@@ -1205,7 +1205,7 @@ def status(hosts):
             continue
         rootref = default_dir_refusal(r)
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
-                   f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
+                   f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB oldest {r.get('oldest_waiter_s', 0) / 3600:.1f} h" if r["waiting"] else "")
                    + f" run {r['running']}" + (f" threads {r['committed_threads']}/{r.get('ncpu', 0)}" if isinstance(r.get("committed_threads"), int) else "")
                    + (" LOADCAP" if load_capped(r, 32, 16) else "")
                    + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
@@ -1859,6 +1859,12 @@ def main():
     spill = not os.environ.get("OT_RUN_NO_SPILL")
     if "--hosts" in a[:a.index("--") if "--" in a else len(a)]:
         spill = False                      # an explicit pin is honoured as before
+        _hv = a[a.index("--hosts") + 1] if a.index("--hosts") + 1 < len(a) else ""
+        if multihost_spill(_hv):
+            # MULTIHOST-SPILL-1630 (FABLE-FLOW-1800 item 4): a kit-wave row names its gen_hosts (--hosts a,b,c) and its kit --dir exists on ONE of them, so ok had one host, REBALANCE never fired and
+            # the spill was off: 9 lint / geom waiters sat on epyc8.  A host LIST is a set of alternatives: spill allowed, but only into the listed hosts (SPILL_ONLY_HOSTS).  One host stays a hard pin.
+            spill = "--no-spill" not in a[:a.index("--") if "--" in a else len(a)]
+            SPILL_ONLY_HOSTS.update(h for h in _hv.split(",") if h)
         _pin_only = "--no-spill" not in a[:a.index("--") if "--" in a else len(a)] and not os.environ.get("OT_RUN_NO_SPILL")   # OVERLOAD_1114
     while a and a[0] != "--":
         o = a.pop(0)
@@ -1927,6 +1933,10 @@ def main():
     if not pick:
         trigger_sweep()
     t0 = time.time()
+    try:
+        t0 = min(t0, float(os.environ.get("OT_RUN_T0", t0)))      # RUNTIME-RELOAD-1630: a re-exec keeps the original start
+    except ValueError:
+        pass
     first = True
     conn_tries = 0
     previously_qualified = set()
@@ -2080,6 +2090,7 @@ def main():
                 continue
             why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
             print(f"ot-run: NOT RUN: no host qualifies ({why})", file=sys.stderr)
+            log_signal(f"ot-run REQUEUE no host qualifies mem {mem} dir {d}: {why[:160]}")
             not_run(f"no host qualifies ({why})")
         print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),
               file=sys.stderr)
@@ -2106,6 +2117,8 @@ def main():
                 not_run(f"{LAST_RUN.get('why') or 'the unit did not start'} (ot-run status {rc or 255})")
             sys.exit(rc)
         print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)
+        log_signal(f"ot-run REQUEUE not admitted on {best} within {wait} s mem {mem} dir {d}")
+        reexec_if_runtime_changed(t0)
         first = False
 
 
@@ -2303,6 +2316,42 @@ def load_spill_neg(root, why=None):
 
 NEEDS = []      # NEEDS_1115 --needs PATH[,PATH]
 REPLICATE = []  # NEEDS_1115 --replicate DIR[,DIR]
+RT_RE = re.compile(r"^(.*/claude/rt)/([0-9a-f]{12})/")
+ORIG_ARGV = list(sys.argv[1:])
+
+
+def reexec_if_runtime_changed(t0, argv=None, real=None, execv=None, env=None):
+    """RUNTIME-RELOAD-1630 (FABLE-FLOW-1800 item 1): a waiting client keeps the ot-run code it started with, so a fix reached only jobs submitted later (23 of 32 epyc8 waiters ran the build without
+    AUTOSTAGE).  Between two placements of an UNSTARTED request (nothing runs, no remote waiter is left) the client looks at rt/current: when it names another sha it re-execs the same arguments from
+    it, carrying its original start time (OT_RUN_T0) so --max-wait still bounds the whole.  Not under an rt/<sha> tree, or no current link: nothing happens.  -> True when it would exec (tests)"""
+    real = real or os.path.realpath(__file__)
+    m = RT_RE.match(real)
+    if not m or os.environ.get("OT_RUN_NO_RELOAD"):
+        return False
+    cur = os.path.join(m.group(1), "current")
+    try:
+        new = os.path.basename(os.path.realpath(cur))
+    except OSError:
+        return False
+    if not re.fullmatch(r"[0-9a-f]{12}", new) or new == m.group(2):
+        return False
+    tool = os.path.join(m.group(1), new, "tools/fleet/ot-run")
+    if not os.path.isfile(tool):
+        return False
+    e = dict(os.environ if env is None else env)
+    e.setdefault("OT_RUN_T0", repr(float(t0)))
+    log_signal(f"ot-run RELOAD {m.group(2)} -> {new} waiting dir {os.environ.get('OT_RUN_DIR_NOTE', '')}")
+    print(f"ot-run: RELOAD: runtime {m.group(2)} -> {new}; re-exec", file=sys.stderr)
+    (execv or os.execve)(sys.executable, [sys.executable, "-I", tool] + (ORIG_ARGV if argv is None else argv), e)
+    return True
+
+
+def multihost_spill(hosts_arg):
+    """MULTIHOST-SPILL-1630: True for a --hosts LIST (two or more hosts) unless spill is switched off by the environment; one host is a hard pin"""
+    return len([h for h in (hosts_arg or "").split(",") if h]) > 1 and not os.environ.get("OT_RUN_NO_SPILL")
+
+
+SPILL_ONLY_HOSTS = set()   # MULTIHOST-SPILL-1630: the --hosts list of a multi-host request; empty = any host
 STAGE = []   # v14 --stage: the job's exact input paths (absolute, normalised); empty = lane-root SPILL as before
 
 
@@ -2509,7 +2558,7 @@ def spill_dest_rows(h, roots, bases):
 
 AUTOSTAGE_AFTER_S = int(os.environ.get("OT_RUN_AUTOSTAGE_AFTER_S", "300"))   # AUTOSTAGE-1630: a --dir job that cannot spill as a lane root stages its --dir after this wait
 AUTOSTAGE_WHY = ("OT_RUN_SPILL_MAX", "lane references keep growing", "lanes referenced", "absolute symlink out of the lane", "command uses ../")
-T_START = time.time()
+T_START = float(os.environ.get("OT_RUN_T0") or time.time())
 
 
 def autostage_ok(why, permanent):
@@ -2529,8 +2578,10 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None, 
     plan2 = _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio)
     if plan2[0]:
         say(f"ot-run: AUTOSTAGE: lane-root spill refused ({plan[1][:100]}); staging --dir {d} alone")
+        log_signal(f"ot-run AUTOSTAGE moved dir {d} from {src} to {plan2[0][0]}: {plan[1][:120]}")
         return plan2
     STAGE.clear()
+    log_signal(f"ot-run AUTOSTAGE refused dir {d} on {src}: {plan2[1][:160]}")
     return plan[0], f"{plan[1]}; staging --dir alone also refused: {plan2[1]}", plan[2]
 
 
@@ -2586,7 +2637,7 @@ def _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None)
     if sym:
         return None, f"absolute symlink out of the {'--stage path(s)' if STAGE else 'lane(s)'}: {sym[:120]}", True
     bases = sorted({r.rsplit("/claude/", 1)[0] if SCRATCH_RE.match(r) else os.path.dirname(r) for r in roots})
-    cands = [h for h in HOSTS if h != src and h not in SPILL_HOSTS_EXCLUDE and h not in held
+    cands = [h for h in HOSTS if h != src and h not in SPILL_HOSTS_EXCLUDE and h not in held and (not SPILL_ONLY_HOSTS or h in SPILL_ONLY_HOSTS)
              and not (native and h in NO_AVX512)]
     if not cands:
         return None, "no spill host", False
@@ -3445,7 +3496,7 @@ def place(hosts, d, disk, mem, quiet=False):
         if r and not r.get("error"):
             if not quiet:
                 print(f"ot-run: {h:14s} admits {r.get('admit_gb', r['free_gb']):5d} GB (avail {r['avail_gb']}, {memory_charge_note(r)}, headroom "
-                      f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB) load {load1(r):.0f}/{r.get('ncpu', 0)} "
+                      f"{r['headroom_gb']}, waiters {r['waiting']}/{r['waiting_gb']} GB, oldest {r.get('oldest_waiter_s', 0) / 3600:.1f} h) load {load1(r):.0f}/{r.get('ncpu', 0)} "
                       f"running {r['running']} disk {r['disk_gb']} GB {note}", file=sys.stderr)
             if not note:
                 ok[h] = r

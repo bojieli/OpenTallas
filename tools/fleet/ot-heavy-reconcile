@@ -1956,8 +1956,22 @@ def die_hold(total, can, floor, table, need=None):
     return 0
 
 
+WAIT_OLDEST = {"s": 0}
+
+
+def proc_age_s(p):
+    """seconds since process p started (stat field 22 and the boot time); 0 when unreadable"""
+    try:
+        st = int(open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[19])
+        bt = [int(x.split()[1]) for x in open("/proc/stat") if x.startswith("btime ")][0]
+        return max(0, int(time.time() - (bt + st / os.sysconf("SC_CLK_TCK"))))
+    except (OSError, ValueError, IndexError):
+        return 0
+
+
 def waiters(table):
     wait, req = [], []
+    WAIT_OLDEST["s"] = 0
     for p in os.listdir("/proc"):
         if not p.isdigit():
             continue
@@ -1967,6 +1981,7 @@ def waiters(table):
                 continue
             m = int(a[a.index("--mem") + 1])
             req.append(m)                                # charged like ot-heavy will charge it
+            WAIT_OLDEST["s"] = max(WAIT_OLDEST["s"], proc_age_s(p))     # OLDWAIT-1630
             wait.append((admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0])
     return wait, req
 
@@ -2095,7 +2110,7 @@ def free(path):
         print(json.dumps(dict(host=os.uname().nodename, total_gb=round(total), avail_gb=round(avail), used_gb=round(total - avail),
                               charged_gb=round(total - avail), reserved_gb=0, growth_gb=0, growth_raw_gb=0, young_gb=0, plenty=True,
                               headroom_gb=0, floor_gb=round(conf("INV_HEADROOM_GB")), cpu_load1=float(open("/proc/loadavg").read().split()[0]),
-                              ncpu=os.cpu_count(), running=running, fresh=0, committed_threads=committed_threads(), waiting=len(wait), waiting_gb=sum(wait),
+                              ncpu=os.cpu_count(), running=running, fresh=0, committed_threads=committed_threads(), waiting=len(wait), oldest_waiter_s=WAIT_OLDEST["s"], waiting_gb=sum(wait),
                               waiting_req_gb=sum(req), disk_gb=disk, admit_gb=can, free_gb=can - sum(wait), die_admit_gb=can,
                               die_reserve=None, inv_free_gb=can, committed_gb=round(total - avail), inv_limit_gb=round(total - conf("INV_HEADROOM_GB")),
                               other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=round(raw_gap, 1), reserve=0, fresh=0, phase_extra=0, phase_raw=0),
@@ -2120,7 +2135,7 @@ def free(path):
                           growth_raw_gb=round(b["grow"]),
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
                           cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
-                          committed_threads=committed_threads(), fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
+                          committed_threads=committed_threads(), fresh=b["fresh"], waiting=len(wait), oldest_waiter_s=WAIT_OLDEST["s"], waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
                           admit_gb=0 if rsv else math.floor(can), free_gb=(0 if rsv else math.floor(can)) - sum(wait),
                           die_admit_gb=math.floor(can_die), die_reserve=rsv,
                           inv_free_gb=math.floor(inv["free"]), committed_gb=round(inv["committed"]),
