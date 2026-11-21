@@ -1,0 +1,1 @@
+- 2026-11-20 17:52 PST DONE [OPUS-FIX-HEAD-LEP0N-R2] ot-run oth-ubuntu-3711582-1795225827 on civil-redfish: rc=0 after 130 s, ended 01:52:35, log /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r2/dgrt.otrun.log, cmd: --mem 48 --threads 16 --hosts epyc10 --dir /srv/opentallas-scratch/claude/opus-fix-head-lep0n-r2 -- bash /srv/opentallas-scratch/claude/opus
