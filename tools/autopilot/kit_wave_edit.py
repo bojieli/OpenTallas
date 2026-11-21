@@ -4,6 +4,8 @@
   python3 -I kit_wave_edit.py --message "KW-FIX-n: why" --patch '[{"op":"replace","path":"/dies/s81/max_inflight","value":40}]'
   python3 -I kit_wave_edit.py --message "..." --patch-file patch.json
   python3 -I kit_wave_edit.py --message "..." --set /enabled=false --set /dies/kv/owner_lane='"KV-R"'     (value = JSON; --unset /path removes)
+  python3 -I kit_wave_edit.py event-pending <die> <event>     (FLEET-WATCH-R5: set when your apply gate starts; the apply clears it; expires after 60 min)
+  python3 -I kit_wave_edit.py event-pending-clear <die>
   python3 -I kit_wave_edit.py --dry-run ...                                            (prints the diff, writes and commits nothing)
 
 The patch is RFC 6902 (add, replace, remove, test; paths are JSON pointers, "-" appends to a list).  It is applied to the committed config
@@ -309,7 +311,43 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
 
 
 
+def event_pending_ops(cmd, die, event, doc):
+    """FLEET-WATCH-R5 11-21 (FABLE-FLOW-0800 class d): `event-pending <die> <event>` sets dies.<die>.event_pending = {event, since} (new launches for the die wait until the apply lands, max 60 min);
+    `event-pending-clear <die>` removes it (a no-op when absent).  -> ops"""
+    import time
+    if die not in (doc.get("dies") or {}):
+        raise SystemExit(f"kit_wave_edit: unknown die {die!r}")
+    if cmd == "event-pending":
+        return [{"op": "add", "path": f"/dies/{die}/event_pending", "value": {"event": event, "since": time.time()}}]
+    return [{"op": "remove", "path": f"/dies/{die}/event_pending"}] if "event_pending" in doc["dies"][die] else []
+
+
+def main_event_pending(argv):
+    ap = argparse.ArgumentParser(prog="kit_wave_edit event-pending")
+    ap.add_argument("cmd", choices=["event-pending", "event-pending-clear"])
+    ap.add_argument("die")
+    ap.add_argument("event", nargs="?", default="")
+    ap.add_argument("--coord", default=os.environ.get("AP_COORD", os.path.expanduser("~/coord")))
+    ap.add_argument("--dry-run", action="store_true")
+    a = ap.parse_args(argv)
+    if a.cmd == "event-pending" and not a.event:
+        raise SystemExit("kit_wave_edit: event-pending <die> <event>")
+    doc = json.loads((Path(a.coord) / REL).read_text())
+    ops = event_pending_ops(a.cmd, a.die, a.event, doc)
+    if not ops:
+        print(f"kit_wave_edit: {a.die} has no event_pending; nothing to clear")
+        return 0
+    who = os.environ.get("OT_LANE", "lane")
+    msg = (f"{who}: event_pending {a.die} {a.event}: apply gate started, new launches for the die wait (max 60 min)" if a.cmd == "event-pending"
+           else f"{who}: event_pending cleared for {a.die}")
+    edit(a.coord, ops, msg, dry=a.dry_run)
+    return 0
+
+
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] in ("event-pending", "event-pending-clear"):
+        return main_event_pending(argv)
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--coord", default=os.environ.get("AP_COORD", os.path.expanduser("~/coord")))
     ap.add_argument("--message", "-m", required=True, help="commit message (name the lane and why)")
