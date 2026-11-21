@@ -158,7 +158,7 @@ def stream(host, base, todo, overwrite=False):
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     p1.stdin.write(('\0'.join(todo) + '\0').encode()); p1.stdin.close()
     q = shlex.quote(base)
-    p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s %s -xf -' % (q, q, '--overwrite' if overwrite else '--skip-old-files')],
+    p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s %s -xf -' % (q, q, '--unlink-first' if overwrite else '--skip-old-files')],
                           stdin=subprocess.PIPE)
     t0, sent = time.time(), 0
     while True:
