@@ -48,3 +48,6 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
 
 - t60 and raise100 both failed the inherited rollout comparison on FF hold. Control TT/FF -222.55/-57.22 ps, r2 -207.06/-68.54, raise100 -206.83/-93.09. No volume rows. 
 - t39 current placement is actually running on intel2 in sealed job ot_s81sl_leaf__t39-place-tolerant-swine-775262-1795253535, with output copy-back to intel1, and the inherited chain follows to CTS. Placement checkpoint review rendered and examined, PASS-COND for this isolated proof; see results/geom_review/tap-grid-r2-t39-1121.md.
+
+- t39 final detailed placement passed. Inspected the copy-back kit's final layout. The inherited kit's Tcl has the same missing tb_cdirect/tb_cdmax globals fixed by main 5294e088f553. A fresh cp -a replay adds only that declaration and is in CTS on intel1, oth-ubuntu-2231504-1795257312, t39/cts_fixed_5294/kit. The original kit and its geometry job were untouched.
+- KV hroot D28 candidate consolidates 12 sparse west taps to 5, preserving 200 um planned reach on the old placed registers and reset preview depth. See results/geom_review/tap-grid-r2-kv-hroot-1121.md.
