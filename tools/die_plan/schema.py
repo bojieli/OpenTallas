@@ -1881,6 +1881,7 @@ SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"typ
 _B = SCHEMA["properties"]["budgets"]["properties"]
 _B["relay_mid_re"] = {"type": "string", "minLength": 1}
 _B["r_dly_spread_station_um"] = {"type": "object", "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}   # XTAP-A 11-20 (gen_phys dly_spread_station_um)
+_B["r_r8_core_seat"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # R8-CORE-SEAT 11-21 (gen_phys r8_core_seat_on): true | [type base names]
 _B["relay_mid_re_types"] = {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}}
 _B["r_dly_lockup"] = {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False, "properties": {
     "seg": {"type": "integer", "minimum": 1}, "tail_groups": {"type": "integer", "minimum": 0}, "pad_min_stations": {"type": "integer", "minimum": 0},

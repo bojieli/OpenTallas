@@ -53,6 +53,18 @@ leaf must be proven pure wiring from its RTL (bind_wire_leaf.wire_map, fail clos
 re-pointed sink with the leaf output it bypasses and the leaf input that carries the same bit, and bind_verify proves
 the wiring again from the RTL and then requires the sink to see exactly the source and depth of that leaf input.
 
+R8-KEEP (FABLE-FIX-QC-STRAP 11-21), optional sub-key "r8_keep": true (absent or false = byte-identical output).  Every R8
+strap site emits its fixed common pad as `ot_dp_dly #(.W(W), .D(base)) u_r8b_<site>_f`.  When several sites of one type
+read the SAME source bits with the same base (QC st_a: rs_n_c[3:0] of x_hc1_i into the four station-row cores), the
+chains are identical and yosys opt_merge folds them into ONE chain whose last flop drives every core (measured on
+slw_st_a_v2__cl9f076a5c: u_r8b_..._u_r1/r2/r3_rs_n_c_p_f have no cell in 1_2_yosys.v, one flop drives four cores stacked
+over 1 mm, -169 ps post-hook CTS / -333 ps at GRT RC on 43 endpoints).  With the sub-key, each fixed pad of such a group
+(>= 2 sites with equal W, base and d expression) of a selected type is emitted as `ot_dp_dly_keep` (same instance name,
+wire, r[] / q register names): every site keeps its own chain, so the placer can run it to its own core pin
+(core_input_chain.tcl R8-CORE-SEAT).  The ot_dp_dly_cnt bank and the strap of each site are unchanged; depth per sink =
+base + count is unchanged (R8 table, bind_latency, LATCHECK, r8_strap_lec untouched; ot_dp_dly_keep == ot_dp_dly).
+bind_pad_tail_split.json records the groups as types.<type>.r8_keep.
+
 REACH (FABLE-FIX-KV-PV class D 11-19), optional sub-keys "route": true and "require_reach": true (absent or false =
 byte-identical output).  Measured on kv3_pv_v8 (pv_N_0, the end of the PV command chain: column pads 0 / 1): K is capped
 by the pad, so 1,474 copy hops were over 380 um (max 870) and the pad-0 consumers read the in-boundary flop over 2.5 mm.
@@ -97,6 +109,29 @@ endmodule
 """
 
 
+R8_FIXED_RE = re.compile(r"^(\s*)ot_dp_dly( #\(\.W\((\d+)\), \.D\((\d+)\)\) (u_r8b_\w+_f) \(\.clk\(clk\), \.d\((.*)\), "
+                         r"\.q\(\w+\)\);  // (?:R8|INNER) strap site .*)$")
+
+
+def r8_keep(body):
+    """R8-KEEP: in the emitted body lines of one type, the fixed common pads (u_r8b_<site>_f) of R8 strap sites that share
+    width, depth and d expression become ot_dp_dly_keep (in place), so synthesis keeps one chain per site.  Returns the
+    record rows [{width, depth, d, insts, extra_flops}] (empty = nothing changed)."""
+    groups = {}
+    for i, ln in enumerate(body):
+        m = R8_FIXED_RE.match(ln)
+        if m:
+            groups.setdefault((int(m.group(3)), int(m.group(4)), m.group(6)), []).append((i, m))
+    rec = []
+    for (w, d, src), rows in sorted(groups.items()):
+        if len(rows) < 2:
+            continue
+        for i, m in rows:
+            body[i] = f"{m.group(1)}{KEEP_MODULE}{m.group(2)}"
+        rec.append(dict(width=w, depth=d, d=src, insts=[m.group(5) for _i, m in rows], extra_flops=w * d * (len(rows) - 1)))
+    return rec
+
+
 def site_rows(inst, k, xy):
     """plan relay_sites rows (type_relay_sites.py key form) for the k-stage tail copy `inst`, all stages at xy: the
     pre-GPL anchor at the consumer cluster (r[0..k-2] and q)"""
@@ -117,15 +152,16 @@ def config(ab):
     if c is None:
         return None
     if not isinstance(c, dict) or not isinstance(c.get("types"), list) or not c["types"] or \
-            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes", "route", "require_reach"} or \
-            not all(isinstance(c.get(k, False), bool) for k in ("pipes", "route", "require_reach")):
+            set(c) - {"types", "min_spread_um", "hop_um", "wire_leaves", "pipes", "route", "require_reach", "r8_keep"} or \
+            not all(isinstance(c.get(k, False), bool) for k in ("pipes", "route", "require_reach", "r8_keep")):
         raise ValueError(f"asbuilt.{KEY}: expected {{types: [regex..], min_spread_um, hop_um[, wire_leaves][, pipes: bool]}}")
     wl = c.get("wire_leaves", [])
     if not isinstance(wl, list) or not all(isinstance(x, str) and x for x in wl) or ("wire_leaves" in c and not wl):
         raise ValueError(f"asbuilt.{KEY}.wire_leaves: expected a non-empty list of as-built leaf module names")
     out = dict(types=[re.compile(x) for x in c["types"]], min_spread_um=float(c.get("min_spread_um", 400.0)),
                hop_um=float(c.get("hop_um", 380.0)), wire_leaves=frozenset(wl), pipes=bool(c.get("pipes", False)),
-               route=bool(c.get("route", False)), require_reach=bool(c.get("require_reach", False)))
+               route=bool(c.get("route", False)), require_reach=bool(c.get("require_reach", False)),
+               r8_keep=bool(c.get("r8_keep", False)))
     if out["hop_um"] <= 0 or out["min_spread_um"] < 0:
         raise ValueError(f"asbuilt.{KEY}: hop_um must be > 0 and min_spread_um >= 0")
     return out

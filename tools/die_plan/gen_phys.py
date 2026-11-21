@@ -886,6 +886,17 @@ def dly_spread_mode(budgets, tn):
     return None
 
 
+def r8_core_seat_on(budgets, tn):
+    """budgets.r_r8_core_seat (FABLE-FIX-QC-STRAP 11-21, R8-CORE-SEAT in core_input_chain.tcl): true = every type, [type base
+    names] = the types whose name starts with a listed base; absent / false / [] = off (kit unchanged).  The kit then exports
+    OT_R8_CORE_SEAT = 1: R8 strap pad flops that feed a hard-core input pin sit at that pin's face and the fixed stages behind
+    them are spread on the route from their head (0 cycles, placement only)."""
+    v = budgets.get("r_r8_core_seat", False)
+    if v is True:
+        return True
+    return bool(isinstance(v, list) and tn and any(b and str(tn).startswith(b) for b in v))
+
+
 def dly_spread_station_um(budgets, tn):
     """budgets.r_dly_spread_station_um {type base: um} (XTAP-A, FABLE-FIX-KV-PV 11-20): dly_spread STATION form for the types whose
     name starts with a listed base (longest base wins): stages grouped on ceil(L/S)-1 stations so back-to-back stages share a clock
@@ -7997,6 +8008,23 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise ValueError(f"core_input_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
         else:
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
+    if r8_core_seat_on(P.budgets, tn):
+        # R8-CORE-SEAT (budgets.r_r8_core_seat): the pass lives in core_input_chain.tcl (PRE_RESIZE, after GPL, before
+        # repair_design buffers the new hops); a kit without the core-input hooks gets the file and the same PRE_RESIZE hook
+        if not (kd / "core_input_chain.tcl").is_file():
+            for f_ in ("core_input_chain.tcl", "place_wire_ratio.tcl"):
+                shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
+            mk = (kd / "config.mk").read_text()
+            m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+            if m_ and (kd / m_.group(1)).is_file():
+                with (kd / m_.group(1)).open("a") as f_:
+                    f_.write(CORE_INPUT_PLACE_CHAIN)
+            elif m_:
+                raise ValueError(f"r_r8_core_seat: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+            else:
+                (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
+        mk = (kd / "config.mk").read_text()
+        (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport OT_R8_CORE_SEAT = 1\n")
     tail_copy_place(kd)
     pad_chain_site_place(kd, cap_um=pad_chain_pitch_cap_um(P.budgets))
     if core_link_pipe_place(P.raw, tn):

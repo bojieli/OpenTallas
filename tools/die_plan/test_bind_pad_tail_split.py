@@ -520,3 +520,30 @@ def test_pipe_cores_inside_the_spread_are_not_split(tmp_path, monkeypatch):
     assert _bind(_plan_pipe(tmp_path, {"pipes": True}, gap=100.0, tag="n"), near, "elab", "bind") == 0
     assert (base / "rtl" / "bt_ts.sv").read_bytes() == (near / "rtl" / "bt_ts.sv").read_bytes()
     assert json.loads((near / "bind_pad_tail_split.json").read_text())["types"]["ts"]["pipes_split"]["split_pipes"] == 0
+
+
+# ---- R8-KEEP (FABLE-FIX-QC-STRAP 11-21): land_pad_tail_split.r8_keep ---------------------------------------------------
+def test_r8_keep_config_and_rule():
+    assert TS.config({"land_pad_tail_split": {"types": ["t"]}})["r8_keep"] is False
+    assert TS.config({"land_pad_tail_split": {"types": ["t"], "r8_keep": True}})["r8_keep"] is True
+    with pytest.raises(ValueError):
+        TS.config({"land_pad_tail_split": {"types": ["t"], "r8_keep": 1}})
+    ln = ("    ot_dp_dly #(.W({w}), .D({d})) u_r8b_strap_r8pad_u_r{k}_{p}_f (.clk(clk), .d({src}), "
+          ".q(r8b_strap_r8pad_u_r{k}_{p}_f));  // R8 strap site strap_r8pad_u_r{k}_{p}: fixed common pad {d}")
+    cnt = ("    ot_dp_dly_cnt #(.W(4), .DMAX(1)) u_r8b_strap_r8pad_u_r0_rs_n_c_p (.clk(clk), .strap_cnt(strap_r8pad_u_r0_rs_n_c_p), "
+           ".d(r8b_strap_r8pad_u_r0_rs_n_c_p_f), .q(r8b_strap_r8pad_u_r0_rs_n_c_p));  // R8 strap-count bank (pad = 5 + s)")
+    body = [ln.format(w=4, d=5, k=k, p="rs_n_c_p", src="x_hc1_i_q[3:0]") for k in range(4)]
+    body += [ln.format(w=64, d=5, k=k, p="rs_n_hi_p", src=f"x_hc1_i_q[{131 + 128 * k}:{68 + 128 * k}]") for k in range(4)]
+    body += [ln.format(w=4, d=6, k=9, p="rs_n_c_p", src="x_hc1_i_q[3:0]"), cnt,
+             "    ot_dp_dly #(.W(4), .D(5)) u_d5_x (.clk(clk), .d(x_hc1_i_q[3:0]), .q(d5_x));",
+             ln.format(w=2, d=3, k=0, p="a", src="{x_q[1], y_q[0]}").replace("// R8 strap", "// INNER strap"),
+             ln.format(w=2, d=3, k=1, p="a", src="{x_q[1], y_q[0]}").replace("// R8 strap", "// INNER strap")]
+    base = list(body)
+    rec = TS.r8_keep(body)
+    assert [(r["width"], r["depth"], len(r["insts"]), r["extra_flops"]) for r in rec] == [(2, 3, 2, 6), (4, 5, 4, 60)]
+    assert rec[1]["insts"] == [f"u_r8b_strap_r8pad_u_r{k}_rs_n_c_p_f" for k in range(4)] and rec[1]["d"] == "x_hc1_i_q[3:0]"
+    changed = [i for i, (a, b) in enumerate(zip(base, body)) if a != b]
+    assert changed == [0, 1, 2, 3, 11, 12]                  # only the two shared groups; hi buses, depth 6, bank, u_d5 untouched
+    for i in changed:
+        assert body[i] == base[i].replace("    ot_dp_dly #(", "    ot_dp_dly_keep #(", 1)
+    assert TS.r8_keep(list(base[4:9])) == []                # no shared group: nothing changes

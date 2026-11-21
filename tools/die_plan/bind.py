@@ -5075,6 +5075,13 @@ class Binder:
                 conns = [(pn, e) for pn, e in conns if pn not in hide]
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
+        if ts_on and ts_cfg["r8_keep"]:
+            # R8-KEEP (FABLE-FIX-QC-STRAP 11-21, sub-key "r8_keep": true; absent = nothing here runs): identical fixed pads of
+            # several R8 strap sites stay one chain per site (ot_dp_dly_keep), so opt_merge cannot fold them into one flop
+            # that drives every consumer core.  Depth per sink unchanged; self.sinks / R8 table untouched.
+            r8k = TS.r8_keep(body)
+            if r8k:
+                self.__dict__.setdefault("_pad_tail_split", {}).setdefault(tn, {})["r8_keep"] = r8k
         if tsplit and len(set(pads.values())) != len(pads):
             raise BindError(f"land_pad_tail_split {tn}: landing pad wire names collide")
         if pcopies and (len(set(pcopies.values())) != len(pcopies) or set(pcopies.values()) & set(pads.values())):

@@ -789,5 +789,180 @@ foreach inst [dict keys $nc_cnt_targets] { lassign [dict get $nc_cnt_targets $in
 puts "OT_NK_R8_COUNT_CHAIN eligible_bits $nc_cnt_seen placed_bits $nc_cnt_chains stages_moved $nc_cnt_stages mux_cells_moved $nc_cnt_mux refused_bits $nc_cnt_refused min_count_max_hop_um $nc_cnt_worst"
 }
 }
+# R8-CORE-SEAT (FABLE-FIX-QC-STRAP 11-21, FABLE-CLOSURE lever 6 "first-hop seats at core pin faces"; opt-in OT_R8_CORE_SEAT=1
+# from plan budgets.r_r8_core_seat, unset = this block does not run and the kit is byte-identical in behaviour).
+# Class (QC slw_st_a_v2__cl9f076a5c a3, measured): an R8 strap pad (bind: fixed pad ot_dp_dly u_r8b_<site>_f, count bank
+# ot_dp_dly_cnt u_r8b_<site>, combinational tap mux) sits between an in-boundary register and a HARD-CORE input pin.  GPL is
+# indifferent to where a fanout-1 chain sits, so the stages bunch near the head and the last flop drives the core pin over the
+# whole distance (u_r0 rs_n_c_p: 5 stages inside 80 um of the head, last hop 1,067 um, -169.05 ps post-hook CTS, 43 GRT
+# endpoints; rs_n_hi / lo: last hop 418 to 439 um).  The NK count pass above handles only pads that end on a u_pc_nk register.
+# Rule: for every hard-core input pin whose data cone (through gates, to the first flops) holds only R8 pad flops and static
+# strap inputs, and whose farthest cone flop is more than OT_R8_SEAT_TAIL_UM (40) away:
+#   - the cone flops (last fixed stage, count stages) and the gates that carry their data sit at the pin, just outside the
+#     core face (count stages nearest, last fixed stage behind them; a flop shared by several pins sits at their median);
+#   - the earlier fixed stages (fanout-1 chain behind the last fixed stage) and their hop buffers are spread at equal
+#     fractions of the macro-avoiding route head -> seat (nc_route), like nc_chain_one does for a pipe register tail.
+# No netlist change, no cycle; FIRM / plan-sited cells are never moved.  DPL legalizes.  A chain whose equal hop is over 405 um
+# is still spread and counted need_stage (a plan item: +1 pad stage).  A pin whose cone flops already sit at the pin keeps them;
+# its fixed chain is still spread when one of its hops is over OT_R8_SEAT_HOP_UM (300).
+if {[info exists ::env(OT_R8_CORE_SEAT)] && $::env(OT_R8_CORE_SEAT) eq "1"} {
+uplevel #0 {
+set rs_tail_um 40.0; if {[info exists ::env(OT_R8_SEAT_TAIL_UM)] && [string is double -strict $::env(OT_R8_SEAT_TAIL_UM)]} { set rs_tail_um $::env(OT_R8_SEAT_TAIL_UM) }
+set rs_hop_thr 300.0; if {[info exists ::env(OT_R8_SEAT_HOP_UM)] && [string is double -strict $::env(OT_R8_SEAT_HOP_UM)]} { set rs_hop_thr $::env(OT_R8_SEAT_HOP_UM) }
+set rs_root_re {u_r8b_strap_r8pad_}; if {[info exists ::env(OT_R8_SEAT_ROOT_RE)] && $::env(OT_R8_SEAT_ROOT_RE) ne ""} { set rs_root_re $::env(OT_R8_SEAT_ROOT_RE) }
+proc rs_name {i} { return [string map {\\ {}} [$i getName]] }
+proc rs_isff {i} { return [string match "DFF*" [[$i getMaster] getName]] }
+# data cone of an input pin back to the first flops: {roots (name -> inst) gates (insts, nearest first) ok}
+proc rs_cone {it} {
+  set roots {}; set gates {}; set seen {}; set front [list $it]; set ok 1
+  for {set d 0} {$d < 24 && [llength $front]} {incr d} {
+    set nf {}
+    foreach t $front {
+      set net [$t getNet]; if {$net eq "NULL" || $net eq ""} continue
+      if {[$net getSigType] ne "SIGNAL"} continue
+      set bts [$net getBTerms]
+      if {[llength $bts]} { foreach bt $bts { if {![regexp {^strap_} [$bt getName]]} { set ok 0 } }; continue }
+      set drv ""; foreach o [$net getITerms] { if {[$o isOutputSignal]} { set drv $o } }
+      if {$drv eq ""} continue
+      set di [$drv getInst]; set dn [$di getName]; set dm [[$di getMaster] getName]
+      if {[[$di getMaster] isBlock] || [regexp {^(DLL|DHL|ICG|SDF)} $dm]} { set ok 0; continue }
+      if {[rs_isff $di]} { dict set roots $dn $di; continue }
+      if {[dict exists $seen $dn]} continue
+      dict set seen $dn 1; lappend gates $di
+      if {[llength $gates] > 64} { return [list {} {} 0] }
+      foreach x [$di getITerms] { if {[$x isInputSignal]} { lappend nf $x } }
+    }
+    set front $nf
+  }
+  if {[llength $front]} { set ok 0 }
+  return [list $roots $gates $ok]
+}
+# the gates of a cone that carry a root's data (static strap decode stays where it is: it is shared by the bank)
+proc rs_dynamic {roots gates} {
+  set nets {}; set sel {}
+  dict for {nm i} $roots { foreach t [$i getITerms] { if {[$t isOutputSignal] && [$t getNet] ne "NULL"} { dict set nets [$t getNet] 1 } } }
+  for {set pass 0} {$pass < 80} {incr pass} {
+    set ch 0
+    foreach g $gates {
+      set gn [$g getName]; if {[dict exists $sel $gn]} continue
+      set dyn 0; foreach t [$g getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL" && [dict exists $nets [$t getNet]]} { set dyn 1 } }
+      if {!$dyn} continue
+      dict set sel $gn $g; set ch 1
+      foreach t [$g getITerms] { if {[$t isOutputSignal] && [$t getNet] ne "NULL"} { dict set nets [$t getNet] 1 } }
+    }
+    if {!$ch} break
+  }
+  return $sel
+}
+proc rs_out {x y} {
+  global nc_mac nc_halo
+  foreach m $nc_mac {
+    lassign $m a b c d; set a [expr {$a-$nc_halo}]; set b [expr {$b-$nc_halo}]; set c [expr {$c+$nc_halo}]; set d [expr {$d+$nc_halo}]
+    if {$x > $a && $x < $c && $y > $b && $y < $d} {
+      lassign [lindex [lsort -real -index 0 [list [list [expr {$x-$a}] $a $y] [list [expr {$c-$x}] $c $y] [list [expr {$y-$b}] $x $b] [list [expr {$d-$y}] $x $d]]] 0] _ x y
+    }
+  }
+  return [list $x $y]
+}
+set rs_keepf {}
+set rs_want {}; set rs_inst {}; set rs_pins 0; set rs_seated 0; set rs_t0 0.0; set rs_slot {}; set rs_pin_of {}
+foreach rs_m [$nc_blk getInsts] {
+  if {![[$rs_m getMaster] isBlock]} continue
+  set rs_b [$rs_m getBBox]; set ma [$rs_b xMin]; set mb [$rs_b yMin]; set mc [$rs_b xMax]; set md [$rs_b yMax]
+  foreach rs_it [$rs_m getITerms] {
+    if {![$rs_it isInputSignal] || [$rs_it getNet] eq "NULL" || [[$rs_it getNet] getSigType] ne "SIGNAL"} continue
+    lassign [rs_cone $rs_it] rs_roots rs_gates rs_ok
+    if {!$rs_ok || ![dict size $rs_roots]} continue
+    set rs_all 1; dict for {nm i} $rs_roots { if {![regexp $rs_root_re [rs_name $i]]} { set rs_all 0; break } }
+    if {!$rs_all} continue
+    incr rs_pins
+    lassign [nc_ctr $rs_it] px py
+    set rs_far 0
+    dict for {nm i} $rs_roots { lassign [nc_ctr $i] x y; set rs_far [expr {max($rs_far, abs($x-$px)+abs($y-$py))}] }
+    set rs_t0 [expr {max($rs_t0, $rs_far/double($nc_dbu))}]
+    if {$rs_far <= $rs_tail_um * $nc_dbu} {
+      dict for {nm i} $rs_roots { if {[regexp {_f[./](?:r\[[0-9]+\]|q)} [rs_name $i]]} { dict set rs_keepf $nm $i } }
+      continue
+    }
+    # the face the pin is on, and the outward unit vector
+    set rs_f [lindex [lsort -index 0 -real [list [list [expr {abs($px-$ma)}] -1 0 $ma $py] [list [expr {abs($px-$mc)}] 1 0 $mc $py] [list [expr {abs($py-$mb)}] 0 -1 $px $mb] [list [expr {abs($py-$md)}] 0 1 $px $md]]] 0]
+    lassign $rs_f _ ox oy ex ey
+    set rs_key "[$rs_m getName] $ox $oy"; dict incr rs_slot $rs_key; set rs_k [expr {[dict get $rs_slot $rs_key] % 4}]
+    set rs_dyn [rs_dynamic $rs_roots $rs_gates]
+    # depth outside the halo edge (um): gates 0.3, count stages 0.9 + 0.54 k, last fixed stage 3.3 + 0.54 k
+    foreach {cls dep} [list g 0.3 c [expr {0.9 + 0.54*$rs_k}] f [expr {3.3 + 0.54*$rs_k}]] {
+      set rs_pt($cls) [list [expr {$ex + $ox*($nc_halo + $dep*$nc_dbu)}] [expr {$ey + $oy*($nc_halo + $dep*$nc_dbu)}]]
+    }
+    dict for {nm i} $rs_roots {
+      if {![nc_mov $i]} continue
+      set cls [expr {[regexp {_f[./](?:r\[[0-9]+\]|q)} [rs_name $i]] ? "f" : "c"}]
+      dict lappend rs_want $nm $rs_pt($cls); dict set rs_inst $nm [list $i $cls]; dict set rs_pin_of $nm [list $px $py]
+    }
+    dict for {nm i} $rs_dyn { if {[nc_mov $i]} { dict lappend rs_want $nm $rs_pt(g); dict set rs_inst $nm [list $i g] } }
+    incr rs_seated
+  }
+}
+set rs_tgt {}; set rs_shared 0; set rs_nroot 0; set rs_ngate 0
+dict for {nm pts} $rs_want {
+  lassign [dict get $rs_inst $nm] i cls
+  if {$cls eq "g"} { incr rs_ngate } else { incr rs_nroot; if {[llength $pts] > 1} { incr rs_shared } }
+  lassign [nc_median_pt $pts] x y
+  dict set rs_tgt $nm [rs_out $x $y]
+}
+# a last fixed stage that stays where it is (its pin is already seated) still ends a chain: spread only when a hop is long
+dict for {nm i} $rs_keepf { if {![dict exists $rs_inst $nm]} { dict set rs_inst $nm [list $i k] } }
+# earlier fixed stages behind each seated last-fixed flop: equal fractions of the route head -> seat
+set rs_chains 0; set rs_stages 0; set rs_hop 0.0; set rs_need 0; set rs_bufs 0; set rs_noroute 0
+dict for {nm v} $rs_inst {
+  lassign $v rs_F cls; if {$cls ne "f" && $cls ne "k"} continue
+  if {![regexp {^(.*_f)[./](?:r\[[0-9]+\]|q)} [rs_name $rs_F] _ rs_bank]} continue
+  set seq {}; set hopb {}; set cur $rs_F; set head ""
+  while {[llength $seq] < 64} {
+    set dp [nc_dpin $cur]; if {$dp eq ""} break
+    lassign [nc_back $dp] drv bufs
+    lappend hopb $bufs
+    if {$drv eq ""} break
+    set di [$drv getInst]
+    if {![[$di getMaster] isBlock] && [rs_isff $di] && [nc_mov $di] && [string first "$rs_bank" [rs_name $di]] == 0 \
+        && ![dict exists $rs_inst [$di getName]] && [nc_loads $di] == 1} { set seq [linsert $seq 0 $di]; set cur $di; continue }
+    set head $drv; break
+  }
+  if {$head eq ""} continue
+  lassign [nc_ctr [expr {[[[$head getInst] getMaster] isBlock] ? $head : [$head getInst]}]] hx hy
+  if {$cls eq "k"} {
+    lassign [nc_ctr $rs_F] tx ty
+    set prev [list $hx $hy]; set mx 0
+    foreach s_ [concat $seq [list $rs_F]] { lassign [nc_ctr $s_] x y; set mx [expr {max($mx, abs($x-[lindex $prev 0])+abs($y-[lindex $prev 1]))}]; set prev [list $x $y] }
+    if {$mx <= $rs_hop_thr * $nc_dbu} continue
+  } else { lassign [dict get $rs_tgt $nm] tx ty }
+  set route [nc_route $hx $hy $tx $ty]
+  if {![nc_ok $route]} { incr rs_noroute; continue }
+  set n [llength $seq]; set hops [expr {$n + 1}]
+  set hop [expr {[nc_len $route]/double($hops)/$nc_dbu}]
+  set rs_hop [expr {max($rs_hop, $hop)}]; if {$hop > 405.0} { incr rs_need }
+  for {set j 0} {$j < $n} {incr j} {
+    lassign [nc_at $route [expr {double($j+1)/$hops}]] x y
+    dict set rs_tgt [[lindex $seq $j] getName] [list $x $y]; dict set rs_inst [[lindex $seq $j] getName] [list [lindex $seq $j] s]; incr rs_stages
+  }
+  # hop buffers: hopb[k] = buffers on the D of (F, seq[n-1], ..., seq[0]) nearest-first; the hop ends at position n+1-k
+  for {set k 0} {$k < [llength $hopb] && $k <= $n} {incr k} {
+    set bs [lindex $hopb $k]; set nb [llength $bs]
+    for {set q 0} {$q < $nb} {incr q} {
+      set bi [lindex $bs $q]; if {![nc_mov $bi] || [nc_loads $bi] != 1 || [dict exists $rs_inst [$bi getName]]} continue
+      set f [expr {(($n + 1 - $k) - double($q+1)/($nb+1)) / $hops}]; if {$f < 0} { set f 0 }
+      lassign [nc_at $route $f] x y
+      dict set rs_tgt [$bi getName] [list $x $y]; dict set rs_inst [$bi getName] [list $bi b]; incr rs_bufs
+    }
+  }
+  incr rs_chains
+}
+dict for {nm xy} $rs_tgt { lassign $xy x y; nc_put [lindex [dict get $rs_inst $nm] 0] $x $y }
+set rs_kept [dict size $rs_keepf]
+set rs_t1 0.0
+dict for {nm pxy} $rs_pin_of { lassign $pxy px py; lassign [nc_ctr [lindex [dict get $rs_inst $nm] 0]] x y; set rs_t1 [expr {max($rs_t1, (abs($x-$px)+abs($y-$py))/double($nc_dbu))}] }
+puts [format "OT_R8_CORE_SEAT pins %d seated_pins %d roots %d shared_roots %d gates %d chains %d stages_moved %d hop_bufs_moved %d noroute %d tail_um max before %.1f after %.1f chain_hop_um max %.1f need_stage %d kept_tails %d" \
+  $rs_pins $rs_seated $rs_nroot $rs_shared $rs_ngate $rs_chains $rs_stages $rs_bufs $rs_noroute $rs_t0 $rs_t1 $rs_hop $rs_need $rs_kept]
+}
+}
 # lever 7 (HOLD-FLOW-R 11-17): this kit's PRE_RESIZE hook is this file, not the gp_noconverge gate: run the post-place wire check here
 if {[file exists [file join [file dirname [file normalize [info script]]] place_wire_ratio.tcl]]} { source [file join [file dirname [file normalize [info script]]] place_wire_ratio.tcl] }
