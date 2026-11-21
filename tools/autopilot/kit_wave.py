@@ -8227,7 +8227,7 @@ def private_spec_stale(sp, cfg=None):
         if cfg is None:
             sys.path.insert(0, str(Path(__file__).resolve().parent))
             import autopilot as AP
-            cfg = load_config(read_config_text(AP))
+            cfg = load_config(private_config_text(AP, sp.get("hub")))
         now = wave_gen_env(cfg, sp["die"], sp["item"])
     except Exception as e:                               # noqa: BLE001 - no config: the kit-side check still runs
         print(f"ENV-PROVENANCE NOTE: private spec staleness not checked ({type(e).__name__}: {e})", flush=True)
@@ -8258,14 +8258,44 @@ def _swap_prefix(v, old, new):
     return v, False
 
 
-def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None):
+PRIVATE_HUB = "intel2"                                   # the coord hub (OT_HUB_NAME of the hub units); private-spec runs on any gen host
+
+
+def private_config_text(AP, hub=None, read=None, ssh=None):
+    """FLOW-PROC-A 11-21 (FAM-QC-COLL, FABLE-FIX-S81-LEAF-R5 copied the hub config by hand): the committed wave config, read here when this host
+    has the hub checkout, else `git show HEAD:autopilot/kit_wave.json` of the hub's ~/coord over ssh.  -> text ('' when neither works)"""
+    try:
+        txt = (read or read_config_text)(AP)
+        if txt and txt.strip():
+            json.loads(txt)
+            return txt
+    except Exception:                                    # noqa: BLE001 - not the hub: ask the hub
+        pass
+    hub = hub or os.environ.get("OT_HUB_NAME") or PRIVATE_HUB
+    argv = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20", hub, f"git -C ~/coord show HEAD:{CFG_REL}"]
+    try:
+        p = (ssh or subprocess.run)(argv, capture_output=True, text=True, timeout=120)
+        return p.stdout if p.returncode == 0 else ""
+    except (OSError, subprocess.SubprocessError):
+        return ""
+
+
+def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
+                 host=None, bind_out=None, src_manifest=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
     the same functions launch() uses: env, gen args, flow_tag), with only plan, tree and overlay replaced.  Env values and kit_rtl / gen_args paths
     under the die tree are rewritten to the private tree (those env keys are plan_derived).  ab = ["KEY=VAL" | "KEY=" (unset)] is the deliberate A/B
     opt-out: it must give why, and run_kit.sh's ENV-PROVENANCE allows exactly those keys to differ.  -> spec dict (raises ValueError on bad input)"""
     if die not in (cfg.get("dies") or {}):
         raise ValueError(f"die {die!r} is not in the wave config")
-    sp = spec_for(cfg, die, item, hub, kind=kind)
+    try:
+        sp = spec_for(cfg, die, item, hub, kind=kind)
+    except ValueError as e:                              # the hub's ot_run override does not exist on this gen host: the plain ot-run here
+        if "ot_run override" not in str(e):
+            raise
+        cfg = dict(cfg, ot_run=None)
+        sp = spec_for(cfg, die, item, hub, kind=kind)
+        sp["ot_run_note"] = f"hub ot_run override not on this host ({e}); {OT_RUN}"
     if not sp.get("gen_tools_manifest_sha"):
         sp.update(rt_tools_fields(cfg, die))
     wave = {"env": dict(sp["gen_env"]), "gen_args": list(sp["gen_args"]), "plan": sp["plan"], "src": sp["src"], "kit_rtl": copy.deepcopy(sp.get("kit_rtl") or {})}
@@ -8289,6 +8319,19 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         raise ValueError("one --overlay per kit (the spec carries one positions-only type_overlay)")
     if ov:
         sp["type_overlay"], sp["type_overlay_sha"] = os.path.abspath(ov[0]), overlay_sha(os.path.abspath(ov[0]))
+    if host:                                             # FLOW-PROC-A: --host = the gen / place host of this private kit (not an env key, no ENV-PROVENANCE effect)
+        sp["gen_host"] = host
+        for k in ("hosts", "place_prefer"):
+            sp[k] = [host] + [h for h in (sp.get(k) or []) if h != host]
+        sp["roam_hosts"] = [host]
+    if bind_out:                                         # FLOW-PROC-A: --bind-out = the private strict bind (a plan-side input, like --plan)
+        sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=os.path.abspath(bind_out))
+    if src_manifest is not None:                         # FLOW-PROC-A: --src-manifest on|off (a private tree often has no .src-manifest.json yet)
+        if src_manifest not in ("on", "off"):
+            raise ValueError("--src-manifest on|off")
+        sp["src_manifest"] = "off" if src_manifest == "off" else (sp.get("src_manifest") if sp.get("src_manifest") not in (None, "", "off") else "require")
+        if src_manifest == "off":
+            sp["src_manifest_hash"] = ""
     keys = []
     for kv in ab or ():
         k, eq, v = str(kv).partition("=")
@@ -8315,12 +8358,17 @@ def private_spec_cmd(a):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
     import env_provenance as EP
-    cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
-    cfg["_hub"] = AP.HUB_NAME
+    hub = a.hub or os.environ.get("OT_HUB_NAME") or PRIVATE_HUB
+    txt = Path(a.config).read_text() if a.config else private_config_text(AP, hub)
+    if not txt:
+        print(f"private-spec: cannot read the wave config here or from {hub}:~/coord (pass --config FILE)", file=sys.stderr)
+        return 2
+    cfg = load_config(txt)
+    cfg["_hub"] = hub
     lane = a.lane or os.environ.get("OT_LANE", "")
     try:
-        sp = private_spec(cfg, a.die, a.item, AP.HUB_NAME, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
-                          work=a.work, kind=a.kind, src_sha=a.src_sha)
+        sp = private_spec(cfg, a.die, a.item, hub, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
+                          work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest)
     except ValueError as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
@@ -18048,6 +18096,10 @@ def main(argv=None):
     ps_.add_argument("--work", help="work dir on the gen host (default <work_root>/<die>/<event>/private/<lane>/<item>_<stamp>)")
     ps_.add_argument("--out", help="dir for spec.json (default AP_DIR/private_specs/<lane>/<die>_<item>_<stamp>)")
     ps_.add_argument("--kind", default="type")
+    ps_.add_argument("--host", help="gen / place host of the private kit (default: the wave pick)")
+    ps_.add_argument("--bind-out", help="private strict bind dir (kit_rtl bind_out; default: the wave bind, moved with --tree)")
+    ps_.add_argument("--src-manifest", choices=("on", "off"), help="off: no src tree manifest check (a private tree without .src-manifest.json)")
+    ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
     rc_ = sub.add_parser("reclassify", help="recompute class/reason of FAIL records from their stored stage logs "
                                             "with the current RULES (dry run unless --write)")

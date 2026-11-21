@@ -132,3 +132,32 @@ def test_runner_block_and_refresh_entry():
     assert 'env_provenance.py" check "$K"' in gp.RUN_KIT and "exit 14" in gp.RUN_KIT
     import kit_flow_refresh as KFR
     assert ("kit+", "env_provenance.py", "tools/autopilot/env_provenance.py") in KFR.ALWAYS
+
+
+def test_host_bind_out_src_manifest_flags(tmp_path):
+    """FAM-QC-COLL / FABLE-FIX-S81-LEAF-R5 edited a config copy for host, bind_out and src_manifest; these are flags now"""
+    c = wave_cfg()
+    sp = KW.private_spec(c, D, I, "intel2", host="epyc10", bind_out=str(tmp_path / "bind"), src_manifest="off")
+    assert sp["gen_host"] == "epyc10" and sp["hosts"][0] == "epyc10" and sp["place_prefer"][0] == "epyc10" and sp["roam_hosts"] == ["epyc10"]
+    assert sp["kit_rtl"]["bind_out"] == str(tmp_path / "bind")
+    assert sp["src_manifest"] == "off" and sp["src_manifest_hash"] == ""
+    assert sp["gen_env"] == sp["private"]["wave_env"]                    # none of them is an env difference
+    assert KW.private_spec(c, D, I, "intel2", src_manifest="on")["src_manifest"] != "off"
+    with pytest.raises(ValueError):
+        KW.private_spec(c, D, I, "intel2", src_manifest="maybe")
+
+
+def test_missing_hub_ot_run_override_falls_back(monkeypatch):
+    c = wave_cfg()
+    c["ot_run"] = "/nonexistent/ot-run-wave"
+    sp = KW.private_spec(c, D, I, "intel2")
+    assert sp["ot_run"] == KW.OT_RUN and "ot_run_note" in sp
+
+
+def test_config_from_hub_when_not_local():
+    class R:
+        returncode, stdout = 0, '{"dies": {}}'
+    calls = []
+    txt = KW.private_config_text(None, "intel2", read=lambda AP: "", ssh=lambda argv, **k: (calls.append(argv), R())[1])
+    assert txt == '{"dies": {}}' and calls[0][-2] == "intel2" and "show HEAD:autopilot/kit_wave.json" in calls[0][-1]
+    assert KW.private_config_text(None, "intel2", read=lambda AP: '{"dies": {"x": {}}}', ssh=None) == '{"dies": {"x": {}}}'
