@@ -153,6 +153,57 @@ proc ot_postplace_worst_report {report} {
   }
   return [list $best_slack $best]
 }
+# OpenSTA prints bus brackets without the Verilog escapes retained by OpenDB.
+proc ot_postplace_db_terminal {blk method pin} {
+  set term [$blk $method $pin]
+  if {$term eq "NULL" || $term eq ""} {
+    set term [$blk $method [string map {"\[" "\\\[" "\]" "\\\]"} $pin]]
+  }
+  return $term
+}
+# A full STA report prints instance/pin names (including hierarchical names and bus bits) and top-level ports.
+# Measure the wires between those pins. Within one instance, the next wire starts at the output, not the input.
+proc ot_postplace_path_geometry {blk path} {
+  set dbu [expr {double([$blk getDbUnitsPerMicron])}]
+  set previous {}; set first {}; set last {}
+  set max_hop 0.0; set length 0.0; set stages 0
+  foreach line $path {
+    if {[string match "*data arrival time*" $line]} break
+    if {![regexp {^\s*(?:[-+0-9.eE]+\s+)+[\^v]\s+(\S+)\s+\(([^)]+)\)} $line -> pin kind]} continue
+    if {$kind in {in out}} {
+      set term [ot_postplace_db_terminal $blk findBTerm $pin]
+      if {$term eq "NULL" || ![llength [$term getBPins]]} { error "no placed port geometry for $pin" }
+      set bounds [$term getBBox]
+      set xy [list [$bounds xCenter] [$bounds yCenter]]
+      set inst [list port $pin]
+    } else {
+      set term [ot_postplace_db_terminal $blk findITerm $pin]
+      if {$term eq "NULL"} { error "no instance terminal for $pin" }
+      lassign [$term getAvgXY] ok x y
+      if {!$ok} { error "no placed pin geometry for $pin" }
+      set xy [list $x $y]
+      set inst [$term getInst]
+      if {$previous ne $inst} { incr stages }
+    }
+    if {$previous ne {} && $previous ne $inst} {
+      # The launch data pin follows the launch clock pin on the same instance.
+      if {$first eq {}} { set first $last }
+      lassign $last px py
+      lassign $xy x y
+      set hop [expr {(abs($x - $px) + abs($y - $py)) / $dbu}]
+      set max_hop [expr {max($max_hop, $hop)}]
+      set length [expr {$length + $hop}]
+    }
+    set previous $inst; set last $xy
+  }
+  set span 0.0
+  if {$first ne {}} {
+    lassign $first ax ay
+    lassign $last bx by
+    set span [expr {(abs($bx - $ax) + abs($by - $ay)) / $dbu}]
+  }
+  return [list $max_hop $length $span $stages]
+}
 # r268 (FABLE-FIX-HEAD-TYPES, hd_serdes sd2): OT_TT_SETUP_MEASURE=1 only reads the TT setup wns/tns of ODB in this same frame and exits;
 # the run_kit step uses it on the WRITTEN repaired DB (a fresh session = what every later reader sees) before keeping it.
 # FLOW-PLACEMEAS-1121 (FABLE-PD-QC-0840 item 4): at post-place the reset nets are not buffered yet, so reset recovery / removal
@@ -180,8 +231,7 @@ proc ot_postplace_recovery {} {
 if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "1"} {
   if {$ot_postplace} { ot_postplace_recovery }
   lassign [ot_tt_wns measure] ot_pw_wns
-  # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop (um, manhattan between
-  # consecutive instances of the path); informational, never fatal
+  # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop, total wire length and endpoint span in um. These diagnostics do not affect the timing result.
   if {$ot_postplace} {
     if {[catch {
       sta::redirect_string_begin
@@ -194,31 +244,7 @@ if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "
       set ot_pw_s "?"; set ot_pw_e "?"
       regexp {Startpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_s
       regexp {Endpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_e
-      set ot_pw_blk [ord::get_db_block]
-      # FABLE-FIX-S81-STROBE 11-21: hop_um is only the longest cell-to-cell hop; a START / reset wavefront carried by 11 to 27 resizer
-      # repeaters read hop 116-175 um on S81 serdes t16 / slice t18 / t29 while the path ran 1.7 to 2.8 mm in one cycle.  path_um = the
-      # summed hops, span_um = first -> last instance, stages = instances on the path (all informational).
-      set ot_pw_prev ""; set ot_pw_hop 0.0; set ot_pw_len 0.0; set ot_pw_n 0; set ot_pw_first ""
-      foreach ln $ot_pw_path {
-        if {[string match "*data arrival time*" $ln]} break
-        if {![regexp {^\s*[-0-9.]+\s+[-0-9.]+\s+[\^v]\s+(\S+)/\S+\s+\(} $ln -> ot_pw_i]} continue
-        set ot_pw_inst [$ot_pw_blk findInst $ot_pw_i]
-        if {$ot_pw_inst eq "NULL"} continue
-        lassign [$ot_pw_inst getLocation] ot_pw_x ot_pw_y
-        if {$ot_pw_prev ne "" && $ot_pw_prev ne $ot_pw_i} {
-          lassign $ot_pw_pxy ot_pw_px ot_pw_py
-          set ot_pw_d [expr {(abs($ot_pw_x - $ot_pw_px) + abs($ot_pw_y - $ot_pw_py)) / double([$ot_pw_blk getDbUnitsPerMicron])}]
-          if {$ot_pw_d > $ot_pw_hop} { set ot_pw_hop $ot_pw_d }
-          set ot_pw_len [expr {$ot_pw_len + $ot_pw_d}]
-        }
-        if {$ot_pw_prev ne $ot_pw_i} { incr ot_pw_n }
-        if {$ot_pw_first eq ""} { set ot_pw_first [list $ot_pw_x $ot_pw_y] }
-        set ot_pw_prev $ot_pw_i; set ot_pw_pxy [list $ot_pw_x $ot_pw_y]
-      }
-      set ot_pw_span 0.0
-      if {$ot_pw_first ne "" && $ot_pw_prev ne ""} {
-        set ot_pw_span [expr {(abs([lindex $ot_pw_pxy 0] - [lindex $ot_pw_first 0]) + abs([lindex $ot_pw_pxy 1] - [lindex $ot_pw_first 1])) / double([$ot_pw_blk getDbUnitsPerMicron])}]
-      }
+      lassign [ot_postplace_path_geometry [ord::get_db_block] $ot_pw_path] ot_pw_hop ot_pw_len ot_pw_span ot_pw_n
       puts [format "OT_POSTPLACE_WORST start=%s end=%s hop_um=%.1f path_um=%.1f span_um=%.1f stages=%d" $ot_pw_s $ot_pw_e $ot_pw_hop $ot_pw_len $ot_pw_span $ot_pw_n]
     } ot_pw_err]} { puts "OT_POSTPLACE_WORST start=? end=? hop_um=? (worst path read failed: $ot_pw_err)" }
   }
