@@ -149,3 +149,18 @@ endmodule'''
     r=C.trace(p,'top',text)
     assert not r['core_conns']['top']
     assert any(x['reason']=='nonliteral delay D' for x in r['wiring_warnings'])
+
+
+def test_reset_statement_does_not_consume_the_following_instance(tmp_path):
+    p = plan(tmp_path)
+    text = """module top(input wire clk, rst_n);
+wire [3:0] q;
+reg valid;
+always @(posedge clk)
+    if (!rst_n) valid <= 1'b0; else valid <= 1'b1;
+HS #(.W(4))u_src (.q(q));
+HT u_dst (.x(q));
+endmodule"""
+    result = C.trace(p, "top", text)
+    assert result["matched_cores"] == ["dst", "src"]
+    assert result["core_conns"]["top"]["dst"]["x"] == ["core:src.q"]

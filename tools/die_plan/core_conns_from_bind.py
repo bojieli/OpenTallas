@@ -252,7 +252,7 @@ def parse(txt):
         else:
             assigns[lhs] = (ids, pure)
     insts = []                              # (module, inst, {port: expr})
-    for m in re.finditer(rf"\n\s*({ID})\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*({ID})\s*\((.*?)\)\s*;", txt, flags=re.S):
+    for m in re.finditer(rf"\n\s*({ID})(?=\s|#)\s*(#\s*\((?:[^()]|\([^()]*\))*\))?\s*({ID})\s*\((.*?)\)\s*;", txt, flags=re.S):
         mod, inst, body = m.group(1), m.group(3), m.group(4)
         if mod in ("module", "assign", "wire", "reg", "input", "output", "always", "if", "for"):
             continue
