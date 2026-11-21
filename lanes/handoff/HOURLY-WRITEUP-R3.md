@@ -5,3 +5,5 @@ Waiter: background sleep loop about every 60 min. Stand down before 330k tokens:
 count 492 any / 407 current, flat since 23:05. No new sign-offs. R2's open items (stage funnel, count explanation): count explained above (474/409 at 22:15 -> 492/407 at 23:05, defer 6 -> 19, retired 59 -> 66, i.e. re-classification on QC/head plan change, not new sign-offs).
 DRT scan script: scratchpad drt3.sh (find 5_2_route*.log mtime<180 min under claude/ot-jobs, kit-wave, kw43*, kw45, read head -1 of reports/.../4_cts_post_hook.rpt). Result 01:35: none with TT>=-42 and hold>=0; hosts use UTC clocks in find output.
 Scratch watch: intel1 scratch2 free 193 -> 165 GB; cause S81 svc_hi_dsdv_svc_* place jobs (~21 GB each) plus 143 kit-wave attempt dirs; recheck df each hour. epyc7 host key changed (185.189.44.212), ssh refused.
+## State 03:55
+count 493 any / 408 current (QC slw_sc_v1__cl63e5a7a2 signed 03:3x). Codex handback read. Resumed after COORD RESUME 03:3x. intel1 scratch2 189 GB free (recovered); epyc9 169 GB at 98%. DRT scan script scratchpad drt3.sh (run on intel1 intel2 epyc2 epyc4 epyc8 epyc9 epyc10; epyc7 ssh host key changed). Next row due 04:55.
