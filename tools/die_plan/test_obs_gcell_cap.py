@@ -77,6 +77,17 @@ def test_extra_blockers_pg_and_track_truth_count_against_free_tracks():
 
 
 @needs_tcl
+def test_clearance_from_next_row_blocks_track_in_candidate_row():
+    src = {"M6": [(337338, 345990, 339498, 346280, WIDE)]}
+    cuts, _ = plan(src, {"M6": M6}, {"M6": 48})
+    assert cuts == []
+    # The blocker starts beyond row 607; its clearance reaches the 346.528 um track within the row.
+    blockers = {"M6": [(330000, 346575, 345000, 346630, WIDE)]}
+    cuts, _ = plan(src, {"M6": M6}, {"M6": 48}, blk=blockers)
+    assert cuts == [("M6", 591, 607, 596, 608)]
+
+
+@needs_tcl
 def test_pin_exempts_only_the_gcells_it_touches():
     src = {"M6": [(337338, 345060, 339498, 346410, WIDE)]}
     cuts, st = plan(src, {"M6": M6}, {"M6": 48}, pins={"M6": [(338100, 346450, 338132, 346500)]})
