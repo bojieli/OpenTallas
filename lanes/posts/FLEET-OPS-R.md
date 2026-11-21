@@ -918,3 +918,4 @@
 - 2026-11-21 02:10 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 993 GB, falling 193 GB/h, floor 50 GB in 4.9 h (cron disk_rate.py; read-only)
 - 2026-11-21 02:30 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 99 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
 - 2026-11-21 02:40 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 389 GB, falling 85 GB/h, floor 50 GB in 4.0 h (cron disk_rate.py; read-only)
+- 2026-11-21 02:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 114 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
