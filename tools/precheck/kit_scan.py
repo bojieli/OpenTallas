@@ -142,11 +142,11 @@ def summarise_placed(kit, ph, reach=CBC.REACH_UM_PER_HOP):
         limit = min(reach, HALF_UM) if half_cycle else reach
         c = CBC.classify_leg(r[2], r[3], r[5], r[6], ph.get("macros") or [])
         if c == "core":             # COORD 11-21: a core-crossing leg counts at its detour length around the cores
-            L = CBC.detour_um(r[5], r[6], ph.get("macros") or [], cap=max(limit, r[0]) * 4)
-            if L <= limit:
+            m = CBC.reach_leg_um(r, ph.get("macros") or [], reach=limit)
+            if not m:
                 continue
             by_class[c] += 1
-            legs.append([round(min(L, 1e9), 1)] + list(r[1:7]) + [c])
+            legs.append([round(m[1], 1)] + list(r[1:7]) + [c])
             continue
         if r[0] <= limit:
             continue

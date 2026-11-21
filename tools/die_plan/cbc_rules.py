@@ -223,47 +223,63 @@ def _out_of(p, rects):
 def detour_um(a, b, macro_rects, cap=None):
     """COORD 11-21 (FAM-S81-COL-R4): shortest rectilinear path a -> b that stays outside every hard-core body (rect
     interiors; abutting cores are one body, a shared edge is not a channel).  Exact on the Hanan grid of the end points and
-    the core edges.  cap: search only paths <= cap (window = bbox(a, b) grown by (cap - straight) / 2) and return
-    float('inf') when none is that short.  A pin end inside its own core walks out by the nearest side first."""
-    import heapq
+    the core edges (cell occupancy precomputed per call, Dijkstra on the grid).  cap: search only paths <= cap (window =
+    bbox(a, b) grown by (cap - straight) / 2) and return float('inf') when none is that short.  A pin end inside its own
+    core walks out by the nearest side first."""
+    import bisect, heapq
     rects = [tuple(map(float, r[:4])) for r in macro_rects or []]
     a = (float(a[0]), float(a[1])); b = (float(b[0]), float(b[1]))
     grown = [(x0 - _EPS, y0 - _EPS, x1 + _EPS, y1 + _EPS) for x0, y0, x1, y1 in rects]
     a, ea = _out_of(a, grown); b, eb = _out_of(b, grown)
     straight = abs(a[0] - b[0]) + abs(a[1] - b[1])
     if cap is not None:
+        if straight + ea + eb > cap:
+            return float("inf")
         m = max(0.0, (cap - ea - eb - straight) / 2.0)
         wx0, wx1 = min(a[0], b[0]) - m, max(a[0], b[0]) + m
         wy0, wy1 = min(a[1], b[1]) - m, max(a[1], b[1]) + m
         grown = [r for r in grown if r[0] < wx1 and r[2] > wx0 and r[1] < wy1 and r[3] > wy0]
-    def inside(x, y):
-        return any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in grown)
     if not _l_paths_blocked(a, b, grown):
         return straight + ea + eb
     xs = sorted({a[0], b[0]} | {v for r in grown for v in (r[0], r[2])})
     ys = sorted({a[1], b[1]} | {v for r in grown for v in (r[1], r[3])})
-    if cap is not None:
-        xs = [x for x in xs if wx0 <= x <= wx1] or xs
-        ys = [y for y in ys if wy0 <= y <= wy1] or ys
-    ix = {x: i for i, x in enumerate(xs)}; iy = {y: j for j, y in enumerate(ys)}
-    src, dst = (ix[a[0]], iy[a[1]]), (ix[b[0]], iy[b[1]])
-    best = {src: 0.0}; pq = [(0.0, src)]
+    nx, ny = len(xs), len(ys)
+    # cell (i, j) = open rectangle xs[i]..xs[i+1] x ys[j]..ys[j+1]; blocked when inside a core.  A grid node is blocked when
+    # strictly inside a core; a grid edge is blocked when its open segment is inside a core (= both cells beside it blocked,
+    # or the segment runs through a core interior).
+    cell = [bytearray(ny) for _ in range(nx)]
+    node = [bytearray(ny) for _ in range(nx)]
+    for x0, y0, x1, y1 in grown:
+        i0, i1 = bisect.bisect_left(xs, x0), bisect.bisect_left(xs, x1)
+        j0, j1 = bisect.bisect_left(ys, y0), bisect.bisect_left(ys, y1)
+        for i in range(i0, i1):
+            ci = cell[i]
+            for j in range(j0, j1):
+                ci[j] = 1
+        for i in range(i0 + 1, i1):
+            ni = node[i]
+            for j in range(j0 + 1, j1):
+                ni[j] = 1
+    def hblk(i, j):                 # edge (i, j) -> (i + 1, j)
+        return (j > 0 and cell[i][j - 1]) and (j < ny - 1 and cell[i][j]) if 0 < j < ny - 1 else False
+    def vblk(i, j):                 # edge (i, j) -> (i, j + 1)
+        return (cell[i - 1][j] and cell[i][j]) if 0 < i < nx - 1 else False
+    src = (xs.index(a[0]), ys.index(a[1])); dst = (xs.index(b[0]), ys.index(b[1]))
+    lim = float("inf") if cap is None else cap - ea - eb
+    best = {src: 0.0}; pq = [(0.0, src[0], src[1])]
     while pq:
-        d, (i, j) = heapq.heappop(pq)
+        d, i, j = heapq.heappop(pq)
         if (i, j) == dst:
             return d + ea + eb
-        if d > best.get((i, j), float("inf")) or (cap is not None and d + ea + eb > cap):
+        if d > best.get((i, j), float("inf")):
             continue
-        for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            ni, nj = i + di, j + dj
-            if not (0 <= ni < len(xs) and 0 <= nj < len(ys)):
-                continue
-            mx, my = (xs[i] + xs[ni]) / 2.0, (ys[j] + ys[nj]) / 2.0
-            if inside(mx, my) or inside(xs[ni], ys[nj]) and (ni, nj) != dst:
+        for ni, nj, blk in ((i + 1, j, i + 1 < nx and hblk(i, j)), (i - 1, j, i > 0 and hblk(i - 1, j)),
+                            (i, j + 1, j + 1 < ny and vblk(i, j)), (i, j - 1, j > 0 and vblk(i, j - 1))):
+            if not (0 <= ni < nx and 0 <= nj < ny) or blk or node[ni][nj]:
                 continue
             nd = d + abs(xs[ni] - xs[i]) + abs(ys[nj] - ys[j])
-            if nd < best.get((ni, nj), float("inf")):
-                best[(ni, nj)] = nd; heapq.heappush(pq, (nd, (ni, nj)))
+            if nd <= lim and nd < best.get((ni, nj), float("inf")):
+                best[(ni, nj)] = nd; heapq.heappush(pq, (nd, ni, nj))
     return float("inf")
 
 
@@ -278,7 +294,16 @@ def reach_leg_um(leg, macro_rects=(), reach=REACH_UM_PER_HOP, routed_um=None):
     if c == "strap":
         return None
     if c == "core":
-        L = float(routed_um) if routed_um is not None else detour_um(leg[5], leg[6], macro_rects, cap=max(reach, leg[0]) * 4)
+        if routed_um is not None:
+            L = float(routed_um)
+        elif leg[0] > reach:            # counted whatever the detour (detour >= straight); length = detour, searched up to 2x
+            L = detour_um(leg[5], leg[6], macro_rects, cap=2.0 * leg[0])
+            L = 2.0 * leg[0] if L == float("inf") else L     # longer than 2x straight: reported as that lower bound
+        else:                           # only the question 'over the reach?' matters: search paths <= reach
+            L = detour_um(leg[5], leg[6], macro_rects, cap=reach)
+            if L == float("inf"):
+                L = detour_um(leg[5], leg[6], macro_rects, cap=2.0 * reach)
+                L = 2.0 * reach if L == float("inf") else L
         return (c, L) if L > reach else None
     if leg[0] <= reach:
         return None
