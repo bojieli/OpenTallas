@@ -31,3 +31,8 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
   tgr2-read-t60 (epyc10 ot-run pid 2320712), tgr2-read-t60R (epyc10 pid 2338565). Each ot-waits, then posts the raw OT_CTS_POST_TIMING / OT_TAP_CONVERGE /
   OT_TAP_INSERTION lines to lanes/posts/TAP-GRID-R2.md. The verdict vs baseline and the rows (KV-PLAN-R3 pv spread < 100 ps; J6 before 11-21 13:00 PST else J7; QC-PLAN-R8 V2) are still lane work.
 - ETA: v8c ~13:00 UTC (baseline hooks 6.6 h); t39 bind ~10:00 UTC, then gen + place + CTS: likely after 16:00 UTC, so J6 (13:00 PST = 21:00 UTC) is tight.
+
+## COORD 11-21 (successor names + scope)
+- Rows go to: KV-PLAN-R4 (not R3), S81-J6-ASSEMBLY-R2 (J6 only if before 11-21 13:00 PST, else J7), QC-PLAN-R8 (V2), and the t39 result also to FABLE-FIX-S81-LEAF-R2.
+- pv tap result applies to the D28 split halves, not v8: the v8c r2 read is evidence for the D28 halves; post it to KV-PLAN-R4 framed that way.
+- Lane keeps a run_in_background waiter on t39/chain.log (CHAIN_DONE / BIND_FAIL / NO_PLACE / cts rc=).
