@@ -154,3 +154,4 @@
 - 2026-11-21 09:34 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 - 2026-11-21 09:44 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 122 min (last 07:41); no DIE-OFF / NO-LAUNCH line
 - 2026-11-21 09:54 PST ALERT NO-PROGRESS qwen_kvsys: 1 eligible rows, 0 KIT-WAVE LAUNCH for 69 min (last 08:44); no DIE-OFF / NO-LAUNCH line
+- 2026-11-21 10:31 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
