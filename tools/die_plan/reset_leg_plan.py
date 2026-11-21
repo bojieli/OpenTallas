@@ -239,11 +239,25 @@ def local_groups(G):
     return dict(gs)
 
 
+_MEMO = {}
+
+
+def calls(sv):
+    k = ("calls", id(sv))
+    if k not in _MEMO:
+        _MEMO[k] = (sv, RC._calls(sv))
+    return _MEMO[k][1]
+
+
 def _widths(sv):
+    k = ("w", id(sv))
+    if k in _MEMO:
+        return _MEMO[k][1]
     w = {}
     for m in re.finditer(r"^\s*(?:input|output)?\s*(?:wire|reg|logic)\s*(?:\[\s*(\d+)\s*:\s*(\d+)\s*\])?\s*([A-Za-z_]\w*)\s*[;,]",
                          sv, re.M):
         w[m.group(3)] = abs(int(m.group(1)) - int(m.group(2))) + 1 if m.group(1) else 1
+    _MEMO[k] = (sv, w)
     return w
 
 
@@ -284,7 +298,7 @@ def fwd_entry(sv, key):
     m = re.fullmatch(r"(?P<i>[A-Za-z_][\w$]*)[./](?P<p>q)(?:\[(?P<b>\d+)\])?", key)
     if not m:
         return None
-    c = RC._calls(sv).get(m.group("i"))
+    c = calls(sv).get(m.group("i"))
     if c is None or not DATA_RELAY_MOD.match(c["module"]) or "d" not in c["ports"] or "q" not in c["ports"]:
         return None
     b = int(m.group("b") or 0)
@@ -295,7 +309,7 @@ def fwd_entry(sv, key):
     return m.group("i"), "d", ([b, b] if (dw or 1) > 1 else None), wb
 
 
-RESET_USE = (r"negedge\s+{t}\b", r"if\s*\(\s*!\s*{t}\s*\)", r"\.\w*(?:rst|reset)\w*\s*\(\s*{t}\s*\)",
+RESET_USE = (r"negedge\s+{t}", r"if\s*\(\s*!\s*{t}\s*\)", r"\.\w*(?:rst|reset)\w*\s*\(\s*{t}\s*\)",
              r"assign\s+\w+\s*=\s*!\s*{t}\s*;", r"^\s*(?:wire|reg|logic)\b")
 RELAY_NAME = re.compile(r"crr|rly|_rr\b|rstr|rst_relay|rrelay")
 
@@ -305,9 +319,11 @@ def reset_only(sv, tok):
     port, an inverted reset copy, or the d of a reset relay instance): staging it moves reset release only"""
     if not tok:
         return False
+    if "[" not in tok and re.search(rf"^\s*(?:wire|reg|logic)\s*\[\s*0\s*:\s*0\s*\]\s*{re.escape(tok)}\s*;", sv, re.M):
+        tok = tok + "[0]"                        # a [0:0] bus (KV face stations): its uses are name[0]
     t = re.escape(tok) + r"(?![\w\[])"
-    relay_d = sum(1 for i, c in RC._calls(sv).items() for p, (e, _a, _b) in c["ports"].items()
-                  if p == "d" and e.replace(" ", "") == tok and RELAY_NAME.search(c["module"] + " " + i))
+    relay_d = sum(1 for i, c in calls(sv).items() for p, (e, _a, _b) in c["ports"].items()
+                  if p == "d" and e.replace(" ", "") in (tok, tok.replace("[0]", "")) and RELAY_NAME.search(c["module"] + " " + i))
     n = ok = 0
     for line in sv.splitlines():
         k = len(re.findall(t, line))
@@ -320,11 +336,20 @@ def reset_only(sv, tok):
 
 
 def port_into(sv, inst, G, src_cells):
-    """the port of bound instance `inst` that carries the group's input: the one whose connection wire drives toward the
-    source, else the only reset-named port that is not a tree net"""
-    c = RC._calls(sv).get(inst)
+    """the port of bound instance `inst` that carries the group's input: the one connected to the RTL wire of a source
+    relay stage (fwd_entry), else the only reset-named port that is not a tree net, else the one whose wire drives toward
+    the source"""
+    c = calls(sv).get(inst)
     if c is None:
         return None
+    wires = set()
+    for s_ in src_cells:
+        fe = fwd_entry(sv, G.name[s_])
+        if fe and fe[3]:
+            wires |= {fe[3], fe[3] + "[0]"}
+    hit = [p for p, (e, _a, _b) in c["ports"].items() if e.replace(" ", "") in wires]
+    if len(hit) == 1:
+        return hit[0]
     cand = [p for p, (e, _a, _b) in c["ports"].items() if re.search(r"rst|reset", p) and not PR.TREE_NET.match(e)]
     if len(cand) == 1:
         return cand[0]
@@ -385,6 +410,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                  centre=[round(v, 1) for v in centre([G.xy(c) for c in fan])], tree_fed=tree_fed,
                  source=[round(v, 1) for v in S] if S else None)
         copies, over_b, over_a, splits, pend = {}, 0, 0, [], []
+        rd_before = len(rd_rows)
         for c in sorted(cells, key=lambda c: (hgt[c], G.name[c])):
             tg = {}
             for s in sorted(ext[c]):
@@ -437,7 +463,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
         Ds = max(0, math.ceil(l1(S, P) / reach - 1e-9) - 1) if (S is not None and P is not None) else 0
         Dn = Ds + (1 + Lb if multi else 0)
         bits = None
-        if not tree_fed and S is not None and moved and Dn > 0 and in_after > reach:
+        if not tree_fed and S is not None and Dn > 0 and in_after > reach:
             if entry:
                 inst, port, bits = entry
             else:
@@ -488,7 +514,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
             idx = {k_: n + 1 for n, x in enumerate(cl_["clones"]) for k_ in x["sinks"]} if cl_ else {}
             for s in ext[c]:
                 drv_pos[s] = copies[c][idx.get(G.name[s], 0)][1]
-        if not moved:
+        if not moved and not e.get("relay_depth") and not pend and len(rd_rows) == rd_before:
             return
         for c in cells:
             if copies[c][0][0] in moved:
@@ -522,6 +548,64 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
     # ---- form L: module-local relays (and crr relay flops), after the forwards that feed them
     for g, cells in sorted(lg.items()):
         relay_tree(g, cells, "L")
+    # ---- form M: a reset forward into a HARD-CORE reset pin (KV hub_Eo u_bin_i_host_die_rst_n -> u_astk_EN, -747 ps).
+    # The leg ends at the core's reset pins (geom_dump MR); when it is over --reach every reset-named port of the core on
+    # that wire gets a relay_depth sink row of D = ceil(L / reach) - 1 stages, sited evenly on the line (reset release
+    # only: the other sinks of the bit, e.g. an outward forward lane, keep their latency).
+    cl_ = calls(sv)
+    for m in sorted(G.mrst):
+        inst = G.name[m]
+        c = cl_.get(inst)
+        if c is None:
+            continue
+        rports = {p: e.replace(" ", "") for p, (e, _a, _b) in c["ports"].items() if re.search(r"rst|reset", p, re.I)}
+        if not rports:
+            continue
+        pins = G.mrst[m]
+        T = centre(pins)
+        for r in sorted(G.sources([m])):
+            if r[0] != "i" or G.kind.get(r[1]) != "S":
+                continue
+            fe = fwd_entry(sv, G.name[r[1]])
+            if not fe or not fe[3]:
+                continue
+            ports = sorted(p for p, e in rports.items() if e in (fe[3], fe[3] + "[0]"))
+            if not ports:
+                continue
+            src = drv_pos.get(m) or seated.get(r[1]) or G.xy(r[1])
+            L = max(l1(src, q) for q in pins)
+            if L <= reach:
+                continue
+            rep["legs_over_before"] += 1
+
+            def worst(D_):                       # every hop of D_ even stages src -> T, then the last stage -> each pin
+                last_ = (src[0] + (T[0] - src[0]) * D_ / (D_ + 1), src[1] + (T[1] - src[1]) * D_ / (D_ + 1))
+                return max([l1(src, T) / (D_ + 1)] + [l1(last_, q) for q in pins])
+            Dn = math.ceil(L / reach - 1e-9) - 1
+            while worst(Dn) > reach + 1e-6 and Dn <= MAX_D:
+                Dn += 1
+            e = dict(group=f"{inst} <- {G.name[r[1]]}", form="M", flops=1, fanout=len(ports), at=[round(v, 1) for v in src],
+                     centre=[round(v, 1) for v in T], tree_fed=False, source=[round(v, 1) for v in src], in_leg_um=round(L, 1))
+            if Dn > MAX_D:
+                e["relay_depth"] = f"needs D {Dn} > {MAX_D}"
+                rep["legs_over_after"] += 1
+                rep["local"].append(e)
+                continue
+            for port in ports:
+                k = len(rd_rows)
+                row = dict(inst=inst, port=port, side="sink", D=Dn, path_um=round(L, 1),
+                           note=f"RESET-RELAY-GEN-1530 form M: {G.name[r[1]]} -> hard-core reset pin {inst}.{port}")
+                rd_rows.append(row)
+                rep["relay_depth"].append(dict(row, over_cap=False))
+                if sites and stage_sites:
+                    for s_ in range(Dn):
+                        f = (s_ + 1) / (Dn + 1)
+                        rs_sites[stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_)] = [
+                            round(src[0] + (T[0] - src[0]) * f, 3), round(src[1] + (T[1] - src[1]) * f, 3)]
+            after = worst(Dn)
+            rep["legs_over_after"] += after > reach + 1e-6
+            e.update(in_leg_after_um=round(after, 1), ports=ports, D=Dn)
+            rep["local"].append(e)
     # ---- form R: tree-fed instances / banks
     taps = tap_cells(G, sv)
     txy = {i: G.xy(c) for i, c in taps.items()}

@@ -464,3 +464,23 @@ def test_macro_reset_pin_xy(tmp_path):
     p.write_text("\n".join(lines) + "\n")
     G = RLP.Geo(geom_rules.Design(str(p)))
     assert G.sxy(1) == (20.0, 30.0) and G.sxy(0) == G.xy(0)
+
+
+def test_forward_into_hard_core_reset_pin(tmp_path):
+    """form M: dn_q[1] (data AND a core reset) drives u_hc.rst_n from the face; the core's reset pin (MR) is ~1,000 um
+    away: D stages on the core's rst_n port only (the data use of the bit keeps its latency), sited on the line"""
+    D = fwd_design(tmp_path)
+    p = tmp_path / "geom.tsv"
+    p.write_text(p.read_text() + "MR\t8\t300\t20\n")
+    D = geom_rules.Design(str(p))
+    t = plan_type()
+    rep = RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
+    (row,) = [r for r in t["relay_depth"] if r["inst"] == "u_hc"]
+    L = abs(990 - 300) + abs(510 - 20)
+    assert row["port"] == "rst_n" and row["side"] == "sink" and row["D"] == -(-L // 300) - 1 and "form M" in row["note"]
+    k = t["relay_depth"].index(row)
+    st = [t["relay_sites"][f"u_y_xd_u_hc_rst_n_k{k}_{s}.q"] for s in range(row["D"])]
+    pts = [(990.0, 510.0)] + [tuple(x) for x in st] + [(300.0, 20.0)]
+    assert max(RLP.l1(a, b) for a, b in zip(pts, pts[1:])) <= 300 + 1e-6
+    assert "u_lpad_dn.q[1]" not in t["relay_sites"]           # the data register is not moved
+    assert any(e["form"] == "M" for e in rep["local"])
