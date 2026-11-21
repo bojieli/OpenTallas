@@ -32,3 +32,13 @@ c. Check the 3 cancelled/infra-oom FAIL_POSTCTS ft-hop 2 km? (2.06-2.17 mm) rows
   wns -187714 ps, tns -2.04e9 = reset-net recovery over a free net, not a data hop. Kit ft_bit_sites.tcl is EMPTY (no FIRM ft sites), so the ft eq flops are free-placed while their reset is repointed to a tap reset
   net (rst_n_t74); planned ft station site (140.8,1025) is 138 um from the relay, placed distance 2061 um. HYPOTHESIS, not yet verified in the place ODB (positions of the eq flop).
   Check: why ft_bit_sites is empty on R6V1 vs routed C kit; compare reset_taps.tcl repoint.
+
+## FT-BIT-SITES-EMPTY finding 11-21 (COORD request) - NOT a generator bug
+Count (kw43 kits, plans S4Q9N46R6V1 + S4Q9N46C, kits with ft_stations.txt: 82): ft_bit_sites.tcl empty (118 B) on 41. 15 of them have explicit station sites in ft_stations.txt
+(relay_bay form: relay_bay.py rewrites ft_stations.txt with FIRM bay sites and deliberately drops ft_bit_sites rows of regenerated slots - SAFE-STATION-1; fe/fw/stm wire-only kits). 26 have no
+station sites at all; of those, 13 C-plan kits have slots with stations>=2 and NO regs_um in the plan (sle_hc0 x3, sle_hc1 cl7d360508, sle_st_b_v1 x2, sle_st_b_v2 x3, slw_hc0, slw_hc1 x2, slw_st_b_v1):
+gen ft_spread.spread_type only spreads slots with regs_um >= stations (todo filter), plan has none, so those stations are GPL-free by plan design. Other 13 = single-station slots (nothing to site).
+slw_fe_v1__clfe325744__cldb4efe33 itself is relay_bay form: MEASURED in 3_place.odb ft eq flops sit AT their bays (o_2 (153,792), o_3 (162,1054), o_4 (173,1315); rrl_229 (139,1164)): 133 um, not 2 km.
+The 2061 um in FAIL_POSTPLACE is the longest hop between consecutive instances ON THE WORST PATH (tt_setup_repair.tcl OT_POSTPLACE_WORST), not rrl->eq: the path runs through reset-net buffers
+far away; WNS -187714 ps / TNS -2.0e9 on a reset net whose sinks (repointed ft/face flops of tap 74) span the die. Cause is the reset repoint/fanout of rst_n_t74 (RTL has 0 sinks on it, sinks are attached at place), not ft sites.
+No generator change pushed (nothing to fix; spreading no-regs_um slots would be a feature, owner QC-PLAN-R8 could add regs_um rows).
