@@ -54,6 +54,8 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
 }
 # WAVE-FLOW-R2 11-17 (COORD lever 6): per-tap insertion after the tap balance, ADVISORY (OT_TAP_INSERTION lines; never an edit, never a gate)
 if {[file exists [file join $cp_dir tap_insertion.tcl]]} { uplevel #0 [list source [file join $cp_dir tap_insertion.tcl]] }
+# LATCH-SWAP-0045: resizer latch -> flop swaps of this stage's repair passes go back to latches before PG connect (latch_restore.tcl)
+if {[file exists [file join $cp_dir latch_restore.tcl]]} { set ::ot_lr_tag post_cts; uplevel #0 [list source [file join $cp_dir latch_restore.tcl]] }
 # FLOW 2026-10-26 PG: every clock/pad/leaf cell created up to here gets its supplies before 4_1_cts.odb is written
 # (global_connect skips dont_touch cells: s8b ot_ms_* spine buffers), then a hard check (OT_PG_OPEN fails CTS).
 uplevel #0 [list source [file join $cp_dir pg_connect.tcl]]

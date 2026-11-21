@@ -42,20 +42,26 @@ def test_evaluate_blocks_fail_only():
     assert not any(x.startswith("latch_swap") for x in rec("PASS")["reasons"])
 
 
-def test_hook_chains_every_repair_stage(tmp_path):
+def test_hook_chains_floorplan_and_resize(tmp_path):
     cfg = ["export DESIGN_NAME = t", "export POST_CTS_TCL = /work/cts_post.tcl",
-           "export POST_GLOBAL_ROUTE_TCL = /work/a.tcl", "override export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
+           "export POST_RESIZE_TCL = /work/a.tcl", "override export POST_RESIZE_TCL = /work/b.tcl"]
     out = gen_phys.latch_restore_hook_lines(cfg, tmp_path)
-    assert cfg == ["export DESIGN_NAME = t"]
+    assert cfg == ["export DESIGN_NAME = t", "export POST_CTS_TCL = /work/cts_post.tcl"]   # CTS hook line untouched
     assert (tmp_path / "latch_restore.tcl").is_file()
     for var, tag in gen_phys.LATCH_RESTORE_STAGES:
         assert f"export {var} = /work/latch_restore_{tag}.tcl" in out
         body = (tmp_path / f"latch_restore_{tag}.tcl").read_text()
-        assert body.rstrip().endswith("source /work/latch_restore.tcl") and f"set ::ot_lr_tag {tag}" in body
-    assert "source /work/cts_post.tcl\n" in (tmp_path / "latch_restore_post_cts.tcl").read_text()
-    grt = (tmp_path / "latch_restore_post_grt.tcl").read_text()
-    assert "source /work/grt_post.tcl\n" in grt and "a.tcl" not in grt      # make reads the last definition
-    assert "source /work/" not in (tmp_path / "latch_restore_post_resize.tcl").read_text().split("set ::ot_lr_tag")[0]
+        assert f"set ::ot_lr_tag {tag}; uplevel #0 {{source /work/latch_restore.tcl}}" in body
+    rs = (tmp_path / "latch_restore_post_resize.tcl").read_text()
+    assert "source /work/b.tcl\n" in rs and "a.tcl" not in rs                 # make reads the last definition
+    assert "source /work/" not in (tmp_path / "latch_restore_post_floorplan.tcl").read_text().split("if {")[0]
+
+
+def test_cts_and_grt_hooks_restore_before_pg_connect():
+    for f, tag, var in (("cts_post.tcl", "post_cts", "cp_dir"), ("grt_post.tcl", "post_grt", "gq_dir")):
+        s = (HERE / f).read_text()
+        h = f"set ::ot_lr_tag {tag}; uplevel #0 [list source [file join ${var} latch_restore.tcl]]"
+        assert s.count(h) == 1 and s.index(h) < s.index(f"source [file join ${var} pg_connect.tcl]")
 
 
 def test_restore_tcl_targets():

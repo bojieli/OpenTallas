@@ -20,6 +20,8 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
   uplevel #0 [list source [file join $gq_dir reset_pair_place.tcl]]
   ot_reset_pair_verify_hops [ord::get_db_block] 405
 }
+# LATCH-SWAP-0045: resizer latch -> flop swaps of this stage's repair passes go back to latches before PG connect (latch_restore.tcl)
+if {[file exists [file join $gq_dir latch_restore.tcl]]} { set ::ot_lr_tag post_grt; uplevel #0 [list source [file join $gq_dir latch_restore.tcl]] }
 # CTS/GRT timing repair creates cells after floorplan PG assignment. Apply the
 # persisted global-connect rules to those cells (protected ones included, pg_connect.tcl) before writing this
 # checkpoint, then the hard check (OT_PG_OPEN fails the GRT step).

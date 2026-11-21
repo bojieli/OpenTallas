@@ -5,8 +5,8 @@
 # Synthesis never maps a DFFLQx4 / DFFHQx4 (Q-output x4 flops; dfflibmap emits DFF[HL]QNx1) and no flow script inserts one, so
 # every DFFLQx4 here is a swapped DLL latch and every DFFHQx4 a swapped DHL latch: put each back on the x3 latch of its Vt
 # (0.918 um <= 1.35 um at the same origin: placement stays legal).  dont_touch is not used: ODB refuses the CLK / D edits of
-# synth (ODB-0369), CTS and repair on a dont_touch instance.  Chained onto POST_FLOORPLAN / POST_RESIZE / POST_CTS /
-# POST_GLOBAL_ROUTE (gen_phys latch_restore_hook_lines); at GRT the swap runs inside an incremental global route, and any cell
+# synth (ODB-0369), CTS and repair on a dont_touch instance.  Run after POST_FLOORPLAN / POST_RESIZE (gen_phys
+# latch_restore_hook_lines) and from cts_post.tcl / grt_post.tcl; at GRT the swap runs inside an incremental global route; a cell
 # that cannot be restored stops the stage (functional error).  ::ot_lr_tag names the stage in the log.
 proc ot_latch_restore_all {tag} {
   set blk [ord::get_db_block]; set db [ord::get_db]
