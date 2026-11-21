@@ -973,3 +973,4 @@
 - 2026-11-21 08:30 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 422 GB, falling 66 GB/h, floor 50 GB in 5.7 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
 - 2026-11-21 08:40 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 382 GB, falling 77 GB/h, floor 50 GB in 4.3 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
 - 2026-11-21 09:00 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 126 GB, falling 13 GB/h, floor 50 GB in 5.7 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
+- 2026-11-21 09:00 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 267 GB, falling 157 GB/h, floor 50 GB in 1.4 h (state 2, was 1) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 AUTO-RETIRE rc 0: ; deleted 0,  (cron disk_rate.py; read-only)
