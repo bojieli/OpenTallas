@@ -75,3 +75,9 @@ Next steps:
 5. J7: follow FABLE-PD-S81-0440 section 5 order on base candC1n_pf. RDX donor must be rebuilt as row adds after ROM pval (it has 192 HARD_CORE_PARAM_ALL RD_EXTRA die0/hard1 on col r0 + 168 EMIT 139-row no-sink). Lanes per-key merge. kv_leaf t2 cut x=1684.80. c1x_C split B needs bound rectangular rows (strip is not one type). Target apply 11-22 04:15.
 Cleanup via ot-delete: s81-j6/tokc/root_c1n, candC3e, candC3h, scratch_svc40.
 Alert: epyc4 ssh host key changed (not touched).
+
+## FINAL (R2 stands down; S81-J6-ASSEMBLY-R4 owns S81 J6/J7)
+- J6 r1 is LIVE: event a9ed808a98d, src kw45/src_s81_pin_3c913dbdfb23_d8j6r1_1117_work, manifest 03230568, plan 44be6051, bind d8j6r1_1117_work_bind_11210658; holds 343 preserved. candC1n_pf gate: ELAB 0, BIND 0, LATCHECK 0, G0 0 new, PRE PASS.
+- epyc10 r1 tree: FAM-S81-SLICE-R3 cp -al'd the published tree (fam-s81-slice-r3/trees/src_s81_j6r1_t37fstart). R2 unshared 180,939 files in the published tree (copy+mv, sha checked, 0 bad) so src_manifest verifies. Those files no longer link to d8j6 on epyc10 (extra disk).
+- Token compile on J6 r1 FAILS in the compiler: layer_prog/slice_source.py needs as-built master ot_s81sl_xs, which is absent from the J6 as-built index (tokc/out_c1n_pf/frame_schedules.log). Owner: token compiler (TOKEN-1121).
+- No R2 units or PIDs are left running. Cleanup via ot-delete when unneeded: s81-j6/tokc/root_c1n, candC3e, candC3h, scratch_svc40, tokc/out_c1n_pf.fail1.
