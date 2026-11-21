@@ -60,7 +60,9 @@ def test_without_record_plan_name_unchanged():
 def test_hbm_t13_manifest():
     """The t13 manifest uses checked-in RTL from "rtl/hbm_next/bind", "rtl/hbm_next/idxn",
     "rtl/hbm_accel/generic/adapters/static_su/top", "rtl/hbm_accel/generic/adapters/static_su/programme",
-    and "rtl/hbm_accel/generic/peers/static_hc".
+    and "rtl/hbm_accel/generic/peers/static_hc". The physical fixture sources include
+    "physical/die_plan/hbm/bind/rtl" and the bundled PHY black box at
+    "physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5".
     """
     root = HERE.parent.parent
     d = root / "physical/die_plan/hbm/bind/d44v"
