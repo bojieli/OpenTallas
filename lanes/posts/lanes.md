@@ -1,3 +1,4 @@
 - 2026-11-20 18:04 PST DONE [lanes] ot-push-main otpush-civil-redfish-23522 on civil-redfish: rc=0 after 82 s, ended 02:04:06, log none, cmd: ot-push-main 
 - 2026-11-20 19:02 PST DIED [lanes] ot-push-main otpush-tolerant-swine-3703371 on tolerant-swine: rc=4 after 713 s, ended 19:02:21, log none, cmd: ot-push-main 
 - 2026-11-20 19:15 PST DIED [lanes] ot-push-main otpush-tolerant-swine-3947287 on tolerant-swine: rc=4 after 747 s, ended 19:15:26, log /tmp/bsa1900_push.log, cmd: ot-push-main --test-timeout 1500
+- 2026-11-20 19:45 PST DONE [lanes] ot-push-main otpush-tolerant-swine-13325 on tolerant-swine: rc=0 after 1762 s, ended 19:45:46, log /tmp/bsa1900_push.log, cmd: ot-push-main --test-timeout 1500
