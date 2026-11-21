@@ -35,9 +35,9 @@ FILES = {
     "native_bb.py": "tools/die_plan/native_bb.py",
     "lec_completed_transfer.py": "tools/die_plan/lec_completed_transfer.py",
     "lec_completed_reference.py": "tools/die_plan/lec_completed_reference.py",
-    # WAVE-FLOW-R2 11-17 (COORD): the face-pin keepout toggle the GRT hooks source (grt_drv_maxwire.tcl, OT_PK_FRAC); read from /src it was missing in a sparse lane clone and
-    # all 6 svc cores failed GRT.  The kit carries it and the hook prefers the kit copy.
-    "stn_pin_keepout.tcl": "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+    # The GRT hook prefers the kit copy. Worker runtime snapshots ship common_flow,
+    # so generating from a runtime-only or composed tree must resolve it there.
+    "stn_pin_keepout.tcl": "physical/common_flow/stn_pin_keepout.tcl",
 }
 
 
