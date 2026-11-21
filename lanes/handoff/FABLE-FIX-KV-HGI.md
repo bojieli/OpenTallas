@@ -66,3 +66,34 @@ closes hold alone, propose dropping clock.core_input_lockup on hg/hgi in D27. Th
 - No route of the held D25e3 hgi kits (v1, v3, v5-v8): unchanged from FABLE-PD-KV-1840.
 - No hold-buffer ECO on head-core front ends; no clock period change; no new tap rows before the A/B.
 - b8 / b8d are private copies: never export, never count.
+
+## STATE 2026-11-20 20:25 PST (read first; sections 1-4 above hold the detail)
+
+Hold root cause so far (hgi): MEASURED on hgi_v1 kR only (GRT readback + its CTS log); v3-v8 NOT yet measured.
+The head-core front hold (-277.6 FF, 5,105 ends) = the core clock pin arriving 381 ps after its own tap port. The tap port
+sits at the core centre over the M5 clock pin (direct tap). tap_balance.tcl pads a tap more than 10 ps under the 250 target
+with a BUFx4 seeded at the port; it can only legalise outside the 216-um core, so the clock goes out and back.
+Static on the 5 held kits: 14 of 16 head-core pins per type are in the padded class (internal insertion < 240 ps).
+
+What b8d tests: the same placed DB as b8 (held D25e3 kv3_hgi_v8 attempt_6), with tap_balance.tcl from lane commit
+49c46f1e15 and OT_TAP_CORE_DIRECT=1: a core-only tap whose port is inside the core it clocks is never padded.
+Expected in 4_1_cts.log: OT_TAP_CORE_DIRECT lines instead of clk_c<k>_tb0_d0 cells; core pin arrival near 0.
+Pass = FF hold into u_head*_e{0,2,4,6} front pins >= 0 on b8d while b8 fails; TT setup out of the cores not worse.
+Readback after both end: epyc7 `bash fable-fix-kv-hgi/sc/rb_cts.sh b8 kv3_hgi_v8` and `... b8d kv3_hgi_v8` THROUGH ot-run
+(--mem 32; writes fable-fix-kv-hgi/rb/<kit>/{FF,TT}.endpoints.tsv + readback logs). Not run yet.
+
+kR probe (epyc9 fable-fix-kv-hgi/krprobe/probe_kr.{tcl,sh}): read-only STA of the retained kR 5_1_grt.odb; prints the worst
+head-core hold path with nets, cell locations of clk_c13_tb0_d0 and the loads of the core clock net. Question it answers:
+is the 167.4 ps step on the core clock pin wire (goes away with the detour) or the lib min_clock_tree_path (167.62)
+added by OpenSTA on top of a hold arc that already holds the internal latency (then 167 ps is model double count).
+First run (unit oth-ubuntu-4100318-1795232550) failed on MY script: receipt written to a read-only mount. Fixed, relaunched
+20:24; output krprobe/probe.log, client log intel2 ~/tmp/fablefixkvhgi/krprobe.log.
+
+Collector path: no row. See section 2 (R3e moves the child to rst_n_t34 inside the monitor band). Bound-RTL check open.
+
+Units in flight (cancel only with ot-run --cancel <unit>):
+- b8  CTS  epyc7 oth-ubuntu-3996980-1795234370  log intel2 ~/tmp/fablefixkvhgi/b8_cts.log   (in 4_1_cts since 20:1x)
+- b8d CTS  epyc7 oth-ubuntu-3918401-1795234172  log intel2 ~/tmp/fablefixkvhgi/b8d_cts.log
+- kR probe epyc9, queued for memory (24 GB request); unit name = the "admitted as" line of krprobe.log
+Leftovers to remove with ot-delete when done: epyc10 fable-fix-kv-hgi/{b8,b8d} (unused copies made for rebalancing).
+Not pushed: lane commit 49c46f1e15 (epyc7 fable-fix-kv-hgi/wt). Not started: the R3e proof kit (section 4).
