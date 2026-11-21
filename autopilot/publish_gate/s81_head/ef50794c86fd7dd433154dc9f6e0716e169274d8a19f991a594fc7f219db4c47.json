@@ -1,0 +1,23 @@
+{
+ "advisory": [
+  "gate"
+ ],
+ "checks": {
+  "gate": {
+   "verdict": "FAIL",
+   "why": "AssertionError: --gen-host epyc9 is not a gen host of the die ['epyc10', 'epyc7']"
+  }
+ },
+ "die": "s81_head",
+ "hosts": [
+  "epyc9",
+  "epyc10"
+ ],
+ "manifest_hash": "ef50794c86fd7dd433154dc9f6e0716e169274d8a19f991a594fc7f219db4c47",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "00b2abf6e7a6478b03614c9885e9bdea2d962dafc09436fea22457c65ec2488a",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1795296597.019764,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_s0",
+ "verdict": "FAIL"
+}
