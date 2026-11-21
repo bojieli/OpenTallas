@@ -3109,6 +3109,42 @@ def pgcap_install(kd):
     return True
 
 
+def grt_clock_first_cfg():
+    """FLOW-CLKGRT-1121 opt-in config.mk lines from the gen environment: OT_GRT_CLOCK_FIRST=1 turns on grt_clock_first.tcl (sourced
+    last in grt_pre.tcl): the first full global_route of the GRT stage routes the clock nets alone, then every other net around
+    them with their gcell-edge usage reserved, so the congestion negotiation cannot detour clock leaf branches.
+    OT_GRT_CLOCK_FIRST_RESERVE=0 (A/B only) skips the reservation.  Nothing is written without OT_GRT_CLOCK_FIRST=1."""
+    if os.environ.get("OT_GRT_CLOCK_FIRST", "").strip() != "1":
+        return []
+    out = ["# FLOW-CLKGRT-1121: clock-first global route (grt_clock_first.tcl, sourced last in grt_pre.tcl)", "export OT_GRT_CLOCK_FIRST = 1"]
+    v = os.environ.get("OT_GRT_CLOCK_FIRST_RESERVE", "").strip()
+    if v:
+        if v not in ("0", "1"):
+            raise SystemExit(f"OT_GRT_CLOCK_FIRST_RESERVE={v!r}: 0 or 1")
+        out.append(f"export OT_GRT_CLOCK_FIRST_RESERVE = {v}")
+    return out
+
+
+GRT_CLOCK_FIRST_HOOK = """# FLOW-CLKGRT-1121 (gen env OT_GRT_CLOCK_FIRST=1): clock-first global route; wraps global_route LAST, after every other hook.
+if {[info exists ::env(OT_GRT_CLOCK_FIRST)] && $::env(OT_GRT_CLOCK_FIRST) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] grt_clock_first.tcl]
+}
+"""
+
+
+def grt_clock_first_install(kd):
+    """Stage grt_clock_first.tcl + its grt_pre.tcl hook from the final generated OT_GRT_CLOCK_FIRST value (not the caller environment)."""
+    values = re.findall(r"^\s*(?:override\s+)?export\s+OT_GRT_CLOCK_FIRST\s*(?::=|=)\s*([01])\s*$",
+                        (kd / "config.mk").read_text(), re.M)
+    if not values or values[-1] != "1":
+        return False
+    shutil.copyfile(Path(__file__).with_name("grt_clock_first.tcl"), kd / "grt_clock_first.tcl")
+    g = kd / "grt_pre.tcl"
+    if "grt_clock_first.tcl" not in g.read_text():
+        g.write_text(g.read_text() + GRT_CLOCK_FIRST_HOOK)
+    return True
+
+
 def pg_cell_keepout_value():
     """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
     v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
@@ -7718,6 +7754,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg += pg_row_guides_lines(cfg)
     cfg += rc_signal_cfg(P.name)   # r222/r228 signal-net RC table (per die; OT_RC_SIGNAL=0 off)
     cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
+    cfg += grt_clock_first_cfg()   # FLOW-CLKGRT-1121 opt-in (gen env OT_GRT_CLOCK_FIRST=1)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     import kit_common_files; kit_common_files.stage(kd)   # KIT-COMMON-1117: hold_pad_hb4 / hold_sdc_guard (HOLD-SDC-1116) / ... (one list, core_flow reads it too)
@@ -7798,6 +7835,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())
     pgcap_install(kd)          # DRT0255 C3b (OT_PGCAP=1 only): pg_pair_cap.tcl + hook line at the end of grt_pre.tcl
+    grt_clock_first_install(kd)   # FLOW-CLKGRT-1121 (OT_GRT_CLOCK_FIRST=1 only): grt_clock_first.tcl + hook line, after pgcap
     if edge_split_ports(P, tn):
         for f in ("clock_edge_split.tcl", "clock_edge_balance.tcl"):
             shutil.copyfile(Path(__file__).with_name(f), kd / f)
