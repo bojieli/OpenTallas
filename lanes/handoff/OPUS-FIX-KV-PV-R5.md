@@ -32,3 +32,24 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
   w-half gen with wave_w/spec.json (dry_gen) -> config.mk diff -> route.
 - 11 D25e3 pv route kits all cancelled (see post 07:34). KV-D26 pv rows: re-measure at 3_4 (place jobs epyc8/epyc9/epyc2 ot-jobs
   kv3_pv*-place-*), cancel >3 h AND measured setup < -300 via kit_wave cancel-rows --event KV-D26 --attempt N.
+
+## Update 2026-11-21 10:4x PST (read first; supersedes the 08:5x next-steps)
+- Probe bind 8 (split 13) CRASHED: "native stations pv_S_3.o_vport_E_N_vqN_d1_p: expected one outgoing lane" - the u_vport_E vq row of
+  o_vport_E_N_vqN_d1 started in w (862, 983) while R2 put the leaf in e, and census8 still had vport_E in w.
+- compose14.py = split 13 + R2 leaf rows follow their leaf (that row's from_um -> u_vport_E anchor) + census recomputed on the new contents
+  (split28/census14.json, transit 29). Installed as tree5 plan_of_record (plan 38bcc8c6a2c2; split 13 kept as por_split_13_installed).
+- chain15.sh (ot-run oth-ubuntu-1760384-1795282470, client log intel2 ~/tmp/okpvr5/chain15.log): probe bind 8b -> exec chain14.sh:
+  r3_rows.py (split28/r3_rows.py; R3 = vport lanes re-stationed from_um -> leaf anchor -> to_um at <= 300 um, sites outside cores, new rows
+  for u_bout buses with leaf bits; R4 = relay_sites for u_vport_X.{out_v_lo/hi, out_t, out_epoch, vq0/1_t, d_q, e_q, t_q, val_q, vf_q,
+  vq*_valid, out_valid} on a 1.08-um spiral within ~62 um of the anchor; names from the D25e3 kv3_pv_v3 netlist) -> plan into
+  plan_of_record (copy kept por_split_14_bound8b) -> bind 9 -> if new rows are only R8 / pair-image PARAM_REGEN / kv3_pc_v3 strap pad:
+  ONE r8_refresh (bindgate_9 bus_groups) -> bind 10 -> leaf_first_hop on both halves (R5 gate = 0 bits over 405 and 0 unknown rows; R3
+  sizes for 300). Outputs split28/bindgate_{8b,9,10}/ (gate.out, errdiff.txt, lfh_*.txt), r3_9/rep.json.
+- If chain14 stops with BIND9_UNKNOWN_NEW, read bindgate_9/errdiff.txt NEW rows first.
+- After bind 10: PARAM_REGEN pair image (boot_v36/run_mu833.sh on the split bind) is KV-PLAN-R5's D28 apply step; ask TAP-GRID-R4 for tap
+  rows for both halves (COORD 10:3x); then w-half gen via kit_wave run-item /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r5/wave_w/spec.json
+  (re-run mkspec.py if the tree plan changed; check config.mk vs the wave kit) -> route; e half the same (mkspec.py kv3_pv_v3e e ...).
+- KV-D26 pv rows (12 live 10:4x): v2 3.3 h, v3n/v4n/v5n 3.8 h but still in global place (no setup measured). Cancel each at 3_4/3_5 when
+  setup < -300 is measured (m26.sh pattern: 3_resizer.rpt / 3_detailed_place.rpt wns), kit_wave cancel-rows --event KV-D26 --attempt N.
+- type_split push still pending (needs a clean bind): epyc7 lane clone branch claude/opus-fix-kv-pv-r5-tsplit 3a132dd5b5. tree5 type_split.py
+  = that version. r3_rows.py should later go to main as a tool (tools/die_plan/pv_leaf_anchor_rows.py) with a test.
