@@ -1,0 +1,3 @@
+# Qwen Compute STM retained placement
+
+2026-11-21 14:29 PST. Viewed the exact V2 attempt 1 placed layout for sle_stm_v2__cl55be2264: epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/items/sle_stm_v2__cl55be2264/gen/sle_stm_v2__cl55be2264/run/layout_review/place/layout.png. Four northwest macros have open streets and a separate central register group. The previous reset reach finding still has a pending V3 row shifting the core reset attachment from a 643 µm leg to a 149 µm leg without changing cycle count. Keep the exact V2 copy for diagnosis and check that reset attachment in the rebuilt type before route.
