@@ -21,14 +21,15 @@ class _P:
 
 def test_absent_key_is_byte_identical():
     base = LP.tcl(_P(), "t")
-    assert "origin-home" not in base
+    # the Tcl template text may mention the tag in comments/guards (FAM-QC-HCST); what must be absent is an emitted origin-home GROUP entry
+    assert " origin-home}" not in base and "u_cland_origin " not in base
     assert LP._origin_home_groups(_P().types["t"]) == []
 
 
 def test_rect_emits_one_firm_origin_group():
     out = LP.tcl(_P({"landing_origin_rect_um": [180, 4.32, 230, 48]}), "t")
     assert "{u_cland_origin {180.00000 4.32000 230.00000 48.00000} origin-home}" in out
-    assert out.count("origin-home") == 1
+    assert out.count(" origin-home}") == 1
 
 
 def test_relay_start_copy_names_the_rx_origin():
