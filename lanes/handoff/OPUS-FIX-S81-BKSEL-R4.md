@@ -23,7 +23,7 @@ physical/die_plan/s81/cores/views/bksel_c_a3pt_1120/dsdv_bksel_c (export_view.py
   outputs $L/place_r3b.log, $L/geom_r3b/, $L/hop300_r3b.json. Measures the face-bus rows. READ IT.
 - Final form = chain_r4b (below).
 
-## 3. OT_BKSEL_L4 RTL -- NOT PUSHED (lane clone working tree; also saved as $L/l4_rtl.diff before edit3/RO 8)
+## 3. OT_BKSEL_L4 RTL -- PUSHED main 48d49db149 (21:1x)
 Files: rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv (dsdv_bk_rrd + u_rst_relay_q/c/g), rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv
 (defines only: RO 8 under L4), physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv (vmtx: u_rst_relay_tx, u_lpd,
 u_dsp, u_fsp; helpers dsdv_bk_lpd/fsp/dsp). Inert unless OT_BKSEL_L4. Profile: RRD 6 (own reset relay per hard core, release +6),
@@ -31,9 +31,9 @@ LPS 4 (loop lane +4 edges), DSP 3 (dst/lpe load +3, routing unchanged, window be
 Evidence:
 - proof_l4 ($L/proof_l4, l4_miter.sv, yosys k-induction): ok SUCCESS; mutw (OT_BKSEL_MUT_DSPW) FAIL; muts (3-stage loop) FAIL.
 - bench_l4 sel (built 04:22 UTC = after RO 8 edit 04:17): a3p PASS, l4 PASS (6/6 variants), l4rrdm (OT_BKSEL_MUT_RRD) FAIL = wanted.
-- bench_l4 vmtx part: PREP_FAIL (cone lacked physical/rom_host_ingest/rtl; fixed). Rerun bench_vm.sh -> $L/bench_vm, status
-  otrun-tolerant-swine-2104918, log hub bench_vm.otrun.log. Need "BKSEL_L4_VMTX PASS".
-Push steps (after bench_vm PASS): cd $L/repo; git add the 3 files; git commit (trailer Co-Authored-By: Claude Opus 5.5
+- vmtx bench (bench_vm.sh): BUILD_FAIL on BOTH vbase (L4 off) and vl4: verilator PINNOTFOUND MLK at portfix178 l20s:691/693 =
+  base problem of the seqhost_timing bk bench, independent of L4 (posted to FLOW-NOADV-R3). Gate used: proof + sel bench + bind ELAB.
+Push steps (DONE): cd $L/repo; git add the 3 files; git commit (trailer Co-Authored-By: Claude Opus 5.5
 <noreply@anthropic.com>); python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main (never --no-test).
 Then post PUSHED to S81-J6-ASSEMBLY.
 
