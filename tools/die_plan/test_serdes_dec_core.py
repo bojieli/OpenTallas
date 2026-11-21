@@ -69,3 +69,17 @@ def test_column_preprocesses_to_one_decoder_form(defs, module, ck):
         dec = re.search(r"\n\s*(\w+)\s+#\(\.MUT\(\(MUT >= 1 && MUT <= 4\) \? MUT : 0\)\)\s+u_dec\s*\((.*?)\);", e, re.S)
         assert dec and dec.group(1) == module
         assert ck in dec.group(2)
+
+
+ENC_CORE = L / "ot_s81_kp4_enc_core.sv"
+
+
+def test_enc_core_wrapper_is_h0_seq_only_form_and_used_in_split_form():
+    """FAM-S81-SERDES-R4 11-21: the split form's u_enc hard core = ot_s81_kp4_enc #(.H0_SEQ_ONLY(1)), wiring only."""
+    t = re.sub(r"//[^\n]*", "", ENC_CORE.read_text())
+    assert re.search(r"ot_s81_kp4_enc\s*#\(\.MUT\(MUT\),\s*\.H0_SEQ_ONLY\(1\)\)\s*u_enc", t)
+    assert not re.search(r"\b(always|assign|reg)\b", t)
+    c = COL.read_text()
+    i = c.index("ot_s81_kp4_enc_core u_enc")
+    assert "`ifdef OT_S81_SERDES_DEC_CORE" in c[i - 400:i]
+    assert "ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_te_rst)" in c        # default form unchanged

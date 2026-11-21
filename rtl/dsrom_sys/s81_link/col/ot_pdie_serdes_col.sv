@@ -172,7 +172,13 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
          .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `endif
 `else
+`ifdef OT_S81_SERDES_DEC_CORE
+    // FAM-S81-SERDES-R4 11-21: in the t4 split form u_enc is the hard core ot_s81_kp4_enc_core (H0_SEQ_ONLY=1, same outputs;
+    // the default form is not LEC-provable after synthesis folds its constant never-reset header flops).
+    ot_s81_kp4_enc_core u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+`else
     ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+`endif
 `endif
     wire [544:0] l_q;
 `ifdef OT_S81_SERDES_TXL4

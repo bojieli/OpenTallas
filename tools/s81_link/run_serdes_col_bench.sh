@@ -10,7 +10,7 @@ case $mode in col) g="-GMODE=0";; col_ref) g="-GMODE=1";; ref_col) g="-GMODE=2";
   *) echo "PDIE_COL BAD_MODE $mode"; exit 2;; esac
 verilator --version > "$out/verilator.version" 2>&1
 verilator --binary --timing -j ${COL_J:-8} ${COL_DEFINES:-} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTITOP +incdir+$L \
-  --top-module tb_s81_pdie_col $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" "$L/ot_s81_kp4_bm.sv" \
+  --top-module tb_s81_pdie_col $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" "$L/ot_s81_kp4_enc_core.sv" "$L/ot_s81_kp4_bm.sv" \
   "$L/ot_s81_kp4_dsyn.sv" "$L/ot_s81_kp4_ddly.sv" "$L/ot_s81_kp4_dchn.sv" "$L/ot_s81_kp4_dout.sv" "$L/ot_s81_kp4_dec.sv" \
   "$L/ot_pdie_serdes.sv" "$L/native/ot_s81_kp4_dec_native_flat.sv" "$L/lp/ot_s81_kp4_dec_native_flat_lp.sv" "$L/lp/ot_s81_kp4_dec_lp_core.sv" \
   "$R/rtl/common/landed_parent/ot_pl_land.sv" "$L/ot_pdie_serdes_locksafe.sv" "$L/col/ot_pdie_serdes_col.sv" \
