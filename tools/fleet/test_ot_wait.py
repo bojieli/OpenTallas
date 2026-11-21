@@ -224,3 +224,13 @@ def test_kit_stage_also_ended_job_is_died(tmp_path):
     rec_file(tmp_path, "otrun-h-9", rc=143, unit="oth-zz")
     p = kit_wait(tmp_path, str(kit), "--stage", "place", "--also", "otrun-h-9")
     assert p.returncode == 143 and "DIED rc=143" in p.stdout and "no place result" in p.stdout
+
+
+def test_post_text_env_tag(tmp_path):
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    rec = dict(t_start=0, t_end=5, rc=0, kind="run", name="n", unit="u", host="h", lane="L", log="", cmd=f"bash run_kit.sh {kit}")
+    assert " env=wave" not in S.post_text(rec)                                # no record: no tag
+    (kit / "kit_env_provenance.json").write_text(json.dumps(dict(
+        wave_env={"OT_A": "1", "OT_SIGNED_VIEW_SHA": "x", "OT_B": "1"}, env={"OT_A": "2", "OT_SIGNED_VIEW_SHA": "y", "OT_B": "1", "OT_C": "3"})))
+    assert " env=wave+2," in S.post_text(rec)                                 # OT_A changed + OT_C added; plan-derived key not counted

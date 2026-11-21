@@ -123,13 +123,33 @@ def update(rec, **kw):
         pass
 
 
+def env_tag(cmd):
+    """DONE/DIED env=wave+N: a kit named in the command (an absolute path, or one with a kit_env_provenance.json up to 3 parents above)
+    -> " env=wave+N" (N = env keys differing from the wave env that are not plan-derived); "" when no kit record is readable here"""
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "autopilot"))
+        import env_provenance as _EP
+        for tok in re.findall(r"/[^\s\"';|&<>]+", str(cmd)):
+            d = tok
+            for _ in range(4):
+                if os.path.isfile(os.path.join(d, _EP.RECORD)):
+                    n = _EP.wave_delta(d)
+                    return "" if n is None else f" env=wave+{n}"
+                d = os.path.dirname(d)
+                if len(d) < 2:
+                    break
+    except Exception:
+        pass
+    return ""
+
+
 def post_text(rec):
     died = rec.get("rc") != 0
     secs = (rec.get("t_end") or 0) - rec.get("t_start", 0)
     what = "ot-push-main" if rec["kind"] == "push" else "ot-run"
     head = f"{'DIED' if died else 'DONE'} [{rec['lane']}]"
     return (f"{head} {what} {rec['unit'] or rec['name']} on {rec['host']}: rc={rec['rc']} after {secs} s, ended "
-            f"{time.strftime('%H:%M:%S', time.localtime(rec['t_end']))}, log {rec.get('log') or 'none'}, cmd: {rec['cmd'][:140]}")
+            f"{time.strftime('%H:%M:%S', time.localtime(rec['t_end']))}{env_tag(rec.get('cmd', ''))}, log {rec.get('log') or 'none'}, cmd: {rec['cmd'][:140]}")
 
 
 def should_post(rec):

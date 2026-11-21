@@ -97,6 +97,18 @@ def judge(rec, config_text, placed=False, kit_path=""):
     return True, lines
 
 
+def wave_delta(kit):
+    """number of non-plan env keys that differ from the wave env (A/B keys included) -> int; None when KIT has no readable record"""
+    try:
+        rec = json.loads(_read(os.path.join(kit, RECORD)) or "null")
+    except ValueError:
+        return None
+    if not isinstance(rec, dict) or not isinstance(rec.get("env"), dict):
+        return None
+    allowed = set(PLAN_DERIVED_KEYS) | set(rec.get("plan_derived") or [])
+    return len([k for k in env_diff(rec.get("wave_env"), rec.get("env")) if k not in allowed])
+
+
 def _soft(placed, lines):
     if placed:
         return True, [ln.replace("ENV-PROVENANCE FAIL", "ENV-PROVENANCE WARN (kit already placed, runs on)") for ln in lines]
