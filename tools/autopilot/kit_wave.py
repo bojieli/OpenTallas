@@ -15147,6 +15147,8 @@ def queue_class(j):
             return stage, "FAIL", "FLOW", f"{kind}: retired flow timeout; {why}"
         if kind == "grt-noconverge":
             return stage, "FAIL", "PLAN", f"{kind}: design:grt_flat_overflow {why}"     # MEM-RECLAIM-2200 (OWNER 11-20): flat congestion across restarts
+        if kind == "place-setup-stop":
+            return "place", "FAIL", "PLAN", why
         if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
             return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
         if kind in ("grt-overflow", "grt-no-progress", "drt-no-progress", "drt-nopath") or (fails & ROUTING_FAILS) or drc:
