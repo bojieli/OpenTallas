@@ -30,12 +30,23 @@ namespace eval ::ot_tap_pair {
   set rdepth [expr {[info exists ::env(OT_TAP_PAIR_RING_DEPTH)] ? $::env(OT_TAP_PAIR_RING_DEPTH) : $depth}]
   set rpair [expr {([info exists ::env(OT_TAP_PAIR_RING_UM)] ? $::env(OT_TAP_PAIR_RING_UM) : $pair_um)*$dbu}]
   set nring 0
+  # Cover the existing tap loads even when the planner cannot move them (for example reset relays).
+  set span_um [expr {[info exists ::env(OT_TAP_SPAN_UM)] && [string is double -strict $::env(OT_TAP_SPAN_UM)] ? $::env(OT_TAP_SPAN_UM) : 0}]
+  set span_seed {}
   # tap nets, their xy and load
   set tapxy {}; set load {}
   foreach tp $ct_taps {
    set net [lindex $tp 1]; set nm [$net getName]
    dict set tapxy $nm [list [lindex $tp 2] [lindex $tp 3]]
-   set n 0; foreach it [$net getITerms] { if {[$it isInputSignal]} { incr n } }
+   set n 0
+   foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    incr n
+    if {$span_um > 0} {
+     lassign [[$it getInst] getLocation] x y
+     span_add_point span_seed $nm $x $y
+    }
+   }
    dict set load $nm $n
   }
   # registers on a tap net: clock iterm, xy, tap
@@ -127,9 +138,8 @@ namespace eval ::ot_tap_pair {
    close $df
   }
   # sink region rule (plan clock.tap_span_um -> OT_TAP_SPAN_UM; unset / 0 = off): see tap_pair_plan.tcl span_ok
-  set span_um [expr {[info exists ::env(OT_TAP_SPAN_UM)] && [string is double -strict $::env(OT_TAP_SPAN_UM)] ? $::env(OT_TAP_SPAN_UM) : 0}]
   if {$span_um > 0} { puts "OT_TAP_PAIR sink region rule: a tap admits a component only inside W+H <= $span_um um (or with no growth of its box)" }
-  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp $grow [expr {$span_um*$dbu}]]
+  set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp $grow [expr {$span_um*$dbu}] $span_seed]
   puts "OT_TAP_PAIR coherent components [dict get $result components], largest [dict get $result largest], frozen oversized [dict get $result frozen], taps above cap $cap at start [dict get $result overfull] (donate only unless overfull grow $grow)"
   foreach row [dict get $result passes] {
    lassign $row pass groups pins cross
