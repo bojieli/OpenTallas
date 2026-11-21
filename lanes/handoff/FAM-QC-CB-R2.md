@@ -32,3 +32,11 @@
 - cbn_q01__clab6e67f2 kit: same bind, spec at p1/spec_cbnq01, place running. Its tcl is NEW (recovery split out), so the post-place number counts.
 - Private kits are exempt from PLACE-SETUP-STOP (lane proofs).
 - R10 b18 bind died: bind_b15.sh's RR points at rt/7ff721a00978/r8_refresh.py, which no longer exists. Posted to R10.
+
+## 13:0x
+- V2 applied (s29q103S4Q9N46R6V2). The V2 wave attempts of cbf_q00__cl1b5a6458 and cbf_q01_s2 went FAIL INFRA (restaged) with no relaunch.
+  I relaunched both as private-spec kits with defaults (V2 plan, tree qwen_compute_v2r10, wave bind, src_manifest on, env=wave) on epyc2.
+  These are the SIGNABLE builds. Specs and logs: intel2 /srv/opentallas-scratch2/claude/fam-qc-cb-r2/v2/<type>/.
+- I own cbf_q01_s2 (claimed from DEAD-OWNER FAM-QC-CB).
+- TAP CORRECTION: keep RRGEN-R3 cbf_q00 taps t24/t25/t93/t100. On V2 geometry they measure 100/90/67/68 um; t77/t76 measure 455/640 um.
+- FABLE-PD-QC-1230 item 5 -> QC-PLAN-R11. Still to do: +1 station rows for bc_i00/bc_i10/bc_i30, nb_i12, y_o00, and the cbn_q01/sibling taps, all from the p1 CTS reads.
