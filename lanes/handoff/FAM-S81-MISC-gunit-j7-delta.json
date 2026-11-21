@@ -1,0 +1,231 @@
+{
+ "schema": "opentallas.s81.j6_donor_delta.v1",
+ "lane": "FAM-S81-MISC",
+ "types_changed": [
+  "gunit__t1"
+ ],
+ "ops": [
+  {
+   "op": "add",
+   "path": "/partition_types/gunit__t1/clock/landing_reader_start",
+   "value": {
+    "depth": 14,
+    "share_trunk": true,
+    "branches": {
+     "xtier_i0": {
+      "stages": [
+       {
+        "xy_um": [
+         2873.76,
+         344.359
+        ],
+        "raw_reset": "rst_n_t20"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         662.574
+        ],
+        "raw_reset": "rst_n_t27"
+       },
+       {
+        "xy_um": [
+         2593.027,
+         700.056
+        ],
+        "raw_reset": "rst_n_t27"
+       },
+       {
+        "xy_um": [
+         2274.812,
+         700.056
+        ],
+        "raw_reset": "rst_n_t26"
+       },
+       {
+        "xy_um": [
+         1956.597,
+         700.056
+        ],
+        "raw_reset": "rst_n_t25"
+       },
+       {
+        "xy_um": [
+         1638.382,
+         700.056
+        ],
+        "raw_reset": "rst_n_t24"
+       },
+       {
+        "xy_um": [
+         1346.472,
+         673.752
+        ],
+        "raw_reset": "rst_n_t23"
+       },
+       {
+        "xy_um": [
+         1028.257,
+         673.752
+        ],
+        "raw_reset": "rst_n_t30"
+       },
+       {
+        "xy_um": [
+         760.272,
+         623.522
+        ],
+        "raw_reset": "rst_n_t14"
+       },
+       {
+        "xy_um": [
+         656.568,
+         409.011
+        ],
+        "raw_reset": "rst_n_t14"
+       },
+       {
+        "xy_um": [
+         570.052,
+         177.312
+        ],
+        "raw_reset": "rst_n_t7"
+       },
+       {
+        "xy_um": [
+         251.837,
+         177.312
+        ],
+        "raw_reset": "rst_n_t6"
+       },
+       {
+        "xy_um": [
+         63.72,
+         47.214
+        ],
+        "raw_reset": "rst_n_t2"
+       },
+       {
+        "xy_um": [
+         63.72,
+         47.214
+        ],
+        "raw_reset": "rst_n_t2"
+       }
+      ]
+     },
+     "flt_i0": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         36.944
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         42.344
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         47.744
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2846.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         26.144
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2861.294,
+         38.88
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         2861.294,
+         38.88
+        ],
+        "raw_reset": "rst_n_t5"
+       }
+      ]
+     }
+    },
+    "origin_rect_um": [
+     2865.12,
+     19.664,
+     2882.4,
+     32.624
+    ]
+   }
+  }
+ ],
+ "manifest_ops": [],
+ "note": "reach_rules.py fix --rules 1 on J6 C3d plan 2ea6cd2f: clock.landing_reader_start relay trunk origin -> xtier_i0 (2815 um START hop > 405). control cycles added only, data cycles 0."
+}
