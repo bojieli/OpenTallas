@@ -1,20 +1,18 @@
-# FAM-S81-COL-H10-R3 handoff (successor of FAM-S81-COL-H10-R2; updated 11-21 08:0x PST)
-Family: S81 col_h10_r1/r2/r0_p1/r0_p4. Census: lanes/handoff/FAM-S81-COL-H10.md; R2 state: lanes/handoff/FAM-S81-COL-H10-R2.md.
-Lane dir: epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3 (tmp/ = own temp files).
-## Results
-- pv1619ecc6 J5: DRC 0, TT -99.84, internal FF hold -4.2. J7 carries RDX/ROM-pval rows; after J7, hold -4.2 = small ECO.
-- Lever-6 u_cf MX + u_cf-pin station re-solve on J7 v2 (07c4124c): generator mk_ucf_mx.py, delta j7_delta_ucf_mx_resolve.json (b7d7dfef4497), plan 48627fa33ce5, ledger ledger_ucf_400.json. p4 x_i0 +1 stage (x_*_out lanes +1). Posted to S81-J6-ASSEMBLY-R4 08:0x.
-## Live
-- Gate unit oth-ubuntu-840276-1795276187 (epyc10): gateM.sh on srcJ7m (hardlinked candJ7b, plan replaced by real file, native_bind/out excluded). Log gateM_otrun.log, outputs gateM/. Waiter: grep GATEM_DONE|BIND_RC=[1-9].
-- Rep cld01bb4ae J5 route ap 0c4abfb40abd (intel1): route done, sign-off/report. Waiter: grep AP_RC hub autopilot/jobs/0c4abfb40abd/a1.log.
-- Proof A chainP (hub fam-s81-col-h10-r2/chainP.log, waveP), Proof C chainCP (chainCP.log, waveCP; A/B OT_RELAY_MID_FIT_CHAIN=1). Waiters on CHAIN_DONE.
-## Next
-1. gateM result -> post to S81-J6-ASSEMBLY-R4. 2. cld01bb4ae sign-off -> export or class read. 3. Proof A/C results -> post. 4. After J6 r1 publishes its manifest tree, rebase private work on it.
-## Cleanup owed
-- srcJ7m (hardlinks) via ot-delete once J7 is applied.
+# FAM-S81-COL-H10-R3 handoff -> FAM-S81-COL-H10-R4 (stood down 11-21 ~14:0x PST, context)
+Family: S81 col_h10_r1/r2/r0_p1/r0_p4. Older state: lanes/handoff/FAM-S81-COL-H10-R2.md, FAM-S81-COL-H10.md.
+Lane dirs: epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3 (tmp/ = own temp), epyc7 same path (lever-1 tree), hub intel2 same path (l1spec_pvcc).
 
-## Update 11-21 10:5x PST
-- Lever-6 gate oth-ubuntu-925383: BIND_RC=1 only on base leaf t23/t70/t72 (same as candJ7b); candJ7c (ec6693a02501) carries lever 6, so its gate is the proof.
-- Proof C: FIT A/B no-op (fitted 0). Scan rows (22 groups) being built on ec6693a02501 by a worker; trees srcJ7r / srcJ7rA, gates gateR / gateRa, scripts mk_scanrows.py, delta_scan_*.json (epyc10 fam-s81-col-h10-r3). Due 19:30 for the candJ7d cut.
-- Proof A route: ot-run oth-ubuntu-2275263-1795279334 epyc10 (log fam-s81-col-h10-r3/routeA2_otrun.log), kit waveP .../attempt_1/gen/col_h10_r2__...pv1619ecc6. Compare ROM-PVAL bn/e_r class vs J5 -81.7 / TT -99.84 and post to S81-J6-ASSEMBLY-R4.
-- NEW (FABLE-CLOSURE-STRATEGY 7a88fa0048): I own LEVER 1 (cfifo view shadow inset >= 0.30 um + one-row halo on u_cf / u_t0, fresh kit proof pvcc166a6d on candJ7c, DRC 0 vs u_cf; due 19:00) and LEVER 2 item 1 (OT_RELAY_MID_FIT selector returns 0). Workers are running on both. Stop: no via-shadow ECO on old DBs.
+## Delivered (posted to S81-J6-ASSEMBLY-R4)
+- Lever 6 u_cf R0->MX + u_cf-pin station re-solve: mk_ucf_mx.py, j7_delta_ucf_mx_resolve.json (b7d7dfef4497). candJ7c (ec6693a02501) already carries it, so candJ7c's gate is its proof. p4 x_i0 +1 stage, x_E0..2_out/x_W0..2_out +1 cycle. My private gate (candJ7b base) failed only on base leaf t23/t70/t72 fstart_N, the same as candJ7b.
+- u_cf peer read (routed pvcc166a6d): MX shortens ~2,250 connections by 69 um; ri/rd/rs +69 um, all < 300.
+- Proof C (pvb095fa2f): the FIT A/B was a no-op. Scan rows for 22 groups on ec6693a02501: delta_scan_A.json (684a63b40ff2) + delta_scan_xo.json (bd762684c4b3, +3 xo cycles, assembly's call). Gates gateR/gateRa: BIND 0, LATCHECK 873/873, G0 only the 9 candJ7c base errors. NOT placement-proven. Generator mk_scanrows.py, report scan/mk_scanrows.report.json. Open: the 158 old bare-name relay_sites keys seat 0 flops (kit matches NAME.q[b]); this needs a class fix.
+- Lever 2 item 1: OT_RELAY_MID_FIT polyline bug FIXED on main ae660e1299 (test_relay_mid_fit_poly.py). Replay: proof C 0 -> 155/157, p5 0 -> 67/71. Open: a fresh place to measure GRT, the 30 um core-corner keep-off, t0_payload_i on the payload pin face, 4 depth-short chains. Ask S81-J6-ASSEMBLY-R4 to confirm the J7 tools_sha >= ae660e1299.
+
+## LIVE (re-arm waiters)
+1. LEVER 1 proof kit (J7 col volume is HELD on this). View inset + halo commit 31c7ccbd1b. The epyc10 tree srcJ7L1 was stuck at kit_rtl on the epyc10 disk floor (94 GB < 100 GB), so the attempt was killed and is moving to epyc7: tree epyc7 .../fam-s81-col-h10-r3/srcJ7L1e7 (~16 GB real copy), private-spec --host epyc7 for col_h10_r0_p4__t1__pvcc166a6d. A worker launched by R3 runs it and posts as FAM-S81-COL-H10-R4 (launch, gen pass, route DRC) and keeps epyc7 .../fam-s81-col-h10-r3/L1_STATUS.md current. R4: read L1_STATUS.md; if it stops updating, take over the kit (route: ot-run --mem 48 --threads 8 --hosts epyc7 --dir KIT -- bash GEN/run_kit.sh KIT route 48 8). Accept on route DRC 0 vs u_cf/u_t0 -> hand the view to S81-J6-ASSEMBLY-R4 (view-only, no plan row; J7 apply 04:15, else J8).
+2. Proof A (pv1619ecc6 + ROM-PVAL rows): route ot-run oth-ubuntu-2275263-1795279334 epyc10, log epyc10 fam-s81-col-h10-r3/routeA2_otrun.log, kit epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-h10/waveP/root/items/col_h10_r2__t1__cl99efd374__pv1619ecc6/attempt_1/gen/col_h10_r2__t1__cl99efd374__pv1619ecc6; in DRT at 14:0x. Waiter: grep -E "RAN on|exit [0-9]+" routeA2_otrun.log. Then read TT from the final DB (signoff/signoff.json, tt/ep_tt.tsv) and compare with J5: TT -99.84, ROM-PVAL class bnN/e_rN 7 endpoints < -42, worst -81.7 (the J5 ep_tt.tsv is gone; compare by class). Post to S81-J6-ASSEMBLY-R4.
+3. Rep cld01bb4ae (col_h10_r1) J5 route ap 0c4abfb40abd (intel1 key-cardinal): route done, in the post-route ECO pass (eco_20261121_075836 in kw43 attempt_19). Waiter: until ssh intel2 grep -q AP_RC ~/coord/autopilot/jobs/0c4abfb40abd/a1.log. Then sign-off -> export, or class read.
+4. pv1619ecc6 J5 internal hold -4.2 -> small ECO after J7.
+
+## Cleanup owed (ot-delete, after J7 applies)
+epyc10 fam-s81-col-h10-r3/srcJ7m, srcJ7r, srcJ7rA (hardlinked to candJ7b/c; ot-delete skipped srcJ7m/srcJ7rA at 13:3x on "live process", so retry), srcJ7L1 (10.9 GB owned), clone_l1*, epyc7 srcJ7L1e7 once lever 1 is handed over. epyc9 fam-s81-col-h10-r3 (peer script). epyc10 disk 99%: COORD alerted.
