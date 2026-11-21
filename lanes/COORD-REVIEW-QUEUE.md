@@ -16383,3 +16383,6 @@ FAILED [AUTOPILOT e8db51a6e22d] 2026-11-21 00:37:10 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 00:42 PST DONE [FABLE-FIX-QC-SLE-R2] ot-push-main otpush-renewed-glider-3741738 on renewed-glider: rc=0 after 48 s, ended 08:42:46, log /srv/opentallas-scratch2/claude/fable-fix-qc-sle/r2/push1.log, cmd: ot-push-main 
 - 2026-11-21 00:42 PST DONE [OPUS-FIX-KV-PV-R4] ot-run oth-ubuntu-4188907-1795249624 on tolerant-swine: rc=0 after 954 s, ended 00:42:55, log /home/ubuntu/tmp/okpvr4/refexp.log, cmd: --mem 64 --threads 4 --priority proof --hosts epyc8 --dir /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/split28 -- bash /srv/opentallas-
 - 2026-11-21 00:43 PST DONE [fable-fix-head-serdes-r3] ot-push-main otpush-civil-redfish-2332760 on civil-redfish: rc=0 after 29 s, ended 08:43:34, log none, cmd: ot-push-main 
+- 2026-11-21 00:44 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p1 (6): GRT 6 TT worst -91.4 median -81.7; CTS FF hold after CORETAP 6: worst -73.3 median -50.3; sign-off runs 4, SIGNED 0, routed TT worst -634.2, FF worst -92.9, DRC max 20; 1 stopped without signoff; old plan -331 (t0->cf.st CTS)
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
