@@ -17,3 +17,8 @@ Family: kv3_hub_{C,Ei,Eo,Wi,Wo}, kv3_hroot, kv3_sys_c, kv3_sys_SD_v1 (routed, ho
 1. When the epyc2 unit ends: read signoff.json (DRC, TT setup >= -42, hold STD_MIN_START, LEC); if signed, carry (nothing to carry for sdc) and hand sender_ps row to KV-PLAN-R3 for D28.
 2. Siblings: take D26 (hub_Wi) and D27c (hub_Eo, hub_Wo, sys_c, hub_C) results from KV-PLAN-R3; no duplicate builds. sys_SD_v1 hold<=30 ECO lives in HARVEST-ECO-2350.
 3. Successor not needed yet; stand down text: lane has launched nothing.
+
+## CODEX notes 11-21 02:40 PST
+
+- hroot E2 route is still progressing in FF hold repair (-410.424 to -321.757 ps by iteration 20); no signed evidence. Preserve the unit. Hub_Eo D25e3 failed at CTS tb_cdirect scope, fixed upstream. Separate representative E10 form M/L removed the pathological -747 ps host reset and ended WNS -147.73 ps with FSTART now worst.
+- D28 review candidate evidence epyc7 fam-kv-hub/d28_corridors. Hub_Eo old geometry 0-cycle reseat takes ES fault 377.1->253.9 μm, EN ctl_ap 1229.7->413.5 μm. hroot Q ctl 371.2->337.7 μm. For hroot input i_kvpc_Q_N_o_next, 299 bin flops: only 171 fit both endpoints at 300 μm, 294 at 405 μm, five require more than a move on the old geometry. See hroot_ring_fit.json for per-bit evidence, re-evaluate on current placement. TAP-GRID-R2 tap delta epyc8 tap-grid-r2/hroot/d28-hroot-pending.json replaces 12 sparse west taps by five; before adoption regenerate clock reservations and raw START/collector tap references.

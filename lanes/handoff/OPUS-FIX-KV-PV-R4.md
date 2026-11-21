@@ -54,3 +54,9 @@ epyc7 same path (repo = lane clone used for the push, cone tools+rtl+physical/co
 - Strict bind + LATCHECK: split28/bind.sh 1 -> split28/bindgate_1/gate.out (ot-run epyc8, client log intel2 ~/tmp/okpvr4/split_bind1.log).
 - Next: on green, gen one half (kv3_pv_v3e or v3) with kv-plan-r3/proofs/proof_kit.sh-style script pointed at split28/tree -> CTS; read
   OT_CELL_CENSUS stage=cts + OT_CTS_POST_TIMING (post-hook) setup/hold; post to KV-PLAN-R3.
+
+## CODEX notes 11-21 02:40 PST
+
+- Split #2 strict failed RC_BIND 2, missing cut-only path L2267 stalled nine old lanes. Base-bind census PASS 28 transit rows, 8 intra, zero unplaced. Split #3 adds 28 lanes, plan f5fc6017c718, strict/LATCHECK epyc8 oth-ubuntu-2186169-1795256714, split28/bindgate_3/gate.out. Earlier compose8 launch RC1 was just missing exact bind output in the private base package; resumed against original D27 bind_of_record.
+- Full cut inspection flagged cl_i_vport_E_N_vo at 0.43 μm from its new west-piece E boundary. Split9 fixes the macro clearance by moving unchanged core from x993.6 to x976.32 (17.71 μm channel). New candidate split28/tree/physical/die_plan/qwen_kvsys/por_split_9. Split #3 remains diagnostic for the nine missing lanes; proceed with split9 only after controlled bind and visual review. Cut remains 9,131 bits/39 ports over 1,521 μm using M4/M6 pin pairs. Keep tail-trunk site repair f2e64e5d3b in the eventual physical kit; exact prior PV v2 detour was the stale dly_spread helper.
+- v8m flip FAIL -598 FF, v8p flip+pad FAIL -554.47 FF (10,953 endpoints), v8c control cancelled per prior ruling. D28 remains the structural fix and uses no flip.

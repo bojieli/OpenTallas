@@ -16,3 +16,9 @@ Family owners: OPUS-FIX-KV-PV-R4 (pv, D28), FABLE-FIX-KV-HGI (hg/hgi), FAM-KV-HU
 4. D28 pv split after D27 applies; hub_C split may join from FAM-KV-HUB. Reset: RESET-RELAY-GEN-R3 re-emits pv bank_taps two-pass on the
    D28 split plan (pass2 on epyc10 rrgen-r3/kv3 is D26-based, not foldable); hub_Eo/Wo/sys_c pass2 to be re-run on D27c for D28.
 5. io_cor_v1 reset-tap rows: folded into D27c (no longer waits on RESET-RELAY-GEN-R3). Other 14 RESET-R3 types still wait.
+
+## CODEX notes 11-21 02:40 PST
+
+- D26 R3f unshared copy PASS, 325,021 prior shared inodes to zero, then local seal/verify PASS at manifest 9f2f31aeb25a. epyc7 seal_rep_d26.out tracks serial replicas. epyc8 replica exists, epyc9 transferring. intel2 ~/tmp/kvplanr4/resume_d26.sh still owns apply and hold release. Exact visual review results/geom_review/kv-d26-r3f-1121.md. After apply, read first hub_Wi gen, pv_v8 collector identity, and hg/hgi release.
+- D27c r4d strict/LATCHECK active epyc8 oth-ubuntu-1869717-1795255451 in d27c/bindgate_d27c_r4d, after measured R8_EXTRA stale reclosure. Exact plan geometry review results/geom_review/kv-d27c-r4d-1121.md. Staged d27c/gen_proof_r4d.sh stops at gen and enforces bind/LATCHECK before kit materialization. Prioritise pc_v3/pc class PDN-0006, hub_Eo/sys/hroot, io, hg/hgi representatives. Preserve D27's PV volume exclusion.
+- D25e3 CTS fails hub_Eo, sys_c, pv_v1n, hgi_v1/v3/v5/v6/v7/v8 share unscoped tb_cdirect, fixed shared main 5294e088f553. No D25e3 repeat; D26 sealed release script predates the bug. E7 and E8 runtime carry the fix. PC PDN failure remains a separate VSS macro-obstruction class addressed in D27c merged views.
