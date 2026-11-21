@@ -28,3 +28,7 @@ Work: epyc10 /srv/opentallas-scratch2/claude/s81-j6 (gate.sh, mk_cand.sh, j7/), 
 - INTAKE LEDGER was posted at 12:0x (posts e1a6afa7). Decisions: lepe10 GEN comes out if LEPE-4 says no at 19:00. The colrom guard package (FABLE-FIX-S81-COLROM-R4 candJ7cG gate) goes in if green, else the rdx stage rows (steps 15-16) come OUT. misc5, serdes, svc hi4 go to J8. Leaf rg5 goes in only with a green gate.
 - Lint J7c: 16/19 PASS; the svc xoff0 signoff/liberty mismatch is on J6 too (handed to SVC-R8).
 - Ack to S81-BKSEL-R7 posted, but post.sh said NOTHING-COMMITTED; the post is in my posts file.
+
+## 12:3x COORD ruling
+- ROM-input stage and guard ship together or not at all. At 19:00: if candJ7cG (FABLE-FIX-S81-COLROM-R4) is green, J7 = v9 + the guard package; else J7 = j7/v9n (v9 without the rdx_rows/rdx_repoint steps; pre-built), and both go to J8. Either choice needs its own gate before the 04:15 apply.
+- eng__t1 view re-export -> FAM-S81-MISC-R3. Tap sinks over cap -> TAP-GRID-R4 (J8). Neither is J7.
