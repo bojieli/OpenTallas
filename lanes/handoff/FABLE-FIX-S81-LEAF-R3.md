@@ -47,3 +47,8 @@ Re-arm first: (1) epyc7: while kill -0 4191487 (B bind client; unit oth-ubuntu-7
 
 ## Cleanup (ot-delete only, after the proofs)
 R3 list in OPUS-FIX-S81-LEAF-R3.md, plus epyc7 fable-fix-s81-leaf-r2/p3, fable-fix-s81-leaf-r3/p1, p2 (cancelled kits), epyc7 + epyc10 fable-fix-s81-leaf-r3x/gd_*.
+
+## Kit A result 2026-11-21 06:29 PST (after stand-down): FAILED AT PLACE, no GRT number
+- intel2 fable-fix-s81-leaf-r3x/w44rtA/chain.log: run-item rc=1, RESULT place FAIL, NO_PLACE (stopped in 3_3_place_gp hooks after 18 min). The chain has ended; no kit A job is running.
+- Cause in the kit place log (epyc7 .../w44rtA/root/items/ot_s81sl_leaf__t44__clf6cf8492/attempt_1/gen/ot_s81sl_leaf__t44__clf6cf8492/run/logs): OT_CLAND BAND FAIL u_cland_ft3_i (15,118 cells, need 5,035.2 um2, band 4,910.5, ratio 1.03) and u_cland_up_s_4N_L0x3_i (16,912 cells, need 5,632.4, band 5,539.3, ratio 1.02): no legal site in the reserved landing band.
+- Not established: whether the moved lanes shrink those bands (R3 columns put lanes at x 4.32 and y 4.32, on the W and S tile edges where landing rings sit) or whether an env / flow_tag difference does. The J5 wave kit of the same type placed. First step for the successor: compare the two band areas with the J5 wave kit's place log (epyc10 work dir above) and diff config.mk; if the lanes cut the bands, leaf_regrid.py find_slots needs the landing bands as keep-outs (EDGE 4.32 is then too small on faces that carry a landing ring), and kit B on the same plan will fail the same way.
