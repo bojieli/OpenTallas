@@ -1,2 +1,3 @@
 - 2026-11-20 21:20 PST DONE [qc-plan-r8-linksites] ot-push-main otpush-renewed-glider-2400524 on renewed-glider: rc=0 after 24 s, ended 05:20:22, log none, cmd: ot-push-main 
 - 2026-11-20 21:58 PST DIED [qc-plan-r8-linksites] ot-push-main otpush-renewed-glider-3327995 on renewed-glider: rc=4 after 8 s, ended 05:58:53, log none, cmd: ot-push-main 
+- 2026-11-20 21:59 PST DONE [qc-plan-r8-linksites] ot-push-main otpush-renewed-glider-3343544 on renewed-glider: rc=0 after 18 s, ended 05:59:36, log none, cmd: ot-push-main 
