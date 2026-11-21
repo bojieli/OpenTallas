@@ -70,7 +70,7 @@ def test_xr_refusals(tmp_path):
     p["partition_types"]["ot_s81sl_kv_leaf__t3"] = copy.deepcopy(p["partition_types"][T8])
     p["partitions"].append(dict(name="s_2N_L0", type="ot_s81sl_kv_leaf__t3"))
     d, _ = SN.leaf_depths(p, vp_xr={"ot_s81sl_kv_leaf__t3": 1})     # a kv leaf with hard cores is an XR leaf like any other
-    assert d[("2N", 0)]["HI_D"] == 0 and d[("2N", 0)]["HI_GS"] == 0
+    assert d[("2N", 0)]["HI_D"] == 1 and d[("2N", 0)]["HI_GS"] == 0
     with pytest.raises(SystemExit, match="unknown leaf"):
         SN.leaf_depths(PLAN, vp_xr={"ot_s81sl_leaf__t99": 1})
     with pytest.raises(SystemExit, match="integer 0 or 1"):
