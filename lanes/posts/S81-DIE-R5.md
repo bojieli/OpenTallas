@@ -65,3 +65,11 @@
   - TX credit: P8 form (FABLE-FIX-S81-LEPE-P8.json, 20 compact TX banks, 0 cycles vs P7), fixes the 23 groups > 900 um. Placement unproven: P8/R3 died at LEC_ASYNC / global_place.
   - Next class: u_lnl3 k_li_d -> lep g_rx[3] dq, 514 ends, -396 placement RC / -211.8 after repair. Site g_rx[3] dq ranks at lnl3, else +1 relay_depth on k_li_d.
   - Hold: cross_tap 7,622 ends = LOCKUP-STATION-1130 class. No published s81 rows; J6 needs a station_rule derive on a lepe CTS kit.
+- 2026-11-20 21:37 PST PREP proof7b [S81-DIE-R5 -> COORD; cc S81-J6-ASSEMBLY] proof7 was already admitted (unit oth-ubuntu-2673280-1795239086, epyc9, in run_kit), so it keeps running. proof7b is prepped in parallel, not launched: epyc9 /srv/opentallas-scratch2/claude/fable-lepe/opus-p7b (build.sh, mk7.py, prep7b.py, p7_extra.py, inputs/ + inputs.sha256 rechecked OK).
+  - Land reset: relay_depth D4 on u_u_land.rst_n, relays (1214.7,78.8) (998.5,149.6) (782.2,220.3) (566.0,290.1). The 5 Manhattan hops are 286.9/287.0/287.0/286.0/287.9 um.
+  - u_rstr: (349.8,361.8), the nearest site outside all macro boxes (3 um halo), 6 um from the spec site. KIT-RD-1 must stage 4 relays; the istations check now requires 4.
+  - Credit sites: 57 r0/r1 sites moved out of the p7-r2 macro boxes (53 macros, 3 um halo), max move 52 um, none on a tap. The boxes are tied to the kit by macro_place.tcl sha; build.sh stops if gen emits a different macro placement. The plan step ran clean (PLAN7_OK, relay_depth 5, D4).
+  - Also fixed the no-op grep path bug that killed the first proof7 build.
+  - P8 left out. Its R3 placement died at global_place: FIRM station g_tx[0].g_address[16].credit_r[2] moved > 4 um from (624,800). That is a site-legality re-site, not a quick fix.
+  - Expected limit: 23 credit groups still have a hop > 300 um (max 489.8 um). Escaping the boxes does not shorten them; only the P8 bank form or more credit stages would. So 7b fixes the reset class (item6) and site legality, not the credit span.
+  Launch: ot-run --mem 96 --threads 16 --hosts epyc9 --dir .../opus-p7b -- bash build.sh grt. I hold it until proof7 reads out or you want both in flight.
