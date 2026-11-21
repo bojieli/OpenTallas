@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.plan_rows.v1",
+ "owner": "FAM-S81-LEPE-2",
+ "event": "J7",
+ "for": "S81-J6-ASSEMBLY-R3",
+ "asked_by": "COORD FABLE-CLOSURE-0600 lever 5",
+ "status": "PROPOSAL rows (11-21 06:xx PST): measured census, NOT bound, NOT gated. No-growth split, 0 added cycles. Same form as FAM-S81-SLICE split B for c1x_C (lanes/handoff/FAM-S81-SLICE-J7-c1xC-rows.json split_plan_B); carry both with one strip/body sub-tile schema.",
+ "type": "dsdv_slice_lepe_mu_C__t1 (outline 1442.88 x 1226.88, slice hub band C: xgt_xo + xrt1 + xfin + eg + capc5r + landings)",
+ "evidence": {
+  "run": "epyc9 ot-jobs/dsdv_slice_lepe_mu_C__t1-route-renewed-glider-2934934-1795248989 (kit-wave 224567138ab): place nontap 499,795 (+120,269 tap), floorplan 337,175, pre-floorplan 334,136; cap 400k",
+  "cone_census": "1_2_yosys.v (247,570 std cells), FF+exclusive-comb cones (cone.py, macros as sinks): xg 37,688 FF + 72,845 comb; xf 4,565 + 11,843; u_ring 4,547 + 9,296; u_lpad 6,044 + 2,284; u_d1 2,668 + 2,668; cap 1,354 + 903; xr 519 + 327; 77k comb not in any FF cone (port/macro pin cones)",
+  "placed_census": "3_place.odb 496,731 insts: named infra 193,999 (u_cland 77,707, u_ist 51,070, u_bout 29,270, u_bin 19,258, u_ft 7,248, u_lpad 6,044, u_d1 2,668, u_rrl 1,055); xg named 39,716; xf 4,530; cap 1,354; xr 519; anonymous 256,191 (_N_ 127,030, wire 109,639, in/out/load_slew 19,350): 193,881 inside the xg macro bbox (43..630 x 52..936), 62,322 outside",
+  "bands_130um": "infra S 74,711 / N 48,264 / E 25,255 / W 15,193 / interior 30,913; anonymous in bands 37,731",
+  "crossings": "cone census cross FF counts: u_lpad -> u_d1 2,668; u_d1 -> xg 1,112; u_lpad -> xg 278; xf <-> xg 348 / 346 (both body); every strip<->body net starts at a landing/relay FF or an xg/xf output FF (xgtxo README: every ring output leaves a flop), so both sides are registered and no register or cycle is added"
+ },
+ "rows": [
+  {"id": "LC-S1", "path": "partition_types[dsdv_slice_lepe_mu_C__t1] -> sub-tiles", "set": {
+    "strip": {"name": "dsdv_slice_lepe_mu_C__t1__strip", "members": "u_cland_*, u_ist_*, u_ft_*, u_bin_*, u_bout_*, u_lpad_*, u_d<N> relays, u_rrl_* (ot_dp_st / ot_dp_dly / ot_dp_rrelay(_nl) / ot_meso_ring_ca / ot_dp_landing_*)", "cells_est_placed": "~232k (194k named infra + ~38k band buffers)", "region": "perimeter bands of the same tile: S 1442.88 x 130, N 1442.88 x 130, E 130 x 967, W 130 x 967; the 30.9k interior infra cells (u_ist 8.8k, u_bout 8.2k, u_bin 5.9k, u_lpad 2.8k, u_cland 2.4k) are re-sited into the bands with hops <= 405 um"},
+    "body": {"name": "dsdv_slice_lepe_mu_C__t1__body", "members": "u_c core logic: xg (ot_s81sl_xgt_xo + 37 macros), xf (4 eng_finish + norm_finish), xr (xrt1), eg (egg/egn x2), cap (capc5r), flt, mk, u_ring control", "cells_est_placed": "~265k (xg 39.7k named + 218k interior anonymous + xf/cap/xr 7k)"},
+    "cycles_added": 0, "die_growth": "none", "core_shapes": "unchanged"}},
+  {"id": "LC-G1", "what": "geometry precondition (open, the same as c1x_C 'W band vs core origins')", "detail": "xg SRAM stack bbox starts at x 43.2 / y 51.9 (24 x ot_sram_1r1w_128x256_m1_r2c2 at 43..475 x 52..724; ROMs 492..582 x 52..936; 128x64 at 596..630 x 52..589), so the W and S 130 um bands cover xg macros. Fix by core MOVE only (allowed): shift the xg macro block +90 um in x and y (it has room: the xf row starts at x 467, cap at y 760), or use 45 um strip depth on the W/S faces where the macros sit. G0 must check that no strip region covers a hard core."},
+  {"id": "LC-F1", "what": "fallback if the body is still > 400k after strip-out", "detail": "harden u_xg (ot_s81sl_xgt_xo) as S-XG1 in FAM-S81-SLICE (xs4 | rstopt_xo cut, registered both sides, +1 cycle declared). Not needed by this arithmetic (body ~265k)."}
+ ],
+ "next": "S81-J6-ASSEMBLY-R3: carry LC-S1 in the same strip/body schema as c1x_C split B; FAM-S81-LEPE-2 builds the body or strip kit once the schema binds. lepe_mu_LP t2 (the representative) is 266k at CTS and needs no split.",
+ "scripts": "epyc10 /srv/opentallas-scratch2/claude/fam-lepe/split_C/{cone_lepe2.py, cone_C2.txt, pcen.py, band.py, C_place.tsv}"
+}
