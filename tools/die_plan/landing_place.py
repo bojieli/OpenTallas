@@ -448,7 +448,12 @@ def _placement_source(active):
 def _band_groups(tn, name, band, typ):
     cfg = _native_role_banks(tn, name, band, typ or {})
     rects = [b['rect_um'] for b in cfg['banks']] if cfg else band_rects(tn, name, band, typ)
-    tag = 'ring:' + name + _spread(band, _bus_order(typ or {}, name))
+    # The emitted pad geometry can give a band a different bit direction
+    # from the logical FT declaration. Keep the override local to placement.
+    order = band.get('pinslot_order', _bus_order(typ or {}, name))
+    if order not in ('lsb_low', 'lsb_high'):
+        raise ValueError(f'{tn}.{name}: invalid pinslot_order {order!r}')
+    tag = 'ring:' + name + _spread(band, order)
     prefix = band.get('instance', 'u_cland_' + name)
     groups = []
     face = band.get('freg_rect_um')
@@ -471,7 +476,7 @@ def _band_groups(tn, name, band, typ):
         if min(face[2], main[2]) > max(face[0], main[0]) and min(face[3], main[3]) > max(face[1], main[1]):
             raise ValueError(f'{tn}.{name}: FREG and storage banks overlap')
         groups.append((prefix + '.g_freg.u_face', list(face),
-                       'ring:' + name + '@freg' + _spread(band, _bus_order(typ, name))))
+                       'ring:' + name + '@freg' + _spread(band, order)))
     groups.extend((prefix, rect, tag) for rect in rects)
     return groups
 
