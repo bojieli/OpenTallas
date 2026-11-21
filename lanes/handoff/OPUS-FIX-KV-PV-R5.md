@@ -53,3 +53,7 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
   setup < -300 is measured (m26.sh pattern: 3_resizer.rpt / 3_detailed_place.rpt wns), kit_wave cancel-rows --event KV-D26 --attempt N.
 - type_split push still pending (needs a clean bind): epyc7 lane clone branch claude/opus-fix-kv-pv-r5-tsplit 3a132dd5b5. tree5 type_split.py
   = that version. r3_rows.py should later go to main as a tool (tools/die_plan/pv_leaf_anchor_rows.py) with a test.
+
+## Update 2026-11-21 ~11:5x PST
+- chain15 probe bind 8b (split 14) crashed again: native stations pv_S_3.o_vport_W_N_vqN_p: expected one outgoing lane (cut lane L2420 carries 0 bits; prefill/_route packs cut bits into the lowest-id w->e cut lane with room, ties by lane id). Plan rows/ports are consistent. Debug bind split28/dbg_ns.sh (ot-run oth-ubuntu-2686426-1795285970, log split28/dbg_ns/log, DBG_BAD/DBG_OUT lines) lists every empty native-station lane + which lanes carry the vport bits. Fix next, then re-run chain14.sh (R3/R4 -> bind 9 -> refresh -> bind 10).
+- v12 split rows sent to KV-PLAN-R6 (D28-rows doc, kv3_pv_v12 section). 11 carried struct stops placed. qkd_pv_fin_s8_pin shown SIGNED (posted).
