@@ -220,10 +220,13 @@ class OneLiveAttempt(unittest.TestCase):
 class ReapRetry(unittest.TestCase):
     def setUp(self):
         self.saved = list(WJ.FLEET)
+        self.saved_bad = set(WJ.BAD_HOSTS)
+        WJ.BAD_HOSTS = set()                  # ISOLATE-1630: a kit_wave tick test earlier in the session leaves hosts marked bad (module global); the stop must reach epyc9
         WJ.set_fleet(["intel2", "epyc9"])
 
     def tearDown(self):
         WJ.FLEET[:] = self.saved
+        WJ.BAD_HOSTS = self.saved_bad
 
     def test_stop_that_missed_a_host_is_retried_next_tick(self):
         with tempfile.TemporaryDirectory() as d:
