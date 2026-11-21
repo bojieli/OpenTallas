@@ -107,6 +107,35 @@ def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user"
                 pass
 
 
+LIVE_ROW_STATES = ("RUNNING", "LAUNCHING", "ENQUEUED", "RETRY-INFRA", "PASS", "ROUTE-HELD", "SIGNED", "DEDUP", "WAITING", "HELD")
+
+
+def live_attempt_paths(coord, out, canon, state_file=None):
+    """FLOW-OPS-1300 item 13: the guard no longer protects old attempt_N dirs through the die work_root, so the attempts a live or queued wave row may still read are listed
+    exactly: items/<item> (its running dir) and attempt_<n>, attempt_<n-1> (resume checkpoint) of every row whose status is live / queued.  -> number added"""
+    n = 0
+    try:
+        st = json.load(open(state_file or os.path.join(coord, "autopilot/kit_wave_state.json")))
+    except (OSError, ValueError):
+        return 0
+    for r in (st.get("items") or {}).values():
+        if not isinstance(r, dict) or str(r.get("status") or "") not in LIVE_ROW_STATES:
+            continue
+        w = str(r.get("work") or "")
+        if not w.startswith("/srv/"):
+            kit = str(r.get("kit") or "").split(":", 1)[-1]
+            m = re.match(r"(.*/items/[^/]+)(?:/|$)", kit)
+            w = m.group(1) if m else ""
+        if not w.startswith("/srv/"):
+            continue
+        w = w.rstrip("/")
+        w = re.sub(r"/attempt_\d+$", "", w)
+        a = int(r.get("attempt") or 0)
+        for p in [w] + [f"{w}/attempt_{k}" for k in (a, a - 1) if k > 0]:
+            out.add(canon(p)); n += 1
+    return n
+
+
 PROV_CACHE = os.path.expanduser("~/.local/state/prov_paths.json")
 POST_SKIP_LANES = ("FLEET-OPS-R", "DISK-RATE", "FLEET", "HUB-SYNC", "FLEET-OPS", "MERGE-QUEUE", "OT-TOOLS-SYNC", "KIT-WAVE")
 TREE_TOKEN = re.compile(r"\b(src_[A-Za-z0-9_]+)")
@@ -177,6 +206,7 @@ def main(argv):
     event_paths(coord, s, g.canon)
     # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
     live_cmd_paths(s, g.canon)
+    live_attempt_paths(coord, s, g.canon)              # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)
     try:                                           # the guard's newer-than-current input, next to the list (refresh_guard_live.sh pushes both)

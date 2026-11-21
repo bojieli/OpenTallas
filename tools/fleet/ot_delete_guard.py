@@ -217,6 +217,23 @@ def routed_unsigned_refusal(t):
     return "routed result not signed and not superseded by a newer routed attempt (5_2_route.odb / 6_final.odb): " + os.path.basename(ad)
 
 
+def attempt_dir_of(t):
+    """the kit-wave attempt dir (.../items/<item>/attempt_N) t is or lies inside, else None"""
+    m = ATTEMPT_DIR.match(t)
+    return t[:m.end()].rstrip("/") if m else None
+
+
+def attempt_signed(ad):
+    """a signoff*.json with verdict SIGNED under the attempt dir"""
+    for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
+        try:
+            if json.load(open(so)).get("verdict") == "SIGNED":
+                return True
+        except (OSError, ValueError, AttributeError):
+            continue
+    return False
+
+
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
@@ -238,14 +255,25 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
         if protected is None:
             return err if m else None            # fail closed for tree roots; other targets keep the other guards
     allow = load_allow_exact() if allow is None else allow
+    # FLOW-OPS-1300 item 13 (FLEET-WATCH-R7: ~97 % of 4,400 idle failed / superseded attempt dirs per host refused): a die's work_root (the rows container
+    # .../runs/<die>/kit-wave) is protected as a whole, so every old attempt_N inside it was refused.  Owner rule 11-12 (keep only live jobs, live / queued refs, signed until
+    # archived): an attempt_N dir is NOT protected by an ANCESTOR entry.  It stays refused when it is listed itself (the latest attempts of live / queued rows,
+    # build_protected_live.live_attempt_paths), holds something listed (PROTECTED-DBS, binds of record), holds a signed result, holds an unsigned routed result
+    # (routed_unsigned_refusal above), or a live process / ot-run command line names it (below).
+    ad = attempt_dir_of(t)
+    ad_free = bool(ad) and not attempt_signed(ad)
     for p in protected:
         if t.startswith(p + "/") and t in allow:
             continue                                  # exact exception: only a protected ANCESTOR is skipped
+        if ad_free and ad.startswith(p + "/"):
+            continue                                  # an ancestor of the attempt dir (the rows container): not a protection of the attempt
         if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
             return "protected (kit_wave.json src/bind of record/marker/prov): " + p
     pt = live_text() if ptext is None else ptext
     if t in pt or t + "/" in pt:
         return "live process cwd/open file/cmdline under it"
+    if ad and ad != t and (ad in pt or ad + "/" in pt):
+        return "live process cwd/open file/cmdline under its attempt dir"
     return None
 
 
