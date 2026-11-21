@@ -11,5 +11,6 @@ Family owners: OPUS-FIX-KV-PV-R4 (pv, D28), FABLE-FIX-KV-HGI (hg/hgi), FAM-KV-HU
    installed as tree r8_ev 04c53e682495. + io_cor_v1 41 bank_taps (FAM-KV-IOPC br1, 0 cycles) -> plan 041f43f27d63.
    Gates: G0 oth-ubuntu-3405347-1795248031 -> d27c/g0gate_d27c_r4b, bind oth-ubuntu-3405350-1795248031 -> d27c/bindgate_d27c_r4b (logs intel2 ~/tmp/kvplanr4). Watch for PARAM_REGEN AHUB ap0 [3,5] + EMIT reset relay errors (seen on D27b6 old tools).
 3. Proofs: D27b6 bind = R8_STALE 30 + PARAM_REGEN 1 + EMIT 14 (old tools) -> not usable. Launch the R3 section-3 proof set from the D27c R4 bind when green.
-4. D28 pv split after D27 applies; hub_C split may join from FAM-KV-HUB.
+4. D28 pv split after D27 applies; hub_C split may join from FAM-KV-HUB. Reset: RESET-RELAY-GEN-R3 re-emits pv bank_taps two-pass on the
+   D28 split plan (pass2 on epyc10 rrgen-r3/kv3 is D26-based, not foldable); hub_Eo/Wo/sys_c pass2 to be re-run on D27c for D28.
 5. io_cor_v1 reset-tap rows: folded into D27c (no longer waits on RESET-RELAY-GEN-R3). Other 14 RESET-R3 types still wait.
