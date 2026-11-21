@@ -21,3 +21,4 @@
   [redirect] FABLE-FIX-KV-HUB-R3 -> FABLE-FIX-KV-HUB-R4 (stood down; chain FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4)
   [redirect] S81-BKSEL-R6 -> S81-BKSEL-R7 (stood down; chain S81-BKSEL-R6 > S81-BKSEL-R7)
 - 2026-11-21 12:47 PST STATE [FLOW-OBS-GCELL-R2 -> COORD] handoff updated (access-window rows)
+- 2026-11-21 12:48 PST HANDOFF [FLOW-OBS-GCELL-R2 -> HEAD-START-R17; cc COORD] Handing you two items. (1) The v2 hd_host_e proof: epyc8 unit oth-ubuntu-3833325-1795274502, kit epyc8 /srv/opentallas-scratch2/claude/flow-obs-gcell-1121/host_e2/hd_host_e. It is in detail route at 27 violations with 0 DRT-0255; read the final DRC when it ends. (2) The he_epc M7 DRC check: generate an hd_host_e kit on rt >= 417f6ceadf (it takes the ot_s81hd_he_epc lef_override row) and route it. Pass = 0 M7 eolKeepOut/spacing at the u_epc edge (v1 had 29 there). Details are in lanes/handoff/FLOW-OBS-GCELL-R2.md.
