@@ -10,6 +10,8 @@ kit then fails post-route (GEOM-REVIEW-2 04:43 kv3_io_cor host_fdi 1258 um, kv3_
 This audit lists every (type, in bus -> out bus) forward leg whose type-frame window distance (Manhattan, window
 mid-points, check._bus_targets) exceeds the station reach, with the number of FIRM internal stations it needs
 (internal_stations[] conn 'bus:<out>', regs_um on the L path at <= reach) unless the type already declares them.
+A declared row passes only when its own hops (from_um -> regs_um[..] -> to_um, Manhattan) are all <= reach
+(KV-PLAN-R2 11-20: 405-um-era rows, e.g. sys_c serdes_E.tx_up 5 stations at 365 um, passed a 300 um audit).
 Exit 1 when any leg is over reach.  usage: fwd_reach.py PLAN.json [--json OUT] [--reach UM]"""
 import argparse
 import json
@@ -36,6 +38,17 @@ def stations_on_L(a, b, n):
         else:
             out.append([round(b[0], 3), round(a[1] + math.copysign(s - dx, b[1] - a[1]), 3)])
     return out
+
+
+def declared_max_hop(row):
+    """the longest Manhattan hop of a declared internal_stations row: from_um -> regs_um[..] -> to_um (None without geometry)"""
+    pts = [row.get("from_um")] + list(row.get("regs_um") or []) + [row.get("to_um")]
+    if any(p is None or len(p) < 2 for p in pts):
+        return None
+    return max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:]))
+
+
+HOP_TOL_UM = 0.5
 
 
 def main(argv=None):
@@ -66,7 +79,10 @@ def main(argv=None):
         t = P.types[tn]
         if t.get("hard"):
             continue
-        have = {e.get("conn") for e in t.get("internal_stations", [])}
+        have = {}
+        for e in t.get("internal_stations", []):
+            if e.get("conn"):
+                have.setdefault(e["conn"], []).append(e)
         bt = C._bus_targets(P, tn)
         for net in sorted(set(ins[tn]) & set(outs[tn])):
             for ib in sorted(ins[tn][net]):
@@ -76,15 +92,21 @@ def main(argv=None):
                     pa, pb = bt[ib][1], bt[ob][1]
                     d = abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
                     n = max(0, math.ceil(d / reach) - 1)
+                    decl = have.get(f"bus:{ob}", [])
+                    hops = [declared_max_hop(e) for e in decl]
+                    hop = None if not decl or None in hops else max(hops)
+                    ok = d <= reach or (hop is not None and hop <= reach + HOP_TOL_UM)
                     rows.append(dict(type=tn, tree=net, in_bus=ib, out_bus=ob, in_um=[round(v, 3) for v in pa],
                                      out_um=[round(v, 3) for v in pb], dist_um=round(d, 1), stations=n,
-                                     declared=f"bus:{ob}" in have,
-                                     verdict="PASS" if d <= reach or f"bus:{ob}" in have else "FAIL",
+                                     declared=bool(decl), declared_stations=sum(len(e.get("regs_um") or []) for e in decl),
+                                     declared_max_hop_um=None if hop is None else round(hop, 1),
+                                     verdict="PASS" if ok else "FAIL",
                                      proposed_regs_um=stations_on_L(pa, pb, n) if n else []))
     bad = [r for r in rows if r["verdict"] == "FAIL"]
     for r in rows:
         print(f"{r['verdict']:4} {r['type']:16} {r['tree']:28} {r['in_bus']:24} -> {r['out_bus']:26} "
-              f"{r['dist_um']:7.1f} um  +{r['stations']} st")
+              f"{r['dist_um']:7.1f} um  +{r['stations']} st"
+              + (f"  declared {r['declared_stations']} st hop {r['declared_max_hop_um']} um" if r["declared"] else ""))
     print(f"FWD_REACH {'FAIL' if bad else 'PASS'} {len(bad)}/{len(rows)} forward legs over {reach:g} um")
     if a.json:
         Path(a.json).write_text(json.dumps(dict(schema="opentallas.die_plan.fwd_reach.v1", plan=str(a.plan),
