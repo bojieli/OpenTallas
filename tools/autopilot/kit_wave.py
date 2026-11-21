@@ -11404,6 +11404,10 @@ def close_queue_job(AP, rec, why):
         return "queue job close failed: %r" % (e,)
 
 
+# FLEET-WATCH-R5: ticks hold kit_wave.lock >= 2.5 min back to back; a 60 s wait starved lane cancels.  Blocking flock queues behind the holder; wait like struct-stop (15 min).
+CANCEL_LOCK_WAIT_S = 900
+
+
 def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry=False, old_plans_only=False, lock=None, no_stop=False, event=None, attempt=None, cls="STRUCT-STOP"):
     """FABLE-FLOW-1950 (L): cancel-rows held kit_wave.lock 17:58-18:47 (seven wave steps skipped, nothing launched for 71 min) because the unit / container stops ran under it.
     Now: (1) lock only to read the state and place the structural stops; (2) stops, withdrawals and container stops OUTSIDE the lock, on copies of the rows;
@@ -11411,9 +11415,9 @@ def cancel_rows_phased(AP, cfg, ap_dir, die, item_glob, why, owner, verdict, dry
     -> (stops, [(key, item, attempt, status)] cancelled, [skipped keys])"""
     import copy
     def take():
-        lk = (lock or lock_take)(Path(ap_dir) / "kit_wave.lock", wait_s=60)
+        lk = (lock or lock_take)(Path(ap_dir) / "kit_wave.lock", wait_s=CANCEL_LOCK_WAIT_S)
         if lk is None:
-            raise RuntimeError("kit_wave.lock busy for 60 s")
+            raise RuntimeError("kit_wave.lock busy for %d s" % CANCEL_LOCK_WAIT_S)
         return lk
     lk = take()
     try:

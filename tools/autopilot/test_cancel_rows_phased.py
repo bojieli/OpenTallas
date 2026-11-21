@@ -56,3 +56,16 @@ def test_row_changed_during_the_stops_is_left_alone(tmp_path, monkeypatch):
     stops, done, skipped = KW.cancel_rows_phased(AP, {"dies": {}}, tmp_path, "s81", "t1", "why", "o", "GEOMETRY")
     row = json.loads((tmp_path / KW.STATE_FILE).read_text())["items"]["s81|e|t1|b"]
     assert skipped == ["s81|e|t1|b"] and row["status"] == "RUNNING" and row["attempt"] == 3 and not AP.saved
+
+
+def test_cancel_lock_wait_is_long_enough_for_a_tick(tmp_path, monkeypatch):
+    _state(tmp_path)
+    seen = []
+    real = KW.lock_take
+    def spy(path, wait_s=0):
+        seen.append(wait_s)
+        return real(path, wait_s=wait_s)
+    monkeypatch.setattr(KW, "lock_take", spy)
+    monkeypatch.setattr(KW, "grt_arm_cancel", lambda ap, cfg, rec, why, cls, jobs, notices, reclaim=True: rec.update(status="CANCELLED", updated=time.time()))
+    KW.cancel_rows_phased(AP, {"dies": {}}, tmp_path, "s81", "t1", "why", "o", "GEOMETRY")
+    assert seen and min(seen) >= 600

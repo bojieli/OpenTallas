@@ -49,7 +49,7 @@ class AP:
 
     def sh(self, cmd, timeout=0, input=None):
         self.cmds.append(cmd)
-        txt = " ".join(map(str, cmd))
+        txt = " ".join(map(str, cmd)) + " " + str(input or "")        # the reclaim script now arrives on stdin
         if "KW_GRTARM_SRC_OK" in txt:
             return 0, ("KW_GRTARM_SRC_OK\n" if self.src_ok else "KW_GRTARM_SRC_NO\n"), ""
         if "KW_RECLAIM" in txt:
