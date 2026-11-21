@@ -5930,7 +5930,7 @@
    "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_1120155451",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
     "note": "S81-DIE-R4 2026-11-20 event J5 on c75b12bc6707 (base D8i d7462b520b09), bind src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213. Revert: rollback_tree D8i"
    },
@@ -37197,6 +37197,7 @@
     }
    ],
    "bind_copy_of_record": [
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_postbind_1120135739",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_postbind_1120021437"
    ],
    "review_before_route": {
