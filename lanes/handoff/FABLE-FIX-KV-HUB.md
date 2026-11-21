@@ -47,3 +47,15 @@ Predecessor dir (read-only, its bind A still writes there): epyc8 fam-kv-hub-r2.
    run the same tap-span replay on hub_Ei/Eo/Wo/Wi/C and sys_c (hub_Ei: 26 of 81 taps over 300 um, max 491).
 6. hub_Ei -433 is port_in (seam class): no builds on it. hgi faces: OPUS-FIX-KV-HGI-R3 owns; R2's in-core relay-site finding is in
    fam-kv-hub-r2/ana/station_core_hg.txt.
+
+## COORD 06:1x (FABLE-PD-KV-0730 fixes 2 and 9) -- state
+- Fix 2 (hroot): no variant A kit, no A rows in D28. Variant B is the carried form: tap density splits every sink box to <= 300 um
+  (52 taps, t9 included), chains kvpc 273 / slg 271 / kvs fan 273 / esh 317 um, all <= 405. Gate for the rows = one kit read at GRT:
+  OT_TAP_SPAN 0 over 300, post-hook tap spread, FF report_clock_skew on clk under 100 ps, TT setup at GRT.
+- Fix 9 (hub_C / sys_c window rows, R-REACH-3): NOT DONE. G0 (fam-kv-hub-r2/g0gate_a2/g0/g0_report.json): hub_C 72 face buses,
+  7,760 bits over 200 um from their consumer, worst o_kvs_ctl_o_hroot_WS 1,118 b x 1,129 um; sys_c 30 buses, 3,215 bits, worst
+  o_dNd_kv_rec_rx 552 b x 1,620 um. Same class as hroot (face bus far from its consumer, no stage). Two forms: move the window
+  (shared-face pin move: touches hroot / hub_E* / hub_W* pins) or station rows at <= 295 um on the bus (r2_fwd300.py form, +cycles,
+  type-local). Recommended: station rows first (type-local, no neighbour re-pin), per bus from the G0 "bus ..." findings of the two
+  types; window moves only where a station row cannot fit beside the 19 hub_C cores. Needs the same work as hroot B (rows, reprice,
+  tap density, G0, bind). Not started: deferral posted to KV-PLAN-R5, successor should take it after the hroot B bind.
