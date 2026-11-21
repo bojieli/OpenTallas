@@ -5,21 +5,21 @@
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-21 02:57 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-21 03:00 PST)
 count_hourly: signed any plan 492 | current plan 407 | deferred re-sign 19 (hbm 1, head 7, qc 10, s81 1) | retired-plan 66 (head 1, kv 12, qc 29, s81 24)
 - [ ] FAIL.S81.CORES 62/62 signed · open: none
-- [ ] FAIL.S81.TYPES 44/394 signed · kit rows: held by die owner (plan event pending) 223 (col_h10_r1__t1__cl95b37463__pv69c7e9a6, +222) · running 54 · running (lint advisory) 43 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +42) · cancelled (superseded) 23 (col_h10_r0_p1__t1__cl574cc59d__pv67036687, +22) · other flow error 7 (bk_sel__t2, +6) · hold after CTS 1 (col_h10_r0_p4__t1__pv5b623e07)
+- [ ] FAIL.S81.TYPES 44/394 signed · kit rows: held by die owner (plan event pending) 223 (col_h10_r1__t1__cl95b37463__pv69c7e9a6, +222) · running 53 · running (lint advisory) 43 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +42) · cancelled (superseded) 23 (col_h10_r0_p1__t1__cl574cc59d__pv67036687, +22) · other flow error 8 (bk_sel__t2, +7) · hold after CTS 1 (col_h10_r0_p4__t1__pv5b623e07)
 - [ ] FAIL.HEAD.CORES 5/5 signed · open: none
 - [ ] FAIL.HEAD.TYPES 25/26 signed · kit rows: running 1
 - [ ] FAIL.QC.CORES 70/70 signed · open: none
 - [ ] FAIL.QC.TYPES 33/125 signed · kit rows: running 71 · held by die owner (plan event pending) 10 (cbf_q00__cl1b5a6458, +9) · cancelled (superseded) 4 (sle_fw_v2__cl69f5e854, +3) · running (lint advisory) 1 (sle_st_b_v1__pvc5a85fd4__pv7b7fafb4)
 - [ ] FAIL.KV.CORES 68/69 signed · open: cancelled (superseded) 1 (qkd_pv_fin_s8_pin)
-- [ ] FAIL.KV.TYPES 6/56 signed · kit rows: running 21 · held by die owner (plan event pending) 15 (kv3_hg, +14) · other flow error 6 (kv3_hgi_v3, +5) · cancelled (superseded) 3 (kv3_hgi_v2__cl2862d491, +2) · bind stale vs plan (re-bind) 2 (kv3_hgi_v6, +1) · running (lint advisory) 2 (kv3_hgi_v4, +1) · PDN-0006 1 (kv3_pc_v3)
+- [ ] FAIL.KV.TYPES 6/56 signed · kit rows: running 20 · held by die owner (plan event pending) 15 (kv3_hg, +14) · other flow error 6 (kv3_hgi_v3, +5) · bind stale vs plan (re-bind) 3 (kv3_hgi_v6, +2) · cancelled (superseded) 3 (kv3_hgi_v2__cl2862d491, +2) · running (lint advisory) 2 (kv3_hgi_v4, +1) · PDN-0006 1 (kv3_pc_v3)
 - [ ] FAIL.HBM.CORES 90/118 signed · open: cancelled (superseded) 12 (hgi_sfu_opsa_group0, hgi_sfu_opsb_group, hnx_vms_bank_q0_faces__vecd4ae, +5) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · no kit-wave row 6 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group1, +3) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
 - [ ] FAIL.HBM.TYPES 4/84 signed · kit rows: cancelled (superseded) 90 (NE_io, +89) · held by die owner (plan event pending) 22 (NE_iorly, +21)
-### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 111 current-event (+1 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts, NOT SEEN: intel2; wave state: local copy 11-21 02:49; full list lanes/STALE.tsv)
+### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 111 current-event (+1 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts, NOT SEEN: intel2; wave state: local copy 11-21 02:58; full list lanes/STALE.tsv)
 - [ ] STALE.S81 1 (cores 0, types 1) · by owner: FAIL-S81-1 1
-  - type iqf__t1 · ROUTE-HELD geom @ 2026-11-20 17:26 (9.5h) · owner FAIL-S81-1
+  - type iqf__t1 · ROUTE-HELD geom @ 2026-11-20 17:26 (9.6h) · owner FAIL-S81-1
 - [ ] STALE.QC 6 (cores 0, types 6) · by owner: unowned 6
   - type sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa · no kit-wave row · owner unowned
   - type sle_hc1__cl22c1ff36__pve230954c · no kit-wave row · owner unowned
@@ -37,10 +37,10 @@ count_hourly: signed any plan 492 | current plan 407 | deferred re-sign 19 (hbm 
   - core ot_pdie_serdes_rx_bm3_rest · no kit-wave row · owner unowned
   - core ot_wbq_sw · no kit-wave row · owner HBM-CORES-B
   - type q_mcb_nw · no kit-wave row · owner unowned
-  - type NE_iorly · ROUTE-HELD geom @ 2026-11-13 03:26 (191.5h) · owner unowned
-  - type NW_iorly · ROUTE-HELD geom @ 2026-11-13 03:26 (191.5h) · owner unowned
-  - type PHY_NC · ROUTE-HELD geom @ 2026-11-13 03:27 (191.5h) · owner DIE-HBM-98
-  - type vsN5 · ROUTE-HELD geom @ 2026-11-13 03:27 (191.5h) · owner KIT-WAVE-1
+  - type NE_iorly · ROUTE-HELD geom @ 2026-11-13 03:26 (191.6h) · owner unowned
+  - type NW_iorly · ROUTE-HELD geom @ 2026-11-13 03:26 (191.6h) · owner unowned
+  - type PHY_NC · ROUTE-HELD geom @ 2026-11-13 03:27 (191.6h) · owner DIE-HBM-98
+  - type vsN5 · ROUTE-HELD geom @ 2026-11-13 03:27 (191.6h) · owner KIT-WAVE-1
   - type vsN2 · ROUTE-HELD geom @ 2026-11-13 07:23 (187.6h) · owner KIT-WAVE-1
   - type PHY_NE · CANCELLED geom SUPERSEDED @ 2026-11-16 07:11 (115.8h) · owner DIE-HBM-98
   - core hnx_fused_lane_c · CANCELLED geom SUPERSEDED @ 2026-11-16 07:11 (115.8h) · owner unowned
@@ -55,85 +55,85 @@ count_hourly: signed any plan 492 | current plan 407 | deferred re-sign 19 (hbm 
   - type q_spu0__physical_v1 · CANCELLED geom SUPERSEDED @ 2026-11-16 07:11 (115.8h) · owner KIT-WAVE-1
   - type vsN4 · CANCELLED geom SUPERSEDED @ 2026-11-16 07:11 (115.8h) · owner KIT-WAVE-1
   - type vsN6 · CANCELLED geom SUPERSEDED @ 2026-11-16 07:11 (115.8h) · owner KIT-WAVE-1
-  - type NE_io · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b002 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b002__physical_v1 · owner KIT-WAVE-1
-  - type q_b002__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b003__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b011 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b011__physical_v1 · owner KIT-WAVE-1
-  - type q_b011__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b012 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b012__physical_v1 · owner KIT-WAVE-1
-  - type q_b012__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b013 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b013__physical_v1 · owner KIT-WAVE-1
-  - type q_b013__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b100__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b101_nw · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b102 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b102__physical_v1 · owner KIT-WAVE-1
-  - type q_b102__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b103 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b103__physical_v1 · owner KIT-WAVE-1
-  - type q_b103__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b110 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b110__physical_v1 · owner KIT-WAVE-1
-  - type q_b110__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b111 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b111__physical_v1 · owner KIT-WAVE-1
-  - type q_b111__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b112 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b112__physical_v1 · owner KIT-WAVE-1
-  - type q_b112__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_b113 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_b113__physical_v1 · owner KIT-WAVE-1
-  - type q_b113__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_hub_ne · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_hub_nw · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner HBM-PLAN
-  - type q_spb0__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_spb2__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_spt0 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_spt0__physical_v1 · owner KIT-WAVE-1
-  - type q_spt0__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_spt1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_su00 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_su00__physical_v1 · owner KIT-WAVE-1
-  - type q_su00__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_su01 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_su01__physical_v1 · owner KIT-WAVE-1
-  - type q_su01__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_su10 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_su10__physical_v1 · owner KIT-WAVE-1
-  - type q_su10__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_su20__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_su21 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_su21__physical_v1 · owner KIT-WAVE-1
-  - type q_su21__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type q_su31 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) row q_su31__physical_v1 · owner KIT-WAVE-1
-  - type q_su31__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.5h) · owner KIT-WAVE-1
-  - type NW_io · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type PHY_NW · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner DIE-HBM-98
-  - core hfd_hgi_vms_glue_nw_t · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/430f68dee83dc012 · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner HBM-CORES
-  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/6d132375c20a740b · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner HBM-CORES
-  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b7314a95f9eb7d23 · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) row hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f · owner HBM-CORES
-  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b95ff4f969a6c0ba · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner HBM-CORES
-  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/d4e89c75b4a66b6e · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner HBM-CORES
-  - core ot_hbm_idx_topk_link_static · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - core ot_hbm_svc_vm_kshare_splitstrap__v700685 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - core ot_hgi_coll_tkm_m_tp192__root · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - core ot_hgi_dma_back_static_vp4_banks_cp · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - core ot_hgi_sfu_opsa_group0 · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner unowned
-  - core ot_hgi_sfu_opsb_group · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner HBM-CORES-B
-  - core ot_svgr_top · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner unowned
-  - type q_b000 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) row q_b000__physical_v1 · owner KIT-WAVE-1
-  - type q_b000__physical_v1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_b001 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) row q_b001__physical_v1 · owner KIT-WAVE-1
-  - type q_b001__physical_v1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_b003 · CANCELLED kit_topology SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_b010 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) row q_b010__physical_v1 · owner KIT-WAVE-1
-  - type q_b010__physical_v1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_b100 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_b101 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_sm0 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_sm1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_sm2 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_sm3 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_spb0 · CANCELLED kit_rtl SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_spb2 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_spu0 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_spu1 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.5h) row q_spu1__physical_v1 · owner KIT-WAVE-1
-  - type q_spu1__physical_v1 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_su11 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.5h) row q_su11__physical_v1 · owner KIT-WAVE-1
-  - type q_su11__physical_v1 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type q_su20 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
-  - type vsN0 · CANCELLED kit_rtl SUPERSEDED @ 2026-11-18 04:25 (70.5h) · owner KIT-WAVE-1
+  - type NE_io · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b002 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b002__physical_v1 · owner KIT-WAVE-1
+  - type q_b002__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b003__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b011 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b011__physical_v1 · owner KIT-WAVE-1
+  - type q_b011__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b012 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b012__physical_v1 · owner KIT-WAVE-1
+  - type q_b012__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b013 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b013__physical_v1 · owner KIT-WAVE-1
+  - type q_b013__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b100__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b101_nw · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b102 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b102__physical_v1 · owner KIT-WAVE-1
+  - type q_b102__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b103 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b103__physical_v1 · owner KIT-WAVE-1
+  - type q_b103__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b110 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b110__physical_v1 · owner KIT-WAVE-1
+  - type q_b110__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b111 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b111__physical_v1 · owner KIT-WAVE-1
+  - type q_b111__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b112 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b112__physical_v1 · owner KIT-WAVE-1
+  - type q_b112__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_b113 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_b113__physical_v1 · owner KIT-WAVE-1
+  - type q_b113__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_hub_ne · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_hub_nw · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner HBM-PLAN
+  - type q_spb0__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_spb2__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_spt0 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_spt0__physical_v1 · owner KIT-WAVE-1
+  - type q_spt0__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_spt1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_su00 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_su00__physical_v1 · owner KIT-WAVE-1
+  - type q_su00__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_su01 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_su01__physical_v1 · owner KIT-WAVE-1
+  - type q_su01__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_su10 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_su10__physical_v1 · owner KIT-WAVE-1
+  - type q_su10__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_su20__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_su21 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_su21__physical_v1 · owner KIT-WAVE-1
+  - type q_su21__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type q_su31 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) row q_su31__physical_v1 · owner KIT-WAVE-1
+  - type q_su31__physical_v1 · LINT-ADVISORY prelint LINT @ 2026-11-16 13:25 (109.6h) · owner KIT-WAVE-1
+  - type NW_io · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type PHY_NW · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner DIE-HBM-98
+  - core hfd_hgi_vms_glue_nw_t · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/430f68dee83dc012 · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner HBM-CORES
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/6d132375c20a740b · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner HBM-CORES
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b7314a95f9eb7d23 · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) row hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f · owner HBM-CORES
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b95ff4f969a6c0ba · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner HBM-CORES
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/d4e89c75b4a66b6e · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner HBM-CORES
+  - core ot_hbm_idx_topk_link_static · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - core ot_hbm_svc_vm_kshare_splitstrap__v700685 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - core ot_hgi_coll_tkm_m_tp192__root · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - core ot_hgi_dma_back_static_vp4_banks_cp · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - core ot_hgi_sfu_opsa_group0 · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner unowned
+  - core ot_hgi_sfu_opsb_group · CANCELLED gen SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner HBM-CORES-B
+  - core ot_svgr_top · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner unowned
+  - type q_b000 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) row q_b000__physical_v1 · owner KIT-WAVE-1
+  - type q_b000__physical_v1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_b001 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) row q_b001__physical_v1 · owner KIT-WAVE-1
+  - type q_b001__physical_v1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_b003 · CANCELLED kit_topology SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_b010 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) row q_b010__physical_v1 · owner KIT-WAVE-1
+  - type q_b010__physical_v1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_b100 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_b101 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_sm0 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_sm1 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_sm2 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_sm3 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_spb0 · CANCELLED kit_rtl SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_spb2 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_spu0 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_spu1 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.6h) row q_spu1__physical_v1 · owner KIT-WAVE-1
+  - type q_spu1__physical_v1 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_su11 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.6h) row q_su11__physical_v1 · owner KIT-WAVE-1
+  - type q_su11__physical_v1 · CANCELLED geom SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type q_su20 · CANCELLED place SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
+  - type vsN0 · CANCELLED kit_rtl SUPERSEDED @ 2026-11-18 04:25 (70.6h) · owner KIT-WAVE-1
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
 - TOOLS-LAG hbm 3127 commits / missing r407 r409 r421 r422 r428 r431 r433 r435 r454 r457 r458 r459 r467 r468 r471 r473 r474 r476 r477 r478 r479 r481 r482 r483 r484 r488 r489 r490 r491 r493 r494 r495 r496 r497 r498 r503 r507 r546 r547 r548 +141 more
 - TOOLS-LAG qwen_compute 137 commits / missing r708
@@ -141,7 +141,7 @@ count_hourly: signed any plan 492 | current plan 407 | deferred re-sign 19 (hbm 
 - TOOLS-LAG s81 unmeasured (git rev-list --count: fatal: bad revision 'j5tree..main')
 - TOOLS-LAG s81_head 83 commits / missing r708
 ### TAP-INSERTION · measured per-tap insertion after CTS (advisory)
-- TAP-INSERTION qwen_compute: 2239 taps in 23 types, 41 over 1650 sinks; insertion max 743 ps (p50 269, p90 287), skew max 137 ps; oversized taps: ins max 299 ps, skew max 57 ps
+- TAP-INSERTION qwen_compute: 2174 taps in 22 types, 41 over 1650 sinks; insertion max 743 ps (p50 269, p90 287), skew max 137 ps; oversized taps: ins max 299 ps, skew max 57 ps
 - TAP-INSERTION qwen_kvsys: 111 taps in 2 types, 1 over 1650 sinks; insertion max 333 ps (p50 268, p90 297), skew max 87 ps; oversized taps: ins max 273 ps, skew max 26 ps
 - TAP-INSERTION s81: 2444 taps in 42 types, 112 over 1650 sinks; insertion max 852 ps (p50 464, p90 496), skew max 347 ps; oversized taps: ins max 815 ps, skew max 301 ps
 - TAP-INSERTION s81_head: 154 taps in 8 types, 0 over 1650 sinks; insertion max 501 ps (p50 464, p90 481), skew max 82 ps; oversized taps: ins max - ps, skew max - ps
