@@ -19534,3 +19534,4 @@ FAILED [AUTOPILOT 3283f16cae2b] 2026-11-21 11:06:43 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] FLOW-CLKGRT-R2: FLOW-CLKGRT-1121 stood down (chain FLOW-CLKGRT-1121 > FLOW-CLKGRT-R2)
 - 2026-11-21 11:11 PST DONE [FLOW-CLKGRT-R2] ot-run oth-ubuntu-3253349-1795287971 on tolerant-swine: rc=0 after 312 s, ended 11:11:21, log /home/ubuntu/tmp/clkgrt_ff_base.out, cmd: --mem 40 --threads 4 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/flow-clkgrt-1121 -- bash -c cd /srv/opentallas-scratch2/claude/flow
 - 2026-11-21 11:11 PST STAND-DOWN [FAM-S81-SERDES-R5 -> FAM-S81-SERDES-R6] stood down; successor FAM-S81-SERDES-R6. COORD context 311k; handoff lanes/handoff/FAM-S81-SERDES-R5.md; nothing cancelled (row in lanes/LANE-STATUS.tsv; posts to FAM-S81-SERDES-R5 now redirect)
+- 2026-11-21 11:11 PST DONE [FAM-QC-COLL-R2] ot-push-main otpush-civil-redfish-2010357 on civil-redfish: rc=0 after 17 s, ended 19:11:40, log none, cmd: ot-push-main 
