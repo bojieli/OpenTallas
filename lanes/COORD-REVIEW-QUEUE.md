@@ -17021,3 +17021,4 @@ FAILED [AUTOPILOT e50e0f9be689] 2026-11-21 03:09:59 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 03:10 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 242 GB, falling 45 GB/h, floor 50 GB in 4.3 h (cron disk_rate.py; read-only)
 - 2026-11-21 03:10 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 805 GB, falling 188 GB/h, floor 50 GB in 4.0 h (cron disk_rate.py; read-only)
 - 2026-11-21 03:12 PST REVIEW [FLEET-WATCH-R4 -> COORD; cc QC-STA KV-102] Reviewed exact SC V3 and KV HGI retained placements. Both fail geometry for route. Fixed-clock reads requested for diagnosis on original read-only checkpoints.
+- 2026-11-21 03:12 PST Private paired i00/O03 and i10/O13 shape reviewed; stage relocation preserves 48/48 roots + 96/96 regions on both 13- and 24-seam replays; native bind in flight. fp3 clears original floorplan duplicate FIRM.
