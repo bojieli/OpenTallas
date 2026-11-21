@@ -66,7 +66,8 @@ def test_hard_equal_depth_chains_and_wavefront_depth():
     assert len(t["relay_sites"]) == 10 and t["relay_sites"]["u_prl_cbr0_4.q"] == r["detail"][0]["centroid"]
     out, rec = R.apply(HARD, t["reset"]["port_relays"])
     assert "u_bin_a (.clk(clk), .rst_n(prl_cbr0_4)," in out and "u_bin_c (.clk(clk), .rst_n(prl_cbr1_4)," in out
-    assert ".ea(rst_n)" in out and "u_core (.clk(clk), .rst_n(rst_n))" in out    # epoch source and the core keep rst_n
+    # FAM-S81-MISC 11-21: a relayed bank epoch source follows its own relay; the core keeps rst_n
+    assert ".ea(prl_cbr0_4)" in out and "u_core (.clk(clk), .rst_n(rst_n))" in out
     assert [x["reset"] for x in rec] == ["prl_cbr0_4", "prl_cbr1_4"]
 
 

@@ -84,6 +84,12 @@ def apply(text, rows):
             if net != "rst_n":
                 raise PortRelayError(f"{name}: sink {s}.rst_n is {net!r}, not the delivered rst_n")
             patches.append((lo, hi, q_last))
+            # FAM-S81-MISC 11-21 (phy__t1 attempt_6, place PLACE-SETUP-STOP): a bank epoch input .ea(rst_n) is the raw delivered
+            # reset, so arst_n reached u_bout_hbmrd_o* eq.D over 4.3 mm with no register (setup -2,585 ps).  The bank releases on
+            # its relay edge, so its epoch source takes the SAME relay q: eq loads 1 on the same edge as before (0 added cycles).
+            ea_net, ea_lo, ea_hi = c["ports"].get("ea", (None, 0, 0))
+            if ea_net == "rst_n":
+                patches.append((ea_lo, ea_hi, q_last))
         prev = "rst_n"
         for j, i in enumerate(insts):
             q = f"prl_{name}_{j}"

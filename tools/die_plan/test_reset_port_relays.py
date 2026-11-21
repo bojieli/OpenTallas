@@ -25,10 +25,18 @@ def test_chain_and_only_named_sink_moves():
     assert "ot_dp_rrelay u_prl_h_0 (.clk(clk), .d(rst_n), .q(prl_h_0));" in out
     assert "ot_dp_rrelay u_prl_h_1 (.clk(clk), .d(prl_h_0), .q(prl_h_1));" in out
     assert "u_bin_a (.clk(clk), .rst_n(prl_h_1)," in out
-    # the other face register and the out epoch source keep the delivered reset
+    # the other face register keeps the delivered reset (not a named sink)
     assert "u_bout_b (.clk(clk), .rst_n(rst_n), .d(a_q), .ea(rst_n)," in out
     assert rec == [dict(name="h", depth=2, relays=["u_prl_h_0", "u_prl_h_1"], sinks=["u_bin_a"], reset="prl_h_1")]
     assert out.index("wire rst_n = arst_n;") < out.index("u_prl_h_0")
+
+
+def test_named_sink_epoch_source_follows_its_relay():
+    out, _ = R.apply(TXT, [dict(name="h", depth=2, sinks=["u_bout_b"])])
+    assert "u_bout_b (.clk(clk), .rst_n(prl_h_1), .d(a_q), .ea(prl_h_1)," in out
+    # a data-fed epoch input is untouched
+    out2, _ = R.apply(TXT, [dict(name="h", depth=2, sinks=["u_bin_a"])])
+    assert ".ea(a[1])" in out2
 
 
 @pytest.mark.parametrize("rows,msg", [
