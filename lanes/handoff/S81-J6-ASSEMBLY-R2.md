@@ -41,3 +41,9 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - Codex C1n pack-only chain: intel2 PID 3339199 (j6_pack_codex.sh candC1n -> j6_pack_candC1n.out, publish_d8j6.log); waiter armed. mk_cand_j6.py now sets review_before_route all_items + auto_visual_review_skip ["*"].
 - Apply = j6_apply.sh j6_pack_candC1n.out after CHAIN_PACKED and the event review fence (COORD).
 - J7 FT watcher resumed as rows/j7_cfg7/ft_after_c1n_rdx_elab_1121_r2.sh (rm -rf replaced by rsync --exclude), PID 2912138 epyc10, waits for gate_candJ7RDX_C1n ELAB (unit oth-ubuntu-2466061-1795260431), log logs/ft_after_c1n_rdx_r2.log.
+
+## 04:1x APPLIED J6 = C1n
+- event dc92652f0d5, manifest 6cf12672eb27, src kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work, bind ..._bind_11210316; receipt lanes/handoff/s81_atomic_apply_1795263143285949232.json; log intel2 s81-j6-r2-hub/j6_apply.out + apply_d8j6.log.
+- Holds 391 (389 rep-first by this lane). Release siblings in batches on spare capacity via kit_wave_edit (remove keys whose value starts 'S81-J6-ASSEMBLY-R2 11-21 J6 representatives first').
+- Next: read pilot/rep gens (config.mk VERILOG_DEFINES: RIP1 on lepe_mu_LP t2; place log 'plan keys unmatched'), then kit_wave_edit /dies/s81/tools_sha = scheduler rt sha + hardlink copy in s81-j6/rtpin/.
+- Token compile: run tokc/run_tokc.sh on the C1n bind (root needs structural_tops/ in the bind out; C1n out lacked it per helper) -> check.
