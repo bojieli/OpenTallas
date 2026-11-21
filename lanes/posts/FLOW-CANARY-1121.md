@@ -1,0 +1,1 @@
+- 2026-11-21 09:58 PST DONE [FLOW-CANARY-1121] ot-push-main otpush-tolerant-swine-978808 on tolerant-swine: rc=0 after 24 s, ended 09:58:05, log /srv/opentallas-scratch2/claude/FLOW-CANARY-1121/push1.log, cmd: ot-push-main 
