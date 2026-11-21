@@ -6705,6 +6705,162 @@
        }
       }
      },
+     "strip_body": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "band_um",
+       "strip"
+      ],
+      "properties": {
+       "band_um": {
+        "anyOf": [
+         {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+           "S": {
+            "type": "number",
+            "minimum": 0
+           },
+           "W": {
+            "type": "number",
+            "minimum": 0
+           },
+           "N": {
+            "type": "number",
+            "minimum": 0
+           },
+           "E": {
+            "type": "number",
+            "minimum": 0
+           }
+          }
+         }
+        ]
+       },
+       "faces": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "enum": [
+          "S",
+          "W",
+          "N",
+          "E"
+         ]
+        }
+       },
+       "halo_um": {
+        "type": "number",
+        "minimum": 0
+       },
+       "cutouts": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "hard_cores": {
+          "anyOf": [
+           {
+            "type": "boolean"
+           },
+           {
+            "type": "array",
+            "items": {
+             "type": "string"
+            }
+           }
+          ]
+         },
+         "extra_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "minItems": 4,
+           "maxItems": 4,
+           "items": {
+            "type": "number"
+           }
+          }
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       },
+       "strip": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "suffix": {
+          "type": "string",
+          "pattern": "^__[A-Za-z0-9_]+$"
+         },
+         "members": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          }
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       },
+       "body": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "suffix": {
+          "type": "string",
+          "pattern": "^__[A-Za-z0-9_]+$"
+         },
+         "members": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          }
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       },
+       "crossing": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "cycles": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "registered": {
+          "enum": [
+           "both_sides",
+           "strip_side",
+           "body_side"
+          ]
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       },
+       "trigger": {
+        "type": "string"
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     },
      "landing_base_type": {
       "type": "string"
      },

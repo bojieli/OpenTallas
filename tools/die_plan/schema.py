@@ -1840,6 +1840,33 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                                               "to": {"type": "string", "minLength": 1},
                                               "bits": {"type": "integer", "minimum": 1},
                                               "note": {"type": "string"}}}}
+# STRIP-BODY (FAM-S81-SLICE-R4 11-21, strip_body.py): strip / body sub-tile split of one type (S81 c1x_C, lepe_mu_C split B);
+# the strip region is a RULE (perimeter band minus hard-core / extra keep-out boxes + halo) resolved by strip_body.resolve
+_SB_RECT = {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}
+_SB_PART = {"type": "object", "additionalProperties": False, "properties": {
+    "suffix": {"type": "string", "pattern": "^__[A-Za-z0-9_]+$"},
+    "members": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "note": {"type": "string"}}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["strip_body"] = {
+    "type": "object", "additionalProperties": False, "required": ["band_um", "strip"],
+    "properties": {
+        "band_um": {"anyOf": [{"type": "number", "exclusiveMinimum": 0},
+                              {"type": "object", "additionalProperties": False, "minProperties": 1,
+                               "properties": {f: {"type": "number", "minimum": 0} for f in ("S", "W", "N", "E")}}]},
+        "faces": {"type": "array", "minItems": 1, "items": {"enum": ["S", "W", "N", "E"]}},
+        "halo_um": {"type": "number", "minimum": 0},
+        "cutouts": {"type": "object", "additionalProperties": False, "properties": {
+            "hard_cores": {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string"}}]},
+            "extra_um": {"type": "array", "items": _SB_RECT},
+            "note": {"type": "string"}}},
+        "strip": _SB_PART,
+        "body": _SB_PART,
+        "crossing": {"type": "object", "additionalProperties": False, "properties": {
+            "cycles": {"type": "integer", "minimum": 0},
+            "registered": {"enum": ["both_sides", "strip_side", "body_side"]},
+            "note": {"type": "string"}}},
+        "trigger": {"type": "string"},
+        "note": {"type": "string"}}}
 # S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail"] = {"type": "boolean"}
 SCHEMA["properties"]["budgets"]["properties"]["relay_hop_fail_types"] = {"type": "array", "items": {"type": "string"}}

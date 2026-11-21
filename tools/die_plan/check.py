@@ -3004,6 +3004,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     # fix = reach_rules.py fix
     import reach_rules as RRL
     summ["r_reach"] = RRL.check_plan(P, R)
+    # STRIP-BODY (FAM-S81-SLICE-R4 11-21, strip_body.py): every type that declares strip_body resolves (WARN only)
+    import strip_body as SBY
+    summ["strip_body"] = SBY.check_plan(P, R)
     # ROUTED-REACH (KV-PV-RIDER 11-18, FABLE-PD-KV-2200 #1): internal_stations hops measured ROUND the hard cores whose
     # LEF OBS reaches the partition signal ceiling (routed_reach.py); WARN by default, --routed-reach / budgets.routed_reach
     # "error" makes a hop over the reach an ERROR, "off" skips
