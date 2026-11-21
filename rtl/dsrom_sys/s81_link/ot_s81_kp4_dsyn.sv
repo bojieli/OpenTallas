@@ -244,10 +244,47 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     end endgenerate
 `endif
 `else
+`ifdef OT_S81_KP4_SYN_SCOPY
+    // OT_S81_KP4_SYN_SCOPY (opt-in define, FABLE-FIX-HEAD-SERDES-R3 11-21; undefined = netlist unchanged; base form only,
+    // not with OT_S81_KP4_SYN_LOCAL): hd_serdes sdr2c GRT RC TT pma_rck S_q -> u_bm g_pe.thq -72 ps with a launch-capture
+    // skew of only -30: one 300-b S_q register is transported to the load muxes of three RiBM units placed apart.
+    // Each unit reads its OWN kept copy S_u[300 u +: 300], a register with the SAME next-state function as S_q (same
+    // cycle, same restart flag copies), so the placer sets each copy at its unit.  S_q stays: it is the accumulator
+    // (s_ar is a function of S_q) and now drives only its own recurrence.  PIN CYCLES +0.  Keep the copies through
+    // synthesis: OT_KEEP_WIRES ot_s81_kp4_dsyn:S_u.
+    // Bench mutants (tools/s81_link/run_kp4_scopy_bench.sh): SCOPY_MUT_STALE (unit 1 reads S one cycle late),
+    // SCOPY_MUT_BIT (bit 7 of the unit 2 copy inverted).  A copy without the chunk-0 restart is NOT a mutant: the copies
+    // are read only in the S-final cycle and never feed back, so that change is invisible (measured: bench PASS).
+    (* keep *) reg [NBM*300-1:0] S_u;
+    generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_su
+        for (gb = 0; gb < 300; gb = gb + 1) begin : g_b
+`ifdef SCOPY_MUT_STALE
+            if (gu == 1) begin : g_m
+                always @(posedge clk) S_u[gu * 300 + gb] <= S_q[gb];                                        // MUTANT: one cycle late
+            end else begin : g_n
+                always @(posedge clk) S_u[gu * 300 + gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp_x[gb];
+            end
+`elsif SCOPY_MUT_BIT
+            if (gu == 2) begin : g_m
+                always @(posedge clk) S_u[gu * 300 + gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp_x[gb] ^ (gb == 7);  // MUTANT: bit 7 inverted
+            end else begin : g_n
+                always @(posedge clk) S_u[gu * 300 + gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp_x[gb];
+            end
+`else
+            always @(posedge clk) S_u[gu * 300 + gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp_x[gb];
+`endif
+        end
+    end endgenerate
+    generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
+        ot_s81_kp4_bm #(.NG(NGB), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_u[gu * 300 +: 300]),
+            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp({NGB{1'b0}}), .Sp(300'd0));
+    end endgenerate
+`else
     generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
         ot_s81_kp4_bm #(.NG(NGB), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_q),
             .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp({NGB{1'b0}}), .Sp(300'd0));
     end endgenerate
+`endif
 `endif
     // ================= result of the unit that is done (to the back tile)
     // load (T + 42): Rl_i = lambda_i alpha^(-543 i), Ro_i = omega_i alpha^(-543 (i + 30)); advance: x alpha^(55 i),
