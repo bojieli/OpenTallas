@@ -20,6 +20,7 @@ Report: moved [(type, bus, old, new)], conflicts, overlaps, skipped, mismatches 
 geometry rule over every port touching a moved or anchor type)."""
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -117,6 +118,148 @@ def set_type_end(t, bus, tf, win, lays, order):
     return old
 
 
+def _usable(L, ln, win):
+    """usable (off-PG) track count of one pin layer on a die-frame window, as schema._window_pins counts it"""
+    lo, hi = sorted(win)
+    p, off = L["pitch_um"], L["offset_um"]
+    k0 = math.ceil((lo - off) / p - 1e-9)
+    k1 = math.floor((hi - off) / p + 1e-9)
+    return sum(1 for k in range(k0, k1 + 1) if not S.pg_blocked_any(L, ln, off + k * p))
+
+
+def _end_pin_counts(raw, parts, bus, lays):
+    """{layer: pins} of the ports on (any instance in parts, bus); None when no port binds it, widths disagree, or no
+    port carries its own die-frame geometry (pins then come from the type frame, identical on every copy)"""
+    prs = [pr for pr in raw["ports"] for sd in ("src", "dst") if pr[sd]["part"] in parts and pr[sd]["bus"] == bus]
+    ws = {S.port_pins_count(pr) for pr in prs}
+    if len(ws) != 1 or not any(all(k in pr for k in ("face", "layers", "window_um")) for pr in prs):
+        return None
+    w, nl = ws.pop(), len(lays)
+    return {ln: len(range(li, w, nl)) for li, ln in enumerate(lays)}
+
+
+def mirror_parity(raw, types, step_um=0.008, max_um=0.512):
+    """UNIFY-TOOLS-R3 (S81-LEAF-CLASS-1730 J7, the '0.064 um mirror off-grid' G0 abutment rows): schema.spread picks
+    the same type-frame tracks in a mirrored copy only when every layer with an ODD pin count has an ODD usable-track
+    count on the window (an odd pick on an even track count has no mirror-symmetric choice, so an MY / R180 copy whose
+    port carries die-frame geometry lands one M7 pitch off its R0 sibling).  For each type end of `types` that has
+    instances in both flip states along its face axis, widen (or narrow) the type window by the smallest step that
+    makes every odd-pin layer's usable count odd (only ends some port of which carries its own die-frame geometry:
+    other ports take their pins in the type frame), keeping every layer able to hold its pins and the window clear of
+    the type's other windows on that face / layer.  Moves the type window only: solve() then carries it to the
+    neighbours and to port-level geometry.  Returns [(type, bus, old window, new window)] and [(type, bus, why)]."""
+    P = S.Plan(raw)
+    moved, left = [], []
+    insts = {}
+    for p in raw["partitions"]:
+        insts.setdefault(p["type"], []).append(p["name"])
+    for tn in types:
+        t = raw["partition_types"][tn]
+        parts = insts.get(tn, [])
+        ends = [b["name"] for b in t.get("buses", []) if "window_um" in b] + [
+            sl["name"] + sfx for sl in t.get("ft_slots", []) for sfx, wk in (("_i", "in_window_um"), ("_o", "out_window_um"))
+            if wk in sl]
+        for bus in ends:
+            g = P._type_geom(parts[0], bus) if parts else None
+            if g is None:
+                continue
+            tf, win, lays, order = g
+            flips = {(P.orient(q) in (("MX", "R180") if tf in "EW" else ("MY", "R180"))) for q in parts}
+            if len(flips) < 2:
+                continue
+            n = _end_pin_counts(raw, set(parts), bus, lays)
+            if n is None:
+                continue
+            odd = [ln for ln in lays if n[ln] % 2]
+            if not odd:
+                continue
+
+            def ok(w):
+                return _parity_ok(P, parts, (tf, w, lays, order), n, odd)
+            if ok(win):
+                continue
+            lo, hi = sorted(win)
+            others = []
+            for b2 in ends:
+                g2 = P._type_geom(parts[0], b2) if b2 != bus else None
+                if g2 and g2[0] == tf and set(g2[2]) & set(lays):
+                    others.append(sorted(g2[1]))
+            best = None
+            k = 1
+            while best is None and k * step_um <= max_um + 1e-9:
+                d = round(k * step_um, 6)
+                for w in ([lo, round(hi + d, 6)], [round(lo - d, 6), hi], [lo, round(hi - d, 6)], [round(lo + d, 6), hi]):
+                    if w[1] - w[0] <= 0 or any(w[0] < b + EPS and a < w[1] + EPS for a, b in others):
+                        continue
+                    if ok(w):
+                        best = w
+                        break
+                k += 1
+            if best is None:
+                left.append((tn, bus, f"no window within {max_um} um gives an odd usable count on {odd}"))
+                continue
+            set_type_end(t, bus, tf, best, lays, order)
+            moved.append((tn, bus, [lo, hi], best))
+            P = S.Plan(raw)
+            # facing ends on class types of `types` take the same die window now, transitively (a t16 ft9_o moved by
+            # a t44 resize carries on to the next t16 copy's ft9_i), else solve() sees two pinned ends disagree; their
+            # usable counts are those of the same die windows, so the parity holds on them too
+            work = [(tn, bus)]
+            while work:
+                ct, cb = work.pop()
+                cparts = set(insts.get(ct, []))
+                dem = {}
+                for pr in raw["ports"]:
+                    if pr.get("segments"):
+                        continue
+                    for a_side, o_side in (("src", "dst"), ("dst", "src")):
+                        ap, op = pr[a_side]["part"], pr[o_side]["part"]
+                        if ap in cparts and pr[a_side]["bus"] == cb and op in P.parts and P.parts[op]["type"] in types:
+                            ga = end_geom(P, pr, a_side)
+                            go = end_geom(P, pr, o_side)
+                            if ga is None or go is None or same(ga, go):
+                                continue
+                            df = ga[0] if o_side == "src" else S.OPP[ga[0]]
+                            tf2, w2, o2 = die_to_type(P, op, df, ga[1], ga[3])
+                            dem.setdefault((P.parts[op]["type"], pr[o_side]["bus"]), []).append((tf2, w2, list(ga[2]), o2))
+                for (tn2, b2), ds in sorted(dem.items()):
+                    c, k = type_end(raw["partition_types"][tn2], b2)
+                    if c is None:
+                        continue
+                    if any(not same(d, ds[0]) for d in ds[1:]):
+                        left.append((tn2, b2, f"facing {ct}.{cb}: instances need different windows"))
+                        continue
+                    old2 = sorted(c.get(k["win"]) or [])
+                    set_type_end(raw["partition_types"][tn2], b2, *ds[0])
+                    moved.append((tn2, b2, old2, ds[0][1]))
+                    work.append((tn2, b2))
+                if dem:
+                    P = S.Plan(raw)
+    # facing moves may have handed a processed end an even count: list what still breaks the mirror pick
+    for tn in types:
+        parts = insts.get(tn, [])
+        for b in raw["partition_types"][tn].get("buses", []) + [
+                dict(name=sl["name"] + sfx) for sl in raw["partition_types"][tn].get("ft_slots", []) for sfx in ("_i", "_o")]:
+            g = P._type_geom(parts[0], b["name"]) if parts else None
+            if g is None or len({(P.orient(q) in (("MX", "R180") if g[0] in "EW" else ("MY", "R180"))) for q in parts}) < 2:
+                continue
+            n = _end_pin_counts(raw, set(parts), b["name"], g[2])
+            if n and not _parity_ok(P, parts, g, n, [ln for ln in g[2] if n[ln] % 2]):
+                left.append((tn, b["name"], "even usable count after facing-end moves"))
+    return moved, left
+
+
+def _parity_ok(P, parts, g, n, odd):
+    tf, w, lays, order = g
+    for q in parts:
+        dw = P.geom_to_die(q, (tf, w, lays, order))[1]
+        for ln in lays:
+            m = _usable(P.layers[ln], ln, dw)
+            if m < n[ln] or (ln in odd and m % 2 == 0):
+                return False
+    return True
+
+
 def solve(raw, anchors, parts_re=None, column=False):
     """column=True (UNIFY-TOOLS whole-column mode): `anchors` is a priority list (first = strongest) of the class rows
     of EVERY class in the column.  Where two anchors meet with different windows, the weaker anchor's (type, bus) end
@@ -124,6 +267,7 @@ def solve(raw, anchors, parts_re=None, column=False):
     classes of a column settle in one event.  A window still conflicts when instances of one type need different
     windows (that type is not one class), or when two ends of equal strength disagree."""
     order = list(dict.fromkeys(anchors))
+    parity, parity_left = mirror_parity(raw, order)      # UNIFY-TOOLS-R3: mirror-equivariant class windows first
     anchors = set(anchors)
     rank = {(t, None): i for i, t in enumerate(order)}      # strength of a pinned whole type / solved bus
     rx = re.compile(parts_re) if parts_re else None
@@ -221,7 +365,7 @@ def solve(raw, anchors, parts_re=None, column=False):
     # An anchor may already carry the proposed window before solve() starts.
     overlaps = window_overlaps(raw, touched)
     after = mismatches(P, raw, touched)
-    return dict(anchors=sorted(anchors), moved=moved, conflicts=conflicts, overlaps=overlaps, skipped=list(skipped.values()),
+    return dict(anchors=sorted(anchors), mirror_parity=parity, mirror_parity_left=parity_left, moved=moved, conflicts=conflicts, overlaps=overlaps, skipped=list(skipped.values()),
                 mismatches_before=len(before), mismatches_after=len(after), mismatch_ports_after=after[:50],
                 types_touched=sorted(touched))
 
@@ -857,6 +1001,9 @@ def main(argv=None):
         rep["class_floorplan"] = fp
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
+    if rep["mirror_parity"] or rep["mirror_parity_left"]:
+        print(f"class_window_solve: mirror parity: {len(rep['mirror_parity'])} class windows resized, "
+              f"{len(rep['mirror_parity_left'])} left {rep['mirror_parity_left'][:3]}")
     print(f"class_window_solve: {len(rep['moved'])} windows moved on {len(rep['types_touched']) - len(anchors)} types, "
           f"{len(rep['conflicts'])} conflicts, {len(rep['overlaps'])} overlaps, {len(rep['skipped'])} skipped; "
           f"port geometry mismatches {rep['mismatches_before']} -> {rep['mismatches_after']}")

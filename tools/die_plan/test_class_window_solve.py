@@ -184,3 +184,57 @@ def test_class_floorplan_drops_stale_bit_sites():
     C.class_floorplan(raw, [("cls", "m1", [("m1", "R0"), ("m2", "R0")])])
     s = raw["partition_types"]["m1"]["ft_slots"][0]
     assert "bit_sites_um" not in s and "bit_site_cell_um" not in s
+
+
+def _mirror_pair(lo, hi, width=5):
+    """class type m (S bus x) on an R0 and an MY copy; each fed by its own source type through a port that carries
+    die-frame geometry (the S81 class shape that showed the 0.064 um M7 offset).  Outline on the 8.64 um lattice."""
+    W, X2 = 172.8, 345.6
+    raw = json.loads((HERE / "examples/tiny_plan.json").read_text())
+    def bus(name, d, face, win, **k):
+        return dict(name=name, dir=d, width=width, kind="data", face=face, window_um=list(win), layers=["M7", "M5"], **k)
+    raw["partition_types"] = {"m": dict(outline_um=[W, W], buses=[bus("x", "in", "S", (lo, hi))]),
+                              "a1": dict(outline_um=[W, W], buses=[bus("y", "out", "N", (lo, hi))]),
+                              "a2": dict(outline_um=[W, W], buses=[bus("y", "out", "N", (W - hi, W - lo), order="lsb_high")])}
+    raw["partitions"] = [dict(name="A1", type="a1", origin_um=[0.0, 0.0]), dict(name="M1", type="m", origin_um=[0.0, W]),
+                         dict(name="A2", type="a2", origin_um=[X2, 0.0]),
+                         dict(name="M2", type="m", origin_um=[X2, W], orient="MY")]
+    raw["ports"] = [dict(id="p1", src=dict(part="A1", bus="y"), dst=dict(part="M1", bus="x"), width=width, epoch=False,
+                         face="N", window_um=[lo, hi], layers=["M7", "M5"]),
+                    dict(id="p2", src=dict(part="A2", bus="y"), dst=dict(part="M2", bus="x"), width=width, epoch=False,
+                         face="N", window_um=[round(X2 + W - hi, 6), round(X2 + W - lo, 6)], layers=["M7", "M5"],
+                         order="lsb_high")]
+    raw["lanes"] = []
+    return raw
+
+
+def _type_pins(raw, pid, base, flip):
+    import schema as S
+    P = S.Plan(raw)
+    pr = {p["id"]: p for p in raw["ports"]}[pid]
+    return sorted((b, ln, round(172.8 - (c - base) if flip else c - base, 6)) for b, ln, c in S.pin_positions(pr, P.layers))
+
+
+def test_mirror_parity_makes_mirrored_copies_share_one_pin_table():
+    """UNIFY-TOOLS-R3 (S81 J7 '0.064 um mirror off-grid'): an odd M7 pin count on an even usable track count puts the
+    MY copy's pins one track off the R0 copy's; the class window is resized to an odd track count and the copies agree"""
+    import schema as S
+    L = S.Plan(_mirror_pair(32.0, 32.3)).layers
+    lo = 32.0                                   # clear of the partition PG bands
+    hi = next(round(lo + 0.256 + 0.008 * k, 6) for k in range(40)
+              if C._usable(L["M7"], "M7", [lo, lo + 0.256 + 0.008 * k]) % 2 == 0
+              and C._usable(L["M5"], "M5", [lo, lo + 0.256 + 0.008 * k]) >= 2)
+    raw = _mirror_pair(lo, hi)
+    assert _type_pins(raw, "p1", 0.0, False) != _type_pins(raw, "p2", 345.6, True)     # the bug
+    rep = C.solve(raw, ["m"])
+    assert [(m[0], m[1]) for m in rep["mirror_parity"]] == [("m", "x")] and rep["mirror_parity_left"] == []
+    assert rep["conflicts"] == [] and rep["mismatches_after"] == 0
+    assert _type_pins(raw, "p1", 0.0, False) == _type_pins(raw, "p2", 345.6, True)
+    # an even pin count, or ports that take their pins from the type frame, are left alone
+    raw = _mirror_pair(lo, hi, width=4)
+    assert C.mirror_parity(raw, ["m"]) == ([], [])
+    raw = _mirror_pair(lo, hi)
+    for pr in raw["ports"]:
+        for k in ("face", "window_um", "layers", "order"):
+            pr.pop(k, None)
+    assert C.mirror_parity(raw, ["m"]) == ([], [])
