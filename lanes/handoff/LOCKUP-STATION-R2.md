@@ -30,7 +30,7 @@ post rows to S81-J6-ASSEMBLY / QC-PLAN-R7 / KV-PLAN-R2 ONLY after a proof whose 
 - Targets now: S81-J6-ASSEMBLY, QC-PLAN-R8 (was R7), KV-PLAN-R3 (was R2). KV: any lockup form goes to D28 after a proof (D27c dropped r5 rows).
 
 ## STAND-DOWN state (LOCKUP-STATION-R2, context ~340k) -- successor reads proof6 + QC2
-Code (lane clone intel1 /srv/opentallas-scratch2/claude/lockup-station-r2, ot-push-main in flight at stand-down; see post for sha):
+Code (lane clone intel1 /srv/opentallas-scratch2/claude/lockup-station-r2, PUSHED main 38faab8511 (51ab145ab6 auto form, 410bd8ff02 dont_touch, 38faab8511 restore)):
 - a8f34806c0 auto form: clock.zl_lockup.<T>.{auto,exclude,same_tap,max_um}; zl_netlist "!re" excludes (reset relays, sram);
   clock_taps.tcl ct_hl_drop/ct_hl_bypass: latch removed when launch+all captures same tap or capture > OT_HOP_LATCH_MAX_UM (gen default 200).
 - a9b2739489 dont_touch on netlist latches -> FAILED at synth (ODB-0369, proof5 dead) ; superseded by
