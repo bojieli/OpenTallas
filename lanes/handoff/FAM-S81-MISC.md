@@ -25,3 +25,5 @@ Hub rows posted via bin/post.sh FAM-S81-MISC (see lanes/posts). Private work dir
 
 ## Rules reminders
 No rm; ot-delete only; kill exact PIDs; coord changes only via bin/coord-commit.sh / bin/post.sh; heavy only via ot-run; ot-wait waiters with run_in_background.
+
+## Update 12:1x: census run 1 (censusB.sh) failed at hierarchy (ot_s81sl_cmp_pool missing: only 4 rtl files read). Rerun = censusB2.sh (reads every rtl/*.sv + *_bb.v of the t2 kit), result fam-s81-misc/censusB/out.txt and yosys.log (harness task b587gvo10, OT_LANE FAM-S81-MISC). Read it first; if hierarchy still fails, add the missing module file and rerun.
