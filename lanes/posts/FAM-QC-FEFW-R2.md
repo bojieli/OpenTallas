@@ -1,0 +1,1 @@
+- 2026-11-21 08:35 PST DIED [FAM-QC-FEFW-R2] ot-run oth-ubuntu-1841527-1795278454 on civil-redfish: rc=143 after 456 s, ended 16:35:08, log /srv/opentallas-scratch2/claude/fam-qc-fefw/lec_r2.client.log, cmd: --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw
