@@ -203,3 +203,4 @@
   QC: 5 new STALE held FAM-QC-CB, 1 old STALE cancelled FAM-QC-HCST, 1 new WAIT-VISUAL FAM-QC-HCST.
   KV: 2 FAILED-NO-RELAUNCH + 1 old FAILED bind stale (PV-R4) + 16 held/placed/cancelled WAIT-BIND; 1 new WAIT-VISUAL FAM-KV-HUB.
   HEAD: none flagged. KV-PLAN-R4 not used as a row owner (no uncategorised KV rows).
+- 2026-11-20 23:52 PST CORRECTION 23:50: S81 STALE held-for-plan-event rows are 28 (COL 9, SLICE 6, LEAF-R2 7, LEPE 2, MISC 3, SERDES 1), not 29; totals S81 30, QC 7, KV 22 = 59 flagged.
