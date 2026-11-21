@@ -214,3 +214,4 @@
   QC (6): 5 STALE held FAM-QC-CB + 1 STALE cancelled HCST, all old; none on SLE-R4/FEFW.
   KV (21): 4 FAILED-NO-RELAUNCH (1 new FAM-KV-HUB flow error) + 17 held/cancelled WAIT-BIND (1 new cancelled IOPC).
   HEAD none flagged (hd_lep0N running, LEP0N-R3). Context well below 330k.
+- 2026-11-21 01:54 PST CORRECTION 01:50: S81 new FAILED-NO-RELAUNCH rows are 4 (FAM-S81-SERDES 2, OPUS-FIX-S81-LEAF-R3 1 stale, S81-BKSEL-R5 1), not 5; totals S81 34, QC 6, KV 21 = 61.
