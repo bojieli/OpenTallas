@@ -1,0 +1,2 @@
+- 2026-11-21 11:22 PST DONE [S81-BKSEL-R6] ot-run oth-ubuntu-3077726-1795288283 on tolerant-swine: rc=0 after 682 s, ended 11:22:41, log /home/ubuntu/s81-bksel-r6/sk1.otrun.log, cmd: --mem 64 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/s81-bksel-r6/w -- bash /srv/opentallas-scratch2/claude/s81-bksel-r
+  [filed under] S81-BKSEL-R7: S81-BKSEL-R6 stood down (chain S81-BKSEL-R6 > S81-BKSEL-R7)
