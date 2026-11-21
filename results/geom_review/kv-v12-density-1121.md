@@ -1,0 +1,9 @@
+# KV D28 v12 measured load and clock sites
+
+Reviewed `intel2:/srv/opentallas-scratch2/claude/tap-grid-r4/v12_split/v12_density_review.png` against emitted base plan SHA `6a897122706fa9acfe80d6e6da06efac73144e8a135570852b1c74b702080676`. The four west and east macro banks leave open center streets. West side needs one tap at the outer edge beside the upper middle bank. East side feeds its lower macro from a crowded south landing strip. Existing lower reservations had a zero-width legal planning strip at y=8.64 µm and no PG-safe consumed track there.
+
+The 12 east keepouts and matching landing bands `ft10_i`, `ft12_i`, `ft14_i`, `ft16_i`, `ft18_i`, `ft20_i`, `ft22_i`, `ft24_i`, `ft26_i`, `ft31_i`, `ft39_i`, `ft49_i` move from y=17.28–25.92 to 17.55–26.19 µm. X limits and areas are unchanged. No new macro or retained-reservation overlap. All 12 collector band copies match the shifted rectangles. Status pins retain their sites. The plan consumes 16 newly accessible dense tap sites at y=8.864 µm. West uses added tap clk_t205 at the exact consumed (9.12, 1013.536).
+
+The 170,300 retained D25e3 parent tap-net sinks split 75,426/94,874 at an exact 10.8 µm bin edge. Including the new plan's station sites gives 84,965/108,717, estimated maxima 953/925 at cap 1,000, and nearest distances 227.936/294.784 µm. The two old grids' 118/74 referenced entries have complete geometric remaps, with maximum site motion 118.272/314.048 µm under 340. The first placed halves must supply final counts. Use `east_reserved_row.json`, the two measured `bins/*__tapnet_split.json`, west `solve/kv3_pv_v12.1000.track_legal.json`, east `solve/kv3_pv_v12e.1000.adopt.json`, and `tap_remap_preview.json` in the same scratch directory.
+
+**PASS-COND for plan geometry and estimated capacity.** Re-select reset references and rerun native bind and LATCHECK before further physical stages.
