@@ -787,6 +787,65 @@ set ct_hlu {}; set ct_hcap {}
 # without latch pins; hop_latch_leaf.tcl (POST_CTS) hangs each latch on its launch flop's leaf.
 set ct_hleaf [expr {[info exists ::env(OT_HOP_LATCH_LEAF)] && $::env(OT_HOP_LATCH_LEAF) eq "1"}]
 set ct_hlpark {}
+# LOCKUP-STATION-R2 (FABLE-CLOSURE-1930 lever 2; t39 proof 15:15: same_tap ends 41 -> 238): OT_HOP_LATCH_SAME_TAP=bypass removes
+# every traced hop latch whose launch flop and ALL its captures (Q through BUF/INV/HB to clocked registers only, no port,
+# no logic) sit on the same tap net after the assignment passes above: a latch there only costs setup.  The latch is a wire
+# (lec.py latch_to_wire on the synthesized netlist), so the D net takes the Q loads; cross-tap hops keep theirs.
+# OT_HOP_LATCH_MAX_UM (with bypass): a latch whose launch flop lies farther than this from a capture is bypassed too.  The latch
+# sits at its launch flop (hop_latch_leaf.tcl), so the whole hop wire is on the latch -> capture leg, which has T/2 of setup:
+# t39 proof2 4_cts (TT, placement RC) 4,257 latch -> capture setup ends, -227k of the -241k TNS, 3,738 of them on hops of
+# 250-400 um; under 200 um 231 ends at -10 to -80.  Long hops lose little hold (base t39 300-350 um: 1,565 ends, mean -25 ps).
+set ct_hlbyp [expr {[info exists ::env(OT_HOP_LATCH_SAME_TAP)] && $::env(OT_HOP_LATCH_SAME_TAP) eq "bypass"}]
+set ct_hlmax [expr {[info exists ::env(OT_HOP_LATCH_MAX_UM)] && [string is double -strict $::env(OT_HOP_LATCH_MAX_UM)] ? $::env(OT_HOP_LATCH_MAX_UM) : -1}]
+set ct_hlb 0; set ct_hlbf 0
+# -> "same" (launch and every capture on one tap), "far" (a capture beyond OT_HOP_LATCH_MAX_UM of the launch), "" keep
+proc ct_hl_drop {li tapnet drv ct_hlmax} {
+  set far 0
+  if {$ct_hlmax >= 0} {
+    set dbu [[ord::get_db_tech] getDbUnitsPerMicron]; lassign [$drv getLocation] dx dy
+  }
+  set qn ""
+  foreach it [$li getITerms] { if {[[$it getMTerm] getName] eq "Q"} { set qn [$it getNet] } }
+  if {$qn eq "" || $qn eq "NULL"} { return "" }
+  set todo [list $qn]; set seen {}; set ncap 0; set same 1
+  while {[llength $todo]} {
+    set n [lindex $todo 0]; set todo [lrange $todo 1 end]
+    if {[dict exists $seen [$n getName]]} continue
+    dict set seen [$n getName] 1
+    if {[llength [$n getBTerms]]} { return "" }
+    foreach it [$n getITerms] {
+      if {[$it getInst] eq $li || [[$it getMTerm] getIoType] ne "INPUT"} continue
+      set ci [$it getInst]
+      if {[regexp {^(BUF|INV|HB)} [[$ci getMaster] getName]]} {
+        foreach o [$ci getITerms] { if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { lappend todo [$o getNet] } }
+        continue
+      }
+      set cc [ct_clk_iterm $ci]
+      if {$cc eq "" || [[$it getMTerm] getName] ne "D"} { return "" }
+      if {[$cc getNet] ne $tapnet} { set same 0 }
+      if {$ct_hlmax >= 0} { lassign [$ci getLocation] cx cy; if {(abs($cx - $dx) + abs($cy - $dy)) > $ct_hlmax * $dbu} { set far 1 } }
+      incr ncap
+    }
+  }
+  if {!$ncap} { return "" }
+  if {$same} { return same }
+  if {$far} { return far }
+  return ""
+}
+proc ct_hl_bypass {li} {
+  set dn ""; set qn ""
+  foreach it [$li getITerms] {
+    set p [[$it getMTerm] getName]
+    if {$p eq "D"} { set dn [$it getNet] } elseif {$p eq "Q"} { set qn [$it getNet] }
+  }
+  if {$dn eq "" || $dn eq "NULL" || $qn eq "" || $qn eq "NULL"} { return 0 }
+  set loads {}
+  foreach it [$qn getITerms] { if {[$it getInst] ne $li} { lappend loads $it } }
+  foreach it $loads { $it disconnect; $it connect $dn }
+  odb::dbInst_destroy $li
+  odb::dbNet_destroy $qn
+  return 1
+}
 if {[llength $ct_taps] >= 2} {
   set ct_hl 0; set ct_hlm 0; set ct_hlx 0
   foreach ct_i [$ct_blk getInsts] {
@@ -817,6 +876,10 @@ if {[llength $ct_taps] >= 2} {
     }
     if {$ct_drv eq ""} { incr ct_hlx; continue }
     set ct_dit [ct_clk_iterm $ct_drv]
+    if {$ct_hlbyp && !$ct_hf && [$ct_dit getNet] ne "NULL"} {
+      set ct_why [ct_hl_drop $ct_i [$ct_dit getNet] $ct_drv $ct_hlmax]
+      if {$ct_why ne "" && [ct_hl_bypass $ct_i]} { if {$ct_why eq "far"} { incr ct_hlbf } else { incr ct_hlb }; continue }
+    }
     if {$ct_hleaf && !$ct_hf} { lappend ct_hlpark "[$ct_i getName]\t[$ct_drv getName]"; $ct_cit disconnect; incr ct_hl; continue }
     set ct_tn [$ct_dit getNet]
     if {[$ct_cit getNet] ne $ct_tn} { $ct_cit disconnect; $ct_cit connect $ct_tn; incr ct_hlm }
@@ -828,6 +891,7 @@ if {[llength $ct_taps] >= 2} {
     set ct_hlf [open /work/hop_latch_leaf.tsv w]; foreach r $ct_hlpark { puts $ct_hlf $r }; close $ct_hlf
     puts "OT_CLOCK_TAPS hop latches: [llength $ct_hlpark] parked for their launch flop's leaf (OT_HOP_LATCH_LEAF, POST_CTS hop_latch_leaf.tcl), not counted on any tap"
   }
+  if {$ct_hlbyp} { puts "OT_CLOCK_TAPS hop latches: $ct_hlb bypassed same tap, $ct_hlbf bypassed far (capture > $ct_hlmax um from launch; OT_HOP_LATCH_SAME_TAP=bypass)" }
   if {$ct_hl || $ct_hlx} { puts "OT_CLOCK_TAPS hop latches: $ct_hl on their launch station's tap ($ct_hlm re-hung), $ct_hlx without a tapped launch flop" }
 }
 # DIE-HBM-97 11-09 (vsN2 a8 TT -33.18: u_fl_rst_15/16/22 and u_fl_L201x2_o_6 on the LATE tap clk_t11 (+402 ps) feed captures

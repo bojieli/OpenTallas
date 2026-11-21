@@ -889,11 +889,21 @@ def zl_lockup_spec(raw, tn):
     return v[max(hit, key=len)] if hit else None
 
 
+# LOCKUP-STATION-R2: capture classes clock.zl_lockup.<T>.auto leaves alone unless exclude says otherwise -- reset relay
+# stages (reset.relay_lockup / RESET-RELAY-GEN own their lockups: never doubled) and SRAM wrappers (one tap per wrapper)
+ZL_MAX_UM = 200.0
+ZL_AUTO_EXCLUDE = (r"rrelay|u_[rs]rl_\d|(^|[./_])rst|reset", r"sram")
+
+
 def zl_netlist_files(kd, spec):
     """clock.zl_lockup.<T>.netlist (LOCKUP-STATION-1130, FABLE-CLOSURE-1315 (2)): flat register-name regexes whose direct
     register -> register hops get a DLL lockup latch in the synthesized netlist (zl_netlist_lockup.tcl, POST_SYNTH_TCL via
     face_keep_release.tcl); run_kit then proves LEC on the ODB export.  No netlist list = nothing written."""
     pats = list((spec or {}).get("netlist") or [])
+    if (spec or {}).get("auto"):
+        # LOCKUP-STATION-R2 (lever 2 by construction): every zero-logic register hop, minus the excluded capture classes;
+        # the tap solve (clock_taps.tcl OT_HOP_LATCH_SAME_TAP=bypass) removes the latches whose two ends share a tap
+        pats = (pats or [".*"]) + ["!" + x for x in ((spec or {}).get("exclude") or ZL_AUTO_EXCLUDE)]
     if not pats:
         return False
     kd = Path(kd)
@@ -910,8 +920,16 @@ def hop_latch_leaf_lines(kd, spec, ft=False):
     if (not spec and not ft) or (spec or {}).get("leaf") is False:
         return []
     shutil.copyfile(Path(__file__).with_name("hop_latch_leaf.tcl"), Path(kd) / "hop_latch_leaf.tcl")
-    return ["# LOCKUP-STATION-1130: hop latches off the tap solve / CTS, then onto their launch flop's leaf (POST_CTS)",
-            "export OT_HOP_LATCH_LEAF = 1"]
+    # LOCKUP-STATION-R2 (t39 proof: same_tap ends 41 -> 238 with latches): a latch whose launch and every capture land on
+    # one tap in the tap solve is removed (a wire, as lec.py proves it), so only cross-tap hops keep one
+    # (opt-in with a clock.zl_lockup spec: ft-only types keep every planned latch)
+    st = [] if not spec or spec.get("same_tap") == "keep" else [
+        "# LOCKUP-STATION-R2: same-tap hop latches bypassed at the tap solve (latches only where the two ends differ)",
+        "export OT_HOP_LATCH_SAME_TAP = bypass",
+        # LOCKUP-STATION-R2: no latch on a hop longer than max_um (default 200): its T/2 latch -> capture leg fails setup
+        f"export OT_HOP_LATCH_MAX_UM = {float((spec or {}).get('max_um', ZL_MAX_UM)):g}"]
+    return st + ["# LOCKUP-STATION-1130: hop latches off the tap solve / CTS, then onto their launch flop's leaf (POST_CTS)",
+                 "export OT_HOP_LATCH_LEAF = 1"]
 
 
 ZL_NETLIST_LINE = "if {[file exists /work/zl_netlist.txt]} { source /work/zl_netlist_lockup.tcl }\n"

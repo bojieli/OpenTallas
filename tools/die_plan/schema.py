@@ -1549,6 +1549,13 @@ SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "a
         "hops": {"type": "array", "items": _ZL_HOP}, "regs": {"type": "array", "items": _ZL_REG},
         "netlist": {"type": "array", "items": {"type": "string", "minLength": 3}},
         "leaf": {"type": "boolean"},
+        # LOCKUP-STATION-R2 (FABLE-CLOSURE-1930 lever 2): auto = every zero-logic register hop of the type gets the netlist
+        # latch (no measured kit needed), exclude = capture-name regexes left out (default: reset relays, SRAM wrappers);
+        # same_tap = what the tap solve does with a latch whose launch and every capture share one tap (default bypass)
+        "auto": {"type": "boolean"},
+        "exclude": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "same_tap": {"type": "string", "enum": ["bypass", "keep"]},
+        "max_um": {"type": "number", "minimum": 0},
         "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
         "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {

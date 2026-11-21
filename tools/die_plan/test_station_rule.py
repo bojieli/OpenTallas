@@ -358,3 +358,37 @@ def test_apply_seams_and_leaf_for_ft_lockup_types(tmp_path):
                                                 "ports": ["o0", "o1"]}}
     assert rec["seam_types"] == 1 and rec["seam_ports"] == 2 and raw["clock"] == {}
     assert gen_phys.hop_latch_leaf_lines(tmp_path, None, ft=True)[-1] == "export OT_HOP_LATCH_LEAF = 1"
+
+
+def test_auto_form_all_zero_logic_hops_minus_reset_and_sram(tmp_path):
+    """LOCKUP-STATION-R2 (lever 2 by construction): auto = every zero-logic hop gets the netlist latch, reset relays and
+    SRAM wrappers excluded; the tap solve bypasses same-tap latches unless same_tap: keep."""
+    import gen_phys
+    import jsonschema
+    jsonschema.validate({"T*": {"auto": True, "exclude": ["u_x"], "same_tap": "bypass"}},
+                        S.SCHEMA["properties"]["clock"]["properties"]["zl_lockup"])
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"T": {"same_tap": "drop"}}, S.SCHEMA["properties"]["clock"]["properties"]["zl_lockup"])
+    assert gen_phys.zl_netlist_files(tmp_path, {"auto": True})
+    lines = (tmp_path / "zl_netlist.txt").read_text().split()
+    assert lines[0] == ".*" and all(x.startswith("!") for x in lines[1:]) and len(lines) == 3
+    import re
+    rx = [re.compile(x[1:]) for x in lines[1:]]
+    for name in ("u_bound.u_rrl_3/q$_DFF_PN0_", "u_bound.u_rst_relay_q[2]", "u_bound.u_sram_w0/q[1]"):
+        assert any(r.search(name) for r in rx), name
+    for name in ("u_bound.u_ft_ft1_o_2/q[5]$_DFF_P_", "u_bound.u_ist_leafup_o0_0/q[161]", "u_bound.u_first_q"):
+        assert not any(r.search(name) for r in rx), name
+    assert gen_phys.zl_netlist_files(tmp_path, {"auto": True, "netlist": [r"u_ft_.*"], "exclude": ["u_y"]})
+    assert (tmp_path / "zl_netlist.txt").read_text().split() == [r"u_ft_.*", "!u_y"]
+    ll = gen_phys.hop_latch_leaf_lines(tmp_path, {"auto": True})
+    assert "export OT_HOP_LATCH_SAME_TAP = bypass" in ll and ll[-1] == "export OT_HOP_LATCH_LEAF = 1"
+    assert "export OT_HOP_LATCH_MAX_UM = 200" in ll
+    assert "export OT_HOP_LATCH_MAX_UM = 120" in gen_phys.hop_latch_leaf_lines(tmp_path, {"auto": True, "max_um": 120})
+    assert not any("SAME_TAP" in x for x in gen_phys.hop_latch_leaf_lines(tmp_path, None, ft=True))
+    assert not any("SAME_TAP" in x for x in gen_phys.hop_latch_leaf_lines(tmp_path, {"auto": True, "same_tap": "keep"}))
+    here = Path(__file__).resolve().parent
+    ct = (here / "clock_taps.tcl").read_text()
+    assert "OT_HOP_LATCH_SAME_TAP" in ct and "proc ct_hl_drop" in ct and "odb::dbInst_destroy $li" in ct and "OT_HOP_LATCH_MAX_UM" in ct
+    assert ct.index("ct_hl_drop $ct_i") < ct.index("$ct_cit disconnect; incr ct_hl; continue")
+    zn = (here / "zl_netlist_lockup.tcl").read_text()
+    assert "lappend zn_excl" in zn and "foreach zn_re $zn_excl" in zn

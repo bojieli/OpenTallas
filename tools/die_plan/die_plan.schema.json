@@ -8377,6 +8377,27 @@
        "leaf": {
         "type": "boolean"
        },
+       "auto": {
+        "type": "boolean"
+       },
+       "exclude": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "same_tap": {
+        "type": "string",
+        "enum": [
+         "bypass",
+         "keep"
+        ]
+       },
+       "max_um": {
+        "type": "number",
+        "minimum": 0
+       },
        "ports": {
         "type": "array",
         "items": {

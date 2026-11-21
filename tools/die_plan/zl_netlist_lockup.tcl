@@ -8,11 +8,12 @@
 set zn_f /work/zl_netlist.txt
 if {![file exists $zn_f]} { return }
 # a line "=<name>" is one exact register (station_rule derive --ends-only: the ends that violate hold before repair)
-set zn_res {}; set zn_exact [dict create]
+set zn_res {}; set zn_exact [dict create]; set zn_excl {}
 foreach l [split [read [set zn_h [open $zn_f]]] "\n"] {
   set l [string trim $l]
   if {$l eq "" || [string match "#*" $l]} continue
-  if {[string index $l 0] eq "="} { dict set zn_exact [string range $l 1 end] 1 } else { lappend zn_res $l }
+  # LOCKUP-STATION-R2: a line "!<re>" excludes the captures whose name matches anywhere (clock.zl_lockup.<T>.auto exclude)
+  if {[string index $l 0] eq "="} { dict set zn_exact [string range $l 1 end] 1 } elseif {[string index $l 0] eq "!"} { lappend zn_excl [string range $l 1 end] } else { lappend zn_res $l }
 }
 close $zn_h
 set zn_blk [ord::get_db_block]
@@ -29,6 +30,8 @@ foreach zn_i [$zn_blk getInsts] {
   set zn_hit [dict exists $zn_exact $zn_nm]
   if {!$zn_hit} { foreach zn_re $zn_res { if {[regexp -- "^(?:$zn_re)\$" $zn_nm]} { set zn_hit 1; break } } }
   if {!$zn_hit} continue
+  foreach zn_re $zn_excl { if {[regexp -- $zn_re $zn_nm]} { set zn_hit 0; break } }
+  if {!$zn_hit} { incr zn_skip; continue }
   set zn_d ""; set zn_ck ""
   foreach zn_t [$zn_i getITerms] {
     set zn_p [[$zn_t getMTerm] getName]
@@ -62,4 +65,4 @@ foreach zn_i [$zn_blk getInsts] {
   $zn_d connect $zn_q
   incr zn_n
 }
-puts "OT_ZL_NETLIST inserted $zn_n lockup latches ([llength $zn_res] patterns, [dict size $zn_exact] exact, $zn_skip matching registers not a direct register hop)"
+puts "OT_ZL_NETLIST inserted $zn_n lockup latches ([llength $zn_res] patterns, [dict size $zn_exact] exact, [llength $zn_excl] excluded, $zn_skip matching registers not a direct register hop)"
