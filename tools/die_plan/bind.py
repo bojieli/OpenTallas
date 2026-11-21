@@ -984,7 +984,7 @@ def wavefront_cells_text_only(names):
     return "\n".join(out)
 
 
-def wavefront_cells_text(driver=False, lockup=False):
+def wavefront_cells_text(driver=False, lockup=False, root_nl=False):
     """Copy physical reset cells verbatim, including their synthesis attributes.
 
     Dropping module ``keep`` deleted unused, geometrically required tap chains
@@ -997,6 +997,8 @@ def wavefront_cells_text(driver=False, lockup=False):
     if lockup == "latch":       # RLK-1108 hop lockup latches (reset_tree.lockup_hops)
         names += ["ot_dp_lk"]
     elif lockup:
+        names += ["ot_dp_rrelay_nl"]
+    if root_nl and "ot_dp_rrelay_nl" not in names:
         names += ["ot_dp_rrelay_nl"]
     out = []
     for name in names:
@@ -3479,7 +3481,8 @@ class Binder:
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
             cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")),
-                                                 lockup=(P.reset.get("relay_lockup") or {}).get("form") or False)
+                                                 lockup=(P.reset.get("relay_lockup") or {}).get("form") or False,
+                                                 root_nl=any((t.get("reset") or {}).get("root_entry_negedge") for t in P.types.values()))
             W = RT.wf_plan(P)
             missing = set(W["parts"]) - set(self.members)
             if missing:

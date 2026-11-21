@@ -288,7 +288,7 @@ class Verification:
             if n=='rst_root_n':
                 # Stop at this partition's original reset entry, preserving
                 # its synchronizer/lock qualifier and original global tree.
-                roots={'u_rst_in':('ot_dp_rrelay','q'),'u_rst_root':('ot_dp_rsync_s'+str(tree.get('sync_stages',2)),'sync_rst_n')}
+                roots={'u_rst_in':('ot_dp_rrelay_nl' if tree.get('root_entry_negedge') else 'ot_dp_rrelay','q'),'u_rst_root':('ot_dp_rsync_s'+str(tree.get('sync_stages',2)),'sync_rst_n')}
                 if tree.get('lock'):roots={'u_rst_lockq':('ot_dp_lockq','q')}
                 return any(up.path==prefix+k and up.module==v[0] and port==v[1] for k,v in roots.items())
             row=rows.get(n)

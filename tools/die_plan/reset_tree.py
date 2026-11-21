@@ -1195,7 +1195,7 @@ def for_type(P, tn, reach=None):
     if native:
         import copy
         tree = copy.deepcopy(native["tree"])
-        configured = _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, tree))))
+        configured = _type_root_entry_negedge(P, tn, _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, tree)))))
         if configured != tree:
             raise ResetError(f"type {tn}: pin root copies require regenerated bound RTL and a fresh native source contract")
         return tree
@@ -1236,7 +1236,7 @@ def for_type(P, tn, reach=None):
             if boot_buses or boot_contents:
                 T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
                          bootstrap_taps=list(range(nck)))
-        return _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T))))
+        return _type_root_entry_negedge(P, tn, _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T)))))
     if pipelined(P):
         K = part_depth(P)
         T = _type_tree(P, tn, K, reach)
@@ -1253,7 +1253,7 @@ def for_type(P, tn, reach=None):
         T["relay_lockup"] = relay_lockup_form(P)
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
-    return _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T))))
+    return _type_root_entry_negedge(P, tn, _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T)))))
 
 
 def entry_stages(T):
@@ -2760,6 +2760,8 @@ def _type_pin_entry_delay(P, tn, T):
 
 def pin_entry_cell(T, signal):
     import pin_entry_delay as D
+    if T.get('root_entry_negedge'):
+        return 'ot_dp_rrelay_nl'
     if T.get('pin_entry_phase'):
         return 'ot_dp_rrelay_ph'
     return D.entry_cell(T, signal)
@@ -2789,6 +2791,24 @@ def _type_pin_entry_fall(P, tn, T):
         raise ResetError(f"type {tn}: pin_entry_fall copies need their own measured entry window")
     T = dict(T, pin_entry_fall=True, pin_entry_added_flops=1 + int(bool(T.get("start"))))
     return T
+
+
+def _type_root_entry_negedge(P, tn, T):
+    """reset.root_entry_negedge (RESET-RELAY-GEN-R3 11-21, COORD/owner hold-fix list: launch-side lockup): the root entry register
+    u_rst_in is the falling-edge-output relay ot_dp_rrelay_nl (posedge state, negedge q), so the first hop to the tree relays has
+    half a cycle of hold margin against clock-insertion skew (S81 leaf t60: u_rst_in on clk_t57 67 ps -> u_rrl_167 on clk_t60 307 ps,
+    hold -158.8).  0 cycles: the first relay still captures on the next rising edge.  Default (absent) = byte-identical."""
+    flag = P.types[tn].get("reset", {}).get("root_entry_negedge", False)
+    if type(flag) is not bool:
+        raise ResetError(f"type {tn}: reset.root_entry_negedge must be boolean")
+    if not flag:
+        return T
+    if T.get("entry") != "relayed" or T.get("start"):
+        raise ResetError(f"type {tn}: root_entry_negedge needs the plain relayed pin-register entry (no sync root, no START)")
+    for k in ("pin_entry_fall", "pin_entry_phase", "pin_entry_delay", "pin_root_copies", "pin_start_copies"):
+        if T.get(k):
+            raise ResetError(f"type {tn}: root_entry_negedge cannot combine with {k}")
+    return dict(T, root_entry_negedge=True)
 
 
 def _type_pin_root_copies(P, tn, T):

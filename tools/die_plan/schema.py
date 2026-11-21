@@ -963,6 +963,8 @@ SCHEMA = {
                         # FABLE-FIX-HEAD-RESET 11-17: strap-selected rising/falling capture + local handoff
                         # (pin_entry_phase.py); needs the 1-bit id_strap strap_rst_ph; instances give reset_entry_phase.
                         "pin_entry_phase": {"type": "boolean"},
+                        # RESET-RELAY-GEN-R3 11-21: root entry u_rst_in = ot_dp_rrelay_nl (launch-side lockup, 0 cycles)
+                        "root_entry_negedge": {"type": "boolean"},
                         # Exact physical input-to-capture technology chain; no new FF/cycle.
                         "pin_entry_delay": {"type": "object", "additionalProperties": False,
                             "required": ["cell", "reset", "start", "reset_sites_um", "start_sites_um", "max_hop_um"],

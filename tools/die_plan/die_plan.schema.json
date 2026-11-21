@@ -5084,6 +5084,9 @@
        "pin_entry_phase": {
         "type": "boolean"
        },
+       "root_entry_negedge": {
+        "type": "boolean"
+       },
        "pin_entry_delay": {
         "type": "object",
         "additionalProperties": false,
