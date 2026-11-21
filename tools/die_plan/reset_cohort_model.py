@@ -99,6 +99,22 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
     def edge_length(edge):
         return distance(centroid([edge[0]]), centroid([edge[1]]))
 
+    excluded = set(excluded_roots)
+    enc = dict(FF_count=len(encoder), centroid_um=None, predicted_nearest_root=None)
+    if encoder:
+        ec = [sum(p[k] for p in encoder) / len(encoder) for k in (0, 1)]
+        heavy = min(taps, key=lambda n: (distance(taps[n], ec), n))
+        enc.update(centroid_um=ec, predicted_nearest_root=heavy)
+        if auto_encoder:
+            excluded.add(heavy)
+    unknown = excluded - taps.keys()
+    if unknown:
+        raise ValueError(f'excluded clock roots absent from actual input: {sorted(unknown)}')
+
+    def root_fit(ids):
+        pts = points(ids)
+        return any(max(distance(p, xy) for p in pts) <= hop_um for name, xy in taps.items() if name not in excluded)
+
     parent = {i: i for i in nodes}
     groups = {i: {i} for i in nodes}
 
@@ -114,7 +130,15 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
             continue
         union = groups[x] | groups[y]
         extent = span(union)
-        if extent <= hop_um:
+        # FAM-S81-SERDES-R4 11-21 (serdes__t4 J6 rep + a15, CTS fail-closed "unfit light-root groups [222]"): a union whose
+        # bbox fits the hop budget can still have no light root within reach of ALL its FFs (two RRL+collector pairs 278 um
+        # apart on the die edge, each 171 / 213 um from its own tap, 445 um from any shared one).  Never make a fitting
+        # cohort unfit by a union: keep the parts separate (one more cross-group edge, measured by CTS/STA as any other).
+        lost_fit = extent <= hop_um and not root_fit(union) and (root_fit(groups[x]) or root_fit(groups[y]))
+        if lost_fit:
+            rejected.append(dict(edge=[a, b], edge_centroid_span_um=edge_length((a, b)),
+                                 rejected_union_bbox_span_um=extent, rejected_union_no_light_root=True))
+        elif extent <= hop_um:
             parent[y] = x
             groups[x] = union
             del groups[y]
@@ -122,17 +146,6 @@ def model(path: Path, *, hop_um=405.0, excluded_roots=(), auto_encoder=True,
             rejected.append(dict(edge=[a, b], edge_centroid_span_um=edge_length((a, b)),
                                  rejected_union_bbox_span_um=extent))
 
-    excluded = set(excluded_roots)
-    enc = dict(FF_count=len(encoder), centroid_um=None, predicted_nearest_root=None)
-    if encoder:
-        ec = [sum(p[k] for p in encoder) / len(encoder) for k in (0, 1)]
-        heavy = min(taps, key=lambda n: (distance(taps[n], ec), n))
-        enc.update(centroid_um=ec, predicted_nearest_root=heavy)
-        if auto_encoder:
-            excluded.add(heavy)
-    unknown = excluded - taps.keys()
-    if unknown:
-        raise ValueError(f'excluded clock roots absent from actual input: {sorted(unknown)}')
 
     result_groups = []
     for ids in sorted(groups.values(), key=lambda s: min(s)):

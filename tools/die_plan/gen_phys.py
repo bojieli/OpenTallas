@@ -6707,6 +6707,13 @@ def macro_move_table(t, tn, env=None):
 # in its plan verilog_defines gets the hook without a generation env (wave kits, private kits alike).
 SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d"),
                      "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
+# FAM-S81-SERDES-R4 11-21 (serdes__t4 split, COORD): under OT_S81_SERDES_DEC_CORE the column's u_dec is the one-clock hard core
+# ot_s81_kp4_dec_lp_core (own kit, own placement).  Every shell placement hook that names an instance inside it
+# (u_dec.u_face_p_d / u_face_p_v face rows, the RCK4 AM face u_dec.u_face_am3, the u_dec.u_rck_transport4 / u_rck_reset4
+# chains, the H4 metadata reflow on u_dec.u_syn / u_rck_transport4) is dropped from the shell kit: those cells are not in its
+# netlist.  The shell keeps the column-level rows (u_txl, u_rxf) and the rck clock exports.
+SERDES_DEC_CORE = "OT_S81_SERDES_DEC_CORE"
+SERDES_DEC_CORE_PREFIX = "u_dec."
 
 
 def s81_rck4_source_contract(cfg, kd, names):
@@ -6932,7 +6939,7 @@ def serdes_h_lines(cfg, kd, names, env, post_gpl):
     out = [f"# SERDES-H-FORM: PHY-region serdes placement form (H17 lineage)",
            f"export PLACE_DENSITY = {SERDES_H_DENSITY:g}",
            f"export OT_CLK_LEAF_SLEW_PS = {SERDES_H_LEAF_SLEW_PS}"]
-    if not any(re.match(r"\s*(?:override\s+)?export\s+PRE_RESIZE_TCL\b", c) for c in cfg):
+    if SERDES_DEC_CORE not in names and not any(re.match(r"\s*(?:override\s+)?export\s+PRE_RESIZE_TCL\b", c) for c in cfg):
         shutil.copyfile(Path(__file__).with_name("h4_meta_reflow.tcl"), Path(kd) / "h4_meta_reflow.tcl")
         out.append("export PRE_RESIZE_TCL = /work/h4_meta_reflow.tcl")
     if "OT_S81_SERDES_BOOT_RELEASE3" in names:
@@ -6968,24 +6975,30 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     assert not rm_local or rck4, "S81 RM locality requires the actual RCK4 native source profile"
     assert not (rm_local and "OT_S81_SERDES_RM_WPL8" in names), "S81 RM locality helper has no RM_WPL8 scope (58-FF selector)"
     assert not am_clock or rck4, "S81 AM cohort requires the actual RCK4 source profile"
-    if rck4:
+    dec_core = SERDES_DEC_CORE in names
+    assert not (am_clock and dec_core), "S81 AM cohort names u_dec.u_face_am3, inside the OT_S81_SERDES_DEC_CORE hard core"
+    rck4_face = rck4 and not dec_core          # the RCK4 face / transport hook places cells of the decoder only
+    if rck4_face:
         s81_rck4_source_contract(cfg, kd, names)
-    pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
+    pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs
+            if not (dec_core and c.startswith(SERDES_DEC_CORE_PREFIX))]
     if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
     assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
     chains = env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split() if env.get("OT_TXL_MID") == "1" else []
+    if dec_core:
+        chains = [c for c in chains if not c.startswith(SERDES_DEC_CORE_PREFIX)]
     if pipe:
         chains = list(dict.fromkeys(chains + pipe))
     chains = " ".join(chains)
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
-    if rck4:
+    if rck4_face:
         shutil.copyfile(Path(__file__).with_name("rck_transport_mid.tcl"), Path(kd) / "rck_transport_mid.tcl")
-    post_gpl = "rck_transport_mid.tcl" if rck4 else "txl_mid.tcl"
+    post_gpl = "rck_transport_mid.tcl" if rck4_face else "txl_mid.tcl"
     if rm_local:
         shutil.copyfile(Path(__file__).with_name("serdes_rm_local.tcl"), Path(kd) / "serdes_rm_local.tcl")
         (Path(kd) / "serdes_post_gpl.tcl").write_text(
-            "source /work/rck_transport_mid.tcl\nsource /work/serdes_rm_local.tcl\n")
+            f"source /work/{post_gpl}\nsource /work/serdes_rm_local.tcl\n")
         post_gpl = "serdes_post_gpl.tcl"
     if am_clock:
         shutil.copyfile(Path(__file__).with_name("rck_am_cohort.tcl"), Path(kd) / "rck_am_cohort.tcl")
@@ -6997,6 +7010,8 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
             *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
             *(["# S81 RCK4: source-qualified RX+4 coherent transport; no netlist/clock change",
                "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
+               "export OT_LEAF_AFF_DEPTH = 12"] if rck4_face else
+              ["# S81 RCK4 DEC_CORE shell: decoder transport placed in its hard core; shell keeps the rck leaf affinity",
                "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
             *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
             # S81 serdes family default (FABLE-FIX-S81-SERDES2 11-17): rck depth balance on every RCK4 kit, 16 rounds (8 rounds stop

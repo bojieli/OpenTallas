@@ -206,3 +206,41 @@ def test_rck4_rm_wpl8_requires_local_empty_and_actual_source():
             assert "no RM_WPL8 scope" in str(error)
         else:
             raise AssertionError("RM locality helper accepted the RM_WPL8 profile")
+
+
+# FAM-S81-SERDES-R4 11-21: OT_S81_SERDES_DEC_CORE shell (u_dec = hard core): no hook names a cell inside the decoder core.
+T4_DEFINES = ["-DOT_KP4_DEC_HARD", "-DOT_S81_SERDES_TXPIPE", "-DOT_S81_SERDES_RXPIPE", "-DOT_S81_SERDES_RXNEG",
+              "-DOT_S81_KP4_AM_FACE3", "-DOT_S81_RCK_RELAY4", "-DOT_S81_SERDES_RM_RPC8", "-DOT_S81_SERDES_BOOT_RELEASE3",
+              "-DOT_S81_LPL_CHUNK", "-DOT_S81_SERDES_RM_LOCAL_EMPTY8", "-DOT_S81_SERDES_RM_WPL8", "-DOT_S81_KP4_AMOK_PIPE",
+              "-DOT_S81_SERDES_TXL4"]
+
+
+def test_dec_core_shell_drops_decoder_internal_hooks():
+    with tempfile.TemporaryDirectory() as d:
+        # no VERILOG_FILES: the RCK4 native-source contract belongs to the core kit, not the shell
+        out = G.txl_mid_exports([], d, env={"OT_TXL_MID": "1", "OT_TXL_MID_CHAINS": "u_txl,u_dec.u_rck_transport4"},
+                                defines=T4_DEFINES + ["-DOT_S81_SERDES_DEC_CORE"])
+        assert "export OT_TXL_MID_CHAINS = u_txl u_rxf" in out
+        assert not any("u_dec." in c for c in out)
+        assert out[-1] == "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"
+        assert "export OT_S81_RCK4_FACE = 1" not in out and "export OT_TXL_MID_RXNEG_PAIR = 1" not in out
+        assert "export OT_LEAF_AFF_DEPTH = 12" in out
+        assert not (Path(d) / "rck_transport_mid.tcl").exists()
+
+
+def test_dec_core_shell_refuses_am_cohort():
+    with tempfile.TemporaryDirectory() as d:
+        try:
+            G.txl_mid_exports([], d, env={"OT_S81_RCK_AM_COHORT": "1"}, defines=T4_DEFINES + ["-DOT_S81_SERDES_DEC_CORE"])
+        except AssertionError:
+            return
+        raise AssertionError("expected refusal")
+
+
+def test_dec_core_shell_has_no_h4_meta_reflow():
+    with tempfile.TemporaryDirectory() as d:
+        names = {x[2:] for x in T4_DEFINES} | {"OT_S81_SERDES_DEC_CORE"}
+        out = G.serdes_h_lines([], d, names, {"OT_SERDES_COHORTS": "0"}, "txl_mid.tcl")
+        assert not any("h4_meta_reflow" in c for c in out)
+        out = G.serdes_h_lines([], d, names - {"OT_S81_SERDES_DEC_CORE"}, {"OT_SERDES_COHORTS": "0"}, "txl_mid.tcl")
+        assert "export PRE_RESIZE_TCL = /work/h4_meta_reflow.tcl" in out

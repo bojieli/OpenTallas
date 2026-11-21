@@ -65,3 +65,24 @@ def test_tcl_trace_marks_root_registers():
     d = Path(__file__).parent
     for f in ("serdes_reset_graph.tcl", "clock_taps.tcl"):
         assert "u_cland_(?:reset_rst_rl|collect_rst_rl)" in (d / f).read_text()
+
+
+def test_union_never_loses_the_light_root_t4_edge_shape(tmp_path):
+    """FAM-S81-SERDES-R4 11-21 (serdes__t4 J6 rep, CTS fail-closed 'unfit light-root groups [222]'): RRL 222 / 223 sit 278 um
+    apart on the die edge, 148 um below the tap row.  Each alone fits its own tap; their union fit the 405 um bbox but no tap
+    reached both.  The union is refused, both parts keep a root, and the old union is recorded as rejected."""
+    rows = ["TAP\tclk_t2\t901.792\t152.864", "TAP\tclk_t3\t1262.496\t152.864",
+            "NODE\tRRL\t222\tu_rrl_222/q\t1239.84\t4.32\tPLACED\tclk",
+            "NODE\tRRL\t223\tu_rrl_223/q\t966.168\t4.59\tPLACED\tclk",
+            "FANIN\tRRL\t223\tu_rrl_223/q\tD\t222"]
+    for cid, x in ((222, 1239.678), (222, 1242.378), (223, 964.71), (223, 967.41)):
+        rows.append(f"NODE\tCOLLECTOR\t{cid}\tu_cland_collect_rst_rl_{cid}/q{x}\t{x}\t4.59\tFIRM\tclk")
+        rows.append(f"FANIN\tCOLLECTOR\t{cid}\tu_cland_collect_rst_rl_{cid}/q{x}\tD\t{cid}")
+    g = tmp_path / "t4.tsv"
+    g.write_text("\n".join(rows) + "\n")
+    r = M.model(g, hop_um=405.0, auto_encoder=False)
+    assert r["unfit_light_root_groups"] == []
+    assert sorted(x["key"] for x in r["groups"]) == [222, 223]
+    assert {x["key"]: x["root_candidates"][0]["name"] for x in r["groups"]} == {222: "clk_t3", 223: "clk_t2"}
+    assert any(x.get("rejected_union_no_light_root") for x in r["rejected_unions"])
+    E.env_values(r)                                                     # no fail-closed raise

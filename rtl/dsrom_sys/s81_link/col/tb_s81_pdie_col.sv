@@ -6,8 +6,25 @@
 // PASS: >= NB - 400 data beats at B, all in order and exact, st(B) live and no fault.
 // Mutants (on the column dies): MUT 1 landing 0 (syn -> dly words) bypassed, MUT 2 landing 0 read one edge late:
 // words and corrections misalign -> FAIL.
+// LS (FAM-S81-SERDES-R4 11-21): the die instantiates the column as #(.LOCKSAFE(1), .HOLD_EDGES(64)) with pma_lock on a pad
+// (serdes__t* wrappers, test_serdes_h_form); the forms OT_S81_RCK_RELAY4 / OT_S81_SERDES_COL_PIN / OT_S81_SERDES_BOOT_RELEASE3
+// require it (the column's own elaboration checks).  Under those defines the bench builds the die form: LOCKSAFE=1,
+// HOLD_EDGES=64, pma_lock rising LOCK_AT core edges after rst release, and the source starts after the guarded release
+// (TX_START) so beat 0 is the first beat the released link carries.  Without them: LOCKSAFE=0, unchanged.
+`ifdef OT_S81_RCK_RELAY4
+`define TB_COL_LS_DEFAULT 1
+`elsif OT_S81_SERDES_COL_PIN
+`define TB_COL_LS_DEFAULT 1
+`elsif OT_S81_SERDES_BOOT_RELEASE3
+`define TB_COL_LS_DEFAULT 1
+`else
+`define TB_COL_LS_DEFAULT 0
+`endif
 module tb_s81_pdie_col;
     parameter integer MODE = 0, MUT = 0, NB = 6000;
+    parameter integer LS = `TB_COL_LS_DEFAULT, LOCK_AT = 4;
+    localparam integer TX_START = (LS != 0) ? 400 : 40;
+    reg lock = 0;
     reg ca = 0, cb = 0, rst = 0;
     always #416.5 ca = ~ca;
     always #416.62495 cb = ~cb;
@@ -30,12 +47,12 @@ module tb_s81_pdie_col;
     generate if (MODE == 2) begin : g_a_ref
         ot_pdie_serdes u_a (.clk(ca), .rst(rst), .tx(txa), .rx(rxa), .st(sta), .pma_tx(pa), .pma_tck(tca), .pma_rx(pb), .pma_rck(tcb));
     end else begin : g_a_col
-        ot_pdie_serdes_col #(.MUT(MUT)) u_a (.clk(ca), .rst(rst), .tx(txa), .rx(rxa), .st(sta), .pma_tx(pa), .pma_tck(tca), .pma_rx(pb), .pma_rck(tcb));
+        ot_pdie_serdes_col #(.MUT(MUT), .LOCKSAFE(LS), .HOLD_EDGES(64)) u_a (.pma_lock(lock), .clk(ca), .rst(rst), .tx(txa), .rx(rxa), .st(sta), .pma_tx(pa), .pma_tck(tca), .pma_rx(pb), .pma_rck(tcb));
     end endgenerate
     generate if (MODE == 1) begin : g_b_ref
         ot_pdie_serdes u_b (.clk(cb), .rst(rst), .tx(512'd2), .rx(rxb), .st(stb), .pma_tx(pb), .pma_tck(tcb), .pma_rx(pa_e), .pma_rck(tca));
     end else begin : g_b_col
-        ot_pdie_serdes_col #(.MUT(MUT)) u_b (.clk(cb), .rst(rst), .tx(512'd2), .rx(rxb), .st(stb), .pma_tx(pb), .pma_tck(tcb), .pma_rx(pa_e), .pma_rck(tca));
+        ot_pdie_serdes_col #(.MUT(MUT), .LOCKSAFE(LS), .HOLD_EDGES(64)) u_b (.pma_lock(lock), .clk(cb), .rst(rst), .tx(512'd2), .rx(rxb), .st(stb), .pma_tx(pb), .pma_tck(tcb), .pma_rx(pa_e), .pma_rck(tca));
     end endgenerate
     reg err_on = 0; integer err_bit = 0;
     always @* begin
@@ -49,7 +66,7 @@ module tb_s81_pdie_col;
     endfunction
     always @(negedge ca) begin
         cyc = cyc + 1;
-        if (cyc > 40 && sent < NB) begin
+        if (cyc > TX_START && sent < NB) begin
             if (cyc % 256 == 0) txa <= 512'd2;
             else begin txa <= beat(sent); sent = sent + 1; end
         end else txa <= 512'd2;
@@ -64,8 +81,10 @@ module tb_s81_pdie_col;
     end
     initial begin
         repeat (8) @(posedge ca); rst = 1;
+        if (LS != 0) begin repeat (LOCK_AT) @(posedge ca); lock = 1; end
         wait (sent == NB);
         repeat (500) @(posedge cb);
+        $display("TB_S81_PDIE_COL LS=%0d", LS);
         $display("TB_S81_PDIE_COL MODE=%0d MUT=%0d sent=%0d got=%0d bad=%0d idles_seen=%0d stA=%b stB=%b", MODE, MUT, sent, got,
                  bad, idles, sta, stb);
         if (got >= NB - 400 && bad == 0 && stb == 2'b10) $display("TB_S81_PDIE_COL PASS"); else $display("TB_S81_PDIE_COL FAIL");
