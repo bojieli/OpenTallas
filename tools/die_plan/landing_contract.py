@@ -591,7 +591,7 @@ def ring_input_sdc(P,tn):
             # max on ft rings of fall types; rise types, non-ft rings and plans without the key are unchanged.
             if bus in ft and ck in fall and rh is not None and rh.get("ft_ring_max_ps") is not None:
                 mx=float(rh["ft_ring_max_ps"])
-            if bus in ft:mx=G._ft_in_max_ps(P,mx)   # CBC registered-sender hop budget (245 ps at the 300-um cap)
+            if bus in ft:mx=G._ft_in_max_ps(P,mx,port=bus,tn=tn)   # CBC registered-sender hop budget (245 ps at the 300-um cap; plan budgets.ft_in_budget_ps per port)
             # DH56-IOHP 11-03: NO T/2 shift for a falling-edge writer.  The sender launches on the forwarded RISE and
             # STA already captures at the fall T/2 later, so the max stays the IO budget (real internal budget T/2 -
             # budget).  The old 'mx -= T/2' restored full-cycle slack: HEAD hd_turn_a kit fstart -max -249.9 passed

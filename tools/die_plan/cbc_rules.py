@@ -117,12 +117,30 @@ SEAM_CLKQ_PS = 50.0
 SEAM_PS_PER_UM = 0.65
 
 
-def ft_in_budget_ps(die=None):
-    """max input delay (ps, before tap-window shift) of an ft / ring seam input under CBC, or None (env opt-out)"""
+def seam_budget_ps(seam_um):
+    """registered-sender seam budget (ps) of a seam of seam_um (clk->q + buffered wire, capped at the hop cap)"""
+    return SEAM_CLKQ_PS + SEAM_PS_PER_UM * min(float(seam_um), REACH_UM_PER_HOP)
+
+
+def ft_in_budget_ps(die=None, port=None, tn=None, budgets=None):
+    """max input delay (ps, before tap-window shift) of an ft / ring seam input under CBC, or None (env opt-out).
+    QC-PLAN-R8 11-20: opt-in plan budgets.ft_in_budget_ps = {"<type>/<port>" | "<port>": ps | {"seam_um": um}} sets
+    the budget of one receiver input port (the ft slot's "<slot>_i", e.g. "cws2_i") from its geometry; a type-scoped
+    key wins over the bare port key, {"seam_um": L} prices 50 + 0.65 x min(L, hop cap).  Absent key / port = the
+    die-wide 50 + 0.65 x hop cap (245 ps at 300 um), byte-identical to before."""
     import os
     if os.environ.get("OT_FT_IN_BUDGET", "").lower() == "fixed":
         return None
-    return SEAM_CLKQ_PS + SEAM_PS_PER_UM * REACH_UM_PER_HOP
+    ov = (budgets or {}).get("ft_in_budget_ps") or {}
+    v = None
+    if port is not None:
+        v = ov.get(f"{tn}/{port}") if tn is not None else None
+        v = ov.get(port) if v is None else v
+    if v is None:
+        return SEAM_CLKQ_PS + SEAM_PS_PER_UM * REACH_UM_PER_HOP
+    if isinstance(v, dict):
+        return seam_budget_ps(v["seam_um"])
+    return float(v)
 
 
 def rules():

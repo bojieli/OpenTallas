@@ -9323,6 +9323,26 @@
     "relay_mid_tail": {
      "type": "boolean"
     },
+    "ft_in_budget_ps": {
+     "type": "object",
+     "additionalProperties": {
+      "type": [
+       "number",
+       "object"
+      ],
+      "exclusiveMinimum": 0,
+      "additionalProperties": false,
+      "required": [
+       "seam_um"
+      ],
+      "properties": {
+       "seam_um": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     }
+    },
     "relay_mid_half": {
      "type": "object",
      "additionalProperties": false,

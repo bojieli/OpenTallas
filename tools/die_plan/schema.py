@@ -1831,6 +1831,11 @@ _B["r_dly_lockup"] = {"type": "object", "additionalProperties": {"type": "object
     "r2r_margin_ps": {"type": "number", "minimum": 0, "maximum": 100}}}}   # XTAP-C 11-20 (gen_phys dly_lockup_cfg, kit_dly_lockup.py)
 _B["pad_chain_pitch_cap_um"] = {"type": "number", "exclusiveMinimum": 0}   # PAD-PITCH-CAP 11-20 (FABLE-CBC-QK-0130 s3, gen_phys pad_chain_pitch_cap_um, pad_chain_site.tcl)
 _B["relay_mid_tail"] = {"type": "boolean"}
+# QC-PLAN-R8 11-20 (cbc_rules.ft_in_budget_ps): per receiver ft input port ("<slot>_i" or "<type>/<slot>_i") registered-
+# sender seam budget, ps or {"seam_um": L} (50 + 0.65 x min(L, hop cap)).  Absent = die-wide 245 ps, byte-identical kits.
+_B["ft_in_budget_ps"] = {"type": "object", "additionalProperties": {   # type list: _check has no anyOf
+    "type": ["number", "object"], "exclusiveMinimum": 0, "additionalProperties": False, "required": ["seam_um"],
+    "properties": {"seam_um": {"type": "number", "minimum": 0}}}}
 _HALF = {"type": "object", "additionalProperties": False,
          "properties": {"src": {"type": "string", "minLength": 1}, "sink": {"type": "string", "minLength": 1}}}
 _B["relay_mid_half"] = _HALF          # OPUS-FIX-S81-SLICEC 11-20: relay_mid.tcl HALF (gen_phys._relay_mid_half)

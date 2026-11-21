@@ -3139,13 +3139,29 @@ def plain_seam_split(P):
     return P._plain_seam_split
 
 
-def _ft_in_max_ps(P, fixed_ps):
+def _ft_in_max_ps(P, fixed_ps, port=None, tn=None):
     """ft seam input max delay (lib units, before the tap-window shift): the fixed share budget, capped by the CBC
     registered-sender hop budget (cbc_rules.ft_in_budget_ps: clk->q + hop-cap wire, 245 ps at 300 um; COORD 11-20
-    QC-HOLD-0030-INDELAY).  Receiver-side relaxation only: the sender keeps its output budget."""
+    QC-HOLD-0030-INDELAY; per receiver port from plan budgets.ft_in_budget_ps, QC-PLAN-R8).  Receiver-side
+    relaxation only: the sender keeps its output budget."""
     import cbc_rules
-    b = cbc_rules.ft_in_budget_ps(P.die.get("name") if isinstance(P.die, dict) else None)
+    b = cbc_rules.ft_in_budget_ps(P.die.get("name") if isinstance(P.die, dict) else None, port=port, tn=tn,
+                                  budgets=getattr(P, "budgets", None))
     return fixed_ps if b is None else min(fixed_ps, t_lib(b))
+
+
+def _ft_in_port_ps(P, tn, slots, fixed_ps):
+    """{"<slot>_i": max delay} for the ft inputs whose plan budgets.ft_in_budget_ps value differs from the die-wide
+    budget (empty without the key, so the kit SDC stays byte-identical)"""
+    if not (getattr(P, "budgets", None) or {}).get("ft_in_budget_ps"):
+        return {}
+    base = _ft_in_max_ps(P, fixed_ps)
+    out = {}
+    for n in slots:
+        v = _ft_in_max_ps(P, fixed_ps, port=f"{n}_i", tn=tn)
+        if v != base:
+            out[f"{n}_i"] = v
+    return out
 
 
 def _ft_delay_lines(kind, ports, base, spl, fmt):
@@ -4357,7 +4373,14 @@ def sdc(P, tn, pins):
         spl = plain_seam_split(P)
         ft_in_ps = _ft_in_max_ps(P, (1 - sh) * per)
         s_in, s_out = spl["in"].get(tn, {}), spl["out"].get(tn, {})
-        if not s_in and not s_out:
+        ft_ov = _ft_in_port_ps(P, tn, slots, (1 - sh) * per)   # plan budgets.ft_in_budget_ps (lib units)
+        if ft_ov and not s_in and not s_out:
+            out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment; plan "
+                    f"budgets.ft_in_budget_ps: per-port registered-sender budget on {len(ft_ov)} input(s)\n"
+                    + _ft_delay_lines("input", [f"{n}_i" for n in slots], ft_in_ps, ft_ov,
+                                      lambda v: f"{v + t_lib(tw_in):.4f}")
+                    + f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+        elif not s_in and not s_out:
             out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
                     f"set_input_delay -max {ft_in_ps + t_lib(tw_in):.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
                     f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
@@ -4366,7 +4389,8 @@ def sdc(P, tn, pins):
                     f"clock.plain_seam_split (plain-lane input budget event): plain-lane inputs "
                     f"{len(s_in)}, registered plain-lane senders {len(s_out)}\n"
                     + _ft_delay_lines("input", [f"{n}_i" for n in slots], ft_in_ps,
-                                      {k: t_lib(v) for k, v in s_in.items()}, lambda v: f"{v + t_lib(tw_in):.4f}")
+                                      dict(ft_ov, **{k: t_lib(v) for k, v in s_in.items()}),
+                                      lambda v: f"{v + t_lib(tw_in):.4f}")
                     + _ft_delay_lines("output", [f"{n}_o" for n in slots], sh * per,
                                       {k: t_lib(v) for k, v in s_out.items()}, lambda v: f"{v:.4f}"))
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never

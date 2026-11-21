@@ -1092,7 +1092,7 @@ def kit_context(P, tn):
         ni, no = gen_rtl.sv_id(s["name"] + "_i"), gen_rtl.sv_id(s["name"] + "_o")
         ins.append(ni)
         outs.append(no)
-        floor[ni] = spl["in"].get(tn, {}).get(ni, gen_phys._ft_in_max_ps(P, (1 - gen_phys.ft_hop_in_share(P)) * per))   # CBC hop budget
+        floor[ni] = spl["in"].get(tn, {}).get(ni, gen_phys._ft_in_max_ps(P, (1 - gen_phys.ft_hop_in_share(P)) * per, port=ni, tn=tn))   # CBC hop budget
         floor[no] = spl["out"].get(tn, {}).get(no, gen_phys.ft_hop_in_share(P) * per)
     floor["arst_n"] = gen_phys.IO_BUDGET * per
     ids = gen_phys.logical_strap_names(t)
@@ -1128,7 +1128,7 @@ def kit_context(P, tn):
         for ck_, sel_ in LC_.ring_input_ports(P, tn):
             for s_ in sel_:
                 if ck_ in fall_ and s_.split("[")[0] in ft_:
-                    floor[s_.split("[")[0]] = gen_phys._ft_in_max_ps(P, float(rh_["ft_ring_max_ps"]))
+                    floor[s_.split("[")[0]] = gen_phys._ft_in_max_ps(P, float(rh_["ft_ring_max_ps"]), port=s_.split("[")[0], tn=tn)
     ib = gen_phys.insertion_binding(P, tn)
     pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
     return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
