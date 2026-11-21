@@ -81,6 +81,27 @@ class KitBindSidecars(unittest.TestCase):
         with self.assertRaisesRegex(FileNotFoundError, "bind_r8pad_strap_audit.json not found on host .*tried"):
             B.declared(kj)
 
+    def test_asbuilt_leaf_kit_copy_when_preview_absent_on_host(self):
+        ab = self.bind.parent / "asbuilt_n46r4_final_preview.json"
+        ab.write_text(json.dumps({"sub_core_leaf": {"u_q": "u_q.map_lane"}, "hard_core_leaf": {"h": "x"}, "big": [1] * 10}))
+        self.kr["asbuilt_manifest"] = str(ab)
+        self.kr["bind_sidecars"] = B.stage_asbuilt_leaf(str(ab), self.kd, B.stage_kit_sidecars(self.bind, self.kd))
+        kj = self.write_kr()
+        ab.rename(ab.with_suffix(".moved"))
+        leaf = B.asbuilt_leaf(kj, self.kr)
+        self.assertEqual(leaf["sub_core_leaf"], {"u_q": "u_q.map_lane"})
+        self.assertEqual(leaf["sub_core_leaf_variants"], {})
+        self.assertNotIn("big", leaf)
+
+    def test_asbuilt_leaf_miss_names_paths_and_host(self):
+        self.kr["asbuilt_manifest"] = str(self.bind.parent / "asbuilt_epyc9_only.json")
+        kj = self.write_kr()
+        with self.assertRaisesRegex(FileNotFoundError, r"on host \S+; tried .*asbuilt_leaf.json, .*asbuilt_epyc9_only.json"):
+            B.asbuilt_leaf(kj, self.kr)
+
+    def test_asbuilt_leaf_none_named(self):
+        self.assertEqual(B.asbuilt_leaf(self.write_kr(), self.kr), {})
+
 
 if __name__ == "__main__":
     unittest.main()

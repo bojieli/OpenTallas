@@ -225,11 +225,11 @@ def project(raw, kit_rtl):
             import s81_svc_pvso_paths
             rows += s81_svc_pvso_paths.resolve(tn, t, bound_text)
         kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
-        manifest = kr.get("asbuilt_manifest")
-        man = (json.loads(Path(manifest).read_text())
-               if manifest and Path(manifest).is_file() and any(
-                   ".u_fcore." in (c.get("physical_inst") or "") or not c.get("physical_inst")
-                   for c in _macro_entries(t)) else {})
+        # FLOW-PROC-A 11-21: the kit copy of the as-built leaf tables first; an as-built named but on no path here was a SILENT {} (wrong
+        # physical paths), now a FileNotFoundError naming the paths and the host
+        need = any(".u_fcore." in (c.get("physical_inst") or "") or not c.get("physical_inst") for c in _macro_entries(t))
+        import bound_r8_straps as _BRS
+        man = _BRS.asbuilt_leaf(Path(fl).with_name("kit_rtl.json"), kr) if need else {}
         rows += resolve_sub_cores(t, bound_text, man.get("sub_core_leaf", {}), man.get("sub_core_leaf_variants", {}))
         rows += resolve_hard_core_leaf(t, bound_text, man.get("hard_core_leaf", {}))
         if not rows:

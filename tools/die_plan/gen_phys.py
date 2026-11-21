@@ -9697,9 +9697,8 @@ def bound_parent_id_plan(raw, kit_rtl):
         # u_sfucore_Q_lane14.map_lane_j.  Resolve the declarations with the same table from the producer manifest
         # the kit records, so the manifest row and the plan declaration name the same leaf.  Width, name and the
         # actual kit input are still checked exactly below; no table = unchanged behaviour.
-        sub_core_leaf = {}
-        if kr.get("asbuilt_manifest"):
-            sub_core_leaf = json.loads(Path(kr["asbuilt_manifest"]).read_text()).get("sub_core_leaf") or {}
+        import bound_r8_straps as _BRS          # FLOW-PROC-A 11-21: kit copy of the as-built leaf tables first (fp7: as-built on one host only)
+        sub_core_leaf = _BRS.asbuilt_leaf(kj, kr).get("sub_core_leaf") or {}
         t = with_sub_core_id_leaves(t, sub_core_leaf)
         declarations = type_parent_id_straps(t)
         import bound_r8_straps as _BRS          # FLOW-PROC-A 11-21: kit copy first, then bind_out; a miss names the paths + host

@@ -7310,7 +7310,7 @@ def cmd_kit_rtl(a):
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
     import bound_r8_straps as _BRS          # FLOW-PROC-A 11-21: kit-local bind sidecars (bind_out may exist on one host only)
-    man["bind_sidecars"] = _BRS.stage_kit_sidecars(out, kd)
+    man["bind_sidecars"] = _BRS.stage_asbuilt_leaf(a.asbuilt, kd, _BRS.stage_kit_sidecars(out, kd))
     if component_report is not None:
         man.update(component_proof=str(Path(a.component_proof).resolve()), component_report=component_report,
                    source_scope="LOCAL_COMPONENT", source_preparation_only=True,

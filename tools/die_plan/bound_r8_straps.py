@@ -32,6 +32,49 @@ def stage_kit_sidecars(bind_out, kd):
     return dict(dir=KIT_BIND_DIR, files=files)
 
 
+ASBUILT_LEAF = "asbuilt_leaf.json"
+ASBUILT_LEAF_KEYS = ("sub_core_leaf", "sub_core_leaf_variants", "hard_core_leaf")
+
+
+def stage_asbuilt_leaf(asbuilt, kd, side):
+    """FLOW-PROC-A 11-21 (FAM-QC-CB fp7: gen read asbuilt_manifest, an absolute as-built preview on epyc9 only): the three leaf
+    tables gen / bound_macro_paths read from the as-built go into kd/bind_sidecars/asbuilt_leaf.json; sha added to side['files']"""
+    if not asbuilt:
+        return side
+    doc = json.loads(Path(asbuilt).read_text())
+    sub = {k: doc.get(k) or {} for k in ASBUILT_LEAF_KEYS} if isinstance(doc, dict) else {k: {} for k in ASBUILT_LEAF_KEYS}
+    data = (json.dumps(sub, indent=1, sort_keys=True) + "\n").encode()
+    dst = Path(kd) / (side.get("dir") or KIT_BIND_DIR)
+    dst.mkdir(parents=True, exist_ok=True)
+    tmp = dst / f".{ASBUILT_LEAF}.tmp"
+    tmp.write_bytes(data)
+    tmp.replace(dst / ASBUILT_LEAF)
+    side.setdefault("files", {})[ASBUILT_LEAF] = hashlib.sha256(data).hexdigest()
+    return side
+
+
+def asbuilt_leaf(kit_rtl_json, kr):
+    """-> {sub_core_leaf, sub_core_leaf_variants, hard_core_leaf}: the kit copy (sha checked) first, then the recorded
+    asbuilt_manifest; {} when the kit names no as-built; FileNotFoundError naming every path tried + host otherwise"""
+    kr = kr or {}
+    side = kr.get("bind_sidecars") or {}
+    if kit_rtl_json:
+        p = Path(kit_rtl_json).parent / (side.get("dir") or KIT_BIND_DIR) / ASBUILT_LEAF
+        if p.is_file():
+            want = (side.get("files") or {}).get(ASBUILT_LEAF)
+            if want and hashlib.sha256(p.read_bytes()).hexdigest() != want:
+                raise ValueError(f"kit as-built sidecar {p}: sha256 differs from the kit_rtl.json bind_sidecars record")
+            return json.loads(p.read_text())
+    m = kr.get("asbuilt_manifest")
+    if not m:
+        return {}
+    if Path(m).is_file():
+        doc = json.loads(Path(m).read_text())
+        return {k: doc.get(k) or {} for k in ASBUILT_LEAF_KEYS} if isinstance(doc, dict) else {}
+    tried = ([str(Path(kit_rtl_json).parent / (side.get("dir") or KIT_BIND_DIR) / ASBUILT_LEAF)] if kit_rtl_json else []) + [str(m)]
+    raise FileNotFoundError(f"as-built leaf tables not found on host {socket.gethostname().split('.')[0]}; tried {', '.join(tried)}")
+
+
 def bind_candidates(kit_rtl_json, kr, name):
     """paths tried for bind sidecar `name`, kit copy first"""
     out = []

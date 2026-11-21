@@ -3807,6 +3807,7 @@ RULES = [
     # flow exit printed after it and hid the class (sle_sc_v3 read _LAYOUT_RENDER local_density).
     ("FLOW", None, r"OT_VCLK_MEASURED_HOLD: pin-register mean unavailable[^\n]*", "measured-hold bind: pin-register clock-arrival mean unavailable (flow tool, not a design verdict)"),
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
+    ("FLOW", r"^abs_inputs$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: pre-gen check, absolute input(s) absent on the gen host (all named); copy into the kit or repoint"),
     # COPY-INFRA-1119 (COORD, FABLE-FLOW-0755: 244 of 247 wave FAILs were kit-store snapshot rsync timeouts): a snapshot copy that timed out, was killed by its own timeout (rc 124/137) or lost its lock wait is
     # the transport / host load, never a design verdict: INFRA retry
     ("INFRA", None, r"KIT-SNAP FETCH failed|KW_ROAM \w+: \S+ dropped \(sync rc (?:124|137|255|30|12|23|10)\b|rsync error: (?:timeout|unexplained error|error in rsync protocol)|flock: .*timed out",
@@ -8707,6 +8708,18 @@ def run_item(spec_path):
         why = private_spec_stale(sp)
         if why:
             return fail("private_spec", "ENV-PROVENANCE " + why)
+    def pre_gen_check(plan_, kr_):
+        """FLOW-PROC-A 11-21: every absolute gen / kit-rtl input resolves on G, else one fail listing all of them"""
+        items = pre_gen_inputs(sp, plan_, kr_)
+        if not items:
+            return None
+        _rc, _txt = run("abs_inputs", remote(pre_gen_probe_cmd(items)), idempotent=True)
+        _why = pre_gen_verdict(items, G, _txt)
+        return fail("abs_inputs", _why, G) if _why else None
+    if not ((bool(sp.get("kit_snap")) or bool(sp.get("kit_store"))) and kit_store_applies(sp)):
+        _pg = pre_gen_check(plan, sp.get("kit_rtl") or {})       # no kit store: the spec paths are what gen reads; check before mkdir
+        if _pg is not None:
+            return _pg
     if sp.get("work_alt_lane"):                          # KW-FIX-38: fresh attempt on the host's scratch2 (best effort)
         run("work_alt", idempotent=True, argv=remote(work_alt_cmd(W, sp["work_alt_lane"])))
     rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
@@ -8769,6 +8782,9 @@ def run_item(spec_path):
         sp["plan"], sp["kit_rtl"] = plan, kr
         sp["gen_args"] = ks_map(list(sp.get("gen_args") or []), mp)
         sp["gen_env"] = ks_map(dict(sp.get("gen_env") or {}), mp)
+        _pg = pre_gen_check(plan, kr)                       # FLOW-PROC-A 11-21: the snapshot-mapped paths, before kit-rtl / gen
+        if _pg is not None:
+            return _pg
     # DIE-KV-69 11-04: die option prov_first_re names types whose planned children have no source under the manifest
     # roots (KV PCC / PCF, results/kv_host_regen_1/rtl_rf3).  bind kit-rtl finds such a child only through the view an
     # overlay plan row binds, so these types build the overlay first and run kit-rtl on it.  Every other type keeps
@@ -9284,6 +9300,63 @@ def ks_inputs(sp, plan):
             if p.startswith("/srv/"):
                 ins.append({"role": role, "path": p, "required": False})
     return ins
+
+
+PRE_GEN_SKIP_KR = ("bind_out", "prep_cmd")    # bind_out: bind_fetch copies it in; prep_cmd: a shell command (names outputs too)
+
+
+def pre_gen_inputs(sp, plan, kr):
+    """FLOW-PROC-A 11-21 (COORD, FAM-QC-CB fp7 rc 22: an absolute as-built preview on epyc9 only): [(role, path)] of every absolute
+    input gen phys / kit-rtl read by path: the plan, kit_rtl keys (asbuilt, script, overlays ...; not notes / revert records /
+    bind_out / prep_cmd), type_overlay, gen_args and gen_env.  Checked on the gen host before mkdir (after the kit snapshot maps them
+    when a kit store is on), so every path that does not resolve there is listed at once, with the host."""
+    out, seen = [], set()
+    bo = str((kr or {}).get("bind_out") or "").rstrip("/")
+
+    def add(role, v):
+        for p in abs_paths(v):
+            if p in seen or (bo and (p == bo or p.startswith(bo + "/"))):
+                continue
+            seen.add(p)
+            out.append((role, p))
+    add("plan", plan or "")
+    for k, v in sorted((kr or {}).items()):
+        if str(k).startswith(("note", "prev")) or "_prev" in str(k) or k in PRE_GEN_SKIP_KR:
+            continue
+        add(f"kit_rtl.{k}", v)
+    add("type_overlay", sp.get("type_overlay") or "")
+    add("gen_args", sp.get("gen_args") or [])
+    add("gen_env", sp.get("gen_env") or {})
+    return out
+
+
+def pre_gen_probe_cmd(items):
+    """shell on the gen host: 'M <path>' per absent input, 'D <json> <path>' per file an as-built json names (base + files /
+    prefer / netlist / rtl_roots) that is absent; silent when whole"""
+    q = shlex.quote
+    parts = [f"ckj() {{ [ -f \"$1\" ] && python3 -I -c {q(_ASBUILT_PY)} \"$1\" \"$1\" 2>/dev/null; }}"]
+    for _, p in items:
+        parts.append(f"{{ [ -e {q(p)} ] || echo M {q(p)}; }}")
+        if p.endswith(".json"):
+            parts.append(f"ckj {q(p)}")
+    return "; ".join(parts + ["true"])
+
+
+def pre_gen_verdict(items, host, txt):
+    """-> '' (all resolve) or the KIT_INPUT_MISSING text naming EVERY unresolvable path with its role and the host"""
+    role = {p: r for r, p in items}
+    miss = []
+    for ln in (txt or "").splitlines():
+        f = ln.split()
+        if len(f) >= 2 and f[0] == "M":
+            miss.append(f"{role.get(f[1], '?')} {f[1]}")
+        elif len(f) >= 3 and f[0] == "D":
+            miss.append(f"{f[2]} (named by {f[1]})")
+    miss = list(dict.fromkeys(miss))
+    if not miss:
+        return ""
+    return (f"{KIT_INPUT_MISSING}: pre-gen check on host {host}: {len(miss)} absolute input(s) do not resolve before any work: "
+            + "; ".join(miss) + " (copy them into the kit / tree, or repoint the spec)")
 
 
 def ks_map(v, mp):
