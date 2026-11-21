@@ -2359,3 +2359,36 @@ class RouteKillIsInfra(Base):
         c = {"FAIL_route": "make exit 2 (see run_route.log)", "runlog_tail": "[ERROR DRT-0305] something"}
         self.assertEqual(self.ap.classify(c, {})[:2], ("CRASH", "route-make-fail"))
         self.assertEqual(self.ap.classify({"FAIL_route": "DRT-0255 path of net x"}, {})[:2], ("STRUCTURAL", "drt-nopath"))
+
+
+def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch):
+    import autopilot as ap
+
+    r, = ap.parse_queue("\t".join(ROW)).values()
+    assert not r["error"]
+    r["geom_ref"] = "AUTO-GEOM KIT-WAVE E /geom/auto_geom.json"
+    die = ap.canonical_die(r["die"])
+    rec = dict(die=die, event="E", item=r["type"], attempt=2, kit=r["kit"])
+    cfg = {"dies": {die: {"event": "E", "review_before_route":
+                        {"event": "E", "all_items": True, "required": True}}}}
+    monkeypatch.setattr(ap.KW, "read_config_text", lambda *_: json.dumps(cfg))
+    monkeypatch.setattr(ap.KW, "load_state", lambda *_: {"items": {"r": rec}})
+    monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: None)
+    monkeypatch.setattr(ap, "rpy", lambda *_a, **_kw: pytest.fail("unreviewed row reached remote probe"))
+    monkeypatch.setattr(ap, "log", lambda *_: None)
+    state = {"jobs": {}}
+    assert ap.admit_new(state, {r["id"]: r}) == 0
+    j = state["jobs"][r["id"]]
+    assert j["status"] == "WAIT-GEOM"
+    assert "unit" not in j
+
+    j.update(status="RUNNING", unit="already-submitted", kind="infra-notrun")
+    assert ap.admit_new(state, {r["id"]: r}) == 0
+    assert j["status"] == "RUNNING"
+    assert j["unit"] == "already-submitted"
+    ap.submit(state, j, "(resubmit: never admitted)")
+    assert j["status"] == "WAIT-GEOM"
+    assert j["unit"] == "already-submitted"
+    monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: "GOOD")
+    assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "E") is None
+    assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "older") is None

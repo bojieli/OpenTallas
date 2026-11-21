@@ -2297,6 +2297,10 @@ def resume_move(j, mem):
 
 
 def submit(st, j, attempt_note=""):
+    if attempt_note and j.get("kind") == "infra-notrun":
+        event = queued_wave_event(j)
+        if event and hold_wave_submission(st, j, wave_review_snapshot(), event):
+            return
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
@@ -3206,6 +3210,56 @@ def die_priority(die):
     return DIE_PRIORITY.index(d) if d in DIE_PRIORITY else len(DIE_PRIORITY)
 
 
+def wave_review_snapshot():
+    """Index wave-owned queued kits using the same committed policy as enqueue."""
+    try:
+        cfg = json.loads(KW.read_config_text(sys.modules[__name__]) or "{}")
+    except (OSError, ValueError):
+        return {}, {}
+    if not any((d.get("review_before_route") or {}).get("required") is True
+               for d in (cfg.get("dies") or {}).values()):
+        return cfg, {}
+    kits = {}
+    for rec in (KW.load_state(AP_DIR).get("items") or {}).values():
+        if KW.required_route_review(cfg, rec):
+            key = (rec["die"], rec["item"], KW.review_kit_location(rec))
+            if key not in kits or rec.get("updated", 0) >= kits[key].get("updated", 0):
+                kits[key] = rec
+    return cfg, kits
+
+
+def queued_wave_event(row):
+    ref = (row.get("geom_ref") or "").split(maxsplit=3)
+    if len(ref) > 2 and ref[:2] == ["AUTO-GEOM", "KIT-WAVE"]:
+        return ref[2]
+    return None
+
+
+def queued_wave_review_hold(snapshot, row, event):
+    cfg, kits = snapshot
+    die, item, kit = canonical_die(row["die"]), row["type"], row["kit"]
+    identity = {"die": die, "item": item, "event": event}
+    if not KW.required_route_review(cfg, identity):
+        return None
+    rec = kits.get((die, item, kit))
+    if rec is None:
+        return f"WAIT-VISUAL: current wave attempt has no exact kit identity for {kit}"
+    return KW.required_route_hold(cfg, rec)
+
+
+def hold_wave_submission(st, row, snapshot, event):
+    why = queued_wave_review_hold(snapshot, row, event)
+    if not why:
+        return False
+    rid = row["id"]
+    job = st["jobs"].setdefault(rid, dict(row))
+    if job.get("status") != "WAIT-GEOM" or job.get("wave_review_reason") != why:
+        log(f"HOLD {rid} {row['die']}/{row['type']}: {why}")
+        job["wave_review_reason"] = why
+        set_status(st, job, "WAIT-GEOM", why)
+    return True
+
+
 def admit_new(st, rows, only_new=False, budget=None):
     """-> rows submitted.  only_new: the pass after the wave step, rows no earlier tick or pass has seen; budget: submits
     left this tick (default MAX_SUBMIT_PER_TICK)."""
@@ -3213,6 +3267,7 @@ def admit_new(st, rows, only_new=False, budget=None):
     budget = MAX_SUBMIT_PER_TICK if budget is None else budget
     if not only_new:
         withdraw_unqueued(st, rows)
+    review_snapshot = None
     for rid, r in sorted(rows.items(), key=lambda kv: (die_priority(kv[1].get("die")), kv[1]["line"])):
         j = st["jobs"].get(rid)
         if only_new and j is not None:
@@ -3243,6 +3298,13 @@ def admit_new(st, rows, only_new=False, budget=None):
                 log(f"REJECT queue line {r['line']} ({r['kit']}): {r['error']}")
                 set_status(st, j, "REJECTED", r["error"])
             continue
+        if r["mode"] != "adopt" and (event := queued_wave_event(r)):
+            if review_snapshot is None:
+                review_snapshot = wave_review_snapshot()
+            if hold_wave_submission(st, r, review_snapshot, event):
+                continue
+            if j is not None:
+                j.pop("wave_review_reason", None)
         if r["mode"] != "adopt" and r["geom"].upper() == "AUTO":
             # AUTO-GEOM (owner 2026-10-25): a registered template replica gets the rule check; the verdict is
             # applied by AG.prepare on the next tick (PASS -> submit, FAIL -> visual REQ on its AUTO-GEOM tag)
