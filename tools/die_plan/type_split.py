@@ -2002,8 +2002,55 @@ class Event:
                     if tp["name"].startswith(inst + "."):
                         tp["xy"] = [rnd(tp["xy"][0] + d[0]), rnd(tp["xy"][1] + d[1])]
                         ntap += 1
+                # an internal-station row launched / captured at this core ('core <inst>.<pin>') moves its end with the core;
+                # its regs are re-spaced (same count = same cycles) on the x-then-y L path between the new ends
+                # (OPUS-FIX-KV-PV-R5 11-21: kv3_pv_v3 g1<->g2 swap left o_pvw__u_sN_j_y_valid rows at the old g1_j side,
+                # so the split cut an empty leg and the bind stopped in native stations)
+                nrow = 0
+                for r in t.get("internal_stations", []):
+                    ends = [k for k, side in (("from_um", "launch"), ("to_um", "capture"))
+                            if str(r.get(side, "")).startswith(f"core {inst}.")]
+                    if not ends:
+                        continue
+                    for k in ends:
+                        r[k] = [rnd(r[k][0] + d[0]), rnd(r[k][1] + d[1])]
+                    n = len(r.get("regs_um") or [])
+                    if n:
+                        # same count (= cycles), evenly spaced on the first legal polyline between the new ends: x-then-y,
+                        # y-then-x, then Z paths through a column / row every 21.6 um; no reg inside a hard-core box
+                        a0, b0 = r["from_um"], r["to_um"]
+                        cands = [[a0, [b0[0], a0[1]], b0], [a0, [a0[0], b0[1]], b0]]
+                        for kk in range(int(max(W, H) / 21.6) + 1):
+                            m = kk * 21.6
+                            if m <= W:
+                                cands.append([a0, [m, a0[1]], [m, b0[1]], b0])
+                            if m <= H:
+                                cands.append([a0, [a0[0], m], [b0[0], m], b0])
+                        regs = None
+                        for wp in sorted(cands, key=lambda w: sum(abs(u[0] - v[0]) + abs(u[1] - v[1]) for u, v in zip(w, w[1:]))):
+                            segs = list(zip(wp, wp[1:]))
+                            tot = sum(abs(u[0] - v[0]) + abs(u[1] - v[1]) for u, v in segs)
+                            got = []
+                            for j in range(1, n + 1):
+                                u = tot * j / (n + 1)
+                                for s0, s1 in segs:
+                                    ln = abs(s1[0] - s0[0]) + abs(s1[1] - s0[1])
+                                    if u <= ln + EPS:
+                                        fr = u / ln if ln else 0.0
+                                        got.append([rnd(s0[0] + (s1[0] - s0[0]) * fr), rnd(s0[1] + (s1[1] - s0[1]) * fr)])
+                                        break
+                                    u -= ln
+                            if len(got) == n and not any(inside(q, box(o)) for q in got for o in cores.values()):
+                                regs = got
+                                break
+                        if regs is None:
+                            raise SplitError(f"core_moves: {tn} {r['conn']}: no legal polyline for {n} regs after moving {inst}")
+                        r["regs_um"] = regs
+                    r["note"] = (r.get("note", "") + f" | {self.tag}: end(s) {ends} moved with core {inst} by {d}"
+                                 + (f", {n} regs re-spaced" if n else ""))
+                    nrow += 1
                 h["note"] = (h.get("note", "") + f" | {self.tag}: moved {old} -> {h['origin_um']} (no re-shape)")
-                rec.append(dict(type=tn, core=inst, old=old, new=h["origin_um"], shift=d, taps_moved=ntap,
+                rec.append(dict(type=tn, core=inst, old=old, new=h["origin_um"], shift=d, taps_moved=ntap, istation_rows_moved=nrow,
                                 pin_layers=sorted(layers)))
             for h in moved_now:          # overlap on the FINAL positions (a column swap moves through occupied boxes)
                 b = box(h)

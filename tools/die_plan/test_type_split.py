@@ -686,3 +686,34 @@ def test_relay_keys_follow_core_bus_and_position():
     assert all(r["optional"] and r["driver_re"] == r"u_rs_ri_pv_u_g\d+_j_rst_n" and "driver" not in r for r in rr)
     import re
     assert re.fullmatch(rr[1]["driver_re"], "u_rs_ri_pv_u_g1_j_rst_n")
+
+
+def test_core_move_carries_its_internal_station_rows(monkeypatch):
+    """OPUS-FIX-KV-PV-R5 11-21 (kv3_pv_v3 split 14, bind 8c: 'native stations pv_S_3.o_pvw__u_sN_j_y_valid_p: expected one
+    outgoing lane'): the g1<->g2 column swap moved core pv__u_g1_j east but its 'core pv__u_g1_j.fault' rows kept the old
+    west from_um, so the split cut an empty leg.  A row launched / captured at a moved core moves that end with the core and
+    keeps its reg count (cycles), re-spaced on a polyline outside every core box."""
+    from types import SimpleNamespace
+    import schema as S
+    import check as C
+    monkeypatch.setattr(S, "Plan", lambda raw, path: SimpleNamespace(grid=0.54, layers={}))
+    monkeypatch.setattr(C, "core_pins", lambda h, d=None: [])
+    t = dict(outline_um=[2160.0, 1520.64],
+             hard_cores=[dict(inst="j1", origin_um=[708.48, 604.8], outline_um=[172.8, 172.8]),
+                         dict(inst="blk", origin_um=[1600.02, 700.02], outline_um=[200.88, 200.88])],
+             internal_stations=[dict(conn="bus:o_y", launch="core j1.fault", capture="face bus o_y", from_um=[881.28, 773.28],
+                                     to_um=[2132.0, 1520.64], regs_um=[[1100.0, 773.28]] * 6, bits=1),
+                                dict(conn="bus:o_z", launch="leaf u_x", capture="face bus o_z", from_um=[10.0, 10.0],
+                                     to_um=[20.0, 0.0], regs_um=[[15.0, 10.0]], bits=1)])
+    ev = TS.Event.__new__(TS.Event)
+    ev.spec = {"core_moves": {"T": {"j1": [1244.16, 604.8]}}}
+    ev.raw = {"partition_types": {"T": t}, "budgets": {}}
+    ev.tag, ev.plan_dir, ev.rep = "t", None, {}
+    ev._core_moves()
+    r, z = t["internal_stations"]
+    assert r["from_um"] == [pytest.approx(1416.96), pytest.approx(773.28)] and r["to_um"] == [2132.0, 1520.64]
+    assert len(r["regs_um"]) == 6
+    blk = (1600.02, 700.02, 1800.9, 900.9)
+    assert not any(blk[0] < q[0] < blk[2] and blk[1] < q[1] < blk[3] for q in r["regs_um"])
+    assert z["from_um"] == [10.0, 10.0] and z["regs_um"] == [[15.0, 10.0]]     # not core-bound: untouched
+    assert ev.rep["core_moves"][0]["istation_rows_moved"] == 1
