@@ -28,3 +28,11 @@ RUNNING (mine, epyc9 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/census,
 2. RTL: land as 4 banked 160x256 macros (write-port and export-conflict analysis first), lock-step bench vs flop form.
 3. J7 split rows (att part + rest, both < 400k, tiling the outline, lane latency declared), private bind + LATCHECK + kit to sign-off.
 4. Rows to S81-J6-ASSEMBLY-R2 for J7.
+
+### Codex takeover update, 11-21 03:15 PST
+
+- Default-off candidate `claude/s81-svc-r5-land-sram-1121` at `9bd318e90366ad7990d4e00ba88a3474085b9275`. The source replaces the 640×256 flop landing store with 12 writer-bank SRAMs on H8 and 30 when ROWX supports two arbitrary same-bank reads. The memory consumes the existing capture edge. The optional registered attention wrapper costs one cycle in each direction.
+- Exact SRAM model proof passed 12,000 directed comparisons and detected 341 priority-mutant edges on epyc9 unit 2296393. Directed integration passed six engine, ROWX old/new and idle checks on epyc9 unit 3130938 using the ATT controller and an engine interface sink. Full arithmetic ATT and cut program builds continue on 2295988 and 2412579.
+- The retained H8 parent ELAB hit unknown 160×256 module on 2947558. The private manifests now declare the existing SRAM blackbox and retry runs on 3370152. No production define or plan adoption occurred.
+- Hi4 seam x=570.24 µm passed the prior bound unique-wire estimate at 6,896 and 2.51/µm. The y candidate failed 8.78/µm against cap 8. The x draft initially stopped in composition because an old hbm_i0 reserve rectangle crossed the seam. The revised S_rs/S_att pack moved FT0 to y=354.24 µm with the fit under 367.05 µm between stations and kept FT1 below 324.61 µm. The first re-seat trial produced all seven bands within their own pieces and 402.84 µm reach on epyc10 unit 1981363. A second re-seat keeps the exact previous reserve-area floor and uses the new FT bank locations.
+- Remaining candidate gates are exact-parent map and proof refresh, loaded clock taps, split timing/latency and geometry review. The J5 svc structural hold remains active.
