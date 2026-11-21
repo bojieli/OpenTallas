@@ -47,3 +47,10 @@ Apply order at or before 11-21 13:00 PST: C3d, else C3c, else C1n (never plain C
 - Holds 391 (389 rep-first by this lane). Release siblings in batches on spare capacity via kit_wave_edit (remove keys whose value starts 'S81-J6-ASSEMBLY-R2 11-21 J6 representatives first').
 - Next: read pilot/rep gens (config.mk VERILOG_DEFINES: RIP1 on lepe_mu_LP t2; place log 'plan keys unmatched'), then kit_wave_edit /dies/s81/tools_sha = scheduler rt sha + hardlink copy in s81-j6/rtpin/.
 - Token compile: run tokc/run_tokc.sh on the C1n bind (root needs structural_tops/ in the bind out; C1n out lacked it per helper) -> check.
+
+## 04:3x
+- Reps on J6: col_h9_r1/r2 + serdes t4 (epyc9), lepe LP t2 + slice_station t36 (intel1); leaf t39 pending. Kit dirs: <gen host>:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/items/<type>.
+- rtpin/39d243610bd2 (+manifest) hardlinked; tools_sha pin pending the first J6 config.mk defines check.
+- Token compile: C1n re-elab (tokc/root_c1n) refused on stale svc PORTFIX; chained onto candJ7RDX_C1n: tokc/after_j7rdx_tokc.sh PID 3764834 epyc10 -> logs/tokc_j7rdx.log, out tokc/out_j7rdx_c1n. tokc/root_c1n is cleanup (ot-delete).
+- J7 FT watcher r2 fired; candJ7RDX_C1n_FT gating.
+- J7 re-partitions to carry: kv_leaf__t2 cut x=1693 (FAM-S81-MISC), c1x_C split B (FAM-S81-SLICE rows).
