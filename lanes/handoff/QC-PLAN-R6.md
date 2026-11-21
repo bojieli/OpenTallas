@@ -29,3 +29,15 @@
 - Re-pin QC tools to rt/current after one proof gen of a bound type (COORD); slew limit is the gen default (25fc65d0cb1), no die_gen_env key.
 - Apply: G0 + strict 0 + LATCHECK green -> publish_apply (intel2 ~/qc-plan-r3/apply_n46r4_a4.sh pattern), lift kit_wave holds PACKED-BANK (11 st_a),
   STATION-KNEE (5), CORE-CONTRACT (3) via kit_wave_edit, post.
+
+## UPDATE ~18:40 PST (latest)
+- b_s1/b_n1 refused by plan_gate_pre FIXEDCYC (row c had not synced latency rows) -> r6_lat_sync.py -> p_g.json.
+- b_s2/b_n2: elab ERROR "clock landing native station families have no actual cohort" for the split hc bases ->
+  bind_v1.sh now rewrites asbuilt internal_stations_types (base -> its param_class_split clones, env PCS_REPORT=pcs_e.json).
+- (f) rleg.sh (rt/current reset_leg_plan.py, A4 kit _bound.sv + A4 placed geom) on p_g -> p_h.json: 6 cb types
+  (cbn_q00 x2, cbn_q11 x2, cbx_q10__cl89936551 and _h) legs over 300 um 25 -> 1 (cbn_q11__cl5cc92dfe needs_local_tap 1), 24 inst_taps, 0 cycles.
+  Not done: cbf_q00__cl1b5a6458 + cbx_q10__cl94a12200 (epyc7 gdump waiting for memory; the latter type is not in ph8),
+  cbf_q01_s2 (no _bound.sv found in its A4 kit). Rows are tap indices of the A4 kit tree: the V1 bind must confirm them.
+- b_s3 (rt 22a689dfc092) / b_n3 (rt/current) on p_h.json running.
+- (h) coll_ftc: no row on purpose. The 20 pins are land-ring hold_mux captures that the land ring check rejects as "cone deeper than 6
+  cells" (BUF chain + INV + OA21 after place repair). A pin register on 20 bits of a ring bus would skew the bus.
