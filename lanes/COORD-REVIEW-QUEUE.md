@@ -16242,3 +16242,5 @@ FAIL_POSTPLA | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qw
 - 2026-11-21 00:11 PST DONE [push-train-0100-b] ot-push-main otpush-tolerant-swine-1964608 on tolerant-swine: rc=0 after 364 s, ended 00:11:55, log none, cmd: ot-push-main --dry-run
 - 2026-11-21 00:12 PST DONE [FLOW-FIX-0100] ot-push-main otpush-tolerant-swine-2302874 on tolerant-swine: rc=0 after 72 s, ended 00:12:23, log /tmp/ff0100-push1.log, cmd: ot-push-main 
 - 2026-11-21 00:12 PST DONE [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2364958 on tolerant-swine: rc=0 after 0 s, ended 00:12:23, log none, cmd: ot-push-main 
+- 2026-11-21 00:12 PST DONE [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2365320 on tolerant-swine: rc=0 after 1 s, ended 00:12:24, log none, cmd: ot-push-main 
+- 2026-11-21 00:12 PST DONE [PUSH-TRAIN-0100] ot-push-main otpush-tolerant-swine-2367023 on tolerant-swine: rc=0 after 1 s, ended 00:12:26, log none, cmd: ot-push-main 
