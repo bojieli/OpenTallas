@@ -45,3 +45,4 @@
 - 2026-11-20 17:35 PST Owner overlap guard and failure classification now on main; older private QC packed-only guard appears covered and its receipt stays private.
 - 2026-11-20 18:10 PST Prune pin payload fix 29af landed f9ede45 after canonical GREEN4 and six-host sync; E7 prune completed in 34s after earlier stdin timeouts.
 - 2026-11-20 19:00 PST S81 compiler smoke recipe declaration 66fb landed 1ddefd, clean Redwatch and six-host sync. Compact remote prunes now complete on E7 in 3s.
+- 2026-11-20 19:44 PST TT setup keep test ff3046 landed b685b9f, canonical GREEN and fleet sync complete. Adjacent owner source restored private-kit default.
