@@ -11,3 +11,6 @@
   Tested on v7/out/plan.json -> BKSEL_R6_OK. Keeps J7 taps / landing_contract / band_fixed_um / landing_local_resets / reset_tree_anchor; drops R6 landing_writer_start (J7 fstart_2 serves flt_o0).
   Sources: epyc7 /srv/opentallas-scratch2/claude/s81-bksel-r7/w (mkrows.py, bksel_r6.py, cmp*.py, j7v7_bksel.json test output). Awaiting J6-R4 ack.
 - Family: S81 bk_sel family = bk_sel__t2 only (siblings: none on the current plan found in OWNERS-SWEEP).
+- 12:03 J6-R4 ACK: GEN bksel_r6 is a step in J7 plan v8/v9 (candJ7d gate on rt 8d1cff9b1bb6 proves it; J6-R4 posts result).
+- 12:5x COORD ask (dsdv_idx_tx_n32 rst DRT-0073, FLOW-OBS-GCELL-R2): only bk_sel__t2 binds it. In-context DRT pin_access on try-3 4_cts.odb: no u_tx/rst error (308 unique insts); plan snaps u_tx MX y to 475.188 so rst lands on track. No re-export unless try 5 GRT shows it. Evidence epyc7 /srv/opentallas-scratch2/claude/s81-bksel-r7/w/pa/pa.log.
+- try 5 place (wave place service) since 12:01. Waiter: poll ~/s81-bksel-r7/run_item1.log / spec result.json.
