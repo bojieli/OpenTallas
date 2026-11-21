@@ -51,3 +51,26 @@ Event = strict bind + LATCHECK + G0, then apply.
   (k5 87 over 405, m 1 at 410). Re-pointing local resets to rst_n leaf taps gives 'missing' raws (they need rst_rl relays):
   open row for the reset owner. Files startfix/{fix_plan.json,fix_report.json,after.tsv}; fix2_plan.json is INVALID, do not use.
 - Split TX LEC FAILED (19 unproven equiv, lane1/2 RX valid/credit) - backup only, not chased.
+
+## STAND-DOWN 11-21 ~07:xx PST (context ~290k) - jobs left running
+STOOD DOWN -> FABLE-FIX-HEAD-LEP0N
+Running kits (GOAL=route, epyc10, OT_LANE=OPUS-FIX-HEAD-LEP0N-R4 posts DONE/DIED):
+- shelf_bf: unit oth-ubuntu-531201-1795266567, kit /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r3/shelf_bf/gen/gen/hd_lep0N,
+  hub log intel2 ~/opus-fix-head-lep0n-r4/shelf_bf_kit.otrun.log. Plan: LEP-BANDFIX-1 on Codex shelf 42fd64227556 (3 rects).
+- col_bf: unit oth-ubuntu-520697-1795266534, kit .../opus-fix-head-lep0n-r3/col_bf/gen/gen/hd_lep0N, hub ~/opus-fix-head-lep0n-r4/col_bf_kit.otrun.log.
+  Plan: column macros + 78 tap moves/re-priced rows + LEP-BANDFIX-1 (52 rects, target 0.6).
+Both: gen/preflight/strict bind/cohort 26/26/LATCHECK 329/329/G0 0 PASS (D/NAME/gen/{bind,g0}).
+Band dry-pass checkpoint: NOT yet reached at stand-down (synth/floorplan; face_flops ~85 min after 3_2). The first check is
+`grep "OT_CLAND dry pass\|BAND FAIL\|OT_CLAND placed" KIT/run_place.log`; then compare GRT east band (x 800-1600, y 550-700)
+congestion with r11b (.../opus-fix-head-lep0n-r3/cancelled_ref/r11b/reports/.../congestion-{5,10}.rpt).
+Waiter re-arm (run in background from any host), per kit NAME in shelf_bf|col_bf:
+  timeout 36000 ssh -n -o ControlPath=none intel2 'cd ~/opus-fix-head-lep0n-r4; until grep -q "ot-run: RAN\|^ot-run: .*NOT RUN\|REFUSED\|interrupted" NAME_kit.otrun.log || timeout 30 ssh -n -o ControlPath=none epyc10 "grep -q \"OT_CLAND dry pass\|OT_CLAND placed .* FIRM in nonoverlapping\" /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r3/NAME/gen/gen/hd_lep0N/run_place.log"; do sleep 300; done; tail -2 NAME_kit.otrun.log'
+  (or simply: ot-wait <unit>). Note ot-run REFUSES scripts outside --dir unless --stage is given; "NOT RUN: admission lock busy" is transient.
+HEAD plan rows in flight (next batched HEAD event ~11-22 01:xx; event = strict bind + LATCHECK + G0, then apply):
+- R4-1 hd_lep0N macro form (shelf_bf or col_bf, whichever clears the east band) incl. LEP-BANDFIX-1 rects.
+- R4-2 78 tap moves + estimated tap_offset rows (col1121/tapmv/{tap_moves,tap_rows_est}.json) if column wins; re-issue from die clock.
+- R4-3 late-meta RTL (L/late_meta1121/candidate; elab + lemma PASS; needs placed/timed build; manifest tree).
+- START reach (SERDES-R4): startfix/fix_plan.json + fix_report.json = raw re-points only (k5 32, m 5); rr_t54/rr_t8 hops gone;
+  open: hd_st_k5 87 / hd_st_m 1 landing_local_resets raw hops > 405 (need rst_rl relays; startfix/fix2_plan.json INVALID).
+- SERDES-R4, once sdr2d proves: hd_serdes tap_group u_enc -> clk_t20, OT_S81_KP4_SYN_SCOPY define, OT_KEEP_WIRES ot_s81_kp4_dsyn:S_u.
+Reported: ot-run --cancel stale-client bug -> FLEET-WATCH-R4. Split TX LEC FAILED (backup, not chased).
