@@ -4,6 +4,28 @@ Owner of the S81 svc family (16 types: svc_hi rs t1-t6, pvso_entry t1-t2, svc_lo
 Succeeds FABLE-FIX-S81-SVC (R3 stood down on context; R4 stopped on the Fable limit). Read lanes/handoff/FABLE-FIX-S81-SVC.md for older state.
 Nothing pushed to main. Nothing signed, nothing exported.
 
+## 11-21 03:4x PST RESUMED after the Codex takeover (02:18-03:32); read CODEX-LOG "## Handoff to Claude 2026-11-21 03:32" S81 SVC line
+MEASURED (epyc9 opus-fix-s81-svc-r5/census, yosys hierarchical synth, abc -D 833, hard cores + SRAMs black boxes):
+- land store native module 4c805 alone: 3,215,315 generic gates (163,840 DFFE, 461k MUX, 1.29M AND, 1.29M OR).
+- H8 shell with land (4c805) + pmem 512x512 (193c9) black-boxed: hi rs t4 311,612 cells (43,217 flops), lo rs t7 353,936 (56,309).
+  Of that, pvq native 133b9 = 39,537 cells still in flops (the memory closure would make it macros). The att share by name prefix
+  (g_u_rsv_NN_u_u_att* + rsv.u_att.u_eng) is ~175k on hi; rs + TOP-GLUE ~137k (TOP-GLUE 99k hi / 126k lo). rd.py's S_att line
+  (22,404) counts only rsv.u_att.u_eng and is WRONG; sum the g_u_rsv_NN_u_u_att* groups. Tables: census/<type>.census.txt.
+CODEX WORK TAKEN OVER (do not duplicate):
+- land SRAM candidate claude/s81-svc-r5-land-sram-1121 @9bd318e90366 (-DOT_SVC_ATT_LAND_SRAM); exact macro lockstep 12,000 checks,
+  mutant caught at 341; needs the full arithmetic proof. Model land-split-model.json (12 macros no ROWX / 30 with ROWX, 0 local cycles).
+- E9 units (waiter epyc9 PID 4131162 -> opus-fix-s81-svc-r5/r5-waiters.log): 3968457 scoped ELAB (split-hi4/elab_r5_hi4_local.sh),
+  3370152 global old H8 ELAB (elab_r5_retry.sh), 2295988 full ATT bench (run_att_mem.sh ROWX=1 NCYC=25000 SEEDS 1 5, land-eq/att),
+  2412579 programme bench (land-eq/prog2.sh).
+- E10 split compose 2494448 FINISHED (split-hi4-band-test/x_epoch: plan_c.json, census_map_split_0.json at 11:34 UTC).
+  Split form = X cut at 570.24 um on the hi4 outline 1442.88 x 2747.52 (geometry_x_ft_bands_epoch.json; renders split-hi4/hi4-svc-j7-x.png).
+  Provisional cost (split-hi4-band-test/provisional_split_cycles.json): +1 on the existing traversal, +2 on eleven new lanes; separate
+  from SRAM 0 and ATTCUT +1/+1.
+- Tool claude/s81-svc-r5-named-lanes-1121 @f6bc63dbbb65 GREEN2 approved: check the merge queue.
+- Holds unchanged: kit_wave dies.s81.hold_items[svc_*].
+NEXT: arithmetic proof of the land SRAM source; read ELAB results; private strict bind + LATCHECK of the hi4 split (x_epoch plan_c);
+kit the smaller part to sign-off; then 16-type rows for S81-J6-ASSEMBLY-R2 (J7).
+
 ## 11-21 02:1x PST
 DONE (URGENT): kit_wave cancel-rows s81 'svc_*' (owner OPUS-FIX-S81-SVC-R5, verdict STRUCTURAL): 16 live rows had stops placed
 (11 cancelled, 5 ended FAIL while the stops ran; 0 live after). Hold `dies.s81.hold_items["svc_*"] = "split pending (OPUS-FIX-S81-SVC-R5)"`
