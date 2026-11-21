@@ -27,3 +27,16 @@ The predecessor's census chain ~/tmp/ffkpvr2/chain_hops.sh (pid 4135070) still w
 
 ## Kits (item 1), epyc7, all in CTS at 18:1x (OT_STB done, tap balance it0/it1); no setup number yet
 Read order: 4_1_cts log tt repair "before" wns; then GRT iteration 5 (congestion) v8m vs v8c on upper strip / pin edge / centre street.
+
+## Update 2026-11-20 19:4x PST (read first)
+- CONFIRMED on v8p stage ODBs (intel1 out/pos.txt): astk_E 255 sg6 latch 3_4 (1666,633) -> 3_5 (480,924), its repeaters to x 480-1267;
+  ctl_cmd_7 sg7 latch (1395,736) -> (403,1230).  Last stage sg6/sg7 is FIRM = anchor -> DLY-REPAIR-1 bug (1).  Fixed on main f2e64e5d3b.
+- Rows for D27: lanes/handoff/OPUS-FIX-KV-PV-R3-rows.json.  READY: B pad_min_stations 16, C tools pin >= f2e64e5d3b + 3098d89a95,
+  D reset inst_taps kv3_pv_v8 (10 rows, 10 -> 0 legs, v8p bind) + kv3_pv_v2 (RESET-RELAY-GEN-1530), F pv_v6n ft9_i band widened.
+  PROPOSED: E pv_v1n o_vport_E_N_f 7 stations on a route (+1 cycle, LATCHECK bundle mate), family follow-up for the face-bunched
+  R8 bundle-mate fault rows; A flip (pending GRT it5); G ft0 not measured.
+- v8q private kit (v8p plan, current main tools in my clone 95661471cd): hub ~/tmp/okpvr3/chain_q.sh v8q, log chain_v8q.log / kit_v8q.log,
+  epyc7 opus-fix-kv-pv-r3/kit/v8q.  First read: 3_5 OT_DLY_SPREAD max_hop + NOROUTE, then CTS setup.  DO_NOT_COUNT.
+- Replay (main dly_spread on v8p 3_4): intel2 ~/tmp/okpvr3/replay3.log, intel1 replay/replay.log (OKP MAXHOP_AFTER line).
+- COORD (FABLE-PD-KV-1840): no held pv row goes to route.  u_bin reset class = RESET-RELAY-GEN-R2; take its rows when posted.
+- Sign-off/export: none.  All 10 held pv D25e3 rows are -4.4..-26 ns at place; no pv type is near sign-off until D27 kits run.

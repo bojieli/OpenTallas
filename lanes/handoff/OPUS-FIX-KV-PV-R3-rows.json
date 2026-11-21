@@ -1,0 +1,218 @@
+{
+ "schema": "OPUS-FIX-KV-PV-R3 D27 pv rows 2026-11-20",
+ "for_lane": "KV-PLAN-R2",
+ "owner": "OPUS-FIX-KV-PV-R3",
+ "READY": {
+  "B_pad_min_stations": {
+   "path": "budgets.r_dly_lockup.kv3_pv.pad_min_stations",
+   "value": 16,
+   "evidence": "v8p dly_spread: astk worst stage hop 801 -> 356 um, chains over 300 um 6,151 -> 5,807, fail 70 -> 32; tool on main 5aa3d06462",
+   "cost": "+12.2k lockup latches on kv3_pv_v8 (66,375 vs 54,175), 0 cycles"
+  },
+  "C_tools_pin": {
+   "rule": "D27 pv kits GEN on main >= f2e64e5d3b (DLY-REPAIR-1) and 3098d89a95 (PLACE-SLEW 320 default)",
+   "evidence": "v8p 1,228/1,819-um hops = hop latch + repeaters of the last hop into the FIRM last stage moved backwards by the pre-fix dly_spread (astk_E bit 255 sg6 latch 3_4 (1666,633) -> 3_5 (480,924)); no plan row needed"
+  },
+  "D_reset_kv3_pv_v8": {
+   "path": "partition_types.kv3_pv_v8.reset.inst_taps",
+   "rows": [
+    {
+     "inst": "u_bin_i_fch_pv_V_N_q",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 1156.1,
+     "tap": 223,
+     "leg_um": 107.1
+    },
+    {
+     "inst": "u_bin_i_vport_E_N_vo",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 715.3,
+     "tap": 193,
+     "leg_um": 22.3
+    },
+    {
+     "inst": "u_bin_i_vport_E_N_vo_d1",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 597.1,
+     "tap": 191,
+     "leg_um": 21.5
+    },
+    {
+     "inst": "u_bin_i_vport_E_N_vo_d2",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 604.9,
+     "tap": 196,
+     "leg_um": 60.2
+    },
+    {
+     "inst": "u_bin_i_vport_E_N_vo_d3",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 726.6,
+     "tap": 190,
+     "leg_um": 23.1
+    },
+    {
+     "inst": "u_bin_i_vport_W_N_vo",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 702.2,
+     "tap": 188,
+     "leg_um": 13.3
+    },
+    {
+     "inst": "u_bin_i_vport_W_N_vo_d1",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 728.0,
+     "tap": 190,
+     "leg_um": 24.9
+    },
+    {
+     "inst": "u_bin_i_vport_W_N_vo_d2",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 724.7,
+     "tap": 190,
+     "leg_um": 23.4
+    },
+    {
+     "inst": "u_bin_i_vport_W_N_vo_d3",
+     "port": "rst_n",
+     "sinks": 1,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 726.5,
+     "tap": 193,
+     "leg_um": 26.4
+    },
+    {
+     "inst": "u_u_efault",
+     "port": "rst_n",
+     "sinks": 5,
+     "tap_rtl": 0,
+     "tap_was": [
+      0
+     ],
+     "leg_was_um": 802.4,
+     "tap": 200,
+     "leg_um": 68.3
+    }
+   ],
+   "legs_over_300": "10 -> 0",
+   "note": "read on the v8p bind/placement; tap ids are per bind: re-run tools/die_plan/reset_leg_plan.py on the D27 bind (or take RESET-RELAY-GEN-R2 u_bin class fix)"
+  },
+  "D_reset_kv3_pv_v2": {
+   "source": "lanes/handoff/RESET-RELAY-GEN-1530-rows.json types.kv3_pv_v2 (10 inst_taps, 13 -> 0 legs), re-run on the D27 bind"
+  },
+  "F_pv_v6n_ft9_i_band": {
+   "paths": [
+    "partition_types.kv3_pv_v6n.clock.landing_contract.bands.ft9_i.rect_um",
+    "partition_types.kv3_pv_v6n.clock.landing_contract.collector_local_sources[name=ft9_i].band.rect_um"
+   ],
+   "old": [
+    17.28,
+    239.355,
+    43.2,
+    247.995
+   ],
+   "new": [
+    17.28,
+    239.355,
+    69.12,
+    247.995
+   ],
+   "evidence": "D25e3 attempt_6 OT_CLAND BAND FAIL u_cland_ft9_i: 531 cells, need 183.2 um2, band 223.9 um2 (0.82), no legal site; widened along the free pvg0 p0/p1 channel (y 233.3-337.0) to 447.8 um2 (0.41); no core or band in x 43-69"
+  }
+ },
+ "PROPOSED": {
+  "E_pv_v1n_fault_first_hop": {
+   "path": "partition_types.kv3_pv_v1n.internal_stations[conn=bus:o_vport_E_N_f]",
+   "old": "6 FIRM stations x 2040-2140 at y 250.56 (R8 bundle mate, next to the face)",
+   "new": {
+    "from_um": [
+     870.0,
+     1095.0
+    ],
+    "to_um": [
+     2160.0,
+     250.573
+    ],
+    "regs_um": [
+     [
+      1086.803,
+      1045.0
+     ],
+     [
+      1353.607,
+      1045.0
+     ],
+     [
+      1620.41,
+      1045.0
+     ],
+     [
+      1690.0,
+      847.786
+     ],
+     [
+      1690.0,
+      580.983
+     ],
+     [
+      1690.0,
+      314.18
+     ],
+     [
+      1927.624,
+      285.0
+     ]
+    ]
+   },
+   "cycles": "+1 (6 -> 7 stations; Manhattan 2,134 um needs 7 for <= 300-um hops); bundle-mate o_vport_E_N_f_d1 cycle match must pass LATCHECK",
+   "route": "channel y 1045 (pvg p2/p3), street x 1690 (pvg2/pvg3, 253 um), channel y 285 (p0/p1)",
+   "evidence": "FABLE-PD-KV-1840: -7,679 ps u_vport_E.fault -> u_ist_o_vport_E_N_f_0; D25e3 a4 geom: fault flop (870,1095)",
+   "family": "same face-bunched R8 bundle-mate form on pv_v1, v3, v3n, v5, v5n, v7, v12 (fault flops GPL-placed 550-1130 um x); generator change (spread from the source) is the structural follow-up"
+  },
+  "A_flip": "lanes/handoff/FABLE-FIX-KV-PV-R2-rows.py (64 cores on 16 types): NOT proved; take only if v8m beats v8c at GRT it5 (kits in CTS on epyc7)",
+  "G_ft0_street": "not measured; not in D27"
+ }
+}
