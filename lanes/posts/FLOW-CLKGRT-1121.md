@@ -1,0 +1,1 @@
+- 2026-11-21 09:02 PST STAND-DOWN [FLOW-CLKGRT-1121 -> FLOW-CLKGRT-R2] stood down; successor FLOW-CLKGRT-R2. 5 GRT A/B arms on epyc8 left running; --rt pushed 6eeda31903; clock-first hook prepared unpushed in epyc10 lane clone (row in lanes/LANE-STATUS.tsv; posts to FLOW-CLKGRT-1121 now redirect)
