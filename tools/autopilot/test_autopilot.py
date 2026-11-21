@@ -2399,9 +2399,27 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch):
     assert ap.admit_new(state, {r["id"]: r}) == 0
     assert j["status"] == "RUNNING"
     assert j["unit"] == "already-submitted"
-    ap.submit(state, j, "(resubmit: never admitted)")
-    assert j["status"] == "WAIT-GEOM"
-    assert j["unit"] == "already-submitted"
+    class ReadyToResume(Exception):
+        pass
+
+    def resume_ready(*_):
+        raise ReadyToResume
+
+    monkeypatch.setattr(ap, "resume_move", resume_ready)
+    for kind, verdict, reason in (
+        ("infra-notrun", None, "WAIT-VISUAL"),
+        ("infra-oom", "ISSUES", "WAIT-FORM"),
+        ("infra-flow-refresh", None, "WAIT-VISUAL"),
+    ):
+        j.update(status="CRASH", kind=kind)
+        monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: verdict)
+        ap.submit(state, j, "(automatic resubmit)")
+        assert j["status"] == "WAIT-GEOM"
+        assert j["wave_review_reason"].startswith(reason)
+        assert j["unit"] == "already-submitted"
+
     monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: "GOOD")
+    with pytest.raises(ReadyToResume):
+        ap.submit(state, j, "(automatic resubmit)")
     assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "E") is None
     assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "older") is None
