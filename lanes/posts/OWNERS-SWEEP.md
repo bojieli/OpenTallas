@@ -225,3 +225,4 @@
   FAILED-NO-RELAUNCH 18 rows: 14 ORPHANED (S81 col 4+hold-after-CTS, serdes 2, leaf 2; KV hgi_v3/v5/v8, hub_Wi, sys_c, pv_v8), 4 DELIBERATE by family-lane post (KV kv3_io_cor_v1, kv3_pc_v3, kv3_pv; S81 bk_sel__t2). Heuristic: keyword + item name in the family lane post, last 12 h.
   S81: 29 STALE held-for-plan-event, all old; QC: 5 STALE held CB + 4 STALE cancelled (2 new: FEFW, QC-PLAN-R9); KV: 17 held/cancelled WAIT-BIND (2 new cancelled HGI-R3).
   HEAD none flagged (hd_lep0N, LEP0N-R3).
+- 2026-11-21 03:51 PST CORRECTION: KV held/cancelled WAIT-BIND rows are 19 (not 17); totals S81 38, QC 9, KV 28 = 75.
