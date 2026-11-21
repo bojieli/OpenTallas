@@ -358,3 +358,17 @@ def test_gate_named_bus_with_measured_leg_only():
     assert [x["inst"] for x in r] == ["r0_u_y_xa_1_0"] and list(t) == ["bus:frame_i"]
     assert any(g["name"] == "r1_u_z_0" and "no measured leg" in g["why"] for g in rep if not g["emitted"])
     assert RB.leg_for(legs["T"], RB._names("r0_u_y_xa_1")) is None          # a prefix of another relay is not it
+
+
+def test_merge_branch_rows_keeps_earlier_copies():
+    """FAM-S81-COL-R4 11-21: a re-run's row for a relay that already has copies adds to them, never replaces them"""
+    import relay_branch as RB
+    old = [{"inst": "u_y_xa_4_0", "copies": [{"name": "u_y_xa_4_bs6_0", "sinks": ["u_bs6"], "D": 0}], "note": "kept ['u_bs5', 'u_t4']"},
+           {"inst": "u_y_xa_9_0", "copies": [{"name": "u_y_xa_9_bs1_0", "sinks": ["u_bs1"], "D": 0}], "note": "x"}]
+    new = [{"inst": "u_y_xa_4_0", "copies": [{"name": "u_y_xa_4_bs5_0", "sinks": ["u_bs5"], "D": 0},
+                                             {"name": "dup", "sinks": ["u_bs6"], "D": 0}], "note": "kept ['u_t4']"},
+           {"inst": "u_y_cc_4_0", "copies": [{"name": "u_y_cc_4_t4_0", "sinks": ["u_t4"], "D": 0}], "note": "y"}]
+    out = {r["inst"]: r for r in RB.merge_branch_rows(old, new)}
+    assert [c["name"] for c in out["u_y_xa_4_0"]["copies"]] == ["u_y_xa_4_bs6_0", "u_y_xa_4_bs5_0"]
+    assert out["u_y_xa_4_0"]["note"] == "kept ['u_t4']"
+    assert set(out) == {"u_y_xa_4_0", "u_y_xa_9_0", "u_y_cc_4_0"}

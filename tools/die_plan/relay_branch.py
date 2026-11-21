@@ -807,6 +807,24 @@ def leg_for(legs, names):
     return max(hit, default=None)
 
 
+def merge_branch_rows(old, new):
+    """FAM-S81-COL-R4 11-21: a re-run reads a bound netlist that already carries the plan's earlier copies of a relay, so its
+    row for that relay lists only the NEW copies; replacing the plan row dropped the earlier copies (col_h9_r1 xa_4: the
+    bs6 copy of S81-RLYBR-1 would fall back onto the original relay).  Same relay: copies = earlier + new (one copy per
+    sink set; the new row's note carries the new kept list).  Relays only in one list are kept as they are."""
+    cur = {r["inst"]: r for r in old}
+    for r in new:
+        o = cur.get(r["inst"])
+        if o is None:
+            cur[r["inst"]] = r
+            continue
+        cps = list(o.get("copies") or [])
+        have = {tuple(sorted(c["sinks"])) for c in cps}
+        cps += [c for c in r["copies"] if tuple(sorted(c["sinks"])) not in have]
+        cur[r["inst"]] = dict(r, copies=cps)
+    return list(cur.values())
+
+
 def gate(tn, fix, legs, rows, joins, trunks):
     """COORD 11-19 05:55: keep only fixes on a named bus / relay with a measured leg; -> (rows, joins, trunks, report)"""
     names = {n for (t_, n) in fix if t_ == tn}
@@ -874,9 +892,7 @@ def main(argv):
             drows = [d for d in drows if any(k in str(d.get("inst", "")) for k in keep)]
         if a.out_plan:
             if rows:                    # merge by relay: rows already in the plan (earlier named fixes) are kept
-                cur = {r["inst"]: r for r in t.get("relay_branch") or []}
-                cur.update({r["inst"]: r for r in rows})
-                t["relay_branch"] = list(cur.values())
+                t["relay_branch"] = merge_branch_rows(t.get("relay_branch") or [], rows)
             if drows:
                 cur = t.setdefault("relay_depth", [])
                 keys = {(sid(r["inst"]), r.get("port"), r.get("side")) for r in cur}
