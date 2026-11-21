@@ -538,6 +538,21 @@ class ViaShadowEolStub(unittest.TestCase):
         self.assertEqual(again[2]["M4"], [])    # idempotent
         self.assertEqual(again[1], ob2)
 
+    def test_shadow_edge_inset(self):
+        """FABLE-CLOSURE lever 1: an M5 OBS rect on the outline gives an M4 shadow >= 0.30 um inside it (parent pin access)"""
+        import abstract_pin_stub as APS
+        t = lef(obs=[("M5", 0, 0, 20, 6)], sig=(("a", "M4", 10.0, 9.0),))
+        head, ob = APS.split_lef(t)
+        sz = (20.0, 10.0)
+        _, ob2, added = APS.shadow_lower(head, ob)
+        m4 = APS.obs_rects(ob2)["M4"]
+        self.assertTrue(added["M4"] and m4, m4)
+        for r in m4:
+            self.assertGreaterEqual(min(r[0], r[1]), 0.30 - 1e-9, r)
+            self.assertLessEqual(r[2], sz[0] - 0.30 + 1e-9, r)
+            self.assertLessEqual(r[3], sz[1] - 0.30 + 1e-9, r)
+        self.assertTrue(any(r[0] <= 0.3 + 1e-9 and r[1] <= 0.3 + 1e-9 and r[3] >= 5.9 for r in m4), m4)
+
     def test_shadow_only_and_disable(self):
         import abstract_pin_stub as APS, os
         head, ob = APS.split_lef(lef(obs=[("M5", 4, 2, 16, 6)], sig=(("a", "M5", 5.0, 0.0),)))

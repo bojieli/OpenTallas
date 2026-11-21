@@ -11,26 +11,36 @@
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950/src/tools/hier_contract/abstract_pin_stub.py",
-    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+    "path": "/srv/opentallas-scratch2/claude/fam-s81-col-h10-r3/clone_l1/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a875944efb2767fcff03f35bfeb79b0c5447a74f400c94cbc641b01404cf5f34"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950/record/views/dsfd_cfifo_crs4/provenance/raw/dsfd_cfifo_crs4.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950/record/views/dsfd_cfifo_crs4/provenance/dsfd_cfifo_crs4.candidate.lef"
+    "/srv/opentallas-scratch2/claude/fam-s81-col-h10-r3/clone_l1/tools/hier_contract/abstract_pin_stub.py",
+    "/tmp/refin_29rfbtls/dsfd_cfifo_crs4/provenance/raw/dsfd_cfifo_crs4.lef",
+    "/tmp/refin_29rfbtls/dsfd_cfifo_crs4/provenance/dsfd_cfifo_crs4.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 1638 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 1636 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles); via shadow: M4 +4607\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
     "pin_names_directions_uses": "PASS",
     "original_pin_rectangles_retained": "PASS"
   },
+  "pg_crossing": {
+    "verdict": "PASS",
+    "pair": "M5:M6+M7",
+    "block_max": 0.25,
+    "fails": [],
+    "nets": {
+      "VDD": 0.0,
+      "VSS": 0.0
+    }
+  },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_cfifo_crs4-c4a-f11bb1950/record/views/dsfd_cfifo_crs4/provenance/dsfd_cfifo_crs4.candidate.lef",
+    "lef": "/tmp/refin_29rfbtls/dsfd_cfifo_crs4/provenance/dsfd_cfifo_crs4.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
@@ -107,16 +117,17 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 1638
+          "added": 1636
         },
         "count": 0,
         "area_um2": 0,
         "examples": []
-      }
+      },
+      "pin_access_violations": 0
     }
   },
   "output": {
     "path": "dsfd_cfifo_crs4.lef",
-    "sha256": "2274f4fb64feec52861bae446887416e9cb9f73b84d32715930c3dbd9d2b7503"
+    "sha256": "daea3c415efd6c78d899a5592db8f9d633e78d66f5903c9e22faeed00f5147f0"
   }
 }

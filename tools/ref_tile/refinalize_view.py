@@ -36,7 +36,7 @@ HELPER = ROOT / "tools/hier_contract/abstract_pin_stub.py"
 
 def head_before_obs(text: str) -> str:
     """the LEF without its OBS section and the OT_OBS_CLOSED marker (pins, size, origin, PG): must be identical"""
-    text = re.sub(r"(?m)^[ \t]*# OT_OBS_CLOSED .*\n", "", text)
+    text = re.sub(r"(?m)^[ \t]*# OT_OBS_(?:CLOSED|SHADOW) .*\n", "", text)  # markers (SHADOW: FABLE-CLOSURE lever 1)
     return re.sub(r"\n[ \t]*OBS[ \t]*\n.*?\n[ \t]*END[ \t]*\n", "\n", text, flags=re.S)
 
 

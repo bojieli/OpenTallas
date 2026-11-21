@@ -19,7 +19,8 @@
    top OBS layer that has OBS directly above it is reachable only through that OBS, yet the parent GRT counts it as
    capacity and DRT drops a via stack through the child's metal.  Every M2..top-1 layer gets OBS wherever the layer
    above has OBS (top-down to M4: M2/M3 keep the std-cell pin access beside the macro), outside keep_um(layer) of signal pins on that layer and the one
-   above.  OT_OBS_SHADOW=0 disables it; marker `# OT_OBS_SHADOW layers=.. added=n`.
+   above, and at least SHADOW_EDGE_UM (0.30 um, OT_OBS_SHADOW_EDGE_UM) inside the macro outline so parent cells abutting
+   the macro keep their pin access (FABLE-CLOSURE lever 1).  OT_OBS_SHADOW=0 disables it; marker `# OT_OBS_SHADOW layers=.. added=n`.
 4. EOL STUBS (same lane, QC sle_sc_v1 cl115da35f: 44 Lef58EolKeepOut, 2 per pin, on 22 qfd_dv_s5_sc2_leaf M5 face
    pins): an OBS rect collinear with a signal pin's end, same width, abutting it and shorter than the layer's
    LEF58_EOLKEEPOUT forward extension (asap7 M4/M5 0.048 um) is the pin's own conductor up to its first via; its far
@@ -349,6 +350,10 @@ SHADOW_RE = re.compile(r"\n[ \t]*# OT_OBS_SHADOW [^\n]*")
 # M2/M3 carry the parent std-cell pin access next to a macro (col pv11b73b67: a shadow down to M2 left a DFF RESETN with
 # no access point, DRT-1231); the via-stack-through-OBS class is M4 under M5, so the shadow stops at M4
 SHADOW_MIN_LEVEL = 4
+# FABLE-CLOSURE lever 1 (FAM-S81-COL-H10-R3 11-21): the shadow stays this far inside the macro outline, so a parent cell
+# (relay / face flop) beside the macro keeps M2..M4 access within the 0.072 um wide-shape spacing of the shadow OBS
+# (col pv11b73b67 ECO: DRT-1231 on a DFF pin beside u_cf).  OT_OBS_SHADOW_EDGE_UM=<um> overrides it.
+SHADOW_EDGE_UM = 0.30
 EOL_FWD_UM = {"M4": 0.048, "M5": 0.048, "M6": 0.048, "M7": 0.048}   # asap7 LEF58_EOLKEEPOUT forward extension
 EOL_WIDTH_UM = {"M4": 0.025, "M5": 0.025, "M6": 0.05, "M7": 0.05}  # ... applies below this line-end width
 
@@ -403,6 +408,9 @@ def shadow_lower(head, obs, only=None, mark=True):
     above = [norm(tuple(map(_iu, r))) for r in by[top]]
     ms = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", head)
     full = (_iu(float(ms.group(1))) * _iu(float(ms.group(2)))) if ms else 0
+    ed = _iu(float(os.environ.get("OT_OBS_SHADOW_EDGE_UM", SHADOW_EDGE_UM)))
+    inner = (ed, ed, _iu(float(ms.group(1))) - ed, _iu(float(ms.group(2))) - ed) if ms else None
+    clip = lambda q: q if inner is None else (max(q[0], inner[0]), max(q[1], inner[1]), min(q[2], inner[2]), min(q[3], inner[3]))
     for n in range(int(top[1:]) - 1, SHADOW_MIN_LEVEL - 1, -1):
         L, up = "M%d" % n, "M%d" % (n + 1)
         own = [norm(tuple(map(_iu, r))) for r in by.get(L, [])]
@@ -420,6 +428,9 @@ def shadow_lower(head, obs, only=None, mark=True):
         for r in above:
             hs = _hits(kidx, keep, r)
             for q in (rect_minus(r, hs) if hs else [r]):
+                q = clip(q)    # edge inset (SHADOW_EDGE_UM)
+                if q[2] <= q[0] or q[3] <= q[1]:
+                    continue
                 if not any(o[0] <= q[0] and o[1] <= q[1] and o[2] >= q[2] and o[3] >= q[3] for o in _hits(oidx, own, q)):
                     add.append(q)   # (a piece already inside one own OBS rect is skipped: re-running adds nothing)
         added[L] = add
