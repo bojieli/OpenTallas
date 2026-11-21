@@ -1286,6 +1286,8 @@ def classify(c, client):
     stop = c.get("place_setup_stop") or client.get("place_setup_stop")
     if stop:
         return "STRUCTURAL", "place-setup-stop", stop
+    if client.get("drt_no_progress"):
+        return "STRUCTURAL", "drt-no-progress", client["drt_no_progress"]
     if c.get("FAIL_route"):
         fr = c["FAIL_route"]
         if re.search(r"DRT-0255", fr):
@@ -1446,6 +1448,12 @@ def parse_client_log(text, *, unit=None, started=0):
                                      r"(?=\n[\s\S]*^ot-run: RAN on [^\n]+ exit 6$)", tail)
                     if stop:
                         o["place_setup_stop"] = stop.group()[:400]
+                if rc == 21:
+                    # The route watchdog terminates its worker, whose shell prints "Killed" before the stop receipt.
+                    stop = re.search(r"(?m)^OT_GRT_STOP drt_no_progress: stage rc \d+ -> 21 \(no re-run\)$", tail)
+                    if stop:
+                        detail = re.findall(r"(?m)^OT_DRT_NO_PROGRESS\b[^\n]*", tail[:stop.start()])
+                        o["drt_no_progress"] = (detail[-1] if detail else stop.group())[:400]
     if o.get("ap_rc") == o.get("exit") == 98 and o.get("ran_on"):
         root_pattern = r"(/srv/opentallas-scratch[^/\s:]*/claude/ot-jobs/[A-Za-z0-9_.-]+)"
         sealed = re.findall(r"^ot-job: SEALED " + root_pattern + r":", text, re.M)
