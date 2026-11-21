@@ -109,3 +109,4 @@ J5 live: event 224567138ab, src kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work, bi
 - 23:00 c1x_C t1 a13 / t6 a46 LEFT to finish (cancel-rows --attempt not landed by 23:00).
 - 23:3x serdes cone refusal: main 124d829f45f OT_PLACE_REGION_DROP (unseparable cone -> no region). Waiter drop_relaunch.sh retries t2@4 t14@5 t15cla3d@4 t15cla21@5 t1clb45@5 t4@13 once rt/current carries it. Then read DPL/CTS.
 - 08:0x HANDED serdes place reads -> FAM-S81-SERDES, proof7/7b -> FAM-S81-LEPE (my waiters stopped; jobs running). I keep wave health, ResetError (rerr_watch 2399884), PLACE-SETUP-STOP (pss_watch), leaf GRT reads (grt_watch), cancels under the rule. c1x t6 a46 / t1 a13 cancelled (cancel_exact.py).
+- 11-21 09:06 watchers re-armed 12 h: rerr 3589075, pss 3589076, grt 3589078.
