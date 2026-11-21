@@ -28,5 +28,17 @@
   "sha256": "b951833c5b928e3b94e65c3f240ba2a7f046ae8065f4abeace75d5496aced5f2",
   "md5": "9ab5a4d1e0972c90c1358b0cd79e28f8",
   "source": "S81-BKSEL-R6 11-21 DRT-0073 (bk_sel__t2 GRT pin access, also alone in porous_views probe): the clock pin is the only 0.048-um M5 pin of the signed view (the child clock was routed wide), at the outline edge under the blanket M1-M6 OBS, and TritonRoute finds no access point; every 0.024-um data pin has access. The PORT rect is narrowed to the 0.024-um on-track centre of the same signed metal: ck M5 304.548..304.596 -> 304.560..304.584 (view bksel_eco3_1117). Probe of the corrected view: 0 DRT-0073. Pins/OBS/SIZE/PG otherwise byte-identical; netlist, Liberty, LEC untouched."
+ },
+ "qkd_kvs_ctl.lef": {
+  "base_sha256": "a2df4fbd0f8428d0677ef48284f5c8933e53c4586bd4e7e3a01bf0136d98c1aa",
+  "sha256": "ffe47ee3b802b97da8107fe1ee6df834677b6960b724714a1b57c40db3175252",
+  "md5": "3b64e0e4043c62b83c7e51ca5992a4ad",
+  "source": "FLOW-OBS-GCELL-R2 11-21 DRT-0073 (fleet pin-access scan, KV kv3_hub_C D26 kit): ck is an interior 0.048-um M5 pin under the full M1-M7 blanket OBS; TritonRoute finds no access point in the view alone. abstract_detail.py splice --layers M9 (no layer replaced) --pin-window-um 1.0 --window-detail exact_b0 --top-layer M7: windows on ck and rst_n replace the M6/M7 blanket by the exact metal of the bloat-0 export of the signed routed ODB (signed-export-1114/qwen_kvsys/qkd_kvs_ctl/6_final.odb); pins, SIZE, PG and M1-M5 OBS byte-identical. Probe of the corrected view: PASS (0 DRT-0073). Netlist, Liberty, LEC untouched; receipt qkd_kvs_ctl.splice.json"
+ },
+ "ot_s81hd_he_epc.lef": {
+  "base_sha256": "749af4baf9cb24ecdb3bdcf45e4dd66cd452b50e7069507756775f3b0660b04c",
+  "sha256": "9b7305f547947fde711c66a43ecc78e4cdca450263ec0ecb0e9fd81169335e8d",
+  "md5": "3afb715e9c2009545bcabeb1a6edd8a5",
+  "source": "FLOW-OBS-GCELL-R2 11-21 DRT-0073 + u_epc M7 EOL class (hd_host_e: 26 eolKeepOut od[*] vs u_epc + 3 spacing at the macro edge, residual after the DRT-0255 fix): every M7 signal pin (555 edge pins 0.032 x 0.192) is abutted by its own conductor as M7 OBS, and TritonRoute finds no access point for in_data[238] in the view alone. abstract_detail.py splice --layers M7 --pin-clear-um 0.048 --pin-clear-layers M7: M7 OBS = exact metal of the bloat-0 export of the signed routed ODB (signed-export-1114/s81_head/ot_s81hd_he_epc/6_final.odb) with each pin's own conductor (555 overlaps, 1.14 um2) out of the OBS; pins, SIZE, PG and M1-M6 OBS byte-identical. Probe of the corrected view: PASS. Netlist, Liberty, LEC untouched; receipt ot_s81hd_he_epc.splice.json"
  }
 }
