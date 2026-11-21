@@ -18452,3 +18452,4 @@ FAILED [AUTOPILOT 08ec4efc045d] 2026-11-21 07:44:56 PST AUTOPILOT -> KIT-WAVE-12
   S81 41 STALE: 35 cancelled-superseded (COL-H9R0 14, SVC-R6 12, COL-H10 7, LEAF-R5 2, SLICE-R4 1, BKSEL 1) + 3 held + 1 signed-count-pending (many new).
   QC 16 STALE (5 held CB-R2, 6 cancelled, 3 signed-count-pending new); KV 1 cancelled WAIT-BIND.
   Lanes with no post <2h: FABLE-FIX-HEAD-LEP0N-R2 (no post file, owns hd_lep0N, running, not flagged), FAM-QC-HCST, OPUS-FIX-QC-SLE-R4.
+- 2026-11-21 07:51 PST DIED [FAM-S81-COL-H10-R3] ot-run oth-ubuntu-840276-1795276187 on civil-redfish: rc=11 after 93 s, ended 15:51:17, log /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3/gateM_otrun.log, cmd: --mem 48 --threads 4 --plan-job bind --priority plan --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3 -- bash /srv/op
