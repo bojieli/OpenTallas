@@ -48,3 +48,7 @@ Read: grep OT_CTS_POST_TIMING / OT_TAP_BALANCE done / OT_TAP_CONVERGE / OT_TAP_I
   Taps above target (clk_t13 549 ...) need raise_ps (t60_convR tests it).
 - Re-proof r2: epyc9 colA_conv2 unit oth-ubuntu-3904285-1795242111. KV v8c r2: epyc7 v8c_conv/kv3_pv_v8 (otrun2.log; r1 unit 2457635 cancelled by me, bad form). t60 x2 queued on epyc10 (patched to the r2 form before start).
 - Rows: none posted. J6 gets a row only if a proof shows setup and hold no worse than baseline before 11-21 13:00.
+
+## Relaunch lines (r1 -> r2)
+- colA_conv (r1): failed because the load-centre pad placed the chain of each core-only clk_c* tap inside/around its hard core: clk_c* 343 -> 800 ps, setup -15.39 -> -277.45, 54 taps/pins off target. r2 colA_conv2 (epyc9 oth-ubuntu-3904285-1795242111): no load-centre pad; core-only clk_c* taps skip the port pad and the core pass pads each early pin in front of the pin, with a stage price learned per pin.
+- v8c_conv (r1, epyc7 oth-ubuntu-2457635-1795240628): did not fail on its own. I cancelled it at CTS (exit 137) because it ran the same withdrawn load-centre form. r2 (epyc7 oth-ubuntu-3155521-1795241969, otrun2.log): same change as colA_conv2. Baseline: tap means 229..983 ps, 15/24 core pins off target.
