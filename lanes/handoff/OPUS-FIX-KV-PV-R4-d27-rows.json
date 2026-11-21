@@ -1,0 +1,37 @@
+{
+ "schema": "OPUS-FIX-KV-PV-R4 D27 pv row set 2026-11-20 20:4x PST",
+ "for_lane": "KV-PLAN-R2",
+ "owner": "OPUS-FIX-KV-PV-R4 (successor of OPUS-FIX-KV-PV-R3)",
+ "READY": {
+  "1_fault_rows": {
+   "file": "lanes/handoff/OPUS-FIX-KV-PV-R3-fault-rows.json",
+   "rows": "26 internal_stations rows on kv3_pv_v1 (4), v1n (3), v3 (4), v3n (4), v5 (4), v5n (4), v7 (4); placed worst hop 1,186 -> <= 300 um each",
+   "cycles": "+1 on kv3_pv_v5n o_vport_E_N_f_d1 and kv3_pv_v7 o_vport_W_N_f only (gen.py latency + LATCHECK, bundle mates listed in the file)",
+   "tool": "tools/die_plan/station_route_spread.py (main c8876644a5) --conn on D25e3 placed geoms"
+  },
+  "2_pad_min_stations": {
+   "path": "budgets.r_dly_lockup.kv3_pv.pad_min_stations",
+   "value": 16,
+   "evidence": "v8p dly_spread astk worst stage hop 801 -> 356 um; v8m worst CTS path (no pad stations) = pd8 ctl_cmd_2_t_10 r[6] -> q, one 295-fF wire, -8,760 ps",
+   "cost": "+12.2k lockup latches on kv3_pv_v8, 0 cycles"
+  },
+  "3_ctl_cmd_q31": {
+   "row": "NONE needed",
+   "finding": "the 1,228-um u_bin_i_pvw__u_ctl_cmd q[31] hop is a stale dly_spread number: each chain was measured when it was placed, and q[31] (plan-sited, 2 loads) was measured before the two pad trunk chains it feeds were spread. Placed v8p 3_place geom: q[31] (72.5,1345.9) -> INV _34_ (163.0,1346.1) -> pd9_..._31_t_11_sg0 (222.2,1346.1) and pd8_..._31_t_10_sg0 (294.3,1346.1): worst pin hop 222 um, under 300. plan_geom_census (main 1c1857d4d1) on the v8p plan: no ctl_cmd bin HOP row on kv3_pv_v8.",
+   "tool_fix": "main c0feb4c70e dly_spread OT_DLY_SPREAD FINAL line re-measures every chain on the final sites (report only, fail gate unchanged, test F): read it on the D27 pv kits instead of the in-pass max_hop"
+  },
+  "4_tools_pin": "D27 pv kits GEN on main >= f2e64e5d3b (DLY-REPAIR-1) + 3098d89a95 (PLACE-SLEW 320) + c0feb4c70e (FINAL line)",
+  "5_reset_u_bin": {
+   "source": "RESET-RELAY-GEN-R3 u_bin class rows when posted (none posted at 20:4x). Fallback = lanes/handoff/OPUS-FIX-KV-PV-R3-rows.json D (kv3_pv_v8 10 inst_taps rows, 10 -> 0 legs > 300 um on the v8p bind) + kv3_pv_v2 RESET-RELAY-GEN-1530 rows",
+   "note": "tap ids are per bind: re-run tools/die_plan/reset_leg_plan.py on the D27 bind"
+  },
+  "6_v6n_ft9_band": "lanes/handoff/OPUS-FIX-KV-PV-R3-rows.json F: kv3_pv_v6n ft9_i band [17.28,239.355,43.2,247.995] -> [17.28,239.355,69.12,247.995] (both copies)"
+ },
+ "NOT_READY": {
+  "flip": "upper near pv_pair flip (lanes/handoff/FABLE-FIX-KV-PV-R2-rows.py): v8m (flip) vs v8c (control) both still in CTS post (tap balance) on epyc7 at 20:4x; CTS-final wns -8,760 vs -8,474 ps (placement RC, before repair) does not decide it. Take only if v8m beats v8c at GRT iteration 5 (watcher ~/tmp/okpvr4/watch_r4.sh posts GRT_IT5_OVERFLOW)."
+ },
+ "RECOMMENDED_OPT_IN": {
+  "405_era_station_resite": "station_route_spread.py without --conn re-sites every pv internal_stations row whose placed hop is over 300 um (hops 320-416 um -> 234-293 um, +17..+49 cycles per type; R3 epyc7 opus-fix-kv-pv-r3/srs/*.report.json). plan_geom_census on the v8p plan: 499 HOP rows over 300 um on 16 pv types, worst 506 um kv3_pv_v2n. The hop cap is 300 um and +cycles are pre-approved; it changes bus latency, so it needs gen.py latency + LATCHECK on the event. Your call for D27."
+ },
+ "after_D27": "pv_v12: run station_route_spread on its first D27 placed kit (no placed geom yet). One pv representative to CTS/route/sign-off, then siblings."
+}
