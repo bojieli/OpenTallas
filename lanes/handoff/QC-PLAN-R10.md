@@ -1,0 +1,14 @@
+# QC-PLAN-R10 handoff (started 2026-11-21 06:4x PST; succeeds QC-PLAN-R9). Read QC-PLAN-R9.md (06:5x b17 section) first.
+
+## 07:0x state
+- epyc8 scratch2 at 79 GB free (disk-ETA HOLD on all admissions; a b17 bind writes ~59 GB). R9's epyc8 waiters (g0cand.sh 3044587/3046540,
+  its held ot-run client 3046543 (never admitted), chain_b17.sh 3075086) were stopped by R10; nothing had run.
+- b17 moved to epyc7 at the SAME absolute paths: /srv/opentallas-scratch2/claude/qc-plan-r9/{b15in,b17in,v1ctl,b16/{extra_final_*,r8_final}.json,
+  bisect/b16_lat.json, scripts} + rt/639df6b7b265 + qc-plan-r8/v2b_host/{proof_gen_v2.sh,rtl_main}. kw45 snap qwen_compute_v1r6 identical (manifest sha 80e4b0c4).
+- LIVE epyc7 qc-plan-r9/chain_b17e7.sh (log chain_b17e7.log, OT_LANE=QC-PLAN-R10): latency regen (gen.py latency --inplace on b17in/plan_ctl) ->
+  static G0 b17 + b16_lat vs V1 control (g0c/) || strict bind b17 (b17.out, dir b17/) -> post-bind G0 + census (event s29q103S4Q9N46R6V2b17)
+  -> 8 proof GENs (b17/post_bind/gen_*.log). Local waiter on the chain log.
+- Cleanup debt: epyc7 qc-plan-r8/v2b_host holds a partial 3.2 GB copy (b12/b13 dirs) from an over-broad rsync by R10 -> ot-delete those subdirs, keep proof_gen_v2.sh + rtl_main.
+## Next
+- If bind 0 + LATCHECK + G0 no new vs V1: proof GENs -> proof kits (private-spec, wave env) to GRT -> kit_wave_edit event-pending qwen_compute <event> -> pack/seal/apply.
+- FAM-QC-COLL coll_core (b) ODPRE + (c) R-ring wd / xr_q regs + (d) input-hold lockup: not proven (pkw4 final -255 ps) -> V3.
