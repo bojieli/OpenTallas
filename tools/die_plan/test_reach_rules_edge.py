@@ -132,3 +132,27 @@ def test_kit_relay_phase_controls_start_and_tree_reach(monkeypatch, lowered):
     assert {f["kind"]: f["limit"] for f in findings} == (
         {"start_raw_net": 0, "edge_reach": RR.REACH_UM} if lowered else
         {"start_raw_net": 0, "edge_reach": RR.HALF_REACH_UM, "reset_half_cycle": RR.HALF_REACH_UM})
+
+
+def test_start_export_reset_uses_emitted_site_beyond_consumer_taps(monkeypatch):
+    raw = _neg(_start_plan())
+    raw["reset"].pop("relay_lockup")
+    raw["reset"]["start"] = "broadcast"
+    plan = _P(raw)
+    t = plan.types["mid"]
+    tree = dict(
+        n_reset_consumers=1, outs=[[100.0, 200.0]], start=True,
+        relays=[
+            dict(name="u_rrl_0", d="rst_root_n", q="rst_n_t0", xy=[0.0, 0.0], kind="tap", depth=1),
+            dict(name="u_rrl_1", d="rst_root_n", q="rst_n_t1", xy=[100.0, 200.0], kind="tap", depth=1),
+        ],
+    )
+    monkeypatch.setattr(RT, "consumer_taps", lambda *_: [("t0", 0.0, 0.0)])
+    t["clock"]["landing_reader_start"] = dict(branches=dict(f0=dict(stages=[
+        dict(raw_reset="rr_t1", xy_um=[100.0, 250.0]),
+        dict(raw_reset="rr_t2", xy_um=[100.0, 250.0]),
+    ])))
+    assert RR.raw_hops(plan, t, "mid", tree) == [
+        ("reader_start:f0:0", "rr_t1", "same", 50.0, RR.REACH_UM),
+        ("reader_start:f0:1", "rr_t2", "missing", None, 0.0),
+    ]

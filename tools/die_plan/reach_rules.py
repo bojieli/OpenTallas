@@ -624,7 +624,7 @@ def _start_stages(t):
 
 def raw_hops(P, t, tn, tree=None):
     """[(where, raw net, edge 'same' | 'half' | 'missing', hop um or None, limit um)] of every START stage raw reset and
-    landing_local_resets raw of type t.  tree = reset_tree.for_type (needed only for rst_rl_<k> raws)."""
+    landing_local_resets raw of type t. The emitted START tree resolves the raw relay and export sites."""
     import reset_tree as RT
     neg = negedge_type(P, tn)
     try:
@@ -632,6 +632,7 @@ def raw_hops(P, t, tn, tree=None):
     except Exception:
         bc = None              # not a reset-tree plan object: rr_t existence cannot be judged here (the emitter checks it)
     taps = None
+    raw_sites = None
     rows = []
     items = [(f"{k.split('_', 1)[1]}:{b}:{i}", st.get("raw_reset"), st.get("xy_um")) for k, b, i, st in _start_stages(t)]
     items += [(f"local_reset:{lr.get('name')}", lr.get("raw"), lr.get("xy_um"))
@@ -644,10 +645,13 @@ def raw_hops(P, t, tn, tree=None):
         if fam == "rr_t" and bc is False:
             rows.append((where, raw, "missing", None, 0.0))
             continue
-        if fam == "rst_rl_":
-            if tree is None:
-                tree = RT.for_type(P, tn)
-            site = next((r["xy"] for r in tree["relays"] if r["q"] == raw), None)
+        if fam == "rst_rl_" or (fam == "rr_t" and bc):
+            if raw_sites is None:
+                if tree is None:
+                    tree = RT.for_type(P, tn)
+                relays = RT.start_relays(tree) if bc else tree["relays"]
+                raw_sites = {relay["q"]: relay["xy"] for relay in relays}
+            site = raw_sites.get(raw)
             if site is None:
                 rows.append((where, raw, "missing", None, 0.0))
                 continue
