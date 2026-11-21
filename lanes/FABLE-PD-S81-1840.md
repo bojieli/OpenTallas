@@ -113,3 +113,11 @@ The raw leg counters of the same records agree: core 670,675, logic 318,624, str
 - No J6 plan exists, so no J6 census (hops, monitor distance, reset) was run; no leaf class plan geometry was opened.
 - Section 3 has no CTS or hold data: no J5 type is past CTS.
 - Section 4 uses the top listed pairs per kit (about 18 per record), classified by name patterns; it is not every leg.
+
+## 7. Addendum 19:10 PST: dump result (V)
+Dump ran (epyc10 unit oth-ubuntu-1271679-1795229027, exit 0; `fable-pd-s81-1840/{t4,t3}.json`). Section 1 mechanism is confirmed by position:
+- t4: 683 cells named by the failed checks, 683 within 30 um outside the region box, 0 inside it, 0 elsewhere on the type. All 110 off-site cells are in that ring. 375 of the 683 have a `u_enc` net.
+- t3: 638 cells, 638 in the ring, 0 inside, 0 elsewhere. All 171 off-site cells are in the ring. 410 have a `u_enc` net.
+- The ring bins hold anonymous gates (`_N_`) and `wireN` buffers. Box + 10 um: row area 4,895 um2, movable 2,293 / 2,368 um2 (util 0.47 / 0.49), so it is exclusion from the box, not lack of area.
+- No hard macro, blockage or PMA edge is near the failing cells (nearest macro edge: PMA RX at y 951 to 953, 61 um north of the box).
+The detached waiter (section 6) will post one more RESULT-ADD with the same numbers when its queued client runs; it does not rerun the dump.
