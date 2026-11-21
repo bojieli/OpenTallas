@@ -58,3 +58,11 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
   wrapped in uplevel #0 after try2 failed on global scope). If sdr2e fails again: do NOT regenerate (dropped by COORD).
 - sdr2e try1 exit 12 (RESYNTH-GUARD: config.mk newer than 1_2_yosys.v; fixed by touch -r), try2 exit 2 (hook proc scope).
 - Then stand down; help OPUS-FIX-HEAD-LEP0N-R4 only if asked.
+
+## 07:xx PST results
+- hd_host_e route FAILED DRT-0255 net21446 (338.01,345.99)-(342,349.98): M6 guide in a gcell row 420/570 nm under reserved obs
+  (337.338,345.06)-(339.498,346.41). Same class as sdr2c. Proposal to FLOW-GRT-RESID: block partly covered gcells (snap to gcell grid).
+- sdr2d GRT rc 0: overflow 559. 5_global_route.rpt -189.74 is PRE-repair (13:24); final 5_1_grt.odb TT WNS +45.45 ps.
+  CTS->GRT split (q_split/split.txt on epyc9 .../opus-fix-head-serdes-r4): wire RC dominates (mean -59 data, -8 skew);
+  encoder launch latency +44 on clk_t20 leaves (posted to FLOW-LEAFREP-1121); no hop > 405 um.
+- sdr2d detailed route running (chain; intel2 ~/opus-fix-head-serdes-r4-logs/sdr2d_route_e9.otrun.log). sdr2e in route on epyc7.
