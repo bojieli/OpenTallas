@@ -911,3 +911,4 @@
 - 2026-11-21 01:10 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 201 GB, falling 29 GB/h, floor 50 GB in 5.3 h (cron disk_rate.py; read-only)
 - 2026-11-21 01:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: ot-jobs on intel1 wrote 159 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 01:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col on intel1 wrote 111 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 01:29 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on intel1 wrote 34 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
