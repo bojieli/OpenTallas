@@ -1,0 +1,1 @@
+- 2026-11-21 04:01 PST DIED [FLOW-FIX-0400] ot-run oth-ubuntu-95124-1795262187 on tolerant-swine: rc=1 after 332 s, ended 04:01:27, log none, cmd: --mem 16 --threads 8 --dir /srv/opentallas-scratch2/claude/lanes/FLOW-FIX-0400/tools/autopilot -- python3 -m pytest -q -x -p no:cacheprovide
