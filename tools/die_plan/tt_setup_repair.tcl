@@ -39,7 +39,10 @@ set virt {}; set real {}
 foreach c [all_clocks] { if {![llength [get_property $c sources]]} { lappend virt $c } else { lappend real $c } }
 if {[llength $virt] != 1} { error "tt_setup_repair: expected exactly one source-less virtual IO clock" }
 if {[info exists ::env(OT_VCLK_TT)]} { set_clock_latency -source $::env(OT_VCLK_TT) $virt }
-set_propagated_clock $real
+set ot_postplace [expr {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"}]
+# Pre-CTS data uses placement RC, but the unbuilt clock network must stay
+# ideal, as in detailed place. CTS and GRT still use propagated clocks.
+if {!$ot_postplace} { set_propagated_clock $real }
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { source $::env(LAYER_PARASITICS_FILE) } else { source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl }
 set ot_tt_rc placement; if {[info exists ::env(OT_TT_SETUP_RC)] && $::env(OT_TT_SETUP_RC) eq "grt"} { set ot_tt_rc grt }
 set ot_tt_cs 1.0
@@ -102,11 +105,10 @@ proc ot_tt_wns {tag} {
 # r268 (FABLE-FIX-HEAD-TYPES, hd_serdes sd2): OT_TT_SETUP_MEASURE=1 only reads the TT setup wns/tns of ODB in this same frame and exits;
 # the run_kit step uses it on the WRITTEN repaired DB (a fresh session = what every later reader sees) before keeping it.
 if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "1"} {
-  if {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"} { ot_tt_est }   ;# a placed DB carries no parasitics: estimate them (placement RC) before reading the slack
   ot_tt_wns measure
   # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop (um, manhattan between
   # consecutive instances of the path); informational, never fatal
-  if {[info exists ::env(OT_POSTPLACE_WORST)] && $::env(OT_POSTPLACE_WORST) eq "1"} {
+  if {$ot_postplace} {
     if {[catch {
       sta::redirect_string_begin
       report_checks -path_delay max -group_path_count 1 -format full
