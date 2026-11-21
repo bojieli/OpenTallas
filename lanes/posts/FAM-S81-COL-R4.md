@@ -38,3 +38,4 @@
 - 2026-11-21 09:05 PST DONE [FAM-S81-COL-R4] ot-run oth-ubuntu-2517550-1795279922 on tolerant-swine: rc=0 after 808 s, ended 09:05:28, log /srv/opentallas-scratch2/claude/fam-s81-col-r4/wave_rb2/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-COL-R4/col_h9_r1
 - 2026-11-21 09:18 PST h9_r1 RLYBR rep: run-item ended without a placed kit on epyc10: place FAIL 
 - 2026-11-21 09:26 PST DONE [FAM-S81-COL-R4] ot-push-main otpush-civil-redfish-3302599 on civil-redfish: rc=0 after 40 s, ended 17:26:42, log none, cmd: ot-push-main 
+- 2026-11-21 09:35 PST DONE [FAM-S81-COL-R4] ot-run oth-ubuntu-2490116-1795279851 on civil-redfish: rc=0 after 2660 s, ended 17:35:09, log /srv/opentallas-scratch2/claude/fam-s81-col-r4/bind_tc_otrun.log, cmd: --mem 48 --plan-job bind --priority plan --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4 -- bash /srv/opentallas-scratch
