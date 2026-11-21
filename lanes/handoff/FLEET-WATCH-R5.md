@@ -15,3 +15,7 @@
 - col_h9_r0_p3 pv13474472 and dsdv c1x_C t4 are on deliberate hold_items (left held).
 - Misread-OOM class already fixed by Codex (8db2fc6, 9abebc, 4b01160b00). Supersede-kill report was NOT A BUG.
 - Rules: NEVER rm; ot-delete only; cancel via ot-run --cancel; push via ot-push-main; use ot-delete guard as is.
+
+## UPDATE 05:1x (R4 final)
+- ot-push-main of the reclaim fix FAILED: TESTS FAILED rc=2 (nothing pushed). A --dry-run diagnosis was started (task b6t6153da, output in R4 tasks dir); fix the failing/collection test in epyc2:/srv/opentallas-scratch2/claude/fleet-watch-r4 (branch fw5, commit on top of main) and push again. Reclaim fix is NOT on main.
+- Lane-dir scan result: /tmp/claude-1000/.../tasks/b7xmcyxh9.output (newest-file age + guard per top dir).
