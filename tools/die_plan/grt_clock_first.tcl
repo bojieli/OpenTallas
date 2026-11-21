@@ -9,7 +9,8 @@
 #            clock wire per edge), so signals negotiate around the clock instead of displacing it; only phase-2 nets get guides;
 #   merge    grt::read_segments of both segment sets, so the in-memory routing the rest of the stage reads (estimate_parasitics
 #            -global_routing, repair_design / repair_timing incremental routes, the GRT leaf-repeat pass) holds every net.
-# Later global_route calls (-start_incremental / -end_incremental) pass through unchanged.  OT_GRT_CLOCK_FIRST_RESERVE=0 skips
+# Later global_route calls (-start_incremental / -end_incremental) pass through unchanged.  OT_GRT_CLOCK_FIRST_RES_AWARE=1 adds
+# -resistance_aware -res_aware_nets_percentage 0 to both phases (recommended form).  OT_GRT_CLOCK_FIRST_RESERVE=0 skips
 # the phase-2 capacity reservation (A/B only).  Opt-out: OT_GRT_CLOCK_FIRST unset / 0 (the hook is then a no-op).
 namespace eval ot_gcf {
   variable done 0
@@ -89,6 +90,11 @@ namespace eval ot_gcf {
     set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : "."}]
     set blk [ord::get_db_block]
     set t0 [clock seconds]
+    # OT_GRT_CLOCK_FIRST_RES_AWARE=1: both phases route resistance-aware (FastRoute orders the clock nets first and lifts them to low-R
+    # layers); KV hroot a5 A/B: t9 spread 170 -> 92 ps, FF internal hold -86 -> -60 ps, overflow 385 -> 382
+    if {[info exists ::env(OT_GRT_CLOCK_FIRST_RES_AWARE)] && $::env(OT_GRT_CLOCK_FIRST_RES_AWARE) eq "1" && [lsearch -exact $args -resistance_aware] < 0} {
+      lappend args -resistance_aware -res_aware_nets_percentage 0
+    }
     set clk [nets]
     foreach n $clk { grt::add_net_to_route $n }
     set a1 $args

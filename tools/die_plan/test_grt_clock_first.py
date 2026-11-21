@@ -24,6 +24,9 @@ def test_cfg_on_and_reserve(monkeypatch):
     assert "export OT_GRT_CLOCK_FIRST = 1" in gen_phys.grt_clock_first_cfg()
     monkeypatch.setenv("OT_GRT_CLOCK_FIRST_RESERVE", "0")
     assert gen_phys.grt_clock_first_cfg()[-1] == "export OT_GRT_CLOCK_FIRST_RESERVE = 0"
+    monkeypatch.setenv("OT_GRT_CLOCK_FIRST_RES_AWARE", "1")
+    assert gen_phys.grt_clock_first_cfg()[-1] == "export OT_GRT_CLOCK_FIRST_RES_AWARE = 1"
+    monkeypatch.delenv("OT_GRT_CLOCK_FIRST_RES_AWARE")
     monkeypatch.setenv("OT_GRT_CLOCK_FIRST_RESERVE", "x")
     with pytest.raises(SystemExit):
         gen_phys.grt_clock_first_cfg()
@@ -51,3 +54,4 @@ def test_tcl_wraps_first_full_route_only():
     # the merge read_segments resets the router: allow-congestion is re-armed after it (else the next incremental route GRT-0116)
     tail = t[t.rindex("grt::read_segments $dir/5_1_grt.clock_first_all.seg"):]
     assert "::grt::set_allow_congestion 1" in tail
+    assert re.search(r"OT_GRT_CLOCK_FIRST_RES_AWARE\) eq \"1\".*\n\s*lappend args -resistance_aware -res_aware_nets_percentage 0", t)

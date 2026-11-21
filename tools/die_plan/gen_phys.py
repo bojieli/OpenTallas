@@ -3139,11 +3139,12 @@ def grt_clock_first_cfg():
     if os.environ.get("OT_GRT_CLOCK_FIRST", "").strip() != "1":
         return []
     out = ["# FLOW-CLKGRT-1121: clock-first global route (grt_clock_first.tcl, sourced last in grt_pre.tcl)", "export OT_GRT_CLOCK_FIRST = 1"]
-    v = os.environ.get("OT_GRT_CLOCK_FIRST_RESERVE", "").strip()
-    if v:
-        if v not in ("0", "1"):
-            raise SystemExit(f"OT_GRT_CLOCK_FIRST_RESERVE={v!r}: 0 or 1")
-        out.append(f"export OT_GRT_CLOCK_FIRST_RESERVE = {v}")
+    for k in ("OT_GRT_CLOCK_FIRST_RESERVE", "OT_GRT_CLOCK_FIRST_RES_AWARE"):
+        v = os.environ.get(k, "").strip()
+        if v:
+            if v not in ("0", "1"):
+                raise SystemExit(f"{k}={v!r}: 0 or 1")
+            out.append(f"export {k} = {v}")
     return out
 
 
