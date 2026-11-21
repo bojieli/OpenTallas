@@ -29,3 +29,4 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-21 14:00 PST CANARY hbm @ 114851a275: FAIL failing vclk_basis,grt_gate,route,rcx,signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/hbm_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 14:32 PST DIED [FLOW-CANARY-R2] ot-run oth-ubuntu-1867190-1795300329 on tolerant-swine: rc=1 after 17 s, ended 14:32:25, log none, cmd: --mem 16 --threads 4 --disk 8 --hosts localhost --dir /srv/opentallas-scratch2/claude/FLOW-CANARY-R2/head_cl_portable_1121 --stage /srv/open
