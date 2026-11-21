@@ -17,3 +17,8 @@ Read lanes/handoff/LOCKUP-STATION-R2.md for the form + baselines.
 ## CODEX notes 11-21 02:22 PST
 
 - t39 proof6 actual post-hook CTS: TT -309.20 / TNS -16,338, FF -220.48 / TNS -260,263.6. TT repair retained at -291.38 / -11,770.78 versus the inherited b05c baseline -354.63 / about -16,400. Pre-GRT FF starts with 9,161 cross-tap ends (-218.14) versus 14,251 baseline (-275), and 2,108 port-out ends versus 1,884 baseline after seam exclusion. Hold repair still active in inherited E7 proof6. Wait for repaired hold and GRT before a plan row. Post-hook ODB census showed 5,146 DLLx2 RVT and zero residual DFFLQx4/DFFHQx4 (E7 sta/codex-p6/census.log). Filter removed 6,354 same-tap and 17,149 far hops, with 5,141 leaf latches connected. QC2 sle_ctl__cl67434795 admitted on intel1, in global placement.
+
+## QC rows (candidate, for QC-PLAN-R9) 11-21 04:xx
+Plan row (opt-in form on main d8800bd360): clock.zl_lockup["<QC type>"] = {"auto": true, "max_um": 200}  (same_tap bypass implied by auto; reset relays + SRAM excluded by default; leaf form + latch restore on).
+Proven so far on: sle_ctl__cl67434795 only (QC2, intel1 oth-ubuntu-2255653-1795247355, running 3.5 h, CTS not reached). Baseline xtap 3,039 / hold cells 48,100 / TT -1.82.
+STATUS: NOT RELEASED. Rule: rows go to a die lane only after a proof no worse than baseline on TNS and hold. R9 may stage the row but must not apply it. I post PROOF-PASS here + to QC-PLAN-R9 the moment QC2 reads post-hook.
