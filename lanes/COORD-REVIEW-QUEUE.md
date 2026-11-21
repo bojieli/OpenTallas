@@ -18076,3 +18076,4 @@ FAILED [AUTOPILOT 4b544bf245c7] 2026-11-21 06:47:25 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 06:54 PST DONE [FLEET-WATCH-R6] ot-push-main otpush-dear-crayfish-30589 on dear-crayfish: rc=0 after 325 s, ended 06:54:08, log /tmp/fw6-push1.log, cmd: ot-push-main 
 - 2026-11-21 06:54 PST DIED [FLOW-LEAFREP-1121] ot-run oth-ubuntu-140364-1795272730 on tolerant-swine: rc=1 after 121 s, ended 06:54:10, log none, cmd: --mem 40 --threads 4 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/flow-leafrep-1121/m --stage /srv/opentallas-scratch3/claude/flow-le
 - 2026-11-21 06:54 PST DONE [token-1121-r2] ot-push-main otpush-civil-redfish-3531053 on civil-redfish: rc=0 after 0 s, ended 14:54:16, log none, cmd: ot-push-main --help
+- 2026-11-21 06:54 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 22c4c3c58376: RuntimeError: /srv/opentallas-scratch2/claude/rt: 55 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
