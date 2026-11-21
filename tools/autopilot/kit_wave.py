@@ -4163,6 +4163,38 @@ def _matched_line(s, m):
     return line
 
 
+# FLOW-OPS-0900 11-21 (FABLE-FLOW-0745 e, 0800 e part 3): a fail reason must carry its cause.  A header line that names none
+# ("KIT_PREFLIGHT FAIL issues 1", "make exit 2 (see run_route.log)", "(see log)") gets the first cause text after it: the issue bullets
+# that follow it in the log ("- macro_channels: macro column 4 ... channel 9.924 um < 10.8"), else the first tool error line.  The fail key
+# (norm_text masks numbers / paths / ids) then groups by cause, not by header.
+CAUSELESS_RE = re.compile(r"(?:KIT_PREFLIGHT FAIL(?: issues \d+)?|make exit \d+ \(see run_\w+\.log\)|\(see (?:the )?(?:run_\w+\.)?log\))\s*:?\s*$")
+CAUSE_BULLET_RE = re.compile(r"^[ \t]*- (\S[^\n]*)")
+FIRST_TOOL_ERR_RE = re.compile(r'(?m)^(?:\[ERROR [A-Z]+-\d+\][^\n]*|Error: [^\n]*|ERROR: [^\n]*)|[^\n]*(?:can.t read "|invalid command name "|Segmentation fault|Signal 11 received)[^\n]*')
+
+
+def with_cause(line, text, n=3):
+    """`line` plus the first cause text of `text` when the line itself names none (see CAUSELESS_RE); unchanged otherwise"""
+    if not line or not CAUSELESS_RE.search(line):
+        return line
+    hdr = line.split(" | ", 1)[0].strip()
+    det = []
+    i = (text or "").find(hdr)
+    if i >= 0:
+        for ln in text[i + len(hdr):].splitlines()[1:24]:
+            m = CAUSE_BULLET_RE.match(ln)
+            if m:
+                det.append(m.group(1).strip())
+                if len(det) >= n:
+                    break
+            elif ln.strip():
+                break
+    if not det:
+        m = FIRST_TOOL_ERR_RE.search(text or "")
+        if m and m.group(0).strip() and m.group(0).strip() not in line:
+            det = [m.group(0).strip()]
+    return (line.rstrip(": ") + ": " + "; ".join(d[:160] for d in det)) if det else line
+
+
 OT_CLASS_MARK = re.compile(r"^\s*OT_CLASS:\s*(design|flow|rtl|structural)\b[:\s]*(.*)$", re.M | re.I)
 OT_CLASS_MAP = {"design": "PLAN", "flow": "FLOW", "rtl": "RTL", "structural": "STRUCTURAL"}
 
@@ -4196,6 +4228,7 @@ def classify(stage, text):
                 line = _matched_line(s, m)
                 if not line or re.match(r"(?:Traceback|File |ot-run: RAN on)", line):
                     line = decisive_line(clean) or line
+                line = with_cause(line, clean)               # FLOW-OPS-0900: a causeless header carries its first cause
                 return cls, f"{why} @{stage}: {line[:300]}"
     dl = decisive_line(clean)
     return "UNCLASSIFIED", f"unclassified failure @{stage} (see log)" + (f": {dl[:300]}" if dl else "")
