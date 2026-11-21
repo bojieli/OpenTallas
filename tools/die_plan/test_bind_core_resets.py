@@ -64,7 +64,7 @@ def test_hbm_t13_manifest():
     base = (d / a["base"]).resolve()
     assert base == root.resolve()
     missing = [f for f in a["netlist"] + a["files"] if not (base / f).is_file()]
-    assert not missing, "missing manifest files:\n" + "\n".join(missing)
+    assert not missing, "\n".join(f"Missing source: {path}" for path in missing)
     assert (d / a["map_file"]).is_file()
     comp = base / a["compose"]
     assert comp.is_file() or comp.with_name(comp.name + ".gz").is_file()
