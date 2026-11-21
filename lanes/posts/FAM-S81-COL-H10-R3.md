@@ -1,0 +1,1 @@
+- 2026-11-21 07:41 PST STARTED successor of FAM-S81-COL-H10-R2 (07:4x PST). Waiters re-armed: rep cld01bb4ae (ap 0c4abfb40abd, route done, in 6_report/sign-off), proof A chainP (waveP gen), proof C chainCP (waveCP gen, A/B OT_RELAY_MID_FIT_CHAIN=1). Results go to S81-J6-ASSEMBLY-R4. New private work rebases on the j6r1 manifest tree once published.
