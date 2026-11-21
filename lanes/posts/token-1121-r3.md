@@ -1,3 +1,4 @@
 - 2026-11-21 09:51 PST DONE [token-1121-r3] ot-push-main otpush-civil-redfish-3919608 on civil-redfish: rc=0 after 1 s, ended 17:51:44, log none, cmd: ot-push-main --help
 - 2026-11-21 09:52 PST DONE [TOKEN-1121-R3] ot-push-main otpush-civil-redfish-3936335 on civil-redfish: rc=0 after 14 s, ended 17:52:37, log none, cmd: ot-push-main 
 - 2026-11-21 09:58 PST DIED [TOKEN-1121-R3] ot-run oth-ubuntu-4010767-1795283739 on civil-redfish: rc=1 after 163 s, ended 17:58:20, log /srv/opentallas-scratch2/claude/token-1121-r3/tokc_j6r1.log, cmd: --mem 48 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/s81-j6 -- bash /srv/opentallas-scratch2/claude/s81-j6/tokc/run_tok
+- 2026-11-21 10:01 PST DONE [TOKEN-1121-R3] ot-push-main otpush-civil-redfish-4158704 on civil-redfish: rc=0 after 22 s, ended 18:01:34, log none, cmd: ot-push-main 
