@@ -78,3 +78,23 @@ NOTE: every W/*.py / *.sh named here lives on epyc9 in W; the session scratchpad
   bash W/proof/p1/gen/run_kit.sh W/proof/p1/gen/cbn_q00__cl622f65d2 route 64 16 ; read 3_detailed_place.rpt / 4_cts_final.rpt:
   class A endpoints (u_d*_sg* -> u_pc_nk) must be gone, place WNS >= -42 (the -296 u_lk_nk latch class L clears at CTS).
 - Cycles for R7 per changed row = station delta on every lane ending on that bus of the type (V/r6_bus_stations.py rule) + R8 re-derive.
+
+## State 20:55 PST: rows for V2 are ready for QC-PLAN-R7 (proof kit not yet run)
+- ROW SET a3 = epyc9 W/a3: plan_all.json (V1 p_h aeae20148627 + rows on all 17 cb types, lanes NOT edited), rep_<type>.json (every leg,
+  positions), ROWS.tsv (63 changed station rows), LANES.tsv (480 lanes, fixed_cycles +1..+6, sum 1,621; rule of V/r6_bus_stations.py),
+  census a3/census: `ABS-CENSUS ... 17 types: no finding` on cb* (V1: 63 HOP rows, worst 678). Runtime of the census: rt/current 20:45.
+- Re-apply on another base: `BASE_PLAN=<plan> bash W/run_all.sh <outdir> --target 292 --min-stations bc_i00=5 --min-stations bc_i10=5
+  --min-stations bc_i20=5 --min-stations bc_i30=5 --min-stations nb_i00=10` (needs W/v1rtl/<type>/rtl staged bound RTL; all 17 staged),
+  then `python3 -I W/rows_table.py <plan> <outdir>`. The tool is deterministic; rows depend on the plan rows / cores / pins only.
+- Station counts (before > after): cbf_q00 x2 / cbf_q00_s2 / cbn_q00 x3: na_i00 4>6, nb_i00 7>10 (the representative alone came out 11:
+  set --min-stations nb_i00=11 for one count on the family, or accept 10/11), y_o00 3>4 (cbn: 2>4), bc_i00 1>5, bc_i10 1>5.
+  cbf_q01 / cbf_q01_s2 / cbn_q01 x3: y_o12 2>4, nb_i12 3>5, bc_o13 2>4 (cbn only). cbf_q11 / cbn_q11 x2: na_i22 2>3, nb_i22 2>4,
+  y_o23 1>2, bc_o33 2>4 (cbn). cbx_q10 x3: y_o21 1>2, bc_i20 1>5, bc_i30 1>5. bc_i class = 5 (cbf_q00 bc_i00 far window end needs 5).
+- NOT closed by rows (tool legs over 300 that the census does not see; each needs a NEW station row = +1 cycle, R7's call):
+  cbf_q11 / cbn_q11 x2: u_bin_bc_i22 -> xstn x_2_2 -> tap -> pc 360-363 um legs, u_bin_bc_i32 -> x_3_2 390 (no bc_i22 / bc_i32 row today);
+  cbx_q10 x3: xstn x_3_1 in -> tap / -> bc_o31 face 383; t11.n_y -> y_o11 face 302-353 (cbf_q00 / cbn_q00), t00/t21.n_y -> first y_o
+  station 303-309 (pin half-span counted). Details in rep_<type>.json "over".
+- r_dly_lockup.<type>.seg = 1 is written for every type by the tool (--seg 1): the relay_sites keys of the u_d<N>_* lines use the
+  <inst>_sg<j>.q names of that split. If R7 drops seg 1, re-run the tool without --seg (keys then follow seg 8).
+- Proof GEN p1 (representative, rows of W/rep3: nb_i00 9, bc_i 4): prepare-stations PASS (planned = bound pads on all rows), gen.py phys
+  running since 20:19 (same long step after m8_grant.json as the V1 proof GEN). Kit not launched yet.
