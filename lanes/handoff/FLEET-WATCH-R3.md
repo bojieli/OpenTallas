@@ -11,3 +11,10 @@
 3. Waiter skip for unadmitted old-plan waiters (s81 dsdv_slice_c1x_C__t6 / t8 old event 465cb9fe2d3, 48 GB on epyc2): their wave rows are RUNNING (wave unit alive, ot-run client waiting), so superseded_unstarted does not see them. Needs: waiter -> wave row match (client pid tag -> wave unit), and a stop of the unadmitted client only. NOT built yet.
 4. epyc2 root 89%: kw43-wave-1109n (1.27 TB) is PROTECTED and referenced by live sealed jobs, static since 11-09; kw45 555 GB (live_qwen_compute 61 GB..., per-entry du /tmp/fw3_kw45du.txt on epyc2); no growth found, nothing deleted.
 5. Rule slip: I ran rm -rf on my own pytest basetemp (.pt in the r3 clone); use ot-delete in future.
+
+## Update 11-21 ~01:50 (stand-down)
+- REPIN landed (main 5d87c872e3), in rt/current. 10 geom clients pinned to one host cancelled by exact attempt dir (+ old-plan c1x_C t6/t8 a3, never admitted, 48 GB freed). Result at next wave tick: 7 relaunched RUNNING at the next attempt, 3 RETRY-INFRA (col_h9_r0_p3 pv13474472 a3, dsdv c1x_C t4 a1, qwen_compute cbx_q10 cl94a12200 a12) waiting for relaunch; none FAIL, none HELD. epyc2 now admits 20 GB and shows no waiters (the leftover pair is gone).
+- Not verified: a KW_REPIN line in a geom log (none needed yet; the 30-min path has not fired). Next owner: grep KW_REPIN in ~/coord/autopilot/kit_wave/*/a*/geom.log after 30 min of a waiting geom.
+- Not built: generic waiter-skip (COORD ruled: cancel old-plan unadmitted waiters directly by exact attempt dir via ot-run --cancel).
+- epyc2 root 89%: kw43-wave-1109n PROTECTED and static; no growth found, nothing deleted (kw45 per-entry du /tmp/fw3_kw45du.txt on epyc2).
+- Slip: rm -rf on my own pytest basetemp in the r3 clone; use ot-delete.
