@@ -5926,7 +5926,9 @@
     "kv3_hg_v1p3@2:fix=kvplanr5-d26ctl-unshared",
     "kv3_hg_v1p4@3:fix=kvplanr5-d26ctl-unshared",
     "kv3_hg_v1@1:fix=55256552eef2",
-    "kv3_hg_v1p2@2:fix=kvplanr5-d26ctl-unshared"
+    "kv3_hg_v1p2@2:fix=kvplanr5-d26ctl-unshared",
+    "kv3_hg_v1p3@3:fix=4f638b4e9f8d",
+    "kv3_hgi_v5@2:fix=4f638b4e9f8d"
    ]
   },
   "s81": {
@@ -37365,7 +37367,10 @@
     "serdes__t2@5:fix=eda19506a55",
     "serdes__t16@17:fix=5294e088f55",
     "serdes__t14@6:fix=eda19506a55",
-    "serdes__t14@2"
+    "serdes__t14@2",
+    "slice_station__t29__clc7772371@7:fix=4f638b4e9f8d",
+    "slice_station__t45@8:fix=4f638b4e9f8d",
+    "slice_station__t6__cl0755c26e@7:fix=4f638b4e9f8d"
    ],
    "bound_trees": [
     {
@@ -51415,7 +51420,10 @@
     "glue@6",
     "cbn_q00__cldbcda913@17",
     "slw_hc3__clccfc3e6b__pvcca9ff41@3",
-    "slw_hc3__cld86a7ad4__pvfd488b8f@4"
+    "slw_hc3__cld86a7ad4__pvfd488b8f@4",
+    "cbn_q01__clab6e67f2@18:fix=4f638b4e9f8d",
+    "slw_fw_v1__clf51c11d8__cl592e3d37@4:fix=4f638b4e9f8d",
+    "slw_st_a_v2__clf4365a62@6:fix=4f638b4e9f8d"
    ],
    "bound_trees": [
     {
