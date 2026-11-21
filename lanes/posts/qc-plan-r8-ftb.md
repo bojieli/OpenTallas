@@ -1,1 +1,2 @@
 - 2026-11-20 21:05 PST DIED [qc-plan-r8-ftb] ot-push-main otpush-renewed-glider-1983085 on renewed-glider: rc=4 after 43 s, ended 05:05:55, log none, cmd: ot-push-main 
+- 2026-11-20 21:07 PST DONE [qc-plan-r8-ftb] ot-push-main otpush-renewed-glider-2024503 on renewed-glider: rc=0 after 65 s, ended 05:07:33, log none, cmd: ot-push-main 
