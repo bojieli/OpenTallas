@@ -1,0 +1,10 @@
+# FAM-QC-HCST handoff (started 2026-11-20 23:3x PST)
+Family: QC sle_hc*/slw_hc*, sle_st*/slw_st*, sle_su*/slw_su*. FABLE-FIX-QC-SLE keeps sle_ctl/sle_sc/slw_sc + GRT class.
+## Census 23:45
+- 6 "STALE unowned" hc types = old pv names (pv1c2f9baa, pve230954c, pv77c16c8a, pv0d63d22b, pv39aac7a1, pv6c2c33ed), absent from kit_wave only_items; V1 live names are the N_PAD split reps (pvcaa93304 pve289215f pv97423966 pvcf529cc9 pvcca9ff41 pvfd488b8f), all running. Not orphans; drop on V2 rename.
+- Fixes already on main (helper of QC-PLAN-R8): 77440fa43c land_slots share_trunk; 2bdea13bb1 ft_spread keeps exact internal station banks. Both in rt f453583d5830 / 124d829f45f5.
+- Wave attempts on fixed tools: slw_hc3 pvcca9ff41 a3 (rep), slw_hc3 pvfd488b8f a4 (place), slw_st_a_v2__clf4365a62 a3 (gen).
+- Watcher: intel2 /tmp/hcst_watch.sh (exits on first AP_RC).
+## Next
+- Rep to sign-off; then hand fix rows to QC-PLAN-R8 for V2; relaunch siblings (slw_hc3 other pv variants if any).
+- slw_st_a_v2__cl9f076a5c + slw_su_c__cl19bb38ef "placed, route held": check route-hold reason.
