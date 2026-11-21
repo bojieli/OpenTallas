@@ -13,6 +13,7 @@ import math
 from collections import defaultdict
 
 import clock_landings as CL
+import cbc_rules as CBC
 from clock_landings import STATUS_FACE_CYCLES  # same-region status face flop (DIE-S81-29): +1 boot status cycle
 import reset_tree as RT
 import schema as S
@@ -1110,6 +1111,15 @@ def compose(*a,ring_ff_min_bits=None,**k):
 # (clock.band_fixed_um, S81-BANDTAP-1115) keeps its rects, but the ring FORM is the compose's: the frozen dicts were
 # written by composes that ran band_ring "all" and so carry no ring_place key.  Stamp the compose BAND_RING on a frozen
 # band without the key; an explicit ring_place on the frozen band wins.
+MONITOR_RESEAT_NOTE="MONITOR-PIN (S81-MONITOR-PIN-1745): frozen monitor seat re-searched at its cland_dn pins"
+
+
+def monitor_seat_um(rect,xy):
+    """Manhattan um from a monitor band's centre (its seat) to a pin point"""
+    x0,y0,x1,y1=rect
+    return abs((x0+x1)/2-xy[0])+abs((y0+y1)/2-xy[1])
+
+
 def _frozen_band(fx):
     band=copy.deepcopy(fx)
     if BAND_RING!="all" and "ring_place" not in band:band["ring_place"]=BAND_RING
@@ -1332,9 +1342,13 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
                     fxm=((t.get("clock") or {}).get("band_fixed_um") or {}).get(f"monitor_{i}")   # frozen (S81-BANDTAP-1115)
+                    # MONITOR-PIN (S81-MONITOR-PIN-1745): a frozen seat > the rule from its cland_dn pin is searched again
+                    stale=bool(fxm and fxm.get("rect_um") and monitor_seat_um(fxm["rect_um"],c["xy_um"])>CBC.MONITOR_PIN_REACH_UM)
                     try:
-                        if fxm and fxm.get("rect_um"):band=copy.deepcopy(fxm)
-                        else:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
+                        if fxm and fxm.get("rect_um") and not stale:band=copy.deepcopy(fxm)
+                        else:
+                            band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
+                            if stale:band.update(reseated_from_um=list(fxm["rect_um"]),reseat=MONITOR_RESEAT_NOTE)
                     except ValueError as e:
                         band=None
                         if band_multi_rect:        # S81-CA-BAND: the 2-bit monitor ring takes the same notched band as a landing
@@ -1343,6 +1357,10 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                         if band is None:
                             placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
+                    if band.get("rect_um") and monitor_seat_um(band["rect_um"],c["xy_um"])>CBC.MONITOR_PIN_REACH_UM:
+                        placement_failures.append(dict(type=tn,bus=monbus,error=(
+                            f"MONITOR-PIN: monitor_{i} seat {band['rect_um']} is {monitor_seat_um(band['rect_um'],c['xy_um']):.0f} um "
+                            f"from its cland_dn pin {c['xy_um']} (> {CBC.MONITOR_PIN_REACH_UM:g})")))
                     info["bands"][f"monitor_{i}"]=band
                 info["children"].append(row)
         bytype[tn]=info
@@ -1690,6 +1708,128 @@ def rehome_far_bands(plan,sidecar,types=None,far_um=None):
     return out,report
 
 
+# S81-MONITOR-PIN-1745 (fix-only, MONITOR-PIN rule): re-seat every landing monitor band (landing_contract.bands.monitor_<i>)
+# whose seat is farther than cbc_rules.MONITOR_PIN_REACH_UM from any of its cland_dn_ready / cland_dn_fault / fclk_in_cland_dn
+# pins, with the compose's own _storage_band search at the pin (same reserve, ring form and band-use target as the old band).
+# The frozen copy (clock.band_fixed_um.monitor_<i>) and the sidecar band follow.  Every other band, type and key stays
+# byte-identical; a monitor that finds no legal seat within the rule keeps its old band and is reported (new_rect_um None).
+def rehome_far_monitors(plan,sidecar,types=None,cap=None):
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX,FACE_CROSSING,FACE_HOME,BAND_CLOCK_OBST
+    cap=CBC.MONITOR_PIN_REACH_UM if cap is None else float(cap)
+    out=copy.deepcopy(plan);side=copy.deepcopy(sidecar) if sidecar is not None else None
+    geoms=((side or {}).get("collector") or {}).get("types") or {}
+    names=sorted(out["partition_types"]) if types is None else list(types)
+    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX,FACE_CROSSING,FACE_HOME,BAND_CLOCK_OBST)
+    P=S.Plan(out) if (out.get("die") or {}).get("pg",{}).get("domains") and out.get("partitions") else None
+    report=[]
+    try:
+        for tn in names:
+            t=out["partition_types"][tn];ck=t.get("clock") or {};lc=ck.get("landing_contract")
+            if not isinstance(lc,dict):continue
+            far=sorted({i for i,_,d in CBC.monitor_pin_distances(lc) if d>cap+1e-6},key=int)
+            if not far:continue
+            pins={p["name"]:p["xy_um"] for p in lc.get("pins") or [] if p.get("xy_um")}
+            bands=lc["bands"];g=geoms.get(tn) or {}
+            phy=phy_supply_rects(P,tn) if P is not None else []
+            resets=_reset_sites_for_type(out,tn,g.get("tree"),lc.get("base_type"))
+            for i in far:
+                key=f"monitor_{i}";bus=f"cland_dn_ready_{i}";b=bands[key]
+                own=[pins[n] for n in (bus,f"cland_dn_fault_{i}",f"fclk_in_cland_dn_{i}") if n in pins]
+                d0=max(monitor_seat_um(b["rect_um"],xy) for xy in own)
+                tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(g.get("bus_geometry") or {})
+                tt["_cland_geom"][bus]=_scalar(tt,bus,"in",pins.get(bus) or own[0],"ctl")
+                used=[list(r) for k,o in bands.items() if k!=key and o.get("rect_um") for r in (o.get("rects_um") or [o["rect_um"]])]
+                used+=[list(r) for k,o in (ck.get("band_fixed_um") or {}).items() if k!=key and o.get("rect_um")
+                       for r in (o.get("rects_um") or [o["rect_um"]])]
+                BAND_RESERVE,BAND_SPREAD,BAND_RING="ring_ff",1.0,b.get("ring_place","all")
+                BAND_USE_MAX=float(b["band_use_target"]) if b.get("band_use_target") else None
+                FACE_CROSSING,FACE_HOME,BAND_CLOCK_OBST=False,False,True
+                err=None
+                try:nb=_storage_band(tt,bus,2,used,has_epoch=False,phy=phy,resets=resets)
+                except ValueError as e:nb=None;err=str(e)
+                d1=max(monitor_seat_um(nb["rect_um"],xy) for xy in own) if nb else None
+                row=dict(type=tn,band=key,old_rect_um=list(b["rect_um"]),pin_um=pins.get(bus),old_um=round(d0,3),
+                         new_rect_um=None,new_um=None)
+                moved=None
+                if nb is None or d1>cap+1e-6:
+                    # the pin sits where no seat fits within the rule (over a hard-core corner): the PINS move to the
+                    # nearest face point (along the outline, both faces at a corner) that has a seat within the rule
+                    moved=_monitor_pin_slide(tt,i,pins,own,used,phy,resets,cap)
+                    if moved is None:
+                        row["error"]=err or f"no seat within {cap:g} um (best {d1:.0f}) and no pin site within {MONITOR_PIN_SLIDE_UM:g} um"
+                        report.append(row);continue
+                    nb,newpins=moved;own=list(newpins.values())
+                    d1=max(monitor_seat_um(nb["rect_um"],xy) for xy in own)
+                    for q in lc["pins"]:
+                        if q["name"] in newpins:q["xy_um"]=newpins[q["name"]]
+                    for e in ck.get("edge_clocks") or []:
+                        if e.get("port") in newpins:e["tap_um"]=newpins[e["port"]]
+                    row["pins_moved_um"]=newpins
+                if "ring_place" in b:nb["ring_place"]=b["ring_place"]
+                nb.update(instance=b.get("instance",f"u_cland_monitor_{i}"),reseated_from_um=list(b["rect_um"]),reseat=MONITOR_RESEAT_NOTE)
+                bands[key]=nb
+                if key in (ck.get("band_fixed_um") or {}):ck["band_fixed_um"][key]=copy.deepcopy(nb)
+                if key in (g.get("bands") or {}):g["bands"][key]=copy.deepcopy(nb)
+                row.update(new_rect_um=nb["rect_um"],new_um=round(d1,3))
+                report.append(row)
+    finally:
+        BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX,FACE_CROSSING,FACE_HOME,BAND_CLOCK_OBST=saved
+    return out,side,report
+
+
+MONITOR_PIN_SLIDE_UM=1000.0     # monitor-home pin fallback: farthest slide along the outline
+MONITOR_PIN_SLIDE_STEP_UM=8.64
+
+
+def _monitor_pin_slide(tt,i,pins,own,used,phy,resets,cap):
+    """(band, {pin: xy}) for the nearest outline point (8.64-um steps, both faces at a corner) whose cland_dn pin trio has a
+    monitor seat within cap, or None.  The trio keeps its spacing along the face (fclk 2.16, ready 4.32, fault 6.48 past the
+    point) and the face inset of the plan's pins (W/E 2.144, N/S 2.656)."""
+    w,h=tt["outline_um"];x0,y0=pins.get(f"cland_dn_ready_{i}") or own[0]
+    names=(f"fclk_in_cland_dn_{i}",f"cland_dn_ready_{i}",f"cland_dn_fault_{i}")
+    def trio(face,at):
+        out={}
+        for k,n in enumerate(names):
+            if n not in pins:continue
+            a=round(at+2.16*(k+1),3)
+            out[n]=[2.144 if face=="W" else round(w-2.144,3),a] if face in "EW" else [a,2.656 if face=="S" else round(h-2.656,3)]
+        return out
+    cands=[]
+    for face in "WENS":
+        ext=h if face in "EW" else w
+        along=y0 if face in "EW" else x0
+        normal=(x0 if face=="W" else w-x0) if face in "EW" else (y0 if face=="S" else h-y0)
+        n=int(MONITOR_PIN_SLIDE_UM//MONITOR_PIN_SLIDE_STEP_UM)
+        for k in range(-n,n+1):
+            at=along+k*MONITOR_PIN_SLIDE_STEP_UM
+            if not 1.0<=at<=ext-8.0:continue
+            moved=abs(normal)+abs(k*MONITOR_PIN_SLIDE_STEP_UM)
+            if moved<=MONITOR_PIN_SLIDE_UM:cands.append((round(moved,3),face,round(at,3)))
+    for moved,face,at in sorted(cands):
+        q=trio(face,at);bus=f"cland_dn_ready_{i}"
+        t2=copy.deepcopy(tt);t2["_cland_geom"][bus]=_scalar(t2,bus,"in",q.get(bus) or next(iter(q.values())),"ctl")
+        try:nb=_storage_band(t2,bus,2,used,has_epoch=False,phy=phy,resets=resets)
+        except ValueError:continue
+        if max(monitor_seat_um(nb["rect_um"],xy) for xy in q.values())<=cap+1e-6:
+            nb["pin_slide_um"]=moved
+            return nb,q
+    return None
+
+
+def monitor_seat_rows(report):
+    """J6 plan rows (path / set) of a rehome_far_monitors report: the landing contract band and its frozen copy"""
+    rows=[]
+    for r in report:
+        if r.get("new_rect_um") is None:continue
+        base=f"partition_types.{r['type']}.clock"
+        rows.append(dict(type=r["type"],band=r["band"],paths=[f"{base}.landing_contract.bands.{r['band']}",
+                                                              f"{base}.band_fixed_um.{r['band']}"],
+                         old_rect_um=r["old_rect_um"],new_rect_um=r["new_rect_um"],seat_um=[r["old_um"],r["new_um"]],
+                         **({"pins_moved_um":r["pins_moved_um"],"pin_paths":[f"{base}.landing_contract.pins",f"{base}.edge_clocks"]}
+                            if r.get("pins_moved_um") else {})))
+    return rows
+
+
 RELOCATE_MIN_BITS=64        # DIE-QC-97: narrow control bands are not worth a move
 RELOCATE_OFF_WINDOW=0.5     # relocate when more than this fraction of the bus bits lie outside the band's face span
 
@@ -1770,7 +1910,7 @@ if __name__=="__main__":
     import argparse
     ap=argparse.ArgumentParser(description="fix-only: re-size undersized landing storage bands (resize-bands) or fill "
                                "FAIL bands with multi-rect bands (fill-bands)")
-    ap.add_argument("cmd",choices=["resize-bands","fill-bands","face-home","band-use"]);ap.add_argument("plan");ap.add_argument("sidecar")
+    ap.add_argument("cmd",choices=["resize-bands","fill-bands","face-home","band-use","monitor-home"]);ap.add_argument("plan");ap.add_argument("sidecar")
     ap.add_argument("--types",help="comma list (face-home default: budgets.cland_face_home_types)");ap.add_argument("--out",required=True)
     ap.add_argument("--band-reserve",default="padded",choices=BAND_MODES,help="fill-bands: reserve mode (default padded)")
     ap.add_argument("--use-max",type=float,default=None,help="resize-bands: band-use floor (CLAND-CLASS-1, e.g. 0.5); band-use: report threshold")
@@ -1783,6 +1923,16 @@ if __name__=="__main__":
         nover=sum(r["over"] for r in rows)
         print(f"OT_BAND_USE {nover}/{len(rows)} ring bands over use {a.use_max or 0.5}")
         raise SystemExit(0)
+    if a.cmd=="monitor-home":     # S81-MONITOR-PIN-1745: plan -> --out plan; sidecar -> <out>.sidecar.json; rows/report beside
+        new,side,rep=rehome_far_monitors(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(",") if a.types else None)
+        open(a.out,"w").write(json.dumps(new,indent=1))
+        open(a.out+".sidecar.json","w").write(json.dumps(side,indent=1))
+        open(a.out+".rows.json","w").write(json.dumps(dict(rule_um=CBC.MONITOR_PIN_REACH_UM,rows=monitor_seat_rows(rep),report=rep),indent=1))
+        for r in rep:print("OT_MONITOR_HOME",json.dumps(r))
+        bad=[r for r in rep if r.get("new_rect_um") is None]
+        print(f"OT_MONITOR_HOME {len(rep)-len(bad)} monitor seats moved to their pins, {len(bad)} without a seat within "
+              f"{CBC.MONITOR_PIN_REACH_UM:g} um")
+        raise SystemExit(1 if bad else 0)
     if a.cmd=="face-home":
         new,rep=rehome_far_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(",") if a.types else None)
         open(a.out,"w").write(json.dumps(new,indent=1))

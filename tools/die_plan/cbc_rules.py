@@ -43,6 +43,31 @@ TAP_SKEW_PS_PER_UM = 0.065      # fit 11-19 (14 S81 kits, 413 taps): skew ~ 0.06
 # edge.  The reset tools take min(plan value, this cap) as their reach; OT_RESET_HOP_CAP_UM overrides (e.g. 405 = old rule).
 RESET_HOP_CAP_UM = 300.0
 
+# MONITOR-PIN rule (S81-MONITOR-PIN-1745, FABLE-CLOSURE-1730 lever 2): a landing monitor ring (u_cland_monitor_<i>, band
+# monitor_<i>) and its cland_dn_ready_<i> / cland_dn_fault_<i> / fclk_in_cland_dn_<i> pins are ONE site: every pin within this
+# Manhattan distance of the monitor seat (band rect centre).  J5 (224567138ab) broke it: aced0fb210 (reset hop 300) re-wired
+# the die reset wavefront, the monitor tree follows that wavefront so the cland_dn pins moved to the new reset-out sites, and
+# the frozen clock.band_fixed_um.monitor_<i> (S81-BANDTAP-1115) kept the seat (slice_station t36 31 -> 2,057 um, -766 ps).
+# The compose re-seats a frozen monitor band that breaks it; precheck MONITOR-PIN reports it on any plan.
+MONITOR_PIN_REACH_UM = 300.0
+
+
+def monitor_pin_distances(lc):
+    """[(monitor index, pin name, Manhattan um seat centre -> pin)] of a landing_contract dict (bands + pins).  A monitor
+    band without a rect (placement FAIL) or without pins is skipped."""
+    pins = {p.get("name"): p.get("xy_um") for p in (lc or {}).get("pins") or [] if p.get("xy_um")}
+    out = []
+    for name, b in sorted(((lc or {}).get("bands") or {}).items()):
+        if not name.startswith("monitor_") or not (b or {}).get("rect_um"):
+            continue
+        i = name.split("_", 1)[1]
+        x0, y0, x1, y1 = b["rect_um"]
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        for pn in (f"cland_dn_ready_{i}", f"cland_dn_fault_{i}", f"fclk_in_cland_dn_{i}"):
+            if pn in pins:
+                out.append((i, pn, round(abs(cx - pins[pn][0]) + abs(cy - pins[pn][1]), 3)))
+    return out
+
 
 _BOUND_CAP = []          # FLOW-NOADV-R2 11-20: stack of caps pushed by bound_reset_hop_cap(); the innermost wins over default AND env
 

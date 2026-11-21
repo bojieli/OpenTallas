@@ -25,6 +25,9 @@ seen on 11-18:
   STALE-BINS  (with --kit-sinks) the clock sinks the newest kit saw (clock_taps.tcl OT_CLOCK_TAPS line, kit_sinks.py)
               differ from the plan's clock.sink_bins_file count by more than 10 %: density taps follow the stale bins and
               the new flops land on the root tap (KV kv3_pv_v8: bins 99,260, kit 120,625 -> clk 10,056, clk_t34 10,234).
+  MONITOR-PIN (S81-MONITOR-PIN-1745) a landing monitor seat (clock.landing_contract.bands.monitor_<i> centre) farther than
+              cbc_rules.MONITOR_PIN_REACH_UM (300) from one of its cland_dn_ready / cland_dn_fault / fclk_in_cland_dn pins
+              (S81 J5: slice_station t36 2,057 um, iqf t1 2,337 um -> -766 / -1,040 ps at place).
   BOUNDARY-REG (CBC r713) a port bit with no planned register (taps.planned_sinks) within 50 um of its pin.
   Thresholds come from tools/die_plan/cbc_rules.py (owner r713 close-by-construction), shared with the CBC generator:
   reach 405 um per placed hop, tap <= 1,000 sinks, reset leaf <= 32, boundary register <= 50 um, aim >= 10 % of the bus bits,
@@ -62,7 +65,8 @@ FF_ROW_UM = 0.27
 FF_RETENTION_UM = 27.0   # ff_put_near: |dx| + |dy| <= 27 um around the request
 FF_NEAR_FACE_UM = 10.0   # a request within 10 um of the N/S face takes the face-bank search
 FF_DEPTH_ROWS = 120
-CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT", "LOW-UTIL")
+CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT", "LOW-UTIL",
+          "MONITOR-PIN")
 CELL_AREA_UM2 = 0.14    # mean ASAP7 std-cell area: QC tt_ctlm 204k cells = 27.4k um2 (0.134); glue 164,563 cells at 2.2 % (0.149)
 LOW_UTIL = 0.15         # COORD 11-19: glue (2.2 %) and tt_ctlm (~10 %) fail by one cone scattering over an empty partition
 # NOT PREDICTIVE on the 11-19 plans: at < 15 % it flags 572 of 610 types incl. every signed S81 / QC type and 22 of 26
@@ -492,6 +496,21 @@ def _taps_and_sinks(ctx, tn):
     return grid, sinks
 
 
+def monitor_pin_findings(lc, reach=None):
+    """[(worst um, detail)] per landing monitor whose seat is farther than the MONITOR-PIN rule from one of its pins"""
+    reach = CBC.MONITOR_PIN_REACH_UM if reach is None else reach
+    worst = {}
+    for i, pn, d in CBC.monitor_pin_distances(lc if isinstance(lc, dict) else None):
+        if d > reach + 1e-6 and d > worst.get(i, (0, ""))[0]:
+            worst[i] = (d, pn)
+    out = []
+    for i, (d, pn) in sorted(worst.items(), key=lambda kv: int(kv[0])):
+        r = lc["bands"][f"monitor_{i}"]["rect_um"]
+        out.append((round(d), f"monitor_{i} seat {[round(v, 1) for v in r]} is {d:.0f} um from {pn} (> {reach:g}); "
+                              f"re-seat it at its pins (clock_landing_plan.py monitor-home)"))
+    return out
+
+
 def type_findings(ctx, tn, checks, opts):
     P = ctx.P
     t = P.types[tn]
@@ -549,6 +568,9 @@ def type_findings(ctx, tn, checks, opts):
         r = stale_bins(bins_count(ctx, ck), opts.kit_sinks_map[tn], opts.stale_frac)
         if r:
             add("STALE-BINS", r[0], opts.stale_frac, r[1])
+    if "MONITOR-PIN" in checks:
+        for v, d in monitor_pin_findings(ck.get("landing_contract")):
+            add("MONITOR-PIN", v, CBC.MONITOR_PIN_REACH_UM, d)
     if "BOUNDARY-REG" in checks and not t.get("hard"):
         for v, d in boundary_findings(ctx, tn, opts.boundary_um):
             add("BOUNDARY-REG", v, opts.boundary_um, d)
@@ -674,6 +696,12 @@ def suggested_rows(findings, raw):
             for f in fs:
                 rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.reset",
                                  set={"local_relay_tree": True, "relay_um": CBC.REACH_UM_PER_HOP, "max_fanout": CBC.RESET_LEAF_MAX_FANOUT}, detail=f["detail"]))
+        elif check == "MONITOR-PIN":
+            for f in fs:
+                rows.append(dict(check=check, family=fam, types=[f["type"]],
+                                 path=f"partition_types.{f['type']}.clock.landing_contract.bands",
+                                 action="clock_landing_plan.py monitor-home: re-seat the monitor band (and its band_fixed_um copy) at "
+                                        "its cland_dn pins", detail=f["detail"]))
         elif check == "MISAIM":
             for f in fs:
                 rows.append(dict(check=check, family=fam, types=[f["type"]], path=f"partition_types.{f['type']}.internal_stations",
