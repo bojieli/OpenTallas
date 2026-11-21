@@ -1,0 +1,20 @@
+# QC-PLAN-R9 handoff (started 2026-11-21 03:4x PST; succeeds QC-PLAN-R8). Read QC-PLAN-R8.md RESUME + b13 sections first.
+
+## 03:5x state
+- b12 (929928f3c22a) ended BIND_RC 1 with R8_STALE 30 only (refresh path bug). R8 relaunched b13 before standing down:
+  epyc8 unit oth-ubuntu-3618703-1795261366, inputs v2b_host/in13/ (plan = b12 plan 929928f3c22a), bind_b13.sh (RR = rt/7ff721a00978 r8_refresh.py).
+- NOTE: R9 launched a duplicate b13 at 11:43 UTC that failed at `test ! -e b13` (no harm to R8's run) BUT its redirect truncated
+  v2b_host/b13.out. Read results from v2b_host/b13/{bind.log,bind/bind_report.json,latcheck.json}, not b13.out.
+  The R9 debug bind (b13dbg) was cancelled. bind_b13.sh was rewritten with identical content (diff vs R8's open fd: none).
+- R9 post-bind chain on b13: epyc8 v2b_host/chain2_b13.sh (pid 3673554, log chain2_b13.log): ot-wait R8 unit -> gate bind errors 0 + latcheck.json
+  -> G0 (check.py) + event_census (event s29q103S4Q9N46R6V2b13) -> 7 proof GENs (watch_b12 type list) into b13/post_bind + b13/proof_gen.
+- b14 (parallel candidate) = b12 plan + 12 zero-cycle HC/ST ft sites from Codex v2b/hcst_ft_followup (SITED, hops <= 300 um, stations unchanged):
+  9x b_hw_ctl_hc3 (sle/slw st_b v1/v2) + 3x cws3 (sle_st_b_v2). Plan epyc8 /srv/opentallas-scratch2/claude/qc-plan-r9/b14in/b14_plan.json c3f5b1eb9c1e
+  (compose_b14.py). Chain qc-plan-r9/chain_b14.sh (pid 3729568, log chain_b14.log, bind log b14.out): bind -> G0 + census -> proof GEN sle_st_b_v2__clfde1249e.
+  Choice: if b14 binds clean + G0 PASS, apply b14 (b13 proofs cover all other types; st_b proof from b14); else apply b13 and carry the 12 to V3.
+- FEFW item (13 C-plan types without regs_um): 36 slots/19 types already sited in b10+ (hcst_ft/ledger.json accepted); 12 more in b14;
+  12 remaining are ENDPOINT_REACH (9 x_fw_ctl_p2 need >= 3 hops, 3 x_su_l0_ctl need >= 4) = cycle reprice at tree joins -> V3 (risk of PARAM_REGEN imbalance).
+## Next
+- On bind PASS: G0 + census read, proof kits to GRT (die priority, CTS post-hook), geometry to GEOM-REVIEW, then pack (pack_b12.py pattern) / seal / apply.
+- On apply: release 11 cb hold_items (65f9eaf04c5, 8cd505347e7) + 3 fe (76a934188b0/56a3cbdebf0/678d61ae6c4) + cbn_q00__cldbcda913 via kit_wave_edit.
+- Re-sign: add 6 N_PAD siblings after the 6 reps sign. Lockup rows held (LOCKUP-STATION-R3). FAM-QC-COLL ODPRE rows staged (not proven to GRT) -> V3.
