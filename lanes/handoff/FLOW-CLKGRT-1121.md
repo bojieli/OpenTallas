@@ -1,35 +1,29 @@
-# FLOW-OBS-GCELL-1121 handoff 2026-11-21 (stood down at ~319k context; successor FLOW-OBS-GCELL-R2)
-Class: DRT-0255 on a gcell that a reserved die-clock-site obstruction only partly covers (HEAD hd_host_e, hd_serdes sdr2c). FLOW-GRT-RESID scope taken over too (it stood down 04:01).
+# FLOW-STRIPBODY-1121 handoff (Opus 5.5, started 11-21 ~16:4x PST) -- ACTIVE
+Goal: strip/body split buildable end to end (lepe_mu_C t1, c1x_C t1..t10; COORD: one schema for KV hub_Eo/Wo, pv too).
+L=epyc10 /srv/opentallas-scratch2/claude/flow-stripbody-1121 (lane clone $L/lc, branch claude/flow-stripbody-1121, NOT pushed yet).
 
-## Code (lane clone epyc8 /srv/opentallas-scratch2/claude/flow-obs-gcell-1121/repo, NOT PUSHED)
-- e44fcd0731: first hook. b62f5f340c: full fix after the FABLE-PD-HEAD-0700 review (lanes/FABLE-PD-HEAD-0700.md section 2).
-- tools/die_plan/obs_gcell_cap.tcl (new): set_global_routing_region_adjustment 1.0 on every gcell a source cuts ACROSS its tracks to < OT_OBS_GCELL_MIN_TRACKS (3) DRT-legal tracks. Sources: dbObstructions on M2-M7, excluding the ::ot_pgtt_obs temp guards, plus the OBS of placed block masters. Blockers: sources + PG-truth guards + PG swires. A track is free when its wire clears the blocker by the WIDTH-BASED spacing. A BTerm or macro pin exempts only the gcells it touches. Default on; OT_OBS_GCELL_CAP=0 turns it off. GRT-only, no DB change. Gcell grid 0.57 um, origin 0.
-- grt_pre.tcl: the hook runs after pg_track_truth, before the appended PGCAP. grt_pg_replay.tcl replays it after TRACK_TRUTH, before PGCAP (default on, skipped when the kit has no helper). gen_phys.py copies the file into kits.
-- tap_balance.tcl tb_seed_side: a tap port inside an M1 obstruction seeds its delay chain outside it, on the sink-centroid side, past OT_CLK_OBS_HALO_ROWS+1 rows (OT_TAP_SEED_SIDE=0 off). This is the sdr2d clk_t4/t5 straddle class. UNPROVEN: no CTS rerun yet.
-- Tests: test_obs_gcell_cap.py (9), test_grt_pg_replay.py, test_rflow_defaults.py (test adjusted: the PG-truth-last rule allows the GRT-only obsgc hook after it). These pass in the clone. Remaining local failures are sparse-checkout FileNotFound only.
-- Push: python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main from the clone, never --no-test, trailer "Co-Authored-By: Claude Opus 5.5".
+## Form (decided, posted 17:4x)
+Notched strip cannot be a kit (ORFS block = rectangle, die partitions tile). strip_body key -> `strip_body.py spec` -> type_split
+one-axis split: face strips = full-length rectangles, depth = band clipped to nearest hard core / plan-sited content macro (+halo),
+floored to 8.64 lattice; body = keep piece (names, origin, START). Pieces <type>__strip_<face>; kit_wave piece_base() inherits base env.
+lepe_mu_C t1 (J6r1): y cuts 43.2 / 1183.68; W/E infra stays in body.
 
-## Why DRT fails on GRT-free tracks (measured)
-asap7_tech_1x LEF M2-M7: SPACINGTABLE PRL gives 0.072 um next to any shape wider than 0.033, and DRT treats the obstruction as wide metal.
-- host_e row y 345.99-346.56: no M6 PG there. 346.464 sits 38 nm from the edge (illegal), 346.528 sits 102 nm away (legal). GRT counts 2 tracks, DRT has 1.
-- sdr2c 34.776: 42 nm from the edge. GRT counts 1, DRT has 0.
+## Code (lane clone, uncommitted until bind green)
+strip_body.py (split_axis_plan, split_spec, spec CLI, contents cutouts, members_by_face), schema.py (+dump), type_split.py
+(clip_windows, explicit tap mode, band_reshape, monitor slide, strapless_pieces, carry_short_fixed, whole_map_to_keep,
+relay_depth to body, core taps follow their core = COORD svc hi4 defect), kit_wave.py (piece_base); tests in test_strip_body,
+test_type_split, autopilot/test_kit_wave_strip_piece.
 
-## Measurements
-- host_e probe (4_cts, plain GRT 30 iterations): full hook cuts 23,756 of 173,964 partly covered gcells. Overflow 0, wirelength +0.1%. The baseline probe without the hook died GRT-0183.
-- Signed QC sle_sc_v2 (has a macro, epyc2): 1,719 cut, overflow 0 on and off, wirelength +0.01%.
-- Signed hd_ctl_e / hd_st_m / hd_st_str: no obstructions, GRT byte-identical.
-- Proof v1 (first hook, no replay; epyc8 .../flow-obs-gcell-1121/host_e/hd_host_e, unit oth-ubuntu-2792729-1795271476, DONE): DRT-0255 gone, routed to the end. DRC 29, flat, all M7 at the u_epc macro top edge y 60.67: 26 Lef58EolKeepOut od[*] vs inst u_epc, 3 spacing to VDD/VSS. That is a NEW separate class (EPC macro M7 pin edge), not slivers. TT -66.49, FF -3.61.
-- Exposure (static estimator, reserved_sites.tcl only, no PG/macro; scratch file expo.py; counts are sliver gcells / zero-legal gcells): qwen_kvsys 43 of 43 types exposed (kv3_pv* ~18-21k / 7-9k). s81_head 5 of 5: hd_lep0N 14,943 / 5,697, hd_serdes 10,241 / 5,187, hd_mesh 8,184 / 3,665, hd_host_w 3,555 / 1,049, hd_host_e 713 / 437. No S81, QC or HBM wave kit carries reserved route obstructions.
+## Proof
+- split OK: $L/split2 (report.json: 2 windows clipped 5.56 pins/um, 16 cut lanes, latency rows latency_rows.json).
+- tree kw45/src_s81_pin_3c913dbdfb23_d8j6r1_1117_work_stripbody1121 (linked child of J6r1, published f67cf6a6).
+- strict bind + LATCHECK: ot-run unit oth-ubuntu-319614-1795284804 epyc10, $L/bind_job.sh, logs $L/bind1.log, latcheck1.*
+Next: on green -> ot-push-main, then rt private-spec s81 <piece> --tree <tree> --plan <tree>/physical/die_plan/s81/stripbody_lepeC/plan_c.json
+--bind-out $L/bind1 for strip_S, body, strip_N; run-item to floorplan; cell counts.
 
-## Running units (leave running)
-1. v2 proof hd_host_e with the full fix: epyc8 unit oth-ubuntu-3833325-1795274502. Kit /srv/opentallas-scratch2/claude/flow-obs-gcell-1121/host_e2/hd_host_e. Client log rtx-pro ~/flow-obs-gcell-1121-logs/host_e2_route.otrun.log.
-   NEXT: check that tt_setup_repair_grt.log shows OT_GRT_PG_REPLAY restored ... OT_OBS_GCELL_CAP and an OT_OBS_GCELL line. Then read the route DRC: 0 DRT-0255 and the residual class. If there is no DRT-0255 and GRT overflow is 0, push b62f5f340c, post, and cc FABLE-FIX-HEAD-LEP0N (hd_lep0N is the most exposed HEAD type).
-2. sdr2e lattice-snap A/B (inherited from OPUS-FIX-HEAD-SERDES-R4): epyc7 unit oth-ubuntu-3951418-1795264633. Log intel2 ~/opus-fix-head-serdes-r4-logs/sdr2e_route_e7.otrun.log. Evidence only: if DRT-0255 recurs, that confirms the snap does not cure the class. No relaunch.
-3. sdr2d route (hold-only): epyc9 unit oth-ubuntu-3513796-1795271147. Read its DRC only, and let it finish.
-4. Sweep: done (the numbers above). Raw output is in the scratch expo_*.tsv files.
-
-## Open items
-- After the push, file the EPC M7 pin-edge EOL class (host_e u_epc) with the HEAD owner or a flow lane.
-- The tap seed-side fix needs a CTS A/B on sdr2d (4_cts input) to prove the +91..+112 ps capture insertion is gone. Also wanted: a GRT estimator line for *_tb* chain nets with guide length > 10x their HPWL (not done).
-- Fable fix list item 5 (the route goal must not rewrite 4_cts.odb when 5_1_grt.odb exists; stamp 5_global_route.rpt PRE-REPAIR) is not started.
-- Audit: core kits' core_final_repair.tcl / core_drv_repair.tcl do not source grt_pre. Core kits have no reserved sites, so this is likely moot.
+## Update after stand-down (hook arm unit oth-ubuntu-1261313-1795279984 ended rc 1)
+- Clock-first route itself COMPLETED: phase 1 158 s, whole two-phase route 4783 s (base arm still at iteration ~15 then).
+- Then the harness's start/end_incremental usage report died GRT-0116: grt::read_segments resets allow-congestion. Fixed in the
+  epyc10 lane clone (hook re-arms ::grt::set_allow_congestion 1 after the merge); kits with grt_allow_cong.tcl were already covered.
+  The clkfirst arm will die the same way at its report step: its segments (out/clkfirst_p1.seg, clkfirst_p2.seg, clkfirst.seg)
+  survive. R2: add `grt::set_allow_congestion 1` before the report in h/arm.tcl, rerun hook (fixed tcl to <W>/h/), compare with base.
