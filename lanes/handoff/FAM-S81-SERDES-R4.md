@@ -12,3 +12,9 @@ Lane clone: epyc7 /srv/opentallas-scratch2/claude/fam-s81-serdes-core (clean, ma
 - dec_j6c (client PID 1603457, epyc8) -> signoff -> LEC -> export.
 - t4 a2 kw-s81-serdest4-2-75184 runs on rt c6a2270ccb02 (no cohort fix). Asked S81-J6-ASSEMBLY-R4 for tools sha >= a0fc9811a19 + retry key.
 - Then: private bind + LATCHECK (R3 Next 2), shell census, rows for all 11 types.
+
+## Update 09:3x
+- t4 a2 cancelled (cancel-rows, struct stop on the item; J6-ASSEMBLY to release after the tools bump). Private t4 kit: spec autopilot/private_specs/FAM-S81-SERDES-R4/s81_serdes__t4_1121074458 (tools a9ed808a98d5, epyc10), run-item intel2 PID 2092058. Post when it passes CTS; if run-item ends at geom, route it yourself.
+- t12/t14/t16: the offline cohort check is clean with both the old and the new model (epyc2 fam-s81-serdes-r4/cohort_offline). Rows left alone.
+- enc_j6a: routed LEC NOT EQUIVALENT (24 ch_q[448..471]) = the H0_SEQ_ONLY=0 constant-flop artifact; defines are at parity. DO NOT EXPORT. Synth-netlist LEC check: intel2 PID 3721361 (out enc_j6a/lec_kit/lec_synth).
+- main 87eed3536ba: split form u_enc = ot_s81_kp4_enc_core (H0_SEQ_ONLY=1); bench PASS / mut1 FAIL. New core kit s81fam_kp4_ench, build ench_j6a on epyc8, intel2 PID 3846312. Next: signoff.py -> lec.py (6_final.v) -> export only on EQUIVALENT. The hard_cores row for u_enc must name module ot_s81_kp4_enc_core.
