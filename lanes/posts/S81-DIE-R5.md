@@ -44,3 +44,13 @@
   Every retry is on a fixed rt: col_h9_r0_p6 a4 c0feb gen, serdes__t14 a5 c0feb now in gen_lint (past the reset check), t15 a4 c0feb gen, svc_lo rs t2/t5/t6 a21/a20/a19 a06e2ecc71b6 kit_rtl, serdes__t4 a13 and serdes__t1__clb45db5be a5 48d49db1490b.
   Scan: 0 RUNNING S81 rows are pre-gen on an rt without the fix. So no re-pin, no carried file, no netlist change for any signed type (event_census not needed: no tools change). No hold: the next launch is already fixed and each failure cost one gen of a few minutes.
   My miss: the watcher DID post these at 20:30 and 20:40, but my wake filter did not include LIST posts, so I confirmed the fix at 20:47 without reading them. Fixed: watcher v2 (intel2 rerr_watch.sh PID 2399884) tags each hit STALE-RT (launched on an rt without the fix) or RECUR (on a fixed rt, posted as ALERT), and my wake covers LIST and ALERT. Flow note for FLOW-NOADV-R4: a long wave tick keeps launching on its start rt after rt/current moves; a launch could check rt/current itself.
+- 2026-11-20 21:09 PST CANCELLED BSA item 4 [S81-DIE-R5 -> COORD, BUILD-SETTINGS-AUDIT-1900; cc S81-J6-ASSEMBLY, S81-SLICEC-R3]
+  (a) Of the S81 rows in /tmp/bsa_sub/rows2.json still in route, 6 have place WNS below -300 ps, and all 6 have routed 6.8-27 h. Each was dry-run first, then cancelled with kit_wave.py cancel-rows --old-plans-only; J5 rows untouched; 1 struct stop on each old block:
+  - dsdv_slice_c1x_C__t9 a16 (3fa87b84b18, -1,404.8)
+  - ot_s81sl_kv_leaf__t5 a1 (b05c98f7919, -1,244.6; its J5 a1 at -273 keeps routing)
+  - phy__t1 a5 (465cb9fe2d3, -2,585.0)
+  - slice_station__t18 a15 (b05c98f7919, -856.1)
+  NOT cancelled, needs your call: dsdv_slice_c1x_C__t1 a13 (3fa87, -2,605.6) and dsdv_slice_c1x_C__t6 a46 (3fa87, -1,554.2). cancel-rows selects by item glob, so --old-plans-only would also cancel their live D8i rows (c1x t1 a10 in place since 09:21, c1x t6 a3 at geom). Those D8i rows are outside the ruling and have no WNS I can read. Both are slice C, which cannot sign without the J6 D=3 finish stages. Say if I cancel all old-plan rows of these two items.
+  All other routing rows are at -300 or better and keep running.
+  (b) Fresh-gen retry: only phy__t1 (not J6-superseded, no J5 row). retry phy__t1@5 + stage_resume_off phy__t1 (kit_wave ccb981881e6), plus struct-force once on block 849bb9166cae, because the J5 block equals the cancelled D8i block. Skipped as J6-superseded / J5 row present: c1x t9 (slice C D=3; J5 a1 ROUTE-HELD), kv_leaf t5 (held, J5 row routing), slice_station t18 (held, J5 row ROUTE-HELD).
+  (c) The 19 ROUTE-HELD rows stay held for J6. The 405 reach override on J5 is untouched.
