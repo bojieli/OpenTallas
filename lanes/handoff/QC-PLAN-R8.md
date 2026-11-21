@@ -24,3 +24,17 @@
   Trial on V1 base: R/trial1 (ot-run).
 - V2b compose = base -> cb reset (R3, else R7 rleg) -> sites_v2b -> apply_lanes (+ft budget) -> R7 c345 steps -> r7_hop300 -> census; then 2-pass bind
   (bind -> re-site link_sites on real bound RTL -> final bind) because new in-row lane pads exist only after bind.
+
+## 21:3x state (R=epyc9 /srv/opentallas-scratch2/claude/qc-plan-r8/v2b)
+- On main: srdreg 2ddb19c08b; link_sites + test 1a0c00b146; --pc-slack + tests 04d2980e9c; ft_in_budget per-port 4c4455dd3a. V2 runtime rt/745c8f11e429 (has all).
+  rt/cca022294010 (R7 pin) was pruned: R/compose_v2b.sh uses rt 745c precheck.
+- V2b pass-1 compose R/c1 (RESET3=0 = R7 rleg reset rows): p_v2b b637003d0801, side_v2 8ed01c07ebdc; sites 0 legs >300 on all 17 cb types;
+  lanes 576 raised (sum 2029); knee 0; schema ok (rt 745c); census HOP 40/36 types (non-cb; same as V2a), UNREG_READ? 38.
+- Bind pass 1: R/bind_v2.sh PLAN SIDE RT OUT [R8] (tree = V1 live tree v1r6 + main ot_coll_tp8_static.sv) -> R/b1 (ot-run oth-ubuntu-2697363-1795239134).
+  Then: land_r8_derive.py derive plan b1/bind/bus_groups.json --like <tree r8> --out R/r8_v2.json; re-site cb with real bound RTL
+  (u_lpad_bc_i22/32 names), pass-2 compose with R3 reset rows (RESET3=1, needs rrgen-r3 qc/out/plan_final.json copied to
+  /srv/opentallas-scratch2/claude/rrgen-r3-copy/plan_final.json on epyc9), final bind, LATCHECK, G0 (qc-plan-r6/v1/g0.sh pattern), census x3, proof kits.
+- Lever 6 (cb tile insertion 818 vs 733 + SDC override): R8 helper agent fixing; stop item: no cb route release before it lands.
+- Tap-grid rows: only from TAP-GRID-2130 after its proof. Note: 120/128 QC types use clock.tap_mode density (tap_pitch_um unused; levers are
+  tap_radius_um / tap_target_sinks / tap_max_sinks / tap_span_um).
+- Proof p1 (fable-fix-qc-cb/proof/p1, cbn_q00__cl622f65d2) running on epyc9 since ~21:2x.
