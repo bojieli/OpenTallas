@@ -13,3 +13,7 @@ Read lanes/handoff/LOCKUP-STATION-R2.md for the form + baselines.
 
 ## Note 11-21
 - proof6 + QC2 started on main 38faab8511: only the R2 restore (u_fl_/u_lk_nk_ names, clock_taps + hop_latch_leaf) is active, NOT the name-free latch_restore.tcl of e88352084d (LATCH-SWAP-0045). On reading: count DFFLQx4/DFFHQx4 in 4_cts odb (expect 0 u_fl_nl swaps; any other swap = uncovered).
+
+## CODEX notes 11-21 02:22 PST
+
+- t39 proof6 actual post-hook CTS: TT -309.20 / TNS -16,338, FF -220.48 / TNS -260,263.6. TT repair retained at -291.38 / -11,770.78 versus the inherited b05c baseline -354.63 / about -16,400. Pre-GRT FF starts with 9,161 cross-tap ends (-218.14) versus 14,251 baseline (-275), and 2,108 port-out ends versus 1,884 baseline after seam exclusion. Hold repair still active in inherited E7 proof6. Wait for repaired hold and GRT before a plan row. Post-hook ODB census showed 5,146 DLLx2 RVT and zero residual DFFLQx4/DFFHQx4 (E7 sta/codex-p6/census.log). Filter removed 6,354 same-tap and 17,149 far hops, with 5,141 leaf latches connected. QC2 sle_ctl__cl67434795 admitted on intel1, in global placement.

@@ -47,3 +47,7 @@ Lane clone epyc10 .../m7pin-stripe-1116/repo: no changes.
 - RECT ONLY n3_turn successor is now actual RMIN SIGNED (TT80.66/actualFF0.34/DRC0), both archives exported, record c9c079 approved r340. spn_end same NF15 pin-rule proof remains LIVE intel1 client936055 (DRT iteration1,30%/10661); HEAD-SERDES-O owns final result.
 - EPC EOL trim source 1ef6fc4d571 is approved r334, reproducing measured LEF1633ae32 from original749af4 at clear0.261 without modifying original. Actual he10/he11r final macro EOL0. he11r NOT SIGNED: TT-35.69 passes academic setup, actual core FF-10.64 plus port issues, fixed M7 reset/clock short1. he12 pin/reservation correction placed and CTS passed, but initial GRT failed13 because approved M8 grant builder was omitted; NO restoration/new continuation exists yet. All keepouts must stay.
 - DRT0206 named-four-net force-rip A/B continues in existing epyc10 eco_ab206_rip4/i1t. No final connectivity verdict; no shared generic generator fix justified yet. Preserve all previous failed/inconclusive records.
+
+## CODEX notes 11-21 02:22 PST
+
+- Closed as a shared class by the 11-20 03:38 archive read. hd_host_e, hd_st_n3_turn, hd_spn_end, hd_ctl and all four implicated QC Rect Only types have signed records. Legacy named-net ECO stopped on a different DRT-0255 SRAM path. EOL trim and M6 down-access changes remain per class.
