@@ -633,12 +633,10 @@
    "hosts": [
     "epyc8",
     "epyc10",
-    "epyc9",
     "epyc7"
    ],
    "gen_hosts": [
     "epyc8",
-    "epyc9",
     "epyc10",
     "intel1",
     "epyc2",
@@ -647,7 +645,6 @@
    "place_prefer": [
     "epyc8",
     "epyc10",
-    "epyc9",
     "epyc7"
    ],
    "item_env": {
@@ -7156,7 +7153,6 @@
    "gen_hosts": [
     "epyc8",
     "epyc2",
-    "epyc9",
     "epyc10",
     "intel1",
     "epyc7"
@@ -7167,7 +7163,6 @@
     "intel1",
     "epyc8",
     "epyc10",
-    "epyc9",
     "epyc2",
     "intel2",
     "epyc7"
@@ -7415,7 +7410,6 @@
     "intel1",
     "epyc8",
     "epyc10",
-    "epyc9",
     "epyc7",
     "intel2",
     "epyc2"
@@ -37673,7 +37667,6 @@
     "hd_host_e@6": "HEAD rp21z10 (HEAD-99 READY+ADOPT 08:03, type-scoped to spn/spn_end/host_w/host_e); host_w launched despite open LEC mismatch (TYPE-HDHOSTW-LEC owns it)."
    },
    "gen_hosts": [
-    "epyc9",
     "epyc10",
     "epyc7"
    ],
@@ -37903,7 +37896,6 @@
     "intel1",
     "epyc8",
     "epyc10",
-    "epyc9",
     "epyc2",
     "intel2"
    ],
@@ -37912,7 +37904,6 @@
     "intel1",
     "epyc8",
     "epyc10",
-    "epyc9",
     "intel2",
     "epyc2"
    ],
@@ -40644,7 +40635,6 @@
     "slw_st_b_v1__cl6357f1cc__pv6ace3e48@3": "FLOW-FIX: QC-FE-1118 (COORD 11-18, FABLE-FIX-QC-STA): attempt 3 died only on the old vclk_measured_hold.tcl (OT_VCLK_MEASURED_HOLD pin-register mean unavailable); fixed on main e1ce3e0b234; the newer attempt is no real retry of it; relaunch unchanged design"
    },
    "gen_hosts": [
-    "epyc9",
     "epyc8",
     "epyc2",
     "intel1",
@@ -40656,7 +40646,6 @@
     "intel1",
     "epyc8",
     "epyc10",
-    "epyc9",
     "epyc2",
     "intel2"
    ],
@@ -40665,7 +40654,6 @@
     "intel1",
     "epyc8",
     "epyc10",
-    "epyc9",
     "intel2",
     "epyc2"
    ],
