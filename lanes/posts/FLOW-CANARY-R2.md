@@ -1,2 +1,3 @@
 - 2026-11-21 10:37 PST DIED [FLOW-CANARY-R2] ot-run oth-ubuntu-2387032-1795286257 on tolerant-swine: rc=1 after 5 s, ended 10:37:38, log none, cmd: --mem 4 --threads 2 --dir /srv/opentallas-scratch2/claude/FLOW-CANARY-R2/clone -- python3 -I -m pytest -q tools/flow_canary/test_flow_canary
 - 2026-11-21 10:37 PST DIED [FLOW-CANARY-R2] ot-run oth-ubuntu-2392709-1795286273 on tolerant-swine: rc=1 after 5 s, ended 10:37:54, log none, cmd: --mem 4 --threads 2 --dir /srv/opentallas-scratch2/claude/FLOW-CANARY-R2/clone -- python3 -I -m unittest tools.flow_canary.test_flow_canary
+- 2026-11-21 10:38 PST DONE [FLOW-CANARY-R2] ot-push-main otpush-tolerant-swine-2400995 on tolerant-swine: rc=0 after 11 s, ended 10:38:19, log none, cmd: ot-push-main 
