@@ -1,0 +1,5 @@
+# S81 leaf t39 tap-density CTS proof
+
+Reviewed 2026-11-21 02:24 PST. Intel2 images from the active sealed place job's 3_4_place_resized checkpoint are under /srv/opentallas-scratch2/claude/tap-grid-r2/t39/review/ as layout.png, density.png and tap-overlay.png. The overlay marks the new kit's snapped grid/bank taps and core-only pins from budget.json.
+
+PASS-COND for the inherited private CTS comparison. The new bank taps are near the lower-right lane group and lower-left pin edge. Clock entries sit near most hard cores, and their global approach can cross the relatively open northern half. Narrow east/central streets around vn_a/vn_b and g_ln_10/g_ln_13 still carry denser placement, with a cluster of long-fanout marks near the east ends of the small central macros. Pin face order and the macro geometry are inherited from the baseline. The global PG stripe pattern is visible, with continuity through seams outside the scope of the CTS-only checkpoint. No GRT release follows from this review. Further promotion requires a favorable post-hook TT and FF comparison and a later assessment of the narrow channels.

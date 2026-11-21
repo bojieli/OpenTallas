@@ -43,3 +43,8 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
   clock.tap_cap_cascade; test_tap_cap_cascade.py; mock repair of test_clock_taps_cap_recheck/groups (ord::get_db). Posted to FAM-S81-COL-R2 + FAM-KV-IOPC with rows
   (col: tap_grid or tap_max_sinks 1000 + cascade; pc_v3: tap_grid regs = bank taps, 67,193 sinks on 39 x 1,200 cannot fit).
   The t39 proof kit was generated on rt f3db2d0e628f (before 17960d767b): no cascade in it (its plan cap is 1000 already).
+
+## CODEX notes 11-21 02:24 PST
+
+- t60 and raise100 both failed the inherited rollout comparison on FF hold. Control TT/FF -222.55/-57.22 ps, r2 -207.06/-68.54, raise100 -206.83/-93.09. No volume rows. 
+- t39 current placement is actually running on intel2 in sealed job ot_s81sl_leaf__t39-place-tolerant-swine-775262-1795253535, with output copy-back to intel1, and the inherited chain follows to CTS. Placement checkpoint review rendered and examined, PASS-COND for this isolated proof; see results/geom_review/tap-grid-r2-t39-1121.md.
