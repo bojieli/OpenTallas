@@ -1771,7 +1771,13 @@ AXIS_LAYERS = {"y": ["M5", "M7"], "x": ["M4", "M6"]}
 
 
 def _lane_num(raw):
-    return max(int(m.group(1)) for m in (re.match(r"^L(\d+)$", l["id"]) for l in raw["lanes"]) if m)
+    numbers = (re.fullmatch(r"L(\d+)", lane["id"]) for lane in raw["lanes"])
+    return max((int(match.group(1)) for match in numbers if match), default=0)
+
+
+def _lane_sort_key(lid):
+    match = re.fullmatch(r"L(\d+)", lid)
+    return (0, int(match.group(1))) if match else (1, lid)
 
 
 class Event:
@@ -2831,7 +2837,7 @@ class Event:
                     d += n - o
             return d
         rows = []
-        for lid in sorted(changed, key=lambda x: int(x[1:])):
+        for lid in sorted(changed, key=_lane_sort_key):
             c = changed[lid]
             dd = defect(lid)
             rel = f"{self.spec['plan']} md5 {self.rep['base_md5']} {lid} {c['old']} cycles"

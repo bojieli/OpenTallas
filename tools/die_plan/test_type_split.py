@@ -509,3 +509,15 @@ def test_split_census_keeps_generated_instance_indices(tmp_path):
     assert result["intra_pin_routes"] == [
         {"hub": "p", "src": "u", "dst": "u", "frm": 0, "to": 1, "port": "rq", "bits": 1},
     ]
+
+
+
+def test_named_h8_lanes_allow_numeric_split_lane_allocation():
+    names = ["attn__svc_9__svc_8", "rsv__svc_8__svc_9", "attn__svc_8__svc_9"]
+    raw = {"lanes": [{"id": lane} for lane in names]}
+    assert TS._lane_num(raw) == 0
+
+    mixed = names + ["L11", "L2"]
+    raw = {"lanes": [{"id": lane} for lane in mixed]}
+    assert TS._lane_num(raw) == 11
+    assert sorted(mixed, key=TS._lane_sort_key) == ["L2", "L11", *sorted(names)]
