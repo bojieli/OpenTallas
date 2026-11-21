@@ -1483,7 +1483,8 @@ def face_sites(P, tn):
             s = (j + 0.5) * L / m
             x, y = {"S": (s, INSET_UM), "N": (s, h - INSET_UM), "W": (INSET_UM, s), "E": (w - INSET_UM, s)}[face]
             if boxes:
-                x, y = push_off((x, y), boxes, box_out)
+                with site_rule(P):
+                    x, y = push_off((x, y), boxes, box_out)
             x, y = _snap(P, x, y)
             for _ in range(8):           # never two pins on one spot (GRT-0080)
                 if not any(abs(x - a) < 1.0 and abs(y - b) < 1.0 for a, b in taken):
@@ -1512,7 +1513,8 @@ def corner_sites(P, tn):
         for x, y in ((INSET_UM, INSET_UM), (w - INSET_UM, INSET_UM), (w - INSET_UM, h - INSET_UM),
                      (INSET_UM, h - INSET_UM)):
             if boxes:
-                x, y = push_off((x, y), boxes, box_out)
+                with site_rule(P):
+                    x, y = push_off((x, y), boxes, box_out)
             x, y = _snap(P, x, y)
             if not any(abs(x - a) < 1.0 and abs(y - b) < 1.0 for a, b in taken):
                 out.append((x, y))
@@ -1557,6 +1559,13 @@ def wf_solve(P):
     solve, within hop) - take the entry line from that site (median over instances; axis and entry face from the side
     the parent sits on) and the exit line from the column child's entry, re-solve with the pinned parents and the line
     sites, until nothing moves (<= 5 passes)."""
+    # Physical pin emission can query the cached wavefront before any type
+    # tree is built. Resolve it under the plan rule regardless of the caller.
+    with site_rule(P):
+        return _solve_wavefront(P)
+
+
+def _solve_wavefront(P):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     if "wf_solve" in cache:
         return cache["wf_solve"]

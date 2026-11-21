@@ -469,6 +469,38 @@ def test_bound_site_rule_interior_keeps_the_pre_legal_site_test():
     assert not RT._free(sliver, boxes, box_out)
 
 
+
+def test_wavefront_pin_queries_apply_plan_site_rule_before_type_tree(monkeypatch):
+    from types import SimpleNamespace
+
+    c = RT.CLEAR_UM
+    boxes = [(a-c, b-c, e+c, d+c) for a, b, e, d in
+             ((86, 993.6, 328, 1088.6), (86, 1097.3, 328, 1200.0))]
+    bounds, sliver = (0.0, 0.0, 600.0, 2000.0), (219.58, 1092.96)
+    monkeypatch.setattr(RT, "bound_native_contract", lambda plan, kind: None)
+    monkeypatch.setattr(RT, "wavefront", lambda plan: True)
+    monkeypatch.setattr(RT, "face_sites", lambda plan, kind: [{"xy": sliver}])
+
+    def solve(plan):
+        selected = [0] if RT._free(sliver, boxes, bounds) else []
+        answer = {"outs": {"part": selected}}
+        plan._reset_tree_cache["wf_solve"] = answer
+        return answer
+
+    monkeypatch.setattr(RT, "_wf_solve_once", solve)
+
+    def plan(rule):
+        return SimpleNamespace(reset={"relay_site_rule": rule}, types={"part": {}})
+
+    pin_first = plan("interior")
+    assert RT.out_pins(pin_first, "part") == [("rst_o_0", *sliver)]
+    tree_first = plan("interior")
+    with RT.site_rule(tree_first):
+        RT.wf_solve(tree_first)
+    assert RT.out_pins(pin_first, "part") == RT.out_pins(tree_first, "part")
+    assert RT.out_pins(plan("legal"), "part") == []
+
+
 def test_bound_plan_cap_wins_over_default_and_env(monkeypatch):
     """BOUND-PLAN-CAP (HEAD-PLAN-R16 11-20): reset.reach_cap_um is plan authority for the reset hop cap: it wins over the tool
     default and OT_RESET_HOP_CAP_UM; a receipt cap (bound_reset_hop_cap) still wins over it; absent = default / env."""
