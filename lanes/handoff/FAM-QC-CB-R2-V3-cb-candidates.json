@@ -9,45 +9,146 @@
     {
       "plan": "paired_s2_v2_zero_egress.json",
       "sha256": "46d9909ba7d7ec6cb566330165e52364bbfe675292857a9c919c13a1a8d5d89a",
-      "types": ["cbf_q00_s2", "cbn_q01"],
-      "keys": ["buses", "internal_stations", "relay_sites", "lanes.fixed_cycles", "latency.lanes", "R8", "CB16"],
+      "types": [
+        "cbf_q00_s2",
+        "cbn_q01__cldd6ea846"
+      ],
+      "keys": [
+        "buses",
+        "internal_stations",
+        "relay_sites",
+        "lanes.fixed_cycles",
+        "latency.lanes",
+        "R8",
+        "CB16"
+      ],
       "cycles": "One physical input station, three net CB16 banks removed, same 48 QFT roots and 96 region parameters. Existing outbound stage count.",
-      "model_um": {"bc_o01": 363.66, "bc_o11": 360.26},
+      "model_um": {
+        "bc_o01": 363.66,
+        "bc_o11": 360.26
+      },
       "review": "s2_zero_egress_review.png",
-      "native": "paired_s2_zero_egress_native, epyc7 oth-ubuntu-2169476-1795303846",
-      "status": "PENDING native and physical timing"
+      "native": "paired_s2_zero_egress_native, epyc7 oth-ubuntu-2169476-1795303846; strict 0, 130 types, 1921/1921 LATCHECK",
+      "status": "PENDING actual placement and timing"
     },
     {
       "plan": "paired_q10_q11_form_r2.json",
       "sha256": "f2e9f677c8190588b8900f236232ada161c5d74a40982c756b565c52d1ed2ade",
-      "types": ["cbx_q10__cl94a12200_h", "cbn_q11__cl5cc92dfe"],
-      "keys": ["relay_sites", "reset.inst_taps"],
+      "types": [
+        "cbx_q10__cl94a12200_h",
+        "cbn_q11__cl5cc92dfe"
+      ],
+      "keys": [
+        "relay_sites",
+        "reset.inst_taps"
+      ],
       "cycles": 0,
-      "model_um": {"bc_o31_registered_to_face": 296.42, "bc_i22_epoch": 313.56, "bc_i32_epoch": 259.99, "x_2_3_reset": 222.738},
+      "model_um": {
+        "bc_o31_registered_to_face": 296.42,
+        "bc_i22_epoch": 313.56,
+        "bc_i32_epoch": 259.99,
+        "x_2_3_reset": 222.738
+      },
       "review": "paired_q10_q11_form_review.png",
-      "native": "paired_q10_q11_native_r2, epyc7 oth-ubuntu-2259371-1795304170",
-      "status": "PENDING native and physical timing"
+      "native": "paired_q10_q11_native_r2, epyc7 oth-ubuntu-2259371-1795304170; strict 0, 130 types, 1921/1921 LATCHECK",
+      "status": "PENDING actual placement and timing"
     },
     {
       "plan": "q00_cland_bc_i10_site_plan.json",
       "sha256": "97433474b344ed509c5259c873c81507d3c9a2f7a51f90a05c12e46245a1157f",
-      "types": ["cbn_q00__cl622f65d2", "cbn_q00__cldbcda913"],
-      "keys": ["relay_sites", "internal_stations.regs_um"],
+      "types": [
+        "cbn_q00__cl622f65d2",
+        "cbn_q00__cldbcda913"
+      ],
+      "keys": [
+        "relay_sites",
+        "internal_stations.regs_um"
+      ],
       "cycles": 0,
-      "model_um": {"bc_i10": 379.116, "y_o00": 393.12},
+      "model_um": {
+        "bc_i10": 379.116,
+        "y_o00": 393.12
+      },
       "note": "Both actual placements have zero over-reach bc_i00 groups. Bci10 changes the existing landing pad and epoch bank sites. Y_o00 retains both stations.",
       "status": "PENDING native and physical timing"
     },
     {
       "plan": "q01_clab_gen_r2/launch/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
       "sha256": "11d62f3dbde1415bad3ffbeebf4d9f9c42c20a625fdfd5c291b75c72ea25de65",
-      "types": ["cbn_q01__clab6e67f2", "cbn_q01__cld9ff4c40"],
-      "keys": ["budgets.r_dly_lockup.<type>.inst_seg.u_d16_u_t_1_3_n_y"],
+      "types": [
+        "cbn_q01__clab6e67f2",
+        "cbn_q01__cld9ff4c40"
+      ],
+      "keys": [
+        "budgets.r_dly_lockup.<type>.inst_seg.u_d16_u_t_1_3_n_y"
+      ],
       "source_main": "25e34125ff37",
       "cycles": 0,
       "model_um": 272.16,
       "native": "clab6e67f2 GEN passed epyc7 oth-ubuntu-1670688-1795302225, exact 8x2 segments. Private place waits for eligible QC gen host.",
       "status": "PENDING actual placement and timing"
+    },
+    {
+      "plan": "v3_nb_fixed_roots.json",
+      "sha256": "2df464baaab2ad56bc4e0b7548f29ea45ae8f6386964bc45b0f6500dce492ff5",
+      "types": [
+        "cbf_q01",
+        "cbf_q01_s2",
+        "cbn_q01__clab6e67f2",
+        "cbn_q01__cld9ff4c40",
+        "cbn_q01__cldd6ea846"
+      ],
+      "keys": [
+        "internal_stations.regs_um",
+        "lanes.fixed_cycles",
+        "latency.lanes",
+        "R8",
+        "CB16"
+      ],
+      "cycles": "48 existing transport corridors gain one physical NB station each, exact CB16 pad removal −48. All 48 QFT roots and 96 region params preserved.",
+      "model_um": 332.64,
+      "review": "nb_i12_exact_review.png",
+      "native": "v3_nb_fixed_roots_native, epyc7 unit 2329784",
+      "status": "PENDING native and physical timing"
+    },
+    {
+      "plan": "v3_cb_site_only_bundle.json",
+      "sha256": "4c86a0e44d70fbb995c825355b24b0f2f376deab4c776f353e820a064a8a5b54",
+      "types": [
+        "cbf_q00__cl1b5a6458",
+        "cbn_q00__cl622f65d2",
+        "cbn_q00__cldbcda913",
+        "cbx_q10__cl89936551",
+        "cbx_q10__cl89936551_h",
+        "cbx_q10__cl94a12200_h"
+      ],
+      "keys": [
+        "relay_sites",
+        "internal_stations"
+      ],
+      "cycles": 0,
+      "model_um": {
+        "cbf_q00_bc": 393.922,
+        "cbn_q00_bc_and_y": 393.12,
+        "cbx_i30": 397.067
+      },
+      "evidence": "Exact V2 flat q00 placed ingress 667/659 µm and d6 up to 926 µm. Existing station counts, port windows, hard macro locations and measured t24/t25/t93/t100 taps preserved. The three CBX i30 cases measure 434–435 µm with zero over-cycle before re-siting.",
+      "native": "v3_cb_site_only_native, epyc7 unit 2500497",
+      "status": "PENDING native and physical timing"
+    },
+    {
+      "types": [
+        "cbf_q01_s2"
+      ],
+      "keys": [
+        "clock.landing_contract.bands.serdes_tx_tx_flit_i.pinslot_order"
+      ],
+      "placement_order": "lsb_low",
+      "source_candidate": "058cd6666ce",
+      "cycles": 0,
+      "review": "epyc2:/srv/opentallas-scratch2/claude/fam-qc-cb-r2/q01_s2_serdes_ring_review.png",
+      "evidence": "Actual S-face pin x increases from 289.952 to 391.704 across 598 bits. Reversed storage tag forced cursor fallback for all 3444 ring flops. True post-hook CTS TT −205.23 on the half-cycle ring path. Ascending placement replay started from original floorplan with same boundary pins.",
+      "status": "PENDING placed pin proximity and TT/FF"
     }
   ],
   "broad_station_trial": {
