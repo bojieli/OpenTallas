@@ -31,3 +31,11 @@ Family: S81 col_h9_r0_p1..p6 (~60 unsigned). Predecessor history: lanes/handoff/
 - chainb2 (pid 2770520) in kit_rtl/gen (dry_gen) since 06:12 -> config.mk diff -> rsync gen dir to epyc8+epyc10 -> ot-run route from epyc8 --hosts epyc8,epyc10.
 - COORD option 1 (stack on COLROM plan) -> I posted a change: J7 v2 (S81-J6-ASSEMBLY-R3 candJ7a/b) already carries RDX + mkdepth405 + mkxalign + mkxo; tree1 is not a manifest tree. Plan: build rep from the J7 published src_manifest tree when J7b gates green. Scripts staged on epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0 (mkdepth405.py, mkxalign_r3.py, mkxo.py) in case COORD insists.
 - Waiters: route jobs (h9wait 1 1), G0, chainb2, COLROM gate1, answers (h9ans).
+## 08:2x
+- G0 (intel1 g0.sh): base J5 87 errors; new1 and new2 87 inherited, 0 new, 0 fixed (s81-j6/g0cmp.py copy in lane dir).
+- chainb2 DONE: run-item dry_gen rc 0; config.mk normalized diff vs J5 wave kit 0 lines (111 keys) + kit_effective_env/flow_tag equal; kit rsync'd to epyc8+epyc10; route client epyc8 pid 3322281 (log <attempt_1>/gen/route_otrun.log on epyc8) -> ot-run picked epyc10 (epyc8 HOLD disk-ETA), unit oth-ubuntu-3506838-1795272809, run dir = kit dir on epyc10 (.../wave/root/items/<T>/attempt_1/gen/<T>/run). 08:2x in CTS. Waiter: ot-wait 3322281 on epyc8.
+- xo D3 placed read (OT_RELAY_POLY lines in 3_*.log) posted to S81-J6-ASSEMBLY-R4: p1 max 1738 (hop 290), p4/p5 2031 (339), p2 D3 kit placed 2114 (352). D2 over 405 on p2/p4/p5.
+- NOTE: OT_MAXWIRE_POST_SKIP=1 was removed from wave item_env (col_h9_r0_*) at 05:42; bind2 kit has it (matches J5 wave kit). J7b rep build: take env from CURRENT kit_wave die_gen_env + item_env (no MAXWIRE skip) and diff vs the newest wave kit of the type.
+- rt/bbcc7f022a8e is gone on intel2 (rt current -> 1ba6a4eb9484): any new wave spec must use a live tools_rt.
+- COLROM gate1 BIND PASS 08:11 (216 col types; LATCHECK 873/873).
+- Next: route read (post-repair final db only; DRC0, TT >= -42, FF hold >= 0, LEC); J7b publish -> rep build from manifest tree.
