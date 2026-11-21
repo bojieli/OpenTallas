@@ -14392,6 +14392,27 @@ def rotate_dies(rows, die_of, pass_n):
     return sorted(rows, key=lambda x: rank[die_of(x)])
 
 
+LIVE_CURRENT = ("RUNNING", "LAUNCHING", "ENQUEUED")
+
+
+def superseded_unstarted(cfg, st, rec):
+    """OWNER 11-20 23:2x (COORD): an old-plan row that has not begun (no gen dir under its attempt, never admitted) is not started while the same type has a row on the die's CURRENT event that is
+    queued or running.  No cancel, no FAIL: the row just waits (running old-plan kits keep running, any-plan sign-off counts).  -> the blocking current-event key, or ''"""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    cur = d.get("event")
+    if not cur or not rec.get("event") or rec.get("event") == cur or rec.get("status") in LIVE_CURRENT:
+        return ""
+    if rec.get("started") or rec.get("unit") and rec.get("status") not in ("RETRY-INFRA", "FAIL"):
+        return ""
+    work = rec.get("work") or ""
+    if work and os.path.isdir(os.path.join(work, "gen")):
+        return ""
+    for k, o in (st.get("items") or {}).items():
+        if o.get("die") == rec.get("die") and o.get("item") == rec.get("item") and o.get("event") == cur and o.get("status") in LIVE_CURRENT:
+            return k
+    return ""
+
+
 def infra_relaunch_due(cfg, rec):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
     if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
@@ -16313,6 +16334,10 @@ def _step(AP, ap_dir):
             AP.log(f"KIT-WAVE COUNTED {rec['die']}/{rec['item']}: not relaunched")
             continue
         if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
+            _sup = superseded_unstarted(cfg, st, rec)
+            if _sup:
+                AP.log(f"KIT-WAVE LAUNCH-SKIP SUPERSEDED {rec['die']}/{rec['item']}@{rec.get('attempt')}: event {rec.get('event')} is not current and {_sup} (current event) is queued or running")
+                continue
             if load_hold(cfg, rec["die"], rec["item"], rec.get("parent_item"), core_module(rec["item"])):
                 held[rec["die"]] = held.get(rec["die"], 0) + 1
                 continue                                 # stays RETRY-INFRA, next tick
