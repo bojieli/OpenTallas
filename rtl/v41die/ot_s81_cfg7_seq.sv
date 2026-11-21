@@ -43,6 +43,14 @@
 // Gate: tb_ot_s81_cfg7_seq.sv +define+TB_CFG7_PINREG (lockstep against the reference loader behind the same delays);
 // negative control +define+OT_S81_CFG7_MUT_PRDL (capture 1 edge early) must FAIL.  PINREG = 0 is byte-for-byte the
 // previous behaviour.
+// RD_EXTRA (FAM-S81-COL 2026-11-21, COORD ruling: +1 cycle pre-approved): the macro read loop a/ce out flop -> ROM -> q in flop
+// leaves 833 - ROM clk->q (514-550 ps) = ~300 ps for wire + setup + skew; ROM-to-sequencer distances of 230-350 um fail it
+// (-142 ps, col_h9_r1).  RD_EXTRA = 1 declares ONE extra posedge stage on every q bus between ROM and this tile (a relay_depth
+// sink row on the sequencer q pins puts it at the ROM pin): the capture side and the go side (DL) run DL = 2 + RD_EXTRA edges
+// behind the loader, so lc -> cfg / go_e / st / go_tag is +4 + RD_EXTRA edges and lc -> a / ce stays +2.  go and cfg share DL, so
+// they stay aligned (no handshake change).  Needs PINREG = 1.  RD_EXTRA = 0 is byte-for-byte the previous behaviour.
+// Gate: tb_ot_s81_cfg7_seq.sv +define+TB_CFG7_PINREG +define+TB_CFG7_RDX1 (the bench puts the stage on the q buses and delays the
+// reference one more edge); negative control +define+OT_S81_CFG7_MUT_PRDL still fails.
 // ---------------------------------------------------------------------------
 module ot_s81_cfg7_seq_local #(
     parameter integer NSEG = 8,
@@ -52,6 +60,7 @@ module ot_s81_cfg7_seq_local #(
     parameter integer LAYOUT = 0,
     parameter integer LOCAL_COPY = 0,
     parameter integer PINREG = 0,
+    parameter integer RD_EXTRA = 0,
     parameter integer CW = 3 * NSEG + 1,
     parameter integer AW = $clog2(CW << PHW)
 ) (
@@ -215,25 +224,28 @@ module ot_s81_cfg7_seq_local #(
     wire          ev1 = 1'b0;
 `endif
     generate if (PINREG != 0) begin : g_dl
-        reg [1:0] d_run, d_cgo, d_st, d_go, d_pend, d_ev1;
-        reg [4:0] d_k [0:1];
-        reg [2:0] d_np [0:1];
-        reg [AW-13:0] d_bk [0:1];
+        localparam integer DLN = 2 + RD_EXTRA;
+        reg [DLN-1:0] d_run, d_cgo, d_st, d_go, d_pend, d_ev1;
+        reg [4:0] d_k [0:DLN-1];
+        reg [2:0] d_np [0:DLN-1];
+        reg [AW-13:0] d_bk [0:DLN-1];
+        integer di;
         always @(posedge clk[0] or negedge rst_c)
-            if (!rst_c) begin d_run <= 2'b00; d_cgo <= 2'b00; d_st <= 2'b00; d_go <= 2'b00; d_pend <= 2'b00; d_ev1 <= 2'b00; end
+            if (!rst_c) begin d_run <= '0; d_cgo <= '0; d_st <= '0; d_go <= '0; d_pend <= '0; d_ev1 <= '0; end
             else begin
-                d_run <= {d_run[0], ld_run}; d_cgo <= {d_cgo[0], cfg_go}; d_st <= {d_st[0], ld_start};
-                d_go <= {d_go[0], go}; d_pend <= {d_pend[0], pend}; d_ev1 <= {d_ev1[0], ev1};
+                d_run <= {d_run[DLN-2:0], ld_run}; d_cgo <= {d_cgo[DLN-2:0], cfg_go}; d_st <= {d_st[DLN-2:0], ld_start};
+                d_go <= {d_go[DLN-2:0], go}; d_pend <= {d_pend[DLN-2:0], pend}; d_ev1 <= {d_ev1[DLN-2:0], ev1};
             end
         always @(posedge clk[0]) begin
-            d_k[0] <= ld_k; d_k[1] <= d_k[0]; d_np[0] <= ld_np; d_np[1] <= d_np[0]; d_bk[0] <= bank_q; d_bk[1] <= d_bk[0];
+            d_k[0] <= ld_k; d_np[0] <= ld_np; d_bk[0] <= bank_q;
+            for (di = 1; di < DLN; di = di + 1) begin d_k[di] <= d_k[di-1]; d_np[di] <= d_np[di-1]; d_bk[di] <= d_bk[di-1]; end
         end
-        assign ld_run_x = d_run[1]; assign cfg_go_x = d_cgo[1]; assign ld_start_x = d_st[1]; assign go_x = d_go[1];
-        assign pend_x = d_pend[1]; assign ev1_x = d_ev1[1]; assign ld_k_x = d_k[1]; assign ld_np_x = d_np[1];
+        assign ld_run_x = d_run[DLN-1]; assign cfg_go_x = d_cgo[DLN-1]; assign ld_start_x = d_st[DLN-1]; assign go_x = d_go[DLN-1];
+        assign pend_x = d_pend[DLN-1]; assign ev1_x = d_ev1[DLN-1]; assign ld_k_x = d_k[DLN-1]; assign ld_np_x = d_np[DLN-1];
 `ifdef OT_S81_CFG7_MUT_PRDL
-        assign bank_x = d_bk[0];             // negative control: payload selected one edge early
+        assign bank_x = d_bk[DLN-2];         // negative control: payload selected one edge early
 `else
-        assign bank_x = d_bk[1];
+        assign bank_x = d_bk[DLN-1];
 `endif
     end else begin : g_nodl
         assign ld_run_x = ld_run; assign cfg_go_x = cfg_go; assign ld_start_x = ld_start; assign go_x = go;
@@ -321,7 +333,8 @@ module ot_s81_cfg7_seq_bf_local #(
     parameter integer NROM = 7,
     parameter integer LAYOUT = 0,
     parameter integer LOCAL_COPY = 0,
-    parameter integer PINREG = 0
+    parameter integer PINREG = 0,
+    parameter integer RD_EXTRA = 0
 ) (
     input  wire [0:0]          clk,
     input  wire [0:0]          rst_n,
@@ -337,7 +350,7 @@ module ot_s81_cfg7_seq_bf_local #(
     output wire               go_local
 );
     wire [1:0] go_tag_0;      // constant 0 at PQ 0
-    ot_s81_cfg7_seq_local #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0), .LAYOUT(LAYOUT), .LOCAL_COPY(LOCAL_COPY), .PINREG(PINREG)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
+    ot_s81_cfg7_seq_local #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0), .LAYOUT(LAYOUT), .LOCAL_COPY(LOCAL_COPY), .PINREG(PINREG), .RD_EXTRA(RD_EXTRA)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
         .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
         .q0(q0), .q1(q1), .q2(q2), .q3(q3), .q4(q4), .q5(q5), .q6(q6),
         .cfg(cfg), .go_e(go_e), .st(st), .ef(2'b00), .go_tag(go_tag_0), .ce_local(ce_local), .cfg_local(cfg_local), .go_local(go_local));
@@ -351,6 +364,7 @@ module ot_s81_cfg7_seq #(
     parameter integer PQ = 0,
     parameter integer LAYOUT = 0,
     parameter integer PINREG = 0,
+    parameter integer RD_EXTRA = 0,
     parameter integer CW = 3 * NSEG + 1,
     parameter integer AW = $clog2(CW << PHW)
 ) (
@@ -366,7 +380,7 @@ module ot_s81_cfg7_seq #(
     input  wire [1:0]          ef,          // PQ: {bank_free, sh_free} of the element
     output wire [1:0]          go_tag       // PQ: the op tag that rides with go
 );
-    ot_s81_cfg7_seq_local #(.NSEG(NSEG),.PHW(PHW),.NROM(NROM),.PQ(PQ),.LAYOUT(LAYOUT),.PINREG(PINREG),.CW(CW),.AW(AW)) u_impl (.clk(clk),.rst_n(rst_n),.lc(lc),.a(a),.ce0(ce0),.ce1(ce1),.ce2(ce2),.ce3(ce3),.ce4(ce4),.ce5(ce5),.ce6(ce6),.q0(q0),.q1(q1),.q2(q2),.q3(q3),.q4(q4),.q5(q5),.q6(q6),.cfg(cfg),.go_e(go_e),.st(st),.ef(ef),.go_tag(go_tag));
+    ot_s81_cfg7_seq_local #(.NSEG(NSEG),.PHW(PHW),.NROM(NROM),.PQ(PQ),.LAYOUT(LAYOUT),.PINREG(PINREG),.RD_EXTRA(RD_EXTRA),.CW(CW),.AW(AW)) u_impl (.clk(clk),.rst_n(rst_n),.lc(lc),.a(a),.ce0(ce0),.ce1(ce1),.ce2(ce2),.ce3(ce3),.ce4(ce4),.ce5(ce5),.ce6(ce6),.q0(q0),.q1(q1),.q2(q2),.q3(q3),.q4(q4),.q5(q5),.q6(q6),.cfg(cfg),.go_e(go_e),.st(st),.ef(ef),.go_tag(go_tag));
 endmodule
 
 // Preserve the released top-level pin and parameter contract.
@@ -375,7 +389,8 @@ module ot_s81_cfg7_seq_bf #(
     parameter integer PHW = 10,
     parameter integer NROM = 7,
     parameter integer LAYOUT = 0,
-    parameter integer PINREG = 0
+    parameter integer PINREG = 0,
+    parameter integer RD_EXTRA = 0
 ) (
     input  wire [0:0]          clk,
     input  wire [0:0]          rst_n,
@@ -387,5 +402,5 @@ module ot_s81_cfg7_seq_bf #(
     output wire [0:0]          go_e,
     output wire [1:0]          st
 );
-    ot_s81_cfg7_seq_bf_local #(.NSEG(NSEG),.PHW(PHW),.NROM(NROM),.LAYOUT(LAYOUT),.PINREG(PINREG)) u_impl (.clk(clk),.rst_n(rst_n),.lc(lc),.a(a),.ce0(ce0),.ce1(ce1),.ce2(ce2),.ce3(ce3),.ce4(ce4),.ce5(ce5),.ce6(ce6),.q0(q0),.q1(q1),.q2(q2),.q3(q3),.q4(q4),.q5(q5),.q6(q6),.cfg(cfg),.go_e(go_e),.st(st));
+    ot_s81_cfg7_seq_bf_local #(.NSEG(NSEG),.PHW(PHW),.NROM(NROM),.LAYOUT(LAYOUT),.PINREG(PINREG),.RD_EXTRA(RD_EXTRA)) u_impl (.clk(clk),.rst_n(rst_n),.lc(lc),.a(a),.ce0(ce0),.ce1(ce1),.ce2(ce2),.ce3(ce3),.ce4(ce4),.ce5(ce5),.ce6(ce6),.q0(q0),.q1(q1),.q2(q2),.q3(q3),.q4(q4),.q5(q5),.q6(q6),.cfg(cfg),.go_e(go_e),.st(st));
 endmodule

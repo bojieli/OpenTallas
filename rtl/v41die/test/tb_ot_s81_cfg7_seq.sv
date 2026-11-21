@@ -18,8 +18,13 @@
 // macro reads, extent, multi-enable) is unchanged.
 module tb_ot_s81_cfg7_seq;
     parameter integer PQ = 0;
+`ifdef TB_CFG7_RDX1
+    localparam integer RDX = 1;
+`else
+    localparam integer RDX = 0;
+`endif
 `ifdef TB_CFG7_PINREG
-    localparam integer PINREG = 1, OD = 3, GD = 4;
+    localparam integer PINREG = 1, OD = 3 + RDX, GD = 4 + RDX;
 `else
     localparam integer PINREG = 0, OD = 0, GD = 0;
 `endif
@@ -68,13 +73,13 @@ module tb_ot_s81_cfg7_seq;
         .e_bank_free(r_ef[1]), .cm_a(cm_a), .cm_q(payload[cm_a]), .c_v(rv0), .c_a(ra0), .c_d(rd0), .go_e(rge0),
         .ld_busy(rbusy0), .fault(rfault0));
     // reference output stages (OD, reset-cleared)
-    reg [56:0] rpipe [0:3];
+    reg [56:0] rpipe [0:4];
     integer pi;
     always @(posedge clk or negedge rst_d)
-        if (!rst_d) for (pi = 0; pi < 4; pi++) rpipe[pi] <= '0;
+        if (!rst_d) for (pi = 0; pi < 5; pi++) rpipe[pi] <= '0;
         else begin
             rpipe[0] <= {rv0, rge0, rbusy0, rfault0, ra0, rd0};
-            for (pi = 1; pi < 4; pi++) rpipe[pi] <= rpipe[pi-1];
+            for (pi = 1; pi < 5; pi++) rpipe[pi] <= rpipe[pi-1];
         end
     wire [56:0] rsel = (OD == 0) ? {rv0, rge0, rbusy0, rfault0, ra0, rd0} : rpipe[OD-1];
     assign {rv, rge, rbusy, rfault, ra, rd} = rsel;
@@ -83,6 +88,15 @@ module tb_ot_s81_cfg7_seq;
     wire [6:0] ce;
     wire [71:0] q [0:6];
     wire [53:0] cfg;
+    // RD_EXTRA (TB_CFG7_RDX1): one posedge stage on every q bus between the ROM and the sequencer (the relay_depth sink row at the ROM pin)
+    reg [47:0] qd [0:6];
+    wire [47:0] qx [0:6];
+    integer qi;
+    always @(posedge clk) for (qi = 0; qi < 7; qi++) qd[qi] <= q[qi][47:0];
+    genvar gq;
+    generate for (gq = 0; gq < 7; gq = gq + 1) begin : g_qx
+        assign qx[gq] = (RDX != 0) ? qd[gq] : q[gq][47:0];
+    end endgenerate
     wire ge;
     wire [1:0] st, gtag;
 `ifdef TB_CFG7_BF
@@ -90,21 +104,21 @@ module tb_ot_s81_cfg7_seq;
     // run at PQ 0 only
     initial if (PQ != 0) $fatal(1, "TB_CFG7_BF is the PQ 0 master");
     assign gtag = 2'd0;
-    ot_s81_cfg7_seq_bf #(.LAYOUT(LAYOUT), .PINREG(PINREG)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq_bf #(.LAYOUT(LAYOUT), .PINREG(PINREG), .RD_EXTRA(RDX)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
-        .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
-        .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st));
+        .q0(qx[0]), .q1(qx[1]), .q2(qx[2]), .q3(qx[3]), .q4(qx[4]), .q5(qx[5]),
+        .q6(qx[6]), .cfg(cfg), .go_e(ge), .st(st));
 `else
-    ot_s81_cfg7_seq #(.PQ(PQ), .LAYOUT(LAYOUT), .PINREG(PINREG)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
+    ot_s81_cfg7_seq #(.PQ(PQ), .LAYOUT(LAYOUT), .PINREG(PINREG), .RD_EXTRA(RDX)) dut (.clk(clk), .rst_n(rst_n), .lc({np, phase, cfg_go, go}), .a(a),
         .ce0(ce[0]), .ce1(ce[1]), .ce2(ce[2]), .ce3(ce[3]), .ce4(ce[4]), .ce5(ce[5]), .ce6(ce[6]),
-        .q0(q[0][47:0]), .q1(q[1][47:0]), .q2(q[2][47:0]), .q3(q[3][47:0]), .q4(q[4][47:0]), .q5(q[5][47:0]),
-        .q6(q[6][47:0]), .cfg(cfg), .go_e(ge), .st(st), .ef(ef), .go_tag(gtag));
+        .q0(qx[0]), .q1(qx[1]), .q2(qx[2]), .q3(qx[3]), .q4(qx[4]), .q5(qx[5]),
+        .q6(qx[6]), .cfg(cfg), .go_e(ge), .st(st), .ef(ef), .go_tag(gtag));
 `endif
     // the PQ spine's op tag (bt_tag = ist): +1 per go broadcast, 0 at reset
     reg [1:0] stag = 0;
     integer tags = 0;
-    reg [3:0] gp = 0;      // gp[k] before an edge = go before the edge k + 1 earlier
-    always @(posedge clk or negedge rst_d) if (!rst_d) gp <= 4'd0; else gp <= {gp[2:0], go};
+    reg [4:0] gp = 0;      // gp[k] before an edge = go before the edge k + 1 earlier
+    always @(posedge clk or negedge rst_d) if (!rst_d) gp <= 5'd0; else gp <= {gp[3:0], go};
     wire go_chk = (GD == 0) ? go : gp[GD-1];
     always @(posedge clk or negedge rst_d)
         if (!rst_d) stag <= 2'd0;
