@@ -3813,3 +3813,4 @@ CODEX: 2026-11-20 03:52 PST generated S81 collector boot proof passed, HEAD r13r
 CODEX: 2026-11-21 02:18 PST takeover live S81 J6, HEAD r16, QC V2 and KV D26/D27; token, fleet and cross-die lanes active. HBM parked.
 
 CODEX: 2026-11-21 02:30 PST S81 J6 exact layouts viewed; indexed Tcl fixture and false pre-CTS setup stop fixes merged; shared CTS direct-core scope and RD_EXTRA follow-through active; QC b9 structural cause assigned.
+CODEX: 2026-11-21 03:23 PST C1n J6 fallback packaging, six Qwen HC launches restored with placed review, HEAD reset cache fix landed, E9 new staging redirected, native QC ROOT and ROM mask work advanced.
