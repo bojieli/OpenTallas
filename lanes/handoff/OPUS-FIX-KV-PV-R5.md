@@ -74,3 +74,5 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
 - COORD 11-21: kit_pin_site_check.py (main) is a pre-place gate on every split half kit (w then e): run after dry gen, exit 1 -> plan fix, no place. Merge order agreed by COORD (start now, no 15:00 wait).
 
 - 13:05 PST: cancelled D26 v4n@1 (-338) / v5n@1 (-805). Push of split_bind_routes waits for FLOW-STRIPBODY step 1 (a69922840c577478e) on main + rebase; if 8d passes first: post READY and wait.
+
+- PUSHED split_bind_routes fix main @3a68739125 (14:xx PST). Step 3 type_split held (stack on STRIPBODY step 1 or SVC-R8 port fix, first to land). tree5 type_split.py = lane-clone tsplit branch + istation-rows-move fix (not yet in any clone commit; diff vs split28/type_split.tree5_r5b.py).
