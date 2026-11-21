@@ -17406,3 +17406,4 @@ FAILED [AUTOPILOT 48b4d4c902dd] 2026-11-21 04:39:51 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 04:49 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r0_p2 (12): GRT 6 TT worst -179.8 median -20.6; CTS FF hold after CORETAP 12: worst -65.0 median -58.3; sign-off runs 1, SIGNED 0, routed TT worst -339.4, FF worst -95.9, DRC max 5; 8 stopped without signoff; old plan -78.7 (bs1->e1 CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-21 04:50 PST DONE [FLEET-WATCH-R5] ot-push-main otpush-dear-crayfish-1223729 on dear-crayfish: rc=0 after 283 s, ended 04:50:00, log /tmp/fw5-push2.log, cmd: ot-push-main 
