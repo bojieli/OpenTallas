@@ -420,3 +420,8 @@
   NO-PROGRESS epyc8 opentallas-scratch2 svc_lo_dsdv_svc_rs__t7.C.yosys stage 7.3 h job 7.3 h: no new meaningful log line for 7.3 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
   NO-PROGRESS epyc8 opentallas-scratch2 svc_hi_dsdv_svc_pvso_entry__t1.C.yosys stage 7.3 h job 7.3 h: no new meaningful log line for 7.0 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
   NO-PROGRESS epyc8 opentallas-scratch2 svc_hi_dsdv_svc_rs__t4.C.yosys stage 7.3 h job 7.3 h: no new meaningful log line for 7.3 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
+- 2026-11-21 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 04:52 PST: 262 running jobs, PROGRESSING 246, SLOW 12, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 serdes__t13 lec stage 19.5 h job 19.5 h: LEC last file/log write 19.5 h ago
+  NO-PROGRESS epyc8 opentallas-scratch2 svc_lo_dsdv_svc_rs__t7.C.yosys stage 8.3 h job 8.3 h: no new meaningful log line for 8.3 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
+  NO-PROGRESS epyc8 opentallas-scratch2 svc_hi_dsdv_svc_pvso_entry__t1.C.yosys stage 8.3 h job 8.3 h: no new meaningful log line for 8.0 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
+  NO-PROGRESS epyc8 opentallas-scratch2 svc_hi_dsdv_svc_rs__t4.C.yosys stage 8.3 h job 8.3 h: no new meaningful log line for 8.3 h; last: Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/s81-svc-s
