@@ -21,3 +21,14 @@ slw_fe_v2__clf110fab2 (running route), slw_fw_v1__clf51c11d8__cl592e3d37 (333 at
 a. Pick representative slw_fe_v1__clfe325744__cldb4efe33 (routed, hold -3.6 ps): copy kit (git-archive tree), rerun hold ECO / tap balance; read CTS post-hook only.
 b. Hand knee rows (item 2) to QC-PLAN-R8 if V1 relaunch is wanted; V2b is clean.
 c. Check the 3 cancelled/infra-oom FAIL_POSTCTS ft-hop 2 km? (2.06-2.17 mm) rows for ft_spread cause.
+
+## UPDATE 02:3x PST (lane RESUMED per COORD; stood-down row removed)
+- slw_fe_v1__clfe325744__cldb4efe33 (C plan kit, epyc10): ECO i1 left ONE internal reg endpoint, FF -3.63 ps: u_bound.u_pd2_dd_ei_32.r[0]/D from u_bound.u_lpad_dd_ei.q[32]/QN.
+  The other 3817 FF hold ends are input-port starts (LOCAL_PASS_NEEDS_PARENT class, advisory). Remaining fails: hold_ff (that 1 endpoint) + drv (advisory).
+  RUNNING: eco_loop.py residual (pad pass, hold margin 10) on epyc10, client log /srv/opentallas-scratch2/claude/fam-qc-fefw/residual.client.log, out ECO_ROOT/residual/i2r. Then sign-off + LEC + export if signed.
+- Knee rows posted to QC-PLAN-R8 (f8d70b09).
+- slw_fe_v1__cl95cd1d0c (C plan, key-cardinal kw43 .../S4Q9N46C): 5_1_grt final overflow 0/0/0, usage 10.9 pct: the 50-56k vertical overflow in the brief is NOT this plan; stale/other plan.
+- 2.06/2.17 mm FAIL_POSTPLACE (R6V1 plan siblings, PLACE-SETUP-STOP, not post-CTS): start u_bound.u_rrl_229/q (reset relay stage, rst_n_t74 gate at (142,1163.7)), end u_ft_x_fw_ctl_p2_o_3/eq flop;
+  wns -187714 ps, tns -2.04e9 = reset-net recovery over a free net, not a data hop. Kit ft_bit_sites.tcl is EMPTY (no FIRM ft sites), so the ft eq flops are free-placed while their reset is repointed to a tap reset
+  net (rst_n_t74); planned ft station site (140.8,1025) is 138 um from the relay, placed distance 2061 um. HYPOTHESIS, not yet verified in the place ODB (positions of the eq flop).
+  Check: why ft_bit_sites is empty on R6V1 vs routed C kit; compare reset_taps.tcl repoint.
