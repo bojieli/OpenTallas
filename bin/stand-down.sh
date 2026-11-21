@@ -31,12 +31,17 @@ sys.exit(1 if sys.argv[2] in P.resolve(sys.argv[3], st) else 0)
 PY
 fi
 # (3) registered running PIDs of the lane that the handoff does not name
-me=$(hostname | cut -d. -f1); hosts=${STAND_HOSTS:-"intel1 intel2 epyc2 epyc4 epyc7 epyc8 epyc9 epyc10 epyc11 epyc12"}
+me=$(hostname | cut -d. -f1)
+# hosts = the deployed fleet: every host `ot-run --status` lists (override: STAND_HOSTS="a b"); a host that does not answer is recorded as UNCHECKED in the row note.
+if [ -n "${STAND_HOSTS:-}" ]; then hosts=$STAND_HOSTS
+else hosts=$(timeout 60 ot-run --status 2>/dev/null | grep -oE '[a-z0-9]+ admits' | cut -d' ' -f1 | grep -v '^localhost$' | tr '\n' ' ') || hosts=""
+  [ -n "$hosts" ] || hosts="intel1 intel2 epyc2 epyc7 epyc8 epyc9 epyc10"; fi
+unchecked=""
 hf="$C/lanes/handoff/$lane.md"; refuse=""
 for h in $me $hosts; do
   [ "$h" = "$me" ] && [ "${seen:-}" = 1 ] && continue
   if [ "$h" = "$me" ]; then seen=1; out=$(python3 -I "$LS" --running "$lane" 2>&1) || out="";
-  else out=$(timeout 20 ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=8 "$h" python3 -I - --running "$lane" < "$LS" 2>/dev/null) || { echo "stand-down: host $h did not answer; not checked" >&2; continue; }; fi
+  else out=$(timeout 20 ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=8 "$h" python3 -I - --running "$lane" < "$LS" 2>/dev/null) || { echo "stand-down: host $h did not answer: UNCHECKED" >&2; unchecked="$unchecked $h"; continue; }; fi
   while IFS= read -r j; do
     [ -n "$j" ] || continue
     ok=0
@@ -54,6 +59,7 @@ if [ -n "$refuse" ]; then
   echo "  Name each unit/record name in lanes/handoff/$lane.md (successor owns it) or pass --handed NAME,NAME, then run again." >&2
   exit 1
 fi
+[ -z "$unchecked" ] || note="${note:+$note; }UNCHECKED hosts (running jobs not verified):${unchecked}"
 res=$(python3 -I "$LS" --set "$T" "$lane" "$succ" "$note") || { echo "stand-down: schema check failed, nothing written" >&2; exit 1; }
 new=$(mktemp "$C/lanes/.LANE-STATUS.XXXXXX")
 printf '%s\n' "$res" > "$new"
