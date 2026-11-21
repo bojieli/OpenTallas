@@ -226,6 +226,27 @@ proc tcs_follow {f} {
   }
   return [list $reps {}]
 }
+# Find the hard pins served by an NK reset group. The core-input hook owns
+# the latches. Follow only D-to-Q arcs and unary repeaters.
+proc tcs_nk_reset_pins {sinks {depth 0}} {
+  if {$depth >= 12 || ![llength $sinks]} { return {} }
+  set pins {}
+  foreach it $sinks {
+    set inst [$it getInst]
+    set master [$inst getMaster]
+    if {[$master isBlock]} { lappend pins $it; continue }
+    set is_nk_d [expr {[regexp {^(DLL|DHL)} [$master getName]] &&
+                      [regexp {(^|[./])u_lk_nk_} [$inst getName]] &&
+                      [[$it getMTerm] getName] eq "D"}]
+    if {!$is_nk_d && ![tcs_isrep $inst]} { return {} }
+    set net [tcs_out $inst]
+    if {$net eq "" || $net eq "NULL"} { return {} }
+    set child_pins [tcs_nk_reset_pins [tcs_sinks $net] [expr {$depth + 1}]]
+    if {![llength $child_pins]} { return {} }
+    lappend pins {*}$child_pins
+  }
+  return $pins
+}
 # pin box centre / point `dist` um outside the macro face nearest the pin (core_input_anchor nka_out_pos)
 proc tcs_pin_xy {pin} { set b [$pin getBBox]; return [list [expr {([$b xMin] + [$b xMax]) / 2}] [expr {([$b yMin] + [$b yMax]) / 2}]] }
 proc tcs_out_pos {pin dist_um dbu} {
@@ -297,6 +318,7 @@ proc tcs_run {} {
     }
     if {$bad || [llength $chain] != $k} { incr merged; continue }
     lassign [tcs_follow [lindex $chain end]] reps s
+    if {[string match u_rs_* $c]} { set s [tcs_nk_reset_pins $s] }
     set macs {}
     foreach it $s { set m [$it getInst]; if {![[$m getMaster] isBlock]} { set macs {}; break }; if {[lsearch -exact $macs $m] < 0} { lappend macs $m } }
     if {[llength $macs] != 1} { incr badout; continue }
