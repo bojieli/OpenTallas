@@ -1,0 +1,70 @@
+{
+ "advisory": [
+  "contained",
+  "hashes",
+  "pre_g0",
+  "schema"
+ ],
+ "checks": {
+  "contained": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/c75b12bc6707/slice_station__t27",
+   "gen_host": "epyc8",
+   "item": "slice_station__t27",
+   "kind": "type",
+   "origin_capture_error": "spec changed before origin capture",
+   "preflight_fail_advisory": null,
+   "published_gen_import_declined": "[Errno 2] No such file or directory: '/home/ubuntu/.local/state/publish-gate/s81/c75b12bc6707/slice_station__t27/published_gen_origin.json'",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work",
+   "stage": "preflight",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "pre_g0": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  },
+  "schema": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 1): ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<string>\", line 387, in run_static\n    bp = check_bound_params(tree, bind_out)\n  File \"<string>\", line 338, in check_bound_params\n    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"die_plan\"))\n                                ^^^^^^^^\nNameError: name '__file__' is not defined. Did you mean: '__name__'?\n"
+  }
+ },
+ "die": "s81",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_bind_11201213/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 11642.8,
+ "hosts": [
+  "epyc8",
+  "epyc2",
+  "epyc9",
+  "epyc10",
+  "intel1"
+ ],
+ "item": "slice_station__t27",
+ "manifest_hash": "c75b12bc6707b35adb9ad60800c3cb5fd2b788788164117ad39f0238c4c9d0d2",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha256": "913a7026b922a4a70df8ca037a629a04a7b6706896234e159c1cadcf55fa1204",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1803.9,
+ "t": 1795209212.633805,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work",
+ "verdict": "FAIL"
+}
