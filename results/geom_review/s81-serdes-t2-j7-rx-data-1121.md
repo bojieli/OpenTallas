@@ -1,0 +1,9 @@
+# S81 SerDes t2 J7 RX placement
+
+The exact J5 a5 cell graph exposes 242 data bits with an x0-to-x_q leg above 300 µm. Moving x0 alone cannot bring both adjacent legs within 300 µm on 86 bits. The current placer spaces the RCK transport toward the first AMPIPE data capture, then leaves x0 and that capture clustered together. The long gap is between x0 and x_q.
+
+I viewed [the revised data paths](s81-serdes-t2-j7-rx-data-1121.png) before running the bounded placement trial. The west and east halves of the north RX face fan in below the PMA halo to their existing SYN captures. For each affected bit the revision spaces the four existing RCK transport flops, the AMPIPE data flop and x0 together along the full path. The source, x_q, pads, macros and clock connectivity are retained. The proposal includes each exclusive data buffer on these chains. The separately reviewed AM/PV changes are included in the same ODB.
+
+OpenROAD legalized all 4,229 selected moves with zero violations and a maximum legalization displacement of 1.7 µm. Actual RX data legs measure at most 245.997 µm across 1,694 hops, down from 1,099.413 µm. The 53 AM/PV legs remain at or below 297.054 µm. Mission latency and the netlist are identical. PASS for the measured RX data and AM/PV placement. Remaining clock, reset, broad timing and routing gates require their own proof.
+
+The inputs and results are in epyc8:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes-0600/t2-j7-rx-data-1121. `data_proposal.json` holds the data-only sites, `proposal.json` and `legal_result.json` hold the combined sites and measured paths, and `3_place_am_pv.odb` holds the combined legal placement. Unit oth-ubuntu-3090591-1795259865 completed. For J7, use the actual typed data paths from `make_preview.py`, rerun the site derivation on the fresh placement, and reuse the already-bound stages. No new RTL or binder latency is required for this revision.
