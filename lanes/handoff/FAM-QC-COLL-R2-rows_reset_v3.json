@@ -1,0 +1,214 @@
+{
+ "schema": "fam-qc-coll.rows.v1",
+ "set": "reset-reach-v3",
+ "status": "READY for QC-PLAN-R11 (V3)",
+ "finding": "R-REACH-5 on V2: coll_ftc 12 raw hops >405 (worst 1,190 um) + 7 missing nets; coll_core 2 + 2. All are stale rst_rl_<k> names in plan landing_local_resets[].raw: the emitter re-resolves each local reset to its equal-depth relay, and in the V2 coll_ftc wave kit (epyc7 items/coll_ftc, bound.sv) all 27 local reset hops on plan sites are <= 405 um (worst 400.3, start_2/3/16); coll_core private kit 6 hops worst 290 um. No physical reach violation, no station needed.",
+ "rows_note": "raw := the net the V2 kit emitted (same relay depth, same cycle). Re-pointing to rr_t<j> (reach_rules fix style) is NOT proposed: it changes the relay depth of a same-cycle copy.",
+ "also_in_v3": "reach_rules fix --rules 4 (forwarded clock outputs onto the nearest tap, 0 cycles): coll_core 13 pins (worst 1,705 -> 69 um), coll_ftc 2 (518 -> 147 um); file reach/fix14.json on epyc10 fam-qc-coll",
+ "tool_gap": "R-REACH-5 should resolve local reset raws the way the emitter does (or the bind should write the names back); otherwise V3 renumbering re-creates these findings",
+ "rows": [
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_0].raw",
+   "old": "rst_rl_10",
+   "value": "rst_rl_24",
+   "kit_hop_um": 354.5
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_1].raw",
+   "old": "rst_rl_70",
+   "value": "rst_rl_59",
+   "kit_hop_um": 290.0
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_2].raw",
+   "old": "rst_rl_93",
+   "value": "rst_rl_70",
+   "kit_hop_um": 400.3
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_3].raw",
+   "old": "rst_rl_93",
+   "value": "rst_rl_70",
+   "kit_hop_um": 400.3
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_4].raw",
+   "old": "rst_rl_65",
+   "value": "rst_rl_50",
+   "kit_hop_um": 296.6
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_5].raw",
+   "old": "rst_rl_70",
+   "value": "rst_rl_59",
+   "kit_hop_um": 289.9
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_6].raw",
+   "old": "rst_rl_65",
+   "value": "rst_rl_50",
+   "kit_hop_um": 296.6
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_7].raw",
+   "old": "rst_rl_70",
+   "value": "rst_rl_59",
+   "kit_hop_um": 238.2
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_8].raw",
+   "old": "rst_rl_65",
+   "value": "rst_rl_50",
+   "kit_hop_um": 296.6
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_9].raw",
+   "old": "rst_rl_70",
+   "value": "rst_rl_59",
+   "kit_hop_um": 230.8
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_10].raw",
+   "old": "rst_rl_51",
+   "value": "rst_rl_94",
+   "kit_hop_um": 8.8
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_11].raw",
+   "old": "rst_rl_70",
+   "value": "rst_rl_59",
+   "kit_hop_um": 224.8
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_12].raw",
+   "old": "rst_rl_12",
+   "value": "rst_rl_26",
+   "kit_hop_um": 169.4
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_13].raw",
+   "old": "rst_rl_68",
+   "value": "rst_rl_75",
+   "kit_hop_um": 379.5
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_14].raw",
+   "old": "rst_rl_81",
+   "value": "rst_rl_43",
+   "kit_hop_um": 266.5
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_15].raw",
+   "old": "rst_rl_70",
+   "value": "rst_rl_59",
+   "kit_hop_um": 224.3
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_16].raw",
+   "old": "rst_rl_93",
+   "value": "rst_rl_70",
+   "kit_hop_um": 400.3
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_17].raw",
+   "old": "rst_rl_51",
+   "value": "rst_rl_94",
+   "kit_hop_um": 33.9
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_18].raw",
+   "old": "rst_rl_91",
+   "value": "rst_rl_70",
+   "kit_hop_um": 339.5
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_21].raw",
+   "old": "rst_rl_51",
+   "value": "rst_rl_94",
+   "kit_hop_um": 289.9
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_22].raw",
+   "old": "rst_rl_81",
+   "value": "rst_rl_43",
+   "kit_hop_um": 306.5
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_23].raw",
+   "old": "rst_rl_10",
+   "value": "rst_rl_24",
+   "kit_hop_um": 354.5
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_24].raw",
+   "old": "rst_rl_44",
+   "value": "rst_rl_89",
+   "kit_hop_um": 290.0
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_25].raw",
+   "old": "rst_rl_55",
+   "value": "rst_rl_107",
+   "kit_hop_um": 272.6
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.landing_local_resets[name=start_26].raw",
+   "old": "rst_rl_62",
+   "value": "rst_rl_67",
+   "kit_hop_um": 228.4
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.clock.landing_local_resets[name=fstart_2].raw",
+   "old": "rst_rl_305",
+   "value": "rst_rl_298",
+   "kit_hop_um": 19.9
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.clock.landing_local_resets[name=fstart_3].raw",
+   "old": "rst_rl_287",
+   "value": "rst_rl_280",
+   "kit_hop_um": 290.0
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.clock.landing_local_resets[name=fstart_4].raw",
+   "old": "rst_rl_173",
+   "value": "rst_rl_166",
+   "kit_hop_um": 220.3
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.clock.landing_local_resets[name=fstart_5].raw",
+   "old": "rst_rl_449",
+   "value": "rst_rl_446",
+   "kit_hop_um": 71.8
+  }
+ ]
+}
