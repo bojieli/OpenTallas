@@ -1,3 +1,7 @@
+# FABLE-FIX-KV-HUB handoff -- STOOD DOWN -> FABLE-FIX-KV-HUB-R2 (COORD 06:5x PST, context). Jobs left running, no waiters of mine remain.
+Successor re-arms: bind B2 (intel2 client 3833051 -> epyc8 fable-fix-kv-hub/bindgate_b2/gate.out), D27d rebind of record (epyc8 kv-plan-r3/d27c/bindgate_d27d_r5/gate.out, poll for ALL_DONE), hub_Ei route (intel2 client 55902), D26 hub_Wo / hub_Eo kit check (epyc8 kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D26/items/kv3_hub_{Wo,Eo}/attempt_*/gen: global tb_cdirect in tap_balance.tcl, flow_tag, route host not epyc9/intel1).
+Read the sections bottom-up: the last one is the newest state.
+
 # FABLE-FIX-KV-HUB handoff (Fable; KV hub/hroot/sys family; successor of FAM-KV-HUB-R2). CURRENT 2026-11-21 06:1x PST
 Family: kv3_hroot (representative), kv3_hub_{C,Ei,Eo,Wi,Wo}, kv3_sys_c, kv3_sys_SD_v1. Rows go to KV-PLAN-R5 (D27d/D28).
 Work dir: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub (tree_b, launch_b, ana/, scripts). Client logs: intel2 ~/tmp/fablefixkvhub/.
