@@ -63,8 +63,8 @@ def test_hbm_t13_manifest():
     a = json.loads((d / "asbuilt_t13.json").read_text())
     base = (d / a["base"]).resolve()
     assert base == root.resolve()
-    for f in a["netlist"] + a["files"]:
-        assert (base / f).is_file(), f
+    missing = [f for f in a["netlist"] + a["files"] if not (base / f).is_file()]
+    assert not missing, "missing manifest files:\n" + "\n".join(missing)
     assert (d / a["map_file"]).is_file()
     comp = base / a["compose"]
     assert comp.is_file() or comp.with_name(comp.name + ".gz").is_file()
