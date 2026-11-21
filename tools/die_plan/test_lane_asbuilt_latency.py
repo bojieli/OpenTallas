@@ -203,3 +203,24 @@ class BindHook(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_asbuilt_reads_the_emitted_parent_count_and_absorbs_the_kit_chain():
+    source = LAL.ModuleIndex(src_rtl())
+    bank = ("    ot_dp_dly_cnt #(.W(9), .DMAX(6)) u_lpad_i "
+            "(.clk(clk), .strap_cnt(strap_r8pad_lane_i), .d({i_eb, i_b}), .q(i_lane_pad_q));\n")
+    p = plan(table=10, src_regs=0, dst=[dict(conn="bus:i", regs_um=[[2, 1], [3, 1]])])
+    row = dict(lane="L0", src="p", dst="q", bus_out="o", bus_in="i", plan_cycles=10)
+
+    def replay(literal):
+        top = f"    R q (.strap_r8pad_lane_i({literal}));\n"
+        receiver = LAL.ModuleIndex(st("u_bin_i") + bank, LAL.lane_pad_ties(top))
+        recs, _ = LAL.check(p, [row], {"p": source, "q": receiver}.get, {"p": "S", "q": "R"}.get,
+                            p["partition_types"], lambda _: 2)
+        return recs[0]
+
+    correct = replay("4'b0110")
+    assert correct["verdict"] == "PASS" and correct["receiver"]["kit_ist"] == 0
+    wrong = replay("4'b0101")
+    assert wrong["verdict"] == "FAIL" and wrong["delta"] == -1
+    assert "missing or invalid parent tie" in replay("not_literal")["problems"][0]

@@ -47,6 +47,8 @@ INST_RX = re.compile(r"^[ \t]*(\w+)[ \t]*(#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))
 D_RX = re.compile(r"\.D\(\s*(\d+)\s*\)")
 HDR_RX = re.compile(r"partition type (\S+?)\.\s")
 MOD_RX = re.compile(r"^\s*module\s+(\w+)", re.M)
+TOP_INST_RX = re.compile(r"^[ 	]*(\w+)\s*(?:#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)\s*)?(\w+)\s*\(", re.M)
+LANE_TIE_RX = re.compile(r"\.(strap_r8pad_lane_\w+)\(\s*(\d+\s*'\s*[bBhHdD]\s*[0-9a-fA-F_]+)\s*\)")
 
 
 def sv_id(s):
@@ -54,14 +56,41 @@ def sv_id(s):
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
 
+def lane_pad_ties(top_text):
+    """Read the actual static lane-count literals from the emitted die top."""
+    if "strap_r8pad_lane_" not in top_text:
+        return {}
+    from straps import literal_bits
+
+    ties = {}
+    for m in TOP_INST_RX.finditer(top_text):
+        end = top_text.find(");", m.end())
+        if end < 0:
+            continue
+        for name, literal in LANE_TIE_RX.findall(top_text[m.end():end]):
+            try:
+                bits = literal_bits(literal)
+            except ValueError:
+                continue
+            ties[m[2], name] = (len(bits), sum(bit << i for i, bit in enumerate(bits)))
+    return ties
+
+
 class ModuleIndex:
     """the lane-stage instances of one bound partition module: name -> (master, D)"""
 
-    def __init__(self, text):
+    def __init__(self, text, count_ties=None):
         self.inst = {}
+        self.counted = {}
+        self.count_ties = count_ties or {}
         for m in INST_RX.finditer(text):
             d = D_RX.search(m.group(2) or "")
             self.inst[m.group(3)] = (m.group(1), int(d.group(1)) if d else None)
+        if any(master == "ot_dp_dly_cnt" and name.startswith("u_lpad_")
+               for name, (master, _) in self.inst.items()):
+            from r8_strap_lec import banks_of
+
+            self.counted = {b["inst"]: b for b in banks_of(text) if b["inst"].startswith("u_lpad_")}
         self._chains = None
 
     def has(self, name):
@@ -95,9 +124,21 @@ class ModuleIndex:
                 by[m.group(1)].add(int(m.group(2)))
         return max((len(v) for v in by.values()), default=0)
 
-    def lpad(self, n):
-        v = self.inst.get(f"u_lpad_{n}")
-        return None if v is None else int(v[1] or 0)
+    def counted_lpad(self, n):
+        return self.inst.get(f"u_lpad_{n}", (None, None))[0] == "ot_dp_dly_cnt"
+
+    def lpad(self, n, part=None):
+        inst = f"u_lpad_{n}"
+        v = self.inst.get(inst)
+        if not self.counted_lpad(n):
+            return None if v is None else int(v[1] or 0)
+        bank = self.counted.get(inst)
+        if not bank:
+            raise ValueError(f"{part}.{inst}: invalid counted receiver bank")
+        tie = self.count_ties.get((sv_id(part), bank["site"])) if part else None
+        if not tie or tie[0] != bank.get("CW", 4) or tie[1] > bank["DMAX"]:
+            raise ValueError(f"{part}.{inst}: missing or invalid parent tie {bank['site']}")
+        return tie[1]
 
     def ft(self, o):
         rx = re.compile(rf"u_f[tx]_{re.escape(o)}_(\d+)")
@@ -125,15 +166,15 @@ def side_stages(ix, typ, bus, side, reg_hard, lpad_override=None):
     ist = ix.ist(n)
     if ist and ist != list(range(len(ist))):
         prob.append(f"u_ist_{n}_* not a contiguous chain {ist[:6]}")
-    lp = ix.lpad(n) if side == "in" else None
-    if lpad_override is not None:
-        lp = lpad_override
+    lp = lpad_override
+    if lp is None and side == "in":
+        lp = ix.lpad(n)
     lp = lp or 0
     bound_core = ix.core_chain_depth(n)
     kdep, kcore = (0, 0) if reg_hard else kit_depth(typ, bus)
     kit_core = 0 if bound_core else kcore
     have = len(pads) + len(ist)
-    if side == "in" and lp:
+    if side == "in" and (lp or ix.counted_lpad(n)):
         kit_bus = 0                                  # packed receiver delay absorbs the IN stations (packed_input_delay)
     else:
         kit_bus = max(0, kdep - have)
@@ -239,8 +280,12 @@ def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), prici
             ft += mf.ft(sv_id(ob))
         land = int(landing_of(lane) or 0)
         cut = source_cut(ms, types.get(st), r["bus_out"], fixed.get(lane, 0))
-        override = None
-        lp = md.lpad(sv_id(r["bus_in"]))
+        try:
+            lp = md.lpad(sv_id(r["bus_in"]), d)
+        except ValueError as exc:
+            probs.append(str(exc))
+            lp = 0
+        override = lp
         if pricing == "on" and cut and lp is not None:
             override = max(0, lp - cut)
         elif pricing == "off" and cut:
@@ -289,6 +334,7 @@ def bind_check(B, out, lat):
     """run on the RTL this bind just emitted (out/rtl) -> (records, errors)"""
     rtl = Path(out) / "rtl"
     idx = {}
+    ties = lane_pad_ties(next(rtl.glob("*_bound_top.sv")).read_text()) if getattr(B, "lane_count_pads", None) else {}
 
     def module_of(p):
         if p not in B.parts:
@@ -296,7 +342,7 @@ def bind_check(B, out, lat):
         mod = B.types.get(B.parts[p].get("type"), {}).get("module")
         if mod not in idx:
             f = rtl / f"{mod}.sv"
-            idx[mod] = ModuleIndex(f.read_text()) if mod and f.is_file() else None
+            idx[mod] = ModuleIndex(f.read_text(), ties) if mod and f.is_file() else None
         return idx[mod]
     spine = {L["lane"] for L in B.links if L.get("spine") and L.get("lane")}
     land = defaultdict(int)
@@ -323,7 +369,8 @@ def load_bind_dir(bd, plan, plan_path=None):
     part_mod = {}
     if top is not None:
         txt = top.read_text(errors="replace")
-        for m in re.finditer(r"^[ \t]*(\w+)\s*(?:#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)\s*)?(\w+)\s*\(", txt, re.M):
+        ties = lane_pad_ties(txt)
+        for m in TOP_INST_RX.finditer(txt):
             if m.group(1) in mod_file:
                 part_mod[m.group(2)] = m.group(1)
     mod_type = {v: k for k, v in type_mod.items()}
@@ -341,7 +388,7 @@ def load_bind_dir(bd, plan, plan_path=None):
         if mod is None:
             return None
         if mod not in idx:
-            idx[mod] = ModuleIndex(mod_file[mod].read_text(errors="replace"))
+            idx[mod] = ModuleIndex(mod_file[mod].read_text(errors="replace"), ties)
         return idx[mod]
 
     def ptype_of(p):
