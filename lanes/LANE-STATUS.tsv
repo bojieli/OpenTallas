@@ -110,3 +110,4 @@ OPUS-FIX-QC-SLE-R4-SC	stood-down	FAM-S81-COL-H10-R3	2026-11-21	sle_sc_v1 cl115da
 FAM-S81-SLICE-R4	stood-down	FAM-S81-SLICE-R5	2026-11-21	11:38 PST | context; handoff lanes/handoff/FAM-S81-SLICE-R4.md
 OPUS-FIX-QC-SLE-R4	stood-down	QC-SLE-R5	2026-11-21	11:42 PST | context 309k; variant C + k_b2 + sc routed LEC handed, nothing cancelled
 FLOW-OPS-1000	stood-down	none	2026-11-21	11:58 PST | done: FABLE-FLOW-1000 items 1-9 + COORD adds on main (last 5933bab6c9); COORD reads the work; open: hub WAITS.tsv rollup cron, epyc4 git shim (host key)
+FAM-S81-COL-H9R0-R3	stood-down	FAM-S81-COL-H9R0-R4	2026-11-21	12:22 PST | context 328k; rep J7c timing proof run-item 1553808 + STAGGER proof run-item 1288533 (gen unit oth-ubuntu-907992-1795292085); see handoff
