@@ -223,7 +223,10 @@ ALWAYS = (("kit", "stage_odb_cap.py", "tools/die_plan/stage_odb_cap.py"),
           ("kit+", "repair_bound.tcl", "physical/common_flow/repair_bound.tcl"),      # post-GRT repair_timing_helper chunk + stall + wall-time bound, hooked below
           ("kit+", "kit_resume.py", "tools/autopilot/kit_resume.py"),                 # in-place restart: run_kit.sh calls it (auto resume)
           ("kit+", "env_provenance.py", "tools/autopilot/env_provenance.py"),         # FLOW-PROC-A: run_kit.sh ENV-PROVENANCE check before place
-          ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"))      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
+          ("kit+", "kit_reports.py", "tools/die_plan/kit_reports.py"),      # "kit+" = created when missing, so legacy kits get the helper the refreshed run_kit.sh calls
+          # FLOW-OPS-1000 (FLOW-OBS-GCELL-R2, main f56d99cf55): the sliver-gcell GRT cap reaches kits generated before it (43 KV + 5 HEAD exposed
+          # types, lanes/OBS-GCELL-EXPOSURE-1121.tsv); patch_obs_hook below sources it from the kit's grt_pre.tcl when that file predates it
+          ("kit+", "obs_gcell_cap.tcl", "tools/die_plan/obs_gcell_cap.tcl"))
 
 
 def src_file(rtr, rel, roots=None):
@@ -308,6 +311,28 @@ def patch_grt_hook(kit, rec, dry=False):
     return True
 
 
+OBS_LINE = "if {[file exists /work/obs_gcell_cap.tcl]} { source /work/obs_gcell_cap.tcl; ot_obsgc_add }"
+
+
+def patch_obs_hook(kit, rec, dry=False):
+    """FLOW-OPS-1000: a kit grt_pre.tcl from before f56d99cf55 (it holds the PG-track-truth hook, ot_pgtt_add, but no obs_gcell_cap source) gets the
+    obs_gcell_cap line at its END, which is where rt's grt_pre.tcl has it (after PG-track-truth, before global_route).  OT_OBS_GCELL_CAP=0 still turns
+    it off inside the helper.  Missing grt_pre.tcl / helper, a symlink, or a file that already names the helper = nothing.  Idempotent.  -> True when patched"""
+    p = os.path.join(kit, "grt_pre.tcl")
+    h = os.path.join(kit, "obs_gcell_cap.tcl")
+    if os.path.islink(p) or not os.path.isfile(p) or not (os.path.isfile(h) or any(t[0] == h for t in (_TXN or []))):
+        return False
+    body = _cur(p).decode()
+    if "obs_gcell_cap" in body or "ot_pgtt_add" not in body:
+        return False
+    rec["replaced"].append({"file": "grt_pre.tcl", "src": "obs_gcell_cap hook line", "old": blob_id(body.encode())[:12], "new": "patched", "from": "always-patch"})
+    if dry:
+        return True
+    out = body + ("" if body.endswith("\n") else "\n") + "# FLOW-OPS-1000: sliver-gcell GRT cap (FLOW-OBS-GCELL, main f56d99cf55) for a kit generated before it\n" + OBS_LINE + "\n"
+    _put(p, out.encode())
+    return True
+
+
 def always_pass(kit, rtr, rec, dry=False, roots=None):
     """replace the ALWAYS files present in the kit by rt's copy when they differ.  -> list of replaced names (also appended to rec['replaced'] with from='always')"""
     out = []
@@ -339,6 +364,8 @@ def always_pass(kit, rtr, rec, dry=False, roots=None):
         out.append("cts_post.tcl")
     if patch_grt_hook(kit, rec, dry):
         out.append("grt_hook")
+    if patch_obs_hook(kit, rec, dry):
+        out.append("obs_hook")
     return out
 
 
