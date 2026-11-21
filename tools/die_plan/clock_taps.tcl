@@ -552,6 +552,8 @@ if {[llength $ct_taps] >= 2} {
   set ct_cascade [expr {[info exists ::env(OT_TAP_CAP_CASCADE)] && $::env(OT_TAP_CAP_CASCADE) eq "1"}]
   set ct_stuck {}
   set ct_spilled {}
+  set ct_sbox {}
+  set ct_span_dirty {}
   set ct_spill [expr {[info exists ::env(OT_TAP_SPILL_UM)] ? $::env(OT_TAP_SPILL_UM) * $ct_dbu : 0}]
   for {set pass 0} {$pass < 8 * [llength $ct_taps]} {incr pass} {
     set over ""
@@ -560,7 +562,18 @@ if {[llength $ct_taps] >= 2} {
     }
     if {$over eq ""} break
     set on [lindex $over 0]
-    set ct_sbox [expr {$ct_span > 0 ? [ct_span_init $ct_by] : {}}]
+    if {$ct_span > 0} {
+      if {$pass == 0} {
+        set ct_sbox [ct_span_init $ct_by]
+      } else {
+        # Only taps whose membership changed need a fresh box. Rebuild
+        # before all candidate checks so ejected extrema can shrink a box.
+        dict for {name _} $ct_span_dirty {
+          dict set ct_sbox $name [ct_span_grow {} [ct_span_pts [dict get $ct_by $name]]]
+        }
+      }
+      set ct_span_dirty {}
+    }
     # KV-PC-DELTA-1115: opt-in OT_TAP_SPILL_UM: a tap that found no room within half a pitch retries with this reach
     set ct_lim [expr {$on in $ct_spilled ? $ct_spill : $ct_maxx}]
     set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
@@ -613,6 +626,7 @@ if {[llength $ct_taps] >= 2} {
           set keep [lsearch -all -inline -not -exact $keep $it]; lappend add $it
         }
         dict set ct_by $on $keep; dict set ct_by $tn $add
+        if {$ct_span > 0} { set ct_span_dirty [dict create $on 1 $tn 1] }
         incr ct_moves [llength [dict get $ct_grp $gbest]]
         continue
       }
@@ -705,6 +719,9 @@ if {[llength $ct_taps] >= 2} {
         if {$ct_span > 0} {
           dict set ct_sbox $rn [ct_span_grow [dict get $ct_sbox $rn] $ct_outpts]
           dict set ct_sbox $fn [ct_span_grow [dict get $ct_sbox $fn] $ct_inpts]
+          dict set ct_span_dirty $on 1
+          dict set ct_span_dirty $fn 1
+          dict set ct_span_dirty $rn 1
         }
         dict set done $it 1
         incr nch
@@ -746,6 +763,7 @@ if {[llength $ct_taps] >= 2} {
       incr n
     }
     dict set ct_by $on $keep; dict set ct_by $tn $add
+    if {$ct_span > 0 && $n} { set ct_span_dirty [dict create $on 1 $tn 1] }
     incr ct_moves $n
     if {$n == 0} { lappend ct_stuck $on; puts "OT_CLOCK_TAPS WARN $on keeps [llength $keep] sinks > cap $ct_cap: the sink region rule admits no further move" }
   }
