@@ -1423,6 +1423,13 @@ def parse_client_log(text, *, unit=None, started=0):
         o["ap_rc"] = int(m[-1])
         o.setdefault("exit", o["ap_rc"])
     rc = o.get("ap_rc")
+    # The placement frontend can refuse before starting the backend. Only
+    # its explicit terminal capacity receipt identifies a payload that never ran.
+    if rc == 78 and "ran_on" not in o and "ot-heavy: admitted on" not in text:
+        refused = re.findall(r"(?m)^NOT-RUN (?:every requested host is draining|disk-ETA hold:|"
+                             r"no host with --dir has \d+ GB|no host qualifies\b)[^\n]*", text)
+        if refused:
+            o.update(not_run=True, msg=refused[-1][:300])
     if unit and rc is not None and rc == o.get("exit") and o.get("ran_on"):
         # A completed receipt names where sealed or spilled artifacts were returned.
         # Scope it to the current AP attempt before trusting markers or return targets.

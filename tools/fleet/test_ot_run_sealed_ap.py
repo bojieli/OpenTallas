@@ -134,6 +134,32 @@ def test_cross_host_fetch_when_no_holder_admits(tmp_path, monkeypatch):
     assert s["return"] == {"to": K, "paths": ["."]}
 
 
+def test_drained_host_only_donates_inputs(tmp_path, monkeypatch):
+    status = ("ot-run status: epyc10 admits 251 GB load 48/96 scratch 93 GB "
+              "DRAINING (93 of 9999 GB, new job dirs refused) | "
+              "intel1 admits 298 GB load 70/112 scratch 187 GB "
+              "DRAINING (187 of 250 GB, new job dirs refused) | "
+              "epyc8 admits 95 GB load 63/96 scratch 165 GB")
+    monkeypatch.setattr(M.subprocess, "run", lambda *args, **kwargs: type("Result", (), {"stdout": status})())
+    settings = conf(spec_dir=str(tmp_path), ap_goals=["route"], hosts=["epyc10"],
+                    ap_fetch_hosts=["intel1", "epyc8"], capacity_passthru=True)
+    probed = []
+
+    def fetch(host, bundle, kit):
+        probed.append(host)
+        return True, []
+
+    out, why = M.decide(ap_argv(), settings, check=ok, fetch=fetch)
+    assert why == f"SEALED on epyc8: {K} (inputs fetched from epyc10)"
+    assert probed == ["epyc8"]
+    assert spec_of(out)["copy_back"]["to"] == "epyc10"
+
+    settings["ap_fetch_hosts"] = ["intel1"]
+    out, _ = M.decide(ap_argv(), settings, check=ok, fetch=fetch)
+    assert out == ["/wave/ot-run"] + ap_argv()
+    assert probed == ["epyc8"]
+
+
 def test_no_fetch_when_holder_admits_or_not_configured(tmp_path, monkeypatch):
     rows = dict(ROWS, epyc2=dict(ROWS["epyc2"], admit=100))
     monkeypatch.setattr(M, "status_rows", lambda b: rows)

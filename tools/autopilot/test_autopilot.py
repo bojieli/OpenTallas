@@ -495,6 +495,19 @@ class TestClientLog(Base):
         o = self.ap.parse_client_log("ot-run: NOT RUN no host admitted 64 GB within --max-wait\nAP_RC=75\n")
         self.assertTrue(o["not_run"])
 
+    def test_bare_not_run_78_capacity_receipt_requires_no_payload(self):
+        text = ("AP_START 1795299160 ap-sample-a1\n"
+                "NOT-RUN every requested host is draining: epyc10 DRAINING "
+                "(94 of 9999 GB scratch free)\nAP_RC=78\n")
+        client = self.ap.parse_client_log(text)
+        self.assertTrue(client["not_run"])
+        self.assertIn("draining", client["msg"])
+        self.assertNotIn("not_run", self.ap.parse_client_log("AP_RC=78\n"))
+        self.assertNotIn("not_run", self.ap.parse_client_log(
+            text.replace("AP_RC", "ot-run: RAN on epyc10 (unit existing): exit 78\nAP_RC")))
+        self.assertNotIn("not_run", self.ap.parse_client_log(
+            text.replace("AP_RC", "ot-heavy: admitted on epyc10 as unit\nAP_RC")))
+
 
 class FakeHosts:
     """stands in for ssh probes / systemd units: kit state per path"""
