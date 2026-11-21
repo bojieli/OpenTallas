@@ -17540,3 +17540,4 @@ FAILED [AUTOPILOT be93d69ccf22] 2026-11-21 05:10:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 05:17 PST DONE [FAM-S81-MISC-R2] ot-run oth-ubuntu-4066063-1795264912 on civil-redfish: rc=0 after 2732 s, ended 13:17:00, log /srv/opentallas-scratch2/claude/fam-s81-misc/var_v1.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-misc -- bash runvar.sh -34.56 -25.92 v1
 - 2026-11-21 05:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned none
 - 2026-11-21 05:17 PST DONE [lanes] ot-push-main otpush-outgoing-giraffe-865708 on outgoing-giraffe: rc=0 after 0 s, ended 13:17:03, log none, cmd: ot-push-main --help
+- 2026-11-21 05:17 PST DONE [lanes] ot-push-main otpush-outgoing-giraffe-863188 on outgoing-giraffe: rc=0 after 29 s, ended 13:17:23, log none, cmd: ot-push-main 
