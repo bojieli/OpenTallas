@@ -1,0 +1,1 @@
+- 2026-11-21 09:17 PST DONE [FLOW-PLACEMEAS-1121] ot-run oth-ubuntu-3139617-1795281278 on dear-crayfish: rc=0 after 170 s, ended 09:17:25, log none, cmd: --mem 60 --threads 6 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/FLOW-PLACEMEAS-1121 -- bash /srv/opentallas-scratch3/claude/FLOW-PL
