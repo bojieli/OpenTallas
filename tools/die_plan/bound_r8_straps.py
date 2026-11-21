@@ -1,8 +1,69 @@
 """Project binder-declared, value-audited R8 pad-count inputs into physical metadata."""
 import copy
 import json
+import hashlib
 import re
+import socket
 from pathlib import Path
+
+# FLOW-PROC-A 11-21 (COORD, FAM-QC-CB fp5/fp6): kit_rtl.json named an absolute bind_out that existed on one host only (epyc9);
+# on epyc7 the R8 check then said "lack their bind manifest" with no path.  bind.py kit-rtl now copies the small bind
+# sidecars a kit's GEN / strap checks read into <kit rtl dir>/bind_sidecars (sha256 recorded in kit_rtl.json), and every
+# reader resolves a sidecar kit copy first, then bind_out; a miss names each path tried and the host.
+KIT_BIND_DIR = "bind_sidecars"
+KIT_BIND_SIDECARS = ("bind_parent_id_straps.json", "bind_r8pad_strap_audit.json", "bind_count_strap_audit.json",
+                     "bind_report.json", "bind_tie_audit.json")
+
+
+def stage_kit_sidecars(bind_out, kd):
+    """copy the KIT_BIND_SIDECARS present in bind_out into kd/bind_sidecars (copy + rename) -> {dir, files {name: sha256}}"""
+    dst = Path(kd) / KIT_BIND_DIR
+    files = {}
+    for name in KIT_BIND_SIDECARS:
+        src = Path(bind_out) / name
+        if not src.is_file():
+            continue
+        data = src.read_bytes()
+        dst.mkdir(parents=True, exist_ok=True)
+        tmp = dst / f".{name}.tmp"
+        tmp.write_bytes(data)
+        tmp.replace(dst / name)
+        files[name] = hashlib.sha256(data).hexdigest()
+    return dict(dir=KIT_BIND_DIR, files=files)
+
+
+def bind_candidates(kit_rtl_json, kr, name):
+    """paths tried for bind sidecar `name`, kit copy first"""
+    out = []
+    side = (kr or {}).get("bind_sidecars") or {}
+    if kit_rtl_json:
+        out.append(Path(kit_rtl_json).parent / (side.get("dir") or KIT_BIND_DIR) / name)
+    if (kr or {}).get("bind_out"):
+        out.append(Path(kr["bind_out"]) / name)
+    return out
+
+
+def bind_file(kit_rtl_json, kr, name):
+    """-> the first existing sidecar path (a kit copy must match its recorded sha256), or None"""
+    want = ((kr or {}).get("bind_sidecars") or {}).get("files", {}).get(name)
+    for i, p in enumerate(bind_candidates(kit_rtl_json, kr, name)):
+        if p.is_file():
+            if i == 0 and kit_rtl_json and want and hashlib.sha256(p.read_bytes()).hexdigest() != want:
+                raise ValueError(f"kit bind sidecar {p}: sha256 differs from the kit_rtl.json bind_sidecars record")
+            return p
+    return None
+
+
+def missing_text(kit_rtl_json, kr, name):
+    tried = ", ".join(str(p) for p in bind_candidates(kit_rtl_json, kr, name)) or "(no bind_out, no kit copy)"
+    return f"{name} not found on host {socket.gethostname().split('.')[0]}; tried {tried}"
+
+
+def read_bind_json(kit_rtl_json, kr, name):
+    p = bind_file(kit_rtl_json, kr, name)
+    if p is None:
+        raise FileNotFoundError(missing_text(kit_rtl_json, kr, name))
+    return json.loads(p.read_text())
 
 
 def declared(kit_rtl_json, width=4):
@@ -14,11 +75,11 @@ def declared(kit_rtl_json, width=4):
             raise ValueError('R8 count ports lack their bind authority')
         # Native station/source manifests have no binder metadata to project.
         return []
-    root = Path(kr['bind_out'])
-    mf = root/'bind_parent_id_straps.json'
-    if not mf.exists():
+    mf = bind_file(kit_rtl_json, kr, 'bind_parent_id_straps.json')
+    if mf is None:
         if any(name.startswith('strap_r8pad_') for name in ports):
-            raise ValueError('R8 count ports lack their bind manifest')
+            raise ValueError('R8 count ports lack their bind manifest: '
+                             + missing_text(kit_rtl_json, kr, 'bind_parent_id_straps.json'))
         return []
     manifest = json.loads(mf.read_text())
     rows = manifest.get('types', {}).get(kr.get('bound_type', kr.get('type')), {})
@@ -31,7 +92,7 @@ def declared(kit_rtl_json, width=4):
         w = row.get('width')
         if w not in (4, width) or not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or ports.get(name) != ('input', w):
             raise ValueError(f'invalid bound R8 count declaration: {name}')
-        audit = json.loads((root/'bind_r8pad_strap_audit.json').read_text())
+        audit = read_bind_json(kit_rtl_json, kr, 'bind_r8pad_strap_audit.json')
         if audit.get('verdict') != 'PASS' or audit.get('errors') or audit.get('checked_bits', 0) < w:
             raise ValueError(f'R8 count value audit not PASS: {name}')
         owners = kr.get('instances', [])

@@ -2188,9 +2188,10 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
     if not kj.is_file():
         raise gen_rtl.GenError(f"type {tn}: declares bump_ports but kit-rtl {kj} is missing (bound port names unknown)")
     kr = json.loads(kj.read_text())
-    rep_f = Path(kr["bind_out"]) / "bind_report.json"
-    if not rep_f.is_file():
-        raise gen_rtl.GenError(f"type {tn}: declares bump_ports but {rep_f} is missing")
+    import bound_r8_straps as _BRS              # FLOW-PROC-A 11-21: kit copy first, then bind_out; a miss names the paths + host
+    rep_f = _BRS.bind_file(kj, kr, "bind_report.json")
+    if rep_f is None:
+        raise gen_rtl.GenError(f"type {tn}: declares bump_ports but {_BRS.missing_text(kj, kr, 'bind_report.json')}")
     rep = json.loads(rep_f.read_text())
     insts = set(kr.get("instances") or [])
     def sid(n):
@@ -9701,8 +9702,8 @@ def bound_parent_id_plan(raw, kit_rtl):
             sub_core_leaf = json.loads(Path(kr["asbuilt_manifest"]).read_text()).get("sub_core_leaf") or {}
         t = with_sub_core_id_leaves(t, sub_core_leaf)
         declarations = type_parent_id_straps(t)
-        mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
-        rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
+        import bound_r8_straps as _BRS          # FLOW-PROC-A 11-21: kit copy first, then bind_out; a miss names the paths + host
+        rows = _BRS.read_bind_json(kj, kr, "bind_parent_id_straps.json").get("types", {}).get(kr.get("bound_type", tn), {})
         actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}
         additions = []
         declared_top = {r["name"]: r["width"] for r in t.get("id_straps", []) + t.get("count_straps", [])}

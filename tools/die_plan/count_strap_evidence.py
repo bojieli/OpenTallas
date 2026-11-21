@@ -43,8 +43,10 @@ def write_for_kit(kit, type_plan, kit_rtl_json):
     if not Path(kit_rtl_json).is_file():
         return None
     kit_rtl = json.loads(Path(kit_rtl_json).read_text())
-    tie_file = Path(kit_rtl.get("bind_out") or "") / "bind_tie_audit.json"
-    tie_audit = json.loads(tie_file.read_text()) if tie_file.is_file() else {}
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import bound_r8_straps as _BRS              # FLOW-PROC-A 11-21: kit copy first, then bind_out
+    tie_file = _BRS.bind_file(kit_rtl_json, kit_rtl, "bind_tie_audit.json")
+    tie_audit = json.loads(tie_file.read_text()) if tie_file else {}
     evidence = build(type_plan, kit_rtl, tie_audit)
     (Path(kit) / FILE).write_text(json.dumps(evidence, indent=1) + "\n")
     return evidence
