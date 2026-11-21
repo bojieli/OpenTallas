@@ -114,3 +114,4 @@ FAM-S81-COL-H9R0-R3	stood-down	FAM-S81-COL-H9R0-R4	2026-11-21	12:22 PST | contex
 OPUS-FIX-KV-HGI-R5	stood-down	OPUS-FIX-KV-HGI-R6	2026-11-21	12:26 PST | context; rows in hgi_r5_rows.json; proof must move to D27d (no D26)
 FABLE-FIX-KV-HUB-R3	stood-down	FABLE-FIX-KV-HUB-R4	2026-11-21	12:37 PST | context limit; D27d2 chain unit live, see handoff STAND-DOWN block
 FAM-QC-COLL-R2	stood-down	FAM-QC-COLL-R3	2026-11-21	12:44 PST
+FLOW-OBS-GCELL-R2	stood-down	none	2026-11-21	12:49 PST | HEAD-START-R17 reads the v2 hd_host_e proof + he_epc M7 DRC check; new flow items -> FLOW-OPS-1300; qkd_ahub -> FABLE-FIX-KV-HUB-R4; idx_tx rst -> S81-BKSEL-R7
