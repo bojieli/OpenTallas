@@ -14831,6 +14831,11 @@ def visual_reject_discard(AP, cfg, st, notices, jobs=None):
     return n
 
 
+def visual_advisory(rec):
+    """FLEET-WATCH-R5 11-21 (COORD): a pending visual verdict / stale-for-review is advisory for every die except parked hbm, whose rows keep their holds"""
+    return rec.get("die") != "hbm"
+
+
 def visual_hold(cfg, rec):
     """COORD/OWNER 11-12 'stop repeating bad builds, manual visual placement and visual review before sign-off': a TYPE row
     stops after place (place DB + renders kept, route resumes from it) until lanes/GEOM-REVIEW.md carries a verdict for that
@@ -14849,14 +14854,19 @@ def visual_hold(cfg, rec):
     vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
     v = visual_verdicts().get(vk)
     if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
-        rec["visual_pending"] = (f"WAIT-VISUAL (advisory): place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
-                                 "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
-                                 "lanes/GEOM-REVIEW.md")
+        txt = (f"place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
+               "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
+               "lanes/GEOM-REVIEW.md")
+        if not visual_advisory(rec):
+            return "WAIT-VISUAL: " + txt
+        rec["visual_pending"] = "WAIT-VISUAL (advisory): " + txt
         return None                      # FLEET-WATCH-R5 11-21: advisory, route proceeds
     if v in VISUAL_ACCEPT:
         return None
     if v in VISUAL_REJECT:
         return f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
+    if not visual_advisory(rec):
+        return "WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt" + (f" (now {v})" if v else "")
     rec["visual_pending"] = "WAIT-VISUAL (advisory): place done, a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md is pending for this attempt" + (f" (now {v})" if v else "")
     return None                          # FLEET-WATCH-R5 11-21: pending = advisory, route proceeds
 
@@ -14895,7 +14905,10 @@ def visual_queue_publish(cfg, st):
         exact_policy = review_before_route(cfg, rec)
         if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL") and not exact_policy:
             why = stale_visual_why(cfg, rec, t0)
-            if why:
+            if why and visual_advisory(rec):
+                # FLEET-WATCH-R5 11-21 (COORD): stale-for-review only waits on a pending verdict = advisory; the row routes (enqueue_pass re-judges it) and stays listed
+                rec["visual_pending"] = f"WAIT-VISUAL (advisory): stale for review ({why})"
+            elif why:
                 # KW-FIX-46 11-12 (GEOM-VIS-4 05:30): a WAIT-VISUAL row placed before the gate, or built on a plan that is no
                 # longer the die's, is not reviewed and never routes: it goes to WAIT-FORM (its route stays held, the type
                 # rebuilds on the current form) and leaves the queue
@@ -14995,6 +15008,8 @@ def route_hold_reason(cfg, rec):
             return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
         if verdict not in VISUAL_ACCEPT:
             # FLEET-WATCH-R5 11-21 (COORD, owner rule "visual review never blocks route or sign-off"): a pending verdict is advisory; enqueue_pass logs it, the GEOM queue lists it, the row routes
+            if not visual_advisory(rec):
+                return f"WAIT-VISUAL: record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
             rec["visual_pending"] = f"WAIT-VISUAL (advisory): record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
     if FG.stops_off_die(cfg, rec.get("die")):      # OWNER 11-18 (hbm excluded): owner-review route holds (route_hold_items, WAIT-VISUAL / WAIT-FORM) hold nothing; visual review is advisory
         return None
@@ -15094,6 +15109,8 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         rec.update(status="ROUTE-HELD", route_hold=f"{tag}: {text}", reason=f"ROUTE hold: {tag}: {text}", updated=time.time())
         return
     why = route_hold_reason(cfg, rec)
+    if not why and rec.get("status") == "ROUTE-HELD" and str(rec.get("route_hold") or "").startswith("WAIT-FORM: stale for review") and visual_advisory(rec):
+        rec["visual_pending"] = "WAIT-VISUAL (advisory): " + str(rec["route_hold"])[len("WAIT-FORM: "):]       # FLEET-WATCH-R5: the old stale hold is released
     if why:
         if rec.get("status") != "ROUTE-HELD" or rec.get("route_hold") != why:
             notices.setdefault(rec["die"], []).append(f"{rec['item']} AUTO-GEOM PASS, ROUTE held: {why}")

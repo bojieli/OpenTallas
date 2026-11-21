@@ -1421,6 +1421,11 @@ def cancel(sub, all_dirs):
         except Exception as e:                 # the cancel itself already happened
             print(f"ot-run --cancel: stopping started jobs failed: {type(e).__name__}: {e}")
     log_signal(f"--cancel {sub!r} by pid {os.getpid()} parent {sender(os.getppid())}: {sorted(hit)}")
+    # FLEET-WATCH-R5 11-21 (OPUS-FIX-HEAD-LEP0N-R4 BUG: --cancel <unit> reached only STALE clients, scope + dpkit containers kept running): an exact unit / client tag is also stopped by its own scope
+    # on every fleet host (ot-heavy-stop --unit|--tag), and the cancel is non-zero while a scope is still active
+    if re.fullmatch(r"oth-[A-Za-z0-9_-]+|otrun-[A-Za-z0-9_.-]+-\d+-(\d+)?", sub) and not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
+        if cancel_unit(sub) == 3:
+            return 3
     return 0
 
 
