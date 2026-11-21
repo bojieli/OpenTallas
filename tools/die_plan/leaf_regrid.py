@@ -37,6 +37,7 @@ ROW_GAP = 25.92
 STRIP = 43.2
 OBS_GAP = 12.96        # lane to a non-lane core (SRAM / vn / vq body)
 EDGE = 4.32
+BAND_GAP = 8.64        # lane to a clock landing band (the J5 t44 kit placed its bands with a lane 8.3 um away)
 HOP = 405.0
 SEAT = 8.64
 FLOP_UM2 = 0.5832       # one station flop on the 2.16 x 0.27 um station comb
@@ -87,7 +88,7 @@ def find_slots(t, col_gap=COL_GAP, row_gap=ROW_GAP, strip=STRIP):
         return None, "no hi rows"
     fx, (y0, y1), side = f
     yc = (y0 + y1) / 2
-    O = obox(t); FT = ft_points(t)
+    O = obox(t); FT = ft_points(t); BD = H.band_rects(t)
     # as many columns as fit between the face and the tile edge with a strip >= `strip`; the slack widens the strip
     avail = (fx - EDGE if side < 0 else W - EDGE - fx) - strip
     ncol = int((avail + col_gap) // (LW + col_gap))
@@ -101,6 +102,9 @@ def find_slots(t, col_gap=COL_GAP, row_gap=ROW_GAP, strip=STRIP):
             return False
         for _, a, b, c, d in O:
             if x < c + OBS_GAP and a < x + LW + OBS_GAP and y < d + OBS_GAP and b < y + LW + OBS_GAP:
+                return False
+        for a, b, c, d in BD:          # S81-LEAF-REGRID BAND KEEP-OUT (t44 kit A: ln_7 / ln_2 on the ft3_i / up_s bands, OT_CLAND BAND FAIL)
+            if x < c + BAND_GAP and a < x + LW + BAND_GAP and y < d + BAND_GAP and b < y + LW + BAND_GAP:
                 return False
         for p in FT:
             if x - 2.16 < p[0] < x + LW + 2.16 and y - 2.16 < p[1] < y + LW + 2.16:
@@ -287,6 +291,7 @@ def check_type(tn, t, gs=0):
             la, lb_ = bool(H.LN.search(a[0])), bool(H.LN.search(b[0]))
             if la or lb_:
                 (gaps if la and lb_ else ogaps).append(max(max(a[1] - b[3], b[1] - a[3]), max(a[2] - b[4], b[2] - a[4])))
+    on_band = sorted({b[0] for b in L for a, bb, c, d in H.band_rects(t) if b[1] < c and a < b[3] and b[2] < d and bb < b[4]})
     worst = 0.0
     for e in t.get("internal_stations") or []:
         if e.get("regs_um"):
@@ -341,7 +346,8 @@ def check_type(tn, t, gs=0):
                lane_gaps_under=sum(1 for g in gaps if g < ROW_GAP - 0.01), min_lane_to_other_core_um=round(min(ogaps), 2) if ogaps else None, worst_hop_um=round(worst, 1),
                bank_spill_max_um=round(spill[0][0], 1) if spill else 0, bank_spill_top=spill[:4],
                corridor=(lambda r: {k: r.get(k) for k in ("verdict", "banks_inside_core", "banks", "worst_ratio")})(H.check({"partition_types": {tn: t}}, ".", gs).get(tn, {})))
-    rep["pass"] = (st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
+    rep["lanes_on_band"] = on_band
+    rep["pass"] = (not on_band and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
     rep["bank_spill_advisory"] = "OK" if rep["bank_spill_max_um"] <= SPILL_MAX else "PILE-UP"      # estimator, not calibrated against a kit yet
     return rep
 

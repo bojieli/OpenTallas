@@ -25,6 +25,11 @@ both sides and the bus crosses the core twice (measured t28/t27 GRT hot gcells: 
         `check` counts it (shared and per-lane banks) and calls the type OVER.  A bank that needs more than FP_SPILL x
         its free-field radius is a PILE-UP: counted and printed, advisory.  `sites` takes the first candidate that is
         neither, else the least bad one.
+  lane-sites PLAN --types RE --out PLAN_OUT [--gs N]   (S81-LANE-BANK) every per-lane bank (hi stage >= gs, every ho
+        stage) gets ONE site whose footprint is clean: kit_istations seats the whole lane stage (about 1,046 flops) at
+        the bits-weighted centroid of its rows, and rows that leave two vn cores put that centroid in a lane core
+        (t44 ln_0 stage 0 inside ln_9).  All rows of the lane stage take the site; hops <= max(LIMIT, before); a lane
+        that cannot keep its hops keeps its old rows.  Counts, cycles, bits, pins unchanged.
         --add-stage (S81-HI-STAGE)          a type with refused rows: +1 per-lane hi stage on every hi row of that type
                                             (plan hi depth +1, +1 cycle, restage LF_CS_HI_D), then all hops <= 400.
 """
@@ -152,18 +157,121 @@ def _fp_key(f):
     return (0 if f["fit"] else 1, len(f["split"]), f["spill"] if f["spill"] is not None else 1e9)
 
 
-def lane_banks(t, gs):
-    """per-lane hi banks (stage >= gs), as kit_istations sites them: (lane capture, stage, centroid, flops)"""
+def lane_flops(es):
+    """flops of one per-lane bank as built: the rows of one lane repeat the bundle bits, so the bank is the widest row
+    + its valid (measured in t44 3_place.odb: 257 per hi lane stage, 1,025 per shared quad stage)"""
+    return max(e["bits"] for e in es) + 1 if es else 0
+
+
+def quad_flops(es):
+    by = defaultdict(list)
+    for e in es:
+        by[e["capture"]].append(e)
+    return sum(lane_flops(v) for v in by.values())
+
+
+def band_rects(t):
+    """clock landing bands of the type (plan clock.band_fixed_um rect_um): closed to register banks and to lane cores
+    (t44 kit A 11-21: two moved lanes on the ft3_i / up_s bands, OT_CLAND BAND FAIL in global_place)"""
+    out = []
+    for v in ((t.get("clock") or {}).get("band_fixed_um") or {}).values():
+        for r in ([v.get("rect_um")] if v.get("rect_um") else []) + list(v.get("rects_um") or []):
+            if r and len(r) == 4:
+                out.append(tuple(r))
+    return out
+
+
+def lane_rows(t):
+    """(class, lane inst) -> rows: hi = vn -> lane (hi_rows), ho = lane -> vn; one kit bank per (class, lane, stage)"""
     by = defaultdict(list)
     for es in hi_rows(t).values():
         for e in es:
-            by[e["capture"]].append(e)
+            by[("hi", e["capture"])].append(e)
+    for e in t.get("internal_stations") or []:
+        m = LN.search(e.get("launch", "").split(":")[-1].rsplit(".", 1)[0])
+        if m and "u_vn" in e.get("capture", "") and e.get("regs_um"):
+            by[("ho", e["launch"].split(":")[-1].rsplit(".", 1)[0])].append(e)
+    return by
+
+
+def lane_banks(t, gs):
+    """per-lane banks as kit_istations sites them (hi stage >= gs, every ho stage; CS_HO_GS 0): (lane, stage, centroid,
+    flops, class)"""
     out = []
-    for cap, es in sorted(by.items()):
-        for j in range(gs, max(len(e["regs_um"]) for e in es)):
+    for (c, cap), es in sorted(lane_rows(t).items()):
+        for j in range(gs if c == "hi" else 0, max(len(e["regs_um"]) for e in es)):
             mem = [e for e in es if len(e["regs_um"]) > j]
-            out.append((cap, j, centroid(mem, j), sum(e["bits"] for e in mem)))
+            out.append((cap, j, centroid(mem, j), lane_flops(mem), c))
     return out
+
+
+def lane_sites(P, rex, gs, mincl, reach=160.0, tries=160):
+    """S81-LANE-BANK: one clean-footprint site per (class, lane, stage) bank; see the module docstring."""
+    rows = []
+    for tn, t in matching(P, rex):
+        B = boxes(t); OUT = t.get("outline_um")
+        occ = list(band_rects(t))
+        FP = [q[0] for q in free_points(t, B, mincl) if not any(a - mincl < q[0][0] < c + mincl and b - mincl < q[0][1] < d + mincl for a, b, c, d in occ)]
+        for g, es in sorted(hi_rows(t).items()):          # shared banks keep their sites and their room
+            for j in range(gs):
+                c = centroid(es, j)
+                if c:
+                    f = seat_bank(c, quad_flops([e for e in es if len(e["regs_um"]) > j]), B, OUT, occ)
+                    if f["bbox_um"]:
+                        occ.append(f["bbox_um"])
+        for (cls, cap), es in sorted(lane_rows(t).items()):
+            keep = [([list(r) for r in e["regs_um"]], e.get("note")) for e in es]
+            hop0 = max(max(_hops(e)) for e in es)
+            lim = max(LIMIT, hop0)
+            mine, bad = [], None
+            j0 = gs if cls == "hi" else 0
+            for j in range(j0, max(len(e["regs_um"]) for e in es)):
+                mem = [e for e in es if len(e["regs_um"]) > j]
+                c = centroid(mem, j); n = lane_flops(mem)
+
+                def hop(p):
+                    w = 0
+                    for e in mem:
+                        w = max(w, md(e["regs_um"][j - 1] if j else e["from_um"], p))
+                        if len(e["regs_um"]) == j + 1:
+                            w = max(w, md(p, e["to_um"]))
+                    return w
+                cand = sorted((q for q in FP if md(q, c) <= reach), key=lambda q: md(q, c))
+                cand = [q for q in cand if hop(q) <= lim]
+                best = None
+                for q in cand[:tries]:
+                    f = seat_bank(q, n, B, OUT, occ + mine)
+                    if f["ok"] and not f["pile"]:
+                        best = (q, f); break
+                    if best is None or _fp_key(f) < _fp_key(best[1]):
+                        best = (q, f)
+                if best is None:
+                    bad = dict(type=tn, lane=cap, cls=cls, stage=j, result="REFUSED no site within the hop limit", lim=round(lim, 1)); break
+                q, f = best
+                for e in mem:
+                    e["regs_um"][j] = [q[0], q[1]]
+                if f["bbox_um"]:
+                    mine.append(f["bbox_um"])
+                rows.append(dict(type=tn, lane=cap, cls=cls, stage=j, result="sited", old=[round(c[0], 2), round(c[1], 2)], new=list(q), flops=n,
+                                 fp_ok=f["ok"], fp_pile=f["pile"], fp_spill=f["spill"], fp_split=f["split"]))
+            if bad is None and max(max(_hops(e)) for e in es) > lim + 1e-6:
+                bad = dict(type=tn, lane=cap, cls=cls, result="REFUSED final hop", hop=round(max(max(_hops(e)) for e in es), 1), before=round(hop0, 1))
+            if bad:
+                for e, (regs, note) in zip(es, keep):
+                    e["regs_um"] = regs
+                rows[:] = [r for r in rows if not (r["type"] == tn and r.get("lane") == cap and r.get("cls") == cls)]
+                bad["kept_old"] = True
+                rows.append(bad)
+                for j in range(j0, max(len(e["regs_um"]) for e in es)):      # the old banks still take their room
+                    mem = [e for e in es if len(e["regs_um"]) > j]
+                    f = seat_bank(centroid(mem, j), lane_flops(mem), B, OUT, occ)
+                    if f["bbox_um"]:
+                        occ.append(f["bbox_um"])
+            else:
+                for e in es:
+                    e["note"] = (e.get("note") or "") + f" | S81-LANE-BANK {cls} stages >= {j0} on one clean-footprint site per lane stage"
+                occ += mine
+    return rows
 
 
 def matching(P, rex):
@@ -251,6 +359,7 @@ def check(P, rex, gs):
             continue
         banks, load = [], defaultdict(lambda: dict(H=0, V=0))
         grid = {}          # station-grid cells taken so far: banks of one type stack (shared banks first, as the kit seats them)
+        bands = band_rects(t)
         for g, es in sorted(Q.items()):
             bits = lane_bits(es)
             for j in range(gs):
@@ -258,9 +367,10 @@ def check(P, rex, gs):
                 if c is None:
                     continue
                 ins = [b[0] for b in B if b[1] < c[0] < b[3] and b[2] < c[1] < b[4]]
-                fp = seat_bank(c, bits, B, t.get("outline_um"), grid=grid)
+                nfl = quad_flops([e for e in es if len(e["regs_um"]) > j])
+                fp = seat_bank(c, nfl, B, t.get("outline_um"), bands, grid=grid)
                 banks.append(dict(quad=g, stage=j, site=[round(c[0], 2), round(c[1], 2)], inside=ins, clear_um=round(clear(c, B), 1),
-                                  flops=bits, fp_ok=fp["ok"], fp_pile=fp["pile"], fp_spill=fp["spill"], fp_split=fp["split"], fp_bbox_um=fp["bbox_um"]))
+                                  flops=nfl, fp_ok=fp["ok"], fp_pile=fp["pile"], fp_spill=fp["spill"], fp_split=fp["split"], fp_bbox_um=fp["bbox_um"]))
                 # bus legs: shared bank j -> next point of every member (j < gs-1: next shared bank; else each lane)
                 if j < gs - 1:
                     targets = [centroid(es, j + 1)]
@@ -285,10 +395,10 @@ def check(P, rex, gs):
         worst = max([c[d]["ratio"] for c in cores.values() for d in c] or [0])
         n_in = sum(1 for b in banks if b["inside"])
         lanes = []
-        for cap, j, c, n in lane_banks(t, gs):
-            fp = seat_bank(c, n, B, t.get("outline_um"), grid=grid)
+        for cap, j, c, n, cls in lane_banks(t, gs):
+            fp = seat_bank(c, n, B, t.get("outline_um"), bands, grid=grid)
             if not fp["ok"] or fp["pile"]:
-                lanes.append(dict(lane=cap, stage=j, site=[round(c[0], 2), round(c[1], 2)], flops=n, fp_ok=fp["ok"], fp_pile=fp["pile"],
+                lanes.append(dict(lane=cap, cls=cls, stage=j, site=[round(c[0], 2), round(c[1], 2)], flops=n, fp_ok=fp["ok"], fp_pile=fp["pile"],
                                   fp_spill=fp["spill"], fp_split=fp["split"], fp_bbox_um=fp["bbox_um"]))
         n_fp = sum(1 for b in banks + lanes if not b["fp_ok"])
         n_pile = sum(1 for b in banks + lanes if b["fp_pile"])
@@ -330,11 +440,12 @@ def _site_type(tn, t, gs, mincl, extra=False):
         return [dict(type=tn, result="no free point")]
     used = []          # banks already sited in this type: keep >= SEP um apart (one bank per channel spot)
     fpbox = {}         # pick -> seated footprint bbox: later banks seat round it
+    BANDS = list(band_rects(t))
     OUT = t.get("outline_um")
 
     def best_fp(points, n, tries=60):
         """first candidate (in preference order) whose bank footprint is clean; else the least bad of the first `tries`"""
-        occ = [fpbox[u] for u in used if u in fpbox]
+        occ = BANDS + [fpbox[u] for u in used if u in fpbox]
         worst_seen = None
         for q in points[:tries]:
             f = seat_bank(q, n, B, OUT, occ)
@@ -372,7 +483,7 @@ def _site_type(tn, t, gs, mincl, extra=False):
                         w = max(w, (md(p, nxt(e, j + 1)) + 10.0) / 2 if extra else md(p, nxt(e, j)))
                 return w
             FPu = [q for q in FP if md(q[0], c) <= 2 * LIMIT and all(md(q[0], u) >= SEP for u in used)]
-            nfl = lane_bits(mem)
+            nfl = quad_flops(mem)
             if j == 0:
                 cand = sorted(FPu, key=lambda q: md(q[0], c))[:400]
                 cand = [q[0] for q in cand if worst(q[0]) <= lim]
@@ -402,7 +513,7 @@ def _site_type(tn, t, gs, mincl, extra=False):
                 if not cand:
                     rows.append(dict(type=tn, capture=e["capture"], result="REFUSED add-stage: no free point within one hop of both ends"))
                     continue
-                q, fp = best_fp([x[2] for x in sorted(cand)], e["bits"], tries=24)
+                q, fp = best_fp([x[2] for x in sorted(cand)], e["bits"] + 1, tries=24)
                 e["regs_um"][gs] = [q[0], q[1]]; used.append(q)
                 e["note"] = e.get("note", "") + f" | S81-HI-STAGE +1 per-lane hi stage at {q[0]},{q[1]} (index {gs}, +1 cycle; shared bank to lane was over {LIMIT:g} um)"
     for g, es in sorted(Q.items()):          # final hop check over the whole rows (both stages moved)
@@ -706,7 +817,7 @@ def clear_added_taps(t, rmax=200.0, step=2.16, only=None, budgets=None, margin=0
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=("check", "seed", "sites", "apply"))
+    ap.add_argument("cmd", choices=("check", "seed", "sites", "apply", "lane-sites"))
     ap.add_argument("--seed")
     ap.add_argument("plan")
     ap.add_argument("--types", default=r"ot_s81sl_leaf__t\d+")
@@ -727,6 +838,16 @@ def main():
         if a.json:
             json.dump(rep, open(a.json, "w"), indent=1)
         print("HI_CORRIDOR_CHECK", {v: sum(1 for r in rep.values() if r["verdict"] == v) for v in ("OK", "RISK", "OVER")})
+    elif a.cmd == "lane-sites":
+        rows = lane_sites(P, a.types, a.gs, a.min_clear)
+        json.dump(P, open(a.out, "w"), indent=1)
+        json.dump(rows, open(a.out + ".lane_sites.json", "w"), indent=1)
+        bad = [r for r in rows if r["result"] != "sited"]
+        dirty = [r for r in rows if r["result"] == "sited" and (not r["fp_ok"] or r["fp_pile"])]
+        print("HI_CORRIDOR_LANE_SITES", len(rows) - len(bad), "sited", len(bad), "lanes refused (kept old rows)", len(dirty), "sited with a split / pile-up footprint")
+        for r in bad + dirty:
+            print(r)
+        sys.exit(1 if bad else 0)
     elif a.cmd == "seed":
         sd, rep = seed(P, a.types, a.form, a.corridor)
         json.dump(sd, open(a.out, "w"), indent=1)

@@ -257,7 +257,7 @@ def test_check_counts_bad_per_lane_banks_at_gs0():
     """GS 0 has no shared bank; the per-lane banks (3 stages a lane, stage 2 beside the lane in the 11-um column gap) are
     seated and counted: split banks make the type OVER, pile-ups are reported"""
     r = H.check(plan(), r"t99", 0)["ot_s81sl_leaf__t99"]
-    assert r["banks"] == 0 and r["lane_banks_fp_bad"] and all(b["flops"] == 523 for b in r["lane_banks_fp_bad"])
+    assert r["banks"] == 0 and r["lane_banks_fp_bad"] and all(b["flops"] == 524 for b in r["lane_banks_fp_bad"])
     assert r["banks_fp_bad"] + r["banks_pile_up"] >= 8
     assert (r["verdict"] == "OVER") == (r["banks_fp_bad"] > 0)
 
@@ -265,7 +265,7 @@ def test_check_counts_bad_per_lane_banks_at_gs0():
 def test_sites_rows_carry_the_footprint_and_shared_banks_are_clean():
     P = plan()
     rows = H.sites(P, r"t99", 2, 4.32)
-    assert all(r["fp_ok"] and not r["fp_pile"] and r["fp_split"] == [] and r["flops"] == 523 for r in rows)
+    assert all(r["fp_ok"] and not r["fp_pile"] and r["fp_split"] == [] and r["flops"] == 4 * 524 for r in rows)
     r = H.check(P, r"t99", 2)["ot_s81sl_leaf__t99"]
     assert all(b["fp_ok"] for b in r["bank_sites"])
 
@@ -284,3 +284,68 @@ def test_one_bank_against_a_core_face_or_in_a_28um_channel_is_not_a_pile_up():
     assert face["ok"] and not face["pile"] and face["spill"] <= 1.6
     chan = H.seat_bank((114.0, 200.0), 1025, [("a", 0.0, 0.0, 100.0, 400.0), ("b", 128.08, 0.0, 228.0, 400.0)], [400.0, 400.0])
     assert chan["ok"] and not chan["pile"] and 1.5 < chan["spill"] < H.FP_SPILL
+
+
+def _two_vn_plan():
+    """one lane fed from two faces N and S of ANOTHER lane core: the bits-weighted centroid of its stage lands in that core"""
+    cores = [dict(inst="u_lf.u_vn.u_a", module="vn", origin_um=[300.0, 260.0], orient="R0", outline_um=[100.0, 100.0]),
+             dict(inst="u_lf.u_vn.u_b", module="vn", origin_um=[300.0, 40.0], orient="R0", outline_um=[100.0, 100.0]),
+             dict(inst="u_lf.u_vp.g_ln[0].u_l", module="ln", origin_um=[20.0, 143.0], orient="R0", outline_um=[L, L]),
+             dict(inst="u_lf.u_vp.g_ln[1].u_l", module="ln", origin_um=[160.0, 143.0], orient="R0", outline_um=[L, L])]
+    st = [dict(bits=523, launch="core:u_lf.u_vn.u_a.hw_d", capture="u_lf.u_vp.g_ln[0].u_l", conn="x", from_um=[300.0, 300.0],
+               regs_um=[[220.0, 290.0]], to_um=[20.0 + L, 250.0], note=""),
+          dict(bits=523, launch="core:u_lf.u_vn.u_b.hw_d", capture="u_lf.u_vp.g_ln[0].u_l", conn="x", from_um=[300.0, 100.0],
+               regs_um=[[220.0, 110.0]], to_um=[20.0 + L, 150.0], note=""),
+          dict(bits=300, launch="core:u_lf.u_vp.g_ln[1].u_l.ho_d", capture="u_lf.u_vn.u_a", conn="x", from_um=[160.0 + L, 200.0],
+               regs_um=[[285.0, 200.0]], to_um=[300.0, 300.0], note="")]
+    return {"partition_types": {"ot_s81sl_leaf__t98": dict(outline_um=[500.0, 400.0], hard_cores=cores, internal_stations=st)}}
+
+
+def test_lane_bank_centroid_in_another_lane_is_found_and_lane_sites_fixes_it():
+    P = _two_vn_plan()
+    r = H.check(P, r"t98", 0)["ot_s81sl_leaf__t98"]
+    assert r["banks_fp_bad"] >= 1 and r["verdict"] == "OVER"
+    assert any(b["site"] == [220.0, 200.0] and b["flops"] == 524 and b["fp_split"] for b in r["lane_banks_fp_bad"])
+    before = copy.deepcopy(P)
+    rows = H.lane_sites(P, r"t98", 0, 8.64)
+    assert rows and all(x["result"] == "sited" and x["fp_ok"] and not x["fp_pile"] for x in rows)
+    assert {(x["cls"], x["flops"]) for x in rows} == {("hi", 524), ("ho", 301)}
+    t, t0 = P["partition_types"]["ot_s81sl_leaf__t98"], before["partition_types"]["ot_s81sl_leaf__t98"]
+    hi = [e for e in t["internal_stations"] if e["capture"].endswith("g_ln[0].u_l")]
+    assert hi[0]["regs_um"] == hi[1]["regs_um"]                       # one site for the whole lane stage
+    assert H.clear(hi[0]["regs_um"][0], H.boxes(t)) >= 8.64
+    assert all(max(H._hops(e)) <= H.LIMIT for e in t["internal_stations"])
+    assert [(e["bits"], len(e["regs_um"]), e["from_um"], e["to_um"]) for e in t["internal_stations"]] == \
+           [(e["bits"], len(e["regs_um"]), e["from_um"], e["to_um"]) for e in t0["internal_stations"]]
+    r = H.check(P, r"t98", 0)["ot_s81sl_leaf__t98"]
+    assert r["banks_fp_bad"] == 0 and r["banks_pile_up"] == 0 and r["verdict"] == "OK"
+
+
+def test_lane_sites_refused_lane_keeps_its_rows(monkeypatch):
+    P = _two_vn_plan()
+    before = copy.deepcopy(P)
+    monkeypatch.setattr(H, "LIMIT", 60.0)             # no point is within 60 um of both vn faces and the lane
+    rows = H.lane_sites(P, r"t98", 0, 8.64)
+    assert any(x["result"].startswith("REFUSED") and x.get("kept_old") for x in rows)
+    t, t0 = P["partition_types"]["ot_s81sl_leaf__t98"], before["partition_types"]["ot_s81sl_leaf__t98"]
+    for e, e0 in zip(t["internal_stations"], t0["internal_stations"]):
+        if max(H._hops(e0)) > 60.0:
+            assert max(H._hops(e)) <= max(H._hops(e0)) + 1e-6
+
+
+def test_bank_flops_as_built_and_landing_bands_are_closed():
+    es = [dict(bits=256, capture="a"), dict(bits=256, capture="a"), dict(bits=3, capture="a"), dict(bits=256, capture="b")]
+    assert H.lane_flops(es[:3]) == 257 and H.quad_flops(es) == 514
+    P = _two_vn_plan()
+    t = P["partition_types"]["ot_s81sl_leaf__t98"]
+    assert H.band_rects(t) == []
+    rows0 = H.lane_sites(copy.deepcopy(P), r"t98", 0, 8.64)
+    site0 = next(x["new"] for x in rows0 if x["cls"] == "hi")
+    band = [site0[0] - 30.0, site0[1] - 10.0, site0[0] + 30.0, site0[1] + 10.0]
+    t["clock"] = dict(band_fixed_um=dict(ft9_i=dict(rect_um=band)))
+    assert H.band_rects(t) == [tuple(band)]
+    rows = H.lane_sites(P, r"t98", 0, 8.64)
+    q = next(x["new"] for x in rows if x["cls"] == "hi")
+    assert not (band[0] - 8.64 < q[0] < band[2] + 8.64 and band[1] - 8.64 < q[1] < band[3] + 8.64)
+    f = H.seat_bank(tuple(site0), 524, H.boxes(t), t["outline_um"], [tuple(band)])
+    assert f["bbox_um"][1] >= band[3] or f["bbox_um"][3] <= band[1] or f["split"] == [] and f["R"] > f["R0"]
