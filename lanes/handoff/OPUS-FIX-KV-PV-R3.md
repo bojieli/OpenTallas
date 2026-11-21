@@ -40,3 +40,15 @@ Read order: 4_1_cts log tt repair "before" wns; then GRT iteration 5 (congestion
 - Replay (main dly_spread on v8p 3_4): intel2 ~/tmp/okpvr3/replay3.log, intel1 replay/replay.log (OKP MAXHOP_AFTER line).
 - COORD (FABLE-PD-KV-1840): no held pv row goes to route.  u_bin reset class = RESET-RELAY-GEN-R2; take its rows when posted.
 - Sign-off/export: none.  All 10 held pv D25e3 rows are -4.4..-26 ns at place; no pv type is near sign-off until D27 kits run.
+
+## Update 2026-11-20 21:xx PST (read first; supersedes the 1,228 cause above)
+- CORRECTION: the dly_spread max_hop 1,228 um is u_bin_i_pvw__u_ctl_cmd q[31], a 1-stage bin chain (main's dly_spread replay on v8p 3_4:
+  still 1,228, fail 32 -> 0, NOROUTE 169).  The 1.4-1.8 mm hop-LATCH class (census) is fixed by main (astk_E 255 sg6 latch -> 1872,596).
+  OPEN: the u_bin ctl_cmd[31] single-stage leg (find its driver/sink on v8p 3_place: intel1 db/v8p_3_place.odb, tools/pos.py with a PAT).
+- STATION-ROUTE-SPREAD on main c8876644a5 (tools/die_plan/station_route_spread.py + test, 5 tests).  Fault rows for 7 pv types:
+  lanes/handoff/OPUS-FIX-KV-PV-R3-fault-rows.json (26 rows, all <= 300 um; +1 cycle v5n E_f_d1, v7 W_f).  kv3_pv_v12 has no placed geom: run
+  the tool on its first D27 placed kit.  Without --conn the tool also re-sites the 405-era rows (+17..+49 cycles per type): separate opt-in.
+  Batch scripts: tools/srs_batch.sh (all rows), tools/srs_rows.sh (rows by conn RE) on epyc7 / intel1; hub chains chain_srs.sh / chain_srsf.sh.
+- v8q (proof kit, current main): GEN still waiting for memory on epyc7 at 21:0x (chain_v8q.log).  Read 3_5 OT_DLY_SPREAD max_hop + NOROUTE,
+  place WNS (3_4 log / tt repair), census (tools/run_hops2.sh on a copy of 3_place.odb), then CTS.  Not watched by watch_r2.sh: add it.
+- Flip: v8m/v8c still in CTS (tap balance it2 at 02:5x UTC).  Read CTS tt setup, then GRT it5 congestion on upper strip / pin edge.
