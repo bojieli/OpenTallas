@@ -47,20 +47,36 @@ def complete_top(text,plan,stages):
     if not used<=set(wires):raise ValueError('START reset provider has unknown export wire')
     unused=[dict(part=k[0],port=k[1],reason='uniform type export unused on this instance; actual raw registered Q') for k in sorted(set(wires)-used)]
     outs={o['net'] for o in stages['die_outputs']};decl=''
-    # Native gen_rtl emits an ANSI header; remove only these exact old external
-    # START input declarations, replacing them with internally driven wires.
-    for n in sorted(outs):
-        text,k=re.subn(r',\n    input  wire '+re.escape(n)+r'(?=[,\n])','',text)
-        if k!=1:raise ValueError(f'{n}: expected one native external START input, found{k}')
-        decl+='    wire '+n+';\n'
-    h=re.search(r'(?m)^module \w+ \(.*?\n\);',text,re.S)
-    if not h:raise ValueError('native ANSI top header missing')
     clocks=[s['clock_port'] for s in stages['stages']]
-    addition=''.join(',\n    input wire '+n for n in clocks)
-    text=text[:h.end()-3]+addition+text[h.end()-3:]
-    h=re.search(r'(?m)^module \w+ \(.*?\n\);',text,re.S)
-    decl+=''.join('    wire '+v+';\n' for v in sorted(new_wires))
-    text=text[:h.end()]+ '\n'+decl+text[h.end():]
+    h=re.search(r'(?m)^module \w+ \(\n.*?\n\);',text,re.S)
+    if h:
+        # Native gen_rtl ANSI header: remove only these exact old external
+        # START input declarations, replacing them with internally driven wires.
+        for n in sorted(outs):
+            text,k=re.subn(r',\n    input  wire '+re.escape(n)+r'(?=[,\n])','',text)
+            if k!=1:raise ValueError(f'{n}: expected one native external START input, found{k}')
+            decl+='    wire '+n+';\n'
+        h=re.search(r'(?m)^module \w+ \(.*?\n\);',text,re.S)
+        addition=''.join(',\n    input wire '+n for n in clocks)
+        text=text[:h.end()-3]+addition+text[h.end()-3:]
+        h=re.search(r'(?m)^module \w+ \(.*?\n\);',text,re.S)
+        decl+=''.join('    wire '+v+';\n' for v in sorted(new_wires))
+        text=text[:h.end()]+ '\n'+decl+text[h.end():]
+    else:
+        # Non-ANSI header (gen.py rtl since 11-1x): `module top (a, b, ...);` + body `input  wire a;`.
+        h=re.search(r'(?m)^module (\w+) \(([^;]*)\);',text)
+        if not h:raise ValueError('native top header missing')
+        names=[x.strip() for x in h[2].split(',')]
+        for n in sorted(outs):
+            if names.count(n)!=1:raise ValueError(f'{n}: expected one native external START input in header, found{names.count(n)}')
+            text,k=re.subn(r'(?m)^    input  wire '+re.escape(n)+r';$','    wire '+n+';',text)
+            if k!=1:raise ValueError(f'{n}: expected one native external START input, found{k}')
+        if set(clocks)&set(names):raise ValueError('stage clock port already a top port')
+        names=[x for x in names if x not in outs]+clocks
+        text=text[:h.start(2)]+', '.join(names)+text[h.end(2):]
+        h=re.search(r'(?m)^module (\w+) \(([^;]*)\);\n',text)
+        decl+=''.join('    input  wire '+n+';\n' for n in clocks)+''.join('    wire '+v+';\n' for v in sorted(new_wires))
+        text=text[:h.end()]+decl+text[h.end():]
     con=['        .'+n+'('+wires[(v['part'],v['port'])]+')' for n,v in sorted(ports.items())]
     con+=['        .'+n+'('+n+')' for n in clocks+sorted(outs)]
     end=text.rfind('endmodule')

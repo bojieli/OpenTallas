@@ -299,7 +299,7 @@ def tb_text(plan, top, cycles, WMAXH):
         decl.append('  wire [%d:0] %s;' % (W - 1, n) if d == 'output' else '  reg [%d:0] %s;' % (W - 1, n))
         conn.append('    .%s(%s)' % (n, n))
         if d == 'input':
-            if n.startswith('clk_region') or n.endswith('_rck') or n.startswith('clk'):
+            if n.startswith('clk_region') or n.endswith('_rck') or n.startswith('clk') or n.endswith('__clk'):  # __clk: START-stage tap ports of the completed top
                 drive.append('  always @* %s = clk;' % n)
             elif n == 'rst_n':
                 drive.append('  always @* rst_n = (cyc >= 40);')
