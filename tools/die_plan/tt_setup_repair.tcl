@@ -181,9 +181,9 @@ proc ::ot_tt_chunk {mg extra n} {
   puts "OT_TT_SETUP_REPAIR WARNING RSZ-0074 inside repair_timing ($err): keeping the DB reached so far, repairing the route / estimate"
   # FLEET-WATCH-1400 (FABLE-FIX-S81-LEPE BUG 11-20 14:03, proof6 lepe_mu_LP__t2: 'Failed to build tree from global routes for pin wire155183/Y and net net155182'): the net the message names
   # (a rebuffered net whose guide could not be restored) is set dont_touch BEFORE the re-route, so the next chunk does not rebuild the same net and die on it again.  More than
-  # OT_TT_DONT_TOUCH_MAX (default 25) such nets = the route cannot be trusted: the repair stops and keeps its DB.
+  # (OpenROAD quotes the net in the message: net 'net155182', the regexp strips the quotes) OT_TT_DONT_TOUCH_MAX (default 25) such nets = the route cannot be trusted: the repair stops and keeps its DB.
   if {![info exists ::ot_dont_touch]} { set ::ot_dont_touch {} }
-  if {[regexp {and net (\S+) at grid} $err -> ot_nn]} {
+  if {[regexp {and net '?([^' ]+)'? at grid} $err -> ot_nn]} {
     if {[catch {set_dont_touch [get_nets $ot_nn]} ot_e3]} {
       puts "OT_TT_SETUP_REPAIR WARNING dont_touch of net $ot_nn failed ($ot_e3)"
     } else {

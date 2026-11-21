@@ -307,3 +307,15 @@ def test_rsz_0074_names_a_net_it_is_set_dont_touch_before_the_reroute_and_the_re
 def test_a_message_without_a_net_sets_nothing_dont_touch():
     out = _chunk_tcl(rsz_at=2, est_fails=1)
     assert "DT " not in out and "dont_touch" not in out
+
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_rsz0074_net_name_is_unquoted_for_dont_touch():
+    """RSZ-CRASH-2200: OpenROAD quotes the net (and net \x27net155182\x27 at grid); the captured name must be bare or get_nets / set_dont_touch fail and the same net kills the next chunk."""
+    import re
+    t = (HERE / "tt_setup_repair.tcl").read_text()
+    m = re.search(r"regexp (\{and net [^}]*\}) \$err -> ot_nn", t)
+    assert m, "net-name regexp not found"
+    msg = "[ERROR RSZ-0074] Failed to build tree from global routes for pin \x27wire155183/Y\x27 and net \x27net155182\x27 at grid (216885, 311505): found route to 1 pins, expected 2"
+    out = subprocess.run([TCLSH], input="set err {%s}\nif {[regexp %s $err -> n]} {puts \"<$n>\"}\n" % (msg, m.group(1)), capture_output=True, text=True)
+    assert out.stdout.strip() == "<net155182>", out.stdout + out.stderr
