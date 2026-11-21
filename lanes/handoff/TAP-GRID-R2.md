@@ -36,3 +36,10 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
 - Rows go to: KV-PLAN-R4 (not R3), S81-J6-ASSEMBLY-R2 (J6 only if before 11-21 13:00 PST, else J7), QC-PLAN-R8 (V2), and the t39 result also to FABLE-FIX-S81-LEAF-R2.
 - pv tap result applies to the D28 split halves, not v8: the v8c r2 read is evidence for the D28 halves; post it to KV-PLAN-R4 framed that way.
 - Lane keeps a run_in_background waiter on t39/chain.log (CHAIN_DONE / BIND_FAIL / NO_PLACE / cts rc=).
+
+## 11-21 09:xx UTC
+- t39: private strict bind PASS (errors 0, LATCHECK 0; bind try2 on the hardlink tree). Chain2 (unit tgr2-t39-chain2, src_manifest off in spec) is at place; kit RTL carries the new ports (clk_t97). CTS next.
+- FABLE-VISUAL-0030 cause 5 (COORD ask): main 17960d767b = clock_taps.tcl CT_CASCADE ejection chains (OT_TAP_CAP_CASCADE), CAPACITY WARN, tap_grid caps at bank_sinks + turns cascade on,
+  clock.tap_cap_cascade; test_tap_cap_cascade.py; mock repair of test_clock_taps_cap_recheck/groups (ord::get_db). Posted to FAM-S81-COL-R2 + FAM-KV-IOPC with rows
+  (col: tap_grid or tap_max_sinks 1000 + cascade; pc_v3: tap_grid regs = bank taps, 67,193 sinks on 39 x 1,200 cannot fit).
+  The t39 proof kit was generated on rt f3db2d0e628f (before 17960d767b): no cascade in it (its plan cap is 1000 already).
