@@ -164,3 +164,8 @@
   QC (QC-PLAN-R5): 14 FAILED-NO-RELAUNCH global_place/place (13 STALE, old) + sle_su_l1 flow error old; new STALE cancelled sle_hc0__cl929603c0__cl38badc56.
   KV (KV-PLAN-R2): 8 FAILED-NO-RELAUNCH (new: kv3_pc_v1__cl4ea58a5c flow error) + 8 held WAIT-BIND, all else old.
   HEAD none flagged; reset-reach types (cbx_q10, kv3_pv_v2, lepe mu_LP t2/nh_mus t1) owned by RESET-RELAY-GEN-1530.
+- 2026-11-20 17:51 PST 17:50 sweep (16:50 mapping + J6/leaf/svc/QC-PLAN-R6/HEAD R2 owners): 495 rows, 35 flagged (unchanged), 0 UNOWNED, 0 DEAD-OWNER.
+  S81: 1 new, serdes__t4 FAILED detail_place no relaunch (owner: S81-DIE-R4 (+MERGE-QUEUE-1,CORE-LIB-LIMITS-1330)	yes). All J6/leaf/svc held rows mapped, none flagged.
+  QC (QC-PLAN-R6): 14 held-by-die-owner STALE (formerly global_place failures), 1 place error UNCLASSIFIED STALE, 1 cancelled STALE; all old.
+  KV (KV-PLAN-R2): 9 FAILED-NO-RELAUNCH (PDN-0006 x2, CLAND, bind stale, input missing, flow errors) + 9 held/cancelled WAIT-BIND; all old.
+  HEAD none flagged.
