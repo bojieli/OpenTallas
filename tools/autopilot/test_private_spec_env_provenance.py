@@ -195,3 +195,10 @@ def test_private_rt_declared_and_recorded(tmp_path, monkeypatch):
     assert rec["tools_sha"] == sha and rec["rt_declared"]["sha"] == sha and rec["source"] == "private-spec"
     assert EP.env_diff(rec["wave_env"], rec["env"]) == []
     assert "rt" not in KW.private_spec(c, D, I, "intel2")["private"]
+
+
+def test_ab_with_tree_keeps_reason(tmp_path):
+    """FAM-S81-COL-H9R0-R3 11-21: --tree used to overwrite the A/B reason with the (empty) link-refusal text."""
+    c = wave_cfg()
+    sp = KW.private_spec(c, D, I, "intel2", tree=str(tmp_path / "tree"), ab=["OT_PGCAP=0"], why="A/B with a private tree")
+    assert sp["gen_env"]["OT_PGCAP"] == "0"

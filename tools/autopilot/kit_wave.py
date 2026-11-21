@@ -8509,9 +8509,10 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
     derived = []
     if tree and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/"):
         old, new = str(sp["src"]), os.path.abspath(tree)
-        why = private_tree_link_refusal(old, new)
-        if why:
-            raise ValueError(why)
+        # FAM-S81-COL-H9R0-R3 11-21: own name, the A/B reason `why` is checked below (--tree + --ab raised 'needs --why')
+        refusal = private_tree_link_refusal(old, new)
+        if refusal:
+            raise ValueError(refusal)
         for k, v in list(sp["gen_env"].items()):
             nv, ch = _swap_prefix(v, old, new)
             if ch:
