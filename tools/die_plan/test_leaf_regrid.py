@@ -1,4 +1,5 @@
-"""S81-LEAF-REGRID: lane slots (columns beside the vn face, landing-band keep-outs), apply and check on a synthetic leaf."""
+"""S81-LEAF-REGRID: lane slots (columns beside the vn face, landing-band keep-outs, 2-D slots round the vn cores), the +1 lane
+stage, the hop fix, apply and check on a synthetic leaf."""
 import copy
 import sys
 from pathlib import Path
@@ -81,9 +82,101 @@ def test_refused_type_keeps_its_rows_through_the_cli(tmp_path):
     t["outline_um"] = [1000.0, 480.0]                                     # 3 rows a column: 12 slots for 16 lanes
     src = tmp_path / "p.json"; out = tmp_path / "o.json"
     src.write_text(json.dumps(P))
-    r = subprocess.run([sys.executable, "-I", str(HERE / "leaf_regrid.py"), "apply", str(src), "--types", "t97", "--out", str(out),
+    r = subprocess.run([sys.executable, "-I", str(HERE / "leaf_regrid.py"), "apply", str(src), "--types", "t97", "--no-2d", "--out", str(out),
                         "--report", str(tmp_path / "r.json")], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
     rep = json.loads((tmp_path / "r.json").read_text())
     assert rep and rep[0]["result"].startswith("REFUSED")
     assert json.loads(out.read_text())["partition_types"][TN] == json.loads(src.read_text())["partition_types"][TN]
+
+
+def plan_2d():
+    """a core west of the vn face closes most of the columns: 16 lanes fit only with slots north / south of vn"""
+    P = plan()
+    t = P["partition_types"][TN]
+    t["hard_cores"].append(dict(inst="u_lf.u_vsw", module="ot_s81sl_vsw", origin_um=[20.0, 20.0], orient="R0", outline_um=[410.0, 980.0]))
+    for k, h in enumerate(c for c in t["hard_cores"] if H.LN.search(c["inst"])):     # the lanes start outside that core
+        h["origin_um"] = [440.0 + (k % 4) * (L + 6.0), 700.0 + (k // 4) * (L + 6.0)]
+        e = t["internal_stations"][k]
+        e["to_um"] = [h["origin_um"][0] + L, h["origin_um"][1] + 60.0]
+        e["regs_um"] = [[590.0, 520.0 + 6 * k], [e["to_um"][0] + 3.0, e["to_um"][1]]]
+    return P
+
+
+def test_2d_slots_when_the_columns_do_not_fit():
+    P = plan_2d()
+    t = P["partition_types"][TN]
+    S, _ = R.find_slots(t)
+    assert len(S["slots"]) < 16
+    assert R.regrid_type(TN, copy.deepcopy(t), P, R.COL_GAP, R.ROW_GAP, R.STRIP, two_d=False)["result"].startswith("REFUSED")
+    keep = copy.deepcopy(t)
+    r = R.regrid_type(TN, t, P, R.COL_GAP, R.ROW_GAP, R.STRIP)
+    assert r["result"] == "moved" and r["form"] == "2d", r
+    lanes = [b for b in H.boxes(t) if H.LN.search(b[0])]
+    other = [b for b in H.boxes(t) if not H.LN.search(b[0])]
+    assert len(lanes) == 16
+    for i, a in enumerate(lanes):
+        for b in lanes[i + 1:]:              # x gap >= COL_GAP or y gap >= ROW_GAP
+            assert max(a[1] - b[3], b[1] - a[3]) >= R.COL_GAP - 1e-6 or max(a[2] - b[4], b[2] - a[4]) >= R.ROW_GAP - 1e-6
+        for o in other:                      # OBS_GAP to every non-lane core
+            assert max(a[1] - o[3], o[1] - a[3], a[2] - o[4], o[2] - a[4]) >= R.OBS_GAP - 1e-6
+        # the strip in front of the face stays open, and no lane goes past the far end of vn
+        assert not (a[1] < S["face_x"] and S["face_x"] - R.STRIP < a[3] and a[2] < S["face_y"][1] + R.ROW_GAP and S["face_y"][0] - R.ROW_GAP < a[4])
+        assert a[3] <= 600.0 + 356.4 + 1e-6
+    assert any(a[1] >= 600.0 - 1e-6 or a[3] > 600.0 for a in lanes)          # some lane stands north / south of vn
+    R.seat(t)
+    hf = R.fix_hops(t, keep["internal_stations"])
+    c = R.check_type(TN, t, 0)
+    assert c["pass"] and c["sites_in_core"] == 0 and c["worst_hop_um"] <= R.HOP, (c, hf)
+    for e in t["internal_stations"]:         # the path sites stand SEAT off every core (round the vn corner, not over it)
+        assert all(H.clear(p, H.boxes(t)) >= R.SEAT - 1e-6 for p in e["regs_um"])
+
+
+def test_router_goes_round_a_core():
+    t = dict(outline_um=[600.0, 600.0], hard_cores=[dict(inst="u_lf.u_vq", origin_um=[200.0, 100.0], orient="R0", outline_um=[100.0, 400.0])])
+    pts = R.Router(t).path([190.0, 300.0], [310.0, 300.0])
+    assert pts and R.plen(pts) > 400.0                                    # 120 um apart, the core between them
+    B = H.boxes(t)
+    assert all(H.clear(p, B) >= R.SEAT - 1e-6 for p in pts[1:-1])
+
+
+def plan_far():
+    """one-station rows to lanes two hops and more from the vn face (a core closes the near columns)"""
+    P = plan()
+    t = P["partition_types"][TN]
+    t["outline_um"] = [1500.0, 1300.0]
+    vn = t["hard_cores"][0]
+    vn["origin_um"] = [1100.0, 500.0]
+    t["hard_cores"].append(dict(inst="u_lf.u_vsw", module="ot_s81sl_vsw", origin_um=[760.0, 4.0], orient="R0", outline_um=[260.0, 1290.0]))
+    for e in t["internal_stations"]:
+        e["from_um"] = [1100.0, e["from_um"][1]]
+        e["regs_um"] = [[(e["from_um"][0] + e["to_um"][0]) / 2, e["from_um"][1]]]
+    return P
+
+
+def test_plus_one_lane_stage_when_the_path_is_over_405_a_hop():
+    P = plan_far()
+    t = P["partition_types"][TN]
+    r0 = R.regrid_type(TN, copy.deepcopy(t), P, R.COL_GAP, R.ROW_GAP, R.STRIP, add_stage=False)
+    assert r0["result"] == "REFUSED hop" and r0["n_hop_over"] > 0, r0
+    r = R.regrid_type(TN, t, P, R.COL_GAP, R.ROW_GAP, R.STRIP)
+    assert r["result"] == "moved" and r["add_stage"] == {"ho": 1} and r["depth"] == {"ho": 2}, r
+    assert r["worst_planned_hop_um"] <= R.HOP
+    assert all(len(e["regs_um"]) == 2 and "S81-HI-STAGE" in e["note"] for e in t["internal_stations"])     # EVERY row of the class
+
+
+def test_hop_fix_resites_then_grows():
+    cores = [dict(inst="u_lf.u_vq", origin_um=[800.0, 800.0], orient="R0", outline_um=[100.0, 100.0])]
+    mk = lambda to, reg: dict(bits=8, conn="bus:leafdn_i0", launch="face bus leafdn_i0", capture="u_lf.u_vs.s_d",      # noqa: E731
+                              from_um=[100.0, 0.0], to_um=list(to), regs_um=[list(reg)], note="")
+    before = [mk([100.0, 700.0], [100.0, 350.0]), mk([400.0, 900.0], [150.0, 450.0])]
+    t = dict(outline_um=[1000.0, 1200.0], hard_cores=cores,
+             internal_stations=[mk([100.0, 700.0], [300.0, 350.0]), mk([400.0, 900.0], [10.0, 450.0])])
+    t["internal_stations"][1]["capture"] = "u_lf.u_vq.m_i"; before[1]["capture"] = "u_lf.u_vq.m_i"
+    rep = R.fix_hops(t, before)
+    a, b = t["internal_stations"]
+    assert len(a["regs_um"]) == 1 and max(R._hops(a)) <= R.HOP                      # 550 -> re-sited, 0 cycles
+    assert len(b["regs_um"]) == 2 and max(R._hops(b)) <= R.HOP                      # 1,200 um run: no one-station site, +1 station
+    assert [g["capture"] for g in rep["grown"]] == ["u_lf.u_vq"] and not rep["left"]
+    rep2 = R.fix_hops(t, before)                                                     # rows inside 405 are left alone
+    assert not rep2["resited"] and not rep2["grown"]
