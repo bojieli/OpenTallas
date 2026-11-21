@@ -21,3 +21,9 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
 - Next: kit via kit_wave.py run-item wave/spec.json (copy of the J5 a3 spec: private src/plan/bind/work, kit_snap off, no future_lec, rt f3db), then tg_cts-style CTS, read post-hook vs baseline.
 - Baseline J5 t39 a3 (epyc7 ot-jobs/ot_s81sl_leaf__t39-route-loved-redfish-1218124-1795237605): OT_CTS_POST_TIMING setup -73.73 / TNS -1278.1, hold -75.14 / -89488.2; 79 taps; clk_t6 6,092 sinks skew 62.3.
 - CORE-DIRECT audit: intel1/intel2/epyc7/epyc8/epyc9 0 bad (config.mk newer than 11-21 04:00 UTC with OT_TAP_CORE_DIRECT=1 and tap_balance.tcl without tb_cdirect); epyc2/epyc10 rescanning.
+
+## 07:4x UTC
+- t39 chain unattended: intel2 systemd user unit tgr2-t39-chain runs /srv/opentallas-scratch2/claude/tap-grid-r2/t39/chain.sh (log chain.log there):
+  wait bind (intel1 oth-ubuntu-1025678-1795244779) -> kit_wave.py run-item wave/spec.json (log wave/run_item.log) -> DO_NOT_COUNT + tg_cts.sh CTS on intel1 (kit otrun_cts.log) -> greps.
+  Posts on bind / place failure. Read 4_1_cts.log OT_CTS_POST_TIMING + OT_TAP_INSERTION vs the J5 a3 baseline above.
+- CORE-DIRECT audit DONE: 7 hosts, 1,420 recent kits, 0 missing the block (posted to FABLE-FIX-KV-HGI).
