@@ -59,3 +59,6 @@ Predecessor dir (read-only, its bind A still writes there): epyc8 fam-kv-hub-r2.
   type-local). Recommended: station rows first (type-local, no neighbour re-pin), per bus from the G0 "bus ..." findings of the two
   types; window moves only where a station row cannot fit beside the 19 hub_C cores. Needs the same work as hroot B (rows, reprice,
   tap density, G0, bind). Not started: deferral posted to KV-PLAN-R5, successor should take it after the hroot B bind.
+
+## 06:2x
+- G0 B PASS: 0 errors, 2,544 warnings (A: 2,543), plan 9ec33fa3c347 (g0gate_b/gate.out). Strict bind B still running (client 2595642).
