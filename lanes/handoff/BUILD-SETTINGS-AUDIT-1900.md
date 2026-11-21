@@ -183,3 +183,23 @@ qwen_compute cbn_q00__cldbcda913 s29q103S4Q9N46C ENQUEUED intel1
 qwen_compute cbn_q01__cld9ff4c40 s29q103S4Q9N46R4A4 ROUTE-HELD intel1
 qwen_kvsys kv3_pv_v1n KV-D25e3 ROUTE-HELD intel1
 ```
+
+## COORD rulings, implemented 19:5x-20:5x
+1. Fan-out: die_gen_env OT_PLACE_MAX_FANOUT=64 dropped on s81 and qwen_kvsys (coord cbeb0ec1ddd). New gens get the R-FLOW default of 32. flow_regen restarts only unstarted current-event rows.
+2. S81 reach: OT_CBC_REACH_UM=405 dropped in cbeb0ec1ddd (19:54:29) and **restored in ac8a92de46c (20:5x)**, following the COORD condition. Reset-identity refusals during the watch hour: 0. But `reset_tree.ResetError ... exceeds reach` recurred 12 times on post-drop attempts (20:00-20:55): leaf t28, serdes t1/t2/t4/t14 x2/t15, svc_lo rs t2/t5/t6, dsdv_slice_c1x_C t6, col_h9_r0_p6 pv0012ba28. This error also failed 6 times before the drop with 405 set (t28 a1-a6 from 19:23), so the drop is probably not its cause. RESET-RELAY-GEN-R3 should root-cause it (legal-site change suspected). KV keeps 405; KV-PLAN-R2 was told to drop it in the D26 apply (post b607b1dd428).
+3. Variant inheritance: 28 family globs `<parent>__pv*` / `__pad*` added (19 S81 col, 9 QC) in cbeb0ec1ddd. Exact keys still win. Drift check now uses the item_env_entry rule (main a4fc295c2a, env_key_applies + test).
+4. 78 stale sparse-exit rows: **not applied.** kit_wave has no config-only way to start a fresh attempt on a ROUTE-HELD or still-routing row: `retry item@N` releases only an ended attempt, and select() skips in-flight rows. Re-placing would need `kit_wave.py cancel-rows`, which cancels live jobs and is outside my rules. 15 of the 19 ROUTE-HELD rows are also under S81-DIE-R4 hold_items ("no route or retry until J6").
+   - S81 rows that qualify (57): 19 ROUTE-HELD (WNS -76 to -2341) and 38 ENQUEUED/routing (WNS -55 to -2606).
+   - S81 rows left to route (8, WNS >= -42): slice_station t24, t40, t41, t43 x2, t49 x2, t52. One row is unknown: col_h9_r0_p6__t1__pv0012ba28, RUNNING, no kit yet.
+   - COORD decision: approve a cancel-rows pass, or add retry + stage_resume_off once each attempt ends. Per-row data: intel2 /tmp/bsa_sub/rows2.json. The WNS source is run/logs/asap7/*/base/3_5_place_dp.json detailedplace__timing__setup__ws.
+   - HEAD live rows (all 7, for HEAD-PLAN-R15):
+
+     | item | event | status | place WNS (ps) | re-place? |
+     |---|---|---|---|---|
+     | hd_ctl | r11b | route running | +31.8 | no |
+     | hd_host_e | r11b | ENQUEUED, queue FAIL | +43.8 | no |
+     | hd_host_n | r11b | ENQUEUED, queue FAIL | -16.9 | no |
+     | hd_host_w | r11 | route running | -40.2 | no |
+     | hd_lep0N | r8b | route running | -412.0 | yes |
+     | hd_serdes | r11b | ROUTE-HELD (WAIT-FORM) | -878.3 | yes |
+     | hd_spn | r8b | route running | +9.6 | no |
