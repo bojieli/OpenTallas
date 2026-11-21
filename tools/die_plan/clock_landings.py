@@ -1895,12 +1895,14 @@ class Landings:
             if not cat or not face_start:
                 raise LandingError(f"{tn}: literal START raw branches require a registered relay origin or a strap origin with FSTART face flops")
             from landing_raw_branches import RawBranches
-            raw_graph = RawBranches(tn, raw_cfg, body, self.types[key].get("outline_um"))
+            type_spec = self.types[key]
+            hard_entry = type_spec.get("reset", {}).get("tap_um") if type_spec.get("hard") else None
+            raw_graph = RawBranches(tn, raw_cfg, body, type_spec.get("outline_um"), hard_entry_um=hard_entry)
             if not hasattr(self, "_raw_graphs"):
                 self._raw_graphs = {}
             self._raw_graphs[tn] = raw_graph
             logic.extend(raw_graph.rtl)
-            self.reset_placements.setdefault(tn, {})["local_resets"] = list(raw_graph.rows)
+            self.reset_placements.setdefault(tn, {})["local_resets"] = raw_graph.hard_prefixes + raw_graph.rows
         if cat:
             logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
             if face_start:
@@ -2311,8 +2313,13 @@ class Landings:
             if collector_info["tree"].get("hard"):
                 reduction=LC.build_hard_chain(collector_info["tree"],sources)
             else:
+                import cbc_rules
+                root_node = collector_info.get("collector_root_node", "rst_root_n")
+                egress = LC.collector_egress(collector_info["tree"],
+                    self.types[key].get("clock", {}).get("landing_contract", {}),
+                    root_node, cbc_rules.reset_hop_cap_um())
                 reduction=LC.build_local(collector_info["tree"],sources,body+"\n"+"\n".join(logic),
-                    root_node=collector_info.get("collector_root_node","rst_root_n"))
+                    root_node=root_node, egress=egress)
             reduction["instances"] = monitor_reset_copies + reduction["instances"]
             logic.extend(reduction["rtl"])
             self.reset_placements.setdefault(tn,{})["collector"]=reduction

@@ -1988,6 +1988,7 @@ _CKPROPS["landing_raw_branches"] = {
         "properties": {
             "name": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
             "base": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+            "hard_boot_prefix_um": {"type": "array", "minItems": 1, "items": _XY2},
             "stages": {"type": "array", "minItems": 1, "items": {
                 "type": "object", "additionalProperties": False, "required": ["original", "xy_um"],
                 "properties": {"original": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}, "xy_um": _XY2}}},

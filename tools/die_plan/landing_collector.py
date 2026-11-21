@@ -142,7 +142,32 @@ def check_local_resets(tree, text, sites=None):
     return count
 
 
-def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
+COLLECTOR_EGRESS_INSTANCE = "u_cland_collect_egress"
+
+
+def collector_egress(tree, contract, root_node, reach_um):
+    """Validate a single registered status pair against the root and both fixed output pins."""
+    xy = contract.get("collector_egress_um")
+    if xy is None:
+        return None
+    import math
+    if (not isinstance(xy, list) or len(xy) != 2 or
+            any(type(v) not in (int, float) or not math.isfinite(v) for v in xy)):
+        raise ValueError("collector egress requires one finite xy_um site")
+    if tree.get("hard") or root_node != "rst_root_n":
+        raise ValueError("collector egress requires the soft partition native reset root")
+    pins = {p["name"]: p["xy_um"] for p in contract.get("pins", [])
+            if p["name"] in ("cland_up_ready", "cland_up_fault") and p["dir"] == "out"}
+    if len(pins) != 2:
+        raise ValueError("collector egress requires the two declared status output pins")
+    legs = {name: sum(abs(a-b) for a,b in zip(xy, point))
+            for name, point in {"reset_and_status_root": tree["root"], **pins}.items()}
+    if max(legs.values()) > reach_um + 1e-6:
+        raise ValueError(f"collector egress {max(legs.values()):.3f}um exceeds R4 {reach_um:g}um")
+    return dict(xy_um=xy, legs_um=legs, added_collector_cycles=1, added_data_cycles=0)
+
+
+def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n", egress=None):
     reset_root="rst_root_n";root=root_node
     relays = {r["q"]: r for r in tree["relays"]}
     xy = {reset_root: tree["root"], **{q: r["xy"] for q, r in relays.items()}}
@@ -195,7 +220,7 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
     sites = body_sites(body)     # the bound relays' stated sites; the copies added below state none
 
     def nets(node):
-        return ("cland_up_ready", "cland_up_fault") if node == root else \
+        return ("cland_up_ready", "cland_up_fault") if node == root and not egress else \
             (f"cland_r_{safe(node)}", f"cland_f_{safe(node)}")
 
     for node in sorted(active, key=lambda n: (-depth[n], n)):
@@ -213,7 +238,7 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
         lines.extend(added)
         insts.extend(copies)
         rn, fn = nets(node)
-        if node != root:
+        if node != root or egress:
             lines += [f"    wire {rn}, {fn};"]
         name = "u_cland_collect_" + safe(node)
         lines += [f"    ot_dp_landing_collect #(.N({len(ready)})) {name} (",
@@ -221,10 +246,28 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
                   f"        .fault_i({{{', '.join(fault)}}}), .ready_o({rn}), .fault_o({fn}));"]
         insts.append(dict(name=name, module="ot_dp_landing_collect", xy_um=xy[node], flops=2,
                           active_inputs=len(ready), raw_reset=reset, depth_to_root=depth[node]+1))
+    egress_cycles = 0
+    if egress:
+        ready, fault = nets(root)
+        lines += [
+            f"    ot_dp_landing_collect #(.N(1)) {COLLECTOR_EGRESS_INSTANCE} (",
+            f"        .clk(clk), .rst_n({root}), .ready_i({ready}), .fault_i({fault}),",
+            "        .ready_o(cland_up_ready), .fault_o(cland_up_fault));",
+        ]
+        egress_cycles = egress["added_collector_cycles"]
+        for row in insts:
+            if row["module"] == "ot_dp_landing_collect":
+                row["depth_to_root"] += egress_cycles
+        insts.append(dict(name=COLLECTOR_EGRESS_INSTANCE, module="ot_dp_landing_collect", xy_um=egress["xy_um"],
+                         flops=2, active_inputs=1, raw_reset=root, depth_to_root=1))
+        hops.extend(dict(src=root, dst=name, hop_um=distance) for name,distance in egress["legs_um"].items())
     check_local_resets(tree, body+"\n"+"\n".join(lines), sites)
-    return dict(rtl=lines, instances=insts, active=True, depth=max(depth.values())+1,
-                max_hop_um=max([h["hop_um"] for h in hops]+[max_source_hop]), hops=hops,
-                source_count=len(sources), data_cycles_added=0)
+    report = dict(rtl=lines, instances=insts, active=True, depth=max(depth.values())+1+egress_cycles,
+                  max_hop_um=max([h["hop_um"] for h in hops]+[max_source_hop]), hops=hops,
+                  source_count=len(sources), data_cycles_added=0)
+    if egress:
+        report["egress"] = egress
+    return report
 
 
 def build_hard_chain(tree, sources, *, reach_um=405):

@@ -68,7 +68,10 @@ class Verification:
         for pn,p in self.parts.items():
             info=self.collector['types'][p['type']]
             if info['mask']['active']:
-                self.root_collect[pn]=ident(pn)+'.u_cland_collect_'+ident(info['collector_root_node'])
+                from landing_collector import COLLECTOR_EGRESS_INSTANCE
+                egress = self._tclock(pn).get("landing_contract", {}).get("collector_egress_um")
+                collector_name = COLLECTOR_EGRESS_INSTANCE if egress is not None else "u_cland_collect_" + ident(info["collector_root_node"])
+                self.root_collect[pn] = ident(pn) + "." + collector_name
         self._check_all()
 
     def _anchored(self,raw):
@@ -491,11 +494,22 @@ class Verification:
                     want=[s[key] for s in at[n]]+[self.output(ident(pn)+'.u_cland_collect_'+ident(q),key+'_o') for q in sorted(children[n])]
                     # Concatenation is MSB first in RTL, Yosys bits are LSB first.
                     self.equal_input(c,port,list(reversed(want)))
+            contract = self._tclock(pn).get("landing_contract", {})
+            if contract.get("collector_egress_um") is not None:
+                c = self.instance(self.root_collect[pn], "ot_dp_landing_collect")
+                if c:
+                    self.clock(c,pn);self.check_reset(c,pn,root)
+                    root_path = ident(pn) + ".u_cland_collect_" + ident(root)
+                    for key in ("ready", "fault"):
+                        self.equal_input(c, key + "_i", [self.output(root_path, key + "_o")])
         actual={c.path for c in self.F.cells if c.module in ('ot_dp_clk_landing','ot_dp_landing_collect','ot_dp_clk_landing_ca','ot_dp_landing_face',
                                                              'ot_dp_landing_origin','ot_dp_landing_root','ot_dp_landing_relay',
                                                              'ot_dp_clk_landing_cas','ot_dp_landing_origin_s','ot_dp_landing_origin_s_regional',
                                                              'ot_dp_landing_relay_rep')}
         actual|={c.path for c in self.F.cells if c.module=='ot_dp_rrelay' and re.fullmatch(r'.*\.g_tt_raw_regions\.g_region\[[0-9]+\]\.u_raw_copy',c.path)}
+        hard_raw = getattr(self, "_hard_boot_paths", set())
+        actual |= {c.path for c in self.F.cells if c.module == "ot_dp_rrelay" and
+                   (c.path in hard_raw or ".u_cland_hard_raw_" in c.path)}
         for x in sorted(actual-self.expected):self.fail('unexpected/unpriced infrastructure '+x)
         for x in sorted(self.expected-actual):self.fail('missing infrastructure instance '+x)
 
@@ -566,6 +580,28 @@ class Verification:
                 self.fail(ring.path+f': reader START copies {rep} < {need} (CLAND-RING-LOCALITY / RSTH-1 per-chunk copies)')
         return prev
 
+    def hard_boot_raw(self, cell, partition, role):
+        """Verify the priced hard-wrapper prefix independently against flattened RTL."""
+        branches = self._tclock(partition).get("landing_raw_branches") or []
+        branch = next((row for row in branches if row.get("hard_boot_prefix_um") and role in row["consumers"]), None)
+        if branch is None:
+            return False
+        parent = self.hard_reset(partition)
+        name = ident(branch["name"])
+        prefix = ident(partition) + "."
+        paths = [prefix + f"u_cland_hard_raw_{name}_{i}" for i in range(len(branch["hard_boot_prefix_um"]))]
+        paths.extend(prefix + f"u_cland_raw_{name}_{i}" for i in range(len(branch["stages"])))
+        self.__dict__.setdefault("_hard_boot_paths", set()).update(paths)
+        for relay_path in paths:
+            relay = self.instance(relay_path, "ot_dp_rrelay")
+            if relay is None:
+                return True
+            self.clock(relay, partition)
+            self.equal_input(relay, "d", [parent])
+            parent = self.output(relay_path, "q")
+        self.equal_input(cell, "rst_raw_n", [parent])
+        return True
+
     def writer_start(self,pn,bus,start_d):
         """The D of a sender's FSTART face flop u_cland_fstart_<bus>.  Default: start_d.  With the type's
         clock.landing_writer_start naming bus (clock_landings._writer_start_rtl): depth - reuse kept ot_dp_landing_relay
@@ -585,7 +621,9 @@ class Verification:
             path=ident(pn)+f'.u_cland_writer_start_{ident(owners[i] if owners else bus)}_{i}'
             c=self.instance(path,'ot_dp_landing_relay')
             if c:
-                self.clock(c,pn);self.equal_input(c,'d',prev);self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
+                self.clock(c,pn);self.equal_input(c,'d',prev)
+                if not self.hard_boot_raw(c,pn,f"writer:{bus}:{i}"):
+                    self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
             prev=[self.output(path,'q')]
         return prev
 
@@ -668,7 +706,7 @@ class Verification:
                     start_d=[self.output(src,'start_d')];o=self.byname.get(src)
                 self.clock(c,pn)
                 self.equal_input(c,'d',self.writer_start(pn,bus,start_d))
-                if o is not None:self.face_raw(c,pn,o)
+                if o is not None and not self.hard_boot_raw(c,pn,f"fstart:{bus}"):self.face_raw(c,pn,o)
         return self.output(path,'q')
 
     def _strap_root(self,pn):

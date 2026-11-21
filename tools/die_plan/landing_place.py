@@ -757,6 +757,9 @@ def _status_reset_groups(t):
     for r in ck.get('landing_local_resets') or []:
         groups.append((f"u_cland_lrst_{safe(r['name'])}",near(r['xy_um']),'local-reset'))
     for branch in ck.get("landing_raw_branches") or []:
+        name = safe(branch["name"])
+        for i, site in enumerate(branch.get("hard_boot_prefix_um", [])):
+            groups.append((f"u_cland_hard_raw_{name}_{i}", near(site), "literal-local-reset"))
         for i, stage in enumerate(branch["stages"]):
             groups.append((f"u_cland_raw_{safe(branch['name'])}_{i}",near(stage["xy_um"]),"literal-local-reset"))
     return groups
@@ -804,7 +807,11 @@ def collector_nodes(ev):
 
 def collector_instances(ev):
     """the u_cland_collect_* instance names of a collector event"""
-    return {'u_cland_collect_'+safe(n) for n in collector_nodes(ev)[0]}
+    instances = {'u_cland_collect_'+safe(n) for n in collector_nodes(ev)[0]}
+    if ev.get("collector_egress_um") is not None:
+        from landing_collector import COLLECTOR_EGRESS_INSTANCE
+        instances.add(COLLECTOR_EGRESS_INSTANCE)
+    return instances
 
 
 COLLECTOR_GROW_MAX = 32   # landing_placement.tcl cland_put_grow: window x1..x32 about the same centre
@@ -885,6 +892,9 @@ def tcl(P,tn,macro_moves=None):
     stale={}
     if root:
         active,xy=collector_nodes(ev)
+        if c.get("collector_egress_um") is not None:
+            from landing_collector import COLLECTOR_EGRESS_INSTANCE
+            groups.append((COLLECTOR_EGRESS_INSTANCE, near(c["collector_egress_um"], "egress"), "collector:egress"))
         for n in sorted(set(xy)-active):
             for k in ('collect','reset'):
                 stale[f'u_cland_{k}_'+safe(n)]=f'collector node {n} is in the tree but on no active path (tree re-solved)'

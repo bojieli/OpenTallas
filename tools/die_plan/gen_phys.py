@@ -9378,7 +9378,8 @@ def install_collector_event(P, tn, lands, rtl_files, plan_tree=None):
         if bind_tree is not info["tree"]:
             trees.insert(0, bind_tree)
     events = [dict(tree=tr, collector_root_node=info.get("collector_root_node", "rst_root_n"),
-                   local_sources=info["local_sources"], children=info["children"]) for tr in trees]
+                   local_sources=info["local_sources"], children=info["children"],
+                   collector_egress_um=contract.get("collector_egress_um")) for tr in trees]
     pat = re.compile(r"\bot_dp_landing_collect\b[^;]*?\b(u_cland_collect_\w+)\s*\(")
     bound = set()
     for f in rtl_files:

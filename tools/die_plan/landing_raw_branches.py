@@ -16,8 +16,9 @@ class RelayIndex(dict):
         self.modules = {}
 
 class RawBranches:
-    def __init__(self, tn, cfg, body, outline_um=None):
+    def __init__(self, tn, cfg, body, outline_um=None, *, hard_entry_um=None):
         self.tn=tn;self.rows=[];self.rtl=[];self.roles={};self.used={};self.names=set()
+        self.hard_prefixes = []
         # ORIGINAL module body (before any generated landing logic): every literal stage must name a relay that already
         # exists here, so a generated Q can never stand in for an original chain node (FLOW 10-30 finding).
         self.original_body=body
@@ -38,6 +39,33 @@ class RawBranches:
             if not isinstance(stages,list) or not stages:raise RawBranchError(f"{tn}.{name}: literal stages required")
             if not isinstance(consumers,list) or not consumers or any(not isinstance(c,str) or not c for c in consumers):raise RawBranchError(f"{tn}.{name}: consumers required")
             prev=base;original_parent=base;records=[]
+            prefix = branch.get("hard_boot_prefix_um")
+            if prefix is not None:
+                if hard_entry_um is None or base != "rst_n" or not re.search(r"\brst_n = arst_n;", body):
+                    raise RawBranchError(f"{tn}.{name}: boot prefix requires the hard wrapper delivered reset")
+                if not isinstance(prefix, list) or not prefix:
+                    raise RawBranchError(f"{tn}.{name}: explicit nonempty boot prefix required")
+                if set(consumers) & {"origin"} or any(not role.startswith(("writer:", "fstart:")) for role in consumers):
+                    raise RawBranchError(f"{tn}.{name}: hard boot prefix applies only to outgoing START")
+                points = [hard_entry_um, *prefix, stages[0].get("xy_um")]
+                for point in points:
+                    if not isinstance(point, list) or len(point) != 2 or any(type(v) not in (int, float) or not math.isfinite(v) for v in point):
+                        raise RawBranchError(f"{tn}.{name}: finite hard prefix point required")
+                    if outline_um and not all(0 <= v <= bound for v, bound in zip(point, outline_um)):
+                        raise RawBranchError(f"{tn}.{name}: boot prefix point outside outline")
+                hops = [sum(abs(x-y) for x,y in zip(a,b)) for a,b in zip(points, points[1:])]
+                import cbc_rules
+                reach = cbc_rules.reset_hop_cap_um()
+                if max(hops) > reach + 1e-6:
+                    raise RawBranchError(f"{tn}.{name}: hard boot prefix {max(hops):.3f}um exceeds R4 {reach}um")
+                for index, xy in enumerate(prefix):
+                    net = f"cland_hard_raw_{name}_{index}"
+                    inst = f"u_cland_hard_raw_{name}_{index}"
+                    self.rtl.extend([f"    wire {net};",
+                        f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({prev}), .q({net}));'])
+                    self.hard_prefixes.append(dict(name=f"{name}_boot_{index}", instance=inst, net=net,
+                        raw=prev, xy_um=xy, added_flops=1, added_cycles=1, kind="hard_wrapper_boot_raw_prefix"))
+                    prev = net
             for i,stage in enumerate(stages):
                 original=stage.get('original');xy=stage.get('xy_um')
                 if not isinstance(original,str) or not re.fullmatch(r'[A-Za-z_]\w*',original):raise RawBranchError(f"{tn}.{name}: original stage Q required")
@@ -85,6 +113,10 @@ class RawBranches:
         original_index = self.driver_index(self.original_body+"\n"+"\n".join(self.baseline))
         emitted_index = self.driver_index(text)
         generated={r['net'] for r in self.rows}
+        for prefix in self.hard_prefixes:
+            inst, pins = self.driver(None, prefix["net"], emitted_index)
+            if inst != prefix["instance"] or pins["d"] != prefix["raw"] or emitted_index.modules[prefix["net"]] != ["ot_dp_rrelay"]:
+                raise RawBranchError(f"{self.tn}: hard boot prefix {prefix['net']} lost its exact relay equation")
         for row in self.rows:
             if row['original'] in generated:raise RawBranchError(f"{self.tn}: {row['original']} is a generated raw branch net, not an original chain node")
             # resolve uniquely in the ORIGINAL body (+ registered default landing relays) only, exact predecessor on D
@@ -110,4 +142,16 @@ class RawBranches:
                 old=a.group(1)
             original=original_for.get(old,old)
             if original!=self.roles[role]['original']:raise RawBranchError(f"{self.tn}: {role} reset phase/equation differs: {original} != {self.roles[role]['original']}")
-        return dict(branches=len(self.names),flops=sum(r['added_flops'] for r in self.rows),consumers=dict(self.roles),status='literal source chains and relay clock phases verified; cold admission still requires actual mechanism proof')
+        report = dict(branches=len(self.names), flops=sum(r["added_flops"] for r in self.rows),
+                      consumers=dict(self.roles), status="literal source chains and relay clock phases verified; cold admission still requires actual mechanism proof")
+        if self.hard_prefixes:
+            depth = {}
+            for prefix in self.hard_prefixes:
+                depth[prefix["net"]] = 1 + depth.get(prefix["raw"], 0)
+            for row in self.rows:
+                depth[row["net"]] = depth.get(row["raw"], 0)
+            report["hard_boot_prefix"] = dict(
+                stages=self.hard_prefixes, added_data_cycles=0,
+                added_boot_cycles_by_role={role: depth.get(rec["net"], 0) for role, rec in self.roles.items()})
+            report["flops"] += len(self.hard_prefixes)
+        return report
