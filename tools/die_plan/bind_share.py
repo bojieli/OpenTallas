@@ -47,8 +47,12 @@ def share_identical(path, store=None, min_bytes=MIN_BYTES, now=None):
         if not os.path.exists(key):
             os.link(path, key)
             return "stored"
-        if os.stat(key).st_ino == st.st_ino:
+        ks = os.stat(key)
+        if ks.st_ino == st.st_ino:
             return "linked"
+        if not ks.st_mode & 0o200:
+            # FLOW-OPS-1300: the store inode is also linked from a published tree (publish chmod a-w acts on the inode): never link a writable lane / kit copy onto it
+            return "kept"
         tmp = path + ".share.tmp"
         os.link(key, tmp)
         os.replace(tmp, path)

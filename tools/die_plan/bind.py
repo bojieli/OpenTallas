@@ -181,6 +181,16 @@ class BindError(Exception):
     pass
 
 
+
+def _fresh_write_text(path, text):
+    """FLOW-OPS-1300 (FABLE-FLOW-1240 c, OPUS-FIX-KV-HGI-R5 bindgate26c): a bind output is written to a new file and renamed over the old one, never written in place.
+    bind_share (KIT-SLIM-1118) hardlinks bind_sinks.json into <scratch>/claude/.bind-share; the same inode is linked from published (chmod a-w) trees, so an in-place
+    write of a private copy either fails (PermissionError, r--r--r-- with 8 links) or would rewrite every tree sharing it.  The rename gives the path its own nlink-1 inode."""
+    path = Path(path)
+    tmp = path.with_name(path.name + ".%d.tmp" % os.getpid())
+    tmp.write_text(text)
+    os.replace(tmp, path)
+
 def sv_id(s):
     s = re.sub(r"[^A-Za-z0-9_]", "_", s)
     s = re.sub(r"_+", "_", s).strip("_")
@@ -3512,7 +3522,7 @@ class Binder:
             cells += "\n" + RRP.TAIL_CELL                # KV-D23-REACH: reset spine relay copies (rsync form rows only)
         if (gen_rtl.uses_hold_hb4(self.plan) or core_input_uses_pad(self.plan)) and "module ot_dp_hd " not in cells:
             cells += "\n" + gen_rtl.HOLD_CELLS     # HOLDFORM-1 hold pads / latch_except_hb4 (absent = byte-identical cell file)
-        (out / "bind_cells.sv").write_text(cells)
+        _fresh_write_text(out / "bind_cells.sv", cells)
         files = [out / "bind_cells.sv"]
         self._native_glue = None
         if self.ab.get("native_glue_types"):
@@ -5622,7 +5632,7 @@ def _bind_through_landings(a):
             for m in (r or {}).get("remaps", []):
                 print(f"   RESET_ANCHOR {r['type']}: {m['name']} -> {m['to']} (depth {m['depth']}, moved {m['moved_um']} um; "
                       f"inputs changed: {','.join(r['changed_inputs']) or 'none'})")
-        (out / "bind_reset_anchor.json").write_text(json.dumps(dict(receipts=receipts, errors=ra_err), indent=1) + "\n")
+        _fresh_write_text(out / "bind_reset_anchor.json", json.dumps(dict(receipts=receipts, errors=ra_err), indent=1) + "\n")
     if B.ab.get("clock_landing_table"):
         import clock_landings as CL
         landing_base = Path(B.base).resolve()
@@ -5648,7 +5658,7 @@ def _bind_through_landings(a):
             raise BindError(f"clock landing: {exc}") from exc
     B.build_buses()
     if getattr(B, 'reset_carriers', None):
-        (out / "bind_reset_carriers.json").write_text(json.dumps(B.reset_carriers, indent=1) + "\n")
+        _fresh_write_text(out / "bind_reset_carriers.json", json.dumps(B.reset_carriers, indent=1) + "\n")
     B.align_landings()
     return raw, out, B, yjs, input_topology
 
@@ -5670,7 +5680,7 @@ def r8_fail_fast(a, raw, out, B):
     if not r8err:
         return None
     bg = B.bus_groups()
-    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
     st = getattr(B, "pad_stats", {}) or {}
     ff = dict(head_r8_errors=len(r8err), other_head_errors=len(B.errors) - len(r8err), derived=None)
     if st.get("mode") == "r8" and st.get("table"):
@@ -5682,7 +5692,7 @@ def r8_fail_fast(a, raw, out, B):
         d = DR.diff(old_t, json.loads(text))
         ff.update(r8_table=str(st["table"]), derived=str(target), members_old=d["members_old"], members_new=d["members_new"],
                   changed=d["changed"], added=d["added"], removed=d["removed"], equal=d["equal"])
-    (out / "bind_report.json").write_text(json.dumps(dict(errors=B.errors, n_errors=len(B.errors), r8_fail_fast=ff,
+    _fresh_write_text(out / "bind_report.json", json.dumps(dict(errors=B.errors, n_errors=len(B.errors), r8_fail_fast=ff,
                                                           crossings=None, crossing_bits=None), indent=1) + "\n")
     print("R8_FAIL_FAST " + json.dumps(ff))
     for e in B.errors[:30]:
@@ -5722,14 +5732,14 @@ def cmd_bind(a):
         B.errors.append(f"TIED_TOTAL {n_tied} tied bits on {len(B.tied_pins)} leaf pins in "
                         f"{len(B.tied_by_port)} (type.port <- source) classes (TIED lines capped at 200; "
                         f"full list bind_tied.json)")
-    (out / "bind_tied.json").write_text(json.dumps(
+    _fresh_write_text(out / "bind_tied.json", json.dumps(
         [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
               sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
     parent_ft_ties = [dict(type=B.parts[p]["type"], module=B.types[B.parts[p]["type"]]["module"], instance=p,
                            port=n + "_i", scope="parent_spare_ft", bits=list(range(sl["width"] + 1)),
                            n=sl["width"] + 1, value=0)
                       for p, slots in sorted(getattr(B, "spare_ft", {}).items()) for n, sl in sorted(slots.items())]
-    (out / "bind_declared_ties.json").write_text(json.dumps(
+    _fresh_write_text(out / "bind_declared_ties.json", json.dumps(
         [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())] + parent_ft_ties,
         indent=0) + "\n")
     rep, lat = B.report()
@@ -5744,7 +5754,7 @@ def cmd_bind(a):
     srcs["lib"] = rebase_lib_paths(srcs.get("lib", []), B.base)
     B.errors.extend(lockup_key_errors(B.plan, getattr(B, "lockup_seen", set())))
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
-    (out / "bind.f").write_text("\n".join(fl) + "\n")
+    _fresh_write_text(out / "bind.f", "\n".join(fl) + "\n")
     # HCPARAM-ALL 11-15: every hard core, built parameters vs the parameters the bound RTL really instantiates (nested + defaults)
     import hard_core_param_all
     B.errors.extend(hard_core_param_all.gate(B, out, fl))
@@ -5799,7 +5809,7 @@ def cmd_bind(a):
         rep["subtype_bind"] = B.subtype_receipts
     if B.param_regen:
         rep["param_regen"] = B.param_regen
-        (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))
+        _fresh_write_text(out / "param_regen.json", json.dumps(B.param_regen, indent=1))
     if B.rewire_stats:
         rep["rewires"] = dict(file=B.ab["rewires"]["file"], bits=B.rewire_stats)
     if B.pc:
@@ -5811,7 +5821,7 @@ def cmd_bind(a):
             import bound_groups
             scope = bound_groups.scope_for_member(B.types[B.parts[p]["type"]], B.rel_of(ci))
             names[f"{sv_id(p)}.{scope}{short_id('u_' + B.rel_of(ci), 90)}"] = B.F.cells[ci].path
-    (out / "bind_names.json").write_text(json.dumps(names, indent=0))
+    _fresh_write_text(out / "bind_names.json", json.dumps(names, indent=0))
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
         sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
@@ -5828,23 +5838,23 @@ def cmd_bind(a):
         rep["bump_ports"] = [dict(die_port=b["dport"], dir=b["dir"], width=b["width"], partition=p,
                                   leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
                              for p, bs in sorted(bumps.items()) for b in bs]
-    (out / "bind_sinks.json").write_text(json.dumps(sinks))
+    _fresh_write_text(out / "bind_sinks.json", json.dumps(sinks))
     try:
         import bind_share
         bind_share.share_identical(str(out / "bind_sinks.json"))   # KIT-SLIM-1118: identical per-attempt copies share one inode
     except ImportError:
         pass
     if getattr(B, "core_input_pipe", None):      # QC-NK-HOLD A+P: declared added cycles (bind_verify / compiler / TOK)
-        (out / "bind_core_input_pipe.json").write_text(json.dumps(B.core_input_pipe, indent=1, sort_keys=True) + "\n")
+        _fresh_write_text(out / "bind_core_input_pipe.json", json.dumps(B.core_input_pipe, indent=1, sort_keys=True) + "\n")
     if getattr(B, "bin_copy_sinks", None):       # BIN-COPY (N4.1): sinks re-pointed past a pure-wiring leaf (bind_verify)
-        (out / "bind_bin_copies.json").write_text(json.dumps(dict(
+        _fresh_write_text(out / "bind_bin_copies.json", json.dumps(dict(
             schema="opentallas.die_plan.bind_bin_copies.v1", sinks=B.bin_copy_sinks), indent=1, sort_keys=True) + "\n")
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
     # DIE-HBM-92-LCHK F4: R8 on every bind + declared fixed-latency contracts vs the landed deltas (bind correctness)
     import latency_consumers as LC
     lc = LC.check(LC.binder_leaves(B, yjs), bg, B.param_regen, B.ab, raw, LC.r8_options(B.ab, B.base))
-    (out / "bind_latency_consumers.json").write_text(json.dumps(lc, indent=1, default=str) + "\n")
+    _fresh_write_text(out / "bind_latency_consumers.json", json.dumps(lc, indent=1, default=str) + "\n")
     rep["latency_consumers"] = dict(stats=lc["stats"], r8={k: v for k, v in lc["r8"].items() if k != "messages"},
                                     advisory=[f"{x['module']} n={x['n']} {sorted(x['params'])}" for x in lc["advisory"]][:50])
     B.errors.extend(lc["errors"])
@@ -5855,7 +5865,7 @@ def cmd_bind(a):
         import lane_asbuilt_latency as LAL
         la_recs, la_errs = LAL.bind_check(B, out, lat)
         la_sum = LAL.summary(la_recs)
-        (out / "bind_lane_asbuilt.json").write_text(json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n")
+        _fresh_write_text(out / "bind_lane_asbuilt.json", json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n")
         rep["lane_asbuilt"] = la_sum
         B.errors.extend(la_errs)
         ip_warn, ip_info = LAL.internal_pipe_check(raw, out)      # S81-COLGEN-3: relay_depth cycles: WARNING naming S81-DIE-R3
@@ -5886,16 +5896,16 @@ def cmd_bind(a):
     except Exception as exc:                # advisory: a failure is recorded, never raised
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
-    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
     # LOCAL-RESET-RAW-1: landing_local_resets raw names re-picked on this bind's relay set (clock_landings._local_resets); the plan
     # write-back is local_reset_writeback.py PLAN bind_local_reset_rederived.json OUT.  No re-pick = no file.
     _lr = getattr(getattr(B, "clock_landings", None), "local_reset_rederived", None)
     if _lr:
-        (out / "bind_local_reset_rederived.json").write_text(json.dumps(_lr, indent=1) + "\n")
+        _fresh_write_text(out / "bind_local_reset_rederived.json", json.dumps(_lr, indent=1) + "\n")
         for _k, _rows in sorted(_lr.items()):
             for _r in _rows:
                 print(f"   LOCAL_RESET_RAW {_k}: {_r['name']} {_r['was']} -> {_r['raw']}")
-    (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
+    _fresh_write_text(out / "bind_report.json", json.dumps(rep, indent=1))
     try:                                     # BIND-GEN-TOOLSKEW (FLOW-FIX-0400): the tool sha + reset/relay generator hashes this bind ran with; kit prep compares them with the gen rt
         import bind_tool_stamp
         bind_tool_stamp.stamp(out)
@@ -5904,7 +5914,7 @@ def cmd_bind(a):
     if not B.errors:
         import kit_topology
         kit_topology.write_bind_receipt(raw,out,getattr(a, "asbuilt",None),input_topology)
-    (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
+    _fresh_write_text(out / "bind_latency.json", json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
                                                            buses=lat, landing_pads=B.land_pads,
@@ -5930,7 +5940,7 @@ def cmd_r8_prepass(a):
     raw, out, B, _yjs, _topology = _bind_through_landings(a)
     st = getattr(B, "pad_stats", {}) or {}
     bg = B.bus_groups()
-    (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
     if st.get("mode") != "r8":
         print("r8-prepass: asbuilt.land_align is not r8; nothing to derive")
         return 0
@@ -6022,7 +6032,7 @@ def cmd_portbind(a):
         cmd += ["--strap-file", str(sf)]
     cmd += ["--out", str(out / "port_bind_strict.json")]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=root)
-    (out / "port_bind_strict.txt").write_text(r.stdout + r.stderr)
+    _fresh_write_text(out / "port_bind_strict.txt", r.stdout + r.stderr)
     shutil.rmtree(root)
     print((r.stdout.strip().splitlines() or [r.stderr[-500:]])[0])
     return r.returncode
