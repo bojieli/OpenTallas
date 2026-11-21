@@ -132,6 +132,27 @@ class PushMain(unittest.TestCase):
         self.assertEqual(m.affected_tests(tests, files, ["tools/x/test_other.py"]), ["tools/x/test_other.py"])
         self.assertEqual(m.affected_tests(tests, files, ["tools/x/test_mod.py", "tools/x/test_other.py"]), tests)
 
+    def test_xdist_workers_default_and_override(self):
+        m = load()
+        py = sys.executable
+        have = S.run([py, "-c", "import xdist"], capture_output=True).returncode == 0
+        self.assertEqual(m.xdist_workers(py, 1, ncpu=64, env={}), 0)            # one file: serial
+        self.assertEqual(m.xdist_workers(py, 50, ncpu=64, env={"OT_PUSH_XDIST": "0"}), 0)
+        self.assertEqual(m.xdist_workers(py, 50, ncpu=64, env={}), 16 if have else 0)
+        self.assertEqual(m.xdist_workers(py, 50, ncpu=8, env={}), 4 if have else 0)
+        self.assertEqual(m.xdist_workers(py, 3, ncpu=64, env={}), 3 if have else 0)
+        self.assertEqual(m.xdist_workers(py, 50, ncpu=64, env={"OT_PUSH_XDIST": "junk"}), 16 if have else 0)
+
+    def test_many_test_files_run_in_parallel_and_push(self):
+        a = self.d / "a"
+        for n in range(3):
+            (a / f"tools/x/test_mod{n}.py").write_text("def test_ok():\n    assert True\n")
+        sh("git", "add", "-A", cwd=a); sh("git", "commit", "-qm", "tests", cwd=a)
+        r = self.run_("a", "--dry-run")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        if "no pytest" not in r.stdout and S.run([sys.executable, "-c", "import xdist"], capture_output=True).returncode == 0:
+            self.assertIn("-n 3 --dist loadfile", r.stdout)
+
     def test_default_timeout_scales_with_load(self):
         m = load()
         self.assertEqual(m.default_timeout(load=1, ncpu=64), 3000)

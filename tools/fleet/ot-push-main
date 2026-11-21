@@ -14,6 +14,8 @@ a full checkout) to the repo paths the selected tests name, and again for any tr
 repeats (max 4 rounds); (2) after a rebase onto a moved main only the tests whose touched file (or the test file itself) overlaps the
 moved files re-run, none when nothing overlaps; (3) the default --test-timeout is 3000 s scaled by host load (load1/ncpu, 1x..3x).
 Lane line: bash+python3 -I ot-push-main, nothing else (no branch, gate record, READY or APPROVED line).
+PUSH-TRAIN-0100: tests run with pytest-xdist (-n min(16, ncpu/2), --dist loadfile; OT_PUSH_XDIST=N overrides, 0 = serial); a rebase
+conflict lists its files; after a moved main only the affected test files re-run, at most 3 times.
 origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here."""
 import argparse
 import os
@@ -30,6 +32,7 @@ try:
 except ImportError:
     _OTS = None
 
+REPUSH_RETEST = 3        # PUSH-TRAIN-0100: re-run only the affected tests up to 3 times when main moves under the test
 VENV_PY = "/srv/opentallas-scratch2/claude/mq-gate/venv/bin/python"
 
 
@@ -159,13 +162,32 @@ def run_tests_once(cmd, timeout):
     return pr.returncode, "".join(buf)
 
 
+def xdist_workers(py, ntests, ncpu=None, env=None):
+    """PUSH-TRAIN-0100: pytest-xdist worker count, 0 = serial.  OT_PUSH_XDIST=N overrides (0 = off); default min(16, ncpu/2, ntests);
+    one test file or no xdist -> serial.  --dist loadfile keeps each test file on one worker (files may share module state)."""
+    env = os.environ if env is None else env
+    ncpu = (os.cpu_count() or 2) if ncpu is None else ncpu
+    try:
+        n = int(env["OT_PUSH_XDIST"]) if env.get("OT_PUSH_XDIST", "").strip() else min(16, max(1, ncpu // 2))
+    except ValueError:
+        n = min(16, max(1, ncpu // 2))
+    n = min(n, ntests)
+    if n < 2:
+        return 0
+    if S.run([py, "-c", "import xdist"], capture_output=True).returncode:
+        return 0
+    return n
+
+
 def run_tests(tests, timeout, rounds=4):
     py = VENV_PY if os.access(VENV_PY, os.X_OK) else sys.executable
     if S.run([py, "-c", "import pytest"], capture_output=True).returncode:
         print("ot-push-main: no pytest here; tests SKIPPED (run them where pytest exists)")
         return 0
     widen_for(test_sources(tests))
-    cmd = [py, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *tests]
+    nw = xdist_workers(py, len(tests))
+    par = ["-n", str(nw), "--dist", "loadfile"] if nw else []
+    cmd = [py, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *par, *tests]
     for n in range(1, rounds + 1):
         print("ot-push-main: " + shlex.join(cmd[2:]))
         rc, o = run_tests_once(cmd, timeout)
@@ -190,7 +212,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-test", action="store_true")
     ap.add_argument("--dry-run", action="store_true", help="rebase + test, no push")
-    ap.add_argument("--max", type=int, default=8)
+    ap.add_argument("--max", type=int, default=8, help="push attempts; main-moved test re-runs are capped at 3 (REPUSH_RETEST)")
     ap.add_argument("--test-timeout", type=int, default=None, help="s; default 3000 scaled by host load")
     a = ap.parse_args()
     if a.test_timeout is None:
@@ -202,6 +224,7 @@ def main():
     if out("status", "--porcelain", "--untracked-files=no"):
         print("ot-push-main: uncommitted changes to tracked files; commit them first (no stash)"); return 2
     tested_files = None
+    retests = 0
     for attempt in range(1, a.max + 1):
         f = git("fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main", timeout=900)
         if f.returncode:
@@ -214,7 +237,8 @@ def main():
         if old_base != base:
             r = git("rebase", "--rebase-merges", base, timeout=1800)
             if r.returncode:
-                files = out("diff", "--name-only", "--diff-filter=U")
+                files = " ".join(sorted(set(out("diff", "--name-only", "--diff-filter=U").split() +
+                                           [l[3:] for l in out("status", "--porcelain").splitlines() if l[:2] in ("UU", "AA", "DU", "UD", "AU", "UA", "DD")])))
                 git("rebase", "--abort")
                 print(f"ot-push-main: REBASE CONFLICT on main {base[:11]} in: {files.replace(chr(10), ' ')}\n"
                       f"  clone unchanged; resolve by hand: git rebase origin/main, fix, git rebase --continue, run again"); return 3
@@ -228,6 +252,9 @@ def main():
                 tests = select_tests(files)
             else:      # rebased onto a moved main: re-run only what the moved files can affect (none when nothing overlaps)
                 tests = affected_tests(tested_files, files, moved)
+                retests += bool(tests)
+                if tests and retests > REPUSH_RETEST:
+                    print(f"ot-push-main: main moved and touched the pushed files {retests} times; stop retesting, run again"); return 5
                 if tests:
                     print(f"ot-push-main: main moved; re-running {len(tests)} affected of {len(tested_files)} test file(s)")
                 else:
