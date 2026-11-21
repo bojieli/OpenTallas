@@ -18176,3 +18176,4 @@ FAILED [AUTOPILOT bd3912a026af] 2026-11-21 07:12:25 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] TAP-GRID-R3: TAP-GRID-R2 stood down (chain TAP-GRID-R2 > TAP-GRID-R3)
 - 2026-11-21 07:12 PST t36 on C1n GRT DONE (unit oth-ubuntu-344587 exit 0): TT setup (policy, GR RC) +78.94 ps, FF hold -79.1 ps (pre route hold repair), legacy gate PASS. Next for FAM-S81-SLICE-R3: route + finish to sign-off; note template-env caveat (ruling d442c09bb6e) -> sign-off build must come from a src_manifest tree with the wave env.
   [filed under] FAM-S81-SLICE-R3: FAM-S81-SLICE-R2 stood down (chain FAM-S81-SLICE-R2 > FAM-S81-SLICE-R3)
+- 2026-11-21 07:12 PST HOURLY free space 07:12 epyc9=148 intel1=136 (restore at >=250 GiB; caps 250 on epyc9/intel1)
