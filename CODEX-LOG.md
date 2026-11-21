@@ -14155,7 +14155,7 @@ E9 storage decision remains open in the 03:23 entry above. The exact 4d15h CPU-a
 
 ## OWNER?
 
-S81 SVC J8. May we replace the seven retained-width horizontal seams with longer vertical seams where the native wire count proves they fit? Recommend vertical alternatives. The retained source census requires 13,160 to 17,284 distinct data and FT wires per horizontal seam against a hard capacity of 11,543. We are preparing private comparisons while the independent hi4 vertical kit continues. The service holds stay in place.
+S81 SVC J8. May we use a north-side Att horizontal seam for svc_1, svc_3 and svc_5, a vertical seam with the existing exterior windows for svc_13, and matched vertical seam/window moves on both sides of three die edges? The north-side wire counts fit at approximately 6,996, 4,269 and 5,682 against 10,388 planned tracks. Private svc_3 and svc_5 macro packs succeed, and svc_1 feedthrough seating is in progress. The svc_13 t5 geometry keeps every window and feedthrough stage, with 632 reseated bit sites now at or below 404.749 µm per hop. For svc_7 t3, x=354.24 µm fits 11,949 of 19,782 tracks with attn_o1 shifted −3.811 µm. For svc_11 PV t2, x=466.56 µm fits 10,614 of 20,715 with attn_o3 shifted −0.743 µm. For svc_15 t6, x=622.08 µm fits 12,611 of 20,715 with ft7_o −0.020 µm, attn_o1 −1.248 µm and attn_i1 −2.520 µm. These translations preserve the widths on the north or south face and would be applied to the matching neighbors. Private packing and the independent hi4 kit continue while the service holds remain.
 
 ### Afternoon progress 2026-11-21 15:02 PST
 
