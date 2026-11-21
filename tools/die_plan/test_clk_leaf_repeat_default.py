@@ -454,3 +454,86 @@ def test_post_repair_dpl_line_behaviour(tmp_path, fail):
                        "global_route -end_incremental", "est -global_routing", "check_placement -verbose"]
     else:
         assert log == ["check_placement"]
+
+
+# FLOW-LEAFREP-1121 (KV hroot D25d a5: clk_t9 in-tap spread 38 ps after CTS -> 510 ps after the GRT pass, 7 BUFx24 in series
+# from re-repeating its own nets, no sibling balance).  OT_CLK_LEAF_GRT_BAL=1: one-shot evenly spaced chain, created and
+# repeated nets never re-selected, latency guard (restore a latency-harmful repeat whose unrepeated slew is legal).
+BAL_MOCK = r"""
+set ::pin2it(lb/A) lb_a
+set ::arr(drv/Y) 50.0; set ::arr(lb/A) 100.0
+proc get_property {p prop} {
+  if {$prop eq "arrival_max_rise"} { if {[info exists ::arr($p)]} { return $::arr($p) }; return 0.0 }
+  if {[info exists ::slew($p)]} { return $::slew($p) }; return 10.0
+}
+set ::rq 0
+proc insert_buffer {args} {
+  L insert_buffer {*}$args
+  set nm [lindex $args [expr {[lsearch $args -buffer_name] + 1}]]
+  set lp [lindex $args [expr {[lsearch $args -load_pins] + 1}]]
+  set its {}; foreach p $lp { lappend its $::pin2it($p) }
+  inst $nm BUFx4_ASAP7_75t_R 0 0
+  mkobj ${nm}_a [list getInst $nm getMTerm mt_A isOutputSignal 0 isInputSignal 1 getNet nn_${nm}_a]
+  mkobj mt_A [list getName A]; proc nn_${nm}_a {m args} "L \$m ${nm}_a {*}\$args"
+  net onet_$nm CLOCK [concat [list ${nm}_y] $its]
+  dict set ::obj(onet_$nm) setSigType {}
+  foreach it $its { dict set ::obj($it) getNet onet_$nm }
+  mkobj ${nm}_y [list getInst $nm getMTerm mt_Y isOutputSignal 1 isInputSignal 0 getNet onet_$nm]
+  mkobj mt_Y [list getName Y]
+  dict set ::obj($nm) getITerms [list ${nm}_a ${nm}_y]
+  set ::pin2it($nm/A) ${nm}_a
+  foreach k [array names ::wl] { set ::wl($k) 10.0 }
+  set ::arr(lb/A) $::arr_after
+}
+proc remove_buffers {args} { L remove_buffers {*}$args }
+proc get_cells {args} { return [lindex $args end] }
+proc blk {m args} {
+  switch $m {
+    getNets { return $::nets }
+    getInsts { return $::insts }
+    findNet { if {[lindex $args 0] in $::nets} { return [lindex $args 0] }; return NULL }
+    findInst { if {[info exists ::obj([lindex $args 0])]} { return [lindex $args 0] }; return NULL }
+  }
+}
+dict set ::obj(drv) getITerms {d_o}
+dict set ::obj(lb) getITerms {lb_a lb_y}
+"""
+
+
+def bal(tmp_path, arr_after, slew=358.0, env=None):
+    return tcl(tmp_path, BAL_MOCK + f"set ::arr_after {arr_after}\n" + GRT_RUN, design=DESIGN, slew=slew,
+               env=dict({"OT_CLK_LEAF_GRT_BAL": "1"}, **(env or {})))
+
+
+def test_grt_bal_even_chain_one_shot(tmp_path):
+    # drv (0.5, 0.5) um -> lb centre (200.5, 48.5): 248 um -> ceil(248/120)-1 = 2 repeaters at 2/3 then 1/3 of the line
+    out, log = bal(tmp_path, 100.0)
+    ins = [x for x in log if x.startswith("insert_buffer")]
+    assert len(ins) == 2, ins
+    assert "-load_pins lb/A" in ins[0] and "-location 133.83" in ins[0]
+    assert "-load_pins clkleafrepg_1/A" in ins[1] and "-location 67.16" in ins[1]
+    # one pass only: the repeated net and the chain nets are never candidates again (no halving chain)
+    assert "grt pass 2: 0 of" in out
+    assert "OT_CLK_LEAF_REPEAT grt done: 1 nets repeated, 2 repeaters" in out
+    assert "grt bal keep clknet_br: driver->loads 50.0 -> 50.0 ps" in out and "remove_buffers" not in " ".join(log)
+
+
+def test_grt_bal_restores_latency_harmful_legal_repeat(tmp_path):
+    # unrepeated GRT slew 300 ps (over the 150 gate, within the 320 DRV limit); the repeat makes the loads 40 ps later
+    out, log = bal(tmp_path, 140.0, slew=300.0)
+    assert "grt bal restore clknet_br: driver->loads 50.0 -> 90.0 ps (+40.0 > 10)" in out
+    rb = [x for x in log if x.startswith("remove_buffers")]
+    assert rb == ["remove_buffers clkleafrepg_1 clkleafrepg_2"] or rb == ["remove_buffers clkleafrepg_2 clkleafrepg_1"], rb
+    assert "OT_CLK_LEAF_REPEAT grt done: 1 nets repeated, 0 repeaters" in out
+
+
+def test_grt_bal_keeps_drv_forced_repeat(tmp_path):
+    # unrepeated slew 358 > 320: the repeat is a DRV fix, kept even though later (its tree goes to the sibling balance)
+    out, log = bal(tmp_path, 140.0, slew=358.0)
+    assert "grt bal keep clknet_br" in out and not any(x.startswith("remove_buffers") for x in log)
+
+
+def test_grt_bal_off_is_the_old_pass(tmp_path):
+    out, log = tcl(tmp_path, GRT_RUN, design=DESIGN)
+    ins = [x for x in log if x.startswith("insert_buffer")]
+    assert len(ins) == 1 and "-location 100.5 24.5" in ins[0] and "grt bal" not in out

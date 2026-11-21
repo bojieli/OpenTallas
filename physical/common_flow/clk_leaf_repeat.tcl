@@ -48,6 +48,26 @@
 #     behind a repeater (grouped as above), inside global_route -start_incremental / detailed_placement /
 #     -end_incremental, at most OT_CLK_LEAF_GRT_PASSES (default 3) passes.  OT_CLK_LEAF_GRT=0 = no GRT pass.
 #   OT_CLK_LEAF_REPEAT=0 (env or 'export OT_CLK_LEAF_REPEAT = 0' in config.mk) = both off (old behaviour).
+# FLOW-LEAFREP-1121 (FABLE-FIX-KV-HUB / FABLE-PD-KV-0730 fix 2): the GRT pass above CREATES skew.  KV hroot D25d a5, per-sink
+# TT arrival on GRT RC (FLOW-LEAFREP-1121 clkarr.tcl): post-hook CTS taps 217..290 ps, in-tap spread <= 70 ps on every
+# clk_t*; after this pass clk_t9 233..749 ps (spread 510), t23 269, t14 202, t17 150, t40 124, 24 CLK pins over 320 ps.
+# Mechanism: (1) every pass re-selects the nets the previous pass made (a repeater's output net still routes > 120 um
+# to its far group, the driver's net too), so a 300-um branch is split d/2, d/4, d/8 ... = 7 BUFx24 in series in front of
+# clkbuf_leaf_52_clk_t9, four of them 1 ps of wire apart (stacked at the group centroid: 17-26 ps of cell delay each);
+# (2) only the long branch gets the stages, its sibling leaves of the same tap keep their depth, and nothing re-balances
+# (partition kits run tapbal_grt / subtree_balance BEFORE this pass, or not at all).
+# OT_CLK_LEAF_GRT_BAL=1 (balanced GRT repeat) changes the GRT pass only (CTS pass unchanged):
+#   * one-shot chain: a repeated group gets k = ceil(d / OT_CLK_LEAF_LONG_UM) - 1 (>= 1, <= OT_CLK_LEAF_GRT_CHAIN_MAX,
+#     default 4) repeaters EVENLY spaced on the driver -> group-centroid line (every segment <= the long rule), and the
+#     repeated net plus every net the pass created are never candidates again (no halving chains, no stacked stages);
+#   * latency guard: per repeated net the worst arrival at its ORIGINAL loads is read on GRT RC before and after; a net
+#     whose repeat made its loads later by > OT_CLK_LEAF_GRT_RISE_PS (default 10 ps) while its unrepeated GRT slew was
+#     within OT_CLK_LEAF_GRT_DRV_PS (default 320 ps = the max_transition sign-off limit) is restored (remove_buffers):
+#     slew 150..320 ps is legal, a later branch is a skew defect;
+#   * sibling balance: a tree whose kept repeats (DRV-forced: unrepeated slew > the limit) still made a branch later by
+#     > OT_CLK_LEAF_GRT_RISE_PS gets subtree_balance.tcl (OT_STB_PORTS = those tree roots, GRT RC, tag lr, hard-core
+#     subtrees fixed) in the same process, so its sibling leaves are delayed to the repeated branch.
+#   Default 0 = the pass as before.  Every line says OT_CLK_LEAF_REPEAT grt bal ...
 proc clr_is_clkcell {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "CLKBUF*" $m]}]
@@ -118,6 +138,100 @@ proc clr_kit_hooked {} {
     foreach {- s} [regexp -all -inline -line {^\s*source\s+\{?(/work/[A-Za-z0-9_.-]+\.tcl)\}?\s*$} $txt] { lappend todo $s }
   }
   return 0
+}
+# FLOW-LEAFREP-1121: worst (latest) TT rise arrival over a list of load iterms, "" when none is timed
+proc clr_load_arr {loads} {
+  set w ""
+  foreach it $loads {
+    set pp [sta::find_pin "[[$it getInst] getName]/[[$it getMTerm] getName]"]
+    if {$pp eq "" || $pp eq "NULL"} continue
+    set a [get_property $pp arrival_max_rise]
+    if {$a eq "" || $a eq "INF" || $a eq "-INF"} continue
+    if {$w eq "" || $a > $w} { set w $a }
+  }
+  return $w
+}
+# driver output -> latest load delay (ps): the repeat's own effect, not an upstream repeat in the same pass
+proc clr_net_delay {drv loads} {
+  set w [clr_load_arr $loads]
+  if {$w eq ""} { return "" }
+  foreach t [$drv getITerms] {
+    if {![$t isOutputSignal]} continue
+    set pp [sta::find_pin "[$drv getName]/[[$t getMTerm] getName]"]
+    if {$pp eq "" || $pp eq "NULL"} break
+    set a [get_property $pp arrival_max_rise]
+    if {$a eq "" || $a eq "INF" || $a eq "-INF"} break
+    return [expr {$w - $a}]
+  }
+  return ""
+}
+# the clock-tree root port of a driver instance (walks input nets up through buffers / inverters), "" when none
+proc clr_root {drv} {
+  set i $drv
+  for {set d 0} {$d < 64} {incr d} {
+    set n ""
+    foreach t [$i getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL"} { set n [$t getNet]; break } }
+    if {$n eq ""} { return "" }
+    set bt [$n getBTerms]
+    if {[llength $bt]} { return [[lindex $bt 0] getName] }
+    set i ""
+    foreach t [$n getITerms] { if {[$t isOutputSignal]} { set i [$t getInst]; break } }
+    if {$i eq ""} { return "" }
+  }
+  return ""
+}
+# balanced GRT repeat: latency guard (restore latency-harmful, DRV-legal repeats) + sibling balance of DRV-forced ones
+proc clr_bal_guard {} {
+  upvar #0 clr_g_rec rec clr_g_order order clr_rise rise clr_drv drv clr_blk blk clr_g_bufs nb
+  set undo {}; set late {}; set nkeep 0
+  foreach nm $order {
+    if {![info exists rec($nm)]} continue
+    lassign $rec($nm) a0 s0 bufs d
+    set n [$blk findNet $nm]
+    set loads {}
+    if {$n ne "NULL" && $n ne ""} {
+      # original loads = the loads of the LAST repeater of each chain = every non-repeater load downstream; read them
+      # through the repeater nets this net now drives
+      foreach b $bufs {
+        set bi [$blk findInst $b]; if {$bi eq "NULL" || $bi eq ""} continue
+        foreach t [$bi getITerms] {
+          if {![$t isOutputSignal] || [$t getNet] eq "NULL"} continue
+          foreach l [[$t getNet] getITerms] { if {[$l isInputSignal] && ![string match "clkleafrepg_*" [[$l getInst] getName]]} { lappend loads $l } }
+        }
+      }
+    }
+    set a1 [clr_net_delay $d $loads]
+    if {$a0 eq "" || $a1 eq ""} { incr nkeep; puts "OT_CLK_LEAF_REPEAT grt bal keep $nm: arrival not readable (before <$a0> after <$a1>, [llength $loads] loads)"; continue }
+    set dr [expr {$a1 - $a0}]
+    if {$dr > $rise && $s0 <= $drv} {
+      puts [format "OT_CLK_LEAF_REPEAT grt bal restore %s: driver->loads %.1f -> %.1f ps (+%.1f > %.0f), unrepeated slew %.1f <= %.0f ps, %d repeaters" $nm $a0 $a1 $dr $rise $s0 $drv [llength $bufs]]
+      lappend undo {*}$bufs
+    } else {
+      incr nkeep
+      puts [format "OT_CLK_LEAF_REPEAT grt bal keep %s: driver->loads %.1f -> %.1f ps (%+.1f), unrepeated slew %.1f ps, %d repeaters" $nm $a0 $a1 $dr $s0 [llength $bufs]]
+      if {$dr > $rise} { set r [clr_root $d]; if {$r ne "" && $r ni $late} { lappend late $r } }
+    }
+  }
+  if {[llength $undo]} {
+    global_route -start_incremental
+    remove_buffers {*}$undo
+    detailed_placement {*}[clr_dpl_args]
+    if {[catch {check_placement}]} { detailed_placement {*}[clr_dpl_args 1] }
+    global_route -end_incremental
+    estimate_parasitics -global_routing
+    set nb [expr {$nb - [llength $undo]}]
+  }
+  puts [format "OT_CLK_LEAF_REPEAT grt bal: %d repeaters restored (latency-harmful, slew legal), %d repeated nets kept, %d trees to balance%s" \
+          [llength $undo] $nkeep [llength $late] [expr {[llength $late] ? " ($late)" : ""}]]
+  if {[llength $late] && [file exists /work/subtree_balance.tcl]} {
+    set sv {}
+    foreach k {OT_STB_PORTS OT_STB_EST OT_STB_TAG OT_STB_BLOCK_SINKS} { if {[info exists ::env($k)]} { dict set sv $k $::env($k) } }
+    set ::env(OT_STB_PORTS) $late; set ::env(OT_STB_EST) grt; set ::env(OT_STB_TAG) lr
+    if {![info exists ::env(OT_STB_BLOCK_SINKS)]} { set ::env(OT_STB_BLOCK_SINKS) fixed }
+    uplevel #0 { source /work/subtree_balance.tcl }
+    foreach k {OT_STB_PORTS OT_STB_EST OT_STB_TAG OT_STB_BLOCK_SINKS} { if {[dict exists $sv $k]} { set ::env($k) [dict get $sv $k] } else { unset -nocomplain ::env($k) } }
+    estimate_parasitics -global_routing
+  }
 }
 set ::ot_clr_mode [expr {[info exists ::ot_clr_stage] && $::ot_clr_stage eq "grt" ? "grt" : "cts"}]
 set ::ot_clr_run 1
@@ -275,6 +389,12 @@ uplevel #0 {
   set clr_long_um [expr {[info exists ::env(OT_CLK_LEAF_LONG_UM)] ? double($::env(OT_CLK_LEAF_LONG_UM)) : 120.0}]
   set clr_gslew [expr {[info exists ::env(OT_CLK_LEAF_GRT_SLEW_PS)] ? double($::env(OT_CLK_LEAF_GRT_SLEW_PS)) : 150.0}]
   set clr_gpasses [expr {[info exists ::env(OT_CLK_LEAF_GRT_PASSES)] ? int($::env(OT_CLK_LEAF_GRT_PASSES)) : 3}]
+  set clr_bal [expr {[info exists ::env(OT_CLK_LEAF_GRT_BAL)] && $::env(OT_CLK_LEAF_GRT_BAL) eq "1"}]
+  set clr_chain_max [expr {[info exists ::env(OT_CLK_LEAF_GRT_CHAIN_MAX)] ? max(1, int($::env(OT_CLK_LEAF_GRT_CHAIN_MAX))) : 4}]
+  set clr_rise [expr {[info exists ::env(OT_CLK_LEAF_GRT_RISE_PS)] ? double($::env(OT_CLK_LEAF_GRT_RISE_PS)) : 10.0}]
+  set clr_drv [expr {[info exists ::env(OT_CLK_LEAF_GRT_DRV_PS)] ? double($::env(OT_CLK_LEAF_GRT_DRV_PS)) : 320.0}]
+  array unset clr_g_done; array unset clr_g_rec
+  set clr_g_order {}
   set clr_macros {}
   foreach clr_g_inst [$clr_blk getInsts] {
     if {[[$clr_g_inst getMaster] isBlock]} { set clr_g_b [$clr_g_inst getBBox]; lappend clr_macros [list $clr_g_inst [$clr_g_b xMin] [$clr_g_b yMin] [$clr_g_b xMax] [$clr_g_b yMax]] }
@@ -285,6 +405,7 @@ uplevel #0 {
     set clr_cand {}
     foreach clr_g_net [$clr_blk getNets] {
       if {![clr_is_clock_net $clr_g_net]} continue
+      if {$clr_bal && [info exists clr_g_done([$clr_g_net getName])]} continue
       set clr_g_r [clr_net $clr_g_net]
       if {$clr_g_r eq ""} continue
       lassign $clr_g_r clr_g_drv clr_g_loads
@@ -341,6 +462,7 @@ uplevel #0 {
       puts [format "OT_CLK_LEAF_REPEAT grt pass %d net %s routed %.1f um%s, GRT est slew %.1f ps, %d loads" \
               $clr_pass $clr_g_nm $clr_g_wl [expr {$clr_g_cross ? " over a macro" : ""}] $clr_g_ms [llength $clr_g_loads]]
       lappend clr_todo [list $clr_g_net $clr_g_drv $clr_g_loads]
+      if {$clr_bal} { set clr_g_rec($clr_g_nm) [list [clr_net_delay $clr_g_drv $clr_g_loads] $clr_g_ms {} $clr_g_drv] }
     }
     puts [format "OT_CLK_LEAF_REPEAT grt pass %d: %d of %d branch nets over rule (routed > %.0f um or over a macro, GRT slew gate %.0f ps)" \
             $clr_pass [llength $clr_todo] [llength $clr_cand] $clr_long_um $clr_gslew]
@@ -383,20 +505,50 @@ uplevel #0 {
           set clr_g_sx [expr {$clr_g_sx + [lindex $clr_g_f 1]}]; set clr_g_sy [expr {$clr_g_sy + [lindex $clr_g_f 2]}]
         }
         set clr_g_cx [expr {$clr_g_sx / [llength $clr_g_g]}]; set clr_g_cy [expr {$clr_g_sy / [llength $clr_g_g]}]
-        set clr_g_px [expr {(($clr_g_dx + $clr_g_cx) / 2.0) / $clr_dbu}]; set clr_g_py [expr {(($clr_g_dy + $clr_g_cy) / 2.0) / $clr_dbu}]
-        incr clr_g_seq
-        set clr_g_bn "clkleafrepg_${clr_g_seq}"
-        if {[llength $clr_g_pins] > 1} {
-          insert_buffer -buffer_cell $clr_g_cell -net [sta::db_net_to_sta $clr_g_net] -load_pins $clr_g_pins -location [list $clr_g_px $clr_g_py] \
-            -buffer_name $clr_g_bn -net_name "clknet_${clr_g_bn}"
-        } else {
-          insert_buffer -buffer_cell $clr_g_cell -load_pins $clr_g_pins -location [list $clr_g_px $clr_g_py] -buffer_name $clr_g_bn -net_name "clknet_${clr_g_bn}"
+        # chain length: 1 (midpoint, the pass as before) or, balanced, k evenly spaced repeaters (each segment <= the long rule)
+        set clr_g_k 1
+        if {$clr_bal && $clr_long_um > 0} {
+          set clr_g_d [expr {double(abs($clr_g_cx - $clr_g_dx) + abs($clr_g_cy - $clr_g_dy)) / $clr_dbu}]
+          set clr_g_k [expr {min($clr_chain_max, max(1, int(ceil($clr_g_d / $clr_long_um)) - 1))}]
         }
-        set clr_g_nn [[lindex [lindex $clr_g_g 0] 0] getNet]
-        if {$clr_g_nn ne "NULL" && $clr_g_nn ne ""} { $clr_g_nn setSigType CLOCK }
-        incr clr_g_bufs
+        set clr_g_ldnet $clr_g_net
+        for {set clr_g_j $clr_g_k} {$clr_g_j >= 1} {incr clr_g_j -1} {
+          set clr_g_fr [expr {$clr_g_k == 1 ? 0.5 : double($clr_g_j) / ($clr_g_k + 1)}]
+          set clr_g_px [expr {($clr_g_dx + ($clr_g_cx - $clr_g_dx) * $clr_g_fr) / $clr_dbu}]; set clr_g_py [expr {($clr_g_dy + ($clr_g_cy - $clr_g_dy) * $clr_g_fr) / $clr_dbu}]
+          incr clr_g_seq
+          set clr_g_bn "clkleafrepg_${clr_g_seq}"
+          if {[llength $clr_g_pins] > 1} {
+            insert_buffer -buffer_cell $clr_g_cell -net [sta::db_net_to_sta $clr_g_ldnet] -load_pins $clr_g_pins -location [list $clr_g_px $clr_g_py] \
+              -buffer_name $clr_g_bn -net_name "clknet_${clr_g_bn}"
+          } else {
+            insert_buffer -buffer_cell $clr_g_cell -load_pins $clr_g_pins -location [list $clr_g_px $clr_g_py] -buffer_name $clr_g_bn -net_name "clknet_${clr_g_bn}"
+          }
+          if {$clr_g_j == $clr_g_k} {
+            set clr_g_nn [[lindex [lindex $clr_g_g 0] 0] getNet]
+          } else {
+            set clr_g_nn [$clr_g_lastin getNet]
+          }
+          if {$clr_g_nn ne "NULL" && $clr_g_nn ne ""} { $clr_g_nn setSigType CLOCK; if {$clr_bal} { set clr_g_done([$clr_g_nn getName]) 1 } }
+          incr clr_g_bufs
+          if {$clr_bal} {
+            # the new repeater = the driver of the moved load's net (insert_buffer may uniquify -buffer_name)
+            set clr_g_bi ""
+            if {$clr_g_nn ne "NULL" && $clr_g_nn ne ""} { foreach clr_g_t [$clr_g_nn getITerms] { if {[$clr_g_t isOutputSignal]} { set clr_g_bi [$clr_g_t getInst]; break } } }
+            if {$clr_g_bi eq ""} { puts "OT_CLK_LEAF_REPEAT grt bal: repeater $clr_g_bn not found on its load net, chain stops"; break }
+            set clr_g_nm0 [$clr_g_net getName]
+            lset clr_g_rec($clr_g_nm0) 2 [concat [lindex $clr_g_rec($clr_g_nm0) 2] [list [$clr_g_bi getName]]]
+          }
+          if {$clr_g_j > 1} {
+            # the next (upstream) repeater drives this one's input pin
+            set clr_g_lastin ""
+            foreach clr_g_t [$clr_g_bi getITerms] { if {[$clr_g_t isInputSignal] && [$clr_g_t getNet] ne "NULL"} { set clr_g_lastin $clr_g_t; break } }
+            if {$clr_g_lastin eq ""} { puts "OT_CLK_LEAF_REPEAT grt bal: no input pin on [$clr_g_bi getName], chain stops at [expr {$clr_g_k - $clr_g_j + 1}] of $clr_g_k"; break }
+            set clr_g_pins [list [sta::find_pin "[$clr_g_bi getName]/[[$clr_g_lastin getMTerm] getName]"]]
+          }
+        }
       }
       incr clr_g_nets
+      if {$clr_bal} { set clr_g_done([$clr_g_net getName]) 1; lappend clr_g_order [$clr_g_net getName] }
     }
     # HEAD sd8g: GRT is a separate process and must apply the same overlap-aware
     # legalization policy as CTS before committing the incremental routing scene.
@@ -409,6 +561,7 @@ uplevel #0 {
     global_route -end_incremental
     estimate_parasitics -global_routing
   }
+  if {$clr_bal && $clr_g_bufs} { clr_bal_guard }
   if {$clr_g_bufs} { check_placement -verbose }
   puts [format "OT_CLK_LEAF_REPEAT grt done: %d nets repeated, %d repeaters (%d long / over-macro nets kept: GRT est slew <= gate), longest routed branch %.1f um" \
           $clr_g_nets $clr_g_bufs $clr_g_skip $clr_g_worst]
