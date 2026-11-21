@@ -28,3 +28,16 @@ and kit_wave.json dies.s81_head die_gen_env + item_env.hd_lep0N.
   start_stage_emit.py emit, then bench_fixed.py gen ... --top completed/s81_head_top.sv --extra completed/start_stages.sv. Details in TOKEN-1121 posts.
 - Sign-off provenance: a private proof that signs must be rebuilt from a src_manifest tree (the HEAD event carries the rows).
 - hd_serdes, host_e, host_n: deferred re-signs, running jobs finish, no new builds.
+
+## UPDATE 11-21 ~07:00 PST (supersedes "In flight" above)
+- Wave-env pipes PASSED (preflight 0, strict bind, cohort 26/26, LATCHECK 329/329, G0 0); config.mk == r16 wave kit except the plan-derived SDC sha.
+- RUNNING (epyc10, GOAL=route, waiter armed on band checkpoint / job end):
+  col_we   oth-ubuntu-1587844-1795268678, kit F/col_we/gen/gen/hd_lep0N, prepared plan bb5a400f362f (input plan_reset 8ef51cce2f23), hub col_we_kit.otrun.log
+  shelf_we oth-ubuntu-1587841-1795268678, kit F/shelf_we/gen/gen/hd_lep0N, prepared plan 9f2a56b66b34 (input 394f7f1a6760), hub shelf_we_kit.otrun.log
+  Waiter re-arm per NAME: until hub NAME_kit.otrun.log has "ot-run: RAN|NOT RUN|interrupted" or kit run_route.log has
+  "OT_CLAND dry pass|BAND FAIL|OT_CLAND placed .* FIRM in nonoverlapping|FAIL_PREFLOOR|[ERROR"; sleep 300.
+- CANCELLED by this lane (superseded, old env, ~35 min in): col_bf 520697, shelf_bf 531201 (ot-run --cancel by exact --dir; containers gone). COORD told.
+- HEAD-START-R16 (COORD 06:5x): r16 K straps are bound to the NF15b START tree (1488 stages) while providers + clock e5c13 use l48 (1251):
+  transport bench fails 211/329. That lane re-plans START on e5c13, re-binds K, emits the provider. It coordinates the HEAD plan change with
+  this lane; plan shas above were posted to it. Its rows + the lep0N rows go in the same HEAD event (lep0N rows re-bound on its base);
+  regenerate the lep0N proof on its base if it touches hd_lep0N START/K pins or relay sites. This also covers the earlier COORD START-provider item.
