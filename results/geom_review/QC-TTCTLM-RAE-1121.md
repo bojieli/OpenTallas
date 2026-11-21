@@ -1,0 +1,3 @@
+# Qwen Compute TT controller RAE placement
+
+2026-11-21 14:31 PST. Viewed epyc7:/srv/opentallas-scratch2/claude/qc-plan-r12/ttctlm/kitA_rae/geom/auto_geom.png from the exact 777.6 × 518.4 µm checkpoint. Macro banks leave open streets on the west and southeast. The narrow northeast route between the central and upper memories remains visible. Global-route estimate overflow is zero, with an approximately 649 µm maximum driver-to-own-sink placement reach. The detailed-placement estimated setup is -25.76 ps and TNS -138.09 ps. This checkpoint can proceed to a private CTS timing screen, with a fresh review for any further routing stage.
