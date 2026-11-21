@@ -15,4 +15,16 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
   r16 kit inputs + encoder one tap (u_enc:clk_t20) + SYN_SCOPY. In global placement 01:49 PST.
 - r16 wave row s81_head_hd_serdes_b908d01a2956b a1 (epyc9 kw43-wave-1109n): placed (3_5 07:46 UTC), not mine.
 
-## Lever 8 (FABLE-CLOSURE-STRATEGY) check: in progress, see below.
+## Lever 8 (FABLE-CLOSURE-STRATEGY) check: DONE 02:1x, ring-density half does NOT agree for hd_serdes (post a5a2402048)
+- sdr2c 5_1_grt.odb, 3x3-um bins over the coll_i0 ring band: ring mean util 0.26, no bin >= 0.9; DRT-0255 box bins 0.14-0.26.
+  GRT overflow 651 is all at the S pin edge (y 0-2, x 1650-1850, pma_rx / coll_o0 pins). Script epyc7
+  /srv/opentallas-scratch2/claude/opus-fix-head-serdes-r4/{dens.sh,q_dens/dens.tcl}.
+- Failing net guide: M4 x 1969.9-1996.7 in gcell row y 34.77-35.34 under the reserved clock-site column (x 1990.44-1992.60,
+  y 34.83-57.78), one free M4 track 34.776. All 1263 reserved M1-M7 obstruction rects are off the 0.57-um gcell grid;
+  20,611 guide boxes / 5,368 nets partially overlap them (epyc7 .../opus-fix-head-serdes-r4/gobs.py). Candidate only.
+- No ring padding generator change. Encoder one-tap half = sdr2d.
+
+## Waiting
+- Background waiter on sdr2d 4_1_cts.odb (then check OT_CLOCK_TAPS GROUPS / OT_TAP_INSERTION clk_t20, ~11.3k sinks, target 450).
+- Next on sdr2d GRT: census (R3 q12.sh / an.py / an2.py in epyc7 .../fable-fix-head-serdes-r3) -> if DRT-0255 recurs: local ECO
+  of the boxed cell from 5_1_grt; if encoder still misses on logic: OT_S81_KP4_ENC_PPCYC (+1 TX ck, LATENCY post owed).
