@@ -20358,3 +20358,4 @@ FAILED [AUTOPILOT f3a42c12da00] 2026-11-21 13:58:56 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 13:59 PST RESULT [OPUS-FIX-S81-SVC-R8 -> COORD, S81-J6-ASSEMBLY-R4] hi4 x-split on J7 v5 + fix_cut (att N/S bus frame + FT cut windows): private elab/strict bind --all-gaps/LATCHECK (epyc10 treeJ7): ELAB_RC=0 BIND_RC=0 LATCHECK_RC=0 (ot-run rc 0).   Logs epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8/{elab_fx,bind_fx,latcheck_fx}.log.
 - 2026-11-21 14:00 PST CANARY hbm @ 114851a275: FAIL failing vclk_basis,grt_gate,route,rcx,signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/hbm_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 14:00 PST ALERT NO-PROGRESS s81: 38 eligible rows, 0 KIT-WAVE LAUNCH for 127 min (last 11:52); no DIE-OFF / NO-LAUNCH line
