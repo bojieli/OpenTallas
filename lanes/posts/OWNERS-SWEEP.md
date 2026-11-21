@@ -184,3 +184,7 @@
   QC (QC-PLAN-R7): only 1 STALE cancelled-superseded left; 15 held rows cleared.
   KV (KV-PLAN-R2): 9 FAILED-NO-RELAUNCH + 9 held/cancelled WAIT-BIND, all old, none new.
   HEAD: hd_lep0N running, not flagged.
+- 2026-11-20 21:51 PST 21:50 sweep (new owners KV-PLAN-R3, QC-PLAN-R8, S81-BKSEL-R5, FABLE-FIX-S81-LEAF; lepe LP -> S81-DIE-R5): 483 rows, 154 flagged; 138 are STOOD-DOWN-OWNER (primary owner a stood-down lane), 0 UNOWNED, 0 DEAD-OWNER.
+  STOOD-DOWN-OWNER by owner: BUILD-SETTINGS-AUDIT-1900 56, CORE-PIN-RELAY-R2 49, KV-PLAN-R2 5, FABLE-FIX-QC-CB 3, QC-PLAN-R7 2, LOCKUP-STATION-1130 2, OPUS-FIX-KV-PV-R3 1, S81-LEAF-CLASS-1730 1 (S81 85, KV 19, QC 15); needs reassignment to live lanes.
+  S81 STALE held-for-plan-event: 16 (4 new). QC: 1 STALE cancelled old. KV real: 2 FAILED-NO-RELAUNCH + 15 held + 1 cancelled WAIT-BIND, old.
+  HEAD: none flagged.
