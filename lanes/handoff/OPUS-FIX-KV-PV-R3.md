@@ -52,3 +52,11 @@ Read order: 4_1_cts log tt repair "before" wns; then GRT iteration 5 (congestion
 - v8q (proof kit, current main): GEN still waiting for memory on epyc7 at 21:0x (chain_v8q.log).  Read 3_5 OT_DLY_SPREAD max_hop + NOROUTE,
   place WNS (3_4 log / tt repair), census (tools/run_hops2.sh on a copy of 3_place.odb), then CTS.  Not watched by watch_r2.sh: add it.
 - Flip: v8m/v8c still in CTS (tap balance it2 at 02:5x UTC).  Read CTS tt setup, then GRT it5 congestion on upper strip / pin edge.
+
+## STAND-DOWN 2026-11-20 21:3x PST (COORD order; successor OPUS-FIX-KV-PV-R4)
+- Stopped: my ot-wait waiter (hub pid 3085137).  Left running: v8q chain (hub chain_q.sh pid 4151714, GEN ot-run 4151717 queued on epyc7);
+  v8m / v8c / v8p kits (predecessor's, CTS on epyc7).
+- Two superseded duplicate read jobs of mine still queue on epyc7 (hub ot-run pids 3044108 = run_rleg.sh, 3227732 = run_pos.sh): both
+  results already exist from intel1; R4 may cancel them with ot-run --cancel <unit> once admitted, or let them run (read-only, ~9 GB each).
+- Open for R4: v8q place WNS + long-hop census; flip CTS/GRT it5 (v8m vs v8c); u_bin_i_pvw__u_ctl_cmd[31] 1-stage 1,228-um leg;
+  pv_v12 spread rows on its first placed kit; RESET-RELAY-GEN-R2 u_bin rows when posted; no held pv row to route.
