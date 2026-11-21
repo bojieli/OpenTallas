@@ -22,3 +22,13 @@
 - V2 b17 strict bind RC1 (TYPE_SPLIT sle_ctl). R10 b18 bind is running on epyc7 (ot-run client pid 3273671).
 - Next: when V2 is applied, run private-spec qwen_compute cbf_q00__cl1b5a6458 --plan <V2 plan + rows> and run-item, then wait with ot-wait --kit place;
   check that the reset-relay -394 class is gone, then route and sign off. Then relaunch cbn_q01__clab6e67f2 and the siblings on V2.
+
+## 09:1x
+- p1/b1 private strict bind: b16 plan with cbf_q00 inst_taps t24/t25/t77/t76. Clean: errors 0, LATCHECK 1921/1921 (epyc7 fam-qc-cb-r2/p1/b1).
+  A rebind is required: inst_taps sit in the native reset contract, so kit_topology reports BIND_STALE without one.
+- cbf_q00 rep kit: private-spec --tree p1/b1/tree --bind-out p1/b1/bind --host epyc7 --src-manifest off. Spec at p1/spec2, place started 08:49.
+  It was generated BEFORE main 3ed87c352a (FLOW-PLACEMEAS), so its post-place WNS still includes recovery and the ideal landing term.
+  Judge it from CTS (cts_read.py / post-hook 4_cts_final), not from the place number.
+- cbn_q01__clab6e67f2 kit: same bind, spec at p1/spec_cbnq01, place running. Its tcl is NEW (recovery split out), so the post-place number counts.
+- Private kits are exempt from PLACE-SETUP-STOP (lane proofs).
+- R10 b18 bind died: bind_b15.sh's RR points at rt/7ff721a00978/r8_refresh.py, which no longer exists. Posted to R10.
