@@ -307,6 +307,28 @@ endmodule
 RS_SPEC = [dict(form="rsync", driver_re=r"u_rs_ri_.*rst_n", region_re="^(.*)$", copy_depth=4)]
 
 
+def test_rsync_lockups_group_by_connected_hard_core():
+    txt = rs_mod(6)
+    lockups = (
+        '    ot_dp_lk #(.W(1)) u_lk_nk_short_a (.clk(clk), .d(glue_rst), .q(lock_a));\n'
+        '    ot_dp_lk #(.W(1)) u_lk_nk_short_b (.clk(clk), .d(ri_pv_rst_n_q[0]), .q(lock_b));\n'
+    )
+    txt = txt.replace('    // as-built pvg0.p0', lockups + '    // as-built pvg0.p0')
+    txt = txt.replace('.s0__rst_n(ri_pv_rst_n_q[0])', '.s0__rst_n(lock_a)', 1)
+    start = txt.index('    rcore u_pvg0_p1 (')
+    txt = txt[:start] + txt[start:].replace('.s0__rst_n(ri_pv_rst_n_q[0])', '.s0__rst_n(lock_b)', 1)
+    pos = {"u_pvg0_p0": (0, 0), "u_pvg0_p1": (400, 0), "u_pvg3_p2": (800, 0)}
+    spec = {**RS_SPEC[0], "lockup_regions": True}
+
+    _, old = RR.apply(txt, RS_SPEC, pos)
+    new, report = RR.apply(txt, [spec], pos)
+    assert old[0]["loads_per_region"]["rest"] == 3
+    assert report[0]["loads_per_region"] == {"rest": 1, "u_pvg0_p0": 2, "u_pvg0_p1": 2, "u_pvg3_p2": 2}
+    assert report[0]["depth"] == 6 and report[0]["copy_depth"] == 4
+    assert re.search(r"u_lk_nk_short_a .*\.d\(glue_rst_rs_ri_pv_rst_n_r1\)", new)
+    assert re.search(r"u_lk_nk_short_b .*\.d\(rs_ri_pv_rst_n_r2\[0\]\)", new)
+
+
 def test_rsync_s2_has_no_relay_stage_and_is_unchanged():
     """the default landing is the two synchroniser flops: nothing to copy, the row says so (stages come from sink_stages)"""
     new, rep = RR.apply(rs_mod(2), RS_SPEC)

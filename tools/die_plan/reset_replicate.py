@@ -51,6 +51,8 @@ all copies assert on the same edge.  Needs the clock running for >= k cycles whi
 >= 64 clk).  Only the near-port synchroniser keeps the spine on its clear pins.
 Each copy line carries the tail-copy marker `// landing pad tail copy for core <region>:` so the siting hook
 (gen_phys.tail_copy_place / tail_copy_anchor.tcl) lists it; use region_re "^(.*)$" for one copy per consumer instance.
+With "lockup_regions", a generated NK latch on the reset load belongs to the hard core wired to its Q.
+An unresolved or shared latch keeps a common copy. The tail siting hook follows these latches to their core pins.
 W must be 1 (a reset / flush level).  Pure text transform of the module `emit_type` returns; nothing happens unless the plan
 type carries the key (absent = byte-identical).
 usage: reset_replicate.py BOUND.sv SPEC.json [--positions POS.json] [-o OUT.sv]   (smoke / kit use)
@@ -66,6 +68,9 @@ DLY = re.compile(r"^(?P<ind>\s*)ot_dp_dly\s*#\(\s*\.W\((?P<W>\d+)\)\s*,\s*\.D\((
 RSY = re.compile(r"^(?P<ind>\s*)ot_dp_rsync\s*#\(\s*\.W\((?P<W>\d+)\)\s*,\s*\.S\((?P<D>\d+)\)\s*\)\s+(?P<inst>\S+)\s*"
                  r"\(\s*\.clk\((?P<clk>[^)]*)\)\s*,\s*\.a\((?P<d>.*)\)\s*,\s*\.q\((?P<q>\w+)\)\s*\)\s*;(?P<tail>.*)$")
 HDR = re.compile(r"^\s*(?P<mod>[A-Za-z_]\w*)\s*(?:#\(.*\))?\s+(?P<inst>\\?[\w$]+)\s*\(\s*$")
+NK_LOCKUP = re.compile(r"^\s*ot_dp_lk\s*#\(\.W\(\d+\)\)\s+u_lk_nk_\w+\s*"
+                       r"\(\.clk\([^()]*\),\s*\.d\([^()]*\),\s*\.q\((\w+)\)\);")
+CORE_PORT = re.compile(r"^\s*\.\w+\((.*?)\)[,;]?\s*(?://.*)?$")
 ASSIGN = re.compile(r"^\s*assign\s+(?P<lhs>\w+)\s*=\s*(?P<rhs>.*?)\s*;\s*(?://.*)?$")
 DEFAULT_REGION_RE = r"^(.*?)(?:_\d+|_sk)?$"
 CELL = "ot_dp_rrelay"
@@ -159,6 +164,19 @@ def _one(lines, di, m, spec, positions):
         encl[i] = None if ln.lstrip().startswith("assign") else cur
         if i != di and decl.match(ln):
             di_decl = i
+    if rsync and spec.get("lockup_regions") and positions:
+        lockups = {match[1]: i for i, line in enumerate(lines) if (match := NK_LOCKUP.match(line))}
+        core_loads = {}
+        for i, line in enumerate(lines):
+            port, assign = CORE_PORT.match(line), ASSIGN.match(line)
+            if port or assign:
+                expression = port[1] if port else assign["rhs"]
+                for signal in re.findall(r"\b\w+\b", expression):
+                    if signal in lockups:
+                        core_loads.setdefault(signal, set()).add(encl[i])
+        for signal, i in lockups.items():
+            cores = core_loads.get(signal, set())
+            encl[i] = next(iter(cores)) if len(cores) == 1 and cores <= positions.keys() else None
     orig = list(lines)
     uses = [i for i, ln in enumerate(orig) if i not in (di, di_decl) and use.search(ln)]
     if not uses:
