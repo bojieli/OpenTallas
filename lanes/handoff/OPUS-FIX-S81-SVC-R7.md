@@ -1,15 +1,22 @@
-# OPUS-FIX-S81-SVC-R7 handoff (started 2026-11-21 08:3x PST; newest first). Succeeds OPUS-FIX-S81-SVC-R6 (read its handoff for bind history).
+# OPUS-FIX-S81-SVC-R7 handoff (started 2026-11-21 08:3x PST; newest first). Succeeds OPUS-FIX-S81-SVC-R6.
 Nothing signed or exported yet.
 
-## 11-21 08:5x PST STATE
-COORD RULING 08:3x: hi4 only in J7; other 15 svc split types -> J8 (cut between port windows per type, lo 3-way or more into att <=400k each,
-hi t1/t6 plan FT corridor row, tool-generated, private bind gated, to S81-J6-ASSEMBLY-R4). svc_* hold stays until hi4 signs off.
+## 11-21 10:2x PST STATE
+hi4 (svc_hi_dsdv_svc_rs__t4 x split, J7): chain10h strict bind + LATCHECK GREEN 17:53Z (881/881). Rows posted to S81-J6-ASSEMBLY-R4
+(post 'ROWS GREEN hi4 J7'). COORD: rows go to assembly only after the rest part preps clean -> tell R4 when chain10i preps both parts.
+Both kit preps failed kit_rtl: (a) rest part kept att core tap u_rsv.u_att.u_a.u_eng.g_t[0]..g_h[0].u_c.clk, because the x_epoch repack moved
+all 32 attn cores without their taps (offset should be core origin + (78.828, 0.24), the R0 rule on siblings); (b) att clk_c0: physical_inst was
+census-grouped u_bound.u_u_rsv_09_u_u_att_u_a_...; the piece's bound leaf is u_bound.u_u_rsv_u_att_u_a_... (flattened inst).
+FIX: bind_hi4x/mk_ub.py -> split-hi4-band-test/plan_svc_hi4_x_epoch_ub.json (32 taps re-sited, 32 physical_inst); private type_split
+patched (core tap follows its core, fails closed off-core: j8/patch_ts_coretap.py). Main commit: same patch + 2 tests in lane clone,
+waiting on FLOW-STRIPBODY-1121 (one commit owner for type_split.py). If no answer, push via ot-push-main after their commit.
 LIVE (waiters needed):
-- chain10h epyc10 PID 1746572 (bind_hi4x/chain10h.sh; posts as OPUS-FIX-S81-SVC-R6): split -> elab -> strict bind -> LATCHECK -> STATE -> att kit prep/place/route (KSTATE).
-- chain_rest8 epyc8 PID 833298: waits epyc10 STATE green -> rest part svc_hi_dsdv_svc_rs__t4 kit place/route (KSTATE_REST).
-  Both under /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r5/bind_hi4x.
-POSTED to R4: hi4 J7 row re-post (rows file lanes/handoff/OPUS-FIX-S81-SVC-R6-J7-rows.json, base plan_svc_hi4_x_epoch.json 5edd9560, gated on chain10h).
-REACH>405 svc 8: real (kit S0 = input pin; die check reads regs_um[0]). GEN epyc10 opus-fix-s81-svc-r7/reach/gen/mkft_svc_s1.py {IN} {OUT}
-  (ft_add_station +1 S1; 8/8 closed on J7 v5, 6 lanes +1/+2 cycles). Handed to R4 for the next candJ7 gate (no private copy: 52 GB, 96% disk).
-Lane clone: epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r7/repo (main 197076cf03; the GEN imports from it, keep it).
-NEXT: on STATE -> fix or watch KSTATE/KSTATE_REST; sign-off read (DRC 0, TT >= -42, FF hold >= 0, LEC; post-hook CTS); export both parts. J8 re-solve of 15 types.
+- chain10i epyc10 PID 224179 (bind_hi4x/chain10i.sh, posts as R7): split -> elab -> strict bind -> LATCHECK -> STATE -> att kit prep/place/route (KSTATE).
+- chain_rest8i epyc8 PID 2379962: waits STATE green -> rest kit prep/place/route (KSTATE_REST). Old outputs renamed *.h1.
+REACH>405 svc 8: GEN svc_s1 handed to R4 (epyc10 opus-fix-s81-svc-r7/reach/gen/mkft_svc_s1.py {IN} {OUT}; md5 24c17b27).
+J8 (COORD ruling: 15 types to J8): x cut between windows impossible on 8 types (2.1 um gaps, no 8.64 grid point). y cut (att band bottom)
+generator j8/gen16yc3.py (gen16 port + W corridor + core taps follow cores). Composes 5 of 7 hi: pvso t1/t2 + rs t2 at Y 1935.36, rs t5 at
+2194.56, rs t6 at 1987.2 + 112.32 um W FT corridor. Fails: rs t1 (FT hop/pack), rs t3 (attn_i2 landing band). lo (8): 72% macro, already
+<400k: asked COORD whether lo needs a split at all (default: no split, own rep kit read). Outputs j8/out_y, out_yc, out_yc2.
+Lane clone epyc10 opus-fix-s81-svc-r7/repo (main 197076cf03 + type_split patch, uncommitted). The svc_s1 GEN imports from it; keep it.
+NEXT: chain10i STATE -> KSTATE/KSTATE_REST; post rest-prep-clean to R4; sign-off read (DRC 0, TT >= -42, FF hold >= 0, LEC, post-hook CTS); export.
