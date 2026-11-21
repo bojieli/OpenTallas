@@ -3749,7 +3749,6 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg12_983443ee_ta2fb7e6_d25e3/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
-    "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
     "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -11004,6 +11003,224 @@
     },
     "col_h10_*": {
      "OT_MAXWIRE_POST_SKIP": "1"
+    },
+    "col_h10_r0_p1__t1__cl574cc59d__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h10_r0_p4__t1__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h10_r1__t1__cl95b37463__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h10_r2__t1__cl1f5d6c2a__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h10_r2__t1__cl99efd374__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p1__t1__pv*": {
+     "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p2__t1__cl0045af7b__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p2__t1__cl9f71e63d__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p3__t1__cl0cd90c0e__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p3__t1__cl8ce97bcb__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p4__t1__cl8ef405e8__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p4__t1__clcb2fbfe8__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p5__t1__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r0_p6__t1__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r1__t1__cl49d7a23e__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r2__t1__cl774acf45__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r2__t1__clb8d86cd5__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r2__t1__clc9ad8f7e__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+    },
+    "col_h9_r2__t1__clce45cab5__pv*": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1",
+     "OT_RELAY_POLY": "1",
+     "OT_HOLD_FF_MARGIN_PS": "10",
+     "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+     "OT_S81_SSTN_M5_BLOCK": "1",
+     "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -23225,7 +23442,6 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
-    "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_PREGRT_FF_HOLD_AUTO": "-1",
     "OT_MAX_BUFFER_PERCENT": "100",
@@ -23240,7 +23456,6 @@
     "OT_PG_PIN_CHECK": "1",
     "OT_PGCAP": "1",
     "OT_S81_VPW_BANK": "1",
-    "OT_CBC_REACH_UM": "405",
     "OT_PLACE_MAX_TRANSITION": "320"
    },
    "kit_self_contained": "copy",
@@ -41764,6 +41979,56 @@
     },
     "sle_st_b_v2__cl14c98df5__pvcd986c42": {
      "OT_PAD_CHAIN_SITE": "auto"
+    },
+    "sle_ctl__cl503337ff__pad*": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
+    },
+    "sle_ctl__cl67434795__pad*": {
+     "OT_CONS_KIT": "1",
+     "OT_KW41_CLAND": "0b305f2395",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PAD_CHAIN_SITE": "auto"
+    },
+    "sle_st_a_v2__pv*": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_st_b_v1__pv*": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "sle_st_b_v1__pvc5a85fd4__pv*": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_st_b_v2__cl14c98df5__pv*": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "slw_st_a_v1__clfc5867a6__pv*": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
+    },
+    "slw_st_b_v1__cl6357f1cc__pv*": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slw_st_b_v2__pva66d0f22__pv*": {
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
