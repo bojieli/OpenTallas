@@ -1,0 +1,7 @@
+# HANDOFF FLOW-NOADV-R4 (11-20 evening)
+Clone: intel2 /srv/opentallas-scratch2/claude/flow-noadv-r2. Pushed main 85307cdc9b (push-r4b.log).
+1 PLACE-SETUP-STOP: code is in rt/current on intel1/intel2/epyc2/7/8/9/10 (epyc4 host key changed, unreadable; epyc5/6 not resolvable). rt synced ~20:00. ZERO rows yet in autopilot/log.txt: only kits generated after the sync carry it. Still open: first 3 rows (WNS, worst path, hop_um), hours saved over 6 h (~2.85 h per stopped kit).
+2 PLACE-REGION: no S81 serdes kit log with OT_PLACE_REGION_* found yet; DPL-0033 not yet confirmed gone. S81-DIE-R5 watcher may retire only after that confirmation.
+3 REPEAT-STOP: total-attempt cap TOTAL_CAP=6 per item@event (BLOCKED-CAP, PLAN note to owner; released by new event / unblock line, not by input change); rows already past 6 (attempt number as hint) stop at their next failure. Ledger key is now die|item@event (legacy die|item stops still hold). INFRA tool_mix error identical on 2 attempts stops (TOOL_MIX_IDENT_N), kept through the INFRA release.
+4 Cancel final: place_cancelled() reads signals.log (ot-run --cancel naming the place kit) -> row CANCELLED/QUEUE-CANCELLED, no retry; place_retry_sh no longer reruns a client that exited 143/130/129.
+5 test_class_stop order dependence: launch() refuses when scheduler_current() is false (kit_wave.py/autopilot.py on disk differ from the imported code, e.g. an edit/merge mid gate run). test_kit_wave_grt_arm.py now pins scheduler_current in setUpModule.
