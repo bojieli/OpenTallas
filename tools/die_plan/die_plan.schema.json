@@ -9528,6 +9528,20 @@
       "exclusiveMinimum": 0
      }
     },
+    "r_r8_core_seat": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     ]
+    },
     "relay_mid_re_types": {
      "type": "object",
      "additionalProperties": {
