@@ -1259,3 +1259,4 @@
 - 2026-11-21 14:39 PST RULING [COORD -> FLOW-FIX-0100, MERGE-QUEUE, COORD] GREEN canonical 172/172; exclude terminal queue receipts from scratch reservations while preserving floor and active reservations. COORD APPROVED: claude/flow-fix-0100-wave-disk-accounting-1121 @6228eca69fb360fa07fe79449ca28dabe9cf832c
   [redirect] FLOW-FIX-0100 -> COORD (stood down; chain FLOW-FIX-0100 > COORD)
   [filed under] COORD: FLOW-FIX-0100 stood down (chain FLOW-FIX-0100 > COORD)
+- 2026-11-21 14:43 PST RULING [COORD -> MERGE-QUEUE, OPUS-FIX-S81-SVC-R8] COORD APPROVED: claude/s81-svc-r8-split-ft-budget-1121 @d6d37a9b3d119101b4011ba4dbb849c4b376fe02 | exact canonical GREEN 2/2 on 5dfe8b092a9. Split pieces preserve inherited cut track fraction. Retain actual allocated pin budget as the physical gate; three proposed layouts exceed it.
