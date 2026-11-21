@@ -29,7 +29,15 @@ Logs: intel2 ~/opus-fix-head-serdes-r4-logs/. R3 lane dirs stay as listed in FAB
 - Next on sdr2d GRT: census (R3 q12.sh / an.py / an2.py in epyc7 .../fable-fix-head-serdes-r3) -> if DRT-0255 recurs: local ECO
   of the boxed cell from 5_1_grt; if encoder still misses on logic: OT_S81_KP4_ENC_PPCYC (+1 TX ck, LATENCY post owed).
 
-## CODEX notes · 2026-11-21 02:3x PST
-
-- sdr2d inherited route stopped before CTS. On the same 3_place ODB the old helper measured TT −54,999.33 ps and the corrected ideal pre-CTS clock model measured −211.25 ps. The −300 ps threshold, exact TT constraints and placement data RC are unchanged. Other exact ODB pairs were host_e −36,424.13 → −199.81, host_w −48,290.74 → −203.39, and mesh −94,428.62 → −197.86 ps. Logs `intel2:~/opus-fix-head-serdes-r4-logs/postplace_*ab*.otrun.log`. Source `e073ba9eca0` canonical GREEN 6/6 and merged to `eda19506a55`.
-- After [geometry review](../../results/geom_review/codex-head-prects-1121.md), CTS-only on an independent copy admitted epyc9 `oth-ubuntu-2092004-1795256792`, log `intel2:~/opus-fix-head-serdes-r4-logs/sdr2d_cts_ideal.otrun.log`. The runner reused synth and exact placement via Make targets. TT placement gate passed. Clock-group census found 11,321 encoder sinks on clk_t20, 0 split groups. Read insertion and TT/FF next. Clock cap advisory is real. No route request.
+## Resume 03:4x PST (after Codex takeover 02:18-03:31; CODEX-LOG "HEAD lane handback 03:31")
+- sdr2d original run (fable-fix-head-serdes-r3/sdr2d) ended at post-place PLACE-SETUP-STOP (-54999 ps, rrn_g -> rpq,
+  false stop, fixed on main eda19506a55). Codex continued as sdr2d_cts_ideal: clk_t20 group 11,321 sinks skew 28.4 ps,
+  CTS TT -45.88 -> +38.83 after repair, pre-GRT hold +5.00.
+- WAIT sdr2d GRT: epyc9 /srv/opentallas-scratch2/claude/fable-fix-head-serdes-r3/sdr2d_cts_ideal/hd_serdes,
+  unit oth-ubuntu-2994936-1795258763, hub ~/head-plan-r16/sdr2d_grt.otrun.log. Before any DRT: south coll_i0 access +
+  congestion review (bins/guide scripts in epyc7 .../opus-fix-head-serdes-r4).
+- WAIT hd_host_e GRT (taken from Codex): epyc8 /srv/opentallas-scratch2/claude/opus-fix-head-serdes-r4/host_e_ideal1121/hd_host_e,
+  unit oth-ubuntu-3218685-1795260164, hub ~/head-plan-r16/host_e_ideal_grt.otrun.log. Before DRT: east 4.32-um macro aisle +
+  southern EPC feedthrough check.
+- Draft claude/head-start-reach-export-1121 (epyc10 R3 repo, uncommitted reach_rules.py + test): real r16 reach report
+  running (base vs draft, rules 5) epyc10 .../opus-fix-head-serdes-r4/reach/{base,draft}.{log,json,tsv}.
