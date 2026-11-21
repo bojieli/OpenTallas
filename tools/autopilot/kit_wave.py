@@ -15987,10 +15987,13 @@ def _enqueue_finish(AP, cfg, st, rec, notices, rc, out, err):
     rec["status"] = "ENQUEUED"
     st["pass_n"] = int(st.get("pass_n", 0)) + 1
     msg = f"{rec['item']} AUTO-GEOM PASS{' ' + rec['geom_tag'] if rec.get('geom_tag') else ''} -> enqueued ({rec['kit']})"
-    if st["pass_n"] % int(cfg.get("geom_sample", DEFAULTS["geom_sample"])) == 1 or int(cfg.get("geom_sample", 5)) == 1:
+    sample = int(cfg.get("geom_sample", DEFAULTS["geom_sample"]))
+    if not required_route_review(cfg, rec) and (sample == 1 or st["pass_n"] % sample == 1):
+        measured = ("AUTO-GEOM FAIL (wave PASS-COND)" if rec.get("geom_verdict") == "PASS-COND"
+                    else "AUTO-GEOM PASS")
         AP.coord_append("lanes/GEOM-REVIEW.md",
                         f"- {now_s()} GEOM REQ [KIT-WAVE-1 sample {rec['die']}/{rec['item']}] 3_place {rec['kit']} "
-                        f"(event {rec['event']}); AUTO-GEOM PASS {rec['geom_dir']}/auto_geom.{{json,png}}; 1-in-5 "
+                        f"(event {rec['event']}); {measured} {rec['geom_dir']}/auto_geom.{{json,png}}; 1-in-{sample} "
                         + (f"independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it"
                          if visual_gate_mode(cfg) != "signoff" else
                          "visual sample; route already enqueued (visual gate at sign-off, OWNER 11-13) -- every routed type "
