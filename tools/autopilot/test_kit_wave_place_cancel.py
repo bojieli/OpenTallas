@@ -7,27 +7,30 @@ import time
 import unittest
 from pathlib import Path
 
-_TMP = tempfile.TemporaryDirectory()
-os.environ["AP_OT_RUN_SIGNALS"] = str(Path(_TMP.name) / "signals.log")
 import autopilot as AP            # noqa: E402
 import kit_wave as KW             # noqa: E402
+
+_TMP = tempfile.TemporaryDirectory()
+SIGNALS = Path(_TMP.name) / "signals.log"
 
 KIT = "/srv/x/kit-wave/items/t1/a3/gen/t1"
 
 
 class PlaceCancel(unittest.TestCase):
     def setUp(self):
+        self._old_sig, AP.OT_RUN_SIGNALS = AP.OT_RUN_SIGNALS, SIGNALS      # the module constant is read at import: other tests may import autopilot first
         self.d = tempfile.TemporaryDirectory()
         self.rec = {"dir": self.d.name}
         (Path(self.d.name) / "place_service.json").write_text(json.dumps({"kit": KIT, "started": time.time() - 600}))
-        Path(os.environ["AP_OT_RUN_SIGNALS"]).write_text("")
+        SIGNALS.write_text("")
 
     def tearDown(self):
+        AP.OT_RUN_SIGNALS = self._old_sig
         self.d.cleanup()
 
     def sig(self, kit, off=0, sender="ot-run --cancel"):
         ts = time.strftime("%Y-%m-%dT%H:%M:%S%z", time.gmtime(time.time() - off))
-        with open(os.environ["AP_OT_RUN_SIGNALS"], "a") as f:
+        with open(SIGNALS, "a") as f:
             f.write(f"{ts} signal 15 from pid 1 ({sender} 'kwp'): ot-run pid 9 dir {kit}: x\n")
 
     def test_cancel_in_signals_log_is_found(self):
