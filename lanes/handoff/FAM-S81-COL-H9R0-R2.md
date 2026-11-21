@@ -39,3 +39,4 @@ Family: S81 col_h9_r0_p1..p6 (~60 unsigned). Predecessor history: lanes/handoff/
 - rt/bbcc7f022a8e is gone on intel2 (rt current -> 1ba6a4eb9484): any new wave spec must use a live tools_rt.
 - COLROM gate1 BIND PASS 08:11 (216 col types; LATCHECK 873/873).
 - Next: route read (post-repair final db only; DRC0, TT >= -42, FF hold >= 0, LEC); J7b publish -> rep build from manifest tree.
+- 08:4x J7b failed (leaf t23/t70/t72 dup fstart_N only). R4 gating candJ7c (J7 v5 plan ec6693a0, unit oth-ubuntu-2168821-1795279082 epyc10, tools a9ed808a98d5, ETA ~10:45); includes mkdepth405 ^col_ + mkxalign + mkxo D3 + RDX rows. Rep build target = candJ7c tree once green/published. Waiters now on S81-J6-ASSEMBLY-R4 + FABLE-FIX-S81-COLROM-R2 only (R3/TOKEN-1121-R2/COLROM stood down). Stand-down at >=300k: bin/stand-down.sh FAM-S81-COL-H9R0-R2 FAM-S81-COL-H9R0-R3.
