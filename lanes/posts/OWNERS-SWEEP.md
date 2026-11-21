@@ -174,3 +174,8 @@
   QC (QC-PLAN-R6): 16 STALE, all old (14 held, 1 place error, 1 cancelled).
   KV (KV-PLAN-R2/OPUS-FIX-KV-PV-R3): 8 FAILED-NO-RELAUNCH + 9 WAIT-BIND held/cancelled, all old.
   HEAD none flagged; 0 DEAD-OWNER.
+- 2026-11-20 19:51 PST 19:50 sweep (18:50 mapping + S81-DIE-R5, QC-PLAN-R7, FABLE-FIX-QC-CB, KV HGI/PV-R4, HEAD owners): 494 rows, 37 flagged (was 36); PLACE-SETUP-STOP rows 0; 0 UNOWNED, 0 DEAD-OWNER.
+  S81: 1 new STALE, serdes__t3 held by die owner (S81-DIE-R5). The two cl0cd90c0e CLAND rows cleared.
+  QC (QC-PLAN-R7): 16 STALE held/cancelled (1 new: slw_su_c__cl92142dac); the unclassified place error cleared.
+  KV: 9 FAILED-NO-RELAUNCH WAIT-BIND (1 new: kv3_io_cor_v1 detail route error) + 10 held/cancelled WAIT-BIND (1 new: kv3_sys_c placed, route held).
+  HEAD none flagged.
