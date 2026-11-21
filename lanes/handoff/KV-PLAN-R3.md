@@ -46,3 +46,10 @@ Base plan: lanes/handoff/KV-PLAN-R2.md (sections 1-4 + stop list still hold).
 - Owned now (KV-FAILED-ROWS-2100 done -> KV-PLAN-R3): hub_C, pc__cl254f2e73, pc__cl5a95b461, pc_v1 x3, pv_v6n holds (lift at D27 apply).
 - io_cor_v1 a11 = PLACE-SETUP-STOP via reset relays u_rrl_63..68 stacked at (639.4,10.6) -> ft16 stations 2 mm away (reset-reach row in D27c).
 - hub_Wi + pv_v8 identity: confirm on first D26 gens. pv_v8 574k cells: D28 split (OPUS-FIX-KV-PV-R4); no D27 volume on v8.
+
+## D28 (COORD 23:xx): pv family split = headline
+- All 15 pv types exceed the 400k cap after placement (x1.43). Split per lanes/handoff/OPUS-FIX-KV-PV-R4-D28-split.md: {g0,g2} -> kv3_pv_<v>w,
+  {g1,g3} -> kv3_pv_<v>e, cut x=1080, cores moved (g2 -> col 1, g1 -> col 2) not re-shaped, +2 lane cycles on broadcast crossings, no growth.
+- Before the D28 bind: on a PRIVATE bind measure (a) the group pairing g0+g2 / g1+g3 on all 15 types (from each bound part: which joins feed
+  which T*Q* output relays), (b) cell count of one half of kv3_pv_v3 (largest, 489k nontap at floorplan) -> must be < 400k after x1.43.
+- Compose D28 right after D27 applies (next daily event). No pv volume on D27 beyond the queued proofs (pv_v2 proof only). v8c cancelled by COORD.
