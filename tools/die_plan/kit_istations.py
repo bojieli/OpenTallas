@@ -1938,9 +1938,9 @@ def main(argv):
                 x,y=regs[k]
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
                 anyg='*'+packed['instance']+'[./]*'
-                if j == packed['depth'] - 1 and packed["master"] == "ot_dp_dly":
-                    # the last stage drives the output port: Yosys calls it <inst>.q[b] (GENBUG-1)
-                    alias='*'+packed['instance']+'[./]q\\[*'
+                if j == packed['depth'] - 1:
+                    # A fixed delay exports its last register as q[b]. A counted delay exports a mux output.
+                    alias='*'+packed['instance']+'[./]q\\[*' if packed["master"] == "ot_dp_dly" else pattern
                     tcl.append(f'is_place_alt {{{pattern}}} {{{alias}}} {{{anyg}}} {x} {y} ist:{bus}')
                 else:
                     tcl.append(f'is_place_alt {{{pattern}}} {{{pattern}}} {{{anyg}}} {x} {y} ist:{bus}')
