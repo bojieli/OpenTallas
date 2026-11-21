@@ -5,7 +5,7 @@
 # Stimulus: the production L0 (stage0) / L2 (stage3) x-streamer programs of tools/s81_slice/xs_program.py (issuer
 # words + ring all-gather beats in near / far / random ring order, four slice offsets), late-beat offset programs
 # (must fault on the same edge), seven fault-injection classes, and an in-flight reset with program restart.
-# [mut] = bank | off | qswap | wcopy | tpar | exp builds that negative control (DUT only; the reference is a renamed
+# [mut] = wreg builds the OT_S81SL_XS4_WREG form (all cases must PASS); bank | off | qswap | wcopy | tpar | exp builds that negative control (DUT only; the reference is a renamed
 # copy whose mutant defines cannot be set) and its listed cases must FAIL.  Final line XS4_EQUIV_BENCH PASS|FAIL.
 set -u; O=$(realpath -m $1); MUT=${2:-}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
@@ -18,6 +18,7 @@ case "$MUT" in
   qswap) D="+define+OT_S81SL_XS_MUT_QSWAP";;
   wcopy) D="+define+OT_S81SL_XS4_MUT_WCOPY";;
   tpar) D="+define+OT_S81SL_XS4_MUT_TPAR";;
+  wreg) D="+define+OT_S81SL_XS4_WREG";;  # FAM-S81-SLICE 11-21: write-port register stage, must PASS every legal case
   exp) D="+define+OT_S81SL_XS4_MUT_EXP";;
   *) echo "unknown mutant $MUT"; echo "XS4_EQUIV_BENCH FAIL"; exit 2;;
 esac
@@ -66,7 +67,7 @@ run() {  # case program expect(PASS|FAIL) plusargs...
 L0="--stage-dir $CAT/stage0"; L2="--stage-dir $CAT/stage3"
 prog L0n5  $L0 --order near --slice 5 || ALL=0
 prog L2n9  $L2 --order near --slice 9 || ALL=0
-if [ -z "$MUT" ]; then
+if [ -z "$MUT" ] || [ "$MUT" = wreg ]; then
   prog L0f0  $L0 --order far --slice 0 --off 52 || ALL=0
   prog L0r15 $L0 --order rand --slice 15 --seed 7 --off 29 || ALL=0
   prog L2r3  $L2 --order rand --slice 3 --seed 11 --off 44 || ALL=0

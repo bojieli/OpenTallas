@@ -823,11 +823,26 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
                         wd[k] = wd[k] | (rsel[b][k / 32] & d[16 * (8 * ((k % 128) / 16) + b) + (k % 16)]);
                 end
             end
+`ifdef OT_S81SL_XS4_WREG
+            // FAM-S81-SLICE 11-21 (slice C class B': gd_b -> SRAM wd_i soft-flop-to-core hops, 2,113 paths, 800-1,400 um):
+            // one registered stage on the write port of every x buffer macro (we, wa, wd, mask together), so the macro pins
+            // are driven by flops that sit at the macro and the long wire is a flop-to-flop hop.  Default off (the form
+            // below is bit for bit the previous one).  +1 edge between the level-B write and the macro sample.
+            reg we_w; reg [6:0] wa_w; reg [255:0] wd_w, wm_w;
+            wire [255:0] wm_c;
+            for (gj = 0; gj < 8; gj = gj + 1) begin : g_mkc
+                assign wm_c[32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
+            end
+            always @(posedge clk) begin we_w <= we; wa_w <= wa; wd_w <= wd; wm_w <= wm_c; end
+            assign mw_d[gs][gm] = wd_w; assign mw_m[gs][gm] = wm_w;
+            assign mw_a[gs][gm] = wa_w; assign mw_e[gs][gm] = we_w;
+`else
             assign mw_d[gs][gm] = wd;
             for (gj = 0; gj < 8; gj = gj + 1) begin : g_mk
                 assign mw_m[gs][gm][32*gj +: 32] = {32{gj < 4 ? mlo[gj] : mhi[gj - 4]}};
             end
             assign mw_a[gs][gm] = wa; assign mw_e[gs][gm] = we;
+`endif
         end
     end endgenerate
     // arrival-table set one-hots (no parity; the table groups apply theirs): q beats 0-95, BF beats 0-79
@@ -1038,11 +1053,21 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
                 .rr_en(2'b0), .rr_addr(14'b0), .cr_en(2'b0), .cr_sel(16'b0));
         end
         for (gc = 0; gc < 2; gc = gc + 1) begin : g_ex
+`ifdef OT_S81SL_XS4_WREG
+            reg ew_w; reg [6:0] ea_w; reg [19:0] ed_w;
+            always @(posedge clk) begin ew_w <= ew[gs][gc]; ea_w <= ea[gs]; ed_w <= {gd_b[1024*gs + 522 +: 10], gd_b[1024*gs + 256 +: 10]}; end
+            ot_sram_1r1w2c_128x64_m1 u_em (
+                .wclk(clk), .rclk(clk), .r_ce_in(gc == 0 ? er0ce : er1ce), .r_addr_in(gc == 0 ? er0a : er1a),
+                .rd_out(erd[gs][gc]), .w_ce_in(ew_w), .w_addr_in(ea_w),
+                .wd_in({44'd0, ed_w}),
+                .w_mask_in({44'd0, 20'hfffff}));
+`else
             ot_sram_1r1w2c_128x64_m1 u_em (
                 .wclk(clk), .rclk(clk), .r_ce_in(gc == 0 ? er0ce : er1ce), .r_addr_in(gc == 0 ? er0a : er1a),
                 .rd_out(erd[gs][gc]), .w_ce_in(ew[gs][gc]), .w_addr_in(ea[gs]),
                 .wd_in({44'd0, gd_b[1024*gs + 522 +: 10], gd_b[1024*gs + 256 +: 10]}),
                 .w_mask_in({44'd0, 20'hfffff}));
+`endif
         end
     end endgenerate
     // ---- stage 2: table lookups (one-hot index lines) -> registered one-hot read-mux lines
