@@ -7,3 +7,4 @@
 - 2026-11-20 19:10 PST DIED [flow-noadv-r2] ot-push-main otpush-tolerant-swine-3815896 on tolerant-swine: rc=3 after 843 s, ended 19:10:34, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3f.log, cmd: ot-push-main 
 - 2026-11-20 19:27 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-4125684 on tolerant-swine: rc=0 after 919 s, ended 19:27:12, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r3g.log, cmd: ot-push-main 
 - 2026-11-20 20:33 PST DIED [flow-noadv-r2] ot-push-main otpush-tolerant-swine-1436184 on tolerant-swine: rc=4 after 788 s, ended 20:33:11, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r4.log, cmd: ot-push-main 
+- 2026-11-20 20:50 PST DONE [flow-noadv-r2] ot-push-main otpush-tolerant-swine-1759256 on tolerant-swine: rc=0 after 893 s, ended 20:50:24, log /srv/opentallas-scratch2/claude/flow-noadv-r2/push-r4b.log, cmd: ot-push-main 
