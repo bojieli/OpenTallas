@@ -44,3 +44,25 @@
 - EMIT fixed: r5_cbf_raw_relay.py now takes the type as arg 4; cbf_q00__cl870de686 y_o11 rr_t104 -> rr_t92 (depth 14, <=194 um) in r5/v1a_r5_fabric_a_raw2_plan.json (contains both relay fixes + fabric).
 - q2 (R8 from q1) is running with raw_plan (without the 870 relay). Read it for whether TYPE_SPLIT and SC_X3 clear once R8 is re-derived (likely stale-R8 effects of the X0f bcf2 column-entry raise on bn/tn). If they persist: TYPE_SPLIT = bn and tn instances of one type need identical bcf2 raises/pads (check c_<s>_bn_11__bcf2 vs c_<s>_tn_11__bcf2 and their R8 pads); SC_X3 = a seam group mixing raised and unraised members (find members in coll_regen.py SC_X3 and raise the 6-shift members by 1 or drop the extra one).
 - Then q3: `bash strict_r5_launch.sh q3 <w>/r5/strict_q2/bind/bus_groups.json v1a_r5_fabric_a_raw2_plan.json`.
+
+## UPDATE ~14:1x PST (latest; read this first)
+### Fabric strict state
+- q1/q2 pass elaboration; fabric PARAM_REGEN W5 S gone. The 30 R8_STALE came from the A4 CB16 tree-align extra table zz_extra_s29q103S4Q9N46V0EBQ_0.json (authoritative over derived R8): re-bound by r5/r5_extra_rebound.py to the q2 bind (124 members, pads kept) -> r5/zz_extra_*_{0,1}_r5.json. The strict script now swaps them in (r5/patch_strict.py applied).
+- Plan r5/v1a_r5_fabric_a_raw2_plan.json = fabric (a) + both cbf_q00 y_o11 relays (cl1b5a6458 rr_t102->rr_t94, cl870de686 rr_t104->rr_t92).
+- q3 launched 14:0x: intel2 ~/qc-plan-r5/strict_q3.log/.rc, epyc9 v1_cbc/r5/strict_q3. Expect R8_STALE 0 and EMIT 0. Open from q2: TYPE_SPLIT x4 (cbn_q00__cl622f65d2, cbn_q00__cldbcda913, cbx_q10__cl89936551_h, cbx_q10__cl94a12200_h: bn vs tn instance ibus bc_i00/bc_i20 differ; suspect the X0f raise on c_<s>_bn_11__bcf2 and c_<s>_tn_11__bcf2 landing differently, or the INNER/R8 pads per instance) and PARAM_REGEN SC_X3 "seam members shift by [6, 7]" (coll_regen.py: one seam group mixes a raised and an unraised member; give the group a uniform shift).
+- After strict 0: G0, LATCHECK token impact in the post (COORD accepted price 395k flops / +15 fabric cycles).
+### Wave holds (kit_wave hold_items, commit c621d9845ad)
+- PACKED-BANK 11 st_a rows, STATION-KNEE 5 rows (sle_ctl x2, su_c x3), CORE-CONTRACT 3 su rows. Release each class when its V1 fix lands. Not held: sle_hc0__cl929603c0__cl4baa7c9c (PARAM-CLASS, needs param_class_split in V1). Posted unblock for slw_st_b_v2__pva66d0f22__pvb80e2003 (bwrap infra).
+- NOPROG-KEEP: keep lines for coll_core pkw4 (read-register proof) and pkw2b (only while > -300 ps; remove the pkw2b lines if it drops below -300).
+### V1 content still to build (COORD + FABLE-CLOSURE-1515 + FABLE-PD-QC-1600 order)
+1. fabric strict 0 (above).
+2. cb* reset reach rows from RESET-RELAY-GEN-1530's generic tool (A4 cb* 9 of 9 have reset paths down to -1,746); take its keys.
+3. st_a rs_s0/rs_s1 two stages on all 11 st_a types, both buses on ONE occupancy map, +1 cycle (neither raw2 nor ph6/plan_rs fixes it). Do not post V1 while overlaps remain.
+4. UNIFY-TOOLS-R3 pad hoist + merged-class rows.
+5. su_c x_sc_o 3 stations (269.8 um) on all three su_c types through the ph6 compose (ph6 has 2). Do not post V1 with 2-station x_sc_o.
+6. sle_ctl b_hw_hc2_o 4 -> 6 stations (+2), plus the u_tap channel/spread rows (Fable 0945 fix 2).
+7. su_l0/l1 three types (sle_su_l0__cl7a55c676, slw_su_l0__cl1a1c1f8f, sle_su_l1__cl5ea486db): core taps -> parent_budget.
+8. coll_ftc: pin-side register rows on the 20 unregistered pins (<300 um), details lanes/GEOM-REVIEW.md.
+9. Re-bin/retap (25 STALE-BINS), first-rank seating, lockup rows, cb bc_i stations, global 300 station hops (Fable 0945 ranking).
+- CORE-LIB-LIMITS-1330 is fixing the dly_spread step that pushed cbf_q01_s2 t_out onto core edges (hop 141 -> 902 um); take its fix.
+- Stop list: no slew-limit regen of held cb kits; no relaunch of the 15 rows on A4 inputs; no loosening of the 403 limit; no leaf_um nudge; no 405-form reseat as the V1 form.
