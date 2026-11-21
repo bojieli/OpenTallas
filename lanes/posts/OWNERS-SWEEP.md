@@ -204,3 +204,8 @@
   KV: 2 FAILED-NO-RELAUNCH + 1 old FAILED bind stale (PV-R4) + 16 held/placed/cancelled WAIT-BIND; 1 new WAIT-VISUAL FAM-KV-HUB.
   HEAD: none flagged. KV-PLAN-R4 not used as a row owner (no uncategorised KV rows).
 - 2026-11-20 23:52 PST CORRECTION 23:50: S81 STALE held-for-plan-event rows are 28 (COL 9, SLICE 6, LEAF-R2 7, LEPE 2, MISC 3, SERDES 1), not 29; totals S81 30, QC 7, KV 22 = 59 flagged.
+- 2026-11-21 00:51 PST 00:50 sweep, family-lane mapping (QC-SLE-R3, HEAD-SERDES-R3): 489 rows, 54 flagged (was 59), 0 UNOWNED/DEAD-OWNER, nothing new since 23:50; held-for-plan-event rows counted owned by their family lane.
+  S81 28 STALE held (COL 9, LEAF-R2 7, SLICE 6, LEPE 2, MISC 3, SERDES 1; 3 also WAIT-VISUAL) + FAM-S81-COL hold-after-CTS FAILED-NO-RELAUNCH STALE; 0 new.
+  QC: 5 STALE held FAM-QC-CB + 1 STALE cancelled FAM-QC-HCST; the QC WAIT-VISUAL and NOT-IN-PLAN rows cleared.
+  KV: 3 FAILED-NO-RELAUNCH (PV-R4 bind stale, FAM-KV-HUB, FAM-KV-IOPC) + 16 held/cancelled WAIT-BIND; all old.
+  HEAD none flagged. Context well below 330k, no stand-down.
