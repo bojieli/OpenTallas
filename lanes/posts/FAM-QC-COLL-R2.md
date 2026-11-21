@@ -1,0 +1,2 @@
+- 2026-11-21 08:33 PST DIED [FAM-QC-COLL] ot-run oth-ubuntu-1782833-1795278360 on civil-redfish: rc=1 after 463 s, ended 16:33:41, log /srv/opentallas-scratch2/claude/fam-qc-coll/pkit_run.log, cmd: --mem 72 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-qc-coll -- python3 -I /srv/opentallas-scratch2/claude/fam-qc-c
+  [filed under] FAM-QC-COLL-R2: FAM-QC-COLL stood down (chain FAM-QC-COLL > FAM-QC-COLL-R2)
