@@ -1,0 +1,8 @@
+{"lane":"FAM-QC-HCST","type":"slw_st_a_v2__clf4365a62","evidence":"attempt_5 PLACE-SETUP-STOP wns -301.73 ps (a4 identical), autopilot b6320dd19e2f; kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/items/slw_st_a_v2__clf4365a62/attempt_5/gen/slw_st_a_v2__clf4365a62",
+ "row":{"kind":"one_station_on_input_hop","bus":"b_hw_ctl_hc0_i","bit":17,"D":1,
+  "from_pin":{"face":"E","layer":"M4","x_um":622.08,"y_um":7.272},
+  "to_inst":{"name":"u_bound.u_cland_b_hw_ctl_hc0_i","master":"sta_cland_w1574_n_s26","x_um":328.332,"y_um":60.108},
+  "hop_um_manhattan":346.6,"cap_um":300,
+  "station_site_um":{"x":475.2,"y":33.7,"note":"midpoint of the Manhattan hop; 173 um to each side; check the free-site/ft_bit_sites reservation before binding"}},
+ "status":"NOT bound/LATCHECKed: no private bind was run by FAM-QC-HCST (context limit). R10/R2 must run strict bind + LATCHECK before applying.",
+ "note":"same hop class as sibling input pins b_hw_ctl_hc0_i[16..18] on the E face at y 7.3-7.6; the fix should cover the whole b_hw_ctl_hc0_i bus, not bit 17 alone"}
