@@ -18772,3 +18772,4 @@ FAILED [AUTOPILOT 472cefdfcaa5] 2026-11-21 08:48:20 PST AUTOPILOT -> KIT-WAVE-1:
   S81 0 real flags, HEAD 0 rows, UNOWNED 0, DEAD-OWNER 0 (all S81 UNOWNED 74 / DEAD-OWNER 15 / STALE rows are held or cancelled). Successor lanes (11 listed) already in agent_ids.
   Details lanes/OWNERS-SWEEP.tsv
 - 2026-11-21 08:53 PST DONE [FABLE-FIX-S81-LEAF-R6] ot-run oth-ubuntu-2224917-1795279221 on tolerant-swine: rc=0 after 797 s, ended 08:53:35, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r6/t39spec/s1/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FABLE-FIX-S81-LEAF-R6/o
+- 2026-11-21 08:53 PST DONE [FABLE-FIX-S81-LEAF-R6] ot-push-main otpush-civil-redfish-2553331 on civil-redfish: rc=0 after 25 s, ended 16:53:41, log none, cmd: ot-push-main 
