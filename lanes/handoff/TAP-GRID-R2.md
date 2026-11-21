@@ -67,3 +67,4 @@ Read lanes/handoff/TAP-GRID-2130.md for the method (tap grid plan key clock.tap_
 - t39 r3 submitted: src3 = src2 + clk_t98 (881.28, 635.04) for the t67 fixed VP writer overload (1465 / cap 1000; 541 other VP sinks within 145 um), tools rt 7ff721a00978 (cascade + span fixes).
   Unit tgr2-t39-chain3 (hub), log t39/chain3.log: bind3 (intel1, t39/bind3.sh) -> run-item wave3/spec.json -> CTS -> post.
 - Baseline (J5 t39 a3 post-hook): setup -73.73 / TNS -1278.1, hold -75.14 / -89488.2. Rows only if a proof is no worse on setup and hold: S81-J6-ASSEMBLY-R2 before 13:00 PST else J7, FABLE-FIX-S81-LEAF-R2, QC-PLAN-R8 (V2), KV-PLAN-R4 (D28 halves).
+- 11-21 COORD retarget: leaf rows -> OPUS-FIX-S81-LEAF-R3 (not FABLE-FIX-S81-LEAF-R2); QC V2 -> QC-PLAN-R9 (not R8). S81-J6-ASSEMBLY-R2 (J7 after 13:00 PST) and KV-PLAN-R4 unchanged.
