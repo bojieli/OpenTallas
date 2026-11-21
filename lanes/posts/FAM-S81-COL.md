@@ -8,3 +8,4 @@
 - 2026-11-21 00:40 PST DONE [FAM-S81-COL] ot-run oth-ubuntu-3552486-1795250205 on key-cardinal: rc=0 after 247 s, ended 00:40:50, log /srv/opentallas-scratch2/claude/fam-s81-col/bench.out, cmd: --direct --mem 16 --threads 4 --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col -- bash bench.sh
 - 2026-11-21 00:41 PST DONE [fam-s81-col] ot-push-main otpush-key-cardinal-3666073 on key-cardinal: rc=0 after 0 s, ended 00:41:42, log none, cmd: ot-push-main --help
 - 2026-11-21 00:42 PST DONE [fam-s81-col] ot-push-main otpush-key-cardinal-3671438 on key-cardinal: rc=0 after 26 s, ended 00:42:17, log none, cmd: ot-push-main 
+- 2026-11-21 00:48 PST DONE [fam-s81-col] ot-push-main otpush-key-cardinal-3823546 on key-cardinal: rc=0 after 36 s, ended 00:48:07, log none, cmd: ot-push-main 
