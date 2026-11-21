@@ -29,7 +29,8 @@ def test_apply_clears_event_pending():
     assert "event_pending" not in json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
 
 
-def test_gen_hosts_drops_a_host_under_its_cap():
+def test_gen_hosts_drops_a_host_under_its_cap(monkeypatch):
+    monkeypatch.setattr(K._host_drain(), "load_caps", lambda: {})
     cfg = {"dies": {"s81": {"gen_host": "epyc8", "gen_hosts": ["epyc8", "intel1", "epyc9"], "gen_host_min_free_gb": {"intel1": 250, "epyc9": 250}, "work_root": "/srv/x/w"}},
            "_hub": "intel2", "_otrun_status": {"epyc8": {"scratch_gb": 400}, "intel1": {"scratch_gb": 120}, "epyc9": {"scratch_gb": 169}}}
     assert K.gen_hosts(cfg, "s81") == ["epyc8"]
