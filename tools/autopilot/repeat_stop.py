@@ -21,6 +21,12 @@ OOM_FACTOR = 1.5
 TOTAL_CAP = 6               # FLOW-NOADV-R4: failed attempts per item per plan event, any mix of fingerprints / OOM; then the row goes to its owner as PLAN
 CAP_STATE = "BLOCKED-CAP"
 TOOL_MIX_IDENT_N = 2        # a deterministic tool_mix error (INFRA class too) repeating on 2 attempts is a stop, not an infra retry
+# FLOW-FIX-0400 (FABLE-FLOW-0400 f): a gen failure whose cause is the plan / bind input (macro-move overlap, collector tree vs captured bound reset identity, a die-tool refusal) is not fixed by a
+# runtime tools change; a tools hash alone never releases such a stop, and a second release of the same cause turns it into a BLOCKED-CAP stop (new plan event or an unblock line)
+PLAN_INPUT_RE = re.compile(r"OT_MACRO_MOVES overlap|differs from captured bound reset identity|captured bound reset identity|die[- ]tool[- ]refus|refused by (?:the )?die tool", re.I)
+PLAN_INPUT_STAGES = ("gen", "bind", "kit", "kit_rtl", "gen_phys")
+PLAN_RELEASE_CAP = 2        # releases of one plan-input cause (any input) before the row needs a new plan event or an unblock line
+GEN_CLASS = "GEN-REPEAT-PLAN"
 OOM_RE = re.compile(r"infra-oom|earlyoom|\bOOM\b|oom-kill|Out of memory|exit 137|rc[ =]+137|Error 247", re.I)
 NET_RE = re.compile(r"\bnet\s+([A-Za-z0-9_./\[\]\\$:-]+)")
 BOX_RE = re.compile(r"routeBox\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)")
@@ -126,7 +132,8 @@ def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fal
     rank = FG.stage_rank(str(stage or "").split()[0]) + (1 if ok else 0)
     if any(a["n"] == attempt and a["stage"] == stage and a["fp"] == fp for a in e["att"]):
         return None
-    e["att"].append({"n": attempt, "t": t, "stage": stage, "rank": rank, "cls": cls, "fp": fp, "inputs": dict(inputs or {}), "oom": (not ok) and is_oom(cls, why)})
+    e["att"].append({"n": attempt, "t": t, "stage": stage, "rank": rank, "cls": cls, "fp": fp, "inputs": dict(inputs or {}), "oom": (not ok) and is_oom(cls, why),
+                     "plan_input": (not ok) and is_plan_input(stage, cls, why), "event": event or ""})
     del e["att"][:-40]
     if ok or e["state"]:
         return None
@@ -155,10 +162,25 @@ def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fal
     return None
 
 
+def is_plan_input(stage, cls, why):
+    """a gen-stage failure caused by the plan / bind input itself (see PLAN_INPUT_RE)"""
+    st_ = str(stage or "").split()[0] if str(stage or "").strip() else ""
+    return bool(PLAN_INPUT_RE.search(str(why or ""))) and (not st_ or st_ in PLAN_INPUT_STAGES or str(cls or "") == "PLAN")
+
+
 def _block(e, state, fp, last, why):
     e["state"], e["fp"], e["inputs"], e["why"] = state, fp, dict(last.get("inputs") or {}), why
     e["blocked_at"] = last["t"]
-    return {"event": state, "fp": fp, "why": why}
+    out = {"event": state, "fp": fp, "why": why}
+    if last.get("plan_input"):
+        e["plan_input"] = True
+        out["class"] = GEN_CLASS
+        n_rel = int((e.get("rel_n") or {}).get(ident(fp), 0))
+        if n_rel >= PLAN_RELEASE_CAP and state != CAP_STATE:       # the same plan-input cause came back after its releases: stop for good until a new plan event
+            e["state"] = out["event"] = CAP_STATE
+            e["why"] = out["why"] = f"{GEN_CLASS}: the same plan-input failure returned after {n_rel} release(s); needs a plan / bind change"
+            e["tot"] = dict(e.get("tot") or {}, event=(e.get("tot") or {}).get("event") or last.get("event", ""))
+    return out
 
 
 def gate(st, die, item, current_inputs, unblocks=(), event=None):
@@ -176,6 +198,9 @@ def gate(st, die, item, current_inputs, unblocks=(), event=None):
             return False, "", "event"
         return True, f"{CAP_STATE}:{fp} ({e.get('why')}); released only by a new plan event or an `unblock {item} cap` line", ""
     old = e.get("inputs") or {}
+    if e.get("plan_input"):                      # a tools / runtime hash cannot fix a plan-input cause
+        old = {k: v for k, v in old.items() if k != "tools"}
+        current_inputs = {k: v for k, v in (current_inputs or {}).items() if k != "tools"}
     changed = sorted(k for k, v in (current_inputs or {}).items() if k in old and old[k] != v)
     changed += sorted(k for k in (current_inputs or {}) if k not in old and old and (current_inputs or {}).get(k))
     if changed:
@@ -185,10 +210,16 @@ def gate(st, die, item, current_inputs, unblocks=(), event=None):
 
 
 def release(e, why):
+    if why in ("plan event changed", "unblock line"):
+        e.pop("rel_n", None)
+    elif e.get("plan_input") and e.get("fp"):
+        rn = e.setdefault("rel_n", {})
+        rn[ident(e["fp"])] = int(rn.get(ident(e["fp"]), 0)) + 1
     e["released"], e["released_fp"] = why, e.get("fp", "")
     e["state"], e["fp"] = "", ""
     e["oom"] = 0
     e.pop("tool_mix", None)
+    e.pop("plan_input", None)
     if why in ("plan event changed", "unblock line"):
         e["tot"] = {}
     e["att"] = [a for a in e["att"]][-1:]          # the streak starts again; the last attempt stays for the stage-rank history

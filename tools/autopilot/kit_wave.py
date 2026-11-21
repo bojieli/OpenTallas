@@ -3927,6 +3927,7 @@ RULES = [
     # defect (the QC A4 st_a rows), not a flow error; typed design:station_overlap so REPEAT-STOP holds it and the sweep routes it to the plan owner.
     ("PLAN", r"^kit_topology$", r"kit_istations:[^\n]*station rows \S+ and \S+ claim overlapping sites",
      "station rows claim overlapping sites: fix the station row plan (one site per flop across rows)"),
+    ("FLOW", r"^bind_toolskew$", r"BIND-GEN-TOOLSKEW", "BIND-GEN-TOOLSKEW: the bind of record ran with other reset / relay generators than the gen rt; rebind on the gen rt"),
     ("PLAN", r"^gen$", r"(?m)^gen phys: ERROR type [^:\s]+: physical collector_tree differs from captured bound reset identity\b",
      "bound reset identity differs from the effective plan/generator: regenerate a coherent bind and kit"),
     # KW-FIX-45 11-12 (OWNER ruling via COORD: "if the job relies on any data or files that do not belong to its job folder,
@@ -7385,7 +7386,7 @@ def restage_waiters(AP, cfg, st, notices):
             # stage redone each time) never reaches admission
             # KW-FIX-27 11-07: the wait doubles with each move of the row (at most x8), so a row is not restarted every 30 min
             young = (time.time() - float(r.get("started") or 0)
-                     < float(cfg.get("restage_min_wait_s", 1800)) * 2 ** min(3, int(r.get("restage_n") or 0)))
+                     < restage_min_wait(cfg, AP=AP) * 2 ** min(3, int(r.get("restage_n") or 0)))
             # KW-FIX-28 11-07: a spillable async PLACE client is already host-mobile: ot-run re-places it every 120 s and spills it
             # to any host that admits.  Stopping it only redoes kit_rtl and gen on the target (181 of 267 moves on 11-07, none of
             # which could help admission).  A move is for a waiter pinned to its gen host: an earlier stage, or a pinned client.
@@ -7498,7 +7499,7 @@ def repick_queued_waits(AP, cfg, st, notices, jobs=None, now=None):
         j = jobs.get(r["q_id"]) or {}
         if str(j.get("status") or "").upper() not in QUEUED_WAIT_STATUS or j.get("started") or j.get("run_started"):
             continue
-        if now - float(r.get("started") or 0) < float(cfg.get("restage_min_wait_s", 1800)):
+        if now - float(r.get("started") or 0) < restage_min_wait(cfg, AP=AP):
             continue
         host = AP.ssh_host(j.get("host") or "") if hasattr(AP, "ssh_host") else (j.get("host") or "")
         host = "localhost" if host == hub else host
@@ -8644,6 +8645,13 @@ def run_item(spec_path):
             rc, txt = run("bind", otrun(sp["bind_mem_gb"], 4, sp["root"], prep, gh))
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
+        # BIND-GEN-TOOLSKEW (FLOW-FIX-0400, COORD item 5): a bind of record made with other reset / relay generators than this gen rt fails at gen hours later ("differs from captured bound
+        # reset identity"); the stamp bind.py wrote is checked now, before any heavy stage.  A bind with no stamp (older) passes.
+        if sp.get("tools_rt") and not core:
+            _tsk = f"{tsrc}/tools/die_plan/bind_tool_stamp.py"
+            rc, txt = run("bind_toolskew", remote(f"if [ -f {q(_tsk)} ]; then python3 -I {q(_tsk)} check --bind-out {q(bind)} --tools {q(tsrc)}; else echo 'BIND-GEN-TOOLSKEW skipped: no checker in this rt'; fi"), idempotent=True)
+            if rc:
+                return fail("bind_toolskew", txt, f"{G}:{bind}")
         # KITRTL-FAIL-1115: kit-rtl runs the die tree's own bind.py when it knows --src-tree; a tree that predates the flag (bind.py
         # 'unrecognized arguments', 35 QC/S81/KV FAILs in 1 h) runs the SCHEDULER's bind.py on the tree's data instead: a staged
         # W/kit_tools repo root = the tree's own tools/die_plan (its overlays win: the S81 tree's taps.py is newer than main's) plus
@@ -10940,6 +10948,132 @@ def live_attempt_elsewhere(st, die, item, key):
     return None
 
 
+LIVE_PROGRESS_H = 2.0                   # FLOW-FIX-0400: an attempt whose log or stage advanced within this window is making progress
+RESTAGE_MIN_WAIT_S = 1800               # FLOW-FIX-0400: the ONE default of restage_min_wait_s (restage_waiters and the restage stop both read it through restage_min_wait)
+DRT_NOPATH_RE = re.compile(r"DRT-NOPATH|Maze Route cannot find path", re.I)
+DRT_RESERVED_SNAP_FIX = "42fa174c180"   # FLOW-GRT-RESID: reserved die-clock-site obstruction snap; a named fix for drt-nopath rows generated before it
+DRT_RESERVED_SNAP_EPOCH = 1795261307    # its commit time (2026-11-21 03:41:47 PST)
+CAUSE_RETRY_CAP = 1                     # automatic relaunches per (item, plan block, failure cause); a named fix= retry key resets it
+
+
+def restage_min_wait(cfg, now=None, AP=None):
+    """FLOW-FIX-0400 (FABLE-FLOW-0400 e): restage_min_wait_s from ONE source.  The default is RESTAGE_MIN_WAIT_S (1800); a different config value is a temporary override: it counts while
+    restage_min_wait_s_until (epoch seconds) is in the future, is ignored once that has passed, and with no expiry at all still counts but is logged as RESTAGE-CONFIG (KW-FIX-40 left 300 live
+    13 days after its note said it was reverted; 69 RESTAGEs in 10 h)."""
+    now = time.time() if now is None else now
+    try:
+        v = float(cfg.get("restage_min_wait_s", RESTAGE_MIN_WAIT_S))
+    except (TypeError, ValueError):
+        return float(RESTAGE_MIN_WAIT_S)
+    if v == RESTAGE_MIN_WAIT_S:
+        return v
+    try:
+        until = float(cfg.get("restage_min_wait_s_until") or 0)
+    except (TypeError, ValueError):
+        until = 0.0
+    if until and until <= now:
+        return float(RESTAGE_MIN_WAIT_S)
+    if not until and AP is not None and not cfg.get("_restage_override_logged"):
+        cfg["_restage_override_logged"] = True
+        AP.log(f"KIT-WAVE RESTAGE-CONFIG: restage_min_wait_s={v:g} is an override with no restage_min_wait_s_until (default {RESTAGE_MIN_WAIT_S}); set an expiry or remove the key")
+    return v
+
+
+def attempt_progress_age_s(r, now=None):
+    """FLOW-FIX-0400: seconds since this attempt last showed progress: the newest mtime of its unit.log / *.live.log, or its record's updated / started time; 0.0 when its dir cannot be read
+    (never judge blind)"""
+    now = time.time() if now is None else now
+    ts = [float(r.get("updated") or 0), float(r.get("started") or 0)]
+    try:
+        d = Path(r["dir"])
+        for f in [d / "unit.log"] + sorted(d.glob("*.live.log")):
+            if f.exists():
+                ts.append(f.stat().st_mtime)
+    except (OSError, KeyError, TypeError):
+        return 0.0
+    return max(0.0, now - max(ts))
+
+
+def attempt_progress_key(r, now=None):
+    """FLOW-FIX-0400: ordering of two live attempts of one item, best last: P&R progress past admission, then the later stage, then recent log progress, then later start"""
+    age = attempt_progress_age_s(r, now)
+    stg = str(r.get("stage") or "").split()
+    return (1 if heavy_progress(r) else 0, FG.stage_rank(stg[0]) if stg else -1,
+            1 if age < LIVE_PROGRESS_H * 3600 else 0, float(r.get("started") or 0), int(r.get("attempt") or 0))
+
+
+def live_progressing_attempt(cfg, st, die, event, item, key, now=None):
+    """FLOW-FIX-0400 (FABLE-FLOW-0400 b: 62 live attempts stopped by a newer attempt, 88.5 unit-hours): a live attempt of (die, item) of the SAME plan event under another record that made progress
+    in the last LIVE_PROGRESS_H hours.  A launch of a newer attempt is refused while it exists.  -> the row or None"""
+    now = time.time() if now is None else now
+    win = float(cfg.get("live_progress_h") or LIVE_PROGRESS_H) * 3600
+    for k, v in (st.get("items") or {}).items():
+        if k == key or v.get("die") != die or v.get("item") != item or str(v.get("event") or "") != str(event or ""):
+            continue
+        live = v.get("status") in ("RUNNING", "LAUNCHING") or (v.get("status") == "ENQUEUED" and v.get("q_status") in REAP_LIVE_Q)
+        if live and (attempt_progress_age_s(v, now) < win or not v.get("dir")):
+            return v
+    return None
+
+
+def retry_fix_named(cfg, die, prev):
+    """a retry key item@N:fix=<sha or row> of this item with N >= the failed attempt is pending in the die config"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    item = prev.get("item")
+    for ia, fx in (d.get("_retry_fix") or {}).items():
+        it, _, n = str(ia).rpartition("@")
+        if it == item and fx and ia in (d.get("retry") or []) and n.isdigit() and int(n) >= int(prev.get("attempt") or 0):
+            return str(fx)
+    return ""
+
+
+def drt_nopath_held(cfg, st, die, prev, now=None):
+    """FLOW-FIX-0400 (FABLE-FLOW-0400 c: coll_ftc a6 relaunched 4 min after a 7.3 h DRT-0255): a failed attempt whose route died on a structural drt-nopath (DRT-0255 Maze Route cannot find path) is not
+    relaunched by the wave on its own: it waits for its family owner until a retry key carries fix=<sha or row> (consumed by the relaunch).  -> '' (go ahead) or the hold text.  A row generated before
+    DRT_RESERVED_SNAP_FIX may retry with fix=42fa174c180 (the text names it)."""
+    if not prev or not so_failed(prev):
+        return ""
+    text = " ".join(str(prev.get(k) or "") for k in ("q_reason", "reason", "evidence_tail"))
+    if not DRT_NOPATH_RE.search(text) or retry_fix_named(cfg, die, prev):
+        return ""
+    old = float(prev.get("started") or 0) < DRT_RESERVED_SNAP_EPOCH
+    item = prev.get("item")
+    return (f"DRT-NOPATH hold [owner {die_owner(cfg, die)[0]}]: attempt {prev.get('attempt')} died on a structural drt-nopath; retry only with a key {item}@{prev.get('attempt')}:fix=<sha>"
+            + (f" (generated before {DRT_RESERVED_SNAP_FIX}: {item}@{prev.get('attempt')}:fix={DRT_RESERVED_SNAP_FIX} is allowed)" if old else ""))
+
+
+def cause_key(rec):
+    """FLOW-FIX-0400: class + stage + first error text of a failed attempt with digits folded; '' for an INFRA failure (the infra budget has its own cap)"""
+    if is_infra_fail(rec):
+        return ""
+    txt = re.sub(r"\s+", " ", str(rec.get("q_reason") or rec.get("reason") or ""))
+    m = re.search(r"\[ERROR [A-Z]+-\d+\]|DRT-\d+|\b[A-Za-z_]+(?:Error|Exception)\b", txt)
+    head = m.group(0) if m else txt[:60]
+    return f"{rec.get('q_class') or rec.get('class') or '?'}|{rec.get('stage') or '?'}|{re.sub(r'[0-9]+', 'N', head)[:80]}"
+
+
+def cause_cap_held(cfg, st, die, prev, now=None):
+    """FLOW-FIX-0400: the second automatic relaunch of the same failure cause on the same plan block is refused (CAUSE_RETRY_CAP = 1); a named fix= retry key resets the count and a changed plan block is
+    another key.  Counts are in state cause_retries[die|item|block|cause].  -> '' (go ahead, count taken) or the hold text"""
+    if not prev or not so_failed(prev):
+        return ""
+    ck = cause_key(prev)
+    if not ck:
+        return ""
+    item = prev.get("item")
+    led = st.setdefault("cause_retries", {})
+    k = f"{die}|{item}|{str(prev.get('block_sha') or '')[:12]}|{ck}"
+    if retry_fix_named(cfg, die, prev):
+        led.pop(k, None)
+        return ""
+    n = int((led.get(k) or {}).get("n") or 0)
+    if n >= CAUSE_RETRY_CAP:
+        return (f"CAUSE-CAP [owner {die_owner(cfg, die)[0]}]: attempt {prev.get('attempt')} failed on {ck[:100]} and {n} automatic relaunch(es) already failed the same way; "
+                f"released by a changed plan block or a retry key {item}@{prev.get('attempt')}:fix=<sha>")
+    led[k] = {"n": n + 1, "ts": time.time()}
+    return ""
+
+
 def tool_skew_closure(cfg, main_root):
     """the import closure of gen.py / gen_phys.py / bind.py in main (flow_guard.closure_files): the ONE module set that both the
     wave gate and the FLOW-HEALTH SKEW table count (FABLE-FLOW-2200 class 6)"""
@@ -11632,6 +11766,20 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
     # COORD 11-19 (HEAD r8b: hd_host_e / hd_lep0N / hd_mesh got no r8b kit, LAUNCH-KEEP "one live attempt per item" on the r3 attempt): OWNER: the new-plan attempt launches IN PARALLEL and the
     # old one is never cancelled; under stops_off (not hbm) a live attempt on ANOTHER plan block does not block this block's launch (memory admission is the only limit)
+    if not arm:
+        _lp = live_progressing_attempt(cfg, st, die, cfg["dies"][die]["event"], r["item"], key)
+        if _lp:                                  # FLOW-FIX-0400 (b): never start attempt N+1 while an attempt of this item and event is live and made progress in the last 2 h
+            log_hourly(AP, st, f"LKEEP|{die}|{r['item']}", f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: attempt {_lp.get('attempt')} ({_lp.get('unit') or _lp.get('q_id') or '-'}) is live and made progress "
+                       f"{attempt_progress_age_s(_lp) / 60:.0f} min ago (stage {_lp.get('stage') or '?'}); no newer attempt while it runs")
+            return None
+        _dh = drt_nopath_held(cfg, st, die, prev)
+        if _dh:                                  # FLOW-FIX-0400 (c)
+            log_hourly(AP, st, f"DRTH|{die}|{r['item']}", f"KIT-WAVE LAUNCH-HELD {die}/{r['item']}: {_dh}")
+            return None
+        _ch = cause_cap_held(cfg, st, die, prev)
+        if _ch:
+            log_hourly(AP, st, f"CAUSE|{die}|{r['item']}", f"KIT-WAVE LAUNCH-HELD {die}/{r['item']}: {_ch}")
+            return None
     other = None if (arm or FG.stops_off_die(cfg, die)) else live_attempt_elsewhere(st, die, r["item"], key)
     if other:                                    # WAVE-LONGRUN-1 (b): one live attempt per item, whatever its plan block
         AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: one live attempt per item; {other.get('status')} attempt {other.get('attempt')} "
@@ -14150,6 +14298,8 @@ def repeat_event(AP, cfg, st, rec, ev):
         return
     e = st["repeat_ledger"][RS.lkey(die, item, rec.get("event"))]
     AP.log(f"KIT-WAVE REPEAT-STOP {die}/{item}: {ev['event']}:{ev['fp'][:140]} ({ev['why']})")
+    if ev.get("class"):                          # FLOW-FIX-0400 (f): one class line per plan-input gen repeat
+        AP.log(f"KIT-WAVE GEN-REPEAT-CLASS {die}/{item}: {ev['class']} {ev['fp'][:100]}; a tools change does not release it, {RS.PLAN_RELEASE_CAP} releases of the same cause make it BLOCKED-CAP (needs a plan / bind change)")
     if e.get("posted") == f"{ev['event']}|{ev['fp']}":
         return
     e["posted"] = f"{ev['event']}|{ev['fp']}"
@@ -15745,14 +15895,13 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
             continue
         live = [r for r in rows if _row_live(r, jobs)]
         if len(live) > 1:
-            live.sort(key=lambda r: (float(r.get("started") or 0), int(r.get("attempt") or 0)))
+            # FLOW-FIX-0400 (FABLE-FLOW-0400 b): the survivor is the attempt with the most progress (P&R past admission, later stage, recent log, then later start), never simply the newest
+            live.sort(key=lambda r: attempt_progress_key(r, now))
             top = live[-1]
             for r in live[:-1]:
-                # FLOW-1949 (2) SELF-STOP (13 live jobs stopped in 2 h by "attempt N superseded by attempt N"): a row is superseded only by a STRICTLY higher attempt of the SAME event; a live row of
-                # another event is a parallel new-plan attempt (OWNER 11-19) and is never stopped for it
-                if int(top.get("attempt") or 0) > int(r.get("attempt") or 0) and str(top.get("event") or "") == str(r.get("event") or "") \
-                        and float(r.get("started") or 0) < float(top.get("started") or 0):
-                    todo.append((r, f"superseded by attempt {top.get('attempt')} of the same item", True))
+                # FLOW-1949 (2) SELF-STOP: a live row of ANOTHER event is a parallel new-plan attempt (OWNER 11-19) and is never stopped for it
+                if int(top.get("attempt") or 0) != int(r.get("attempt") or 0) and str(top.get("event") or "") == str(r.get("event") or ""):
+                    todo.append((r, f"superseded by attempt {top.get('attempt')} of the same item (further progress)", True))
         for r in rows:
             if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < float(cfg.get("reap_window_h") or 24) * 3600:
                 todo.append((r, "row CANCELLED", False))

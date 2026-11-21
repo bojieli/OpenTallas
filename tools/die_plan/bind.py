@@ -5889,6 +5889,11 @@ def cmd_bind(a):
             for _r in _rows:
                 print(f"   LOCAL_RESET_RAW {_k}: {_r['name']} {_r['was']} -> {_r['raw']}")
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
+    try:                                     # BIND-GEN-TOOLSKEW (FLOW-FIX-0400): the tool sha + reset/relay generator hashes this bind ran with; kit prep compares them with the gen rt
+        import bind_tool_stamp
+        bind_tool_stamp.stamp(out)
+    except Exception as _e:                  # a stamp failure never fails a bind
+        print(f"   BIND_TOOL_STAMP skipped: {type(_e).__name__}: {_e}")
     if not B.errors:
         import kit_topology
         kit_topology.write_bind_receipt(raw,out,getattr(a, "asbuilt",None),input_topology)
