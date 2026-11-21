@@ -5,6 +5,7 @@
 # Refuses when (1) a name or schema problem, (2) SUCCESSOR's own chain leads back to LANE, (3) LANE still has registered RUNNING ot-run / ot-push records
 # (~/.local/state/ot-status, pid alive, lane = LANE) on any host that its handoff (lanes/handoff/LANE.md) does not name by unit, record name or pid, and that
 # --handed does not list.  A host that does not answer within 20 s is reported and does not block (set STAND_HOSTS to change the host list).
+# Copies the lane's open FAIL-CLASS relays into lanes/handoff/SUCCESSOR.md as an OPEN-RELAYS block (FLOW-OPS-0900); never refuses on them.
 # Writes the row, posts "STAND-DOWN [LANE -> SUCCESSOR]" under LANE's own name (no redirect), and commits both through bin/post.sh in ONE coord-commit.
 set -eu
 C=${COORD_DIR:-/home/ubuntu/coord}
@@ -60,8 +61,23 @@ if [ -n "$refuse" ]; then
   exit 1
 fi
 [ -z "$unchecked" ] || note="${note:+$note; }UNCHECKED hosts (running jobs not verified):${unchecked}"
+# OPEN-RELAYS (FLOW-OPS-0900, FABLE-FLOW-0745 d: 7 failure classes bounced between successors, one 129 min): the lane's unanswered FAIL-CLASS
+# relays (tools/fail_route.py state) go into the successor's handoff as an explicit block (the lane's own handoff when SUCCESSOR is none).
+extra=""
+FR="$C/tools/fail_route.py"
+if [ -f "$FR" ]; then
+  ors=$(timeout 30 python3 -I "$FR" --open-relays "$lane" 2>/dev/null) || ors=""
+  if [ -n "$ors" ]; then
+    tgt=$succ; [ "$succ" != none ] || tgt=$lane
+    th="lanes/handoff/$tgt.md"; mkdir -p "$C/lanes/handoff"
+    printf '\n## OPEN-RELAYS from %s (stand-down %s)\nUnanswered failure classes; post RESULT or ACK naming the class id (fail_route accepts the whole owner chain).\n%s\n' \
+      "$lane" "$(TZ=America/Los_Angeles date '+%Y-%m-%d %H:%M %Z')" "$ors" >> "$C/$th"
+    extra="$th"; n_or=$(printf '%s\n' "$ors" | grep -c '^- FAIL-CLASS' || true)
+    note="${note:+$note; }OPEN-RELAYS ${n_or} -> $th"
+  fi
+fi
 res=$(python3 -I "$LS" --set "$T" "$lane" "$succ" "$note") || { echo "stand-down: schema check failed, nothing written" >&2; exit 1; }
 new=$(mktemp "$C/lanes/.LANE-STATUS.XXXXXX")
 printf '%s\n' "$res" > "$new"
 mv -f "$new" "$T"
-POST_NO_RESOLVE=1 bash "$C/bin/post.sh" "$lane" "STAND-DOWN [$lane -> $succ] stood down; successor $succ.${note:+ $note} (row in lanes/LANE-STATUS.tsv; posts to $lane now redirect)" lanes/LANE-STATUS.tsv
+POST_NO_RESOLVE=1 bash "$C/bin/post.sh" "$lane" "STAND-DOWN [$lane -> $succ] stood down; successor $succ.${note:+ $note} (row in lanes/LANE-STATUS.tsv; posts to $lane now redirect)" lanes/LANE-STATUS.tsv $extra
