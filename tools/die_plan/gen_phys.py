@@ -8690,6 +8690,10 @@ fi
 if [ "$GOAL" != synth ] && [ -f "$K/env_provenance.py" ]; then
   EPV=$(python3 -I "$K/env_provenance.py" check "$K" 2>&1); EPR=$?; echo "$EPV" >&2
   if [ $EPR = 14 ]; then echo "FAIL_PREFLOOR $(echo "$EPV" | grep -m1 'ENV-PROVENANCE FAIL' | cut -c1-500)" | tee -a "$K/FAIL_PREFLOOR"; exit 14; fi
+elif [ "$GOAL" != synth ] && [ "${K#*/kit-wave/}" = "$K" ] && [ -f "${OT_RT_TOOLS:-/srv/opentallas-scratch2/claude/rt/current/tools}/autopilot/env_provenance.py" ]; then
+  # FLOW-OPS-0900 (FABLE-FLOW-0745 g): a kit with no checker copy that is not a kit-wave attempt (gen_phys run by hand) is judged by the rt copy
+  EPV=$(python3 -I "${OT_RT_TOOLS:-/srv/opentallas-scratch2/claude/rt/current/tools}/autopilot/env_provenance.py" check "$K" 2>&1); EPR=$?; echo "$EPV" >&2
+  if [ $EPR = 14 ]; then echo "FAIL_PREFLOOR $(echo "$EPV" | grep -m1 'ENV-PROVENANCE FAIL' | cut -c1-500)" | tee -a "$K/FAIL_PREFLOOR"; exit 14; fi
 fi
 # KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then

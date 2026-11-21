@@ -22,6 +22,9 @@ Refusals (only while the kit has no 3_place.odb: a kit already past place gets a
   - env differs from wave_env on a key that is not plan-derived and not named by the spec's A/B opt-out (ab.keys, with a reason)
   - a private-spec kit whose config.mk OT_* exports differ from the ones recorded at run-item (config.mk edited by hand after generation;
     on a wave kit this is a NOTE: wave kits are right by construction)
+  - FLOW-OPS-0900 (FABLE-FLOW-0745 g, FAM-S81-LEPE-3 proof9 = wave kit copy + config.mk diff): a wave record found in a kit dir other than
+    the one run-item wrote it in (the record's "kit") is a COPIED wave kit; a config.mk change there is a FAIL, not a NOTE (a copy + edit
+    is a hand-built kit).  A plain copy with an unchanged config.mk passes with a NOTE.
 Only exit 14 refuses; a crash of this checker (any other rc) never stops the kit.
 """
 import base64
@@ -86,15 +89,34 @@ def judge(rec, config_text, placed=False, kit_path=""):
     if isinstance(rec_cfg, dict) and config_text is not None:
         now = config_ot(config_text)
         cd = env_diff(rec_cfg, now)
+        copied = copied_from(rec, kit_path)
         if cd:                                           # a wave kit is right by construction: a later config.mk edit there is only reported
-            lines.append(("ENV-PROVENANCE FAIL" if src == "private-spec" else "ENV-PROVENANCE NOTE")
-                         + ": config.mk OT_* exports changed after run-item recorded them (hand edit?): " + ", ".join(cd[:12]))
+            if src == "wave" and copied:
+                lines.append(f"ENV-PROVENANCE FAIL: copied wave kit (record written in {copied}) with config.mk OT_* exports edited after run-item "
+                             f"(a hand-built kit): {', '.join(cd[:12])}; build private kits with `kit_wave.py private-spec` + `run-item`")
+            else:
+                lines.append(("ENV-PROVENANCE FAIL" if src == "private-spec" else "ENV-PROVENANCE NOTE")
+                             + ": config.mk OT_* exports changed after run-item recorded them (hand edit?): " + ", ".join(cd[:12]))
+        elif copied:
+            lines.append(f"ENV-PROVENANCE NOTE: kit copied from {copied} (config.mk unchanged)")
     if any(ln.startswith("ENV-PROVENANCE FAIL") for ln in lines):
         return _soft(placed, lines)
     n = len([k for k in diff if k in ab_keys])
     lines.insert(0, f"ENV-PROVENANCE PASS: source {src} {rec.get('die')}/{rec.get('item')} env=wave"
                  + (f"+{len(diff)}({','.join(diff[:8])})" if diff else "") + (f" A/B {n} key(s): {ab.get('why')}" if n else ""))
     return True, lines
+
+
+def copied_from(rec, kit_path):
+    """the kit dir the record was written in when that is not KIT (a copied kit), else ''.  Records older than FLOW-OPS-0900 carry no kit."""
+    k = str((rec or {}).get("kit") or "")
+    if not k or not kit_path:
+        return ""
+    try:
+        same = os.path.realpath(k) == os.path.realpath(kit_path)
+    except (OSError, ValueError):
+        same = k.rstrip("/") == str(kit_path).rstrip("/")
+    return "" if same else k
 
 
 def wave_delta(kit):
@@ -144,7 +166,7 @@ def check(kit):
 
 def write(kit, decl):
     kit = os.path.abspath(kit)
-    rec = dict(decl, schema=SCHEMA, written=time.strftime("%F %T %Z"))
+    rec = dict(decl, schema=SCHEMA, written=time.strftime("%F %T %Z"), kit=kit)
     txt = _read(os.path.join(kit, "config.mk"))
     if txt is not None:
         rec["config_ot"] = config_ot(txt)

@@ -3549,6 +3549,36 @@ def place(hosts, d, disk, mem, quiet=False):
 
 
 MAINT_FLAGS = ("--selftest", "--status", "--spill-sweep", "--spill-handoff", "--cancel", "--cancel-dir")
+ARGV_REFUSE_EXIT = 64      # FLOW-OPS-0900 (FABLE-FLOW-0745 g): a request malformed at parse time; no unit, no status record, no DIED post
+RUN_KIT_RE = re.compile(r"(?:^|/)run_kit[A-Za-z0-9_.-]*\.sh$")
+
+
+def argv_refusal(argv):
+    """'' when the submission's argument list is well formed, else the refusal text (pure: tests).
+    TAP-GRID-R3 11-21 07:26 submitted 24 jobs as `--dir -- bash ...` (an empty shell variable): each ran 0 s and posted DIED.
+    Refused: a --dir whose value is empty or starts with '-'; a run_kit*.sh command whose kit argument is
+    empty, a flag or not absolute (a fan-out over an empty list)."""
+    if "--" not in argv or (argv and argv[0] in MAINT_FLAGS):
+        return ""
+    i = argv.index("--")
+    head, cmd = argv[:i], argv[i + 1:]
+    for j, o in enumerate(head):
+        v = None
+        if o == "--dir":
+            v = head[j + 1] if j + 1 < len(head) else ""
+        elif o.startswith("--dir="):
+            v = o[len("--dir="):]
+        if v is not None and (not v.strip() or v.startswith("-")):
+            return f"--dir {v!r} is empty or a flag (an unset variable in a fan-out?); nothing was submitted"
+    if "--dir" in head and head.index("--dir") == len(head) - 1:
+        return "--dir has no value (an unset variable in a fan-out?); nothing was submitted"
+    for k, w in enumerate(cmd):
+        if w.startswith("/") and RUN_KIT_RE.search(w):      # the fan-out form names its runner by absolute path
+            kit = cmd[k + 1] if k + 1 < len(cmd) else ""
+            if not kit.strip() or kit.startswith("-") or not kit.startswith("/"):
+                return f"{os.path.basename(w)} kit argument {kit!r} is empty, a flag or not an absolute kit path (fan-out over an empty list?); nothing was submitted"
+            break
+    return ""
 
 
 def _records_status(argv):
@@ -3557,6 +3587,10 @@ def _records_status(argv):
 
 
 if __name__ == "__main__":
+    _bad = argv_refusal(sys.argv[1:])
+    if _bad:
+        print(f"ot-run: REFUSED (ARGV-GUARD): {_bad}", file=sys.stderr, flush=True)
+        not_run(f"ARGV-GUARD {_bad}", ARGV_REFUSE_EXIT)
     if _records_status(sys.argv[1:]):
         _OTS.run_recorded("run", main, " ".join(sys.argv[1:]))
     else:
