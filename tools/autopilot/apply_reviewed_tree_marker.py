@@ -26,6 +26,34 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
+FLEET_POOL = ("epyc10", "epyc7", "epyc8", "epyc9", "epyc2", "intel1")
+
+
+def old_tree_holders(old_src, pool, skip, run=None):
+    """TREESYNC-1630: hosts outside the die's gen_hosts that already hold the die's CURRENT tree (a copy made by hand, e.g. epyc7 S81 J5).  They are synced and verified
+    with the new tree too, so the apply never leaves a host with a stale tree that the die could use later.  One `test -d` per host; a host that does not answer is not a holder."""
+    import shlex
+    import subprocess
+    import concurrent.futures as CF
+    if not old_src:
+        return []
+    cands = [h for h in pool if h not in skip]
+    if not cands:
+        return []
+
+    def one(h):
+        try:
+            if run:
+                rc, _ = run(f"test-holder {h} {old_src}")
+                return h if rc == 0 else None
+            r = subprocess.run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=10", h, f"test -d {shlex.quote(old_src)}"], capture_output=True, timeout=40)
+            return h if r.returncode == 0 else None
+        except Exception:
+            return None
+    with CF.ThreadPoolExecutor(max_workers=len(cands)) as ex:
+        return [h for h in ex.map(one, cands) if h]
+
+
 def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_from=""):
     """WAVE-FLOW-R2 11-17 (FABLE-FLOW-1700 item 3): the apply must not narrow the die to the hosts the candidate happens to list.  Every host that serves the die today
     (current_hosts) and is not in the candidate list gets the tree replicated (src_manifest replicate --link-from) and verified (hosts --expect); any failure refuses with
@@ -213,6 +241,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     if not keep:
         _cfg0 = json.loads((C / "autopilot/kit_wave.json").read_text())
         _cur = [h for h in (_cfg0["dies"][die].get("gen_hosts") or []) if h not in (_cfg0.get("retired_hosts") or [])]
+        _pool = [h for h in (_cfg0.get("hosts") or FLEET_POOL) if h not in (_cfg0.get("retired_hosts") or [])]
+        _cur = _cur + [h for h in old_tree_holders(str(_cfg0["dies"][die].get("src") or ""), _pool, set(_cur) | set(hosts)) if h not in _cur]
         hosts, replicated = ensure_tree_on_hosts(tree, want, _cur, hosts, rt or HERE, link_from=os.path.basename(str(_cfg0["dies"][die].get("src") or "")))
         mc.pop("gen_hosts", None) if replicated else None
         warnings += [x for x in replicated if x.startswith("DROPPED")]

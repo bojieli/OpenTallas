@@ -9,6 +9,9 @@ class PGOK:                                   # PUBLISH-GATE-1116: these tests a
     def require_pass(*a): return ""
 
 
+REAL_HOLDERS = A.old_tree_holders
+A.old_tree_holders = lambda *a, **k: []     # TREESYNC-1630: no real ssh probes in tests
+
 def apply(*a, **k):
     k.setdefault("PG", PGOK)
     k.setdefault("host_verify", lambda *a, **kw: ({}, {}))          # SNAP-RO-1119: the real per-host verify has its own tests (test_snap_ro_1119.py)
@@ -186,6 +189,27 @@ class KeepGenHosts(unittest.TestCase):
         c = mk()
         with self.assertRaises(AssertionError):
             apply(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+
+    def test_hosts_holding_the_old_tree_outside_gen_hosts_are_synced_too(self):
+        """TREESYNC-1630: epyc7 holds the die's current tree by hand but is not in gen_hosts: it is part of the sync set, so the new tree is replicated + verified there"""
+        seen = []
+        orig, orig_h = A.ensure_tree_on_hosts, A.old_tree_holders
+        A.old_tree_holders = lambda old, pool, skip, run=None: [h for h in ("epyc7",) if h not in skip]
+        A.ensure_tree_on_hosts = lambda tree, want, cur, hosts, rt, run=None, link_from="": (seen.append((cur, hosts)) or (list(hosts) + [h for h in cur if h not in hosts], ["replicated"]))
+        try:
+            c = mk({"gen_hosts": ["epyc10", "epyc8"]})
+            apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]), verify_retained_bind=lambda h: None)
+        finally:
+            A.ensure_tree_on_hosts, A.old_tree_holders = orig, orig_h
+        self.assertEqual(seen, [(["epyc10", "epyc8", "epyc7"], ["epyc10"])])
+        self.assertEqual(sorted(json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]["gen_hosts"]), ["epyc10", "epyc7", "epyc8"])
+
+    def test_old_tree_holders_probe(self):
+        calls = []
+        got = REAL_HOLDERS("/t/old", ["a", "b", "c"], {"c"}, run=lambda cmd: (calls.append(cmd) or (0 if " a " in cmd else 1, "")))
+        self.assertEqual(got, ["a"])
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(REAL_HOLDERS("", ["a"], set()), [])
 
     def test_default_never_narrows_the_die_it_replicates_or_refuses(self):
         """FABLE-FLOW-1700 item 3: the candidate lists only epyc10 but the die serves epyc10 and epyc8: the tree is replicated to epyc8 (and verified) before the switch, else nothing is applied"""
