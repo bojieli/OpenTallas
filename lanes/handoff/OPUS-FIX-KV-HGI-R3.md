@@ -1,5 +1,29 @@
 # OPUS-FIX-KV-HGI-R3 handoff (Opus; KV hg/hgi family owner; successor of FABLE-FIX-KV-HGI / -R2). CURRENT 2026-11-21 03:45 PST
 
+## STAND-DOWN 2026-11-21 05:5x PST (context ~290k; COORD order). Successor: OPUS-FIX-KV-HGI-R4. Read this section first.
+Units in flight (waiters were mine; RE-ARM them, OT_LANE=<successor>; cancel only with ot-run --cancel):
+- b8 / b8d core-tap A/B GRT, epyc7 oth-ubuntu-1682127 / 1682133-1795238641 (logs intel2 ~/tmp/fablefixkvhgi/b8*_grt.log).
+  Decide OT_TAP_CORE_DIRECT from them (Fable handoff STATE 21:30 steps 1-3; compare b8 vs b8d only, both congested).
+- ft26 pilot GRT (Codex), epyc9 oth-ubuntu-3222492-1795259200, log ~/tmp/fablefixkvhgi/ft26_raw_reseat_grt.log.
+- relayfit A/B (ft26 pilot + OT_RELAY_MID_FIT=1, MAX_HOP 300), queued epyc7/epyc10, intel2 client pid 42768,
+  log ~/tmp/fablefixkvhgi/ft26_relayfit_grt.log. Read: grep OT_RELAY_MID_FIT run/logs/.../3_3_place_gp.log (where hst3_g went).
+- Lever-8 G0 oth-ubuntu-1244622-1795267991 and strict bind+LATCHECK oth-ubuntu-1244823-1795267991, epyc8
+  (opus-fix-kv-hgi-r3/{g0gate_r3,bindgate_r3}/gate.out; logs intel2 ~/tmp/opusfixkvhgir3/). COORD 05:4x accepted the re-site.
+Next, in order:
+1. When bind is green: hgi_v1 proof kit from launch_r3 (bind.py kit-rtl from tree/.../bind_of_record, then gen.py phys) with
+   the EXACT wave env + gen args (COORD RULING d442c09bb6e: OT_PGCAP + grt_pre hook, OT_PLACE_MAX_FANOUT, OT_CLAND_STRIP_DENS,
+   OT_IO_HOLD, OT_SIGNED_VIEW_SHA, OT_GPL_SPARSE_UTIL, flow_tag). Source of truth: the D25e3 wave kit
+   epyc7/epyc10/epyc2 kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D25e3/items/kv3_hgi_v1__cl141fc26e/attempt_4
+   (kit_effective_env.json, config.mk, gen log args). Diff the new config.mk against that one before launch; only the plan
+   (kst sites) may differ. Run to GRT iteration 10, read congestion at the head-core faces vs the wave kit, then sign-off.
+   Template for kit-rtl/gen lines: epyc8 kv-plan-r3/proofs/proof_kit.sh (but take env from the wave kit, not from it).
+2. Rows to KV-PLAN-R5 for D28: re-run lanes/handoff/OPUS-FIX-KV-HGI-R3-kst_resite.py on the D28 base plan.
+   Also hand: core tap key (after b8/b8d), street/hst3_g row (after pilot/relayfit), r7 census300 rows.
+3. hgi_v3/v5/v6/v8 (+hgi, hgi_v7) stay HELD (posted 04:0x, 04:3x): stale D25e3 bind; release by regenerating from D26/D28 bind.
+4. Cleanup when done (ot-delete): epyc9 + epyc10 fable-fix-kv-hgi/{b8,b8d} copies, epyc9 ft26_middle_0/gen_ft26_relayfit
+   (unused copy), opus-fix-kv-hgi-r3/ana/plan_try.json.
+
+
 Read first: lanes/handoff/FABLE-FIX-KV-HGI.md (STAND-DOWN 01:25). Codex covered 02:18-03:32 under this lane name (posts 02:27-03:06).
 Lane dirs: epyc7/epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hgi (b8, b8d, ft26_middle_0, sc/r3_* read-only probes, rb/b8/*).
 
