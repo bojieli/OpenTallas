@@ -2374,6 +2374,24 @@ class RouteKillIsInfra(Base):
         self.assertEqual(self.ap.classify({"FAIL_route": "DRT-0255 path of net x"}, {})[:2], ("STRUCTURAL", "drt-nopath"))
 
 
+def test_sealed_drt_progress_stop_takes_precedence_over_worker_kill():
+    import autopilot as ap
+
+    marker = "OT_GRT_STOP drt_no_progress: stage rc 137 -> 21 (no re-run)"
+    detail = "OT_DRT_NO_PROGRESS stage=route class=DRT_STALL: 1430 violations, flat for six rounds"
+    log = (f"AP_START 1000 ap-test-a1\n{detail}\nKilled setsid worker\n{marker}\n"
+           "FAIL_route make exit 21 (see run_route.log)\n"
+           "ot-run: RAN on epyc9 (unit worker): exit 21\nAP_RC=21\n")
+    probe = {"FAIL_route": "make exit 21 (see run_route.log)", "oom": "Killed setsid worker"}
+    current = ap.parse_client_log(log, unit="ap-test-a1", started=1000)
+    assert ap.classify(probe, current) == ("STRUCTURAL", "drt-no-progress", detail)
+    for text, unit, started in ((log, "ap-test-a2", 1000), (log, "ap-test-a1", 1121),
+                                (log.replace(marker, ""), "ap-test-a1", 1000),
+                                (log.replace("AP_RC=21", "AP_RC=137"), "ap-test-a1", 1000)):
+        client = ap.parse_client_log(text, unit=unit, started=started)
+        assert ap.classify(probe, client)[:2] == ("CRASH", "infra-oom")
+
+
 def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch):
     import autopilot as ap
 
@@ -2399,9 +2417,27 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch):
     assert ap.admit_new(state, {r["id"]: r}) == 0
     assert j["status"] == "RUNNING"
     assert j["unit"] == "already-submitted"
-    ap.submit(state, j, "(resubmit: never admitted)")
-    assert j["status"] == "WAIT-GEOM"
-    assert j["unit"] == "already-submitted"
+    class ReadyToResume(Exception):
+        pass
+
+    def resume_ready(*_):
+        raise ReadyToResume
+
+    monkeypatch.setattr(ap, "resume_move", resume_ready)
+    for kind, verdict, reason in (
+        ("infra-notrun", None, "WAIT-VISUAL"),
+        ("infra-oom", "ISSUES", "WAIT-FORM"),
+        ("infra-flow-refresh", None, "WAIT-VISUAL"),
+    ):
+        j.update(status="CRASH", kind=kind)
+        monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: verdict)
+        ap.submit(state, j, "(automatic resubmit)")
+        assert j["status"] == "WAIT-GEOM"
+        assert j["wave_review_reason"].startswith(reason)
+        assert j["unit"] == "already-submitted"
+
     monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: "GOOD")
+    with pytest.raises(ReadyToResume):
+        ap.submit(state, j, "(automatic resubmit)")
     assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "E") is None
     assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "older") is None
