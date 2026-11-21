@@ -48,6 +48,6 @@ Plan `M/plan/p4.json` f15722674c75.
   die_ctx changes on all types (new reset keys); signed rows stay terminal on their block.
 
 ## Next
-1. Confirm the wave launches hd_serdes + hd_lep0N on r16 (log.txt KIT-WAVE). tr2s / sdr2c untouched (any-plan count).
+1. DONE 22:24: wave launched hd_serdes, hd_lep0N (+ hd_mesh, hd_host_e, hd_host_w: r13r base blocks) on r16. tr2s / sdr2c untouched.
 2. Signed >300-um hops (hd_spn be_i/bw_i 850/706, hd_spn_end 850/706, hd_tile 573/421/398/342) + 300-um reset re-solve: next event.
 3. Clean the contained finding (copy r4_s0 sink bins into the tree, rewrite plan paths) in the next event.
