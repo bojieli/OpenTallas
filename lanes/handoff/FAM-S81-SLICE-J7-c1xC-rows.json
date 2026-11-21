@@ -1,27 +1,147 @@
 {
- "schema": "fam-s81-slice.c1xC_j7_rows.v0",
+ "schema": "fam-s81-slice.c1xC_j7_rows.v1",
  "geometry_base": "J5 plan_h2_2249 / C1n (module+instance names of bound t9: u_s_6N_u_lp_*), rebase by name onto the applied J6 candidate; none of these keys is changed by J6 monitor-home or FSTART",
- "status": "DRAFT spec, not yet validated by tools/die_plan (needs plan_j3b schema + placed-length dump to pick D per bundle)",
- "types": ["dsdv_slice_c1x_C__t1","t3","t4","t5","t6","t7","t8","t9","t10"],
+ "status": "FINAL spec for J7 handoff (11-21 04:xx). Not yet validated by tools/die_plan: partition_types sub-tile schema and per-bundle D need S81-J6-ASSEMBLY-R2 / die_plan tooling.",
+ "types": [
+  "dsdv_slice_c1x_C__t1",
+  "t3",
+  "t4",
+  "t5",
+  "t6",
+  "t7",
+  "t8",
+  "t9",
+  "t10"
+ ],
  "relay_depth_rows": [
-  {"id":"R-ST1a","src":"u_s_6N_u_lp_u_xr","port":"ci_b","width":1076,"dst":"u_s_6N_u_lp_u_xg","D":"+1 (stage at first 300um)","why":"xr->xg bus, N-face to register cloud, 22.6k hops >300um, max 1434um"},
-  {"id":"R-ST1b","src":"u_s_6N_u_lp_u_xr","port":"is_d","width":160,"dst":"u_s_6N_u_lp_u_xg","D":"+1"},
-  {"id":"R-ST1c","src":"u_s_6N_u_lp_u_xg","port":"xf","width":1380,"dst":"xf cores","D":"+1..+2 by placed length (xg xf_q -> vo_d worst -511 ps, 1775um, 50 lvls)"},
-  {"id":"R-RD","src":"u_s_6N_u_lp_u_xr","ports":["eg_v","eg_c"],"D":2,"types":["t9","t10"],"functional":true},
-  {"id":"R-RD2","src":"cap","port":"cfg_d","D":2,"types":["dsdv_slice_iq_C__t1"],"functional":true}
+  {
+   "id": "R-ST1a",
+   "src": "u_s_6N_u_lp_u_xr",
+   "port": "ci_b",
+   "width": 1076,
+   "dst": "u_s_6N_u_lp_u_xg",
+   "D": "+1 (stage at first 300um)",
+   "why": "xr->xg bus, N-face to register cloud, 22.6k hops >300um, max 1434um"
+  },
+  {
+   "id": "R-ST1b",
+   "src": "u_s_6N_u_lp_u_xr",
+   "port": "is_d",
+   "width": 160,
+   "dst": "u_s_6N_u_lp_u_xg",
+   "D": "+1"
+  },
+  {
+   "id": "R-ST1c",
+   "src": "u_s_6N_u_lp_u_xg",
+   "port": "xf",
+   "width": 1380,
+   "dst": "xf cores",
+   "D": "+1..+2 by placed length (xg xf_q -> vo_d worst -511 ps, 1775um, 50 lvls)"
+  },
+  {
+   "id": "R-RD",
+   "src": "u_s_6N_u_lp_u_xr",
+   "ports": [
+    "eg_v",
+    "eg_c"
+   ],
+   "D": 2,
+   "types": [
+    "t9",
+    "t10"
+   ],
+   "functional": true
+  },
+  {
+   "id": "R-RD2",
+   "src": "cap",
+   "port": "cfg_d",
+   "D": 2,
+   "types": [
+    "dsdv_slice_iq_C__t1"
+   ],
+   "functional": true
+  }
  ],
  "station_move_rows": [
-  {"id":"R-SL1","what":"station flops currently inside memory-array slits (58 gaps <20um, 2,243 flops, x180-380 y500-1100)","move_to":"station row outside the array: x<150 (W face) or y<480 (S of array)","rule":"every hop <=300um, first station <=250um of xr W/S face (half-cycle reach)"},
-  {"id":"R-HF","what":"first leafdn station per xr face within 200-250um","ref":"FABLE-FIX-S81-SLICEC-0045 R3, t9 sites in mkplan.py"}
+  {
+   "id": "R-SL1",
+   "what": "station flops currently inside memory-array slits (58 gaps <20um, 2,243 flops, x180-380 y500-1100)",
+   "move_to": "station row outside the array: x<150 (W face) or y<480 (S of array)",
+   "rule": "every hop <=300um, first station <=250um of xr W/S face (half-cycle reach)"
+  },
+  {
+   "id": "R-HF",
+   "what": "first leafdn station per xr face within 200-250um",
+   "ref": "FABLE-FIX-S81-SLICEC-0045 R3, t9 sites in mkplan.py"
+  }
  ],
- "tap_rows": {"clock.tap_span_um":300,"t9":"171 taps, fable-fix-s81-slicec/p1/t9_taps.json; others solve with p1_taps.sh on regs/ dumps"},
+ "tap_rows": {
+  "clock.tap_span_um": 300,
+  "t9": "171 taps, fable-fix-s81-slicec/p1/t9_taps.json; others solve with p1_taps.sh on regs/ dumps"
+ },
  "split_plan_B": {
-  "trigger": "type over 400k cells (t9 place 480,720 nontap; t3 477k; t6 503k)",
-  "cut": "landing/station strip vs core+xg body",
-  "strip_type": "u_cland_* (xring_i1 13.0k, leafup_i3/i4 7.9k each, ft1/ft2/xtier 3.3k each, ret_i0-2 0.9k each, monitor, reader_start*), u_ist_leafdn_o* (~18k), u_ft_ft*_o* (~8.3k), u_bin_*/u_bout_* (~21k) = ~115k flat named + ~38k named cland = ~150k synth cells; measured placement: 97k cells with y<100um (S edge) and landings at N edge and E/W faces",
-  "body_type": "xr, eg(gg,nh,nk), cap, flt, mk, eng_finish x4, norm_finish, xstop, xg(36.5k cells named) + the 142k anonymous logic (not attributable from the flat netlist) ~185k synth; place est ~330k",
-  "crossings": "landing chains are already registered station chains (DFF per bit), so the strip/body boundary adds no logic: body ports = the chain ends. Cycles +0.",
-  "no_growth": "same tile; strip = partition region along the pin faces (S strip ~110um x 1438um carries 97k cells), core shapes unchanged",
-  "open": "(1) N/E/W landings are not in the S strip: 2-3 strips or only S strip first; (2) anonymous 142k logic attribution (needs hierarchical yosys on kit RTL with flatten off, ot-run); (3) plan partition_types schema for a sub-tile"
+  "applies_to": [
+   "dsdv_slice_c1x_C__t1",
+   "t3",
+   "t4",
+   "t5",
+   "t6",
+   "t7",
+   "t8",
+   "t9",
+   "t10"
+  ],
+  "trigger": "nontap cells > 400k at place",
+  "strip_type": {
+   "name_suffix": "__strip",
+   "cells_mapped": "~150k",
+   "members": "u_cland_* (xring_i1, leafup_i3/i4, ft1/ft2, xtier_i0, ret_i0-2, monitor, reader_start*), u_ist_leafdn_o*, u_ft_ft*_o*, u_bin_*, u_bout_* (ot_dp_st / ot_dp_dly / ot_meso_ring_ca / ot_dp_landing_*)",
+   "crossing": "landing chains are one register per bit already: strip boundary = chain ends, +0 cycles, registered both sides",
+   "region": "S edge strip ~110um x 1438um holds 97k of the cells (placed y<100um); N/E/W landings need extra strip regions on those faces, same tile, no growth"
+  },
+  "body_type": {
+   "name_suffix": "__body",
+   "cells_mapped": "~185k",
+   "members": "u_xr, u_eg(gg,nh,nk), cap, flt, mk, eng_finish x4, norm_finish, xstop, memory cores, and xg = ot_s81sl_xgt_xo (xs4 172.6k generic + rstopt_xo 51.4k + xs4_cal 3.9k + xs4_ctl 1.2k; ~178k mapped)",
+   "note": "xr<->eg class A direct wires stay inside body"
+  },
+  "t6_strip_out": {
+   "t6_nontap_cts": 503146,
+   "strip_removed": "~150k",
+   "body_left": "~353k",
+   "under_cap": true
+  },
+  "t9_strip_out": {
+   "place_nontap": 480720,
+   "body_left": "~331k",
+   "under_cap": true
+  },
+  "xs4_rstopt_cut": {
+   "needed": false,
+   "condition": "only if a body is still >400k after strip-out (none of t3/t6/t9 by this arithmetic: max ~353k); cut = ot_s81sl_xs4 (172.6k generic) | ot_s81sl_rstopt_xo (51.4k generic) inside xg, crossing = xs4<->rstopt_xo ports, register both sides, declared +1 cycle",
+   "rows": [
+    {
+     "id": "S-XG1",
+     "split_instance": "u_s_6N_u_lp_u_xg",
+     "into": [
+      "xs4",
+      "rstopt_xo"
+     ],
+     "crossing_regs": "both sides, +1 cycle"
+    }
+   ]
+  },
+  "open": [
+   "N/E/W landing strips (S strip is only 97k of ~150k)",
+   "plan partition_types sub-tile schema",
+   "t3/t10 etc census not run: arithmetic assumes strip ~150k for every C type"
+  ]
+ },
+ "evidence": {
+  "census": "epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-slicec/t9_hier_census_1121/stats.json (unit oth-ubuntu-2354952-1795257342, exit 0, pre-map generic gates, design 348,443)",
+  "synth_netlist": "epyc9 .../p1/dsdv_slice_c1x_C__t9/gen/dsdv_slice_c1x_C__t9/1_synth_odb.v (335,915 mapped cells)",
+  "placed": "t9 place 480,720 nontap +120,945 tap; t3 477k; t6 503,146 nontap at CTS"
  }
 }
