@@ -386,11 +386,22 @@ def run_host(host, cmd, inp=None, timeout=120):
                           input=inp, capture_output=True, text=True, timeout=timeout)
 
 
+RT_CURRENT = os.environ.get("NOPROG_SRC", "/srv/opentallas-scratch2/claude/rt/current/tools/autopilot")
+
+
+def push_src_dir():
+    """FLOW-FIX-0100 (FABLE-FLOW-2350 f): the hub tick runs from ~/.local/lib/noprog, so HERE is that lib copy and it pushed ITSELF to every host forever
+    (the 22:04 STAGE-CAP / log fix never reached any of the 7 hosts).  Push rt/current's pair (main) when both files are there, else HERE."""
+    if all(os.path.isfile(os.path.join(RT_CURRENT, fn)) for fn in ("noprog_watchdog.py", "noprog_stage.py")):
+        return RT_CURRENT
+    return HERE
+
+
 def push_and_scan(host):
     d = LIB
     try:
         for fn in ("noprog_watchdog.py", "noprog_stage.py"):
-            src = open(os.path.join(HERE, fn)).read()
+            src = open(os.path.join(push_src_dir(), fn)).read()
             run_host(host, f"mkdir -p {d} && cat > {d}/{fn}.new && mv {d}/{fn}.new {d}/{fn}", inp=src, timeout=60)
         p = run_host(host, f"OT_HUB_NAME={HUB} python3 -I {d}/noprog_stage.py scan", timeout=180)
         rows = json.loads(p.stdout)
