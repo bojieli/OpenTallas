@@ -223,6 +223,24 @@ def test_relay_role_mix_stays_a_type_split():
         Landings(p, t)
 
 
+def test_relay_start_copy_keeps_unread_rx_flop():
+    """FAM-QC-HCST: with landing_relay_start_copy every writer START reads cland_start_d, so under share_trunk nothing
+    reads the rx Q; synthesis then drops u_cland_rstart_rx and global_place stops 'OT_CLAND no mapped cells found under
+    u_cland_rstart_rx'.  The rx flop carries keep (only in copy mode; landing_place names it as the origin home)."""
+    from test_clock_landings import ca_relay_vehicle, C_BODY
+    p, t = ca_relay_vehicle()
+    ca = t["count_aligned"]; ca["strap_form"] = True
+    st = CAB.strap_ties(ca, p)
+    for tn, info in st["types"].items():
+        p["partition_types"][tn]["count_straps"] = [cs(sp, w) for sp, w in info["straps"].items()]
+    p["partition_types"]["C"]["landing_relay_start_copy"] = True
+    cc = Landings(p, t).type_rtl("C", C_BODY)
+    assert '(* keep = "true" *) ot_dp_landing_relay u_cland_rstart_rx (' in cc
+    p["partition_types"]["C"]["landing_relay_start_copy"] = False
+    cc = Landings(p, t).type_rtl("C", C_BODY)
+    assert "ot_dp_landing_relay u_cland_rstart_rx (" in cc and "keep" not in cc.split("u_cland_rstart_rx")[0].splitlines()[-1]
+
+
 def test_variant_reference_wrapper_is_the_parameter_form_of_one_copy():
     p, t = strap_vehicle(strap_form=False)
     c = Landings(p, t, ca_variants=True)

@@ -2516,7 +2516,11 @@ class Landings:
                 # equal cland_start on every edge, with zero count-frame change.
                 raw_logic += ["    assign cland_start_d = cland_rstart_in;",
                               f"    assign cland_start_raw = {raw};"]
-            return raw_logic + [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
+            # FAM-QC-HCST: with start copies every writer START takes cland_start_d, so under share_trunk nothing reads the
+            # rx Q; synthesis then drops u_cland_rstart_rx and global_place stops "OT_CLAND no mapped cells found under
+            # u_cland_rstart_rx" (slw_hc3 pvfd488b8f a4).  Keep the one flop, as the writer START stages are kept.
+            keep = '(* keep = "true" *) ' if getattr(self, "types", {}).get(type_key or tn, {}).get("landing_relay_start_copy", False) else ""
+            return raw_logic + [f"    {keep}ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
         if role[0] == "rolestrap":
             logic, raw = self._origin_rolestrap_rtl(tn, role, ca_raw, extra, local_raw, raw_logic)
