@@ -16149,3 +16149,6 @@ FAILED [AUTOPILOT c7e7e02101fb] 2026-11-20 23:50:32 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-20 23:55 PST DIED [FAM-QC-HCST] ot-run oth-ubuntu-2255212-1795247723 on renewed-glider: rc=1 after 8 s, ended 07:55:29, log none, cmd: --mem 8 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-qc-hcst/c1 -- /home/ubuntu/.local/bin/pytest -q -x -p no:cachepr
 - 2026-11-20 23:55 PST DONE [PLACE-PRECHECK-2330] ot-push-main otpush-tolerant-swine-1587300 on tolerant-swine: rc=0 after 26 s, ended 23:55:40, log none, cmd: ot-push-main 
 - 2026-11-20 23:55 PST DIED [S81-J6-ASSEMBLY] ot-run oth-ubuntu-207147-1795245549 on civil-redfish: rc=11 after 2193 s, ended 07:55:41, log /srv/opentallas-scratch2/claude/s81-j6/logs/gate_candC3c.log, cmd: --mem 108 --threads 8 --hosts epyc10 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/s81-j6 -- bash -c bash /srv/opent
+- 2026-11-20 23:55 PST unblock serdes__t4 cap
+  unblock serdes__t1__clfe1f0815 cap
+  FAM-S81-SERDES: t4 a14 and t1__clfe1f0815 a8 were RESTAGED epyc10->epyc8 (unstarted waiter, KW-FIX-4) and then LAUNCH-HELD by BLOCKED-CAP (13 / 7 failed attempts). Their earlier failures were the cone error on old rt; rt f453583d583 carries 124d829f45f. Unblocking both so the restaged relaunch runs. t2 a5 is already at place; t14/t15x2/t1clb45 launched 23:45.
