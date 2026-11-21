@@ -1498,22 +1498,30 @@ def _flow_source_bytes(src):
     return (here.parents[1] / src).read_bytes()
 
 
+FLOW_REFRESH_CMD_MAX = 100000      # one argv string: MAX_ARG_STRLEN 131,072 less the bash -c quoting and the ssh options
+
+
 def flow_files_refresh_cmd(kit, work=None, files=None):
     """FLOW-FIX-2045: ONE shell command that refreshes every FLOW_REFRESH_FILES entry already present in the kit (kit) or beside it (runner: <work>/gen/<name>) from the runtime tools.  Content travels
     in the command (the host needs no matching rt path).  Copy to <file>.new, keep the mode, then mv: a new inode, so a shell or watcher already running the old file keeps it.  A missing target
     is never created; an identical file is left alone."""
-    import base64
+    import base64, gzip
     parts = []
     for where, name, src in (files if files is not None else FLOW_REFRESH_FILES):
         if where == "runner" and not work:
             continue
         try:
-            b64 = base64.b64encode(_flow_source_bytes(src)).decode()
+            # FAIL-CLASS a2e8efcde6 (11-21): the whole command is ONE ssh argument (remote()), and one argument is capped at 131,072 bytes by the kernel.  Plain base64 of the
+            # three files was 128,527 chars before the kit path: every launch with a real kit path died with OSError Errno 7.  gzip first (about 4x smaller); mtime 0 keeps the command stable.
+            b64 = base64.b64encode(gzip.compress(_flow_source_bytes(src), 9, mtime=0)).decode()
         except Exception:
             continue
         k = shlex.quote((str(kit) if where == "kit" else str(work) + "/gen") + "/" + name)
-        parts.append(f"if [ -f {k} ]; then echo {b64} | base64 -d > {k}.new && {{ cmp -s {k}.new {k} || {{ chmod --reference={k} {k}.new && mv -f {k}.new {k}; }}; }}; rm -f {k}.new; fi")
-    return "; ".join(parts) or "true"
+        parts.append(f"if [ -f {k} ]; then echo {b64} | base64 -d | gzip -dc > {k}.new && [ -s {k}.new ] && {{ cmp -s {k}.new {k} || {{ chmod --reference={k} {k}.new && mv -f {k}.new {k}; }}; }}; rm -f {k}.new; fi")
+    cmd = "; ".join(parts) or "true"
+    if len(cmd) > FLOW_REFRESH_CMD_MAX:
+        raise RuntimeError(f"flow_files_refresh_cmd: command is {len(cmd)} chars, over {FLOW_REFRESH_CMD_MAX} (one ssh argument holds 131,072 bytes): split FLOW_REFRESH_FILES or send it on stdin")
+    return cmd
 
 
 def stage_cap_refresh_cmd(kit):

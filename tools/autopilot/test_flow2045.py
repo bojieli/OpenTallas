@@ -210,6 +210,19 @@ def test_flow_files_refresh_covers_the_runner_and_the_watcher_with_a_new_inode(t
     assert subprocess.run(["bash", "-c", KW.flow_files_refresh_cmd(bare / "gen" / "t", bare)]).returncode == 0
     assert not (bare / "gen" / "run_kit.sh").exists() and not (bare / "gen" / "t" / "stage_odb_cap.py").exists()
     assert [x[1] for x in KW.FLOW_REFRESH_FILES] == ["stage_odb_cap.py", "tt_setup_repair.tcl", "hold_cap.tcl", "run_kit.sh"]
+    # FAIL-CLASS a2e8efcde6: the command is one ssh argument (131,072 bytes); a 300-char kit path must still fit, and an over-long command is refused here, not by the kernel
+    long = "/srv/" + "x" * 300
+    assert len(KW.flow_files_refresh_cmd(long + "/kit", long)) < KW.FLOW_REFRESH_CMD_MAX < 131072 - 4096
+    old = KW.FLOW_REFRESH_CMD_MAX
+    try:
+        KW.FLOW_REFRESH_CMD_MAX = 100
+        try:
+            KW.flow_files_refresh_cmd(kit, work)
+            raise AssertionError("an over-long refresh command was not refused")
+        except RuntimeError as e:
+            assert "one ssh argument" in str(e)
+    finally:
+        KW.FLOW_REFRESH_CMD_MAX = old
 
 
 def test_kit_flow_refresh_always_replaces_the_listed_flow_files_at_every_stage(tmp_path):
