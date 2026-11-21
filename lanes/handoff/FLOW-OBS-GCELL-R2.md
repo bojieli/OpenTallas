@@ -6,3 +6,4 @@
 - Exposure list: lanes/OBS-GCELL-EXPOSURE-1121.tsv (43 KV + 5 HEAD types; S81/QC/HBM wave kits carry no reserved route OBS).
 - Open: EPC M7 pin-edge EOL class (v1: 29 DRC at u_epc top edge y 60.67) posted to FABLE-FIX-HEAD-LEP0N-R2; tap seed-side CTS A/B on sdr2d unproven; route goal must not rewrite 4_cts.odb when 5_1_grt.odb exists (not started).
 - Waiters (rtx-pro session): v2 poll on epyc8 pid 3833325; sdr2e (epyc7 oth-ubuntu-3951418-1795264633) and sdr2d (epyc9 oth-ubuntu-3513796-1795271147) ot-wait on intel2.
+- 11-21 12:1x PIN-ACCESS scan (COORD ask): lanes/PIN-ACCESS-SCAN-1121.tsv; 172 hard views probed, 7 FAIL (S81 3, KV 2, QC 1, HEAD 1); bksel class = only the 2 already fixed by 8d1cff9b1b. Tool tools/die_plan/lef_pin_narrow.py pushed main 3026f6a6e2 (not wired). Probes epyc8 /srv/opentallas-scratch2/claude/flow-obs-gcell-r2/probe. Open: KV-D26 kv3_hub_C qkd_ahub / qkd_kvs_ctl need access-window splice before that kit runs.
