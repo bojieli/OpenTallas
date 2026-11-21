@@ -15629,3 +15629,4 @@ FAILED [AUTOPILOT f87b60ebab7c] 2026-11-20 21:45:17 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 14.4 h job 14.8 h: drt_violations best 1 last 42 rows 44 window-gain 0.0%; stagnant 8.2 h; last event 3.5 h ago, log write 3.3 h ago (2524 lines)
   NO-PROGRESS epyc7 serdes__t13 lec stage 12.5 h job 12.5 h: LEC last file/log write 12.5 h ago
   NO-PROGRESS epyc9 coll_core 5_1_grt stage 12.5 h job 22.0 h: repair_Viol best 221 last 221 rows 141 window-gain 0.0%; stagnant 6.0 h; last event 0.1 h ago, log write 0.0 h ago (2113 lines)
+- 2026-11-20 21:53 PST DIED [S81-J6-ASSEMBLY] ot-run oth-ubuntu-2054008-1795239619 on loved-redfish: rc=1 after 768 s, ended 05:53:04, log /srv/opentallas-scratch2/claude/s81-j6-iqc-xfer/eq3.otrun.log, cmd: --mem 48 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/s81-j6-iqc-xfer -- bash /srv/opentallas-scratch2/claude/s81-j6-iqc-
