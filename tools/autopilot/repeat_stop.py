@@ -33,6 +33,8 @@ BOX_RE = re.compile(r"routeBox\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*\(\s*(-?\d+)\s+(-
 GATE_RE = re.compile(r"(FAIL_POSTCTS\s+\w+|OT_POSTCTS_GATE\s+\w+\s+\([^)]*\)|SETUP_TRIAGE|HOLD_STRUCTURAL)")
 ENDPT_RE = re.compile(r"(pinreg\s+\w+|worst endpoint[s]?:?\s*[\w./\[\]$-]+|endpoint group\s+[\w./-]+)")
 EXC_RE = re.compile(r"\b([A-Za-z_][\w.]*(?:Error|Exception))\b:?\s*(.{0,120})")
+# FLOW-PROC-A 11-21 (FABLE-FLOW-0800 e): an OpenROAD Tcl error ("Error: cts.tcl, 89 can't read "tb_cdirect": no such variable") is its own cause
+TCL_ERR_RE = re.compile(r"Error: ([\w.-]+\.tcl), \d+ ([^\n;|]{0,80})")
 FILE_RE = re.compile(r"([\w.-]+\.(?:py|sv|svh|v|tcl|json|sdc|lib|lef|def|odb|f|mk))\b")
 
 
@@ -74,6 +76,10 @@ def fingerprint(stage, cls, why):
         obj = f"{re.sub(r'[0-9]+', 'N', g)} {e.group(1) if e else ''}".strip()
     elif is_oom(cls, why):
         obj = "OOM"
+    elif TCL_ERR_RE.search(why):
+        t = TCL_ERR_RE.search(why)
+        msg = re.sub(r"[0-9]+", "N", re.sub(r"\s+", " ", t.group(2))).strip()[:70]
+        obj = "tcl " + t.group(1) + " " + msg
     elif cls == "PLAN" and " @" in why:
         # FLOW-0035: a PLAN-class failure is named by its plan cause (the text before " @<stage>:"), not by the tool noise after it: qkd_pv_fin_s8_pin alternated two evidence texts
         # ("import json,sys;..." / "CORE_VIEW FAIL <id>@") for the same cause, so 3 identical fingerprints in a row never happened (attempt 25)
@@ -118,8 +124,28 @@ def record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fals
     n_tot = max(len(tot["n"]), int(attempts_hint or 0))      # a row that already ran many attempts before the cap existed counts by its attempt number
     if n_tot >= TOTAL_CAP and not e["state"]:
         return _block(e, CAP_STATE, "cap|%d attempts" % n_tot, e["att"][-1],
-                      why=f"{n_tot} failed attempts in plan event {event or '?'} (mixed errors): PLAN item for the owner")
+                      why=f"{n_tot} failed attempts in plan event {event or '?'} ({cause_summary(e, tot['n'], event, n_tot)}): PLAN item for the owner")
     return ev
+
+
+def cause_summary(e, attempts, event, n_tot=0):
+    """FLOW-PROC-A 11-21 (FABLE-FLOW-0800 e: every cap line read "(mixed errors)"): the causes of the counted attempts, by fingerprint
+    (stage|object, the last failure of each attempt), most frequent first: "one cause: route|tcl cts.tcl N can't read ..." or
+    "3 causes: A x4; B x1; C x1"; attempts the ledger no longer holds are named as such"""
+    last = {}
+    for a in e.get("att") or []:
+        if a.get("n") in attempts and a.get("fp") not in ("ok", "released") and (a.get("event") or "") == (event or ""):
+            last[a["n"]] = ident(a["fp"])
+    counts = {}
+    for f in last.values():
+        counts[f] = counts.get(f, 0) + 1
+    order = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    unk = max(0, int(n_tot or len(attempts)) - len(last))
+    if not order:
+        return f"causes not in the ledger for {unk} attempt(s)"
+    txt = (f"one cause: {order[0][0][:140]}" if len(order) == 1 else
+           f"{len(order)} causes: " + "; ".join(f"{k[:90]} x{v}" for k, v in order[:4]) + (f"; +{len(order) - 4} more" if len(order) > 4 else ""))
+    return txt + (f"; {unk} earlier attempt(s) not in the ledger" if unk else "")
 
 
 def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=False, event=None, ident_n=None):

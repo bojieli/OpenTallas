@@ -3788,6 +3788,8 @@ RULES = [
     # KIT-OPS-5 11-15 (FABLE-TRIAGE-QC, FLOW-OTSTORE): a kit whose python cannot import ot_store died of the host / sync, not of the design
     ("INFRA", None, r"ModuleNotFoundError: No module named 'ot_store'", "infra (ot_store module missing on the run host: sync / env, not a design failure)"),
     ("INFRA", None, r"INFRA-VIEW-MISSING", "infra (INFRA-VIEW-MISSING: the die-owner / counted child view is not on any host)"),
+    # FLOW-PROC-A 11-21 (FABLE-FLOW-0800 e): the all-or-nothing kit flow refresh could not write every file, changed nothing and deferred the stage (no design run)
+    ("INFRA", None, r"FLOW-REFRESH-PARTIAL|infra-flow-refresh", "infra (kit flow refresh partial: nothing replaced, the stage was deferred; relaunch takes the current flow files)"),
     # KIT-OPS-5 11-14 (COORD class fix): a job whose submit-time admission bundle predates the late-ECO scope postcondition
     # refuses its ECO (eco_loop: "staged late-ECO hook lacks the runtime scope postcondition") before any repair.  That is a stale
     # bundle, not a design verdict: the INFRA auto-retry re-admits the attempt, which pins the current bundle.  Before the hold_ff
@@ -11054,7 +11056,8 @@ def cause_key(rec):
     if is_infra_fail(rec):
         return ""
     txt = re.sub(r"\s+", " ", str(rec.get("q_reason") or rec.get("reason") or ""))
-    m = re.search(r"\[ERROR [A-Z]+-\d+\]|DRT-\d+|\b[A-Za-z_]+(?:Error|Exception)\b", txt)
+    # FLOW-PROC-A 11-21: a Tcl error line ("Error: cts.tcl, 89 can't read "tb_cdirect"") is a cause of its own (it read as the route make exit before)
+    m = re.search(r"\[ERROR [A-Z]+-\d+\]|DRT-\d+|Error: [\w.-]+\.tcl, \d+ [^;|]{0,60}|can.t read \"[^\"]+\"|invalid command name \"[^\"]+\"|\b[A-Za-z_]+(?:Error|Exception)\b", txt)
     head = m.group(0) if m else txt[:60]
     return f"{rec.get('q_class') or rec.get('class') or '?'}|{rec.get('stage') or '?'}|{re.sub(r'[0-9]+', 'N', head)[:80]}"
 
@@ -17333,7 +17336,7 @@ def same_input_records(a, b):
     return stage_env(ia.get("env"), stage, why) == stage_env(ib.get("env"), stage, why)
 
 
-INFRA_FAIL_RE = re.compile(r"\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bexit 14[3]\b|\bterminated by signal (?:9|15)\b|INFRA_KILLED|\bOOM\b.*host")
+INFRA_FAIL_RE = re.compile(r"FLOW-REFRESH-PARTIAL|\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bexit 14[3]\b|\bterminated by signal (?:9|15)\b|INFRA_KILLED|\bOOM\b.*host")
 
 
 def is_infra_fail(r):

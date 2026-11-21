@@ -170,7 +170,8 @@ def flow_refresh(kit, goal, script=KFR, bundle=None):
     the current versions (record KIT/flow_refresh.jsonl), so a fix on main reaches every stage this job has not run yet.
     FABLE-FLOW-1000 A: the job is sealed (bwrap: rt/current is not visible), so the refresher, the flow blob index and the current
     scripts come from the admission bundle this chain runs from (die_plan/__flow__); rt/current only when the bundle has none.
-    Never fails the job; a skip prints one KIT_FLOW_REFRESH SKIPPED line.  OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh turns it off."""
+    A skip prints one KIT_FLOW_REFRESH SKIPPED line.  OT_FLOW_REFRESH=0 or KIT/.no_flow_refresh turns it off.  -> the refresher exit code:
+    75 = FLOW-REFRESH-PARTIAL (all or nothing: nothing was changed, the caller defers the stage)."""
     b = Path(bundle) if bundle else Path(__file__).resolve().parent
     fl = b / "die_plan" / "__flow__"
     if os.environ.get("OT_FLOW_REFRESH", "1") == "0":
@@ -190,6 +191,17 @@ def flow_refresh(kit, goal, script=KFR, bundle=None):
     except Exception as e:                                      # noqa: BLE001
         print(f"KIT_FLOW_REFRESH skipped: {type(e).__name__}: {e}", flush=True)
         return None
+
+
+def runner_override(kit, since=0.0):
+    """kit_flow_refresh.runner_override without importing it (the refresher may come from the bundle): the last flow_refresh.jsonl
+    record's runner_override, when that file exists and was written by this refresh"""
+    try:
+        lines = (Path(kit) / "flow_refresh.jsonl").read_text().splitlines()
+        alt = (json.loads(lines[-1]) if lines else {}).get("runner_override")
+    except (OSError, ValueError):
+        return None
+    return alt if alt and os.path.isfile(alt) and os.path.getmtime(alt) >= since - 5 else None
 
 
 def _sha(path):
@@ -301,7 +313,17 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
             print("KIT_PREFLIGHT FAIL: autopilot stopped before physical runner", flush=True)
             return rc
     if not proof_only and refresh:
-        refresh(kit, goal)
+        t_ref = time.time()
+        frc = refresh(kit, goal)
+        if frc == 75:
+            # FLOW-PROC-A (FABLE-FLOW-0800 e): the all-or-nothing flow refresh could not write every file (it printed the
+            # KIT_FLOW_REFRESH FAIL FLOW-REFRESH-PARTIAL line, the kit is unchanged): defer the stage, never run it on mixed flow files
+            print("FLOW-REFRESH-PARTIAL: stage deferred before the physical runner (autopilot class CRASH infra-flow-refresh)", flush=True)
+            return 75
+        alt = runner_override(kit, t_ref)
+        if alt and alt != str(runner):
+            print(f"KIT_FLOW_REFRESH runner override: {runner} is read-only in this job; running the refreshed copy {alt}", flush=True)
+            runner = alt
     if not proof_only and so_tool and goal not in ("cts", "grt"):
         so_tool(kit)
     rc = 0 if proof_only else run(["bash", runner, str(kit), goal, str(mem), str(threads)])

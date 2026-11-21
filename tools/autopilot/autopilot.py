@@ -101,6 +101,7 @@ ORPHAN_IDLE_S = 3 * 3600
 CHAIN_VERSION = 2
 MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "100000"))   # LAUNCH-ALL-1116 (OWNER 11-13: no per-tick caps); was 12
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
+MAX_FLOW_REFRESH = 3                                    # FLOW-PROC-A: FLOW-REFRESH-PARTIAL (stage deferred, kit unchanged) resubmits
 # KW-FIX-46 11-12 (COORD, hbm q_mcb_ne 58ab1566e512): a container memory-cgroup OOM is the kit's --mem request, not the
 # host: q_mcb_ne route peaked > 75 GB, killed at --mem 48 and again at 72 (one x1.5 step), then filed as a final CRASH.
 # Two x1.5 steps (48 -> 72 -> 108) cover a 2x under-estimate; a third OOM is a real memory problem.
@@ -758,6 +759,14 @@ for f in ("FAIL_PREFLOOR", "FAIL_POSTPLACE", "FAIL_POSTCTS", "FAIL_route"):
 logs = sorted(glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.log")), key=os.path.getmtime)
 out["last_log"] = os.path.basename(logs[-1]) if logs else ""
 out["last_log_mtime"] = os.path.getmtime(logs[-1]) if logs else 0
+# FLOW-PROC-A 11-21 (FABLE-FLOW-0800 e): the FIRST tool / Tcl error line of the stage log that stopped (the newest ORFS log of this run), so a
+# 'FAIL_route make exit 2 (see run_route.log)' of an older runner still names its cause (kv3_hub_Wo: Error: cts.tcl, 89 can't read "tb_cdirect")
+_fere = re.compile(r'(?m)^(?:\[ERROR [A-Z]+-\d+\][^\n]*|Error: [^\n]*|ERROR: [^\n]*)|[^\n]*(?:can.t read "|invalid command name "|Segmentation fault|Signal 11 received)[^\n]*')
+for _lp in [p for p in logs[-1:] if os.path.getmtime(p) >= since] + [os.path.join(K, "run_%s.log" % goal)]:
+    _m = _fere.search(rd(_lp, 4000000))
+    if _m:
+        out["first_error"] = (os.path.basename(_lp) + ": " + _m.group(0).strip())[:300]
+        break
 txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog_path = os.path.join(K, "run_%s.log" % goal)
 runlog = rd(runlog_path, 400000)
@@ -1229,6 +1238,10 @@ def classify(c, client):
     class: SIGNED | NEAR-MISS | STRUCTURAL | CRASH ; kind refines it (infra / tool / ...)"""
     if client.get("admission_tools_fail"):
         return "CRASH", "admission-tools", client["admission_tools_fail"]
+    if client.get("flow_refresh_partial"):
+        # FLOW-PROC-A (FABLE-FLOW-0800 e): the kit flow refresh could not write every file and changed nothing; the runner never started.
+        # Infrastructure (no design attempt): resubmit, never a route-make-fail on stale flow files
+        return "CRASH", "infra-flow-refresh", client["flow_refresh_partial"]
     if client.get("preflight_fail"):
         return "STRUCTURAL", "preflight", client["preflight_fail"]
     so = c.get("signoff")
@@ -1282,6 +1295,8 @@ def classify(c, client):
         km = re.search(r"\] Error 247\b[^\n]*|\brc[ =]+137\b[^\n]*", " ".join(str(x) for x in (fr, c.get("runlog_tail"), c.get("orfs_error"), client.get("msg")) if x))
         if km:
             return "CRASH", "infra-oom", km.group(0)[:300]
+        if re.search(r"make exit \d+ \(see run_\w+\.log\)", fr) and c.get("first_error"):
+            fr = re.sub(r"\(see run_\w+\.log\)", "", fr).strip() + ": " + c["first_error"]     # FLOW-PROC-A: the cause, not the make exit
         return "CRASH", "route-make-fail", fr[:300]
     # DIE-HBM-97 11-10 (COORD): a global placement that stopped at the per-pass Nesterov cap above overflow 0.1 is the
     # cause of what follows it (kv_line vC: 459k resizer buffers, DPL-0038 at 153%), not a crash or a congestion row
@@ -1360,7 +1375,7 @@ def classify(c, client):
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
-INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-disk")
+INFRA_KINDS = ("infra-oom", "infra-lost", "infra-notrun", "infra-orphan", "infra-disk", "infra-flow-refresh")
 
 
 def parse_client_log(text, *, unit=None, started=0):
@@ -1388,6 +1403,9 @@ def parse_client_log(text, *, unit=None, started=0):
         o["frontend_shell_fail"] = shell_error[0]
         o["not_run"] = True
         o["msg"] = "frontend shell syntax, payload not run: " + shell_error[0][:240]
+    fr = re.findall(r"^KIT_FLOW_REFRESH FAIL FLOW-REFRESH-PARTIAL:[^\n]*", text, re.M)
+    if fr:                                              # FLOW-PROC-A: the all-or-nothing refresh deferred the stage before the runner
+        o["flow_refresh_partial"] = fr[-1][:400]
     if "ot-run: NOT COMPLETED" in text:
         o["not_completed"] = True
         o["msg"] = [l for l in text.splitlines() if "NOT COMPLETED" in l][-1][:300]
@@ -3336,6 +3354,16 @@ def finish(st, j, c, client):
             set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
             return
         notrun = kind == "infra-notrun"
+        if kind == "infra-flow-refresh":
+            n = int(j.get("flow_refresh_retries") or 0)
+            if n < MAX_FLOW_REFRESH:
+                j["flow_refresh_retries"] = n + 1
+                submit(st, j, f"(resubmit {n + 1}/{MAX_FLOW_REFRESH}: FLOW-REFRESH-PARTIAL deferred the stage, kit unchanged; resumes the run dir)")
+                return
+            set_status(st, j, "CRASH", f"infra-flow-refresh: FLOW-REFRESH-PARTIAL {MAX_FLOW_REFRESH + 1} times: {reasons[:160]}"[:200])
+            after_class(st, j)
+            released_cleanup()
+            return
         oom_attempts = int(j.get("oomkill_retries") or 0) + int(j.get("oom_retries") or 0)
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1

@@ -20,7 +20,14 @@ are never touched (only .tcl/.py/.sh files that exist in BOTH trees).  The call 
 rt sha, host, the files taken from rt (sha1) and the files that exist only in the die tree (kept).  tools_rev.json carries no timestamp
 that changes between identical calls other than "t".
 A skipped refresh always prints one KIT_FLOW_REFRESH SKIPPED line (FABLE-FLOW-1000: it used to return silently).
-Opt-out: K/.no_flow_refresh or OT_FLOW_REFRESH=0.  Never fails the stage: any error is logged and exit 0.
+Opt-out: K/.no_flow_refresh or OT_FLOW_REFRESH=0.
+FLOW-PROC-A 11-21 (FABLE-FLOW-0800 class e: 5 KV rows ran 6-9 attempts on a cts.tcl defect fixed on main, because the route-stage refresh
+hit EBUSY on the sealed job's read-only runner bind, threw, and left every later file -- the die-tree cts.tcl among them -- stale):
+the refresh is ALL OR NOTHING.  Every pass only computes its writes (a transaction); the commit then applies them, retrying EBUSY / ETXTBSY,
+rewriting a bind-mounted target in place (rename onto a mount point is EBUSY), and putting a refreshed runner that the job sees read-only
+at K/.flow_runner/<name> (record "runner_override"; signoff_chain runs that copy).  When any write still fails, every write already made
+is rolled back and the call exits 75 with one line "KIT_FLOW_REFRESH FAIL FLOW-REFRESH-PARTIAL: ..." -- the caller defers the stage
+(autopilot class CRASH infra-flow-refresh, wave class INFRA: no design attempt is counted) instead of launching on mixed flow files.
 """
 import argparse
 import hashlib
@@ -42,6 +49,110 @@ def blob_id(data):
     return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
 
 
+PARTIAL_RC = 75                                          # EX_TEMPFAIL: the stage is deferred, nothing in the kit changed
+RUNNER_OVERRIDE_DIR = ".flow_runner"
+_TXN = None                                              # the open transaction of refresh(): [(path, new bytes, mode, kind)]
+
+
+class PartialRefresh(Exception):
+    pass
+
+
+def _cur(p):
+    """the bytes of kit file p as this transaction will leave it (a later pass sees an earlier pass's staged write)"""
+    for q, data, _m, _k in reversed(_TXN or []):
+        if q == p:
+            return data
+    with open(p, "rb") as f:
+        return f.read()
+
+
+def _put(p, data, mode=None, kind="kit"):
+    """stage one write; outside a transaction (direct helper calls) it is applied at once with the same commit rules"""
+    if mode is None:
+        mode = (os.stat(p).st_mode & 0o7777 | 0o200) if os.path.isfile(p) else 0o644
+    if _TXN is None:
+        commit([(p, data, mode, kind)], {})
+        return
+    _TXN[:] = [t for t in _TXN if t[0] != p] + [(p, data, mode, kind)]
+
+
+def _write_one(p, data, mode, retries=3, wait=0.5):
+    """copy + rename (a running process keeps its inode); EBUSY / ETXTBSY retried; a bind-mounted target (rename EBUSY / EXDEV after the
+    retries) is rewritten in place.  Raises OSError when the target cannot be written at all (read-only bind, EACCES)."""
+    import errno
+    tmp = os.path.join(os.path.dirname(p), f".{os.path.basename(p)}.kfr.{os.getpid()}")
+    last = None
+    for i in range(retries):
+        try:
+            with open(tmp, "wb") as f:
+                f.write(data)
+            os.chmod(tmp, mode)
+            os.replace(tmp, p)
+            return "replaced"
+        except OSError as e:
+            last = e
+            try:
+                os.unlink(tmp)                           # our own temp file only
+            except OSError:
+                pass
+            if e.errno not in (errno.EBUSY, errno.ETXTBSY, errno.EXDEV):
+                raise
+            if i + 1 < retries:
+                time.sleep(wait * (i + 1))
+    try:                                                 # a mount point (bwrap file bind): the inode is the mount, write through it
+        with open(p, "r+b") as f:
+            f.write(data)
+            f.truncate()
+        return "in-place"
+    except OSError as e:
+        raise OSError(e.errno, f"{e.strerror} (after rename {last.strerror if last else '?'} x{retries})", p) from e
+
+
+def commit(txn, rec):
+    """apply every staged write or none: on a failure the files already written get their old bytes back (a file this call created is
+    unlinked) and PartialRefresh is raised.  A 'runner' write the job cannot make (read-only bind) goes to K/.flow_runner/<name>."""
+    done = []                                            # (path, old bytes or None, old mode)
+    try:
+        for p, data, mode, kind in txn:
+            old = None
+            if os.path.isfile(p):
+                with open(p, "rb") as f:
+                    old = f.read()
+            om = os.stat(p).st_mode & 0o7777 if old is not None else None
+            try:
+                how = _write_one(p, data, mode)
+            except OSError as e:
+                if kind != "runner" or not rec.get("_kit"):
+                    raise
+                alt_dir = os.path.join(rec["_kit"], RUNNER_OVERRIDE_DIR)
+                os.makedirs(alt_dir, exist_ok=True)
+                alt = os.path.join(alt_dir, os.path.basename(p))
+                aold = None
+                if os.path.isfile(alt):
+                    with open(alt, "rb") as f:
+                        aold = f.read()
+                _write_one(alt, data, mode)
+                done.append((alt, aold, 0o755 if aold is not None else None))
+                rec["runner_override"] = alt
+                rec.setdefault("commit_notes", []).append(f"{os.path.basename(p)}: {e.strerror or e} -> runner override {alt}")
+                continue
+            if how != "replaced":
+                rec.setdefault("commit_notes", []).append(f"{os.path.basename(p)}: {how}")
+            done.append((p, old, om))
+    except OSError as e:
+        bad = []
+        for q, old, om in reversed(done):
+            try:
+                if old is None:
+                    os.unlink(q)                         # created by this call
+                else:
+                    _write_one(q, old, om if om is not None else 0o644)
+            except OSError as e2:
+                bad.append(f"{q}: {e2}")
+        raise PartialRefresh(f"{type(e).__name__}: {e}; rolled back {len(done)} write(s)" + (f"; ROLLBACK FAILED {bad}" if bad else "")) from e
+
+
 DIE_ROOTS = ("tools/die_plan", "tools/autopilot", "tools", "physical/common_flow")   # where a gen copy of a die-tree script can come from
 
 
@@ -58,7 +169,7 @@ def die_tree_copies(kit, rt, die_src, dry=False):
         p = os.path.join(kit, name)
         if name in NEVER or not name.endswith(EXT) or os.path.islink(p) or not os.path.isfile(p):
             continue
-        data = open(p, "rb").read()
+        data = _cur(p)
         hit = None
         for d in DIE_ROOTS:
             dp, rp = os.path.join(die_src, d, name), os.path.join(rtr, d, name)
@@ -84,11 +195,7 @@ def die_tree_copies(kit, rt, die_src, dry=False):
         rt_files[name] = rel
         if dry:
             continue
-        tmp = os.path.join(kit, f".{name}.kfr.{os.getpid()}")
-        with open(tmp, "wb") as f:
-            f.write(new)
-        os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
-        os.replace(tmp, p)
+        _put(p, new)
     return replaced, rt_files, die_only
 
 
@@ -155,7 +262,7 @@ def patch_cts_post(kit, rtr, rec, dry=False, roots=None):
     sp = src_file(rtr, "tools/die_plan/cts_post.tcl", roots)
     if os.path.islink(p) or not os.path.isfile(p) or not os.path.isfile(sp):
         return False
-    old, new = open(p).read(), open(sp).read()
+    old, new = _cur(p).decode(), open(sp).read()
     if "subtree_balance.tcl" in old or new.count(TAP_LINE) != 1 or STB_MARK not in new or old.count(TAP_LINE) != 1:
         return False
     a, b = new.index(STB_MARK), new.index(TAP_LINE)
@@ -166,11 +273,7 @@ def patch_cts_post(kit, rtr, rec, dry=False, roots=None):
     if dry:
         return True
     out = old.replace(TAP_LINE, block + TAP_LINE)
-    tmp = os.path.join(kit, f".cts_post.tcl.kfr.{os.getpid()}")
-    with open(tmp, "w") as f:
-        f.write(out)
-    os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
-    os.replace(tmp, p)
+    _put(p, out.encode())
     return True
 
 
@@ -191,18 +294,14 @@ def patch_grt_hook(kit, rec, dry=False):
     p = os.path.join(kit, ms[-1][len("/work/"):])
     if os.path.islink(p) or not os.path.isfile(p):
         return False
-    body = open(p).read()
+    body = _cur(p).decode()
     if "repair_bound.tcl" in body:
         return False
     rec["replaced"].append({"file": os.path.basename(p), "src": "repair_bound hook line", "old": blob_id(body.encode())[:12], "new": "patched", "from": "always-patch"})
     if dry:
         return True
     out = body + ("" if body.endswith("\n") else "\n") + "# FLOW-FIX-2045: bound the post-GRT repair_timing_helper (chunk + stall + wall time)\nif {[file exists /work/repair_bound.tcl]} { " + BOUND_LINE + " }\n"
-    tmp = os.path.join(os.path.dirname(p), f".{os.path.basename(p)}.kfr.{os.getpid()}")
-    with open(tmp, "w") as f:
-        f.write(out)
-    os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
-    os.replace(tmp, p)
+    _put(p, out.encode())
     return True
 
 
@@ -225,18 +324,14 @@ def always_pass(kit, rtr, rec, dry=False, roots=None):
             continue
         if not new:
             continue
-        data = open(p, "rb").read() if os.path.isfile(p) else b""
+        data = _cur(p) if os.path.isfile(p) else b""
         if new == data and os.path.isfile(p):
             continue
         rec["replaced"].append({"file": name, "src": srcrel, "old": blob_id(data)[:12], "new": blob_id(new)[:12], "from": "always"})
         out.append(name)
         if dry:
             continue
-        tmp = os.path.join(os.path.dirname(p), f".{name}.kfr.{os.getpid()}")
-        with open(tmp, "wb") as f:
-            f.write(new)
-        os.chmod(tmp, (os.stat(p).st_mode & 0o7777 | 0o200) if os.path.isfile(p) else 0o644)
-        os.replace(tmp, p)
+        _put(p, new, kind="runner" if where == "runner" else "kit")
     if patch_cts_post(kit, rtr, rec, dry, roots):
         out.append("cts_post.tcl")
     if patch_grt_hook(kit, rec, dry):
@@ -245,6 +340,27 @@ def always_pass(kit, rtr, rec, dry=False, roots=None):
 
 
 def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=None):
+    """all or nothing (FLOW-PROC-A): the passes stage their writes, commit() applies all of them or none (PartialRefresh)"""
+    global _TXN
+    outer, _TXN = _TXN, []
+    try:
+        rec = _plan(kit, stage, rt, dry, index, src, sha, die_src)
+        txn = list(_TXN)
+    finally:
+        _TXN = outer
+    rec["_kit"] = kit
+    try:
+        if not dry:
+            commit(txn, rec)
+    finally:
+        rec.pop("_kit", None)
+    tr = rec.pop("_tools_rev", None)
+    if tr and not dry:
+        write_tools_rev(kit, rec, *tr)
+    return rec
+
+
+def _plan(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_src=None):
     rtr = os.path.realpath(rt)
     roots = dict(src or {})                              # rel dir -> directory holding its current files (default rt/<rel dir>)
     rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": stage, "rt": rtr, "host": socket.gethostname().split(".")[0],
@@ -278,7 +394,7 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
         rels = [r for r in by_name.get(name, []) if any(r == f"{d}/{name}" for d in DIRS)]
         if not rels:
             continue
-        data = open(p, "rb").read()
+        data = _cur(p)
         b = blob_id(data)
         rel = next((r for r in rels if b in known[r]), None)
         if rel is None:
@@ -294,11 +410,7 @@ def refresh(kit, stage, rt=RT, dry=False, index=None, src=None, sha=None, die_sr
         rec["replaced"].append({"file": name, "src": rel, "old": b[:12], "new": blob_id(new)[:12]})
         if dry:
             continue
-        tmp = os.path.join(kit, f".{name}.kfr.{os.getpid()}")
-        with open(tmp, "wb") as f:
-            f.write(new)
-        os.chmod(tmp, os.stat(p).st_mode & 0o7777 | 0o200)
-        os.replace(tmp, p)
+        _put(p, new)
     always_pass(kit, rtr, rec, dry, roots)
     if die_src:
         _die_pass(kit, rec, rtr, die_src, dry)
@@ -310,8 +422,7 @@ def _die_pass(kit, rec, rtr, die_src, dry):
     rec["replaced"].extend(rep)
     for r in rec["replaced"]:                            # index-pass replacements are rt files too
         rt_files.setdefault(r["file"], r["src"])
-    if not dry:
-        write_tools_rev(kit, rec, rt_files, die_only)
+    rec["_tools_rev"] = (rt_files, die_only)              # written after the commit (it lists what the kit now holds)
 
 
 def main(argv=None):
@@ -331,8 +442,9 @@ def main(argv=None):
         return 0
     try:
         rec = refresh(kit, a.stage, a.rt, a.dry, index=a.index or None, src=dict(x.split("=", 1) for x in a.src), sha=a.sha or None, die_src=a.die_src or None)
-    except Exception as e:                               # noqa: BLE001 - never fails the stage
-        rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": a.stage, "error": f"{type(e).__name__}: {e}"}
+    except Exception as e:                               # noqa: BLE001 - all or nothing: the kit is unchanged, the caller defers the stage
+        rec = {"t": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "stage": a.stage, "error": f"{type(e).__name__}: {e}", "partial": True,
+               "host": socket.gethostname().split(".")[0]}
     if not a.dry:
         try:
             with open(os.path.join(kit, "flow_refresh.jsonl"), "a") as f:
@@ -340,8 +452,26 @@ def main(argv=None):
         except OSError:
             pass
     print(f"KIT_FLOW_REFRESH stage {a.stage} rt {str(rec.get('sha'))[:12]} replaced {len(rec.get('replaced') or [])}: "
-          + " ".join(r["file"] for r in rec.get("replaced") or []) + (f" ({rec.get('note') or 'SKIPPED: ' + str(rec.get('error'))})" if rec.get("note") or rec.get("error") else ""), flush=True)
+          + " ".join(r["file"] for r in rec.get("replaced") or []) + (f" ({rec.get('note') or 'SKIPPED: ' + str(rec.get('error'))})" if rec.get("note") or rec.get("error") else "")
+          + (f" runner_override {rec['runner_override']}" if rec.get("runner_override") else ""), flush=True)
+    if rec.get("partial"):
+        print(f"KIT_FLOW_REFRESH FAIL FLOW-REFRESH-PARTIAL: stage {a.stage} on {rec.get('host')}: {rec.get('error')}; nothing in the kit was changed "
+              f"(all or nothing); the stage is deferred, not launched on stale flow files", flush=True)
+        return PARTIAL_RC
     return 0
+
+
+def runner_override(kit, since=0.0):
+    """the refreshed runner a sealed job must run instead of its read-only input (the LAST flow_refresh.jsonl record names it), else None"""
+    try:
+        lines = open(os.path.join(kit, "flow_refresh.jsonl")).read().splitlines()
+        rec = json.loads(lines[-1]) if lines else {}
+    except (OSError, ValueError):
+        return None
+    alt = rec.get("runner_override")
+    if alt and os.path.isfile(alt) and os.path.getmtime(alt) >= since - 5:
+        return alt
+    return None
 
 
 if __name__ == "__main__":

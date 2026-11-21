@@ -9161,6 +9161,11 @@ tail -5 "$K/run_$GOAL.log"
 # with no FAIL_* marker of this run writes FAIL_route carrying the first DRT error line (or the make exit), so the autopilot / wave classify it (DRT-0255 -> class DRT-NOPATH with the net name).
 if [ $rc != 0 ] && ! ls "$K"/FAIL_* >/dev/null 2>&1; then
   FE=$(grep -hE '\[ERROR DRT-[0-9]+\]' "$K"/run/logs/asap7/*/base/5_2_route.log "$K/run_$GOAL.log" 2>/dev/null | head -1 | cut -c1-300)
+  # FLOW-PROC-A 11-21 (FABLE-FLOW-0800 e: 7 'make exit 2 (see run_route.log)' lines with no cause; kv3_hub_Wo was a cts.tcl Tcl error): no DRT line -> the FIRST
+  # tool / Tcl error line of the stage log that stopped (the newest ORFS log), named with its log, so the per-cause cap and the fail key see the cause
+  FERE='^\[ERROR [A-Z]+-[0-9]+\]|^Error: |^ERROR: |can.t read "|invalid command name|^Traceback|Segmentation fault|Signal 11 received'
+  if [ -z "$FE" ]; then for LL in $(ls -t "$K"/run/logs/asap7/*/base/*.log 2>/dev/null | head -1) "$K/run_$GOAL.log"; do
+      FL=$(grep -m1 -E "$FERE" "$LL" 2>/dev/null | cut -c1-260); [ -z "$FL" ] || { FE="make exit $rc: $(basename "$LL"): $FL"; break; }; done; fi
   echo "FAIL_route ${FE:-make exit $rc (see run_$GOAL.log)}" | tee -a "$K/FAIL_route"
 fi
 # Route success alone is not sign-off. Preserve previous failed verdicts.
