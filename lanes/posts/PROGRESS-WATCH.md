@@ -126,3 +126,4 @@
 - 2026-11-21 00:24 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 - 2026-11-21 00:44 PST ALERT NO-PROGRESS s81_head: 17 eligible rows, 0 KIT-WAVE LAUNCH for 66 min (last 23:38); no DIE-OFF / NO-LAUNCH line
 - 2026-11-21 01:25 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
+- 2026-11-21 01:35 PST ALERT SELF-STOP s81: 1 job(s) stopped by the wave 988 s after its own SUBMIT (latest dsdv_slice_c1x_C__t8@3 at 01:34:25: superseded by attempt 4 of the same item)
