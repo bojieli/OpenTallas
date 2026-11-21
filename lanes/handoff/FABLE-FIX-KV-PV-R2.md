@@ -4,6 +4,14 @@ Written 2026-11-20 12:3x PST. Posts lanes/posts/FABLE-FIX-KV-PV-R2.md. Lane dir 
 (repo = lane clone of main, tools/ = scripts, out/ = dumps, por_<tag>/ = private plan dirs, kit/<tag>/ = private kits).
 Hub logs and chains: intel2 ~/tmp/ffkpvr2 (chain_r2.sh TAG LABEL, chain_<tag>.log, kit_<tag>.log, watch_r2.sh posts AUTO-KIT lines).
 
+## Update 2026-11-20 16:1x PST (read first; supersedes the 'NOT pushed' and watcher lines below)
+- pad_min_stations is ON MAIN: ddb2501006 (kit_dly_lockup / gen_phys / schema.py / tests) + 5aa3d06462 (die_plan.schema.json),
+  ot-push-main PUSHED main @5aa3d0646265.  Absent key = unchanged kit.  Lane clone is on main again (no local edits).
+- v8p GEN passed 14:17 PST and the kit launched: OT_DLY_LOCKUP segments 58,631 (v8m 46,186), latches 66,375 (v8m 54,175),
+  stages 143,468 in both.  16:06 PST: v8p in 3_3 place; v8m and v8c in CTS (clock taps written).
+- Watcher restarted with v8p (intel2 ~/tmp/ffkpvr2/watch_r2.sh, PID 1223454 at start).
+- First check for the successor: v8p 3_4 OT_DLY_SPREAD max_hop against 1,404 (v8m / v8c).
+
 ## Update 2026-11-20 14:3x PST (read first)
 - THREE private kits on epyc7 (crit, goal route, 64 GB / 16 thr, DO_NOT_COUNT, .keep_stage_odbs; tree4c data + bind4c RTL):
     v8m = flip + station 300 + R3 split rows + form C, tools main 38cdd37cec9.  Launched 12:08 PST; 13:11 PST place hooks:
