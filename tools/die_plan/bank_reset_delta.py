@@ -115,6 +115,22 @@ def landing_positions(tcl):
     return {"u_bin_" + b: (sum(c[0] for c in v) / len(v), sum(c[1] for c in v) / len(v)) for b, v in cs.items()}
 
 
+def pin_positions(pins):
+    """{u_bin_<bus>, u_bout_<bus>: (x, y)} from a kit pins.json ([{bus, x, y, ...}]): the centroid of the bus's pins, the plan
+    point of the boundary bank (u_bout_<bus> has no landing ring; hierarchical u_bin_<bus> buses are not rings either).
+    RESET-RELAY-GEN-R3 11-21 (COORD): KV u_bout banks and pv hierarchical u_bin were `unplaced`."""
+    cs = {}
+    for r in pins:
+        if r.get("bus") is not None and r.get("x") is not None:
+            cs.setdefault(r["bus"], []).append((float(r["x"]), float(r["y"])))
+    out = {}
+    for b, v in cs.items():
+        xy = (sum(c[0] for c in v) / len(v), sum(c[1] for c in v) / len(v))
+        out["u_bin_" + b] = xy
+        out["u_bout_" + b] = xy
+    return out
+
+
 def banks_on_rst(sv):
     """[(inst, module)] of the banks whose rst_n pin is the type's rst_n net"""
     out = []
@@ -132,7 +148,9 @@ def tree_taps(sv):
     return taps
 
 
-def soft_rows(tn, t, sv, pos, reach, leaf_max):
+def soft_rows(tn, t, sv, pos, reach, leaf_max, far=None):
+    """far: a list -> banks with no tree tap with room within reach are appended to it as (inst, xy) instead of raising
+    (RESET-RELAY-GEN-R3: they need a reset.local_taps_um tap of the tree at the bank, see local_tap_sites)"""
     leaf = PR.LEAF.findall(sv)
     taps = tree_taps(sv)
     if len(leaf) != 1 or not taps:
@@ -146,6 +164,9 @@ def soft_rows(tn, t, sv, pos, reach, leaf_max):
         order = sorted(taps, key=lambda i: (man(taps[i], xy), i))
         i = next((i for i in order if load.get(i, 0) < leaf_max), None)
         if i is None or man(taps[i], xy) > reach + 1e-6:
+            if far is not None:
+                far.append((inst, xy))
+                continue
             raise DeltaError(f"{tn}: bank {inst} at {tuple(round(v, 1) for v in xy)}: no tree tap with room within {reach} um "
                              f"(nearest {min(man(p, xy) for p in taps.values()):.0f} um): needs reset.local_taps_um")
         load[i] = load.get(i, 0) + 1
@@ -154,6 +175,23 @@ def soft_rows(tn, t, sv, pos, reach, leaf_max):
                         was_hop_um=round(man(taps[int(leaf[0])], xy), 1) if int(leaf[0]) in taps else None))
     rows = [dict(tap=i, sinks=by_tap[i]) for i in sorted(by_tap)]
     return rows, rep, unplaced
+
+
+def local_tap_sites(far, reach, leaf_max):
+    """greedy clusters of far banks (every member <= reach/2 of the site, <= leaf_max banks) -> [(site, [insts])]:
+    the reset.local_taps_um terminals that give each far bank a tree tap within reach (the tree pads them to the common depth:
+    0 added cycles; a second bank_reset_delta pass on the bind of the new plan seats the banks on those taps)"""
+    out = []
+    for inst, xy in sorted(far, key=lambda f: f[0]):
+        for c in out:
+            if len(c[1]) < leaf_max and man(c[0], xy) <= reach / 2 - 1e-6:
+                c[1].append(inst)
+                c[2].append(xy)
+                c[0] = (sum(q[0] for q in c[2]) / len(c[2]), sum(q[1] for q in c[2]) / len(c[2]))
+                break
+        else:
+            out.append([xy, [inst], [xy]])
+    return [(tuple(round(v, 3) for v in c[0]), c[1]) for c in out]
 
 
 def hard_groups(cons, reach, leaf_max):
@@ -216,7 +254,7 @@ def hard_rows(tn, t, sv, pos, reach, leaf_max, prefix="cbr"):
     return rows, sites, rep, unplaced, D
 
 
-def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX):
+def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX, local_taps=False):
     """mutates t; -> report dict (empty rows when nothing to do)"""
     pos = pos or {}
     if not banks_on_rst(sv):
@@ -230,10 +268,15 @@ def type_delta(tn, t, sv, pos=None, reach=REACH_UM, leaf_max=LEAF_MAX):
             rs["depth"] = int(rs.get("depth", HARD_DEPTH)) + D
         return dict(form="port_relays", rows=rows, relay_sites=sites, detail=rep, unplaced=unplaced,
                     added_reset_cycles=D, flops=sum(r["depth"] for r in rows), reset_depth=rs.get("depth"))
-    rows, rep, unplaced = soft_rows(tn, t, sv, pos, reach, leaf_max)
+    far = [] if local_taps else None
+    rows, rep, unplaced = soft_rows(tn, t, sv, pos, reach, leaf_max, far)
     if rows:
         rs["bank_taps"] = (rs.get("bank_taps") or []) + rows
+    lt = local_tap_sites(far, reach, leaf_max) if far else []
+    if lt:
+        rs["local_taps_um"] = list(rs.get("local_taps_um") or []) + [list(c[0]) for c in lt]
     return dict(form="bank_taps", rows=rows, detail=rep, unplaced=unplaced, added_reset_cycles=0, flops=0,
+                local_taps=[dict(xy=list(c[0]), banks=c[1]) for c in lt],
                 hop_max_um=max([r["hop_um"] for r in rep], default=0.0),
                 was_hop_max_um=max([r["was_hop_um"] or 0 for r in rep], default=0.0))
 
@@ -258,6 +301,10 @@ def main(argv=None):
     ap.add_argument("--reach-um", type=float, default=REACH_UM)
     ap.add_argument("--leaf-max", type=int, default=LEAF_MAX)
     ap.add_argument("--positions")
+    ap.add_argument("--local-taps", action="store_true",
+                    help="banks with no tree tap within --reach-um get a reset.local_taps_um terminal at the bank (second pass seats them)")
+    ap.add_argument("--pins", action="append", default=[], metavar="TYPE=pins.json",
+                    help="bank positions of u_bin_/u_bout_<bus> from the pin centroid of that bus (kit pins.json); lower priority than --landing")
     ap.add_argument("--landing", action="append", default=[], metavar="TYPE=landing_placement.tcl",
                     help="bank positions of u_bin_<bus> from the landing-ring boxes of that type's kit (no placed DB)")
     a = ap.parse_args(argv)
@@ -271,11 +318,15 @@ def main(argv=None):
         t = raw["partition_types"][tn]
         sv = bound_rtl(a.rtl_dir, tn, t).read_text()
         pos = dict(allpos.get(tn) or {})
+        for spec in a.pins:
+            k, _, f = spec.partition("=")
+            if k == tn:
+                pos = {**pin_positions(json.loads(Path(f).read_text())), **pos}
         for spec in a.landing:
             k, _, f = spec.partition("=")
             if k == tn:
                 pos = {**landing_positions(Path(f).read_text()), **pos}
-        r = type_delta(tn, t, sv, pos, a.reach_um, a.leaf_max)
+        r = type_delta(tn, t, sv, pos, a.reach_um, a.leaf_max, a.local_taps)
         rep[tn] = r
         print(f"{tn}: {r['form']} {len(r['rows'])} rows, +{r['added_reset_cycles']} reset cycles, {r['flops']} flops, "
               f"unplaced {len(r.get('unplaced') or [])}")

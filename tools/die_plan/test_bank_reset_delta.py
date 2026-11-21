@@ -196,3 +196,32 @@ def test_u_bin_nearest_tap_from_landing_ring_boxes():
     assert got["u_bin_a"]["tap"] == 0 and got["u_bin_c"]["tap"] == 1
     assert got["u_bin_c"]["hop_um"] < got["u_bin_c"]["was_hop_um"]
     assert "u_bout_b" in rep["unplaced"]
+
+
+def test_pin_centroid_places_u_bout_and_hierarchical_u_bin():
+    """RESET-RELAY-GEN-R3 11-21: u_bout banks (no landing ring) and hierarchical pv u_bin buses were `unplaced`; the centroid of
+    the bus's kit pins.json pins is their position (--pins), landing rings keep priority"""
+    pins = [dict(bus="b", bit=0, x=960.0, y=30.0), dict(bus="b", bit=1, x=980.0, y=30.0), dict(bus="z", bit=0, x=1.0, y=1.0)]
+    pos = B.pin_positions(pins)
+    assert pos["u_bout_b"] == (970.0, 30.0) == pos["u_bin_b"] and pos["u_bout_z"] == (1.0, 1.0)
+    t = dict(outline_um=[1000.0, 1000.0], reset=dict(sync_stages=2),
+             buses=[dict(name="a", dir="in", width=3), dict(name="b", dir="out", width=3)])
+    rep = B.type_delta("s", t, SOFT, {"u_bin_a": (20.0, 20.0), **pos}, reach=405.0)
+    assert "u_bout_b" not in (rep.get("unplaced") or [])
+    got = {x["inst"]: x for x in rep["detail"]}
+    assert got["u_bout_b"]["tap"] == 1 and got["u_bout_b"]["hop_um"] < got["u_bout_b"]["was_hop_um"]
+
+
+def test_far_bank_gets_local_tap_terminal_not_a_long_hop():
+    """RESET-RELAY-GEN-R3 11-21 (COORD): KV pv v3/v3n 397 um, v7 355 um nearest-tap hops; with --local-taps (reach 300) a bank with no
+    tap within reach gets a reset.local_taps_um site (cluster centroid), 0 cycles, and stays out of bank_taps until the second pass"""
+    t = dict(outline_um=[1000.0, 1000.0], reset=dict(sync_stages=2),
+             buses=[dict(name="a", dir="in", width=3), dict(name="b", dir="out", width=3)])
+    pos = {"u_bin_a": (20.0, 20.0), "u_bout_b": (500.0, 900.0)}
+    with pytest.raises(B.DeltaError):
+        B.type_delta("s", copy.deepcopy(t), SOFT, pos, reach=300.0)
+    tt = copy.deepcopy(t)
+    rep = B.type_delta("s", tt, SOFT, pos, reach=300.0, local_taps=True)
+    assert rep["added_reset_cycles"] == 0 and rep["local_taps"] == [dict(xy=[500.0, 900.0], banks=["u_bout_b"])]
+    assert tt["reset"]["local_taps_um"] == [[500.0, 900.0]]
+    assert all("u_bout_b" not in r["sinks"] for r in rep["rows"]) and all(d["hop_um"] <= 300.0 for d in rep["detail"])
