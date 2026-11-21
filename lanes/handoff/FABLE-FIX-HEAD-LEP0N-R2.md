@@ -74,3 +74,12 @@ and kit_wave.json dies.s81_head die_gen_env + item_env.hd_lep0N.
   Apply waits on R16 transport bench on p6 + the hd_lep0N proof. START hops k5/m: none on the applied plan (R16 07:49), no rows.
   Re-base: edit the three sha guards in run_ev.sh, run with a new TAG (ot-run --priority plan --plan-job bind --mem 32 --threads 8 --hosts epyc10 --dir F).
 - Sign-off provenance: the proof kits are private (src_manifest off); the signed build must come from the HEAD event manifest tree.
+
+## COORD rulings 11-21 08:1x-09:0x PST
+- e1 (79ac2973400d): OWNER r712 apply first, prove alongside. Apply as soon as HEAD-START-R16 transport bench on p6 PASSES (functional gate); one HEAD apply
+  together with R16. 08:13: bench tr7 FAIL 78/329 -> NOT applied; tr8 running. Held-out rows stay out. Apply form = HEAD-PLAN-R16.md "APPLIED" section
+  (pack -> live_tree.py apply -> candidate -> publish_gate -> apply_reviewed_tree_marker --optimistic --no-pilot).
+- DRT-0255 / sliver gcells (FLOW-OBS-GCELL-R2, fix b62f5f340c obs_gcell_cap.tcl in grt_pre + replay re-apply; NOT in shelf_we / shelf_tg; hd_lep0N worst,
+  14,943 sliver gcells). Pushes when the v2 proof DRT is clean. If a kit dies at DRT with 0255: do NOT rebuild; resume from its CTS DB (4_cts.odb) with the
+  fixed tools via kit_wave.py private-spec ... --rt <fixed sha> (GRT re-runs with the cap). Its tap_balance strip seeding also targets the reserved-strip
+  detour strip_check.py measures: compare strip_check flags before/after.
