@@ -46,6 +46,38 @@ class SelectedAsbuiltTest(unittest.TestCase):
             with patch.dict(os.environ,env):
                 with self.assertRaisesRegex(ValueError,'missing/ambiguous'):resolve(die,'s',root)
 
+    def bound_env(self, root, drop=(), retired='ot_s81sl_slice_old'):
+        path, spec = self.fixture(root)
+        kids = root / 'rtl/children.sv'
+        text = kids.read_text()
+        for m in drop:
+            text = text.replace('module %s; endmodule\n' % m, '')
+        kids.write_text(text)
+        (root / 'bound').mkdir()
+        (root / 'bound/asbuilt_sources.json').write_text(json.dumps(dict(selected_parameter_overrides=[dict(
+            master=retired, instance='s', selected_source='/x/structural_full/0123456789ab_ot_s81sl_slice.sv')])))
+        return {'OT_S81_SELECTED_ASBUILT_MANIFEST': str(path), 'OT_S81_SELECTED_DEFINES': 'ACTUAL',
+                'OT_BOUND_DATA': str(root / 'bound')}
+
+    def test_slice_master_comes_from_the_bind_not_the_die_name(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            with patch.dict(os.environ, self.bound_env(root)):
+                r = resolve(SimpleNamespace(inst={'s': dict(master='ot_s81sl_slice_old', params='')}), 's', root)
+            self.assertEqual(r['wrapper_chain'], ['ot_s81sl_slice'])
+
+    def test_unelaborated_xg_children_recorded_cap_gap_is_loud(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            with patch.dict(os.environ, self.bound_env(root, drop=('ot_s81sl_xs', 'ot_ring'))):
+                r = resolve(SimpleNamespace(inst={'s': dict(master='ot_s81sl_slice_old', params='')}), 's', root)
+            self.assertEqual(sorted(r['unelaborated_children']), ['ot_ring', 'ot_s81sl_xs'])
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            with patch.dict(os.environ, self.bound_env(root, drop=('ot_cap',))):
+                with self.assertRaisesRegex(ValueError, r'slice s .*real gap.*ot_cap'):
+                    resolve(SimpleNamespace(inst={'s': dict(master='ot_s81sl_slice_old', params='')}), 's', root)
+
     def test_explicit_children_cannot_replace_manifest_module(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);path,_=self.fixture(root)

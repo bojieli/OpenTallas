@@ -145,6 +145,22 @@ def xfin_delivery_contract(source_root, manifest, bound_rtl=None):
                 source_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
+def bound_selected_masters(bound_dir=None):
+    """{instance: master} the strict bind SELECTED for each slice (asbuilt_sources.json selected_parameter_overrides:
+    selected_source = <hash>_<module>.sv).  The bound die netlist may still name a retired master (iq_w3, sukv_raw512_w3);
+    the as-built source is the selected one (ot_s81sl_slice_w3), so slice membership comes from the bind, not a module list."""
+    bound_dir = bound_dir or os.environ.get('OT_BOUND_DATA')
+    f = Path(bound_dir) / 'asbuilt_sources.json' if bound_dir else None
+    if f is None or not f.exists():
+        return {}
+    out = {}
+    for e in json.loads(f.read_text()).get('selected_parameter_overrides', []):
+        m = re.match(r'(?:[0-9a-f]{12}_)?(ot_s81sl_slice\w*)\.sv$', os.path.basename(e.get('selected_source') or ''))
+        if m and str(e.get('master', '')).startswith('ot_s81sl_slice') and e.get('instance'):
+            out[e['instance']] = m.group(1)
+    return out
+
+
 def resolve(die, slice_inst, source_root=None):
     explicit = source_root is not None or bool(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT'))
     source_root = Path(source_root or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
@@ -190,6 +206,9 @@ def resolve(die, slice_inst, source_root=None):
         return match[1] if match else None
 
     master = die.inst[slice_inst]['master']
+    selected_master = bound_selected_masters().get(slice_inst)
+    if selected_master and selected_master != master:
+        master = selected_master
     hb = re.search(r'\.HB\(\s*(\d+)\s*\)', die.inst[slice_inst].get('params', ''))
     hb = int(hb.group(1)) if hb else None
     seen = set()
@@ -197,7 +216,10 @@ def resolve(die, slice_inst, source_root=None):
         if master in seen:
             raise ValueError('recursive slice wrapper ' + master)
         seen.add(master)
-        text = body(master)
+        try:
+            text = body(master)
+        except ValueError as e:
+            raise ValueError(f'slice {slice_inst} (die master {die.inst[slice_inst]["master"]}, bound master {master}): {e}') from e
         default_hb = re.search(r'parameter\s+integer\s+HB\s*=\s*(\d+)', text)
         if hb is None and default_hb:
             hb = int(default_hb.group(1))
@@ -246,9 +268,19 @@ def resolve(die, slice_inst, source_root=None):
     ring = child(xg_text, 'u_r')
     if streamer not in ('ot_s81sl_xs', 'ot_s81sl_xs4') or ring is None:
         raise ValueError('selected source streamer/ring pair is unresolved: ' + xg)
-    body(streamer)
-    body(ring)
-    body(cap)
+    unelaborated = {}
+    for child_master in (streamer, ring, cap):
+        try:
+            body(child_master)
+        except ValueError as e:
+            if child_master in (streamer, ring) and streamer != 'ot_s81sl_xs4' and selection:
+                # the bind keeps this slice's plain x streamer / ring stop (xg children) outside the as-built (hard-leaf slice such as iq_w3 ->
+                # ot_s81sl_slice_w3): the timing contract reads only the XR transport and CAP, both resolved above.
+                # Recorded, never a silent pass; an xs4 streamer still needs its capture-stage receipt.
+                unelaborated[child_master] = str(e)
+                continue
+            raise ValueError(f'slice {slice_inst} (bound master chain {chain}, xg {xg}): real gap, the as-built has no '
+                             f'definition of {child_master}: {e}') from e
     added = 0
     if streamer == 'ot_s81sl_xs4':
         # capture-stage receipts: XS4 sources whose streamer capture adds exactly ONE edge.
@@ -279,7 +311,7 @@ def resolve(die, slice_inst, source_root=None):
                 xg=xg, ring=ring, streamer=streamer, capture=cap,
                 xr=xr, xr_source_path=xr_path, xr_ring_land=xr_ring_land,
                 selected_hb=hb,
-                streamer_added_capture_edges=added, source_sha256=sources,
+                streamer_added_capture_edges=added, unelaborated_children=unelaborated, source_sha256=sources,
                 source_root=str(source_root), explicit_source_root=explicit, physical_binding_qualified=False,
                 qualification='SOURCE RESOLUTION ONLY; exact kit/netlist inventory and runtime clocks remain required')
     if selection:
