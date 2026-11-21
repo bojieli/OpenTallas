@@ -22,3 +22,9 @@ Work: epyc10 /srv/opentallas-scratch2/claude/s81-j6 (gate.sh, mk_cand.sh, j7/), 
 - Kit-gen lint: intel2 /srv/opentallas-scratch2/claude/s81-j6-r4/lint_fams.sh (dry_gen per family); first pass E2BIG (fixed main 4f638b4e9f); rerun SUF=_b -> lint_candJ7c_b/summary.txt. eng__t1 gen fails (dsdv_eng_rr_e LEF without lib), not a J7 row.
 - J7 apply: put col_* items on hold_items (held-until-view, owner FAM-S81-COL-H10-R3) until a fresh u_cf kit routes DRC 0. via-shadow 1980f8126c NOT in J7.
 - Pending row offers (bind-proven delta by 20:00 or J8): bk_sel R6 plan_r6 (BKSEL-R6), 22 h10_r0_p1 groups (COL-H10-R3), bank taps (COL-R4), svc hi4 (held: rest-part prep), COLROM-R4 ROM-input stage, SERDES-R6 CRC split.
+
+## 12:1x update
+- candJ7d = plan v9 (j7/v9, 94d2e3b7, 1417 ops): v6 + GEN lepe10 (v7) + GEN bksel_r6 (v8, S81-BKSEL-R7 files copied to j7/gen) + GEN mkresite (v9, COL-R4 10:45). List j7/J7d.list. Gate unit oth-ubuntu-97519-1795292177 (epyc10), log s81-j6/logs/gate_candJ7d.log, rt 8d1cff9b1bb6. Then lint: intel2 `SUF=_d bash lint_fams.sh candJ7d 8d1cff9b1bb6 <items minus eng__t1>`.
+- INTAKE LEDGER was posted at 12:0x (posts e1a6afa7). Decisions: lepe10 GEN comes out if LEPE-4 says no at 19:00. The colrom guard package (FABLE-FIX-S81-COLROM-R4 candJ7cG gate) goes in if green, else the rdx stage rows (steps 15-16) come OUT. misc5, serdes, svc hi4 go to J8. Leaf rg5 goes in only with a green gate.
+- Lint J7c: 16/19 PASS; the svc xoff0 signoff/liberty mismatch is on J6 too (handed to SVC-R8).
+- Ack to S81-BKSEL-R7 posted, but post.sh said NOTHING-COMMITTED; the post is in my posts file.
