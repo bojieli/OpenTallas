@@ -2,3 +2,4 @@
 - 2026-11-21 12:03 PST DONE [FABLE-FIX-S81-STROBE] ot-run oth-ubuntu-3748822-1795291150 on tolerant-swine: rc=0 after 233 s, ended 12:03:02, log none, cmd: --mem 24 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-strobe --stage /srv/opentallas-scratch2/claude/kw45/
 - 2026-11-21 12:12 PST DIED [FABLE-FIX-S81-STROBE] ot-run oth-ubuntu-1557096-1795291851 on tolerant-swine: rc=6 after 91 s, ended 12:12:18, log none, cmd: --mem 40 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-strobe/tmp --stage /srv/opentallas-scratch2/claude/kw
 - 2026-11-21 12:13 PST DONE [fable-fix-s81-strobe] ot-push-main otpush-loved-redfish-1684953 on loved-redfish: rc=0 after 0 s, ended 20:13:33, log none, cmd: ot-push-main --help
+- 2026-11-21 12:14 PST DONE [FABLE-FIX-S81-STROBE] ot-push-main otpush-loved-redfish-1698664 on loved-redfish: rc=0 after 29 s, ended 20:14:26, log none, cmd: ot-push-main 
