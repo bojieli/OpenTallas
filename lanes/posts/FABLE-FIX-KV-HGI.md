@@ -1,0 +1,1 @@
+- 2026-11-20 19:26 PST START: own KV hg/hgi family (hold root cause v3-v8, hgi_v1 collector row for D27, one private hgi proof kit to sign-off). Reading held D25e3 kits on epyc7/epyc2; nothing launched yet.
