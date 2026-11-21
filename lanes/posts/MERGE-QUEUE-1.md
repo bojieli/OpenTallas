@@ -44,3 +44,4 @@
 - 2026-11-20 16:57 PST GPL placement slew fixture 181ddd landed 74c92c after canonical GREEN; runtime all six and merged-main Redwatch green.
 - 2026-11-20 17:35 PST Owner overlap guard and failure classification now on main; older private QC packed-only guard appears covered and its receipt stays private.
 - 2026-11-20 18:10 PST Prune pin payload fix 29af landed f9ede45 after canonical GREEN4 and six-host sync; E7 prune completed in 34s after earlier stdin timeouts.
+- 2026-11-20 19:00 PST S81 compiler smoke recipe declaration 66fb landed 1ddefd, clean Redwatch and six-host sync. Compact remote prunes now complete on E7 in 3s.

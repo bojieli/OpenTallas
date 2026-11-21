@@ -317,3 +317,7 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 
 ## CODEX continuation 2026-11-20 18:10 PST
 - E7 two runtime companion prune commands timed out after 300s. Read-only process inspection found remote prune waiting on fd0 pins before deletion; actual hub payload 445,768,853 bytes. Exact 29afaf8320cbfd7ec886d350c67f2afe5397e6db compacts to deduplicated whole hex runs (2,466,584 bytes measured), which preserve every old 12-digit lowercase snapshot substring match. Focused prune PASS7, canonical GREEN4/4 E10 oth-ubuntu-4044147-1795226354. Landed f9ede45fd9e and sync hook six hosts rc0, latest E7 prune 34s, other hosts 10–12s. Existing snapshot protection and concurrency intact.
+
+## CODEX continuation 2026-11-20 19:00 PST
+- Fully updated prune sender later proved E7 3s and other hosts 1–2s in repeated normal syncs. f9ede45 post-merge Redwatch GREEN4/4.
+- S81 222ac8a1b00 had two missing legacy GU recipe inputs and recovered at Redwatch GREEN14. Exact fixture declaration 66fb4978362f4d49b9592ee48b0e40c40f26d99b stages the tracked recipe at test intake. Canonical E10 GREEN1/1 with 11 named dirs, adaptive first slice RTL miss recovered, no matched baseline. Landed 1ddefd55818, merged-main GREEN1 and runtime all six. No compiler, plan or component change.
