@@ -1,0 +1,1 @@
+- 2026-11-21 11:12 PST STARTED (successor of FAM-S81-SERDES-R5). Waiters re-armed: enchp_j6b (intel2 PID 3627675), ench_j6a routed LEC (PID 3387241), dec_j6c (PID 1603457 / oth-ubuntu-3823626-1795274482), t4 private route (oth-ubuntu-293099-1795284746, GRT stage wait). Watching kit_wave t12 a2 / t14 a3. Next: encoder pick by LEC+signoff, dec_j6c signoff, private bind.
