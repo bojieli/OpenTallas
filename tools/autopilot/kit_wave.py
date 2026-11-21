@@ -8168,6 +8168,12 @@ def run_item(spec_path):
     roamer = ROAM.Roamer(ROAM.Ops(roam_sh), W, G, sp.get("roam_hosts") or [], hub_names=("localhost", hub),
                          max_mb=int(sp.get("roam_max_mb") or ROAM.MAX_MB))
 
+    def _status_text():                                  # REPIN-1121: `ot-run --status` (per host: what it admits now)
+        try:
+            return subprocess.run([sp["ot_run"], "--status"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120).stdout or ""
+        except (OSError, subprocess.SubprocessError):
+            return ""
+
     def run(stage, argv, timeout=None, idempotent=False):
         """idempotent: the stage may be rerun after any ssh rc 255 (mkdir/probes); every stage is rerun when ot-run
         says NOT RUN or the ssh transport dropped before 'RAN on' (the command never started)"""
@@ -8186,7 +8192,11 @@ def run_item(spec_path):
             # ('ot-heavy: admitted on') or it still waits in the memory queue (cancel_class_volume)
             live = out / f"{stage}.live.log"
             with open(live, "w") as ef:
-                p = subprocess.run(argv, stdout=subprocess.PIPE, stderr=ef, text=True, timeout=timeout)
+                if stage == "geom" and not roam and sp.get("place_spill", True) and ROAM.is_movable(argv, roamer.others, W, int(sp.get("repin_s", ROAM.REPIN_S))):   # REPIN-1121 (spill=false rows stay pinned): a geom stage pinned to one host that does not admit it moves after ROAM.REPIN_S
+                    p = ROAM.run_watch(argv, ef, live, roamer.others, W, roamer.ops, _status_text, lambda m: print(m, flush=True),
+                                       repin_s=int(sp.get("repin_s", ROAM.REPIN_S)), timeout=timeout)
+                else:
+                    p = subprocess.run(argv, stdout=subprocess.PIPE, stderr=ef, text=True, timeout=timeout)
             txt = (p.stdout or "") + (getattr(p, "stderr", None) or "") + live.read_text(errors="replace")
             txt_all += txt
             drop = (p.returncode != 0 and SSH_DROP.search(txt) and not re.search(r"ot-run: RAN on", txt)

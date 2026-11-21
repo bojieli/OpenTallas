@@ -12,6 +12,8 @@ other host the stage is pinned to G exactly as before.  Only stages whose --dir 
 """
 import re
 import shlex
+import subprocess
+import time
 
 RAN_RE = re.compile(r"(?m)^ot-run: RAN on ([^\s:]+)")
 MAX_MB = 3000
@@ -108,3 +110,93 @@ class Roamer:
         if rc:
             return False, f"KW_ROAM_PULLBACK_FAIL {stage} {h}->{self.G} rc {rc}: {t[-200:]}"
         return True, f"KW_ROAM {stage}: ran on {h}, outputs copied back to {self.G}"
+
+
+# REPIN-1121 (COORD: s81 kv_leaf t1 a3 geometry check queued from 19:26 on epyc2 with --hosts epyc2, 24 GB asked, epyc2 admitting 0 GB; 14 s81 waiters pinned the same way):
+# a stage whose attempt dir is over MAX_MB (after place it is 4+ GB) never roams, and geom runs where the placed checkpoint is.  A single-host-pinned stage that has
+# not been admitted within REPIN_S is re-submitted on a host that admits it now: the attempt dir (kit, geom tools) is copied there, the stage runs there, the outputs are
+# copied back to the home host.  The client stopped is this process's own child (SIGTERM makes ot-run cancel its queued waiter).
+REPIN_S = 1800
+ADMITTED_RE = re.compile(r"ot-heavy: admitted on|ot-run: RAN on")
+ADMITS_RE = re.compile(r"(?:ot-run status:|\|)\s*(\S+) admits (\d+) GB")
+
+
+def single_pin(argv):
+    """host of a single-host --hosts pin, else ''"""
+    v = arg_after(argv, "--hosts")
+    return v if v and "," not in v else ""
+
+
+def arg_after(argv, flag):
+    try:
+        return argv[list(argv).index(flag) + 1]
+    except (ValueError, IndexError):
+        return ""
+
+
+def parse_admits(status_text):
+    """`ot-run --status` text -> {host: GB it admits now}"""
+    return {h: int(g) for h, g in ADMITS_RE.findall(status_text or "")}
+
+
+def pick_alt(admits, mem, exclude, candidates):
+    """the candidate host (not excluded) that admits >= mem GB now with the most room, else ''"""
+    best = sorted(((admits.get(h, 0), h) for h in candidates if h not in exclude and admits.get(h, 0) >= mem), reverse=True)
+    return best[0][1] if best else ""
+
+
+def is_movable(argv, others, home_dir, repin_s=REPIN_S):
+    d = arg_after(argv, "--dir")
+    return bool(single_pin(argv) and others and repin_s and d and (d == home_dir or d.startswith(home_dir.rstrip("/") + "/")))
+
+
+class Done:
+    def __init__(self, returncode, stdout):
+        self.returncode, self.stdout = returncode, stdout
+
+
+def run_watch(argv, ef, live, others, home_dir, ops, status_fn, log, repin_s=REPIN_S, poll_s=30, clock=time.time, popen=subprocess.Popen, timeout=None):
+    """run the ot-run argv; a stage pinned to ONE host and not admitted within repin_s moves to a host that admits it (see above) -> Done(rc, stdout)"""
+    pin, d = single_pin(argv), arg_after(argv, "--dir")
+    mem = int(arg_after(argv, "--mem") or 0)
+    movable = is_movable(argv, others, home_dir, repin_s)
+    p = popen(list(argv), stdout=subprocess.PIPE, stderr=ef, text=True)
+    t0 = clock()
+    while movable:
+        try:
+            out, _ = p.communicate(timeout=poll_s)
+            return Done(p.returncode, out)
+        except subprocess.TimeoutExpired:
+            pass
+        if clock() - t0 < repin_s:
+            continue
+        try:
+            if ADMITTED_RE.search(open(live, errors="replace").read()):
+                break                                      # admitted: it runs, never touched
+        except OSError:
+            pass
+        alt = pick_alt(parse_admits(status_fn()), mem, {pin}, others)
+        if not alt:
+            t0 = clock()                                   # nothing admits it now: look again in repin_s
+            continue
+        log(f"KW_REPIN {d[-60:]}: not admitted on {pin} after {int(clock() - t0)} s; copying the attempt dir to {alt}")
+        rc, txt = ops.copy(pin, alt, d)
+        if rc:
+            log(f"KW_REPIN: copy to {alt} failed (rc {rc}: {txt[-120:]}); stays pinned to {pin}")
+            t0 = clock()
+            continue
+        p.terminate()                                      # our own child: its queued waiter is cancelled
+        try:
+            p.communicate(timeout=60)
+        except subprocess.TimeoutExpired:
+            p.kill()
+            p.communicate()
+        argv2 = list(argv)
+        argv2[argv2.index("--hosts") + 1] = alt
+        p2 = popen(argv2, stdout=subprocess.PIPE, stderr=ef, text=True)
+        out, _ = p2.communicate(timeout=timeout)
+        b, note = ops.copy(alt, pin, d, delete=False)
+        log(f"KW_REPIN: ran on {alt}" + (f"; outputs copied back to {pin}" if not b else f"; COPY-BACK FAILED rc {b}: {note[-120:]}"))
+        return Done(p2.returncode if not b else (p2.returncode or 1), out)
+    out, _ = p.communicate(timeout=timeout)
+    return Done(p.returncode, out)
