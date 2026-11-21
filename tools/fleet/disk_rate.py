@@ -117,7 +117,55 @@ def clear_lane_hold(host, run=None):
         pass
 
 
-def main(post=True, now=None, pusher=None, stopper=None, clearer=None):
+HOLDER_CMD = "lsof -nP +L1 -F pcsn 2>/dev/null"
+
+
+def parse_holders(text, disk):
+    """lsof -F pcsn +L1 output -> [(pid, cmd, GB)] for deleted-but-open files under disk, biggest first (one row per pid)"""
+    per, pid, cmd, size = {}, None, "", 0
+    for ln in text.splitlines():
+        if not ln:
+            continue
+        t, v = ln[0], ln[1:]
+        if t == "p":
+            pid, cmd = v, ""
+        elif t == "c":
+            cmd = v
+        elif t == "s":
+            try:
+                size = int(v)
+            except ValueError:
+                size = 0
+        elif t == "n" and pid and v.startswith(disk):
+            e = per.setdefault(pid, [cmd, 0]); e[1] += size
+    return sorted(((p_, c, b / 1e9) for p_, (c, b) in per.items()), key=lambda r: -r[2])
+
+
+def holders_text(host, disk, run=None, top=3):
+    """top deleted-but-open holders on that mount: pid, cmdline (from /proc), held GB.  best effort, never raises"""
+    try:
+        rows = parse_holders(sh_host(host, HOLDER_CMD, run, 180).stdout or "", disk)
+    except Exception as e:
+        return " LSOF+L1 failed: %s" % str(e)[:60]
+    rows = [r for r in rows if r[2] >= 0.01][:top]
+    if not rows:
+        return " LSOF+L1 holders: none (>=10 MB) on %s" % disk
+    out = []
+    for pid, c, gb in rows:
+        try:
+            cl = (sh_host(host, "tr '\\0' ' ' < /proc/%s/cmdline | cut -c1-160" % int(pid), run, 60).stdout or "").strip() or c
+        except Exception:
+            cl = c
+        out.append("pid %s [%s] %.1f GB" % (pid, cl, gb))
+    return " LSOF+L1 top holders on %s: %s" % (disk, "; ".join(out))
+
+
+def level(hours):
+    """alert state: 3 = floor within 1 h, 2 = within 2 h, 1 = within HORIZON_H, 0 = fine"""
+    return 0 if hours is None else 3 if hours <= STOP_HOURS else 2 if hours <= AUTO_HOURS else 1 if hours <= HORIZON_H else 0
+
+
+def main(post=True, now=None, pusher=None, stopper=None, clearer=None, holder=None):
     now = now or time.time()
     try:
         h = json.load(open(HIST))
@@ -133,9 +181,13 @@ def main(post=True, now=None, pusher=None, stopper=None, clearer=None):
                 (pusher or push_eta)(host, pr[1] if pr else 0.0, now)
                 if not (pr and pr[0] <= STOP_HOURS):
                     (clearer or clear_lane_hold)(host)        # recovered (or never held): the lane hold ends
-            if pr and pr[0] <= HORIZON_H and now - h["alerted"].get(k, 0) >= ALERT_EVERY_S:
+            lv = level(pr[0] if pr else None)
+            prev = h.setdefault("level", {}).get(k, 0)
+            h["level"][k] = lv
+            if lv > prev:                                   # one alert per state change (entering or escalating), never a repeat
                 h["alerted"][k] = now
-                alerts.append("DISK-RATE %s %s: free %.0f GB, falling %.0f GB/h, floor 50 GB in %.1f h" % (host, disk, free / 1e9, pr[1], pr[0]) + auto_retire(host, disk, pr[0])
+                alerts.append("DISK-RATE %s %s: free %.0f GB, falling %.0f GB/h, floor 50 GB in %.1f h (state %d, was %d)" % (host, disk, free / 1e9, pr[1], pr[0], lv, prev)
+                              + (holder or holders_text)(host, disk) + auto_retire(host, disk, pr[0])
                               + ((stopper or hold_top_lane)(host) if pr[0] <= STOP_HOURS and disk.endswith("scratch2") else ""))
     os.makedirs(os.path.dirname(HIST), exist_ok=True)
     json.dump(h, open(HIST, "w"))
