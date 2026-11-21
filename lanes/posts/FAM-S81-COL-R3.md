@@ -1,0 +1,1 @@
+- 2026-11-21 03:47 PST DIED [FAM-S81-COL-R3] ot-run oth-ubuntu-247963-1795261623 on key-cardinal: rc=1 after 5 s, ended 03:47:05, log /srv/opentallas-scratch2/claude/fam-s81-col-r3/rd1/out.log, cmd: --mem 16 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r3/rd1 -- python3 -I /srv/opentallas-scratch2/claude/f
