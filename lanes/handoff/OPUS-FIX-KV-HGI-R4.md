@@ -12,6 +12,7 @@ Running units (leave alone; re-arm waiters with OT_LANE=OPUS-FIX-KV-HGI-R5, ot-w
 - relayfit A/B running on epyc10 as oth-ubuntu-3125913-1795262038 (intel2 client 42768).
 - Stale record otrun-tolerant-swine-271965 (setup_r4 on epyc8): I killed that held client (my pid); nothing ran.
 
+- UPDATE 07:3x: prep_d26 DONE rc 0 (oth-ubuntu-2684513-1795273452). epyc7 W/tree26 + W/launch26 ready, plan 8e916c6fcb01 (D26 a9f605cb1acf + x-street kst + v8 taps). Report W/ana/kst_xstreet_d26_report.json: all 11 hgi types 0 kst sites left in cores (v5/v6/v8 head2 now routed), depth-2 max centre hop 366 / bit 386; hg (8 types) still 136 inside + hg_v1 head0 e4 1806 um detour; 62 rows skipped (die-edge endpoints, mostly rows that need no move). Next: G0 + bind gates on W/launch26 (commands above), then gen_v1.sh.
 kt re-site bind status:
 - r3 plan 152d6c878972 (straight re-site): G0 PASS 0 errors (+61 station_core, +60 routed_reach: e4/e6 hops 546 um round the cores).
   Its strict bind oth-ubuntu-1244823-1795267991 I CANCELLED (superseded by the COORD 06:3x order; do not carry 152d rows).
