@@ -18675,3 +18675,5 @@ FAILED [AUTOPILOT de40cf1697f8] 2026-11-21 08:29:58 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FAM-QC-COLL-R2: FAM-QC-COLL stood down (chain FAM-QC-COLL > FAM-QC-COLL-R2)
 - 2026-11-21 08:33 PST DONE [TAP-GRID-R4] ot-run oth-ubuntu-1926138-1795278598 on civil-redfish: rc=0 after 228 s, ended 16:33:44, log /srv/opentallas-scratch2/claude/tap-grid-r4/compose.log, cmd: --mem 16 --threads 1 --disk 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/tap-grid-r4 -- python3 -I -u /srv/opentallas-scratch2/cla
 - 2026-11-21 08:33 PST DONE [FLOW-OPS-0900] ot-push-main otpush-civil-redfish-1888768 on civil-redfish: rc=0 after 298 s, ended 16:33:50, log none, cmd: ot-push-main 
+- 2026-11-21 08:33 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): qwen_compute/slw_fe_v2__clf110fab2@4 22.0 GB
+  [filed under] FLEET-WATCH-R3: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3)
