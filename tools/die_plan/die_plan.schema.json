@@ -9472,6 +9472,17 @@
       "maximum": 1
      }
     },
+    "relay_mid_fit_chain": {
+     "type": "boolean"
+    },
+    "relay_mid_fit_chain_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "core_pin_relay": {
      "oneOf": [
       {

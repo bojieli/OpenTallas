@@ -1872,6 +1872,9 @@ _B["relay_mid_half_types"] = {"type": "object", "additionalProperties": _HALF}
 _B["relay_mid_tail_types"] = {"type": "array", "uniqueItems": True, "items": {"type": "string", "minLength": 1}}
 _B["relay_mid_soft_frac"] = {"type": "number", "minimum": 0, "maximum": 1}
 _B["relay_mid_soft_frac_types"] = {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}
+# FAM-S81-COL-R3 11-21 (gen_phys._relay_mid_fit_chain, relay_mid.tcl FIT CHAIN): opt-in actual-seat leg check
+_B["relay_mid_fit_chain"] = {"type": "boolean"}
+_B["relay_mid_fit_chain_types"] = {"type": "array", "uniqueItems": True, "items": {"type": "string", "minLength": 1}}
 # CORE-PIN-RELAY-1930 (gen_phys._core_pin_relay, relay_depth.pin_weight): relay stages / landing flops seated at hard-core pins
 _B["core_pin_relay"] = {"oneOf": [{"type": "boolean"}, {"type": "object", "additionalProperties": False, "properties": {
     "re": {"type": "string", "minLength": 1}, "w": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
