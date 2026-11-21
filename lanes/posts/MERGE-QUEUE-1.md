@@ -48,3 +48,4 @@
 - 2026-11-20 19:44 PST TT setup keep test ff3046 landed b685b9f, canonical GREEN and fleet sync complete. Adjacent owner source restored private-kit default.
 - 2026-11-20 21:07 PST Wave place-cancel test isolation 9e019 landed 04bd3b8 with clean gate and merged-main Redwatch.
 - 2026-11-20 21:32 PST Archived QC52 and HEAD nested bind test baselines fixed by separate GREEN fixtures; both landed, no plan/reset source edits.
+- 2026-11-20 22:36 PST HBM reset manifest now stages nine narrow dirs first pass, 18cc landed 3dd8e5. TAP-GRID owner successor restored CORE-DIRECT and current Redwatch is green.
