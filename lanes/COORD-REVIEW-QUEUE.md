@@ -17784,3 +17784,4 @@ FAILED [AUTOPILOT 4ac7a61c3854] 2026-11-21 05:52:27 PST AUTOPILOT -> KIT-WAVE-3:
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
 - 2026-11-21 05:55 PST DIED [FAM-S81-COL-R3] ot-run oth-ubuntu-1899459-1795265375 on key-cardinal: rc=11 after 3978 s, ended 05:55:51, log /srv/opentallas-scratch2/claude/fam-s81-col-r3/bind5_otrun.log, cmd: --mem 48 --threads 4 --plan-job bind --priority plan --hosts intel1 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r3 -- bash /srv/openta
 - 2026-11-21 05:55 PST DIED [FABLE-FIX-S81-LEAF-R3] ot-run oth-ubuntu-1887940-1795269349 on civil-redfish: rc=1 after 8 s, ended 13:55:54, log none, cmd: --mem 12 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r3x -- python3 -I /srv/opentallas-scratch2/clau
+- 2026-11-21 05:56 PST h9_r1 rep private strict bind/LATCHECK FAILED (intel1 fam-s81-col-r3/bind5.log)
