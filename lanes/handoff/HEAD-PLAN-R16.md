@@ -35,8 +35,19 @@ Plan `M/plan/p4.json` f15722674c75.
 - 300-um hops on signed types (hd_spn be_i/bw_i 850/706, x_o/b_i 340; hd_spn_end 850/706; hd_tile 573/421/398/342) NOT touched:
   signed, station rows would change their netlists -> next event (Fable F7).
 
+## APPLIED (11-20 22:0x PST)
+- r16b PASS (pinned rt, tree tools == rt 0 diffs): trees 26/26 == r13r, GEN/BIND PASS, cohort gen DIFF hd_serdes only, strict 26/26,
+  LATCHECK 329/329, G0 0 errors, R-REACH-5 4 rr_t<i> warnings (pre-existing class).
+- Pack M/pack_r16b (984 add, 2 delete: tools/autopilot tools_refresh*.py removed on main) -> live_tree.py apply: snapshot
+  kw45/snap_s81_head/s81_head_r16_s0, manifest 80eaa65ea9cb, epyc10+epyc9 (+epyc7 synced by apply). Candidate M/cand_r16.json
+  (= intel2 ~/head-plan-r16/cand_r16.json): tools_sha 745c8f11e429d7b6457d64cd1d78ceb449665054, receipt results/head_native_release_nf15f_r16.
+- publish_gate record coord autopilot/publish_gate/s81_head/80eaa65e...json: schema, pre_g0, hashes, dry_gen (hd_serdes) PASS; contained
+  FAIL = plan names kw45/snap_s81_head/s81_head_r4_s0 sink bins + an eco99 lib (inherited, same rows as r11b) -> advisory.
+- apply_reviewed_tree_marker --optimistic --no-pilot: event head_rp21z20NF15f_r16; receipt lanes/handoff/s81_head_atomic_apply_1795240903731931643.json.
+- Block identity r16 vs r11b: 21 equal; changed hd_serdes, hd_lep0N (this event) and hd_host_e, hd_host_w, hd_mesh (r13r base rows, not R16).
+  die_ctx changes on all types (new reset keys); signed rows stay terminal on their block.
+
 ## Next
-1. r16b PASS -> pack (M/mkpack.py: live_s81_head -> r16b tree), live_tree.py apply --name s81_head_r16_s0 (epyc10,epyc9) with the
-   r11b candidate, publish_gate run, apply_reviewed_tree_marker. Expect only hd_serdes + hd_lep0N blocks to change.
-2. Launch hd_serdes + hd_lep0N on it; tell OPUS-FIX-HEAD-LEP0N-R2 / FABLE-FIX-HEAD-SERDES-R2 (tr2s / sdr2c untouched).
-Stop list kept: no apply at 300, no auto-republish of signed DIFF types, no hd_tile relaunch on a depth-5 tree (tree stays depth 4).
+1. Confirm the wave launches hd_serdes + hd_lep0N on r16 (log.txt KIT-WAVE). tr2s / sdr2c untouched (any-plan count).
+2. Signed >300-um hops (hd_spn be_i/bw_i 850/706, hd_spn_end 850/706, hd_tile 573/421/398/342) + 300-um reset re-solve: next event.
+3. Clean the contained finding (copy r4_s0 sink bins into the tree, rewrite plan paths) in the next event.
