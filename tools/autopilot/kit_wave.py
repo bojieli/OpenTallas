@@ -7862,6 +7862,29 @@ def _ssh(host, hub):
     return [] if host in ("localhost", hub) else ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host]
 
 
+def hub_copy_removable(G, hub, K, run=subprocess.run, local_id=None):
+    """FLOW-OPS-1300 item 7: (True, '') when the local <work>/gen is only the hub's relay copy: the gen host G is another machine (machine-id differs) and holds the
+    kit K.  Off the hub (run-item on the gen host, or a spec made elsewhere) the local copy IS the kit: (False, why), never deleted."""
+    try:
+        local_id = local_id if local_id is not None else Path("/etc/machine-id").read_text().strip()
+    except OSError:
+        local_id = ""
+    a = _ssh(G, hub)
+    if not a:
+        return False, f"gen host {G} is this host"
+    try:
+        p = run(a + ["bash -c " + shlex.quote(f"cat /etc/machine-id; test -d {shlex.quote(K)} && echo KW_GEN_KIT_OK")], stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError) as e:
+        return False, f"cannot check {G}: {type(e).__name__}"
+    out = p.stdout or ""
+    if p.returncode != 0 or "KW_GEN_KIT_OK" not in out:
+        return False, f"kit {K} not confirmed on {G} (rc {p.returncode}): the local copy may be the only one"
+    if not local_id or local_id in out.split():
+        return False, f"{G} is this machine (same machine-id): the local gen dir is the kit"
+    return True, ""
+
+
 SEALED_COPY_BACK = re.compile(r"(?m)^ot-run-sealed: copy-back (\S+) -> (\S+) rc 0\b")
 
 
@@ -9512,7 +9535,13 @@ def run_item(spec_path):
         res["place_async"] = asy
         if asy:
             if not on_hub:
-                run("clean_hub", ["bash", "-c", f"rm -rf {q(W)}/gen"])   # pre-place relay copy (lint only)
+                # FLOW-OPS-1300 item 7 (FAM-QC-COLL-R2: run-item started ON the gen host rm -rf'd the only gen copy -> place 'kit dir missing'): the local W/gen is
+                # removed only when it is a relay copy, i.e. this process does not run on the gen host and the kit is present there
+                _ok, _why = hub_copy_removable(G, hub, K)
+                if _ok:
+                    run("clean_hub", ["bash", "-c", f"rm -rf {q(W)}/gen"])   # pre-place relay copy (lint only)
+                else:
+                    print(f"KW_CLEAN_HUB_SKIP {_why}", flush=True)
             m, t = sp["place_mem_gb"], sp["place_threads"]
             prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
             rc, txt, rcpt = place_async(K, prun, m, t)
