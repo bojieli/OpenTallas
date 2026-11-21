@@ -12,3 +12,9 @@ Lane dir: epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3 (tmp/ = own 
 1. gateM result -> post to S81-J6-ASSEMBLY-R4. 2. cld01bb4ae sign-off -> export or class read. 3. Proof A/C results -> post. 4. After J6 r1 publishes its manifest tree, rebase private work on it.
 ## Cleanup owed
 - srcJ7m (hardlinks) via ot-delete once J7 is applied.
+
+## Update 11-21 10:5x PST
+- Lever-6 gate oth-ubuntu-925383: BIND_RC=1 only on base leaf t23/t70/t72 (same as candJ7b); candJ7c (ec6693a02501) carries lever 6, so its gate is the proof.
+- Proof C: FIT A/B no-op (fitted 0). Scan rows (22 groups) being built on ec6693a02501 by a worker; trees srcJ7r / srcJ7rA, gates gateR / gateRa, scripts mk_scanrows.py, delta_scan_*.json (epyc10 fam-s81-col-h10-r3). Due 19:30 for the candJ7d cut.
+- Proof A route: ot-run oth-ubuntu-2275263-1795279334 epyc10 (log fam-s81-col-h10-r3/routeA2_otrun.log), kit waveP .../attempt_1/gen/col_h10_r2__...pv1619ecc6. Compare ROM-PVAL bn/e_r class vs J5 -81.7 / TT -99.84 and post to S81-J6-ASSEMBLY-R4.
+- NEW (FABLE-CLOSURE-STRATEGY 7a88fa0048): I own LEVER 1 (cfifo view shadow inset >= 0.30 um + one-row halo on u_cf / u_t0, fresh kit proof pvcc166a6d on candJ7c, DRC 0 vs u_cf; due 19:00) and LEVER 2 item 1 (OT_RELAY_MID_FIT selector returns 0). Workers are running on both. Stop: no via-shadow ECO on old DBs.
