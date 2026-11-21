@@ -1,0 +1,34 @@
+{
+ "schema": "fam-qc-coll.rows.v1",
+ "set": "a",
+ "status": "PREPARED, not sent; pick after pkw4 final GRT TT class read",
+ "what": "registered S read (SRDREG, on branch claude/qc-plan-r7-v2-srdreg 2ddb19c08b) + write-data register (SWDREG, 0 cycles, needs LS>=3) + 2 stations on u_ctl face codec (+2 cycles status)",
+ "why": "pkw4 (read-reg proof) post-hook CTS -478.6 rdq -> out_data: 1.22 ns, ~25 cells, 3 long wire repeaters (SRAM at x~450-535,y~900-1000, od_q far); GRT repair floor WNS -82..-215, 221 ends; others: g_wd -> sring wd_in (-218/80 ends), u_ctl face codec epoch_abort (3 ends, 960 um)",
+ "rtl": "famqc_rtl.patch on top of 2ddb19c08b (ot_coll_tp8_static.sv); functional bench pending (tools/qwen_coll_tp8_static_bench.py --mutant-define for each define)",
+ "rows": [
+  {
+   "op": "append",
+   "path": "partition_types.coll_core.verilog_defines",
+   "value": "OT_TP8S_SRDREG"
+  },
+  {
+   "op": "append",
+   "path": "partition_types.coll_core.verilog_defines",
+   "value": "OT_TP8S_SWDREG"
+  },
+  {
+   "op": "append",
+   "path": "partition_types.coll_core.internal_stations",
+   "value": {
+    "conn": "u_ctl face codec (epoch_abort/fault/epo -> rx), each of face_0 and face_1",
+    "hops": 3,
+    "leg_um_max": 320,
+    "stations": 2,
+    "cycles": 2,
+    "bits": "status only (3 ends)",
+    "sites": "derive at compose (link_sites), keep-clear of face u_tx.u_mem",
+    "note": "Fable CBC-QK-0130: 3 hops of 320 um, +2 cycles on status bits (pre-approved)"
+   }
+  }
+ ]
+}
