@@ -1,0 +1,114 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsdv_bksel_c_rfda3pt",
+  "module": "dsdv_bksel_c",
+  "plan_type": "bk_sel__t2",
+  "outline_um": [
+   388.8,
+   129.6
+  ],
+  "ref_tile": "physical/ref_tile/s81dvbk_selc2",
+  "spec": "physical/ref_tile/s81dvbk_selc2/spec.json",
+  "spec_sha256": "49abb30ddbe07a5ca8f7c1df5e9bbfdffed6a7058f79f40a17adaca6e0a92002",
+  "pins_file": "inputs/core_pins/dsdv_bksel_c_c3_1104.json",
+  "pins_sha256": "f5f32aaa6016f115eede743809e7c7f97943a77ad7659d507a73755be2a80801",
+  "pins": 5513,
+  "plan_lef": "physical/die_plan/s81/cores/views/bksel_c3_1104/dsdv_bksel_c/dsdv_bksel_c.lef",
+  "pins_canon_sha256": "0433ea3782d86a93bb96f472357eee4dd1f49d732bf442a52ce5fc092c746b03",
+  "pins_placed_canon_sha256": "0433ea3782d86a93bb96f472357eee4dd1f49d732bf442a52ce5fc092c746b03",
+  "pins_staged_file": "declared_pin_contract/dsdv_bksel_c_c3_1104.json",
+  "pins_staged_sha256": "f5f32aaa6016f115eede743809e7c7f97943a77ad7659d507a73755be2a80801",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst"
+  ],
+  "recipe_sha256": "74e9e6937f64ee02eb334219553c833e6783b79d253ae54591c6412a948d227f",
+  "period_ps": 833.0,
+  "insertion_ps": 450.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 364.5,
+  "insertion_basis": {
+   "tt": "measured core: rfd5 5_1_grt TT worst-path clock arrivals u_c 440-449, u_oll 495-499; same IO reference class as dsdv_bksel_q (vclk 250 vs measured tree; band checked in die STA, OWNER 11-03)",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "regional_taps": {
+   "nx": 4,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20
+  },
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "5aa3d06462",
+  "sdc_lint_sha256": "cd514db2a2963787a989a4aa2627aa8ebc90aee1abc4f82825c20e0cb9088125",
+  "face_guard_sha256": "febde1cc8345194787a8f7c044f4b86bb6f9fd4625f5a1d669628c57ed3745af",
+  "signoff_sha256": "19e75403b54e8a964157ea46f29b1bf02a23933149d93ff8714d03a88f81974b",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "2d372d08b57505de",
+  "reset_contract": {
+   "edges": 64,
+   "module": "dsdv_bksel_c",
+   "contract_sha256": "7e84df78c68ac03bb7642e2f5093ac57fc2419c6925531b089c6dab1ef74ddb7",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 450.0,
+   "ff": 364.5,
+   "default": true
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC None)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3/ucore/dsdv_bksel_c_rfda3pt",
+ "src_commit": "40458a43e16",
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-21T03:53:27+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3/ucore/dsdv_bksel_c_rfda3pt",
+  "base": "/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3/ucore/dsdv_bksel_c_rfda3pt/run/results/asap7/kl_dsdv_bksel_c_rfda3pt/base",
+  "signoff": "/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3/ucore/dsdv_bksel_c_rfda3pt/signoff/signoff.json",
+  "signoff_sha256": "17ca282c4edd85e89e3f2984feb260c183c97699539e20dc52967e382c0d75b6",
+  "signoff_generated": "2026-11-21T03:44:47+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3/ucore/dsdv_bksel_c_rfda3pt/run/results/asap7/kl_dsdv_bksel_c_rfda3pt/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r3/ucore/dsdv_bksel_c_rfda3pt/lec/gold.aliases.json",
+  "note": "OPUS-FIX-S81-BKSEL-R4: A3P control view rfda3pt (TKR 1), params OLL 2 SELOH 1 RNF 1 LQH 1 QRX 1 TKR 1; LEC EQUIVALENT 31697/31697",
+  "lib_basis": null,
+  "files_sha256": {
+   "dsdv_bksel_c.lef": "30d472575082edf355f9f2f1e4abde2b39295ec789457fd2c284e91afb0a3a0b",
+   "dsdv_bksel_c_ff.lib": "456bfb5c29887fd4dcd035f15541456f3f3d424f53523d3bd53d7fe1040bb8de",
+   "dsdv_bksel_c_tt.lib": "0ec011957ef68673f44cfc32ae08f168401128dcc245217958671568616fe0aa",
+   "pins.json": "7a27466e5cc5adf5ef93eb29ad79779e70cee4ba2f829a650321c437e3160694"
+  },
+  "pin_access": {
+   "ok": true,
+   "top_layer": "M6",
+   "signal_pins": 5513,
+   "without_access": [],
+   "n_without_access": 0
+  },
+  "closed": {
+   "signoff.json": "17ca282c4edd85e89e3f2984feb260c183c97699539e20dc52967e382c0d75b6"
+  }
+ }
+}
