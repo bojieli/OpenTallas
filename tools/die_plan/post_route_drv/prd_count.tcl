@@ -6,6 +6,10 @@ foreach l $::env(OT_LIBS) { read_liberty $l }
 read_db $::env(ODB)
 read_sdc $::env(SDC)
 set_propagated_clock [all_clocks]
+# A macro-pad kit stages the same in-pin continuity cleanup for final_report.
+# Standalone counting bypasses that report hook and has its own in-memory DB.
+set pad_abut_strip [file join [file dirname [info script]] pad_abut_strip.tcl]
+if {[file isfile $pad_abut_strip]} { source $pad_abut_strip }
 if {![file exists $::env(SPEF)]} { extract_parasitics -ext_model_file $::env(RCX_RULES); write_spef $::env(SPEF) }
 read_spef $::env(SPEF)
 set pl ok
