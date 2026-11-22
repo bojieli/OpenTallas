@@ -94,3 +94,4 @@ qwen_compute	slw_fe_v2__clf110fab2	FAM-QC-FEFW-R3	COORD 11-22 orphan: R4A4 geom 
 qwen_compute	slw_st_a_v2__cl9f076a5c	FAM-QC-SLWSLE-R1	COORD 11-22 02:4x: sweep FAILED-NO-RELAUNCH was an earlier place PLAN fail (01:06); V2 attempt b490ddfd3c751 is already ENQUEUED at geom on epyc10 (no relaunch needed, kit untouched); STRAP-R2/R13 rows for st_a stay with them
 qwen_kvsys	kv3_pc__cl254f2e73	FAM-KV-IOPC-R4	COORD 11-22 03:xx: PLACE-SETUP-STOP x2 = pc_v3 input-bus distance class (not a flow error); held in kit_wave owner=FAM-KV-IOPC-R4 eta=2026-11-23 12:00; pcreg rows carry it into D29
 qwen_kvsys	kv3_pc__cl5a95b461	FAM-KV-IOPC-R4	COORD 11-22 03:xx: same class as cl254f2e73; held, pcreg D29
+s81	dsdv_slice_kv512_C__t1	FAM-S81-SLICE-R6	COORD owners-sweep 04:1x: sealed J7 kit 1122035445 (unit oth-ubuntu-379079), J8 rows in plan_j8_slice_v9
