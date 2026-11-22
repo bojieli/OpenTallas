@@ -53,8 +53,21 @@ class Rules(unittest.TestCase):
         self.assertIn("17 candidate rows before launch checks", message["text"])
         self.assertIn("disk admission blocked hd_host_e", message["text"])
         self.assertIn("epyc7: in flight 108 + 9 GB > free 168 - 150", message["text"])
-        later, = P.detect(events, D(2026, 11, 21, 17, 25), state)
+        later, = P.detect(events, D(2026, 11, 21, 17, 31), state)
         self.assertNotIn("disk admission blocked", later["text"])
+
+    def test_disk_evidence_outlasts_no_launch_count(self):
+        launch = "2026-11-21 11:46:00 PST AUTOPILOT: KIT-WAVE LAUNCH qwen_compute/old (type, 1 replicas)"
+        disk = ("2026-11-21 17:40:42 PST AUTOPILOT: KIT-WAVE LAUNCH-DISK-CAP qwen_compute/cbf_q00__cl1b5a6458: "
+                "disk cap: epyc8: in flight 45 + 9 GB > free 126 - 150")
+        blocked = "2026-11-21 17:40:42 PST AUTOPILOT: KIT-WAVE NO-LAUNCH qwen_compute: 19 eligible rows"
+        events = self.ev(launch, disk, blocked)
+        state = {"eligible": {"qwen_compute": 5}}
+        message, = P.detect(events, D(2026, 11, 21, 17, 56), state)
+        self.assertIn("5 candidate rows before launch checks", message["text"])
+        self.assertIn("disk admission blocked cbf_q00__cl1b5a6458", message["text"])
+        expired, = P.detect(events, D(2026, 11, 21, 18, 5, 43), state)
+        self.assertNotIn("disk admission blocked", expired["text"])
 
     def test_self_stop_needs_same_job_within_30_min(self):
         sub = "2026-11-19 10:00:00 PST AUTOPILOT: SUBMIT aaaaaaaaaaaa qwen_compute/x /p"
