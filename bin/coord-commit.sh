@@ -47,6 +47,11 @@ exec 9>"$C/.coord.lock"
 exec 8>"$C/.coord.push.lock"
 t=$(now); flock 9; W9=$(echo "$(now)-$t" | bc)
 ORIG=("$@")
+# FLOW-FLEET-R2 S1 11-22: refuse invalid UTF-8 in the lines this commit adds to a named text file (bin/utf8_guard.py; COORD_UTF8_GUARD=off skips)
+_g="$C/bin/utf8_guard.py"
+if [ -f "$_g" ] && ! _gm=$(python3 -I "$_g" --files "$C" "$@" 2>&1); then
+  echo "FAILED $_gm" | head -6 | tee /dev/stderr; flock -u 9; exit 1
+fi
 git add -- "$@"
 # NOTHING-COMMITTED (COORD 11-19, SONNET-FIX-QC): "no changes added to commit" followed by PUSHED hid a handoff that never committed.
 # After staging, the named paths must differ from HEAD; if not, say so, exit 1 (nothing is pushed on their behalf).

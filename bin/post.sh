@@ -10,6 +10,9 @@ C=${COORD_DIR:-/home/ubuntu/coord}
 lane="$1"; text="$2"; shift 2 || { echo "usage: post.sh LANE TEXT [files]" >&2; exit 2; }
 [[ "$lane" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || { echo "bad lane name: $lane" >&2; exit 2; }
 [ -n "$text" ] || { echo "empty post" >&2; exit 2; }
+# FLOW-FLEET-R2 S1 11-22: a post that is not valid UTF-8 (one 0x94 byte made every autopilot tick skip hold recompile / tree switch / UNBLOCK / LOOP-GAPS for ~1 h) is refused here
+_g="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/utf8_guard.py"
+if [ -f "$_g" ]; then printf '%s' "$text" | python3 -I "$_g" --text || { echo "post.sh: refused, fix the text (invalid UTF-8)" >&2; exit 1; }; fi
 mkdir -p "$C/lanes/posts"
 # FLOW-FIX-0100 (FABLE-FLOW-2350 b): one resolve_lane() with case folding (tools/post_redirect.py --resolve): a lowercase twin of an existing lane file is the same lane
 if [ -f "$C/tools/post_redirect.py" ]; then
