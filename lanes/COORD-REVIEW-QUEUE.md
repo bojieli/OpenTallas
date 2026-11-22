@@ -21660,3 +21660,4 @@ FAILED [AUTOPILOT 32c6dd0d2b3a] 2026-11-21 19:48:46 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 19:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc7: rt/current 2c3fa5fd9727 != hub 6dbb162ffe89. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-21 19:52 PST epyc9 at 1290 GiB: already in gen_hosts, nothing to restore
 - 2026-11-21 19:52 PST DONE [FABLE-FIX-S81-LEAF-R8] ot-run oth-ubuntu-3328313-1795319416 on tolerant-swine: rc=0 after 146 s, ended 19:52:36, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r8/t39spec/a2/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FABLE-FIX-S81-LEAF-R8/ot
+- 2026-11-21 19:52 PST intel1 at 1252 GiB: already in gen_hosts, nothing to restore
