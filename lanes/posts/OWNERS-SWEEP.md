@@ -297,3 +297,8 @@
   S81 UNOWNED held 17: dsdv c1x t3-t10, iq, lepw (mu, mus, LP) -> FAM-S81-DSDV-R1; s81sl_kv_leaf t3/t4, svc_hi pvso_entry t2, svc_hi rs t5 unowned.
   S81 col held STALE 5 (live FAM owners, not flags); superseded rows omitted.
 - 2026-11-22 00:51 PST 01:0x sweep 221 unsigned s81/head/qc/kv rows: HELD-OK 87 (s81 79, kv 8), flagged 76 (DEAD-OWNER 33, STALE 48, UNOWNED 0, FAILED-NO-RELAUNCH 0; some both). s81: FAIL-S81-1 has 20 rows with no post in 2h (6 superseded-await-relaunch stale); S81-CORES 4 cores idle 20h+ no post; OPUS-FIX-S81-LEAF-R10 18 leaf superseded rows stale >3h. kv: KV-R owns 7 hgi/hub_Wo rows with no post (kv3_hub_Wo FAILED); KV-CORES 3 qkd cores dead. qc: 7 qfd_qc_su_lane_w KIT-PLACED PASS kits not enqueued (QC-PLAN); GEOM-UNHOLD-2200 and FABLE-FLOW-2000 no posts. File lanes/OWNERS-SWEEP.tsv
+- 2026-11-22 02:27 PST OWNERS-SWEEP 02:26: 461 unsigned rows (S81 347, QC 64, KV 49, HEAD 1); no UNOWNED, no DEAD-OWNER (all owners alive).
+  FAILED-NO-RELAUNCH 3: KV kv3_hub_Wo (OPUS-FIX-KV-HUB-R6), KV kv3_io_cor_v1 (FAM-KV-IOPC-R4), QC slw_st_a_v2__cl9f076a5c (PRECHECK-1119).
+  STALE 74: S81 68 (cancelled-superseded 62, held-by-owner 5, signed-pending 1), QC 6 (held 3, cancelled/withdrawn/signed-pending 3); owners live.
+  KV WAIT-BIND 5 (KV-WAITBIND-R1 3 + the 2 failed); KV CBC-FALLBACK 2: kv3_pc__cl254f2e73, kv3_pc__cl5a95b461.
+  4 unsigned types have no kit-wave row (S81 1, QC 2, KV 1). Table lanes/OWNERS-SWEEP.tsv.
