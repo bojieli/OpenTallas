@@ -78,3 +78,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 07:08 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-3025800-1795358172 on tolerant-swine: rc=0 after 1943 s, ended 07:08:31, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SERDES-R7/s81_phy__t1_1122061135/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SERDES-R7/phy__
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-22 07:14 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-4131774-1795360126 on tolerant-swine: rc=0 after 349 s, ended 07:14:31, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SERDES-R7/s81_phy__t1_1122061135/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SERDES-R7/phy__
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
