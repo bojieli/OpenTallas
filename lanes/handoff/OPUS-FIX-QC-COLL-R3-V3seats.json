@@ -1,0 +1,18 @@
+{
+ "schema": "opus-fix-qc-coll.v3seats.v1",
+ "lane": "OPUS-FIX-QC-COLL-R3 (successor of FABLE-FIX-QC-COLL-R2)",
+ "to": "QC-PLAN-R13",
+ "written": "2026-11-21 23:2x PST",
+ "type": "coll_core",
+ "what": "v3 seat file = SAME 28-row coll package as v2 (FABLE-FIX-QC-COLL-V3-pkg.json); only partition_types.coll_core.relay_sites changes (value_file swap). 27 other rows byte-identical to v2 (checked row by row).",
+ "why": "v2 placed proof: WNS -170.23 driven by OT_TP8S_INLOCK half-cycle lock-flop paths (ir_n/srr_n/drr_n) priced full-cycle in the solver. v3 caps half-cycle edges at 120 um (an/solve4.py cfg7.json): 5,298 of 5,411 <= 150 um (v2: 2,110 over 150 um, max 380 um).",
+ "seat_file": "epyc10:/srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkg5/rows_v3p5r.relay_sites.json",
+ "seat_file_sha256": "022d10f8870953085ab6dba1237408ca785ca4edd6e63c19fe886cc79716ceaf",
+ "replaces_v2_seat_file_sha256_prefix": "2224ddd04bdc",
+ "keys": "49,748 (same key set as v2; 12,527 seats moved)",
+ "delta": "epyc10:/srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkg5/rows_v3p5r.delta.json (28 rows; relay_sites row value_file -> the v3 seat file)",
+ "seat_check": "an/check_seats.py on pkg5/plan_v3p5r_coll3.json: 49,770 ok, 4 in halo (the same 2 old hook keys u_lpad_rec_rx_s1/s2_i.q[547] + fault station as v2), max 2 per point",
+ "bind_receipt": "epyc10 unit oth-ubuntu-3836728-1795329935 rc 0 ended 23:14 PST, ot-tree-fork private tree, pinned R8 refresh (33 coll members, SHARED_R8_UNTOUCHED): STRICT errors 0, unbound 0, 1921 crossings; LATCHECK 1921/1921 PASS; kit-rtl done. Files fable-fix-qc-coll-r2/pk4/{bind.log,latcheck.json,r8_final.json,rebind}",
+ "how_to_swap": "In your V3 compose: point the coll relay_sites row value_file at the v3 seat file (or re-run apply_delta.py with pkg5/rows_v3p5r.delta.json instead of pkg4). Nothing else changes; R8 refresh and lane cycles identical to v2.",
+ "fallback": "If the swap costs you any re-bind risk before 06:00, keep v2 in V3; v3 rides V4. Your call, both bound clean."
+}
