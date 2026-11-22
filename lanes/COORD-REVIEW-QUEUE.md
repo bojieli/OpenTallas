@@ -24357,3 +24357,4 @@ FAILED [AUTOPILOT 067148e11be2] 2026-11-22 04:44:57 PST AUTOPILOT -> KIT-WAVE-3:
   QC: 6 HELD-V3, 2 FAILED-NO-RELAUNCH (coll_core, slw_st_a_v2__cl9f076a5c), 55 clean.
   KV: 2 FAILED-NO-RELAUNCH (kv3_hub_Wo, kv3_io_cor_v1), 8 WAIT-BIND, 2 CBC-FALLBACK, 40 clean.
   HEAD: hd_lep0N running (lint advisory); hd_ctl/host_e/host_n not in table (tool counts them signed).
+- 2026-11-22 04:51 PST DONE [OPUS-FIX-QC-COLL-R3] ot-run oth-ubuntu-3448291-1795351744 on tolerant-swine: rc=0 after 142 s, ended 04:51:22, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pspec_core4/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkit_core4 --hosts epyc10 -- bash -c [ -f /srv/opentallas-scr
