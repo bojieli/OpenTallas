@@ -41,7 +41,11 @@ RTX_ROOT = os.environ.get('OT_RTX_ROOT', '/home/ubuntu/signed-export-1114')
 AGI = ['ssh', '-i', os.path.join(HOME, '.ssh/agidock_ot'), '-o', 'IdentitiesOnly=yes', '-o', 'ControlPath=none',
        '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20', 'ubuntu@155.103.253.53']
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
-HOSTS = ('intel1', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10')
+# FLOW-FLEET-R1 11-22 (FABLE-FLOW-0000 F9): intel2 is a build host too (capped); its own spool was never read (45 files, oldest 10:40)
+HOSTS = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10')
+SPOOL_RETRY_AGE_S = float(os.environ.get('OT_AUTO_EXPORT_SPOOL_RETRY_H', 2)) * 3600   # F9: older -> retried once, then set aside
+SPOOL_ASIDE_AFTER_S = 600                                                               # the retry gets at least one more drain
+NOT_RECORD = re.compile(r"/(flow-canary|test_[^/]*|[^/]*pyt-[^/]*|[^/]*pytest[^/]*|fixtures?)/")   # canary / test runs: never a sign-off of record
 DIES = ('s81_head', 's81', 'qwen_compute', 'qwen_kvsys', 'hbm')
 WINDOW_H = float(os.environ.get('OT_AUTO_EXPORT_WINDOW_H', 72))
 SCAN_H = float(os.environ.get('OT_AUTO_EXPORT_SCAN_H', 6))
@@ -188,7 +192,10 @@ if mode == "spool":
         try: s = json.load(open(os.path.join(SPOOL, f)))
         except Exception: continue
         u = unit(s["signoff"], {k: s.get(k) for k in ("die", "element", "kind")}) if os.path.isfile(s.get("signoff", "")) else dict(signoff=s.get("signoff"), err="signoff.json gone")
-        u["spool"] = f; print(json.dumps(u), flush=True)
+        u["spool"] = f
+        try: u["spool_age_s"] = round(time.time() - os.path.getmtime(os.path.join(SPOOL, f)), 1)
+        except OSError: pass
+        print(json.dumps(u), flush=True)
 elif mode == "scan":
     cut = time.time() - arg["hours"] * 3600
     import subprocess
@@ -218,6 +225,13 @@ elif mode == "hash":
 elif mode == "evidence":
     u = unit(arg["signoff"])
     print(json.dumps(dict(files=[x for x in u.get("files", []) if x[1] in ("land_slots.json", "face_guard.json", "1_synth.v") or "/" in x[1]], err=u.get("err"))))
+elif mode == "asidespool":
+    fd = os.path.join(SPOOL, "failed"); os.makedirs(fd, exist_ok=True)
+    for f, why in arg["items"]:
+        if re.fullmatch(r"[0-9a-f]{16}\.json", f) and os.path.isfile(os.path.join(SPOOL, f)):
+            os.replace(os.path.join(SPOOL, f), os.path.join(fd, f))
+            open(os.path.join(fd, f + ".reason"), "w").write(json.dumps(dict(reason=why, at=time.strftime("%%Y-%%m-%%dT%%H:%%M:%%S%%z"))) + "\n")
+    print("{}")
 elif mode == "rmspool":
     for f in arg["files"]:
         if re.fullmatch(r"[0-9a-f]{16}\.json", f) and os.path.isfile(os.path.join(SPOOL, f)):
@@ -426,6 +440,74 @@ def collect(hosts, scan, spool=True):
         return [u for part in ex.map(one, hosts) for u in part]
 
 
+def spool_triage(L, cands, now=None):
+    """F9 (FLOW-FLEET-R1 11-22): -> (keep, aside {host: [(file, reason)]}, drop {host: [file]}).  Per spool unit:
+      canary / test run                     -> set aside now (never a sign-off of record)
+      ledger state done / skip              -> spool file dropped (already exported / ODB already in INDEX)
+      older than SPOOL_RETRY_AGE_S, first   -> retried once (an export that failed 3 times gets one more try), stays
+      older, retried >= SPOOL_ASIDE_AFTER_S ago and still here -> set aside with its reason (signoff gone, last export error,
+                                               rtx-pro not verified, ...) in the host's spool/failed/<file> + .reason"""
+    now = time.time() if now is None else now
+    sr = L.setdefault('spool_retry', {})
+    keep, aside, drop = [], {}, {}
+    for u in cands:
+        if u.get('via') != 'spool' or not u.get('spool'):
+            keep.append(u)
+            continue
+        h, f, so = u['host'], u['spool'], u.get('signoff') or ''
+        k = '%s:%s' % (h, f)
+        if NOT_RECORD.search(so):
+            aside.setdefault(h, []).append((f, 'canary / test run, not a sign-off of record: %s' % so))
+            continue
+        okey = '%s:%s' % (h, u['odb']) if u.get('odb') else None
+        prev = L['units'].get(okey) or {} if okey else {}
+        if prev.get('state') in ('done', 'skip'):
+            drop.setdefault(h, []).append(f)
+            continue
+        if u.get('spool_age_s', 0) < SPOOL_RETRY_AGE_S:
+            keep.append(u)
+            continue
+        e = sr.get(k)
+        if e is None:
+            sr[k] = dict(at=now, signoff=so)
+            if prev.get('tries', 0) >= 3:
+                prev['tries'] = 2                  # one more export try
+            keep.append(u)
+            continue
+        if now - e['at'] < SPOOL_ASIDE_AFTER_S:
+            keep.append(u)
+            continue
+        why = (u.get('err') or prev.get('err') or prev.get('rtx_err')
+               or ('exported, rtx-pro has not verified it' if prev.get('state') in ('agi', 'meta') else '')
+               or 'not exported after one retry')
+        aside.setdefault(h, []).append((f, '%s (spool age %.1f h): %s' % (why, u.get('spool_age_s', 0) / 3600, so)))
+        sr.pop(k, None)
+    return keep, aside, drop
+
+
+def apply_spool_triage(L, cands):
+    """spool_triage + the host probes; -> the units to export"""
+    keep, aside, drop = spool_triage(L, cands)
+    for h, items in aside.items():
+        try:
+            probe(h, 'asidespool', dict(items=items))
+            for f, why in items:
+                say('spool %s:%s SET ASIDE: %s' % (h, f, why[:300]))
+        except Exception as e:
+            say('asidespool %s: %s' % (h, e))
+    for h, files in drop.items():
+        try:
+            probe(h, 'rmspool', dict(files=files))
+            say('spool %s: %d file(s) dropped (already exported / in INDEX)' % (h, len(files)))
+        except Exception as e:
+            say('rmspool %s: %s' % (h, e))
+    sp = [u for u in cands if u.get('via') == 'spool']
+    if sp:
+        say('SPOOL %d file(s), oldest %.1f h; %d set aside, %d dropped' % (
+            len(sp), max(u.get('spool_age_s', 0) for u in sp) / 3600, sum(map(len, aside.values())), sum(map(len, drop.values()))))
+    return keep
+
+
 def finish(L, have):
     """4. units rtx-pro has verified: append the AGIdock INDEX row, drop the host spool file, post AUTO-EXPORT.
     Runs at the start of every drain and after every export, so a long backfill still indexes as it goes."""
@@ -448,6 +530,12 @@ def finish(L, have):
             elif u and u.get('state') in ('agi', 'meta') and not d.get('ok'):
                 u['rtx_err'] = d.get('err')
         os.replace(rp, rp + '.%d' % int(t0))
+        for old in os.listdir(STATE):          # F9: rotated rtx_done files are already merged into the ledger above; keep 3 days
+            if old.startswith('rtx_done.jsonl.') and old.rsplit('.', 1)[-1].isdigit() and t0 - int(old.rsplit('.', 1)[-1]) > 3 * 86400:
+                try:
+                    os.unlink(os.path.join(STATE, old))
+                except OSError:
+                    pass
     if done:
         for h in {u['host'] for u in done if u.get('spool')}:
             try:
@@ -585,6 +673,8 @@ def drain(a):
     def process(cands, what, repoll=False):
         if stop[0]:
             return
+        if what.startswith('spool'):
+            cands = apply_spool_triage(L, cands)
         todo = pick(cands)
         if todo or what == 'spool':
             say('%d candidate DBs (%d from spool), %s, scan=%s' % (len(todo), sum(u['via'] == 'spool' for u in todo), what, scan))
