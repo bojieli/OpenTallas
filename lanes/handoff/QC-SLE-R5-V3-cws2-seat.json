@@ -1,0 +1,3 @@
+{"event":"QC V3 intake: sle_ctl cws2 seat","base":"s29q103S4Q9N46R6V2:7f9f8260349f",
+ "row":{"op":"set","path":"partition_types.sle_ctl__cla4f6f12f.ft_slots[name=cws2].regs_um[0]","value":[1158.813,1338.2],"was":[1050.4066,1158.557]},
+ "proof":{"kit":"epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/private/QC-SLE-R5/sle_ctl__cla4f6f12f_1121123057/gen/sle_ctl__cla4f6f12f","stage":"GRT done, TT repair gate rc 6","result":"no u_cland_cws2_i endpoint in the worst set (k_a2 558, k_b2 671 endpoints at -75..-94)","caveat":"private, V1 tree, src_manifest off; config.mk lacks congestion_iterations 10 and LATCH-SWAP hooks; remaining worst: u_bin_x_fw_p1_i, u_u_tap/rst_n, R8 pad flops","cycles":0}}
