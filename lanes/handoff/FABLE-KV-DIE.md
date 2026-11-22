@@ -22,6 +22,21 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 08:50 PST (COORD 08:4x: three tasks; this block is current, the 08:40 block below still holds for rows / gates)
+- KITS (sealed, --goal route, from tree_a = gate_b3 plan 01eb79c44cd6; gen host epyc8 only because the tree is there; nothing pinned):
+  kv3_hg_v1p2  unit fkd-kit-hgv1p2-1122  spec ~/coord/autopilot/private_specs/FABLE-KV-DIE/qwen_kvsys_kv3_hg_v1p2_1122083950  work .../private/FABLE-KV-DIE/kv3_hg_v1p2_1122083937
+  kv3_hg       unit fkd-kit-hg-1122      spec .../qwen_kvsys_kv3_hg_1122084006                                             work .../private/FABLE-KV-DIE/kv3_hg_1122083959
+  kv3_io_cor_v1 unit fkd-kit-iocor-1122 (goal finish; memory note 11-22 says finish dies on resume: if it stops after route, re-run run-item --goal route)
+  logs intel2 ~/tmp/fablekvdie/kit_{hgv1p2,hg,iocor}.log. tree_a has NO R6h reset rows: an hg setup miss on the reset spine there is the known
+  -560 class, not R5. Read GRT overflow vs FLOW-CLKGRT-R2 566k / 871k.
+- R6 = ROWS_FABLE-KV-DIE-R6.py 034899c832bd (in the D28 intake): kv3_hg_v3 +4 added taps clk_t60..63 from tap_split.py on the composed plan
+  97a61b154060: max load 5,347 -> 2,970, over cap 2 -> 0. plan_gate_pre on the composed plan with / without R6: 0 findings both. Order: after R5.
+- RE-ARMED GATE: intel2 user unit fkd-rearm-gate-d (script ~/tmp/fablekvdie/rearm_d.sh, log rearm_d.log) polls the newest kv-plan-r6/d28/rh*_bind
+  every 5 min; on BIND_ERRORS 0 it runs epyc8 fable-kv-die/gate_d.sh once (fresh fork tree_d of the work tree + PRE + G0 + strict bind + LATCHECK
+  + BPC -> gate_d1/gate.sum) and posts one GATE-D line. Stop it with systemctl --user stop fkd-rearm-gate-d if D28 is sealed without it.
+- RECLAIM (after the io_cor kit ends, via ot-delete, lane dir is guard-protected until then): epyc8 fable-kv-die/tree_b (51 GB);
+  later tree_d (51 GB) and, when all three kits ended, tree_a (51 GB).
+
 ## State 08:40 PST (supersedes earlier state blocks)
 - ALL FOUR ROWS ARE IN THE D28 COMPOSE: KV-PLAN-R6 dry10 (16 rows) has R1, R1b, R5, R5c APPLIED (intake kv-plan-r6/d28/rows/: R1 9860691ee0da,
   R1b 74bdc3ee5a86, R5 6281f8f48b0a, R5c 6e86608e1250, helper kst_xstreet_v3_fkd.py 095576e60380). Its rehearsal rh8 (plan 97a61b154060) is the
