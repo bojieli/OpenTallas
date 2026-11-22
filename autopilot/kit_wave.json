@@ -633,6 +633,7 @@
    "hosts": [
     "epyc7",
     "epyc10",
+    "epyc9",
     "intel2"
    ],
    "gen_hosts": [
@@ -643,7 +644,8 @@
    ],
    "place_prefer": [
     "epyc7",
-    "epyc10"
+    "epyc10",
+    "epyc9"
    ],
    "item_env": {
     "kv3_phy": {
@@ -7235,6 +7237,7 @@
    "hosts": [
     "intel1",
     "epyc8",
+    "epyc9",
     "epyc10",
     "epyc2",
     "intel2",
@@ -7482,6 +7485,7 @@
    "place_prefer": [
     "intel1",
     "epyc8",
+    "epyc9",
     "epyc10",
     "epyc7",
     "intel2",
@@ -38642,6 +38646,7 @@
    "hosts": [
     "intel1",
     "epyc8",
+    "epyc9",
     "epyc10",
     "epyc2",
     "intel2"
@@ -38650,6 +38655,7 @@
    "place_prefer": [
     "intel1",
     "epyc8",
+    "epyc9",
     "epyc10",
     "intel2",
     "epyc2"
@@ -41379,6 +41385,7 @@
    "hosts": [
     "intel1",
     "epyc8",
+    "epyc9",
     "epyc10",
     "epyc2",
     "intel2"
@@ -41387,6 +41394,7 @@
    "place_prefer": [
     "intel1",
     "epyc8",
+    "epyc9",
     "epyc10",
     "intel2",
     "epyc2"
