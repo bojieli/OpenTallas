@@ -19,3 +19,7 @@ V4 (11-23 event) MUST carry: (1) the 66 internal-station hops > 405 um in 19 typ
 - (2) st_a btab read path -> u_u_r3/bt_q_p (22 ends, worst -195.3): btab rows 2b/2c ARE in V3 (V3p3 onward); re-read on V3 kits, add rows in V4 if still failing.
 - (3) Row 2a (R8 keep/seat, st_a scoped): IN V3 (budgets.r_r8_core_seat [slw_st_a, sle_st_a] + asbuilt land_pad_tail_split.r8_keep true via ASB_MERGE). main 289287760f / 3fba1b4bc0.
 ## Live (21:47): epyc10 v3p6/chain_v3p6n2.log (FALLBACK pre fb6bc61e8db0) + chain_v3p7b.log (PRIMARY pre 1c1589949555 = + coll v2 + cb family row A); both carry tap fix clk_t101->clk_t114 on cbf_q00__cl1b5a6458. Cleanup debt (ot-delete): v3p6/{v3p6,v3p6n,v3p7}_bound partial dirs.
+## COORD 23:25 V4 lever: compose V4 on tools >= main 2fd0ab57c1 (remap reset-anchor re-record fix). V4 intake adds:
+slw_hc0 x_ctl_o station (HCST-R3), slw_st_a pd1 stage, coll v3 seats (OPUS-FIX-QC-COLL-R3 replaces FABLE-FIX-QC-COLL-R2), sle_ctl macro move (8.64 um gap hotspot), su_c cap2 rows.
+Flag: slw_su_c__cl92142dac still -504 ps setup stop (FAM-QC-SLWSLE-R1).
+## 23:00 state: V3p5r-based binds hit EMIT sle_sc_v1__cl115da35f (stale collector_tree after tap_split). Targeted retap (retap/rt1.sh, ot-run) on V3p6n2 + V3p7b -> relaunch as v3p6n3 / v3p7c via chain_v3p6.sh TAG retap/out_*.json.
