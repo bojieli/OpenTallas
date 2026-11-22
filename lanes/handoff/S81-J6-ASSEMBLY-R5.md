@@ -1,0 +1,18 @@
+# S81-J6-ASSEMBLY-R5 handoff (started 2026-11-21 18:4x PST; successor of S81-J6-ASSEMBLY-R4). Read R4's handoff first.
+Work: intel2 /srv/opentallas-scratch2/claude/s81-j6-r5 (j7_apply.sh, pinsmoke.sh), stage intel2 s81-j6-r2-hub/j7_preferred_stage (marker_r5/, addpin_r5.py, addhold_r5.py, addhold2_r5.py). Lane clone epyc10 s81-j6-r4/repo.
+
+## J7 apply (11-22 04:15 PST)
+- Event record PUSHED main 18a2688b741f (physical/die_plan/s81/events/d8j7_1122/EVENT.json; replaces draft f176ced869d).
+- Candidate lanes/handoff/S81_D8J7_source_candidate_1122.json (+ S81-D8J7-G0-BASELINE-1122.json): event 18a2688b741, manifest 12af64d4f18d, plan a6771d121e95, tools_sha 404887a342b0.
+  - TOOLSKEW FIX: config.item_inputs[395 items].gen_tools_pin {event, src_manifest_hash, bind_out}, so wave kits gen/kit_rtl with the tree tools (byte-identical to rt 404887a342b0, the tools the bind was stamped with), and flow refresh still comes from rt/current. Without it every J7 kit dies at bind_toolskew rc 3: the wave runs the scheduler rt, not dies.s81.tools_sha, and the rt from dbf5266757ab (15:25) on differs in reset_replicate.py.
+    Remove only with a strict rebind of J7 on a newer rt.
+  - hold_records_add: j7-col-held-until-view-1122 (216 col; release proof:J7COL_UCF_VIEW, proof:J7COL_PLACED_READ, proof:J7COL_XO_KEEP_AB, tree_has_sha:ae660e1299; owner FAM-S81-COL-H10-R4).
+    j7-serdes-no-start-1122 (11 serdes; release proof:S81_SERDES_START_ROWS_BOUND; owner FAM-S81-SERDES-R7). Proof terms = any lane's RESULT post "<name> ... PASS".
+  - Dry apply on a scratch copy of the coord passed (pins 395, both records added, tools 404887a342b0).
+- SCHEDULED: intel2 user timer s81-j7-apply-r5 (04:14:00) runs j7_apply.sh, writing s81-j6-r5/j7_apply.out: event_pending set, publish_apply apply --pilot-item dsdv_slice_lepe_mu_LP__t2, post-verify, hold restore if <100. A STOP clears event_pending and posts.
+  To cancel: systemctl --user stop s81-j7-apply-r5.timer (on intel2).
+- RISK: every non-hub gen host is DRAINING, and KW-FIX-45 refuses gen on intel2, so the J7 pilot gen waits for FLEET to undrain one host.
+- Fallback candJ7enL6 (unit 3465054) only on a package defect.
+
+## J8 intake (start after the apply)
+LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/handoff/FAM-S81-SERDES-R6-j8-serdes-start-rows.json, not yet bound), leaf RG9 re-grid (unit 1263880) and THEN a vp_sr_ho re-run + LF_CS_DEPTH vs a fresh ELAB, tap-sink rows, ft-slot re-site, col xo D3/D4, strip/body (FLOW-STRIPBODY-R2), FABLE-PD-S81-2000 START/reset reach as GEN (reach_rules.py fix; t46).
