@@ -16,3 +16,8 @@ Work: intel2 /srv/opentallas-scratch2/claude/s81-j6-r5 (j7_apply.sh, pinsmoke.sh
 
 ## J8 intake (start after the apply)
 LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/handoff/FAM-S81-SERDES-R6-j8-serdes-start-rows.json, not yet bound), leaf RG9 re-grid (unit 1263880) and THEN a vp_sr_ho re-run + LF_CS_DEPTH vs a fresh ELAB, tap-sink rows, ft-slot re-site, col xo D3/D4, strip/body (FLOW-STRIPBODY-R2), FABLE-PD-S81-2000 START/reset reach as GEN (reach_rules.py fix; t46).
+
+## 19:4x update
+- J7 pinned-mode GEN smoke PASS on epyc9 (lepe_mu_LP t2 + svc_lo rs t1, preflight DRY-PASS; receipt s81-j6-r5/pinsmoke_epyc9/smoke_receipt.json).
+- s81 gen_hosts now epyc2,epyc7,epyc10,epyc9 (FLEET). j7_apply.sh syncs candidate hosts to live gen_hosts (cand_live.json) so keep_gen_hosts holds.
+- Waiter: local poll on s81-j6-r5/j7_apply.out (APPLY_DONE/APPLY_STOP).
