@@ -44,3 +44,4 @@
 - 2026-11-21 16:27 PST t14 syndrome reset copy DPL PASS and exact 177 inverted sinks at ≤356.454um direct; reused branch 964.980um remains. t12 original formal geometry FAIL with zero GRT overflow but 1.005 horizontal channel.
 - 2026-11-21 16:37 PST J6 t16 exact a3 E2 placement shows independent 3.17mm reset and 3.02mm START data reaches; depth-13 local reset and dual-origin primitive proof pass only with aligned west TSTART delivery. Private t12/t14 reset reroots pass DPL and exact sink graph with cumulative buffered reach 392.904/390.258um. Unchanged routes held.
 - 2026-11-21 16:52 PST t14 private relocated existing rate-matcher valid flop, real DPL clean and captures over405 reduced from 3417 original to 881 after combined fixes. Critical independent PV leg 937.818um remains.
+- 2026-11-21 16:55 PST Corrected front3 CTS finished and exact layout reviewed. Native FF hold +19.50 with vclk period warning, independent same-period TT/FF measurement next. Route held.
