@@ -26,6 +26,15 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 02:2x (after weekly limit resume)
+- r18c kits e9/w9 FAILED kit_rtl: missing physical/common_flow/stn_pin_keepout.tcl (R7 F tree also overlaid 6 common_flow files).
+- Tree s81_head_r18d_split_s0 (77e2dbd4209b) = r18c + L/src physical/common_flow (tmp/mk_r18d.sh); replicated epyc9+epyc7.
+  F vs r17b differ ONLY in tools/, physical/common_flow, 4 rtl, die_plan lane dirs -> r18d carries all of it.
+- LIVE kits r18d on epyc9: E runitem_e10.log pid 879385 spec s81_head_hd_lep0N_1122021804; W runitem_w10.log pid 885611 spec
+  s81_head_hd_lep0N_w_1122021812 (launcher tmp/launch_r18d.sh).
+- E7 cancelled (F tree, CTS post-hook setup -1007). W7 epyc10 unit oth-ubuntu-1721981-1795335594 kept to GRT as face probe only.
+- rt current 59d4d33e92c1 >= floor 6d2e187f0d.
+
 ## UPDATE 11-22 01:3x
 - r18b tree (9a9a2c0193b3) kits e8/w8 FAILED kit_rtl: tree tools (main 385f61b) only know native_stage_groups v1; split plan is v2.
   R7's F tree = r17a + whole tools/ from L/src. Fix: tree s81_head_r18c_split_s0 = r18b + L/src tools overlay (408 files,
