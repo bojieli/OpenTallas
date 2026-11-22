@@ -26002,3 +26002,4 @@ FAILED [AUTOPILOT c56425f2b5b2] 2026-11-22 11:50:09 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 11:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 11:52 PST: 223 running jobs, PROGRESSING 209, SLOW 12, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 20.9 h job 20.9 h: no new meaningful log line for 19.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS epyc7 slw_su_l1__clcc9d0155 5_2_route stage 20.1 h job 23.5 h: drt_violations best 48926 last 48926 rows 16 window-gain 0.8%; stagnant 6.5 h; last event 0.4 h ago, log write 0.5 h ago (1243 lines)
+- 2026-11-22 11:52 PST DONE [WAVE-OPS-R1] ot-run oth-ubuntu-2259806-1795376308 on outgoing-giraffe: rc=0 after 1607 s, ended 19:52:34, log none, cmd: --hosts epyc8,epyc7,epyc9,epyc10,intel1 --dir /srv/opentallas-scratch2/claude/mq-gate --mem 12 --threads 2 --disk 60 -- ot-gate-remote claud
