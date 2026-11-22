@@ -35,6 +35,7 @@ import argparse, collections, fcntl, hashlib, json, os, re, shlex, socket, subpr
 HOME = os.path.expanduser('~')
 STATE = os.environ.get('OT_AUTO_EXPORT_STATE', os.path.join(HOME, '.local/state/ot-auto-export'))
 SPOOL_REL = '.local/state/ot-auto-export/spool'
+SPOOL_POLL_S = float(os.environ.get('OT_AUTO_EXPORT_SPOOL_POLL_S', 300))   # FLOW-FLEET-R1: spools re-read this often while a scan drain runs
 AGI_ROOT = '/archive/opentallas-signed-1114'
 RTX_ROOT = os.environ.get('OT_RTX_ROOT', '/home/ubuntu/signed-export-1114')
 AGI = ['ssh', '-i', os.path.join(HOME, '.ssh/agidock_ot'), '-o', 'IdentitiesOnly=yes', '-o', 'ControlPath=none',
@@ -110,7 +111,12 @@ def unit(so, hint=None):
     if not (rec.get("profile") == "minimal" and rec.get("verdict") == "SIGNED"):
         o["err"] = "not R-MINIMAL SIGNED"; return o
     if rec.get("host") and rec.get("host") != HN:
-        o["err"] = "record of host %%s (copy)" %% rec.get("host"); return o
+        # FLOW-FLEET-R1 11-22: the autopilot RELOCATES a signed kit to <host>:.../autopilot/closed/<die>/<item>__<sha>/ (record written on the build host it
+        # ran on, often the hub); the original is then gone, and skipping every copy left those sign-offs unexported (pending_archive for 14-19 h).
+        # A closed relocation is authoritative: export it; duplicates are still dropped by the ODB sha256 (INDEX / ledger).
+        if "/autopilot/closed/" not in so:
+            o["err"] = "record of host %%s (copy)" %% rec.get("host"); return o
+        o["copy_of"] = rec.get("host")
     inp = rec.get("inputs") or {}
     odb = inp.get("odb") or (inp.get("base") and os.path.join(inp["base"], "6_final.odb"))
     if not odb or not os.path.isfile(odb):          # autopilot relocated copy: <dest>/kit/<signoff dir>/ next to <dest>/base/
@@ -401,14 +407,14 @@ def post(text):
     subprocess.run(['bash', os.path.join(HOME, 'coord/bin/post.sh'), LANE, text], timeout=300)
 
 
-def collect(hosts, scan):
+def collect(hosts, scan, spool=True):
     """-> candidate units (dicts) from spools (+ scans), all hosts in parallel."""
     import concurrent.futures as cf
 
     def one(h):
         out = []
         try:
-            for u in probe(h, 'spool', {}):
+            for u in (probe(h, 'spool', {}) if spool else ()):
                 out.append(dict(u, host=h, via='spool'))
             if scan:
                 for u in probe(h, 'scan', dict(hours=WINDOW_H, roots=ROOTS), timeout=3 * 3600):
@@ -552,37 +558,67 @@ def drain(a):
     if a.evidence:
         evidence_backfill(L, a.budget_s)
         return 0
-    # 2. collect new candidates
+    # 2. collect new candidates.  FLOW-FLEET-R1 11-22: spools first, the scan in the background with the spools polled again every SPOOL_POLL_S
+    # while it runs: a scan (probe timeout 3 h per host; manual `drain --scan` runs held the lock 19:15-22:0x on 11-21) never delays a fresh sign-off
     scan = a.scan or (time.time() - L.get('last_scan', 0) > SCAN_H * 3600)
-    cands = collect(hosts, scan)
+    import threading
+    scan_box, scan_done = [], threading.Event()
+
+    def _scan():
+        try:
+            scan_box.append(collect(hosts, True, False))
+        finally:
+            scan_done.set()
+    if scan:      # a daemon thread: a drain that reached its budget exits without waiting for the scan
+        threading.Thread(target=_scan, daemon=True).start()
     t1 = time.time()
-    if scan and not a.list_only and not a.hosts:
-        L['last_scan'] = t0
-    seen, todo = set(), []
-    for u in cands:
-        if 'err' in u:
-            if u.get('via') == 'spool':
-                say('spool %s:%s skipped: %s' % (u['host'], u.get('signoff'), u['err']))
-            continue
-        key = '%s:%s' % (u['host'], u['odb'])
-        prev = L['units'].get(key, {})
-        if key in seen or prev.get('state') in ('agi', 'meta', 'done', 'skip') or prev.get('tries', 0) >= 3:
-            continue
-        seen.add(key)
-        todo.append(u)
-    # newest record first per DB is irrelevant: the DB is the unit
-    say('%d candidate DBs (%d from spool), scan=%s' % (len(todo), sum(u['via'] == 'spool' for u in todo), scan))
-    listed = []
-    for u in todo:
-        if time.time() - t1 > a.budget_s:
-            say('budget reached; rest next tick')
-            break
+    seen, listed = set(), []
+    stop = [False]
+    last_poll = [time.time()]
+
+    def poll_spool():
+        if time.time() - last_poll[0] >= SPOOL_POLL_S:
+            last_poll[0] = time.time()
+            finish(L, have)           # units rtx-pro verified meanwhile get their INDEX row now, not after the scan
+            process(collect(hosts, False), 'spool re-poll')
+
+    def process(cands, what, repoll=False):
+        if stop[0]:
+            return
+        todo = pick(cands)
+        if todo or what == 'spool':
+            say('%d candidate DBs (%d from spool), %s, scan=%s' % (len(todo), sum(u['via'] == 'spool' for u in todo), what, scan))
+        for u in todo:
+            if time.time() - t1 > a.budget_s:
+                say('budget reached; rest next tick')
+                stop[0] = True
+                return
+            export_one(u)
+            if repoll:
+                poll_spool()
+
+    def pick(cands):
+        todo = []
+        for u in cands:
+            if 'err' in u:
+                if u.get('via') == 'spool':
+                    say('spool %s:%s skipped: %s' % (u['host'], u.get('signoff'), u['err']))
+                continue
+            key = '%s:%s' % (u['host'], u['odb'])
+            prev = L['units'].get(key, {})
+            if key in seen or prev.get('state') in ('agi', 'meta', 'done', 'skip') or prev.get('tries', 0) >= 3:
+                continue
+            seen.add(key)
+            todo.append(u)
+        return todo
+
+    def export_one(u):
         try:
             hs = probe(u['host'], 'hash', dict(paths=[os.path.join(d, f) for d, f in u['files']] +
                                                 [os.path.join(d, f) for d, f in u.get('display') or ()]), timeout=3600)[0]
         except Exception as e:
             say('hash %s: %s' % (u['odb'], e))
-            continue
+            return
         shas = {f: hs[os.path.join(d, f)][0] for d, f in u['files']}
         u['bytes'] = sum(hs[os.path.join(d, f)][1] or 0 for d, f in u['files'])
         u['sizes'] = {f: hs[os.path.join(d, f)][1] for d, f in u['files']}
@@ -590,29 +626,39 @@ def drain(a):
         u['display'] = [(d, f) for d, f in u.get('display') or () if f in u['display_shas']]
         if None in shas.values():
             say('hash failed %s' % u['odb'])
-            continue
+            return
         osha = shas['6_final.odb']
         key = '%s:%s' % (u['host'], u['odb'])
         if osha in have or any(x.get('odb_sha') == osha and x.get('state') in ('agi', 'meta', 'done') for x in L['units'].values()):
             L['units'][key] = dict(state='skip', odb_sha=osha, why='ODB sha already in INDEX / ledger', signoff=u['signoff'])
-            continue
+            return
         die, el, kind, how = infer(u, rows)
         u.update(die=die, element=el, kind=kind, how=how, odb_sha=osha, shas=shas, unit='%s__ax_%s' % (el, osha[:10]),
                  src='%s %s:%s (%s, die by %s) R-MINIMAL SIGNED TT %s FF %s' % (SRC_TAG, u['host'], u['signoff'], u['via'], how, u.get('tt'), u.get('ff')))
         listed.append(u)
         if a.list_only:
-            continue
+            return
         say('export %s/%s from %s:%s' % (die, u['unit'], u['host'], u['signoff']))
         err = export_agi_meta(u)
         if err:
             say('  FAIL', err)
             L['units'][key] = dict(u, state='err', err=err, at=time.time(), tries=L['units'].get(key, {}).get('tries', 0) + 1)
             save_ledger(L)
-            continue
+            return
         have.add(osha)
         L['units'][key] = dict(u, state='meta', agi_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'))
         save_ledger(L)
         finish(L, have)
+    process(collect(hosts, False), 'spool')
+    if scan:
+        while not stop[0] and not scan_done.wait(SPOOL_POLL_S):
+            last_poll[0] = 0
+            poll_spool()
+        scanned = scan_box[0] if scan_done.is_set() and scan_box and not stop[0] else None
+        if scanned is not None:
+            if not a.list_only and not a.hosts:
+                L['last_scan'] = t0
+            process(scanned, 'scan', repoll=True)
     if a.list_only:
         for u in listed:
             print('\t'.join([u['die'], u['element'], u['kind'], u['host'], u['signoff'], u['odb_sha'][:12], u['how']]))

@@ -125,7 +125,11 @@ def apply(cache, gate=None):
     tot = {}
     for ent in (cache.get('plans') or {}).values():
         die = ent.get('die'); D = ent.get('designs') or {}; why = {}; basis = {}
-        names_of = dict(signed_types=lambda k: [k], signed_cores=lambda k: [k], signed_designs=lambda k: [x for x in [(D.get(k) or {}).get('module'), k] if x])
+        # FLOW-FLEET-R1 11-22: AUTO-EXPORT names a type's archive unit by its plan key (die hint) OR by its top module (die inferred from a lane / wave
+        # path: s81p_slice_station__t36, qfd_qc_slw_sc for slw_sc_v2), so a type is looked up under both; it sat in pending_archive for hours otherwise
+        PT = ent.get('plan_types') or {}
+        names_of = dict(signed_types=lambda k: [x for x in dict.fromkeys([k, PT.get(k) if isinstance(PT.get(k), str) else None]) if x], signed_cores=lambda k: [k],
+                        signed_designs=lambda k: [x for x in [(D.get(k) or {}).get('module'), k] if x])
         cnt = {}; novp = []
         for sk, pk in KEYS:
             s = ent.get(sk)

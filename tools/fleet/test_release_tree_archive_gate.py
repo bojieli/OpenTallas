@@ -84,3 +84,16 @@ def test_metadata_only_drops_routed_db_files(monkeypatch):
     assert [f[0] for f in si.metadata_only(fs)] == ["a/signoff.json"]
     monkeypatch.setenv("OT_INGEST_FULL_DB", "1")
     assert len(si.metadata_only(fs)) == 4
+
+
+def test_type_archived_under_its_top_module_counts(tmp_path):
+    """FLOW-FLEET-R1 11-22: AUTO-EXPORT stored slice_station__t36 as s81p_slice_station__t36 and slw_sc_v2 as qfd_qc_slw_sc (die inferred from the lane
+    path): the gate looked only for the plan key and kept both pending for hours"""
+    tsv = 'die\telement\tkind\trecord\tdb\trtx_db\tsize\tsha256\tpack\tmeta\tstatus\tsrc\n' \
+          's81\ts81p_slice_station__t36\tt\tr\tdb\trdb\t1\tsha\tpack\tmeta\tRTX-FULL-AGI-META\tsrc\n'
+    L = listing(tmp_path, [('s81', 'qfd_qc_slw_sc', FULL)], tsv=tsv)
+    c = dict(errors=[], plans={'s81/p.json': dict(die='s81', designs={}, plan_types={'slice_station__t36': 's81p_slice_station__t36', 'slw_sc_v2': 'qfd_qc_slw_sc',
+                                                                                     't_other': 'm_other'},
+                                                     signed_types={'slice_station__t36': ['r'], 'slw_sc_v2': ['r'], 't_other': ['r']})})
+    e = G.apply(c, G.Gate(listing=L, store=tmp_path / 'nostore'))['plans']['s81/p.json']
+    assert sorted(e['signed_types']) == ['slice_station__t36', 'slw_sc_v2'] and sorted(e['pending_archive_types']) == ['t_other']
