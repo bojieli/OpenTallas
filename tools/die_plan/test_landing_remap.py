@@ -266,3 +266,18 @@ def test_anchor_mode_does_not_restore_a_stale_anchor():
     ck = new["partition_types"]["T"]["clock"]
     assert ck["landing_reader_start"]["branches"]["b"]["stages"][0]["raw_reset"] == "rst_rl_59"
     assert set(ck[RA.KEY]["relays"]) == {"rst_rl_59"}
+
+
+def test_identity_pass_keeps_authoritative_anchored_source():
+    old = _plan("rst_rl_60", "clk")
+    new = copy.deepcopy(old)
+    path = "clock/landing_reader_start/branches/b/stages/0/raw_reset"
+
+    def identity(raw, tn):
+        if raw is old:
+            return {"rst_rl_60": ("old_tree_with_reused_name",)}
+        return {"rst_rl_60": ("anchored_site",), "rst_rl_59": ("old_tree_with_reused_name",)}
+
+    assert LR.identity_remap(old, new, ["T"], identity, preserve_paths={"T": {path}}) == []
+    changed = LR.identity_remap(old, new, ["T"], identity)
+    assert changed[0]["new"] == "rst_rl_59"

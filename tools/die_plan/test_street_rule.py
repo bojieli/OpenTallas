@@ -379,6 +379,55 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     assert br["base"] == "qa2" and br["stages"][0]["original"] == "s1n"
 
 
+def test_reset_resel_uses_anchor_when_old_tree_reused_relay_names(monkeypatch, tmp_path):
+    import copy
+    import types
+    import reset_anchor
+    import reset_tree
+    import schema
+
+    def relay(q, depth, x):
+        return dict(name=q, q=q, depth=depth, xy=[x, 0.0])
+
+    trees = {
+        "old": {"relays": [relay("rst_rl_17", 2, 10.0)]},
+        "new": {"relays": [
+            relay("rst_rl_17", 2, 12.0),
+            relay("rst_rl_21", 7, 11.0),
+            relay("rst_rl_31", 7, 14.0),
+            relay("rst_rl_39", 7, 105.0),
+        ]},
+    }
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: types.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda plan, tn: trees[plan.tag])
+    monkeypatch.setattr(reset_anchor, "ported", lambda tree: {"rst_rl_21"})
+    base = {"clock": {
+        "landing_local_resets": [
+            {"raw": "rst_rl_17", "xy_um": [12.0, 0.0]},
+            {"raw": "rst_rl_19", "xy_um": [101.0, 0.0]},
+        ],
+        reset_anchor.KEY: {
+            "tol_um": 30,
+            "relays": {
+                "rst_rl_17": {"depth": 7, "xy": [10.0, 0.0]},
+                "rst_rl_19": {"depth": 7, "xy": [100.0, 0.0]},
+            },
+        },
+    }}
+    old = {"tag": "old", "partition_types": {"x": base}}
+    out = copy.deepcopy(base)
+    new = {"tag": "new", "partition_types": {"x": out}}
+    rec = SR.reset_resel(old, new, ["x"], tmp_path / "plan.json")["x"]
+    assert "error" not in rec
+    assert [r["raw"] for r in out["clock"]["landing_local_resets"]] == ["rst_rl_31", "rst_rl_39"]
+    assert rec["anchored_paths"] == ["clock/landing_local_resets/0/raw", "clock/landing_local_resets/1/raw"]
+    assert [r["raw"] for r in base["clock"]["landing_local_resets"]] == ["rst_rl_17", "rst_rl_19"]
+    trees["new"]["relays"].pop()
+    new["partition_types"]["x"] = copy.deepcopy(base)
+    rec = SR.reset_resel(old, new, ["x"], tmp_path / "plan.json")["x"]
+    assert "anchored rst_rl_19 has no plain depth 7 relay within 30 um" in rec["error"]
+
+
 def test_reset_resel_keeps_role_hd_st_n3_transit_u2_i(monkeypatch, tmp_path):
     """COORD 11-12 (HEAD-94 hd_st_n3_transit.u2_i): a reader-START stage raw_reset names a REGISTERED raw relay; the
     nearest same-depth relay of the re-solved tree is the gated consumer tap rst_n_t1 (reset AND run), which fails
