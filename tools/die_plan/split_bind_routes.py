@@ -125,6 +125,8 @@ def prefill(b, reference, allL, put, recv, holders, out_of, heapq):
         if L["id"] not in seen and group is not None and inverse.get(L["dst"])==group:
             cut_by_group[group].append(L)
     for ls in cut_by_group.values():ls.sort(key=lambda L:L["id"])
+    _pl=(getattr(b,"plan",None) or {}).get("lanes",[])
+    _lane_note={x["id"]:x.get("note","") for x in (_pl if isinstance(_pl,list) else []) if isinstance(x,dict) and "id" in x}
     pending=planned[:];done=0;nbits=0;cut_puts=0;passes=0
     while pending:
         passes+=1;later=[];reasons={};progress=False
@@ -143,7 +145,22 @@ def prefill(b, reference, allL, put, recv, holders, out_of, heapq):
             vout=defaultdict(list)
             for x in virtual.values():vout[x["src"]].append(x)
             actions=[];blocked=None
+            # OPUS-FIX-KV-PV-R7 11-22: a reference lane whose plan has its OWN station cut leg (lane note "cut leg of
+            # bus:<oname> piece") stages its keys through that leg even when another leg already brought the same source
+            # keys into the piece (kv3_pv_v12: o_vport_E_N_vo and o_vport_E_N_vo_d2 both forward i_vport_E_N_vo_d1; the
+            # second leg o_vport_E_N_vo_d1_p_2 stayed empty -> native stations "expected one outgoing lane").
+            _o=L.get("oname","")
+            _own=[x for x in virtual.values() if _o and x["dst"]==L["src"] and x["src"] in group and
+                  re.search(r"cut leg of bus:"+re.escape(_o)+r" piece ",_lane_note.get(x["id"],"") or "")]
             for key in keys:
+                if _own and key not in _own[0]["carried"] and (available[key]-{L["src"]}):
+                    path=b._route(available[key]-{L["src"]},L["src"],[key],vout,heapq,only=lambda x,i=_own[0]["id"]:x["id"]==i)
+                    if path:
+                        for x in path:
+                            if key not in x["carried"]:
+                                if x["left"]<=0:raise SplitRouteError("own cut leg exceeded capacity")
+                                x["carried"][key]=-1;x["left"]-=1;actions.append((lanes[x["id"]],key))
+                        continue
                 if L["src"] in available[key]:continue
                 # OPUS-FIX-KV-PV-R5 11-21: the cut leg named for this lane's own bus (<oname>_p, <oname>_p_N: the split's
                 # station cut of that bus) is tried first; the lane-id tie-break alone put kv3_pv_v3 o_vport_W_N_vqN /

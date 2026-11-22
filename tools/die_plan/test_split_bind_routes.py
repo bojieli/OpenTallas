@@ -209,3 +209,24 @@ def test_own_cut_leg_of_an_unprefixed_bus_is_o_prefixed():
     b.prefill(b.reference())
     assert list(b.byid["cut_A"]["carried"])==[b.key("a",i)for i in range(2)]
     assert not wide["carried"] and wide["left"]==8
+
+
+def test_second_bus_of_the_same_source_keeps_its_own_cut_leg():
+    """OPUS-FIX-KV-PV-R7 11-22 (kv3_pv_v12 D28 split bind 12: 'native stations pv_N_7e.o_vport_E_N_vo_d1_p_2: expected
+    one outgoing lane'): o_vport_E_N_vo and o_vport_E_N_vo_d2 both forward the same source keys, each with its own station
+    cut leg (plan lane note 'cut leg of bus:<oname> piece').  The first leg brought the keys into the piece, so the second
+    bus took them from there and its own leg stayed empty.  Each bus now stages its keys through its own leg."""
+    b=Toy()
+    leg2=lane("cut_A2","A0","A1",2);b.lanes.append(leg2);b.byid[leg2["id"]]=leg2
+    b.out["A0"]=sorted(b.out["A0"]+[leg2],key=lambda x:x["id"])
+    for x in b.lanes:x["oname"]="o_other"
+    b.byid["L0"]["oname"]="o_bus";b.byid["cut_A"]["oname"]="o_bus_p"
+    b.byid["L1"]["oname"]="o_bus2";leg2["oname"]="o_bus2_p_2"
+    b.plan["lanes"]=[dict(id="cut_A",note="cut leg of bus:o_bus piece 1"),dict(id="cut_A2",note="cut leg of bus:o_bus2 piece 1")]
+    rows=[dict(id="L0",src="A",dst="B",drivers=[["a","q",i]for i in range(2)]),
+          dict(id="L1",src="A",dst="B",drivers=[["a","q",i]for i in range(2)])]
+    ref=b.reference();ref.update(lanes=rows,payload_sha256=payload_sha256(rows))
+    b.prefill(ref)
+    keys=[b.key("a",i)for i in range(2)]
+    assert sorted(b.byid["cut_A"]["carried"])==keys
+    assert sorted(leg2["carried"])==keys
