@@ -25,3 +25,7 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
   AUTO-EXPORT starved 19:15-22:2x by CLEAN-AGGR-R2 manual `drain --scan` runs (epyc10 scan hung 59 min; killed exact pids
   2750745, 2754377 intel2, 2275000 epyc10) -> sle_hc2 pvcf529cc9/pv0d63d22b unexported; fix: spools first + re-poll during scan;
   closed relocation copies (pv41c959f3, sle_hc0 cl38badc56) now exported. slice_station__t52 is PENDING-LEC (COUNT-REVOKED), not a bug.
+
+## COORD item 11-22 symlinked-plan class fix: DONE main c7cf2178a9
+- tools/die_plan/tree_write_guard.py wired into r8_refresh.py, land_r8_derive.py derive --out, ot_build in-place choice; ot-tree-fork PLAN links (refuse / --materialize, verify PLAN-LINK); kit_wave private_tree_plan_link_refusal.
+- Audit lanes/handoff/TREE-LINK-AUDIT-1122.tsv (37 lane-dir trees linking out; 3 live FABLE-PIPELINE-R1 ot-build launch trees). Post 6878853ae3.
