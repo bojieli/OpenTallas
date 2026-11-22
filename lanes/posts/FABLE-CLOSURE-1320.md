@@ -1,0 +1,1 @@
+- 2026-11-21 18:19 PST STAND-DOWN [FABLE-CLOSURE-1320 -> none] stood down; successor none. 2-hourly review done; report lanes/FABLE-CLOSURE-STRATEGY.md ce33abeeee3; no jobs; COORD reads it, next round is a new FABLE-CLOSURE lane (row in lanes/LANE-STATUS.tsv; posts to FABLE-CLOSURE-1320 now redirect)
