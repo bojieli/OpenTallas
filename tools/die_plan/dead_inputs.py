@@ -21,6 +21,14 @@ def dead_bits(module, port):
     return {i for i, b in enumerate(p['bits']) if isinstance(b, int) and b not in live}
 
 
+def _repo_rel(rel):
+    """LAUNCH-LINK-1122 (OPUS-FIX-S81-COLROM-R6): a repository-relative path is checked lexically (not absolute, no '..').
+    A resolve()-based containment check refuses every proof in an rt launch tree, whose top-level entries (results/, rtl/)
+    are symlinks into the source tree (ot-build bind: 'dead-input proof must be repository-relative')."""
+    p = Path(str(rel))
+    return bool(str(rel)) and not p.is_absolute() and '..' not in p.parts
+
+
 def module_hash(path, module):
     import re
     text = Path(path).read_text()
@@ -61,7 +69,7 @@ def _reproof_matches(proof, repo, rel, manifest):
     """True when the repository-relative re-proof `rel` is a PASS made under exactly manifest['defines'] with the
     same dependency modules and the same declarations as `proof` (re-proof parameters a subset of the proof's)."""
     path = (repo / rel).resolve()
-    if Path(rel).is_absolute() or not path.is_relative_to(repo) or not path.is_file():
+    if not _repo_rel(rel) or not path.is_file():
         raise ValueError('dead-input re-proof must be an existing repository-relative file: ' + str(rel))
     rp = json.loads(path.read_text())
     if rp.get('schema') != 'opentallas.dead_inputs.v1' or rp.get('verdict') != 'PASS':
@@ -89,7 +97,7 @@ class ProvenDead:
                     raise ValueError('plan dead-input proof is not selected by manifest: ' + tn)
         for rel in manifest.get('dead_input_proofs', []):
             path = (repo / rel).resolve()
-            if not path.is_relative_to(repo) or Path(rel).is_absolute():
+            if not _repo_rel(rel):
                 raise ValueError('dead-input proof must be repository-relative')
             proof = json.loads(path.read_text())
             if proof.get('schema') != 'opentallas.dead_inputs.v1' or proof.get('verdict') != 'PASS':
@@ -104,11 +112,11 @@ class ProvenDead:
                     raise ValueError('stale dead-input preprocessor defines')
             for dep in proof.get('dependency_modules', []):
                 source = (repo / dep['source']).resolve()
-                if not source.is_relative_to(repo) or module_hash(source, dep['module']) != dep['module_sha256']:
+                if not _repo_rel(dep['source']) or module_hash(source, dep['module']) != dep['module_sha256']:
                     raise ValueError('stale dead-input dependency ' + dep['module'])
             for row in proof['declarations']:
                 source = (repo / row['source']).resolve()
-                if not source.is_relative_to(repo) or Path(row['source']).is_absolute():
+                if not _repo_rel(row['source']):
                     raise ValueError('dead-input source must be repository-relative')
                 # A still-present historical file cannot qualify a different selected
                 # implementation with the same module name. Resolve the preferred
