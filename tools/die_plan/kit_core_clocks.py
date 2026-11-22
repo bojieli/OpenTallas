@@ -310,12 +310,17 @@ def wire(bound, module, rows, leaf_id=None, core_masters=None, clock_net="clk"):
 def swap_ahub_boundary(bound, hard_cores):
     """Opt-in exact native AHUB -> its already signed ck7/35-bit hard boundary.
 
+    qkd_ahub_ck7_r27: the view bakes AP_OFS / FR_OFS in, so the bound table must be exactly its build table.
+    qkd_ahub_ck7_strap (KV-AHUB-RH1 11-21): the view has strap_ofs_ap[31:0] / strap_ofs_fr[7:0] ID-strap inputs; the
+    bound table is read and tied to them here (constants at the parent, OWNER 10-25 option B), any 8-bit table.
+
     The parent's plan already projects am[35:2],am[0]; bit 1 is not exposed.
     All seven ck pins belong to the same core domain. No state or cycle changes.
     """
     receipt = []
     for core in hard_cores or []:
-        if core.get("native_boundary_adapter") != "qkd_ahub_ck7_r27":
+        adapter = core.get("native_boundary_adapter")
+        if adapter not in AHUB_ADAPTERS:
             continue
         if core.get("module") != "qkd_ahub" or core.get("inst") != "ahub":
             raise ValueError("AHUB boundary adapter requires qkd_ahub ahub")
@@ -326,9 +331,18 @@ def swap_ahub_boundary(bound, hard_cores):
         head = heads[0]
         params = dict(re.findall(r"\.(\w+)\(([^()]*)\)", head.group(2)))
         params = {k: re.sub(r"[\s_]", "", v).lower() for k, v in params.items()}
-        expected = {"AP_OFS": "64'hffe0ffdfffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
-        if params != expected:
-            raise ValueError(f"AHUB boundary: native parameter signature changed: {params}")
+        ties = []
+        if adapter == "qkd_ahub_ck7_r27":
+            expected = {"AP_OFS": "64'hffe0ffdfffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
+            if params != expected:
+                raise ValueError(f"AHUB boundary: native parameter signature changed: {params}")
+        else:
+            # KV-AHUB-RH1 11-21 (COORD hub_C AP_OFS ruling): the strap view carries the die offsets as ID-strap pins tied
+            # here, at the hub_C parent, to the bound table; the table may move with the plan, the hard structure may not.
+            if set(params) != {"AP_OFS", "FR_OFS", "Z_IN_STRIDE"} or params["Z_IN_STRIDE"] != "4":
+                raise ValueError(f"AHUB boundary: strap view needs AP_OFS, FR_OFS and Z_IN_STRIDE 4: {params}")
+            sap, sfr = ahub_strap_values(params["AP_OFS"], params["FR_OFS"])
+            ties = [("strap_ofs_ap", f"32'h{sap:08x}"), ("strap_ofs_fr", f"8'h{sfr:02x}")]
         end = bound.find("\n" + head.group(1) + ");", head.end())
         if end < 0:
             raise ValueError("AHUB boundary: unclosed native instance")
@@ -346,8 +360,36 @@ def swap_ahub_boundary(bound, hard_cores):
             net = values[0].strip()
             body = re.sub(r"\." + pin + r"\([^()]*\)", "." + pin + "({" + net + "[35:2], " + net + "[0]})", body, count=1)
             projections[pin] = dict(native=net, kept_bits="35:2,0", unexposed_bit=1)
+        if ties:
+            if re.search(r"\.strap_ofs_", body):
+                raise ValueError("AHUB boundary: native instance already connects strap_ofs_*")
+            body = body.rstrip() + ",\n" + ",\n".join(f"{head.group(1)}    .{p}({v})" for p, v in ties)
         bound = bound[:head.start()] + head.group(1) + "qkd_ahub u_ahub (" + body + bound[end:]
         receipt.append(dict(inst="ahub", module="qkd_ahub", native_leaf="u_ahub", native_module="qkd_ahub_static_dw",
-                            native_params=params, clock_net=clock, clock_copies=7, am_projection=projections,
-                            cycles_changed=0, tieoffs=[]))
+                            adapter=adapter, native_params=params, clock_net=clock, clock_copies=7,
+                            am_projection=projections, cycles_changed=0,
+                            tieoffs=[dict(pin=p, value=v, kind="id_strap") for p, v in ties]))
     return bound, receipt
+
+
+AHUB_ADAPTERS = ("qkd_ahub_ck7_r27", "qkd_ahub_ck7_strap")
+
+
+def ahub_strap_values(ap, fr):
+    """bound AP_OFS (64'h literal, 4 x 16-bit two's complement) / FR_OFS (integer text) -> (strap_ofs_ap, strap_ofs_fr)
+    ints: strap_ofs_ap[8 s +: 8] = AP_OFS_s, strap_ofs_fr = FR_OFS.  Every value must fit 8-bit two's complement (the
+    strap view sign-extends), else the view cannot carry the table: fail closed."""
+    m = re.fullmatch(r"64'h([0-9a-f]{1,16})", ap)
+    if not m or not re.fullmatch(r"-?\d+", fr):
+        raise ValueError(f"AHUB boundary: strap view needs literal AP_OFS 64'h.. / integer FR_OFS, got {ap} / {fr}")
+    a, f = int(m.group(1), 16), int(fr)
+    sap = 0
+    for s in range(4):
+        v = (a >> (16 * s)) & 0xFFFF
+        v = v - 0x10000 if v & 0x8000 else v
+        if not -128 <= v <= 127:
+            raise ValueError(f"AHUB boundary: AP_OFS stack {s} = {v} does not fit the 8-bit strap")
+        sap |= (v & 0xFF) << (8 * s)
+    if not -128 <= f <= 127:
+        raise ValueError(f"AHUB boundary: FR_OFS {f} does not fit the 8-bit strap")
+    return sap, f & 0xFF

@@ -2127,8 +2127,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
 # DIE-HBM-25 (HBM-047/048): split piece of a reuse content bound whole -> where the piece reset comes from in the master
-# CODEX KV 11-06: opt-in exact native AHUB/ck7 projected hard boundary.
-SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_boundary_adapter"] = {"enum": ["qkd_ahub_ck7_r27"]}
+# CODEX KV 11-06: opt-in exact native AHUB/ck7 projected hard boundary (KV-AHUB-RH1 11-21: + qkd_ahub_ck7_strap, AP_OFS/FR_OFS tied to strap pins).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["native_boundary_adapter"] = {"enum": ["qkd_ahub_ck7_r27", "qkd_ahub_ck7_strap"]}
 # Explicit independent physical FT ports: exact qualified proof, never a pin-check exemption.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["physical_ft"] = {
  "type": "object", "additionalProperties": False,
