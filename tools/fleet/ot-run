@@ -1142,6 +1142,37 @@ def plan_cmd_ok(words):
     return os.environ.get("OT_RUN_PLAN_OK") == "1" or bool(PLAN_CMD_RE.search(" ".join(words)))
 
 
+def plan_job_rt_floor(kind, words, exempt="", real=None, rt_root=None, cfg=None):
+    """FLOW-FLEET-R2 T1 (FABLE-FLOW-0350): `ot-run --plan-job bind` obeys the same runtime floor as private-spec / ot-build (kit_wave.json min_rt, $OT_MIN_RT,
+    rt/MIN_RT; tools/autopilot/rt_floor.py): a bind whose rt/<sha12> is below it is refused unless the job passes --rt-floor-exempt WHY (logged).  The rt is the
+    /claude/rt/<sha12>/ the command names, else the one this client runs from; none known -> no refusal.  -> (verdict, message); BELOW is the only refusal"""
+    if kind != "bind":
+        return "SKIP", ""
+    m = None
+    for tok in words or ():
+        m = RT_RE.match(os.path.realpath(x) if "/rt/current" in (x := str(tok)) else x)
+        if not m:
+            m = re.search(r"(.*/claude/rt)/([0-9a-f]{12})/", str(tok))
+        if m:
+            break
+    if not m:
+        m = RT_RE.match(real or os.path.realpath(__file__))
+    if not m:
+        return "UNKNOWN", ""
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "autopilot"))
+        import rt_floor as _RTF
+    except ImportError:
+        return "UNKNOWN", ""
+    if cfg is None:
+        try:
+            cfg = json.load(open(os.path.join(os.environ.get("AP_DIR") or os.path.expanduser("~/coord/autopilot"), "kit_wave.json")))
+        except (OSError, ValueError):
+            cfg = None
+    r = _RTF.check(m.group(2), cfg, exempt=exempt, rt_root=rt_root or m.group(1), what="ot-run --plan-job bind")
+    return r["verdict"], r.get("why", "")
+
+
 def plan_job():
     """PLANBYPASS_1114 (OWNER 11-14 19:40): ot-run --priority plan"""
     return "OT_HEAVY_PRIO=plan" in os.environ.get("OT_RUN_PRIO_ENV", "")
@@ -2208,6 +2239,7 @@ def main():
     _pin_only = False
     mem, d, disk, hosts, pick, max_wait, threads = None, None, None, HOSTS, False, None, THREADS
     job = None
+    rt_exempt = ""
     spill = not os.environ.get("OT_RUN_NO_SPILL")
     if "--hosts" in a[:a.index("--") if "--" in a else len(a)]:
         spill = False                      # an explicit pin is honoured as before
@@ -2253,12 +2285,19 @@ def main():
             if kind not in PLAN_JOB_KINDS: sys.exit("ot-run: --plan-job takes only " + ", ".join(PLAN_JOB_KINDS) + " (die bind, LATCHECK, G0)")
             os.environ["OT_RUN_PLAN_JOB"] = kind
             os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=plan "
+        elif o == "--rt-floor-exempt":      # FLOW-FLEET-R2 T1: keep an rt below min_rt for this plan bind (sealed / pinned tree); logged
+            rt_exempt = a.pop(0) if a else ""
         else: sys.exit(__doc__)
     if job and not os.environ.get("OT_RUN_PLAN_JOB") and spec_plan_job(job):     # the job spec names the plan kind: it implies --priority plan
         os.environ["OT_RUN_PLAN_JOB"] = spec_plan_job(job)
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=plan "
     if os.environ.get("OT_RUN_PRIO_ENV", "").startswith("OT_HEAVY_PRIO=plan") and not plan_cmd_ok(a[1:]):
         sys.exit("ot-run: --priority plan is for die-plan bind / LATCHECK / G0 scripts only (--plan-job bind|latcheck|g0, or the script names bind*, run_gate*, chain*, latcheck*, g0; OT_RUN_PLAN_OK=1 for a plan marker); type builds do not bypass memory admission")
+    _fv, _fw = plan_job_rt_floor(os.environ.get("OT_RUN_PLAN_JOB", ""), a[1:], rt_exempt)
+    if _fv == "BELOW":
+        sys.exit("ot-run: " + _fw)
+    if _fv in ("EXEMPT", "UNKNOWN") and _fw:
+        print(f"ot-run: RT-FLOOR {_fv}: {_fw}", file=sys.stderr)
     cmd = ro_source_binds(a[1:])
     if job:
         cmd = job_wrap(cmd, job)

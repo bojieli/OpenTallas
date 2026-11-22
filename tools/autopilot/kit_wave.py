@@ -67,6 +67,7 @@ import os
 import random
 import re
 import shlex
+import stat
 import subprocess
 import sys
 import time
@@ -9686,6 +9687,64 @@ def write_env_provenance(K, b64, remote, run, T, src=None):
 
 
 RUN_ITEM_GOAL = None                                     # FLOW-PRIVSPEC-R1: `run-item --goal` (private specs only)
+
+
+def runitem_unit_argv(spec_path, sp, argv, env=None, cgroup=None, stdout_path=None, cwd=None, suffix=""):
+    """FLOW-FLEET-R2 P1 (FABLE-FLOW-0350): a PRIVATE run-item driver started from a plain ssh shell (nohup / setsid) died with the shell's
+    session or the ssh drop and posted nothing (53 such drivers on the hub, 6 supervised).  -> the `systemd-run --user --wait` argv that
+    re-executes this very command line as unit runitem-<item>, or None when it must run in place: not a private spec, already under systemd
+    (INVOCATION_ID, or a .service cgroup) or ot-run, or KW_RUNITEM_NO_UNIT=1 (opt-out).  Same args; stdout/stderr go to the caller's own
+    log file when it is a regular file, else to <spec dir>/run-item.log (a pipe would die with the ssh session)."""
+    env = os.environ if env is None else env
+    if not (sp or {}).get("private") or env.get("KW_RUNITEM_NO_UNIT") == "1" or env.get("KW_RUNITEM_UNIT"):
+        return None
+    if env.get("INVOCATION_ID") or env.get("OT_RUN_UNIT") or env.get("OT_RUN_STAGE") or env.get("PYTEST_CURRENT_TEST"):
+        return None
+    if cgroup is None:
+        try:
+            cgroup = Path("/proc/self/cgroup").read_text()
+        except OSError:
+            cgroup = ""
+    if re.search(r"\.service(/|$|\s)", cgroup):
+        return None
+    base = re.sub(r"[^A-Za-z0-9_.-]", "_", str((sp or {}).get("item") or Path(spec_path).parent.name))[:60]
+    unit = f"runitem-{base}{suffix}"
+    log = stdout_path or str(Path(spec_path).resolve().parent / "run-item.log")
+    cmd = ["systemd-run", "--user", "--quiet", "--collect", "--wait", f"--unit={unit}", "--property=TimeoutStopSec=120",
+           f"--property=StandardOutput=append:{log}", f"--property=StandardError=append:{log}",
+           f"--working-directory={cwd or os.getcwd()}", "--setenv=KW_RUNITEM_UNIT=" + unit]
+    for k in sorted(env):
+        if k in ("PATH", "HOME", "USER", "LANG", "LC_ALL", "AP_DIR", "TZ") or k.startswith(("OT_", "KW_", "AP_")):
+            if k != "KW_RUNITEM_UNIT":
+                cmd.append(f"--setenv={k}={env[k]}")
+    return {"unit": unit, "log": log, "argv": cmd + list(argv)}
+
+
+def runitem_reexec(spec_path, argv):
+    """exec the unit wrapper of runitem_unit_argv (prints the unit name); returns only when the item runs in place"""
+    try:
+        sp = json.loads(Path(spec_path).read_bytes())
+    except (OSError, ValueError):
+        return
+    out = None
+    try:
+        st = os.fstat(1)
+        if stat.S_ISREG(st.st_mode):
+            out = os.readlink("/proc/self/fd/1")
+            if out.endswith(" (deleted)"):
+                out = None
+    except OSError:
+        pass
+    r = runitem_unit_argv(spec_path, sp, argv, stdout_path=out)
+    if not r:
+        return
+    try:
+        if subprocess.run(["systemctl", "--user", "is-active", "--quiet", r["unit"]]).returncode == 0:   # same item already driven: a distinct unit, never a clash
+            r = runitem_unit_argv(spec_path, sp, argv, stdout_path=out, suffix=f"-{int(time.time()) % 100000}")
+    except OSError:
+        return
+    print(f"run-item: re-executing under systemd unit {r['unit']} (log {r['log']}; opt out: KW_RUNITEM_NO_UNIT=1)", flush=True)
+    os.execvp(r["argv"][0], r["argv"])
 
 
 def run_item(spec_path):
@@ -19967,6 +20026,7 @@ def main(argv=None):
         try:
             global RUN_ITEM_GOAL
             RUN_ITEM_GOAL = a.goal
+            runitem_reexec(a.spec, ["python3", str(Path(__file__).resolve()), "run-item", a.spec] + (["--goal", a.goal] if a.goal else []))
             return run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
             out = Path(a.spec).parent / "result.json"

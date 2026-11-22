@@ -315,15 +315,33 @@ def stops_off_for(die):
     return _FG.stops_off_die(cfg, die)
 
 
+_COORD_BAD_UTF8 = set()
+
+
+def _coord_text(raw, rel):
+    """FLOW-FLEET-R2 S1 (FABLE-FLOW-0350): one stray byte (0x94 in lanes/posts/COORD.md) made every coord reader raise, and each caller skipped its whole step
+    (hold recompile, tree switch, UNBLOCK, LOOP-GAPS) for ~1 h.  Decode with errors='replace' and log ONE warning per file per process."""
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError as e:
+        if rel not in _COORD_BAD_UTF8:
+            _COORD_BAD_UTF8.add(rel)
+            log(f"WARN coord file {rel} is not valid UTF-8 (byte {raw[e.start]:#04x} at offset {e.start}); read with replacement characters - fix the data")
+        return raw.decode("utf-8", errors="replace")
+
+
 def read_coord(rel):
-    """a coord/state file (lanes/GEOM-REVIEW.md ...) as of the last fetch; '' if missing (read-only)"""
+    """a coord/state file (lanes/GEOM-REVIEW.md ...) as of the last fetch; '' if missing (read-only).  Invalid UTF-8 never raises (_coord_text)"""
     if COORD_FILES:
         try:
-            return (Path(COORD_FILES) / rel).read_text(errors="replace")
+            return _coord_text((Path(COORD_FILES) / rel).read_bytes(), rel)
         except OSError:
             return ""
-    rc, out, _ = sh(["git", "-C", str(COORD), "show", f"origin/coord/state:{rel}"], timeout=60)
-    return out if rc == 0 else ""
+    try:
+        r = subprocess.run(["git", "-C", str(COORD), "show", f"origin/coord/state:{rel}"], capture_output=True, timeout=60)
+    except subprocess.TimeoutExpired:
+        return ""
+    return _coord_text(r.stdout, rel) if r.returncode == 0 else ""
 
 
 def geom_tag(ref):
