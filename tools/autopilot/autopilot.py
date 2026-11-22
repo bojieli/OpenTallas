@@ -838,11 +838,16 @@ runlog = rd(runlog_path, 400000)
 place_pass = False
 current = []
 if os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
-    if a.get("retained_return_to") and goal == "route" and result.get("rc") == 21:
-        stops = re.findall(r"(?m)^OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE:[^\n]*", runlog)
+    if a.get("retained_return_to") and goal == "route":
         last_line = runlog.rstrip("\r\n").rsplit("\n", 1)[-1]
-        if stops and re.fullmatch(r"OT_GRT_STOP noconverge: stage rc \d+ -> 21 \(no re-run\)", last_line):
-            out["retained_grt_noconverge"] = stops[-1][:300]
+        if result.get("rc") == 21:
+            stops = re.findall(r"(?m)^OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE:[^\n]*", runlog)
+            if stops and re.fullmatch(r"OT_GRT_STOP noconverge: stage rc \d+ -> 21 \(no re-run\)", last_line):
+                out["retained_grt_noconverge"] = stops[-1][:300]
+        elif result.get("rc") == 6 and re.fullmatch(
+                r"FAIL_POSTPLACE PLACE-SETUP-STOP wns -?\d+(?:\.\d+)? ps < -?\d+(?:\.\d+)? ps"
+                r" \(TT, post-place; routing cannot close it\)[^\n]*", last_line):
+            out["retained_place_setup_stop"] = last_line[:400]
     current = re.findall(r"(?m)^(?:FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*|OT_POSTPLACE_SETUP_STOP (?:pass|no measurement)\b[^\n]*)", runlog)
     if current:
         place_pass = current[-1].startswith("OT_POSTPLACE_SETUP_STOP ")
@@ -3788,6 +3793,8 @@ def retained_publish_negative(j, client, probe=None):
     so = c.get("signoff")
     if not so and c.get("retained_grt_noconverge"):
         return {"host": host, "grt_noconverge": c["retained_grt_noconverge"]}
+    if not so and c.get("retained_place_setup_stop"):
+        return {"host": host, "place_setup_stop": c["retained_place_setup_stop"]}
     if not so or so.get("verdict") != "NOT SIGNED":
         return None
     gates = SP.judge(so, j.get("die"))["gates"]
@@ -3825,6 +3832,9 @@ def finish(st, j, c, client):
                 if "grt_noconverge" in retained:
                     j["retained_grt_noconverge"] = retained["grt_noconverge"]
                     cls, kind, reasons = classify({"grt_noconverge": retained["grt_noconverge"]}, {})
+                elif "place_setup_stop" in retained:
+                    j["retained_place_setup_stop"] = retained["place_setup_stop"]
+                    cls, kind, reasons = classify({"place_setup_stop": retained["place_setup_stop"]}, {})
                 else:
                     j["retained_signoff"] = retained
                     cls, kind, reasons = classify({"signoff": retained["signoff"]}, {})
