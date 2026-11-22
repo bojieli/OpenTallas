@@ -8,3 +8,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 548 any / 438 current (was 544/437 at 00:05). QC 61/127, S81 46/394, HEAD 25/26, KV 6/56, HBM 4/84. Deferred 22, retired 88. LECGATE: 6 un-revoked, 18 revoked. Waiter: scratchpad wait.sh as run_in_background, then ssh nohup count job with </dev/null.
 ## State 02:30 PST 11-22
 548 any / 438 current, flat vs 01:15. RESUMED 02:18 after limit (no jobs of mine live). GEOM source this hour: flow-canary runs/*/gen/*/run/layout_review/place/layout.png (fresh, found with find -mmin -240 on intel2). LECGATE: 6 un-revoked, no new commits.
+## State 03:20 PST 11-22
+549 any / 439 current (+1/+1 vs 02:18). QC 62/127, S81 46/394, HEAD 25/26, KV 6/56, HBM 4/84. Deferred 21, retired 89. Private kits: no renders yet for col_h9_r0 or hub_Ei (ls private dirs on intel2 found no png); use FAM-S81-* private dirs under kw43-wave-1109n/.../a9ed808a98d/private. Round fired 03:05 (COORD asked 03:1x).
