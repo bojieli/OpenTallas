@@ -180,6 +180,7 @@ def main():
     ap.add_argument("--input-lockup", action="store_true", help="OT_TP8S_INLOCK: falling-edge staging of every input pin register (0 cycles)")
     ap.add_argument("--ring-wd-reg", action="store_true", help="OT_TP8S_RRWD: R ring write-data register (0 cycles)")
     ap.add_argument("--xr-pipe", action="store_true", help="OT_TP8S_XRPIPE: stage after the cross fold (+1 cycle, reduce only)")
+    ap.add_argument("--xe-pre", action="store_true", help="OT_TP8S_XEPRE (needs --xr-pipe): per-slice (e & v) register before the OR (0 cycles)")
     a = ap.parse_args()
     a.out = a.out.resolve()
     a.out.mkdir(parents=True, exist_ok=True)
@@ -199,6 +200,10 @@ def main():
     if a.xr_pipe:
         defines += ("OT_TP8S_XRPIPE",)
         REDUCE_EXTRA = 1
+    if a.xe_pre:
+        if not a.xr_pipe:
+            ap.error("--xe-pre needs --xr-pipe")
+        defines += ("OT_TP8S_XEPRE",)
     exe = build(a.out, a.latu, a.lats, a.xu, a.xs, a.mutant_define, a.qfd, defines)
     bad, records = [], []
     for i, (name, nmsg, words, mk, kind, extra) in enumerate(cases):

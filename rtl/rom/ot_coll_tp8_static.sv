@@ -412,10 +412,20 @@ module ot_coll_tp8_static #(
     // ---------------- E: cross-fold result, R ring write, UCIe R send ----------------
     reg [FW-1:0] xr_q; reg xe_q;
 `ifdef OT_TP8S_XRPIPE
-    reg [FW-1:0] xs_q; reg xe0_q;
+    reg [FW-1:0] xs_q;
     always @(posedge clk) begin xs_q <= xs_sum; xr_q <= xs_q; end
+`ifdef OT_TP8S_XEPRE
+    // OPUS-FIX-QC-COLL-R3 11-22: register each fold slice's (e & v) at its own slice BEFORE the NS-way OR (was: OR of the
+    // NS slice outputs across the partition into one flop xe0_q, -196.86 ps at CTS on the v3 proof).  Same 2 stages to
+    // xe_q, same reset, same cycle: xe_q(t) = |(xs_e & xs_v)(t-2) exactly as before.
+    reg [NS-1:0] xev_q;
+    always @(posedge clk or negedge rs_r) if (!rs_r) begin xev_q <= {NS{1'b0}}; xe_q <= 1'b0; end
+        else begin xev_q <= xs_e & xs_v; xe_q <= |xev_q; end
+`else
+    reg xe0_q;
     always @(posedge clk or negedge rs_r) if (!rs_r) begin xe0_q <= 1'b0; xe_q <= 1'b0; end
         else begin xe0_q <= |(xs_e & xs_v); xe_q <= xe0_q; end
+`endif
 `else
     always @(posedge clk) xr_q <= xs_sum;
     always @(posedge clk or negedge rs_r) if (!rs_r) xe_q <= 1'b0; else xe_q <= |(xs_e & xs_v);
