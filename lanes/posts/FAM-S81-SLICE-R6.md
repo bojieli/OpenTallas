@@ -135,3 +135,7 @@
   - Both go to FIX-SYNC-S81 CLAND-ORIGIN-REACH, with type owners FAM-S81-COL-H10-R4 and the serdes FAM lane.
   - G0 on unmodified J7 and on v10 are running. The J8 post follows with the inherited-vs-new split.
 - 2026-11-22 06:52 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-3188845-1795356918 on loved-redfish: rc=0 after 2217 s, ended 14:52:10, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/fork_v9.otrun.log, cmd: --mem 8 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6 --stage /srv/opentallas-scratch2/claude/rt/b15a8a1
+- 2026-11-22 06:57 PST t52 + kv512 v9 [FAM-S81-SLICE-R6 -> COORD]
+  - slice_station__t52: STALE taken into the slice set. Wave state has no row on a9ed808a98d (last row bf70369076de2 CANCELLED SUPERSEDED on 224567138ab), no hold and no signed record. The J8 v8 sweep shows it in reach: raw 119.9 um, reader/writer START 320.7/361.9, no over-405.
+  - So no J8 row is needed. Launched sealed J7 kit s81_slice_station__t52_1122065653: --goal route, rt d6f543f8005f exempt, epyc9, unit oth-ubuntu-3341374, PID 3337253, durable waiter.
+  - Second kv512_C t1 kit, on private v9 (fork trees/s81_j8v9, nlink-1 verified, bind in-tree): --goal route, spec s81_dsdv_slice_kv512_C__t1_1122065315, unit oth-ubuntu-3193381, PID 3188798, durable waiter.
