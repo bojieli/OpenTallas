@@ -29,3 +29,12 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
   FIX (V4, 0 cycles): RTL define OT_TP8S_XEPRE = per-slice xev_q[NS] then xe_q <= |xev_q (same 2 stages). Patch in epyc10 clone10 + epyc8 clone (uncommitted);
   bench epyc10 opus-fix-qc-coll-r3/bench_xe (ot-run client intel2 log opus-fix-qc-coll-r3-bench_xe.client.log). Push after bench PASS; then seats for xev_q near each g_xf core + V4 row (7th define).
 - early LEC: ctl relaunched (first read hit 4_cts.odb mid-copy); split chain = early_lec_chain2.sh (pid 3451196) using early_lec2.sh (waits for stable file).
+## 11-22 02:4x (after weekly limit)
+- pkit_core3s CANCELLED: --ab env never reached config.mk (0 _rtap_ clones) = duplicate of 3b. Lesson: plan keys, not --ab, for clock.* features.
+- Real-clone LEC: 3b 4_cts.odb -> in-memory affinity+split (100 copies, 270 chain cells, 934 sinks repointed, 979 -> 6) -> pkit_core3b/early_lec/4_cts_split.v
+  -> lec.py rt 59d4d33e92c1 (has FLOW-OPS-R2 tap_clone_proposals d9c2941791); out epyc10 opus-fix-qc-coll-r3/split_lec_3b; chain log intel2 opus-fix-qc-coll-r3-split_lec.chain.log.
+  FAM-S81-LEPE-4 waits on this verdict (their J8 row R1). Control unsplit LEC: early_lec_ctl (chain log fable-fix-qc-coll-r2/early_lec_ctl.chain.log).
+- XEPRE pushed main bac6bcfd79 (bench PASS 3/3 variants).
+- V4 candidate: pkg8/plan_v2.json (+XEPRE define, clock.tap_reset_split, xev_q[0..3] seats at slice xs_q medians, xe_q -> (519.48,1259.685), xe0_q key removed; rows pkg8/rows_v4cand.json).
+  mktree_v4.sh (delta-apply tree_fork + RTL overlay -> tree_v4) + bind_pkg8.sh (rt 59d4d33e92c1, pk8) as one ot-run (client log intel2 opus-fix-qc-coll-r3-mktree_v4.client.log).
+  Next: private-spec pspec_core4 from tree_v4 / pk8 (no --ab for split; plan key carries it), rt 59d4d33e92c1.
