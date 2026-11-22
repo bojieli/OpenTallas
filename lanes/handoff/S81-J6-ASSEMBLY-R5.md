@@ -21,3 +21,7 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - J7 pinned-mode GEN smoke PASS on epyc9 (lepe_mu_LP t2 + svc_lo rs t1, preflight DRY-PASS; receipt s81-j6-r5/pinsmoke_epyc9/smoke_receipt.json).
 - s81 gen_hosts now epyc2,epyc7,epyc10,epyc9 (FLEET). j7_apply.sh syncs candidate hosts to live gen_hosts (cand_live.json) so keep_gen_hosts holds.
 - Waiter: local poll on s81-j6-r5/j7_apply.out (APPLY_DONE/APPLY_STOP).
+
+## J8 intake add (20:4x)
+- OPUS-FIX-S81-SVC-R9 J8 svc package: hi4 re-split (13409->8022 cut pins), 7 svc layouts, ft3 plan_ftresite_r9 sha 24dbfb31; gate tree intel2 opus-fix-s81-svc-r9/treeJ8; bind unit oth-ubuntu-618193-1795321900. J8 bind needs tools >= main 8ad54f25f4 (drop J7 gen_tools_pin at J8 apply). J8 FILE lines + epyc10 opus-fix-s81-svc-r8/j8/scoped_h8_overlay (sources + map_svc_j8_scoped_h8.json; asbuilt base = tree root).
+- Successor after the J7 apply: S81-J7-HELD-R1 (COORD).
