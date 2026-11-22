@@ -307,3 +307,8 @@
   Still flagged: KV 3 failed (kv3_hub_Wo, kv3_io_cor_v1, kv3_pc__cl254f2e73), QC 1 failed (slw_st_a_v2__cl9f076a5c, FAM-QC-SLWSLE-R1), KV 5 WAIT-BIND.
   STALE: S81 68 (unchanged), QC 7. HEAD clean.
   377 rows no flag; file lanes/OWNERS-SWEEP.tsv
+- 2026-11-22 03:50 PST OWNERS-SWEEP 03:5x: 460 rows (S81 347, QC 63, KV 49, HEAD 1); 84 flagged.
+  S81: STALE 67 (cancelled-superseded old-plan pv rows, owners FAM-S81-COL-H9R0-R4/COL-H10-R4/SVC-R9/LEAF-R10 alive); UNOWNED 1 dsdv_slice_kv512_C__t1 (FAM-S81-SLICE-R6 mentions it).
+  QC: STALE 6, FAILED-NO-RELAUNCH 2 (coll_core, slw_st_a_v2__cl9f076a5c; FAM-QC-SLWSLE-R1).
+  KV: FAILED-NO-RELAUNCH 2 (kv3_hub_Wo, kv3_io_cor_v1), WAIT-BIND 6, CBC-FALLBACK 2; owners OPUS-FIX-KV-HUB-R6, FAM-KV-IOPC-R4, KV-WAITBIND-R1.
+  No DEAD-OWNER rows; HEAD clean.
