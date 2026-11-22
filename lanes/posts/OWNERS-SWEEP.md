@@ -270,3 +270,8 @@
   HEAD: hd_lep0N FAILED place, stale 8.6h, owner FABLE-FIX-HEAD-LEP0N-R2 alive (18:16), no relaunch.
   KV: hg/pv failed rows HELD (D27d3 green, D28); kv3_hroot owner R3 dead (12:37) -> R4; kv3_hg_v1p2 owner FLOW-CLKGRT-R2 dead (15:53).
   QC: 4 FAILED no relaunch, stale 4-5h (cbf_q00_s2, cbx_q10, sle_stm_v1, slw_su_c); owners alive.
+- 2026-11-21 18:52 PST 18:5x sweep: lanes/OWNERS-SWEEP.tsv 463 rows (S81 347, QC 65, KV 51, HEAD 1), committed.
+  S81: 141 UNOWNED (col_h9/col_h10 held-by-die-owner twins, plan event pending), 62 STALE mostly superseded-cancelled; serdes__t12 HOST-BLOCKED.
+  QC: 11 cbn/cbf no-host rows + 2 INFRA fails HOST-BLOCKED; 5 FAILED-NO-RELAUNCH other flow error (cbf_q00_s2, cbx_q10, slw_su_c); 5 STALE.
+  KV: 10 FAILED-NO-RELAUNCH (kv3_pv_v* CLAND ring band/400k cells, kv3_hroot dead owner); 22 WAIT-BIND; 2 CBC-FALLBACK (hub_Wi, pc_v3).
+  HEAD: hd_lep0N failed place 9 h, owners alive, no relaunch.
