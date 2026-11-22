@@ -1791,7 +1791,7 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     ents = _placed_entries(t)
     base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
     out = []
-    for inst, mod, lef, lib, x, y, o in type_macros(P, tn):
+    for inst, mod, lef, lib, x, y, o in type_macros(P, tn, base):
         c = ents.get(inst) or {}
         if not c.get("outline_um"):
             continue
@@ -2200,12 +2200,12 @@ def declared_bumps(P, tn):
     return out
 
 
-def kit_bump_ports(P, tn, kit_rtl_filelist):
+def kit_bump_ports(P, tn, kit_rtl_filelist, root=None):
     """[dict(port, inst, module, pin, dir, width)]: the declared bump pins of a kit-rtl type with the bound partition
     port names, read from <filelist dir>/kit_rtl.json -> bind_out/bind_report.json.  [] when the plan declares none."""
     import gen_rtl
     dec = declared_bumps(P, tn)
-    pads = pad_bumps(P, tn, kit_rtl_filelist)
+    pads = pad_bumps(P, tn, kit_rtl_filelist, root)
     if not dec:
         return pads
     kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
@@ -2317,14 +2317,14 @@ def kit_dead_inputs(kit_rtl_filelist):
 # io_pma_rx/tx/tck) is the same line side as a bound bump: no face register, its top pin ON the macro pin
 # (bump_pin_sites), face_guard proves the bit drives / loads exactly that one macro pin.  The name is the plan pad
 # itself (gen_rtl emits it), so no bind report is needed; a kit-rtl wrapper must carry it as a bound-only pin.
-def pad_bumps(P, tn, kit_rtl_filelist=None):
+def pad_bumps(P, tn, kit_rtl_filelist=None, root=None):
     """[dict(port, inst, module, pin, dir, width)] of the type pads that declare macro_pin.  [] when none do."""
     import gen_rtl
     t = P.types[tn]
     pads = [p for p in t.get("pads", []) if p.get("macro_pin")]
     if not pads:
         return []
-    views = {m[0]: m[1] for m in type_macros(P, tn)}
+    views = {m[0]: m[1] for m in type_macros(P, tn, root)}
     bop = None
     if kit_rtl_filelist:
         kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
@@ -2640,7 +2640,7 @@ def pg_island_cuts(P, tn, root=None):
     cuts = []
     # default mode (no explicit type key): only the placed hard cores, never the PHY / memory macros
     hard = {(c.get("physical_inst") or c["inst"]) for c in t.get("hard_cores", [])}
-    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn, root):
         if not island and inst not in selected:
             continue
         if island and "pg_island_cut" not in t and inst not in hard and inst not in selected:
@@ -2787,7 +2787,7 @@ def pg_face_cuts(P, tn, root=None):
     import cores as C
     sp = PG_CUT_SPACE_UM
     cuts = []
-    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn, root):
         pins, (w, h) = lef_face_pins(C.resolve(lef, root))
         faces = {}
         for ln, r in pins:
@@ -4692,30 +4692,35 @@ def macro_halo_lines(t, placed):
             *[f"ot_macro_halo {{{q['inst_db']}}} {halo[q['inst']]:g}" for q in rows]]
 
 
-def type_macros(P, tn):
+def type_macros(P, tn, root=None):
     """content macros of a type the kit must place (COORD 10-23): hard_cores[] and contents[] that carry a hardened
     view (lef).  [(inst, module, lef, lib, x, y, orient)], type frame, origin + track offset.  A macro view without a
-    placement is an error: G3 of a kit whose SRAM / ROM / cores float is meaningless."""
+    placement is an error: G3 of a kit whose SRAM / ROM / cores float is meaningless. Resolve views from the same
+    design root the kit uses to stage them, including when the generator runs from a separate tools bundle."""
     t = P.types[tn]
     out = []
+    base = Path(root).absolute() if root else Path(__file__).resolve().parents[2]
+
+    def resolve(path):
+        return _CR.resolve(path, base)
 
     def own_lef(c):
         # KW6-CODE 11-04: a lib with a view_lef receipt carries its signed view's LEF; the plan entry stays (no block key change)
-        k = (c["lef"], c.get("lib"))
+        k = (base, c["lef"], c.get("lib"))
         if k not in _VIEW_LEF:
             import view_lef as VL
             import lef_override as LO
             import porous_views as PV
             # POROUS-ALL-1 11-10 (OWNER): opt-in real-shape child abstract (gen env OT_POROUS_VIEWS); unset = unchanged
-            _VIEW_LEF[k] = PV.select(LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve),
-                                     _CR.resolve)
+            lef = VL.view_lef_for(c["lef"], c.get("lib"), resolve)
+            _VIEW_LEF[k] = PV.select(LO.select(lef, resolve), resolve)
         return _VIEW_LEF[k]
     import core_view_sha as _CVS      # KIT-OPS-6 11-14 (TYPE-HDEPC): the signed view, by sha (OT_SIGNED_VIEW_SHA table / plan lib_sha256, lef_sha256)
     _exp = _CVS.load_expected()
     for c in t.get("hard_cores", []):
         if not c.get("lef"):
             continue
-        _CVS.gate(c, _CR.resolve, _exp)
+        _CVS.gate(c, resolve, _exp)
         ox, oy = c.get("track_offset_um", [0.0, 0.0])
         # DIE-KV-49 10-31: optional kit-only physical identity (content_physical_identity form); default unchanged
         pinst, pmaster = content_physical_identity(c) if ("physical_inst" in c or "physical_master" in c) else \
@@ -7122,7 +7127,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
     ib = insertion_binding(P, tn)
     w, h = t["outline_um"]
-    macros = type_macros(P, tn)
+    macros = type_macros(P, tn, root)
     macros, pinband = pinband_macros(P, tn, macros, root, check_only=bool(bump_ports))
     # A physical abstract alone leaves macro paths untimed and prevents load-driven
     # buffering (S81 frame review, 2026-10-24). Reject before writing a partial kit.
@@ -7955,7 +7960,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text(hook.read_text() + "\nuplevel #0 {source /work/serdes_lanes_release.tcl}\n")
     if rck_early_exports(P, tn):
         shutil.copyfile(Path(__file__).with_name("rck_early_report.tcl"), kd / "rck_early_report.tcl")
-    bump_out = pad_bumps(P, tn)       # PAD-IN-DIRECT-1 11-17: output AND input macro_pin pads
+    bump_out = pad_bumps(P, tn, root=root)       # PAD-IN-DIRECT-1 11-17: output AND input macro_pin pads
     if bump_out:
         # S81-PMATX-DT 11-09 (DIE-S81-85, serdes__t14 a11 G2 u_ptx -> io_pma_tx -249 ps): a macro_pin output pad's die pin
         # IS the macro pin (0 um), but ORFS buffer_ports put its port buffer outside the PMA stack (~270 um down + back,
@@ -9917,13 +9922,14 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             raise gen_rtl.GenError(f"bound native reset {tn}: requires a declared non-hard bound type")
         if not types or tn not in types or not kit_rtl or tn not in kit_rtl:
             raise gen_rtl.GenError(f"bound native reset {tn}: requires explicit --types and --kit-rtl")
+    root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     wrappers = set(hard_wrappers or ())
     for tn in sorted(wrappers):
         if tn not in P.types or not P.types[tn].get("hard"):
             raise gen_rtl.GenError(f"hard wrapper {tn}: must name an existing hard type")
         if not types or tn not in types or not kit_rtl or tn not in kit_rtl:
             raise gen_rtl.GenError(f"hard wrapper {tn}: requires explicit --types and --kit-rtl")
-        if not type_macros(P, tn):
+        if not type_macros(P, tn, root):
             raise gen_rtl.GenError(f"hard wrapper {tn}: requires a placed macro with LEF and TT/FF views")
     if master_slice:                                            # 12.7c: every slice checked before any kit is written
         for tn, t in sorted(P.types.items()):
@@ -9984,7 +9990,6 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         import clock_landings as CL
         lands = CL.Landings(raw, landing, plan_path=plan_path)
     cells = rtl_dir / "ot_dp_cells.sv"
-    root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
     kits = []
     import contextlib as _ctxl
@@ -10021,7 +10026,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             install_bound_native_reset(P, tn, mine, source_contract=captured_reset, cap_scope=_bound_cap_scope)
         if land_decl_only:
             install_collector_event(P, tn, lands, mine, plan_tree=plan_ctree)
-        bumps = kit_bump_ports(P, tn, kit_rtl[tn]) if kit_rtl and tn in kit_rtl else None
+        bumps = kit_bump_ports(P, tn, kit_rtl[tn], root) if kit_rtl and tn in kit_rtl else None
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
                                    skip_ir, max_wire_um, rc_cal, master_slice, trial, bump_ports=bumps,
                                    gpl_plain=tn in (gpl_plain or ()),

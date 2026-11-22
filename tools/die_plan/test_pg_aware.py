@@ -201,7 +201,7 @@ def test_face_cut_windows_stop_parent_stripes_before_pin_faces(tmp_path, monkeyp
     pins, size = gen_phys.lef_face_pins(lef)
     assert size == (40.0, 30.0) and sorted(ln for ln, _ in pins) == ["M6", "M6", "M7"]   # no PG, no interior pin
     P = SimpleNamespace(types={"hd": {}})
-    monkeypatch.setattr(gen_phys, "type_macros", lambda P, tn: [("u_epc", "epc", str(lef), None, 423.36, 313.344, "R0")])
+    monkeypatch.setattr(gen_phys, "type_macros", lambda P, tn, root=None: [("u_epc", "epc", str(lef), None, 423.36, 313.344, "R0")])
     import cores
     monkeypatch.setattr(cores, "resolve", lambda p, root=None: p)
     assert gen_phys.pg_face_cuts(P, "hd") == []                                       # opt-in
