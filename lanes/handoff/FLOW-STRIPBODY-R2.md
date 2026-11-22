@@ -41,6 +41,12 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
 - private-spec (specs2.sh, lc kit_wave with efe70f16d3 + fix 0890cc9405: spec kit_rtl.asbuilt = bind's asbuilt_vN, rt-floor exempt):
   specs $L/spec_<item>/spec.json for strip_S, t1 (body), strip_N.
 - run-item x3 started 07:04 (rt/current kit_wave, logs $L/runitem_<item>.log, PIDs 3697331/2/4). Adopt: never relaunch while alive.
+- 07:1x run-item round 2 (specs from specs2.sh = lc kit_wave + c7d3d0d2d4 sidecar fix; logs runitem2_<item>.log):
+  strip_S 56,543 cells, place GP FAIL (OT_CLAND no legal band site, 0.91 cells/um2): needs taller strip = t1 core moves (LEPE-4/J8).
+  strip_N 30,332 cells, PORT_BIND FAIL cland_rstart_in (dead relay start) -> main 1b22315ec7 + ad59d5fb07.
+  body (PID 4164179) gen_lint/place pending on bind7g (still valid for body).
+- round i (full_i.sh, ot-run PID 2168194): split7i/pack7i/tree _stripbody_r2i/bind7i/latcheck7i (LATCHECK via lc).
+  Then specs2.sh with r2i/bind7i -> run-item strip_N (+ body if g body fails).
 ## Cleanup owed
 - trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each; ASK posted to COORD/FLEET-OPS 02:4x) superseded; ot-delete guard refuses now (newer than die tree,
   apply pending). Delete via ot-delete after the J7 apply.
