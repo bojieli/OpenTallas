@@ -578,6 +578,68 @@ class ViaShadowEolStub(unittest.TestCase):
         self.assertIn((1.288, 0.084, 1.312, 0.144), APS.obs_rects(ob2)["M5"])
         self.assertEqual(APS.eol_stubs(head, ob2)[1], [])
 
+class PinStubSelfGuard(unittest.TestCase):
+    """FAM-S81-COL-H10-R4 / FABLE-FLOW-0800 class A1 11-22: the J6 hw ROM view (j6ctl_rom_elem_q_hw) exported every face
+    pin's metal a second time as a same-size OBS rect.  Moving those into new PORTs gave 96 -> 1444 Lef58EolKeepOut in the
+    TritonRoute view-alone probe; they are dropped now (step 1a), and main() refuses an output with more static defects."""
+    FIX = Path(__file__).resolve().parent / "testdata" / "j6_rom_elem_q_hw_face.lef"
+
+    def test_j6_face_duplicates_are_dropped_not_ported(self):
+        import abstract_pin_stub as APS
+        text = self.FIX.read_text()
+        before = APS.defects(text)
+        self.assertGreater(before["pinobs"], 0)
+        self.assertEqual(before["dupport"], 0)
+        out, msg = APS.process(text)
+        after = APS.defects(out)
+        self.assertEqual(after["pinobs"], 0)
+        self.assertEqual(after["dupport"], 0)
+        self.assertEqual(after["pinabut"], 0)
+        self.assertLessEqual(after["eolstub"], before["eolstub"])
+        self.assertIn("inside pin metal dropped", msg)
+        self.assertIn("abutting own-conductor OBS rects moved", msg)
+        sig, _ = APS.pin_rects(APS.split_lef(out)[0])
+        self.assertEqual(max(r[4] for r in sig["cfg_a[0]"]), 0.199, "the pin's own M5 conductor chain is in its PORT")
+
+    def test_uncovering_without_chain_is_refused(self):
+        # the first fix (drop the pin copies only) left 674 pins abutting their own conductor as OBS: 1348 EOL in the probe
+        import abstract_pin_stub as APS, io, contextlib, os
+        text = self.FIX.read_text()
+        with tempfile.TemporaryDirectory() as td:
+            src, dst = Path(td, "in.lef"), Path(td, "out.lef")
+            src.write_text(text)
+            os.environ["OT_OBS_CHAIN"] = "0"
+            try:
+                with contextlib.redirect_stdout(io.StringIO()) as so, contextlib.redirect_stderr(io.StringIO()) as se:
+                    rc = APS.main([str(src), str(dst)])
+            finally:
+                del os.environ["OT_OBS_CHAIN"]
+            self.assertEqual(rc, 3, so.getvalue())
+            self.assertIn("pinabut", se.getvalue())
+            self.assertFalse(dst.exists())
+
+    def test_main_refuses_a_worse_output(self):
+        import abstract_pin_stub as APS, io, contextlib
+        text = self.FIX.read_text()
+        with tempfile.TemporaryDirectory() as td:
+            src, dst = Path(td, "in.lef"), Path(td, "out.lef")
+            src.write_text(text)
+            orig = APS.process
+            APS.process = lambda t: (t.replace("  END cfg_a[0]", "    PORT\n      LAYER M5 ;\n        RECT  142.848 0 142.872 0.084 ;\n    END\n  END cfg_a[0]"), "x")
+            try:
+                with contextlib.redirect_stdout(io.StringIO()) as so, contextlib.redirect_stderr(io.StringIO()) as se:
+                    rc = APS.main([str(src), str(dst)])
+            finally:
+                APS.process = orig
+            self.assertEqual(rc, 3)
+            self.assertFalse(dst.exists())
+            self.assertIn("pinstub-defects before", so.getvalue())
+            self.assertIn("REFUSED", se.getvalue())
+            with contextlib.redirect_stdout(io.StringIO()) as so:
+                self.assertEqual(APS.main([str(src), str(dst)]), 0)
+            self.assertTrue(dst.exists())
+            self.assertIn("dupport=0", so.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

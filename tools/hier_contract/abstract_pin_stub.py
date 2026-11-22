@@ -111,9 +111,21 @@ def _candidates(idx, layer, r):
     return sorted(out)
 
 
+DROPPED = []  # step 1a of the last move_stubs call: [(pin, layer, rect strings)] dropped as copies of pin metal
+
+
+def _inside(r, p):
+    """rect r inside rect p (both (x0, y0, x1, y1), any corner order)"""
+    eps = 1e-6
+    return (min(r[0], r[2]) >= min(p[0], p[2]) - eps and min(r[1], r[3]) >= min(p[1], p[3]) - eps
+            and max(r[0], r[2]) <= max(p[0], p[2]) + eps and max(r[1], r[3]) <= max(p[1], p[3]) + eps)
+
+
 def move_stubs(head, obs, pins):
-    """step 1; returns (head, obs, moved {pin: [(layer, (x0, y0, x1, y1) strings)]})"""
+    """step 1; returns (head, obs, moved {pin: [(layer, (x0, y0, x1, y1) strings)]}).  1a: an OBS rect inside one of the
+    pin's own same-layer rects only duplicates pin metal and is dropped, never moved (listed in DROPPED)"""
     moved = {}
+    DROPPED.clear()
     out, cur = [], None
     names = list(pins)
     idx = pin_index(pins)
@@ -126,6 +138,11 @@ def move_stubs(head, obs, pins):
             hit = [p for p in (names[k] for k in _candidates(idx, cur, r))
                    if any(x[0] == cur and _ov(r, x[1:]) for x in pins[p])]
             if len(hit) == 1:
+                if any(x[0] == cur and _inside(r, x[1:]) for x in pins[hit[0]]):
+                    # 1a DUPLICATE (FAM-S81-COL-H10-R4 11-22): an OBS rect inside the pin's own rect is a copy of the pin
+                    # metal, not a stub, so it is dropped.  Re-adding it as a second PORT gave the J6 hw ROM view
+                    # 96 -> 1444 Lef58EolKeepOut (674 duplicate PORTs) in the TritonRoute view-alone probe.
+                    DROPPED.append((hit[0], cur, m.groups())); continue
                 moved.setdefault(hit[0], []).append((cur, m.groups())); continue
             if len(hit) > 1:
                 # 1b BAND CARVE (ROOT 2026-10-15, hbm_ckgen_rel-r1): an OBS rect over SEVERAL pins is the exporter's
@@ -332,6 +349,73 @@ def pin_spacing_violations(text):
     return out
 
 
+CHAIN_MAX = 64  # own-conductor chain links followed per pin end
+
+
+def chain_stubs(head, obs):
+    """step 1c (FAM-S81-COL-H10-R4 11-22): an OBS rect on the pin's layer with exactly the pin's cross span that ABUTS a
+    pin rect's end (no overlap, so step 1 skips it) is the pin's own conductor; it, and the collinear rects abutting it in
+    turn, move into the pin's PORT.  Left as OBS, the pin's inner line end touches blockage metal and every connected pin
+    is a Lef58EolKeepOut on both corners (J6 hw ROM view, face pins: 1444 EOL in the view-alone probe once the pin copy
+    OBS is gone).  Returns (head, obs, {pin: [(layer, rect strings)]})."""
+    if os.environ.get("OT_OBS_CHAIN", "1") == "0":
+        return head, obs, {}
+    sig, _ = pin_rects(head)
+    by = obs_rects(obs)
+    ends = {}  # (layer, vertical, cross lo, cross hi, coordinate) -> [obs rect index]
+    ints = {lay: [tuple(map(_iu, r)) for r in rs] for lay, rs in by.items()}
+    for lay, rs in ints.items():
+        for k, (a, b, c, e) in enumerate(rs):
+            a, b, c, e = min(a, c), min(b, e), max(a, c), max(b, e)
+            ends.setdefault((lay, True, a, c, b), []).append(k)
+            ends.setdefault((lay, True, a, c, e), []).append(k)
+            ends.setdefault((lay, False, b, e, a), []).append(k)
+            ends.setdefault((lay, False, b, e, c), []).append(k)
+    take, owner = {}, {}
+    for pin, rs in sig.items():
+        for lay, *pr in rs:
+            if lay not in ints:
+                continue
+            a, b, c, e = map(_iu, (min(pr[0], pr[2]), min(pr[1], pr[3]), max(pr[0], pr[2]), max(pr[1], pr[3])))
+            for vert in (True, False):
+                lo, hi = (a, c) if vert else (b, e)
+                todo = [(b, e)] if vert else [(a, c)]
+                seen = 0
+                while todo and seen < CHAIN_MAX:
+                    s0, s1 = todo.pop()
+                    for at in (s0, s1):
+                        for k in ends.get((lay, vert, lo, hi, at), ()):
+                            r = ints[lay][k]
+                            r0, r1 = (min(r[1], r[3]), max(r[1], r[3])) if vert else (min(r[0], r[2]), max(r[0], r[2]))
+                            if (lay, k) in owner or not (r1 == at or r0 == at) or (r0 < s1 and s0 < r1):
+                                continue
+                            owner[(lay, k)] = pin
+                            take.setdefault(pin, []).append((lay, k))
+                            todo.append((r0, r1)); seen += 1
+    if not take:
+        return head, obs, {}
+    kill = {(lay, by[lay][k]) for (lay, k) in owner}
+    out, cur, moved = [], None, {}
+    gone = set()
+    for line in obs.split("\n"):
+        m = re.match(r"\s*LAYER (\S+)", line)
+        if m:
+            cur = m.group(1); out.append(line); continue
+        mr = re.match(r"\s*" + _RECT, line)
+        if mr and cur:
+            key = (cur, tuple(map(float, mr.groups())))
+            if key in kill and key not in gone:
+                gone.add(key)
+                k = by[cur].index(key[1])
+                moved.setdefault(owner[(cur, k)], []).append((cur, mr.groups())); continue
+        out.append(line)
+    obs = "\n".join(out)
+    for pn, rs in moved.items():
+        add = "".join(f"\n    PORT\n      LAYER {l} ;\n        RECT  {a} {b} {c} {d} ;\n    END" for l, (a, b, c, d) in rs)
+        head = re.sub(rf"(  PIN {re.escape(pn)}\n.*?)(\n  END {re.escape(pn)})", lambda m: m.group(1) + add + m.group(2), head, count=1, flags=re.S)
+    return head, obs, moved
+
+
 def close_pockets(head, obs):
     """step 2; returns (head, obs, pocket record or None when disabled)"""
     if os.environ.get("OT_OBS_CLOSE", "1") == "0":
@@ -455,9 +539,9 @@ def shadow_lower(head, obs, only=None, mark=True):
     return head, obs, added
 
 
-def eol_stubs(head, obs):
-    """step 4; returns (obs, [(pin, layer, old rect, new rect)])"""
-    if os.environ.get("OT_OBS_EOLSTUB", "1") == "0":
+def eol_stubs(head, obs, force=False):
+    """step 4; returns (obs, [(pin, layer, old rect, new rect)]); force: run even when OT_OBS_EOLSTUB=0 (defects() counts)"""
+    if not force and os.environ.get("OT_OBS_EOLSTUB", "1") == "0":
         return obs, None
     sig, _ = pin_rects(head)
     by = obs_rects(obs)
@@ -513,15 +597,61 @@ def eol_stubs(head, obs):
     return "\n".join(out), done
 
 
+def defects(text):
+    """static pin-access defect counts of a LEF (SELF-GUARD, FABLE-FLOW-0800 class A1 11-22):
+    pinobs  = same-layer OBS rects overlapping a signal pin rect (child_lint (f): no access point),
+    eolstub = own-conductor OBS stubs shorter than the line-end keep-out (step 4's finding),
+    dupport = signal pin rects inside another rect of the same pin on the same layer,
+    pinabut = signal pin rects with no same-layer OBS over them whose end abuts a same-layer OBS rect of the same cross span
+              (the pin's own conductor left as blockage: J6 hw view 96 -> 1444 Lef58EolKeepOut once its pin copies were gone)"""
+    head, obs = split_lef(text)
+    sig, _ = pin_rects(head)
+    idx = pin_index(sig)
+    names = list(sig)
+    pinobs = 0
+    for lay, rs in obs_rects(obs).items():
+        if lay not in idx:
+            continue
+        for r in rs:
+            if any(x[0] == lay and _ov(r, x[1:]) for k in _candidates(idx, lay, r) for x in sig[names[k]]):
+                pinobs += 1
+    dup = 0
+    for rs in sig.values():
+        for i, a in enumerate(rs):
+            if any(j != i and b[0] == a[0] and _inside(a[1:], b[1:]) and (a[1:] != b[1:] or j < i) for j, b in enumerate(rs)):
+                dup += 1
+    by = {lay: [tuple(map(_iu, (min(r[0], r[2]), min(r[1], r[3]), max(r[0], r[2]), max(r[1], r[3])))) for r in rs]
+          for lay, rs in obs_rects(obs).items()}
+    bidx = {lay: _bucket(rs) for lay, rs in by.items()}
+    abut = 0
+    for rs in sig.values():
+        for lay, *pr in rs:
+            if lay not in by:
+                continue
+            a, b, c, e = map(_iu, (min(pr[0], pr[2]), min(pr[1], pr[3]), max(pr[0], pr[2]), max(pr[1], pr[3])))
+            near = _hits(bidx[lay], by[lay], (a - 1, b - 1, c + 1, e + 1))
+            if any(_ov((a, b, c, e), o) for o in near):
+                continue
+            if any(((o[0], o[2]) == (a, c) and (o[3] == b or o[1] == e)) or ((o[1], o[3]) == (b, e) and (o[2] == a or o[0] == c))
+                   for o in near):
+                abut += 1
+    return {"pinobs": pinobs, "eolstub": len(eol_stubs(head, obs, force=True)[1]), "dupport": dup, "pinabut": abut}
+
+
 def process(text):
     """(new LEF text, summary line)"""
     head, obs = split_lef(text)
     pins, _ = pin_rects(head)
     head, obs, moved = move_stubs(head, obs, pins)
+    head, obs, chain = chain_stubs(head, obs)
     head, obs, rec = close_pockets(head, obs)
     obs, eol = eol_stubs(head, obs)
     head, obs, sh = shadow_lower(head, obs)
     msg = f"pinstub: {sum(map(len, moved.values()))} OBS rects moved into {len(moved)} pins: " + ", ".join(sorted(moved)[:12])
+    if DROPPED:
+        msg += f"; {len(DROPPED)} OBS rects inside pin metal dropped ({len({d[0] for d in DROPPED})} pins)"
+    if chain:
+        msg += f"; chain: {sum(map(len, chain.values()))} abutting own-conductor OBS rects moved into {len(chain)} pins"
     if rec is None:
         msg += "; pockets: closing disabled (OT_OBS_CLOSE=0)"
     elif not rec["layer"]:
@@ -540,7 +670,16 @@ def main(argv=None):
     if len(argv) != 2:
         print(__doc__, file=sys.stderr); return 2
     src, dst = argv
-    out, msg = process(open(src).read())
+    text = open(src).read()
+    out, msg = process(text)
+    # SELF-GUARD (FABLE-FLOW-0800 class A1 11-22): never write a LEF with more static pin-access defects than its input
+    before, after = defects(text), defects(out)
+    print("pinstub-defects before " + " ".join(f"{k}={v}" for k, v in before.items())
+          + " after " + " ".join(f"{k}={v}" for k, v in after.items()))
+    worse = [k for k in before if after[k] > before[k]]
+    if worse:
+        print(f"pinstub: REFUSED, output has more {', '.join(worse)} than the input; {dst} not written", file=sys.stderr)
+        return 3
     # atomic replace, not an in-place write: ref_tile export rewrites the view LEF in place (dst == src) and the exporter's
     # container leaves it root-owned (open(dst, "w") -> PermissionError, hgi_topk_heap_rt_m5-h3m5-6d8d554ba collect 10-12);
     # the view directory itself is the job user's
