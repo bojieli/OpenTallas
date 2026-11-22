@@ -64,6 +64,8 @@ def test_preflight_ring_ff(tmp_path):
     assert len(e) == 1 and "tag ring:wide has no +ff" in e[0]
     assert KP.ring_ff(_kit(tmp_path, ok, tcl.replace("ring:wide}", "ring:wide@1.8037+ff}"))) == []
     assert KP.ring_ff(_kit(tmp_path, _bands(), tcl, die="qwen_kvsys")) == []      # only S81 kits are judged
+    e = KP.ring_ff(_kit(tmp_path, _bands(edge=dict(ring_place="ff")), tcl, die="s81_head"))   # LEP-RINGFF-1: HEAD is judged
+    assert len(e) == 1 and "wide (1104 bits) has no ring_place=ff" in e[0]
 
 
 def test_preflight_ring_ff_no_contract(tmp_path):

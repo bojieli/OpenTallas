@@ -375,6 +375,11 @@ def core_tap_reach(kit, limit=None):
 # flops-only (plan band without ring_place=ff, or a landing_placement.tcl tag without +ff) packs the whole ring FIRM in
 # netlist order and fails GRT inside the band (13 of 13 leaf kits, 38k-250k overflow).  A certain tool failure, so it
 # is an error here.  Only S81 kits are judged (freeze.json die s81): KV still has hub types on the old form (KV-102 rows).
+# FABLE-FIX-HEAD-LEP0N 11-22 (LEP-RINGFF-1): HEAD kits (die s81_head) are judged too.  The hd_lep0N W|E split re-compose ran
+# band_ring='all' with ring_ff_min_bits=0; hd_lep0N_w coll_i1 / coll_i2 lost ring_place=ff, passed preflight and placed
+# with the whole coll_i2 ring FIRM in a 12.96 x 531 um sliver (TT setup -495.73 at place).  Every other HEAD ring band of
+# >= 256 bits carries ring_place=ff (r18e plan census: 0 missing besides those two).
+RING_FF_DIES = ('s81', 's81_head')
 RING_FF_MIN_BITS = 256
 def ring_ff(kit, min_bits=RING_FF_MIN_BITS):
     kit = Path(kit)
@@ -382,7 +387,7 @@ def ring_ff(kit, min_bits=RING_FF_MIN_BITS):
     if not lc_path.is_file():
         return []
     freeze = kit/'freeze.json'
-    if not freeze.is_file() or json.loads(freeze.read_text()).get('die') != 's81':
+    if not freeze.is_file() or json.loads(freeze.read_text()).get('die') not in RING_FF_DIES:
         return []
     bands = (json.loads(lc_path.read_text()).get('bands') or {})
     tags = {}
