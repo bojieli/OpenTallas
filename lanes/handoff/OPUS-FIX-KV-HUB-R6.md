@@ -17,3 +17,10 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 ## Next
 1. Ei rebind verdict -> Ei rows to KV-PLAN-R6.
 2. private-spec kits on tree_h3 (plan p8 if Ei passes, else p4 + aside base bind): hub_Wo, hub_Eo, hub_Ei (census target <=320k).
+
+## 23:3x update (wins)
+- COORD: start sign-off kits now, in parallel. Kit tree epyc8 /srv/opentallas-scratch2/claude/opus-fix-kv-hub-r6/tree_b (fork of tree_h3, plan b2910bca0603, base bind).
+- LIVE kits (private-spec, src_manifest off): specs ~/coord/autopilot/private_specs/OPUS-FIX-KV-HUB-R6/qwen_kvsys_kv3_hub_{Wo_1121233022,Eo_1121233034};
+  runners intel2 pids 3672200 / 3672201, logs intel2 ~/tmp/opusfixkvhub-r6/kit_*.log; work epyc8 .../KV-D27d3/private/OPUS-FIX-KV-HUB-R6/kv3_hub_{Wo_1121233015,Eo_1121233026}.
+- PLAN-GATE-PRE vs D27d3 baseline: PASS for p4 and p8 (hub_h3/pre_p4.log, pre_p8.log).
+- epyc2 hub_Ei wave kit unit oth-ubuntu-1907616-1795289726 (container pid 1940453): COORD says cancel via ot-run --cancel if DRT > 10k violations at ~02:30 PST.
