@@ -703,6 +703,8 @@ def main():
         rss = sum(p["rss"] for p in allp)
         hwm = sum(p["hwm"] for p in allp)
         cuse = sum(num(d + "/memory.current") for d in cdirs)
+        if not DRY:
+            cpu_interval(s, NOW, cpu_usec(cg) + sum(cpu_usec(d) for d in cdirs))     # FLOW-FLEET-R2 F1: measured cores of this unit
         cgpeak = num(cg + "/memory.peak") + sum(num(d + "/memory.peak") for d in cdirs)
         if s.get("cls") in ("cd", "?"):
             s["cls"] = None
@@ -812,6 +814,8 @@ def main():
         s = st.pop(u)
         if s.get("cls") and s.get("age", 0) >= 240 and int(s.get("dock_miss", 0)) < 2:  # finished: one row of history
             open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
+            if len(s.get("cpu_iv") or []) >= 3:     # FLOW-FLEET-R2 F1: the class's measured cores (p90 of its intervals)
+                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{pct_of(s['cpu_iv'], 0.9)}\t{max(s['cpu_iv'])}\t{int(s['age'])}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -955,7 +959,8 @@ DEFAULTS = dict(THREAD_CAP_FACTOR=1.0, GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_A
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0, PEAK_GAP_FACTOR=0.0, PLAN_GAP_FACTOR=1.0, MEASURED_GAP_FACTOR=1.0, MEASURED_GAP_CAP=0.5,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_PROBE_GB=40.0, SMALL_THREADS=4.0, SMALL_PROBE_MAX=8.0,
+                CPU_CHARGE=1.0, CPU_FACTOR=1.0, CPU_FALLBACK_SHARE=0.5, CPU_PCT=0.9, CPU_MIN_N=3.0, CPU_MIN_LOAD=0.6, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1495,6 +1500,106 @@ def plan_census(skip_pid=0):
     return run, wait
 
 
+def job_threads():
+    """the --threads the launcher declared (OT_HEAVY_THREADS), 8 when absent"""
+    try:
+        return max(1, int(os.environ.get("OT_HEAVY_THREADS", "8")))
+    except ValueError:
+        return 8
+
+
+def probe_like(mem, threads=None):
+    """FLOW-FLEET-R2 P1 (FABLE-FLOW-0800): a probe / measurement (<= SMALL_THREADS threads, <= SMALL_PROBE_GB GB: a 32 GB DB read) uses the small-job line of the host and never
+    waits behind 48 GB kits.  Off when SMALL_JOB_GB is 0 (no small lane on this host) or SMALL_PROBE_GB is 0."""
+    th = job_threads() if threads is None else threads
+    return conf("SMALL_JOB_GB") > 0 and conf("SMALL_PROBE_GB") > 0 and th <= conf("SMALL_THREADS") and mem <= conf("SMALL_PROBE_GB")
+
+
+def small_like(mem, threads=None):
+    return (conf("SMALL_JOB_GB") > 0 and mem <= conf("SMALL_JOB_GB")) or probe_like(mem, threads)
+
+
+def cpu_usec(path):
+    """usage_usec of a cgroup dir (cpu.stat), 0 when unreadable"""
+    for ln in rd(path + "/cpu.stat").splitlines():
+        if ln.startswith("usage_usec"):
+            try:
+                return int(ln.split()[1])
+            except (IndexError, ValueError):
+                return 0
+    return 0
+
+
+def cpu_interval(s, now, usec, min_dt=30.0):
+    """FLOW-FLEET-R2 F1: cores a unit used since its last sample (scope + its containers, usage_usec delta over wall time); the intervals of a unit's life are kept in
+    s['cpu_iv'] (capped).  A counter that went down (a container ended) restarts the interval.  -> cores or None"""
+    prev = s.get("cpu_prev")
+    s["cpu_prev"] = [now, usec]
+    if not prev or usec < prev[1] or now - prev[0] < min_dt:
+        if prev and now - prev[0] < min_dt:
+            s["cpu_prev"] = prev
+        return None
+    cores = (usec - prev[1]) / 1e6 / (now - prev[0])
+    iv = s.setdefault("cpu_iv", [])
+    iv.append(round(cores, 2))
+    del iv[:-240]
+    return cores
+
+
+def pct_of(vals, pct):
+    v = sorted(vals)
+    return v[min(len(v) - 1, int(pct * len(v)))] if v else 0.0
+
+
+CPU_PEAKS = f"{D}/cpu-peaks.tsv"
+
+
+def cpu_history(path=None):
+    """class -> sorted p90 cores of this host's finished runs of the class (cpu-peaks.tsv: ts, unit, class, p90 cores, max cores, age s)"""
+    h = {}
+    for ln in rd(path or CPU_PEAKS).splitlines():
+        f = ln.split("\t")
+        if len(f) >= 6:
+            try:
+                h.setdefault(f[2], []).append(float(f[3]))
+            except ValueError:
+                pass
+    for v in h.values():
+        v.sort()
+    return h
+
+
+def expected_cores(cls, threads, hist, pct=0.9, min_n=3, fallback=0.5):
+    """cores a job of this class takes: the pct-quantile of the class's finished runs (>= min_n), never above its declared threads; no history -> fallback x threads (a declared
+    thread count overstates what a job runs on: 112 declared vs load 50 refused 31 admits on epyc7, 11-22)"""
+    v = hist.get(cls) or []
+    if len(v) < min_n:
+        return max(1.0, threads * fallback)
+    return max(1.0, min(float(threads), v[min(len(v) - 1, int(pct * len(v)))]))
+
+
+def cpu_committed(units, hist, threads_of, pct, min_n, fallback, young=()):
+    """sum of the expected cores of the running units (class p90 or the fallback share of the declared threads) + the admits that have no scope yet"""
+    tot = 0.0
+    for u, _req, cls, _now in units:
+        tot += expected_cores(cls, threads_of(u), hist, pct, min_n, fallback)
+    for cls, th in young:
+        tot += expected_cores(cls, th, hist, pct, min_n, fallback)
+    return tot
+
+
+def cpu_charge_check(cls, threads, units, hist, threads_of, nproc, load1, young=(), factor=1.0, pct=0.9, min_n=3, fallback=0.5, min_load=0.6):
+    """FLOW-FLEET-R2 F1 (FABLE-FLOW-0800): CPU is charged the way memory is: the expected cores (p90 of the class's measured runs) of every running unit plus this job must stay
+    under FACTOR x nproc.  Only while the host is really busy (load1 >= MIN_LOAD x nproc): a declared-only cap refused 31 admits at load 50/96.  -> (ok, why)"""
+    need = expected_cores(cls, threads, hist, pct, min_n, fallback)
+    have = cpu_committed(units, hist, threads_of, pct, min_n, fallback, young)
+    cap = factor * nproc
+    if load1 < min_load * nproc:
+        return True, f"CPU_CHARGE: load {load1:.0f} < {min_load:g} x {nproc} cores, not charged ({have:.0f} committed + {need:.0f})"
+    ok = have + need <= cap
+    return ok, f"CPU_CHARGE: {have:.0f} cores committed by {len(units)} running + {need:.0f} for this job {'<=' if ok else '>'} {cap:.0f} ({factor:g} x {nproc}); load {load1:.0f}"
+
+
 def small_lane(mem, avail, small_running, headroom, small_gb, small_max, floor_gb):
     """SMALL_JOB lane (ADMIT-TUNE-1 11-14 COORD): a job of <= small_gb GB (kit gens, binds) is admitted while MemAvailable - its size stays above
     max(headroom / 2, floor_gb [earlyoom 3% trigger + margin]) and fewer than small_max small jobs run on the host; routes keep the full reserve.
@@ -1579,7 +1684,7 @@ def gate_locked(mem, argv):
                     _my_age = None
                 if not _wpid:
                     _my_age = None          # launcher not found: no queue rule
-                if _my_age is not None and mem > conf("SMALL_JOB_GB") and older_plan_waiting(_my_age, _pwait):
+                if _my_age is not None and not small_like(mem) and older_plan_waiting(_my_age, _pwait):
                     print(f"NO {mem} {cls} | PLAN-QUEUE: an older plan job (waiting {max(_pwait):.0f} s, this one {_my_age:.0f} s) goes first")
                     return
                 if _prun < conf("PLAN_MAX_RUNNING"):
@@ -1598,18 +1703,20 @@ def gate_locked(mem, argv):
                             pass
                         print(f"OK {_pneed} {cls} | PLAN_PRIO{_early}: plan job admitted ahead of the growth reserve: MemAvailable {avail:.0f} - {_pneed} >= {_pfloor:.0f} GB, {_prun} of {conf('PLAN_MAX_RUNNING'):g} plan jobs running")
                         return
-            elif mem > conf("SMALL_JOB_GB") and _pwait and conf("PLAN_DRAIN_S") <= max(_pwait) < conf("PLAN_HOLD_MAX_S"):   # PLAN_DRAIN_S: a plan job waiting this long puts the host in drain (no new non-plan admits > SMALL_JOB_GB)
+            elif not small_like(mem) and _pwait and conf("PLAN_DRAIN_S") <= max(_pwait) < conf("PLAN_HOLD_MAX_S"):   # PLAN_DRAIN_S: a plan job waiting this long puts the host in drain (no new non-plan admits > SMALL_JOB_GB)
                 print(f"NO {mem} {cls} | PLAN-FIRST: host held for {len(_pwait)} waiting plan job(s) (oldest {max(_pwait):.0f} s, hold ends at {conf('PLAN_HOLD_MAX_S'):g} s)")
                 return
-        if conf("SMALL_JOB_GB") > 0 and mem <= conf("SMALL_JOB_GB"):   # SMALL_JOB_1114
-            _sr = sum(1 for _u, _r, _c, _n in running_units_light() if _r <= conf("SMALL_JOB_GB"))
+        if small_like(mem):   # SMALL_JOB_1114; P1 FLOW-FLEET-R2: probes (<= SMALL_THREADS threads, <= SMALL_PROBE_GB) take the same line
+            _probe = probe_like(mem) and mem > conf("SMALL_JOB_GB")
+            _sgb = conf("SMALL_PROBE_GB") if _probe else conf("SMALL_JOB_GB")
+            _sr = sum(1 for _u, _r, _c, _n in running_units_light() if _r <= _sgb and (not _probe or num(f"{D}/cthr.{_u}") <= conf("SMALL_THREADS")))
             for _f in glob.glob(f"{D}/res.*"):      # admitted a moment ago, no scope yet
                 try:
-                    if time.time() - os.path.getmtime(_f) < max(conf("SIMPLE_FRESH_S"), 60) and int(open(_f).read().split()[1]) <= conf("SMALL_JOB_GB"):
+                    if time.time() - os.path.getmtime(_f) < max(conf("SIMPLE_FRESH_S"), 60) and int(open(_f).read().split()[1]) <= _sgb:
                         _sr += 1
                 except (OSError, ValueError, IndexError):
                     pass
-            _okl, _wl = small_lane(mem, avail, _sr, conf("INV_HEADROOM_GB"), conf("SMALL_JOB_GB"), conf("SMALL_JOB_MAX"), conf("SMALL_FLOOR_GB"))
+            _okl, _wl = small_lane(mem, avail, _sr, conf("INV_HEADROOM_GB"), _sgb, conf("SMALL_PROBE_MAX") if _probe else conf("SMALL_JOB_MAX"), conf("SMALL_FLOOR_GB"))
             if _okl:
                 print(f"OK {mem} {cls} | {_wl}")
                 return
@@ -1637,7 +1744,25 @@ def gate_locked(mem, argv):
             _grow += _sg    # STAGE_PEAK_1114: every running build is charged its measured stage peak (current + next stage), not its RSS now
             _free = avail - conf("INV_HEADROOM_GB") - _grow - _young
             _ok = _free >= _need
-            print(f"{'OK' if _ok else 'NO'} {_need} {cls} | SIMPLE_PEAK: MemAvailable {avail:.0f} - {conf('INV_HEADROOM_GB'):g} headroom - {_grow:.0f} expected growth of {len(_units)} running [stage peaks {_sg:.0f} GB over {_sn} build procs] (x{conf('PEAK_GROWTH_FRAC'):g}) - {_young:.0f} unstarted = {_free:.0f} GB vs expected peak {_need} GB of class '{cls}' (p{conf('PEAK_PCT') * 100:.0f} of its completed runs, else the request), admissible {max(0, _free):.0f} GB")
+            _cpu_note = ""
+            if _ok and conf("CPU_CHARGE") and not os.environ.get("OT_HEAVY_CPU") == "crit" and not os.environ.get("OT_HEAVY_DIRECT") == "1":
+                try:     # FLOW-FLEET-R2 F1: CPU charged by measured class cores, like memory by stage peak
+                    _young_c = []
+                    for _f in glob.glob(f"{D}/res.*"):
+                        if time.time() - os.path.getmtime(_f) < max(conf("SIMPLE_FRESH_S"), 1):
+                            _u2 = open(_f).read().split()[0]
+                            if _u2 not in _live:
+                                _mm2 = rd(f"{D}/meta.{_u2}").split()
+                                _young_c.append((_mm2[1] if len(_mm2) > 1 else "?", int(num(f"{D}/cthr.{_u2}") or 8)))
+                    _cok, _cwhy = cpu_charge_check(cls, job_threads(), _units, cpu_history(), lambda u: int(num(f"{D}/cthr.{u}") or 8), os.cpu_count() or 1,
+                                                   float(rd("/proc/loadavg").split()[0]), _young_c, conf("CPU_FACTOR"), conf("CPU_PCT"), conf("CPU_MIN_N"), conf("CPU_FALLBACK_SHARE"), conf("CPU_MIN_LOAD"))
+                    _cpu_note = " | " + _cwhy
+                    if not _cok:
+                        print(f"NO {_need} {cls}{_cpu_note}")
+                        return
+                except (OSError, ValueError, IndexError):
+                    pass
+            print(f"{'OK' if _ok else 'NO'} {_need} {cls}{_cpu_note} | SIMPLE_PEAK: MemAvailable {avail:.0f} - {conf('INV_HEADROOM_GB'):g} headroom - {_grow:.0f} expected growth of {len(_units)} running [stage peaks {_sg:.0f} GB over {_sn} build procs] (x{conf('PEAK_GROWTH_FRAC'):g}) - {_young:.0f} unstarted = {_free:.0f} GB vs expected peak {_need} GB of class '{cls}' (p{conf('PEAK_PCT') * 100:.0f} of its completed runs, else the request), admissible {max(0, _free):.0f} GB")
             return
         _e = table.get(cls) if cls not in ("?", "cd") else None
         _pk = _e.get("peak_gb", 0) if _e and capacity_sample_count(cls, _e) >= 1 else 0
