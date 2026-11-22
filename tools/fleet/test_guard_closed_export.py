@@ -67,3 +67,34 @@ def test_attempt_signed_counts_local_pass(tmp_path):
     (ad / "gen" / "signoff").mkdir(parents=True)
     (ad / "gen" / "signoff" / "signoff.json").write_text('{"verdict": "LOCAL_PASS_NEEDS_PARENT"}')
     assert g.attempt_signed(str(ad))
+
+
+
+def _attempt(tmp, rec, sub="kit/signoff_eco_1/signoff.json"):
+    a = tmp / "claude" / "kw43-wave-1109n" / "runs" / "qwen_compute" / "kit-wave" / "qwen_compute" / "ev" / "items" / "sle_x" / "attempt_2"
+    f = a / sub
+    f.parent.mkdir(parents=True)
+    raw = json.dumps(rec).encode()
+    f.write_bytes(raw)
+    return a, hashlib.sha256(raw).hexdigest()
+
+
+def test_signed_unexported_attempt_refused_anywhere_clean_aggr_r3(tmp_path):
+    a, sha = _attempt(tmp_path, {"verdict": "SIGNED", "host": "dear-crayfish"})
+    assert "not exported" in g.signed_unexported_refusal(str(a), exported=set(), host="dear-crayfish")
+    assert g.signed_unexported_refusal(str(a), exported={sha}, host="dear-crayfish") is None
+    assert g.signed_unexported_refusal(str(a), exported=set(), host="other-host") is None        # a copy: its origin host keeps it
+
+
+def test_signed_copy_in_input_dir_and_unsigned_not_refused_clean_aggr_r3(tmp_path):
+    a, _ = _attempt(tmp_path, {"verdict": "SIGNED"}, sub="gen/k/ft_physical/child/signoff.json")
+    assert g.signed_unexported_refusal(str(a), exported=set(), host="h") is None
+    b, _ = _attempt(tmp_path / "b", {"verdict": "FAIL_POSTCTS"})
+    assert g.signed_unexported_refusal(str(b), exported=set(), host="h") is None
+
+
+def test_refuse_calls_signed_unexported_with_stale_list_failing_closed_clean_aggr_r3(tmp_path, monkeypatch):
+    a, _ = _attempt(tmp_path, {"verdict": "LOCAL_PASS"})
+    monkeypatch.setattr(g, "EXPORTED_LIST", str(tmp_path / "missing.txt"))
+    why = g.refuse(str(a), protected=set(), ptext="", current={}, allow=set())
+    assert why and "exported_records.txt missing or stale" in why

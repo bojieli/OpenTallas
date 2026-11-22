@@ -123,7 +123,19 @@ def test_routed_unsigned_attempt_is_refused_unless_signed_or_superseded(tmp_path
     assert G.refuse(str(it / "attempt_3"), protected=set(), ptext="", allow=set()) is None           # superseded by a newer routed attempt
     assert "routed result not signed" in G.refuse(str(it / "attempt_5"), protected=set(), ptext="", allow=set())
     attempt(6, True, signed=True)
-    assert G.refuse(str(it / "attempt_6"), protected=set(), ptext="", allow=set()) is None           # SIGNED
+    # CLEAN-AGGR-R3 (COORD 11-22): a SIGNED attempt is kept until its record is exported, then it may go
+    import hashlib as _h, time as _t
+    sha = _h.sha256((it / "attempt_6" / "gen" / "t47" / "signoff" / "signoff.json").read_bytes()).hexdigest()
+    lst = tmp_path / "exported_records.txt"
+    old_list = G.EXPORTED_LIST
+    try:
+        G.EXPORTED_LIST = str(lst)
+        lst.write_text("# built %d\n" % int(_t.time()))
+        assert "signed record not exported" in G.refuse(str(it / "attempt_6"), protected=set(), ptext="", allow=set())
+        lst.write_text("# built %d\n%s\tx\n" % (int(_t.time()), sha))
+        assert G.refuse(str(it / "attempt_6"), protected=set(), ptext="", allow=set()) is None       # SIGNED and exported
+    finally:
+        G.EXPORTED_LIST = old_list
 
 
 def test_private_kit_not_protected_by_kit_wave_ancestor_clean_aggr_r3(tmp_path):

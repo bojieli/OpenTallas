@@ -382,6 +382,52 @@ def closed_unit_refusal(t, exported=None, hold=None):
     return None
 
 
+def own_signed_records(t, host=None):
+    """-> [(sha256, relpath)] of the signed / LOCAL_PASS / NEEDS_PARENT records at or under t that are THIS host's results: not a copy inside a unit's
+    input dirs (COPIED_INPUT_DIRS), not repo content under physical/die_plan, and not a record whose "host" names another host (auto_export drain skips those as copies; their origin host keeps them)"""
+    import hashlib, socket
+    host = host or socket.gethostname()
+    out = []
+    for d, ds, fs in os.walk(t):
+        ds[:] = [x for x in ds if not os.path.islink(os.path.join(d, x)) and x not in COPIED_INPUT_DIRS
+                 and not (x == "die_plan" and os.path.basename(d) == "physical")]   # physical/die_plan = git-tracked plan / view content of a source tree (in main), not a result
+        for f in fs:
+            if f != "signoff.json" and not f.endswith(".signoff.json"):
+                continue
+            q = os.path.join(d, f)
+            try:
+                if os.path.islink(q) or os.path.getsize(q) > 8e6:
+                    continue
+                raw = open(q, "rb").read()
+                rec = json.loads(raw)
+                if not SIGNED_VERDICT.match(str(rec.get("verdict") or "")):
+                    continue
+                if rec.get("host") and str(rec.get("host")) != host:
+                    continue
+                out.append((hashlib.sha256(raw).hexdigest(), os.path.relpath(q, t)))
+            except (OSError, ValueError, AttributeError):
+                continue
+    return out
+
+
+def signed_unexported_refusal(t, exported=None, host=None):
+    """CLEAN-AGGR-R3 (COORD 11-22 class bug: sle_st_b_v2__cl14c98df5__pv41c959f3 attempt_2 went to ot-auto-retire 11-21 17:01 and its closed unit to ot-delete at
+    19:24 while its SIGNED record 8f88a85b... was never exported): ANY target -- attempt, lane dir, kit, tree -- holding this host's signed record whose sha256 is
+    not in exported_records.txt (the auto_export ledger / rtx-pro INDEX record column) is refused; a missing or stale list exports nothing (fail closed)."""
+    if not os.path.isdir(t) or os.path.islink(t):
+        return None
+    recs = own_signed_records(t, host)
+    if not recs:
+        return None
+    exported = load_exported() if exported is None else exported
+    if exported is None:
+        return "signed record(s) present and exported_records.txt missing or stale (signed results are kept until exported): " + recs[0][1]
+    miss = [r for s_, r in recs if s_ not in exported]
+    if miss:
+        return "signed record not exported (%d of %d, e.g. %s)" % (len(miss), len(recs), miss[0])
+    return None
+
+
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
@@ -420,6 +466,9 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
             continue                                  # an ancestor of the attempt dir (the rows container): not a protection of the attempt
         if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
             return "protected (kit_wave.json src/bind of record/marker/prov): " + p
+    su = signed_unexported_refusal(os.path.abspath(target))      # after the list: a protected tree keeps its own reason
+    if su:
+        return su
     lr = lease_refusal(t)
     if lr:
         return lr
