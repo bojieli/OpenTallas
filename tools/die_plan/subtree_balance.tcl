@@ -41,9 +41,15 @@ if {![info exists ::stb::n]} { set ::stb::n 0 }
 # OpenSTA pin arrival properties use command time units, including values
 # below one unit. Convert by the declared scale before budgeting in ps.
 set ::stb::ui_per_ps [sta::time_sta_ui 1.0e-12]
+# TAP-GRID-R5 11-22: an arrival beyond +-1 us is not a clock insertion but an unset/sentinel STA value (QC slw_hc1
+# cle683a076 clk_t11/t18 read -9.8e11..9.4e11 ps; the latest-sink target then padded long delay chains per tap -> 2,062 ps
+# raw tap insertion).  Such a sink is unmeasured: skipped like INF.
+set ::stb::arr_max_ps [expr {[info exists ::env(OT_STB_ARR_MAX_PS)] ? $::env(OT_STB_ARR_MAX_PS) : 1.0e6}]
 proc stb::time_ps {a} {
   if {$a eq "" || $a eq "INF" || $a eq "-INF"} { return "" }
-  return [expr {double($a) / $::stb::ui_per_ps}]
+  set v [expr {double($a) / $::stb::ui_per_ps}]
+  if {abs($v) > $::stb::arr_max_ps} { return "" }
+  return $v
 }
 proc stb::arr {pinname} {
   set p [get_pins -quiet $pinname]

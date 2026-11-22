@@ -262,3 +262,16 @@ def test_tag_keeps_cell_names_of_two_passes_apart():
     # untagged pass (tapbal_grt.tcl, a later process) keeps the old names
     out2, _ = _run("set ::env(OT_STB_EST) placement\n", after=after)
     assert int(out2.split("TAGGED ")[1].split()[0]) == 0 and int(out2.split("PLAIN ")[1].split()[0]) > 0, out2
+
+
+def test_sentinel_arrival_is_unmeasured_not_a_target():
+    """TAP-GRID-R5 11-22: QC slw_hc1 cle683a076 clk_t11/t18 sinks read ~9.4e11 ps (unset STA arrival); the latest-sink target
+    padded long delay chains per tap (2,062 ps raw insertion).  A sink beyond OT_STB_ARR_MAX_PS (1 us) is skipped."""
+    env = ("set ::env(OT_STB_EST) placement\nset ::env(OT_STB_PORTS) clk\n"
+           "rename get_property _gp\n"
+           "proc get_property {p prop} { if {$p eq \"f3.CLK\"} { return 948620000000.0 }; return [_gp $p $prop] }\n")
+    out, arr = _run(env)
+    assert "OT_STB ERROR" not in out
+    # f3 unmeasured -> clk target = f1/f2 (20): nothing padded, no 1e11 target
+    assert "target 20.0" in out and "OT_STB done: 0 delay buffers" in out, out
+    assert arr["f1"] == 20 and arr["f2"] == 20, (arr, out)
