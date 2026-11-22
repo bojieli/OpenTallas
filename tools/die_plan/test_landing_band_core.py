@@ -113,9 +113,15 @@ def test_own_landing_core_is_not_an_overlap():
     boxes = {"cl_ft2_i": (77.772, 587.532, 242.796, 644.556), "cl_i_slg_Q_N_krsp": (8.652, 371.532, 51.852, 590.556),
              "cl_stage_a": (300.012, 300.012, 320.012, 320.012)}
     assert LB.findings_type("kv3_hg", t, boxes) == []
-    moved = dict(boxes, cl_ft2_i=(150.0, 587.532, 315.036, 644.556))     # R6d: the core moved, the band stayed
+    grid = dict(boxes, cl_ft2_i=(79.932, 586.552, 244.956, 642.844))     # QC form: own core 2.17 um off its band rect -> still its own
+    assert LB.findings_type("kv3_hg", t, grid) == []
+    moved = dict(boxes, cl_ft2_i=(200.0, 587.532, 365.036, 644.556))     # R6d: the core moved (26 % left on the band), the band stayed
     f = LB.findings_type("kv3_hg", t, moved)
     assert [(x["band"], x["own"]) for x in f] == [("ft2_i", True)] and "own landing core" in LB.message(f[0])
     other = dict(boxes, u_x=(200.0, 600.0, 260.0, 700.0))                 # a foreign core on the band is still an overlap
     f = LB.findings_type("kv3_hg", t, other)
     assert [(x["band"], x["core"], x["own"]) for x in f] == [("ft2_i", "u_x", False)]
+
+
+def test_stem_drops_event_hashes():
+    assert LB.stem("sle_st_a_v2__pv30dda31f__pv88773f93") == "sle_st_a_v2" == LB.stem("sle_st_a_v2__cl1234abcd")

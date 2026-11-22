@@ -16,13 +16,14 @@ one finding per (type, band, core) with the covered share of the band.
 OWN LANDING CORE (COORD 11-22, KV HGI: 106 hg/hgi bands '100 % covered' by their own landing core): a band's own landing core / landing
 group cell IS the band's footprint and is never an overlap.  Own = named cl_<band> / u_cland_<band> (band name with non-word chars as _,
 '#i' rect suffix dropped) or a box equal to the band rect within OWN_TOL_UM on every edge (track offsets: 0.012 um seen).  An own core
-by name that no longer sits on its band (the KV R6d class: core moved, band left behind) is still reported, as 'own landing core
+by name that still covers >= OWN_KEEP_SHARE of its band is on its band (QC cl_ cores sit 2.17 um off their band rect: grid, not a
+defect); one that covers less has moved off it (the KV R6d class: core moved, band left behind) and is reported as 'own landing core
 offset from its band'.
 
 ERROR ON NEW, WARN ON INHERITED (COORD ruling 11-22: no new restrictive gate; KV D28 / S81 J8 must not fail on inherited overlaps):
   base = the plan of record the event starts from (check.py --band-base PLAN; publish_gate passes the die's live plan).  A finding whose
   (type stem, band kind, band, core) overlaps in the base by at least the same area (1e-3 um2 slack) is INHERITED -> WARN
-  "[inherited]"; a new overlap, or one the event makes larger, -> ERROR "[new]" / "[larger]".  Type stem = name without __cl<hash>
+  "[inherited]"; a new overlap, or one the event makes larger, -> ERROR "[new]" / "[larger]".  Type stem = name without __cl<hash> / __pv<hash>
   (events re-hash type names).  No base given -> every finding is a WARN "[no base]": new and inherited cannot be told apart.
   The G0 report summary lists the inherited findings (landing_band_core.inherited) for the owners' next event.
 Read-only, stdlib + the plan's own schema helpers.
@@ -39,6 +40,7 @@ sys.path.insert(0, str(HERE))
 CHECK = "landing_band_core"
 EPS = 1e-6
 OWN_TOL_UM = 0.5
+OWN_KEEP_SHARE = 0.5
 
 
 def _rect(r):
@@ -111,8 +113,11 @@ def findings_type(tn, t, boxes=None):
                 continue                                   # the band's own landing core / group cell: its footprint, not an overlap
             a = inter(r, cb)
             if a > EPS:
+                own = own_core(name, core)
+                if own and a / area >= OWN_KEEP_SHARE:
+                    continue                               # own landing core on its band (grid offset only)
                 out.append(dict(type=tn, kind=kind, band=name, rect=r, core=core, core_rect=[float(v) for v in cb],
-                                overlap_um2=round(a, 3), share=round(a / area, 3), own=own_core(name, core)))
+                                overlap_um2=round(a, 3), share=round(a / area, 3), own=own))
     return out
 
 
@@ -131,7 +136,7 @@ def message(f):
 
 
 def stem(tn):
-    return re.sub(r"__cl[0-9a-f]{6,}", "", tn)
+    return re.sub(r"__(cl|pv)[0-9a-f]{6,}", "", tn)
 
 
 def key(f):
