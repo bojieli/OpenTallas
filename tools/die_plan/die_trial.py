@@ -241,12 +241,14 @@ def die_core_cover(P, L, grow=0.0, thresh=None):
 
 
 def core_obs(t):
-    """[(x0, y0, x1, y1, top_layer, module, has_view)] of a type's planned hard cores (ROM macros, closed leaves)."""
+    """[(x0, y0, x1, y1, top_layer, module, has_view)] of a type's placed hard cores."""
     out = []
     for h in t.get("hard_cores", []) or []:
         if "origin_um" not in h or "outline_um" not in h:
             continue
-        x0, y0 = h["origin_um"]
+        ox, oy = h["origin_um"]
+        dx, dy = h.get("track_offset_um", (0, 0))
+        x0, y0 = ox + dx, oy + dy
         w, hh = h["outline_um"]
         if h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
             w, hh = hh, w
