@@ -1,0 +1,4481 @@
+{
+ "schema": "opentallas.s81.j6_donor_delta.v1",
+ "lane": "FAM-S81-LEPE-4",
+ "event": "J8",
+ "for": "S81-J6-ASSEMBLY-R5",
+ "status": "DRAFT 11-22 01:xx PST (COORD proof12 rulings 2+3). Apply ONLY if proof12 final 5_1_grt confirms: S1 if setup WNS < -42 on u_u_lnl3 -> li3_d; R1 if internal async removal < 0. Not bound.",
+ "types_changed": [
+  "dsdv_slice_lepe_mu_LP__t2",
+  "dsdv_slice_lepe_nh_mus_LP__t1"
+ ],
+ "tools_min_sha": "20a713e74d",
+ "rows": {
+  "S1": {
+   "what": "li3_d/li3_v D1 station FIRM at the lnl3 -> g_rx midpoint (no cycle)",
+   "types": [
+    "dsdv_slice_lepe_mu_LP__t2"
+   ],
+   "evidence": "proof12 4_cts.odb: 553 li3 station flops placed at mean (499,353) next to their consumers (522,346); launch pins u_u_lnl3.k_li_d at (1225..1330, 622). Launch leg ~1000 um manhattan -> setup -106.3. FIRM strip at (883,484) splits it ~498 / ~499 um (below the lnl2 bottom edge y 509.8; taps t26/t62 clear).",
+   "K": "0 (same D1 station, moved). A stage instead (D 1 -> 2) is NOT drafted: lnl3 k_li_r is already D2 after S81-J6-ASSEMBLY 11-21, so the li3 credit loop is at DR 8 and +1 forward needs a credit depth change first.",
+   "fallback": "if GRT with S1 is still < -42: D 1 -> 2 with credit DR 8 -> 9 (RTL param); legs ~333 um",
+   "nh_mus_LP": "same lnl3/li3 geometry class; FIRM sites from its own proof placement, not copied",
+   "ops": "ops[] entries relay_sites/u_y_xd_u_lep_li3_*"
+  },
+  "R1": {
+   "what": "clock.tap_reset_split true (also turns on tap_reset_affinity): every last reset stage gets a same-depth copy on each tap that holds its async sinks",
+   "types": [
+    "dsdv_slice_lepe_mu_LP__t2",
+    "dsdv_slice_lepe_nh_mus_LP__t1"
+   ],
+   "evidence": "proof12 4_cts.odb clock trace: g_local[417].local_r on clk_t29 (insertion 185 ps); its sink g_tx[0].g_safe_write.u_m.g_address[16].address_r[4], 7 um away, on clk_t8 (403 ps, via the east-edge tap and two otstb delay buffers). Removal -173 = 218 ps tap-to-tap skew, not distance: the copy already sits at its cluster (13 um), so a relay sited at the cluster alone would not fix it.",
+   "K": "0 (copy = same register, same depth, same reset release; LEC same-side duplicates)",
+   "risk": "group_r -> copy D path becomes cross-tap where a copy lands on a late tap; the 500-700 um wire covers it on proof12 numbers; checked by the FF hold gate",
+   "tools": "main 6135636053 (RST-COTAP), included in tools >= 20a713e74d"
+  }
+ },
+ "ops": [
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[0]",
+   "value": [
+    837.64,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[1]",
+   "value": [
+    837.64,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[2]",
+   "value": [
+    837.64,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[3]",
+   "value": [
+    837.64,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[4]",
+   "value": [
+    837.64,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[5]",
+   "value": [
+    837.64,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[6]",
+   "value": [
+    837.64,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[7]",
+   "value": [
+    837.64,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[8]",
+   "value": [
+    838.936,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[9]",
+   "value": [
+    838.936,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[10]",
+   "value": [
+    838.936,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[11]",
+   "value": [
+    838.936,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[12]",
+   "value": [
+    838.936,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[13]",
+   "value": [
+    838.936,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[14]",
+   "value": [
+    838.936,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[15]",
+   "value": [
+    838.936,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[16]",
+   "value": [
+    840.232,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[17]",
+   "value": [
+    840.232,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[18]",
+   "value": [
+    840.232,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[19]",
+   "value": [
+    840.232,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[20]",
+   "value": [
+    840.232,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[21]",
+   "value": [
+    840.232,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[22]",
+   "value": [
+    840.232,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[23]",
+   "value": [
+    840.232,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[24]",
+   "value": [
+    841.528,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[25]",
+   "value": [
+    841.528,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[26]",
+   "value": [
+    841.528,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[27]",
+   "value": [
+    841.528,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[28]",
+   "value": [
+    841.528,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[29]",
+   "value": [
+    841.528,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[30]",
+   "value": [
+    841.528,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[31]",
+   "value": [
+    841.528,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[32]",
+   "value": [
+    842.824,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[33]",
+   "value": [
+    842.824,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[34]",
+   "value": [
+    842.824,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[35]",
+   "value": [
+    842.824,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[36]",
+   "value": [
+    842.824,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[37]",
+   "value": [
+    842.824,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[38]",
+   "value": [
+    842.824,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[39]",
+   "value": [
+    842.824,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[40]",
+   "value": [
+    844.12,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[41]",
+   "value": [
+    844.12,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[42]",
+   "value": [
+    844.12,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[43]",
+   "value": [
+    844.12,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[44]",
+   "value": [
+    844.12,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[45]",
+   "value": [
+    844.12,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[46]",
+   "value": [
+    844.12,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[47]",
+   "value": [
+    844.12,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[48]",
+   "value": [
+    845.416,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[49]",
+   "value": [
+    845.416,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[50]",
+   "value": [
+    845.416,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[51]",
+   "value": [
+    845.416,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[52]",
+   "value": [
+    845.416,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[53]",
+   "value": [
+    845.416,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[54]",
+   "value": [
+    845.416,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[55]",
+   "value": [
+    845.416,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[56]",
+   "value": [
+    846.712,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[57]",
+   "value": [
+    846.712,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[58]",
+   "value": [
+    846.712,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[59]",
+   "value": [
+    846.712,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[60]",
+   "value": [
+    846.712,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[61]",
+   "value": [
+    846.712,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[62]",
+   "value": [
+    846.712,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[63]",
+   "value": [
+    846.712,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[64]",
+   "value": [
+    848.008,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[65]",
+   "value": [
+    848.008,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[66]",
+   "value": [
+    848.008,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[67]",
+   "value": [
+    848.008,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[68]",
+   "value": [
+    848.008,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[69]",
+   "value": [
+    848.008,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[70]",
+   "value": [
+    848.008,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[71]",
+   "value": [
+    848.008,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[72]",
+   "value": [
+    849.304,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[73]",
+   "value": [
+    849.304,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[74]",
+   "value": [
+    849.304,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[75]",
+   "value": [
+    849.304,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[76]",
+   "value": [
+    849.304,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[77]",
+   "value": [
+    849.304,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[78]",
+   "value": [
+    849.304,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[79]",
+   "value": [
+    849.304,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[80]",
+   "value": [
+    850.6,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[81]",
+   "value": [
+    850.6,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[82]",
+   "value": [
+    850.6,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[83]",
+   "value": [
+    850.6,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[84]",
+   "value": [
+    850.6,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[85]",
+   "value": [
+    850.6,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[86]",
+   "value": [
+    850.6,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[87]",
+   "value": [
+    850.6,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[88]",
+   "value": [
+    851.896,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[89]",
+   "value": [
+    851.896,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[90]",
+   "value": [
+    851.896,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[91]",
+   "value": [
+    851.896,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[92]",
+   "value": [
+    851.896,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[93]",
+   "value": [
+    851.896,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[94]",
+   "value": [
+    851.896,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[95]",
+   "value": [
+    851.896,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[96]",
+   "value": [
+    853.192,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[97]",
+   "value": [
+    853.192,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[98]",
+   "value": [
+    853.192,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[99]",
+   "value": [
+    853.192,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[100]",
+   "value": [
+    853.192,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[101]",
+   "value": [
+    853.192,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[102]",
+   "value": [
+    853.192,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[103]",
+   "value": [
+    853.192,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[104]",
+   "value": [
+    854.488,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[105]",
+   "value": [
+    854.488,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[106]",
+   "value": [
+    854.488,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[107]",
+   "value": [
+    854.488,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[108]",
+   "value": [
+    854.488,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[109]",
+   "value": [
+    854.488,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[110]",
+   "value": [
+    854.488,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[111]",
+   "value": [
+    854.488,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[112]",
+   "value": [
+    855.784,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[113]",
+   "value": [
+    855.784,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[114]",
+   "value": [
+    855.784,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[115]",
+   "value": [
+    855.784,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[116]",
+   "value": [
+    855.784,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[117]",
+   "value": [
+    855.784,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[118]",
+   "value": [
+    855.784,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[119]",
+   "value": [
+    855.784,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[120]",
+   "value": [
+    857.08,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[121]",
+   "value": [
+    857.08,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[122]",
+   "value": [
+    857.08,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[123]",
+   "value": [
+    857.08,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[124]",
+   "value": [
+    857.08,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[125]",
+   "value": [
+    857.08,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[126]",
+   "value": [
+    857.08,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[127]",
+   "value": [
+    857.08,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[128]",
+   "value": [
+    858.376,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[129]",
+   "value": [
+    858.376,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[130]",
+   "value": [
+    858.376,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[131]",
+   "value": [
+    858.376,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[132]",
+   "value": [
+    858.376,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[133]",
+   "value": [
+    858.376,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[134]",
+   "value": [
+    858.376,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[135]",
+   "value": [
+    858.376,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[136]",
+   "value": [
+    859.672,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[137]",
+   "value": [
+    859.672,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[138]",
+   "value": [
+    859.672,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[139]",
+   "value": [
+    859.672,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[140]",
+   "value": [
+    859.672,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[141]",
+   "value": [
+    859.672,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[142]",
+   "value": [
+    859.672,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[143]",
+   "value": [
+    859.672,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[144]",
+   "value": [
+    860.968,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[145]",
+   "value": [
+    860.968,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[146]",
+   "value": [
+    860.968,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[147]",
+   "value": [
+    860.968,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[148]",
+   "value": [
+    860.968,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[149]",
+   "value": [
+    860.968,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[150]",
+   "value": [
+    860.968,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[151]",
+   "value": [
+    860.968,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[152]",
+   "value": [
+    862.264,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[153]",
+   "value": [
+    862.264,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[154]",
+   "value": [
+    862.264,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[155]",
+   "value": [
+    862.264,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[156]",
+   "value": [
+    862.264,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[157]",
+   "value": [
+    862.264,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[158]",
+   "value": [
+    862.264,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[159]",
+   "value": [
+    862.264,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[160]",
+   "value": [
+    863.56,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[161]",
+   "value": [
+    863.56,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[162]",
+   "value": [
+    863.56,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[163]",
+   "value": [
+    863.56,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[164]",
+   "value": [
+    863.56,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[165]",
+   "value": [
+    863.56,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[166]",
+   "value": [
+    863.56,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[167]",
+   "value": [
+    863.56,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[168]",
+   "value": [
+    864.856,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[169]",
+   "value": [
+    864.856,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[170]",
+   "value": [
+    864.856,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[171]",
+   "value": [
+    864.856,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[172]",
+   "value": [
+    864.856,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[173]",
+   "value": [
+    864.856,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[174]",
+   "value": [
+    864.856,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[175]",
+   "value": [
+    864.856,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[176]",
+   "value": [
+    866.152,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[177]",
+   "value": [
+    866.152,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[178]",
+   "value": [
+    866.152,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[179]",
+   "value": [
+    866.152,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[180]",
+   "value": [
+    866.152,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[181]",
+   "value": [
+    866.152,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[182]",
+   "value": [
+    866.152,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[183]",
+   "value": [
+    866.152,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[184]",
+   "value": [
+    867.448,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[185]",
+   "value": [
+    867.448,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[186]",
+   "value": [
+    867.448,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[187]",
+   "value": [
+    867.448,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[188]",
+   "value": [
+    867.448,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[189]",
+   "value": [
+    867.448,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[190]",
+   "value": [
+    867.448,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[191]",
+   "value": [
+    867.448,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[192]",
+   "value": [
+    868.744,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[193]",
+   "value": [
+    868.744,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[194]",
+   "value": [
+    868.744,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[195]",
+   "value": [
+    868.744,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[196]",
+   "value": [
+    868.744,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[197]",
+   "value": [
+    868.744,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[198]",
+   "value": [
+    868.744,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[199]",
+   "value": [
+    868.744,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[200]",
+   "value": [
+    870.04,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[201]",
+   "value": [
+    870.04,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[202]",
+   "value": [
+    870.04,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[203]",
+   "value": [
+    870.04,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[204]",
+   "value": [
+    870.04,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[205]",
+   "value": [
+    870.04,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[206]",
+   "value": [
+    870.04,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[207]",
+   "value": [
+    870.04,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[208]",
+   "value": [
+    871.336,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[209]",
+   "value": [
+    871.336,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[210]",
+   "value": [
+    871.336,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[211]",
+   "value": [
+    871.336,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[212]",
+   "value": [
+    871.336,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[213]",
+   "value": [
+    871.336,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[214]",
+   "value": [
+    871.336,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[215]",
+   "value": [
+    871.336,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[216]",
+   "value": [
+    872.632,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[217]",
+   "value": [
+    872.632,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[218]",
+   "value": [
+    872.632,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[219]",
+   "value": [
+    872.632,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[220]",
+   "value": [
+    872.632,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[221]",
+   "value": [
+    872.632,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[222]",
+   "value": [
+    872.632,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[223]",
+   "value": [
+    872.632,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[224]",
+   "value": [
+    873.928,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[225]",
+   "value": [
+    873.928,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[226]",
+   "value": [
+    873.928,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[227]",
+   "value": [
+    873.928,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[228]",
+   "value": [
+    873.928,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[229]",
+   "value": [
+    873.928,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[230]",
+   "value": [
+    873.928,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[231]",
+   "value": [
+    873.928,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[232]",
+   "value": [
+    875.224,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[233]",
+   "value": [
+    875.224,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[234]",
+   "value": [
+    875.224,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[235]",
+   "value": [
+    875.224,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[236]",
+   "value": [
+    875.224,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[237]",
+   "value": [
+    875.224,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[238]",
+   "value": [
+    875.224,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[239]",
+   "value": [
+    875.224,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[240]",
+   "value": [
+    876.52,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[241]",
+   "value": [
+    876.52,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[242]",
+   "value": [
+    876.52,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[243]",
+   "value": [
+    876.52,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[244]",
+   "value": [
+    876.52,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[245]",
+   "value": [
+    876.52,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[246]",
+   "value": [
+    876.52,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[247]",
+   "value": [
+    876.52,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[248]",
+   "value": [
+    877.816,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[249]",
+   "value": [
+    877.816,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[250]",
+   "value": [
+    877.816,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[251]",
+   "value": [
+    877.816,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[252]",
+   "value": [
+    877.816,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[253]",
+   "value": [
+    877.816,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[254]",
+   "value": [
+    877.816,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[255]",
+   "value": [
+    877.816,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[256]",
+   "value": [
+    879.112,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[257]",
+   "value": [
+    879.112,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[258]",
+   "value": [
+    879.112,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[259]",
+   "value": [
+    879.112,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[260]",
+   "value": [
+    879.112,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[261]",
+   "value": [
+    879.112,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[262]",
+   "value": [
+    879.112,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[263]",
+   "value": [
+    879.112,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[264]",
+   "value": [
+    880.408,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[265]",
+   "value": [
+    880.408,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[266]",
+   "value": [
+    880.408,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[267]",
+   "value": [
+    880.408,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[268]",
+   "value": [
+    880.408,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[269]",
+   "value": [
+    880.408,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[270]",
+   "value": [
+    880.408,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[271]",
+   "value": [
+    880.408,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[272]",
+   "value": [
+    881.704,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[273]",
+   "value": [
+    881.704,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[274]",
+   "value": [
+    881.704,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[275]",
+   "value": [
+    881.704,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[276]",
+   "value": [
+    881.704,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[277]",
+   "value": [
+    881.704,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[278]",
+   "value": [
+    881.704,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[279]",
+   "value": [
+    881.704,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[280]",
+   "value": [
+    883.0,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[281]",
+   "value": [
+    883.0,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[282]",
+   "value": [
+    883.0,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[283]",
+   "value": [
+    883.0,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[284]",
+   "value": [
+    883.0,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[285]",
+   "value": [
+    883.0,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[286]",
+   "value": [
+    883.0,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[287]",
+   "value": [
+    883.0,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[288]",
+   "value": [
+    884.296,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[289]",
+   "value": [
+    884.296,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[290]",
+   "value": [
+    884.296,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[291]",
+   "value": [
+    884.296,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[292]",
+   "value": [
+    884.296,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[293]",
+   "value": [
+    884.296,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[294]",
+   "value": [
+    884.296,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[295]",
+   "value": [
+    884.296,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[296]",
+   "value": [
+    885.592,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[297]",
+   "value": [
+    885.592,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[298]",
+   "value": [
+    885.592,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[299]",
+   "value": [
+    885.592,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[300]",
+   "value": [
+    885.592,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[301]",
+   "value": [
+    885.592,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[302]",
+   "value": [
+    885.592,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[303]",
+   "value": [
+    885.592,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[304]",
+   "value": [
+    886.888,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[305]",
+   "value": [
+    886.888,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[306]",
+   "value": [
+    886.888,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[307]",
+   "value": [
+    886.888,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[308]",
+   "value": [
+    886.888,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[309]",
+   "value": [
+    886.888,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[310]",
+   "value": [
+    886.888,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[311]",
+   "value": [
+    886.888,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[312]",
+   "value": [
+    888.184,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[313]",
+   "value": [
+    888.184,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[314]",
+   "value": [
+    888.184,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[315]",
+   "value": [
+    888.184,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[316]",
+   "value": [
+    888.184,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[317]",
+   "value": [
+    888.184,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[318]",
+   "value": [
+    888.184,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[319]",
+   "value": [
+    888.184,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[320]",
+   "value": [
+    889.48,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[321]",
+   "value": [
+    889.48,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[322]",
+   "value": [
+    889.48,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[323]",
+   "value": [
+    889.48,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[324]",
+   "value": [
+    889.48,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[325]",
+   "value": [
+    889.48,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[326]",
+   "value": [
+    889.48,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[327]",
+   "value": [
+    889.48,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[328]",
+   "value": [
+    890.776,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[329]",
+   "value": [
+    890.776,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[330]",
+   "value": [
+    890.776,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[331]",
+   "value": [
+    890.776,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[332]",
+   "value": [
+    890.776,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[333]",
+   "value": [
+    890.776,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[334]",
+   "value": [
+    890.776,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[335]",
+   "value": [
+    890.776,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[336]",
+   "value": [
+    892.072,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[337]",
+   "value": [
+    892.072,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[338]",
+   "value": [
+    892.072,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[339]",
+   "value": [
+    892.072,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[340]",
+   "value": [
+    892.072,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[341]",
+   "value": [
+    892.072,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[342]",
+   "value": [
+    892.072,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[343]",
+   "value": [
+    892.072,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[344]",
+   "value": [
+    893.368,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[345]",
+   "value": [
+    893.368,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[346]",
+   "value": [
+    893.368,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[347]",
+   "value": [
+    893.368,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[348]",
+   "value": [
+    893.368,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[349]",
+   "value": [
+    893.368,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[350]",
+   "value": [
+    893.368,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[351]",
+   "value": [
+    893.368,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[352]",
+   "value": [
+    894.664,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[353]",
+   "value": [
+    894.664,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[354]",
+   "value": [
+    894.664,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[355]",
+   "value": [
+    894.664,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[356]",
+   "value": [
+    894.664,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[357]",
+   "value": [
+    894.664,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[358]",
+   "value": [
+    894.664,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[359]",
+   "value": [
+    894.664,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[360]",
+   "value": [
+    895.96,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[361]",
+   "value": [
+    895.96,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[362]",
+   "value": [
+    895.96,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[363]",
+   "value": [
+    895.96,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[364]",
+   "value": [
+    895.96,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[365]",
+   "value": [
+    895.96,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[366]",
+   "value": [
+    895.96,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[367]",
+   "value": [
+    895.96,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[368]",
+   "value": [
+    897.256,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[369]",
+   "value": [
+    897.256,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[370]",
+   "value": [
+    897.256,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[371]",
+   "value": [
+    897.256,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[372]",
+   "value": [
+    897.256,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[373]",
+   "value": [
+    897.256,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[374]",
+   "value": [
+    897.256,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[375]",
+   "value": [
+    897.256,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[376]",
+   "value": [
+    898.552,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[377]",
+   "value": [
+    898.552,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[378]",
+   "value": [
+    898.552,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[379]",
+   "value": [
+    898.552,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[380]",
+   "value": [
+    898.552,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[381]",
+   "value": [
+    898.552,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[382]",
+   "value": [
+    898.552,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[383]",
+   "value": [
+    898.552,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[384]",
+   "value": [
+    899.848,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[385]",
+   "value": [
+    899.848,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[386]",
+   "value": [
+    899.848,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[387]",
+   "value": [
+    899.848,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[388]",
+   "value": [
+    899.848,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[389]",
+   "value": [
+    899.848,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[390]",
+   "value": [
+    899.848,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[391]",
+   "value": [
+    899.848,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[392]",
+   "value": [
+    901.144,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[393]",
+   "value": [
+    901.144,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[394]",
+   "value": [
+    901.144,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[395]",
+   "value": [
+    901.144,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[396]",
+   "value": [
+    901.144,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[397]",
+   "value": [
+    901.144,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[398]",
+   "value": [
+    901.144,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[399]",
+   "value": [
+    901.144,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[400]",
+   "value": [
+    902.44,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[401]",
+   "value": [
+    902.44,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[402]",
+   "value": [
+    902.44,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[403]",
+   "value": [
+    902.44,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[404]",
+   "value": [
+    902.44,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[405]",
+   "value": [
+    902.44,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[406]",
+   "value": [
+    902.44,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[407]",
+   "value": [
+    902.44,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[408]",
+   "value": [
+    903.736,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[409]",
+   "value": [
+    903.736,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[410]",
+   "value": [
+    903.736,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[411]",
+   "value": [
+    903.736,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[412]",
+   "value": [
+    903.736,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[413]",
+   "value": [
+    903.736,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[414]",
+   "value": [
+    903.736,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[415]",
+   "value": [
+    903.736,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[416]",
+   "value": [
+    905.032,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[417]",
+   "value": [
+    905.032,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[418]",
+   "value": [
+    905.032,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[419]",
+   "value": [
+    905.032,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[420]",
+   "value": [
+    905.032,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[421]",
+   "value": [
+    905.032,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[422]",
+   "value": [
+    905.032,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[423]",
+   "value": [
+    905.032,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[424]",
+   "value": [
+    906.328,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[425]",
+   "value": [
+    906.328,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[426]",
+   "value": [
+    906.328,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[427]",
+   "value": [
+    906.328,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[428]",
+   "value": [
+    906.328,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[429]",
+   "value": [
+    906.328,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[430]",
+   "value": [
+    906.328,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[431]",
+   "value": [
+    906.328,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[432]",
+   "value": [
+    907.624,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[433]",
+   "value": [
+    907.624,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[434]",
+   "value": [
+    907.624,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[435]",
+   "value": [
+    907.624,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[436]",
+   "value": [
+    907.624,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[437]",
+   "value": [
+    907.624,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[438]",
+   "value": [
+    907.624,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[439]",
+   "value": [
+    907.624,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[440]",
+   "value": [
+    908.92,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[441]",
+   "value": [
+    908.92,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[442]",
+   "value": [
+    908.92,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[443]",
+   "value": [
+    908.92,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[444]",
+   "value": [
+    908.92,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[445]",
+   "value": [
+    908.92,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[446]",
+   "value": [
+    908.92,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[447]",
+   "value": [
+    908.92,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[448]",
+   "value": [
+    910.216,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[449]",
+   "value": [
+    910.216,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[450]",
+   "value": [
+    910.216,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[451]",
+   "value": [
+    910.216,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[452]",
+   "value": [
+    910.216,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[453]",
+   "value": [
+    910.216,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[454]",
+   "value": [
+    910.216,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[455]",
+   "value": [
+    910.216,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[456]",
+   "value": [
+    911.512,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[457]",
+   "value": [
+    911.512,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[458]",
+   "value": [
+    911.512,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[459]",
+   "value": [
+    911.512,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[460]",
+   "value": [
+    911.512,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[461]",
+   "value": [
+    911.512,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[462]",
+   "value": [
+    911.512,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[463]",
+   "value": [
+    911.512,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[464]",
+   "value": [
+    912.808,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[465]",
+   "value": [
+    912.808,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[466]",
+   "value": [
+    912.808,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[467]",
+   "value": [
+    912.808,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[468]",
+   "value": [
+    912.808,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[469]",
+   "value": [
+    912.808,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[470]",
+   "value": [
+    912.808,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[471]",
+   "value": [
+    912.808,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[472]",
+   "value": [
+    914.104,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[473]",
+   "value": [
+    914.104,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[474]",
+   "value": [
+    914.104,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[475]",
+   "value": [
+    914.104,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[476]",
+   "value": [
+    914.104,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[477]",
+   "value": [
+    914.104,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[478]",
+   "value": [
+    914.104,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[479]",
+   "value": [
+    914.104,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[480]",
+   "value": [
+    915.4,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[481]",
+   "value": [
+    915.4,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[482]",
+   "value": [
+    915.4,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[483]",
+   "value": [
+    915.4,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[484]",
+   "value": [
+    915.4,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[485]",
+   "value": [
+    915.4,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[486]",
+   "value": [
+    915.4,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[487]",
+   "value": [
+    915.4,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[488]",
+   "value": [
+    916.696,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[489]",
+   "value": [
+    916.696,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[490]",
+   "value": [
+    916.696,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[491]",
+   "value": [
+    916.696,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[492]",
+   "value": [
+    916.696,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[493]",
+   "value": [
+    916.696,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[494]",
+   "value": [
+    916.696,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[495]",
+   "value": [
+    916.696,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[496]",
+   "value": [
+    917.992,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[497]",
+   "value": [
+    917.992,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[498]",
+   "value": [
+    917.992,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[499]",
+   "value": [
+    917.992,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[500]",
+   "value": [
+    917.992,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[501]",
+   "value": [
+    917.992,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[502]",
+   "value": [
+    917.992,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[503]",
+   "value": [
+    917.992,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[504]",
+   "value": [
+    919.288,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[505]",
+   "value": [
+    919.288,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[506]",
+   "value": [
+    919.288,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[507]",
+   "value": [
+    919.288,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[508]",
+   "value": [
+    919.288,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[509]",
+   "value": [
+    919.288,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[510]",
+   "value": [
+    919.288,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[511]",
+   "value": [
+    919.288,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[512]",
+   "value": [
+    920.584,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[513]",
+   "value": [
+    920.584,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[514]",
+   "value": [
+    920.584,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[515]",
+   "value": [
+    920.584,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[516]",
+   "value": [
+    920.584,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[517]",
+   "value": [
+    920.584,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[518]",
+   "value": [
+    920.584,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[519]",
+   "value": [
+    920.584,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[520]",
+   "value": [
+    921.88,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[521]",
+   "value": [
+    921.88,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[522]",
+   "value": [
+    921.88,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[523]",
+   "value": [
+    921.88,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[524]",
+   "value": [
+    921.88,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[525]",
+   "value": [
+    921.88,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[526]",
+   "value": [
+    921.88,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[527]",
+   "value": [
+    921.88,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[528]",
+   "value": [
+    923.176,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[529]",
+   "value": [
+    923.176,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[530]",
+   "value": [
+    923.176,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[531]",
+   "value": [
+    923.176,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[532]",
+   "value": [
+    923.176,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[533]",
+   "value": [
+    923.176,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[534]",
+   "value": [
+    923.176,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[535]",
+   "value": [
+    923.176,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[536]",
+   "value": [
+    924.472,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[537]",
+   "value": [
+    924.472,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[538]",
+   "value": [
+    924.472,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[539]",
+   "value": [
+    924.472,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[540]",
+   "value": [
+    924.472,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[541]",
+   "value": [
+    924.472,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[542]",
+   "value": [
+    924.472,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[543]",
+   "value": [
+    924.472,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[544]",
+   "value": [
+    925.768,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[545]",
+   "value": [
+    925.768,
+    482.65
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[546]",
+   "value": [
+    925.768,
+    483.19
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[547]",
+   "value": [
+    925.768,
+    483.73
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[548]",
+   "value": [
+    925.768,
+    484.27
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[549]",
+   "value": [
+    925.768,
+    484.81
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[550]",
+   "value": [
+    925.768,
+    485.35
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[551]",
+   "value": [
+    925.768,
+    485.89
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_d_0_0.q[552]",
+   "value": [
+    927.064,
+    482.11
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/relay_sites/u_y_xd_u_lep_li3_v_0_0.q[0]",
+   "value": [
+    883.0,
+    486.7
+   ]
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/clock/tap_reset_split",
+   "value": true
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/clock/tap_reset_split",
+   "value": true
+  }
+ ],
+ "not_in_gate": "hold -207.5 on input port -> first register (arst_n, lpc_i0, lepf_i0) vs ~200 ps insertion: port budget, die-level only (COORD ruling 1); no lever spent"
+}

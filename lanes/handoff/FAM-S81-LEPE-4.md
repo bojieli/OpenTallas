@@ -36,3 +36,5 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 - 11-22 PST XMID gaps closed: main 20a713e74d, shared layer_prog/rstop_model.py used by compiler, dv_cut_replay (manifest rstop_xmid, fail closed) and compose_tok_ds (legs enter col-7 XMID stops: +1 per leg end). J8 rows tools_min_sha 20a713e74d.
 
 - 11-22 00:1x PST proof12 (lepe_mu_LP t2, 54c1e2+coll_i0 channel) CTS post-hook: setup_ws -106.3 (u_u_lnl3 core out -> u_y_xd_u_lep_li3_d station q[263]; also g_tx[0].g_rp.odr -> lo0_d -94.8), hold_ws -207.5 (input ports arst_n/lpc_i0/lepf_i0 -> first input reg: port-to-reg vs ~200 ps insertion), async removal -173 (g_reset_balanced local copies -> g_safe_write addr regs). vs proof10 -64.5/-181: worse at CTS; GRT running since 00:08, judged on final 5_1_grt.odb.
+
+- 11-22 01:xx PST COORD proof12 ruling: drafted S1 (li3 D1 station FIRM at midpoint 883,484; no cycle; credit loop at DR 8 blocks +1) + R1 (clock.tap_reset_split on mu_LP t2 + nh_mus_LP t1) in lanes/handoff/FAM-S81-LEPE-4-lepeLP-p12fix-J8-rows.json; apply only if proof12 GRT confirms. Port hold noted die-level only.
