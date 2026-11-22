@@ -28,3 +28,11 @@ Lane clone (adopted): intel2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/c
 - e2e1 died at bpc (D4) as predicted. e2e2 = ot-build hub on rt 20a713e74dcf, pid 634373 on intel2, log intel2 OPUS-PIPELINE-R2/tmp/e2e2.log,
   bind out epyc2 OPUS-PIPELINE-R2/ot-build/qwen_kvsys/<tree>/b_5b9b3a25de6f. Then private-spec + run-item to sign-off.
 - run 4 (FABLE kvob/b_7df6a93d4f78) serial still finishing: optional second reference.
+
+## 11-22 00:4x update
+- run 4 (same rt as run 5) vs run 5: same result (335 byte-identical, 40 path-only, 1 yosys timing line).
+- e2e2 bind PASSED (main rt 20a713e74dcf, parallel 1134 s emit, bind 1813 s, bpc advisory) but kit refused: D5 alias path -> fixed main dfcb8055f4.
+- e2e3 = hub from rt dfcb8055f488 with --rt 20a713e74dcf (bind FRESH), kit run-item goal finish in flight: hub pid 2245003 intel2,
+  log intel2 OPUS-PIPELINE-R2/tmp/e2e3.log, spec ~/coord/autopilot/private_specs/OPUS-PIPELINE-R2/ot-build/qwen_kvsys_kv3_io_cor_v1/1122003502.
+  If hub dies: rerun same command (bind FRESH). On sign-off: post result; auto_export enqueued by hub.
+- Landed total: deb04cf0fb, a2fe3bc714, 33fe1ccf07 (default auto), dfcb8055f4.
