@@ -1,4 +1,4 @@
-# TAP-GRID-R5 handoff (live; updated 11-21 ~19:40 PST)
+# TAP-GRID-R5 handoff (live; updated 11-22 03:45 PST)
 Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lane dirs: intel2 + epyc7 /srv/opentallas-scratch2/claude/tap-grid-r5 (intel2 repo = ot-lane-clone).
 
 ## Landed
@@ -18,3 +18,11 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - intel2 tap-grid-r5/j8: j8_hold.tcl / j8_run.sh per-path FF hold on FABLE-FIX-S81-LEAF-R7 t39kit 5_1_grt.odb (J6 rg3 proof) -> t39_grt.out. Parse launch/capture tap port + clock latency per violating path.
 ## Open
 - 5: CTS re-merges reset taps (lever 6.2), QC cb q01 S2 clock form (6.3), hg_v3 11 taps on macros.
+
+## 11-22 03:4x update
+- COORD dispatch DONE (posted READY 50ab6733): lanes/handoff/TAP-GRID-R5-V3-QC-taps.json, 111 QC types = v3all2 split rows + clock.tap_balance_to slowest, tap_slowest_max_ps = insertion+15. Built by epyc7 tap-grid-r5/qc_pkg.py (plan pkg/plan.json). Measured taps per type: tap-grid-r5/qc_tapins.json (qc_tapins.py scans autopilot-state kit CTS logs).
+- KEY: pin-register gate bound = OT_VCLK_TT = type clock.insertion_ps (gen_phys insertion_binding), not the tap_balance target. The 4 stopped types got insertion_ps = measured pinreg mean on a 5-ps grid (280/280/285/300). Needs tools >= main 3c2f3758f4 (V3p3 launch schema lacks the key). Missed the 04:00 receipt -> PENDING next event.
+- Split rerun with local lattice candidates on the 9 partial types: epyc7 tap_split2.py -> v3p/rows.json (waiter bldqvtqqo; if it improves, land the lattice in tools/die_plan/tap_split.py + test).
+- J8 DONE (posted 35f0577d): t39 hold all in2reg, r(slack, capture latency) = -0.988; structural in-port hold ~49 ps below bound; fix = in-port padding, not tap balance. j8/j8_io.py, t39_j8_io.txt, t39_paths.tsv.
+- slw_hc1 cle683a076 t11/t18: 42/27 sinks, CTS depth 2, 29 um wire, yet raw 1874-2143 ps both taps (same range) and OT_STB arrivals ~1e12 (no valid arrival on some sinks). Suspect sinks whose clock arrives via a non-tree path / macro internal latency. ODB trace epyc7 tap-grid-r5/hc1_taps.tcl -> hc1_taps.out (running).
+- KV chain kvnp.sh (intel2, waiter b9ragnd05) at RC_SPLIT radius step; gate -> kv/gate1/gate.out -> KV-PLAN-R6.
