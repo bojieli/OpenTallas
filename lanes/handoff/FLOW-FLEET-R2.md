@@ -12,3 +12,6 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R2/repo (cone tools
 
 ## T1 min_rt for plan binds: DONE (ot-run plan_job_rt_floor)
 - ot-run --plan-job bind refuses an rt (named /claude/rt/<sha12>/ in the command, else the client's own) below min_rt (kit_wave.json, $OT_MIN_RT, rt/MIN_RT) unless --rt-floor-exempt "WHY" (logged). test_ot_run_plan_rt_floor.py.
+
+## 11-22 COORD add-on: interim result.json: DONE main 91ac256152b6
+- run-item seal record now verdict RUNNING (stage kept); an ended unit left at RUNNING is collected as FAIL at that stage; FAIL only from fail(). test_interim_result.py.
