@@ -24,3 +24,6 @@ place+geom PASS-COND. route ot-run oth-ubuntu-2998350-1795329265 epyc7 (resumed 
 
 ## 22:1x lever-1 route + cleanup
 lever-1 place+geom PASS-COND (76,109 cells). route ot-run oth-ubuntu-3023440-1795329345 epyc7, log epyc7 fam-s81-col-h10-r4/routeL1_otrun.log, kit epyc7 .../private/FAM-S81-COL-H10-R4/col_h10_r0_p4__t1__pvcc166a6d_1121190309/gen/col_h10_r0_p4__t1__pvcc166a6d. Accept: route DRC 0 vs u_cf/u_t0 (count DRT violations by owner macro). Cleanup: specA/specL1/L1b/L1c deleted; intel2 srcA handed to CLEAN-AGGR-R3 (guard host-scope).
+
+## 23:4x PROOF A RESULT: GRT-0116 FAIL (done, no more A/B)
+Congestion 483->154; south frame_int hotspot gone (FIT worked there). New: 84 V gcells x700-900 y950-1100 over u_r2.u_e15e.u_view.u_c (ot_v41_bf_col3_c MY) + bf16_half; nets = repair buffers (netNNN). J8 term (a) NOT met. Needs a bf_col3_c corridor/halo row for col_h10_r2 (owner COLROM / col plan lane). Kit results kept on epyc7. Renders: run/layout_review/grt/{congestion,density}.png.
