@@ -819,6 +819,85 @@ def build(repo, sha, overlay_json, scope, out, die="", allow_file="", main_ref="
     return m
 
 
+SEAL_CAP = 2000                  # overlay entries carried inline in a seal record (the full manifest goes to --out)
+
+
+def _seal_cache_path(root):
+    return os.path.join(CACHE_DIR, "seal-" + hashlib.md5(os.path.realpath(root).encode()).hexdigest() + ".json")
+
+
+def seal(root, out="", jobs=8):
+    """FLOW-FLEET-R1 11-22 (OWNER: private family-plan kits count directly): the manifest of a private tree (an ot-tree-fork copy of a
+    manifest tree, edited by its lane) as it is NOW = the parent's main sha + every file that differs from the parent (or was in its overlay)
+    as overlay, each with its sha256.  Never writes inside the tree: the full manifest goes to OUT (json, .gz when OUT ends in .gz).
+    An unedited tree that verifies against its own manifest seals to that manifest (no rehash beyond verify).  -> (record, refusal)"""
+    import concurrent.futures
+    root = os.path.realpath(root)
+    m0 = load_manifest(root)
+    if not m0 or not m0.get("main_sha") or not isinstance(m0.get("files"), dict):
+        return None, (f"SRC_MANIFEST SEAL-REFUSED {root}: no parent {MANIFEST} with a main sha (not a manifest tree or an ot-tree-fork copy of one); "
+                      "fork the die src with ot-tree-fork (kit_wave.py private-spec --fork src) so the sign-off carries src provenance")
+    h0 = manifest_hash(m0)
+    ro_tree = not writable(root)
+    errs = verify(root, ro=False)[0] if ro_tree else ["writable tree: hashed"]   # a published read-only tree: its own (cached) verify; a fork: hash it
+    newest = 0
+    if not errs:
+        m, changed, added, deleted = m0, [], [], []
+    else:
+        try:
+            with open(_seal_cache_path(root)) as f:
+                cache = json.load(f)
+        except (OSError, ValueError):
+            cache = {}
+        have = walk_tree(root)
+
+        def one(rel):
+            p = have[rel]
+            st = os.lstat(p)
+            key = f"{st.st_dev}:{st.st_ino}:{st.st_size}:{st.st_mtime_ns}"
+            c = cache.get(rel)
+            if c and c[0] == key:
+                return rel, c[1], key, st.st_mtime
+            return rel, tree_hash(p), key, st.st_mtime
+        files, nc = {}, {}
+        with concurrent.futures.ThreadPoolExecutor(max(1, int(jobs))) as ex:
+            for rel, h, key, mt in ex.map(one, sorted(have)):
+                files[rel] = h
+                nc[rel] = [key, h]
+                newest = max(newest, mt)
+        pf, pov = m0.get("files") or {}, m0.get("overlay") or {}
+        changed = sorted(r for r in files if r in pf and pf[r] != files[r])
+        added = sorted(r for r in files if r not in pf)
+        deleted = sorted(r for r in pf if r not in files)
+        ov = {r: files[r] for r in sorted(files) if r in pov or r in changed or r in added}
+        errs = [] if files == pf else errs
+        m = m0 if files == pf else {"version": 1, "main_sha": m0["main_sha"], "scope": list(m0.get("scope") or DEFAULT_SCOPE), "overlay": ov, "files": files}
+        if m is not m0:
+            m["manifest_hash"] = manifest_hash(m)
+        try:
+            os.makedirs(CACHE_DIR, exist_ok=True)
+            with open(_seal_cache_path(root) + ".tmp", "w") as f:
+                json.dump(nc, f)
+            os.replace(_seal_cache_path(root) + ".tmp", _seal_cache_path(root))
+        except OSError:
+            pass
+    rec = {"schema": "opentallas.src_seal.v1", "tree": root, "manifest_hash": m.get("manifest_hash") or manifest_hash(m), "main_sha": m["main_sha"],
+           "parent_manifest_hash": h0, "tree_read_only": ro_tree, "files": len(m.get("files") or {}), "overlay_n": len(m.get("overlay") or {}),
+           "overlay": dict(list(sorted((m.get("overlay") or {}).items()))[:SEAL_CAP]), "changed_vs_parent": len(changed), "added_vs_parent": len(added),
+           "deleted_vs_parent": deleted[:200], "deleted_n": len(deleted), "newest_mtime": newest or None, "sealed_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+           "host": os.uname().nodename, "unchanged": not errs}
+    if out:
+        import gzip
+        body = json.dumps(dict(m, seal={k: v for k, v in rec.items() if k != "overlay"}), sort_keys=True).encode()
+        tmp = out + f".tmp{os.getpid()}"
+        os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
+        with (gzip.open(tmp, "wb") if out.endswith(".gz") else open(tmp, "wb")) as f:
+            f.write(body)
+        os.replace(tmp, out)
+        rec["out"] = os.path.abspath(out)
+    return rec, ""
+
+
 def make_ro(root):
     for dp, dn, fn in os.walk(root, topdown=False):
         for f in fn:
@@ -1330,6 +1409,10 @@ def main(argv=None):
     v.add_argument("--ro", action="store_true")
     v.add_argument("--full", action="store_true")
     v.add_argument("--no-writers", action="store_true", help="on drift, skip the scan that names the writers (other hardlink names, symlinks into the tree, live processes)")
+    se = sp.add_parser("seal", help="FLOW-FLEET-R1: manifest of a private (forked, edited) tree now = parent main sha + changed files as overlay; never writes the tree")
+    se.add_argument("tree")
+    se.add_argument("--out", default="", help="write the full manifest here (.json or .json.gz)")
+    se.add_argument("--jobs", type=int, default=8)
     cr = sp.add_parser("cached-receipt", help="reuse an exact completed verification plus current immutable metadata, no payload rehash")
     cr.add_argument("tree")
     cr.add_argument("--expect", default="")
@@ -1398,6 +1481,14 @@ def main(argv=None):
                     print(w)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
+    elif a.cmd == "seal":
+        rec, why = seal(a.tree, a.out, a.jobs)
+        if why:
+            print(why)
+            return 1
+        print(f"SRC_MANIFEST SEALED {rec['manifest_hash']} main {rec['main_sha']} overlay {rec['overlay_n']} files {rec['files']} parent {rec['parent_manifest_hash'][:12]}"
+              + (" (unchanged)" if rec["unchanged"] else f" (+{rec['changed_vs_parent']} changed {rec['added_vs_parent']} added {rec['deleted_n']} deleted vs parent)"))
+        print("SRC_MANIFEST_SEAL " + json.dumps(rec, sort_keys=True))
     elif a.cmd == "receipt":
         errs, info = host_receipt(a.tree, a.expect)
         if errs:

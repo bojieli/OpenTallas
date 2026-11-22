@@ -288,7 +288,9 @@ def infer(u, rows):
     """-> (die, element, kind, how)."""
     hint = u.get('hint') or {}
     # the wave's item name is the element the count and the lanes use (hd_st_str, not its module ot_s81hd_st_str)
+    # FLOW-FLEET-R1 11-22: a private kit (kit_wave private-spec work dir <event>/private/<lane>/<item>_<MMDDhhmmss>/) is the same element as its wave item
     w = (re.search(r'/kit-wave/([a-z0-9_]+)/[^/]+/items/([^/]+)/', u['signoff'])
+         or re.search(r'/kit-wave/([a-z0-9_]+)/[^/]+/private/[^/]+/(.+?)_\d{10}/', u['signoff'])
          or re.search(r'/autopilot/closed/([a-z0-9_]+)/(.+?)__[0-9a-f]{10}/', u['signoff']))
     el = hint.get('element') or (w and w.group(2)) or u.get('top') or u.get('name') or 'unknown'
     el = re.sub(r'[^A-Za-z0-9_.-]', '_', el)

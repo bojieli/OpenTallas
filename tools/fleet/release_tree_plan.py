@@ -743,7 +743,10 @@ def prov(p, d, load):
             if n == 'PROVENANCE.json' and x.get('kind') == 'resign':
                 return resign(f, x, load)
             if x.get('src_commit') and x.get('flow_tag'):
-                return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f)
+                # FLOW-FLEET-R1 11-22: a private family-plan kit (kit_wave run-item / private-provenance, kind private) names its private plan
+                pv = x.get('private') if x.get('kind') == 'private' and isinstance(x.get('private'), dict) else {}
+                return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f,
+                            **({'private_plan_sha': pv.get('plan_sha256') or '', 'private_plan': pv.get('plan') or '', 'src_manifest_hash': pv.get('src_manifest_hash') or ''} if pv else {}))
             return {}
         nq = os.path.dirname(q)
         if nq == q: break

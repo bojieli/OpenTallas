@@ -8157,6 +8157,22 @@ def verifier_path(own=None):
     return own
 
 
+SEAL_NAME = "src_manifest.sealed.json.gz"               # FLOW-FLEET-R1 11-22: <work>/logs/<this>: the full manifest of a private tree at gen
+
+
+def seal_record(txt):
+    """the SRC_MANIFEST_SEAL / SRC_MANIFEST OK line of a src_manifest step -> {manifest_hash, main_sha, ...} or {}"""
+    for ln in reversed(str(txt or "").splitlines()):
+        if ln.startswith("SRC_MANIFEST_SEAL "):
+            try:
+                r = json.loads(ln[len("SRC_MANIFEST_SEAL "):])
+                return r if isinstance(r, dict) and r.get("manifest_hash") and r.get("main_sha") else {}
+            except ValueError:
+                return {}
+    m = re.search(r"^SRC_MANIFEST OK ([0-9a-f]{64}) main ([0-9a-f]{7,40})", str(txt or ""), re.M)
+    return {"manifest_hash": m.group(1), "main_sha": m.group(2), "overlay_n": None, "from": "verify"} if m else {}
+
+
 def src_manifest_cmd(sp):
     """SRC-TREE-1115: shell command (on the gen host) verifying the die src tree against its manifest; None = off.
     The verifier is shipped inline (python3 -I -c), so the gen host needs no copy of it."""
@@ -8169,6 +8185,9 @@ def src_manifest_cmd(sp):
         script = verifier_path().read_text()
     except OSError:
         return None
+    if mode == "seal":                                   # FLOW-FLEET-R1 11-22: a private tree's manifest as gen reads it, kept with the attempt (never written into the tree)
+        return (f"python3 -I -c {shlex.quote(script)} seal {shlex.quote(sp['src'])} --out "
+                f"{shlex.quote(str(sp.get('work') or '/tmp') + '/logs/' + SEAL_NAME)}")
     cmd = f"python3 -I -c {shlex.quote(script)} verify {shlex.quote(sp['src'])}"
     if sp.get("src_manifest_hash"):
         cmd += f" --expect {shlex.quote(sp['src_manifest_hash'])}"
@@ -8182,6 +8201,11 @@ def src_manifest_verdict(sp, rc, txt):
     file(s); no manifest is a note ('verify') or a refusal ('require', or when adoption pinned a hash)."""
     mode = str(sp.get("src_manifest") or "require")
     txt = txt or ""
+    if mode == "seal":
+        if rc == 0 and seal_record(txt):
+            return "", ""
+        return "", ("KW_NOTE src_manifest seal: " + ((next((ln for ln in txt.splitlines() if "SEAL-REFUSED" in ln), "") or txt[-300:]).strip())[:400]
+                    + " -> the sign-off of this kit stays SIGNED-UNVERSIONED (no src provenance)")
     missing = "SRC_MANIFEST MISSING" in txt
     if rc == 0 and not missing:
         return "", ""
@@ -9099,11 +9123,14 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         sp["roam_hosts"] = [host]
     if bind_out:                                         # FLOW-PROC-A: --bind-out = the private strict bind (a plan-side input, like --plan)
         sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=os.path.abspath(bind_out))
+    if src_manifest is None and other_tree and not sp.get("src_manifest_hash"):   # FLOW-FLEET-R1 11-22 (OWNER: private family-plan kits count directly): a private
+        # tree (no adopted manifest hash: a fork, not a bound event tree) is sealed at gen; a bound tree keeps the wave verify (its OK line is the provenance)
+        src_manifest = "seal"
     if src_manifest is not None:                         # FLOW-PROC-A: --src-manifest on|off (a private tree often has no .src-manifest.json yet)
-        if src_manifest not in ("on", "off"):
-            raise ValueError("--src-manifest on|off")
-        sp["src_manifest"] = "off" if src_manifest == "off" else (sp.get("src_manifest") if sp.get("src_manifest") not in (None, "", "off") else "require")
-        if src_manifest == "off":
+        if src_manifest not in ("on", "off", "seal"):
+            raise ValueError("--src-manifest seal|on|off")
+        sp["src_manifest"] = src_manifest if src_manifest in ("off", "seal") else (sp.get("src_manifest") if sp.get("src_manifest") not in (None, "", "off", "seal") else "require")
+        if src_manifest in ("off", "seal"):
             sp["src_manifest_hash"] = ""
     keys = []
     for kv in ab or ():
@@ -9422,12 +9449,200 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
         return 0
     if rc == 0 and chain.get("verdict") == "PASS":
         res.update(stage="signoff", verdict="SIGNED", evidence=(rcpt.get("signoff") or {}).get("path") and f"{kh}:{rcpt['signoff']['path']}" or f"{kh}:{K}")
+        try:                                             # FLOW-FLEET-R1 11-22: the private sign-off counts directly (PROVENANCE kind private beside the kit)
+            res["provenance"] = private_provenance(sp, kh, K, (rcpt.get("signoff") or {}).get("path") or f"{K}/signoff/signoff.json", res.get("src_manifest") or {},
+                                                   chain=chain, spec_path=str(out / "spec.json"))
+            print(f"KW_PROVENANCE {res['provenance'].get('verdict')} {res['provenance'].get('why') or ''}".rstrip(), flush=True)
+        except Exception as e:                           # noqa: BLE001 - a provenance problem never turns a sign-off into a FAIL
+            res["provenance"] = {"verdict": "ERROR", "why": f"{type(e).__name__}: {e}"[:300]}
+            print(f"KW_PROVENANCE ERROR {res['provenance']['why']}", flush=True)
         (out / "result.json").write_text(json.dumps(res, indent=1))
         print(f"KW_CHAIN SIGNED {sp['die']}/{sp['item']} on {kh}:{K}", flush=True)
         return 0
     stage = failed_stage or ("signoff" if chain.get("verdict") in ("NOT_SIGNED", "SIGNOFF_MISSING") else
                              "lec" if str(chain.get("verdict") or "").startswith("LEC") else "chain")
     return fail(stage, f"KW_CHAIN {chain.get('verdict') or 'no receipt'} rc {rc}: {chain.get('reason') or ''}\n" + txt[-3000:], f"{kh}:{K}")
+
+
+# FLOW-FLEET-R1 11-22 (OWNER, COORD top priority: "make private family-plan kits count directly"): a private kit's sign-off + routed LEC counts as an
+# any-plan sign-off with no rebuild from a wave tree.  Its provenance is the same as a wave kit's: the src tree = main sha + overlay manifest (here SEALED
+# at gen: the fork's parent main sha + every changed file with its sha256, kept in <work>/logs/src_manifest.sealed.json.gz), src_commit = that main sha,
+# flow_tag = the flow release tag carrying that commit's flow (autopilot.resolve_provenance, as the autopilot does for a wave job), and the routed LEC
+# EQUIVALENT.  It is written as <work>/gen/PROVENANCE.json {schema provenance.v1, kind private, verdict SIGNED, src_commit, flow_tag, private {plan,
+# plan_sha256, src_manifest_hash, overlay, fork, spec}}, which release_tree_plan reads above the signoff.json (the kit's own kit_provenance.v1 record
+# is skipped there).  Anything missing -> verdict SIGNED-UNVERSIONED with the reason (never counted, never a FAIL).
+PRIVATE_PROV_PROBE = r'''
+import glob, hashlib, json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+def sha(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""): h.update(b)
+    return h.hexdigest()
+if a.get("plan"):
+    try: out["plan_sha256"] = sha(a["plan"])
+    except OSError as e: out["plan_err"] = str(e)[:200]
+if a.get("signoff"):
+    try:
+        so = json.load(open(a["signoff"]))
+        base = (so.get("inputs") or {}).get("base") or ""
+        out["signoff"] = {"verdict": so.get("verdict"), "profile": so.get("profile"), "generated": so.get("generated"), "base": base, "name": so.get("name")}
+    except Exception as e:
+        so, base = {}, ""
+        out["signoff_err"] = str(e)[:200]
+    nl = os.path.join(base, "6_final.v") if base else ""
+    nmt = os.path.getmtime(nl) if nl and os.path.isfile(nl) else None
+    cands = [a["lec"]] if a.get("lec") else []
+    K = a.get("kit") or ""
+    for pat in ("lec_routed*/lec.json", "*/lec_routed*/lec.json", "lec_routed*/*/lec.json", "*/lec.json"):
+        cands += sorted(glob.glob(os.path.join(K, pat)), key=os.path.getmtime, reverse=True) if K else []
+    seen = set()
+    for c in cands:
+        if c in seen or not os.path.isfile(c): continue
+        seen.add(c)
+        try: d = json.load(open(c))
+        except Exception: continue
+        ok = d.get("verdict") == "EQUIVALENT" and (d.get("superset_vec") or {}).get("all_shown") is True and nmt is not None and os.path.getmtime(c) >= nmt
+        if ok or "lec" not in out:
+            out["lec"] = {"path": c, "verdict": d.get("verdict"), "all_shown": (d.get("superset_vec") or {}).get("all_shown"), "ok": bool(ok),
+                          "newer_than_netlist": nmt is not None and os.path.getmtime(c) >= nmt, "netlist": nl}
+        if ok: break
+if a.get("kit") and os.path.isfile(os.path.join(a["kit"], "config.mk")): out["kit_gen_mtime"] = os.path.getmtime(os.path.join(a["kit"], "config.mk"))
+if a.get("write"):
+    p = a["write"]; prev = None
+    try: prev = json.load(open(p))
+    except Exception: pass
+    if isinstance(prev, dict) and prev.get("verdict") == "PROVISIONAL":
+        out["kept"] = "PROVISIONAL (KW-PROV-1 marker: built on provisional child views)"
+    else:
+        t = p + ".tmp%d" % os.getpid()
+        with open(t, "w") as f: json.dump(a["doc"], f, indent=1)
+        os.replace(t, p); out["written"] = p
+print("KW_PRIVPROV " + json.dumps(out))
+'''
+
+
+def _privprov(host, hub, arg, run=subprocess.run):
+    """run PRIVATE_PROV_PROBE on host -> dict"""
+    argv = remote_argv(host, hub, f"python3 -I - {shlex.quote(json.dumps(arg))} <<'KWPP'\n{PRIVATE_PROV_PROBE}\nKWPP")
+    p = run(argv, capture_output=True, text=True, timeout=900)
+    got = [ln[len("KW_PRIVPROV "):] for ln in (p.stdout or "").splitlines() if ln.startswith("KW_PRIVPROV ")]
+    if not got:
+        raise RuntimeError(f"provenance probe on {host} gave no answer: {((p.stdout or '') + (p.stderr or ''))[-300:]}")
+    return json.loads(got[-1])
+
+
+def private_provenance_doc(sp, kit_host, signoff_path, seal, lec, plan_sha, prov, spec_path="", spec_sha="", backfill=None):
+    """-> the PROVENANCE.json document of a private sign-off (pure).  Versioned (verdict SIGNED, src_commit + flow_tag set) only when the tree was
+    sealed (manifest hash + main sha), the routed LEC is EQUIVALENT (all_shown, newer than the routed netlist) and the flow tag resolved."""
+    pv = sp.get("private") or {}
+    why = []
+    if not (seal or {}).get("manifest_hash") or not (seal or {}).get("main_sha"):
+        why.append("no src manifest seal (private-spec --src-manifest off, or the tree is not an ot-tree-fork copy of a manifest tree)")
+    if not (lec or {}).get("ok"):
+        why.append("no routed LEC EQUIVALENT newer than the routed netlist" + (f" ({lec.get('path')}: {lec.get('verdict')})" if (lec or {}).get("path") else ""))
+    if (prov or {}).get("error") or not (prov or {}).get("flow_tag"):
+        why.append("flow tag: " + str((prov or {}).get("error") or "unresolved"))
+    if not plan_sha:
+        why.append(f"plan {sp.get('plan')} unreadable")
+    ok = not why
+    ov = (seal or {}).get("overlay") or {}
+    doc = {"schema": "opentallas.provenance.v1", "kind": "private", "verdict": "SIGNED" if ok else "SIGNED-UNVERSIONED",
+           "id": f"private:{pv.get('lane') or ''}:{sp.get('die')}/{sp.get('item')}:{os.path.basename(str(sp.get('work') or ''))}",
+           "die": sp.get("die"), "type": sp.get("item"), "src": sp.get("src"), "lane": pv.get("lane") or "",
+           "src_commit": (prov or {}).get("src_commit", "") if ok else "", "flow_tag": (prov or {}).get("flow_tag", "") if ok else "",
+           "why": "; ".join(why), "written": now_s(), "signoff": f"{kit_host}:{signoff_path}", "lec": lec or {},
+           "private": {"of": pv.get("of"), "plan": sp.get("plan"), "plan_sha256": plan_sha or "", "wave_plan": pv.get("wave_plan"),
+                       "src_manifest_hash": (seal or {}).get("manifest_hash", ""), "main_sha": (seal or {}).get("main_sha", ""),
+                       "parent_manifest_hash": (seal or {}).get("parent_manifest_hash", ""), "overlay_n": (seal or {}).get("overlay_n"),
+                       "overlay": dict(list(ov.items())[:500]), "seal_record": (seal or {}).get("out", ""), "sealed_utc": (seal or {}).get("sealed_utc", ""),
+                       "tree_fork": pv.get("tree_fork") or {}, "spec": spec_path, "spec_sha256": spec_sha, "env_ab": sp.get("env_ab") or {},
+                       "rt": pv.get("rt") or {}, "flow_manifest_src": (prov or {}).get("src_commit", "")}}
+    if backfill:
+        doc["private"]["backfill"] = backfill
+    return doc
+
+
+def _resolve_private_flow(die, main_sha):
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import autopilot as AP
+    try:
+        return AP.resolve_provenance(f"main@{main_sha}", "", die)
+    except Exception as e:                               # noqa: BLE001
+        return {"src_commit": "", "flow_tag": "", "error": f"{type(e).__name__}: {e}"[:200]}
+
+
+def private_provenance(sp, kit_host, K, signoff_path, seal, chain=None, spec_path="", run=subprocess.run, resolve=None, backfill=None):
+    """probe plan sha (gen host) + sign-off / routed LEC (kit host), resolve the flow tag here (the hub), write <work>/gen/PROVENANCE.json on the
+    kit host -> summary {verdict, why, path, src_commit, flow_tag, plan_sha256, src_manifest_hash}"""
+    hub = sp.get("hub") or PRIVATE_HUB
+    G = sp.get("gen_host") or kit_host
+    W = str(sp.get("work") or "")
+    chain = chain or {}
+    lec_given = chain.get("lec") if chain.get("lec_verdict") == "EQUIVALENT" else ""
+    k = _privprov(kit_host, hub, {"signoff": signoff_path, "kit": K, "lec": lec_given or "", "plan": sp.get("plan") if G == kit_host else ""}, run=run)
+    plan_sha = k.get("plan_sha256") or ""
+    if not plan_sha and G != kit_host:
+        plan_sha = _privprov(G, hub, {"plan": sp.get("plan")}, run=run).get("plan_sha256") or ""
+    so = k.get("signoff") or {}
+    if so.get("verdict") != "SIGNED":
+        raise RuntimeError(f"{kit_host}:{signoff_path} is not SIGNED ({so.get('verdict') or k.get('signoff_err')})")
+    prov = (resolve or _resolve_private_flow)(sp.get("die"), seal["main_sha"]) if (seal or {}).get("main_sha") else {}
+    try:
+        spec_sha = hashlib.sha256(Path(spec_path).read_bytes()).hexdigest() if spec_path else ""
+    except OSError:
+        spec_sha = ""
+    doc = private_provenance_doc(sp, kit_host, signoff_path, seal, k.get("lec") or {}, plan_sha, prov, spec_path=spec_path, spec_sha=spec_sha, backfill=backfill)
+    dest = f"{W}/gen/PROVENANCE.json"
+    w = _privprov(kit_host, hub, {"write": dest, "doc": doc}, run=run)
+    return {"verdict": doc["verdict"] if w.get("written") else "KEPT " + str(w.get("kept")), "why": doc["why"], "path": f"{kit_host}:{dest}",
+            "src_commit": doc["src_commit"], "flow_tag": doc["flow_tag"], "plan_sha256": plan_sha, "src_manifest_hash": doc["private"]["src_manifest_hash"],
+            "lec": (k.get("lec") or {}).get("path")}
+
+
+def private_provenance_cmd(a):
+    """backfill: PROVENANCE for a private kit that signed off outside run-item's chain (driven by hand after AUTO-GEOM, or before 11-22).  The tree is
+    sealed NOW; it stands for the tree gen read only when it is read-only (published) or no file in it is newer than the kit's config.mk."""
+    d = Path(a.spec).parent if a.spec.endswith(".json") else Path(a.spec)
+    sp = json.loads((d / "spec.json").read_text())
+    if not sp.get("private"):
+        print("private-provenance: not a private spec", file=sys.stderr)
+        return 2
+    hub = sp.get("hub") or PRIVATE_HUB
+    try:
+        res = json.loads((d / "result.json").read_text())
+    except (OSError, ValueError):
+        res = {}
+    kh, _, K = str(a.kit or res.get("kit") or "").partition(":")
+    if not K:
+        kh, K = sp.get("gen_host"), f"{sp['work']}/gen/{sp['item']}"
+    so = a.signoff or f"{K}/signoff/signoff.json"
+    seal = dict(res.get("src_manifest") or {})
+    backfill = None
+    if not seal.get("manifest_hash"):
+        script = verifier_path().read_text()
+        out = f"{sp['work']}/logs/{SEAL_NAME}"
+        G = sp.get("gen_host") or kh
+        p = subprocess.run(remote_argv(G, hub, f"python3 -I -c {shlex.quote(script)} seal {shlex.quote(sp['src'])} --out {shlex.quote(out)}"),
+                           capture_output=True, text=True, timeout=7200)
+        seal = seal_record(p.stdout) if p.returncode == 0 else {}
+        if not seal:
+            print(f"private-provenance: seal of {G}:{sp['src']} failed: {((p.stdout or '') + (p.stderr or ''))[-400:]}", file=sys.stderr)
+        k = _privprov(kh, hub, {"kit": K})
+        gen_t = k.get("kit_gen_mtime")
+        fresh = bool(seal) and (seal.get("tree_read_only") or (seal.get("newest_mtime") is not None and gen_t is not None and seal["newest_mtime"] <= gen_t))
+        backfill = {"sealed_after_gen": True, "kit_gen_mtime": gen_t, "tree_newest_mtime": seal.get("newest_mtime") if seal else None,
+                    "tree_read_only": seal.get("tree_read_only") if seal else None}
+        if seal and not fresh:
+            print(f"private-provenance: {sp['src']} has files newer than the kit's gen ({seal.get('newest_mtime')} > {gen_t}): the seal is not the tree gen "
+                  "read; this sign-off stays unversioned (re-run it through run-item, which seals at gen)", file=sys.stderr)
+            seal = {}
+    r = private_provenance(sp, kh, K, so, seal, chain={"lec": a.lec, "lec_verdict": "EQUIVALENT"} if a.lec else {}, spec_path=str(d / "spec.json"), backfill=backfill)
+    print(json.dumps(r, indent=1))
+    if not a.dry:
+        res["provenance"] = r
+        (d / "result.json").write_text(json.dumps(res, indent=1))
+    return 0 if r.get("verdict") == "SIGNED" else 1
 
 
 def chain_goal_of(sp, goal=None):
@@ -9915,7 +10130,12 @@ def run_item(spec_path):
             print(_note, flush=True)
         if _why:
             return fail("src_manifest", _why, f"{G}:{src}")
-        print("KW_SRC_MANIFEST ok " + (_mtxt or "")[-200:].strip(), flush=True)
+        _seal = seal_record(_mtxt) if _mrc == 0 else {}
+        if _seal:                                        # FLOW-FLEET-R1 11-22: the tree identity the private sign-off's PROVENANCE names
+            res["src_manifest"] = dict(_seal, mode=str(sp.get("src_manifest") or "require"), host=G)
+            (out / "result.json").write_text(json.dumps(res, indent=1))
+        print("KW_SRC_MANIFEST ok " + next((ln for ln in (_mtxt or "").splitlines() if ln.startswith(("SRC_MANIFEST SEALED", "SRC_MANIFEST OK"))),
+                                           (_mtxt or "")[-200:].strip())[:300], flush=True)
     if sp.get("tools_rt"):
         # the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there
         for _h in [G] + [h for h in roamer.others if h != G]:
@@ -19572,7 +19792,9 @@ def main(argv=None):
     ps_.add_argument("--host", help="gen / place host of the private kit (default: the wave pick)")
     ps_.add_argument("--bind-out", help="private strict bind dir (kit_rtl bind_out; default: the wave bind, moved with --tree)")
     ps_.add_argument("--allow-bind-stale", action="store_true", help="KIT-TOPO-STALE-1122: write the spec although the bind probe finds the bind made from another plan")
-    ps_.add_argument("--src-manifest", choices=("on", "off"), help="off: no src tree manifest check (a private tree without .src-manifest.json)")
+    ps_.add_argument("--src-manifest", choices=("seal", "on", "off"), help="seal (default with --tree/--fork, FLOW-FLEET-R1): the tree's manifest at gen = parent main sha + "
+                                                                       "changed files (sha256), kept in <work>/logs; the sign-off then counts (PROVENANCE kind private). "
+                                                                       "on: the wave's read-only verify.  off: no check and the sign-off never counts")
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
     ps_.add_argument("--goal", default="auto", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: how far run-item drives the kit: auto (default: the runner's "
@@ -19580,6 +19802,13 @@ def main(argv=None):
     ps_.add_argument("--rt", metavar="SHA", help="FLOW-CLKGRT-1121: declared tools runtime = rt/<sha12> snapshot for gen / kit_rtl / the launch tree (e.g. the "
                                                "runtime the bind was made on), recorded in spec private.rt + kit_env_provenance.json; flow scripts are still "
                                                "refreshed from rt/current at each stage (FLOW-FIX-2045), so new flow tcl reach the kit; env and ENV-PROVENANCE unchanged")
+    pp_ = sub.add_parser("private-provenance", help="FLOW-FLEET-R1: write PROVENANCE (kind private) for a private kit that signed off outside run-item "
+                                                    "(seal the tree now; counts when sealed + routed LEC EQUIVALENT + flow tag)")
+    pp_.add_argument("spec", help="private spec dir or its spec.json")
+    pp_.add_argument("--kit", help="HOST:KIT when the kit moved (default result.json kit, else <gen_host>:<work>/gen/<item>)")
+    pp_.add_argument("--signoff", help="signoff.json path on the kit host (default KIT/signoff/signoff.json)")
+    pp_.add_argument("--lec", help="routed lec.json on the kit host (default: the newest EQUIVALENT one under the kit); checked: EQUIVALENT, all_shown, newer than 6_final.v")
+    pp_.add_argument("--dry", action="store_true", help="do not update result.json (PROVENANCE.json is still written)")
     rc_ = sub.add_parser("reclassify", help="recompute class/reason of FAIL records from their stored stage logs "
                                             "with the current RULES (dry run unless --write)")
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
@@ -19632,6 +19861,8 @@ def main(argv=None):
         return cmd_reclassify(a)
     if a.cmd == "private-spec":
         return private_spec_cmd(a)
+    if a.cmd == "private-provenance":
+        return private_provenance_cmd(a)
     if a.cmd == "run-item":
         try:
             global RUN_ITEM_GOAL
