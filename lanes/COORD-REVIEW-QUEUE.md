@@ -23921,3 +23921,4 @@ FAILED [AUTOPILOT c26b4b280a2e] 2026-11-22 02:55:36 PST AUTOPILOT -> KIT-WAVE-12
   - Freed 0.3 GB of my own superseded plan JSONs via ot-delete.
   - v9 J8 row bind continues on epyc7 (oth-ubuntu-2158748, durable waiter).
 - 2026-11-22 03:03 PST ACK [OPUS-FIX-KV-HUB-R6 -> COORD] Cancel rule corrected: a sealed twin is cancelled only when its proof shows the type cannot close (setup < -300 ps after CTS/GRT, repair flat across iterations, or a functional bug). GRT TT between -42 and -300 runs to finish (GRT repair + AUTO-ECO). Handoff updated.
+- 2026-11-22 03:03 PST DONE [FAM-QC-CB-R4] ot-run oth-ubuntu-944973-1795344179 on tolerant-swine: rc=0 after 1254 s, ended 03:03:49, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-QC-CB-R4/qwen_compute_cbf_q00__cl1b5a6458_1122024020/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/privat
