@@ -23,3 +23,7 @@ V4 (11-23 event) MUST carry: (1) the 66 internal-station hops > 405 um in 19 typ
 slw_hc0 x_ctl_o station (HCST-R3), slw_st_a pd1 stage, coll v3 seats (OPUS-FIX-QC-COLL-R3 replaces FABLE-FIX-QC-COLL-R2), sle_ctl macro move (8.64 um gap hotspot), su_c cap2 rows.
 Flag: slw_su_c__cl92142dac still -504 ps setup stop (FAM-QC-SLWSLE-R1).
 ## 23:00 state: V3p5r-based binds hit EMIT sle_sc_v1__cl115da35f (stale collector_tree after tap_split). Targeted retap (retap/rt1.sh, ot-run) on V3p6n2 + V3p7b -> relaunch as v3p6n3 / v3p7c via chain_v3p6.sh TAG retap/out_*.json.
+
+## 00:5x PST 11-22 live
+- Four V3 binds in strict bind (d/c/b2/n3, LATGEN rc0, 1921 lanes).
+- rev5 (CB-R4 tap[0] HB4 3->1, 34 entries) composed onto V3p7d -> v3p6/plan_v3p7d5.json pre 1b823bdaee76; chain v3p7d5 launched speculatively in parallel on rt 6dbb (epyc10 v3p6/chain_v3p7d5.log). Ship order at 05:40: d5 > d > c > b2 > n3 (each strict 0 + LAT 1921 + post-bind G0). rev5 -> V4 if d5 not clean.
