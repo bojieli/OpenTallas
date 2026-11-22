@@ -61,6 +61,23 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 09:45 PST (newest; read this first; the 08:55 block below still holds for T1 / K1 facts)
+- ROW A HANDED 09:3x: post ROWS-READY to KV-PLAN-R6; package epyc8 w/handoff/D29_pv_v6n_package.json (sha 0123d278f8fc) made by
+  w/package_d29.py v6n6 tree OUT. KV-PLAN-R6 must re-merge on the SEALED D28 plan: when it posts the D28 tree, fork it
+  (ot-tree-fork), re-run w/chain_full2.sh (compose + G0 + bind + pad loop) on that base, re-issue the package.
+- K1 kit (kv3_pv_v6n w piece): stages mkdir..kit_rtl_probe all rc 0 (src_manifest seal ok: main 315cc722d686, manifest 2c58b770003a);
+  kit_rtl has been WAITING on the epyc8 load cap since 09:01 (load1 130-160 >= 115). Just wait; check with
+  intel2 `bash ~/tmp/ffkvpv/st.sh` (one-screen status of K1 stages + T2 gates).
+  Once <work>/gen/kv3_pv_v6n exists: ot-wait --durable --kit <kit dir> --host epyc8 --stage place --timeout 3000.
+- Hedge: ot-tree-fork of the bound tree to epyc2 /srv/opentallas-scratch2/claude/fable-fix-kv-pv-sinkspread/tree
+  (intel2 ~/tmp/ffkvpv/fork_epyc2.log). Use it for a second private-spec (--host epyc2) ONLY if epyc8 stays blocked and epyc2 load
+  is under its cap (153); otherwise ot-delete it later. A second kit of the same item = the allowed A/B slot.
+- R3 (vport leaf rows) probe on the bound v6n pieces (w/r3_probe.sh tree kv3_pv_v6n,kv3_pv_v6ne v6n6u1): 0 anchors, 0 rows: nothing to add.
+- T2 m5 (14 types, plan 04e1457da0fe): G0 PASS 0 errors, PLAN-GATE-PRE PASS, first bind R8 30 + 30; loop_pv iteration m5s1: tables
+  regenerated (col law TRUNK_D 89 / FLAG_D 87 / C 35; vport_w 20, col 164 rebound), bind m5s1 running since 09:08 (slow host).
+  When CHAIN_FULL_DONE: python3 -I w/package_d29.py m5 tree2 w/handoff/D29_pv_14types_package.json and post ROWS-READY row B.
+  If the loop stops with non-R8 errors (PARAM_REGEN kv_pv_col_regen: TRUNK_D / FLAG_D changed) read gates/m5s<i>_bind/gate.out first.
+
 ## STATE 11-22 08:55 PST (newest; read this first)
 *** v6n D29 FORM PROVEN AT PLAN + BIND LEVEL; SEALED KIT K1 RUNNING ***
 T1 = epyc8 <lane>/tree (ot-tree-fork of the D28 work tree at dry5, tools rt 6390b7bfa650 + type_split cap patch = main d4f31de6bc6e):
