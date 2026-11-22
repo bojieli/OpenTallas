@@ -67,3 +67,11 @@ Queue after: W1 probe detach, canary narrowing (replica_keep ~18 ps), io_guard, 
 - HOLD-DONE measurement posted: 115 kits / 96 h in 7 d (76 h in last 24 h) of margin chunks after ws>=10 & 0 viol.
 - Earlier X1 note: a hub-side temp file I wrote went to intel2 /tmp and was rm'd; from now hub temp files go to the lane tmp dir only.
 Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (replica_keep ~18 ps), io_guard, lever 9, 8/11/12, push-test triage.
+
+## 11-22 08:5x PST: FABLE-FLOW-0800 S1/T1/D1 pushed
+- S1 e26626c8886: run-item reads CONTROL from rt/current at each stage start (geom_check.sh staged from rt/current; geom_gate + resolve_chain_goal run via `kit_wave.py control-call` of rt/current when their source differs; result tools stay pinned; KW_CONTROL_REACH / KW_FIX_NOT_REACHED lines + result.json control_reach). OT_CONTROL_ROOT=0 off. Drivers already running keep old code (only from this sha on). Not done: hold_guard_grt.tcl from rt/current (it is sourced from the kit copy by grt_pre.tcl inside docker), FIX-REACH.tsv per FLOW-FIX push.
+- D1 6e0567b2a30: ot_status defers a DIED post whose log is X.live.log until X.log (stdout, written by kit_wave after ot-run exits) is there (<=45 s). Re-classification of the 70 NO-PATTERN of 11-22: 42 GEOM-FAIL (this race), 26 'log none' (ot-run without log: FLOW-FLEET-R2), 2 kit_istations, 1 other.
+- T1 da102e4d499: driver-side BIND-GEN-TOOLSKEW -> switch to the gen host rt snapshot that fits the bind stamp (KW_BIND_RT); ot-tools-sync private-spec dry run before flip (qwen_compute free item, 6 s; red only if prev rt passes). Launch side = WAVE-OPS-R1 1c8b40168f9.
+- S81 bind_preflight re-enabled 07:35 (a093cbb0ba): ticks 305 s / 354 s, no stranded rows (posted 5cb7493a3c).
+- Canary narrowing arms running (intel2 ot-run via canary.py): runs/ab_flowops_r2/{classoff,asyncoff} on d14cac8bd26f (baseline keep-on 105.94, keep-off 124.4 ps TT setup).
+- Next: read canary arms; io_guard, lever 9, items 8/11/12, push-test triage; optional S1 hold_guard + FIX-REACH.tsv; tick hang in plan_dies prewarm_probes (07:33).
