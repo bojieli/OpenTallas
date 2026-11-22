@@ -159,3 +159,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 07:45 PST CANARY hbm @ c7d3d0d2d4: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (REGRESSION grt hold_ff_wns 0.0 -> None not measured; the baseline run measured it; grt hold_ff_ep 0.0 -> None not measured; the baseline run measured it; stage)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 08:15 PST CANARY qwen_kvsys @ 2bc14507b4: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d032c7204_1121_101641_352907)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
