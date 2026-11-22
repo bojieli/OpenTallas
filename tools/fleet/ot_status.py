@@ -148,8 +148,15 @@ def post_text(rec):
     secs = (rec.get("t_end") or 0) - rec.get("t_start", 0)
     what = "ot-push-main" if rec["kind"] == "push" else "ot-run"
     head = f"{'DIED' if died else 'DONE'} [{rec['lane']}]"
+    tail = ""
+    if died:
+        try:
+            import ot_deathclass      # FLOW-DEATHCLASS-R1: class + one-line cause on every DIED post
+            tail = ot_deathclass.label(rec.get("rc"), rec.get("cmd", ""), rec.get("log"), secs)
+        except Exception:
+            tail = " | class=UNCLASSIFIED cause=classifier unavailable"
     return (f"{head} {what} {rec['unit'] or rec['name']} on {rec['host']}: rc={rec['rc']} after {secs} s, ended "
-            f"{time.strftime('%H:%M:%S', time.localtime(rec['t_end']))}{env_tag(rec.get('cmd', ''))}, log {rec.get('log') or 'none'}, cmd: {rec['cmd'][:140]}")
+            f"{time.strftime('%H:%M:%S', time.localtime(rec['t_end']))}{env_tag(rec.get('cmd', ''))}, log {rec.get('log') or 'none'}, cmd: {rec['cmd'][:140]}{tail}")
 
 
 def should_post(rec):
