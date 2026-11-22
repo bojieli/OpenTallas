@@ -37,3 +37,8 @@
 ## 20:4x COORD: relaunch moves to epyc10 via FAM-S81-COL-R6
 - My retry (intel2 pid 584384) killed (cmdline checked; no run-item started). COL-R6 copies tree_r6 to epyc10 (unit oth-ubuntu-1521480-1795321728) and relaunches the r7a spec there. Asked COL-R6 (post 20:4x) to carry plan_r7a.json and post spec/work dir.
 - Mine after place on epyc10: hop300 scan, run_kit route 48 16 (ot-run, kit work dir), sign-off read, J8 row result to S81-J6-ASSEMBLY-R5.
+
+## 21:1x COL-R6 ended -> I own the epyc10 relaunch
+- Copy unit oth-ubuntu-1521480-1795321728 (COL-R6 script /srv/opentallas-scratch2/claude/fam-s81-col-r6/copy_e10.sh) copies tree_r6 to epyc10 SAME path /srv/opentallas-scratch2/claude/s81-bksel-r5/w/tree_r6 + plan_r7a to /srv/opentallas-scratch2/claude/s81-bksel-r7/w/ (31/54 GB at 21:08).
+- Detached intel2 pid 2476582 ~/s81-bksel-r7/launch_e10.sh (log launch_e10.log): ot-wait copy -> verify -> private-spec --host epyc10 --goal auto -> run-item (log ~/s81-bksel-r7/run_item_e10.log). goal auto = through route/sign-off.
+- hop300: epyc10 /srv/opentallas-scratch2/claude/s81-bksel-r7/w/hop300.py <rt/current> <kit geom/geom.tsv> 300 <out.json> (via ot-run) once 3_place + geom exist.
