@@ -161,3 +161,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 08:15 PST CANARY qwen_kvsys @ 2bc14507b4: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 08:45 PST CANARY qwen_compute @ ba20f11e2d: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d032c7204_1121_101641_352907); CANARY s81_cl @ af3312b925: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: no metric measured (flow stopped before GRT))
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
