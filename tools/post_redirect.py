@@ -56,16 +56,47 @@ def resolve_lane(name, status, posts_dir=None):
     return name
 
 
+KNOWN = set()          # lane names with a posts/<lane>.md file (filled by known_lanes(); the CLI does it)
+RNUM = re.compile(r"^(.*?)(?:-R(\d+))?$")
+
+
+def known_lanes(coord):
+    try:
+        KNOWN.update(f[:-3] for f in os.listdir(os.path.join(coord, "lanes", "posts")) if f.endswith(".md"))
+    except OSError:
+        pass
+
+
+def latest_r(lane, status):
+    """S81-DIE-R5 11-21 (COORD): a successor that never got a stand-down row (S81-J6-ASSEMBLY-R4 -> R5) still wins: the highest BASE-R<n> above the
+    lane's own number among LANE-STATUS lanes and posts files, else ''.  Successors are always numbered upward, so a higher number is the later lane."""
+    base, n = RNUM.match(lane).groups()
+    n = int(n or 0)
+    best, bn = "", n
+    for k in set(status) | KNOWN:
+        m = re.match(re.escape(base) + r"-R(\d+)$", k)
+        if m and int(m.group(1)) > bn:
+            best, bn = k, int(m.group(1))
+    return best
+
+
 def resolve(lane, status, limit=10):
-    """Follow stood-down chain; returns list of successors (may be empty)."""
+    """Follow stood-down chain; returns list of successors (may be empty).  At the end of the registered chain, a higher-numbered
+    BASE-R<n> sibling (latest_r) continues it."""
     lane = resolve_lane(lane, status)
     chain, seen = [], {lane}
     cur = lane
     for _ in range(limit):
         st = status.get(cur)
-        if not st or st[0] != "stood-down" or not st[1] or st[1] in seen:
+        if st and st[0] == "stood-down" and st[1] and st[1] not in seen:
+            nxt = st[1]
+        elif not st or st[0] != "done":
+            nxt = latest_r(cur, status) if (chain or (st and st[0] == "stood-down") or RNUM.match(cur).group(2)) else ""
+            if not nxt or nxt in seen:
+                break
+        else:
             break
-        cur = st[1]
+        cur = nxt
         seen.add(cur)
         chain.append(cur)
     return chain
@@ -117,9 +148,11 @@ if __name__ == "__main__":
         sys.exit(0)
     if len(sys.argv) >= 3 and sys.argv[1] == "--live":
         _c = sys.argv[3] if len(sys.argv) > 3 else "/home/ubuntu/coord"
+        known_lanes(_c)
         print("%s\t%s" % live_lane(sys.argv[2], load_status(_c)))
         sys.exit(0)
     coord = sys.argv[1] if len(sys.argv) > 1 else "/home/ubuntu/coord"
+    known_lanes(coord)
     t = sys.stdin.read()
     nl = t.endswith("\n")
     t = t.rstrip("\n")

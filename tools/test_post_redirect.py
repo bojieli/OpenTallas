@@ -78,3 +78,16 @@ class ResolveLaneTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_unregistered_higher_r_successor_ends_the_chain():
+    import post_redirect as PR
+    st = {"A": ("stood-down", "A-R2", ""), "A-R2": ("stood-down", "A-R3", ""), "A-R3": ("stood-down", "A-R4", "")}
+    PR.KNOWN.clear(); PR.KNOWN.update({"A-R4", "A-R5", "B-R9"})
+    try:
+        assert PR.resolve("A", st) == ["A-R2", "A-R3", "A-R4", "A-R5"]
+        assert PR.live_lane("A-R3", st)[0] == "A-R5"
+        assert PR.resolve("A-R5", st) == []            # the live lane itself: nothing above it
+        assert PR.resolve("B", {}) == []              # a live lane without a stand-down row is never moved by a sibling
+    finally:
+        PR.KNOWN.clear()
