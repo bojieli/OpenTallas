@@ -63,6 +63,66 @@ DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_comp
         # which left 31 of the 75 d44f hard-core modules without an OWNERS row)
         ("hbm", "hbm/plan_of_record/d44f", "d44f")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
+
+
+# FLOW-FLEET-R1 11-22 (COORD class fix, CORE-ITEM-AUDIT retired 14 ghost rows by hand, OWNERS-RETIRED.tsv 88f7326): the die_plan.json files
+# on origin/main date from 10-25..10-29, so renamed / split cores and types of every later plan event showed as NEEDS-KIT.  The items now
+# come from the plan the kit wave is BOUND to (autopilot/kit_wave.json dies.<die>.plan + src: S81 J6r1/J7, QC V2/V3, KV D27d3/D28, HEAD
+# r17b ...), so OWNERS follows every apply with no edit here.  A parked die, or a bound plan that cannot be read, keeps the main plan.
+def bound_plans(cfg, exists=None):
+    """kit_wave.json -> {die: {"plan": path, "src": src tree, "event": ev}} for the OWNERS dies that are bound and not parked"""
+    import os
+    exists = exists or os.path.isfile
+    out = {}
+    dies = (cfg or {}).get("dies") or {}
+    for die, _pdir, _p in DIES:
+        d = dies.get(die)
+        if not isinstance(d, dict) or d.get("parked"):
+            continue
+        plan = str(d.get("plan") or "")
+        if plan and (exists(plan) or exists(plan + ".gz")):
+            out[die] = {"plan": plan, "src": str(d.get("src") or ""), "event": str(d.get("event") or "")}
+    return out
+
+
+def bound_roots(pdir, bound):
+    """directories a bound plan's relative files (pins_file, bind/bound_r8/rtl) resolve against, first hit wins"""
+    import os
+    roots = []
+    if bound.get("src"):
+        roots.append(os.path.join(bound["src"], "physical/die_plan", pdir))
+    roots.append(os.path.dirname(bound["plan"]))
+    return [r for i, r in enumerate(roots) if r not in roots[:i]]
+
+
+def read_local(path):
+    """text of a local file or its .gz twin, '' when neither reads"""
+    import gzip
+    try:
+        return open(path, errors="replace").read()
+    except OSError:
+        pass
+    try:
+        return gzip.decompress(open(path + ".gz", "rb").read()).decode(errors="replace")
+    except (OSError, ValueError, EOFError):
+        return ""
+
+
+def _json_or_none(text):
+    try:
+        j = json.loads(text) if (text or "").strip() else None
+    except ValueError:
+        return None
+    return j if isinstance(j, dict) and j.get("partition_types") else None
+
+
+def read_local_rel(roots, rel):
+    import os
+    for r in roots:
+        t = read_local(os.path.join(r, rel))
+        if t:
+            return t
+    return None
 STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
           "SIGNED-UNVERSIONED", "SIGNED", "GENERATED", "RETIRED"]
 # generated memory macros (tools/mem_compiler: ROM/SRAM compilers, owner 2026-10-25 ROM-MACRO): one content-independent

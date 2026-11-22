@@ -4782,15 +4782,34 @@ def ownership_inputs(st, geom_text, trows):
     gnames = list_tree("results/proto_1025/geom")
     rnames = list_tree("results/proto_1025/g2")
     core_pins, bound_rtl = {}, {}
+    try:                                                # FLOW-FLEET-R1 11-22: items from the kit-wave BOUND plan of each die (follows every apply)
+        bound = OWN.bound_plans(json.loads((AP_DIR / "kit_wave.json").read_text())) if not REPO_FILES else {}
+    except (OSError, ValueError):
+        bound = {}
+    plan_src = {}
     for die, pdir, pname in OWN.DIES:
-        plans[die] = read_plan_json(f"physical/die_plan/{pdir}/die_plan.json")
-        pf = {h.get("pins_file") for t in ((plans[die] or {}).get("partition_types") or {}).values()
-              if isinstance(t, dict) for h in t.get("hard_cores") or [] if h.get("pins_file")}
-        texts = read_repo_many(f"physical/die_plan/{pdir}/{f}" for f in pf)
-        core_pins[die] = {f: texts.get(f"physical/die_plan/{pdir}/{f}") for f in pf}
-        cand = OWN.bound_rtl_paths(pdir, plans[die])
-        texts = read_repo_many(c for cs in cand.values() for c in cs)
-        bound_rtl[die] = {k: next((texts[c] for c in cs if texts.get(c)), None) for k, cs in cand.items()}
+        b = bound.get(die)
+        plans[die] = OWN._json_or_none(OWN.read_local(b["plan"])) if b else None
+        if plans[die] is not None:
+            roots = OWN.bound_roots(pdir, b)
+            plan_src[die] = f"{b['event'] or 'bound'} {b['plan']}"
+            pf = {h.get("pins_file") for t in (plans[die].get("partition_types") or {}).values()
+                  if isinstance(t, dict) for h in t.get("hard_cores") or [] if h.get("pins_file")}
+            core_pins[die] = {f: OWN.read_local_rel(roots, f) for f in pf}
+            cand = OWN.bound_rtl_paths(pdir, plans[die])
+            pre = f"physical/die_plan/{pdir}/"
+            bound_rtl[die] = {k: next((t for c in cs for t in [OWN.read_local_rel(roots, c[len(pre):] if c.startswith(pre) else c)] if t), None)
+                              for k, cs in cand.items()}
+        else:
+            plans[die] = read_plan_json(f"physical/die_plan/{pdir}/die_plan.json")
+            plan_src[die] = f"origin/main physical/die_plan/{pdir}/die_plan.json"
+            pf = {h.get("pins_file") for t in ((plans[die] or {}).get("partition_types") or {}).values()
+                  if isinstance(t, dict) for h in t.get("hard_cores") or [] if h.get("pins_file")}
+            texts = read_repo_many(f"physical/die_plan/{pdir}/{f}" for f in pf)
+            core_pins[die] = {f: texts.get(f"physical/die_plan/{pdir}/{f}") for f in pf}
+            cand = OWN.bound_rtl_paths(pdir, plans[die])
+            texts = read_repo_many(c for cs in cand.values() for c in cs)
+            bound_rtl[die] = {k: next((texts[c] for c in cs if texts.get(c)), None) for k, cs in cand.items()}
         proto[die] = {
             "geom": {n: _json(read_repo(f"results/proto_1025/geom/{n}")) for n in gnames
                      if n.endswith(".json") and n.startswith(pname)},
@@ -4806,7 +4825,7 @@ def ownership_inputs(st, geom_text, trows):
             lane_texts[n[:-3]] = read_coord(f"lanes/{n}")
     lane_texts.pop("GEOM-REVIEW", None)               # read once, as geom_text
     return dict(plans=plans, proto=proto, cache=cache, jobs=list(st["jobs"].values()), trows=trows,
-                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl,
+                geom_text=geom_text, lane_texts=lane_texts, live=hub_otrun_clients(), core_pins=core_pins, bound_rtl=bound_rtl, plan_src=plan_src,
                 canonical=_json(read_repo(OWN.CANONICAL_SPLIT)),
                 retired=OWN.parse_retired(read_coord("autopilot/OWNERS-RETIRED.tsv")))
 
