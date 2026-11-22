@@ -250,6 +250,12 @@ class BindStage:
         self.plan = Path(os.path.realpath(a.plan))
         self.asbuilt = Path(os.path.realpath(a.asbuilt)) if a.asbuilt else None
         self.rt_dir, self.rt_sha = rt_resolve(a.rt)
+        import rt_floor as RTF                            # FABLE-FLOW-0230 T1: no NEW bind on an rt below the floor (min_rt / $OT_MIN_RT / rt/MIN_RT)
+        self.rt_floor = RTF.check(self.rt_sha, None, exempt=getattr(a, "rt_floor_exempt", "") or "", rt_root=self.rt_dir.parent, what="ot-build bind")
+        if self.rt_floor["verdict"] == "BELOW" and not (getattr(a, "status", False) or getattr(a, "dry", False)):
+            raise G.BuildError(self.rt_floor["why"])
+        if self.rt_floor["verdict"] in ("EXEMPT", "UNKNOWN"):
+            log(f"RT-FLOOR {self.rt_floor['verdict']}: {self.rt_floor['why']}")
         self.env = {}
         for kv in a.env or []:
             k, eq, v = kv.partition("=")
@@ -607,6 +613,7 @@ def parser():
     b.add_argument("--asbuilt")
     b.add_argument("--out-root", required=True)
     b.add_argument("--rt")
+    b.add_argument("--rt-floor-exempt", default="", metavar="WHY", help="FABLE-FLOW-0230 T1: bind on an rt below the floor (sealed / pinned plan tree); logged")
     b.add_argument("--env", action="append", default=[], metavar="OT_KEY=VALUE")
     b.add_argument("--emit-j", default="auto")
     b.add_argument("--mem", default="48")

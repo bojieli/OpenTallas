@@ -9231,6 +9231,14 @@ def private_spec_cmd(a):
     except ValueError as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
+    import rt_floor as RTF                                # FABLE-FLOW-0230 T1: a NEW private launch on an rt below kit_wave.json min_rt is refused
+    _fl = RTF.check(sp.get("tools_sha") or "", cfg, exempt=getattr(a, "rt_floor_exempt", "") or "", what=f"private-spec {a.die}/{a.item}")
+    sp.setdefault("private", {})["rt_floor"] = _fl
+    if _fl["verdict"] == "BELOW":
+        print("private-spec: " + _fl["why"], file=sys.stderr)
+        return 2
+    if _fl["verdict"] in ("EXEMPT", "UNKNOWN"):
+        print(f"private-spec: RT-FLOOR {_fl['verdict']}: {_fl['why']}", file=sys.stderr)
     if fork_src:
         rc, msg = fork_private_tree(fork_src, a.tree, sp.get("gen_host") or "")
         print(msg)
@@ -19795,6 +19803,8 @@ def main(argv=None):
     ps_.add_argument("--src-manifest", choices=("seal", "on", "off"), help="seal (default with --tree/--fork, FLOW-FLEET-R1): the tree's manifest at gen = parent main sha + "
                                                                        "changed files (sha256), kept in <work>/logs; the sign-off then counts (PROVENANCE kind private). "
                                                                        "on: the wave's read-only verify.  off: no check and the sign-off never counts")
+    ps_.add_argument("--rt-floor-exempt", default="", metavar="WHY", help="FABLE-FLOW-0230 T1: keep an rt below kit_wave.json min_rt (a sealed / pinned "
+                                                                          "plan tree); recorded in spec private.rt_floor")
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
     ps_.add_argument("--goal", default="auto", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: how far run-item drives the kit: auto (default: the runner's "
