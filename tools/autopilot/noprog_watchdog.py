@@ -538,6 +538,127 @@ def grt_unsignable_evidence(row):
     return None
 
 
+# ---------------------------------------------------------------- GRT-STUCK (FLOW-FLEET-R1 11-22, FABLE-FLOW-2200 H3, owner rule 11-20)
+# 19 GRT-0273 containers ran 7 to 51 h with an empty action column: the GRT-LABEL verdict is a label, grt_flat_pass takes only wave kits under
+# items/<item>/attempt_N, and lane / private / gen-path kits had no action at all.  GRT-STUCK = the overflow is flat or rising over the last 3 or more
+# GRT rounds (best of the later rounds not 2 % below the first) AND the job has been > 6 h in GRT.  It is a BAD verdict like NO-PROGRESS: REPORTED on the
+# first pass, cancelled (ot-heavy-stop of its scope, NOPROG-ACTIONS row, NEEDS-LANE post) on a later pass.  Not judged: wave attempts that grt_flat_pass
+# cancels through cancel-rows, re-sign / ECO / hold-only jobs, kits that are, hold or lie under a PROTECTED-DBS path of the host, and jobs a lane named
+# (container, unit, kit dir) in a post of the last 2 h.  The hub copies both lists to every host's policy dir each tick.
+GRT_STUCK = "GRT-STUCK"
+GRT_STUCK_ROUNDS = 3
+GRT_STUCK_MIN_STAGE_H = 6.0
+GRT_STUCK_POST_S = 2 * 3600
+POST_STAMP_RE = re.compile(r"^- (\d{4}-\d{2}-\d{2} \d{2}:\d{2})")
+WATCHDOG_POSTERS = re.compile(r"(?i)^(NOPROG-WATCHDOG|FLEET-WATCH|WATCHDOG|STALL-WATCH|PROGRESS-WATCH|COORD-REVIEW-QUEUE)")
+
+
+def grt_stuck(rounds, stage_age_h, rounds_n=GRT_STUCK_ROUNDS, improve=MIN_IMPROVE, min_stage_h=GRT_STUCK_MIN_STAGE_H):
+    """-> evidence string when the latest overflow is > 0, there are >= rounds_n GRT rounds, the best overflow of the last rounds_n - 1 rounds is not
+    `improve` below the round before them (flat or rising over rounds_n rounds), and the GRT stage is older than min_stage_h; else ''.  Pure."""
+    if len(rounds) < rounds_n or rounds[-1][1] <= 0 or (stage_age_h or 0) <= min_stage_h:
+        return ""
+    base_n, base = rounds[-rounds_n]
+    later = rounds[-rounds_n + 1:]
+    best = min(v for _n, v in later)
+    if best < base * (1 - improve):
+        return ""
+    trend = " -> ".join(f"{n}:{v}" for n, v in rounds[-rounds_n:])
+    return (f"GRT overflow flat/rising over {rounds_n} rounds ({trend}; best {best} vs {base} at round {base_n}); "
+            f"{stage_age_h:.1f} h in GRT > {min_stage_h:g} h")
+
+
+def _related_path(a, b):
+    a, b = (a or "").rstrip("/"), (b or "").rstrip("/")
+    return bool(a) and bool(b) and (a == b or a.startswith(b + "/") or b.startswith(a + "/"))
+
+
+def protected_rows(text, host):
+    """PROTECTED-DBS rows of fleet host `host` -> [path].  Rows are host<TAB|spaces>path[ note] or host:/path (lanes/ and root lists); a row that
+    starts with a bare /path names no host and protects that path on every host."""
+    out = []
+    for ln in (text or "").splitlines():
+        if ln.lstrip().startswith("#"):
+            continue
+        f = ln.split()
+        if f and ":/" in f[0]:
+            f = f[0].split(":", 1) + f[1:]
+        if f and f[0].startswith("/"):
+            out.append(f[0].rstrip("/"))
+        elif len(f) >= 2 and f[0] == host and f[1].startswith("/"):
+            out.append(f[1].rstrip("/"))
+    return out
+
+
+def recent_posts(coord, now, horizon_s=GRT_STUCK_POST_S + 1800):
+    """-> [(epoch, lane, text)] of the post entries of lanes/posts/*.md stamped within horizon_s (watchdog lanes excluded).  Hub side."""
+    out = []
+    for p in glob.glob(os.path.join(coord, "lanes/posts/*.md")):
+        lane = os.path.basename(p)[:-3]
+        if WATCHDOG_POSTERS.match(lane):
+            continue
+        try:
+            if now - os.path.getmtime(p) > horizon_s:
+                continue
+            lines = read_text(p, cap=4 * 2**20).splitlines()
+        except OSError:
+            continue
+        cur = None
+        for ln in lines[-3000:]:
+            m = POST_STAMP_RE.match(ln)
+            if m:
+                try:
+                    t = time.mktime(time.strptime(m.group(1), "%Y-%m-%d %H:%M"))
+                except ValueError:
+                    t = None
+                cur = [t, lane, ln] if t and now - t <= horizon_s else None
+                if cur:
+                    out.append(cur)
+            elif cur is not None and ln.startswith("  "):
+                cur[2] += " " + ln.strip()
+    return [(t, l, x.replace("\t", " ").replace("\n", " ")) for t, l, x in out]
+
+
+def grt_stuck_spare(row, protected, posts, now, post_s=GRT_STUCK_POST_S):
+    """-> reason the GRT-STUCK row is spared, else ''.  Pure.  protected = [path] of this host; posts = [(epoch, lane, text)]."""
+    ident = " ".join(str(row.get(k) or "") for k in ("container", "type", "kit", "work", "ident"))
+    if "resign" in ident.lower() or "re-sign" in ident.lower():
+        return "re-sign"
+    if ECO_RE.search(ident) or HOLD_ONLY_RE.search(ident):
+        return "ECO"
+    ex = grt_flat_exempt(row)
+    if not ex:
+        return "wave attempt: grt_flat_pass cancels it through cancel-rows"
+    if not (ex.startswith("OT_LANE") or ex.startswith("private kit")):
+        return ex
+    for pth in protected:
+        if _related_path(row.get("kit"), pth) or _related_path(row.get("work"), pth):
+            return f"PROTECTED-DBS {pth}"
+    toks = [t for t in (row.get("container"), row.get("unit"), (row.get("kit") or "").rstrip("/"), (row.get("work") or "").rstrip("/")) if t and len(t) > 8]
+    kit = (row.get("kit") or "").rstrip("/")
+    m = LANE_DIR_RE.search(kit + "/")
+    if m:
+        toks.append(kit.split("/claude/", 1)[1])     # lane-relative kit path ("lockup-station-r2/proof6_t39") as lanes write it
+    for t, lane, text in posts:
+        if now - t <= post_s and any(tok in text for tok in toks):
+            return f"lane {lane} posted about it {(now - t) / 60:.0f} min ago"
+    return ""
+
+
+def load_spare_inputs(pol):
+    """host side: (protected paths, recent posts) from the policy files the hub writes per host (protected.tsv = one path per line, already this host's
+    rows; posts_recent.tsv = epoch<TAB>lane<TAB>text); missing files = empty lists"""
+    prot = [l.strip().rstrip("/") for l in read_lines(os.path.join(pol, "protected.tsv")) if l.strip().startswith("/")]
+    posts = []
+    for l in read_lines(os.path.join(pol, "posts_recent.tsv")):
+        f = l.split("\t", 2)
+        try:
+            posts.append((float(f[0]), f[1], f[2]))
+        except (ValueError, IndexError):
+            continue
+    return prot, posts
+
+
 def is_plan(env_prio, text):
     """--priority plan (OT_HEAVY_PRIO=plan) or a bind / LATCHECK / G0 / die-proto / chain command.  --priority die (die-level
     trials) is NOT excluded: those are exactly the long builds this watchdog is for.  base64 spec blobs are stripped first."""
@@ -743,7 +864,7 @@ def save_json(path, obj):
     os.replace(tmp, path)
 
 
-BAD_VERDICTS = ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL")      # GRT_LABEL is deliberately NOT here: it never cancels
+BAD_VERDICTS = ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_STUCK)      # GRT_LABEL is deliberately NOT here: it never cancels; GRT-STUCK does (FLOW-FLEET-R1)
 
 
 def decide(rows, reported, now, act):
@@ -778,6 +899,7 @@ def scan(now=None, act=False, probe_s=4):
     hostname = os.environ.get("NOPROG_HOST") or socket.gethostname()
     pol = os.path.join(STATE_DIR, "policy")
     keep = read_lines(os.path.join(pol, "keep.tsv"))
+    prot_paths, posts = load_spare_inputs(pol)
     state = load_state()
     del DOCKER_ERR[:]
     ids = sh("docker", "ps", "-q").split()
@@ -855,6 +977,15 @@ def scan(now=None, act=False, probe_s=4):
                 special = synth_mem_stall(read_text(log) if os.path.isfile(log) else "", now - mt)
             if special:
                 v, why, detail, row["klass"] = special
+            if kind == "grt" and log:
+                ev = grt_stuck(rounds_, (now - max(birth(log) or started, started)) / 3600)
+                if ev:
+                    spare = grt_stuck_spare(dict(row, ident=" ".join([name, kit or "", work or ""]), lane=lane), prot_paths, posts, now)
+                    if spare:
+                        row["grt_stuck_spared"] = spare[:160]
+                    else:
+                        v, why, row["klass"] = GRT_STUCK, ev, "GRT-CONGESTION"
+                        detail = detail or ""
             if kind == "lec" and now - started > LEC_MAX_S:
                 # COORD 11-14: LEC is advisory under R-MINIMAL.  A LEC-only job (the route result exists) older than 24 h goes,
                 # alive or not; a LEC whose route stage has not produced its result is never cancelled here.
@@ -938,7 +1069,7 @@ def do_cancel(unit, rs, now):
 
 
 # ---------------------------------------------------------------- hub
-ORDER = {UNSIGNABLE: 0, "GRT-LABEL": 1, "DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
+ORDER = {UNSIGNABLE: 0, GRT_STUCK: 0, "GRT-LABEL": 1, "DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
 
 
 def md_table(reports):
@@ -961,8 +1092,12 @@ def run_host(host, cmd, inp=None, timeout=60):
 def hub(now=None, post=True):
     now = now or time.time()
     keep = read_lines(os.path.join(COORD, "lanes/NOPROG-KEEP.tsv"))
+    prot_all = []
+    for pf in ("lanes/PROTECTED-DBS.txt", "PROTECTED-DBS.txt"):
+        prot_all += read_lines(os.path.join(COORD, pf))
+    posts = [f"{t:.0f}\t{l}\t{x[:2000]}" for t, l, x in recent_posts(COORD, now)]
     for h in HOSTS:
-        for fname, lines in (("keep.tsv", keep),):
+        for fname, lines in (("keep.tsv", keep), ("protected.tsv", protected_rows("\n".join(prot_all), h)), ("posts_recent.tsv", posts)):
             try:
                 d = f"{STATE_DIR}/policy"
                 run_host(h, f"mkdir -p {d} && cat > {d}/{fname}.new && mv {d}/{fname}.new {d}/{fname}", inp="".join(l + "\n" for l in lines))
@@ -980,7 +1115,7 @@ def hub(now=None, post=True):
             missing.append(h)
     table, rows = md_table(reports)
     stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
-    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_LABEL, UNSIGNABLE)]
+    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_LABEL, UNSIGNABLE, GRT_STUCK)]
     counts = {}
     for r in rows:
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1

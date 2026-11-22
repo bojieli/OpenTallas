@@ -190,7 +190,7 @@ def test_an_old_plan_is_never_a_cancel_reason():
     assert not hasattr(nw, "derive_superseded")
     assert "NEVER a reason" in src
     # the verdicts that remain are the documented ones: HBM parked, LEC > 24 h, and the judged window (NO-PROGRESS / DESIGN-FAIL)
-    assert set(nw.BAD_VERDICTS) == {"NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL"}
+    assert set(nw.BAD_VERDICTS) == {"NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", "GRT-STUCK"}     # GRT-STUCK: FLOW-FLEET-R1 measured GRT rounds
     import re
     reasons = re.findall(r'verdict="CANCEL-NOW", why="([^"]+)"', src)
     assert reasons == ["HBM is parked"], reasons
