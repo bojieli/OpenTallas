@@ -49,3 +49,6 @@ Open: confirm with S81-J6-ASSEMBLY-R5 that p4/p5 are in the J8 col release and c
 bk_sel r7a: run-item (spec FAM-S81-COL-R6/s81_bk_sel__t2_1121220051, epyc10), local bg task; on exit post kit dir + result to S81-BKSEL-R7.
 H9R0-R4 J7 p2 results (22:43): keep rep CTS setup WS -17.11 ps (xo recovery class gone, 8 rq flops); STAGGER GRT overflow 829 (was 5,401), e2 strip clear.
 COORD RULING 23:xx: FAM-S81-COL-H9R0-R4 carries the p4/p5 J8 rows in its single hand-off to S81-J6-ASSEMBLY-R5; I send no separate hand-off. I keep owning the p4/p5 runs and the J8 relaunch (check coverage against the J8 candidate when it exists).
+
+## 11-22 02:2x bk_sel__t2 r7a result (handed to S81-BKSEL-R7)
+Kit dir epyc10 /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-R6/bk_sel__t2_1121220031/gen/bk_sel__t2 ; spec private_specs/FAM-S81-COL-R6/s81_bk_sel__t2_1121220051/result.json (stage route, verdict FAIL, chain RUNNER_FAIL rc 6, FAIL_POSTCTS). Place PASS-COND (176,162 cells, geom advisory only, placed_scan 0 groups over 405 um), CTS ok, GRT ran to completion: total congestion 323 (max H/V 16/12), GRT-0116 gone (try 5: 16,786 overflow). But TT: post-CTS gate TT setup wns -1928.19 ps tns -1.68M (placement RC, 67 repair cells; STD_WNS_MAX -2885), legacy grt gate FAIL, G2_REQUIRED_FAIL setup_tt. No DRT/sign-off.
