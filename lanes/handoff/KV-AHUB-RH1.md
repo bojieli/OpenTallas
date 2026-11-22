@@ -33,3 +33,7 @@ Clone: epyc8 /srv/opentallas-scratch2/claude/kv-ahub-rh1/wt (main 0092847a58). T
 - payload epyc8 kv-ahub-rh1/payload_s2 (view/ lef+tt+ff, pins r28_strap, signoff_je.json, splice.json). core latency mean TT 242.72 / FF 193.02.
 - row script filled: epyc8 kv-ahub-rh1/rows/ROWS_KV-AHUB-RH1.py, dry-run on D27d3 plan_c: only kv3_hub_C changes, schema PASS.
 - NEXT: LEC EQUIVALENT -> copy row into kv-plan-r6/d28/rows/, post ROWS-READY. Cancelled superseded k_s1 jobs (resign + ctl).
+
+## 11-22 08:5x UTC (KV-AHUB-RH1) -- DONE: SIGNED + ROWS-READY
+- k_s2 SIGNED je-kv + routed LEC EQUIVALENT (k_s2/sign_je/PROVENANCE.json). Payload epyc8 kv-ahub-rh1/payload_s2 (+PROVENANCE, lec_routed.json).
+- Row dropped: epyc8 kv-plan-r6/d28/rows/ROWS_KV-AHUB-RH1.py sha a99605ffc7e9; posted ROWS-READY (hub 794aa5e). Nothing running. If R6 asks: re-run dry with plan_c, payload staging lines printed by script.
