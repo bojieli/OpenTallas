@@ -22177,3 +22177,4 @@ FAILED [AUTOPILOT 3df3f614925c] 2026-11-21 21:20:37 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 21:23 PST HOURLY free space 21:22 epyc9=2672 intel1=1215 (restore at >=250 GiB; caps 250 on epyc9/intel1)
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 21:23 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 219 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
