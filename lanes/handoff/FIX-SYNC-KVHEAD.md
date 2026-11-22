@@ -37,3 +37,5 @@ OPUS-FIX-HEAD-LEP0N-R8 (r18). Report to COORD every 4 h (<250 words).
 | H-C08 | FABLE-FIX-HEAD-LEP0N LEP-RINGFF-1 | split re-compose dropped bands[coll_i*].ring_place=ff -> whole ring packed FIRM in netlist order (W -496) | band ring_place ff in base/split parent, not ff in new plan | restore ring_place ff + rect on pin window | fable 04:14 | HEAD hd_lep0N_w FIXED-by-owner; KV/S81/QC 0 hits |
 
 - 05:0x COORD: posted missing D28 rows (KV-C02 c2736959a155, RINGMAC 3a0f01f89763) to KV-PLAN-R6 (810264dd56). Tools floors 79274b7c9b/9cdc3bde91 are in rt 6d2e187f0d. Re-check rows/ vs rows.json at 11:00; post any gaps to COORD.
+
+- 08:0x KV-C17 ROWS-READY a7e7e4b5: kv-plan-r6/d28/rows/ROWS_FIX-SYNC-KVHEAD-RESET.py 2c9571551899 + fsk_reset (29 types), PRE PASS 0 on dry5. Veto to 09:05 (IOPC-R4, SINKSPREAD+PV-R7, HUBC-SYSC-R2); HGI-R6 no veto with conditions (6 moved hgi -> D29). D29 queue: hgi_v2 x2/v3/v6/v7/v8 on R6h, pv_v3/v3e split reps, pv_v6 (SINKSPREAD), unmeasured hub_C/hub_Wi/io_ft/phy/phy_v1/pv_v1n/pv_v2n, KV-C18 LEFs after COL-H10-R4 tool fix. hroot taps with HROOT-R1, pc_v3 to IOPC-R4 (rows not yet posted to IOPC).
