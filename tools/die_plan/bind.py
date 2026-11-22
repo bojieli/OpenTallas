@@ -7608,7 +7608,85 @@ def _plan_gate_pre(a):
     return 0
 
 
+_PG_CHILD = {}
+
+
+def _plan_gate_pre_start(a):
+    """PLAN-GATE-BESIDE-1122 (FABLE-FLOW-0600 G1, COORD: the pre-gate ran before the bind, a serial wait on every bind chain): the gate runs in a
+    forked child BESIDE the elab / bind, its lines go to OUT/plan_gate_pre.log, and main() joins it before it returns; a refusing gate turns the
+    bind's rc into the gate's (2) and writes OUT/PLAN_GATE_PRE_REFUSED.txt next to the outputs.  OT_PLAN_GATE_PRE_SERIAL=1 = the old order.
+    -> True when the child started."""
+    try:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        log = Path(a.out) / "plan_gate_pre.log"
+        sys.stdout.flush()
+        sys.stderr.flush()
+        pid = os.fork()
+    except OSError as e:
+        print(f"bind: plan_gate_pre could not run beside the bind ({e}); running it first")
+        return False
+    if pid == 0:                                         # child: the gate only, then exit without the parent's cleanups
+        rc = 2
+        try:
+            f = open(log, "w")
+            os.dup2(f.fileno(), 1)
+            os.dup2(f.fileno(), 2)
+            sys.stdout = sys.stderr = f                  # a wrapped stdout (pytest capture, a pipe wrapper) writes to the log too
+            rc = _plan_gate_pre(a)
+        except BaseException as e:                       # noqa: BLE001 -- any crash is a gate that could not judge
+            try:
+                print(f"bind: plan_gate_pre crashed: {type(e).__name__}: {e}", flush=True)
+            except BaseException:                        # noqa: BLE001
+                pass
+            rc = 0 if os.environ.get("OT_PLAN_GATE_PRE") == "warn" else 2
+        finally:
+            try:
+                sys.stdout.flush()
+            except BaseException:                        # noqa: BLE001 -- the child never returns into the parent's code
+                pass
+            os._exit(int(rc or 0) & 0xFF)
+    _PG_CHILD.update(pid=pid, out=a.out, log=str(log))
+    print(f"bind: plan_gate_pre running beside the bind (pid {pid}, log {log})")
+    return True
+
+
+def _plan_gate_pre_join(rc):
+    pid = _PG_CHILD.pop("pid", None)
+    if not pid:
+        return rc
+    try:
+        _, status = os.waitpid(pid, 0)
+        grc = os.waitstatus_to_exitcode(status)
+    except ChildProcessError:
+        grc = 2
+    try:
+        for ln in Path(_PG_CHILD["log"]).read_text(errors="replace").splitlines():
+            print(ln)
+    except OSError:
+        pass
+    if grc:
+        print(f"bind: plan_gate_pre (beside the bind) refused rc {grc}; the outputs in {_PG_CHILD['out']} are NOT a valid bind")
+        try:
+            (Path(_PG_CHILD["out"]) / "PLAN_GATE_PRE_REFUSED.txt").write_text(f"plan_gate_pre rc {grc}; see plan_gate_pre.log\n")
+        except OSError:
+            pass
+        return grc if not rc else rc
+    try:
+        (Path(_PG_CHILD["out"]) / "PLAN_GATE_PRE_REFUSED.txt").unlink()   # a pass clears an old refusal of this OUT
+    except OSError:
+        pass
+    return rc
+
+
 def main(argv=None):
+    try:
+        return _plan_gate_pre_join(_main(argv))
+    except BaseException:
+        _plan_gate_pre_join(1)
+        raise
+
+
+def _main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     k = sub.add_parser("kit-rtl", help="G3 kit RTL: bound partition module inside the plan wrapper + filelist")
@@ -7668,9 +7746,10 @@ def main(argv=None):
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     if a.cmd in ("elab", "bind", "all") and "PYTEST_CURRENT_TEST" not in os.environ:   # tests call main() on toy plans
-        rc = _plan_gate_pre(a)
-        if rc:
-            return rc
+        if os.environ.get("OT_PLAN_GATE_PRE_SERIAL") == "1" or os.environ.get("OT_PLAN_GATE_PRE") == "off" or not _plan_gate_pre_start(a):
+            rc = _plan_gate_pre(a)
+            if rc:
+                return rc
     try:
         if a.cmd == "component-proof":
             import bind_component

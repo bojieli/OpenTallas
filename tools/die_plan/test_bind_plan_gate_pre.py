@@ -79,4 +79,30 @@ def test_main_skips_hook_under_pytest(monkeypatch, tmp_path):
     monkeypatch.setattr(bind, "cmd_bind", lambda a: 0)
     assert bind.main(["bind", str(tmp_path / "p.json"), "--out", str(tmp_path / "o")]) == 0 and not called
     monkeypatch.delenv("PYTEST_CURRENT_TEST")
+    monkeypatch.setenv("OT_PLAN_GATE_PRE_SERIAL", "1")
     assert bind.main(["bind", str(tmp_path / "p.json"), "--out", str(tmp_path / "o")]) == 2 and called
+
+
+@pytest.mark.parametrize("gate_rc", [0, 2])
+def test_gate_runs_beside_the_bind_and_its_refusal_wins(monkeypatch, tmp_path, gate_rc):
+    """PLAN-GATE-BESIDE-1122: the bind starts at once; the gate (a forked child) is joined before main returns"""
+    import os
+    import time
+    ran = []
+
+    def gate(a):
+        time.sleep(0.5)
+        print("GATE-LINE from the child")
+        return gate_rc
+    monkeypatch.setattr(bind, "_plan_gate_pre", gate)
+    monkeypatch.setattr(bind, "cmd_bind", lambda a: ran.append(time.time()) or 0)
+    monkeypatch.delenv("PYTEST_CURRENT_TEST")
+    monkeypatch.delenv("OT_PLAN_GATE_PRE_SERIAL", raising=False)
+    monkeypatch.delenv("OT_PLAN_GATE_PRE", raising=False)
+    t0 = time.time()
+    out = tmp_path / "o"
+    assert bind.main(["bind", str(tmp_path / "p.json"), "--out", str(out)]) == gate_rc
+    assert ran and ran[0] - t0 < 0.4                     # the bind did not wait for the gate
+    assert "GATE-LINE" in (out / "plan_gate_pre.log").read_text()
+    assert (out / "PLAN_GATE_PRE_REFUSED.txt").exists() == bool(gate_rc)
+    assert not bind._PG_CHILD.get("pid") and os.getpid()
