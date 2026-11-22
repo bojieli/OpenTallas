@@ -338,6 +338,17 @@ def test_in_tree_replaces_bind_landed_lpad(tmp_path):
     assert r2.returncode != 0 and "u_lpad_i is D=2" in (r2.stderr + r2.stdout)
 
 
+def test_in_tree_efault_eq_station_read_is_owned(tmp_path):
+    """FAM-KV-IOPC-R4 11-22: the plan's efault eq station (u_efs<D>_efault_<n>, reads <bus>_eq only) must not make a tree fail closed:
+    it hangs on the first reader's node (every node carries the epoch at depth K)."""
+    kd = kit(tmp_path, IN_BOUND_LPAD.replace("endmodule", "    ot_dp_dly_keep #(.W(1), .D(7)) u_efs7_efault_1 (.clk(clk), .d(i_eq), .q(u_efs7_efault_1_q));\nendmodule"))
+    plan = tree_plan(NODES, [dict(node="t2", core="A"), dict(node="t3", core="B")])
+    r = run_ist(tmp_path, plan, kd)
+    assert r.returncode == 0, r.stderr + r.stdout
+    sv = (kd / "t_part_bound.sv").read_text()
+    assert ".d(i_tt2_eq)" in sv and "u_lpad_i" not in sv
+
+
 def test_in_tree_fail_closed(tmp_path):
     kd = kit(tmp_path, IN_BOUND)
     bad = [dict(NODES[0]), dict(NODES[1]), dict(id="t2", parent="t0", site_um=[500, 50]), dict(NODES[3])]

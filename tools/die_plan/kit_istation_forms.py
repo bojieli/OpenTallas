@@ -583,6 +583,10 @@ def station_tree(tn, t, entry, txt, man, tcl, rep, bound_bus_width):
                 out.append(ln)
                 continue
             who = {ctx[1]} - {None} if ctx else _ident_readers(ln, atts)
+            if not who and not ctx and eqre.search(ln) and not qre.search(ln) and re.search(r"\bu_efs\w*", ln):
+                # FAM-KV-IOPC-R4 11-22: the plan's efault eq stations (bind.py u_efs<D>_efault_<n>) read only the bus epoch; every node
+                # carries the same epoch at its depth, so they hang on the first reader's node (all readers are K stations from the face)
+                who = {atts[0]["name"]}
             if len(who) != 1:
                 raise FormError(f"kit_istations: {tn} {bus_name}: read of {last_q} not owned by exactly one tree reader "
                                 f"(owners {sorted(who)}): {ln.strip()[:120]}")
