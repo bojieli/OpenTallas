@@ -1,0 +1,178 @@
+{
+  "type": "slw_su_c__cl19bb38ef",
+  "rows": [
+    {
+      "tap": 11,
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsa",
+        "u_u_suvm_u_vm8q_u_rsb"
+      ]
+    },
+    {
+      "tap": 36,
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsbt"
+      ]
+    },
+    {
+      "tap": 12,
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsc"
+      ]
+    },
+    {
+      "tap": 6,
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsl1"
+      ]
+    }
+  ],
+  "modeled": [
+    {
+      "sink": "u_u_suvm_u_vm8q_u_rsa",
+      "provider": "u_rrl_131",
+      "tap": 11,
+      "depth": 8,
+      "old_um": 999.756,
+      "new_um": 32.94,
+      "sink_xy": [
+        359.424,
+        56.565
+      ],
+      "provider_xy": [
+        383.72400000000005,
+        47.925
+      ]
+    },
+    {
+      "sink": "u_u_suvm_u_vm8q_u_rsb",
+      "provider": "u_rrl_131",
+      "tap": 11,
+      "depth": 8,
+      "old_um": 972.81,
+      "new_um": 11.286,
+      "sink_xy": [
+        386.1,
+        56.835
+      ],
+      "provider_xy": [
+        383.72400000000005,
+        47.925
+      ]
+    },
+    {
+      "sink": "u_u_suvm_u_vm8q_u_rsbt",
+      "provider": "u_rrl_146",
+      "tap": 36,
+      "depth": 8,
+      "old_um": 646.947,
+      "new_um": 106.083,
+      "sink_xy": [
+        910.737,
+        394.33500000000004
+      ],
+      "provider_xy": [
+        963.9000000000001,
+        341.41499999999996
+      ]
+    },
+    {
+      "sink": "u_u_suvm_u_vm8q_u_rsc",
+      "provider": "u_rrl_167",
+      "tap": 12,
+      "depth": 8,
+      "old_um": 925.02,
+      "new_um": 32.94,
+      "sink_xy": [
+        846.1800000000001,
+        51.705
+      ],
+      "provider_xy": [
+        817.29,
+        47.655
+      ]
+    },
+    {
+      "sink": "u_u_suvm_u_vm8q_u_rsl1",
+      "provider": "u_rrl_118",
+      "tap": 6,
+      "depth": 8,
+      "old_um": 977.508,
+      "new_um": 77.112,
+      "sink_xy": [
+        899.2080000000001,
+        52.245000000000005
+      ],
+      "provider_xy": [
+        963.36,
+        39.285
+      ]
+    }
+  ],
+  "receipt": [
+    {
+      "tap": 11,
+      "reset": "rst_n_t11",
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsa",
+        "u_u_suvm_u_vm8q_u_rsb"
+      ],
+      "moved": [
+        "u_u_suvm_u_vm8q_u_rsa",
+        "u_u_suvm_u_vm8q_u_rsb"
+      ],
+      "bound": [],
+      "leaf": "rst_n_t0",
+      "cycles_added": 0
+    },
+    {
+      "tap": 36,
+      "reset": "rst_n_t36",
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsbt"
+      ],
+      "moved": [
+        "u_u_suvm_u_vm8q_u_rsbt"
+      ],
+      "bound": [],
+      "leaf": "rst_n_t0",
+      "cycles_added": 0
+    },
+    {
+      "tap": 12,
+      "reset": "rst_n_t12",
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsc"
+      ],
+      "moved": [
+        "u_u_suvm_u_vm8q_u_rsc"
+      ],
+      "bound": [],
+      "leaf": "rst_n_t0",
+      "cycles_added": 0
+    },
+    {
+      "tap": 6,
+      "reset": "rst_n_t6",
+      "port": "d",
+      "sinks": [
+        "u_u_suvm_u_vm8q_u_rsl1"
+      ],
+      "moved": [
+        "u_u_suvm_u_vm8q_u_rsl1"
+      ],
+      "bound": [],
+      "leaf": "rst_n_t0",
+      "cycles_added": 0
+    }
+  ],
+  "added_cycles": 0,
+  "added_flops": 0
+}
