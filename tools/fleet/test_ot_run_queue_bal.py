@@ -238,7 +238,8 @@ class RefusedSource(unittest.TestCase):
         self.assertFalse(srun.called)
 
     def test_pinned_job_is_not_spilled(self):
-        code, splan, srun, _ = self.main(True, (("epyc5", [self.D], 2.7), "", False), argv_extra=("--hosts", "epyc4"))
+        # DEATHCLASS-1122 RAIL-KILL: only --strict-host keeps the old hard pin (no spill, NOT-RUN); a plain pin falls back once
+        code, splan, srun, _ = self.main(True, (("epyc5", [self.D], 2.7), "", False), argv_extra=("--hosts", "epyc4", "--strict-host"))
         self.assertEqual(code, 78)
         self.assertFalse(splan.called or srun.called)
 

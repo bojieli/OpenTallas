@@ -204,6 +204,142 @@ RUNNING_CHARGE_DIV = 4
 DIE_FREE_FLOOR_GB = int(os.environ.get("OT_RUN_DIE_FREE_FLOOR_GB", "60"))
 
 
+# DEATHCLASS-1122 SSH-DROP (FLOW-DEATHCLASS-R1, COORD 11-22: 20 rc-78 deaths): fleet names are ssh-config aliases (no DNS: `getent hosts intel2` fails
+# on every host), and "localhost" meant the hub only on the hub.  On epyc8 `--hosts localhost` probed `ssh localhost` (Host key verification failed:
+# NOT-RUN), and the default pool carried that dead entry on every non-hub host.  canon_hosts() names this machine the way ssh resolves it: the alias
+# whose `ssh -G` HostName is one of this machine's addresses.  On the hub its alias becomes "localhost" (HUB_SELF, HOST_RESERVE keys); elsewhere
+# "localhost" becomes this machine's alias.  A machine that is no fleet alias (rtx-pro) keeps "localhost" for drop_no_heavy to refuse.
+HUB_ALIAS = os.environ.get("OT_RUN_HUB_ALIAS", "intel2")
+_SELF_ALIAS = []
+SSH_TRANSIENT_RE = re.compile(r"Could not resolve hostname|Temporary failure in name resolution|Name or service not known|kex_exchange_identification|"
+                              r"Connection (?:reset|closed|timed out)|Connection refused", re.I)
+SSH_PROBE_TRIES = 3
+
+
+def ssh_alias_ip(alias):
+    """the HostName ssh would connect to for this alias (ssh -G reads the same config ssh does; no DNS lookup)"""
+    try:
+        r = subprocess.run(["ssh", "-G", alias], capture_output=True, text=True, timeout=10, stdin=subprocess.DEVNULL)
+    except Exception:
+        return None
+    m = re.search(r"^hostname (\S+)$", r.stdout or "", re.M)
+    return m.group(1) if m else None
+
+
+def local_addrs():
+    out = {"127.0.0.1", "::1", socket.gethostname(), socket.getfqdn()}
+    try:
+        out.update((subprocess.run(["hostname", "-I"], capture_output=True, text=True, timeout=10).stdout or "").split())
+    except Exception:
+        pass
+    return out
+
+
+def self_alias(cands=None, ip_of=None, addrs=None):
+    """this machine's fleet alias, or "" (OT_RUN_SELF_ALIAS overrides; cached per process)"""
+    if os.environ.get("OT_RUN_SELF_ALIAS") is not None:
+        return os.environ["OT_RUN_SELF_ALIAS"]
+    if cands is None and _SELF_ALIAS:
+        return _SELF_ALIAS[0]
+    ip_of = ip_of or ssh_alias_ip
+    addrs = local_addrs() if addrs is None else addrs
+    got = ""
+    for a in dict.fromkeys(list(cands if cands is not None else HOSTS) + [HUB_ALIAS]):
+        if a and a != "localhost" and ip_of(a) in addrs:
+            got = a
+            break
+    if cands is None:
+        _SELF_ALIAS[:] = [got]
+    return got
+
+
+def canon_hosts(hosts, me=None):
+    """-> hosts with this machine named once, the way ssh resolves it (see HUB_ALIAS above); order kept, duplicates dropped"""
+    me = self_alias() if me is None else me
+    if not me:
+        return list(hosts)
+    out = []
+    for h in hosts:
+        h = ("localhost" if h == me else h) if me == HUB_ALIAS else (me if h == "localhost" else h)
+        if h not in out:
+            out.append(h)
+    return out
+
+
+# DEATHCLASS-1122 RAIL-KILL (22 deaths, 16 on epyc10: a lane pinned --hosts to a full / draining / held host and got NOT-RUN): when EVERY pinned host
+# refuses, the request falls back ONCE to the pinned hosts plus every other pool host (spill on, so a --dir that lives only on the refused host is
+# copied); --strict-host (or OT_RUN_STRICT_HOST=1 / OT_RUN_HARD_PIN=1) keeps the old hard pin and its NOT-RUN.
+PIN_FALLBACK = [False]
+
+
+def pin_fallback_pool(pinned, held=None, cmd=(), pool=None):
+    """-> the hosts to try after every pinned host refused, or None (strict, already fell back, nothing else to try)"""
+    if os.environ.get("OT_RUN_STRICT_HOST") or os.environ.get("OT_RUN_HARD_PIN") or PIN_FALLBACK[0]:
+        return None
+    rest = [h for h in canon_hosts(HOSTS if pool is None else pool) if h not in (held or {}) and h not in pinned]
+    rest = drop_no_heavy(rest)
+    if gate_like(cmd):
+        rest = [h for h in rest if h not in GATE_NO_HOSTS]
+    if not rest:
+        return None
+    PIN_FALLBACK[0] = True
+    return [h for h in pinned if h not in (held or {})] + rest
+
+
+# DEATHCLASS-1122 SETUP (32 deaths at 0 s rc 1, 15 on a missing file): before admission the --dir, every --stage path and a relative script named
+# by the command (python3 x.py / bash x.sh, resolved under --dir) must exist on at least one candidate host (or on this machine for --stage / --dir,
+# which spill / autostage copy from here).  Refused with NOT-RUN SETUP and the missing path.  OT_RUN_NO_PREFLIGHT=1 skips it.
+SCRIPT_RE = re.compile(r"[^\s/][^\s]*\.(?:py|sh|tcl|bash)$")
+INTERP = ("python3", "python", "bash", "sh", "tclsh", "openroad", "yosys")
+
+
+def rel_script(cmd):
+    """the relative script file an interpreter command runs (python3 -I x.py -> x.py), else None"""
+    toks = list(cmd)
+    if not toks or os.path.basename(toks[0]) not in INTERP:
+        return None
+    for t in toks[1:]:
+        if t in ("-c", "-m", "-lc"):
+            return None
+        if t.startswith("-"):
+            continue
+        return t if SCRIPT_RE.match(t) and not t.startswith("/") else None
+    return None
+
+
+def setup_preflight(hosts, d, stage, cmd, probe=None, local_exists=os.path.exists, check_dir=True):
+    """-> refusal text or None.  A host whose probe answers nothing (unreachable) proves nothing: no answer from any host = no refusal"""
+    probe = probe or needs_probe
+    want = []
+    if d and check_dir:
+        want.append(d)
+    want += list(stage or [])
+    sc = rel_script(cmd)
+    if sc and d:
+        want.append(os.path.normpath(os.path.join(d, sc)))
+    if not want or not hosts:
+        return None
+    with cf.ThreadPoolExecutor(max(1, len(hosts))) as ex:
+        rows = dict(zip(hosts, ex.map(lambda h: probe(h, ["/"] + want), hosts)))
+    rows = {h: r for h, r in rows.items() if r.get("/")}
+    if not rows:
+        return None
+    miss = []
+    for x in want:
+        if any(r.get(x) for r in rows.values()):
+            continue
+        if (x == d or x in (stage or [])) and local_exists(x):
+            continue
+        miss.append(x)
+    if not miss:
+        return None
+    what = []
+    for x in miss:
+        kind = "--dir" if x == d else "--stage path" if x in (stage or []) else "script"
+        what.append(f"{kind} {x}")
+    return f"SETUP: {'; '.join(what)} exists on none of the candidate hosts ({', '.join(sorted(rows))}); create it or fix the path"
+
+
 def retryable_queued_probe_failures(first, previously_qualified, notes):
     """Only known transport loss may keep an already-unstarted request queued."""
     if first:
@@ -222,14 +358,19 @@ def probe(host, d, spill_ok=False):
     cmd = test + ("" if spill_ok else f"for m in {marks}; do test -e $m && {{ echo NODIR; exit 0; }}; done; ") + SCRATCH_FREE_SH \
         + LOADCAP_SH + PSI_SH + "/usr/local/bin/ot-heavy-reconcile --free $t"
     try:
-        for _try in (0, 1):   # PROBE_TIMEOUT_1114 ADMIT-TUNE-1: load 200+/96 hosts (load gate removed) need > 40 s; 60 s + one retry on timeout; revert: ot-run.bak-at1-1114
+        for _try in range(SSH_PROBE_TRIES):   # PROBE_TIMEOUT_1114 ADMIT-TUNE-1: load 200+/96 hosts (load gate removed) need > 40 s; 60 s + one retry on timeout; revert: ot-run.bak-at1-1114
             try:
                 r = subprocess.run(["ssh", "-o", "ConnectTimeout=20", "-o", "BatchMode=yes", host, cmd], capture_output=True,
                                    text=True, timeout=60)
-                break
             except subprocess.TimeoutExpired:
                 if _try:
                     raise
+                continue
+            # DEATHCLASS-1122 SSH-DROP: a transient resolve / transport failure (rc 255) is retried with backoff (2 s, 4 s) before the host is skipped
+            if r.returncode == 255 and SSH_TRANSIENT_RE.search(r.stderr or "") and _try + 1 < SSH_PROBE_TRIES:
+                time.sleep(2 * (_try + 1))
+                continue
+            break
         if r.returncode:
             return host, {"error": f"SSH probe exit {r.returncode}: {r.stderr.strip()[-160:]}"}
         if "NODIR" in r.stdout:
@@ -1263,7 +1404,7 @@ def dir_has_data(host, d):
         return False
 
 
-def drain_hosts(hosts, d, job, held=None):
+def drain_hosts(hosts, d, job, held=None, fallback=None):
     """FLOW-OPS-0900 fix 4: drop draining hosts (scratch free under the admit cap, host_drain.py) from this job's hosts, except where its --dir already
     holds data (a sealed --job or a job-root dir never does).  Every host draining -> NOT-RUN with the drain state and the hosts to use.  -> hosts (same object when unchanged)"""
     HD, dr = drain_state(hosts)
@@ -1278,6 +1419,14 @@ def drain_hosts(hosts, d, job, held=None):
         return hosts
     print(f"ot-run: DRAIN: {HD.describe({h: dr[h] for h in dropped})}: not used for this job (new job dir)", file=sys.stderr)
     if not kept:
+        fb = fallback() if fallback else None
+        if fb:
+            _hd2, dr2 = drain_state(fb)
+            fb = [h for h in fb if h not in dropped and h not in (dr2 or {})]
+        if fb:
+            print(f"ot-run: PIN-FALLBACK: every pinned host drains ({', '.join(dropped)}); trying {', '.join(fb)} (--strict-host keeps the pin)", file=sys.stderr)
+            log_signal(f"ot-run PIN-FALLBACK drain {','.join(dropped)} dir {d} -> {','.join(fb)}")
+            return fb
         not_run(HD.refusal(hosts, dr, [h for h in HOSTS if h != "localhost" and h not in (held or {})]))
     return kept
 
@@ -1453,7 +1602,34 @@ def client_matches(sub, pid, rest, d):
     return sub in rest
 
 
-def cancel(sub, all_dirs):
+# FLOW-FLEET-R1 11-22 (FABLE-FLOW-0000 F2): `ot-run --cancel SUBSTR --reason hang|design|infra` records why.  The cancelled client prints
+# "OT-RUN-CANCEL reason=<r>" into its log, so kit-wave books a manual cancel as CANCELLED (no free INFRA retry) unless the reason is infra.
+# No --reason = "manual" (not infra).
+CANCEL_REASONS = ("hang", "design", "infra", "manual")
+CANCEL_REASON_DIR = os.path.expanduser("~/.local/state/ot-run/cancel_reason")
+
+
+def note_cancel_reason(pids, reason, who=""):
+    try:
+        os.makedirs(CANCEL_REASON_DIR, exist_ok=True)
+        for p in pids:
+            with open(os.path.join(CANCEL_REASON_DIR, str(p)), "w") as f:
+                f.write(f"{reason} {who}"[:300])
+    except OSError:
+        pass
+
+
+def take_cancel_reason(pid):
+    f = os.path.join(CANCEL_REASON_DIR, str(pid))
+    try:
+        txt = open(f).read().split(None, 1)
+        os.unlink(f)
+    except OSError:
+        return None
+    return txt[0] if txt and txt[0] in CANCEL_REASONS else None
+
+
+def cancel(sub, all_dirs, reason="manual"):
     hit = {p: v for p, v in clients().items() if client_matches(sub, p, v[0], v[1])}
     if not hit and sub.startswith(("oth-", "otrun-")):
         return cancel_unit(sub)
@@ -1476,19 +1652,20 @@ def cancel(sub, all_dirs):
               f"({', '.join(dirs)[:400]}); other lanes' jobs would die.  Use a substring unique to your job (its --dir or "
               f"script path), kill your exact pid, or pass --all-dirs after reading the list.  Nothing killed.")
         return 2
+    note_cancel_reason(list(hit), reason, f"pid {os.getpid()}")
     for p in hit:
         try:
             os.kill(p, signal.SIGTERM)
         except OSError:
             pass
-    print(f"ot-run --cancel: SIGTERM sent to {len(hit)} client(s); waiters are cancelled on their hosts")
+    print(f"ot-run --cancel: SIGTERM sent to {len(hit)} client(s) (reason {reason}); waiters are cancelled on their hosts")
     if not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
         try:
             stop_started(stop_targets(hit, sub, [h for h in HOSTS if h != "localhost"]), path=sub if sub.startswith("/srv/") else None, fleet=list(HOSTS))
             stop_by_path([sub] if sub.startswith("/srv/") else [d for d in dirs if d.startswith("/srv/")], fleet=list(HOSTS))   # FLEET-WATCH-R4: the client's own --dir names the container too
         except Exception as e:                 # the cancel itself already happened
             print(f"ot-run --cancel: stopping started jobs failed: {type(e).__name__}: {e}")
-    log_signal(f"--cancel {sub!r} by pid {os.getpid()} parent {sender(os.getppid())}: {sorted(hit)}")
+    log_signal(f"--cancel {sub!r} reason={reason} by pid {os.getpid()} parent {sender(os.getppid())}: {sorted(hit)}")
     # FLEET-WATCH-R5 11-21 (OPUS-FIX-HEAD-LEP0N-R4 BUG: --cancel <unit> reached only STALE clients, scope + dpkit containers kept running): an exact unit / client tag is also stopped by its own scope
     # on every fleet host (ot-heavy-stop --unit|--tag), and the cancel is non-zero while a scope is still active
     if re.fullmatch(r"oth-[A-Za-z0-9_-]+|otrun-[A-Za-z0-9_.-]+-\d+-(\d+)?", sub) and not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
@@ -1770,6 +1947,10 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     unblock = lambda: signal.pthread_sigmask(signal.SIG_UNBLOCK, SIGS)
 
     def stop(sig, who):
+        _why = take_cancel_reason(os.getpid())
+        if _why:
+            who = f"{who}; OT-RUN-CANCEL reason={_why}"
+            say(f"ot-run: OT-RUN-CANCEL reason={_why} (ot-run --cancel{'' if _why == 'infra' else ': a manual stop, no free INFRA retry'})")
         log_signal(f"signal {sig} from {who} -> ot-run pid {os.getpid()} host {host} tag {tag} "
                    f"{'STARTED unit ' + state['unit'] if state['started'] else 'WAITING'} dir {d}: {' '.join(cmd)[:200]}")
         if state["started"]:
@@ -2018,7 +2199,10 @@ def main():
     if a[:1] == ["--spill-handoff"] and len(a) >= 2:
         sys.exit(spill_handoff_cli(a[1], a[a.index("--goal") + 1] if "--goal" in a else "place", dry="--dry-run" in a))
     if a[:1] == ["--cancel"] and len(a) >= 2:
-        sys.exit(cancel(a[1], "--all-dirs" in a[2:]))
+        _r = a[a.index("--reason") + 1] if "--reason" in a[2:] and a.index("--reason") + 1 < len(a) else "manual"
+        if _r not in CANCEL_REASONS:
+            sys.exit(f"ot-run --cancel: --reason takes {'|'.join(CANCEL_REASONS[:3])} (got {_r!r})")
+        sys.exit(cancel(a[1], "--all-dirs" in a[2:], reason=_r))
     if a[:1] == ["--cancel-dir"] and len(a) >= 2:
         sys.exit(cancel_dir(a[1], a[a.index("--reason") + 1] if "--reason" in a[2:] and a.index("--reason") + 1 < len(a) else ""))
     _pin_only = False
@@ -2044,6 +2228,7 @@ def main():
             _ex = {h for h in a.pop(0).split(",") if h}
             HOSTS[:] = [h for h in HOSTS if h not in _ex]
         elif o == "--pick": pick = True
+        elif o == "--strict-host": os.environ["OT_RUN_STRICT_HOST"] = "1"     # DEATHCLASS-1122 RAIL-KILL: keep a hard pin (no PIN-FALLBACK)
         elif o == "--needs": NEEDS.extend(x for x in a.pop(0).split(",") if x)      # NEEDS_1115: input paths the chosen host must have
         elif o == "--replicate": REPLICATE.extend(x for x in a.pop(0).split(",") if x)   # NEEDS_1115: small input dirs rsynced to a host that lacks them
         elif o == "--no-spill": spill = False
@@ -2082,6 +2267,11 @@ def main():
     os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
+    if hosts is HOSTS:
+        HOSTS[:] = canon_hosts(HOSTS)          # DEATHCLASS-1122 SSH-DROP: this machine named the way ssh resolves it (identity of HOSTS kept)
+    else:
+        hosts = canon_hosts(hosts)
+    _pinned_req = list(hosts) if hosts is not HOSTS else None
     hosts = gate_hosts(cmd, hosts)
     _pool = drop_no_heavy(hosts)
     if not _pool and hosts:
@@ -2090,13 +2280,24 @@ def main():
     held = held_hosts()
     if held and not os.environ.get("OT_RUN_INCLUDE_HELD"):
         kept = [h for h in hosts if h not in held]
+        if not kept and hosts is not HOSTS:
+            kept = pin_fallback_pool(hosts, held, cmd) or []
+            if kept:
+                spill = bool(d) and not job
+                SPILL_ONLY_HOSTS.clear()
+                print(f"ot-run: PIN-FALLBACK: every pinned host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); trying {', '.join(kept)} "
+                      f"(--strict-host keeps the pin)", file=sys.stderr)
+                log_signal(f"ot-run PIN-FALLBACK held {','.join(hosts)} dir {d} -> {','.join(kept)}")
         if not kept:
             print(f"ot-run: NOT RUN: every requested host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); "
                   f"edit {HELD_FILE} to release", file=sys.stderr)
             not_run(f"every requested host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); edit {HELD_FILE} to release")
         hosts = kept
     # FLOW-OPS-0900 fix 4 (FABLE-FLOW-0745 c: 10 lane jobs pinned to the draining intel1 / epyc9): a host under its admit cap takes no new job dir
-    _dk = drain_hosts(hosts, d, job, held)
+    _dk = drain_hosts(hosts, d, job, held, fallback=(lambda: pin_fallback_pool(hosts, held, cmd)) if hosts is not HOSTS else None)
+    if _dk is not hosts and PIN_FALLBACK[0] and hosts is not HOSTS:
+        spill = bool(d) and not job
+        SPILL_ONLY_HOSTS.clear()
     if _dk is not hosts:
         if hosts is HOSTS:
             HOSTS[:] = _dk                 # keeps `pinned = hosts is not HOSTS` false for an unpinned job
@@ -2166,6 +2367,13 @@ def main():
             held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
             hosts = gate_hosts(cmd, [h for h in HOSTS if h not in held]) or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
+        if first and not job and not os.environ.get("OT_RUN_NO_PREFLIGHT") and (STAGE or rel_script(cmd)):
+            # DEATHCLASS-1122 SETUP: the --stage paths and the relative script must exist on a host that holds --dir (or here, for --stage)
+            _have = [h for h in hosts if not str(PLACE_NOTES.get(h) or "").startswith(("no ", "SSH probe"))]
+            _pf = setup_preflight(_have, d, STAGE, cmd, check_dir=False)
+            if _pf:
+                say(f"ot-run: NOT RUN: {_pf}")
+                not_run(_pf)
         ok = drop_low_disk(raw, die, disk, say if first else None)
         ok, eta_held = drop_eta(ok, disk, say if first else None, d=d, plan="OT_HEAVY_PRIO=plan" in os.environ.get("OT_RUN_PRIO_ENV", ""))
         if eta_held and not ok:
@@ -2285,6 +2493,20 @@ def main():
                 first = False
                 continue
             why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
+            _fb = pin_fallback_pool(hosts, held, cmd) if pinned else None
+            if _fb:
+                say(f"ot-run: PIN-FALLBACK: no pinned host qualifies ({why[:300]}); trying {', '.join(_fb)} (--strict-host keeps the pin)")
+                log_signal(f"ot-run PIN-FALLBACK no host qualifies {','.join(hosts)} dir {d} -> {','.join(_fb)}")
+                hosts = _fb
+                spill = bool(d) and not job
+                SPILL_ONLY_HOSTS.clear()
+                first = True
+                continue
+            _nod = [h for h in hosts if PLACE_NOTES.get(h) == "no " + str(d)]
+            if d and _nod and all(h in _nod or str(PLACE_NOTES.get(h) or "").startswith("SSH probe") for h in hosts):
+                _pf = f"SETUP: --dir {d} exists on none of the candidate hosts ({', '.join(hosts)}); create it or fix the path"
+                say(f"ot-run: NOT RUN: {_pf}")
+                not_run(_pf)
             print(f"ot-run: NOT RUN: no host qualifies ({why})", file=sys.stderr)
             log_signal(f"ot-run REQUEUE no host qualifies mem {mem} dir {d}: {why[:160]}")
             not_run(f"no host qualifies ({why})")

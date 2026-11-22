@@ -38,7 +38,7 @@ def test_epyc10_in_the_host_and_floor_tables():
 
 
 def test_probe_has_the_timeout_retry_and_psi():
-    assert "PROBE_TIMEOUT_1114" in SRC and "for _try in (0, 1)" in SRC
+    assert "PROBE_TIMEOUT_1114" in SRC and "for _try in range(SSH_PROBE_TRIES)" in SRC
     assert m.psi_of("OT_PSI 3.5\n") == 3.5 and "OT_PSI" in m.PSI_SH
 
 
