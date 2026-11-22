@@ -104,7 +104,55 @@ def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",
     for lg in admit_logs:
         try: out += open(lg, errors="replace").read().splitlines()[-tail_lines:]
         except OSError: pass
+    out.append(recent_launch_text())
     return "\n".join(out)
+
+
+RECENT_LAUNCH_H = float(os.environ.get("OT_RT_RECENT_LAUNCH_H", "48"))
+RT_TOKEN = re.compile(r"rt/([0-9a-f]{8,40})")
+
+
+def recent_launch_text(hours=None, journal=None):
+    """CLEAN-AGGR-R3 (COORD 11-21: rt 3a68.. pruned on every host during the KV D27d3 apply, rt 15db9fcd7a42 pruned on intel2 under FABLE-FIX-QC-COLL-R2):
+    every rt/<sha> named by an ot-run / systemd-run launch of this host in the last OT_RT_RECENT_LAUNCH_H hours (user journal), one per line"""
+    hours = RECENT_LAUNCH_H if hours is None else hours
+    if journal is None:
+        try:
+            journal = S.run(["journalctl", "--user", "--since", f"-{int(hours * 60)}min", "-o", "cat", "--no-pager"],
+                            capture_output=True, text=True, timeout=120).stdout
+        except Exception:
+            journal = ""
+    return "\n".join(sorted({"rt/" + m for m in RT_TOKEN.findall(journal)}))
+
+
+SPEC_MAX_AGE_H = float(os.environ.get("OT_RT_SPEC_MAX_AGE_H", "168"))
+HUB_COORD = Path(os.environ.get("OT_HUB_COORD", "/srv/opentallas-scratch2/claude/hub-coord"))
+
+
+def private_spec_text(roots=None, now=None, max_age_h=None):
+    """CLEAN-AGGR-R3: live private specs (autopilot/private_specs/**/*.json, modified within OT_RT_SPEC_MAX_AGE_H) name the rt their run-items use"""
+    now = time.time() if now is None else now
+    max_age_h = SPEC_MAX_AGE_H if max_age_h is None else max_age_h
+    t = []
+    for r in (roots if roots is not None else (COORD, HUB_COORD)):
+        for f in Path(r).glob("autopilot/private_specs/**/*.json"):
+            try:
+                if now - f.stat().st_mtime <= max_age_h * 3600 and f.stat().st_size <= 4_000_000:
+                    t.append(f.read_text(errors="replace"))
+            except OSError:
+                pass
+    return "\n".join(t)
+
+
+def named_in(name, text):
+    """a snapshot is named when its 12-hex name occurs in text, or an rt/<hex> / tools_sha / gen_tools_pin value of 8..40 hex is a prefix of it or
+    starts with it (kit_wave tools_sha / gen_tools_pin may be a full 40-hex sha or a short one)"""
+    if name in text:
+        return True
+    for tok in set(re.findall(r"(?:rt/|tools_sha\W{1,6}|gen_tools_pin\W{1,6}|tools_pin\W{1,6})([0-9a-f]{8,40})(?![0-9a-f])", text)):
+        if tok.startswith(name) or name.startswith(tok):
+            return True
+    return False
 
 
 MIN_KEEP = 3          # the newest three snapshots stay whatever OT_RT_KEEP says (a rollback of the runtime must always be possible)
@@ -120,6 +168,8 @@ def names_in_use_text():
     for cmd in (["crontab", "-l"], ["systemctl", "--user", "cat", "*"]):
         try: t += S.run(cmd, capture_output=True, text=True, timeout=30).stdout
         except Exception: pass
+    try: t += "\n" + private_spec_text()
+    except Exception: pass
     try: t += "\n" + live_reference_text()       # the hub's own queued / armed ot-run clients name the rt/<sha> a build host will run: sent to the hosts with the pins
     except Exception: pass
     return t
@@ -154,7 +204,7 @@ def _prune_snapshots_locked(root, keep, protect, text, rm):
     except Exception: pass
     gone = []
     for d in snaps:
-        if d.name in stay or d.name == current(root) or d.name in text or in_use(d):
+        if d.name in stay or d.name == current(root) or named_in(d.name, text) or in_use(d):
             continue
         try:
             if rm: rm(d)

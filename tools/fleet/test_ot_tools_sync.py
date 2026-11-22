@@ -135,6 +135,22 @@ class Guard(unittest.TestCase):
         self.assertTrue((d / names[2]).is_dir() and (d / names[1]).is_dir() and (d / names[7]).is_dir())
         self.assertFalse((d / f"{names[0]}.manifest.json").exists())
 
+    def test_prune_keeps_pins_specs_and_recent_launches_clean_aggr_r3(self):
+        m = self.load(); names = ["%012x" % ((0x9e3779b97f4a * (i + 3)) % 2**48) for i in range(1, 9)]
+        d = self.mk(names)
+        m.recent_launch_text = lambda *a, **k: ""
+        text = '{"tools_sha": "%s7777"}\n gen_tools_pin: %s\n' % (names[0], names[3][:9])
+        self.assertTrue(m.named_in(names[0], text) and m.named_in(names[3], text) and not m.named_in(names[4], text))
+        gone = m.prune_snapshots(d, keep=3, text=text)
+        self.assertNotIn(names[0], gone); self.assertNotIn(names[3], gone); self.assertIn(names[4], gone)
+        j = "Started oth-1.scope - bash -c python3 /srv/x/rt/%s/tools/fleet/ot-run --hosts epyc7\n" % names[1]
+        self.assertIn("rt/" + names[1], m.recent_launch_text.__wrapped__(journal=j) if hasattr(m.recent_launch_text, "__wrapped__") else self.load().recent_launch_text(journal=j))
+        sp = pathlib.Path(tempfile.mkdtemp())
+        (sp / "autopilot/private_specs/L/x").mkdir(parents=True)
+        (sp / "autopilot/private_specs/L/x/spec.json").write_text('{"rt": "/srv/opentallas-scratch2/claude/rt/%s"}' % names[2])
+        self.assertIn(names[2], self.load().private_spec_text(roots=[sp]))
+        self.assertEqual(self.load().private_spec_text(roots=[sp], now=10**12), "")
+
     def test_prune_off_and_in_use_untouched(self):
         m = self.load(); names = ["%012x" % i for i in range(1, 6)]
         d = self.mk(names)
