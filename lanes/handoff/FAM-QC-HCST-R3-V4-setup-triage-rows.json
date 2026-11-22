@@ -1,0 +1,12 @@
+{"lane":"FAM-QC-HCST-R3","for":"QC-PLAN-R13 V4","source":"4_cts_post_hook.rpt (setup max paths) in ot-job-failed-logs of the SETUP_TRIAGE stops (epyc2/epyc8, 11-21); triage setup_est is post-GRT TT (hook-read), CTS worst shown",
+"rows":[
+ {"type":"sle_st_a_v1__cl989804f6__cled3c1d7b","triage":-218.27,"cts_worst":"-22.5 u_bin_b_tw_data_i -> u_u_r3","class":"re-site","fix":"btab column row (FAM-QC-HCST-R3-V3-btab189-rows.json, shift 189.0)"},
+ {"type":"slw_st_a_v1__clfc5867a6__pvf82a6c28","triage":-154.27,"cts_worst":"-37.5 g_btb[3] -> g_read[6].q[9]","class":"re-site","fix":"btab column row, shift 189.0 (same row)"},
+ {"type":"slw_st_a_v2__cl9f076a5c","triage":"-266..-387","cts_worst":"-169.1/-151.9 u_r8b_strap_r8pad_u_r0_rs_n_c_p_f.q[2] -> u_u_r0 (stable on 3 attempts)","class":"re-site","fix":"R8S-1 strap-seat row r_r8_core_seat (STRAP-R2 V3 2a) + btab 189 row; face-home landing already on this type"},
+ {"type":"sle_st_a_v1__cl989804f6__cl18eece69","triage":"-184..-318","cts_worst":"-101.1 u_cland_origin/s2 -> u_cland_rstart_tx/q","class":"station","fix":"origin->rstart_tx hop: +1 register stage (or seat rstart_tx adjacent to origin); NOT in btab row (btab shift breaks x_fw_ctl on g_btb[3])"},
+ {"type":"slw_st_a_v1__clb036e152","triage":-417.89,"cts_worst":"-85.5 u_cland_origin/s2 -> u_cland_rstart_tx/q","class":"station","fix":"same origin->rstart_tx fix; excluded from btab row"},
+ {"type":"slw_st_b_v1__cle6023ec2","triage":-306.53,"cts_worst":"log gone","class":"split","fix":"2-piece split (384.7k synth); table FAM-QC-HCST-R3-V3-split-table.tsv"},
+ {"type":"sle_su_l1__cl5ea486db","triage":-186.94,"cts_worst":"log gone","class":"UNMEASURED","fix":"needs rebuild to read"},
+ {"type":"sle_hc1__cl22c1ff36","triage":-486.88,"cts_worst":"log gone (11-15 attempt 8)","class":"UNMEASURED","fix":"stale; sle_hc1 siblings signed whole"}
+],
+"note":"hold paths in the same rpt (x_hc1_i -> u_bin_x_hc1_i, -120..-148) are Path Type min, not setup; not part of SETUP_TRIAGE"}
