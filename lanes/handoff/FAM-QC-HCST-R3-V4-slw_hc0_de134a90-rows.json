@@ -1,0 +1,11 @@
+{"lane":"FAM-QC-HCST-R3","for":"QC-PLAN-R13 V4","type":"slw_hc0__cl4f54b7a3__pvde134a90 (and sibling pvd0aa3ddc, same type)","advisory":true,
+"v3_check":"V3 plan (qc-plan-r12/ctl_strap/v3p3_static/plan.json) is IDENTICAL to b20 for this type: internal_stations only bus:cw_n0 (516b, 3 regs); ft_slots rsn(5 st), rsf(4 st), x_hc1_st_a (2 regs, E->S). NO station for x_ctl_o, x_hc1_i or cland_tstart_in. So V3 does NOT carry stations for the long hops.",
+"evidence":{"source":"kit geom 3_place auto_geom.json+geom.tsv epyc9 s29q103S4Q9N46R6V2/items/slw_hc0__cl4f54b7a3__pvde134a90/geom",
+ "r2r_captures_gt405":133,"r2r_max_um":531.7,
+ "worst_hop":"u_u_xl0_4.q_bad (209,311) -> u_bout_x_ctl_o/q[5] (615,185), manhattan 532 um; x_ctl_o is a 9-bit E-face bus, output regs already within 7 um of pins, so the long hop is core->output reg",
+ "pin_reg_worst_um":{"x_hc1_i[0]":267.7,"x_hc1_i[1]":267.4,"cland_tstart_in[0]":251.5,"x_hc1_st_a_i[514]":197.7,"x_hc1_st_a_i[511]":197.6},
+ "pin_reg_p90_um":38.4,"clock_tap_sinks":1486,"fill":0.12,"empty":0.676,"not_measured":"full list of the 133 captures not exported by auto_geom; only the worst and the x_ctl_o class were traced"},
+"rows":[
+ {"kind":"internal_station","conn":"bus:x_ctl_o","bits":9,"stages":1,"regs":"midpoint of each xl0_k.q_bad -> x_ctl_o[bit] path (>=1 register stage so each leg <=405 um; 532 um needs 2 legs <=266 um)","cycles":"+1 (pre-approved)","note":"same row exists for the st_a siblings (int:bus:x_ctl_o); R13 sites helper to derive per-bit sites"},
+ {"kind":"pin_register_seat","buses":["x_hc1_i[0..1]","cland_tstart_in[0]"],"rule":"seat the capture register within 100 um of the pin (E face); x_hc1_st_a_i[511..514] likewise (ft x_hc1_st_a regs_um first reg is at E face x=622, second at x=412, 210 um hop; add a middle reg or move the 2nd reg to x~517)"},
+ {"kind":"placement_note","text":"single dense blob with east half empty is a placement outcome (fill 0.12, empty 0.68); not fixable by a row; hop/pin rows above are the plan-level cure; not a gate (advisory)"}]}
