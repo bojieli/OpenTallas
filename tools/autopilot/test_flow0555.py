@@ -773,12 +773,16 @@ def test_bind_preflight_groups_and_dies_probe_in_parallel_with_the_same_result(m
     # prewarm: two dies, probed concurrently, caches filled so the per-die loop makes no further probe
     cfg2 = {"dies": {k: {"enabled": True, "gen_host": "h", "src": "/s", "plan": "/p", "kit_rtl": {"mode": "bind", "bind_out": "/b0"}} for k in ("a", "b")}}
     owners = [{"die": k, "item": "t1", "kind": "type"} for k in ("a", "b")]
+    cfg2["dies"]["parked"] = dict(cfg2["dies"]["a"], plan="/parked", parked={"reason": "owner parked"})
+    owners.append({"die": "parked", "item": "t1", "kind": "type"})
     seen.clear()
+    plans = []
     st = {}
-    monkeypatch.setattr(KW, "plan_names", lambda AP, st, d: {})
+    monkeypatch.setattr(KW, "plan_names", lambda AP, st, d: plans.append(d["plan"]) or {})
     t0 = _t.time()
     n = KW.prewarm_probes(type("AP2", (), {"log": staticmethod(lambda m: None), "rpy": staticmethod(ap.rpy)})(), cfg2, st, owners)
     assert n == 2 and _t.time() - t0 < 0.55
+    assert plans == ["/p", "/p"]
 
 
 def test_cancel_stop_is_detached_and_its_result_is_checked_next_tick(tmp_path, monkeypatch):
