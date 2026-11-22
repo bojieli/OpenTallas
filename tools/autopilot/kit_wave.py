@@ -12510,7 +12510,8 @@ def prewarm_probes(AP, cfg, st, owners):
     (over its OWNERS type rows, a superset of what it will pick) run IN PARALLEL, one thread per die, each ssh with its own timeout; the loop then hits the caches (plan_names by file mtime,
     bind_preflight by group).  Never raises into the plan; a die whose prewarm failed is simply probed in the loop as before."""
     from concurrent.futures import ThreadPoolExecutor
-    dies = [x for x, v in (cfg.get("dies") or {}).items() if isinstance(v, dict) and v.get("enabled") and v.get("plan") and v.get("gen_host")]
+    dies = [die for die, d in (cfg.get("dies") or {}).items()
+            if isinstance(d, dict) and d.get("enabled") and d.get("plan") and d.get("gen_host") and not die_parked(d)]
     if len(dies) < 2 or os.environ.get("OT_PREWARM_OFF"):
         return 0
 
