@@ -3,7 +3,7 @@
  "lane": "FAM-S81-LEPE-4",
  "event": "J8",
  "for": "S81-J6-ASSEMBLY-R5",
- "status": "DRAFT 11-22 01:xx PST (COORD proof12 rulings 2+3). Apply ONLY if proof12 final 5_1_grt confirms: S1 if setup WNS < -42 on u_u_lnl3 -> li3_d; R1 if internal async removal < 0. Not bound.",
+ "status": "DRAFT 11-22 01:xx PST (COORD proof12 rulings 2+3). Apply ONLY if proof12 final 5_1_grt confirms: S1 if setup WNS < -42 on u_u_lnl3 -> li3_d; R1 if internal async removal < 0. Not bound. Dry-run strict bind+LATCHECK with S1+R1: proof14 (intel2 fam-lepe4/p14) running 11-22 01:xx.",
  "types_changed": [
   "dsdv_slice_lepe_mu_LP__t2",
   "dsdv_slice_lepe_nh_mus_LP__t1"
@@ -16,10 +16,11 @@
     "dsdv_slice_lepe_mu_LP__t2"
    ],
    "evidence": "proof12 4_cts.odb: 553 li3 station flops placed at mean (499,353) next to their consumers (522,346); launch pins u_u_lnl3.k_li_d at (1225..1330, 622). Launch leg ~1000 um manhattan -> setup -106.3. FIRM strip at (883,484) splits it ~498 / ~499 um (below the lnl2 bottom edge y 509.8; taps t26/t62 clear).",
-   "K": "0 (same D1 station, moved). A stage instead (D 1 -> 2) is NOT drafted: lnl3 k_li_r is already D2 after S81-J6-ASSEMBLY 11-21, so the li3 credit loop is at DR 8 and +1 forward needs a credit depth change first.",
-   "fallback": "if GRT with S1 is still < -42: D 1 -> 2 with credit DR 8 -> 9 (RTL param); legs ~333 um",
+   "K": "0 (same D1 station, moved).",
+   "fallback": "if GRT with S1 is still < -42: D 1 -> 2 costs ~1.8% RX rate at the off-die cap (credit-bound 12/16) unless CRED 13 + lane re-sign; prefer a second FIRM re-site first",
    "nh_mus_LP": "same lnl3/li3 geometry class; FIRM sites from its own proof placement, not copied",
-   "ops": "ops[] entries relay_sites/u_y_xd_u_lep_li3_*"
+   "credit_loop": "li3 RX credit loop, counted on the p12 bound RTL s81p_dsdv_slice_lepe_mu_LP__t2.sv: u_u_lep CRED 12 / DR 12, u_u_ln3 CORE_CRED 12; bind stages u_y_xd_u_lep_li3_d_0_0 + li3_v_0_0 (D1 forward) and u_y_xd_u_lnl3_k_li_r_0_0 + _0_1 (D2 credit return); ot_s81_mu72_lnland +3 each way (exact). RTT = base ~6 (RTL header estimate, not simulated) + 6 landing + 1 + 2 = ~15 edges vs 12 credits: already credit-bound at 12/15 = 0.80 beats/cycle, still above the 0.764 off-die cap. The +1 fallback makes it 12/16 = 0.75 < 0.764 (~1.8% RX rate loss at the cap); keeping the cap needs CRED/DR 13 in lep AND lane CORE_CRED 13 (the signed lane view dscoll_lane_e_s12g, so a re-sign).",
+   "ops_ref": "ops[] entries relay_sites/u_y_xd_u_lep_li3_* (li3_v station name confirmed in the p12 bound RTL)"
   },
   "R1": {
    "what": "clock.tap_reset_split true (also turns on tap_reset_affinity): every last reset stage gets a same-depth copy on each tap that holds its async sinks",
@@ -30,7 +31,8 @@
    "evidence": "proof12 4_cts.odb clock trace: g_local[417].local_r on clk_t29 (insertion 185 ps); its sink g_tx[0].g_safe_write.u_m.g_address[16].address_r[4], 7 um away, on clk_t8 (403 ps, via the east-edge tap and two otstb delay buffers). Removal -173 = 218 ps tap-to-tap skew, not distance: the copy already sits at its cluster (13 um), so a relay sited at the cluster alone would not fix it.",
    "K": "0 (copy = same register, same depth, same reset release; LEC same-side duplicates)",
    "risk": "group_r -> copy D path becomes cross-tap where a copy lands on a late tap; the 500-700 um wire covers it on proof12 numbers; checked by the FF hold gate",
-   "tools": "main 6135636053 (RST-COTAP), included in tools >= 20a713e74d"
+   "tools": "main 6135636053 (RST-COTAP), included in tools >= 20a713e74d",
+   "provisional": "clock.tap_reset_split is PROVISIONAL until LEC passes with cloned reset stages (OPUS-FIX-QC-COLL-R3 pkit_core3s, first run). R1 enters J8 only if that LEC is EQUIVALENT or a mu_LP LEC passes first."
   }
  },
  "ops": [
