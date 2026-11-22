@@ -57,3 +57,13 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
   chain_d29.sh staged (binds the v6n draft after row 1; moves plan_of_record to por_row1_final).
 - Pending: merge FIX-SYNC reset.inst_taps v2 rows (13 banks) when posted; FABLE-FIX-KV-PV-SINKSPREAD sync.
 - Representative v3 build: needs an emitting (clean) bind -> after D28 seal or a clean bind 14.
+
+## State 2026-11-22 07:0x PST (current)
+- No running jobs or waiters. chain_r7c (2nd refresh + bind 14) was cancelled before admission (own exact PIDs, epyc8 load 147);
+  tree5 plan_of_record = plan 0268822b037f with the bind-13 R8 table dc12dffd7a48 (snapshot Q/por_row1_bind13).
+- D28 row 1 READY 617f8b82 (manifest split28/r7/row1_package.json). KV-PLAN-R6 owns the seal-time die R8 refresh + pair image.
+- D29 pv: FABLE-FIX-KV-PV-SINKSPREAD owns the one-event candidate 54ac7f32109f; my drafts are inputs only (ALIGN 16c9052a).
+  pv_v6 reset-leg coverage (FIX-SYNC 06:17) goes with SINKSPREAD unless COORD says otherwise.
+- NEXT: after the D28 seal emits a clean bind, build the v3 split representative (kv3_pv_v3 and kv3_pv_v3e) with
+  kit_wave.py private-spec qwen_kvsys <item> --tree <seal tree> --src-manifest seal --host epyc7|epyc8 (wave env), then run-item to sign-off.
+- Cleanup later via ot-delete: tree5 Q/por_d29_* trial dirs, r7/negtest, por_*fail dirs.
