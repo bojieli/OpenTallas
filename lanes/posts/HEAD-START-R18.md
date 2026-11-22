@@ -35,3 +35,4 @@
   - Recipe: epyc7 /srv/opentallas-scratch2/claude/head-start-r18/tr28.sh (env TAG, MUTANT).
   - Next (mine): rebase p6 onto e1a plan 00b2abf6e7a6 (= e1b), re-site lep0N START reset ports, rerun this bench on the result, hand to the LEP0N lane for the combined apply.
 - 2026-11-21 20:43 PST DONE [HEAD-START-R18] ot-run oth-ubuntu-1720360-1795322477 on tolerant-swine: rc=0 after 144 s, ended 20:43:40, log /home/ubuntu/head-start-r18/gates_e1b.otrun.log, cmd: --mem 48 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/head-start-r18 -- env TAG=e1b bash /srv/opentallas-scratch2/claude
+- 2026-11-21 20:44 PST DIED [HEAD-START-R18] ot-run oth-ubuntu-1757154-1795322655 on tolerant-swine: rc=1 after 2 s, ended 20:44:16, log /home/ubuntu/head-start-r18/e1b_tb1.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/head-start-r18 -- env TAG=tb1 bash /srv/opentallas-scratch2/claude
