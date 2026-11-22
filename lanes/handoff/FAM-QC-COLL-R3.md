@@ -34,3 +34,12 @@ Read FAM-QC-COLL-R2.md first (R2 rows: rows_bcd.json, rows_reset_v3.json, fix14.
   Live: intel2 qc-plan-r12/core_fault_reflow (fault stage sites reflowed, place resume) otrun-tolerant-swine-2714302; waiter armed (FAM-QC-COLL-R3/reflow.wait).
   coll_ftc: epyc9 fam-qc-coll/pkit9_spread (wide_r2/r3/axis_r4 place-only), r4 TT -166 -> +55 ps, 66 over405, route held. Wave coll_ftc a1 GRT waiter still armed (epyc8).
 - NEXT: read reflow 3_place (fault path setup, auto-geom); then ONE route build = wall rebind + fault pipe + keep-wires env via private-spec (wave env), read post-hook CTS + final 5_1_grt.
+
+## 20:xx reflow2 / reflow3 (intel2 fam-qc-coll/reflowN, own copies of Codex core_fault_reflow kit)
+- Codex core_fault_reflow DIED DPL-0033: hand-FIRMed epoch clone face_0 epoch_begin_south at (218.16,169.83) sat in the u_rx.u_mem halo (top 171.72).
+- reflow2 = same + clone/inverter moved to (218.16,171.99): PLACED rc 0. Placement TT WNS -367.54 / TNS -84,934; collective fault return no longer in the worst list (was -671.05).
+  Worst = face_0 codec u_ctl es[4] -> fault_cause[1] (slot_bad compare -> new_fault -> fault_cause). Located: es + rf capture bank at x 250-331 y 57-101 (south face pins),
+  but fault_cause / epoch_abort / rx_v placed at (45,338): ~500 um away. face_1 is compact (rf 16-82,322-425; fault_cause 20,567).
+- reflow3 = reflow2 + private relay sites for face_0 u_ctl fault_cause[0..7], epoch_abort, rx_v at (300,75) next to the rf bank (zero cycles). ot-run otrun-tolerant-swine-2880393, waiter armed.
+  If it clears es->fault_cause: V3 row = relay_sites for those 10 u_ctl regs (face_0; check face_1 too). If the path moves downstream, fallback = +1 registered slot_bad/crc_bad stage (rows_bcd codec stations, +cycles pre-approved; rx_v timing changes too, needs bench).
+- Hold at placement: start_i -> u_run_in -87.9 (input port; structural, handled by IO hold flow).
