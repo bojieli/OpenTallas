@@ -41620,7 +41620,8 @@
      "svc_lo_dsdv_svc_rs_w__t1"
     ]
    },
-   "note_gen_tools_pin_j7": "S81-J6-ASSEMBLY-R5 11-21 (COORD toolskew risk): every J7 row gens from the sealed tree tools (== rt 404887a342b0) via item_inputs gen_tools_pin; flow refresh still from rt/current. Remove only with a strict rebind of J7 on the newer rt."
+   "note_gen_tools_pin_j7": "S81-J6-ASSEMBLY-R5 11-21 (COORD toolskew risk): every J7 row gens from the sealed tree tools (== rt 404887a342b0) via item_inputs gen_tools_pin; flow refresh still from rt/current. Remove only with a strict rebind of J7 on the newer rt.",
+   "auto_bind": true
   },
   "s81_head": {
    "enabled": true,
