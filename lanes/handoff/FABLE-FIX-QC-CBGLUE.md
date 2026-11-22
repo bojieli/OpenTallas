@@ -195,3 +195,11 @@ Exact stock-basis E2 pre-GRT hold experiment `glue_chunk_e2_r3.log` exited 0. Th
 
 
 For the separate token alignment task, E7 physical geometry traced 524/524 X3 local D1 bits of the retained V1 `3_place`, the same local bank name emitted by current V2. Direct source-to-capture width max 210.365 µm; keeping existing repeaters leaves max new splice 98.155 µm. TSV and reviewed image `fam-qc-cb-r2/glue_x3_geometry/`, exact unit 182975. The native valid-only D1 physical read (4145200) gives final capture x308.44 from upstream shared pad Q x135.71. Existing y610 corridor allows same-polarity repeaters without another registered cycle. Token owns end-to-end GEN, calendar and age changes. No Glue transport changes were adopted here.
+
+## November 22 late-morning Glue continuation
+
+V2 wave attempt 5 AP 05ca36d93864 reached DRC0 at 833 ps. Minimal setup TT −93.36 ps is `rom_qr[33]` to `dh_prog_a[108]` through twelve route repeaters. Internal FF is −4.55 ps on two hard SRAM write-data pins, bits 323 and 319. The automatic ECO is in DRT, after GRT TT −94.46. It is a live run. The separate E8 attempt 1 AP 16ce96ed175e has pre-payload admission waits and an exact reviewed ISSUES row for its 10,225-sink clk_t19 and 1,135.03 µm own-clock reach.
+
+E9 `fam-qc-cb-r2/nov22_glue_clock` contains three independently scoped physical options. Its exact in-memory production clock assignment stock to central+19 reduced cap debt from 18,254 to 977. The remaining bottom clk_t1 has 1,977 sinks. An independent +20 replay is queued. The 583-site FDI capture re-seat brings inbound maximum 680.13→386.37 µm with downstream 361.04 µm. The separate 146-site ROM/program re-seat brings the 128 selected branches 1114.34→480.06 µm while preserving the other cone envelope. Both site images were reviewed. The ROM candidate requires fresh timing and retains some above-limit geometry.
+
+E10 `fam-qc-cb-r4/nov22_v4_sites/p7c5rt_{fdi,rom}.json` are independent exact-geometry projections onto the strict/LAT-green QC p7c5rt parent. No lane/port/cycle changes, and no new route from them. Token's private service patch preserves the relevant net names in source. Check actual mapped placement in the chosen combined form. The old strict E7 b774 counter correction passes all 1,921 LAT checks. Its a087 factory-compatible rebind is queued rather than bypassing the current tool floor.
