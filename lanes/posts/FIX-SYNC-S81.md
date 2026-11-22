@@ -1,0 +1,1 @@
+- 2026-11-22 01:13 PST RESUMED FIX-SYNC-S81 (Opus) 01:1x: fix-propagation lane for S81; harvesting classes -> lanes/FIX-SYNC-S81.tsv; J8 rows to S81-J6-ASSEMBLY-R5 by 14:00, prioritising J8-able classes.
