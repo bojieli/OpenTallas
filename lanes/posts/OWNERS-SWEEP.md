@@ -265,3 +265,8 @@
   KV: FAILED-NO-RELAUNCH 16 (pv/hg/hgi, owners PV-R5/HGI-R6); kv3_sys_c unclassified; CBC-FALLBACK 2 held.
   HEAD: hd_lep0N FAILED-NO-RELAUNCH (FABLE-FIX-HEAD-LEP0N-R2). QC: cbf_q01_s2 DEAD-OWNER (FAM-QC-CB-R2), tt_ctlm + slw_stm_v2 UNOWNED.
   File lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-21 18:28 PST OWNERS-SWEEP-1900 [OWNERS-SWEEP -> COORD] 463 rows rebuilt (lanes/OWNERS-SWEEP.tsv, commit 17ed5c1c38).
+  S81: 132 UNOWNED/62 STALE were held J7 plan-event or superseded-cancelled rows; reclassified HELD/CANCELLED with inferred owners, no real flags left.
+  HEAD: hd_lep0N FAILED place, stale 8.6h, owner FABLE-FIX-HEAD-LEP0N-R2 alive (18:16), no relaunch.
+  KV: hg/pv failed rows HELD (D27d3 green, D28); kv3_hroot owner R3 dead (12:37) -> R4; kv3_hg_v1p2 owner FLOW-CLKGRT-R2 dead (15:53).
+  QC: 4 FAILED no relaunch, stale 4-5h (cbf_q00_s2, cbx_q10, sle_stm_v1, slw_su_c); owners alive.
