@@ -55,3 +55,21 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
 
 ## Item 7 OWNERS from bound plans: DONE main a90c6d61ab
 - ownership.py + autopilot.ownership_inputs read kit_wave.json dies.<die>.plan/src (follows every apply); parked HBM keeps main d44f. Live check: S81 a9ed808a98d / HEAD r17b / QC R6V2 / KV D27d3 bound plans, all pins resolve; 2 S81 ghost NEEDS-KIT rows (ot_s81dv_xfin, ot_v41_rom_elem_q_qxpq_w10) drop at the next OWNERS tick.
+
+## 11-22 PRIVATE-KIT PROVENANCE (TOP): DONE main 03412153064a (commits 14e4ef9ab0 provenance, cb5ae5779a DEATHCLASS, 5e79d9bc5f ot-wait --durable)
+- private-spec --tree/--fork defaults to --src-manifest seal: run-item seals the tree at gen (src_manifest.py seal -> <work>/logs/src_manifest.sealed.json.gz;
+  parent main sha + changed files as overlay; the tree is never written). After chain SIGNED (sign-off + routed LEC) it writes <work>/gen/PROVENANCE.json kind private
+  (src_commit = sealed main sha, flow_tag via autopilot.resolve_provenance, private.plan_sha256 / src_manifest_hash / overlay / fork / spec sha).
+  Versioned only with seal + routed LEC EQUIVALENT (all_shown, newer than 6_final.v) + flow tag; else SIGNED-UNVERSIONED with why.
+- Backfill: kit_wave.py private-provenance <spec dir> [--kit H:K] [--signoff P] [--lec P] (seal now; ok only if the tree is RO or not newer than kit config.mk).
+- E2E: FAM-S81-SLICE-R4 slice_station__t36_1121074053 (epyc10). Routed LEC was run by me (lec_routed_ffr1_1122: EQUIVALENT, 88463 points); backfill -> SIGNED
+  src 3c913dbdfb23 flow-20261113-my-s81 plan sha 44be6051; counter prov() -> versioned + private_plan_sha; INDEX already holds the export (s81p_..._ax_caf8c9632a).
+  auto_export now names private kits by the wave item.
+- Same push: DEATHCLASS GEOM-FAIL/ADMIT (the 9 "admits ... headroom 0" UNCLASSIFIED geom deaths were admitted AUTO-GEOM FAILs, so no requeue); ot-wait --durable.
+## 11-22 ops
+- intel2 autopilot.service: new drop-in zzzzz-ffr1-rtcurrent.conf, ExecStart = rt/current only (old drop-ins named deleted wt/claude-ap-signoff2-1027 and the gone kw38/rt).
+- Hub ~/OpenTallas (symlink to moved/home__ubuntu__OpenTallas) HEAD is still 11-14 22c217df540 with 131 dirty files and is NOT synced. Nothing live runs from it:
+  autopilot, cron and hub_git_sync all use rt/current, which ot-tools-follow.timer moves to origin/main every 1 min (ownership a90c6d61ab is live there).
+- rtx-pro: cron */15 ~/bin/ot-run-follow.sh keeps ~/.local/lib/fleet/ot-run-main/current = hub rt/current (log ~/.local/state/ot-run-follow.log).
+- Pre-existing failures on main: test_kit_wave_guard_kill (2), test_kit_wave_source RetryOutput (1).
+- PENDING: epyc7 LOAD_CAP decision before 11-23 06:00Z (sampler e7_sample.tsv).
