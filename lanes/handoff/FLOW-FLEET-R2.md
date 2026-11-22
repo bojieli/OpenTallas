@@ -3,7 +3,7 @@
 Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R2/repo (cone tools,bin,tests). Scratch tmp: .../FLOW-FLEET-R2/tmp.
 
 ## S1 UTF-8 guard: DONE
-- (a) main (commit 9b60997964 in lane clone, push below): autopilot.read_coord decodes with errors=replace on the git-show path too (it was strict) + one WARN per file per process; test_read_coord_utf8.py.
+- (a) main main c9b8d5f226ca (lane commit 9b60997964): autopilot.read_coord decodes with errors=replace on the git-show path too (it was strict) + one WARN per file per process; test_read_coord_utf8.py.
 - (b) coord/state e22d85406d: bin/utf8_guard.py; post.sh refuses invalid UTF-8 text; coord-commit.sh refuses invalid UTF-8 in the LINES IT ADDS to named text files (old bad bytes never block). COORD_UTF8_GUARD=off skips. tools/tests/test_utf8_guard.py.
 - Note: tools/tests/test_coord_commit.py::test_nothing_to_commit_but_origin_has_head_is_pushed_status already fails without my change (NOTHING-COMMITTED rule 11-19).
 
