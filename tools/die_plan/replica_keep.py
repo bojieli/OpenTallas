@@ -227,7 +227,13 @@ def station_regs(rtl_dir, ist_files):
 # rs_n_c -333 ps; c1x_C.  These registers exist only to be placed apart, so every clocked register of such a module and
 # the named reset-synchroniser stages anywhere are kept (Mod:reg, module-scoped).  Function unchanged (keep only stops the
 # folding, LEC names stay 1:1); applies to new synth only.  OT_CLASS_KEEP=0 omits it.
-CLASS_MOD = re.compile(r"(rly|relay|station|_stn[hv]?(?:_|\d|$)|_svc_stn|landing|reset_sync|rst_sync|rst_relay)", re.I)
+# CANARY-NARROW-1122 (FLOW-OPS-R2, s81_head_cl canary -5 ps TT GRT slack / 0 -> 14 GRT slew violations): A/B at 8a2a7b31a97 traced the
+# regression to the ot_dp_clk_landing / _ca control registers (align_c, arm, count, fault_state, on, ready, rst_l ...) that the
+# "landing" class added to OT_KEEP_WIRES.  Clock landing control is not a placed-apart relay stage, so it is left out; relay /
+# station / ROM-input stations / reset-sync stay kept (S81 col 52 ROM-input stations need them).  Its (* async_reg *) synchronisers
+# are still kept by ot_keep_regs.tcl.
+CLASS_MOD = re.compile(r"(rly|relay|station|_stn[hv]?(?:_|\d|$)|_svc_stn|reset_sync|rst_sync|rst_relay)", re.I)
+CLASS_SKIP = re.compile(r"clk_landing", re.I)
 CLASS_NAMED = (("*", ("reset_pipe", "r_reset_meta", "sync_q", "rst_meta", "rst_sync_q")),
                ("_sel_hist", ("gs0", "gs1")))          # FAM-S81-SLICE-R5: WREG gs1 fan-out flop (t9: 124 pins)
 _NB = re.compile(r"(?<![<=!>])\b([A-Za-z_]\w*)\s*(?:\[[^\]]*\]\s*)*<=")
@@ -242,7 +248,7 @@ def class_regs(rtl_dir):
         for d in re.finditer(r"\b(?:reg|logic)\s+(?:signed\s+)?(?:\[[^\]]*\]\s*)*([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)", body):
             regs |= set(re.findall(r"[A-Za-z_]\w*", d.group(1)))
         assigned = {n for n in _NB.findall(body) if n in regs}
-        if CLASS_MOD.search(m):
+        if CLASS_MOD.search(m) and not CLASS_SKIP.search(m):
             res |= {f"{m}:{r}" for r in assigned}
         for frag, names in CLASS_NAMED:
             if frag == "*" or frag in m:

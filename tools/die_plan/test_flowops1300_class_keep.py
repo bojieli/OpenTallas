@@ -103,3 +103,16 @@ def test_yosys_two_synchronisers_stay_two(env, bits):
         p = subprocess.run(["yosys", "-q", "-c", str(tcl)], capture_output=True, text=True, env=e, timeout=300)
         assert p.returncode == 0, p.stderr[-2000:]
         assert ("DFFBITS %d" % bits) in p.stdout
+
+
+def test_clk_landing_control_regs_not_class_kept(tmp_path):
+    """CANARY-NARROW-1122: s81_head_cl regressed (GRT slew 0 -> 14, TT slack -5 ps) only from the ot_dp_clk_landing keep; relays/stations stay"""
+    import replica_keep as RK
+    (tmp_path / "a.sv").write_text(
+        "module ot_dp_clk_landing (input wire clk, input wire d, output reg arm);\n always @(posedge clk) arm <= d;\nendmodule\n"
+        "module ot_dp_clk_landing_ca (input wire clk, input wire d, output reg count);\n always @(posedge clk) count <= d;\nendmodule\n"
+        "module ot_dp_rrelay (input wire clk, input wire d, output reg q);\n always @(posedge clk) q <= d;\nendmodule\n"
+        "module ot_s81_rom_station (input wire clk, input wire d, output reg q);\n always @(posedge clk) q <= d;\nendmodule\n")
+    got = RK.class_regs(str(tmp_path))
+    assert "ot_dp_rrelay:q" in got and "ot_s81_rom_station:q" in got
+    assert not [g for g in got if "clk_landing" in g]
