@@ -2,3 +2,4 @@
   [filed under] FABLE-FIX-S81-LEAF-R9: FABLE-FIX-S81-LEAF-R7 stood down (chain FABLE-FIX-S81-LEAF-R7 > FABLE-FIX-S81-LEAF-R8 > FABLE-FIX-S81-LEAF-R9)
 - 2026-11-21 20:54 PST 68-type gate oth-ubuntu-875159-1795316235 ended exit 143 (SIGTERM) during strict bind after G68_ELAB_RC=0; not cancelled by this lane. No verdict. Elab out is kept in fable-fix-s81-leaf-r7/g68_src (script r7_gate68.sh resumes at bind). R9: relaunch only after the lane-tap G0 fix (same re-grid blocks), or find who cancelled it.
   [filed under] FABLE-FIX-S81-LEAF-R9: FABLE-FIX-S81-LEAF-R8 stood down (chain FABLE-FIX-S81-LEAF-R8 > FABLE-FIX-S81-LEAF-R9)
+- 2026-11-21 20:54 PST DONE [FABLE-FIX-S81-LEAF-R9] ot-push-main otpush-tolerant-swine-2009834 on tolerant-swine: rc=0 after 40 s, ended 20:54:57, log none, cmd: ot-push-main 
