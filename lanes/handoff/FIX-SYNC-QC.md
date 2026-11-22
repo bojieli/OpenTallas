@@ -10,3 +10,6 @@ cb*/cbx*: FAM-QC-CB-R4. coll_core/coll_ftc: OPUS-FIX-QC-COLL-R3. hc/st/su: FAM-Q
 ## Do not duplicate: CLASS-SWEEP-R1 (HB4 over-insertion, band capacity, reset copy tap), NEARMISS-ECO-R1, TAP-GRID-R5 (tap density/splits).
 ## Log
 - 01:13 RESUMED posted. 01:2x scan1 (v3p7d) launched via ot-run on epyc10 (client pid 3088555, log scan1.otrun.log).
+- 01:5x r1 DONE: lanes/FIX-SYNC-QC.tsv (11 classes) + lanes/handoff/FIX-SYNC-QC-V4-rows-r1.json (QS-RLEG cbn_q11__cl5cc92dfe inst_taps 89->90; QS-STRAP slw_fw_v1 cl592e3d37 + optional slw_stm_v1). Posted to CB-R4/FEFW-R3/R13, veto until 02:50.
+  epyc10 fix-sync-qc: detect_slit.py, detect_landface.py, detect_launchwire.py, mk_rleg_draft.py, strap_sites.py (= S81 slice_strap_sites.py), rlp3/ (reset_leg_plan V3 numbering), in/<type>/ (V2 geom + bound sv copies).
+- Next: QS-LAUNCH cbx_q10 x3 y_o21 station re-site (363->246 um, 0 cycles; site found core-free); precheck REACH diff vs handed V4 rows; sle_ctl lever-3 type still has x_fw_p2_i launch hop 432 um (> 405) -> tell SLWSLE.
