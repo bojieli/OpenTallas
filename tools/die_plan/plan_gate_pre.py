@@ -67,6 +67,13 @@ DEADIN-1122 (FLOW-OPS-R2, COORD): with an as-built that names dead_input_proofs,
   validation (repository-relative paths, PASS verdict, defines / re-proofs, dependency module hashes, selected source) runs here,
   before the elab: OPUS-FIX-S81-COLROM-R6 kit G lost 28 min of elab to "dead-input proof must be repository-relative".
 
+TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with clock.added_taps, the density base is solved
+  exactly as the bind does (taps._density_base) and the added names must be clk_t<base>, clk_t<base+1>, ... in order (cbf_q00
+  clk_t101 for t114, coll_core clk_t130 for t126: EMIT "density added tap names/order must be ..." after 30+ min of bind).
+  FAIL TAPNAME names each wrong name and its expected one.  A clock-section reference to a clk_t<k> that is no tap of the
+  type (k >= base + added), or to a misnamed added tap, is FAIL TAPNAME-RETAP: the reset tree / consumer sites still carry
+  old tap indices; re-run the tap package (retap.py) on the solved base.
+
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -83,7 +90,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -958,6 +965,69 @@ def check_deadin(tree, plan, asbuilt):
     return []
 
 
+def check_tapname(plan, base_fn=None, max_list=6):
+    """FAIL TAPNAME / TAPNAME-RETAP lines (see TAPNAME-1122).  base_fn(P, raw, type) -> density base tap count; injectable."""
+    raw = _load(plan)
+    if not raw:
+        return []
+    todo = []
+    for tn, ty in (raw.get("partition_types") or {}).items():
+        ck = (ty or {}).get("clock") or {} if isinstance(ty, dict) else {}
+        if ck.get("tap_mode") != "density":
+            continue
+        refs = [v for v in _tap_ref_names(ck)]
+        if ck.get("added_taps") or refs:
+            todo.append((tn, ck, refs))
+    if not todo:
+        return []
+    if base_fn is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import schema
+        import taps as TP
+        P = schema.Plan(raw, Path(plan))
+
+        def base_fn(_P, _raw, tn):
+            return len(TP._density_base(P, tn))
+    out = []
+    for tn, ck, refs in todo:
+        added = [str((a or {}).get("name")) for a in ck.get("added_taps") or []]
+        if not added and not refs:
+            continue
+        try:
+            nb = base_fn(None, raw, tn)
+        except Exception as e:  # noqa: BLE001 - the bind reports a density solve error itself
+            out.append(f"WARN TAPNAME {tn}: density base not solved ({type(e).__name__}: {str(e)[:160]}); name check skipped")
+            continue
+        exp = [f"clk_t{nb + i}" for i in range(len(added))]
+        wrong = [(a, e) for a, e in zip(added, exp) if a != e]
+        if wrong:
+            out.append(f"FAIL TAPNAME {tn}: density base gives {nb} taps, so added_taps must be {exp[0]}..{exp[-1]}; "
+                       + "; ".join(f"{a} should be {e}" for a, e in wrong[:max_list]))
+        names = {"clk"} | {f"clk_t{i}" for i in range(1, nb)} | set(exp)
+        bad = sorted({r for r in refs if r not in names or r in {a for a, _ in wrong}}, key=lambda s: int(s[5:]) if s[5:].isdigit() else -1)
+        if bad:
+            out.append(f"FAIL TAPNAME-RETAP {tn}: clock references name {len(bad)} tap(s) that are not taps of the solved base "
+                       f"({nb} density + {len(added)} added): {', '.join(bad[:max_list])}; re-run the tap package (retap) on this base")
+    return out
+
+
+def _tap_ref_names(ck):
+    """clk_t<k> names the clock section references outside the tap tables (landing_remap.tap_refs rule)"""
+    out = []
+
+    def walk(o):
+        items = o.items() if isinstance(o, dict) else enumerate(o) if isinstance(o, list) else ()
+        for k, v in items:
+            if isinstance(k, str) and k in ("taps", "added_taps"):
+                continue
+            if isinstance(v, str) and re.match(r"^clk_t\d+$", v):
+                out.append(v)
+            else:
+                walk(v)
+    walk(ck)
+    return out
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None):
@@ -975,6 +1045,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, baseline)
+    if "TAPNAME" not in skip:                            # TAPNAME-1122: density added tap names, seconds before the bind
+        findings += check_tapname(plan)
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
