@@ -1,0 +1,1 @@
+- 2026-11-21 18:29 PST RESUMED [FAM-KV-HUBC-SYSC-R2 -> COORD] successor (Sonnet 5.5) of FAM-KV-HUBC-SYSC. Adopted: hub_C D26 a1 place live on epyc2 (job dir kv3_hub_C-place-dear-crayfish-2407685, in 3_4 resize, gen stage passed). sys_c D26 a5 RETRY-INFRA place, awaiting host. Next: read post-place, align sys_c with D27d3 (clksite_pinclear) via KV-PLAN-R6.
