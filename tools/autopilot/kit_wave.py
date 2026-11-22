@@ -14065,6 +14065,33 @@ def live_on_fleet(AP, roots, hosts=None):
 # Global option hung_watch_min 0 = off (rows stay report-only, as before).
 HUNG_WATCH_MIN = 120
 HUNG_CPU_S = 60.0
+# FLOW-FLEET-R1 11-22 (FABLE-FLOW-0000 F2, COORD): progress = new log / file output, not CPU growth.  A wave row in place / CTS / GRT / route whose
+# stage logs (fleet run/logs + ot-run staging work + hub log) have not grown for HANG_OUTPUT_MIN while its CPU still grows is HANG: posted first
+# (HANG-REPORT), cancelled HANG_CANCEL_AFTER_MIN later if no new output appeared since the report (report-then-cancel).  Private kits are not wave
+# rows (noprog_watchdog keeps them report-only).  Global option hang_output_min 0 = off.
+HANG_OUTPUT_MIN = 90
+HANG_CANCEL_AFTER_MIN = 30
+HANG_STAGES = re.compile(r"^(?:place|cts|grt|global_route|route|detail_route|resume_\w+)$")
+
+
+def hang_judge(rec, w, now, minutes=HANG_OUTPUT_MIN, cancel_after=HANG_CANCEL_AFTER_MIN, hub_newest=0.0):
+    """-> (kind, why) with kind 'report' | 'cancel' | None for a row whose CPU is busy (not hung by _hung_judge).  w = the row's new hung_watch
+    (w['log'] = newest stage-log mtime seen on the fleet).  rec['hang_reported'] = [t, log mtime at report]: the cancel needs the same log mtime."""
+    if minutes <= 0 or not HANG_STAGES.match(str(rec.get("stage") or "")):
+        return None, ""
+    logt = max(float((w or {}).get("log") or 0), float(hub_newest or 0))
+    if not logt:
+        return None, ""
+    out_m = (now - logt) / 60.0
+    if out_m < minutes:
+        return None, ""
+    hr = rec.get("hang_reported")
+    why = f"HANG: stage {rec.get('stage')}: no new log output for {out_m:.0f} min while the CPU still grows (CPU growth is not progress)"
+    if isinstance(hr, (list, tuple)) and len(hr) == 2 and abs(float(hr[1]) - logt) < 1.0:
+        if (now - float(hr[0])) / 60.0 >= cancel_after:
+            return "cancel", why + f"; reported {(now - float(hr[0])) / 60.0:.0f} min ago, no output since"
+        return None, ""
+    return "report", why
 HUNG_PROBE = r"""
 # HUNG_PROBE
 import glob, json, os, re, subprocess, sys
@@ -14393,8 +14420,14 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
                 hung, w, why = hung_judge(rec.get("hung_watch"), p, _prog_ts - m * 60.0, _prog_ts or now, hm, dead_min=dm)
                 if watch_out is not None:
                     watch_out[key] = dict(w, containers=list(p.get("containers") or [])) if hung else w
+                _hk, _hw = (None, "") if hung else hang_judge(rec, w, _prog_ts or now, float(cfg.get("hang_output_min", HANG_OUTPUT_MIN) or 0),
+                                                               hub_newest=_prog_ts - m * 60.0)
                 if hung:
                     out.append((key, "HUNG", why))
+                elif _hk == "cancel":
+                    out.append((key, "HUNG", _hw))
+                elif _hk == "report":
+                    out.append((key, "HANG-REPORT", f"{_hw}; cancelled in {HANG_CANCEL_AFTER_MIN} min unless output resumes; {why}"))
                 elif m >= HUNG_POST_MIN and not rec.get("hung_posted"):
                     out.append((key, "POST6H", f"unit active, log frozen {m:.0f} min but CPU busy; not cancelled (WF-1): {why}"))
                 elif m > minutes:
@@ -14626,6 +14659,12 @@ def reap_dead(AP, cfg, st, notices, now=None):
             AP.log(f"KIT-WAVE REAP-DEAD SILENT {key}: {why}")
             continue
         rec = st["items"][key]
+        if kind == "HANG-REPORT":                          # F2: report first; the cancel comes HANG_CANCEL_AFTER_MIN later on the same frozen log
+            if not AP.DRY:
+                rec["hang_reported"] = [time.time(), float((marks.get(key) or {}).get("log") or 0)]
+                notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} HANG (report, cancel follows): {why[:200]}")
+                AP.log(f"KIT-WAVE HANG-REPORT {key}: {why}")
+            continue
         if kind == "POST6H":                               # WF-1: post once, never kill a busy job
             if not AP.DRY:
                 rec["hung_posted"] = time.time()
@@ -14830,6 +14869,14 @@ def _collect_body(AP, cfg, st, notices):
             rec.update(status="CANCELLED", **{"class": "QUEUE-CANCELLED"}, updated=time.time(), reason=f"place cancelled by ot-run --cancel (final, no retry): {_cx[:200]}")
             notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} place CANCELLED by ot-run --cancel (final; retry {rec['item']}@{rec.get('attempt')} relaunches)")
             AP.log(f"KIT-WAVE PLACE-CANCELLED {rec['die']}/{rec['item']}@{rec.get('attempt')}: {_cx[:160]}")
+            continue
+        _mc = manual_cancel_reason((res.get("errors") or "") + "\n" + (res.get("tail") or ""))
+        if _mc and _mc != "infra":
+            # FABLE-FLOW-0000 F2: `ot-run --cancel --reason hang|design` (or no reason) is a manual stop: CANCELLED, no free INFRA retry
+            rec.update(status="CANCELLED", **{"class": "MANUAL-CANCEL"}, updated=time.time(),
+                       reason=f"cancelled by ot-run --cancel (reason {_mc}; final, no free INFRA retry; retry {rec['item']}@{rec.get('attempt')} relaunches)")
+            notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} CANCELLED by ot-run --cancel (reason {_mc}; no free retry)")
+            AP.log(f"KIT-WAVE MANUAL-CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')}: reason {_mc}")
             continue
         stage = res.get("stage") or ""
         cls, why = classify(stage, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
@@ -19008,11 +19055,22 @@ def same_input_records(a, b):
 INFRA_FAIL_RE = re.compile(r"FLOW-REFRESH-PARTIAL|\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bexit 14[3]\b|\bterminated by signal (?:9|15)\b|INFRA_KILLED|\bOOM\b.*host")
 
 
+MANUAL_CANCEL_RE = re.compile(r"OT-RUN-CANCEL reason=(hang|design|infra|manual)\b")
+
+
+def manual_cancel_reason(text):
+    """FABLE-FLOW-0000 F2: the reason an `ot-run --cancel` client printed (last one wins), or None"""
+    got = MANUAL_CANCEL_RE.findall(str(text or ""))
+    return got[-1] if got else None
+
+
 def is_infra_fail(r):
     """COORD 11-19 (S81: 20 retry rows of make Error 247/241 host kills, stored class FLOW from before the classifier fix): a failure is INFRA when its stored class says so
     OR its recorded reason / evidence matches the CURRENT infra signatures (host kill: make Error 241/247, rc 137/143, earlyoom), whatever class was stored then"""
     if str(r.get("class") or "") == "INFRA" or str(r.get("stage_class") or "") == "infra":
         return True
+    if manual_cancel_reason(str(r.get("reason") or "") + " " + str(r.get("evidence_tail") or "")) not in (None, "infra"):
+        return False                                     # F2: a manual cancel (rc 143) is not a host kill
     return bool(INFRA_FAIL_RE.search(str(r.get("reason") or "") + " " + str(r.get("evidence_tail") or "")))
 
 
