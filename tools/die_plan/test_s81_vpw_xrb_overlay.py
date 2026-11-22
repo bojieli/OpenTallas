@@ -25,7 +25,8 @@ def test_overlay_edits_only_vpw_and_refuses_twice(tree):  # noqa: F811
     assert after[:vp_end] == before[:vp_end]                              # nothing of ot_s81sl_vp moves
     assert "parameter integer XRB = `OT_S81SL_VP_XRB_DEFAULT) (" in after and "begin : g_xrb" in after
     assert after.count("sw_d_b[sb][") == 2 and after.count("xwd_b[gb][") == 2 and "cw_d_b[sb][31:0]" in after
-    assert "n_wdo[b] = hi_sw ? sw_d_i[255:128]" in after                  # b_dec untouched
+    assert "n_wa[b] = hi_sw_b ? " not in after and "hi_sw = (sw_a_b[b][0] != bb)" in after   # b_dec reads bank b's copy
+    assert "n_wdo[b] = hi_sw ? sw_d_b[b][255:128]" in after and after.count("(* keep *) reg [9:0] x_wa_q;") == 1
     with pytest.raises(SystemExit, match="XRB_OVERLAY_TWICE"):
         B.main([str(tree)])
 
@@ -36,15 +37,16 @@ def test_overlay_needs_the_slr_form(tree):  # noqa: F811
 
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="no iverilog")
-@pytest.mark.parametrize("mutant,want", [(False, "XRB_EQ PASS"), (True, "XRB_EQ FAIL")])
+@pytest.mark.parametrize("mutant,want", [(None, "XRB_EQ PASS"), ("data", "XRB_EQ FAIL"), ("ctl", "XRB_EQ FAIL")])
 def test_lockstep_xrb_equals_shared(tree, tmp_path, mutant, want):  # noqa: F811
     assert S.main([str(tree)]) == 0 and B.main([str(tree)]) == 0
     vp = (tree / B.REL).read_text()
     mod = vp[vp.index("// " + B.TAG + " (tools"):]
-    if mutant:
-        line = "always @(posedge clk) begin sw_d_q <= sw_d; hs_d_q <= hs_d;"
+    if mutant:   # one bank-copy flop only (12-space indent = g_xrb; the g_xr flop of the same name has 8)
+        line = {"data": "            always @(posedge clk) hs_d_q <= hs_d;",
+                "ctl": "            always @(posedge clk) x_wa_q <= x_wa;"}[mutant]
         assert mod.count(line) == 1
-        mod = mod.replace(line, "always @(posedge clk) begin sw_d_q <= sw_d; hs_d_q <= hs_d ^ 256'd1;")
+        mod = mod.replace(line, line.replace("<= hs_d;", "<= hs_d ^ 256'd1;").replace("<= x_wa;", "<= x_wa ^ 10'd1;"))
     (tmp_path / "vpw.sv").write_text(mod)
     out = tmp_path / "tb.vvp"
     r = subprocess.run(["iverilog", "-g2012", "-o", str(out), str(HERE / "fixtures/s81_vp_xr/tb_vpw_xrb.sv"),
