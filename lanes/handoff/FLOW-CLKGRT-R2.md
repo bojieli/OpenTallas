@@ -41,3 +41,10 @@ Goal: clock nets keep near-CTS routes through congestion GRT. Work dir epyc8 /sr
   Control = wave kw-qwenkv-kv3hgv1p2-3-87352. Re-arm: ot-wait --kit <kit> --host epyc8 --stage grt --poll 300.
   Compare from final 5_1_grt.odb: TT setup, FF hold, GRT overflow, clock tap spread. Then default switch (gen_phys default OT_GRT_CLOCK_FIRST=1)
   only if no worse; RES_AWARE default needs its own real-kit run (TNS rose on hroot).
+
+## 11-22 03:xx PST -- DEFAULT SWITCHED
+- main 8ba65785b1: gen_phys default OT_GRT_CLOCK_FIRST=1 (=0 opts out); RES_AWARE opt-in. Decision table in post 11-22 RESULT.
+- hd_spn a5 3-way: epyc7 flow-clkgrt-1121/head_spn/out (base, hook_ra, Codex) + out_cf (base, plain hook, mine).
+- hg_v1p2 private kits both ended exit 2 DPL-0033 (repair wire buffers, central channel; geometry). Harness base control on its CTS
+  still running epyc8 out_hg (waiter): pre-repair overflow control vs 565,769 (cf) / 553,144 (combined). Informational only.
+- Next: watch first new-gen kits (5_1_grt.log OT_GRT_CLOCK_FIRST lines, GRT runtime); revert to opt-in on any hook error class.
