@@ -24874,3 +24874,7 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc2:/srv/
   Held S81 147 / KV 38 / QC ~18 pending plan events are counted OK.
 - 2026-11-22 06:52 PST DONE [FAM-S81-COL-R5] ot-run oth-ubuntu-1636470-1795356659 on civil-redfish: rc=0 after 2469 s, ended 14:52:04, log none, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r5/rst -- bash -c cd /srv/opentallas-scratch2/claude/k
 - 2026-11-22 06:52 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-3188845-1795356918 on loved-redfish: rc=0 after 2217 s, ended 14:52:10, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/fork_v9.otrun.log, cmd: --mem 8 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6 --stage /srv/opentallas-scratch2/claude/rt/b15a8a1
+- 2026-11-22 06:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 06:52 PST: 298 running jobs, PROGRESSING 291, SLOW 4, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 47.4 h job 47.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 33.0 h; last event 17.5 h ago, log write 13.7 h ago (3167 lines)
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 15.9 h job 15.9 h: no new meaningful log line for 14.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+  NO-PROGRESS epyc8 i1 generate_abstract stage 1.4 h job 1.4 h: last event 1.3 h ago, log write 1.3 h ago (656 lines), cpu idle (hung)
