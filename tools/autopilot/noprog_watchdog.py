@@ -55,6 +55,8 @@ GRT_TOTAL = re.compile(r"^Total\s+\d+\s+\d+\s+[\d.]+%\s+(\d+)\s*/\s*(\d+)\s*/\s*
 NOISE = re.compile(r"GRT-0102|GRT-0273|RSZ-0104|STAGE-CAP|WATCHER (?:replaced|would)|heartbeat|^\s*$", re.I)
 NOT_FLOW_LOG = re.compile(r"stage_odb_cap|heartbeat", re.I)     # whole log files that only carry such lines
 METRIC_COLS = ["Remaining", "Violations", "Viol", "TNS"]     # priority; TNS is taken as |TNS|
+GRT_HOLD_CHUNK = re.compile(r"^OT_HOLD_GUARD_GRT chunk (\d+): hold ws .*? tns (-?\d+(?:\.\d+)?) viol \d+,")
+
 
 
 def num(s):
@@ -155,9 +157,28 @@ def extract(kind, text):
                 return res
         if kind == "grt":
             # global_route's own news: GRT-0xxx lines (iteration / overflow / incremental GRT); a legalizer table filling the log is not growth
-            g = [i for i, ln in enumerate(lines) if re.search(r"\bGRT-0\d+\]", ln) and not NOISE.search(ln)]
+            grt_events = [i for i, ln in enumerate(lines) if re.search(r"\bGRT-0\d+\]", ln)]
+            g = [i for i in grt_events if not NOISE.search(lines[i])]
             if g:
                 res["growth_idx"] = g[-1]
+            # Between repair tables, retain only completed hold chunks after the last routing event.
+            # Starting a new chunk sequence resets the baseline.
+            completed = []
+            last_chunk = 0
+            for i in range(grt_events[-1] + 1 if grt_events else 0, n):
+                m = GRT_HOLD_CHUNK.match(lines[i])
+                if not m:
+                    continue
+                chunk = int(m[1])
+                if chunk <= last_chunk:
+                    completed = []
+                completed.append((i, abs(float(m[2]))))
+                last_chunk = chunk
+            if completed:
+                res["growth_idx"] = completed[-1][0]
+                if len(completed) > 1:
+                    res["name"], res["series"] = "grt_hold_TNS", completed
+                return res
         tot = [(i, float(m.group(3))) for i, ln in enumerate(lines) for m in [GRT_TOTAL.match(ln)] if m]
         # GRT-0096 final congestion total (one per global_route call): the metric only while it is the stage's last news
         if tot and kind == "grt" and (not meaningful or tot[-1][0] >= meaningful[-1] - 40):
