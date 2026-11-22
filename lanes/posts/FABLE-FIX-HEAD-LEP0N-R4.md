@@ -1,0 +1,1 @@
+- 2026-11-21 19:02 PST RESUMED (successor of R3). Owner of hd_lep0N type split + HEAD plan rows. 0 units in flight; shelf forms not relaunched. Next: wrapper contents (hub/lanes/io), type_split spec + 3 PD rows, strict bind+LATCHECK, private-spec kit.
