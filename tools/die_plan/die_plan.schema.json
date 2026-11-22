@@ -9677,6 +9677,22 @@
        "row_stride": {
         "type": "integer",
         "minimum": 1
+       },
+       "inset_um": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "E": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 200
+         },
+         "W": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 200
+         }
+        }
        }
       }
      }
