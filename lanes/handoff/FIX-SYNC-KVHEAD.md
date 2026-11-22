@@ -26,3 +26,9 @@ OPUS-FIX-HEAD-LEP0N-R8 (r18). Report to COORD every 4 h (<250 words).
   HEAD-CTL-R1, CLASS-SWEEP-R1) for new RULING/ROWS-READY/root causes; add classes; detect; hand rows.
 - Before 11:30: rerun landing_band_core (0c33826deb) + p5/p7 scans on the final D28 compose (after PV-R7/HGI-R6 rows land).
 - Open: KV-C14 strip density (hroot DRT-0255) needs a placed-DB proxy; pc_v3 cells 998k in plan (check placed count with IOPC-R4).
+
+## 02:2x (after weekly limit)
+- RESUMED posted. KV-PLAN-R6 rehearsal 2 on rt 6d2e187f0d65 (dry5 fcfa38bdb65b): PRE PASS, G0 --band-base D27d3 PASS 0 (17 false hard-ring errors gone), strict bind 0, LATCHECK 0, BPC PASS. KV-C01 CLOSED.
+- KV-C15 (pc pin stations, IOPC-R4 pcreg) added to table; IOPC-R4 owns siblings pc__cl5a95b461/cl254f2e73; pc_v1 x3 check after D28 bind.
+- Pending D28 rows: PV-R7 (v3 split, bind running), HGI-R6. When both land in kv-plan-r6/d28/rows.json: rerun lbc (rt 6d2e187f0d65) + p5/p7 scans on the final compose.
+- HEAD: LEP0N-R8 r18c split tree s81_head_r18c_split_s0 (45c1f2f8e091), kits on epyc9; nothing to hand.
