@@ -93,6 +93,11 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 19:21:09	tolerant-swine	FAM-QC-CB-R3	pid	1721467	10	0	no	-
 2026-11-21 19:21:09	tolerant-swine	FAM-QC-CB-R3	pid	1721470	10	0	no	-
 2026-11-21 19:22:24	tolerant-swine	FABLE-FIX-KV-HUB-R4	pid	2901065	0	3780	no	-
+2026-11-21 19:30:41	tolerant-swine	FAM-S81-SLICE-R6	status	oth-ubuntu-2518159-1795318087	1	145	no	-
+2026-11-21 19:31:30	tolerant-swine	FAM-S81-SERDES-R7	pid	2433138	1	1475	no	-
+2026-11-21 19:31:31	tolerant-swine	FAM-S81-SERDES-R6	pid	2433138	1	4295	no	-
+2026-11-21 19:34:37	tolerant-swine	FABLE-FIX-QC-COLL	status	oth-ubuntu-345723-1795315461	0	600	no	-
+2026-11-21 19:34:41	tolerant-swine	FAM-QC-COLL-R3	status	otrun-tolerant-swine-344268	0	3000	no	-
 2026-11-21 19:41:08	loved-redfish	-	pid	999999999	66	0	no	-
 2026-11-21 19:41:08	loved-redfish	-	status	oth-abc	3	0	no	-
 2026-11-21 19:41:08	loved-redfish	-	status	oth-nope	66	0	no	-
@@ -133,6 +138,11 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 19:43:11	loved-redfish	-	kit	/tmp/pytest-of-ubuntu/pytest-878/popen-gw0/test_kit_stage_done_by_odb_not0/kit:cts	124	1	yes	-
 2026-11-21 19:43:11	loved-redfish	-	kit	/tmp/pytest-of-ubuntu/pytest-878/popen-gw0/test_kit_stage_fail_marker_and0/kit:route	1	0	no	-
 2026-11-21 19:43:11	loved-redfish	-	kit	/tmp/pytest-of-ubuntu/pytest-878/popen-gw0/test_kit_stage_fail_marker_and0/nope:place	66	0	no	-
+2026-11-21 19:54:49	tolerant-swine	OPUS-FIX-KV-PV-R5	status	oth-ubuntu-3076559-1795314127	0	5495	no	-
+2026-11-21 19:55:15	tolerant-swine	OPUS-FIX-KV-PV-R6	status	oth-ubuntu-3076559-1795314127	0	1980	no	-
+2026-11-21 19:57:38	tolerant-swine	FAM-QC-CB-R3	pid	2665483	1	1440	no	-
+2026-11-21 19:58:49	tolerant-swine	FAM-S81-LEPE-4	status	oth-ubuntu-258364-1795309584	0	5726	no	-
+2026-11-21 19:59:33	tolerant-swine	OPUS-FIX-KV-PV-R6	status	oth-ubuntu-3076559-1795314127	0	2700	no	-
 2026-11-21 20:10:11	civil-redfish	-	status	otrun-civil-redfish-4033525	0	100	no	-
 2026-11-21 20:16:38	civil-redfish	-	status	otrun-civil-redfish-3062	0	100	no	-
 2026-11-21 20:19:44	civil-redfish	-	status	oth-ubuntu-3966924-1795291526	66	0	no	-
@@ -142,3 +152,4 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-22 02:14:41	loved-redfish	-	status	oth-ubuntu-1645995-1795247826	124	5	yes	-
 2026-11-22 02:17:59	civil-redfish	-	status	oth-ubuntu-3665743-1795282889	124	1	yes	-
 2026-11-22 02:18:00	civil-redfish	-	status	oth-ubuntu-171031-1795284529	124	1	yes	-
+2026-11-22 03:58:14	loved-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-3314323-1795319375	3	225	no	-
