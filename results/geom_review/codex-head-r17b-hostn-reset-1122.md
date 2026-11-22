@@ -1,0 +1,5 @@
+# HEAD r17b north host corrected reset generation
+
+Counted 29 reset-tree coherence failures in the archived live r17b attempt. The physical emitter did an early wavefront cache under the wrong site rule, adding an extra rst_o_4. The RTL had four outputs and used rr_t11 at (1434.720, 164.128). Tool floor `6d2e187f0d65` contains `cf418b03ca7`, which applies the bound site rule on every wavefront entry. A fresh GEN from the exact r17b plan and retained six-file kit RTL passed full preflight. Reset Tcl SHA256 `b12793949e60d91bbd3e074183d6d629573e40d592f1e944ff58e0e5b3003513`.
+
+Viewed the prospective kit directly from its new generated pin, FIRM reset and landing-band records at `epyc10:/srv/opentallas-scratch2/claude/head-crossing-1119/host_n_reset_probe_1122/host_n_exact_gen.png`. No hard macro walls. Facing ring bands are clear in the plan. North edge landings and the isolated eastern relays need physical hop and clock checks in the actual placement. PASS for private ordinary placement. Detail route needs its own exact viewed review.
