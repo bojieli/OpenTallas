@@ -20,3 +20,11 @@ Lane clone (adopted): intel2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/c
 ## Next
 1 run 5 done -> diff; 2 rerun e2e hub on main; 3 if identical: decide default (ot-build already --emit-j auto; bind.py OT_BIND_EMIT_J default 1);
 4 report COORD <250 words.
+
+## 11-22 00:0x update
+- PROVEN: run 5 (kvob5/b_d52a7fe3d070) parallel merged: 56 types 959 s, bind node 1531 s vs run 2 4805 s. cmpout.py (OPUS-PIPELINE-R2/tmp/cmpout.py on epyc8)
+  run2 vs run5: 335 byte-identical, 40 own-path-only, 1 yosys timing line, +bind_emit_par.json.
+- LANDED 33fe1ccf07: bind.py default OT_BIND_EMIT_J=auto (mem-capped). Posted hub 9b6eb8b588.
+- e2e1 died at bpc (D4) as predicted. e2e2 = ot-build hub on rt 20a713e74dcf, pid 634373 on intel2, log intel2 OPUS-PIPELINE-R2/tmp/e2e2.log,
+  bind out epyc2 OPUS-PIPELINE-R2/ot-build/qwen_kvsys/<tree>/b_5b9b3a25de6f. Then private-spec + run-item to sign-off.
+- run 4 (FABLE kvob/b_7df6a93d4f78) serial still finishing: optional second reference.
