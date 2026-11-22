@@ -21,3 +21,5 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tool
 - ABSPATH strict from 2026-11-29 (ABSPATH_STRICT_FROM in plan_gate_pre.py).
 - Queue next: KIT_TOPOLOGY_BIND_STALE, LEC dec_j6c function matching, watchdog/io_guard/lever 9/items 8,11,12, push test triage, tools_lag false positive; publish_gate/ot_build do not pass --baseline-plan yet (LANDREMAP/ISTCYC need it).
 - 11-22 ~10 PST: ISTCYC + reprice on main fda4eaad0e (posted to the die plan lanes); DEADIN on main 16811af012 (posted to COLROM-R6, coord 7b4aaed3e1). The 4 COORD class fixes are done. Next: KIT_TOPOLOGY_BIND_STALE, then the canary 10 ps diff, LEC dec_j6c, watchdog/io_guard etc.
+- 11-22 ~11 PST: TAPNAME (plan_gate_pre) + private-spec KIT_TOPOLOGY_BIND_STALE refusal on main 6d2e187f0d, posted. Rule slip disclosed: a test file was written into opus-fix-kv-hgi-r6 launch27f plan_of_record on epyc8 and rm -f right away; use FLOW-OPS-R2/tmp copies only.
+- Next: canary 10 ps diff, LEC dec_j6c function matching, watchdog/io_guard/lever 9/items 8,11,12, push triage, tools_lag FP; publish_gate/ot_build --baseline-plan wiring.
