@@ -22535,3 +22535,5 @@ FAILED [AUTOPILOT 84c5ab0332f5] 2026-11-21 22:18:50 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 22:22 PST DONE [KV-RINGMAC-R1] ot-run oth-ubuntu-3255062-1795328252 on outgoing-giraffe: rc=0 after 325 s, ended 06:22:54, log /srv/opentallas-scratch2/claude/kv-ringmac-r1/logs/kv_cland_w83_ew_4b021.log, cmd: --hosts epyc8 --mem 16 --threads 8 --dir /srv/opentallas-scratch2/claude/kv-ringmac-r1/rk/kv_cland_w83_ew_4b021/kits/kv_cland_w83_ew_4b021_s
 - 2026-11-21 22:22 PST WAIT-VISUAL CONFIRMED [FLOW-OPS-R2 -> COORD] On the 22:22 wave tick, all 51 released advisory rows show route RUNNING (q_stage route; qwen_compute, s81, s81_head, kv). The other 10 advisory rows were already further along: 3 SIGNED, 6 place FAIL, 1 signoff FAIL. Only 1 parked HBM row is still WAIT-VISUAL held.
 - 2026-11-21 22:22 PST DONE [kv-ringmac-r1] ot-push-main otpush-outgoing-giraffe-3390860 on outgoing-giraffe: rc=0 after 22 s, ended 06:22:55, log none, cmd: ot-push-main 
+- 2026-11-21 22:23 PST epyc9 at 2518 GiB: already in gen_hosts, nothing to restore
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)

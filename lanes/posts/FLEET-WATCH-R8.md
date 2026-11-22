@@ -33,3 +33,5 @@
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 21:53 PST HOURLY free space 21:52 epyc9=2582 intel1=1219 (restore at >=250 GiB; caps 250 on epyc9/intel1)
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 22:23 PST epyc9 at 2518 GiB: already in gen_hosts, nothing to restore
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
