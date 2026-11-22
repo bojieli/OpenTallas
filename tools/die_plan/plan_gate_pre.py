@@ -1197,10 +1197,13 @@ def check_resetpub(tree, plan, tree_fn=None, max_list=4, base=None, solve=False)
     one along each localized reset's lineage -- the edges reset_consumers.localize checks.  A differing edge or depth is
     FAIL RESETPUB (republish: retap.py OLD NEW OUT --types T --republish-reset).  A tree that cannot be solved is FAIL
     RESETPUB-UNCHECKED.  tree_fn(tn) -> solved tree; injectable.
-    Cost: the reset solve of a wavefront plan solves the die (QC: > 15 min cold), so by default only SUSPECT types are solved: the
-    type's clock / reset inputs differ from the base plan (base = --remap-base / --baseline-plan / bind_of_record) while its published
-    collector_tree is byte-identical to the base's (inputs moved, tree not republished: the V3 case, tap_balance_to + tap_slowest_max_ps).
-    solve=True ($OT_RESETPUB_SOLVE=1) solves every localized type.  No base and no solve: nothing is solved."""
+    Cost: the reset solve of a wavefront plan solves the whole die (QC v3p6n3: not done after 3400 s, 1 GB), longer than the check may
+    take before a bind.  So by default nothing is solved: a SUSPECT type -- its clock / reset inputs differ from the base plan (base =
+    --remap-base / --baseline-plan / bind_of_record) while its published collector_tree is byte-identical to the base's (inputs moved,
+    tree not republished: the V3 case, tap_balance_to + tap_slowest_max_ps) -- is FAIL RESETPUB in seconds, naming the moved keys.
+    Clear it by republishing (retap.py BASE PLAN OUT --types T --republish-reset), or prove the tree unchanged with solve=True
+    ($OT_RESETPUB_SOLVE=1: every localized type is solved and compared edge by edge), or --skip RESETPUB when the moved keys provably do
+    not reach the reset tree.  No base and no solve: nothing is checked."""
     raw = _load(plan)
     braw = None
     if base and not solve:
@@ -1246,6 +1249,12 @@ def check_resetpub(tree, plan, tree_fn=None, max_list=4, base=None, solve=False)
     for tn, pub, nets in todo:
         why = next((n[1:] for n in nets if n.startswith("@")), "")
         nets = [n for n in nets if not n.startswith("@")]
+        if not solve:
+            out.append(f"FAIL RESETPUB {tn}: clock / reset inputs changed vs base ({why}) but the published collector_tree is byte-identical "
+                       f"to the base's (localized resets {', '.join(nets[:max_list])}): the bind emits the tree solved on the new inputs and dies at "
+                       f"EMIT 'emitted/published reset edge mismatch' when it differs -- republish: retap.py BASE PLAN OUT --types {tn} "
+                       f"--republish-reset (or prove it unchanged: OT_RESETPUB_SOLVE=1, die-wide solve, slow; or --skip RESETPUB)")
+            continue
         try:
             new = tree_fn(tn)
         except Exception as e:  # noqa: BLE001 - the bind reports a reset solve error itself; the published tree is unchecked

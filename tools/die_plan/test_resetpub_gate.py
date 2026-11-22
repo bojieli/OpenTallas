@@ -68,8 +68,8 @@ def test_retap_republish_reset_flag_fixes_an_already_stale_tree():
 
 
 def test_default_solves_only_types_whose_inputs_moved_but_tree_did_not(tmp_path):
-    """the V3 case: base -> plan adds clock.tap_balance_to / tap_slowest_max_ps, collector_tree byte-identical -> solved and refused;
-    the same plan with an unchanged type or a republished tree is not solved at all (the die solve takes > 15 min on QC)"""
+    """the V3 case: base -> plan adds clock.tap_balance_to / tap_slowest_max_ps, collector_tree byte-identical -> refused without a solve
+    (the die solve took > 3400 s on QC); an unchanged type or a republished tree passes; solve=True proves by the solved tree"""
     calls = []
     fn = lambda tn: calls.append(tn) or copy.deepcopy(NEW_TREE)  # noqa: E731
     base = write(tmp_path, sc_type(), "base.json")
@@ -77,8 +77,9 @@ def test_default_solves_only_types_whose_inputs_moved_but_tree_did_not(tmp_path)
     t["clock"]["tap_balance_to"] = "slowest"
     t["clock"]["tap_slowest_max_ps"] = 265.0
     f = G.check_resetpub(str(tmp_path), write(tmp_path, t), tree_fn=fn, base=base)
-    assert calls == ["sle_sc_v1__cl7479a5ec"] and f[0].startswith("FAIL RESETPUB sle_sc_v1__cl7479a5ec")
-    assert "inputs changed vs base: clock.tap_balance_to,clock.tap_slowest_max_ps, tree not republished" in f[0]
+    assert calls == [] and f[0].startswith("FAIL RESETPUB sle_sc_v1__cl7479a5ec: clock / reset inputs changed vs base "
+                                           "(clock.tap_balance_to,clock.tap_slowest_max_ps)")   # refused in seconds, nothing solved
+    assert "--republish-reset" in f[0]
     calls.clear()
     assert G.check_resetpub(str(tmp_path), write(tmp_path, sc_type()), tree_fn=fn, base=base) == [] and calls == []   # unchanged
     t2 = copy.deepcopy(t)
