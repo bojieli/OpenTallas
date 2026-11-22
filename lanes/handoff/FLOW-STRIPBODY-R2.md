@@ -7,6 +7,7 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
 ## Pushed to main
 - 9f844e40a0 type_split carries clock.landing_local_resets per piece (J7 START local reset copies); reset_tree_anchor dropped via spec drop_clock_keys.
 - cd2cd11c4e split_bind_routes own cut leg also matches o_<stem>_p (unprefixed bus).
+- a699139ec4 clock_landings finds partition instances by bind sv_id name (s_7N_C__strip_S -> s_7N_C_strip_S).
 - 74bbd8a8a6 type_split drops landing_local_resets copies sited outside the keep piece (strip trees are shallow).
 
 ## Spec / plan (scripts in $L: split7.sh, full_c.sh, tmp/mkplan7.py, tmp/mkpack7.py)
@@ -26,9 +27,12 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
 - round c: station error GONE with lane_reference (prefill 4356 cut puts); 1 error left: strip_S local reset fstart_1 raw
   rst_rl_135 no driver -> fixed by 74bbd8a8a6.
 - round d (full_d.sh, ot-run localhost, PID 2053096): split7d -> tree _stripbody_r2d -> bind7d + latcheck7d.
+- round d: 1 error: EMIT clock landing: expected exactly one bound instance s_7N_C__strip_S (sv_id vs ident) -> a699139ec4;
+  the J7 tree's clock_landings + this fix rides as overlay tmp/clock_landings_j7_fix.py.
+- round e (full_e.sh, ot-run localhost, PID 2651813): reuses split7d -> pack7e -> tree _stripbody_r2e -> bind7e + latcheck7e.
 ## Cleanup owed
-- trees ..._work_stripbody_r2, _r2b, _r2c (55 GB each) superseded; ot-delete guard refuses now (newer than die tree,
+- trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each) superseded; ot-delete guard refuses now (newer than die tree,
   apply pending). Delete via ot-delete after the J7 apply.
 ## Next
-private-spec script $L/specs.sh (edit tree to r2d, bind-out bind7d) -> run-item to floorplan (epyc7/epyc9 gen; hub gen
+private-spec script $L/specs.sh (edit tree to r2e, bind-out bind7e; --host intel2 already set) -> run-item to floorplan (epyc7/epyc9 gen; hub gen
 guard lifted 2e21a81724) -> cell counts to S81-J6-ASSEMBLY-R5 + FAM-S81-LEPE-4.
