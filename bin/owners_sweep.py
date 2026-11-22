@@ -337,6 +337,7 @@ def main():
             if r and failed and (r.get('class') or '') == 'UNCLASSIFIED': flags.append('UNCLASSIFIED')      # WAVE-PILOT-FIX 11-18 (COORD FLOW-1950 N): no rule names this failure; COORD starts a lane the same hour
             if not running and age is not None and age > 3: flags.append('STALE')
             if notinplan: flags = []
+            # HELD-OK note (OWNERS-ROUTE-FIX 11-22): superseded+held rows with an owner (J7/J8, D28, V3/V4) = HELD-OK, see lanes/handoff/OWNERS-SWEEP.md
             # WAIT-BIND (OWNER-SWEEP 11-19): a KV row that is not running and would be UNOWNED / DEAD-OWNER / STALE waits for a bind of record
             if tag.upper() == 'KV' and not running and not notinplan and set(flags) & {'UNOWNED', 'DEAD-OWNER', 'STALE'}:
                 flags = [x for x in flags if x not in ('UNOWNED', 'DEAD-OWNER', 'STALE')] + ['WAIT-BIND']
