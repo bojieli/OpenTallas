@@ -116,8 +116,12 @@ def emit(t, land, kit, root):
         params = wrap['params']
         depth = PLAIN_DEPTH if base == PLAIN_BASE else params.get('DEPTH')
         # CLAND-MACRO-1 11-14: the writer edge (WFALL / WNEG) is the child's own signed timing, not a contract term:
-        # HEAD rings are rising-edge WREG rings.  The count-aligned START contract still needs the registered writer.
-        if spec != {'D': depth, 'form': 'hold_mux'} or (base != PLAIN_BASE and params.get('WREG') != 1):
+        # HEAD rings are rising-edge WREG rings.
+        # KV-RINGMAC-R1 11-21: WREG is not a contract term either.  The count-aligned START contract is proved on the
+        # child's own signed netlist by prove() below (t_rst_n ring_start: writer flops on fclk, else refused), and the
+        # hard child is the exact soft ring (param_wrap: same parameters, no logic, no cycles), so a WREG=0 NARROW ring
+        # (kv3_hub_C W32/W33/W44: proof PASS, 158 fclk writer flops on W33) keeps the soft ring's START timing.
+        if spec != {'D': depth, 'form': 'hold_mux'}:
             raise ValueError(f'{inst}: selected hard landing does not match declared ring')
         master = c.get('physical_master', c['module'])
         # QC-PLAN-R3 11-17: a raw plan row carries no view; kit_wave.prov_stage fills the signed provider lef/lib

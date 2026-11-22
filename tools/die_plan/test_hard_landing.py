@@ -62,9 +62,9 @@ def test_external_evidence_path_rejected(tmp_path):
     with pytest.raises(ValueError, match='inside the kit'): F.kit_land(p)
 
 
-def _selected_row(**view):
+def _selected_row(wreg=1, **view):
     row = dict(inst='cl_a', module='ring_a', physical_inst='u_bound.u_cland_a', physical_master='ring_a',
-               param_wrap=dict(base='ot_dp_clk_landing_cas', params=dict(DEPTH=4, WREG=1)), **view)
+               param_wrap=dict(base='ot_dp_clk_landing_cas', params=dict(DEPTH=4, WREG=wreg)), **view)
     return dict(hard_cores=[row]), dict(schema='land_slots/3', buses=dict(a=dict(D=4, form='hold_mux')))
 
 
@@ -79,3 +79,13 @@ def test_unselected_row_without_view_is_untouched(tmp_path):
     t, land = _selected_row()
     t['hard_cores'][0]['physical_inst'] = 'u_bound.u_other'
     assert H.emit(t, land, tmp_path, tmp_path) == land
+
+
+def test_wreg0_ring_is_judged_by_its_proof_not_a_param(tmp_path):
+    """KV-RINGMAC-R1: a WREG=0 ring passes the declared-ring check and goes on to the view + proof (prove) checks."""
+    t, land = _selected_row(wreg=0)
+    with pytest.raises(ValueError, match='has no lef/lib view'):
+        H.emit(t, land, tmp_path, tmp_path)
+    t['hard_cores'][0]['param_wrap']['params']['DEPTH'] = 8
+    with pytest.raises(ValueError, match='does not match declared ring'):
+        H.emit(t, land, tmp_path, tmp_path)
