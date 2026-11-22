@@ -183,7 +183,12 @@ def merge_set(a, b, path):
         if isinstance(a, dict):
             out = copy.copy(a)                       # keeps a defaultdict / Counter what it is
             for k, v in b.items():
-                out[k] = merge_set(a[k], v, path + (("k", k),)) if k in a else v
+                if k not in a:
+                    out[k] = v
+                elif not _num(v) and _same_pickle(a[k], v):
+                    out[k] = a[k]                    # one cache entry / record both types computed the same (Plan._reset_tree_cache)
+                else:
+                    out[k] = merge_set(a[k], v, path + (("k", k),))
             return out
         if isinstance(a, (set, frozenset)):
             return a | b
@@ -198,7 +203,36 @@ def merge_set(a, b, path):
                 same = False
         if same is True and (isinstance(a, bool) or not isinstance(a, (int, float))):
             return a
+        if hasattr(a, "__dict__") and not isinstance(a, type) and type(a).__eq__ is object.__eq__:
+            # a lazily built record object that every type created and then filled with its OWN cache entries
+            # (clock_landings._physical_clock_plan = schema.Plan: _reset_tree_cache[(kind, type)]): merged attribute by
+            # attribute -- an attribute that pickles the same everywhere is one value, dicts merge key by key, anything else
+            # follows the rules above (a clash stays ParUnsafe).  The serial loop ends with the same union of entries.
+            va, vb = vars(a), vars(b)
+            merged = dict(va)
+            for k, y in vb.items():                  # a cache attribute only some types created (a lazy memo of the record): taken whole
+                if k not in va:
+                    merged[k] = y
+                    continue
+                x = va[k]
+                if not (_num(x) and _is_counter(path + (("o",), ("k", k)))) and _same_pickle(x, y):
+                    merged[k] = x
+                else:
+                    merged[k] = merge_set(x, y, path + (("o",), ("k", k)))
+            out = copy.copy(a)
+            out.__dict__.clear()
+            out.__dict__.update(merged)
+            return out
     raise ParUnsafe(f"{_p(path)}: set by more than one type to values that do not merge (a counter / last-writer value)")
+
+
+def _same_pickle(x, y):
+    if x is y:
+        return True
+    try:
+        return pickle.dumps(x, protocol=4) == pickle.dumps(y, protocol=4)
+    except Exception:
+        return False
 
 
 def _retyped(a, b):

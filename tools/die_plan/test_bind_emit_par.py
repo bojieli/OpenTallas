@@ -18,6 +18,18 @@ class Rec:
         self.d = d
 
 
+class PlanRec:
+    """schema.Plan as clock_landings._physical_clock_plan memoises it: plain attributes + a per-type cache it fills lazily"""
+
+    def __init__(self, raw):
+        self.raw = raw
+        self.W = 100.0
+        self._reset_tree_cache = {}
+
+    def taps(self, tn):
+        return self._reset_tree_cache.setdefault(("sites", tn), [len(tn), self.W])
+
+
 class Glue:
     """an object that does not pickle (holds a lambda) with nested state the type passes mutate in place (Binder.pc.efs_rec)"""
 
@@ -27,6 +39,7 @@ class Glue:
         self.fn = lambda x: x
         self.B = None                                  # back reference to the Binder (Binder.pc.B)
         self.memo = None
+        self._plan = None
 
 
 class Fake:
@@ -69,6 +82,9 @@ class Fake:
         self.glue.rec["types"][tn] = len(ps)
         if self.glue.memo is None:                     # lazily built record object without __eq__, the same in every worker
             self.glue.memo = Rec({"taps": [1, 2, 3]})
+        if self.glue._plan is None:                    # a lazily built schema.Plan each worker fills with its own type's cache entries
+            self.glue._plan = PlanRec({"die": "x"})
+        self.glue._plan.taps(tn)
         self.__dict__.setdefault("_receipts", {})[tn] = dict(n=len(ps))
         if tn.endswith(("1", "4")):
             self.errors.append(f"WARN {tn}")
@@ -89,6 +105,7 @@ def state(B):
     d = {k: v for k, v in B.__dict__.items() if k not in ("F", "glue", "alias")}
     d["glue_rec"] = B.glue.rec
     d["glue_memo"] = B.glue.memo.d if B.glue.memo else None
+    d["glue_plan"] = (B.glue._plan.raw, B.glue._plan.W, B.glue._plan._reset_tree_cache) if B.glue._plan else None
     d["glue_files"] = [Path(x).name for x in B.glue.files]
     d["alias_is_errors"] = B.alias is B.errors
     return copy.deepcopy(d)
@@ -148,6 +165,20 @@ def test_merge_set_rules():
     for a, b in ((1, 1), ([1], [2]), ("x", "y"), ({"a": [1]}, {"a": [1, 1]}), (1, True)):
         with pytest.raises(EP.ParUnsafe):
             EP.merge_set(a, b, (("k", "v"),))
+
+
+def test_merge_set_record_objects():
+    a, b = PlanRec({"die": 1}), PlanRec({"die": 1})
+    a.taps("t0"), b.taps("t1"), b.taps("t0")
+    m = EP.merge_set(a, b, (("k", "_plan"),))
+    assert type(m) is PlanRec and m.W == 100.0 and set(m._reset_tree_cache) == {("sites", "t0"), ("sites", "t1")}
+    c = PlanRec({"die": 1})
+    c._reset_tree_cache[("sites", "t0")] = [9]
+    with pytest.raises(EP.ParUnsafe):
+        EP.merge_set(a, c, (("k", "_plan"),))
+    d = PlanRec({"die": 2})
+    with pytest.raises(EP.ParUnsafe):
+        EP.merge_set(a, d, (("k", "_plan"),))
 
 
 def test_change_under_a_path_another_type_set_is_unsafe():
