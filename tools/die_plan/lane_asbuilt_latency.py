@@ -56,6 +56,13 @@ def sv_id(s):
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
 
+def inst_id(s):
+    """bind.sv_id: the bound top's partition INSTANCE name (collapses "_+", strips, "n" before a digit), e.g. split piece
+    s_7N_C__strip_S -> instance s_7N_C_strip_S (FLOW-STRIPBODY-R2 11-22)"""
+    s = re.sub(r"_+", "_", sv_id(s)).strip("_")
+    return s if s and not s[0].isdigit() else "n" + s
+
+
 def lane_pad_ties(top_text):
     """Read the actual static lane-count literals from the emitted die top."""
     if "strap_r8pad_lane_" not in top_text:
@@ -384,7 +391,7 @@ def load_bind_dir(bd, plan, plan_path=None):
                          "nothing to check")
 
     def module_of(p):
-        mod = part_mod.get(sv_id(p))
+        mod = part_mod.get(sv_id(p)) or part_mod.get(inst_id(p))
         if mod is None:
             return None
         if mod not in idx:
@@ -392,7 +399,7 @@ def load_bind_dir(bd, plan, plan_path=None):
         return idx[mod]
 
     def ptype_of(p):
-        mod = part_mod.get(sv_id(p))
+        mod = part_mod.get(sv_id(p)) or part_mod.get(inst_id(p))
         return mod_type.get(mod) or parts.get(p, {}).get("type")
     rep = json.loads((bd / "bind_report.json").read_text()) if (bd / "bind_report.json").is_file() else {}
     types = dict(plan["partition_types"])

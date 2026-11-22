@@ -224,3 +224,18 @@ def test_asbuilt_reads_the_emitted_parent_count_and_absorbs_the_kit_chain():
     wrong = replay("4'b0101")
     assert wrong["verdict"] == "FAIL" and wrong["delta"] == -1
     assert "missing or invalid parent tie" in replay("not_literal")["problems"][0]
+
+
+def test_standalone_finds_split_pieces_by_their_bound_instance_name():
+    # FLOW-STRIPBODY-R2: plan partition s_7N_C__strip_S is instance s_7N_C_strip_S in the bound top (bind.sv_id)
+    with tempfile.TemporaryDirectory() as d:
+        bd = Path(d)
+        (bd / "rtl").mkdir()
+        (bd / "rtl" / "m_strip.sv").write_text(module("m_strip", "X", st("u_bout_o")))
+        (bd / "rtl" / "die_bound_top.sv").write_text("module die_bound_top (input clk);\n  m_strip s_7N_C_strip_S (.clk(clk));\nendmodule\n")
+        (bd / "bind_latency.json").write_text(json.dumps(dict(buses=[])))
+        plan = dict(partitions=[dict(name="s_7N_C__strip_S", type="X")], partition_types=dict(X={}))
+        _, module_of, ptype_of, _, _, _ = LAL.load_bind_dir(bd, plan)
+        assert module_of("s_7N_C__strip_S") is not None
+        assert ptype_of("s_7N_C__strip_S") == "X"
+        assert LAL.inst_id("9a__b") == "n9a_b"
