@@ -1023,3 +1023,4 @@
 - 2026-11-21 18:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: harvest-eco-2350 on intel1 wrote 38 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 18:59 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 2095d6a53df2: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-21 19:04 PST STATE tools sync recovered after 4 min (rt/current e5429d32c55e)
+- 2026-11-21 19:05 PST HOST-REPORT 2026-11-21 19:05 | tolera L80.48/112 units0 free430G | key-ca L30.78/112 units169 free193G | dear-c L105.12/128 units427 free109G | loved- L102.64/96 units64 free310G | outgoi L102.47/96 units156 free68G | renewe L36.75/96 units41 free148G | civil- L54.90/96 units16 free91G
