@@ -7,6 +7,108 @@ itself; tools/die_plan/test_signoff_profile.py covers the minimal profile and it
 import os
 import pytest
 
+# FLEET-GUARD-1122 (FABLE-FLOW-0600 E1; incident BIND-DOOM-STORM 11-22: merge-queue autopilot tests ran bind_doom.step for real -> 64 sweeps, 189 remote
+# scans, epyc9 load 197).  ONE harness-level guard instead of a per-feature one: under pytest every subprocess start whose program (after timeout / nice /
+# env / setsid / nohup / ionice / stdbuf wrappers) is a real fleet tool -- ssh, scp, systemd-run, ot-run, ot-heavy, ot-delete, ot-push-main -- runs
+# a stub that fails like an unreachable host (rc 255; OT_TEST_FLEET_STRICT=1 raises FleetUnderTest instead).  Allowed: a program that resolves (via the call's PATH) to a file under the temp dir / --basetemp (a fake) or inside this checkout
+# (the tool under test, e.g. tools/fleet/ot-run with its hermetic test env); installed copies (~/.local/bin, rt/current, /usr) are refused.  A test that really needs the real tool sets OT_TEST_FLEET_OK=1 (monkeypatch.setenv).  OT_UNDER_TEST=1 is exported for child shells.
+import shutil
+import subprocess
+import tempfile
+
+os.environ["OT_UNDER_TEST"] = "1"
+FLEET_TOOLS = {"ssh", "scp", "systemd-run", "ot-run", "ot-heavy", "ot-delete", "ot-push-main"}
+_WRAP = {"timeout", "nice", "env", "setsid", "nohup", "ionice", "stdbuf", "chrt", "taskset"}
+
+
+class FleetUnderTest(RuntimeError):
+    pass
+
+
+def _program(argv):
+    """the program a wrapped argv really runs (timeout 60 nice -n 10 ssh h ... -> ssh)"""
+    i = 0
+    while i < len(argv):
+        w = os.path.basename(str(argv[i]))
+        if w not in _WRAP:
+            return str(argv[i])
+        i += 1
+        first = True
+        while i < len(argv):
+            x = str(argv[i])
+            if x.startswith("-") or "=" in x and w == "env":
+                if w in ("nice", "ionice", "taskset", "chrt") and x in ("-n", "-c", "-p") and i + 1 < len(argv):
+                    i += 1
+                i += 1
+                continue
+            if w in ("timeout", "taskset", "chrt") and first and (x[:1].isdigit() or w != "timeout"):
+                first = False
+                i += 1
+                continue
+            break
+    return ""
+
+
+_FAKE_ROOTS = {os.path.realpath(tempfile.gettempdir()), "/tmp", "/var/tmp",
+               os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))}   # this checkout: its own scripts are the code under test
+
+
+def pytest_configure(config):
+    bt = getattr(config.option, "basetemp", None)
+    if bt:
+        _FAKE_ROOTS.add(os.path.realpath(str(bt)))
+
+
+def _is_fake(path):
+    rp = os.path.realpath(path)
+    return any(rp.startswith(r.rstrip("/") + "/") for r in _FAKE_ROOTS)
+
+
+def fleet_refusal(args, executable=None, shell=False, env=None):
+    """-> '' or why this subprocess start would reach the real fleet"""
+    if os.environ.get("OT_TEST_FLEET_OK") == "1" or (env or {}).get("OT_TEST_FLEET_OK") == "1":
+        return ""
+    if isinstance(args, (str, bytes)):
+        argv = (args.decode() if isinstance(args, bytes) else args).split() if shell or isinstance(args, str) else [args]
+    else:
+        argv = [os.fspath(x) if not isinstance(x, (str, bytes)) else (x.decode() if isinstance(x, bytes) else x) for x in args]
+    prog = executable or _program(argv)
+    if not prog or os.path.basename(prog) not in FLEET_TOOLS:
+        return ""
+    path = prog if "/" in prog else shutil.which(prog, path=(env or os.environ).get("PATH"))
+    if not path or not os.path.exists(path) or _is_fake(path):
+        return ""
+    return f"test started the real fleet tool {path}: {' '.join(argv)[:200]} (fake it, or OT_TEST_FLEET_OK=1)"
+
+
+_popen_init = subprocess.Popen.__init__
+
+
+FLEET_STUBBED = []
+_STUB_RC = 255                          # what ssh returns for an unreachable host: code under test takes its "probe failed" path
+
+
+def _guarded_init(self, args, *a, **k):
+    why = fleet_refusal(args, k.get("executable"), k.get("shell", False), k.get("env"))
+    if why:
+        if os.environ.get("OT_TEST_FLEET_STRICT") == "1":
+            raise FleetUnderTest(why)
+        FLEET_STUBBED.append(why)       # the real tool never runs: a stub that fails like an unreachable host takes its place
+        k["shell"], k["executable"] = False, None
+        args = ["/bin/sh", "-c", 'echo "FleetUnderTest: $1" >&2; exit %d' % _STUB_RC, "fleet-guard", why[:300]]
+    return _popen_init(self, args, *a, **k)
+
+
+def pytest_terminal_summary(terminalreporter):
+    if FLEET_STUBBED:
+        terminalreporter.write_line(f"FLEET-GUARD-1122: {len(FLEET_STUBBED)} real fleet tool start(s) replaced by a failing stub in this process "
+                                    f"(OT_TEST_FLEET_STRICT=1 raises): {FLEET_STUBBED[0][:160]}")
+
+
+if not getattr(subprocess.Popen.__init__, "_ot_fleet_guard", False):
+    _guarded_init._ot_fleet_guard = True
+    subprocess.Popen.__init__ = _guarded_init
+
 # TOOLS-CONVERGE-1115: the kit_wave launch gate (autopilot/tool_skew.py) never ssh-es to a die tree host under test
 os.environ.setdefault("OT_TOOL_SKEW_REMOTE", "0")
 
