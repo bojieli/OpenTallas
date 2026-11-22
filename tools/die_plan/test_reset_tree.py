@@ -516,3 +516,38 @@ def test_bound_plan_cap_wins_over_default_and_env(monkeypatch):
     assert RT.relay_um(SimpleNamespace(reset={}, types={})) == 300.0
     assert cbc_rules.plan_reset_hop_cap({"reset": {"reach_cap_um": 405}}) == 405.0
     assert cbc_rules.plan_reset_hop_cap({"reset": {}}) is None and cbc_rules.plan_reset_hop_cap(None) is None
+
+
+def test_wavefront_reaches_short_hop_descendants_after_die_relay(monkeypatch):
+    """A valid bridge repairs its downstream hops; an invalid bridge leaves them unreachable."""
+    from types import SimpleNamespace
+
+    names = ["root", "bridge", "behind_bridge", "broken", "behind_broken", "unattached"]
+    parent = {
+        "root": None,
+        "bridge": ("root", 0, 670.0),
+        "behind_bridge": ("bridge", 0, 132.0),
+        "broken": ("root", 0, 670.0),
+        "behind_broken": ("broken", 0, 132.0),
+    }
+    sol = dict(root="root", root_type="soft", parent=parent, hard=[], hard_depth={},
+               outs={"soft": [0]}, unreachable=names[1:])
+    tree = dict(depth=2, entry="relayed", relays=[], max_hop_um=0)
+    monkeypatch.setattr(RT, "wf_solve", lambda _p: sol)
+    monkeypatch.setattr(RT, "for_type", lambda _p, _t: tree)
+    monkeypatch.setattr(RT, "entry_stages", lambda _t: 1)
+    monkeypatch.setattr(RT, "release_clocks", lambda _t: 3)
+    monkeypatch.setattr(RT, "in_pin", lambda _p, _t: (0, 0))
+    monkeypatch.setattr(RT, "out_pins", lambda _p, _t: [("rst_o_0", 0, 0)])
+    monkeypatch.setattr(RT, "wf_hop_ends", lambda _p, name, _sol: ((0, 0), (parent[name][2], 0)))
+    p = SimpleNamespace(parts={n: {"type": "soft"} for n in names}, types={"soft": {}},
+                        reset={"release": "wavefront", "hop_um": 300, "die_relays": {
+                            "bridge": {"parent": "root", "site": 0, "sites_um": [[240, 0], [460, 0]]},
+                            "broken": {"parent": "root", "site": 0, "sites_um": [[400, 0]]},
+                        }})
+
+    got = RT.wf_plan(p)
+
+    assert got["unreachable"] == ["behind_broken", "broken", "unattached"]
+    assert got["long_hops"] == [["broken", "root.rst_o_0", 400.0]]
+    assert got["parts"]["behind_bridge"]["release"] == 11
