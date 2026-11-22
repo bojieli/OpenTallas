@@ -32,3 +32,10 @@ Flag: slw_su_c__cl92142dac still -504 ps setup stop (FAM-QC-SLWSLE-R1).
 - The p7 lineage coll_core density base is 126, not 130, so the added tap is renamed clk_t130 -> clk_t126 (v3p6/ccren.py). Targeted retap --types coll_core (old=plan_v3p6n3) is running: epyc10 v3p6/retap2/rt2.sh.
 - v3p6/after_rt2.sh builds plan_v3p7{b2,c,d}r and d5r (rev5), then launches chain_r.sh on rt 33fe (tags *x) plus d5r/dr on rt 6dbb.
 - The old b2/c/d/d5 binds will each fail with the coll_core EMIT; I let them run only to see errors in other types. Fallback: n3 (base 130, unaffected).
+
+## 02:5x PST resume
+- retap2 was a no-op (coll_core tree NOT OWN), so the r plans = rename only. coll_core has no reset.consumer_localization, so there is no published/emitted reset edge check and the stale-tree risk is low.
+- I cancelled my own doomed old c/b2/d5 binds. Running: old d (info only), n3 (fallback), b2rx/crx/drx/d5rx (rt 33fe), dr/d5r (rt 6dbb).
+- plan_gate_pre on 6d2e: every gated plan PASS. FIXEDCYC 6 only on the pre-latency plan_v3p7d5.json (posted).
+- COORD ruling: p7d5r collective fault fixed_cycles 8->11 is pre-approved; cite it in the apply post. HB4 3->1 only with d5r.
+- FAM-QC-SLWSLE-R1 v4sucE was built on plan_v3p7d (clk_t130); told them to rebase onto plan_v3p7dr.
