@@ -28,10 +28,35 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
 - main already has: spec cut_window_pref, cut_face_margin_um; plan key place_regions; budgets.face_flop_ew_types.
 - Thin band (FIX-SYNC-KVHEAD 04:06): kv3_pv_v6n i_vport_E_N_vo_d3 [1135.5,28.1,1379.5,38.9] 10.8 x 244 um: to fix or justify.
 
-## Tool change (in clone, to push)
-- face_flops.tcl OT_FF_EW_INSET_UM; gen_phys budgets.face_flop_ew_types[].inset_um; schema; type_split spec
-  cut_face_bank_inset_um + cut_face_reserve_um; tests. Patch script: w/patch_main.py.
+## Tools ON MAIN 6390b7bfa650 (11-22 05:1x, pushed from intel2 clone2)
+- type_split spec cut_face_bank_inset_um, cut_face_reserve_um {type: [[lo, hi]]} (windows_for reserved=), drop_clock_keys also
+  drops reserved_sites_um / start_capture_um; face_flops OT_FF_EW_INSET_UM <- budgets.face_flop_ew_types[].inset_um; schema json.
+- My tree has the same patch applied by hand (w/patch_main.py, patch_drop.py, patch_res2.py); re-pin to an rt >= 6390b7bfa650 when one exists.
+- epyc8 clone/ is a broken half-widened sparse worktree (push timed out there): ot-delete it later. intel2 clone2/ is the good one.
+
+## Method (scripts in epyc8 w/)
+- run_d29.sh TYPE 1080 VAR: mk_bins7 (D23H regs, vo delay banks as place_regions stacks, stacks slide off ring keep-outs with
+  D29_MAPVAR) -> compose.py (PV-R7 composer on base plan_of_record.base_d28, spec keys) -> tap_split report. env D29_RESERVE=lo:hi,..
+- map1.sh TYPE VAR: legal_map.py per piece (ASCII map + json: boxes, keepouts, legal sites, tap loads).
+- auto_reserve.py MAPW MAPE 1080 25.92 64.8: cut-face spans where the inset bank meets a tap-closed box or has no legal tap in 65 um.
+- all_p2.sh NEWVAR MAPVAR: auto reserve + compose + taps + maps for the 10 other placed types.
+- finish.sh TYPE 1080 VAR: in-core ft fix + place_regions + tap rows (--out-plan) + landing_remap -> $O/plan_c.json (final).
+- bind_chain.sh TYPE 1080 VAR NAME: install as tree plan_of_record + gate_g0.sh (precheck, PLAN-GATE-PRE vs D28 dry5, G0) + gate_bind.sh.
+
+## Results
+- p1 (PV-R7 lever set on D28 base): under cap kv3_pv v1 v2 v4 v8; over v6ne 1128, v4ne 1328/1200, v5e 2122/1200, v5ne 2209, v12e 1789, v7e 1859.
+- v12e / v7e residual = INHERITED: unsplit D28 base v7 clk_t9 (1805, 21.6) carries the same 1858 (base clock.sink_sites_um rows of the
+  hard S-face ft rings, 921 x 4.923). Asked TAP-GRID-R5. G0 tap_sink_cap is a WARN; the kit cap pass (clock_taps.tcl) re-homes.
+- v6n variant c3 (reserve 8.64:149.04,1397.52:1512.00, stacks off keep-outs): v6n 990/1000, v6ne 1000/1000, 0 over, radius <= 283.
+  Final candidate plan sha 20b983e80b9c = tree por_d29_kv3_pv_v6n_1080_c3_composed/plan_c.json (19 taps added, 10 in-core ft moved,
+  21 + 19 place_regions). Thin band i_vport_E_N_vo_d3: ring_place=ff kept on all 16 ff bands (INFO per FIX-SYNC 04:17).
+
+## Running
+- bind_chain v6n_c3: ot-run client intel2 log ~/tmp/ffkvpv/bind_v6n_c3.log, out epyc8 w/gates/v6n_c3{.out,_g0,_bind} (~1.2 h).
+- all_p2 p2 (auto reserve, 10 types): intel2 ~/tmp/ffkvpv/all_p2.log, results epyc8 w/d29/run_*_p2.out.
 
 ## Next
-- push tools -> compose v6n on the D28 base in tree/ with spec keys -> tap report + plan_gate_pre -> strict bind ->
-  private-spec kit (v6n or v6ne) -> sign-off. In parallel: model for the other 14 types.
+- bind OK -> kit_wave private-spec qwen_kvsys kv3_pv_v6n --tree <tree> --plan <plan> --lane FABLE-FIX-KV-PV-SINKSPREAD --goal finish
+  (sealed default) -> run-item under systemd-run + ot-wait --durable; read the tap loads at place (OT_CLOCK_TAPS, AUTO-GEOM tap_stuck).
+- p2 results -> residual types; v1n v2n v3n v6 have no D23H place (use sibling regs: v6<-v6n, v2n<-v2, v1n<-v1, v3n<-?).
+- Hand D29 rows to KV-PLAN-R6: per type spec keys (reserve spans, inset), place_regions rows, tap rows, in-core ft moves.
