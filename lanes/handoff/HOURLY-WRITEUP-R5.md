@@ -20,3 +20,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 558 any / 447 current (+8/+7 vs 05:05): S81 cores 68 (+6), QC types 63 (+1). Waiter pattern: wait2.sh with hard-coded HH:15; count job started inside the same bg command that waits (output file only fills at the end). Next round 07:15 (edit wait2.sh).
 ## State 07:25 PST 11-22
 558 any / 447 current FLAT vs 06:15. Round run at 07:05 on COORD request, waiter bl0kmb4dd stopped, next waiter for 08:15.
+## State 08:35 PST 11-22
+562 any / 452 current (+4/+5 vs 07:05): S81 cores 72, QC types 64. J7 wave items live under kit-wave/s81/18a2688b741/items/*/geom/auto_geom.png (intel2). Next round 09:15 (waiter armed). After commit, verify HANDOFF line exists (a 07:05 commit once reported NOTHING-COMMITTED).
