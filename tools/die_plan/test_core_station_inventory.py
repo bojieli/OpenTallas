@@ -102,3 +102,17 @@ def test_h_tree_pipeline_ordinal_from_actual_native_stages():
     ho=next(b for b in rows if b['cls']=='ho' and b['group']==0 and b['stage']==0)
     assert (hi['pipeline_stage'],hi['total_depth'],hi['shared_stages'])==(1,4,1)
     assert (ho['pipeline_stage'],ho['total_depth'],ho['shared_stages'])==(2,4,2)
+
+
+def test_body_sha_drift_same_bank_is_restamped():
+    """SOFTCS-STAMP-1122 (OPUS-FIX-S81-LEAF-R10): the bound body changed elsewhere (s81 leaf t31: rebind moved the body sha)
+    but the bank is the same actual class/stage with the same flops -> accepted and re-stamped to the placed body; a
+    foreign bank id in the stamp still refuses."""
+    p=plan();r=p["clock"]["soft_reg_banks"][0]
+    text=RTL+"\n// unrelated body change\n"
+    rows,_=prepare(p,text)
+    sha=hashlib.sha256(text.encode()).hexdigest()
+    assert rows[0]["source"]=="nativeRTL:"+sha+"#"+r["id"] and rows[0]["source_restamped_from"]==r["source"]
+    assert p["clock"]["soft_reg_banks"][0]["source"]==r["source"]          # the plan row itself is not mutated
+    r["source"]=r["source"].rpartition("#")[0]+"#g_other_bank"
+    with pytest.raises(ValueError,match="stale source"):prepare(p,text)

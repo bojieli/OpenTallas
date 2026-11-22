@@ -25,10 +25,16 @@ def prepare(t, txt, source_sha=None, native_manifest=None, wrapper_sources=None)
         if bank['id'] in used:
             raise ValueError('soft CS bank actual stage selected twice: '+bank['id'])
         used.add(bank['id'])
-        if row['source'] != 'nativeRTL:'+sha+'#'+bank['id']:
+        src = str(row.get('source', ''))
+        if not src.startswith('nativeRTL:') or src.rpartition('#')[2] != bank['id']:
             raise ValueError('soft CS bank stale source: '+row['id'])
         if len(row['bit_sites_um']) != bank['flops']:
             raise ValueError('soft CS bank allocation count differs from actual flops: '+row['id'])
+        if src != 'nativeRTL:'+sha+'#'+bank['id']:
+            # SOFTCS-STAMP-1122 (OPUS-FIX-S81-LEAF-R10): the bound body changed elsewhere (a rebind / reset relay rename moved
+            # its sha) but this bank is the same actual class/stage: its glob selects exactly this one bank, every register
+            # of it, and the site count equals its flops.  The sites stay valid; re-stamp to the body actually placed.
+            row = dict(row, source='nativeRTL:'+sha+'#'+bank['id'], source_restamped_from=src)
         out.append(row)
     return out, {r['cell_glob'] for r in out}
 
