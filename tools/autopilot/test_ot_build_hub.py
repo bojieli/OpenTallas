@@ -26,9 +26,12 @@ class Fleet:
         self.calls = []
         self.verdict = "SIGNED"
         self.eff_asbuilt = SRC + "/p/ab.json"
+        self.eff_tree = None
+        self.eff_plan = SRC + "/p/plan.json"
 
     def eff(self, rc):
-        return "OT-BUILD EFFECTIVE " + json.dumps(dict(out="/srv/out/b_1", rc=rc, plan=SRC + "/p/plan.json", asbuilt=self.eff_asbuilt,
+        extra = {"tree": self.eff_tree} if self.eff_tree else {}
+        return "OT-BUILD EFFECTIVE " + json.dumps(dict(out="/srv/out/b_1", rc=rc, plan=self.eff_plan, asbuilt=self.eff_asbuilt, **extra,
                                                        keys={"bind": "k" * 64}, types=self.types, plan_rest="pr", asbuilt_sha="as",
                                                        tree_id="seal:1")) + "\n"
 
@@ -149,6 +152,14 @@ def test_sealed_tree_with_tables_refreshed_outside_refuses_the_kit(fleet, capsys
     assert go(fleet) == 1
     assert "refreshed R8 tables OUTSIDE the tree" in capsys.readouterr().out and "private-spec" not in fleet.calls
     assert go(fleet, "--goal", "bind") == 0
+
+
+def test_bind_host_alias_path_of_the_tree_is_the_tree(fleet):
+    alias = "/srv/s3/kw/src_kv"                               # epyc2 reaches the tree through scratch2 -> scratch3
+    fleet.eff_tree, fleet.eff_asbuilt, fleet.eff_plan = alias, alias + "/p/ab.json", alias + "/p/plan.json"
+    assert go(fleet) == 0 and "private-spec" in fleet.calls
+    c = fleet.spec_cmd
+    assert c[c.index("--plan") + 1] == SRC + "/p/plan.json" and c[c.index("--tree") + 1] == SRC
 
 
 def test_tree_and_plan_override(fleet):

@@ -330,6 +330,10 @@ def kit_dir(lane, die, item):
 def run_kit(r, item, host, eff, rt_dir, a, kd, stream=None):
     kw = f"{rt_dir}/tools/autopilot/kit_wave.py"
     exp = swap_prefix((r.get("asbuilt") or ""), r["tree"], r["tree"])
+    # the bind host names the tree by ITS real path (epyc2: scratch2 -> scratch3 alias): its paths inside the tree map back onto
+    # this side's tree path before any comparison or hand-on (e2e defect D5, OPUS-PIPELINE-R2 11-22)
+    home = lambda p: swap_prefix(p, eff["tree"], r["tree"]) if p and eff.get("tree") else p
+    eff = dict(eff, asbuilt=home(eff.get("asbuilt")), plan=home(eff.get("plan")))
     if eff.get("asbuilt") and exp and os.path.realpath(eff["asbuilt"]) != os.path.realpath(exp):
         raise G.BuildError("the bind used refreshed R8 tables OUTSIDE the tree (the tree is sealed): " + str(eff["asbuilt"]) + "\n"
                            "  a kit must be generated from a tree that carries them.  Fork the tree (tools/fleet/ot-tree-fork SRC DST),"
