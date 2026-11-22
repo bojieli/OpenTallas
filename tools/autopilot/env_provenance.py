@@ -25,6 +25,11 @@ Refusals (only while the kit has no 3_place.odb: a kit already past place gets a
   - FLOW-OPS-0900 (FABLE-FLOW-0745 g, FAM-S81-LEPE-3 proof9 = wave kit copy + config.mk diff): a wave record found in a kit dir other than
     the one run-item wrote it in (the record's "kit") is a COPIED wave kit; a config.mk change there is a FAIL, not a NOTE (a copy + edit
     is a hand-built kit).  A plain copy with an unchanged config.mk passes with a NOTE.
+  - AB-CONSUMED-1122 (COORD, OPUS-FIX-QC-COLL-R3 pkit_core3s: --ab OT_TAP_RESET_SPLIT=1 never reached config.mk, so the A/B kit was a
+    copy of its control): every A/B key the kit env SETS (non-empty, differing from the wave) must be exported by config.mk with that
+    value -- the flow reads config.mk, not the gen env.  Missing or different = FAIL "A/B override not consumed" (the knob is plan
+    data, e.g. clock.tap_reset_split, or gen_phys overrode it).  Keys consumed outside config.mk by design are declared in the spec
+    (ab.env_only = [...]); run-item prints the same verdict when it writes the record.
 Only exit 14 refuses; a crash of this checker (any other rc) never stops the kit.
 """
 import base64
@@ -58,6 +63,23 @@ def env_diff(wave, env):
     return sorted(k for k in set(wave) | set(env) if str(wave.get(k)) != str(env.get(k)) or (k in wave) != (k in env))
 
 
+def ab_not_consumed(rec, cfg):
+    """[(key, kit value, config.mk value or None)] for A/B keys the kit env sets that config.mk does not export with that value"""
+    ab = rec.get("ab") or {}
+    keys = set(ab.get("keys") or []) - set(ab.get("env_only") or [])
+    w, e = rec.get("wave_env") or {}, rec.get("env") or {}
+    out = []
+    for k in sorted(keys):
+        v = e.get(k)
+        if v is None or str(v) == "" or (k in w and str(w.get(k)) == str(v)):
+            continue                                     # unset / emptied / same as wave: nothing to consume
+        c = cfg.get(k)
+        if c is not None and (str(c) == str(v) or (len(str(v).split()) > 1 and set(str(v).split()) <= set(str(c).split()))):
+            continue                                     # exported as given, or a list the generator extended (every given item kept)
+        out.append((k, str(v), c))
+    return out
+
+
 def judge(rec, config_text, placed=False, kit_path=""):
     """-> (ok, [lines]).  ok False = refuse place.  Pure function (tests)."""
     lines = []
@@ -84,6 +106,13 @@ def judge(rec, config_text, placed=False, kit_path=""):
         w, e = rec.get("wave_env") or {}, rec.get("env") or {}
         lines.append("ENV-PROVENANCE FAIL: kit env differs from the wave env of %s/%s on %d key(s) that are neither plan-derived nor declared A/B: %s"
                      % (rec.get("die"), rec.get("item"), len(bad), "; ".join(f"{k} wave={w.get(k, '<unset>')!s:.60} kit={e.get(k, '<unset>')!s:.60}" for k in bad[:12])))
+    if config_text is not None and ab_keys:             # AB-CONSUMED-1122
+        nc = ab_not_consumed(rec, config_ot(config_text))
+        if nc:
+            lines.append("ENV-PROVENANCE FAIL: A/B override not consumed: config.mk does not export "
+                         + "; ".join(f"{k}={v!s:.40} (config.mk {'<unset>' if c is None else c})" for k, v, c in nc[:12])
+                         + " -- the flow reads config.mk, so this kit is a copy of its control; set the knob in the plan (gen_phys "
+                           "writes it), or declare ab.env_only for a key consumed outside config.mk")
     unused = sorted(ab_keys - set(diff))
     if unused:
         lines.append(f"ENV-PROVENANCE NOTE: A/B keys {','.join(unused)} equal the wave env")
@@ -179,6 +208,10 @@ def write(kit, decl):
     os.replace(tmp, os.path.join(kit, RECORD))
     print(f"ENV-PROVENANCE RECORD {rec.get('source')} {rec.get('die')}/{rec.get('item')}: env {len(rec.get('env') or {})} keys, "
           f"differs from wave on {','.join(env_diff(rec.get('wave_env'), rec.get('env'))) or 'nothing'}", flush=True)
+    nc = ab_not_consumed(rec, rec.get("config_ot") or {}) if txt is not None else []
+    if nc:                                               # AB-CONSUMED-1122: loud at run-item; run_kit.sh's check refuses place
+        print("ENV-PROVENANCE AB-NOT-CONSUMED " + " ".join(f"{k}={v} (config.mk {c if c is not None else '<unset>'})" for k, v, c in nc)
+              + ": these A/B overrides do not reach the flow (config.mk); place will be refused", flush=True)
     return 0
 
 
