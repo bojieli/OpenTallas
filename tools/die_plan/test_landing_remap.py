@@ -225,3 +225,44 @@ def test_does_not_rewrite_added_tap_declarations():
     _run(old, new)
     assert [r["name"] for r in ck["added_taps"]] == ["clk_t218", "clk_t777"]
     assert ck["landing_contract"]["pins"][0]["source_clock_port"] == "clk_t219"
+
+
+def _anchored(raw_reset, tree):
+    pl = _plan(raw_reset, "clk")
+    ck = pl["partition_types"]["T"]["clock"]
+    ck[RA.KEY] = RA.record(pl["partition_types"]["T"], tree, HERE, 50.0)
+    return pl
+
+
+def test_anchor_rerecorded_when_resel_renames_relay():
+    """RESET-ANCHOR-REMAP (TAP-GRID-R5 11-22): the tap rows renumber the relay tree, reset_resel renames rst_rl_60 ->
+    rst_rl_59; the anchor still listed rst_rl_60 and the bind failed RESET_ANCHOR.  Now re-recorded on the NEW tree."""
+    old, new = _anchored("rst_rl_60", OLD_T), _anchored("rst_rl_60", OLD_T)
+
+    def rename(o, n, names, d):
+        n["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["b"]["stages"][0]["raw_reset"] = "rst_rl_59"
+        return {"T": dict(exports=[], raw=[["rst_rl_60", "rst_rl_59"]], skipped=[])}
+    rec = LR.remap_plan(old, new, HERE, HERE, resets="resel", resel_fn=rename, keep_xy=False,
+                        tree_fn=lambda raw, tn: OLD_T if raw is old else NEW_T)
+    a = new["partition_types"]["T"]["clock"][RA.KEY]
+    assert rec["anchors"] == ["T"] and set(a["relays"]) == {"rst_rl_59"}
+    assert a["relays"]["rst_rl_59"] == dict(depth=2, xy=[0.0, 100.0]) and a["tol_um"] == 50.0
+    # the bind-side check accepts it: every referenced name is carried, at the NEW tree site
+    RA.resolve("T", new["partition_types"]["T"], NEW_T, HERE, lambda tree: set())
+
+
+def test_anchor_untouched_when_names_unchanged():
+    old, new = _anchored("rst_rl_60", OLD_T), _anchored("rst_rl_60", OLD_T)
+    before = copy.deepcopy(new["partition_types"]["T"]["clock"][RA.KEY])
+    rec = LR.remap_plan(old, new, HERE, HERE, resets="resel", resel_fn=lambda *a: {"T": dict(exports=[], raw=[], skipped=[])},
+                        tree_fn=lambda raw, tn: OLD_T if raw is old else NEW_T)
+    assert rec["anchors"] == [] and new["partition_types"]["T"]["clock"][RA.KEY] == before
+
+
+def test_anchor_mode_does_not_restore_a_stale_anchor():
+    """anchor mode used to put the OLD anchor back after renaming (rst_rl_61 depth 2 -> rst_rl_59)."""
+    old, new = _anchored("rst_rl_61", OLD_T), _anchored("rst_rl_61", OLD_T)
+    _run(old, new)
+    ck = new["partition_types"]["T"]["clock"]
+    assert ck["landing_reader_start"]["branches"]["b"]["stages"][0]["raw_reset"] == "rst_rl_59"
+    assert set(ck[RA.KEY]["relays"]) == {"rst_rl_59"}

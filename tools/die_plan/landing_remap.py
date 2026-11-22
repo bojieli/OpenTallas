@@ -195,6 +195,28 @@ def resel_resets(old_raw, new_raw, names, plan_dir):
     return street_rule.reset_resel(old_raw, new_raw, names, Path(plan_dir) / "die_plan.json")
 
 
+def rerecord_anchors(old_raw, new_raw, names, root, tree_fn, relay_um_fn):
+    """RESET-ANCHOR-REMAP (TAP-GRID-R5 11-22): a type that carries clock.reset_tree_anchor and whose relay references this
+    pass rewrote (or that references a name its anchor does not carry) gets its anchor re-recorded on the NEW reset tree,
+    in the same pass as the names.  Otherwise the bind's reset_anchor.resolve fails closed on every remapped name
+    ("reset_tree_anchor lacks referenced relay(s) rst_rl_N: re-record the anchor": 99 QC types after the V3 tap rows).
+    A type whose names are unchanged and all anchored keeps its anchor byte-identical.  -> [type]"""
+    out = []
+    for tn in names:
+        t_old, t_new = old_raw["partition_types"][tn], new_raw["partition_types"][tn]
+        a = (t_new.get("clock") or {}).get(RA.KEY)
+        if not a or not RA.refs(t_new):
+            continue
+        now = [c[k] for c, k in RA.refs(t_new)]
+        was = [c[k] for c, k in RA.refs(t_old)]
+        if now == was and set(now) <= set((a.get("relays") or {})):
+            continue
+        tol = float(a.get("tol_um") or 0) or relay_um_fn()
+        t_new["clock"][RA.KEY] = RA.record(t_new, tree_fn(new_raw, tn), root, tol)
+        out.append(tn)
+    return out
+
+
 def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, tree_fn=None, groups_fn=None, tol_um=None,
                ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0):
     """rewrite new_raw in place.  resets: 'resel' (street_rule.reset_resel: raw exports, pin sources, START stages, local
@@ -210,7 +232,17 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         return plans[id(raw)]
     if groups_fn is None:
         groups_fn = lambda raw, tn: tap_groups(plan(raw), tn)  # noqa: E731
-    rec = dict(resets=[], taps=[], skipped=[], adopted={})
+    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[])
+
+    def _tree_fn():
+        if tree_fn is not None:
+            return tree_fn
+        import reset_tree as RT
+        return lambda raw, tn: RT.for_type(plan(raw), tn)
+
+    def _relay_um():
+        import reset_tree as RT
+        return RT.relay_um(plan(new_raw))
     names = [tn for tn in new_raw["partition_types"] if (not types or tn in types) and tn in old_raw["partition_types"]]
     if adopt:
         for tn in names:
@@ -245,10 +277,9 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             if r.get("error"):
                 raise RemapError(f"{tn}: reset_resel: {r['error']}")
             rec["resets"].append(dict(type=tn, **r))
+        rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, _tree_fn(), _relay_um)
         return rec
-    if tree_fn is None:
-        import reset_tree as RT
-        tree_fn = lambda raw, tn: RT.for_type(plan(raw), tn)  # noqa: E731
+    tree_fn = _tree_fn()
     for tn in names:
         t_old, t_new = old_raw["partition_types"][tn], new_raw["partition_types"][tn]
         if not RA.refs(t_new):
@@ -267,6 +298,7 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             del t_new["clock"][RA.KEY]
             if (t_old.get("clock") or {}).get(RA.KEY):
                 t_new["clock"][RA.KEY] = t_old["clock"][RA.KEY]
+    rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, tree_fn, _relay_um)
     return rec
 
 
@@ -295,7 +327,8 @@ def main(argv):
     nt = sum(len(r["remaps"]) for r in rec["taps"])
     for tn, ad in rec["adopted"].items():
         print(f"  adopted by key {tn}: {len(ad)} name(s)")
-    print(f"landing_remap: {nr} relay name(s), {nt} tap name(s) rewritten; skipped {len(rec['skipped'])}")
+    print(f"landing_remap: {nr} relay name(s), {nt} tap name(s) rewritten; skipped {len(rec['skipped'])}; "
+          f"reset anchors re-recorded {len(rec.get('anchors') or [])}")
     for r in rec["resets"]:
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
         for where, name in r.get("kept") or []:
