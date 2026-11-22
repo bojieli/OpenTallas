@@ -16,3 +16,9 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-h10-r3 (tmp/ = own
 
 ## Cleanup owed (ot-delete, after J7 applies)
 epyc10 fam-s81-col-h10-r3/srcJ7m, srcJ7r, srcJ7rA (hardlinked to candJ7b/c; ot-delete skipped srcJ7m/srcJ7rA at 13:3x on "live process", so retry), srcJ7L1 (10.9 GB owned), clone_l1*, epyc7 srcJ7L1e7 once lever 1 is handed over. epyc9 fam-s81-col-h10-r3 (peer script). epyc10 disk 99%: COORD alerted.
+
+## RESUME READ 11-21 18:2x PST (after the weekly limit; Codex 14:23-18:1x did nothing in this area)
+- LEVER 1: NOT LAUNCHED. The worker died on the limit after copying the tree. epyc7 .../fam-s81-col-h10-r3/srcJ7L1e7 (16 GB real copy of srcJ7L1 = candJ7c + view 31c7ccbd1b + halo) and srcJ7L1e7_stn_keepout (unknown variant from the worker; inspect before use). No L1_STATUS.md, no kit. R4 FIRST ACTION: on intel2, kit_wave.py private-spec s81 col_h10_r0_p4__t1__pvcc166a6d --tree <epyc7 srcJ7L1e7> --host epyc7 --lane FAM-S81-COL-H10-R4 (diff config.mk vs the wave kit), run-item, then run_kit route on epyc7; accept on route DRC 0 vs u_cf/u_t0. The old epyc10 spec is hub l1spec_pvcc/spec.json (killed). J7 col volume is HELD on this proof.
+- PROOF A: FAILED at GRT. ot-run oth-ubuntu-2275263 rc 21 at 15:33 PST after 6.8 h: FAIL_route GRT-0116 congestion (5_1_grt.log, post-repair GRT-0115). No TT, so no ROM-PVAL A/B. This is the lever-2 congestion class (stations on a macro corner, FIT fitted 0 before main ae660e1299). Kit epyc10 .../fam-s81-col-h10/waveP/.../attempt_1/gen/col_h10_r2__t1__cl99efd374__pv1619ecc6 (results kept). Next: rebuild proof A on tools >= ae660e1299 (FIT fix) from place, and read the congestion report bins first (congestion_post_repair_*.rpt).
+- cld01bb4ae: no AP_RC yet; still in the ECO pass (kw43 attempt_19 eco_20261121_075836). The waiter is gone with my session: re-arm until grep -q AP_RC ~/coord/autopilot/jobs/0c4abfb40abd/a1.log.
+- All R3 waiters and workers ended with this session.
