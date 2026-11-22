@@ -10363,3 +10363,18 @@ Owner confirms Claude limited until05:42; all existing workers resumed. Coverage
 - ROM. E7 HEAD wide rank0 1,122,304 bits confirmed from programmed GDS; E10 combined interface361 markers, strict-via and decoder/buffer physical fixes live. E7 QC 4096x266 actual raw/C1 examples both exhaustive readback PASS.
 - Physical. Hold SDC parser exact 7bdf02f canonical gate active. Existing QC replay remains conservative and timing-identical. HG paired GRT arms failed exact high overflow/layer density. Restored E7 canary place-only unit1686958, exact 4,152 bound pins with M8 grant, review pending.
 - Fleet. Legacy cleanup guard synchronized all seven hosts and push driver. Sealed relocated final ODB exact protection source 33dd00af gate active. Hub free ~182 GiB. Private ot-build live remap-base f376e606 E9 source gate. HBM parked.
+
+## CODEX notes 2026-11-22 11:03 PST
+
+- S81 J7 18a2688b741 live; J8 16:00 cut. COL H9 missing native station sites PLAN failure has tested J8 row fc17a6c28976. KV512 −1154.54 ps to SRAM data input, exact path diagnosis active. TAPROWS Gate B binding, COL Kit H selected for J8 on measured GRT and held from release by routed TT/FF. Archived t52 count row reconciled f448a78dbc7.
+- SVC R9C strict E9 288006 and additive FIX-SYNC 1835906 active. RS/PVSO t2 missing 40 macros per type because 1064-bit active PVQ differs from the 2120-bit prepared closure.
+- S81 SerDes Front3 child routed LEC26,507/26,507, signed-view extraction E9. ENG GRT968 overflow, t12 TT−225.19, t14 held pending remaining geometry and timing. PHY p5 gen admissions preserved.
+- HEAD r18m 3dd49f406010 PRE/LAT334, production r18jk pending exact G2/face. Host-N M7 Rect Only same cause, r18j pin +2.16 µm. Host-E old drt-no-progress exact, new LEF place-only queued. WRCAP CTL private signed and exact clone gate ongoing; LEP pair signed, successor kits active.
+- QC V2r10 live, R13 c5rt/crt exact strict/LAT/post-bind G0 gates required and 11:16 earliest release. Owner already approved +3 collective fault. Four 96G V4 variants active. Native59 LOCAL32 mode0 keeps eight SRAMs, mode1 loses them; scoped formatter-only synth next. FE +2 placement collected.
+- CB E7 combined strict/LAT1921 passed, cbf_q01_s2/q11 claimed. q00 rev5 −61.95 CTS route already active, prior rc143 retained. Glue inherited auto ECO ongoing; V4 rebase on approved V3.
+- KV D27d3 live, D28 dry14/rh10 E8 client3406774 with 18 rows, same-tree FIX-SYNC pending. PV m6 output-exists refusal superseded by m7; HGI lockup 11/40-rest versus 18/no rest client diagnosis and launches held. Separate final pair-image/strict-source isolation guard staged.
+- Token D27 alpha exact strict/LAT2404 and enables at age85. F3 single-link anchor retry active. HEAD configured first passes, START-first mutant sticky fault before HBC. Paired D28 exact C18/−8 compiler staged read-only.
+- ROM HEAD corrected extracted loads still miss capture TT/FF; QC exact native interface repairs active. Programmed exemplar readbacks retained.
+- Shared physical slw_stm_v2 stale signoff drove 197 redundant pads where latest exact path needs one. Source handoff fix in progress, existing ECO untouched. Stripbody inherited jobs active.
+- Fleet 150 GB hub floor enforced; guarded GC reclaimed 13.1 GB, subsequent cleanup underway. ENG/COL GRT-0116 wrong crash class fix in progress. t70 and native59 authenticated watchdog stops. Cone-scatter A/B inherited kit_rtl active, independent preview rc78 was admission timeout.
+- Canary three-row geometry reviewed at 71.4% versus 86.4% with DPL/PDN clean. E7 `flow-canary/runs/s81_cl_ring_1122/variant3/grt_live_1059.log` queued. Portable reset fixture branch and latest exact E7 GEN-only test. Main a087287d5309 fleet-synchronized. HBM parked.
