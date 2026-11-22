@@ -20,6 +20,7 @@ form this module does not understand costs time, never a wrong bind.
 
 Proof duty of a caller that turns it on for a new die: one serial and one parallel bind of the same inputs, `diff -r` of the two out
 directories (tools/die_plan/test_bind_emit_par.py does it on a synthetic Binder; ot-build records the real-die comparisons)."""
+import copy
 import io
 import json
 import os
@@ -176,9 +177,11 @@ def merge_set(a, b, path):
     """two types set one path.  Equal non-numeric values are one memo / flag (computed by whichever type came first: once); two dicts
     are merged key by key (`self.__dict__.setdefault("_receipts", {})[tn] = r`); two sets are united.  Everything else -- equal
     numbers (a counter: 0 -> 1 in every worker), different lists or scalars (last writer) -- is a cross-type value: ParUnsafe."""
+    if _num(a) and _num(b) and _is_counter(path):
+        return a + b                                 # a count first created by the workers themselves (stats.get(k, 0) + n): absent = 0
     if type(a) is type(b):
         if isinstance(a, dict):
-            out = dict(a)
+            out = copy.copy(a)                       # keeps a defaultdict / Counter what it is
             for k, v in b.items():
                 out[k] = merge_set(a[k], v, path + (("k", k),)) if k in a else v
             return out
@@ -298,7 +301,12 @@ def _get(cur, step):
 
 
 def apply(state, per_type_ops):
-    """parent: apply [(type, ops)] in the given (sorted type) order.  Every conflict is found BEFORE anything is applied:
+    """parent: apply [(type, ops)] in the given (sorted type) order; every conflict is found by plan_merge BEFORE anything is applied"""
+    _apply_planned(state, per_type_ops, plan_merge(per_type_ops))
+
+
+def plan_merge(per_type_ops):
+    """the checks of apply(), without a state (also run offline on kept worker results: OT_BIND_EMIT_PAR_KEEP):
     one path set by several types must merge (merge_set); an op of one type under / over a path another type set is a
     cross-type dependency.  -> ParUnsafe, state untouched."""
     sets, owners, under = {}, {}, {}
@@ -329,6 +337,10 @@ def apply(state, per_type_ops):
                     raise ParUnsafe(f"{_p(path)}: changed by {tn} under {_p(path[:n])}, which {sorted(o - {tn})[0]} set")
             if op == "set" and (under.get(path) or {tn}) != {tn}:
                 raise ParUnsafe(f"{_p(path)}: set by {tn}, changed inside by {sorted(under[path] - {tn})[0]}")
+    return sets
+
+
+def _apply_planned(state, per_type_ops, sets):
     did, done_sets = set(), set()                # one list / set reached by two attribute paths (an alias) is extended once per type
     for tn, ops in per_type_ops:
         for op, path, val in ops:
@@ -460,7 +472,10 @@ def _run(B, out, files, j, rec_path=None):
     if j <= 1 or len(order) <= 1 or not hasattr(os, "fork"):
         raise ParUnsafe("nothing to parallelise")
     t0 = time.time()
-    work = tempfile.mkdtemp(prefix="bind_emit_par_", dir=os.environ.get("TMPDIR") or None)
+    keep = os.environ.get("OT_BIND_EMIT_PAR_KEEP")       # diagnosis: keep every worker's result (<i>.res pickles) in this directory
+    if keep:
+        os.makedirs(keep, exist_ok=True)
+    work = keep or tempfile.mkdtemp(prefix="bind_emit_par_", dir=os.environ.get("TMPDIR") or None)
     todo = sorted(order, key=lambda kv: -weight(B, kv[0], kv[1]))
     live, done = {}, {}
     sys.stdout.flush()
@@ -543,6 +558,8 @@ def _run(B, out, files, j, rec_path=None):
 
 
 def _cleanup(work):
+    if os.environ.get("OT_BIND_EMIT_PAR_KEEP"):
+        return
     try:
         for f in os.listdir(work):
             os.unlink(os.path.join(work, f))

@@ -60,6 +60,7 @@ class Fake:
             self.io_used.setdefault(p, {})[tn] = [1, 2]
         self.seen.add(tn)
         self.stats["cells_emitted"] += len(ps) + int(tn[1:])
+        self.stats["wires_emitted"] = self.stats.get("wires_emitted", 0) + 3       # a count the first type creates
         if self._memo is None:                         # a lazily computed die-wide value (Binder.bump_pins): the same in every worker
             self._memo = {"ports": {"S": ["link", "far"]}}
         if getattr(self, "_memo2", None) is None:
@@ -143,6 +144,7 @@ def test_merge_set_rules():
     assert EP.merge_set({"a": [1]}, {"b": [2]}, ()) == {"a": [1], "b": [2]}
     assert EP.merge_set({"a": [1]}, {"a": [1]}, ()) == {"a": [1]}
     assert EP.merge_set(True, True, ()) is True and EP.merge_set("x", "x", ()) == "x"
+    assert EP.merge_set(2, 3, (("k", "stats"), ("k", "x"))) == 5
     for a, b in ((1, 1), ([1], [2]), ("x", "y"), ({"a": [1]}, {"a": [1, 1]}), (1, True)):
         with pytest.raises(EP.ParUnsafe):
             EP.merge_set(a, b, (("k", "v"),))
