@@ -35,3 +35,23 @@ tns -49481. Other E groups at place: coll_i3 lap_ok -191.73 (max_delay 416.5, pr
   goal finish, sealed, run-item = systemd --user unit fable-lep0n-w1 on intel2 (pid 339647), log ~/fable-fix-head-lep0n-1122/runitem_w1.log.
 - R8: build hd_lep0N (E) from r18f, NOT from r18e (r18e E fails the status path by -800). The E kit gen needs the patched
   clock_landings.py: it is in the r18f tree tools; an rt with it follows after ot-push-main (posted when landed).
+
+## 4. LEP-RINGFF-2 (hd_lep0N_w, plan only; added 05:0x after the r18f W placed DB) tree r18g
+- coll_i1: rect_um [17.28,629.64,30.24,864.0] (was [17.28,634.24,58.32,840.24]), ring_place ff, no spread, area_reserve_um2 2134.84.
+Cause (measured, r18f W 3_place.odb, epyc9 L/sta_w/w_xy2.txt): the pin column of coll_i1 is y 640.39..845.59 but the band ended at 840.24
+(pair 1 halo), and its START pin (y 932.9) is nearest the LAST bit 513. landing_placement.tcl cland_place_pinslot puts each flop in
+[target row .. band top]; for the top 5 um of bits and the 102 control registers keyed at bit 513 that window is empty, so they fall
+back to first fit at the band BOTTOM: ctl_w / ctl_lap / g_oh / ghi / glo FIRM at y 634.5-635.6, rv / lap_ok FIRM at y 839.5.
+Placed TT: ctl_w[1] -> rv -708.55, ctl_w[2] -> lap_ok -548.8 (max_delay 416.5 across 205 um). coll_i2 (band covers its pins, START pin mid
+window): rv -19.5, all groups met. New band = the 12.96-um W channel over the whole pin column + 18 um above it (beside pair 1).
+Tree epyc9 .../fable-fix-head-lep0n-1122/trees/s81_head_r18g_ringff2, plan sha256 0c7056cd38b8b1f6; landing_band_core PASS 0 new;
+plan_gate_pre: only TOOLSTALE vs rt c9b8d5f226ca (tree tools are 6d2e + overlay; kits take the rt tools).
+
+## 5. Same class on the E piece (for R8, read from the r18e E place log + STA; not built by me)
+- lepk_i0: band y 265.59..501.13, pin column y 265.80..510.98: the top 9.85 um (about 44 bits, 260 flops) fall back to first fit at
+  the band bottom, 245 um from their pins. Matches the 51 violating u_cland_lepk_i0 .. u_dsel/y path-delay ends (-48.9) and
+  reader_start_lepk_i0_2 -> dsel -191.4. Row: band top >= 512.5 (or rects_um).
+- coll_i3: band y 854.29..941.08 but pin column y 645.43..759.43 (sidecar has the band on the pins [980.64,645.19,1054.08,759.64]);
+  every ring flop is 95-296 um from its pin and the 84 control registers are keyed at bit 1, 135 um from START. E7 CTS fs_q -> wen -216,
+  r18e place lap_ok -191.7. Row: band on the pin window if the io stage rows (pin_s0u, pout_s7c at y 686-704) can yield, else ff_rect_um.
+- Guard to add (tool): fail closed when a +ff y-column band does not cover its pin column / the ctlkey bit has no rows above it.
