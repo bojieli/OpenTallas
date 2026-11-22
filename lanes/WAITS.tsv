@@ -56,6 +56,8 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 15:05:11	tolerant-swine	OPUS-FIX-KV-PV-R5	status	oth-ubuntu-3964095-1795290272	0	11881	no	-
 2026-11-21 15:13:17	tolerant-swine	FAM-S81-COL-H9R0-R3	pid	1553808	70	10561	no	-
 2026-11-21 15:18:04	tolerant-swine	FAM-QC-COLL-R3	pid	973964	70	9000	no	-
+2026-11-21 15:43:23	tolerant-swine	FAM-S81-SLICE-R5	pid	1315433	70	13080	no	-
+2026-11-21 15:48:58	tolerant-swine	FAM-S81-SERDES-R6	pid	921992	70	8286	no	-
 2026-11-21 19:41:08	loved-redfish	-	pid	999999999	66	0	no	-
 2026-11-21 19:41:08	loved-redfish	-	status	oth-abc	3	0	no	-
 2026-11-21 19:41:08	loved-redfish	-	status	oth-nope	66	0	no	-
@@ -100,3 +102,4 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 20:16:38	civil-redfish	-	status	otrun-civil-redfish-3062	0	100	no	-
 2026-11-21 20:19:44	civil-redfish	-	status	oth-ubuntu-3966924-1795291526	66	0	no	-
 2026-11-21 21:06:41	civil-redfish	FAM-S81-SLICE-R5	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SLICE-R4/slice_station__t36_1121074053/gen/slice_station__t36:grt	124	3601	yes	-
+2026-11-21 23:44:27	loved-redfish	FAM-QC-CB-R2	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/private/FAM-QC-CB-R2/cbn_q01__clab6e67f2_1121085408/gen/cbn_q01__clab6e67f2:cts	124	13803	yes	-
