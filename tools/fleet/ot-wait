@@ -26,6 +26,13 @@ DIGEST mode (FLOW-OPS-1000, FABLE-FLOW-1000 i: one wake per job end, so lanes wo
   ended, or at the first --every boundary (default 30 min) after at least one target ended, with one line per target (DONE/DIED/ENDED ... or RUNNING)
   and a last line REMAINING <targets still running> (re-arm with exactly those).  Exit: 0 all ended rc 0; the first non-zero rc among the ended;
   75 = some ended rc 0, others still running (re-arm REMAINING); 124 timeout with none ended.
+DURABLE mode (FLOW-FLEET-R1 11-22, COORD: lane waiters hit the 1 h / 12 h tool caps and missed job ends all night):
+  ot-wait --durable <any of the forms above> [--timeout S]
+  A detached watcher (own session: a tool-cap kill or a dropped ssh of the lane does not reach it) runs the same wait with no timeout and keeps its
+  answer in ~/.local/state/ot-wait/durable/<key>.out (key = the wait's targets).  The foreground call only reads that file: it returns the watcher's
+  line(s) and rc as soon as the job ends, or after --timeout (default 3000 s, under a 1 h cap) with exit 75 and a REARM line.  Re-running the SAME
+  command re-attaches to the same watcher, so a job that ended while nobody was attached is reported at once; a watcher that vanished (reboot) is
+  restarted.  Lane usage:   ot-wait --durable otrun-$(hostname)-$PID > $LANE/wait.out     (re-run it on exit 75)
 LEDGER: every ot-wait exit appends one line to ~/.local/state/ot-wait/waits.tsv (OT_WAIT_LEDGER overrides): time, host, lane (OT_LANE), mode, targets,
   rc, waited s, timeout yes/no, ended n of m.  A record only, so a review can count waits, timeouts and wake-ups without a result."""
 import argparse
@@ -287,7 +294,86 @@ def wait_digest(targets, a, now=time.time, sleep=time.sleep):
         sleep(a.poll)
 
 
+DURABLE_DIR = os.path.expanduser(os.environ.get("OT_WAIT_DURABLE_DIR", "~/.local/state/ot-wait/durable"))
+DURABLE_TIMEOUT_S = 3000
+DURABLE_RC = "OT_WAIT_RC="
+
+
+def durable_key(a):
+    import hashlib
+    k = json.dumps({"t": a.target, "d": a.digest, "k": a.kit.rstrip("/"), "s": a.stage, "h": a.host, "a": a.also, "c": a.cmdline, "dir": a.dir}, sort_keys=True)
+    return hashlib.sha1(k.encode()).hexdigest()[:16]
+
+
+def durable_argv(argv):
+    """the watcher's argv: this call without --durable / --timeout (it waits until the end)"""
+    out, skip = [], False
+    for x in argv:
+        if skip:
+            skip = False
+            continue
+        if x == "--durable":
+            continue
+        if x == "--timeout":
+            skip = True
+            continue
+        if x.startswith("--timeout="):
+            continue
+        out.append(x)
+    return out
+
+
+def _watcher_alive(pidf):
+    try:
+        pid, start = open(pidf).read().split()
+        return S.pid_start(int(pid)) == int(start)
+    except (OSError, ValueError):
+        return False
+
+
+def wait_durable(a, argv, popen=subprocess.Popen, sleep=time.sleep, now=time.time):
+    os.makedirs(DURABLE_DIR, exist_ok=True)
+    key = durable_key(a)
+    out, pidf = os.path.join(DURABLE_DIR, key + ".out"), os.path.join(DURABLE_DIR, key + ".pid")
+
+    def answer():
+        try:
+            txt = open(out, errors="replace").read()
+        except OSError:
+            return None
+        if DURABLE_RC not in txt:
+            return None
+        body = [ln for ln in txt.splitlines() if not ln.startswith(DURABLE_RC)]
+        rc = int(txt.rsplit(DURABLE_RC, 1)[1].split()[0])
+        return body, rc
+
+    got = answer()
+    if got is None and not _watcher_alive(pidf):
+        w = [sys.executable, "-I", os.path.realpath(__file__)] + durable_argv(argv)
+        sh = f"{' '.join(__import__('shlex').quote(x) for x in w)} > {__import__('shlex').quote(out)} 2>&1; echo {DURABLE_RC}$? >> {__import__('shlex').quote(out)}"
+        p = popen(["bash", "-c", sh], stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        st = S.pid_start(p.pid)
+        with open(pidf + ".tmp", "w") as f:
+            f.write(f"{p.pid} {st if st is not None else 0}\n")
+        os.replace(pidf + ".tmp", pidf)
+        print(f"ot-wait: durable watcher {key} started (pid {p.pid}); answer file {out}", file=sys.stderr, flush=True)
+    t0, limit = now(), (a.timeout or DURABLE_TIMEOUT_S)
+    while got is None:
+        if now() - t0 >= limit:
+            print(f"RUNNING durable watcher {key} keeps waiting; REARM: re-run the same ot-wait --durable command", flush=True)
+            return 75
+        sleep(a.poll)
+        got = answer()
+        if got is None and not _watcher_alive(pidf) and answer() is None:
+            print(f"ot-wait: durable watcher {key} gone without an answer; re-run to restart it", file=sys.stderr, flush=True)
+            return 71
+    for ln in got[0]:
+        print(ln, flush=True)
+    return got[1]
+
+
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("target", nargs="?", default="")
     ap.add_argument("--kit", default="")
@@ -300,8 +386,13 @@ def main(argv=None):
     ap.add_argument("--dir", default="")
     ap.add_argument("--digest", nargs="+", default=None, help="one waiter for many targets; returns once (see DIGEST mode)")
     ap.add_argument("--every", type=float, default=30, help="--digest: minutes between wakes (default 30)")
+    ap.add_argument("--durable", action="store_true", help="detached watcher survives tool caps / ssh drops; re-run the same command to re-attach (see DURABLE)")
     a = ap.parse_args(argv)
     t0 = time.time()
+    if a.durable:
+        rc = wait_durable(a, argv)
+        ledger("durable", ([a.kit + ":" + a.stage] if a.kit else ([a.target] if a.target else []) + list(a.digest or [])), rc, t0)
+        return rc
     if a.digest:
         tg = ([a.target] if a.target else []) + a.digest
         rc, n = wait_digest(tg, a)
