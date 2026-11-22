@@ -1735,6 +1735,26 @@ class TypeSplit:
         unk = set(lc) - known
         if unk:
             raise SplitError(f"{self.tn}: unhandled landing_contract keys {sorted(unk)}")
+        if lc.get("monitor") == "region":
+            # HEAD region-monitor form (per-bus sideband pins, clock_landing_plan.compose monitor="region"): the contract is
+            # DERIVED by the compose from buses + ports + region table and cannot be split by geometry (head_host_split_delta /
+            # head_n3_split_delta precedent).  The pieces carry only the native stage rows; the contract is re-composed
+            # (tools/s81_head/fallback_land.py compose --monitor region) before any gen / bind.
+            if not self.ev.spec.get("landing_recompose"):
+                raise SplitError(f"{self.tn}: region-monitor landing contract (HEAD) is derived by the landing compose; "
+                                 f"set spec landing_recompose and re-compose the pieces after the split")
+            L = []
+            for i in range(self.n):
+                d = dict(base_type=self.tnames[i], monitor="region", status="RAW_RECOMPOSE_REQUIRED")
+                T[i]["clock"]["landing_contract"] = d
+                L.append(d)
+            self._native_stage_groups(lc.get("native_stage_groups"), L)
+            self.band_clip, self.child_map, self.child_idx = [], {}, [0] * self.n
+            self.croot, self.coll_links, self.relay_links = self.keep, [], []
+            self.head_recompose = True
+            self.infra_x = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
+            self.rep["landing_recompose"] = sorted(k for k in lc if k != "native_stage_groups")
+            return
         L = []
         for i in range(self.n):
             d = {k: copy.deepcopy(v) for k, v in lc.items() if k not in ("pins", "bands", "collector_tree",
@@ -2019,7 +2039,7 @@ class TypeSplit:
         if rs is None:
             return
         unk = set(rs) - {"tap_um", "sync_stages", "start_role", "local_taps_um", "obstacle_model", "wavefront_min_depth",
-                         "consumer_sites_um"}
+                         "consumer_sites_um", "pin_entry_phase"}     # pin_entry_phase (HEAD): each piece's own reset entry
         if unk:
             raise SplitError(f"{self.tn}: unhandled reset keys {sorted(unk)}")
         for i in range(self.n):
@@ -3344,6 +3364,15 @@ class Event:
     def _piece_of_pin(self, base, name):
         ts = self.ts[self.raw_type(base)]
         m = LAND_PIN.match(name)
+        if getattr(ts, "head_recompose", False):
+            # HEAD region-monitor pins: per bus (the edge follows its bus; the compose rewrites the status edges)
+            hm = HEAD_BUS_PIN.match(name)
+            bus = m.group(2) if m else hm.group(2) if hm else None
+            if bus in {b["name"] for b in ts.t.get("buses", [])}:
+                return ts.bp(bus), name
+            if name in START_PINS or (hm and name.startswith("rst_start_raw_")):
+                return ts.keep, name
+            raise SplitError(f"{base}: landing network pin {name} has no piece")
         if name.startswith(("cland_up_", "fclk_out_cland_up")):
             return getattr(ts, "croot", ts.keep), name
         if name in START_PINS:
@@ -3548,10 +3577,62 @@ class Event:
         self.latency_rows = rows
 
     # ---------------------------------------------------------------- sidecar
+    def _sidecar_head(self, sd):
+        """HEAD region table (opentallas.fallback_head_regions.v1: regions[].parts is a COUNT, membership = part centre in
+        box_um): every piece stays in its base partition's region (the box grows to hold the piece centres), the port rows
+        follow the plan ports.  count_aligned / collector are derived data: left for the landing compose."""
+        parts = {p["name"]: p for p in self.out["partitions"]}
+        ca = (sd.get("count_aligned") or {}).get("parts", {})
+        rec = {}
+        for base, names in self.pmap.items():
+            if not getattr(self.ts[self.raw_type(base)], "head_recompose", False):
+                raise SplitError(f"HEAD region table: {base} is not a region-monitor type")
+            tag = (ca.get(base) or {}).get("region")
+            rg = [r for r in sd["regions"] if r["tag"] == tag]
+            if len(rg) != 1:
+                raise SplitError(f"HEAD region table: partition {base} has no single region ({tag})")
+            r = rg[0]
+            r["parts"] = int(r["parts"]) + len(names) - 1
+            box = list(r["box_um"])
+            for nm in names:
+                q = parts[nm]
+                w, h = self.out["partition_types"][q["type"]]["outline_um"]
+                if q.get("orient", "R0") in ("R90", "R270"):
+                    w, h = h, w
+                x0, y0 = q["origin_um"]
+                box = [min(box[0], x0), min(box[1], y0), max(box[2], x0 + w), max(box[3], y0 + h)]
+            # no other partition centre may fall into the grown box
+            for nm, q in parts.items():
+                if nm in names:
+                    continue
+                w, h = self.out["partition_types"][q["type"]]["outline_um"]
+                if q.get("orient", "R0") in ("R90", "R270"):
+                    w, h = h, w
+                cx, cy = q["origin_um"][0] + w / 2, q["origin_um"][1] + h / 2
+                inside = lambda b: b[0] < cx < b[2] and b[1] < cy < b[3]
+                if inside(box) and not inside(r["box_um"]):
+                    raise SplitError(f"HEAD region table: grown box of region {tag} would take partition {nm}")
+            rec[tag] = dict(parts=r["parts"], old_box=r["box_um"], box=[rnd(v, 4) for v in box])
+            r["box_um"] = [rnd(v, 4) for v in box]
+        moved = 0
+        for r in sd["ports"]:
+            pr = self.ports.get(r["port"])
+            if pr is None:
+                raise SplitError(f"sidecar row {r['port']}: no plan port")
+            for k in ("src", "dst"):
+                if r[k] != pr[k]["part"]:
+                    r[k] = pr[k]["part"]
+                    moved += 1
+        sd["recompose_required"] = sorted(n for names in self.pmap.values() for n in names)
+        self.rep["sidecar"] = dict(form="head_regions", regions=rec, rows_renamed=moved,
+                                   recompose_required=sd["recompose_required"])
+
     def _sidecar(self):
         if self.side is None:
             return
         sd = self.side = copy.deepcopy(self.side)
+        if any(isinstance(r.get("parts"), int) for r in sd["regions"]):
+            return self._sidecar_head(sd)
         for r in sd["regions"]:
             for p in list(r["parts"]):
                 if p in self.pmap:
@@ -3677,6 +3758,10 @@ class Event:
                                  "same-region (no landing row)")
 
     def _straps(self):
+        if any(getattr(ts, "head_recompose", False) for ts in self.ts.values()):
+            # HEAD: count_aligned parts / regions of the pieces are written by the landing compose; the strap ties follow it
+            self.rep["straps"] = dict(recompose_required=True)
+            return
         if not self.side or not (self.side.get("count_aligned") or {}).get("strap_form"):
             return
         import count_align_bind as CAB
@@ -3987,6 +4072,8 @@ class Event:
         spec = self.out.get("census")
         if not spec:
             return {}
+        if isinstance(spec, dict) and set(spec) == {"none"}:
+            return {}                   # a plan without an as-built census (HEAD top-down plan: census {"none": reason})
         base_dir = rpath(self.spec["census_base"]) if self.spec.get("census_base") else self.plan_dir
         locs = defaultdict(set)
         akey = defaultdict(dict)        # piece partition -> {as-built name: local inst} (census leaves use as-built names)
@@ -4172,6 +4259,8 @@ class Event:
             pieces = {nm for ts in self.ts.values() for nm in ts.tnames}
             bad = sorted(n for n, r in self.side.get("collector", {}).get("types", {}).items()
                          if n in pieces and r.get("tree") is None)
+            if self.side.get("recompose_required"):
+                bad = []                # HEAD region table: the collector rows are rewritten by the landing compose
             if bad:
                 raise SplitError(f"sidecar collector row without a tree: {bad[:5]}")
             txt = json.dumps(self.side, separators=(",", ":"))

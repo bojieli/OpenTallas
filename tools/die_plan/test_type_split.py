@@ -1128,3 +1128,49 @@ def test_head_per_bus_landing_pin_names():
     assert TS.HEAD_BUS_PIN.match("cland_up_fault_lepk_o0").group(2) == "lepk_o0"
     assert TS.HEAD_BUS_PIN.match("rst_start_raw_3").group(2) == "3"
     assert not TS.HEAD_BUS_PIN.match("cland_tstart_in") and not TS.HEAD_BUS_PIN.match("fclk_in_coll_i0")
+
+
+# ---- HEAD region-monitor landing contract: derived data, re-composed after the split (FABLE-FIX-HEAD-LEP0N-R7 11-21)
+def _head_region_split(spec=None):
+    ts = _head_keys_split(dict(buses=[dict(name="coll_i1"), dict(name="lepk_o0")]), spec)
+    ts.cut = TS.Cut("x", [820.8], 1892.16)
+    ts.W, ts.H = 1892.16, 1408.32
+    ts.T = [dict(clock={}) for _ in range(2)]
+    ts.bus_piece = {"coll_i1": 0, "lepk_o0": 1}
+    return ts
+
+
+def test_region_monitor_contract_needs_landing_recompose_and_is_left_to_the_compose():
+    lc = dict(monitor="region", base_type="hd", pins=[dict(name="cland_dn_ready_coll_i1", xy_um=[0, 924.44])], bands={},
+              collector_children=[dict(bus="coll_i1", ready="cland_dn_ready_coll_i1", fault="cland_dn_fault_coll_i1",
+                                       xy_um=[0, 924.44], seam=True)],
+              collector_local_sources=[], collector_root_node="cland_up_ready_lepk_o0", collector_tree=None)
+    with pytest.raises(TS.SplitError, match="set spec landing_recompose"):
+        _head_region_split()._landing_contract(lc)
+    ts = _head_region_split(dict(landing_recompose=True))
+    ts._landing_contract(lc)
+    assert [t["clock"]["landing_contract"] for t in ts.T] == [
+        dict(base_type="hd_w", monitor="region", status="RAW_RECOMPOSE_REQUIRED"),
+        dict(base_type="hd", monitor="region", status="RAW_RECOMPOSE_REQUIRED")]
+    assert ts.head_recompose and ts.coll_links == [] and ts.relay_links == [] and ts.croot == ts.keep
+    assert "collector_children" in ts.rep["landing_recompose"] and "pins" in ts.rep["landing_recompose"]
+
+
+def test_head_landing_network_pin_follows_its_bus():
+    ev = TS.Event.__new__(TS.Event)
+    ts = _head_region_split(dict(landing_recompose=True))
+    ts.head_recompose = True
+    ev.ts = {"hd": ts}
+    ev.raw_type = lambda base: "hd"
+    assert ev._piece_of_pin("lep", "cland_dn_ready_coll_i1") == (0, "cland_dn_ready_coll_i1")
+    assert ev._piece_of_pin("lep", "fclk_out_lepk_o0") == (1, "fclk_out_lepk_o0")
+    assert ev._piece_of_pin("lep", "cland_up_fault_lepk_o0") == (1, "cland_up_fault_lepk_o0")
+    assert ev._piece_of_pin("lep", "cland_tstart_in") == (1, "cland_tstart_in")
+    with pytest.raises(TS.SplitError, match="has no piece"):
+        ev._piece_of_pin("lep", "cland_dn_ready_7")
+
+
+def test_census_none_plan_has_no_census_to_split(tmp_path):
+    ev = TS.Event.__new__(TS.Event)
+    ev.out = dict(census={"none": "top-down plan of a new die"})
+    assert ev._census(tmp_path) == {}
