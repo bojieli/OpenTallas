@@ -11,3 +11,7 @@ Placed unit `2086136-1795382235`, exit 0. Exact kit `epyc10:/srv/opentallas-scra
 I also viewed the exact `sle_cland_w517_n_s10_1_freg` and `sle_cland_w517_n_s10_2_freg` output density plots. Both have the same fixed outline, cell distribution across the center, continuous north and south pin rows, and a 0.334 M5 pin-track fraction. The only flagged legs are `rst_xn[6]` and `rst_xn[2]`, at 47.74 and 65.49 µm for the x_hc1_st_b child and 51.83 and 65.70 µm for the cws2 child. The admitted placement units `2288732-1795382547` and `2289172-1795382547` both exited zero. The geometry supports an isolated GRT timing proof for each.
 
 Exact images are under `epyc10:/srv/opentallas-scratch2/claude/QC-SLE-R5/freg_hard_children/<master>/registered_face/kits/<master>_synth0/run/layout_review/place/density.png`.
+
+## cws1 exact global routing
+
+**GOOD for the private detailed route.** I viewed `run/layout_review/grt/density.png` from the same cws1 kit after unit `2386496-1795382678` exited zero. Maximum grid demand was 86%, with no grid cells above 90%. Placement density stays distributed across the footprint. The same two short reset paths are the only geometry flags. The scoped FF repair cleared all eight internal violations, improving the internal worst slack from −106.71 to +17.01 ps. Final global-routing setup worst slack was +137.53 ps. The remaining negative hold reports include boundary paths that require parent qualification.
