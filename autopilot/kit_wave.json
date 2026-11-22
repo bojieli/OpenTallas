@@ -68666,7 +68666,12 @@
     "epyc10",
     "epyc2"
    ],
-   "gen_host_min_free_gb": {}
+   "gen_host_min_free_gb": {},
+   "parked": {
+    "owner": "COORD",
+    "since": "2026-11-22",
+    "reason": "HBM parked: separate release target (owner 11-12); no new HBM work until COORD unparks"
+   }
   }
  },
  "place_prefer": [
