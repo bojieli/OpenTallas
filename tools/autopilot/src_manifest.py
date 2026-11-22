@@ -65,17 +65,33 @@ def manifest_hash(m):
 
 
 def walk_tree(root):
-    """{relpath: abs} of every regular file under root (symlinks recorded too, hashed by target text), skipping caches"""
+    """{relpath: abs} of every regular file under root (symlinks recorded too, hashed by target text), skipping caches.
+    DIRLINK-1121: os.walk lists a symlink that points at a DIRECTORY under dirnames and never descends into it, so a tracked
+    directory symlink (git mode 120000, e.g. results/qc_die33_1029/bind/cores) was in the tracked list but not in the walk
+    and every full-scope build refused.  It is one entry like any other symlink (hashed by its target text)."""
     out = {}
     for dp, dn, fn in os.walk(root):
         dn[:] = sorted(d for d in dn if d not in SKIP_DIRS)
-        for f in sorted(fn):
+        links = [d for d in dn if os.path.islink(os.path.join(dp, d))]
+        for f in sorted(fn + links):
             p = os.path.join(dp, f)
             rel = os.path.relpath(p, root)
             if rel in (MANIFEST, HASHFILE, LINKBASE, SNAPGROUP, SNAPDELTA) or skipped(rel):
                 continue
             out[rel] = p
     return out
+
+
+def dir_link(p):
+    """a symlink whose target is a directory (or dangles onto nothing a file walk would list)"""
+    return os.path.islink(p) and os.path.isdir(p)
+
+
+def legacy_dir_links(have, want):
+    """DIRLINK-1121: directory symlinks a tree holds that its manifest does not list.  Every manifest written before the
+    walk recorded them is silent about them (the walk never saw them), so such a tree is still exactly its manifest; a
+    manifest that lists the path is checked like any entry."""
+    return {rel for rel in set(have) - set(want) if dir_link(have[rel])}
 
 
 def tree_hash(p):
@@ -265,7 +281,7 @@ def verify(root, expect="", ro=False, full=False):
     if nshared:
         errs.insert(0, f"SRC_MANIFEST NOT-READY {nshared} file(s) share an inode with another path (cp -al copy elsewhere): "
                        f"a published tree must be unshared; run `src_manifest.py links TREE --find-in DIR...` to name the other paths")
-    for rel in sorted(set(have) - set(want)):
+    for rel in sorted(set(have) - set(want) - legacy_dir_links(have, want)):
         errs.append(f"SRC_MANIFEST DRIFT {rel} (extra: not in the manifest)")
     if ro and writable(root):
         errs.append("SRC_MANIFEST DRIFT . (tree dir writable)")
@@ -320,7 +336,7 @@ def cached_receipt(root, expect=""):
         errs.append("SRC_MANIFEST CACHE MISS completed verification hash/signature is stale")
     have = walk_tree(root)
     want = m.get("files") or {}
-    if set(have) != {r for r in want if not skipped(r)}:        # SNAP-RO-1119: an entry whose name the walk skips is not an inventory difference
+    if set(have) - legacy_dir_links(have, want) != {r for r in want if not skipped(r)}:        # SNAP-RO-1119: an entry whose name the walk skips is not an inventory difference
         errs.append("SRC_MANIFEST CACHE MISS current inventory differs from verified manifest")
     paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
     snap = bool(snap_group(root))
@@ -733,7 +749,10 @@ def link_tree(src, dst):
             else:
                 os.link(sp_, dp_)
         for x in dn:                                              # keep the source's directory modes (made writable by the caller)
-            os.makedirs(os.path.join(d, x), exist_ok=True)
+            if os.path.islink(os.path.join(dp, x)):               # DIRLINK-1121: a directory symlink is recreated, never turned into a real dir
+                os.symlink(os.readlink(os.path.join(dp, x)), os.path.join(d, x))
+            else:
+                os.makedirs(os.path.join(d, x), exist_ok=True)
 
 
 def link_outside_base(old_tree, out):
