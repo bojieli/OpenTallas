@@ -86,6 +86,27 @@ def test_signed_unexported_attempt_refused_anywhere_clean_aggr_r3(tmp_path):
     assert g.signed_unexported_refusal(str(a), exported=set(), host="other-host") is None        # a copy: its origin host keeps it
 
 
+def test_sealed_return_final_odb_on_other_host_is_kept_until_export(tmp_path):
+    # AP c7ce90ba4af9: hub producer, exact ECO checkpoint returned to epyc2.
+    a, _ = _attempt(tmp_path, {"verdict": "NOT SIGNED"})
+    odb = a / "kit" / "eco_1" / "run" / "results" / "asap7" / "x" / "base" / "6_final.odb"
+    odb.parent.mkdir(parents=True)
+    odb.write_bytes(b"routed")
+    raw = json.dumps({"verdict": "SIGNED", "host": "tolerant-swine", "inputs": {"odb": str(odb)}}).encode()
+    (a / "kit/signoff_eco_1/signoff.json").write_bytes(raw)
+    sha = hashlib.sha256(raw).hexdigest()
+    assert "not exported" in g.signed_unexported_refusal(str(a), exported=set(), host="dear-crayfish")
+    assert g.signed_unexported_refusal(str(a), exported={sha}, host="dear-crayfish") is None
+
+    # A metadata-only foreign copy, or a DB symlink to another target, is irrelevant here.
+    odb.unlink()
+    assert g.signed_unexported_refusal(str(a), exported=set(), host="dear-crayfish") is None
+    external = tmp_path / "6_final.odb"
+    external.write_bytes(b"other target")
+    odb.symlink_to(external)
+    assert g.signed_unexported_refusal(str(a), exported=set(), host="dear-crayfish") is None
+
+
 def test_signed_copy_in_input_dir_and_unsigned_not_refused_clean_aggr_r3(tmp_path):
     a, _ = _attempt(tmp_path, {"verdict": "SIGNED"}, sub="gen/k/ft_physical/child/signoff.json")
     assert g.signed_unexported_refusal(str(a), exported=set(), host="h") is None
