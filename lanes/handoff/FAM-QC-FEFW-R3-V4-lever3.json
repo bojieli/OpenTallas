@@ -1,0 +1,70 @@
+{
+ "schema": "FAM-QC-FEFW-R3-V4-lever3.v1",
+ "date": "2026-11-21",
+ "for": "QC-PLAN-R13 / V4",
+ "method": "STA (census2, grt RC, TT) on each kit 5_1_grt_pre_tt.odb + constraint.sdc, C plan kits copied to epyc10 fam-qc-fefw/census/out_<type>/census.log; slack < 100 endpoint classes",
+ "rows": [
+  {
+   "types": [
+    "sle_fw_v1__cl9d029624",
+    "sle_fw_v1__clf58b4dfb"
+   ],
+   "worst": "-411.3 / -427.7 ps",
+   "class": "NEEDS STATION",
+   "path": "u_bin_l9_wi/q[*] -> u_bout_x_st_a_o/q[*] (258 of 258 endpoints negative, all < -42), data arrival 1468 ps from clk 257 (1.21 ns path)",
+   "secondary": "u_bout_x_st_b_o/q: -124.0 (83 neg, 31 < -42) / -72.9 (85 neg, 10 < -42)",
+   "row": "+2 stations on the l9_wi -> x_st_a_o slot (258 bits), +1 on x_st_b_o; WITH sites; check lane latency (cycles pre-approved)"
+  },
+  {
+   "types": [
+    "sle_fw_v2__cl6740750e",
+    "sle_fw_v2__cl69f5e854"
+   ],
+   "worst": "-80.1 / -66.2 ps",
+   "class": "NEEDS STATION (+1)",
+   "path": "u_lpad_x_fe_p1_i.q[551] -> u_core.ch_dn_o[573]: 28/22 negative, 7/3 below -42; same class as slw_fw_v3 ch_dn_o row FEFW-V3-2",
+   "row": "+1 station on x_fe_p1_i -> ch_dn_o, WITH sites (one row covers sle_fw_v1/v2, slw_fw_v3)"
+  },
+  {
+   "types": [
+    "slw_fw_v1__clf51c11d8__cl592e3d37"
+   ],
+   "worst": "-20.7 ps",
+   "class": "NONE (passes -42)",
+   "path": "1 negative end u_bout_flt_wo/q; setup not blocking",
+   "row": "none"
+  },
+  {
+   "types": [
+    "slw_fw_v3"
+   ],
+   "worst": "-5.7 ps",
+   "class": "NONE (passes -42) on this DB",
+   "path": "3 negative ends u_cland_rsf_i ring; the earlier -84.28 ch_dn_o miss is not in this ODB",
+   "row": "keep FEFW-V3-2 ch_dn_o row from the R6V2 place reading"
+  },
+  {
+   "types": [
+    "slw_fe_v2__cle312294d"
+   ],
+   "worst": "-35.6 ps",
+   "class": "NONE (passes -42); hold is the blocker",
+   "row": "residual hold ECO running"
+  },
+  {
+   "types": [
+    "slw_fe_v2__clf110fab2"
+   ],
+   "class": "NEEDS STATION + col_v + taps",
+   "row": "FEFW-V3-4"
+  },
+  {
+   "types": [
+    "slw_fw_v1__cl51d45468"
+   ],
+   "class": "NOT READ",
+   "why": "kit only on epyc2 (drained); no census run"
+  }
+ ],
+ "caveat": "pre_tt ODBs are the kit state at the stop, setup numbers differ from the original setup_est lines (-582 etc.); classes are from measured paths, no sites supplied"
+}
