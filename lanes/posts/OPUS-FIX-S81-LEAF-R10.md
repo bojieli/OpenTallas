@@ -1,0 +1,1 @@
+- 2026-11-21 23:13 PST RESUMED (succeeds FABLE-FIX-S81-LEAF-R9, Fable 429). Adopted: gate c oth-ubuntu-2637398-1795324543 (plan c 8c21a4c06257, ELAB_RC=0, bind running), t39 chain b1 epyc7 (geom PASS, route started 23:03), kv_leaf t2 A|B split prep (R9/t2s, split stage hit unhandled clock keys; continuing). J8 hand to S81-J6-ASSEMBLY-R5 by 14:00.
