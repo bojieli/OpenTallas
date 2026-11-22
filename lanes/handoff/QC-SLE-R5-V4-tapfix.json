@@ -1,0 +1,12 @@
+{"event":"QC V4 intake: st_a TAPNAME rename (FIX-SYNC) so V4 binds strict on rt c54215ce9245 together with freg_buses","base":"plan_v3p7dr / plan_v4a",
+ "tool":"epyc10 /srv/opentallas-scratch2/claude/QC-SLE-R5/tapfix.py PLAN GATE_TXT OUT (parses plan_gate_pre TAPNAME lines run against the bind launch tree)",
+ "rows":{"sle_st_a_v2__pv30dda31f__pvd2ec7769":{"clk_t228":"clk_t230","clk_t229":"clk_t231","clk_t230":"clk_t232"},
+  "sle_st_a_v2__pv30dda31f__pv88773f93":{"clk_t228":"clk_t230","clk_t229":"clk_t231","clk_t230":"clk_t232"},
+  "sle_st_a_v2__pv4242de79":{"clk_t228":"clk_t230","clk_t229":"clk_t231","clk_t230":"clk_t232"},
+  "sle_st_a_v1__cl67389ecd":{"clk_t388":"clk_t391","clk_t389":"clk_t392","clk_t390":"clk_t393"},
+  "slw_st_a_v1__clfc5867a6__pvf82a6c28":{"clk_t353":"clk_t352","clk_t354":"clk_t353","clk_t355":"clk_t354","clk_t356":"clk_t355","clk_t357":"clk_t356"},
+  "slw_st_a_v1__clfc5867a6__pvdf8e5ca4":{"clk_t353":"clk_t352","clk_t354":"clk_t353","clk_t355":"clk_t354","clk_t356":"clk_t355","clk_t357":"clk_t356"},
+  "slw_st_a_v1__clb036e152":{"clk_t356":"clk_t365","clk_t357":"clk_t366"},
+  "sle_st_a_v1__cl989804f6__cled3c1d7b":{"clk_t373":"clk_t379"}},
+ "dry_run":"plan_gate_pre check --tree <bind launch tree> on plan_tapfix.json: TAPNAME 8 -> 0; only ROWS-NO-PROOF (9 sc types, R13 rows proof) remains, same as v3p7dr",
+ "plan":"epyc10 /srv/opentallas-scratch2/claude/QC-SLE-R5/v4c/plan.json = plan_v4a + tapfix (strict bind v4c_bound running)"}
