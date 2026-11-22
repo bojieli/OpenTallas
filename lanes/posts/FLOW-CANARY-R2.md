@@ -93,3 +93,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-21 22:45 PST CANARY qwen_kvsys @ 9be5dd1f86: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 23:00 PST CANARY s81 @ 3504af932d: FAIL failing signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_d032c7204_1121_101641_352907); CANARY hbm_sram @ 93fa1eb851: FAIL failing vclk_basis,signoff (STALE-BASELINE STALE-BASELINE: identical 4 regressed metric(s) at 5 source commits (3504af932d1b, 3c2f3758f4c1, a67ae35f4ddd, e468efe8432f); baseline canary-ru)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
