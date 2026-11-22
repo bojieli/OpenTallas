@@ -49,6 +49,26 @@ class NativeStations(unittest.TestCase):
   self.assertIsNone(native_istations.selected_buses(b.ab,'other'))
   with self.assertRaisesRegex(ValueError,'unknown OUT buses'):native_istations.source_entries(t,{'zz'})
 
+
+ def test_input_bus_station_tree_stays_with_kit(self):
+  # FAM-KV-IOPC-R4 11-22: an IN-bus station_trees / pad_landing entry (kit_istation_forms) must not reach the bind-time native
+  # materialization copy: that copy keeps OUT rows only, and the form then fails closed with "no internal_stations rows".
+  b,L=self.fixture();t=b.types['sys']
+  t['buses'].append(dict(name='i',dir='in',width=8))
+  t['internal_stations'].append(dict(conn='bus:i',from_um=[0,0],to_um=[400,0],regs_um=[[200,0],[400,0]],bits=8))
+  t['station_trees']=[dict(bus='i',nodes=[dict(id='n1',parent=None,site_um=[200,0]),dict(id='n2',parent='n1',site_um=[400,0])],readers=[dict(node='n2',core='c0')])]
+  t['pad_landing']=[dict(bus='i',bit_depth=[[0,7,2]])]
+  v=native_istations.native_view(t,native_istations.selected_buses(b.ab,'sys'))
+  self.assertNotIn('station_trees',v);self.assertNotIn('pad_landing',v)
+  self.assertEqual([e['conn'] for e in v['internal_stations']],['bus:o'])
+  self.assertIn('station_trees',t)                       # the plan type itself is untouched (deep copy)
+  self.assertEqual([e['conn'] for e in t['internal_stations']],['bus:o','bus:i'])
+  # the kit-stage tree check still accepts the tree against the FULL type: depth 2 = the IN row's planned stations
+  import kit_istation_forms as KF
+  k=KF._planned_k(t,'i','sys');self.assertEqual(k,2)
+  par,depth=KF.tree_check('sys','i',t['station_trees'][0]['nodes'],k,0,['n2']);self.assertEqual(depth['n2'],2)
+  with self.assertRaises(SystemExit):KF._planned_k(v,'i','sys')   # what the unfixed bind hit on the filtered copy
+
  def test_output_geometry_follows_signal_order(self):
   b,L=self.fixture();e=b.types['sys']['internal_stations'][0]
   e.update(launch='u_t00.n_y',capture='face flop',from_um=[0,0],to_um=[8,0])

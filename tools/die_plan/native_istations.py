@@ -177,12 +177,21 @@ def annotate_kit_dest(b):
             L['internal_kit_dest_core_cycles']=n
 
 
+def native_view(typ,only=None):
+    """The copy of a plan type that bind-time native materialization hands to kit_istations: OUT-bus rows only.
+    IN-bus station forms (station_trees / pad_landing, kit_istation_forms) are realised by the kit-rtl kit_istations stage on the
+    full plan row; kept here they fail closed (\"no internal_stations rows\") because the IN rows are filtered out (FAM-KV-IOPC-R4 11-22)."""
+    typ=copy.deepcopy(typ)
+    typ.pop('station_trees',None);typ.pop('pad_landing',None)
+    typ['internal_stations']=source_entries(typ,only)
+    return typ
+
+
 def materialize(b,tn,file):
     typ=b.types[tn];original=typ.get('split_of',tn)
     selected=set(b.ab.get('internal_stations_types',[]))
     if tn not in selected and original not in selected:return
-    typ=copy.deepcopy(typ)
-    typ['internal_stations']=source_entries(typ,selected_buses(b.ab,tn,original))
+    typ=native_view(typ,selected_buses(b.ab,tn,original))
     if not typ['internal_stations']:return
     # Binding removes proven constant/unused payload bits from the functional
     # lane. The native station carries that exact bound payload plus its epoch,
