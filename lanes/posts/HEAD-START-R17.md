@@ -66,3 +66,4 @@
   - tr27 = tr26 + Codex's tr13 FIRM oracle fix. 38 lanes (spine sp_*, ch*_h/_r, host_tx/rx, m7N_rx, kd) have their plan fixed_cycles realised by live wrapper stations, but the oracle subtracted them. tr27 is the candidate START gate.
   
   Verdicts in about 30 min. The tr11-tr24 counts and the 53 K candidates stay void.
+- 2026-11-21 19:44 PST DONE [HEAD-START-R17] ot-run oth-ubuntu-2369325-1795317418 on tolerant-swine: rc=0 after 1645 s, ended 19:44:19, log /home/ubuntu/head-start-r17/tr26.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/head-start-r17 -- env TAG=tr26 bash /srv/opentallas-scratch2/claude
