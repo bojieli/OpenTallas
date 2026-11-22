@@ -1,33 +1,35 @@
 # OPUS-FIX-HEAD-LEP0N-R8 (Opus, from 11-21 23:1x PST): HEAD event r17b + hd_lep0N split to sign-off (successor of FABLE-FIX-HEAD-LEP0N-R7)
 
-Predecessor handoffs: lanes/handoff/FABLE-FIX-HEAD-LEP0N-R7.md (split facts, rename map, NEXT list), -R6/-R5/-R4.
-My hub dir: intel2 ~/opus-fix-head-lep0n-r8/. Lane scratch: /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8/tmp (intel2, epyc10).
-R7 lane dir (adopted, still used): /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r7 (intel2 + epyc10), hub logs ~/fable-fix-head-lep0n-r7/.
+Predecessor handoffs: lanes/handoff/FABLE-FIX-HEAD-LEP0N-R7.md (split facts, rename map), -R6/-R5/-R4.
+Hub dir intel2 ~/opus-fix-head-lep0n-r8/. Lane dir M=/srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8 (intel2: tmp/, plan/, ev/, planroot_e1b;
+epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r7 still used (L/src tools tree, L/tmp/recompose_merge.py, L/hc_proof).
 
-## HEAD event r17b (A+B of R7's 21:17 PLAN)
-- Tree kw45/snap_s81_head/s81_head_r17b_s0, manifest 67d8b0903f20 (main 385f61b5582a), = r17b_e1b_s0 + native release receipt
-  rewritten with in-tree relative paths (R7 e6.sh). Plan 18f3c0c7c0c1, sidecar facc71b93198. G0 PASS 0 errors on epyc10.
-  Replicated: epyc10 (origin), epyc7, intel2, epyc9.
-- First gate on r17b_e1b_s0 (0a25678af645) FAILED only pre_g0: receipt refused (absolute path into another tree). Fixed by r17b_s0.
-- Candidate ~/opus-fix-head-lep0n-r8/cand_r17b.json (event head_rp21z20NF15f_r17b, tools 30b1f11ad5f7 >= 650916ebb262,
-  gen_hosts epyc7/epyc10/epyc9 kept, review_before_route NOT required (owner rule), optimistic).
-- Publish gate running (started 23:1x): ~/opus-fix-head-lep0n-r8/pgate_r17b.log, --gen-host epyc7, item hd_host_e.
-- NEXT: on PASS: apply_reviewed_tree_marker.py --candidate cand_r17b.json --expect-source .../s81_head_r16_s0
-  --expect-event head_rp21z20NF15f_r16 --optimistic --keep-gen-hosts. Then check the wave relaunches HEAD types.
+## DONE
+- HEAD event head_rp21z20NF15f_r17b APPLIED 23:3x (src s81_head_r17b_s0, manifest 67d8b0903f20; e1b START plan 18f3c0c7c0c1 /
+  sidecar facc71b93198; in-tree receipt; tools 30b1f11ad5f7). Publish gate PASS c293e888858; marker receipt
+  lanes/handoff/s81_head_atomic_apply_1795332633870162806.json (optimistic, holds preserved, review not required).
+- ACK FAIL-CLASS 8070467972 posted (hd_host_e DRT-0255; r17b contained tree). Watch the wave hd_host_e relaunch and post RESULT.
+- E piece GPL death root cause: yosys kept g_rxm.g_o[*].g_on.g_registered_select.g_bit[k].dm name for merged mrd[k] flops;
+  fix tmp/mrdfix.py widens the 4 mrd stage groups. LANDING-BAND-CORE (COORD 23:4x): tmp/bandfix.py slides overlapping stage bands
+  (10 on E, 6 on W, max 100 um); landing_band_core --base r16 PASS on both pieces. Both fixes in private tree F (epyc10
+  L/trees/s81_head_r7split; plan sha ce3fb5e7ef4d; wave_prepare sha updated; backups in epyc10 M/tmp).
+- Cancelled bad-plan kits: oth-ubuntu-371717-1795332613 (E place), oth-ubuntu-231439-1795332206 (W GRT; W CTS setup -875 = landing
+  fault/status path coll_i0 -> coll_o2 1.2 mm, no status relays, plus coll_i2 ring -234 in a 13 x 531 um sliver band).
+- Split rebased on e1b: tmp/rebase.sh e1 -> M/ev/e1: split + recompose + gen rtl + bind/cohort/LATCHECK 334/334 PASS; G0 14 errors
+  (6 faces face_budget_g2, 7 START uses rst_start_raw_0..6, 1 band_capacity reader-start:lepk_i0).
 
-## hd_lep0N split private kits (plan g9 in private tree epyc10 L/trees/s81_head_r7split, src_manifest off = proof only)
-- W piece hd_lep0N_w: R7 run-item pid 1908887 (intel2, log ~/fable-fix-head-lep0n-r7/runitem_w4.log): place done, in geom/GRT.
-- E piece hd_lep0N: R7 kit 1121224225 DIED at 3_3_place_gp: "OT_CLAND missing native stage group ...g_rxm.mrd[256..767]".
-  ROOT CAUSE: in the E piece synthesis, yosys merged mrd[k] with the equal g_rxm.g_o[*].g_on.g_registered_select.g_bit[k].dm
-  flop and kept the dm name for 1070 of 1104 bits (uncut kit keeps mrd). FIX (R8): the 4 mrd groups (mrd_bank0, mrd_bank1234,
-  wdq_bank3, wdq_bank4) now match (?:mrd|g_o\[N\].g_on.g_registered_select.g_bit)\[k\](?:.dm)?$_DFF_P_. Patched in the
-  private plan (backup .../opus-fix-head-lep0n-r8/tmp/source_plan_g9_pre_mrdfix.json, new sha 790a97d420d1; script tmp/mrdfix.py).
-  All 4 groups now match 256/512/256/80 cells. MUST also go into premove.py / the split event rows.
-- E relaunched: spec ~/coord/autopilot/private_specs/OPUS-FIX-HEAD-LEP0N-R8/s81_head_hd_lep0N_1121232043/spec.json,
-  run-item pid 3412315 on intel2, log ~/opus-fix-head-lep0n-r8/runitem_e5.log.
-- Cut-form LEC (R7 units, epyc10): oth-ubuntu-1452654-1795321534 (functional, CUT_EQUIV_PASS) and oth-ubuntu-1610100-1795322008
-  (rst_n free, CUT_RST_EQUIV_PASS); client pids 432115 / 691937 on intel2.
+## IN FLIGHT
+- Private kits on F (fixed plan, v2-based g9 bind): E spec ~/coord/autopilot/private_specs/OPUS-FIX-HEAD-LEP0N-R8/s81_head_hd_lep0N_1121234406
+  (run-item pid 3993424, log ~/opus-fix-head-lep0n-r8/runitem_e7.log); W .../s81_head_hd_lep0N_w_1121234411 (pid 3993434, runitem_w7.log).
+- Cut-form LEC (R7 units, epyc10): oth-ubuntu-1452654-1795321534 (CUT_EQUIV_PASS), oth-ubuntu-1610100-1795322008 (CUT_RST_EQUIV_PASS).
+- tmp/post2.sh e1 e2 (ot-run pid 4109031 on intel2, log ~/opus-fix-head-lep0n-r8/post2_e2.otrun.log): bandfix + START exports per piece
+  (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
+  head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
-## Open (from R7 NEXT): G0 of g9 had 14 errors (faces x6 need face_budget_g2; 7 START-tree rst_start_raw_N; 1 band_capacity
-reader-start:lepk_i0 fill 1.445) -> need per-piece START / reset-export re-derivation before the split goes into an event;
-sign-off build must come from a src_manifest tree.
+## NEXT
+1. e2 G0 to 0 errors: faces need face_budget_g2 (G2 probe = routed private kits of the pieces), band_capacity reader-start:lepk_i0 grow.
+2. coll_i2 band on W: channel west of pair 2 is 34.56 - 17.28 = 13 um (pairs at x 34.56). Options: band north of pair 2
+   [17.28, 512, 66, 630] (pin hop up to ~407 um) or a different pair x. Decide from W kit result.
+3. Split HEAD event r18 on r17b: tree = r17b_s0 + overlay (e2 prep files, published piece wrappers, parts RTL + rgnl sources,
+   bind results), src_manifest delta-apply, publish gate, marker; that also clears the uncut LANDING-BAND-CORE overlap.
+4. Kits from the r18 manifest tree -> sign-off + export.
