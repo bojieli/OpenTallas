@@ -9,6 +9,10 @@
 #    was > 100 um from both banks, so the first FF failed);
 #  - under R-MINIMAL an FF with no site within 100 um is a WARN and is left
 #    to GPL (not FIRM), never a place stop.
+# BANK-AFF (OPUS-FIX-S81-LEAF-R10 11-22, S81-VPW-XRB): OT_S81_VPW_BANK_AFF=1 sites every bank-k FF (wdo_q / wa_q / wmw_q /
+#    xl_q / xh_q [k], g_slr.g_b[k], g_xrb.g_b[k]) on the free site nearest bank u_b<k>, not the nearest of either bank:
+#    the name-ordered nearest-either fill put bank-0 write flops at bank 1 and the slice muxes crossed the leaf (t31 J5
+#    -498 ps, 5 gates + 17 repeaters).  Shared FFs (wv_q, wcol_q, g_xr) keep nearest-either.  Unset = unchanged.
 # XR-MID-1 (S81-GEOM-OPUS 11-18, FABLE-PD-S81-0855 fix 2): OT_S81_VPW_XR_MID=MIN:D (plan budgets.vpw_xr_mid_types).
 # When W = VS core centre to the far VP bank centre (Manhattan) is over MIN um, the XR cohort (write-port flops under g_xr) is taken
 # out of the bank set and placed FIRM on free sites nearest the point at min(D, W/2) um from the VS core along the
@@ -161,20 +165,58 @@ foreach r [$vb_b getRows] {
       set q [$bi getBBox]
       set dist [expr {min($dist,max(0,[$q xMin]-$px,$px-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax]))}]
     }
-    lappend vb_rows [list $dist $px $y [$r getOrient]]
+    set dk {}
+    foreach bi $vb_banks {
+      set q [$bi getBBox]
+      lappend dk [expr {max(0,[$q xMin]-$px,$px-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax])}]
+    }
+    lappend vb_rows [list $dist $px $y [$r getOrient] {*}$dk]
   }
 }
 set vb_rows [lsort -real -index 0 $vb_rows]
+set vb_aff [expr {[info exists ::env(OT_S81_VPW_BANK_AFF)] && $::env(OT_S81_VPW_BANK_AFF) eq "1"}]
+set vb_bank_ix {}
+if {$vb_aff} {
+  # bank index k of each real macro from its name (u_b0 / u_b1); vb_rows column 4+j = distance to vb_banks j
+  set j 0
+  foreach bi $vb_banks {
+    if {![regexp {u_b([01])$} [$bi getName] -> k]} {error "OT_VPW_BANK_AFF cannot index bank [$bi getName]"}
+    dict set vb_bank_ix $k [expr {4+$j}];incr j
+  }
+  if {[dict size $vb_bank_ix]!=2} {error "OT_VPW_BANK_AFF needs banks u_b0 and u_b1"}
+  set vb_by {};set vb_ptr {}
+  foreach k {0 1} {dict set vb_by $k [lsort -real -index [dict get $vb_bank_ix $k] $vb_rows];dict set vb_ptr $k 0}
+  dict set vb_ptr any 0
+}
+set vb_used {}
+proc vb_ff_bank {n} {
+  if {[regexp {g_b\\?\[([01])\\?\]} $n -> k]} {return $k}
+  if {[regexp {(?:wdo|wa|wmw|xl|xh)_q\\?\[([01])\\?\]} $n -> k]} {return $k}
+  return -1
+}
+set vb_naff 0
 set vb_out [open /work/vpw_bank_sites.tsv w];puts $vb_out "inst\tx_um\ty_um\tbank_distance_um"
 set vb_n 0;set vb_worst 0;set vb_gpl 0
 foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $vb_ffs] {
   if {$vb_n>=[llength $vb_rows]} {incr vb_gpl;continue}
-  lassign [lindex $vb_rows $vb_n] dist x y orient
+  set k [expr {$vb_aff ? [vb_ff_bank [$i getName]] : -1}]
+  set lst [expr {$k>=0 ? [dict get $vb_by $k] : $vb_rows}]
+  set pk [expr {$k>=0 ? $k : "any"}]
+  set pt [expr {$vb_aff ? [dict get $vb_ptr $pk] : $vb_n}]
+  while {$vb_aff && $pt<[llength $lst] && [dict exists $vb_used [lrange [lindex $lst $pt] 1 2]]} {incr pt}
+  if {$pt>=[llength $lst]} {incr vb_gpl;continue}
+  set row [lindex $lst $pt]
+  if {$vb_aff} {dict set vb_ptr $pk [expr {$pt+1}];dict set vb_used [lrange $row 1 2] 1}
+  lassign $row dist x y orient
   set bd 1e30
-  foreach bi $vb_banks {
-    set q [$bi getBBox]
-    set d [expr {max(0,[$q xMin]-$x,$x-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax])}]
-    set bd [expr {min($bd,$d)}]
+  if {$k>=0} {
+    set bd [lindex $row [dict get $vb_bank_ix $k]];incr vb_naff
+  } else {
+    foreach bi $vb_banks {
+      set q [$bi getBBox]
+      set d [expr {max(0,[$q xMin]-$x,$x-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax])}]
+      set bd [expr {min($bd,$d)}]
+    }
   }
   if {$bd>100*$vb_u} {incr vb_gpl;continue}
   $i setPlacementStatus PLACED;$i setOrient $orient;$i setLocation $x $y;$i setPlacementStatus FIRM
@@ -182,6 +224,7 @@ foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName
   set vb_worst [expr {max($vb_worst,$bd)}];incr vb_n
 }
 close $vb_out
+if {$vb_aff} {puts "OT_VPW_BANK_AFF $vb_naff of $vb_n FFs sited at their own bank (u_b0/u_b1 by name)"}
 if {$vb_gpl} {puts "OT_VPW_BANK WARN $vb_gpl of [llength $vb_ffs] FFs have no free site within 100um of a bank; left to GPL"}
 # Persist a standard-tap group for the later CTS process. Core taps clk_c*
 # have early hard-macro contracts and are never candidates.

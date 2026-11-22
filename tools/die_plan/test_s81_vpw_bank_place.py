@@ -139,3 +139,62 @@ def test_vpw_xr_mid_types_exports_only_listed_types():
     assert gen_phys._vpw_xr_mid(b, "ot_s81sl_leaf__t3") == ["export OT_S81_VPW_XR_MID = 600:500"]
     assert gen_phys._vpw_xr_mid(b, "ot_s81sl_leaf__t4") == []
     assert gen_phys._vpw_xr_mid({}, "ot_s81sl_leaf__t3") == []
+
+
+AFF = r"""
+mkbox b0box 0 0 10000 10000
+mkbox b1box 0 420000 10000 430000
+mkinst b0 u_bound.u_u_lf4_u_vp_u_b0 sram b0box FIRM
+mkinst b1 u_bound.u_u_lf4_u_vp_u_b1 sram b1box FIRM
+lappend ::insts b0 b1
+set n 0
+foreach name {
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.g_slr.g_b\[1\].g_r\[0\].sa_q\[0\]$_DFF_P_}
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.g_xrb.g_b\[0\].sw_d_q\[3\]$_DFF_P_}
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.g_xrb.g_b\[1\].sw_d_q\[3\]$_DFF_P_}
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.wa_q\[1\]\[2\]$_DFF_P_}
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.wdo_q\[0\]\[114\]$_DFF_P_}
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.wdo_q\[1\]\[114\]$_DFF_P_}
+  {u_bound.u_u_lf4_u_vp_g_wr1_u_w.wv_q\[1\]$_DFF_P_}
+} {
+  mkbox fb$n 0 0 0 0
+  mkinst f$n $name dff fb$n PLACED
+  lappend ::insts f$n; incr n
+}
+mkrows 0 480000
+"""
+
+
+def _sites(tmp_path):
+    return {ln.split("\t")[0]: ln.split("\t") for ln in (tmp_path / "vpw_bank_sites.tsv").read_text().splitlines()[1:]}
+
+
+def test_bank_affinity_sites_each_bank_ff_at_its_own_bank(tmp_path):
+    """BANK-AFF (OPUS-FIX-S81-LEAF-R10 11-22): bank-1 FFs (g_b[1], wa_q[1], wdo_q[1]) at u_b1 (y >= 420 - 100), bank-0
+    FFs at u_b0 (y <= 110); the shared wv_q keeps nearest-either."""
+    r = _run(tmp_path, AFF, {"OT_S81_VPW_BANK_AFF": "1"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "OT_VPW_BANK_AFF 6 of 7" in r.stdout and "PLACED 7" in r.stdout, r.stdout
+    rows = _sites(tmp_path)
+    for name, row in rows.items():
+        y = float(row[2])
+        if "g_b[1]" in name or "g_b\\[1\\]" in name or "_q\\[1\\]\\[" in name or "_q[1][" in name:
+            assert y >= 320, (name, row)
+        elif "wv_q" not in name:
+            assert y <= 110, (name, row)
+        assert float(row[3]) <= 100.0
+    assert len({(r_[1], r_[2]) for r_ in rows.values()}) == 7
+
+
+def test_bank_affinity_off_is_nearest_either(tmp_path):
+    r = _run(tmp_path, AFF)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "OT_VPW_BANK_AFF" not in r.stdout and "PLACED 7" in r.stdout
+
+
+def test_vpw_bank_aff_types_exports_only_listed_types():
+    import gen_phys
+    b = {"vpw_bank_aff_types": ["ot_s81sl_leaf__t31"]}
+    assert gen_phys._vpw_bank_aff(b, "ot_s81sl_leaf__t31") == ["export OT_S81_VPW_BANK_AFF = 1"]
+    assert gen_phys._vpw_bank_aff(b, "ot_s81sl_leaf__t3") == []
+    assert gen_phys._vpw_bank_aff({}, "ot_s81sl_leaf__t31") == []

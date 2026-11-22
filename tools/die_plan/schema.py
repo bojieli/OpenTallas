@@ -1446,6 +1446,8 @@ SCHEMA = {
             vpw_xr_mid_types={"type": "object", "additionalProperties": {
                 "type": "object", "additionalProperties": False, "properties": {
                     "min_um": {"type": "number", "minimum": 0}, "d_um": {"type": "number", "exclusiveMinimum": 0}}}},
+            # BANK-AFF (OPUS-FIX-S81-LEAF-R10 11-22) opt-in: VPW bank-k FFs sited at bank u_b<k> per type/base
+            vpw_bank_aff_types={"type": "array", "items": {"type": "string"}, "uniqueItems": True},
             face_flop_ns_types={"type": "object", "additionalProperties": {
                 "type": "object", "additionalProperties": False, "properties": {
                     "row_stride": {"type": "integer", "minimum": 1, "maximum": 16},
