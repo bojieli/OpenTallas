@@ -302,3 +302,8 @@
   STALE 74: S81 68 (cancelled-superseded 62, held-by-owner 5, signed-pending 1), QC 6 (held 3, cancelled/withdrawn/signed-pending 3); owners live.
   KV WAIT-BIND 5 (KV-WAITBIND-R1 3 + the 2 failed); KV CBC-FALLBACK 2: kv3_pc__cl254f2e73, kv3_pc__cl5a95b461.
   4 unsigned types have no kit-wave row (S81 1, QC 2, KV 1). Table lanes/OWNERS-SWEEP.tsv.
+- 2026-11-22 02:50 PST 02:50 sweep: 461 rows (HEAD/S81/QC/KV), 0 UNOWNED, 0 DEAD-OWNER (unchanged vs 02:26).
+  Changes: KV FAILED-NO-RELAUNCH 2->3 (+kv3_pc__cl254f2e73, owner KV-PLAN-R6), KV CBC-FALLBACK 2->3, QC STALE 6->7.
+  Still flagged: KV 3 failed (kv3_hub_Wo, kv3_io_cor_v1, kv3_pc__cl254f2e73), QC 1 failed (slw_st_a_v2__cl9f076a5c, FAM-QC-SLWSLE-R1), KV 5 WAIT-BIND.
+  STALE: S81 68 (unchanged), QC 7. HEAD clean.
+  377 rows no flag; file lanes/OWNERS-SWEEP.tsv
