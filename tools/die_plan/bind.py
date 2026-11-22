@@ -3804,7 +3804,8 @@ class Binder:
                 raise BindError(f"monitor use strap audit: {monitor_aud['reason']}")
         if cexp:
             # count-strap VALUE audit (COORD addition, 12.14a: extends this audit): literal == bind value, every pin
-            cva = STR.audit_count_strap_values(f.read_text(), {re.sub(r"[^A-Za-z0-9_]", "_", q): v for q, v in cexp.items()})
+            # FLOW-STRIPBODY-R2 11-22: the top names instances by sv_id (s_7N_C__strip_S -> s_7N_C_strip_S)
+            cva = STR.audit_count_strap_values(f.read_text(), {sv_id(q): v for q, v in cexp.items()})
             (out.parent / "bind_count_strap_audit.json").write_text(json.dumps(cva, indent=1) + "\n")
             if cva["verdict"] != "PASS":
                 raise BindError(f"count-strap tie-value audit (G0 ERROR): {cva['reason']}")
