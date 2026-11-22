@@ -15,6 +15,17 @@ Read lanes/handoff/FABLE-FIX-QC-COLL.md first (method, solver, station plan). Wo
   spec pspec_ftc2, run-item intel2 pid 2978227 (goal auto), kit epyc10 pkit_ftc2. pspec_ftc1 died KIT_TOPOLOGY_BIND_STALE (a private plan needs its own bind).
 - If run-item stops at geom: resume with the kit's own run_kit.sh GOAL=route through ot-run (COORD).
 
+## RULES ADDED 11-21 23:xx (COORD, after my shared-tree write incident)
+- Private trees ONLY via ot-tree-fork (rt tools/fleet/ot-tree-fork SRC DST; real nlink-1 copies). A launch tree's physical/die_plan is a SYMLINK into its
+  source tree: an R8 refresh in a "private launch copy" writes the shared tree. Before writing into a launch tree: no symlink, no nlink > 1, else fail
+  (guard() in epyc10 fable-fix-qc-coll-r2/bind_pkg4.sh).
+- epyc10 kw45/snap_qwen_compute/qwen_compute_v2r10_famqc_cr8 (hardlinked, made by delta-apply --link): the v2 proof kit pkit_core1 runs from it.
+  NO writes into it (no bind, no R8 refresh). When the v2 proof ends: retire it via ot-delete (and its rt_tools_launch/qwen_compute_v2r10_famqc_cr8@* launch dirs).
+- v3 seats (half-cycle INLOCK edges <= 120 um; an/solve4.py cfg7.json -> s7/seats_ds.json -> pkg5/): bind = epyc10 fork_bind.sh (ot-tree-fork -> tree_fork, pk4),
+  unit oth-ubuntu-3836728-1795329935. Clean by 05:00 -> offer R13 a seat-file swap (relay_sites value_file only); else V3 keeps v2, v3 -> V4.
+  v3 proof kit must use the fork tree (tree_fork carries the refreshed R8 after the bind), not cr8.
+- Proof v2 placed read: WNS -170.23 (INLOCK half-cycle lock flops ir_n/srr_n/drr_n priced as full cycle), recovery +37.69, shr_p_rx_i ring -95.60.
+
 ## Delivered
 - V3 package for QC-PLAN-R12: lanes/handoff/FABLE-FIX-QC-COLL-V3-pkg.json (delta keyed by type/row on V3p5r b1281d55e514; 24 rows).
   Files: pkg3/rows_v3p5r.delta.json + rows_v3p5r.relay_sites.json, apply tool an/apply_delta.py, generator an/compose_r2.py
