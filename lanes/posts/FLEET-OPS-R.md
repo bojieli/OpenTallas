@@ -1044,3 +1044,4 @@
 - 2026-11-21 20:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col-h9r0 on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 20:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: tap-grid-r2 on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 20:32 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:kw45 on epyc2 wrote 220 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 20:32 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:fable-fix-s81-colh9r1 on epyc2 wrote 48 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
