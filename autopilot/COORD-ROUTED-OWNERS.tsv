@@ -1,4 +1,5 @@
 # die	item (exact, or prefix*)	owner	ruling   -- COORD-routed owners, read by tools/stale_list.py; override OWNERS.tsv and lanes/*.md owners
+s81	col_h10_r2__t1__*	FAM-S81-COL-H10-R4	COORD 11-21 21:50 ownership sweep: adopted from dead S81-GEOM-OPUS (18 variants); J7 col hold -> J8 readiness via lever-1 + proof-A kits, no J7-tools relaunch
 hbm	ot_hbm_su_pg_lane1p_core	AUTO-RESIGN	COORD 11-10 22:31 (COUNT-ARCHIVE-3)
 qwen_kvsys	kv3_pv_v2n	DIE-KV-97	COORD 11-10 22:31
 qwen_compute	sle_hc2__cl9c4c4509__cl3edce1b8	DIE-QC-97	COORD 11-10 22:31 lineage batch
@@ -110,15 +111,16 @@ s81	dsdv_slice_lepw_mu_C__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned d
 s81	serdes__t15__cla3d02796	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	serdes__t16	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	serdes__t4	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_hi_dsdv_svc_rs__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_hi_dsdv_svc_rs__t3	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs__t3	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs__t4	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs__t5	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs__t6	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs__t7	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	svc_lo_dsdv_svc_rs_w__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
+s81	svc_hi_dsdv_svc_rs__t1	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_hi_dsdv_svc_rs__t3	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs__t1	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs__t3	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs__t4	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs__t5	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs__t6	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs__t7	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_lo_dsdv_svc_rs_w__t1	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
+s81	svc_*	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: all svc rows (hi/lo/rs_w/pvso_entry/split pieces)
 s81	col_h10_r0_p4__t1__pvc9270d09	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h10_r0_p4__t1__pvd8c0565f	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h10_r0_p4__t1__pv5b623e07	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
@@ -402,3 +404,5 @@ qwen_compute	slw_stm_v2__cl9beb65e6	QC-RELAUNCH-R1	COORD 11-21 20:5x: DEAD-OWNER
 qwen_compute	cbx_q10__cl89936551_h	FAM-QC-CB-R4	COORD 11-21 21:50 (ownership sweep)
 qwen_compute	cbf_q00_s2	FAM-QC-CB-R4	COORD 11-21 21:50 (ownership sweep)
 qwen_compute	cbn_q01*	FAM-QC-CB-R4	COORD 11-21 21:50 (ownership sweep)
+qwen_compute	sle_hc2__cl9c4c4509__clf60c5152__pv*	FAM-QC-HCST-R3	COORD 11-21 21:50 (ownership sweep): both signed, count pending, no rebuild
+qwen_compute	slw_hc3__*	FAM-QC-HCST-R3	COORD 11-21 21:50 (ownership sweep): all 4 pv signed
