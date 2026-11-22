@@ -16,3 +16,10 @@ Family: S81 dsdv_slice_c1x_C__t1,t3..t10; lepw_mu_C, lepw_mu_LP, lepw_mus_C, lep
 - Generator scratchpad iq/mkrows.py maps groups with u_bin_/u_bout_ ends to bus: station rows (13 rows); 89 inner groups (xg u_r, xf, rrl reset, ist_ existing) flagged for LEPE-4 shared xg/xf form + RAWRST rows. Rows file epyc9 fam-s81-dsdv-r1/iq_rows.json; private plan trees/j7_work/physical/die_plan/s81/plan_iq1.json.
 - Strict bind+LATCHECK+G0 running: ot-run unit on epyc9 (gate_iq1.sh, log fam-s81-dsdv-r1/gate_iq1.otrun.log, outputs gate_iq1/, bind out native_bind/out_iq1). Then private-spec iq_C with --plan plan_iq1.json --bind-out out_iq1 --src-manifest off -> route toward sign-off.
 - Geom kits launched on J7 fork for lepw_mus_C__t1, lepw_mu_LP__t2, c1x_C__t8 (specs in autopilot/private_specs/FAM-S81-DSDV-R1/*_1122*). Next: same scan->rows for them.
+
+## STATE 11-22 08:2x PST
+- iq_C gate GREEN (gate_iq2: bind 0, LATCHECK 873/873, G0 only 9 die-level J7 baseline errors). Plan epyc9 trees/j7_work/physical/die_plan/s81/plan_iq1.json (+sync_fixed_cycles, scripts mkplan2.py), bind out native_bind/out_iq2.
+- Sealed route kit RUNNING: spec ~/coord/autopilot/private_specs/FAM-S81-DSDV-R1/s81_dsdv_slice_iq_C__t1_1122081048 (--src-manifest seal --rt-floor-exempt, COORD: counts; do NOT rebind for counting). Durable waiter on result.json. On sign-off: PROVENANCE.json by run-item; check EQUIVALENT routed LEC.
+- Geom kits (sealed) for lepw_mus_C t1, lepw_mu_LP t2, c1x_C t8: specs *_1122081* ; next: placed_scan --limit 405 --cycle 405 on geom/geom.tsv -> iq/mkrows.py -> rows -> sync_fixed_cycles plan (mkplan2.py) -> gate -> route kit.
+- J8 rows posted: lanes/handoff/FAM-S81-DSDV-R1-iq_C-J8-rows.json (13 bus rows, tools_min_sha 20a713e74d); 89 inner groups listed in same file under unmapped_groups_for_shared_xg_xf_form -> LEPE-4.
+- Notes: never run gate/writes in the tree while a kit seals; private-spec swallows stdin in bash -s scripts (use </dev/null).

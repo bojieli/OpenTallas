@@ -1,0 +1,925 @@
+{
+ "lane": "FAM-S81-DSDV-R1",
+ "for": "S81-J6-ASSEMBLY-R5 J8",
+ "tools_min_sha": "20a713e74d",
+ "basis": "placed_scan.py --limit 405 --cycle 405 on J7-fork private kit geom.tsv; stations=ceil(leg/405)-1 on the Manhattan leg",
+ "rows": {
+  "dsdv_slice_iq_C__t1": {
+   "internal_stations": [
+    {
+     "conn": "bus:attn_i0",
+     "launch": "u_bound.u_cland_attn_i0/u_ring.dch.u_dsel/y",
+     "capture": "u_bound.u_bin_attn_i0",
+     "from_um": [
+      197.07,
+      41.79
+     ],
+     "to_um": [
+      482.66,
+      598.4
+     ],
+     "regs_um": [
+      [
+       477.8,
+       41.79
+      ],
+      [
+       482.66,
+       317.67
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 842 um max 1129 um on 517 bits; 2 station(s), hop 281 um; +2 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:attn_o0",
+     "launch": "u_bound.u_u_s_3S_u_bs.o_s",
+     "capture": "u_bound.u_bout_attn_o0",
+     "from_um": [
+      659.63,
+      1151.29
+     ],
+     "to_um": [
+      427.48,
+      6.95
+     ],
+     "regs_um": [
+      [
+       427.48,
+       1039.32
+      ],
+      [
+       427.48,
+       695.19
+      ],
+      [
+       427.48,
+       351.07
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 1376 um max 1463 um on 513 bits; 3 station(s), hop 344 um; +3 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:idx_o0",
+     "launch": "u_bound.u_u_s_3S_u_bs.o_i",
+     "capture": "u_bound.u_bout_idx_o0",
+     "from_um": [
+      677.43,
+      1160.06
+     ],
+     "to_um": [
+      484.38,
+      7.42
+     ],
+     "regs_um": [
+      [
+       484.38,
+       1016.68
+      ],
+      [
+       484.38,
+       680.26
+      ],
+      [
+       484.38,
+       343.85
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 1346 um max 1346 um on 1 bits; 3 station(s), hop 336 um; +3 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:leafup_i0",
+     "launch": "u_bound.u_bin_leafup_i0",
+     "capture": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.xf",
+     "from_um": [
+      395.87,
+      1222.42
+     ],
+     "to_um": [
+      525.8,
+      600.35
+     ],
+     "regs_um": [
+      [
+       525.8,
+       976.35
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 752 um max 752 um on 1 bits; 1 station(s), hop 376 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:leafup_i1",
+     "launch": "u_bound.u_bin_leafup_i1",
+     "capture": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.xfs",
+     "from_um": [
+      671.27,
+      1220.81
+     ],
+     "to_um": [
+      508.03,
+      577.12
+     ],
+     "regs_um": [
+      [
+       508.03,
+       980.59
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 807 um max 807 um on 1 bits; 1 station(s), hop 403 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:sid_o0",
+     "launch": "u_bound.u_u_frs_s_3S_C.fo",
+     "capture": "u_bound.u_bout_sid_o0",
+     "from_um": [
+      431.3,
+      557.96
+     ],
+     "to_um": [
+      6.05,
+      557.68
+     ],
+     "regs_um": [
+      [
+       218.54,
+       557.96
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 426 um max 426 um on 1 bits; 1 station(s), hop 213 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:x_o0",
+     "launch": "u_bound.u_u_s_3S_u_sl_u_xg.u_s.xw_d",
+     "capture": "u_bound.u_bout_x_o0",
+     "from_um": [
+      624.01,
+      635.72
+     ],
+     "to_um": [
+      894.37,
+      1221.0
+     ],
+     "regs_um": [
+      [
+       894.37,
+       650.58
+      ],
+      [
+       894.37,
+       935.79
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 856 um max 1195 um on 786 bits; 2 station(s), hop 285 um; +2 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:xring_i0",
+     "launch": "u_bound.u_bin_xring_i0",
+     "capture": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.ie",
+     "from_um": [
+      1436.92,
+      367.35
+     ],
+     "to_um": [
+      731.23,
+      380.99
+     ],
+     "regs_um": [
+      [
+       1077.25,
+       367.35
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 719 um max 1028 um on 1096 bits; 1 station(s), hop 360 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:xring_i1",
+     "launch": "u_bound.u_cland_xring_i1/u_ring.dch.u_dsel/y",
+     "capture": "u_bound.u_bin_xring_i1",
+     "from_um": [
+      46.79,
+      172.81
+     ],
+     "to_um": [
+      432.41,
+      330.35
+     ],
+     "regs_um": [
+      [
+       318.37,
+       172.81
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 543 um max 776 um on 387 bits; 1 station(s), hop 272 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:xring_o0",
+     "launch": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.ro_e",
+     "capture": "u_bound.u_bout_xring_o0",
+     "from_um": [
+      549.05,
+      330.49
+     ],
+     "to_um": [
+      1436.73,
+      125.94
+     ],
+     "regs_um": [
+      [
+       913.12,
+       330.49
+      ],
+      [
+       1277.2,
+       330.49
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 1092 um max 1341 um on 1104 bits; 2 station(s), hop 364 um; +2 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:xring_o1",
+     "launch": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.ro_w",
+     "capture": "u_bound.u_bout_xring_o1",
+     "from_um": [
+      467.98,
+      404.94
+     ],
+     "to_um": [
+      6.24,
+      386.94
+     ],
+     "regs_um": [
+      [
+       228.11,
+       404.94
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 480 um max 780 um on 774 bits; 1 station(s), hop 240 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:xtier_i0",
+     "launch": "u_bound.u_bin_xtier_i0",
+     "capture": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.iv",
+     "from_um": [
+      94.66,
+      1221.25
+     ],
+     "to_um": [
+      452.38,
+      829.3
+     ],
+     "regs_um": [
+      [
+       452.38,
+       1204.13
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 750 um max 1088 um on 87 bits; 1 station(s), hop 375 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:xtier_o0",
+     "launch": "u_bound.u_u_s_3S_u_sl_u_xg.u_r.vo",
+     "capture": "u_bound.u_bout_xtier_o0",
+     "from_um": [
+      465.08,
+      513.65
+     ],
+     "to_um": [
+      6.25,
+      518.19
+     ],
+     "regs_um": [
+      [
+       233.4,
+       513.65
+      ]
+     ],
+     "note": "FAM-S81-DSDV-R1 J8: placed scan (J7 fork kit, --limit 405 --cycle 405) leg 463 um max 581 um on 262 bits; 1 station(s), hop 232 um; +1 cycle(s) pre-approved"
+    }
+   ]
+  }
+ },
+ "unmapped_groups_for_shared_xg_xf_form": [
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.ro_w",
+   "bits": 1104,
+   "leg_um": 824,
+   "max_um": 1181,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.ro_e",
+   "bits": 1081,
+   "leg_um": 752,
+   "max_um": 1087,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_r.iw->u_bound.u_u_s_3S_u_sl_u_xg.u_r.dl_e",
+   "bits": 1075,
+   "leg_um": 1054,
+   "max_um": 1547,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_bin_leafup_i2->u_bound.u_lpad_leafup_i2.q",
+   "bits": 668,
+   "leg_um": 574,
+   "max_um": 690,
+   "why": "bus has plan row"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_r.ie->u_bound.u_u_s_3S_u_sl_u_xg.u_r.dl_w",
+   "bits": 533,
+   "leg_um": 719,
+   "max_um": 1163,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_g_c3_u_xr->u_bound.u_ist_leafdn_o3_0",
+   "bits": 504,
+   "leg_um": 549,
+   "max_um": 568,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_g_c3_u_xr->u_bound.u_ist_leafdn_o4_0",
+   "bits": 504,
+   "leg_um": 518,
+   "max_um": 536,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_1_g_dlv_e_d_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_3_u_e",
+   "bits": 480,
+   "leg_um": 672,
+   "max_um": 871,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_1_g_dlv_e_d_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_2_u_e",
+   "bits": 480,
+   "leg_um": 496,
+   "max_um": 664,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_lpad_leafup_i4.q->u_bound.u_u_s_3S_u_sl_g_c3_u_xr",
+   "bits": 389,
+   "leg_um": 475,
+   "max_um": 507,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_lpad_leafup_i3.q->u_bound.u_u_s_3S_u_sl_g_c3_u_xr",
+   "bits": 389,
+   "leg_um": 467,
+   "max_um": 498,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xf_u_x.dl_d->u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_1_g_dlv_e_d_r",
+   "bits": 316,
+   "leg_um": 777,
+   "max_um": 1088,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_lane.xw->u_bound.u_u_s_3S_u_sl_u_xg.u_s.xw_d",
+   "bits": 311,
+   "leg_um": 740,
+   "max_um": 1509,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_ist_leafdn_o1_0->u_bound.u_ist_leafdn_o1_1",
+   "bits": 286,
+   "leg_um": 442,
+   "max_um": 491,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_lpad_leafup_i2.q->u_bound.u_u_s_3S_u_sl_u_xg.u_r.xf",
+   "bits": 276,
+   "leg_um": 675,
+   "max_um": 801,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.vo",
+   "bits": 276,
+   "leg_um": 648,
+   "max_um": 748,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_r.dl_w->u_bound.u_u_s_3S_u_sl_g_c3_u_xr",
+   "bits": 137,
+   "leg_um": 505,
+   "max_um": 714,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_r.iv->u_bound.u_u_s_3S_u_sl_u_xg.u_r.dl_vb",
+   "bits": 108,
+   "leg_um": 245,
+   "max_um": 718,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_s_c->u_bound.g_u_s_3S_u_sl_u_xf_src_f347e4bb06581b43e8cc",
+   "bits": 32,
+   "leg_um": 948,
+   "max_um": 995,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_e_hh_q->u_bound.g_u_s_3S_u_sl_u_xf_driver_e_hh",
+   "bits": 32,
+   "leg_um": 533,
+   "max_um": 559,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_e_kk_q->u_bound.g_u_s_3S_u_sl_u_xf_driver_e_kk",
+   "bits": 32,
+   "leg_um": 531,
+   "max_um": 554,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_y_xd_u_s_3S_u_sl_u_eg_u_gg_scale_0_0.q->u_bound.u_y_xd_u_s_3S_u_sl_u_eg_u_gg_scale_0_1.q",
+   "bits": 32,
+   "leg_um": 435,
+   "max_um": 437,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_ld_pv_W.u_land.o->u_bound.u_ld_pv_W.o",
+   "bits": 28,
+   "leg_um": 519,
+   "max_um": 665,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_bin_xring_i1->u_bound.u_u_s_3S_u_sl_u_xg.u_r.iw",
+   "bits": 23,
+   "leg_um": 434,
+   "max_um": 615,
+   "why": "dup bus"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_1_g_dlv_e_b_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_3_u_e",
+   "bits": 17,
+   "leg_um": 663,
+   "max_um": 740,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_1_g_dlv_e_b_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_2_u_e",
+   "bits": 17,
+   "leg_um": 485,
+   "max_um": 565,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.r1_bu->u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_qsel.u_q1",
+   "bits": 16,
+   "leg_um": 493,
+   "max_um": 554,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.r1_bu->u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_qsel.u_q0",
+   "bits": 14,
+   "leg_um": 503,
+   "max_um": 553,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.u_u_s_3S_u_bs.left",
+   "bits": 12,
+   "leg_um": 974,
+   "max_um": 979,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.action->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_stream3",
+   "bits": 12,
+   "leg_um": 784,
+   "max_um": 792,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_bin_leafup_i4->u_bound.u_lpad_leafup_i4.r",
+   "bits": 12,
+   "leg_um": 414,
+   "max_um": 425,
+   "why": "bus has plan row"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_rr.rst_n->u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_qsel.u_q0",
+   "bits": 11,
+   "leg_um": 413,
+   "max_um": 425,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_ld_pv_W.row",
+   "bits": 9,
+   "leg_um": 562,
+   "max_um": 564,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xf_u_x.dl_b->u_bound.g_u_s_3S_u_sl_u_xf_src_dbc84e330a10e181823c",
+   "bits": 8,
+   "leg_um": 693,
+   "max_um": 962,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_ld_pv_W.w",
+   "bits": 8,
+   "leg_um": 569,
+   "max_um": 571,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_rr.rst_n",
+   "bits": 8,
+   "leg_um": 475,
+   "max_um": 487,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_rr.rst_n->u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_qsel.u_q1",
+   "bits": 8,
+   "leg_um": 418,
+   "max_um": 423,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xf_u_x.dl_b->u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank.g_mac.u_mem",
+   "bits": 6,
+   "leg_um": 550,
+   "max_um": 703,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_0_g_dlv_e_t_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_3_u_e",
+   "bits": 6,
+   "leg_um": 620,
+   "max_um": 628,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.action->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_ctl.ca",
+   "bits": 6,
+   "leg_um": 440,
+   "max_um": 474,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_0_g_dlv_e_t_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_2_u_e",
+   "bits": 6,
+   "leg_um": 445,
+   "max_um": 452,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.xfv",
+   "bits": 5,
+   "leg_um": 312,
+   "max_um": 767,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_cap",
+   "bits": 5,
+   "leg_um": 434,
+   "max_um": 434,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xf_u_x.dl_b->u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_0_g_dlv_e_t_r",
+   "bits": 4,
+   "leg_um": 744,
+   "max_um": 952,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.gi->u_bound.u_u_s_3S_u_sl_u_xg.u_s.g_bank.g_mac.u_mem",
+   "bits": 4,
+   "leg_um": 496,
+   "max_um": 587,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_ld_pv_W.lv",
+   "bits": 3,
+   "leg_um": 565,
+   "max_um": 566,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.g_v",
+   "bits": 3,
+   "leg_um": 502,
+   "max_um": 546,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_3_g_dlv_e_v_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_3_u_e",
+   "bits": 3,
+   "leg_um": 521,
+   "max_um": 537,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xf_u_x.dl_b->u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_1_g_dlv_e_b_r",
+   "bits": 2,
+   "leg_um": 793,
+   "max_um": 963,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.on_n",
+   "bits": 2,
+   "leg_um": 652,
+   "max_um": 655,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.vt_n",
+   "bits": 2,
+   "leg_um": 619,
+   "max_um": 620,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.fr_n",
+   "bits": 2,
+   "leg_um": 604,
+   "max_um": 607,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync",
+   "bits": 2,
+   "leg_um": 584,
+   "max_um": 585,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_ld_pv_W.u_land.wc",
+   "bits": 2,
+   "leg_um": 512,
+   "max_um": 513,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_rr.sync",
+   "bits": 2,
+   "leg_um": 446,
+   "max_um": 447,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_bin_attn_i0/eq",
+   "bits": 1,
+   "leg_um": 1334,
+   "max_um": 1334,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_bin_xring_i1/eq",
+   "bits": 1,
+   "leg_um": 1325,
+   "max_um": 1325,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.g_u_s_3S_u_sl_u_xf_src_9390c08f15346cd51385",
+   "bits": 1,
+   "leg_um": 1080,
+   "max_um": 1080,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_src_efe3540ec4c3ecb1ea7d->u_bound.g_u_s_3S_u_sl_u_xf_driver_rb_v",
+   "bits": 1,
+   "leg_um": 1029,
+   "max_um": 1029,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.u_u_s_3S_u_bs.rt",
+   "bits": 1,
+   "leg_um": 983,
+   "max_um": 983,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.u_u_s_3S_u_bs.o_i",
+   "bits": 1,
+   "leg_um": 982,
+   "max_um": 982,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.u_u_s_3S_u_bs.o_s",
+   "bits": 1,
+   "leg_um": 979,
+   "max_um": 979,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.u_u_s_3S_u_bs.infr",
+   "bits": 1,
+   "leg_um": 972,
+   "max_um": 972,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_go_c->u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_0_g_dlv_e_go_r",
+   "bits": 1,
+   "leg_um": 899,
+   "max_um": 899,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_bin_leafup_i4/eq",
+   "bits": 1,
+   "leg_um": 895,
+   "max_um": 895,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.nxe_v",
+   "bits": 1,
+   "leg_um": 751,
+   "max_um": 751,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_bin_leafup_i1->u_bound.u_u_s_3S_u_sl_u_xg.u_r.xf",
+   "bits": 1,
+   "leg_um": 737,
+   "max_um": 737,
+   "why": "dup bus"
+  },
+  {
+   "conn": "group:u_bound.u_bin_leafup_i0->u_bound.u_u_s_3S_u_sl_u_xg.u_r.xfs",
+   "bits": 1,
+   "leg_um": 728,
+   "max_um": 728,
+   "why": "dup bus"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.nxw_v",
+   "bits": 1,
+   "leg_um": 703,
+   "max_um": 703,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_lpad_leafup_i2.q->u_bound.u_u_s_3S_u_sl_u_xg.u_r.xfv",
+   "bits": 1,
+   "leg_um": 677,
+   "max_um": 677,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.rst_n",
+   "bits": 1,
+   "leg_um": 672,
+   "max_um": 672,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_bin_leafup_i3/eq",
+   "bits": 1,
+   "leg_um": 660,
+   "max_um": 660,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_frs_s_3S_C.fo",
+   "bits": 1,
+   "leg_um": 634,
+   "max_um": 634,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_lpad_leafup_i2.q->u_bound.u_u_s_3S_u_sl_u_xg.u_r.xfs",
+   "bits": 1,
+   "leg_um": 630,
+   "max_um": 630,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_0_g_dlv_e_go_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_3_u_e",
+   "bits": 1,
+   "leg_um": 629,
+   "max_um": 629,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.fault",
+   "bits": 1,
+   "leg_um": 611,
+   "max_um": 611,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.own_v",
+   "bits": 1,
+   "leg_um": 608,
+   "max_um": 608,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.fr_on",
+   "bits": 1,
+   "leg_um": 605,
+   "max_um": 605,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.asm_v",
+   "bits": 1,
+   "leg_um": 594,
+   "max_um": 594,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_ld_pv_W.o",
+   "bits": 1,
+   "leg_um": 561,
+   "max_um": 561,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_ctl.bc_hc->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_lane.xw",
+   "bits": 1,
+   "leg_um": 556,
+   "max_um": 556,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.g_u_s_3S_u_sl_src_ae4e68cdc1d4afcda450",
+   "bits": 1,
+   "leg_um": 522,
+   "max_um": 522,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_ctl.bt_u->u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_ctl.bc_hd",
+   "bits": 1,
+   "leg_um": 476,
+   "max_um": 476,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_s.u_cal_reader.g_rst_relay.u_rr.sync->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_3_u_e",
+   "bits": 1,
+   "leg_um": 464,
+   "max_um": 464,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_g_cp_0_g_dlv_e_go_r->u_bound.u_u_s_3S_u_sl_u_xf_g_cp_2_u_e",
+   "bits": 1,
+   "leg_um": 453,
+   "max_um": 453,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_rrl_79->u_bound.u_u_s_3S_u_sl_u_xg.u_r.dl_ev",
+   "bits": 1,
+   "leg_um": 448,
+   "max_um": 448,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.g_u_s_3S_u_sl_u_xf_driver_flt->u_bound.g_u_s_3S_u_sl_u_xf_driver_fault",
+   "bits": 1,
+   "leg_um": 446,
+   "max_um": 446,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_u_s_3S_u_sl_u_xg.u_r.dl_vb->u_bound.u_u_s_3S_u_sl_g_c3_u_xr",
+   "bits": 1,
+   "leg_um": 408,
+   "max_um": 408,
+   "why": "inner group"
+  },
+  {
+   "conn": "group:u_bound.u_ld_pv_W.o->u_bound.u_u_s_3S_u_sl_g_c3_u_xr",
+   "bits": 1,
+   "leg_um": 405,
+   "max_um": 405,
+   "why": "inner group"
+  }
+ ]
+}
