@@ -28,3 +28,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 00:28 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-812958-1795330015 on tolerant-swine: rc=0 after 6074 s, ended 00:28:07, log /home/ubuntu/fam-s81-serdes-r7/j8p2_gate.client.log, cmd: --hosts epyc9 --mem 40 --threads 4 --disk 20 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 -- bash gate_j8p2.sh
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-22 00:28 PST DIED [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2745322-1795336059 on tolerant-swine: rc=1 after 59 s, ended 00:28:36, log /home/ubuntu/fam-s81-serdes-r7/eco_r7k2.client.log, cmd: --hosts epyc9 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 --stage /srv/opentallas-scratch2/claude/rt/404887 | class=DESIGN-FAIL cause=ECO_LOOP ERROR: late-ECO exhausted (1 it, 55.6 s): TT 10.67->None FF -98.12->None drv 85->None drc 0->None; it
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
