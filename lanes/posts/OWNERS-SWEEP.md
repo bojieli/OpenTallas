@@ -330,3 +330,8 @@
   DEAD-OWNER 2, QC: cbn_q00 cl622f65d2 + cldbcda913 (TAP-GRID-R5, no post 2 h).
   STALE 1: S81 col_h9_r0_p6 (FAM-S81-COL-H9R0-R4).
   UNCLASSIFIED 3: KV kv3_hub_C (kit_rtl), QC slw_st_b_v1 cle6023ec2, S81 s81sl_leaf t65 (place error).
+- 2026-11-22 09:51 PST 10xx sweep 458 rows (S81 349, QC 61, KV 47, HEAD 1). Flags: 6 FAILED-NO-RELAUNCH, 2 UNCLASSIFIED, 0 UNOWNED, 0 DEAD-OWNER, 0 STALE.
+  S81 FAILED-NO-RELAUNCH: col_h9_r1 pv4bd36c74, col_h9_r2 pv7c30fd4e + pvdc7d4221 (OPUS-FIX-S81-COLROM-R6; bind_toolskew), leaf t1 + t65 (OPUS-FIX-S81-LEAF-R10; place fail, t65 UNCLASSIFIED).
+  KV: kv3_hub_C kit_rtl FAIL UNCLASSIFIED (FAM-KV-HUBC-SYSC-R2; private kv3_sys_c running).
+  QC, HEAD: no flags; cbn_q00 now FABLE-FIX-QC-V4.
+  Read-only, nothing changed.
