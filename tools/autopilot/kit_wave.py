@@ -3513,9 +3513,10 @@ def select(rows, cfg, die, state, plan_types=None):
             # KW-RELAUNCH-1 11-05: the parent row of a class-split item carries the state of the wave's OWN running class
             # (ROUTING / QUEUED ...).  That hid every released retry of its sibling classes (S81 slice_station t29 / t40 /
             # t6: retry @6 / @8 / @9 set, never launched).  Such a parent still expands, but only into released retries.
-            if r["state"] == "SIGNED-UNVERSIONED" and plan_types is not None and r["item"] not in plan_types \
-                    and any(t.startswith(r["item"] + "__") for t in plan_types):
-                pass         # FABLE-FLOW-1750: a SIGNED-UNVERSIONED parent still takes its unsigned class items (QC slw_stm_v1/v2, slw_hc2 never launched)
+            if (r["state"] in ("SIGNED", "SIGNED-UNVERSIONED") and plan_types is not None
+                    and r["item"] not in plan_types and any(t.startswith(r["item"] + "__") for t in plan_types)):
+                # The ownership row summarizes the base type. Check each current class's own signoff and holds below.
+                pass
             elif not (str(r.get("owner", "")).startswith("KIT-WAVE") and _own_wave_unit(r)
                       and plan_types is not None and r["item"] not in plan_types
                       and any(x.split("@", 1)[0].startswith(r["item"] + "__") for x in retry)):
