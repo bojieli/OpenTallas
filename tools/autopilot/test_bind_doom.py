@@ -109,3 +109,24 @@ def test_step_posts_from_last_sweep_and_never_raises(tmp_path):
     assert len(ap.posts) == 1                                                   # posted once
     (tmp_path / B.STATE).write_text("{not json")
     B.step(ap)                                                                  # unreadable state: no raise
+
+
+def test_no_sweep_from_tests_or_a_non_hub_dir(tmp_path):
+    """BIND-DOOM-STORM-1122: the merge queue's autopilot tests started 64 real fleet sweeps"""
+    assert B.may_launch(tmp_path, env={}) == (False, "under pytest")              # pytest is loaded in this process
+    import sys as _s
+    saved = _s.modules.pop("pytest")
+    try:
+        assert not B.may_launch(tmp_path, env={})[0] and "not the hub autopilot dir" in B.may_launch(tmp_path, env={})[1]
+        assert B.may_launch(tmp_path, env={"BIND_DOOM_AP_DIR": str(tmp_path)}) == (True, "")
+        assert B.may_launch(tmp_path, env={"BIND_DOOM_AP_DIR": str(tmp_path), "BIND_DOOM": "off"})[0] is False
+    finally:
+        _s.modules["pytest"] = saved
+    ap = _AP(tmp_path)
+    ap.DRY = False
+    B.step(ap)                                                                   # not DRY, but under pytest: no Popen
+    assert not (tmp_path / B.RUNFILE).exists() and not any("sweep started" in m for m in ap.lines)
+    assert B.main(["sweep", str(tmp_path), "epyc10", "intel2"]) == 0            # a stray sweep exits at once
+    a = B.single_flight(str(tmp_path / "l"))
+    assert a is not None and B.single_flight(str(tmp_path / "l")) is None
+    a.close()

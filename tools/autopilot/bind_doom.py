@@ -227,6 +227,40 @@ def doomed_rows(state, old_text=""):
     return head + "".join(v + "\n" for _, v in sorted(rows.items()))
 
 
+HUB_AP_DIR = os.path.expanduser("~/coord/autopilot")
+LOCK = os.path.expanduser("~/.local/state/bind_doom.sweep.lock")
+
+
+def may_launch(ap_dir, env=None):
+    """BIND-DOOM-STORM-1122: a sweep runs real ssh + checks on the whole fleet, so it starts only from the hub autopilot dir and never
+    under pytest (the merge queue's autopilot tests ran step() with a temp AP_DIR: 64 concurrent fleet sweeps, epyc9 load 197).
+    -> (ok, why)"""
+    env = os.environ if env is None else env
+    if env.get("PYTEST_CURRENT_TEST") or "pytest" in sys.modules:
+        return False, "under pytest"
+    if env.get("BIND_DOOM") == "off":
+        return False, "BIND_DOOM=off"
+    try:
+        if Path(ap_dir).resolve() != Path(env.get("BIND_DOOM_AP_DIR") or HUB_AP_DIR).resolve():
+            return False, f"not the hub autopilot dir ({ap_dir})"
+    except OSError as e:
+        return False, f"ap dir unreadable: {e}"
+    return True, ""
+
+
+def single_flight(path=LOCK):
+    """-> an open, exclusively locked file (keep it open for the sweep), or None when another sweep holds the lock"""
+    import fcntl
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    f = open(path, "a")
+    try:
+        fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return f
+    except OSError:
+        f.close()
+        return None
+
+
 def due(state, now, rt_now=None):
     """a sweep is due SWEEP_S after the last one, or at once when rt/current moved (a new pre-check landed)"""
     if not state.get("swept_t") or now - float(state["swept_t"]) >= SWEEP_S:
@@ -263,7 +297,8 @@ def step(AP):
         n_unc = sum(1 for b in (state.get("binds") or {}).values() if any("UNCHECKED" in x for x in b.get("findings") or []))
         now = time.time()
         rt_now = os.path.realpath(os.environ.get("OT_RT_CURRENT") or RT_DEFAULT)
-        if due(state, now, rt_now) and not AP.DRY:
+        ok, why_not = may_launch(ap_dir)
+        if due(state, now, rt_now) and not AP.DRY and ok:
             run = ap_dir / RUNFILE
             if not (run.exists() and now - run.stat().st_mtime < RUN_STALE_S):
                 run.write_text(str(os.getpid()))
@@ -281,6 +316,14 @@ def step(AP):
 def main(argv):
     if len(argv) >= 4 and argv[0] == "sweep":
         ap_dir, hosts, hub = argv[1], [h for h in argv[2].split(",") if h], argv[3]
+        ok, why = may_launch(ap_dir)
+        lk = single_flight() if ok else None
+        if lk is None:                                   # not the hub dir, under pytest, or another sweep runs: nothing to do
+            try:
+                Path(ap_dir, RUNFILE).unlink()
+            except OSError:
+                pass
+            return 0
         try:
             st = sweep(ap_dir, hosts, hub)
             st["rt_seen"] = os.path.realpath(os.environ.get("OT_RT_CURRENT") or RT_DEFAULT)
