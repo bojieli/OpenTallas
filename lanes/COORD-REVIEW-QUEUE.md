@@ -24872,3 +24872,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc2:/srv/
   FAILED-NORELAUNCH: S81 3 (col_h9_r1__t1 pv1c15776f, s81sl_leaf__t31, dsdv_slice_lepe_nh_mus_LP__t1), QC 2 (coll_core, slw_st_a_v2__cl9f076a5c), KV 1 (kv3_hub_Wo).
   STALE: QC 27 (cancelled/held, 3-17h), S81 1 (slice_station__t52). DEAD-OWNER: QC 6 sle_hc1/sle_st_b/slw_fe rows, FLOW-FLEET-R1 last post 02:57.
   Held S81 147 / KV 38 / QC ~18 pending plan events are counted OK.
+- 2026-11-22 06:52 PST DONE [FAM-S81-COL-R5] ot-run oth-ubuntu-1636470-1795356659 on civil-redfish: rc=0 after 2469 s, ended 14:52:04, log none, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r5/rst -- bash -c cd /srv/opentallas-scratch2/claude/k
