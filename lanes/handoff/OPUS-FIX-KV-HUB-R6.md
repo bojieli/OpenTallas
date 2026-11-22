@@ -24,3 +24,11 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
   runners intel2 pids 3672200 / 3672201, logs intel2 ~/tmp/opusfixkvhub-r6/kit_*.log; work epyc8 .../KV-D27d3/private/OPUS-FIX-KV-HUB-R6/kv3_hub_{Wo_1121233015,Eo_1121233026}.
 - PLAN-GATE-PRE vs D27d3 baseline: PASS for p4 and p8 (hub_h3/pre_p4.log, pre_p8.log).
 - epyc2 hub_Ei wave kit unit oth-ubuntu-1907616-1795289726 (container pid 1940453): COORD says cancel via ot-run --cancel if DRT > 10k violations at ~02:30 PST.
+
+## 00:3x update (wins)
+- First kits (…_1121233022 / _1121233034) FAILED at 3_3_place_gp: OT_CLAND no mapped ring flops under u_cland_ft0_i / ft10_i.
+  Tool fix HARD-RING-BAND-1 on main bdb08607ce (landing_place.tcl skips bands whose ring is a hard_cores param_wrap child).
+- LIVE kits on rt bdb08607ce36: specs OPUS-FIX-KV-HUB-R6/qwen_kvsys_kv3_hub_{Wo_1122003254,Eo_1122003303}, intel2 pids 1629056/1633552, logs kit2_*.log.
+- hub_Ei rebind: G0 PASS 0 errors (g0gate_ei2), elab 0, strict bind running (bindgate_ei2).
+- D28 GEN needs tools >= bdb08607ce (Eo/Wo, also hub_C rings) and >= ae9a5815f0 (hub_Ei). Posted to KV-PLAN-R6.
+- Lane clone: epyc8 r5/clone branch opus-r6-hard-ring-band (pushed).
