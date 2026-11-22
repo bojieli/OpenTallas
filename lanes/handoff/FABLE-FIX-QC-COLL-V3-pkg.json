@@ -1,28 +1,28 @@
 {
- "schema": "fable-fix-qc-coll.v3pkg.v2",
+ "schema": "fable-fix-qc-coll.v3pkg.v3",
  "lane": "FABLE-FIX-QC-COLL-R2",
  "to": "QC-PLAN-R12",
- "written": "2026-11-21 20:1x PST",
+ "written": "2026-11-21 21:3x PST",
  "type": "coll_core",
- "status": "DELIVERED as a delta keyed by type/row. Private strict bind 0 errors + LATCHECK 1921/1921 PASS (V2 base + package, 11-21 20:31 PST). No routed proof yet (private kit launched after the bind).",
+ "status": "v2 DELIVERED: 28 rows keyed by type/row on V3p5r. Private strict bind 0 errors + LATCHECK 1921/1921 PASS at 21:24 PST (before the COORD 05:00 limit). No routed proof yet.",
  "coord_ruling": "all 13 lane-latency changes ride V3 (+cycles pre-approved), gate strict 0 + LATCHECK; R8 landing-table refresh for these lanes approved (standard tool only).",
  "base": {
   "composed_on": "V3p5r b1281d55e514 (qc-plan-r12/v3p4/plan_v3p5r.json)",
   "also_valid_on": "V3p3 f5d51696a2eb (coll_core keys identical except clock.added_taps clk_t130 and the 6c landing_local_resets revert, neither touched by the delta)"
  },
  "apply": {
-  "delta": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg3/rows_v3p5r.delta.json sha256 f257b5cbda35 (24 rows; copy below in 'rows', relay_sites as value_file)",
-  "relay_sites_value_file": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg3/rows_v3p5r.relay_sites.json sha256 ce4145ab5597 (49,748 keys, whole dict; the 4,462 base keys are all kept, 4,455 re-seated)",
-  "command": "python3 -I /srv/opentallas-scratch2/claude/fable-fix-qc-coll/an/apply_delta.py pkg3/rows_v3p5r.delta.json PLAN_IN PLAN_OUT   (checks every old value, refuses a second apply, prints the block sha)",
-  "expected_coll_core_block_sha256_on_V3p5r": "bc3113c7eea47f778e89187be1aab7a57237fdf42d3b16ead152fb9c2f2d643e",
-  "already_applied_plan": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg3/plan_v3p5r_coll.json (pre-lat, sha fcb00eda362c) and pkg3/lat_v3p5r.json (after gen.py latency, rt 6dbb162ffe89)",
-  "generator": "an/compose_r2.py PLAN_IN PLAN_OUT an/s3/seats.json reset/rows_reset.json faultgen/run1/row.json ROWS.json (never hand-edit; apply_delta output == compose output, same block sha)"
+  "delta": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg4/rows_v3p5r.delta.json (28 rows; copy in 'rows')",
+  "relay_sites_value_file": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg4/rows_v3p5r.relay_sites.json (49,748 keys)",
+  "command": "python3 -I /srv/opentallas-scratch2/claude/fable-fix-qc-coll/an/apply_delta.py pkg4/rows_v3p5r.delta.json PLAN_IN PLAN_OUT  on a plan WITHOUT the v1 coll delta (compose_v3p6.py --no-coll, then this)",
+  "expected_coll_core_block_sha256_on_V3p5r": "14aa4ca8ee2d2a7f1a9c33512e019922b518ed6169e1c8e0a35d997e850bfe58",
+  "already_applied_plan": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg4/plan_v3p5r_coll2.json (pre-lat)",
+  "generator": "epyc10 fable-fix-qc-coll-r2/an: solve3.py cfg5.json (legal map + macro_shift) -> destack.py -> compose_r4.py; check an/check_seats.py"
  },
  "content": [
-  "verilog_defines = six OT_TP8S_* (FAM-QC-COLL-R2 rows_bcd row 11, was HELD on the wall; REQUIRED: the seats are solved on the six-define netlist). RTL = main >= aaa1dcff0349 rtl/rom/ot_coll_tp8_static.sv. No lane change from the defines (strict + LATCHECK passed with them on pkit10_wall).",
-  "wall respace v3: g_xf_0/g_pf_3 x 51.84, g_xf_1 289.92, g_xf_2/g_xf_3 528.0, g_sring[0..4].u_m x 530.0 (cores move, never re-shape; no outline change).",
-  "0-cycle FIRM seats (relay_sites) for all 49,530 GPL-placed flops + 4 reset-sync seats + 207 per-bit fltv_o station seats + 9 fault stations: reg-to-reg connections over 370 um 14,516 -> 926 in the model.",
-  "stations: rec_tx_s0 1->3, rec_tx_s1 0->2, rec_tx_s2 0->2, flt_o 0->3, fltv_o 0->3 (sites=float, per-bit seats), io_collective__fault 0->3 (three parallel OR groups, key or_groups)."
+  "v1 content (six defines, wall respace v3, stations rec_tx_s0/s1/s2, flt_o, fltv_o, fault OR groups, 6 lanes fixed_cycles: unchanged, same 13 lanes move)",
+  "NEW 4 core moves: u_pring / u_rring g_b[0..1].u_m down 30.24 um (y 907.2 -> 876.96, 1019.52 -> 989.28): opens the two 5.4 um slits under g_xf_0 / g_xf_1 to 35.6 um; no re-shape, no outline change",
+  "NEW seats: legal map in the solver (core box + 5.4 um halo + every slit < 13 um + 6 um edge) and one seat per 2.16 x 0.27 um cell. check_seats: 49,744 relay seats, 0 in a core box, 0 in a slit, 2 in a halo (old hook keys u_lpad_rec_rx_s1/s2_i.q[547]), max 2 per point (v1: 97 / 599 / 254 on one point)",
+  "NEW fault south chain station 2 re-sited (121.662, 1001.295) -> (121.662, 973.62) (the old site is inside the moved u_rring.g_b[0].u_m); legs 349 / 366 um; fltv_o regs_um = the legal per-bit seat nearest each centroid"
  ],
  "lanes": {
   "fixed_cycles": {
@@ -117,9 +117,9 @@
  ],
  "kit_env": "every coll_core kit: OT_KEEP_WIRES += ot_reset_sync:reset_pipe qfd_static_ch546:r_reset_meta (merged reset flop with 719 loads otherwise; pkit8 proof).",
  "private_proof": {
-  "bind_1": "epyc7 oth-ubuntu-3314323-1795319375 rc 3: 30 R8_STALE only; plan, or_groups row, sites=float row and 49,748 seat keys loaded clean",
-  "bind_2": "epyc7 oth-ubuntu-3591748-1795320119 rc 0 (fable-fix-qc-coll/pk2): strict bind errors 0, unbound 0, crossings 1921 (790,393 bits), R8 0 after the pinned r8_refresh (33 members, table pk2/r8_final.json sha cb7f8940cd90, extras rebound 0); LANE_ASBUILT lanes 1921 passed 1921 failed 0 verdict PASS (pk2/latcheck.json); kit-rtl coll_core written (pk2/rebind_rtl).",
-  "kit": "private-spec coll_core to GRT TT and sign-off follows the bind"
+  "bind_v1": "epyc7 pk2: strict 0, LATCHECK 1921/1921 (v1, superseded)",
+  "bind_v2": "epyc10 oth-ubuntu-1983038-1795323707 rc 0 (fable-fix-qc-coll-r2/pk3, V2 base + v2, rt 15db9fcd7a42, pinned R8 refresh loop): strict errors 0, unbound 0, 1921 crossings 790,393 bits; R8 table cb7f8940cd90 (same 33 coll members as v1); LANE_ASBUILT 1921/1921 PASS; kit-rtl written",
+  "kit": "private-spec coll_core on epyc10, rt 15db9fcd7a42 (>= 650916ebb262), follows"
  },
  "residual_not_in_package": [
   "u_coll hi_q/lo_q -> g_pf fold slices 254 bits at 411 um (station follows from this lane after the proof kit)",
@@ -207,6 +207,54 @@
   },
   {
    "op": "set",
+   "path": "partition_types.coll_core.hard_cores[inst=u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m].origin_um",
+   "old": [
+    43.2,
+    907.2
+   ],
+   "value": [
+    43.2,
+    876.96
+   ]
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.hard_cores[inst=u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m].origin_um",
+   "old": [
+    241.92,
+    907.2
+   ],
+   "value": [
+    241.92,
+    876.96
+   ]
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.hard_cores[inst=u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m].origin_um",
+   "old": [
+    43.2,
+    1019.52
+   ],
+   "value": [
+    43.2,
+    989.28
+   ]
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.hard_cores[inst=u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m].origin_um",
+   "old": [
+    241.92,
+    1019.52
+   ],
+   "value": [
+    241.92,
+    989.28
+   ]
+  },
+  {
+   "op": "set",
    "path": "partition_types.coll_core.hard_cores[inst=u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m].origin_um",
    "old": [
     449.28,
@@ -270,8 +318,8 @@
    "path": "partition_types.coll_core.relay_sites",
    "keys_before": 4462,
    "keys_after": 49748,
-   "value_file": "pkg3/rows_v3p5r.relay_sites.json",
-   "value_sha256": "ce4145ab55978983871855e05441afeb3c942d0fa934f14f43ed310f7f42913d",
+   "value_file": "/srv/opentallas-scratch2/claude/fable-fix-qc-coll/pkg4/rows_v3p5r.relay_sites.json",
+   "value_sha256": "2224ddd04bdc4861efa0dd4f03bd4c6d75725145390e1b04cffb73e7d1e337de",
    "note": "whole dict (sorted keys); the base's 4,462 keys are all kept, 4,455 re-seated"
   },
   {
@@ -413,16 +461,16 @@
     ],
     "regs_um": [
      [
-      156.082,
-      1175.213
+      249.48,
+      1228.905
      ],
      [
-      87.915,
-      1346.421
+      44.28,
+      1348.515
      ],
      [
-      53.185,
-      1459.173
+      44.28,
+      1465.155
      ]
     ],
     "bits": 70,
@@ -452,7 +500,7 @@
      ],
      [
       121.662,
-      1001.295
+      973.62
      ],
      [
       26.622,
@@ -477,7 +525,7 @@
        ],
        [
         121.662,
-        1001.295
+        973.62
        ],
        [
         26.622,
@@ -565,5 +613,11 @@
    "old": 3,
    "value": 6
   }
+ ],
+ "version": "v2 (legal re-seat); REPLACES the 24-row v1, which must not ship (599 slit seats, 97 in-core seats)",
+ "model_after_v2": "register connections over 405 um: 351 (max 448, 4 at 558 = tbc/pe_q <-> g_pf_3); hub hi_q/lo_q -> g_pf fold 128+128 at 410-413 um; every g_wd[*].u_tcv / u_gd load <= 370 um",
+ "open_reads_on_proof_kit": [
+  "reset recovery post-CTS (OT_RESET_TREE LEAF; reflow3 -193.82 is a 3_place read) -> relay row only if still negative",
+  "g_wd[*].u_tcv -> qdata select fan-out (reflow3 -402.98 without seats) -> per-face replication (RTL) only if still failing"
  ]
 }
