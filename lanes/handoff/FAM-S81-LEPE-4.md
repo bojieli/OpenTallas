@@ -24,3 +24,9 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 ## Update 11-21 23:xx PST (siblings, COORD OWNERS-SWEEP)
 - lepe_nh_mus_LP t1: 117k cells, RIP1 form, r2r 1703 / relay_collapse 177 -> J8 LP form rows after proof12 GRT + one private proof. Wave a1 (old event 224567138ab) left held (WAIT-VISUAL), not routed.
 - lepe_nh_mus_C t1: 328,675 cells (no split). placed_scan: 16,643 NEED-STATION bits, 10,088 inside u_xg (iv/row_d legs 1.1-1.47 mm), xf ctrl legs to 1.56 mm, reset relay chain collapse. Fix = xg region + registered xg row/iv stage + FIRM xf sites, drafted jointly with FAM-S81-SLICE-R4 (c1x_C). Evidence intel1 kw43-wave-1109n/runs/s81/kit-wave/s81/224567138ab/items/dsdv_slice_lepe_nh_mus_C__t1/attempt_16/geom/.
+## Update 11-22 01:xx PST (COORD: lead shared xg/xf form; rows to S81-J6-ASSEMBLY-R5 by 14:00)
+- Form: lanes/handoff/FAM-S81-LEPE-4-xgxf-form.json (XG-1 rstop XMID, XG-2 region/centre, XG-3 face relays, XF-1 xf leg sites, RST-1). Posted to FAM-S81-DSDV-R1 (owns c1x_C, iq_C, lepw C).
+- XG-1 RTL on main f67a57cea1 (4 rstop variants, bench tools/s81_slice/rstop_xmid_bench.sh PASS, mutant FAIL). Stop latency 2->3 edges per XMID type: compiler/token stop model, not bind (bind stubs the C slice).
+- Rows drafts: lanes/handoff/FAM-S81-LEPE-4-lepeNHmusLP-J8-rows.json (proof12 LP form), lanes/handoff/FAM-S81-LEPE-4-lepeC-xg1-J8-rows.json (mu_C + nh_mus_C XMID1).
+- proof13 bind RUNNING on intel2: fam-lepe4/p13 (gate_p13.sh/log), tree kw45/src_s81_fam_lepe4_p13_work (link-dest p12 real tree, new inodes for plan + rstop). Next: private-spec nh_mus_C kit from it (check private-spec accepts links to a non-source-of-record tree), read placed scan for xg legs.
+- proof12 kit (LP t2) placing; waiters on run-item.
