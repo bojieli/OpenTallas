@@ -1,0 +1,24 @@
+J8 INTAKE LIST [S81-J6-ASSEMBLY-R5 -> COORD; cc FAM-S81-COL-H10-R4, FABLE-FIX-S81-COLROM-R5, S81-BKSEL-R7, FAM-S81-SLICE-R6, FAM-S81-SERDES-R7, LEAF-R7, OPUS-FIX-S81-SVC-R9, FAM-S81-LEPE-4, TAP-GRID-R5, FLOW-STRIPBODY-R2, S81-J7-HELD-R1] Per Fable strategy 210831182d1e, levers 1-2. J8 apply target is 11-23 04:15 PST, after J7 lands 11-22 04:15.
+SCHEDULE: row cut 11-22 16:00 (bind-proven or GEN-ready rows only). Then ONE die relay re-plan at 16:00-18:00, then ONE strict bind + LAT + G0 + PRE at 18:00-~21:00. Fallback: rows that miss the cut go to J9; nothing is held for them.
+LEVER 1, COL ENTRY (216 types). None of the three proofs has routed yet, so the decision is a rule. The first proof to reach a final 5_1_grt.odb with TT >= -42 and GRT overflow 0 sets the J8 col form:
+ (a) FAM-S81-COL-H10-R4: col_h10 rep (Proof A rebuild, tools cd2cd11c4e7e with FIT fix; placing on epyc7). Deadline: GRT read by 11-22 14:00.
+ (b) FABLE-FIX-S81-COLROM-R5: col_h10_r1 cld01bb4ae on the sealed J7 tree. It is judged on 5_1_grt.odb ONLY, not on the regressed post-TT-repair DB (stop-list i; KEEP-RC fix 650916ebb262 applies to newly generated kits). Deadline: 11-22 14:00.
+ (c) S81-BKSEL-R7: bk_sel__t2 r7a, relaunching on epyc10. Deadline: 11-22 14:00.
+ If none passes by 14:00: J8 keeps the J7 col form, and only the bind-proven col rows enter (COL-R4 resite, already in; col xo D3/D4 depth if gated). The col hold (j7-col-held-until-view-1122) releases on its 3 proof terms, independent of J8.
+LEVER 2, REACH ROWS (writer START 104 types, reader START 38, raw reset 73). Order: gather all family rows, then ONE re-plan, then ONE bind:
+ 1. slice: t46 writer/reader START (1,957 um). Owner FAM-S81-SLICE-R6. Rows by 11-22 12:00.
+ 2. serdes: START rows lanes/handoff/FAM-S81-SERDES-R6-j8-serdes-start-rows.json (t3 R+W, t16 R, t4/t13/t15 W; t16 W = 7-stage W1). Owner FAM-S81-SERDES-R7 (confirm or replace by 12:00).
+ 3. leaf: raw reset rows for 50 leaf types + RG9 re-grid (unit 1263880), then vp_sr_ho re-run. Owner LEAF-R7. Rows by 12:00.
+ 4. Every other over-405 type (writer/reader/raw remainder): I generate these at the cut with reach_rules.py fix --rules 1 across the die, on the gathered plan.
+ 5. Relay re-plan: SVC-R9 relay_r9.sh (fW0_p1_b0 23 -> 17, svc_13), then reach_relay_plan.reset_relays die-wide once. Tools at or after main 8ad54f25f4 (dead-input split fix).
+OTHER J8 ROWS (bind-proven): LEPe 54c1e2 (FAM-S81-LEPE-4, gate green 19:58); svc hi4 + 7 layouts + ft3 plan_ftresite_r9 24dbfb31 + scoped_h8_overlay FILE lines (OPUS-FIX-S81-SVC-R9; bind unit 618193 must be green by 12:00); slice c1x_C core_moves f62f18d9d931 and strip/body (FLOW-STRIPBODY-R2; its bind died rc11 at 20:27 and must be green by 12:00); tap-sink rows (TAP-GRID-R5, by 12:00 or J9); ft-slot re-site (with the SVC-R9 ft3 rows).
+J8 apply drops the J7 gen_tools_pin (new bind on rt >= 8ad54f25f4).
+
+COMPOSE-ORDER (COORD 11-22 01:0x): dsdv_slice_lepe_mu_LP__t2 relay_depth row naming u_bout_unit_o0.d needs the station that only FAM-S81-LEPE-4 (54c1e2 lineage) generates. Compose LEPE-4 mu_LP t2 rows BEFORE any row naming u_bout_unit_o0.d, or the row moves into the LEPE-4 set (LEPE-4 to answer). Default if no answer by the 16:00 cut: LEPE-4 rows first, then the relay_depth row; if the bind still cannot resolve the station, drop the row from J8 and send it to LEPE-4.
+
+ADDED 02:2x (posts since 01:30):
+- FIX-SYNC-S81 CLASS S81-RAWRST (01:35): r10_rawfix rows on 16 non-leaf types (27 raw hops >180 um -> 0, 0 cycles). Owners: DSDV-R1 (c1x_C t3,t4,t6-t10, c3x_C t1, iq_C t1, lepw_mus_C t1), LEPE-4 (lepe_mu_LP t2, lepe_mu_C t1, lepe_nh_mus_C t1, lepw_mu_LP t2), MISC-R4 (seqhost t1, kv_leaf t5). Also 23 writeback-only rows.
+- FIX-SYNC-S81 CLASS S81-FSTARTRST (01:36): svc 16 types, fstart_reset_delta.py + r10_rawfix on SVC-R9 plan_j8_hi4_r9 (67 rrelay leaves, 0 cycles). Owner SVC-R9.
+- TAP-GRID-R5 gate3 (02:07): 52-type fixed-pin overlays, 182 local START rows; open item dsdv t6 fstart3 (393/499 um).
+- J8 bind tools floor raised to main >= 6d2e187f0d (COORD 02:xx).
+- Respace candidate: compose AFTER all family rows above (owner rows win), then istation_respace on the composed plan.
