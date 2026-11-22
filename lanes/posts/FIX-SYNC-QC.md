@@ -1,0 +1,1 @@
+- 2026-11-22 01:13 PST RESUMED FIX-SYNC-QC (Opus) 01:13: fix-propagation lane for QC (cb/cbf/cbn/cbx, coll_core, slw_*, sle_*, glue). Harvest -> lanes/FIX-SYNC-QC.tsv, detect over other QC families, rows as V4 intake to QC-PLAN-R13 after 06:00 V3 cut; V3 binds untouched.
