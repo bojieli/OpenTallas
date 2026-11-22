@@ -1,0 +1,27 @@
+{
+ "lane": "FAM-QC-CB-R3",
+ "made": "2026-11-21 19:4x PST",
+ "to": "QC-PLAN-R12",
+ "base": "7f9f8260349f",
+ "event": "s29q103S4Q9N46R6V2",
+ "status": "CANDIDATE - NOT IN: needs the R12 composer (core move changes relay_sites / ft_slots regs / clock_entry_access), then strict bind + LATCHECK 1921 + static G0",
+ "item_cbn_q00_street": {
+  "type": "cbn_q00__cl622f65d2",
+  "evidence": "COORD 19:10 AUTO-GEOM FAIL (epyc7 .../s29q103S4Q9N46R6V2/items/cbn_q00__cl622f65d2/geom/auto_geom.{json,png}): 1235.52x2566.08, 4 hard cores qfd_tile_nk_a0c 457.92x1157.76 at x 103.68/691.2, y 69.12/1287.36. Free street widths: W strip 103.68 (taps+na_i00 station regs at x=43.2 and a 285 um SW pin bank), centre V 129.60, E strip 86.40, H street 52.2. channel_h 1.54, channel_v 3.02, col_v 3.41 (limit 0.6), clock_tap_sinks 2598 (limit 1500), clock_on_macro 4, 63,657 sinks.",
+  "same_class_seen_on": "cbf_q00__cl1b5a6458 V2 placed kit (same 2x2 grid; auto_geom.png title FAIL aspect/channel/col_v/clock_tap_sinks), so the row applies to the cb family.",
+  "row_core_move": {
+   "hard_cores.u_t00.origin_um": [60.48, 69.12],
+   "hard_cores.u_t01.origin_um": [60.48, 1287.36],
+   "hard_cores.u_t10.origin_um": [691.2, 69.12],
+   "hard_cores.u_t11.origin_um": [691.2, 1287.36],
+   "result_um": {"W_strip": 60.48, "centre_V": 172.80, "E_strip": 86.40},
+   "why": "cores move, never re-shape; 43.2 um (5 x 8.64 grid) moves from the W strip to the centre street (+33 pct). W strip keeps the na_i00/nb_i00 station column x=43.2 inside the strip (17 um clear of the core edge). 0 cycles, 0 flops."
+  },
+  "row_street_logic": "Re-site the na_i00 (4) and nb_i00 (7) W-column FIRM stations that sit at x=43.2 / y 1166-2281 onto the centre street (x ~626) for the part of their route inside the NW core pair, so the W strip no longer carries the ~285 um SW pin/reg bank + 2 x 514-bit chains; counts unchanged (internal_stations regs_um only).",
+  "row_taps": "The 1000-2600-sink taps on the streets (clk_t38 2598, clk_t43 1932, clk_t95 2209, clk_t102 1645, clk_t101 1501, clk_t19 1491) exceed the 1500-sink advisory: split with tap_max_sinks 1000 per TAP-GRID-R4 (tool not landed; item 9). Meanwhile keep clk_t131 (820.8, 2471.04) E and clk_t115 (604.8, 2393.28) W. Taps must stay on streets (cores cover the rest): move only the 4 taps flagged clock_on_macro to the nearest street point.",
+  "must_measure_after_compose": ["auto_geom channel_v/col_v <= pre-move (3.02/3.41)", "clock_on_macro 0", "strict bind 0 + LATCHECK 1921/1921"]
+ },
+ "item_cb_stations_pending_p1_cts": "bc_i00, bc_i10, bc_i30, nb_i12, y_o00 +1 station rows: V2 post-hook CTS now read (cbf_q00 setup -157.14, cbf_q01_s2 -205.23) but its worst paths are NOT station paths (lockup latch u_lk_nk_u_t_1_0_n_b -> u_t10 n_b, and serdes_tx ring / arst_n). Rows wait for the routed reads.",
+ "item_cbn_q01_taps": "recheck on V2 placed DB still PENDING (no V2 placed cbn_q01 DB yet)",
+ "cb_taps": "keep t24/t25/t93/t100 (cbf_q00)"
+}
