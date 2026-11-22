@@ -21933,3 +21933,5 @@ FAILED [AUTOPILOT 27b8bf5e2d1c] 2026-11-21 20:35:22 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 20:45 PST RESULT hd_lep0N six-content form (hub, io, 4 regions) PROVEN 0-cycle equal to Codex split core: 351,685/351,685, unit oth-ubuntu-1136304-1795317736 exit 0 (epyc9). 0 units in flight. Next for R5: plan delta (contents + nets + rename map), type_split nets extension, spec at x 907.2. Handoff updated.
   [filed under] FABLE-FIX-HEAD-LEP0N-R7: FABLE-FIX-HEAD-LEP0N-R4 stood down (chain FABLE-FIX-HEAD-LEP0N-R4 > FABLE-FIX-HEAD-LEP0N-R5 > FABLE-FIX-HEAD-LEP0N-R6 > FABLE-FIX-HEAD-LEP0N-R7)
 - 2026-11-21 20:45 PST DONE [FABLE-PIPELINE-R1] ot-push-main otpush-tolerant-swine-1081570 on tolerant-swine: rc=0 after 112 s, ended 20:45:23, log /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/tmp/push1.log, cmd: ot-push-main 
+- 2026-11-21 20:45 PST CANARY hbm_sram @ a67ae35f4d: FAIL failing vclk_basis,signoff (REGRESSION grt hold_ff_ep 319.0 -> 336.0 336 vs 319 (tol +5 %); signoff ins_tt 323.94 -> 302.69 change -21.25 (tol 5, no bound); signoff ins_ff 258.62 -> 239.9)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)

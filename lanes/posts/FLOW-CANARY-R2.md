@@ -75,3 +75,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-21 20:30 PST CANARY hbm @ 3b2f4d0447: FAIL failing vclk_basis,grt_gate,route,rcx,signoff (REGRESSION grt hold_ff_wns 0.0 -> None not measured; the baseline run measured it; grt hold_ff_ep 0.0 -> None not measured; the baseline run measured it); CANARY s81_head @ a67ae35f4d: FAIL failing signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b6934d775_1121_114528_208707)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-21 20:45 PST CANARY hbm_sram @ a67ae35f4d: FAIL failing vclk_basis,signoff (REGRESSION grt hold_ff_ep 319.0 -> 336.0 336 vs 319 (tol +5 %); signoff ins_tt 323.94 -> 302.69 change -21.25 (tol 5, no bound); signoff ins_ff 258.62 -> 239.9)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
