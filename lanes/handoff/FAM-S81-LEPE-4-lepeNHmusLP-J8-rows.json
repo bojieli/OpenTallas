@@ -1,0 +1,122 @@
+{
+ "schema": "opentallas.s81.j6_donor_delta.v1",
+ "lane": "FAM-S81-LEPE-4",
+ "event": "J8",
+ "for": "S81-J6-ASSEMBLY-R5",
+ "types_changed": [
+  "dsdv_slice_lepe_nh_mus_LP__t1"
+ ],
+ "status": "DRAFT 11-22 00:xx PST on the proof12 form (lepe_mu_LP__t2 54c1e2 + coll_i0 channel); NOT bound. Revise before 14:00 if proof12 GRT disagrees.",
+ "base": "J8 base plan; ops are whole-key replaces resolved against the type as in plan a9ed808a98d / 54c1e2 (unchanged for this type)",
+ "K": {
+  "ro/t_host/t_kd/mu_c": "+3 (ROS3)",
+  "ri": "+2 vs RIP1 (RIP3)",
+  "li0/li1 _d/_v": "+1"
+ },
+ "evidence": "intel1 kw43-wave-1109n/runs/s81/kit-wave/s81/224567138ab/items/dsdv_slice_lepe_nh_mus_LP__t1/geom/placed_scan.tsv: 35 NEED-STATION groups, 10,609 bits; rop->roq 1104b 1703um (ROS3), rid->lepk_o0 1103b 1120um (RIP3), bin_lepk_i0->rop 1103b 1005um, u_lnl0->g_rx.dq 553b 722um (li D1), odr->lo0_d/lo1_d 553b 1157/878um, land wdq/rd 1104b ~700um, reset group_r->local_r 590b 1038um",
+ "ops": [
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/verilog_defines",
+   "value": [
+    "OT_S81SL_LEP_CRP2",
+    "OT_S81SL_LEP_WREP5",
+    "OT_S81SL_LEP_RIP3",
+    "OT_S81SL_LEP_ROS3"
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/relay_depth",
+   "value": [
+    {
+     "D": 6,
+     "inst": "u_land",
+     "note": "D8i LEPE row B (FABLE-FIX-S81-LEPE): land reset lepk_i0_q[0] -> u_land.rst_n 1937 um, 4 relay stages (legs 387 um); reset release +4, no data lane K | S81-J6-ASSEMBLY 11-21: D 4 -> 6 so every leg <= 300 um (FABLE-PD-S81-2340 regression rows / S81-DIE-R5 item6 D4)",
+     "path_um": 1937,
+     "port": "rst_n",
+     "side": "sink"
+    },
+    {
+     "D": 1,
+     "bits": [
+      0,
+      2
+     ],
+     "inst": "u_lnl0",
+     "path_um": 434.6,
+     "port": "n_flt",
+     "side": "sink",
+     "stages_existing": 0
+    },
+    {
+     "D": 1,
+     "bits": [
+      0,
+      2
+     ],
+     "inst": "u_lnl1",
+     "path_um": 434.6,
+     "port": "n_flt",
+     "side": "sink",
+     "stages_existing": 0
+    },
+    {
+     "inst": "u_lnl0",
+     "port": "k_li_r",
+     "side": "sink",
+     "D": 1,
+     "stages_existing": 0,
+     "note": "J6 lepe RIP1 row 1 (FABLE-FIX-S81-LEPE-RIP1-rows item1): RX credit return lir -> lnl k_li_r +1 (credit loop 6->7 within DR 8); proof6/r2"
+    },
+    {
+     "inst": "u_lnl1",
+     "port": "k_li_r",
+     "side": "sink",
+     "D": 1,
+     "stages_existing": 0,
+     "note": "J6 lepe RIP1 row 1 (FABLE-FIX-S81-LEPE-RIP1-rows item1): RX credit return lir -> lnl k_li_r +1 (credit loop 6->7 within DR 8); proof6/r2"
+    },
+    {
+     "inst": "u_lep",
+     "port": "li0_d",
+     "side": "sink",
+     "D": 1,
+     "stages_existing": 0,
+     "note": "FAM-S81-LEPE-4 J8 (proof12 LP form): k_li -> lep relay +1, data with valid (a1 scan u_lnl0 -> g_rx.dq 553 bits 722 um)"
+    },
+    {
+     "inst": "u_lep",
+     "port": "li0_v",
+     "side": "sink",
+     "D": 1,
+     "stages_existing": 0,
+     "note": "FAM-S81-LEPE-4 J8 (proof12 LP form): k_li -> lep relay +1, data with valid (a1 scan u_lnl0 -> g_rx.dq 553 bits 722 um)"
+    },
+    {
+     "inst": "u_lep",
+     "port": "li1_d",
+     "side": "sink",
+     "D": 1,
+     "stages_existing": 0,
+     "note": "FAM-S81-LEPE-4 J8 (proof12 LP form): k_li -> lep relay +1, data with valid (a1 scan u_lnl0 -> g_rx.dq 553 bits 722 um)"
+    },
+    {
+     "inst": "u_lep",
+     "port": "li1_v",
+     "side": "sink",
+     "D": 1,
+     "stages_existing": 0,
+     "note": "FAM-S81-LEPE-4 J8 (proof12 LP form): k_li -> lep relay +1, data with valid (a1 scan u_lnl0 -> g_rx.dq 553 bits 722 um)"
+    }
+   ]
+  }
+ ],
+ "open": [
+  "relay_sites FIRM for ROS/RIP/li stage flops: taken from the private proof placement (mu_LP took 8191 from proof10); default relay_mid until then",
+  "rx bank compaction: rx[0] banks 0-2 sit in the x=544 column, banks 3-4 and rx[1] on the y=820.8 row (wdata->mem 1106b 655um); same rule as mu_LP rx[2] move, coordinates after a G0 tap/halo check (mu_LP needed clk_t6 moved)",
+  "g_tx odr->lo0_d/lo1_d 553b up to 1157um: lo<N> stage (+1 on lo lanes) if the proof keeps it < -42",
+  "reset group_r->local_r 590b 1038um: local reset tap (structural), not hold repair",
+  "bin_lepk_i0 -> rop 1005um: lepk_i0 face-pin vs rop site; FIRM rop at the E face (ROS stages carry the interior legs)"
+ ]
+}
