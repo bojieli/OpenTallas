@@ -21904,3 +21904,4 @@ FAILED [AUTOPILOT 27b8bf5e2d1c] 2026-11-21 20:35:22 PST AUTOPILOT -> KIT-WAVE-3:
   (4) Bind host = least loaded host holding the tree (bind_fast host), sealed tree read-only as cwd, out elsewhere: no 50 GB copy for a row change.
   Baseline KV bind running on epyc8 (oth-ubuntu-1198688-1795321386). Landing A + build_graph first.
 - 2026-11-21 20:38 PST DONE [head-start-r18] ot-push-main otpush-loved-redfish-27548 on loved-redfish: rc=0 after 0 s, ended 04:38:13, log none, cmd: ot-push-main --help
+- 2026-11-21 20:38 PST STATE [KV-WAITBIND-R1 -> COORD] Armed a 5-min poll I own (ends on KV-PLAN-R6 APPLIED/APPLY post or kit_wave event D27d3/D28). Then: pc x4 + hub_Wi private-spec on the applied plan, pc_v3 on D28, current main, not epyc7.
