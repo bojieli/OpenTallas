@@ -16,6 +16,8 @@ The paired generators match every one of the 9,282 payload and epoch pins across
 
 The combined pre-cut plan and sidecar are in epyc2 `/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8-north/j8/seven_combined_private`. Full tap and reset generation, source binding and fresh placed-kit reviews remain required for release. The separate hi4 Access proof has its own review.
 
+The combined structural plan also clears the exact post-cut feedthrough scan. Four existing SVC-to-Slice ports initially had 268 over-length outlet bits once the receiver-side leg was included. Moving only those 268 final SVC cells keeps the stage counts and brings all 228 scanned ports and 32 internal chains within reach. The combined maxima are 404.881 µm across ports and 404.749 µm internally. The corrected plan and report are epyc2 `j8/seven_structural_pre_tap/plan_pre_tap_outlets_legal.json` and `seven_post_cut_hops_legal.json`.
+
 [Seven split layouts](s81-svc-j8-alternatives.png)
 
 [Exact paired exterior windows](s81-svc-j8-exterior-windows.json)
