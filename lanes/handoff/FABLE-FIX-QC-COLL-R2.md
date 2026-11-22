@@ -1,6 +1,20 @@
 # FABLE-FIX-QC-COLL-R2 handoff (Fable; owns QC coll_core end to end; successor of FABLE-FIX-QC-COLL, started 11-21 19:53 PST)
 Read lanes/handoff/FABLE-FIX-QC-COLL.md first (method, solver, station plan). Work dir: epyc7 /srv/opentallas-scratch2/claude/fable-fix-qc-coll.
 
+## STATE 11-21 21:45 PST (work moved to epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2; hub scripts/specs in the same path on intel2)
+- Package v2 (legal re-seat) DELIVERED: lanes/handoff/FABLE-FIX-QC-COLL-V3-pkg.json, 28 rows on V3p5r; delta + relay_sites + apply tool on epyc7
+  fable-fix-qc-coll/{pkg4,an/apply_delta.py}. Bind v2 clean 21:24 (epyc10 pk3: strict 0, LATCHECK 1921/1921). COORD: R13 swaps v2 into V3; v1 must not ship.
+- Solver chain (epyc10 an/): solve3.py cfg5.json (legal map: box + 5.4 halo + slits < 13 um; macro_shift ring SRAMs -30.24) -> destack.py -> compose_r4.py; check_seats.py.
+  Eval mode: cfg5_eval.json (init_seats, iters 0). Model after v2: 351 connections > 405 um (max 448; 4 at 558).
+- coll_core proof kit: intel2 core_chain.sh (pid 3022559, log core_chain.log) waits for the epyc10 tree qwen_compute_v2r10_famqc_cr8 (famqc + refreshed R8 table,
+  mktree10.sh) then private-spec (pspec_core1, rt db0d7630d4c2, --bind-out pk3/rebind, A/B OT_KEEP_WIRES) + run-item (goal auto) -> kit epyc10 pkit_core1.
+  rt snapshots rotate: use rt/current on intel2 if a sha dir is gone.
+- Reads owed on the proof kit (COORD accepted): post-CTS reset recovery (relay row only if still negative); g_wd[*].u_tcv -> qdata select fan-out
+  (per-face replication RTL only if still failing); OT_RELAY_SITES unmatched; an/grp.py on the new geom.
+- coll_ftc: V2 wave kit route resume CANCELLED (COORD). Spread form = Codex axis_r4 plan (ftc_plan/zz_ftc_axis_r4.json), private bind pkf clean (strict 0, LAT 1921),
+  spec pspec_ftc2, run-item intel2 pid 2978227 (goal auto), kit epyc10 pkit_ftc2. pspec_ftc1 died KIT_TOPOLOGY_BIND_STALE (a private plan needs its own bind).
+- If run-item stops at geom: resume with the kit's own run_kit.sh GOAL=route through ot-run (COORD).
+
 ## Delivered
 - V3 package for QC-PLAN-R12: lanes/handoff/FABLE-FIX-QC-COLL-V3-pkg.json (delta keyed by type/row on V3p5r b1281d55e514; 24 rows).
   Files: pkg3/rows_v3p5r.delta.json + rows_v3p5r.relay_sites.json, apply tool an/apply_delta.py, generator an/compose_r2.py
