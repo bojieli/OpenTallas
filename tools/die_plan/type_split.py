@@ -42,6 +42,12 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       clip_max_pins_per_um 8; both port ends share the window; strip_body.py)
   fold_legs                           drop one internal station next to the cut where both hops stay <= reach
                                       (the cut boundary flop pair replaces it: +1 cycle instead of +2)
+  cut_pins_per_um, cut_face_margin_um  cut-face pin budget (default 8.0, 90 % of it is spent) and the keep-out of the cut
+                                      windows from the two ends of the cut face (default 8.64 um)
+  cut_window_pref {type: [[regex, along_um]..]}   window centre of a cut route ("<frm>><to>:<stem>") or of an internal
+                                      station leg ("<a>><b>:<oname>") along the cut face
+  landing_recompose                   HEAD region-monitor types: required; the landing rows of the existing buses follow
+                                      their bus, the cut-bus rows / relay pins / root node are written by the landing compose
   net_drivers {type: {net: "inst.port"}}   gen-mode types (contents talk only through type `nets`): the driving leaf
                                       port of every net whose two leaf ports fall in different pieces.  The net becomes
                                       a cut bus pair (driver bind -> bus:o_<net>, load bind -> bus:i_<net>) + port + lane
@@ -2762,7 +2768,8 @@ class Event:
                         self.lmax += 1
                         lid = f"L{self.lmax}"
                         self._req(kind_="leg", base=base, ts=ts, a=c["a"], b=c["b"], sbus=c["oname"], dbus=c["iname"],
-                                  width=leg["width"], kind=leg["kind"], xpref=c["x"], key=f"leg:{c['a']}:{c['b']}:{c['oname']}",
+                                  width=leg["width"], kind=leg["kind"],
+                                  xpref=self._leg_window_pref(ts, c), key=f"leg:{c['a']}:{c['b']}:{c['oname']}",
                                   lane=lid, new_lane=True, pid=f"{lid}_0",
                                   note=f"{self.tag}: cut leg of {leg['conn']} piece {c['a']} -> {c['b']}"
                                        + (" (one station folded into the cut boundary)" if c["folded"] else ""))
@@ -2953,6 +2960,17 @@ class Event:
             self.rep.setdefault("cut_stations_on_window", []).append(
                 dict(type=ts.tn, slot=r["slot"], piece=b, x_from=old, x_to=x, hops=[rnd(h1, 1), rnd(h2, 1)]))
 
+    def _leg_window_pref(self, ts, c):
+        """spec cut_window_pref also places the cut window of an internal-station LEG (key "<a>><b>:<oname>", e.g.
+        "0>1:o_coll_i0_p"): hd_lep0N's coll_i0 leg crosses in the 69 um N strip beside a pair that is flush on the cut, so its
+        window must sit on the strip, not on the leg's own line."""
+        for rx, um in ((getattr(self, "spec", None) or {}).get("cut_window_pref") or {}).get(ts.tn, []):
+            if re.fullmatch(rx, f"{c['a']}>{c['b']}:{c['oname']}"):
+                self.rep.setdefault("cut_window_pref", []).append(dict(type=ts.tn, route=f"{c['a']}>{c['b']}:{c['oname']}",
+                                                                      along_um=float(um)))
+                return float(um)
+        return c["x"]
+
     def _set_ft_cut_geometry(self, ts, request, segs, layers):
         """The packed cut window is the geometry of both new FT ends."""
         window = [segs[0][0], segs[-1][1]]
@@ -3006,7 +3024,8 @@ class Event:
                 items.append((r["key"], pins, r["xpref"], rng))
             L = ts.W if ts.cut.ax == 1 else ts.H
             try:
-                win = windows_for(items, L, per_um)
+                # spec cut_face_margin_um (default 8.64): keep-out of the cut windows from the two ends of the cut face
+                win = windows_for(items, L, per_um, margin=float(self.spec.get("cut_face_margin_um", 8.64)))
             except SplitError as e:
                 dem = sum(i[1] for i in items)
                 raise SplitError(f"{base} cut {j}: {e} (demand {dem} pins on a {L:.1f} um face at {per_um}/um = "
