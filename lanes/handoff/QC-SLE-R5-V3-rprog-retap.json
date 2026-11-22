@@ -1,0 +1,80 @@
+{
+  "type": "sle_ctl__cla4f6f12f",
+  "port": "rst_n",
+  "reset_inst_taps": [
+    {
+      "tap": 127,
+      "port": "rst_n",
+      "sinks": [
+        "u_u_rp"
+      ]
+    }
+  ],
+  "gated_depth": 9,
+  "old_um": 733.104,
+  "new_um": 380.052,
+  "old_provider": "u_rrl_254",
+  "new_provider": "u_rrl_708",
+  "sinks": {
+    "u_bound.u_u_rp.g_wgrp\\[0\\].u_g/u_rl.rs1$_DFF_PN0_": [
+      625.968,
+      331.96500000000003
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[0\\].u_g/u_rl.rst$_DFF_PN0_": [
+      690.66,
+      332.235
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[1\\].u_g/u_rl.rs1$_DFF_PN0_": [
+      926.64,
+      319.545
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[1\\].u_g/u_rl.rst$_DFF_PN0_": [
+      927.504,
+      320.08500000000004
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[2\\].u_g/u_rl.rs1$_DFF_PN0_": [
+      924.804,
+      320.355
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[2\\].u_g/u_rl.rst$_DFF_PN0_": [
+      925.506,
+      319.815
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[3\\].u_g/u_rl.rs1$_DFF_PN0_": [
+      889.11,
+      343.305
+    ],
+    "u_bound.u_u_rp.g_wgrp\\[3\\].u_g/u_rl.rst$_DFF_PN0_": [
+      890.028,
+      343.575
+    ],
+    "u_bound.u_u_rp.u_rl.rs1$_DFF_PN0_": [
+      690.012,
+      700.785
+    ],
+    "u_bound.u_u_rp.u_rl.rst$_DFF_PN0_": [
+      690.876,
+      699.705
+    ]
+  },
+  "provider_xy": [
+    683.0999999999999,
+    327.645
+  ],
+  "receipt": [
+    {
+      "tap": 127,
+      "reset": "rst_n_t127",
+      "port": "rst_n",
+      "sinks": [
+        "u_u_rp"
+      ],
+      "moved": [
+        "u_u_rp"
+      ],
+      "bound": [],
+      "leaf": "rst_n_t0",
+      "cycles_added": 0
+    }
+  ]
+}
