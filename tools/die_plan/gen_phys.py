@@ -3904,10 +3904,29 @@ def _lockup_pad_type(P, tn):
                for n in bind.core_input_hold_pads(P.raw, tn, module).values())
 
 
-def hold_pad_dont_touch_tcl(P, tn):
+def hold_pad_rtl_cells(kd):
+    """HOLDFORM-1 pad cells the kit RTL declares: sum of W x N over every `ot_dp_hd #(.W(w), .N(n)) u_hdly_<port>` instance (not the
+    latch_except u_hdly_lk_* pads) of <kit>/rtl/*.sv; None when the kit has no RTL dir or no such instance.  A bound lane can be narrower
+    than the plan bus / slot that carries it (S81 leaf t39: leafdn_i0 and ft3 plan width 597, bound 595 data + epoch), so the plan widths
+    only bound the count; the RTL names it exactly."""
+    import re
+    rtl = Path(kd) / "rtl" if kd is not None else None
+    if rtl is None or not rtl.is_dir():
+        return None
+    n, hit = 0, False
+    for f in sorted(rtl.glob("*.sv")):
+        for w, k in re.findall(r"ot_dp_hd\s*#\(\.W\((\d+)\),\s*\.N\((\d+)\)\)\s+u_hdly_(?!lk_)", f.read_text(errors="replace")):
+            n += int(w) * int(k)
+            hit = True
+    return n if hit else None
+
+
+def hold_pad_dont_touch_tcl(P, tn, kd=None):
     """HOLDFORM-1 (DIE-QC-97 11-10): PRE_FLOORPLAN text keeping the gen_rtl.ot_dp_hd hold-pad cells (u_hdly_<bus>
     HB4xp67) through floorplan remove_buffers, timing-driven unbuffering and every repair / resizer pass, and failing the
-    kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same)."""
+    kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same).
+    kd (the kit dir, FABLE-FIX-S81-LEAF-TAPHOLD 11-22): when its rtl/ declares the pads, the count must equal what the RTL declares
+    (hold_pad_rtl_cells) instead of lying in the plan-width range."""
     hb = [(int(b["hold_hb4"]), int(b["width"])) for b in P.types[tn].get("buses", [])
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
     hb += [(int(s["hold_hb4"]), int(s["width"])) for s in P.types[tn].get("ft_slots", [])      # HOLDFORM-1 for ft slots
@@ -3927,6 +3946,11 @@ def hold_pad_dont_touch_tcl(P, tn):
     if not hb:
         return ""
     lo, hi = sum(n * w for n, w in hb), sum(n * (w + 1) for n, w in hb)     # without / with the epoch bit
+    exact = hold_pad_rtl_cells(kd)
+    if exact is not None:
+        if exact > hi:
+            raise ValueError(f"HOLDFORM-1 {tn}: the kit RTL declares {exact} hold-pad cells, more than the plan allows ({hi})")
+        lo = hi = exact
     return ("# HOLDFORM-1: keep the ot_dp_hd hold pads (gen_rtl.HOLD_CELLS)\n"
             "set ot_hb {}\n"
             "foreach i [[ord::get_db_block] getInsts] {\n"
@@ -7500,7 +7524,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # COORD 11-04 06:00 (2): opt-in kit-level cap; without the option the file is byte-identical to before
     (kd / "pre_floorplan_type.tcl").write_text((f"set ::ot_native_cell_limit {int(native_cell_cap)}\n" if native_cell_cap else "")
                                                + "source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n"
-                                               + hold_pad_dont_touch_tcl(P, tn))
+                                               + hold_pad_dont_touch_tcl(P, tn, kd))
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):

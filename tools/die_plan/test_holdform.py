@@ -167,3 +167,26 @@ def test_ft_slot_schema_bounds():
         except jsonschema.ValidationError:
             continue
         raise AssertionError(f"ft slot hold_hb4 {bad} accepted")
+
+
+def test_kit_hook_counts_the_pads_the_rtl_declares(tmp_path):
+    """a bound lane narrower than the plan bus / slot (S81 leaf t39: plan 597, bound 595 + epoch): the kit RTL names the count exactly"""
+    raw = _raw_slot(3)
+    P = schema.Plan(raw)
+    assert gen_phys.hold_pad_rtl_cells(None) is None and gen_phys.hold_pad_rtl_cells(tmp_path) is None      # no rtl dir
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "x.sv").write_text("module x; endmodule\n")
+    assert gen_phys.hold_pad_rtl_cells(tmp_path) is None                                                     # rtl without pads
+    assert f"plan {3 * 64}..{3 * 65}" in gen_phys.hold_pad_dont_touch_tcl(P, "fa", tmp_path)                 # falls back to the plan range
+    (tmp_path / "rtl" / "p.sv").write_text(
+        "    ot_dp_hd #(.W(61), .N(3)) u_hdly_fz_i (.a(fz_i[60:0]), .y(fz_i_hd));\n"
+        "    ot_dp_hd #(.W(1), .N(5)) u_hdly_lk_core_x_3 (.a(a), .y(y));\n")                                 # latch_except pad: not counted
+    assert gen_phys.hold_pad_rtl_cells(tmp_path) == 183
+    tcl = gen_phys.hold_pad_dont_touch_tcl(P, "fa", tmp_path)
+    assert "plan 183..183" in tcl and "< 183 || [llength $ot_hb] > 183" in tcl
+    (tmp_path / "rtl" / "p.sv").write_text("    ot_dp_hd #(.W(70), .N(3)) u_hdly_fz_i (.a(fz_i[69:0]), .y(fz_i_hd));\n")
+    try:
+        gen_phys.hold_pad_dont_touch_tcl(P, "fa", tmp_path)                                                   # wider than the plan slot: refused
+    except ValueError:
+        return
+    raise AssertionError("more pad cells than the plan allows accepted")
