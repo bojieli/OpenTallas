@@ -318,3 +318,8 @@
   KV: 2 FAILED-NO-RELAUNCH (kv3_hub_Wo, kv3_io_cor_v1), 8 WAIT-BIND, 2 CBC-FALLBACK, 40 clean.
   HEAD: hd_lep0N running (lint advisory); hd_ctl/host_e/host_n not in table (tool counts them signed).
 - 2026-11-22 05:51 PST 05:50 sweep 468 rows: S81 147 HELD-J8, 10 SIGNED-LEC-PENDING, 0 flagged; QC 11 HELD-V3, 13 STALE (9 cancelled-superseded, coll_ftc withdrawn, cbx_q10 held x2, slw_su_c cl19bb38ef owner FIX-SYNC-KVHEAD), 2 FAILED-NO-RELAUNCH (coll_core, slw_st_a_v2__cl9f076a5c); KV 12 HELD-D28, 1 FAILED-NO-RELAUNCH (kv3_io_cor_v1 place FAM-KV-IOPC-R4); HEAD 0; UNOWNED 0 DEAD-OWNER 0
+- 2026-11-22 06:51 PST 06:50 sweep (ec3c054): unsigned S81 353, QC 62, KV 48, HEAD 1 (HBM skipped).
+  OK: S81 349, QC 29, KV 47, HEAD 1. UNOWNED 0.
+  FAILED-NORELAUNCH: S81 3 (col_h9_r1__t1 pv1c15776f, s81sl_leaf__t31, dsdv_slice_lepe_nh_mus_LP__t1), QC 2 (coll_core, slw_st_a_v2__cl9f076a5c), KV 1 (kv3_hub_Wo).
+  STALE: QC 27 (cancelled/held, 3-17h), S81 1 (slice_station__t52). DEAD-OWNER: QC 6 sle_hc1/sle_st_b/slw_fe rows, FLOW-FLEET-R1 last post 02:57.
+  Held S81 147 / KV 38 / QC ~18 pending plan events are counted OK.
