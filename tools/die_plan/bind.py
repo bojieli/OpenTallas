@@ -3552,6 +3552,100 @@ class Binder:
             return
         raise BindError(msg)
 
+    def _emit_one(self, tn, ps, out, files):
+        """one bound type of emit(): emit_type + the per-type RTL passes; appends the files it wrote to `files`.  The serial loop and
+        the forked workers of bind_emit_par.py both call exactly this (FABLE-PIPELINE-R1)."""
+        t = self.types[tn]
+        if getattr(self, "collect_gaps", False):
+            try:
+                txt, pnames = self.emit_type(tn, ps[0])
+            except BindError as exc:          # --all-gaps: this type stops at its gap; the other types go on
+                self._gap(exc)
+                return
+        else:
+            txt, pnames = self.emit_type(tn, ps[0])
+        if getattr(self, "clock_landings", None):
+            try:
+                txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
+            except ValueError as exc:
+                # DIE-QC-69: name the type (the landing message may not); --all-gaps records it and goes on
+                err = BindError(f"{tn}: {exc}")
+                if not getattr(self, "collect_gaps", False):
+                    raise err from exc
+                self._gap(err)
+                return
+        reset_localization = t.get("reset", {}).get("consumer_localization")
+        if reset_localization:
+            import reset_consumers
+            import reset_tree as RT
+            tree = t.get("clock", {}).get("landing_contract", {}).get("collector_tree")
+            if tree is None and self.wavefront_plan() is not None:
+                tree = RT.for_type(self.wavefront_plan(), t.get("split_of", tn))
+            try:
+                txt, receipt = reset_consumers.localize(
+                    txt, reset_localization, tree, getattr(self, "_reset_consumer_roles", {}).get(tn, {}))
+            except reset_consumers.ResetConsumerError as exc:
+                raise BindError(f"control reset localization {tn}: {exc}") from exc
+            self.__dict__.setdefault("_reset_consumer_changes", {})[tn] = receipt
+        self.pnames[tn] = pnames
+        f = out / f"{t['module']}.sv"
+        f.write_text(txt)
+        import native_istations
+        native_istations.materialize(self, tn, f)
+        # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the instance this bind just emitted (module + params)
+        import hard_core_param
+        for _m in hard_core_param.check_bound_text(tn, f.read_text(), t.get("hard_cores")):
+            self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
+        # KV-98 11-12 (COORD): port_relays apply AFTER station materialization so a relay can name a native u_ist_* flop
+        # (the kit_istations stations only exist in the file once materialize has run).
+        port_relays = t.get("reset", {}).get("port_relays")
+        if port_relays:
+            # KV-TYPES-5 11-08 (COORD 10:0x kv3_phy@7R): opt-in synchronous reset relays from the delivered reset
+            # to far face registers of a native hard wrapper (tools/die_plan/reset_port_relays.py)
+            import reset_port_relays
+            try:
+                txt2, receipt = reset_port_relays.apply(f.read_text(), port_relays)
+            except reset_port_relays.PortRelayError as exc:
+                raise BindError(f"reset port relays {tn}: {exc}") from exc
+            f.write_text(txt2)
+            self.__dict__.setdefault("_reset_port_relays", {})[tn] = receipt
+        bank_taps = t.get("reset", {}).get("bank_taps")
+        if bank_taps:
+            # CBC-RULES-1119 (r713 rule 4): banks to the nearest equal-depth reset-tree tap (reset_port_relays.apply_bank_taps)
+            import reset_port_relays
+            try:
+                txt2, receipt = reset_port_relays.apply_bank_taps(f.read_text(), bank_taps)
+            except reset_port_relays.PortRelayError as exc:
+                raise BindError(f"reset bank taps {tn}: {exc}") from exc
+            f.write_text(txt2)
+            self.__dict__.setdefault("_reset_bank_taps", {})[tn] = receipt
+        inst_taps = t.get("reset", {}).get("inst_taps")
+        if inst_taps:
+            # RESET-RELAY-GEN-1530: any instance reset port to the equal-depth tap nearest its placed sinks (reset_leg_plan.py)
+            import reset_port_relays
+            try:
+                txt2, receipt = reset_port_relays.apply_inst_taps(f.read_text(), inst_taps)
+            except reset_port_relays.PortRelayError as exc:
+                raise BindError(f"reset inst taps {tn}: {exc}") from exc
+            f.write_text(txt2)
+            self.__dict__.setdefault("_reset_inst_taps", {})[tn] = receipt
+        import bound_groups
+        try:
+            files.extend(bound_groups.materialize(self, tn, f))
+        except (bound_groups.BoundGroupError, ValueError) as exc:
+            raise BindError(str(exc)) from exc
+        import hbm_spb_native
+        try:
+            files.extend(hbm_spb_native.materialize(self, tn, f))
+        except (ValueError, KeyError, OSError) as exc:
+            raise BindError(f"HBM SPB native {tn}: {exc}") from exc
+        if tn in getattr(self, "_emitted_reset_trees", {}):
+            import bound_reset_contract as BRC
+            prov_file = out.parent / "provenance_bind.json"
+            prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None
+            BRC.emitted(f, tn, self._emitted_reset_trees[tn], provenance=prov)
+        files.append(f)
+
     def emit(self, out):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
@@ -3609,97 +3703,19 @@ class Binder:
         self.io_used = {}
         self.parent_id_ports = {}
         self.parent_id_values = {}
-        for tn, ps in sorted(self.by_type.items()):
-            t = self.types[tn]
-            if getattr(self, "collect_gaps", False):
-                try:
-                    txt, pnames = self.emit_type(tn, ps[0])
-                except BindError as exc:          # --all-gaps: this type stops at its gap; the other types go on
-                    self._gap(exc)
-                    continue
-            else:
-                txt, pnames = self.emit_type(tn, ps[0])
-            if getattr(self, "clock_landings", None):
-                try:
-                    txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
-                except ValueError as exc:
-                    # DIE-QC-69: name the type (the landing message may not); --all-gaps records it and goes on
-                    err = BindError(f"{tn}: {exc}")
-                    if not getattr(self, "collect_gaps", False):
-                        raise err from exc
-                    self._gap(err)
-                    continue
-            reset_localization = t.get("reset", {}).get("consumer_localization")
-            if reset_localization:
-                import reset_consumers
-                import reset_tree as RT
-                tree = t.get("clock", {}).get("landing_contract", {}).get("collector_tree")
-                if tree is None and self.wavefront_plan() is not None:
-                    tree = RT.for_type(self.wavefront_plan(), t.get("split_of", tn))
-                try:
-                    txt, receipt = reset_consumers.localize(
-                        txt, reset_localization, tree, getattr(self, "_reset_consumer_roles", {}).get(tn, {}))
-                except reset_consumers.ResetConsumerError as exc:
-                    raise BindError(f"control reset localization {tn}: {exc}") from exc
-                self.__dict__.setdefault("_reset_consumer_changes", {})[tn] = receipt
-            self.pnames[tn] = pnames
-            f = out / f"{t['module']}.sv"
-            f.write_text(txt)
-            import native_istations
-            native_istations.materialize(self, tn, f)
-            # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the instance this bind just emitted (module + params)
-            import hard_core_param
-            for _m in hard_core_param.check_bound_text(tn, f.read_text(), t.get("hard_cores")):
-                self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
-            # KV-98 11-12 (COORD): port_relays apply AFTER station materialization so a relay can name a native u_ist_* flop
-            # (the kit_istations stations only exist in the file once materialize has run).
-            port_relays = t.get("reset", {}).get("port_relays")
-            if port_relays:
-                # KV-TYPES-5 11-08 (COORD 10:0x kv3_phy@7R): opt-in synchronous reset relays from the delivered reset
-                # to far face registers of a native hard wrapper (tools/die_plan/reset_port_relays.py)
-                import reset_port_relays
-                try:
-                    txt2, receipt = reset_port_relays.apply(f.read_text(), port_relays)
-                except reset_port_relays.PortRelayError as exc:
-                    raise BindError(f"reset port relays {tn}: {exc}") from exc
-                f.write_text(txt2)
-                self.__dict__.setdefault("_reset_port_relays", {})[tn] = receipt
-            bank_taps = t.get("reset", {}).get("bank_taps")
-            if bank_taps:
-                # CBC-RULES-1119 (r713 rule 4): banks to the nearest equal-depth reset-tree tap (reset_port_relays.apply_bank_taps)
-                import reset_port_relays
-                try:
-                    txt2, receipt = reset_port_relays.apply_bank_taps(f.read_text(), bank_taps)
-                except reset_port_relays.PortRelayError as exc:
-                    raise BindError(f"reset bank taps {tn}: {exc}") from exc
-                f.write_text(txt2)
-                self.__dict__.setdefault("_reset_bank_taps", {})[tn] = receipt
-            inst_taps = t.get("reset", {}).get("inst_taps")
-            if inst_taps:
-                # RESET-RELAY-GEN-1530: any instance reset port to the equal-depth tap nearest its placed sinks (reset_leg_plan.py)
-                import reset_port_relays
-                try:
-                    txt2, receipt = reset_port_relays.apply_inst_taps(f.read_text(), inst_taps)
-                except reset_port_relays.PortRelayError as exc:
-                    raise BindError(f"reset inst taps {tn}: {exc}") from exc
-                f.write_text(txt2)
-                self.__dict__.setdefault("_reset_inst_taps", {})[tn] = receipt
-            import bound_groups
+        # FABLE-PIPELINE-R1: OT_BIND_EMIT_J=N (default 1) emits the types in N forked workers and merges their state changes in
+        # sorted type order (bind_emit_par.py); a state change it cannot merge falls back to this serial loop.
+        import bind_emit_par
+        _par = False
+        if bind_emit_par.jobs() > 1 and len(self.by_type) > 1:
             try:
-                files.extend(bound_groups.materialize(self, tn, f))
-            except (bound_groups.BoundGroupError, ValueError) as exc:
-                raise BindError(str(exc)) from exc
-            import hbm_spb_native
-            try:
-                files.extend(hbm_spb_native.materialize(self, tn, f))
-            except (ValueError, KeyError, OSError) as exc:
-                raise BindError(f"HBM SPB native {tn}: {exc}") from exc
-            if tn in getattr(self, "_emitted_reset_trees", {}):
-                import bound_reset_contract as BRC
-                prov_file = out.parent / "provenance_bind.json"
-                prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None
-                BRC.emitted(f, tn, self._emitted_reset_trees[tn], provenance=prov)
-            files.append(f)
+                bind_emit_par.run(self, out, files, bind_emit_par.jobs())
+                _par = True
+            except bind_emit_par.ParUnsafe as exc:
+                print(f"bind: emit parallel fell back to serial: {exc}", flush=True)
+        if not _par:
+            for tn, ps in sorted(self.by_type.items()):
+                self._emit_one(tn, ps, out, files)
         if getattr(self, "_bound_core_resets", None):
             (out.parent / "bind_core_resets.json").write_text(
                 json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets), indent=1) + "\n")
