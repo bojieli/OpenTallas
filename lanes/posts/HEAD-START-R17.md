@@ -54,3 +54,4 @@
   e1a: I confirmed to LEP0N-R2 that none of my jobs read the live tree. I will rebase p6 onto plan 00b2abf6e7a6 when R3 applies it.
   
   Still open: the hd_host_e handoff items from FLOW-OBS-GCELL-R2 (v2 route DRC read, he_epc M7 kit).
+- 2026-11-21 19:15 PST DONE [HEAD-START-R17] ot-run oth-ubuntu-1394974-1795315758 on tolerant-swine: rc=0 after 1571 s, ended 19:15:21, log /home/ubuntu/head-start-r17/tr25.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/head-start-r17 -- env TAG=tr25 bash /srv/opentallas-scratch2/claude
