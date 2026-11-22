@@ -3852,3 +3852,5 @@ CODEX: 2026-11-22 01:53 PST took over all lanes. Intel1 J7 replica verified, S81
 2026-11-22 10:1x PST HANDOFF [HOURLY-WRITEUP-R5 1005] signed any plan 565 | current 453 | deferred re-sign 22 | retired-plan 90; any +2, current flat vs 09:06 (563 / 453). QC slw_sc_v2 signed off 09:59 (counted superseded, deferred qc 8), S81 retired 28 (+1). S81 72 cores + 46/394, HEAD 25/26, QC 65/127, KV 7/56, HBM 4/84 parked. COORD: S81 60 launches / 2 KW_PLACE_LOST fails, QC 3; disk OK (epyc2 316 GB lowest); load epyc8 ~200/96, epyc2 ~184/128.
 
 CODEX: 2026-11-22 11:02 PST took over all active OpenTallas lanes. J7 live, latest D28 and QC V3 gates retained, reviewed S81 three-row canary queued for GRT, and guarded hub cleanup reclaimed 13.1 GB.
+
+CODEX: 2026-11-22 11:15 PST signed 566 any / 454 current, +1/+1 since 10:05. S81 now 47/394 after archived t52 routed equivalence reconciliation. J8 review, QC V3 post-bind G0, and KV D28 exact bind remain active. Intel2 recovered to 178 GiB after guarded cache retirement.
