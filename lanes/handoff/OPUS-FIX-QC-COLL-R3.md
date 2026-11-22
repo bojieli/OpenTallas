@@ -25,3 +25,7 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
   early_lec_chain.sh split (pkit_core3s, pid 4134370) + ctl (pkit_core3b, pid 4134371) -> wait 4_cts.odb -> ot-run epyc10
   opus-fix-qc-coll-r3/early_lec.sh (write_verilog -> KIT/early_lec/4_cts.v, lec.py rt 6135636053bb, OT_LEC_SUPERSET_VEC=1) -> out opus-fix-qc-coll-r3/early_lec_{split,ctl}.
   If clones flagged: split pass writes clone map, lec.py accepts declared duplicates; coordinate FLOW-OPS-R2 (LEC register matching).
+- 01:3x v3 read (pkit_core3b): CTS WNS -196.86 / TNS -15,569 (v2 -194.38/-27,123). INLOCK gone. New worst g_xf[0].u_fs -> |(xs_e&xs_v) -> xe0_q (1 bit, OR of NS slices).
+  FIX (V4, 0 cycles): RTL define OT_TP8S_XEPRE = per-slice xev_q[NS] then xe_q <= |xev_q (same 2 stages). Patch in epyc10 clone10 + epyc8 clone (uncommitted);
+  bench epyc10 opus-fix-qc-coll-r3/bench_xe (ot-run client intel2 log opus-fix-qc-coll-r3-bench_xe.client.log). Push after bench PASS; then seats for xev_q near each g_xf core + V4 row (7th define).
+- early LEC: ctl relaunched (first read hit 4_cts.odb mid-copy); split chain = early_lec_chain2.sh (pid 3451196) using early_lec2.sh (waits for stable file).
