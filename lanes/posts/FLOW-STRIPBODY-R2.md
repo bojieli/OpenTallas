@@ -57,3 +57,4 @@
 - 2026-11-22 12:15 PST ACTUAL north round i PLACE PASS, PORT_BIND 12,893/12,893, 30,061 cells, monitor 80 FFs FIRM. Viewed exact placement. HOLD GRT/route for clipped local logic density99.63%, 87 bins >70%; reset max real segment168.380um. CAP clash for proposed +8.64um North height. No route submitted.
 - 2026-11-22 12:31 PST DONE [FLOW-STRIPBODY-R2] ot-run oth-ubuntu-3534676-1795378784 on tolerant-swine: rc=0 after 729 s, ended 12:31:50 env=wave+0, log /srv/opentallas-scratch2/claude/flow-stripbody-r2/strip_n_round_i_review/staggered_rows/place_retry.log, cmd: --no-spill --hosts localhost --mem 12 --threads 4 --disk 5 --dir /srv/opentallas-scratch2/claude/flow-stripbody-r2/strip_n_round_i_review/st
 - 2026-11-22 12:38 PST RESULT — North round i row-stride placement reduces hot bins, residual saturation holds route
+- 2026-11-22 12:56 PST RESULT — Strip-N exact original-source cut latency mismatch holds round i
