@@ -1,0 +1,92 @@
+{
+ "schema": "opus-fix-qc-coll.v4pkg.v1",
+ "lane": "OPUS-FIX-QC-COLL-R3",
+ "to": "FABLE-FIX-QC-V4 (V4 composer, base cr); cc QC-PLAN-R13",
+ "status": "PROVISIONAL (drop when split LEC of the tap_reset_split clones is EQUIVALENT; LEC running epyc10 pid 616074)",
+ "written": "2026-11-22 05:0x PST",
+ "rows_coll_core": [
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.verilog_defines",
+   "old": [
+    "OT_TP8S_SRDREG",
+    "OT_TP8S_SWDREG",
+    "OT_TP8S_ODPRE",
+    "OT_TP8S_INLOCK",
+    "OT_TP8S_RRWD",
+    "OT_TP8S_XRPIPE"
+   ],
+   "value": [
+    "OT_TP8S_SRDREG",
+    "OT_TP8S_SWDREG",
+    "OT_TP8S_ODPRE",
+    "OT_TP8S_INLOCK",
+    "OT_TP8S_RRWD",
+    "OT_TP8S_XRPIPE",
+    "OT_TP8S_XEPRE"
+   ]
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.clock.tap_reset_split",
+   "value": true
+  },
+  {
+   "op": "relay_sites",
+   "add": {
+    "u_io_collective_u_io_u_collective.u_coll.xev_q[0]": [
+     249.48,
+     1184.625
+    ],
+    "u_io_collective_u_io_u_collective.u_coll.xev_q[1]": [
+     486.54,
+     1177.74
+    ],
+    "u_io_collective_u_io_u_collective.u_coll.xev_q[2]": [
+     724.14,
+     1199.34
+    ],
+    "u_io_collective_u_io_u_collective.u_coll.xev_q[3]": [
+     724.14,
+     1427.22
+    ]
+   },
+   "set": {
+    "u_io_collective_u_io_u_collective.u_coll.xe_q": [
+     519.48,
+     1259.685
+    ]
+   },
+   "old_xe_q": [
+    442.638,
+    1054.215
+   ],
+   "remove": [
+    "u_io_collective_u_io_u_collective.u_coll.xe0_q"
+   ]
+  }
+ ],
+ "rows_coll_ftc": [
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.tap_reset_split",
+   "value": true
+  }
+ ],
+ "rtl": {
+  "file": "rtl/rom/ot_coll_tp8_static.sv",
+  "main_commit": "bac6bcfd79",
+  "define": "OT_TP8S_XEPRE (needs OT_TP8S_XRPIPE)",
+  "effect": "xe0_q path replaced by xev_q[NS] per-slot regs + xe_q OR (+0 net cycles vs XRPIPE form; bench allxe/allqxe/all PASS)",
+  "sha256_file": "d36820f5ed24"
+ },
+ "tool": "clock.tap_reset_split needs kit tools >= 6135636053bb (rt 59d4d33e92c1 used)",
+ "base_of_rows": "v3 seats pkg5/plan_v2.json (rows_v3p5r.relay_sites.json 022d10f88709); proof plan pkg8/plan_v2.json sha 4927ffc08d69",
+ "evidence": {
+  "bind": "epyc10 fable-fix-qc-coll-r2/pk8/rebind: errors 0, unbound 0, crossings 1921; LANE_ASBUILT 1921/1921 PASS (as-bound pricing)",
+  "tree": "tree_v4 ot-tree-fork verify OK, sealed",
+  "harness": "tap_reset_split on v3 CTS DB: mismatched reset sinks 979 -> 6 (100 copies, 270 chain cells, 934 sinks repointed)",
+  "proof_kit": "pspec_core4 / pkit_core4 epyc10 launched 04:48 (run-item, goal finish)",
+  "v3_reason": "v3 kit CTS worst path g_xf[0].u_fs -> xe0_q (-196.86); removal -73.24 reset class"
+ }
+}
