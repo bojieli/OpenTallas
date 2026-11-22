@@ -2500,10 +2500,21 @@ class Event:
         else:
             sb, db, slots = shared["sb"], shared["db"], shared["slots"]
         shared["bases"].add(base)
+        # spec cut_window_pref {type: [[regex, along_um], ...]} (OPUS-FIX-S81-SVC-R9, FABLE-PD-S81-2000 rank 1): a cut
+        # route's window is centred near along_um on every cut face it crosses (first regex that fully matches
+        # "<frm>><to>:<stem>", e.g. "1>0:u_rsv_09_Y"), so it can sit between its two endpoints instead of where the
+        # left-to-right fill puts it.
+        pref = None
+        for rx, um in ((getattr(self, "spec", None) or {}).get("cut_window_pref") or {}).get(ts.tn, []):
+            if re.fullmatch(rx, f"{frm}>{to}:{stem}"):
+                pref = float(um)
+                break
+        if pref is not None:
+            self.rep.setdefault("cut_window_pref", []).append(dict(type=ts.tn, route=f"{frm}>{to}:{stem}", bus=sb, along_um=pref))
         for k, (a, b) in enumerate(hops):
             sbus = sb if a == frm else slots[a]["name"] + "_o"
             dbus = db if b == to else slots[b]["name"] + "_i"
-            self._req(kind_="transit", base=base, ts=ts, a=a, b=b, sbus=sbus, dbus=dbus, width=width, kind=kind, xpref=None,
+            self._req(kind_="transit", base=base, ts=ts, a=a, b=b, sbus=sbus, dbus=dbus, width=width, kind=kind, xpref=pref,
                       key=f"tr:{lid}:{k}", lane=lid, new_lane=k == 0, hop=k, pid=f"{lid}_{k}", slot_b=slots.get(b),
                       slot_a=slots.get(a), note=f"{self.tag}: cut route {how} piece {frm} -> {to}", plancell=pc)
         return sb, db, lid

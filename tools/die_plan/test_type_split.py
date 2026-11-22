@@ -797,3 +797,26 @@ def test_port_geometry_check_fails_split_ports_only(monkeypatch):
         TS.Event.port_geometry_check(ev)
     ev.spec["skip_port_check"] = True
     assert TS.Event.port_geometry_check(ev) == []
+
+
+def test_cut_window_pref_centres_a_cut_route_between_its_endpoints():
+    """OPUS-FIX-S81-SVC-R9 (FABLE-PD-S81-2000 rank 1): spec cut_window_pref sets the window preference of a cut route,
+    so the window sits near the given along-cut position instead of in the left-to-right fill order."""
+    from types import SimpleNamespace
+    ev = TS.Event.__new__(TS.Event)
+    ev.rep, ev.req, ev.lmax, ev.tag = {}, [], 0, "T"
+    ev.spec = {"cut_window_pref": {"t": [[r"0>1:far_.*", 830.0]]}}
+    ev._req = lambda **k: ev.req.append(k)
+    new_bus = {0: [], 1: []}
+    T = [{"buses": []}, {"buses": []}]
+    ts = SimpleNamespace(tn="t", parts=[{}], T=T, bus_piece={}, _new_bus_name=lambda piece, base: base)
+    ev._transit("p", ts, 0, 1, "far_p", 100, "data", "leaf far")
+    ev._transit("p", ts, 0, 1, "near_p", 100, "data", "leaf near")
+    assert [r["xpref"] for r in ev.req] == [830.0, None]
+    assert ev.rep["cut_window_pref"] == [dict(type="t", route="0>1:far_p", bus="o_far_p", along_um=830.0)]
+    # a preferred window is placed at its preference; an unpreferred one fills from the low end
+    items = [(r["key"], 101, r["xpref"]) for r in ev.req]
+    w = TS.windows_for(items, 2747.52, 7.2)
+    lo, hi, _ = w[ev.req[0]["key"]][0]
+    assert abs((lo + hi) / 2 - 830.0) < 2.2
+    assert w[ev.req[1]["key"]][0][0] < 20
