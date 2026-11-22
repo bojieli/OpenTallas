@@ -234,6 +234,64 @@ def load_bound_fallback(since, tail=48 << 20):
     return out
 
 
+PRIVATE = os.path.join(COORD, 'autopilot/private_specs')
+LIVE_LOG_S = 1800
+
+
+def active_units():
+    """active systemd --user services on this (hub) host: kit_wave place units kwp-* and private run-item units runitem-*"""
+    import subprocess
+    try:
+        r = subprocess.run(['systemctl', '--user', 'list-units', '--type=service', '--state=active', '--no-legend', '--plain',
+                            'kwp-*', 'runitem-*'], capture_output=True, text=True, timeout=60)
+        return {l.split()[0].rsplit('.service', 1)[0] for l in r.stdout.splitlines() if l.strip()}
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def load_private_live(now, units=None, root=PRIVATE):
+    """PRIV-LIVE-1122 (COORD: kv3_hub_Wo flagged FAILED-NO-RELAUNCH while its private sealed kit qwen_kvsys_kv3_hub_Wo_1122025530 was in
+    place): (die, item) -> (start time, 'lane/spec', why) of a LIVE private kit (kit_wave private-spec run-item).  Live = result.json verdict
+    RUNNING, or its place_service.json unit / a runitem-*<item>* unit is an active systemd --user service on the hub, or (units unreadable)
+    a *.live.log written in the last 30 min."""
+    out = {}
+    if units is None:
+        units = active_units()
+    for sj in glob.glob(os.path.join(root, '*', '*', 'spec.json')):
+        d = os.path.dirname(sj)
+        try:
+            sp = json.load(open(sj))
+            die, item = sp.get('die'), str(sp.get('item') or '').split('#')[0]
+        except (OSError, ValueError):
+            continue
+        if not die or not item:
+            continue
+        why = ''
+        try:
+            if (json.load(open(os.path.join(d, 'result.json'))).get('verdict') or '') == 'RUNNING':
+                why = 'result.json RUNNING'
+        except (OSError, ValueError, AttributeError):
+            pass
+        if not why and units:
+            try:
+                u = json.load(open(os.path.join(d, 'place_service.json'))).get('unit')
+            except (OSError, ValueError, AttributeError):
+                u = None
+            if u and u in units:
+                why = 'place unit %s active' % u
+            elif any(x.startswith('runitem-') and item in x for x in units):
+                why = 'run-item unit active'
+        if not why and units is None:
+            if any(now - os.path.getmtime(f) < LIVE_LOG_S for f in glob.glob(os.path.join(d, '*.live.log'))):
+                why = 'live log < 30 min'
+        if why:
+            t = os.path.getmtime(sj)
+            k = (die, item)
+            if t > out.get(k, (0,))[0]:
+                out[k] = (t, os.path.relpath(d, root), why)
+    return out
+
+
 def order_flags(owner, al):
     return [] if al else ['DEAD-OWNER']
 
@@ -267,6 +325,7 @@ def main():
     holds = fb.die_holds(); reg = registry(); routed = routed_rows(); launches = load_launches()
     s81_from = time.mktime(time.strptime(time.strftime('%Y-%m-%d') + ' 06:40', '%Y-%m-%d %H:%M'))
     bfall = load_bound_fallback(s81_from)
+    plive = load_private_live(now)
     cbc = cbc_failed_rounds(rows, now - a.cbc_days * 86400 if a.cbc_days else 0.0); cbc_hit = collections.defaultdict(list)
     out = []; notes = []
     for die, tag in DIES:
@@ -333,6 +392,9 @@ def main():
             lt = max(lt, bfall.get((die, item.split('#')[0]), 0)) if lt >= s81_from or (die, item.split('#')[0]) in bfall else lt
             if failed and lt > upd:
                 age = (now - lt) / 3600; failed = False; lab = 'relaunched (LAUNCH %s)' % fmt_t(lt)
+            pv = plive.get((die, item.split('#')[0]))
+            if failed and pv:                # PRIV-LIVE-1122: a live private sealed kit of the type is its relaunch
+                age = (now - pv[0]) / 3600; failed = False; lab = 'relaunched (private kit %s live: %s)' % (pv[1], pv[2])
             if failed and age is not None and age > 1: flags.append('FAILED-NO-RELAUNCH')
             if r and failed and (r.get('class') or '') == 'UNCLASSIFIED': flags.append('UNCLASSIFIED')      # WAVE-PILOT-FIX 11-18 (COORD FLOW-1950 N): no rule names this failure; COORD starts a lane the same hour
             if not running and age is not None and age > 3: flags.append('STALE')
