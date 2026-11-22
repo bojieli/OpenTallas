@@ -2091,6 +2091,20 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
 INSERTION_BAND_SCHEMA = "opentallas.insertion_band.v1"
 
 
+def relay_sites_unmatched(kit):
+    """SEAT-MISS (COORD 11-21): plan relay_sites keys that matched no register at the seat step of this kit
+    (ot_relay_sites_unmatched.txt, written by rs_place_all).  -> {"n", "keys" (first 10)} or None when the kit has no such list.
+    Information for the plan owner (the rows seat nothing), never a sign-off reason."""
+    try:
+        fs = sorted(Path(kit).glob("run/results/*/*/*/ot_relay_sites_unmatched.txt"))
+        if not fs:
+            return None
+        keys = sorted({ln.strip() for ln in fs[-1].read_text(errors="replace").splitlines() if ln.strip()})
+    except OSError:
+        return None
+    return {"n": len(keys), "keys": keys[:10]}
+
+
 def insertion_band_record(kit):
     """KW-FIX-4/BAND 11-03 (OWNER 19:12, all dies): the in-flow per-corner clock-insertion window is ADVISORY -- a core
     stopped only by it routes on and counts on its own sign-off; the band moves to die STA (the die tap delay absorbs
@@ -2995,6 +3009,10 @@ def cmd_run(a):
     band = insertion_band_record(disc["kit"]) if disc.get("kit") else None   # KW-FIX-4/BAND: information for die STA, not a reason
     if band is not None:
         rec["insertion_band"] = band
+    seat_miss = relay_sites_unmatched(disc["kit"]) if disc.get("kit") else None   # SEAT-MISS: advisory, for the plan owner
+    if seat_miss is not None:
+        rec["relay_sites_unmatched"] = seat_miss
+        print(f"SIGNOFF ADVISORY relay_sites_unmatched {seat_miss['n']} plan seat keys matched no register: {' '.join(seat_miss['keys'][:3])}")
     if core_contract:
         rec["core_latency"] = dict(contract=core_contract, measured={
             c: rec["corners"][c].get("insertion_pinflops") for c in rec["corners"] if rec["corners"][c].get("done")})

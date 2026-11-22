@@ -422,9 +422,10 @@ proc rs_place_all {sites} {
   set miss [expr {[dict size $sites] - [dict size $hit]}]
   if {$miss} { lappend is_miss "relay_sites:$miss" }
   puts "OT_RELAY_SITES placed $n flops FIRM (plan keys unmatched: $miss of [dict size $sites])"
-  # SEAT-MISS (COORD 11-21: silent misses are the bug class): every plan seat key that found no register is listed, and the kit
-  # stops here unless the miss is waived.  OT_RELAY_SITES_UNMATCHED_MAX = the number of unmatched keys this kit may have
-  # (default 0; set it per item with the reason when the plan seats bits that synthesis removed).
+  # SEAT-MISS (COORD 11-21: silent misses are the bug class): every plan seat key that found no register is listed in
+  # ot_relay_sites_unmatched.txt and counted in the kit log and in signoff.json (relay_sites_unmatched).  A WARNING by default
+  # (COORD ruling 11-21: no new gate; QC cb / sle_ctl / st_a and S81 bk_sel plans still carry rows for registers their kits do not
+  # have).  OT_RELAY_SITES_UNMATCHED_STOP=1 makes it a stop when more than OT_RELAY_SITES_UNMATCHED_MAX (default 0) keys miss.
   if {$miss} {
     set lim 0
     if {[info exists ::env(OT_RELAY_SITES_UNMATCHED_MAX)] && [string is integer -strict $::env(OT_RELAY_SITES_UNMATCHED_MAX)]} { set lim $::env(OT_RELAY_SITES_UNMATCHED_MAX) }
@@ -433,9 +434,10 @@ proc rs_place_all {sites} {
     if {[info exists ::env(RESULTS_DIR)] && [file isdirectory $::env(RESULTS_DIR)]} {
       set uf [open $::env(RESULTS_DIR)/ot_relay_sites_unmatched.txt a]; foreach k $un { puts $uf $k }; close $uf
     }
-    puts "OT_RELAY_SITES SEAT-MISS $miss plan seat keys match no register (limit $lim): [join [lrange $un 0 5] { }][expr {$miss > 6 ? { ...} : {}}]"
-    if {$miss > $lim} {
-      error "OT_RELAY_SITES SEAT-MISS: $miss of [dict size $sites] plan relay_sites keys match no register (first: [lindex $un 0]); fix the plan key or the matcher, or waive with OT_RELAY_SITES_UNMATCHED_MAX=$miss (ot_relay_sites_unmatched.txt lists them)"
+    set stop [expr {[info exists ::env(OT_RELAY_SITES_UNMATCHED_STOP)] && $::env(OT_RELAY_SITES_UNMATCHED_STOP) eq "1"}]
+    puts "OT_RELAY_SITES SEAT-MISS WARNING $miss of [dict size $sites] plan seat keys match no register (stop [expr {$stop ? "on, limit $lim" : "off"}]): [join [lrange $un 0 5] { }][expr {$miss > 6 ? { ...} : {}}]"
+    if {$stop && $miss > $lim} {
+      error "OT_RELAY_SITES SEAT-MISS: $miss of [dict size $sites] plan relay_sites keys match no register (first: [lindex $un 0]); fix the plan key or the matcher, or raise OT_RELAY_SITES_UNMATCHED_MAX to $miss (ot_relay_sites_unmatched.txt lists them)"
     }
   }
 }

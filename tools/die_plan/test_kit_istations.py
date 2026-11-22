@@ -546,7 +546,7 @@ def test_relay_sites_match_separator_blind_when_the_exact_name_is_absent(tmp_pat
     f = tmp_path / "t.tcl"
     f.write_text(RELAY_SEP_MOCK + KI.RELAY_TCL +
                  "\nrs_place_all [dict create {u_twb/q[3]} {1 2} {u_a/q[0]} {3 4} {u_x/r[1]} {5 6} {u_amb/q} {7 8} {u_amb.q} {9 9} {u_gone/q} {0 0}]\n")
-    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True, env=dict(os.environ, OT_RELAY_SITES_UNMATCHED_MAX="99")).stdout
+    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True).stdout
     got = {r[0]: (float(r[2]), float(r[3])) for r in (ln.split("\t") for ln in out.splitlines()) if len(r) > 3 and r[1] == "relay"}
     assert got[r"u_bound.u_twb.q\[3\]$_DFF_P_"] == (1.0, 2.0)          # '/' key, '.' flop
     assert got[r"u_bound.u_a/q\[0\]$_DFF_P_"] == (3.0, 4.0)            # exact, as before
@@ -597,7 +597,7 @@ def test_relay_sites_index_key_sites_the_aliased_last_stage(tmp_path):
     f = tmp_path / "t.tcl"
     f.write_text(RELAY_IDX_MOCK + KI.RELAY_TCL + "\nrs_place_all [dict create {u_g.u_crg.g_rl.r[0]} {1 2} {u_g.u_crg.g_rl.r[1]} {3 4} "
                  "{u_g.u_crg.g_rl.r[2]} {5 6} {u_h.r[0]} {7 8} {u_h.r[1]} {9 9} {u_k.x} {2 2}]\n")
-    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True, env=dict(os.environ, OT_RELAY_SITES_UNMATCHED_MAX="99")).stdout
+    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True).stdout
     got = {r[0]: (float(r[2]), float(r[3])) for r in (ln.split("\t") for ln in out.splitlines()) if len(r) > 3 and r[1] == "relay"}
     assert got[r"u_bound.u_g.u_crg.g_rl.r\[0\]$_DFF_PN0_"] == (1.0, 2.0)      # exact name, as before
     assert got[r"u_bound.u_g.u_crg.q$_DFF_PN0_"] == (3.0, 4.0)                # r[1] = the stage after r[0] (through an inverter)
@@ -648,7 +648,7 @@ def test_relay_sites_instance_key_seats_every_register_of_the_station(tmp_path):
     f = tmp_path / "t.tcl"
     f.write_text(RELAY_INST_MOCK + KI.RELAY_TCL +
                  "\nrs_place_all [dict create {u_y_xd_u_bn8_e_r0_0_0} {365.064 943.84} {u_lpad_i1} {1 1} {u_lpad_i1.q[5]} {7 8} {u_gone} {0 0}]\n")
-    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True, env=dict(os.environ, OT_RELAY_SITES_UNMATCHED_MAX="99")).stdout
+    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True).stdout
     got = {r[0]: (float(r[2]), float(r[3])) for r in (ln.split("\t") for ln in out.splitlines()) if len(r) > 3 and r[1] == "relay"}
     assert got[r"u_bound.u_y_xd_u_bn8_e_r0_0_0.q\[0\]$_DFF_P_"] == (365.064, 943.84)
     assert got[r"u_bound.u_y_xd_u_bn8_e_r0_0_0.q\[26\]$_DFF_P_"] == (365.064, 943.84)
@@ -691,7 +691,7 @@ def test_relay_sites_normalised_names_leaf_prefix_and_generate_scope(tmp_path):
     if shutil.which("tclsh") is None:
         pytest.skip("tclsh")
     r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, "rs_place_all [dict create {u_u_crr_rxsb/q} {1 2} {u_u_vp_u_rr.rst_n[10]} {3 4} "
-                   "{u_u_fab_u_x_2_2.u_st.run} {5 6} {u_u_fab_u_x_2_2.u_st.cap[0]} {7 8} {u_u_plain.q} {9 9}]", OT_RELAY_SITES_UNMATCHED_MAX="1")
+                   "{u_u_fab_u_x_2_2.u_st.run} {5 6} {u_u_fab_u_x_2_2.u_st.cap[0]} {7 8} {u_u_plain.q} {9 9}]")
     assert r.returncode == 0, r.stderr
     got = {x[0]: (float(x[2]), float(x[3])) for x in (ln.split("\t") for ln in r.stdout.splitlines()) if len(x) > 3 and x[1] == "relay"}
     assert got[r"u_bound.u_u_lf0_u_crr_rxsb/q$_DFF_PN0_"] == (1.0, 2.0)
@@ -700,23 +700,32 @@ def test_relay_sites_normalised_names_leaf_prefix_and_generate_scope(tmp_path):
     assert got[r"u_bound.u_u_plain.q$_DFF_P_"] == (9.0, 9.0)
     assert not any("cap" in k for k in got)                                             # ambiguous: not seated
     assert "RELAY-NORM: 3 keys" in r.stdout and "plan keys unmatched: 1 of 5" in r.stdout
-    assert "SEAT-MISS 1 plan seat keys match no register (limit 1): u_u_fab_u_x_2_2.u_st.cap[0]" in r.stdout
+    assert "SEAT-MISS WARNING 1 of 5 plan seat keys match no register (stop off): u_u_fab_u_x_2_2.u_st.cap[0]" in r.stdout
 
 
-def test_relay_sites_unmatched_key_stops_the_kit_unless_waived(tmp_path):
-    """SEAT-MISS (COORD 11-21): a plan seat key that matches no register is an error with the key named and listed, not a log line
-    (S81 J7 col: 140 of 166 keys silently unseated).  OT_RELAY_SITES_UNMATCHED_MAX=<n> waives up to n keys; all matched = no change."""
+def test_relay_sites_unmatched_key_warns_by_default_and_stops_only_on_request(tmp_path):
+    """SEAT-MISS (COORD 11-21, ruling: no new gate): a plan seat key that matches no register is listed and counted in the kit log, and the
+    kit goes on (S81 J7 col: 140 of 166 keys were silently unseated; QC / bk_sel plans still carry rows for absent registers).
+    OT_RELAY_SITES_UNMATCHED_STOP=1 makes it a stop above OT_RELAY_SITES_UNMATCHED_MAX (default 0); all matched = no line."""
     import shutil
     if shutil.which("tclsh") is None:
         pytest.skip("tclsh")
     call = "rs_place_all [dict create {u_u_plain.q} {9 9} {u_gone.q} {1 1} {u_gone2.q} {2 2}]"
     res = tmp_path / "res"; res.mkdir()
     r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, RESULTS_DIR=str(res))
+    assert r.returncode == 0, r.stderr                                                   # default: warning, the kit continues
+    assert "SEAT-MISS WARNING 2 of 3 plan seat keys match no register (stop off): u_gone.q u_gone2.q" in r.stdout
+    assert (res / "ot_relay_sites_unmatched.txt").read_text().split() == ["u_gone.q", "u_gone2.q"]
+    import signoff as SO
+    kit = tmp_path / "kit"; (kit / "run/results/asap7/d/base").mkdir(parents=True)
+    assert SO.relay_sites_unmatched(kit) is None
+    (kit / "run/results/asap7/d/base/ot_relay_sites_unmatched.txt").write_text("u_gone.q\nu_gone2.q\nu_gone.q\n")
+    assert SO.relay_sites_unmatched(kit) == {"n": 2, "keys": ["u_gone.q", "u_gone2.q"]}
+    r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, OT_RELAY_SITES_UNMATCHED_STOP="1")
     assert r.returncode != 0
     assert "OT_RELAY_SITES SEAT-MISS: 2 of 3 plan relay_sites keys match no register (first: u_gone.q)" in r.stderr + r.stdout
-    assert (res / "ot_relay_sites_unmatched.txt").read_text().split() == ["u_gone.q", "u_gone2.q"]
-    assert _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, OT_RELAY_SITES_UNMATCHED_MAX="1").returncode != 0      # 2 > 1
-    r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, OT_RELAY_SITES_UNMATCHED_MAX="2")
-    assert r.returncode == 0 and "SEAT-MISS 2 plan seat keys match no register (limit 2)" in r.stdout
-    r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, "rs_place_all [dict create {u_u_plain.q} {9 9}]")
+    assert _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, OT_RELAY_SITES_UNMATCHED_STOP="1", OT_RELAY_SITES_UNMATCHED_MAX="1").returncode != 0
+    r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, OT_RELAY_SITES_UNMATCHED_STOP="1", OT_RELAY_SITES_UNMATCHED_MAX="2")
+    assert r.returncode == 0 and "SEAT-MISS WARNING 2 of 3" in r.stdout and "stop on, limit 2" in r.stdout
+    r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, "rs_place_all [dict create {u_u_plain.q} {9 9}]", OT_RELAY_SITES_UNMATCHED_STOP="1")
     assert r.returncode == 0 and "SEAT-MISS" not in r.stdout
