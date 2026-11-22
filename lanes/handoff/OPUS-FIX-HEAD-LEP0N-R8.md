@@ -26,6 +26,13 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 10:xx MERGED PLAN OF RECORD (COORD)
+- Merged = FABLE r18k (trees/s81_head_r18j_pairs, 762441fd7f14) + R8 hd_host_n pg_pin_rule: sha256 5e1f38e1530b8d0d.
+  Prep epyc9 M/ev/k1/prep (tmp/post9.sh; tools/RTL root = Fable tree read-only). Gates PASS (bind, cohort 27/27, LATCHECK 334/334,
+  receipt, band core); G0 = 6 face_budget_g2 only. Posted.
+- W-band rows (r18i) NOT merged (conflict with ring-FF coll_i1/i2); r8-w13 continues as a parallel form.
+- E = Fable e1 (r18j_pairs); no R8 E. Live R8 kits: hn3 (r18j, goal route), hn2 (to end), w13 (r18i, goal route).
+
 ## UPDATE 11-22 08:3x hd_host_n r18j (COORD accepted)
 - hn1 (r18e) routed NOT SIGNED: DRC 3 Rect Only M7 rst_start_raw_0 (510.2,339.2) only; TT +80.3, FF core hold PASS.
 - r18j = r18i + partition_types.hd_host_n.pg_pin_rule=true (tmp/fix18j.py, post8 -> ev/j1). Class sweep tmp/pgscan.py on r18i:
