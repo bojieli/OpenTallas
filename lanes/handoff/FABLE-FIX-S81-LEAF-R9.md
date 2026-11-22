@@ -19,3 +19,4 @@ Lane dir: intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r9 (R9): clo
 
 ## Update 21:2x PST
 - Plan c 8c21a4c06257 (plan b + t22 nudge): G0 subset 0 errors in taps/cores, cuts, pin_sites (0 new vs J7, 2 J7 cut errors gone). Gate c running on it: log R9/g68c.otrun.log (unit in its header), markers G68B_* / R9_GATE68B_DONE, tree R9/g68b_src. Plan b / gate b are superseded.
+- COORD 21:3x: green gate c -> hand RG9 to FAM-S81-MISC-R4 and S81-J6-ASSEMBLY-R5 (J8 intake); S81-J7-HELD-R1 has ended. If t39 bind B (epyc7, load ~196) has no BIND_RC by 23:30 PST, start the same bind on epyc10 or epyc8 in parallel (needs the src_a tree + r8_bindB.sh there; chain then takes whichever bind_b finishes first).
