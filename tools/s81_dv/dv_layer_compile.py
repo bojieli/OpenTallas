@@ -63,6 +63,47 @@ SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=
 # a V SOUTH command leaves vo_s at v_cmd_to_vo + vo_s_land (V north on vo_n unchanged).
 # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
 RSTOP_HOP = 2
+# FAM-S81-LEPE-4 XG-1 (main f67a57cea1): a slice type bound with OT_S81SL_RSTOP_XMID1 (rstop XMID 1) registers every
+# stop input face once more, so its stop is RSTOP_HOP + 1 edges.  The bind stubs the C-layer stop, so LATCHECK never
+# sees this edge; the compiler adds it per slice from the bound plan's partition_types verilog_defines.
+RSTOP_XMID_DEFINE = 'OT_S81SL_RSTOP_XMID1'
+RSTOP_XMID_EXTRA = 1
+
+
+def rstop_hop(die, inst):
+    """edges of the ring stop of slice instance inst (u_s_<col><tier>): RSTOP_HOP, + RSTOP_XMID_EXTRA when bound XMID 1"""
+    return RSTOP_HOP + (RSTOP_XMID_EXTRA if inst in getattr(die, 'rstop_xmid', ()) else 0)
+
+
+def rstop_xmid_slices(plan):
+    """slice instances whose bound partition type carries OT_S81SL_RSTOP_XMID1 (partition s_<col><tier>_<layer> ->
+    u_s_<col><tier>).  A define on a partition that names no slice fails closed."""
+    types = plan.get('partition_types') or {}
+    out = set()
+    for p in plan.get('partitions') or []:
+        t = types.get(p.get('type'), {})
+        if RSTOP_XMID_DEFINE not in (t.get('verilog_defines') or []):
+            continue
+        m = re.match(r'^(s_[0-7][NS])(_|$)', p['name'])
+        if not m:
+            raise ValueError(f'{RSTOP_XMID_DEFINE} on partition {p["name"]} (type {p.get("type")}) names no slice stop')
+        out.add('u_' + m.group(1))
+    return frozenset(out)
+
+
+def bound_rstop_xmid(bound_dir, prov_plan, tree=None):
+    """read the bind's own plan (provenance_bind plan, relative to the bind tree) -> (xmid slices, plan path).
+    OT_S81_RSTOP_XMID_PLAN overrides the path; an unresolved plan fails closed (the +1 must not slip past)."""
+    env = os.environ.get('OT_S81_RSTOP_XMID_PLAN')
+    cands = [Path(env)] if env else []
+    if prov_plan and not env:
+        rel = Path(prov_plan)
+        cands += [rel] if rel.is_absolute() else [a / rel for a in Path(bound_dir).resolve().parents] + \
+            ([Path(tree) / rel] if tree is not None else []) + [ROOT / rel]
+    for c in cands:
+        if c.is_file():
+            return rstop_xmid_slices(json.loads(c.read_text())), c
+    raise ValueError(f'bound plan {prov_plan} not found for the rstop XMID model (set OT_S81_RSTOP_XMID_PLAN)')
 # V CTL injection is source-qualified by xr_timing.source_contract (XR2: seven edges).
 # dsdv_bk_sel rung transit vi -> vo: 3 edges since S81-TILES8/bk (10-18: one 276-b relay per input direction inside the
 # cluster, u_rn on vi_n; was ot_dsdv_vstop's 2).
@@ -732,8 +773,8 @@ class Prog:
 def ctl_path(die, sl):
     """seq_host vo_n / vo_s -> the slice's control plane: per-hop edges (contract model, asserted by the bench).
     V north reaches s_4N (tvN_seqhost), V south bk_sel then s_4S (tvS_seqhost, tvS_bk_sel); the column-4 slice
-    re-injects on its tier line both ways (V pin -> line out V_CTL_INJECT edges through xr), rstop 2 edges a stop + the
-    xr / xrE link ages between slices."""
+    re-injects on its tier line both ways (V pin -> line out V_CTL_INJECT edges through xr), rstop 2 edges a stop (3 on
+    a bound XMID 1 slice, rstop_hop) + the xr / xrE link ages between slices."""
     info = die.slices()[sl]
     sid = info['sid']
     tier = 'N' if sl.endswith('N') else 'S'
@@ -761,7 +802,7 @@ def ctl_path(die, sl):
     t += die.timing_contract["v_ctl_inject"]
     path.append(dict(at=f'{entry} line inject', edge=t))
     if col == 4:
-        t = t_vi + RSTOP_HOP
+        t = t_vi + rstop_hop(die, entry)
     step = -1 if col < 4 else 1
     c = 4
     while c != col:
@@ -771,7 +812,7 @@ def ctl_path(die, sl):
                 and any(x[0] == f'u_s_{nxt}{tier}' for x in L['dst'])]
         assert cand, f'no line link u_s_{c}{tier} -> u_s_{nxt}{tier}'
         lk, L = max(cand, key=lambda kv: kv[1]['age_edges'])
-        t += L['age_edges'] + RSTOP_HOP
+        t += L['age_edges'] + rstop_hop(die, f'u_s_{nxt}{tier}')
         path.append(dict(at=f'u_s_{nxt}{tier} line', link=lk, lanes=sorted(k for k, _ in cand), edge=t))
         c = nxt
     port = 'ri_e' if col < 4 else ('ri_w' if col > 4 else 'vi')
@@ -943,7 +984,7 @@ def _line_hop(die, tier, a, b):
     cand = [L for L in die.links.values() if any(x[0] == f'u_s_{a}{tier}' for x in L['src'])
             and any(x[0] == f'u_s_{b}{tier}' for x in L['dst'])]
     assert cand, f'no line link u_s_{a}{tier} -> u_s_{b}{tier}'
-    return max(L['age_edges'] for L in cand) + RSTOP_HOP
+    return max(L['age_edges'] for L in cand) + rstop_hop(die, f'u_s_{b}{tier}')
 
 
 def gunit_ctl_line_reservations(die, prog):
@@ -963,7 +1004,7 @@ def gunit_ctl_line_reservations(die, prog):
         link = die.links.get(f'tv{tier}_gunit')
         if link is None:
             continue
-        t_out = e['cycle'] + link['age_edges'] - RSTOP_HOP + inj
+        t_out = e['cycle'] + link['age_edges'] - rstop_hop(die, f'u_s_3{tier}') + inj
         eng = ENG['VS'] if tier == 'S' else ENG['VN']
         for stops, port in ((range(2, -1, -1), 'ri_e'), (range(4, 8), 'ri_w')):
             t, prev = t_out, 3
@@ -974,7 +1015,7 @@ def gunit_ctl_line_reservations(die, prog):
                     continue
                 cp = paths.setdefault((tier, c), ctl_path(die, f'u_s_{c}{tier}'))
                 if cp['entry_port'] == port:
-                    issue = t - cp['edges'] + RSTOP_HOP
+                    issue = t - cp['edges'] + rstop_hop(die, f'u_s_{c}{tier}')
                     if issue >= 0:
                         reserved.add((eng, issue))
     return reserved
@@ -999,7 +1040,7 @@ def line_slot_conflicts(die, prog):
         L = die.links.get(f'tv{tier}_gunit')
         if L is None:
             continue
-        t_out = e['cycle'] + L['age_edges'] - RSTOP_HOP + inj
+        t_out = e['cycle'] + L['age_edges'] - rstop_hop(die, f'u_s_3{tier}') + inj
         for path, port in ((range(2, -1, -1), 'ri_e'), (range(4, 8), 'ri_w')):
             t, prev = t_out, 3
             for c in path:
@@ -1015,7 +1056,7 @@ def line_slot_conflicts(die, prog):
         tier = 'N' if r['eng'] == ENG['VN'] else 'S'
         for c in (2, 1, 0, 5, 6, 7):
             cp = paths.setdefault((tier, c), ctl_path(die, f'u_s_{c}{tier}'))
-            t = r['issue'] + cp['edges'] - RSTOP_HOP      # the row's CTL event edge is the landed line pin + RSTOP_HOP
+            t = r['issue'] + cp['edges'] - rstop_hop(die, f'u_s_{c}{tier}')   # CTL event edge = landed line pin + stop
             tag = occ.get((tier, c, cp['entry_port']), {}).get(t)
             if tag is not None:
                 out.append((r['issue'], tier, c, cp['entry_port'], t, tag, r.get('what', '')))
@@ -1181,6 +1222,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                   bound_rtl=Path(B['bound']) / 'rtl') if B.get('netlist_path') \
             else Die(tree)
         bound_rec = BD.rebind_links(die, B, diagnostic=bound_data.get('diagnostic', False))
+        die.rstop_xmid, xmid_plan = bound_rstop_xmid(bound_data['dir'], B['provenance'].get('plan'), tree)
+        die.die_source.update(rstop_xmid=sorted(die.rstop_xmid), rstop_xmid_plan=str(xmid_plan))
         bound_rec['die_source'] = die.die_source
         # S81-PLAN-1 11-10: as-built frame schedules bind the bind's OWN manifest (its romq / gb_split frame sources);
         # an explicit OT_S81_FRAME_ASBUILT_MANIFEST must be that manifest (same file bytes), else refuse
