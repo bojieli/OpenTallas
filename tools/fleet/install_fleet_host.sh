@@ -68,6 +68,15 @@ echo 'EARLYOOM_ARGS="-m 3,2 -s 100,100 -r 300 -n --prefer ^(verilator_bin|verila
   | sudo -n tee /etc/default/earlyoom >/dev/null
 sudo -n systemctl enable earlyoom >/dev/null 2>&1
 sudo -n systemctl restart earlyoom
+# 3a. FLEET-EPYC7-R1 11-22: cap dirty pages on the docker data-root disk (4 GiB strict) at every boot; overlay umount syncfs
+# behind ~100 GB dirty blocked dockerd 2 h on epyc7.  Background writeback from 1 GiB (sysctl.d).
+sudo -n install -m 0755 "$here/ot-docker-bdi-cap" /usr/local/sbin/ot-docker-bdi-cap
+sudo -n install -m 0644 "$here/systemd/ot-docker-bdi-cap.service" /etc/systemd/system/ot-docker-bdi-cap.service
+sudo -n install -m 0644 "$here/90-ot-dirty.conf" /etc/sysctl.d/90-ot-dirty.conf
+sudo -n systemctl daemon-reload
+sudo -n systemctl enable ot-docker-bdi-cap.service >/dev/null 2>&1
+sudo -n systemctl restart ot-docker-bdi-cap.service || echo "install_fleet_host: ot-docker-bdi-cap failed (docker root disk not found)" >&2
+sudo -n sysctl -q -p /etc/sysctl.d/90-ot-dirty.conf
 if [ ! -f /etc/ot-heavy.conf ]; then
   { echo "# ot-heavy admission factors (see ot-heavy-reconcile header); FLEET-NEW3 2026-10-24"
     if [ "$role" = coord ]; then echo "MIN_AVAIL_FRAC=0.15"; fi
