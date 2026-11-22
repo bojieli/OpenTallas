@@ -1,0 +1,1 @@
+- 2026-11-21 18:20 PST RESUMED (Sonnet 5.5): reading kit sign-off for slw_fe_v2/sle_fe_v1/slw_fw_v3, watching R6V2 rows, V3 rows to QC-PLAN-R12
