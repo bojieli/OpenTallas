@@ -87,3 +87,15 @@ s81_head_hd_lep0N_w_1122094408 (unit fable-lep0n-w9).
 Open on W (build A probe, GRT 8 iterations): vertical congestion in the W channel at the top of the two ring bands (x 0-60, y 300-350: 1,073;
 y 850-900: 478) and in the TX SRAM mid band (x 210-660, y 600-700: about 3,900); the two pair-centre rst_n nets (capacity 0) are removed by
 this view. 30-iteration probe running (intel2 L/grt_probe30).
+
+## 8. LEP-H2R-STN-1 (hd_lep0N E piece, plan only) + merge row -> tree r18m = MERGED PLAN CANDIDATE
+- partition_types.hd_lep0N.internal_stations += {conn bus:o_h2r1_p, launch u_core.h2r1, from_um [344,605], to_um [0,795.312], regs_um [[200,720]],
+  bits 574} and {conn bus:o_h2r2_p, launch u_core.h2r2, from_um [344,605], to_um [0,625.536], regs_um [[215,612]], bits 574};
+  lanes L2 / L4 fixed_cycles 1; latency.lanes L2 / L4 {cycles 3, fixed 1, natural 3}. +1 cycle on the two hub -> W-piece cut lanes.
+  Measure: r18e E placed u_bout_o_h2r1_p/q 186 ends worst -229.6; geometry g_mtx (399-414,575-578), stamp logic mean (344,605), face register
+  (4-10,758-832): 560-650 um after 440 ps of logic. Hops with the station 259 / 301 um (h2r2 136 / 229, kept equal to lane 1).
+- partition_types.hd_host_n = R8 r18j row (pg_pin_rule true).
+Tree epyc9 .../fable-fix-head-lep0n-1122/trees/s81_head_r18m_e2, plan sha256 3dd49f406010fc3a = r18k + section 8: plan_gate_pre PASS, reset
+exports check PASS, bind PASS, cohort 27/27, LATCHECK 334/334 (L/bind_r18m). E kit e2: spec s81_head_hd_lep0N_1122104411 (unit fable-lep0n-e2,
+rt a4c5d882015d). Still unaddressed E placed-scan groups (R8 kit geom/placed_scan.tsv, 22 NEED-STATION): u_land.rd -> g_rxm dm 657 um,
+g_rx.wp -> qwa 615, u_rg3 g_txr -> credit_pin_r 986 (9 bits), u_land SRAM -> rd 625; internal reg-to-reg, need RTL stages, not plan rows.

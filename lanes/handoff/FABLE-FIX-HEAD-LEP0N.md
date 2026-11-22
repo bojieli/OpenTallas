@@ -43,6 +43,18 @@ c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-rep
   (2) w10 = W variant with the congestion fix as soon as L/grt_probe30/cong.rpt lands. (3) keep durable waiters on e1, w9, e2, w10.
 - Growth / re-shape of outline and cores is now allowed (owner 11-22), parallel variants and extra cycles pre-approved.
 
+## 10:4x: e2 LAUNCHED, merged plan candidate
+- Tree r18m (epyc9 L/trees/s81_head_r18m_e2, plan 3dd49f406010fc3a) = r18k + LEP-H2R-STN-1 (1 station on o_h2r1_p / o_h2r2_p, lanes L2/L4 +1)
+  + R8 hd_host_n pg_pin_rule row = the MERGED HEAD plan candidate (differs from R8 r18j only in the two lep0N pieces). Gates PASS (L/bind_r18m,
+  chain_r18m.otrun.log). Rows file section 8.
+- e2: unit fable-lep0n-e2 on intel2 (pid 3777598), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_1122104411/spec.json,
+  rt a4c5d882015d, log runitem_e2.log. e1 (r18k, no stations) is the control.
+- LIVE KITS: e1 (pid 1145048), w9 (1151380), w10 (2714297), e2 (3777598); durable waiters armed for all four
+  (re-attach: ot-wait --durable <pid> --cmdline run-item). All gen hosts are at CPU-charge / LOADCAP: stages queue 10-40 min each.
+- Placed geometry without a job: any kit's geom/geom.tsv (C records: name last column, x col 5, y col 6) + geom/placed_scan.tsv.
+- TODO: get R8's yes on the merge (posted 09:5x), then post "merged sha 3dd49f406010" as plan of record candidate; W band conflict open until a W
+  kit passes pre-GRT. Read e1/e2/w10 place + CTS post-hook when they land.
+
 ## 10:3x additions
 - W congestion located (30-iteration probe, intel2 L/grt_probe30/cong.rpt): the 688 residual overflow is ALL in the W channel beside pair 2,
   x 0-60, y 240-400 (peak 300-360; H markers at capacity 0 on the pair edge x 40-60, V in face strip + channel), nets u_bout_coll_o2 / coll_i2
