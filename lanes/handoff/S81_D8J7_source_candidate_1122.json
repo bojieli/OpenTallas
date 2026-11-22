@@ -3692,7 +3692,7 @@
   {
    "id": "j7-col-held-until-view-1122",
    "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
-   "reason": "S81 J7 COL held-until-view (COORD ruling 11-21): released when the u_cf view proof, one placed J7-form col read, the xo reset-merge keep A/B and wave tools >= ae660e1299 all exist",
+   "reason": "S81 J7 COL held-until-view (COORD ruling 11-21): released when the u_cf view proof, one placed J7-form col read, the xo reset-merge keep A/B and wave tools >= ae660e1299 all exist | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-COL-H10-R4; S81-J6-ASSEMBLY-R5 assembles J8)",
    "cause": "J7 col form unproven: u_cf view/halo + xo reset-merge keep not yet proven on a placed J7-form col kit (shared by every col_* type)",
    "owner": "FAM-S81-COL-H10-R4",
    "release": [
@@ -3919,12 +3919,14 @@
     "col_h9_r2__t1__clce45cab5__pvfb42a1ad",
     "col_h9_r2__t1__clce45cab5__pvfd79e8b6"
    ],
-   "follow_plan": true
+   "follow_plan": true,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
   },
   {
    "id": "j7-serdes-no-start-1122",
    "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
-   "reason": "S81 J7 serdes held (COORD dispatch FABLE-PD-S81-2000 + t4 struct stop): no serdes kit without START rows; J7 has none (t3 3327 um, t16 3088/3319 um). Rows go in J8 (lanes/handoff/FAM-S81-SERDES-R6-j8-serdes-start-rows.json)",
+   "reason": "S81 J7 serdes held (COORD dispatch FABLE-PD-S81-2000 + t4 struct stop): no serdes kit without START rows; J7 has none (t3 3327 um, t16 3088/3319 um). Rows go in J8 (lanes/handoff/FAM-S81-SERDES-R6-j8-serdes-start-rows.json) | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-SERDES-R6; S81-J6-ASSEMBLY-R5 assembles J8)",
    "cause": "serdes reset START reach over 405 um on every serdes type in the J7 plan (no START rows); shared by the serdes family",
    "owner": "FAM-S81-SERDES-R6",
    "release": [
@@ -3943,12 +3945,14 @@
     "serdes__t3",
     "serdes__t4"
    ],
-   "follow_plan": false
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
   },
   {
    "id": "j7-t5-band-overlap-1122",
    "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
-   "reason": "t5-band-overlap-J8 (COORD 11-21 via FAM-S81-MISC-R4): J7 plan vp lane cores g_ln[4] cover 100% ft0_i / 52% ft1_i, g_ln[0] 88% monitor_0 landing bands -> OT_CLAND BAND FAIL at global_place; fix row (vp re-pitch, band growth, monitor_0 move, tap re-site) in J8",
+   "reason": "t5-band-overlap-J8 (COORD 11-21 via FAM-S81-MISC-R4): J7 plan vp lane cores g_ln[4] cover 100% ft0_i / 52% ft1_i, g_ln[0] 88% monitor_0 landing bands -> OT_CLAND BAND FAIL at global_place; fix row (vp re-pitch, band growth, monitor_0 move, tap re-site) in J8 | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-MISC-R4; S81-J6-ASSEMBLY-R5 assembles J8)",
    "cause": "t5 vp lane cores overlap the landing bands in the J7 plan (structural, every t5 kit fails OT_CLAND BAND)",
    "owner": "FAM-S81-MISC-R4",
    "release": [
@@ -3957,7 +3961,9 @@
    "items": [
     "ot_s81sl_kv_leaf__t5"
    ],
-   "follow_plan": false
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
   }
  ]
 }
