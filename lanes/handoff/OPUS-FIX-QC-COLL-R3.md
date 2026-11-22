@@ -21,3 +21,7 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
   Tool on main 6135636053bb (tap_reset_split.tcl, test_tap_reset_split.py; lane clone epyc8 opus-fix-qc-coll-r3/clone).
   Scan tools epyc10 opus-fix-qc-coll-r3/rstscan (rst_cotap_scan.tcl, split_harness.tcl). Harness: coll_core 675 -> 7.
 - A/B kit v3 + split flag: intel2 core3s_chain.sh (pid 4015970) -> pspec_core3s, epyc10 pkit_core3s, rt 6135636053bb. Grep OT_TAP_RESET_SPLIT in its CTS log.
+- 00:5x COORD: RST-COTAP row PROVISIONAL until LEC passes with clones (json status updated). Early LEC chains on intel2:
+  early_lec_chain.sh split (pkit_core3s, pid 4134370) + ctl (pkit_core3b, pid 4134371) -> wait 4_cts.odb -> ot-run epyc10
+  opus-fix-qc-coll-r3/early_lec.sh (write_verilog -> KIT/early_lec/4_cts.v, lec.py rt 6135636053bb, OT_LEC_SUPERSET_VEC=1) -> out opus-fix-qc-coll-r3/early_lec_{split,ctl}.
+  If clones flagged: split pass writes clone map, lec.py accepts declared duplicates; coordinate FLOW-OPS-R2 (LEC register matching).
