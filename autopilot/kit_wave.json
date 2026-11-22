@@ -38609,6 +38609,16 @@
      "OT_GEN_M8_GRANT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_KIT": "1"
+    },
+    "hd_lep0N_w": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_KW43_FIX": "lep-7c45adfab1d",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     }
    },
    "item_env_note": "KW-FIX-4 17:52 (DIE-HEAD-58 ruling, item_env merged abf51d0c72): every HEAD type moves from the legacy seam_hold min -90 exception to OT_IO_HOLD=sender_min at its next (re)launch; hd_mesh_e relaunched now (m_rx_ft_i, 73-ps window).",
