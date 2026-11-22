@@ -2088,6 +2088,24 @@ def edge_clock_pins(P, tn):
             for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
 
 
+def landing_contract_metadata(P, tn):
+    """Describe the placed center for a forwarded input declared at the same nominal edge tap."""
+    clock = P.types[tn]["clock"]
+    contract = clock["landing_contract"]
+    nominal = {edge["port"]: edge["tap_um"] for edge in clock.get("edge_clocks", [])}
+    if not nominal or not contract.get("pins"):
+        return contract
+    placed = {name: [x, y] for name, x, y, _ in edge_clock_pins(P, tn)}
+    pins = []
+    for pin in contract["pins"]:
+        name = pin["name"]
+        if (pin.get("kind") == "clock" and pin.get("dir") == "in"
+                and name in nominal and pin.get("xy_um") == nominal[name]):
+            pin = dict(pin, xy_um=placed[name])
+        pins.append(pin)
+    return dict(contract, pins=pins)
+
+
 # DIE-QC-75 11-05 (QC coll_s FF hold -320 ps): plain PHY-edge clocks (clk_coll, clk_serdes, clk_d2d: one die-period port with
 # no forwarded ring, unlike fclk_in_*) get one tree per region of the same size as the clk taps, balanced to the same plan
 # insertion: clock_edge_split.tcl (pre-CTS root buffers) + clock_edge_balance.tcl (POST_CTS pad).  The kit decides by sink
@@ -8038,7 +8056,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hook.write_text("source /work/reserved_sites.tcl\n" + hook.read_text())
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
-        (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
+        (kd / "landing_contract.json").write_text(json.dumps(landing_contract_metadata(P, tn), indent=1) + "\n")
         # kit-rtl wrappers declare bound-only one-bit pins as [0:0] vectors -> BTerm "<port>[0]" (KV-022)
         bit0 = LC.bit0_ports((kd / "rtl" / f"{t['module']}.sv").read_text()) if plain_rings else frozenset()
         (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn, bit0))
