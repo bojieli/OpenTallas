@@ -12,3 +12,7 @@ Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL
 - mkresite: after the J7 bind, read the longest bound reset hop on h9_r0_p1/p3/h9_r2. If the captured bound_native_reset bypassed it, write the bound_reset_placement overlay. The 146 residual reset hops (R4 rc/rrl_try.json) are held under the COORD station-row stop until FIT is fixed.
 - Carry the H10-R3 FIT and view fix to the h9_r1/r2 siblings once it is proven.
 - e3 y 648 flag (53 h9_r0 types) posted to S81-J6-ASSEMBLY-R4 + FAM-S81-COL-H9R0-R3.
+## 18:2x PST resume (after the weekly limit; Codex covered 14:23-18:1x)
+- Adopted these Codex posts filed under my lane: FIT-poly replay 83/87 fit (14:47); rb/tc CTS TT -36.11/-35.73 (15:18); old D8 pv047ea3b3 xai93 analysis (18:02).
+- rb_e8 and tc_e8 are in GRT on the old obs_gcell_cap.tcl, inside the slow OBS planner (one core at 100%; logs last written 13:48 and 14:23 PST). The fix 86cda1125201 is in rt/current. hub chain_e8 waiters are alive.
+- Plan: if GRT shows no progress by 22:00 PST, relaunch one arm from 4_cts with the refreshed obs_gcell_cap.tcl, copied and mvd into a new kit dir, on epyc10 or epyc2. E8 is 9999-drained.
