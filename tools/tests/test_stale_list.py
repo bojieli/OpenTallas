@@ -162,3 +162,12 @@ if __name__ == '__main__':
     test_owner_fallback_lane_md(pathlib.Path(tempfile.mkdtemp()))
     test_coord_routed_owner_wins(pathlib.Path(tempfile.mkdtemp()))
     print("10 passed")
+
+
+def test_parked_dies_are_not_listed(tmp_path):
+    import json as _j
+    _S = S
+    f = tmp_path / "kw.json"
+    f.write_text(_j.dumps({"dies": {"hbm": {"parked": {"owner": "COORD"}}, "s81": {"enabled": True}}}))
+    assert _S.parked_dies(str(f)) == {"hbm"}
+    assert _S.unparked([("hbm", "H"), ("s81", "S")], {"hbm"}) == [("s81", "S")]

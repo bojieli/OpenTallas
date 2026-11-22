@@ -414,8 +414,23 @@ def owner_post(stale, prev=(), stamp=None, unreachable=()):
     return '\n'.join(out) + '\n'
 
 
+def parked_dies(path=None):
+    """F4 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000): dies with dies.<die>.parked in autopilot/kit_wave.json are not listed as stale"""
+    try:
+        d = json.load(open(path or os.path.join(COORD, autopilot/kit_wave.json))).get(dies) or {}
+    except (OSError, ValueError):
+        return set()
+    return {k for k, v in d.items() if isinstance(v, dict) and v.get(parked)}
+
+
+def unparked(dies, parked=None):
+    parked = parked_dies() if parked is None else parked
+    return [(d, t) for d, t in dies if d not in parked]
+
+
 def section(cache, rows, dies, plan_die=None, hosts=None, write=True):
     """the STALE block lines for failure_breakdown.main(); probes the fleet"""
+    dies = unparked(dies)
     state, src = hub_state()
     text, unreachable = live_text(hosts)
     stale = stale_items(cache, rows, owners_rows(), state, text, dies, plan_die=plan_die,
@@ -434,7 +449,7 @@ def main(argv):
     rows = list(csv.DictReader(open(FB.STAGES), delimiter='\t'))
     state, src = hub_state()
     text, unreachable = live_text()
-    stale = stale_items(cache, rows, owners_rows(), state, text, FB.DIES, plan_die=FB.PLAN_DIE,
+    stale = stale_items(cache, rows, owners_rows(), state, text, unparked(FB.DIES), plan_die=FB.PLAN_DIE,
                         retired=retired_rows(), lane_idx=lane_md_index(), routed=routed_rows())
     prev = read_tsv()
     write_tsv(stale)
