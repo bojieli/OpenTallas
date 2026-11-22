@@ -19,3 +19,9 @@ Dirs: epyc8 /srv/opentallas-scratch2/claude/kv-plan-r6 (d27d3/, pinclear2/, rema
 - Carry HGI R6c rows (19 types) + pv split (16 pv types) in ONE event; hub ring rows (HUB-R4, via a real copy), hub_Wi pin row, hr_core_peer re-export.
 - KV-WAITBIND-R1 CBC: take ONLY kv3_hub_Wi + kv3_pc_v3 bank reset relay rows (+0 cycles); NOT the 72 lane K deltas.
 - Re-run landing_remap (OLD=D27d3, NEW=D28) and clksite_pinclear (main) only on the changed types.
+
+## D28 (started 2026-11-21, cut 11-22 12:00 PST, apply same day)
+- Intake posted (coord aaa74b408): pv split+leg+tap PV-R7; HGI R6c/R6d+lockup_regions HGI-R6; hub_Eo/Wo/Wi ring+hub_Ei tool HUB-R5 (real copy); hub_Wi io_pad_die_id + pc_v3 bank reset relays WAITBIND-R1 (no 72 K deltas); hub_C cuts <400k HUBC-SYSC-R2; hg/hgi hotspot re-site FABLE-PD-KV-2000 lever 3.
+- Workspace epyc8 /srv/opentallas-scratch2/claude/kv-plan-r6/d28: base_d27d3.json (48b92c30c8f6, real copy, 56 types), d28_compose.py (applies rows in order, refuses any row that changes an unnamed type or top key; ledger.json). Self-test passed (st_out).
+- Rows go into d28/rows/ROWS_<owner>.py plus rows.json entries {owner,script,types}. After compose: landing_remap OLD=D27d3 NEW=D28, clksite_pinclear (main), r8/pinsite checks, then G0, strict bind, LATCHECK, gen proofs + kit_pin_site_check, visual, seal (real copy), replicate (incl. epyc9/10 + portable bind), publish_apply on the current rt.
+- K-C=-8 goes into the boot-programme compile input. After apply, the kv3_hg*/kv3_pv* holds auto-lift on event_adopt:KV-D28; lift hub_Eo/hub_Wi if their rows landed.
