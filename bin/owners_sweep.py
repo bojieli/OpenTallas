@@ -161,6 +161,31 @@ def cbc_failed_rounds(rows, since=0.0, n_events=2):
     return out
 
 
+ROUTED = os.path.join(COORD, 'autopilot/COORD-ROUTED-OWNERS.tsv')
+
+
+def routed_rows(path=ROUTED):
+    """COORD-ROUTED-OWNERS.tsv (die, item or prefix*, owner, ruling) -> {die: [(item, owner)]}; same format as tools/stale_list.py routed_rows"""
+    out = {}
+    try:
+        for l in open(path):
+            f = l.rstrip('\n').split('\t')
+            if len(f) >= 3 and l.strip() and not l.startswith('#') and f[0] != 'die' and f[2].strip():
+                out.setdefault(f[0].strip(), []).append((f[1].strip(), f[2].strip()))
+    except OSError:
+        pass
+    return out
+
+
+def routed_owner(routed, die, names):
+    """first matching row wins (exact item, or prefix* row), as stale_list.routed_owner"""
+    for n in names:
+        for r, o in (routed or {}).get(die, ()):
+            if n == r or (r.endswith('*') and n.startswith(r[:-1])):
+                return o
+    return None
+
+
 def registry():
     reg = {}
     try:
@@ -239,7 +264,7 @@ def main():
             continue
         last[(r['die'], r['item'])] = r
     fb.LAST.clear(); fb.LAST.update(last)
-    holds = fb.die_holds(); reg = registry(); launches = load_launches()
+    holds = fb.die_holds(); reg = registry(); routed = routed_rows(); launches = load_launches()
     s81_from = time.mktime(time.strptime(time.strftime('%Y-%m-%d') + ' 06:40', '%Y-%m-%d %H:%M'))
     bfall = load_bound_fallback(s81_from)
     cbc = cbc_failed_rounds(rows, now - a.cbc_days * 86400 if a.cbc_days else 0.0); cbc_hit = collections.defaultdict(list)
@@ -281,13 +306,16 @@ def main():
             ro = reg.get((die, item.split('#')[0])) or reg.get((die, item)) or ''
             if ro and ro not in EXCLUDE_LANES and ro in lanes_known and ro not in cand:
                 cand[ro] = (0, lastpost.get(ro, 0), 'registry owner')
-            def alive(l): return lastpost.get(l, 0) >= now - a.alive_hours * 3600
+            rt = routed_owner(routed, die, [item, item.split('#')[0], short])
+            rt_ok = bool(rt) and rt not in EXCLUDE_LANES and lastpost.get(rt, 0) >= now - win     # COORD-ROUTED row: owned while that lane posted in the last --hours
+            if rt_ok: cand[rt] = (4, lastpost.get(rt, 0), 'COORD-ROUTED-OWNERS')
+            def alive(l): return lastpost.get(l, 0) >= now - a.alive_hours * 3600 or (rt_ok and l == rt)
             order = sorted(cand.items(), key=lambda kv: (-kv[1][0], not alive(kv[0]), -kv[1][1]))
             flags = []
             running = lab in RUNNING
             if order:
                 lane, (lvl, t, snip) = order[0]
-                match = {3: 'type', 2: 'cluster', 1: 'family', 0: 'registry'}[lvl]
+                match = {4: 'routed', 3: 'type', 2: 'cluster', 1: 'family', 0: 'registry'}[lvl]
                 al = any(alive(l) for l, _ in order[:3])
                 extra = [l for l, _ in order[1:3]]
                 owner = lane + (' (+%s)' % ','.join(extra) if extra else '')
