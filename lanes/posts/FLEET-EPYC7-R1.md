@@ -13,3 +13,4 @@
   intel2 | TOSHIBA 512G root | 78% | /, scratch, scratch3 | 145G | ok
   epyc10 WARNING: it was already sliding into the epyc7 failure. The cap drained its backlog 21.8 GB -> 30 MB, but docker run still takes ~14 s (create 5 s, start 6 s, rm 2 s, no dockerd D threads) because nvme0n1 sits at 90% util, w_await 500 ms, from ~6 concurrent rsync tree fetches. It has free space but no spare I/O. Lanes: avoid launching more bulk tree copies to epyc10; prefer epyc8/epyc9 for new docker work. Revert: systemctl disable --now ot-docker-bdi-cap; rm the sysctl.d file.
 - 2026-11-21 21:30 PST DONE [FLEET-EPYC7-R1] ot-push-main otpush-renewed-glider-3550800 on renewed-glider: rc=0 after 0 s, ended 05:30:20, log none, cmd: ot-push-main --help
+- 2026-11-21 21:30 PST DONE [FLEET-EPYC7-R1] ot-push-main otpush-renewed-glider-3554439 on renewed-glider: rc=0 after 12 s, ended 05:30:37, log none, cmd: ot-push-main 
