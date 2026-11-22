@@ -134,3 +134,4 @@
   - cland_mon_* of lk_ES0 (about 1,025 um) is type serdes__t1__clb45db5be.
   - Both go to FIX-SYNC-S81 CLAND-ORIGIN-REACH, with type owners FAM-S81-COL-H10-R4 and the serdes FAM lane.
   - G0 on unmodified J7 and on v10 are running. The J8 post follows with the inherited-vs-new split.
+- 2026-11-22 06:52 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-3188845-1795356918 on loved-redfish: rc=0 after 2217 s, ended 14:52:10, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/fork_v9.otrun.log, cmd: --mem 8 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6 --stage /srv/opentallas-scratch2/claude/rt/b15a8a1

@@ -24873,3 +24873,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc2:/srv/
   STALE: QC 27 (cancelled/held, 3-17h), S81 1 (slice_station__t52). DEAD-OWNER: QC 6 sle_hc1/sle_st_b/slw_fe rows, FLOW-FLEET-R1 last post 02:57.
   Held S81 147 / KV 38 / QC ~18 pending plan events are counted OK.
 - 2026-11-22 06:52 PST DONE [FAM-S81-COL-R5] ot-run oth-ubuntu-1636470-1795356659 on civil-redfish: rc=0 after 2469 s, ended 14:52:04, log none, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r5/rst -- bash -c cd /srv/opentallas-scratch2/claude/k
+- 2026-11-22 06:52 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-3188845-1795356918 on loved-redfish: rc=0 after 2217 s, ended 14:52:10, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/fork_v9.otrun.log, cmd: --mem 8 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6 --stage /srv/opentallas-scratch2/claude/rt/b15a8a1
