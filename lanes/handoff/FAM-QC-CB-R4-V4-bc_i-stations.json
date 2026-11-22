@@ -1,0 +1,666 @@
+{
+ "lane": "FAM-QC-CB-R4",
+ "to": "QC-PLAN-R13 (V4)",
+ "base": "plan cbf_q00_ctsfam (V2 + row A family) internal_stations",
+ "rule": "every internal_stations hop (from->regs->to, Manhattan) <= 405 um: stations n=max(now, ceil(route/405)-1), regs_um re-sited equally on the polyline; +cycles pre-approved (+1 cycle per added station on the lane)",
+ "rows": {
+  "cbf_q01": [
+   {
+    "conn": "bus:nb_i12",
+    "bits": 515,
+    "route_um": 1658.6,
+    "hops_now": [
+     418,
+     415,
+     415,
+     411
+    ],
+    "stations_now": 3,
+    "stations_new": 4,
+    "added": 1,
+    "hop_um_new": 331.7,
+    "regs_um_new": [
+     [
+      1201.21,
+      2193.89
+     ],
+     [
+      1192.32,
+      1871.06
+     ],
+     [
+      1192.32,
+      1539.34
+     ],
+     [
+      1183.93,
+      1216.02
+     ]
+    ]
+   }
+  ],
+  "cbf_q01_s2": [
+   {
+    "conn": "bus:nb_i12",
+    "bits": 515,
+    "route_um": 1658.6,
+    "hops_now": [
+     418,
+     415,
+     415,
+     411
+    ],
+    "stations_now": 3,
+    "stations_new": 4,
+    "added": 1,
+    "hop_um_new": 331.7,
+    "regs_um_new": [
+     [
+      1201.21,
+      2193.89
+     ],
+     [
+      1192.32,
+      1871.06
+     ],
+     [
+      1192.32,
+      1539.34
+     ],
+     [
+      1183.93,
+      1216.02
+     ]
+    ]
+   }
+  ],
+  "cbf_q00_s2": [
+   {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "route_um": 1270.4,
+    "hops_now": [
+     634,
+     637
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 317.6,
+    "regs_um_new": [
+     [
+      318.87,
+      47.64
+     ],
+     [
+      587.42,
+      96.47
+     ],
+     [
+      565.82,
+      392.46
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "route_um": 1253.1,
+    "hops_now": [
+     625,
+     628
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 313.3,
+    "regs_um_new": [
+     [
+      932.3,
+      51.97
+     ],
+     [
+      1192.21,
+      105.11
+     ],
+     [
+      1170.62,
+      396.78
+     ]
+    ]
+   }
+  ],
+  "cbx_q10__cl89936551": [
+   {
+    "conn": "bus:bc_i30",
+    "bits": 517,
+    "route_um": 1261.7,
+    "hops_now": [
+     634,
+     628
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 315.4,
+    "regs_um_new": [
+     [
+      926.17,
+      51.61
+     ],
+     [
+      1189.99,
+      103.22
+     ],
+     [
+      1170.77,
+      394.77
+     ]
+    ]
+   }
+  ],
+  "cbn_q00__cld7bf7197": [
+   {
+    "conn": "bus:y_o00",
+    "bits": 515,
+    "route_um": 1204.3,
+    "hops_now": [
+     413,
+     397,
+     394
+    ],
+    "stations_now": 2,
+    "stations_new": 2,
+    "added": 0,
+    "hop_um_new": 401.4,
+    "regs_um_new": [
+     [
+      44.89,
+      787.43
+     ],
+     [
+      43.2,
+      387.68
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "route_um": 847.0,
+    "hops_now": [
+     426,
+     421
+    ],
+    "stations_now": 1,
+    "stations_new": 2,
+    "added": 1,
+    "hop_um_new": 282.3,
+    "regs_um_new": [
+     [
+      562.96,
+      200.28
+     ],
+     [
+      590.56,
+      426.54
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "route_um": 1225.1,
+    "hops_now": [
+     614,
+     611
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 306.3,
+    "regs_um_new": [
+     [
+      940.58,
+      56.0
+     ],
+     [
+      1190.87,
+      112.0
+     ],
+     [
+      1170.73,
+      395.25
+     ]
+    ]
+   }
+  ],
+  "cbn_q00__cl622f65d2": [
+   {
+    "conn": "bus:y_o00",
+    "bits": 515,
+    "route_um": 1204.3,
+    "hops_now": [
+     413,
+     397,
+     394
+    ],
+    "stations_now": 2,
+    "stations_new": 2,
+    "added": 0,
+    "hop_um_new": 401.4,
+    "regs_um_new": [
+     [
+      44.89,
+      787.43
+     ],
+     [
+      43.2,
+      387.68
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "route_um": 847.0,
+    "hops_now": [
+     426,
+     421
+    ],
+    "stations_now": 1,
+    "stations_new": 2,
+    "added": 1,
+    "hop_um_new": 282.3,
+    "regs_um_new": [
+     [
+      562.96,
+      200.28
+     ],
+     [
+      590.56,
+      426.54
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "route_um": 1225.1,
+    "hops_now": [
+     614,
+     611
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 306.3,
+    "regs_um_new": [
+     [
+      940.58,
+      56.0
+     ],
+     [
+      1190.87,
+      112.0
+     ],
+     [
+      1170.73,
+      395.25
+     ]
+    ]
+   }
+  ],
+  "cbn_q00__cldbcda913": [
+   {
+    "conn": "bus:y_o00",
+    "bits": 515,
+    "route_um": 1204.3,
+    "hops_now": [
+     413,
+     397,
+     394
+    ],
+    "stations_now": 2,
+    "stations_new": 2,
+    "added": 0,
+    "hop_um_new": 401.4,
+    "regs_um_new": [
+     [
+      44.89,
+      787.43
+     ],
+     [
+      43.2,
+      387.68
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "route_um": 847.0,
+    "hops_now": [
+     426,
+     421
+    ],
+    "stations_now": 1,
+    "stations_new": 2,
+    "added": 1,
+    "hop_um_new": 282.3,
+    "regs_um_new": [
+     [
+      562.96,
+      200.28
+     ],
+     [
+      590.56,
+      426.54
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "route_um": 1225.1,
+    "hops_now": [
+     614,
+     611
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 306.3,
+    "regs_um_new": [
+     [
+      940.58,
+      56.0
+     ],
+     [
+      1190.87,
+      112.0
+     ],
+     [
+      1170.73,
+      395.25
+     ]
+    ]
+   }
+  ],
+  "cbn_q01__cldd6ea846": [
+   {
+    "conn": "bus:nb_i12",
+    "bits": 515,
+    "route_um": 1658.6,
+    "hops_now": [
+     418,
+     415,
+     415,
+     411
+    ],
+    "stations_now": 3,
+    "stations_new": 4,
+    "added": 1,
+    "hop_um_new": 331.7,
+    "regs_um_new": [
+     [
+      1201.21,
+      2193.89
+     ],
+     [
+      1192.32,
+      1871.06
+     ],
+     [
+      1192.32,
+      1539.34
+     ],
+     [
+      1183.93,
+      1216.02
+     ]
+    ]
+   }
+  ],
+  "cbn_q01__clab6e67f2": [
+   {
+    "conn": "bus:nb_i12",
+    "bits": 515,
+    "route_um": 1658.6,
+    "hops_now": [
+     418,
+     415,
+     415,
+     411
+    ],
+    "stations_now": 3,
+    "stations_new": 4,
+    "added": 1,
+    "hop_um_new": 331.7,
+    "regs_um_new": [
+     [
+      1201.21,
+      2193.89
+     ],
+     [
+      1192.32,
+      1871.06
+     ],
+     [
+      1192.32,
+      1539.34
+     ],
+     [
+      1183.93,
+      1216.02
+     ]
+    ]
+   }
+  ],
+  "cbn_q01__cld9ff4c40": [
+   {
+    "conn": "bus:nb_i12",
+    "bits": 515,
+    "route_um": 1658.6,
+    "hops_now": [
+     418,
+     415,
+     415,
+     411
+    ],
+    "stations_now": 3,
+    "stations_new": 4,
+    "added": 1,
+    "hop_um_new": 331.7,
+    "regs_um_new": [
+     [
+      1201.21,
+      2193.89
+     ],
+     [
+      1192.32,
+      1871.06
+     ],
+     [
+      1192.32,
+      1539.34
+     ],
+     [
+      1183.93,
+      1216.02
+     ]
+    ]
+   }
+  ],
+  "cbf_q00__cl1b5a6458": [
+   {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "route_um": 1270.4,
+    "hops_now": [
+     634,
+     637
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 317.6,
+    "regs_um_new": [
+     [
+      318.87,
+      47.64
+     ],
+     [
+      587.42,
+      96.47
+     ],
+     [
+      565.82,
+      392.46
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "route_um": 1253.1,
+    "hops_now": [
+     625,
+     628
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 313.3,
+    "regs_um_new": [
+     [
+      932.3,
+      51.97
+     ],
+     [
+      1192.21,
+      105.11
+     ],
+     [
+      1170.62,
+      396.78
+     ]
+    ]
+   }
+  ],
+  "cbf_q00__cl870de686": [
+   {
+    "conn": "bus:bc_i00",
+    "bits": 517,
+    "route_um": 1270.4,
+    "hops_now": [
+     634,
+     637
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 317.6,
+    "regs_um_new": [
+     [
+      318.87,
+      47.64
+     ],
+     [
+      587.42,
+      96.47
+     ],
+     [
+      565.82,
+      392.46
+     ]
+    ]
+   },
+   {
+    "conn": "bus:bc_i10",
+    "bits": 517,
+    "route_um": 1253.1,
+    "hops_now": [
+     625,
+     628
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 313.3,
+    "regs_um_new": [
+     [
+      932.3,
+      51.97
+     ],
+     [
+      1192.21,
+      105.11
+     ],
+     [
+      1170.62,
+      396.78
+     ]
+    ]
+   }
+  ],
+  "cbx_q10__cl89936551_h": [
+   {
+    "conn": "bus:bc_i30",
+    "bits": 517,
+    "route_um": 1261.7,
+    "hops_now": [
+     634,
+     628
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 315.4,
+    "regs_um_new": [
+     [
+      926.17,
+      51.61
+     ],
+     [
+      1189.99,
+      103.22
+     ],
+     [
+      1170.77,
+      394.77
+     ]
+    ]
+   }
+  ],
+  "cbx_q10__cl94a12200_h": [
+   {
+    "conn": "bus:bc_i30",
+    "bits": 517,
+    "route_um": 1261.7,
+    "hops_now": [
+     634,
+     628
+    ],
+    "stations_now": 1,
+    "stations_new": 3,
+    "added": 2,
+    "hop_um_new": 315.4,
+    "regs_um_new": [
+     [
+      926.17,
+      51.61
+     ],
+     [
+      1189.99,
+      103.22
+     ],
+     [
+      1170.77,
+      394.77
+     ]
+    ]
+   }
+  ]
+ }
+}
