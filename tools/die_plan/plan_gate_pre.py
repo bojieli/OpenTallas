@@ -1066,8 +1066,11 @@ def check_deadin(tree, plan, asbuilt):
     return []
 
 
-def check_tapname(plan, base_fn=None, max_list=6):
-    """FAIL TAPNAME / TAPNAME-RETAP lines (see TAPNAME-1122).  base_fn(P, raw, type) -> density base tap count; injectable."""
+def check_tapname(plan, base_fn=None, max_list=6, tree=None):
+    """FAIL TAPNAME / TAPNAME-RETAP lines (see TAPNAME-1122).  base_fn(P, raw, type) -> density base tap count; injectable.
+    TAPNAME-UNCHECKED-1122 (COORD, QC-PLAN-R13 / QC-SLE-R5: run from a bare rt dir the density base inputs were not found, a WARN was
+    printed and the broken v3p7d plan reported PASS): the base is solved with the plan's repo-relative inputs read from --tree; a base
+    that still cannot be solved is FAIL TAPNAME-UNCHECKED (non-zero, verdict UNCHECKED), never a silent PASS."""
     raw = _load(plan)
     if not raw:
         return []
@@ -1085,10 +1088,22 @@ def check_tapname(plan, base_fn=None, max_list=6):
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import schema
         import taps as TP
-        P = schema.Plan(raw, Path(plan))
+        _pc = {}
 
         def base_fn(_P, _raw, tn):
-            return len(TP._density_base(P, tn))
+            here, root0 = os.getcwd(), TP._root
+            try:
+                if tree and Path(tree).is_dir():
+                    # plan inputs (sink_bins_file ...) are repo-relative: read them from --tree, not from the tool tree this
+                    # checker runs from (a bare rt/<sha> dir holds tools only)
+                    os.chdir(tree)
+                    TP._root = lambda: Path(tree).resolve()
+                if "P" not in _pc:               # a plan the schema cannot load is UNCHECKED too (inside the per-type try)
+                    _pc["P"] = schema.Plan(raw, Path(here, plan) if not Path(plan).is_absolute() else Path(plan))
+                return len(TP._density_base(_pc["P"], tn))
+            finally:
+                os.chdir(here)
+                TP._root = root0
     out = []
     for tn, ck, refs in todo:
         added = [str((a or {}).get("name")) for a in ck.get("added_taps") or []]
@@ -1097,7 +1112,8 @@ def check_tapname(plan, base_fn=None, max_list=6):
         try:
             nb = base_fn(None, raw, tn)
         except Exception as e:  # noqa: BLE001 - the bind reports a density solve error itself
-            out.append(f"WARN TAPNAME {tn}: density base not solved ({type(e).__name__}: {str(e)[:160]}); name check skipped")
+            out.append(f"FAIL TAPNAME-UNCHECKED {tn}: density base not solved ({type(e).__name__}: {str(e)[:160]}); added tap names NOT checked "
+                       f"-- re-run with --tree <tree holding the plan inputs> (tree {tree or '-'})")
             continue
         exp = [f"clk_t{nb + i}" for i in range(len(added))]
         wrong = [(a, e) for a, e in zip(added, exp) if a != e]
@@ -1235,7 +1251,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, rb)
     if "TAPNAME" not in skip:                            # TAPNAME-1122: density added tap names, seconds before the bind
-        findings += check_tapname(plan)
+        findings += check_tapname(plan, tree=tree)
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
@@ -1323,7 +1339,8 @@ def main(argv=None):
     if not a.quiet:
         for x in lst + fails + warns:
             print(x)
-    print(f"PLAN-GATE-PRE {'FAIL' if fails else 'PASS'} tree={a.tree} plan={a.plan} findings={len(fails)}"
+    unchecked = [x for x in fails if x.split()[1].endswith("-UNCHECKED")]
+    print(f"PLAN-GATE-PRE {'UNCHECKED' if unchecked and len(unchecked) == len(fails) else 'FAIL' if fails else 'PASS'} tree={a.tree} plan={a.plan} findings={len(fails)}"
           + (" classes=" + ",".join(sorted({x.split()[1].split('-')[0] for x in fails})) if fails else ""))
     if a.json:
         Path(a.json).write_text(json.dumps({"tree": a.tree, "plan": a.plan, "findings": fails}, indent=1) + "\n")

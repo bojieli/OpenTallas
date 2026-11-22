@@ -32,6 +32,36 @@ def test_right_names_pass_and_stale_refs_need_retap(tmp_path):
     assert len(f) == 1 and f[0].startswith("FAIL TAPNAME-RETAP cbf_q00:") and "clk_t130" in f[0] and "clk_t3," not in f[0]
 
 
-def test_solve_error_warns(tmp_path):
+def test_solve_error_is_unchecked_fail(tmp_path):
+    """TAPNAME-UNCHECKED-1122: an unsolved density base is a FAIL (UNCHECKED), never a WARN + PASS"""
     f = G.check_tapname(plan(tmp_path, ["clk_t114"]), base_fn=lambda *a: 1 / 0)
-    assert f[0].startswith("WARN TAPNAME cbf_q00: density base not solved")
+    assert f[0].startswith("FAIL TAPNAME-UNCHECKED cbf_q00: density base not solved")
+
+
+def test_cli_missing_base_inputs_is_unchecked_nonzero(tmp_path, monkeypatch, capsys):
+    """run from a bare dir with no plan inputs: rc != 0 and the verdict line says UNCHECKED, not PASS"""
+    p = plan(tmp_path, ["clk_t114"])
+    bare = tmp_path / "bare"
+    bare.mkdir()
+    monkeypatch.chdir(bare)
+    rc = G.main(["check", "--tree", str(bare), "--plan", p, "--skip", "SCHEMA", "--skip", "INPUT", "--skip", "TOOLS", "--skip", "ROWS",
+                 "--skip", "GEOM", "--skip", "KITFIT", "--skip", "FIXEDCYC", "--skip", "ROWSINK", "--skip", "MODULES", "--skip", "TOOLSTALE",
+                 "--skip", "LANDREMAP", "--skip", "ABSPATH", "--skip", "ISTCYC", "--skip", "DEADIN", "--skip", "R8STALE",
+                 "--skip", "RELAYSINK", "--skip", "EMITNAME"])
+    out = capsys.readouterr().out
+    assert rc != 0 and "PLAN-GATE-PRE UNCHECKED" in out and "PLAN-GATE-PRE PASS" not in out
+
+
+def test_density_base_solved_inside_tree(tmp_path):
+    """the default solver reads the plan's repo-relative inputs from --tree, not from the checker's own tool tree"""
+    seen = []
+    import taps as TP
+    import schema
+    orig, oplan = TP._density_base, schema.Plan
+    try:
+        TP._density_base = lambda P, tn: seen.append(TP._root()) or [0] * 114
+        schema.Plan = lambda raw, path=None: object()
+        f = G.check_tapname(plan(tmp_path, ["clk_t114"]), tree=str(tmp_path))
+    finally:
+        TP._density_base, schema.Plan = orig, oplan
+    assert f == [] and seen and seen[0] == tmp_path.resolve() and TP._root() != tmp_path.resolve()
