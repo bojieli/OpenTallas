@@ -22367,3 +22367,4 @@ FAILED [AUTOPILOT 0c4abfb40abd] 2026-11-21 21:37:34 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 21:52 PST DONE [FAM-S81-MISC-R4] ot-run oth-ubuntu-2987789-1795325291 on tolerant-swine: rc=0 after 1485 s, ended 21:52:54, log /srv/opentallas-scratch2/claude/fam-s81-misc-r4/t5fix/g0.otrun.log, cmd: --mem 24 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fam-s81-misc-r4 --stage /srv/opentallas-scratch2/claude/fam-s81-mi
 - 2026-11-21 21:52 PST epyc9 at 2582 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 21:53 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2896923 on civil-redfish: rc=0 after 29 s, ended 05:53:08, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push3.log, cmd: ot-push-main 
