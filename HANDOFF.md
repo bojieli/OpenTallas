@@ -3854,3 +3854,5 @@ CODEX: 2026-11-22 01:53 PST took over all lanes. Intel1 J7 replica verified, S81
 CODEX: 2026-11-22 11:02 PST took over all active OpenTallas lanes. J7 live, latest D28 and QC V3 gates retained, reviewed S81 three-row canary queued for GRT, and guarded hub cleanup reclaimed 13.1 GB.
 
 CODEX: 2026-11-22 11:15 PST signed 566 any / 454 current, +1/+1 since 10:05. S81 now 47/394 after archived t52 routed equivalence reconciliation. J8 review, QC V3 post-bind G0, and KV D28 exact bind remain active. Intel2 recovered to 178 GiB after guarded cache retirement.
+
+CODEX: 2026-11-22 12:15 PST signed 566 any / 454 current, flat since 11:15. D28 corrected PRE/G0 pass; strict serial fallback is reporting three HGI types. QC V3 strict/LAT green and post-bind G0 still running. Restored 20 existing J7 launch holds plus three exact SerDes geometry holds. S81 L01 native writes and t32 readout match current fixtures.
