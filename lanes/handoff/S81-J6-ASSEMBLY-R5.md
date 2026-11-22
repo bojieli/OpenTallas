@@ -33,3 +33,5 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - Col entry: first of COL-H10-R4 / COLROM-R5 (5_1_grt.odb only) / BKSEL-R7 r7a with final-GRT TT>=-42 + ovf 0 by 11-22 14:00; else J7 col form.
 
 - J8 add: slice_station__t37 pin-face re-site + sweep of all slice_station types for opposite-face pins (owner FAM-S81-SLICE-R6, by 11-22 16:00; GEOM-REVIEW 21:12).
+
+- COORD 21:4x: S81-J7-HELD-R1 ended; R5 owns post-apply too (held rows, relaunch checks, first J7 wave launches). No handoff. SLICE-R6 resumed for t37 sweep, t46, t6.
