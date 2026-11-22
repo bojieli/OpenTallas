@@ -202,3 +202,4 @@
 - 2026-11-21 18:06 PST ALERT NO-PROGRESS s81_head: 17 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 625 min (last 07:41); latest disk admission blocked hd_host_e: disk cap: epyc7: in flight 108 + 9 GB > free 142 - 150; epyc10: in flight 80 + 9 GB > free 70 - 150 (waits; one line per die per 15 min)
 - 2026-11-21 18:17 PST ALERT STUCK-STATE qwen_compute: 2 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-21 17:04)
 - 2026-11-21 18:47 PST ALERT STUCK-STATE s81: 34 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
+- 2026-11-21 18:57 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
