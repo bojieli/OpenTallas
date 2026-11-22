@@ -317,3 +317,4 @@
   QC: 6 HELD-V3, 2 FAILED-NO-RELAUNCH (coll_core, slw_st_a_v2__cl9f076a5c), 55 clean.
   KV: 2 FAILED-NO-RELAUNCH (kv3_hub_Wo, kv3_io_cor_v1), 8 WAIT-BIND, 2 CBC-FALLBACK, 40 clean.
   HEAD: hd_lep0N running (lint advisory); hd_ctl/host_e/host_n not in table (tool counts them signed).
+- 2026-11-22 05:51 PST 05:50 sweep 468 rows: S81 147 HELD-J8, 10 SIGNED-LEC-PENDING, 0 flagged; QC 11 HELD-V3, 13 STALE (9 cancelled-superseded, coll_ftc withdrawn, cbx_q10 held x2, slw_su_c cl19bb38ef owner FIX-SYNC-KVHEAD), 2 FAILED-NO-RELAUNCH (coll_core, slw_st_a_v2__cl9f076a5c); KV 12 HELD-D28, 1 FAILED-NO-RELAUNCH (kv3_io_cor_v1 place FAM-KV-IOPC-R4); HEAD 0; UNOWNED 0 DEAD-OWNER 0
