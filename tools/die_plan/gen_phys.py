@@ -9430,6 +9430,10 @@ if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then
 fi
 exit $rc
 """
+import sys as _sys_gt                                    # FLOW-FLEET-R2 C1: run_kit.sh's stage-resume goal lines are written from the one goal table
+_sys_gt.path.insert(0, str(Path(__file__).resolve().parents[1] / "autopilot"))
+import goal_table as _GT                                  # noqa: E402
+RUN_KIT = _GT.shell_resume(RUN_KIT)
 
 
 _CLAND_RING = re.compile(r"\b(ot_dp_clk_landing_cas?)\s*#\(([^;]*?)\)\s*u_cland_(\w+)\s*\(")

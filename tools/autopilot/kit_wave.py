@@ -3516,6 +3516,20 @@ def family_plan(cfg, st, die, picks):
                 if (_alive or r["item"] != reps[k]) and r["item"] not in held:
                     held[r["item"]] = (f"SIBLING-BIG {k}: representative {_alive[0]['item'] if _alive else reps[k]} (family has a type over {SPLIT_CELLS} cells) has not passed CTS yet; "
                                        f"siblings wait")
+    # FLOW-FLEET-R2 F1 11-22 (COORD, FABLE-FLOW-0600): "representatives first" in the LAUNCH ORDER, not just the sort: one tick launched reps and every sibling together (fleet load 145 %,
+    # epyc9 2.3x).  A sibling waits while its family's representative has no record on the current event (no attempt yet); it launches in a later tick.  A family whose representative
+    # is held, or already has any record (running, queued, failed, signed), is not gated.  Active only while the fleet is loaded (d['_reps_gate'], fleet_loaded());
+    # die opt-out: reps_launch_first false.
+    if d.get("reps_launch_first") is not False and d.get("_reps_gate"):
+        _rows2 = list((st.get("items") or {}).values())
+        for k, members in fam.items():
+            _rep = reps[k]
+            if _rep in held or not any(m["item"] != _rep and m["item"] not in held for m in members):
+                continue
+            if not any(x.get("die") == die and x.get("item") == _rep and str(x.get("event") or "") == str(ev or "") for x in _rows2):
+                for m in members:
+                    if m["item"] != _rep and m["item"] not in held:
+                        held[m["item"]] = f"SIBLING-WAIT {k}: representative {_rep} has no attempt on this event yet; siblings launch in a later tick (representatives first)"
     rep_set = set(reps.values())
     ordered = [r for r in picks if r["item"] in rep_set and r["item"] not in held] + [r for r in picks if r["item"] not in rep_set and r["item"] not in held]
     meta = {"families": len(fam), "reps": sorted(rep_set), "siblings": len(sibs), "held": len(held)}
@@ -6640,10 +6654,23 @@ def work_root_problem(cfg, die, hub_isdir=os.path.isdir):
     return None
 
 
+def fleet_loaded(status, ratio=1.0, share=0.5):
+    """FLOW-FLEET-R2 F1: True when at least SHARE of the hosts in an ot-run status dict ({host: row with cores, load}) run at load >= RATIO x cores (fleet 145 %, 11-22)"""
+    rows = [v for v in (status or {}).values() if isinstance(v, dict) and int(v.get("cores") or 0) > 0]
+    if not rows:
+        return False
+    hot = sum(1 for v in rows if float(v.get("load") or 0) >= ratio * int(v["cores"]))
+    return hot >= max(1, share * len(rows))
+
+
 def over_load_cap(v):
     """the ot-heavy rule (LOADCAP_1101): a non-crit job waits while int(load1) >= int(LOAD_CAP_FACTOR x nproc)"""
     n = int((v or {}).get("cores") or 0)
-    return n > 0 and int(float(v.get("load", 0))) >= int(LOAD_CAP_FACTOR * n)
+    try:                                                  # FLOW-FLEET-R2 F1: the host's OWN ot-heavy factor (ot-run status row load_cap_factor, 1.2 fleet-wide); 0 / missing = the default
+        f = float((v or {}).get("load_cap_factor") or 0) or LOAD_CAP_FACTOR
+    except (TypeError, ValueError):
+        f = LOAD_CAP_FACTOR
+    return n > 0 and int(float(v.get("load", 0))) >= int(f * n)
 
 
 def host_room(v, disk_low=None):
@@ -8773,7 +8800,8 @@ def _swap_prefix(v, old, new):
 
 # FLOW-PRIVSPEC-R1 (item 7c): goal of a private run-item.  geom = stop after AUTO-GEOM (the old private behaviour); auto = the runner's own
 # sign-off goal (autopilot default_goal / runner_goal: run_kit.sh -> route); route / finish = that goal; cts / grt = diagnostic (never a sign-off)
-PRIVATE_GOALS = ("auto", "route", "finish", "place", "geom", "cts", "grt")
+import goal_table as GT                                 # FLOW-FLEET-R2 C1: the one goal table (private-spec, chain, run_kit.sh resume)
+PRIVATE_GOALS = GT.NAMES
 PRIVATE_HUB = "intel2"                                   # the coord hub (OT_HUB_NAME of the hub units); private-spec runs on any gen host
 
 
@@ -9383,7 +9411,7 @@ def private_spec_cmd(a):
 CHAIN_WAIT_SLICE_S = 1800                                # one ot-wait --kit call; between calls the ot-run client is checked
 CHAIN_NOT_RUN_RETRIES = 2                                # ot-run answered NOT RUN (never admitted) / signoff_chain deferred (rc 75): relaunch
 CHAIN_RETRY_WAIT_S = 120
-CHAIN_STAGES = {"cts": ("cts",), "grt": ("cts", "grt"), "route": ("cts", "grt", "route"), "finish": ("cts", "grt", "route", "finish")}
+CHAIN_STAGES = GT.CHAIN_STAGES
 CHAIN_ENV_KEEP = ("OT_LANE", "OT_HUB_NAME", "OT_STATUS_DIR", "OT_WAIT_LEDGER")
 CHAIN_RECEIPT_PY = r'''
 import glob, json, os, sys
@@ -9769,7 +9797,7 @@ def resolve_chain_goal(AP, goal, p, runner=""):
     for the probed kit p.  auto (or anything that is not a stage goal) = the runner's sign-off goal (autopilot.default_goal: run_kit.sh ->
     route), never geom; finish on a kit with a stage resume (p['resume']) = route (a resumed run_kit.sh runs up to route only)."""
     g = str(goal or "auto").strip().lower()
-    if g not in ("route", "finish", "cts", "grt"):
+    if g not in GT.STAGE_GOALS:
         g = AP.default_goal(p.get("runner") or runner or "run_kit.sh")
     if g == "finish" and p.get("resume"):
         print("KW_CHAIN_GOAL finish -> route (stage resume %s: finish is route on a resumed kit)" % ((p.get("resume") or {}).get("start") or "?"), flush=True)
@@ -12312,6 +12340,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 if picks and FG.stops_off_die(cfg, die) and d.get("families_first") is not False:
                     try:                                         # OWNER 11-20 (#8): representatives first, siblings on spare capacity, held while the family's representative fails
                         _all = list(picks)
+                        d["_reps_gate"] = fleet_loaded(status)
                         picks, _held, _fm = family_plan(cfg, st, die, picks)
                         for _it, _why in _held.items():
                             skip.setdefault(_why[:100], []).append(_it)

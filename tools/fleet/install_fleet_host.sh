@@ -82,7 +82,7 @@ if [ ! -f /etc/ot-heavy.conf ]; then
     if [ "$role" = coord ]; then echo "MIN_AVAIL_FRAC=0.15"; fi
     # ADMIT-TUNE-1 11-14 (OWNER: remove conservative limits): one check, MemAvailable - 16 GB >= class measured RSS (16 GB unknown);
     # no load gate/cap, fresh window or short pool.  Revert: SIMPLE_ADMIT=0 and delete the other lines.
-    echo "SIMPLE_ADMIT=1"; echo "INV_HEADROOM_GB=16"; echo "LOAD_GATE_FACTOR=0"; echo "LOAD_CAP_FACTOR=0"
+    echo "SIMPLE_ADMIT=1"; echo "INV_HEADROOM_GB=16"; echo "LOAD_GATE_FACTOR=0"; echo "LOAD_CAP_FACTOR=1.2"
     echo "LOAD_FRESH_S=0"; echo "YOUNG_S=0"; echo "OT_HEAVY_SHORT_POOL=0"; } | sudo -n tee /etc/ot-heavy.conf >/dev/null
 fi
 sudo -n loginctl enable-linger "$u"
