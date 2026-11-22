@@ -25555,3 +25555,4 @@ FAILED [AUTOPILOT 15723040d4e5] 2026-11-22 09:08:22 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 09:25 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7564be45aeac: RuntimeError: git rev-parse d4aeaa3c6b58^{commit}: fatal: ambiguous argument 'd4aeaa3c6b58^{commit}': unknown revision or path not in the working tree.
   Use '--' to separate paths from revisions, like this:
   'git <command> [<revision>...] -- [<file>...]'
+- 2026-11-22 09:26 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-serdes-r7 on intel1 wrote 55 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
