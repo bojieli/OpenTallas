@@ -33,6 +33,9 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
 - Native-reset receipt: proof rerun on r18f sources into epyc9 M/receipt_r18f/proof (run_single*.sh with paths rewritten to the r18f
   tree + lane dir), systemd unit r8-nrproof-1795351270. Then head_native_release_receipt.py --proof-dir that dir. >1 h -> publish gate
   without it (COORD ruling 2). Not a sign-off gate.
+  DONE 05:2x: receipt epyc9 M/receipt_r18f/out/native_release_receipt.json (stale in-tree mutants regenerated from r18f ot_pdie_serdes:
+  proof/leaf_*.sv, old copies *.stale). G0 with --native-reset-receipt that file: 6 errors = face_budget_g2 only (M/receipt_r18f/g0).
+  Publish gate for r18f: pass --native-reset-receipt M/receipt_r18f/out/native_release_receipt.json; face_budget_g2 rows after routed E/W.
 - hd_host_n hn1/hn2: geom rc 1 (advisory), past chain_probe.
 
 ## UPDATE 11-22 04:4x r18f
