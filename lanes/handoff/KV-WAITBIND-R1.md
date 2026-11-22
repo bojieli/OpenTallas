@@ -4,3 +4,4 @@ Routed: 6 hgi + 4 pc + pc_v3 + hroot rows in autopilot/COORD-ROUTED-OWNERS.tsv (
 hroot: FAM-KV-HROOT-R1 chain epyc8 /srv/opentallas-scratch2/claude/fam-kv-hroot-r1 (bindgate running, unit oth-ubuntu-3836537-1795316483). Next: private-spec kit per FAM-KV-HROOT-R1.md Next 1.
 CBC-FALLBACK (hub_Wi, pc_v3): cbc_pass on D27d3 -> epyc8 kv-waitbind-r1/cbc_out; rows go to KV-PLAN-R6 for D28.
 COORD 20:0x: HGI-R6, IOPC-R4, FAM-KV-HROOT-R1 stood down. I own hgi x6 + pc_v3 until D28 adopts, and the hroot chain (unit oth-ubuntu-3836537-1795316483 adopted). When D28 lands: rebind hgi + pc_v3 at once, start private kits. Freeze until then.
+COORD correction: FAM-KV-HROOT-R1 is live and owns kv3_hroot + unit oth-ubuntu-3836537-1795316483; I dropped hroot and killed my waiter. I keep hgi x6 + pc_v3 until D28.

@@ -391,4 +391,4 @@ qwen_kvsys	kv3_pc_v1__cl23f6a148	KV-PLAN-R6	COORD 11-21 KV-WAITBIND-R1: rebind o
 qwen_kvsys	kv3_pc_v1__cl4ea58a5c	KV-PLAN-R6	COORD 11-21 KV-WAITBIND-R1: rebind on D27d3 (plan 48b92c30c8f6, sealed 19:42, apply ETA ~21:30); kit_wave hold lifts at apply (KV-PLAN-R6 after-apply list); not D28
 qwen_kvsys	kv3_pc_v1__cl7f648944	KV-PLAN-R6	COORD 11-21 KV-WAITBIND-R1: rebind on D27d3 (plan 48b92c30c8f6, sealed 19:42, apply ETA ~21:30); kit_wave hold lifts at apply (KV-PLAN-R6 after-apply list); not D28
 qwen_kvsys	kv3_pc_v3	KV-WAITBIND-R1	COORD 11-21 KV-WAITBIND-R1: CBC-FALLBACK; rebind on D27d3 after apply+publish_bind (KIT_TOPOLOGY_BIND_STALE); IOPC-R4 re-specs private-spec; cbc_pass rows to KV-PLAN-R6 for D28
-qwen_kvsys	kv3_hroot	KV-WAITBIND-R1	COORD 11-21 KV-WAITBIND-R1: FAM-KV-HROOT-R1 chain (D27d3+variant A relay rows plan 30004fa0b2df) bind running epyc8 unit oth-ubuntu-3836537-1795316483; then private-spec kit
+qwen_kvsys	kv3_hroot	FAM-KV-HROOT-R1	COORD 11-21 KV-WAITBIND-R1: FAM-KV-HROOT-R1 chain (D27d3+variant A relay rows plan 30004fa0b2df) bind running epyc8 unit oth-ubuntu-3836537-1795316483; then private-spec kit
