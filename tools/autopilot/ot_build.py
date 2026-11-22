@@ -248,7 +248,6 @@ class BindStage:
             raise G.BuildError(f"tree {a.tree} missing on {os.uname().nodename}")
         # real paths: a tree reached through a scratch alias (epyc2: scratch2 -> scratch3) is still the tree
         self.plan = Path(os.path.realpath(a.plan))
-        self.remap_base = getattr(a, "remap_base", None)
         self.asbuilt = Path(os.path.realpath(a.asbuilt)) if a.asbuilt else None
         self.rt_dir, self.rt_sha = rt_resolve(a.rt)
         self.env = {}
@@ -257,6 +256,8 @@ class BindStage:
             if not eq or not re.fullmatch(r"[A-Z][A-Z0-9_]*", k):
                 raise G.BuildError(f"--env {kv!r}: KEY=VALUE")
             self.env[k] = v
+        remap_base = a.remap_base or self.env.get("OT_PLAN_REMAP_BASE", os.environ.get("OT_PLAN_REMAP_BASE"))
+        self.remap_base = Path(remap_base).resolve() if remap_base else None
         self.seal = tree_id(self.src)
         self.root = Path(os.path.abspath(a.out_root))
         self.ab, self.ab_path = asbuilt_of(self.plan, self.asbuilt)
@@ -264,6 +265,10 @@ class BindStage:
         self.tools = tools_input("tools", self.rt_dir, ["bind.py", "plan_gate_pre.py", "land_r8_derive.py", "r8_refresh.py"])
         ctx = dict(plan=G.sha_json_file(self.plan), asbuilt=G.sha_obj(self.ab), tree=self.seal or str(self.src),
                    tools=self.tools.hash(), env=self.env)
+        if self.remap_base:
+            ctx["remap_base"] = str(self.remap_base)
+            if self.remap_base.is_file():
+                ctx["remap_base_sha"] = G.sha_json_file(self.remap_base)
         self.ctx = G.sha_obj(ctx)[:12]
         self.out = self.root / f"b_{self.ctx}"
         self.L = None
@@ -390,9 +395,8 @@ class BindStage:
         argv = ["check", "--tree", self._launch(), "--plan", self.plan, "--skip", "TOOLSTALE", "--json", js, "--quiet"]
         if self.asbuilt:
             argv += ["--asbuilt", self.asbuilt]
-        rb = getattr(self, "remap_base", None) or os.environ.get("OT_PLAN_REMAP_BASE")
-        if rb:                                           # REMAP-BASE-1122; without it plan_gate_pre falls back to <plan dir>/bind_of_record
-            argv += ["--remap-base", rb]
+        if self.remap_base:
+            argv += ["--remap-base", self.remap_base]
         try:
             self._tool("plan_gate_pre.py", argv, "pre.log", ok=(0, 1))
             got = load_json(js)

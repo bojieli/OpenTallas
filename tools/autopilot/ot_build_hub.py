@@ -163,6 +163,8 @@ def bind_argv(r, rt_dir, out_root, emit_j, types):
             "--out-root", out_root, "--rt", str(rt_dir), "--emit-j", str(emit_j)]
     if r["asbuilt"]:
         argv += ["--asbuilt", r["asbuilt"]]
+    if r.get("remap_base"):
+        argv += ["--remap-base", r["remap_base"]]
     for k, v in sorted(r["env"].items()):
         argv += ["--env", f"{k}={v}"]
     for t in types:
@@ -416,6 +418,12 @@ def main(argv=None, run=sh, stream=None, cfg=None):
         if not (rt_dir / "tools" / "autopilot" / "ot_build.py").is_file():
             raise G.BuildError(f"runtime pin {rt_dir} has no tools/autopilot/ot_build.py (older than ot-build); give --rt")
         files = [r["plan"]] + ([r["asbuilt"]] if r["asbuilt"] else []) + [str(rt_dir / "tools" / "autopilot" / "ot_build.py")]
+        live_plan = cfg["dies"][a.die]["plan"]
+        if os.path.normpath(live_plan) != os.path.normpath(r["plan"]):
+            binder = rt_dir / "tools" / "autopilot" / "ot_build.py"
+            if "--remap-base" in binder.read_text(errors="replace"):
+                r["remap_base"] = live_plan
+                files.append(live_plan)
         host, table = pick_host(r["hosts"], r["tree"], files, run=run, pin=a.host)
         log(f"ot-build: {a.die}/{a.type} tree {r['tree']} plan {r['plan']} rt {rt_dir.name} bind env {r['env']}")
         log("ot-build: bind host " + host + (" (pinned)" if a.host else " = least loaded holder of the tree") + "\n" + "\n".join(table))

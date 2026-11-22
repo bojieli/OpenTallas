@@ -115,6 +115,22 @@ def test_other_types_row_change_rebinds_but_keeps_this_kit(fleet):
     assert fleet.calls[-3:] == ["private-spec", "run-item", "export"]
 
 
+def test_forked_plan_probes_and_passes_live_remap_base(fleet):
+    (H.RT_ROOT / "current/tools/autopilot/ot_build.py").write_text("--remap-base")
+    commands = []
+
+    def run(cmd, timeout=None, stdin=None):
+        commands.append(cmd)
+        return fleet.run(cmd, timeout=timeout, stdin=stdin)
+
+    fork_plan = SRC + "/p/candidate.json"
+    assert H.main(["kv", "ta", "--lane", "L1", "--plan", fork_plan, "--dry"],
+                  run=run, stream=fleet.stream, cfg=CFG) == 3
+    live_plan = CFG["dies"]["kv"]["plan"]
+    assert any(fork_plan in " ".join(c) and live_plan in " ".join(c) and "--status" not in " ".join(c) for c in commands)
+    assert any(f"--remap-base {live_plan}" in " ".join(c) and "--status" in " ".join(c) for c in commands)
+
+
 def test_dry_reports_and_runs_nothing(fleet, capsys):
     assert go(fleet, "--dry") == 3
     assert fleet.calls == ["status@h2"] and "DRY" in capsys.readouterr().out
