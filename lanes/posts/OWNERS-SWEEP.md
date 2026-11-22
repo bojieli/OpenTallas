@@ -312,3 +312,8 @@
   QC: STALE 6, FAILED-NO-RELAUNCH 2 (coll_core, slw_st_a_v2__cl9f076a5c; FAM-QC-SLWSLE-R1).
   KV: FAILED-NO-RELAUNCH 2 (kv3_hub_Wo, kv3_io_cor_v1), WAIT-BIND 6, CBC-FALLBACK 2; owners OPUS-FIX-KV-HUB-R6, FAM-KV-IOPC-R4, KV-WAITBIND-R1.
   No DEAD-OWNER rows; HEAD clean.
+- 2026-11-22 04:51 PST 04:55 sweep 470 rows (S81 347, QC 63, KV 49, HEAD 1; HBM skipped).
+  S81: 67 HELD-J8 (superseded/held col,leaf,svc under J7 typed holds), 9 UNOWNED (no kit-wave row), 1 DEAD-OWNER (s81_svc_idx_hslice_fp), 280 clean.
+  QC: 6 HELD-V3, 2 FAILED-NO-RELAUNCH (coll_core, slw_st_a_v2__cl9f076a5c), 55 clean.
+  KV: 2 FAILED-NO-RELAUNCH (kv3_hub_Wo, kv3_io_cor_v1), 8 WAIT-BIND, 2 CBC-FALLBACK, 40 clean.
+  HEAD: hd_lep0N running (lint advisory); hd_ctl/host_e/host_n not in table (tool counts them signed).
