@@ -34,3 +34,9 @@ Package: FAM-QC-SLWSLE-R1-V4-suc-cap2b-<type>.json (supersede cap2), compose scr
 
 ## OPTIONAL V4 row: pad leaf toward the twp sinks (08:0x PST)
 Measured on the V2 sle_su_c placement (geom.tsv): u_u_suvm_u_vm8q_u_twp.q flops (925) sit at cx 401 cy 373, x 332-469 y 364-394 (street under su8); u_lpad_x_ctl_p1_i flops at cx 705 cy 340. x_ctl_p1_i/p2_i leaf (570,340) -> (470,372) = east edge of the twp cluster; cap2b + this leaf: pad hop 128/125 um, 0 extra cycles beyond cap2b. vwa sinks (1050, cx 253 cy 248, x 118-599, y 46-445) are spread over the bottom core row, one leaf cannot serve them: the x_ctl_i pd3 -> vwa class needs a per-bit site row after a V4 placement read. Files FAM-QC-SLWSLE-R1-V4-OPTIONAL-padleaf-<type>.json (full su_delta output incl cap2b). Apply ONLY if -50 ps or worse remains on the twp pad class after V4. v4suc chain cancelled (cap2b supersedes); v4sucd waiter armed.
+
+## TODO after R13 V3 pick (06:00 PST; preference V3p7d > V3p7c > V3p7b, COORD 00:2x)
+1. Read the pick in lanes/posts/QC-PLAN-R13.md; plan = epyc10 qc-plan-r13/v3p6/<pick>/plan.json (v3p7d, v3p7c, v3p7b2 exist).
+2. Recompose: python3 -I FAM-QC-SLWSLE-R1/v4/compose_suc.py <pick plan.json> v4/pd_v2_d.json <V2 plan_of_record zz_s29...preview.json> v4/plan_v4X.json via ot-run --stage the three inputs on epyc10; run v4/chain_v4suc.sh <TAG> v4/plan_v4X.json (latency gen + R8 loop + bind + LATCHECK + G0 + census). 
+3. v4sucd (V3p7b + cap2b, chain pid 287276, log v4/chain_v4sucd.log) stays as proof that the rows themselves bind.
+4. Hand R13: plan_v4X + bound dir + census; optional pad-leaf row stays optional.
