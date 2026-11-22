@@ -95,6 +95,14 @@ TK=(); v=$(kv OT_TAP_MAX_SINKS); [ -n "$v" ] && TK+=(--tap-max-sinks "$v"); v=$(
 v=$(kv OT_TAP_SPILL_UM); [ -n "$v" ] && TK+=(--tap-spill-um "$v"); [ "$(kv OT_TAP_SKIP_MACRO)" = 1 ] && TK+=(--tap-skip-macro)
 python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${TK[@]}" "${RA[@]}"
 vrc=$?
+# GEOM-ADVISORY-RC-1122 (COORD: KV-HUB-R6 hub_Ei unit oth-ubuntu-1616143-1795359133 exited 1 on an advisory AUTO-GEOM FAIL line while its record was
+# PASS / geom PASS-COND, and the hub posted a false DIED): AUTO-GEOM is advisory (kit_wave.geom_gate, OWNER 11-03 targets-not-gates); a rule FAIL WITH
+# a verdict line is a finished check, rc 0, the FAIL text stays in the line and auto_geom.json.  rc != 0 only when the check did not judge (no verdict,
+# a crash) or with OT_GEOM_STRICT=1 (the old exit 1 on a rule FAIL).
+if [ "$vrc" = 1 ] && [ "${OT_GEOM_STRICT:-0}" != 1 ] && python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); sys.exit(0 if d.get("verdict") == "FAIL" and str(d.get("line", "")).startswith("AUTO-GEOM FAIL") else 1)' "$OUT/auto_geom.json" 2>/dev/null; then
+  echo "AP_AUTO_GEOM_ADVISORY rule FAIL recorded (advisory: the wave gate reads the line, PASS-COND GEOM-ADVISORY); check finished, rc 0"
+  vrc=0
+fi
 PA=(); [ "$GRT" = true ] && PA=(--cong "$OUT/cong.rpt")
 python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" "${PA[@]}" \
   >/dev/null 2>&1 && echo "AP_AUTO_GEOM_PNG $OUT/auto_geom.png" || echo "AP_AUTO_GEOM_PNG_ERROR"
