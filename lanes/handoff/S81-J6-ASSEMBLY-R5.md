@@ -31,3 +31,5 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 ## J8 INTAKE LIST (posted 21:2x; full text intel2 s81-j6-r5/j8_intake.txt)
 - Cut 11-22 16:00 -> one relay re-plan 16-18 -> one strict bind/LAT/G0/PRE 18-21 -> apply 11-23 04:15.
 - Col entry: first of COL-H10-R4 / COLROM-R5 (5_1_grt.odb only) / BKSEL-R7 r7a with final-GRT TT>=-42 + ovf 0 by 11-22 14:00; else J7 col form.
+
+- J8 add: slice_station__t37 pin-face re-site + sweep of all slice_station types for opposite-face pins (owner FAM-S81-SLICE-R6, by 11-22 16:00; GEOM-REVIEW 21:12).
