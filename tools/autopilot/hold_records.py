@@ -22,7 +22,7 @@ Selector expansion: a pattern expands to the explicit items of hold_event_items[
 plan sha moved: a follow_plan record is re-expanded against the new plan's item list (and rebound in memory), any other record keeps
 holding its old items (no behaviour change at an adopt) and the audit reports it SUPERSEDED.
 
-Audit codes (each should be 0): HELD-BUT-LAUNCHED, TERM-UNREACHABLE, HOLD-SUPERSEDED, HOLD-ZERO-MATCH.
+Audit codes (each should be 0): HELD-BUT-LAUNCHED, HOLD-LEAK, TERM-UNREACHABLE, HOLD-SUPERSEDED, HOLD-ZERO-MATCH.
 """
 import argparse
 import fnmatch
@@ -806,6 +806,13 @@ def audit(cfg, launched=()):
             if fnmatch.fnmatchcase(str(item), pat):
                 add("HELD-BUT-LAUNCHED", die, (cfg.get("_hold_compiled") or {}).get(die, {}).get(pat) or "legacy", f"key {pat}", item=item)
                 break
+        else:                                    # H1 (WAVE-OPS-R1): a record that blocks nothing on this die (stops_off) still names the row: the owner meant to hold it
+            for rid, r in recs.get(die, {}).items():
+                pats = [x for x in (r.get("keys") or []) + (r.get("items") or []) if isinstance(x, str)]
+                hit = next((x for x in pats if fnmatch.fnmatchcase(str(item), x)), None)
+                if hit:
+                    add("HOLD-LEAK", die, rid, f"record {rid} key {hit} (launched; hold_items does not carry it)", item=item)
+                    break
     return list(out.values())
 
 

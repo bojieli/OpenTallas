@@ -1105,7 +1105,15 @@ def hold_audit_step(AP, cfg, st, t0):
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
-           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD", "PILOT-DEADLOCK")))
+           ("HELD-BUT-LAUNCHED", "HOLD-LEAK", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD", "PILOT-DEADLOCK")))
+    for f in found:                                  # H1 (WAVE-OPS-R1): launched rows a hold record names but hold_items does not carry -> a HOLD-LEAK line to the die owner
+        if f["code"] == "HOLD-LEAK" and f["n"] > 0:
+            _own = ((cfg.get("dies") or {}).get(f["die"]) or {}).get("owner_lane") or "die owner"
+            _k = f"hold_leak_sig:{f['die']}:{f['id']}"
+            if st.get(_k) != f["n"]:
+                st[_k] = f["n"]
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} HOLD-LEAK [-> {_own}] {f['die']}/{f['id']}: {f['n']} launched row(s) match a hold record that blocks nothing on this die "
+                                f"(stops_off): {f['detail']}; items {','.join(map(str, f['items'][:8]))}. Hold them with dies.{f['die']}.hold_items (kit_wave_edit refuses new records here).")
     # HOLD-FLOW-R 11-16 (FABLE-FLOW-2000): a held release term with no producer for 12 h is a wave alert line
     try:
         _ctx = hold_ctx(cfg)

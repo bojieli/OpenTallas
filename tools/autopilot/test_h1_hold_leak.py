@@ -108,3 +108,12 @@ def test_removed_hold_keys_pure():
     assert KE.removed_hold_keys(CFG, new) == {"s81": ["col_*"]}
     assert KE.removed_hold_keys(CFG, CFG) == {}
     assert KE.removed_hold_keys(CFG, {"dies": {}}) == {"s81": ["col_*", "leaf_*", "svc_*"]}
+
+
+def test_audit_counts_launched_rows_matching_a_record():
+    import hold_records as HR
+    cfg = {"dies": {"s81": {"hold_records": [{"id": "r1", "keys": ["leaf_*"]}], "hold_items": {}}}}
+    f = HR.audit(cfg, [("s81", "leaf_t1"), ("s81", "svc_t2")])
+    leak = [x for x in f if x["code"] == "HOLD-LEAK"]
+    assert len(leak) == 1 and leak[0]["items"] == ["leaf_t1"] and HR.summarize(f)["HOLD-LEAK"] == 1
+    assert not [x for x in HR.audit(cfg, [("s81", "svc_t2")]) if x["code"] == "HOLD-LEAK"]
