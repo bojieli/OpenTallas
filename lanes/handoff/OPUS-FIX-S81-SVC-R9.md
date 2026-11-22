@@ -21,3 +21,7 @@ Read R8 handoff (lanes/handoff/OPUS-FIX-S81-SVC-R8.md) for J7/J8 history and FAB
    Expect att GEN trouble Codex hit on J7 (epyc2 north/hi4_regen: exact macro names, 98-site fit memory = 8 staging 160x265 + 4 PMEM 256x256 SRAMs instead of ~601k soft bits, stage path aliases; scripts gen_att_fit_memory.py, correct_fit_macro_stage.py, finish_att_fit.sh) and rest clock landing x (epyc7 north/hi4_place_only/prepare_rest_clock_pin.py).
 2. Then FABLE ranks 3-4: +2 stages on Y_p (1.86 mm endpoints), att macro-to-macro nets (eng _Y, load_s, rd_data 1.3-1.5 mm) need stations or macro re-order.
 3. Hand hi4 rows to S81-J6-ASSEMBLY-R5 once a pair places clean (PLAN = plan_ftresite_r9 + hi4 split; FILE lines = split_hi4x dir, ovl_hi4 RTL, census_x_r9, ovl_j8).
+
+## 11-21 22:xx update
+- ADOPTED all s81 svc rows (COORD sweep 21:50): COORD-ROUTED-OWNERS.tsv rows 113-122 (incl s81 svc_*) -> OPUS-FIX-S81-SVC-R9. Choice posted: lo t2/t3/t4 + stale svc rows RELAUNCH ON J7 via the wave after 04:14 apply; watch launches, fix real failure classes.
+- Bind fixes: main c6b360d4cd + 8ad54f25f4 (dead_inputs split-piece rule; installed in treeJ8). Die reset relays re-planned (relay_r9.sh -> relay/plan_relay.json, 2 rows: fW0_p1_b0, svc_13) and installed as plan_j8_hi4_r9.json (pre copy relay/plan_j8_hi4_r9.pre_relay.json). Full gate rerun: unit oth-ubuntu-2471689-1795324147, log r9/bind_r9f.otrun.log.
