@@ -83,3 +83,17 @@ Work dir epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8 (scripts als
 
 - Reference rest unit `oth-ubuntu-3500509-1795309095` exited at PLACE-HPWL before resize. GPL ended at overflow 0.1972 and 19.6055M µm HPWL, 1.319× its converged minimum versus 1.3 allowed. At overflow 0.2437 it was 16.0558M µm. The failed 3_3 ODB is preserved. Its actual 27 macro poses match exactly. Visual review `hi4_place_only/rest_review/gpl_render` shows a congested east-edge cell strip near x565 and measured 1.306 local density. The 0.24 overflow comparison is parked pending the corrected rest result and retains the 1.3 HPWL gate and existing 0.25 sparse threshold.
 - ATT fit completed stock synthesis at 228,796 standard cells and 98 macros against its 400k cap, and the actual 2_2 ODB has all 98 at the exact intended poses, zero missing, extra or moved. Att and corrected rest passed PDN and continue in GPL. Exact final placed review helper on epyc7 is `hi4_place_only/review_actual.sh`. It reads the required `3_place.odb` and compares macro poses and clock landings against the active kit and saved flow receipt.
+
+## R8 RESUMED 18:3x PST (after Codex 14:23-18:1x) — newest
+- Adopted all Codex svc work (opus-fix-s81-svc-r8-north on E2/E7). type_split faults A+B fixed on main f11e3abd9c3 / merge f7c6720324a.
+- COORD 18:1x APPROVED the seven private svc J8 layouts. J8 rows package: epyc2 opus-fix-s81-svc-r8-north/j8/J8_ROWS_svc.txt
+  (PLAN j8/ft_resite/plan_ftresite.json sha ed6d6287 = seven_finalization_r4/kit_input/plan_c.json + 22 ft regs re-sites; BASE J7 v11; FILE lines).
+- FABLE-PD-S81-1430 item 2: actual FT bit sites in cores = 0 on all svc; the hits were regs_um centres (lo rs_w t1 5, lo t1 3, lo t7 10, hi t4 ft1 4).
+  Rows ledger j8/ft_resite/ft_resite_rows.json; scripts apply_ftrows.py, hi_regs.py (epyc2 north dir). Re-census 0/0.
+  OPEN: face-entry (stage 0) regs under face-abutting macros: hi rs t1 ft3 (251.2,2746.5) u_h4; hi rs t6 ft3 (44.2,2747.5) pmem_capture ram -> window or macro nudge in J8 hi layout.
+- hi4 place-only on epyc7 (rest_clock unit 3854018, att_fit 3862334): BOTH FAIL PLACE-HPWL 1.32x (limit 1.3). Do NOT retry on settings.
+  Structural read (rest): 22 macros x 43.2-553.0, y 69-1598 (type frame, W 570.24); the 13 cut-route ports (~11.5k bits) sit on the E cut edge
+  at type y 90-2102, i.e. along a 17 um channel beside the macro wall; upper third (y>1600) is empty; GPL density 1.306 in that strip
+  (rest_review/gpl_render/density.png). Fix candidates: (a) pack the L cut ports above the macro top (y>=1610) first, spill below with
+  the remaining span; (b) shift the macro block west to open >=40 um E channel (check W-face attn_i2/attn_o2 channel). Do the same read on att_fit
+  3_3_place_gp.odb (macros x 8.6-857.5 W 872.64: no channel at either face). Then re-split hi4 with main type_split on the J8 base (plan_ftresite).
