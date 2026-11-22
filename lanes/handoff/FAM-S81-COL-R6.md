@@ -48,3 +48,4 @@ Col is held until J8 (apply 11-23 04:15), not J7 (11-22 04:14). Cut 11-22 16:00,
 Open: confirm with S81-J6-ASSEMBLY-R5 that p4/p5 are in the J8 col release and carry H9R0-R4 keep (OT_KEEP_WIRES + ot_s81_rly:rq) + STAGGER rows (H9R0-R4 kit C, j8c tree, plans p1/p2/p4/p5).
 bk_sel r7a: run-item (spec FAM-S81-COL-R6/s81_bk_sel__t2_1121220051, epyc10), local bg task; on exit post kit dir + result to S81-BKSEL-R7.
 H9R0-R4 J7 p2 results (22:43): keep rep CTS setup WS -17.11 ps (xo recovery class gone, 8 rq flops); STAGGER GRT overflow 829 (was 5,401), e2 strip clear.
+COORD RULING 23:xx: FAM-S81-COL-H9R0-R4 carries the p4/p5 J8 rows in its single hand-off to S81-J6-ASSEMBLY-R5; I send no separate hand-off. I keep owning the p4/p5 runs and the J8 relaunch (check coverage against the J8 candidate when it exists).
