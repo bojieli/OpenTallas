@@ -22683,3 +22683,4 @@ FAILED [AUTOPILOT 4e4323c4d5b1] 2026-11-21 22:52:25 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 22:53 PST HOURLY free space 22:53 epyc9=2470 intel1=1210 (restore at >=250 GiB; caps 250 on epyc9/intel1)
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 22:53 PST ALERT STUCK-STATE s81: 36 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
