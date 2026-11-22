@@ -838,6 +838,11 @@ runlog = rd(runlog_path, 400000)
 place_pass = False
 current = []
 if os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
+    if a.get("retained_return_to") and goal == "route" and result.get("rc") == 21:
+        stops = re.findall(r"(?m)^OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE:[^\n]*", runlog)
+        last_line = runlog.rstrip("\r\n").rsplit("\n", 1)[-1]
+        if stops and re.fullmatch(r"OT_GRT_STOP noconverge: stage rc \d+ -> 21 \(no re-run\)", last_line):
+            out["retained_grt_noconverge"] = stops[-1][:300]
     current = re.findall(r"(?m)^(?:FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*|OT_POSTPLACE_SETUP_STOP (?:pass|no measurement)\b[^\n]*)", runlog)
     if current:
         place_pass = current[-1].startswith("OT_POSTPLACE_SETUP_STOP ")
@@ -1383,6 +1388,12 @@ def classify(c, client):
         return "STRUCTURAL", "place-setup-stop", stop
     if client.get("drt_no_progress"):
         return "STRUCTURAL", "drt-no-progress", client["drt_no_progress"]
+    if client.get("grt_noconverge"):
+        # The wrapper kills the worker after the GRT design stop. A bare
+        # shell "Killed" or Error 137 is a consequence, not memory evidence.
+        if re.search(r"out of memory|std::bad_alloc|OOMKilled|\] Error 247\b", c.get("oom") or "", re.I):
+            return "CRASH", "infra-oom", c["oom"]
+        return "STRUCTURAL", "grt-noconverge", client["grt_noconverge"]
     if c.get("FAIL_route"):
         fr = c["FAIL_route"]
         if c.get("grt_caught_dpl"):
@@ -1564,6 +1575,17 @@ def parse_client_log(text, *, unit=None, started=0):
                                      r"(?=\n[\s\S]*^ot-run: RAN on [^\n]+ exit 6$)", tail)
                     if stop:
                         o["place_setup_stop"] = stop.group()[:400]
+                if rc == 21 and o.get("unit") and abs(int(start[1]) - float(started or 0)) <= 120:
+                    worker = re.search(rf"(?m)^ot-run: RAN on {re.escape(o['ran_on'])} "
+                                       rf"\(unit {re.escape(o['unit'])}\): exit 21$", tail)
+                    if worker:
+                        before_return = tail[:worker.start()]
+                        stops = list(re.finditer(r"(?m)^OT_GRT_STOP [^\n]+$", before_return))
+                        if stops and re.fullmatch(r"OT_GRT_STOP noconverge: stage rc \d+ -> 21 \(no re-run\)", stops[-1][0]):
+                            detail = re.findall(r"(?m)^OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE:[^\n]*",
+                                                before_return[:stops[-1].start()])
+                            if detail:
+                                o["grt_noconverge"] = detail[-1][:300]
                 if rc == 21:
                     # The route watchdog terminates its worker, whose shell prints "Killed" before the stop receipt.
                     stop = re.search(r"(?m)^OT_GRT_STOP drt_no_progress: stage rc \d+ -> 21 \(no re-run\)$", tail)
@@ -3761,8 +3783,12 @@ def retained_publish_negative(j, client, probe=None):
     probe = probe or rpy
     c = probe(host, PROBE_CLASSIFY, {"kit": entry["root"] + "/work", "since": j.get("started", 0),
                                    "goal": j["goal"], "retained_return_to": j["path"]})
-    so = (c or {}).get("signoff")
-    if not so or c.get("error") or so.get("verdict") != "NOT SIGNED":
+    if not c or c.get("error"):
+        return None
+    so = c.get("signoff")
+    if not so and c.get("retained_grt_noconverge"):
+        return {"host": host, "grt_noconverge": c["retained_grt_noconverge"]}
+    if not so or so.get("verdict") != "NOT SIGNED":
         return None
     gates = SP.judge(so, j.get("die"))["gates"]
     failed = [k for k in so.get("fails", ()) if gates.get(k) == "FAIL"]
@@ -3796,8 +3822,12 @@ def finish(st, j, c, client):
         if not c.get("signoff") and j["goal"] == "route":
             retained = retained_publish_negative(j, client)
             if retained:
-                j["retained_signoff"] = retained
-                cls, kind, reasons = classify({"signoff": retained["signoff"]}, {})
+                if "grt_noconverge" in retained:
+                    j["retained_grt_noconverge"] = retained["grt_noconverge"]
+                    cls, kind, reasons = classify({"grt_noconverge": retained["grt_noconverge"]}, {})
+                else:
+                    j["retained_signoff"] = retained
+                    cls, kind, reasons = classify({"signoff": retained["signoff"]}, {})
                 reasons = f"{reasons} | return copy failed; retained {retained['host']}:{j['publish_return']['root']}"
     if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
         chain = c.get("chain") or {}
