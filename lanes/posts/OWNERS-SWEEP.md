@@ -325,3 +325,8 @@
   Held S81 147 / KV 38 / QC ~18 pending plan events are counted OK.
 - 2026-11-22 07:51 PST 07:51 sweep 449 unsigned rows (S81 347, QC 52, KV 47, HEAD 1). OK 198. DEAD-OWNER 249 (S81 223 = LEAF-R10 66 last post 02:33, COLROM-R6 ~113 last 05:19, SVC-R9 14; KV 19 HGI-R6 02:48; QC 7). UNOWNED 0, FAILED 0, STALE 0. DEAD-OWNER = primary lane no post 2h; successor lanes often posting.
 - 2026-11-22 07:52 PST 07:51 CORRECTION: S81 DEAD-OWNER 223 = COLROM-R6 118 (last 05:19), LEAF-R10 80 (02:33), SVC-R9 16 (04:15), FAIL-S81-1 6, DSDV-R1 2, COL-R6 1. Prior post split was wrong; totals unchanged.
+- 2026-11-22 08:50 PST 09xx sweep: 458 unsigned rows (S81 349, QC 62, KV 47, HEAD 1); no UNOWNED.
+  FAILED-NO-RELAUNCH 15, all S81: s81sl_leaf t2/t12/t31/t33/t44/t45/t47/t52 (OPUS-FIX-S81-LEAF-R10), col_h10_r2, col_h9_r2, dsdv_slice_lepe_mu_LP, lepe_nh_mus_LP, lepw_mu_C, lepw_mus_LP, iqf__t1.
+  DEAD-OWNER 2, QC: cbn_q00 cl622f65d2 + cldbcda913 (TAP-GRID-R5, no post 2 h).
+  STALE 1: S81 col_h9_r0_p6 (FAM-S81-COL-H9R0-R4).
+  UNCLASSIFIED 3: KV kv3_hub_C (kit_rtl), QC slw_st_b_v1 cle6023ec2, S81 s81sl_leaf t65 (place error).
