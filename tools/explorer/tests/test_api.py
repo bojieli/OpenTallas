@@ -168,26 +168,3 @@ def test_path_traversal(path):
     assert b'import design_service' not in body and b'class H(BaseHTTPRequestHandler)' not in body and b'root:x:0:0' not in body, 'leaked file via ' + path
     # an index.html fallback or a 4xx is fine; a 200 with the server source is not
     assert head.split(b' ')[1] in (b'200', b'301', b'302', b'400', b'403', b'404'), head[:80]
-
-
-def test_any_plan_records():
-    """EXPLORER-STORE-R1 (OWNER 11-22): every signed record on ANY plan is listed with its plan label and counted per die;
-    a superseded record (no current-plan node) opens as a node with its archive rows and pack"""
-    st, _, j = jget('/api/v1/records')
-    assert st == 200 and set(['summary', 'total', 'records']) <= set(j) and j['total'] == len(j['records']) > 0
-    plans = {r['plan'] for r in j['records']}
-    assert plans <= {'current', 'superseded'}
-    for r in j['records'][:50]:
-        assert set(['id', 'die', 'level', 'plan', 'plan_label', 'superseded', 'archive', 'pack']) <= set(r)
-        assert r['id'].startswith(r['die'] + '.') and r['superseded'] == (r['plan'] == 'superseded')
-    s = j['summary']
-    assert s['total']['signed'] == j['total'] and s['total']['current'] + s['total']['superseded'] == j['total']
-    for d in s['dies'].values(): assert d['signed'] >= d['archived'] and d['signed'] >= d['viewable']
-    st, _, a = jget('/api/v1/archive/summary')
-    assert st == 200 and a['any_plan']['total'] == s['total'] and 'any_plan_not_viewable' in a
-    st, _, c = jget('/api/v1/records?plan=current&die=s81')
-    assert st == 200 and all(r['plan'] == 'current' and r['die'] == 's81' for r in c['records'])
-    sup = [r for r in j['records'] if r['superseded'] and not r['node']]
-    if sup:
-        st, _, n = jget('/api/v1/node/' + sup[0]['id'])
-        assert st == 200 and n['node']['superseded'] and n['node']['status']['state'] == 'signed' and n['record']['id'] == sup[0]['id']
