@@ -4558,7 +4558,8 @@
  "not_in_gate": "hold -207.5 on input port -> first register (arst_n, lpc_i0, lepf_i0) vs ~200 ps insertion: port budget, die-level only (COORD ruling 1); no lever spent",
  "bind_proof": {
   "S1+R1 (proof14)": "GREEN 11-22 03:xx PST: intel2 fam-lepe4/p14 (p12 tree + 556 ops, tools rt d7b817cb7a8d): ELAB 0, BIND 0, LATCHECK 873/873 PASS delta {}, G0 9 errors = p12 baseline set (0 new); mu_LP relay_sites 8338 -> 8892, still 28 inside hard macros (inherited, 0 of the 554 new), PRE PASS",
-  "F2+R1 (proof15)": "GREEN 11-22 03:xx PST: intel2 fam-lepe4/p15 (p12 tree + R1 + u_lep li3_d/li3_v relay_depth D2, no S1 sites, tools rt d7b817cb7a8d): ELAB 0, BIND 0, LATCHECK 873/873 PASS delta {}, internal_pipe cycles 2023515 -> 2024069 (+554 = 553 li3_d + 1 li3_v bits x +1), G0 9 errors = p12 baseline set (0 new), PRE PASS. Stage instances u_y_xd_u_lep_li3_{d,v}_0_0 and _0_1 (FIRM keys for the F2 kit sites)."
+  "F2+R1 (proof15)": "GREEN 11-22 03:xx PST: intel2 fam-lepe4/p15 (p12 tree + R1 + u_lep li3_d/li3_v relay_depth D2, no S1 sites, tools rt d7b817cb7a8d): ELAB 0, BIND 0, LATCHECK 873/873 PASS delta {}, internal_pipe cycles 2023515 -> 2024069 (+554 = 553 li3_d + 1 li3_v bits x +1), G0 9 errors = p12 baseline set (0 new), PRE PASS. Stage instances u_y_xd_u_lep_li3_{d,v}_0_0 and _0_1 (FIRM keys for the F2 kit sites).",
+  "F2 bind of record (pinned tree)": "GREEN 11-22: fresh strict elab+bind of epyc7 trees/s81_mu_LP_f2 (proof15 fork + 1108 F2 li3 sites, plan sha 4eb9e2cf) into trees/s81_mu_LP_f2_bind_f2 on tree tools; LATCHECK 873/873 PASS (internal_pipe digest b43bc86adb4bdaaa), G0 9 errors = baseline, PLAN-GATE-PRE PASS 0 findings"
  },
  "j8_rule": "COORD 11-22: S1 goes into J8 if proof12 GRT shows the li3 leg (u_u_lnl3 -> li3 station) meeting setup at GRT; otherwise F2 (+1 pre-approved). If neither S1 nor the F2 race kit has GRT data by 13:30, ship F2."
 }
