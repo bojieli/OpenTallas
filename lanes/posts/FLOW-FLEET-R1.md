@@ -1,1 +1,2 @@
 - 2026-11-21 21:53 PST RESUMED FLOW-FLEET-R1 (Opus 5.5, new lane for COORD): source lanes/FABLE-FLOW-2200.md. Items: 1 epyc7 THREAD_CAP revert + cap owner/expiry convention + hourly flag; 2 NOPROG-WATCHDOG GRT-LABEL cancel action; 3 ot-tree-fork/src_manifest copy lock + manifest-hash reuse; 4 count drift 437->431 + 5 uncounted signed rows.
+- 2026-11-21 21:57 PST DONE [FLOW-FLEET-R1] ot-push-main otpush-renewed-glider-4023340 on renewed-glider: rc=0 after 20 s, ended 05:57:09, log none, cmd: ot-push-main 
