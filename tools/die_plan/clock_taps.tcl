@@ -374,7 +374,20 @@ if {$ct_reset_family} {
       }
     }
   }
-  if {![dict size $ct_collectors]} {error "OT_SERDES_RESET_COHORT no compiled local-clock collectors"}
+  if {[info exists ::env(OT_SERDES_EXPECTED_LOCAL_COLLECTORS)]} {
+    set ct_compiled_collectors {}
+    foreach collector [dict keys $ct_collectors] {
+      regexp {_([0-9]+)$} $collector -> ct_cid
+      lappend ct_compiled_collectors $ct_cid
+    }
+    set ct_compiled_collectors [lsort -integer $ct_compiled_collectors]
+    set ct_expected_collectors $::env(OT_SERDES_EXPECTED_LOCAL_COLLECTORS)
+    if {$ct_compiled_collectors ne $ct_expected_collectors} {
+      error "OT_SERDES_RESET_COHORT local-clock collector mismatch: expected {$ct_expected_collectors}, compiled {$ct_compiled_collectors}"
+    }
+  } elseif {![dict size $ct_collectors]} {
+    error "OT_SERDES_RESET_COHORT no compiled local-clock collectors"
+  }
   # Typed rows are sized on the actual compiled driver graph before CTS. Each
   # bounded group has a fixed existing light-clock tap, not the encoder root.
   if {[info exists ::env(OT_SERDES_RELAY_COHORTS)] && $::env(OT_SERDES_RELAY_COHORTS) ne ""} {
