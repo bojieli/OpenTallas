@@ -7,8 +7,10 @@ GOAL: 9 NARROW cland ring masters for the kv3_hub_C cut (DONE: signed + exported
 - Private gate on ot-tree-fork L/tree_d27d3 (plan 6cf8a895318e): PRE PASS 0 (L/gates/pre_a), G0 PASS 0 err (g0_b), strict bind 0 err + LATCHECK RC0 + BPC PASS (bind_b); R8 = D27d3 baseline.
 - Lessons: freezer must keep dict key order (param_wrap text compared verbatim by bind EMIT); SCH.Plan shares the plan dict (search on a deepcopy); bind hardlinks bind_sinks.json from a cache -> move bind_of_record out before ot-tree-fork --verify.
 - Generator (re-site if base moves): L/ROWS_hubc_ringmac.py (run in a tree root; --views L/views --pins L/rk --overlay ... --report ...), then L/tmp/freeze.py BASE OUT ROWS.
-## Running
-- Private proof kit kv3_hub_C rm1: L/gen_hubc_rm.sh rm1 (launch tree L/launch_8ba6 = rt 8ba65785b19d + fork; wave env kit_wave.json) via ot-run epyc8 -> L/proof/rm1. Next: check cell count < 400k, then run_kit GOAL=route.
+## Running (11-22 04:5x PST)
+- Fork now = D27d3 + RINGMAC rows + KV-AHUB-RH1 rows (plan 3523e1022d40; composes ORDER_INDEPENDENT). Bind from launch tree L/launch_8ba6 (rt 8ba65785b19d; fork D27d3 tools lack qkd_ahub_ck7_strap enum): gates/bind_d RC_BIND 0 / 0 errors, LATCHECK 0, R8 = baseline, BPC 1 error = kv3_pc__cl5a95b461 S_slg_slg_cfg_group (not hub_C; rt-vs-tree skew). gen proof/rm2 GEN_OK, 59 rings exact-placed.
+- RINGMAC rows alone on rt 8ba6 fail hub_C kit-rtl (AHUB boundary signature) -> hub_C kits need both row sets.
+- Private kit (kit_wave private-spec, wave env): spec L/pk/spec_rm3/spec.json, work L/pk/hubc_rm3, goal route; run-item pid 1809733 epyc8, log L/pk/run_rm3.log.
 ## Next
 1. Answer KV-PLAN-R6 compose questions (re-site if D28 compose moves a band: re-run generator on the composed plan).
 2. rm1 kit to GRT TT; report cell count + GRT to COORD/KV-PLAN-R6.
