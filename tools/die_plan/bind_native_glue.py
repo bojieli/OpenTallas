@@ -4,6 +4,7 @@ Retain inferred memories as arrays. Never run memory_map, async2sync, opt,
 or clock rewrites here. These helpers remove an RTL emission gap; they do
 not qualify reset timing, physical memories, or a plan boundary.
 """
+import fcntl
 import hashlib
 import json
 import re
@@ -89,7 +90,6 @@ class NativeGlue:
             inp = self.directory / (module + ".json")
             sv = self.directory / (module + ".sv")
             ys = self.directory / (module + ".ys")
-            inp.write_text(json.dumps(data))
             # All paths are generated below the output directory; reject names
             # that cannot be represented by Yosys's quoted filename syntax.
             if any('"' in str(p) or "\n" in str(p) for p in (inp, sv)):
@@ -97,28 +97,36 @@ class NativeGlue:
             # write_verilog has no expression for $bwmux / $demux / $bmux: lower only that one cell with its own
             # Yosys map pass (bit-exact by construction: and/or, shift/compare), nothing else
             lower = {"$bwmux": "bwmuxmap\n", "$demux": "demuxmap\n", "$bmux": "bmuxmap\n"}.get(cell.ytype, "")
-            ys.write_text(f'read_json "{inp}"\n{lower}write_verilog -noattr "{sv}"\n')
-            try:
-                E.run_yosys(ys, self.directory / (module + ".log"),
-                            [self.directory], mem_gb=2)
-            except E.ElabError as exc:
-                raise NativeGlueError(str(exc)) from exc
-            merged = []
-            if cell.ytype == "$mem_v2":
-                # write_verilog expands every per-bit write enable into its own statement (S81 svc hi: 4096 $memwr on one
-                # 256 x 40 memory); register-ise such arrays before Yosys's superlinear memory passes (exact, see native_mem2reg)
-                text, marked = mark_mem2reg(sv.read_text())
-                # S81-SVC-SYNTH 11-15: the same per-bit statements stall canonicalize (PROC_PRUNE/PROC_DFF, hours) even as
-                # registers; merge each run of one port into chunk-wide read-modify-write statements (exact, see native_memwr_merge).
-                # mem2reg is decided on the per-bit count BEFORE the merge: a 262144-bit memory left as $mem fails ORFS
-                # SYNTH_MEMORY_MAX_BITS (svc_hi t3, 37 min into 1_2_yosys), the register form is what the kits have always had.
-                if os.environ.get("OT_NATIVE_MEMWR_MERGE", "1") != "0":
-                    text, merged = merge_memwr(text)
-                    if merged:
-                        (self.directory / (module + ".memwr_merge.txt")).write_text(
-                            "".join(f"{m} {b} -> {a}\n" for m, b, a in merged))
-                if marked or merged:
-                    sv.write_text(text)
+            # Forked type workers have separate caches but share these paths.
+            # Keep the same input inode and lock it before truncating it or
+            # updating any of the helper's Yosys inputs, outputs and logs.
+            with inp.open("a") as input_file:
+                fcntl.flock(input_file, fcntl.LOCK_EX)
+                input_file.truncate(0)
+                input_file.write(json.dumps(data))
+                input_file.flush()
+                ys.write_text(f'read_json "{inp}"\n{lower}write_verilog -noattr "{sv}"\n')
+                try:
+                    E.run_yosys(ys, self.directory / (module + ".log"),
+                                [self.directory], mem_gb=2)
+                except E.ElabError as exc:
+                    raise NativeGlueError(str(exc)) from exc
+                merged = []
+                if cell.ytype == "$mem_v2":
+                    # write_verilog expands every per-bit write enable into its own statement (S81 svc hi: 4096 $memwr on one
+                    # 256 x 40 memory); register-ise such arrays before Yosys's superlinear memory passes (exact, see native_mem2reg)
+                    text, marked = mark_mem2reg(sv.read_text())
+                    # S81-SVC-SYNTH 11-15: the same per-bit statements stall canonicalize (PROC_PRUNE/PROC_DFF, hours) even as
+                    # registers; merge each run of one port into chunk-wide read-modify-write statements (exact, see native_memwr_merge).
+                    # mem2reg is decided on the per-bit count BEFORE the merge: a 262144-bit memory left as $mem fails ORFS
+                    # SYNTH_MEMORY_MAX_BITS (svc_hi t3, 37 min into 1_2_yosys), the register form is what the kits have always had.
+                    if os.environ.get("OT_NATIVE_MEMWR_MERGE", "1") != "0":
+                        text, merged = merge_memwr(text)
+                        if merged:
+                            (self.directory / (module + ".memwr_merge.txt")).write_text(
+                                "".join(f"{m} {b} -> {a}\n" for m, b, a in merged))
+                    if marked or merged:
+                        sv.write_text(text)
             self.cache[key] = module
             self.files.append(sv)
         actual = [f".{p}({connections[p]})" for p, width in widths.items() if width and p in exposed]

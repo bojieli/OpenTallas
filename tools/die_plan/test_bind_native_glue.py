@@ -85,6 +85,41 @@ end endmodule
     assert (r.returncode != 0) == mutant, r.stdout+r.stderr
     if not mutant: assert "NATIVE_GLUE_PASS" in r.stdout
 
+def test_parallel_emit_holds_same_helper_lock_through_yosys(tmp_path, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    import fcntl
+    from threading import Barrier
+
+    primitive = NS(ytype="$shift", yparams={}, dirs={"A": "input", "Y": "output"},
+                   ports={"A": [2], "Y": [3]})
+    stub = "module shared(input A, output Y); assign Y = A; endmodule\n"
+    start = Barrier(2)
+
+    def run_yosys(script, log, mounts, mem_gb):
+        inp, sv = [Path(command.split('"')[1]) for command in script.read_text().splitlines()]
+        with inp.open() as reader:
+            # A distinct file descriptor, like a producer in another process,
+            # cannot lock the inode while the current producer runs Yosys.
+            with pytest.raises(BlockingIOError):
+                fcntl.flock(reader, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            assert len(json.load(reader)["modules"]) == 1
+        sv.write_text(stub)
+
+    def emit():
+        glue = NativeGlue(tmp_path, ["$shift"])
+        start.wait(timeout=10)
+        instance = glue.emit(primitive, {"A": "a", "Y": "y"}, "u")
+        return instance, glue.files
+
+    monkeypatch.setattr(E, "run_yosys", run_yosys)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(emit)
+        second = pool.submit(emit)
+        assert first.result(timeout=10) == second.result(timeout=10)
+    assert len(list(tmp_path.glob("*.sv"))) == 1
+    assert next(tmp_path.glob("*.sv")).read_text() == stub
+
+
 def test_collect_memories_is_explicit_and_does_not_map_state():
     base = E.yosys_script({"top": "top"}, [], [], [], "out.json")
     selected = E.yosys_script({"top": "top", "collect_memories": True}, [], [], [], "out.json")
