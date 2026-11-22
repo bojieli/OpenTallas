@@ -730,7 +730,35 @@ def evidence_backfill(L, budget_s=1500):
     say('evidence backfill: %d unit(s) queued for rtx-pro' % len(queue))
 
 
-def write_guard_exported(L, rows, hosts, push=True):
+MAIN_GIT = os.environ.get('OT_MAIN_GIT', '/srv/opentallas-scratch2/git/OpenTallas.git')
+SIGNOFF_NAME = re.compile(r'(^|/)([^/]*\.)?signoff\.json$')
+
+
+def main_record_shas(git_dir=None, ref='main'):
+    """CLEAN-AGGR-R3 11-22 (intel2 at 150 GB): a sign-off record committed to main IS exported (git is the store of record); every source tree copy carries the
+    221 tracked records (physical/ref_tile views, results/...) and the guard refused those trees as 'signed record not exported'.  -> sha256 set ({} on error)"""
+    g = ['git', '--git-dir', git_dir or MAIN_GIT]
+    try:
+        ls = subprocess.run(g + ['ls-tree', '-r', ref], capture_output=True, text=True, timeout=300).stdout
+        objs = [ln.split()[2] for ln in ls.splitlines() if ln.split('\t')[0].split()[1:2] == ['blob'] and SIGNOFF_NAME.search(ln.split('\t', 1)[1])]
+        if not objs:
+            return set()
+        out = subprocess.run(g + ['cat-file', '--batch'], input=('\n'.join(objs) + '\n').encode(), capture_output=True, timeout=300).stdout
+    except (OSError, subprocess.SubprocessError, IndexError):
+        return set()
+    shas, i = set(), 0
+    while i < len(out):
+        j = out.index(b'\n', i)
+        hdr = out[i:j].split()
+        if len(hdr) < 3 or hdr[1] != b'blob':
+            break
+        n = int(hdr[2])
+        shas.add(hashlib.sha256(out[j + 1:j + 1 + n]).hexdigest())
+        i = j + 1 + n + 1
+    return shas
+
+
+def write_guard_exported(L, rows, hosts, push=True, git_dir=None):
     """CLEAN-AGGR-R2 (COORD / FABLE-FLOW-2000 item 5): the delete guard keeps a signed result until it is exported.  Write every exported sign-off record
     sha (INDEX 'record' column + ledger units in state done) and every exported ODB sha to ~/.local/state/ot-delete-guard/exported_records.txt and push it
     to the build hosts.  -> number of shas"""
@@ -744,11 +772,12 @@ def write_guard_exported(L, rows, hosts, push=True):
             for c in (u.get('record'), u.get('odb_sha')):
                 if isinstance(c, str) and re.fullmatch(r'[0-9a-f]{64}', c):
                     shas.add(c)
+    shas |= main_record_shas(git_dir)
     d = os.path.join(HOME, '.local/state/ot-delete-guard')
     os.makedirs(d, exist_ok=True)
     out = os.path.join(d, 'exported_records.txt')
     with open(out + '.tmp', 'w') as f:
-        f.write('# built %d (auto_export drain: INDEX record + ODB shas, ledger done)\n' % time.time())
+        f.write('# built %d (auto_export drain: INDEX record + ODB shas, ledger done, main records)\n' % time.time())
         f.writelines(x + '\n' for x in sorted(shas))
     os.replace(out + '.tmp', out)
     if push:
