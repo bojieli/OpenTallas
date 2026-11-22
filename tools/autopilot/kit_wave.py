@@ -8656,14 +8656,130 @@ def ensure_future_lec(out, meta):
     return ""
 
 
+CONTROL_GEOM_FILES = ("geom_check.sh",)          # S1 (FABLE-FLOW-0800): control scripts (exit codes, stop rules) read from rt/current at each stage start
+CONTROL_FUNCS = ("geom_gate", "resolve_chain_goal")  # S1: stage gate + goal resolution taken from rt/current kit_wave.py at each stage start
+
+
+def control_root(env=None, own=None):
+    """S1 (FABLE-FLOW-0800, COORD 11-22): a running driver keeps the tools of the rt it started from (rt/<sha>/tools/autopilot), so a fix of a
+    CONTROL script (geom_check.sh rc, the stage gate, goal resolution) never reached work in flight (10 false geom DIED posts after 7d9c8891149
+    reached the hub).  -> the tools/autopilot dir of rt/current, resolved NOW (one stage keeps one copy), or None when it is this driver's own
+    dir, is missing, or OT_CONTROL_ROOT=0.  OT_CONTROL_ROOT=<dir> names it explicitly (tests, a pinned control rt).  Result-shaping tools stay pinned."""
+    env = os.environ if env is None else env
+    v = env.get("OT_CONTROL_ROOT", "")
+    if v == "0":
+        return None
+    if not v and env is os.environ and (env.get("PYTEST_CURRENT_TEST") or env.get("OT_UNDER_TEST")):
+        return None                                  # a test of the driver never reaches out to the host's rt/current unless it names one
+    own = Path(own or Path(__file__).resolve().parent).resolve()
+    if v:
+        cand = Path(v)
+    else:
+        try:
+            cand = own.parents[2] / "current" / "tools" / "autopilot"   # rt/<sha>/tools/autopilot -> rt/current/tools/autopilot
+        except IndexError:
+            return None
+    try:
+        cand = cand.resolve()
+        if cand == own or not (cand / "kit_wave.py").is_file():
+            return None
+    except OSError:
+        return None
+    return cand
+
+
+CONTROL_REACH = []                                   # this driver's control-reach notes; run_item copies them into result.json
+
+
+def note_control_reach(stage, name, own_h, ctl_h, used, ctl_root):
+    """one line per control script / function whose rt/current copy differs from the driver's own: what the fix reached (used=current) or not"""
+    rec = {"stage": stage, "name": name, "own": own_h[:12], "current": ctl_h[:12], "used": used, "root": str(ctl_root)}
+    if rec not in CONTROL_REACH:
+        CONTROL_REACH.append(rec)
+    print(f"KW_CONTROL_REACH stage={stage} {name}: driver copy {own_h[:12]} != rt/current {ctl_h[:12]} ({ctl_root}); used={used}", flush=True)
+
+
+def _func_src_hash(path, name):
+    """sha256 of the source text of top-level def NAME in PATH ('' when absent)"""
+    try:
+        txt = Path(path).read_text()
+    except OSError:
+        return ""
+    m = re.search(r"^def %s\(.*?(?=^\S)" % re.escape(name), txt, re.S | re.M)
+    return hashlib.sha256(m.group(0).encode()).hexdigest() if m else ""
+
+
+def control_call(stage, name, args, local, env=None, timeout=300):
+    """S1: call the rt/current version of control function NAME (geom_gate, resolve_chain_goal) when its source differs from this driver's;
+    in a subprocess (python3 -I <rt/current>/kit_wave.py control-call NAME <json>), so the old and new modules never mix.  Any failure
+    falls back to LOCAL(*args) and says so.  -> the JSON-decoded return value (tuples come back as lists)."""
+    ctl = control_root(env)
+    if ctl is None or name not in CONTROL_FUNCS:
+        return local(*args)
+    own_h, ctl_h = _func_src_hash(Path(__file__).resolve(), name), _func_src_hash(ctl / "kit_wave.py", name)
+    if not ctl_h or own_h == ctl_h:
+        return local(*args)
+    try:
+        r = subprocess.run([sys.executable, "-I", str(ctl / "kit_wave.py"), "control-call", name, json.dumps(list(args))],
+                           capture_output=True, text=True, timeout=timeout)
+        got = [ln[len("KW_CONTROL_JSON "):] for ln in (r.stdout or "").splitlines() if ln.startswith("KW_CONTROL_JSON ")]
+        if r.returncode or not got:
+            raise RuntimeError(f"rc {r.returncode}: {(r.stderr or r.stdout or '')[-300:]}")
+        val = json.loads(got[-1])
+    except Exception as e:                                # noqa: BLE001 - a broken control copy never stops the stage
+        print(f"KW_CONTROL_REACH stage={stage} {name}: rt/current call failed ({type(e).__name__}: {str(e)[:200]}); used=driver", flush=True)
+        note_control_reach(stage, name, own_h, ctl_h, "driver", ctl)
+        return local(*args)
+    for ln in (r.stdout or "").splitlines():
+        if not ln.startswith("KW_CONTROL_JSON "):
+            print(ln, flush=True)
+    note_control_reach(stage, name, own_h, ctl_h, "current", ctl)
+    return val
+
+
+def control_call_cmd(name, args_json):
+    """`kit_wave.py control-call NAME JSON`: the subprocess side of control_call; prints KW_CONTROL_JSON <value>"""
+    if name not in CONTROL_FUNCS:
+        print(f"control-call: {name} is not a control function", file=sys.stderr)
+        return 2
+    args = json.loads(args_json)
+    if name == "resolve_chain_goal":
+        import autopilot as AP
+        val = resolve_chain_goal(AP, *args)
+    else:
+        val = globals()[name](*args)
+    print("KW_CONTROL_JSON " + json.dumps(val), flush=True)
+    return 0
+
+
 GEOM_TOOL_FILES = ("geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules.py", "geom_png.py", "placed_scan.py", "geom_memory.py")
 
 
-def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None):
-    """Put the scheduler's complete tool closure beside the actual checkpoint, never move the checkpoint's host."""
+def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None, control=None):
+    """Put the scheduler's complete tool closure beside the actual checkpoint, never move the checkpoint's host.
+    S1: the CONTROL_GEOM_FILES (geom_check.sh: its exit code) come from CONTROL (rt/current at stage start) when given and present."""
     q = shlex.quote
     root = Path(tool_root or Path(__file__).resolve().parent)
     blobs = {name: (root / name).read_bytes() for name in GEOM_TOOL_FILES}
+    if control is not None:
+        for name in CONTROL_GEOM_FILES:
+            try:
+                cb = (Path(control) / name).read_bytes()
+            except OSError:
+                continue
+            if cb != blobs[name]:
+                note_control_reach("geom", name, hashlib.sha256(blobs[name]).hexdigest(), hashlib.sha256(cb).hexdigest(), "current", control)
+                blobs[name] = cb
+        for name in GEOM_TOOL_FILES:
+            if name in CONTROL_GEOM_FILES:
+                continue
+            try:
+                cb = (Path(control) / name).read_bytes()
+            except OSError:
+                continue
+            if cb != blobs[name]:                         # result-shaping tool: stays pinned; say the newer copy did not reach this stage
+                print(f"KW_FIX_NOT_REACHED stage=geom {name}: pinned driver copy {hashlib.sha256(blobs[name]).hexdigest()[:12]} kept, "
+                      f"rt/current {hashlib.sha256(cb).hexdigest()[:12]} ({control}) differs (result tool, pinned)", flush=True)
     hashes = {name: hashlib.sha256(blob).hexdigest() for name, blob in blobs.items()}
     digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
     local = Path(out) / (".geom-tools-" + digest[:16])
@@ -9556,7 +9672,9 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
         p = json.loads(got[-1])
     except (IndexError, ValueError):
         return fail("chain_probe", "KW_CHAIN kit probe gave no answer\n" + (ptxt or "")[-1500:], f"{kh}:{K}")
-    g = resolve_chain_goal(AP, goal, p, runner)
+    g = control_call("chain", "resolve_chain_goal", (goal, p, runner), lambda *a: resolve_chain_goal(AP, *a))
+    if CONTROL_REACH:
+        res["control_reach"] = list(CONTROL_REACH)
     g2 = AP.runner_goal(g, p) if p.get("runner") else g
     if g2 != g:
         print(f"KW_CHAIN_GOAL {g} -> {g2} (runner signs off on {'/'.join(p.get('signoff_goals') or [])})", flush=True)
@@ -10208,7 +10326,7 @@ def run_item(spec_path):
         # The physical checkpoint decides the host.  A missing old source tree
         # requires staging tools there, never falling back to a host without the DB.
         try:
-            geom_tools = stage_geom_tools(out, gd, kh, hub, run)
+            geom_tools = stage_geom_tools(out, gd, kh, hub, run, control=control_root())
         except OSError as e:
             return fail("geom_tools", f"KW_GEOM_TOOLS {kh}: {e}", f"{kh}:{gd}")
         rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False))
@@ -10221,7 +10339,9 @@ def run_item(spec_path):
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
             # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
             return fail("geom_run", txt[-3000:], f"{kh}:{gd}")
-        v, failing, tag = geom_gate(line, sp.get("geom_waivers"), sp.get("geom_advisory", True))
+        v, failing, tag = control_call("geom", "geom_gate", (line, sp.get("geom_waivers"), sp.get("geom_advisory", True)), geom_gate)
+        if CONTROL_REACH:
+            res["control_reach"] = list(CONTROL_REACH)
         if v not in ("PASS", "PASS-COND"):
             return fail("geom", line, f"{kh}:{gd}/auto_geom.json")
         res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{kh}:{gd}/auto_geom.json")
@@ -20287,6 +20407,8 @@ def main(argv=None):
     s_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     s_.add_argument("--owners", help="OWNERS.tsv to select from (default AP_DIR/OWNERS.tsv)")
     s_.add_argument("--dry-run", action="store_true")
+    cc_ = sub.add_parser("control-call", help="S1: run one control function of THIS rt (the driver of an older rt calls rt/current at stage start)")
+    cc_.add_argument("name"); cc_.add_argument("args_json")
     r = sub.add_parser("run-item")
     r.add_argument("spec")
     r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
@@ -20386,6 +20508,8 @@ def main(argv=None):
         return private_spec_cmd(a)
     if a.cmd == "private-provenance":
         return private_provenance_cmd(a)
+    if a.cmd == "control-call":
+        return control_call_cmd(a.name, a.args_json)
     if a.cmd == "run-item":
         try:
             global RUN_ITEM_GOAL
