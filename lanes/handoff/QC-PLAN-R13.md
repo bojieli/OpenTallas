@@ -10,3 +10,7 @@ Row cut 11-22 06:00 PST; apply >= 11:16. Tools pin rt 6dbb162ffe89 (has 3c2f3758
 - coll: FABLE-FIX-QC-COLL-R2 pk2 epyc7 oth-ubuntu-3591748-1795320119 (fable-fix-qc-coll/pk2/bind.log, COLL_PKG_BIND_DONE).
 - CB A+D: FAM-QC-CB-R4 bind3 epyc7 fam-qc-cb-r3/bind3. q01_s2 row A, B, C, street, CB-R2 candidates: no bind -> V4.
 ## Then: pack/seal/apply per QC-PLAN-R10 recipe (pack_b20.py pattern, seal_v2.sh, tools_sha = rt 6dbb162ffe89), post, report COORD.
+## COORD via FABLE-PD-QC-2045 (lanes/FABLE-PD-QC-2045.md): V3p6 ships as planned, nothing blocks.
+V4 (11-23 event) MUST carry: (1) the 66 internal-station hops > 405 um in 19 types (V3p6 = V2 reach); (2) family-wide cb row A (FAM-QC-CB-R4; V3 has cbf_q00 only);
+(3) coll_core reset + slit re-seats (FABLE-FIX-QC-COLL-R2); (4) SETUP_TRIAGE station rows (FAM-QC-HCST-R3, FAM-QC-FEFW-R3) incl st_a + glue setup stations
+(insertion_ps raise in the tap pkg is NOT their fix); (5) 400k-cell splits. Also pending from R12: calendar K-C=-8 overlay, HC1 rs_return, FE START +2, FW five-bank, cbf_q01_s2 rows A/B/C, cbn street.
