@@ -33,3 +33,16 @@ combined J8 col set by 14:00), FAM-S81-COL-H10-R4, S81-J6-ASSEMBLY-R5 (J8 cut 16
 3. after bind: kit_wave.py private-spec s81 ITEM --plan PRIV --tree sealed J7 --bind-out OUT --host epyc7 --rt <sha> (one rep per sub-form:
    col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898, col_h9_r0_p6__t1__pv0012ba28, col_h10_r0_p4__t1__pvcc166a6d), run-item, ot-wait --kit --stage grt.
 4. GRT read (final 5_1_grt.odb) -> J8 rows to FAM-S81-COL-H9R0-R4 + S81-J6-ASSEMBLY-R5 by 14:00; sibling fan-out kits to sign-off.
+
+## UPDATE 05:2x 11-22
+- Tool PUSHED main d219668949 (rt >= 73fdcdf7365e has it). Bind-stamp generators untouched.
+- J7 rebind BUILT 05:21 on rt 79f34e2ad42e: epyc7 /srv/opentallas-scratch2/claude/FABLE-FIX-S81-COL-RANKSEAT/ot-build/s81/src_s81_pin_3c913dbdfb23_d8j7_1117_work/b_24a9496dfcdb
+  (pre/elab/bind/latcheck BUILT; bpc bound_param_check rc=1, 35 errors BOUND-PARAM-PARTIAL, node still BUILT; toolskew check ok vs rt 73fdcdf7365e).
+- Private plan planR1 (intel2 + epyc7 fable-fix-s81-col-rankseat/planR1/plan_h2_2249.json sha 737bebdb9331, delta.json) = J7 plan +
+  budgets.rank_line_types {^col_h9_r0_p3__, ^col_h9_r0_p6__, ^col_h10_r0_p4__: {}} + budgets.grt_cong_iters_types {"^col_": 50}.
+- Kits LAUNCHED 05:25 (epyc7, wave env, no --ab, src_manifest on, goal auto, rt 73fdcdf7365e); run-item pids intel2 runitem_{p3,p6,h10p4}.pid/.log:
+  specs ~/coord/autopilot/private_specs/FABLE-FIX-S81-COL-RANKSEAT/s81_col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898_1122052247,
+  s81_col_h9_r0_p6__t1__pv0012ba28_1122052340, s81_col_h10_r0_p4__t1__pvcc166a6d_1122052426
+  work epyc7 .../kit-wave/s81/18a2688b741/private/FABLE-FIX-S81-COL-RANKSEAT/<item>_<stamp>
+- Check at gen: kit log "RANK-SEAT n packed pad ranks on lines", istations.tcl rs_rank_line calls, config.mk -congestion_iterations 50;
+  at place: "OT_RELAY_RANK ... bits FIRM on the line". GRT verdict from final 5_1_grt.odb only.
