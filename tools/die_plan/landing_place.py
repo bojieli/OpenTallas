@@ -900,6 +900,12 @@ def tcl(P,tn,macro_moves=None):
         return _dataflow_tcl(tn,c,P.types[tn])
     for name,band in c.get('bands',{}).items():
         if band.get('hard_core'):continue   # QC-SLECTL-B: the ring is a hard child placed on this band (hard_cores[])
+        # HARD-RING-BAND-1 (OPUS-FIX-KV-HUB-R6 11-22): a ring the plan realises as a signed hard child through hard_cores[]
+        # param_wrap (clock_landings.hard_ring_params, the form the other ring consumers read) is a macro placed by
+        # macro_place.tcl; emitting its soft ring band made global_place fail 'OT_CLAND no mapped ring flops found under
+        # u_cland_<bus>' (kv3_hub_Eo / kv3_hub_Wo D28 hard ring rows carry no band hard_core flag).
+        import clock_landings as CL
+        if CL.hard_ring_params({"partition_types": {tn: P.types[tn]}}, tn, name) is not None:continue
         groups += _band_groups(tn, name, band, P.types[tn])
     for s in ev.get('local_sources',[]):
         x,y=s['xy_um']
