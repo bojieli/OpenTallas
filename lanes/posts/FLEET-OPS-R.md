@@ -1042,3 +1042,4 @@
 - 2026-11-21 20:23 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fable-fix-qc-sta on intel1 wrote 56 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 20:23 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 20:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col-h9r0 on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 20:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: tap-grid-r2 on intel1 wrote 57 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
