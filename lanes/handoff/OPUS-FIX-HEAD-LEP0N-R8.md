@@ -26,6 +26,15 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 04:5x COORD rulings
+- SPLIT posted (hub 23199c88a5d3): R8 owns E r8-e11 + W r8-w11 (r18f tree 2fa83144541824aa). FABLE-FIX-HEAD-LEP0N owns the structural
+  analysis + every variant, incl. its own W ring-FF kit (fable-lep0n-w1/w4, own r18f fork plan f23abfbd22780d25). First W to sign counts.
+  I start no new hd_lep0N variant.
+- Native-reset receipt: proof rerun on r18f sources into epyc9 M/receipt_r18f/proof (run_single*.sh with paths rewritten to the r18f
+  tree + lane dir), systemd unit r8-nrproof-1795351270. Then head_native_release_receipt.py --proof-dir that dir. >1 h -> publish gate
+  without it (COORD ruling 2). Not a sign-off gate.
+- hd_host_n hn1/hn2: geom rc 1 (advisory), past chain_probe.
+
 ## UPDATE 11-22 04:4x r18f
 - r18e dry place (epyc9 M/r18e/*_dry): E post-place wns -800 (cut-face status u_cland_face_fault_i_coll_i0_p -> u_cland_agg_1,
   unrelayed ~1 mm: face child i_coll_i0_p is an intra (same-region) input, sideband stage tool skips it); W wns -496 (coll_i2
