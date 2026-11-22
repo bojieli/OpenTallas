@@ -87,6 +87,32 @@ def test_retained_return_accepts_only_matching_completed_negative_evidence(tmp_p
     write_proof("SIGNED", 9.0, 1.0)
     assert ap.retained_publish_negative(j, client, probe=probe) is None
 
+    proof.unlink()
+    stop = "OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE: two restarts lost overflow"
+    route_log = job_dir / "work" / "run_route.log"
+    terminal = "OT_GRT_STOP noconverge: stage rc 137 -> 21 (no re-run)"
+    route_log.write_text(f"{stop}\n{terminal}\n")
+    os.utime(route_log, (150, 150))
+    receipt_path = meta / "result.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt_path.write_text(json.dumps(dict(receipt, rc=21)))
+    assert ap.retained_publish_negative(j, client, probe=probe) == {"host": "epyc2", "grt_noconverge": stop}
+    with mock.patch.object(ap, "rpy", side_effect=probe), mock.patch.object(ap, "log"), \
+         mock.patch.object(ap, "set_status") as status, mock.patch.object(ap, "after_class"), mock.patch.object(ap, "released_cleanup"):
+        ap.finish({}, j, {}, client)
+    assert status.call_args.args[2] == "STRUCTURAL" and j["kind"] == "grt-noconverge"
+    assert j["retained_grt_noconverge"] == stop and j["publish_return"] == client["publish_return"]
+    assert ap.retained_publish_negative(dict(j, path="/other/kit"), client, probe=probe) is None
+    os.utime(route_log, (91, 91))
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+    route_log.write_text(stop + "\n")
+    os.utime(route_log, (150, 150))
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+    route_log.write_text(f"{stop}\n{terminal}\n")
+    os.utime(route_log, (150, 150))
+    receipt_path.write_text(json.dumps(dict(receipt, rc=137)))
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+
 
 KIT = "epyc2:/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
 ROW = ["s81", "slice_station__t5", KIT, "claude/s81-kits@0123456789ab", "PASS", "GEOM-REVIEW 03:33", "24", "120000",

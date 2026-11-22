@@ -838,6 +838,11 @@ runlog = rd(runlog_path, 400000)
 place_pass = False
 current = []
 if os.path.isfile(runlog_path) and since <= os.path.getmtime(runlog_path) <= until:
+    if a.get("retained_return_to") and goal == "route" and result.get("rc") == 21:
+        stops = re.findall(r"(?m)^OT_GRT_NOCONVERGE stage=grt class=GRT_NOCONVERGE:[^\n]*", runlog)
+        last_line = runlog.rstrip("\r\n").rsplit("\n", 1)[-1]
+        if stops and re.fullmatch(r"OT_GRT_STOP noconverge: stage rc \d+ -> 21 \(no re-run\)", last_line):
+            out["retained_grt_noconverge"] = stops[-1][:300]
     current = re.findall(r"(?m)^(?:FAIL_POSTPLACE PLACE-SETUP-STOP\b[^\n]*|OT_POSTPLACE_SETUP_STOP (?:pass|no measurement)\b[^\n]*)", runlog)
     if current:
         place_pass = current[-1].startswith("OT_POSTPLACE_SETUP_STOP ")
@@ -3747,8 +3752,12 @@ def retained_publish_negative(j, client, probe=None):
     probe = probe or rpy
     c = probe(host, PROBE_CLASSIFY, {"kit": entry["root"] + "/work", "since": j.get("started", 0),
                                    "goal": j["goal"], "retained_return_to": j["path"]})
-    so = (c or {}).get("signoff")
-    if not so or c.get("error") or so.get("verdict") != "NOT SIGNED":
+    if not c or c.get("error"):
+        return None
+    so = c.get("signoff")
+    if not so and c.get("retained_grt_noconverge"):
+        return {"host": host, "grt_noconverge": c["retained_grt_noconverge"]}
+    if not so or so.get("verdict") != "NOT SIGNED":
         return None
     gates = SP.judge(so, j.get("die"))["gates"]
     failed = [k for k in so.get("fails", ()) if gates.get(k) == "FAIL"]
@@ -3782,8 +3791,12 @@ def finish(st, j, c, client):
         if not c.get("signoff") and j["goal"] == "route":
             retained = retained_publish_negative(j, client)
             if retained:
-                j["retained_signoff"] = retained
-                cls, kind, reasons = classify({"signoff": retained["signoff"]}, {})
+                if "grt_noconverge" in retained:
+                    j["retained_grt_noconverge"] = retained["grt_noconverge"]
+                    cls, kind, reasons = classify({"grt_noconverge": retained["grt_noconverge"]}, {})
+                else:
+                    j["retained_signoff"] = retained
+                    cls, kind, reasons = classify({"signoff": retained["signoff"]}, {})
                 reasons = f"{reasons} | return copy failed; retained {retained['host']}:{j['publish_return']['root']}"
     if j.get("chain_required") and cls in ("SIGNED", "WAIT-PARENT"):
         chain = c.get("chain") or {}
