@@ -1440,6 +1440,10 @@ def parse_client_log(text, *, unit=None, started=0):
             start = starts[-1]
             tail = text[start.end():]
             if start[2] == unit and int(start[1]) >= float(started or 0) - 120 and tail.rstrip().endswith(f"\nAP_RC={rc}"):
+                if rc in (137, 143) and abs(int(start[1]) - float(started or 0)) <= 120:
+                    ran = f"ot-run: RAN on {o['ran_on']} (unit {o.get('unit', '')}): exit {rc}"
+                    if o.get("unit") and ran in tail.splitlines():
+                        o["signal_attempt_started"] = int(start[1])
                 if KW.SEALED_COPY_BACK.search(tail) or KW.SPILL_COPY_BACK.search(tail):
                     o["return_hosts"] = [h for h in KW.copy_back_hosts(tail, None, HUB_NAME) if h]
                 if rc == 6:
@@ -4089,6 +4093,67 @@ def minimal_rejudge_candidate(j):
             and SP.judge(so)["verdict"] == "SIGNED")
 
 
+def rejudge_late_noprog(st):
+    """Reclassify routing plateaus whose exact watchdog action arrived after collection."""
+    if DRY:
+        return
+    try:
+        lines = NOPROG_ACTIONS.read_text(errors="replace").splitlines()[-4000:]
+    except OSError:
+        return
+    kinds = {"5_1_grt": "grt-no-progress", "5_2_route": "drt-no-progress"}
+    actions = {}
+    for line in lines:
+        f = line.split("\t")
+        if (len(f) < 8 or f[3] not in kinds or not f[4] or not f[6]
+                or " before window:" not in f[7] or not Path(f[5]).is_absolute()):
+            continue
+        try:
+            stopped = time.mktime(time.strptime(f[0], "%Y-%m-%d %H:%M:%S"))
+        except (ValueError, OverflowError):
+            continue
+        actions.setdefault((f[1], str(Path(f[5]))), []).append((stopped, kinds[f[3]], f))
+    changed = False
+    for j in st["jobs"].values():
+        if (j.get("status") != "DONE-CRASH" or j.get("kind") != "route-make-fail"
+                or j.get("goal") != "route" or j.get("signoff") or canonical_die(j.get("die")) == "hbm"):
+            continue
+        host, path = j.get("ran_on"), Path(j.get("path") or "")
+        candidates = actions.get((host, str(path)))
+        if not candidates or not path.is_absolute():
+            continue
+        jid, attempt = j.get("id"), j.get("attempts")
+        if not jid or not isinstance(attempt, int) or attempt < 1 or j.get("unit") != f"ap-{jid}-a{attempt}":
+            continue
+        client_log = AP_DIR / "jobs" / jid / f"a{attempt}.log"
+        if j.get("client_log") != str(client_log):
+            continue
+        try:
+            text = client_log.read_text(errors="replace")
+            ended = client_log.stat().st_mtime
+        except OSError:
+            continue
+        started, finished = j.get("started") or 0, j.get("finished") or 0
+        client = parse_client_log(text, unit=j["unit"], started=started)
+        if not client.get("signal_attempt_started") or client.get("ran_on") != host:
+            continue
+        for stopped, kind, f in reversed(candidates):
+            if not (max(started, client["signal_attempt_started"]) <= stopped <= finished
+                    and abs(stopped - ended) <= 120):
+                continue
+            previous = {key: j.get(key) for key in ("status", "cls", "kind", "reasons")}
+            reasons = f"{f[3]} watchdog on {host} at {f[0]} (exit {client['exit']}): {f[7]}; {f[4]}"
+            j.update(status="DONE-STRUCTURAL", cls="STRUCTURAL", kind=kind, reasons=reasons[:600],
+                     noprog_rejudge={"attempt": attempt, "action": f[:8], "previous": previous})
+            # Preserve finished/updated so this historical row cannot outrank a newer job on the same kit.
+            j.setdefault("history", []).append([now_s(), "DONE-STRUCTURAL", reasons[:300]])
+            log(f"NOPROG-REJUDGE {jid} attempt {attempt}: {reasons[:300]}")
+            changed = True
+            break
+    if changed:
+        save_state(st)
+
+
 RP_T = {}                    # WF-1 11-14: seconds / calls per retry_pending branch, logged by the tick
 
 
@@ -4129,6 +4194,7 @@ def poll_times_line():
 
 
 def retry_pending(st):
+    rejudge_late_noprog(st)
     released = failure_resolutions()
     budget = MINIMAL_REJUDGE_PER_TICK
     _t = time.time()
