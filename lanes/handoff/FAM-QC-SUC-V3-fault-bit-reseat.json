@@ -1,0 +1,71 @@
+{
+  "type": "slw_su_c__cl19bb38ef",
+  "selected": [
+    {
+      "bit": 0,
+      "site_overrides": {
+        "u_u_suvm_u_vm8q_u_rabs.q[0]": [
+          782.622,
+          385.695
+        ],
+        "u_u_suvm_u_vm8q_u_obs.q[0]": [
+          465.102,
+          318.195
+        ],
+        "g_u_suvm_procdff_60309_q[0]": [
+          391.662,
+          4.455
+        ],
+        "u_ist_x_su_l0_o_0/q[0]": [
+          503.982,
+          279.315
+        ],
+        "u_ist_x_su_l0_o_1/q[0]": [
+          886.302,
+          282.555
+        ]
+      },
+      "new_max_um": 387.18,
+      "old_hop_um": 1096.47,
+      "edges": 7
+    }
+  ],
+  "remaining": [],
+  "added_cycles": 0,
+  "relay_sites": {
+    "u_u_suvm_u_vm8q_u_rabs.q[0]": [
+      782.622,
+      385.695
+    ],
+    "u_u_suvm_u_vm8q_u_obs.q[0]": [
+      465.102,
+      318.195
+    ],
+    "g_u_suvm_procdff_60309_q[0]": [
+      391.662,
+      4.455
+    ],
+    "u_ist_x_su_l0_o_0/q[0]": [
+      503.982,
+      279.315
+    ],
+    "u_ist_x_su_l0_o_1/q[0]": [
+      886.302,
+      282.555
+    ]
+  },
+  "measured_hard_source": {
+    "instance": "u_bound.u_u_suvm_u_vm8q_u_bt",
+    "pin": "bs_q[0]",
+    "xy_um": [
+      1131.81,
+      422.424
+    ],
+    "odb_read": "intel2 unit 1767784"
+  },
+  "existing_fault_capture_xy_um": [
+    6.048,
+    4.455
+  ],
+  "physical_only": "Private existing-register sites, no latency or RTL change. Actual post-cap placement and review still required."
+}
