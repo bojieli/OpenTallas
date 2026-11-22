@@ -5,11 +5,24 @@
  "written": "2026-11-22 00:2x PST",
  "what": "RST-COTAP row: every reset synchroniser / last reset stage on the same clock tap as its async loads (removal-check class). One row, keyed by type.",
  "rows": [
-  {"op": "set", "path": "partition_types.coll_core.clock.tap_reset_split", "value": true},
-  {"op": "set", "path": "partition_types.coll_ftc.clock.tap_reset_split", "value": true}
+  {
+   "op": "set",
+   "path": "partition_types.coll_core.clock.tap_reset_split",
+   "value": true
+  },
+  {
+   "op": "set",
+   "path": "partition_types.coll_ftc.clock.tap_reset_split",
+   "value": true
+  }
  ],
  "optional_rows_signed_types": [
-  {"op": "set", "path": "partition_types.coll_s.clock.tap_reset_split", "value": true, "note": "coll_s is signed; its 11-18 CTS DB has 3 sources / 348 sinks on another tap (92 left by affinity alone). Carry only when coll_s is rebuilt anyway."}
+  {
+   "op": "set",
+   "path": "partition_types.coll_s.clock.tap_reset_split",
+   "value": true,
+   "note": "coll_s is signed; its 11-18 CTS DB has 3 sources / 348 sinks on another tap (92 left by affinity alone). Carry only when coll_s is rebuilt anyway."
+  }
  ],
  "tool": "main 6135636053bb (ccc3a834f5 rebased): clock.tap_reset_split -> OT_TAP_RESET_SPLIT=1 + OT_TAP_RESET_AFFINITY=1; tools/die_plan/tap_reset_split.tcl runs in pre_cts clock_taps.tcl after tap_reset_affinity.tcl: per source, copy of the flop + its INV/BUF chain for each OTHER tap holding its async sinks (CLK on that tap, same D/RESETN/SETN, same polarity and stage count: 0 cycles, LATCHECK unchanged); the post-CTS detailed_placement legalises the copies. Clock/kit-stage only: no RTL, no bind change, no lane latency change. Needs kit tools >= 6135636053bb.",
  "scan": {
@@ -21,5 +34,6 @@
   "coll_n, coll_ucie, coll_ftn, coll_ftm": "signed; no CTS DB left on any host to scan; not in the row"
  },
  "proof": "in-memory harness on the coll_core v2 CTS DB (pre-CTS tap state emulated, affinity + split applied): 675 -> 7 mismatched sinks (the 7 are 1-sink u_rrl reset-tree relays, owned by the plan reset tree); coll_ftc 8 -> 0. Routed confirmation: v3 proof kit read + an A/B kit with the flag (following).",
- "residual": "7 single-sink u_rrl_* reset-tree relays in coll_core (relay tap assignment by reset_tree); not touched by this row."
+ "residual": "7 single-sink u_rrl_* reset-tree relays in coll_core (relay tap assignment by reset_tree); not touched by this row.",
+ "status": "PROVISIONAL: not final for V4 until LEC passes with the split clones (COORD 00:4x). Early LEC on the pkit_core3s post-CTS netlist + control on pkit_core3b; routed LEC at route."
 }
