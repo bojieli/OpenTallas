@@ -11936,6 +11936,51 @@ def auto_rebind(AP, cfg, st, die, rows, stale, now=None, rpy=None, rebind=None):
     return rescued
 
 
+BIND_PROBE_DIR = "bind_probe"
+BIND_PROBE_WAIT_S = 3600                # a detached probe unit older than this without a result is launched again
+
+
+def bind_probe_detached(AP, host, args, now):
+    """PROBE-DETACH-1122 (FABLE-FLOW-0600 W1: bind_preflight took 126-516 s of a tick, and a tick killed by the service timeout lost its launches).
+    The full bind probe runs in its own systemd unit (kit_wave.py bind-probe) that writes <ap_dir>/bind_probe/<key>.json; the tick only reads it.
+    -> the probe result once there (consumed: the file is removed), else None (the unit is started or still running)."""
+    key = hashlib.sha1(json.dumps([host, args], sort_keys=True).encode()).hexdigest()[:16]
+    dd = Path(getattr(AP, "AP_DIR")) / BIND_PROBE_DIR
+    res, req = dd / f"{key}.json", dd / f"{key}.req.json"
+    try:
+        if res.exists() and req.exists() and res.stat().st_mtime >= req.stat().st_mtime:
+            got = json.loads(res.read_text())
+            res.unlink()
+            return got
+    except (OSError, ValueError):
+        pass
+    try:
+        rq = json.loads(req.read_text()) if req.exists() else {}
+    except (OSError, ValueError):
+        rq = {}
+    if rq.get("unit") and now - float(rq.get("t") or 0) < BIND_PROBE_WAIT_S and (not hasattr(AP, "unit_active") or AP.unit_active(rq["unit"])):
+        return None
+    dd.mkdir(parents=True, exist_ok=True)
+    unit = f"kw-bprobe-{key[:10]}-{int(now) % 100000}"
+    req.write_text(json.dumps({"host": host, "args": args, "unit": unit, "t": now, "out": str(res)}))
+    ok = AP.launch_unit(unit, dd / f"{key}.log", ["python3", str(Path(__file__).resolve()), "bind-probe", str(req)])
+    if hasattr(AP, "log"):
+        AP.log(f"KIT-WAVE BIND-PROBE detached {host} {len(args.get('types') or [])} type(s): unit {unit} {'started' if ok else 'FAILED to start'}")
+    return None
+
+
+def bind_probe_cmd(req_path):
+    """kit_wave.py bind-probe <req.json>: run the bind probe of one request and write its result (the detached half of bind_probe_detached)"""
+    import autopilot as AP
+    rq = json.loads(Path(req_path).read_text())
+    got = AP.rpy(rq["host"], PROBE_BIND, rq["args"], timeout=1800)
+    out = Path(rq["out"])
+    tmp = out.with_suffix(f".{os.getpid()}")
+    tmp.write_text(json.dumps(got))
+    os.replace(tmp, out)
+    return 0 if isinstance(got, dict) and not got.get("error") else 1
+
+
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     """{item: why} for type rows whose kit_topology prepare-stations would raise KIT_TOPOLOGY_BIND_STALE (kit_rtl mode
     bind, canonical topology preparation on).  One probe per (src, plan, bind_out, asbuilt, reset scope) on the die's
@@ -12006,7 +12051,14 @@ def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
             # FABLE-FLOW-0555 E: probe only the items this entry has not judged and merge (a verdict, stale or green, is kept for the entry's life)
             old_c = c if (c and c.get("sig")) else None
             todo_i = sorted(set(items) - set(old_c.get("checked") or ())) if old_c else sorted(set(items))
-            p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=todo_i), timeout=600)
+            if getattr(AP, "KW_DETACH_PROBES", False) and not getattr(AP, "DRY", False) and os.environ.get("OT_BIND_PREFLIGHT_SYNC") != "1":
+                p = bind_probe_detached(AP, d.get("gen_host"), dict(g, types=todo_i), now)
+                if p is None:                            # PROBE-DETACH-1122: the probe runs in its own unit; rows wait (fail closed), next tick reads it
+                    for item in items:
+                        out[item] = "BIND_PREFLIGHT_PENDING: the bind probe runs detached from the tick; launched once it has judged"
+                    continue
+            else:
+                p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=todo_i), timeout=600)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
                 if AP:
                     AP.log(f"KIT-WAVE bind preflight {die} UNKNOWN (fail closed, rows not launched): "
@@ -20227,6 +20279,8 @@ def main(argv=None):
     rj.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     rj.add_argument("--write", action="store_true")
     rj.add_argument("--include-old", action="store_true", help="also release records on superseded plan blocks")
+    bp_ = sub.add_parser("bind-probe", help="PROBE-DETACH-1122 worker: run one detached bind preflight probe")
+    bp_.add_argument("req")
     pr_ = sub.add_parser("prov-resign", help="KW-PROV-1 worker: STA-only re-sign of a PROVISIONAL kit on signed child views")
     pr_.add_argument("spec")
     pc_ = sub.add_parser("prov-census", help="KW-PROV-1: per die, WAIT-DEP types launchable on a routed child abstract "
@@ -20234,6 +20288,8 @@ def main(argv=None):
     pc_.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
     pc_.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
+    if a.cmd == "bind-probe":
+        return bind_probe_cmd(a.req)
     if a.cmd == "prov-resign":
         return prov_resign_run(a.spec)
     if a.cmd == "reclassify":

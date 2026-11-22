@@ -162,6 +162,7 @@ TSV_HEAD = {
 }
 GEOM_TEXT = ""                                         # lanes/GEOM-REVIEW.md of this tick (AUTO-GEOM revocation)
 DRY = False
+KW_DETACH_PROBES = True                 # PROBE-DETACH-1122: kit_wave runs its slow bind probe in a unit of its own (fakes in tests leave it off)
 
 
 # ------------------------------------------------------------------------------------------------ small helpers

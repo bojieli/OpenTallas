@@ -109,3 +109,30 @@ def test_unreadable_signature_probe_forces_the_full_probe():
     p2 = lambda host, code, args, timeout=600: {"error": "x"} if code is KW.PROBE_BIND_SIG else Probe()(host, code, args, timeout)
     KW.bind_preflight(None, cfg(), st, "kv", ROWS, now=100.0 + 1000, rpy=p2)
     assert len(p.calls) == 2                                                               # p itself not asked again; the fallback probe ran through p2
+
+
+def test_detached_probe_pends_then_reads_the_result(tmp_path):
+    """PROBE-DETACH-1122: with KW_DETACH_PROBES the tick never waits on the bind probe; a unit writes the result, the next tick reads it"""
+    import json as _j
+    import kit_wave as K
+
+    class AP:
+        KW_DETACH_PROBES, DRY, AP_DIR = True, False, tmp_path
+        units, logs = [], []
+
+        def launch_unit(self, unit, logf, argv):
+            self.units.append((unit, argv))
+            return True
+
+        def unit_active(self, unit):
+            return True
+
+        def log(self, m):
+            self.logs.append(m)
+    ap = AP()
+    assert K.bind_probe_detached(ap, "epyc10", {"types": ["t"]}, 1000.0) is None and len(ap.units) == 1
+    assert K.bind_probe_detached(ap, "epyc10", {"types": ["t"]}, 1001.0) is None and len(ap.units) == 1   # running: not started twice
+    req = ap.units[0][1][-1]
+    rq = _j.loads(open(req).read())
+    open(rq["out"], "w").write(_j.dumps({"stale": [], "relay": {}}))
+    assert K.bind_probe_detached(ap, "epyc10", {"types": ["t"]}, 1002.0) == {"stale": [], "relay": {}}
