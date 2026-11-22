@@ -25,8 +25,24 @@
   {
    "id": "FEFW-V3-3",
    "item": "Codex candidates carried as-is",
-   "rows": ["FE START +2 on W1/W3 only (clE312294D; strict/LAT pass, K58 repriced)", "E9 FW five-bank new-site place (active)"],
+   "rows": [
+    "FE START +2 on W1/W3 only (clE312294D; strict/LAT pass, K58 repriced)",
+    "E9 FW five-bank new-site place (active)"
+   ],
    "verdict": "IN when native proof reads; not duplicated here"
+  },
+  {
+   "id": "FEFW-V3-4",
+   "item": "slw_fe_v2 clf110fab2 (R4A4 plan geometry) +1 station on arv_ei and arm_ei",
+   "verdict": "ROW NEEDS SITES",
+   "measured": {
+    "source": "AP_PLACED_SCAN NEED-STATION from private-spec run FAM-QC-FEFW-R3/slw_fe_v2__clf110fab2_1121191027 (geom stage rc 1, 11-21 20:09 PST)",
+    "groups_need_station": 2,
+    "arv_ei": "u_bound.u_bin_arv_ei -> u_pd8_arv_ei_0.r, max 695 um, no plan row",
+    "arm_ei": "u_bound.u_bin_arm_ei -> u_pd8_arm_ei_0.r, max 593 um, no plan row",
+    "also": "u_lpad_x_st_b_i.q -> u_bout_rr_eo 562 um (row 6/251 um present); 9 bits over 405 um"
+   },
+   "request": "+1 station on arv_ei and arm_ei slots for slw_fe_v2 clf110fab2, with sites (same knee class as R2 finding: cle312294d arv_ei 559 um); this form cannot pass geom without it."
   }
  ]
 }
