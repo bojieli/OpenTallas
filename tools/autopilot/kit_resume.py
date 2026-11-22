@@ -28,6 +28,7 @@ non-monotone outputs, a different ORFS image, a runner without the resume marker
 a source on a host we cannot reach) -> full rebuild.  Stdlib only: the same file runs on the hub (import) and on a
 fleet host (python3 - <args> < kit_resume.py).
 """
+import errno
 import hashlib
 import json
 import os
@@ -717,8 +718,15 @@ def apply(newK, src, dec, source_meta):
             os.makedirs(os.path.dirname(b), exist_ok=True)
             st = os.stat(a)
             if mode == "link":
-                os.link(a, b)
-            else:
+                try:
+                    os.link(a, b)
+                except OSError as exc:
+                    if exc.errno not in (errno.EPERM, errno.EXDEV):
+                        raise
+                    # OpenROAD may produce a readable checkpoint owned by the
+                    # container user, or the resume workspace may be on another device.
+                    mode = "copy"
+            if mode == "copy":
                 shutil.copy2(a, b)
             links.append({"rel": rel, "mode": mode, "size": st.st_size, "mtime": st.st_mtime, "ino": st.st_ino})
     except Exception:
