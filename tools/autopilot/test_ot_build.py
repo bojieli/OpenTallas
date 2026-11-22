@@ -239,3 +239,39 @@ def test_tool_closure(tmp_path):
         (d / f"{n}.py").write_text("")
     (d / "cells.tcl").write_text("")
     assert OB.tool_closure(tmp_path, ["a.py"]) == ["a.py", "b.py", "c.py", "e.py", "cells.tcl"]
+
+
+STUB_BPC = r'''
+import json, os, sys
+from pathlib import Path
+a = sys.argv[1:]
+open(os.environ["STUB_LOG"], "a").write("bound_param_check.py\n")
+errs = [e for e in os.environ.get("STUB_BPC_ERRS", "").split("|") if e]
+Path(a[a.index("--json") + 1]).write_text(json.dumps({"errors": errs}))
+sys.exit(1 if errs else 0)
+'''
+
+
+def test_bpc_blocks_only_findings_in_the_kit_types_rtl(env, capsys, monkeypatch):
+    (env["rt"] / "tools" / "die_plan" / "bound_param_check.py").write_text(STUB_BPC)
+    p = json.loads((env["pd"] / "plan.json").read_text())
+    p["partition_types"]["t"]["module"] = "t_part"
+    (env["pd"] / "plan.json").write_text(json.dumps(p))
+    other = "BOUND-PARAM kv3_pc__cl5.S_cfg: passed by top.sv:pc_EN_0; no definition in the tree declares it (results/x/kv3_pc__cl5.sv)"
+    monkeypatch.setenv("STUB_BPC_ERRS", other)
+    assert run(env, extra=["--type", "t"]) == 0                                    # die-top finding: advisory (publish gate rule)
+    assert "ADVISORY BOUND-PARAM kv3_pc__cl5.S_cfg" in capsys.readouterr().out
+    calls(env)
+    own = "BOUND-PARAM ring.LITE: passed by t_part.sv:u_ring; no definition in the tree declares it (rtl/ring.sv)"
+    monkeypatch.setenv("STUB_BPC_ERRS", other + "|" + own)
+    assert run(env, extra=["--type", "t", "--force", "bpc"]) == 1                  # the kit type's own RTL: blocks
+    out = capsys.readouterr().out
+    assert "BLOCK BOUND-PARAM ring.LITE" in out and "ADVISORY BOUND-PARAM kv3_pc__cl5" in out
+    assert run(env, extra=["--force", "bpc"]) == 0                                 # no kit type named: advisory, like the publish gate
+
+
+def test_bpc_hits():
+    mods = {"kv3_io_cor_v1_part"}
+    assert OB.bpc_hits("BOUND-PARAM kv3_io_cor_v1_part.W: passed by top.sv:u0; no definition", mods)
+    assert OB.bpc_hits("BOUND-PARAM ring.LITE: passed by kv3_io_cor_v1_part.sv:u_r, x.sv:y; no definition", mods)
+    assert not OB.bpc_hits("BOUND-PARAM kv3_pc.S: passed by top.sv:pc; no definition in the tree declares it (r/kv3_io_cor_v1_part.sv)", mods)

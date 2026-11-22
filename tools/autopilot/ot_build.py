@@ -205,6 +205,22 @@ def taps_findings(plan, eps=1e-6):
     return out
 
 
+def bpc_type_modules(plan_path, types):
+    """-> the bound modules of the named types (their kit RTL)"""
+    if not types:
+        return set()
+    pt = load_json(plan_path).get("partition_types") or {}
+    return {str((pt.get(tn) or {}).get("module") or tn) for tn in types}
+
+
+def bpc_hits(err, mods):
+    """a BOUND-PARAM finding ("BOUND-PARAM <mod>.<param>: passed by <file>.sv:<inst>, ..") in one of mods' RTL"""
+    m = re.match(r"BOUND-PARAM (\S+?)\.[^.\s:]+:", err)
+    if m and m.group(1) in mods:
+        return True
+    return any(re.search(r"(^|[\s,/])" + re.escape(x) + r"\.sv:", err) for x in mods)
+
+
 def overlay_dir(src_dir, dst, copy=()):
     """dst = symlinks to every entry of src_dir, real copies of the names in `copy` (the files a private delta edits)"""
     src_dir, dst = Path(src_dir), Path(dst)
@@ -495,8 +511,25 @@ class BindStage:
         return 0
 
     def run_bpc(self, node):
-        self._tool("bound_param_check.py", ["--tree", self._launch(), "--rtl-dir", self.out / "rtl", "--json",
-                                            self.out / G.STAMP_DIR / "bpc.json"], "bpc.log")
+        """BOUND-PARAM-1 is ADVISORY in the plan publish gate (publish_gate.check_bound_params).  Here it blocks only a finding
+        in the RTL of a type this build makes a kit of (--type): a parameter its own module passes, or one passed to it, that
+        no definition declares (its kit elaboration would fail).  A finding elsewhere (KV D27d3: kv3_pc__cl5a95b461 from the
+        die top) is printed as advisory and the build goes on (OPUS-PIPELINE-R2 11-21, e2e defect D4)."""
+        js = self.out / G.STAMP_DIR / "bpc.json"
+        rc, lf = self._tool("bound_param_check.py", ["--tree", self._launch(), "--rtl-dir", self.out / "rtl", "--json", js],
+                            "bpc.log", ok=(0, 1))
+        if rc == 0:
+            return 0
+        try:
+            errs = list(load_json(js).get("errors") or [])
+        except (OSError, ValueError) as e:
+            raise G.BuildError(f"bound_param_check.py rc=1 and no readable {js}: {e}")
+        mods = bpc_type_modules(self.plan, self.a.type or [])
+        block = [e for e in errs if bpc_hits(e, mods)]
+        for e in errs:
+            log(f"ot-build:   {'BLOCK' if e in block else 'ADVISORY'} {e[:300]}")
+        if block:
+            raise G.BuildError(f"bound_param_check.py: {len(block)} finding(s) in the RTL of {', '.join(sorted(mods))}; log {lf}")
         return 0
 
     def main(self):
