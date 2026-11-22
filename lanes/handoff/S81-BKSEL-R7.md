@@ -95,3 +95,6 @@
   Ruled: countable build = J8 wave kit on main >= 5b1b2e8b5f9. tree_sealed in w/ is ot-delete-protected.
 - A: epyc2 coreA kit, GRT FF hold repair: outputs done, internal macro pins (u_hc g_bank i_en) ~-12 ps at 07:3x.
   After route: signoff/signoff.json; if FF hold short, hold-only route-keep ECO per fx6/hei_fable/run_hei_fable.sh.
+- 08:4x COORD ack: C rt 2bc14507b4dc contains 36d0a6df8f6 (chain runs "goal route attempt 1"); new private kits use explicit --goal route.
+  Row 4 goes to J6-R5 as soon as A or C gives the answer (pre-routed evidence OK). DISK for EPYC10-DISK after C ends:
+  epyc10 /srv/opentallas-scratch2/claude/s81-bksel-r7/w/tree_sealed (54 GB, unused sealed fork) - reclaim via ot-delete; do not touch before C ends.
