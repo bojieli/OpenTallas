@@ -48,3 +48,7 @@ Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fa
 - A2: gen PASS 01:31 (kit epyc9 .../col_h10_r2__t1__cl99efd374__pv1619ecc6_1122005516/gen/<T>, config has macro_halo_carve + OT_RELAY_POLY_FILE). run-item place NOT-RUN (sealed place on intel2, disk-ETA hold, rc 78). Relaunched by hand: ot-run --hosts epyc9 run_kit.sh <K> route 48 8 = oth-ubuntu-907207-1795342870, log epyc9 fam-s81-col-h10-r4/routeA2_otrun.log. Waiter ot-wait --kit K --stage grt.
 - lever-1: GRT hold repair running on epyc7 (unit oth-ubuntu-3023440-1795329345), waiter b6xr6o6s0 equivalent: ot-wait unit.
 - Fallback (if bind not green by 14:00): no-clock row legal only for col_h9_r2 + col_h10_r2 (72); col_h9_r1 -> J9.
+
+## 04:2x
+- J7 row bind: alive 3 h (parallel emit, 2 workers x ~50 GB at a time, ~1 min each); ~850 rtl files re-emitted, rate slowing (66 / 30 min). Waiter re-armed on bind_row.otrun.log GATE_DONE / OT_RUN_EXIT.
+- A2 place: relay_mid seated u_y_xd_u_e15_xb_data_0_0 at 675.0, 1186.4 (path 561 um through the channel; was 815, 1187 over the view in proof A); halo blockages on the 3 view macros in; carve OK. Waiting on GRT (50 iters).
