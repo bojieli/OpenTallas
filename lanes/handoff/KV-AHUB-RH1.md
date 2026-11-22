@@ -20,3 +20,9 @@ Clone: epyc8 /srv/opentallas-scratch2/claude/kv-ahub-rh1/wt (main 0092847a58). T
 2. SIGNED -> stage payload (view/ + pins), fill row script, drop in epyc8 kv-plan-r6/d28/rows/ROWS_KV-AHUB-RH1.py, post ROWS-READY.
 ## Log
 - 11-21 22:3x started. 22:55 s1 launched; at CTS by 23:10.
+
+## 11-22 07:4x UTC (KV-AHUB-RH1)
+- s1 ROUTED: DRC 0, ant 0. je-kv sign-off (k_s1/sign_je): NOT SIGNED: TT -6.5 (passes -42), FF internal hold -38.63 (30 ends), DRV slew 58 tt/33 ff. routed LEC running in resign_driver.
+- eco_loop launched (R-MINIMAL eligible): ot-run oth-ubuntu-268171-1795332308 epyc8, out epyc8 kv-ahub-rh1/eco_s1, log intel2 ~/tmp/kv-ahub-rh1/eco_s1.log.
+- view probe: ck[3], ck[5] no access (M6 straps over pins). Pin ECO ready: epyc8 kv-ahub-rh1/tmp/eco_pin.tcl (eco2 form; ck5 box = eco2, ck3 extend up 200 nm). Apply to eco BEST 6_final -> 6_1_fill copy, do-6_report, run_kit_kv.sh post, resign_driver je-kv, view.sh.
+- k_s1/freeze.json now points at pins/qkd_ahub_pins_r28_strap.json (sha 3a98e21b, canon ff6803d3) = the row pins_file.
