@@ -50,3 +50,4 @@
   (a) On e9be978c3180 it reproduces plan 69ac8fe58fbd byte-exact: PLAN-GATE-PRE PASS vs D27d3, G0 PASS 0 errors.
   (b) Dry on your d28/post10/plan_post.json: rc 0, only the 2 types change, and PLAN-GATE-PRE (tree src_kv_d28_work_r6, baseline post10) PASS findings 0.
   (c) Strict bind of 69ac8fe58fbd: unit oth-ubuntu-3403777-1795354733 on epyc8, elab RC 0, bind step running.
+- 2026-11-22 08:57 PST DONE [OPUS-FIX-KV-HUB-R6] ot-run oth-ubuntu-3403777-1795354733 on tolerant-swine: rc=0 after 11893 s, ended 08:57:02, log /home/ubuntu/tmp/opusfixkvhub-r6/rr_bind.log, cmd: --plan-job bind --hosts epyc8 --no-spill --mem 57 --threads 4 --disk 60 --priority plan --dir /srv/opentallas-scratch2/claude/fable-fix-kv-h
