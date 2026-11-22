@@ -45,7 +45,7 @@ if str(HERE) not in sys.path:
 import schema as S  # noqa: E402
 
 FORMAT = "type-overlay-1"
-TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "internal_stations", "type_positions", "note"}
+TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "internal_stations", "type_positions", "note", "place_regions"}
 # Type-local site coordinates (dotted path inside partition_types[T]); every one is physical only, and the rtl_projection
 # check proves the bind inputs derived from them (reset tree incl. relay names, tap names, gate taps) did not move.
 import re  # noqa: E402
@@ -204,6 +204,17 @@ def apply_overlay(raw, ov):
             errs.append(f"type_positions {dotted!r}: point outside the type outline {W:g}x{H:g}")
             continue
         node[parts[-1]] = copy.deepcopy(val)
+    # PLACE-GROUP (FABLE-FIX-CONE-SCATTER 11-22): "place_regions": [rows] REPLACES partition_types[T].place_regions ([] removes it).
+    # The key is read by gen_phys install_place_regions only (place_regions.tcl at global place): no bind / RTL / G0 input, so it rides
+    # on the bound plan like a position; its rows are schema-checked with the type (validate_overlay step 1).
+    if "place_regions" in ov:
+        pr = ov["place_regions"]
+        if not isinstance(pr, list) or not all(isinstance(r, dict) for r in pr):
+            errs.append("place_regions: expected a list of rows (partition_types.<type>.place_regions form)")
+        elif pr:
+            t["place_regions"] = copy.deepcopy(pr)
+        else:
+            t.pop("place_regions", None)
     sts = ov.get("internal_stations") or {}
     if not isinstance(sts, dict):
         errs.append("internal_stations: expected {index: {...}}")
@@ -271,6 +282,11 @@ def _is_note(path, tn):
     return bool(path) and path[-1] == "note" and (len(path) == 1 or path[:2] == ("partition_types", tn))
 
 
+def _is_place_regions(path, tn):
+    """PLACE-GROUP: partition_types[tn].place_regions (any depth): a kit-only key (gen_phys install_place_regions)"""
+    return len(path) >= 3 and path[0] == "partition_types" and path[1] == tn and path[2] == "place_regions"
+
+
 def pk_parts(dotted):
     return [int(x) if x.isdigit() else x for x in dotted.split(".")]
 
@@ -306,9 +322,13 @@ def _category(path):
 def overlay_from_plans(base, new, tn):
     """The overlay equivalent to `new` against `base`; OverlayError listing every changed path outside the allowlist."""
     errs, hc, ct, st, tp = [], {}, {}, {}, {}
+    prx = None
     for path in _diff(base, new):
         ok = False
         if _is_note(path, tn):           # the plan's free-text note: documentation, no kit input
+            continue
+        if _is_place_regions(path, tn):  # PLACE-GROUP: the whole row list rides in the overlay
+            prx = copy.deepcopy(new["partition_types"][tn].get("place_regions") or [])
             continue
         pk = pos_key(path, tn)
         if pk:
@@ -334,6 +354,8 @@ def overlay_from_plans(base, new, tn):
     for k, v in (("hard_cores", hc), ("contents", ct), ("internal_stations", st), ("type_positions", tp)):
         if v:
             ov[k] = v
+    if prx is not None:
+        ov["place_regions"] = prx
     return ov
 
 
@@ -426,7 +448,7 @@ def _skip(skipped, check, why):
 def validate_overlay(base, new, tn, g0_full=False, plan_path=None, skipped=None):
     """All type-scoped checks of the overlaid plan `new` against the bound plan `base`; list of error strings."""
     errs = [f"changed outside the allowlist: {'.'.join(map(str, p))}" for p in _diff(base, new)
-            if not _is_note(p, tn) and not pos_key(p, tn) and not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
+            if not _is_note(p, tn) and not pos_key(p, tn) and not _is_place_regions(p, tn) and not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
                     and p[4] in HC_KEYS + CONTENT_KEYS + STATION_KEYS)]
     if errs:
         return errs
@@ -488,6 +510,8 @@ def apply_validated(raw, ov, g0_full=False, plan_path=None):
     if errs:
         raise OverlayError(errs)
     changed = {k: sorted(ov[k]) for k in ("hard_cores", "contents", "internal_stations", "type_positions") if ov.get(k)}
+    if "place_regions" in ov:
+        changed["place_regions"] = sorted(r.get("name", "?") for r in ov["place_regions"])
     return new, {"format": FORMAT, "type": tn, "base_plan_sha256": plan_sha(raw), "overlaid_plan_sha256": plan_sha(new),
                  "changed": changed, "checks": [c for c in ("allowlist", "schema(type-scoped)", "rtl_projection", "collector_reach",
                                                         "seam_hop", "g0_full" if g0_full else "g0_subset")

@@ -260,3 +260,28 @@ def test_missing_check_modules_warn_and_are_recorded(plan, monkeypatch, capsys):
     assert "WARN skipped check collector_reach" in err and "WARN skipped check seam_hop" in err
     _new, rec = TO.apply_validated(plan, OV)
     assert rec["skipped_checks"] == [] and "seam_hop" in rec["checks"]
+
+
+# PLACE-GROUP (FABLE-FIX-CONE-SCATTER 11-22): place_regions rides in the overlay (kit-only key, no rebind)
+PR = [{"name": "ctr", "inst_re": r"u_c\.count_r", "kind": "soft", "radius_um": 20, "util": 0.5}]
+
+
+def test_place_regions_overlay_roundtrip_and_kit_gets_only_the_region_files(plan, tmp_path):
+    ov = {"format": TO.FORMAT, "type": "mid", "place_regions": PR}
+    new = TO.apply_overlay(plan, ov)
+    assert new["partition_types"]["mid"]["place_regions"] == PR and "place_regions" not in plan["partition_types"]["mid"]
+    back = TO.overlay_from_plans(plan, new, "mid")
+    assert back["place_regions"] == PR and TO.apply_overlay(plan, back) == new
+    assert TO.apply_overlay(new, {"format": TO.FORMAT, "type": "mid", "place_regions": []}) == plan
+    a, b = kit(plan, tmp_path / "a"), kit(plan, tmp_path / "b", type_overlay=ov)
+    added = set(b) - set(a)
+    assert {"mid/place_regions_data.tcl", "mid/place_regions.tcl", "mid/place_regions_release.tcl", "mid/type_overlay.json"} <= added
+    assert b"ctr" in b["mid/place_regions_data.tcl"] and b" soft {} 20}" in b["mid/place_regions_data.tcl"]
+    assert json.loads(b["mid/type_overlay.json"])["changed"] == {"place_regions": ["ctr"]}
+
+
+def test_place_regions_overlay_bad_rows_rejected(plan):
+    with pytest.raises(TO.OverlayError, match="place_regions"):
+        TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "place_regions": {"x": 1}})
+    new = TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "place_regions": [{"name": "x", "inst_re": "a", "kind": "hard"}]})
+    assert TO.validate_overlay(plan, new, "mid")                  # schema (type-scoped) refuses kind hard
