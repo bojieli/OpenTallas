@@ -61,49 +61,16 @@ SPECIAL = ('mtp_draft', 'head')
 SEQ = dict(fks_to_job=3, job_to_age0=4, v_cmd_to_vo=7, svc_to_sj=2, gunit_to_cw=3, kit_to_tkd=3, done_v=5, vo_s_land=1)
 # vo_s_land (S81-SHLK2 10-18): dsdv_sh_lk RL 1 lands the rung at both faces of the L0 leaf (+1 edge each way of the rung);
 # a V SOUTH command leaves vo_s at v_cmd_to_vo + vo_s_land (V north on vo_n unchanged).
-# ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop.
-RSTOP_HOP = 2
-# FAM-S81-LEPE-4 XG-1 (main f67a57cea1): a slice type bound with OT_S81SL_RSTOP_XMID1 (rstop XMID 1) registers every
-# stop input face once more, so its stop is RSTOP_HOP + 1 edges.  The bind stubs the C-layer stop, so LATCHECK never
-# sees this edge; the compiler adds it per slice from the bound plan's partition_types verilog_defines.
-RSTOP_XMID_DEFINE = 'OT_S81SL_RSTOP_XMID1'
-RSTOP_XMID_EXTRA = 1
-
-
-def rstop_hop(die, inst):
-    """edges of the ring stop of slice instance inst (u_s_<col><tier>): RSTOP_HOP, + RSTOP_XMID_EXTRA when bound XMID 1"""
-    return RSTOP_HOP + (RSTOP_XMID_EXTRA if inst in getattr(die, 'rstop_xmid', ()) else 0)
-
-
-def rstop_xmid_slices(plan):
-    """slice instances whose bound partition type carries OT_S81SL_RSTOP_XMID1 (partition s_<col><tier>_<layer> ->
-    u_s_<col><tier>).  A define on a partition that names no slice fails closed."""
-    types = plan.get('partition_types') or {}
-    out = set()
-    for p in plan.get('partitions') or []:
-        t = types.get(p.get('type'), {})
-        if RSTOP_XMID_DEFINE not in (t.get('verilog_defines') or []):
-            continue
-        m = re.match(r'^(s_[0-7][NS])(_|$)', p['name'])
-        if not m:
-            raise ValueError(f'{RSTOP_XMID_DEFINE} on partition {p["name"]} (type {p.get("type")}) names no slice stop')
-        out.add('u_' + m.group(1))
-    return frozenset(out)
+# ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop; +1 on a slice bound with OT_S81SL_RSTOP_XMID1
+# (layer_prog/rstop_model.py, shared with dv_cut_replay and tokfunc/compose_tok_ds).
+from layer_prog.rstop_model import (RSTOP_HOP, RSTOP_XMID_DEFINE, RSTOP_XMID_EXTRA, rstop_hop,  # noqa: E402,F401
+                                    rstop_xmid_slices)
+from layer_prog import rstop_model as _RSTOP  # noqa: E402
 
 
 def bound_rstop_xmid(bound_dir, prov_plan, tree=None):
-    """read the bind's own plan (provenance_bind plan, relative to the bind tree) -> (xmid slices, plan path).
-    OT_S81_RSTOP_XMID_PLAN overrides the path; an unresolved plan fails closed (the +1 must not slip past)."""
-    env = os.environ.get('OT_S81_RSTOP_XMID_PLAN')
-    cands = [Path(env)] if env else []
-    if prov_plan and not env:
-        rel = Path(prov_plan)
-        cands += [rel] if rel.is_absolute() else [a / rel for a in Path(bound_dir).resolve().parents] + \
-            ([Path(tree) / rel] if tree is not None else []) + [ROOT / rel]
-    for c in cands:
-        if c.is_file():
-            return rstop_xmid_slices(json.loads(c.read_text())), c
-    raise ValueError(f'bound plan {prov_plan} not found for the rstop XMID model (set OT_S81_RSTOP_XMID_PLAN)')
+    """the bind's own plan -> (xmid slices, plan path); fails closed (layer_prog.rstop_model.bound_rstop_xmid)"""
+    return _RSTOP.bound_rstop_xmid(bound_dir, prov_plan, ROOT, tree)
 # V CTL injection is source-qualified by xr_timing.source_contract (XR2: seven edges).
 # dsdv_bk_sel rung transit vi -> vo: 3 edges since S81-TILES8/bk (10-18: one 276-b relay per input direction inside the
 # cluster, u_rn on vi_n; was ot_dsdv_vstop's 2).
@@ -1480,6 +1447,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                land_plan_sha256=sha256(tree / 'results/arch/s81_dv_1016/landing/p4l/land_plan.json'),
                plan_sha256=sha256(tree / 'results/arch/s81_dv_1016/p4l/plan.json'),
                compiler_sha256=sha256(Path(__file__)), files={},
+               rstop_xmid=sorted(getattr(die, 'rstop_xmid', ())),
                bound_data=None if bound_rec is None else dict(
                    verdict=bound_rec['verdict'], bind_dir=bound_rec['bind_dir'], bind_sha256=bound_rec['bind_sha256'],
                    bind_clean=bound_rec['bind_clean'], bind_errors=bound_rec['bind_errors'], counts=bound_rec['counts'],

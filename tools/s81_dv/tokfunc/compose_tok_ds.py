@@ -51,6 +51,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / 'results/token_pass/tokds_compose_1024'
+sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
+import rstop_model as RM  # noqa: E402  (ring stop edges + OT_S81SL_RSTOP_XMID1, shared with the compiler)
 PLAN = ROOT / 'physical/die_plan/s81/plan_h2_2249.json'
 LAT = LAT_OF_RECORD = ROOT / 'physical/die_plan/s81/lat/s81_latency.json'
 LAT_R8 = ROOT / 'physical/die_plan/s81/r8/s81_latency.json'
@@ -71,6 +73,7 @@ LEG_P4L_PER_CROSSING = 134.0     # base "on-die leg farthest slice <-> end slice
 LEG_LINKS = 7                    # farthest slice -> end slice ring links (LEG definition; v4.8 ends at slice 0 and 7,
 #                                  a TP4 broadcast needs both the E and the W links -> 7 links worst case)
 RSTOP_EDGES = 5                  # LEG law: each ring link + the stop it enters = k_link + 5 edges (rstop logic)
+#                                  + RSTOP_XMID_EXTRA at an OT_S81SL_RSTOP_XMID1 stop of PLAN (layer_prog/rstop_model)
 FRAME_FI_HOPS = 4                # frame-internal b0->b1->b2 out + b2->b1->b0 back (fi lanes) a field round
 
 # ---------------------------------------------------------------------------------------------- module loading
@@ -459,9 +462,17 @@ def apply_hooks(dag, comps, hooks, ops):
 
 
 # ---------------------------------------------------------------------------------------------- transforms
+@functools.lru_cache(None)
+def leg_xmid():
+    """(XMID slices of PLAN, extra edges on one worst-case leg end); a non-slice XMID define fails closed"""
+    xm = RM.rstop_xmid_slices(json.loads(PLAN.read_text()))
+    return xm, RM.leg_xmid_extra(xm, LEG_LINKS)
+
+
 def transform_lanes(dag, comps, LT, log, unmapped):
     W = LT['field_round']['cycles']
-    leg_end = LEG_LINKS * (LT['ring_link']['cycles'] + RSTOP_EDGES)
+    xmid, xmid_end = leg_xmid()
+    leg_end = LEG_LINKS * (LT['ring_link']['cycles'] + RSTOP_EDGES) + xmid_end
     for n in dag['nodes']:
         i, op, cl = n['id'], n.get('op') or '', comps[n['id']]
         crit = bool(n.get('critical'))
@@ -470,11 +481,15 @@ def transform_lanes(dag, comps, LT, log, unmapped):
             if c_['k'] == 'leg':
                 xs = c_['rec']['base_total'] / LEG_P4L_PER_CROSSING
                 wire = xs * 2 * LEG_LINKS * LT['ring_link']['cycles']
-                stop = xs * 2 * LEG_LINKS * RSTOP_EDGES
+                stop = xs * 2 * (LEG_LINKS * RSTOP_EDGES + xmid_end)
                 leg_rec = json.loads((ROOT / c_['rec']['file']).read_text())['ops'][0] if c_['rec'].get('file') else None
                 out.append(comp(wire, LANE, 'wire', f'v4.8 ring: {xs:g} crossings x 2 ends x {LEG_LINKS} xring lanes'))
                 out.append(comp(stop, 'measured-release-RTL' if leg_rec else PRICED, 'logic',
-                                f'rstop logic {RSTOP_EDGES} edges a stop (LEG law)', leg_rec))
+                                f'rstop logic {RSTOP_EDGES} edges a stop (LEG law)'
+                                + (f' + {xmid_end} XMID edge(s) an end ({",".join(sorted(xmid))})' if xmid_end else ''),
+                                leg_rec))
+                if xmid_end:
+                    out[-1].update(leg_stops=xs * 2 * LEG_LINKS, leg_xmid_edges=xs * 2 * xmid_end)
                 log['leg'][('crit' if crit else 'off')] += 1
                 log['leg_delta'] += (wire + stop - c_['c']) * crit
                 continue
@@ -579,8 +594,8 @@ def transform_components(dag, comps, receipts, log):
             for cl in comps.values():
                 for x in cl:
                     if x['src'].startswith('rstop logic'):
-                        per = x['c'] / RSTOP_EDGES
-                        x.update(c=per * float(r['leg_rstop_edges']), g=CUR, src=f'rstop {r["leg_rstop_edges"]} edges '
+                        per = x.get('leg_stops', x['c'] / RSTOP_EDGES)
+                        x.update(c=per * float(r['leg_rstop_edges']) + x.get('leg_xmid_edges', 0), g=CUR, src=f'rstop {r["leg_rstop_edges"]} edges '
                                  f'a stop: receipt {r["_file"]}', rec=None, receipt=r['_file'])
             log['components'].append(dict(file=r['_file'], applied='leg_rstop_edges'))
         ops_ = r.get('op')
@@ -822,8 +837,9 @@ def lane_map_table(r):
     return [
         dict(dag_term='xdie on-die leg (priced 134 / LEG p4l 140 a crossing)', lane_quantity='ring_link',
              lanes=LT['ring_link']['lanes'][:4] + ['...'], per_unit=LT['ring_link']['cycles'],
-             formula=f'crossings x 2 ends x {LEG_LINKS} x (ring_link + {RSTOP_EDGES} rstop edges)',
-             per_crossing=2 * LEG_LINKS * (LT['ring_link']['cycles'] + RSTOP_EDGES),
+             formula=f'crossings x 2 ends x {LEG_LINKS} x (ring_link + {RSTOP_EDGES} rstop edges)'
+             + (f' + 2 x {leg_xmid()[1]} XMID edges ({",".join(sorted(leg_xmid()[0]))})' if leg_xmid()[1] else ''),
+             per_crossing=2 * (LEG_LINKS * (LT['ring_link']['cycles'] + RSTOP_EDGES) + leg_xmid()[1]),
              nodes=dict(lg['leg']), critical_delta=round(lg['leg_delta'], 1)),
         dict(dag_term='field op p4l die wire (r8 wire + s81 die tiles) / missing hub return', lane_quantity='field_round',
              lanes=LT['field_round']['lanes'], per_unit=LT['field_round']['cycles'],
@@ -1319,6 +1335,7 @@ def main(argv=None):
     if a.plan:
         PLAN = a.plan.resolve()
         lane_table.cache_clear()
+        leg_xmid.cache_clear()
     if a.lat:
         LAT = Path(a.lat).resolve()
         lane_table.cache_clear()

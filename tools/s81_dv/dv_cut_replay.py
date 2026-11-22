@@ -77,12 +77,18 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'layer_prog'))
 
 from xr_timing import inject_cycles, check_run_source
+from rstop_model import RSTOP_HOP, rstop_hop, programme_rstop_xmid
 
 SCHEMA = 'opentallas.s81_dv.cut_replay.v1'
-RSTOP_HOP = 2                       # ot_s81sl_rstop: line in pin -> line out pin 2 edges a stop
+# ot_s81sl_rstop: line in pin -> line out pin RSTOP_HOP (2) edges a stop, +1 on an OT_S81SL_RSTOP_XMID1 slice
+# (layer_prog/rstop_model.rstop_hop, the compiler's model; the XMID stops come from the programme manifest)
 LINE_INJECT_COL = 4                 # dv_layer_compile ctl_path: seq_host V -> column-4 slice -> line both ways
 ENCODED = ('CTL', 'SVCJ')
-PIN_OFFSET = {'CTL': -RSTOP_HOP, 'SVCJ': 0}   # landed-pin cycle = event cycle + offset
+PIN_OFFSET = {'CTL': -RSTOP_HOP, 'SVCJ': 0}   # landed-pin cycle = event cycle + offset (CTL: - the slice's rstop_hop)
+
+
+def pin_offset(die, kind, inst):
+    return -rstop_hop(die, inst) if kind == 'CTL' else PIN_OFFSET[kind]
 
 INST_RE = re.compile(r'^\s*(\w+)\s+(?:#\((.*?)\)\s+)?(\w+)\s*\((.*)\);\s*(?://.*)?$')
 WIRE_RE = re.compile(r'^\s*(?:wire|input wire|output wire|reg)\s*(?:\[(\d+):(\d+)\])?\s*([^;]+);')
@@ -298,11 +304,12 @@ def derive_line_events(S, die):
         if e['kind'] != 'CTL' or e['dir'] != 'in' or e['port'] not in ('ri_e', 'ri_w', 'vi'):
             continue
         col, tier = int(e['inst'][4]), e['inst'][5]
-        hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + RSTOP_HOP
+        hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + rstop_hop(die, f'u_s_{b}{tier}')
+        inj_hop = rstop_hop(die, f'u_s_{LINE_INJECT_COL}{tier}')
         if e['port'] == 'vi':
             if col != LINE_INJECT_COL:
                 raise ValueError(f'CTL event {e["tag"]} at {e["inst"]}.vi is not the column-{LINE_INJECT_COL} injector')
-            t_out = e['cycle'] - RSTOP_HOP + inject_cycles(S)
+            t_out = e['cycle'] - inj_hop + inject_cycles(S)
         else:
             path = W if e['port'] == 'ri_e' else E
             if col not in path:
@@ -315,7 +322,7 @@ def derive_line_events(S, die):
             # TOKj-S81 10-23 (fc30 entry job17: 51 u_s_3N.ri_e rows, w_tvN_seqhost_lnd 51 words unscheduled): a line
             # beat compiled at a stop is the seq_host V rung beat re-injected by the column-4 slice, so the rung word
             # on <u_s_4T>.vi is derived too (inverse of the vi branch above; ctl_beat leaves a vi beat unrewritten).
-            v = dict(e, cycle=t_out + RSTOP_HOP - inject_cycles(S), inst=f'u_s_{LINE_INJECT_COL}{tier}', port='vi',
+            v = dict(e, cycle=t_out + inj_hop - inject_cycles(S), inst=f'u_s_{LINE_INJECT_COL}{tier}', port='vi',
                      derived_from=f'{e["inst"]}@{e["cycle"]}')
             if (v['inst'], 'vi', v['cycle'], v['payload']) not in have:
                 have.add((v['inst'], 'vi', v['cycle'], v['payload']))
@@ -354,8 +361,8 @@ def derive_vctl_line_events(S, die):
                 continue
             col, tier = int(m.group(1)), m.group(2)
             src = die.sid(w['inst'])
-            hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + RSTOP_HOP
-            t_out = w['cycle_land'] - RSTOP_HOP + inject_cycles(S)
+            hop = lambda a, b: line_link_age(die, f'u_s_{a}{tier}', f'u_s_{b}{tier}')[0] + rstop_hop(die, f'u_s_{b}{tier}')
+            t_out = w['cycle_land'] - rstop_hop(die, w['inst']) + inject_cycles(S)
             for path, port in ((range(col - 1, -1, -1), 'ri_e'), (range(col + 1, 8), 'ri_w')):
                 t, prev = t_out, col
                 for c in path:
@@ -505,7 +512,7 @@ def landed_words(S, T, die):
             val, meta = int(e['payload'], 16), {}
         bits = {nb: (val >> i) & 1 for i, nb in enumerate(pb) if nb is not None}
         words.append(dict(event=dict((k, v) for k, v in e.items() if k != 'payload') | {'payload': e['payload']},
-                          inst=inst, port=e['port'], cycle_land=e['cycle'] + PIN_OFFSET[e['kind']], bits=bits, **meta))
+                          inst=inst, port=e['port'], cycle_land=e['cycle'] + pin_offset(die, e['kind'], inst), bits=bits, **meta))
     return words, unenc, offdie, internal
 
 
@@ -530,6 +537,7 @@ def gen(a):
     S = json.loads((prog / 'schedule.json').read_text())
     T = {t['i']: t for t in json.loads((prog / 'prog/ctl_templates.json').read_text())['templates']}
     man = json.loads((prog / 'manifest.json').read_text()) if (prog / 'manifest.json').exists() else {}
+    die.rstop_xmid = programme_rstop_xmid(man)     # the compiler's XMID stops (fails closed on a pre-model bound prog)
     cut = Cut(a.cut)
     st = stale_check(S, die, man)
     out = Path(a.out)
