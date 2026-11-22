@@ -236,6 +236,20 @@ def attempt_dir_of(t):
     return t[:m.end()].rstrip("/") if m else None
 
 
+# CLEAN-AGGR-R3 (COORD 11-21: QC-RELAUNCH-R1 failed private slw_su_c kits refused because the die work_root kit-wave is protected whole):
+# a private-spec kit dir .../kit-wave/<die>/<plan>/private/<LANE>/<kit> is a unit like attempt_N: an ANCESTOR entry does not protect it.
+PRIVATE_KIT_DIR = re.compile(r"^.*/kit-wave/[^/]+/[^/]+/private/[^/]+/[^/]+(?=/|$)")
+
+
+def unit_dir_of(t):
+    """the attempt_N dir or private-spec kit dir t is or lies inside, else None"""
+    ad = attempt_dir_of(t)
+    if ad:
+        return ad
+    m = PRIVATE_KIT_DIR.match(t)
+    return m.group(0).rstrip("/") if m else None
+
+
 def attempt_signed(ad):
     """a signoff*.json with verdict SIGNED / LOCAL_PASS* / NEEDS_PARENT under the attempt dir (LOCAL_PASS counts as signed, CLEAN-AGGR-R2)"""
     for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
@@ -354,7 +368,7 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     # archived): an attempt_N dir is NOT protected by an ANCESTOR entry.  It stays refused when it is listed itself (the latest attempts of live / queued rows,
     # build_protected_live.live_attempt_paths), holds something listed (PROTECTED-DBS, binds of record), holds a signed result, holds an unsigned routed result
     # (routed_unsigned_refusal above), or a live process / ot-run command line names it (below).
-    ad = attempt_dir_of(t)
+    ad = unit_dir_of(t)
     ad_free = bool(ad) and not attempt_signed(ad)
     for p in protected:
         if t.startswith(p + "/") and t in allow:

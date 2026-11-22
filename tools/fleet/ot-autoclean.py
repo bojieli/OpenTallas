@@ -170,6 +170,41 @@ GENERIC_NAMES = {"kit", "run", "base", "results", "asap7", "src", "items", "work
 KEEP_DIAG_DIRS = {"reports", "logs"}
 KEEP_DIAG_MAX_BYTES = 256 << 20
 REPORTS_KEPT_MARK = "REPORTS-KEPT.txt"
+# COORD 11-21 (FABLE-PD-QC-2045): a kit stopped by SETUP_TRIAGE or a TT gate fail keeps its CTS / timing diagnostics for 48 h
+# wherever they sit in the tree (4_cts_final.rpt, CTS + gate logs, timing reports, FAIL_* / signoff records), over the size cap;
+# its DBs still go.
+TRIAGE_KEEP_S = 48 * 3600
+TRIAGE_FILE_MAX_BYTES = 64 << 20
+TRIAGE_DIAG_RE = re.compile(r"(\.rpt|\.log|\.tmp\.log|\.json|\.txt|\.tsv)$|^FAIL_")
+
+
+def triage_stop_age(f, now=None):
+    """seconds since the newest SETUP_TRIAGE / TT-gate-fail stop marker in tree f, or None.  Markers: a FAIL_POSTCTS that
+    names SETUP_TRIAGE (gen_phys post-CTS gate), or a signoff.json whose verdict is not SIGNED/LOCAL_PASS and that fails on setup."""
+    best = None
+    for dp, _dns, fns in os.walk(f):
+        for n in fns:
+            if n not in ("FAIL_POSTCTS", "signoff.json"):
+                continue
+            q = os.path.join(dp, n)
+            try:
+                if os.path.islink(q) or os.path.getsize(q) > TRIAGE_FILE_MAX_BYTES:
+                    continue
+                with open(q, errors="replace") as fh:
+                    txt = fh.read()
+                if n == "FAIL_POSTCTS":
+                    hit = "SETUP_TRIAGE" in txt
+                else:
+                    hit = (re.search(r'"verdict"\s*:\s*"(SIGNED|LOCAL_PASS)"', txt) is None
+                           and re.search(r"setup", txt, re.I) is not None and re.search(r"FAIL", txt) is not None)
+                if hit:
+                    m = os.path.getmtime(q)
+                    best = m if best is None else max(best, m)
+            except OSError:
+                continue
+    if best is None:
+        return None
+    return max(0.0, (now or time.time()) - best)
 HEAVY_DIRS = {"run", "objects", "results", "logs", "reports", "gen", "items", ".git"}
 ABS_RE = re.compile(r"(?<![\w.~/])/(?:srv|home|tmp)/[^\s'\"<>|;,()\[\]{}`*?$\\]+")
 REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]+)")
@@ -2260,10 +2295,27 @@ class Job:
                 if n in KEEP_DIAG_DIRS and not os.path.islink(os.path.join(dp, n)):
                     keepd.append(os.path.join(dp, n))
                     dns.remove(n)                         # never walk into a kept dir
+        age = triage_stop_age(f)
+        triage = age is not None and age < TRIAGE_KEEP_S
+        if triage:                                        # COORD 11-21: + every diagnostics file outside reports/ logs/
+            kd = tuple(k + "/" for k in keepd)
+            for dp, dns, fns in os.walk(f):
+                if (dp + "/").startswith(kd):
+                    dns[:] = []
+                    continue
+                for n in fns:
+                    q = os.path.join(dp, n)
+                    try:
+                        if TRIAGE_DIAG_RE.search(n) and not os.path.islink(q) and os.path.getsize(q) <= TRIAGE_FILE_MAX_BYTES:
+                            keepd.append(q)
+                    except OSError:
+                        pass
         if not keepd:
             return None
-        sizes = {k: tree_info_c(k)[1] for k in keepd}
-        if sum(sizes.values()) > KEEP_DIAG_MAX_BYTES:
+        sizes = {k: (os.path.getsize(k) if os.path.isfile(k) else tree_info_c(k)[1]) for k in keepd}
+        if triage:
+            say(f"keep-reports: {f}: SETUP_TRIAGE / TT-fail stop {age / 3600:.1f} h ago: {len(keepd)} diagnostics kept over the cap")
+        elif sum(sizes.values()) > KEEP_DIAG_MAX_BYTES:
             keepd = [k for k in keepd if os.path.basename(k) == "reports"]
             if not keepd or sum(sizes[k] for k in keepd) > KEEP_DIAG_MAX_BYTES:
                 say(f"keep-reports: {f}: kept diagnostics over {KEEP_DIAG_MAX_BYTES >> 20} MB, tree removed whole")

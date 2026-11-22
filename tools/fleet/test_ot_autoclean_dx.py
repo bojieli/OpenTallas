@@ -14,6 +14,9 @@ ROUTED = ("6_final", "5_3_fillcell", "5_2_route", "5_1_grt", "5_route", "6_1_fil
 # FABLE-FLOW-1555 (3bb606ac2f, 11-18): ot_delete_guard refuses an unsigned attempt that holds 5_2_route.odb / 6_final.odb unless a NEWER attempt of the
 # same item also holds one.  So the newest unsigned attempt of those two stages is kept; every older one, and every other routed stage, is deleted.
 GUARDED = ("6_final", "5_2_route")
+# CLEAN-AGGR-1121 (1326932a95, OWNER 11-12/11-21 aggressive cleanup): that refusal holds only for ROUTED_GRACE_H after the routed DB was written; these
+# fixtures are aged past the grace (age_tree), so the newest unsigned routed attempt goes too unless a live / queued row or a live process protects it.
+GUARDED_AFTER_GRACE = ()
 
 
 class Gate(T.Base):
@@ -49,7 +52,7 @@ class Gate(T.Base):
                 self.dx["ledger"] = []
                 self.run_job("--classes", "a")
                 self.assertFalse(os.path.exists(fin))
-                self.assertEqual(os.path.exists(sup), stage in GUARDED)
+                self.assertEqual(os.path.exists(sup), stage in GUARDED_AFTER_GRACE)
                 self.assertEqual(self.dxreq(), [])
 
     def sign(self, k):
@@ -93,7 +96,7 @@ class Gate(T.Base):
         self.assertFalse(os.path.exists(fin))
         self.dx = None
         self.run_job("--classes", "a", "--design-export", "off")   # explicit off opens the export gate ...
-        self.assertTrue(os.path.exists(sup))                       # ... but the newest unsigned routed attempt stays (delete guard, 11-18)
+        self.assertFalse(os.path.exists(sup))                      # ... and the newest unsigned routed attempt, past the 2 h grace, goes (CLEAN-AGGR-1121)
 
     def test_drive_writes_hold_all_when_hook_fails(self):
         import types

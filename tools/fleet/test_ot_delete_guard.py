@@ -124,3 +124,20 @@ def test_routed_unsigned_attempt_is_refused_unless_signed_or_superseded(tmp_path
     assert "routed result not signed" in G.refuse(str(it / "attempt_5"), protected=set(), ptext="", allow=set())
     attempt(6, True, signed=True)
     assert G.refuse(str(it / "attempt_6"), protected=set(), ptext="", allow=set()) is None           # SIGNED
+
+
+def test_private_kit_not_protected_by_kit_wave_ancestor_clean_aggr_r3(tmp_path):
+    """COORD 11-21: a failed private-spec kit under .../kit-wave/<die>/<plan>/private/<LANE>/ is deletable; listed itself, signed or live stays refused"""
+    wr = tmp_path / "runs" / "qwen_compute" / "kit-wave"
+    k = wr / "qwen_compute" / "planX" / "private" / "LANE-A" / "slw_su_c_1"
+    (k / "gen").mkdir(parents=True)
+    wr_s, k_s = g.canon(str(wr)), g.canon(str(k))
+    assert g.refuse(str(k), protected={wr_s}, ptext="", current={}, allow=set()) is None
+    assert g.refuse(str(k / "gen"), protected={wr_s}, ptext="", current={}, allow=set()) is None
+    assert g.refuse(str(k), protected={wr_s, k_s}, ptext="", current={}, allow=set())
+    assert g.refuse(str(k), protected={wr_s}, ptext="cmd " + k_s + " x", current={}, allow=set())
+    (k / "signoff").mkdir()
+    (k / "signoff" / "signoff.json").write_text('{"verdict": "SIGNED"}')
+    assert g.refuse(str(k), protected={wr_s}, ptext="", current={}, allow=set())
+    assert g.refuse(str(wr / "qwen_compute" / "planX" / "private" / "LANE-A"), protected={wr_s}, ptext="", current={}, allow=set())
+

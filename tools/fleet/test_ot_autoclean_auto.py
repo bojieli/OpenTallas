@@ -664,6 +664,33 @@ class TestSafety(Base):
             ac.DOCKER_INSPECT_CHUNK_TIMEOUT, ac.DOCKER_INSPECT_ONE_TIMEOUT = old
         self.assertIn(os.path.normpath(os.path.dirname(b)), lv.mounts)
 
+    def test_triage_stop_keeps_cts_diagnostics_48h(self):
+        """COORD 11-21 (FABLE-PD-QC-2045): a SETUP_TRIAGE-stopped kit keeps 4_cts_final.rpt, CTS logs and gate logs; DBs go"""
+        f = os.path.join(self.t, "tri/attempt_1")
+        rpt = touch(os.path.join(f, "run/reports/asap7/x/base/4_cts_final.rpt"))
+        log = touch(os.path.join(f, "run/logs/asap7/x/base/4_1_cts.log"))
+        gate = touch(os.path.join(f, "postcts_gate_TT.log"))
+        db = touch(os.path.join(f, "run/results/asap7/x/base/4_cts.odb"))
+        fp = os.path.join(f, "FAIL_POSTCTS")
+        with open(fp, "w") as fh:
+            fh.write("FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop\n")
+        self.assertIsNotNone(ac.triage_stop_age(f))
+        job = ac.Job.__new__(ac.Job)
+        job.a = type("A", (), {"rm_jobs": 1, "aggressive": False})()
+        self.assertIsNotNone(job.keep_reports(f))
+        for q in (rpt, log, gate, fp):
+            self.assertTrue(os.path.exists(q), q)
+        self.assertFalse(os.path.exists(db))
+        old = os.path.join(self.t, "tri2/attempt_1")
+        touch(os.path.join(old, "run/results/asap7/x/base/4_cts.odb"))
+        g2 = touch(os.path.join(old, "postcts_gate_TT.log"))
+        fp2 = os.path.join(old, "FAIL_POSTCTS")
+        with open(fp2, "w") as fh:
+            fh.write("SETUP_TRIAGE\n")
+        os.utime(fp2, (time.time() - 49 * 3600,) * 2)
+        self.assertIsNone(job.keep_reports(old))           # stop older than 48 h, no reports/logs dir: removed whole by the caller
+        self.assertTrue(os.path.exists(g2))
+
     def test_never_names(self):
         job = ac.Job.__new__(ac.Job)
         with self.assertRaises(OSError):
