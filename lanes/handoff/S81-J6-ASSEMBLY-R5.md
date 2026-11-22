@@ -41,3 +41,5 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - COORD RULING 22:xx: J7 as sealed; 643ffb9932 -> J8. Col held until J8 UNLESS COLROM-R5 Kit B (OT_RELAY_MID_RE excluding u_y_xd_, J7 tools) shows xd stages <= 50 um from seats AND CTS TT >= -42 (post-hook) -> release col on J7 with that env as override (use item_env on col_* items, NOT die_gen_env, to avoid die_env_stale rearm of every kit) + remove hold record j7-col-held-until-view-1122. Post decision when Kit B reads.
 
 - COL DECISION 21:5x: col waits for J8 (env-only Kit B cannot seat xd: key/flop mismatch + 52 merged u_w stations need 643ffb9932 + 8a2a7b31a9). J8 tools must include 643ffb9932, 8a2a7b31a9, 4dac1ad0b7, 8ad54f25f4. bk_sel 575 key re-key row owed by BKSEL-R7 (seat-miss-rows.tsv).
+
+- J8 TOOLS (FLOW-OPS-R2 via COORD, hub 04baa8752e): bind J8 on main >= 5a966bb45bc (narrowed class keep: clock-landing ctrl regs out, relay/station/ROM-input/reset-sync kept; includes 643ffb9932, 4dac1ad0b7, 8ad54f25f4, aa0cde9d13). Verify 8a2a7b31a9 ancestry before the bind.
