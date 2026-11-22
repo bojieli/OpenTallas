@@ -5919,7 +5919,6 @@
     "required": true
    },
    "gen_host_min_free_gb": {
-    "epyc9": 250,
     "intel1": 250
    },
    "retry": [],
@@ -37342,8 +37341,7 @@
    "tools_refresh_bind_cmd": "mkdir -p {out}/o && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- bash -c 'python3 -I -B tools/die_plan/bind.py elab {plan} --asbuilt {asbuilt} --out {out}/o --strict --mem 96 > {out}/elab.log 2>&1 && python3 -I -B tools/die_plan/bind.py bind {plan} --asbuilt {asbuilt} --out {out}/o --strict > {out}/bind.log 2>&1'",
    "tools_refresh_bind_sub": "o",
    "gen_host_min_free_gb": {
-    "intel1": 250,
-    "epyc9": 250
+    "intel1": 250
    },
    "retry": [
     "slice_station__t24__cl66b71008@21",
@@ -40530,9 +40528,7 @@
    "auto_visual_review_skip": [
     "*"
    ],
-   "gen_host_min_free_gb": {
-    "epyc9": 250
-   }
+   "gen_host_min_free_gb": {}
   },
   "qwen_compute": {
    "enabled": true,
@@ -51556,7 +51552,6 @@
     "*"
    ],
    "gen_host_min_free_gb": {
-    "epyc9": 250,
     "intel1": 250
    },
    "note_tools_sha_qcr11": "QC-PLAN-R11 2026-11-21 12:1x PST: pin bump 65f3f85d7c5f -> b6934d7751d6 (f656e319b7) REVERTED. dies.<die>.tools_sha is the tree-tools reference (tool_skew pin mode, apply marker 'the rt the die tools came from'); it is not the kit runtime. With b6934 the skew read 229 of 18947 modules differ (tree v2r10 packs 639df bind/G0 tools) vs 3 with 65f3 - noise, not a runtime change. Kit stages run the scheduler rt/current per launch (TOOLS-DECOUPLE): V2 launches 11:28-11:51 recorded c2047d41ccdf / a13768301176, which carry 3ed87c352a, 4f638b4e9f, f56d99cf55, 8d1cff9b1b, a0fc9811a19 (a1376 also 289287760f/3fba1b4bc0). The tree-side tools (kit_rtl bind) move with V3, packed from main >= 3fba1b4bc0; the pin moves to that tree's rt then."
@@ -68659,7 +68654,6 @@
     "epyc2"
    ],
    "gen_host_min_free_gb": {
-    "epyc9": 250,
     "intel1": 250
    }
   }
@@ -70105,7 +70099,6 @@
  ],
  "host_drain": {
   "epyc10": 9999,
-  "epyc7": 9999,
   "epyc8": 9999,
   "epyc2": 9999
  }
