@@ -1236,7 +1236,7 @@ def for_type(P, tn, reach=None):
             raise ResetError(f"type {tn}: hard partitions carry no generated reset tree")
         T = _wf_type_tree(P, tn)
         T.update(entry="sync" if tn == wf_solve(P)["root_type"] else "relayed", sync_stages=sync_stages(P, tn),
-                 type=tn, start=start_broadcast(P), relay_driver=bool(P.reset.get("relay_driver")))
+                 type=tn, start=start_broadcast(P), relay_driver=relay_driver(P, tn))
         raw_used = start_raw_requests(P.types[tn])
         if raw_used:
             T["start_raw_used"] = raw_used
@@ -1278,7 +1278,7 @@ def for_type(P, tn, reach=None):
         ent = "sync"
         T = _type_tree(P, tn, None, reach)
     T.update(entry=ent, sync_stages=sync_stages(P, tn), type=tn,
-             relay_driver=bool(P.reset.get("relay_driver")))
+             relay_driver=relay_driver(P, tn))
     if relay_lockup(P, tn):
         T["relay_lockup"] = relay_lockup_form(P)
     if T["relay_driver"]:
@@ -2923,6 +2923,20 @@ def lockup_hops(T):
     return [r for r in T["relays"] if r["d"] in internal]
 
 
+def relay_driver(P, tn):
+    """Opt-in electrical reset relay drivers (ot_dp_rrelay_drive / ot_dp_rgate_drive, FIRM FF+driver pairs) for type
+    tn: die-wide reset.relay_driver, or per type reset.relay_driver_types (OPUS-FIX-HEAD-LEP0N-R8 11-22: hd_lep0N
+    u_rrl_380 gated tap -> u_rg0.u_pair rst_n, an M5 pin at the pair centre 246 um inside the macro: the plain
+    ot_dp_rgate output INVx1 was placed on the far macro edge and drove the 250 um over-macro net with 662 ps slew,
+    post-place TT setup -441 ps).  Absent = unchanged (plain relays)."""
+    return bool(P.reset.get("relay_driver")) or tn in (P.reset.get("relay_driver_types") or [])
+
+
+def relay_driver_any(P):
+    """any type of the plan carries relay drivers (the bound cell library then needs the *_drive cells)."""
+    return bool(P.reset.get("relay_driver")) or bool(P.reset.get("relay_driver_types"))
+
+
 def relay_lockup(P, tn):
     """CLK FORM #7 / RLK-1108 (opt-in): reset.relay_lockup = {"form": "negedge" | "latch", "types": [type, ...]}.  True
     when type tn's internal relay hops get the lockup form (negedge: ot_dp_rrelay_nl relays; latch: an ot_dp_lk per hop,
@@ -2937,7 +2951,7 @@ def relay_lockup(P, tn):
         raise ResetError(f"reset.relay_lockup names unknown types {bad[:5]}")
     if tn not in cfg["types"]:
         return False
-    if P.reset.get("relay_driver"):
+    if relay_driver(P, tn):
         raise ResetError(f"type {tn}: reset.relay_lockup and reset.relay_driver are exclusive")
     if start_broadcast(P):
         raise ResetError(f"type {tn}: reset.relay_lockup does not support START broadcast plans")

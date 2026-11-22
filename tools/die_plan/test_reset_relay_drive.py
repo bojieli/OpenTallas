@@ -77,3 +77,30 @@ puts "PAIR_STATE $state(relay) $state(face)"
         env=dict(os.environ,RESULTS_DIR=str(tmp_path),OT_RESET_PAIR_FIXED=mode)
         p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
         assert p.returncode==0 and expected in p.stdout,p.stdout+p.stderr
+
+
+def test_relay_driver_types_per_type():
+    class P:
+        reset = {"relay_driver_types": ["a"]}
+    assert R.relay_driver(P, "a") and not R.relay_driver(P, "b") and R.relay_driver_any(P)
+    P.reset = {}
+    assert not R.relay_driver(P, "a") and not R.relay_driver_any(P)
+    P.reset = {"relay_driver": True}
+    assert R.relay_driver(P, "b") and R.relay_driver_any(P)
+
+
+def test_relay_driver_types_schema():
+    import schema as S
+    props = None
+    def find(o):
+        nonlocal props
+        if isinstance(o, dict):
+            if "relay_lockup" in o and "relay_driver_types" in o:
+                props = o
+            for v in o.values():
+                find(v)
+        elif isinstance(o, list):
+            for v in o:
+                find(v)
+    find(S.SCHEMA if hasattr(S, "SCHEMA") else vars(S))
+    assert props is not None

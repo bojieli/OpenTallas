@@ -7916,7 +7916,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
         cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
-    if P.reset.get("relay_driver"):
+    import reset_tree as _RTD
+    if _RTD.relay_driver(P, tn):
         cfg.append("export OT_RESET_PAIR_FIXED = 1")
     if t.get("clock", {}).get("tap_passthrough"):
         # FLOW-GEN-2 (opt-in clock.tap_passthrough): hard-core island ft clock pass-through inputs are followed, not
@@ -8299,7 +8300,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
     # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
     # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
-    if P.reset.get("relay_driver"):
+    import reset_tree as _RTD
+    if _RTD.relay_driver(P, tn):
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")

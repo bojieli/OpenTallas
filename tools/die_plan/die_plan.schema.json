@@ -9290,6 +9290,16 @@
       "broadcast"
      ]
     },
+    "relay_driver": {
+     "type": "boolean"
+    },
+    "relay_driver_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
     "relay_lockup": {
      "type": "object",
      "additionalProperties": false,

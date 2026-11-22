@@ -1387,6 +1387,9 @@ SCHEMA = {
             # types use ot_dp_rrelay_nl (posedge state flop + negedge re-launch, 1 cycle); absent = byte-identical
             # RLK-1108 (DIE-HBM-92-RLK 11-08) form "latch": relays stay posedge ot_dp_rrelay, each internal relay->relay
             # hop gets an ot_dp_lk hop lockup latch (u_fl_rst*, launch tap, hop midpoint; 0 cycles, reset_tree.lockup_hops)
+            # RDRV-TYPES (OPUS-FIX-HEAD-LEP0N-R8 11-22, opt-in; reset_tree.relay_driver): the named types use the electrical
+            # relay drivers (ot_dp_rrelay_drive / ot_dp_rgate_drive, FIRM FF+driver pairs); absent = unchanged
+            "relay_driver": {"type": "boolean"}, "relay_driver_types": {"type": "array", "items": _name},
             "relay_lockup": {"type": "object", "additionalProperties": False, "required": ["form", "types"],
                              "properties": {"form": {"enum": ["negedge", "latch"]}, "types": {"type": "array", "items": _name},
                                             "note": {"type": "string"}}},

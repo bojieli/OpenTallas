@@ -3658,7 +3658,7 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            cells += "\n" + wavefront_cells_text(driver=bool(P.reset.get("relay_driver")),
+            cells += "\n" + wavefront_cells_text(driver=RT.relay_driver_any(P),
                                                  lockup=(P.reset.get("relay_lockup") or {}).get("form") or False,
                                                  root_nl=any((t.get("reset") or {}).get("root_entry_negedge") for t in P.types.values()))
             W = RT.wf_plan(P)
