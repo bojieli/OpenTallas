@@ -19,5 +19,14 @@
   "gen_step": "GEN bksel_seatmiss python3 -I -B /srv/opentallas-scratch2/claude/s81-bksel-r7/w/bksel_seatmiss.py {IN} {OUT}  (intel2/epyc7/epyc10, sha256 c9a511e08e72a118; asserts every dropped key has a co-located kept key; prints BKSEL_SEATMISS_OK dropped 575)",
   "tested": "plan_r7a and J7 v7+bksel_r6: dropped 575 each, 45,974 -> 45,399",
   "order": "independent of bksel_spread (dropped keys are outside the spread window)"
+ },
+ "row3_fstart_reset": {
+  "status": "READY (model on the r7a placed kit; tool on main, 0 added cycles)",
+  "cause": "R2R_MAX 1202.5 um u_rrl_11 (tap rst_n_t2 at 1210.1,17.3) -> u_cland_fstart_flt_o0 (placed 6.2,17.6): all FSTART face flops share cland_start_raw = rst_n_t2; carried since R4.",
+  "what": "partition_types.bk_sel__t2.clock.landing_local_resets (3 kept ot_dp_rrelay leaves) + clock.reset_tree_anchor, from tools/die_plan/fstart_reset_delta.py (die-agnostic FSTART class tool). fstart_2 = rst_rl_46 (384.3,4.3) -> leaf (2.16,21.8) -> u_cland_fstart_flt_o0; fstart_0 = rst_rl_10 -> (1234.7,2.7) -> fstart_tl_o0 + origin; fstart_1 = rst_rl_8 -> (1415.5,2.7) -> fstart_xtier_o0. Hops in <= 399.6 um, out <= 62.8 um (all < 405); release depth unchanged (raw depth + 1 = old), +3 flops, 0 cycles.",
+  "gen_step": "GEN bksel_fstart python3 -I -B <repo main>/tools/die_plan/fstart_reset_delta.py <repo main> {IN} <J8 strict bind out dir> {OUT} {REPORT} --types bk_sel__t2   (fails closed if any hop > 405; rows are per bind, so run on the J8 bind)",
+  "tested": "plan_r7a + chain_r6 native_bind/out (rt ae9a5815f02c): 3 leaves / 4 consumers, additive delta only under partition_types.bk_sel__t2.clock (epyc10 s81-bksel-r7/w/plan_r7a_fst.json sha e075782beb7c4bef, report fst_r7a.json).",
+  "note": "tools/die_plan/reset_leg_plan.py on the same placement does not see this leg (landing cells); its other 5 legs over 300 (u_core rst_n 381, u_ist_tp/xtier 310-355) are < 405 and left per COORD.",
+  "order": "independent of rows 1-2 (no relay_sites keys)"
  }
 }
