@@ -62,3 +62,9 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - Proofs (kit2_*, pids 1629056 / 1633552 / 2287276) keep running. A proof showing its type cannot close (GRT TT < -42 not fixable by ECO,
   or setup < -300) -> cancel the sealed twin's units (ot-run --cancel on the exact units only).
 - Sealed sign-off + EQUIVALENT routed LEC -> kit_wave.py private-provenance <spec dir> --lec <lec.json>.
+
+## 03:1x COORD correction to the cancel rule (wins over the 02:5x text)
+- GRT TT below -42 is NOT grounds to cancel a sealed twin (GRT repair + AUTO-ECO near-miss window recover it).
+- Cancel a sealed twin ONLY when its proof shows the type cannot close: setup < -300 ps after CTS/GRT, repair flat across
+  iterations, or a functional bug. Anything between -42 and -300 runs to finish.
+- Sealed kits: Wo kv3_hub_Wo_1122025522, Eo kv3_hub_Eo_1122025534 (seal bc02a8674058), Ei kv3_hub_Ei_1122025546 (seal 5ef688a82af6). Waiter b4a1azv8e.
