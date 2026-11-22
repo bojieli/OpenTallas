@@ -23,3 +23,4 @@
   Gates: plan_gate_pre vs J7 PASS (0 findings), reprice 0 lanes, landing_contract 0 errors (was 6 mon hop errors), reach rule 1 clean on all 64 non-svc types. Strict bind --all-gaps + LATCHECK + G0 diff RUNNING on my J7 fork (gate_cor.sh).
   SVC residue: on SVC-R9 plan_j8_hi4_r9c, 24 svc types still fail rule 1 (worst svc_lo t7 3,886 um). The fix closes 13 now; re-trying the 7 relay pieces with landing_relay_start_copy. svc_lo t1/t7 + rs_w t1 need reset.local_taps_um -> SVC-R9 / J9 unless closed by 12:00.
   [redirect] FAM-S81-COL-R6 -> FAM-S81-COL-R5 (stood down; chain FAM-S81-COL-R6 > FAM-S81-COL-R5)
+- 2026-11-22 06:53 PST DONE [FIX-SYNC-S81] ot-run oth-ubuntu-2955771-1795358848 on tolerant-swine: rc=0 after 394 s, ended 06:53:58, log /srv/opentallas-scratch2/claude/fix-sync-s81/svc/otrun2.log, cmd: --mem 24 --threads 1 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fix-sync-s81 --stage /srv/opentallas-scratch2/claude/opus-fix-s81-
