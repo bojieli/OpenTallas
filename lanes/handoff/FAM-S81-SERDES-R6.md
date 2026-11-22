@@ -1,4 +1,4 @@
-# FAM-S81-SERDES-R6 handoff (started 2026-11-21 11:1x PST, successor of FAM-S81-SERDES-R5)
+# FAM-S81-SERDES-R6 handoff (started 2026-11-21 11:1x PST, successor of FAM-S81-SERDES-R5; STAND-DOWN 19:1x -> FAM-S81-SERDES-R7)
 Read also: lanes/handoff/FAM-S81-SERDES-R5.md (layouts, sibling notes), lanes/posts/FAM-S81-SERDES-R6.md.
 Client logs: intel2 ~/fam-s81-serdes-r6/*.client.log. Builds: epyc8/epyc7 /srv/opentallas-scratch2/claude/fam-s81-serdes-build/<label>.
 Lane clone epyc7 /srv/opentallas-scratch2/claude/fam-s81-serdes-core is checked out DETACHED at 87eed3536ba (builds use it as /src: never switch it while a build runs; push from a worktree, e.g. epyc7 fam-s81-serdes-r6-push).
@@ -16,6 +16,15 @@ Lane clone epyc7 /srv/opentallas-scratch2/claude/fam-s81-serdes-core is checked 
 - t4 UNSPLIT private kit (E10, oth-ubuntu-293099-1795284746) in DRT: final GRT setup ws +99, scoped hold +7.09 viol 0, broad hold -150 (ports), 444k cells. If it signs -> LEC -> export; t4 then needs no split.
 - t14 a5 (wave, E8) in FF GRT; Codex private t14_a5_geom_only_1415 geometry fixes. t12 private FT5 +1 geometry/LAT only. t16 needs boot W7 native proof.
 - PHY corner leg (729 um to k_wstrb) is NOT serdes family (phy type) - confirm owner with COORD.
+
+## J8 START rows (COORD/FABLE-PD-S81-2000 dispatch 19:0x) - DONE, handed to S81-J6-ASSEMBLY-R5
+- lanes/handoff/FAM-S81-SERDES-R6-j8-serdes-start-rows.json: reach_rules.py fix --rules 1 --types ^serdes__ on J7eL6 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work). 6 ops: t3 reader+writer (11), t16 reader (11), t4/t13/t15__cla2127225 writer (3); t16 writer DROPPED (7-stage W1 form = separate row; Codex private t16 W1 proof, see lane posts 16:59/17:07). Not strict-bound by me. RULE: no serdes kit launches without START rows.
+
+## Priorities for R7
+1. dec_j6c official LEC (intel2 PID 2433138, at hyp9 19:1x) -> if EQUIVALENT: ref_tile export of the dec view (python3 tools/ref_tile/ref_tile.py export --orfs-dir <dec_j6c_export_stage_1415 work/orfs or the build> --kit physical/ref_tile/s81fam_kp4_decc --out views/...) and confirm AUTO-EXPORT row; if NOT EQ again: read the failing points vs Codex private_tail_split proof, ask COORD.
+2. t4 unsplit (oth-ubuntu-293099-1795284746, DRT) -> run_kit does signoff -> LEC -> AUTO-EXPORT; release struct stop s81|serdes__t4|bf6905ce91d07 via S81-J6-ASSEMBLY-R5. If it signs, the split (S1/front3) is not needed for t4.
+3. front3 / S1 split: HELD (geometry). Only pursue if t4 unsplit fails.
+4. t12/t14/t16: J8 START rows first, then kits.
 
 ## Live
 | what | unit/pid | next |
