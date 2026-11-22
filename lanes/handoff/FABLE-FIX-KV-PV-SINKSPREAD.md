@@ -61,6 +61,36 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 08:10 PST (newest; read this first)
+T1 (tree, v6n only):
+- v6n6 fe2e828014f3: G0 PASS 0 errors; PLAN-GATE-PRE PASS 0 findings after the r8 refresh WHEN the base is in its own root
+  (w/pre_only.sh tree NAME; base copy epyc8 <lane>/base_d28_root/.../plan_of_record/plan_c.json = dry5 fcfa38bdb65b).
+  The 2 R8STALE in gates/v6n6r_g0 were an artefact: a baseline inside the same tree resolves its R8 tables to the tree under test.
+  gate_g0.sh now defaults to base_d28_root.
+- r8 loop did NOT converge on v6n6: after the first refresh the same 30 R8_STALE stay: pv_v_pads_ffkpv.json members
+  (id pvw_1__u_s0_b<k>.pe2[..]<-astk_EN..owner_7..response_data@67: table bound 71, bind 70). That pad table is an EXTRA table
+  (authoritative, ids are not in the derivation, r8_refresh cannot rebind them; its generator is pvx_regen.py / r8/kv_pv_v_pads.py,
+  not mine). Cause: the split lowered the depth of the forwarded lanes L51 / L219 (pv_N_6 o_astk_{E,W}..owner_response_data ->
+  pv_N_5) from 6 to 5 ("legs cut at the piece boundary").
+- FIX IN FLIGHT: restore that depth: w/addstation.sh v6n6s1 v6n6t tree <pieces> "<type:bus:1,...>" = restation.py ADD (+1 station
+  on both rows, lanes priced +1) -> plan 3cce60482b76 installed in tree (08:01) -> rebind_loop (gates v6n6t1..; intel2
+  ~/tmp/ffkvpv/add_v6n6t.log). If CLEAN: run w/pre_only.sh tree v6n6t + a full G0 (w/gate_g0.sh), then the KIT.
+  If the same R8 errors repeat (loop exits 7): look at which lanes the pad members ride (member "lane") and restore more depth,
+  or ask KV-PLAN-R6 for the pv_v pad regen recipe.
+T2 (tree2, 14 types):
+- m3 2fc442c938cc: first bind R8_STALE 30 + R8_UNCOVERED 30 only; G0 FAIL 3 errors: (1) landing_band_core [new] kv3_pv_v3n band
+  i_vport_W_N_vo_d2 vs moved core pvg2_p0 (6.6 um) -> composer D29_CORE_TWEAK kv3_pv_v3n:pvg2_p0=-8.64,0 (default in multi.sh);
+  (2,3) faces on two v5 / v5n cut ports "33 pins on 52 M6 tracks = 0.63 > 0.6": the cut spent the type N/S budget (15.5 x 0.9) on
+  M4/M6 -> new spec key cut_pins_per_um_cap (ON MAIN d4f31de6bc6e; trees patched by w/patch_cap.py), multi.sh default 11.9.
+- m4 (cap + tweak) compose FAILED: kv3_pv_v5 cut face full at 11.9/um with its 345 um reserve (63 pins short).
+  RUNNING: w/fit_cap.sh (intel2 ~/tmp/ffkvpv/fit_cap.log; epyc8 w/d29/fit_<type>.out, fit_<type>.reserve): per capped type
+  (v2 v2n v3n v4 v4n v5 v5n) compose alone with reserve trimming until the cut fits. THEN: write the fitted reserves into
+  d29/rows_<t>_1080_r1.json spec_keys.cut_face_reserve_um and run chain_full.sh m5 tree2 <14 picks :r1> (plan job).
+- A CLEAN strict bind of the 14-type event needs the three KV pad tables regenerated for many lanes (m3 PRE: pv_v_pads 370
+  members / 16 lanes, pv_col_pads 18 lanes, vport_w_pads 2 lanes) = the die seal's job (as for row 1). Deliverable for the 14
+  types = composed plan + G0 PASS + PLAN-GATE-PRE (only R8STALE) + first bind with R8 classes only.
+Tools on main now: 6390b7bfa650 (inset, reserve, drop keys) and d4f31de6bc6e (cut_pins_per_um_cap).
+
 ## STATE 11-22 07:40 PST (newest; read this first)
 FINAL CANDIDATES (D28 dry5 base, rt 6390b7bfa650 tools, lane reference, stack-free r1 bins, pure column swap):
 - v6n-only: v6n6 = plan fe2e828014f3 (tree por_d29_all_v6n6_composed; installed as tree plan_of_record).
