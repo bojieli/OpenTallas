@@ -14,16 +14,18 @@ proc nka_place {inst x y} {
 # inverter can have a generic name: only unary BUF/INV masters are transparent,
 # and the terminal DFF must still be the named NK pipeline register. Reset
 # latch fanin and unrelated logic therefore produce no placement side effects.
-proc nka_pipe_chain {net {limit 6}} {
+proc nka_pipe_chain {net {limit 6} {unique_sink 0}} {
   set chain {}; set seen_nets {}; set seen_insts {}
   for {set hop 0} {$hop < $limit} {incr hop} {
     if {$net eq "" || $net eq "NULL" || [dict exists $seen_nets $net]} { return {} }
     dict set seen_nets $net 1
-    set drivers {}
+    set drivers {}; set sinks 0
     foreach it [$net getITerms] {
-      if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend drivers [$it getInst] }
+      set io [[$it getMTerm] getIoType]
+      if {$io eq "OUTPUT"} { lappend drivers [$it getInst] }
+      if {$unique_sink && $io eq "INPUT"} { incr sinks }
     }
-    if {[llength $drivers] != 1} { return {} }
+    if {[llength $drivers] != 1 || ($unique_sink && ($sinks != 1 || [llength [$net getBTerms]]))} { return {} }
     set drv [lindex $drivers 0]
     if {[dict exists $seen_insts $drv]} { return {} }
     dict set seen_insts $drv 1
@@ -181,5 +183,31 @@ dict for {pre cells} [nka_pad_groups $nka_padrows] {
   incr nka_pad
 }
 puts "OT_NK_PAD_ANCHOR chains $nka_pad unresolved $nka_pad_miss (HB4 pad chains FIRM at their core pin)"
+# A scoped latch exception preserves the pipe register. Place its unique
+# BUF/INV chain at the same 6-um station used when the latch is present.
+if {[info exists nka_direct]} {
+  set nka_direct_kept 0; set nka_direct_miss 0
+  foreach inst [$nka_blk getInsts] {
+    set master [[$inst getMaster] getName]
+    if {![dict exists $nka_direct $master]} continue
+    set ports [dict get $nka_direct $master]
+    foreach pin [$inst getITerms] {
+      if {![$pin isInputSignal]} continue
+      set pn [[$pin getMTerm] getName]
+      set base [lindex [split $pn {[}] 0]
+      if {$pn ni $ports && $base ni $ports} continue
+      set chain [nka_pipe_chain [$pin getNet] 6 1]
+      if {![llength $chain]} { incr nka_direct_miss; continue }
+      lassign [nka_out_pos $pin 6] x y
+      foreach drv $chain {
+        nka_place $drv $x $y
+        puts $nka_out [$drv getName]
+      }
+      incr nka_direct_kept
+    }
+  }
+  puts "OT_NK_DIRECT_ANCHOR pipe_regs $nka_direct_kept unresolved $nka_direct_miss"
+  unset nka_direct
+}
 close $nka_out
 puts "OT_NK_ANCHOR latches $nka_lat pipe_regs $nka_reg unresolved $nka_miss pipe_unresolved $nka_pipe_miss (FIRM outside their NK pin; released for DPL)"

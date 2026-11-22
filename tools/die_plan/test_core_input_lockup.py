@@ -123,6 +123,26 @@ class CoreInputLatchExcept(unittest.TestCase):
         self.assertFalse(bind.core_input_latch(p, "cbn_q11", "qfd_tile_nl_a0c", "n_a"))
         self.assertFalse(bind.core_input_latch(p, "cbn_q11", "qfd_tile_nk_a0c", "other"))
 
+    def test_type_scoped_exceptions_preserve_the_pipe_and_global_entries(self):
+        import gen_phys
+        module = "qfd_tile_nk_a0c"
+        p = self._plan(latch_except={module: ["tap[0]"]},
+                       latch_except_by_type={"cbn_q11": {module: ["n_a", "n_b[372]"]}})
+        p["clock"]["core_input_lockup"]["types"].append("cbn_q00")
+        self.assertFalse(bind.core_input_latch(p, "cbn_q11", module, "n_a"))
+        self.assertEqual(bind.core_input_pipe(p, "cbn_q11", module, "n_a"), 1)
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", module, "n_b"), {372})
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", module, "tap"), {0})
+        self.assertTrue(bind.core_input_latch(p, "cbn_q00", module, "n_a"))
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q00", module, "n_b"), set())
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q00", module, "tap"), {0})
+        self.assertEqual(gen_phys.core_input_direct_anchor(p, "cbn_q11"),
+                         "set nka_direct {qfd_tile_nk_a0c {n_a n_b[372]}}\n")
+        self.assertEqual(gen_phys.core_input_direct_anchor(p, "cbn_q00"), "")
+        self.assertEqual(bind.lockup_key_errors(p, {module}, {("cbn_q11", module)}), [])
+        self.assertIn("cbn_q11/" + module,
+                      bind.lockup_key_errors(p, {module}, {("cbn_q00", module)})[0])
+
     def test_absent_lockup_is_off(self):
         self.assertFalse(bind.core_input_latch({}, "cbn_q11", "qfd_tile_nk_a0c", "tap"))
 
