@@ -30,3 +30,8 @@ Lane dirs: intel2 /srv/opentallas-scratch2/claude/fable-fix-cone-scatter (clone/
 - Rows: 20 place_regions, lcs_tx<t>_b<k>: inst_re g_tx[t].g_safe_write.g_address[(4k..4k+3)]. near_re tx t bank k SRAM macro, radius 30, util .5.
 - Census+tool post 09:5x (hub 66f5021280). COORD report sent after this.
 - epyc8 cone dump of lepw J7 ODB (q/lepw/cone.tsv) still queued (bg).
+
+## 10:3x update
+- Launched 10:10; first try FAILED kit_snap: KIT-STORE MISSING type_overlay (overlay file must exist on ALL die hosts). Copied ov_lepw_A/B.json to /srv/opentallas-scratch2/claude/fable-fix-cone-scatter/ on epyc8 intel1 epyc9 epyc10 epyc2 epyc7; relaunched 10:24 (units runitem-dsdv_slice_lepw_mus_LP__t2-71876 A, -71881 B; logs intel2 L/runitem_<spec>.log, try1 logs kept).
+- Durable waiters (intel2 nohup) L/waiter.sh A-fence / B-soft: poll kit dir, then ot-wait --kit place/route --durable, post PROOF lines. (A junk 10:13 PROOF post was corrected.)
+- Next: read place result (wns vs -347 baseline, OT_PLACE_REGION lines, DPL), hand row file to S81-J6-ASSEMBLY-R5 (J9) + DSDV-R1.
