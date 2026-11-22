@@ -20,3 +20,18 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
   kept as por_r5carry_bind11) -> bind 12 -> split28/bindgate_12 (gate.out, errdiff.txt).
 - Then: R3/bank rows from bind-12 RTL (v3, v3e at least) -> reprice -> bind -> ONE r8_refresh (chain14.sh form, rt/current r8_refresh.py)
   from that bind's bus_groups -> bind 13 + LATCHECK. Then v3 representative: kit_wave private-spec (wave env) -> run-item -> sign-off.
+
+## State 2026-11-22 (supersedes "Running / next" above)
+- COORD: D28 row 1 = v3 only (v3/v3e split + own-leg fix + taps); the row 2 pieces stay unsplit. Hand-off to KV-PLAN-R6 is due 11:30 PST 11-22.
+- Bind 12 crash (duplicate cut legs for o_vport_E_N_vo/_d2) was fixed by the own-leg prefill patch in tree5 split_bind_routes.py
+  (patch r7/sbr_patch.py, test 14 pass, NOT pushed to main yet).
+- Row 1a (r7/compose_v3row1.py) bind: HARD_CORE_PARAM_WRAP x2, so row 1b (r7/compose_v3row1b.py) keeps the split-15 ring sites.
+  The landing_remap'd plan 02da9cb896b3 is INSTALLED as tree5 plan_of_record; tap_split v3 +2 (SPLIT), v3e OK.
+  Bind is running (r7/chain_v3b.sh via ot-run from intel2, log ~/tmp/okpvr7/chain_v3b.log, out split28/bindgate_v3b).
+- Next: chain_r7b.sh (R3 rows -> bind -> pure/mixed banks + reprice + gen latency -> bind -> ONE r8_refresh -> bind 13 + LATCHECK).
+  Then the D28 row 1 hand-off, then the v3 representative via kit_wave private-spec to sign-off.
+- D29 (cut-face bank offset, COORD ruling): v6n draft with the bank 25.92 um inward (r7/compose_d29b.py, r7/d29/run_d29b.sh).
+  Still over the cap: w 5773/1000, e 1371/1000. The residual is the old netlist register cluster at the cut corner, not the bank.
+  plan_gate_pre FAILs with 10 new GEOM-STATION-IN-CORE (v6ne ft regs_um[3]). So v6n stays UNSPLIT for D29 (posted c4116c1f).
+  Flow knob staged, not pushed: r7/face_flops_inset.tcl (OT_FF_EW_INSET_UM).
+- Cleanup later (ot-delete): tree5 Q/por_*fail*, por_d29_*, r7 dbg dirs, dbg_all16_out.
