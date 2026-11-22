@@ -204,3 +204,4 @@
 - 2026-11-21 18:47 PST ALERT STUCK-STATE s81: 34 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
 - 2026-11-21 18:57 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
 - 2026-11-21 19:08 PST ALERT NO-PROGRESS s81_head: 17 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 686 min (last 07:41); no current launch blocker logged
+- 2026-11-21 19:40 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 19:15:51 (25 min; no launch or classify meanwhile) running tick started 19:35:23, last mark 'after wave_balance'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
