@@ -13,12 +13,19 @@ proc ::ot_hsg_parse_io {text} {
   foreach line [split $text "\n"] {
     set line [string trim $line]
     if {![regexp {^set_(input|output)_delay\s} $line -> dir]} continue
+    # write_sdc emits a clock collection before the port collection.
+    set clk "-"
+    if {[regexp {^(.*)\s-clock\s+\[get_clocks\s+\{([^{}]+)\}\](.*)$} $line -> head clock tail]
+        || [regexp {^(.*)\s-clock\s+\[get_clocks\s+([^\s\]]+)\](.*)$} $line -> head clock tail]} {
+      set clk $clock
+      set line "$head$tail"
+    }
     set mm max
     if {[regexp {\s-min(\s|$)} $line]} { set mm min }
     set tgt ""; set head $line
     set bi [string first "\[" $line]
     if {$bi >= 0} { set tgt [string range $line $bi end]; set head [string range $line 0 [expr {$bi - 1}]] }
-    set clk "-"; set val ""; set skip 0; set first 1
+    set val ""; set skip 0; set first 1
     foreach w $head {
       if {$first} { set first 0; continue }
       if {$skip} { set clk $w; set skip 0; continue }
@@ -27,9 +34,13 @@ proc ::ot_hsg_parse_io {text} {
       if {$val eq "" && [string is double -strict $w]} { set val $w } elseif {$tgt eq ""} { set tgt $w }
     }
     if {$val eq "" || $tgt eq ""} continue
-    if {[regexp {get_clocks\s+\{?([^\}\]\s]+)} $clk -> cc]} { set clk $cc }
-    set ports {}
-    if {[regexp {get_ports\s+(?:-\S+\s+)*\{?([^\}\]]*)\}?\]} $tgt -> pl]} { set ports $pl } elseif {[string match "*all_outputs*" $tgt]} { set ports ALL_OUT } elseif {[string match "*all_inputs*" $tgt]} { set ports ALL_IN } else { set ports $tgt }
+    # Braced port lists can contain ']' in bus indices and glob selectors.
+    if {[regexp {^\[get_ports\s+(?:-\S+\s+)*\{([^{}]*)\}\]$} $tgt -> port_list]
+        || [regexp {^\[get_ports\s+(?:-\S+\s+)*([^\]]*)\]$} $tgt -> port_list]} {
+      set ports $port_list
+    } elseif {[string match "*all_outputs*" $tgt]} { set ports ALL_OUT
+    } elseif {[string match "*all_inputs*" $tgt]} { set ports ALL_IN
+    } else { set ports $tgt }
     foreach p $ports { dict set d "$dir $mm $clk $p" [format %.4f $val] }
   }
   return $d
@@ -39,10 +50,25 @@ proc ::ot_hsg_expand {d} {
   set o {}; set i {}
   if {[llength [info commands all_outputs]]} { foreach p [all_outputs] { lappend o [get_full_name $p] } }
   if {[llength [info commands all_inputs]]} { foreach p [all_inputs -no_clocks] { lappend i [get_full_name $p] } }
+  set selectors [dict create]
   set r [dict create]
   dict for {k v} $d {
     lassign $k dir mm clk p
-    if {$p eq "ALL_OUT"} { foreach q $o { dict set r "$dir $mm $clk $q" $v } } elseif {$p eq "ALL_IN"} { foreach q $i { dict set r "$dir $mm $clk $q" $v } } else { dict set r $k $v }
+    if {$p eq "ALL_OUT"} {
+      set names $o
+    } elseif {$p eq "ALL_IN"} {
+      set names $i
+    } elseif {[regexp {[*?]} $p] && [llength [info commands get_ports]]} {
+      if {![dict exists $selectors $p]} {
+        set names {}
+        if {![catch {get_ports -quiet $p} pins]} {
+          foreach pin $pins { lappend names [get_full_name $pin] }
+        }
+        dict set selectors $p [expr {[llength $names] ? $names : [list $p]}]
+      }
+      set names [dict get $selectors $p]
+    } else { set names [list $p] }
+    foreach q $names { dict set r "$dir $mm $clk $q" $v }
   }
   return $r
 }
