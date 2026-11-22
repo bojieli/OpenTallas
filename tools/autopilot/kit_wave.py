@@ -4617,12 +4617,104 @@ def overlay_owners(orows, state):
 
 
 # ------------------------------------------------------------------------------------------------ state
+LAUNCH_JOURNAL = "kit_wave_launch_journal.jsonl"
+LAST_REPLAY = []                                         # keys the last load_state took from the journal (logged by _step)
+
+
+def _journal_lock(ap_dir):
+    import fcntl
+    f = open(Path(ap_dir) / (LAUNCH_JOURNAL + ".lock"), "a")
+    fcntl.flock(f, fcntl.LOCK_EX)
+    return f
+
+
+def journal_launch(ap_dir, key, rec, drop=False):
+    """LAUNCH-JOURNAL-1122 (FABLE-FLOW-0600 W1: 18 items launched twice; the tick was killed by the service timeout after its units started and before
+    save_state, so the next tick launched the same rows again).  One fsynced line {key, unit, rec} per launch BEFORE systemd-run and one with the outcome;
+    load_state replays lines the state file does not hold yet, save_state drops lines the saved state holds.  drop=True: the launch raised, forget it."""
+    if not ap_dir:
+        return
+    try:
+        lk = _journal_lock(ap_dir)
+        try:
+            with open(Path(ap_dir) / LAUNCH_JOURNAL, "a") as f:
+                f.write(json.dumps({"key": key, "unit": rec.get("unit"), "t": time.time(), "drop": bool(drop), "rec": None if drop else rec}, sort_keys=True) + "\n")
+                f.flush()
+                os.fsync(f.fileno())
+        finally:
+            lk.close()
+    except OSError as e:
+        print(f"KW_LAUNCH_JOURNAL write failed: {e}", flush=True)
+
+
+def _journal_lines(ap_dir):
+    out = []
+    try:
+        for ln in (Path(ap_dir) / LAUNCH_JOURNAL).read_text().splitlines():
+            try:
+                out.append(json.loads(ln))
+            except ValueError:
+                continue                                 # a torn last line (killed mid-write) is skipped
+    except OSError:
+        pass
+    return out
+
+
+def replay_journal(st, ap_dir):
+    """apply journal lines newer than the state's row for that key; returns the keys taken"""
+    items = st.setdefault("items", {})
+    last = {}
+    for x in _journal_lines(ap_dir):                     # the newest line per (key, unit) wins: the outcome over the record, a drop over both
+        last.pop((x.get("key"), x.get("unit")), None)
+        last[(x.get("key"), x.get("unit"))] = x
+    took = []
+    for (key, _u), x in last.items():
+        rec = x.get("rec")
+        if x.get("drop") or not isinstance(rec, dict) or not key or key in (st.get("pruned") or {}):
+            continue
+        cur = items.get(key)
+        if cur is not None and cur.get("unit") == rec.get("unit"):
+            if cur.get("status") == "LAUNCHING" and rec.get("status") != "LAUNCHING":
+                items[key] = rec                         # the outcome line of a launch the state saved mid-flight
+            continue
+        if cur is not None and float(cur.get("started") or 0) >= float(rec.get("started") or 0):
+            continue                                     # the state already holds a newer attempt
+        rec = dict(rec)
+        if rec.get("status") == "LAUNCHING":             # killed between the record and the outcome: the unit is judged like any RUNNING row
+            rec.update(status="RUNNING", reason="launch journal replay: tick ended before the launch outcome was saved")
+        items[key] = rec
+        took.append(key)
+    return took
+
+
+def compact_journal(st, ap_dir):
+    """keep only the lines the saved state does not hold (same key, same unit)"""
+    p = Path(ap_dir) / LAUNCH_JOURNAL
+    if not p.exists():
+        return
+    items = st.get("items") or {}
+    try:
+        lk = _journal_lock(ap_dir)
+        try:
+            keep = [x for x in _journal_lines(ap_dir) if not x.get("drop") and (items.get(x.get("key")) or {}).get("unit") != x.get("unit")
+                    and time.time() - float(x.get("t") or 0) < 7 * 86400]
+            tmp = p.with_suffix(f".{os.getpid()}")
+            tmp.write_text("".join(json.dumps(x, sort_keys=True) + "\n" for x in keep))
+            os.replace(tmp, p)
+        finally:
+            lk.close()
+    except OSError as e:
+        print(f"KW_LAUNCH_JOURNAL compact failed: {e}", flush=True)
+
+
 def load_state(ap_dir=None):
     p = Path(ap_dir or AP_DIR) / STATE_FILE
     try:
-        return json.loads(p.read_text())
+        st = json.loads(p.read_text())
     except (OSError, ValueError):
-        return {"items": {}, "prep": {}, "pass_n": 0}
+        st = {"items": {}, "prep": {}, "pass_n": 0}
+    LAST_REPLAY[:] = replay_journal(st, ap_dir or AP_DIR)
+    return st
 
 
 def save_state(st, ap_dir=None):
@@ -4661,6 +4753,7 @@ def save_state(st, ap_dir=None):
     tmp = p.with_suffix(f".{os.getpid()}")
     tmp.write_text(json.dumps(st, indent=1, sort_keys=True))
     os.replace(tmp, p)
+    compact_journal(st, ap_dir or AP_DIR)
 
 
 ARCHIVE_FILE = "kit_wave_archive.jsonl"
@@ -13936,16 +14029,17 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if opt(cfg, die, "future_lec") is not False:
         sp["future_lec"] = future_lec_for(cfg, die, jd / "future_lec")
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
-    ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
+    # LAUNCH-JOURNAL-1122 (FABLE-FLOW-0600 W1): the row is built, put in st and journaled BEFORE systemd-run; the outcome is set after
+    ok = None
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
            "block_sha": r.get("block_sha"), "plan_sha": cfg["dies"][die].get("_plan_sha"),
            "unit": unit, "dir": str(jd), "volume": r.get("volume") or "",
            "gen_host": sp.get("gen_host"), "work": sp.get("work"),        # GENHOST-REC-1116: the host this attempt generated on; later stages / controllers read it, never the die's current gen_host
-           "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
+           "status": "LAUNCHING", "class": "", "replicas": r.get("replicas"),
            "full_hash": full_input_hash(cfg, die, r["item"], r.get("block_sha")),
            "input_parts": input_parts(cfg, die, r["item"], r.get("block_sha")),
            "unclass_n": (int(prev.get("unclass_n") or 0) + 1) if prev.get("class") == "UNCLASSIFIED" else int(prev.get("unclass_n") or 0),
-           "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
+           "reason": "", "started": time.time(), "updated": time.time(),
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
            # design FAILs before must still get its infra_attempts after a class fix relaunch
            "infra_base": (int(prev.get("infra_base") or 0) if prev.get("class") == "INFRA"
@@ -13956,10 +14050,6 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if sp.get("prov_views"):
         rec["provisional"] = {m: "pending" for m in sp["prov_views"]["modules"]}
         rec["prov_key"] = (d.get("_prov_keys") or {}).get(r["item"])
-    if ls_form and ok:
-        rec["leafslew_form"] = ls_form
-        if ls_key:
-            st["leafslew"][ls_key]["hooked_attempt"] = attempt
     if prev.get("restage_n") and prev.get("class") == "INFRA":      # a design verdict in between starts the count again
         rec["restage_n"] = prev["restage_n"]
     rec["item_disk_gb"] = sp.get("item_disk_gb") or 0
@@ -13970,7 +14060,25 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     _dc = current_die_ctx(cfg, st).get(die, {}).get(r["item"])
     if _dc:
         rec["die_ctx"] = _dc
+    _old = st["items"].get(key)
     st["items"][key] = rec
+    _jdir = cfg.get("_ap_dir") or getattr(AP, "AP_DIR", None)
+    journal_launch(_jdir, key, rec)
+    try:
+        ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
+    except BaseException:
+        if _old is None:                                 # launch_safe's contract: a raising launch leaves the row as it was
+            st["items"].pop(key, None)
+        else:
+            st["items"][key] = _old
+        journal_launch(_jdir, key, rec, drop=True)
+        raise
+    rec.update({"status": "RUNNING", "class": ""} if ok else {"status": "FAIL", "class": "INFRA", "reason": "systemd-run failed"})
+    journal_launch(_jdir, key, rec)
+    if ls_form and ok:
+        rec["leafslew_form"] = ls_form
+        if ls_key:
+            st["leafslew"][ls_key]["hooked_attempt"] = attempt
     # KW-FIX-46 11-12 (COORD: 'event e9eda32d41c' read as the old S81 plan after the ready12 switch): the event is the row
     # identity key (work dir, item key), not the plan; the line names the plan file and its sha so the log is honest
     _psha = str((d or {}).get("plan_sha256") or (d or {}).get("_plan_sha") or "")[:12] or "?"
@@ -18482,6 +18590,8 @@ def _step(AP, ap_dir):
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
+    if LAST_REPLAY:
+        AP.log(f"KIT-WAVE LAUNCH-REPLAY {len(LAST_REPLAY)} launch(es) a killed tick started but never saved, taken from {LAUNCH_JOURNAL}: {' '.join(LAST_REPLAY[:6])}")
     try:
         prune_terminal(AP, cfg, st, ap_dir)
     except Exception as e:                               # a prune problem never stops the wave
@@ -18792,6 +18902,8 @@ def _step(AP, ap_dir):
         reap_orphan_waiters(AP, cfg)
     except Exception as e:                      # a diagnostic sweep never stops the tick
         AP.log(f"KIT-WAVE REAP skipped: {e}")
+    if not AP.DRY:                                       # LAUNCH-JOURNAL-1122: the collect / sweep phase is on disk before any launch
+        save_state(st, ap_dir)
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
     if not scheduler_current(AP):                        # code changed during collect: launch on the current code now

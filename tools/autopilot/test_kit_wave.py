@@ -884,6 +884,38 @@ class Step(unittest.TestCase):
             self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))   # second kill: stops
             self.assertEqual(r.get("blocked"), "BLOCKED-INFRA-REPEAT")
 
+    def test_killed_tick_launch_is_replayed_not_relaunched(self):
+        # LAUNCH-JOURNAL-1122 (FABLE-FLOW-0600 W1): a tick killed after systemd-run and before save_state launched the same rows again
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "OWNERS.tsv").write_text(OWN)
+            c = json.dumps(cfg(die_max_inflight=1))
+            ap = FakeAP(d, c)
+            with mock.patch.object(KW, "save_state", lambda *a, **k: None):     # the kill: nothing saved after the launch
+                KW.step(ap)
+            self.assertEqual(len(ap.units), 1)
+            self.assertFalse((Path(d) / KW.STATE_FILE).exists())
+            ap2 = FakeAP(d, c, active={ap.units[0][0]})
+            st = KW.step(ap2)
+            self.assertEqual(ap2.units, [])                                     # replayed, not launched again
+            (r,) = st["items"].values()
+            self.assertEqual((r["unit"], r["status"]), (ap.units[0][0], "RUNNING"))
+            self.assertTrue(any("LAUNCH-REPLAY 1" in m for m in ap2.logs))
+            self.assertEqual((Path(d) / KW.LAUNCH_JOURNAL).read_text(), "")    # saved: the journal is compacted
+
+    def test_journal_replay_keeps_newer_state_and_drops_raised_launches(self):
+        with tempfile.TemporaryDirectory() as d:
+            st = {"items": {"k": {"unit": "u2", "started": 20, "status": "FAIL"}}}
+            KW.journal_launch(d, "k", {"unit": "u1", "started": 10, "status": "LAUNCHING"})
+            KW.journal_launch(d, "j", {"unit": "v1", "started": 10, "status": "LAUNCHING"})
+            KW.journal_launch(d, "j", {"unit": "v1"}, drop=True)
+            KW.journal_launch(d, "m", {"unit": "w1", "started": 10, "status": "LAUNCHING"})
+            KW.journal_launch(d, "m", {"unit": "w1", "started": 10, "status": "FAIL", "class": "INFRA"})
+            took = KW.replay_journal(st, d)
+            self.assertEqual(st["items"]["k"]["unit"], "u2")
+            self.assertNotIn("j", st["items"])
+            self.assertEqual(st["items"]["m"]["status"], "FAIL")
+            self.assertIn("m", took)
+
     def test_infra_non_kill_failure_keeps_the_budget(self):
         # an INFRA failure that is not a kill (here an ssh transport drop) still follows infra_attempts (3 attempts), no BLOCKED-INFRA-REPEAT
         self.assertIsNone(KW.KILL_RE.search("Connection reset by peer"))
