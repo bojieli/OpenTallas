@@ -3,7 +3,7 @@
  "lane": "FAM-S81-LEPE-4",
  "event": "J8",
  "for": "S81-J6-ASSEMBLY-R5",
- "status": "DRAFT 11-22 01:xx PST (COORD proof12 rulings 2+3). Apply ONLY if proof12 final 5_1_grt confirms: S1 if setup WNS < -42 on u_u_lnl3 -> li3_d; R1 if internal async removal < 0. Not bound. Dry-run strict bind+LATCHECK with S1+R1: proof14 (intel2 fam-lepe4/p14) running 11-22 01:xx.",
+ "status": "DRAFT 11-22 01:xx PST (COORD proof12 rulings 2+3). Apply ONLY if proof12 final 5_1_grt confirms: S1 if setup WNS < -42 on u_u_lnl3 -> li3_d; R1 if internal async removal < 0. Not bound. Dry-run strict bind+LATCHECK with S1+R1: proof14 GREEN 03:xx; F2 proof15 running.",
  "types_changed": [
   "dsdv_slice_lepe_mu_LP__t2",
   "dsdv_slice_lepe_nh_mus_LP__t1"
@@ -4512,5 +4512,8 @@
    "value": true
   }
  ],
- "not_in_gate": "hold -207.5 on input port -> first register (arst_n, lpc_i0, lepf_i0) vs ~200 ps insertion: port budget, die-level only (COORD ruling 1); no lever spent"
+ "not_in_gate": "hold -207.5 on input port -> first register (arst_n, lpc_i0, lepf_i0) vs ~200 ps insertion: port budget, die-level only (COORD ruling 1); no lever spent",
+ "bind_proof": {
+  "S1+R1 (proof14)": "GREEN 11-22 03:xx PST: intel2 fam-lepe4/p14 (p12 tree + 556 ops, tools rt d7b817cb7a8d): ELAB 0, BIND 0, LATCHECK 873/873 PASS delta {}, G0 9 errors = p12 baseline set (0 new); mu_LP relay_sites 8338 -> 8892, still 28 inside hard macros (inherited, 0 of the 554 new), PRE PASS"
+ }
 }
