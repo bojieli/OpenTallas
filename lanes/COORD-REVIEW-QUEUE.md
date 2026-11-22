@@ -21139,3 +21139,5 @@ FAILED [AUTOPILOT 6151e44b9726] 2026-11-21 18:28:21 PST AUTOPILOT -> KIT-WAVE-12
   HEAD: hd_lep0N FAILED place, stale 8.6h, owner FABLE-FIX-HEAD-LEP0N-R2 alive (18:16), no relaunch.
   KV: hg/pv failed rows HELD (D27d3 green, D28); kv3_hroot owner R3 dead (12:37) -> R4; kv3_hg_v1p2 owner FLOW-CLKGRT-R2 dead (15:53).
   QC: 4 FAILED no relaunch, stale 4-5h (cbf_q00_s2, cbx_q10, sle_stm_v1, slw_su_c); owners alive.
+- 2026-11-21 18:29 PST DONE [FAM-S81-SLICE-R4] ot-run oth-ubuntu-3665743-1795282889 on civil-redfish: rc=0 after 33604 s, ended 02:29:12, log /srv/opentallas-scratch2/claude/fam-s81-slice-r3/t36s_route.log, cmd: --mem 64 --threads 16 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r3 -- bash /srv/opentallas-scratch2/claude/fam-s81-
+  [filed under] FAM-S81-SLICE-R5: FAM-S81-SLICE-R4 stood down (chain FAM-S81-SLICE-R4 > FAM-S81-SLICE-R5)
