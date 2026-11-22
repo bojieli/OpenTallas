@@ -193,6 +193,12 @@ def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fal
             e["mem_x"] = round(e["mem_x"] * OOM_FACTOR, 2)
             return {"event": "OOM-RESUBMIT", "fp": fp, "mem_x": e["mem_x"]}
         return None
+    if is_structural_verdict(stage, cls, why):
+        # STRUCT-FIRST-1122 (FABLE-FLOW-0350 R1: 4 of 5 wave launches were unchanged relaunches after a STRUCTURAL verdict; attempts 2 and 3
+        # were free under the 3-identical rule): the FIRST structural / plan verdict blocks (item, plan block); only a changed plan block,
+        # a retry key item@N:fix=<sha> (kit_wave) or an unblock line releases it -- never a tools / src / stage-file hash.
+        e["block_only"] = True
+        return _block(e, PLAN_STATE, fp, last, why="STRUCTURAL / PLAN verdict: plan fix, no unchanged retry (first failure)")
     n_id = ident_n or IDENT_N
     tail = [ident(a["fp"]) if a["fp"] != "ok" else "ok" for a in e["att"][-n_id:]]
     if len(tail) == n_id and len(set(tail)) == 1 and tail[0] != "ok":
@@ -208,6 +214,17 @@ def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fal
 
 PLAN_CLASSES = ("PLAN", "STRUCTURAL")
 PLAN_STOP_RE = re.compile(r"PLACE-SETUP-STOP|GRT-SETUP-STOP|SETUP_TRIAGE STRUCTURAL|HOLD_STRUCTURAL")
+
+
+PLAN_STATE = "BLOCKED-PLAN"
+
+
+def is_structural_verdict(stage, cls, why):
+    """STRUCT-FIRST-1122 (FABLE-FLOW-0350 R1): a verdict that says the plan must change -- a structural stop marker, class STRUCTURAL,
+    or class PLAN after the gen stages ("routing cannot close it; plan fix, no unchanged retry")"""
+    st_ = str(stage or "").split()[0] if str(stage or "").strip() else ""
+    base = re.split(r"[\[ (]", str(cls or ""))[0]
+    return bool(PLAN_STOP_RE.search(str(why or ""))) or base == "STRUCTURAL" or (base == "PLAN" and bool(st_) and st_ not in PLAN_INPUT_STAGES)
 
 
 def is_plan_input(stage, cls, why):
@@ -258,6 +275,9 @@ def gate(st, die, item, current_inputs, unblocks=(), event=None):
             return False, "", "tools:pipeline-cap"
         return True, f"{CAP_STATE}:{fp} ({e.get('why')}); released only by a new plan event or an `unblock {item} cap` line", ""
     old = e.get("inputs") or {}
+    if e.get("block_only"):                      # STRUCT-FIRST-1122: only the plan block releases a structural verdict
+        old = {k: v for k, v in old.items() if k == "block"}
+        current_inputs = {k: v for k, v in (current_inputs or {}).items() if k == "block"}
     if e.get("plan_input"):                      # a tools / runtime hash cannot fix a plan-input cause
         old = {k: v for k, v in old.items() if k != "tools"}
         current_inputs = {k: v for k, v in (current_inputs or {}).items() if k != "tools"}
@@ -280,6 +300,7 @@ def release(e, why):
     e["oom"] = 0
     e.pop("tool_mix", None)
     e.pop("plan_input", None)
+    e.pop("block_only", None)
     if why in ("plan event changed", "unblock line"):
         e["tot"] = {}
     e["att"] = [a for a in e["att"]][-1:]          # the streak starts again; the last attempt stays for the stage-rank history

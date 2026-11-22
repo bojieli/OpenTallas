@@ -57,10 +57,25 @@ def test_structural_place_stop_is_plan_input_tools_change_does_not_release():
     assert RS.is_plan_input("geom", "FLOW", WHY)
     assert not RS.is_plan_input("route", "FLOW", "DRT-0255 net a")
     s = {}
-    for n in (1, 2, 3):
-        ev = RS.record(s, "qc", "cbf_q00", n, "place", "STRUCTURAL", WHY, inputs={"block": "b1", "tools": f"t{n}"}, t=1000.0 + n, event="E1")
-    assert ev and ev["event"] == "BLOCKED-REPEAT"
+    ev = RS.record(s, "qc", "cbf_q00", 1, "place", "STRUCTURAL", WHY, inputs={"block": "b1", "tools": "t1"}, t=1001.0, event="E1")
+    assert ev and ev["event"] == RS.PLAN_STATE                                # STRUCT-FIRST-1122: the first structural verdict blocks
     b, why, rel = RS.gate(s, "qc", "cbf_q00", {"block": "b1", "tools": "t9"}, event="E1")
     assert b and not rel
     b, why, rel = RS.gate(s, "qc", "cbf_q00", {"block": "b2", "tools": "t9"}, event="E1")
     assert not b and rel == "inputs:block"
+
+
+
+def test_struct_first_blocks_on_first_failure_only_block_releases():
+    """STRUCT-FIRST-1122 (FABLE-FLOW-0350 R1)"""
+    s = {}
+    ev = RS.record(s, "qc", "coll_core", 1, "geom", "PLAN", WHY, inputs={"block": "b1", "tools": "t1", "src": "s1", "file:x.tcl": "h1"}, t=1.0, event="E1")
+    assert ev["event"] == "BLOCKED-PLAN"
+    assert RS.gate(s, "qc", "coll_core", {"block": "b1", "tools": "t2", "src": "s2", "file:x.tcl": "h2"}, event="E1")[0]   # tools/src/files: held
+    b, _w, rel = RS.gate(s, "qc", "coll_core", {"block": "b2", "tools": "t2"}, event="E1")
+    assert not b and rel == "inputs:block"
+    s2 = {}
+    assert RS.record(s2, "qc", "x", 1, "route", "FLOW", "DRT-0255 net a", inputs={"block": "b1"}, t=1.0, event="E1") is None   # non-structural: no first-failure stop
+    s3 = {}
+    RS.record(s3, "qc", "y", 1, "gen", "PLAN", "ContractError: x", inputs={"block": "b1"}, t=1.0, event="E1")
+    assert not RS.state_of(s3, "qc", "y")[0]                                  # gen-stage PLAN keeps the 3-identical rule

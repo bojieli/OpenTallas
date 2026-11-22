@@ -40,10 +40,11 @@ def test_a_different_net_breaks_the_streak():
         assert RS.record(st, D, I, n, "route", "CRASH", DRT % (net, 1, 2, 3, 4), t=n) is None
 
 
-def test_hd_serdes_post_cts_five_times_is_blocked_at_the_third():
+def test_hd_serdes_post_cts_five_times_is_blocked_at_the_first():
+    """STRUCT-FIRST-1122 (FABLE-FLOW-0350 R1): a STRUCTURAL verdict blocks at the first failure (was: at the third identical)"""
     st = {}
     r = [RS.record(st, "s81_head", "hd_serdes", n, "cts", "STRUCTURAL", CTS % str(250 + n), inputs={"block": "b"}, t=n * 7200) for n in range(1, 6)]
-    assert r[2] and r[2]["event"] == "BLOCKED-REPEAT" and r[3] is None and r[4] is None
+    assert r[0] and r[0]["event"] == RS.PLAN_STATE and all(x is None for x in r[1:])
 
 
 def test_oom_resubmits_with_more_memory_once_then_blocks():
@@ -175,8 +176,9 @@ def test_repeat_stop_refuses_with_stops_off_and_releases_on_a_new_input(monkeypa
     assert cur2["tools"] == "rt2" and RS.gate(st2, D, I, cur2)[2].startswith("inputs:tools")
 
 
-def test_station_row_overlap_plan_class_is_blocked_at_the_third():
-    """FLOW-NOADV-R3 11-20: kit_istations cross-row site overlap (QC A4 st_a) is PLAN[design:station_overlap]; REPEAT-STOP holds it at the third"""
+def test_station_row_overlap_plan_class_is_blocked_at_the_first():
+    """FLOW-NOADV-R3 11-20: kit_istations cross-row site overlap (QC A4 st_a) is PLAN[design:station_overlap]; STRUCT-FIRST-1122 (FABLE-FLOW-0350 R1):
+    a PLAN verdict after the gen stages blocks the (item, plan block) at the first failure (was: at the third)"""
     line = ("kit_istations: sle_st_a_v1__cl989804f6__cled3c1d7b: station rows bus:rs_s0 and bus:rs_s1 claim overlapping sites "
             "(233.28, 522.72) / (233.28, 522.72) (%d overlaps); one site per flop across rows")
     st, evs = {}, []
@@ -186,8 +188,8 @@ def test_station_row_overlap_plan_class_is_blocked_at_the_third():
         full = f"{why} @kit_topology: {line % (20 + n)}"
         evs.append(RS.record(st, "qwen_compute", "sle_st_a_v1__cl989804f6__cled3c1d7b", n, "kit_topology", cls, full,
                              inputs={"block": "b1"}, t=1000 + n * 3600))
-    assert [bool(e) for e in evs] == [False, False, True, False]
-    assert evs[2]["event"] == "BLOCKED-REPEAT"
+    assert [bool(e) for e in evs] == [True, False, False, False]
+    assert evs[0]["event"] == RS.PLAN_STATE
     assert RS.gate(st, "qwen_compute", "sle_st_a_v1__cl989804f6__cled3c1d7b", {"block": "b1"})[0] is True
 
 

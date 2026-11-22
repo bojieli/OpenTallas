@@ -13721,6 +13721,10 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                 return None
             (st.get("dedup_released") or {}).pop(f"{die}|{r.get('item')}", None)
         _rb, _rwhy, _rrel = RS.gate(st, die, r.get("item"), repeat_inputs_now(cfg, st, die, r.get("item"), r.get("block_sha")), cfg.get("_unblocks") or (), event=cfg["dies"][die].get("event"))
+        if _rb and str(_rwhy).startswith(RS.PLAN_STATE) and explicit_retry_pending(cfg, st, die, r.get("item")):
+            # STRUCT-FIRST-1122: a retry key item@N(:fix=<sha>) is the named release of a first-failure structural block
+            RS.release(RS.lookup(st, die, r.get("item"), cfg["dies"][die].get("event")), "retry key")
+            _rb, _rwhy, _rrel = False, "", "retry key"
         if _rrel:
             AP.log(f"KIT-WAVE REPEAT-STOP RELEASE {die}/{r.get('item')}: {_rrel}")
         if _so and explicit_retry_pending(cfg, st, die, r.get("item")):
