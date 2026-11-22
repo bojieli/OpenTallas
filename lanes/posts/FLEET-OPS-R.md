@@ -1054,3 +1054,4 @@
 - 2026-11-21 22:06 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7312afb7a304: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-21 22:09 PST STATE tools sync recovered after 2 min (rt/current 5a966bb45bcf)
 - 2026-11-21 22:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 2196 GB, falling 404 GB/h, floor 50 GB in 5.3 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
+- 2026-11-21 22:23 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 224 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
