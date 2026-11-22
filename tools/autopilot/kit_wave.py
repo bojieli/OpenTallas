@@ -10102,6 +10102,14 @@ def run_item(spec_path):
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
 
+    def resume_release(kit):
+        """RESUME-STAGE-1122 (OPUS-FIX-KV-HUB-R6: resumed private hub_Ei kits stopped after AUTO-GEOM PASS-COND, 4 relaunches): the stage-resume
+        release runs after AUTO-GEOM, and run() names res['stage'] after every step, so 'resume_release' replaced 'geom' and
+        chain_after_geom never started the chain.  The release keeps the pipeline stage it found."""
+        st = res.get("stage")
+        run("resume_release", remote(kr_cmd(f"release {shlex.quote(kit)}")), idempotent=True)
+        res["stage"] = st
+
     def chain_after_geom(rc):
         """FLOW-PRIVSPEC-R1 (item 7c): a private spec whose goal is past geom continues through the wave stage chain after AUTO-GEOM PASS"""
         if rc != 0 or chain_goal == "geom" or res.get("stage") != "geom" or res.get("verdict") != "PASS":
@@ -10362,7 +10370,7 @@ def run_item(spec_path):
         try:
             rc = after_place(svc["kit"], rc, txt)
         finally:
-            run("resume_release", remote(kr_cmd(f"release {q(svc['kit'])}")), idempotent=True)
+            resume_release(svc['kit'])
         return chain_after_geom(rc)
     if sp.get("private"):                                # FLOW-PROC-A ENV-PROVENANCE: a private spec built from an older die config is refused before gen
         why = private_spec_stale(sp)
@@ -10893,7 +10901,7 @@ def run_item(spec_path):
         rc = place_and_geom(K, rs)
     finally:
         if rs:
-            run("resume_release", remote(kr_cmd(f"release {q(K)}")), idempotent=True)
+            resume_release(K)
     return chain_after_geom(rc)
 
 
