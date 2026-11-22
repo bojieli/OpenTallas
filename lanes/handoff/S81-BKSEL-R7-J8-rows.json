@@ -9,8 +9,15 @@
  "rows": "positions only, 0 cycles, no lane change: every bk_sel__t2 relay_sites key with x in [1645, 2700), y in [384, 400], a trailing [bit] index and no 'rst' in the key gets y := 386 + 4.32 * (bit mod 10) (same bit -> same lane on every stage, so stage-to-stage hops keep their length; core-end legs <= +40.7 um). On the R6 plan: 11,583 keys move, 3 kept.",
  "gen_step": "GEN bksel_spread python3 -I -B <dir>/spread.py {IN} {OUT} 10 4.32 386.0   (prints SPREAD_OK moved N; asserts no moved site inside a hard core + 2 um)",
  "files": {
-  "intel2": "/srv/opentallas-scratch2/claude/s81-bksel-r7/w/spread.py",
+  "intel2": "/srv/opentallas-scratch2/claude/s81-bksel-r7/w/spread.py (sha256 b979383f4c2d1703) + bksel_seatmiss.py",
   "epyc7": "/srv/opentallas-scratch2/claude/s81-bksel-r7/w/spread.py (+ plan_r7a.json dfd669b1 = plan_r6 84af570f + spread)"
  },
- "proof": "private-spec kit of plan_r7a on the chain_r6 tree/bind (intel2 copy), place -> hop300 scan -> run_kit route -> sign-off; result posted to S81-J6-ASSEMBLY-R5 before the J8 row cut"
+ "proof": "private-spec kit of plan_r7a on the chain_r6 tree/bind (intel2 copy), place -> hop300 scan -> run_kit route -> sign-off; result posted to S81-J6-ASSEMBLY-R5 before the J8 row cut",
+ "row2_seatmiss": {
+  "status": "READY (static: exact 575 keys, each co-located with a seated register key)",
+  "what": "drop the 575 bk_sel__t2 relay_sites keys of lanes/handoff/FABLE-FIX-S81-COLROM-R5-seat-miss-rows.tsv; they name no kit register and each sits at exactly the xy of a register key that seats (u_lpd.r[3]/lp_d = u_lpd.q point, dst/dwf/lpe/wq = u_dsp.g_r.cvd, cd/cv = u_dsp.g_r.v, rs0 = rs1r, rs1 = u_rst_relay_dsp.q, txf/u_fsp.q = u_fsp.g_r.r[2], rst_* / g_q.rq = u_rst_relay_*.q), so re-key = drop",
+  "gen_step": "GEN bksel_seatmiss python3 -I -B /srv/opentallas-scratch2/claude/s81-bksel-r7/w/bksel_seatmiss.py {IN} {OUT}  (intel2/epyc7/epyc10, sha256 c9a511e08e72a118; asserts every dropped key has a co-located kept key; prints BKSEL_SEATMISS_OK dropped 575)",
+  "tested": "plan_r7a and J7 v7+bksel_r6: dropped 575 each, 45,974 -> 45,399",
+  "order": "independent of bksel_spread (dropped keys are outside the spread window)"
+ }
 }
