@@ -322,6 +322,7 @@ def ring_write_reg(plan, tn, bus):
     cfg = (t.get("clock") or {}).get("landing_ring_wreg")
     if cfg and (not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list)):
         raise ValueError(f"{tn}: clock.landing_ring_wreg must be {{\"buses\": [...], \"dsrep\": n}}")
+    _listed = bool(cfg) and bus in cfg["buses"]
     if not cfg or bus not in cfg["buses"]:
         # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12, COORD-approved family rule): a wide soft ring gets the registered
         # writer by default.  The ONE shared rule (ring_wreg_reach) is read by every WREG consumer (generator, strap
@@ -330,6 +331,16 @@ def ring_write_reg(plan, tn, bus):
         if not cfg:
             return None
     cfg = ring_fanout_wreg_cfg(plan.get("clock"), cfg)   # DIE-QC-97: die fanout bound (0 = cfg unchanged)
+    # HARD-RING-WREG-1 (FABLE-FIX-KV-HUB-R5 11-21, kv3_hub_Ei strict bind): landing_ring_wreg is ONE cfg per type, so a type
+    # that already opts a soft bus in with "freg": true (kv3_hub_Ei i_hp_fault_N_q_d1) could not list a signed hard ring
+    # there: the shared freg landed on the hard ring too (FREG-DECL-1 error, K + 2 instead of K + 1) although its master
+    # was built and signed WITHOUT the face register.  A LISTED bus that the plan realises as a signed hard child with
+    # WREG = 1 and FREG = 0 therefore never takes the type cfg freg (a hard child is built from its own params and is
+    # not re-parameterised by type knobs: hard_ring_params).  One direction only: a child signed WITH FREG under a cfg
+    # without freg stays the fail-closed "signed hard child" mismatch, and dsrep / chunks keep the existing path.
+    hp = hard_ring_params(plan, tn, bus) if _listed else None
+    if hp is not None and int(hp.get("WREG", 0)) == 1 and not int(hp.get("FREG", 0)) and cfg.get("freg"):
+        cfg = {k: v for k, v in cfg.items() if k not in ("freg", "freg_numeric_order")}
     dsrep = cfg.get("dsrep", 1)
     if isinstance(dsrep, bool) or not isinstance(dsrep, int) or dsrep < 1 or 64 % dsrep:
         raise ValueError(f"{tn}: landing_ring_wreg.dsrep must divide 64")
