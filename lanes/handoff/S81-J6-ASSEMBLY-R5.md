@@ -35,3 +35,5 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - J8 add: slice_station__t37 pin-face re-site + sweep of all slice_station types for opposite-face pins (owner FAM-S81-SLICE-R6, by 11-22 16:00; GEOM-REVIEW 21:12).
 
 - COORD 21:4x: S81-J7-HELD-R1 ended; R5 owns post-apply too (held rows, relaunch checks, first J7 wave launches). No handoff. SLICE-R6 resumed for t37 sweep, t46, t6.
+
+- RELAY-INST 643ffb9932 (kit_istations: whole-station relay_sites keys): cannot enter J7 (pin = tree tools; newer rt => toolskew rc3 w/o rebind). Goes in J8 (rt >= max(8ad54f25f4, 643ffb9932)). Rec: keep col held until J8.
