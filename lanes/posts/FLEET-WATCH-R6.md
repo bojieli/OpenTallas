@@ -29,3 +29,4 @@
 - 2026-11-21 19:22 PST HOURLY free space 19:22 epyc9=483 intel1=556 (restore at >=250 GiB; caps 250 on epyc9/intel1)
 - 2026-11-21 19:52 PST epyc9 at 1290 GiB: already in gen_hosts, nothing to restore
 - 2026-11-21 19:52 PST intel1 at 1252 GiB: already in gen_hosts, nothing to restore
+- 2026-11-21 19:52 PST HOURLY free space 19:52 epyc9=1290 intel1=1252 (restore at >=250 GiB; caps 250 on epyc9/intel1)
