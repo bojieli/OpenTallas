@@ -1,0 +1,5 @@
+# West FW forwarded clock extraction review · 2026-11-22
+
+**PASS-COND for timing replay on the existing routed geometry.** I viewed `run/layout_review/route/wires.png` in the exact epyc10 `slw_fw_v2__cl8537f156_1121205923` kit. The tall soft block has dense horizontal cross-routing at the central landing cluster and long vertical wiring between its north and south port bands. Its detailed route completed with zero DRT violations. The repair concerns the name of the exported clock net only.
+
+The inherited 6_final.v gave each of 15 forwarded-clock nets the name of its buffer instance. The corresponding physical SPEF then generated STA-1652 for internal clock nodes, including real resistance and capacitance entries. The read-only exact replay in `epyc10:/srv/opentallas-scratch2/claude/fam-qc-fefw/nov22_fw_fwd_alias` completed full SPEF reading with zero STA-1652. The exploratory TT −74.82 is separate from qualified two-corner signoff. The normalized copy keeps the same routed topology, components, pin locations, and timing constraints.

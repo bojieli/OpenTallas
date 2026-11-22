@@ -83,3 +83,9 @@ NEXT for R3: (1) read CODEX-LOG from line 14146 for fe/fw work done 14:23-18:1x;
 - slw_fe_v2 cle312294d R6V1: NOT SIGNED (hold_ff -36.39, ECO exhausted). slw_fe_v2 clf110fab2 and slw_fw_v3: no sign-off yet (R4A4 / R6V1 rows ENQUEUED). slw_fw_v1 cl592e3d37 epyc2 attempt_3 RUNNER_FAIL.
 - V3 rows delivered: lanes/handoff/FAM-QC-FEFW-R3-V3-rows.json (x_sc_i reconciled; ch_dn_o needs sites).
 - LEC EQUIVALENT sle_fe_v1__cl8210183c cp=103598 proved=103598 differs=0 (kit-copy epyc7 fam-qc-fefw/lec_kit_sefe/lec_out, unit oth-ubuntu-1218730-1795315360).
+
+### CODEX 11-22 13:27 PST
+
+West FW `slw_fw_v2__cl8537f156` E10 inherited route completed detailed routing at zero violations and wrote its final RCX. The stage-6 reader hit the STA-1652 warning cap twice. All 1,000 distinct sample records name forwarded clock numeric internal nodes across 15 outputs, including 260 positive RES and 524 positive CAP records. The exact Verilog net and BUFx24 instance use the same identifier. Frozen full replay E10 `oth-ubuntu-1981410-1795382043` rc0 in `fam-qc-fefw/nov22_fw_fwd_alias` uses 15 ODB net renames and the exact corresponding SPEF map IDs, removing every STA-1652. Exploratory TT −74.82 is outside qualified signoff.
+
+The generator fix preserves driver and external port names and names each output net `cland_fwd_net_<port>`. Exact old pre-CTS buffer reuse accepts and migrates legacy names after preserving connectivity checks. Branch `claude/fwd-spef-repair-1122@09a2ba041e4be941d0822159b5c4eea20e25c104` passed 30 focused tests and is admitted to canonical E10 `ot-gate-remote --merge` unit `2406832` after the mirror received the ref. The original central merge attempt stopped at unrelated unstaged KV/S81 changes. Those bytes remain untouched. Exact routed visual review is `results/geom_review/qc-fw-forward-alias-1122.md`. The normal TT/FF signoff on an alias-normalized copy is queued in the same E10 directory, client log `~/fam-qc-fefw.fwd_alias_signoff.log`.
