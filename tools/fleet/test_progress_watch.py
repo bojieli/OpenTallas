@@ -41,7 +41,20 @@ class Rules(unittest.TestCase):
         self.assertTrue(P.detect(e, now))
         self.assertFalse([f for f in P.detect(e, now, {"eligible": {"s81": 0}}) if f["cls"] == "NO-PROGRESS"])
         f = [f for f in P.detect(e, now, {"eligible": {"s81": 4}}) if f["cls"] == "NO-PROGRESS"]
-        self.assertIn("4 eligible rows", f[0]["text"])
+        self.assertIn("4 candidate rows before launch checks", f[0]["text"])
+
+    def test_reports_recent_disk_admission_without_certifying_candidates(self):
+        launch = "2026-11-21 07:41:00 PST AUTOPILOT: KIT-WAVE LAUNCH s81_head/old (type, 1 replicas)"
+        disk = ("2026-11-21 17:05:33 PST AUTOPILOT: KIT-WAVE LAUNCH-DISK-CAP s81_head/hd_host_e: "
+                "disk cap: epyc7: in flight 108 + 9 GB > free 168 - 150")
+        events = self.ev(launch, disk)
+        state = {"eligible": {"s81_head": 17}}
+        message, = P.detect(events, D(2026, 11, 21, 17, 10), state)
+        self.assertIn("17 candidate rows before launch checks", message["text"])
+        self.assertIn("disk admission blocked hd_host_e", message["text"])
+        self.assertIn("epyc7: in flight 108 + 9 GB > free 168 - 150", message["text"])
+        later, = P.detect(events, D(2026, 11, 21, 17, 25), state)
+        self.assertNotIn("disk admission blocked", later["text"])
 
     def test_self_stop_needs_same_job_within_30_min(self):
         sub = "2026-11-19 10:00:00 PST AUTOPILOT: SUBMIT aaaaaaaaaaaa qwen_compute/x /p"

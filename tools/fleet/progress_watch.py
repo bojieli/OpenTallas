@@ -62,6 +62,10 @@ def parse_lines(lines):
                 ev.append({"t": t, "kind": "launch", "die": tok.split("/")[0], "item": tok.split("/", 1)[1], "digest": dg.groups() if dg else None})
         elif rest.startswith("KIT-WAVE DIE-OFF "):
             ev.append({"t": t, "kind": "die_off", "die": rest.split()[2].rstrip(":")})
+        elif rest.startswith("KIT-WAVE LAUNCH-DISK-CAP "):
+            disk = re.match(r"KIT-WAVE LAUNCH-DISK-CAP (\S+?)/(\S+): (.*)", rest)
+            if disk:
+                ev.append({"t": t, "kind": "disk_cap", "die": disk[1], "item": disk[2], "why": disk[3]})
         elif rest.startswith("KIT-WAVE NO-LAUNCH "):
             m2 = re.match(r"KIT-WAVE NO-LAUNCH (\S+?): (\d+) eligible", rest)
             if m2:
@@ -143,8 +147,9 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
             continue
         elig = state.get("eligible", {}).get(die)
         nl = [e for e in ev if e["kind"] == "no_launch" and e["die"] == die and now - e["t"] <= timedelta(minutes=15)]
-        if nl and nl[-1]["eligible"] > (elig or 0):
-            elig = nl[-1]["eligible"]  # the wave's own NO-LAUNCH count
+        wave_count = nl and nl[-1]["eligible"] >= (elig or 0)
+        if wave_count:
+            elig = nl[-1]["eligible"]
         if elig is None:
             if ll is None or age > timedelta(hours=ACTIVE_LOOKBACK_H):
                 continue
@@ -152,13 +157,18 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
         elif elig <= 0:
             continue
         else:
-            elig_txt = f"{elig} eligible rows"
+            elig_txt = f"{elig} eligible rows" if wave_count else f"{elig} candidate rows before launch checks"
         reasons = {}
         for e in ev:
             if e.get("die") == die and e["kind"] in ("die_off", "no_launch") and (ll is None or e["t"] > ll):
                 k = e["kind"].upper().replace("_", "-")
                 reasons[k] = reasons.get(k, 0) + 1
-        why = ", ".join(f"{k} x{n}" for k, n in sorted(reasons.items())) or "no DIE-OFF / NO-LAUNCH line"
+        disk = next((e for e in reversed(ev) if e.get("die") == die and e["kind"] == "disk_cap"
+                     and now - e["t"] <= timedelta(minutes=15) and (ll is None or e["t"] > ll)), None)
+        details = [f"{k} x{n}" for k, n in sorted(reasons.items())]
+        if disk:
+            details.append(f"latest disk admission blocked {disk['item']}: {disk['why'][:270]}")
+        why = "; ".join(details) or "no current launch blocker logged"
         mins = f"{int(age.total_seconds() // 60)} min" if age is not None else f">{ACTIVE_LOOKBACK_H} h"
         out.append({"die": die, "cls": "NO-PROGRESS", "state": "alert",
                     "text": f"NO-PROGRESS {die}: {elig_txt}, 0 KIT-WAVE LAUNCH for {mins} (last {ll.strftime('%H:%M') if ll else 'none in window'}); {why}"})
