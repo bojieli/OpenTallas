@@ -1,0 +1,20 @@
+{
+ "schema": "fam-s81-lepe.xgxf_form.v1",
+ "owner": "FAM-S81-LEPE-4 (lead, COORD 11-22 00:xx)",
+ "for": "FAM-S81-DSDV-R1 (c1x_C, iq_C, lepw C) and FAM-S81-LEPE-4 (lepe_mu_C t1, lepe_nh_mus_C t1); rows to S81-J6-ASSEMBLY-R5 by 11-22 14:00 PST",
+ "status": "FORM DRAFT 11-22 00:xx; RTL + rows to follow; not bound",
+ "evidence": {
+  "lepe_nh_mus_C__t1": "a16 placed scan (event 224567138ab): 66 NEED-STATION groups, 16,643 bits; xg 10,088 b (u_r.iv -> dl_vb/nxe_d 1.42-1.47 mm, u_r.row_d -> xring_o0 1103 b 1.08 mm, u_r.nxw_d -> u_s 147 b 1.08 mm); xf driver/src 1-3 b legs to 1.56 mm; reset chain collapse 1720",
+  "lepe_mu_C__t1": "placed scan: 76 groups, 18,771 bits; xg 11,001 b (u_r.iw -> g_d 864 b 1.735 mm est 2.15 ns, iw -> nxe_d 1.73 mm); xf 1,459 b to 1.35 mm; xring 2,208; leafup 2,003",
+  "cause": "ot_s81sl_rstop is ONE register stage: iw at the W ring face, ie at the E face, iv at the rung; g_d = {ie, iw, g0}, ro_e <= hdr(iw), nxe_d from iw/ie/iv, dl_* <= iw/ie/iv. Every output mixes both faces, so a flat C-layer placement stretches each output reg to 1.1-1.7 mm from one of its inputs (> 405 um reach, ~1.25 ps/um). The ring stop cannot close in 833 ps across a 1442.88 um tile without at least one mid stage."
+ },
+ "form": [
+  {"id": "XG-1 registered xg stage (RTL)", "what": "ot_s81sl_rstop parameter XMID (default 0 = unchanged; bare plan define OT_S81SL_RSTOP_XMID1): iw/ie/iv/xf_q/neo_q/nwo_q/ci_q get one more register (iw_m <= iw ...) placed at the xg centre; all rstop outputs read the _m copies. +1 cycle on every rstop path (ring through ro_e/ro_w, dl_*, g_d -> xs, nx_*), pre-approved. Bench: existing rstop/slice benches with the latency model +1, plus a mutant that skips one copy."},
+  {"id": "XG-2 xg region (plan)", "what": "placement region for u_*_u_sl_u_xg (rstop + xs) centred between its ring faces, sized to its cells at ~0.6 fill, so rstop -> xs g_d (3 x 1024 b) and nx_* stay local; FIRM iw_m/ie_m at the region centre."},
+  {"id": "XG-3 face legs (plan relay_depth)", "what": "after XG-1 the remaining legs are centre -> face (~720 um): relay_depth sink/source D1 on the xring/x ports that still exceed 405 um in the placed scan (u_bout_xring_o0, u_bout_x_o0/o1, u_bin_xring_i0, cland_xring), +1 on those lanes; FIRM sites at the face/centre midpoint."},
+  {"id": "XF-1 xf control leg sites", "what": "xf driver/src single-bit legs (go_c -> g_cp[k].g_dlv go_r, src -> rb_v, flt -> fault, e_hh) 1.1-1.56 mm: D1 relays with FIRM sites at midpoints (relay_sites), 0 cycles where the protocol is credit-based / +1 where bound lanes."},
+  {"id": "RST-1 reset chain", "what": "relay_collapse (u_rst_in -> u_rrl_490, 17 hops, 1720 collapsed): FIRM reset relay sites along the chain (reset_tree anchors), no hold-buffer repair."}
+ ],
+ "split": "not needed for lepe_mu_C t1 / lepe_nh_mus_C t1 if XG-1..3 hold (nh_mus_C 328,675 cells; mu_C ~497k still needs the J8 split rows in lanes/handoff/FAM-S81-LEPE-3-lepeC-split-J8-rows.json, with xg kept whole in one part)",
+ "division": "FAM-S81-LEPE-4: XG-1 RTL + bench on main via ot-push-main; lepe_mu_C / lepe_nh_mus_C rows. FAM-S81-DSDV-R1: c1x_C / iq_C / lepw C rows on the same XG/XF ids, confirm c1x_C placed scan shows the same rstop signature."
+}
