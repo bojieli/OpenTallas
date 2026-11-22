@@ -1,0 +1,8 @@
+# FLOW-RESTORE-AUDIT-R1 handoff (11-21 21:0x PST)
+Goal: KEEP-RC-1121 (650916ebb262) audit on 7 gen hosts, recover kits that failed/are heading to fail only because of the kept regressed DB, pins check.
+- Marker: tt_setup_keep.log line "OT_TT_SETUP_KEEP RESTORE before: reloaded DB is worse (wns A -> B, tns C -> D)" on an OLD-flow kit = repaired DB kept (fixed flow prints the same line then "OT_TT_SETUP_REPAIR FALLBACK step rc 0 ... unchanged").
+- Scanner scripts (scratchpad of the session, not durable): find tt_setup_keep.log under /srv/opentallas-scratch{,2,3} + ~ on each host; epyc7 find is very slow (load 170), result file out/epyc7.jsonl arrives last.
+- Recovery launched: rb_e8 (col_h9_r1 pv047ea3b3, FAM-S81-COL-R5 / S81-GEOM-OPUS) copy at epyc8 /srv/opentallas-scratch2/claude/flow-restore-audit-r1/rb_e8_rest/gen/<kit>; 4_cts.odb = 4_cts_pre_tt.odb (-36.11), grt outputs in stale_pre_recover/, run_kit.sh refreshed (fixed). CTS TT repair re-ran and the fixed step restored (4_cts.odb unchanged). Waiting on 5_1_grt.odb TT; compare with original rb_e8 (kept DB -67.24).
+- J7 rep col_h10_r1 cld01bb4ae (epyc9, COLROM-R5): -1.98 pre, kept -21.04, inside gate; lane continues, relaunch from CTS only if final < -42 (their statement). Not touched.
+- Pins: kit_wave.json tools_sha pins lack the fix (s81 a9ed808a98d5, kv 4e46a7ec46c5, qc 65f3f85d7c5f, head 745c8f11e429) but rt/current (7c6e28945118) has it and every stage refresh replaces run_kit.sh; s81_head tools_from_rt false. Posted to S81-J6-ASSEMBLY-R5, QC-PLAN-R13, KV-PLAN-R6.
+- TODO: epyc7 scan result, final TSV lanes/RESTORE-AUDIT.tsv, watch rb_e8_rest GRT result, report to COORD.
