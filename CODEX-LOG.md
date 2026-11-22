@@ -14242,3 +14242,9 @@ Parked on the owner's reset. Admitted jobs, live plans, and the armed J7 timer c
 OWNER?
 QC V3 p7d5r collective fault fixed_cycles=3 (8→11) is present despite the outstanding owner question. Resolve using explicit owner authority before publication, or rebuild without that delta. p6n3 has no such row.
 Previously logged ownership questions stay in place. Package K−C −8 was resolved by the owner and exercised by the D27 native mission.
+
+### Final parked receipts
+
+- Token F3 native replay E8 2873032 ended on same-edge testbench observer ordering. Actual K first start 5600 was correct. Replace the mutable shared shift in the witness with ANCHOR+LIST_LEAD+1 and resume the private replay. S81 exact L01 FSA E9 649774 passed; R001 E9 774151 refused relocated frame manifest identity, compare manifest_content() with the preserved sealed input. HEAD native HBC/CSR test E10 375121 remains active and the boot authority question is already logged.
+- ROM corrected physical fanout full analog TT/FF E10 unit397116-1795342664 and local evaluate 316884-1795342446 remain admitted. Standalone unit392748 lacked nmos_rvt_3. Materialized QC native output plus eight bitlines has 10 interface markers (6 M4.S.1, 2 M3.S.6, 2 inherited DFF), distinct from the earlier 8-marker precursor.
+- Fleet readonly-aware cleanup push exact branch ed34033c02f5be1d33bdce63919b6ad8ad05ffe0, focused4/4, E8 pending canonical gate oth-ubuntu-2884175-1795342519. FE persisted row still showed the earlier diagnosis at park, while exact read-only replay already produced drt-no-progress. S81 unheld gaps from the stuck-rule scan were leaf t39 and slice t40 cl1ea9de02. Hub last 177 GiB.
