@@ -280,3 +280,8 @@
   KV WAIT-BIND 24, CBC-FALLBACK 2 (kv3_hub_Wi, kv3_pc_v3), FAILED-NO-RELAUNCH 1 (kv3_hroot); HEAD hd_lep0N FAILED-NO-RELAUNCH+STALE
   top classes: held by die owner 288, running 67, cancelled superseded 59+, FAILED no host 12, other flow error 6
   revoked counted unsigned per tool; tool bin/owners_sweep.py
+- 2026-11-21 20:53 PST 20:50 sweep 469 rows, 215 clean. S81: 105 HELD-EVENT (J7 04:14, owner S81-J7-HELD-R1), 12 UNOWNED cancelled-superseded col_h9/h10, 60 DEAD-OWNER (FAM-S81-COL-R5 57), 64 STALE.
+  QC: 2 UNOWNED (cbn_q11 x2, route held), 2 DEAD-OWNER (cbf_q01, slw_stm_v2), 3 FAILED-NO-RELAUNCH, 6 STALE.
+  KV: 2 FAILED-NO-RELAUNCH (kv3_hroot owner FAM-KV-HROOT-R1, kv3_hub_Wo), 16 WAIT-BIND under KV-WAITBIND-R1, 2 CBC-FALLBACK.
+  HEAD: hd_lep0N FAILED-NO-RELAUNCH+STALE 11h, owner FABLE-FIX-HEAD-LEP0N-R7 live.
+  COORD-ROUTED-OWNERS.tsv is in autopilot/, not coord root.

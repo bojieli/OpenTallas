@@ -21984,3 +21984,8 @@ FAILED [AUTOPILOT 27b8bf5e2d1c] 2026-11-21 20:35:22 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 37.4 h job 37.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 28.4 h; last event 7.5 h ago, log write 3.7 h ago (3167 lines)
   NO-PROGRESS epyc10 slw_su_c__cl92142dac 5_1_grt stage 31.3 h job 50.5 h: repair_Viol best 737 last 737 rows 596 window-gain 0.0%; stagnant 18.1 h; last event 0.0 h ago, log write 0.0 h ago (1053 lines)
 - 2026-11-21 20:53 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-102): 2 event(s): kv3_hg_v1p4 PREFLIGHT-ADVISORY clock_entry_clear 16 (io.tcl: clock entry clk_c4 (445.472, 125.28) over macro kv3_head_eighth_e1#1 [336.96, 17.28, 552.96, 233.28]); macro_channels 5 (macro column 0 x[8.652,51.852]: W vertical channel 4.332 um < 10.8); kv3_hg_v1 PREFLIGHT-ADVISORY clock_entry_clear 16 (io.tcl: clock entry clk_c4 (445.472, 125.28) over macro kv3_head_eighth_e1#1 [336.96, 17.28, 552.96, 233.28]); macro_channels 5 (macro column 0 x[8.652,51.852]: W vertical channel 4.332 um < 10.8)
+- 2026-11-21 20:53 PST 20:50 sweep 469 rows, 215 clean. S81: 105 HELD-EVENT (J7 04:14, owner S81-J7-HELD-R1), 12 UNOWNED cancelled-superseded col_h9/h10, 60 DEAD-OWNER (FAM-S81-COL-R5 57), 64 STALE.
+  QC: 2 UNOWNED (cbn_q11 x2, route held), 2 DEAD-OWNER (cbf_q01, slw_stm_v2), 3 FAILED-NO-RELAUNCH, 6 STALE.
+  KV: 2 FAILED-NO-RELAUNCH (kv3_hroot owner FAM-KV-HROOT-R1, kv3_hub_Wo), 16 WAIT-BIND under KV-WAITBIND-R1, 2 CBC-FALLBACK.
+  HEAD: hd_lep0N FAILED-NO-RELAUNCH+STALE 11h, owner FABLE-FIX-HEAD-LEP0N-R7 live.
+  COORD-ROUTED-OWNERS.tsv is in autopilot/, not coord root.
