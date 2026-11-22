@@ -2,3 +2,4 @@
 - 2026-11-21 21:53 PST Status $(date +%H:%M): waiting for J7 apply 04:14; timer armed, J7 tree untouched (COORD: hardlinks accepted, no writes into it). Gen hosts undrained per COORD; will post exact refusal if any at 04:14.
 - 2026-11-21 23:53 PST Status $(date +%H:%M): waiting for J7 apply 04:14; timer armed, J7 tree untouched (COORD: hardlinks accepted, no writes into it). Gen hosts undrained per COORD; will post exact refusal if any at 04:14.
 - 2026-11-22 01:53 PST Status $(date +%H:%M): waiting for J7 apply 04:14; timer armed, J7 tree untouched (COORD: hardlinks accepted, no writes into it). Gen hosts undrained per COORD; will post exact refusal if any at 04:14.
+- 2026-11-22 03:54 PST Status $(date +%H:%M): waiting for J7 apply 04:14; timer armed, J7 tree untouched (COORD: hardlinks accepted, no writes into it). Gen hosts undrained per COORD; will post exact refusal if any at 04:14.
