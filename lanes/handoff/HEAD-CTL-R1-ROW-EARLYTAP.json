@@ -1,0 +1,14 @@
+{
+ "lane": "HEAD-CTL-R1",
+ "type": "hd_ctl",
+ "status": "PREPARED, NOT APPLIED. Use only if wave-env WRCAP DRT (epyc9 head-ctl-r1/kit/gen/hd_ctl, unit oth-ubuntu-585011-1795329124) does not reach DRC 0.",
+ "why": "63,257 hold pads (~24% of instances) in u_cland_*/holdN (HB4xp67) come from clock.tap_window.per_type_ps.hd_ctl = 87 ps: the pad window is sized for the worst kit-clock-port arrival spread, not for measured per-port arrival. DRT iter0 showed 32k violations.",
+ "mechanism_in_main": "clock.tap_offset.per_port_ps.<type>.<kit clk port> = {TT, FF, tol} (R-CLOCK-7; used today only for hd_lep0N; checked by die_sta_related.tap_offset_gate) and clock.tap_window.per_type_ps.<type> (window pads). Early capture tap = the port-start capture flops sit on a shallower tap, so the measured offset is negative and the pad window shrinks.",
+ "rows": [
+  {"key": "clock.tap_offset.per_port_ps.hd_ctl", "value": "from die_sta_related --kit-offset-out on the routed die clock (proto as lep0N R4/R15): per kit clk port {TT, FF, tol=max(10, half instance range)}", "state": "hd_ctl has NO row today (per_port_ps lists only hd_lep0N)"},
+  {"key": "clock.tap_window.per_type_ps.hd_ctl", "value": "re-derive = ceil10(measured need + 10) after the tap_offset row (today 87.0); cap T/4 = 208", "state": "87.0 today"}
+ ],
+ "check_after_apply": ["hold-pad count in hd_ctl GRT (target << 63,257)", "TT setup stays >= -42 (WRCAP GRT -1.22)", "die_sta_related tap_offset_gate PASS", "DRT converges to DRC 0"],
+ "evidence": {"grt_final_sha": "79952f8abfe8", "grt_policy": "PASS, TT -1.22, FF after GRT repair +2.66/0 violators (COORD)", "plan": "28819946547a (WRCAP)"},
+ "not_done": "measured offsets need the routed die clock; not derived here. Hand to the HEAD plan-event owner (HEAD-PLAN-R16/r17) with this file."
+}
