@@ -26,3 +26,10 @@ Clone: epyc8 /srv/opentallas-scratch2/claude/kv-ahub-rh1/wt (main 0092847a58). T
 - eco_loop launched (R-MINIMAL eligible): ot-run oth-ubuntu-268171-1795332308 epyc8, out epyc8 kv-ahub-rh1/eco_s1, log intel2 ~/tmp/kv-ahub-rh1/eco_s1.log.
 - view probe: ck[3], ck[5] no access (M6 straps over pins). Pin ECO ready: epyc8 kv-ahub-rh1/tmp/eco_pin.tcl (eco2 form; ck5 box = eco2, ck3 extend up 200 nm). Apply to eco BEST 6_final -> 6_1_fill copy, do-6_report, run_kit_kv.sh post, resign_driver je-kv, view.sh.
 - k_s1/freeze.json now points at pins/qkd_ahub_pins_r28_strap.json (sha 3a98e21b, canon ff6803d3) = the row pins_file.
+
+## 11-22 08:0x UTC (KV-AHUB-RH1) -- SIGNED, LEC pending
+- eco_s1/i1 (eco_loop 1 it) SIGNED; k_s2 = i1 + ck[3]/ck[5] pin ECO (tmp/eco_pin.tcl), do-6_report, kit post SIGNED; je-kv resign_driver k_s2/sign_je: SIGNED TT +24.6 FF +5.42 DRC 0; routed LEC running (ot-run oth-ubuntu-713267-1795334005, log intel2 ~/tmp/kv-ahub-rh1/sign_s2.log).
+- local DRC around ck3/ck5 base=eco=0; view_k_s2 splice OK + probe DRT-0073=0 (34/34 AP).
+- payload epyc8 kv-ahub-rh1/payload_s2 (view/ lef+tt+ff, pins r28_strap, signoff_je.json, splice.json). core latency mean TT 242.72 / FF 193.02.
+- row script filled: epyc8 kv-ahub-rh1/rows/ROWS_KV-AHUB-RH1.py, dry-run on D27d3 plan_c: only kv3_hub_C changes, schema PASS.
+- NEXT: LEC EQUIVALENT -> copy row into kv-plan-r6/d28/rows/, post ROWS-READY. Cancelled superseded k_s1 jobs (resign + ctl).
