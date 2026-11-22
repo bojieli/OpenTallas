@@ -1,1 +1,2 @@
 - 2026-11-22 01:13 PST RESUMED FIX-SYNC-KVHEAD (Opus) 11-22 01:1x: fix-propagation lane for KV (hg/hgi, hub_*, hroot, pv, pc, io_cor, sys) + HEAD (hd_lep0N, hd_ctl, hd_serdes, hd_host). Harvesting accepted fixes -> lanes/FIX-SYNC-KV.tsv + FIX-SYNC-HEAD.tsv; KV D28 rows to KV-PLAN-R6 by 11:30, HEAD rows to OPUS-FIX-HEAD-LEP0N-R8 (r18).
+- 2026-11-22 01:20 PST DONE [FIX-SYNC-KVHEAD] ot-push-main otpush-outgoing-giraffe-2058321 on outgoing-giraffe: rc=0 after 16 s, ended 09:20:22, log none, cmd: ot-push-main 
