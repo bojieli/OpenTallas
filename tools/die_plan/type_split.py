@@ -4001,12 +4001,13 @@ class Event:
                     # FLOW-STRIPBODY-1121: a piece with no count-aligned crossing lands nothing: no count straps
                     info = dict(straps={})
                     self.rep["notes"].append(f"strap ties: {nm} has no count-aligned crossing (no count straps)")
-                    dead.add(nm)
                 if info is None:
                     raise SplitError(f"strap ties: no entry for {nm}")
                 t = self.out["partition_types"][nm]
                 want = [dict(name=sp, width=w, note="OWNER 12.15a count strap (tied at the parent)")
                         for sp, w in sorted(info["straps"].items())]
+                if nm != tn and not info["straps"]:
+                    dead.add(nm)                       # a piece with no count strap holds no count frame (no relay role)
                 have = t.get("count_straps", [])
                 if [(x["name"], x["width"]) for x in have] != [(x["name"], x["width"]) for x in want]:
                     out[nm] = dict(was=len(have), now=len(want))
