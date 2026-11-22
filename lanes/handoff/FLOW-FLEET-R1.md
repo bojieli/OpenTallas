@@ -1,5 +1,7 @@
 # FLOW-FLEET-R1 handoff (Opus 5.5, lane for COORD; source lanes/FABLE-FLOW-2200.md)
 
+**EXPIRY 2026-11-23 06:00Z: epyc7 /etc/ot-heavy.conf LOAD_CAP_FACTOR=1.2 (owner FLOW-FLEET-R1). Renew (edit the #@cap expires=) or revert to 0 (value in /etc/ot-heavy.conf.bak-fleet7r1-1122). Shown hourly in FLEET-OPS-R host report HOST-CAPS line (main fd7e7d78a9).**
+
 Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools,bin,tests). Scratch tmp: .../FLOW-FLEET-R1/tmp.
 
 ## Item 1 epyc7 thread cap: DONE
@@ -9,6 +11,7 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
 - TODO 2026-11-23 06:00Z: LOAD_CAP expiry -> revert to 0 or renew.
 
 ## Item 2 GRT-STUCK: DONE main 403477dcd9 (live in rt/current)
+- COORD ruling 11-22 applied main 30b1f11ad5 (live): GRT-STUCK + NO-PROGRESS on lane-own kits (kit-wave .../private/<LANE>/ or lane scratch dir) = REPORT-ONLY + one NOTICE to owning lane, never auto-cancel; wave kits still cancel; CANCEL-NOW and UNSIGNABLE (NOTICE+KEEP) unchanged.
 - 22:xx table: 2 GRT-STUCK REPORTED (sle_ctl padW5 epyc10, kv3_hgi_v1 intel2), cancel next pass.
 
 ## Item 3 tree copies + .fork.json: DONE main 36c00658e2
