@@ -250,3 +250,4 @@ time	die	class	state	posted	text
 2026-11-22 07:17:18	qwen_compute	STUCK-STATE	alert	yes	STUCK-STATE qwen_compute: 10 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9, 2026-11-22 05:20)
 2026-11-22 07:17:18	s81_head	STUCK-STATE	alert	yes	STUCK-STATE s81_head: 10 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_ctl_e, 2026-11-18 22:20)
 2026-11-22 07:27:45	qwen_compute	NO-PROGRESS	alert	yes	NO-PROGRESS qwen_compute: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 123 min (last 05:24); 19 hold(s): 17 without eta, 0 overdue, next eta 11-23 12:00
+2026-11-22 07:58:01	autopilot	TICK-DEAD	alert	yes	[PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 07:31:05 (27 min; no launch or classify meanwhile) running tick started 07:50:54, last mark 'after wave_balance'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
