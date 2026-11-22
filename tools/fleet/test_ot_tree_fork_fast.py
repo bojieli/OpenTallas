@@ -38,3 +38,15 @@ def test_list_remote_parses_find(monkeypatch):
 
 def test_default_ssh_has_fast_cipher_no_compression():
     assert "Compression=no" in TF.SSH and any("aes128-gcm" in x for x in TF.SSH) and TF.STREAMS >= 2
+
+
+def test_no_manifest_takes_the_plain_fetch(monkeypatch, tmp_path):
+    # an edited private fork still carries its parent manifest hash: --no-manifest must not enter the manifest route
+    calls = []
+    monkeypatch.setattr(TF, "ssh_out", lambda host, cmd, timeout=600: (0, "a" * 64 + "\n"))
+    monkeypatch.setattr(TF, "check_dst", lambda s, d: "")
+    monkeypatch.setattr(TF, "hash_lock", lambda *a, **k: calls.append("manifest route") or None)
+    monkeypatch.setattr(TF, "same_tree", lambda *a, **k: calls.append("manifest route") or "")
+    lines = []
+    assert TF.fork_remote("hostx", "/src/tree", str(tmp_path / "dst"), dry=True, out=lines.append, no_manifest=True) is None
+    assert calls == [] and any("NO-MANIFEST" in x for x in lines) and any("(no manifest)" in x for x in lines)
