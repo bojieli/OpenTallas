@@ -1,4 +1,4 @@
-# FAM-S81-SLICE-R5 handoff (Opus 5.5, live; updated 11-21 18:55 PST)
+# FAM-S81-SLICE-R5 handoff (Opus 5.5) -- STOOD DOWN 11-21 ~20:0x PST (context); successor FAM-S81-SLICE-R6
 Predecessor: lanes/handoff/FAM-S81-SLICE-R4.md. R3=epyc10 /srv/opentallas-scratch2/claude/fam-s81-slice-r3. D5=intel2 /srv/opentallas-scratch2/claude/fam-s81-slice-r5.
 
 ## SIGNED
@@ -22,3 +22,8 @@ Predecessor: lanes/handoff/FAM-S81-SLICE-R4.md. R3=epyc10 /srv/opentallas-scratc
 - J8 rows posted to S81-J6-ASSEMBLY-R5: D5/rows/j8_slice_family_rows.json (79bd052f8b0c), full plan plan_j8_slice_rows.json (81cf3836285a). Covers c1x_C x9 rules 1,5; t46 writer START + reset.local_taps_um x3 (residual local_reset fstart_1 <- rst_rl_57 at 555 um); kv512_C/c3x_C xring chains. Wrapper used for t46: D5/tmp/t46fix.py (adds local_taps_um at the over-reach stage sites).
 - PARTIAL: item 3 geometry draft posted: /srv/opentallas-scratch2/claude/fam-s81-slice-r5/rows/c1x_core_moves_j8.json (f62f18d9d931; generator D5/tmp/cm.py PLAN OUT 2.16 0.5). Still open: tap re-sites, cap/xr pins, t9 xring second strip. Original item 3: c1x_C core_moves (S strip cut y 60.48; per-type macro moves north 8.64-34.56 um, table in FABLE-PD-S81-2000.md section 3; re-site 0-14 clock taps per type), plus a second strip for the t9 xring landing (t9 body ~380k). Coordinate with FLOW-STRIPBODY-R2. STOP: no strip split at 17-43 um depth, no t9 body build with only S out, no J6 relaunch of t6/t29/t18.
 - OPEN: item 6: one J7eL6-form slice proof (t18) once the tree is rebound on the gen rt.
+
+## Stand-down 20:0x
+- R6 adopts: t37 ECO waiter (epyc10 oth-ubuntu-171031-1795284529) and t36 export check (AUTO-EXPORT post for the new t36 record; spool epyc10 30e0d759416e083b.json).
+- R6 adopts the Fable items: item 3 remainder (tap re-sites, cap/xr pins, t9 xring second strip), item 6 (t18 J7eL6 proof), c3x_C relaunch once admission returns.
+- J8 rows already with S81-J6-ASSEMBLY-R5: rows/j8_slice_family_rows.json (79bd052f8b0c), rows/c1x_core_moves_j8.json (f62f18d9d931). Neither is bind-proven.
