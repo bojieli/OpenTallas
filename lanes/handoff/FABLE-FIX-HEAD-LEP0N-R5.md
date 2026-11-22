@@ -23,8 +23,7 @@ Stood down on context, not on a blocker. No kit launched. No plan event, no live
      New v2 form {schema ...v2, contents [{content, module, params}], groups}; landing_place accepts v1 and v2.
    - 13 new tests in test_type_split.py, 8 in test_native_stage_groups.py. Unit level only: no gen-mode type has run
      through Event.run() end to end yet (see blockers).
-2. tools/s81_head/head_lep_parts_delta.py + test (push in flight at stand-down: check `git log origin/main -3 -- tools/s81_head`;
-   log L/tmp/push2.log; if absent, the commit is on branch claude/fable-fix-head-lep0n-r5 in L/clone, run ot-push-main there).
+2. 5aab47bd4b1 tools/s81_head/head_lep_parts_delta.py + test (pushed, 2 tests).
    One-content plan -> six contents + 17 two-leaf nets + every carried path renamed. Run on v2 plan 00b2abf6e7a6:
    L/plan/plan_parts.json, report L/plan/parts_delta_report.json. Counts equal R4's census: hard cores 24 moved / 25 hub,
    stage groups hub 136, io 18, rg0/3 14 each, rg1/2 22 each, bus leaves 12, core taps 4, internal stations 3.
