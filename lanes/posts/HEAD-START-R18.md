@@ -34,3 +34,4 @@
   - Three bench errors fixed, tool on main e468efe8432 (tools/s81_head/head_transport_depth.py + test): (1) Verilator folded tb clock phases to mod T/2, now free-running generators; (2) stubs count own clock edges = planner frame; (3) fixed_cycles realised as wrapper stations (hd_spn, hd_spn_end, hd_ctl; 38 lanes) now derived from the plan internal_stations.
   - Recipe: epyc7 /srv/opentallas-scratch2/claude/head-start-r18/tr28.sh (env TAG, MUTANT).
   - Next (mine): rebase p6 onto e1a plan 00b2abf6e7a6 (= e1b), re-site lep0N START reset ports, rerun this bench on the result, hand to the LEP0N lane for the combined apply.
+- 2026-11-21 20:43 PST DONE [HEAD-START-R18] ot-run oth-ubuntu-1720360-1795322477 on tolerant-swine: rc=0 after 144 s, ended 20:43:40, log /home/ubuntu/head-start-r18/gates_e1b.otrun.log, cmd: --mem 48 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/head-start-r18 -- env TAG=e1b bash /srv/opentallas-scratch2/claude
