@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 import autopilot as A
 
@@ -142,3 +143,65 @@ def test_new_place_receipt_overrides_marker_when_route_log_was_not_returned(tmp_
     k = kit_with_marker(tmp_path, marker="FAIL_POSTPLACE PLACE-SETUP-STOP wns -94428.62 ps < -300 ps")
     (k / "place_setup_stop.json").write_text('{"stopped": false, "wns": -197.86}')
     assert "place_setup_stop" not in probe(k, time.time() - 600)
+
+
+# Retained epyc2 5_1_grt.log, AP 031c5184d5c9. Unrelated progress lines omitted.
+CAUGHT_RSZ_THEN_DPL = """[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 201 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+OT_HB4PAD: after hold repair the design holds 6326 HB4xp67 cells
+OT_HOLD_GUARD_GRT chunk 1: hold ws 34.95 (+33.80) tns 0.0 viol 0, +201 buffers (cap 200), 2883 s
+OT_HOLD_SETUP_GUARD stop: worst setup -179.88 < min(before 6.65, floor -42); hold ws 34.95
+OT_HOLD_GUARD_GRT: chunk buffer caps reached (RSZ-0060 caught per chunk); continuing on the repaired design
+OT_HOLD_BUDGET added 201 logic_cells 177068 pct 0.11 budget 10 hold_ws 34.95 margin 40 OK
+OT_GRT_NONPORT restored exact FF SDC (port hold remains visible)
+OT_GRT_NONPORT begin native_ff input_ports=5951 excluded_output_ports=0
+ wire186267
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: global_route.tcl, 196 DPL-0033
+Elapsed time: 4:02:08.09[h:]min:sec. CPU time: user 17523.51 sys 639.04 (125%). Peak memory: 15491204KB.
+"""
+
+
+def test_grt_terminal_dpl_after_proven_caught_rsz(tmp_path):
+    k = kit_with_marker(tmp_path)
+    (k / "FAIL_POSTCTS").unlink()
+    stage = k / "run/logs/asap7/x/base/5_1_grt.log"
+    stage.write_text(CAUGHT_RSZ_THEN_DPL)
+    old_marker = "FAIL_route make exit 2: 5_1_grt.log: [ERROR RSZ-0060] Max buffer count reached.\n"
+    expected = "FAIL_route make exit 2: 5_1_grt.log: [ERROR DPL-0033] detailed placement checks failed during check placement."
+    marker = k / "FAIL_route"
+    marker.write_text(old_marker)
+    receipt = probe(k, time.time() - 600)
+    assert A.classify(receipt, {"exit": 2}) == ("CRASH", "route-make-fail", expected)
+    assert receipt["first_error"].startswith("5_1_grt.log: [ERROR DPL-0033]")
+
+    # Exercise the exact emitted runner diagnostic branch against the same stage file.
+    marker.unlink()
+    (k / "kit_resume.py").write_bytes(Path(A.KR.__file__).read_bytes())
+    source = (Path(A.__file__).resolve().parents[1] / "die_plan/gen_phys.py").read_text()
+    start = source.index('if [ $rc != 0 ] && ! ls "$K"/FAIL_*')
+    end = source.index("# Route success alone is not sign-off.", start)
+    runner = source[start:end]
+    run = subprocess.run(["bash", "-c", "K=$1; rc=2; GOAL=route\n" + runner, "runner", str(k)],
+                         check=True, capture_output=True, text=True, timeout=30)
+    assert run.stdout.strip() == marker.read_text().strip() == expected
+
+
+def test_grt_terminal_dpl_does_not_replace_uncaught_or_old_failure(tmp_path):
+    k = kit_with_marker(tmp_path)
+    (k / "FAIL_POSTCTS").unlink()
+    old_marker = "FAIL_route make exit 2: 5_1_grt.log: [ERROR RSZ-0060] Max buffer count reached."
+    (k / "FAIL_route").write_text(old_marker + "\n")
+    stage = k / "run/logs/asap7/x/base/5_1_grt.log"
+    for text in (CAUGHT_RSZ_THEN_DPL.replace("OT_HOLD_GUARD_GRT chunk 1:", "unrelated chunk 1:"),
+                 CAUGHT_RSZ_THEN_DPL.replace("continuing on the repaired design", "repair ended"),
+                 CAUGHT_RSZ_THEN_DPL + "[ERROR GRT-9999] later terminal failure\n"):
+        stage.write_text(text)
+        receipt = probe(k, time.time() - 600)
+        assert "grt_caught_dpl" not in receipt
+        assert A.classify(receipt, {"exit": 2}) == ("CRASH", "route-make-fail", old_marker)
+    stage.write_text(CAUGHT_RSZ_THEN_DPL)
+    old = time.time() - 7200
+    os.utime(stage, (old, old))
+    assert "grt_caught_dpl" not in probe(k, time.time() - 600)

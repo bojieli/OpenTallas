@@ -9304,7 +9304,12 @@ if [ $rc != 0 ] && ! ls "$K"/FAIL_* >/dev/null 2>&1; then
   # tool / Tcl error line of the stage log that stopped (the newest ORFS log), named with its log, so the per-cause cap and the fail key see the cause
   FERE='^\[ERROR [A-Z]+-[0-9]+\]|^Error: |^ERROR: |can.t read "|invalid command name|^Traceback|Segmentation fault|Signal 11 received'
   if [ -z "$FE" ]; then for LL in $(ls -t "$K"/run/logs/asap7/*/base/*.log 2>/dev/null | head -1) "$K/run_$GOAL.log"; do
-      FL=$(grep -m1 -E "$FERE" "$LL" 2>/dev/null | cut -c1-260); [ -z "$FL" ] || { FE="make exit $rc: $(basename "$LL"): $FL"; break; }; done; fi
+      FL=$(grep -m1 -E "$FERE" "$LL" 2>/dev/null | cut -c1-260)
+      if [ "$(basename "$LL")" = 5_1_grt.log ] && [[ "$FL" == "[ERROR RSZ-0060]"* ]]; then
+        DPL=$(python3 -I "$K/kit_resume.py" grt-terminal-dpl "$LL" 2>/dev/null)
+        if [ -n "$DPL" ]; then FL="$DPL"; fi
+      fi
+      [ -z "$FL" ] || { FE="make exit $rc: $(basename "$LL"): $FL"; break; }; done; fi
   echo "FAIL_route ${FE:-make exit $rc (see run_$GOAL.log)}" | tee -a "$K/FAIL_route"
 fi
 # Route success alone is not sign-off. Preserve previous failed verdicts.

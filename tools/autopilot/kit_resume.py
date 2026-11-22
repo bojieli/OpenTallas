@@ -67,6 +67,22 @@ STEP_LOGS = {"synth": ("1_2_yosys.log", "1_synth.log"),
 HOLD_GUARD_CAP_RE = re.compile(r"^\[ERROR RSZ-0060\][^\n]*\n(?=(?:[^\n]*\n){0,4}OT_HOLD_GUARD_GRT chunk \d+:)", re.M)
 ERR_LINE = re.compile(r"^(?:\[ERROR|ERROR:|Error:)", re.M)
 
+
+def grt_terminal_dpl(text):
+    """Use a final global-route placement failure after a proven caught buffer cap."""
+    first = ERR_LINE.search(text)
+    if not first or not HOLD_GUARD_CAP_RE.match(text, first.start()):
+        return ""
+    dpl = re.search(r"(?m)^(\[ERROR DPL-0033\][^\n]*)\nError: global_route\.tcl, \d+ DPL-0033$", text[first.start():])
+    if not dpl:
+        return ""
+    start = first.start()
+    prior = HOLD_GUARD_CAP_RE.sub("", text[start:start + dpl.start()])
+    if (ERR_LINE.search(prior) or ERR_LINE.search(text[start + dpl.end():])
+            or "OT_HOLD_GUARD_GRT: chunk buffer caps reached (RSZ-0060 caught per chunk); continuing on the repaired design" not in prior):
+        return ""
+    return dpl[1]
+
 # run_kit.sh (gen_phys RUN_KIT) itself reads these kit files.  Producers: the make step whose output they change.
 RUNNER_ROOTS = {"orfs_hold_mm.py": "synth", "native_bb.py": "synth", "partition_ir.py": "synth",
                 "adder_map_dontuse.py": "synth", "signed_parent_source.json": "synth",
@@ -790,6 +806,8 @@ def main(argv):
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    a = sub.add_parser("grt-terminal-dpl", help="print the terminal placement error after a caught GRT hold cap")
+    a.add_argument("log")
     a = sub.add_parser("inputs")
     a.add_argument("kit")
     a = sub.add_parser("manifest")
@@ -812,7 +830,10 @@ def main(argv):
     a = sub.add_parser("clean", help="drop stale .kwrs_done.* step markers (run after cp -al of a kit, before launch)")
     a.add_argument("kit")
     a = ap.parse_args(argv)
-    if a.cmd == "inputs":
+    if a.cmd == "grt-terminal-dpl":
+        with open(a.log, errors="replace") as stream:
+            print(grt_terminal_dpl(stream.read()))
+    elif a.cmd == "inputs":
         r = write_inputs(a.kit)
         print("KW_RESUME_INPUTS " + json.dumps({"n": len(r["files"])}))
     elif a.cmd == "manifest":
