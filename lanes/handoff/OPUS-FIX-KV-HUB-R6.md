@@ -85,3 +85,11 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - On BIND_ERRORS 0: new D28 row = plan 69ac8fe58fbd (replaces e9be978c3180) + ROWS-READY receipt line; relaunch sealed hub_Eo/hub_Wo on it.
 - CANCELLED the sealed hub_Eo twin (_1122025542) per COORD rule (proof setup -755 < -300 after CTS): runner 2512829 and preempt script killed;
   place scope stopped. hub_Eo PROOF keeps running for GRT/route evidence. Sealed hub_Wo waits for the Wo proof CTS number.
+
+## Update 11-22 10:2x PST
+- TOOL FIXES on main: RESUME-STAGE-1122 9959118207e3 (kit_wave run_item: resume_release no longer renames res stage; resumed private kits now chain after geom), RD-LEAF-1122 f407b779cf63 (reset_leg_plan relay_depth rows name bind leaf; stage sites bind form u_y_xd_<leaf>_<port>_0_<s>.q). rt/current d4aeaa3c6b58 has both.
+- D28 ROW: ROWS-READY 80449f4195bd = epyc8 kv-plan-r6/d28/rows/ROWS_OPUS-FIX-KV-HUB-R6-RESET.py + hub_r6_reset/ (SHA256SUMS afffc15525b4). On e9be978c3180 -> plan bf83bf83b70c. First bind (69ac8fe58fbd, old tool) failed only on 2 EMIT relay_depth misses (root cause above).
+- LIVE: strict re-bind of bf83bf83b70c, epyc8 unit oth-ubuntu-33312-1795369379, script opus-fix-kv-hub-r6/rebind_r6b.sh, out rr/bindgate2/gate.out (elab reused). ETA ~11:35. COORD fallback: unproven by 11:30 -> inst_taps/relay_sites go D28, relay_depth D29.
+- sealed hub_Ei (spec qwen_kvsys_kv3_hub_Ei_1122025555): run-item from lane-staged scheduler intel2 /srv/opentallas-scratch2/claude/opus-fix-kv-hub-r6/rt_9959118207e3 --goal route, systemd unit runitem-kv3_hub_Ei, log intel2 ~/tmp/opusfixkvhub-r6/kit3i_*. Chain queued for CPU on epyc8 (kit lives there). Stale FAIL_PREFLOOR moved to epyc8 opus-fix-kv-hub-r6/aside_ei/.
+- sealed hub_Wo twin CANCELLED (proof CTS -723.92 = astk_WN reset reach); sealed hub_Eo cancelled earlier. NEXT: on clean re-bind, relaunch sealed hub_Eo/Wo from a tree with plan bf83bf83b70c + its bind (tree_r), src-manifest on, --goal route, scheduler rt >= 9959118207e3.
+- proof hub_Ei GRT (kv3_hub_Ei_1122003611): hold repair, setup WNS +36 ps TNS 0 at it 100.
