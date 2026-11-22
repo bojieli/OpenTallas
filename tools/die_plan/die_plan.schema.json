@@ -3502,6 +3502,9 @@
        "tap_reset_affinity": {
         "type": "boolean"
        },
+       "tap_reset_split": {
+        "type": "boolean"
+       },
        "pregrt_hold_guard_ps": {
         "type": "number",
         "minimum": 0,

@@ -845,6 +845,11 @@ if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq
 if {[info exists ::env(OT_TAP_RESET_AFFINITY)] && $::env(OT_TAP_RESET_AFFINITY) eq "1"} {
  source [file join [file dirname [info script]] tap_reset_affinity.tcl]
 }
+# QC-COLL RST-COTAP 11-22 (default off, OT_TAP_RESET_SPLIT=1 from clock.tap_reset_split): a last reset stage whose async sinks sit
+# on several taps gets one copy per other tap (tap_reset_split.tcl), so every removal/recovery edge is launched and captured on one tap.
+if {[info exists ::env(OT_TAP_RESET_SPLIT)] && $::env(OT_TAP_RESET_SPLIT) eq "1"} {
+ source [file join [file dirname [info script]] tap_reset_split.tcl]
+}
 # QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"; ring bonding took clk_t84 from 116
 # sinks to 1): OT_TAP_POST_MIN_SINKS (opt-in, plan clock.tap_post_merge_min_sinks) re-runs the small-tap
 # merge AFTER the affinity passes.  A tap left with 0 < n < min sinks moves ALL its clock pins to the nearest tap that
