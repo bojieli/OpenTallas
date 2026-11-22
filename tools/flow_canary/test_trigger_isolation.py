@@ -85,4 +85,30 @@ class Isolation(unittest.TestCase):
             self.assertEqual(T.unlock_completed_sources(src,runs),[str(snap)])
             self.assertFalse(T.source_lock_file(snap).exists())
 
+def test_fresh_checkout_uses_normal_local_admission_on_source_volume(tmp_path, monkeypatch):
+    root = tmp_path / "canary" / "runs"
+    sources = root.parent / "sources"
+    sources.mkdir(parents=True)
+    sha = "123456789abcdef"
+    calls = []
+
+    def refuse(cmd, **kwargs):
+        calls.append(cmd)
+        return subprocess.CompletedProcess(cmd, 78, "", "disk floor refusal")
+
+    monkeypatch.setattr(T.subprocess, "run", refuse)
+    assert T.source_staging_refusal(root, sha) == "disk floor refusal"
+    assert len(calls) == 1
+    cmd = calls[0]
+    assert cmd[cmd.index("--dir") + 1] == str(sources)
+    assert cmd[cmd.index("--hosts") + 1] == "localhost"
+    assert cmd[cmd.index("--disk") + 1] == str(T.SOURCE_STAGE_GB)
+    assert {"--pick", "--strict-host"}.issubset(cmd)
+    assert not T.snapshot_path(root, sha).exists()
+
+    T.snapshot_path(root, sha).mkdir()
+    assert T.source_staging_refusal(root, sha) == ""
+    assert len(calls) == 1
+
+
 if __name__=='__main__':unittest.main()

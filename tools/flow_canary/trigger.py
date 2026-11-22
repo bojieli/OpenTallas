@@ -26,6 +26,7 @@ flow_paths = _watch_module.flow_paths
 STATE = Path.home() / ".local/state/flow_canary/state.json"
 LIVE_S = 12 * 3600
 LOCK_REASON = "FLOW-CANARY live source; release after all referencing clients finish"
+SOURCE_STAGE_GB = 6  # Intel2 source snapshots occupy about 4.6 GiB before the canary itself starts.
 
 
 def git(src, *a):
@@ -158,9 +159,33 @@ def hold_sparse(dest):
             raise RuntimeError(r.stderr)
 
 
+def snapshot_path(root, sha):
+    return Path(root).parent / "sources" / sha[:12]
+
+
+def source_staging_refusal(root, sha):
+    """Use normal admission on the volume that would hold a new checkout."""
+    dest = snapshot_path(root, sha)
+    if dest.exists():
+        return ""
+    parent = next(path for path in dest.absolute().parents if path.is_dir())
+    try:
+        admission = subprocess.run(
+            [str(Path.home() / ".local/bin/ot-run"), "--hosts", "localhost", "--strict-host",
+             "--dir", str(parent), "--mem", "4", "--threads", "1", "--disk", str(SOURCE_STAGE_GB),
+             "--max-wait", "1", "--pick"],
+            capture_output=True, text=True, timeout=45,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return str(exc)
+    if admission.returncode == 0 and admission.stdout.strip() == "localhost":
+        return ""
+    return (admission.stderr.strip() or admission.stdout.strip() or "no local admission receipt")[-500:]
+
+
 def source_snapshot(src, sha, root):
     """An immutable sparse source per revision; no checkout underneath any live canary."""
-    dest = Path(root).parent / "sources" / sha[:12]
+    dest = snapshot_path(root, sha)
     if dest.exists():
         head = git(dest, "rev-parse", "HEAD")
         if head.returncode or head.stdout.strip() != sha:
@@ -239,6 +264,10 @@ def main(argv=None):
     if a.dry:
         return 0
     if dies:
+        refusal = source_staging_refusal(a.root, new)
+        if refusal:
+            print(f"FLOW_CANARY_TRIGGER source staging deferred: {refusal}")
+            return 0
         try:
             pinned_src = source_snapshot(a.src, new, a.root)
         except RuntimeError as e:
