@@ -45,7 +45,10 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
 );
     localparam integer NPE = 46, GS = (NPE + NG - 1) / NG;   // 12 at NG 4 (unchanged); 6 at NG 8 (S81-RCK-10 vJ)
     reg  [9:0] d  [0:NPE-1];
-    reg  [9:0] th [0:((THC != 0) ? NPE-2 : NPE-1)];
+    // FAM-S81-SERDES-R7 11-21 (COORD dec_j6c LEC ruling): keep every theta register.  With THC = 0 synthesis folds the
+    // reachable-constant theta_45 bits and names the surviving tail flop after an aliased thq bit, so routed LEC could not
+    // pair gold theta_45[0] (33 delta_45 points NOT EQUIVALENT on dec_j6c).  keep = same function, <= 9 flops per unit.
+    (* keep *) reg  [9:0] th [0:((THC != 0) ? NPE-2 : NPE-1)];
     // Reachable theta45 stores only bit0: upper bits are always zero after the first load.
     // No never-reset constant-D tail flops exist in this opt-in form.
     reg th_last;
