@@ -1070,6 +1070,11 @@ def kitwave_reduce_main(a):
 
 
 # ------------------------------------------------------------------ live use
+DOCKER_INSPECT_CHUNK = 20
+DOCKER_INSPECT_CHUNK_TIMEOUT = 180
+DOCKER_INSPECT_ONE_TIMEOUT = 120
+
+
 class Live:
     def __init__(self, docker="docker", deep=lambda p: depth(p) > LANE_DEPTH):
         self.docker = docker
@@ -1108,16 +1113,35 @@ class Live:
             if q.returncode:
                 raise RuntimeError(f"docker ps failed: {q.stderr.strip()[:200]}")
             ids = q.stdout.split()
-            if ids:
-                m = subprocess.run(dk + ["inspect", "-f", "{{range .Mounts}}{{.Source}} {{end}}"] + ids,
-                                   capture_output=True, text=True, timeout=300)
-                if m.returncode:
-                    # a container removed between ps and inspect has no mounts: only that error is tolerated
-                    errs = [ln for ln in m.stderr.splitlines() if ln.strip()]
-                    if not errs or any("no such object" not in ln.lower() for ln in errs):
-                        raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
-                self.mounts = [os.path.normpath(x) for x in m.stdout.split()]
+            self.mounts = []
+            # CLEAN-AGGR-R3: one inspect of ~150 ids timed out at 300 s on a loaded epyc7 (load 177) while each id
+            # answered in < 3 s.  Inspect in chunks; a chunk that times out is retried one id at a time; an id that
+            # still times out (or any other error) fails closed as before.
+            for i in range(0, len(ids), DOCKER_INSPECT_CHUNK):
+                chunk = ids[i:i + DOCKER_INSPECT_CHUNK]
+                try:
+                    outs = [self._inspect(dk, chunk, DOCKER_INSPECT_CHUNK_TIMEOUT)]
+                except subprocess.TimeoutExpired:
+                    outs = []
+                    for one in chunk:
+                        try:
+                            outs.append(self._inspect(dk, [one], DOCKER_INSPECT_ONE_TIMEOUT))
+                        except subprocess.TimeoutExpired as e:
+                            raise RuntimeError(f"docker inspect timed out for {one}: {e}")
+                for o in outs:
+                    self.mounts += [os.path.normpath(x) for x in o.split()]
         return self
+
+    @staticmethod
+    def _inspect(dk, ids, timeout):
+        m = subprocess.run(dk + ["inspect", "-f", "{{range .Mounts}}{{.Source}} {{end}}"] + ids,
+                           capture_output=True, text=True, timeout=timeout)
+        if m.returncode:
+            # a container removed between ps and inspect has no mounts: only that error is tolerated
+            errs = [ln for ln in m.stderr.splitlines() if ln.strip()]
+            if not errs or any("no such object" not in ln.lower() for ln in errs):
+                raise RuntimeError(f"docker inspect failed: {m.stderr.strip()[:200]}")
+        return m.stdout
 
     def why(self, forms):
         for k in forms:

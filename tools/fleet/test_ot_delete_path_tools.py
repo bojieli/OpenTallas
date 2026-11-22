@@ -63,3 +63,27 @@ class Cap(unittest.TestCase):
         os.chmod(os.path.join(a, "sub"), 0o555)
         rc, out = run([a], FakeGuard({}), None)
         self.assertEqual(rc, 0); self.assertFalse(os.path.exists(a))
+
+    def test_root_fallback_after_permission_failure(self):
+        """CLEAN-AGGR-R3: a root-owned tree the ubuntu delete cannot remove goes through sudo rm, same guard; refused when not eligible"""
+        import types
+        d = tempfile.mkdtemp(); a = os.path.join(d, "t"); os.mkdir(a)
+        def deny(t): raise PermissionError(13, "Permission denied", t)
+        calls = []
+        def root(t):
+            calls.append(t); os.rmdir(t); return types.SimpleNamespace(returncode=0, stderr="")
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            rc = D.main([a], guard=FakeGuard({}), rmtree=deny, rootrm=root, root_ok=lambda t: True)
+        self.assertEqual((rc, calls), (0, [a])); self.assertIn("ROOT-FALLBACK", out.getvalue()); self.assertFalse(os.path.exists(a))
+        b = os.path.join(d, "u"); os.mkdir(b)
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = D.main([b], guard=FakeGuard({}), rmtree=deny, rootrm=lambda t: self.fail("not eligible"), root_ok=lambda t: False)
+        self.assertEqual(rc, 1); self.assertTrue(os.path.exists(b))
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc = D.main([b], guard=FakeGuard({"u": "protected"}), rmtree=deny, rootrm=lambda t: self.fail("guarded"), root_ok=lambda t: True)
+        self.assertEqual(rc, 0); self.assertTrue(os.path.exists(b))
+
+    def test_root_fallback_eligibility(self):
+        self.assertFalse(D.root_fallback_ok("/tmp/x"))
+        self.assertFalse(D.root_fallback_ok("/srv/opentallas-scratch2/claude"))

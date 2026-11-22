@@ -39,7 +39,22 @@ def avail(path):
         return -1
 
 
-def main(argv, guard=None, rmtree=None):
+ROOT_OK = ("/srv/opentallas-scratch/", "/srv/opentallas-scratch2/", "/srv/opentallas-scratch3/")
+
+
+def sudo_rm(t):
+    """CLEAN-AGGR-R3 (COORD 11-21: ot-run spill copy-back / docker jobs leave root-owned dirs that ot-delete could not remove):
+    the same guard-approved path, removed as root, like ot-autoclean's class-a root mode.  Never follows symlinks or crosses filesystems."""
+    return subprocess.run(["sudo", "-n", "rm", "-rf", "--one-file-system", "--", t], capture_output=True, text=True, timeout=7200)
+
+
+def root_fallback_ok(t):
+    """only a real (non-symlink, canonical) tree below a scratch root that still exists after the ubuntu-side delete failed"""
+    return (os.path.lexists(t) and not os.path.islink(t) and os.path.isdir(t) and os.path.realpath(t) == t
+            and t.startswith(ROOT_OK) and t.rstrip("/").count("/") >= 4)
+
+
+def main(argv, guard=None, rmtree=None, rootrm=None, root_ok=None):
     dry = "--dry" in argv
     targets = [a for a in argv if a != "--dry"]
     if not targets:
@@ -74,7 +89,12 @@ def main(argv, guard=None, rmtree=None):
             else:
                 rm(t)
         except OSError as e:
-            print("FAILED %s: %s" % (t, e)); rc = 1; continue
+            ok = (root_ok or root_fallback_ok)(t)
+            r = (rootrm or sudo_rm)(t) if ok else None
+            if r is None or r.returncode or os.path.lexists(t):
+                print("FAILED %s: %s%s" % (t, e, "" if r is None else " (root fallback rc %s: %s)" % (r.returncode, (r.stderr or "").strip()[:160])))
+                rc = 1; continue
+            print("ROOT-FALLBACK %s: ubuntu-side delete failed (%s); removed as root" % (t, e))
         print("DELETED %s  df before %.1f GB after %.1f GB" % (t, before / 2**30, avail(os.path.dirname(t)) / 2**30))
     return rc
 

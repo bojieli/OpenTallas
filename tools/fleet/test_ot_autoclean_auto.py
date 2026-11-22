@@ -649,6 +649,21 @@ class TestSafety(Base):
         self.assertEqual(self.run_job(), 2)
         self.assertTrue(os.path.exists(os.path.join(b2, "5_route.odb")))
 
+    def test_docker_inspect_chunk_timeout_retries_per_id(self):
+        # CLEAN-AGGR-R3: a batched inspect that hangs is retried per id; mounts found per id still protect
+        k, b = self.kit_b("dkc/k")
+        slow = os.path.join(self.ddir, "slow")
+        with open(slow, "w") as f:
+            f.write('#!/bin/sh\ncase "$1" in ps) echo a1; echo a2;; inspect) if [ $# -gt 4 ]; then sleep 30; fi; '
+                    'if [ "$4" = a2 ]; then echo "%s"; else echo ""; fi;; esac\n' % os.path.dirname(b))
+        old = (ac.DOCKER_INSPECT_CHUNK_TIMEOUT, ac.DOCKER_INSPECT_ONE_TIMEOUT)
+        ac.DOCKER_INSPECT_CHUNK_TIMEOUT, ac.DOCKER_INSPECT_ONE_TIMEOUT = 1, 10
+        try:
+            lv = ac.Live("sh " + slow)
+        finally:
+            ac.DOCKER_INSPECT_CHUNK_TIMEOUT, ac.DOCKER_INSPECT_ONE_TIMEOUT = old
+        self.assertIn(os.path.normpath(os.path.dirname(b)), lv.mounts)
+
     def test_never_names(self):
         job = ac.Job.__new__(ac.Job)
         with self.assertRaises(OSError):
