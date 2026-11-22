@@ -43,20 +43,36 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
 - finish.sh TYPE 1080 VAR: in-core ft fix + place_regions + tap rows (--out-plan) + landing_remap -> $O/plan_c.json (final).
 - bind_chain.sh TYPE 1080 VAR NAME: install as tree plan_of_record + gate_g0.sh (precheck, PLAN-GATE-PRE vs D28 dry5, G0) + gate_bind.sh.
 
-## Results
-- p1 (PV-R7 lever set on D28 base): under cap kv3_pv v1 v2 v4 v8; over v6ne 1128, v4ne 1328/1200, v5e 2122/1200, v5ne 2209, v12e 1789, v7e 1859.
-- v12e / v7e residual = INHERITED: unsplit D28 base v7 clk_t9 (1805, 21.6) carries the same 1858 (base clock.sink_sites_um rows of the
-  hard S-face ft rings, 921 x 4.923). Asked TAP-GRID-R5. G0 tap_sink_cap is a WARN; the kit cap pass (clock_taps.tcl) re-homes.
-- v6n variant c3 (reserve 8.64:149.04,1397.52:1512.00, stacks off keep-outs): v6n 990/1000, v6ne 1000/1000, 0 over, radius <= 283.
-  Final candidate plan sha 20b983e80b9c = tree por_d29_kv3_pv_v6n_1080_c3_composed/plan_c.json (19 taps added, 10 in-core ft moved,
-  21 + 19 place_regions). Thin band i_vport_E_N_vo_d3: ring_place=ff kept on all 16 ff bands (INFO per FIX-SYNC 04:17).
+## KEY FINDINGS
+1. Cut overloads = cut-face bank / bank stack on or beside a landing-ring keep-out at the cut corner (no legal tap). Fix by
+   construction: auto cut-face reserve (auto_reserve.py from legal_map json) + stacks slide off keep-outs (mk_bins7/8).
+   A reach-bounded ft cut window wins over a reserve (trim_reserve.py; v12 ft57, v8 ft5).
+2. v12e / v7e over-cap taps are INHERITED from the unsplit base (S-face hard ft ring sink_sites_um rows); PV-R7 agrees (05:03).
+3. The composer's SWAP table is the v3 recipe: pure x swap on the 10 v3-like types, but on the 6 n types (v1n v2n v3n v4n v5n
+   v6n) it also moves 6 of 8 cores to OTHER ROWS (up to 1054 um). Fix: D29_SWAPMODE=purex (compose.py + mk_bins8.py). Posted 05:3x.
+   c3 (row-permuted) is DEAD; c4 (purex) is the candidate.
+4. mk_bins8: per-core registers (name _pvg<g>_p<k>_) of a moved core are carried with the core; stacks keyed to the real core row.
+5. G0 tap_sink_cap is a WARN; the kit's clock_taps.tcl cap pass re-homes; AUTO-GEOM reports tap_stuck. Real proof = kit place.
+6. Thin band v6n i_vport_E_N_vo_d3: INFO (FIX-SYNC 04:17); ring_place=ff survives the split on all 16 ff bands.
 
-## Running
-- bind_chain v6n_c3: ot-run client intel2 log ~/tmp/ffkvpv/bind_v6n_c3.log, out epyc8 w/gates/v6n_c3{.out,_g0,_bind} (~1.2 h).
-- all_p2 p2 (auto reserve, 10 types): intel2 ~/tmp/ffkvpv/all_p2.log, results epyc8 w/d29/run_*_p2.out.
+## Results (nearest-tap model, D28 base)
+- p2 (v3 table, mk_bins7, auto reserve): 0 over on kv3_pv v1 v2 v4 v4n v5 (v8 at p1); v5ne 1172/1000; v7e, v12e inherited.
+- v6n c4 (purex, mk_bins8, reserve 8.64:149.04,1397.52:1512.00): v6n 991/1000, v6ne 996/1000. FINAL a4830a316287 =
+  tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
+- unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
+
+## Running (11-22 05:4x PST)
+- bind_chain v6n_c4 (G0 gate + strict bind): intel2 ~/tmp/ffkvpv/bind_v6n_c4.log, epyc8 w/gates/v6n_c4{.out,_g0,_bind}; started 05:36, ~1.2 h.
+- all_p2.sh q1 p1 with D29_SWAPMODE=purex + mk_bins8 (10 placed types): intel2 ~/tmp/ffkvpv/all_q1.log, epyc8 w/d29/run_*_q1.out.
+- pass4.sh (v2n v3n v6 v1n: n2 = plan bins + auto reserve, s2 = sibling-register estimate; purex): intel2 ~/tmp/ffkvpv/pass4.log.
+- ot-tree-fork -> epyc8 tree2 (for the all-types bind), log epyc8 tmp/fork2.log; then w/repin.sh needs a tree2 variant.
 
 ## Next
-- bind OK -> kit_wave private-spec qwen_kvsys kv3_pv_v6n --tree <tree> --plan <plan> --lane FABLE-FIX-KV-PV-SINKSPREAD --goal finish
-  (sealed default) -> run-item under systemd-run + ot-wait --durable; read the tap loads at place (OT_CLOCK_TAPS, AUTO-GEOM tap_stuck).
-- p2 results -> residual types; v1n v2n v3n v6 have no D23H place (use sibling regs: v6<-v6n, v2n<-v2, v1n<-v1, v3n<-?).
-- Hand D29 rows to KV-PLAN-R6: per type spec keys (reserve spans, inset), place_regions rows, tap rows, in-core ft moves.
+- bind c4 OK -> on intel2: python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_wave.py private-spec qwen_kvsys
+  kv3_pv_v6n --tree <epyc8 tree> --plan <tree>/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --lane FABLE-FIX-KV-PV-SINKSPREAD
+  --host epyc8 --goal finish [--rt 6390b7bfa650]; then nohup ... kit_wave.py run-item <spec.json> (re-execs itself under a systemd
+  user unit); ot-wait --durable --kit <kit> --stage place|cts|grt|route|finish. Read OT_CLOCK_TAPS + AUTO-GEOM tap_stuck at place.
+- pick final variant per type from q1 / n2 / s2 -> one multi-type event (compose.py D29_CFG json) -> finish -> bind in tree2.
+- Hand D29 rows to KV-PLAN-R6 (composer recipe + composed plan dir + per-type reserve / place_regions / tap rows).
+- compose.py still monkey-patches type_split.relay_tx_sites (rstart pin at CUT-86.4, from the v3 recipe); a spec key would remove it.
+- Cleanup later (ot-delete): epyc8 clone/ (broken sparse worktree), tree por_d29_*_{a,b,c,c2,c3,p1,p2,n1}_*, por_before_*, aside/.
