@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_sys_face_mu_dhobs",
- "enable": false,
- "reason": "QW-MU d2 (owner 10-20 09:05: pin registers only at region crossings / > 405 um): dhobs sits in the tt_ctlm region (die clock clk_x, same as tt_ctlm) beside its dh pins; every output is a flop (dh_user = dh_user_q DHREG 1, res_user = res_q, mu_fault = fault_q); seq_dh[42:36] feed the k counter / stage compare into flops (one compare level, no in->out path); seq_dh[186:44], [43], [35:0] unread (one die bus with tt_ctlm.dh). A synthesis pin wrapper would add 2 unpriced edges on seq_dh."
-}

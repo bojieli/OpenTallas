@@ -1,7 +1,0 @@
-[Unit]
-Description=Hourly retire-superseded-trees pass (guarded)
-[Timer]
-OnBootSec=10min
-OnUnitActiveSec=1h
-[Install]
-WantedBy=timers.target

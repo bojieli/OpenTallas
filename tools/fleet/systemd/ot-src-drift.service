@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas die source-tree replica drift check (MERGE-QUEUE-1, COORD 2026-11-15): flag files copied to only some of a die's gen_hosts copies
-
-[Service]
-Type=oneshot
-WorkingDirectory=%h
-ExecStart=/bin/sh -c 'f=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-src-refresh; [ -f "$f" ] || f=%h/merge-queue/bin/ot-src-refresh; exec /usr/bin/python3 -I "$f" drift --post --dies qwen_compute,qwen_kvsys,s81,s81_head'
-Nice=10
-TimeoutStartSec=3500

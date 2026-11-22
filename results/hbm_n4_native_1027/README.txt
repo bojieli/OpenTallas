@@ -1,7 +1,0 @@
-Native N4 extraction smallest cut
-
-Exact surviving source is bundled in source_snapshot.tar.gz from epyc2 hbm-mu-quad-3-1027/n4rtl/bundle. The test instantiates original hub N4EXT0 and two actual ot_hnx_fused_tnode plus hub N4EXT1. Stable zero pad straps, fully warmed reset, one833psclock. It compares UP headers (including fin with valid0), valid data, four DOWN buses, done/fault/busy. A positive rounding witness detects altered pairing; same binary +MUT_PAIR gives32 errors. Baseline714checks0errors. No added node/calendar edges.
-
-Scope excludes32 actual leaves, VM bank transactions, physical stations, routed clocks and whole FUSED/kernel/token completion. The inherited fulltree baseline remains failed for both internal and extracted configurations; original pre has no output writes, post writes fullsectorcount with wrongdata and no done. These are separate from the old runner line78 sd-unbound problem.
-
-2026-10-27 native nonzero pad diagnosis/fix: six-bit fill saturates63, then fill+6bit1 wraps0, permanently dropping SRAM control and finish after63edges. Repository tree widens addition7bits (snapshot remains originalbug negative). Exact shifted-data/control reference all33depths PASS8085/0; original module mutant6200caught. Production two-link wrapper versus original hub with corrected source PASS721/0 at zero and4/4/2 straps,32chunks4scalars40commands1fin each. Padded crosspair mutant291caught. No arithmetic/pad-latency cycles added. Full32leaf requalification remains pending, with sourcecause no longer opaque.

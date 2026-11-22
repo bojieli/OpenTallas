@@ -1,5 +1,0 @@
-#!/bin/bash
-R19=/srv/opentallas-scratch2/claude/clock-kv-r19-1027; V=/srv/opentallas-scratch2/claude/clock-kv-r16-1026/views
-export PYTHONPATH=/srv/opentallas-scratch2/claude/clock-kv-r21-1027/maintool:$R19/in/pylib:/srv/opentallas-scratch2/claude/wt/clock-kv-r21/tools/die_plan; cd /srv/opentallas-scratch2/claude/clock-kv-r21-1027; ulimit -v 32000000
-python3 /srv/opentallas-scratch2/claude/clock-kv-r21-1027/maintool/kv_r20_hb4_capture.py $R19/r19 --plan $R19/in/hm_r12.json --out sta/G_maincap --clock-tool /srv/opentallas-scratch2/claude/wt/clock-kv-r21/tools/die_plan   --core-view kv3_head_eighth_e1=$V/kv3_head_eighth_e1 --core-view kv3_head_eighth_e5=$V/kv3_head_eighth_e5   --clock-ocv table --mesh-signoff TT=/srv/opentallas-scratch2/claude/clock-kv-r18-1027/mc/r18_TT.json,FF=/srv/opentallas-scratch2/claude/clock-kv-r18-1027/mc/r18_FF.json --hold-buffers HB4 --core-latency-ff 202.5 --dump sta/G_maincap.pkl > sta/G_maincap.log 2>&1
-echo "G_maincap rc=$? $(date -Is)" > sta/G_maincap.run

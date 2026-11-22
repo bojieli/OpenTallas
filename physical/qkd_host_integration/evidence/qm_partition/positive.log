@@ -1,5 +1,0 @@
-PASS NATIVE_ACTUAL sectors=2048 ck=5310 first=581 last=4714 fenced=8 image=exact128controllersPHY
-- rtl/test/qwen_host/tb_qkd_host_native_partition.sv:156: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 4us; walltime 38.077 s; speed 116.036 ns/s
-- Verilator: cpu 38.053 s on 1 threads; allocated 42 MB

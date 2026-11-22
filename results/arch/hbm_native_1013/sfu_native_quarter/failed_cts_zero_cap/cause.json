@@ -1,8 +1,0 @@
-{
-  "source": "54383735d",
-  "actual_result": "NO SYNTHESIS EXECUTED",
-  "tool_failure": "--synth-cap0 maps to SYNTH_TIMEOUT=0, ref_route rejects OT_SYNTH_TIMEOUT_SECONDS must be positive",
-  "misleading_analysis": "tool labels rc1,s=0 as stall because elapsed>=cap0",
-  "next": "shared-tool owner translatecap<=0 to unlimited; skipelapsed>=cap ifnonpositive; then fresh unique gate, preservedfailures",
-  "no_duplication": "all units completedexit0 wrapper, no live synth/build/route started"
-}

@@ -1,3 +1,0 @@
-FAIL vpx_ag {"sends_A": {"expected": 3, "got": 3, "edge_delta": [0, 1]}, "sends_B": {"expected": 3, "got": 3, "edge_delta": [0, 1]}, "rx_A": {"lri": 3, "writes": 12, "expected": 12, "wr_minus_lri": [6]}, "rx_B": {"lri": 3, "writes": 12, "expected": 12, "wr_minus_lri": [6]}, "readback_A": {"expected": 6, "got": 6, "edge_delta": [0]}, "readback_B": {"expected": 6, "got": 6, "edge_delta": [0]}}
-  A send 2: edge 8176 != compiled 8175
-  B send 2: edge 8176 != compiled 8175

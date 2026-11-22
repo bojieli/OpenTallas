@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     admits   -52 GB (avail 464, growth 375, headroom 64, waiters 1/76 GB) load 128/128 running 50 disk 710 GB 
-ot-run: ot-epyc4       admits  -409 GB (avail 443, growth 285, headroom 48, waiters 2/550 GB) load 149/128 running 28 disk 785 GB 
-ot-run: ot-pve1        admits   150 GB (avail 198, growth 37, headroom 32, waiters 0/0 GB) load 88/28 running 15 disk 1326 GB 
-ot-run: ot-agidock128  admits    14 GB (avail 71, growth 53, headroom 24, waiters 0/0 GB) load 20/64 running 7 disk 380 GB 
-ot-run: -> ot-pve1
-ot-heavy: admitted on ot-pve1 as oth-ubuntu-502628-1791945358 after 0 s
-RESULT cycles 200000 ops 700875 own_reads 31253 returned 124712 same_cycle_same_bank_reads 305 status 9 max_occ 4 errors 0
-BGL_gold: PASS
-ot-run: RAN on ot-pve1 (unit oth-ubuntu-502628-1791945358): exit 0

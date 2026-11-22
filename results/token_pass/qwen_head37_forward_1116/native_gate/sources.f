@@ -1,9 +1,0 @@
-../source/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv
-../source/rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv
-stream.sv
-native_leaves.sv
-ot_hdc_delay.sv
-qfd_dv_slice_tload.sv
-qfd_dv_table_rom_loader.sv
-rom.sv
-tb.sv

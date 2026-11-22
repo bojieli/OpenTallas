@@ -1,9 +1,0 @@
-{
-  "status": "immutable_resolved_failure",
-  "host": "ot-pve1",
-  "phase": "first_ACTUAL_MEMORY_elaboration",
-  "error": "Concatenation operand 7*266'b0 has indefinite width",
-  "repair": "Use explicit1862-bit zero padding in unused bank response lanes",
-  "exact_failure_source_snapshot_available": false,
-  "adoption_claim": false
-}

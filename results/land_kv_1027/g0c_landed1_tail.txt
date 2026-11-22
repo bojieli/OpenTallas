@@ -1,5 +1,0 @@
-WARN  [schema] type kv3_hub_C: bus o_kvs_attn_attn__tx_valid has no leaf binding
-WARN  [schema] type kv3_hub_C: bus o_kvs_attn_prg has no leaf binding
-... 1825 more in g0_report.json
-G0C per type: 60/60 types clean (G3-eligible: 60); die-level {}; ERRORs
-G0C PASS: 0 errors, 2025 warnings; 60 types / 160 partitions (28 in near-duplicate groups); worst cut {'ratio': 0.1605, 'at': 'vertical@6750'}, worst partition segment {'ratio': 0.5064, 'at': 'horizontal@25500:hgi_EN_0'}; report ../g0c_landed1/g0_report.json

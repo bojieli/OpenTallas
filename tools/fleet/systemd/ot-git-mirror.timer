@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas lane git mirror sync every 2 minutes
-
-[Timer]
-OnCalendar=*:0/2
-Persistent=false
-
-[Install]
-WantedBy=timers.target

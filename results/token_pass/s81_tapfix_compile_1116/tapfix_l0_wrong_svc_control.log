@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/token_ds_followthrough1116/source/tools/s81_dv/dv_layer_compile.py", line 1523, in <module>
-    main()
-  File "/tmp/token_ds_followthrough1116/source/tools/s81_dv/dv_layer_compile.py", line 1510, in main
-    r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-  File "/tmp/token_ds_followthrough1116/source/tools/s81_dv/dv_layer_compile.py", line 1107, in compile_layer
-    raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
-ValueError: service timing profile legacy_fg3 disagrees with selected source closing_allq

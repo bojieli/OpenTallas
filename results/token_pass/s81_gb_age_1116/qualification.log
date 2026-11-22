@@ -1,5 +1,0 @@
-CONTRACT x_age  0 PASS exact=True delay=None caught={'wrong_date': True, 'wrong_tag': True, 'counterfactual_retime': True, 'skew': True} mb1_rows=[5]
-CONTRACT x_age 12 PASS exact=True delay={'core': True, 'partial_words': True} caught={'wrong_date': True, 'wrong_tag': True, 'counterfactual_retime': True, 'skew': True} mb1_rows=[5]
-CONTRACT x_age 13 PASS exact=True delay={'core': True, 'partial_words': True} caught={'wrong_date': True, 'wrong_tag': True, 'counterfactual_retime': True, 'skew': True} mb1_rows=[5]
-CONTRACT x_age 22 PASS exact=True delay={'core': True, 'partial_words': True} caught={'wrong_date': True, 'wrong_tag': True, 'counterfactual_retime': True, 'skew': True} mb1_rows=[5]
-GB_PROVIDER_QUAL PASS [0, 12, 13, 22]

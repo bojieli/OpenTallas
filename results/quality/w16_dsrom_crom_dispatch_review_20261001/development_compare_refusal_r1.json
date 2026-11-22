@@ -1,6 +1,0 @@
-{
-  "status": "RETAINED_DEVELOPMENT_REPLAY_COMPARISON_REFUSAL",
-  "reason": "Direct Python object comparison saw RAM selection tuples versus JSON lists; no numeric/source drift.",
-  "correction": "Compare exact owner CLI serialized bytes; both records nowbyteidentical.",
-  "scientific_model_failure": false
-}

@@ -1,9 +1,0 @@
-qkd_kvs_emb_ctx.sv
-qkd_embedding_ctx_start.sv
-qkd_embedding_row_tx_rope.sv
-qfd_embedding_word_provider.sv
-qkd_embedding_static_preload_face.sv
-qkd_embedding_static_core_store.sv
-ot_rst_relay.sv
-ot_sram_1r1w_64x512_m1_r2c2.v
-tb.sv

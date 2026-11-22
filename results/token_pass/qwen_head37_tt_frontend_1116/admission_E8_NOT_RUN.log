@@ -1,2 +1,0 @@
-ot-run: epyc8          admits   645 GB (avail 693, reserve 0, fresh 0, peak 0, headroom 0, waiters 4/75 GB) load 18/96 running 20 disk 40 GB scratch disk /srv/opentallas-scratch has 40 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
-ot-run: NOT RUN: no host qualifies (epyc8: scratch disk /srv/opentallas-scratch has 40 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides))

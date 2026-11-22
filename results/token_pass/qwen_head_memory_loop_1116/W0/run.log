@@ -1,7 +1,0 @@
-OPERAND case=1 age=60 aligned_va=3f801000
-CASE case=1 reqdelay=22 replydelay=20 writes=128 retire=128 bad=0 req=5 bound=27 first_VMout=34 reply_receiver=54 operand=60 write=86 retire_first=85
-LOOP_WITNESS_PASS candidate=W0 exact_copy=128
-- tb.sv:67: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 857ns; walltime 0.004 s; speed 224.927 us/s
-- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB

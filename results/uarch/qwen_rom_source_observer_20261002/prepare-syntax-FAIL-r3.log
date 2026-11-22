@@ -1,4 +1,0 @@
-  File "/tmp/opentallas-qrom-image-journal-current-20261002/tools/qwen_rom_source_observer_prepare.py", line 44
-    src=once(src,'int main(int argc, char** argv) {',accessor+'\nint main(int argc, char** argv) {\n#if QROM_OBSERVER\n    static_assert(D==4 && G==6144 && SW==64 && TCUT==7 && CB==5 && XVM==1, "observer frozen TP4 source geometry");
-                                                              ^
-SyntaxError: unterminated string literal (detected at line 44)

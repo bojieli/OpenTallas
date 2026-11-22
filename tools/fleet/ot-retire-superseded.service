@@ -1,6 +1,0 @@
-[Unit]
-Description=Retire superseded die source trees through ot_delete_guard (FLEET-OPS-R, retire-at-switch call site)
-[Service]
-Type=oneshot
-ExecStart=/srv/opentallas-scratch2/claude/clean-all-1115/ot-retire-superseded-run.sh
-Nice=10

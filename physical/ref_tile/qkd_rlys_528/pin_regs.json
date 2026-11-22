@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_rlys_528",
- "enable": false,
- "reason": "a relay standard is ONE register stage pin to pin (a -> flop -> b, no logic): its data flop is the pin register of both pins (io_flop_at_pins anchors it at the faces); the die plan counts exactly 1 core cycle per relay stage (kv_die.py relay_stages), so extra pin registers would change the static calendar"
-}

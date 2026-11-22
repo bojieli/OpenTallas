@@ -1,7 +1,0 @@
-{
-  "origin": "Transcribed from exclusive model generation terminal failure, exec sessions51559/44939; empty result files preserved.",
-  "exception": "ValueError: finite credit deadlock",
-  "function": "ready_layer_calendar",
-  "cause": "Completion of final event emptied the event heap; loop failed before recognizing successful completion.",
-  "correction": "Explicit success break only when every request batch has issued and every retirement event has completed."
-}

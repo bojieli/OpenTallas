@@ -1,7 +1,0 @@
-Current source endpoint recognition
-
-The selectedD3 top directly connects24 whole1104bit native frame xo→x words. They are explicit active source wires; the old96 w_x_* station sublinks are disconnected and remain blocked. The parser requires exactlytwo complete native frame endpoints, one xo and one x, with literal1104bit declaration and no extra driver. This is source connectivity, never a guessed zero bound age: the strict current bind supplies every eventual transport age.
-
-The HBC wrapper inputs hb_status_t_host/kd/starter_armed connect directly to the selected child pins status_t_host/kd/starter_armed (job_active is statusbit65). The alias reader proves the literal selected wrapper connection and records source hashes. It excludes unrelated MU routes without weakening the mixed-age guard. Actual current model:619crossings+96intraPASS,24PFwholewords, HBC76. Six alias controls and six directwire controls accompany positive cases;21focusedtestsPASS. No simulation or programme claim.
-
-The genuine L0 compiler reached measuredframe/GB selection and stops on missing currentcfifo landing-window receipt. Clock_reach owns actualTTFF/SC/source/reset calculation. The oldOct27 script is included only to document the equation and its explicitly unchecked assumptions; it is not retagged. Current/sourceclockmap covers72frames and must not be read as legal_E proof. Source provider selection remains the actualOLD1109T51 of819/D3; no switch to unused1116view.

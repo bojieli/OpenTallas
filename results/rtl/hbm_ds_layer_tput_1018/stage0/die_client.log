@@ -1,8 +1,0 @@
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1417046-1792337416 after 0 s
-Terminated                 /usr/local/bin/ot-heavy --mem 300 --tag otrun-ubuntu-977375-337416501 -- env SRC=/srv/opentallas-scratch/claude/tokpass-hbmds/die1 OUT=/srv/opentallas-scratch/claude/tokpass-hbmds/die1/out JOBS=6 CYCLES=4000 bash run_die_vehicle.sh
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1417046-1792337416): exit 143
-ot-run: -> ot-epyc5
-ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1298123-1792335301 after 0 s
-Terminated                 /usr/local/bin/ot-heavy --mem 380 --tag otrun-ubuntu-806778-335301313 -- env SRC=/srv/opentallas-scratch/claude/tokpass-hbmds/die0 OUT=/srv/opentallas-scratch/claude/tokpass-hbmds/die0/out JOBS=32 CYCLES=4000 bash run_die_vehicle.sh
-ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1298123-1792335301): exit 143

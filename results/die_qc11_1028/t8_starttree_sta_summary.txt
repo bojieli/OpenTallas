@@ -1,7 +1,0 @@
-COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -170.5 hi 195.7 fail 255 slot_read fail 182 guard fail 0 start-skew fail 302/413 FAIL (INFO, never gates)
-COUNT-ALIGN TT crossings 2537 (sta 2537, tree 0, no taps 0, key region unbound 0) worst lo 109.4 hi 413.4 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/413 <100 0 ocv table max lo/hi 337.8/337.8 PASS
-COUNT-ALIGN FF crossings 2537 (sta 2537, tree 0, no taps 0, key region unbound 0) worst lo 104.8 hi 553.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/413 <100 0 ocv table max lo/hi 272.3/272.3 PASS
-proof TT intra              pairs  163972 setup   317.80 (neg 0) hold  -335.16 (neg 151986) skew  307.66
-proof TT seam               pairs    7004 setup   549.19 (neg 0) hold  -103.77 (neg 7004) skew   49.36
-proof FF intra              pairs  163972 setup   416.42 (neg 0) hold  -281.94 (neg 156846) skew  251.67 kit-contract hold -251.67 (W 0, need 251.67, neg 108352)
-proof FF seam               pairs    7004 setup   599.15 (neg 0) hold   -99.21 (neg 7004) skew   46.67 kit-contract hold -6.67 (W 40, need 46.67, neg 14)

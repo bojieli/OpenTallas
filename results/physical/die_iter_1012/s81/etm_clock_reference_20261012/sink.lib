@@ -1,9 +1,0 @@
-library (probe) {
- time_unit : "1ps"; capacitive_load_unit (1,ff); delay_model : table_lookup;
- cell (sink) { pin (ck) { direction : input; clock : true; capacitance : 1; }
- pin (i) { direction : input; capacitance : 1; timing () { related_pin : "ck";
- timing_type : hold_rising; rise_constraint(scalar) {values("15");} fall_constraint(scalar) {values("15");} }
- timing () { related_pin : "ck"; timing_type : setup_rising; rise_constraint(scalar) {values("18");} fall_constraint(scalar) {values("18");} } }
- pin (q) { direction : output; timing () { related_pin : "ck"; timing_type : rising_edge;
- cell_rise(scalar) {values("32");} cell_fall(scalar) {values("32");} rise_transition(scalar){values("20");} fall_transition(scalar){values("20");} } }
- } }

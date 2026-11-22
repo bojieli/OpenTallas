@@ -1,6 +1,0 @@
-tb_static_landing (32 groups x 4 PCs = 128 real 128x256 SRAM landings, ctx 8192), Verilator 5.050, local build, source = this commit
-vmap=0 dut=0 f=0: PASS staticlanding ctx8192 groups32 PCs128 rows16384 sectors65536 fixed_latency5 cycles4519
-vmap=0 dut=0 f=1..4: FAIL (fault / errors) as before
-vmap=1 dut=1 f=0: PASS staticlanding ctx8192 groups32 PCs128 rows16384 sectors65536 fixed_latency5 cycles951   (V phase = both w16 pairs' request walk, 8,192 V rows in 528 edges, one V get per group per edge, ascending ordinal)
-vmap=1 dut=1 f=1: FAIL errors0 fault00000001 ; f=2: FAIL fault00000001 ; f=3: FAIL errors2 fault00000001 ; f=4: FAIL errors2
-vmap=1 dut=0 (landing built for the old layout, fed the PV16 layout): FAIL errors7168 faultffffffff

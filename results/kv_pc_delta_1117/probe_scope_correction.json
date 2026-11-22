@@ -1,7 +1,0 @@
-{
- "initial_probe": "HG6_PC_carve_clock_identity.json",
- "scope_correction": "Initial probe imported frozen D15 schema/gen_phys but could resolve deferred imports through rt/current. Its fully-frozen label overstates module purity; it is not the qualification record.",
- "qualification_record": "HG6_PC_frozen_clock_identity.json",
- "qualification_helper": "clock_api_identity_frozen.py",
- "frozen_result": "PASS on all exact clock names/xy and core tap records; legacy tap flags omitted from carve-only rows"
-}

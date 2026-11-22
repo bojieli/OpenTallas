@@ -1,9 +1,0 @@
-[Unit]
-Description=ot-store GC hourly
-[Timer]
-OnBootSec=15min
-OnUnitActiveSec=1h
-RandomizedDelaySec=300
-AccuracySec=30
-[Install]
-WantedBy=timers.target

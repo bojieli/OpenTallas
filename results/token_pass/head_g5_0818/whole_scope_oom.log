@@ -1,7 +1,0 @@
-ot-run: epyc2          admits   664 GB (avail 814, reserve 0, fresh 18, peak 68.4, headroom 0, waiters 0/0 GB) load 29/128 running 17 disk 182 GB 
-ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/wt/codex-head-scope-0857
-ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/wt/codex-head-scope-0857
-ot-run: -> epyc2
-ot-heavy: admitted on dear-crayfish as oth-ubuntu-2049220-1793116670 after 0 s
-ot-heavy: MEMCG-OOM on dear-crayfish at 2026-10-27T09:21:19-0700: 1 process(es) of unit oth-ubuntu-2049220-1793116670 killed at the scope's own MemoryMax (274877906944 B, peak 256.0 GiB); job exit 143: raise --mem or lower -j
-ot-run: RAN on epyc2 (unit oth-ubuntu-2049220-1793116670): exit 143

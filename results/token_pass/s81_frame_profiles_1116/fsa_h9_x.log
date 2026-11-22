@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/token_ds_followthrough1116/source/tools/s81_dv/frame_schedule_asb.py", line 847, in <module>
-    sys.exit(main())
-  File "/tmp/token_ds_followthrough1116/source/tools/s81_dv/frame_schedule_asb.py", line 762, in main
-    depths = bound_seam_depths(json.loads(braw), m)
-  File "/tmp/token_ds_followthrough1116/source/tools/s81_dv/frame_schedule_asb.py", line 304, in bound_seam_depths
-    raise ValueError(f'bound plan: {master} fi depths differ between frame instances {bad}; one schedule per '
-ValueError: bound plan: col_h9 fi depths differ between frame instances {'u_s10': [8, 9]}; one schedule per master cannot carry them (equalise them in the plan event)

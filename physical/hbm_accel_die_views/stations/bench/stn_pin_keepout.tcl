@@ -1,1 +1,0 @@
-../../../common_flow/stn_pin_keepout.tcl

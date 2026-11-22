@@ -1,5 +1,0 @@
-read_verilog -sv -lib /out/leaf_headers.v
-read_verilog -sv /out/actual_wrappers.v
-hierarchy -check
-proc
-write_json /out/actual_wrappers.json

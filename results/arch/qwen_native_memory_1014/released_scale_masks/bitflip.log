@@ -1,6 +1,0 @@
-MISMATCH addr=0 port=23 got=371837513702374e36dc36df36f336e236c336d136d8369836c436d5369836ab expected=371837513702374e36dc36df36f336e236c336d136d8369836c436d5369836aa
-FAIL released_scale_masks errors=1 checked=30576 macro_instances=384 fixed_group_latency=7
-- /srv/opentallas-scratch/codex/qwen-scale-native-1014/src/tools/qwen_scale_rom/tb_scale_masks.sv:49: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 61us; walltime 9.969 s; speed 6.138 us/s
-- Verilator: cpu 9.968 s on 1 threads; allocated 61 MB

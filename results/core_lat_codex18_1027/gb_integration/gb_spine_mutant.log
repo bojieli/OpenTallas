@@ -1,9 +1,0 @@
-GO_DIFF edge61
-GO_DIFF edge62
-GO_DIFF edge245
-TAG_DIFF 245
-GO_DIFF edge246
-GB_SPINE FAIL 5
-[600000] %Fatal: tb.sv:70: Assertion failed in tb_gb_spine: miter
-%Error: /srv/opentallas-scratch2/claude/codex-s81-core-1027/gb_spine/tb.sv:70: Verilog $stop
-Aborting...

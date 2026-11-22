@@ -1,5 +1,0 @@
-read_rtlil /srv/opentallas-scratch/codex/beauvoir-qwen-rom-receiver-consumer-20261005/fault_base_hierarchy_prepare_r1/corrected_hierarchy.il
-hierarchy -check -top ot_qwen_rom_core
-proc
-check -assert
-write_rtlil /srv/opentallas-scratch/codex/beauvoir-qwen-rom-receiver-consumer-20261005/fault_base_hierarchy_prepare_r1/corrected_proc.il

@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas waiter-fail relay every 10 minutes (:04,:14,...; off the autopilot :02/:12 and watchdog :13 ticks)
-
-[Timer]
-OnCalendar=*-*-* *:04,14,24,34,44,54:00
-Persistent=false
-
-[Install]
-WantedBy=timers.target

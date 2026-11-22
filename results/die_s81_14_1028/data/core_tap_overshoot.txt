@@ -1,8 +1,0 @@
-TT n 1696 p1 -180 p10 -100 p50 -36 p90 19 p99 59 | <-180: 16  >+180: 0  |off|<=60: 1216
-  most early [(-669, 't_bk_sel__clk_c3'), (-211, 't_fW2_p1_b1__clk_c4'), (-210, 't_fW2_p1_b1__clk_c5'), (-206, 't_fW2_p4_b1__clk_c4'), (-204, 't_fW2_p4_b1__clk_c5'), (-197, 't_fW2_p1_b1__clk_c3')]
-  most late [(72, 't_fE3_p2_b1__clk_c1'), (74, 't_fE3_p5_b1__clk_c1'), (79, 't_fE2_p2_b1__clk_c1'), (82, 't_fE2_p5_b1__clk_c1')]
-  <-180 by part (top) [('fW2_p1_b1', 3), ('fW2_p4_b1', 2), ('fW1_p4_b2', 2), ('fW0_p1_b2', 2), ('fW1_p1_b1', 2), ('bk_sel', 1), ('fE2_p1_b1', 1), ('fW0_p4_b1', 1)]
-FF n 1696 p1 -184 p10 -111 p50 -52 p90 9 p99 38 | <-180: 19  >+180: 0  |off|<=60: 1000
-  most early [(-624, 't_bk_sel__clk_c3'), (-212, 't_fW2_p1_b1__clk_c4'), (-212, 't_fW2_p1_b1__clk_c5'), (-208, 't_fW2_p4_b1__clk_c4'), (-207, 't_fW2_p4_b1__clk_c5'), (-199, 't_fW1_p4_b2__clk_c1')]
-  most late [(57, 't_fE2_p5_b1__clk_c1'), (63, 't_s_2N_L0__clk_c0'), (63, 't_s_7N_L2__clk_c1'), (65, 't_s_6N_C__clk_c3')]
-  <-180 by part (top) [('fW2_p1_b1', 3), ('fW2_p4_b1', 2), ('fW1_p4_b2', 2), ('fW0_p1_b2', 2), ('fW1_p1_b1', 2), ('fW1_p4_b1', 2), ('fW0_p1_b1', 2), ('bk_sel', 1)]

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_hr_core_prompt_mu4p2_n32",
- "enable": false,
- "reason": "Exact source qkd_hr_core_prompt_mu4p2_n32 (sha 9e17bef4) is the mapped primitive-copy of the flow-wrapped MU4 ps2 prompt (u_ot_pr_core, ps2 pin_regs on): every pin already registered; a second wrapper adds a cycle and re-merges copies."
-}

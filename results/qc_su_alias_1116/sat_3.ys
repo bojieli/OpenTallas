@@ -1,5 +1,0 @@
-read_verilog /out/cutpoint_miters.v
-hierarchy -check -top miter_3
-flatten
-opt_clean
-sat -verify -prove ok 1 -show-inputs -show-outputs

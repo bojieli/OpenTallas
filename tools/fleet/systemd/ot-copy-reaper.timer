@@ -1,8 +1,0 @@
-[Unit]
-Description=copy reaper every 10 minutes
-[Timer]
-OnBootSec=180
-OnUnitActiveSec=600
-AccuracySec=15
-[Install]
-WantedBy=timers.target

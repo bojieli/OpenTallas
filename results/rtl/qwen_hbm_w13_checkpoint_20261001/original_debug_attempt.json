@@ -1,8 +1,0 @@
-{
-  "log_sha256": "7ef39b5a8d077742eb5d386be24da36361bc0bd5a81d1fb58bda5f5db07e6049",
-  "pid": 443149,
-  "reason": "GDB invoked vpi_handle_by_name outside VPI callback; simulator asserted vpi_mode_flag != VPI_MODE_NONE. Debugger-induced abort, no RTL numerical verdict.",
-  "recovery": "Same pinned executable and operands in fresh retry directory; all original material preserved",
-  "stage": "diagnostic instrumentation",
-  "status": "fail"
-}

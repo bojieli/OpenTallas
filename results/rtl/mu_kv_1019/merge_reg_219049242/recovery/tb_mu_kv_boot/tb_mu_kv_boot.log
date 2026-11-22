@@ -1,6 +1,0 @@
-boot: 471 words through qkd_static_kv_boot_dispatch_mu, layer programme configured, GAP[1][1] 3701
-PASS MU_KV_BOOT: 471-word MU image through the boot dispatcher; 10 starts (4 users, 2 frames), 2660 event edges equal the compiled list, 10 tokens done, user 0 == MU 0 on 1012 edges, no fault
-- rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv:125: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 1.721 s; speed 1.161 ms/s
-- Verilator: cpu 1.720 s on 1 threads; allocated 7 MB

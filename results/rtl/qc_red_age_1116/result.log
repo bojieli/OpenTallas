@@ -1,8 +1,0 @@
-RED_OUTPUT cycle=154 start=45 age=109 addr=000000 data=00000000 fault=0
-RED_OUTPUT cycle=170 start=45 age=125 addr=000000 data=00000000 fault=0
-RED_OUTPUT cycle=186 start=45 age=141 addr=000000 data=00000000 fault=0
-NATIVE_RED_VALID_AGE_PASS rows=3 elements=384 payload_unobserved
-- tb.sv:25: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 244ns; walltime 0.002 s; speed 131.021 us/s
-- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB

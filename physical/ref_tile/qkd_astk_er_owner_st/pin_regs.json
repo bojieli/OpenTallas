@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_astk_er_owner_st",
- "enable": false,
- "reason": "Native input/output pin registers; automatic boundary insertion would change 42-edge compiled timeline."
-}

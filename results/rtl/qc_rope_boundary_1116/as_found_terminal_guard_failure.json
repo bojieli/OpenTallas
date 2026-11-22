@@ -1,8 +1,0 @@
-{
-  "verdict": "FAIL_AS_FOUND",
-  "source": "4d2499531347d60a73b3a8e94e6784a24c98872caf4648315b9d28829ec7ab55",
-  "guard": "n_state[MAIN]==65",
-  "actual_frame": "header slot0,embedding1..64,RoPE65..72; terminal73",
-  "first_failure": "case0 token17 position0, accepted RX65 cycle1311",
-  "scope": "Intended ctx/RoPE successor component; not the selected legacy HG1 producer."
-}

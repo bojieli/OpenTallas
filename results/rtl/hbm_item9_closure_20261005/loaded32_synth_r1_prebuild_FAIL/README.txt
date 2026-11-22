@@ -1,1 +1,0 @@
-Prebuild CLI refusal; no synthesis or route began. Removed P&R-only floorplan args from synthesis-only successor. Original source and remote output preserved. Finite geometry remains in own bounded model.

@@ -1,6 +1,0 @@
-Oct 04 10:04:28 ot-epyc1tb kernel: [1310929]  1000 1310929 68734259 35696835 35696208      627         0 545607680        0             0 verilator_bin
-Oct 04 10:04:28 ot-epyc1tb kernel: [1310929]  1000 1310929 68734259 35696835 35696208      627         0 545607680        0             0 verilator_bin
-Oct 04 10:04:28 ot-epyc1tb kernel: [1310929]  1000 1310929 68734259 35696835 35696208      627         0 545607680        0             0 verilator_bin
-Oct 04 10:04:28 ot-epyc1tb kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=user.slice,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/session-37559.scope,task=verilator_bin,pid=1310929,uid=1000
-Oct 04 10:04:28 ot-epyc1tb kernel: Out of memory: Killed process 1310929 (verilator_bin) total-vm:274937036kB, anon-rss:142784832kB, file-rss:2508kB, shmem-rss:0kB, UID:1000 pgtables:532820kB oom_score_adj:0
-Oct 04 10:04:38 ot-epyc1tb kernel: oom_reaper: reaped process 1310929 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB

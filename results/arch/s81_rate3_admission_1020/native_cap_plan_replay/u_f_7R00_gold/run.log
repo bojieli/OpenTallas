@@ -1,9 +1,0 @@
-CAP_WRITE 511 0 0 18 bdda0000
-CAP_WRITE 515 0 0 16 bc820000
-CAP_WRITE 516 0 0 17 3d4f0000
-CAP_REPLAY_END edges=1100 writes=3 expected=3 errors=0 fault=0
-PASS actual_aproj_to_candidate_CAP
-- /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcap/results/arch/s81_rate3_admission_1020/native_cap/tb_aproj_cap_replay.sv:35: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.098 s; speed 11.227 us/s
-- Verilator: cpu 0.098 s on 1 threads; allocated 8 MB

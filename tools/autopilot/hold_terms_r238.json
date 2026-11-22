@@ -1,4 +1,0 @@
-{"planned": {"s81": ["B6gG3", "B6gG3b"], "qwen_compute": ["S4q6d", "S4q7e", "S4q7g", "S4q8"], "qwen_kvsys": ["7uh"], "s81_head": ["NF13b"]},
- "terms": {
-  "event_adopt:B6gG3* (any S81 adopt named B6gG3 or B6gG3b) + lane_result:sdc_lint 0 on that adopt's gen (per item; lint decides)": ["event_adopt:B6gG3", "lint_clean:s81"],
-  "event_adopt:B6gG3b + lane_result:sdc_lint 0 on the G3b gen": ["event_adopt:B6gG3b", "lint_clean:s81"]}}

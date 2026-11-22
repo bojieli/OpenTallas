@@ -1,5 +1,0 @@
-QSM_MV L0 qkv INT8 m=768 K=4096 PASS sm0 R=48 lines=3072 packed=1536 cyc=3206 priced=3418.6 fault=None
-QSM_MV L0 o INT8 m=4096 K=512 PASS sm0 R=256 lines=2048 packed=1024 cyc=2161 priced=2394.6 fault=None
-QSM_MV L0 gu INT8 m=3072 K=4096 PASS sm0 R=192 lines=12288 packed=6144 cyc=12422 priced=12634.6 fault=None
-QSM_MV L0 down INT8 m=2048 K=3072 PASS sm0 R=128 lines=6144 packed=3072 cyc=6278 priced=6490.6 fault=None
-QWEN_SM_MV_UNIT PASS records=4 mut=-

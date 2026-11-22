@@ -1,7 +1,0 @@
-read_json /tmp/dsrom-noECC-WAKE-retained-complete-r1/q/mapped.json
-select -set local_wake ot_v41_rom_elem_w10/a:src=*ot_v41_rom_elem_w10.sv:191.* ot_v41_rom_elem_w10/t:DFF* %i
-select -assert-count 8 @local_wake
-setattr -set keep 1 -set dont_touch 1 @local_wake
-select -clear
-write_json /tmp/dsrom-noECC-WAKE-context-prepared-r2/q/mapped.json
-write_verilog /tmp/dsrom-noECC-WAKE-context-prepared-r2/q/mapped.v

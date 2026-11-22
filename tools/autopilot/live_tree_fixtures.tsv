@@ -1,6 +1,0 @@
-# sha	expect	note   (TOOLSMOKE-1115: oldest live die src trees; the merge gate runs the wave tree-tool flags against tools/die_plan of each)
-94f11ab5d29	pass	oldest main commit whose bind.py kit-rtl has --src-tree
-7073a6b4a599	skew	S81 src_sha base: bind.py lacks --src-tree; live tree is overlaid (src-tree-manifest rollout removes the skew)
-96f13b36a258	skew	KV src_sha base: same
-1e3b302be850	skew	QC src_sha base (wt/qc-s29-tree2): same
-d6b0b70323aa	skew	HBM src_sha base: same

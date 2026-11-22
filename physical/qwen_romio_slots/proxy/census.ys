@@ -1,6 +1,0 @@
-read_verilog -sv rtl/physical/ot_qwen_romio_slots.sv rtl/physical/ot_qfd_link_proxy_candidate.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
-read_verilog -lib physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v
-hierarchy -check -top qfd_link_adp512_proxy_candidate -chparam ENABLE_PROXY 1
-synth -top qfd_link_adp512_proxy_candidate -flatten -noabc
-stat
-write_json out/census/proxy.json

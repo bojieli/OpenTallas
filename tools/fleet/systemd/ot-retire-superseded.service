@@ -1,6 +1,0 @@
-[Unit]
-Description=Retire superseded die source trees through ot_delete_guard (installed from rt/current, DISK-AUTOPRUNE-REINSTALL-1119)
-[Service]
-Type=oneshot
-ExecStart=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-retire-superseded-run.sh
-Nice=10

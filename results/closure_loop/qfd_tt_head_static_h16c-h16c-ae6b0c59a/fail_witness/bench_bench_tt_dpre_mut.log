@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_tt_head_static_h16c-h16c-ae6b0c59a bench bench_bench_tt_dpre_mut host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16c-h16c-ae6b0c59a log cl/bench_bench_tt_dpre_mut.a1b1.log captured 2026-10-18T23:13:59-07:00
-# fail_regex 'REGROUP_FAIL|Assertion failed in tb_tt_static_regroup\\S*: DTIL me_tiles [0-9a-f]+ != [0-9a-f]+'
-[353000] %Fatal: ot_qwen_rom_core_ctrl_static.sv:1073: Assertion failed in tb_tt_static_regroup.u_dut.u_hr.u_head.u_ctrl_me.g_dtilk: DTIL me_tiles 0 != 8
-%Error: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1073: Verilog $stop
-Aborting...

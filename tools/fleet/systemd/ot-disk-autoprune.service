@@ -1,6 +1,0 @@
-[Unit]
-Description=OpenTallas disk-refusal auto-prune of superseded kw45 trees (installed from rt/current, DISK-AUTOPRUNE-REINSTALL-1119)
-[Service]
-Type=oneshot
-ExecStart=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-disk-autoprune-run.sh
-Nice=10

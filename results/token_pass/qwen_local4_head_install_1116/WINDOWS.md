@@ -1,9 +1,0 @@
-# Source-selected installation and admission windows
-
-`native_component_windows.json` translates the four actual slice0 receiver-date rows from `early45.log`; it does not synthesize dates for the other eleven slices. The finite X/RSTD inputs are completely preloaded before CALR start and remain intact through BF16 completion, so CALR start and last BF16 provide conservative observed lease bounds. Genuine user address ranges and programme indices come from the pinned source lease.
-
-Use `python3 tools/qwen_layerbench/head37_windows.py --windows results/token_pass/qwen_local4_head_install_1116/native_component_windows.json --component-only --out /tmp/native-window-verdict.json`. Omitting `--component-only` rejects these four rows because global selection requires all48 actual slice/user windows.
-
-The guard pins the measured date-contract hash and native source/profile. It checks each source-selected edge against the actual programme/gain macro stores and reads; rejects same-edge access, insufficient loader writer reservation, expired or wrong-address operand leases, duplicate identities, busy admission violations and overlapping writer windows. Existing HEAD37 selection now calls this guard for complete global selection rather than trusting only a status string and48 identities. Relative `ctlm_parent.source` paths also resolve against the selection manifest.
-
-The retained six source guard controls use actual preserved window metadata and deliberately mutate only the rejected input. No RTL build or runtime was repeated. The native earliest-command45 proof is restricted to ALIGN3/EXTRA1/MIF1 with zero external memory transport. MEM44/SEG1 or a new transport contract cannot inherit it by changing a label. Those actual macro-store/read ages require their own qualified contract before complete physical window selection. The current complete TT parent, actual48 request/command dates and selected physical TW transport remain required inputs.

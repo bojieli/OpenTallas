@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81sl_lep_nh",
- "enable": false,
- "reason": "Source-registered (RTL-BUILD-S81): ro lands in pin flops (rov/roq), ri / lo_v / lo_d / li_r / rxv / fault leave flops, li handshake + data land in hq / dq flops, sl_f / l*_f land in slq / lfq; recipe pin_regs would add an unpriced stage."
-}

@@ -1,5 +1,0 @@
-#!/bin/sh
-# coord-branch-guard: a per-worktree hooksPath replaces the shared hooks dir, so chain to its pre-push (the 11-16 owner-checkout push denial)
-SH="$(git rev-parse --git-common-dir)/hooks/pre-push"
-[ -x "$SH" ] && exec "$SH" "$@"
-exit 0

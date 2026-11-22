@@ -1,9 +1,0 @@
-{
-  "admission": false,
-  "status": "CONDITIONAL_DIAGNOSTIC",
-  "all_8_units_terminal_exit": 0,
-  "original_inputs_unchanged": true,
-  "reference_parent_source_commit": "725c106ff9bc3dc17cdada690ead1abd8745c955",
-  "source_context": "Copied closed-child ODB/SPEF/SDC, lambda0, data tags removed only clock ports, observed exact per-pin rise/fall min/max root slew set to measured parent macro-pin slew; original data/load and source waveform retained.",
-  "waveform_gap": "Original child SDC period770ps/waveform0,385 retained; parent833.333ps. Actual clock-slew ETM O/S export context consistency and native source binding remain open. Do not mix conditional R with source0 ETM anchors or adopt new phase targets."
-}

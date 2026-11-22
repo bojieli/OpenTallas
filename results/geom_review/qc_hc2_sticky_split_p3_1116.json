@@ -1,9 +1,0 @@
-{
-  "candidate_commit": "f41d9439612",
-  "candidate": "P3 full-shape grouped hc2 with sticky fault split",
-  "baseline_picture": "/srv/opentallas-scratch2/claude/fable-fix-qc-hcfe/p2/gen/sle_hc2__cl9c4c4509__clf60c5152/run/layout_review/grt/density.png",
-  "verdict": "PASS-COND",
-  "findings": "Reviewed baseline GRT density: 8 kept leaf regions in two horizontal bands, broad empty upper region and narrow SW control cluster. No macros/walls. Regions are local about 60-80% occupied. P3 changes only 9 sticky control state bits per xhead and no clock, pin, hard-core or station placement. Existing fault_r remains sink for short OR9; no new boundary hop or schedule edge. Check measured placement and GRT before further route.",
-  "added_cycles": 0,
-  "physical_scope": "GRT mechanism pilot, not signoff; old P2 flow controls are retained as paired baseline"
-}

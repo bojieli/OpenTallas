@@ -1,7 +1,0 @@
-[Unit]
-Description=OpenTallas ot-store by-reference GC, 24 h record age-out, signed records pinned (ot-store-gc-run; no LLM)
-[Service]
-Type=oneshot
-ExecStart=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-store-gc-run.sh
-Nice=10
-TimeoutStartSec=3000

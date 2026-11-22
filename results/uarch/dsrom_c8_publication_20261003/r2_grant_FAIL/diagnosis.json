@@ -1,9 +1,0 @@
-{
-  "status": "FAIL_PRESERVED_SOURCE_GRANT_DEFECT",
-  "source_commit": "56f7d42248ef3ed879031df298fa9c8a3e444901",
-  "terminal": "actual C writer failed to publish nine visible sectors",
-  "cause": "Overlapping substring substitutions in additive generator replaced choose_w within !choose_w first, emitting !rst_n && !hold_write && choose_w for C-ready. Backend accepted events could not be matched by the normal-reset C caller grant.",
-  "repair": "Replace complete W-ready and C-ready assignments exactly, preserving C8_PUBLICATION default0.",
-  "fixture_correction": "Original 1.0 transport input is not a quantized compressed-row value. Actual pinned golden qdq_fp4_e4m3(ones512) produces BF16-widen 0x3f840000 (1.03125). Successor fails on any actual service fault; transport expected bytes remain actual original encoder output, not a numerical exactness qualification.",
-  "scope": "No two-position engine, whole token, physical, or legacy reencoder/direct-producer admission"
-}

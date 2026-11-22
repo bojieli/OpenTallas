@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas lane git mirror: fetch main + claude/* from GitHub, re-forward claude/* pushes (ot-git-mirror)
-
-[Service]
-Type=oneshot
-WorkingDirectory=%h
-ExecStart=/bin/sh -c 'f=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-git-mirror; [ -f "$f" ] || f=%h/.local/bin/ot-git-mirror; exec /usr/bin/python3 -I "$f" sync'
-TimeoutStartSec=3600
-Nice=5

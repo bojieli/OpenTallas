@@ -1,6 +1,0 @@
-CASE case=1 reqdelay=4 replydelay=4 writes=0 retire=128 bad=0 req=5 bound=9 first_VMout=16 operand=26 write=-431 retire_first=51
-CASE case=2 reqdelay=22 replydelay=21 writes=0 retire=128 bad=0 req=5 bound=27 first_VMout=34 operand=26 write=-1288 retire_first=51
-CASE case=3 reqdelay=22 replydelay=20 writes=0 retire=128 bad=0 req=5 bound=27 first_VMout=34 operand=26 write=-2145 retire_first=51
-[2571000] %Fatal: tb.sv:65: Assertion failed in tb: LOOP_WITNESS_FAIL cases=3
-%Error: tb.sv:65: Verilog $stop
-Aborting...

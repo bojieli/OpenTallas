@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "dsdv_idx_qf",
- "enable": false,
- "reason": "Source-registered: qs / ql / uid land in flops at the pin (qs_d/ql_d/qs_v0/ql_v0/qs_vk/ql_vk/mek), qr / qc0 / qc1 / st leave flops; the die calendar prices pin -> pin 3 edges, recipe pin_regs would add an unpriced stage."
-}

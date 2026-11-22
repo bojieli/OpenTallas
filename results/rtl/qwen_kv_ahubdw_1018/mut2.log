@@ -1,6 +1,0 @@
-AHUB_DW FAIL mut=2 first error cycle 741 pass 0: reciprocals at pvfin.fr != reference rz_vector
-AHUB_DW FAIL mut=2 errors=72
-- rtl/test/qwen_kv_die/tb_qkd_ahub_static_dw.sv:183: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 0.169 s; speed 18.676 us/s
-- Verilator: cpu 0.169 s on 1 threads; allocated 10 MB

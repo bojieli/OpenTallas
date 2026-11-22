@@ -1,9 +1,0 @@
-%Error-PINNOTFOUND: tb.sv:7:111: Pin not found: 'se_i'
-                               : ... Suggested alternative: 'sw_i'
-    7 | qfd_dv_s6_stm_se0 #(.TSLICE(0),.HEAD_STAGE37(1)) u1(.ck(ck),.rst_n(rst_n),.sid(4'd11),.stm_cfg('0),.sw_i('0),.se_i('0),.vm_we('0),.vm_waddr('0),.vm_wdata('0),.treq_i(req1),.tw_we(we[1]),.tw_kind(kind[1]),.tw_addr(addr[1]),.tw_data(data[1]),.tld_fault(fault[1]));
-      |                                                                                                               ^~~~
-                               : ... Location of instance's module declaration
-  386 | module qfd_dv_s6_stm_se0 #(parameter integer CE_MUT = 0, parameter integer HARD = 1, parameter integer MUT = 0, parameter integer TSLICE = 0, parameter integer HEAD_STAGE37 = 0) (
-      |        ^~~~~~~~~~~~~~~~~
-                    ... For error description see https://verilator.org/warn/PINNOTFOUND?v=5.050
-%Error: Exiting due to 1 error(s)

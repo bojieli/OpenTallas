@@ -1,8 +1,0 @@
-[Unit]
-Description=copy reaper: terminate receiver-side leftover rsync servers (older than 30 min, no IO progress) on build hosts, exact pids (ot-copy-reaper-hub; no LLM)
-[Service]
-Type=oneshot
-WorkingDirectory=%h
-ExecStart=/bin/bash /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-copy-reaper-hub
-TimeoutStartSec=1700
-Nice=5

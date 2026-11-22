@@ -1,4 +1,0 @@
-STATS CHAIN_P8191_base hbm_act=8632 rd=262144 wr=272 refpb=9164 violations=0 max_landing=12 rsp_tile_stall=22177 fill_sectors=262144 wr_sectors=272 wr_lat_max=64
-PASS CHAIN_P8191_base "P":8191,"early_go":0,"posted_wb":0,"attn_cycles":1200,"mlp_cycles":3000,"A_fill_cycles":1357,"A_kv_ok_after_start":1866,"B_fill_cycles":1616,"B_fill_exposed_after_start":1616,"B_kv_ok_after_start":2048,"su_drain_wait":3784,"violations":0 : A and B slices, both token write-backs exact
-KV_SERVICE4_STANDALONE PASS
-{"cases":[{"name":"CHAIN_P8191_base","pass":true,"P":8191,"early_go":0,"posted_wb":0,"attn_cycles":1200,"mlp_cycles":3000,"A_fill_cycles":1357,"A_kv_ok_after_start":1866,"B_fill_cycles":1616,"B_fill_exposed_after_start":1616,"B_kv_ok_after_start":2048,"su_drain_wait":3784,"violations":0,"detail":"A and B slices, both token write-backs exact"}],"status":"pass"}

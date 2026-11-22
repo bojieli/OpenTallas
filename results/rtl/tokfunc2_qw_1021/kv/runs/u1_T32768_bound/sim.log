@@ -1,6 +1,0 @@
-{"user":0,"ctx":32768,"exact":false,"data_errors":0,"result_words":0,"status_word":-1,"k_rows":0,"v_rows":0,"cyc_go":104,"cyc_run":128,"cyc_cmd":-1,"cyc_start_qk":-1,"cyc_k_last":-1,"cyc_v_first":-1,"cyc_v_last":-1,"cyc_pv0_out":-1,"cyc_pv1_out":-1,"cyc_final_out":-1,"cyc_result0":-1,"cyc_result31":-1,"cyc_status":-1,"cyc_idle":137,"fin0_root_age":-1,"start_to_retire":0,"start_to_status":0,"work_span":0}
-KVATTN_REL FAIL mode=steady gmut=0 nu=1 ctx=32768 fd=3 tile_fault=1 svc_fault=0 result_fault=0 cal_fault=1 root_lf=0 root_iof=0 dp_fault=0000000000000000 timeout=0 period=0
-- rtl/test/qwen_kv_die/kvattn_rel_1019/tb_kvattn_rel.sv:199: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 282ns; walltime 36.107 s; speed 7.810 ns/s
-- Verilator: cpu 36.107 s on 150 threads; allocated 2952 MB

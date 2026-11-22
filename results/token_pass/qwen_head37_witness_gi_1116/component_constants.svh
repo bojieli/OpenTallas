@@ -1,1 +1,0 @@
-localparam[63:0] COMPONENT_DIGEST=64'h6cfd54ca9e9e2204;

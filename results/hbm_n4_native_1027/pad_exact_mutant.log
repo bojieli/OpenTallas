@@ -1,8 +1,0 @@
-PAD_CONTROL_MISMATCH k=2 expected=0001 actual=0000
-PAD_CONTROL_MISMATCH k=2 expected=0002 actual=0000
-PAD_CONTROL_MISMATCH k=3 expected=0001 actual=0000
-PAD_CONTROL_MISMATCH k=2 expected=0003 actual=0000
-PAD_EXACT_RESULT checks=8085 errors=6200 depths=33 warm=80 MUT_ORIGINAL=1 clock_ps=833
-[274891] %Fatal: tb_pad_exact.sv:25: Assertion failed in tb_pad_exact: PAD_EXACT FAIL
-%Error: tb_pad_exact.sv:25: Verilog $stop
-Aborting...

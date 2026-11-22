@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_argmax_static_sw_vm",
- "enable": false,
- "reason": "Every output is an engine flop Q (vm_rq, cq, cq_seq, busy/done/fault/nan_flag); inputs reach one flop (cfg captured on go, cr[273]/tag flops, vm_rr through the 8:1 sector select into cap_d). The VM read RD=7/ACK=12 edges are measured and compiled (ot_hbm_argmax_static header); a synthesis pin stage would shift them unpriced."
-}

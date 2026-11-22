@@ -1,4 +1,0 @@
-ot-run: epyc10         admits   138 GB (avail 187, reserve 0, fresh 0, peak 0, headroom 0, waiters 14/339 GB) load 242/96 running 68 disk 884 GB 
-ot-run: -> epyc10
-ot-heavy: waiting for memory on civil-redfish: thread cap: committed 106 threads + this job 1 > 1.0 x 96 = 96 (memory admits; running jobs untouched)
-ot-run: interrupted (signal 15 from pid 2723610 (/usr/bin/python3 /home/ubuntu/.local/lib/fleet/rehost1-threadcap-1116/ot-run --cancel run_head37_tt_native.py; parent 2723608 (sshd-session: ubuntu@notty))); cancellation requested on epyc10: START STATE UNKNOWN; verify canonical remote unit/payload before any successor

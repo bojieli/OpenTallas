@@ -1,5 +1,0 @@
-read_json results/arch/hbm_native_1013/sm_own_logic/wg_own.json
-hierarchy -check -top ot_smh_own_wg
-write_verilog results/arch/hbm_native_1013/sm_own_logic/wg_own.sv
-synth -top ot_smh_own_wg
-stat

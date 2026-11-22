@@ -1,5 +1,0 @@
-TRACE q4 UE fault cycle=       1621
-TRACE q4 hostrequest cycle=       1623 qualifiedready=0
-TRACE q4 sampledrequest cycle=       1625 qualifiedready=0
-PASS capture256 q4/fault5 actual ND8 transported HOSTpacket UE stickyIRQ no-controllerstart CQfault=00000000cafe0075
-/var/tmp/codex-qhost-service-snapshot/rtl/test/qwen_host/tb_qkd_host_control_token_service.sv:379: $finish called at 1624632 (1ps)

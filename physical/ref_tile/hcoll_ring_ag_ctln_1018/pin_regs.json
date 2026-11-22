@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_coll_ring_ag_ctln",
- "enable": false,
- "reason": "every boundary is already registered in RTL (ot_hgi_coll_ring_ag_ctln): pure pin flops on all command inputs, ring words, state_tx and av; every output a dedicated flop Q (pin0_q/pin1_q copies, carry_write, acc_we/acc_tag, lane-command copies, fault); automatic pin registers would add a second edge"
-}

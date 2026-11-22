@@ -1,4 +1,0 @@
-Verilator 5.050 2026-07-01 rev v5.050
-VM_FAULT_PASS cases=84 all32banksUE/protocol all12hubflags serialsync-preserved CEcount-nonfatal
-[456000] %Fatal: tb_vm_fault_l16.sv:59: Assertion failed in tb_vm_fault_l16.run_case.unnamedblk2: VM_FAULT_FAIL missing/wrong-cause q=0 kind=0 item=0 age=8 fault=0 cause=0
-[43746000] %Fatal: tb_vm_fault_l16.sv:57: Assertion failed in tb_vm_fault_l16.run_case.unnamedblk2: VM_FAULT_FAIL early q=0 kind=3 item=0 age=5

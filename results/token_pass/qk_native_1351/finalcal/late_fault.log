@@ -1,6 +1,0 @@
-KVSLICE_BOOT PASS dcal_fault 0 cyc 0
-KVSLICE_POST cyc 4 events 0 fdi_tx_words 0
-KVSLICE_FINALCAL dcal_fault 1 cyc 4
-[9000] %Fatal: tb_finalcal.sv:18: Assertion failed in tb_finalcal: KVSLICE_FINALCAL FAIL: calendar fault after POST
-%Error: tb_finalcal.sv:18: Verilog $stop
-Aborting...

@@ -1,9 +1,0 @@
-mismatch at1 error0 expected1
-mismatch at18 error0 expected1
-mismatch at24 error0 expected1
-mismatch at30 error0 expected1
-mismatch at35 error0 expected1
-SERVICE_WORDBANK compared=4096 errors=595 II=1 expected_entries=16
-[8230000] %Fatal: tb_vm_service_wordbank.sv:46: Assertion failed in tb_vm_service_wordbank: SERVICE_WORDBANK FAIL
-%Error: tb_vm_service_wordbank.sv:46: Verilog $stop
-Aborting...

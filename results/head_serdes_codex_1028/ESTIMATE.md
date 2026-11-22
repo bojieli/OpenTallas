@@ -1,9 +1,0 @@
-# HEAD SerDes: existing KP4 Chien/Forney child
-
-The failing parent synthesis has422,040 cells, above400k/run. Its55 `ot_s81_kp4_inv` tables contribute about128.8k cells and all belong to the existing registered `u_phy.u_link.u_dec.u_chn` hierarchy. Hardening that child leaves a conservative parent estimate below294k before counting the other Chien logic removed from the shell. This is an estimate; the rebuilt shell's actual synthesis must establish the build-cap result.
-
-The source has one512-bit digital link and one544-bit KP4 codeword stream. The plan's six physical analog lanes are not six identical digital decoder instances. COORD approved the natural existing child boundary; no digital link clones are created. The existing `OT_KP4_DEC_HARD` compile form removes the MUT override while keeping its default0. No arithmetic, reset sequence or data cycle changes. The model contribution of this extraction is0 cycles.
-
-The216x194.4um frame reuses the established Chien tile outline, not its historical timing verdict. The945 pins comprise320W inputs,559N output bits,64S counter bits and2centre clock/reset entries. Face bands use0.288um pitch, giving161um for the widest edge on a216um face. Max centre-to-corner145.3um is below250um. There are no SRAMs or macro walls inside this child. The shared M5 PG template and structured local clock flow are used. The viewed pin map is `dchn_plan.png` (PASS-COND for trial placement).
-
-This is an internal timed cut, so the existing typed `INTERNAL_CORE` endpoint census applies (`R2_INTERNAL_TIMED_IN_PARTITION`), with no face shell. The parent hd_serdes still owns its R2 boundary. All internal endpoints remain inventoried and timed; constants, feedthrough, loops and unqualified memory arcs fail. The child needs current TT/FF signoff and the parent needs its actual extracted-child timing; historical ref_tile PASS is not current SIGNED evidence.

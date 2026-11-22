@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas live-only drift check every 15 minutes
-
-[Timer]
-OnCalendar=*:7/15
-Persistent=false
-
-[Install]
-WantedBy=timers.target

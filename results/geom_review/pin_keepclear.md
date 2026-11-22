@@ -1,9 +1,0 @@
-# HEAD raw reset export clock keepclear, 2026-11-16
-
-The real he10 final DRC marker is the fixed M7 port overlap between rst_start_raw_1 and clk_t5: intersection [93.264,51.624,93.296,52.056] µm. Both source pin rectangles are fixed; a routing seed cannot repair them. NF14r still declares this raw export at [93.28,51.84]. Its reserved_sites_um are standard-cell placement/route blockages, not a port-pin allocator.
-
-The existing standalone head_raw_export_rects.py already avoids actual same-layer port rectangles. New opt-in --avoid-clock-sites also treats each die_clock_tree reserved rectangle on its declared route layers as occupied metal. It changes landing_contract pin coordinates only; reset_start_raw_exports source FF locations, clock pins, RTL, cycles, outline and clock constraints remain unchanged.
-
-Full hd_host_e input: existing he11r io.tcl (2142 signal pins plus infrastructure), with scalar landing_contract declarations regenerated from NF14r source_plan.json, plus all 48 NF14r clock reservations. The report records zero remaining raw-export rectangle overlaps. Proposed M7 track positions: raw1 [92.064,51.84] (−1.216 µm x), raw3 [16.608,473.688] and raw4 [16.608,285.984] (each −0.704 µm x). All other pins are unchanged. Minimum complete-shape gap is 0.032 µm; no clock move. New positions remain close to the existing source registers.
-
-Review: pin_keepclear.png was rendered and inspected. Green reset rectangles are outside the orange clock reserved rectangles and blue fixed clock pins; the old red raw1 overlaps its clock. Verdict PASS for this bounded pin-geometry change. This is a future fresh-kit input, not a routed/signoff claim; no running kit was changed or new route launched. Source regression uses the exact real short and reserved rectangles, and checks opt-in/layer behavior (2 tests passed).

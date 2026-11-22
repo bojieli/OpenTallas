@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81sl_cap_ed",
- "enable": false,
- "reason": "Source-registered: ot_hdc_delay_rf lands every input in its pin input register and every output leaves its pin output register; o_f is a sticky flop; recipe-3 pin_regs would add unpriced edges to the D=23 calendar."
-}

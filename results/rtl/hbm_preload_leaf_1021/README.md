@@ -1,5 +1,0 @@
-The three-line fix 5dc620497 strips the named initial block suffix `.INIT` from `%m` before selecting the PHY instance's preload image. The old model bytes in this packet exactly match main at the time of the check, SHA c2daef5894dbc8c3eef85f8cde4d1f4ab9c751f8ef8d8ec2717ba539c82bbe41.
-
-A tiny actual model test instantiates phy_SW, phy_SE, phy_NW and phy_NE with two distinct sectors each. It issues legal ACT and read commands to PCs 0 and 1 and checks all 256 return bits. A poison INIT.hex is deliberately present. The old source loads that poison file for all four instances and the first readback fails with deadbeef. Fixed source loads the four correctly named files and passes all eight actual readbacks. Gold2 unit 740544-1792643541, Verilator 5.050, exits 0 after both expected outcomes.
-
-Raw source versions, SHA manifest, instance images, TB, runner, binary hashes and raw logs are retained. Run the packet's run.sh on fleet with 4 GB / 2 threads to reproduce the two tiny builds. This validates only the off-chip model correction. Existing pre-fix binaries still require the documented INIT.hex workaround; no full SM or token rerun is claimed.

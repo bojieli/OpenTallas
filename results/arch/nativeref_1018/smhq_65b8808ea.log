@@ -1,7 +1,0 @@
-INPUTS 341
-OLD ref g_l[0].u_sml/ck (first_register) arrival_max 369.2  search_ms 66
-QDM PINFLOP reference: 341 input pin flops (0 hard-child clock pins at +insertion), median arrival 612.006653 (range 591.511047 .. 630.521179)
-NEW ref r_cfg[1]$_DFF_P_/CLK (pinflop) raw 612.0 ot_pf_arr max 612.0 min 582.2  search_ms 420
-FIRST g_l[0].u_sml/ck raw 369.2 ot_pf_arr 583.8
-QDM REFGLOB u_t* reference: 544 registers, median arrival 611.147095 (range 552.84198 .. 630.521179)
-GLOB ref u_td.genblk1.g_line.line[70]$_DFF_P_/CLK arrival 611.1

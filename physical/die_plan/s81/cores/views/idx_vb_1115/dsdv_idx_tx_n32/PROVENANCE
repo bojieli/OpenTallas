@@ -1,5 +1,0 @@
-source: signed kit s81-idx-b5/vg/eco_vg/i1 (intel2) run/results/asap7/kl_dsdv_idx_tx_n32_vb/base, design kl_dsdv_idx_tx_n32_vb, SIGNED (signoff.json signed-export-1114/s81/dsdv_idx_tx_n32, host tolerant-swine 2026-11-06T22:17-08:00).
-files: dsdv_idx_tx_n32.lef (as built), dsdv_idx_tx_n32_tt.lib = dsdv_idx_tx_n32_tc.lib (TT, max_clock_tree_path 816.54), dsdv_idx_tx_n32_ff.lib = dsdv_idx_tx_n32_BC.lib (FF, 668.68).
-cell area 130299.867 (the S81-TAPROWS 11-15 plan swap replaces closed_import/dsdv_idx_tx_n32, area 130731.805, x2-b642addfb).
-kit params: V 276 IK 4 EK 5 UID 92 D 8192 IB 64 SRAM_MACRO 1 MUT 0 RDL 1 WDL 1 WDC 1 SCS 1 RIL 1 RHP 1 FACE 2 LKL 0 MLK 0 PDC 1 (SPLIT default 0).
-io reference (insertion_band bound): 722.72 TT / 592.8 FF; routed pin-register mean 677.13 / 562.34 (n 844).

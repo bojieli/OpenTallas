@@ -1,8 +1,0 @@
-[Unit]
-Description=rt/current catch-up: push the current rt to every build host that is behind, parallel, with backoff (ot-tools-sync catchup; no LLM)
-[Service]
-Type=oneshot
-WorkingDirectory=%h
-ExecStart=/usr/bin/python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-tools-sync catchup
-TimeoutStartSec=1500
-Nice=5

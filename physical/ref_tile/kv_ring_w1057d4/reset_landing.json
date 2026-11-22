@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "kv_ring_w1057d4",
- "enable": false,
- "reason": "the ring has no reset tree of its own: t_rst_n / rst_n are the landed sender / receiver starts of the parent"
-}

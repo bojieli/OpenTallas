@@ -1,7 +1,0 @@
-QBG expert_intermediate_gather n=2304 slice=576 (mod32 0, mod128 64) trials=120 mismatches=0
-QBG o-group n=1024 slice=256 (mod32 0, mod128 0) trials=120 mismatches=0
-QBG engram.rows_gather n=6144 slice=1536 (mod32 0, mod128 0) trials=120 mismatches=0
-QBG MUTANT off_grid_boundary(+16) mismatches=120 -> REJECTED
-QBG MUTANT block128_at_576 mismatches=120 -> REJECTED
-QBG_BENCH PASS
-EXIT 0

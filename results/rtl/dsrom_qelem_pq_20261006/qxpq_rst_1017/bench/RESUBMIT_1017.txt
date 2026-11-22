@@ -1,7 +1,0 @@
-2026-10-17 S81-TILES2: dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-e0f932882 was REFUSED (SUBMIT_LINT BENCH_LINT: fail_witness
-sub2_mut_bypass.out / sub2_mut_late.out "not in the source commit"). Both witnesses ARE in the source commit (added in f9192e143,
-an ancestor of e0f932882) and match their fail_regex (MUTANT_DETECTED, rc=1). The refusal came from the daemon reading the
-commit before its object store had the freshly pushed branch (this worktree is a separate clone). Same spec, resubmitted on
-this commit (the daemon freezes a job name at first sight, so a new source commit is needed for a new name).
--76d52c946 was REFUSED by the same race (daemon bench_lint_at_submit reads the commit before lint_at_submit's
-submit_check fetches the branch). This resubmit pre-fetches the branch into the shared object store first.

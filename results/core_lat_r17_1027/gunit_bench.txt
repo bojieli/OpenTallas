@@ -1,5 +1,0 @@
-base r16 2ad2c9fd3f: MUT=0: GUNIT PASS cases=8 router_lat=38 (last SC -> ids row at the stop pins; 50 at the unit pins) hc_lat=1007 (last HP -> first coef row at the stop pins; 1019 at the unit pins)
-base r16 2ad2c9fd3f: MUT=10: GUNIT FAIL 153 (MUT=10)
-r17: MUT=0: GUNIT PASS cases=8 router_lat=39 (last SC -> ids row at the stop pins; 51 at the unit pins) hc_lat=1007 (last HP -> first coef row at the stop pins; 1019 at the unit pins)
-r17: MUT=10: GUNIT FAIL 153 (MUT=10)
-r17 rd-per-stage: MUT=0: GUNIT PASS cases=8 router_lat=39 (51 at unit pins) hc_lat=1007; MUT=10: GUNIT FAIL 153

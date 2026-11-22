@@ -1,1 +1,0 @@
-IDXRD_CASE BAD m7/closed_g2048p3: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 7 sram 1 ckh 900 hdr_to_last 4811 end_to_last 4618 nerr 921 nopen 1 qerr 0 slice_err 0 | maxrss_kb=215968 wall=1:45.71

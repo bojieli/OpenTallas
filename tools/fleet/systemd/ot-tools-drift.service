@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas live-only check: pinned tools trees vs their recorded main sha, DRIFT lines to the review queue (MERGE-QUEUE-1)
-
-[Service]
-Type=oneshot
-WorkingDirectory=%h
-ExecStart=/bin/sh -c 'f=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-tools-sync; [ -f "$f" ] || f=%h/merge-queue/bin/ot-tools-sync; exec /usr/bin/python3 -I "$f" drift --post'
-Nice=10
-TimeoutStartSec=1800

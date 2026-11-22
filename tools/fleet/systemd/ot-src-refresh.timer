@@ -1,9 +1,0 @@
-[Unit]
-Description=OpenTallas die source-tree refresh, once a day at 06:00 (never per merge)
-
-[Timer]
-OnCalendar=*-*-* 06:00:00
-Persistent=false
-
-[Install]
-WantedBy=timers.target

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_sm_xload_xq_pegress",
- "enable": false,
- "reason": "x6 RTL registers every input in exactly one pin register (rn -> 4 relay D pins; ed5 -> e5p; bq_v -> bvp; ede -> e6; bq_last/addr/b -> bc_*; bq_d -> bq_c; rwq -> rw) and every output is a register."
-}

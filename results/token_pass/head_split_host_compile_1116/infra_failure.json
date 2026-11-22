@@ -1,7 +1,0 @@
-{
-  "status": "INFRA_NOT_TESTED",
-  "cause": "E9 scratch ENOSPC while editing tiny source before coupon collection; target transiently zero bytes; exact HEAD6547 bytes restored by parent through tiny source repair",
-  "pytest_result": "collection ImportError, no tests executed; moved coupon to local exact source capsule",
-  "source_repaired": true,
-  "old_failure_overwritten": false
-}

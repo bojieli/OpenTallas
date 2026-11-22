@@ -1,4 +1,0 @@
-HOUSEKEEPING: this copy of tools/closure_loop differs from origin/main 68b9cad6c (README.md, child_ins_env.py, gate_rule_guard.py, hosts.json ...); running main's submit_exact
-lint_receipt: reviewed_gray_fifos qkd_hr_cdc_host: lint ran on ubuntu (6 s); receipt /tmp/tmpwlaf8kt9/physical/ref_tile/qkd_hr_cdc_host/lint_receipt.json (commit it with the kit)
-daemon submit check at 12d9ecc9e: WARN: sources: 21 referenced file(s) do not exist: ['physical/common_flow/anchor_row_packing.tcl', 'physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/clock_entries.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc'] (fix: commit them / fix the path)
-DRY RUN: would submit qkd_hr_cdc_host-pg1-12d9ecc9e at 12d9ecc9e

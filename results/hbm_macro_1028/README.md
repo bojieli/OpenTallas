@@ -1,9 +1,0 @@
-Macro estimates after the C24 failures, 2026-10-28.
-
-`estimate.py` regenerates both candidates from constants read from the staged macro abstracts and the preserved C24 placement map. `render.py` generates the viewed image. These are source-only estimates; no physical run or timing closure is claimed.
-
-VP4: 501.12 x 311.04 um, ten 94.8 x 41.1 SRAMs in two columns. The 0.5933 maximum channel ratio uses every edge pin in a column and excludes halo width from the M3+M5 supply (48.611 tracks/um). This is a conservative channel bound, not a GRT result. Clock centre250.56/155.52 is on the4.32 lattice. No current instance map/pins/islands are adopted here.
-
-Programme store: old C24 array scatters four SRAM pages of leaf0 over649.026um and leaf9 over581.754um. The RTL `ot_hgi_sfu_programme_store_r10.sv` explicitly plans source-local eleven leaves in rows `[P2 P1 P0] / [P6 head IO0] / [P7 IO2 IO1] / [P5 P4 P3]`. Restore each leaf's 2x2 pages in285.12x181.44um zones, whole outline864x734.4um. Active W-edge banks face the local spine (MY left/R0 right). Per-local-row channel bound .3828 inner/.5633 outer assumes standard-cell leaf guides; summing every page in a tall column is only a conservative upper bound and cannot certify real routing demand. Candidate carries44exact macro instance paths and11guide zones. Head/row/output relay placement and16clockisland relocation remain required. No build until the die owner integrates pins/clock/reset/PDN and completes reach405 review.
-
-Observed programme-store failure is GPL RUDY congestion, not a50-iteration GRT verdict: weighted congestion2.3302→1.5319,71.55→71.45% tiles overflowed, then GPL-0305. The M7 what-if changed no RUDY numbers because that variable was not read; it supplies no evidence for a layer change. Current lanes_plain fail is multiplier carry logic (rebalance owner), so no outline change is proposed for that core.

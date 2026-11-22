@@ -2294,6 +2294,8 @@ def wf_plan(P):
         if pr is not None:
             kids.setdefault(pr[0], []).append(p)
     drl = _die_relay_rows(P, sol)                # R-REACH-1 die reset relays: +1 release cycle each, hop = longest segment
+    max_hop = hop_um(P)
+    reachable = {sol["root"]}
     parts, st = {}, [sol["root"]]
     while st:
         p = st.pop()
@@ -2336,11 +2338,15 @@ def wf_plan(P):
             row.update(source=f"{q}.rst_o_{k}", hop_um=pr[2])
             if p in drl:
                 row.update(hop_um=round(drl[p][1], 1), direct_hop_um=pr[2], die_relays=len(drl[p][0]))
+            # Solver misses precede die relays. A repaired parent can
+            # reach its descendants through already-legal direct hops.
+            span = drl[p][1] if p in drl else _man(*wf_hop_ends(P, p, sol))
+            if q in reachable and span <= max_hop + 1e-6:
+                reachable.add(p)
         parts[p] = row
         st += sorted(kids.get(p, []))
-    fixed = {p for p in drl if p in parts and parts[p]["hop_um"] <= hop_um(P) + 1e-6}
     out = dict(release="wavefront", sync_stages=N, root=sol["root"], root_type=sol["root_type"],
-               hop_um=hop_um(P), relay_um=relay_um(P), unreachable=[p for p in sol["unreachable"] if p not in fixed],
+               hop_um=max_hop, relay_um=relay_um(P), unreachable=sorted(set(P.parts) - reachable),
                **({"die_relays": dict(parts=len(drl), relays=sum(len(v[0]) for v in drl.values()),
                                       max_segment_um=round(max(v[1] for v in drl.values()), 1))} if drl else {}),
                max_release=max([r["release"] for r in parts.values()] or [0]),

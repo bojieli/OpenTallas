@@ -1,7 +1,0 @@
-ot-run: epyc7          admits   732 GB (avail 780, reserve 0, fresh 0, peak 0, headroom 0, waiters 0/0 GB) load 36/96 running 9 disk 72 GB 
-ot-run: -> epyc7
-ot-heavy: admitted on loved-redfish as oth-ubuntu-2810122-1794870179 after 0 s
-[0] %Fatal: safe.sv:15: Assertion failed in tb.a.u_skn_c1: SAFE_RING_DELAY unsupported shape
-%Error: safe.sv:15: Verilog $stop
-Aborting...
-ot-run: RAN on epyc7 (unit oth-ubuntu-2810122-1794870179): exit 1

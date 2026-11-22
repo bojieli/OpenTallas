@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_d2d_cal_seq_pin_ovl_rope_w-ovlr1w-cfe9ed547 bench bench_rope_mut_halt_keeps_midlist_pointer host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qkd_d2d_cal_seq_pin_ovl_rope_w-ovlr1w-cfe9ed547 log cl/bench_rope_mut_halt_keeps_midlist_pointer.a1b1.log captured 2026-10-22T08:12:01-07:00
-# fail_regex '^KDCALOVL_FAIL mode6$'
-KDCALOVL_ERR cyc4708090 mode6 static TX/RX start edge mismatch
-KDCALOVL_FAIL mode6
-[3926548000] %Fatal: tb_kv_dcal_ovl_rope.sv:54: Assertion failed in tb_kv_dcal_ovl_rope
-%Error: rtl/test/qwen_split/tb_kv_dcal_ovl_rope.sv:54: Verilog $stop
-Aborting...
