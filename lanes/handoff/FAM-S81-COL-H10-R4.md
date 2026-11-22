@@ -52,3 +52,7 @@ Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fa
 ## 04:2x
 - J7 row bind: alive 3 h (parallel emit, 2 workers x ~50 GB at a time, ~1 min each); ~850 rtl files re-emitted, rate slowing (66 / 30 min). Waiter re-armed on bind_row.otrun.log GATE_DONE / OT_RUN_EXIT.
 - A2 place: relay_mid seated u_y_xd_u_e15_xb_data_0_0 at 675.0, 1186.4 (path 561 um through the channel; was 815, 1187 over the view in proof A); halo blockages on the 3 view macros in; carve OK. Waiting on GRT (50 iters).
+
+## 05:2x
+- A2 GRT (50 iters): overflow 0 on every layer; station 675,1186 (channel); internal hold +30.04. run_kit route continuing (post-GRT gate / DRT). Waiting for OT_POSTCTS_GATE TT line in kit run_route.log.
+- LEVER-1 DONE/FAIL: exit 6 post-GRT gate; GRT overflow 2475 at x1200-1300 y300 + y800 (u_t0/u_cf views); TT pinreg est -162.76 triage FAIL. DRC term unproven. Posted 05:2x. No relaunch without COORD (kit config change would be needed for 50 iters = new private-spec).
