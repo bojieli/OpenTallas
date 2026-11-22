@@ -111,4 +111,22 @@ def test_fresh_checkout_uses_normal_local_admission_on_source_volume(tmp_path, m
     assert len(calls) == 1
 
 
+def test_scheduled_hbm_references_resume_after_unpark(tmp_path, monkeypatch):
+    config = tmp_path / "kit_wave.json"
+    dies = ["s81", "hbm", "hbm_sram", "qwen_kvsys"]
+    watch = ["tools/die_plan/*"]
+    monkeypatch.setattr(T, "git", lambda *args: SimpleNamespace(returncode=0, stdout="tools/die_plan/gen.py"))
+    config.write_text(json.dumps({"dies": {"hbm": {"parked": {"owner": "COORD"}}}}))
+    scheduled = T.scheduled_dies(dies, config)
+    ready, revisions, _ = T.ready_dies("/src", "new", scheduled, watch, {"last_sha": "old"}, set())
+    assert ready == ["s81", "qwen_kvsys"]
+    assert not revisions
+    revisions.update({die: "new" for die in ready})
+
+    config.write_text(json.dumps({"dies": {"hbm": {"parked": False}}}))
+    assert T.scheduled_dies(dies, config) == dies
+    ready, _, _ = T.ready_dies("/src", "new", dies, watch, {"last_sha": "old", "die_sha": revisions}, set())
+    assert ready == ["hbm", "hbm_sram"]
+
+
 if __name__=='__main__':unittest.main()
