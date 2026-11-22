@@ -74,7 +74,7 @@ Netlist count (`1_2_yosys.v` of the D26 kits, script `tmp/ringcount.py`):
 |---|---|---|---|---|---|
 | R1 | `clock.landing_ring_narrow: true` | 44 unsigned types, 1,018 soft rings < 64 bits | 0 | about -350 cells per narrow ring (811 -> 461) | row script ready; gates running on a private fork |
 | R1b | `clock.landing_ring_lite` on the same types, tool change so status-copy types qualify | 44 | 0 | 811 -> 88 cells and 200 -> 18 flops per grouped ring: pv_v6 about -37 k cells / -9.5 k flops, hgi_v3 about -12 k cells | tool change to write + bench |
-| R5 | hg feedthrough street: head0/1_e4, e5 and the astk strips g_ex_N +43.2 um in y; opens a 51.8 um street at y 553-605 on the ft3 axis (section 6) | hg_v1, v1p2..v1p6, hg_v3 (7 types, 28 partitions) | 0 | core_place RUDY H overflow 571k -> 270k (-53 %), over-core H ratio 1.52 -> 1.07; 15-30 stations re-routed, register count kept, EQ OK | row script ready; gate B (with landing_remap + pinclear) after gate A |
+| R5 | hg feedthrough street: head0/1_e4, e5 and the astk strips g_ex_N +43.2 um in y; opens a 51.8 um all-layer street at y 553-605 inside the ft3 band span (section 6) | hg_v1, v1p2..v1p6, hg_v3 (7 types, 28 partitions) | 0 | core_place RUDY H overflow 571k -> 270k (-53 %), over-core H ratio 1.52 -> 1.07; 15-30 stations re-routed, register count kept, EQ OK | row script ready; gate B (with landing_remap + pinclear) after gate A |
 | R2 | re-site the narrow bands at their pins after R1 / R1b (`cland_band_fit`) | pv 16, hub, pc, hgi | 0 | bands > 300 um from pin and sliver bands go away where the ring shrinks | after R1b bind |
 | R3 | pv re-floor inside the tile, no die growth needed: W/E margin 15 -> 58 um, centre (cut) street 104 -> 234 um, side streets 253 -> 145 um; cores move, shapes kept | pv 16 | re-price | cut-face margin per half 52 -> 117 um: tap and bank sites at the cut | geometry handed to FABLE-FIX-KV-PV-SINKSPREAD; not built by me |
 | R4 | hgi head array +86.4 um north (S margin 17 -> 103, N 302 -> 216) | hgi 11 | re-price | S-face landing strip for 1,296-2,165 ft bits | proposal to OPUS-FIX-KV-HGI-R6 |
@@ -92,8 +92,12 @@ bench `rtl/test/meso/lite/run_csc.sh` 11 of 11 phases, 0 mismatches, shift and m
 ## 6. hg central channel (COORD 04:5x, FLOW-CLKGRT-R2 kv3_hg_v1p2: GRT overflow 871k base / 566k clock-first, DPL-0033) (M)
 
 - All hg cores block M1-M5 (LEF OBS 93-100 %; M6 / M7 2-4 %). Over a core a bundle has M6 (E-W) or M7 (N-S) only.
-- ft3 (1,056 bits, W -> E, stations at (312, 587), (642, 601), (960, 601)) crosses the astk strips g_ex_1 (198 um) and g_ex_2 (190 um):
-  y 561.6-673.9, 112 um of M6 = about 1,750 tracks x 0.6 = 1,050 for 1,056 bits. Slots beside the strips: 9 um (y 553-562, 674-683).
+- ft3 (1,056 bits, W -> E) has three station banks, each a column in an x-street (x 309-333, 622-652, 950-966) spread over
+  y 404-744 (340 um, plan `bit_sites_um`). Between the banks the bundle therefore runs over head e2/e3 (y 337-553), the astk strips
+  g_ex_1 / g_ex_2 (y 561.6-673.9) and head e4/e5 (y 683-899), on M6 only; the only all-layer E-W space in that 340 um is two 9 um slots
+  (y 553-562, 674-683). core_place's route-supply model gives demand / supply 1.52 for E-W wires over the cores of this type.
+  CORRECTION to my 04:5x post: the bundle is not a 26 um ribbon over the astk strips alone; "1,050 M6 tracks for 1,056 bits" was the
+  strip-only reading and is withdrawn. The class (E-W bundle over M1-M5 cores with no street) stands.
 - Kit congestion.rpt (clock-first arm, 20,000-gcell sample): 69 % of the overflow lies inside hard-core footprints (head0_e5, head0_e2,
   head1_e4), hot bins x 432-700, y 604-860. The kit's own placed scan: 263 groups over reach, 12,020 bits.
 - Variants tried with `core_place.py --seed --no-search` on kv3_hg_v1p2 (RUDY H overflow, base 571,430): head e4/e5 up only 523,527;
