@@ -6364,11 +6364,12 @@
         "tail_clear": {
          "enum": [
           "async",
-          "sync"
+          "sync",
+          "sync_output"
          ]
         },
         "lockup_regions": {
-          "type": "boolean"
+         "type": "boolean"
         }
        }
       }
