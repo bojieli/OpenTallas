@@ -1,0 +1,1 @@
+- 2026-11-21 18:57 PST DONE [CLEAN-AGGR-1121] ot-push-main otpush-loved-redfish-1684782 on loved-redfish: rc=0 after 33 s, ended 02:57:15, log /srv/opentallas-scratch2/claude/clean-aggr-1121/tmp/push1.log, cmd: ot-push-main 
