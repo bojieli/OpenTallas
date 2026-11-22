@@ -854,7 +854,7 @@
  "ot_s81_sstn_payload536.lef": {
   "base_sha256": "5c14147f7d851126987c5a03532880a00070159f6655ad7b49b8b49aaff78381",
   "die": "s81",
-  "file": "ot_s81_sstn_payload536.lef.0187b355ac71.gz",
+  "file": "ot_s81_sstn_payload536.lef.c7d3c35336b4.gz",
   "layers": [
    "M4",
    "M5"
@@ -863,7 +863,7 @@
   "pin_access_probe": {
    "def_sha256": "f437dd46044309b4220f2f12afe5748e7fce213376fad6faaa5f4dfaef44b915",
    "every_signal_pin_connected": true,
-   "log_sha256": "07d73a7f8063171880236acbc6e5a267b4dd18a3c29921ef7a9f6763ba32a65d",
+   "log_sha256": "d138369fd4d6b65e5e782da069964c7d40167cfeb6e3c585164cfe0e7deb977b",
    "phase_nm": [
     108,
     12
@@ -871,9 +871,9 @@
    "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
    "verdict": "PASS"
   },
-  "receipt": "ot_s81_sstn_payload536.lef.0187b355ac71.receipt.json",
-  "receipt_sha256": "a6ed0b0e4f709546262cb54b71bce17c761e39db982c2c4f51810b623a10dfff",
-  "sha256": "0187b355ac715e7bfb737c350120ea4b03f231f6b7f173503e68edb70f0588b9",
+  "receipt": "ot_s81_sstn_payload536.lef.c7d3c35336b4.receipt.json",
+  "receipt_sha256": "b4cec3e87c30a5fb5b34b7fd7f2eb12bcd1fdc9e082ec9f7ff6f803f5d8f377c",
+  "sha256": "c7d3c35336b4ce70e345baa8ca77e0f71afcc6dfb29c2d677a98add924ee8cb4",
   "source": {
    "archive": "/archive/opentallas-signed-1106/intel2",
    "db_path": "srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_e1027/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb",
@@ -1165,7 +1165,7 @@
  "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef": {
   "base_sha256": "2b6de51c97b5f915c861950b0d207ad9a4eb28b16259b4ec0667154ab15e09a7",
   "die": "s81",
-  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.659819b4718b.gz",
+  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.bbc42691a185.gz",
   "layers": [
    "M4",
    "M5"
@@ -1174,7 +1174,7 @@
   "pin_access_probe": {
    "def_sha256": "88e6bb19cee9c660262af600b7108d9957d7add86da61c7aa68e7bd313c5407d",
    "every_signal_pin_connected": true,
-   "log_sha256": "fd5549671122ad7fb78ceb77b984e6c52bf6ec1185041377187a73fdf37c3c2c",
+   "log_sha256": "41bdca53d230d86bed1859b9155117bc3be6247a4c486323e17d223341aba92a",
    "phase_nm": [
     12,
     12
@@ -1182,9 +1182,9 @@
    "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
    "verdict": "PASS"
   },
-  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.659819b4718b.receipt.json",
-  "receipt_sha256": "0b7e3f7c110879ac41980b5d8477f45003bcbc772137bcb1341bfe5932933367",
-  "sha256": "659819b4718b8385dacfd3d197488b980bf9711c4745c1703bc909a2b371808d",
+  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_he.lef.bbc42691a185.receipt.json",
+  "receipt_sha256": "4afc1d049019a4b48324e5f622dc80d47125c1b2e8ab553a80f64007d97bad45",
+  "sha256": "bbc42691a185f40a487459380306c377c3a7e84250e2eb9e369b8e3491a118aa",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc5",
    "db_path": "srv/opentallas-scratch3/claude/s81-romq-b4/he_tgt/run/results/asap7/kl_ot_v41_rom_elem_q_qxpq_w10_gb_he_vB/base/6_final.odb",
@@ -1196,7 +1196,7 @@
  "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef": {
   "base_sha256": "996bfbfe9fcf3e5187858478efb7972b1e00c4e75ee66107dfdca6c54a52b3b6",
   "die": "s81",
-  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.9924dfc8290c.gz",
+  "file": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.1b7a030446b6.gz",
   "layers": [
    "M4",
    "M5"
@@ -1205,7 +1205,7 @@
   "pin_access_probe": {
    "def_sha256": "8e40c68226b8ae2391078b9c06a70cc842ebb76eabbc184f31eb2339dff4b99d",
    "every_signal_pin_connected": true,
-   "log_sha256": "6af35990ff8c66b8c2b66185516128018e960f6c96482d37bdcc336c6bc737c1",
+   "log_sha256": "1d94b35d855971de295e3fb1a5087cf36b6afc5e6858109101b53cf8110ed089",
    "phase_nm": [
     12,
     12
@@ -1213,9 +1213,9 @@
    "tool": "TritonRoute pin_access (openroad/orfs:asap7lock)",
    "verdict": "PASS"
   },
-  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.9924dfc8290c.receipt.json",
-  "receipt_sha256": "c80afa5e9f5932b32bec64c04d174919561e6d7681f6a430f7e3db4359474e0b",
-  "sha256": "9924dfc8290c3a8fd4de155ae57be280fde77cab31592da83ba8c7fd19e17c06",
+  "receipt": "ot_v41_rom_elem_q_qxpq_w10_gb_hw.lef.1b7a030446b6.receipt.json",
+  "receipt_sha256": "24dce4c410eaaa70fe76b66cd720c223abd2ecadfd0f586f6355aa345305cf28",
+  "sha256": "1b7a030446b62812a5bc8b3c309077ed2f1d8a43111667fffcd426aafc283d25",
   "source": {
    "archive": "/archive/opentallas-signed-1106/epyc5",
    "db_path": "srv/opentallas-scratch2/claude/s81-romq-b5/hw_x8/run/results/asap7/kl_ot_v41_rom_elem_q_qxpq_w10_gb_hw_vB/base/6_final.odb",
