@@ -84,8 +84,21 @@ GATE_ROOTS |= {"layout_render_hook.sh", "layout_render.tcl", "layout_smells.py"}
 GATE_ROOTS |= {"failfast_rules.py"}   # FAILFAST-1 11-11: stops a run on progress; inert unless a rule fires
 GATE_ROOTS |= {"kit_reports.py", "stage_odb_cap.py", "kit_resume.py"}   # FLOW-FIX-2045: helpers the wave ships into every kit (report quarantine, ODB cap, this file): no stage output depends on them
 GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental
+# The pre-GRT hold hook replaces 4_cts.odb. Changing the hook or its settings must rebuild
+# CTS so removing or narrowing a repair starts from the original clock tree.
+RUNNER_ROOTS["pregrt_ff_hold.tcl"] = "cts"
 # run_kit.sh reads these config variables itself (outside the ORFS make steps)
-RUNNER_VARS = {"OT_HOLD_FF_MARGIN": "grt", "OT_TAP_GRT_PRE": "cts", "OT_PINREG_PAD": "cts"}
+RUNNER_VARS = {
+    "OT_HOLD_FF_MARGIN": "grt",
+    "OT_TAP_GRT_PRE": "cts",
+    "OT_PINREG_PAD": "cts",
+    "OT_PREGRT_FF_HOLD": "cts",
+    "OT_PREGRT_HOLD_GUARD": "cts",
+    "OT_PREGRT_HOLD_PORT_MARGIN": "cts",
+    "OT_PREGRT_HOLD_R2R_MARGIN": "cts",
+    "OT_PREGRT_HOLD_R2R_CHUNK_BUFS": "cts",
+    "OT_PREGRT_SKIP_SETUP_PS": "cts",
+}
 # ORFS variables first read after synthesis (anything else: synth, i.e. a full rebuild)
 VAR_STAGE = {}
 for _s, _vs in (("floorplan", "DIE_AREA CORE_AREA CORE_UTILIZATION CORE_ASPECT_RATIO CORE_MARGIN IO_CONSTRAINTS PDN_TCL "

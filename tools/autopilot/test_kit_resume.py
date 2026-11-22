@@ -139,6 +139,23 @@ class Fingerprint(unittest.TestCase):
                 self.assertEqual((dec, start), ("resume", want), d)
                 self.assertEqual(d["reuse"], list(KR.STEPS[:KR.IDX[want]]))
 
+    def test_pregrt_hold_requires_original_cts_checkpoint(self):
+        def add_hook(files):
+            files["pregrt_ff_hold.tcl"] = "write_db /work/4_cts.odb"
+            files["config.mk"] += "export OT_PREGRT_FF_HOLD = 1\nexport OT_PREGRT_HOLD_GUARD = 45\n"
+
+        new = self.new_kit(add_hook)
+        self.assertEqual(new["files"]["pregrt_ff_hold.tcl"]["stage"], "cts")
+        self.assertEqual(new["config"]["OT_PREGRT_FF_HOLD"]["stage"], "cts")
+        self.assertEqual(new["config"]["OT_PREGRT_HOLD_GUARD"]["stage"], "cts")
+        baseline = man(self.oK)
+        for previous, successor in ((baseline, new), (new, baseline)):
+            with self.subTest(enabling=successor is new):
+                previous["checkpoint"] = baseline["checkpoint"]
+                decision = KR.decide(successor, previous)
+                self.assertEqual(decision["start"], "cts")
+                self.assertEqual(decision["reuse"], ["synth", "floorplan", "place"])
+
     def test_new_unknown_file_is_synth(self):
         dec, _, d = self.start(lambda f: f.__setitem__("extra_hook.tcl", "puts hi\n"))
         self.assertEqual(dec, "full", d)
