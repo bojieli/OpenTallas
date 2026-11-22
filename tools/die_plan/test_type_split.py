@@ -1205,3 +1205,11 @@ def test_gen_mode_cut_leg_gets_its_leaf_or_a_feed_through():
         "u_feed_o_coll_i0_p", "ot_dp_feed", {"W": 514}, {"d": "bus:coll_i0", "q": "bus:o_coll_i0_p"})
     assert "leaf" not in w["buses"][0] and w["sources"] == ["rtl/common/ot_dp_feed.sv"]
     assert (ROOT / "rtl/common/ot_dp_feed.sv").is_file()
+
+
+def test_carried_short_fixed_never_falls_below_the_new_station_rows():
+    # lepe_mu_C t1 up_s_7N_L0: base fixed 3 with 4 station rows (short, carried); the cut leaves 1 row -> 1, not 0
+    assert TS.carried_fixed(3, 4, 1) == 1
+    assert TS.carried_fixed(4, 4, 2) == 2
+    assert TS.carried_fixed(2, 2, 1) == 1
+    assert TS.carried_fixed(3, 4, 2) == 2

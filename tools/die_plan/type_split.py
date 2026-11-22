@@ -119,6 +119,13 @@ CLOCK_COPY_KEYS = {"insertion_basis", "insertion_ff_ps", "landing_export_form", 
                    "tap_passthrough", "tap_group"}
 
 
+def carried_fixed(f0, old, new):
+    """lane fixed_cycles after a split moves its station rows old -> new: f0 - old + new, but a carried short base lane
+    (f0 < old) never falls below its new station rows (FLOW-STRIPBODY-R2 11-22)"""
+    f = int(f0) - int(old) + int(new)
+    return max(int(new), f) if int(f0) < int(old) else f
+
+
 class SplitError(ValueError):
     pass
 
@@ -3552,7 +3559,10 @@ class Event:
                         self.rep.setdefault("short_fixed_carried", []).append(dict(lane=lid, fixed=f0, rows=old, new_rows=new))
                     elif f0 < old:
                         raise SplitError(f"lane {lid}: fixed_cycles {f0} < its station rows {old}")
-                    ln["fixed_cycles"] = f0 - old + new
+                    # FLOW-STRIPBODY-R2 11-22: a carried short base lane never falls below its new station rows: the
+                    # folded row that made it short may have left with the cut (lepe_mu_C t1 up_s_7N_L0 / L2: 3 -> 0 with
+                    # 1 row; strict bind delivered 5 vs table 4, UNPRICED_KIT_STATIONS)
+                    ln["fixed_cycles"] = carried_fixed(f0, old, new)
                     ln["note"] = (ln.get("note", "") + f" | {self.tag}: fixed {f0} -> {ln['fixed_cycles']} (internal "
                                   f"stations {old} -> {new}: legs cut at the piece boundary)").lstrip(" |")
                     self.rep["lanes_changed"].setdefault(lid, {})["fixed"] = [f0, ln["fixed_cycles"]]
