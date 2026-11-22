@@ -1567,6 +1567,9 @@ SCHEMA["properties"]["clock"]["properties"]["zl_lockup"] = {"type": "object", "a
         "exclude": {"type": "array", "items": {"type": "string", "minLength": 1}},
         "same_tap": {"type": "string", "enum": ["bypass", "keep"]},
         "max_um": {"type": "number", "minimum": 0},
+        # LOCKUP-STATION-R3: regexes (matched anywhere in the instance name) of lockup latches hung on their CAPTURE tap
+        # (clock_taps.tcl OT_HOP_LATCH_CAPTURE_TAP; not parked on the launch leaf), e.g. internal_stations chains "u_fl_d10_u_t_1_0_n_y_sg1"
+        "capture_tap": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "pattern": "^[^\\s]+$"}},
         "ports": {"type": "array", "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
         "clk": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {

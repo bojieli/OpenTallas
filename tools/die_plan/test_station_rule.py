@@ -395,3 +395,24 @@ def test_auto_form_all_zero_logic_hops_minus_reset_and_sram(tmp_path):
     assert ct.index("ct_hl_drop $ct_i") < ct.index("$ct_cit disconnect; incr ct_hl; continue")
     zn = (here / "zl_netlist_lockup.tcl").read_text()
     assert "lappend zn_excl" in zn and "foreach zn_re $zn_excl" in zn
+
+
+def test_capture_tap_key_zl_lockup(tmp_path):
+    """LOCKUP-STATION-R3: clock.zl_lockup.<T>.capture_tap -> OT_HOP_LATCH_CAPTURE_TAP regexes; the leaf parking skips them."""
+    import gen_phys
+    import jsonschema
+    sch = S.SCHEMA["properties"]["clock"]["properties"]["zl_lockup"]
+    jsonschema.validate({"T": {"capture_tap": ["u_fl_d10_u_t_1_0_n_y_sg1"]}}, sch)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"T": {"capture_tap": ["has space"]}}, sch)
+    class P:  # noqa: N801
+        raw = {"clock": {"zl_lockup": {"T": {"capture_tap": ["u_fl_d10_u_t_1_0_n_y_sg1", "u_fl_x_"]}}}}
+        die = {"name": "qwen_compute"}
+        types = {"T": {}}
+    v = gen_phys._hop_latch_tap_cfg(P, "T")
+    assert v.split() == ["u_fl_d10_u_t_1_0_n_y_sg1", "u_fl_x_"], v
+    class Q(P):
+        raw = {"clock": {"zl_lockup": {"T": {"auto": True}}}}
+    assert gen_phys._hop_latch_tap_cfg(Q, "T") is None
+    ct = (Path(__file__).resolve().parent / "clock_taps.tcl").read_text()
+    assert "proc ct_hl_capmatch" in ct and "![ct_hl_capmatch [$ct_i getName]]" in ct

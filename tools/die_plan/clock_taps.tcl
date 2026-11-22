@@ -993,6 +993,14 @@ proc ct_hl_drop {li tapnet drv ct_hlmax} {
   if {$far} { return far }
   return ""
 }
+# LOCKUP-STATION-R3 (plan clock.zl_lockup.<T>.capture_tap -> OT_HOP_LATCH_CAPTURE_TAP): a latch whose name matches one of those
+# regexes belongs to the capture-tap pass below, so it is not parked for its launch flop's leaf (hop_latch_leaf.tcl would hang it
+# back on the launch tap after CTS).  Internal station chains (u_fl_<inst>_*) launch from a late tap into an early capture tap.
+proc ct_hl_capmatch {nm} {
+  if {![info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)]} { return 0 }
+  foreach re $::env(OT_HOP_LATCH_CAPTURE_TAP) { if {[regexp -- $re $nm]} { return 1 } }
+  return 0
+}
 proc ct_hl_bypass {li} {
   set dn ""; set qn ""
   foreach it [$li getITerms] {
@@ -1041,7 +1049,7 @@ if {[llength $ct_taps] >= 2} {
       set ct_why [ct_hl_drop $ct_i [$ct_dit getNet] $ct_drv $ct_hlmax]
       if {$ct_why ne "" && [ct_hl_bypass $ct_i]} { if {$ct_why eq "far"} { incr ct_hlbf } else { incr ct_hlb }; continue }
     }
-    if {$ct_hleaf && !$ct_hf} { lappend ct_hlpark "[$ct_i getName]\t[$ct_drv getName]"; $ct_cit disconnect; incr ct_hl; continue }
+    if {$ct_hleaf && !$ct_hf && ![ct_hl_capmatch [$ct_i getName]]} { lappend ct_hlpark "[$ct_i getName]\t[$ct_drv getName]"; $ct_cit disconnect; incr ct_hl; continue }
     set ct_tn [$ct_dit getNet]
     if {[$ct_cit getNet] ne $ct_tn} { $ct_cit disconnect; $ct_cit connect $ct_tn; incr ct_hlm }
     # VSN6-B 11-11: remember latch -> launch flop clock pin for the cap recheck below (they move as one unit)

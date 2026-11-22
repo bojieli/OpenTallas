@@ -4496,6 +4496,12 @@ def _hop_latch_tap_cfg(P, tn):
             res += [_hop_latch_re(s, k) for s, k in hops
                     if (s, k) not in launch and _re.search(tok, sample(s, k)) and _hop_latch_re(s, k) not in res]
         toks = keep
+    # LOCKUP-STATION-R3: plan clock.zl_lockup.<T>.capture_tap = regexes of lockup latch instance names (internal_stations
+    # chains u_fl_<inst>_*, zl_lockup hops) hung on their capture tap, not their launch flop's leaf (clock_taps.tcl)
+    zs = zl_lockup_spec(getattr(P, "raw", None), tn) or {}
+    for rx in zs.get("capture_tap") or []:
+        if rx not in toks and rx not in res:
+            toks.append(rx)
     v = " ".join(toks + res)
     return v or None
 
