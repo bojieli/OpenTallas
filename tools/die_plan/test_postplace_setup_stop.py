@@ -225,6 +225,35 @@ proc port_rect {method} { return 0 }
     d = PS.read_log(r.stdout)
     assert (d["hop_um"], d["path_um"], d["span_um"], d["stages"]) == (80.0, 90.0, 102.0, 2)
 
+
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+@pytest.mark.parametrize("has_pin", [True, False])
+def test_postplace_path_keeps_endpoints_and_resolves_mixed_bus_escaping(has_pin):
+    rows = r""" 0.00 0.00 ^ u_src/Q (DFF)\n 1.00 1.00 ^ top/u_macro\[0\]/d\[347\] (MACRO)\n 1.00 data arrival time\n"""
+    stubs = r"""
+rename blk clock_block
+proc blk {method args} {
+    set name [lindex $args 0]
+    if {$method eq "findITerm"} {
+        return [expr {$name eq "u_src/Q" ? "pin_q" : "NULL"}]
+    }
+    if {$method eq "findInst" && $name eq {top/u_macro\[0\]}} { return macro }
+    return [clock_block $method {*}$args]
+}
+proc macro {method pin} {
+    if {$method eq "findITerm" && $pin eq {d[347]} && @HAS_PIN@} { return pin_d }
+    return NULL
+}
+proc pin_q {method} { return [dict get {getAvgXY {1 10000 0} getInst source_ff} $method] }
+proc pin_d {method} { return [dict get {getAvgXY {1 100000 2000} getInst macro} $method] }
+""".replace("@HAS_PIN@", "1" if has_pin else "0")
+    r = subprocess.run([TCLSH], input=_pp_stub("", "", rows, stubs), text=True, capture_output=True, check=True)
+    rec = PS.read_log(r.stdout)
+    assert (rec["wns"], rec["start"], rec["end"]) == (-41.25, "d_src", "d_end")
+    assert rec["hop_um"] == (92.0 if has_pin else None)
+    assert ("no instance terminal" in r.stdout) is not has_pin
+
+
 def test_path_length_span_and_stage_count_reach_the_marker(tmp_path):
     """FABLE-FIX-S81-STROBE 11-21: S81 serdes t16 START wavefront: hop 115.9 um but 2.8 mm / 27 repeaters in one cycle (-1252 ps)."""
     log = tmp_path / "l"

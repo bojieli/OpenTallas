@@ -165,7 +165,19 @@ proc ot_postplace_db_terminal {blk method pin} {
   if {$term eq "NULL" || $term eq ""} {
     set term [$blk $method [string map {"\[" "\\\[" "\]" "\\\]"} $pin]]
   }
-  return $term
+  return [expr {$term eq "" ? "NULL" : $term}]
+}
+# OpenDB may escape indices in the hierarchical instance name but retain the
+# master pin's raw bus name. Resolve the two names independently after the
+# complete-name lookup so existing flat names keep their normal precedence.
+proc ot_postplace_db_iterm {blk pin} {
+  set term [ot_postplace_db_terminal $blk findITerm $pin]
+  if {$term ne "NULL"} { return $term }
+  set split_at [string last / $pin]
+  if {$split_at < 0} { return "NULL" }
+  set inst [ot_postplace_db_terminal $blk findInst [string range $pin 0 [expr {$split_at - 1}]]]
+  if {$inst eq "NULL"} { return "NULL" }
+  return [ot_postplace_db_terminal $inst findITerm [string range $pin [expr {$split_at + 1}] end]]
 }
 # A full STA report prints instance/pin names (including hierarchical names and bus bits) and top-level ports.
 # Measure the wires between those pins. Within one instance, the next wire starts at the output, not the input.
@@ -183,7 +195,7 @@ proc ot_postplace_path_geometry {blk path} {
       set xy [list [$bounds xCenter] [$bounds yCenter]]
       set inst [list port $pin]
     } else {
-      set term [ot_postplace_db_terminal $blk findITerm $pin]
+      set term [ot_postplace_db_iterm $blk $pin]
       if {$term eq "NULL"} { error "no instance terminal for $pin" }
       lassign [$term getAvgXY] ok x y
       if {!$ok} { error "no placed pin geometry for $pin" }
@@ -239,6 +251,7 @@ if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "
   lassign [ot_tt_wns measure] ot_pw_wns
   # FLOW-NOADV-R3 11-20 (PLACE-SETUP-STOP): OT_POSTPLACE_WORST=1 also names the worst path's start / end and its longest hop, total wire length and endpoint span in um. These diagnostics do not affect the timing result.
   if {$ot_postplace} {
+    set ot_pw_s "?"; set ot_pw_e "?"
     if {[catch {
       sta::redirect_string_begin
       report_checks -path_delay max -group_path_count 1 -format full
@@ -247,12 +260,11 @@ if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "
         error "reported path slack $ot_pw_slack does not identify measured WNS $ot_pw_wns"
       }
       set ot_pw_txt [join $ot_pw_path "\n"]
-      set ot_pw_s "?"; set ot_pw_e "?"
       regexp {Startpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_s
       regexp {Endpoint:\s+(\S+)} $ot_pw_txt -> ot_pw_e
       lassign [ot_postplace_path_geometry [ord::get_db_block] $ot_pw_path] ot_pw_hop ot_pw_len ot_pw_span ot_pw_n
       puts [format "OT_POSTPLACE_WORST start=%s end=%s hop_um=%.1f path_um=%.1f span_um=%.1f stages=%d" $ot_pw_s $ot_pw_e $ot_pw_hop $ot_pw_len $ot_pw_span $ot_pw_n]
-    } ot_pw_err]} { puts "OT_POSTPLACE_WORST start=? end=? hop_um=? (worst path read failed: $ot_pw_err)" }
+    } ot_pw_err]} { puts "OT_POSTPLACE_WORST start=$ot_pw_s end=$ot_pw_e hop_um=? (worst path read failed: $ot_pw_err)" }
   }
   exit 0
 }
