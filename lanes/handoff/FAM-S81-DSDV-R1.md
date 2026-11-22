@@ -8,3 +8,11 @@ Family: S81 dsdv_slice_c1x_C__t1,t3..t10; lepw_mu_C, lepw_mu_LP, lepw_mus_C, lep
 1. Read shared xg form from LEPE-4/SLICE-R6 rows; apply to c1x_C representative (non-t9, e.g. t8/t4) + lepw_mus_C + iq_C as J8 rows; hand to S81-J6-ASSEMBLY-R5 before 11-22 14:00.
 2. Private kit via kit_wave.py private-spec (model: autopilot/private_specs/FAM-S81-IQF-R1/*/spec.json; fork J7 tree kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work with ot-tree-fork).
 3. After J7 apply (04:14): check holds on my 14 types released, wave relaunches siblings.
+
+## STATE 11-22 02:3x PST (after limit resume)
+- COORD ruling: iq_C t1 = representative. Owner prefix rows added (COORD-ROUTED-OWNERS.tsv). J8 rows need tools_min_sha 20a713e74d. J7 does NOT release my types; they relaunch on J8 (11-23 04:15).
+- Tree fork (real copy of J7 d8j7_1117_work): epyc9 /srv/opentallas-scratch2/claude/fam-s81-dsdv-r1/trees/j7_work (verified).
+- iq_C J7 geom kit DONE: epyc9 kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-DSDV-R1/dsdv_slice_iq_C__t1_1121230933 (370,912 cells, geom PASS-COND). scan405/ = placed_scan --limit 405 --cycle 405: 103 groups, 15389 bits.
+- Generator scratchpad iq/mkrows.py maps groups with u_bin_/u_bout_ ends to bus: station rows (13 rows); 89 inner groups (xg u_r, xf, rrl reset, ist_ existing) flagged for LEPE-4 shared xg/xf form + RAWRST rows. Rows file epyc9 fam-s81-dsdv-r1/iq_rows.json; private plan trees/j7_work/physical/die_plan/s81/plan_iq1.json.
+- Strict bind+LATCHECK+G0 running: ot-run unit on epyc9 (gate_iq1.sh, log fam-s81-dsdv-r1/gate_iq1.otrun.log, outputs gate_iq1/, bind out native_bind/out_iq1). Then private-spec iq_C with --plan plan_iq1.json --bind-out out_iq1 --src-manifest off -> route toward sign-off.
+- Geom kits launched on J7 fork for lepw_mus_C__t1, lepw_mu_LP__t2, c1x_C__t8 (specs in autopilot/private_specs/FAM-S81-DSDV-R1/*_1122*). Next: same scan->rows for them.
