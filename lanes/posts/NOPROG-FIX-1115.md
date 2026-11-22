@@ -500,3 +500,6 @@
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 42.4 h job 42.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 30.7 h; last event 12.5 h ago, log write 8.7 h ago (3167 lines)
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 10.9 h job 10.9 h: no new meaningful log line for 9.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS epyc8 cbn_q00__cld7bf7197 5_1_grt stage 6.3 h job 11.6 h: no new meaningful log line for 6.3 h; last: OT_PG_TRACK_TRUTH add 5351 temporary GRT obstructions (layer=stripes/tracks) M5=1416/5664 M6=3312/19
+- 2026-11-22 02:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 02:52 PST: 156 running jobs, PROGRESSING 143, SLOW 11, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 43.4 h job 43.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 31.1 h; last event 13.5 h ago, log write 9.7 h ago (3167 lines)
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 11.9 h job 11.9 h: no new meaningful log line for 10.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
