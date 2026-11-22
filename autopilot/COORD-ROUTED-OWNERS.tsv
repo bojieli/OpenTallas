@@ -110,6 +110,8 @@ s81	dsdv_slice_lepw_mu_C__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned d
 s81	serdes__t15__cla3d02796	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	serdes__t16	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	serdes__t4	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
+s81	svc_hi_dsdv_svc_*	OPUS-FIX-S81-SVC-R9	COORD 11-22 OWNERS-SWEEP: explicit svc prefix rows (catch-all svc_* not picked up by generator)
+s81	svc_lo_dsdv_svc_*	OPUS-FIX-S81-SVC-R9	COORD 11-22 OWNERS-SWEEP: explicit svc prefix rows (catch-all svc_* not picked up by generator)
 s81	svc_hi_dsdv_svc_rs__t1	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
 s81	svc_hi_dsdv_svc_rs__t3	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
 s81	svc_lo_dsdv_svc_rs__t1	OPUS-FIX-S81-SVC-R9	COORD 11-21 21:50 ownership sweep: svc family owner adopts all svc rows (was dead FAIL-S81-1)
