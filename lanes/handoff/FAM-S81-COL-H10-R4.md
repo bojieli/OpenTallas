@@ -21,3 +21,6 @@ col_h10_r2__t1__* (18 variants, ex S81-GEOM-OPUS): COORD-ROUTED-OWNERS.tsv prefi
 
 ## 22:1x proof A route
 place+geom PASS-COND. route ot-run oth-ubuntu-2998350-1795329265 epyc7 (resumed from place), log epyc7 /srv/opentallas-scratch2/claude/fam-s81-col-h10-r4/routeA7_otrun.log, kit epyc7 .../private/FAM-S81-COL-H10-R4/col_h10_r2__t1__cl99efd374__pv1619ecc6_1121201647/gen/<T>. Waiter: ot-wait --kit K --stage grt --also unit. Read final 5_1_grt.odb (grt_policy/tt ep_tt.tsv + overflow) -> J8 term (a) by 11-22 14:00.
+
+## 22:1x lever-1 route + cleanup
+lever-1 place+geom PASS-COND (76,109 cells). route ot-run oth-ubuntu-3023440-1795329345 epyc7, log epyc7 fam-s81-col-h10-r4/routeL1_otrun.log, kit epyc7 .../private/FAM-S81-COL-H10-R4/col_h10_r0_p4__t1__pvcc166a6d_1121190309/gen/col_h10_r0_p4__t1__pvcc166a6d. Accept: route DRC 0 vs u_cf/u_t0 (count DRT violations by owner macro). Cleanup: specA/specL1/L1b/L1c deleted; intel2 srcA handed to CLEAN-AGGR-R3 (guard host-scope).
