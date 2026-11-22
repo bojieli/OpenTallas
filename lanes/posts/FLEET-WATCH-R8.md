@@ -59,3 +59,5 @@
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-22 00:23 PST epyc9 at 2397 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-22 00:23 PST intel1 at 1220 GiB: already in gen_hosts, nothing to restore
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
