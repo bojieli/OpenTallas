@@ -21989,3 +21989,5 @@ FAILED [AUTOPILOT 27b8bf5e2d1c] 2026-11-21 20:35:22 PST AUTOPILOT -> KIT-WAVE-3:
   KV: 2 FAILED-NO-RELAUNCH (kv3_hroot owner FAM-KV-HROOT-R1, kv3_hub_Wo), 16 WAIT-BIND under KV-WAITBIND-R1, 2 CBC-FALLBACK.
   HEAD: hd_lep0N FAILED-NO-RELAUNCH+STALE 11h, owner FABLE-FIX-HEAD-LEP0N-R7 live.
   COORD-ROUTED-OWNERS.tsv is in autopilot/, not coord root.
+- 2026-11-21 20:54 PST DIED [FABLE-FIX-S81-LEAF-R7] ot-run oth-ubuntu-875159-1795316235 on tolerant-swine: rc=143 after 7010 s, ended 20:54:04, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r7/g68.otrun.log, cmd: --hosts localhost --dir /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r7 --threads 8 --mem 104 --priority plan --plan-job bind --disk 6
+  [filed under] FABLE-FIX-S81-LEAF-R9: FABLE-FIX-S81-LEAF-R7 stood down (chain FABLE-FIX-S81-LEAF-R7 > FABLE-FIX-S81-LEAF-R8 > FABLE-FIX-S81-LEAF-R9)
