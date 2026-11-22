@@ -409,3 +409,9 @@ s81	ot_s81sl_kv_leaf__t1	FAM-S81-MISC-R4	COORD 11-21 21:50 ownership sweep: unow
 s81	ot_s81sl_kv_leaf__t5	FAM-S81-MISC-R4	COORD 11-21 21:50: lane cores g_ln[4]/g_ln[0] on ft0_i/ft1_i/monitor_0 bands; J8 band-clear row (t5fix); FLOW-PRIVSPEC-R1 builds the tree
 s81	col_h9_r0_p4__t1__*	FAM-S81-COL-R6	COORD 11-21 23:xx: S81-GEOM-OPUS dead; held old-J6 rows stay held, relaunch on J7 (04:14 apply) then J8; coordinate with FAM-S81-COL-H9R0-R4 (keep+STAGGER J8 rows, kit C)
 s81	col_h9_r0_p5__t1__*	FAM-S81-COL-R6	COORD 11-21 23:xx: S81-GEOM-OPUS dead; held old-J6 rows stay held, relaunch on J7 (04:14 apply) then J8; coordinate with FAM-S81-COL-H9R0-R4
+s81	dsdv_slice_c1x_C__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of the unowned dsdv slice types; held until J8 (11-23 04:15); J8 rows tools_min_sha 20a713e74d (LEPE-4 shared xg/xf form)
+s81	dsdv_slice_iq_C__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of the unowned dsdv slice types; held until J8 (11-23 04:15); J8 rows tools_min_sha 20a713e74d (LEPE-4 shared xg/xf form)
+s81	dsdv_slice_lepw_mu_C__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of the unowned dsdv slice types; held until J8 (11-23 04:15); J8 rows tools_min_sha 20a713e74d (LEPE-4 shared xg/xf form)
+s81	dsdv_slice_lepw_mus_C__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of the unowned dsdv slice types; held until J8 (11-23 04:15); J8 rows tools_min_sha 20a713e74d (LEPE-4 shared xg/xf form)
+s81	dsdv_slice_lepw_mu_LP__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of the unowned dsdv slice types; held until J8 (11-23 04:15); J8 rows tools_min_sha 20a713e74d (LEPE-4 shared xg/xf form)
+s81	dsdv_slice_lepw_mus_LP__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of the unowned dsdv slice types; held until J8 (11-23 04:15); J8 rows tools_min_sha 20a713e74d (LEPE-4 shared xg/xf form)
