@@ -228,3 +228,4 @@
 - 2026-11-22 02:02 PST ALERT NO-PROGRESS s81: 46 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 61 min (last 01:00); 343 hold(s): 343 without eta, 0 overdue
 - 2026-11-22 02:02 PST ALERT STUCK-STATE s81: 37 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
 - 2026-11-22 02:52 PST ALERT NO-PROGRESS s81_head: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 187 min (last 23:44); NO-LAUNCH x3
+- 2026-11-22 03:02 PST ALERT STUCK-STATE s81: 37 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
