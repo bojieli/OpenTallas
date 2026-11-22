@@ -18,6 +18,9 @@ re='^[A-Za-z0-9][A-Za-z0-9._-]*$'
 [[ "$succ" =~ $re ]] || { echo "stand-down: bad successor '$succ' (a lane name or none)" >&2; exit 2; }
 [ "$lane" != "$succ" ] || { echo "stand-down: successor is the lane itself" >&2; exit 2; }
 [ "$succ" != none ] || [ -n "$note" ] || { echo "stand-down: successor none needs a note saying who reads the lane's work" >&2; exit 2; }
+# FLOW-OPS-R2 11-22 (FABLE-FLOW-2200 item 3, OWNER 11-21 20:4x): lanes auto-compress their context; never stand down or hand off for context size.
+if printf '%s' "$note" | grep -qiE 'context|compact|compress|token (budget|limit|window)|(^|[^a-z])ctx([^a-z]|$)'; then
+  echo "stand-down: REFUSED, the reason names context size: lanes auto-compress (OWNER 11-21); keep working and keep lanes/handoff/$lane.md current" >&2; exit 2; fi
 LS="$C/tools/lane_status.py"; T="$C/lanes/LANE-STATUS.tsv"
 exec 8>"$C/.stand-down.lock"; flock -w 120 8 || { echo "stand-down: lock busy" >&2; exit 1; }
 # (2) a chain from SUCCESSOR that returns to LANE
