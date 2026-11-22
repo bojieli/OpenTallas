@@ -47,3 +47,4 @@
 - 2026-11-21 16:55 PST Corrected front3 CTS finished and exact layout reviewed. Native FF hold +19.50 with vclk period warning, independent same-period TT/FF measurement next. Route held.
 - 2026-11-21 16:59 PST t16 private W1 form seats seven boot-only writer START stages on the exact a3 geometry with worst 378.459um. Exact J7eL6 count ties change only lk_EN3.coll_i0 K1→8 and lk_WS2.coll_i0 K−2→5. Narrow full control ring proof passes, exact-width sweep active; no parent change.
 - 2026-11-21 17:00 PST 16:59 checkpoint: old exact decoder LEC active, corrected front3 TT+44.80/internal FF+17.79 but shell AM hold −762.48, private t14 placement fixes and t16 W7 boot-only proof preserved.
+- 2026-11-21 17:07 PST t16 exact W513 W7 K-adjusted ring test PASS both receivers over four resets, 158 equal words and 158 wrong-K catches. t14 combined exact private DPL reduces all over405 captures to 501, with unrelated 754.22um max.
