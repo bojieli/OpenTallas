@@ -23034,3 +23034,4 @@ FAILED [AUTOPILOT 340b90bce065] 2026-11-22 00:06:33 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 00:08 PST DONE [fable-fix-s81-colrom-r5] ot-push-main otpush-tolerant-swine-985100 on tolerant-swine: rc=0 after 111 s, ended 00:08:47, log none, cmd: ot-push-main 
 - 2026-11-22 00:09 PST DONE [OPUS-FIX-HEAD-LEP0N-R8] ot-run oth-ubuntu-728607-1795334283 on tolerant-swine: rc=0 after 680 s, ended 00:09:21, log /home/ubuntu/opus-fix-head-lep0n-r8/post3_e5.otrun.log, cmd: --mem 32 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8 --stage /srv/opentallas-scratch2/claude/opu
+- 2026-11-22 00:09 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1244903 on civil-redfish: rc=0 after 400 s, ended 08:09:52, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push12.log, cmd: ot-push-main 
