@@ -37,6 +37,10 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
 - round g (full_g.sh, ot-run localhost PID 1577850): split7g (only L0/L2 0->1 vs split7d), pack7g (+clock_landings fix +
   tmp/bind_j7_fix.py), tree _stripbody_r2g (nlink 1, LINKS 0), bind7g, latcheck7g. r2e deleted. Kits: tree r2g, bind-out bind7g.
 - ovl_e: tools copy with dangling links, ot-delete SKIP protected (kit_wave marker); small, retry later.
+- round g: BIND PASS (0 errors), LATCHECK PASS 893/893 with main cb780b6d04 (latcheck7g3.json).
+- private-spec (specs2.sh, lc kit_wave with efe70f16d3 + fix 0890cc9405: spec kit_rtl.asbuilt = bind's asbuilt_vN, rt-floor exempt):
+  specs $L/spec_<item>/spec.json for strip_S, t1 (body), strip_N.
+- run-item x3 started 07:04 (rt/current kit_wave, logs $L/runitem_<item>.log, PIDs 3697331/2/4). Adopt: never relaunch while alive.
 ## Cleanup owed
 - trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each; ASK posted to COORD/FLEET-OPS 02:4x) superseded; ot-delete guard refuses now (newer than die tree,
   apply pending). Delete via ot-delete after the J7 apply.
