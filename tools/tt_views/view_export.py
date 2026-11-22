@@ -461,7 +461,7 @@ def _aps():
         return None
 
 
-def exact_window_patch(text, exact_lines):
+def exact_window_patch(text, exact_lines, pg_access=False):
     """default abstract TEXT with its same-layer OBS replaced by the EXACT shapes inside every signal pin's wide-spacing
     window (TW3-LGTAP 2026-10-19).  Window = the pin rect widened by the layer's wide-metal spacing across the layer's
     preferred direction (M5 vertical: +-0.072 in x over the pin's y run; M4 horizontal: +-0.072 in y).  Inside a
@@ -474,7 +474,7 @@ def exact_window_patch(text, exact_lines):
     iu = mod._iu
     norm = lambda r: (min(r[0], r[2]), min(r[1], r[3]), max(r[0], r[2]), max(r[1], r[3]))
     head, obs = mod.split_lef(text)
-    sig, _ = mod.pin_rects(head)
+    sig, pg = mod.pin_rects(head)
     BIN = 2 * U  # 2-um x bins
     wins = {}
     for rs in sig.values():
@@ -487,6 +487,21 @@ def exact_window_patch(text, exact_lines):
             win = (a - w, b, c + w, e) if int(lay[1:]) % 2 else (a, b - w, c, e + w)
             for k in range(win[0] // BIN, win[2] // BIN + 1):
                 wins.setdefault((lay, k), []).append(win)
+
+    pg_windows = 0
+    if pg_access:
+        for r in pg:
+            if r[0] != "M5":
+                continue
+            a, b, c, e = norm(tuple(map(iu, r[1:])))
+            for lay in ("M6", "M7"):
+                w = iu(mod.WIDE_SPACING_UM[lay])
+                win = (a - w, b - w, c + w, e + w)
+                for k in range(win[0] // BIN, win[2] // BIN + 1):
+                    wins.setdefault((lay, k), []).append(win)
+                pg_windows += 1
+        if pg_windows and mod.PG_ACCESS_MARK not in head.splitlines():
+            head += "\n" + mod.PG_ACCESS_MARK
 
     def hits(lay, r):
         out = set()
@@ -534,8 +549,11 @@ def exact_window_patch(text, exact_lines):
     blk = "".join(f"\n    LAYER {lay} ;" + "".join(f"\n      RECT  {mod._um(a)} {mod._um(b)} {mod._um(c)} {mod._um(e)} ;"
                                                 for a, b, c, e in sorted(rs)) for lay, rs in sorted(add.items()))
     obs = obs[:k] + blk + obs[k:]
-    return head + obs, dict(windows=len({w for v in wins.values() for w in v}), default_rects_cut=cut,
-                            exact_rects_added=sum(map(len, add.values())))
+    receipt = dict(windows=len({w for v in wins.values() for w in v}), default_rects_cut=cut,
+                   exact_rects_added=sum(map(len, add.values())))
+    if pg_access:
+        receipt["pg_windows"] = pg_windows
+    return head + obs, receipt
 
 
 def pin_access_violations(text):
@@ -699,7 +717,7 @@ def pg_brief(rep):
                 raw_verdict=rep.get("raw_verdict", rep["verdict"]))
 
 
-def choose_abstract(out, name, base, image, mounts=()):
+def choose_abstract(out, name, base, image, mounts=(), pg_access=False):
     """publish the exact-shape abstract instead of the default one when the default one blocks signal pin access or
     fails the PG crossing preflight (pg_crossing_published), or when OT_VIEW_EXACT_OBS=1 asks for it (the exact one is
     written by an extra session only then); returns the decision record (always removes the side file).  The record's
@@ -744,6 +762,20 @@ def choose_abstract(out, name, base, image, mounts=()):
                                     "default (closing-bloat) abstract fails the PG crossing preflight: "
                                     + "; ".join(pg["fails"][:2])) + f"; exact-shape abstract PG {pg_x['verdict']}")
                     exact.replace(lef)
+                    return rec
+            if pg_access and pg_bad and pg["pair"] == PG_CROSS_DEFAULT:
+                with exact.open(errors="replace") as f:
+                    pg_window_text, patch = exact_window_patch(text, f, pg_access=True)
+                pg_window = pg_crossing_published(pg_window_text)
+                pin_window = pin_access_violations(pg_window_text)
+                rec.update(pg_window_patch=patch, pg_window_crossing=pg_brief(pg_window),
+                           pg_window_pin_access_violations=None if pin_window is None else len(pin_window))
+                if patch["pg_windows"] and pg_window["nets"] and pg_window["verdict"] == "PASS" and pin_window == []:
+                    tmp = out / f".{name}.lef.pg-windows"
+                    tmp.write_text(pg_window_text)
+                    rec.update(mode="exact_pg_windows", default_sha256=sha(lef), exact_sha256=sha(exact),
+                               why="exact routed shapes in signal and M5 PG crossing windows pass both access checks")
+                    tmp.replace(lef)
                     return rec
             if not bad:
                 return rec
@@ -991,6 +1023,8 @@ def main():
     ap.add_argument("--pin-only-tech", action="store_true", help="snapshot exact read-tech LEF for M6 contact-via audit")
     ap.add_argument("--signal-max-layer", help="optional stricter signal/clock ceiling, independent of PG")
     ap.add_argument("--pg-max-layer", help="PG ceiling for the final routed net-type audit")
+    ap.add_argument("--exact-m5-pg-windows", action="store_true",
+                    help="for a PG-blocked abstract, recover exact routed M6/M7 metal in the M5 PG windows")
     ap.add_argument("--signal-audit-tcl", type=Path, help="source-pinned actual OpenDB net-type audit helper")
     ap.add_argument("--forwarded-clock", metavar="INPUT:OUTPUT", help="explicit scalar physical unary BUF/INV forwarding pair; polarity is derived from Liberty")
     ap.add_argument("--retain-child-clock-witness", type=Path, metavar="TOOLS_DIR",
@@ -1220,9 +1254,9 @@ def main():
         rec.setdefault('forwarded_clock_errors', {})['cross_corner'] = 'inconsistent physical Liberty polarity'
         for corner in rec['corners'].values():
             corner['done'] = False
-    rec["abstract"] = choose_abstract(out, a.name, base, a.image) if "ss" in a.corners.split(",") else \
+    rec["abstract"] = choose_abstract(out, a.name, base, a.image, pg_access=a.exact_m5_pg_windows) if "ss" in a.corners.split(",") else \
         dict(mode="default", why="no SS pass: abstract not written by this export")
-    if rec["abstract"]["mode"] in ("exact", "exact_windows", "exact_pg", "exact_forced"):
+    if rec["abstract"]["mode"] in ("exact", "exact_windows", "exact_pg", "exact_pg_windows", "exact_forced"):
         print(f"VIEW_EXPORT exact-shape abstract published: {rec['abstract']['why']}")
     pgx = rec["abstract"].get("pg_crossing") or {}
     if pgx.get("verdict") == "FAIL":

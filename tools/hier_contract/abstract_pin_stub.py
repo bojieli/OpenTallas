@@ -42,6 +42,9 @@ _FILL = re.compile(rb"\x02+")
 _RECT = r"RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"
 
 
+PG_ACCESS_MARK = "# OT_OBS_PG_ACCESS M5:M6+M7"
+
+
 def _ov(a, b):  # overlap with positive area
     return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
 
@@ -286,6 +289,11 @@ def find_pockets(text, d_um=None, use_marker=True):
     below = "M%d" % (int(layer[1:]) - 1)
     keep = [(a - p, b - p, c + p, e + p) for rs in sig.values() for r in rs if r[0] in (layer, below)
             for a, b, c, e in [norm(tuple(map(_iu, r[1:])))]]
+    if layer == "M7" and PG_ACCESS_MARK in head.splitlines():
+        # Exact-window export retains the routed M7 geometry over these M5
+        # stripes. Avoid recreating the removed bloat as synthetic pocket OBS.
+        keep.extend((a - p, b - p, c + p, e + p) for r in pg if r[0] == "M5"
+                    for a, b, c, e in [norm(tuple(map(_iu, r[1:])))])
     rects = fill_gaps(obst, keep, _iu(d)) if d > 0 else []
     rec.update(d_um=d, pitch_um=pitch, obstacles=len(obst), rects=[tuple(v / U for v in r) for r in rects], _int=rects)
     return rec
