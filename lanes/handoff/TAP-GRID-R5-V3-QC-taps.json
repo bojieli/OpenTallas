@@ -1,0 +1,3978 @@
+{
+ "lane": "TAP-GRID-R5",
+ "base_plan": "/srv/opentallas-scratch2/claude/qc-plan-r12/ctl_strap/v3p3_static/plan.json",
+ "split_rows": "/srv/opentallas-scratch2/claude/tap-grid-r5/v3all2/rows.json",
+ "types": 111,
+ "rows": {
+  "cbf_q00__cl1b5a6458": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t101",
+      "xy": [
+       565.408,
+       1257.12
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 338,
+    "taps_over_250": 9,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbf_q00__cl1b5a6458/gen/cbf_q00__cl1b5a6458"
+   },
+   "pinreg_stop": null
+  },
+  "cbf_q00__cl870de686": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t130",
+      "xy": [
+       610.208,
+       653.408
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 384,
+    "taps_over_250": 6,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/items/cbf_q00__cl870de686/attempt_5/gen/cbf_q00__cl870de686"
+   },
+   "pinreg_stop": null
+  },
+  "cbf_q01": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t106",
+      "xy": [
+       1161.568,
+       1101.6
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 279,
+    "taps_over_250": 2,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/cbf_q01/gen/cbf_q01"
+   },
+   "pinreg_stop": null
+  },
+  "cbf_q01_s2": {
+   "clock": {
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 252,
+    "taps_over_250": 1,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbf_q01_s2/gen/cbf_q01_s2"
+   },
+   "pinreg_stop": null
+  },
+  "cbf_q11": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t89",
+      "xy": [
+       625.888,
+       30.24
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 290,
+    "taps_over_250": 1,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/cbf_q11/gen/cbf_q11"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q00__cl622f65d2": {
+   "clock": {
+    "append_taps": [
+     {
+      "name": "clk_t132",
+      "xy": [
+       634.528,
+       12.96
+      ]
+     },
+     {
+      "name": "clk_t133",
+      "xy": [
+       427.168,
+       12.96
+      ]
+     },
+     {
+      "name": "clk_t134",
+      "xy": [
+       741.536,
+       12.96
+      ]
+     },
+     {
+      "name": "clk_t135",
+      "xy": [
+       534.176,
+       12.96
+      ]
+     },
+     {
+      "name": "clk_t136",
+      "xy": [
+       81.568,
+       2449.44
+      ]
+     },
+     {
+      "name": "clk_t137",
+      "xy": [
+       570.72,
+       1533.6
+      ]
+     },
+     {
+      "name": "clk_t138",
+      "xy": [
+       17.76,
+       2548.768
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 322,
+    "taps_over_250": 8,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/cbn_q00__cl622f65d2/gen/cbn_q00__cl622f65d2"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q00__cld7bf7197": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t122",
+      "xy": [
+       570.72,
+       1308.96
+      ]
+     },
+     {
+      "name": "clk_t123",
+      "xy": [
+       81.568,
+       2548.768
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 280,
+    "taps_over_250": 1,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbn_q00__cld7bf7197/gen/cbn_q00__cld7bf7197"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q00__cldbcda913": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t113",
+      "xy": [
+       674.976,
+       1497.952
+      ]
+     },
+     {
+      "name": "clk_t114",
+      "xy": [
+       674.976,
+       1053.024
+      ]
+     },
+     {
+      "name": "clk_t115",
+      "xy": [
+       9.12,
+       1128.608
+      ]
+     },
+     {
+      "name": "clk_t116",
+      "xy": [
+       570.72,
+       1215.008
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 307,
+    "taps_over_250": 7,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/cbn_q00__cldbcda913/gen/cbn_q00__cldbcda913"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q01__clab6e67f2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t134",
+      "xy": [
+       1204.192,
+       2305.824
+      ]
+     },
+     {
+      "name": "clk_t135",
+      "xy": [
+       37.792,
+       70.176
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 297,
+    "taps_over_250": 19,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbn_q01__clab6e67f2/gen/cbn_q01__clab6e67f2"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q01__cld9ff4c40": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t138",
+      "xy": [
+       1204.768,
+       1265.76
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 244,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/cbn_q01__cld9ff4c40/gen/cbn_q01__cld9ff4c40"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q01__cldd6ea846": {
+   "clock": {
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 647,
+    "taps_over_250": 12,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/items/cbn_q01__cldd6ea846/gen/cbn_q01__cldd6ea846"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q11__cl49ae4555": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t96",
+      "xy": [
+       556.192,
+       2273.376
+      ]
+     },
+     {
+      "name": "clk_t97",
+      "xy": [
+       685.792,
+       1279.776
+      ]
+     },
+     {
+      "name": "clk_t98",
+      "xy": [
+       37.792,
+       264.608
+      ]
+     },
+     {
+      "name": "clk_t99",
+      "xy": [
+       664.224,
+       966.624
+      ]
+     },
+     {
+      "name": "clk_t100",
+      "xy": [
+       674.976,
+       912.608
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 331,
+    "taps_over_250": 8,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbn_q11__cl49ae4555/gen/cbn_q11__cl49ae4555"
+   },
+   "pinreg_stop": null
+  },
+  "cbn_q11__cl5cc92dfe": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t87",
+      "xy": [
+       617.248,
+       721.44
+      ]
+     },
+     {
+      "name": "clk_t88",
+      "xy": [
+       55.648,
+       125.28
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 347,
+    "taps_over_250": 6,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbn_q11__cl5cc92dfe/gen/cbn_q11__cl5cc92dfe"
+   },
+   "pinreg_stop": null
+  },
+  "cbx_q10__cl89936551_h": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t87",
+      "xy": [
+       625.888,
+       1438.56
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 329,
+    "taps_over_250": 11,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbx_q10__cl89936551_h/gen/cbx_q10__cl89936551_h"
+   },
+   "pinreg_stop": null
+  },
+  "cbx_q10__cl94a12200_h": {
+   "clock": {
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 413,
+    "taps_over_250": 20,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/cbx_q10__cl94a12200_h/gen/cbx_q10__cl94a12200_h"
+   },
+   "pinreg_stop": null
+  },
+  "coll_core": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t130",
+      "xy": [
+       242.976,
+       513.056
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "coll_ft__cla4a25d77": {
+   "clock": {
+    "append_taps": [
+     {
+      "name": "clk_t9",
+      "xy": [
+       76.32,
+       469.92
+      ]
+     },
+     {
+      "name": "clk_t10",
+      "xy": [
+       387.36,
+       471.84
+      ]
+     },
+     {
+      "name": "clk_t11",
+      "xy": [
+       225.312,
+       470.752
+      ]
+     },
+     {
+      "name": "clk_t12",
+      "xy": [
+       233.952,
+       234.784
+      ]
+     },
+     {
+      "name": "clk_t13",
+      "xy": [
+       262.048,
+       705.824
+      ]
+     },
+     {
+      "name": "clk_t14",
+      "xy": [
+       193.888,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t15",
+      "xy": [
+       277.728,
+       924.448
+      ]
+     },
+     {
+      "name": "clk_t16",
+      "xy": [
+       89.248,
+       705.824
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 296,
+    "taps_over_250": 5,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N41Q/items/coll_ft__cla4a25d77/gen/coll_ft__cla4a25d77"
+   },
+   "pinreg_stop": null
+  },
+  "coll_ftc": {
+   "clock": {
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 280,
+    "taps_over_250": 1,
+    "kit": "epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/coll_ftc/gen/coll_ftc"
+   },
+   "pinreg_stop": null
+  },
+  "coll_n": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t26",
+      "xy": [
+       113.376,
+       423.328
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "coll_s": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t41",
+      "xy": [
+       512.992,
+       415.776
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 180,
+    "taps_over_250": 0,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N4/items/coll_s/attempt_8/gen/coll_s"
+   },
+   "pinreg_stop": null
+  },
+  "glue": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t86",
+      "xy": [
+       264.608,
+       1387.808
+      ]
+     }
+    ],
+    "insertion_ps": 300.0,
+    "insertion_basis": "TAP-GRID-R5 11-22: measured post-CTS pin-register mean 295.17 ps",
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 315.0
+   },
+   "measured": {
+    "max_tap_ps": 252,
+    "taps_over_250": 1,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/glue/gen/glue"
+   },
+   "pinreg_stop": 295.17
+  },
+  "native59": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t65",
+      "xy": [
+       750.624,
+       437.408
+      ]
+     },
+     {
+      "name": "clk_t66",
+      "xy": [
+       728.992,
+       59.424
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_ctl__cla4f6f12f": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t266",
+      "xy": [
+       1036.32,
+       30.24
+      ]
+     },
+     {
+      "name": "clk_t267",
+      "xy": [
+       725.28,
+       38.88
+      ]
+     },
+     {
+      "name": "clk_t268",
+      "xy": [
+       569.76,
+       30.24
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_fe_v1__cl1cbb7497": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t108",
+      "xy": [
+       409.888,
+       1802.144
+      ]
+     },
+     {
+      "name": "clk_t109",
+      "xy": [
+       142.048,
+       667.936
+      ]
+     },
+     {
+      "name": "clk_t110",
+      "xy": [
+       297.568,
+       644.064
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_fe_v1__cl8210183c": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t108",
+      "xy": [
+       409.888,
+       1802.144
+      ]
+     },
+     {
+      "name": "clk_t109",
+      "xy": [
+       366.688,
+       1034.016
+      ]
+     },
+     {
+      "name": "clk_t110",
+      "xy": [
+       358.048,
+       1423.968
+      ]
+     },
+     {
+      "name": "clk_t111",
+      "xy": [
+       297.568,
+       644.064
+      ]
+     },
+     {
+      "name": "clk_t112",
+      "xy": [
+       592.352,
+       1022.176
+      ]
+     },
+     {
+      "name": "clk_t113",
+      "xy": [
+       314.848,
+       714.464
+      ]
+     },
+     {
+      "name": "clk_t114",
+      "xy": [
+       280.288,
+       1802.144
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 242,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/sle_fe_v1__cl8210183c/attempt_6/gen/sle_fe_v1__cl8210183c"
+   },
+   "pinreg_stop": null
+  },
+  "sle_fe_v2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t88",
+      "xy": [
+       514.592,
+       750.368
+      ]
+     },
+     {
+      "name": "clk_t89",
+      "xy": [
+       600.992,
+       183.072
+      ]
+     },
+     {
+      "name": "clk_t90",
+      "xy": [
+       600.992,
+       301.344
+      ]
+     },
+     {
+      "name": "clk_t91",
+      "xy": [
+       306.208,
+       986.592
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_fw_v1__cl9d029624": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t89",
+      "xy": [
+       17.76,
+       774.048
+      ]
+     },
+     {
+      "name": "clk_t90",
+      "xy": [
+       98.848,
+       1163.744
+      ]
+     },
+     {
+      "name": "clk_t91",
+      "xy": [
+       185.248,
+       29.536
+      ]
+     },
+     {
+      "name": "clk_t92",
+      "xy": [
+       202.528,
+       584.864
+      ]
+     },
+     {
+      "name": "clk_t93",
+      "xy": [
+       605.28,
+       785.824
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 264,
+    "taps_over_250": 2,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_fw_v1__cl9d029624/gen/sle_fw_v1__cl9d029624"
+   },
+   "pinreg_stop": null
+  },
+  "sle_fw_v1__clf58b4dfb": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t93",
+      "xy": [
+       514.592,
+       1766.688
+      ]
+     },
+     {
+      "name": "clk_t94",
+      "xy": [
+       366.688,
+       1778.528
+      ]
+     },
+     {
+      "name": "clk_t95",
+      "xy": [
+       185.248,
+       64.992
+      ]
+     },
+     {
+      "name": "clk_t96",
+      "xy": [
+       150.688,
+       1553.952
+      ]
+     },
+     {
+      "name": "clk_t97",
+      "xy": [
+       81.568,
+       1778.528
+      ]
+     },
+     {
+      "name": "clk_t98",
+      "xy": [
+       133.408,
+       1175.84
+      ]
+     },
+     {
+      "name": "clk_t99",
+      "xy": [
+       297.568,
+       785.824
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 212,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_fw_v1__clf58b4dfb/gen/sle_fw_v1__clf58b4dfb"
+   },
+   "pinreg_stop": null
+  },
+  "sle_fw_v2__cl6740750e": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t65",
+      "xy": [
+       340.192,
+       790.304
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_fw_v2__cl69f5e854": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t87",
+      "xy": [
+       332.128,
+       714.464
+      ]
+     },
+     {
+      "name": "clk_t88",
+      "xy": [
+       565.408,
+       1766.688
+      ]
+     },
+     {
+      "name": "clk_t89",
+      "xy": [
+       280.288,
+       1790.112
+      ]
+     },
+     {
+      "name": "clk_t90",
+      "xy": [
+       185.248,
+       64.992
+      ]
+     },
+     {
+      "name": "clk_t91",
+      "xy": [
+       55.648,
+       774.048
+      ]
+     },
+     {
+      "name": "clk_t92",
+      "xy": [
+       29.728,
+       372.256
+      ]
+     },
+     {
+      "name": "clk_t93",
+      "xy": [
+       124.768,
+       1282.208
+      ]
+     },
+     {
+      "name": "clk_t94",
+      "xy": [
+       72.928,
+       89.056
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 252,
+    "taps_over_250": 1,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_fw_v2__cl69f5e854/gen/sle_fw_v2__cl69f5e854"
+   },
+   "pinreg_stop": null
+  },
+  "sle_fw_v3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t84",
+      "xy": [
+       583.712,
+       1766.688
+      ]
+     },
+     {
+      "name": "clk_t85",
+      "xy": [
+       418.528,
+       1790.112
+      ]
+     },
+     {
+      "name": "clk_t86",
+      "xy": [
+       427.168,
+       266.208
+      ]
+     },
+     {
+      "name": "clk_t87",
+      "xy": [
+       185.248,
+       64.992
+      ]
+     },
+     {
+      "name": "clk_t88",
+      "xy": [
+       314.848,
+       703.136
+      ]
+     },
+     {
+      "name": "clk_t89",
+      "xy": [
+       55.648,
+       774.048
+      ]
+     },
+     {
+      "name": "clk_t90",
+      "xy": [
+       133.408,
+       1223.072
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 225,
+    "taps_over_250": 0,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S3R/items/sle_fw_v3/attempt_3/gen/sle_fw_v3"
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc0__cl05696ed1": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t126",
+      "xy": [
+       156.576,
+       176.416
+      ]
+     },
+     {
+      "name": "clk_t127",
+      "xy": [
+       253.792,
+       193.76
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       124.192,
+       8.672
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       437.408,
+       384.608
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       307.808,
+       159.008
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       189.024,
+       164.832
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 264,
+    "taps_over_250": 1,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_hc0__cl05696ed1/gen/sle_hc0__cl05696ed1"
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc0__cl929603c0__cl38badc56": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t126",
+      "xy": [
+       178.208,
+       126.944
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 242,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_hc0__cl929603c0__cl38badc56/gen/sle_hc0__cl929603c0__cl38badc56"
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv48712631": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t127",
+      "xy": [
+       145.824,
+       8.672
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       383.392,
+       326.752
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       361.824,
+       8.672
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t127",
+      "xy": [
+       145.824,
+       8.672
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       383.392,
+       326.752
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       361.824,
+       8.672
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t127",
+      "xy": [
+       145.824,
+       8.672
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       383.392,
+       326.752
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       361.824,
+       8.672
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 262,
+    "taps_over_250": 1,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/items/sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304/attempt_2/gen/sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304"
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc1__cl22c1ff36__pve230954c": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t129",
+      "xy": [
+       135.008,
+       34.656
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       189.024,
+       8.672
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc1__cl22c1ff36__pve289215f": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t129",
+      "xy": [
+       135.008,
+       34.656
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       189.024,
+       8.672
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc1__cl7d360508__pv77c16c8a": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t136",
+      "xy": [
+       107.488,
+       76.96
+      ]
+     },
+     {
+      "name": "clk_t137",
+      "xy": [
+       29.728,
+       34.72
+      ]
+     },
+     {
+      "name": "clk_t138",
+      "xy": [
+       358.048,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t139",
+      "xy": [
+       116.128,
+       62.112
+      ]
+     },
+     {
+      "name": "clk_t140",
+      "xy": [
+       314.848,
+       16.8
+      ]
+     },
+     {
+      "name": "clk_t141",
+      "xy": [
+       453.088,
+       159.648
+      ]
+     },
+     {
+      "name": "clk_t142",
+      "xy": [
+       185.248,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t143",
+      "xy": [
+       228.448,
+       145.76
+      ]
+     },
+     {
+      "name": "clk_t144",
+      "xy": [
+       193.888,
+       94.816
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc1__cl7d360508__pv97423966": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t136",
+      "xy": [
+       107.488,
+       76.96
+      ]
+     },
+     {
+      "name": "clk_t137",
+      "xy": [
+       29.728,
+       34.72
+      ]
+     },
+     {
+      "name": "clk_t138",
+      "xy": [
+       358.048,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t139",
+      "xy": [
+       116.128,
+       62.112
+      ]
+     },
+     {
+      "name": "clk_t140",
+      "xy": [
+       314.848,
+       16.8
+      ]
+     },
+     {
+      "name": "clk_t141",
+      "xy": [
+       453.088,
+       159.648
+      ]
+     },
+     {
+      "name": "clk_t142",
+      "xy": [
+       185.248,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t143",
+      "xy": [
+       228.448,
+       145.76
+      ]
+     },
+     {
+      "name": "clk_t144",
+      "xy": [
+       193.888,
+       94.816
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 244,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/items/sle_hc1__cl7d360508__pv97423966/gen/sle_hc1__cl7d360508__pv97423966"
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc2__cl9c4c4509__cl3edce1b8": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t124",
+      "xy": [
+       178.208,
+       37.792
+      ]
+     },
+     {
+      "name": "clk_t125",
+      "xy": [
+       264.608,
+       156.576
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 218,
+    "taps_over_250": 0,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S2/items/sle_hc2__cl9c4c4509__cl3edce1b8/attempt_8/gen/sle_hc2__cl9c4c4509__cl3edce1b8"
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t125",
+      "xy": [
+       156.576,
+       126.944
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t125",
+      "xy": [
+       156.576,
+       126.944
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_sc_v1__cl115da35f": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t129",
+      "xy": [
+       595.68,
+       904.032
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       245.728,
+       1802.144
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       332.128,
+       1507.744
+      ]
+     },
+     {
+      "name": "clk_t132",
+      "xy": [
+       595.68,
+       1483.04
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 229,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/sle_sc_v1__cl115da35f/attempt_2/gen/sle_sc_v1__cl115da35f"
+   },
+   "pinreg_stop": null
+  },
+  "sle_sc_v1__cl7479a5ec": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t127",
+      "xy": [
+       595.68,
+       892.576
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       332.128,
+       714.464
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       595.68,
+       1506.72
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_sc_v2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t71",
+      "xy": [
+       286.176,
+       1410.976
+      ]
+     },
+     {
+      "name": "clk_t72",
+      "xy": [
+       264.608,
+       1011.872
+      ]
+     },
+     {
+      "name": "clk_t73",
+      "xy": [
+       394.208,
+       169.888
+      ]
+     },
+     {
+      "name": "clk_t74",
+      "xy": [
+       189.024,
+       524.384
+      ]
+     },
+     {
+      "name": "clk_t75",
+      "xy": [
+       156.576,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t76",
+      "xy": [
+       595.68,
+       51.68
+      ]
+     },
+     {
+      "name": "clk_t77",
+      "xy": [
+       145.824,
+       1794.464
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 193,
+    "taps_over_250": 0,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S2/items/sle_sc_v2/gen/sle_sc_v2"
+   },
+   "pinreg_stop": null
+  },
+  "sle_sc_v3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t69",
+      "xy": [
+       26.976,
+       997.088
+      ]
+     },
+     {
+      "name": "clk_t70",
+      "xy": [
+       293.28,
+       1381.152
+      ]
+     },
+     {
+      "name": "clk_t71",
+      "xy": [
+       340.192,
+       731.168
+      ]
+     },
+     {
+      "name": "clk_t72",
+      "xy": [
+       595.68,
+       228.96
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_a_v1__cl67389ecd": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t388",
+      "xy": [
+       375.328,
+       60.448
+      ]
+     },
+     {
+      "name": "clk_t389",
+      "xy": [
+       438.496,
+       108.0
+      ]
+     },
+     {
+      "name": "clk_t390",
+      "xy": [
+       438.496,
+       84.768
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 284,
+    "taps_over_250": 1,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N43G/items/sle_st_a_v1__cl67389ecd/gen/sle_st_a_v1__cl67389ecd"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_a_v1__cl989804f6__cl18eece69": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t369",
+      "xy": [
+       287.328,
+       12.96
+      ]
+     },
+     {
+      "name": "clk_t370",
+      "xy": [
+       447.136,
+       168.48
+      ]
+     },
+     {
+      "name": "clk_t371",
+      "xy": [
+       358.048,
+       397.408
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 228,
+    "taps_over_250": 0,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N4/items/sle_st_a_v1__cl989804f6__cl18eece69/gen/sle_st_a_v1__cl989804f6__cl18eece69"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t373",
+      "xy": [
+       543.84,
+       86.432
+      ]
+     }
+    ],
+    "insertion_ps": 280.0,
+    "insertion_basis": "TAP-GRID-R5 11-22: measured post-CTS pin-register mean 279.34 ps",
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 295.0
+   },
+   "measured": {
+    "max_tap_ps": 304,
+    "taps_over_250": 3,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/items/sle_st_a_v1__cl989804f6__cled3c1d7b/gen/sle_st_a_v1__cl989804f6__cled3c1d7b"
+   },
+   "pinreg_stop": 279.34
+  },
+  "sle_st_a_v2__pv30dda31f__pv88773f93": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t228",
+      "xy": [
+       351.008,
+       69.088
+      ]
+     },
+     {
+      "name": "clk_t229",
+      "xy": [
+       318.624,
+       740.384
+      ]
+     },
+     {
+      "name": "clk_t230",
+      "xy": [
+       552.48,
+       414.688
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 285,
+    "taps_over_250": 4,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/items/sle_st_a_v2__pv30dda31f__pv88773f93/gen/sle_st_a_v2__pv30dda31f__pv88773f93"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_a_v2__pv30dda31f__pvd2ec7769": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t228",
+      "xy": [
+       351.008,
+       69.088
+      ]
+     },
+     {
+      "name": "clk_t229",
+      "xy": [
+       318.624,
+       740.384
+      ]
+     },
+     {
+      "name": "clk_t230",
+      "xy": [
+       552.48,
+       414.688
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 187,
+    "taps_over_250": 0,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_st_a_v2__pv30dda31f__pvd2ec7769/gen/sle_st_a_v2__pv30dda31f__pvd2ec7769"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_a_v2__pv4242de79": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t228",
+      "xy": [
+       351.008,
+       69.088
+      ]
+     },
+     {
+      "name": "clk_t229",
+      "xy": [
+       318.624,
+       740.384
+      ]
+     },
+     {
+      "name": "clk_t230",
+      "xy": [
+       552.48,
+       414.688
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 280,
+    "taps_over_250": 1,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/items/sle_st_a_v2__pv4242de79/gen/sle_st_a_v2__pv4242de79"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_b_v1__pv0e7b1dcc": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t125",
+      "xy": [
+       253.792,
+       912.608
+      ]
+     },
+     {
+      "name": "clk_t126",
+      "xy": [
+       286.176,
+       1225.824
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_b_v1__pvc5a85fd4__pv38472fb8": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t128",
+      "xy": [
+       253.792,
+       901.792
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       265.248,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       340.192,
+       113.376
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       167.392,
+       534.624
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 203,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/sle_st_b_v1__pvc5a85fd4__pv38472fb8/attempt_6/gen/sle_st_b_v1__pvc5a85fd4__pv38472fb8"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_b_v1__pvc5a85fd4__pv7b7fafb4": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t128",
+      "xy": [
+       253.792,
+       901.792
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       265.248,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       340.192,
+       113.376
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       167.392,
+       534.624
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 205,
+    "taps_over_250": 0,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/sle_st_b_v1__pvc5a85fd4__pv7b7fafb4/gen/sle_st_b_v1__pvc5a85fd4__pv7b7fafb4"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_b_v2__cl14c98df5__pv41c959f3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t123",
+      "xy": [
+       264.608,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t124",
+      "xy": [
+       386.208,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t125",
+      "xy": [
+       296.992,
+       502.176
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 181,
+    "taps_over_250": 0,
+    "kit": "epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_st_b_v2__cl14c98df5__pv41c959f3/gen/sle_st_b_v2__cl14c98df5__pv41c959f3"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_b_v2__cl14c98df5__pvcd986c42": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t123",
+      "xy": [
+       264.608,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t124",
+      "xy": [
+       386.208,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t125",
+      "xy": [
+       296.992,
+       502.176
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 221,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/sle_st_b_v2__cl14c98df5__pvcd986c42/attempt_5/gen/sle_st_b_v2__cl14c98df5__pvcd986c42"
+   },
+   "pinreg_stop": null
+  },
+  "sle_st_b_v2__clfde1249e": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t124",
+      "xy": [
+       242.976,
+       837.024
+      ]
+     },
+     {
+      "name": "clk_t125",
+      "xy": [
+       386.208,
+       556.192
+      ]
+     },
+     {
+      "name": "clk_t126",
+      "xy": [
+       17.76,
+       394.208
+      ]
+     },
+     {
+      "name": "clk_t127",
+      "xy": [
+       232.224,
+       1182.624
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 194,
+    "taps_over_250": 0,
+    "kit": "epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_st_b_v2__clfde1249e/gen/sle_st_b_v2__clfde1249e"
+   },
+   "pinreg_stop": null
+  },
+  "sle_stm_v1__cl27746664": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t79",
+      "xy": [
+       241.44,
+       1616.736
+      ]
+     },
+     {
+      "name": "clk_t80",
+      "xy": [
+       437.408,
+       1735.648
+      ]
+     },
+     {
+      "name": "clk_t81",
+      "xy": [
+       296.992,
+       1589.728
+      ]
+     },
+     {
+      "name": "clk_t82",
+      "xy": [
+       264.608,
+       1463.008
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 322,
+    "taps_over_250": 6,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/sle_stm_v1__cl27746664/attempt_3/gen/sle_stm_v1__cl27746664"
+   },
+   "pinreg_stop": null
+  },
+  "sle_stm_v1__clbe630b9c": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t122",
+      "xy": [
+       17.76,
+       1495.776
+      ]
+     },
+     {
+      "name": "clk_t123",
+      "xy": [
+       210.592,
+       1096.224
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_stm_v2__cl55be2264": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t78",
+      "xy": [
+       286.176,
+       1589.728
+      ]
+     },
+     {
+      "name": "clk_t79",
+      "xy": [
+       189.024,
+       701.472
+      ]
+     },
+     {
+      "name": "clk_t80",
+      "xy": [
+       340.192,
+       1366.368
+      ]
+     },
+     {
+      "name": "clk_t81",
+      "xy": [
+       189.024,
+       1144.8
+      ]
+     },
+     {
+      "name": "clk_t82",
+      "xy": [
+       253.792,
+       1558.432
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 248,
+    "taps_over_250": 0,
+    "kit": "epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_stm_v2__cl55be2264/gen/sle_stm_v2__cl55be2264"
+   },
+   "pinreg_stop": null
+  },
+  "sle_stm_v2__cl7b3062fa": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t128",
+      "xy": [
+       405.024,
+       458.976
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       372.576,
+       189.024
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 237,
+    "taps_over_250": 0,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_stm_v2__cl7b3062fa/gen/sle_stm_v2__cl7b3062fa"
+   },
+   "pinreg_stop": null
+  },
+  "sle_stm_v3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t92",
+      "xy": [
+       150.688,
+       1477.408
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "sle_su_c": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t84",
+      "xy": [
+       728.992,
+       17.312
+      ]
+     },
+     {
+      "name": "clk_t85",
+      "xy": [
+       113.376,
+       321.312
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 248,
+    "taps_over_250": 0,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N4/items/sle_su_c/gen/sle_su_c"
+   },
+   "pinreg_stop": null
+  },
+  "sle_su_l1__cl5ea486db": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t70",
+      "xy": [
+       556.192,
+       296.992
+      ]
+     },
+     {
+      "name": "clk_t71",
+      "xy": [
+       441.12,
+       783.008
+      ]
+     },
+     {
+      "name": "clk_t72",
+      "xy": [
+       441.12,
+       545.376
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 226,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R3/items/sle_su_l1__cl5ea486db/attempt_3/gen/sle_su_l1__cl5ea486db"
+   },
+   "pinreg_stop": null
+  },
+  "sle_su_l1__clc6d66f5b": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t75",
+      "xy": [
+       523.232,
+       744.672
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 224,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/sle_su_l1__clc6d66f5b/gen/sle_su_l1__clc6d66f5b"
+   },
+   "pinreg_stop": null
+  },
+  "slw_fe_v1__cl95cd1d0c": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t96",
+      "xy": [
+       470.368,
+       1814.432
+      ]
+     },
+     {
+      "name": "clk_t97",
+      "xy": [
+       48.032,
+       76.832
+      ]
+     },
+     {
+      "name": "clk_t98",
+      "xy": [
+       565.408,
+       277.728
+      ]
+     },
+     {
+      "name": "clk_t99",
+      "xy": [
+       314.848,
+       1022.176
+      ]
+     },
+     {
+      "name": "clk_t100",
+      "xy": [
+       314.848,
+       833.12
+      ]
+     },
+     {
+      "name": "clk_t101",
+      "xy": [
+       48.032,
+       797.664
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 227,
+    "taps_over_250": 0,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_fe_v1__cl95cd1d0c/gen/slw_fe_v1__cl95cd1d0c"
+   },
+   "pinreg_stop": null
+  },
+  "slw_fe_v1__clfe325744__cldb4efe33": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t93",
+      "xy": [
+       565.408,
+       845.088
+      ]
+     },
+     {
+      "name": "clk_t94",
+      "xy": [
+       38.368,
+       89.056
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_fe_v2__cle312294d": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t90",
+      "xy": [
+       349.408,
+       1802.144
+      ]
+     },
+     {
+      "name": "clk_t91",
+      "xy": [
+       323.488,
+       726.752
+      ]
+     },
+     {
+      "name": "clk_t92",
+      "xy": [
+       306.208,
+       1163.744
+      ]
+     },
+     {
+      "name": "clk_t93",
+      "xy": [
+       48.032,
+       41.568
+      ]
+     },
+     {
+      "name": "clk_t94",
+      "xy": [
+       297.568,
+       880.416
+      ]
+     },
+     {
+      "name": "clk_t95",
+      "xy": [
+       592.352,
+       1022.176
+      ]
+     },
+     {
+      "name": "clk_t96",
+      "xy": [
+       349.408,
+       974.944
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_fe_v2__clf110fab2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t67",
+      "xy": [
+       329.376,
+       849.376
+      ]
+     },
+     {
+      "name": "clk_t68",
+      "xy": [
+       17.76,
+       864.16
+      ]
+     },
+     {
+      "name": "clk_t69",
+      "xy": [
+       296.992,
+       790.304
+      ]
+     },
+     {
+      "name": "clk_t70",
+      "xy": [
+       156.576,
+       1814.432
+      ]
+     },
+     {
+      "name": "clk_t71",
+      "xy": [
+       17.76,
+       125.536
+      ]
+     },
+     {
+      "name": "clk_t72",
+      "xy": [
+       296.992,
+       1144.8
+      ]
+     },
+     {
+      "name": "clk_t73",
+      "xy": [
+       307.808,
+       1395.936
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 266,
+    "taps_over_250": 1,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N1B/items/slw_fe_v2__clf110fab2/gen/slw_fe_v2__clf110fab2"
+   },
+   "pinreg_stop": null
+  },
+  "slw_fw_v1__clf51c11d8__cl592e3d37": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t98",
+      "xy": [
+       605.28,
+       1683.936
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 173,
+    "taps_over_250": 0,
+    "kit": "epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/slw_fw_v1__clf51c11d8__cl592e3d37/gen/slw_fw_v1__clf51c11d8__cl592e3d37"
+   },
+   "pinreg_stop": null
+  },
+  "slw_fw_v2__cl8537f156": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t83",
+      "xy": [
+       340.768,
+       1117.216
+      ]
+     },
+     {
+      "name": "clk_t84",
+      "xy": [
+       193.888,
+       655.84
+      ]
+     },
+     {
+      "name": "clk_t85",
+      "xy": [
+       98.848,
+       998.56
+      ]
+     },
+     {
+      "name": "clk_t86",
+      "xy": [
+       98.848,
+       1081.312
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_fw_v2__cl8f84514c": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t118",
+      "xy": [
+       605.28,
+       1171.808
+      ]
+     },
+     {
+      "name": "clk_t119",
+      "xy": [
+       80.992,
+       858.592
+      ]
+     },
+     {
+      "name": "clk_t120",
+      "xy": [
+       199.776,
+       1452.576
+      ]
+     },
+     {
+      "name": "clk_t121",
+      "xy": [
+       307.808,
+       826.208
+      ]
+     },
+     {
+      "name": "clk_t122",
+      "xy": [
+       17.76,
+       48.608
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 238,
+    "taps_over_250": 0,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_fw_v2__cl8f84514c/gen/slw_fw_v2__cl8f84514c"
+   },
+   "pinreg_stop": null
+  },
+  "slw_fw_v3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t85",
+      "xy": [
+       288.928,
+       752.16
+      ]
+     },
+     {
+      "name": "clk_t86",
+      "xy": [
+       323.488,
+       570.912
+      ]
+     },
+     {
+      "name": "clk_t87",
+      "xy": [
+       565.408,
+       1800.928
+      ]
+     },
+     {
+      "name": "clk_t88",
+      "xy": [
+       38.368,
+       237.6
+      ]
+     },
+     {
+      "name": "clk_t89",
+      "xy": [
+       444.448,
+       399.072
+      ]
+     },
+     {
+      "name": "clk_t90",
+      "xy": [
+       435.808,
+       1798.24
+      ]
+     },
+     {
+      "name": "clk_t91",
+      "xy": [
+       90.208,
+       99.744
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc0__cl1bc59e1c": {
+   "clock": {
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 281,
+    "taps_over_250": 3,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/slw_hc0__cl1bc59e1c/attempt_2/gen/slw_hc0__cl1bc59e1c"
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc1__cl3449ea95": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t127",
+      "xy": [
+       351.008,
+       95.392
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       264.608,
+       95.392
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       135.008,
+       11.616
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 269,
+    "taps_over_250": 1,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_hc1__cl3449ea95/gen/slw_hc1__cl3449ea95"
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc1__cl68f9248e__cl144ee7b3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t129",
+      "xy": [
+       286.176,
+       101.024
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       351.008,
+       11.616
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       253.792,
+       176.416
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 282,
+    "taps_over_250": 1,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/slw_hc1__cl68f9248e__cl144ee7b3/attempt_2/gen/slw_hc1__cl68f9248e__cl144ee7b3"
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc1__cl68f9248e__cle683a076": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t129",
+      "xy": [
+       286.176,
+       101.024
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       351.008,
+       11.616
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       253.792,
+       176.416
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 2062,
+    "taps_over_250": 3,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/items/slw_hc1__cl68f9248e__cle683a076/gen/slw_hc1__cl68f9248e__cle683a076"
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc2__cl6bcaba89": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t125",
+      "xy": [
+       26.976,
+       48.608
+      ]
+     },
+     {
+      "name": "clk_t126",
+      "xy": [
+       383.392,
+       37.792
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 237,
+    "taps_over_250": 0,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_hc2__cl6bcaba89/gen/slw_hc2__cl6bcaba89"
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc2__cla3497502__cldc737267": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t127",
+      "xy": [
+       394.208,
+       141.664
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc3__clccfc3e6b__pv39aac7a1": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t118",
+      "xy": [
+       232.224,
+       8.672
+      ]
+     },
+     {
+      "name": "clk_t119",
+      "xy": [
+       221.408,
+       89.632
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc3__clccfc3e6b__pvcca9ff41": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t118",
+      "xy": [
+       232.224,
+       8.672
+      ]
+     },
+     {
+      "name": "clk_t119",
+      "xy": [
+       221.408,
+       89.632
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc3__cld86a7ad4__pv6c2c33ed": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t116",
+      "xy": [
+       405.024,
+       98.272
+      ]
+     },
+     {
+      "name": "clk_t117",
+      "xy": [
+       102.624,
+       141.664
+      ]
+     },
+     {
+      "name": "clk_t118",
+      "xy": [
+       275.424,
+       95.392
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_hc3__cld86a7ad4__pvfd488b8f": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t116",
+      "xy": [
+       405.024,
+       98.272
+      ]
+     },
+     {
+      "name": "clk_t117",
+      "xy": [
+       102.624,
+       141.664
+      ]
+     },
+     {
+      "name": "clk_t118",
+      "xy": [
+       275.424,
+       95.392
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_sc_v1__cl63e5a7a2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t82",
+      "xy": [
+       26.976,
+       228.96
+      ]
+     },
+     {
+      "name": "clk_t83",
+      "xy": [
+       37.792,
+       1395.936
+      ]
+     },
+     {
+      "name": "clk_t84",
+      "xy": [
+       595.68,
+       51.68
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 208,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/slw_sc_v1__cl63e5a7a2/attempt_6/gen/slw_sc_v1__cl63e5a7a2"
+   },
+   "pinreg_stop": null
+  },
+  "slw_sc_v1__cl64543eaf__cl4590432d": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t126",
+      "xy": [
+       332.128,
+       714.464
+      ]
+     },
+     {
+      "name": "clk_t127",
+      "xy": [
+       340.768,
+       1802.144
+      ]
+     },
+     {
+      "name": "clk_t128",
+      "xy": [
+       595.68,
+       1364.896
+      ]
+     },
+     {
+      "name": "clk_t129",
+      "xy": [
+       98.848,
+       584.864
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 204,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/slw_sc_v1__cl64543eaf__cl4590432d/attempt_2/gen/slw_sc_v1__cl64543eaf__cl4590432d"
+   },
+   "pinreg_stop": null
+  },
+  "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t124",
+      "xy": [
+       340.768,
+       1802.144
+      ]
+     },
+     {
+      "name": "clk_t125",
+      "xy": [
+       556.768,
+       868.576
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 236,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/slw_sc_v1__cl64543eaf__cl5e017c6f/attempt_2/gen/slw_sc_v1__cl64543eaf__cl5e017c6f"
+   },
+   "pinreg_stop": null
+  },
+  "slw_sc_v2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t82",
+      "xy": [
+       37.792,
+       1381.152
+      ]
+     },
+     {
+      "name": "clk_t83",
+      "xy": [
+       189.024,
+       893.664
+      ]
+     },
+     {
+      "name": "clk_t84",
+      "xy": [
+       595.68,
+       51.68
+      ]
+     },
+     {
+      "name": "clk_t85",
+      "xy": [
+       469.792,
+       155.104
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 237,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/slw_sc_v2/attempt_2/gen/slw_sc_v2"
+   },
+   "pinreg_stop": null
+  },
+  "slw_sc_v3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t70",
+      "xy": [
+       26.976,
+       1011.872
+      ]
+     },
+     {
+      "name": "clk_t71",
+      "xy": [
+       293.28,
+       1366.368
+      ]
+     },
+     {
+      "name": "clk_t72",
+      "xy": [
+       178.208,
+       66.464
+      ]
+     },
+     {
+      "name": "clk_t73",
+      "xy": [
+       340.192,
+       583.456
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_a_v1__clb036e152": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t356",
+      "xy": [
+       375.328,
+       60.448
+      ]
+     },
+     {
+      "name": "clk_t357",
+      "xy": [
+       287.328,
+       12.96
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 221,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_st_a_v1__clb036e152/gen/slw_st_a_v1__clb036e152"
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t353",
+      "xy": [
+       375.328,
+       60.448
+      ]
+     },
+     {
+      "name": "clk_t354",
+      "xy": [
+       438.496,
+       108.0
+      ]
+     },
+     {
+      "name": "clk_t355",
+      "xy": [
+       438.496,
+       84.768
+      ]
+     },
+     {
+      "name": "clk_t356",
+      "xy": [
+       479.008,
+       741.408
+      ]
+     },
+     {
+      "name": "clk_t357",
+      "xy": [
+       287.328,
+       12.96
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_a_v1__clfc5867a6__pvf82a6c28": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t353",
+      "xy": [
+       375.328,
+       60.448
+      ]
+     },
+     {
+      "name": "clk_t354",
+      "xy": [
+       438.496,
+       108.0
+      ]
+     },
+     {
+      "name": "clk_t355",
+      "xy": [
+       438.496,
+       84.768
+      ]
+     },
+     {
+      "name": "clk_t356",
+      "xy": [
+       479.008,
+       741.408
+      ]
+     },
+     {
+      "name": "clk_t357",
+      "xy": [
+       287.328,
+       12.96
+      ]
+     }
+    ],
+    "insertion_ps": 285.0,
+    "insertion_basis": "TAP-GRID-R5 11-22: measured post-CTS pin-register mean 281.47 ps",
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 300.0
+   },
+   "measured": {
+    "max_tap_ps": 250,
+    "taps_over_250": 0,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N43G/items/slw_st_a_v1__clfc5867a6__pvf82a6c28/gen/slw_st_a_v1__clfc5867a6__pvf82a6c28"
+   },
+   "pinreg_stop": 281.47
+  },
+  "slw_st_a_v2__cl9f076a5c": {
+   "clock": {
+    "insertion_ps": 280.0,
+    "insertion_basis": "TAP-GRID-R5 11-22: measured post-CTS pin-register mean 275.87 ps",
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 295.0
+   },
+   "measured": {
+    "max_tap_ps": 214,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_st_a_v2__cl9f076a5c/gen/slw_st_a_v2__cl9f076a5c"
+   },
+   "pinreg_stop": 275.87
+  },
+  "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t121",
+      "xy": [
+       210.592,
+       1193.376
+      ]
+     },
+     {
+      "name": "clk_t122",
+      "xy": [
+       372.576,
+       449.312
+      ]
+     },
+     {
+      "name": "clk_t123",
+      "xy": [
+       253.792,
+       837.024
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 196,
+    "taps_over_250": 0,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/slw_st_b_v1__cl6357f1cc__pvffd43fdc/gen/slw_st_b_v1__cl6357f1cc__pvffd43fdc"
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_b_v1__cle6023ec2": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t120",
+      "xy": [
+       253.792,
+       898.528
+      ]
+     },
+     {
+      "name": "clk_t121",
+      "xy": [
+       340.192,
+       869.408
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_b_v2__pva66d0f22__pv3d7bec84": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t116",
+      "xy": [
+       48.608,
+       351.008
+      ]
+     },
+     {
+      "name": "clk_t117",
+      "xy": [
+       371.04,
+       869.408
+      ]
+     },
+     {
+      "name": "clk_t118",
+      "xy": [
+       286.176,
+       674.976
+      ]
+     },
+     {
+      "name": "clk_t119",
+      "xy": [
+       372.576,
+       102.624
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_b_v2__pva66d0f22__pvb80e2003": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t116",
+      "xy": [
+       48.608,
+       351.008
+      ]
+     },
+     {
+      "name": "clk_t117",
+      "xy": [
+       371.04,
+       869.408
+      ]
+     },
+     {
+      "name": "clk_t118",
+      "xy": [
+       286.176,
+       674.976
+      ]
+     },
+     {
+      "name": "clk_t119",
+      "xy": [
+       372.576,
+       102.624
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_st_b_v2__pvc2ec5bfb": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t116",
+      "xy": [
+       340.192,
+       869.408
+      ]
+     },
+     {
+      "name": "clk_t117",
+      "xy": [
+       307.808,
+       405.024
+      ]
+     },
+     {
+      "name": "clk_t118",
+      "xy": [
+       199.776,
+       534.624
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 204,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_st_b_v2__pvc2ec5bfb/gen/slw_st_b_v2__pvc2ec5bfb"
+   },
+   "pinreg_stop": null
+  },
+  "slw_stm_v1__cle34a73c3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t79",
+      "xy": [
+       156.576,
+       347.104
+      ]
+     },
+     {
+      "name": "clk_t80",
+      "xy": [
+       241.44,
+       1602.72
+      ]
+     },
+     {
+      "name": "clk_t81",
+      "xy": [
+       318.624,
+       1676.576
+      ]
+     },
+     {
+      "name": "clk_t82",
+      "xy": [
+       178.208,
+       139.872
+      ]
+     },
+     {
+      "name": "clk_t83",
+      "xy": [
+       145.824,
+       1369.632
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 238,
+    "taps_over_250": 0,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/slw_stm_v1__cle34a73c3/attempt_12/gen/slw_stm_v1__cle34a73c3"
+   },
+   "pinreg_stop": null
+  },
+  "slw_stm_v2__cl1ca9c415": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t80",
+      "xy": [
+       307.808,
+       1589.728
+      ]
+     },
+     {
+      "name": "clk_t81",
+      "xy": [
+       307.808,
+       1477.408
+      ]
+     },
+     {
+      "name": "clk_t82",
+      "xy": [
+       208.288,
+       1530.912
+      ]
+     },
+     {
+      "name": "clk_t83",
+      "xy": [
+       156.576,
+       347.104
+      ]
+     },
+     {
+      "name": "clk_t84",
+      "xy": [
+       210.592,
+       760.736
+      ]
+     },
+     {
+      "name": "clk_t85",
+      "xy": [
+       264.608,
+       1410.976
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 304,
+    "taps_over_250": 5,
+    "kit": "epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R4A4/items/slw_stm_v2__cl1ca9c415/attempt_2/gen/slw_stm_v2__cl1ca9c415"
+   },
+   "pinreg_stop": null
+  },
+  "slw_stm_v2__cl9beb65e6": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t129",
+      "xy": [
+       394.208,
+       804.576
+      ]
+     },
+     {
+      "name": "clk_t130",
+      "xy": [
+       242.976,
+       1560.608
+      ]
+     },
+     {
+      "name": "clk_t131",
+      "xy": [
+       210.592,
+       1139.424
+      ]
+     },
+     {
+      "name": "clk_t132",
+      "xy": [
+       437.408,
+       1344.608
+      ]
+     },
+     {
+      "name": "clk_t133",
+      "xy": [
+       210.592,
+       1085.408
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_stm_v3": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t78",
+      "xy": [
+       156.576,
+       347.104
+      ]
+     },
+     {
+      "name": "clk_t79",
+      "xy": [
+       329.376,
+       1477.408
+      ]
+     },
+     {
+      "name": "clk_t80",
+      "xy": [
+       221.408,
+       716.448
+      ]
+     },
+     {
+      "name": "clk_t81",
+      "xy": [
+       241.44,
+       1617.312
+      ]
+     },
+     {
+      "name": "clk_t82",
+      "xy": [
+       145.824,
+       1262.944
+      ]
+     },
+     {
+      "name": "clk_t83",
+      "xy": [
+       264.608,
+       1366.368
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 251,
+    "taps_over_250": 1,
+    "kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/slw_stm_v3/attempt_12/gen/slw_stm_v3"
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_c__cl19bb38ef": {
+   "clock": {
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 266,
+    "taps_over_250": 3,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_su_c__cl19bb38ef/gen/slw_su_c__cl19bb38ef"
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_c__cl92142dac": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t110",
+      "xy": [
+       946.592,
+       1377.12
+      ]
+     },
+     {
+      "name": "clk_t111",
+      "xy": [
+       1058.912,
+       1382.432
+      ]
+     },
+     {
+      "name": "clk_t112",
+      "xy": [
+       695.008,
+       1377.12
+      ]
+     },
+     {
+      "name": "clk_t113",
+      "xy": [
+       886.112,
+       1377.12
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 276,
+    "taps_over_250": 1,
+    "kit": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_su_c__cl92142dac/gen/slw_su_c__cl92142dac"
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_l0__cl1a1c1f8f": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t71",
+      "xy": [
+       102.624,
+       1009.824
+      ]
+     },
+     {
+      "name": "clk_t72",
+      "xy": [
+       180.96,
+       124.192
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 193,
+    "taps_over_250": 0,
+    "kit": "intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_su_l0__cl1a1c1f8f/gen/slw_su_l0__cl1a1c1f8f"
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_l0__cl1e5219ea": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t45",
+      "xy": [
+       48.608,
+       536.16
+      ]
+     },
+     {
+      "name": "clk_t46",
+      "xy": [
+       180.96,
+       118.304
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 184,
+    "taps_over_250": 0,
+    "kit": "epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q2/items/slw_su_l0__cl1e5219ea/attempt_14/gen/slw_su_l0__cl1e5219ea"
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_l0__cl76fb247e": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t44",
+      "xy": [
+       156.576,
+       129.824
+      ]
+     },
+     {
+      "name": "clk_t45",
+      "xy": [
+       80.992,
+       1044.128
+      ]
+     },
+     {
+      "name": "clk_t46",
+      "xy": [
+       180.96,
+       434.656
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_l1__cla2a78701": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t42",
+      "xy": [
+       457.44,
+       17.248
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 214,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_su_l1__cla2a78701/gen/slw_su_l1__cla2a78701"
+   },
+   "pinreg_stop": null
+  },
+  "slw_su_l1__clcc9d0155": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t43",
+      "xy": [
+       469.792,
+       73.376
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": 226,
+    "taps_over_250": 0,
+    "kit": "epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46C/items/slw_su_l1__clcc9d0155/gen/slw_su_l1__clcc9d0155"
+   },
+   "pinreg_stop": null
+  },
+  "tt_ctlm": {
+   "clock": {
+    "append_added_taps": [
+     {
+      "name": "clk_t65",
+      "xy": [
+       394.208,
+       178.208
+      ]
+     },
+     {
+      "name": "clk_t66",
+      "xy": [
+       221.408,
+       156.576
+      ]
+     }
+    ],
+    "tap_balance_to": "slowest",
+    "tap_slowest_max_ps": 265.0
+   },
+   "measured": {
+    "max_tap_ps": null,
+    "taps_over_250": null,
+    "kit": null
+   },
+   "pinreg_stop": null
+  }
+ }
+}
