@@ -18,3 +18,8 @@ Cached AGIdock INDEX: intel2 /srv/opentallas-scratch2/claude/clean-aggr-1121/tmp
 - 40%-free target: epyc7 9%, epyc8 13%, epyc9 17%, epyc10 18%, intel2 22% free on scratch2.
 - candMISC5 (epyc7 fam-s81-misc-r4/trees): protected because the hub live-process scan sees the running intel2 run-item PID 3087357 (spec FAM-S81-MISC-R4 t5_1121194641, --hosts localhost) name the same path. The list is host-agnostic on purpose, since hub run-items drive remote jobs. ot-delete it once that run-item ends. An allow_exact line on epyc7 expires ~22:0x and does not help (ancestor-only).
 - hold_ids.txt is empty on all hosts. FLOW-LECGATE-R2 / COUNT-REVOKED owners should fill it.
+
+## Next big holders (du, 20:4x)
+- epyc8 scratch2: kw43-wave-1109n 889, wt 660, s81-b3-clk 372, s81-geom-opus-d8g 298, s81-die-r3-e8 220, kw43-wave-1109 164, opus-fix-kv-pv-r4 145, s81-svc-split-1119 100, kw43 94, ot-jobs 86 GB.
+- epyc7 scratch2 (du partial): wt 265, rt 54, kv-d23-hubwi 50 GB.
+- wt = lane worktrees (wt-reaper / owners); check idle owner dirs with the export-checked rule before ot-delete.
