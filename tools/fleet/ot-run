@@ -1928,8 +1928,76 @@ def soft_pin_ok(spec_path, d=None):
         return False
 
 
+# FLOW-OPS-1300 item 14 (COORD 11-21: `ot-run --status <unit>` ignored the unit and printed the fleet table, so lanes had no poll):
+# --status TARGET reports ONE job from this host's ot-status records (the host whose ot-run client launched it).  (The help text is frozen by
+# test_ot_run_shell_guard, so the usage lives here.)  Poll loop in a run_in_background shell:
+#   until ot-run --status U >/dev/null; r=$?; [ $r -ne 75 ] && [ $r -ne 76 ]; do sleep 300; done
+UNIT_STATUS_EXIT = {"running": 75, "queued": 76, "died": 71, "missing": 66}
+
+
+def _status_records(d):
+    out = []
+    try:
+        names = os.listdir(d)
+    except OSError:
+        return out
+    for fn in names:
+        if fn.endswith(".json") and not fn.startswith("."):
+            try:
+                r = json.load(open(os.path.join(d, fn)))
+                r["_mtime"] = os.path.getmtime(os.path.join(d, fn))
+                out.append(r)
+            except (OSError, ValueError):
+                continue
+    return sorted(out, key=lambda r: r.get("_mtime", 0), reverse=True)
+
+
+def _client_alive(rec):
+    pid = rec.get("pid")
+    if not pid or not os.path.exists(f"/proc/{pid}"):
+        return False
+    try:
+        with open(f"/proc/{pid}/stat") as f:
+            st = int(f.read().rsplit(")", 1)[1].split()[19])
+    except (OSError, ValueError, IndexError):
+        return False
+    return rec.get("pid_start") in (None, st)
+
+
+def unit_status(target, d=None, alive=_client_alive):
+    """-> (exit status, one line).  target: a status name (otrun-<host>-<pid>), an ot-heavy unit (oth-...), a client pid of this host, or a substring
+    of the recorded command (--job name, kit dir; the newest match).  States: queued (client alive, no unit admitted yet), running (admitted),
+    done (rc), died (client gone without a result).  Exit: done -> the job's rc (0 only for rc 0); running 75; queued 76; died 71; not found 66."""
+    d = d or (_OTS.status_dir() if _OTS else os.path.expanduser("~/.local/state/ot-status"))
+    recs = _status_records(d)
+    hit = [r for r in recs if target in (r.get("name"), r.get("unit"))]
+    if not hit and target.isdigit():
+        hit = [r for r in recs if str(r.get("pid")) == target and r.get("host") == socket.gethostname()]
+    if not hit and len(target) >= 6:
+        hit = [r for r in recs if target in str(r.get("cmd") or "")]
+    if not hit:
+        return UNIT_STATUS_EXIT["missing"], (f"MISSING target={target} host={socket.gethostname()}: no ot-status record here (records live on the host "
+                                             f"whose ot-run client launched the job; ask that host, e.g. ssh intel2 ot-run --status {target})")
+    r = hit[0]
+    if r.get("state") == "done" and r.get("rc") is not None:
+        state, code = "done", int(r["rc"]) & 255
+    elif alive(r):
+        state = "running" if r.get("unit") else "queued"
+        code = UNIT_STATUS_EXIT[state]
+    else:
+        state, code = "died", UNIT_STATUS_EXIT["died"]
+    more = f" (+{len(hit) - 1} older match{'es' if len(hit) > 2 else ''})" if len(hit) > 1 else ""
+    return code, (f"{state.upper()} rc={r.get('rc') if r.get('rc') is not None else '-'} name={r.get('name')} unit={r.get('unit') or '-'} "
+                  f"host={r.get('host')} lane={r.get('lane') or '-'} start={time.strftime('%H:%M:%S', time.localtime(r.get('t_start') or 0))} "
+                  f"log={r.get('log') or 'none'}{more}")
+
+
 def main():
     a = sys.argv[1:]
+    if a[:1] == ["--status"] and len(a) >= 2 and not a[1].startswith("-"):
+        code, ln = unit_status(a[1])
+        print(ln)
+        sys.exit(code)
     if a[:1] == ["--selftest"]:
         sys.exit(choose_selftest() if a[1:2] == ["choose"] else choose_selftest() | selftest(a[1].split(",") if len(a) > 1 else HOSTS))
     if a[:1] == ["--status"]:
