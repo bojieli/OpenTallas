@@ -113,6 +113,28 @@ def test_retained_return_accepts_only_matching_completed_negative_evidence(tmp_p
     receipt_path.write_text(json.dumps(dict(receipt, rc=137)))
     assert ap.retained_publish_negative(j, client, probe=probe) is None
 
+    place = ("FAIL_POSTPLACE PLACE-SETUP-STOP wns -2168.18 ps < -300 ps (TT, post-place; routing cannot close it) "
+             "start=u_bound.u_u_gunit_u_l1 end=u_bound.u_u_gunit_g_l1f_1_u_l1f.u_f hop_um=423.1 path_um=2389.1 "
+             "span_um=1278.0 stages=14; place ODB, reports and logs kept (plan item for the die owner)")
+    route_log.write_text(f"make: Nothing to be done for 'place'.\n{place}\n")
+    os.utime(route_log, (150, 150))
+    # The receipt must agree with the actual worker exit, independently of the outer rc98.
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+    receipt_path.write_text(json.dumps(dict(receipt, rc=6)))
+    assert ap.retained_publish_negative(j, client, probe=probe) == {"host": "epyc2", "place_setup_stop": place}
+    with mock.patch.object(ap, "rpy", side_effect=probe), mock.patch.object(ap, "log"), \
+         mock.patch.object(ap, "set_status"), mock.patch.object(ap, "after_class"), mock.patch.object(ap, "released_cleanup"):
+        ap.finish({}, j, {}, client)
+    assert j["kind"] == "place-setup-stop" and j["retained_place_setup_stop"] == place
+    assert j["publish_return"] == client["publish_return"] and client["exit"] == 98
+    assert ap.retained_publish_negative(dict(j, path="/other/kit"), client, probe=probe) is None
+    route_log.write_text(f"{place}\nOT_POSTPLACE_SETUP_STOP pass\n")
+    os.utime(route_log, (150, 150))
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+    route_log.write_text(place + "\n")
+    os.utime(route_log, (91, 91))
+    assert ap.retained_publish_negative(j, client, probe=probe) is None
+
 
 KIT = "epyc2:/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
 ROW = ["s81", "slice_station__t5", KIT, "claude/s81-kits@0123456789ab", "PASS", "GEOM-REVIEW 03:33", "24", "120000",
