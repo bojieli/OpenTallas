@@ -1,0 +1,68 @@
+{
+ "advisory": [
+  "contained",
+  "dry_gen",
+  "hashes",
+  "pre_g0",
+  "schema"
+ ],
+ "checks": {
+  "contained": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/561a1f11cf15/hd_lep0N",
+   "gen_host": "intel2",
+   "item": "hd_lep0N",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/561a1f11cf15/hd_lep0N/published_gen_origin.json",
+   "origin_sha256": "9c71393facb8225a1c238391884141a84dced1c7369864bd8501592722e241d7",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "4cb6a9427ccd1bc143fcbdef2ad0c1890a00717f7691bd6301d27303c702942f",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0",
+   "stage": "mkdir",
+   "verdict": "FAIL",
+   "why": "stage mkdir: ssh: Could not resolve hostname intel2: Temporary failure in name resolution"
+  },
+  "hashes": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+  },
+  "pre_g0": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+  },
+  "schema": {
+   "verdict": "FAIL",
+   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+  }
+ },
+ "die": "s81_head",
+ "foreign_tree_scan": {
+  "asbuilts": [],
+  "bind_out": null,
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json"
+  ]
+ },
+ "gate_s": 163.3,
+ "hosts": [
+  "intel2",
+  "epyc7",
+  "epyc9",
+  "epyc10"
+ ],
+ "item": "hd_lep0N",
+ "manifest_hash": "561a1f11cf153c6c6bb14f9644c0a8d17c80e69220cf438c0b7b89e50407bbe5",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "62edabc647ac8e87ffdda7506976700eaa0963327bc52aca077602ad546e91ac",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 0.0,
+ "t": 1795315863.4185994,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0",
+ "verdict": "FAIL"
+}
