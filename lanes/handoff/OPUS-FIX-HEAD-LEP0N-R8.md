@@ -26,7 +26,17 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
-## NEXT
+## UPDATE 11-22 00:4x
+- ev/e5 = e1 + bandfix + START exports per piece (start_split.py + head_reset_exports fix, check bad 0) + sideband rows (W: writer/reader
+  start dropped, fstart/origin consumers filtered = relay piece) + uncut band_fill set aside: bind/cohort/LATCHECK 334/334, landing_band PASS,
+  G0 only 6 faces (face_budget_g2 missing; schema: a string naming the G2 probe record).
+- ev/e6 = e5 + HEAD-CTL-R1 hd_ctl tap_offset/tap_window rows + wave_prepare native_sink_censuses tree-relative (12, were r4_s0 / r13r
+  absolute) + hd_lep0N_w eligible: same verdicts. Tree s81_head_r18a_split_s0 (from e5, 022cd626ba26) superseded by
+  s81_head_r18b_split_s0 (from e6; tmp/mk_r18b.sh, log ~/opus-fix-head-lep0n-r8/mk_r18b.log).
+- NEXT: private kits E + W from r18b (src_manifest tree -> signable; also the G2 face probe), then cancel E7/W7 (F tree, no status rows);
+  after a clean GRT add face_budget_g2 to both pieces -> G0 0 -> publish gate r18 -> marker.
+
+## NEXT (older)
 1. e2 G0 to 0 errors: faces need face_budget_g2 (G2 probe = routed private kits of the pieces), band_capacity reader-start:lepk_i0 grow.
 2. coll_i2 band on W: channel west of pair 2 is 34.56 - 17.28 = 13 um (pairs at x 34.56). Options: band north of pair 2
    [17.28, 512, 66, 630] (pin hop up to ~407 um) or a different pair x. Decide from W kit result.
