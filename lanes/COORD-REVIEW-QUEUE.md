@@ -22757,3 +22757,4 @@ FAILED [AUTOPILOT 8d27fd163951] 2026-11-21 23:01:10 PST AUTOPILOT -> KIT-WAVE-12
   col_h9_r0_p5 (12): GRT 0; CTS FF hold after CORETAP 4: worst -88.4 median -88.4; sign-off runs 0, SIGNED 0; 4 stopped without signoff; old plan -196 (rst CTS)
   col_h9_r1 (60): GRT 6 TT worst -46.6 median -46.6; CTS FF hold after CORETAP 13: worst -120.2 median -120.2; sign-off runs 1, SIGNED 0, routed TT worst -83.5, FF worst -162.3, DRC max 0; 12 stopped without signoff; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-21 23:06 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): cbx_q10__cl94a12200_h place FAIL PLAN (FAIL_POSTPLACE PLACE-SETUP-STOP wns -380.69 ps < -300 ps (TT, post-place; routing cannot close it) start=u_bound.u_lk_nk_u_t_2_0_n_b/q[372]$_DLATCH_N_ end=u_bou) job 8d27fd163951
