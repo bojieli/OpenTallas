@@ -63,3 +63,16 @@
 - Posted BLOCKER with options A (re-sign bksel_q OLL 0), B (+1 stage; t_s/t_c blocked: u_c XDX uses RS/RC), C (NEG0 + quarter clock ~100 ps early + r[0] re-site). Default A at 05:00 if no ruling.
 - RTL candidates (epyc10 w/bksel_ids): selids_A/B.sv (u_ids remaining-count; B + cnt/pre registered from vo[99:84]), dsdv_bk_sel_neg0.sv (dsdv_bk_stn NEG0, define OT_BKSEL_NEG0, inert unless set). Sim PASS (tb3 23,607 x3 MUT; tb_stn 1,990). Formal BMC/induction yosys running (eq_*.log).
 - Private fork tree_ids (ot-tree-fork of tree_r6, 53.7 GB) patched: dsdv_bk_sel.sv eb490a6c, portfix178 dsdv_idx_l20s.sv 5716d3de. plan_r7b.json (8e55cee7) = r7a + row3 fstart + OT_BKSEL_NEG0. Strict elab/bind/LATCHECK/PRE running (bind_r7b.sh, log w/bind_r7b/).
+
+## 11-22 03:1x COORD ruling A + C executing
+- A (core re-sign OLL 0): kit epyc2 /srv/opentallas-scratch2/claude/s81-bksel-r7/coreA/bksel_q_oll0 = copy of signed base kit
+  fable-fix-bksel/fx6/bksel_vC9fx6 (eco3 base form) minus run/, VERILOG_TOP_PARAMS OLL 0 RFH 2 HLAT 1; gate tools
+  (signoff/lec/sdc_lint/rtl_lint/legacy_gate/pin_audit/lec_async/kit_modes) from rt 787530142d79; stale lec_async identity
+  moved to s81-bksel-r7/tmp/coreA_stale. ot-run unit oth-ubuntu-788310-1795345327 (epyc2, 72G), log intel2
+  ~/s81-bksel-r7-logs/coreA.otrun.log; run_kit.sh finish 64 16 -> signoff/signoff.json. fx6 GRT took ~10 h; a hold-only
+  route-keep ECO (fx6/hei_fable/run_hei_fable.sh) may be needed after route. Then export view + plan row (row4).
+- C: plan_r7c.json (epyc10 w/, sha dd0f05d4123ba8ae, mk_r7c.py) = r7b + quarter core tap insertion 750.69 -> 587
+  (early 137) + clock.core_tap_direct + u_stn_s/o/c r[0] relay sites min(120 um, half hop) toward r[1].
+  Bind: bksel_ids/bind_r7c.sh via ot-run epyc10 (r7b bind cancelled: r7c supersedes it), logs w/bind_r7c/.
+  Next: private-spec s81 bk_sel__t2 --plan plan_r7c --tree tree_ids --bind-out <tree_ids native_bind/out> --goal finish.
+- J8 rows 1-3 READY (posted 03:1x).
