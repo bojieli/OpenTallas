@@ -25,3 +25,12 @@ Read FAM-QC-COLL-R2.md first (R2 rows: rows_bcd.json, rows_reset_v3.json, fix14.
   lpad_rec_rx_s0 site x 200 re-derived). No overlaps, inside core. Needs a private bind + kit proof (next build after pkit7/pkit8 read).
 - Reset reach: R2 rows_reset_v3.json stands (stale raw names; every hop <= 405). If the V3 bind re-solves resets at the 300 um default for new binds (OWNER 11-20 #6),
   8 coll_ftc local hops at 306-400 um (start_0/23 354.5, start_2/3/16 400.3, start_13 379.5, start_18 339.5, start_22 306.5) get re-solved: re-check names after the V3 bind.
+
+## 18:2x RESUMED after weekly limit (Codex drove 14:23-18:1x under this lane name)
+- pkit7 run-item ended 15:18 at geom_run FAIL; pkit8 ended 15:00, geom PASS (AP_PLACED_SCAN 3,067 bits >405, 98 groups need station). Both keep the 4.33 um wall: no route.
+- MERGE FIX PROVEN (pkit8 synth): OT_KEEP_WIRES += ot_reset_sync:reset_pipe qfd_static_ch546:r_reset_meta -> reset nets 14 -> 22, the 719-load merged flop is gone. Carry into every coll_core kit.
+- Codex work adopted: epyc8 fam-qc-coll/pkit10_wall = wall respace (rows_wall_v3) + exact reset rebind 508->477, strict/LAT pass, kit_place placed; fault path placed setup -671.05 ps
+  (u_lpad_fltv_s_i -> u_bout_io_collective__fault, walk 1,918 um, source 1,453 um away). faultpipe_private = 11-cycle fault return (OWNER-APPROVED 18:1x for V3), package lanes/handoff/FAM-QC-COLL-R3-V3-faultpipe.json.
+  Live: intel2 qc-plan-r12/core_fault_reflow (fault stage sites reflowed, place resume) otrun-tolerant-swine-2714302; waiter armed (FAM-QC-COLL-R3/reflow.wait).
+  coll_ftc: epyc9 fam-qc-coll/pkit9_spread (wide_r2/r3/axis_r4 place-only), r4 TT -166 -> +55 ps, 66 over405, route held. Wave coll_ftc a1 GRT waiter still armed (epyc8).
+- NEXT: read reflow 3_place (fault path setup, auto-geom); then ONE route build = wall rebind + fault pipe + keep-wires env via private-spec (wave env), read post-hook CTS + final 5_1_grt.
