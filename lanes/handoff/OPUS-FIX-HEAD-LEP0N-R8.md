@@ -26,6 +26,12 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 06:0x
+- E r8-e11 place PASS (KW_PLACE_RC 0); post-place wns -556 (pre-CTS): u_rrl_380 -> u_rg0.u_pair rst_n driven by an INVx1 over a long
+  wire (slew 1242 ps; repair_design should buffer it), coll_i3 wreg fs_q -> u_wen -38, lepk wen -163, u_bout_o_h2r1_p -> port -218,
+  arst_n -> u_rst_in -91. Judge at the CTS post-hook report (cancel rule: < -300 after CTS/GRT repair).
+- R7 cut-form LEC (e10 form) FAILED 03:47 (3348/3380 unproven); superseded form, posted 524d1a62, not rerun.
+
 ## UPDATE 11-22 05:4x W-band r18g (COORD 05:2x/05:4x)
 - Split: R8 = E (r8-e11, r18f) + W-band; Fable = W-ringFF (fable-lep0n-w4). Parallel forms, first W to sign counts.
 - Tree s81_head_r18g_split_s0 (3bde930bae13, epyc9; plan c6eab9a2e92b; tmp/fix18g.py + post6.sh + mk_r18g.sh; ev/g1):
