@@ -1,0 +1,1 @@
+- 2026-11-21 18:27 PST RESUMED (succeeds R2): tasks btab 189um G0 on intel2, st_b/hc split table, st_a Codex holds read, sle_hc2 state
