@@ -44,6 +44,7 @@ import faulthandler
 import fcntl
 import fnmatch
 import hashlib
+import inspect
 from functools import lru_cache
 import json
 import math
@@ -62,6 +63,7 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import kit_resume as KR  # noqa: E402
 sys.path.insert(1, str(Path(__file__).resolve().parents[1] / "die_plan"))
 import signoff_profile as SP  # noqa: E402  (OWNER 11-13 R-MINIMAL; OT_SIGNOFF_PROFILE=legacy keeps the old gates)
 import wave_balance as WB  # noqa: E402
@@ -662,7 +664,12 @@ except Exception:
 done()
 '''
 
-PROBE_CLASSIFY = r'''
+PROBE_CLASSIFY = (
+    "import re\n"
+    f"HOLD_GUARD_CAP_RE = re.compile({KR.HOLD_GUARD_CAP_RE.pattern!r}, re.M)\n"
+    f"ERR_LINE = re.compile({KR.ERR_LINE.pattern!r}, re.M)\n"
+    + inspect.getsource(KR.grt_terminal_dpl)
+) + r'''
 import json, os, sys, glob, re, time
 a = json.loads(sys.argv[1]); K = a["kit"]; since = a.get("since", 0) - 120; goal = a.get("goal", "route")
 out = {"kit": K, "exists": os.path.isdir(K)}
@@ -766,7 +773,14 @@ out["last_log_mtime"] = os.path.getmtime(logs[-1]) if logs else 0
 # 'FAIL_route make exit 2 (see run_route.log)' of an older runner still names its cause (kv3_hub_Wo: Error: cts.tcl, 89 can't read "tb_cdirect")
 _fere = re.compile(r'(?m)^(?:\[ERROR [A-Z]+-\d+\][^\n]*|Error: [^\n]*|ERROR: [^\n]*)|[^\n]*(?:can.t read "|invalid command name "|Segmentation fault|Signal 11 received)[^\n]*')
 for _lp in [p for p in logs[-1:] if os.path.getmtime(p) >= since] + [os.path.join(K, "run_%s.log" % goal)]:
-    _m = _fere.search(rd(_lp, 4000000))
+    _stage_log = rd(_lp, 4000000)
+    if os.path.basename(_lp) == "5_1_grt.log" and os.path.getmtime(_lp) <= until:
+        _dpl = grt_terminal_dpl(_stage_log)
+        if _dpl:
+            out["grt_caught_dpl"] = _dpl[:260]
+            out["first_error"] = "5_1_grt.log: " + out["grt_caught_dpl"]
+            break
+    _m = _fere.search(_stage_log)
     if _m:
         out["first_error"] = (os.path.basename(_lp) + ": " + _m.group(0).strip())[:300]
         break
@@ -1290,6 +1304,9 @@ def classify(c, client):
         return "STRUCTURAL", "drt-no-progress", client["drt_no_progress"]
     if c.get("FAIL_route"):
         fr = c["FAIL_route"]
+        if c.get("grt_caught_dpl"):
+            fr = re.sub(r"5_1_grt\.log: \[ERROR RSZ-0060\][^\n]*",
+                        lambda _: "5_1_grt.log: " + c["grt_caught_dpl"], fr, count=1)
         if re.search(r"DRT-0255", fr):
             net = re.search(r"path of net (\S+)", fr)
             return "STRUCTURAL", "drt-nopath", f"DRT-NOPATH net {net.group(1) if net else '?'}: {fr[:260]}"
