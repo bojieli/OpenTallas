@@ -323,3 +323,4 @@
   FAILED-NORELAUNCH: S81 3 (col_h9_r1__t1 pv1c15776f, s81sl_leaf__t31, dsdv_slice_lepe_nh_mus_LP__t1), QC 2 (coll_core, slw_st_a_v2__cl9f076a5c), KV 1 (kv3_hub_Wo).
   STALE: QC 27 (cancelled/held, 3-17h), S81 1 (slice_station__t52). DEAD-OWNER: QC 6 sle_hc1/sle_st_b/slw_fe rows, FLOW-FLEET-R1 last post 02:57.
   Held S81 147 / KV 38 / QC ~18 pending plan events are counted OK.
+- 2026-11-22 07:51 PST 07:51 sweep 449 unsigned rows (S81 347, QC 52, KV 47, HEAD 1). OK 198. DEAD-OWNER 249 (S81 223 = LEAF-R10 66 last post 02:33, COLROM-R6 ~113 last 05:19, SVC-R9 14; KV 19 HGI-R6 02:48; QC 7). UNOWNED 0, FAILED 0, STALE 0. DEAD-OWNER = primary lane no post 2h; successor lanes often posting.
