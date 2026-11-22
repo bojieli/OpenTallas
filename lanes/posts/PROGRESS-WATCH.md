@@ -231,3 +231,4 @@
 - 2026-11-22 03:02 PST ALERT STUCK-STATE s81: 37 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
 - 2026-11-22 03:43 PST ALERT NO-PROGRESS qwen_compute: 6 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 66 min (last 02:36); blocker: plan event s29q103S4Q9N46R6V2 pending (the wave waits for it); 19 hold(s): 17 without eta, 0 overdue, next eta 11-23 12:00
 - 2026-11-22 03:53 PST ALERT NO-PROGRESS s81_head: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 248 min (last 23:44); NO-LAUNCH x9
+- 2026-11-22 04:03 PST ALERT STUCK-STATE s81: 37 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
