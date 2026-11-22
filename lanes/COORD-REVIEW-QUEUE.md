@@ -22825,3 +22825,5 @@ FAILED [AUTOPILOT 7ec904ab5034] 2026-11-21 23:19:19 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 23:23 PST epyc9 at 2344 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 23:23 PST DIED [FABLE-FIX-HEAD-LEP0N-R7] ot-run oth-ubuntu-70976-1795331578 on tolerant-swine: rc=1 after 627 s, ended 23:23:22, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N-R7/s81_head_hd_lep0N_w_1121224232/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r16/private/FAB
+- 2026-11-21 23:23 PST intel1 at 1201 GiB: already in gen_hosts, nothing to restore
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
