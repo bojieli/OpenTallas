@@ -1733,7 +1733,8 @@ class TypeSplit:
         rs = t.get("reset")
         if rs is None:
             return
-        unk = set(rs) - {"tap_um", "sync_stages", "start_role", "local_taps_um", "obstacle_model", "wavefront_min_depth"}
+        unk = set(rs) - {"tap_um", "sync_stages", "start_role", "local_taps_um", "obstacle_model", "wavefront_min_depth",
+                         "consumer_sites_um"}
         if unk:
             raise SplitError(f"{self.tn}: unhandled reset keys {sorted(unk)}")
         for i in range(self.n):
@@ -1743,6 +1744,11 @@ class TypeSplit:
                 r["tap_um"] = cut.sh(rs["tap_um"], i) if cut.ppiece(rs["tap_um"]) == i else centre
             if "local_taps_um" in rs:
                 r["local_taps_um"] = [cut.sh(p, i) for p in rs["local_taps_um"] if cut.ppiece(p) == i] or [[8.64, 8.64]]
+            # consumer_sites_um = the base type's frozen consumer list [tap name, x, y] (reset_tree._taps); its names are the
+            # base clock taps, which the split re-derives per piece, so the list is dropped and each piece's reset relays
+            # follow its own taps (OPUS-FIX-KV-PV-R5 11-21: kv3_pv / kv3_pv_v8 in the D28 all-16 pv split)
+            if r.pop("consumer_sites_um", None) is not None:
+                self.rep.setdefault("reset_consumer_sites_dropped", []).append(self.tnames[i])
 
     def _reset_spine_pins(self):
         """reset_spine_pins (bound-only ri_*/rs_* wrapper pins of a reset net, one interior site per bit): the pin goes
@@ -2127,6 +2133,7 @@ class Event:
             # moved later in this loop.
             final_boxes = [box(h, mv.get(inst)) for inst, h in cores.items()]
             moved_now = []
+            respace = []            # (row, reg count, core): re-spaced once every core of the type is at its final place
             for inst, org in mv.items():
                 h = cores.get(inst)
                 if h is None:
@@ -2175,6 +2182,21 @@ class Event:
                         r[k] = [rnd(r[k][0] + d[0]), rnd(r[k][1] + d[1])]
                     n = len(r.get("regs_um") or [])
                     if n:
+                        respace.append((r, n, inst))
+                    r["note"] = (r.get("note", "") + f" | {self.tag}: end(s) {ends} moved with core {inst} by {d}"
+                                 + (f", {n} regs re-spaced" if n else ""))
+                    nrow += 1
+                h["note"] = (h.get("note", "") + f" | {self.tag}: moved {old} -> {h['origin_um']} (no re-shape)")
+                rec.append(dict(type=tn, core=inst, old=old, new=h["origin_um"], shift=d, taps_moved=ntap, istation_rows_moved=nrow,
+                                pin_layers=sorted(layers)))
+            for h in moved_now:          # overlap on the FINAL positions (a column swap moves through occupied boxes)
+                b = box(h)
+                for o in cores.values():
+                    if o is not h:
+                        ob = box(o)
+                        if b[0] < ob[2] - EPS and ob[0] < b[2] - EPS and b[1] < ob[3] - EPS and ob[1] < b[3] - EPS:
+                            raise SplitError(f"core_moves: {tn} {h['inst']} box overlaps core {o['inst']}")
+            for r, n, inst in respace:
                         # same count (= cycles), evenly spaced on the first legal polyline between the new ends: x-then-y,
                         # y-then-x, then Z paths through a column / row every 21.6 um; no reg inside a hard-core box
                         a0, b0 = r["from_um"], r["to_um"]
@@ -2205,19 +2227,6 @@ class Event:
                         if regs is None:
                             raise SplitError(f"core_moves: {tn} {r['conn']}: no legal polyline for {n} regs after moving {inst}")
                         r["regs_um"] = regs
-                    r["note"] = (r.get("note", "") + f" | {self.tag}: end(s) {ends} moved with core {inst} by {d}"
-                                 + (f", {n} regs re-spaced" if n else ""))
-                    nrow += 1
-                h["note"] = (h.get("note", "") + f" | {self.tag}: moved {old} -> {h['origin_um']} (no re-shape)")
-                rec.append(dict(type=tn, core=inst, old=old, new=h["origin_um"], shift=d, taps_moved=ntap, istation_rows_moved=nrow,
-                                pin_layers=sorted(layers)))
-            for h in moved_now:          # overlap on the FINAL positions (a column swap moves through occupied boxes)
-                b = box(h)
-                for o in cores.values():
-                    if o is not h:
-                        ob = box(o)
-                        if b[0] < ob[2] - EPS and ob[0] < b[2] - EPS and b[1] < ob[3] - EPS and ob[1] < b[3] - EPS:
-                            raise SplitError(f"core_moves: {tn} {h['inst']} box overlaps core {o['inst']}")
             slots = {f["name"]: f for f in t.get("ft_slots", [])}
             for sn, regs in (smoves.get(tn) or {}).items():
                 f = slots.get(sn)

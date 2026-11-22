@@ -820,3 +820,45 @@ def test_cut_window_pref_centres_a_cut_route_between_its_endpoints():
     lo, hi, _ = w[ev.req[0]["key"]][0]
     assert abs((lo + hi) / 2 - 830.0) < 2.2
     assert w[ev.req[1]["key"]][0][0] < 20
+
+
+def test_core_move_rows_are_respaced_against_the_final_column_swap(monkeypatch):
+    """OPUS-FIX-KV-PV-R5 11-21 (D28 all-16 pv split, kv3_pv_v1n: 'plan points newly inside a core box: istation
+    o_pvw__u_sN_j_y_valid reg 1'): in a column swap the row's regs were re-spaced while the partner core still sat at its
+    old place, so a reg landed where that core arrives.  Re-spacing now runs after every core of the type has moved."""
+    from types import SimpleNamespace
+    import schema as S
+    import check as C
+    monkeypatch.setattr(S, "Plan", lambda raw, path: SimpleNamespace(grid=0.54, layers={}))
+    monkeypatch.setattr(C, "core_pins", lambda h, d=None: [])
+    # a (west) and b (east) swap; a's row runs east to the face; b's FINAL box sits where a starts (old a place)
+    t = dict(outline_um=[2160.0, 1520.64],
+             hard_cores=[dict(inst="a", origin_um=[648.0, 604.8], outline_um=[172.8, 172.8]),
+                         dict(inst="b", origin_um=[1244.16, 604.8], outline_um=[172.8, 172.8])],
+             internal_stations=[dict(conn="bus:o_y", launch="core a.fault", capture="face bus o_y", from_um=[820.8, 700.0],
+                                     to_um=[400.0, 1520.64], regs_um=[[700.0, 700.0]] * 3, bits=1)])
+    ev = TS.Event.__new__(TS.Event)
+    ev.spec = {"core_moves": {"T": {"a": [1244.16, 604.8], "b": [648.0, 604.8]}}}
+    ev.raw = {"partition_types": {"T": t}, "budgets": {}}
+    ev.tag, ev.plan_dir, ev.rep = "t", None, {}
+    ev._core_moves()
+    r = t["internal_stations"][0]
+    assert r["from_um"] == [pytest.approx(1416.96), pytest.approx(700.0)] and len(r["regs_um"]) == 3
+    b_final = (648.0, 604.8, 820.8, 777.6)
+    assert not any(b_final[0] < q[0] < b_final[2] and b_final[1] < q[1] < b_final[3] for q in r["regs_um"])
+
+
+def test_reset_consumer_sites_are_dropped_per_piece():
+    """OPUS-FIX-KV-PV-R5 11-21: reset.consumer_sites_um names the base clock taps, which the split re-derives; each piece
+    drops it (reported) instead of failing 'unhandled reset keys'."""
+    from types import SimpleNamespace
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.n, ts.tnames, ts.rep = "T", 2, ["T", "Te"], {}
+    ts.cut = TS.Cut("x", [1080.0], 2160.0)
+    ts.t = dict(reset=dict(tap_um=[100.0, 100.0], local_taps_um=[[50.0, 50.0], [1500.0, 50.0]],
+                           consumer_sites_um=[["clk_t1", 17.76, 17.312], ["clk_t2", 1500.0, 17.3]]))
+    ts.T = [dict(outline_um=[1080.0, 1520.64]), dict(outline_um=[1080.0, 1520.64])]
+    ts._reset()
+    assert all("consumer_sites_um" not in ts.T[i]["reset"] for i in range(2))
+    assert ts.rep["reset_consumer_sites_dropped"] == ["T", "Te"]
+    assert ts.T[1]["reset"]["local_taps_um"] == [[420.0, 50.0]]
