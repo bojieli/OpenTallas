@@ -8511,6 +8511,9 @@ def _swap_prefix(v, old, new):
     return v, False
 
 
+# FLOW-PRIVSPEC-R1 (item 7c): goal of a private run-item.  geom = stop after AUTO-GEOM (the old private behaviour); auto = the runner's own
+# sign-off goal (autopilot default_goal / runner_goal: run_kit.sh -> route); route / finish = that goal; cts / grt = diagnostic (never a sign-off)
+PRIVATE_GOALS = ("auto", "route", "finish", "geom", "cts", "grt")
 PRIVATE_HUB = "intel2"                                   # the coord hub (OT_HUB_NAME of the hub units); private-spec runs on any gen host
 
 
@@ -8619,8 +8622,231 @@ def fork_private_tree(src, dst, host, run=subprocess.run):
     return p.returncode, ((p.stdout or "") + (p.stderr or "")).strip()
 
 
+# ------------------------------------------------------------------------------------------------ FLOW-PRIVSPEC-R1: --tree owns its bind + rt
+# FABLE-FLOW-2000 item 7a / class B2 (FAM-S81-COL-H9R0-R4, FAM-S81-SLICE-R6, HEAD-CTL-R1): private-spec --tree took bind_out and the tools
+# runtime from the LIVE WAVE (J6 bind + rt/current on a J7 tree: kit_rtl 'has no connection', BIND-GEN-TOOLSKEW).  A private kit has four
+# inputs that must agree (tree, plan, bind, rt).  With --tree they now come from the tree itself:
+#   1. the die's bound_trees record of that exact tree (plan, kit_rtl bind_out/asbuilt, src_sha, manifest hash), else
+#   2. the tree's own bind: a strict bind INSIDE the tree (the wave bind path moved to the tree, or plan_of_record/native_bind/out,
+#      plan_of_record/bind_of_record) or exactly one sibling <tree>_bind* dir; several candidates or none = refusal naming --bind-out.
+#   3. rt: the item's gen_tools_pin for that bind (tools from the tree), else the rt snapshot whose reset / relay generators equal the
+#      bind's bind_tool.json stamp (the scheduler rt first), else the tree's own tools when they match the stamp; no match = refusal.
+#      An explicit --rt or --bind-out that disagrees with the stamp is refused with the command that fixes it.
+TREE_BIND_REL = ("physical/die_plan/{die}/plan_of_record/native_bind/out", "physical/die_plan/{die}/plan_of_record/bind_of_record")
+TREE_PROBE_PY = r'''
+import glob, hashlib, json, os, sys
+a = json.loads(sys.argv[1]); T = a["tree"].rstrip("/"); out = {"tree": T, "exists": os.path.isdir(T), "binds": {}, "siblings": []}
+def stamp(b):
+    try: return json.load(open(os.path.join(b, "bind_tool.json")))
+    except Exception: return None
+def rep(b):
+    try:
+        r = json.load(open(os.path.join(b, "bind_report.json"))); e = r.get("errors")
+        return {"ok": True, "n_errors": len(e) if isinstance(e, list) else int(e or 0), "stamp": stamp(b)}
+    except Exception as x:
+        return {"ok": False, "why": type(x).__name__}
+for b in a.get("binds") or []:
+    out["binds"][b] = rep(b)
+for b in sorted(glob.glob(T + "_bind*")):
+    if os.path.isfile(os.path.join(b, "bind_report.json")):
+        out["siblings"].append(b); out["binds"][b] = rep(b)
+out["plan"] = {p: os.path.isfile(p) for p in a.get("plans") or []}
+try: out["fork"] = json.load(open(os.path.join(T, ".fork.json")))
+except Exception: out["fork"] = None
+out["gens"] = {}
+for n in a.get("gens") or []:
+    f = os.path.join(T, "tools", "die_plan", n)
+    if os.path.isfile(f):
+        out["gens"][n] = hashlib.sha256(open(f, "rb").read()).hexdigest()
+print("KW_TREE_PROBE " + json.dumps(out))
+'''
+
+
+def _bts():
+    """tools/die_plan/bind_tool_stamp.py (the BIND-GEN-TOOLSKEW generator list), or None on a tree without it"""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+        import bind_tool_stamp
+        return bind_tool_stamp
+    except ImportError:
+        return None
+
+
+def tree_probe(tree, host, hub, binds=(), plans=(), run=subprocess.run):
+    """one look at --tree (here when the dir is local, else on --host / the gen host over ssh): which bind candidates hold a bind_report.json
+    (errors + bind_tool.json stamp), sibling <tree>_bind* binds, which plan files exist, the tree's own generator hashes.  {} when unreadable."""
+    BTS = _bts()
+    args = json.dumps({"tree": str(tree), "binds": list(binds), "plans": list(plans), "gens": list(BTS.GENERATORS) if BTS else []})
+    local = os.path.isdir(tree) or not host or host in ("localhost", hub)
+    argv = ([sys.executable, "-I", "-c", TREE_PROBE_PY, args] if local else
+            _ssh(host, hub) + ["python3 -I -c " + shlex.quote(TREE_PROBE_PY) + " " + shlex.quote(args)])
+    try:
+        p = run(argv, capture_output=True, text=True, timeout=180)
+    except (OSError, subprocess.SubprocessError):
+        return {}
+    got = [ln[len("KW_TREE_PROBE "):] for ln in (p.stdout or "").splitlines() if ln.startswith("KW_TREE_PROBE ")]
+    try:
+        return dict(json.loads(got[-1]), host="local" if local else host) if got else {}
+    except ValueError:
+        return {}
+
+
+def rt_generator_hashes(rt_dir):
+    BTS = _bts()
+    return BTS.generator_hashes(rt_dir) if BTS else {}
+
+
+def stamp_diff(stamp, gens):
+    """generators whose hash differs between a bind_tool.json stamp and a tools tree ([] = the bind fits these tools)"""
+    old = (stamp or {}).get("generators") or {}
+    return sorted(n for n in set(old) | set(gens or {}) if old.get(n) != (gens or {}).get(n))
+
+
+def rt_snapshots(rt_root=None):
+    """[(sha12 dir, full sha)] of the rt/<sha12> snapshots on this host, the scheduler's own first, then newest first"""
+    if rt_root is None:
+        rt, _ = scheduler_rt()
+        rt_root = os.path.dirname(rt) if rt else os.path.dirname(os.path.realpath(RT_CURRENT))
+    cur, _ = scheduler_rt()
+    out = []
+    try:
+        names = [n for n in os.listdir(rt_root) if RT_NAME_RE.fullmatch(n) and os.path.isfile(os.path.join(rt_root, n, "tools", "autopilot", "rt_launch_tree.sh"))]
+    except OSError:
+        return []
+    names.sort(key=lambda n: os.path.getmtime(os.path.join(rt_root, n)), reverse=True)
+    for n in names:
+        d = os.path.join(str(rt_root), n)
+        _, full = scheduler_rt(d)
+        out.append((d, full or n))
+    if cur:
+        out.sort(key=lambda x: os.path.realpath(x[0]) != os.path.realpath(cur))
+    return out
+
+
+def rt_for_stamp(stamp, rt_root=None, hashes=rt_generator_hashes):
+    """the rt snapshot the bind was made on: (dir, sha) of the first snapshot (scheduler rt first) whose generators equal the stamp, else None.
+    A stamp naming an rt sha that exists wins when its generators match."""
+    snaps = rt_snapshots(rt_root)
+    named = str((stamp or {}).get("tools_sha") or "")[:12]
+    if named:
+        snaps.sort(key=lambda x: os.path.basename(x[0]) != named)
+    for d, full in snaps:
+        if not stamp_diff(stamp, hashes(d)):
+            return d, full
+    return None
+
+
+def resolve_tree_inputs(cfg, die, item, sp, tree, host=None, bind_out=None, rt=None, plan=None, probe=None, rt_root=None, fork_of=None):
+    """FLOW-PRIVSPEC-R1 (item 7a): the plan / bind / rt a private kit on --tree uses when the caller did not name them; -> {"update": {spec keys},
+    "record": {provenance: where each came from}}; raises ValueError (the refusal text names the fixing flag) when the inputs cannot agree.
+    sp = the item's wave spec (spec_for + rt tools), before the tree swap.  probe(tree, binds, plans) -> tree_probe dict (tests)."""
+    d = cfg["dies"][die]
+    old, new = str(sp["src"]).rstrip("/"), os.path.abspath(tree).rstrip("/")
+    kr = dict(sp.get("kit_rtl") or {})
+    upd, rec = {}, {"tree": new}
+    real = lambda p: os.path.realpath(str(p)).rstrip("/")
+    bt = next((b for b in (d.get("bound_trees") or []) if isinstance(b, dict) and b.get("src") and real(b["src"]) == real(new)), None)
+    if bt:                                               # 1. the die already bound this tree: its record is the truth
+        rec["source"] = f"bound_trees (event {bt.get('event') or '?'})"
+        for k in ("src_sha", "queue_src", "src_manifest_hash"):
+            if bt.get(k):
+                upd[k] = bt[k]
+        if bt.get("plan") and not plan:
+            upd["plan"] = bt["plan"]
+        if isinstance(bt.get("kit_rtl"), dict):
+            kr = dict(kr, **bt["kit_rtl"])
+            upd["kit_rtl_record"] = dict(kr)
+            if not bind_out:
+                rec["bind_from"] = "bound_trees"
+    if kr.get("mode") != "bind" or not kr.get("bind_out"):
+        rec.setdefault("bind_from", "none (kit_rtl mode " + str(kr.get("mode") or "-") + ")")
+        return {"update": upd, "record": rec}
+    if fork_of and not bt and real(fork_of) == real(old):    # private-spec --fork src (FLOW-TREEFORK-R1): a copy of the wave tree keeps the wave bind + rt
+        rec.update(source="fork of the wave tree", bind_from="wave bind (tree is an ot-tree-fork copy of the wave src)", bind=kr["bind_out"],
+                   rt_from="wave default (fork of the wave tree)")
+        return {"update": upd, "record": rec}
+    wave_bind = str(kr["bind_out"]).rstrip("/")
+    moved = (new + wave_bind[len(old):]) if (wave_bind == old or wave_bind.startswith(old + "/")) else ""
+    cands = [b for b in [moved] + [f"{new}/{r.format(die=die)}" for r in TREE_BIND_REL] if b]
+    cands = list(dict.fromkeys(cands))
+    plans = [p for p in [upd.get("plan") or plan or (new + str(sp.get("plan"))[len(old):] if str(sp.get("plan") or "").startswith(old + "/") else "")] if p]
+    explicit = os.path.abspath(bind_out).rstrip("/") if bind_out else ""
+    pr = (probe or (lambda t, b, p: tree_probe(t, host or sp.get("gen_host"), sp.get("hub") or PRIVATE_HUB, b, p)))(new, cands + ([explicit] if explicit else []), plans)
+    rec["probe_host"] = (pr or {}).get("host") or "unreadable"
+    fk = (pr or {}).get("fork") or {}
+    if not bt and not explicit and fk.get("src_real") and real(fk["src_real"]) == real(old):
+        rec.update(source="fork of the wave tree (.fork.json)", bind_from="wave bind (tree is an ot-tree-fork copy of the wave src)", bind=wave_bind,
+                   rt_from="wave default (fork of the wave tree)")
+        return {"update": upd, "record": rec}
+    binds = (pr or {}).get("binds") or {}
+    good = lambda b: (binds.get(b) or {}).get("ok") and int((binds.get(b) or {}).get("n_errors") or 0) == 0
+    if explicit:
+        chosen, rec["bind_from"] = explicit, "--bind-out"
+    elif rec.get("bind_from") == "bound_trees":
+        chosen = wave_bind
+    elif not pr or not pr.get("exists"):
+        if moved:                                        # tree not readable here: only a path rule can decide; an in-tree wave bind path still moves with it
+            chosen, rec["bind_from"] = moved, "wave bind path moved into the tree (tree not probed)"
+        else:
+            raise ValueError(f"private-spec --tree {new}: tree not readable here or on {host or sp.get('gen_host')} and the wave bind {wave_bind} belongs to the wave tree "
+                             f"{old}, not to this one; pass --host <a host holding the tree> or --bind-out <this tree's strict bind>")
+    else:
+        inside = [b for b in cands if good(b)]
+        sib = [b for b in (pr.get("siblings") or []) if good(b)]
+        found = inside[:1] if inside else sib
+        if len(found) != 1:
+            why = ("no strict bind (bind_report.json, 0 errors) inside the tree " + ", ".join(cands) + " or next to it (" + new + "_bind*)") if not found else \
+                  ("several sibling binds: " + ", ".join(found))
+            raise ValueError(f"private-spec --tree {new}: {why}; the wave bind {wave_bind} is the wave tree's, never used for another tree. "
+                             f"Pass --bind-out <the strict bind of this tree>")
+        chosen = found[0]
+        rec["bind_from"] = "in-tree" if inside else "sibling " + os.path.basename(chosen)
+    upd["bind_out"] = chosen
+    for p in plans:
+        if pr and pr.get("exists") and (pr.get("plan") or {}).get(p) is False and not plan:
+            raise ValueError(f"private-spec --tree {new}: the plan {p} does not exist in the tree; pass --plan <this tree's plan of record>")
+    rec["bind"] = chosen
+    # 3. rt.  gen_tools_pin of this item for exactly this bind = the tree's own tools (no rt)
+    pin = ((d.get("item_inputs") or {}).get(item) or {}).get("gen_tools_pin")
+    stamp = (binds.get(chosen) or {}).get("stamp")
+    if isinstance(pin, dict) and pin.get("bind_out") == chosen and pin.get("src_manifest_hash"):
+        upd.update(gen_tools_manifest_sha=pin["src_manifest_hash"], tools_rt=None, tools_sha=None)
+        rec["rt_from"] = "gen_tools_pin (tree tools)"
+        return {"update": upd, "record": rec}
+    if not stamp or not stamp.get("generators"):
+        rec["rt_from"] = "explicit --rt" if rt else ("wave default (bind has no bind_tool.json stamp)" if sp.get("tools_rt") else "tree tools (die tools_from_rt false)")
+        return {"update": upd, "record": rec}
+    if rt:                                               # explicit --rt: must fit the bind's generators
+        f = private_rt_fields(rt, rt_root=rt_root)
+        diff = stamp_diff(stamp, rt_generator_hashes(f["tools_rt"]))
+        if diff:
+            hit = rt_for_stamp(stamp, rt_root)
+            raise ValueError(f"private-spec: --rt {rt} does not fit the bind {chosen}: reset / relay generators differ ({', '.join(diff[:6])}); "
+                             + (f"drop --rt (the bind was made on rt {os.path.basename(hit[0])}) or rebind on {rt}" if hit else f"rebind the tree on rt {rt}"))
+        rec["rt_from"] = "explicit --rt (fits the bind stamp)"
+        return {"update": upd, "record": rec}
+    if not sp.get("tools_rt"):
+        rec["rt_from"] = "tree tools (die tools_from_rt false)"
+        return {"update": upd, "record": rec}
+    if not stamp_diff(stamp, rt_generator_hashes(sp["tools_rt"])):
+        rec["rt_from"] = f"wave rt {str(sp.get('tools_sha') or '')[:12]} (fits the bind stamp)"
+        return {"update": upd, "record": rec}
+    hit = rt_for_stamp(stamp, rt_root)
+    if hit:
+        upd["_rt_sha"] = hit[1]
+        rec["rt_from"] = f"rt {os.path.basename(hit[0])} (the bind's generators; wave rt {str(sp.get('tools_sha') or '')[:12]} differs)"
+        return {"update": upd, "record": rec}
+    if (pr or {}).get("gens") and not stamp_diff(stamp, pr["gens"]):
+        upd.update(tools_rt=None, tools_sha=None)
+        rec["rt_from"] = "tree tools (the bind's generators = the tree's; no rt snapshot matches)"
+        return {"update": upd, "record": rec}
+    raise ValueError(f"private-spec --tree {new}: bind {chosen} was made with reset / relay generators that match no rt snapshot here and not the tree's "
+                     f"own tools ({', '.join(stamp_diff(stamp, rt_generator_hashes(sp['tools_rt']))[:6])} differ from the wave rt); rebind the tree on rt "
+                     f"{str(sp.get('tools_sha') or '')[:12]} or pass --rt <the sha the bind was made on>")
+
+
 def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
-                 host=None, bind_out=None, src_manifest=None, rt=None):
+                 host=None, bind_out=None, src_manifest=None, rt=None, goal=None, probe=None, rt_root=None, fork_of=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
     the same functions launch() uses: env, gen args, flow_tag), with only plan, tree and overlay replaced.  Env values and kit_rtl / gen_args paths
     under the die tree are rewritten to the private tree (those env keys are plan_derived).  ab = ["KEY=VAL" | "KEY=" (unset)] is the deliberate A/B
@@ -8635,13 +8861,21 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         cfg = dict(cfg, ot_run=None)
         sp = spec_for(cfg, die, item, hub, kind=kind)
         sp["ot_run_note"] = f"hub ot_run override not on this host ({e}); {OT_RUN}"
+    other_tree = bool(tree) and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/")
+    if other_tree and sp.get("gen_tools_manifest_sha"):  # FLOW-PRIVSPEC-R1: the wave's gen_tools_pin belongs to the wave tree, never to --tree
+        sp.pop("gen_tools_manifest_sha", None)
     if not sp.get("gen_tools_manifest_sha"):
         sp.update(rt_tools_fields(cfg, die))
+    ti = None
+    if other_tree:                                       # FLOW-PRIVSPEC-R1 (item 7a): plan / bind / rt of --tree come from the tree, not the live wave
+        ti = resolve_tree_inputs(cfg, die, item, sp, tree, host=host, bind_out=bind_out, rt=rt, plan=plan, probe=probe, rt_root=rt_root, fork_of=fork_of)
     rt_decl = None
-    if rt:                                               # FLOW-CLKGRT-1121: --rt SHA (declared tools runtime; recorded, not an env key)
-        f = private_rt_fields(rt)
+    rt_pick = rt or ((ti or {}).get("update") or {}).get("_rt_sha")
+    if rt_pick:                                          # FLOW-CLKGRT-1121: --rt SHA (declared tools runtime; recorded, not an env key); FLOW-PRIVSPEC-R1: or the bind's rt
+        f = private_rt_fields(rt_pick, rt_root=rt_root)
         rt_decl = {"sha": f["tools_sha"], "rt": f["tools_rt"], "wave_tools_rt": sp.get("tools_rt") or "",
-                   "wave_tools_sha": sp.get("tools_sha") or "", "wave_gen_tools_manifest_sha": sp.pop("gen_tools_manifest_sha", "") or ""}
+                   "wave_tools_sha": sp.get("tools_sha") or "", "wave_gen_tools_manifest_sha": sp.pop("gen_tools_manifest_sha", "") or "",
+                   "from": "--rt" if rt else "bind stamp (private-spec default for --tree)"}
         sp.update(f)
     wave = {"env": dict(sp["gen_env"]), "gen_args": list(sp["gen_args"]), "plan": sp["plan"], "src": sp["src"], "kit_rtl": copy.deepcopy(sp.get("kit_rtl") or {})}
     derived = []
@@ -8661,6 +8895,22 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         if str(sp.get("plan") or "").startswith(old.rstrip("/") + "/") and not plan:
             sp["plan"], _ = _swap_prefix(sp["plan"], old, new)
         sp.update(src=new, src_sha=src_sha or "", src_manifest_hash="", queue_src="")
+    if ti:
+        u = ti["update"]
+        for k in ("src_sha", "queue_src", "src_manifest_hash"):
+            if u.get(k) and not (k == "src_sha" and src_sha):
+                sp[k] = u[k]
+        if u.get("plan") and not plan:
+            sp["plan"] = u["plan"]
+        if u.get("kit_rtl_record"):
+            sp["kit_rtl"] = dict(u["kit_rtl_record"])
+        if u.get("bind_out"):
+            sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=u["bind_out"])
+        if "tools_rt" in u and u["tools_rt"] is None:        # the tree's own tools (gen_tools_pin / stamp = tree generators)
+            sp.pop("tools_rt", None)
+            sp.pop("tools_sha", None)
+        if u.get("gen_tools_manifest_sha"):
+            sp["gen_tools_manifest_sha"] = u["gen_tools_manifest_sha"]
     if plan:
         sp["plan"] = os.path.abspath(plan)
     ov = [o for o in (overlays or []) if o]
@@ -8702,6 +8952,12 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
                      "wave_gen_args": wave["gen_args"], "wave_plan": wave["plan"], "wave_src": wave["src"], "plan_derived": sorted(derived)}
     if rt_decl:
         sp["private"]["rt"] = rt_decl
+    if ti:
+        sp["private"]["tree_inputs"] = ti["record"]
+    g = str(goal or "auto").strip().lower()
+    if g not in PRIVATE_GOALS:
+        raise ValueError(f"--goal {goal!r}: one of {', '.join(PRIVATE_GOALS)}")
+    sp["goal"] = g                                       # FLOW-PRIVSPEC-R1 (item 7c): run-item drives the wave stage chain to this goal
     return sp
 
 
@@ -8741,7 +8997,7 @@ def private_spec_cmd(a):
     try:
         sp = private_spec(cfg, a.die, a.item, hub, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
                           work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest,
-                          rt=a.rt)
+                          rt=a.rt, goal=a.goal, fork_of=fork_src)
     except ValueError as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
@@ -8759,16 +9015,255 @@ def private_spec_cmd(a):
     print(f"private-spec {a.die}/{a.item}: {out / 'spec.json'}  env=wave" + (f"+{len(diff)}({','.join(diff)})" if diff else "")
           + f"  plan {sp['plan']}  tree {sp['src']}" + (f"  overlay {sp['type_overlay']}" if sp.get("type_overlay") else "")
           + (f"  rt {sp['tools_sha'][:12]} (declared --rt)" if (sp.get("private") or {}).get("rt") else "")
-          + f"  work {sp['gen_host']}:{sp['work']}")
-    print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place)")
+          + f"  work {sp['gen_host']}:{sp['work']}  goal {sp['goal']}")
+    ti = (sp.get("private") or {}).get("tree_inputs")
+    if ti:
+        print(f"tree inputs: bind {ti.get('bind', '-')} ({ti.get('bind_from', '-')}); rt {ti.get('rt_from', '-')}; probed on {ti.get('probe_host', '-')}"
+              + (f"; record {ti['source']}" if ti.get("source") else ""))
+    print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place; "
+          + ("stops after AUTO-GEOM)" if sp["goal"] == "geom" else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
     return 0
 
 
+# ------------------------------------------------------------------------------------------------ FLOW-PRIVSPEC-R1: private kits run the wave chain
+# FABLE-FLOW-2000 item 7c / class B3 (FAM-QC-CB-R2/R3, QC-SLE-R5, FABLE-FIX-QC-STRAP-R2, HEAD-CTL-R1 drove run_kit.sh by hand after run-item
+# stopped at AUTO-GEOM: GOAL=cts skipped the pre-GRT hold check, an advisory GRT hit a 600 s wall, a kit resumed under a disk floor).  After an
+# AUTO-GEOM PASS a private run-item continues exactly as the autopilot SUBMIT does for a wave kit (autopilot.submit): the same admission bundle
+# (signoff_chain.py: kit preflight, stage flow refresh, the kit's own runner to the goal, sign-off with the late-ECO loop, routed LEC), the same
+# goal resolution (default_goal / runner_goal), the same ot-run --stage / --disk admission; the kit stays pinned to the host that holds the
+# placed kit.  Stage progress is waited on with ot-wait --kit (stage ODB / FAIL_*), never by grepping a log.
+CHAIN_WAIT_SLICE_S = 1800                                # one ot-wait --kit call; between calls the ot-run client is checked
+CHAIN_NOT_RUN_RETRIES = 2                                # ot-run answered NOT RUN (never admitted) / signoff_chain deferred (rc 75): relaunch
+CHAIN_RETRY_WAIT_S = 120
+CHAIN_STAGES = {"cts": ("cts",), "grt": ("cts", "grt"), "route": ("cts", "grt", "route"), "finish": ("cts", "grt", "route", "finish")}
+CHAIN_ENV_KEEP = ("OT_LANE", "OT_HUB_NAME", "OT_STATUS_DIR", "OT_WAIT_LEDGER")
+CHAIN_RECEIPT_PY = r'''
+import glob, json, os, sys
+K = sys.argv[1]; out = {}
+c = sorted(glob.glob(os.path.join(K, "autopilot_chain_*.json")), key=os.path.getmtime)
+if c:
+    try: out["chain"] = dict(json.load(open(c[-1])), path=c[-1])
+    except Exception as e: out["chain"] = {"verdict": "UNREADABLE", "reason": str(e)[:200], "path": c[-1]}
+for f in sorted(glob.glob(os.path.join(K, "signoff*", "signoff.json")), key=os.path.getmtime)[-1:]:
+    try:
+        r = json.load(open(f))
+        out["signoff"] = {"path": f, "verdict": r.get("verdict"), "checks": {k: (v.get("verdict") if isinstance(v, dict) else v) for k, v in (r.get("checks") or {}).items()}}
+    except Exception as e:
+        out["signoff"] = {"path": f, "verdict": "UNREADABLE", "why": str(e)[:200]}
+out["fail_marks"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(K, "FAIL_*")))
+print("KW_CHAIN_RECEIPT " + json.dumps(out))
+'''
+
+
+def chain_refusal(p, goal):
+    """the autopilot admit_new refusal for a kit probe (PROBE_KIT), '' when the kit may continue"""
+    if not p.get("exists"):
+        return "kit dir missing"
+    if not p.get("config"):
+        return "no config.mk"
+    if p.get("routed") or p.get("signoff_dirs"):
+        return f"kit already routed / signed off ({', '.join((p.get('routed') or []) + (p.get('signoff_dirs') or []))}); make a fresh private kit"
+    if p.get("fail_marks"):
+        return f"kit carries {'+'.join(p['fail_marks'])} from an earlier run" + "".join(f" [{t}]" for t in (p.get("fail_text") or {}).values() if t)
+    if not p.get("runner"):
+        return "no run_kit*.sh runner found"
+    if p.get("signoff_missing") and goal not in ("cts", "grt"):
+        return f"kit signoff.py lacks {', '.join(p['signoff_missing'])} (sign-off would crash after the route)"
+    return ""
+
+
+def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None):
+    """the autopilot.submit argv for this kit (ot-run on the hub, pinned to the kit host)"""
+    argv = [sp.get("ot_run") or OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit,
+            "--hosts", ",".join(target_hosts([host], hub, allow_hub=True))] + list(AP.stage_disk_args())
+    if not runner.startswith(kit.rstrip("/") + "/"):
+        argv += ["--stage", runner]
+    if goal in ("cts", "grt"):
+        return argv + ["--", "bash", runner, kit, goal, str(mem), str(thr)]
+    bundle = dict(bundle if bundle is not None else AP.stage_admission_tools())
+    bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
+    enc = base64.b64encode(json.dumps(bundle).encode()).decode()
+    return argv + ["--", "python3", "-c", AP.ADMISSION_BOOTSTRAP, enc] + ([] if AP.late_eco_on() else ["--no-late-eco"]) + [runner, kit, goal, str(mem), str(thr)]
+
+
+def chain_env(lane=""):
+    """the ot-run client env: the caller's OT_* knobs never leak into a chain (only lane / hub / waiter bookkeeping)"""
+    env = {k: v for k, v in os.environ.items() if not k.startswith("OT_") or k in CHAIN_ENV_KEEP}
+    if lane and not env.get("OT_LANE"):
+        env["OT_LANE"] = lane
+    return env
+
+
+def ot_wait_bin():
+    p = HOME / ".local" / "bin" / "ot-wait"
+    return str(p) if p.exists() else "ot-wait"
+
+
+def chain_stage_wait(kit, stage, host, hub, proc, wait=subprocess.run, slice_s=None):
+    """ot-wait --kit KIT --stage STAGE [--host H] in slices while the ot-run client lives -> (0 reached | 1 FAIL_* | 2 job ended first | rc, text)"""
+    slice_s = int(slice_s or CHAIN_WAIT_SLICE_S)
+    base = [ot_wait_bin(), "--kit", kit, "--stage", stage, "--poll", "60"] + ([] if host in ("localhost", hub) else ["--host", host])
+    txt = ""
+    while True:
+        try:
+            r = wait(base + ["--timeout", str(slice_s)], capture_output=True, text=True, timeout=slice_s + 600)
+            rc, t = r.returncode, (r.stdout or "") + (r.stderr or "")
+        except subprocess.TimeoutExpired:
+            rc, t = 124, "ot-wait wrapper timeout\n"
+        txt += t
+        if rc in (0, 1):
+            return rc, txt
+        if rc not in (124, 66) and rc is not None:
+            return rc, txt
+        if proc.poll() is not None:                       # the job ended: one last look (the ODB may land right before the client exits)
+            try:
+                r = wait(base + ["--timeout", "1"], capture_output=True, text=True, timeout=600)
+                txt += (r.stdout or "") + (r.stderr or "")
+                return (r.returncode if r.returncode in (0, 1) else 2), txt
+            except subprocess.TimeoutExpired:
+                return 2, txt
+
+
+def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Popen, wait=subprocess.run, sleep=time.sleep):
+    """FLOW-PRIVSPEC-R1 (item 7c): AUTO-GEOM PASS -> the wave stage chain to `goal` on the placed kit; -> rc, result.json updated"""
+    import autopilot as AP
+    hub = sp["hub"]
+    kh, _, K = str(res.get("kit") or "").partition(":")
+    if not K:
+        return fail("chain", "KW_CHAIN no placed kit recorded after AUTO-GEOM")
+    W = sp["work"]
+    runner = sp.get("chain_runner") or ("" if sp.get("kind") == "core" else f"{W}/gen/run_kit.sh")
+    remote = (lambda cmd: remote_argv(kh, hub, cmd))
+    _, ptxt = run("chain_probe", remote(f"python3 -I - {shlex.quote(json.dumps({'kit': K, 'runner': runner}))} <<'KWPROBE'\n{AP.PROBE_KIT}\nKWPROBE"), idempotent=True)
+    got = [ln[8:] for ln in (ptxt or "").splitlines() if ln.startswith("AP_JSON ")]
+    try:
+        p = json.loads(got[-1])
+    except (IndexError, ValueError):
+        return fail("chain_probe", "KW_CHAIN kit probe gave no answer\n" + (ptxt or "")[-1500:], f"{kh}:{K}")
+    g = goal
+    if g == "auto":
+        g = AP.default_goal(p.get("runner") or runner or "run_kit.sh")
+    g2 = AP.runner_goal(g, p) if p.get("runner") else g
+    if g2 != g:
+        print(f"KW_CHAIN_GOAL {g} -> {g2} (runner signs off on {'/'.join(p.get('signoff_goals') or [])})", flush=True)
+    g = g2
+    why = chain_refusal(p, g)
+    if why:
+        return fail("chain_admit", "KW_CHAIN refused (autopilot admission rules): " + why, f"{kh}:{K}")
+    runner = p["runner"]
+    mem, thr = int(sp.get("route_mem_gb") or sp.get("place_mem_gb") or 32), int(sp.get("route_threads") or 8)
+    lane = (sp.get("private") or {}).get("lane") or ""
+    res.update(goal=g, chain="RUNNING", chain_host=kh)
+    (out / "result.json").write_text(json.dumps(res, indent=1))
+    stages = CHAIN_STAGES.get(g, ("cts", "grt", "route"))
+    rc, attempt, txt = 1, 0, ""
+    while True:
+        attempt += 1
+        argv = chain_argv(sp, AP, K, runner, g, mem, thr, kh, hub)
+        live = out / f"chain_a{attempt}.live.log"
+        res["stage"] = "chain"
+        print(f"KW_STAGE chain {now_s()} :: goal {g} attempt {attempt} on {kh} :: {' '.join(shlex.quote(a) for a in argv[:14])} ...", flush=True)
+        with open(live, "w") as lf:
+            proc = popen(argv, stdout=lf, stderr=subprocess.STDOUT, env=chain_env(lane))
+        failed_stage = ""
+        for st in stages:
+            if st in completed and completed[st] == 0:
+                continue
+            res["stage"] = st
+            print(f"KW_STAGE {st} {now_s()} :: ot-wait --kit {K} --stage {st}" + ("" if kh in ("localhost", hub) else f" --host {kh}"), flush=True)
+            src, wt = chain_stage_wait(K, st, kh, hub, proc, wait=wait)
+            (out / f"{st}.wait.log").write_text(wt)
+            completed[st] = src
+            print(f"KW_STAGE_RC {st} {src}", flush=True)
+            if src != 0:
+                failed_stage = st
+                break
+        rc = proc.wait()
+        try:
+            txt = live.read_text(errors="replace")
+        except OSError:
+            txt = ""
+        (out / "chain.log").write_text(txt)
+        completed["chain"] = rc
+        print(f"KW_STAGE_RC chain {rc}", flush=True)
+        deferred = rc == 75
+        not_admitted = rc != 0 and bool(re.search(r"\bNOT RUN\b", txt)) and not re.search(r"ot-run: RAN on", txt)
+        if (deferred or not_admitted) and attempt <= CHAIN_NOT_RUN_RETRIES:
+            print(f"KW_CHAIN_RETRY attempt {attempt + 1} in {CHAIN_RETRY_WAIT_S} s: " + ("signoff_chain deferred (rc 75)" if deferred else "ot-run NOT RUN (never admitted)"), flush=True)
+            sleep(CHAIN_RETRY_WAIT_S)
+            continue
+        break
+    _, rtxt = run("chain_receipt", remote(f"python3 -I - {shlex.quote(K)} <<'KWRCPT'\n{CHAIN_RECEIPT_PY}\nKWRCPT"), idempotent=True)
+    got = [ln[len("KW_CHAIN_RECEIPT "):] for ln in (rtxt or "").splitlines() if ln.startswith("KW_CHAIN_RECEIPT ")]
+    try:
+        rcpt = json.loads(got[-1])
+    except (IndexError, ValueError):
+        rcpt = {}
+    chain = rcpt.get("chain") or {}
+    res.update(chain=chain.get("verdict") or ("DONE" if rc == 0 else "FAIL"), chain_rc=rc, chain_reason=str(chain.get("reason") or "")[:600],
+               signoff=rcpt.get("signoff"), chain_receipt=chain.get("path"), fail_marks=rcpt.get("fail_marks") or [])
+    if g in ("cts", "grt"):                              # diagnostic goals: never a sign-off
+        ok = rc == 0 and not failed_stage
+        res.update(stage=g, verdict="PASS" if ok else "FAIL", evidence=f"{kh}:{K}")
+        if not ok:
+            return fail(failed_stage or g, txt[-3000:], f"{kh}:{K}")
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 0
+    if rc == 0 and chain.get("verdict") == "PASS":
+        res.update(stage="signoff", verdict="SIGNED", evidence=(rcpt.get("signoff") or {}).get("path") and f"{kh}:{rcpt['signoff']['path']}" or f"{kh}:{K}")
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        print(f"KW_CHAIN SIGNED {sp['die']}/{sp['item']} on {kh}:{K}", flush=True)
+        return 0
+    stage = failed_stage or ("signoff" if chain.get("verdict") in ("NOT_SIGNED", "SIGNOFF_MISSING") else
+                             "lec" if str(chain.get("verdict") or "").startswith("LEC") else "chain")
+    return fail(stage, f"KW_CHAIN {chain.get('verdict') or 'no receipt'} rc {rc}: {chain.get('reason') or ''}\n" + txt[-3000:], f"{kh}:{K}")
+
+
+def chain_goal_of(sp, goal=None):
+    """FLOW-PRIVSPEC-R1: how far run-item drives this spec.  A wave spec always stops at AUTO-GEOM (the tick enqueues it); a private spec
+    follows run-item --goal, else its own goal; a private spec written before goals existed keeps the old stop at geom."""
+    if not sp.get("private"):
+        return "geom"
+    g = str(goal or sp.get("goal") or "geom").strip().lower()
+    return g if g in PRIVATE_GOALS else "geom"
+
+
+def write_env_provenance(K, b64, remote, run, T, src=None):
+    """FLOW-PRIVSPEC-R1 (item 7b): write K/kit_env_provenance.json with the scheduler's env_provenance.py (sent on stdin, so the kit's own copy
+    or its absence never matters) and install that checker as K/env_provenance.py when the kit has none (run_kit.sh then checks it).
+    -> '' when the record is there, else the reason"""
+    q = shlex.quote
+    try:
+        code = Path(src or Path(__file__).with_name("env_provenance.py")).read_text()
+    except OSError as e:
+        return f"scheduler env_provenance.py unreadable ({e})"
+    tag = "KWEPV_" + hashlib.sha1(code.encode()).hexdigest()[:10]
+    tmp = f"{K}/.env_provenance.py.kw{os.getpid()}"
+    cmd = (f"test -d {q(K)} || {{ echo 'ENV-PROVENANCE NOT WRITTEN: kit dir missing'; exit 3; }}; "
+           f"cat > {q(tmp)} <<'{tag}'\n{code if code.endswith(chr(10)) else code + chr(10)}{tag}\n"
+           f"python3 -I {q(tmp)} write {q(K)} --b64 {b64} || {{ rm -f {q(tmp)}; exit 3; }}; "
+           f"if [ -f {q(K)}/env_provenance.py ]; then rm -f {q(tmp)}; else mv -f {q(tmp)} {q(K)}/env_provenance.py && "
+           f"echo 'ENV-PROVENANCE CHECKER INSTALLED: {T}: the kit had no env_provenance.py (old rt); the record was written by the scheduler copy'; fi; "
+           f"test -f {q(K)}/kit_env_provenance.json || {{ echo 'ENV-PROVENANCE NOT WRITTEN: no record after write'; exit 3; }}")
+    rc, txt = run("env_provenance", remote(cmd), idempotent=True)
+    if rc:
+        return f"record not written on the kit (rc {rc}): " + (txt or "").strip()[-300:]
+    return ""
+
+
+RUN_ITEM_GOAL = None                                     # FLOW-PRIVSPEC-R1: `run-item --goal` (private specs only)
+
+
 def run_item(spec_path):
-    """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
+    """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
+    continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
     spec_bytes = Path(spec_path).read_bytes()
     spec_sha256 = hashlib.sha256(spec_bytes).hexdigest()
     sp = json.loads(spec_bytes)
+    goal = RUN_ITEM_GOAL
+    if goal and not sp.get("private"):
+        print(f"run-item: --goal applies to private specs only (a wave spec stops at AUTO-GEOM and the tick enqueues it); ignored", flush=True)
+    chain_goal = chain_goal_of(sp, goal)
     sp = repick_stage_hosts(sp)
     out = Path(spec_path).parent
     completed_stages = {}
@@ -8868,11 +9363,12 @@ def run_item(spec_path):
 
     def env_provenance_record(K):
         """FLOW-PROC-A (ENV-PROVENANCE): K/kit_env_provenance.json, written right before place: the env this kit was generated with and the wave
-        env it must equal (run_kit.sh refuses place on an undeclared difference).  A kit without env_provenance.py (old rt) is noted, not stopped."""
+        env it must equal (run_kit.sh refuses place on an undeclared difference).  FLOW-PRIVSPEC-R1 (item 7b, HEAD-CTL-R1 r16 tree: 'SKIPPED'):
+        the record is written by THIS run-item's env_provenance.py (the hub rt), never by the kit's copy, and a kit without the checker gets
+        that copy too, so an old-rt tree is checked like any other.  -> '' or the reason it could not be written (a private kit then stops)."""
         decl = env_provenance_decl(sp, spec_path)
         b64 = base64.b64encode(json.dumps(decl, sort_keys=True, default=str).encode()).decode()
-        run("env_provenance", remote(f"if [ -f {q(K)}/env_provenance.py ]; then python3 -I {q(K)}/env_provenance.py write {q(K)} --b64 {b64}; "
-                                     f"else echo 'ENV-PROVENANCE SKIPPED: {T}: no env_provenance.py in the kit (rt older than FLOW-PROC-A)'; fi"), idempotent=True)
+        return write_env_provenance(K, b64, remote, run, T)
 
     _drc = {}
 
@@ -8916,6 +9412,15 @@ def run_item(spec_path):
         res.update(stage=stage, verdict="FAIL", tail=recorded[-3000:], errors=error_lines(recorded), evidence=evidence or f"{G}:{W}")
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
+
+    def chain_after_geom(rc):
+        """FLOW-PRIVSPEC-R1 (item 7c): a private spec whose goal is past geom continues through the wave stage chain after AUTO-GEOM PASS"""
+        if rc != 0 or chain_goal == "geom" or res.get("stage") != "geom" or res.get("verdict") != "PASS":
+            return rc
+        try:
+            return private_chain(sp, res, out, chain_goal, run, fail, completed_stages)
+        except Exception as e:                           # noqa: BLE001 - recorded, never a silent stop
+            return fail("chain", f"KW_CHAIN pipeline error {type(e).__name__}: {e}", res.get("kit") or f"{G}:{W}")
 
     def after_place(K, rc, txt):
         """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
@@ -9162,9 +9667,10 @@ def run_item(spec_path):
         rc, txt, _ = place_wait(svc)
         res["ran_on"] = G
         try:
-            return after_place(svc["kit"], rc, txt)
+            rc = after_place(svc["kit"], rc, txt)
         finally:
             run("resume_release", remote(kr_cmd(f"release {q(svc['kit'])}")), idempotent=True)
+        return chain_after_geom(rc)
     if sp.get("private"):                                # FLOW-PROC-A ENV-PROVENANCE: a private spec built from an older die config is refused before gen
         why = private_spec_stale(sp)
         if why:
@@ -9606,7 +10112,9 @@ def run_item(spec_path):
         # FABLE-FLOW-1000 A (TOOLS-DECOUPLE): the kit (fresh gen, or a relaunch that restored items/<item>/gen) gets the current flow
         # scripts of this attempt's rt tools before PLACE: verbatim copies of older main versions are replaced (KIT/flow_refresh.jsonl).
         flow_refresh("place")
-        env_provenance_record(K)
+        _epw = env_provenance_record(K)
+        if _epw and sp.get("private"):
+            return fail("env_provenance", "ENV-PROVENANCE " + _epw, f"{G}:{K}")
         asy = False
         if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
             _, at = run("place_mode", idempotent=True, argv=remote(
@@ -9684,10 +10192,11 @@ def run_item(spec_path):
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
     try:
-        return place_and_geom(K, rs)
+        rc = place_and_geom(K, rs)
     finally:
         if rs:
             run("resume_release", remote(kr_cmd(f"release {q(K)}")), idempotent=True)
+    return chain_after_geom(rc)
 
 
 # ------------------------------------------------------------------------------------------------ KIT-INPUT-STORE-1
@@ -18667,6 +19176,8 @@ def main(argv=None):
     s_.add_argument("--dry-run", action="store_true")
     r = sub.add_parser("run-item")
     r.add_argument("spec")
+    r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (geom = stop after AUTO-GEOM; "
+                                                         "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
     ps_.add_argument("die"); ps_.add_argument("item")
     ps_.add_argument("--plan", help="private plan of record (default: the wave plan)")
@@ -18687,6 +19198,8 @@ def main(argv=None):
     ps_.add_argument("--src-manifest", choices=("on", "off"), help="off: no src tree manifest check (a private tree without .src-manifest.json)")
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
+    ps_.add_argument("--goal", default="auto", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: how far run-item drives the kit: auto (default: the runner's "
+                                                                          "sign-off goal, route for run_kit.sh) / route / finish = sign-off + routed LEC; geom = stop after AUTO-GEOM; cts / grt = diagnostic")
     ps_.add_argument("--rt", metavar="SHA", help="FLOW-CLKGRT-1121: declared tools runtime = rt/<sha12> snapshot for gen / kit_rtl / the launch tree (e.g. the "
                                                "runtime the bind was made on), recorded in spec private.rt + kit_env_provenance.json; flow scripts are still "
                                                "refreshed from rt/current at each stage (FLOW-FIX-2045), so new flow tcl reach the kit; env and ENV-PROVENANCE unchanged")
@@ -18744,6 +19257,8 @@ def main(argv=None):
         return private_spec_cmd(a)
     if a.cmd == "run-item":
         try:
+            global RUN_ITEM_GOAL
+            RUN_ITEM_GOAL = a.goal
             return run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
             out = Path(a.spec).parent / "result.json"
