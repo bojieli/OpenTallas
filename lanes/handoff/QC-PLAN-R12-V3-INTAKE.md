@@ -55,3 +55,7 @@ Current trial: epyc7 `/srv/opentallas-scratch2/claude/qc-plan-r12/ctl_strap/v3p3
 - OWNER 19:0x: production calendar K fwd_epoch - C = -8 edges (-7, -10 retired). Not a plan key; V3 binds the -8 calendar/epoch-pad RTL variant (token lane overlay requested by 04:00); verify K-C=-8 in the V3 bind receipt. Row C = PENDING overlay.
 - FEFW-V3-2 slw_fw_v3 x_fe_p1_i +1: REJECTED (duplicate): V2 already has 2 stations (R7 hop300 1->2); -84.28 was the 1-station N46C kit. Measure V2 kit first. FEFW-V3-1 reconciled no row. FEFW-V3-3 = Codex FE START/FW five-bank candidates (IN when native proof reads).
 - SU-1 sle_su_c b84307a2499d (FAM-QC-SLWSLE-R1): identical to V2 type -> no-op (asked lane). SU-2 slw_su_c__cl92142dac 194c89fb6df9 + SU-3 cl19bb38ef s3 3d3a7f3498e7: ft_slot x_su_l1_ctl 33->32 sited stations, merged per-slot into V3p4b (lanes_raised already = V2 cycles). STAGED, strict/LAT pending.
+
+### 20:3x PST QC-PLAN-R12 state
+- Current candidate V3p5r b1281d55e514 = V3p3 + HC3 + CTL retaps + SU cap + su_c slots + tap_balance_to slowest + tap_split (346) with 6c REVERTED (6c = 3 strict errors). Static G0 + strict bind on rt 6dbb162ffe89 running (v3p4/chain_p5r2.log).
+- To fold as V3p6 before 06:00: coll_core pkg (FABLE-FIX-QC-COLL-R2, 13 lanes OK), CB rows (FAM-QC-CB-R3-V3-cts-fix A-D + cbn-street + CB-R2 candidates; CANDIDATE), calendar -8 overlay. Successor QC-PLAN-R13.
