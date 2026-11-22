@@ -3,6 +3,7 @@ Goal: close routed near-misses (DRC 0; TT >= -80 or <= 20 ep; internal FF >= -40
 
 ## State
 - Scan: rtx-pro scratchpad nm_scan.py (read-only, signoff.json <4 d, all 7 hosts) -> scan/<host>.jsonl; match.py vs release cache + kit_wave_stages. Most near-miss records belong to types already signed (any plan).
+- 02:2x RESUMED after limit. fe_v1 run1 ERROR (6_final seed fillers, DPL-0033) -> relaunched --from grt as ..._g. Waiter wait_eco.sh re-armed on fe_v1_g, stm_v2, serdes.
 - ECOs (roots /srv/opentallas-scratch2/claude/nearmiss-eco-r1/<item>/{eco,ot-run.log,LAUNCH.txt}; kits read-only):
   - epyc8 slw_stm_v2__cl9beb65e6 unit oth-ubuntu-2124691-1795339457
   - epyc9 slw_fe_v1__clfe325744__cl08d14f0d unit oth-ubuntu-3818921-1795339456
