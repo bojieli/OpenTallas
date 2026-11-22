@@ -1,0 +1,5 @@
+# S81 leaf t2 VP SRAM corridor, 2026-11-22 11:11 PST
+
+Viewed the exact J7 attempt_2 placed density on Intel1 and the proposed overlay at Intel2 `/srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10/t2_vp_corridor_1122/vp_clearance.png`. The baseline places the 99% bin at (1139.3,579.3) in a 20.712 µm gap between VP bank 1 and LN13. A west shift of 34.56 µm increases that horizontal gap to 55.272 µm. Bank 0 shifts 25.92 µm west, opening its corner beside VN. The new footprints clear every other hard block in the viewed local strip. The nearest RX block ends at x753.948, leaving over 160 µm from each new bank's west edge. The exact frozen placement graph estimates 11.3% and 14.9% lower total Manhattan length using cell-center endpoints for the 283 direct signal pairs on each bank. Each bank retains one longer outlier, for separate endpoint inspection.
+
+Verdict: suitable for a private placement comparison after the stock type-overlay topology check. Check actual pin access and reset topology from the generated kit before advancing.
