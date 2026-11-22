@@ -1,1 +1,2 @@
 - 2026-11-21 21:22 PST RESUMED (Opus 5.5, successor of FLOW-OPS-1300). P1 re-sign nomcap path map, P2 adopt push17, P3 s81_head_cl canary bisect (8a2a7b31a9 first), P4 open items.
+- 2026-11-21 21:32 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2532009 on civil-redfish: rc=0 after 35 s, ended 05:32:58, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push1.log, cmd: ot-push-main 
