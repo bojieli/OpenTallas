@@ -1800,6 +1800,8 @@ class TypeSplit:
                 s = self.keep
             if "source_clock_tap" in q:
                 q["source_clock_tap"] = self.tapmap[s].get(q["source_clock_tap"], q["source_clock_tap"])
+            if "source_clock_port" in q:        # HEAD forwarded-clock pins name their source tap port
+                q["source_clock_port"] = self.tapmap[s].get(q["source_clock_port"], q["source_clock_port"])
             L[s]["pins"].append(q)
         # a pin that follows its bus into a piece but sat just across the cut (beside a window near the cut) is
         # nudged inward along the cut axis on a 0.96-um step, clear of the other landing pins of its layer
@@ -3606,6 +3608,57 @@ class Event:
         self.latency_rows = rows
 
     # ---------------------------------------------------------------- sidecar
+    FEED_SRC = "rtl/common/ot_dp_feed.sv"
+
+    def _gen_leg_leaves(self):
+        """gen-mode types (leaf binding = contents[].bind + bus.leaf, gen_rtl): the pieces of a cut internal-station leg.
+        The piece that holds the leaf: its (cut) bus takes the leaf.  Every other piece on the leg has no leaf for its two
+        buses: it gets a feed-through content (ot_dp_feed) binding them, so no bus is left open."""
+        rec = []
+        for ts in getattr(self, "ts", {}).values():
+            for tn in ts.tnames:
+                t = self.out["partition_types"][tn]
+                conts = {c["inst"]: c for c in t.get("contents", [])}
+                if not any("bind" in c for c in conts.values()):
+                    continue
+                buses = {b["name"]: b for b in t["buses"]}
+                for r in t.get("internal_stations", []):
+                    if "of the crossing leg" not in r.get("note", ""):
+                        continue
+                    bus = buses[r["conn"][4:]]
+                    la, ca = r.get("launch") or "", r.get("capture") or ""
+                    leaf = next((x for x in (la, ca) if "." in x and not x.startswith("face") and " " not in x), None)
+                    if leaf:
+                        if leaf.split(".", 1)[0] not in conts:
+                            raise SplitError(f"{tn}: leg {r['conn']} leaf {leaf} is not a content of this piece")
+                        bus["leaf"] = leaf
+                        rec.append([tn, bus["name"], leaf])
+                        continue
+                    if la.startswith("bus ") and ca.startswith("face bus "):
+                        d, q = la[4:], ca[9:]
+                    elif la.startswith(("bus ", "face")) and r["conn"][4:] in buses and buses[r["conn"][4:]]["dir"] == "out":
+                        d, q = (la[4:] if la.startswith("bus ") else None), r["conn"][4:]
+                    else:
+                        d = q = None
+                    if not d or d not in buses or q not in buses:
+                        raise SplitError(f"{tn}: leg {r['conn']} piece row has no leaf and no bus pair to feed through")
+                    inst = "u_feed_" + re.sub(r"\W", "_", q)
+                    w = int(buses[q]["width"])
+                    if int(buses[d]["width"]) != w:
+                        raise SplitError(f"{tn}: feed-through {d} -> {q}: widths differ")
+                    t["contents"].append(dict(inst=inst, module="ot_dp_feed", status="new", params={"W": w},
+                                              bind={"d": f"bus:{d}", "q": f"bus:{q}"},
+                                              note=f"{self.tag}: feed-through of the cut leg {r['conn']} (leaf in another piece)"))
+                    conts[inst] = t["contents"][-1]
+                    for b in (buses[d], buses[q]):
+                        if b.get("leaf") and b["leaf"].split(".", 1)[0] not in conts:
+                            b.pop("leaf")
+                    if self.FEED_SRC not in t.get("sources", []):
+                        t.setdefault("sources", []).append(self.FEED_SRC)
+                    rec.append([tn, f"{d} -> {q}", inst])
+        if rec:
+            self.rep["gen_leg_leaves"] = rec
+
     def _head_cut_bus_geometry(self):
         """HEAD types place pins from their own bus geometry (ports carry no window) and the landing compose reads a bus's
         site from it: every cut port between two pieces of a region-monitor type also writes face / window_um (type frame)
@@ -4321,6 +4374,7 @@ class Event:
                     (out / "sink_bins").mkdir(exist_ok=True)
                     md5[f"sink_bins/{nm}.json"] = jdump(ts.sink_bins[i], out / "sink_bins" / f"{nm}.json")
                     ck["sink_bins_file"] = f"{rel_dir}/sink_bins/{nm}.json"
+        self._gen_leg_leaves()
         self._head_cut_bus_geometry()
         txt = json.dumps(self.out)
         p = out / "plan_c.json"

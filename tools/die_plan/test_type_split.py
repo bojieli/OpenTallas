@@ -1182,3 +1182,24 @@ def test_census_none_plan_has_no_census_to_split(tmp_path):
     ev = TS.Event.__new__(TS.Event)
     ev.out = dict(census={"none": "top-down plan of a new die"})
     assert ev._census(tmp_path) == {}
+
+
+def test_gen_mode_cut_leg_gets_its_leaf_or_a_feed_through():
+    # hd_lep0N coll_i0: the band is in piece W, the leaf u_core in piece E
+    class _T:
+        tnames = ["hd_w", "hd"]
+    note = "T: piece 0 of the crossing leg bus:coll_i0"
+    w = dict(buses=[dict(name="coll_i0", dir="in", width=514, leaf="u_core.coll_i0"), dict(name="o_coll_i0_p", dir="out", width=514)],
+             contents=[dict(inst="u_rg1", bind={})], sources=[],
+             internal_stations=[dict(conn="bus:o_coll_i0_p", regs_um=[], launch="bus coll_i0", capture="face bus o_coll_i0_p", note=note)])
+    e = dict(buses=[dict(name="i_coll_i0_p", dir="in", width=514)], contents=[dict(inst="u_core", bind={})],
+             internal_stations=[dict(conn="bus:i_coll_i0_p", regs_um=[], launch="face:W", capture="u_core.coll_i0", note=note)])
+    ev = TS.Event.__new__(TS.Event)
+    ev.ts, ev.tag, ev.rep, ev.out = {"hd": _T()}, "T", {}, dict(partition_types={"hd_w": w, "hd": e})
+    ev._gen_leg_leaves()
+    assert e["buses"][0]["leaf"] == "u_core.coll_i0"
+    feed = w["contents"][-1]
+    assert (feed["inst"], feed["module"], feed["params"], feed["bind"]) == (
+        "u_feed_o_coll_i0_p", "ot_dp_feed", {"W": 514}, {"d": "bus:coll_i0", "q": "bus:o_coll_i0_p"})
+    assert "leaf" not in w["buses"][0] and w["sources"] == ["rtl/common/ot_dp_feed.sv"]
+    assert (ROOT / "rtl/common/ot_dp_feed.sv").is_file()
