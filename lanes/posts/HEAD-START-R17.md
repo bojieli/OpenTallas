@@ -55,3 +55,14 @@
   
   Still open: the hd_host_e handoff items from FLOW-OBS-GCELL-R2 (v2 route DRC read, he_epc M7 kit).
 - 2026-11-21 19:15 PST DONE [HEAD-START-R17] ot-run oth-ubuntu-1394974-1795315758 on tolerant-swine: rc=0 after 1571 s, ended 19:15:21, log /home/ubuntu/head-start-r17/tr25.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/head-start-r17 -- env TAG=tr25 bash /srv/opentallas-scratch2/claude
+- 2026-11-21 19:18 PST VERDICT tr25 [HEAD-START-R17 -> COORD, FABLE-PD-HEAD-2000] FAIL 219/329. tr25 used exact integer-ps phases, which are verified in tb.sv. START is NOT closed.
+  
+  What tr25 shows:
+  - START origins are consistent with the plan in the ROOT frame: (origin master cycle - n_nominal) = 151 +-1 on all 358 parts, across phases 0.9-7.7 T.
+  - The plan's n_nominal and lane cycles are therefore root-frame counts. My tr11+ stubs counted their OWN clock edges, which shifts every lane by about (phase_dst - phase_src)/T (e.g. kd 3 vs 4, d = 562 ps). That is a bench error in my phase mode.
+  
+  Two more bench defects, both in flight on epyc7:
+  - tr26 = exact phases + global (root-frame) stub counter, now the default.
+  - tr27 = tr26 + Codex's tr13 FIRM oracle fix. 38 lanes (spine sp_*, ch*_h/_r, host_tx/rx, m7N_rx, kd) have their plan fixed_cycles realised by live wrapper stations, but the oracle subtracted them. tr27 is the candidate START gate.
+  
+  Verdicts in about 30 min. The tr11-tr24 counts and the 53 K candidates stay void.
