@@ -214,7 +214,7 @@ def _set(node, path, v):
         node[path[-1]] = v
 
 
-def identity_remap(old_raw, new_raw, names, ident_fn, strict=True, skipped=None):
+def identity_remap(old_raw, new_raw, names, ident_fn, strict=True, skipped=None, preserve_paths=None):
     """PORTPAD-1122: rewrite stale same-path references by relay identity.  ident_fn(raw, tn) -> {name: identity}.
     -> [{type, path, old, new, identity}].  strict (identity mode, or a type reset_resel refused): a stale reference without a
     unique same-identity NEW relay, or a tree that does not build, raises RemapError; not strict (after a reset_resel that
@@ -222,10 +222,12 @@ def identity_remap(old_raw, new_raw, names, ident_fn, strict=True, skipped=None)
     import plan_gate_pre as G
     out = []
     skipped = [] if skipped is None else skipped
+    preserve_paths = preserve_paths or {}
     for tn in names:
         rn = G.landing_reset_refs(new_raw["partition_types"][tn])
         rb = G.landing_reset_refs(old_raw["partition_types"][tn])
-        same = {pth: v for pth, v in rn.items() if rb.get(pth) == v}
+        preserve = preserve_paths.get(tn, ())
+        same = {pth: v for pth, v in rn.items() if rb.get(pth) == v and pth not in preserve}
         if not same:
             continue
         try:
@@ -361,8 +363,11 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             rec["resets"].append(dict(type=tn, **r))
         try:
             rec["identity"] = identity_remap(old_raw, new_raw, [tn for tn in names if tn in rec["resel_fallback"]], ident_fn)
+            # A successful anchored START/local pick is authoritative even if
+            # its generated name also happens to survive the tree edit.
+            preserve = {tn: set(r.get("anchored_paths", ())) for tn, r in out.items()}
             rec["identity"] += identity_remap(old_raw, new_raw, [tn for tn in names if tn not in rec["resel_fallback"]], ident_fn,
-                                              strict=False, skipped=rec["skipped"])
+                                              strict=False, skipped=rec["skipped"], preserve_paths=preserve)
         except RemapError as e:
             fb = "; ".join(f"{k}: reset_resel {v}" for k, v in rec["resel_fallback"].items())
             raise RemapError(str(e) + (f" (after {fb})" if fb else "")) from e

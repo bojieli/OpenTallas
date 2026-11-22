@@ -2102,6 +2102,7 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     import math
     import schema as SC
     import reset_tree as RT
+    import reset_anchor as RA
     def has(t):
         ck = t.get("clock") or {}
         return bool(t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or ck.get("landing_raw_branches")
@@ -2167,9 +2168,10 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
             for key in ("landing_reader_start", "landing_writer_start"):
                 for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
                     for i, st in enumerate(br.get("stages", [])):
-                        refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
+                        refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset",
+                                     f"clock/{key}/branches/{bus}/stages/{i}/raw_reset"))
             for i, lr in enumerate(ck.get("landing_local_resets") or []):
-                refs.append(("landing_local_resets.%d" % i, lr, "raw"))
+                refs.append(("landing_local_resets.%d" % i, lr, "raw", f"clock/landing_local_resets/{i}/raw"))
             # landing_raw_branches: base + stage originals must be a D-chain of the re-solved tree (landing_raw_branches
             # .py: "exactly one same-clk plain relay" per Q, each original's D = its parent): base -> nearest same-depth
             # relay to the old base, then each stage -> the child of the previous node nearest the stage xy
@@ -2265,8 +2267,34 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 for st, r in zip(walk, chain):
                     st["original"] = r["q"]
                 rec["kept"] += kept
-            for tag, obj, fld in refs:
+            # A recorded plain START reference describes its bound source.
+            # The reconstructed OLD tree may have reused the same Q at a
+            # different depth or site after changes to the solver inputs.
+            old_clock = P["partition_types"][tn].get("clock") or {}
+            anchor = old_clock.get(RA.KEY) or {}
+            anchored = anchor.get("relays") or {}
+            ported = None
+            for tag, obj, fld, path in refs:
                 q = obj.get(fld)
+                if q in anchored and RA.NAME.fullmatch(q):
+                    mark = anchored[q]
+                    if ported is None:
+                        ported = RA.ported(tb)
+                    candidates = (
+                        (sum(abs(a - b) for a, b in zip(mark["xy"], r["xy"])), r["q"])
+                        for r in rb_plain
+                        if RA.NAME.fullmatch(r["q"]) and r["q"] not in ported and r["depth"] == mark["depth"]
+                    )
+                    match = min(candidates, default=None)
+                    tol = float(anchor.get("tol_um") or 0)
+                    if match is None or match[0] > tol:
+                        raise ValueError(f"{tag}: anchored {q} has no plain depth {mark['depth']} relay within {tol:g} um")
+                    rec.setdefault("anchored_paths", []).append(path)
+                    target = match[1]
+                    if target != q:
+                        rec["raw"].append([tag, q, target])
+                        obj[fld] = target
+                    continue
                 o = ra_q.get(q)
                 if o is None:
                     if isinstance(q, str) and q:        # not a relay of the OLD tree: left as named
