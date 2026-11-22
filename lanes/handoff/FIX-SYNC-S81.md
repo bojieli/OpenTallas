@@ -10,3 +10,8 @@ S81-RAWRST, S81-REGSUM, S81-STNMACRO, S81-STRAP, S81-CAP400K, S81-FIXEDCYC, S81-
 
 ## Log
 - 01:15 reach_rules check die-wide on J7 plan: ot-run oth-ubuntu-3297674-1795338947 (intel2), out reach_j7_all.{json,tsv,log}.
+- 01:35 POSTED S81-RAWRST non-leaf rows (rr/, PRE PASS); 01:36 S81-FSTARTRST svc rows (fs/, PRE PASS on SVC treeJ8). Veto windows 03:30 / 03:45.
+- 01:4x-02:1x weekly limit. 02:19 strict gate relaunched: ot-run on intel2, script gate_rr.sh, log grr.otrun.log, outputs grr/, tree gtree (J7 fork, plan swapped to rr/plan_rr.json). Markers FSRR_ELAB/BIND/LAT/G0/PRE/REACH, FSRR_GATE_DONE.
+- 02:3x POSTED S81-FIXEDCYC IQF rows: iqf/j8_iqf_rows_repriced_delta.json 80ee97685c3b (reprice 5 lanes). Open Q to IQF-R1: duplicate conn bus:idx_o0.
+- Other J8 row files: LEPE-4 drafts (owner strict binds), SERDES start rows (owner gate PASS), BKSEL (positions), SLICE strip-body (proposal), CLASS-SWEEP C rows (tap_reset_split; theirs).
+- TODO: post gate result; serdes stations inside u_phy slot advisory -> SERDES-R8; CHANSPREAD scan (relay_sites y-line density) on other types; 4-h report to COORD (first report after gate). Re-scan final J8 compose when R5 publishes it.
