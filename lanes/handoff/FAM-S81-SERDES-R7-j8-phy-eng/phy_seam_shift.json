@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.j6_donor_delta.v1",
+ "lane": "FAM-S81-SERDES-R7",
+ "base": "J8p2 (J7eL6+6 serdes+31 PHY/ENG+2 eng regs)",
+ "note": "phy__t1 private kit (J8p) GRT-0116: 175 gcells overflow 1 at the NE corner (x 8375-8467, y 1180-1197) where the dfi_i0 E window (922-1219) reaches into the 44-um N std strip above the 8500x1177 HBM PHY macro next to the dfi_i6 N window. Shift the paired PHY/ENG seam windows (phy dfi_i0/hbmrd_o0, eng ft0 out/ft1 in, ports 1785/1788) down 48.384 um so dfi_i0 lands in the east strip below the corner; 0 cycles, same widths. Also eng ft1 in-face station regs_um[0] follows its moved W in-window (was the old window centre y 424.3: G0 hop 1 505 um on J8p2).",
+ "ops": [
+  {
+   "op": "replace",
+   "path": "/partition_types/phy__t1/buses/0/window_um",
+   "expected_old": [
+    921.984,
+    1219.364
+   ],
+   "value": [
+    873.6,
+    1170.98
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/phy__t1/buses/8/window_um",
+   "expected_old": [
+    676.224,
+    915.42
+   ],
+   "value": [
+    627.84,
+    867.036
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/eng__t1/ft_slots/0/out_window_um",
+   "expected_old": [
+    921.984,
+    1219.364
+   ],
+   "value": [
+    873.6,
+    1170.98
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/eng__t1/ft_slots/1/in_window_um",
+   "expected_old": [
+    676.224,
+    915.42
+   ],
+   "value": [
+    627.84,
+    867.036
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/eng__t1/ft_slots/1/regs_um/0",
+   "expected_old": [
+    0.0,
+    424.3018
+   ],
+   "value": [
+    0.0,
+    747.438
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/ports/1785/window_um",
+   "expected_old": [
+    779.904,
+    1019.1
+   ],
+   "value": [
+    731.52,
+    970.716
+   ]
+  },
+  {
+   "op": "replace",
+   "path": "/ports/1788/window_um",
+   "expected_old": [
+    1025.664,
+    1323.044
+   ],
+   "value": [
+    977.28,
+    1274.66
+   ]
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.j6_donor_delta.v1",
+  "lane": "FAM-S81-MISC-R4",
+  "base_sha256": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+  "types_changed": [
+    "eng__t1"
+  ],
+  "ops": [
+    {
+      "op": "add",
+      "path": "/partition_types/eng__t1/hard_cores/0/lib",
+      "value": "physical/die_plan/s81/cores/views/engrr_vJ_eco1_1108/dsdv_eng_rr_e/dsdv_eng_rr_e_tt.lib"
+    },
+    {
+      "op": "replace",
+      "path": "/partition_types/eng__t1/clock/taps/38",
+      "expected_old": {
+        "budget_owner": "parent_budget selected view dsdv_eng_rr_e_{tt,ff}.lib max_clock_tree_path rise (ETM; no measured mean in the view); ENG-CTAP-1109 DIE-S81-85",
+        "insertion_ff_ps": 671.43,
+        "insertion_ps": 848.98,
+        "kind": "core",
+        "name": "u_eng.u_e.ck",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ENG-CTAP-1109 (pair.py --core-taps rule: internal 848.98 > 210 ps)",
+        "xy": [
+          1028.376,
+          1105.668
+        ]
+      },
+      "value": {
+        "budget_owner": "SIGNED exact routed dsdv_eng_rr_e pin-register means, parent boundary remains LOCAL_PASS_NEEDS_PARENT",
+        "insertion_ff_ps": 655.12,
+        "insertion_ps": 816.76,
+        "kind": "core",
+        "name": "u_eng.u_e.ck",
+        "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the core clock pin; ENG-CTAP-1109 (pair.py --core-taps rule: internal 848.98 > 210 ps)",
+        "xy": [
+          1028.376,
+          1105.668
+        ]
+      }
+    }
+  ],
+  "package_dir": "engrr_vJ_eco1_1108/dsdv_eng_rr_e",
+  "qualification": "Existing exact LOCAL_PASS_NEEDS_PARENT view, paired pin-register means from the extracted measurements. Retain existing plan LEF and pins. Full dry GEN/LINT required."
+}
