@@ -32,6 +32,23 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
 c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
 
+## LIVE 11-22 05:1x PST (read this first; older sections below are history)
+- W attempt 4 (r18f): PLACED 04:48 on intel1; coll_i2 fixed (all groups met, tns -62198 -> -3938) but coll_i1 ctl_w -> rv -708.55 /
+  lap_ok -548.8: band [634.24..840.24] did not cover the pin column y 640.39..845.59 and START-nearest bit = last bit 513, so
+  cland_place_pinslot dropped 102 control regs to the band bottom (ctl_* y 634.5, rv/lap_ok y 839.5). Still running as GRT/channel probe:
+  unit fable-lep0n-w4 (intel2 pid 1483054), spec ..._1122041412, kit epyc9 .../private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122041410/gen/hd_lep0N_w.
+  CANCEL it (kit_wave cancel-rows / ot-run --cancel of its stage unit, exact unit only) once attempt 5 places clean; evidence = the -708.
+- W attempt 5 (r18g = r18f + LEP-RINGFF-2 coll_i1 rect [17.28,629.64,30.24,864.0]): tree epyc9 L/trees/s81_head_r18g_ringff2, plan sha256
+  0c7056cd38b8b1f6; spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122050625/spec.json, rt c9b8d5f226ca, seal;
+  unit fable-lep0n-w5 on intel2 (pid 2768751), log ~/fable-fix-head-lep0n-1122/runitem_w5.log. Launched 05:06 (seal ~15 min, place ~30 min).
+  CHECK at place: OT_CLAND ctlkey coll_i1 line, then w_xy2-style positions (L/tmp/sta_kit.sh KIT dp_hd_lep0N_w OUT L/tmp/sta_w.tcl via
+  ot-run --dir L --stage KIT), 3_detailed_place.rpt path-delay group (was -708.55).
+- Known residual at place (pre-repair, watch at CTS post-hook): clk u_cland_rst_coll_i0 -> reader_start_coll_i0_0 -104.7 (84 fF relay net).
+- Rows file lanes/handoff/FABLE-FIX-HEAD-LEP0N-rows.md sections 1-5 (5 = E-piece same-class findings for R8: lepk_i0 band top, coll_i3 band off pins,
+  h2r1 cut-face output -229.6).
+- Place jobs may spill to intel1 (job dir /srv/opentallas-scratch2/claude/ot-jobs/hd_lep0N_w-place-*/work); results sync back to epyc9.
+- Waiters do not survive my turn reliably: poll with short (<170 s) ssh loops.
+
 ## LIVE KIT (supersedes the spec/unit/pid named in STATE below) 11-22 04:2x PST
 - Attempts 1-3 died before place on tooling: (1) kit_wave.py of rt 6d2e = verify not seal (SRC_MANIFEST DRIFT); (3) rt 6d2e tools replace the
   tree tools in the launch view, so GEN failed on the E face rows. Attempt 4 = rt c9b8d5f226ca (has c293b03e90 face-status generator and
