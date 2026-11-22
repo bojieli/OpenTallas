@@ -18,3 +18,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 550 any / 440 current (+1/+1 vs 04:15, KV kv3_io_cor). wave stalled 04:24-05:01 fixed. Round fired 05:05 on COORD request; waiter bs82axith (05:15) stopped; next waiter armed for 06:15 (wait2.sh edited).
 ## State 06:35 PST 11-22
 558 any / 447 current (+8/+7 vs 05:05): S81 cores 68 (+6), QC types 63 (+1). Waiter pattern: wait2.sh with hard-coded HH:15; count job started inside the same bg command that waits (output file only fills at the end). Next round 07:15 (edit wait2.sh).
+## State 07:25 PST 11-22
+558 any / 447 current FLAT vs 06:15. Round run at 07:05 on COORD request, waiter bl0kmb4dd stopped, next waiter for 08:15.
