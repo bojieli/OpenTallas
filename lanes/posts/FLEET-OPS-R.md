@@ -1022,3 +1022,4 @@
 - 2026-11-21 18:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 77 GB, falling 15 GB/h, floor 50 GB in 1.8 h (state 2, was 1) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 AUTO-RETIRE rc 0: ; deleted 0,  (cron disk_rate.py; read-only)
 - 2026-11-21 18:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: harvest-eco-2350 on intel1 wrote 38 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 18:59 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 2095d6a53df2: exit 4 (see /home/ubuntu/merge-queue/log)
+- 2026-11-21 19:04 PST STATE tools sync recovered after 4 min (rt/current e5429d32c55e)
