@@ -366,9 +366,17 @@ def cmd_hold(a):
     print(json.dumps(ops, indent=1) if a.dry_run else f"EVENT-CENSUS hold: {len(ops)} op(s)")
     if not ops or a.dry_run:
         return 0
-    r = subprocess.run([sys.executable, "-I", str(HERE.parent / "autopilot/kit_wave_edit.py"), "--coord", str(C), "--message",
-                        f"{a.lane}: EVENT-CENSUS {a.die} {a.event or rec.get('event')}: {len(rec.get('held') or {})} regressed type(s) not launched",
-                        "--patch", json.dumps(ops)], capture_output=True, text=True, timeout=600)
+    edit = [sys.executable, "-I", str(HERE.parent / "autopilot/kit_wave_edit.py"), "--coord", str(C), "--message",
+            f"{a.lane}: EVENT-CENSUS {a.die} {a.event or rec.get('event')}: {len(rec.get('held') or {})} regressed type(s) not launched",
+            "--patch", json.dumps(ops)]
+    if any(o.get("op") == "remove" for o in ops):          # H1 (WAVE-OPS-R1): a census key removed is a hold release; kit_wave_edit needs --expect-launch N (the rows it frees)
+        dr = subprocess.run(edit + ["--dry-run"], capture_output=True, text=True, timeout=600)
+        m = re.search(r"LAUNCHABLE (\d+)", dr.stdout)
+        if not m:
+            print((dr.stdout + dr.stderr)[-600:])
+            return dr.returncode or 1
+        edit += ["--expect-launch", m.group(1)]
+    r = subprocess.run(edit, capture_output=True, text=True, timeout=600)
     print((r.stdout + r.stderr)[-600:])
     return r.returncode
 

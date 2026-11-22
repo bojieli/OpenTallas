@@ -7,6 +7,7 @@
   python3 -I kit_wave_edit.py event-pending <die> <event>     (FLEET-WATCH-R5: set when your apply gate starts; the apply clears it; expires after 60 min)
   python3 -I kit_wave_edit.py event-pending-clear <die>
   python3 -I kit_wave_edit.py --dry-run ...                                            (prints the diff, writes and commits nothing)
+  python3 -I kit_wave_edit.py --expect-launch N ...      (H1, WAVE-OPS-R1 11-22: REQUIRED when the edit removes hold_items keys; N = rows that become launchable)
 
 The patch is RFC 6902 (add, replace, remove, test; paths are JSON pointers, "-" appends to a list).  It is applied to the committed config
 (`git show HEAD:autopilot/kit_wave.json`), never to a working copy somebody else is editing; a working copy that differs from HEAD is refused.  The
@@ -148,7 +149,92 @@ def release_repoint_errors(old_doc, new_doc, ops):
     return errs
 
 
-def edit(coord, ops, message, dry=False, commit_cmd=None):
+LAUNCH_PROBE = None            # tests inject probe(coord, old_doc, new_doc, die) -> set of items newly eligible for launch
+
+
+def noop_hold_record_problems(old_doc, new_doc):
+    """H1 (WAVE-OPS-R1 11-22, FABLE-FLOW-0600 class H1): hold_records compile to nothing on a die where stops_off applies (every die but hbm, r703): only the
+    hold_items list blocks there.  S81-J6-ASSEMBLY-R5 moved 342 holds into records on S81; 194 rows launched against them.  An edit that ADDS or CHANGES a hold
+    record on such a die is refused (a no-op hold).  Records already in the file and untouched are not judged.  -> [problem text]"""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from flow_guard import stops_off_die
+    except Exception:
+        return []
+    od = (old_doc or {}).get("dies") or {}
+    out = []
+    for die, d in sorted(((new_doc or {}).get("dies") or {}).items()):
+        if not isinstance(d, dict) or not isinstance(d.get("hold_records"), list) or not stops_off_die(new_doc, die):
+            continue
+        old = {r.get("id"): r for r in ((od.get(die) or {}).get("hold_records") or []) if isinstance(r, dict)} if isinstance(od.get(die), dict) else {}
+        for r in d["hold_records"]:
+            if isinstance(r, dict) and old.get(r.get("id")) != r:
+                out.append(f"NO-OP-HOLD refused for {die}/{r.get('id')}: hold records do not block on {die} (stops_off, r703: only hbm keeps them); "
+                           f"use the hold list instead: add the keys to dies.{die}.hold_items with 'owner=<lane> eta=<YYYY-mm-dd HH:MM>'")
+    return out
+
+
+def removed_hold_keys(old_doc, new_doc):
+    """{die: [hold_items key, ...]} keys the edit REMOVES (a key gone, its map gone, or its die gone) -- a hold release.  Pure."""
+    out = {}
+    for die, d in ((old_doc or {}).get("dies") or {}).items():
+        oh = d.get("hold_items") if isinstance(d, dict) else None
+        if not isinstance(oh, dict) or not oh:
+            continue
+        nd = ((new_doc or {}).get("dies") or {}).get(die)
+        nh = nd.get("hold_items") if isinstance(nd, dict) else None
+        gone = [k for k in oh if not (isinstance(nh, dict) and k in nh)]
+        if gone:
+            out[die] = sorted(gone)
+    return out
+
+
+def _default_launch_probe(coord, old_doc, new_doc, die):
+    """the wave's own select() on the OWNERS rows + state of the hub, with the old and the new config (hold_items are its first filter)"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import kit_wave as _KW
+    ap = Path(coord) / "autopilot"
+    owners = _KW.parse_owners((ap / "OWNERS.tsv").read_text())
+    st = _KW.load_state(str(ap))
+    st.setdefault("items", {})
+    picks = []
+    for doc in (old_doc, new_doc):
+        cfg = _KW.load_config(dump(doc))
+        p, _skip = _KW.select(owners, cfg, die, copy.deepcopy(st), None)
+        picks.append({r["item"] for r in p})
+    return picks[1] - picks[0]
+
+
+def newly_launchable(coord, old_doc, new_doc, removed, probe=None):
+    """{die: sorted items} rows that are held now and eligible to launch once the removed hold_items keys are gone (a dry select, no launch)"""
+    probe = probe or LAUNCH_PROBE or _default_launch_probe
+    return {die: sorted(probe(coord, old_doc, new_doc, die)) for die in sorted(removed)}
+
+
+def launch_count_problems(coord, old_doc, new_doc, expect_launch, dry):
+    """H1: removing hold_items keys needs --expect-launch N and N must equal the rows that become launchable.  -> [problem text] (prints the count)"""
+    removed = removed_hold_keys(old_doc, new_doc)
+    if not removed:
+        if expect_launch is not None:
+            print("kit_wave_edit: --expect-launch ignored: the edit removes no hold_items key")
+        return []
+    try:
+        per = newly_launchable(coord, old_doc, new_doc, removed)
+    except Exception as e:
+        return [f"LAUNCH-COUNT refused: cannot count the rows that become launchable ({type(e).__name__}: {str(e)[:200]})"]
+    n = sum(len(v) for v in per.values())
+    detail = ", ".join(f"{die} {len(v)}" for die, v in per.items())
+    print(f"kit_wave_edit: LAUNCHABLE {n} ({detail}) after removing {sum(len(v) for v in removed.values())} hold_items key(s)")
+    if expect_launch is None:
+        return [] if dry else [f"HOLD-RELEASE refused: removing hold keys needs --expect-launch N; {n} row(s) become launchable now ({detail}); "
+                               f"rerun with --expect-launch {n} if that is meant"]
+    if n != expect_launch:
+        return [f"HOLD-RELEASE refused: --expect-launch {expect_launch} but {n} row(s) become launchable ({detail}); "
+                f"{sorted(x for v in per.values() for x in v)[:12]}"]
+    return []
+
+
+def edit(coord, ops, message, dry=False, commit_cmd=None, expect_launch=None):
     """patch the committed config and commit it; returns the new text.  commit_cmd(message, rel) overrides coord-commit.sh (tests)"""
     coord = Path(coord)
     gd = git(coord, "rev-parse", "--absolute-git-dir").stdout.strip()      # ~/coord is a linked worktree: .git is a file there
@@ -161,7 +247,7 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
     lock.seek(0); lock.truncate(); lock.write(f"pid={os.getpid()} cmd={' '.join(sys.argv)[:200]}\n"); lock.flush()
     try:
         for _try in range(5):
-            res = _edit_once(coord, ops, message, dry, commit_cmd)
+            res = _edit_once(coord, ops, message, dry, commit_cmd, expect_launch)
             if res != "retry":
                 return res
         raise SystemExit("kit_wave_edit: the file kept moving under the edit (5 compare-and-swap retries); nothing left half-written")
@@ -336,7 +422,7 @@ def host_add_problems(new_doc, added, probe=None):
     return [f"{die} {h}: {str(why)[:400]}" for h, ds in sorted(res.items()) for die, why in sorted(ds.items()) if h in added.get(die, [])]
 
 
-def _edit_once(coord, ops, message, dry, commit_cmd):
+def _edit_once(coord, ops, message, dry, commit_cmd, expect_launch=None):
     """one read-modify-write.  WAVE-PILOT-FIX 11-17 (COORD, 17:5x: a patch applied to a copy of HEAD read minutes earlier reverted another lane's
     commit): the base is the blob sha of HEAD:file read just now; before the commit it is compared again (compare-and-swap) and the patch is
     re-applied to the new HEAD when it moved; the pushed commit receipt's PARENT blob must equal the base, else the commit overwrote a commit
@@ -352,7 +438,8 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
     try:
         _old = json.loads(head)
         _newdoc = apply_patch(_old, ops)
-        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc) + required_review_problems(_old, _newdoc) + hold_term_problems(_old, _newdoc)
+        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc) + required_review_problems(_old, _newdoc) + hold_term_problems(_old, _newdoc) + noop_hold_record_problems(_old, _newdoc)
+        _errs += launch_count_problems(coord, _old, _newdoc, expect_launch, dry)
         _hp = host_add_problems(_newdoc, added_gen_hosts(_old, _newdoc), HOST_ADD_PROBE)
         if _hp:
             _errs += ["HOST-ADD refused, input closure incomplete (copy the trees, re-run; OT_HOST_ADD_FORCE=1 overrides): " + " | ".join(_hp[:6])]
@@ -447,6 +534,8 @@ def main(argv=None):
     ap.add_argument("--set", action="append", default=[], metavar="/PTR=JSON", help="replace-or-add the value at the pointer")
     ap.add_argument("--unset", action="append", default=[], metavar="/PTR")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--expect-launch", type=int, default=None, metavar="N",
+                    help="required when the edit removes hold_items keys: the number of rows that become launchable (the edit prints it; refused when it differs)")
     a = ap.parse_args(argv)
     ops = []
     try:
@@ -463,7 +552,7 @@ def main(argv=None):
         raise SystemExit(f"kit_wave_edit: bad JSON: {e}")
     if not ops:
         raise SystemExit("kit_wave_edit: no patch (--patch, --patch-file, --set or --unset)")
-    edit(a.coord, ops, a.message, dry=a.dry_run)
+    edit(a.coord, ops, a.message, dry=a.dry_run, expect_launch=a.expect_launch)
     return 0
 
 
