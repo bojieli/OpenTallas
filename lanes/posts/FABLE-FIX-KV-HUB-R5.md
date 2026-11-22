@@ -25,3 +25,5 @@
 - 2026-11-21 23:02 PST DONE [FABLE-FIX-KV-HUB-R5] ot-run oth-ubuntu-2562368-1795326075 on tolerant-swine: rc=0 after 4878 s, ended 23:02:31, log /home/ubuntu/tmp/fablefixkvhub-r5/chain_h3_base.log, cmd: --hosts epyc8 --no-spill --mem 57 --threads 4 --disk 10 --priority plan --dir /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 -- bash /s
 - 2026-11-21 23:14 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-109684 on outgoing-giraffe: rc=0 after 0 s, ended 07:14:17, log none, cmd: ot-push-main --help
   [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
+- 2026-11-21 23:14 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-111115 on outgoing-giraffe: rc=0 after 20 s, ended 07:14:42, log none, cmd: ot-push-main 
+  [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)

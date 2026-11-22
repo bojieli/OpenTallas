@@ -22781,3 +22781,5 @@ FAILED [AUTOPILOT 8d27fd163951] 2026-11-21 23:01:10 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 23:14 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-109684 on outgoing-giraffe: rc=0 after 0 s, ended 07:14:17, log none, cmd: ot-push-main --help
   [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
 - 2026-11-21 23:14 PST DONE [FABLE-FIX-QC-COLL-R2] ot-run oth-ubuntu-3836728-1795329935 on civil-redfish: rc=0 after 1729 s, ended 07:14:21, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/bind_pkg4.client.log, cmd: --mem 48 --threads 8 --disk 60 --priority plan --plan-job bind --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 -- 
+- 2026-11-21 23:14 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-111115 on outgoing-giraffe: rc=0 after 20 s, ended 07:14:42, log none, cmd: ot-push-main 
+  [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
