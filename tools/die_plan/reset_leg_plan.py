@@ -62,9 +62,20 @@ FLAT_LOCAL = re.compile(r"^(?P<g>u_\w*?_(?:u_rstr|u_rr|u_rst_relay\w*|u_rrelay\w
 RELAY_FLOP = re.compile(r"^(?P<g>(?:u_\w*?)?u_crr\w*)(?=[./])")
 DATA_RELAY_MOD = re.compile(r"^(?:ot_dp_dly|ot_dp_dly_keep|ot_dp_st|ot_s81sl_crr)$")
 TREE_CELL = re.compile(r"^(?:u_rrl_\d+|u_srl_\d+|u_rst_root|u_rst_in|u_rsync_t\d+|u_cland_reset\w*)(?:[./_]|$)")
-# kit-rtl stage flop name: kit_relay_depth.apply instance {base}_{s} (ot_dp_dly, base u_y_xd_<sid>_<port>_k<row>); Yosys names
-# its flop <inst>.q (seen on the S81 lepe_nh_mus_LP t1 proof netlist: u_y_xd_u_u_land_rst_n_k0_0.q$_DFF_P_)
-STAGE_KEY = "u_y_xd_{sid}_{port}_k{k}_{s}.q"
+# stage flop name of a relay_depth sink row (RD-LEAF-1122): the strict bind emits the stages of a plan row itself, instance
+# u_y_xd_<leaf>_<port>_<k>_<s> (bind.py emit_lp; k = 0 for a reset port, one depth group), Yosys flop <inst>.q.  kit_relay_depth
+# only stages rows the bind never saw (u_y_xd_<leaf>_<port>_k<row>_<s>); a D28 plan row is always bound, so the sites follow the
+# bind form.  sid = the row's leaf name (bind_leaf), never the bound instance name.
+STAGE_KEY = "u_y_xd_{sid}_{port}_0_{s}.q"
+
+
+def bind_leaf(inst):
+    """RD-LEAF-1122 (OPUS-FIX-KV-HUB-R6: D28 hub_Eo/Wo strict bind 'relay_depth ... matched no internal sink'): a relay_depth
+    row names the sink by its bind leaf name, the as-built rel name that bind.py matches with sv_id(rel) and instantiates as
+    u_<rel>.  The bound text this tool reads carries the instance name u_<rel>, so one leading 'u_' is dropped."""
+    if not inst.startswith("u_"):
+        raise ValueError(f"bound instance {inst!r} does not carry bind's u_ prefix: cannot name its leaf")
+    return inst[2:]
 # stage flop of a reset_pin_relay row (hard core nested below the bound instance; the RTL stage is a 1-bit ot_dp_dly chain
 # named u_rst_pin_relay_<port> inside the module that holds the core, Yosys flop <inst>.u_rst_pin_relay_<port>.g_r.r[s])
 NESTED_KEY = "{inst}.u_rst_pin_relay_{port}.g_r.r[{s}]"
@@ -480,7 +491,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 e["relay_depth"] = f"needs D {Dn} > {MAX_D}"
             else:
                 k = len(rd_rows)
-                row = dict(inst=inst, port=port, side="sink", D=Dn, path_um=round(in_after, 1),
+                row = dict(inst=bind_leaf(inst), port=port, side="sink", D=Dn, path_um=round(in_after, 1),
                            note=f"RESET-RELAY-GEN-1530 form {form}: {g} fed from {e['source']}, seated at its fanout"
                                 + (f", stage at the entry centre + {Lb} branch level(s) x {len(ent)}" if multi else ""))
                 if bits:
@@ -488,7 +499,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 row.update(lockup=True) if lockup else None
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
-                skey = [stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_) for s_ in range(Dn)]
+                skey = [stage_key.format(sid=sv_id(bind_leaf(inst)), port=port, k=k, s=s_) for s_ in range(Dn)]
                 if stage_sites or multi:
                     for s_ in range(Ds):
                         f = (s_ + 1) / (Ds + 1)
@@ -602,16 +613,16 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 continue
             for port in ports:
                 k = len(rd_rows)
-                row = dict(inst=inst, port=port, side="sink", D=Dn, path_um=round(L, 1),
+                row = dict(inst=bind_leaf(inst), port=port, side="sink", D=Dn, path_um=round(L, 1),
                            note=f"RESET-RELAY-GEN-1530 form M: {G.name[r[1]]} -> hard-core reset pin {inst}.{port}")
                 row.update(lockup=True) if lockup else None
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
                 if sites and stage_sites:
-                    chains.append((src, [stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_) for s_ in range(Dn)], pins))
+                    chains.append((src, [stage_key.format(sid=sv_id(bind_leaf(inst)), port=port, k=k, s=s_) for s_ in range(Dn)], pins))
                     for s_ in range(Dn):
                         f = (s_ + 1) / (Dn + 1)
-                        rs_sites[stage_key.format(sid=sv_id(inst), port=port, k=k, s=s_)] = [
+                        rs_sites[stage_key.format(sid=sv_id(bind_leaf(inst)), port=port, k=k, s=s_)] = [
                             round(src[0] + (T[0] - src[0]) * f, 3), round(src[1] + (T[1] - src[1]) * f, 3)]
             after = worst(Dn)
             rep["legs_over_after"] += after > reach + 1e-6

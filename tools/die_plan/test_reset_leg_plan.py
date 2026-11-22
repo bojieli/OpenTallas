@@ -113,10 +113,11 @@ def test_form_r_and_l(tmp_path):
     for k in ("u_u_land.u_rstr.sync_q[0]", "u_u_land.u_rstr.sync_q[1]", "u_u_land.u_rstr.rst_n"):
         assert t["relay_sites"][k] == [round(c[0], 3), round(c[1], 3)]
     (row,) = t["relay_depth"]
-    assert row["inst"] == "u_u_land" and row["port"] == "rst_n" and row["side"] == "sink"
+    assert row["inst"] == "u_land" and row["port"] == "rst_n" and row["side"] == "sink"     # RD-LEAF-1122: bind leaf name
+    assert "land_m u_" + row["inst"] + " (" in BOUND          # bind.py instantiates leaf rel as u_<rel> and matches sv_id(rel)
     L = abs(995 - 160) + abs(10 - 310)
     assert row["D"] == -(-L // 300) - 1 == 3
-    st = [t["relay_sites"][f"u_y_xd_u_u_land_rst_n_k0_{s}.q"] for s in range(3)]
+    st = [t["relay_sites"][f"u_y_xd_u_land_rst_n_0_{s}.q"] for s in range(3)]               # bind.py emit_lp stage names
     hops = [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip([[995, 10]] + st, st + [c])]
     assert max(hops) <= 300
     assert rep["added_reset_cycles"] == 3 and rep["legs_over_after"] == 0 and rep["legs_over_before"] == 2
@@ -136,7 +137,7 @@ def test_kit_rtl_stages_the_row_and_bind_retaps(tmp_path):
     btxt, rec = KRD.apply(txt, "x", t["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
     assert rec["applied"] == 1
     for s in range(3):     # the sited key is <stage instance>.q (Yosys flop name of the ot_dp_dly stage)
-        assert f"ot_dp_dly #(.W(1), .D(1)) u_y_xd_u_u_land_rst_n_k0_{s} (" in btxt
+        assert f"ot_dp_dly #(.W(1), .D(1)) u_y_xd_u_land_rst_n_k0_{s} (" in btxt
 
 
 def test_apply_inst_taps_fail_closed():
@@ -222,12 +223,12 @@ def test_replicated_relay_seats_each_copy(tmp_path):
     # the synchroniser then feeds copies 1,600 um apart: split too, and listed after the row whose copy it drives
     assert list(sp)[:2] == ["u_u_land.u_rstr.relay_q[0][1]", "u_u_land.u_rstr.sync_q[1]"]
     # then the entry-chain branch stages, deepest first (each drives one synchroniser copy)
-    assert all(k.startswith("u_y_xd_u_u_land_rst_n_k0_") for k in list(sp)[2:])
+    assert all(k.startswith("u_y_xd_u_land_rst_n_0_") for k in list(sp)[2:])
     assert [int(k.split("_")[-1][0]) for k in list(sp)[2:]] == sorted((int(k.split("_")[-1][0]) for k in list(sp)[2:]), reverse=True)
     assert e["copies"] == 6 and e["split_flops"] == 2
     # its source (510, 500) is then over reach from the far copy: equal-depth stages, every hop within reach
     (row,) = t["relay_depth"]
-    assert row["inst"] == "u_u_land" and rep["legs_over_after"] == 0
+    assert row["inst"] == "u_land" and rep["legs_over_after"] == 0
 
 
 def test_hard_core_sinks_are_not_retapped(tmp_path):
@@ -299,9 +300,9 @@ def test_replicated_relay_is_split_and_staged(tmp_path):
     # the group and root flops split above their copies; every hop of the built tree is within reach
     assert f"{g}.g_group[0].group_r" in rows and f"{g}.root_r" in rows
     (row,) = t["relay_depth"]
-    assert row["inst"] == "u_u_lep" and row["port"] == "rst_n" and row["side"] == "sink"
+    assert row["inst"] == "u_lep" and row["port"] == "rst_n" and row["side"] == "sink"
     # the stage chain: straight stages to P, a stage at P, branch levels to the root copies (equal stage count per copy)
-    st = [k for k in t["relay_sites"] if k.startswith("u_y_xd_u_u_lep_rst_n_k0_")]
+    st = [k for k in t["relay_sites"] if k.startswith("u_y_xd_u_lep_rst_n_0_")]
     assert len([k for k in st if "__rs" not in k]) == row["D"]
     assert rep["legs_over_after"] == 0 and rep["legs_over_before"] == 2   # the two local_r legs
     assert all(r["flop"] in rows for r in t["relay_split"])
@@ -338,7 +339,7 @@ def test_relay_depth_over_four_stages(tmp_path):
     D = dump(tmp_path, *cells_nets())
     t = plan_type()
     rep = RLP.type_delta("x", t, BOUND, D, reach=120, stage_sites=True)
-    (row,) = [r for r in t["relay_depth"] if r["inst"] == "u_u_land"]
+    (row,) = [r for r in t["relay_depth"] if r["inst"] == "u_land"]
     assert row["D"] > 4 and not rep["relay_depth"][0]["over_cap"]
     import schema
     sch = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
@@ -429,22 +430,22 @@ def test_reset_forward_lane_pad_bit(tmp_path):
     rep = RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
     rows = {(r["inst"], r["port"]): r for r in t["relay_depth"]}
     # the reset bit moves to its fanout (crr + vp relay ~850 um W of the face); its own input bit is staged from the face
-    r = rows[("u_lpad_dn", "d")]
+    r = rows[("lpad_dn", "d")]
     assert r["bits"] == [0, 0] and r["D"] >= 2 and "form F" in r["note"]
     x, y = t["relay_sites"]["u_lpad_dn.q[0]"]
     assert x < 300
-    st = sorted(k for k in t["relay_sites"] if k.startswith("u_y_xd_u_lpad_dn_d_k"))
+    st = sorted(k for k in t["relay_sites"] if k.startswith("u_y_xd_lpad_dn_d_0_"))
     assert len(st) == r["D"]                                     # stage sites by default, spread on the leg
     pts = [(995.0, 500.0)] + [tuple(t["relay_sites"][k]) for k in st] + [(x, y)]
     assert max(RLP.l1(a, b) for a, b in zip(pts, pts[1:])) <= 300 + 1e-6
     # bit 1 also carries data: untouched (no row, no site)
-    assert ("u_lpad_dn", "d") in rows and all(rr.get("bits") != [1, 1] for rr in t["relay_depth"])
+    assert ("lpad_dn", "d") in rows and all(rr.get("bits") != [1, 1] for rr in t["relay_depth"])
     assert "u_lpad_dn.q[1]" not in t["relay_sites"]
     assert any(e["form"] == "F" for e in rep["local"]) and rep["legs_over_after"] == 0
     # KIT-RD-1 stages bit 0 of the concatenated pad input
     btxt, rec = KRD.apply(FWD_BOUND, "f", t["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
     assert rec["applied"] == len(t["relay_depth"])
-    assert "assign rdk_u_lpad_dn_d_k0_in = {dn_eb, dn_b};" in btxt
+    assert "assign rdk_lpad_dn_d_k0_in = {dn_eb, dn_b};" in btxt
 
 
 def test_flat_relay_and_crr_are_groups(tmp_path):
@@ -475,11 +476,11 @@ def test_forward_into_hard_core_reset_pin(tmp_path):
     D = geom_rules.Design(str(p))
     t = plan_type()
     rep = RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
-    (row,) = [r for r in t["relay_depth"] if r["inst"] == "u_hc"]
+    (row,) = [r for r in t["relay_depth"] if r["inst"] == "hc"]
     L = abs(990 - 300) + abs(510 - 20)
     assert row["port"] == "rst_n" and row["side"] == "sink" and row["D"] == -(-L // 300) - 1 and "form M" in row["note"]
     k = t["relay_depth"].index(row)
-    st = [t["relay_sites"][f"u_y_xd_u_hc_rst_n_k{k}_{s}.q"] for s in range(row["D"])]
+    st = [t["relay_sites"][f"u_y_xd_hc_rst_n_0_{s}.q"] for s in range(row["D"])]
     pts = [(990.0, 510.0)] + [tuple(x) for x in st] + [(300.0, 20.0)]
     assert max(RLP.l1(a, b) for a, b in zip(pts, pts[1:])) <= 300 + 1e-6
     assert "u_lpad_dn.q[1]" not in t["relay_sites"]           # the data register is not moved
@@ -563,7 +564,7 @@ def test_stage_rows_carry_a_lockup_latch_by_default(tmp_path):
     D = geom_rules.Design(str(p))
     t = plan_type()
     RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
-    rows = [r for r in t["relay_depth"] if r["inst"] == "u_hc"]
+    rows = [r for r in t["relay_depth"] if r["inst"] == "hc"]
     assert rows and all(r["lockup"] is True for r in t["relay_depth"])
     t2 = plan_type()
     RLP.type_delta("f", t2, FWD_BOUND, D, reach=300, lockup=False)
