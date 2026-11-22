@@ -312,6 +312,10 @@ if __name__ == "__main__":
     ap.add_argument("--no-tree", action="store_true", help="skip the whole-src-tree comparison (per-top-dir counts + manifest sha)")
     a = ap.parse_args()
     cfg = json.load(open(a.config))
+    _pk = (cfg.get("dies") or {}).get(a.die, {}).get("parked") if isinstance((cfg.get("dies") or {}).get(a.die), dict) else None
+    if _pk:                                     # F4 (FLOW-OPS-R2 11-22): a parked die is not guarded (its plan may be gone); one line, exit 0
+        print(f"ADOPT-GUARD DIE-PARKED {a.die}: {json.dumps(_pk)[:200]}")
+        sys.exit(0)
     if a.plan_only:
         d = cfg["dies"][a.die]
         hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])

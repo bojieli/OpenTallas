@@ -193,7 +193,7 @@ def measure(cfg, repo=DEFAULT_REPO, main_ref="main", dies=None, rulings=None):
     out = {}
     clear_caches()                    # main moves: the per-sha answers are cached for one measurement only
     for die, d in (cfg.get("dies") or {}).items():
-        if not isinstance(d, dict) or not d.get("enabled") or (dies and die not in dies):
+        if not isinstance(d, dict) or not d.get("enabled") or d.get("parked") or (dies and die not in dies):   # F4: a parked die is not measured
             continue
         try:
             out[die] = lag(repo, pin_of(d), main_ref, rulings=rulings)

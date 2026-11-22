@@ -1215,9 +1215,22 @@ def stop_reason(cfg, die, ap_dir=None):
     return None
 
 
+def die_parked(d):
+    """F4 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000): dies.<die>.parked = {owner, since, reason} (truthy) -> one-line text, else ''.  A parked die is
+    skipped by the wave gate, the adopt guard, TOOLS-LAG and the STALE list; removing the key re-arms every check at once."""
+    p = (d or {}).get("parked") if isinstance(d, dict) else None
+    if not p:
+        return ""
+    if isinstance(p, dict):
+        return "DIE-PARKED owner %s since %s: %s" % (p.get("owner") or "?", p.get("since") or "?", str(p.get("reason") or "")[:160])
+    return "DIE-PARKED: %s" % str(p)[:160]
+
+
 def gate(cfg, die, descends=None):
     """(ok, why).  descends(sha, base) -> bool (git merge-base --is-ancestor on the hub); None = exact match only"""
     d = (cfg.get("dies") or {}).get(die) or {}
+    if die_parked(d):
+        return False, die_parked(d)
     if not d.get("enabled"):
         return False, "die not enabled"
     if die in COORD_ONLY and not d.get("coord_enable"):
