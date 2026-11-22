@@ -237,3 +237,4 @@
 - 2026-11-22 04:54 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 04:24:49 (30 min; no launch or classify meanwhile) running tick started 04:44:34, last mark 'after wave_balance'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
 - 2026-11-22 04:54 PST ALERT NO-PROGRESS s81_head: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 309 min (last 23:44); NO-LAUNCH x14
 - 2026-11-22 05:04 PST ALERT SELF-STOP s81: 1 job(s) stopped by the wave 931 s after its own SUBMIT (latest ot_s81sl_leaf__t57@11 at 05:04:32: superseded by attempt 12 of the same item (further progress))
+- 2026-11-22 05:04 PST ALERT STUCK-STATE s81: 37 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
