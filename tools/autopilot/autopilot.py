@@ -4147,7 +4147,7 @@ def rejudge_late_noprog(st):
         actions.setdefault((f[1], str(Path(f[5]))), []).append((stopped, kinds[f[3]], f))
     changed = False
     for j in st["jobs"].values():
-        if (j.get("status") != "DONE-CRASH" or j.get("kind") != "route-make-fail"
+        if (j.get("status") != "DONE-CRASH" or j.get("kind") not in {"route-make-fail", "infra-stopped"}
                 or j.get("goal") != "route" or j.get("signoff") or canonical_die(j.get("die")) == "hbm"):
             continue
         host, path = j.get("ran_on"), Path(j.get("path") or "")

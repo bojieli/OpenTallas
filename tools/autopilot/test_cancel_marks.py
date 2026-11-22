@@ -66,6 +66,7 @@ def test_hung_watch_cancel_writes_the_mark_autopilot_reads(monkeypatch):
     ("exact", 143), ("exact", 137), ("other_exit", 21), ("old_receipt", 143),
     ("other_path", 143), ("other_host", 143), ("old_client", 143),
     ("no_current_ran", 143), ("running", 143), ("earlyoom", 137),
+    ("stop_timeout", 137), ("unattributed_stop", 137),
 ])
 def test_late_noprog_rejudge_exact_terminal_attempt(tmp_path, monkeypatch, variant, code):
     monkeypatch.setattr(AP, "AP_DIR", tmp_path)
@@ -85,28 +86,32 @@ def test_late_noprog_rejudge_exact_terminal_attempt(tmp_path, monkeypatch, varia
         client.write_text(ran + f"AP_START {start} {log_unit}\nAP_RC={code}\n")
     else:
         client.write_text(f"AP_START {start} {log_unit}\n{ran}AP_RC={code}\n")
-    os.utime(client, (stopped + 3, stopped + 3))
+    ended = stopped + (95 if variant == "stop_timeout" else 3)
+    os.utime(client, (ended, ended))
     receipt = time.strftime("%F %T", time.localtime(start - 100 if variant == "old_receipt" else stopped))
     action_path = path + "/run" if variant == "other_path" else path
-    action_host = "epyc8" if variant == "other_host" else "epyc7"
+    action_host = "epyc8" if variant in {"other_host", "unattributed_stop"} else "epyc7"
     actions.write_text(f"{receipt}\t{action_host}\ta\t5_2_route\tdrt_violations best 13126 last 24036"
                        f"\t{action_path}\tdpkit-a-2852636\tdrt_violations best 13126 vs 13155 before window: < 2 % in 6 h\n")
+    previous_kind = {"earlyoom": "infra-oom", "stop_timeout": "infra-stopped",
+                     "unattributed_stop": "infra-stopped"}.get(variant, "route-make-fail")
     row = dict(id="489da562f86c", die="qwen_compute", goal="route", status="RUNNING" if variant == "running" else "DONE-CRASH",
-               cls="CRASH", kind="infra-oom" if variant == "earlyoom" else "route-make-fail",
+               cls="CRASH", kind=previous_kind,
                reasons="old FAIL_route exit 21", ran_on="epyc7", path=path, client_log=str(client), unit=unit, attempts=2,
-               started=start, finished=stopped + 40, updated=stopped + 45, history=[["old", "DONE-CRASH", "prior"]])
+               started=start, finished=ended + 37, updated=ended + 42, history=[["old", "DONE-CRASH", "prior"]])
     state = {"jobs": {row["id"]: row}}
     previous = copy.deepcopy(row)
     AP.save_state(state)
     AP.rejudge_late_noprog(state)
-    if variant != "exact":
+    if variant not in {"exact", "stop_timeout"}:
         assert row == previous
         assert AP.load_state()["jobs"][row["id"]] == previous
         return
     assert (row["status"], row["kind"], row["finished"], row["updated"]) == (
         "DONE-STRUCTURAL", "drt-no-progress", previous["finished"], previous["updated"])
     assert row["history"][:1] == previous["history"]
-    assert row["noprog_rejudge"]["previous"]["reasons"] == "old FAIL_route exit 21"
+    assert row["noprog_rejudge"]["previous"]["kind"] == previous_kind
+    assert row["noprog_rejudge"]["previous"]["reasons"] == previous["reasons"]
     assert AP.load_state()["jobs"][row["id"]] == row
     AP.rejudge_late_noprog(state)
     assert len(row["history"]) == 2
