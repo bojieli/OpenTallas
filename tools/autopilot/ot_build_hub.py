@@ -151,9 +151,9 @@ def pick_host(hosts, tree, files, min_mem_gb=64, run=sh, pin=None):
     return best["host"], lines
 
 
-def bind_argv(r, rt_dir, out_root, a, types):
+def bind_argv(r, rt_dir, out_root, emit_j, types):
     argv = ["python3", "-I", f"{rt_dir}/tools/autopilot/ot_build.py", "bind", "--tree", r["tree"], "--plan", r["plan"],
-            "--out-root", out_root, "--rt", str(rt_dir), "--emit-j", str(a.emit_j)]
+            "--out-root", out_root, "--rt", str(rt_dir), "--emit-j", str(emit_j)]
     if r["asbuilt"]:
         argv += ["--asbuilt", r["asbuilt"]]
     for k, v in sorted(r["env"].items()):
@@ -174,32 +174,45 @@ def parse_bind(out):
     return eff
 
 
-def run_bind_stage(r, host, rt_dir, out_root, a, types, run=sh, stream=None):
-    """status over ssh; when stale, the stage through ot-run on the host.  -> effective record (raises BuildError)"""
-    argv = bind_argv(r, rt_dir, out_root, a, types)
-    q = " ".join(shlex.quote(x) for x in argv)
-    env = f"OT_LANE={shlex.quote(a.lane)} OT_BUILD_HASH_CACHE={shlex.quote(out_root)}/hash_cache.json"
-    rc, out, err = remote(host, f"mkdir -p {shlex.quote(out_root)} && {env} {q} --status", timeout=1800, run=run)
-    for ln in out.splitlines():
-        if ln.startswith("ot-build:"):
-            log("  " + ln)
-    eff = parse_bind(out)
-    if rc == 0 and eff:
-        log(f"ot-build: bind stage FRESH on {host}: {eff['out']}")
-        return eff
-    if rc not in (0, 3) or eff is None:
-        raise G.BuildError(f"bind stage status on {host} failed (rc {rc}): {(out + err).strip()[-800:]}")
-    if a.dry:
-        raise Dry("the bind stage has stale nodes (above)")
+def _bind_env(lane, out_root):
+    return f"OT_LANE={shlex.quote(lane)} OT_BUILD_HASH_CACHE={shlex.quote(out_root)}/hash_cache.json"
+
+
+def bind_status(r, host, rt_dir, out_root, lane, emit_j, types, run=sh):
+    """hashes only, over ssh (seconds) -> (rc, effective record | None, output): rc 0 every node fresh, 3 stale, 1 refused"""
+    q = " ".join(shlex.quote(x) for x in bind_argv(r, rt_dir, out_root, emit_j, types))
+    rc, out, err = remote(host, f"mkdir -p {shlex.quote(out_root)} && {_bind_env(lane, out_root)} {q} --status", timeout=1800, run=run)
+    return rc, parse_bind(out), out + err
+
+
+def bind_job(r, host, rt_dir, out_root, lane, emit_j, mem, types, run=sh):
+    """write the stage script into out_root on the host (ot-run admits a lane job whose inputs are under its --dir) -> ot-run argv"""
+    q = " ".join(shlex.quote(x) for x in bind_argv(r, rt_dir, out_root, emit_j, types))
     script = f"{out_root}/ot_build_bind.sh"
-    body = f"#!/bin/bash\n# ot-build bind stage ({a.lane}); written by ot_build_hub.py\ncd /\nexport {env}\nexec {q}\n"
+    body = f"#!/bin/bash\n# ot-build bind stage ({lane}); written by ot_build_hub.py\ncd /\nexport {_bind_env(lane, out_root)}\nexec {q}\n"
     rc, _, err = remote(host, f"cat > {shlex.quote(script)}.tmp <<'OTB_EOF'\n{body}OTB_EOF\nmv {shlex.quote(script)}.tmp {shlex.quote(script)}",
                         timeout=60, run=run)
     if rc != 0:
         raise G.BuildError(f"cannot write {script} on {host}: {err.strip()[-200:]}")
-    j = 8 if str(a.emit_j) == "auto" else int(a.emit_j)
-    cmd = ["python3", "-I", f"{rt_dir}/tools/fleet/ot-run", "--hosts", host, "--mem", str(a.bind_mem), "--threads", str(j + 2),
-           "--priority", "plan", "--plan-job", "bind", "--dir", out_root, "--", "bash", script]
+    j = 8 if str(emit_j) == "auto" else int(emit_j)
+    return ["python3", "-I", f"{rt_dir}/tools/fleet/ot-run", "--hosts", host, "--mem", str(mem), "--threads", str(j + 2),
+            "--priority", "plan", "--plan-job", "bind", "--dir", out_root, "--", "bash", script]
+
+
+def run_bind_stage(r, host, rt_dir, out_root, a, types, run=sh, stream=None):
+    """status over ssh; when stale, the stage through ot-run on the host.  -> effective record (raises BuildError)"""
+    rc, eff, out = bind_status(r, host, rt_dir, out_root, a.lane, a.emit_j, types, run=run)
+    for ln in out.splitlines():
+        if ln.startswith("ot-build:"):
+            log("  " + ln)
+    if rc == 0 and eff:
+        log(f"ot-build: bind stage FRESH on {host}: {eff['out']}")
+        return eff
+    if rc not in (0, 3) or eff is None:
+        raise G.BuildError(f"bind stage status on {host} failed (rc {rc}): {out.strip()[-800:]}")
+    if a.dry:
+        raise Dry("the bind stage has stale nodes (above)")
+    cmd = bind_job(r, host, rt_dir, out_root, a.lane, a.emit_j, a.bind_mem, types, run=run)
     log("ot-build: bind stage through ot-run: " + " ".join(shlex.quote(c) for c in cmd))
     rc, out = (stream or stream_cmd)(cmd, dict(os.environ, OT_LANE=a.lane))
     eff = parse_bind(out)
@@ -207,6 +220,85 @@ def run_bind_stage(r, host, rt_dir, out_root, a, types, run=sh, stream=None):
         tail = [ln for ln in out.splitlines() if ln.startswith(("ot-build:", "    ", "ot-run:"))][-30:]
         raise G.BuildError(f"bind stage FAILED on {host} (ot-run rc {rc}):\n" + "\n".join(tail))
     return eff
+
+
+# ---- wave rows (kit_wave.py) --------------------------------------------------------------------------------------------------------
+WAVE_STATUS_TTL_S = 600
+WAVE_FAIL_RETRY_S = 7200
+
+
+def _alive(pid):
+    try:
+        os.kill(int(pid), 0)
+        return True
+    except (OSError, ValueError, TypeError):
+        return False
+
+
+def wave_rebind(cfg, die, st, lane="KIT-WAVE", now=None, run=sh, popen=None, alive=_alive, rt=None, emit_j="auto", mem="96"):
+    """kit_wave tick, die option auto_bind: the wave rows of `die` are BIND-STALE (KIT_TOPOLOGY_BIND_STALE preflight / stage, R8_STALE)
+    on the die's own tree and plan.  Instead of waiting for a hand-run bind: make the die's bind fresh with the ot-build bind stage
+    and hand its OUT back.  One call per tick, never blocks on the bind:
+
+        FRESH    {out, asbuilt, host}: every node's stamp equals the tree + plan now -> the caller points the stale rows' kit_rtl at it
+        STARTED / RUNNING            : the stage runs through ot-run --priority plan on the least loaded holder of the tree
+        FAILED   {why}               : the stage refused or failed (the message names the input); retried after WAVE_FAIL_RETRY_S or
+                                       as soon as the die's src / plan / as-built change
+    State is kept in st["auto_bind"][die] (the wave state file)."""
+    now = time.time() if now is None else float(now)
+    rec = st.setdefault("auto_bind", {}).get(die) or {}
+    try:
+        r = resolve(cfg, die)
+        key = "|".join([r["tree"], r["plan"], str(r["asbuilt"]), json.dumps(r["env"], sort_keys=True)])
+        if rec.get("key") != key:
+            rec = {"key": key}
+        if rec.get("state") in ("STARTED", "RUNNING"):
+            if alive(rec.get("pid")):
+                rec["state"] = "RUNNING"
+                st["auto_bind"][die] = rec
+                return dict(rec)
+            try:
+                eff = parse_bind(Path(rec["log"]).read_text(errors="replace"))
+            except OSError:
+                eff = None
+            if eff and eff.get("rc") == 0:
+                rec.update(state="FRESH", out=eff["out"], asbuilt=eff.get("asbuilt"), t=now)
+            else:
+                tail = ""
+                try:
+                    tail = " | ".join(ln.strip() for ln in Path(rec["log"]).read_text(errors="replace").splitlines()
+                                      if ln.startswith(("ot-build:", "    ")))[-600:]
+                except OSError:
+                    pass
+                rec.update(state="FAILED", why=tail or "the bind stage ended without a result", t=now)
+            st["auto_bind"][die] = rec
+            return dict(rec)
+        if rec.get("state") == "FRESH" and now - float(rec.get("t") or 0) < WAVE_STATUS_TTL_S:
+            return dict(rec)
+        if rec.get("state") == "FAILED" and now - float(rec.get("t") or 0) < WAVE_FAIL_RETRY_S:
+            return dict(rec)
+        rt_dir = Path(os.path.realpath(RT_ROOT / (rt or "current")))
+        files = [r["plan"]] + ([r["asbuilt"]] if r["asbuilt"] else []) + [str(rt_dir / "tools" / "autopilot" / "ot_build.py")]
+        host, _ = pick_host(r["hosts"], r["tree"], files, run=run)
+        out_root = f"{SCRATCH}/{lane}/ot-build/{die}/{Path(r['tree']).name}"
+        rc, eff, text = bind_status(r, host, rt_dir, out_root, lane, emit_j, [], run=run)
+        if rc == 0 and eff:
+            rec.update(state="FRESH", out=eff["out"], asbuilt=eff.get("asbuilt"), host=host, t=now)
+        elif rc == 3 and eff:
+            cmd = bind_job(r, host, rt_dir, out_root, lane, emit_j, mem, [], run=run)
+            lf = AP_DIR / "auto_bind" / f"{die}_{time.strftime('%m%d%H%M%S', time.localtime(now))}.log"
+            lf.parent.mkdir(parents=True, exist_ok=True)
+            with open(lf, "w") as f:
+                p = (popen or subprocess.Popen)(cmd, stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                                start_new_session=True, env=dict(os.environ, OT_LANE=lane))
+            rec.update(state="STARTED", pid=p.pid, log=str(lf), host=host, t=now,
+                       why="; ".join(ln.split("STALE", 1)[1].strip()[:160] for ln in text.splitlines() if " STALE " in ln)[:500])
+        else:
+            rec.update(state="FAILED", why=" | ".join(ln.strip() for ln in text.splitlines() if ln.strip())[-600:], t=now)
+    except G.BuildError as e:
+        rec.update(state="FAILED", why=str(e)[:600], t=now)
+    st["auto_bind"][die] = rec
+    return dict(rec)
 
 
 class Dry(Exception):
@@ -236,9 +328,10 @@ def run_kit(r, item, host, eff, rt_dir, a, kd, stream=None):
                            "  a kit must be generated from a tree that carries them.  Fork the tree (tools/fleet/ot-tree-fork SRC DST),"
                            " run ot-build with --tree DST (the tables are then refreshed in place), or hand the rows to the die plan lane.")
     stamp = time.strftime("%m%d%H%M%S")
-    spec = kd / f"spec_{stamp}.json"
+    sd = kd / stamp                                  # private-spec --out is a DIRECTORY: spec.json, later result.json, inside
+    spec = sd / "spec.json"
     cmd = ["python3", "-I", kw, "private-spec", r["die"], item, "--tree", r["tree"], "--plan", eff.get("plan") or r["plan"],
-           "--bind-out", eff["out"], "--lane", a.lane, "--out", str(spec), "--goal", "finish" if a.goal != "kit" else "geom",
+           "--bind-out", eff["out"], "--lane", a.lane, "--out", str(sd), "--goal", "finish" if a.goal != "kit" else "geom",
            "--rt", Path(rt_dir).name]
     if a.kit_host or host:
         cmd += ["--host", a.kit_host or host]
@@ -255,10 +348,7 @@ def run_kit(r, item, host, eff, rt_dir, a, kd, stream=None):
     cmd = ["python3", "-I", kw, "run-item", str(spec)]
     log("ot-build: " + " ".join(shlex.quote(c) for c in cmd))
     rc, out = (stream or stream_cmd)(cmd, dict(os.environ, OT_LANE=a.lane))
-    res = spec.with_name("result.json")
-    for cand in (spec.with_name("result.json"), spec.with_suffix(".result.json")):
-        if cand.is_file():
-            res = cand
+    res = sd / "result.json"
     try:
         rj = json.loads(res.read_text())
     except (OSError, ValueError):
@@ -282,6 +372,7 @@ def main(argv=None, run=sh, stream=None, cfg=None):
     ap.add_argument("--lane", default=os.environ.get("OT_LANE", ""))
     ap.add_argument("--goal", choices=GOALS, default="export")
     ap.add_argument("--host", help="pin the bind host (default: least loaded host that holds the tree)")
+    ap.add_argument("--out-root", help="bind out root on the bind host (default <scratch>/claude/<lane>/ot-build/<die>/<tree name>)")
     ap.add_argument("--kit-host")
     ap.add_argument("--rt", help="runtime pin sha12 (default: rt/current, resolved once)")
     ap.add_argument("--emit-j", default="auto")
@@ -306,7 +397,7 @@ def main(argv=None, run=sh, stream=None, cfg=None):
         host, table = pick_host(r["hosts"], r["tree"], files, run=run, pin=a.host)
         log(f"ot-build: {a.die}/{a.type} tree {r['tree']} plan {r['plan']} rt {rt_dir.name} bind env {r['env']}")
         log("ot-build: bind host " + host + (" (pinned)" if a.host else " = least loaded holder of the tree") + "\n" + "\n".join(table))
-        out_root = f"{SCRATCH}/{a.lane}/ot-build/{a.die}/{Path(r['tree']).name}"
+        out_root = a.out_root or f"{SCRATCH}/{a.lane}/ot-build/{a.die}/{Path(r['tree']).name}"
         eff = run_bind_stage(r, host, rt_dir, out_root, a, [a.type], run=run, stream=stream)
         ty = (eff.get("types") or {}).get(a.type)
         if not ty or not ty.get("block"):

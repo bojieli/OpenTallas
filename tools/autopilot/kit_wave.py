@@ -11212,6 +11212,59 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
 BOUND_TREE_TRIES = 3
 
 
+def auto_rebind(AP, cfg, st, die, rows, stale, now=None, rpy=None, rebind=None):
+    """FABLE-PIPELINE-R1 (OWNER 11-21: two thirds of the sign-off failures are stale derived artefacts refreshed by hand).  Die option
+    auto_bind true: rows that are BIND-STALE on the die's OWN tree and plan (the bind of record predates the plan; nothing to fall back
+    to) no longer wait for a hand-run bind.  tools/autopilot/ot_build_hub.wave_rebind keeps the die's bind fresh with the stamped
+    ot-build bind stage (pre-check, elab reuse, R8 tables re-derived from the bound depths, ONE strict bind, LATCHECK) on the least
+    loaded host that holds the tree; a tick never waits for it.  When it reports FRESH the stale rows take its OUT as kit_rtl.bind_out
+    (in memory for this tick, like bound_fallback) and launch if the bind preflight is now green for them.
+    -> {item: bind out} of the rescued items, removed from `stale`."""
+    d = cfg["dies"][die]
+    if rebind is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import ot_build_hub
+        rebind = ot_build_hub.wave_rebind
+    res = rebind(cfg, die, st, lane=re.sub(r"[^A-Za-z0-9_.-]", "_", str(d.get("lane") or "KIT-WAVE")), now=now)
+    state = res.get("state")
+    last = (st.setdefault("auto_bind_log", {}).get(die) or "")
+    if state != last:                                    # one line per state change, not per tick
+        st["auto_bind_log"][die] = state
+        AP.log(f"KIT-WAVE AUTO-BIND {die}: {state}" + (f" on {res.get('host')}" if res.get("host") else "")
+               + (f" out {res.get('out')}" if state == "FRESH" else f": {str(res.get('why') or '')[:300]}" if res.get("why") else ""))
+    if state != "FRESH" or not res.get("out"):
+        return {}
+    src = str(d.get("src") or "").rstrip("/")
+    kr = dict(d.get("kit_rtl") or {}, bind_out=res["out"])
+    ab = str(res.get("asbuilt") or "")
+    if ab and not ab.startswith(src + "/"):              # R8 tables refreshed outside a sealed tree: a kit needs them in the tree (plan lane event)
+        if last != "FRESH-OUTSIDE":
+            st["auto_bind_log"][die] = "FRESH-OUTSIDE"
+            AP.log(f"KIT-WAVE AUTO-BIND {die}: bind is green only with R8 tables refreshed OUTSIDE the sealed tree ({ab}); the die plan lane "
+                   "must carry the refreshed tables in its next event; rows stay BIND-STALE")
+        return {}
+    todo = [r for r in rows if r["item"] in stale]
+    cfg2 = copy.deepcopy(cfg)
+    ii2 = cfg2["dies"][die].setdefault("item_inputs", {})
+    if res.get("host"):
+        cfg2["dies"][die]["gen_host"] = res["host"]     # the bind probe runs where the fresh bind is
+    for r in todo:
+        ii2[r["item"]] = dict(ii2.get(r["item"]) or {}, kit_rtl=dict(kr))
+    bad = bind_preflight(AP, cfg2, st, die, todo, now=now, rpy=rpy)
+    rescued = {}
+    for r in todo:
+        if r["item"] in bad:
+            continue
+        d.setdefault("item_inputs", {}).setdefault(r["item"], {})["kit_rtl"] = dict(kr)
+        rescued[r["item"]] = res["out"]
+        stale.pop(r["item"], None)
+        for h in set(x for x in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if x) - {res.get("host")}:
+            cfg.setdefault("_item_incomplete", {}).setdefault(h, {}).setdefault(die, {})[r["item"]] = f"auto bind {res['out']} not on {h}"
+    if rescued:
+        AP.log(f"KIT-WAVE AUTO-BIND {die}: {len(rescued)} BIND-STALE row(s) launch on the fresh bind {res['out']}: " + " ".join(sorted(rescued)[:12]))
+    return rescued
+
+
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     """{item: why} for type rows whose kit_topology prepare-stations would raise KIT_TOPOLOGY_BIND_STALE (kit_rtl mode
     bind, canonical topology preparation on).  One probe per (src, plan, bind_out, asbuilt, reset scope) on the die's
@@ -11709,6 +11762,14 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                             st["bind_stale_items"][die] = sorted(stale or {})
                             AP.log(f"KIT-WAVE BOUND-FALLBACK {die}: {len(resc)} BIND-STALE row(s) launch on the newest earlier tree with a green bind (any-plan sign-off counts): "
                                    + " ".join(f"{i}@{os.path.basename(t.rstrip('/'))[-24:]}" for i, t in sorted(resc.items())[:12]))
+                    if stale and d.get("auto_bind"):       # FABLE-PIPELINE-R1: the die's own bind is made fresh by ot-build, not by hand
+                        try:
+                            reb = auto_rebind(AP, cfg, st, die, go, stale)
+                        except Exception as e:             # a diagnostic probe never stops the plan
+                            reb = {}
+                            AP.log(f"KIT-WAVE AUTO-BIND {die} skipped: {e}")
+                        if reb:
+                            st["bind_stale_items"][die] = sorted(stale or {})
                     if stale:
                         for r in go:
                             if r["item"] in stale:

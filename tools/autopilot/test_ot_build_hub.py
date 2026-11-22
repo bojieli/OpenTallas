@@ -51,9 +51,9 @@ class Fleet:
             return 0, self.eff(0)
         if "private-spec" in cmd:
             self.calls.append("private-spec")
-            Path(cmd[cmd.index("--out") + 1]).parent.mkdir(parents=True, exist_ok=True)
-            Path(cmd[cmd.index("--out") + 1]).write_text("{}")
-            self.spec = Path(cmd[cmd.index("--out") + 1])
+            self.spec = Path(cmd[cmd.index("--out") + 1]) / "spec.json"
+            self.spec.parent.mkdir(parents=True, exist_ok=True)
+            self.spec.write_text("{}")
             self.spec_cmd = cmd
             return 0, "private-spec kv/ta: spec\n"
         if "run-item" in cmd:
@@ -157,3 +157,49 @@ def test_tree_and_plan_override(fleet):
     assert r["tree"] == SRC and r["plan"] == "/srv/delta/plan.json" and r["asbuilt"] == SRC + "/p/ab.json"
     assert r["env"] == {"OT_HCPARAM_ALL": "1", "OT_KV_HEAD_KST": "2", "OT_VIEW": SRC + "/p/v.json"}
     assert H.resolve(CFG, "kv", tree="/srv/fork/t1")["env"]["OT_VIEW"] == "/srv/fork/t1/p/v.json"
+
+
+class P:
+    pid = 4242
+
+
+def test_wave_rebind_states(fleet, tmp_path):
+    st, alive, started = {}, {"v": True}, []
+
+    def popen(cmd, **kw):
+        started.append(cmd)
+        kw["stdout"].write("ot-build: bind       BUILT   k in 600 s\n" + fleet.eff(0))
+        return P()
+
+    def rb(now):
+        return H.wave_rebind(CFG, "kv", st, now=now, run=fleet.run, popen=popen, alive=lambda pid: alive["v"])
+    r = rb(1000)
+    assert r["state"] == "STARTED" and r["host"] == "h2" and len(started) == 1 and "input plan changed" in r["why"]
+    assert "--plan-job" in started[0] and started[0][started[0].index("--hosts") + 1] == "h2"
+    assert rb(1060)["state"] == "RUNNING" and len(started) == 1            # never a second bind of the same inputs
+    alive["v"] = False
+    fleet.stale = False
+    r = rb(1120)
+    assert r["state"] == "FRESH" and r["out"] == "/srv/out/b_1"
+    n = len(fleet.calls)
+    assert rb(1200)["state"] == "FRESH" and len(fleet.calls) == n          # within the TTL: no probe at all
+    assert rb(1120 + H.WAVE_STATUS_TTL_S + 1)["state"] == "FRESH" and len(fleet.calls) == n + 1
+    cfg2 = json.loads(json.dumps(CFG))
+    cfg2["dies"]["kv"]["plan"] = SRC + "/p/plan2.json"                     # a new plan of record: the old verdict is void
+    fleet.stale = True
+    assert H.wave_rebind(cfg2, "kv", st, now=3000, run=fleet.run, popen=popen, alive=lambda pid: True)["state"] == "STARTED"
+
+
+def test_wave_rebind_failure_is_reported_and_backs_off(fleet):
+    st = {}
+
+    def popen(cmd, **kw):
+        kw["stdout"].write("ot-build: bind       FAILED  strict bind reports 3 error(s)\n" + fleet.eff(1))
+        return P()
+    assert H.wave_rebind(CFG, "kv", st, now=10, run=fleet.run, popen=popen, alive=lambda pid: False)["state"] == "STARTED"
+    r = H.wave_rebind(CFG, "kv", st, now=20, run=fleet.run, popen=popen, alive=lambda pid: False)
+    assert r["state"] == "FAILED" and "strict bind reports 3 error(s)" in r["why"]
+    n = len(fleet.calls)
+    assert H.wave_rebind(CFG, "kv", st, now=30, run=fleet.run, popen=popen, alive=lambda pid: False)["state"] == "FAILED"
+    assert len(fleet.calls) == n
+    assert H.wave_rebind(CFG, "head", st, now=30, run=fleet.run)["state"] == "FAILED"
