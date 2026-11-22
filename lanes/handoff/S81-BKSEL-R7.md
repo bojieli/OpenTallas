@@ -33,3 +33,7 @@
 - intel2 fallback copy cancelled (oth-ubuntu-315702) + partial tree ot-deleted per COORD 18:5x.
 - r7a spec ~/coord/autopilot/private_specs/S81-BKSEL-R7/s81_bk_sel__t2_1121185210 (epyc7, rt 18a2688b741f): gen OK, gen_lint killed rc 143 after 4479 s -> run-item FAIL. Cause: epyc7 docker hung (trivial docker run > 60 s; ~25 lanes' docker stages stuck).
 - Detached retry: intel2 pid 584384 ~/s81-bksel-r7/retry_r7a.sh (log retry_r7a.log): reruns run-item on the same spec after 2 consecutive docker runs < 15 s; output ~/s81-bksel-r7/run_item_r7a_2.log. Successor: check it; then hop300 + route as above.
+
+## 20:4x COORD: relaunch moves to epyc10 via FAM-S81-COL-R6
+- My retry (intel2 pid 584384) killed (cmdline checked; no run-item started). COL-R6 copies tree_r6 to epyc10 (unit oth-ubuntu-1521480-1795321728) and relaunches the r7a spec there. Asked COL-R6 (post 20:4x) to carry plan_r7a.json and post spec/work dir.
+- Mine after place on epyc10: hop300 scan, run_kit route 48 16 (ot-run, kit work dir), sign-off read, J8 row result to S81-J6-ASSEMBLY-R5.
