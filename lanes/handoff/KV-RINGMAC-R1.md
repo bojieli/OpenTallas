@@ -1,7 +1,20 @@
 # KV-RINGMAC-R1 handoff (Opus 5.5; COORD lane, started 2026-11-21 22:0x PST)
-GOAL: sign 9 NARROW cland ring masters for the kv3_hub_C cut (D28 cut 11-22 12:00 PST, else D29), export views, hand paths+shas to FAM-KV-HUBC-SYSC-R2 + KV-PLAN-R6.
+GOAL: sign 9 NARROW cland ring masters for the kv3_hub_C cut (DONE: 9 SIGNED + exported), then (COORD 11-21) write the 44 hub_C ring rows, private strict bind/LATCHECK/G0 on an ot-tree-fork of D27d3 (epyc8); clean by 11-22 11:30 PST -> KV-PLAN-R6 D28 row, else D29; post rows to KV-AHUB-RH1 too.
 
-## State 2026-11-21 23:5x PST: ALL 9 SIGNED + views delivered (post SIGNED 23:5x)
+## State 2026-11-21 23:2x PST: ROWS written, private gate pending
+- COORD ruling relayed to KV-PLAN-R6 (79274b7c9b accepted; D28+ GEN tools >= 79274b7c9b).
+- Row generator (site search, KV-D23-HUBC d23_hubc_rows.py form): epyc8 L=/srv/opentallas-scratch2/claude/kv-ringmac-r1/ROWS_hubc_ringmac.py (run in a tree root: PLAN_IN PLAN_OUT --views L/views --pins L/rk --overlay L/rows/overlay --report L/rows/report.json).
+- D28 row (self-contained, composer form `python3 -I ROWS PLAN_IN PLAN_OUT`): epyc8 L/rows/ROWS_kv_ringmac_d28.py (frozen delta 4bbcae0dde8f; out plan on D27d3 = L/rows/plan_c.json). Touches only kv3_hub_C: hard_cores +44, clock.taps +44, landing_contract.bands x44 (+collector_local_sources band), landing_ring_wreg.buses +12. 0 added cycles (exact params) -> no latency entry. Overlay L/rows/overlay (kvringmac_views/<m> + plan_of_record/cores/kv_ring/<m>_pins.json) must be copied into the D28 tree.
+- Placement report L/rows/report.json: all 44 PLACED, reset+grid tap tables unchanged; worst displacement ft28/ft29 (~90-110 um from old band, W face).
+- Private gate: L/gate.sh on fork L/tree_d27d3 (ot-tree-fork running 23:0x) -> ot-run G0 (kv-plan-r3/d27c/gate_g0_d26.sh) + strict bind/LATCHECK/BPC (kv-d23-compose8/gate_bind_d25.sh); outputs L/gates/{g0,bind}_a/gate.out.
+## Next
+1. Read gates; fix row failures (re-run generator, refreeze); if clean -> post ROWS + receipt to KV-PLAN-R6 (D28) + KV-AHUB-RH1; else D29.
+2. Keep something running after hand-off.
+
+
+
+
+## Earlier state 2026-11-21 23:5x PST: ALL 9 SIGNED + views delivered (post SIGNED 23:5x)
 - Views /srv/opentallas-scratch2/claude/kv-ringmac-r1/views/<m> on epyc8+epyc9 (prove PASS, signed clock_contract.json from ck_contract.py copy L/ck_contract.py, ck outputs L/ck/<m>). Manifest lanes/handoff/KV-RINGMAC-R1-views.{json,tsv}.
 - Tool fix main 79274b7c9b: hard_landing.emit no longer requires WREG=1 (W32/33/44 WREG=0 child proofs PASS). D28 GEN must use tools >= it.
 - Export: AUTO-EXPORT ledger has the 5 epyc8 units at 'meta' (AGIdock done, rtx-pull pending); epyc9 4 enqueued (spool). Verify INDEX rows on rtx-pro.
