@@ -25612,3 +25612,5 @@ FAILED [AUTOPILOT 8dce7a7cee6b] 2026-11-22 09:45:03 PST AUTOPILOT -> KIT-WAVE-3:
   On e9be978c3180 it gives plan bf83bf83b70c, with the same legs as before: Eo 34->0 (+8 reset cycles), Wo 30->0 (+9).
   Proof in flight: strict re-bind of bf83bf83b70c on tree_r (unit oth-ubuntu-33312-1795369379, epyc8; reuses the 14:43 elab, bind only). The previous bind's only errors were the 2 EMIT relay_depth misses; BPC passed and R8 is 32 unequal = D27d3 baseline. Bind result ETA ~11:00-11:15.
   Fallback per COORD: if it is not proven by 11:30, take the inst_taps + relay_sites parts and send relay_depth to D29.
+- 2026-11-22 09:45 PST CANARY s81_head_cl @ af3312b925: FAIL failing face_cover (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 5 source commits (2eba10c7aee8, 5b1b2e8b5f98, bc9603f67b09, d14cac8bd26f); baseline canary-ru)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)

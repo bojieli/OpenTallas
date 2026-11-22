@@ -167,3 +167,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 09:30 PST CANARY hbm @ af3312b925: FAIL failing vclk_basis,cts,grt_gate,route,rcx,signoff (REGRESSION grt hold_ff_wns 0.0 -> None not measured; the baseline run measured it; grt hold_ff_ep 0.0 -> None not measured; the baseline run measured it; stage); CANARY hbm_sram @ af3312b925: FAIL failing vclk_basis,route,rcx,signoff (REGRESSION grt hold_ff_ep 319.0 -> 336.0 336 vs 319 (tol +5 %); signoff setup_tt_wns -53.39 -> None not measured; the baseline run measured it; signoff hold_ff)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 09:45 PST CANARY s81_head_cl @ af3312b925: FAIL failing face_cover (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 5 source commits (2eba10c7aee8, 5b1b2e8b5f98, bc9603f67b09, d14cac8bd26f); baseline canary-ru)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
