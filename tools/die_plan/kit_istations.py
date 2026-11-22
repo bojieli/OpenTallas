@@ -1792,6 +1792,134 @@ def join_stations(n, W, d0, ea0, need, joins):
     return decl, body, cq, ceq, names
 
 
+OR_ATOM = re.compile(r"^(\w+)(?:\[(\d+)(?::(\d+))?\])?$")
+
+
+def or_atoms(tn, bus, txt, d0):
+    """QC-COLL-FAULT 11-21 (or_groups): the single-bit leaves of the OR cone that drives a 1-bit out face register.
+    A term whose wire has an `assign` containing `|` is expanded when that assign is a pure OR (`a | b | ..`) or a
+    reduce-OR (`|{a, b[3:0], ..}`) of a 1-bit wire; any other operator in such an assign fails closed.  A term without
+    an assign, or with an assign that has no `|` (alias / leaf logic), is an atom.  Ranges are split to bits."""
+    assigns = {m.group(1): m.group(2).strip() for m in re.finditer(r"(?m)^\s*assign\s+(\w+)\s*=\s*([^;]+);", txt)}
+    width = {}
+    for m in re.finditer(r"(?m)^\s*(?:wire|logic|reg)\s*(?:\[(\d+):(\d+)\])?\s*(\w+)\s*;", txt):
+        width[m.group(3)] = abs(int(m.group(1) or 0) - int(m.group(2) or 0)) + 1
+    seen, atoms = set(), []
+
+    def bits(term):
+        m = OR_ATOM.match(term)
+        if not m:
+            raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: OR cone term {term!r} is not a wire or bit select")
+        base, hi, lo = m.groups()
+        if hi is None:
+            return [base]
+        if lo is None:
+            return [f"{base}[{hi}]"]
+        a, c = sorted((int(hi), int(lo)))
+        return [f"{base}[{i}]" for i in range(a, c + 1)]
+
+    def walk(term, depth):
+        term = term.strip()
+        m = OR_ATOM.match(term)
+        base = m.group(1) if m else None
+        expr = assigns.get(base) if base else None
+        if expr is None or "|" not in expr:
+            for a in bits(term):
+                if a not in seen:
+                    seen.add(a)
+                    atoms.append(a)
+            return
+        if depth > 64 or width.get(base, 1) != 1 or (m.group(3) is not None) or (m.group(2) not in (None, "0")):
+            raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: {term} is not a 1-bit OR wire (fail closed)")
+        red = re.fullmatch(r"\|\s*\{([^{}]*)\}", expr)
+        kids = red.group(1).split(",") if red else expr.split("|")
+        if not red and not re.fullmatch(r"[\w\[\]:\s|]+", expr):
+            raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: assign {base} = {expr[:80]} is not a pure OR (fail closed)")
+        if any(not k.strip() for k in kids):
+            raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: assign {base} = {expr[:80]} is not a pure OR (fail closed)")
+        for k in kids:
+            walk(k, depth + 1)
+
+    walk(d0, 0)
+    return sorted(atoms)
+
+
+def or_group_split(tn, bus, atoms, groups):
+    """atoms -> {group name: [atoms]}: every atom in exactly one group; one group may be the remainder (match ["*"])."""
+    rest = [g["name"] for g in groups if g["match"] == ["*"]]
+    if len(rest) > 1 or len({g["name"] for g in groups}) != len(groups):
+        raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: unique names and at most one remainder group")
+    out = {g["name"]: [] for g in groups}
+    for a in atoms:
+        hit = [g["name"] for g in groups if g["match"] != ["*"] and any(re.search(rx, a) for rx in g["match"])]
+        if len(hit) > 1 or (not hit and not rest):
+            raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: atom {a} matches {len(hit)} groups {hit} (fail closed)")
+        out[hit[0] if hit else rest[0]].append(a)
+    empty = [k for k, v in out.items() if not v]
+    if empty:
+        raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: group(s) {empty} match no atom of the OR cone")
+    return out
+
+
+def or_group_names(n, groups, depth):
+    """group 0 = the plain chain u_ist_<bus>_<j> (the row's regs_um, what bind / kit_topology count); the other groups
+    are parallel same-depth chains u_ist_<bus>__og<name>_<j>."""
+    return [[f"u_ist_{n}_{j}" if gi == 0 else f"u_ist_{n}__og{gen_rtl.sv_id(g['name'])}_{j}" for j in range(depth)]
+            for gi, g in enumerate(groups)]
+
+
+def or_group_stations(tn, bus, n, txt, m, e, depth):
+    """QC-COLL-FAULT 11-21 (FABLE-FIX-QC-COLL; Codex fault-pipe form made a generator form): an OUT bus of width 1 whose
+    face register is fed by an OR cone of far-apart sources gets `depth` stations as PARALLEL chains, one per or_groups
+    entry (its atoms ORed at stage 0 next to them), the chain tails ORed at the face register.  Every source still crosses
+    `depth` registers (ot_dp_st: q <= d every clock), so it equals `depth` serial stations before u_bout (the plain row
+    the latency table prices): 0 cycles against the plain form.  Epochs: every chain starts at the face register's
+    epoch source; the face register takes group 0's last epoch.  -> (new txt, per-group atoms, per-group names)"""
+    groups = e["or_groups"]
+    names = or_group_names(n, groups, depth)
+    lead, d0, ea0 = m.group(1), m.group(2), m.group(4)
+    rst = re.search(r"\.rst_n\((\w+)\)", lead)
+    if not rst:
+        raise SystemExit(f"kit_istations: {tn} {bus}: or_groups: face register has no plain reset net")
+    atoms = or_group_split(tn, bus, or_atoms(tn, bus, txt, d0), groups)
+    decl, body, tails, eqs = [], [], [], []
+    for gi, g in enumerate(groups):
+        gid = "" if gi == 0 else f"_og{gen_rtl.sv_id(g['name'])}"
+        dn = f"{n}_ogd{gi}"
+        decl.append(f"    wire [0:0] {dn};  // kit_istations: or_groups {g['name']}: {len(atoms[g['name']])} atoms")
+        body.append(f"    assign {dn} = |{{{', '.join(atoms[g['name']])}}};")
+        cq, ceq = dn, ea0
+        for j, inst in enumerate(names[gi]):
+            q, eq = f"{n}{gid}_is{j}_q", f"{n}{gid}_is{j}_eq"
+            decl.append(f"    wire [0:0] {q};\n    wire {eq};  // kit_istations")
+            body.append(f"    ot_dp_st #(.W(1)) {inst} (.clk(clk), .rst_n({rst.group(1)}), .d({cq}), .ea({ceq}), "
+                        f".q({q}), .eq({eq}));  // kit_istations: FIRM plan station (or_groups {g['name']})")
+            cq, ceq = q, eq
+        tails.append(cq)
+        eqs.append(ceq)
+    decl.append(f"    wire [0:0] {n}_ogy;  // kit_istations: or_groups join at the face register")
+    body.append(f"    assign {n}_ogy = |{{{', '.join(tails)}}};")
+    line = lead + f"{n}_ogy" + m.group(3) + eqs[0] + m.group(5)
+    line = re.sub(r"^(\s*)ot_dp_ste\b", r"\1ot_dp_st", line)
+    txt = txt[:m.start()] + line + txt[m.end():]
+    txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
+    return txt, atoms, names
+
+
+def or_group_check(tn, bus, e, b, W, pads, exact, floating):
+    og = e["or_groups"]
+    regs = e["regs_um"]
+    if b["dir"] != "out" or W != 1 or pads or exact is not None or floating or e.get("join") or e.get("bit_route") \
+            or e.get("merged_entries", 1) > 1:
+        raise SystemExit(f"kit_istations: {tn} {bus}: or_groups is a plain 1-bit OUT chain form only (one row, no pads / "
+                         "join / exact banks / bit_route / float)")
+    if not og or any(len(g["regs_um"]) != len(regs) for g in og):
+        raise SystemExit(f"kit_istations: {tn} {bus}: every or_groups entry needs {len(regs)} regs_um (the row's depth)")
+    if [list(map(float, p)) for p in og[0]["regs_um"]] != [list(map(float, p)) for p in regs]:
+        raise SystemExit(f"kit_istations: {tn} {bus}: or_groups[0].regs_um must equal the row's regs_um (the priced chain; "
+                         "write the row source -> face)")
+
+
 def bus_entries(t):
     """Station entries of a type's buses, one per bus.  The planner lists one entry per capture group, but a bus has one
     chain (bind face register -> leaf): its depth is the deepest entry, stage j at the bits-weighted centroid of the
@@ -2014,7 +2142,24 @@ def main(argv):
             if e.get("join") and (pads or (prev and not re.search(rf"\bu_isj_{re.escape(n)}_\d", txt))):
                 raise SystemExit(f"kit_istations: {tn} {bus}: join rows need a fresh out chain (no pads, no chain inserted "
                                  "without its joins)")
-            if need and e.get("join"):
+            og_names = None
+            if e.get("or_groups"):
+                # QC-COLL-FAULT 11-21: parallel same-depth OR-group chains (opt-in row key; absent = unchanged)
+                or_group_check(tn, bus, e, b, W, pads, exact, floating)
+                og_names = or_group_names(n, e["or_groups"], len(regs))
+                have_og = [nm for row in og_names[1:] for nm in row if re.search(rf"\b{re.escape(nm)}\s*\(", txt)]
+                want_og = [nm for row in og_names[1:] for nm in row]
+                if need not in (0, len(regs)) or (need == 0) != (have_og == want_og) or (need and have_og):
+                    raise SystemExit(f"kit_istations: {tn} {bus}: or_groups needs a fresh out chain or a complete "
+                                     f"earlier application ({len(prev)} plain, {len(have_og)}/{len(want_og)} group stations)")
+                og_atoms = None
+                if need:
+                    txt, og_atoms, _ = or_group_stations(tn, bus, n, txt, m, e, len(regs))
+                    names += og_names[0]
+                    need_done, need = need, 0
+            if og_names is not None:
+                pass
+            elif need and e.get("join"):
                 # S81-RLYBR-1 11-19: far slices join the chain at their nearest station (0 added cycles)
                 decl, body, cq, ceq, jn = join_stations(n, W, m.group(2), m.group(4), need, e["join"])
                 names += jn
@@ -2071,10 +2216,24 @@ def main(argv):
         else:
             for (x, y), nm in zip(regs, names):
                 tcl.extend(ordered_station_row(nm, W, x, y, bus, b.get("face"), t.get("outline_um")))
+        og_rows = []
+        if e.get("or_groups") and b["dir"] != "out":
+            raise SystemExit(f"kit_istations: {tn} {bus}: or_groups is an OUT bus form")
+        if b["dir"] == "out" and e.get("or_groups"):
+            inserted = len(regs) if og_atoms is not None else 0
+            need, have = inserted, len(regs) - inserted
+            for g, row in list(zip(e["or_groups"], og_names))[1:]:
+                for (x, y), nm in zip(g["regs_um"], row):
+                    tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
+                og_rows.append(dict(or_group=f"{conn}:{g['name']}", or_conn=conn, planned=len(regs), inserted=inserted,
+                                    stations=row, **({"atoms": og_atoms[g["name"]]} if og_atoms is not None else {})))
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names,
                         plan_width=b["width"], bound_width=W,
+                        **({"or_groups": [g["name"] for g in e["or_groups"]]} if og_rows else {}),
+                        **({"or_group_atoms": og_atoms[e["or_groups"][0]["name"]]} if og_rows and og_atoms is not None else {}),
                         **({"bit_groups": bgrp["groups"]} if bgrp is not None and exact is None else {}),
                         **({"exact_bank_sites": True} if exact is not None else {})))
+        rep.extend(og_rows)
     txt = core_stations(t, txt, apply, htree, tcl, rep, source_sha, native_manifest, wrapper_sources)
     # plan cells with a FIRM site (no hard view): their flops at the site
     for c in soft_plan_cells(tn, t):

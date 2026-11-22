@@ -269,6 +269,11 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
                 choices=kinds.get(name,[])
                 if len(choices)!=1:problems.append(f'{name}: expected one canonical station instance, found {len(choices)}')
                 required.append(dict(inst=name,master=choices[0] if len(choices)==1 else 'ot_dp_st',kind=conn))
+    for row in report:      # QC-COLL-FAULT 11-21: parallel OR-group chains of a 1-bit out bus (kit_istations or_groups)
+        if row.get('or_group'):
+            for name in row.get('stations',[]):
+                if len(_instance_type_spans(text,'ot_dp_st',name))!=1:problems.append(f'{name}: expected one canonical station instance')
+                required.append(dict(inst=name,master='ot_dp_st',kind=row['or_group']))
     required=list({(r['inst'],r['master']):r for r in required}.values())
     return dict(schema='opentallas.kit_topology.v1',type=tn,source=str(source),
                 source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),

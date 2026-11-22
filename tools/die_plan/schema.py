@@ -3869,6 +3869,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["i
                        "stage0_um": {"type": "number"}, "stage_um": {"type": "number"}}}}
 
 
+# QC-COLL-FAULT 11-21 (kit_istations.or_group_stations): a 1-bit OUT bus fed by an OR cone of far-apart sources takes its
+# stations as parallel same-depth chains, one per group (atoms matched by regex on the bound OR-cone leaves, ["*"] = the
+# remainder); or_groups[0].regs_um = the row's regs_um (the priced chain).  0 cycles against the plain row.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["or_groups"] = {
+    "type": "array", "minItems": 2, "items": {"type": "object", "additionalProperties": False, "required": ["name", "match", "regs_um"],
+        "properties": {"name": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"},
+                       "match": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+                       "regs_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}},
+                       "note": {"type": "string"}}}}
+
+
 # CBC-RULES-1119 (COORD r713, amended 11-19): die-level close-by-construction key read by tools/die_plan/cbc_pass.py.
 # Absent or true = ON with the default thresholds (cbc_pass HOP_UM / DEPTH_LEVELS / TAP_SINKS / RESET_LEAF); false = off;
 # an object = on (enabled false turns it off) with per-die threshold overrides.
