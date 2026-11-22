@@ -32,3 +32,4 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tool
 - B1 d31350886cd (push24): plan_gate_pre EMITNAME (clock landing inst names vs bind sv_id), bind_rowcheck RELAYSINK (relay_depth rows vs elab leaves; real gate1 bind 32,992 rows -> 0).
 - push22/23 "REBASE CONFLICT in: <empty>" = I edited the clone while ot-push-main ran (tests passed). Rule: never touch the clone during a push.
 - Left /tmp/flowops_r2_kw/*.py on intel2 (read-only replay copies; not my scratch dir; not deleted).
+- PUSHED main 4396e129eff (push25): e6729610919 R1 FAMCAUSE, 0cceb43c4c3 AB-CONSUMED fix (ENV_CONFIG_FORMS merged with GEN_CONSUMED + d2196689499 _grt_cong_iters(budgets,tn)), 4396e129eff B1 EMITNAME/RELAYSINK. DONE posted (coord d6dff183c5). Next: canary ~10 ps gap, LEC dec_j6c.
