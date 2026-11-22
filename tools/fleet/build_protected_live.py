@@ -325,6 +325,8 @@ def live_attempt_paths(coord, out, canon, state_file=None):
 PROV_CACHE = os.path.expanduser("~/.local/state/prov_paths.json")
 POST_SKIP_LANES = ("FLEET-OPS-R", "DISK-RATE", "FLEET", "HUB-SYNC", "FLEET-OPS", "MERGE-QUEUE", "OT-TOOLS-SYNC", "KIT-WAVE")
 TREE_TOKEN = re.compile(r"\b(src_[A-Za-z0-9_]+)")
+POST_ITEM = re.compile(r"\(\d+\)")                                       # a ruling's numbered items "(1) ... (2) ..." are judged one by one
+DELETE_APPROVED = re.compile(r"may be deleted|delete APPROVED", re.I)
 DIE_PREFIX = (("src_kv_", "qwen_kvsys"), ("src_qc_", "qwen_compute"), ("src_head_", "s81_head"), ("src_s81_", "s81"), ("src_hbm_", "hbm"))
 POST_LINE = re.compile(r"^- (\d{4}-\d{2}-\d{2}) (\d{2}):(\d{2}|\dx)\b[^\[]*\[([^\]\s>]+)")
 
@@ -348,8 +350,11 @@ def post_trees(queue_file, out, canon, now=None, max_age_h=24.0, root="/srv/open
             continue
         if now - t > max_age_h * 3600 or t > now + 7200:
             continue
-        for tok in TREE_TOKEN.findall(ln):
-            out.add(canon(os.path.join(root, tok)))
+        for clause in POST_ITEM.split(ln):
+            if DELETE_APPROVED.search(clause):
+                continue        # COORD 11-22: a ruling that approves deleting a tree must not protect it (stripbody _r2 was kept by its own RULING)
+            for tok in TREE_TOKEN.findall(clause):
+                out.add(canon(os.path.join(root, tok)))
 
 
 def current_trees(coord, now=None):

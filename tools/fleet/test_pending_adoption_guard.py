@@ -38,6 +38,17 @@ class Posts(unittest.TestCase):
         out = set(); B.post_trees(q, out, os.path.normpath, now=now)
         self.assertEqual(out, {R + "kw45/src_qc_pin_eb_s4q9m5_tce8bcf97"})
 
+    def test_post_approving_a_delete_does_not_protect_the_tree_clean_aggr_r3(self):
+        q = tempfile.mktemp()
+        now = time.mktime(time.strptime("2026-11-22 04:00", "%Y-%m-%d %H:%M"))
+        open(q, "w").write("\n".join([
+            "- 2026-11-22 03:05 PST RULING [COORD] (1) FAM-X READY src_s81_pin_keep_work APPROVED. (2) FLOW-Y ASK APPROVED: its trees "
+            "kw45/src_s81_pin_a_work_r2, _r2b may be deleted via ot-delete. (3) other src_kv_pin_keep2 stays",
+            "- 2026-11-22 03:10 PST RULING [COORD] src_qc_pin_old_work delete APPROVED",
+        ]))
+        out = set(); B.post_trees(q, out, os.path.normpath, now=now)
+        self.assertEqual(out, {R + "kw45/src_s81_pin_keep_work", R + "kw45/src_kv_pin_keep2"})
+
     def test_current_trees_file_names_the_current_tree_and_its_adoption_time(self):
         c = tempfile.mkdtemp(); os.makedirs(c + "/autopilot"); os.makedirs(c + "/lanes/handoff")
         json.dump({"dies": {"qwen_compute": {"src": R + "kw45/src_qc_pin_x_d4"}}}, open(c + "/autopilot/kit_wave.json", "w"))
