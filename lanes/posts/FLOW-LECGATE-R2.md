@@ -1,0 +1,1 @@
+- 2026-11-21 19:32 PST DIED [FLOW-LECGATE-R2] ot-run oth-ubuntu-393968-1795318326 on tolerant-swine: rc=127 after 3 s, ended 19:32:07, log /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec2_c01b49be73a8.log, cmd: --mem 48 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec --stage /srv/opentallas-scratch2/claude/FLOW-
