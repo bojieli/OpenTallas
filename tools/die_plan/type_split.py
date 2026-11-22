@@ -103,6 +103,8 @@ LAND_PIN = re.compile(r"^(fclk_in|fclk_out|cland_fstart_in|cland_fstart_out)_(.*
 COLL_PIN = re.compile(r"^(cland_up_ready|cland_up_fault|fclk_out_cland_up|cland_dn_ready_(\d+)|cland_dn_fault_(\d+)|"
                       r"fclk_in_cland_dn_(\d+))$")
 START_PINS = ("cland_tstart_in", "cland_tstart_out", "cland_raw_reset_out")
+# HEAD region-monitor landing (FABLE-FIX-HEAD-LEP0N-R7): per-bus collector / raw reset START sideband pins
+HEAD_BUS_PIN = re.compile(r"^(cland_dn_ready|cland_dn_fault|cland_up_ready|cland_up_fault|rst_start_raw)_(.+)$")
 PIN_MARGIN = 2.16    # landing pin keep-in from a piece edge along the cut axis
 PIN_STEP = 0.96      # landing pin nudge step (two 0.48 tracks)
 # clock keys copied to every piece unchanged (HEAD gen-mode types, FABLE-FIX-HEAD-LEP0N-R6 11-21): budget / form scalars
@@ -113,6 +115,20 @@ CLOCK_COPY_KEYS = {"insertion_basis", "insertion_ff_ps", "landing_export_form", 
 
 class SplitError(ValueError):
     pass
+
+
+def port_face(ev, pr):
+    """die-frame face of a port at its src end.  HEAD gen-mode ports carry no face / window (both ends take their type's
+    bus geometry): resolve it the way the pin generator does (schema.Plan), without publishing it on the port."""
+    if pr.get("face"):
+        return pr["face"]
+    import schema
+    if not hasattr(ev, "_native_port_geometry"):
+        ev._native_port_geometry = schema.Plan(copy.deepcopy(ev.raw), ev.plan_path)
+    f = ev._native_port_geometry.ports[pr["id"]].get("face")
+    if f is None:
+        raise SplitError(f"port {pr['id']} has no face")
+    return f
 
 
 def rnd(v, n=6):
@@ -310,7 +326,8 @@ class TypeSplit:
                 if part not in names:
                     continue
                 p = names[part]
-                df = pr["face"] if (e == "src" or pr["src"]["part"] == "@die") else OPP[pr["face"]]
+                f = port_face(self.ev, pr)
+                df = f if (e == "src" or pr["src"]["part"] == "@die") else OPP[f]
                 ends[pr[e]["bus"]].append((pr, e, p, df))
         return ends
 
@@ -543,8 +560,15 @@ class TypeSplit:
             w, hh = hh, w
         tx, ty = (float(v) for v in tp["xy"][:2])
         if not (x - 2.0 <= tx <= x + w + 2.0 and y - 2.0 <= ty <= y + hh + 2.0):
-            raise SplitError(f"{self.tn}: core tap {name} at {tp['xy']} is not on its core {inst} "
-                             f"({x}, {y}) + ({w}, {hh}); re-site the tap with the core before the split")
+            # HEAD (FABLE-FIX-HEAD-LEP0N-R7 11-21): a pair core's tap is declared at its band-side source (hd_lep0N
+            # u_rg<i>.u_pair.clk, 250 um off the pair).  Legal when the tap point lies in the piece of its core.
+            v = (tx, ty)[self.cut.ax]
+            pc = self.core_piece(h)
+            if not (self.cut.lo(pc) - EPS <= v <= self.cut.hi(pc) + EPS):
+                raise SplitError(f"{self.tn}: core tap {name} at {tp['xy']} is not on its core {inst} "
+                                 f"({x}, {y}) + ({w}, {hh}) and not in its piece; re-site the tap with the core before "
+                                 f"the split")
+            return pc
         return self.core_piece(h)
 
     def split(self):
@@ -1729,6 +1753,7 @@ class TypeSplit:
             L.append(d)
         self._native_stage_groups(lc.get("native_stage_groups"), L)
         self.band_clip = []
+        busnames = {b["name"] for b in self.t.get("buses", [])}
         for p in lc.get("pins", []):
             m = LAND_PIN.match(p["name"])
             cm = COLL_PIN.match(p["name"])
@@ -1736,6 +1761,10 @@ class TypeSplit:
                 s = cut.ppiece(p["xy_um"], f"{self.tn} pin {p['name']}")
             elif m:
                 s = self.bp(m.group(2))
+            elif HEAD_BUS_PIN.match(p["name"]) and HEAD_BUS_PIN.match(p["name"]).group(2) in busnames:
+                s = self.bp(HEAD_BUS_PIN.match(p["name"]).group(2))      # HEAD per-bus sideband pin: follows its bus
+            elif HEAD_BUS_PIN.match(p["name"]) and p["name"].startswith("rst_start_raw_"):
+                s = cut.ppiece(p["xy_um"], f"{self.tn} pin {p['name']}")  # numbered raw reset START export: by position
             else:
                 raise SplitError(f"{self.tn}: landing pin {p['name']} not handled")
             q = copy.deepcopy(p) | {"xy_um": cut.sh(p["xy_um"], s)}
@@ -2303,9 +2332,23 @@ class Event:
                     if pr[e]["part"] not in names:
                         continue
                     p = names[pr[e]["part"]]
-                    df = pr["face"] if (e == "src" or pr["src"]["part"] == "@die") else OPP[pr["face"]]
+                    f = port_face(self, pr)
+                    df = f if (e == "src" or pr["src"]["part"] == "@die") else OPP[f]
                     lf = local_face(p.get("orient", "R0"), df)
                     if lf in ts.cut.axis_faces():
+                        continue
+                    if pr.get("window_um") is None:
+                        # a type-frame window (HEAD gen-mode ports carry no die window): the pins of BOTH types follow their
+                        # own bus window, so a clip here would also need the neighbour TYPE's window changed.  Fail closed
+                        # when it straddles a cut; otherwise nothing to clip.
+                        win = self._native_port_geometry.ports[pr["id"]].get("window_um")
+                        o, org, L = p.get("orient", "R0"), float(p["origin_um"][ts.cut.ax]), ts.cut.L
+                        flip = o in (("MX", "R180") if ts.cut.ax == 1 else ("MY", "R180"))
+                        loc = sorted([(org + L - v) if flip else (v - org) for v in win]) if win else None
+                        if loc and any(loc[0] + EPS < c < loc[1] - EPS for c in ts.cut.cuts):
+                            raise SplitError(f"{tn} port {pr['id']} bus {pr[e]['bus']}: type-frame window "
+                                             f"{loc[0]:.3f}..{loc[1]:.3f} straddles a cut; clip_windows cannot move it "
+                                             f"(the neighbour type's window would have to change too)")
                         continue
                     o = p.get("orient", "R0")
                     org = float(p["origin_um"][ts.cut.ax])

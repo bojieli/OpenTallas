@@ -1092,3 +1092,39 @@ def test_head_clock_scalars_are_known_and_start_keys_need_drop_clock_keys():
               reset_tree_anchor={})
     with pytest.raises(TS.SplitError, match=r"unhandled clock keys \['landing_reader_start', 'reset_tree_anchor'\]"):
         _head_keys_split(dict(clock=ck))._clock()
+
+
+# ---- HEAD gen-mode ports, pair core taps and per-bus landing pins (FABLE-FIX-HEAD-LEP0N-R7 11-21)
+class _Geo:
+    def __init__(self, ports):
+        self.ports = ports
+
+
+def test_port_face_of_a_port_without_face_comes_from_the_plan_geometry():
+    ev = _Ev({}, {})
+    assert TS.port_face(ev, dict(id="a", face="N")) == "N"
+    ev._native_port_geometry = _Geo({"kd__0": dict(face="W", window_um=[10.0, 20.0]), "x": dict()})
+    assert TS.port_face(ev, dict(id="kd__0", src=dict(part="ctl", bus="o"), dst=dict(part="lep", bus="i"))) == "W"
+    with pytest.raises(TS.SplitError, match="port x has no face"):
+        TS.port_face(ev, dict(id="x"))
+
+
+def test_pair_core_tap_in_the_band_is_legal_inside_its_cores_piece():
+    # hd_lep0N: u_rg<i>.u_pair.clk is declared at its band-side source, 250 um off the pair
+    def piece(xy):
+        ts = TS.TypeSplit.__new__(TS.TypeSplit)
+        ts.tn = "hd"
+        ts.cut = TS.Cut("x", [820.8], 1892.16)
+        ts.t = {"hard_cores": [{"inst": "u_rg0.u_pair", "origin_um": [967.68, 846.72], "outline_um": [777.6, 492.48]}]}
+        return ts._core_tap_piece({"kind": "core", "name": "u_rg0.u_pair.clk", "xy": xy})
+    assert piece([1328.88, 596.16]) == 1
+    with pytest.raises(TS.SplitError, match="not on its core .* and not in its piece"):
+        piece([467.04, 643.68])
+
+
+def test_head_per_bus_landing_pin_names():
+    m = TS.HEAD_BUS_PIN.match("cland_dn_ready_coll_i0")
+    assert m and m.group(2) == "coll_i0"
+    assert TS.HEAD_BUS_PIN.match("cland_up_fault_lepk_o0").group(2) == "lepk_o0"
+    assert TS.HEAD_BUS_PIN.match("rst_start_raw_3").group(2) == "3"
+    assert not TS.HEAD_BUS_PIN.match("cland_tstart_in") and not TS.HEAD_BUS_PIN.match("fclk_in_coll_i0")
