@@ -56,3 +56,9 @@ Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fa
 ## 05:2x
 - A2 GRT (50 iters): overflow 0 on every layer; station 675,1186 (channel); internal hold +30.04. run_kit route continuing (post-GRT gate / DRT). Waiting for OT_POSTCTS_GATE TT line in kit run_route.log.
 - LEVER-1 DONE/FAIL: exit 6 post-GRT gate; GRT overflow 2475 at x1200-1300 y300 + y800 (u_t0/u_cf views); TT pinreg est -162.76 triage FAIL. DRC term unproven. Posted 05:2x. No relaunch without COORD (kit config change would be needed for 50 iters = new private-spec).
+
+## 05:3x COORD: lever-1 rerun + channel variant, fold A2 row into J8
+- Lever-1 congestion cause (5_1_grt nets): u_t0 (ot_s81_sstn_base566, xbi in on bottom y294, xb out top) boxed: u_n6 node 2 um east of it; 266 xbi drivers packed in that 2-um slot (x1224 y337); payload_i station (536b) seated at 1230,261 below u_t0 feeding u_t0_payload bottom pins y380; xbi station at 1325,384. Second hotspot x1300-1437 y770-875 = u_lpad_x_i0 228 regs next to u_n10/u_n11.
+- specL1e (intel2 fam-s81-col-h10-r4/specL1e, run log runL1e.log): same plan + OT_GRT_CONG_ITERS=50, rt a9ed808a98d5 (--rt-floor-exempt, bind stamp), host epyc7, kit .../s81/18a2688b741/private/FAM-S81-COL-H10-R4/col_h10_r0_p4__t1__pvcc166a6d_1122051024.
+- specL1f: COL-T0-CHAN row (t0chan_row.py 1754bdf4ea97; ops rows_COL-T0-CHAN_J7L1.json c2a1c6c2194f, 6 family types): u_r0.u_n6 1226.88,319.68 -> 1373.76,319.68 halo 0.27 (free pocket x1339-1442 y260-449), opens 71-um channel east of u_t0; no clock refs to u_n6, taps legal. Plan file srcJ7L1e7/physical/die_plan/s81/plan_h2_2249_t0chan.json + 50 iters. Kit ..._1122051847. Waiter on both run logs reaching place/fail.
+- J8 fold-in posted 05:2x (PUSHED 5c07bb50adc): row file intel2 fam-s81-col-h10-r4/rows_COL-E15E-CHAN_J7.json c88f0eb10156.
