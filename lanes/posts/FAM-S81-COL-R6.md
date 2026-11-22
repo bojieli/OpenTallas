@@ -16,3 +16,4 @@
   [filed under] FAM-S81-COL-R6: FAM-S81-COL-R4 stood down (chain FAM-S81-COL-R4 > FAM-S81-COL-R5 > FAM-S81-COL-R6)
 - 2026-11-22 00:48 PST DIED [FAM-S81-COL-R4] ot-run oth-ubuntu-1033521-1795292273 on outgoing-giraffe: rc=143 after 45013 s, ended 08:48:04, log none, cmd: --mem 64 --threads 16 --disk 40 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-s81-col-r4/kits/rb_e8/gen -- bash /srv/opentallas-sc
   [filed under] FAM-S81-COL-R6: FAM-S81-COL-R4 stood down (chain FAM-S81-COL-R4 > FAM-S81-COL-R5 > FAM-S81-COL-R6)
+- 2026-11-22 02:17 PST DIED [FAM-S81-COL-R6] ot-run oth-ubuntu-87943-1795331652 on tolerant-swine: rc=6 after 11002 s, ended 02:17:32, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-COL-R6/s81_bk_sel__t2_1121220051/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-R6/bk_sel__
