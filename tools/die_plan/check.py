@@ -69,6 +69,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               clock.ft_hop_lockup (xtap flop / latch); one [xtap-count] line
   band_capacity (HEAD-PLAN-R4 11-17) landing band fill from PLANDIR/band_fill/<type>.json (band_capacity.py measure on the
               synthesized netlist), band area from the plan's current native_stage_groups rect: WARN > 0.7, ERROR > 1.0
+  landing_band_core (ERROR, FLOW-FLEET-R1 11-22, closure lever 7, landing_band_core.py) every landing band of a placed type
+              (clock.landing_contract bands / native_stage_groups / group_rects_um) clear of every core / macro footprint
+              (placement_boxes, no halo); touching is legal.  S81 kv_leaf t5: a regrid put vp cores on ft0_i / ft1_i / monitor_0
   tap_sink_cap (WARN default / --tap-sink-cap error, XTAP-SWEEP-1 11-11) a clock tap whose plan sink count exceeds gen_phys._tap_cap (3000 grid /
               1500 density; lower bound without a sink inventory); one [tapcap-count] line
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -3015,6 +3018,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     summ["kit_fit"] = check_kit_core_fit(P, R)          # KITFIT-1116: boxes at the kit's real offsets, every type
+    import landing_band_core as LBC                     # FLOW-FLEET-R1 11-22 lever 7: landing band x core/macro footprint = ERROR
+    summ["landing_band_core"] = LBC.check(P, R)
     import band_capacity as BCAP                        # HEAD-PLAN-R4 11-17: landing band fill (PLANDIR/band_fill/*.json)
     summ["band_capacity"] = BCAP.check(P, R, plan_dir)  # WARN fill > 0.7, ERROR > 1.0; silent when unmeasured
     summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
