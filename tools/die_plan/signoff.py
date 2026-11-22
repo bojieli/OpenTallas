@@ -1803,16 +1803,72 @@ if {[catch {
 '''.replace("@NAMES@", names)
 
 
-def check_setup_counts(text, ft_out=(), static_strap_endpoints=()):
+def signed_hard_instances(kit, src_tree=None):
+    """UNCONST-IN-HARDVIEW (COORD 11-22, COLROM a6098c6b5f): {physical instance: view dir} of the kit's hard cores whose view is SIGNED.
+    The instances and their view libs come from KIT/core_latency.json (rows inst / lib); the view's signoff.json sits next to the lib or
+    one directory up, under the lib path itself (absolute), the kit's src_tree (kit_rtl_paths.json) or SRC_TREE.  A view without a
+    readable SIGNED signoff.json gives nothing (fail closed: its endpoints still count)."""
+    out = {}
+    if not kit:
+        return out
+    kit = Path(kit)
+    try:
+        rows = json.loads((kit / "core_latency.json").read_text()).get("rows") or []
+    except (OSError, ValueError, AttributeError):
+        return out
+    roots = [Path(src_tree)] if src_tree else []
+    try:
+        st = json.loads((kit / "kit_rtl_paths.json").read_text()).get("src_tree")
+        if st:
+            roots.append(Path(st))
+    except (OSError, ValueError, AttributeError):
+        pass
+    seen = {}
+    for r in rows:
+        inst, lib = str(r.get("inst") or ""), str(r.get("lib") or "")
+        if not inst or not lib:
+            continue
+        if lib not in seen:
+            seen[lib] = None
+            cands = [Path(lib)] if Path(lib).is_absolute() else [root / lib for root in roots]
+            for lp in cands:
+                for d in (lp.parent, lp.parent.parent):
+                    try:
+                        if json.loads((d / "signoff.json").read_text()).get("verdict") == "SIGNED":
+                            seen[lib] = str(d)
+                            break
+                    except (OSError, ValueError, AttributeError):
+                        continue
+                if seen[lib]:
+                    break
+        if seen[lib]:
+            out[inst] = seen[lib]
+    return out
+
+
+def under_hard(ep, hard):
+    """the signed hard instance an endpoint name (inst/pin, '/' or '.' separated) is a pin of or under, else None"""
+    for h in hard:
+        for hh in {h, h.replace(".", "/")}:
+            if ep.startswith(hh + "/") or ep.startswith(hh + "."):
+                return h
+    return None
+
+
+def check_setup_counts(text, ft_out=(), static_strap_endpoints=(), hard_signed=()):
     """counts from check_setup output.  ft_out: declared 12.2a1 die-timed ft outputs -- listed (verbose) unconstrained
-    endpoints among them are counted as ft_die_timed, not as unconstrained core IO."""
+    endpoints among them are counted as ft_die_timed, not as unconstrained core IO.  hard_signed: physical instances of hard
+    cores whose view is SIGNED (UNCONST-IN-HARDVIEW): a listed endpoint that is a pin of / under one is an input of a signed
+    view without a check arc in its lib, counted as hard_view_unconstrained, not as unconstrained (OT_SIGNOFF_HARDVIEW_UNCONST=0 off)."""
     c = dict(unconstrained=0, unclocked=0, loops=0, multiple_clock=0, generated=0)
+    if os.environ.get("OT_SIGNOFF_HARDVIEW_UNCONST", "1") == "0":
+        hard_signed = ()
     lines = text.splitlines()
     for i, ln in enumerate(lines):
         m = re.search(r"There (?:are|is) (\d+) unconstrained endpoints?", ln)
         if m:
             c["unconstrained"] = int(m.group(1))
-            if ft_out or static_strap_endpoints:
+            if ft_out or static_strap_endpoints or hard_signed:
                 listed = []
                 for x in lines[i + 1:]:
                     if not x.startswith((" ", "\t")) or not x.strip():
@@ -1825,6 +1881,11 @@ def check_setup_counts(text, ft_out=(), static_strap_endpoints=()):
                 c["unconstrained"] -= len(static)
                 if static:
                     c["static_strap_endpoints"] = len(static)
+                hv = sorted(x for x in set(listed) - set(ft) - set(static) if under_hard(x, hard_signed))
+                if hv:
+                    c["unconstrained"] -= len(hv)
+                    c["hard_view_unconstrained"] = len(hv)
+                    c["hard_view_instances"] = sorted({under_hard(x, hard_signed) for x in hv})
         m = re.search(r"There (?:are|is) (\d+) register/latch pins? with no clock", ln)
         if m:
             c["unclocked"] = int(m.group(1))
@@ -1840,7 +1901,7 @@ def check_setup_counts(text, ft_out=(), static_strap_endpoints=()):
     return c
 
 
-def corner_result(parsed):
+def corner_result(parsed, hard_signed=()):
     kv = parsed["kv"]
     allck = [a for _, a, _ in parsed["ck"]]
     bnd = [a for b, a, _ in parsed["ck"] if b]
@@ -1874,7 +1935,7 @@ def corner_result(parsed):
     ftd = (kv.get("FT_DIE_TIMED") or "").split()
     ft_out = ftd[ftd.index("out") + 1:] if "out" in ftd else []
     static_strap_endpoints = parsed.get("static_strap_endpoints", [])
-    out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""), ft_out, static_strap_endpoints)
+    out["check_setup"] = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""), ft_out, static_strap_endpoints, hard_signed)
     if static_strap_endpoints:
         out["static_strap_endpoints"] = sorted(set(static_strap_endpoints))
     if ftd:
@@ -2076,7 +2137,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     with open(od / "sta.log", "w") as lf:
         rc = subprocess.call(cmd, shell=True, stdout=lf, stderr=subprocess.STDOUT)
     text = (od / "sta.log").read_text(errors="replace")
-    res = corner_result(parse_session(text))
+    res = corner_result(parse_session(text), signed_hard_instances(disc.get("kit")))
     res.update(corner=corner, rc=rc, macro_libs=mlibs, macro_missing=mmiss, clock_pin_cap=nomcap_label(od / "libraries.json"),
                errors=re.findall(r"\[ERROR[^\n]*", text)[:5])
     if ftd:
@@ -3147,9 +3208,40 @@ def cmd_refresh_coverage(a):
     return 0 if rec["verdict"] == "SIGNED" else 1
 
 
+def rescore_check_setup(rec, record_path, kit=None):
+    """UNCONST-IN-HARDVIEW: re-derive each done corner's check_setup counts from its own sta.log (<record dir>/<corner>/sta.log) with
+    the signed hard-core exclusion, no STA re-run.  -> {corner: (before, after)} of the unconstrained count where it changed"""
+    changed = {}
+    base = Path(record_path).resolve().parent
+    kit = kit or ((rec.get("discover") or {}).get("kit") if isinstance(rec.get("discover"), dict) else None) or rec.get("kit") \
+        or str(base.parent)
+    hard = signed_hard_instances(kit)
+    if not hard:
+        return changed
+    for c, x in (rec.get("corners") or {}).items():
+        lg = base / c / "sta.log"
+        if not (isinstance(x, dict) and x.get("done") and lg.is_file()):
+            continue
+        parsed = parse_session(lg.read_text(errors="replace"))
+        kv = parsed["kv"]
+        ftd = (kv.get("FT_DIE_TIMED") or "").split()
+        cs = check_setup_counts(parsed["blocks"].get("CHECK_SETUP", ""), ftd[ftd.index("out") + 1:] if "out" in ftd else [],
+                                parsed.get("static_strap_endpoints", []), hard)
+        before = (x.get("check_setup") or {}).get("unconstrained")
+        if cs.get("unconstrained") != before:
+            x["check_setup"] = cs
+            changed[c] = (before, cs.get("unconstrained"))
+    return changed
+
+
 def cmd_verdict(a):
     rec = json.loads(Path(a.record).read_text())
+    if getattr(a, "rescore_unconstrained", False):
+        for c, (b, n) in rescore_check_setup(rec, a.record, getattr(a, "kit", None)).items():
+            print(f"RESCORE {c} unconstrained {b} -> {n} (UNCONST-IN-HARDVIEW: endpoints under SIGNED hard-core views)")
     evaluate(rec, a.insertion_target)
+    if getattr(a, "rescore_unconstrained", False) and getattr(a, "write", False):
+        Path(a.record).write_text(json.dumps(rec, indent=1) + "\n")
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:
         print(f"  - {r}")
@@ -3202,6 +3294,10 @@ def main(argv=None):
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
+    v.add_argument("--rescore-unconstrained", action="store_true", help="UNCONST-IN-HARDVIEW: re-count check_setup from each corner sta.log "
+                   "with endpoints under SIGNED hard-core views excluded (no STA re-run); --write stores the record")
+    v.add_argument("--kit", help="kit dir (default: the record dir parent)")
+    v.add_argument("--write", action="store_true")
     rc_ = sub.add_parser("refresh-coverage", help="re-derive child-flop clock coverage of a finished record from its own "
                          "receipts (NOMCAP-MAP) and re-evaluate; --write to store")
     rc_.add_argument("record")
