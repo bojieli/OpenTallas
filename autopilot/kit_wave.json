@@ -41213,7 +41213,7 @@
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_postbind_1120021437"
    ],
    "hold_items": {
-    "col_h9_r0_p3__t1__cl0cd90c0e__*": "S81-DIE-R4 11-20: J5 reset relay rst_rl_137 site in macro gap u_ha/u_hb (OT_CLAND no legal row); fix in J6 (S81-J6-ASSEMBLY / RESET-RELAY-GEN-1530)",
+    "col_h9_r0_p3__t1__cl0cd90c0e__*": "SUPERSEDED by J7 col rows (j7-col-held-until-view-1122): old-plan col_h9_r0_p3 not started, running J6 kits keep going. owner=FAM-S81-COL-H10-R4 eta=2026-11-23 04:15 (J8)",
     "slice_station__t40__cl1ea9de02": "FAM-S81-SLICE-R6 11-22 (COORD, Codex stuck-rule scan) owner=FAM-S81-SLICE-R6 eta=2026-11-23 04:15 (J8). Old event a9ed808a98d relaunches on an unfixed reach cause (reader-START / u_rrl->cland_fstart class, same as t6/t29/t45). J8 slice rows (plan_j8_slice_v9) carry it; release = J8 apply or a SLICE-R6 J8-row proof kit PASS."
    },
    "auto_visual_review_skip": [
