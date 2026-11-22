@@ -22537,3 +22537,4 @@ FAILED [AUTOPILOT 84c5ab0332f5] 2026-11-21 22:18:50 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 22:22 PST DONE [kv-ringmac-r1] ot-push-main otpush-outgoing-giraffe-3390860 on outgoing-giraffe: rc=0 after 22 s, ended 06:22:55, log none, cmd: ot-push-main 
 - 2026-11-21 22:23 PST epyc9 at 2518 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 22:23 PST DIED [FABLE-FIX-S81-COLROM-R5] ot-run oth-ubuntu-2288963-1795320570 on tolerant-swine: rc=2 after 8016 s, ended 22:23:05, log /srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r5/route_e9.otrun.log, cmd: --mem 64 --threads 8 --disk 40 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private
