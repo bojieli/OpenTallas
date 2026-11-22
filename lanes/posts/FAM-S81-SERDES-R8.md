@@ -42,3 +42,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 01:00 PST DONE [FAM-S81-SERDES-R7] ot-push-main otpush-renewed-glider-3324528 on renewed-glider: rc=0 after 17 s, ended 09:00:02, log none, cmd: ot-push-main 
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-22 01:00 PST RESULT dec keep-th: official routed LEC (rt 404887a342b0 lec.py, unmodified) on dec_r7k 6_final.v = EQUIVALENT 28726/28726 (24098 by name, 2160 register pairs inductive, 0 unmatched). PUSHED main 132f74ad819 (RiBM keep on th, same function). Also PUSHED main a8ade98de24 RX_FRONT3 opt-in RTL (shell face+AM3+3 transport stages, child ot_s81_kp4_dec_lp_core_front3; off unless OT_S81_SERDES_RX_FRONT3) so J8 t4 rows can name it. dec_r7k sign-off: one internal FF hold endpoint -0.13 ps -> eco_loop hold ECO (R-MINIMAL eligible) running; export after SIGNED + LEC of the ECO netlist.
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
