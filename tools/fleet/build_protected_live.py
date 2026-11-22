@@ -72,14 +72,46 @@ def prose_paths(files, out, canon, now=None, max_age_h=24.0, skip=("COORD-REVIEW
             pass
 
 
+# FLOW-OPS-1300 item 13b (FLOW-CANARY retire pass 11-21 freed ~0 GB): a hub checkout rewrote the mtime of 457 / 488 lanes/handoff/*.json at 11-19 05:56, so 5-day-old
+# receipts counted as "recent", and a delete-pass receipt (E9_DELETE_GUARD_REAL_PASS_1116.json, its allow list) protected the 60 trees it had cleared for deletion.
+# The age is the date in the file name when it carries one (_1116, -1120, 20261120-...), else the mtime; delete / retire / cleanup receipts never protect.
+NAME_DATE = re.compile(r"(?:^|[_.-])(?:20\d\d)?(1[0-2]|0[1-9])([0-3]\d)(?=[_.-]|$)")
+RECEIPT_NAME = re.compile(r"delete|retire|reaper|cleanup|autoclean|reclaim|_freed", re.I)
+
+
+def name_age_h(base, now):
+    """hours since the newest MMDD / YYYYMMDD date token in a file name, None if it carries none"""
+    import datetime
+    t_now = datetime.datetime.fromtimestamp(now)
+    best = None
+    for m in NAME_DATE.finditer(os.path.splitext(base)[0]):
+        mo, dd = int(m.group(1)), int(m.group(2))
+        if not 1 <= dd <= 31:
+            continue
+        for y in (t_now.year, t_now.year - 1):
+            try:
+                d = datetime.datetime(y, mo, dd)
+            except ValueError:
+                break
+            if d <= t_now + datetime.timedelta(days=1):
+                a = (t_now - d).total_seconds() / 3600 - 24      # the whole named day counts as its date
+                best = a if best is None else min(best, a)
+                break
+    return None if best is None else max(best, 0.0)
+
+
 def event_paths(coord, out, canon, now=None, max_age_h=72.0):
     """(b) bind / LATCHECK / G0 inputs of in-flight plan events: structured json that names them (tree checks, handoff json: plan events, candidates, receipts), recent only"""
     now = now or time.time()
     for pat in ("autopilot/tree_checks/*", "lanes/handoff/*.json", "autopilot/*candidate*.json", "autopilot/events/*.json"):
         for f in glob.glob(os.path.join(coord, pat)):
             try:
-                if now - os.stat(f).st_mtime > max_age_h * 3600 or "_atomic_apply_" in os.path.basename(f):
-                    continue                        # a receipt of an apply that already happened is history, not an input
+                base = os.path.basename(f)
+                if now - os.stat(f).st_mtime > max_age_h * 3600 or "_atomic_apply_" in base or RECEIPT_NAME.search(base):
+                    continue                        # a receipt of an apply / delete pass that already happened is history, not an input
+                na = name_age_h(base, now)
+                if na is not None and na > max_age_h:
+                    continue                        # the named date wins over an mtime a checkout rewrote
                 paths_in(json.load(open(f)), out, canon)
             except (OSError, ValueError):
                 pass
