@@ -32,3 +32,4 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
 
 ## COORD item 11-22 lever 7 landing band x core G0 check: DONE main b7e262fd60
 - tools/die_plan/landing_band_core.py + check.py wiring (ERROR landing_band_core); existing findings S81 t3/t32, KV hg/hgi (16) posted.
+- COORD ruling error-on-new/warn-inherited + own-core exclusion: main b40d177ee8 + 53fba95dad; per-die list lanes/handoff/LANDING-BAND-CORE-1122.tsv (HEAD r17b 14 new hd_lep0N; QC V3 11-13 new; S81 2 / KV 8 inherited).
