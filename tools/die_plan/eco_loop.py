@@ -912,6 +912,20 @@ def stage_mismatch(pd):
     return "OT_PRD STAGE_MISMATCH" in t
 
 
+def route_keep_rcx_logs(pd):
+    """RCX cannot extract the kept-wire DRT checkpoint (NEARMISS serdes t13, Nov 22)."""
+    marker = "[ERROR ODB-0420] tmg_conn::detachTilePins: tilepin inside iterm."
+    logs = []
+    for name in ("prd_count_p1_tc.log", "prd_count_p1_bc.log"):
+        try:
+            lines = (Path(pd) / name).read_text(errors="replace").splitlines()
+        except OSError:
+            continue
+        if marker in lines:
+            logs.append(name)
+    return logs
+
+
 def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE, prev=None, tag="", repair_rc="",
             trim=True, keep_route=True, watch_stop=None, residual=False):
     """one ECO iteration from routed dir src into root/i<n><tag> (a single-mode kit's t<N> pass first into
@@ -1018,6 +1032,12 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             if flexpa_sig11(pd):
                 it["flexpa_sig11"] = True
                 return end("ERROR", f"ECO {v} session SIGSEGV in DRT pin access (FlexPA SIG11 class, run_prd.log)")
+            if rc == 6 and env["OT_PRD_FROM"] in {"route", "final"}:
+                rcx_logs = route_keep_rcx_logs(pd)
+                if rcx_logs:
+                    it["route_keep_rcx_logs"] = rcx_logs
+                    return end("ERROR", f"ECO {v} RCX extraction failed on the route-kept detailed checkpoint "
+                               f"(ODB-0420, {', '.join(rcx_logs)})")
             return end("ERROR", f"ECO {v} route / clock-freeze check / finish failed (prd_result.json)")
         # the ECO overrides steer only the ECO route: the next pass and the sign-off start from the kit's own config
         if (pd / "config.mk").is_file():

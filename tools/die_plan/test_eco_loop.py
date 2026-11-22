@@ -633,6 +633,32 @@ def test_flexpa_sig11_retried_once_with_placement_repair_rc(tmp_path):
     assert "OT_PRD_REPAIR_RC" not in runs[0] and runs[1]["OT_PRD_REPAIR_RC"] == "placement"
 
 
+@pytest.mark.parametrize("drc, classified", [(0, True), (3, False)])
+def test_rcx_tilepin_failure_keeps_exact_pass_evidence(tmp_path, drc, classified):
+    class RcxFailure(Fake):
+        def __call__(self, cmd, **kw):
+            if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh"):
+                self.calls.append((cmd, kw.get("env") or {}))
+                for corner in ("tc", "bc"):
+                    (Path(cmd[2]) / f"prd_count_p1_{corner}.log").write_text(
+                        "[ERROR ODB-0420] tmg_conn::detachTilePins: tilepin inside iterm.\n"
+                    )
+                return 6
+            return super().__call__(cmd, **kw)
+
+    k = kit(tmp_path)
+    f = RcxFailure([None])
+    res = E.run_loop(k, base_rec(k, rec(-20, 2, drc=drc)), tmp_path / "eco", run=f, tools=Path(E.HERE))
+    assert res["verdict"] == "ERROR"
+    assert len([cmd for cmd, _ in f.calls if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh")]) == 1
+    iteration = res["iterations"][0]
+    if classified:
+        assert iteration["route_keep_rcx_logs"] == ["prd_count_p1_tc.log", "prd_count_p1_bc.log"]
+        assert "RCX extraction failed on the route-kept detailed checkpoint" in iteration["reason"]
+    else:
+        assert "route_keep_rcx_logs" not in iteration
+
+
 def test_non_sig11_route_failure_not_retried(tmp_path):
     k = kit(tmp_path)
     res = E.run_loop(k, base_rec(k, rec(-20, 2)), tmp_path / "eco", run=Fake([None]), tools=Path(E.HERE))
