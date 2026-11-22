@@ -864,6 +864,27 @@ def save_json(path, obj):
     os.replace(tmp, path)
 
 
+# COORD ruling 11-22 (owner rule: proofs, ECOs and hold-only jobs are exempt from unsignable cancels; lanes own their private kits): a NO-PROGRESS or
+# GRT-STUCK job whose kit is a lane's own (a kit-wave .../private/<LANE>/... spec, or a dir under a lane's scratch dir) is REPORTED to that lane and the
+# hub, never auto-cancelled.  Shared roots below /srv/opentallas-scratch*/claude/ are not lane dirs.
+LANE_OWN_VERDICTS = ("NO-PROGRESS", GRT_STUCK)
+SHARED_ROOT_RE = re.compile(r"^(kw\d+-wave.*|kw45|autopilot|rt|ot-jobs|warm|tree-cache|counted|mq-gate|git|flow-canary|signed-export.*)$")
+_LANE_KIT_RE = re.compile(r"/srv/opentallas-scratch\d*/claude/([A-Za-z0-9][A-Za-z0-9._-]*)/")
+_PRIV_RE = re.compile(r"/kit-wave/[^/]+/[^/]+/private/([A-Za-z0-9][A-Za-z0-9._-]*)/")
+
+
+def lane_own_kit(kit):
+    """-> the owning lane-ish name when KIT is a lane's private kit (kit-wave private/<LANE>/ spec or a lane scratch dir), else ''.  Pure."""
+    k = (kit or "").rstrip("/") + "/"
+    m = _PRIV_RE.search(k)
+    if m:
+        return m.group(1)
+    m = _LANE_KIT_RE.search(k)
+    if m and not SHARED_ROOT_RE.match(m.group(1)):
+        return m.group(1)
+    return ""
+
+
 BAD_VERDICTS = ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_STUCK)      # GRT_LABEL is deliberately NOT here: it never cancels; GRT-STUCK does (FLOW-FLEET-R1)
 
 
@@ -879,6 +900,11 @@ def decide(rows, reported, now, act):
         if not bad:
             continue
         healthy = [r for r in rs if r["verdict"] not in BAD_VERDICTS]
+        own = [lane_own_kit(r.get("kit")) for r in bad if r["verdict"] in LANE_OWN_VERDICTS]
+        if own and all(own):
+            for r in bad:
+                r["action"] = "REPORT-ONLY: lane-own kit (%s decides; never auto-cancelled)" % own[0]
+            continue
         standalone = unit is None and all(r.get("lec_only") for r in bad) and not healthy
         if healthy or (unit is None and not standalone):
             for r in bad:
@@ -1163,6 +1189,23 @@ def hub(now=None, post=True):
             qlines.append(f"- {stamp} NEEDS-LANE [NOPROG-WATCHDOG -> COORD] {r['type']}: DESIGN-FAIL class GRT-CONGESTION on {r['host']} at {r['stage']} "
                           f"({(r.get('why') or '')[:90]}; {(r.get('detail') or '')[:160]}). Label only, the job keeps running; no unchanged retry.")
     seen["labelled"] = sorted(labelled)
+    told = seen.setdefault("lane_own_told", {})
+    for r in rows:
+        a_ = r.get("action") or ""
+        if r["verdict"] in LANE_OWN_VERDICTS and a_.startswith("REPORT-ONLY: lane-own kit"):
+            k = f"{r['host']}|{r.get('key')}"
+            if k in told:
+                continue
+            told[k] = now
+            owner = owner_of([r])
+            txt = (f"NOTICE [NOPROG-WATCHDOG -> {owner}] {r['verdict']} on your own kit {r.get('kit')} ({r['host']} {r.get('unit')} {r['stage']}, job {r['age_h']} h): "
+                   f"{(r.get('why') or '')[:160]}; {(r.get('detail') or '')[:120]}. Not cancelled (lane-own kit, COORD 11-22): cancel it yourself with ot-run --cancel "
+                   f"<unit> if it cannot sign, or post KEEP {r.get('unit')} <why>.")
+            qlines.append(f"- {stamp} {txt}")
+            if post and owner != "COORD":
+                _post("NOPROG-WATCHDOG", txt)
+    for k in [k for k, t in told.items() if now - t > 3 * 86400]:
+        del told[k]
     done = set(seen["posted"])
     for a in new_actions:
         if a["type"] in done:
@@ -1270,9 +1313,23 @@ def lane_from_path(path, coord=None):
     return ""
 
 
+def _private_lane(path, coord=None):
+    m = _PRIV_RE.search((path or "").rstrip("/") + "/")
+    if not m:
+        return ""
+    want = m.group(1).lower()
+    try:
+        for f in os.listdir(os.path.join(coord or COORD, "lanes/posts")):
+            if f.endswith(".md") and f[:-3].lower() == want:
+                return f[:-3]
+    except OSError:
+        pass
+    return m.group(1)
+
+
 def owner_of(rs):
     """the job's OT_LANE, else the lane of its tree / kit path (most units carry no OT_LANE), else COORD (wave jobs)"""
-    return (next((r["lane"] for r in rs if r.get("lane")), "") or next((l for r in rs for l in [lane_from_path(r.get("kit") or ""), lane_from_path(r.get("ident") or "")] if l), "")
+    return (next((r["lane"] for r in rs if r.get("lane")), "") or next((l for r in rs for l in [_private_lane(r.get("kit") or ""), lane_from_path(r.get("kit") or ""), lane_from_path(r.get("ident") or "")] if l), "")
             or "COORD")
 
 

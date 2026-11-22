@@ -62,11 +62,11 @@ def test_protected_rows_and_recent_posts(tmp_path):
 
 def test_grt_stuck_is_a_bad_verdict_reported_then_cancelled():
     assert nw.GRT_STUCK in nw.BAD_VERDICTS
-    r = row(verdict=nw.GRT_STUCK, key="k1")
+    r = row(verdict=nw.GRT_STUCK, key="k1", kit=GENKIT, work=GENKIT)
     reported = {}
     assert nw.decide([r], reported, NOW, act=True) == [] and r["action"].startswith("REPORTED")
     reported["k1"] = NOW
-    r2 = row(verdict=nw.GRT_STUCK, key="k1")
+    r2 = row(verdict=nw.GRT_STUCK, key="k1", kit=GENKIT, work=GENKIT)
     assert nw.decide([r2], reported, NOW + nw.MIN_REPORT_AGE_S, act=True) == [r2["unit"]]
 
 
@@ -75,3 +75,35 @@ def test_load_spare_inputs(tmp_path):
     (tmp_path / "posts_recent.tsv").write_text("1800000000\tL\ttext with\ttab\nbad line\n")
     prot, posts = nw.load_spare_inputs(str(tmp_path))
     assert prot == ["/srv/a", "/srv/b"] and posts == [(1800000000.0, "L", "text with\ttab")]
+
+
+WAVEKIT_GEN = "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/b05c98f7919/items/ot_s81sl_leaf__t73/gen/ot_s81sl_leaf__t73"
+PRIVKIT = "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-H10-R4/col_h10_r2__t1__x/gen/col"
+
+
+def test_lane_own_kit_paths():
+    assert nw.lane_own_kit(LANEKIT) == "lockup-station-r2"
+    assert nw.lane_own_kit(PRIVKIT) == "FAM-S81-COL-H10-R4"
+    assert nw.lane_own_kit(GENKIT) == "" and nw.lane_own_kit(WAVEKIT) == ""
+    assert nw.lane_own_kit("/srv/opentallas-scratch2/claude/autopilot/closed/s81/x") == ""
+    assert nw.lane_own_kit("") == ""
+
+
+def test_lane_own_kits_are_reported_never_cancelled():
+    """COORD 11-22: GRT-STUCK and NO-PROGRESS on a lane's private kit -> REPORT-ONLY; wave kits still cancel on the second pass"""
+    for v in (nw.GRT_STUCK, "NO-PROGRESS"):
+        for kit in (LANEKIT, PRIVKIT):
+            r = row(verdict=v, key="k1", kit=kit)
+            assert nw.decide([r], {"k1": NOW - 99999}, NOW, act=True) == []
+            assert r["action"].startswith("REPORT-ONLY: lane-own kit")
+    r = row(verdict=nw.GRT_STUCK, key="k2", kit=GENKIT)
+    assert nw.decide([r], {"k2": NOW - 99999}, NOW, act=True) == [r["unit"]]
+    r = row(verdict="CANCEL-NOW", key="k3", kit=LANEKIT)                      # HBM parked / LEC > 24 h keep their rule
+    assert nw.decide([r], {"k3": NOW - 99999}, NOW, act=True) == [r["unit"]]
+
+
+def test_owner_of_private_spec_names_the_lane(tmp_path, monkeypatch):
+    monkeypatch.setattr(nw, "COORD", str(tmp_path))
+    (tmp_path / "lanes/posts").mkdir(parents=True)
+    (tmp_path / "lanes/posts/FAM-S81-COL-H10-R4.md").write_text("")
+    assert nw.owner_of([row(kit=PRIVKIT)]) == "FAM-S81-COL-H10-R4"
