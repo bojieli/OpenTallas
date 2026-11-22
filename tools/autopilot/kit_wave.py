@@ -16269,7 +16269,7 @@ def visual_reject_discard(AP, cfg, st, notices, jobs=None):
         if rec.get("status") != "ENQUEUED" or not visual_signoff_gated(cfg, rec):
             continue
         s, v = visual_signoff_state(cfg, rec)
-        if s != "reject":
+        if s != "reject" or not visual_reject_holds(rec, v):
             continue
         why = (f"WAIT-FORM: visual verdict {v} for this attempt (visual gate at sign-off, OWNER 11-13): routed build discarded, "
                "not counted; the type relaunches when its form fingerprint changes")
@@ -16281,6 +16281,19 @@ def visual_reject_discard(AP, cfg, st, notices, jobs=None):
 def visual_advisory(rec):
     """FLEET-WATCH-R5 11-21 (COORD): a pending visual verdict / stale-for-review is advisory for every die except parked hbm, whose rows keep their holds"""
     return rec.get("die") != "hbm"
+
+
+def auto_geom_passed(rec):
+    """VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, COORD; owner rule "visual review never blocks"): the row's own AUTO-GEOM PASSED, so its
+    place renders exist.  Such a row routes at once: a pending or ISSUES visual verdict is advisory (visual_pending, GEOM
+    queue); only an explicit BAD verdict holds it (WAIT-FORM).  PASS-COND (AUTO-GEOM FAIL granted) or no geom record keeps the
+    review holds (no render because geom failed)."""
+    return str(rec.get("geom_verdict") or "").strip().upper() == "PASS" and bool(rec.get("geom_dir"))
+
+
+def visual_reject_holds(rec, verdict):
+    """True when a rejecting verdict holds this row: BAD always; ISSUES only without an AUTO-GEOM PASS (VISUAL-NOBLOCK)"""
+    return verdict == "BAD" or (verdict in VISUAL_REJECT and not auto_geom_passed(rec))
 
 
 def visual_hold(cfg, rec):
@@ -16297,22 +16310,22 @@ def visual_hold(cfg, rec):
         # verdict that already rejects THIS build (BAD / ISSUES, bound to its form) keeps it at WAIT-FORM.
         s, v = visual_signoff_state(cfg, rec)
         return (f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
-                if s == "reject" else None)
+                if s == "reject" and visual_reject_holds(rec, v) else None)
     vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
     v = visual_verdicts().get(vk)
     if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
         txt = (f"place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
                "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
                "lanes/GEOM-REVIEW.md")
-        if not visual_advisory(rec):
+        if not visual_advisory(rec) and not auto_geom_passed(rec):
             return "WAIT-VISUAL: " + txt
         rec["visual_pending"] = "WAIT-VISUAL (advisory): " + txt
         return None                      # FLEET-WATCH-R5 11-21: advisory, route proceeds
     if v in VISUAL_ACCEPT:
         return None
-    if v in VISUAL_REJECT:
+    if v in VISUAL_REJECT and visual_reject_holds(rec, v):
         return f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
-    if not visual_advisory(rec):
+    if not visual_advisory(rec) and not auto_geom_passed(rec):
         return "WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt" + (f" (now {v})" if v else "")
     rec["visual_pending"] = "WAIT-VISUAL (advisory): place done, a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md is pending for this attempt" + (f" (now {v})" if v else "")
     return None                          # FLEET-WATCH-R5 11-21: pending = advisory, route proceeds
@@ -16376,7 +16389,7 @@ def visual_queue_publish(cfg, st):
             # a hold_items pattern, so their route_hold text is never re-evaluated there.
             vk = (rec.get("die"), rec.get("item"), int(rec.get("attempt") or 0))
             v = visual_verdicts().get(vk)
-            if v in VISUAL_REJECT and verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+            if v in VISUAL_REJECT and visual_reject_holds(rec, v) and verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
                 rec["route_hold"] = f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
                 rec["updated"] = time.time()
                 continue
@@ -16459,9 +16472,14 @@ def required_route_hold(cfg, rec):
         return None
     kit = review_kit_location(rec)
     verdict = exact_kit_visual_verdict(rec, viewed_only=True)
-    if verdict in VISUAL_REJECT:
+    if verdict in VISUAL_REJECT and visual_reject_holds(rec, verdict):
         return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
     if verdict not in VISUAL_ACCEPT:
+        if auto_geom_passed(rec):
+            # VISUAL-NOBLOCK: a required review is queued, never a route hold, once AUTO-GEOM passed (16 hand-posted verdicts 11-21)
+            rec["visual_pending"] = (f"WAIT-VISUAL (advisory): AUTO-GEOM PASS, routed; GEOM VERDICT pending for kit="
+                                     f"{kit or '<host:/kit/path>'}" + (f" (now {verdict})" if verdict else ""))
+            return None
         return f"WAIT-VISUAL: view the placement and record a GEOM VERDICT with kit={kit or '<host:/kit/path>'}"
     return None
 
@@ -16475,11 +16493,11 @@ def route_hold_reason(cfg, rec):
     elif review_before_route(cfg, rec):
         kit = review_kit_location(rec)
         verdict = exact_kit_visual_verdict(rec)
-        if verdict in VISUAL_REJECT:
+        if verdict in VISUAL_REJECT and visual_reject_holds(rec, verdict):
             return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
         if verdict not in VISUAL_ACCEPT:
             # FLEET-WATCH-R5 11-21 (COORD, owner rule "visual review never blocks route or sign-off"): a pending verdict is advisory; enqueue_pass logs it, the GEOM queue lists it, the row routes
-            if not visual_advisory(rec):
+            if not visual_advisory(rec) and not auto_geom_passed(rec):
                 return f"WAIT-VISUAL: record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
             rec["visual_pending"] = f"WAIT-VISUAL (advisory): record a GEOM VERDICT for this attempt with kit={kit or '<host:/kit/path>'}"
     if FG.stops_off_die(cfg, rec.get("die")):      # OWNER 11-18 (hbm excluded): owner-review route holds (route_hold_items, WAIT-VISUAL / WAIT-FORM) hold nothing; visual review is advisory
