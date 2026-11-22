@@ -1,1 +1,2 @@
 - 2026-11-21 19:25 PST RESUMED (successor of R4). Adopted proof unit oth-ubuntu-1136304-1795317736 (epyc9, six-content 0-cycle equivalence, pass line PARTS_EQUIV_PASS); waiter armed. Next: type_split.py nets/native_stage_groups for gen-mode dies (rebase b569b7b5972c), split spec W|E 907.2/1745.28, PD rows, private kits, r17a reseal.
+- 2026-11-21 19:32 PST DONE [fable-fix-head-lep0n-r5] ot-push-main otpush-tolerant-swine-2652531 on tolerant-swine: rc=0 after 0 s, ended 19:32:07, log none, cmd: ot-push-main --help
