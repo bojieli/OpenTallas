@@ -88,3 +88,11 @@ def test_radius_bound_is_300(tmp_path):
     p.write_text(json.dumps({}))
     with pytest.raises(SystemExit):
         TS.main([str(p), "--radius-um", "301", "--rows", str(tmp_path / "r.json")])
+
+
+def test_cap_option_only_tightens(monkeypatch):
+    """TAP-GRID-R5 11-22 (Fable lever 8): --cap 1650 splits to min(plan cap, 1650); a larger --cap never loosens the plan cap."""
+    import inspect
+    src = inspect.getsource(TS.split_type)
+    assert "min(cap, gen_phys._tap_cap(t))" in src
+    assert "--cap" in inspect.getsource(TS.main)

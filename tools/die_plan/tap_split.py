@@ -144,7 +144,7 @@ def split_type(P, tn, radius, max_add, cap=None):
         return rep, []
     tp = schema.tap_grid(P, tn)
     sinks = TP.sink_sites(P, tn)
-    cap = int(cap or gen_phys._tap_cap(t))
+    cap = int(min(cap, gen_phys._tap_cap(t)) if cap else gen_phys._tap_cap(t))   # --cap only tightens the plan cap
     rep["cap"], rep["radius_um"], rep["taps_before"] = cap, radius, len(tp)
     if not sinks:
         rep["status"] = "NO_SINKS"
@@ -291,7 +291,7 @@ def apply_rows(raw, rows_by_type):
         ck[key] = list(ck[key]) + rows
 
 
-def recheck(P, types, radius):
+def recheck(P, types, radius, cap_max=None):
     """G0's own count (check.tap_sink_loads rule) on the written plan."""
     import schema, taps as TP, gen_phys
     out = {}
@@ -299,6 +299,7 @@ def recheck(P, types, radius):
         tp = schema.tap_grid(P, tn)
         loads = TP.tap_loads([(x, y) for _, x, y in tp], TP.sink_sites(P, tn))
         cap = gen_phys._tap_cap(P.types[tn])
+        cap = min(cap, cap_max) if cap_max else cap
         out[tn] = dict(taps=len(tp), max_load=int(round(max(n for n, _ in loads))),
                        over_cap=sum(1 for n, _ in loads if round(n) > cap),
                        max_radius=round(max(f for _, f in loads), 3),
@@ -313,6 +314,7 @@ def main(argv=None):
     ap.add_argument("--over", action="store_true", help="all types with a tap over the cap or radius (default: all)")
     ap.add_argument("--radius-um", type=float, default=300.0)
     ap.add_argument("--max-add", type=int, default=200)
+    ap.add_argument("--cap", type=int, default=0, help="split to min(plan cap, CAP) sinks/tap (Fable lever 8: 1650); default = plan cap")
     ap.add_argument("--rows", required=True)
     ap.add_argument("--out-plan")
     ap.add_argument("--tools", help="tools/die_plan of the tree to plan with (default: next to this file)")
@@ -329,7 +331,7 @@ def main(argv=None):
     reps, rows_by_type = [], {}
     for tn in types:
         try:
-            rep, rows = split_type(P, tn, a.radius_um, a.max_add)
+            rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None)
         except Exception as ex:
             rep, rows = dict(type=tn, status="ERROR", why=f"{type(ex).__name__}: {str(ex)[:200]}"), []
         if rows:
@@ -340,13 +342,13 @@ def main(argv=None):
               f"{b.get('max_load')}->{f.get('max_load', b.get('max_load'))}/{rep.get('cap')}, over cap {b.get('over_cap')}->"
               f"{f.get('over_cap', b.get('over_cap'))}, max radius {b.get('max_radius')}->{f.get('max_radius', b.get('max_radius'))}"
               f"{' ' + rep['why'] if rep.get('why') else ''}", flush=True)
-    out = dict(tool="tap_split.py", plan=str(a.plan), radius_um=a.radius_um,
+    out = dict(tool="tap_split.py", plan=str(a.plan), radius_um=a.radius_um, cap=a.cap or None,
                rows={tn: {"key": k, "rows": r} for tn, (k, r) in rows_by_type.items()}, report=reps)
     if a.out_plan:
         apply_rows(raw, rows_by_type)
         Path(a.out_plan).write_text(json.dumps(raw, indent=1, sort_keys=False) + "\n")
         P2 = S.Plan(json.loads(Path(a.out_plan).read_text()), a.out_plan)
-        out["recheck"] = recheck(P2, sorted(rows_by_type), a.radius_um)
+        out["recheck"] = recheck(P2, sorted(rows_by_type), a.radius_um, a.cap or None)
         bad = {k: v for k, v in out["recheck"].items() if v["over_cap"] or v["over_radius"]}
         print(f"TAP_SPLIT RECHECK {len(out['recheck'])} types on {a.out_plan}: {len(bad)} still over cap/radius", flush=True)
     Path(a.rows).write_text(json.dumps(out, indent=1) + "\n")
