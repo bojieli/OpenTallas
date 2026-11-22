@@ -71,7 +71,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               synthesized netlist), band area from the plan's current native_stage_groups rect: WARN > 0.7, ERROR > 1.0
   landing_band_core (ERROR, FLOW-FLEET-R1 11-22, closure lever 7, landing_band_core.py) every landing band of a placed type
               (clock.landing_contract bands / native_stage_groups / group_rects_um) clear of every core / macro footprint
-              (placement_boxes, no halo); touching is legal.  S81 kv_leaf t5: a regrid put vp cores on ft0_i / ft1_i / monitor_0
+              (placement_boxes, no halo); touching is legal.  S81 kv_leaf t5: a regrid put vp cores on ft0_i / ft1_i / monitor_0.
+              ERROR only for an overlap new or larger vs --band-base PLAN (the event's base plan of record); inherited = WARN
+              (listed in the summary); no --band-base = WARN for all
   tap_sink_cap (WARN default / --tap-sink-cap error, XTAP-SWEEP-1 11-11) a clock tap whose plan sink count exceeds gen_phys._tap_cap (3000 grid /
               1500 density; lower bound without a sink inventory); one [tapcap-count] line
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -2960,7 +2962,7 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=(), routed_reach=None):
+        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=(), routed_reach=None, band_base=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -3019,7 +3021,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["geometry"] = check_geometry(P, R)
     summ["kit_fit"] = check_kit_core_fit(P, R)          # KITFIT-1116: boxes at the kit's real offsets, every type
     import landing_band_core as LBC                     # FLOW-FLEET-R1 11-22 lever 7: landing band x core/macro footprint = ERROR
-    summ["landing_band_core"] = LBC.check(P, R)
+    summ["landing_band_core"] = LBC.check(P, R, base=band_base)   # COORD 11-22: ERROR new/larger vs --band-base, WARN inherited
     import band_capacity as BCAP                        # HEAD-PLAN-R4 11-17: landing band fill (PLANDIR/band_fill/*.json)
     summ["band_capacity"] = BCAP.check(P, R, plan_dir)  # WARN fill > 0.7, ERROR > 1.0; silent when unmeasured
     summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
@@ -3192,6 +3194,8 @@ def main(argv=None):
                     help="ROUTED-REACH (routed_reach.py): internal_stations hops routed round the hard cores whose LEF OBS "
                          "reaches the partition signal ceiling; a hop over the reach is a WARN (default, or budgets."
                          "routed_reach), error = ERROR, off = skipped")
+    ap.add_argument("--band-base", help="landing_band_core: base plan of record of this event; its overlaps are inherited (WARN), new / "
+                    "larger ones ERROR; without it every overlap is a WARN (publish_gate passes the die's live plan)")
     ap.add_argument("--repo-root", help="checkout holding the core views for --timing-audit (default: this checkout)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
@@ -3204,11 +3208,13 @@ def main(argv=None):
                   core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, tap_sinks=a.tap_sinks, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
                   full_cut=a.full_cut, street_rule=a.street_rule, timing_audit=a.timing_audit, repo_root=a.repo_root, routed_reach=a.routed_reach,
-                  plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
+                  plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None,
+                  band_base=S.load(a.band_base) if a.band_base else None)
     ne = len(R.errors())
     npv = len(R.pendings())
     nw = len(R.items) - ne - npv
-    n_adv = sum(1 for i in R.items if i["check"] in ("seam_hop", "cuts_full_band"))   # advisory: not a --strict failure
+    n_adv = sum(1 for i in R.items if i["check"] in ("seam_hop", "cuts_full_band")
+                or (i["check"] == "landing_band_core" and i["level"] == "WARN"))   # inherited band overlaps never fail --strict   # advisory: not a --strict failure
     ok = ne == 0 and not (a.strict and nw - n_adv)
     verdict = ("PENDING-VIEW" if npv else "PASS") if ok else "FAIL"   # PENDING-VIEW is never PASS
     rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()), verdict=verdict, pending_view=npv,

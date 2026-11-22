@@ -345,7 +345,7 @@ def check_bound_params(tree, bind_out):
 
 
 def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None):
+               bind_out=None, band_base=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
     tree, plan = str(tree), str(plan)
     work = work or tempfile.mkdtemp(prefix="pubgate-")
@@ -367,7 +367,12 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     rc1, t1 = _sub(pre, tree)
     Path(work).mkdir(parents=True, exist_ok=True)
     g0_dir = tempfile.mkdtemp(prefix="g0-", dir=work)  # never accept a stale report after a crashed checker
-    rc2, t2 = _sub([py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", g0_dir], tree)
+    g0 = [py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", g0_dir]
+    # LANDING-BAND-CORE (COORD 11-22): the die's live plan of record is the base: its band x core overlaps are inherited (WARN), new ones ERROR.
+    # Only a check.py that knows --band-base gets it (an older tree's checker has no landing_band_core at all).
+    if band_base and os.path.isfile(band_base) and "--band-base" in Path(dp, "check.py").read_text(errors="replace"):
+        g0 += ["--band-base", band_base]
+    rc2, t2 = _sub(g0, tree)
     try:
         g0_report = json.loads(Path(g0_dir, "g0_report.json").read_text())
     except (OSError, ValueError):
@@ -391,7 +396,7 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -401,7 +406,8 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else "")
            + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or [])
            + "".join(f" --scan {q(str(x))}" for x in scan or []) + "".join(f" --scan-asbuilt {q(str(x))}" for x in scan_asbuilt or [])
-           + (f" --bind-out {q(str(bind_out))}" if bind_out else ""))
+           + (f" --bind-out {q(str(bind_out))}" if bind_out else "")
+           + (f" --band-base {q(str(band_base))}" if band_base else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -512,6 +518,13 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         rec["item"] = pick
         wr = str(cfgd.get("work_root") or json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("work_root") or "/tmp")
         baseline = load_g0_baseline(marker.get("g0_baseline") or obj.get("g0_baseline"))
+        # LANDING-BAND-CORE (COORD 11-22): base plan of record = candidate.band_base, else the die's LIVE plan in the coord config (pre-apply)
+        try:
+            live = (json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("dies") or {}).get(die) or {}
+        except (OSError, ValueError):
+            live = {}
+        band_base = marker.get("band_base") or obj.get("band_base") or (live.get("plan") if live.get("plan") != plan else None)
+        rec["band_base"] = band_base
         rows_proofs = list(marker.get("rows_proofs") or obj.get("rows_proofs") or [])
         rec["rows_proofs"] = rows_proofs
         # FOREIGN-TREE (advisory): what the candidate's kit RTL will read besides the plan and the marker asbuilt
@@ -539,7 +552,7 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             t0 = time.time()
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
-                                                                       bind_out=bind_out)))(
+                                                                       bind_out=bind_out, band_base=band_base)))(
                 static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
             rec["checks"].update(st)
             rec["static_s"] = round(time.time() - t0, 1)
@@ -580,6 +593,7 @@ def main(argv=None):
     s.add_argument("--scan", action="append", default=[], help="extra input file scanned for paths in another published tree (sidecar, bind.f ...); advisory")
     s.add_argument("--scan-asbuilt", action="append", default=[], help="extra as-built manifest whose base / land_r8 must lie in the tree; advisory")
     s.add_argument("--bind-out", help="kit_rtl.bind_out of the candidate; outside the tree = advisory FOREIGN-TREE finding")
+    s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
     c.add_argument("--die", required=True)
@@ -589,7 +603,8 @@ def main(argv=None):
     a = P.parse_args(argv)
     if a.cmd == "static":
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
-                                                   rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out)))
+                                                   rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
+                                                   band_base=a.band_base)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)

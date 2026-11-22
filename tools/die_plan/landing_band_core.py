@@ -11,10 +11,23 @@ Bands (type frame, clock.landing_contract):
   native_stage_groups.groups[]    rect_um (tag)        native stage landing bands (stage:*)
   group_rects_um[<name>]          rect                 explicit landing group rects
 Footprints: placement_obstacles.placement_boxes(t) (hard cores, placed macros, probe blockages; no halo).  Touching edges is legal;
-any positive-area intersection is an ERROR (check `landing_band_core`), one finding per (type, band, core) with the covered share of
-the band.  Read-only, stdlib + the plan's own schema helpers.
+one finding per (type, band, core) with the covered share of the band.
 
-  python3 tools/die_plan/landing_band_core.py PLAN_OR_TYPE.json [--types REGEX]     (exit 1 on any overlap)
+OWN LANDING CORE (COORD 11-22, KV HGI: 106 hg/hgi bands '100 % covered' by their own landing core): a band's own landing core / landing
+group cell IS the band's footprint and is never an overlap.  Own = named cl_<band> / u_cland_<band> (band name with non-word chars as _,
+'#i' rect suffix dropped) or a box equal to the band rect within OWN_TOL_UM on every edge (track offsets: 0.012 um seen).  An own core
+by name that no longer sits on its band (the KV R6d class: core moved, band left behind) is still reported, as 'own landing core
+offset from its band'.
+
+ERROR ON NEW, WARN ON INHERITED (COORD ruling 11-22: no new restrictive gate; KV D28 / S81 J8 must not fail on inherited overlaps):
+  base = the plan of record the event starts from (check.py --band-base PLAN; publish_gate passes the die's live plan).  A finding whose
+  (type stem, band kind, band, core) overlaps in the base by at least the same area (1e-3 um2 slack) is INHERITED -> WARN
+  "[inherited]"; a new overlap, or one the event makes larger, -> ERROR "[new]" / "[larger]".  Type stem = name without __cl<hash>
+  (events re-hash type names).  No base given -> every finding is a WARN "[no base]": new and inherited cannot be told apart.
+  The G0 report summary lists the inherited findings (landing_band_core.inherited) for the owners' next event.
+Read-only, stdlib + the plan's own schema helpers.
+
+  python3 tools/die_plan/landing_band_core.py PLAN_OR_TYPE.json [--base PLAN] [--types REGEX]   (exit 1 on any new/larger overlap)
 """
 import json
 import re
@@ -25,6 +38,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 CHECK = "landing_band_core"
 EPS = 1e-6
+OWN_TOL_UM = 0.5
 
 
 def _rect(r):
@@ -69,6 +83,21 @@ def inter(a, b):
     return w * h if w > EPS and h > EPS else 0.0
 
 
+def _norm(name):
+    return re.sub(r"\W", "_", str(name).split("#")[0])
+
+
+def own_core(band, core):
+    """True when CORE is the band's own landing core / landing group cell by name"""
+    b = _norm(band)
+    leaf = core.rsplit(".", 1)[-1]
+    return leaf in (f"cl_{b}", f"u_cland_{b}", f"cl_{b.replace('stage_', '', 1)}") or core in (f"cl_{band}", f"u_cland_{band}")
+
+
+def same_rect(a, b, tol=OWN_TOL_UM):
+    return all(abs(float(x) - float(y)) <= tol for x, y in zip(a, b))
+
+
 def findings_type(tn, t, boxes=None):
     """-> [dict(type, kind, band, rect, core, core_rect, overlap_um2, share)]"""
     if boxes is None:
@@ -78,10 +107,12 @@ def findings_type(tn, t, boxes=None):
     for kind, name, r in band_rects(t):
         area = (r[2] - r[0]) * (r[3] - r[1])
         for core, cb in sorted(boxes.items()):
+            if same_rect(r, cb):
+                continue                                   # the band's own landing core / group cell: its footprint, not an overlap
             a = inter(r, cb)
             if a > EPS:
                 out.append(dict(type=tn, kind=kind, band=name, rect=r, core=core, core_rect=[float(v) for v in cb],
-                                overlap_um2=round(a, 3), share=round(a / area, 3)))
+                                overlap_um2=round(a, 3), share=round(a / area, 3), own=own_core(name, core)))
     return out
 
 
@@ -90,24 +121,78 @@ def fmt(r):
 
 
 def message(f):
+    if f.get("own"):
+        return (f"{f['type']}: landing {f['kind']} {f['band']} {fmt(f['rect'])}: its own landing core {f['core']} {fmt(f['core_rect'])} is "
+                f"offset from the band ({f['overlap_um2']:g} um2, {100 * f['share']:.0f} % of the band shared): the core moved and left the band "
+                f"behind (KV R6d class); move the band with its core")
     return (f"{f['type']}: landing {f['kind']} {f['band']} {fmt(f['rect'])} overlaps core {f['core']} {fmt(f['core_rect'])} "
             f"({f['overlap_um2']:g} um2, {100 * f['share']:.0f} % of the band): move the core or re-site the band before any kit "
             f"(a regrid onto a band fails global place)")
 
 
-def check(P, R, types=None, boxes_fn=None):
-    """G0: one ERROR per (type, band, core) overlap over the types used by a partition (all types when none is placed)"""
-    used = {inst["type"] for inst in P.parts.values()} if getattr(P, "parts", None) else set()
-    n, hit = 0, set()
-    for tn in sorted(P.types):
-        if (used and tn not in used) or (types and not re.search(types, tn)):
+def stem(tn):
+    return re.sub(r"__cl[0-9a-f]{6,}", "", tn)
+
+
+def key(f):
+    return (stem(f["type"]), f["kind"], f["band"], f["core"])
+
+
+def plan_findings(types, used=(), only=None, boxes_fn=None):
+    out = []
+    for tn in sorted(types):
+        if (used and tn not in used) or (only and not re.search(only, tn)):
             continue
-        t = P.types[tn]
-        for f in findings_type(tn, t, boxes_fn(t) if boxes_fn else None):
-            R.err(CHECK, message(f), type=tn)
-            n += 1
-            hit.add(tn)
-    return dict(findings=n, types=len(hit))
+        t = types[tn]
+        out += findings_type(tn, t, boxes_fn(t) if boxes_fn else None)
+    return out
+
+
+def base_index(base_raw, boxes_fn=None):
+    """base plan raw dict (partition_types / partitions) -> {key: max overlap_um2}"""
+    if not base_raw:
+        return None
+    types = base_raw.get("partition_types") or {}
+    used = {p["type"] for p in base_raw.get("partitions", []) if isinstance(p, dict) and p.get("type")}
+    idx = {}
+    for f in plan_findings(types, used, boxes_fn=boxes_fn):
+        idx[key(f)] = max(idx.get(key(f), 0.0), f["overlap_um2"])
+    return idx
+
+
+def classify(findings, idx, slack=1e-3):
+    """-> [(status, finding, base_um2)]; status new | larger | inherited | nobase"""
+    out = []
+    for f in findings:
+        if idx is None:
+            out.append(("nobase", f, None))
+            continue
+        b = idx.get(key(f))
+        out.append(("new" if b is None else ("larger" if f["overlap_um2"] > b + slack else "inherited"), f, b))
+    return out
+
+
+def check(P, R, types=None, boxes_fn=None, base=None):
+    """G0: ERROR per new / larger (type, band, core) overlap vs the base plan of record, WARN per inherited one (or every one when no base
+    is given), over the types used by a partition (all types when none is placed)"""
+    used = {inst["type"] for inst in P.parts.values()} if getattr(P, "parts", None) else set()
+    idx = base_index(base, boxes_fn) if isinstance(base, dict) and "partition_types" in base else base   # raw plan, or a ready index
+    rows = classify(plan_findings(P.types, used, types, boxes_fn), idx)
+    cnt = {"new": 0, "larger": 0, "inherited": 0, "nobase": 0}
+    inherited = []
+    for st, f, b in rows:
+        cnt[st] += 1
+        msg = message(f)
+        if st == "new":
+            R.err(CHECK, "[new] " + msg, type=f["type"])
+        elif st == "larger":
+            R.err(CHECK, f"[larger: base {b:g} um2] " + msg, type=f["type"])
+        elif st == "inherited":
+            R.warn(CHECK, f"[inherited: base {b:g} um2] " + msg, type=f["type"])
+            inherited.append(msg)
+        else:
+            R.warn(CHECK, "[no base plan: new vs inherited unknown] " + msg, type=f["type"])
+    return dict(findings=len(rows), errors=cnt["new"] + cnt["larger"], base=idx is not None, **cnt, inherited_list=inherited[:400])
 
 
 def main(argv=None):
@@ -115,18 +200,19 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan", help="plan json (partition_types) or one type json")
     ap.add_argument("--types")
+    ap.add_argument("--base", help="base plan of record: findings it already has (same or smaller) are inherited (WARN)")
     a = ap.parse_args(argv)
     raw = json.loads(Path(a.plan).read_text())
     types = raw.get("partition_types") or {Path(a.plan).stem: raw}
     used = {p["type"] for p in raw.get("partitions", [])}
+    idx = base_index(json.loads(Path(a.base).read_text())) if a.base else None
+    rows = classify(plan_findings(types, used, a.types), idx)
     n = 0
-    for tn in sorted(types):
-        if (used and tn not in used) or (a.types and not re.search(a.types, tn)):
-            continue
-        for f in findings_type(tn, types[tn]):
-            print("ERROR " + message(f))
-            n += 1
-    print(f"LANDING-BAND-CORE {'FAIL ' + str(n) + ' overlap(s)' if n else 'PASS'}")
+    for st, f, b in rows:
+        lvl = "ERROR" if st in ("new", "larger") else "WARN"
+        n += lvl == "ERROR"
+        print(f"{lvl} [{st}{'' if b is None else ' base %g um2' % b}] " + message(f))
+    print(f"LANDING-BAND-CORE {'FAIL' if n else 'PASS'}: {n} new/larger, {len(rows) - n} inherited/unbased")
     return 1 if n else 0
 
 
