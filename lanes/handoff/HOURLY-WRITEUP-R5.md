@@ -12,3 +12,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 549 any / 439 current (+1/+1 vs 02:18). QC 62/127, S81 46/394, HEAD 25/26, KV 6/56, HBM 4/84. Deferred 21, retired 89. Private kits: no renders yet for col_h9_r0 or hub_Ei (ls private dirs on intel2 found no png); use FAM-S81-* private dirs under kw43-wave-1109n/.../a9ed808a98d/private. Round fired 03:05 (COORD asked 03:1x).
 ## State 03:30 PST 11-22
 549 any / 439 current flat vs 03:05 (round fired 03:15 because wait.sh targets the next :15 more than 5 min away; COORD wants ~04:15, so next waiter armed for 04:15). GEOM: canary place renders only (private kits have none yet).
+## State 04:30 PST 11-22
+549 any / 439 current FLAT since 02:32 sign-off. Wave 2/2/0; disk all above floors. Owner ruling 04:14: no-growth rule withdrawn. GEOM: found private kit renders under epyc9 .../a9ed808a98d/private/<LANE>/<kit>/geom/auto_geom.png (use ls -dt then find). Next round 05:15 (wait2.sh with hard-coded time; edit 04:15 -> 05:15).
