@@ -109,7 +109,7 @@
       "model_um": 332.64,
       "review": "nb_i12_exact_review.png",
       "native": "v3_nb_fixed_roots_native, epyc7 unit 2329784",
-      "status": "PENDING native and physical timing"
+      "status": "GREEN strict and as-bound LATCHECK 1921/1921; actual placement, CTS and timing PENDING"
     },
     {
       "plan": "v3_cb_site_only_bundle.json",
@@ -134,7 +134,7 @@
       },
       "evidence": "Exact V2 flat q00 placed ingress 667/659 µm and d6 up to 926 µm. Existing station counts, port windows, hard macro locations and measured t24/t25/t93/t100 taps preserved. The three CBX i30 cases measure 434–435 µm with zero over-cycle before re-siting.",
       "native": "v3_cb_site_only_native, epyc7 unit 2500497",
-      "status": "PENDING native and physical timing"
+      "status": "GREEN strict and as-bound LATCHECK 1921/1921; actual placement, CTS and timing PENDING"
     },
     {
       "types": [
