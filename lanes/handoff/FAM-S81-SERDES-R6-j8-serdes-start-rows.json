@@ -1,0 +1,1182 @@
+{
+ "schema": "fable_fix_s81_strobe.start_rows.v1",
+ "lane": "FAM-S81-SERDES-R6",
+ "base_plan_sha256": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646 (J7eL6 a6771d121e95, sealed intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work)",
+ "tool": "tools/die_plan/reach_rules.py fix --rules 1 --types ^serdes__ (tree tools 404887a342b0)",
+ "cycles": "0 data cycles; START boot depth only",
+ "dropped_ops": [
+  "/partition_types/serdes__t16/clock/landing_writer_start"
+ ],
+ "note": "COORD/FABLE-PD-S81-2000 + STROBE handoff: t16 landing_writer_start dropped (7-stage W1 form wins, separate row); kept t3 reader+writer, t4/t13/t15 writer, t16 reader. NOT yet bind-gated on J7eL6.",
+ "ops": [
+  {
+   "op": "set",
+   "path": "/partition_types/serdes__t13/clock/landing_writer_start",
+   "value": {
+    "depth": 3,
+    "share_trunk": true,
+    "branches": {
+     "ft0_o": {
+      "stages": [
+       {
+        "xy_um": [
+         4.32,
+         294.032
+        ],
+        "raw_reset": "rst_n_t37"
+       },
+       {
+        "xy_um": [
+         4.32,
+         520.768
+        ],
+        "raw_reset": "rst_n_t40"
+       },
+       {
+        "xy_um": [
+         4.32,
+         407.136
+        ],
+        "raw_reset": "rst_n_t37"
+       }
+      ]
+     },
+     "ft2_o": {
+      "stages": [
+       {
+        "xy_um": [
+         4.32,
+         294.032
+        ],
+        "raw_reset": "rst_n_t37"
+       },
+       {
+        "xy_um": [
+         4.32,
+         520.768
+        ],
+        "raw_reset": "rst_n_t40"
+       },
+       {
+        "xy_um": [
+         4.32,
+         634.4
+        ],
+        "raw_reset": "rst_n_t40"
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "op": "set",
+   "path": "/partition_types/serdes__t15__cla2127225/clock/landing_writer_start",
+   "value": {
+    "depth": 3,
+    "share_trunk": true,
+    "branches": {
+     "ft1_o": {
+      "stages": [
+       {
+        "xy_um": [
+         12.0,
+         358.528
+        ],
+        "raw_reset": "rst_n_t49"
+       },
+       {
+        "xy_um": [
+         4.32,
+         634.4
+        ],
+        "raw_reset": "rst_n_t49"
+       },
+       {
+        "xy_um": [
+         4.32,
+         634.4
+        ],
+        "raw_reset": "rst_n_t49"
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "op": "set",
+   "path": "/partition_types/serdes__t16/clock/landing_reader_start",
+   "value": {
+    "depth": 11,
+    "share_trunk": true,
+    "branches": {
+     "ft1_i": {
+      "stages": [
+       {
+        "xy_um": [
+         2828.065,
+         454.872
+        ],
+        "raw_reset": "rst_n_t15"
+       },
+       {
+        "xy_um": [
+         2514.347,
+         454.872
+        ],
+        "raw_reset": "rst_n_t37"
+       },
+       {
+        "xy_um": [
+         2200.628,
+         454.872
+        ],
+        "raw_reset": "rst_n_t34"
+       },
+       {
+        "xy_um": [
+         1886.91,
+         454.872
+        ],
+        "raw_reset": "rst_n_t13"
+       },
+       {
+        "xy_um": [
+         1573.191,
+         454.872
+        ],
+        "raw_reset": "rst_n_t12"
+       },
+       {
+        "xy_um": [
+         1259.472,
+         454.872
+        ],
+        "raw_reset": "rst_n_t11"
+       },
+       {
+        "xy_um": [
+         1003.796,
+         512.914
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         690.077,
+         512.914
+        ],
+        "raw_reset": "rst_n_t40"
+       },
+       {
+        "xy_um": [
+         376.359,
+         512.914
+        ],
+        "raw_reset": "rst_n_t35"
+       },
+       {
+        "xy_um": [
+         62.64,
+         512.914
+        ],
+        "raw_reset": "rst_n_t41"
+       },
+       {
+        "xy_um": [
+         62.64,
+         512.914
+        ],
+        "raw_reset": "rst_n_t41"
+       }
+      ]
+     },
+     "coll_i0": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         197.648
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         203.048
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         208.448
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         213.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         173.742
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         173.742
+        ],
+        "raw_reset": "rst_n_t33"
+       }
+      ]
+     },
+     "ft0_i": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         197.648
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         203.048
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         208.448
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         213.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         186.848
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         400.279
+        ],
+        "raw_reset": "rst_n_t33"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         614.91
+        ],
+        "raw_reset": "rst_n_t31"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         614.91
+        ],
+        "raw_reset": "rst_n_t31"
+       }
+      ]
+     }
+    },
+    "origin_rect_um": [
+     2865.12,
+     180.368,
+     2882.4,
+     193.328
+    ]
+   }
+  },
+  {
+   "op": "set",
+   "path": "/partition_types/serdes__t3/clock/landing_reader_start",
+   "value": {
+    "depth": 11,
+    "share_trunk": true,
+    "branches": {
+     "ft2_i": {
+      "stages": [
+       {
+        "xy_um": [
+         2678.358,
+         507.136
+        ],
+        "raw_reset": "rst_n_t15"
+       },
+       {
+        "xy_um": [
+         2351.404,
+         507.136
+        ],
+        "raw_reset": "rst_n_t22"
+       },
+       {
+        "xy_um": [
+         2024.451,
+         507.136
+        ],
+        "raw_reset": "rst_n_t29"
+       },
+       {
+        "xy_um": [
+         1697.497,
+         507.136
+        ],
+        "raw_reset": "rst_n_t28"
+       },
+       {
+        "xy_um": [
+         1443.06,
+         434.619
+        ],
+        "raw_reset": "rst_n_t42"
+       },
+       {
+        "xy_um": [
+         1370.455,
+         180.27
+        ],
+        "raw_reset": "rst_n_t3"
+       },
+       {
+        "xy_um": [
+         1043.501,
+         180.27
+        ],
+        "raw_reset": "rst_n_t45"
+       },
+       {
+        "xy_um": [
+         716.548,
+         180.27
+        ],
+        "raw_reset": "rst_n_t48"
+       },
+       {
+        "xy_um": [
+         389.594,
+         180.27
+        ],
+        "raw_reset": "rst_n_t39"
+       },
+       {
+        "xy_um": [
+         62.64,
+         180.27
+        ],
+        "raw_reset": "rst_n_t50"
+       },
+       {
+        "xy_um": [
+         62.64,
+         73.134
+        ],
+        "raw_reset": "rst_n_t49"
+       }
+      ]
+     },
+     "ft3_i": {
+      "stages": [
+       {
+        "xy_um": [
+         2678.358,
+         507.136
+        ],
+        "raw_reset": "rst_n_t15"
+       },
+       {
+        "xy_um": [
+         2351.404,
+         507.136
+        ],
+        "raw_reset": "rst_n_t22"
+       },
+       {
+        "xy_um": [
+         2024.451,
+         507.136
+        ],
+        "raw_reset": "rst_n_t29"
+       },
+       {
+        "xy_um": [
+         1697.497,
+         507.136
+        ],
+        "raw_reset": "rst_n_t28"
+       },
+       {
+        "xy_um": [
+         1443.06,
+         434.619
+        ],
+        "raw_reset": "rst_n_t42"
+       },
+       {
+        "xy_um": [
+         1370.455,
+         180.27
+        ],
+        "raw_reset": "rst_n_t3"
+       },
+       {
+        "xy_um": [
+         1043.501,
+         180.27
+        ],
+        "raw_reset": "rst_n_t45"
+       },
+       {
+        "xy_um": [
+         716.548,
+         180.27
+        ],
+        "raw_reset": "rst_n_t48"
+       },
+       {
+        "xy_um": [
+         389.594,
+         180.27
+        ],
+        "raw_reset": "rst_n_t39"
+       },
+       {
+        "xy_um": [
+         62.64,
+         180.27
+        ],
+        "raw_reset": "rst_n_t50"
+       },
+       {
+        "xy_um": [
+         62.64,
+         287.406
+        ],
+        "raw_reset": "rst_n_t50"
+       }
+      ]
+     },
+     "ft0_i": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         649.488
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         654.888
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         660.288
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         665.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         406.815
+        ],
+        "raw_reset": "rst_n_t41"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         173.742
+        ],
+        "raw_reset": "rst_n_t51"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         173.742
+        ],
+        "raw_reset": "rst_n_t51"
+       }
+      ]
+     },
+     "coll_i0": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         649.488
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         654.888
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         660.288
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         665.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2874.42,
+         512.046
+        ],
+        "raw_reset": "rst_n_t47"
+       },
+       {
+        "xy_um": [
+         2874.96,
+         625.71
+        ],
+        "raw_reset": "rst_n_t52"
+       }
+      ]
+     },
+     "ft1_i": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         649.488
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         654.888
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         660.288
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         665.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2874.42,
+         512.046
+        ],
+        "raw_reset": "rst_n_t47"
+       },
+       {
+        "xy_um": [
+         2873.88,
+         398.382
+        ],
+        "raw_reset": "rst_n_t41"
+       }
+      ]
+     }
+    },
+    "origin_rect_um": [
+     2865.12,
+     632.208,
+     2882.4,
+     645.168
+    ]
+   }
+  },
+  {
+   "op": "set",
+   "path": "/partition_types/serdes__t3/clock/landing_writer_start",
+   "value": {
+    "depth": 11,
+    "share_trunk": true,
+    "branches": {
+     "ft0_o": {
+      "stages": [
+       {
+        "xy_um": [
+         2823.12,
+         343.272
+        ],
+        "raw_reset": "rst_n_t41"
+       },
+       {
+        "xy_um": [
+         2504.05,
+         343.272
+        ],
+        "raw_reset": "rst_n_t43"
+       },
+       {
+        "xy_um": [
+         2332.262,
+         182.496
+        ],
+        "raw_reset": "rst_n_t6"
+       },
+       {
+        "xy_um": [
+         1999.699,
+         182.496
+        ],
+        "raw_reset": "rst_n_t5"
+       },
+       {
+        "xy_um": [
+         1667.136,
+         182.496
+        ],
+        "raw_reset": "rst_n_t4"
+       },
+       {
+        "xy_um": [
+         1334.573,
+         182.496
+        ],
+        "raw_reset": "rst_n_t3"
+       },
+       {
+        "xy_um": [
+         1002.01,
+         182.496
+        ],
+        "raw_reset": "rst_n_t2"
+       },
+       {
+        "xy_um": [
+         669.446,
+         182.496
+        ],
+        "raw_reset": "rst_n_t48"
+       },
+       {
+        "xy_um": [
+         336.883,
+         182.496
+        ],
+        "raw_reset": "rst_n_t39"
+       },
+       {
+        "xy_um": [
+         4.32,
+         182.496
+        ],
+        "raw_reset": "rst_n_t50"
+       },
+       {
+        "xy_um": [
+         4.32,
+         182.496
+        ],
+        "raw_reset": "rst_n_t50"
+       }
+      ]
+     },
+     "ft1_o": {
+      "stages": [
+       {
+        "xy_um": [
+         2695.213,
+         507.136
+        ],
+        "raw_reset": "rst_n_t15"
+       },
+       {
+        "xy_um": [
+         2385.114,
+         507.136
+        ],
+        "raw_reset": "rst_n_t22"
+       },
+       {
+        "xy_um": [
+         2075.014,
+         507.136
+        ],
+        "raw_reset": "rst_n_t29"
+       },
+       {
+        "xy_um": [
+         1764.915,
+         507.136
+        ],
+        "raw_reset": "rst_n_t28"
+       },
+       {
+        "xy_um": [
+         1454.816,
+         507.136
+        ],
+        "raw_reset": "rst_n_t20"
+       },
+       {
+        "xy_um": [
+         1148.94,
+         502.913
+        ],
+        "raw_reset": "rst_n_t27"
+       },
+       {
+        "xy_um": [
+         934.618,
+         407.136
+        ],
+        "raw_reset": "rst_n_t18"
+       },
+       {
+        "xy_um": [
+         624.518,
+         407.136
+        ],
+        "raw_reset": "rst_n_t9"
+       },
+       {
+        "xy_um": [
+         314.419,
+         407.136
+        ],
+        "raw_reset": "rst_n_t39"
+       },
+       {
+        "xy_um": [
+         4.32,
+         407.136
+        ],
+        "raw_reset": "rst_n_t50"
+       },
+       {
+        "xy_um": [
+         4.32,
+         407.136
+        ],
+        "raw_reset": "rst_n_t50"
+       }
+      ]
+     },
+     "ft2_o": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         627.888
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         622.488
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         617.088
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         611.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2881.44,
+         414.944
+        ],
+        "raw_reset": "rst_n_t41"
+       },
+       {
+        "xy_um": [
+         2881.44,
+         183.52
+        ],
+        "raw_reset": "rst_n_t51"
+       },
+       {
+        "xy_um": [
+         2881.44,
+         70.624
+        ],
+        "raw_reset": "rst_n_t40"
+       }
+      ]
+     },
+     "ft3_o": {
+      "stages": [
+       {
+        "xy_um": [
+         2879.16,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         627.888
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         622.488
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         617.088
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         611.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2873.76,
+         638.688
+        ],
+        "raw_reset": "rst_n_t52"
+       },
+       {
+        "xy_um": [
+         2881.44,
+         414.944
+        ],
+        "raw_reset": "rst_n_t41"
+       },
+       {
+        "xy_um": [
+         2881.44,
+         183.52
+        ],
+        "raw_reset": "rst_n_t51"
+       },
+       {
+        "xy_um": [
+         2881.44,
+         296.416
+        ],
+        "raw_reset": "rst_n_t41"
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "op": "set",
+   "path": "/partition_types/serdes__t4/clock/landing_writer_start",
+   "value": {
+    "depth": 3,
+    "share_trunk": true,
+    "branches": {
+     "ft0_o": {
+      "stages": [
+       {
+        "xy_um": [
+         4.32,
+         294.032
+        ],
+        "raw_reset": "rst_n_t35"
+       },
+       {
+        "xy_um": [
+         4.32,
+         520.768
+        ],
+        "raw_reset": "rst_n_t36"
+       },
+       {
+        "xy_um": [
+         4.32,
+         634.4
+        ],
+        "raw_reset": "rst_n_t36"
+       }
+      ]
+     },
+     "ft1_o": {
+      "stages": [
+       {
+        "xy_um": [
+         4.32,
+         294.032
+        ],
+        "raw_reset": "rst_n_t35"
+       },
+       {
+        "xy_um": [
+         4.32,
+         520.768
+        ],
+        "raw_reset": "rst_n_t36"
+       },
+       {
+        "xy_um": [
+         4.32,
+         407.136
+        ],
+        "raw_reset": "rst_n_t35"
+       }
+      ]
+     }
+    }
+   }
+  }
+ ]
+}
