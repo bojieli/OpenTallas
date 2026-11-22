@@ -44,3 +44,5 @@ PROVISIONAL 07:10: H10-R4 S81-EOL-VIEW-PUSH2 = 21 hard-core view LEF replacement
 NOTE 07:0x: J7 PLACE-SETUP-STOP dsdv_slice_lepw_mus_LP t2 -347 ps (LOCAL-CONE-SCATTER class, count_r chain) -> LEPE-4; leaf t31 (old event) -> LEAF-R10.
 NOTE 07:33: H10-R4 vprobe5 positive control: J8 hw/he/payload536 views CLEAN (0 Lef58EolKeepOut vs 96 on J6 hw); EOL-VIEW-PUSH2 probes continue.
 UPDATE 07:33: EOL-VIEW-PUSH2 split: (i) xrt1, xrt3, capc5r = HOLD (tool made J6 view worse 96 -> 1348 EOL), J8 only if their probes show fix <= orig; (ii) other 18 LEFs stay provisional J8 (cfg7_seq_bfp probed 0 -> 0).
+IN 08:16: FAM-S81-DSDV-R1 iq_C t1 rows = lanes/handoff/FAM-S81-DSDV-R1-iq_C-J8-rows.json: 13 bus internal_stations rows (placed_scan --limit 405 on a J7-fork kit), +20 cycles on 13 lanes (fixed_cycles synced).
+STATUS 08:02: TAPROWS gate B strict bind still running (epyc7 oth-ubuntu-440360, load 122/96); precheck clean.
