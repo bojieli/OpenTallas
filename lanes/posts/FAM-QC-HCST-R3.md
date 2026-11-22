@@ -1,1 +1,2 @@
 - 2026-11-21 18:27 PST RESUMED (succeeds R2): tasks btab 189um G0 on intel2, st_b/hc split table, st_a Codex holds read, sle_hc2 state
+- 2026-11-21 18:52 PST DIED [FAM-QC-HCST-R3] ot-run otrun-tolerant-swine-739753 on tolerant-swine: rc=78 after 0 s, ended 18:52:19, log /srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/tmp/btab189.out, cmd: --mem 24 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/FAM-QC-HCST-R3 -- python3 -I -B /srv/opentallas-scratch2/claude/FA
