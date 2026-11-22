@@ -253,7 +253,7 @@ def _relay_mid_stagger(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
-def _relay_mid_re(budgets, tn):
+def _relay_mid_re(budgets, tn, die=None):
     """FABLE-FIX-KV-HG 11-18: the relay-station name regex of relay_mid.tcl (group = first capture), in order: GEN env
     OT_RELAY_MID_RE (kit-wave item_env: a pilot or a class batch needs no plan event), per type
     budgets.relay_mid_re_types {type or unsplit base name: regex}, plan-wide budgets.relay_mid_re, else RELAY_MID_RE.
@@ -268,7 +268,8 @@ def _relay_mid_re(budgets, tn):
         for k in (tn, tn.split("__")[0]):
             if k in per:
                 return per[k]
-    return budgets.get("relay_mid_re", RELAY_MID_RE)
+    # FABLE-FIX-QC-COLL 11-21: per-die default below the plan keys (RELAY_MID_RE_DIE; a die without an entry keeps RELAY_MID_RE)
+    return budgets.get("relay_mid_re", RELAY_MID_RE_DIE.get(die, RELAY_MID_RE))
 
 
 def _relay_mid_tail(budgets, tn):
@@ -1597,6 +1598,20 @@ RELAY_MID_RE = r"^(.*[._]u_y_[A-Za-z0-9_]+)[.]"
 # KV hg / hgi head-station pipeline (qkh_head_gather_stage u_hst<h>_g / _t<k>, u_head<h>_u_ftg) next to the S81 relays; the
 # 34-bit qkh_head_sstage side chain (u_hst<h>_s<k>) stays a soft endpoint (< 2 % of a group) so each chain keeps ONE successor
 RELAY_MID_RE_KV = r"^(.*[._]u_y_[A-Za-z0-9_]+|.*[._]u_hst[0-9]+_(?:g|t[0-9]+)|.*[._]u_head[0-9]+_u_ftg)[.]"
+# FABLE-FIX-QC-COLL 11-21 (FABLE-CLOSURE-2000 lever 5.3): the QC delay-pad chains.  Every QC kit carried the S81 u_y_ regex, so
+# the hook logged "OT_RELAY_MID placed 0 relay flops of 0 stations (0 relay groups)" (coll_core: 222-321 collapsed chains of
+# 8,071-8,492; xs_q -> face_1 u_tx.wd 8 hops over 501 um with one hop of 372, in_data dsel -> face_0 u_tx.wd one hop of 447).
+# A QC chain stage is ONE register rank of a bound ot_dp_dly pad: u_d<D>_<conn>.r[<k>][<bit>] (k = 0..D-2) and the output
+# rank u_d<D>_<conn>.q[<bit>]; the packed landing pad u_lpad_<bus>.r[<k>][<bit>] / .q[<bit>] has the same form (ranks the
+# plan sites with relay_sites are FIRM and skipped by the hook).  group = the rank, all bits, so a D-rank pad is a D-station
+# chain.  No "$" in it (config.mk is a makefile): the rank name ends at a non-identifier character, so .q_pin / .qdata /
+# .r_reset_meta of other modules do not match.  The chain ends must be fixed points (hard-core pins, ports, FIRM flops:
+# plan relay_sites on the registers that launch / capture the pad), else the group is left to GPL as before.
+RELAY_MID_RE_QC = (r"^(.*[._]u_y_[A-Za-z0-9_]+(?=[.])"
+                   r"|.*[._]u_(?:d[0-9]+|lpad)_[A-Za-z0-9_]+[.](?:r\[[0-9]+\]|q)(?![A-Za-z0-9_]))")
+# the default regex of a die (plan budgets.relay_mid_re / relay_mid_re_types and GEN env OT_RELAY_MID_RE come first); S81,
+# HEAD and KV have no entry: their kits keep RELAY_MID_RE (KV types name RELAY_MID_RE_KV in their plan budgets)
+RELAY_MID_RE_DIE = {"qwen_compute": RELAY_MID_RE_QC}
 
 
 def _snap_tap(P, x, y, pg_legal=True):
@@ -7726,7 +7741,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export CORNERS = tc bc",
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
-           *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn)}"] if macros else []),
+           *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn, P.die.get('name') if isinstance(getattr(P, 'die', None), dict) else None)}"]
+             if macros else []),
            *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
            *(_relay_mid_half_exports(P.budgets, tn) if macros else []),
            # CORE-PIN-RELAY-1930: relay stages and landing flops seated at their hard-core pins (opt-in, gen_phys._core_pin_relay)
