@@ -21,3 +21,9 @@ Exact images are under `epyc10:/srv/opentallas-scratch2/claude/QC-SLE-R5/freg_ha
 **GOOD for the private x_hc1_st_b detailed route.** I viewed the exact `_1_freg` GRT density image. Unit `2470653-1795382803` exited zero with a maximum grid demand of 82% and no cells above 90%. Setup was +135.07 ps and internal FF hold was +17.49 ps with zero violations. The two short reset legs remain the only placement flags.
 
 **ISSUES for cws2 detailed routing.** I viewed the exact `_2_freg` GRT density image. Unit `2470655-1795382803` exited zero with +136.64 ps setup and +15.37 ps internal FF hold. Peak grid demand reached 100% with 35 cells above 90%. The marked hotspots are near (37.91, 31.07), (29.36, 6.55) and (51.02, 20.80) µm. The current cws2 checkpoint is held for a placement adjustment that reduces routing demand.
+
+## cws1 routed result and cws2 density variant
+
+The reviewed cws1 form finished at 13:41 PST with minimal-profile physical SIGNED, TT setup +141.76 ps, DRC and antenna zero, and all 1,037 face checks passing. Its FF boundary paths remain conditional on a real-parent hold receipt. Exact routed-netlist LEC proved 4,622 of 4,622 points with zero differences or undecided, unit 3167594 exit zero. Its signoff and routed proof are under the existing cws1 kit at `signoff/signoff.json` and `lec_routed_1122/lec.json`.
+
+I viewed the exact cws2 density-0.47 placement. The outline and pin rows are unchanged and the center remains broadly distributed. The 0.334 pin-track fraction is unchanged. Only `rst_xn[2]` remains flagged, a 46.35 µm direct-distance reader leg. I cleared this specific placement for isolated GRT timing and congestion measurement, unit 3167391. Its kit is `epyc10:/srv/opentallas-scratch2/claude/QC-SLE-R5/freg_hard_children/sle_cland_w517_n_s10_2_freg/less_dense/kits/sle_cland_w517_n_s10_2_freg_synth0`. Detailed route depends on the density variant's own viewed GRT result.
