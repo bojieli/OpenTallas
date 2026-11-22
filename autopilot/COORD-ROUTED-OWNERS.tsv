@@ -95,3 +95,5 @@ qwen_compute	slw_st_a_v2__cl9f076a5c	FAM-QC-SLWSLE-R1	COORD 11-22 02:4x: sweep F
 qwen_kvsys	kv3_pc__cl254f2e73	FAM-KV-IOPC-R4	COORD 11-22 03:xx: PLACE-SETUP-STOP x2 = pc_v3 input-bus distance class (not a flow error); held in kit_wave owner=FAM-KV-IOPC-R4 eta=2026-11-23 12:00; pcreg rows carry it into D29
 qwen_kvsys	kv3_pc__cl5a95b461	FAM-KV-IOPC-R4	COORD 11-22 03:xx: same class as cl254f2e73; held, pcreg D29
 s81	dsdv_slice_kv512_C__t1	FAM-S81-SLICE-R6	COORD owners-sweep 04:1x: sealed J7 kit 1122035445 (unit oth-ubuntu-379079), J8 rows in plan_j8_slice_v9
+qwen_compute	cbf_q01_s2	FAM-QC-CB-R4	COORD Codex takeover 11-22 10:56; typed reset, ring, and latch source candidate passed strict; private changed geometry
+qwen_compute	cbf_q11	FAM-QC-CB-R4	COORD Codex takeover 11-22 10:56; rev5 private placement proves remaining bc_i22/i32 local reach; changed-form owner
