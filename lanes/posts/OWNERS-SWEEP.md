@@ -275,3 +275,8 @@
   QC: 11 cbn/cbf no-host rows + 2 INFRA fails HOST-BLOCKED; 5 FAILED-NO-RELAUNCH other flow error (cbf_q00_s2, cbx_q10, slw_su_c); 5 STALE.
   KV: 10 FAILED-NO-RELAUNCH (kv3_pv_v* CLAND ring band/400k cells, kv3_hroot dead owner); 22 WAIT-BIND; 2 CBC-FALLBACK (hub_Wi, pc_v3).
   HEAD: hd_lep0N failed place 9 h, owners alive, no relaunch.
+- 2026-11-21 19:50 PST 469 rows (S81 348, QC 70, KV ~50, HEAD 1; HBM skipped)
+  flagged: S81 UNOWNED 134 + STALE 64 (mostly held-by-die-owner / cancelled-superseded col_h9/h10 variants); QC FAILED-NO-RELAUNCH 5, STALE 5, DEAD-OWNER 1 (native59)
+  KV WAIT-BIND 24, CBC-FALLBACK 2 (kv3_hub_Wi, kv3_pc_v3), FAILED-NO-RELAUNCH 1 (kv3_hroot); HEAD hd_lep0N FAILED-NO-RELAUNCH+STALE
+  top classes: held by die owner 288, running 67, cancelled superseded 59+, FAILED no host 12, other flow error 6
+  revoked counted unsigned per tool; tool bin/owners_sweep.py

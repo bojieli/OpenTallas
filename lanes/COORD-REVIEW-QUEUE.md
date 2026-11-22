@@ -21644,3 +21644,8 @@ FAILED [AUTOPILOT 32c6dd0d2b3a] 2026-11-21 19:48:46 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 19:49 PST DONE [S81-J6-ASSEMBLY-R5] ot-run oth-ubuntu-1380817-1795318267 on tolerant-swine: rc=0 after 1113 s, ended 19:49:39, log /srv/opentallas-scratch2/claude/s81-j6-r5/pinsmoke_epyc9/svc_lo_dsdv_svc_rs__t1/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/S81-J6-ASSEMBLY-R5/svc_
 - 2026-11-21 19:49 PST DIED [FLOW-LECGATE-R2] ot-run oth-ubuntu-1452266-1795318504 on tolerant-swine: rc=2 after 887 s, ended 19:49:50, log /srv/opentallas-scratch2/claude/FLOW-LECGATE-R2/relec2_2fa9961fbc78.log, cmd: --mem 48 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/FLOW-LECGATE-R2/relec2 --stage /srv/opentallas-scratch2/claude/FLOW
 - 2026-11-21 19:50 PST DONE [fable-fix-head-lep0n-r6] ot-push-main otpush-tolerant-swine-3182693 on tolerant-swine: rc=0 after 30 s, ended 19:50:30, log /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r6/tmp/push1.log, cmd: ot-push-main 
+- 2026-11-21 19:50 PST 469 rows (S81 348, QC 70, KV ~50, HEAD 1; HBM skipped)
+  flagged: S81 UNOWNED 134 + STALE 64 (mostly held-by-die-owner / cancelled-superseded col_h9/h10 variants); QC FAILED-NO-RELAUNCH 5, STALE 5, DEAD-OWNER 1 (native59)
+  KV WAIT-BIND 24, CBC-FALLBACK 2 (kv3_hub_Wi, kv3_pc_v3), FAILED-NO-RELAUNCH 1 (kv3_hroot); HEAD hd_lep0N FAILED-NO-RELAUNCH+STALE
+  top classes: held by die owner 288, running 67, cancelled superseded 59+, FAILED no host 12, other flow error 6
+  revoked counted unsigned per tool; tool bin/owners_sweep.py
