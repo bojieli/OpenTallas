@@ -27,3 +27,8 @@ Flag: slw_su_c__cl92142dac still -504 ps setup stop (FAM-QC-SLWSLE-R1).
 ## 00:5x PST 11-22 live
 - Four V3 binds in strict bind (d/c/b2/n3, LATGEN rc0, 1921 lanes).
 - rev5 (CB-R4 tap[0] HB4 3->1, 34 entries) composed onto V3p7d -> v3p6/plan_v3p7d5.json pre 1b823bdaee76; chain v3p7d5 launched speculatively in parallel on rt 6dbb (epyc10 v3p6/chain_v3p7d5.log). Ship order at 05:40: d5 > d > c > b2 > n3 (each strict 0 + LAT 1921 + post-bind G0). rev5 -> V4 if d5 not clean.
+
+## 01:3x PST coll_core tap fix
+- The p7 lineage coll_core density base is 126, not 130, so the added tap is renamed clk_t130 -> clk_t126 (v3p6/ccren.py). Targeted retap --types coll_core (old=plan_v3p6n3) is running: epyc10 v3p6/retap2/rt2.sh.
+- v3p6/after_rt2.sh builds plan_v3p7{b2,c,d}r and d5r (rev5), then launches chain_r.sh on rt 33fe (tags *x) plus d5r/dr on rt 6dbb.
+- The old b2/c/d/d5 binds will each fail with the coll_core EMIT; I let them run only to see errors in other types. Fallback: n3 (base 130, unaffected).
