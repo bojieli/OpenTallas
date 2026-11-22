@@ -8821,7 +8821,7 @@ def run_item(spec_path):
             _drc["t"] = time.time()
         return _drc["v"]
 
-    def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
+    def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         _all = list(hosts)
         _dr = stage_drain()
@@ -9043,10 +9043,7 @@ def run_item(spec_path):
         set_aside_stale_service(K)
         if svc_file.exists():
             return place_wait(json.loads(svc_file.read_text()))
-        if G in ("localhost", hub):                  # KW-FIX-45 11-12 hub guard: the kit's gen host is the hub
-            msg = f"KW_PLACE_REFUSED: heavy stage place refuses to run on the hub ({G}); pick a fleet gen host (KW-FIX-45 hub guard)"
-            (out / "place.log").write_text(msg + "\n")
-            return 1, msg, None
+        # FLEET-WATCH-R8 11-21 (COORD URGENT, owner 11-12 capped build host): the hub-only target refusal is gone; ot-run HOST_RESERVE (64 thr / 600 GB / 150 GB reserve) bounds the hub
         cmd = f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}"
         if sp.get("place_spill", True):
             # KW-FIX-4 11-03 (ONBOARD-1 ask, COORD approved): no --hosts pin (a pin disables ot-run SPILL / LOAD SPILL /

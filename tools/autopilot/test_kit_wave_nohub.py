@@ -13,13 +13,13 @@ def test_heavy_args_exclude_hosts_is_opt_in():
 
 def test_place_async_and_otrun_have_the_guard():
     src = (Path(KW.__file__)).read_text()
-    assert 'KW_PLACE_REFUSED: heavy stage place refuses to run on the hub' in src
+    assert 'KW_PLACE_REFUSED: heavy stage place refuses to run on the hub' not in src      # FLEET-WATCH-R8 11-21: hub is a capped build host
     # new rule (COORD 11-12): gen / bind / kit_rtl / lint / preflight / geom refuse the hub; only the place stage may use it
     # (as ot-run 'localhost', capped by ot-run HOST_RESERVE + scratch floor)
     assert 'hosts = target_hosts(hosts, hub, allow_hub)' in src
-    assert src.count('allow_hub=True') == 1 and 'phosts, allow_hub=True))' in src
+    assert 'phosts, allow_hub=True))' in src
     # the roam flag (kit_rtl / topology stay on the host that holds the attempt) is a keyword after the guard: allow_hub default stays False
-    assert 'def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):' in src
+    assert 'def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True):' in src
 
 
 def test_ot_run_accepts_exclude_hosts():
