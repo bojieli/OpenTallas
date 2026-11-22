@@ -144,7 +144,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
                          accepts, so the job is classified CANCELLED at its next poll instead of waiting for the 3 h ORPHAN
                          timer.  Refuses (exit 2) while a live local ot-run client still has that --dir (use --cancel).
                          It signals nothing and touches no unit, container or file.
-  ot-run --cancel EXACT [--all-dirs]    SIGTERMs the local ot-run clients that EXACT names (pid, --dir, or one whole argument; never a substring, CANCEL-EXACT-1122) -- the ONLY way an
+  ot-run --cancel SUBSTR [--all-dirs]   SIGTERMs the local ot-run clients whose arguments contain SUBSTR -- the ONLY way an
                          agent stops its own ot-run jobs besides `kill <exact pid>`.  It refuses (lists, kills nothing,
                          exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
                          take other lanes' jobs; --all-dirs overrides after reading the list.  Never `pkill -f` ot-run.
@@ -2104,6 +2104,8 @@ def main():
             hosts = _dk
     # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
     d = gate_workdir(cmd, d)
+    if not pick:
+        start_leases(lease_paths(d, cmd, STAGE), f"{os.environ.get('OT_LANE') or 'ot-run'}/ot-run-{socket.gethostname().split('.')[0]}-{os.getpid()}")
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
@@ -2514,6 +2516,89 @@ NEEDS = []      # NEEDS_1115 --needs PATH[,PATH]
 REPLICATE = []  # NEEDS_1115 --replicate DIR[,DIR]
 RT_RE = re.compile(r"^(.*/claude/rt)/([0-9a-f]{12})/")
 ORIG_ARGV = list(sys.argv[1:])
+
+# JOB-LEASE (FLOW-OPS-R2 11-22, COORD after CLEAN-AGGR-R3 249135c503 ot_lease.py): a running client holds delete-guard leases on what its job
+# uses -- its --dir, the scratch trees its command names (kit, tree, script dirs; --stage paths; OT_LEASE_PATHS), and the rt/<sha> snapshot it
+# runs from -- renews them every TTL/3 while it lives and releases them on exit, so ot_delete_guard never frees a live job's inputs.  A killed
+# client's leases expire after LEASE_TTL_H.  OT_RUN_NO_LEASE=1 turns it off.
+LEASE_TTL_H = 2.0
+LEASE_MAX = 16
+
+
+def lease_paths(d, cmd, stage=(), real=None, env=None):
+    """-> sorted unique absolute paths a job's client leases (pure: tests)"""
+    env = os.environ if env is None else env
+    out = []
+
+    def add(x):
+        if not x or not isinstance(x, str) or not x.startswith("/"):
+            return
+        x = os.path.normpath(x)
+        m = SCRATCH_RE.match(x)
+        if m and x not in out and os.path.basename(m.group(1)) != "claude":
+            out.append(x)
+
+    add(d)
+    for x in stage:
+        add(x)
+    for x in (env.get("OT_LEASE_PATHS") or "").split(":"):
+        add(x)
+    for tok in cmd or ():
+        for x in re.findall(r"/srv/opentallas-scratch[^\s'\";:|&<>()]*", str(tok)):
+            x = x.rstrip("/")
+            if "/rt/current" in x:
+                x = os.path.realpath(x)
+            if os.path.isfile(x):
+                x = os.path.dirname(x)
+            if os.path.isdir(x):
+                add(x)
+    m = RT_RE.match(real or os.path.realpath(__file__))
+    if m:
+        out.append(os.path.join(m.group(1), m.group(2)))
+    return list(dict.fromkeys(out))[:LEASE_MAX]
+
+
+def start_leases(paths, owner, take=None, release=None, ttl_h=None):
+    """take the leases now and renew them every ttl/3 in a daemon thread; -> stop() that releases them (also registered at exit).  None when off"""
+    if not paths or os.environ.get("OT_RUN_NO_LEASE"):
+        return None
+    if take is None or release is None:
+        try:
+            sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+            import ot_lease as _L
+        except ImportError:
+            return None
+        take, release = take or _L.take, release or _L.release
+    ttl = LEASE_TTL_H if ttl_h is None else ttl_h
+    done = threading.Event()
+
+    def renew():
+        for x in paths:
+            try:
+                take(x, owner, ttl)
+            except (OSError, ValueError):
+                pass
+
+    def loop():
+        while not done.wait(max(60.0, ttl * 3600 / 3)):
+            renew()
+
+    renew()
+    threading.Thread(target=loop, daemon=True, name="ot-run-lease").start()
+    state = {"released": False}
+
+    def stop():
+        done.set()
+        if not state["released"]:
+            state["released"] = True
+            for x in paths:
+                try:
+                    release(x, owner)
+                except OSError:
+                    pass
+    import atexit
+    atexit.register(stop)
+    return stop
 
 
 def reexec_if_runtime_changed(t0, argv=None, real=None, execv=None, env=None):
