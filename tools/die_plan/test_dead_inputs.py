@@ -64,3 +64,20 @@ def test_declared_ties_rejects_loose_row():
         DeclaredTies({"declared_ties": [dict(types=[], module="m", port="p", bits=[0, 1], value="0", proof="x")]})
     with pytest.raises(ValueError):
         DeclaredTies({"declared_ties": [dict(types=["T"], module="m", port="p", bits=[0, 1], value="0")]})
+
+
+def test_split_piece_carries_the_declaration_of_a_replaced_type(tmp_path):
+ """OPUS-FIX-S81-SVC-R9: type_split replaced 'tile' by pieces and carried the exact declaration to 'tile_rs'; the proof
+ row applies to that piece.  A piece with a changed declaration, or no piece at all, still fails closed."""
+ src=tmp_path/'leaf.sv';src.write_text('module leaf #(parameter M=0)(input [1:0]a,output y);assign y=a[0];\nendmodule\n')
+ row=dict(partition_type='tile',module='leaf',parameters={'M':'0'},source='leaf.sv',module_sha256=module_hash(src,'leaf'),method='yosys.proc.opt.no_fanout',remaining_loads=0,ports={'a':[[1,1]]})
+ (tmp_path/'proof.json').write_text(json.dumps(dict(schema='opentallas.dead_inputs.v1',verdict='PASS',declarations=[row])))
+ m={'dead_input_proofs':['proof.json'],'files':['leaf.sv']};cell=SimpleNamespace(module='leaf',params={'M':'0'})
+ ptypes={'tile_rs':{'dead_inputs':[plan_declaration(row,'proof.json')]},'tile_att':{}}
+ d=ProvenDead(m,tmp_path,ptypes)
+ assert d.allows('tile_rs',cell,'a',1) and not d.allows('tile_att',cell,'a',1) and not d.allows('tile',cell,'a',1)
+ wrong=copy.deepcopy(ptypes);wrong['tile_rs']['dead_inputs'][0]['ports']={'a':[[0,0]]}
+ with pytest.raises(ValueError,match='plan'):
+  ProvenDead(m,tmp_path,wrong)
+ with pytest.raises(ValueError,match='plan'):
+  ProvenDead(m,tmp_path,{'tile_att':{}})

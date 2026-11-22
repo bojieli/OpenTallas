@@ -125,10 +125,20 @@ class ProvenDead:
                     raise ValueError('stale dead-input source ' + row['source'])
                 if row.get('method') != 'yosys.proc.opt.no_fanout' or row.get('remaining_loads') != 0:
                     raise ValueError('missing optimized no-fanout proof')
-                typ = (plan_types or {}).get(row['partition_type'], {})
-                if plan_declaration(row, rel) not in typ.get('dead_inputs', []):
+                decl = plan_declaration(row, rel)
+                typ = (plan_types or {}).get(row['partition_type'])
+                if typ is not None or not plan_types:
+                    if decl not in (typ or {}).get('dead_inputs', []):
+                        raise ValueError('missing or mismatched per-type plan dead-input declaration: ' + row['partition_type'])
+                    self.rows.append(row)
+                    continue
+                # OPUS-FIX-S81-SVC-R9 11-21: a type_split replaced the proof's type by pieces (the unsplit type is
+                # gone from the plan) and carried the exact declaration to the piece that holds the instance
+                # (spec dead_input_pieces).  The row applies to every piece type that declares it verbatim.
+                hosts = sorted(tn for tn, t in plan_types.items() if decl in t.get('dead_inputs', []))
+                if not hosts:
                     raise ValueError('missing or mismatched per-type plan dead-input declaration: ' + row['partition_type'])
-                self.rows.append(row)
+                self.rows.extend(dict(row, partition_type=tn) for tn in hosts)
 
     def allows(self, partition_type, cell, port, bit, defaults=()):
         params = dict(defaults)
