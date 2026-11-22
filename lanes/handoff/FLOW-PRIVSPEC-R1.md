@@ -31,3 +31,7 @@ COORD yes: E2E = MISC-R4's next t5 run. MISC-R4 relaunch run-item PID 3352347 (s
 old spec, stops at geom) alive at 20:36 -> let it finish. Only if it FAILS: rt/current kit_wave.py private-spec s81 ot_s81sl_kv_leaf__t5
 --tree /srv/opentallas-scratch2/claude/fam-s81-misc-r4/trees/candMISC5 --lane FAM-S81-MISC-R4 (copy its --ab/--plan from the old spec env_ab), then run-item;
 post the result to MISC-R4 + COORD.
+
+## 21:1x
+- prov_views fix LANDED main 2c04073c53 (QC-RELAUNCH-R1 told).
+- MISC-R4 t5 1121195713 FAILED at place (OT_CLAND band fit, design). Not rebuilt (same failure). Posted E2E-HOLD d873553e9e: MISC-R4 sends next fixed tree -> I build it with new private-spec (no --bind-out, goal auto) to sign-off.
