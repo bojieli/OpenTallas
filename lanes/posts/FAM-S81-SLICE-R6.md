@@ -46,3 +46,4 @@
   - Group 3: place_regions IS in the pinned schema (place_regions.tcl). Row xg_ring_router: inst_re u_xg\.u_r\., util 0.5, centre (490,360), on c3x_C t1 and kv512_C t1. No RTL wait.
   - Also moved 6 ret_i* regs out of u_c.u_cap (c1x t9, c3x t1); GEOM had caught them.
   4. v8 a1de248ab590: plan_gate_pre --baseline-plan PASS (0 findings). Strict bind dry run is on epyc7, unit oth-ubuntu-1435880. v6b was cancelled as superseded; v5 is still running.
+- 2026-11-22 01:50 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-606847-1795336544 on loved-redfish: rc=11 after 4489 s, ended 09:50:29, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_v5.otrun.log, cmd: --mem 108 --threads 8 --disk 20 --hosts epyc7 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind  | class=DESIGN-FAIL cause={"partitions": 398, "types": 395, "crossings": 873, "crossing_bits": 579881, "errors": 1, "unbound": 0, "tied"
