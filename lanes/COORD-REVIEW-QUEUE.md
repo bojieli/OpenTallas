@@ -25565,3 +25565,4 @@ FAILED [AUTOPILOT 15723040d4e5] 2026-11-22 09:08:22 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 09:29 PST NEEDS-ACTION [AUTOPILOT -> COORD] UNDER-USE: 1 row(s) waited 3+ ticks at launch gate 'gate:q_fail' with no hold naming it
 - 2026-11-22 09:29 PST NEEDS-ACTION [AUTOPILOT -> COORD] UNDER-USE: 1 row(s) waited 3+ ticks at launch gate 'gate:q_queued' with no hold naming it
 - 2026-11-22 09:29 PST STATE tools sync recovered after 3 min (rt/current d4aeaa3c6b58)
+- 2026-11-22 09:29 PST DONE [FAM-S81-DSDV-R1] ot-run oth-ubuntu-3441228-1795368052 on tolerant-swine: rc=0 after 545 s, ended 09:29:53, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-DSDV-R1/s81_dsdv_slice_lepw_mu_LP__t2_1122081224/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-DSDV-R1/dsdv_sl
