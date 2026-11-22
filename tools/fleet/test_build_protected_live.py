@@ -75,3 +75,37 @@ class MainIgnoresProse(unittest.TestCase):
         r = subprocess.run([sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_protected_live.py"), d, out], capture_output=True, text=True, env=dict(os.environ, OT_PROV_PATHS_CACHE="/nonexistent"))
         txt = open(out).read() if os.path.exists(out) else ""
         self.assertNotIn("sd9h_gen", txt, r.stdout + r.stderr)
+
+
+def test_host_scoped_otrun_paths_and_plan_refs_clean_aggr_r3(tmp_path, monkeypatch):
+    """CLEAN-AGGR-R3: a hub ot-run --hosts epyc8 path protects only on epyc8 + the hub; paths inside a live die plan file are protected"""
+    import importlib.util as iu
+    H = os.path.dirname(os.path.abspath(__file__))
+    sp = iu.spec_from_file_location("bpl_r3", os.path.join(H, "build_protected_live.py")); B = iu.module_from_spec(sp); sp.loader.exec_module(B)
+    sg = iu.spec_from_file_location("g_r3", os.path.join(H, "ot_delete_guard.py")); G = iu.module_from_spec(sg); sg.loader.exec_module(G)
+    proc = tmp_path / "proc"
+    (proc / "11").mkdir(parents=True)
+    (proc / "11" / "cmdline").write_bytes(b"python3\0/x/ot-run\0--hosts\0epyc8\0--dir\0/srv/opentallas-scratch2/claude/lane-a/r5\0--\0bash\0/srv/opentallas-scratch2/claude/lane-a/r5/go.sh")
+    (proc / "12").mkdir()
+    (proc / "12" / "cmdline").write_bytes(b"bash\0/srv/opentallas-scratch2/claude/lane-b/job/run.sh")
+    out = set()
+    B.live_cmd_paths(out, G.canon, proc=str(proc), unit_dirs=())
+    assert "@epyc8,intel2 /srv/opentallas-scratch2/claude/lane-a/r5" in out
+    assert "/srv/opentallas-scratch2/claude/lane-b/job/run.sh" in out
+    lst = tmp_path / "p.txt"
+    G.write_list(out, str(lst))
+    for host, want in (("loved-redfish", False), ("outgoing-giraffe", True), ("tolerant-swine", True), ("unknown-box", True)):
+        monkeypatch.setenv("OT_HOST_ALIAS", host)
+        s, err = G.load_list(str(lst))
+        assert err is None
+        assert ("/srv/opentallas-scratch2/claude/lane-a/r5" in s) == want, host
+        assert "/srv/opentallas-scratch2/claude/lane-b/job/run.sh" in s
+    plan = tmp_path / "source_plan.json"
+    plan.write_text('{"sink_bins_file": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/x/sink_bins_8.json"}')
+    cfg = {"dies": {"s81_head": {"enabled": True, "plan": str(plan), "gen_args": []}, "off": {"enabled": False, "plan": str(plan)}}}
+    out2 = set()
+    n = B.plan_ref_paths(cfg, out2, G.canon, prefix=str(tmp_path))
+    assert n == 1 and "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/x/sink_bins_8.json" in out2
+    g_prot = {G.canon(x) for x in out2}
+    assert G.refuse("/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0", protected=g_prot, ptext="", current={}, allow=set())
+

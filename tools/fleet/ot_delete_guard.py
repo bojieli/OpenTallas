@@ -120,7 +120,27 @@ def load_list(path=None, now=None):
         return None, "protected list missing/unreadable"
     if (now or time.time()) - built > MAX_AGE_H * 3600:
         return None, "protected list older than %gh" % MAX_AGE_H
-    return {canon(l) for l in lines if l.startswith("/srv/")}, None
+    me = self_alias()
+    out = set()
+    for l in lines:
+        if l.startswith("/srv/"):
+            out.add(canon(l))
+        elif l.startswith("@") and " /srv/" in l:   # CLEAN-AGGR-R3: host-scoped (hub ot-run --hosts): applies on those hosts; unknown host = applies
+            hs, p = l[1:].split(" ", 1)
+            if me is None or me in hs.split(","):
+                out.add(canon(p.strip()))
+    return out, None
+
+
+HOST_ALIAS = {"key-cardinal": "intel1", "tolerant-swine": "intel2", "dear-crayfish": "epyc2", "loved-redfish": "epyc7",
+              "outgoing-giraffe": "epyc8", "renewed-glider": "epyc9", "civil-redfish": "epyc10"}
+
+
+def self_alias():
+    """fleet alias of this host (ot-run --hosts names), or None when unknown (then every host-scoped line applies: fail closed)"""
+    import socket
+    h = os.environ.get("OT_HOST_ALIAS") or socket.gethostname()
+    return HOST_ALIAS.get(h, h if h in HOST_ALIAS.values() else None)
 
 
 _CACHE = {"t": 0, "v": ""}

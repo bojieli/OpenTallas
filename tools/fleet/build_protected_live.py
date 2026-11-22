@@ -229,17 +229,36 @@ class RecordScope:
                 self.dropped[kind] = self.dropped.get(kind, 0) + 1
 
 
+HUB_ALIAS = "intel2"
+OTRUN_HOSTS = re.compile(r"(?:^|\s)--hosts[ =]([A-Za-z0-9_,.-]+)")
+
+
+def otrun_hosts(cmd):
+    """CLEAN-AGGR-R3 (COORD 11-21: epyc7 copies of fable-fix-kv-hub/r5 kept because a hub ot-run of the same --dir ran on epyc8): the host set an ot-run
+    command line places its job on (+ the hub, which spills / copies back), or None when the command is not an ot-run with an explicit --hosts list"""
+    if "ot-run" not in cmd.split(" -- ", 1)[0]:
+        return None
+    m = OTRUN_HOSTS.search(cmd.split(" -- ", 1)[0])
+    if not m:
+        return None
+    hs = {h.strip() for h in m.group(1).split(",") if h.strip()}
+    hs = {HUB_ALIAS if h == "localhost" else h for h in hs}
+    return sorted(hs | {HUB_ALIAS}) if hs else None
+
+
 def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user",)):
-    """(c) scratch paths named by running process command lines on this host (ot-run queue clients and waiters, jobs) and by user systemd unit files"""
+    """(c) scratch paths named by running process command lines on this host (ot-run queue clients and waiters, jobs) and by user systemd unit files.
+    A path from an ot-run command line with --hosts is written host-scoped ("@h1,h2 /srv/..."): the guard applies it only on those hosts and the hub."""
     for c in glob.glob(os.path.join(proc, "[0-9]*", "cmdline")):
         try:
             t = open(c, "rb").read().replace(b"\0", b" ").decode("latin1")
         except OSError:
             continue
+        hs = otrun_hosts(t)
         for m in RX.finditer(t):
             x = m.group().rstrip("/.-")
             if x.count("/") >= 5:
-                out.add(canon(x))
+                out.add(canon(x) if hs is None else "@%s %s" % (",".join(hs), canon(x)))
     for d in unit_dirs:
         for f in glob.glob(os.path.join(os.path.expanduser(d), "**", "*.service"), recursive=True) + glob.glob(os.path.join(os.path.expanduser(d), "*.timer")):
             try:
@@ -346,6 +365,30 @@ def prov_cache_paths(cache, out, canon, max_age_h=72.0, now=None):
         pass
 
 
+def plan_ref_paths(cfg, out, canon, maxbytes=64 << 20, prefix="/srv/"):
+    """CLEAN-AGGR-R3 (COORD 11-21: snap tree s81_head_r4_s0 retired while the live r16 HEAD plan source_plan.json still named its sink_bins files):
+    every scratch path written inside an enabled die's plan file and the json files of its gen_args is protected, not only kit_wave src / bind.  -> number added"""
+    n = 0
+    for die, d in ((cfg or {}).get("dies") or {}).items():
+        if not isinstance(d, dict) or d.get("enabled") is False:
+            continue
+        files = [d.get("plan")] + [a for a in (d.get("gen_args") or []) if isinstance(a, str)]
+        for f in files:
+            if not isinstance(f, str) or not f.startswith(prefix) or not f.endswith(".json"):
+                continue
+            try:
+                if os.path.getsize(f) > maxbytes:
+                    continue
+                txt = open(f, errors="replace").read()
+            except OSError:
+                continue
+            for m in RX.finditer(txt):
+                x = m.group().rstrip("/.-")
+                if x.count("/") >= 5:
+                    out.add(canon(x)); n += 1
+    return n
+
+
 def main(argv):
     coord, outp, markers = argv[1], argv[2], argv[3:] or [os.path.join(argv[1], "lanes/handoff"), os.path.join(argv[1], "state")]
     here = os.path.dirname(os.path.realpath(__file__))
@@ -362,6 +405,7 @@ def main(argv):
     event_paths(coord, s, g.canon, scope=scope)
     # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
     live_cmd_paths(s, g.canon)
+    plan_ref_paths(cfg, s, g.canon)
     s |= live                                          # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)
