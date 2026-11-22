@@ -1,0 +1,70 @@
+{
+  "schema": "fable_fix_s81_strobe.start_rows.v1",
+  "lane": "FAM-S81-SERDES-R8",
+  "base_plan_sha256": "9fe026d10b26f5373596f8b04c128ecc972c20bc186fac3bc911a2c163b7cf01",
+  "note": "Apply after R11 and W7. Corrects the single existing START origin home shared by reader and writer, plus the W7 stage 0 coordinate. No extra control stage or steady-state cycle. The exact start_findings model passes; placement, raw-release timing and visual review remain.",
+  "modeled_start_reach": {
+    "type": "serdes__t16",
+    "rings": 3,
+    "fstart_out": 3,
+    "origin": [
+      2841.48,
+      417.42
+    ],
+    "origin_pinned": true,
+    "reader_depth": 11,
+    "writer_depth": 7,
+    "share_trunk": true,
+    "reader_worst_hop_um": 313.7,
+    "writer_worst_hop_um": 395.0,
+    "reader_over": 0,
+    "writer_over": 0,
+    "origin_loads": 2,
+    "origin_d_loads": 3,
+    "origin_kind": "start_tree"
+  },
+  "ops": [
+    {
+      "op": "replace",
+      "path": "/partition_types/serdes__t16/clock/landing_reader_start/origin_rect_um",
+      "expected_old": [
+        2865.12,
+        180.368,
+        2882.4,
+        193.328
+      ],
+      "value": [
+        2837.16,
+        415.26,
+        2845.8,
+        419.58
+      ]
+    },
+    {
+      "op": "replace",
+      "path": "/partition_types/serdes__t16/clock/landing_writer_start/branches/ft0_o/stages/0/xy_um",
+      "expected_old": [
+        2507.922,
+        495.18
+      ],
+      "value": [
+        2525.04,
+        494.64
+      ]
+    }
+  ],
+  "worst_conservative_window_legs_um": {
+    "W7 leg 0": 404.46,
+    "W7 leg 1": 403.596,
+    "W7 leg 2": 387.018,
+    "W7 leg 3": 385.83,
+    "W7 leg 4": 385.722,
+    "W7 leg 5": 385.938,
+    "W7 leg 6": 385.992,
+    "W7 leg 7": 394.44,
+    "TSTART": 279.188,
+    "coll_o0": 404.052,
+    "ft1_o": 161.468,
+    "origin raw": 341.604
+  }
+}
