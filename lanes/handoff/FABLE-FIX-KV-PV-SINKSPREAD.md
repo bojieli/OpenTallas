@@ -61,6 +61,26 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## RESUME HERE (11-22 10:00 PST)
+Unattended pieces that keep running without the lane:
+ 1. K1 = sealed kit kv3_pv_v6n (systemd user unit runitem-kv3_pv_v6n on intel2, goal finish). The whole fleet is over its load cap
+    (every host 20-30 waiters), so each kit stage queues: expect hours per stage.
+ 2. T2 = chain_full2.sh m5 on tree2 (14-type event): bind m5s1 got past R8 after ONE pad-table regeneration and is emitting RTL;
+    then LATCHECK, then the final G0 gate, then CHAIN_FULL_DONE.
+ 3. Watcher intel2 ~/tmp/ffkvpv/watch.sh (pid in watch.log / pgrep -f watch.sh; state ~/tmp/ffkvpv/watch.state): posts one lane
+    line per K1 stage from kit_rtl on (with the place tap-load lines), the K1 verdict, and for T2 builds
+    w/handoff/D29_pv_14types_package.json + posts ROWS-READY row B on CHAIN_FULL_DONE (or a STATUS line if the chain stops).
+What the lane still owes (in order):
+ a. K1 place: read the tap loads (watcher post; kit place log OT_CLOCK_TAPS; AUTO-GEOM tap_stuck), dump the placed registers
+    (regs.tcl form, docker openroad on epyc8), taps.py bins -> tap_split -> real tap rows of kv3_pv_v6n; if a tap stays over the
+    cap after the kit cap pass, fix the plan (bank / reserve) and relaunch (cancel only on setup < -300, flat repair, functional bug).
+ b. K1 sign-off (DRC 0, TT >= -42, FF hold >= 0, LEC EQUIVALENT routed): report to COORD; standard export.
+ c. v6ne (e piece, 171k cells) has no wave item: a second private-spec needs ITEM kv3_pv_v6ne (untested) = the A/B slot.
+ d. Rebase rows A / B on the SEALED D28 plan when KV-PLAN-R6 posts its tree (fork, chain_full2.sh, package, ROWS-READY).
+ e. epyc2 fork of the bound tree (hedge): if unused, ot-delete epyc2:/srv/opentallas-scratch2/claude/fable-fix-kv-pv-sinkspread/tree.
+ f. Cleanup via ot-delete when done: epyc8 <lane>/clone (broken sparse worktree), tree/.../por_d29_* trial dirs, por_before_*,
+    aside*, tree2 after row B is merged; intel2 <lane>/clone2 can stay for pushes.
+
 ## STATE 11-22 09:45 PST (newest; read this first; the 08:55 block below still holds for T1 / K1 facts)
 - ROW A HANDED 09:3x: post ROWS-READY to KV-PLAN-R6; package epyc8 w/handoff/D29_pv_v6n_package.json (sha 0123d278f8fc) made by
   w/package_d29.py v6n6 tree OUT. KV-PLAN-R6 must re-merge on the SEALED D28 plan: when it posts the D28 tree, fork it
