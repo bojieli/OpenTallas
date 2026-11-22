@@ -1,18 +1,19 @@
-# FAM-S81-SLICE-R5 handoff (Opus 5.5, live; updated 11-21 12:10 PST)
-Predecessor handoff lanes/handoff/FAM-S81-SLICE-R4.md (paths R3/W/L/E8 defined there). Waiters run in this session; a successor RE-ARMS all.
+# FAM-S81-SLICE-R5 handoff (Opus 5.5, live; updated 11-21 18:55 PST)
+Predecessor: lanes/handoff/FAM-S81-SLICE-R4.md. R3=epyc10 /srv/opentallas-scratch2/claude/fam-s81-slice-r3. D5=intel2 /srv/opentallas-scratch2/claude/fam-s81-slice-r5.
 
-## Live units
-1. t36 SIGNABLE route+sign-off+routed LEC  epyc10 oth-ubuntu-3665743-1795282889 (log fam-s81-slice-r3/t36s_route.log). CTS post-hook TT +127.37, pre-GRT hold pass done; in GRT 12:0x.
-2. t37 FSTART route chain epyc10 oth-ubuntu-171031-1795284529 (t37s_route.log). CTS TT +46.37, +24.27 after pre-GRT hold; in GRT.
-3. t36 hand-env route (proof only) epyc10 oth-ubuntu-3910202-1795273859.
-4. t49 internal hold ECO epyc8 oth-ubuntu-205666-1795276113 (fam-s81-slice-r3/t49_eco3, RESULT.json).
-5. t9 WREG hand-env GRT (evidence) epyc8 oth-ubuntu-949753-1795267285.
-6. kv512_C t1 private-spec run-item intel2 pid 1315433 (spec ~/coord/autopilot/private_specs/FAM-S81-SLICE-R5/s81_dsdv_slice_kv512_C__t1_1121120337, log /srv/opentallas-scratch2/claude/fam-s81-slice-r5/*.runitem.log). Claimed 11-21 12:0x (dead owner S81-DIE-R5).
-7. c3x_C t1 private-spec run-item intel2 pid 1315434 (spec .../s81_dsdv_slice_c3x_C__t1_1121120339). Claimed (unowned).
-Waiter: ot-wait <unit> on the named host; ot-wait <pid> --cmdline run-item on intel2.
+## SIGNED
+- slice_station__t36 (representative) SIGNED 02:29Z on private-spec / wave env / J6r1 manifest tree: TT +49.35, internal FF 0/0, boundary FF -97.41 advisory, DRC 0, pin audit 15103/15103.
+  epyc10 kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SLICE-R4/slice_station__t36_1121074053/gen/slice_station__t36/signoff/signoff.json
+  Export spooled epyc10 ~/.local/state/ot-auto-export/spool/30e0d759416e083b.json (AUTO-EXPORT drain). Check that the AUTO-EXPORT post for it lands.
+- t49 already SIGNED on 3c913dbdfb23 (Codex; TT +72.71). The 14:10 hand-env t36 export (c1n kit) is superseded by the row above.
 
-## Done
-- WREG LEC lec4 EQUIVALENT 77321/77321 (define off). PUSHED main 7694816880 (c2907ed768, f1aa185305, 904afefed8, 7694816880). Posted to S81-J6-ASSEMBLY-R4.
+## Live
+1. t37 FSTART epyc10 oth-ubuntu-171031-1795284529 (t37s_route.log): routed DRC 0, TT -50.1, FF -89.9, now in the late ECO loop. Waiter: ssh epyc10 'ot-wait oth-ubuntu-171031-1795284529'.
+   If it signs: post + export (auto). If not: it is evidence for FABLE-FIX-S81-STROBE (Codex 14:54: the START class is reset relay as counted data; lever-6 regenerated on J7eL6/J7enL6).
 
-## Holds
-- Lever-6 START relay rows ON HOLD until FABLE-FIX-S81-STROBE reads the path (no post from it yet at 12:10). Evidence: t37 FSTART CTS TT +24..+46 real clock.
+## Claimed types (COORD 11-21 12:0x)
+- dsdv_slice_kv512_C__t1: private kit 1121120337 placed (354k cells), real GEO FAIL (xring E legs 1295/1372 um). J8 rows posted: D5/rows/j8_slicehub_rows.json (1d282cf8971e).
+- dsdv_slice_c3x_C__t1: private kit 1121120339 place refused rc 78 (scratch drain). Relaunch run-item (spec ~/coord/autopilot/private_specs/FAM-S81-SLICE-R5/s81_dsdv_slice_c3x_C__t1_1121120339/spec.json) when admission returns; better, on the J8 tree with the rows.
+
+## Done today
+- WREG pushed main 7694816880 (LEC EQUIVALENT, define off). t9 WREG-on: xg.u_s.gs1 absorbed every ot_rst_relay sync_q (opt_merge); no-merge request sent to FLOW-OPS-1300. t9 goes to the J8 strip/body split.
