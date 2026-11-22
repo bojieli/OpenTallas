@@ -486,6 +486,53 @@ for x in tools/autopilot/kit_wave.py tools/autopilot/rt_launch_tree.sh tools/die
 '''
 
 
+SPEC_SMOKE_DIE = os.environ.get("OT_RT_SPEC_SMOKE_DIE", "qwen_compute")      # its items run the scheduler rt (s81 items carry gen_tools_pin = tree tools)
+SPEC_SMOKE_TIMEOUT_S = 600
+
+
+def spec_smoke(new, prev, cfg_path=None, runner=None):
+    """T1 (FABLE-FLOW-0800: efe70f16d3 broke every private-spec --bind-out on the hub rt 06:49-06:53; rt/current moves every 7 min with no trial
+    run): before a flip, one private-spec dry run (`kit_wave.py private-spec DIE ITEM --bind-out <the wave bind> --allow-bind-stale --out <tmp>`;
+    writes only the spec) on the NEW rt.  Fails on new but passes on prev = 'red' (nothing flips); fails on both = 'infra' (an input, not the tools:
+    the flip goes on); OT_RT_SPEC_SMOKE_DIE=0 = 'off'.  -> (verdict, note)"""
+    if SPEC_SMOKE_DIE in ("", "0") or (os.environ.get("PYTEST_CURRENT_TEST") and "OT_RT_SPEC_SMOKE_DIE" not in os.environ and runner is None):
+        return "off", "spec smoke off"
+    runner = runner or run
+    cfg_path = Path(cfg_path or os.path.expanduser("~/coord/autopilot/kit_wave.json"))
+    try:
+        d = json.loads(cfg_path.read_text())["dies"][SPEC_SMOKE_DIE]
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return "infra", f"no wave config for {SPEC_SMOKE_DIE}: {type(e).__name__}"
+    item = os.environ.get("OT_RT_SPEC_SMOKE_ITEM") or next((k for k, v in sorted((d.get("item_inputs") or {}).items())
+                                                           if not ({"gen_tools_pin", "rt"} & set(v or {}))), "")     # an item pinned to other tools tests nothing
+    bind = str((d.get("kit_rtl") or {}).get("bind_out") or "")
+    if not item:
+        return "infra", f"no item of {SPEC_SMOKE_DIE} on the scheduler rt to dry-run"
+
+    def one(root):
+        import shutil
+        import tempfile
+        out = Path(tempfile.mkdtemp(prefix=".rt-spec-smoke.", dir=str(Path(root).parent)))
+        try:
+            argv = ["python3", "-I", f"{root}/tools/autopilot/kit_wave.py", "private-spec", SPEC_SMOKE_DIE, item, "--config", str(cfg_path),
+                    "--lane", "RT-SPEC-SMOKE", "--allow-bind-stale", "--out", str(out)] + (["--bind-out", bind] if bind else [])
+            r = runner(argv, timeout=SPEC_SMOKE_TIMEOUT_S)
+            ok = r.returncode == 0 and (out / "spec.json").is_file()
+            return ok, f"rc={r.returncode}: " + " | ".join(((r.stderr or "") + (r.stdout or "")).strip().splitlines()[-2:])[:300]
+        finally:
+            shutil.rmtree(out, ignore_errors=True)
+
+    ok_new, t_new = one(new)
+    if ok_new:
+        return "ok", f"private-spec {SPEC_SMOKE_DIE}/{item} ok"
+    if not prev:
+        return "infra", f"fails on {Path(new).name} (no previous rt to compare): {t_new}"
+    ok_prev, t_prev = one(prev)
+    if ok_prev:
+        return "red", f"private-spec {SPEC_SMOKE_DIE}/{item} passes on {Path(prev).name}, fails on {Path(new).name}: {t_new}"
+    return "infra", f"private-spec {SPEC_SMOKE_DIE}/{item} fails on both rts (an input, not the tools): {t_new}"
+
+
 def gen_smoke(host, root):
     """-> (verdict, note): verdict 'ok' | 'red' (the copy on a gen host cannot compose or run a kit launch tree) | 'infra' (host not reached)"""
     r = run(SSH + [host, "bash", "-s", "--", shlex.quote(str(root))], input=GEN_SMOKE_SH, timeout=900)
@@ -697,6 +744,14 @@ def sync(sha, hosts=True, tests=True):
                 print(f"GEN-SMOKE-{verdict.upper()} rt {name} {gh}: {gnote[:300]}")
                 return 3 if verdict == "red" else 5
             log(f"{name}: gen smoke ok on {gh}")
+        if hosts:
+            sv, snote = spec_smoke(RT / name, (RT / prev) if prev and prev != name else None)
+            if sv == "red":
+                log(f"{name}: SPEC SMOKE RED, current stays {prev or '-'} on hub and hosts: {snote}")
+                (RT / f"{name}.smoke-failed").write_text(f"spec smoke red: {snote}\n")
+                print(f"SPEC-SMOKE-RED rt {name}: {snote[:300]}")
+                return 3
+            log(f"{name}: spec smoke {sv}: {snote[:300]}")
         flip(RT, name)
         with open(RT / "history.log", "a") as f:
             f.write(f"{now().isoformat(timespec='seconds')} hub current {prev or '-'} -> {name} ({full})\n")

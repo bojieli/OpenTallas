@@ -10527,8 +10527,8 @@ def run_item(spec_path):
             (out / "result.json").write_text(json.dumps(interim_record(res), indent=1))
         print("KW_SRC_MANIFEST ok " + next((ln for ln in (_mtxt or "").splitlines() if ln.startswith(("SRC_MANIFEST SEALED", "SRC_MANIFEST OK"))),
                                            (_mtxt or "")[-200:].strip())[:300], flush=True)
-    if sp.get("tools_rt"):
-        # the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there
+    def compose_rt():
+        """the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there; -> fail result or None"""
         for _h in [G] + [h for h in roamer.others if h != G]:
             _ra = (lambda c, _h=_h: remote_argv(_h, hub, c))
             _pp, _rs, _fin = rt_mirror_cmds(sp, _h, hub)
@@ -10546,6 +10546,12 @@ def run_item(spec_path):
                 roamer.others = [h for h in roamer.others if h != _h]
                 print(f"KW_RT_TOOLS roam host {_h} dropped: launch tree not composed (rc {rc})", flush=True)
         print(f"KW_RT_TOOLS {sp.get('tools_sha')} {tsrc}", flush=True)
+        return None
+
+    if sp.get("tools_rt"):
+        _r = compose_rt()
+        if _r is not None:
+            return _r
     plan0 = plan                                          # the die's plan of record (shared die bind prep, kit RTL)
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
@@ -10636,6 +10642,24 @@ def run_item(spec_path):
         if sp.get("tools_rt") and not core:
             _tsk = f"{tsrc}/tools/die_plan/bind_tool_stamp.py"
             rc, txt = run("bind_toolskew", remote(f"if [ -f {q(_tsk)} ]; then python3 -I {q(_tsk)} check --bind-out {q(bind)} --tools {q(tsrc)}; else echo 'BIND-GEN-TOOLSKEW skipped: no checker in this rt'; fi"), idempotent=True)
+            if rc and os.environ.get("OT_BIND_RT", "1") != "0":
+                # T1 (FABLE-FLOW-0800: rt/current moved 16x in 108 min; 18 S81 BIND-GEN-TOOLSKEW FAILs): gen runs the generators of the
+                # bind's OWN rt.  The rt snapshot on G whose reset / relay generators fit the bind stamp (the stamp's tools_sha first) becomes
+                # this attempt's tools rt; the launch tree is composed again on it.  None fits -> the old FAIL.
+                rc2, txt2 = run("bind_rt", remote(bind_rt_cmd(bind, os.path.dirname(str(sp["tools_rt"]).rstrip("/")))), idempotent=True)
+                hit = re.findall(r"^KW_BIND_RT (\S+) (\S+)$", txt2 or "", re.M)
+                if rc2 == 0 and hit:
+                    old_sha = sp.get("tools_sha")
+                    sp["tools_rt"], sp["tools_sha"] = hit[-1]
+                    tsrc = rt_launch_path(src, sp["tools_rt"])
+                    print(f"KW_BIND_RT gen runs on the bind's rt {sp['tools_sha']} (was {old_sha}): {txt.strip().splitlines()[-1][:300] if txt.strip() else ''}", flush=True)
+                    res.update(tools_rt=sp["tools_rt"], tools_sha=sp["tools_sha"], tools_rt_from=f"bind stamp (wave rt {old_sha})")
+                    _r = compose_rt()
+                    if _r is not None:
+                        return _r
+                    rc, txt = run("bind_toolskew_rt", remote(f"python3 -I {q(tsrc)}/tools/die_plan/bind_tool_stamp.py check --bind-out {q(bind)} --tools {q(tsrc)}"), idempotent=True)
+                else:
+                    txt = (txt or "") + "\nKW_BIND_RT no rt snapshot on " + G + " fits the bind stamp: " + (txt2 or "").strip()[-300:]
             if rc:
                 return fail("bind_toolskew", txt, f"{G}:{bind}")
         # KITRTL-FAIL-1115: kit-rtl runs the die tree's own bind.py when it knows --src-tree; a tree that predates the flag (bind.py
@@ -13541,6 +13565,46 @@ def rt_mirror_path(src, rt):
     """the host-local copy of the hub's rt/<sha12> tools (fleet hosts get only tools/fleet from ot-tools-sync): pushed by the rt_tools stage"""
     s = str(src).rstrip("/")
     return f"{os.path.dirname(s)}/rt_tools_launch/.rt/{os.path.basename(str(rt).rstrip('/'))}"
+
+
+BIND_RT_PY = r"""
+import importlib.util, json, os, re, sys
+bind, root = sys.argv[1], sys.argv[2]
+try:
+    st = json.load(open(os.path.join(bind, "bind_tool.json")))
+except (OSError, ValueError) as e:
+    print("KW_BIND_RT_NONE no stamp: %s" % e); sys.exit(3)
+named = str(st.get("tools_sha") or "")[:12]
+try:
+    names = [n for n in os.listdir(root) if re.fullmatch(r"[0-9a-f]{12}", n) and os.path.isfile(os.path.join(root, n, "tools", "die_plan", "bind_tool_stamp.py"))]
+except OSError:
+    names = []
+names.sort(key=lambda n: (n != named, -os.path.getmtime(os.path.join(root, n))))
+for n in names[:60]:
+    d = os.path.join(root, n)
+    spec = importlib.util.spec_from_file_location("bts_" + n, os.path.join(d, "tools", "die_plan", "bind_tool_stamp.py"))
+    m = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(m)
+        why = m.check(bind, d)
+    except Exception as e:
+        continue
+    if not why:
+        full = n
+        try:
+            full = json.load(open(os.path.join(root, n + ".manifest.json"))).get("sha") or n
+        except (OSError, ValueError):
+            pass
+        print("KW_BIND_RT %s %s" % (d, full)); sys.exit(0)
+print("KW_BIND_RT_NONE %d snapshot(s) checked, stamp tools_sha %s" % (len(names[:60]), named or "?")); sys.exit(3)
+"""
+
+
+def bind_rt_cmd(bind, rt_root):
+    """T1: shell command (run on the gen host) that prints 'KW_BIND_RT <rt dir> <sha>' for the rt snapshot under rt_root whose generators fit
+    the bind stamp (the stamp's own tools_sha first, then newest), each judged by that snapshot's own bind_tool_stamp.check"""
+    q = shlex.quote
+    return f"python3 -I - {q(str(bind))} {q(str(rt_root))} <<'KWBINDRT'\n{BIND_RT_PY}\nKWBINDRT"
 
 
 def rt_tree_cmd(sp):
