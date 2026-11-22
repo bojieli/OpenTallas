@@ -67,6 +67,26 @@
     }
    ],
    "race_kit": "epyc7 fam-lepe4/trees/s81_mu_LP_f2 (ot-tree-fork of proof15 tree + F2 sites), private-spec --goal route --src-manifest seal"
+  },
+  "N1": {
+   "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+   "class": "RX SRAM read -> select -> rid (same class FABLE-FIX-S81-LEPE 11-19 fixed on mu_LP t2 with RIP; slice_lep.sv:148)",
+   "evidence": "J7 wave kit 18a2688b741 epyc10 FAIL_POSTPLACE PLACE-SETUP-STOP: 3_detailed_place wns -446.3 (marker -389.5): g_rx[1] bank0 SRAM (976-1028,821-842) rd_out[112] 276 ps -> head mux at (834,832)->(627,828) -> AO22 nrid[664] -> 10 x BUFx12 chain back SE to rid[664] at (1320,437): ~1,100 um, 1,511 ps arrival vs 1,065 required. rid bank (n=1103) spread bbox 454-1437 x 318-834: with RIP 1 each rid bit is pulled toward its single relay stage at the face. Second: lnl1 -> lfq[5] -173.7 (input face).",
+   "fix": "adopt the mu_LP t2 lep profile (proof9/10, place worst -199 with no rid path in top 8): verilog_defines RIP1 -> RIP3 (ri +2 cycles vs today, rid interior with 3 placed legs; mu_rt unchanged, credits unchanged) and + ROS3 (input face stages, lnl1 -> lfq leg). Cycles pre-approved (OWNER 11-12).",
+   "status": "DRAFT 11-22 07:xx: needs dry-run strict bind + LATCHECK (ri K +2, ROS input K) before J8; R1 (tap_reset_split) already lists this type",
+   "ops": [
+    {
+     "op": "replace",
+     "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/verilog_defines",
+     "value": [
+      "OT_S81SL_LEP_CRP2",
+      "OT_S81SL_LEP_WREP5",
+      "OT_S81SL_LEP_RIP3",
+      "OT_S81SL_LEP_ROS3"
+     ]
+    }
+   ],
+   "ops_note": "row-local ops (NOT in top-level ops until its bind proof is green); replaces verilog_defines of the type; CRP2 and WREP5 kept"
   }
  },
  "ops": [
