@@ -24878,3 +24878,5 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json) | kit epyc2:/srv/
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 47.4 h job 47.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 33.0 h; last event 17.5 h ago, log write 13.7 h ago (3167 lines)
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 15.9 h job 15.9 h: no new meaningful log line for 14.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS epyc8 i1 generate_abstract stage 1.4 h job 1.4 h: last event 1.3 h ago, log write 1.3 h ago (656 lines), cpu idle (hung)
+- 2026-11-22 06:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc8: rt/current 149a58c42d08 != hub efe70f16d3b1. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-22 06:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc8: rt/current 71c5a1ca59d3 != hub c19dbd9b5e68
