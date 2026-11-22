@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 NO_PROGRESS_MIN = 60
+DISK_EVIDENCE_MIN = 25     # waves throttle disk refusals to 15 min, plus tick scheduling delay
 SELF_STOP_MIN = 30
 NO_ADVANCE_H = 6
 STUCK_MIN = 60
@@ -164,7 +165,7 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
                 k = e["kind"].upper().replace("_", "-")
                 reasons[k] = reasons.get(k, 0) + 1
         disk = next((e for e in reversed(ev) if e.get("die") == die and e["kind"] == "disk_cap"
-                     and now - e["t"] <= timedelta(minutes=15) and (ll is None or e["t"] > ll)), None)
+                     and now - e["t"] <= timedelta(minutes=DISK_EVIDENCE_MIN) and (ll is None or e["t"] > ll)), None)
         details = [f"{k} x{n}" for k, n in sorted(reasons.items())]
         if disk:
             details.append(f"latest disk admission blocked {disk['item']}: {disk['why'][:270]}")
