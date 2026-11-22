@@ -22368,3 +22368,4 @@ FAILED [AUTOPILOT 0c4abfb40abd] 2026-11-21 21:37:34 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 21:52 PST epyc9 at 2582 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 21:53 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2896923 on civil-redfish: rc=0 after 29 s, ended 05:53:08, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push3.log, cmd: ot-push-main 
+- 2026-11-21 21:53 PST ALERT STUCK-STATE s81: 36 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
