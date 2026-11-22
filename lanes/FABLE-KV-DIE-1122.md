@@ -105,7 +105,26 @@ bench `rtl/test/meso/lite/run_csc.sh` 11 of 11 phases, 0 mismatches, shift and m
   `ft_corridor --band` finds no 3-station chain for a detour into an off-axis street, which is why the street is put on the ft3 axis.
 - kv3_hg (4 partitions) has another feedthrough path (ft2 at y 213-232); R5 leaves it (331k -> 323k only). Open.
 
-## 7. Not checked
+## 7. Gates (private ot-tree-fork of the D28 work tree, epyc8 `fable-kv-die/tree_a`, base dry5 fcfa38bdb65b, tools rt 6d2e187f0d65 + RING-LITE-2)
+
+| Gate | Rows | Plan | Result |
+|---|---|---|---|
+| A (`gate_a1`) | R1 + R1b | 6f866b1b34cc | precheck PASS, PLAN-GATE-PRE PASS 0, G0 PASS 0 errors / 2585 warnings, ELAB 0, strict bind 0 errors (160 / 56 / 2545), LATCHECK rc 0, BPC PASS 570, R8 = baseline (91 / 32 / 7). COORD ruled R1 + R1b into D28; scripts in `kv-plan-r6/d28/rows/` (9860691ee0da, 74bdc3ee5a86). |
+| B (`gate_b2`) | R1 + R1b + R5 + landing_remap + pinclear | 0585b4608c74 | row RC 0 (hg_v3 added tap clk_t52 moved 43.2 um off head0_e5), remap RC 0, pinclear 0 moves, PLAN-GATE-PRE PASS 0; G0 + bind running at 06:1x PST |
+
+LITE rings in the Gate A bound RTL: pv_v12 / v7 56, pv_v6 / v6n 50, pv_v5 / v5n 41, pv_v4 / v4n 34, pv_v3 / v3n 25, pv_v2 / v2n 18, pv_v1 / v1n 9,
+hgi_v3..v8 11-12, hroot 7, pc_v1 x3 / pc_v3 7, pc x2 4, io_cor_v1 12, sys_c 14, hg_v1.. 4.
+
+## 8. sys_c (COORD 05:3x: D27d3 kit GRT setup -418, 285 intra-D2D groups over 405 um, 2.7 mm reset recovery path) (M + ruling)
+
+- The slot is the pv column width x the io row height (2160 x 1036.8); both are shared, so a smaller sys_c outline frees no usable die area.
+- Pins on W and E only; the UCIe PHY is a fixed bump field at slot x 691-1469, y 60-838. A compact outline must contain it and reach
+  one face, so the other face stays 700-1500 um away: same station count as a compact region in the full slot, plus a re-shape of a
+  neighbour (io_cor is signed).
+- Ruling: D29 keeps the slot. Compaction = one place region for the D2D core (about 330 x 330 um at x 1500-1830, y 500-830 round the
+  four SRAMs), stations by placed length from the W bands over the PHY, a reset relay in the region. Owner FAM-KV-HUBC-SYSC-R2.
+
+## 9. Not checked
 
 - No placed-DB sink census by me (FABLE-FIX-KV-PV-SINKSPREAD owns it). The pv centre-bottom cluster is only partly rings: 14-18 narrow
   bands there on v6n / v5n, 0-1 on v12 / v7 / v2 (plan).
