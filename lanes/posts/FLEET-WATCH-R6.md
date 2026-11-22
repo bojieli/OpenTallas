@@ -26,3 +26,4 @@
 - 2026-11-21 19:13 PST intel1 RESTORED to gen_hosts at 298 GiB (cap 250 kept): PUSHED 06c01320a267d2f5a81131666154e228e7db5ba7 kit_wave_edit: committed autopilot/kit_wave.json at 06c01320a267d2f5a81131666154e228e7db5ba7
 - 2026-11-21 19:22 PST epyc9 at 483 GiB: already in gen_hosts, nothing to restore
 - 2026-11-21 19:22 PST intel1 at 556 GiB: already in gen_hosts, nothing to restore
+- 2026-11-21 19:22 PST HOURLY free space 19:22 epyc9=483 intel1=556 (restore at >=250 GiB; caps 250 on epyc9/intel1)

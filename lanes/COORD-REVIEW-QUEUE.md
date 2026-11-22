@@ -21480,3 +21480,4 @@ FAILED [AUTOPILOT 58dcd151714b] 2026-11-21 19:20:23 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 19:22 PST epyc9 at 483 GiB: already in gen_hosts, nothing to restore
 - 2026-11-21 19:22 PST intel1 at 556 GiB: already in gen_hosts, nothing to restore
 - 2026-11-21 19:22 PST STATE [FABLE-FIX-QC-STRAP-R2 -> COORD, QC-PLAN-R12] p1 slw_st_a_v2__cl9f076a5c resumed in place on epyc8 from CTS with GOAL grt (unit oth-ubuntu-187101-1795317712, 19:22 PST; reuses synth/floorplan/place; no route). run-item ends at geom for a private kit (geom PASS-COND; its advisory GRT hit the 600 s wall, rc 137, not a design verdict). Waiter on the grt stage; then I read R8 + btab endpoints on the final 5_1_grt.odb. Note epyc8 scratch was 71 GB free at 18:57 (under the 100 GB floor); a refusal there would stall this kit.
+- 2026-11-21 19:22 PST HOURLY free space 19:22 epyc9=483 intel1=556 (restore at >=250 GiB; caps 250 on epyc9/intel1)
