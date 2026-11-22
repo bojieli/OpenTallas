@@ -33,3 +33,15 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
 ## COORD item 11-22 lever 7 landing band x core G0 check: DONE main b7e262fd60
 - tools/die_plan/landing_band_core.py + check.py wiring (ERROR landing_band_core); existing findings S81 t3/t32, KV hg/hgi (16) posted.
 - COORD ruling error-on-new/warn-inherited + own-core exclusion: main b40d177ee8 + 53fba95dad; per-die list lanes/handoff/LANDING-BAND-CORE-1122.tsv (HEAD r17b 14 new hd_lep0N; QC V3 11-13 new; S81 2 / KV 8 inherited).
+
+## Item 5 FABLE-FLOW-0000 F2/F3/F6/F7/F9 + DEATHCLASS 1-3: DONE (pushed)
+- F9 main 2363679a9d: auto_export reads intel2's own spool (was missing from HOSTS); items >2 h retried once then set aside to spool/failed/<f>.reason; canary/test aside at once. Verified: intel2 canary records set aside 00:00.
+- F3 main fbc8d99350: tools/fleet/tool_copies.py (TOOL-COPY line in fleet-ops-r/host_report.sh, ALERT >24 h). intel2 crons flow_health / ot-reaper / limit_outage moved to rt/current (backup ~/.local/state/crontab.bak-flowfleetr1-1122). Left: autopilot.service dead wt fallback path (reported ALERT); rtx-pro ~/.local/bin/ot-run is a Nov 14 copy (no rt/ on rtx-pro).
+- F6 main 67607c6e47: UNDER-USE headline = measured load, committed threads beside it; cpu <70 % with rows waiting -> "BLOCKED ... top bucket".
+- F2 + DEATHCLASS main bdc4b147c2:
+  - ot-run --cancel SUBSTR --reason hang|design|infra (default manual); client prints OT-RUN-CANCEL reason=<r>; kit-wave books non-infra as CANCELLED class MANUAL-CANCEL (no free INFRA retry).
+  - kit-wave HANG: place/cts/grt/route row with no stage-log output 90 min while CPU grows -> HANG-REPORT, cancel 30 min later on the same frozen log (option hang_output_min 0 = off). Private kits stay report-only (noprog lane-own rule).
+  - SSH-DROP: cause = fleet names are ssh aliases (no DNS anywhere); on non-hub hosts `--hosts localhost` probed `ssh localhost` -> Host key verification failed -> NOT-RUN 78 (reproduced epyc8). canon_hosts() maps by `ssh -G` HostName vs local addrs; probe retries rc-255 resolve/transport 2x (2 s, 4 s). Old intel2 "Could not resolve intel2" logs are 11-02/03 (pre HUB_SELF).
+  - RAIL-KILL: all pinned hosts held/draining/refusing -> one PIN-FALLBACK to pinned+pool with spill on; --strict-host keeps the pin.
+  - SETUP: relative script / --stage missing on every --dir host -> NOT-RUN SETUP; --dir existing nowhere -> NOT-RUN SETUP message.
+- F7 main bdc4b147c2: tools/autopilot/uncounted_signed.py; intel2 cron :25 (runs once rt/current has it) -> lanes/UNCOUNTED-SIGNED.md + one NEEDS-ACTION per new row. Dry run 00:2x: 20 rows (18 PENDING-LEC incl t52 + QC slw_hc3 x4; QC sle_st_b_v2 archive key 8.3 h; 2 fable-fix-kv-hub export set-aside, rtx-pro unverified).
