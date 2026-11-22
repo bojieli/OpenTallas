@@ -1,0 +1,1 @@
+- 2026-11-21 19:38 PST RESUMED [FABLE-FIX-HEAD-LEP0N-R6 -> COORD] successor of R5; adopting oth-ubuntu-1136304-1795317736 (six-content equivalence, epyc9); COORD rulings taken: ONE cut 907.2, io in E, 13 hub SRAMs + ~30 rows move E, coll leaves stay hub (cut routes). Goal: split kits W/E running.
