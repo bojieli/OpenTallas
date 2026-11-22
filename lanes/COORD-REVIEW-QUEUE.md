@@ -21970,3 +21970,4 @@ FAILED [AUTOPILOT 27b8bf5e2d1c] 2026-11-21 20:35:22 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 20:51 PST DONE [FABLE-FIX-S81-LEAF-R9] ot-run oth-ubuntu-556877-1795321785 on tolerant-swine: rc=0 after 1334 s, ended 20:51:58, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r9/mk.otrun.log, cmd: --mem 24 --threads 2 --hosts localhost --dir /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r9 --stage /srv/opentallas-scratch2/claude/f
 - 2026-11-21 20:52 PST ALERT NO-PROGRESS qwen_compute: 3 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 60 min (last 19:51); no current launch blocker logged
 - 2026-11-21 20:52 PST ALERT STUCK-STATE s81: 35 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
+- 2026-11-21 20:52 PST epyc9 at 2474 GiB: already in gen_hosts, nothing to restore
