@@ -467,3 +467,6 @@
   NO-PROGRESS epyc2 kit drt_TT stage 38.1 h job 38.1 h: drt_violations best 14534 last 14534 rows 2 window-gain 0.0%; stagnant 8.2 h; last event 1.7 h ago, log write 0.8 h ago (1501 lines)
   NO-PROGRESS epyc10 slw_su_c__cl92142dac 5_1_grt stage 27.3 h job 46.5 h: repair_Viol best 737 last 737 rows 398 window-gain 0.0%; stagnant 14.1 h; last event 0.0 h ago, log write 0.0 h ago (855 lines)
   NO-PROGRESS intel1 qc_sle_ctl2 pregrt_ff_hold stage 7.3 h job 15.4 h: no new meaningful log line for 6.1 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.003 |   0.000 | u_bound.u_lpad_x_su_l0_i.r[17]
+- 2026-11-21 17:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-21 17:52 PST: 141 running jobs, PROGRESSING 126, SLOW 13, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 39.1 h job 39.1 h: drt_violations best 14534 last 14534 rows 2 window-gain 0.0%; stagnant 9.2 h; last event 0.7 h ago, log write 0.1 h ago (1505 lines)
+  NO-PROGRESS epyc10 slw_su_c__cl92142dac 5_1_grt stage 28.3 h job 47.5 h: repair_Viol best 737 last 737 rows 442 window-gain 0.0%; stagnant 15.1 h; last event 0.0 h ago, log write 0.0 h ago (899 lines)
