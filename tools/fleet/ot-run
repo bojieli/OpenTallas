@@ -144,7 +144,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
                          accepts, so the job is classified CANCELLED at its next poll instead of waiting for the 3 h ORPHAN
                          timer.  Refuses (exit 2) while a live local ot-run client still has that --dir (use --cancel).
                          It signals nothing and touches no unit, container or file.
-  ot-run --cancel SUBSTR [--all-dirs]   SIGTERMs the local ot-run clients whose arguments contain SUBSTR -- the ONLY way an
+  ot-run --cancel EXACT [--all-dirs]    SIGTERMs the local ot-run clients that EXACT names (pid, --dir, or one whole argument; never a substring, CANCEL-EXACT-1122) -- the ONLY way an
                          agent stops its own ot-run jobs besides `kill <exact pid>`.  It refuses (lists, kills nothing,
                          exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
                          take other lanes' jobs; --all-dirs overrides after reading the list.  Never `pkill -f` ot-run.
@@ -1442,8 +1442,19 @@ def cancel_unit(sub, run=None, fleet=None):
     return 0
 
 
+def client_matches(sub, pid, rest, d):
+    """CANCEL-EXACT-1122 (FLOW-OPS-R2, FABLE-FLOW-2200 item 4: substring cancels hit 3 bystander waiters whose bash -c text
+    contained the unit): a client matches only by an EXACT selector: its pid, its --dir (normalised path), or one whole argument
+    equal to SUB (e.g. its script path or a unit it names as its own argument).  Never a substring of a longer argument."""
+    if sub == str(pid):
+        return True
+    if d and sub.startswith("/") and os.path.normpath(sub) == os.path.normpath(d):
+        return True
+    return sub in rest
+
+
 def cancel(sub, all_dirs):
-    hit = {p: v for p, v in clients().items() if sub in " ".join(v[0])}
+    hit = {p: v for p, v in clients().items() if client_matches(sub, p, v[0], v[1])}
     if not hit and sub.startswith(("oth-", "otrun-")):
         return cancel_unit(sub)
     if not hit and sub.startswith("/srv/"):             # no client left (died / stale): the exact kit dir still names the container it mounts

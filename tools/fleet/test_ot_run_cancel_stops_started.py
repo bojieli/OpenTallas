@@ -24,11 +24,13 @@ def test_a_prefix_matching_two_clients_is_refused_without_all(monkeypatch, capsy
     monkeypatch.setattr(RUN, "clients", lambda: cl)
     killed = []
     monkeypatch.setattr(RUN.os, "kill", lambda p, s: killed.append(p))
-    assert RUN.cancel("bind_", False) == 2 and killed == []
+    assert RUN.cancel("bind_", False) == 1 and killed == []                                   # CANCEL-EXACT-1122: a prefix matches nothing
+    assert RUN.cancel("/srv/x/lane", False) == 2 and killed == []                             # one exact dir, two clients: refused without --all-dirs
     assert "REFUSED" in capsys.readouterr().out
-    monkeypatch.setattr(RUN, "stop_started", lambda t: None)
+    monkeypatch.setattr(RUN, "stop_started", lambda t, **k: None)
+    monkeypatch.setattr(RUN, "stop_by_path", lambda paths, **k: [])
     monkeypatch.setattr(RUN, "log_signal", lambda m: None)
-    assert RUN.cancel("bind_a", False) == 0 and killed == [1]                                  # one exact job: fine
+    assert RUN.cancel("bind_a.sh", False) == 0 and killed == [1]                              # one exact job: fine
 
 
 def test_the_exact_container_of_a_cancelled_job_is_stopped_by_name_after_the_scope_step():
@@ -100,3 +102,22 @@ def test_cancel_passes_the_whole_fleet_and_the_local_host_runs_without_ssh(monke
     calls = []
     orig([("epyc2", "otrun-hub-1-", 1)], fleet=["localhost"], run=lambda cmd, **k: (calls.append(cmd), types.SimpleNamespace(stdout="containers stopped: none\n", stderr=""))[1])
     assert any(c[0] == "bash" and "docker stop" in c[-1] for c in calls)                   # localhost: direct, no ssh
+
+
+def test_cancel_never_matches_a_substring_of_a_bystander_waiter(monkeypatch):
+    """CANCEL-EXACT-1122 (FABLE-FLOW-2200 item 4): 3 bystander waiters died because their bash -c text contained the selector"""
+    unit = "oth-ubuntu-1-2"
+    cl = {5: (["--dir", "/srv/x/a", "--", "bash", "-c", f"until ot-wait {unit}; do sleep 9; done"], "/srv/x/a"),
+          6: (["--dir", "/srv/x/b", "--", "bash", "job.sh"], "/srv/x/b")}
+    monkeypatch.setattr(RUN, "clients", lambda: cl)
+    killed = []
+    monkeypatch.setattr(RUN.os, "kill", lambda p, s: killed.append(p))
+    monkeypatch.setattr(RUN, "cancel_unit", lambda s: 1)
+    for sel in (unit, "job", "/srv/x", "ot-wait", "x/b"):
+        RUN.cancel(sel, False)
+    assert killed == []
+    monkeypatch.setattr(RUN, "stop_started", lambda t, **k: None)
+    monkeypatch.setattr(RUN, "stop_by_path", lambda paths, **k: [])
+    monkeypatch.setattr(RUN, "log_signal", lambda m: None)
+    assert RUN.cancel("6", False) == 0 and killed == [6]
+    assert RUN.cancel("/srv/x/a/", False) == 0 and killed == [6, 5]
