@@ -1,1 +1,2 @@
 - 2026-11-21 23:54 PST owners_sweep.py now reads COORD-ROUTED-OWNERS.tsv prefix rows (first match wins; owned if the lane posted in 6 h), commit 472964cd. Flagged UNOWNED 16 -> 10 (S81); DEAD-OWNER 1 unchanged; no-flag rows 371 -> 377.
+- 2026-11-21 23:58 PST DONE [flow-deathclass-r1] ot-push-main otpush-tolerant-swine-726206 on tolerant-swine: rc=0 after 14 s, ended 23:58:13, log none, cmd: ot-push-main 
