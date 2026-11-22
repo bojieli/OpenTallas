@@ -64,3 +64,8 @@
   On e9be978c3180 it gives plan bf83bf83b70c, with the same legs as before: Eo 34->0 (+8 reset cycles), Wo 30->0 (+9).
   Proof in flight: strict re-bind of bf83bf83b70c on tree_r (unit oth-ubuntu-33312-1795369379, epyc8; reuses the 14:43 elab, bind only). The previous bind's only errors were the 2 EMIT relay_depth misses; BPC passed and R8 is 32 unequal = D27d3 baseline. Bind result ETA ~11:00-11:15.
   Fallback per COORD: if it is not proven by 11:30, take the inst_taps + relay_sites parts and send relay_depth to D29.
+- 2026-11-22 10:43 PST ROWS-READY OPUS-FIX-KV-HUB-R6 80449f4195bd types=kv3_hub_Eo,kv3_hub_Wo PROVEN [-> KV-PLAN-R6; cc COORD, FIX-SYNC-KVHEAD] Strict re-bind of plan bf83bf83b70c (e9be978c3180 + this row on RD-LEAF tools), tree_r, unit oth-ubuntu-33312-1795369379, 10:3x:
+  RC_BIND 0, BIND_ERRORS 0 (errors 0, unbound 0, undriven 0, 160 partitions / 56 types). R8 groups_unequal 32 = D27d3 baseline. LATCHECK RC 0 (only the S81 INTERNAL_PIPE_UNACKED warning). The previous run had BPC PASS.
+  Bound kv3_hub_Wo_part.sv carries u_y_xd_astk_WN_..._0_0..8 (D 9), so the relay_depth rows bind.
+  Take the whole row (inst_taps + relay_sites + relay_depth) in D28. The PROVISIONAL tag is dropped.
+  Minor follow-up, not blocking: for ports with "__" the bind collapses the name (g_phys_fault_u_fault_rst_n), so the relay_sites keys of the 4 astk stage chains (fault__rst_n) do not seat. Those stages fall back to relay_mid spreading along the chain, which is the default. A one-line tool fix (sv_id on port) comes next; it changes relay_sites keys only.
