@@ -341,6 +341,20 @@ def ring_write_reg(plan, tn, bus):
     hp = hard_ring_params(plan, tn, bus) if _listed else None
     if hp is not None and int(hp.get("WREG", 0)) == 1 and not int(hp.get("FREG", 0)) and cfg.get("freg"):
         cfg = {k: v for k, v in cfg.items() if k not in ("freg", "freg_numeric_order")}
+    # FREG-BUSES-1 (QC-SLE-R5 11-22, opt-in, absent = byte-identical): landing_ring_wreg.freg is ONE boolean for every listed bus of the
+    # type.  "freg_buses": [bus, ..] puts the rising-fclk face register (FREG=1, +1 data cycle on that crossing, declared on the bind
+    # sidecar exactly as for freg) on those buses only, so a half-cycle port -> landing D class (QC sle_ctl cws1_i / cws2_i /
+    # x_hc1_st_b_i, TT -92..-111 ps) is registered at the pin face without paying the cycle on the other buses.  Exclusive with
+    # "freg" and "freg_numeric_order".
+    fb = cfg.get("freg_buses")
+    if fb is not None:
+        if (not isinstance(fb, list) or not fb or len(fb) != len(set(fb))
+                or any(not isinstance(b, str) or not re.fullmatch(r"[A-Za-z_]\w*", b) for b in fb)):
+            raise ValueError(f"{tn}: landing_ring_wreg.freg_buses must list unique bus names")
+        if cfg.get("freg") or cfg.get("freg_numeric_order"):
+            raise ValueError(f"{tn}: landing_ring_wreg.freg_buses excludes freg and freg_numeric_order")
+        cfg = {k2: v for k2, v in cfg.items() if k2 != "freg_buses"}
+        cfg["freg"] = bus in fb
     dsrep = cfg.get("dsrep", 1)
     if isinstance(dsrep, bool) or not isinstance(dsrep, int) or dsrep < 1 or 64 % dsrep:
         raise ValueError(f"{tn}: landing_ring_wreg.dsrep must divide 64")

@@ -473,7 +473,7 @@ def _band_groups(tn, name, band, typ):
         # the storage band; adding the register alone does not shorten pin reach.
         wreg = (typ or {}).get('clock', {}).get('landing_ring_wreg') or {}
         legacy = (typ or {}).get('clock', {}).get('landing_input_freg') or []
-        ca_freg = wreg.get('freg') and name in wreg.get('buses', [])
+        ca_freg = (wreg.get('freg') or name in (wreg.get('freg_buses') or [])) and name in wreg.get('buses', [])
         if not ca_freg and name not in legacy:
             raise ValueError(f'{tn}.{name}: freg_rect_um requires this bus FREG')
         if cfg or len(rects) != 1:

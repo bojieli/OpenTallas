@@ -3707,6 +3707,15 @@
          "freg": {
           "type": "boolean"
          },
+         "freg_buses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+           "type": "string",
+           "pattern": "^[A-Za-z_]\\w*$"
+          }
+         },
          "write_chunk": {
           "type": "integer",
           "enum": [
