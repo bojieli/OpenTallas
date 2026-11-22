@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.j6_donor_delta.v1",
+ "lane": "FAM-S81-SERDES-R7",
+ "base": "J8p3 9fe026d10b26 (origin stays 77.76, 4.32)",
+ "note": "Adopt the merged track-centred PHY pin contract (tools/s81_dv/phy_pin_track_form.py, main 4103cdee09, rows results/geom_review/phy_pin_track_1117/rows.json, never applied to the J7eL6/J8 plan). At origin 77.76 all 19,907 signal pins (14,153 M5 + 5,754 M7) land on their own layer track grid (measured 0 off). Pins move <=12 nm; same names/outline/libs; 0 cycles. Replaces phy_macro_grid.json (x -0.012 shift, 5,757 pins still off).",
+ "ops": [
+  {
+   "op": "replace",
+   "path": "/partition_types/phy__t1/contents/0/lef",
+   "expected_old": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k/ot_hbm3e_phy_v41x_aw30_e8p5_k.lef",
+   "value": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k_track1117/ot_hbm3e_phy_v41x_aw30_e8p5_k.lef"
+  }
+ ]
+}
