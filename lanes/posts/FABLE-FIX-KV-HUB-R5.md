@@ -31,3 +31,5 @@
   [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
 - 2026-11-22 07:41 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-2591189 on outgoing-giraffe: rc=0 after 1265 s, ended 15:41:21, log none, cmd: ot-push-main 
   [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
+- 2026-11-22 09:03 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-2200393 on outgoing-giraffe: rc=0 after 63 s, ended 17:03:20, log none, cmd: ot-push-main 
+  [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
