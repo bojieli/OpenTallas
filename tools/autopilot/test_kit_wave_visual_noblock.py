@@ -20,9 +20,10 @@ def verdict(monkeypatch):
 
 
 @pytest.mark.parametrize("v", [None, "ISSUES", "PENDING"])
-def test_required_review_is_advisory_after_auto_geom_pass(verdict, v):
+@pytest.mark.parametrize("gv", ["PASS", "PASS-COND"])
+def test_required_review_is_advisory_after_auto_geom_pass(verdict, v, gv):
     verdict["v"] = v
-    row = dict(ROW)
+    row = dict(ROW, geom_verdict=gv)
     assert K.required_route_hold(CFG, row) is None
     assert K.route_hold_reason(CFG, dict(ROW)) is None
     assert row["visual_pending"].startswith("WAIT-VISUAL (advisory): AUTO-GEOM PASS")
@@ -34,7 +35,7 @@ def test_bad_verdict_still_holds(verdict):
     assert K.route_hold_reason(CFG, dict(ROW)).startswith("WAIT-FORM")
 
 
-@pytest.mark.parametrize("geom", [{"geom_verdict": "PASS-COND"}, {"geom_verdict": None}, {"geom_dir": None}])
+@pytest.mark.parametrize("geom", [{"geom_verdict": "FAIL"}, {"geom_verdict": None}, {"geom_dir": None}])
 def test_no_auto_geom_pass_keeps_required_hold(verdict, geom):
     row = dict(ROW, **geom)
     assert K.required_route_hold(CFG, row).startswith("WAIT-VISUAL")
@@ -50,7 +51,8 @@ def test_route_mode_visual_hold(monkeypatch):
     cfg = {"dies": {"hbm": {}}}
     rec = dict(ROW, die="hbm", kind="type")            # hbm keeps holds unless its own AUTO-GEOM passed
     assert K.visual_hold(cfg, dict(rec)) is None
-    assert K.visual_hold(cfg, dict(rec, geom_verdict="PASS-COND")).startswith("WAIT-VISUAL")
+    assert K.visual_hold(cfg, dict(rec, geom_verdict="PASS-COND")) is None      # granted geom FAIL still has its render
+    assert K.visual_hold(cfg, dict(rec, geom_verdict=None)).startswith("WAIT-VISUAL")
     box[("hbm", "t1", 1)] = "ISSUES"
     assert K.visual_hold(cfg, dict(rec)) is None
     assert K.visual_hold(cfg, dict(rec, geom_dir=None)).startswith("WAIT-FORM")

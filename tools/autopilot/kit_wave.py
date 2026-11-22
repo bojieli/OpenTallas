@@ -16288,7 +16288,9 @@ def auto_geom_passed(rec):
     place renders exist.  Such a row routes at once: a pending or ISSUES visual verdict is advisory (visual_pending, GEOM
     queue); only an explicit BAD verdict holds it (WAIT-FORM).  PASS-COND (AUTO-GEOM FAIL granted) or no geom record keeps the
     review holds (no render because geom failed)."""
-    return str(rec.get("geom_verdict") or "").strip().upper() == "PASS" and bool(rec.get("geom_dir"))
+    # PASS-COND (AUTO-GEOM FAIL granted by a die exception) ran geom and has its render too: it routes like PASS (FABLE-FLOW-2200:
+    # 51 qwen_compute/s81 rows held WAIT-VISUAL 24-39 h were all PASS-COND)
+    return str(rec.get("geom_verdict") or "").strip().upper() in ("PASS", "PASS-COND") and bool(rec.get("geom_dir"))
 
 
 def visual_reject_holds(rec, verdict):
