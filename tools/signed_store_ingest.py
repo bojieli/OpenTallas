@@ -44,7 +44,8 @@ def host_cmd(h, remote):
 
 AGI_KEY = os.path.expanduser('~/.ssh/agidock_ot')
 AGI = SSH + ['-i', AGI_KEY, 'ubuntu@155.103.253.53']
-ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
+LIVE = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10')   # FLOW-CANARY-R2 11-21 (COORD): live gen hosts only
+ORDER = tuple(h for h in ('intel1', 'intel2', 'epyc2') if h in rtp.HOSTS and h in LIVE) + tuple(h for h in rtp.HOSTS if h in LIVE and h not in ('intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
 import importlib.util, json, os, sys
@@ -125,10 +126,12 @@ def marker_sweep(fails, cache=None):
     known = {'%s:%s' % (r['host'], r['dir'].rstrip('/')) for r in rtp.dnc_rows()}
     add = []
     for h, ds in sorted(need.items()):
+        if h not in LIVE:                                   # retired hosts (epyc1/3/4/5/6): never ssh them (epyc4 has a changed host key)
+            continue
         try:
             r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
             if r.returncode != 0 or not r.stdout.strip():          # a terminated / unreachable host has no markers to read
-                say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-80:].strip()); continue
+                say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-160:].strip().replace(chr(10), ' | ')); continue
             found = json.loads(r.stdout)
         except Exception as e:
             fails.append([h, '*', 'marker sweep', str(e)[:200]]); continue
@@ -507,7 +510,8 @@ def main():
                unreachable=unreachable, commit_rc=commit, dry=dry)
     LAST.write_text(json.dumps(res, indent=1))
     say('DONE new', len(new), 'fails', len(fails), 'unreachable', unreachable, 'commit rc', commit, '%d s' % res['secs'])
-    return 1 if fails or unreachable else 0
+    # per-record fails stay listed in last.json; the unit fails only for infrastructure (store commit / a live host unreachable)
+    return 1 if commit or [u for u in unreachable if u in LIVE] else 0
 
 
 if __name__ == '__main__':
