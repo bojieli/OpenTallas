@@ -119,13 +119,18 @@ def test_drop_keeps_a_copy_another_process_uses(tmp_path):
     mk = tmp_path / "lane" / "mark"
     mk.write_text("")
     cmd = m.spill_drop_cmd(str(r), shlex.quote(str(mk)), shlex.quote(str(mk)))
+    fake = tmp_path / "fakebin"                         # hermetic docker (see _drop): `docker inspect` of ~100 churning containers fails closed
+    fake.mkdir()
+    (fake / "docker").write_text("#!/bin/sh\nexit 0\n")
+    (fake / "docker").chmod(0o755)
+    env = dict(os.environ, PATH=f"{fake}:{os.environ.get('PATH', '')}")
     other = subprocess.Popen(["sh", "-c", f": {r}; sleep 30"])
     time.sleep(0.2)
     try:
-        out = subprocess.run(["sh", "-c", cmd], capture_output=True, text=True).stdout
+        out = subprocess.run(["sh", "-c", cmd], capture_output=True, text=True, env=env).stdout
         assert "DROPPED" not in out and r.is_dir()
     finally:
         other.kill()
         other.wait()
-    out = subprocess.run(["sh", "-c", cmd], capture_output=True, text=True).stdout
+    out = subprocess.run(["sh", "-c", cmd], capture_output=True, text=True, env=env).stdout
     assert "DROPPED" in out and not r.exists()
