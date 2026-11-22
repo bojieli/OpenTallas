@@ -1,5 +1,5 @@
 """FLOW-CLKGRT-1121: OT_GRT_CLOCK_FIRST=1 (gen env) -> config.mk line + grt_clock_first.tcl staged + hook appended last to grt_pre.tcl;
-unset -> kit byte-equal.  The Tcl wraps only the first full global_route and passes incremental calls through."""
+unset -> on (default, FLOW-CLKGRT-R2); OT_GRT_CLOCK_FIRST=0 -> no line, no hook.  The Tcl wraps only the first full global_route and passes incremental calls through."""
 import re
 import sys
 from pathlib import Path
@@ -11,11 +11,16 @@ sys.path.insert(0, str(HERE))
 import gen_phys  # noqa: E402
 
 
-def test_cfg_off_by_default(monkeypatch):
-    monkeypatch.delenv("OT_GRT_CLOCK_FIRST", raising=False)
-    assert gen_phys.grt_clock_first_cfg() == []
+def test_cfg_on_by_default_opt_out(monkeypatch):
+    for k in ("OT_GRT_CLOCK_FIRST", "OT_GRT_CLOCK_FIRST_RESERVE", "OT_GRT_CLOCK_FIRST_RES_AWARE"):
+        monkeypatch.delenv(k, raising=False)
+    assert "export OT_GRT_CLOCK_FIRST = 1" in gen_phys.grt_clock_first_cfg()
+    assert not any("RES_AWARE" in l for l in gen_phys.grt_clock_first_cfg())   # resistance-aware stays opt-in
     monkeypatch.setenv("OT_GRT_CLOCK_FIRST", "0")
     assert gen_phys.grt_clock_first_cfg() == []
+    monkeypatch.setenv("OT_GRT_CLOCK_FIRST", "2")
+    with pytest.raises(SystemExit):
+        gen_phys.grt_clock_first_cfg()
 
 
 def test_cfg_on_and_reserve(monkeypatch):

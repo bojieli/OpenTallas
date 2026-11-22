@@ -3164,11 +3164,17 @@ def pgcap_install(kd):
 
 
 def grt_clock_first_cfg():
-    """FLOW-CLKGRT-1121 opt-in config.mk lines from the gen environment: OT_GRT_CLOCK_FIRST=1 turns on grt_clock_first.tcl (sourced
-    last in grt_pre.tcl): the first full global_route of the GRT stage routes the clock nets alone, then every other net around
-    them with their gcell-edge usage reserved, so the congestion negotiation cannot detour clock leaf branches.
-    OT_GRT_CLOCK_FIRST_RESERVE=0 (A/B only) skips the reservation.  Nothing is written without OT_GRT_CLOCK_FIRST=1."""
-    if os.environ.get("OT_GRT_CLOCK_FIRST", "").strip() != "1":
+    """FLOW-CLKGRT-1121 / FLOW-CLKGRT-R2 config.mk lines from the gen environment.  DEFAULT ON (COORD lever 4, 11-22): grt_clock_first.tcl
+    (sourced last in grt_pre.tcl) routes the clock nets alone in the first full global_route of the GRT stage, then every other net around
+    them with their gcell-edge usage reserved, so the congestion negotiation cannot detour clock leaf branches.  Measured: KV hroot a5
+    (congested) overflow 424 -> 385, FF internal hold -170 -> -86 ps, TT setup -660 -> -624, clock t9 spread 244 -> 170 ps; HEAD hd_spn a5
+    (open) overflow 0 / 0, TT +8.81 / +8.81, FF hold all -103.2 / -105.8, internal -9.06 / -8.90.  OT_GRT_CLOCK_FIRST=0 opts out (no line,
+    no hook).  OT_GRT_CLOCK_FIRST_RES_AWARE=1 stays opt-in (both phases resistance-aware: hroot hold -60 ps, but hd_spn FF hold all -18 ps
+    and 10x GRT runtime).  OT_GRT_CLOCK_FIRST_RESERVE=0 (A/B only) skips the reservation."""
+    v0 = os.environ.get("OT_GRT_CLOCK_FIRST", "").strip()
+    if v0 not in ("", "0", "1"):
+        raise SystemExit(f"OT_GRT_CLOCK_FIRST={v0!r}: 0 or 1")
+    if v0 == "0":
         return []
     out = ["# FLOW-CLKGRT-1121: clock-first global route (grt_clock_first.tcl, sourced last in grt_pre.tcl)", "export OT_GRT_CLOCK_FIRST = 1"]
     for k in ("OT_GRT_CLOCK_FIRST_RESERVE", "OT_GRT_CLOCK_FIRST_RES_AWARE"):

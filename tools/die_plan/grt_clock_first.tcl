@@ -1,4 +1,4 @@
-# GENERATED-COPY of tools/die_plan/grt_clock_first.tcl (FLOW-CLKGRT-1121, opt-in OT_GRT_CLOCK_FIRST=1; sourced last in grt_pre.tcl).
+# GENERATED-COPY of tools/die_plan/grt_clock_first.tcl (FLOW-CLKGRT-1121, gen default OT_GRT_CLOCK_FIRST=1 (FLOW-CLKGRT-R2), opt-out =0; sourced last in grt_pre.tcl).
 # Clock-first global routing.  The 30-iteration congestion negotiation rips up and re-routes every net that crosses an
 # overflowed gcell edge, clock leaf branches included, so near-tap clock branches came out 217..432 um where the same CTS
 # database routes them <= 215 um on an empty grid (KV hroot D25d a5: clk_t9 spread 39 -> 510 ps after GRT; leaf repeaters on
@@ -11,7 +11,7 @@
 #            -global_routing, repair_design / repair_timing incremental routes, the GRT leaf-repeat pass) holds every net.
 # Later global_route calls (-start_incremental / -end_incremental) pass through unchanged.  OT_GRT_CLOCK_FIRST_RES_AWARE=1 adds
 # -resistance_aware -res_aware_nets_percentage 0 to both phases (recommended form).  OT_GRT_CLOCK_FIRST_RESERVE=0 skips
-# the phase-2 capacity reservation (A/B only).  Opt-out: OT_GRT_CLOCK_FIRST unset / 0 (the hook is then a no-op).
+# the phase-2 capacity reservation (A/B only).  Opt-out: gen env OT_GRT_CLOCK_FIRST=0 (config.mk without the key: the hook is a no-op).
 namespace eval ot_gcf {
   variable done 0
   # clock network = the nets from every register clock pin up through the buffer / inverter tree (single-input cells, or the CLK
