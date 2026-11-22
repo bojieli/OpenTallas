@@ -6,7 +6,7 @@ import json,sys
 v3p,cap_p,base_p,outp=sys.argv[1:5]
 V3=json.load(open(v3p)); C=json.load(open(cap_p)); B=json.load(open(base_p))
 TYPES=["sle_su_c","slw_su_c__cl92142dac","slw_su_c__cl19bb38ef"]
-rep={}; DELTA={}
+rep={}; DELTA={}; DELTA_IN={}
 for tn in TYPES:
     t3=V3["partition_types"][tn]; tc=C["partition_types"][tn]; tb=B["partition_types"][tn]
     ic={e["conn"]:e for e in tc["internal_stations"]}; i3={e["conn"]:e for e in t3["internal_stations"]}; ib={e["conn"]:e for e in tb["internal_stations"]}
@@ -19,14 +19,16 @@ for tn in TYPES:
             for k in [k for k in rs3 if k.startswith(pre)]: del rs3[k]
             for k,v in rsc.items():
                 if k.startswith(pre): rs3[k]=v
-            if d: DELTA[(tn,c[4:])]=d
+            if d and c[4:].endswith("_o"): DELTA[(tn,c[4:])]=d
+            elif d: DELTA_IN[(tn,c[4:])]=d
     rep[tn]={"changed":changed,"d":{b:d for (t,b),d in DELTA.items() if t==tn}}
 ptype={x["name"]:x["type"] for x in V3["partitions"]}
 ports=V3["ports"] if isinstance(V3["ports"],dict) else {x["id"]:x for x in V3["ports"]}
 lanes=[]
 for l in V3["lanes"]:
     a=ports[l["ports"][0]].get("src") or {}
-    d=DELTA.get((ptype.get(a.get("part")),a.get("bus")),0)
+    dd=ports[l["ports"][-1]].get("dst") or {}
+    d=DELTA.get((ptype.get(a.get("part")),a.get("bus")),0)+DELTA_IN.get((ptype.get(dd.get("part")),dd.get("bus")),0)
     if d:
         l["fixed_cycles"]=int(l.get("fixed_cycles",0))+d; r=V3["latency"]["lanes"][l["id"]]
         for k in ("fixed","cycles","natural"): r[k]=int(r[k])+d
