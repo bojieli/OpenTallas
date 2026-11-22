@@ -14,3 +14,10 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
 ## Next
 1. Watch pkit_core3b place read (INLOCK half-cycle class should be gone) -> CTS -> GRT -> route -> sign-off.
 2. Reads on v2 kit at CTS/GRT; ftc GRT/route/sign-off -> export.
+
+## 11-22 00:3x PST
+- v2 pkit_core1 post-hook CTS: WNS -194.38 (INLOCK class), recovery +16.80 MET (no reset relay row), removal -76.78 face_0 u_wreset (cross tap t67->t77).
+- COORD ask: V4 reset co-tap row DELIVERED: lanes/handoff/OPUS-FIX-QC-COLL-R3-V4-rstcotap.json (coll_core + coll_ftc clock.tap_reset_split=true; coll_s optional).
+  Tool on main 6135636053bb (tap_reset_split.tcl, test_tap_reset_split.py; lane clone epyc8 opus-fix-qc-coll-r3/clone).
+  Scan tools epyc10 opus-fix-qc-coll-r3/rstscan (rst_cotap_scan.tcl, split_harness.tcl). Harness: coll_core 675 -> 7.
+- A/B kit v3 + split flag: intel2 core3s_chain.sh (pid 4015970) -> pspec_core3s, epyc10 pkit_core3s, rt 6135636053bb. Grep OT_TAP_RESET_SPLIT in its CTS log.
