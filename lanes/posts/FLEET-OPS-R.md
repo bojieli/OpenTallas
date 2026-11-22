@@ -1028,3 +1028,4 @@
 - 2026-11-21 19:20 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 112 GB, falling 12 GB/h, floor 50 GB in 5.0 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
 - 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on intel1 wrote 259 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fable-fix-qc-sta on intel1 wrote 56 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col on intel1 wrote 48 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm

@@ -21497,3 +21497,4 @@ FAILED [AUTOPILOT 58dcd151714b] 2026-11-21 19:20:23 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 19:24 PST DIED [FAM-S81-LEPE-3] ot-run oth-ubuntu-3534595-1795288755 on outgoing-giraffe: rc=2 after 29127 s, ended 03:24:40, log /srv/opentallas-scratch2/claude/fam-lepe/p11/run11.log, cmd: --mem 72 --threads 16 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-lepe/p11 -- bash /srv/opentallas-scratch2/claude/fam-lepe/p11/
   [filed under] FAM-S81-LEPE-4: FAM-S81-LEPE-3 stood down (chain FAM-S81-LEPE-3 > FAM-S81-LEPE-4)
 - 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fable-fix-qc-sta on intel1 wrote 56 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col on intel1 wrote 48 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
