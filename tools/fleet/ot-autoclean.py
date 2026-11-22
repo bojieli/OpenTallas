@@ -3303,10 +3303,16 @@ class Driver:
         finally:
             shutil.rmtree(tb, ignore_errors=True)
         st, td = shlex.quote(self.rstate), shlex.quote(self.tools)
-        cmd = (f"set -e; mkdir -p {st} {td}; T=$(mktemp -d {st}/.push.XXXXXX); tar -C $T -xf -; "
-               f"if [ -f $T/guard/protected.txt ]; then mkdir -p ~/.local/state/ot-delete-guard; cp $T/guard/protected.txt ~/.local/state/ot-delete-guard/protected.txt; fi; "
-               f"cp $T/tools/* {td}/; rm -rf {st}/snapshot.old; if [ -d {st}/snapshot ]; then mv {st}/snapshot "
-               f"{st}/snapshot.old; fi; mv $T/snapshot {st}/snapshot; rm -rf $T {st}/snapshot.old")
+        cmd = (f'set -e; mkdir -p {st} {td}; T=$(mktemp -d {st}/.push.XXXXXX); tar -C "$T" -xf -; '
+               'if [ -f "$T"/guard/protected.txt ]; then mkdir -p ~/.local/state/ot-delete-guard; '
+               'cp "$T"/guard/protected.txt ~/.local/state/ot-delete-guard/protected.txt; fi; '
+               f'for src in "$T"/tools/*; do dst={td}/${{src##*/}}; '
+               'if cmp -s -- "$src" "$dst"; then continue; fi; '
+               'tmp=$(mktemp "$dst.new.XXXXXX"); cp -- "$src" "$tmp"; '
+               'if [ -f "$dst" ]; then chmod --reference="$dst" "$tmp"; else chmod --reference="$src" "$tmp"; fi; '
+               'mv -fT -- "$tmp" "$dst"; done; '
+               f"rm -rf {st}/snapshot.old; if [ -d {st}/snapshot ]; then mv {st}/snapshot "
+               f'{st}/snapshot.old; fi; mv "$T"/snapshot {st}/snapshot; rm -rf "$T" {st}/snapshot.old')
         r = self.r.host(h, cmd, inp=data, binary=True)
         return r.returncode == 0, (r.stderr or b"").decode(errors="replace")[:200]
 
