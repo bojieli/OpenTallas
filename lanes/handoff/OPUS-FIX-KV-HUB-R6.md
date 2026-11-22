@@ -48,3 +48,10 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - Kits: hub_Ei PLACED, chain goal route, in CTS (02:20). hub_Wo / hub_Eo past global place (the fix works), in resize / detail place.
   Waiter bolt9appw: failed stage or first cts/grt/route pass.
 - NEXT on GRT: read final 5_1_grt.odb TT setup and FF hold (never 5_global_route.rpt), then route DRC -> signoff chain + routed LEC.
+
+## 02:4x COORD ruling (main 03412153064a): private kits count only if SEALED + EQUIVALENT routed LEC
+- My 3 kits are --src-manifest off (rt bdb08607ce36) = PROOFS ONLY. Trees tree_b / tree_h3 are sealable forks (parent manifest fa1d8c9906a3).
+- When a proof shows it can close (final 5_1_grt.odb TT >= -42, FF hold >= 0): relaunch that type as a SEALED private-spec on the same tree and plan
+  (no --src-manifest off; --rt b15a8a1023ed, which is >= 6d2e187f0d floor and contains my fixes). Waiters: ot-wait --durable.
+- After sign-off + EQUIVALENT routed LEC: kit_wave.py private-provenance <private_specs/OPUS-FIX-KV-HUB-R6/dir> --lec <routed lec.json>.
+- Never edit tree_b / tree_h3 again (a seal must equal what gen read).
