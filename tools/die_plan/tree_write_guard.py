@@ -13,6 +13,11 @@ epyc7 and epyc10.  A tmp + rename write breaks a hardlink (new inode) but follow
              naming the first symlink on the way.
     rule 2   inplace=True (a writer that opens the existing file for writing): a regular file with nlink > 1 is refused, its inode is
              shared with another tree.  tmp + rename writers pass inplace=False: the rename gives the path a new inode.
+    rule 3   LANE-OWN-1122 (COORD, FLOW-OPS-R2 slips 11-22): when the writer names its lane ($OT_LANE, or lane=), a target whose REAL path
+             lies in another lane's directory is refused even without a symlink: /srv/opentallas-scratch*/claude/<dir>/... with <dir> a
+             lane directory (lane-style name: words joined by '-', ending -r<N> or -<NNNN>; or a tree whose .fork.json names a lane)
+             that is not the writer's own (case and '_'/'-' ignored).  Shared containers (kw<N>*, rt, git, hub-coord, autopilot, ...)
+             are not lane directories.  $OT_TREE_WRITE_ANY_LANE=1 lifts rule 3 for one deliberate hand-off write.
 Stdlib only, stat-only."""
 import os
 import sys
@@ -51,8 +56,53 @@ def first_link(path, root):
     return ""
 
 
-def refusal(path, root=None, inplace=False):
+import re as _re
+CLAUDE = _re.compile(r"^/srv/opentallas-scratch[^/]*/claude/([^/]+)(?:/|$)")
+LANE_DIR = _re.compile(r"^(?!kw\d)[a-z0-9]+(?:-[a-z0-9]+)*-(?:r\d+|\d{4})$", _re.I)
+
+
+def _norm(s):
+    return str(s or "").strip().lower().replace("_", "-")
+
+
+def owner_lane(real):
+    """the lane that owns REAL path: .fork.json "lane" of the nearest fork root, else the lane-style claude/<dir> it lies in, else ''"""
+    d = os.path.dirname(real)
+    while d and d != "/":
+        f = os.path.join(d, ".fork.json")
+        if os.path.isfile(f):
+            try:
+                import json as _j
+                ln = (_j.load(open(f)) or {}).get("lane")
+                if ln:
+                    return str(ln)
+            except (OSError, ValueError):
+                pass
+            break
+        d = os.path.dirname(d)
+    m = CLAUDE.match(real)
+    return m.group(1) if m and LANE_DIR.match(m.group(1)) else ""
+
+
+def lane_refusal(path, lane=None):
+    """rule 3 text or ''"""
+    lane = lane if lane is not None else os.environ.get("OT_LANE", "")
+    if not lane or os.environ.get("OT_TREE_WRITE_ANY_LANE") == "1":
+        return ""
+    real = os.path.realpath(os.path.abspath(path))
+    own = owner_lane(real)
+    if own and _norm(own) != _norm(lane):
+        return (f"TREE-WRITE REFUSED {path}: resolves to {real}, which belongs to lane {own}, not to the writer lane {lane}. "
+                f"Write into your own lane dir (/srv/opentallas-scratch*/claude/{lane}/...) or ask {own}; "
+                f"OT_TREE_WRITE_ANY_LANE=1 only for an agreed hand-off write.")
+    return ""
+
+
+def refusal(path, root=None, inplace=False, lane=None):
     p = os.path.abspath(path)
+    w = lane_refusal(p, lane)
+    if w:
+        return w
     r = os.path.abspath(root) if root else tree_root(p)
     if r:
         rr, tgt = os.path.realpath(r), os.path.realpath(p)

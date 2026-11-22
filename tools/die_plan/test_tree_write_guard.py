@@ -96,3 +96,28 @@ def test_private_spec_refuses_symlinked_die_plan(tmp_path):
     S, P = trees(tmp_path)
     assert "physical/die_plan is a symlink" in KW.private_tree_plan_link_refusal(str(P), "qwen_compute")
     assert KW.private_tree_plan_link_refusal(str(S), "qwen_compute") == ""
+
+
+
+def test_lane_own_rule_refuses_other_lane_dir_without_symlink(monkeypatch):
+    other = "/srv/opentallas-scratch2/claude/opus-fix-kv-hgi-r6/launch27f/physical/die_plan/x/plan.json"
+    own = "/srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/x.json"
+    monkeypatch.delenv("OT_TREE_WRITE_ANY_LANE", raising=False)
+    w = TWG.lane_refusal(other, lane="FLOW-OPS-R2")
+    assert "belongs to lane opus-fix-kv-hgi-r6" in w and "writer lane FLOW-OPS-R2" in w
+    assert TWG.lane_refusal(other, lane="OPUS-FIX-KV-HGI-R6") == ""                # own lane, case-insensitive
+    assert TWG.lane_refusal(own, lane="FLOW-OPS-R2") == ""
+    assert TWG.lane_refusal("/srv/opentallas-scratch2/claude/kw45/snap/x.json", lane="FLOW-OPS-R2") == ""   # shared container
+    assert TWG.lane_refusal("/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/x", lane="FLOW-OPS-R2") == ""
+    assert TWG.lane_refusal(other, lane="") == ""                                   # no lane named: rule 3 off
+    monkeypatch.setenv("OT_TREE_WRITE_ANY_LANE", "1")
+    assert TWG.lane_refusal(other, lane="FLOW-OPS-R2") == ""
+
+
+def test_fork_json_names_the_owner(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_TREE_WRITE_ANY_LANE", raising=False)
+    root = tmp_path / "trees" / "t1"
+    (root / "physical").mkdir(parents=True)
+    (root / ".fork.json").write_text(json.dumps({"lane": "KV-WAITBIND-R1"}))
+    assert "belongs to lane KV-WAITBIND-R1" in TWG.refusal(root / "physical" / "p.json", lane="FLOW-OPS-R2")
+    assert TWG.refusal(root / "physical" / "p.json", lane="kv_waitbind_r1") == ""
