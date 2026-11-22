@@ -321,3 +321,60 @@ def test_stage_cap_and_heartbeat_lines_are_not_progress(tmp_path):
     cap_log.unlink(); hb.unlink(); stage.unlink()
     cap_log.write_text(cap)
     assert nw.candidate_logs(str(work), [], "dpkit-x", NOW - 100) == (None, 0)       # only the harness log: no flow log (NO-DATA), never PROGRESSING
+
+
+def test_hub_retries_action_receipt_missing_from_successful_push(tmp_path, monkeypatch):
+    import json
+    import subprocess
+
+    coord = tmp_path / "coord"
+    state = tmp_path / "state"
+    (coord / "lanes").mkdir(parents=True)
+    state.mkdir()
+    monkeypatch.setattr(nw, "COORD", str(coord))
+    monkeypatch.setattr(nw, "STATE_DIR", str(state))
+    monkeypatch.setattr(nw, "HOSTS", ["epyc9"])
+    monkeypatch.setattr(nw, "unsignable_pass", lambda *args, **kwargs: ("report", [], []))
+    monkeypatch.setattr(nw, "grt_flat_pass", lambda *args, **kwargs: ("report", [], []))
+
+    action = dict(t=NOW, type="eco-i1t", stage="5_2_route", metric="DRT best 571 last 3567",
+                  kit="/scratch/item/kit", containers=["prd-eco-i1t"], why="flat for six hours",
+                  gb=37.8, cores=8, cores_busy=1.0, host="epyc9")
+    action_file = coord / "lanes/NOPROG-ACTIONS.tsv"
+    row = nw.action_tsv(action)
+    pushed = ""
+    commit_count = 0
+
+    def run_host(host, cmd, **kwargs):
+        data = json.dumps(action) if "actions.jsonl" in cmd else '{"rows": []}'
+        return subprocess.CompletedProcess(cmd, 0, data, "")
+
+    def run(cmd, **kwargs):
+        nonlocal commit_count, pushed
+        if cmd[0] == "bash":
+            commit_count += 1
+            if commit_count < 3:
+                assert str(action_file.relative_to(coord)) in cmd
+                assert action_file.read_text().splitlines().count(row) == 1
+            if commit_count == 2:
+                pushed = action_file.read_text()
+            return subprocess.CompletedProcess(cmd, 0, "PUSHED abcdef\\n", "")
+        assert cmd == ["git", "show", "origin/coord/state:lanes/NOPROG-ACTIONS.tsv"]
+        assert kwargs["cwd"] == str(coord)
+        return subprocess.CompletedProcess(cmd, 0, pushed, "")
+
+    monkeypatch.setattr(nw, "run_host", run_host)
+    monkeypatch.setattr(nw.subprocess, "run", run)
+
+    _, actions = nw.hub(now=NOW + 90)
+    assert actions == [action]
+    assert json.loads((state / "hub_seen.json").read_text())["offset"] == {}
+
+    _, actions = nw.hub(now=NOW + 990)
+    assert actions == [action]
+    assert json.loads((state / "hub_seen.json").read_text())["offset"] == {"epyc9": 1}
+    assert pushed.splitlines().count(row) == 1
+
+    _, actions = nw.hub(now=NOW + 1890)
+    assert not actions
+    assert action_file.read_text().splitlines().count(row) == 1
