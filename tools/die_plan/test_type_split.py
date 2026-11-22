@@ -890,3 +890,142 @@ def test_landing_local_resets_follow_their_site_and_consumers():
 def test_landing_local_reset_consumer_across_a_cut_fails_closed():
     with pytest.raises(TS.SplitError, match="consumer u_cland_fstart_leafdn_o3 in piece 0"):
         _local_reset_split([{"name": "f", "raw": "r", "xy_um": [400.0, 300.0], "consumers": ["u_cland_fstart_leafdn_o3"]}])
+
+
+# ---- gen-mode types (HEAD): type nets, content params, native stage groups (FABLE-FIX-HEAD-LEP0N-R5 11-21)
+def _gen_mode_split(spec=None, nets=None, contents=None):
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.n, ts.keep = "hd", 2, 1
+    ts.tnames = ["hd_w", "hd"]
+    ts.cut = TS.Cut("x", [907.2], 1892.16)
+    ts.ev = _Ev({}, dict(spec or {}))
+    ts.rep = {}
+    rows = contents or [
+        dict(inst="u_core", module="hub", params={"TXI": "16'h2442", "PIN": 6},
+             bind={"ck": "clk", "h2r1": "net:h2r1", "r2h1": "net:r2h1", "pin": "net:pin"}),
+        dict(inst="u_io", module="io", bind={"ck": "clk", "pin": "net:pin"}),
+        dict(inst="u_rg1", module="rgn", params={"K": 1}, bind={"ck": "clk", "h2r": "net:h2r1", "r2h": "net:r2h1"})]
+    ts.content_piece = {"u_core": 1, "u_io": 1, "u_rg1": 0}
+    ts.T = [dict(contents=[]) for _ in range(2)]
+    for c in rows:
+        ts.T[ts.content_piece[c["inst"]]]["contents"].append(json.loads(json.dumps(c)))
+    ts.t = dict(contents=rows)
+    if nets is not False:
+        ts.t["nets"] = nets or [dict(name="h2r1", width=574), dict(name="r2h1", width=558), dict(name="pin", width=1150)]
+    return ts
+
+
+def test_type_net_inside_one_piece_stays_and_a_cut_net_is_queued_with_its_driver():
+    ts = _gen_mode_split(dict(net_drivers={"hd": {"h2r1": "u_core.h2r1", "r2h1": "u_rg1"}}, net_kinds={"hd": {"r2h1": "ctl"}}))
+    ts._type_nets()
+    assert "nets" not in ts.T[0] and ts.T[1]["nets"] == [dict(name="pin", width=1150)]
+    got = {c["net"]: (c["drv"][0], c["drv"][1]["inst"], c["drv"][2], c["load"][0], c["load"][1]["inst"], c["load"][2],
+                      c["width"], c["kind"]) for c in ts.net_cuts}
+    assert got == {"h2r1": (1, "u_core", "h2r1", 0, "u_rg1", "h2r", 574, "data"),
+                   "r2h1": (0, "u_rg1", "r2h", 1, "u_core", "r2h1", 558, "ctl")}
+    assert ts.rep["nets"]["kept"] == [0, 1]
+
+
+@pytest.mark.parametrize("spec,nets,match", [
+    ({}, None, "net_drivers must name its driving leaf port"),
+    (dict(net_drivers={"hd": {"h2r1": "u_io"}}), None, "net_drivers must name its driving leaf port"),
+    (dict(net_drivers={"hd": {"nope": "u_core"}}), None, "name no net"),
+    ({}, [dict(name="h2r1", width=574), dict(name="pin", width=1150)], "does not declare"),
+    (dict(net_drivers={"hd": {"h2r1": "u_core", "r2h1": "u_rg1"}}),
+     [dict(name="h2r1", width=574), dict(name="r2h1", width=558), dict(name="pin", width=1150),
+      dict(name="idle", width=1)], "net idle has no leaf port")])
+def test_type_net_cut_fails_closed(spec, nets, match):
+    with pytest.raises(TS.SplitError, match=match):
+        _gen_mode_split(spec, nets)._type_nets()
+
+
+def test_three_leaf_net_across_a_cut_fails_closed():
+    rows = [dict(inst="u_core", module="hub", bind={"rs": "net:rs"}), dict(inst="u_io", module="io", bind={"rs": "net:rs"}),
+            dict(inst="u_rg1", module="rgn", bind={"rs": "net:rs"})]
+    with pytest.raises(TS.SplitError, match="with 3 leaf ports"):
+        _gen_mode_split({}, [dict(name="rs", width=123)], rows)._type_nets()
+
+
+def test_type_without_nets_is_untouched_and_a_stray_net_bind_fails():
+    rows = [dict(inst="u_core", module="hub", bind={"ck": "clk"}), dict(inst="u_io", module="io", bind={}),
+            dict(inst="u_rg1", module="rgn", bind={})]
+    ts = _gen_mode_split({}, False, rows)
+    ts._type_nets()
+    assert ts.net_cuts == [] and all("nets" not in x for x in ts.T) and "nets" not in ts.rep
+
+
+def test_net_requests_point_both_binds_at_the_cut_buses():
+    ts = _gen_mode_split(dict(net_drivers={"hd": {"h2r1": "u_core", "r2h1": "u_rg1.r2h"}}))
+    ts._type_nets()
+    ev = TS.Event.__new__(TS.Event)
+    ev.ts, ev.rep, ev.pmap = {"hd": ts}, {}, {"lep0N": ["lep0N_w", "lep0N"]}
+    ev.raw = dict(partitions=[dict(name="lep0N", type="hd")])
+    calls = []
+
+    def transit(part, ts_, a, b, stem, width, kind, how, pc=None):
+        calls.append((part, a, b, stem, width, kind, how))
+        return f"o_{stem}", f"i_{stem}", f"L{len(calls)}"
+    ev._transit = transit
+    ev._net_requests()
+    assert calls == [("lep0N", 1, 0, "h2r1", 574, "data", "type net h2r1"), ("lep0N", 0, 1, "r2h1", 558, "data", "type net r2h1")]
+    core = ts.T[1]["contents"][0]["bind"]
+    rg = ts.T[0]["contents"][0]["bind"]
+    assert core["h2r1"] == "bus:o_h2r1" and rg["h2r"] == "bus:i_h2r1"
+    assert rg["r2h"] == "bus:o_r2h1" and core["r2h1"] == "bus:i_r2h1" and core["pin"] == "net:pin"
+    assert [r["lanes"] for r in ev.rep["net_routes"]] == [["L1"], ["L2"]]
+
+
+def test_content_params_delta_is_applied_with_the_split():
+    ts = _gen_mode_split(dict(content_params={"hd": {"u_core": {"TXI": "16'h2222", "PIN": None}}}))
+    ts._content_params()
+    assert ts.T[1]["contents"][0]["params"] == {"TXI": "16'h2222"}
+    assert ts.rep["content_params"] == {"u_core": {"TXI": ["16'h2442", "16'h2222"], "PIN": [6, None]}}
+    for bad, match in (({"u_x": {"A": 1}}, "names no content"), ({"u_core": {"PIN": 6}}, "changes nothing")):
+        with pytest.raises(TS.SplitError, match=match):
+            _gen_mode_split(dict(content_params={"hd": bad}))._content_params()
+
+
+def _nsg(groups, v2=False):
+    if v2:
+        return dict(schema="opentallas.native_stage_groups.v2", groups=groups, contents=[
+            dict(content="u_core", module="hub", params={"TXI": "16'h2442", "PIN": 6}),
+            dict(content="u_io", module="io", params={}), dict(content="u_rg1", module="rgn", params={"K": 1})])
+    return dict(schema="opentallas.native_stage_groups.v1", content="u_core", module="hub",
+                params={"TXI": "16'h2442", "PIN": 6}, groups=groups)
+
+
+def test_native_stage_groups_follow_their_content_into_the_piece_frame():
+    rows = [dict(prefix=r"u_core\.u\.g_plw", rect_um=[1000.0, 10.0, 1100.0, 20.0], tag="stage:plw"),
+            dict(prefix=r"u_io\.u\.g_pin", rect_um=[1800.0, 10.0, 1850.0, 20.0], tag="stage:pin"),
+            dict(prefix=r"u_rg1\.g_rxf\.g_s\[0\]", rect_um=[100.0, 600.0, 200.0, 620.0], tag="stage:rx0", match="cell"),
+            dict(prefix=r"u_rg1\.g_txi\.g_s\[3\]", rect_um=[900.0, 600.0, 1000.0, 620.0], tag="stage:txi3")]
+    ts = _gen_mode_split(dict(content_params={"hd": {"u_core": {"TXI": "16'h2222"}}},
+                              native_stage_drop={"hd": [r"u_rg1\\\.g_txi\\\.g_s\\\[[23]\\\]"]}))
+    ts._content_params()
+    L = [dict(), dict()]
+    ts._native_stage_groups(_nsg(rows, v2=True), L)
+    assert L[0]["native_stage_groups"] == dict(schema="opentallas.native_stage_groups.v1", content="u_rg1", module="rgn",
+                                               params={"K": 1}, groups=[rows[2]])
+    e = L[1]["native_stage_groups"]
+    assert e["schema"] == "opentallas.native_stage_groups.v2"
+    assert e["contents"] == [dict(content="u_core", module="hub", params={"TXI": "16'h2222", "PIN": 6}),
+                             dict(content="u_io", module="io", params={})]
+    assert [g["rect_um"] for g in e["groups"]] == [[pytest.approx(92.8), 10.0, pytest.approx(192.8), 20.0],
+                                                   [pytest.approx(892.8), 10.0, pytest.approx(942.8), 20.0]]
+    assert ts.rep["native_stage_groups"] == dict(pieces=[1, 2], dropped=[rows[3]["prefix"]])
+
+
+def test_native_stage_groups_one_content_base_and_fail_closed_forms():
+    row = dict(prefix=r"u_core\.u\.g_plw", rect_um=[1000.0, 10.0, 1100.0, 20.0], tag="stage:plw")
+    L = [dict(), dict()]
+    _gen_mode_split()._native_stage_groups(_nsg([row]), L)
+    assert "native_stage_groups" not in L[0] and L[1]["native_stage_groups"]["content"] == "u_core"
+    for groups, spec, match in (
+            ([row | {"rect_um": [100.0, 10.0, 200.0, 20.0]}], {}, "lies outside piece 1"),
+            ([row | {"rect_um": [900.0, 10.0, 1000.0, 20.0]}], {}, "native stage group"),
+            ([row | {"prefix": "u_other"}], {}, "starts with no listed content"),
+            ([row], dict(native_stage_drop={"hd": ["u_none"]}), "matches no native stage group")):
+        with pytest.raises(TS.SplitError, match=match):
+            _gen_mode_split(spec)._native_stage_groups(_nsg(groups), [dict(), dict()])
+    with pytest.raises(TS.SplitError, match="schema/fields"):
+        _gen_mode_split()._native_stage_groups(dict(_nsg([row]), schema="v0"), [dict(), dict()])

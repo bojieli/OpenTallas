@@ -72,3 +72,32 @@ def test_group_word_survives_lassign(tmp_path, prefix, name):
     assert p.returncode==0,p.stderr
     assert 'PLAIN u_plain' in p.stdout and 'KEY 1' in p.stdout and 'HIT 1' in p.stdout, p.stdout
     assert '  {u_plain {1.00000 1.00000 2.00000 2.00000} x}' in lines
+
+
+def typ2():
+    """v2 (FABLE-FIX-HEAD-LEP0N-R5 11-21): a gen-mode type with several contents joined by type nets"""
+    return dict(outline_um=[100,100], contents=[dict(inst='u_core',module='mod',params={'N':2}),dict(inst='u_io',module='io')],
+                clock=dict(landing_contract=dict(native_stage_groups=dict(
+                    schema='opentallas.native_stage_groups.v2',
+                    contents=[dict(content='u_core',module='mod',params={'N':2}),dict(content='u_io',module='io',params={})],
+                    groups=[dict(prefix=r'u_core\.g_s\[0\]',rect_um=[10,10,30,20],tag='stage:s0'),
+                            dict(prefix=r'u_io\.u\.g_pin',rect_um=[40,10,60,20],tag='stage:pin')]))))
+
+
+def test_v2_several_contents_emitted():
+    groups,check=L._native_stage_groups(typ2(),[])
+    assert [g[0] for g in groups]==[r'u_core\.g_s\[0\]',r'u_io\.u\.g_pin']
+    assert check.count('OT_CLAND missing native stage group')==1 and r'{u_io\.u\.g_pin}' in check
+
+
+@pytest.mark.parametrize('edit',[
+    lambda c:c['contents'].append(dict(content='u_core',module='mod',params={'N':2})),
+    lambda c:c['contents'].__setitem__(1,dict(content='u_io',module='wrong',params={})),
+    lambda c:c['contents'].__setitem__(1,dict(content='u_io',module='io')),
+    lambda c:c.__setitem__('contents',[]),
+    lambda c:c['groups'][1].__setitem__('prefix','u_other'),
+    lambda c:c.__setitem__('schema','opentallas.native_stage_groups.v1'),
+    lambda c:c.__setitem__('content','u_core')])
+def test_v2_fail_closed(edit):
+    t=typ2();edit(t['clock']['landing_contract']['native_stage_groups'])
+    with pytest.raises(ValueError):L._native_stage_groups(t,[])

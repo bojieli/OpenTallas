@@ -42,12 +42,25 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       clip_max_pins_per_um 8; both port ends share the window; strip_body.py)
   fold_legs                           drop one internal station next to the cut where both hops stay <= reach
                                       (the cut boundary flop pair replaces it: +1 cycle instead of +2)
+  net_drivers {type: {net: "inst.port"}}   gen-mode types (contents talk only through type `nets`): the driving leaf
+                                      port of every net whose two leaf ports fall in different pieces.  The net becomes
+                                      a cut bus pair (driver bind -> bus:o_<net>, load bind -> bus:i_<net>) + port + lane
+  net_kinds {type: {net: kind}}       bus kind of a cut net (default "data")
+  content_params {type: {inst: {param: value | null}}}   parameter delta of a content applied with the split (null
+                                      removes): the cut boundary flop pair replaces native stages of the content, so the
+                                      cut costs no cycle.  native_stage_groups params follow the content row
+  native_stage_drop {type: [regex]}   native_stage_groups rows (fullmatch on the prefix) that no longer exist after
+                                      content_params (the stages the boundary pair replaced)
 
 What moves (every element is decided by geometry or by the spec; anything else fails closed):
   buses              the piece of every port window of the bus (all instances agree); faces normal to the axis go to
                      the outer pieces
   hard cores         their extent (a core across a cut is an error)
   contents           spec rules / core membership; physical_parts must lie inside the piece
+  nets               a net whose leaf ports sit in one piece stays a net of that piece; a two-leaf net across pieces
+                     becomes a cut route (spec net_drivers); sources go to every piece
+  native stage groups  (landing_contract.native_stage_groups) rows follow their content (the longest content instance
+                     their prefix starts with), rect shifted; a piece with several such contents gets the v2 form
   ft slots           whole slot when its stations lie in one piece, else one slot per piece: the next piece gets a new
                      in-face station at the cut (+1 cycle per cut) and every lane through the slot a new port
   internal stations  one leg per piece; each cut adds a bus pair (o_<stem>_p -> i_<stem>_p) + lane, fixed_cycles moved
@@ -376,6 +389,133 @@ class TypeSplit:
         self.content_piece = out
         return out
 
+    # -------------------------------------------------------------- gen-mode: content params, type nets
+    def _content_params(self):
+        """spec content_params {type: {inst: {param: value | null}}} (FABLE-FIX-HEAD-LEP0N-R5 11-21): the parameter
+        delta a content takes WITH the split (hd_lep0N: the cut boundary flop pair replaces two native TXI / KRX stages
+        of the crossing lanes, so the W | E cut costs 0 data cycles).  Applied to the piece content rows; an unknown
+        content or a delta that changes nothing fails closed."""
+        delta = (self.ev.spec.get("content_params") or {}).get(self.tn) or {}
+        rows = {c["inst"]: c for x in self.T for c in x["contents"]}
+        rep = {}
+        for inst, d in delta.items():
+            if inst not in rows:
+                raise SplitError(f"{self.tn}: content_params names no content {inst}")
+            p = rows[inst].setdefault("params", {})
+            before = dict(p)
+            for k, v in d.items():
+                if v is None:
+                    p.pop(k, None)
+                else:
+                    p[k] = v
+            if p == before:
+                raise SplitError(f"{self.tn}: content_params of {inst} changes nothing")
+            rep[inst] = {k: [before.get(k), p.get(k)] for k in d}
+        if rep:
+            self.rep["content_params"] = rep
+
+    def _type_nets(self):
+        """type `nets` of a gen-mode type (HEAD: plan wrappers from gen_rtl, contents[].bind port -> "net:N"; no
+        as-built plan cells).  A net whose leaf ports all sit in one piece stays a net of that piece.  A net across
+        pieces must have exactly two leaf ports and a driver named in spec net_drivers: it is queued as a cut route
+        (Event._net_requests: bus pair + port + lane) and both binds are re-pointed at the cut buses.  Anything else
+        fails closed (a three-leaf net across a cut needs an RTL fan-out first)."""
+        nets = self.t.get("nets")
+        self.net_cuts = []
+        use = defaultdict(list)
+        for i in range(self.n):
+            for c in self.T[i]["contents"]:
+                for port, v in (c.get("bind") or {}).items():
+                    if isinstance(v, str) and v.startswith("net:"):
+                        use[v[4:]].append((i, c, port))
+        names = [nt["name"] for nt in nets or []]
+        stray = sorted(set(use) - set(names))
+        if stray:
+            raise SplitError(f"{self.tn}: contents bind nets {stray[:5]} that the type does not declare")
+        if nets is None:
+            return
+        drivers = (self.ev.spec.get("net_drivers") or {}).get(self.tn) or {}
+        kinds = (self.ev.spec.get("net_kinds") or {}).get(self.tn) or {}
+        unknown = sorted((set(drivers) | set(kinds)) - set(names))
+        if unknown:
+            raise SplitError(f"{self.tn}: spec net_drivers / net_kinds name no net {unknown[:5]}")
+        rep = self.rep.setdefault("nets", dict(kept=[0] * self.n, cut=[]))
+        for nt in nets:
+            nm, leaves = nt["name"], use.get(nt["name"], [])
+            ps = sorted({i for i, _, _ in leaves})
+            if not ps:
+                raise SplitError(f"{self.tn}: net {nm} has no leaf port")
+            if len(ps) == 1:
+                self.T[ps[0]].setdefault("nets", []).append(copy.deepcopy(nt))
+                rep["kept"][ps[0]] += 1
+                continue
+            if len(leaves) != 2:
+                raise SplitError(f"{self.tn}: net {nm} crosses pieces {ps} with {len(leaves)} leaf ports "
+                                 f"(a cut net has one driver and one load: fan it out in the RTL first)")
+            want = drivers.get(nm)
+            drv = [x for x in leaves if want in (x[1]["inst"], f"{x[1]['inst']}.{x[2]}")]
+            if len(drv) != 1:
+                names_ = [c["inst"] + "." + port for _, c, port in leaves]
+                raise SplitError(f"{self.tn}: net {nm} crosses pieces {ps}: spec net_drivers must name its driving "
+                                 f"leaf port (got {want!r}; leaves {names_})")
+            load = next(x for x in leaves if x is not drv[0])
+            self.net_cuts.append(dict(net=nm, width=int(nt["width"]), kind=kinds.get(nm, "data"), drv=drv[0], load=load))
+
+    def _native_stage_groups(self, cfg, L):
+        """landing_contract.native_stage_groups per piece (gen-mode HEAD types).  Base form: v1 (one content) or v2
+        (contents [{content, module, params}]).  A row follows the content whose instance name its prefix starts with
+        (longest wins), its rect shifts into the piece frame and must lie inside the piece; rows named by spec
+        native_stage_drop are removed (stages replaced by the cut boundary pair, see content_params).  module / params
+        are re-read from the piece content rows so they match what gen_rtl instantiates."""
+        if cfg is None:
+            return
+        v1 = {"schema", "content", "module", "params", "groups"}
+        v2 = {"schema", "contents", "groups"}
+        if set(cfg) == v1 and cfg["schema"] == "opentallas.native_stage_groups.v1":
+            owners = [cfg["content"]]
+        elif set(cfg) == v2 and cfg["schema"] == "opentallas.native_stage_groups.v2":
+            owners = [c["content"] for c in cfg["contents"]]
+        else:
+            raise SplitError(f"{self.tn}: native_stage_groups schema/fields not handled")
+        rows = {c["inst"]: c for x in self.T for c in x["contents"]}
+        missing = [o for o in owners if o not in rows]
+        if missing:
+            raise SplitError(f"{self.tn}: native_stage_groups content {missing} is not a content of the type")
+        drops = [re.compile(rx) for rx in (self.ev.spec.get("native_stage_drop") or {}).get(self.tn) or []]
+        hit = [0] * len(drops)
+        by = [defaultdict(list) for _ in range(self.n)]
+        rep = self.rep.setdefault("native_stage_groups", dict(pieces=[0] * self.n, dropped=[]))
+        for row in cfg["groups"]:
+            k = next((j for j, rx in enumerate(drops) if rx.fullmatch(row["prefix"])), None)
+            if k is not None:
+                hit[k] += 1
+                rep["dropped"].append(row["prefix"])
+                continue
+            own = [o for o in owners if row["prefix"].startswith(re.escape(o))]
+            if not own:
+                raise SplitError(f"{self.tn}: native stage group {row['prefix']} starts with no listed content")
+            o = max(own, key=len)
+            i = self.content_piece[o]
+            r = row["rect_um"]
+            if self.cut.piece(r[self.cut.ax], r[self.cut.ax + 2], f"{self.tn} native stage group {row['prefix']}") != i:
+                raise SplitError(f"{self.tn}: native stage group {row['prefix']} rect {r} lies outside piece {i} of "
+                                 f"its content {o} (move the stage row before the split)")
+            by[i][o].append(copy.deepcopy(row) | {"rect_um": self.cut.shr(r, i)})
+            rep["pieces"][i] += 1
+        idle = [rx.pattern for rx, h in zip(drops, hit) if not h]
+        if idle:
+            raise SplitError(f"{self.tn}: native_stage_drop {idle} matches no native stage group")
+        for i in range(self.n):
+            if not by[i]:
+                continue
+            groups = [g for o in owners for g in by[i].get(o, [])]
+            heads = [dict(content=o, module=rows[o]["module"], params=copy.deepcopy(rows[o].get("params", {})))
+                     for o in owners if o in by[i]]
+            if len(heads) == 1:
+                L[i]["native_stage_groups"] = dict(schema="opentallas.native_stage_groups.v1", **heads[0], groups=groups)
+            else:
+                L[i]["native_stage_groups"] = dict(schema="opentallas.native_stage_groups.v2", contents=heads, groups=groups)
+
     # -------------------------------------------------------------- the type split
     def _core_tap_piece(self, tp):
         """OPUS-FIX-S81-SVC-R7 11-21 (hi4 x_epoch split, kit_rtl 'core tap ... names no hard_cores[]' on the rest part):
@@ -408,7 +548,7 @@ class TypeSplit:
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
                    "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
                    "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
-                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body"}
+                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body", "nets", "sources"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -419,7 +559,7 @@ class TypeSplit:
             T[i]["outline_um"] = o
             T[i]["hard"] = False
             for k in ("face_pins_per_um", "face_budget_g2", "landing_base_type",
-                      "verilog_defines", "port_buf_at_pin", "face_layers", "ft_track_frac"):
+                      "verilog_defines", "port_buf_at_pin", "face_layers", "ft_track_frac", "sources"):
                 if k in t:
                     T[i][k] = copy.deepcopy(t[k])
             T[i]["note"] = (f"{self.ev.tag}: piece {i} of {self.tn} ({'xy'[cut.ax]} {cut.lo(i)}..{cut.hi(i)} of the "
@@ -465,6 +605,8 @@ class TypeSplit:
                     raise SplitError(f"{self.tn}: physical part {name} lies outside piece {i}")
                 q["origin_um"] = cut.sh(q["origin_um"], i)
             T[i]["contents"].append(cc)
+        self._content_params()
+        self._type_nets()
         self._ft_slots()
         self._internal_stations()
         self._clock()
@@ -1482,14 +1624,16 @@ class TypeSplit:
             return
         cut, T = self.cut, self.T
         known = {"pins", "bands", "base_type", "registered_monitor", "physical_qualified", "collector_tree",
-                 "collector_root_node", "collector_local_sources", "collector_children", "forwarded_clock_only_inputs", "collector_root_xy"}
+                 "collector_root_node", "collector_local_sources", "collector_children", "forwarded_clock_only_inputs", "collector_root_xy",
+                 "native_stage_groups", "monitor"}
         unk = set(lc) - known
         if unk:
             raise SplitError(f"{self.tn}: unhandled landing_contract keys {sorted(unk)}")
         L = []
         for i in range(self.n):
             d = {k: copy.deepcopy(v) for k, v in lc.items() if k not in ("pins", "bands", "collector_tree",
-                                                                       "collector_local_sources", "collector_children")}
+                                                                       "collector_local_sources", "collector_children",
+                                                                       "native_stage_groups")}
             d["base_type"] = self.tnames[i]
             d["pins"], d["bands"] = [], {}
             d["collector_local_sources"], d["collector_children"] = [], []
@@ -1501,6 +1645,7 @@ class TypeSplit:
                     d.pop("collector_root_xy", None)
             T[i]["clock"]["landing_contract"] = d
             L.append(d)
+        self._native_stage_groups(lc.get("native_stage_groups"), L)
         self.band_clip = []
         for p in lc.get("pins", []):
             m = LAND_PIN.match(p["name"])
@@ -2376,6 +2521,7 @@ class Event:
         self._leg_requests()
         self._census_requests()
         self._plancell_requests()
+        self._net_requests()
         self._build_cut_ports()
         # ---- the rest of the plan
         self._landing_network()
@@ -2606,6 +2752,27 @@ class Event:
             cb(*endpoints[0])
 
     # ---------------------------------------------------------------- windows + ports + lanes
+    def _net_requests(self):
+        """type nets cut by the split (TypeSplit._type_nets): one cut route per net, shared by every partition of the
+        type, then the driver / load content binds point at the cut buses (gen_rtl binds them by name)."""
+        self.rep["net_routes"] = []
+        for tn, ts in self.ts.items():
+            cuts = getattr(ts, "net_cuts", [])
+            if not cuts:
+                continue
+            bases = [b for b in self.pmap if self.raw_type(b) == tn]
+            for nc in cuts:
+                (a, dc, dp), (b, lc, lp) = nc["drv"], nc["load"]
+                ends = [self._transit(part, ts, a, b, nc["net"], nc["width"], nc["kind"], f"type net {nc['net']}")
+                        for part in bases]
+                if len({e[:2] for e in ends}) != 1:
+                    raise SplitError(f"{tn}: net {nc['net']} cut route has inconsistent shared endpoints")
+                sb, db = ends[0][:2]
+                dc["bind"][dp], lc["bind"][lp] = "bus:" + sb, "bus:" + db
+                self.rep["net_routes"].append(dict(type=tn, net=nc["net"], width=nc["width"], frm=a, to=b, src_bus=sb,
+                                                   dst_bus=db, driver=f"{dc['inst']}.{dp}", load=f"{lc['inst']}.{lp}",
+                                                   lanes=[e[2] for e in ends]))
+
     def _ft_station_on_window(self, ts, r):
         """the kit places a slot's station 0 at its in-window pin (face_flops.tcl): move the new in-face cut station
         of the crossing slot onto the allocated window centre, then re-check both hops at reach (fail closed)"""

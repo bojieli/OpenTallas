@@ -20,11 +20,22 @@ def _native_stage_groups(t, groups):
     cfg = t.get('clock', {}).get('landing_contract', {}).get('native_stage_groups')
     if cfg is None:
         return groups, ''
-    if not isinstance(cfg, dict) or set(cfg) != {'schema', 'content', 'module', 'params', 'groups'} or cfg['schema'] != 'opentallas.native_stage_groups.v1':
+    # v1: one content.  v2 (FABLE-FIX-HEAD-LEP0N-R5 11-21, gen-mode type with several contents joined by type nets):
+    # contents [{content, module, params}], every group prefix starts with one of them.
+    if isinstance(cfg, dict) and set(cfg) == {'schema', 'content', 'module', 'params', 'groups'} and cfg['schema'] == 'opentallas.native_stage_groups.v1':
+        heads = [dict(content=cfg['content'], module=cfg['module'], params=cfg['params'])]
+    elif isinstance(cfg, dict) and set(cfg) == {'schema', 'contents', 'groups'} and cfg['schema'] == 'opentallas.native_stage_groups.v2':
+        heads = cfg['contents']
+        if not isinstance(heads, list) or not heads or any(not isinstance(h, dict) or set(h) != {'content', 'module', 'params'} for h in heads) \
+                or len({h['content'] for h in heads}) != len(heads):
+            raise ValueError('native_stage_groups contents fields')
+    else:
         raise ValueError('native_stage_groups schema/fields')
-    matches = [x for x in t.get('contents', []) if x.get('inst') == cfg['content']]
-    if len(matches) != 1 or matches[0].get('module') != cfg['module'] or matches[0].get('params', {}) != cfg['params']:
-        raise ValueError('native_stage_groups content/module/params mismatch')
+    for head in heads:
+        matches = [x for x in t.get('contents', []) if x.get('inst') == head['content']]
+        if len(matches) != 1 or matches[0].get('module') != head['module'] or matches[0].get('params', {}) != head['params']:
+            raise ValueError('native_stage_groups content/module/params mismatch')
+    owners = tuple(re.escape(h['content']) for h in heads)
     rows = cfg['groups']
     if not isinstance(rows, list) or not rows:
         raise ValueError('native_stage_groups needs nonempty groups')
@@ -36,7 +47,7 @@ def _native_stage_groups(t, groups):
         if mode not in ('prefix', 'cell'):
             raise ValueError('native_stage_groups match must be prefix or cell')
         prefix, rect, tag = row['prefix'], row['rect_um'], row['tag']
-        if not isinstance(prefix, str) or not prefix.startswith(re.escape(cfg['content'])) or any(x in prefix for x in '{}\n\r\t\0') or prefix in seen:
+        if not isinstance(prefix, str) or not prefix.startswith(owners) or any(x in prefix for x in '{}\n\r\t\0') or prefix in seen:
             raise ValueError('native_stage_groups invalid/duplicate prefix')
         try:
             re.compile(prefix)
