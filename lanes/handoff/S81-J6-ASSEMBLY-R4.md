@@ -32,3 +32,11 @@ Work: epyc10 /srv/opentallas-scratch2/claude/s81-j6 (gate.sh, mk_cand.sh, j7/), 
 ## 12:3x COORD ruling
 - ROM-input stage and guard ship together or not at all. At 19:00: if candJ7cG (FABLE-FIX-S81-COLROM-R4) is green, J7 = v9 + the guard package; else J7 = j7/v9n (v9 without the rdx_rows/rdx_repoint steps; pre-built), and both go to J8. Either choice needs its own gate before the 04:15 apply.
 - eng__t1 view re-export -> FAM-S81-MISC-R3. Tap sinks over cap -> TAP-GRID-R4 (J8). Neither is J7.
+
+## 18:3x RESUMED after Codex (14:23-18:1x)
+- J7 = a6771d121e95 (= epyc10 candJ7eL6, Codex START-form fix of my v11 candJ7e). Sealed on intel2 at kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work, manifest 12af64d4. Stage dir: intel2 s81-j6-r2-hub/j7_preferred_stage (marker, G0 baseline, prepare_event.sh, replicate_and_smoke.sh, event draft f176ced869d3).
+- G0: 9 errors, identical to candJ7c (inherited + empty reset line).
+- Fallback: candJ7enL6 (unit 3465054, green).
+- Running: smoke intel2 PID 3321179, log /srv/opentallas-scratch2/claude/s81-j6-r4/smoke_epyc8.log. LEPe bind unit 258364 (J8). RG9 leaf unit 1263880 (J8).
+- Apply prereqs: see posts 5b9b75d8.
+- Col items go on hold_items at apply.
