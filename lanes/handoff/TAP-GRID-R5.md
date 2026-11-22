@@ -39,3 +39,8 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - Fix: s81j8/remap_anc.py does an anchor-mode landing_remap with OLD tree = the J7 reset_tree_anchor, then RA.record on the new tree. bind4 runs on epyc7 (copy of s81j8; intel2 scratch2 144 GB < 150 floor, bind_out dirs are ot-delete protected): epyc7 s81j8/bind4.out, gate4/, bind_out4/, plan_rm4.json. ("KeyError anchors" lines in remap_anc.log are a print bug after the update; harmless, fixed.)
 - QC: remap5a (rt 5aab47 same tools) 100 -> 20 errors (19 RESET_ANCHOR + EMIT cbf_q00 rr_t103 drives an output port). remap5b (epyc7 tap-grid-r5/remap5b.sh/.out, pkg/plan_rm5b.json, v3pkg_bound2/bind5b) applies the same anchor-mode fix to 18 types; coll_ftc V3P3 anchor is partial (10 refs unanchored), so it is not fixable by me.
 - Main 4f69f6e241 already lands the class fix (reset_resel picks anchored refs by anchor depth+site).
+
+## 11-22 ~06:xx PST
+- COORD: FABLE-FIX-S81-J8-TAPROWS owns the 53 failing J8 types (fix on main 3e5de95c409b). My bind4 is cancelled (oth-ubuntu-3692769-1795347965). The 50 clean types are delivered to S81-J6-ASSEMBLY-R5: lanes/handoff/TAP-GRID-R5-S81-J8-clean50.json (b9e1df91), plan intel2 s81j8/plan_rm3.json 612857f52632, gate3 0 errors on those 50, LATCHECK not run (whole-plan rc 1). READY post 4f07c5d3.
+- QC V4 intake: plan_rm5b 4631425ff607 (epyc7 pkg/) has 2 bind errors. coll_ftc RESET_ANCHOR is inherited (same on the V3P3 entry). cbf_q00 writer-START rr_t10x drives an output port; it moves between variants (cl1b5a6458 -> cl870de686 when reverted). Posted e2153ba4; offered to do the cbf_q00 non-port re-pick.
+- Nothing of mine is running now.
