@@ -161,6 +161,21 @@ def test_zero_violators_stops_the_margin_chase():
     assert "0 hold violators" not in off and float(off.split("WS ")[1]) >= 10.0
 
 
+def test_repeat_call_with_hold_met_runs_no_chunk():
+    # HOLD-DONE-1122 (COORD, QC HCST: one 1300-2200 s chunk per outer repair call at ws +32..+38, 0 violators, toward a 40 ps margin)
+    again = "\nrepair_timing_helper -hold_margin 40 -max_buffer_percent 100\nrepair_timing_helper -hold_margin 40 -max_buffer_percent 100\n"
+
+    def go(env=None):
+        e = {k: v for k, v in os.environ.items() if not k.startswith("OT_HOLD")}
+        e.update({"OT_HOLD_CHUNK_S": "0", "OT_HOLD_CHUNK_BUF_MIN": "20"}, **(env or {}))
+        out = tcl(MOCK.replace("[MODEL]", "3.0") % (ZV + "\nset ::ws 20.0\nset ::tns 0.0", GUARD + again), e)
+        return out, [c for c in calls(out) if "-hold" in c]
+    out, hold = go()
+    assert len(hold) == 1 and "OT_HOLD_DONE: hold ws 23.00 >= 10 ps with 0 violators after 1 earlier chunk(s)" in out
+    out, hold = go({"OT_HOLD_DONE_STOP": "0"})
+    assert len(hold) == 2 and "OT_HOLD_DONE" not in out
+
+
 def sdclog(out):
     return [l for l in out.splitlines() if l.startswith("SDCLOG")][0]
 

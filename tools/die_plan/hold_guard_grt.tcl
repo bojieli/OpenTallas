@@ -94,6 +94,14 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
       {*}$prev $hm $inst0 $tot]
     for {set k 1} {1} {incr k} {
       if {[lindex $prev 0] >= $hm} { break }
+      # HOLD-DONE-1122 (COORD: QC HCST kits re-entered this guard once per outer repair chunk, each time at hold ws +32..+38 and 0 violators, and ran one more
+      # 200-buffer chunk of 1300-2200 s toward the 40 ps margin; the gate is internal FF hold >= 0): once a chunk has run in this session, a call that finds
+      # 0 violators and ws >= OT_HOLD_DONE_WS (10 ps) runs no chunk.  OT_HOLD_DONE_STOP=0 restores the chase; a negative count (unreadable) never stops.
+      lassign $prev pw pt pv
+      if {[::ot_hg_num OT_HOLD_DONE_STOP 1] != 0 && [info exists ::ot_hg_chunks_run] && $::ot_hg_chunks_run >= 1 && $pv == 0 && $pw >= [::ot_hg_num OT_HOLD_DONE_WS 10.0]} {
+        puts [format "OT_HOLD_DONE: hold ws %.2f >= %g ps with 0 violators after %d earlier chunk(s); no further margin chunk" $pw [::ot_hg_num OT_HOLD_DONE_WS 10.0] $::ot_hg_chunks_run]
+        break
+      }
       set inst [llength [$block getInsts]]
       set left [expr {$tot * $inst0 / 100.0 - ($inst - $inst0)}]
       if {$left < 1} { puts "OT_HOLD_GUARD_GRT: total buffer budget $tot % used, stop"; break }
@@ -106,6 +114,7 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
         set capped 1; set hit 1
       }
       set cur [::ot_hg_stats]
+      incr ::ot_hg_chunks_run
       set added [expr {[llength [$block getInsts]] - $inst}]
       set dt [expr {max(1, [clock seconds] - $tc)}]
       set dw [expr {[lindex $cur 0] - [lindex $prev 0]}]
