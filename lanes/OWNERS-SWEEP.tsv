@@ -1,460 +1,460 @@
-# OWNERS-SWEEP 2026-11-22 09:51 PST (tools: ~/coord/bin/owners_sweep.py); one row per unsigned type/core on S81, HEAD, QC, KV; HBM skipped
-die	type	state	owning_lane	owner_posted_2h	last_action	flag
-HEAD	hd_lep0N	running (lint advisory)	FABLE-FIX-HEAD-LEP0N (+FABLE-FIX-HEAD-LEP0N-rows,OPUS-FIX-HEAD-LEP0N-R8)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hub_C	FAILED kit_rtl	FAM-KV-HUBC-SYSC-R2 (+FAIL-ROUTE-1115,PROGRESS-WATCH)	yes	FAIL kit_rtl UNCLASSIFIED	FAILED-NO-RELAUNCH,UNCLASSIFIED
-KV	kv3_hg	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+KV-PLAN-R6,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v1	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v1p2	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,NOPROG-FIX-1115)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v1p3	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v1p4	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v1p5	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v1p6	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hg_v3	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v1__cl141fc26e	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v1__cl42bc8b12	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v2__cl2862d491	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v2__cle0015330	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v3	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v4	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v5	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v6	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v7	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+FIX-SYNC-KVHEAD,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hgi_v8	held by die owner (plan event pending)	OPUS-FIX-KV-HGI-R6 (+KV-PLAN-R6,FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hub_Eo	held by die owner (plan event pending)	OPUS-FIX-KV-HUB-R6 (+KV-PLAN-R6,FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hub_Wi	held by die owner (plan event pending)	OPUS-FIX-KV-HUB-R6 (+KV-PLAN-R6,FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_hub_Wo	waits on child core	OPUS-FIX-KV-HUB-R6 (+FLOW-OPS-R2,PLAN-GATE-PRE-1115)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_io_cor_v1	relaunched (private kit FAM-KV-IOPC-R4/qwen_kvsys_kv3_io_cor_v1_1122092158 live: result.json RUNNING)	FAM-KV-IOPC-R4 (+PLAN-GATE-PRE-1115,FABLE-KV-DIE)	yes	FAIL place FLOW	
-KV	kv3_pc__cl254f2e73	held by die owner (plan event pending)	KV-PLAN-R6 (+CBC-RULES-1119,FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pc__cl5a95b461	held by die owner (plan event pending)	FAM-KV-IOPC-R4 (+CBC-RULES-1119,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pc_v1__cl23f6a148	held by die owner (plan event pending)	FIX-SYNC-KVHEAD (+FABLE-FIX-CONE-SCATTER,CBC-RULES-1119)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pc_v1__cl4ea58a5c	held by die owner (plan event pending)	FIX-SYNC-KVHEAD (+FABLE-FIX-CONE-SCATTER,CBC-RULES-1119)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pc_v1__cl7f648944	held by die owner (plan event pending)	FIX-SYNC-KVHEAD (+FABLE-FIX-CONE-SCATTER,CBC-RULES-1119)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pc_v3	running	FAM-KV-IOPC-R4 (+FABLE-FIX-CONE-SCATTER,KV-PLAN-R6)	yes	RUNNING place	
-KV	kv3_pv	held by die owner (plan event pending)	FABLE-FIX-KV-PV-SINKSPREAD (+KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v1	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v12	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v1n	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FIX-SYNC-KVHEAD,FABLE-FIX-KV-PV-SINKSPREAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v2	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FIX-SYNC-KVHEAD,FABLE-FIX-KV-PV-SINKSPREAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v2n	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FIX-SYNC-KVHEAD,FABLE-FIX-KV-PV-SINKSPREAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v3	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+KV-PLAN-R6,FABLE-KV-DIE)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v3n	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v4	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v4n	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v5	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v5n	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v6	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v6n	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v7	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_pv_v8	held by die owner (plan event pending)	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	yes	LINT-ADVISORY prelint LINT	
-KV	kv3_sys_c	running	FAM-KV-HUBC-SYSC-R2 (+PLAN-GATE-PRE-1115)	yes	QUEUED queue	
-QC	cbf_q00__cl1b5a6458	held by die owner (plan event pending)	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-QC	cbf_q00__cl870de686	held by die owner (plan event pending)	TAP-GRID-R5 (+FABLE-FIX-QC-V4,FLOW-OPS-R2)	yes	LINT-ADVISORY prelint LINT	
-QC	cbf_q00_s2	held by die owner (plan event pending)	FAM-QC-CB-R4 (+FABLE-FIX-QC-V4,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-QC	cbf_q01	held by die owner (plan event pending)	FAM-QC-CB-R4	yes	LINT-ADVISORY prelint LINT	
-QC	cbf_q01_s2	held by die owner (plan event pending)	QC-PLAN-R13 (+FIX-SYNC-KVHEAD)	yes	LINT-ADVISORY prelint LINT	
-QC	cbf_q11	held by die owner (plan event pending)	FIX-SYNC-KVHEAD	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q00__cl622f65d2	held by die owner (plan event pending)	FABLE-FIX-QC-V4 (+TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q00__cld7bf7197	held by die owner (plan event pending)	PRECHECK-1119 (+FABLE-FIX-QC-V4,TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q00__cldbcda913	held by die owner (plan event pending)	FABLE-FIX-QC-V4 (+TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q01__clab6e67f2	held by die owner (plan event pending)	FAM-QC-CB-R4	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q01__cld9ff4c40	held by die owner (plan event pending)	FAM-QC-CB-R4	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q01__cldd6ea846	held by die owner (plan event pending)	FAM-QC-CB-R4	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q11__cl49ae4555	held by die owner (plan event pending)	FAM-QC-CB-R4 (+FIX-SYNC-KVHEAD,FABLE-FIX-QC-V4)	yes	LINT-ADVISORY prelint LINT	
-QC	cbn_q11__cl5cc92dfe	held by die owner (plan event pending)	FAM-QC-CB-R4 (+FIX-SYNC-KVHEAD,FABLE-FIX-QC-V4)	yes	LINT-ADVISORY prelint LINT	
-QC	cbx_q10__cl89936551	held by die owner (plan event pending)	FAM-QC-CB-R4 (+FLOW-OPS-R2,FABLE-FIX-QC-V4)	yes	LINT-ADVISORY prelint LINT	
-QC	cbx_q10__cl89936551_h	held by die owner (plan event pending)	FAM-QC-CB-R4 (+FLOW-OPS-R2,FABLE-FIX-QC-V4)	yes	LINT-ADVISORY prelint LINT	
-QC	cbx_q10__cl94a12200_h	held by die owner (plan event pending)	FAM-QC-CB-R4 (+FLOW-OPS-R2,FABLE-FIX-QC-V4)	yes	LINT-ADVISORY prelint LINT	
-QC	coll_core	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,FAM-QC-SLWSLE-R1)	yes	QUEUED queue	
-QC	glue	running	TAP-GRID-R5 (+FABLE-FIX-S81-LEAF-TAPHOLD,QC-PLAN-R13)	yes	RUNNING route	
-QC	native59	running	NOPROG-FIX-1115	yes	RUNNING place	
-QC	sle_ctl__cla4f6f12f	running	LOCKUP-STATION-R3 (+FAM-QC-SLWSLE-R1,FABLE-FIX-QC-V4)	yes	RUNNING place	
-QC	sle_fw_v1__cl9d029624	running	KIT-WAVE(auto)	yes	RUNNING place	
-QC	sle_fw_v1__clf58b4dfb	running	KIT-WAVE(auto)	yes	RUNNING route	
-QC	sle_fw_v2__cl6740750e	running	KIT-WAVE(auto)	yes	RUNNING geom	
-QC	sle_fw_v2__cl69f5e854	running	FLEET-WATCH-R8	yes	RUNNING geom	
-QC	sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv48712631	running	KIT-WAVE(auto)	yes	RUNNING geom	
-QC	sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59	running	KIT-WAVE(auto)	yes	QUEUED queue	
-QC	sle_hc1__cl22c1ff36__pve230954c	running	QC-SLE-R5	yes	RUNNING place	
-QC	sle_hc1__cl22c1ff36__pve289215f	running	QC-SLE-R5	yes	RUNNING place	
-QC	sle_hc1__cl7d360508__pv77c16c8a	running	QC-SLE-R5	yes	QUEUED queue	
-QC	sle_st_a_v1__cl67389ecd	running	QC-PLAN-R13 (+FLOW-OPS-R2,FABLE-FIX-QC-V4)	yes	RUNNING place	
-QC	sle_st_a_v1__cl989804f6__cl18eece69	running	QC-PLAN-R13 (+FLOW-OPS-R2,FABLE-FIX-QC-V4)	yes	RUNNING gen_lint	
-QC	sle_st_a_v1__cl989804f6__cled3c1d7b	running	QC-PLAN-R13 (+FLOW-OPS-R2,FABLE-FIX-QC-V4)	yes	RUNNING gen_lint	
-QC	sle_st_a_v2__pv30dda31f__pv88773f93	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	yes	RUNNING route	
-QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	yes	RUNNING route	
-QC	sle_st_a_v2__pv4242de79	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	yes	RUNNING route	
-QC	sle_st_b_v2__cl14c98df5__pv41c959f3	running (lint advisory)	QC-SLE-R5	yes	LINT-ADVISORY prelint LINT	
-QC	sle_st_b_v2__clfde1249e	running (lint advisory)	QC-SLE-R5	yes	LINT-ADVISORY prelint LINT	
-QC	sle_stm_v1__clbe630b9c	running	FAM-QC-SLWSLE-R1 (+TAP-GRID-R5)	yes	RUNNING	
-QC	sle_stm_v2__cl55be2264	running	FAM-QC-SLWSLE-R1 (+TAP-GRID-R5)	yes	RUNNING route	
-QC	sle_stm_v2__cl7b3062fa	running	FAM-QC-SLWSLE-R1 (+TAP-GRID-R5)	yes	RUNNING route	
-QC	sle_su_c	running	FLEET-WATCH-1015 (+FAM-QC-SLWSLE-R1,CUT-LEDGER-R1)	yes	RUNNING place	
-QC	sle_su_l1__cl5ea486db	running	KIT-WAVE(auto)	yes	RUNNING route	
-QC	slw_fe_v1__cl95cd1d0c	running	QC-SLE-R5	yes	RUNNING route	
-QC	slw_fe_v1__clfe325744__cl08d14f0d	running	KIT-WAVE(auto)	yes	RUNNING place	
-QC	slw_fe_v2__clf110fab2	running	FABLE-FIX-QC-V4	yes	QUEUED queue	
-QC	slw_fw_v1__clf51c11d8__cl592e3d37	running	FABLE-FIX-QC-V4	yes	RUNNING place	
-QC	slw_fw_v3	running	KIT-WAVE(auto)	yes	RUNNING route	
-QC	slw_hc0__cl4f54b7a3__pvd0aa3ddc	running	QC-PLAN-R13	yes	RUNNING place	
-QC	slw_hc0__cl4f54b7a3__pvde134a90	running	QC-PLAN-R13	yes	QUEUED queue	
-QC	slw_st_a_v1__clb036e152	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,FAM-QC-SLWSLE-R1)	yes	RUNNING gen	
-QC	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,FAM-QC-SLWSLE-R1)	yes	RUNNING place	
-QC	slw_st_a_v1__clfc5867a6__pvf82a6c28	running	FABLE-FIX-QC-V4 (+QC-PLAN-R13,FAM-QC-SLWSLE-R1)	yes	RUNNING place	
-QC	slw_st_a_v2__cl9f076a5c	running	FAM-QC-SLWSLE-R1 (+QC-PLAN-R13)	yes	RUNNING route	
-QC	slw_st_a_v2__clf4365a62	running	FAM-QC-SLWSLE-R1 (+QC-PLAN-R13)	yes	RUNNING route	
-QC	slw_stm_v2__cl9beb65e6	running	NEARMISS-ECO-R1	yes	RUNNING route	
-QC	slw_su_c__cl19bb38ef	held by die owner (plan event pending)	FIX-SYNC-KVHEAD (+TAP-GRID-R5,CUT-LEDGER-R1)	yes	LINT-ADVISORY prelint LINT	
-QC	slw_su_c__cl92142dac	held by die owner (plan event pending)	FABLE-FIX-QC-V4 (+QC-PLAN-R13,CUT-LEDGER-R1)	yes	LINT-ADVISORY prelint LINT	
-QC	slw_su_l1__cla2a78701	running	FABLE-FIX-QC-V4 (+FAM-QC-SLWSLE-R1)	yes	RUNNING route	
-QC	slw_su_l1__clcc9d0155	running	QC-PLAN-R13	yes	RUNNING route	
-QC	tt_ctlm	running	FAM-QC-SLWSLE-R1	yes	RUNNING route	
-S81	col_h9_r1__t1__cl49d7a23e__pv4bd36c74	FAILED other flow error	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,FAM-S81-COL-H10-R4)	yes	FAIL bind_toolskew FLOW	FAILED-NO-RELAUNCH
-S81	col_h9_r2__t1__clce45cab5__pv7c30fd4e	FAILED other flow error	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	FAIL bind_toolskew FLOW	FAILED-NO-RELAUNCH
-S81	col_h9_r2__t1__clce45cab5__pvdc7d4221	FAILED other flow error	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,WAVE-OPS-R1)	yes	FAIL bind_toolskew FLOW	FAILED-NO-RELAUNCH
-S81	s81sl_leaf__t1	FAILED other flow error	OPUS-FIX-S81-LEAF-R10 (+FABLE-FIX-CONE-SCATTER,FIX-SYNC-S81)	yes	FAIL place PLAN	FAILED-NO-RELAUNCH
-S81	s81sl_leaf__t65	FAILED place error	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	yes	FAIL place UNCLASSIFIED	FAILED-NO-RELAUNCH,UNCLASSIFIED
-S81	bk_sel__t2	running (lint advisory)	S81-BKSEL-R7 (+PROGRESS-WATCH,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	running (lint advisory)	FAM-S81-COL-H10-R4 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p1__t1__cl574cc59d__pv67036687	running (lint advisory)	FAM-S81-COL-H10-R4 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	running	FAM-S81-COL-H10-R4 (+FAM-S81-SLICE-R6,PRECHECK-1119)	yes	RUNNING	
-S81	col_h10_r0_p1__t1__cl574cc59d__pvd7af8531	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p1__t1__cl911743eb	running	FAM-S81-COL-H10-R4 (+PRECHECK-1119)	yes	RUNNING gen	
-S81	col_h10_r0_p4__t1__pv07945c1e	running	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	yes	RUNNING gen	
-S81	col_h10_r0_p4__t1__pv5b623e07	running	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	yes	RUNNING preflight	
-S81	col_h10_r0_p4__t1__pvc9270d09	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p4__t1__pvcc166a6d	running	FAM-S81-COL-H10-R4 (+FABLE-FIX-S81-COL-RANKSEAT,WAVE-OPS-R1)	yes	RUNNING route	
-S81	col_h10_r0_p4__t1__pvd11cc58b	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r0_p4__t1__pvd8c0565f	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pv0713a75a	running (lint advisory)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pv1a6ec9c2	running (lint advisory)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pv69c7e9a6	running (lint advisory)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pv6a7ae122	running	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	RUNNING	
-S81	col_h10_r1__t1__cl95b37463__pv74ebbc00	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pv799da6f8	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pv86f5e3b9	running	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	RUNNING gen	
-S81	col_h10_r1__t1__cl95b37463__pva3a8bfd1	running	FAM-S81-COL-H10-R4 (+PRECHECK-1119,HOURLY-WRITEUP-R5)	yes	RUNNING route	
-S81	col_h10_r1__t1__cl95b37463__pvce76611c	running	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	RUNNING gen	
-S81	col_h10_r1__t1__cl95b37463__pve28d14fa	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cl95b37463__pvf724da2a	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r1__t1__cld01bb4ae	running	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,HOURLY-WRITEUP-R5)	yes	RUNNING route	
-S81	col_h10_r2__t1__cl1f5d6c2a__pv0c1de895	running (lint advisory)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl1f5d6c2a__pv16277ca6	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0	running	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	RUNNING	
-S81	col_h10_r2__t1__cl1f5d6c2a__pvcd889288	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	running	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	RUNNING gen	
-S81	col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl8b686b3e	running	FAM-S81-COL-H10-R4 (+FLEET-WATCH-R8,OPUS-FIX-S81-COLROM-R6)	yes	RUNNING gen	
-S81	col_h10_r2__t1__cl99efd374__pv1619ecc6	running (lint advisory)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl99efd374__pv4c1f67ff	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl99efd374__pv7a8a5452	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__cl99efd374__pv9ae398c2	held by die owner (plan event pending)	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h10_r2__t1__clac068e56	running	FAM-S81-COL-H10-R4 (+FAIL-ROUTE-1115,OPUS-FIX-S81-COLROM-R6)	yes	RUNNING preflight	
-S81	col_h9_r0_p1__t1__pv697f40c9	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+PRECHECK-1119,S81-J6-ASSEMBLY-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p1__t1__pv8c197f8e	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p1__t1__pva2e3974f	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p1__t1__pvb3e2a60a	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p1__t1__pvb49c16c8	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p1__t1__pvf9acce4c	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl0045af7b__pv622a6f97	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+PRECHECK-1119,EPYC10-DISK-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl0045af7b__pva2793873	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl0045af7b__pve183b536	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pv2744f675	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pv291547b4	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pva4376595	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl31d0dc4b	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+PRECHECK-1119,FABLE-FIX-S81-COL-RANKSEAT)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT,S81-J7-HELD-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	running (lint advisory)	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pv35382794	running (lint advisory)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pv5c8f2166	running (lint advisory)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pv8995e794	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pvb22875c0	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pvbca8d846	running (lint advisory)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pvc1b82625	running	FAM-S81-COL-H9R0-R4	yes	RUNNING	
-S81	col_h9_r0_p5__t1__pvc6e5797f	running	FAM-S81-COL-H9R0-R4	yes	RUNNING gen	
-S81	col_h9_r0_p5__t1__pvc93af856	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pveda1ecc9	running	FAM-S81-COL-H9R0-R4	yes	RUNNING route	
-S81	col_h9_r0_p5__t1__pvee6f8140	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pvf71da13a	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p5__t1__pvf731e6ec	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv0012ba28	running	FAM-S81-COL-H9R0-R4 (+FAIL-ROUTE-1115,FABLE-FIX-S81-COL-RANKSEAT)	yes	RUNNING route	
-S81	col_h9_r0_p6__t1__pv082a7609	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv6398a5b7	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv7808008f	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv8241ebb8	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv87853a7e	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv8d617470	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pv9da72aa7	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pvb38a9d6c	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pvbdbd69f2	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pvde240d6d	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r0_p6__t1__pvea45abf3	held by die owner (plan event pending)	FAM-S81-COL-H9R0-R4 (+HOURLY-WRITEUP-R5,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv047ea3b3	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-R5,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv0a45e191	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv0bab1162	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv11c696bc	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv11dcdcd2	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv152ea348	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv15cef3f7	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv1c15776f	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv2cabd9a9	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	running	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	RUNNING gen	
-S81	col_h9_r1__t1__cl49d7a23e__pv36da905c	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv4108910d	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv4593e8e5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv461b5256	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv47efee8f	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv49636389	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv49f0ba38	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv4ef1b59c	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv534ef85e	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv58f6356d	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv62bca836	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv637e5d47	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv6c1e320a	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv70f04488	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv7466df46	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv87d52780	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv88891f20	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv8aaf8508	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv8ea75ee5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv9a5bd576	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pv9c5966b7	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pva2370bfd	running	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	RUNNING route	
-S81	col_h9_r1__t1__cl49d7a23e__pva7e46565	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvac06e607	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvadb6c679	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvadbd1880	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvafa6f454	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvb2dac3cf	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvbb600efe	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvc22584f3	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvc25aad1b	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvc382fb14	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvcb813ee7	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pve273b259	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pve3f8a86c	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvebe696ff	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__cl49d7a23e__pvfed9fee6	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__clf32cde8d__pv387d6579	running	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,FAM-S81-COL-H10-R4)	yes	RUNNING place	
-S81	col_h9_r1__t1__clf32cde8d__pv3b9ba75c	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__clf32cde8d__pv48cfde67	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__clf32cde8d__pv63f488e9	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__clf32cde8d__pvd9381c1d	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r1__t1__clf32cde8d__pvee46d7b8	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__cl774acf45__pv858fb2ba	running	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	RUNNING route	
-S81	col_h9_r2__t1__cl774acf45__pve3ab90e7	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__cl774acf45__pvea45273b	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__cl774acf45__pvf8d9f9e5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__cl87f3ff59	running	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,WAVE-OPS-R1)	yes	RUNNING gen	
-S81	col_h9_r2__t1__clb8d86cd5__pv6a2b031b	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clb8d86cd5__pv8d57997d	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clb8d86cd5__pv982ec12c	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clb8d86cd5__pvf1445dce	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+NOPROG-FIX-1115,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clc9ad8f7e__pvf079625b	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clc9ad8f7e__pvfef7c177	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-H10-R4,FAM-S81-COL-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv06a1adf6	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+FLEET-WATCH-R8,WAVE-OPS-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv09b9967e	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv14626557	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv1aac64f0	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv22267ca0	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv2833ee2b	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv2f87774f	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv31e47bd5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv37074264	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv40e9fb5a	running (lint advisory)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv467913cc	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv4754d912	running	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	RUNNING route	
-S81	col_h9_r2__t1__clce45cab5__pv4937edd4	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv6827937d	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv7b8853b5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv843b0fff	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv8b5a5980	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv9a22736e	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv9cc104a8	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pv9e92407b	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pva119e808	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pva8c07948	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvaa9a1324	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvb11188eb	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvb3258867	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvb3f647ea	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvb6ec679e	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvb7e88dd2	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvc6132d1e	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvcd1d9f5f	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvd2454d1a	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvd60e699f	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pve0486b40	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pve0bffaf8	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pve171243a	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvf390b1f5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvf57acd2b	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvf9c773d5	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvfb42a1ad	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	col_h9_r2__t1__clce45cab5__pvfd79e8b6	held by die owner (plan event pending)	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,FAM-S81-COL-H10-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	dsdv_slice_c1x_C__t1	running (lint advisory)	FAM-S81-SLICE-R6 (+FAM-S81-DSDV-R1,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	dsdv_slice_c1x_C__t10	running (lint advisory)	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	dsdv_slice_c1x_C__t3	running (lint advisory)	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	dsdv_slice_c1x_C__t4	running (lint advisory)	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	LINT-ADVISORY prelint LINT	
-S81	dsdv_slice_c1x_C__t5	running	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	RUNNING gen	
-S81	dsdv_slice_c1x_C__t6	running	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	RUNNING gen_lint	
-S81	dsdv_slice_c1x_C__t7	running	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	RUNNING	
-S81	dsdv_slice_c1x_C__t8	running	FAM-S81-SLICE-R6 (+FABLE-FIX-S81-J8-TAPROWS,PRECHECK-1119)	yes	RUNNING	
-S81	dsdv_slice_c1x_C__t9	running	FAM-S81-SLICE-R6 (+PRECHECK-1119,TAP-GRID-R5)	yes	RUNNING place	
-S81	dsdv_slice_c3x_C__t1	running (lint advisory)	FAM-S81-SLICE-R6	yes	LINT-ADVISORY prelint LINT	
-S81	dsdv_slice_iq_C__t1	running	FAM-S81-DSDV-R1 (+TAP-GRID-R5)	yes	RUNNING place	
-S81	dsdv_slice_kv512_C__t1	running	FAM-S81-SLICE-R6 (+PRECHECK-1119)	yes	RUNNING place	
-S81	dsdv_slice_lepe_mu_C__t1	running	FAM-S81-SLICE-R6	yes	RUNNING place	
-S81	dsdv_slice_lepe_mu_LP__t2	cancelled (superseded)	FAM-S81-DSDV-R1 (+S81-J6-ASSEMBLY-R5)	yes	CANCELLED  STRUCT-STOP	
-S81	dsdv_slice_lepe_nh_mus_C__t1	running	PRECHECK-1119 (+FAM-S81-LEPE-4)	yes	RUNNING place	
-S81	dsdv_slice_lepe_nh_mus_LP__t1	running	S81-DIE-R5	yes	RUNNING place	
-S81	dsdv_slice_lepw_mu_C__t1	cancelled (superseded)	FAM-S81-DSDV-R1 (+FAIL-ROUTE-1115)	yes	CANCELLED  STRUCT-STOP	
-S81	dsdv_slice_lepw_mu_LP__t2	running	FAIL-ROUTE-1115	yes	RUNNING place	
-S81	dsdv_slice_lepw_mus_C__t1	running	FAM-S81-DSDV-R1	yes	RUNNING place	
-S81	dsdv_slice_lepw_mus_LP__t2	cancelled (superseded)	FABLE-FIX-CONE-SCATTER (+FIX-SYNC-S81,FAM-S81-DSDV-R1)	yes	CANCELLED  STRUCT-STOP	
-S81	eng__t1	running	FAM-S81-COL-R6	yes	RUNNING route	
-S81	gunit__t1	running	EPYC10-DISK-R1 (+S81-J6-ASSEMBLY-R5)	yes	QUEUED queue	
-S81	iqf__t1	cancelled (superseded)	FAM-S81-DSDV-R1 (+FAIL-ROUTE-1115,CUT-LEDGER-R1)	yes	CANCELLED  STRUCT-STOP	
-S81	phy__t1	NOT-IN-PLAN	FAIL-ROUTE-1115 (+FAM-S81-SERDES-R8,PROGRESS-WATCH)	yes	RUNNING gen	
-S81	s81sl_kv_leaf__t1	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_kv_leaf__t2	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING place	
-S81	s81sl_kv_leaf__t3	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-1015,FIX-SYNC-S81)	yes	RUNNING route	
-S81	s81sl_kv_leaf__t4	running	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	RUNNING route	
-S81	s81sl_kv_leaf__t5	held by die owner (plan event pending)	OPUS-FIX-S81-LEAF-R10 (+FAM-S81-MISC-R4)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t10	running	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	RUNNING gen	
-S81	s81sl_leaf__t11	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t12	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	yes	RUNNING place	
-S81	s81sl_leaf__t13	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t14	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	RUNNING place	
-S81	s81sl_leaf__t15	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t16	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING gen	
-S81	s81sl_leaf__t17	running	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	RUNNING gen	
-S81	s81sl_leaf__t2	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	yes	RUNNING gen	
-S81	s81sl_leaf__t21	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	RUNNING place	
-S81	s81sl_leaf__t22	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING preflight	
-S81	s81sl_leaf__t23	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_leaf__t24__cl2456157b	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t24__cl81374cd8	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t25__cl431c660f	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t25__cl55642d17	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t26	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING gen	
-S81	s81sl_leaf__t27	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t28	running	OPUS-FIX-S81-LEAF-R10 (+NOPROG-WATCHDOG)	yes	RUNNING route	
-S81	s81sl_leaf__t29	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t3	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_leaf__t30	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t31	cancelled (superseded)	OPUS-FIX-S81-LEAF-R10 (+FIX-SYNC-S81,FAIL-ROUTE-1115)	yes	CANCELLED  FLOW	
-S81	s81sl_leaf__t32	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t33	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	yes	RUNNING gen	
-S81	s81sl_leaf__t34	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t35	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t36	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING	
-S81	s81sl_leaf__t37	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t38	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t39	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FABLE-FIX-S81-LEAF-TAPHOLD)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t4	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t40__cl86ea32b3	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t40__cl86ea32b3__sid5S	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t40__clf8bbdae1	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t41	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t42	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t43	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING	
-S81	s81sl_leaf__t44__clf4ea6d4b	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t44__clf6cf8492	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	yes	RUNNING	
-S81	s81sl_leaf__t45	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	yes	RUNNING	
-S81	s81sl_leaf__t46	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING place	
-S81	s81sl_leaf__t47	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	yes	RUNNING place	
-S81	s81sl_leaf__t5	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t50	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING route	
-S81	s81sl_leaf__t51	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t52	running	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	yes	RUNNING place	
-S81	s81sl_leaf__t53__cl958451dd	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t53__clb66fa5cb	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t54__cl501e5681	running (lint advisory)	OPUS-FIX-S81-LEAF-R10	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t54__cl706d9749	running (lint advisory)	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	LINT-ADVISORY prelint LINT	
-S81	s81sl_leaf__t55	running	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	RUNNING gen	
-S81	s81sl_leaf__t56	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	RUNNING	
-S81	s81sl_leaf__t57	running	OPUS-FIX-S81-LEAF-R10 (+PROGRESS-WATCH)	yes	RUNNING route	
-S81	s81sl_leaf__t58	running	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	RUNNING place	
-S81	s81sl_leaf__t59	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	RUNNING	
-S81	s81sl_leaf__t6	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	yes	RUNNING place	
-S81	s81sl_leaf__t60	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING route	
-S81	s81sl_leaf__t61	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_leaf__t62	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t66	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING	
-S81	s81sl_leaf__t67	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_leaf__t68	running	OPUS-FIX-S81-LEAF-R10	yes	QUEUED queue	
-S81	s81sl_leaf__t69	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_leaf__t7	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,FAIL-ROUTE-1115)	yes	RUNNING gen	
-S81	s81sl_leaf__t70	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING route	
-S81	s81sl_leaf__t71	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t72	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING gen	
-S81	s81sl_leaf__t73	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING place	
-S81	s81sl_leaf__t74	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	yes	RUNNING route	
-S81	s81sl_leaf__t75	running	OPUS-FIX-S81-LEAF-R10	yes	RUNNING route	
-S81	s81sl_leaf__t8	running	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-1015,PRECHECK-1119)	yes	RUNNING route	
-S81	s81sl_leaf__t9	running	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	yes	RUNNING route	
-S81	seqhost__t1	running	FLEET-WATCH-1015 (+S81-DIE-R5,S81-J6-ASSEMBLY-R5)	yes	RUNNING gen_lint	
-S81	serdes__t12	held by die owner (plan event pending)	FAM-S81-SERDES-R7 (+PRECHECK-1119,FABLE-FIX-CONE-SCATTER)	yes	LINT-ADVISORY prelint LINT	
-S81	serdes__t13	running	FAM-S81-SERDES-R7 (+NEARMISS-ECO-R1,FABLE-FIX-CONE-SCATTER)	yes	RUNNING gen	
-S81	serdes__t14	running (lint advisory)	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	serdes__t15__cla2127225	held by die owner (plan event pending)	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	serdes__t15__cla3d02796	held by die owner (plan event pending)	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	yes	LINT-ADVISORY prelint LINT	
-S81	serdes__t16	running (lint advisory)	FAM-S81-SERDES-R7 (+S81-DIE-R5,FABLE-FIX-CONE-SCATTER)	yes	LINT-ADVISORY prelint LINT	
-S81	serdes__t1__clb45db5be	running	FAM-S81-SERDES-R7 (+FAM-S81-SLICE-R6,S81-J6-ASSEMBLY-R5)	yes	RUNNING	
-S81	serdes__t1__clfe1f0815	running	FAM-S81-SERDES-R7 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-CONE-SCATTER)	yes	RUNNING gen	
-S81	serdes__t2	running	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	yes	RUNNING resume_inputs	
-S81	serdes__t3	running	FAM-S81-SERDES-R7 (+FAIL-ROUTE-1115,FABLE-FIX-CONE-SCATTER)	yes	RUNNING gen	
-S81	serdes__t4	running	FAM-S81-SERDES-R7 (+FAIL-ROUTE-1115,FABLE-FIX-CONE-SCATTER)	yes	RUNNING gen	
-S81	slice_station__t51	running	FAM-S81-SLICE-R6 (+FAIL-ROUTE-1115,FIX-SYNC-KVHEAD)	yes	RUNNING resume_old_intel2	
-S81	slice_station__t52	running	FAM-S81-SLICE-R6 (+NEARMISS-ECO-R1,HOURLY-WRITEUP-R5)	yes	RUNNING place	
-S81	svc_hi_dsdv_svc_pvso_entry__t1	running	OPUS-FIX-S81-SVC-R9 (+S81-BKSEL-R7)	yes	RUNNING gen	
-S81	svc_hi_dsdv_svc_pvso_entry__t2	running	OPUS-FIX-S81-SVC-R9 (+FAIL-ROUTE-1115)	yes	RUNNING gen	
-S81	svc_hi_dsdv_svc_rs__t1	running (lint advisory)	OPUS-FIX-S81-SVC-R9	yes	LINT-ADVISORY prelint LINT	
-S81	svc_hi_dsdv_svc_rs__t2	running (lint advisory)	OPUS-FIX-S81-SVC-R9	yes	LINT-ADVISORY prelint LINT	
-S81	svc_hi_dsdv_svc_rs__t3	running	OPUS-FIX-S81-SVC-R9	yes	RUNNING	
-S81	svc_hi_dsdv_svc_rs__t4	running	OPUS-FIX-S81-SVC-R9	yes	RUNNING gen	
-S81	svc_hi_dsdv_svc_rs__t5	running	OPUS-FIX-S81-SVC-R9	yes	RUNNING gen	
-S81	svc_hi_dsdv_svc_rs__t6	running	OPUS-FIX-S81-SVC-R9 (+FAIL-ROUTE-1115)	yes	RUNNING gen	
-S81	svc_lo_dsdv_svc_rs__t1	running (lint advisory)	OPUS-FIX-S81-SVC-R9 (+FABLE-PD-S81-1430)	yes	LINT-ADVISORY prelint LINT	
-S81	svc_lo_dsdv_svc_rs__t2	running (lint advisory)	OPUS-FIX-S81-SVC-R9	yes	LINT-ADVISORY prelint LINT	
-S81	svc_lo_dsdv_svc_rs__t3	running	OPUS-FIX-S81-SVC-R9	yes	RUNNING gen	
-S81	svc_lo_dsdv_svc_rs__t4	running	OPUS-FIX-S81-SVC-R9	yes	RUNNING	
-S81	svc_lo_dsdv_svc_rs__t5	running (lint advisory)	OPUS-FIX-S81-SVC-R9	yes	LINT-ADVISORY prelint LINT	
-S81	svc_lo_dsdv_svc_rs__t6	running	OPUS-FIX-S81-SVC-R9	yes	RUNNING gen	
-S81	svc_lo_dsdv_svc_rs__t7	running	OPUS-FIX-S81-SVC-R9 (+FAIL-ROUTE-1115)	yes	RUNNING gen	
-S81	svc_lo_dsdv_svc_rs_w__t1	running	OPUS-FIX-S81-SVC-R9 (+FAIL-ROUTE-1115)	yes	RUNNING gen	
+# OWNERS-SWEEP 2026-11-22 10:50 PST (tools: ~/coord/bin/owners_sweep.py); one row per unsigned type/core on S81, HEAD, QC, KV; HBM skipped
+die	type	kind	state	age_h	owning_lane	match	owner_alive	lane_last_post	agent_id	kit_last_action	kit_last_time	lane_last_mention	flags
+HEAD	hd_lep0N	type	running (lint advisory)	0.1	FLOW-OPS-R2 (+FABLE-FIX-HEAD-LEP0N,FABLE-FIX-HEAD-LEP0N-rows)	type	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:49 # FLOW-OPS-R2 handoff (Opus 5.5; successor of FLOW-OPS-1300) -- live memory, 11-21 22:4x P	
+KV	kv3_hub_C	type	held/retry (D28 FAM-KV-HUBC-SYSC-R2 + private kit)	2.6	FAM-KV-HUBC-SYSC-R2 (+FAIL-ROUTE-1115,PROGRESS-WATCH)	type	yes	11-22 10:21		FAIL kit_rtl UNCLASSIFIED	2026-11-22 08:13	11-22 08:55 - 2026-11-22 08:55 PST CHECK hubc_rm3 [FAM-KV-HUBC-SYSC-R2 -> COORD] NOT hung, left runnin	
+KV	kv3_pc_v3	type	relaunched (private kit FAM-KV-IOPC-R4/qwen_kvsys_kv3_pc_v3_1122043706 live: run-item unit active) (stale 6.2h)	6.2	FAM-KV-IOPC-R4 (+FABLE-FIX-CONE-SCATTER,KV-PLAN-R6)	routed	yes	11-22 10:23		FAIL place PLAN	2026-11-22 10:06	11-22 10:23 COORD-ROUTED-OWNERS	WAIT-BIND
+KV	kv3_hg	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+KV-PLAN-R6,FABLE-KV-DIE)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v1	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v1p2	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,NOPROG-FIX-1115)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v1p3	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v1p4	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v1p5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v1p6	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hg_v3	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,KV-PLAN-R6)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v1__cl141fc26e	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v1__cl42bc8b12	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v2__cl2862d491	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v2__cle0015330	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v3	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v4	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v6	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-FIX-KV-PV-SINKSPREAD,FABLE-KV-DIE)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v7	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+FABLE-KV-DIE,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hgi_v8	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HGI-R6 (+KV-PLAN-R6,FABLE-KV-DIE)	routed	yes	11-22 08:31		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:31 COORD-ROUTED-OWNERS	
+KV	kv3_hub_Eo	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HUB-R6 (+KV-PLAN-R6,FIX-SYNC-KVHEAD)	routed	yes	11-22 10:45		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:45 COORD-ROUTED-OWNERS	
+KV	kv3_hub_Wi	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-HUB-R6 (+KV-PLAN-R6,FIX-SYNC-KVHEAD)	routed	yes	11-22 10:45		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:45 COORD-ROUTED-OWNERS	
+KV	kv3_hub_Wo	type	waits on child core	0.1	OPUS-FIX-KV-HUB-R6 (+KV-PLAN-R6,FLOW-OPS-R2)	routed	yes	11-22 10:45		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:45 COORD-ROUTED-OWNERS	
+KV	kv3_io_cor_v1	type	running	0.3	FAM-KV-IOPC-R4 (+PLAN-GATE-PRE-1115,FABLE-KV-DIE)	routed	yes	11-22 10:23		RUNNING gen	2026-11-22 10:33	11-22 10:23 COORD-ROUTED-OWNERS	
+KV	kv3_pc__cl254f2e73	type	held by die owner (plan event pending)	0.1	KV-PLAN-R6 (+CBC-RULES-1119,FIX-SYNC-KVHEAD)	routed	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:49 COORD-ROUTED-OWNERS	
+KV	kv3_pc__cl5a95b461	type	held by die owner (plan event pending)	0.1	FAM-KV-IOPC-R4 (+CBC-RULES-1119,KV-PLAN-R6)	routed	yes	11-22 10:23		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:23 COORD-ROUTED-OWNERS	
+KV	kv3_pc_v1__cl23f6a148	type	held by die owner (plan event pending)	0.1	FIX-SYNC-KVHEAD (+FABLE-FIX-CONE-SCATTER,CBC-RULES-1119)	cluster	yes	11-22 08:02		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:00 - 2026-11-22 08:00 PST ROWS-READY D28 KV-C17 reset legs [FIX-SYNC-KVHEAD -> KV-PLAN-R6; VE	
+KV	kv3_pc_v1__cl4ea58a5c	type	held by die owner (plan event pending)	0.1	FIX-SYNC-KVHEAD (+FABLE-FIX-CONE-SCATTER,CBC-RULES-1119)	cluster	yes	11-22 08:02		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:00 - 2026-11-22 08:00 PST ROWS-READY D28 KV-C17 reset legs [FIX-SYNC-KVHEAD -> KV-PLAN-R6; VE	
+KV	kv3_pc_v1__cl7f648944	type	held by die owner (plan event pending)	0.1	FIX-SYNC-KVHEAD (+FABLE-FIX-CONE-SCATTER,CBC-RULES-1119)	cluster	yes	11-22 08:02		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:00 - 2026-11-22 08:00 PST ROWS-READY D28 KV-C17 reset legs [FIX-SYNC-KVHEAD -> KV-PLAN-R6; VE	
+KV	kv3_pv	type	held by die owner (plan event pending)	0.1	FABLE-FIX-KV-PV-SINKSPREAD (+KV-PLAN-R6)	type	yes	11-22 10:24		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:24 # FABLE-FIX-KV-PV-SINKSPREAD handoff (Fable fix lane, KV pv D29 form; pairs with OPUS-FIX-	
+KV	kv3_pv_v1	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v12	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v1n	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FIX-SYNC-KVHEAD,FABLE-FIX-KV-PV-SINKSPREAD)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v2	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FIX-SYNC-KVHEAD,FABLE-FIX-KV-PV-SINKSPREAD)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v2n	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FIX-SYNC-KVHEAD,FABLE-FIX-KV-PV-SINKSPREAD)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v3	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+KV-PLAN-R6,FABLE-KV-DIE)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v3n	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v4	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v4n	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v5n	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v6	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,FIX-SYNC-KVHEAD)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v6n	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v7	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_pv_v8	type	held by die owner (plan event pending)	0.1	OPUS-FIX-KV-PV-R7 (+FABLE-FIX-KV-PV-SINKSPREAD,KV-PLAN-R6)	routed	yes	11-22 08:56		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:56 COORD-ROUTED-OWNERS	
+KV	kv3_sys_c	type	running	1.3	FAM-KV-HUBC-SYSC-R2 (+PLAN-GATE-PRE-1115)	routed	yes	11-22 10:21		RUNNING route	2026-11-22 09:35	11-22 10:21 COORD-ROUTED-OWNERS	
+QC	cbf_q01_s2	type	held by die owner (plan event pending)	0.1			no			LINT-ADVISORY prelint LINT	2026-11-22 10:45		UNOWNED
+QC	cbf_q11	type	held by die owner (plan event pending)	0.1			no			LINT-ADVISORY prelint LINT	2026-11-22 10:45		UNOWNED
+QC	slw_su_c__cl19bb38ef	type	held by die owner (plan event pending)	0.1	TAP-GRID-R5 (+FIX-SYNC-KVHEAD,CUT-LEDGER-R1)	type	no	11-22 06:21		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:21 # TAP-GRID-R5 handoff (live; updated 11-22 03:45 PST) Predecessor: lanes/handoff/TAP-GRID-	DEAD-OWNER
+QC	cbf_q00__cl1b5a6458	type	held by die owner (plan event pending)	0.1	FABLE-FIX-QC-V4 (+TAP-GRID-R5,FLOW-OPS-R2)	type	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	cbf_q00__cl870de686	type	held by die owner (plan event pending)	0.1	TAP-GRID-R5 (+FABLE-FIX-QC-V4,FLOW-OPS-R2)	type	yes	11-22 06:21		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:21 - 2026-11-22 06:21 PST [TAP-GRID-R5 -> QC-PLAN-R13, COORD] QC bind5c (coll_ftc + cbf_q00__	
+QC	cbf_q00_s2	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4 (+FABLE-FIX-QC-V4,PRECHECK-1119)	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbf_q01	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbn_q00__cl622f65d2	type	held by die owner (plan event pending)	0.1	FABLE-FIX-QC-V4 (+TAP-GRID-R5)	type	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 - 2026-11-22 08:52 PST OWNER cbn_q00__cl622f65d2 + cbn_q00__cldbcda913 [FABLE-FIX-QC-V4 ->	
+QC	cbn_q00__cld7bf7197	type	held by die owner (plan event pending)	0.1	FABLE-FIX-QC-V4 (+TAP-GRID-R5)	family	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	cbn_q00__cldbcda913	type	held by die owner (plan event pending)	0.1	FABLE-FIX-QC-V4 (+TAP-GRID-R5)	type	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 - 2026-11-22 08:52 PST OWNER cbn_q00__cl622f65d2 + cbn_q00__cldbcda913 [FABLE-FIX-QC-V4 ->	
+QC	cbn_q01__clab6e67f2	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbn_q01__cld9ff4c40	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbn_q01__cldd6ea846	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbn_q11__cl49ae4555	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4 (+FABLE-FIX-QC-V4)	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbn_q11__cl5cc92dfe	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4 (+FABLE-FIX-QC-V4)	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbx_q10__cl89936551	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4 (+FLOW-OPS-R2)	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbx_q10__cl89936551_h	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4 (+FLOW-OPS-R2)	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	cbx_q10__cl94a12200_h	type	held by die owner (plan event pending)	0.1	FAM-QC-CB-R4 (+FLOW-OPS-R2)	routed	yes	11-22 08:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:08 COORD-ROUTED-OWNERS	
+QC	coll_core	type	running	1.3	FABLE-FIX-QC-V4 (+FAM-QC-SLWSLE-R1,OPUS-FIX-QC-COLL-R3)	type	yes	11-22 10:49		RUNNING route	2026-11-22 09:35	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	glue	type	running	1.7	TAP-GRID-R5 (+FLOW-OPS-R2,FABLE-FIX-S81-LEAF-TAPHOLD)	routed	yes	11-22 06:21		RUNNING route	2026-11-22 09:09	11-22 06:21 COORD-ROUTED-OWNERS	
+QC	native59	type	running	0.4	NOPROG-FIX-1115	type	yes	11-22 09:52		RUNNING route	2026-11-22 10:29	11-22 07:52 - 2026-11-22 07:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 07:52 PST	
+QC	sle_ctl__cla4f6f12f	type	cancelled (superseded)	0.3	LOCKUP-STATION-R3 (+FAM-QC-SLWSLE-R1,FABLE-FIX-QC-V4)	type	yes	11-22 05:15		CANCELLED geom CANCEL-UNSIGNABLE	2026-11-22 10:30	11-22 05:15 - 2026-11-22 05:15 PST capture_tap is ON MAIN: 73fdcdf7365e (code 705f463187 + regenerated	
+QC	sle_fw_v1__cl9d029624	type	running	0.2	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-22 10:41		
+QC	sle_fw_v1__clf58b4dfb	type	running	1.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-22 09:22		
+QC	sle_fw_v2__cl6740750e	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-22 09:47		
+QC	sle_fw_v2__cl69f5e854	type	running	1.1	FLEET-WATCH-R8	type	yes	11-22 10:46		RUNNING route	2026-11-22 09:47	11-22 05:01 - 2026-11-22 05:01 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:gr	
+QC	sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv48712631	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-22 09:47		
+QC	sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59	type	running	1.9	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-22 08:59		
+QC	sle_hc1__cl22c1ff36__pve230954c	type	running	2.5	QC-SLE-R5	type	no	11-22 08:00		RUNNING place	2026-11-22 08:18	11-22 06:53 - 2026-11-22 06:53 PST ADOPTED [QC-SLE-R5 -> COORD; cc FAM-QC-SLWSLE-R1, FAM-QC-FEFW-R3] t	
+QC	sle_hc1__cl22c1ff36__pve289215f	type	running	0.7	QC-SLE-R5	type	no	11-22 08:00		RUNNING route	2026-11-22 10:06	11-22 06:53 - 2026-11-22 06:53 PST ADOPTED [QC-SLE-R5 -> COORD; cc FAM-QC-SLWSLE-R1, FAM-QC-FEFW-R3] t	
+QC	sle_hc1__cl7d360508__pv77c16c8a	type	running	1.3	QC-SLE-R5	type	no	11-22 08:00		RUNNING route	2026-11-22 09:35	11-22 06:53 - 2026-11-22 06:53 PST ADOPTED [QC-SLE-R5 -> COORD; cc FAM-QC-SLWSLE-R1, FAM-QC-FEFW-R3] t	
+QC	sle_st_a_v1__cl67389ecd	type	running	2.3	QC-PLAN-R13	family	no	11-22 08:26		RUNNING geom	2026-11-22 08:30	11-22 06:43 - 2026-11-22 06:43 PST LANDREMAP [QC-PLAN-R13 -> COORD; cc FAM-QC-SLWSLE-R1, FABLE-FIX-QC-	
+QC	sle_st_a_v1__cl989804f6__cl18eece69	type	running	2.3	QC-PLAN-R13	family	no	11-22 08:26		RUNNING gen_lint	2026-11-22 08:30	11-22 06:43 - 2026-11-22 06:43 PST LANDREMAP [QC-PLAN-R13 -> COORD; cc FAM-QC-SLWSLE-R1, FABLE-FIX-QC-	
+QC	sle_st_a_v1__cl989804f6__cled3c1d7b	type	running	2.3	QC-PLAN-R13	family	no	11-22 08:26		RUNNING place	2026-11-22 08:30	11-22 06:43 - 2026-11-22 06:43 PST LANDREMAP [QC-PLAN-R13 -> COORD; cc FAM-QC-SLWSLE-R1, FABLE-FIX-QC-	
+QC	sle_st_a_v2__pv30dda31f__pv88773f93	type	running	1.5	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	family	yes	11-22 10:49		RUNNING route	2026-11-22 09:22	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	type	running	1.7	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	family	yes	11-22 10:49		RUNNING route	2026-11-22 09:09	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	sle_st_a_v2__pv4242de79	type	running	1.5	FABLE-FIX-QC-V4 (+QC-PLAN-R13,TAP-GRID-R5)	type	yes	11-22 10:49		RUNNING route	2026-11-22 09:22	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	sle_st_b_v2__cl14c98df5__pv41c959f3	type	running (lint advisory)	0.1	QC-SLE-R5	type	no	11-22 08:00		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:53 - 2026-11-22 06:53 PST ADOPTED [QC-SLE-R5 -> COORD; cc FAM-QC-SLWSLE-R1, FAM-QC-FEFW-R3] t	
+QC	sle_st_b_v2__clfde1249e	type	running (lint advisory)	0.1	QC-SLE-R5	type	no	11-22 08:00		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:53 - 2026-11-22 06:53 PST ADOPTED [QC-SLE-R5 -> COORD; cc FAM-QC-SLWSLE-R1, FAM-QC-FEFW-R3] t	
+QC	sle_stm_v1__clbe630b9c	type	running	1.2	FAM-QC-SLWSLE-R1 (+TAP-GRID-R5)	routed	yes	11-22 09:47		RUNNING place	2026-11-22 09:39	11-22 09:47 COORD-ROUTED-OWNERS	
+QC	sle_stm_v2__cl55be2264	type	running	1.5	FAM-QC-SLWSLE-R1 (+TAP-GRID-R5)	routed	yes	11-22 09:47		RUNNING route	2026-11-22 09:22	11-22 09:47 COORD-ROUTED-OWNERS	
+QC	sle_stm_v2__cl7b3062fa	type	running	1.5	FAM-QC-SLWSLE-R1 (+TAP-GRID-R5)	routed	yes	11-22 09:47		RUNNING route	2026-11-22 09:22	11-22 09:47 COORD-ROUTED-OWNERS	
+QC	sle_su_c	type	running	0.7	FLEET-WATCH-1015 (+FAM-QC-SLWSLE-R1,CUT-LEDGER-R1)	type	yes	11-22 10:46		RUNNING route	2026-11-22 10:06	11-22 09:02 - 2026-11-22 09:02 PST CANCELLED [FLEET-WATCH-1015 -> QC-SUST-MACRO-1119] UNSIGNABLE watch	
+QC	sle_su_l1__cl5ea486db	type	running	2.2	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-22 08:37		
+QC	slw_fe_v1__cl95cd1d0c	type	running	2.2	QC-SLE-R5	type	no	11-22 08:00		RUNNING route	2026-11-22 08:37	11-22 06:53 - 2026-11-22 06:53 PST ADOPTED [QC-SLE-R5 -> COORD; cc FAM-QC-SLWSLE-R1, FAM-QC-FEFW-R3] t	
+QC	slw_fe_v1__clfe325744__cl08d14f0d	type	running	1.1	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-22 09:47		
+QC	slw_fe_v2__clf110fab2	type	running	1.3	FABLE-FIX-QC-V4	cluster	yes	11-22 10:49		RUNNING route	2026-11-22 09:35	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	slw_fw_v1__clf51c11d8__cl592e3d37	type	running	0.5	FABLE-FIX-QC-V4	family	yes	11-22 10:49		RUNNING route	2026-11-22 10:18	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	slw_fw_v3	type	running	1.5	KIT-WAVE(auto)	autopilot	yes			RUNNING route	2026-11-22 09:22		
+QC	slw_hc0__cl4f54b7a3__pvd0aa3ddc	type	running	0.7	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-22 10:06		
+QC	slw_hc0__cl4f54b7a3__pvde134a90	type	running	1.7	KIT-WAVE(auto)	autopilot	yes			QUEUED queue	2026-11-22 09:09		
+QC	slw_st_a_v1__clb036e152	type	running	1.0	FABLE-FIX-QC-V4 (+FAM-QC-SLWSLE-R1,QC-PLAN-R13)	cluster	yes	11-22 10:49		RUNNING kit_rtl	2026-11-22 09:51	11-22 05:32 - 2026-11-22 05:32 PST STATE 05:4x [FABLE-FIX-QC-V4 -> COORD, QC-PLAN-R13; cc OPUS-FIX-QC-	
+QC	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	type	running	0.5	FABLE-FIX-QC-V4 (+FAM-QC-SLWSLE-R1,QC-PLAN-R13)	cluster	yes	11-22 10:49		RUNNING route	2026-11-22 10:18	11-22 05:32 - 2026-11-22 05:32 PST STATE 05:4x [FABLE-FIX-QC-V4 -> COORD, QC-PLAN-R13; cc OPUS-FIX-QC-	
+QC	slw_st_a_v1__clfc5867a6__pvf82a6c28	type	running	0.1	FABLE-FIX-QC-V4 (+FAM-QC-SLWSLE-R1,QC-PLAN-R13)	cluster	yes	11-22 10:49		RUNNING	2026-11-22 10:45	11-22 05:32 - 2026-11-22 05:32 PST STATE 05:4x [FABLE-FIX-QC-V4 -> COORD, QC-PLAN-R13; cc OPUS-FIX-QC-	
+QC	slw_st_a_v2__cl9f076a5c	type	running	1.7	FAM-QC-SLWSLE-R1 (+QC-PLAN-R13)	routed	yes	11-22 09:47		RUNNING route	2026-11-22 09:09	11-22 09:47 COORD-ROUTED-OWNERS	
+QC	slw_st_a_v2__clf4365a62	type	running	2.1	FAM-QC-SLWSLE-R1 (+QC-PLAN-R13)	family	yes	11-22 09:47		RUNNING route	2026-11-22 08:46	11-22 09:47 - 2026-11-22 09:47 PST DECISION slw_st_a [FAM-QC-SLWSLE-R1 -> COORD, FABLE-FIX-QC-V4]: wen	
+QC	slw_stm_v2__cl9beb65e6	type	running	1.7	QC-RELAUNCH-R1 (+NEARMISS-ECO-R1)	routed	yes	11-22 10:02		RUNNING route	2026-11-22 09:09	11-22 10:02 COORD-ROUTED-OWNERS	
+QC	slw_su_c__cl92142dac	type	held by die owner (plan event pending)	0.1	FABLE-FIX-QC-V4 (+CUT-LEDGER-R1,FAM-QC-SLWSLE-R1)	type	yes	11-22 10:49		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:14 # FABLE-FIX-QC-V4 handoff (Fable; started 2026-11-22 04:1x PST by COORD). Goal: compose + 	
+QC	slw_su_l1__cla2a78701	type	running	1.7	FABLE-FIX-QC-V4 (+FAM-QC-SLWSLE-R1)	type	yes	11-22 10:49		RUNNING route	2026-11-22 09:09	11-22 10:27 - 2026-11-22 10:27 PST DIED [FABLE-FIX-QC-V4] ot-run oth-ubuntu-3009624-1795367958 on outg	
+QC	slw_su_l1__clcc9d0155	type	running	2.2	QC-PLAN-R13	type	no	11-22 08:26		RUNNING route	2026-11-22 08:37	11-22 06:43 - 2026-11-22 06:43 PST LANDREMAP [QC-PLAN-R13 -> COORD; cc FAM-QC-SLWSLE-R1, FABLE-FIX-QC-	
+QC	tt_ctlm	type	running	1.7	FAM-QC-SLWSLE-R1	routed	yes	11-22 09:47		RUNNING route	2026-11-22 09:09	11-22 09:47 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t1	type	held/retry (J9 LEAF-R10)	2.4	OPUS-FIX-S81-LEAF-R10 (+FABLE-FIX-CONE-SCATTER,FIX-SYNC-S81)	routed	yes	11-22 09:52		FAIL place PLAN	2026-11-22 08:25	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	svc_hi_dsdv_svc_pvso_entry__t1	type	relaunched (newer prelint 10:45)	0.7	S81-BKSEL-R7	type	no	11-22 08:28		FAIL place PLAN	2026-11-22 10:06	11-22 08:28 # S81-BKSEL-R7 handoff (Claude Opus; successor of S81-BKSEL-R6; started 2026-11-21 11:2x P	DEAD-OWNER
+S81	svc_hi_dsdv_svc_rs__t4	type	relaunched (newer prelint 10:45)	0.4			no			FAIL place PLAN	2026-11-22 10:29		UNOWNED
+S81	svc_hi_dsdv_svc_rs__t5	type	relaunched (newer prelint 10:45)	0.5			no			FAIL place PLAN	2026-11-22 10:18		UNOWNED
+S81	svc_lo_dsdv_svc_rs__t3	type	relaunched (newer prelint 10:45)	0.4			no			FAIL place PLAN	2026-11-22 10:29		UNOWNED
+S81	svc_lo_dsdv_svc_rs__t6	type	relaunched (newer prelint 10:45)	0.5			no			FAIL place PLAN	2026-11-22 10:18		UNOWNED
+S81	bk_sel__t2	type	running (lint advisory)	0.1	S81-BKSEL-R7 (+PROGRESS-WATCH,FAM-S81-COL-H10-R4)	routed	yes	11-22 08:28		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:28 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	type	running	0.5	FAM-S81-COL-H10-R4	routed	yes	11-22 10:48		RUNNING gen	2026-11-22 10:22	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p1__t1__cl574cc59d__pv67036687	type	running	1.0	FAM-S81-COL-H10-R4	routed	yes	11-22 10:48		RUNNING place	2026-11-22 09:51	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	type	running	1.2	FAM-S81-COL-H10-R4 (+FAM-S81-SLICE-R6)	routed	yes	11-22 10:48		RUNNING place	2026-11-22 09:39	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p1__t1__cl574cc59d__pvd7af8531	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p1__t1__cl911743eb	type	running	1.6	FAM-S81-COL-H10-R4	routed	yes	11-22 10:48		RUNNING place	2026-11-22 09:14	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p4__t1__pv07945c1e	type	running	1.8	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 10:48		RUNNING place	2026-11-22 09:03	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p4__t1__pv5b623e07	type	running	2.0	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 10:48		RUNNING geom	2026-11-22 08:52	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p4__t1__pvc9270d09	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p4__t1__pvcc166a6d	type	running	3.0	FAM-S81-COL-H10-R4 (+FABLE-FIX-S81-COL-RANKSEAT,WAVE-OPS-R1)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 07:52	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p4__t1__pvd11cc58b	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r0_p4__t1__pvd8c0565f	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+WAVE-OPS-R1,FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv0713a75a	type	running	0.3	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		RUNNING gen	2026-11-22 10:33	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv1a6ec9c2	type	running	0.5	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		RUNNING gen	2026-11-22 10:22	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv69c7e9a6	type	running	1.0	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		RUNNING place	2026-11-22 09:51	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv6a7ae122	type	running	0.5	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		RUNNING gen	2026-11-22 10:22	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv74ebbc00	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv799da6f8	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pv86f5e3b9	type	running	0.4	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 10:29	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pva3a8bfd1	type	running	1.3	FAM-S81-COL-H10-R4 (+PRECHECK-1119,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 09:35	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pvce76611c	type	running	0.3	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		RUNNING kit_rtl	2026-11-22 10:33	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pve28d14fa	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cl95b37463__pvf724da2a	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+HOURLY-WRITEUP-R5,FLOW-OPS-R2)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r1__t1__cld01bb4ae	type	running	3.0	FAM-S81-COL-H10-R4 (+FLOW-OPS-R2,OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 07:52	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl1f5d6c2a__pv0c1de895	type	running	0.7	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 10:06	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl1f5d6c2a__pv16277ca6	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0	type	running	0.5	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		RUNNING gen	2026-11-22 10:22	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl1f5d6c2a__pvcd889288	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	type	running	0.2	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		QUEUED queue	2026-11-22 10:41	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl8b686b3e	type	running	0.2	FAM-S81-COL-H10-R4 (+FLEET-WATCH-R8,OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 10:41	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl99efd374__pv1619ecc6	type	running (lint advisory)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl99efd374__pv4c1f67ff	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl99efd374__pv7a8a5452	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__cl99efd374__pv9ae398c2	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H10-R4 (+OPUS-FIX-S81-COLROM-R6,WAVE-OPS-R1)	routed	yes	11-22 10:48		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h10_r2__t1__clac068e56	type	running	0.4	FAM-S81-COL-H10-R4 (+FAIL-ROUTE-1115,OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 10:48		RUNNING route	2026-11-22 10:29	11-22 10:48 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p1__t1__pv697f40c9	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p1__t1__pv8c197f8e	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p1__t1__pva2e3974f	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p1__t1__pvb3e2a60a	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p1__t1__pvb49c16c8	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p1__t1__pvf9acce4c	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl0045af7b__pv622a6f97	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl0045af7b__pva2793873	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl0045af7b__pve183b536	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv2744f675	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv291547b4	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pva4376595	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+EPYC10-DISK-R1,TAP-GRID-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl31d0dc4b	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+FLEET-WATCH-R8,OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4 (+OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	type	running	0.1	FAM-S81-COL-H9R0-R4 (+FLEET-WATCH-R8,OPUS-FIX-S81-COLROM-R6)	routed	yes	11-22 08:52		RUNNING	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pv35382794	type	running	0.3	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		RUNNING gen	2026-11-22 10:33	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pv5c8f2166	type	running (lint advisory)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pv8995e794	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvb22875c0	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvbca8d846	type	running	0.5	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		RUNNING gen	2026-11-22 10:22	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvc1b82625	type	running	1.0	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		RUNNING place	2026-11-22 09:51	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvc6e5797f	type	running	1.6	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		RUNNING resume_fp	2026-11-22 09:14	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvc93af856	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pveda1ecc9	type	running	1.5	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		RUNNING route	2026-11-22 09:22	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvee6f8140	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvf71da13a	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p5__t1__pvf731e6ec	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv0012ba28	type	running	1.7	FAM-S81-COL-H9R0-R4 (+FAIL-ROUTE-1115,FABLE-FIX-S81-COL-RANKSEAT)	routed	yes	11-22 08:52		RUNNING route	2026-11-22 09:09	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv082a7609	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv6398a5b7	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv7808008f	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv8241ebb8	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv87853a7e	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv8d617470	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pv9da72aa7	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pvb38a9d6c	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pvbdbd69f2	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pvde240d6d	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r0_p6__t1__pvea45abf3	type	held by die owner (plan event pending)	0.1	FAM-S81-COL-H9R0-R4 (+FLOW-CLKGRT-R2,HOURLY-WRITEUP-R5)	routed	yes	11-22 08:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 08:52 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv047ea3b3	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+FAM-S81-COL-R5,FLOW-OPS-R2)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv0a45e191	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv0bab1162	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv11c696bc	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv11dcdcd2	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv152ea348	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv15cef3f7	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv1c15776f	type	running	0.1	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv2cabd9a9	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	type	running	1.8	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING place	2026-11-22 09:03	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv36da905c	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	type	running	0.3	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING kit_rtl	2026-11-22 10:33	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv4108910d	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv4593e8e5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv461b5256	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv47efee8f	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv49636389	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv49f0ba38	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv4bd36c74	type	running	0.5	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,FLOW-OPS-R2)	routed	yes	11-22 10:47		RUNNING gen	2026-11-22 10:22	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv4ef1b59c	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv534ef85e	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv58f6356d	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv62bca836	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv637e5d47	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv6c1e320a	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv70f04488	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv7466df46	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv87d52780	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv88891f20	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv8aaf8508	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv8ea75ee5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv9a5bd576	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pv9c5966b7	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pva2370bfd	type	running	1.7	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING route	2026-11-22 09:09	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pva7e46565	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvac06e607	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvadb6c679	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvadbd1880	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvafa6f454	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvb2dac3cf	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvbb600efe	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvc22584f3	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvc25aad1b	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvc382fb14	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvcb813ee7	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pve273b259	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pve3f8a86c	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvebe696ff	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__cl49d7a23e__pvfed9fee6	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__clf32cde8d__pv387d6579	type	running	0.5	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,FLOW-OPS-R2)	routed	yes	11-22 10:47		RUNNING route	2026-11-22 10:18	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__clf32cde8d__pv3b9ba75c	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__clf32cde8d__pv48cfde67	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__clf32cde8d__pv63f488e9	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__clf32cde8d__pvd9381c1d	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r1__t1__clf32cde8d__pvee46d7b8	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLOW-OPS-R2,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__cl774acf45__pv858fb2ba	type	running	1.5	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING route	2026-11-22 09:22	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__cl774acf45__pve3ab90e7	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__cl774acf45__pvea45273b	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__cl774acf45__pvf8d9f9e5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__cl87f3ff59	type	running	2.0	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,WAVE-OPS-R1)	routed	yes	11-22 10:47		RUNNING place	2026-11-22 08:53	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clb8d86cd5__pv6a2b031b	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clb8d86cd5__pv8d57997d	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clb8d86cd5__pv982ec12c	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clb8d86cd5__pvf1445dce	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+NOPROG-FIX-1115,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	type	running	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clc9ad8f7e__pvf079625b	type	running	0.3	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		RUNNING gen	2026-11-22 10:33	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clc9ad8f7e__pvfef7c177	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+HOURLY-WRITEUP-R5,FAM-S81-COL-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv06a1adf6	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+FLEET-WATCH-R8,WAVE-OPS-R1)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv09b9967e	type	running (lint advisory)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv14626557	type	running	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		RUNNING	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv1aac64f0	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv22267ca0	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv2833ee2b	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv2f87774f	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv31e47bd5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv37074264	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv40e9fb5a	type	running	0.3	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		RUNNING gen	2026-11-22 10:33	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv467913cc	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv4754d912	type	running	3.0	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		RUNNING route	2026-11-22 07:52	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv4937edd4	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv6827937d	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv7b8853b5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv7c30fd4e	type	running	0.5	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		RUNNING gen	2026-11-22 10:22	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv843b0fff	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv8b5a5980	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv9a22736e	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv9cc104a8	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pv9e92407b	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pva119e808	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pva8c07948	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvaa9a1324	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvb11188eb	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvb3258867	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvb3f647ea	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvb6ec679e	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvb7e88dd2	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvc6132d1e	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvcd1d9f5f	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvd2454d1a	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvd60e699f	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvdc7d4221	type	running	0.5	OPUS-FIX-S81-COLROM-R6 (+FAIL-ROUTE-1115,WAVE-OPS-R1)	routed	yes	11-22 10:47		RUNNING gen	2026-11-22 10:22	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pve0486b40	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pve0bffaf8	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pve171243a	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvf390b1f5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvf57acd2b	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvf9c773d5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvfb42a1ad	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	col_h9_r2__t1__clce45cab5__pvfd79e8b6	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-COLROM-R6 (+WAVE-OPS-R1,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:47		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:47 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t1	type	running	0.1	FAM-S81-SLICE-R6 (+FAM-S81-DSDV-R1)	routed	yes	11-22 10:08		RUNNING	2026-11-22 10:45	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t10	type	running	0.3	FAM-S81-SLICE-R6	routed	yes	11-22 10:08		RUNNING gen	2026-11-22 10:33	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t3	type	running	0.5	FAM-S81-SLICE-R6 (+FLEET-WATCH-1015)	routed	yes	11-22 10:08		RUNNING gen	2026-11-22 10:22	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t4	type	running	1.0	FAM-S81-SLICE-R6	routed	yes	11-22 10:08		RUNNING gen_lint	2026-11-22 09:51	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t5	type	running	1.6	FAM-S81-SLICE-R6 (+FLEET-WATCH-1015)	routed	yes	11-22 10:08		RUNNING gen_lint	2026-11-22 09:14	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t6	type	running	1.8	FAM-S81-SLICE-R6	routed	yes	11-22 10:08		RUNNING gen_lint	2026-11-22 09:04	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t7	type	running	1.2	FAM-S81-SLICE-R6	routed	yes	11-22 10:08		RUNNING gen_lint	2026-11-22 09:39	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t8	type	running	1.2	FAM-S81-SLICE-R6 (+FABLE-FIX-S81-J8-TAPROWS)	routed	yes	11-22 10:08		RUNNING gen	2026-11-22 09:39	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c1x_C__t9	type	running	3.4	FAM-S81-SLICE-R6	routed	yes	11-22 10:08		RUNNING place	2026-11-22 07:29	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_c3x_C__t1	type	running (lint advisory)	0.1	FAM-S81-SLICE-R6	routed	yes	11-22 10:08		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_iq_C__t1	type	relaunched (private kit FAM-S81-DSDV-R1/s81_dsdv_slice_iq_C__t1_1122081048 live: result.json RUNNING)	2.7	FAM-S81-DSDV-R1 (+S81-DIE-R5)	routed	yes	11-22 10:49		FAIL place PLAN	2026-11-22 10:18	11-22 10:49 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_kv512_C__t1	type	running	0.5	FAM-S81-SLICE-R6 (+FLEET-WATCH-1015,PRECHECK-1119)	routed	yes	11-22 10:08		RUNNING route	2026-11-22 10:18	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_lepe_mu_C__t1	type	running	3.4	FAM-S81-SLICE-R6 (+PRECHECK-1119)	routed	yes	11-22 10:08		RUNNING place	2026-11-22 07:29	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_lepe_mu_LP__t2	type	cancelled (superseded)	1.9	FAM-S81-DSDV-R1 (+S81-J6-ASSEMBLY-R5)	type	yes	11-22 10:49		CANCELLED  STRUCT-STOP	2026-11-22 08:58	11-22 08:56 - 2026-11-22 08:56 PST OWNED dsdv_slice_lepe_mu_LP__t2: FAIL class = BIND-GEN-TOOLSKEW (J7	
+S81	dsdv_slice_lepe_nh_mus_C__t1	type	running	3.3	PRECHECK-1119 (+FAM-S81-LEPE-4)	type	yes	11-22 10:49		RUNNING place	2026-11-22 07:30	11-22 09:08 - 2026-11-22 09:08 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] outgoing-giraf	
+S81	dsdv_slice_lepe_nh_mus_LP__t1	type	running	0.2	S81-DIE-R5	type	yes	11-22 10:48		QUEUED queue	2026-11-22 10:41	11-22 06:15 - 2026-11-22 06:15 PST PLAN-ROWS PLACE-SETUP-STOP [S81-DIE-R5 -> S81-J6-ASSEMBLY-R2, S81-J	
+S81	dsdv_slice_lepw_mu_C__t1	type	cancelled (superseded)	1.9	FAM-S81-DSDV-R1 (+FAIL-ROUTE-1115)	type	yes	11-22 10:49		CANCELLED  STRUCT-STOP	2026-11-22 08:57	11-22 08:56 - 2026-11-22 08:56 PST OWNED dsdv_slice_lepw_mu_C__t1: FAIL class = BIND-GEN-TOOLSKEW (J7 	
+S81	dsdv_slice_lepw_mu_LP__t2	type	running	2.0	FAIL-ROUTE-1115	type	yes	11-22 09:18		RUNNING place	2026-11-22 08:53	11-22 07:48 - 2026-11-22 07:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> DIE-S81-92, COORD] FAIL-CLASS 608c	
+S81	dsdv_slice_lepw_mus_C__t1	type	running	3.3	FAM-S81-DSDV-R1 (+PRECHECK-1119)	routed	yes	11-22 10:49		RUNNING place	2026-11-22 07:30	11-22 10:49 COORD-ROUTED-OWNERS	
+S81	dsdv_slice_lepw_mus_LP__t2	type	cancelled (superseded)	1.9	FABLE-FIX-CONE-SCATTER (+FIX-SYNC-S81,FAM-S81-DSDV-R1)	type	yes	11-22 10:48		CANCELLED  STRUCT-STOP	2026-11-22 08:57	11-22 10:25 # FABLE-FIX-CONE-SCATTER handoff (Opus 5.5 for Fable; COORD launch 11-22 09:4x). Owns clas	
+S81	eng__t1	type	running	0.5	FAM-S81-COL-R6	routed	yes	11-22 05:48		RUNNING gen	2026-11-22 10:22	11-22 05:48 COORD-ROUTED-OWNERS	
+S81	gunit__t1	type	running	1.3	EPYC10-DISK-R1 (+S81-J6-ASSEMBLY-R5)	family	yes	11-22 09:35		RUNNING route	2026-11-22 09:35	11-22 09:35 - 2026-11-22 09:35 PST epyc10 scratch2 reclaim: free 268 -> 832 GB (89pct), target 800 met	
+S81	iqf__t1	type	cancelled (superseded)	1.9	FAM-S81-DSDV-R1 (+FAIL-ROUTE-1115,CUT-LEDGER-R1)	type	yes	11-22 10:49		CANCELLED  STRUCT-STOP	2026-11-22 08:57	11-22 10:46 - 2026-11-22 10:46 PST DONE [FAM-S81-DSDV-R1] ot-run oth-ubuntu-3534900-1795372125 on tole	
+S81	phy__t1	type	NOT-IN-PLAN	0.2	FAIL-ROUTE-1115 (+PROGRESS-WATCH,FAM-S81-SERDES-R8)	type	yes	11-22 09:18		QUEUED queue	2026-11-22 10:41	11-22 08:38 - 2026-11-22 08:38 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS bccb49a5ab s81/bin	
+S81	s81sl_kv_leaf__t1	type	running	2.2	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 08:37	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_kv_leaf__t2	type	running	3.3	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 07:30	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_kv_leaf__t3	type	running	1.9	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-1015)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 08:59	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_kv_leaf__t4	type	running	2.4	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 08:25	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_kv_leaf__t5	type	held by die owner (plan event pending)	0.1	OPUS-FIX-S81-LEAF-R10 (+FAM-S81-MISC-R4)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t10	type	running	1.6	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:14	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t11	type	running	1.8	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t12	type	running	2.0	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:53	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t13	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t14	type	running	2.0	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:53	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t15	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t16	type	running	1.6	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING preflight	2026-11-22 09:14	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t17	type	running	1.8	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t2	type	running	2.0	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:53	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t21	type	running	1.8	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING geom	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t22	type	running	1.8	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING geom	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t23	type	running	1.7	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:09	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t24__cl2456157b	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t24__cl81374cd8	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t25__cl431c660f	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t25__cl55642d17	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t26	type	running	1.8	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t27	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t28	type	running	3.0	OPUS-FIX-S81-LEAF-R10 (+NOPROG-WATCHDOG)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 07:52	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t29	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t3	type	running	2.2	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 08:37	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t30	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t31	type	cancelled (superseded)	1.9	OPUS-FIX-S81-LEAF-R10 (+FIX-SYNC-S81,FAIL-ROUTE-1115)	routed	yes	11-22 09:52		CANCELLED  FLOW	2026-11-22 08:58	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t32	type	running	1.8	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING resume_fp	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t33	type	running	2.0	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,FAIL-ROUTE-1115)	routed	yes	11-22 09:52		RUNNING geom	2026-11-22 08:53	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t34	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t35	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t36	type	running	1.2	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING gen	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t37	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t38	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t39	type	running	0.2	OPUS-FIX-S81-LEAF-R10 (+FABLE-FIX-S81-LEAF-TAPHOLD)	routed	yes	11-22 09:52		QUEUED queue	2026-11-22 10:41	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t4	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t40__cl86ea32b3	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t40__cl86ea32b3__sid5S	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t40__clf8bbdae1	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t41	type	running	1.8	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:04	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t42	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t43	type	running	1.2	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING kit_rtl	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t44__clf4ea6d4b	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t44__clf6cf8492	type	running	1.2	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING gen	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t45	type	running	1.2	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING kit_rtl	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t46	type	running	1.9	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING geom	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t47	type	running	0.4	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119,FAIL-ROUTE-1115)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 10:29	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t5	type	running (lint advisory)	0.1	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t50	type	running	1.7	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:09	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t51	type	running	0.1	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING	2026-11-22 10:46	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t52	type	running	0.2	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	routed	yes	11-22 09:52		QUEUED queue	2026-11-22 10:41	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t53__cl958451dd	type	running	1.6	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:14	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t53__clb66fa5cb	type	running	0.3	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING kit_rtl	2026-11-22 10:33	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t54__cl501e5681	type	running	0.5	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING gen	2026-11-22 10:22	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t54__cl706d9749	type	running	1.0	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:51	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t55	type	running	1.9	OPUS-FIX-S81-LEAF-R10 (+PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING geom	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t56	type	running	1.2	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING gen_lint	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t57	type	running	3.0	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PROGRESS-WATCH)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 07:52	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t58	type	running	0.2	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		QUEUED queue	2026-11-22 10:41	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t59	type	running	1.2	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t6	type	running	1.9	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t60	type	running	3.0	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 07:52	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t61	type	running	1.5	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:22	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t62	type	running	1.9	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t65	type	running	1.0	OPUS-FIX-S81-LEAF-R10 (+FAIL-ROUTE-1115)	routed	yes	11-22 09:52		RUNNING gen	2026-11-22 09:51	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t66	type	running	1.2	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING gen_lint	2026-11-22 09:39	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t67	type	running	1.5	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:22	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t68	type	running	1.3	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:35	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t69	type	running	1.5	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:22	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t7	type	running	1.9	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8,FAIL-ROUTE-1115)	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t70	type	running	2.6	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 08:14	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t71	type	running	1.9	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t72	type	running	1.9	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING place	2026-11-22 08:54	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t73	type	running	0.2	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		QUEUED queue	2026-11-22 10:41	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t74	type	running	1.5	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-R8)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 09:22	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t75	type	running	3.0	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 07:52	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t8	type	running	2.6	OPUS-FIX-S81-LEAF-R10 (+FLEET-WATCH-1015,PRECHECK-1119)	routed	yes	11-22 09:52		RUNNING route	2026-11-22 08:14	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	s81sl_leaf__t9	type	running	3.0	OPUS-FIX-S81-LEAF-R10	routed	yes	11-22 09:52		RUNNING route	2026-11-22 07:52	11-22 09:52 COORD-ROUTED-OWNERS	
+S81	seqhost__t1	type	running	1.9	FLEET-WATCH-1015 (+S81-DIE-R5,S81-J6-ASSEMBLY-R5)	type	yes	11-22 10:46		RUNNING place	2026-11-22 08:54	11-22 09:02 - 2026-11-22 09:02 PST CANCELLED [FLEET-WATCH-1015 -> COORD] UNSIGNABLE watchdog cancelled	
+S81	serdes__t12	type	held by die owner (plan event pending)	0.1	FAM-S81-SERDES-R7 (+FLOW-CLKGRT-R2,FABLE-FIX-CONE-SCATTER)	routed	yes	11-22 06:11		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t13	type	running	1.8	FAM-S81-SERDES-R7 (+NEARMISS-ECO-R1,FABLE-FIX-CONE-SCATTER)	routed	yes	11-22 06:11		RUNNING place	2026-11-22 09:04	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t14	type	running	0.5	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	routed	yes	11-22 06:11		RUNNING gen	2026-11-22 10:22	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t15__cla2127225	type	held by die owner (plan event pending)	0.1	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	routed	yes	11-22 06:11		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t15__cla3d02796	type	held by die owner (plan event pending)	0.1	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	routed	yes	11-22 06:11		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t16	type	running	1.0	FAM-S81-SERDES-R7 (+S81-DIE-R5,FABLE-FIX-CONE-SCATTER)	routed	yes	11-22 06:11		RUNNING place	2026-11-22 09:51	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t1__clb45db5be	type	running	1.2	FAM-S81-SERDES-R7 (+FAM-S81-SLICE-R6,S81-J6-ASSEMBLY-R5)	routed	yes	11-22 06:11		RUNNING place	2026-11-22 09:40	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t1__clfe1f0815	type	running	1.6	FAM-S81-SERDES-R7 (+S81-J6-ASSEMBLY-R5,FABLE-FIX-CONE-SCATTER)	routed	yes	11-22 06:11		RUNNING place	2026-11-22 09:14	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t2	type	running	1.8	FAM-S81-SERDES-R7 (+FABLE-FIX-CONE-SCATTER,EPYC10-DISK-R1)	routed	yes	11-22 06:11		RUNNING place	2026-11-22 09:03	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t3	type	running	1.9	FAM-S81-SERDES-R7 (+FAIL-ROUTE-1115,FABLE-FIX-CONE-SCATTER)	routed	yes	11-22 06:11		RUNNING place	2026-11-22 08:54	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	serdes__t4	type	running	1.0	FAM-S81-SERDES-R7 (+FAIL-ROUTE-1115,FABLE-FIX-CONE-SCATTER)	routed	yes	11-22 06:11		RUNNING gen	2026-11-22 09:51	11-22 06:11 COORD-ROUTED-OWNERS	
+S81	slice_station__t51	type	running	1.9	FAM-S81-SLICE-R6 (+FAIL-ROUTE-1115,HOURLY-WRITEUP-R5)	routed	yes	11-22 10:08		RUNNING place	2026-11-22 08:54	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	slice_station__t52	type	running	1.9	FAM-S81-SLICE-R6 (+HOURLY-WRITEUP-R5,S81-DIE-R5)	routed	yes	11-22 10:08		RUNNING place	2026-11-22 08:54	11-22 10:08 COORD-ROUTED-OWNERS	
+S81	svc_hi_dsdv_svc_pvso_entry__t2	type	FAILED other flow error	0.7	PROGRESS-WATCH (+FAIL-ROUTE-1115)	type	yes	11-22 10:08		FAIL place PLAN	2026-11-22 10:06	11-22 10:08 - 2026-11-22 10:08 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on t	
+S81	svc_hi_dsdv_svc_rs__t1	type	running (lint advisory)	0.1	KIT-WAVE(auto)	autopilot	yes			LINT-ADVISORY prelint LINT	2026-11-22 10:45		
+S81	svc_hi_dsdv_svc_rs__t2	type	running	1.0	KIT-WAVE(auto)	autopilot	yes			RUNNING resume_fp	2026-11-22 09:51		
+S81	svc_hi_dsdv_svc_rs__t3	type	running	0.3	KIT-WAVE(auto)	autopilot	yes			RUNNING place	2026-11-22 10:33		
+S81	svc_hi_dsdv_svc_rs__t6	type	FAILED other flow error	0.7	PROGRESS-WATCH (+FAIL-ROUTE-1115)	type	yes	11-22 10:08		FAIL place PLAN	2026-11-22 10:06	11-22 10:08 - 2026-11-22 10:08 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on t	
+S81	svc_lo_dsdv_svc_rs__t1	type	running (lint advisory)	0.1	FABLE-PD-S81-1430	registry	no	11-21 13:20		LINT-ADVISORY prelint LINT	2026-11-22 10:45	11-21 13:20 registry owner	
+S81	svc_lo_dsdv_svc_rs__t2	type	running	1.0	KIT-WAVE(auto)	autopilot	yes			RUNNING gen	2026-11-22 09:51		
+S81	svc_lo_dsdv_svc_rs__t4	type	running	0.1	KIT-WAVE(auto)	autopilot	yes			RUNNING	2026-11-22 10:45		
+S81	svc_lo_dsdv_svc_rs__t5	type	running (lint advisory)	0.1	KIT-WAVE(auto)	autopilot	yes			LINT-ADVISORY prelint LINT	2026-11-22 10:45		
+S81	svc_lo_dsdv_svc_rs__t7	type	running	1.0	FAIL-ROUTE-1115	type	yes	11-22 09:18		RUNNING kit_rtl	2026-11-22 09:51	11-22 08:18 - 2026-11-22 08:18 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 608c336eca s81/bin	
+S81	svc_lo_dsdv_svc_rs_w__t1	type	running	0.7	FAIL-ROUTE-1115	type	yes	11-22 09:18		RUNNING gen	2026-11-22 10:10	11-22 08:18 - 2026-11-22 08:18 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 608c336eca s81/bin	
