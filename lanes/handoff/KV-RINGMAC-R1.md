@@ -1,7 +1,19 @@
 # KV-RINGMAC-R1 handoff (Opus 5.5; COORD lane, started 2026-11-21 22:0x PST)
-GOAL: sign 9 NARROW cland ring masters for the kv3_hub_C cut (DONE: 9 SIGNED + exported), then (COORD 11-21) write the 44 hub_C ring rows, private strict bind/LATCHECK/G0 on an ot-tree-fork of D27d3 (epyc8); clean by 11-22 11:30 PST -> KV-PLAN-R6 D28 row, else D29; post rows to KV-AHUB-RH1 too.
+GOAL: 9 NARROW cland ring masters for the kv3_hub_C cut (DONE: signed + exported) -> 44 hub_C ring rows (DONE: D28 row handed to KV-PLAN-R6 11-22 02:5x PST) -> private hub_C proof kit (running).
 
-## State 2026-11-21 23:2x PST: ROWS written, private gate pending
+## State 2026-11-22 02:5x PST: D28 ROW READY (posted to KV-PLAN-R6, cc COORD/KV-AHUB-RH1/FAM-KV-HUBC-SYSC-R2)
+- ROWS: epyc8 L=/srv/opentallas-scratch2/claude/kv-ringmac-r1/rows/ROWS_kv_ringmac_d28.py sha 3a0f01f89763 (frozen delta d518e6f36e6a; copy staged as kv-plan-r6/d28/rows/ROWS_KV-RINGMAC-R1.py; KV-PLAN-R6 adds rows.json entry types=[kv3_hub_C]).
+- OVERLAY for the D28 tree: L/rows/overlay (171 files, sha-of-shas c72b316ac74b): kvringmac_views/<m>/ + plan_of_record/cores/kv_ring/<m>_pins.json.
+- Private gate on ot-tree-fork L/tree_d27d3 (plan 6cf8a895318e): PRE PASS 0 (L/gates/pre_a), G0 PASS 0 err (g0_b), strict bind 0 err + LATCHECK RC0 + BPC PASS (bind_b); R8 = D27d3 baseline.
+- Lessons: freezer must keep dict key order (param_wrap text compared verbatim by bind EMIT); SCH.Plan shares the plan dict (search on a deepcopy); bind hardlinks bind_sinks.json from a cache -> move bind_of_record out before ot-tree-fork --verify.
+- Generator (re-site if base moves): L/ROWS_hubc_ringmac.py (run in a tree root; --views L/views --pins L/rk --overlay ... --report ...), then L/tmp/freeze.py BASE OUT ROWS.
+## Running
+- Private proof kit kv3_hub_C rm1: L/gen_hubc_rm.sh rm1 (launch tree L/launch_8ba6 = rt 8ba65785b19d + fork; wave env kit_wave.json) via ot-run epyc8 -> L/proof/rm1. Next: check cell count < 400k, then run_kit GOAL=route.
+## Next
+1. Answer KV-PLAN-R6 compose questions (re-site if D28 compose moves a band: re-run generator on the composed plan).
+2. rm1 kit to GRT TT; report cell count + GRT to COORD/KV-PLAN-R6.
+
+## Earlier state 2026-11-21 23:2x PST: ROWS written, private gate pending
 - COORD ruling relayed to KV-PLAN-R6 (79274b7c9b accepted; D28+ GEN tools >= 79274b7c9b).
 - Row generator (site search, KV-D23-HUBC d23_hubc_rows.py form): epyc8 L=/srv/opentallas-scratch2/claude/kv-ringmac-r1/ROWS_hubc_ringmac.py (run in a tree root: PLAN_IN PLAN_OUT --views L/views --pins L/rk --overlay L/rows/overlay --report L/rows/report.json).
 - D28 row (self-contained, composer form `python3 -I ROWS PLAN_IN PLAN_OUT`): epyc8 L/rows/ROWS_kv_ringmac_d28.py (frozen delta 4bbcae0dde8f; out plan on D27d3 = L/rows/plan_c.json). Touches only kv3_hub_C: hard_cores +44, clock.taps +44, landing_contract.bands x44 (+collector_local_sources band), landing_ring_wreg.buses +12. 0 added cycles (exact params) -> no latency entry. Overlay L/rows/overlay (kvringmac_views/<m> + plan_of_record/cores/kv_ring/<m>_pins.json) must be copied into the D28 tree.
