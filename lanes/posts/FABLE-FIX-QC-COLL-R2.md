@@ -1,0 +1,2 @@
+- 2026-11-21 19:58 PST DIED [FABLE-FIX-QC-COLL] ot-run oth-ubuntu-3314323-1795319375 on loved-redfish: rc=3 after 516 s, ended 03:58:10, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll/bind_pkg.client.log, cmd: --priority plan --mem 48 --threads 8 --disk 20 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll -- bash /srv/opentallas
+  [filed under] FABLE-FIX-QC-COLL-R2: FABLE-FIX-QC-COLL stood down (chain FABLE-FIX-QC-COLL > FABLE-FIX-QC-COLL-R2)
