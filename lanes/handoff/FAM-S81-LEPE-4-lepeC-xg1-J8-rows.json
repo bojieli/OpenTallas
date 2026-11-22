@@ -29,5 +29,114 @@
   "lepe_mu_C t1 keeps the J8 split rows lanes/handoff/FAM-S81-LEPE-3-lepeC-split-J8-rows.json; u_xg stays whole in one part",
   "XG-3 / XF-1 / RST-1 FIRM sites follow from the proof13 placement (relay_sites), revised before 14:00"
  ],
- "tools_min_sha": "20a713e74d"
+ "tools_min_sha": "20a713e74d",
+ "xg3": {
+  "type": "dsdv_slice_lepe_nh_mus_C__t1",
+  "what": "XG-3 face legs as internal_stations (native bind inserts u_ist_ stations, FIRM sites): xring_o0 2 stations, x_o0 / x_o1 / xring_i0 1 each; +1 cycle per station on those lanes (pre-approved), priced by the bind (LATCHECK)",
+  "evidence": "proof13 (nh_mus_C t1, XMID1) place wns -858 / tns -422,898; AUTO-GEOM placed scan 65 NEED-STATION groups, 12,020 bits > 405 um; these four face buses are 4 of the top 7 (1103/1016/1005/1067 b at 840-1057 um, plan_row none)",
+  "ops": [
+   {
+    "op": "add",
+    "path": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/internal_stations/-",
+    "value": {
+     "conn": "bus:xring_o0",
+     "launch": "u_s_7S_u_sl_u_xg.ro_w",
+     "capture": "face flop",
+     "from_um": [
+      487.71,
+      367.69
+     ],
+     "to_um": [
+      1436.71,
+      366.99
+     ],
+     "regs_um": [
+      [
+       804.28,
+       367.69
+      ],
+      [
+       1120.84,
+       367.69
+      ]
+     ],
+     "note": "XG-3 FAM-S81-LEPE-4 11-22: xg u_r.row_d -> xring_o0 1103 b, placed max 1057 um (est 1310 ps), 2 stations, hops ~317 um; proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
+    }
+   },
+   {
+    "op": "add",
+    "path": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/internal_stations/-",
+    "value": {
+     "conn": "bus:x_o1",
+     "launch": "u_s_7S_u_sl_u_xg.xw_d",
+     "capture": "face flop",
+     "from_um": [
+      255.44,
+      535.01
+     ],
+     "to_um": [
+      427.05,
+      8.26
+     ],
+     "regs_um": [
+      [
+       427.05,
+       357.45
+      ]
+     ],
+     "note": "XG-3 FAM-S81-LEPE-4 11-22: xg u_s.xw_d -> x_o1 1102 b, placed max 929 um, 1 station, hop ~349 um; proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
+    }
+   },
+   {
+    "op": "add",
+    "path": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/internal_stations/-",
+    "value": {
+     "conn": "bus:x_o0",
+     "launch": "u_s_7S_u_sl_u_xg.xw_d",
+     "capture": "face flop",
+     "from_um": [
+      262.88,
+      521.5
+     ],
+     "to_um": [
+      189.26,
+      6.47
+     ],
+     "regs_um": [
+      [
+       189.26,
+       300.79
+      ]
+     ],
+     "note": "XG-3 FAM-S81-LEPE-4 11-22: xg u_s.xw_d -> x_o0 1102 b, placed max 947 um, 1 station; proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
+    }
+   },
+   {
+    "op": "add",
+    "path": "/partition_types/dsdv_slice_lepe_nh_mus_C__t1/internal_stations/-",
+    "value": {
+     "conn": "bus:xring_i0",
+     "launch": "face flop",
+     "capture": "u_s_7S_u_sl_u_xg.ri_w",
+     "from_um": [
+      1415.29,
+      130.08
+     ],
+     "to_um": [
+      807.31,
+      133.64
+     ],
+     "regs_um": [
+      [
+       1109.52,
+       130.08
+      ]
+     ],
+     "note": "XG-3 FAM-S81-LEPE-4 11-22: cland_xring_i0 -> bin_xring_i0 -> xg ri_w 1104 b, placed max 840 um, 1 station, hop ~306 um; proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
+    }
+   }
+  ],
+  "status": "DRAFT 11-22 08:5x: row-local; dry-run strict bind + LATCHECK + G0 + PRE on an ot-tree-fork of the proof13 tree (epyc7 trees/s81_nhC_xg3, systemd lepe4-xg3bind). J8 only if green by 13:30, else J9.",
+  "not_in_j8": "XG-2 (xg region / FIRM xmid sites: g_xmid.vi_f -> iv 1205 um), XF-1 internal xf legs (driver g_cp d_r -> u_e 984 um, dl_d -> d_r 927 um, e_hh/kk/dd 884-1058 um) and the xf sticky fault loop (-858; RTL selector OT_S81DV_XFIN_FLTP2 drafted, bench running) -> J9; RST-1 not seen in the top groups of this scan"
+ }
 }
