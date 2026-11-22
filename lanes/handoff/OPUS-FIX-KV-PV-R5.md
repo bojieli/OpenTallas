@@ -78,3 +78,8 @@ Written 2026-11-21 06:2x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R5.md. Hub dir in
 - PUSHED split_bind_routes fix main @3a68739125 (14:xx PST). Step 3 type_split held (stack on STRIPBODY step 1 or SVC-R8 port fix, first to land). tree5 type_split.py = lane-clone tsplit branch + istation-rows-move fix (not yet in any clone commit; diff vs split28/type_split.tree5_r5b.py).
 
 - Committed (not pushed) station-rows-move-with-core fix: epyc7 lane clone /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r4/repo branch claude/opus-fix-kv-pv-r5-tsplit (on 3a132dd5b5), + test_core_move_carries_its_internal_station_rows; test_type_split all pass. Step 3 held (stack on STRIPBODY step 1 or SVC-R8 port fix; push from an epyc8/epyc10 clone, not epyc7).
+
+## RESUME 2026-11-21 18:3x PST (after weekly limit; Codex 14:23-18:1x)
+- chain17 binds 9/10: native stations L2416 fixed_cycles 11 vs 0 (R3 cycles unpriced). ONE r8 refresh SPENT (r8_ev f886e0cb87b7 saved split28/r8_ev.refreshed_f886e0.json). Do not refresh again.
+- Codex/TAP-GRID R5 carry plan 472f8f912964 (por_split_15_taps/plan_taps_preserve.json) installed as tree5 plan_of_record (prev = por_split_15_r3bind10). chain18.sh ot-run oth-ubuntu-3076559-1795314127 (log intel2 ~/tmp/okpvr5/chain18.log): bind 11 -> split28/bindgate_11/{gate.out,errdiff.txt,lfh_*.txt}.
+- Step 3 branch claude/opus-fix-kv-pv-r5-tsplit-step3 @1059cbc654 COORD APPROVED, not merged yet (MERGE-QUEUE).
