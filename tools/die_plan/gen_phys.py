@@ -38,6 +38,19 @@ from schema import DIE_PART
 
 
 
+# AB-CONSUMED-1122 (COORD: H9R0-R4 kit C refused although OT_GRT_CONG_ITERS=50 was written as GLOBAL_ROUTE_ARGS ... -congestion_iterations 50):
+# gen env knobs this generator TRANSLATES into other config.mk lines (ORFS args) -> the regex of the line it writes ({v} = the knob value,
+# re-escaped) and the values that write no line on purpose (the default).  env_provenance.py reads this literal (ast, no import) and
+# accepts an A/B key whose translated line is in config.mk; a knob listed here whose line is missing is a real drop.  A knob translated
+# into a new config line must be added here.
+ENV_CONFIG_FORMS = {
+    "OT_GRT_CONG_ITERS": {"re": r"^\s*export\s+GLOBAL_ROUTE_ARGS\s*=.*\s-congestion_iterations\s+{v}(\s|$)", "noop": ["0", "30"]},
+    "OT_GRT_ALLOW_CONGESTION": {"re": r"^\s*export\s+GLOBAL_ROUTE_ARGS\s*=.*\s-allow_congestion(\s|$)", "noop": []},
+    "OT_SYNTH_ARGS": {"re": r"^\s*export\s+SYNTH_ARGS\s*=", "noop": []},
+}
+
+
+
 GRT_CONG_ITERS = 10
 
 

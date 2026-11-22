@@ -26,10 +26,13 @@ Refusals (only while the kit has no 3_place.odb: a kit already past place gets a
     the one run-item wrote it in (the record's "kit") is a COPIED wave kit; a config.mk change there is a FAIL, not a NOTE (a copy + edit
     is a hand-built kit).  A plain copy with an unchanged config.mk passes with a NOTE.
   - AB-CONSUMED-1122 (COORD, OPUS-FIX-QC-COLL-R3 pkit_core3s: --ab OT_TAP_RESET_SPLIT=1 never reached config.mk, so the A/B kit was a
-    copy of its control): every A/B key the kit env SETS (non-empty, differing from the wave) must be exported by config.mk with that
-    value -- the flow reads config.mk, not the gen env.  Missing or different = FAIL "A/B override not consumed" (the knob is plan
-    data, e.g. clock.tap_reset_split, or gen_phys overrode it).  Keys consumed outside config.mk by design are declared in the spec
-    (ab.env_only = [...]); run-item prints the same verdict when it writes the record.
+    copy of its control): an A/B key the kit env SETS (non-empty, differing from the wave) that config.mk does not export with that
+    value is classified by who reads it in the source tree: a generator (Python under tools/ or physical/ names it as a quoted
+    token: OT_GEN_M8_GRANT, OT_IO_HOLD, OT_GRT_CONG_ITERS ...) = consumed at gen; only flow scripts (::env(K) / $(K) in .tcl/.sh/.mk)
+    = FAIL "A/B override not consumed" (the flow reads config.mk, not the gen env: the kit is a copy of its control); nobody = WARN
+    "read by nothing".  A knob gen_phys TRANSLATES into another config line (gen_phys.ENV_CONFIG_FORMS: OT_GRT_CONG_ITERS ->
+    GLOBAL_ROUTE_ARGS ... -congestion_iterations N) is checked in that form first: line present (or a no-op value) = consumed,
+    line missing = FAIL.  Keys consumed elsewhere by design are declared in the spec (ab.env_only = [...]); run-item prints the verdict.
 Only exit 14 refuses; a crash of this checker (any other rc) never stops the kit.
 """
 import base64
@@ -80,6 +83,100 @@ def gen_consumed(key, value, config_text):
     return re.search(pat.format(v=re.escape(str(value).strip())), config_text, re.M) is not None
 
 
+_READERS = {}
+
+
+def key_readers(keys, root=None):
+    """{key: "gen" | "flow" | ""} -- who reads KEY in the source tree ROOT (default: the repo this file is in): "gen" = a Python file under
+    tools/ or physical/ (not the scheduler tools/autopilot, not tests) names it as a quoted token; "flow" = only a .tcl/.sh/.mk reads it
+    (::env(K), $(K), ${K}, $K); "" = nobody.  None when the tree cannot be read."""
+    root = os.path.abspath(root or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+    keys = sorted(set(keys))
+    ck = (root, tuple(keys))
+    if ck in _READERS:
+        return _READERS[ck]
+    if not keys or not os.path.isdir(os.path.join(root, "tools")):
+        return None
+    alt = "|".join(re.escape(k) for k in keys)
+    py_re = re.compile(r"[\"'](" + alt + r")[\"']")
+    fl_re = re.compile(r"(?:::env\(|\$\(|\$\{|\$)(" + alt + r")\b")
+    out = {k: "" for k in keys}
+    for top in ("tools", "physical"):
+        for dp, dns, fns in os.walk(os.path.join(root, top)):
+            dns[:] = [d for d in dns if not d.startswith(".") and d not in ("__pycache__", "results", "logs", "objects", "reports", "run")]
+            if os.sep + os.path.join("tools", "autopilot") in dp + os.sep:
+                continue
+            for fn in fns:
+                ext = os.path.splitext(fn)[1]
+                if ext not in (".py", ".tcl", ".sh", ".mk") or fn.startswith("test_"):
+                    continue
+                try:
+                    fp = os.path.join(dp, fn)
+                    if os.path.getsize(fp) > 8 << 20:
+                        continue
+                    txt = open(fp, errors="replace").read()
+                except OSError:
+                    continue
+                for m in (py_re if ext == ".py" else fl_re).finditer(txt):
+                    k = m.group(1)
+                    out[k] = "gen" if ext == ".py" else (out[k] or "flow")
+    _READERS[ck] = out
+    return out
+
+
+_FORMS = {}
+
+
+def config_forms(root=None):
+    """gen_phys.ENV_CONFIG_FORMS of the source tree ROOT, read as a literal (no import) -> {} when absent / unreadable"""
+    import ast
+    root = os.path.abspath(root or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+    if root not in _FORMS:
+        out = {}
+        try:
+            src = open(os.path.join(root, "tools", "die_plan", "gen_phys.py"), errors="replace").read()
+            i = src.find("\nENV_CONFIG_FORMS = {")
+            if i >= 0:
+                j = src.find("\n}\n", i)
+                out = ast.literal_eval(src[i:j + 2].split("=", 1)[1].strip())
+        except (OSError, ValueError, SyntaxError):
+            out = {}
+        _FORMS[root] = out if isinstance(out, dict) else {}
+    return _FORMS[root]
+
+
+def translated(key, value, config_text, forms):
+    """True / False when KEY has a translated config form (present / missing), None when it has none"""
+    f = (forms or {}).get(key)
+    if not isinstance(f, dict) or not f.get("re"):
+        return None
+    if str(value) in [str(x) for x in f.get("noop") or []]:
+        return True
+    rx = re.compile(f["re"].replace("{v}", re.escape(str(value))), re.M)
+    return bool(rx.search(config_text or ""))
+
+
+def ab_classify(rec, cfg, root=None, config_text=None):
+    """-> (dropped, unread): A/B keys not exported by config.mk that only flow scripts read, or whose translated config line
+    (gen_phys.ENV_CONFIG_FORMS) is missing (dropped: the override never reached the flow), and that nobody reads (unread).  Keys a
+    generator reads are consumed at gen.  Unknown source tree: every candidate is 'unread' (warn)."""
+    cand = ab_not_consumed(rec, cfg, config_text)
+    if not cand:
+        return [], []
+    if config_text is None:
+        config_text = "\n".join(f"export {k} = {v}" for k, v in (cfg or {}).items())
+    forms = config_forms(root)
+    tr = {k: translated(k, v, config_text, forms) for k, v, _ in cand}
+    gone = [c for c in cand if tr[c[0]] is False]
+    cand = [c for c in cand if tr[c[0]] is None]
+    if not cand:
+        return gone, []
+    rd = key_readers([k for k, _, _ in cand], root)
+    if rd is None:
+        return gone, cand
+    return gone + [c for c in cand if rd.get(c[0]) == "flow"], [c for c in cand if not rd.get(c[0])]
+
+
 def ab_not_consumed(rec, cfg, config_text=None):
     """[(key, kit value, config.mk value or None)] for A/B keys the kit env sets that config.mk does not export with that value"""
     ab = rec.get("ab") or {}
@@ -126,12 +223,15 @@ def judge(rec, config_text, placed=False, kit_path=""):
         lines.append("ENV-PROVENANCE FAIL: kit env differs from the wave env of %s/%s on %d key(s) that are neither plan-derived nor declared A/B: %s"
                      % (rec.get("die"), rec.get("item"), len(bad), "; ".join(f"{k} wave={w.get(k, '<unset>')!s:.60} kit={e.get(k, '<unset>')!s:.60}" for k in bad[:12])))
     if config_text is not None and ab_keys:             # AB-CONSUMED-1122
-        nc = ab_not_consumed(rec, config_ot(config_text), config_text)
+        nc, unread = ab_classify(rec, config_ot(config_text), config_text=config_text)
         if nc:
             lines.append("ENV-PROVENANCE FAIL: A/B override not consumed: config.mk does not export "
                          + "; ".join(f"{k}={v!s:.40} (config.mk {'<unset>' if c is None else c})" for k, v, c in nc[:12])
-                         + " -- the flow reads config.mk, so this kit is a copy of its control; set the knob in the plan (gen_phys "
-                           "writes it), or declare ab.env_only for a key consumed outside config.mk")
+                         + " -- only flow scripts read it and the flow reads config.mk, so this kit is a copy of its control; set the knob "
+                           "in the plan (gen_phys writes it), or declare ab.env_only for a key consumed outside config.mk")
+        if unread:
+            lines.append("ENV-PROVENANCE WARN: A/B key(s) read by nothing in the source tree and not in config.mk (no effect?): "
+                         + ", ".join(k for k, _, _ in unread[:12]))
     unused = sorted(ab_keys - set(diff))
     if unused:
         lines.append(f"ENV-PROVENANCE NOTE: A/B keys {','.join(unused)} equal the wave env")
@@ -227,7 +327,10 @@ def write(kit, decl):
     os.replace(tmp, os.path.join(kit, RECORD))
     print(f"ENV-PROVENANCE RECORD {rec.get('source')} {rec.get('die')}/{rec.get('item')}: env {len(rec.get('env') or {})} keys, "
           f"differs from wave on {','.join(env_diff(rec.get('wave_env'), rec.get('env'))) or 'nothing'}", flush=True)
-    nc = ab_not_consumed(rec, rec.get("config_ot") or {}) if txt is not None else []
+    try:
+        nc = ab_classify(rec, rec.get("config_ot") or {}, config_text=txt)[0] if txt is not None else []
+    except Exception:                                    # never fail run-item on this report
+        nc = []
     if nc:                                               # AB-CONSUMED-1122: loud at run-item; run_kit.sh's check refuses place
         print("ENV-PROVENANCE AB-NOT-CONSUMED " + " ".join(f"{k}={v} (config.mk {c if c is not None else '<unset>'})" for k, v, c in nc)
               + ": these A/B overrides do not reach the flow (config.mk); place will be refused", flush=True)
