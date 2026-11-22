@@ -157,5 +157,50 @@
     "native_floor": "v3_reach_cb_native_floor.json",
     "native_floor_sha256": "01a052759f8656c08e232912766495eaa1427abed4eb72e92c98dbf364a0fb88",
     "status": "HOLD: added sites across 156 exact native lane members require additional delivered cycles on seven slices. Separate zero-cycle re-sites and exact scoped pad offsets before considering any aggregate."
-  }
+  },
+  "typed_nk_candidates": [
+    {
+      "plan": "cbn_dual_nohb4.json",
+      "types": [
+        "cbn_q00__cldbcda913",
+        "cbn_q11__cl49ae4555"
+      ],
+      "native": "epyc7 cbn_dual_nohb4_native, unit 3513469, strict green and LATCHECK 1921/1921",
+      "source_main": "ec1f6f3fd24",
+      "bound_module": "qfd_tile_nk_rp2_romleaf_rr",
+      "cycles": "Existing pipe banks and delivered cycles retained",
+      "frozen_tt_nb_ps": [
+        57.72,
+        85.57
+      ],
+      "frozen_ff_nb_ps": [
+        24.92,
+        29.37
+      ],
+      "frozen_tt_tap0_ps": [
+        -85.31,
+        -52.41
+      ],
+      "frozen_ff_tap0_ps": [
+        112.78,
+        114.59
+      ],
+      "status": "PENDING successor placement, stock full-corner timing, and exact geometry review"
+    },
+    {
+      "plan": "cf0b_nab_nohb4.json",
+      "types": [
+        "cbx_q10__cl89936551_h"
+      ],
+      "native": "epyc7 cf0b_nab_nohb4_native, unit 3283240, strict green and LATCHECK 1921/1921",
+      "source_main": "ec1f6f3fd24",
+      "bound_module": "qfd_tile_nk_rp2_romleaf_rr",
+      "cycles": "Existing pipe banks and delivered cycles retained",
+      "frozen_tt_nb_ps": -263.41,
+      "frozen_ff_nb_ps": 52.16,
+      "frozen_tt_tap0_ps": -406.01,
+      "frozen_ff_tap0_ps": 126.06,
+      "status": "PENDING successor placement and current die per-core clock price; stock full-path TT held"
+    }
+  ]
 }
