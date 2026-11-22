@@ -42,3 +42,5 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 - 11-22 01:xx PST proof14 dry-run bind (S1+R1) running intel2 fam-lepe4/p14 (tree kw45/src_s81_fam_lepe4_p14_work). R1 PROVISIONAL until COLL-R3 LEC EQUIVALENT (asked). li3 credit loop: CRED/DR 12, RTT ~15 (credit-bound 0.80 > 0.764 cap); +1 fallback -> 0.75 (needs CRED13 + lane re-sign).
 
 - 11-22 01:xx PST COORD fallback ruling: S1 primary; if GRT < -42 build F1 (second re-site) + F2 (li3 D 1->2, no CRED raise, 0.75 accepted) in parallel, first to close wins. F2 row drafted.
+
+- 11-22 01:xx PST proof15 F2 dry-run bind (R1 + li3_d/li3_v D2, no S1 sites, no CRED change) running intel2 fam-lepe4/p15 (tree kw45/src_s81_fam_lepe4_p15_work), parallel to proof14.
