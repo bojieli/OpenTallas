@@ -20888,3 +20888,4 @@ FAILED [AUTOPILOT 0c4c31159c90] 2026-11-21 15:49:12 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-21 16:51 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
   col_h9_r0_p4 (6): GRT 4 TT worst -34.3 median -34.1; CTS FF hold after CORETAP 6: worst -84.2 median -65.7; sign-off runs 0, SIGNED 0; 5 stopped without signoff; old plan n/a
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-21 16:51 PST Reviewed frontend internal access coupon R5 E10 romw-1119/array_frontend_1121/placed_r5/frontend_placement.png PASS-COND before M1–M4 detail route. R4 finished with exactly two M3 shorts, n17/n18 on x62433 and n14/n24 on x63153 at y36747, no power marks. R5 preserves 100 cells, signed PG stripes and slit and moves phase_capture/address[10] access adjacent to their single loads above the threading region. Evidence in placed_r5/record.md.
