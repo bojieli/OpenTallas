@@ -40,6 +40,24 @@ proc ot_obsgc_free {tracks lo hi a0 a1 obs clr} {
   }
   return $free
 }
+# Merge inclusive, integer along-gcell spans.
+proc ot_obsgc_merge_spans {spans} {
+  set merged {}
+  set end {}
+  foreach span [lsort -integer -index 0 $spans] {
+    lassign $span lo hi
+    if {$end eq "" || $lo > $end + 1} {
+      if {$end ne ""} { lappend merged [list $start $end] }
+      set start $lo
+      set end $hi
+    } elseif {$hi > $end} {
+      set end $hi
+    }
+  }
+  if {$end ne ""} { lappend merged [list $start $end] }
+  return $merged
+}
+
 # pure planner (no OpenROAD calls; test_obs_gcell_cap.py runs it in tclsh).  srcd / blkd / pinsd: {layer {rect ...}}
 # in along/across coordinates (blkd = extra blockers beyond the sources).  Returns {{ln al0 ac0 al1 ac1} ...} in gcell
 # units (cut regions), plus a stats dict as the last element.
@@ -49,19 +67,17 @@ proc ot_obsgc_plan {srcd blkd tracksd pinsd clrd gc minfree} {
     set tracks [dict get $tracksd $ln]; set clr [dict get $clrd $ln]
     set pins {}; if {[dict exists $pinsd $ln]} { set pins [dict get $pinsd $ln] }
     set blk $srcs; if {[dict exists $blkd $ln]} { set blk [concat $srcs [dict get $blkd $ln]] }
-    array unset seen; array unset bk; array unset pg
-    set cut {}; set edges {}; set candidate_rows {}
+    array unset edges; array unset bk; array unset pg
     foreach o $srcs {
       lassign $o al0 ac0 al1 ac1
-      set rows {}
-      if {$ac0 % $gc != 0} { lappend rows [expr {$ac0 / $gc}] }
-      if {$ac1 % $gc != 0 && [expr {$ac1 / $gc}] ni $rows} { lappend rows [expr {$ac1 / $gc}] }
-      lappend edges [list [expr {$al0 / $gc}] [expr {($al1 - 1) / $gc}] $rows]
-      lappend candidate_rows {*}$rows
+      set along [list [expr {$al0 / $gc}] [expr {($al1 - 1) / $gc}]]
+      if {[lindex $along 0] > [lindex $along 1]} continue
+      if {$ac0 % $gc != 0} { lappend edges([expr {$ac0 / $gc}]) $along }
+      if {$ac1 % $gc != 0 && ($ac1 / $gc != $ac0 / $gc || $ac0 % $gc == 0)} {
+        lappend edges([expr {$ac1 / $gc}]) $along
+      }
     }
-    set candidate_rows [lsort -integer -unique $candidate_rows]
-    # Long PG stripes span many along cells but only a few across rows. Bucket by across row and include the
-    # blocker's clearance so a stripe can still block tracks in the next row. Along overlap is checked below.
+    set candidate_rows [lsort -integer [array names edges]]
     foreach q $blk {
       lassign $q p0 c0 p1 c1 qc
       if {$qc eq ""} { set qc $clr }
@@ -77,34 +93,55 @@ proc ot_obsgc_plan {srcd blkd tracksd pinsd clrd gc minfree} {
         for {set r [expr {$c0 / $gc}]} {$r <= ($c1 - 1) / $gc} {incr r} { set pg($i,$r) 1 }
       }
     }
-    foreach edge $edges {
-      lassign $edge i0 i1 rows
-      foreach r $rows {
-        set lo [expr {$r * $gc}]; set hi [expr {($r + 1) * $gc}]
-        set blockers [expr {[info exists bk($r)] ? $bk($r) : {}}]
-        for {set i $i0} {$i <= $i1} {incr i} {
-          if {[info exists seen($i,$r)]} continue
-          set seen($i,$r) 1; incr ncand
-          if {[info exists pg($i,$r)]} { incr nexempt; continue }
-          if {[ot_obsgc_free $tracks $lo $hi [expr {$i * $gc}] [expr {($i + 1) * $gc}] $blockers $clr] < $minfree} {
-            lappend cut [list $r $i]
-          }
+    foreach r $candidate_rows {
+      set lo [expr {$r * $gc}]; set hi [expr {($r + 1) * $gc}]
+      set first [expr {[lsearch -sorted -integer -bisect $tracks [expr {$lo - 1}]] + 1}]
+      set last [lsearch -sorted -integer -bisect $tracks [expr {$hi - 1}]]
+      set row_tracks [lrange $tracks $first $last]
+      set blockers [expr {[info exists bk($r)] ? $bk($r) : {}}]
+      array unset coverage; array unset event
+      # A blocker covers a consecutive interval of along-gcells on each of its affected tracks. Union the
+      # intervals per track so overlaps count once, then sweep the sum to get the number of blocked tracks.
+      foreach q $blockers {
+        lassign $q p0 c0 p1 c1 qc
+        if {$qc eq ""} { set qc $clr }
+        set a0 [expr {$p0 / $gc}]; set a1 [expr {($p1 - 1) / $gc}]
+        if {$a0 > $a1} continue
+        set first [expr {[lsearch -sorted -integer -bisect $row_tracks [expr {$c0 - $qc}]] + 1}]
+        set last [lsearch -sorted -integer -bisect $row_tracks [expr {$c1 + $qc - 1}]]
+        set span [list $a0 $a1]
+        for {set k $first} {$k <= $last} {incr k} { lappend coverage($k) $span }
+      }
+      foreach {track spans} [array get coverage] {
+        foreach span [ot_obsgc_merge_spans $spans] {
+          lassign $span a0 a1
+          incr event($a0)
+          incr event([expr {$a1 + 1}]) -1
         }
       }
-    }
-    # merge runs of consecutive gcells in one row/column into one region
-    set prev {}
-    foreach rc [lsort -integer -index 0 [lsort -integer -index 1 [lsort -unique $cut]]] {
-      lassign $rc r i
-      incr ncut
-      if {$prev ne "" && [lindex $prev 0] == $r && [lindex $prev 2] == $i - 1} {
-        set prev [list $r [lindex $prev 1] $i]
-      } else {
-        if {$prev ne ""} { lappend out [list $ln [lindex $prev 1] [lindex $prev 0] [expr {[lindex $prev 2] + 1}] [expr {[lindex $prev 0] + 1}]] }
-        set prev [list $r $i $i]
+      set boundaries [lsort -integer [array names event]]
+      set cursor 0; set blocked 0; set cut_start {}; set cut_end {}
+      set count [llength $row_tracks]
+      foreach span [ot_obsgc_merge_spans $edges($r)] {
+        lassign $span i0 i1
+        for {set i $i0} {$i <= $i1} {incr i} {
+          while {$cursor < [llength $boundaries] && [lindex $boundaries $cursor] <= $i} {
+            incr blocked $event([lindex $boundaries $cursor])
+            incr cursor
+          }
+          incr ncand
+          if {[info exists pg($i,$r)]} { incr nexempt; continue }
+          if {$count - $blocked >= $minfree} continue
+          incr ncut
+          if {$cut_end eq "" || $i != $cut_end + 1} {
+            if {$cut_end ne ""} { lappend out [list $ln $cut_start $r [expr {$cut_end + 1}] [expr {$r + 1}]] }
+            set cut_start $i
+          }
+          set cut_end $i
+        }
       }
+      if {$cut_end ne ""} { lappend out [list $ln $cut_start $r [expr {$cut_end + 1}] [expr {$r + 1}]] }
     }
-    if {$prev ne ""} { lappend out [list $ln [lindex $prev 1] [lindex $prev 0] [expr {[lindex $prev 2] + 1}] [expr {[lindex $prev 0] + 1}]] }
   }
   lappend out [dict create candidates $ncand exempt $nexempt cut $ncut]
   return $out
