@@ -1,1 +1,2 @@
 - 2026-11-22 08:13 PST DONE [GATE-AGREE-R1] ot-push-main otpush-tolerant-swine-1830328 on tolerant-swine: rc=0 after 47 s, ended 08:13:23, log none, cmd: ot-push-main 
+- 2026-11-22 08:13 PST DONE main 883b648f14f: LANDREMAP now uses reset_anchor.repicked_paths (the bind resolve predicate). Stale refs the bind re-picks = WARN LANDREMAP-ADVISORY; unrepaired = FAIL LANDREMAP; anchor the bind refuses = FAIL LANDREMAP-BIND. 4 QC-shaped 44-ref tests.
