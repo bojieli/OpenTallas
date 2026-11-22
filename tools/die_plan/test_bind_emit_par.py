@@ -46,7 +46,8 @@ class Fake:
         self.F = {"cells": {i: {"x": i} for i in range(200000 if big else 10)}}
         self.fail = None
         self._memo = None
-        self.counter = None
+        self.stats = {"cells_emitted": 5, "name": "x"}
+        self.level = None
 
     def _emit_one(self, tn, ps, out, files):
         print(f"emit {tn}")
@@ -58,6 +59,7 @@ class Fake:
         for p in ps:
             self.io_used.setdefault(p, {})[tn] = [1, 2]
         self.seen.add(tn)
+        self.stats["cells_emitted"] += len(ps) + int(tn[1:])
         if self._memo is None:                         # a lazily computed die-wide value (Binder.bump_pins): the same in every worker
             self._memo = {"ports": {"S": ["link", "far"]}}
         if getattr(self, "_memo2", None) is None:
@@ -70,8 +72,8 @@ class Fake:
         if tn.endswith(("1", "4")):
             self.errors.append(f"WARN {tn}")
         self.F["cells"][0]["x"] == 0                    # read-only use of the big netlist
-        if self.counter is not None:
-            self.counter += 1
+        if self.level is not None:
+            self.level += 1
         files.append(f)
 
 
@@ -129,10 +131,10 @@ def test_first_failing_type_raises_with_state_up_to_it(tmp_path, monkeypatch):
 def test_cross_type_counter_is_unsafe_and_leaves_state(tmp_path, monkeypatch):
     monkeypatch.setenv("TMPDIR", str(tmp_path))
     b = Fake()
-    b.counter = 0
+    b.level = 0
     before = state(b)
     files = []
-    with pytest.raises(EP.ParUnsafe, match="counter"):
+    with pytest.raises(EP.ParUnsafe, match="level"):
         EP.run(b, tmp_path, files, 3)
     assert state(b) == before and files == []
 

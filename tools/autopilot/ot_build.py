@@ -221,8 +221,9 @@ class BindStage:
         self.src = Path(os.path.realpath(a.tree))
         if not self.src.is_dir():
             raise G.BuildError(f"tree {a.tree} missing on {os.uname().nodename}")
-        self.plan = Path(os.path.abspath(a.plan))
-        self.asbuilt = Path(os.path.abspath(a.asbuilt)) if a.asbuilt else None
+        # real paths: a tree reached through a scratch alias (epyc2: scratch2 -> scratch3) is still the tree
+        self.plan = Path(os.path.realpath(a.plan))
+        self.asbuilt = Path(os.path.realpath(a.asbuilt)) if a.asbuilt else None
         self.rt_dir, self.rt_sha = rt_resolve(a.rt)
         self.env = {}
         for kv in a.env or []:

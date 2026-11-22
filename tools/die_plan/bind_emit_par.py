@@ -24,6 +24,7 @@ import io
 import json
 import os
 import pickle
+import re
 import sys
 import tempfile
 import time
@@ -147,7 +148,23 @@ def _diff(old, new, path, ops):
         _diff(vars(old), vars(new), path + (("o",),), ops)
         return
     if old != new:
-        ops.append(("set", path, new))
+        if _num(old) and _num(new):
+            ops.append(("add", path, new - old))     # a number that moved: its increment (a statistics counter sums over the types)
+        else:
+            ops.append(("set", path, new))
+
+
+COUNTER_RE = re.compile(r"(^|_)(stats?|counts?|counters?|emitted|total|n)(_|$)")
+
+
+def _num(v):
+    return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+
+def _is_counter(path):
+    """a number changed by MORE than one type is summed only where the name says it is a count (self.pc.stats['cells_emitted']);
+    any other shared number (a maximum, a last-writer value) stays ParUnsafe"""
+    return any(step[0] == "k" and isinstance(step[1], str) and COUNTER_RE.search(step[1]) for step in path)
 
 
 def _new(path, v, ops):
@@ -296,6 +313,14 @@ def apply(state, per_type_ops):
             owners.setdefault(path, set()).add(tn)
             for n in range(1, len(path)):
                 under.setdefault(path[:n], set()).add(tn)
+    adders = {}
+    for tn, ops in per_type_ops:
+        for op, path, val in ops:
+            if op == "add":
+                adders.setdefault(path, set()).add(tn)
+    for path, who in adders.items():
+        if len(who) > 1 and not _is_counter(path):
+            raise ParUnsafe(f"{_p(path)}: a number changed by {len(who)} types ({sorted(who)[0]}, ..) and not named as a counter")
     for tn, ops in per_type_ops:
         for op, path, val in ops:
             for n in range(1, len(path) + (0 if op == "set" else 1)):
@@ -316,6 +341,14 @@ def apply(state, per_type_ops):
                     if last[0] == "o":
                         raise ParUnsafe(f"{_p(path)}: object replaced")
                     cont[last[1]] = sets[path]
+                    continue
+                if op == "add":
+                    if (tn, id(cont), last, op) in did:
+                        continue
+                    did.add((tn, id(cont), last, op))
+                    if last[0] == "o":
+                        raise ParUnsafe(f"{_p(path)}: object replaced")
+                    cont[last[1]] = cont[last[1]] + val
                     continue
                 tgt = _get(cont, last)
                 if (tn, id(tgt), op) in did:

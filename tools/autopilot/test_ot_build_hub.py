@@ -20,6 +20,7 @@ class Fleet:
     def __init__(self, tmp):
         self.tmp = tmp
         self.load = {"h1": (190.0, 96, True), "h2": (40.0, 96, True), "h3": (5.0, 96, False)}
+        self.disk = {}
         self.stale = True
         self.types = {"ta": dict(block="b1", module="m_ta", rtl="r1")}
         self.calls = []
@@ -36,7 +37,7 @@ class Fleet:
         if stdin is not None:                               # host probe
             h = next(x for x in cmd if x in self.load)
             ld, n, tree = self.load[h]
-            return 0, f"L {ld} {ld}\nN {n}\nM 400\nT {int(tree)}\nF 1\n", ""
+            return 0, f"L {ld} {ld}\nN {n}\nM 400\nT {int(tree)}\nD {self.disk.get(h, 900)}\nF 1\n", ""
         if "--status" in s:
             self.calls.append("status@" + next((x for x in cmd if x in self.load), "local"))
             return (3 if self.stale else 0), "ot-build: bind       STALE   input plan changed\n" + self.eff(3 if self.stale else 0), ""
@@ -203,3 +204,10 @@ def test_wave_rebind_failure_is_reported_and_backs_off(fleet):
     assert H.wave_rebind(CFG, "kv", st, now=30, run=fleet.run, popen=popen, alive=lambda pid: False)["state"] == "FAILED"
     assert len(fleet.calls) == n
     assert H.wave_rebind(CFG, "head", st, now=30, run=fleet.run)["state"] == "FAILED"
+
+
+def test_draining_host_is_not_picked(fleet, capsys):
+    fleet.disk = {"h2": 180}                               # the least loaded holder is under its disk admit cap
+    assert go(fleet, "--goal", "bind") == 0
+    assert fleet.calls[0] == "status@h1"
+    assert "disk 180 GB < 250 (draining)" in capsys.readouterr().out

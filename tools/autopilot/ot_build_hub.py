@@ -30,10 +30,12 @@ RT_ROOT = Path(os.environ.get("OT_RT_ROOT") or "/srv/opentallas-scratch2/claude/
 SCRATCH = os.environ.get("OT_BUILD_SCRATCH") or "/srv/opentallas-scratch2/claude"
 SSH = ["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10"]
 GOALS = ("bind", "kit", "finish", "export")
+MIN_DISK_GB = int(os.environ.get("OT_BUILD_MIN_DISK_GB", "250"))
 PROBE = r'''
 t=$1; shift
 echo L $(cut -d' ' -f1,2 /proc/loadavg); echo N $(nproc); echo M $(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)
 [ -d "$t" ] && echo T 1 || echo T 0
+echo D $(df -BG --output=avail "$(dirname "$t")" 2>/dev/null | tail -1 | tr -dc 0-9)
 ok=1; for f in "$@"; do [ -e "$f" ] || { ok=0; echo MISS "$f"; }; done; echo F $ok
 '''
 
@@ -110,6 +112,8 @@ def probe(host, tree, files, run=sh):
             d["mem_gb"] = int(v)
         elif k == "T":
             d["has_tree"] = v == "1"
+        elif k == "D" and v.strip().isdigit():
+            d["disk_gb"] = int(v)
         elif k == "F":
             d["has_files"] = v == "1"
         elif k == "MISS":
@@ -140,7 +144,10 @@ def pick_host(hosts, tree, files, min_mem_gb=64, run=sh, pin=None):
             why.append("missing " + ", ".join(d["miss"][:2]))
         if d.get("mem_gb", 0) < min_mem_gb:
             why.append(f"{d.get('mem_gb')} GB free < {min_mem_gb}")
-        lines.append(f"  {d['host']:8s} load/cpu {d['lpc']:5.2f}  mem {d.get('mem_gb')} GB  tree {'yes' if d.get('has_tree') else 'no'}"
+        if d.get("disk_gb", MIN_DISK_GB) < MIN_DISK_GB and not pin:      # a draining host takes no new job (its admit cap), even a small one
+            why.append(f"disk {d['disk_gb']} GB < {MIN_DISK_GB} (draining)")
+        lines.append(f"  {d['host']:8s} load/cpu {d['lpc']:5.2f}  mem {d.get('mem_gb')} GB  disk {d.get('disk_gb', '?')} GB  "
+                     f"tree {'yes' if d.get('has_tree') else 'no'}"
                      + ("   skip: " + "; ".join(why) if why else ""))
         if not why:
             ok.append(d)
