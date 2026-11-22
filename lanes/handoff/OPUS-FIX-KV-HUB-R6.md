@@ -68,3 +68,9 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - Cancel a sealed twin ONLY when its proof shows the type cannot close: setup < -300 ps after CTS/GRT, repair flat across
   iterations, or a functional bug. Anything between -42 and -300 runs to finish.
 - Sealed kits: Wo kv3_hub_Wo_1122025522, Eo kv3_hub_Eo_1122025534 (seal bc02a8674058), Ei kv3_hub_Ei_1122025546 (seal 5ef688a82af6). Waiter b4a1azv8e.
+
+## 05:3x goal finish cannot resume at CTS
+- Sealed hub_Ei (goal finish) refused at CTS: "FAIL_PREFLOOR stage resume: goal finish unsupported". A rerun with --goal auto stopped at geom.
+  LIVE: rerun with --goal route (pid 3064271, log kit3c_*Ei*). route = sign-off + routed LEC for run_kit kits; check that chain.log shows signoff_chain + LEC.
+- Sealed hub_Wo / hub_Eo: preempt_route.sh (intel2 ~/tmp/opusfixkvhub-r6) waits for place rc 0, stops the goal-finish runner (exact PID, cmdline
+  checked), and re-runs --goal route (logs kit3r_*). Outputs preempt_Wo.out / preempt_Eo.out.
