@@ -21687,3 +21687,4 @@ FAILED [AUTOPILOT 32c6dd0d2b3a] 2026-11-21 19:48:46 PST AUTOPILOT -> KIT-WAVE-1:
   - Fix (lane clone epyc7 head-start-r18/repo, unit test OK): free-running generator per phased clock (edge k at 1000 + D + 2000k), stubs on own edge counters by default (--stub-root = diagnostic).
   - tr28 running on epyc7 (log intel2 ~/head-start-r18/tr28.otrun.log), verdict in ~30 min. Codex 53 K values stay void.
   [redirect] FABLE-FIX-HEAD-LEP0N-R6 -> FABLE-FIX-HEAD-LEP0N-R7 (stood down; chain FABLE-FIX-HEAD-LEP0N-R6 > FABLE-FIX-HEAD-LEP0N-R7)
+- 2026-11-21 19:55 PST DIED [S81-J6-ASSEMBLY-R5] ot-run oth-ubuntu-1915718-1795319509 on tolerant-swine: rc=1 after 234 s, ended 19:55:41, log /srv/opentallas-scratch2/claude/s81-j6-r5/pinsmoke_epyc9/svc_lo_dsdv_svc_rs__t1/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/S81-J6-ASSEMBLY-R5/svc_l
