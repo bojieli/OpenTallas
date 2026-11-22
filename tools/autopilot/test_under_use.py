@@ -64,11 +64,11 @@ class UnderUse(unittest.TestCase):
             def sh(cmd, timeout=0):
                 return 0, STATUS, ""
         UU.step(AP)
-        self.assertEqual(len(logs), 1)
-        self.assertTrue(logs[0].startswith("UNDER-USE cpu idle"))
+        self.assertEqual(len(logs), 2)                   # FABLE-FLOW-0230 U1: + the UNDER-USE HELD line
+        self.assertTrue(logs[0].startswith("UNDER-USE cpu idle") and logs[1].startswith("UNDER-USE HELD"))
         AP.sh = staticmethod(lambda cmd, timeout=0: (1, "", "x"))
         UU.step(AP)
-        self.assertEqual(logs[1], "UNDER-USE ot-run --status unavailable")
+        self.assertEqual(logs[2], "UNDER-USE ot-run --status unavailable")
 
 
 if __name__ == "__main__":

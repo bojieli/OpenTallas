@@ -132,6 +132,89 @@ def line(status_text, items, cfg, top=5):
 
 NEEDS_ACTION_TICKS = 3
 
+# FABLE-FLOW-0230 U1 (FLOW-FLEET-R1 11-22): 187-194 rows not launching while 35-43 % of cores idle; SKIP-HELD 75 and WAIT-FORM 42 were one
+# number each, with no key, owner or age.  held_detail() splits them by hold key (SKIP-HELD / hold_items: the die hold_items pattern; WAIT-FORM:
+# the die, one key per die) with owner (owner= in the hold text, else the die lane), eta (eta= in the text) and age (oldest row held since);
+# a key with no owner, past its eta, or older than STALE_HOLD_H without an eta is FLAGGED.
+HOLD_OWNER_RE = re.compile(r"\bowner\s*[=:]\s*([A-Za-z0-9_.-]+)", re.I)
+HOLD_ETA_RE = re.compile(r"\beta\s*[=:]\s*(\d{4}-\d\d-\d\d(?:[ T]\d\d:\d\d)?)", re.I)
+SKIP_PAT_RE = re.compile(r"^SKIP-HELD: item held \((.*?)\): ?(.*)$", re.S)
+STALE_HOLD_H = 24.0
+
+
+def _eta(text):
+    m = HOLD_ETA_RE.search(str(text or ""))
+    if not m:
+        return None
+    v = m.group(1).replace("T", " ")
+    try:
+        return time.mktime(time.strptime(v, "%Y-%m-%d %H:%M" if " " in v else "%Y-%m-%d")) + (0 if " " in v else 86399)
+    except ValueError:
+        return None
+
+
+def held_detail(items, cfg, now=None):
+    """-> [{bucket, die, key, n, owner, eta, age_h, flags, why}] for SKIP-HELD / hold_items rows and WAIT-FORM rows, largest first"""
+    now = time.time() if now is None else now
+    dies = (cfg or {}).get("dies") or {}
+    g = {}
+    for rec in (items or {}).values():
+        st, die = rec.get("status"), rec.get("die")
+        d = dies.get(die) or {}
+        hold = str(rec.get("route_hold") or "")
+        bucket = key = why = None
+        m = SKIP_PAT_RE.match(hold) if st in HELD else None
+        if m:
+            bucket, key = "SKIP-HELD", m.group(1)
+            why = str((d.get("hold_items") or {}).get(key) or m.group(2))
+        elif st in HELD and hold.startswith("WAIT-FORM"):
+            bucket, key, why = "WAIT-FORM", "visual verdict BAD/ISSUES, form unchanged", hold
+        elif st in ELIGIBLE and not (d.get("event") and rec.get("event") and rec.get("event") != d.get("event")):
+            item = str(rec.get("item") or "")
+            hit = next(((pat, w) for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(item, pat)), None)
+            if hit:
+                bucket, key, why = "SKIP-HELD", hit[0], str(hit[1])
+        if not bucket:
+            continue
+        e = g.setdefault((bucket, die, key), {"bucket": bucket, "die": die, "key": key, "n": 0, "why": why, "since": now})
+        e["n"] += 1
+        e["since"] = min(e["since"], float(rec.get("updated") or rec.get("started") or now) or now)
+    out = []
+    for e in g.values():
+        m = HOLD_OWNER_RE.search(e["why"] or "")
+        lane = (dies.get(e["die"]) or {}).get("lane") or ""
+        owner = m.group(1) if m else ("" if e["bucket"] == "SKIP-HELD" else lane)
+        eta = _eta(e["why"])
+        age = max(0.0, (now - e["since"]) / 3600.0)
+        flags = []
+        if not owner:
+            flags.append("NO-OWNER")
+        if eta is not None and eta < now:
+            flags.append("OVERDUE")
+        if eta is None and age >= STALE_HOLD_H:
+            flags.append(f"NO-ETA>{STALE_HOLD_H:g}h")
+        out.append(dict(bucket=e["bucket"], die=e["die"], key=e["key"], n=e["n"], owner=owner or (lane and f"(die lane {lane})") or "", eta=eta,
+                        age_h=round(age, 1), flags=flags, why=str(e["why"] or "")[:120]))
+    return sorted(out, key=lambda x: (x["bucket"], -x["n"], -x["age_h"]))
+
+
+def held_line(detail, top=8):
+    """'UNDER-USE HELD SKIP-HELD 75: s81/hd_* 40 [owner X, 26.1 h, FLAGGED NO-OWNER] ...; WAIT-FORM 42: ...'"""
+    if not detail:
+        return "UNDER-USE HELD none"
+    parts = []
+    for b in ("SKIP-HELD", "WAIT-FORM"):
+        rows = [x for x in detail if x["bucket"] == b]
+        if not rows:
+            continue
+        parts.append(f"{b} {sum(x['n'] for x in rows)}: " + "; ".join(
+            f"{x['die']}/{x['key']} {x['n']} [owner {x['owner'] or '-'}, {x['age_h']} h"
+            + (f", eta {time.strftime('%m-%d %H:%M', time.localtime(x['eta']))}" if x["eta"] else "")
+            + (f", FLAGGED {'+'.join(x['flags'])}" if x["flags"] else "") + "]" for x in rows[:top])
+            + (f"; +{len(rows) - top} more key(s)" if len(rows) > top else ""))
+    flagged = sum(1 for x in detail if x["flags"])
+    return "UNDER-USE HELD " + " | ".join(parts) + f" | flagged keys {flagged}"
+
 
 def track(state, classes, now):
     """state {"rows": {key: [class, ticks]}, "posted": {class: t}}; a row in the same non-hold gate class for NEEDS_ACTION_TICKS ticks
@@ -165,6 +248,26 @@ def step(AP):
         except (OSError, ValueError):
             cfg = {}
         AP.log(line(status, items, cfg) if status else "UNDER-USE ot-run --status unavailable")
+        try:                                             # FABLE-FLOW-0230 U1: held rows by key, owner, age; flagged keys posted once
+            det = held_detail(items, cfg)
+            AP.log(held_line(det))
+            sp_ = ap_dir / "under_use_state.json"
+            try:
+                st_ = json.loads(sp_.read_text())
+            except (OSError, ValueError):
+                st_ = {}
+            seen = st_.setdefault("held_flag_posted", {})
+            new = [x for x in det if x["flags"] and seen.get(f"{x['bucket']}|{x['die']}|{x['key']}") != "+".join(x["flags"])]
+            if new:
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                                f"- {time.strftime('%Y-%m-%d %H:%M %Z')} NEEDS-ACTION [AUTOPILOT -> " + ", ".join(sorted({x['owner'] or 'COORD' for x in new})) + ", COORD] "
+                                + "HELD rows: " + "; ".join(f"{x['bucket']} {x['die']}/{x['key']} {x['n']} row(s) {x['age_h']} h {'+'.join(x['flags'])}" for x in new[:15])[:1500]
+                                + " -- set owner= and eta= on the hold, or release it")
+                for x in new:
+                    seen[f"{x['bucket']}|{x['die']}|{x['key']}"] = "+".join(x["flags"])
+                sp_.write_text(json.dumps(st_))
+        except Exception as e:
+            AP.log(f"UNDER-USE HELD skipped: {type(e).__name__}: {e}")
         try:
             sp = ap_dir / "under_use_state.json"
             try:
