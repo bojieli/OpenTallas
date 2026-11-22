@@ -1,1 +1,2 @@
 - 2026-11-22 01:27 PST DONE [CLASS-SWEEP-R1] ot-run oth-ubuntu-1298967-1795339496 on loved-redfish: rc=0 after 127 s, ended 09:26:59, log none, cmd: --mem 48 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/class-sweep-r1/c --max-wait 1800 -- bash /srv/opentallas-scratch2/c
+- 2026-11-22 01:27 PST DONE [CLASS-SWEEP-R1] ot-run oth-ubuntu-3274099-1795339494 on dear-crayfish: rc=0 after 178 s, ended 01:27:50, log none, cmd: --mem 48 --threads 4 --hosts epyc2 --dir /srv/opentallas-scratch2/claude/class-sweep-r1/c --max-wait 1800 -- bash /srv/opentallas-scratch2/c
