@@ -336,7 +336,7 @@ proc rs_dff_succ {i} {
 }
 proc rs_place_all {sites} {
   global ff_blk ff_dbu is_fh is_miss
-  set n 0; set hit [dict create]; set hit_i [dict create]; set used [dict create]; set al 0
+  set n 0; set hit [dict create]; set hit_i [dict create]; set used [dict create]; set al 0; set ni 0; set inst_k [dict create]
   # RELAY-SEP (FABLE-FIX-QC 11-18): Yosys writes `inst.q[3]` for a register of a flattened instance and `inst/q[3]` where the
   # hierarchy is kept, and which one a module gets changes with the flow.  A key that matches no flop as written is tried with
   # '/' and '.' taken as the same separator (QC su_c x3: 1,034 of 1,034 keys u_u_suvm_u_vm8q_u_twb/q[N] matched nothing, the
@@ -355,7 +355,18 @@ proc rs_place_all {sites} {
         set a [string map {/ .} $c]
         if {[dict exists $sep $a] && [dict get $sep $a] ne ""} { set k [dict get $sep $a]; break }
       }
-      if {$k eq ""} continue
+      if {$k eq ""} {
+        # RELAY-INST (FABLE-FIX-S81-COLROM-R5 11-21, S81 J7 col ROM stages): a key that is no flop name but the INSTANCE the flop
+        # sits directly in (plan station rows u_y_xd_u_bn8_e_r0_0_0 against flops u_y_xd_u_bn8_e_r0_0_0.q[N]) seats every
+        # register of that instance as one cluster at the site.  col_h10_r1 J7: 140 of 166 keys matched nothing, the stages
+        # were left to GPL / relay_mid.tcl and 27 sat up to 409 um off the seat (ROM pval half-cycle hop 415 um instead of 5).
+        # Flop-name keys (exact, separator-blind) win; only the last path component is dropped, never a deeper prefix.
+        foreach c [list $k0 [regsub {^[^./]*[./]} $k0 {}]] {
+          if {[regexp {^(.*)[./][^./]+$} $c -> p] && [dict exists $sites $p]} { set k $p; break }
+        }
+        if {$k eq ""} continue
+        incr ni; dict set inst_k $k 1
+      }
     }
     lassign [dict get $sites $k] x y
     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
@@ -380,6 +391,7 @@ proc rs_place_all {sites} {
       dict set hit $k 1; dict set hit_i $k $i; dict set used $i 1; incr n; incr al; set more 1
     }
   }
+  if {$ni} { puts "OT_RELAY_SITES RELAY-INST: $ni flops of [dict size $inst_k] instance keys sited as clusters at their plan sites" }
   if {$al} { puts "OT_RELAY_SITES RELAY-IDX: $al keys NAME\\[k\\] sited on the shift-stage successor of NAME\\[k-1\\]" }
   set miss [expr {[dict size $sites] - [dict size $hit]}]
   if {$miss} { lappend is_miss "relay_sites:$miss" }

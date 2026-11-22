@@ -618,3 +618,42 @@ def test_counted_receiver_delay_preserves_payload_and_epoch_sites():
     assert packed["stage_registers"] == [f"u_lpad_a.r[{i}]" for i in range(6)]
     with pytest.raises(ValueError, match="expected payload and epoch"):
         K.packed_input_delay("T", bus, text.replace("{a_eq, a_q}", "{a_q, a_eq}"), 8, 2)
+
+
+RELAY_INST_MOCK = r"""
+proc ff_put_near {i x y} { return [list $x $y] }
+set ::insts {}; set n 0
+foreach nm {{u_bound.u_y_xd_u_bn8_e_r0_0_0.q\[0\]$_DFF_P_} {u_bound.u_y_xd_u_bn8_e_r0_0_0.q\[26\]$_DFF_P_} {u_bound.u_y_xd_u_bn8_e_r0_0_0.u_deep.r\[0\]$_DFF_P_}
+            {u_bound.u_lpad_i1.q\[5\]$_DFF_P_} {u_bound.u_lpad_i1.q\[6\]$_DFF_P_} {u_bound.u_other.q\[0\]$_DFF_P_}} {
+  set c ::ins[incr n]
+  proc $c {cmd} [format {if {$cmd eq "getName"} { return %s }; return ::mas} [list $nm]]
+  lappend ::insts $c
+}
+proc ::blk {cmd} { return $::insts }
+proc ::mas {cmd} { return DFFHQNx1 }
+set ff_blk ::blk; set ff_dbu 1000; set is_fh stdout; set is_miss {}
+"""
+
+
+def test_relay_sites_instance_key_seats_every_register_of_the_station(tmp_path):
+    """RELAY-INST (FABLE-FIX-S81-COLROM-R5 11-21): S81 J7 col plan rows key a whole stage station (u_y_xd_u_bn8_e_r0_0_0), the flops are
+    <station>.q[N]: 140 of 166 keys matched nothing on col_h10_r1 and relay_mid.tcl moved 27 stations up to 409 um off the seat.
+    An instance key seats all registers directly in it; a flop-name key still wins; deeper instances and other stations are untouched."""
+    import shutil
+    import kit_istations as KI
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    assert "RELAY-INST" in KI.RELAY_TCL
+    f = tmp_path / "t.tcl"
+    f.write_text(RELAY_INST_MOCK + KI.RELAY_TCL +
+                 "\nrs_place_all [dict create {u_y_xd_u_bn8_e_r0_0_0} {365.064 943.84} {u_lpad_i1} {1 1} {u_lpad_i1.q[5]} {7 8} {u_gone} {0 0}]\n")
+    out = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True).stdout
+    got = {r[0]: (float(r[2]), float(r[3])) for r in (ln.split("\t") for ln in out.splitlines()) if len(r) > 3 and r[1] == "relay"}
+    assert got[r"u_bound.u_y_xd_u_bn8_e_r0_0_0.q\[0\]$_DFF_P_"] == (365.064, 943.84)
+    assert got[r"u_bound.u_y_xd_u_bn8_e_r0_0_0.q\[26\]$_DFF_P_"] == (365.064, 943.84)
+    assert r"u_bound.u_y_xd_u_bn8_e_r0_0_0.u_deep.r\[0\]$_DFF_P_" not in got          # one level only
+    assert got[r"u_bound.u_lpad_i1.q\[5\]$_DFF_P_"] == (7.0, 8.0)                      # its own flop key wins
+    assert got[r"u_bound.u_lpad_i1.q\[6\]$_DFF_P_"] == (1.0, 1.0)                      # the rest of the instance: the instance key
+    assert r"u_bound.u_other.q\[0\]$_DFF_P_" not in got
+    assert "RELAY-INST: 3 flops of 2 instance keys" in out
+    assert "plan keys unmatched: 1 of 4" in out                                        # u_gone
