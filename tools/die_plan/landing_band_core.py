@@ -26,6 +26,9 @@ ERROR ON NEW, WARN ON INHERITED (COORD ruling 11-22: no new restrictive gate; KV
   "[inherited]"; a new overlap, or one the event makes larger, -> ERROR "[new]" / "[larger]".  Type stem = name without __cl<hash> / __pv<hash>
   (events re-hash type names).  No base given -> every finding is a WARN "[no base]": new and inherited cannot be told apart.
   The G0 report summary lists the inherited findings (landing_band_core.inherited) for the owners' next event.
+HARD RINGS (FIX-SYNC-KVHEAD 11-22, HARD-RING-BAND-1): a band whose ring is a signed hard child (hard_cores[] param_wrap, or band.hard_core)
+is not a placement region (landing_place emits no ring group for it); it is skipped as a band.  The hard child's box stays an obstacle
+for every soft band.  KV D28 hub_Ei/Eo/Wo: 17 "[new]" findings were all such dead hard-ring band rects.
 Read-only, stdlib + the plan's own schema helpers.
 
   python3 tools/die_plan/landing_band_core.py PLAN_OR_TYPE.json [--base PLAN] [--types REGEX]   (exit 1 on any new/larger overlap)
@@ -51,12 +54,28 @@ def _rect(r):
     return r if len(r) == 4 and r[2] > r[0] and r[3] > r[1] else None
 
 
+def hard_ring_buses(t):
+    """HARD-RING-BAND-1 (FIX-SYNC-KVHEAD 11-22): buses whose ring the type realises as a SIGNED hard child (hard_cores[] param_wrap
+    on a count-aligned ring base at u_bound.u_cland_<bus>, clock_landings.hard_ring_params) or whose band names a hard_core.  Such a
+    band emits no ring group (landing_place skips it), so its rect is not a placement region: the hard child's own box is its
+    footprint, and that box is still checked against every SOFT band of the type."""
+    from clock_landings import HARD_RING_BASES
+    out = set()
+    for hc in (t or {}).get("hard_cores") or []:
+        pw = (hc or {}).get("param_wrap") or {}
+        inst = ((hc or {}).get("physical_inst") or "").removeprefix("u_bound.")
+        if isinstance(pw, dict) and pw.get("base") in HARD_RING_BASES and inst.startswith("u_cland_"):
+            out.add(inst[len("u_cland_"):])
+    return out
+
+
 def band_rects(t):
-    """-> [(kind, name, rect)] of type t's landing bands"""
+    """-> [(kind, name, rect)] of type t's landing bands (bands realised as hard rings excluded: hard_ring_buses)"""
     lc = (((t or {}).get("clock") or {}).get("landing_contract") or {})
     out = []
+    hard = hard_ring_buses(t)
     for bus, b in sorted((lc.get("bands") or {}).items()):
-        if not isinstance(b, dict):
+        if not isinstance(b, dict) or bus in hard or b.get("hard_core"):
             continue
         rs = b.get("rects_um") or ([b["rect_um"]] if b.get("rect_um") else [])
         for i, r in enumerate(rs):

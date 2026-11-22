@@ -125,3 +125,24 @@ def test_own_landing_core_is_not_an_overlap():
 
 def test_stem_drops_event_hashes():
     assert LB.stem("sle_st_a_v2__pv30dda31f__pv88773f93") == "sle_st_a_v2" == LB.stem("sle_st_a_v2__cl1234abcd")
+
+
+def test_hard_ring_band_is_not_a_band():
+    """FIX-SYNC-KVHEAD 11-22 (HARD-RING-BAND-1): a ring realised as a signed hard child places no flops in its band rect, so the rect is
+    not checked; the hard child's box is still an obstacle for every soft band (KV D28 hub_Wo ft2_i/ft3_i, pv_v12 i_slg_E_N_rsp_d1)."""
+    from clock_landings import HARD_RING_BASES
+    base = sorted(HARD_RING_BASES)[0]
+    t = {"clock": {"landing_contract": {"bands": {
+            "ft2_i": {"rect_um": [0, 0, 100, 100]},                      # hard ring, child moved off its band
+            "ft3_i": {"rect_um": [100, 0, 140, 100]},                    # hard ring, under ft2_i's child
+            "ft9_i": {"rect_um": [0, 200, 50, 260], "hard_core": "cl_ft9_i"},
+            "soft_i": {"rect_um": [200, 0, 260, 100]}}}},               # soft ring under ft2_i's child
+         "hard_cores": [{"inst": "cl_ft2_i", "physical_inst": "u_bound.u_cland_ft2_i", "param_wrap": {"base": base, "params": {}}},
+                        {"inst": "cl_ft3_i", "physical_inst": "u_bound.u_cland_ft3_i", "param_wrap": {"base": base, "params": {}}}]}
+    assert LB.hard_ring_buses(t) == {"ft2_i", "ft3_i"}
+    assert {n for _, n, _ in LB.band_rects(t)} == {"soft_i"}
+    boxes = {"cl_ft2_i": (90, 50, 220, 150), "cl_ft3_i": (0, 0, 40, 40), "cl_ft9_i": (300, 300, 340, 340)}
+    f = LB.findings_type("hub", t, boxes)
+    assert [(x["band"], x["core"]) for x in f] == [("soft_i", "cl_ft2_i")]
+    t2 = dict(t, hard_cores=[dict(h, param_wrap={"base": "not_a_ring"}) for h in t["hard_cores"]])
+    assert {n for _, n, _ in LB.band_rects(t2)} == {"ft2_i", "ft3_i", "soft_i"}     # a non-ring hard core does not exempt a band
