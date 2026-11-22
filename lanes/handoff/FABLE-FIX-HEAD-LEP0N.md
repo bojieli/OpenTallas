@@ -43,6 +43,22 @@ c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-rep
   (2) w10 = W variant with the congestion fix as soon as L/grt_probe30/cong.rpt lands. (3) keep durable waiters on e1, w9, e2, w10.
 - Growth / re-shape of outline and cores is now allowed (owner 11-22), parallel variants and extra cycles pre-approved.
 
+## 10:3x additions
+- W congestion located (30-iteration probe, intel2 L/grt_probe30/cong.rpt): the 688 residual overflow is ALL in the W channel beside pair 2,
+  x 0-60, y 240-400 (peak 300-360; H markers at capacity 0 on the pair edge x 40-60, V in face strip + channel), nets u_bout_coll_o2 / coll_i2
+  ring / u_bin_coll_i2; small spot (0-40, 880). Cause: pair 2 is MX, so coll_i2 / coll_o2 type pins (lsb low) and the pair pins (lsb high,
+  y 45-507) are in REVERSE order: about 1,000 bits twist in a 17-um channel. Pair 1 (R0) has no twist.
+- The kill was a flow bug: tap pre-pass routes with -allow_congestion but its -end_incremental did not (GRT-0116 on any residual).
+  Fixed on main a4c5d882015d (TAPPRE-ALLOW-1; commits 769269ccaf + test fix), rt /srv/opentallas-scratch2/claude/rt/a4c5d882015d.
+- w10 LAUNCHED 10:30: unit fable-lep0n-w10 (intel2 pid 2714297), spec .../s81_head_hd_lep0N_w_1122103032/spec.json, tree r18k (same as w9),
+  --rt a4c5d882015d, --ab OT_GRT_ALLOW_CONGESTION=1 (hd_serdes precedent), log runitem_w10.log. w9 (rt c9b8) is the control and will die at the
+  pre-pass like build A. If w10 DRT cannot clean the twist zone: next lever = W outline growth west (+34.56, channel 17 -> 52 um; all x of the
+  piece shift, die-level partner pins move) or flip the pin order at the partner.
+- E e2: fork r18m ready (L/trees/s81_head_r18m_e2, not yet edited); rows wait on the xy probe (ot-run client pid 1436648 on intel2, out
+  L/tmp/sta_e3_out/e_h2r.txt, queued on CPU charge). Row form: internal_stations {conn bus:o_h2r1_p, launch u_core.h2r1, regs_um [...]},
+  lanes[L2].fixed_cycles += n, latency.lanes.L2 cycles/fixed/natural += n (as coll_WN0_d); also add partition_types.hd_host_n.pg_pin_rule=true
+  (R8 row) so the e2 plan is the merged plan of record; then chain (plan_gate_pre, bind, cohort, LATCHECK) and private-spec/run-item --goal route.
+
 ## LIVE 11-22 09:4x PST (read first)
 - PAIR VIEW SIGNED 09:14 (rst_n on the S face), views built, tree r18k gated, E + W kits launched 09:44. Details: rows file section 7.
   Tree epyc9 L/trees/s81_head_r18j_pairs, plan 762441fd7f142bf6 (r18h + pair view vE28s + rekeyed reset rows). Gates PASS (L/bind_r18j2).
