@@ -1,0 +1,5 @@
+# HEAD r16 east host EPC access review · 2026-11-21 16:34 PST
+
+Viewed `epyc7:/srv/opentallas-scratch2/claude/opus-fix-head-serdes-r4/host_e_access1415_retry/epc_m7_access_review.png`. The plot uses the exact signed base EPC LEF `749af4baf9cb` and generated override `9b7305f54794`, with 555 identical M7 pin rectangles. The previously inaccessible `in_data[238]` remains at local x159.312–159.344, y0–0.192 µm. Its own obstruction starts directly at its inward edge in the signed base and at y0.260 µm in the override, leaving a 68nm gap. The kit seats `u_core.u_lane1.u_ln.u.u_epc` at (423.36, 60.48) µm R0. The preceding GRT/DRT clock-site and macro-edge failure classes are tracked separately.
+
+The generated kit has exact LEF receipt and clean preflight. The source root fix passed 64/64 in the merge queue. This local review covers prospective placement of this exact view. Inspect plots from the new placed and GRT databases before approving detail route. No new physical run was admitted here.
