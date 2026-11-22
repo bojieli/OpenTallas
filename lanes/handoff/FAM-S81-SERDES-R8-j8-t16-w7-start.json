@@ -1,0 +1,115 @@
+{
+  "schema": "fable_fix_s81_strobe.start_rows.v1",
+  "lane": "FAM-S81-SERDES-R8",
+  "base_plan_sha256": "9fe026d10b26f5373596f8b04c128ecc972c20bc186fac3bc911a2c163b7cf01",
+  "cycles": "0 steady data cycles. W7 adds seven writer START boot cycles to ft0_o.",
+  "note": "Apply after the six generic SerDes START rows, only if t16 reader depth is 11 and the t16 writer START key is absent. Regenerate the strict bind and count-align straps. The proof covers the exact p3 base. Actual placed hops and local raw-reset release, then visual review, remain required for any route.",
+  "functional_receipt": {
+    "source_sha256": "e1ea9a4879ca0a4030025c5222b5243d73d2a4717c52e58c03b6e033afbc3029",
+    "replay_sha256": "9f795366ddba6f62e5716fd5eedcc7286660cbc0e7222eca55f13eec7e000824",
+    "path": "epyc9:/srv/opentallas-scratch2/claude/fam-s81-serdes-r7/t16_j8p3_w7_1122/j8p3_r11_w7_compatible.json",
+    "t16_reader_start_depth": 11,
+    "changed_receiver_straps": {
+      "lk_EN3": {
+        "old_K": {
+          "coll_i0": 1
+        },
+        "new_K": {
+          "coll_i0": 8
+        },
+        "old_ties": {
+          "strap_ca_k_coll_i0": 1,
+          "strap_ca_pad": 0,
+          "strap_ca_efall": 1
+        },
+        "new_ties": {
+          "strap_ca_k_coll_i0": 8,
+          "strap_ca_pad": 0,
+          "strap_ca_efall": 1
+        }
+      },
+      "lk_WS2": {
+        "old_K": {
+          "coll_i0": -2
+        },
+        "new_K": {
+          "coll_i0": 5
+        },
+        "old_ties": {
+          "strap_ca_k_coll_i0": 62,
+          "strap_ca_pad": 0,
+          "strap_ca_efall": 1
+        },
+        "new_ties": {
+          "strap_ca_k_coll_i0": 5,
+          "strap_ca_pad": 0,
+          "strap_ca_efall": 1
+        }
+      }
+    }
+  },
+  "ops": [
+    {
+      "op": "set",
+      "path": "/partition_types/serdes__t16/clock/landing_writer_start",
+      "value": {
+        "depth": 7,
+        "branches": {
+          "ft0_o": {
+            "stages": [
+              {
+                "xy_um": [
+                  2507.922,
+                  495.18
+                ],
+                "raw_reset": "rst_n_t37"
+              },
+              {
+                "xy_um": [
+                  2130.084,
+                  494.64
+                ],
+                "raw_reset": "rst_n_t34"
+              },
+              {
+                "xy_um": [
+                  1752.246,
+                  494.1
+                ],
+                "raw_reset": "rst_n_t39"
+              },
+              {
+                "xy_um": [
+                  1386.396,
+                  505.44
+                ],
+                "raw_reset": "rst_n_t36"
+              },
+              {
+                "xy_um": [
+                  1032.534,
+                  528.66
+                ],
+                "raw_reset": "rst_n_t38"
+              },
+              {
+                "xy_um": [
+                  678.726,
+                  552.15
+                ],
+                "raw_reset": "rst_n_t40"
+              },
+              {
+                "xy_um": [
+                  324.864,
+                  575.64
+                ],
+                "raw_reset": "rst_n_t35"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
