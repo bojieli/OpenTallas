@@ -1342,6 +1342,10 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=None, hold_mar
             stop = f"no improvement at iteration {n} (WNS gain < {MIN_WNS_GAIN_PS} ps, DRV/DRC not falling)"
             break
         src, prev = Path(it["dir"]), m
+        # The new route and its endpoint tables are a pair. Reusing the
+        # original tables would re-pad captures the previous pass already fixed.
+        if _HOLD_TARGETED.get():
+            _BASE_SIGNOFF.set(it["signoff"])
     if (verdict == "EXHAUSTED" and best is not None and not strict_one_pass and not route_hold_form and residual_enabled()
             and residual_case(best["metrics"])):
         pre = best["metrics"]
