@@ -400,13 +400,8 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
         return done(1, "NOT_SIGNED", "signoff gates not PASS: " + ", ".join(f"{k}={gates[k]}" for k in bad))
     base = Path((physical.get("inputs") or {}).get("base", ""))
     netlist = base / "6_final.v"
-    if minimal() and os.environ.get("OT_CHAIN_LEC", "async") != "sync":
-        # R-MINIMAL: the post-route LEC is ADVISORY / async -- sign-off never waits for it.  The routed netlist is
-        # recorded; the LEC report runs off the sign-off path (future_kit_lec scheduler / lec lane).
-        # OT_CHAIN_LEC=sync runs it here as before but never fails the chain on it.
-        receipt.update(netlist=str(netlist), routed_lec="ADVISORY_ASYNC")
-        return done(0, "PASS", "physical signoff complete (R-MINIMAL: DRC 0, TT setup >= -42 ps, FF hold >= 0); "
-                               "routed LEC advisory/async")
+    # FLOW-LECGATE-R1 11-21: routed LEC is a BINDING sign-off gate under R-MINIMAL too (DRC 0, TT >= -42, FF hold >= 0, bind, LEC).
+    # It was ADVISORY/async: sle_fe_v1 cl8210183c was recorded PASS + exported with no LEC run.  No async/advisory bypass.
     tool = Path(lec) if lec else kit / "lec.py"
     receipt["lec_tool"] = str(tool)
     if not netlist.is_file() or not tool.is_file():
@@ -419,9 +414,6 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     sv = result.get("superset_vec") or {}
     receipt.update(netlist=str(netlist), lec=str(proof / "lec.json"),
                    lec_verdict=result.get("verdict"), lec_exit=code, lec_all_shown=sv.get("all_shown"))
-    if minimal():
-        receipt["routed_lec"] = "ADVISORY " + str(result.get("verdict"))
-        return done(0, "PASS", f"physical signoff complete; routed LEC advisory: {result.get('verdict')} exit {code}")
     if code in (137, -9) or "out of memory" in str(result.get("reason", "")).lower():
         return done(code or 137, "LEC_OOM", f"routed proof stopped in {mem} GB; route kept; re-admit --proof-only at measured memory")
     if code or result.get("verdict") != "EQUIVALENT":
