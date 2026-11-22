@@ -166,10 +166,21 @@ def republish_tree(t, new_tree):
              len(kn - ko)]]
 
 
-def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None):
+def _reset_inputs(t):
+    """the parts of a type the reset tree is solved from, minus the published tree itself (clock without landing_contract.collector_tree, reset)"""
+    ck = json.loads(json.dumps(t.get("clock") or {}))
+    (ck.get("landing_contract") or {}).pop("collector_tree", None)
+    return _norm({"clock": ck, "reset": t.get("reset")})
+
+
+def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=None, tree_fn=None, republish_reset=False):
     """Re-point new_raw (in place) against old_raw, then re-solve and republish the collector_tree of every type whose
     tap set changed.  taps_fn(raw, path) -> (tn -> [(n, x, y)]) (default schema.tap_grid); tree_fn(raw, path) ->
     (tn -> tree) (default reset_tree.for_type on the re-pointed plan).
+    RESETPUB-1122 (COORD: TAP-GRID-R5 clock keys changed the reset tree, the tap set did not, so nothing was republished and the QC V3
+    binds died at EMIT): a type whose tap set is unchanged but whose clock / reset inputs changed is re-solved too, and republished
+    when its old published tree was its own (reset_tree.for_type of the old plan).  republish_reset=True republishes every selected
+    type that publishes a tree (also an already stale one) with the tree the tools solve now.
     -> {type: [[where, key, was, now, um_or_n]]} for the types that changed."""
     tf = taps_fn or _plan_taps
     to, tn_ = tf(old_raw, old_path), tf(new_raw, new_path)
@@ -200,6 +211,24 @@ def repoint(old_raw, new_raw, old_path=None, new_path=None, types=None, taps_fn=
                 moved.append(tn)
             else:
                 rep.setdefault(tn, []).append(["landing_contract.collector_tree", "tree_not_own", 0, 0, 0])
+    done = {tn for tn, _, _ in todo}
+    extra, forced = [], []
+    for tn, t in new_raw["partition_types"].items():
+        if tn in done or (types and tn not in types) or tn not in old_raw["partition_types"] or _published(t) is None:
+            continue
+        if republish_reset:
+            forced.append(tn)
+        elif _reset_inputs(t) != _reset_inputs(old_raw["partition_types"][tn]):
+            extra.append(tn)
+    if extra:
+        tr_old = tr_old or (tree_fn or _plan_tree)(old_raw, old_path)
+        for tn in extra:
+            pub = _published(old_raw["partition_types"][tn])
+            if _norm(pub) == _norm(tr_old(tn)):
+                moved.append(tn)
+            else:
+                rep.setdefault(tn, []).append(["landing_contract.collector_tree", "tree_not_own", 0, 0, 0])
+    moved += forced
     if moved:
         tr = (tree_fn or _plan_tree)(new_raw, new_path)
         for tn in moved:
@@ -213,9 +242,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("old"); ap.add_argument("new"); ap.add_argument("out")
     ap.add_argument("--report"); ap.add_argument("--types", default="")
+    ap.add_argument("--republish-reset", action="store_true",
+                    help="RESETPUB-1122: republish the collector_tree of every selected type with the tree the tools solve now (also a stale one)")
     a = ap.parse_args(argv)
     old, new = json.loads(Path(a.old).read_text()), json.loads(Path(a.new).read_text())
-    rep = repoint(old, new, a.old, a.new, [x for x in a.types.split(",") if x] or None)
+    rep = repoint(old, new, a.old, a.new, [x for x in a.types.split(",") if x] or None, republish_reset=a.republish_reset)
     Path(a.out).write_text(json.dumps(new, indent=1) + "\n")
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")

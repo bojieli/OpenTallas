@@ -102,7 +102,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1099,7 +1099,7 @@ def check_tapname(plan, base_fn=None, max_list=6, tree=None):
                     os.chdir(tree)
                     TP._root = lambda: Path(tree).resolve()
                 if "P" not in _pc:               # a plan the schema cannot load is UNCHECKED too (inside the per-type try)
-                    _pc["P"] = schema.Plan(raw, Path(here, plan) if not Path(plan).is_absolute() else Path(plan))
+                    _pc["P"] = _shared_plan(Path(here, plan) if not Path(plan).is_absolute() else Path(plan), raw)
                 return len(TP._density_base(_pc["P"], tn))
             finally:
                 os.chdir(here)
@@ -1125,6 +1125,149 @@ def check_tapname(plan, base_fn=None, max_list=6, tree=None):
         if bad:
             out.append(f"FAIL TAPNAME-RETAP {tn}: clock references name {len(bad)} tap(s) that are not taps of the solved base "
                        f"({nb} density + {len(added)} added): {', '.join(bad[:max_list])}; re-run the tap package (retap) on this base")
+    return out
+
+
+_PLAN_OBJ = {}
+
+
+def _shared_plan(plan, raw):
+    """one schema.Plan per (plan file, mtime) in this process: TAPNAME and RESETPUB share its solved taps (the die wavefront reset
+    solve taps every type; solving them twice doubled a QC check)"""
+    import schema
+    pa = Path(plan).absolute()
+    try:
+        key = (str(pa), pa.stat().st_mtime_ns)
+    except OSError:
+        key = (str(pa), None)
+    if key not in _PLAN_OBJ:
+        _PLAN_OBJ.clear()
+        _PLAN_OBJ[key] = schema.Plan(json.loads(json.dumps(raw)), pa)
+    return _PLAN_OBJ[key]
+
+
+def _in_tree(tree, fn):
+    """run fn() with the plan's repo-relative inputs read from --tree (taps._root + cwd), not from this checker's tool tree"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import taps as TP
+    here, root0 = os.getcwd(), TP._root
+    try:
+        if tree and Path(tree).is_dir():
+            os.chdir(tree)
+            TP._root = lambda: Path(tree).resolve()
+        return fn()
+    finally:
+        os.chdir(here)
+        TP._root = root0
+
+
+def _reset_lineage(tree, net):
+    """[(q, d, depth)] from net up to rst_root_n in a published collector_tree (stops at an unknown / cyclic net)"""
+    by_q = {r.get("q"): r for r in (tree or {}).get("relays") or [] if isinstance(r, dict)}
+    out, seen = [], set()
+    while net in by_q and net not in seen and net != "rst_root_n":
+        seen.add(net)
+        r = by_q[net]
+        out.append((net, r.get("d"), r.get("depth")))
+        net = r.get("d")
+    return out
+
+
+def _reset_inputs(t):
+    """what a type's reset tree is solved from, minus the published tree itself (clock without landing_contract.collector_tree, reset)"""
+    ck = json.loads(json.dumps((t or {}).get("clock") or {}))
+    (ck.get("landing_contract") or {}).pop("collector_tree", None)
+    return json.dumps({"clock": ck, "reset": (t or {}).get("reset")}, sort_keys=True)
+
+
+def _diff_keys(a, b, pre=""):
+    if isinstance(a, dict) and isinstance(b, dict):
+        out = []
+        for k in sorted(set(a) | set(b)):
+            out += _diff_keys(a.get(k), b.get(k), f"{pre}.{k}" if pre else str(k))
+        return out
+    return [] if a == b else [pre or "."]
+
+
+def check_resetpub(tree, plan, tree_fn=None, max_list=4, base=None, solve=False):
+    """RESETPUB-1122 (COORD; QC V3 n3 / cr / b2r binds died at EMIT 'control reset localization sle_sc_v1__cl7479a5ec: rst_n_t0:
+    emitted/published reset edge mismatch' after TAP-GRID-R5 clock keys changed and retap.py, seeing no tap-set change, left the
+    published tree as it was): for every soft type with reset.consumer_localization and a published clock.landing_contract.
+    collector_tree, the reset tree the tools solve now (reset_tree.for_type, the tree the bind emits) is compared with the published
+    one along each localized reset's lineage -- the edges reset_consumers.localize checks.  A differing edge or depth is
+    FAIL RESETPUB (republish: retap.py OLD NEW OUT --types T --republish-reset).  A tree that cannot be solved is FAIL
+    RESETPUB-UNCHECKED.  tree_fn(tn) -> solved tree; injectable.
+    Cost: the reset solve of a wavefront plan solves the die (QC: > 15 min cold), so by default only SUSPECT types are solved: the
+    type's clock / reset inputs differ from the base plan (base = --remap-base / --baseline-plan / bind_of_record) while its published
+    collector_tree is byte-identical to the base's (inputs moved, tree not republished: the V3 case, tap_balance_to + tap_slowest_max_ps).
+    solve=True ($OT_RESETPUB_SOLVE=1) solves every localized type.  No base and no solve: nothing is solved."""
+    raw = _load(plan)
+    braw = None
+    if base and not solve:
+        try:
+            braw = _load(base).get("partition_types") or {}
+        except (OSError, ValueError):
+            braw = None
+    todo = []
+    for tn, ty in (raw.get("partition_types") or {}).items():
+        if not isinstance(ty, dict) or ty.get("hard"):
+            continue
+        loc = (ty.get("reset") or {}).get("consumer_localization") or []
+        pub = ((ty.get("clock") or {}).get("landing_contract") or {}).get("collector_tree")
+        if not loc or not isinstance(pub, dict) or pub.get("hard") or not pub.get("relays"):
+            continue
+        nets = sorted({str(c.get("new_reset")) for c in loc if isinstance(c, dict) and c.get("new_reset")})
+        if not nets:
+            continue
+        if not solve:
+            bt = (braw or {}).get(tn)
+            if not isinstance(bt, dict):
+                continue
+            bpub = ((bt.get("clock") or {}).get("landing_contract") or {}).get("collector_tree")
+            if _reset_inputs(ty) == _reset_inputs(bt) or json.dumps(bpub, sort_keys=True) != json.dumps(pub, sort_keys=True):
+                continue                                 # inputs unchanged, or the tree was republished with them
+            nets = nets + ["@" + ",".join(_diff_keys(json.loads(_reset_inputs(bt)), json.loads(_reset_inputs(ty)))[:max_list])]
+        todo.append((tn, pub, nets))
+    if not todo:
+        return []
+    if tree_fn is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import schema
+        import reset_tree as RT
+        _pc = {}
+
+        def tree_fn(tn):
+            def solve():
+                if "P" not in _pc:
+                    _pc["P"] = _shared_plan(plan, raw)
+                return RT.for_type(_pc["P"], tn)
+            return _in_tree(tree, solve)
+    out = []
+    for tn, pub, nets in todo:
+        why = next((n[1:] for n in nets if n.startswith("@")), "")
+        nets = [n for n in nets if not n.startswith("@")]
+        try:
+            new = tree_fn(tn)
+        except Exception as e:  # noqa: BLE001 - the bind reports a reset solve error itself; the published tree is unchecked
+            out.append(f"FAIL RESETPUB-UNCHECKED {tn}: reset tree not solved ({type(e).__name__}: {str(e)[:160]}); published collector_tree "
+                       f"NOT checked -- re-run with --tree <tree holding the plan inputs>")
+            continue
+        sol = {r.get("q"): r for r in (new or {}).get("relays") or [] if isinstance(r, dict)}
+        bad = []
+        for net in nets:
+            for q, d, dp in _reset_lineage(pub, net):
+                s = sol.get(q)
+                if s is None:
+                    bad.append(f"{q} published d={d}, solved tree has no relay {q}")
+                elif s.get("d") != d or (dp is not None and s.get("depth") is not None and s.get("depth") != dp):
+                    bad.append(f"{q} published d={d} depth={dp}, solved d={s.get('d')} depth={s.get('depth')}")
+        bad = list(dict.fromkeys(bad))
+        if bad:
+            out.append(f"FAIL RESETPUB {tn}: published collector_tree is stale against the reset tree the bind emits ({len(bad)} edge(s) on the "
+                       f"localized resets {', '.join(nets[:max_list])}" + (f"; inputs changed vs base: {why}, tree not republished" if why else "")
+                       + "): " + "; ".join(bad[:max_list])
+                       + " -- the bind dies at EMIT 'emitted/published reset edge mismatch'; republish: retap.py OLD NEW OUT --types "
+                       f"{tn} --republish-reset")
     return out
 
 
@@ -1260,6 +1403,9 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_r8stale(tree, plan, rb, asbuilt)
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
+    if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
+        findings += check_resetpub(tree, plan, base=rb if rb else remap_base(plan, remap, baseline)[0],
+                                   solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
