@@ -274,6 +274,8 @@ def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user"
             t = raw.replace(b"\0", b" ").decode("latin1")
         except OSError:
             continue
+        if any(os.path.basename(a) == "ot-delete" for a in raw.decode("latin1").split("\0")[:6]):
+            continue    # CLEAN-AGGR-R3 11-22: a running ot-delete (or its timeout/xargs wrapper) names what it removes; it is not a user (it protected 400 bundles mid-batch)
         hs = otrun_hosts(t)
         sh = ssh_host(raw.decode("latin1").split("\0"))
         if hs is None and sh:

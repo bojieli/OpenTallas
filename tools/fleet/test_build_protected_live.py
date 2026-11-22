@@ -137,3 +137,18 @@ def test_plan_refs_follow_specs_nested_plans_and_home_clean_aggr_r3(tmp_path):
     assert "/home/ubuntu/scratch/plan-qc/r56/x.json" in out
     assert "/srv/opentallas-scratch2/claude/qc-plan-r13/v3p6/tree/physical/die_plan/qwen_compute/p.json" in out        # live private spec
     assert not any("old-lane" in x for x in out)                                                                    # spec older than 48 h
+
+
+def test_running_ot_delete_names_no_live_path_clean_aggr_r3(tmp_path):
+    import importlib.util as iu
+    H = os.path.dirname(os.path.abspath(__file__))
+    sp = iu.spec_from_file_location("bpl_r3d", os.path.join(H, "build_protected_live.py")); BB = iu.module_from_spec(sp); sp.loader.exec_module(BB)
+    proc = tmp_path / "proc"
+    for pid, argv in (("21", b"timeout\x001800\x00python3\x00-I\x00otd/ot-delete\x00/srv/opentallas-scratch2/claude/autopilot/admission_tools/aaaa"),
+                      ("22", b"python3\x00-I\x00/home/u/.local/bin/ot-delete\x00/srv/opentallas-scratch2/claude/lane-x/old/tree"),
+                      ("23", b"bash\x00/srv/opentallas-scratch2/claude/lane-y/job/run.sh")):
+        (proc / pid).mkdir(parents=True)
+        (proc / pid / "cmdline").write_bytes(argv)
+    out = set()
+    BB.live_cmd_paths(out, os.path.normpath, proc=str(proc), unit_dirs=())
+    assert out == {"/srv/opentallas-scratch2/claude/lane-y/job/run.sh"}
