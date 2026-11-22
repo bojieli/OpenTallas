@@ -97,3 +97,4 @@
   - t29__cl2e5c855a: PID 2775645, unit oth-ubuntu-2782000
   - t29__clc7772371: PID 2775650, unit oth-ubuntu-2781994
   Driver PIDs are on intel2; the place stages run as kwp-* services. The v9 J8 row bind on epyc7 continues (oth-ubuntu-2158748, durable waiter).
+- 2026-11-22 03:51 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2158748-1795342847 on loved-redfish: rc=11 after 5440 s, ended 11:51:24, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_v9.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind -- env TREE=tree6 PLANF=plan_j8_slice_v9.js | class=DESIGN-FAIL cause=BIND_RC=1
