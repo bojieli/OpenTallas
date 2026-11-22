@@ -17,5 +17,21 @@ if {[info exists ::env(OT_SERDES_COHORTS)] && $::env(OT_SERDES_COHORTS) eq "0"} 
     set ot_sc_old [expr {[info exists ::env(OT_TAP_GROUP_FIXED)] ? $::env(OT_TAP_GROUP_FIXED) : ""}]
     exec python3 /work/serdes_cohorts_env.py $ot_sc_dir/serdes_reset_cohorts.json $ot_sc_dir/serdes_cohorts_env.tcl $ot_sc_old >@stdout 2>@stderr
     source $ot_sc_dir/serdes_cohorts_env.tcl
+    # A native relay-only partition legitimately has no local collector. Derive the
+    # expected ids from the sealed bound wrapper, independently of the compiled ODB.
+    unset -nocomplain ::env(OT_SERDES_EXPECTED_LOCAL_COLLECTORS)
+    if {[info exists ::env(DESIGN_NAME)]} {
+      set ot_sc_bound [file join /work rtl "$::env(DESIGN_NAME)_bound.sv"]
+      if {[file readable $ot_sc_bound]} {
+        set ot_sc_f [open $ot_sc_bound]
+        set ot_sc_rtl [read $ot_sc_f]
+        close $ot_sc_f
+        set ot_sc_ids {}
+        foreach {decl id} [regexp -all -inline {\mot_dp_landing_collect\M[^;]*?\mu_cland_collect_rst_rl_([0-9]+)\M\s*\(} $ot_sc_rtl] {
+          lappend ot_sc_ids $id
+        }
+        set ::env(OT_SERDES_EXPECTED_LOCAL_COLLECTORS) [lsort -integer -unique $ot_sc_ids]
+      }
+    }
   }
 }

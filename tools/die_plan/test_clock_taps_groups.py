@@ -395,6 +395,22 @@ def test_serdes_reset_family_uses_compiled_alias_driver(tmp_path):
     assert len(rows) == 3 and len({l.rsplit(' ',1)[1] for l in rows}) == 1, p.stdout
 
 
+def test_serdes_typed_relay_only_cohort(tmp_path):
+    p = run(tmp_path, "mkflop u_rrl_3/q 600",
+            env="set ::env(OT_SERDES_RESET_COHORT) 1\n"
+                "set ::env(OT_SERDES_EXPECTED_LOCAL_COLLECTORS) {}")
+    assert p.returncode == 0, p.stderr
+    assert "NET ck_u_rrl_3/q" in p.stdout
+
+
+def test_serdes_collector_manifest_preserves_identity(tmp_path):
+    p = run(tmp_path, RESET_FAMILY,
+            env="set ::env(OT_SERDES_RESET_COHORT) 1\n"
+                "set ::env(OT_SERDES_EXPECTED_LOCAL_COLLECTORS) {94}")
+    assert p.returncode != 0
+    assert "local-clock collector mismatch: expected {94}, compiled {95}" in p.stderr
+
+
 def test_serdes_reset_family_refuses_missing_actual_driver(tmp_path):
     body = RESET_FAMILY + '\nrename q_u_rrl_3/q {}\nunset NET(q_u_rrl_3/q)\n'
     p = run(tmp_path, body, env='set ::env(OT_SERDES_RESET_COHORT) 1')
