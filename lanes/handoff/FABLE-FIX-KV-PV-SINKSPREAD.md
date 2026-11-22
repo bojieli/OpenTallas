@@ -61,6 +61,23 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 10:30 PST (newest; supersedes the T2 lines of the blocks below)
+- T2 m5 bind after ONE pad regeneration got past R8 and failed on 2 real classes (gates/m5s1_bind):
+  (a) 9 HARD_CORE_PARAM_WRAP "expected one bound instance u_cland_<bus>, found 0": type_split binds a landing ring in the piece of
+      its bus WINDOW (bus_piece) but keeps the hard core in the piece its box is in. Fix: w/ringside.py (core vs band piece of a
+      composed plan) -> env D29_RINGSIDE {type:{core:"w"|"e"}} -> compose.py ring loop re-sites those cores (also non-straddling)
+      in the band's half. multi.sh now composes twice (pass 1 tag <tag>_p1 finds the list, pass 2 = real tag) unless D29_RINGSIDE
+      is given. m5 list (9 rings, 8 types): w/d29/ringside_all_m7.json. v6n alone has none (K1 unaffected).
+  (b) EMIT kv3_hgi_v6 "original rst_n_t35 D=rst_rl_381 != literal predecessor rst_rl_389": the event republished the reset
+      collector tree of an UNTOUCHED type (report trees_republished_untouched) whose clock.landing_raw_branches name relays
+      literally. Fix: w/remap_untouched.sh (landing_remap, OLD = base plan, --bound-rtl = tree's bind of the v6n plan, where
+      hgi_v6 is unchanged); 29 names rewritten on m5 (gates/m5_remapu). multi.sh runs it at the end.
+- Chain now: w/chain_full3.sh m7 tree2 <14 picks :r1> (composes IN tree2, D29_RINGSIDE given), client log intel2
+  ~/tmp/ffkvpv/chain_m7.log, started 10:27. m6 = a failed launch (composer refuses an existing out dir), ignore; its dirs in
+  tree2 (por_d29_all_m6_composed, plan_of_record.all_m6*) go to ot-delete later.
+- The watcher only knows chain m5 (it posted the m5 stop). For m7: on CHAIN_FULL_DONE m7 run
+  python3 -I w/package_d29.py m7 tree2 w/handoff/D29_pv_14types_package.json (run from tree2; it finds the composed dir in tree2) and post ROWS-READY row B.
+
 ## RESUME HERE (11-22 10:00 PST)
 Unattended pieces that keep running without the lane:
  1. K1 = sealed kit kv3_pv_v6n (systemd user unit runitem-kv3_pv_v6n on intel2, goal finish). The whole fleet is over its load cap
