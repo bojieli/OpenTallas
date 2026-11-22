@@ -48,3 +48,12 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
   tap_probe.py, legal_probe.py. Next: bind the D29 draft.
 - Staged, not pushed: r7/face_flops_inset.tcl (OT_FF_EW_INSET_UM).
 - Cleanup (ot-delete, later): r7/negtest (SKIP: protected parent), por_d29_* trial dirs except stk5res.
+
+## State 2026-11-22 06:3x PST
+- D28 row 1 READY posted 617f8b82: plan 0268822b037f, manifest epyc8 split28/r7/row1_package.json.
+- Bind 13 (one R8 refresh) -> 42 new (R8_STALE 30 pvw_1, R8_STRAP_PAD 5 pc, TYPE_SPLIT 3, EMIT 3, PARAM_REGEN). Snapshot tree5 Q/por_row1_bind13.
+- chain_r7c.sh (2nd refresh from bind 13 -> bind 14) queued/running; log intel2 ~/tmp/okpvr7/chain_r7c.log.
+- D29: v6n draft 78fe00f580fd closes (plan_gate_pre PASS). With the D29 levers: v2 closes; v12/v7 left only with INHERITED corner taps; v5ne still over (2114/1889).
+  chain_d29.sh staged (binds the v6n draft after row 1; moves plan_of_record to por_row1_final).
+- Pending: merge FIX-SYNC reset.inst_taps v2 rows (13 banks) when posted; FABLE-FIX-KV-PV-SINKSPREAD sync.
+- Representative v3 build: needs an emitting (clean) bind -> after D28 seal or a clean bind 14.
