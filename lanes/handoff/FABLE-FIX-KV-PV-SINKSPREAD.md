@@ -61,7 +61,39 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
-## Running (11-22 05:4x PST)
+## STATE 11-22 06:25 PST (supersedes any "Running / Next" below)
+Candidates so far (all on D28 base dry5, tools rt 6390b7bfa650, pure column swap):
+- all-14-types ONE event m1 = plan 54ac7f32109f (tree por_d29_all_m1_composed): model 26/28 pieces 0 over cap; v12e, v7e inherited.
+  Picks: kv3_pv:q1 v1:q1 v12:q1 v2:q1 v2n:s2 v3n:n2 v4:q1 v4n:q1 v5:q1 v5n:q1 v6:s2 v6n:c4 v7:q1 v8:q1 (w/multi.sh NAME picks...).
+- v6n-only c4 = a4830a316287. Its gate v6n_c4: PLAN-GATE-PRE 3 findings (1 in-core internal station -> fix_st_in_core.py now
+  covers internal_stations; 2 R8STALE -> r8_refresh after a bind), G0 13 errors, strict bind CRASHED:
+  "native stations pv_N_4.o_vport_W_N_vo: expected one outgoing lane".
+What that taught (each one fixed or in flight):
+ a. BIND CRASH = no split lane reference. A split bind needs spec lane_reference = split_lane_reference_export.py of the UNSPLIT
+    base bind (PV-R7 ref_base.json is D27: not usable). Export from D28 base RUNNING: w/refexp.sh in tree2 (plan job), client log
+    intel2 ~/tmp/ffkvpv/refexp.log, out epyc8 w/refbind + w/ref_base_d28.json (~35 min from 06:13). Then compose with
+    FF_LANEREF=/srv/opentallas-scratch2/claude/fable-fix-kv-pv-sinkspread/w/ref_base_d28.json (multi.sh passes it through).
+    refexp.sh moves tree2 plan_of_record.base_d28 -> plan_of_record and back at the end: check it was moved back.
+ b. G0 errors: abutment/faces (a straddling N/S window moved onto a neighbour window: the composer compared face labels only)
+    and landing_band_core (re-sited ring cl_i_vport_W_N_vo on band ft3_i). Both fixed in compose.py (06:1x). m2 / v6n5 =
+    recomposition with those fixes (no restation, no laneref): only to re-check G0 (w/g0only.sh TAG NAME).
+ c. G0C hop > 405 on 33 rows of the 14 types (j-core rows fault_d1/d3, y_valid, cut legs; v12e o_vport_E_N_vqN): w/restation.py
+    (core-clear path, equal arc length, STEP 400, +stations priced on lane fixed_cycles, then gen.py latency --inplace).
+    Now a step of multi.sh. Test on m1: 33 rows fixed, few stations added.
+ d. R-REACH-1 START fan WARNs exist on the D28 row-1 form (v3) too: not fixed here (reach_rules.py fix --rules 1,4 is the tool).
+ e. After a bind: PV-R7 row-1 chain = r3 rows from bound RTL -> bind -> leaf banks + reprice + latency -> bind -> r8_refresh -> bind.
+    My type-generic copies: w/r3/*.py, w/r3chain.sh (r3 | banks), w/rebind.sh (station fix + r8_refresh + gate).
+Scripts added: w/multi.sh (MULTI_REFINISH=1 re-runs the finish steps on an existing composed dir), w/g0only.sh, w/restation.py,
+ w/hopfix.py (superseded by restation), w/refexp.sh, w/rebind.sh, w/r3chain.sh, w/repin.sh RT [tree2].
+ot-run notes: --dir must be the lane root when a job names paths in two trees; binds / G0 / export go with
+ --priority plan --plan-job bind|g0 (jumps the host load cap); other jobs wait while epyc8 load1 > 115.
+NEXT:
+ 1. refexp done -> multi.sh m3 (14 types) and multi.sh v6n6 kv3_pv_v6n:c4 with FF_LANEREF -> g0only / bind_chain:
+    T1 = tree (v6n-only), T2 = tree2 (all types; FF_TREE=tree2 FF_O=<tree composed dir>, ot-run --dir lane root).
+ 2. bind result -> r3chain r3 -> banks -> rebind (r8) -> clean bind + LATCHECK -> kit (private-spec ... --goal finish; run-item).
+ 3. Hand rows to KV-PLAN-R6 (composer recipe + composed dir + receipts).
+
+## (older) Running (11-22 05:4x PST)
 - bind_chain v6n_c4 (G0 gate + strict bind): intel2 ~/tmp/ffkvpv/bind_v6n_c4.log, epyc8 w/gates/v6n_c4{.out,_g0,_bind}; started 05:36, ~1.2 h.
 - all_p2.sh q1 p1 with D29_SWAPMODE=purex + mk_bins8 (10 placed types): intel2 ~/tmp/ffkvpv/all_q1.log, epyc8 w/d29/run_*_q1.out.
 - pass4.sh (v2n v3n v6 v1n: n2 = plan bins + auto reserve, s2 = sibling-register estimate; purex): intel2 ~/tmp/ffkvpv/pass4.log.
