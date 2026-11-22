@@ -33,3 +33,9 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - QC V4: tap_split on V3p6n adds nothing (116 OK, 9 BLOCKED: no legal site near macro-packed sinks). Posted FIX: V3p6n cbf_q00__cl1b5a6458 clk_t101 -> clk_t114 (lanes/handoff/TAP-GRID-R5-V3p6n-cbf_q00-fix.json).
 - QC bind B (full V3 package on rt 5aab47) on epyc7 bindq_full.sh -> v3pkg_bound (R13 gates V3p6n with my keys anyway). Bind A cancelled, qcsnap.part ot-deleted.
 - KV pv taps now owned by OPUS-FIX-KV-PV-R7. KV D28 non-pv chain kvnp.sh still running (intel2 kv/).
+
+## 11-22 04:0x PST (after the 01:4x weekly limit; RESUMED 0769e8e3)
+- S81 J8: bind3 (intel2 s81j8/gate3, per-type re-record) gave 96 errors = 6 RESET_ANCHOR + 53 EMIT + 37 LF_CS_DEPTH on 53 row types (s81j8/bad53.txt); 50 row types clean. Cause: remap rebuilt the OLD tree from plan_h2_2249, which is not the J7 bound tree, so landing raw names were kept and point at wrong-depth relays.
+- Fix: s81j8/remap_anc.py does an anchor-mode landing_remap with OLD tree = the J7 reset_tree_anchor, then RA.record on the new tree. bind4 runs on epyc7 (copy of s81j8; intel2 scratch2 144 GB < 150 floor, bind_out dirs are ot-delete protected): epyc7 s81j8/bind4.out, gate4/, bind_out4/, plan_rm4.json. ("KeyError anchors" lines in remap_anc.log are a print bug after the update; harmless, fixed.)
+- QC: remap5a (rt 5aab47 same tools) 100 -> 20 errors (19 RESET_ANCHOR + EMIT cbf_q00 rr_t103 drives an output port). remap5b (epyc7 tap-grid-r5/remap5b.sh/.out, pkg/plan_rm5b.json, v3pkg_bound2/bind5b) applies the same anchor-mode fix to 18 types; coll_ftc V3P3 anchor is partial (10 refs unanchored), so it is not fixable by me.
+- Main 4f69f6e241 already lands the class fix (reset_resel picks anchored refs by anchor depth+site).
