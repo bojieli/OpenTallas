@@ -9139,6 +9139,31 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
     return sp
 
 
+def private_bind_stale(sp, item, rpy):
+    """KIT-TOPO-STALE-1122 (COORD, FAM-S81-SLICE-R6 / FAM-KV-IOPC-R4): the wave bind_preflight probe (PROBE_BIND: kit_topology.bind_matches
+    + kit_relay_depth on the bound module, the exact kit_topology / kit_rtl calls) for ONE private spec, on its gen host, before the spec
+    is written.  -> ("", "") ok or not a bind-mode type kit; ("STALE", why); ("UNKNOWN", why) when the probe could not run."""
+    kr = sp.get("kit_rtl") or {}
+    if (sp.get("kind") or "type") != "type" or kr.get("mode") != "bind" or not kr.get("bind_out") or not sp.get("canonical_topology_prepare", True):
+        return "", ""
+    env = sp.get("gen_env") or {}
+    g = dict(src=sp.get("src"), plan=sp.get("plan"), bind_out=kr["bind_out"], asbuilt=kr.get("asbuilt") or "",
+             scope=env.get("OT_NATIVE_RESET_SCOPE") or "", producer=env.get("OT_NATIVE_PRODUCER_CONTEXT") or "", types=[item])
+    if sp.get("gen_tools_manifest_sha"):
+        g["gen_tools_manifest_sha"] = sp["gen_tools_manifest_sha"]
+    if not g["src"] or not g["plan"]:
+        return "", ""
+    p = rpy(sp.get("gen_host"), PROBE_BIND, g, timeout=600)
+    if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
+        return "UNKNOWN", f"bind probe on {sp.get('gen_host')} could not run: {(p or {}).get('error') if isinstance(p, dict) else p}"[:400]
+    if item in p["stale"]:
+        rw = (p.get("relay") or {}).get(item)
+        return "STALE", (f"KIT_TOPOLOGY_BIND_STALE: bind {g['bind_out']} " + (f"predates the plan {g['plan']} relay rows ({rw})" if rw else
+                         f"does not match plan {g['plan']} (kit_topology.bind_matches: the bind was made from another plan)")
+                         + "; pass --bind-out <bind made from this plan> or rebind (bind.py) first; --allow-bind-stale writes the spec anyway")
+    return "", ""
+
+
 def private_spec_cmd(a):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
@@ -9186,6 +9211,13 @@ def private_spec_cmd(a):
             print(f"private-spec: ot-tree-fork {fork_src} -> {sp.get('gen_host')}:{a.tree} failed rc {rc}; no spec written", file=sys.stderr)
             return 2
         sp["private"]["tree_fork"] = {"src": fork_src, "dst": a.tree, "host": sp.get("gen_host") or "", "tool": "ot-tree-fork"}
+    if not getattr(a, "allow_bind_stale", False):          # KIT-TOPO-STALE-1122: refuse a plan / bind mismatch in seconds, not at kit_topology after gen
+        verdict, why = private_bind_stale(sp, a.item, AP.rpy)
+        if verdict == "STALE":
+            print(f"private-spec: REFUSED {a.die}/{a.item}: {why}", file=sys.stderr)
+            return 3
+        if verdict == "UNKNOWN":
+            print(f"private-spec: WARN {a.die}/{a.item}: {why} (spec written; kit_topology will check)", file=sys.stderr)
     out = Path(a.out or (AP_DIR / "private_specs" / re.sub(r"[^A-Za-z0-9_.-]", "_", lane or "lane") / f"{a.die}_{a.item}_{time.strftime('%m%d%H%M%S')}"))
     out.mkdir(parents=True, exist_ok=True)
     (out / "spec.json").write_text(json.dumps(sp, indent=1))
@@ -19534,6 +19566,7 @@ def main(argv=None):
     ps_.add_argument("--kind", default="type")
     ps_.add_argument("--host", help="gen / place host of the private kit (default: the wave pick)")
     ps_.add_argument("--bind-out", help="private strict bind dir (kit_rtl bind_out; default: the wave bind, moved with --tree)")
+    ps_.add_argument("--allow-bind-stale", action="store_true", help="KIT-TOPO-STALE-1122: write the spec although the bind probe finds the bind made from another plan")
     ps_.add_argument("--src-manifest", choices=("on", "off"), help="off: no src tree manifest check (a private tree without .src-manifest.json)")
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
