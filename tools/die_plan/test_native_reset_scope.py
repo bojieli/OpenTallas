@@ -69,3 +69,16 @@ def test_portable_exact_capture_and_full_producer_mutant(tmp_path,monkeypatch):
     mutant['partition_types']['other']['buses'].append(dict(name='wrong',dir='in',width=4,kind='data'))
     capture.write_text(json.dumps(mutant))
     assert not K.bind_matches(current,'selected',out,str(ab),plan)
+
+
+def test_scope_ignores_kit_prep_soft_cs_banks(tmp_path,monkeypatch):
+    """SOFTCS-STAMP-1122: soft_reg_banks is KIT-prep only; other selected clock keys stay freshness inputs."""
+    raw,plan,ab,out=fixture(tmp_path)
+    monkeypatch.setenv('OT_NATIVE_RESET_SCOPE','selected')
+    raw['partition_types']['other']['clock']['taps'][0]['x']=99
+    assert K.bind_matches(raw,'selected',out,str(ab),plan)
+    cur=copy.deepcopy(raw)
+    cur['partition_types']['selected']['clock']['soft_reg_banks']=[dict(id='b',source='nativeRTL:abc#b')]
+    assert K.bind_matches(cur,'selected',out,str(ab),plan)
+    cur['partition_types']['selected']['clock']['taps'][0]['x']=100
+    assert not K.bind_matches(cur,'selected',out,str(ab),plan)

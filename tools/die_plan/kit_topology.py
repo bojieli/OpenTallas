@@ -129,11 +129,17 @@ def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     return selected_reset_context(producer, tn) == selected_reset_context(raw, tn)
 
 
+# SOFTCS-STAMP-1122 (OPUS-FIX-S81-LEAF-R10): clock keys only KIT preparation reads (kit_istations / soft_cs_placement), never
+# the native binder; a change to them (e.g. a soft CS bank source re-stamp to the current bound body) must not make the bind stale.
+KIT_PREP_CLOCK_KEYS = frozenset({'soft_reg_banks'})
+
+
 def selected_reset_context(raw, tn):
-    """All global reset inputs and this type's native reset/clock inputs."""
+    """All global reset inputs and this type's native reset/clock inputs (not KIT-prep-only clock keys)."""
     typ = raw['partition_types'][tn]
     return dict(global_reset=raw.get('reset'), reset=typ.get('reset'), hard=typ.get('hard'),
-                clock={k:v for k,v in typ.get('clock',{}).items() if not k.startswith('landing_')})
+                clock={k:v for k,v in typ.get('clock',{}).items()
+                       if not k.startswith('landing_') and k not in KIT_PREP_CLOCK_KEYS})
 
 
 def has_topology(raw,tn,asbuilt=None):
