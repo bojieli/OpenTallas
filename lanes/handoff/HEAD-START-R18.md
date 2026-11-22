@@ -41,3 +41,7 @@ Lane dir epyc10 `E=/srv/opentallas-scratch2/claude/head-start-r18` (README there
 - private-spec (autopilot/private_specs/HEAD-START-R18/s81_head_hd_host_e_1121195741) fails at kit_rtl: the r16 wave plan
   names sink_bins files in snap tree s81_head_r4_s0, which was deleted on all hosts. Needs the flow owner: restore
   prep/NF6/assets at that path, or switch the HEAD wave to the contained r17a v2 tree. Then rerun run-item.
+
+## Update 21:5x PST
+- e1b bench tb1 PASS 329/329 (unit oth-ubuntu-1899646-1795323383); mutants on e1b FAIL as required: st_bypass 12 lanes, k_plus1 1 lane (E/tb1_st_bypass, E/tb1_k_plus1).
+- e1b is ready to apply; posted VERDICT ec6a0395ada. No job of this lane is running.
