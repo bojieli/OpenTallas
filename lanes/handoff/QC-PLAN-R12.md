@@ -19,3 +19,4 @@ Stop list FABLE-PD-QC-1230 sec 3 applies. Then pack/seal/apply per QC-PLAN-R10 r
 - tt_ctlm owned by R12->R13 (UNOWNED in sweep): Codex RAE private TT -36.34/FF -121.93 (qc-plan-r12/ttctlm*), not in V3. Helper subagent died on limit.
 - FEFW-V3-2 rejected (V2 already has 2 x_fe_p1_i stations; -84.28 was the 1-station N46C kit).
 - COORD rulings recorded in ledger (faultpipe 8->11, rebind 508->477, calendar -8, coll 13 lanes, tools pin).
+## Units handed (epyc7): oth-ubuntu-3087156-1795318814 (static_p5r G0, then chain_p5r2.sh binds), oth-ubuntu-3672641-1795320392 (smoke_6dbb G0). oth-ubuntu-2223944-1795317172 = landing_remap on ctl_strap/v3p3_static (TAP-GRID-R5 work in our launch dir; not ours).
