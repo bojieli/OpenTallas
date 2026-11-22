@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import wave_balance as W
 import kit_wave as K
+import autopilot as A
 
 NODE = "tolerant-swine"
 KIT = "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/items/t1/attempt_1/gen/t1"
@@ -112,6 +113,8 @@ class FakeAP:
     AP_DIR = None
     HUB_NAME = "intel2"
     HUB_ALIASES = {"intel2": ("intel2", "tolerant-swine")}
+    queued_wave_event = staticmethod(A.queued_wave_event)
+    queued_wave_review_hold = staticmethod(A.queued_wave_review_hold)
 
     def __init__(self, tmp):
         FakeAP.AP_DIR = tmp
@@ -177,6 +180,43 @@ def mv(j, ps):
     c = {"id": "j1", "die": "s81", "type": "t1", "unit": "ap-j1-a1", "host": "epyc9", "path": KIT, "mem": 48, "threads": 8,
          "age_s": 900, "waiter": w, "kit_gb": 2.0, "job": j, "hub_node": NODE}
     return {"cand": c, "to": "epyc2"}
+
+
+
+@pytest.mark.parametrize("required", [True, False])
+def test_route_move_honors_exact_required_review_and_preserves_advisory(tmp_path, required):
+    ap, j = FakeAP(tmp_path), job()
+    j["geom_ref"] = "AUTO-GEOM KIT-WAVE E /geom/auto_geom.json"
+    policy = {"event": "E", "all_items": True}
+    if required:
+        policy["required"] = True
+    ap.wave_review_snapshot = lambda: ({"dies": {"s81": {"event": "E", "review_before_route": policy}}}, {})
+    ops = FakeOps([ps_waiting()])
+
+    ok, why = W.move_one(ap, {"jobs": {"j1": j}}, ops, mv(j, ps_waiting()), lambda _: None)
+
+    if required:
+        assert not ok and "WAIT-VISUAL" in why
+        assert not ops.calls and j["status"] == "RUNNING" and "wave_balance" not in j
+    else:
+        assert ok and "copy" in ops.names() and "launch" in ops.names()
+
+
+def test_route_move_rechecks_review_before_switch(tmp_path):
+    ap, j = FakeAP(tmp_path), job()
+    j["geom_ref"] = "AUTO-GEOM KIT-WAVE E /geom/auto_geom.json"
+    current = {"dies": {"s81": {"event": "E",
+                               "review_before_route": {"event": "E", "all_items": True, "required": True}}}}
+    snapshots = iter([({}, {}), (current, {})])
+    ap.wave_review_snapshot = lambda: next(snapshots)
+    ops = FakeOps([ps_waiting()])
+
+    ok, why = W.move_one(ap, {"jobs": {"j1": j}}, ops, mv(j, ps_waiting()), lambda _: None)
+
+    assert not ok and "WAIT-VISUAL" in why
+    assert "copy" in ops.names() and "verify" in ops.names()
+    assert "stop" not in ops.names() and "launch" not in ops.names()
+    assert j["status"] == "RUNNING" and "wave_balance" not in j
 
 
 def test_move_ok_order_and_record(tmp_path):

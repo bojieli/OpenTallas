@@ -367,11 +367,22 @@ def candidates(AP, st, ops, status, hub_node, cfg):
 
 
 # ----------------------------------------------------------------------------------------------- apply
+def route_review_hold(AP, job):
+    """The same required exact-kit gate as other automatic AP route submissions."""
+    if job.get("goal") in ("auto", "route"):
+        event = AP.queued_wave_event(job)
+        if event:
+            return AP.queued_wave_review_hold(AP.wave_review_snapshot(), job, event)
+    return None
+
+
 def move_one(AP, st, ops, move, log):
     """copy, verify, stop the unstarted waiter, resubmit pinned -> (ok, note).  Every failure before the stop leaves the
     job exactly as it was."""
     c, t = move["cand"], move["to"]
     j, src, w = c["job"], c["host"], c["waiter"]
+    if why := route_review_hold(AP, j):
+        return False, why
     roots = job_roots(j)
     pr = ops.py(src, SRC_PROBE, {"roots": roots})
     if pr.get("error"):
@@ -401,6 +412,10 @@ def move_one(AP, st, ops, move, log):
     if not argv or "--dir" not in argv:
         return False, "client argv unreadable"
     new_argv = with_hosts(argv, t)
+    # The copy/verification can take minutes. Read current policy and review
+    # again before stopping the original unstarted client.
+    if why := route_review_hold(AP, j):
+        return False, why
     ops.stop_unit(c["unit"])
     after = [x for x in parse_waiters(ops.ps(src), c["hub_node"]) if x["tag"] == w["tag"]]
     if after and after[0]["started"]:
