@@ -240,9 +240,27 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 `else
     assign r_dp = r_d; assign r_vp = rn_r;
 `endif
+`ifdef OT_S81_SERDES_RX_FRONT3
+`ifndef OT_S81_SERDES_DEC_CORE
+    initial $fatal(1, "RX_FRONT3 requires the one-clock decoder hard core");
+`endif
+`ifndef OT_S81_RCK_RELAY4
+    initial $fatal(1, "RX_FRONT3 requires the four-stage transport calendar");
+`endif
+`ifndef OT_S81_KP4_AM_FACE3
+    initial $fatal(1, "RX_FRONT3 requires the AM partial capture");
+`endif
+    wire [553:0] rx_front_data;
+    wire rx_front_reset;
+    ot_s81_serdes_rx_front3 u_rx_front3 (
+        .ck(pma_rck), .rst_n(rn_r), .p_v(r_vp), .p_d(r_dp),
+        .front_data(rx_front_data), .front_reset(rx_front_reset));
+`endif
     // ---- receive: landed KP4 decoder (4 rck regions) -> rate matcher -> clk
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
-`ifdef OT_S81_SERDES_DEC_CORE
+`ifdef OT_S81_SERDES_RX_FRONT3
+    ot_s81_kp4_dec_lp_core_front3 #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (
+`elsif OT_S81_SERDES_DEC_CORE
     // FAM-S81-SERDES 11-21 (COORD-approved serdes__t4 no-growth split): the same landed decoder behind the one-clock hard-core
     // wrapper ot_s81_kp4_dec_lp_core (lp/ot_s81_kp4_dec_lp_core.sv: ck drives ck_syn/ck_dly/ck_chn/ck_out exactly as below,
     // wiring only, 0 added cycles); u_dec becomes one hard core of the column (its dchn / dmem / cmem macros move inside it).
@@ -253,7 +271,12 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 `else
     ot_s81_kp4_dec_native_flat_lp #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (
 `endif
+`ifdef OT_S81_SERDES_RX_FRONT3
+        .rst_n(rx_front_reset), .p_v(rx_front_data[544]), .p_d(rx_front_data[543:0]),
+        .front_am_parts(rx_front_data[553:545]),
+`else
         .rst_n(rn_r), .p_v(r_vp), .p_d(r_dp),
+`endif
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock),
         .n_corr(n_corr), .n_unc(n_unc), .n_relock(n_rl),
 `ifdef OT_S81_SERDES_DEC_CORE
