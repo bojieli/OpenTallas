@@ -27,3 +27,7 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - Successor after the J7 apply: S81-J7-HELD-R1 (COORD).
 
 - J8 recipe: run intel2 opus-fix-s81-svc-r9/relay_r9.sh (die reset relay re-site: fW0_p1_b0 23->17, svc_13 relays, +31 boot cycles, max hop 290 um) before the J8 bind, with tools >= main 8ad54f25f4.
+
+## J8 INTAKE LIST (posted 21:2x; full text intel2 s81-j6-r5/j8_intake.txt)
+- Cut 11-22 16:00 -> one relay re-plan 16-18 -> one strict bind/LAT/G0/PRE 18-21 -> apply 11-23 04:15.
+- Col entry: first of COL-H10-R4 / COLROM-R5 (5_1_grt.odb only) / BKSEL-R7 r7a with final-GRT TT>=-42 + ovf 0 by 11-22 14:00; else J7 col form.
