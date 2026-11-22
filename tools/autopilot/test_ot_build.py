@@ -126,6 +126,19 @@ def seal(e):
     (e["src"] / ".src-manifest.sha256").write_text("5" * 64 + "\n")
 
 
+def test_remap_base_change_rechecks_pre(env):
+    base = env["tmp"] / "remap.json"
+    base.write_text("{}")
+    args = ["--remap-base", str(base), "--upto", "pre"]
+    assert run(env, extra=args) == 0
+    assert len(list(env["root"].glob("b_*/.ot-build/logs/pre.log"))) == 1
+    base.write_text('{"depth": 2}')
+    assert run(env, extra=args) == 0
+    logs = list(env["root"].glob("b_*/.ot-build/logs/pre.log"))
+    assert len(logs) == 2
+    assert all(f"--remap-base {base}" in p.read_text() for p in logs)
+
+
 def test_first_build_then_fresh(env, capsys):
     assert run(env) == 0
     assert calls(env) == ["bind.py elab J=", "bind.py r8-prepass J=", "bind.py bind J=4", "lane_asbuilt_latency.py", "bound_param_check.py"]
