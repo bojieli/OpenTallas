@@ -1,0 +1,1 @@
+- 2026-11-22 02:34 PST STARTED 02:3x: reading COLROM-R6/H9R0-R4/H10-R4 handoffs + kit H/P/P2 state; next = rank census on 4_cts.odb of 11 col sub-forms, then rank-level seat key on main.
