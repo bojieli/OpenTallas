@@ -52,3 +52,4 @@ Current trial: epyc7 `/srv/opentallas-scratch2/claude/qc-plan-r12/ctl_strap/v3p3
 - COORD ruling: coll_core 48 um aisles exact reset rebind (508 -> 477 relays) rides V3 with the FAM-QC-COLL-R3 rows (row 11 package). PENDING its rows file.
 - V3p3 f5d51696a2eb (rt 55344f311cde): strict bind + LATCHECK E7 oth-ubuntu-3907396 running; then post-bind G0 vs b20 + census.
 - Candidates for V3p4 by the cut (IN when native proof read): HC3 projection (strict/LAT 1921 PASS), HC1 rs_return (strict/LAT 1921 PASS, placement review pending), SU C tap cap (strict/LAT 1921 PASS, place running), FE START +2 (strict running), FW five-bank sites (place running), CTL rprog retap (QC-SLE-R5-V3-rprog-retap.json, 0 cycles).
+- OWNER 19:0x: production calendar K fwd_epoch - C = -8 edges (-7, -10 retired). Not a plan key; V3 binds the -8 calendar/epoch-pad RTL variant (token lane overlay requested by 04:00); verify K-C=-8 in the V3 bind receipt. Row C = PENDING overlay.
