@@ -21971,3 +21971,4 @@ FAILED [AUTOPILOT 27b8bf5e2d1c] 2026-11-21 20:35:22 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 20:52 PST ALERT NO-PROGRESS qwen_compute: 3 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 60 min (last 19:51); no current launch blocker logged
 - 2026-11-21 20:52 PST ALERT STUCK-STATE s81: 35 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
 - 2026-11-21 20:52 PST epyc9 at 2474 GiB: already in gen_hosts, nothing to restore
+- 2026-11-21 20:52 PST DIED [FABLE-FIX-QC-COLL-R2] ot-run oth-ubuntu-1862505-1795323170 on civil-redfish: rc=1 after 2 s, ended 04:52:51, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/mktree10.client.log, cmd: --mem 8 --threads 2 --disk 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 -- bash /srv/opentallas-scratch2/clau
