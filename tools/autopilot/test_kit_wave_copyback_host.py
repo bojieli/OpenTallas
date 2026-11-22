@@ -42,7 +42,8 @@ class CopyBackHost(unittest.TestCase):
         a = src.index("    def after_place(K, rc, txt):"); b = src.index('    svc_file = out / "place_service.json"')
         body = src[a:b]
         self.assertNotIn("remote(", body.replace("remote_argv(", ""))
-        self.assertIn("copy_back_host(txt, ran_ok_host(txt, hub) or G)", body)   # WAVE-COPYBACK-1115: default = the RAN host
+        self.assertIn("cands = copy_back_hosts(txt, G, hub)", body)
+        self.assertIn("kh = cands[0]", body)
         self.assertEqual(re.findall(r"\{G\}:", body), [])
 
 
