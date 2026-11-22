@@ -15,7 +15,7 @@ never counted.  Input: the archive listing written by tools/explorer/tools/archi
 
     python3 archive_gate.py [--cache FILE]      # print the gate result of a cache file (reads only)
 """
-import argparse, gzip, json, os, pathlib, sys, time
+import argparse, gzip, json, os, pathlib, re, sys, time
 
 STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')))
 LISTING = pathlib.Path(os.environ.get('AGIDOCK_ARCHIVE_INDEX', STATE / 'agidock_archive_index.json'))
@@ -48,9 +48,19 @@ def entry_state(files):
     return [k for k in ('db', 'metadata') if not have[k]]
 
 
+VARIANT_TAIL = re.compile(r'[A-Za-z0-9]+__[A-Za-z0-9_]+')
+
+
+def variant_of(module, element):
+    """FLOW-FLEET-R2 X1 11-22: AUTO-EXPORT gives each variant of one module its own element when units collide: ot_hdc_v41x_attn_tr_x_xoff0__h8_1119 for the module
+    ot_hdc_v41x_attn_tr_x (4 xoff designs, pending_archive for hours with their DB + metadata exported).  <module>_<tag>__<rest> is a variant of <module>; a longer
+    MODULE name (ot_s81_cfg7_seq_bfp for ot_s81_cfg7_seq) has no '__' tail and never matches."""
+    return element.startswith(module + '_') and bool(VARIANT_TAIL.fullmatch(element[len(module) + 1:]))
+
+
 class Gate:
     def __init__(self, listing=None, store=None, now=None):
-        self.error = None; self.ent = {}; self.rows = set(); self.store = set(); self.index = {}
+        self.error = None; self.ent = {}; self.rows = set(); self.store = set(); self.index = {}; self.by_die = {}
         p = pathlib.Path(listing or LISTING)
         try: A = json.loads(p.read_text())
         except Exception as e: self.error = 'ARCHIVE GATE NOT APPLIED: no archive listing (%s: %s)' % (p, e); return
@@ -66,6 +76,7 @@ class Gate:
             for ln in lines[1:]:
                 r = dict(zip(head, ln.split('\t')))
                 self.index[(r.get('die'), r.get('element'))] = r
+                self.by_die.setdefault(r.get('die'), []).append(r)
         else:
             for ln in lines: self.rows.update(c.strip() for c in ln.split('\t') if c.strip())
         self.store = store_archived(store)
@@ -96,6 +107,11 @@ class Gate:
                 m = entry_state(e['files'])
                 if not m: return 'opentallas-signed-1114 ' + e['path'], None
                 miss = dict(missing=m, path=e['path'], zero_byte=sorted(f for f, z in e['files'].items() if not z))
+        for nm in names:       # a variant element of the module (variant_of): the same ARCHIVED-BOTH / RTX-FULL-AGI-META rule
+            for d in EXPORT_DIES.get(die, (die,)):
+                for r in self.by_die.get(d, ()):
+                    if variant_of(nm, r.get('element') or '') and (r.get('status') or '').startswith(('ARCHIVED-BOTH', 'RTX-FULL-AGI-META')):
+                        return 'INDEX.tsv variant ' + r['element'], None
         for nm in names:
             if nm in self.rows: return 'INDEX.tsv row', None
             if (die, nm) in self.store: return 'signed-store record in an AGIdock archive', None
