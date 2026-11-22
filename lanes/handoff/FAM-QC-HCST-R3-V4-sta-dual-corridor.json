@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qc_v4.rows.v1",
+  "status": "placed_model_only",
+  "partition_type": "sle_st_a_v2__pv4242de79",
+  "reference_job": "104091288e62",
+  "diagnosis": "Final DPL-0033 after GRT repair inserts seven buffers in the east/south R0 collar. The observed b_hw_ctl_hc0 and x_fw_ctl groups share that collar.",
+  "rows": [
+    {
+      "selector": {"collection": "ft_slots", "name": "b_hw_ctl_hc0"},
+      "field": "regs_um.1",
+      "expect": [385.182, 244.485],
+      "value": [438.0, 278.0],
+      "stations": 5,
+      "width": 1573
+    }
+  ],
+  "preserve": ["x_fw_ctl regs_um", "all stage counts", "epoch transport", "every lane schedule"],
+  "model": {
+    "source_to_station_and_next": "Manhattan from every measured landing driver through proposed stage center to its same-bit next stage",
+    "rows_measured": 1573,
+    "current_center_max_um": 389.303,
+    "candidate_center_max_um": 382.712,
+    "candidate_over_405": 0,
+    "clear_of_macro_boxes": true,
+    "trace": "epyc7:/srv/opentallas-scratch2/claude/qc-plan-r12/ctl_strap/sta_dpl/chains.tsv"
+  },
+  "needs": "Native bind and exact actual placement review on selected V4 basis. Stress initial GRT repair only after review. The duplicated mapped epoch cells are left on the same transport."
+}
