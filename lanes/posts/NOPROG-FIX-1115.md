@@ -521,3 +521,6 @@
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 48.4 h job 48.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 34.3 h; last event 18.5 h ago, log write 14.7 h ago (3167 lines)
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 16.9 h job 16.9 h: no new meaningful log line for 15.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS epyc2 native59 pregrt_ff_hold stage 8.3 h job 9.6 h: no new meaningful log line for 6.6 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd5_emb_code_q_436.r
+- 2026-11-22 08:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 08:52 PST: 297 running jobs, PROGRESSING 288, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 49.4 h job 49.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 35.1 h; last event 15.5 h ago, log write 0.7 h ago (3169 lines)
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 17.9 h job 17.9 h: no new meaningful log line for 16.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
