@@ -49,3 +49,13 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tool
 - main 36d0a6df8f6 RESUME-GOAL-1122 (finish=route on stage resume in run_kit.sh + resolve_chain_goal; private no-goal = auto, never geom). main 2bc14507b4d RESETPUB suspect = FAIL in seconds (die reset solve >3400 s on QC; OT_RESETPUB_SOLVE=1 to prove). coord owners_sweep PRIV-LIVE 3c7ddba256. All posted.
 - bind_doom real (epyc10 5 QC binds): 3 PASS, 2 timeout at 900 s (QC TAPNAME density solve) -> CHECK_TIMEOUT_S may need raising; storm guard ba20f11e2d8.
 - Next: canary narrow replica_keep (keep-on 105.94 vs off 124.4 ps), io_guard, lever 9, items 8/11/12, push triage.
+
+## 2026-11-22 ~07:00 PST update (FLOW-OPS-R2)
+Pushed to main since the last section:
+- 5bb9a043e39 TAPNAME-DELTA-1122: plan_gate_pre TAPNAME solves only density types whose clock section (minus kit-only tap_balance_to / tap_slowest_max_ps) differs from the base; QC v3p6n3 vs v3p5r_lat 6/124 types, 56 s cold, 11 s warm (was ~160 s; the 1-h runs were the old RESETPUB die-wide solve, gone since 2bc14507b4d). bind_doom: CHECK_TIMEOUT_S 3600, 4 parallel checks/host, dedupe by (plan sha, tree, asbuilt).
+- f4e0e522b00 HUB-DIRTY-1122: hub_git_sync commits lanes/posts/*.md + lanes/OWNERS-SWEEP.tsv; refusal line names mtime + fuser holder. HUB-SYNC-FAILED had cleared 05:54 already.
+- 233947ba8aa LAUNCH-JOURNAL-1122 (W1): kit_wave launch row journaled (fsync) before systemd-run, replayed by load_state, compacted by save_state; state saved after the collect phase. NOT done yet: detaching slow probes (bind_preflight 126-516 s/tick, plan_dies) from the tick.
+- 7ed394df813 HOLD-DONE-1122: hold_guard_grt runs no further margin chunk once a chunk ran and ws >= 10 with 0 violators (OT_HOLD_DONE_STOP=0 off). New kits only.
+- c19dbd9b5e6 PLAN-GATE-BESIDE-1122: bind.py forks plan_gate_pre beside elab/bind, joins before return, refusal -> rc 2 + OUT/PLAN_GATE_PRE_REFUSED.txt; OT_PLAN_GATE_PRE_SERIAL=1 old order. ot_build "pre" node still serial.
+In flight: E1 FLEET-GUARD-1122 tools/conftest.py Popen guard (full tools suite run on epyc10 to find tests using real ssh/systemd-run/ot-run); hold-chase fleet-hours scan (hgscan.py, 7 days, dedupe by guard-line hash).
+Queue after: W1 probe detach, canary narrowing (replica_keep ~18 ps), io_guard, lever 9, 8/11/12, push-test triage.
