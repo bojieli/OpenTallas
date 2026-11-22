@@ -170,10 +170,60 @@ def should_post(rec):
     return True
 
 
+STDOUT_WAIT_S = 45.0
+
+
+def stdout_log_of(log):
+    """a kit_wave stage log X.live.log holds stderr only; the stage's stdout X.log (the verdict) is written by the CALLER after ot-run exits"""
+    log = str(log or "")
+    return log[:-len(".live.log")] + ".log" if log.endswith(".live.log") else ""
+
+
+def wait_stdout_log(rec, wait_s=None, sleep=time.sleep, now=time.time):
+    """D1 (FABLE-FLOW-0800: NO-PATTERN 43 % of DIED): 42 of 70 NO-PATTERN DIED posts on 11-22 were AUTO-GEOM FAIL in geom.log, written by
+    kit_wave run() only after this ot-run exited, so the classifier read an empty stdout log ('rc 1 after N s, no log').
+    -> True once X.log is non-empty and not older than the job end, False after wait_s (OT_STATUS_STDOUT_WAIT_S, default 45 s)"""
+    so = stdout_log_of(rec.get("log"))
+    if not so:
+        return False
+    if wait_s is None:
+        try:
+            wait_s = float(os.environ.get("OT_STATUS_STDOUT_WAIT_S", STDOUT_WAIT_S))
+        except ValueError:
+            wait_s = STDOUT_WAIT_S
+    t_end = float(rec.get("t_end") or 0)
+    deadline = now() + wait_s
+    while True:
+        try:
+            st = os.stat(so)
+            if st.st_size > 0 and st.st_mtime >= t_end - 1:
+                return True
+        except OSError:
+            pass
+        if now() >= deadline:
+            return False
+        sleep(1.0)
+
+
+def deferred_post_argv(rec):
+    """the detached argv that waits for the stdout log, then posts (a DIED with an X.live.log), else None"""
+    if rec.get("rc") == 0 or not stdout_log_of(rec.get("log")) or os.environ.get("OT_STATUS_DEFER", "1") == "0":
+        return None
+    return [sys.executable, "-I", os.path.abspath(__file__), "deferred-post", json.dumps(rec)]
+
+
 def post(rec):
-    """detached post.sh call; returns the argv used (tests) or None"""
+    """detached post.sh call; returns the argv used (tests) or None.  A DIED whose verdict lands in X.log after this process exits is
+    posted by a detached deferred-post child that waits for that log first (D1)."""
     if not should_post(rec):
         return None
+    dargv = deferred_post_argv(rec)
+    if dargv:
+        try:
+            subprocess.Popen(dargv, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+            return dargv
+        except OSError:
+            pass                                   # post now, unclassified rather than never
     post_sh = os.environ.get("OT_POST_SH") or os.path.expanduser("~/coord/bin/post.sh")
     text = post_text(rec)
     if os.path.exists(post_sh):
@@ -224,3 +274,16 @@ CURRENT = None
 def set_unit(unit):
     """ot-run calls this when ot-heavy admitted the job (the oth-... scope)"""
     update(CURRENT, unit=unit)
+
+
+def _deferred_post(rec_json):
+    rec = json.loads(rec_json)
+    wait_stdout_log(rec)
+    os.environ["OT_STATUS_DEFER"] = "0"
+    post(rec)
+    return 0
+
+
+if __name__ == "__main__" and sys.argv[1:2] == ["deferred-post"] and len(sys.argv) == 3:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    sys.exit(_deferred_post(sys.argv[2]))
