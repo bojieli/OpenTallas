@@ -38,6 +38,7 @@ def test_fwd_export_resolves_vector_bterm_keeps_instance_name():
                       frozenset({"fclk_out_o"}))
     assert "findBTerm {fclk_out_o[0]}" in s and "findBTerm {clk}" in s
     assert "{cland_fwd_fclk_out_o}" in s and "cland_fwd_fclk_out_o[0]" not in s
+    assert "{cland_fwd_net_fclk_out_o}" in s and "cland_fwd_net_fclk_out_o[0]" not in s
 
 
 def test_tie_and_scalar_wrapper_stay_byte_identical():
