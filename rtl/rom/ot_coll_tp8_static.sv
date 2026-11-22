@@ -412,10 +412,19 @@ module ot_coll_tp8_static #(
     // ---------------- E: cross-fold result, R ring write, UCIe R send ----------------
     reg [FW-1:0] xr_q; reg xe_q;
 `ifdef OT_TP8S_XRPIPE
-    reg [FW-1:0] xs_q; reg xe0_q;
+    reg [FW-1:0] xs_q;
     always @(posedge clk) begin xs_q <= xs_sum; xr_q <= xs_q; end
+`ifdef OT_TP8S_XEPRE
+    // Register each slice's error before the cross-slice OR. The two stages
+    // between xs_e/xs_v and xe_q retain the same reset and output cycle.
+    reg [NS-1:0] xev_q;
+    always @(posedge clk or negedge rs_r) if (!rs_r) begin xev_q <= {NS{1'b0}}; xe_q <= 1'b0; end
+        else begin xev_q <= xs_e & xs_v; xe_q <= |xev_q; end
+`else
+    reg xe0_q;
     always @(posedge clk or negedge rs_r) if (!rs_r) begin xe0_q <= 1'b0; xe_q <= 1'b0; end
         else begin xe0_q <= |(xs_e & xs_v); xe_q <= xe0_q; end
+`endif
 `else
     always @(posedge clk) xr_q <= xs_sum;
     always @(posedge clk or negedge rs_r) if (!rs_r) xe_q <= 1'b0; else xe_q <= |(xs_e & xs_v);
