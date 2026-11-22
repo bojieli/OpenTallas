@@ -27,6 +27,13 @@ set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGE
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
 set tb_tol [expr {[info exists ::env(OT_TAP_TOL_PS)] ? $::env(OT_TAP_TOL_PS) : 15.0}]
 set tb_ronly [expr {[info exists ::env(OT_TAP_REPORT_ONLY)] && $::env(OT_TAP_REPORT_ONLY)}]
+# TAP-GRID-R5 11-21 (FABLE-CLOSURE-STRATEGY lever 6 fix 3, opt-in OT_TAP_BALANCE_TO=slowest): the balance target is the slowest
+# raw tap mean of this kit (never below the plan insertion OT_TAP_TARGET_PS, at most OT_TAP_SLOWEST_MAX_PS when set), so no tap
+# is left early against the slowest one (J8: FF hold tracks the tap insertion spread, r -0.64); the post-CTS tree bound
+# (OT_TAP_CHECK) is that target + window.  Unset: the plan insertion target, byte for byte.
+set tb_slowest [expr {[info exists ::env(OT_TAP_BALANCE_TO)] && $::env(OT_TAP_BALANCE_TO) eq "slowest"}]
+set tb_slow_max [expr {[info exists ::env(OT_TAP_SLOWEST_MAX_PS)] ? double($::env(OT_TAP_SLOWEST_MAX_PS)) : 0.0}]
+set tb_bnd $tb_target    ;# post-CTS tree bound base (OT_TAP_CHECK): the plan insertion, or the slowest-tap target
 # CORE-DIRECT (FABLE-FIX-KV-HGI 11-20, opt-in OT_TAP_CORE_DIRECT=1): an early core tap (clk_c<k>, core pins only) whose port
 # lands INSIDE the outline of the hard core it clocks is a direct via-stack tap: port and core clock pin are a few um
 # apart.  The delay chain below is seeded at the tap port, and the legalizer can only put it outside the core, so one
@@ -451,10 +458,11 @@ proc tb_seed_side {bt tree x y} {
 }
 proc tb_tap_pass {it} {
   global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev tb_coreonly
-  global tb_cdirect tb_cdmax
+  global tb_cdirect tb_cdmax tb_slowest tb_slow_max
   set m [tb_measure]
   set longest 0.0
-  dict for {n v} $m { set longest [expr {max($longest, [lindex $v 0])}] }
+  set slow_tap ""
+  dict for {n v} $m { if {[lindex $v 0] > $longest} { set longest [lindex $v 0]; set slow_tap $n } }
   # target fixed at the first pass (padding overshoot must not ratchet it up); a padded tree's slowest sink stays
   # <= ins + tol
   # KV-P5 17:34 / KV-P6: the target is the PLAN insertion (OT_TAP_TARGET_PS = clock.insertion_ps = the vclk source
@@ -470,6 +478,13 @@ proc tb_tap_pass {it} {
     if {$tb_conv && $tb_raise > 0} {
       set tgt [expr {max($tgt, min($tb_target + $tb_raise, $longest))}]
       puts "OT_TAP_CONVERGE target [format %.0f $tgt] ps (plan [format %.0f $tb_target], latest raw tap mean [format %.0f $longest], raise cap [format %.0f $tb_raise])"
+    }
+    if {$tb_slowest} {
+      set s [expr {max($tb_target, $longest)}]
+      if {$tb_slow_max > 0} { set s [expr {min($s, max($tb_target, $tb_slow_max))}] }
+      set tgt [expr {max($tgt, $s)}]
+      set ::tb_bnd $tgt
+      puts "OT_TAP_SLOWEST target [format %.0f $tgt] ps (plan [format %.0f $tb_target], slowest raw tap $slow_tap mean [format %.0f $longest], cap [expr {$tb_slow_max > 0 ? [format %.0f $tb_slow_max] : {none}}]); post-CTS tree bound [format %.0f [expr {$tgt + $::tb_win}]] ps"
     }
   }
   if {$tb_conv} {
@@ -489,7 +504,7 @@ proc tb_tap_pass {it} {
     if {$tb_conv} {
       set d [expr {min($tgt - [lindex $v 0], $tgt + $tb_cwin - [lindex $v 2])}]
     } else {
-      set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
+      set d [expr {min($tgt - [lindex $v 0], $::tb_bnd + $tb_win - [lindex $v 2])}]
     }
     if {$d <= $tb_tol} continue
     if {$tb_cdirect && [dict exists $tb_coreonly $n] && [set tb_dc [tb_direct_core $n [lindex $v 4]]] ne ""} {
@@ -689,7 +704,7 @@ set m [tb_measure]
 set lo 1e9; set hi 0.0; set fail {}
 dict for {n v} $m {
   set lo [expr {min($lo, [lindex $v 0])}]; set hi [expr {max($hi, [lindex $v 0])}]
-  if {[lindex $v 2] > $tb_target + $tb_win} { lappend fail "$n=[format %.0f [lindex $v 2]]" }
+  if {[lindex $v 2] > $::tb_bnd + $tb_win} { lappend fail "$n=[format %.0f [lindex $v 2]]" }
 }
 set tb_empty {}
 foreach bt [$tb_blk getBTerms] {
@@ -703,12 +718,12 @@ if {[llength $tb_cores]} {
 puts "OT_TAP_BALANCE done: $tb_added delay cells; tap mean insertion [format %.0f $lo]..[format %.0f $hi] ps (spread [format %.0f [expr {$hi - $lo}]], target [format %.0f $tgt]); empty taps [llength $tb_empty] $tb_empty"
 if {[llength $fail]} {
   # insertion ~ grows with the tree span; shrink the pitch by the overshoot ratio
-  set sug [expr {$tb_pitch * ($tb_target + $tb_win) / max($hi, 1.0)}]
+  set sug [expr {$tb_pitch * ($::tb_bnd + $tb_win) / max($hi, 1.0)}]
   # COORD 10-23 19:55 (owner clock rule): absolute insertion is GUIDANCE -> WARN; the hard clock checks are face-flop
   # spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the die common latency (clock.common_latency_ps)
-  puts "OT_TAP_CHECK WARN trees over [format %.0f [expr {$tb_target + $tb_win}]] ps: $fail; re-pitch taps to <= [format %.0f $sug] um (partition clock.tap_pitch_um)"
+  puts "OT_TAP_CHECK WARN trees over [format %.0f [expr {$::tb_bnd + $tb_win}]] ps: $fail; re-pitch taps to <= [format %.0f $sug] um (partition clock.tap_pitch_um)"
 } else {
-  puts "OT_TAP_CHECK OK every tap tree <= [format %.0f [expr {$tb_target + $tb_win}]] ps"
+  puts "OT_TAP_CHECK OK every tap tree <= [format %.0f [expr {$::tb_bnd + $tb_win}]] ps"
 }
 }
 }

@@ -2415,6 +2415,17 @@
        "tap_cap_cascade": {
         "type": "boolean"
        },
+       "tap_balance_to": {
+        "enum": [
+         "plan",
+         "slowest"
+        ]
+       },
+       "tap_slowest_max_ps": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 833
+       },
        "tap_skip_macro": {
         "type": "boolean"
        },

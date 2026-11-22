@@ -773,6 +773,11 @@ SCHEMA = {
                         # TAP-GRID-R2 11-21 (opt-in; on with tap_grid): clock_taps.tcl cap pass ejection chains (OT_TAP_CAP_CASCADE):
                         # a sink of an over-full tap moves to a full neighbour that passes one sink on to a tap with room
                         "tap_cap_cascade": {"type": "boolean"},
+                        # TAP-GRID-R5 11-21 (FABLE-CLOSURE-STRATEGY lever 6 fix 3, opt-in): tap_balance target = the slowest raw tap
+                        # mean of the kit (never below the plan insertion; at most tap_slowest_max_ps when set) instead of the fixed
+                        # plan insertion, and the post-CTS tree bound (OT_TAP_CHECK) from the same number (OT_TAP_BALANCE_TO=slowest)
+                        "tap_balance_to": {"enum": ["plan", "slowest"]},
+                        "tap_slowest_max_ps": {"type": "number", "exclusiveMinimum": 0, "maximum": 833},
                         "tap_skip_macro": {"type": "boolean"},
                         # REACH-FIX-1 11-12 (reach_fix.py): the subset of sink_sites_um the tool added (kit flops the
                         # tap planner does not list: landing rings, ring reads, relays), so its check counts them once

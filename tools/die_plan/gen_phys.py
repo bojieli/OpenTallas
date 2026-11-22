@@ -4292,6 +4292,20 @@ def tap_grid_exports(t):
     return out
 
 
+def tap_balance_to_exports(t):
+    """TAP-GRID-R5 11-21 (FABLE-CLOSURE-STRATEGY lever 6 fix 3; TAP-GRID-R4 J8: FF hold tracks the tap insertion spread / slowest
+    tap, r -0.64, not the sink count): clock.tap_balance_to "slowest" -> tap_balance.tcl balances every tap to the slowest raw tap
+    mean (never below the plan insertion; capped by clock.tap_slowest_max_ps) and bounds OT_TAP_CHECK from that target.
+    No key / "plan": no line (the plan insertion target, unchanged)."""
+    ck = t.get("clock") or {}
+    if ck.get("tap_balance_to", "plan") != "slowest":
+        return []
+    out = ["export OT_TAP_BALANCE_TO = slowest"]
+    if ck.get("tap_slowest_max_ps") is not None:
+        out.append(f"export OT_TAP_SLOWEST_MAX_PS = {float(ck['tap_slowest_max_ps']):g}")
+    return out
+
+
 def tap_pair_affinity_exports(t):
     """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
     Clock pins only; radius and group bounded by the declared tap radius and capacity."""
@@ -7845,6 +7859,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_grid_exports(t)          # TAP-GRID-2130, opt-in (clock.tap_grid)
     if (t.get("clock") or {}).get("tap_cap_cascade") and not tap_grid_cfg(t):
         cfg += ["export OT_TAP_CAP_CASCADE = 1"]   # TAP-GRID-R2 11-21, opt-in without the grid (clock.tap_cap_cascade)
+    cfg += tap_balance_to_exports(t)    # TAP-GRID-R5 11-21, opt-in (clock.tap_balance_to slowest)
     if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
