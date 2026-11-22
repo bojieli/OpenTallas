@@ -856,3 +856,11 @@ def test_relay_tx_stage_reset_is_local_to_its_plan_site():
     assert r0 == "raw_a" and r1 == "raw_b" and rl == []
     r2 = c._tx_raw("b", "B", "P", {"P": "raw_a"}, rl, sfx="_p1", at=[900.0, 900.0], limit=405.0)
     assert r2 == "cland_reset_tx_p1" and any("u_cland_rst_tx_p1 (.clk(clk), .d(raw_a)" in x for x in rl)
+
+
+def test_bind_inst_id_matches_the_bind_instance_name():
+    # FLOW-STRIPBODY-R2 11-22: the landing pass must find split pieces (s_7N_C__strip_S) under the name bind.emit_top writes
+    import bind
+    from clock_landings import bind_inst_id
+    for pn in ("s_7N_C__strip_S", "s_7N_C", "hub__Eo_0", "1x", "a.b__c"):
+        assert bind_inst_id(pn) == bind.sv_id(pn)

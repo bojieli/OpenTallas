@@ -990,6 +990,13 @@ def ident(s):
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
 
+def bind_inst_id(s):
+    """the instance name bind.emit_top writes for partition s (bind.sv_id: runs of '_' collapse, so a split piece
+    s_7N_C__strip_S is instance s_7N_C_strip_S; FLOW-STRIPBODY-R2 11-22, the landing pass looked for s_7N_C__strip_S)"""
+    s = re.sub(r"_+", "_", ident(s)).strip("_")
+    return s if s and not s[0].isdigit() else "n" + s
+
+
 # Same-region (non-seam) status inputs (DIE-S81-29, COORD DIE-S81-28-PARK (2)): every such pin bit loads ONLY the D of
 # its own face capture flop ot_dp_landing_face (no reset term, so no gate between pin and D: face_guard 'unregistered'
 # on the former AND2 of the reduction's synchronous reset).  +1 status cycle (boot-only training/status path,
@@ -3233,7 +3240,7 @@ class Landings:
             # Anchor on the instance, then the binder's own closing line; leaf
             # parameter parentheses can never terminate this module instance.
             pat = re.compile(r"(?m)^(    " + re.escape(modules[p["type"]]) +
-                             r"(?: #\([^\n]*\))? " + re.escape(ident(pn)) + r" \(\n)(.*?)(\n    \);)", re.S)
+                             r"(?: #\([^\n]*\))? " + re.escape(bind_inst_id(pn)) + r" \(\n)(.*?)(\n    \);)", re.S)
             matches = list(pat.finditer(text))
             if len(matches) != 1:
                 raise LandingError(f"clock landing: expected exactly one bound instance {pn}")
