@@ -206,9 +206,18 @@ def _record(st, die, item, attempt, stage, cls, why, inputs=None, t=None, ok=Fal
     return None
 
 
+PLAN_CLASSES = ("PLAN", "STRUCTURAL")
+PLAN_STOP_RE = re.compile(r"PLACE-SETUP-STOP|GRT-SETUP-STOP|SETUP_TRIAGE STRUCTURAL|HOLD_STRUCTURAL")
+
+
 def is_plan_input(stage, cls, why):
-    """a gen-stage failure caused by the plan / bind input itself (see PLAN_INPUT_RE)"""
+    """a failure caused by the plan / bind input itself: PLAN_INPUT_RE at a gen stage, or -- FAMCAUSE-1122 (FABLE-FLOW-0230 R1: a place-stage
+    PLACE-SETUP-STOP was released by every tools-hash change, main took 37 commits in 2 h) -- any verdict of class PLAN / STRUCTURAL or a
+    structural stop marker at ANY stage (class PLAN after the gen stages): a runtime tools change never releases those"""
     st_ = str(stage or "").split()[0] if str(stage or "").strip() else ""
+    base = re.split(r"[\[ (]", str(cls or ""))[0]
+    if PLAN_STOP_RE.search(str(why or "")) or base == "STRUCTURAL" or (base == "PLAN" and st_ and st_ not in PLAN_INPUT_STAGES):
+        return True                                      # a gen-stage PLAN verdict keeps the PLAN_INPUT_RE rule (a gen contract error is often a tool fix)
     return bool(PLAN_INPUT_RE.search(str(why or ""))) and (not st_ or st_ in PLAN_INPUT_STAGES or str(cls or "") == "PLAN")
 
 

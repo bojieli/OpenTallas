@@ -12852,6 +12852,81 @@ def cause_cap_held(cfg, st, die, prev, now=None):
     return ""
 
 
+FAMCAUSE_PIN_RE = re.compile(r"\bstart=(\S+) end=(\S+)")
+FAMCAUSE_WNS_RE = re.compile(r"\bwns (-?\d+(?:\.\d+)?) ps")
+FAMCAUSE_BUCKET_PS = 50
+FAMCAUSE_MIN_TYPES = 2
+
+
+def _famcause_pin(pin):
+    """a path end without its instance numbering: the bound prefix dropped, digit runs folded (u_bound.u_lk_nk_u_t_0_1_n_b/q[372]$_DLATCH_N_ -> u_lk_nk_u_t_N_N_n_b/q[N]$_DLATCH_N_)"""
+    return re.sub(r"\d+", "N", re.sub(r"^u_bound\.", "", str(pin)))
+
+
+def path_cause_key(rec):
+    """FAMCAUSE-1122 (FABLE-FLOW-0230 R1): the failing-path fingerprint of a structural setup stop (PLACE-SETUP-STOP and any stop line with
+    start= end= wns): stop kind + start + end (instance numbers folded) + wns in 50 ps buckets.  '' when the attempt did not fail on one."""
+    if not so_failed(rec):
+        return ""
+    txt = " ".join(str(rec.get(x) or "") for x in ("q_reason", "reason", "evidence_tail"))
+    m, w = FAMCAUSE_PIN_RE.search(txt), FAMCAUSE_WNS_RE.search(txt)
+    if not m or not w:
+        return ""
+    kind = re.search(r"\b([A-Z]+(?:-[A-Z]+)*-STOP)\b", txt)
+    b = int(round(float(w.group(1)) / FAMCAUSE_BUCKET_PS)) * FAMCAUSE_BUCKET_PS
+    return f"{kind.group(1) if kind else 'SETUP-STOP'}|{_famcause_pin(m.group(1))}|{_famcause_pin(m.group(2))}|wns{b}"
+
+
+def famcause_index(st, die, event):
+    """{path cause key: {type stem: {"item", "attempt", "block", "fam"}}} over the failed attempts of DIE in plan EVENT (st items)"""
+    idx = {}
+    for rec in (st.get("items") or {}).values():
+        if not isinstance(rec, dict) or rec.get("die") != die or (rec.get("event") or "") != (event or ""):
+            continue
+        ck = path_cause_key(rec)
+        if not ck:
+            continue
+        it = str(rec.get("item") or "")
+        ent = idx.setdefault(ck, {})
+        old = ent.get(type_stem(it))
+        if not old or int(rec.get("attempt") or 0) >= int(old.get("attempt") or 0):
+            ent[type_stem(it)] = {"item": it, "attempt": rec.get("attempt"), "block": str(rec.get("block_sha") or ""), "fam": family_of(die, it)}
+    return idx
+
+
+def famcause_held(cfg, st, die, item, block_sha=None, idx=None):
+    """FAMCAUSE-1122 (FABLE-FLOW-0230 R1: the QC cb lockup n_b/q[372] -> u_t01 path, -380 ps, failed 29 times on 15 variants: REPEAT-STOP
+    is per item and CAUSE-CAP per type stem, so each variant spent its own attempts): once >= 2 distinct types of a die fail in one plan
+    event on the same path cause key, every row of their families is held (one hold, one owner).  Released by a new plan event, a changed
+    plan block of a type that failed on it (that type only), an explicit retry key (item@N[:fix=<sha>]) or an `unblock <item|family> famcause`
+    line.  -> '' or the hold text"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    event = d.get("event")
+    fam = family_of(die, item)
+    for u_item, u_fp in cfg.get("_unblocks") or ():
+        if u_item in (item, fam, "*") and str(u_fp).startswith("famcause"):
+            return ""
+    if explicit_retry_pending(cfg, st, die, item):
+        return ""
+    if idx is None:
+        cache = cfg.setdefault("_famcause", {})
+        ck_ = f"{die}|{event}"
+        if ck_ not in cache:
+            cache[ck_] = famcause_index(st, die, event)
+        idx = cache[ck_]
+    for ck, ent in sorted(idx.items()):
+        if len(ent) < FAMCAUSE_MIN_TYPES or fam not in {v["fam"] for v in ent.values()}:
+            continue
+        own = ent.get(type_stem(item))
+        if own and own["item"] == item and block_sha and own["block"] and own["block"] != str(block_sha):
+            continue                                    # this type's own plan block changed since it failed on the path
+        ex = sorted(ent.values(), key=lambda v: v["item"])
+        return (f"FAMCAUSE hold [owner {die_owner(cfg, die)[0]}]: family {fam}: {len(ent)} types failed in event {event} on one path "
+                f"{ck[:160]} ({', '.join('%s@%s' % (v['item'], v['attempt']) for v in ex[:4])}{' +%d' % (len(ex) - 4) if len(ex) > 4 else ''}); "
+                f"released by a new plan event, a changed plan block, a retry key {item}@N:fix=<sha> or `unblock {fam} famcause`")
+    return ""
+
+
 def tool_skew_closure(cfg, main_root):
     """the import closure of gen.py / gen_phys.py / bind.py in main (flow_guard.closure_files): the ONE module set that both the
     wave gate and the FLOW-HEALTH SKEW table count (FABLE-FLOW-2200 class 6)"""
@@ -13634,6 +13709,14 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         _ch = cause_cap_held(cfg, st, die, prev)
         if _ch:
             log_hourly(AP, st, f"CAUSE|{die}|{r['item']}", f"KIT-WAVE LAUNCH-HELD {die}/{r['item']}: {_ch}")
+            return None
+        try:
+            _fc = famcause_held(cfg, st, die, r["item"], r.get("block_sha"))
+        except Exception as _e:                  # never let the family hold break a launch tick
+            _fc = ""
+            log_hourly(AP, st, f"FAMCAUSE-ERR|{die}", f"KIT-WAVE FAMCAUSE skipped: {type(_e).__name__}: {_e}")
+        if _fc:                                  # FAMCAUSE-1122 (FABLE-FLOW-0230 R1)
+            log_hourly(AP, st, f"FAMC|{die}|{family_of(die, r['item'])}", f"KIT-WAVE LAUNCH-HELD {die}/{r['item']}: {_fc}")
             return None
     other = None if (arm or FG.stops_off_die(cfg, die)) else live_attempt_elsewhere(st, die, r["item"], key)
     if other:                                    # WAVE-LONGRUN-1 (b): one live attempt per item, whatever its plan block
