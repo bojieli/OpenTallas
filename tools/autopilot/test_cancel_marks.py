@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """CANCELMARK-1400: a job stopped by the no-progress watchdog or HUNG-WATCH is CANCELLED, never infra-oom (make Error 241 / exit 143 after a SIGTERM that was not earlyoom)."""
+import copy
+import os
 import sys, tempfile, time
+
+import pytest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -56,3 +60,53 @@ def test_hung_watch_cancel_writes_the_mark_autopilot_reads(monkeypatch):
         j = {"path": T.ROOT, "started": now - 3600}
         got = AP.marked_cancel(j, now=now + 131 * 60, marks=Path(d) / "cancel_marks.tsv", actions=Path(d) / "none")
         assert got and "HUNG-WATCH" in got
+
+
+@pytest.mark.parametrize(("variant", "code"), [
+    ("exact", 143), ("exact", 137), ("other_exit", 21), ("old_receipt", 143),
+    ("other_path", 143), ("other_host", 143), ("old_client", 143),
+    ("no_current_ran", 143), ("running", 143), ("earlyoom", 137),
+])
+def test_late_noprog_rejudge_exact_terminal_attempt(tmp_path, monkeypatch, variant, code):
+    monkeypatch.setattr(AP, "AP_DIR", tmp_path)
+    monkeypatch.setattr(AP, "DRY", False)
+    monkeypatch.setattr(AP, "log", lambda message: None)
+    actions = tmp_path / "actions.tsv"
+    monkeypatch.setattr(AP, "NOPROG_ACTIONS", actions)
+    client = tmp_path / "jobs" / "489da562f86c" / "a2.log"
+    client.parent.mkdir(parents=True)
+    start = 1795219804
+    stopped = 1795308302
+    path = "/srv/scratch/claude/wave/items/a/attempt_2/gen/a"
+    unit = "ap-489da562f86c-a2"
+    ran = f"ot-run: RAN on epyc7 (unit oth-ubuntu-2814195-1795219815): exit {code}\n"
+    log_unit = "ap-489da562f86c-a1" if variant == "old_client" else unit
+    if variant == "no_current_ran":
+        client.write_text(ran + f"AP_START {start} {log_unit}\nAP_RC={code}\n")
+    else:
+        client.write_text(f"AP_START {start} {log_unit}\n{ran}AP_RC={code}\n")
+    os.utime(client, (stopped + 3, stopped + 3))
+    receipt = time.strftime("%F %T", time.localtime(start - 100 if variant == "old_receipt" else stopped))
+    action_path = path + "/run" if variant == "other_path" else path
+    action_host = "epyc8" if variant == "other_host" else "epyc7"
+    actions.write_text(f"{receipt}\t{action_host}\ta\t5_2_route\tdrt_violations best 13126 last 24036"
+                       f"\t{action_path}\tdpkit-a-2852636\tdrt_violations best 13126 vs 13155 before window: < 2 % in 6 h\n")
+    row = dict(id="489da562f86c", die="qwen_compute", goal="route", status="RUNNING" if variant == "running" else "DONE-CRASH",
+               cls="CRASH", kind="infra-oom" if variant == "earlyoom" else "route-make-fail",
+               reasons="old FAIL_route exit 21", ran_on="epyc7", path=path, client_log=str(client), unit=unit, attempts=2,
+               started=start, finished=stopped + 40, updated=stopped + 45, history=[["old", "DONE-CRASH", "prior"]])
+    state = {"jobs": {row["id"]: row}}
+    previous = copy.deepcopy(row)
+    AP.save_state(state)
+    AP.rejudge_late_noprog(state)
+    if variant != "exact":
+        assert row == previous
+        assert AP.load_state()["jobs"][row["id"]] == previous
+        return
+    assert (row["status"], row["kind"], row["finished"], row["updated"]) == (
+        "DONE-STRUCTURAL", "drt-no-progress", previous["finished"], previous["updated"])
+    assert row["history"][:1] == previous["history"]
+    assert row["noprog_rejudge"]["previous"]["reasons"] == "old FAIL_route exit 21"
+    assert AP.load_state()["jobs"][row["id"]] == row
+    AP.rejudge_late_noprog(state)
+    assert len(row["history"]) == 2
