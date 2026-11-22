@@ -120,12 +120,13 @@ def sha_json_file(path, drop=()):
     return sha_obj(d)
 
 
-def tree_files(root, globs=("*",), exclude=("__pycache__/*", "*.pyc", ".ot-build/*", "*/.ot-build/*", "*/__pycache__/*")):
+def tree_files(root, globs=("*",), exclude=("__pycache__/*", "*.pyc", ".ot-build/*", "*/.ot-build/*", "*/__pycache__/*"),
+               followlinks=False):
     root = Path(root)
     out = []
     if not root.is_dir():
         return out
-    for dp, dn, fn in os.walk(root):
+    for dp, dn, fn in os.walk(root, followlinks=followlinks):
         dn.sort()
         for f in sorted(fn):
             rel = os.path.relpath(os.path.join(dp, f), root)
@@ -211,13 +212,29 @@ class Input:
 
 
 class Node:
-    def __init__(self, name, inputs=(), deps=(), run=None, out=None, cost="fast", doc=""):
-        self.name, self.inputs, self.deps, self.run, self.cost, self.doc = name, list(inputs), list(deps), run, cost, doc
+    """deps: nodes whose result this node is made from (their keys are part of this node's key).
+    after: order only -- must be fresh first, but a change of theirs does not make this node stale (a precheck before an elab).
+    inputs: a list, or a callable returning one (inputs that an earlier node of the same build decides).
+    run(node) may set node.extra = {...}: recorded in the stamp."""
+
+    def __init__(self, name, inputs=(), deps=(), run=None, out=None, cost="fast", doc="", after=()):
+        self._inputs = inputs if callable(inputs) else list(inputs)
+        self.name, self.deps, self.after, self.run, self.cost, self.doc = name, list(deps), list(after), run, cost, doc
         self.out = Path(out) if out else None
-        labels = [i.label for i in self.inputs]
+        self.extra = None
+        if not callable(inputs):
+            self._check(self._inputs)
+
+    def _check(self, ins):
+        labels = [i.label for i in ins]
         dup = sorted({x for x in labels if labels.count(x) > 1})
         if dup:
-            raise ValueError(f"node {name}: duplicate input labels {dup}")
+            raise ValueError(f"node {self.name}: duplicate input labels {dup}")
+        return ins
+
+    @property
+    def inputs(self):
+        return self._check(list(self._inputs())) if callable(self._inputs) else self._inputs
 
     def stamp_path(self):
         if self.out is None:
@@ -265,8 +282,8 @@ def drop_stamp(node):
         pass
 
 
-def parts_now(node, dep_keys):
-    parts = {i.label: i.hash() for i in node.inputs}
+def parts_now(node, dep_keys, ins=None):
+    parts = {i.label: i.hash() for i in (node.inputs if ins is None else ins)}
     for d in node.deps:
         parts["dep:" + d] = dep_keys[d]
     return parts
@@ -274,7 +291,7 @@ def parts_now(node, dep_keys):
 
 def diff_parts(old, new, node=None):
     """-> human lines naming every input whose hash moved (the precise stale message)"""
-    det = {i.label: i.detail() for i in (node.inputs if node else [])}
+    det = {i.label: i.detail() for i in (node if isinstance(node, list) else node.inputs if node else [])}
     why = []
     for k in sorted(set(old) | set(new)):
         a, b = old.get(k), new.get(k)
@@ -296,18 +313,19 @@ def status(node, dep_status=None):
     """Status of one node given the Status of its deps ({name: Status}).  A node with a stale dep is stale; its key is then
     'pending' (the dep's new key is not known before the dep runs)."""
     dep_status = dep_status or {}
-    stale_deps = [d for d in node.deps if not dep_status[d].fresh]
+    stale_deps = [d for d in node.deps + node.after if not dep_status[d].fresh]
     if stale_deps:
         return Status(False, [f"dependency {d} is stale" for d in stale_deps], None, None)
-    parts = parts_now(node, {d: dep_status[d].key for d in node.deps})
+    ins = node.inputs
+    parts = parts_now(node, {d: dep_status[d].key for d in node.deps}, ins)
     key = key_of(parts)
-    missing = [i for i in node.inputs if parts[i.label] == MISSING and not i.kw.get("optional")]
+    missing = [i for i in ins if parts[i.label] == MISSING and not i.kw.get("optional")]
     st = read_stamp(node)
     if st is None:
         return Status(False, ["no stamp (never built here, or the last run did not finish)"], parts, key)
     if st.get("key") == key:
         return Status(True, [], parts, key)
-    why = diff_parts(st.get("parts") or {}, parts, node) or ["stamp key differs"]
+    why = diff_parts(st.get("parts") or {}, parts, ins) or ["stamp key differs"]
     if missing:
         why += [f"input {i.label} ({i.detail()}) is MISSING" for i in missing if f"input {i.label}" not in " ".join(why)]
     return Status(False, why, parts, key)
@@ -329,7 +347,7 @@ def order(nodes, goal=None):
         if name in seen:
             return
         path.append(name)
-        for d in by[name].deps:
+        for d in by[name].deps + by[name].after:
             visit(d)
         path.pop()
         seen.add(name)
@@ -385,7 +403,7 @@ def build(nodes, goal=None, dry=False, log=None, force=()):
             log(f"ot-build: {n.name:10s} FAILED  rc={rc} after {time.time() - t0:.0f} s")
             flush_cache()
             return 1
-        write_stamp(n, s.parts, s.key, extra=dict(wall_s=round(time.time() - t0, 1)))
+        write_stamp(n, s.parts, s.key, extra=dict(n.extra or {}, wall_s=round(time.time() - t0, 1)))
         log(f"ot-build: {n.name:10s} BUILT   {s.key[:12]} in {time.time() - t0:.0f} s")
         st[n.name] = Status(True, [], s.parts, s.key)
     flush_cache()

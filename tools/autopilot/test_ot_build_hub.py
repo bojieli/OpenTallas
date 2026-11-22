@@ -1,0 +1,158 @@
+"""ot-build hub side with a fake fleet: host choice, bind only when stale, kit stamped per type, precise refusals."""
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import ot_build_hub as H  # noqa: E402
+
+SRC = "/srv/s/kw/src_kv"
+CFG = {"dies": {"kv": {"src": SRC, "plan": SRC + "/p/plan.json", "gen_hosts": ["h1", "h2", "h3"], "gen_host": "h1",
+                       "kit_rtl": {"mode": "bind", "asbuilt": SRC + "/p/ab.json", "bind_out": SRC + "_bind"},
+                       "bind_env": {"OT_HCPARAM_ALL": "1"}, "die_gen_env": {"OT_KV_HEAD_KST": "2", "OT_VIEW": SRC + "/p/v.json"}},
+                "head": {"src": "/x", "plan": "/x/p.json", "kit_rtl": {"mode": "script"}}}}
+
+
+class Fleet:
+    def __init__(self, tmp):
+        self.tmp = tmp
+        self.load = {"h1": (190.0, 96, True), "h2": (40.0, 96, True), "h3": (5.0, 96, False)}
+        self.stale = True
+        self.types = {"ta": dict(block="b1", module="m_ta", rtl="r1")}
+        self.calls = []
+        self.verdict = "SIGNED"
+        self.eff_asbuilt = SRC + "/p/ab.json"
+
+    def eff(self, rc):
+        return "OT-BUILD EFFECTIVE " + json.dumps(dict(out="/srv/out/b_1", rc=rc, plan=SRC + "/p/plan.json", asbuilt=self.eff_asbuilt,
+                                                       keys={"bind": "k" * 64}, types=self.types, plan_rest="pr", asbuilt_sha="as",
+                                                       tree_id="seal:1")) + "\n"
+
+    def run(self, cmd, timeout=None, stdin=None):
+        s = " ".join(cmd)
+        if stdin is not None:                               # host probe
+            h = next(x for x in cmd if x in self.load)
+            ld, n, tree = self.load[h]
+            return 0, f"L {ld} {ld}\nN {n}\nM 400\nT {int(tree)}\nF 1\n", ""
+        if "--status" in s:
+            self.calls.append("status@" + next((x for x in cmd if x in self.load), "local"))
+            return (3 if self.stale else 0), "ot-build: bind       STALE   input plan changed\n" + self.eff(3 if self.stale else 0), ""
+        self.calls.append("write-script")
+        return 0, "", ""
+
+    def stream(self, cmd, env):
+        s = " ".join(cmd)
+        if "/ot-run" in s:
+            self.calls.append("ot-run@" + cmd[cmd.index("--hosts") + 1])
+            self.stale = False
+            return 0, self.eff(0)
+        if "private-spec" in cmd:
+            self.calls.append("private-spec")
+            Path(cmd[cmd.index("--out") + 1]).parent.mkdir(parents=True, exist_ok=True)
+            Path(cmd[cmd.index("--out") + 1]).write_text("{}")
+            self.spec = Path(cmd[cmd.index("--out") + 1])
+            self.spec_cmd = cmd
+            return 0, "private-spec kv/ta: spec\n"
+        if "run-item" in cmd:
+            self.calls.append("run-item")
+            self.spec.with_name("result.json").write_text(json.dumps(dict(verdict=self.verdict, stage="signoff", kit="/k/ta",
+                                                                          signoff={"path": "/k/ta/signoff.json"}, chain_reason="TT setup -80")))
+            return 0, ""
+        if "auto_export.py" in s:
+            self.calls.append("export")
+            return 0, ""
+        raise AssertionError(s)
+
+
+@pytest.fixture
+def fleet(tmp_path, monkeypatch):
+    rt = tmp_path / "rt" / "aaaabbbbcccc"
+    (rt / "tools" / "autopilot").mkdir(parents=True)
+    (rt / "tools" / "autopilot" / "ot_build.py").write_text("")
+    (tmp_path / "rt" / "current").symlink_to(rt)
+    monkeypatch.setattr(H, "RT_ROOT", tmp_path / "rt")
+    monkeypatch.setattr(H, "AP_DIR", tmp_path / "ap")
+    monkeypatch.setenv("OT_BUILD_FORCE_SSH", "1")
+    monkeypatch.setenv("OT_BUILD_HASH_CACHE", "off")
+    return Fleet(tmp_path)
+
+
+def go(f, *argv):
+    return H.main(["kv", "ta", "--lane", "L1"] + list(argv), run=f.run, stream=f.stream, cfg=CFG)
+
+
+def test_end_to_end_then_everything_fresh(fleet, capsys):
+    assert go(fleet) == 0
+    assert fleet.calls == ["status@h2", "write-script", "ot-run@h2", "private-spec", "run-item", "export"]
+    out = capsys.readouterr().out
+    assert "bind host h2 = least loaded holder of the tree" in out and "h3" in out and "no tree" in out
+    c = fleet.spec_cmd
+    assert c[c.index("--bind-out") + 1] == "/srv/out/b_1" and c[c.index("--tree") + 1] == SRC and c[c.index("--goal") + 1] == "finish"
+    assert "OT_HCPARAM_ALL" in out and "OT_KV_HEAD_KST" in out
+    del fleet.calls[:]
+    assert go(fleet) == 0
+    assert fleet.calls == ["status@h2"]                    # bind fresh, kit fresh, export fresh
+
+
+def test_other_types_row_change_rebinds_but_keeps_this_kit(fleet):
+    assert go(fleet) == 0
+    del fleet.calls[:]
+    fleet.stale = True                                     # another type's row changed: the die re-binds ...
+    assert go(fleet) == 0
+    assert fleet.calls == ["status@h2", "write-script", "ot-run@h2"]      # ... this type's block and bound RTL did not move: no kit
+    del fleet.calls[:]
+    fleet.stale = True
+    fleet.types = {"ta": dict(block="b1", module="m_ta", rtl="r2")}       # its bound RTL moved (a neighbour's depth): rebuild
+    assert go(fleet) == 0
+    assert fleet.calls[-3:] == ["private-spec", "run-item", "export"]
+
+
+def test_dry_reports_and_runs_nothing(fleet, capsys):
+    assert go(fleet, "--dry") == 3
+    assert fleet.calls == ["status@h2"] and "DRY" in capsys.readouterr().out
+    fleet.stale = False
+    assert go(fleet, "--dry") == 3                         # kit stale
+    assert fleet.calls == ["status@h2", "status@h2"]
+
+
+def test_not_signed_is_a_failure_and_reruns(fleet, capsys):
+    fleet.verdict = "FAIL"
+    assert go(fleet) == 1
+    out = capsys.readouterr().out
+    assert "verdict FAIL at stage signoff (want SIGNED)" in out and "TT setup -80" in out and "export" not in fleet.calls
+    fleet.verdict = "SIGNED"
+    del fleet.calls[:]
+    assert go(fleet) == 0 and fleet.calls == ["status@h2", "private-spec", "run-item", "export"]
+
+
+def test_refusals(fleet, capsys):
+    assert H.main(["nodie", "ta", "--lane", "L1"], run=fleet.run, stream=fleet.stream, cfg=CFG) == 1
+    assert "is not in the wave config" in capsys.readouterr().out
+    assert H.main(["head", "ta", "--lane", "L1"], run=fleet.run, stream=fleet.stream, cfg=CFG) == 1
+    assert "kit_rtl.mode is 'script'" in capsys.readouterr().out
+    assert H.main(["kv", "tz", "--lane", "L1", "--goal", "bind"], run=fleet.run, stream=fleet.stream, cfg=CFG) == 1
+    assert "type 'tz' is not a partition type" in capsys.readouterr().out
+    for h in fleet.load:
+        fleet.load[h] = (1.0, 96, False)
+    assert go(fleet) == 1
+    assert "no host holds the tree" in capsys.readouterr().out
+    assert H.main(["kv", "ta"], run=fleet.run, stream=fleet.stream, cfg=CFG) == 2
+
+
+def test_sealed_tree_with_tables_refreshed_outside_refuses_the_kit(fleet, capsys):
+    fleet.eff_asbuilt = "/srv/out/b_1/.ot-build/plan/ab.json"
+    assert go(fleet) == 1
+    assert "refreshed R8 tables OUTSIDE the tree" in capsys.readouterr().out and "private-spec" not in fleet.calls
+    assert go(fleet, "--goal", "bind") == 0
+
+
+def test_tree_and_plan_override(fleet):
+    r = H.resolve(CFG, "kv", tree="/srv/fork/t1")
+    assert r["plan"] == "/srv/fork/t1/p/plan.json" and r["asbuilt"] == "/srv/fork/t1/p/ab.json"
+    r = H.resolve(CFG, "kv", plan="/srv/delta/plan.json")
+    assert r["tree"] == SRC and r["plan"] == "/srv/delta/plan.json" and r["asbuilt"] == SRC + "/p/ab.json"
+    assert r["env"] == {"OT_HCPARAM_ALL": "1", "OT_KV_HEAD_KST": "2", "OT_VIEW": SRC + "/p/v.json"}
+    assert H.resolve(CFG, "kv", tree="/srv/fork/t1")["env"]["OT_VIEW"] == "/srv/fork/t1/p/v.json"
