@@ -1,0 +1,32 @@
+{
+ "schema": "FAM-QC-FEFW-R3-V3-rows.v1",
+ "for": "QC-PLAN-R12 (cut 11-22 06:00 PST)",
+ "date": "2026-11-21",
+ "event_baseline": "s29q103S4Q9N46R6V2",
+ "rows": [
+  {
+   "id": "FEFW-V3-1",
+   "item": "x_sc_i +1 station (slw_fw_v1 cl592e3d37, sle_fw_v2 cl6740750e, slw_fw_v3, slw_fe_v1)",
+   "verdict": "RECONCILED, NO ROW",
+   "why": "Intake row 8 / Codex 17:32: V2 exact FW variants already instantiate five x_sc_i path banks; E9 FW five-bank new-site place is the active proof (E7 qc-plan-r12/fefw_sc, E9 fam-qc-fefw/sc_eo_place). A +1 row from FEFW would duplicate. slw_fe_v1 cldb4efe33 is SIGNED+LEC+exported (hold ECO only, no station change). Adopt the Codex five-bank sites when its place reads."
+  },
+  {
+   "id": "FEFW-V3-2",
+   "item": "slw_fw_v3 u_core.ch_dn_o[] (x_fe_p1_i -> core), +1 station",
+   "verdict": "ROW NEEDS SITES (stop list: no station without a site)",
+   "measured": {
+    "R2 slw_fw_v3 placement setup": "-84.28 ps",
+    "path": "u_bin_x_fe_p1_i/q[*] -> 1 gate -> u_core.ch_dn_o[*]",
+    "same class on sle_fw_v2": "FABLE-PD-QC-0700: 818 pairs over 405 um, -467.6 ps placed, x_fe_p1_i has no station on sle_fw_v1/v2",
+    "geometry (FABLE-TYPES-QC-WEST)": "E face (608,740) to core flops spread x 268-616, y 204-937; 551 bits"
+   },
+   "request": "ask the R12 sites helper (compose_sites.py) to site +1 stage per bit on the x_fe_p1_i -> ch_dn_o slot for slw_fw_v3 (unchanged count elsewhere); FEFW has no verified free-of-hard-core site list, so this lane does not invent coordinates. Lane latency +1 cycle on x_fe_p1_i -> ch_dn_o (cycles pre-approved); needs strict 0 + LATCHECK 1921."
+  },
+  {
+   "id": "FEFW-V3-3",
+   "item": "Codex candidates carried as-is",
+   "rows": ["FE START +2 on W1/W3 only (clE312294D; strict/LAT pass, K58 repriced)", "E9 FW five-bank new-site place (active)"],
+   "verdict": "IN when native proof reads; not duplicated here"
+  }
+ ]
+}
