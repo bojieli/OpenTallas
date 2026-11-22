@@ -81,3 +81,17 @@
   spec ~/coord/autopilot/private_specs/S81-BKSEL-R7/s81_bk_sel__t2_1122042135, run-item pid 1685261 on intel2, log
   ~/s81-bksel-r7-logs/r7c_runitem.log, work epyc10 .../kit-wave/s81/18a2688b741/private/S81-BKSEL-R7/bk_sel__t2_1122042103.
 - u_ids formal: EQUIVALENT by strengthened 1-induction (epyc10 w/bksel_ids/inv_B.{sv,ys,log}, xo.sv/xb.sv).
+
+## 11-22 08:3x state (resume here)
+- main 5b1b2e8b5f9 PUSHED: portfix178 dsdv_idx_l20s.sv u_ids-B (formal EQUIVALENT, strengthened 1-induction,
+  epyc10 w/bksel_ids/inv_B.{sv,ys,log} + xo.sv/xb.sv) + dsdv_bk_sel.sv define OT_BKSEL_NEG0 (default off). Lane clone epyc7
+  s81-bksel-r7/repo (sparse).
+- C (evidence, unsealed): spec ~/coord/autopilot/private_specs/S81-BKSEL-R7/s81_bk_sel__t2_1122054404 (goal auto; goal finish
+  is broken: KWRS stage resume refuses finish), run-item log ~/s81-bksel-r7-logs/r7c3_runitem.log, work epyc10
+  .../private/S81-BKSEL-R7/bk_sel__t2_1122054328. Place done, geom FAIL advisory (same class as r7a, r2r fixed), CTS queued
+  for CPU admission on epyc10/epyc8 since 07:23. Next read: FAIL_POSTCTS / postcts_gate_TT.log, OT_TAP_CORE lines (quarter
+  pins should read ~-137 pin, no clk_c0..3 pad), then 5_1_grt.
+- Sealed C on die src 3c913db: bind refuses (svc_hi_dsdv_svc_pvso_entry__t1 dead-input proof not in manifest; src lacks L4).
+  Ruled: countable build = J8 wave kit on main >= 5b1b2e8b5f9. tree_sealed in w/ is ot-delete-protected.
+- A: epyc2 coreA kit, GRT FF hold repair: outputs done, internal macro pins (u_hc g_bank i_en) ~-12 ps at 07:3x.
+  After route: signoff/signoff.json; if FF hold short, hold-only route-keep ECO per fx6/hei_fable/run_hei_fable.sh.
