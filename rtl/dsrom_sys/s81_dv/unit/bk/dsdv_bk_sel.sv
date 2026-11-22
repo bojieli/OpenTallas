@@ -94,6 +94,20 @@
 `ifndef OT_BKSEL_RLN
 `define OT_BKSEL_RLN 0
 `endif
+// S81-BKSEL-R7 11-22: OT_BKSEL_NEG0 (plan define, inert unless set) = negedge first station after an OLL 2 core output
+// (dsdv_bk_stn NEG0): u_stn_c after the control (OLL 2 in every form), u_stn_s / u_stn_o after the quarters only when they
+// are the OLL 2 eco3 view (OT_BKQ_ECO3).  0 cycles (see dsdv_bk_stn).
+`ifdef OT_BKSEL_NEG0
+`define OT_BKSEL_NEG0_C 1
+`ifdef OT_BKQ_ECO3
+`define OT_BKSEL_NEG0_Q 1
+`else
+`define OT_BKSEL_NEG0_Q 0
+`endif
+`else
+`define OT_BKSEL_NEG0_C 0
+`define OT_BKSEL_NEG0_Q 0
+`endif
 // S81-CORES-R3 11-17 (S81-DIE-R3 NEEDS-LANE (a)): the hardened quarter parameter set of the dsdv_bksel_q view the die binds,
 // written as literals (tools/die_plan/hard_core_param_all.py resolves `ifdef against the bind defines, not macro values).
 //   default         = the hq3 view (dsdv_bksel_q defaults: OLL 0, RFH 0, HLAT 0), control QRX 0 (as built)
@@ -188,9 +202,9 @@ module dsdv_bk_sel #(
     dsdv_bk_rrd #(.D(`OT_BKSEL_RRD)) u_rst_relay_g (.ck(clk), .d(rst_n), .q(rst_g));
     // S81-A2 plan stations (dsdv_bksel_c.sv header): *_q = quarter side, *_c = control side
     wire [4*CB-1:0] tc_q; wire [3:0] tcr_q; wire [4*SB-1:0] fs_c; wire [4*OB-1:0] fo_c; wire [4*515-1:0] ln_q;
-    dsdv_bk_stn #(.W(4*CB + 4), .D(`OT_BKSEL_RC)) u_stn_c (.ck(clk), .d({tc, tcr}), .q({tc_q, tcr_q}));
-    dsdv_bk_stn #(.W(4*SB), .D(`OT_BKSEL_RS)) u_stn_s (.ck(clk), .d(fs), .q(fs_c));
-    dsdv_bk_stn #(.W(4*OB), .D(`OT_BKSEL_RO)) u_stn_o (.ck(clk), .d(fo), .q(fo_c));
+    dsdv_bk_stn #(.W(4*CB + 4), .D(`OT_BKSEL_RC), .NEG0(`OT_BKSEL_NEG0_C)) u_stn_c (.ck(clk), .d({tc, tcr}), .q({tc_q, tcr_q}));
+    dsdv_bk_stn #(.W(4*SB), .D(`OT_BKSEL_RS), .NEG0(`OT_BKSEL_NEG0_Q)) u_stn_s (.ck(clk), .d(fs), .q(fs_c));
+    dsdv_bk_stn #(.W(4*OB), .D(`OT_BKSEL_RO), .NEG0(`OT_BKSEL_NEG0_Q)) u_stn_o (.ck(clk), .d(fo), .q(fo_c));
     dsdv_bk_stn #(.W(4*515), .D(`OT_BKSEL_RLN)) u_stn_l (.ck(clk), .d(ln), .q(ln_q));
     generate for (g = 0; g < 4; g = g + 1) begin : g_q       // quarter 0 SW, 1 SE, 2 NW, 3 NE
         wire rq;
@@ -229,14 +243,24 @@ module dsdv_bk_sel #(
 endmodule
 
 // S81-A2: D reset-less register stations (the plan internal_stations model; D = 0: wires)
-module dsdv_bk_stn #(parameter integer W = 1, parameter integer D = 0) (input wire ck, input wire [W-1:0] d,
+// S81-BKSEL-R7 11-22 (NEG0): the quarter / control cores are signed with OLL 2 (a negedge flop on every output port), so
+// t_s / t_o / t_c leave the core on the FALLING edge with an 836-903 ps ck -> pin arc (core insertion).  A posedge first
+// station gives that a half cycle: r7a GRT TT -337 / -362 ps on all 4,876 g_q -> u_stn_s / u_stn_o r[0] endpoints.
+// NEG0 1 makes r[0] a negedge flop: a full cycle from the core's negedge launch, then a half cycle r[0] -> r[1] (one
+// <= 300 um hop).  With a negedge source r[1] (and q) see the same value on the same posedge as before: 0 cycles.
+module dsdv_bk_stn #(parameter integer W = 1, parameter integer D = 0, parameter integer NEG0 = 0) (input wire ck, input wire [W-1:0] d,
                                                                        output wire [W-1:0] q);
     generate if (D == 0) begin : g_w
         assign q = d;
     end else begin : g_r
         reg [W-1:0] r [0:D-1];
         integer i;
-        always @(posedge ck) begin r[0] <= d; for (i = 1; i < D; i = i + 1) r[i] <= r[i-1]; end
+        if (NEG0 != 0) begin : g_n0
+            always @(negedge ck) r[0] <= d;
+        end else begin : g_p0
+            always @(posedge ck) r[0] <= d;
+        end
+        always @(posedge ck) for (i = 1; i < D; i = i + 1) r[i] <= r[i-1];
         assign q = r[D-1];
     end endgenerate
 endmodule

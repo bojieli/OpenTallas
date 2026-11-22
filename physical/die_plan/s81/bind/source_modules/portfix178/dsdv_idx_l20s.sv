@@ -1080,13 +1080,17 @@ module dsdv_bk_selids #(
     wire [185:0] cp = vr[21 +: 186];
     wire jctl = vr[0] && vr[3:1] == 3'd0 && cp[7:0] == 8'(UID) && cp[10:8] == 3'd3;
     wire eg = vr[0] && vr[3:1] == 3'(EK);
-    reg armed, e_h; reg [9:0] k_n, rk; reg [7:0] ot; reg [3:0] msk; reg [255:0] lo;
+    reg armed, e_h; reg [9:0] remaining, rk; reg [7:0] ot; reg [3:0] msk; reg [255:0] lo;
     wire [511:0] w = {vr[275:20], lo};
     wire wv = armed && eg && vr[6] && e_h && w[511:508] == 4'd3 && w[507:500] == ot;
     wire [15:0] lv = w[335:320];
-    reg [4:0] cnt;
-    always @* begin cnt = 5'd0; for (int i = 0; i < 16; i++) cnt = cnt + 5'(lv[i]); end
-    wire pre = ((lv + 16'd1) & lv) == 16'd0;
+    // S81-BKSEL-R7 11-22: cnt / pre of lv = w[335:320] = vr[99:84] are registered from vo[99:84] beside vr (vr[V-1:1] is a
+    // plain unreset copy of vo), so they equal the old combinational values every cycle after the first edge: 0 cycles.
+    // Both are read only under wv (armed, reset 0, set by a jctl at least one edge after reset release).
+    wire [15:0] lv_d = vo[99:84];
+    reg [4:0] cnt_d; reg [4:0] cnt; reg pre;
+    always @* begin cnt_d = 5'd0; for (int i = 0; i < 16; i++) cnt_d = cnt_d + 5'(lv_d[i]); end
+    always @(posedge ck) begin cnt <= cnt_d; pre <= ((lv_d + 16'd1) & lv_d) == 16'd0; end
     always @(posedge ck) if (eg && !vr[6]) lo <= vr[275:20];
     reg w1v; reg [V-1:0] b1;
     function automatic [V-1:0] beat(input [511:0] ww, input h, input [9:0] sf, input [4:0] sc, input [3:0] m);
@@ -1107,9 +1111,9 @@ module dsdv_bk_selids #(
                 if (armed) fault <= 1'b1;                                       // a job while one is open
                 armed <= cp[40:31] != 10'd0; rk <= 10'd0;
             end else if (wv) begin
-                if (!pre || 11'(rk) + 11'(cnt) > 11'(k_n)) fault <= 1'b1;
+                if (!pre || 10'(cnt) > remaining) fault <= 1'b1;
                 rk <= (MUT == 1) ? rk : rk + 10'(cnt);
-                if (11'(rk) + 11'(cnt) >= 11'(k_n)) armed <= 1'b0;
+                if (10'(cnt) >= remaining) armed <= 1'b0;
             end
             o[0] <= (wv && cnt != 5'd0) | w1v; w1v <= wv && cnt != 5'd0;   // an empty word (lv 0) sends nothing
         end
@@ -1120,7 +1124,9 @@ module dsdv_bk_selids #(
         if (!rst) b1 <= {V{1'b0}};
         else if (wv) b1 <= beat(w, 1'b1, rk, cnt, msk);
     always @(posedge ck) begin
-        if (jctl) begin k_n <= cp[40:31]; ot <= cp[68:61]; msk <= cp[72:69]; end
+        // S81-BKSEL-R7 11-22 (Codex remaining-count): while armed, remaining + rk == the job size cp[40:31]; 0 cycles.
+        if (jctl) begin remaining <= cp[40:31]; ot <= cp[68:61]; msk <= cp[72:69]; end
+        else if (wv && MUT != 1) remaining <= remaining - 10'(cnt);
         o[V-1:1] <= (wv && cnt != 5'd0) ? beat(w, 1'b0, rk, cnt, msk) >> 1 : w1v ? b1 >> 1 : {(V-1){1'b0}};
     end
 endmodule
