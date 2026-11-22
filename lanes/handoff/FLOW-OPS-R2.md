@@ -45,3 +45,7 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tool
 - coord 3c7ddba256 owners_sweep PRIV-LIVE-1122 (private kit live = result RUNNING / active kwp|runitem unit) DONE posted.
 - Open: RESETPUB real solve on plan_v3p6n3 vs v3p5r_lat running on epyc10 (tmp/rp_real2.out; QC die reset solve >1000 s cold). bind_doom real: QC TAPNAME checks take >900 s each (timeout) -> consider raising CHECK_TIMEOUT_S or sharing the bind-gate cache.
 - Next: canary narrow replica_keep (keep-on 105.94 vs off 124.4), io_guard, lever 9, items 8/11/12, push triage.
+## 11-22 06:xx PST
+- main 36d0a6df8f6 RESUME-GOAL-1122 (finish=route on stage resume in run_kit.sh + resolve_chain_goal; private no-goal = auto, never geom). main 2bc14507b4d RESETPUB suspect = FAIL in seconds (die reset solve >3400 s on QC; OT_RESETPUB_SOLVE=1 to prove). coord owners_sweep PRIV-LIVE 3c7ddba256. All posted.
+- bind_doom real (epyc10 5 QC binds): 3 PASS, 2 timeout at 900 s (QC TAPNAME density solve) -> CHECK_TIMEOUT_S may need raising; storm guard ba20f11e2d8.
+- Next: canary narrow replica_keep (keep-on 105.94 vs off 124.4 ps), io_guard, lever 9, items 8/11/12, push triage.
