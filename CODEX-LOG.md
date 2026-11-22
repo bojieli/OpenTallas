@@ -14218,3 +14218,7 @@ Claude reported that the limit reset. Codex and the lane agents parked. Previous
 ### OWNER?
 
 See the existing OWNER? entries for SVC’s seven peer window choices, QC collective fault return 8→11, KV AFK/KREQ downstream service inhibition and HGI assertion contract, the PHY package question, the exact D26/V2 package epoch edge (−7 versus −8), and the old KV E9 proof 090f50f4534f. No response awaited. HBM design work remains parked by owner order.
+
+## OWNER?
+
+For the live HEAD r17b e1b mission boot, which external producer drives the die START pad, and what stage, rank, clock/reset identity and HBC header/commit edges should the host_w binding use? The live host_w uses sentinel values (stage255, rank4, phase disabled, zero identity, all-ones dates). The validated e1b transport is ready after START, while the pre-START HBC and CSR routes contain mission-reset stations. Please identify whether the board issues START before HBC/CSR delivery or requires those stations to carry pre-START traffic. The native source and component work continues.
