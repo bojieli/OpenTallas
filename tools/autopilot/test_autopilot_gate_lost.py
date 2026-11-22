@@ -205,3 +205,30 @@ def test_grt_terminal_dpl_does_not_replace_uncaught_or_old_failure(tmp_path):
     old = time.time() - 7200
     os.utime(stage, (old, old))
     assert "grt_caught_dpl" not in probe(k, time.time() - 600)
+
+
+def test_failed_sealed_return_keeps_exact_worker_grt_overflow():
+    unit = "ap-6b0d31f1a8c9-a1"
+    start = 1795360482
+    error = "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer."
+    log = (
+        f"AP_START {start} {unit}\n"
+        f"FAIL_route make exit 2: 5_1_grt.log: {error}\n"
+        "ot-job: command exit 2\n"
+        "ot-run: RAN on localhost (unit oth-ubuntu-4018231-1795360490): exit 2\n"
+        "tar: physical_completion: Cannot change mode: Operation not permitted\n"
+        "ot-run-sealed: copy-back localhost -> epyc2 rc 2\n"
+        "AP_RC=2\n"
+    )
+    client = A.parse_client_log(log, unit=unit, started=start)
+    assert A.classify({}, client) == ("FAIL", "grt-overflow", error)
+    assert A.classify({"oom": "memcg OOM"}, client) == ("CRASH", "infra-oom", "memcg OOM")
+
+    for changed in (
+        log.replace(unit, "ap-other-a1"),
+        log.replace("5_1_grt.log", "5_2_route.log"),
+        log.replace("copy-back localhost -> epyc2 rc 2", "copy-back localhost -> epyc2 rc 0"),
+        log.replace("AP_RC=2", "AP_RC=98"),
+        log.replace(f"AP_START {start}", f"AP_START {start + 121}"),
+    ):
+        assert "grt_overflow_return" not in A.parse_client_log(changed, unit=unit, started=start)

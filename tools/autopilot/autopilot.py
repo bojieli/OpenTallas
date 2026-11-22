@@ -1484,6 +1484,8 @@ def classify(c, client):
     if client.get("exit") is None and not c.get("last_log") and not c.get("runlog_tail"):
         # adopted run that was not live and left no logs: nothing ran here, not a flow error
         return "CRASH", "infra-lost", "no client exit and no run logs (adopted run not live / run data gone)"
+    if client.get("grt_overflow_return"):
+        return "FAIL", "grt-overflow", client["grt_overflow_return"]
     return "CRASH", "flow-error", c.get("orfs_error") or (c.get("runlog_tail") or "")[-300:] or f"exit {client.get('exit')}"
 
 
@@ -1547,6 +1549,15 @@ def parse_client_log(text, *, unit=None, started=0):
                         o["signal_attempt_started"] = int(start[1])
                 if KW.SEALED_COPY_BACK.search(tail) or KW.SPILL_COPY_BACK.search(tail):
                     o["return_hosts"] = [h for h in KW.copy_back_hosts(tail, None, HUB_NAME) if h]
+                if rc == 2 and o.get("unit") and abs(int(start[1]) - float(started or 0)) <= 120:
+                    # Legacy sealed returns can fail after the worker printed its exact GRT terminal result.
+                    worker = re.search(rf"(?m)^ot-run: RAN on {re.escape(o['ran_on'])} "
+                                       rf"\(unit {re.escape(o['unit'])}\): exit 2$", tail)
+                    if worker and re.search(r"(?m)^ot-run-sealed: copy-back \S+ -> \S+ rc [1-9]\d*$", tail[worker.end():]):
+                        overflow = re.search(r"(?m)^FAIL_route make exit 2: 5_1_grt\.log: (\[ERROR GRT-0116\][^\n]*)$",
+                                             tail[:worker.start()])
+                        if overflow:
+                            o["grt_overflow_return"] = overflow[1][:300]
                 if rc == 6:
                     # A sealed job can publish its logs without returning the marker or the run log to the probe host.
                     stop = re.search(r"(?m)^FAIL_POSTPLACE PLACE-SETUP-STOP wns -?\d+(?:\.\d+)? ps < -?\d+(?:\.\d+)? ps[^\n]*"
