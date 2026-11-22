@@ -85,4 +85,48 @@ class Isolation(unittest.TestCase):
             self.assertEqual(T.unlock_completed_sources(src,runs),[str(snap)])
             self.assertFalse(T.source_lock_file(snap).exists())
 
+def test_fresh_checkout_uses_normal_local_admission_on_source_volume(tmp_path, monkeypatch):
+    root = tmp_path / "canary" / "runs"
+    sources = root.parent / "sources"
+    sources.mkdir(parents=True)
+    sha = "123456789abcdef"
+    calls = []
+
+    def refuse(cmd, **kwargs):
+        calls.append(cmd)
+        return subprocess.CompletedProcess(cmd, 78, "", "disk floor refusal")
+
+    monkeypatch.setattr(T.subprocess, "run", refuse)
+    assert T.source_staging_refusal(root, sha) == "disk floor refusal"
+    assert len(calls) == 1
+    cmd = calls[0]
+    assert cmd[cmd.index("--dir") + 1] == str(sources)
+    assert cmd[cmd.index("--hosts") + 1] == "localhost"
+    assert cmd[cmd.index("--disk") + 1] == str(T.SOURCE_STAGE_GB)
+    assert {"--pick", "--strict-host"}.issubset(cmd)
+    assert not T.snapshot_path(root, sha).exists()
+
+    T.snapshot_path(root, sha).mkdir()
+    assert T.source_staging_refusal(root, sha) == ""
+    assert len(calls) == 1
+
+
+def test_scheduled_hbm_references_resume_after_unpark(tmp_path, monkeypatch):
+    config = tmp_path / "kit_wave.json"
+    dies = ["s81", "hbm", "hbm_sram", "qwen_kvsys"]
+    watch = ["tools/die_plan/*"]
+    monkeypatch.setattr(T, "git", lambda *args: SimpleNamespace(returncode=0, stdout="tools/die_plan/gen.py"))
+    config.write_text(json.dumps({"dies": {"hbm": {"parked": {"owner": "COORD"}}}}))
+    scheduled = T.scheduled_dies(dies, config)
+    ready, revisions, _ = T.ready_dies("/src", "new", scheduled, watch, {"last_sha": "old"}, set())
+    assert ready == ["s81", "qwen_kvsys"]
+    assert not revisions
+    revisions.update({die: "new" for die in ready})
+
+    config.write_text(json.dumps({"dies": {"hbm": {"parked": False}}}))
+    assert T.scheduled_dies(dies, config) == dies
+    ready, _, _ = T.ready_dies("/src", "new", dies, watch, {"last_sha": "old", "die_sha": revisions}, set())
+    assert ready == ["hbm", "hbm_sram"]
+
+
 if __name__=='__main__':unittest.main()

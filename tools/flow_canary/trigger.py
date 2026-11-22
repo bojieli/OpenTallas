@@ -26,6 +26,7 @@ flow_paths = _watch_module.flow_paths
 STATE = Path.home() / ".local/state/flow_canary/state.json"
 LIVE_S = 12 * 3600
 LOCK_REASON = "FLOW-CANARY live source; release after all referencing clients finish"
+SOURCE_STAGE_GB = 6  # Intel2 source snapshots occupy about 4.6 GiB before the canary itself starts.
 
 
 def git(src, *a):
@@ -158,9 +159,33 @@ def hold_sparse(dest):
             raise RuntimeError(r.stderr)
 
 
+def snapshot_path(root, sha):
+    return Path(root).parent / "sources" / sha[:12]
+
+
+def source_staging_refusal(root, sha):
+    """Use normal admission on the volume that would hold a new checkout."""
+    dest = snapshot_path(root, sha)
+    if dest.exists():
+        return ""
+    parent = next(path for path in dest.absolute().parents if path.is_dir())
+    try:
+        admission = subprocess.run(
+            [str(Path.home() / ".local/bin/ot-run"), "--hosts", "localhost", "--strict-host",
+             "--dir", str(parent), "--mem", "4", "--threads", "1", "--disk", str(SOURCE_STAGE_GB),
+             "--max-wait", "1", "--pick"],
+            capture_output=True, text=True, timeout=45,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return str(exc)
+    if admission.returncode == 0 and admission.stdout.strip() == "localhost":
+        return ""
+    return (admission.stderr.strip() or admission.stdout.strip() or "no local admission receipt")[-500:]
+
+
 def source_snapshot(src, sha, root):
     """An immutable sparse source per revision; no checkout underneath any live canary."""
-    dest = Path(root).parent / "sources" / sha[:12]
+    dest = snapshot_path(root, sha)
     if dest.exists():
         head = git(dest, "rev-parse", "HEAD")
         if head.returncode or head.stdout.strip() != sha:
@@ -183,6 +208,17 @@ def source_snapshot(src, sha, root):
         raise RuntimeError(r.stderr)
     hold_sparse(dest)
     return dest
+
+
+def scheduled_dies(dies, wave_config):
+    """Only the unattended trigger honors the HBM wave park."""
+    try:
+        hbm = json.loads(wave_config.read_text())["dies"]["hbm"]
+    except (OSError, ValueError, TypeError, KeyError):
+        return dies
+    if not isinstance(hbm, dict) or not hbm.get("parked"):
+        return dies
+    return [die for die in dies if die not in {"hbm", "hbm_sram"}]
 
 
 def ready_dies(src, new, specs, watch, state, busy, force=False, spec=None):
@@ -233,12 +269,18 @@ def main(argv=None):
     new = git(a.src, "rev-parse", "origin/main").stdout.strip()
     spec = json.loads((HERE / "canaries.json").read_text())
     specs = [c["die"] for c in spec["canaries"]]
+    wave_config = Path(os.environ.get("AP_COORD", str(Path.home() / "coord"))) / "autopilot/kit_wave.json"
+    scheduled = scheduled_dies(specs, wave_config)
     busy = live_dies(a.root)
-    dies, revisions, hits = ready_dies(a.src, new, specs, spec["watch"], state, busy, a.force, spec=spec)
+    dies, revisions, hits = ready_dies(a.src, new, scheduled, spec["watch"], state, busy, a.force, spec=spec)
     print(f"FLOW_CANARY_TRIGGER main {new[:9]}: submit {dies}; existing live {sorted(busy)}; changes {hits[:8]}")
     if a.dry:
         return 0
     if dies:
+        refusal = source_staging_refusal(a.root, new)
+        if refusal:
+            print(f"FLOW_CANARY_TRIGGER source staging deferred: {refusal}")
+            return 0
         try:
             pinned_src = source_snapshot(a.src, new, a.root)
         except RuntimeError as e:
