@@ -40,3 +40,6 @@ Measured on the V2 sle_su_c placement (geom.tsv): u_u_suvm_u_vm8q_u_twp.q flops 
 2. Recompose: python3 -I FAM-QC-SLWSLE-R1/v4/compose_suc.py <pick plan.json> v4/pd_v2_d.json <V2 plan_of_record zz_s29...preview.json> v4/plan_v4X.json via ot-run --stage the three inputs on epyc10; run v4/chain_v4suc.sh <TAG> v4/plan_v4X.json (latency gen + R8 loop + bind + LATCHECK + G0 + census). 
 3. v4sucd (V3p7b + cap2b, chain pid 287276, log v4/chain_v4sucd.log) stays as proof that the rows themselves bind.
 4. Hand R13: plan_v4X + bound dir + census; optional pad-leaf row stays optional.
+
+## 02:3x PST rst_rl_180 ask (TAP-GRID-R5 00:52, COORD GO, owner me, V4)
+reset_anchor.py record on the composed plan fails outside a bound launch tree (plan collector_tree points at rt/59d4d33e92c1, absent on epyc10, no sink_bins coll_ft__cl78c7b300). Working recipe is TAP-GRID-R5 anchor_rebind.sh / anchor_each.py: run INSIDE the bound launch tree after the strict bind lists RESET_ANCHOR errors for the types (epyc7 tap-grid-r5/anchor_rebind.sh). Plan: when v4sucE bind finishes, take the 4 types (sle_st_a_v2__pv30dda31f__pv88773f93 / __pvd2ec7769, sle_st_a_v2__pv4242de79, sle_stm_v1__clbe630b9c) from its bind_report RESET_ANCHOR errors, run anchor_each.py in v4/v4sucE_bound/launch, rebind, LATCHECK, then post the anchored plan rows to QC-PLAN-R13.
