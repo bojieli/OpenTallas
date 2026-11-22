@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import kit_wave as KW
 
@@ -86,6 +87,20 @@ class PlaceAsync(unittest.TestCase):
             self.assertEqual((svc["launch"], svc["receipt"]["run_id"]), ("launched", "dpkit-T-1"))
             # GEOM ran after the receipt, on the gen host copy
             self.assertTrue(any("geom_check.sh" in c for c in f.calls))
+
+    def test_private_place_stops_before_geometry_probe(self):
+        with tempfile.TemporaryDirectory() as d:
+            f = Fake(d)
+            p = spec(d)
+            sp = json.loads(p.read_text())
+            sp.update(private={"wave_env": {}}, goal="place")
+            p.write_text(json.dumps(sp))
+            with patch.object(KW, "private_spec_stale", return_value=""), patch.object(KW, "PLACE_POLL_S", 0), patch.object(KW.subprocess, "run", f):
+                rc = KW.run_item(p)
+            res = json.loads((Path(d) / "result.json").read_text())
+            self.assertEqual((rc, res["verdict"], res["stage"]), (0, "PASS", "place"))
+            self.assertEqual(res["evidence"], "intel1:/w/gen/T/run/results/asap7/x/base/3_place.odb")
+            self.assertFalse(any("geom_check.sh" in c or "signoff_chain" in c for c in f.calls))
 
     def test_place_spill_false_keeps_gen_host_pin(self):
         with tempfile.TemporaryDirectory() as d:
