@@ -88,3 +88,4 @@ qwen_kvsys	kv3_io_cor*	FAM-KV-IOPC-R4	COORD 11-22 OWNERS-ROUTE-FIX: sweep flagge
 qwen_compute	sle_stm_v*	FAM-QC-SLWSLE-R1	COORD 11-22 OWNERS-ROUTE-FIX: sweep flagged DEAD-OWNER/STALE; routed to live family/fix lane
 qwen_compute	tt_ctlm*	FAM-QC-SLWSLE-R1	COORD 11-22 OWNERS-ROUTE-FIX: sweep flagged DEAD-OWNER/STALE; routed to live family/fix lane
 qwen_compute	glue*	TAP-GRID-R5	COORD 11-22 OWNERS-ROUTE-FIX: sweep flagged DEAD-OWNER/STALE; routed to live family/fix lane
+qwen_kvsys	kv3_sys_c	FAM-KV-HUBC-SYSC-R2	COORD 11-22 01:3x orphan adopt: private-spec D27d3 kit qwen_kvsys_kv3_sys_c_1121215912 (CTS done, GRT running)
