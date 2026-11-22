@@ -169,6 +169,25 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         lock.close()
 
 
+def hold_term_problems(old_doc, new_doc):
+    """F5 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000): a hold_items key ADDED (or re-worded) by an edit must carry owner=<lane> and eta=<YYYY-mm-dd[ HH:MM]> in
+    its text, so the wave can report HOLD-OVERDUE.  Removing a hold is always allowed; untouched old keys are not judged.  -> [problem text]"""
+    import re as _re
+    od, nd = (old_doc or {}).get("dies") or {}, (new_doc or {}).get("dies") or {}
+    out = []
+    for die, d in sorted(nd.items()):
+        if not isinstance(d, dict) or not isinstance(d.get("hold_items"), dict):
+            continue
+        oh = ((od.get(die) or {}).get("hold_items") or {}) if isinstance(od.get(die), dict) else {}
+        for k, v in d["hold_items"].items():
+            if oh.get(k) == v:
+                continue
+            s = str(v)
+            if not (_re.search(r"\bowner\s*[=:]\s*[A-Za-z0-9_.-]+", s, _re.I) and _re.search(r"\beta\s*[=:]\s*\d{4}-\d\d-\d\d", s, _re.I)):
+                out.append(f"HOLD-TERM refused for {die}/{k}: a new hold needs 'owner=<lane> eta=<YYYY-mm-dd HH:MM>' in its text (F5: holds with no term idle the fleet)")
+    return out
+
+
 def required_review_problems(old_doc, new_doc):
     """VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, FABLE-FLOW-2200 item 1; owner rule "visual review never blocks"): a die's
     review_before_route.required = true held 50 rows WAIT-VISUAL 24-39 h after it was put back 11-21 03:07-04:12 and 14:16-14:21.
@@ -333,7 +352,7 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
     try:
         _old = json.loads(head)
         _newdoc = apply_patch(_old, ops)
-        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc) + required_review_problems(_old, _newdoc)
+        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc) + required_review_problems(_old, _newdoc) + hold_term_problems(_old, _newdoc)
         _hp = host_add_problems(_newdoc, added_gen_hosts(_old, _newdoc), HOST_ADD_PROBE)
         if _hp:
             _errs += ["HOST-ADD refused, input closure incomplete (copy the trees, re-run; OT_HOST_ADD_FORCE=1 overrides): " + " | ".join(_hp[:6])]

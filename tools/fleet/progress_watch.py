@@ -115,6 +115,32 @@ def read_tail(path, since, chunk=8 << 20, max_bytes=96 << 20):
     return data.decode("utf-8", "replace").split("\n")
 
 
+def hold_blocker(die, state, now):
+    """F5: -> None (nothing known), '' (every hold within its eta, no pending event: stay silent) or the blocker text"""
+    pend = (state.get("pending_event") or {}).get(die)
+    holds = (state.get("holds") or {}).get(die) or []
+    if not pend and not holds:
+        return None
+    etas, noterm = [], 0
+    for h in holds:
+        m = re.search(r"\beta\s*[=:]\s*(\d{4}-\d\d-\d\d(?:[ T]\d\d:\d\d)?)", h, re.I)
+        if not m:
+            noterm += 1
+            continue
+        s = m.group(1).replace("T", " ")
+        try:
+            etas.append(datetime.strptime(s, "%Y-%m-%d %H:%M") if " " in s else datetime.strptime(s, "%Y-%m-%d") + timedelta(hours=23, minutes=59))
+        except ValueError:
+            noterm += 1
+    overdue = sum(1 for e in etas if e < now)
+    if not pend and holds and not noterm and not overdue:
+        return ""
+    parts = [f"blocker: plan event {pend} pending (the wave waits for it)"] if pend else []
+    if holds:
+        parts.append(f"{len(holds)} hold(s): {noterm} without eta, {overdue} overdue" + (f", next eta {min(e for e in etas if e >= now):%m-%d %H:%M}" if any(e >= now for e in etas) else ""))
+    return "; ".join(parts)
+
+
 def detect(events, now, state=None, parked=PARKED_DEFAULT):
     """-> [{die, cls, state, text}]; pure.  state (live only) = {eligible: {die: n}, rows: [dict], known: [die], parked: [die]}.
     Without state a die counts as eligible when it launched in the last 24 h (log-only form)."""
@@ -169,6 +195,13 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
         details = [f"{k} x{n}" for k, n in sorted(reasons.items())]
         if disk:
             details.append(f"latest disk admission blocked {disk['item']}: {disk['why'][:270]}")
+        # F5 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000: "no current launch blocker logged" while the r17b plan event was pending): name the pending plan
+        # event and the holds; holds that all carry a future eta (and no pending event) keep the alert silent.
+        blk = hold_blocker(die, state, now)
+        if blk == "":
+            continue
+        if blk:
+            details.insert(0, blk)
         why = "; ".join(details) or "no current launch blocker logged"
         mins = f"{int(age.total_seconds() // 60)} min" if age is not None else f">{ACTIVE_LOOKBACK_H} h"
         out.append({"die": die, "cls": "NO-PROGRESS", "state": "alert",
@@ -256,6 +289,8 @@ def load_state(coord):
                 st["known"].append(die)
                 if v.get("parked"):
                     st["parked"].append(die)
+                if isinstance(v.get("hold_items"), dict) and v["hold_items"]:
+                    st.setdefault("holds", {})[die] = [str(x) for x in v["hold_items"].values()]
     except (OSError, ValueError):
         pass
     try:
@@ -263,6 +298,13 @@ def load_state(coord):
             st["rows"] = list(csv.DictReader(f, delimiter="\t"))
     except OSError:
         return st
+    try:
+        _ks = json.load(open(ap / "kit_wave_state.json"))
+        for die, w in (_ks.get("event_pending_log") or {}).items():       # F5: the plan event the wave waits for ('wait:<event>')
+            if str(w).startswith("wait:"):
+                st.setdefault("pending_event", {})[die] = str(w)[5:]
+    except (OSError, ValueError, AttributeError):
+        pass
     try:
         items = json.load(open(ap / "kit_wave_state.json")).get("items") or {}
         done = {(r.get("die"), r.get("item"), str(r.get("event") or "")) for r in items.values()

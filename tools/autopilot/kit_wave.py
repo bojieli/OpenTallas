@@ -997,6 +997,98 @@ def compile_hold_records(cfg, is_merged=None, tree_fn=None, marker_fn=None):
         return []
 
 
+# F5 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000: 274 S81 + 37 KV rows held with no term; NO-PROGRESS said "no blocker"): a hold_items entry carries its
+# term in its text as `owner=<lane> eta=<YYYY-mm-dd[ HH:MM]>`.  Past its ETA it is HOLD-OVERDUE (owner + COORD); with no ETA it is HOLD-NO-TERM, and
+# a current-plan row it keeps orphaned (CANCELLED / SUPERSEDED, no successor) for ORPHAN_HOLD_H hours is relaunched (the key is dropped in memory).
+HOLD_OWNER_RE = re.compile(r"\bowner\s*[=:]\s*([A-Za-z0-9_.-]+)", re.I)
+HOLD_ETA_RE = re.compile(r"\beta\s*[=:]\s*(\d{4}-\d\d-\d\d(?:[ T]\d\d:\d\d)?)", re.I)
+ORPHAN_HOLD_H = 2.0
+
+
+def hold_term(why):
+    """(owner or '', eta epoch or None) from a hold_items text"""
+    s = str(why or "")
+    m, e = HOLD_OWNER_RE.search(s), HOLD_ETA_RE.search(s)
+    eta = None
+    if e:
+        v = e.group(1).replace("T", " ")
+        try:
+            eta = time.mktime(time.strptime(v, "%Y-%m-%d %H:%M" if " " in v else "%Y-%m-%d"))
+            if " " not in v:
+                eta += 86399                     # a date-only ETA ends that day
+        except ValueError:
+            eta = None
+    return (m.group(1) if m else ""), eta
+
+
+def hold_term_findings(cfg, now=None):
+    """-> {die: {'overdue': [(key, owner, eta)], 'noterm': [key], 'n': total}} for every enabled, unparked die with hold_items"""
+    now = time.time() if now is None else now
+    out = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("enabled") or die_parked(d) or not isinstance(d.get("hold_items"), dict):
+            continue
+        f = {"overdue": [], "noterm": [], "n": len(d["hold_items"])}
+        for key, why in d["hold_items"].items():
+            owner, eta = hold_term(why)
+            if eta is None:
+                f["noterm"].append(key)
+            elif eta < now:
+                f["overdue"].append((key, owner or die_owner(cfg, die)[0], eta))
+        out[die] = f
+    return out
+
+
+def hold_term_step(AP, cfg, st, now=None):
+    """one HOLD-TERM line per die per hour; a COORD-REVIEW-QUEUE ALERT HOLD-OVERDUE (owner + COORD) when the overdue set changes"""
+    now = time.time() if now is None else now
+    found = hold_term_findings(cfg, now)
+    for die, f in sorted(found.items()):
+        if f["n"]:
+            log_hourly(AP, st, f"HOLD-TERM|{die}", f"KIT-WAVE HOLD-TERM {die}: {f['n']} hold(s), {len(f['noterm'])} without owner/eta (HOLD-NO-TERM), "
+                       f"{len(f['overdue'])} overdue" + (f": " + "; ".join(f"{k} [owner {o}] eta {time.strftime('%m-%d %H:%M', time.localtime(e))}" for k, o, e in f["overdue"][:5]) if f["overdue"] else ""), now=now)
+    od = sorted((die, k, o) for die, f in found.items() for k, o, _e in f["overdue"])
+    sig = hashlib.sha1(json.dumps(od).encode()).hexdigest()[:12] if od else ""
+    if od and st.get("hold_overdue_sig") != sig:
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [HOLD-OVERDUE -> " + ", ".join(sorted({o for _d, _k, o in od})) + ", COORD] holds past their ETA: "
+                        + "; ".join(f"{d}/{k} [owner {o}]" for d, k, o in od[:20])[:1600] + " -- set a new eta= or delete the key (kit_wave_edit)")
+    st["hold_overdue_sig"] = sig
+    return found
+
+
+def orphan_hold_release(cfg, st, now=None, hours=None):
+    """F5: a hold_items key with no ETA that keeps a current-plan row orphaned -- CANCELLED (SUPERSEDED / QUEUE-CANCELLED / no class) for >= hours,
+    no later attempt of the item -- is dropped in memory so the row relaunches on the current plan (owner rule: never start old-plan kits while
+    a current-plan row waits).  A key with an eta= is the owner's kept hold and stays.  Die option orphan_hold_release false = off; parked dies
+    are skipped.  -> [(die, key, items)]"""
+    now = time.time() if now is None else now
+    hours = ORPHAN_HOLD_H if hours is None else hours
+    items = list((st.get("items") or {}).values())
+    latest = {}
+    for r in items:
+        k = (r.get("die"), r.get("item"))
+        latest[k] = max(latest.get(k, 0.0), float(r.get("started") or 0))
+    out = []
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("enabled") or die_parked(d) or d.get("orphan_hold_release") is False \
+                or cfg.get("orphan_hold_release") is False or not isinstance(d.get("hold_items"), dict) or not d.get("event"):
+            continue
+        orph = [r for r in items if r.get("die") == die and str(r.get("event") or "") == str(d["event"]) and r.get("status") == "CANCELLED"
+                and str(r.get("class") or "") in ("SUPERSEDED", "QUEUE-CANCELLED", "") and now - float(r.get("updated") or 0) >= hours * 3600
+                and float(r.get("started") or 0) >= latest.get((die, r.get("item")), 0.0)]
+        for key in list(d["hold_items"]):
+            if hold_term(d["hold_items"][key])[1] is not None:
+                continue
+            hit = sorted({str(r.get("item")) for r in orph if fnmatch.fnmatchcase(str(r.get("item") or ""), key)})
+            if hit:
+                del d["hold_items"][key]
+                out.append((die, key, hit))
+    if out:
+        cfg.setdefault("_hold_auto_released", []).extend((die, key, f"F5 orphan relaunch: {len(hit)} current-plan row(s) cancelled > {hours:g} h, hold has no eta")
+                                                       for die, key, hit in out)
+    return out
+
+
 def hold_audit_step(AP, cfg, st, t0):
     """HOLDGEN-1115 per-tick audit: held-but-launched, release terms that cannot be reached, holds whose plan sha is superseded,
     patterns that match nothing.  One log line every tick; a COORD-REVIEW-QUEUE ALERT when the finding set changes."""
@@ -1005,6 +1097,10 @@ def hold_audit_step(AP, cfg, st, t0):
         AP.log(f"KIT-WAVE HOLD-AUDIT compile error: {cfg['_hold_records_error']}")
     launched = [(r.get("die"), r.get("item")) for r in (st.get("items") or {}).values()
                 if float(r.get("started") or 0) >= t0 and r.get("die") and r.get("item")]
+    try:
+        hold_term_step(AP, cfg, st)
+    except Exception as _e:                           # advisory: never stops the audit
+        AP.log(f"KIT-WAVE HOLD-TERM check failed: {type(_e).__name__}: {_e}")
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
@@ -17930,6 +18026,9 @@ def _step(AP, ap_dir):
         _tf, _mf = tree_gate(AP, cfg)
         plan_drift_step(AP, cfg, st)                    # names first: the hold audit counts zero matches against the CURRENT plan
         compile_hold_records(cfg, None, _tf, _mf)
+        for _d, _k, _its in orphan_hold_release(cfg, st):
+            log_hourly(AP, st, f"HOLD-ORPHAN|{_d}|{_k}", f"KIT-WAVE HOLD-ORPHAN-RELEASE {_d}/{_k}: no eta and {len(_its)} current-plan row(s) cancelled with no successor > "
+                       f"{ORPHAN_HOLD_H:g} h ({', '.join(_its[:4])}): relaunch on the current plan; keep the hold by adding owner=<lane> eta=<YYYY-mm-dd HH:MM>")
         log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met", reset=True,
                           summary_total=len(cfg.get("_hold_auto_released") or []))
         import hold_records as _HR                       # tree_ready: switch dies.<die>.src / die_gen_env in memory, no lane needed
