@@ -113,3 +113,27 @@ def test_host_scoped_otrun_paths_and_plan_refs_clean_aggr_r3(tmp_path, monkeypat
     g_prot = {G.canon(x) for x in out2}
     assert G.refuse("/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0", protected=g_prot, ptext="", current={}, allow=set())
 
+
+
+
+def test_plan_refs_follow_specs_nested_plans_and_home_clean_aggr_r3(tmp_path):
+    import json as _j, os as _o, importlib.util as iu
+    H = _o.path.dirname(_o.path.abspath(__file__))
+    sg = iu.spec_from_file_location("g_r3b", _o.path.join(H, "ot_delete_guard.py")); G = iu.module_from_spec(sg); sg.loader.exec_module(G)
+    nested = tmp_path / "die_plan" / "source_plan.json"
+    nested.parent.mkdir()
+    nested.write_text('{"sink_bins": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/a/sink_bins_8.json", "h": "/home/ubuntu/scratch/plan-qc/r56/x.json"}')
+    top = tmp_path / "plan.json"
+    top.write_text(_j.dumps({"src": str(nested)}))
+    spec = tmp_path / "coord" / "autopilot" / "private_specs" / "LANE-X" / "k1"
+    spec.mkdir(parents=True)
+    (spec / "spec.json").write_text(_j.dumps({"plan": "/srv/opentallas-scratch2/claude/qc-plan-r13/v3p6/tree/physical/die_plan/qwen_compute/p.json"}))
+    old = spec.parent / "k0"; old.mkdir(); (old / "spec.json").write_text('{"plan": "/srv/opentallas-scratch2/claude/old-lane/t/physical/die_plan/x.json"}')
+    _o.utime(old / "spec.json", (1, 1))
+    cfg = {"dies": {"s81_head": {"enabled": True, "plan": str(top), "type_args": ["--x", str(top)]}}}
+    out = set()
+    B.plan_ref_paths(cfg, out, G.canon, prefix=str(tmp_path), coord=str(tmp_path / "coord"))
+    assert "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/a/sink_bins_8.json" in out      # followed into the nested die_plan json
+    assert "/home/ubuntu/scratch/plan-qc/r56/x.json" in out
+    assert "/srv/opentallas-scratch2/claude/qc-plan-r13/v3p6/tree/physical/die_plan/qwen_compute/p.json" in out        # live private spec
+    assert not any("old-lane" in x for x in out)                                                                    # spec older than 48 h

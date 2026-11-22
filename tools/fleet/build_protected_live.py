@@ -388,27 +388,62 @@ def prov_cache_paths(cache, out, canon, max_age_h=72.0, now=None):
         pass
 
 
-def plan_ref_paths(cfg, out, canon, maxbytes=64 << 20, prefix="/srv/"):
-    """CLEAN-AGGR-R3 (COORD 11-21: snap tree s81_head_r4_s0 retired while the live r16 HEAD plan source_plan.json still named its sink_bins files):
-    every scratch path written inside an enabled die's plan file and the json files of its gen_args is protected, not only kit_wave src / bind.  -> number added"""
-    n = 0
+PLAN_RX = re.compile(r"(?:/srv/opentallas-scratch[0-9]*|/home/ubuntu)/[A-Za-z0-9._+/@=~,:%-]+")
+PLAN_KEYS = ("plan", "gen_args", "type_args", "preflight_args")
+
+
+def _strs(o):
+    if isinstance(o, dict):
+        for v in o.values():
+            yield from _strs(v)
+    elif isinstance(o, list):
+        for v in o:
+            yield from _strs(v)
+    elif isinstance(o, str):
+        yield o
+
+
+def plan_ref_paths(cfg, out, canon, maxbytes=64 << 20, prefix="/srv/", coord=None, spec_age_h=48, depth=2, now=None):
+    """CLEAN-AGGR-R3 (COORD 11-21/22 class bug: snap tree s81_head_r4_s0 retired while live HEAD r16/r17 plans named its sink_bins files; hd_ctl kit3 broke):
+    every absolute /srv/ or /home/ubuntu/ path written inside a live plan json is protected.  Plan json = an enabled die's plan / gen_args / type_args /
+    preflight_args, plus the json files of every private spec (spec.json) newer than spec_age_h; die_plan json files they name are followed `depth` levels
+    (signoff* / result* files are records, not inputs).  -> number added"""
+    seeds = []
     for die, d in ((cfg or {}).get("dies") or {}).items():
         if not isinstance(d, dict) or d.get("enabled") is False:
             continue
-        files = [d.get("plan")] + [a for a in (d.get("gen_args") or []) if isinstance(a, str)]
-        for f in files:
-            if not isinstance(f, str) or not f.startswith(prefix) or not f.endswith(".json"):
+        for k in PLAN_KEYS:
+            seeds += [x for x in _strs(d.get(k)) if x.endswith(".json")]
+    if coord:
+        now = time.time() if now is None else now
+        for root in (os.path.join(coord, "autopilot/private_specs"), "/srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs"):
+            for f in glob.glob(os.path.join(root, "**", "spec.json"), recursive=True):
+                try:
+                    if now - os.path.getmtime(f) <= spec_age_h * 3600:
+                        seeds.append(f)
+                except OSError:
+                    pass
+    rx = PLAN_RX if prefix == "/srv/" else re.compile(r"(?:%s|/srv/opentallas-scratch[0-9]*|/home/ubuntu)/[A-Za-z0-9._+/@=~,:%%-]+" % re.escape(prefix.rstrip("/")))
+    n, seen = 0, set()
+    todo = [(f, 0) for f in seeds if isinstance(f, str) and (f.startswith(prefix) or f.startswith("/home/"))]
+    while todo:
+        f, lvl = todo.pop()
+        if f in seen:
+            continue
+        seen.add(f)
+        try:
+            if os.path.getsize(f) > maxbytes:
                 continue
-            try:
-                if os.path.getsize(f) > maxbytes:
-                    continue
-                txt = open(f, errors="replace").read()
-            except OSError:
+            txt = open(f, errors="replace").read()
+        except OSError:
+            continue
+        for m in rx.finditer(txt):
+            x = m.group().rstrip("/.-,:")
+            if x.count("/") < 5:
                 continue
-            for m in RX.finditer(txt):
-                x = m.group().rstrip("/.-")
-                if x.count("/") >= 5:
-                    out.add(canon(x)); n += 1
+            out.add(canon(x)); n += 1
+            if lvl < depth and x.endswith(".json") and "die_plan" in x and not os.path.basename(x).startswith(("signoff", "result")):
+                todo.append((x, lvl + 1))
     return n
 
 
@@ -444,7 +479,7 @@ def main(argv):
     event_paths(coord, s, g.canon, scope=scope)
     # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
     live_cmd_paths(s, g.canon)
-    plan_ref_paths(cfg, s, g.canon)
+    plan_ref_paths(cfg, s, g.canon, coord=coord)
     hub_lease_paths(s, g.canon)
     s |= live                                          # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
