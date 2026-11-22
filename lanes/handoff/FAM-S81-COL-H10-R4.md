@@ -15,3 +15,6 @@ srcJ7L1e7 u_cf LEF dsfd_cfifo_crs4.lef sha daea3c41: every derived via-shadow re
 ## Cleanup owed (ot-delete)
 COORD-approved: when run-items specA7 (PID 212032) and specL1d (PID 2620793) exit, ot-delete intel2 fam-s81-col-h10-r4/srcA (55 GB), specA, specL1 (guard holds them: live cmdline prefix + host-scoped protection of srcA). specL1b/specL1c DONE. If still refused then -> CLEAN-AGGR-R3 with exact paths. epyc7 fam-s81-col-h10-r3/rt_tools_launch/srcJ7L1e7@2095d6a53df2 (failed specL1c cache).
 ## Posts: RESUMED, 19:1x launch, 19:4x gen pass, STATUS line for COORD sweep (rows dropped listed there).
+
+## Adopted 21:5x (COORD sweep)
+col_h10_r2__t1__* (18 variants, ex S81-GEOM-OPUS): COORD-ROUTED-OWNERS.tsv prefix row (top). Under J7 col hold; J8 readiness only (rows + proofs via lever-1/proof-A). No relaunch on J7 tools. J8 col-entry rule and deadline 11-22 14:00 GRT read: intel2 /srv/opentallas-scratch2/claude/s81-j6-r5/j8_intake.txt.
