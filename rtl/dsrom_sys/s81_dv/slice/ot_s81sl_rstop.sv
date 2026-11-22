@@ -32,9 +32,24 @@
 // Latency: line in pin -> line out pin 2 edges a stop; V fragment in -> assembled beat on the line 2 edges after the
 // 4th fragment's input flop.
 // ---------------------------------------------------------------------------------------------------------------------
+// FAM-S81-LEPE-4 11-22 XG-1 (XMID, shared C-layer J8 form lanes/handoff/FAM-S81-LEPE-4-xgxf-form.json): XMID 1 adds ONE
+// register stage on every input port (ri_w / ri_e / vi / xf* / nx_eo / nx_wo / ci_* / sid) in front of the existing input
+// flops, so the face flops sit at their pins and the existing input flops (iw / ie / iv ...) can sit at the stop centre next
+// to the logic that mixes both faces.  Every output moves by exactly +1 edge; nothing else changes (bench
+// tb_s81sl_rstop_xmid: XMID 1 outputs == XMID 0 outputs one edge later, all four stop variants).  Default 0 = unchanged.
+// Bare plan define OT_S81SL_RSTOP_XMID1 selects XMID 1 for a type.
+`ifdef OT_S81SL_RSTOP_XMID1
+`ifndef OT_S81SL_RSTOP_XMID
+`define OT_S81SL_RSTOP_XMID 1
+`endif
+`endif
+`ifndef OT_S81SL_RSTOP_XMID
+`define OT_S81SL_RSTOP_XMID 0
+`endif
 module ot_s81sl_rstop #(
     parameter integer W = 1104,
-    parameter integer V = 276
+    parameter integer V = 276,
+    parameter integer XMID = `OT_S81SL_RSTOP_XMID   // XG-1: +1 input face stage (see the note above the module)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -64,10 +79,75 @@ module ot_s81sl_rstop #(
     output reg             fault
 );
     localparam [2:0] K_CTL = 3'd0, K_XQ = 3'd1, K_XB = 3'd2, K_NX = 3'd3;
+    // ---------------------------------------------------------------- XG-1 XMID input face stage (default 0: wires)
+    wire [W-1:0] ri_w_x;
+    wire [W-1:0] ri_e_x;
+    wire [W-1:0] ci_b_x;
+    wire [V-1:0] vi_x;
+    wire [4:0] xf_v_x;
+    wire [4:0] xf_s_x;
+    wire [5*V-1:0] xf_x;
+    wire [172:0] nx_eo_x;
+    wire [172:0] nx_wo_x;
+    wire [2:0] ci_dir_x;
+    wire [3:0] sid_x;
+    generate if (XMID != 0) begin : g_xmid
+        (* keep = "true" *) reg [W-1:0] ri_w_f;
+        (* keep = "true" *) reg [W-1:0] ri_e_f;
+        (* keep = "true" *) reg [W-1:0] ci_b_f;
+        (* keep = "true" *) reg [V-1:0] vi_f;
+        (* keep = "true" *) reg [4:0] xf_s_f;
+        (* keep = "true" *) reg [5*V-1:0] xf_f;
+        (* keep = "true" *) reg [172:0] nx_eo_f;
+        (* keep = "true" *) reg [172:0] nx_wo_f;
+        (* keep = "true" *) reg [2:0] ci_dir_f;
+        (* keep = "true" *) reg [3:0] sid_f;
+        (* keep = "true" *) reg [4:0] xf_v_f;
+        always @(posedge clk) begin
+            ri_w_f <= ri_w;
+            ri_e_f <= ri_e;
+            ci_b_f <= ci_b;
+            vi_f <= vi;
+            xf_s_f <= xf_s;
+            xf_f <= xf;
+            nx_eo_f <= nx_eo;
+            nx_wo_f <= nx_wo;
+            ci_dir_f <= ci_dir;
+            sid_f <= sid;
+        end
+        always @(posedge clk or negedge rst_n) if (!rst_n) xf_v_f <= 5'd0; else xf_v_f <= xf_v;   // valid: reset like xfv_q
+        assign ri_w_x = ri_w_f;
+        assign ri_e_x = ri_e_f;
+`ifdef OT_S81SL_RSTOP_MUT_XMIDSKIP
+        assign ci_b_x = ci_b;     // MUTANT: ci_b skips the face stage, ci_dir does not
+`else
+        assign ci_b_x = ci_b_f;
+`endif
+        assign vi_x = vi_f;
+        assign xf_v_x = xf_v_f;
+        assign xf_s_x = xf_s_f;
+        assign xf_x = xf_f;
+        assign nx_eo_x = nx_eo_f;
+        assign nx_wo_x = nx_wo_f;
+        assign ci_dir_x = ci_dir_f;
+        assign sid_x = sid_f;
+    end else begin : g_xm0
+        assign ri_w_x = ri_w;
+        assign ri_e_x = ri_e;
+        assign ci_b_x = ci_b;
+        assign vi_x = vi;
+        assign xf_v_x = xf_v;
+        assign xf_s_x = xf_s;
+        assign xf_x = xf;
+        assign nx_eo_x = nx_eo;
+        assign nx_wo_x = nx_wo;
+        assign ci_dir_x = ci_dir;
+        assign sid_x = sid;
+    end endgenerate
     // ---------------------------------------------------------------- input flops
     reg [W-1:0] iw, ie, ci_q; reg [V-1:0] iv; reg [4:0] xfv_q, xfs_q; reg [5*V-1:0] xf_q; reg [172:0] neo_q, nwo_q; reg [2:0] cid_q; reg [3:0] sid_c;
     always @(posedge clk) begin
-        iw <= ri_w; ie <= ri_e; iv <= vi; xfs_q <= xf_s; xf_q <= xf; neo_q <= nx_eo; nwo_q <= nx_wo; ci_q <= ci_b; cid_q <= ci_dir; sid_c <= sid;
+        iw <= ri_w_x; ie <= ri_e_x; iv <= vi_x; xfs_q <= xf_s_x; xf_q <= xf_x; neo_q <= nx_eo_x; nwo_q <= nx_wo_x; ci_q <= ci_b_x; cid_q <= ci_dir_x; sid_c <= sid_x;
     end
 `ifdef OT_S81SL_RSTOP_MUT_TIERCOL
     // NEGATIVE CONTROL (S81-LBGAP G2): the pre-10-18 {tier, col} decode
@@ -82,7 +162,7 @@ module ot_s81sl_rstop #(
     wire [2:0] iw_k = iw[3:1], ie_k = ie[3:1];
     wire [4:0] iw_h = iw[8:4], ie_h = ie[8:4];
     // own fragments (at most one leaf a cycle): merged, passed to V, assembled into the own beat
-    always @(posedge clk or negedge rst_n) if (!rst_n) xfv_q <= 5'd0; else xfv_q <= xf_v;
+    always @(posedge clk or negedge rst_n) if (!rst_n) xfv_q <= 5'd0; else xfv_q <= xf_v_x;
     reg ofv, ofs; reg [V-1:0] of; reg [2:0] nown; integer k;
     always @(*) begin
         ofv = 1'b0; ofs = 1'b0; of = {V{1'b0}}; nown = 3'd0;

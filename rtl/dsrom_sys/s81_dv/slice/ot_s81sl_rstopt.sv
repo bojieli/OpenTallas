@@ -26,9 +26,24 @@
 //    as kept static copies (sid is a strap, stable long before reset release).
 // Bench: the ot_s81sl_rstop benches run unchanged against this module (tb_s81sl_rstop_sid, slice / L0 layer replay).
 // ---------------------------------------------------------------------------------------------------------------------
+// FAM-S81-LEPE-4 11-22 XG-1 (XMID, shared C-layer J8 form lanes/handoff/FAM-S81-LEPE-4-xgxf-form.json): XMID 1 adds ONE
+// register stage on every input port (ri_w / ri_e / vi / xf* / nx_eo / nx_wo / ci_* / sid) in front of the existing input
+// flops, so the face flops sit at their pins and the existing input flops (iw / ie / iv ...) can sit at the stop centre next
+// to the logic that mixes both faces.  Every output moves by exactly +1 edge; nothing else changes (bench
+// tb_s81sl_rstop_xmid: XMID 1 outputs == XMID 0 outputs one edge later, all four stop variants).  Default 0 = unchanged.
+// Bare plan define OT_S81SL_RSTOP_XMID1 selects XMID 1 for a type.
+`ifdef OT_S81SL_RSTOP_XMID1
+`ifndef OT_S81SL_RSTOP_XMID
+`define OT_S81SL_RSTOP_XMID 1
+`endif
+`endif
+`ifndef OT_S81SL_RSTOP_XMID
+`define OT_S81SL_RSTOP_XMID 0
+`endif
 module ot_s81sl_rstopt #(
     parameter integer W = 1104,
-    parameter integer V = 276
+    parameter integer V = 276,
+    parameter integer XMID = `OT_S81SL_RSTOP_XMID   // XG-1: +1 input face stage (see the note above the module)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -73,15 +88,80 @@ module ot_s81sl_rstopt #(
     wire rs_a = rr[0], rs_b = rr[1];
     wire [NSP-1:0] sp = rr[7:2];
 
+    // ---------------------------------------------------------------- XG-1 XMID input face stage (default 0: wires)
+    wire [W-1:0] ri_w_x;
+    wire [W-1:0] ri_e_x;
+    wire [W-1:0] ci_b_x;
+    wire [V-1:0] vi_x;
+    wire [4:0] xf_v_x;
+    wire [4:0] xf_s_x;
+    wire [5*V-1:0] xf_x;
+    wire [172:0] nx_eo_x;
+    wire [172:0] nx_wo_x;
+    wire [2:0] ci_dir_x;
+    wire [3:0] sid_x;
+    generate if (XMID != 0) begin : g_xmid
+        (* keep = "true" *) reg [W-1:0] ri_w_f;
+        (* keep = "true" *) reg [W-1:0] ri_e_f;
+        (* keep = "true" *) reg [W-1:0] ci_b_f;
+        (* keep = "true" *) reg [V-1:0] vi_f;
+        (* keep = "true" *) reg [4:0] xf_s_f;
+        (* keep = "true" *) reg [5*V-1:0] xf_f;
+        (* keep = "true" *) reg [172:0] nx_eo_f;
+        (* keep = "true" *) reg [172:0] nx_wo_f;
+        (* keep = "true" *) reg [2:0] ci_dir_f;
+        (* keep = "true" *) reg [3:0] sid_f;
+        (* keep = "true" *) reg [4:0] xf_v_f;
+        always @(posedge clk) begin
+            ri_w_f <= ri_w;
+            ri_e_f <= ri_e;
+            ci_b_f <= ci_b;
+            vi_f <= vi;
+            xf_s_f <= xf_s;
+            xf_f <= xf;
+            nx_eo_f <= nx_eo;
+            nx_wo_f <= nx_wo;
+            ci_dir_f <= ci_dir;
+            sid_f <= sid;
+        end
+        always @(posedge clk or negedge rs_a) if (!rs_a) xf_v_f <= 5'd0; else xf_v_f <= xf_v;   // valid: reset like xfv_q
+        assign ri_w_x = ri_w_f;
+        assign ri_e_x = ri_e_f;
+`ifdef OT_S81SL_RSTOP_MUT_XMIDSKIP
+        assign ci_b_x = ci_b;     // MUTANT: ci_b skips the face stage, ci_dir does not
+`else
+        assign ci_b_x = ci_b_f;
+`endif
+        assign vi_x = vi_f;
+        assign xf_v_x = xf_v_f;
+        assign xf_s_x = xf_s_f;
+        assign xf_x = xf_f;
+        assign nx_eo_x = nx_eo_f;
+        assign nx_wo_x = nx_wo_f;
+        assign ci_dir_x = ci_dir_f;
+        assign sid_x = sid_f;
+    end else begin : g_xm0
+        assign ri_w_x = ri_w;
+        assign ri_e_x = ri_e;
+        assign ci_b_x = ci_b;
+        assign vi_x = vi;
+        assign xf_v_x = xf_v;
+        assign xf_s_x = xf_s;
+        assign xf_x = xf;
+        assign nx_eo_x = nx_eo;
+        assign nx_wo_x = nx_wo;
+        assign ci_dir_x = ci_dir;
+        assign sid_x = sid;
+    end endgenerate
     // ---------------------------------------------------------------- input flops (data: no reset)
     reg [W-1:0] iw, ie, ci_q; reg [V-1:0] iv; reg [4:0] xfs_q; reg [5*V-1:0] xf_q; reg [172:0] neo_q, nwo_q; reg [2:0] cid_q;
     reg [3:0] sid_c;
     always @(posedge clk) begin
-        iw <= ri_w; ie <= ri_e; iv <= vi; xfs_q <= xf_s; xf_q <= xf; neo_q <= nx_eo; nwo_q <= nx_wo; ci_q <= ci_b;
-        cid_q <= ci_dir; sid_c <= sid;
+        iw <= ri_w_x; ie <= ri_e_x; iv <= vi_x; xfs_q <= xf_s_x; xf_q <= xf_x; neo_q <= nx_eo_x; nwo_q <= nx_wo_x; ci_q <= ci_b_x;
+        cid_q <= ci_dir_x; sid_c <= sid_x;
     end
     reg [4:0] xfv_q;
-    always @(posedge clk or negedge rs_a) if (!rs_a) xfv_q <= 5'd0; else xfv_q <= xf_v;
+    always @(posedge clk or negedge rs_a) if (!rs_a) xfv_q <= 5'd0; else xfv_q <= xf_v_x;
 
     // ---------------------------------------------------------------- static straps (level 1 decode, level 2 kept copies)
 `ifdef OT_S81SL_RSTOP_MUT_TIERCOL
@@ -148,21 +228,21 @@ module ot_s81sl_rstopt #(
     wire vt_on = vt_n != 2'd0;
 
     // ---------------------------------------------------------------- pin-decoded kept selects (same edge as the inputs)
-    wire fe_p = ri_w[0] && ri_w[3:1] != K_NX && ri_w[8:4] > 5'd1;
-    wire fw_p = ri_e[0] && ri_e[3:1] != K_NX && ri_e[8:4] > 5'd1;
-    wire ce_p = ci_b[0] && ci_dir[0], cw_p = ci_b[0] && ci_dir[1], cv_p = ci_b[0] && ci_dir[2];
-    wire hz_p = ci_b[8:4] == 5'd0;
-    wire cxb_p = ci_b[0] && ci_b[3:1] == K_XB;
+    wire fe_p = ri_w_x[0] && ri_w_x[3:1] != K_NX && ri_w_x[8:4] > 5'd1;
+    wire fw_p = ri_e_x[0] && ri_e_x[3:1] != K_NX && ri_e_x[8:4] > 5'd1;
+    wire ce_p = ci_b_x[0] && ci_dir_x[0], cw_p = ci_b_x[0] && ci_dir_x[1], cv_p = ci_b_x[0] && ci_dir_x[2];
+    wire hz_p = ci_b_x[8:4] == 5'd0;
+    wire cxb_p = ci_b_x[0] && ci_b_x[3:1] == K_XB;
 `ifdef OT_S81SL_RSTOP_MUT_CIXB
     wire cxo_p = 1'b0;
 `else
-    wire cxo_p = cxb_p && (ci_dir[0] || ci_dir[1]);
+    wire cxo_p = cxb_p && (ci_dir_x[0] || ci_dir_x[1]);
 `endif
-    wire vtc_p = cxb_p && ci_dir[2];
-    wire nE_p = !tier && nx_eo[172] && !map_e, nW_p = tier && nx_wo[172] && !map_w;    // E line NX from eo / wo
-    wire wE_p = tier && nx_eo[172] && !map_e, wW_p = !tier && nx_wo[172] && !map_w;    // W line NX from eo / wo
-    wire vE_p = map_e && nx_eo[172], vW_p = !(map_e && nx_eo[172]) && map_w && nx_wo[172];  // V-mapped NX
-    wire ofv_p = |xf_v, ofs_p = |(xf_v & xf_s);
+    wire vtc_p = cxb_p && ci_dir_x[2];
+    wire nE_p = !tier && nx_eo_x[172] && !map_e, nW_p = tier && nx_wo_x[172] && !map_w;    // E line NX from eo / wo
+    wire wE_p = tier && nx_eo_x[172] && !map_e, wW_p = !tier && nx_wo_x[172] && !map_w;    // W line NX from eo / wo
+    wire vE_p = map_e && nx_eo_x[172], vW_p = !(map_e && nx_eo_x[172]) && map_w && nx_wo_x[172];  // V-mapped NX
+    wire ofv_p = |xf_v_x, ofs_p = |(xf_v_x & xf_s_x);
     // line E / W selects (group 0 = header)
     (* keep *) reg [NGL-1:0] fe_c, fw_c, ce_c, cw_c, oe_c, ow_c, ae_c, aw_c;
     (* keep *) reg [NGLX-1:0] neE_c, neW_c, nwE_c, nwW_c;
@@ -201,7 +281,7 @@ module ot_s81sl_rstopt #(
             vph_c[NGV + k] <= vph_c[k];
             vph_c[2 * NGV + k] <= vph_c[NGV + k];
         end
-        for (k = 0; k < 5 * NGV; k = k + 1) xfv_c[k] <= xf_v[k / NGV];
+        for (k = 0; k < 5 * NGV; k = k + 1) xfv_c[k] <= xf_v_x[k / NGV];
         for (k = 0; k < NGG; k = k + 1) begin
             gas_c[k] <= asm_v_nx && sp[(k / 30 + 1) % NSP];
             gcs_c[k] <= cxo_p && sp[(k / 30 + 4) % NSP];
