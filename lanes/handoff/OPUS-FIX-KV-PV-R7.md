@@ -67,3 +67,5 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
 - NEXT: after the D28 seal emits a clean bind, build the v3 split representative (kv3_pv_v3 and kv3_pv_v3e) with
   kit_wave.py private-spec qwen_kvsys <item> --tree <seal tree> --src-manifest seal --host epyc7|epyc8 (wave env), then run-item to sign-off.
 - Cleanup later via ot-delete: tree5 Q/por_d29_* trial dirs, r7/negtest, por_*fail dirs.
+
+- 2026-11-22 06:4x PST: COORD approved all 3. D29 handed to SINKSPREAD (bundle split28/r7/d29_for_sinkspread). Waiter on KV-PLAN-R6 seal post (local bg). At seal: private-spec qwen_kvsys kv3_pv_v3 and kv3_pv_v3e --tree <seal tree> --src-manifest seal --goal route --bind-out <seal in-tree bind> --host epyc7/epyc8; run-item --goal route; waiters. Cleanup blocked by guard (split28 root protected via handoff refs); retry post-seal.
