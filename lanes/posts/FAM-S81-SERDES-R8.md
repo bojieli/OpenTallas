@@ -1,2 +1,4 @@
 - 2026-11-21 21:41 PST RESUMED (COORD: no stand-down, no R8). Order: (1) dec_r7k waiter -> signoff -> routed LEC -> push b4d98fc16875 -> export; (2) J8 G0/PRE unit oth-ubuntu-2591672-1795321761 -> hand 6+31 ops; (3) t4 split rows + front3 hold for the 16:00 cut, t4 stop stays; (4) phy__t1 private kit epyc9.
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-21 21:49 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2591672-1795321761 on tolerant-swine: rc=0 after 4792 s, ended 21:49:13, log /home/ubuntu/fam-s81-serdes-r7/j8s_gate3.client.log, cmd: --hosts epyc9 --mem 40 --threads 4 --disk 20 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 -- bash gate_j8s.sh
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
