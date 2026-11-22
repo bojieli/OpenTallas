@@ -529,3 +529,6 @@
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 18.9 h job 18.9 h: no new meaningful log line for 17.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
 - 2026-11-22 10:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 10:52 PST: 263 running jobs, PROGRESSING 254, SLOW 8, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 19.9 h job 19.9 h: no new meaningful log line for 18.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+- 2026-11-22 11:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 11:52 PST: 223 running jobs, PROGRESSING 209, SLOW 12, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 20.9 h job 20.9 h: no new meaningful log line for 19.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+  NO-PROGRESS epyc7 slw_su_l1__clcc9d0155 5_2_route stage 20.1 h job 23.5 h: drt_violations best 48926 last 48926 rows 16 window-gain 0.8%; stagnant 6.5 h; last event 0.4 h ago, log write 0.5 h ago (1243 lines)
