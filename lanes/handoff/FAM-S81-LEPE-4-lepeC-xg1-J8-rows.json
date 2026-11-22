@@ -104,11 +104,11 @@
      ],
      "regs_um": [
       [
-       189.26,
-       300.79
+       380.0,
+       250.0
       ]
      ],
-     "note": "XG-3 FAM-S81-LEPE-4 11-22: xg u_s.xw_d -> x_o0 1102 b, placed max 947 um, 1 station; proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
+     "note": "XG-3 FAM-S81-LEPE-4 11-22: xg u_s.xw_d -> x_o0 1102 b, placed max 947 um, 1 station, sited just E of hard core u_c.u_cap (scan site 189,301 is inside it; legs ~388 / ~434 um); proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
     }
    },
    {
@@ -134,9 +134,51 @@
      ],
      "note": "XG-3 FAM-S81-LEPE-4 11-22: cland_xring_i0 -> bin_xring_i0 -> xg ri_w 1104 b, placed max 840 um, 1 station, hop ~306 um; proof13 placed_scan_rows 11-22 (kit a9ed808a98d/private/FAM-S81-LEPE-4/dsdv_slice_lepe_nh_mus_C__t1_1122022123)"
     }
+   },
+   {
+    "op": "set_in_list",
+    "path": "/lanes",
+    "match": {
+     "id": "x_E0_in"
+    },
+    "set": {
+     "fixed_cycles": 2
+    }
+   },
+   {
+    "op": "set_in_list",
+    "path": "/lanes",
+    "match": {
+     "id": "x_E0_out"
+    },
+    "set": {
+     "fixed_cycles": 3
+    }
+   },
+   {
+    "op": "set_in_list",
+    "path": "/lanes",
+    "match": {
+     "id": "xring__s_6S_C__s_7S_C"
+    },
+    "set": {
+     "fixed_cycles": 1
+    }
+   },
+   {
+    "op": "set_in_list",
+    "path": "/lanes",
+    "match": {
+     "id": "xring__s_7S_C__s_6S_C"
+    },
+    "set": {
+     "fixed_cycles": 2
+    }
    }
   ],
-  "status": "DRAFT 11-22 08:5x: row-local; dry-run strict bind + LATCHECK + G0 + PRE on an ot-tree-fork of the proof13 tree (epyc7 trees/s81_nhC_xg3, systemd lepe4-xg3bind). J8 only if green by 13:30, else J9.",
-  "not_in_j8": "XG-2 (xg region / FIRM xmid sites: g_xmid.vi_f -> iv 1205 um), XF-1 internal xf legs (driver g_cp d_r -> u_e 984 um, dl_d -> d_r 927 um, e_hh/kk/dd 884-1058 um) and the xf sticky fault loop (-858; RTL selector OT_S81DV_XFIN_FLTP2 drafted, bench running) -> J9; RST-1 not seen in the top groups of this scan"
+  "status": "PROVISIONAL for J8 (COORD 11-22): pre-gate PASS is the evidence; the assembly J8 bind is the full proof. Cross-check dry-run bind on an ot-tree-fork of the proof13 tree continues on epyc7 (lepe4-xg3bind)",
+  "not_in_j8": "XG-2 (xg region / FIRM xmid sites: g_xmid.vi_f -> iv 1205 um), XF-1 internal xf legs (driver g_cp d_r -> u_e 984 um, dl_d -> d_r 927 um, e_hh/kk/dd 884-1058 um) and the xf sticky fault loop (-858; RTL selector OT_S81DV_XFIN_FLTP2 drafted, bench running) -> J9; RST-1 not seen in the top groups of this scan",
+  "reprice": "plan_gate_pre reprice vs the proof13 plan: x_E0_in fixed 1->2 (latency 36), x_E0_out 2->3 (59), xring__s_6S_C__s_7S_C 0->1 (4), xring__s_7S_C__s_6S_C 0->2 (7). Assembly: rerun `plan_gate_pre.py reprice` on the J8 plan after applying the station rows rather than copying these numbers.",
+  "evidence_pre": "PLAN-GATE-PRE PASS findings=0 (rt/current plan_gate_pre check --baseline-plan proof13 plan, --asbuilt proof13 bind): first run caught GEOM-STATION-IN-CORE (x_o0 scan site 189,301 inside hard core u_c.u_cap -> re-sited 380,250) and 4 ISTCYC lanes -> repriced; LANDREMAP clean"
  }
 }
