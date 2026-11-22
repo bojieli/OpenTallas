@@ -72,6 +72,13 @@ REMAP-BASE-1122 (FLOW-OPS-R2, COORD): LANDREMAP and ISTCYC compare against the r
   provenance_bind.json (the tree's last bind).  publish_gate passes the die's live plan (kit_wave.json), ot_build passes its
   --remap-base / the same fallback, private-spec the wave plan it forks from.  The base used is printed as a WARN-free LIST line.
 
+R8STALE-1122 (FLOW-OPS-R2, COORD; FAM-KV-IOPC-R4 pc_v3: +5 stations on 32 pi bundles, reprice ran, 3 strict binds then died at
+  R8_FAIL_FAST with 30 R8_STALE): with a remap base, every lane whose end-bus station depth changed against the base is looked up
+  in the as-built's R8 tables (land_r8 + land_r8_extra, member "lane").  A table that is byte-identical to the base tree's copy
+  (same tree-relative path) was not re-derived after the change: FAIL R8STALE with the members and the regeneration recipe (one
+  strict bind stops at R8_FAIL_FAST and writes OUT/r8_derived.json; install it, or r8_refresh.py, then bind).  Base copy not found:
+  WARN with the same recipe.
+
 TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with clock.added_taps, the density base is solved
   exactly as the bind does (taps._density_base) and the added names must be clk_t<base>, clk_t<base+1>, ... in order (cbf_q00
   clk_t101 for t114, coll_core clk_t130 for t126: EMIT "density added tap names/order must be ..." after 30+ min of bind).
@@ -95,7 +102,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -923,6 +930,85 @@ def istcyc_lanes(raw, braw):
     return out
 
 
+def depth_changed_lanes(raw, braw):
+    """{lane id: (base depth, new depth)} for lanes on types whose internal_stations changed, whose source OUT + destination IN
+    station depth differs from the base (no fixed_cycles rule: every bound depth that moves)"""
+    bt, nt = braw.get("partition_types") or {}, raw.get("partition_types") or {}
+    changed = {tn for tn, t in nt.items() if isinstance(t, dict) and tn in bt
+               and (t.get("internal_stations") or []) != ((bt.get(tn) or {}).get("internal_stations") or [])}
+    if not changed:
+        return {}
+    ports = {p.get("id"): p for p in raw.get("ports") or []}
+    parts = {p.get("name"): p for p in raw.get("partitions") or []}
+    out = {}
+    for L in raw.get("lanes") or []:
+        ps = [ports.get(x) for x in L.get("ports") or []]
+        if not ps or not ps[0] or not ps[-1]:
+            continue
+        try:
+            src = (parts[ps[0]["src"]["part"]]["type"], ps[0]["src"]["bus"])
+            dst = (parts[ps[-1]["dst"]["part"]]["type"], ps[-1]["dst"]["bus"])
+        except (KeyError, TypeError):
+            continue
+        if src[0] not in changed and dst[0] not in changed:
+            continue
+        db = _bus_depth(braw, *src) + _bus_depth(braw, *dst)
+        dn = _bus_depth(raw, *src) + _bus_depth(raw, *dst)
+        if db != dn:
+            out[L.get("id")] = (db, dn)
+    return out
+
+
+def check_r8stale(tree, plan, baseline, asbuilt=None, max_list=6):
+    """FAIL / WARN R8STALE (see R8STALE-1122)"""
+    if not baseline:
+        return []
+    raw, braw = _load(plan), _load(baseline)
+    if not raw or not braw:
+        return []
+    lanes = depth_changed_lanes(raw, braw)
+    if not lanes:
+        return []
+    ab, mdir = None, Path(plan).parent
+    if asbuilt:
+        ab, mdir = _load(asbuilt), Path(asbuilt).parent
+    if not isinstance(ab, dict):
+        ab = raw.get("asbuilt") if isinstance(raw.get("asbuilt"), dict) else None
+    if not ab:
+        return []
+    base, _ = manifest_paths(ab, mdir, tree)
+    tabs = []
+    if ab.get("land_r8"):
+        tabs.append(ab["land_r8"])
+    tabs += list(ab.get("land_r8_extra") or [])
+    root, broot = plan_tree_root(plan, tree).absolute(), plan_tree_root(baseline).absolute()
+    out = []
+    recipe = (f"regenerate: one strict bind of this plan stops at R8_FAIL_FAST and writes OUT/r8_derived.json (OUT/bus_groups.json); "
+              f"install it as the table (or python3 -I tools/die_plan/r8_refresh.py {plan} OUT/bus_groups.json TABLE --asbuilt AB), then bind")
+    for rel in tabs:
+        tp = Path(os.path.normpath(Path(rel) if Path(rel).is_absolute() else Path(base) / rel))
+        try:
+            members = (json.loads(tp.read_text()) or {}).get("members") or []
+        except (OSError, ValueError):
+            continue
+        hit = sorted({str(m.get("lane")) for m in members if m.get("lane") in lanes})
+        if not hit:
+            continue
+        try:
+            bcopy = broot / tp.absolute().relative_to(root)
+        except ValueError:
+            bcopy = None
+        ex = ", ".join(f"{x} {lanes[x][0]}->{lanes[x][1]}" for x in hit[:max_list])
+        nm = sum(1 for m in members if m.get("lane") in lanes)
+        if bcopy is not None and bcopy.is_file() and bcopy.read_bytes() == tp.read_bytes():
+            out.append(f"FAIL R8STALE {tp}: {nm} member(s) on {len(hit)} lane(s) whose station depth changed vs the base ({ex}), "
+                       f"but the table is byte-identical to the base copy {bcopy} (not re-derived); {recipe}")
+        else:
+            out.append(f"WARN R8STALE {tp}: {nm} member(s) on {len(hit)} lane(s) whose station depth changed vs the base ({ex}); "
+                       f"base copy {'not found' if bcopy is None or not bcopy.is_file() else 'differs (re-derived?)'}; if not re-derived: {recipe}")
+    return out
+
+
 def check_istcyc(plan, baseline, max_list=8):
     """FAIL ISTCYC per touched lane whose fixed_cycles was not re-priced (see ISTCYC-1122 in the doc)"""
     if not baseline:
@@ -1089,6 +1175,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
         findings += check_istcyc(plan, rb)
+    if "R8STALE" not in skip:                            # R8STALE-1122: R8 table not re-derived after a station change
+        findings += check_r8stale(tree, plan, rb, asbuilt)
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
