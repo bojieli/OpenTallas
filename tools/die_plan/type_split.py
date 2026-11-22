@@ -2352,6 +2352,26 @@ class Event:
         self._asbuilt()
         return raw
 
+    def port_geometry_check(self):
+        """COORD 11-21 (svc hi4: a mirrored second piece's windows shifted by the cut, cut ports whose type window /
+        layer order disagreed with the plan port; bind and LATCHECK do not look at port geometry, generate did): the
+        plan's own validator (schema.validate) on the output plan, every error about a port with an end on a split piece
+        fails the split here.  Pre-existing errors of untouched ports are not this event's.  spec skip_port_check opts out."""
+        if self.spec.get("skip_port_check"):
+            return []
+        import schema as S
+        touched = {pr["id"] for pr in self.out["ports"]
+                   if pr["src"]["part"] in self.ppart or pr["dst"]["part"] in self.ppart}
+        bad = []
+        for e in S.validate(self.out):
+            m = re.match(r"port (\S+): ", e)
+            if m and m.group(1) in touched:
+                bad.append(e)
+        self.rep["port_geometry_check"] = dict(ports=len(touched), errors=len(bad))
+        if bad:
+            raise SplitError(f"PORT-GEOMETRY {len(bad)} error(s) on split ports: " + "; ".join(bad[:5]))
+        return bad
+
     def raw_type(self, part):
         return next(p["type"] for p in self.raw["partitions"] if p["name"] == part)
 
@@ -4037,6 +4057,7 @@ def main(argv=None):
         ev = Event(spec)
         ev.out_dir = Path(a.out).resolve()
         ev.run()
+        ev.port_geometry_check()
         out = Path(a.out).resolve()
         rel = a.rel or str(out.relative_to(ROOT))
         md5 = ev.write(out, rel)

@@ -780,3 +780,20 @@ def test_x_split_resolves_mirrored_type_native_port_window():
     assert ts._end_piece(port, source, "N") == 1
     assert ts.ev._native_port_geometry.ports["native"]["window_um"] == [115, 135]
     assert "window_um" not in port
+
+
+
+def test_port_geometry_check_fails_split_ports_only(monkeypatch):
+    """COORD 11-21: the plan validator runs after the split; only errors of ports with an end on a split piece fail it"""
+    import schema
+    from types import SimpleNamespace
+    ev = SimpleNamespace(spec={}, rep={}, ppart={"p_b": ("p", 1, None)},
+                         out={"ports": [{"id": "a", "src": {"part": "p_b"}, "dst": {"part": "q"}},
+                                        {"id": "b", "src": {"part": "q"}, "dst": {"part": "r"}}]})
+    monkeypatch.setattr(schema, "validate", lambda raw: ["port b: window lo >= hi", "type x: something"])
+    assert TS.Event.port_geometry_check(ev) == []
+    monkeypatch.setattr(schema, "validate", lambda raw: ["port a: port geometry (..) != src type geometry (..)"])
+    with pytest.raises(TS.SplitError, match="PORT-GEOMETRY 1"):
+        TS.Event.port_geometry_check(ev)
+    ev.spec["skip_port_check"] = True
+    assert TS.Event.port_geometry_check(ev) == []
