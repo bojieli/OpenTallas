@@ -13081,7 +13081,14 @@ def tools_lag_rows(AP, cfg, ttl=1800):
         spec = _ilu.spec_from_file_location("tools_lag", str(Path(__file__).resolve().parents[1] / "tools_lag.py"))
         TL = _ilu.module_from_spec(spec)
         spec.loader.exec_module(TL)
-        raw = TL.measure(cfg, repo=cfg.get("tools_lag_repo") or TL.DEFAULT_REPO, main_ref=cfg.get("tools_lag_main") or "main")
+        _pins = {}
+        for _d in (cfg.get("dies") or {}):                  # TOOLS-LAG-RT-1122: measure the tools a launch actually composes (rt/<sha>)
+            try:
+                _pins[_d] = str(rt_tools_fields(cfg, _d).get("tools_sha") or "")
+            except Exception:
+                _pins[_d] = ""
+        raw = TL.measure(cfg, repo=cfg.get("tools_lag_repo") or TL.DEFAULT_REPO, main_ref=cfg.get("tools_lag_main") or "main",
+                         pins={d_: s_ for d_, s_ in _pins.items() if s_})
         rows = {die: TL.line(die, r) for die, r in raw.items()}
     except Exception as e:                       # advisory: never stops the wave
         AP.log(f"KIT-WAVE TOOLS-LAG not measured: {type(e).__name__}: {e}")

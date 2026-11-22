@@ -98,3 +98,14 @@ def test_pin_resolution_and_unmeasured(tmp_path):
     assert TL.line("x", TL.lag("/nonexistent", "", rulings={})).startswith("TOOLS-LAG x unmeasured")
     res = TL.measure({"dies": {"a": {"enabled": True, "src_sha": "main@deadbee"}, "b": {"enabled": False}}}, repo=tmp_path / "nope", rulings={})
     assert list(res) == ["a"] and res["a"]["n_commits"] is None
+
+
+
+def test_measure_uses_launch_rt_pin_over_stale_tree_pin(monkeypatch):
+    """TOOLS-LAG-RT-1122: a die whose launches compose rt/<sha> is measured at that sha, not at its stale tools_sha"""
+    import tools_lag as TL2
+    seen = {}
+    monkeypatch.setattr(TL2, "lag", lambda repo, pin, main_ref="main", paths=None, rulings=None: seen.setdefault("p", []).append(pin) or dict(pin=pin, n_commits=0, missing=[], shas={}))
+    cfg = {"dies": {"s81": {"enabled": True, "tools_sha": "a9ed808a98d5"}, "head": {"enabled": True, "tools_sha": "30b1f11ad5f7"}}}
+    out = TL2.measure(cfg, rulings={}, pins={"s81": "4396e129eff7"})
+    assert seen["p"] == ["4396e129eff7", "30b1f11ad5f7"] and out["s81"]["pin_src"] == "rt" and out["head"]["pin_src"] == "tree"

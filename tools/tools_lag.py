@@ -188,15 +188,20 @@ def line(die, res):
     return f"TOOLS-LAG {die} {res['n_commits']} commits / missing {shown or 'none'}"
 
 
-def measure(cfg, repo=DEFAULT_REPO, main_ref="main", dies=None, rulings=None):
-    """{die: lag result} for every enabled die of a kit_wave config (errors are recorded per die, never raised)"""
+def measure(cfg, repo=DEFAULT_REPO, main_ref="main", dies=None, rulings=None, pins=None):
+    """{die: lag result} for every enabled die of a kit_wave config (errors are recorded per die, never raised).
+    TOOLS-LAG-RT-1122 (FLOW-OPS-R2): PINS {die: sha} = the tools a launch of that die actually runs (kit_wave passes the scheduler's
+    rt/<sha> for every die that does not opt out with tools_from_rt false): s81 / qwen_compute were reported 'missing r708' from their
+    stale tools_sha while every launch composed rt/current, which has r708.  A die without an entry falls back to pin_of."""
     out = {}
     clear_caches()                    # main moves: the per-sha answers are cached for one measurement only
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or not d.get("enabled") or d.get("parked") or (dies and die not in dies):   # F4: a parked die is not measured
             continue
         try:
-            out[die] = lag(repo, pin_of(d), main_ref, rulings=rulings)
+            pin = str((pins or {}).get(die) or "") or pin_of(d)
+            out[die] = lag(repo, pin, main_ref, rulings=rulings)
+            out[die]["pin_src"] = "rt" if (pins or {}).get(die) else "tree"
         except (ValueError, OSError, subprocess.TimeoutExpired) as e:
             out[die] = dict(pin=pin_of(d)[:12], n_commits=None, missing=[], shas={}, why=str(e)[:200])
     return out
