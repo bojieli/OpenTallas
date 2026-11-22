@@ -69,3 +69,4 @@
   Bound kv3_hub_Wo_part.sv carries u_y_xd_astk_WN_..._0_0..8 (D 9), so the relay_depth rows bind.
   Take the whole row (inst_taps + relay_sites + relay_depth) in D28. The PROVISIONAL tag is dropped.
   Minor follow-up, not blocking: for ports with "__" the bind collapses the name (g_phys_fault_u_fault_rst_n), so the relay_sites keys of the 4 astk stage chains (fault__rst_n) do not seat. Those stages fall back to relay_mid spreading along the chain, which is the default. A one-line tool fix (sv_id on port) comes next; it changes relay_sites keys only.
+- 2026-11-22 10:45 PST DONE [OPUS-FIX-KV-HUB-R6] ot-run oth-ubuntu-33312-1795369379 on tolerant-swine: rc=0 after 3755 s, ended 10:45:30, log /home/ubuntu/tmp/opusfixkvhub-r6/rr_bind2.log, cmd: --disk 2 --mem 48 --threads 2 --priority plan --plan-job bind --hosts epyc8 --dir /srv/opentallas-scratch2/claude/opus-fix-kv-hub-r6 -- bash
