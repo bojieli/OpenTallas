@@ -18,6 +18,12 @@ from test_kit_wave import cfg    # noqa: E402
 D, I = "qwen_kvsys", "kv3_pc"
 
 
+@pytest.fixture(autouse=True)
+def _no_plan_probe(monkeypatch):
+    """FLOW-PRIVSPEC-R1: private_spec reads the plan flags for the provisional child-view rule; tests have no plan host"""
+    monkeypatch.setattr(KW, "plan_names", lambda AP, st, d: {"flags": {}, "deps": {}})
+
+
 def wave_cfg(src="/srv/x/src_kv"):
     c = cfg()
     d = c["dies"][D]

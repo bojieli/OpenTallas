@@ -24,6 +24,12 @@ WAVE_BIND = WAVE + "_bind_1121"
 GENS = ("reset_tree.py", "reset_replicate.py")
 
 
+@pytest.fixture(autouse=True)
+def _no_plan_probe(monkeypatch):
+    """FLOW-PRIVSPEC-R1: private_spec reads the plan flags for the provisional child-view rule; tests have no plan host"""
+    monkeypatch.setattr(KW, "plan_names", lambda AP, st, d: {"flags": {}, "deps": {}})
+
+
 def wave_cfg(**over):
     c = cfg()
     d = c["dies"][D]
@@ -368,3 +374,25 @@ def test_fork_of_the_wave_tree_keeps_wave_bind(rts):
         return {"tree": t, "exists": True, "binds": {}, "siblings": [], "plan": {}, "gens": {}, "fork": {"src_real": WAVE}, "host": "local"}
     sp = KW.private_spec(wave_cfg(), D, I, "intel2", tree=T, probe=pr, rt_root=rts["root"])
     assert sp["kit_rtl"]["bind_out"] == WAVE_BIND and sp["tools_sha"] == rts["A"][1]
+
+
+def test_private_spec_carries_the_wave_provisional_child_views(monkeypatch):
+    """QC-RELAUNCH-R1 slw_su_c: the wave kit config.mk adds provisional child LEF/libs (qfd_dv_s8x_prog / btab); a private kit must get the same"""
+    seen = {}
+
+    def pv(d):
+        seen["plan"] = d["plan"]
+        return {"flags": {I: "planned"}, "deps": {I: ["qfd_dv_s8x_prog", "qfd_dv_s8x_btab"]}, "prov_deps": {}}
+    monkeypatch.setattr(KW, "prov_sources", lambda jobs, die, mods, d, hub: {m: [{"dir": "/v/" + m}] for m in mods})
+    c = wave_cfg(kit_rtl={})
+    sp = KW.private_spec(c, D, I, "intel2", plan="/srv/lane/plan_x.json", plan_view=pv)
+    assert sp["prov_views"]["modules"] == ["qfd_dv_s8x_prog", "qfd_dv_s8x_btab"] and seen["plan"] == "/srv/lane/plan_x.json"
+    assert set(sp["prov_views"]["cands"]) == {"qfd_dv_s8x_prog", "qfd_dv_s8x_btab"} and sp["private"]["prov_views"]["modules"]
+    # same set the wave launch rule gives on that plan
+    d = dict(c["dies"][D], _plan_flags={I: "planned"}, _plan_deps={I: ["qfd_dv_s8x_prog", "qfd_dv_s8x_btab"]})
+    import autopilot as AP
+    assert KW.prov_spec(AP, d, D, I, "intel2")["modules"] == sp["prov_views"]["modules"]
+    assert "prov_views" not in KW.private_spec(c, D, I, "intel2", plan_view=lambda d: {"flags": {}})
+    assert "prov_views" not in KW.private_spec(wave_cfg(kit_rtl={}, prov_view=False), D, I, "intel2", plan_view=pv)
+    with pytest.raises(ValueError):
+        KW.private_spec(c, D, I, "intel2", plan_view=lambda d: {"error": "ssh failed"})

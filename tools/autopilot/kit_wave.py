@@ -8845,8 +8845,31 @@ def resolve_tree_inputs(cfg, die, item, sp, tree, host=None, bind_out=None, rt=N
                      f"{str(sp.get('tools_sha') or '')[:12]} or pass --rt <the sha the bind was made on>")
 
 
+def private_prov_views(cfg, die, item, hub, sp, kind="type", plan_view=None):
+    """FLOW-PRIVSPEC-R1 (QC-RELAUNCH-R1: private slw_su_c kits died at synth ORD-2013, LEF master ot_sram_1r1w_128x256_m1_r2c2 not found): the
+    wave launch() gives a type whose child views are unsigned PROVISIONAL child views (sp prov_views -> prov_view.py adds the child LEF/lib to
+    config.mk); private-spec used spec_for only and dropped them.  Same rule here: the plan flags / deps (plan_names, cached in the wave state)
+    and prov_spec candidates, on the private plan.  -> prov_views dict or None; raises ValueError when the plan cannot be read (fail closed:
+    a kit without its child views dies at synth).  plan_view(d) -> plan_names-like dict (tests)."""
+    d0 = cfg["dies"][die]
+    if kind != "type" or not prov_on(d0):
+        return None
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import autopilot as AP
+    d = dict(d0, plan=sp["plan"], gen_host=sp.get("gen_host") or d0.get("gen_host"))
+    pn = plan_names(AP, load_state(), d) if plan_view is None else plan_view(d)
+    if (pn or {}).get("error"):
+        raise ValueError(f"private-spec: plan {sp['plan']} unreadable on {d.get('gen_host')} for the provisional child-view rule ({str(pn['error'])[:200]}); "
+                         f"pass --host <a host holding the plan>")
+    d.update(_plan_flags=pn.get("flags") or {}, _plan_deps=pn.get("deps") or {}, _prov_deps=pn.get("prov_deps") or {},
+             _prov_keys=pn.get("prov_keys") or {}, _prov_bound=pn.get("bound") or {}, _plan_dir=pn.get("plan_dir") or "")
+    if not prov_item(d, item):
+        return None
+    return prov_spec(AP, d, die, item, hub)
+
+
 def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
-                 host=None, bind_out=None, src_manifest=None, rt=None, goal=None, probe=None, rt_root=None, fork_of=None):
+                 host=None, bind_out=None, src_manifest=None, rt=None, goal=None, probe=None, rt_root=None, fork_of=None, plan_view=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
     the same functions launch() uses: env, gen args, flow_tag), with only plan, tree and overlay replaced.  Env values and kit_rtl / gen_args paths
     under the die tree are rewritten to the private tree (those env keys are plan_derived).  ab = ["KEY=VAL" | "KEY=" (unset)] is the deliberate A/B
@@ -8954,6 +8977,10 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         sp["private"]["rt"] = rt_decl
     if ti:
         sp["private"]["tree_inputs"] = ti["record"]
+    pv = private_prov_views(cfg, die, item, hub, sp, kind, plan_view=plan_view)
+    if pv:
+        sp["prov_views"] = pv
+        sp["private"]["prov_views"] = {"modules": list(pv.get("modules") or []), "from": "wave launch rule (prov_item + prov_spec) on plan " + str(sp["plan"])}
     g = str(goal or "auto").strip().lower()
     if g not in PRIVATE_GOALS:
         raise ValueError(f"--goal {goal!r}: one of {', '.join(PRIVATE_GOALS)}")
