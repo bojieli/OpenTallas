@@ -56,3 +56,40 @@ def test_run_kit_steps_gate_the_swap_on_the_keep_decision():
     assert len(repair_swaps) == 2
     for line in repair_swaps:
         assert line.index("OT_TT_SETUP_MEASURE=1") < line.index("/work/tt_setup_keep.py") < line.index("then mv -f")
+
+
+# KEEP-RC-1121 (FABLE-FIX-S81-COLROM-R5, S81 col_h10_r1 J7 rep): run_kit piped the keep decision into tee inside the container shell
+# (no pipefail there), so the step status was tee's 0 and a RESTORE verdict still moved the worse DB over 4_cts.odb (-1.98 -> -21.04 kept).
+def _keep_fragments():
+    import re
+    src = (HERE / "gen_phys.py").read_text()
+    frs = re.findall(r"\( KL=.*?tt_setup_keep\.py.*?exit \\\$kk \)", src)
+    return src, frs
+
+
+def test_run_kit_keep_step_is_not_masked_by_tee():
+    src, frs = _keep_fragments()
+    assert len(frs) == 2                                              # the CTS-stage and the GRT-stage step
+    assert not re_search_pipe(src)
+
+
+def re_search_pipe(src):
+    import re
+    return re.search(r"tt_setup_keep\.py [^;|]*\| *tee", src)
+
+
+@pytest.mark.parametrize("measure,want", [("-21.04 tns -413.03", "RESTORE"), ("-0.50 tns -0.60", "KEEP")])
+def test_run_kit_keep_step_status_is_the_decision(tmp_path, measure, want):
+    _src, frs = _keep_fragments()
+    for fr in frs:
+        w = tmp_path / ("w%d" % frs.index(fr)); w.mkdir()
+        (w / "tt_setup_keep.py").write_text((HERE / "tt_setup_keep.py").read_text())
+        for f in ("tt_setup_repair.log", "tt_setup_repair_grt.log"):
+            (w / f).write_text("OT_TT_SETUP_REPAIR before TT setup wns -1.98 tns -2.36\n")
+        for f in ("tt_setup_measure.log", "tt_setup_measure_grt.log"):
+            (w / f).write_text("OT_TT_SETUP_REPAIR measure TT setup wns %s\n" % measure)
+        sh = fr.replace("\\$", "$").replace('\\"', '"').replace("/work/", str(w) + "/").replace("python3", sys.executable)
+        r = subprocess.run(["bash", "-c", "if true && %s; then echo STEP-KEEP; else echo STEP-RESTORE; fi" % sh], capture_output=True, text=True)
+        assert ("STEP-" + want) in r.stdout, (r.stdout, r.stderr, sh)
+        assert ("KEEP repaired" if want == "KEEP" else "RESTORE before") in r.stdout          # still shown in the run log
+        assert "OT_TT_SETUP_KEEP" in (w / "tt_setup_keep.log").read_text()
