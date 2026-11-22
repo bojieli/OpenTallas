@@ -62,7 +62,7 @@ Netlist count (`1_2_yosys.v` of the D26 kits, script `tmp/ringcount.py`):
 ## 3. Street rule (M: `tools/die_plan/street_rule.py` on D27d3, rt 3e5de95c409b)
 
 - `check`: 45 of 50 checked types violate the street-or-abut rule (every pv type 8-9 outline slivers; hg 8-10; hgi 4-6).
-- `legalize` dry runs (private outputs, `--no-bins`): default = 16 types applied, 0 die growth; `add_regs=3` = 13 applied. Not applied:
+- `legalize` dry runs (private outputs, `--no-bins`): default = 16 types applied, 0 die growth; `add_regs=3` = 14 applied. Not applied:
   all 16 pv, 7-8 hg, 6 hgi, hub_C ("points under cores", "ft hops over reach", "cores over LEF content macros").
   Largest outline the tool asks for: pv_v2n 2194.56 x 1555.2 (+3.9 %). Reticle headroom 14.8 x 5.96 mm.
 - The tool's event writer crashes on a non-JSON bool (`cmd_legalize` line 3073); I ran it through a wrapper (`sr_wrap.py`).
@@ -74,6 +74,7 @@ Netlist count (`1_2_yosys.v` of the D26 kits, script `tmp/ringcount.py`):
 |---|---|---|---|---|---|
 | R1 | `clock.landing_ring_narrow: true` | 44 unsigned types, 1,018 soft rings < 64 bits | 0 | about -350 cells per narrow ring (811 -> 461) | row script ready; gates running on a private fork |
 | R1b | `clock.landing_ring_lite` on the same types, tool change so status-copy types qualify | 44 | 0 | 811 -> 88 cells and 200 -> 18 flops per grouped ring: pv_v6 about -37 k cells / -9.5 k flops, hgi_v3 about -12 k cells | tool change to write + bench |
+| R5 | hg feedthrough street: head0/1_e4, e5 and the astk strips g_ex_N +43.2 um in y; opens a 51.8 um street at y 553-605 on the ft3 axis (section 6) | hg_v1, v1p2..v1p6, hg_v3 (7 types, 28 partitions) | 0 | core_place RUDY H overflow 571k -> 270k (-53 %), over-core H ratio 1.52 -> 1.07; 15-30 stations re-routed, register count kept, EQ OK | row script ready; gate B (with landing_remap + pinclear) after gate A |
 | R2 | re-site the narrow bands at their pins after R1 / R1b (`cland_band_fit`) | pv 16, hub, pc, hgi | 0 | bands > 300 um from pin and sliver bands go away where the ring shrinks | after R1b bind |
 | R3 | pv re-floor inside the tile, no die growth needed: W/E margin 15 -> 58 um, centre (cut) street 104 -> 234 um, side streets 253 -> 145 um; cores move, shapes kept | pv 16 | re-price | cut-face margin per half 52 -> 117 um: tap and bank sites at the cut | geometry handed to FABLE-FIX-KV-PV-SINKSPREAD; not built by me |
 | R4 | hgi head array +86.4 um north (S margin 17 -> 103, N 302 -> 216) | hgi 11 | re-price | S-face landing strip for 1,296-2,165 ft bits | proposal to OPUS-FIX-KV-HGI-R6 |
@@ -81,7 +82,26 @@ Netlist count (`1_2_yosys.v` of the D26 kits, script `tmp/ringcount.py`):
 Not in my rows (owned, already moving): hg / hgi lockup + reset rows (HGI-R6, LOCKUP-INERT), pv split (PV-R7), hub hard rings (HUB-R6,
 RINGMAC), pc pin stations (IOPC-R4), hroot (HROOT-R1).
 
-## 5. Not checked
+## 5. LITE eligibility (M: D27d3 sidecar, rings <= 8 bits with the same source, K and depth; instance-level upper bound)
+
+pv_v12 / v7 56 of 58; pv_v6 / v6n 51 of 53; pv_v5 / v5n 41 of 43; pv_v4 / v4n 35 of 37; pv_v3 / v3n 25 of 27; pv_v2 / v2n 19 of 21;
+hgi_v3..v8 11-12 of 14-15; pc_v1 8 of 11; pc 5 of 7; pc_v3 7 of 10; hroot 7 of 9; io_cor_v1 12 of 15; sys_c 14 of 16; hg_v1.. 4 of 7.
+Die: 1,338 of 1,687 narrow ring instances. Tool change RING-LITE-2 (`landing_ring_lite.status_copy`): unit tests 130 pass, lock-step
+bench `rtl/test/meso/lite/run_csc.sh` 11 of 11 phases, 0 mismatches, shift and mutant negative controls caught.
+
+## 6. hg central channel (COORD 04:5x, FLOW-CLKGRT-R2 kv3_hg_v1p2: GRT overflow 871k base / 566k clock-first, DPL-0033) (M)
+
+- All hg cores block M1-M5 (LEF OBS 93-100 %; M6 / M7 2-4 %). Over a core a bundle has M6 (E-W) or M7 (N-S) only.
+- ft3 (1,056 bits, W -> E, stations at (312, 587), (642, 601), (960, 601)) crosses the astk strips g_ex_1 (198 um) and g_ex_2 (190 um):
+  y 561.6-673.9, 112 um of M6 = about 1,750 tracks x 0.6 = 1,050 for 1,056 bits. Slots beside the strips: 9 um (y 553-562, 674-683).
+- Kit congestion.rpt (clock-first arm, 20,000-gcell sample): 69 % of the overflow lies inside hard-core footprints (head0_e5, head0_e2,
+  head1_e4), hot bins x 432-700, y 604-860. The kit's own placed scan: 263 groups over reach, 12,020 bits.
+- Variants tried with `core_place.py --seed --no-search` on kv3_hg_v1p2 (RUDY H overflow, base 571,430): head e4/e5 up only 523,527;
+  head e2/e3 down: not legal (ring core `cl_..zo_d1` in the lower channel); **head e4/e5 + astk strips up 43.2: 270,198**.
+  `ft_corridor --band` finds no 3-station chain for a detour into an off-axis street, which is why the street is put on the ft3 axis.
+- kv3_hg (4 partitions) has another feedthrough path (ft2 at y 213-232); R5 leaves it (331k -> 323k only). Open.
+
+## 7. Not checked
 
 - No placed-DB sink census by me (FABLE-FIX-KV-PV-SINKSPREAD owns it). The pv centre-bottom cluster is only partly rings: 14-18 narrow
   bands there on v6n / v5n, 0-1 on v12 / v7 / v2 (plan).
