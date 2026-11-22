@@ -35,3 +35,16 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
   plan_gate_pre FAILs with 10 new GEOM-STATION-IN-CORE (v6ne ft regs_um[3]). So v6n stays UNSPLIT for D29 (posted c4116c1f).
   Flow knob staged, not pushed: r7/face_flops_inset.tcl (OT_FF_EW_INSET_UM).
 - Cleanup later (ot-delete): tree5 Q/por_*fail*, por_d29_*, r7 dbg dirs, dbg_all16_out.
+
+## State 2026-11-22 03:3x PST (supersedes the block above)
+- Own-leg fix PUSHED to main 4c484aef37 (split_bind_routes + regression test).
+- Row 1b bind (bindgate_v3b): only the 30 expected R8_UNCOVERED (pv_S_3), no HARD_CORE_PARAM_WRAP.
+- chain_r7b (log intel2 ~/tmp/okpvr7/chain_r7b.log): R3 rows -> bind 12b (same 30 R8 only) -> banks + reprice
+  (R3_FIXED_CYCLES 20, net +55) -> plan 0268822b037f -> bind 12c RUNNING -> one R8 refresh -> bind 13 + LATCHECK.
+  Then the D28 row 1 package to KV-PLAN-R6 (due 11:30): plan sha + v3 rows (r7/compose_v3row1b.py rows) + tap rows (v3 +2).
+- D29 v6n CLOSED on the model (posted 722deacc): draft sha 78fe00f580fd at tree5 Q/por_d29_kv3_pv_v6n_1080_b25.92_stk5res_composed.
+  Tools: r7/compose_d29c.py (D29_BINS, D29_XPREF, D29_RESERVE), r7/d29/run_d29c.sh, mk_bins5.py (regs from the KV-D23H odb,
+  dumped by epyc7 /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r7/d29v6n/regs.sh), fix_st_in_core.py, assemble_d29.py,
+  tap_probe.py, legal_probe.py. Next: bind the D29 draft.
+- Staged, not pushed: r7/face_flops_inset.tcl (OT_FF_EW_INSET_UM).
+- Cleanup (ot-delete, later): r7/negtest (SKIP: protected parent), por_d29_* trial dirs except stk5res.
