@@ -51,6 +51,10 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       cut costs no cycle.  native_stage_groups params follow the content row
   native_stage_drop {type: [regex]}   native_stage_groups rows (fullmatch on the prefix) that no longer exist after
                                       content_params (the stages the boundary pair replaced)
+  drop_clock_keys [key, ..]           clock keys derived from the whole type (HEAD START / status / reset-tree keys:
+                                      landing_reader_start, landing_writer_start, landing_status_anchors,
+                                      landing_status_input_stages, reset_tree_anchor) dropped for re-derivation per piece
+  drop_type_keys [key, ..]            the same for type keys; only reset_start_raw_exports (head_reset_exports.py)
 
 What moves (every element is decided by geometry or by the spec; anything else fails closed):
   buses              the piece of every port window of the bus (all instances agree); faces normal to the axis go to
@@ -101,6 +105,10 @@ COLL_PIN = re.compile(r"^(cland_up_ready|cland_up_fault|fclk_out_cland_up|cland_
 START_PINS = ("cland_tstart_in", "cland_tstart_out", "cland_raw_reset_out")
 PIN_MARGIN = 2.16    # landing pin keep-in from a piece edge along the cut axis
 PIN_STEP = 0.96      # landing pin nudge step (two 0.48 tracks)
+# clock keys copied to every piece unchanged (HEAD gen-mode types, FABLE-FIX-HEAD-LEP0N-R6 11-21): budget / form scalars
+# and the tap_group instance regexes (a pattern that names no instance of a piece groups nothing there)
+CLOCK_COPY_KEYS = {"insertion_basis", "insertion_ff_ps", "landing_export_form", "tap_grt_pre", "tap_model",
+                   "tap_passthrough", "tap_group"}
 
 
 class SplitError(ValueError):
@@ -548,7 +556,8 @@ class TypeSplit:
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
                    "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
                    "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
-                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body", "nets", "sources"}
+                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body", "nets", "sources",
+                   "id_straps", "private_reset_start_exports", "reset_start_raw_exports"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -613,6 +622,8 @@ class TypeSplit:
         self._reset()
         self._reset_spine_pins()
         self._count_straps()
+        self._id_straps()
+        self._reset_start_exports()
         self._relay_keys()
         if t.get("reach_homes"):
             raise SplitError(f"{self.tn}: reach_homes present (drop them before the split; re-derive after)")
@@ -1398,7 +1409,8 @@ class TypeSplit:
         known = {"tap_um", "layer", "insertion_ps", "insertion_tol_ps", "tap_pitch_um", "tap_edge_y_um", "taps",
                  "core_taps", "edge_clocks", "landing_contract", "added_taps", "tap_mode", "sink_sites_um",
                  "reach_fix_sinks", "tap_radius_um", "tap_max_sinks", "tap_target_sinks", "die_islands_um",
-                 "keepouts_um", "sink_bins_file", "landing_ring_wreg", "landing_local_resets"}
+                 "keepouts_um", "sink_bins_file", "landing_ring_wreg", "landing_local_resets"} | CLOCK_COPY_KEYS | \
+                {"start_capture_um", "reserved_sites_um"}
         drop = set(self.ev.spec.get("drop_clock_keys") or [])
         unk = set(ck) - known - drop
         if unk:
@@ -1419,7 +1431,8 @@ class TypeSplit:
                                  if k not in ("taps", "edge_clocks", "landing_contract", "added_taps", "sink_sites_um",
                                               "reach_fix_sinks", "tap_um", "tap_edge_y_um", "die_islands_um",
                                               "keepouts_um", "sink_bins_file", "landing_ring_wreg",
-                                              "landing_local_resets") and k not in drop}
+                                              "landing_local_resets", "start_capture_um", "reserved_sites_um")
+                                 and k not in drop}
             for k in ("die_islands_um", "keepouts_um"):
                 if k in ck:
                     # a reservation / keep-out rect is kept on every piece it touches (clipped: the part inside)
@@ -1440,6 +1453,7 @@ class TypeSplit:
             centre = [rnd(round(v / 2 / 8.64) * 8.64) for v in T[i]["outline_um"]]
             if "tap_um" in ck:
                 c["tap_um"] = (cut.sh(ck["tap_um"], i) if cut.ppiece(ck["tap_um"]) == i else centre)
+            self._clock_sites(ck, c, i)
             if "tap_edge_y_um" in ck:
                 if cut.ax != 1:
                     raise SplitError(f"{self.tn}: tap_edge_y_um with an x cut is not handled")
@@ -1462,6 +1476,74 @@ class TypeSplit:
             self._grid_added_taps(ck, grid, added)
         # edge clocks by bus
         self._clock_rest(ck)
+
+    def _clock_sites(self, ck, c, i):
+        """clock.start_capture_um / clock.reserved_sites_um of piece i (FABLE-FIX-HEAD-LEP0N-R6 11-21, HEAD gen-mode
+        types).  The START capture site keeps its offset from the type tap (c["tap_um"] is the piece tap: the base tap
+        when inside, else the piece centre).  A reserved site row ({rect_um, kind, route_layers}: a die clock-tree cell
+        site or a ring bank) goes to the piece that holds its rect, in the piece frame; a clock cell site cannot be
+        clipped, so a rect across a cut fails closed (re-site it first: clksite_resite.py)."""
+        cut = self.cut
+        if "start_capture_um" in ck:
+            if "tap_um" not in ck:
+                raise SplitError(f"{self.tn}: clock.start_capture_um without clock.tap_um")
+            c["start_capture_um"] = [rnd(float(c["tap_um"][k]) + float(ck["start_capture_um"][k]) - float(ck["tap_um"][k]))
+                                     for k in (0, 1)]
+        if "reserved_sites_um" in ck:
+            c["reserved_sites_um"] = [
+                copy.deepcopy(r) | {"rect_um": cut.shr(r["rect_um"], i)} for r in ck["reserved_sites_um"]
+                if cut.rect_piece(r["rect_um"], f"{self.tn} clock.reserved_sites_um {r.get('kind')}") == i]
+
+    def _id_straps(self):
+        """type id_straps (FABLE-FIX-HEAD-LEP0N-R6 11-21, HEAD strap_rst_ph): an ID-only strap is tied at the parent
+        per partition and read by the reset / START entry of the partition, so EVERY piece keeps the row (the piece
+        partitions follow their base partition's id_straps values).  A site inside the piece moves to the piece frame;
+        a site outside it is re-seated at the same distance from the nearer type edge along the cut axis (the cut is on
+        the plan lattice, so the pin stays on its layer track), reported in rep["id_strap_sites_reseated"]."""
+        rows = self.t.get("id_straps")
+        if rows is None:
+            return
+        cut, L = self.cut, self.cut.L
+        for i in range(self.n):
+            out = []
+            for r in rows:
+                q = copy.deepcopy(r)
+                sites = []
+                for s in r.get("sites_um") or []:
+                    a = float(s[cut.ax])
+                    if cut.lo(i) - EPS <= a <= cut.hi(i) + EPS:
+                        sites.append(cut.sh(s, i))
+                        continue
+                    o = list(s)
+                    o[cut.ax] = rnd(a if a <= L - a else cut.ext(i) - (L - a))
+                    if not EPS < o[cut.ax] < cut.ext(i) - EPS:
+                        raise SplitError(f"{self.tn}: id strap {r['name']} site {s} does not fit piece {i}")
+                    sites.append(o)
+                    self.rep.setdefault("id_strap_sites_reseated", []).append(
+                        dict(piece=self.tnames[i], strap=r["name"], base=list(s), site=o))
+                if "sites_um" in r:
+                    q["sites_um"] = sites
+                out.append(q)
+            self.T[i]["id_straps"] = out
+
+    def _reset_start_exports(self):
+        """type private_reset_start_exports / reset_start_raw_exports (HEAD-START prep, head_reset_exports.py): the flag
+        goes to every piece.  The export rows name relay instances of the whole-type reset relay tree, which every piece
+        builds anew, so they are never copied: they can only be dropped for re-derivation (spec drop_type_keys), like
+        the clock START keys (spec drop_clock_keys)."""
+        t = self.t
+        drop = set(self.ev.spec.get("drop_type_keys") or [])
+        bad = drop - {"reset_start_raw_exports"}
+        if bad:
+            raise SplitError(f"{self.tn}: spec drop_type_keys {sorted(bad)}: only reset_start_raw_exports can be dropped")
+        if "reset_start_raw_exports" in t:
+            if "reset_start_raw_exports" not in drop:
+                raise SplitError(f"{self.tn}: reset_start_raw_exports names the whole-type reset relay tree: it can only "
+                                 f"be dropped for re-derivation per piece (spec drop_type_keys)")
+            self.rep["type_keys_dropped"] = ["reset_start_raw_exports"]
+        if "private_reset_start_exports" in t:
+            for i in range(self.n):
+                self.T[i]["private_reset_start_exports"] = copy.deepcopy(t["private_reset_start_exports"])
 
     def _explicit_taps(self, ck):
         """clock.tap_mode explicit (FLOW-STRIPBODY-1121; S81 slice types): every table tap goes to the piece that holds

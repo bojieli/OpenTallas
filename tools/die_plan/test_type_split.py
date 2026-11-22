@@ -1029,3 +1029,66 @@ def test_native_stage_groups_one_content_base_and_fail_closed_forms():
             _gen_mode_split(spec)._native_stage_groups(_nsg(groups), [dict(), dict()])
     with pytest.raises(TS.SplitError, match="schema/fields"):
         _gen_mode_split()._native_stage_groups(dict(_nsg([row]), schema="v0"), [dict(), dict()])
+
+
+# ---- HEAD type / clock keys of a gen-mode type (FABLE-FIX-HEAD-LEP0N-R6 11-21)
+def _head_keys_split(t, spec=None):
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.n, ts.keep = "hd", 2, 1
+    ts.tnames = ["hd_w", "hd"]
+    ts.cut = TS.Cut("x", [907.2], 1892.16)
+    ts.ev = _Ev({}, dict(spec or {}))
+    ts.rep = {}
+    ts.t = t
+    ts.T = [dict() for _ in range(2)]
+    return ts
+
+
+def test_id_strap_goes_to_every_piece_and_an_outside_site_is_reseated():
+    ts = _head_keys_split(dict(id_straps=[dict(name="strap_rst_ph", width=1, layer="M7", sites_um=[[10.016, 4.32]]),
+                                          dict(name="strap_e", width=1, layer="M7", sites_um=[[1880.0, 4.32]])]))
+    ts._id_straps()
+    assert [r["name"] for r in ts.T[0]["id_straps"]] == [r["name"] for r in ts.T[1]["id_straps"]] == ["strap_rst_ph", "strap_e"]
+    assert ts.T[0]["id_straps"][0]["sites_um"] == [[10.016, 4.32]]        # inside the W piece: unchanged
+    assert ts.T[1]["id_straps"][0]["sites_um"] == [[10.016, 4.32]]        # re-seated 10.016 from the E piece's low edge
+    assert ts.T[1]["id_straps"][1]["sites_um"] == [[972.8, 4.32]]         # inside the E piece: piece frame
+    assert ts.T[0]["id_straps"][1]["sites_um"] == [[895.04, 4.32]]        # re-seated 12.16 from the W piece's high edge
+    assert [(r["piece"], r["strap"]) for r in ts.rep["id_strap_sites_reseated"]] == [("hd_w", "strap_e"), ("hd", "strap_rst_ph")]
+    assert ts.t["id_straps"][0]["sites_um"] == [[10.016, 4.32]]           # the base rows are not edited
+
+
+def test_reset_start_raw_exports_are_only_dropped_for_rederivation():
+    t = dict(private_reset_start_exports=True,
+             reset_start_raw_exports=[dict(port="rst_start_raw_0", instance="u_rrl_698", net="rst_rl_698", xy_um=[972.1, 595.1])])
+    with pytest.raises(TS.SplitError, match="reset_start_raw_exports names the whole-type reset relay tree"):
+        _head_keys_split(t)._reset_start_exports()
+    with pytest.raises(TS.SplitError, match="only reset_start_raw_exports can be dropped"):
+        _head_keys_split(t, dict(drop_type_keys=["buses"]))._reset_start_exports()
+    ts = _head_keys_split(t, dict(drop_type_keys=["reset_start_raw_exports"]))
+    ts._reset_start_exports()
+    assert all(q == {"private_reset_start_exports": True} for q in ts.T)
+    assert ts.rep["type_keys_dropped"] == ["reset_start_raw_exports"]
+
+
+def test_clock_start_capture_follows_the_piece_tap_and_reserved_sites_their_rect():
+    ck = dict(tap_um=[1131.84, 596.16], start_capture_um=[1140.48, 596.16],
+              reserved_sites_um=[dict(rect_um=[17.496, 443.34, 20.196, 445.23], kind="die_clock_tree", route_layers="M1-M7"),
+                                 dict(rect_um=[961.3, 642.1, 966.2, 645.6], kind="die_clock_tree", route_layers="M1-M7")])
+    ts = _head_keys_split(dict(clock=ck))
+    w, e = dict(tap_um=[449.28, 708.48]), dict(tap_um=[224.64, 596.16])
+    ts._clock_sites(ck, w, 0)
+    ts._clock_sites(ck, e, 1)
+    assert w["start_capture_um"] == [457.92, 708.48] and e["start_capture_um"] == [233.28, 596.16]
+    assert [r["rect_um"] for r in w["reserved_sites_um"]] == [[17.496, 443.34, 20.196, 445.23]]
+    assert e["reserved_sites_um"] == [dict(rect_um=[54.1, 642.1, 59.0, 645.6], kind="die_clock_tree", route_layers="M1-M7")]
+    ck["reserved_sites_um"].append(dict(rect_um=[905.0, 10.0, 909.0, 12.0], kind="die_clock_tree"))
+    with pytest.raises(TS.SplitError, match="clock.reserved_sites_um die_clock_tree .* straddles a cut"):
+        ts._clock_sites(ck, {"tap_um": [0.0, 0.0]}, 0)
+
+
+def test_head_clock_scalars_are_known_and_start_keys_need_drop_clock_keys():
+    assert {"insertion_ff_ps", "tap_model", "tap_group", "landing_export_form"} <= TS.CLOCK_COPY_KEYS
+    ck = dict(tap_model="frozen_anchor", insertion_ff_ps=380.0, tap_passthrough=True, landing_reader_start={"depth": 4},
+              reset_tree_anchor={})
+    with pytest.raises(TS.SplitError, match=r"unhandled clock keys \['landing_reader_start', 'reset_tree_anchor'\]"):
+        _head_keys_split(dict(clock=ck))._clock()
