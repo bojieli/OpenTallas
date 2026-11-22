@@ -36,3 +36,9 @@ Proof A2: srcA + bindA copying epyc7 -> epyc9 fam-s81-col-h10-r4/srcA2 + bindA2 
 ## 01:1x proof A2 LIVE
 spec intel2 fam-s81-col-h10-r4/specA2 (tree epyc9 srcA2 + bindA2, host epyc9, --ab OT_GRT_CONG_ITERS=50, rt a699139ec4bc, goal auto = signoff chain), run-item intel2 PID 2939493, log runA2.log. Try 1 died at kit_rtl: the row first moved col_h9_r1 clk_t30 to y1166.4 = illegal (tap clear 8.64 + halo) -> fixed to top+halo+8.64+2.16 = 1170.72, verified with taps.grid_explicit_sites on all 132 family types (0 bad). Try 2 died at kit_topology KIT_TOPOLOGY_BIND_STALE: shifted core-tap xy changes the selected native reset context. So the proof tree applies the row to the proof type only with --keep-clock (taps unchanged, 26-um core-tap error; bind_matches True). The J8 row keeps the clock part (J8 re-binds anyway).
 Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fam-s81-col-h10-r4/tmp/row_A2_ops.json (full, 336 ops).
+
+## 01:3x COORD ruling: bind-prove the FULL row (clock incl.) on J7, parallel with A2
+- Fork: epyc9 fam-s81-col-h10-r4/treeJ7r (ot-tree-fork of sealed J7 kw45 d8j7, manifest 12af64d4, nlink 1). Full row applied (132 types, 336 ops; ops file epyc9 fam-s81-col-h10-r4/rows_COL-E15E-CHAN_J7.json; plan sha b60a529b1a37). tools/ replaced by rt a8ade98de24a (has 33fe1ccf07 parallel emit).
+- Gate: epyc9 fam-s81-col-h10-r4/bind_row.sh (strict --all-gaps, one r8_refresh+rebind if R8_STALE-only, LATCHECK+latcmp vs J7 candJ7eL6, G0+g0cmp, PRE), ot-run unit oth-ubuntu-3587548-1795338787, log bind_row.otrun.log, gate dir gateJ7r/.
+- Outcome rule (COORD): green by 14:00 -> whole row to H9R0-R4 as bind-proven; else row w/o clock-tap part only if moves leave all taps legal; else J9. Post bind result to H9R0-R4 + J6-ASSEMBLY-R5.
+- A2 try 3 died at gen: relay_polylines entry had an unknown key note (schema) -> removed from script; try 4 run-item PID 3080932.
