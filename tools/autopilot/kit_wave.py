@@ -12003,6 +12003,13 @@ def bind_stale_from_stage(cfg, st, die, rows):
             if f"{die}|{r['item']}|{src}|{bo}" in wb}
 
 
+BIND_PREFLIGHT_PENDING = "BIND_PREFLIGHT_PENDING:"
+
+
+def bind_recovery_rows(rows, findings):
+    return [row for row in rows if row["item"] in findings and not findings[row["item"]].startswith(BIND_PREFLIGHT_PENDING)]
+
+
 def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
     """FABLE-FLOW-0555 A (COORD 11-19): S81 289 rows BIND-STALE, 0 launches in 2 h while the newest tree's bind was red.  Launch a stale row on the
     newest EARLIER tree of the die (dies.<die>.bound_trees, newest first, written by every apply) whose bind preflight is green for that item;
@@ -12010,7 +12017,7 @@ def bound_fallback(AP, cfg, st, die, rows, stale, now=None, rpy=None):
     this tick (spec_for reads them); the row identity stays on the die plan.  -> {item: tree src} of the rescued items, removed from `stale`."""
     d = cfg["dies"][die]
     rescued = {}
-    todo = [r for r in rows if r["item"] in stale]
+    todo = bind_recovery_rows(rows, stale)
     wb = (st or {}).get("wait_bind") or {}
     for bi, bt in enumerate(list(d.get("bound_trees") or [])[:BOUND_TREE_TRIES]):
         todo = [r for r in todo if f"{die}|{r['item']}|{str(bt.get('src') or '').rstrip('/')}" not in wb]
@@ -12060,6 +12067,9 @@ def auto_rebind(AP, cfg, st, die, rows, stale, now=None, rpy=None, rebind=None):
     loaded host that holds the tree; a tick never waits for it.  When it reports FRESH the stale rows take its OUT as kit_rtl.bind_out
     (in memory for this tick, like bound_fallback) and launch if the bind preflight is now green for them.
     -> {item: bind out} of the rescued items, removed from `stale`."""
+    todo = bind_recovery_rows(rows, stale)
+    if not todo:
+        return {}
     d = cfg["dies"][die]
     if rebind is None:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -12083,7 +12093,6 @@ def auto_rebind(AP, cfg, st, die, rows, stale, now=None, rpy=None, rebind=None):
             AP.log(f"KIT-WAVE AUTO-BIND {die}: bind is green only with R8 tables refreshed OUTSIDE the sealed tree ({ab}); the die plan lane "
                    "must carry the refreshed tables in its next event; rows stay BIND-STALE")
         return {}
-    todo = [r for r in rows if r["item"] in stale]
     cfg2 = copy.deepcopy(cfg)
     ii2 = cfg2["dies"][die].setdefault("item_inputs", {})
     if res.get("host"):
@@ -12224,7 +12233,7 @@ def _bind_preflight_groups(AP, d, st, die, group_items, cache, now, rpy, out):
                 p = bind_probe_detached(AP, d.get("gen_host"), dict(g, types=todo_i), now)
                 if p is None:                            # PROBE-DETACH-1122: the probe runs in its own unit; rows wait (fail closed), next tick reads it
                     for item in items:
-                        out[item] = "BIND_PREFLIGHT_PENDING: the bind probe runs detached from the tick; launched once it has judged"
+                        out[item] = f"{BIND_PREFLIGHT_PENDING} the bind probe runs detached from the tick; launched once it has judged"
                     continue
             else:
                 p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=todo_i), timeout=600)
@@ -12668,7 +12677,12 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                             if r["item"] in stale:
                                 skip.setdefault(stale[r["item"]], []).append(r["item"])
                         go = [r for r in go if r["item"] not in stale]
-                        AP.log(f"KIT-WAVE BIND-STALE {die}: {len(stale)} row(s) not launched: " + " ".join(sorted(stale)[:40]))
+                        pending = sorted(item for item, why in stale.items() if why.startswith(BIND_PREFLIGHT_PENDING))
+                        if pending:
+                            AP.log(f"KIT-WAVE BIND-PROBE-WAIT {die}: {len(pending)} row(s) await the current bind result: " + " ".join(pending[:40]))
+                        bad = sorted(set(stale) - set(pending))
+                        if bad:
+                            AP.log(f"KIT-WAVE BIND-STALE {die}: {len(bad)} row(s) not launched: " + " ".join(bad[:40]))
                 if AP and go and d.get("gen_args") is not None:
                     try:
                         scst = sidecar_preflight(AP, cfg, st, die, go)

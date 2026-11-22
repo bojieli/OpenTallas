@@ -29,9 +29,10 @@ def test_fresh_bind_rescues_rows_whose_preflight_turns_green(monkeypatch):
     monkeypatch.setattr(KW, "bind_preflight", preflight)
     c, st, ap = cfg(), {}, AP()
     rows = [{"item": "ta"}, {"item": "tb"}, {"item": "tc"}]
-    stale = {"ta": "stale", "tb": "stale"}
+    pending = f"{KW.BIND_PREFLIGHT_PENDING} own bind running"
+    stale = {"ta": "stale", "tb": "stale", "tc": pending}
     res = KW.auto_rebind(ap, c, st, "kv", rows, stale, rebind=lambda *a, **k: dict(state="FRESH", out="/o/b_1", asbuilt="/s/t/ab.json", host="h2"))
-    assert res == {"ta": "/o/b_1"} and stale == {"tb": "stale"}
+    assert res == {"ta": "/o/b_1"} and stale == {"tb": "stale", "tc": pending}
     assert seen == {"bind_out": "/o/b_1", "gen_host": "h2"}
     d = c["dies"]["kv"]
     assert d["item_inputs"]["ta"]["kit_rtl"] == {"mode": "bind", "bind_out": "/o/b_1", "asbuilt": "/s/t/ab.json"}
@@ -59,3 +60,17 @@ def test_tables_refreshed_outside_a_sealed_tree_do_not_launch(monkeypatch):
     r = KW.auto_rebind(ap, c, st, "kv", [{"item": "ta"}], stale,
                        rebind=lambda *a, **k: dict(state="FRESH", out="/o/b_1", asbuilt="/o/b_1/.ot-build/plan/ab.json", host="h2"))
     assert r == {} and stale == {"ta": "stale"} and "OUTSIDE the sealed tree" in ap.lines[-1]
+
+
+def test_pending_current_probe_starts_neither_fallback_nor_rebind(monkeypatch):
+    def unexpected(*args, **kwargs):
+        raise AssertionError("pending current probe must finish before bind recovery")
+
+    monkeypatch.setattr(KW, "bound_holders", unexpected)
+    c, st, ap = cfg(), {}, AP()
+    c["dies"]["kv"]["bound_trees"] = [{"src": "/older", "kit_rtl": {"bind_out": "/older/bind"}}]
+    rows = [{"item": "ta"}]
+    pending = {"ta": f"{KW.BIND_PREFLIGHT_PENDING} own bind running"}
+    assert KW.bound_fallback(ap, c, st, "kv", rows, pending) == {}
+    assert KW.auto_rebind(ap, c, st, "kv", rows, pending, rebind=unexpected) == {}
+    assert list(pending) == ["ta"]
