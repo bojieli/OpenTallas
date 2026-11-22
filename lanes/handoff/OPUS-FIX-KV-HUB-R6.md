@@ -55,3 +55,10 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
   (no --src-manifest off; --rt b15a8a1023ed, which is >= 6d2e187f0d floor and contains my fixes). Waiters: ot-wait --durable.
 - After sign-off + EQUIVALENT routed LEC: kit_wave.py private-provenance <private_specs/OPUS-FIX-KV-HUB-R6/dir> --lec <routed lec.json>.
 - Never edit tree_b / tree_h3 again (a seal must equal what gen read).
+
+## 02:5x SEALED kits launched (COORD: do not wait for proofs)
+- Specs OPUS-FIX-KV-HUB-R6/qwen_kvsys_kv3_hub_{Wo_1122025530,Eo_1122025542,Ei_1122025555}: src-manifest ON, rt b15a8a1023ed, goal finish, gen epyc8.
+  Runners intel2 pids 2509488 / 2512829 / 2516970, logs ~/tmp/opusfixkvhub-r6/kit3_*.log.
+- Proofs (kit2_*, pids 1629056 / 1633552 / 2287276) keep running. A proof showing its type cannot close (GRT TT < -42 not fixable by ECO,
+  or setup < -300) -> cancel the sealed twin's units (ot-run --cancel on the exact units only).
+- Sealed sign-off + EQUIVALENT routed LEC -> kit_wave.py private-provenance <spec dir> --lec <lec.json>.
