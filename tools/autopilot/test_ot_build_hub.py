@@ -77,6 +77,7 @@ def fleet(tmp_path, monkeypatch):
     monkeypatch.setattr(H, "AP_DIR", tmp_path / "ap")
     monkeypatch.setenv("OT_BUILD_FORCE_SSH", "1")
     monkeypatch.setenv("OT_BUILD_HASH_CACHE", "off")
+    monkeypatch.delenv("OT_LANE", raising=False)
     return Fleet(tmp_path)
 
 
@@ -139,7 +140,7 @@ def test_refusals(fleet, capsys):
         fleet.load[h] = (1.0, 96, False)
     assert go(fleet) == 1
     assert "no host holds the tree" in capsys.readouterr().out
-    assert H.main(["kv", "ta"], run=fleet.run, stream=fleet.stream, cfg=CFG) == 2
+    assert H.main(["kv", "ta"], run=fleet.run, stream=fleet.stream, cfg=CFG) == 2         # no --lane and no OT_LANE
 
 
 def test_sealed_tree_with_tables_refreshed_outside_refuses_the_kit(fleet, capsys):
