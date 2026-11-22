@@ -42,3 +42,9 @@ Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fa
 - Gate: epyc9 fam-s81-col-h10-r4/bind_row.sh (strict --all-gaps, one r8_refresh+rebind if R8_STALE-only, LATCHECK+latcmp vs J7 candJ7eL6, G0+g0cmp, PRE), ot-run unit oth-ubuntu-3587548-1795338787, log bind_row.otrun.log, gate dir gateJ7r/.
 - Outcome rule (COORD): green by 14:00 -> whole row to H9R0-R4 as bind-proven; else row w/o clock-tap part only if moves leave all taps legal; else J9. Post bind result to H9R0-R4 + J6-ASSEMBLY-R5.
 - A2 try 3 died at gen: relay_polylines entry had an unknown key note (schema) -> removed from script; try 4 run-item PID 3080932.
+
+## 02:2x RESUMED after weekly limit
+- J7 row bind gate still running (oth-ubuntu-3587548-1795338787, epyc9 gateJ7r/bind1.log); waiter: until GATE_DONE in epyc9 fam-s81-col-h10-r4/bind_row.otrun.log.
+- A2: gen PASS 01:31 (kit epyc9 .../col_h10_r2__t1__cl99efd374__pv1619ecc6_1122005516/gen/<T>, config has macro_halo_carve + OT_RELAY_POLY_FILE). run-item place NOT-RUN (sealed place on intel2, disk-ETA hold, rc 78). Relaunched by hand: ot-run --hosts epyc9 run_kit.sh <K> route 48 8 = oth-ubuntu-907207-1795342870, log epyc9 fam-s81-col-h10-r4/routeA2_otrun.log. Waiter ot-wait --kit K --stage grt.
+- lever-1: GRT hold repair running on epyc7 (unit oth-ubuntu-3023440-1795329345), waiter b6xr6o6s0 equivalent: ot-wait unit.
+- Fallback (if bind not green by 14:00): no-clock row legal only for col_h9_r2 + col_h10_r2 (72); col_h9_r1 -> J9.
