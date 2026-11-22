@@ -700,7 +700,7 @@ def _shift(v, d):
     return [round(v[0] + d[0], 4), round(v[1] + d[1], 4)] + list(v[2:])
 
 
-def move_lanes(t, sd, gs, near=30.0, budgets=None):
+def move_lanes(t, sd, gs, near=30.0, budgets=None, root=None):
     """rigid lane moves (same orient): the lane, every clock / landing record of that lane (inst / name prefix),
     the end points of station rows on it, and the registers of those rows near the old lane box (hi rows: the
     per-lane stages >= gs only; the shared banks are re-sited by `sites`) move by the lane's delta."""
@@ -750,8 +750,95 @@ def move_lanes(t, sd, gs, near=30.0, budgets=None):
                 if max(dx, dy) <= near:
                     e["regs_um"][j] = _shift(r, d); n["regs"] += 1
             e["note"] = e.get("note", "") + f" | S81-HI-CORRIDOR lane move {inst} by {d[0]:.2f},{d[1]:.2f}"
+    n["core_taps"] = retap_lanes(t, set(D), root=root, budgets=budgets)
     n["taps_moved"] = clear_added_taps(t, only=set(D), budgets=budgets)
     return n
+
+
+CORE_TAP_CLEAR = 4.32          # early_core_taps.add: a core tap sits >= 4.32 um from every placed box and every other tap
+
+
+def core_clk_pin(h, pin="clk", root=None):
+    """type-frame xy of one clock pin of a hard core, as early_core_taps.add reads it: origin + track_offset + the
+    oriented view pin (inline pins[] first, then the LEF).  None when the core carries no readable view of the pin."""
+    w, hh = h["outline_um"]
+    pp = next((q for q in h.get("pins") or [] if q.get("name") == pin), None)
+    xy = pp and (pp.get("xy") or [pp.get("x"), pp.get("y")])
+    if not xy or xy[0] is None:
+        if not h.get("lef"):
+            return None
+        import cores
+        try:
+            g = cores.lef_pins(cores.resolve(h["lef"], root), h.get("module"))
+        except (OSError, ValueError):
+            return None
+        pp = g.get(pin) or g.get(pin.split("[")[0])
+        xy = pp and pp.get("xy")
+        if not xy:
+            return None
+    px, py = float(xy[0]), float(xy[1])
+    o = h.get("orient", "R0")
+    if o in ("MY", "R180"):
+        px = w - px
+    if o in ("MX", "R180"):
+        py = hh - py
+    dx, dy = h.get("track_offset_um", [0.0, 0.0])
+    return h["origin_um"][0] + dx + px, h["origin_um"][1] + dy + py
+
+
+def core_tap_errors(t, insts=None):
+    """kind-core clock taps of the lanes (`insts`: only these cores) that G0 refuses: outside the outline (check.py
+    check_taps_cores), or two taps on one spot (pin_sites, GRT-0080 at route).  -> [(tap name, reason)]."""
+    W, H = t["outline_um"]
+    taps = [tp for tp in (t.get("clock") or {}).get("taps") or [] if tp.get("kind") == "core"]
+    bad = []
+    for i, tp in enumerate(taps):
+        inst = tp["name"].rsplit(".", 1)[0]
+        if not LN.search(inst) or (insts is not None and inst not in insts):
+            continue
+        x, y = map(float, tp["xy"][:2])
+        if not (0 <= x <= W and 0 <= y <= H):
+            bad.append((tp["name"], "outside the outline"))
+        elif any(abs(x - float(o["xy"][0])) < 2.16 and abs(y - float(o["xy"][1])) < 2.16 for j, o in enumerate(taps) if j != i):
+            bad.append((tp["name"], "on the site of another core tap"))
+    return bad
+
+
+def retap_lanes(t, insts, root=None, budgets=None, clear=CORE_TAP_CLEAR):
+    """FABLE-FIX-S81-LEAF-R9 11-21 (RG9 G0: 37 lane core taps outside the outline in 24 re-grid types, t26 two taps on
+    one M7 site): a core tap is not a rigid part of its lane.  Its site is the nearest legal channel point to the core's
+    clock pin (early_core_taps.add: schema.tap_clear, 4.32 um off every placed box, the outline and every other tap), and
+    that point depends on what stands round the core, so a shifted tap keeps an offset that was legal only at the old
+    place (a lane moved to the west column at x 4.32 took its tap to x -5.3).  Every kind-core tap of a moved lane is
+    derived again from the moved core's pin, in table order, against all other taps of the type (core, grid, added).
+    A core without a readable pin view keeps the shifted site only if G0 would accept it.  -> [[name, old, new]]."""
+    ck = t.get("clock") or {}
+    cores_ = {h["inst"]: h for h in t.get("hard_cores") or []}
+    mine = [tp for tp in ck.get("taps") or [] if tp.get("kind") == "core" and tp.get("name", "").rsplit(".", 1)[0] in insts]
+    if not mine:
+        return []
+    import schema
+    _, _, grid = _tap_rule(t, budgets)
+    taken = [tuple(map(float, tp["xy"][:2])) for tp in ck.get("taps") or [] if not any(tp is m for m in mine)]
+    taken += list(grid) + [tuple(map(float, tp["xy"][:2])) for tp in ck.get("added_taps") or []]
+    out, blind = [], set()
+    for tp in mine:
+        inst, pin = tp["name"].rsplit(".", 1)
+        p = core_clk_pin(cores_[inst], pin, root)
+        x, y = map(float, tp["xy"][:2])
+        if p is None:
+            blind.add(inst); taken.append((x, y))
+            continue
+        q = schema.tap_clear(t, p[0], p[1], taken, clear=clear)
+        q = (round(q[0], 3), round(q[1], 3))
+        taken.append(q)
+        if abs(q[0] - x) > 1e-6 or abs(q[1] - y) > 1e-6:
+            tp["xy"] = [q[0], q[1]] + list(tp["xy"][2:])
+            out.append([tp["name"], [round(x, 3), round(y, 3)], [q[0], q[1]]])
+    bad = core_tap_errors(t, insts)
+    if bad:
+        raise SystemExit(f"HI_CORRIDOR_APPLY: core taps of moved lanes are not legal ({'no pin view for ' + str(sorted(blind)) + '; ' if blind else ''}{bad[:6]})")
+    return out
 
 
 def _tap_rule(t, budgets=None):

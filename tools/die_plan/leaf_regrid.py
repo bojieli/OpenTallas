@@ -32,6 +32,17 @@ HOP FIX: a non hi/ho row that seat() or a lane move left over 405 um (and longer
 for the hop (one site per bus group, 0 cycles); a group (rows of one bus to one core) that still cannot meet 405 gets
 +1 station on each of its rows (+1 cycle, reported as `grown`: the latency of those rows is re-priced by the bind).
 
+CORE TAPS (FABLE-FIX-S81-LEAF-R9 11-21, RG9 G0: 37 lane core taps outside the outline in 24 types): a lane's early core tap
+is derived from the MOVED core's clock pin (s81_hi_corridor.retap_lanes = the early_core_taps.add rule: nearest channel
+point 4.32 um off every placed box, the outline and every other tap), never shifted with the lane; --root = the source
+tree the core LEF views are read from.  check fails a lane core tap outside the outline or on another core tap.
+  retap PLAN --base BASE_PLAN --root TREE --out PLAN_OUT [--report REP.json]
+                                               a plan re-gridded before that rule: the taps of every lane that moved
+                                               against BASE_PLAN (and every tap check refuses) are derived again
+  nudge PLAN --move TYPE:LANE,LANE:DX,DY ... --root TREE --out PLAN_OUT
+                                               rigid move of some lanes of a re-gridded type on the 4.32 lattice (a lane
+                                               off a die cut line); kept only if check passes, 0 cycles, exit 1 otherwise
+
 After apply, in this order and with bind tools == gen tools: istation_clear.py, leaf_slot_clear.py, then the re-solves on
 the moved cores (vp_sr stations, reach_rules.py fix --rules 1, taps, fstart_reset_delta.py), then `check` again.
 """
@@ -318,7 +329,7 @@ def lane_path(vn, lp, S, rows):
     return pts
 
 
-def regrid_type(tn, t, P, col_gap, row_gap, strip, two_d=True, add_stage=True):
+def regrid_type(tn, t, P, col_gap, row_gap, strip, two_d=True, add_stage=True, root=None):
     S, err = find_slots(t, col_gap, row_gap, strip)
     if err:
         return dict(type=tn, result="REFUSED " + err)
@@ -349,7 +360,7 @@ def regrid_type(tn, t, P, col_gap, row_gap, strip, two_d=True, add_stage=True):
         rows.setdefault(x, []).append(y)
     for x in rows:
         rows[x].sort()
-    mv = H.move_lanes(t, seed, 0, budgets=P.get("budgets"))
+    mv = H.move_lanes(t, seed, 0, budgets=P.get("budgets"), root=root)
     RT = Router(t) if two else None
     todo = []
     for e in t["internal_stations"]:
@@ -566,6 +577,36 @@ def explicit_tap_refusal(t):
     return None
 
 
+def nudge_type(tn, t, P, insts, d, root=None):
+    """S81-LEAF-NUDGE (RG9 G0 11-21: die cut at 10750 through s_3S_L0 0.61 > 0.6, the re-grid stood two lanes on the cut
+    line where J7 had one): a rigid move of some lanes of one re-gridded type by d (a 4.32 um lattice vector).  The
+    lanes, their row ends and the registers beside them move (H.move_lanes), their core taps are derived again, relay
+    sites and non hi/ho registers are seated; no station is added (0 cycles).  The move is kept only if check_type
+    passes; otherwise the type is restored.  -> report."""
+    if any(abs(v / G - round(v / G)) > 1e-6 for v in d):
+        return dict(type=tn, result=f"REFUSED move {list(d)} is off the {G} um lattice")
+    keep = copy.deepcopy(t)
+    lanes = {h["inst"]: h for h in t["hard_cores"] if H.LN.search(h["inst"])}
+    miss = [i for i in insts if i not in lanes]
+    if miss:
+        return dict(type=tn, result=f"REFUSED no lane {miss}")
+    seed = {i: dict(origin_um=[round(lanes[i]["origin_um"][0] + d[0], 4), round(lanes[i]["origin_um"][1] + d[1], 4)], orient=lanes[i].get("orient", "R0")) for i in insts}
+    was = max([max(_hops(e)) for e in t.get("internal_stations") or [] if e.get("regs_um") and e.get("from_um") and e.get("to_um")] or [0.0])
+    try:
+        mv = H.move_lanes(t, seed, 0, budgets=P.get("budgets"), root=root)
+        r = dict(type=tn, result="moved", lanes=sorted(insts), by=list(d), move=mv, seated=seat(t), worst_hop_before_um=round(was, 1))
+        r["check"] = check_type(tn, t, 0)
+        if not r["check"]["pass"]:
+            r["result"] = "REFUSED check"
+    except SystemExit as e:
+        r = dict(type=tn, result=f"REFUSED {e}")
+    if r["result"] != "moved":
+        t.clear(); t.update(keep)
+    else:
+        t["note"] = t.get("note", "") + f" | S81-LEAF-NUDGE 11-21: {len(insts)} lanes moved by {d[0]:g},{d[1]:g} (off a die cut line; 0 cycles)"
+    return r
+
+
 def check_type(tn, t, gs=0):
     B = H.boxes(t); L = lbox(t); W, Ht = t["outline_um"]
     inn = lambda p: [b[0] for b in B if b[1] < p[0] < b[3] and b[2] < p[1] < b[4]]      # noqa: E731
@@ -656,14 +697,16 @@ def check_type(tn, t, gs=0):
                                    if bool(H.LN.search(a[0])) != bool(H.LN.search(b[0]))
                                    and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6 and a[2] < b[4] - 1e-6 and b[2] < a[4] - 1e-6})
     rep["explicit_tap_refused"] = explicit_tap_refusal(t)
-    rep["pass"] = (not on_band and not rep["lanes_on_core"] and not rep["explicit_tap_refused"] and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
+    # CORE-TAP (RG9 G0 11-21): a lane core tap outside the outline / on another core tap is a G0 error
+    rep["core_taps_bad"] = [list(b) for b in H.core_tap_errors(t)]
+    rep["pass"] = (not on_band and not rep["lanes_on_core"] and not rep["explicit_tap_refused"] and not rep["core_taps_bad"] and st_in == 0 and rl_in == 0 and start_in == 0 and rep["lane_gaps_under"] == 0 and worst <= HOP + 1e-6)
     rep["bank_spill_advisory"] = "OK" if rep["bank_spill_max_um"] <= SPILL_MAX else "PILE-UP"      # estimator, not calibrated against a kit yet
     return rep
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=("slots", "apply", "check"))
+    ap.add_argument("cmd", choices=("slots", "apply", "check", "retap", "nudge"))
     ap.add_argument("plan")
     ap.add_argument("--types", default=r"^ot_s81sl_leaf__t")
     ap.add_argument("--out"); ap.add_argument("--report"); ap.add_argument("--json")
@@ -671,6 +714,9 @@ def main():
     ap.add_argument("--strip", type=float, default=STRIP); ap.add_argument("--gs", type=int, default=0)
     ap.add_argument("--no-2d", action="store_true", help="apply: column form only (a type with too few column slots is refused)")
     ap.add_argument("--no-add-stage", action="store_true", help="apply: no +1 per-lane hi stage on a type whose lane path needs a hop over 405 um")
+    ap.add_argument("--root", help="source tree the core LEF views are read from (apply / retap: core taps are derived from the moved core's clock pin)")
+    ap.add_argument("--base", help="retap: the plan the lanes were moved FROM; core taps of every lane whose origin / orient differs are derived again")
+    ap.add_argument("--move", action="append", default=[], help="nudge: TYPE:LANE,LANE,..:DX,DY (lane indices; a rigid move on the 4.32 um lattice), repeatable")
     ap.add_argument("--no-hop-fix", action="store_true", help="apply: leave non hi/ho rows that the move put over 405 um")
     a = ap.parse_args()
     P = json.load(open(a.plan))
@@ -688,7 +734,7 @@ def main():
     elif a.cmd == "apply":
         for tn, t in H.matching(P, a.types):
             keep = copy.deepcopy(t)
-            r = regrid_type(tn, t, P, a.col_gap, a.row_gap, a.strip, two_d=not a.no_2d, add_stage=not a.no_add_stage)
+            r = regrid_type(tn, t, P, a.col_gap, a.row_gap, a.strip, two_d=not a.no_2d, add_stage=not a.no_add_stage, root=a.root)
             if r["result"] == "moved":
                 r["seated"] = seat(t)
                 if not a.no_hop_fix:
@@ -706,6 +752,34 @@ def main():
                   "in_core", c.get("sites_in_core"), "gap", c.get("min_lane_gap_um"), "spill", c.get("bank_spill_max_um"), c.get("bank_spill_advisory"), "PASS" if c.get("pass") else "CHECK-FAIL" if c else "",
                   *(["2D"] if r.get("form") == "2d" else []), *(["STAGE+1 " + "+".join(sorted(r["add_stage"]))] if r.get("add_stage") else []),
                   *([f"HOPFIX resited {len(r['hop_fix']['resited'])} grown {len(r['hop_fix']['grown'])} left {len(r['hop_fix']['left'])}"] if r.get("hop_fix") else []))
+        json.dump(P, open(a.out, "w"))
+    elif a.cmd == "nudge":
+        T = P["partition_types"]
+        for m in a.move:
+            tn, ln, dv = m.split(":")
+            r = nudge_type(tn, T[tn], P, [f"u_lf.u_vp.g_ln[{int(k)}].u_l" for k in ln.split(",")], tuple(float(v) for v in dv.split(",")), root=a.root)
+            rep.append(r)
+            c = r.get("check") or {}
+            print("LEAF_REGRID_NUDGE", tn, r["result"], "lanes", ln, "by", dv, "hop", r.get("worst_hop_before_um"), "->", c.get("worst_hop_um"), "gap", c.get("min_lane_gap_um"),
+                  "core taps", len((r.get("move") or {}).get("core_taps") or []), "PASS" if c.get("pass") else "CHECK-FAIL " + str({k: v for k, v in c.items() if k in ("sites_in_core", "relay_in_core", "start_in_core", "lane_gaps_under", "lanes_on_band", "lanes_on_core", "core_taps_bad", "explicit_tap_refused")}) if c else "")
+        if any(r["result"] != "moved" for r in rep):
+            json.dump(rep, open(a.report or a.json, "w"), indent=1) if (a.report or a.json) else None
+            sys.exit(1)
+        json.dump(P, open(a.out, "w"))
+    elif a.cmd == "retap":
+        # a plan re-gridded before the core taps followed their cores by derivation (RG9 2e60f71467d1): same rule, after the fact
+        B = json.load(open(a.base))["partition_types"] if a.base else {}
+        for tn, t in H.matching(P, a.types):
+            bl = {h["inst"]: (h["origin_um"], h.get("orient", "R0")) for h in B.get(tn, {}).get("hard_cores", [])}
+            moved = {h["inst"] for h in t["hard_cores"] if H.LN.search(h["inst"]) and h["inst"] in bl and bl[h["inst"]] != (h["origin_um"], h.get("orient", "R0"))}
+            moved |= {n.rsplit(".", 1)[0] for n, _ in H.core_tap_errors(t)}
+            if not moved:
+                continue
+            ch = H.retap_lanes(t, moved, root=a.root, budgets=P.get("budgets"))
+            if ch:
+                t["note"] = t.get("note", "") + f" | S81-LEAF-RETAP 11-21: {len(ch)} lane core taps derived again from the moved core's clock pin"
+            rep.append(dict(type=tn, lanes=len(moved), retapped=ch, core_taps_bad=H.core_tap_errors(t)))
+            print("LEAF_REGRID_RETAP", tn, "lanes", len(moved), "taps", len(ch), "max move", round(max([H.md(c[1], c[2]) for c in ch] or [0]), 1))
         json.dump(P, open(a.out, "w"))
     else:
         for tn, t in H.matching(P, a.types):

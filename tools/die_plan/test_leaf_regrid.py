@@ -251,3 +251,93 @@ def test_explicit_tap_table_under_a_lane_fails_the_check():
     assert R.check_type(TN, t)["explicit_tap_refused"] is None
     t["clock"]["tap_mode"] = "grid+explicit"; t["clock"]["taps"][1]["xy"] = [x + 40.0, y + 40.0]
     assert R.check_type(TN, t)["explicit_tap_refused"] is None                 # only a frozen explicit table is judged here
+
+
+def _tapped(orient="R0"):
+    """the synthetic leaf with a pin view (clk on the south edge) and one early core tap per lane, sited as early_core_taps.add does"""
+    P = plan()
+    t = P["partition_types"][TN]
+    taps = []
+    for h in t["hard_cores"]:
+        if H.LN.search(h["inst"]):
+            h["orient"] = orient
+            h["pins"] = [dict(name="clk", layer="M3", x=29.133, y=0.019)]
+            taps.append(dict(name=h["inst"] + ".clk", kind="core", xy=[0.0, 0.0], insertion_ps=260.0))
+    t["clock"] = dict(core_taps="early", taps=taps)
+    H.retap_lanes(t, {h["inst"] for h in t["hard_cores"]})
+    return P, t
+
+
+def _pin_dist(t):
+    hc = {h["inst"]: h for h in t["hard_cores"]}
+    return {tp["name"]: R.md(H.core_clk_pin(hc[tp["name"].rsplit(".", 1)[0]]), tp["xy"]) for tp in t["clock"]["taps"]}
+
+
+def test_core_taps_are_derived_from_the_moved_core_not_shifted():
+    """RG9 G0 11-21: 37 lane core taps outside the outline in 24 re-grid types (a lane moved to the west column at x 4.32
+    took its tap, 9.6 um west of the core, to x -5.3), and t26 two taps on one M7 site."""
+    for orient in ("R0", "MX"):
+        P, t = _tapped(orient)
+        ln = next(h for h in t["hard_cores"] if H.LN.search(h["inst"]))
+        tp = next(a for a in t["clock"]["taps"] if a["name"] == ln["inst"] + ".clk")
+        tp["xy"] = [ln["origin_um"][0] - 9.639, ln["origin_um"][1] + 0.031]           # the stale J7 form: legal only where it was
+        r = R.regrid_type(TN, t, P, R.COL_GAP, R.ROW_GAP, R.STRIP)
+        assert r["result"] == "moved" and r["move"]["core_taps"], r
+        W, Ht = t["outline_um"]
+        assert H.core_tap_errors(t) == [] and all(0 <= a["xy"][0] <= W and 0 <= a["xy"][1] <= Ht for a in t["clock"]["taps"])
+        assert max(_pin_dist(t).values()) <= 4 * H.CORE_TAP_CLEAR                         # beside its own pin again
+        B = [b for b in H.boxes(t)]
+        assert not any(b[1] < a["xy"][0] < b[3] and b[2] < a["xy"][1] < b[4] for a in t["clock"]["taps"] for b in B)
+        assert R.check_type(TN, t)["core_taps_bad"] == []
+
+
+def test_check_fails_a_lane_core_tap_outside_the_outline_or_on_another_tap():
+    P, t = _tapped()
+    a, b = t["clock"]["taps"][0], t["clock"]["taps"][1]
+    keep = list(a["xy"])
+    a["xy"] = [-5.319, 400.0]
+    c = R.check_type(TN, t)
+    assert c["core_taps_bad"] == [[a["name"], "outside the outline"]] and not c["pass"]
+    a["xy"] = list(b["xy"])
+    assert {n for n, _ in R.check_type(TN, t)["core_taps_bad"]} == {a["name"], b["name"]}
+    a["xy"] = keep
+    assert R.check_type(TN, t)["core_taps_bad"] == []
+
+
+def test_a_moved_lane_without_a_pin_view_keeps_a_legal_shifted_tap_and_refuses_an_illegal_one():
+    P, t = _tapped()
+    ln = next(h for h in t["hard_cores"] if H.LN.search(h["inst"]))
+    tp = next(a for a in t["clock"]["taps"] if a["name"] == ln["inst"] + ".clk")
+    del ln["pins"]
+    x, y = ln["origin_um"]; was = list(tp["xy"])
+    n = H.move_lanes(t, {ln["inst"]: dict(origin_um=[x, y - 4.32], orient="R0")}, 0)
+    assert n["core_taps"] == [] and tp["xy"] == [was[0], round(was[1] - 4.32, 3)]
+    tp["xy"] = [1.0, 1.0]
+    try:
+        H.move_lanes(t, {ln["inst"]: dict(origin_um=[x, y - 8.64], orient="R0")}, 0, near=0.0)
+        H.move_lanes(t, {ln["inst"]: dict(origin_um=[x - 400.0, y - 8.64], orient="R0")}, 0)
+        assert False, "a tap shifted out of the outline must stop the move"
+    except SystemExit as e:
+        assert "core taps of moved lanes are not legal" in str(e)
+
+
+def test_nudge_moves_lanes_on_the_lattice_and_restores_a_refused_type():
+    P, t = _tapped()
+    r = R.regrid_type(TN, t, P, R.COL_GAP, R.ROW_GAP, R.STRIP)
+    R.seat(t)
+    assert r["result"] == "moved" and R.check_type(TN, t)["pass"]
+    ls = sorted((h for h in t["hard_cores"] if H.LN.search(h["inst"])), key=lambda h: (h["origin_um"][0], h["origin_um"][1]))
+    col = max(([h for h in ls if h["origin_um"][0] == x] for x in {h["origin_um"][0] for h in ls}), key=len)      # the fullest column
+    room = col[0]["origin_um"][1] - R.EDGE
+    assert room >= R.G, "fixture: the first column needs room below"
+    was = {h["inst"]: list(h["origin_um"]) for h in col}
+    n = R.nudge_type(TN, t, P, [h["inst"] for h in col], (0.0, -R.G))
+    assert n["result"] == "moved" and n["check"]["pass"], n
+    assert all(h["origin_um"] == [was[h["inst"]][0], round(was[h["inst"]][1] - R.G, 4)] for h in col)
+    assert max(_pin_dist(t).values()) <= 4 * H.CORE_TAP_CLEAR and "S81-LEAF-NUDGE" in t["note"]
+    keep = copy.deepcopy(t)
+    assert R.nudge_type(TN, t, P, [col[0]["inst"]], (0.0, 1.0))["result"].startswith("REFUSED move")           # off the lattice
+    assert len(col) >= 2, "fixture: the first column holds two lanes"
+    dy = -(round((col[1]["origin_um"][1] - col[0]["origin_um"][1] - L) / R.G) - 1) * R.G                        # 4.32 um (or less) off the lane below
+    bad = R.nudge_type(TN, t, P, [col[1]["inst"]], (0.0, dy))
+    assert bad["result"].startswith("REFUSED") and t == keep
