@@ -74,3 +74,34 @@ split_tx_io_stages.sv and rgnl are in no plan `sources` list and not on main; pr
 internal station so that fold_legs + the pair keep 2 stations (0 cycles); not done. 6. Split, re-derive keys, strict bind,
 LATCHECK, private-spec kits (wave env), routed LEC, sign-off. 7. e1b: HEAD-START-R18 told to keep the lep0N START rows out
 until the split plan exists.
+
+## UPDATE 11-21 20:5x PST (after COORD ruling (U): cut 820.8, pairs 1 / 2 west 25.92)
+- PARTS_EQUIV_PASS: unit oth-ubuntu-1136304-1795317736 ended rc 0 at 20:44, "Equivalence successfully proven" (4,901 s).
+  The six-content form equals Codex's proven split core, 0 cycles.
+- In flight (2, both on epyc10, waiters armed in my session): oth-ubuntu-1452654-1795321534 = cut form, functional mode
+  (pid 432115, log ~/fable-fix-head-lep0n-r7/cut_equiv_ra4c_e10.otrun.log, pass CUT_EQUIV_PASS); ot-run pid 691937 = the same
+  proof with rst_n FREE (reset assertion and release, local fan vs hub leaves, reset-free pair flops; L/cut/prove_cut_rst.sh,
+  proof dir L/cut/proof_rst, log cut_rst_equiv_e10.otrun.log, pass CUT_RST_EQUIV_PASS). Neither proven yet.
+- type_split on main: 96b36b14f25 (ports without face, pair core taps in the band, per-bus landing pins) and 7c6e2894511
+  (spec landing_recompose: HEAD region-monitor contract left to the compose, landing network ends by bus, HEAD region table,
+  pin_entry_phase, census none). 6 new tests. hd_lep0N NOW SPLITS END TO END: spec L/plan/split_spec_820u.json, base
+  L/plan/plan_cut_pre_u.json (tmp/premove.py 820.8 25.92 _u), output L/clone/physical/die_plan/r7_split_u/ (plan_c.json,
+  eW_sidecar.json, report.json, latency_rows.json, sink_bins/). Pieces hd_lep0N_w 820.8 x 1408.32 (rg1, rg2; 64 taps) and
+  hd_lep0N 1071.36 x 1408.32 (hub, io, rg0, rg3; 183 taps). 5 cut ports L1..L5 (coll_i0 leg, h2r1, r2h1, h2r2, r2h2).
+- Pre-plan changes for (U), all in premove.py: pairs to x 43.2; W-channel taps clk_t16/t19/t216/t220/t231, the coll_o2
+  station and its sink to x 34.56; 11 die_clock_tree reserved rects pushed west of x 41 (die clock must re-seat them);
+  u_land g_t[0] / g_t[1] at x 867.72 (tap clk_t22 clearance), wdq_bank0 / 1 at x 848-855; RX sites (940.908, 708.492),
+  (940.908, 734.412), (967.788, 604.812), (838.188, 483.852); coll_i0 leg with ONE station (the cut pair folds it).
+  504 repo-relative assets that exist only in the event tree are absolute snapshot paths (read-only).
+- Lane check still owed: report says coll_WN0_u fixed 2 -> 1 plus new lane L1; confirm in gen RTL that the coll_i0 path has
+  exactly 2 registers between the band and c0i_s0, as before.
+
+## NEXT (open, in order)
+1. Landing re-compose of the two pieces. fallback_land.py compose re-composes the WHOLE die (clock_landing_plan._compose),
+   which would also re-place every other type's bands. Needed: a scoped run that keeps only the rows of hd_lep0N and
+   hd_lep0N_w (contract pins / bands / children / sources, collector.types, edges, count_aligned parts / regions / ports of
+   L1..L5) and merges them into r7_split_u. The W channel is 43.2 um: bands coll_i1 / coll_i2 (45.36 wide today) must be
+   re-placed by it. No earlier HEAD split left a chain script on main (head_hsplit_event.sh is not in history).
+2. head_sideband_street_rows.py --redo (START / status keys), reach_fix.py (reset_tree_anchor), head_reset_exports.py,
+   head_rf_plan_delta.py (hub RFPL / relay_sites).
+3. Private tree with parts RTL + rgnl in `sources`; gen.py rtl; strict bind; LATCHECK. 4. PD rows, kits, sign-off.
