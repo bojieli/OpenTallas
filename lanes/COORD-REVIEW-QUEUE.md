@@ -24119,3 +24119,4 @@ FAILED [AUTOPILOT 8f29b1f0ce89] 2026-11-22 03:15:08 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 03:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-22 03:52 PST: 152 running jobs, PROGRESSING 141, SLOW 9, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 col_h9_r2__t1__clc9ad8f7e__pv45d0c698 5_2_route stage 44.4 h job 44.8 h: drt_violations best 1 last 29 rows 57 window-gain 0.0%; stagnant 31.6 h; last event 14.5 h ago, log write 10.7 h ago (3167 lines)
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 12.9 h job 12.9 h: no new meaningful log line for 11.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+- 2026-11-22 03:52 PST DONE [CLEAN-AGGR-R3] ot-push-main otpush-outgoing-giraffe-655652 on outgoing-giraffe: rc=0 after 22 s, ended 11:52:35, log none, cmd: ot-push-main 
