@@ -23844,3 +23844,4 @@ FAILED [AUTOPILOT 20d5395e14bc] 2026-11-22 02:40:14 PST AUTOPILOT -> KIT-WAVE-1:
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 02:52 PST ALERT NO-PROGRESS s81_head: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 187 min (last 23:44); NO-LAUNCH x3
 - 2026-11-22 02:52 PST DIED [explorer-store-r1] ot-push-main otpush-outgoing-giraffe-3489827 on outgoing-giraffe: rc=4 after 5 s, ended 10:52:54, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 5 s, no log
+- 2026-11-22 02:53 PST ACK private-kits-count ruling: iq_C final kit will be private-spec on the ot-tree-fork copy (sealed manifest mode, NEVER --src-manifest off), plan_iq1.json as overlay, --goal finish, --rt >= 6d2e187f0d65, ot-wait --durable. Gate (strict bind+LATCHECK+G0 on iq_C station rows) running on epyc9; geom kits for lepw_mus_C t1, lepw_mu_LP t2, c1x_C t8 running.
