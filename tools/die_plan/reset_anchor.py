@@ -185,7 +185,9 @@ def main(argv):
     it on the plan they solved; a later in-place input change is then re-picked at bind).  --source snapshot / auto
     take the sites from the plan's own solve-time tree (landing_contract.collector_tree) instead, for a plan whose
     names were picked before a later event or generator change renumbered the tree (auto: snapshot when it holds every
-    referenced name, else the tree)."""
+    referenced name, else the tree).  Per type: a type that cannot be anchored (e.g. a referenced relay missing from
+    every source) is listed as FAILED and left unchanged; every other type is still anchored and OUT is written; the
+    exit status is 1 when any type failed (TAP-GRID-R5 11-22: one stale QC reference blocked 98 re-records)."""
     import argparse
     import sys
     ap = argparse.ArgumentParser(description=main.__doc__)
@@ -217,35 +219,42 @@ def main(argv):
     tol = a.tol_um if a.tol_um is not None else RT.relay_um(P)
     want = set(filter(None, a.types.split(",")))
     bplan = json.loads(Path(a.bound_plan).read_text())["partition_types"] if a.bound_plan and a.bound_rtl else {}
-    n = 0
+    n, failed = 0, {}
     for tn, t in raw["partition_types"].items():
         if (want and tn not in want) or not refs(t):
             continue
-        names = {c[k] for c, k in refs(t)}
-        has = lambda tr: tr is not None and names <= {r["q"] for r in tr["relays"]}  # noqa: E731
-        src, tree = None, None
-        if a.source == "auto" and tn in bplan and [c[k] for c, k in refs(bplan[tn])] == [c[k] for c, k in refs(t)]:
-            f = Path(a.bound_rtl) / f"{tn}.sv"
-            bt = bound_tree(f.read_text()) if f.is_file() else None
-            if has(bt):
-                src, tree = "bound", bt
-        if tree is None and a.source in ("tree", "auto"):
-            tt = RT.for_type(P, tn)
-            if a.source == "tree" or has(tt):
-                src, tree = "tree", tt
-        if tree is None:
-            snap = snapshot(t)
-            if a.source == "snapshot" or has(snap):
-                src, tree = "snapshot", snap
-        if tree is None:
-            raise AnchorError(f"{tn}: no source holds every referenced relay (bound / tree / snapshot)")
-        t["clock"][KEY] = record(t, tree, a.root, tol)
-        n += 1
-        print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s) from the {src}, tol {tol:g} um", flush=True)
+        try:
+            names = {c[k] for c, k in refs(t)}
+            has = lambda tr: tr is not None and names <= {r["q"] for r in tr["relays"]}  # noqa: E731
+            src, tree = None, None
+            if a.source == "auto" and tn in bplan and [c[k] for c, k in refs(bplan[tn])] == [c[k] for c, k in refs(t)]:
+                f = Path(a.bound_rtl) / f"{tn}.sv"
+                bt = bound_tree(f.read_text()) if f.is_file() else None
+                if has(bt):
+                    src, tree = "bound", bt
+            if tree is None and a.source in ("tree", "auto"):
+                tt = RT.for_type(P, tn)
+                if a.source == "tree" or has(tt):
+                    src, tree = "tree", tt
+            if tree is None:
+                snap = snapshot(t)
+                if a.source == "snapshot" or has(snap):
+                    src, tree = "snapshot", snap
+            if tree is None:
+                raise AnchorError(f"{tn}: no source holds every referenced relay (bound / tree / snapshot)")
+            t["clock"][KEY] = record(t, tree, a.root, tol)
+            n += 1
+            print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s) from the {src}, tol {tol:g} um", flush=True)
+        except Exception as e:                       # TAP-GRID-R5 11-22: one bad type never blocks the rest
+            failed[tn] = f"{type(e).__name__}: {str(e)[:300]}"
+            print(f"FAILED {tn}: {failed[tn]}", flush=True)
     for tn, f in keep.items():
         raw["partition_types"][tn]["clock"]["sink_bins_file"] = f
     Path(a.out).write_text(json.dumps(raw, separators=(",", ":")))
     print(f"wrote {a.out} sha256 {hashlib.sha256(Path(a.out).read_bytes()).hexdigest()[:12]} ({n} types)")
+    if failed:
+        print(f"reset_anchor record: {len(failed)} type(s) NOT anchored (left as they were): " + ", ".join(sorted(failed)))
+        return 1
     return 0
 
 

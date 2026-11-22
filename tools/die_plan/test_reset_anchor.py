@@ -159,3 +159,25 @@ def test_bound_tree_reads_the_relays_a_bind_of_record_emitted():
     bt = RA.bound_tree(sv)
     assert bt["relays"] == [dict(q="rst_rl_228", depth=5, xy=[366.7, 946.1]), dict(q="rst_rl_229", depth=6, xy=[366.7, 946.1])]
     assert RA.bound_tree("module m; endmodule") is None
+
+
+def test_record_cli_anchors_every_good_type_and_lists_failures(tmp_path, monkeypatch, capsys):
+    """TAP-GRID-R5 11-22: record is per type; a stale reference (rst_rl_9 not in the tree) fails only its own type."""
+    import reset_tree as RT
+    raw = {"partition_types": {"A": _type("rst_rl_1"), "BAD": _type("rst_rl_9"), "C": _type("rst_rl_2", "rst_rl_3")}}
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    monkeypatch.setattr(schema, "Plan", lambda r, f: object())
+    monkeypatch.setattr(RT, "for_type", lambda P, tn: OLD)
+    monkeypatch.setattr(RT, "relay_um", lambda P: 50.0)
+    out = tmp_path / "out.json"
+    rc = RA.main(["reset_anchor.py", "record", str(plan), str(out), "--root", str(HERE)])
+    got = json.loads(out.read_text())["partition_types"]
+    assert rc == 1
+    assert set(got["A"]["clock"][RA.KEY]["relays"]) == {"rst_rl_1"}
+    assert set(got["C"]["clock"][RA.KEY]["relays"]) == {"rst_rl_2", "rst_rl_3"}
+    assert RA.KEY not in got["BAD"]["clock"]
+    text = capsys.readouterr().out
+    assert "FAILED BAD:" in text and "1 type(s) NOT anchored" in text and "BAD" in text.splitlines()[-1]
+    rc_ok = RA.main(["reset_anchor.py", "record", str(plan), str(out), "--types", "A,C", "--root", str(HERE)])
+    assert rc_ok == 0
