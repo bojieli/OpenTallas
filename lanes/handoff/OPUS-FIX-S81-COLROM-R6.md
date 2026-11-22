@@ -14,3 +14,10 @@ report their GRT. No separate col hand-off.
   (rebind on rt current) --ab OT_RELAY_MID_RE=<E> --ab OT_KEEP_WIRES="<wave list> ot_s81_rly:rq" --ab OT_RELAY_MID_STAGGER=1 --ab OT_GRT_CONG_ITERS=50.
 - Cancelled: first G try spec _1121231436 (planF + E RE on J7 tools; inherits D -81 seats) at kit_rtl, ot-run unit oth-ubuntu-1270086-1795331713.
 ## Reads: CTS = 4_cts_post_hook.rpt; GRT = final 5_1_grt.odb only.
+
+## UPDATE 01:3x 11-22
+- D: GRT-0116 ovf 1725 (10 it) DEAD. E: GRT-0116 ovf 2039 (10 it) DEAD; E CTS +22.23 (timing row OK). F: CTS -72.14, GRT 50 it running. H: CTS +19.20, GRT pending.
+- G try1 bind FAILED: dead_inputs resolve() vs ot-build launch-tree symlinks -> fixed main 06b2ca5293 (LAUNCH-LINK-1122). G try2 on rt 06b2ca5293cd: elab BUILT, bind running (driver intel2 opus-fix-s81-colrom-r6/buildG.pid/log; try1 log buildG.try1.log).
+- ROOT CAUSE south hotspot: lpad_frame_int_i1 ranks keyed with 5 sample bits; 6300 unseated pad flops at y<100 (census epyc9 opus-fix-s81-colrom-r6/tmp/hotE/hot_cells.tsv; tools tmp/hot.sh hot.tcl cong.py).
+- Kits P (planP = planH + all lpad bits at rank sites) work _1122012035, P2 (+ r[1] at 600,170) work _1122012102; specs private_specs/OPUS-FIX-S81-COLROM-R6/..._1122012055/_1122012120; runitem_p/p2.pid in fable-fix-s81-colrom-r5.
+- Systemic: col_h10_r2 (520 keys i0), col_h9_r0_p4/p5 (4 keys) same sample-bit lpad keys. Posted to H9R0-R4/H10-R4/ASSEMBLY.
