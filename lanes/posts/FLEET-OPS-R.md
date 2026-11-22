@@ -1034,3 +1034,4 @@
 - 2026-11-21 19:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: harvest-eco-2350 on intel1 wrote 37 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 19:25 PST ALERT [FLEET-OPS-R -> COORD] lane quota: tap-grid-r2 on intel1 wrote 48 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 19:30 PST DISK-RATE epyc7 /srv/opentallas-scratch: free 294 GB, falling 124 GB/h, floor 50 GB in 2.0 h (state 2, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch (cron disk_rate.py; read-only)
+- 2026-11-21 19:35 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:kw45 on epyc2 wrote 159 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
