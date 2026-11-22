@@ -210,6 +210,17 @@ SSH_FAILS = {}          # host -> failed ssh calls in this tick process (a tick 
 SSH_SKIP_AFTER = 2
 
 
+# RETIRED-HOSTS-1122 (FLOW-OPS-R2): owner rules -- epyc1 released 10-26, epyc3 terminated 10-25, never ssh to epyc3/4/5/6.  76 auto-resign
+# backlog rows still named them and every tick ssh-probed them (name-resolution / host-key / timeout errors), so they sat in WAIT for ever.
+# rpy / rbash refuse these hosts without an ssh; OT_AP_RETIRED_HOSTS (comma list) replaces the set.
+RETIRED_HOSTS = frozenset(h for h in (os.environ.get("OT_AP_RETIRED_HOSTS") or "epyc1,epyc3,epyc4,epyc5,epyc6").split(",") if h)
+RETIRED_ERROR = "RETIRED-HOST"
+
+
+def host_retired(host):
+    return str(host or "").split(".")[0] in RETIRED_HOSTS
+
+
 def ssh_skipped(host):
     """FABLE-FLOW-0755 H (tick 556-796 s, poll_running 262 s waiting on epyc7): a host whose ssh failed (255 / timeout) twice in this tick is skipped for the rest of the tick"""
     return SSH_FAILS.get(ssh_host(host), 0) >= SSH_SKIP_AFTER
@@ -225,6 +236,8 @@ def ssh_note(host, rc, out=""):
 
 def rpy(host, code, args, timeout=600):
     """run python code on host (read-mostly probes) with JSON args on argv; returns parsed JSON or {'error': ...}"""
+    if host_retired(host):
+        return {"error": f"{RETIRED_ERROR} {host}: retired build host, never ssh'd (records there are gone; owner rule)"}
     if ssh_skipped(host):
         return {"error": f"probe skipped: ssh to {host} failed {SSH_SKIP_AFTER}x this tick (not checked)"}
     cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "ControlPath=none", ssh_host(host),
@@ -238,6 +251,8 @@ def rpy(host, code, args, timeout=600):
 
 
 def rbash(host, script, timeout=1800):
+    if host_retired(host):
+        return 255, "", f"{RETIRED_ERROR} {host}: retired build host, never ssh'd (owner rule)"
     if ssh_skipped(host):
         return 255, "", f"skipped: ssh to {host} failed {SSH_SKIP_AFTER}x this tick (not checked)"
     cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "ControlPath=none", ssh_host(host),

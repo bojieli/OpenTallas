@@ -300,6 +300,8 @@ def tool_key(shas):
 def judge(c, p, ctx, it):
     """(action, why) for a probed candidate.  action LAUNCH | WAIT | SKIP | LANE (needs a lane, said in the record)"""
     if p.get("error"):
+        if str(p["error"]).startswith("RETIRED-HOST"):     # RETIRED-HOSTS-1122: the record left with the host; never probed again
+            return "SKIP", str(p["error"])[:200]
         return "WAIT", "probe: " + str(p["error"])[:200]
     if not p.get("record"):
         return "WAIT", "no record that counts yet"
