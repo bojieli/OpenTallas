@@ -1753,7 +1753,7 @@ class TypeSplit:
             L.append(d)
         self._native_stage_groups(lc.get("native_stage_groups"), L)
         self.band_clip = []
-        busnames = {b["name"] for b in self.t.get("buses", [])}
+        busnames = {b["name"] for b in (getattr(self, "t", None) or {}).get("buses", [])}
         for p in lc.get("pins", []):
             m = LAND_PIN.match(p["name"])
             cm = COLL_PIN.match(p["name"])
