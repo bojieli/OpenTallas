@@ -95,3 +95,5 @@
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3 > FLEET-WATCH-R8)
 - 2026-11-22 10:46 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/ot_s81sl_leaf__t33@13 20.9 GB
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3 > FLEET-WATCH-R8)
+- 2026-11-22 12:45 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/ot_s81sl_kv_leaf__t4@2 21.8 GB
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3 > FLEET-WATCH-R8)
