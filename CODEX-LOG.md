@@ -14184,3 +14184,7 @@ At 15:47 the fixture isolation e3fc357884b merged via e78138996dd, and the insta
 ## OWNER?
 
 May the dedicated collective fault return from coll_core through coll_f3 to glue publish in 11 cycles instead of 8? The private candidate adds three registered stages to this fault return only. It preserves the existing gated reset, delays its epoch by the same three cycles, and leaves every mission data lane and both face-codec stages at their existing cycles. With the current receive-pad sites, the farthest fault source is 1,453 µm from the return register, which needs four legs at the 405 µm reach limit. Private physical work continues with the current route hold in place.
+
+## OWNER?
+
+Which K fwd_epoch pad launch and C pad capture phase should the V2r10/D26 production calendar use? The exact emitted D5+D5 native dual-sequencer cut measures K minus C = −7 edges with a shared-edge package transfer and −8 with one additional sampling edge. Both candidates compile. The old −2 image matches neither current-bound variant. The older synthetic three-register package model implies −10, and the available landing receipts do not select a physical package sample edge. Please identify or approve the package timing basis.
