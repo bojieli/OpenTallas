@@ -38,15 +38,20 @@ set ::stb::blk_sinks [expr {[info exists ::env(OT_STB_BLOCK_SINKS)] ? $::env(OT_
 set ::stb::tag [expr {[info exists ::env(OT_STB_TAG)] ? $::env(OT_STB_TAG) : ""}]
 if {![info exists ::stb::n]} { set ::stb::n 0 }
 
+# OpenSTA pin arrival properties use command time units, including values
+# below one unit. Convert by the declared scale before budgeting in ps.
+set ::stb::ui_per_ps [sta::time_sta_ui 1.0e-12]
+proc stb::time_ps {a} {
+  if {$a eq "" || $a eq "INF" || $a eq "-INF"} { return "" }
+  return [expr {double($a) / $::stb::ui_per_ps}]
+}
 proc stb::arr {pinname} {
   set p [get_pins -quiet $pinname]
   if {![llength $p]} { return "" }
   # STB-EDGE-1: a sink below an odd number of inverters sees the source RISE as its FALL; measure that edge, so every
   # sink reads insertion delay from the same source edge (not rise + half a period)
   set a [get_property $p [expr {[info exists ::stb::par($pinname)] && $::stb::par($pinname) ? "arrival_max_fall" : "arrival_max_rise"}]]
-  if {$a eq "" || $a eq "INF" || $a eq "-INF"} { return "" }
-  if {abs($a) < 1.0} { set a [expr {$a * 1e12}] }
-  return $a
+  return [stb::time_ps $a]
 }
 proc stb::is_node {inst} {
   if {[[$inst getMaster] isBlock]} { return 0 }
