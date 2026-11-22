@@ -14252,3 +14252,6 @@ CODEX 2026-11-22 11:35 PST QC CB/Glue/FE: Combined V2 strict 130/1921 unit 18862
 
 OWNER?
 Which installed QC SYS_FACE_CFG image and target-6 producer schedule should the live QC/KV boot proof use? The sealed V2r10 and V3 bound source recipes select the sequencer RTL, but the installed 72-bit SYS_FACE_CFG bytes were absent from those packs and from the former media path. The archived candidate gives only a provisional AUTH and WITNESS date. The owner’s K−C = −8 phase is already exercised. Token work continues with the exact component schedules while the active target-6 dates remain open.
+
+OWNER?
+Can the KV PC1↔PC2 hard-macro link add one matched pipeline cycle per direction across its payload and companion control bundles, or must it retain its current inter-macro latency? The exact pc_v3 pin-register specimen has 1,113 linked pins at 581.568–894.960 µm against the 405 µm budget. Even the macro-box gap is 492.480 µm. The already approved PHY input station changes do not cover that inter-macro link. The existing latency remains in force while we price a zero-cycle seating alternative.
