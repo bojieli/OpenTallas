@@ -86,3 +86,6 @@ ot_s81hd_lep0N_region_core, same RFAN depth off the W piece's gated tap). I lean
 - intel2 ot-run HOLD at 19:1x PST: "disk-ETA: 465 GB free falling 483 GB/h" (no admission). --max-wait did not end the
   hold loop; I stopped my own client (exact pid). Private-spec gen on intel2 will meet the same hold.
 - epyc9 admitted both proof jobs at once (scratch2 475 GB free).
+
+## UPDATE: proof FINISHED PASS (after stand-down)
+Unit oth-ubuntu-1136304-1795317736 exit 0: 351,685/351,685 equiv cells proven, PARTS_EQUIV_PASS (0 cycles, RXA 16h0330, vs Codex moved_raw.il sha 99888541...). 0 units in flight. The "In flight" section above is closed; work order step 1 wait is done.
