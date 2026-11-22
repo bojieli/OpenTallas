@@ -337,20 +337,34 @@ def fetch_parallel(src_host, src, into, streams, out=print):
     dirs, files = list_remote(src_host, src)
     q = shlex.quote
     base = " ".join(q(x) for x in ["timeout", "86400"] + SSH + [src_host])
-    procs = []
+    def extract(paths, mode=""):
+        remote = f"tar -C {q(src)} --no-recursion {mode} -cf - -T -"
+        command = f"set -o pipefail; {base} {q(remote)} | tar -C {q(into)} -xpf -"
+        p = subprocess.Popen(["bash", "-c", command], stdin=subprocess.PIPE, text=True)
+        try:
+            with p.stdin:
+                p.stdin.write("\n".join(paths) + "\n")
+        except BrokenPipeError:
+            pass  # The process exit status carries the transfer error.
+        return p
+
+    failed = f"TREE-FORK FETCH FAILED {src_host}:{src} -> {into}"
+    partial = f"(partial copy kept: delete it with ot-delete {into})"
     if dirs:
-        p = subprocess.Popen(["bash", "-c", f"set -o pipefail; {base} {q(f'tar -C {q(src)} --no-recursion -cf - -T -')} | tar -C {q(into)} -xpf -"], stdin=subprocess.PIPE, text=True)
-        p.communicate("\n".join(dirs) + "\n")
-        if p.returncode:
-            raise SystemExit(f"TREE-FORK FETCH FAILED {src_host}:{src} -> {into}: directories rc {p.returncode} (partial copy kept: delete it with ot-delete {into})")
-    for i, lst in enumerate(partition(files, streams)):
-        p = subprocess.Popen(["bash", "-c", f"set -o pipefail; {base} {q(f'tar -C {q(src)} --no-recursion -cf - -T -')} | tar -C {q(into)} -xpf -"], stdin=subprocess.PIPE, text=True)
-        p.stdin.write("\n".join(lst) + "\n"); p.stdin.close()
-        procs.append(p)
+        # Sealed sources have read-only directories. Keep the staging parents
+        # writable until all file streams have finished.
+        rc = extract(dirs, "--mode=u+rwx").wait()
+        if rc:
+            raise SystemExit(f"{failed}: directories rc {rc} {partial}")
+    procs = [extract(paths) for paths in partition(files, streams)]
     out(f"TREE-FORK FETCH {src_host}:{src}: {len(files)} files, {len(dirs)} dirs in {len(procs)} parallel stream(s)")
-    bad = [p.wait() for p in procs]
-    if any(bad):
-        raise SystemExit(f"TREE-FORK FETCH FAILED {src_host}:{src} -> {into} rc {max(bad)} (partial copy kept: delete it with ot-delete {into})")
+    statuses = [p.wait() for p in procs]
+    if any(statuses):
+        raise SystemExit(f"{failed} rc {max(statuses)} {partial}")
+    if dirs:
+        rc = extract(dirs).wait()
+        if rc:
+            raise SystemExit(f"{failed}: directory metadata rc {rc} {partial}")
 
 
 def fetch(src_host, src, into, out=print):

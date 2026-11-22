@@ -143,10 +143,12 @@ def test_src_host_without_manifest_fetches_into_the_fork(env):
     src = t / "remote/plain"
     (src / "d").mkdir(parents=True)
     (src / "d/f.txt").write_text("hi")
+    (src / "d").chmod(0o550)
     os.symlink(str(src / "d/f.txt"), src / "abs")
     rec = TF.fork_remote("hostS", str(src), str(t / "lane/claude/L4/tree"), out=lambda *_: None)
     dst = t / "lane/claude/L4/tree"
     assert rec["method"] == "fetch" and (dst / "d/f.txt").read_text() == "hi"
+    assert (dst / "d").stat().st_mode & 0o777 == 0o550
     assert os.readlink(dst / "abs") == "d/f.txt"                      # absolute link into SRC rewritten inside the fork
     assert json.loads((dst / ".fork.json").read_text())["src"] == f"hostS:{src}"
 
