@@ -138,7 +138,8 @@ CRASH_LOG = ("OT_TAP_BALANCE GRT it0 target 450: clk=424\nPlacement Analysis\n"
 
 def _prepass_segment():
     rk = gen_phys.RUN_KIT
-    i = rk.index("    if [ \\$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1'")
+    # the guard gained a G5X term (base test went stale): find the pre-pass grep, then the start of its 'if' line
+    i = rk.rindex("    if [ \\$rc = 0 ]", 0, rk.index("grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1'"))
     j = rk.index("rc=6; fi; fi; \\\n", i) + len("rc=6; fi; fi; \\\n")
     # the segment sits inside run_kit.sh's  bash -lc "..."  string: undo that quoting level
     return rk[i:j].replace("\\\n", "").replace("\\$", "$").replace('\\"', '"')
