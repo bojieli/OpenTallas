@@ -1,213 +1,279 @@
-# FABLE-FLOW-2200: procedural / flow review, window 11-20 19:40 to 21:45 PST
+# FABLE-FLOW-2200: procedural / flow review, window 11-21 19:45 to 21:48 PST
 
-Lane FABLE-FLOW-2200 (Fable 5.2). Read-only review, flow only. Nothing cancelled, signalled or launched.
-Previous: lanes/FABLE-FLOW-2000.md.
-Sources: autopilot/log.txt (1,821 lines from 19:40), lanes/FLOW-HEALTH.tsv (21:08), tools/failure_breakdown.py (21:43),
-`ot-run --status` and free/df on the 6 build hosts (21:44), lanes/NOPROG.tsv (21:37, 334 jobs with GB and hours),
-the live 5_1_grt logs on 7 hosts (21:5x, grep only), intel2 ot-run signals.log, lane posts.
-Marking: **V** = I read or measured it this round. **R** = reported by COORD or the named lane, not re-measured.
-**I** = inferred. **P** = proposal.
+Lane FABLE-FLOW-2200 (Fable 5.2). Read-only review of process and tooling. Nothing cancelled, signalled, launched, deleted
+or edited. Previous: lanes/FABLE-FLOW-2000.md (window 17:45 to 19:50). This file replaces the 11-20 report of the same name
+(kept in git history).
+Sources: autopilot/log.txt (19:45 on, 771 lines), kit_wave.json and kit_wave_state.json (21:45), lanes/FLOW-HEALTH.tsv,
+`failure_breakdown.py` (21:43), `ot-run --status` (21:43 and 21:48), ~/.local/state/ot-run/signals.log, lanes/NOPROG-TABLE.md
+(21:30), rt/current kit_wave.py (7c6e28945118, then 4dac1ad0b7b5 from 21:45), /proc and `docker ps` / `docker stats` on
+intel1, epyc2, epyc7, epyc8, epyc9, epyc10 (21:47), posts of the last 3 h (FLOW-OPS-1300/-R2, CLEAN-AGGR-R2/-R3,
+QC-RELAUNCH-R1, FLEET-EPYC7-R1, FLOW-RESTORE-AUDIT-R1, FLOW-TREEFORK-R1, FLOW-PRIVSPEC-R1, GEOM-UNHOLD-2200,
+NOPROG-CANCEL-2105, FABLE-FIX-S81-COLROM-R5, FLOW-CANARY-R2, S81-J6-ASSEMBLY-R5, KV-WAITBIND-R1).
+Marking: **V** = read or measured this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Not done: the 44 QC visual-held rows were not checked one by one for their AUTO-GEOM verdict; the cause of the three
+QC-RELAUNCH-R1 geom rc 1 runs was not read; the drop of the current-plan count (headline 6) was not traced; the "specA vs
+specA7" string-prefix guard case was not found as a landed fix. "Share" is an estimate (I) of fleet core-hours in the 2 h
+window unless marked.
 
 ## Headline
 
-1. **Sign-off count is flat for 5 h 57 min (V): signed any plan 474, current plan 409, same as 15:46.**
-2. **Admission moved a little (V).** Launches per hour: 10 (hour 19), 76 (hour 20), 19 (hour 21 to 21:43).
-   Waiters fell from 77 / 3.75 TB (19:52) to 31 / 702 GB (epyc10 17 / 320, epyc2 11 / 312, intel1 3 / 70).
-   epyc8 shows 0 waiters now, not about 30; I found no post that says where they went.
-   epyc7 admits 126 GB and epyc9 18 GB; the other four admit 0.
-3. **The largest memory waste is a global route that restarts (V, new).** 28 running jobs are 12 h or older and
-   have run the 30-iteration GRT congestion loop 3 to 9 times each; 24 of them are S81 leaf types.
-   Together 636 job-hours, about 590 GB now, about 13,000 GB-hours (22 percent of all GB-hours held by running jobs).
-   The watchdog calls all of them PROGRESSING because each restart writes log lines. Class 10.
-4. **The watchdog cannot see 148 of 334 jobs (V, new).** Their stage reads `stage_odb_cap` and "last event 0.0 h
-   ago": the STAGE-CAP keep/skip line is taken as progress. They hold 2,334 GB (42 percent); 62 of them are over 6 h
-   in one stage (1,513 GB). Class 10.
-5. Flow failures fell: 15 FAIL lines in hour 20, 3 in hour 21. The ResetError class stopped at 20:40.
+1. **The fleet is not failing, it is not launching.** Launches per hour (V, FLOW-HEALTH + log): 62 (hour 18), 16 (19), 1 (20),
+   3 (21). FAIL lines in the window: 0 until one infra kill at 21:45. Measured load at 21:42 (V): intel1 16/112, epyc2 37/128,
+   intel2 44/112, epyc7 58/96, epyc8 53/96, epyc9 32/96, epyc10 68/96 = 308 of 736 cores, **42 % busy**. UNDER-USE printed
+   "used 88 %" at the same minute, because it counts requested threads (epyc7 271/96, epyc8 283/96), not CPU.
+2. **198 rows cannot launch a route** (V, UNDER-USE 21:42): SKIP-HELD 71, WAIT-VISUAL 51, WAIT-FORM 44, q_running 12, q_fail 10.
+   On top, 274 S81 and 25 KV type rows are "held by die owner (plan event pending)" (V, failure block); S81 J7 applies at
+   04:14 (R).
+3. **WAIT-VISUAL came back through config, not code** (class H1): `review_before_route` with `required: true, all_items: true`
+   is set on all four live dies (V). It was removed at 00:00 on 11-21 (coord b1a38f6fc0f, after FABLE-FLOW-2350) and put back
+   at 03:07 (QC), 03:24 (KV) and 04:12 (S81 atomic apply). Fix landed 21:46 (main 94f0c2e4b8, R); effect not yet seen.
+4. **epyc7 is refusing work again, for a different reason** (class A2): THREAD_CAP_FACTOR=1.0 was hand-set at 21:09 against a
+   stall whose own diagnosis was I/O, and its owner stood down at 21:31 with no successor. 31 "not admitted on epyc7"
+   requeues from 21:20 to 21:48 at load 50/96 (V).
+5. **Docker stall itself: fixed for the symptom, not for the cause.** At 21:47 all six gen hosts show Dirty 0.0 GB,
+   dirty_background_bytes 1 GiB, ot-docker-bdi-cap active, `docker ps` 0.05 to 0.09 s, dockerd D threads 0 to 1 (V). Raw
+   tree copies continue: 6 seen at 21:47, 4 of them duplicates of each other (V, class A4).
+6. **Count: signed any plan 527 / current plan 431 (V 21:43).** Any-plan is flat since 19:10; current-plan was 437 at 19:10.
+   4 units were classified SIGNED in the window (QC sle_hc2 x2, sle_hc0, slw_fe_v1). 5 rows stand as "signed (count
+   pending)", three of them for 14 to 19 h (class C5).
+
+## What FABLE-FLOW-2000 asked for: landed or not
+
+| 2000 item | State at 21:48 |
+|---|---|
+| A1 drain filter fails open | LANDED main 3504af932d 21:27 (R): computed drain, DRAIN-HOLD when every gen host drains, host-add gate. Took 17 pushes; the last ran 3051 s |
+| A2 hand-set drain has no release term | Disk drains: computed now. The same class re-opened on threads (epyc7, headline 4) |
+| A3 epyc7 admitted by memory only | Changed by hand on epyc7 only (/etc/ot-heavy.conf), not in main. See A2 |
+| A4/A5 tree fork tool | LANDED main 19c436478b 20:50 (R): ot-tree-fork, private-spec --fork, writer names on a broken seal. Used by FABLE-FIX-KV-HUB-R5 (R). Not enforced: raw copies continue (V) |
+| A6 guard and wave share one definition of "needed" | PARTLY: guard now lists every scratch path named in enabled die plans + gen_args (d82503914e, 86d1912318, R). Still a list built from sources; see D1 |
+| B1 ot-push-main failures | Improved: 32 rc 0 / 4 failed (rc 4 x3, rc 3 x1) in the window, was 20 / 14 (V, posts). 1265 s lost in failed attempts, was about 75 min. Base-test triage still has no lane (one BASE-TEST ask to FLOW-NOADV-R3, which stood down) |
+| B2 private-spec defaults | LANDED main 15db9fcd7a 20:35 (R); prov views 2c04073c53 21:04 (R) |
+| B3 run-item to sign-off | LANDED with B2 (`--goal auto`). First end-to-end proof not run yet (R: the chosen kit failed place on design) |
+| B4 LEC count / spool entry | Not re-read |
+| C1 canary | NOT landed. 13 verdicts in the window, 2 PASS; s81_cl NO-BASELINE 3 more times; hbm and hbm_sram still scheduled (5 verdicts). New: STALE-BASELINE label on hbm_sram (R) |
+| C2 ENQUEUED hides three states | NOT landed. 34 superseded-event ENQUEUED rows remain (S81 18, QC 10, KV 4, HBM 2; S81 median 26 h) (V) |
+| C3 retire needs an INDEX row; guard changes dry-run first | PARTLY. A second delete incident surfaced (D1) |
+| C4 repeat ledger | NOT landed. hd_host_n still "16 earlier attempts not in the ledger" (V) |
+| 1900 (e) sign-off tcl from rt, TOOLS-LAG | NOT landed. All four live dies still "missing r708"; lag 240 to 435 commits (V) |
+| 1900 (g) parked die skipped by adopt-guard | NOT landed. 45 ADOPT-GUARD hbm alert lines and 2 DIE-OFF hbm in the window (V) |
 
 ## Classes
 
-Fleet-time shares are of the 5,534 GB of container memory in NOPROG.tsv unless a line says otherwise.
+### H. Holds that over-hold
 
-### 1. Launches on the runtime the tick started with (item 1)
+**H1. Route held for a visual verdict: 50 live-die rows, 36 of them for 24 to 39 h. Fix landed 21:46, unverified.**
+- Count (V): state 21:45: QC 44, S81 4, KV 2 (plus 1 parked HBM). First WAIT-VISUAL log line of the rows still held after
+  19:45: 36 rows on 11-20 (06:00 to 23:00), 1 at 05:00 today, 11 at 20:00 to 21:00 today. Trend: was 0 after the 00:00
+  unhold, 51 now. GEOM-UNHOLD-2200 and QC-RELAUNCH-R1 hand-posted 18 verdicts (21:25 to 21:33 and 20:02, 20:54); the 21:42
+  tick still counted 51.
+- Root cause (V, kit_wave.py 16440 to 16466 in rt 7c6e28945118): `required_route_hold()` returns WAIT-VISUAL whenever the die
+  config has `review_before_route.required`; it runs before `visual_advisory()` and before `stops_off_die()`, so the owner
+  rule ("visual never blocks") implemented at three other places did not apply. The key is plain config: two plan lanes and
+  one atomic apply wrote it back 3 to 4 h after COORD removed it. Global config says `visual_gate: signoff` and
+  `wait_visual: false` at the same time (V), so the file contradicts itself and nothing reports that.
+- Fix landed (R, FLOW-OPS-R2 main 94f0c2e4b8): a row whose own AUTO-GEOM passed is no longer held by `required`,
+  `route_hold_reason` or `visual_hold`. Hard holds kept: explicit BAD, PASS-COND, no geom record.
+- Is it structural: partly. The code path is closed for AUTO-GEOM PASS rows. Still open (P): (1) `kit_wave_edit` and
+  `apply_reviewed_tree_marker` should refuse to write `review_before_route.required` on an unparked die, so a plan apply
+  cannot carry it back; (2) HOLD-AUDIT printed seven zeros every tick while 51 rows were held against an owner rule: add a
+  counter OWNER-RULE-HOLD (any WAIT-VISUAL on an unparked die) that must be 0; (3) rows with PASS-COND stay held with no
+  owner: list them in the tick line.
+- Owner: FLOW-OPS-R2. Share: about 15 % (I: 36 routes waiting over a day while 58 % of cores were idle; each route is
+  several hours at 8 to 16 threads).
 
-- Count, trend (V): 16 INFRA[tool_mix] ResetError fails in the window, 12 since 20:00, 10 after the 20:17 fix,
-  on 11 S81 items. Last one 20:40:57; none in the 63 min after. Falling to zero.
-- Root cause (R for the mechanism, V for the conditions): a wave tick resolves rt/current once and launches on it
-  until it ends. Ticks ran 199 to 734 s in the window, and rt/current moved about 7 times in hour 20 and 13 in
-  hour 21 (I, by directory time). The fail is also typed INFRA, so before 85307cdc9b nothing counted it.
-- Structural fix (P): the launch tree records the rt sha (it already does, `<src>@<rt sha>`). `launch_safe`
-  re-reads rt/current before each launch, and if it differs from the tick's sha the tick stops launching and
-  the rows wait one tick. Second half, from 20:00 and still open: one runtime per 15 min unless the push
-  carries a `Flow-Urgent:` trailer. A fix push then reaches launches in one tick and never mid-tick.
-- Owner: FLEET-WATCH-2000. Fleet time: under 0.2 percent (each fail dies at gen or kit_rtl in minutes).
+**H2. A hand-set host cap with no release term and no owner: epyc7, again.**
+- Count (V): signals.log "not admitted on epyc7 within N s": 1, 1, 1 per 10 min from 20:50, then 12, 12, 6 from 21:20 (31
+  lines; FLOW-LECGATE-R1 relec 11, FAM-S81-COL-H10-R4 7, FAM-S81-IQF-R1 3, QC wave row 3). ot-run status 21:48: epyc7 load
+  50/96, avail 575 GB, 5 waiters, threads 268/96.
+- Root cause: FLEET-EPYC7-R1 first read the stall as CPU over-admission and set THREAD_CAP_FACTOR=1.0, then found the cause
+  was I/O (68 GB dirty pages, R) and fixed that with the dirty cap, but left both caps and stood down with "successor none".
+  The 268 committed threads are mostly requests, not use: 11 of the 27 running units are single-threaded GRT loops at 100 %
+  of one core each (V, docker stats).
+- Structural fix (P): every hand edit of /etc/ot-heavy.conf goes through one command that records owner, reason and an
+  expiry (default 2 h) and the conf is rebuilt from main when it expires; thread admission charges measured CPU of units
+  older than 30 min instead of their request. Same form as the computed disk drain that landed tonight.
+- Owner: NEW (FLEET-WATCH-R8 to revert the epyc7 thread cap now; code to FLOW-OPS-R2). Share: about 5 % (I: half of a
+  96-core host for the last 30 min and rising; the 2 h docker stall before it is counted in A4).
 
-### 2. A job reports DONE rc=0 while its script failed (item 2)
+**H3. Jobs that cannot sign keep running: 19 containers, 7 to 51 h, verdict without an action.**
+- Count (V, NOPROG-TABLE 21:30): 19 GRT-LABEL "DESIGN-FAIL GRT-0273" rows (epyc7 11, epyc10 3, epyc9 2, epyc8, intel1,
+  intel2 1 each), 17 older than 21 h, overflow flat or rising (for example 62755 -> 49999 after 36 h). Their action column
+  is empty. 3 more were cancelled by hand at 21:11 to 21:13 (R). Trend: flat; the label exists since 11-20.
+- Root cause: the watchdog has an action for UNSIGNABLE and NO-PROGRESS but GRT-LABEL is report-only, and the owner rule
+  (cancel jobs over 3 h measured unable to sign) is applied by a one-off lane. The design cause is not in scope here; the
+  missing action is.
+- Structural fix (P): GRT-LABEL DESIGN-FAIL with age over 3 h and overflow not down 20 % in the last two rounds gets the
+  UNSIGNABLE action (notice to the owner lane, cancel on the next pass unless the lane posts KEEP).
+- Owner: NEW (NOPROG-WATCHDOG has no live lane). Share: about 3 % of CPU (19 cores), but 268 committed threads on epyc7
+  feed H2, and about 1.3 TB of memory requests stay reserved.
 
-- Count (V): 8 GPL-TD-AB jobs, 20:05 to 20:06, each 1,222 to 1,309 s at 12 GB. One lane, one event.
-- Root cause (R, FLEET-WATCH-2000 20:49, verified there): ot-run carries the real rc; ab.sh ends in
-  `echo rc=$?` and a grep, so the script exits 0. The A/B then had no result and nobody was told.
-- Structural fix (P): `ot-lane-clone` writes a job wrapper `ot-job-sh` that lanes use in place of `bash x.sh`:
-  it runs with `set -euo pipefail`, and ot-run posts DIED when the job log's last `rc=` or `exit` line is
-  non-zero while the process rc is 0 (one line check at DONE). A swallowed rc then shows as DIED-SWALLOWED.
-- Owner: FLEET-WATCH-2000. Fleet time: 8 x 12 GB x 0.35 h = 34 GB-hours, under 0.1 percent; cost is one lost
-  A/B round, about 1 h of the lane, and 361 REQUEUE lines on epyc10 for that lane (V, signals.log).
+**H4. Cancel by name pattern hits bystanders: 3 cases.**
+- V/R: NOPROG-CANCEL-2105 `ot-run --cancel` matched by substring and sent SIGTERM to two epyc7 waiters of other attempts;
+  21:45 kv3_sys_c@6 was killed at geom_run by `ot-run --cancel KV-D26/items/kv3_sys_...` and took a free infra retry;
+  CANCEL-STOP at 21:12 reported "epyc10, epyc7 not checked: rc 124 timeout" and went on.
+- Structural fix (P): `ot-run --cancel` takes a unit id or an exact job dir; a pattern needs `--match` and prints the
+  matched units first; an unchecked host makes the cancel result UNKNOWN, not done.
+- Owner: FLOW-OPS-R2. Share: under 1 %.
 
-### 3. cancel-rows selects by item name only (item 3)
+### A. Hosts, trees, disk
 
-- Count (V): 9 CANCEL-ROWS lines in the window (5 at 19:40 "no queue job", 4 at 21:01 "queue job closed").
-  151 superseded-event rows are in the wave (20:00: 106). S81 has jobs running on 4 events at once (V, table below).
-- Root cause: as at 20:00. Row identity for a person is the item name; the wave's own keys are (item, event).
-  85307cdc9b keyed the ledger and cap by item@event (R); the cancel side is not there yet.
-- Structural fix (P): the `--event` / `--attempt` selector in flight, plus: `cancel-rows` with a bare item name
-  refuses when that name is live on more than one event and prints the events. No change for unique names.
-- Owner: FLEET-WATCH-2000 (in flight). Fleet time: none directly; it is why old-plan attempts that are measured
-  unable cannot be cancelled one by one, which feeds class 10.
+**A4. Bulk tree copies on the docker disk: the stall is capped, the copies are not.**
+- Count: epyc7 created no container from 19:10 to 21:14 (R, FLEET-EPYC7-R1): 2 h on a 96-core host. Writers were 6 tree
+  copies, 3 of them duplicates (R). At 21:47 (V): epyc10 three rsyncs of one tree (s81-bksel-r5/w/tree_r6 from epyc7, two
+  started 2 s apart, 78 min old) and two of fam-qc-cb-r3/bind3/tree; epyc9 a `cp -a` of the QC v1r6 snapshot into
+  fam-qc-fefw. epyc10 docker was 14 s at 21:28 (R); `docker ps` is 0.05 s now (V; `docker run` not timed by me).
+- The fix that landed (main 8082157602: 4 GiB per-device dirty cap + 1 GiB background, on all 7 hosts and in the host
+  install script) is structural for the failure mode "one syncfs waits behind 68 GB". It does not reduce the write load:
+  epyc7 and epyc8 scratch are 89 % and 83 % full consumer NVMe at about 70 MB/s sustained (R), and a capped writer now
+  blocks itself instead of docker.
+- Root cause: copying a 57 GB / 325,000-file tree is a lane habit with no queue. ot-tree-fork landed tonight but nothing
+  makes a lane use it, and it has no cross-host form with a concurrency limit.
+- Structural fix (P): `ot-tree-fork --host` and `src_manifest replicate` take a per-host copy lock (1 or 2 at a time) and
+  reuse an existing identical copy by manifest hash; ot-copy-reaper (its timer already runs every 10 min on the hub, V)
+  posts any raw cp / rsync / tar whose source is under kw45 or a lane tree, with pid and lane. Docker data-root off the
+  scratch disk on epyc7/8/9/10 when the two new hosts are installed.
+- Owner: FLOW-TREEFORK-R1 (tool), FLEET-WATCH-R8 (operate). Share: about 6 % (I: epyc7 starts and teardowns blocked 2 h;
+  running jobs continued).
 
-### 4. Clock conclusions from the pre-hook report (item 4)
+**A1/A2 disk admission.** REQUEUE lines per hour (V): 136 (18), 48 (19), 2 (20), 40 (21). The 21 h lines are epyc7 thread
+cap (31), not disk, plus 3 naming epyc4. Scratch free 411 to 2646 GB. Disk is not a limiter. No open item.
 
-- Count (R, FABLE-CLOSURE-2130 21:21): 252 kits scanned; S81 b05c setup median -260 pre-hook, -200 post-hook;
-  QC N46C -66 against +5. One stop item on J6 col volume and the root_entry_negedge rows were raised and withdrawn
-  (R). root_entry_scan.py reads the post-hook report since 21:25 (R).
-- Root cause: two files describe one stage and the older name sounds final. Nothing in the name or the file says
-  that hooks ran after it.
-- Structural fix (P): the hook step renames the raw file to `4_cts_prehook.rpt` and writes the post-hook report
-  as the only `4_cts_final.rpt`, with the line `OT_CTS_REPORT hooks=<list> state=post` at the top. A reader that
-  wants a clock number calls one function (`kit_reports.cts_final(kit)`) that refuses a file without that line.
-  Old kits keep working: the function falls back to `4_cts_post_hook.rpt` when it exists.
-- Owner: TAP-GRID-2130. Fleet time: no machine time measured; about a day of lane conclusions on S81 clocks (R),
-  and at least one build decision (the J6 stop) made and reversed.
+### D. Delete guard and cleanup
 
-### 5. Fixes posted to lanes that had stood down (item 5)
+**D1. The guard is a list of known reference sources; each incident adds one. 4 new cases.**
+- R (CLEAN-AGGR-R3 21:18, 21:37): (a) s81_head_r4_s0 deleted on epyc7/8/9/10 at 19:13 to 19:16 by the hourly
+  ot-retire-superseded timer while the r16 source plan still named its sink_bins paths: the guard knew kit_wave src and
+  bind only; the 18:58 guard change turned a partial delete into a whole-tree delete one pass later. (b) Private-spec kits
+  were protected by the kit-wave ancestor, so two failed QC-RELAUNCH-R1 kits could not be deleted. (c) Copied child-view
+  sign-off records made a lane-private copy "signed". (d) Hub run-item command lines protected the same path on every
+  host. All four have pushes on main (d82503914e, 86d1912318, eb170c1a34, 47a226faaa). Not found as fixed: path prefixes
+  compared as strings (specA vs specA7).
+- Also R: hosts ran a stale 11-14 ot-autoclean because an hourly timer on localhost re-pushed its own old copy; the epyc7
+  timer had not finished a pass since 11-16; three kwbatch.sh loops of the stood-down CLEAN-AGGR-1121 were still running on
+  epyc7/9/10 and were stopped before they reached snap trees. s81-die-r3-e8 (65 GB, about 355 signed views not exported)
+  is undeletable under the KEEP rule until AUTO-EXPORT acts; its lane stood down without answering.
+- Root cause: "is this path needed" is answered by scanning a growing set of files and command lines for paths. Anything
+  that names a path in a place the scan does not read is unprotected (a); anything that sits under or contains a protected
+  string is over-protected (b, c, d).
+- Structural fix (P): leases. A consumer (wave row, bound plan, run-item, lane hold) writes one line `realpath, host,
+  owner, expiry` into a lease dir on that host; delete needs zero live leases on the path or any parent, compared by path
+  components after realpath. The plan-file scan stays as a second net and logs every path it protects that has no lease.
+  Fleet tools installed on hosts carry the main sha in a header and the tick alerts when a host copy differs from
+  rt/current (that would have caught the 11-14 autoclean in an hour instead of a week). A lane that starts a background
+  loop registers its pid with the lane row, and stand-down.sh refuses while registered pids live.
+- Owner: CLEAN-AGGR-R3. Share: 0 fleet; one HEAD tree lost (not restored, HEAD moves to r17a), about 1 h of two lanes.
 
-- Count (R): 2 cases today (monitor-pin rows to S81-DIE-R4, QC cb rows to FABLE-FIX-QC-CB). I did not re-read them.
-  Related (V): 13 QC types and 1 KV core are STALE with owner "unowned"; 20:00 had QC 2. The 12 new QC rows are
-  `__pv` variants with no kit-wave row.
-- Root cause: a post is addressed by a lane name, and a name does not say whether anyone reads it. A stand-down
-  writes a handoff but does not redirect the name.
-- Structural fix (P): `lanes/SUCCESSORS.tsv` (lane, state, successor), written by the stand-down step itself.
-  `post.sh` reads it: a post addressed to a stood-down lane is delivered to the successor's file as well and the
-  poster sees `REDIRECTED <old> -> <new>`; with no successor the post goes to COORD with `NO-READER`.
-- Owner: new Sonnet lane **POST-ROUTE-2200**. Fleet time: none measured; the cost is hours of delay per fix.
+### B. Kits and tools
 
-### 6. rm -f by lanes (item 6)
+**B5. Tool fixes cannot reach kits: pins and sealed trees.**
+- V: kit_wave.json tools_sha: s81 a9ed808a98d5, qwen_compute 65f3f85d7c5f, s81_head 745c8f11e429 (tools_from_rt false),
+  qwen_kvsys 47a226faaa96 (moved with the D27d3 apply at 21:39). TOOL-SKEW warn-only: KV 428, S81 234, QC 161, HEAD 9
+  modules differ from pin; HBM 281 of 281.
+- R: the restore-keep fix 650916ebb262 reaches wave kits only because every stage refreshes run_kit.sh from rt/current;
+  HEAD gen skips that refresh. The seat fix 643ffb9932 lives in kit_istations.py, which is not in the refresh list, so the
+  sealed J7 tree (tools = rt 404887a342b0) will launch S81 col kits at 04:14 with 52 to 140 plan seat keys matching nothing.
+  SEAT-MISS was made a warning by COORD ruling (aa0cde9d13), so the kit will not stop on it.
+- Root cause: a tree seal freezes design sources and flow tools together; the only way to carry a flow fix is a file-by-file
+  refresh list.
+- Structural fix (P): split the pin: design-generating tools stay sealed with the tree; kit-time flow scripts (run_kit.sh,
+  kit_istations.py, the sign-off tcl) always come from rt/current, by directory, not by a list. Until then add
+  kit_istations.py to the kit_flow_refresh ALWAYS list before the 04:14 J7 apply. That one line decides whether the J7 col
+  wave is built with a known defect.
+- Owner: FLOW-OPS-R2 (refresh list today), S81-J6-ASSEMBLY-R5 (J7). Share: at risk, not spent: all S81 col types of the J7
+  wave.
 
-- Count (R): 3 today. I found 2 self-reports in posts (V): OPUS-FIX-S81-BKSEL-R4 20:55 "rm -f of my own log",
-  S81-DIE-R5 21:41 "ot-delete only from now on". No loss reported.
-- Root cause: the rule is text. `rm` works, `ot-delete` is longer, and a lane's own log looks harmless.
-- Structural fix (P): the lane shell profile that `ot-lane-clone` installs defines `rm` as a function that passes
-  plain files inside the lane's own clone or job directory to `ot-delete` and refuses everything else with the
-  ot-delete line to use. No new gate on builds; it only replaces the command a lane types.
-- Owner: FLEET-WATCH-2000. Fleet time: 0.
+**B6. Seat-key matcher matched nothing, silently: 58 placed kits (R), flat until tonight.**
+- R (FABLE-FIX-S81-COLROM-R5): 58 placed kits with unmatched relay_sites keys; forms: leaf prefix (25 kits, fixed by
+  RELAY-NORM 4dac1ad0b7), J7 station keys (88 of 140 fixed by RELAY-INST), and plan rows naming registers the kit does not
+  have (bk_sel 594, QC cb 276 to 294 each, sle_ctl 15,996). The count is now in the kit log and in
+  ot_relay_sites_unmatched.txt.
+- Is it structural: no. A warning in a kit log is what existed before ("plan keys unmatched: 140 of 166" was printed, V in
+  the post). The class stays silent at the level where it can be acted on.
+- Structural fix (P): check at gen time, before place: gen fails when a plan seat key matches no register in the
+  generated netlist, with a per-type waiver list in the plan (explicit, counted, visible in PRECHECK). Then a wrong plan
+  row costs 5 minutes, not a routed kit.
+- Owner: FABLE-FIX-S81-COLROM-R5 (matcher), PRECHECK-1119 (gen-time check). Share: design-adjacent; the 3 kits with stages
+  moved over 50 um each lost a place-to-CTS run.
 
-### 7. Pushes that fail in the test gate (item 7)
+**B7. A step status masked by `| tee`: about 35 kits kept a worse DB; the pattern is still in the generator.**
+- R (FLOW-RESTORE-AUDIT-R1): 259 kit dirs had a RESTORE verdict on the old flow, 40 (about 35 kits) kept the regressed DB,
+  2 of them had passed the -42 ps gate before the repair (one recovery copy running on epyc8). Fix 650916ebb262 takes the
+  status of tt_setup_keep.py itself.
+- V: gen_phys.py in rt/current has 42 lines with `| tee` and 2 with `pipefail`. The instance is fixed, the class is not.
+- Structural fix (P): the generated run_kit.sh sets `set -o pipefail` once at the top of every container shell, and a
+  generator test fails on any `| tee` in a step whose status is used.
+- Owner: FLOW-OPS-R2. Share: under 1 % measured (2 kits).
 
-- Count, trend (V): 37 ot-push-main runs in the window, 9 died (24 percent; 20:00 window 17 percent; today 27 of
-  109). FLEET-WATCH-2000 lost 3 (666, 670 and 908 s). Its third died on **"tests timed out after 900 s"**, not on
-  inputs (V, push3 log): the test host had load 150 on 96 threads. 5 others died in 4 to 43 s, which is the
-  missing-input pattern (I), and 1 after 788 s.
-- Root cause: two separate ones. (a) A sparse clone does not hold what the tests read, and the gate finds that
-  out after minutes. (b) The gate runs on a build host at 150 percent load with a fixed 900 s limit.
-- Structural fix (P): (a) ot-push-main starts with a 5 s preflight: the test inputs listed in one manifest must
-  exist, else it widens the sparse set itself and continues. (b) The gate runs in a reserved slot (16 threads on
-  intel2, outside the wave's thread count) and the limit counts CPU seconds of the tests, not wall time.
-- Owner: FLEET-WATCH-2000. Fleet time: about 0.9 h of lane wall time in the window, machine share under 0.1 percent.
-  The real cost is that every flow fix above arrives 10 to 40 min later.
+**B8. Re-sign NOT RECORDED.** R (FLOW-OPS-R2 main 5ce545eff0): nomcap receipts map to nomcap_dir(), sha-bound, fail-closed;
+`refresh-coverage` re-derives without STA. 2 re-signs re-recorded; the other 37 NOT RECORDED are real failures. Structural
+for this cause. Open (P): AUTO-RESIGN should print the gate that failed in the NOT RECORDED line so the next path-map
+error is one grep, not a 7-host scan. Owner: FLOW-OPS-R2. Share: under 1 %.
 
-### 8. Memory-bound fleet, no sign-offs (item 8)
+**B9. Private kits outside the queue: 2 passes not taken, 3 geom rc 1, 2 synth fails.**
+- R (QC-RELAUNCH-R1): pvcca9ff41 old-spec run-item passed geom at 20:3x and the autopilot queue never took it (0 rows);
+  regenerated on main; its geom then died rc 1 at 21:39 (V, 98 s). pv41c959f3 geom rc 1 at 21:12. Two private slw_su_c kits
+  failed synth for missing provisional views (fixed 2c04073c53). The wave did not relaunch the same types for 30 min.
+- Root cause: an old-spec private kit ends at geometry and expects a queue that only reads wave rows; specs made before
+  15db9fcd7a have no goal chain. Nothing tells the lane its spec is of the old kind.
+- Structural fix (P): run-item refuses a spec without a goal chain and prints the regenerate command; a private kit that
+  ends at geom PASS without a next stage writes result.json STOPPED-AT-GEOM, which the lane waiter reports.
+- Owner: QC-RELAUNCH-R1 (instances), FLOW-PRIVSPEC-R1 (rule). Share: about 2 % (short failed runs; the cost is 3 QC rebuilds
+  about 2 h late).
+- Lane units that DIED in the window (V, posts, excluding pushes): 98. rc 1: 55 (FAM-QC-HCST-R3 12, HEAD-START-R18 5,
+  FLOW-LECGATE-R2 4), rc 143: 25 (QC-PLAN-R12/R13 8), rc 11: 7. Not classified further.
 
-- Count (V): 334 jobs hold 5,534 GB. All 624 wave threads are used on every tick. Per host MemAvailable 130 to
-  355 GB of 1,007. Rows not launching 204: q_running 54, WAIT-FORM 49, SKIP-HELD 49, WAIT-VISUAL 38, KW-FIX-45 8.
-- Root cause: memory is held by jobs that are old, not by many jobs. Jobs over 12 h are 78 of 334 but hold
-  39,700 of 58,300 GB-hours (68 percent). Jobs over 6 h in one stage hold 80 percent. See the ranking below.
-- Structural fix: class 10. Owner: FLEET-WATCH-2000. Fleet time: see ranking.
+### C. Lanes and background machinery
 
-### 9. RSZ-0074 leaves the GRT DB unrepaired (item 9)
+**C6. Lanes stand down for context against the owner rule: 8 in 2 h.**
+- V (posts 19:52 to 21:21): FABLE-FIX-QC-COLL, FABLE-FIX-HEAD-LEP0N-R6, CLEAN-AGGR-R2, OPUS-FIX-KV-PV-R6, FAM-QC-CB-R3,
+  QC-PLAN-R12, FABLE-FIX-S81-LEAF-R8, FLOW-OPS-1300 all give "context" as the reason. FLOW-OPS-1300 stood down with
+  "successor none" while its push 17 was in flight and then said so itself. `bin/stand-down.sh` has no check on the reason
+  (V: no match for "context" in the script).
+- Cost seen: FLEET-EPYC7-R1 and FLOW-OPS-1300 left open items without an owner (H2, base tests); CLEAN-AGGR-1121 left three
+  running loops (D1); S81-DIE-R5 left an unanswered export ask.
+- Router: 4 redirect / filed-under lines in the window, all resolved to a live successor (V). The stale-name loss is fixed
+  for chains with a successor; "successor none" still drops posts.
+- Structural fix (P): stand-down.sh refuses a reason matching context / limit / compact and prints the owner rule;
+  "successor none" is allowed only with `--done` and no open ASK addressed to the lane, no registered pid, no hand-set cap.
+- Owner: FLOW-OPS-R2. Share: 0 fleet; about 20 to 30 min of lane time per chain, 8 chains.
 
-- Count: I found no post from RSZ-CRASH-2200 yet, so no census number here. Known cases (V, posts): S81-DIE-R5
-  proof6/r2 ended with TT -377 unrepaired after the crash; a QC coll_ftc proof on 11-19 the same.
-- Root cause: the repair step ends with an error, the flow keeps the pre-repair DB under the post-repair name and
-  goes on, so the next stages spend hours on a DB that was never repaired.
-- Structural fix (P): the repair hook writes `grt_repair.json` (state ok / crashed, error id, slack before and
-  after). On `crashed` it retries once with the failing net excluded (the id is in the message), and if that
-  also crashes the kit stops as FLOW[rsz_crash] with the DB named `5_1_grt_unrepaired.odb`. Detail route does
-  not start from a DB with that name. That is self-stopping and frees the route memory.
-- Owner: RSZ-CRASH-2200. Fleet time: not measured; each case costs the whole route stage, 20 to 26 GB for 10 h or more.
+**C1. Canary.** 13 verdicts, 2 PASS; unchanged class (table above). Owner: FLOW-CANARY-R2. Share: about 3 %.
 
-### 10. New: GRT that restarts, and a watchdog that cannot see it
+**C4. Retries on an unfixed cause: low.** ITEM-SYNC phy_serdes_b epyc10->epyc2 rc 2 every tick (5 of 67 ITEM-SYNC lines; the
+other 62 are rc 0 re-copies of bound dirs); kv3_hub_Wo held correctly by SKIP-SAME-INPUT; INFRA-RETRY slw_su_c "free requeue
+8/8". ADOPT-GUARD hbm 45 lines. kv3_hub_C: "unit active, no output for 791 min", reported only, container alive (V).
+Owner: FLOW-OPS-R2. Share: under 1 %.
 
-- Count (V): 114 live 5_1_grt logs. 31 have run the "extra iterations" loop 3 or more times, 15 five or more,
-  top 9 rounds (S81 leaf t7 and t33 on epyc8, 34 h, 132 to 136 iterations). 28 are 12 h or older.
-  43 logs end on "GRT-0273 Disabled NDR for net clknet...", so the clock rule was dropped to reduce congestion.
-  By type: S81 leaf 24, QC sle_ctl 3, KV 3, QC slw_su_l1 1.
-- Detail route, same pattern (V, NOPROG): 5 jobs over 12 h in 5_2_route hold 132 GB and 5,164 GB-hours.
-  col_h10_r2 pv4c1f67ff: 20 violations, no gain for 9.7 h, job 31.8 h, "advisory, no cancel".
-- Root cause: (a) the resume hook (grt_stall_resume / grt183) re-enters GRT without a round limit; (b) NOPROG
-  reads "a log line appeared" as progress, and the STAGE-CAP line appears every few minutes in 148 jobs;
-  (c) the 20:00 proposal to turn a flat GRT label into UNSIGNABLE has no post or code I could find.
-- Structural fix (P), no new gate, it is the owner's "flat repair" case:
-  - The resume hook stops at the end of the second full round with `GRT-NOCONVERGE rounds=2` and the overflow
-    value. The row goes to the die owner as PLAN. A leaf type that needs 9 rounds is a floorplan item.
-  - NOPROG ignores STAGE-CAP lines when it picks the stage and the last event, and counts GRT rounds and
-    detail-route violations as the progress measure. Two reads 30 min apart with no gain on a job over 3 h give
-    UNSIGNABLE with the evidence line, and the exact unit is cancelled as it is today for setup below -300 ps.
-- Owner: FLEET-WATCH-2000 for the watchdog; S81-DIE-R5 for the 24 leaf rows (which of them it still wants).
+**C5. Stale and unowned.** STALE 107 (HBM 104 parked; QC 2 unowned, S81 1). The three live-die rows are all "SIGNED count"
+rows waiting 14.4, 16.4 and 18.7 h for the count (V), and the failure block shows 5 "signed (count pending)" in total.
+Superseded-event rows: ROUTE-HELD S81 62 SKIP-HELD + 17 WAIT-FORM (median 26 to 32 h), ENQUEUED 34. 134 S81 rows unowned
+(R, S81-J7-HELD-R1). Fix (P): a SIGNED row not counted after 2 h is an alert with the missing gate named (LEC, export,
+visual), owned by the count owner. Owner: FLOW-LECGATE-R2 for the count rows; NEW for base-test triage, NOPROG actions and
+host caps.
 
-## Ranking: memory-hours on the memory-bound fleet
+## Fleet time in the window (estimates)
 
-GB-hours are GB now times job age (V from NOPROG.tsv; I where marked). Total 58,300 GB-hours, 5,534 GB.
+| Class | Share | Fix | Owner |
+|---|---|---|---|
+| H1 visual route hold via config | about 15 % | landed 94f0c2e4b8; refuse the config key, OWNER-RULE-HOLD counter | FLOW-OPS-R2 |
+| A4 tree copies / docker stall | about 6 % | dirty cap landed; copy lock + dedup by manifest, raw-copy alert | FLOW-TREEFORK-R1 |
+| H2 epyc7 thread cap left behind | about 5 %, rising | revert now; caps with owner and expiry, CPU-measured threads | NEW / FLEET-WATCH-R8 |
+| H3 unsignable GRT jobs | about 3 % CPU + reservations | GRT-LABEL gets the cancel action | NEW |
+| C1 canary | about 3 % | closure-change trigger, INPUT-BROKEN, no parked die | FLOW-CANARY-R2 |
+| B9 private kits outside the queue | about 2 % | refuse goal-less specs, STOPPED-AT-GEOM result | QC-RELAUNCH-R1 / FLOW-PRIVSPEC-R1 |
+| B7, B8, C4, H4 | under 1 % each | pipefail; gate name in NOT RECORDED; exact-unit cancel | FLOW-OPS-R2 |
+| B5/B6 pins and seat keys | at risk: J7 col wave | refresh list today, gen-time seat check | FLOW-OPS-R2 / FABLE-FIX-S81-COLROM-R5 |
+| D1 guard, C6 stand-downs | 0 fleet, lane time | leases; stand-down reason check | CLEAN-AGGR-R3 / FLOW-OPS-R2 |
 
-| Rank | Holder | Jobs | GB now | GB-hours | Share of GB-hours |
-|---|---|---|---|---|---|
-| 1 | GRT restarting 3+ rounds, job 12 h+ | 28 | about 590 (I, 21 GB each) | about 13,000 (I) | 22 percent |
-| 2 | Lane private builds, all lanes | 72 | 1,394 | 19,037 | 33 percent, of which s81-geom-opus-d8g 30 jobs, 632 GB, 7,750 |
-| 3 | Detail route over 12 h in stage | 5 | 132 | 5,164 | 9 percent |
-| 4 | Old S81 events 3fa87, b05c, 465c (overlaps rank 1) | 63 | 1,332 | 18,689 | 32 percent |
-| 5 | Old QC event N46C | 24 | 715 | 7,122 | 12 percent |
-| 6 | Retries, stale rt, swallowed rc, push gate | - | - | under 600 | under 1 percent |
+## For COORD now
 
-Ranks 4 and 5 are not waste by themselves: old-plan kits that can still sign stay. They show where to look.
-intel2, the hub, carries 32 of these jobs and 725 GB.
-
-What frees the most admission, in order:
-1. Stop the 28 restarting GRT jobs after evidence (class 10): about 590 GB, which is 6 of the 96 GB route kits
-   or about 28 leaf routes. 17 of the 31 sit on epyc10 and epyc8; epyc10 has the longest queue.
-2. S81-GEOM-OPUS lists which of its 30 d8g jobs (632 GB) still decide something. Half would be 300 GB.
-3. The 3 long detail routes of col_h10_r2 (78 GB, 31 to 45 h): one is flat for 9.7 h; cancel only those
-   measured flat on two reads.
-4. RSZ self-stop (class 9): frees one route stage per crash from then on.
-Items 1 to 3 together are about 1,000 GB, 18 percent of what is held, with no row lost that could sign.
-
-## The 20:00 fixes
-
-| Fix | State now |
-|---|---|
-| Total cap per item@event, INFRA tool_mix x2 stops, cancel is final (85307cdc9b) | Works (V): BLOCKED-CAP on serdes__t1__clfe1f0815 (7) and serdes__t12 (8); ResetError loop ended 20:40. t28 was launched again at 21:39 as attempt 10; watch its result. |
-| REPEAT-STOP "OOM kill, memory x1.5" | Still printed 3 times (V); not checked whether real OOM. |
-| GRT label becomes UNSIGNABLE | Not done (V): NOPROG still "advisory, no cancel". Class 10. |
-| One runtime per 15 min | Not done (V): 13 runtimes in hour 21. Class 1. |
-| s81 tools_sha a real sha | Not done (V): still `j5tree`, TOOLS-LAG s81 unmeasured; fifth review. KV and HEAD pin manifests still missing on the hub. |
-| HBM parked flag | Not done (V): 16 ADOPT-GUARD alerts in the window, 104 of 117 STALE rows. |
-
-## Disk, admission, src skew
-
-- Disk (V): no refusal in the window. Free: intel1 scratch 244 GB (94 percent used), epyc8 533 (93), epyc9 623
-  (92), epyc10 675 (91), epyc2 root 90 percent with 207 GB. intel1 fell from 272 to 244 GB in 2 h.
-- Admission (V): refusals are memory only. signals.log has 361 REQUEUE lines for one 12 GB lane job set on epyc10.
-- Src skew (V): s81 489 of 18,020 modules differ from pin 3c913dbdfb23 (warn, launching). QC SRC-INCOMPLETE at
-  20:12 on epyc7, epyc8, intel1 (postbind bind_cells.sv missing), 5 lines, then none.
-- Hub (V): ALERT HUB-SYNC-FAILED at 21:42, "non-log local edits in the hub checkout: lanes/posts/S81-DIE-R5.md".
-  A posts file was edited in place instead of through post.sh. Owner: S81-DIE-R5.
-
-## Do now (ordered)
-
-1. FLEET-WATCH-2000: NOPROG ignores STAGE-CAP lines and counts GRT rounds; post the 28-job list with rounds and
-   hours as evidence; cancel on the flat-repair rule after S81-DIE-R5 marks the rows it wants kept.
-2. S81-DIE-R5: the 24 leaf rows with 3 to 9 GRT rounds are a plan item (congestion with clock NDR dropped).
-3. FLEET-WATCH-2000: push gate in a reserved slot with a CPU-time limit; rt re-read before each launch.
-4. TAP-GRID-2130: one `4_cts_final.rpt`, post-hook, with the state line.
-5. RSZ-CRASH-2200: `grt_repair.json` and the unrepaired DB name.
-6. POST-ROUTE-2200 (new, Sonnet): SUCCESSORS.tsv and the post.sh redirect; the 13 unowned QC `__pv` rows.
-
-Not checked: where the epyc8 waiters went; overflow values of the restarting GRT jobs (the log prints none
-between rounds); GB per job for the 28 (taken as the 21 GB mean of long GRT rows); whether QC event R4A4 (57 jobs,
-745 GB) is superseded by R6V1; the two stood-down posts; the RSZ census; real OOM behind REPEAT-STOP; git history.
+1. H2: revert THREAD_CAP_FACTOR on epyc7 (`/etc/ot-heavy.conf.bak-fleet7r1b-1122`); the stall was I/O and the dirty cap
+   covers it. 5 units are waiting at load 50/96.
+2. H1: at the next tick check that WAIT-VISUAL on QC/S81/KV went to 0; any row left is PASS-COND or has no geom record and
+   needs a named owner. Ask FLOW-OPS-R2 to make kit_wave_edit refuse `review_before_route.required`.
+3. B5: add kit_istations.py to the kit_flow_refresh ALWAYS list before the 04:14 J7 apply, or the S81 col wave launches
+   unseated.
+4. H3: name an owner for the 19 GRT-0273 containers (11 on epyc7); they are the committed threads behind item 1.
+5. A4: tell S81-BKSEL (three rsyncs of tree_r6 on epyc10) and FAM-QC-CB-R4 (two of bind3/tree) to keep one copy each.
+6. C5: 5 signed rows are not in the count, three for 14 to 19 h; current-plan count fell 437 -> 431 since 19:10 with no
+   post explaining it.
