@@ -36,8 +36,9 @@ class StagePre(unittest.TestCase):
     def pre(self, roots):
         """the dst-side preparation of spill_fwd_cmd, tar and touch cut off"""
         dcmd = shlex.split(m.spill_fwd_cmd("epyc4", "dst", roots, "/tmp/stamp").split(" BatchMode=yes dst ", 1)[1])[0]
-        cut = dcmd.index("flock ")
-        return subprocess.run(["bash", "-c", dcmd[:cut]], capture_output=True, text=True)
+        toks = shlex.split(dcmd)      # FLOW-OPS-R2 11-22: the preparation runs under the per-lane flock: flock LOCK bash -c PRE && tar ...
+        assert toks[0] == "flock" and toks[1] == m.spill_lock(roots) and toks[2:4] == ["bash", "-c"] and toks[5] == "&&", toks[:6]
+        return subprocess.run(["bash", "-c", toks[4]], capture_output=True, text=True)
 
     def test_created_parent_is_marked_and_next_spill_passes(self):
         for roots in ([self.kit, self.run], [self.run, self.kit]):

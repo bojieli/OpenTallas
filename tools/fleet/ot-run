@@ -2990,7 +2990,10 @@ def spill_fwd_cmd(src, dst, roots, stamp, listed=False, metadata_scope=None):
                    for r in sorted(roots, key=lambda x: os.path.normpath(x) not in STAGE_FILES))   # files first: a staged dir's mkdir -p must not create a file's parent
     scopes = [os.path.normpath(metadata_scope)] if metadata_scope else roots
     scope_json = shlex.quote(json.dumps(scopes))
-    dcmd = (f"{pre} {tar_x(roots)} && cd / && "
+    # FLOW-OPS-R2 11-22 (flaky test_concurrent_spills_of_one_lane_both_copy under load): the unmarked-root check + mkdir + marker
+    # ran outside the per-lane flock, so a concurrent spill of the same lane could see the root between mkdir and the marker
+    # write and refuse it as real data (OT_SPILL_REAL, exit 3).  The check now runs under the same flock as the extraction.
+    dcmd = (f"flock {spill_lock(roots)} bash -c {shlex.quote(pre)} && {tar_x(roots)} && cd / && "
             f"find {rels} ! -name {SPILL_MARK} \\( -type f -o -type l \\) -print0 > {shlex.quote(stamp + '.inputs')} "
             f"&& printf %s {scope_json} > {shlex.quote(stamp + '.scope')} && touch {stamp}")
     stc = "cd / && tar --null --no-recursion -T - -cf - | zstd -q -1 -T8" if listed else f"tar -C / -cf - {rels} | zstd -q -1 -T8"

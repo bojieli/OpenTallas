@@ -11,6 +11,7 @@ import importlib.util
 import json
 import os
 import pathlib
+import shlex
 import shutil
 import subprocess
 import sys
@@ -131,6 +132,14 @@ class Spill(unittest.TestCase):
         self.assertEqual([out[0].returncode, out[1].returncode], [0, 0], [out[0].stderr[-300:], out[1].stderr[-300:]])
         self.assertTrue(os.path.exists(self.host("dst") + "/d199/b/c/f"))
         self.assertTrue(os.path.exists(self.host("dst") + "/" + self.m.SPILL_MARK))
+
+    def test_concurrent_preparation_never_refuses_its_own_copy(self):
+        """FLOW-OPS-R2 11-22: the unmarked-root check + mkdir + marker runs under the per-lane flock, so a second spill of the
+        same lane cannot see the root between mkdir and the marker write (flaky OT_SPILL_REAL under load)"""
+        dcmd = shlex.split(self.m.spill_fwd_cmd("src", "dst", [self.root], "/tmp/stamp").split(" BatchMode=yes dst ", 1)[1])[0]
+        toks = shlex.split(dcmd)
+        self.assertEqual((toks[0], toks[1], toks[2], toks[3], toks[5]), ("flock", self.m.spill_lock([self.root]), "bash", "-c", "&&"))
+        self.assertIn("OT_SPILL_REAL", toks[4])
 
     def test_tar135_existing_directory_errors_are_not_a_failure(self):
         """tar 1.35 + --keep-newer-files fails on every existing directory (the real MU-SLICE-GATE trigger: a second
