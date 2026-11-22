@@ -185,6 +185,17 @@ def source_snapshot(src, sha, root):
     return dest
 
 
+def scheduled_dies(dies, wave_config):
+    """Only the unattended trigger honors the HBM wave park."""
+    try:
+        hbm = json.loads(wave_config.read_text())["dies"]["hbm"]
+    except (OSError, ValueError, TypeError, KeyError):
+        return dies
+    if not isinstance(hbm, dict) or not hbm.get("parked"):
+        return dies
+    return [die for die in dies if die not in {"hbm", "hbm_sram"}]
+
+
 def ready_dies(src, new, specs, watch, state, busy, force=False, spec=None):
     """One slow reference holds only its own die; remember each die's submitted revision."""
     revisions = dict(state.get("die_sha", {}))
@@ -233,8 +244,10 @@ def main(argv=None):
     new = git(a.src, "rev-parse", "origin/main").stdout.strip()
     spec = json.loads((HERE / "canaries.json").read_text())
     specs = [c["die"] for c in spec["canaries"]]
+    wave_config = Path(os.environ.get("AP_COORD", str(Path.home() / "coord"))) / "autopilot/kit_wave.json"
+    scheduled = scheduled_dies(specs, wave_config)
     busy = live_dies(a.root)
-    dies, revisions, hits = ready_dies(a.src, new, specs, spec["watch"], state, busy, a.force, spec=spec)
+    dies, revisions, hits = ready_dies(a.src, new, scheduled, spec["watch"], state, busy, a.force, spec=spec)
     print(f"FLOW_CANARY_TRIGGER main {new[:9]}: submit {dies}; existing live {sorted(busy)}; changes {hits[:8]}")
     if a.dry:
         return 0
