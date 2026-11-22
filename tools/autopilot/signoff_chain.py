@@ -262,7 +262,13 @@ def stage_signoff_tool(kit, bundle=None, source=None):
     old = _sha(kit / "signoff.py")
     tmp = Path(tempfile.mkdtemp(prefix=".so_stage.", dir=str(kit)))
     try:
-        r = subprocess.run([sys.executable, "-I", str(src / "signoff.py"), "bundle", str(tmp)],
+        command = [sys.executable, "-I", str(src / "signoff.py"), "bundle", str(tmp)]
+        pin_helper = "native_pin_contract.py"
+        # The staging directory is empty. Forward the existing pin audit's
+        # missing dependency without replacing a kit-provided audit or helper.
+        if (kit / "pin_audit.py").is_file() and not (kit / pin_helper).is_file() and (src / pin_helper).is_file():
+            command.extend(("--with", pin_helper))
+        r = subprocess.run(command,
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=300)
         if r.returncode:
             print(f"SIGNOFF_TOOL SKIPPED (bundle from {src} rc {r.returncode}: {r.stderr.strip()[-200:]}): kit copy signoff.py {old}", flush=True)
