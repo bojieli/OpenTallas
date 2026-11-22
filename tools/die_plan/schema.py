@@ -1907,6 +1907,14 @@ _B["relay_mid_re"] = {"type": "string", "minLength": 1}
 _B["r_dly_spread_station_um"] = {"type": "object", "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}   # XTAP-A 11-20 (gen_phys dly_spread_station_um)
 _B["r_r8_core_seat"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # R8-CORE-SEAT 11-21 (gen_phys r8_core_seat_on): true | [type base names]
 _B["relay_mid_re_types"] = {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}}
+# GRT-ITERS-PLAN 11-22 (gen_phys _grt_cong_iters): GRT congestion iterations per round from the plan (GEN env OT_GRT_CONG_ITERS still wins)
+_B["grt_cong_iters"] = {"type": "integer", "minimum": 0, "maximum": 200}
+_B["grt_cong_iters_types"] = {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 200}}
+# RANK-SEAT auto 11-22 (kit_istations rank_line_cfg / auto_rank_line): {type-name regex: row}; packed lane-pad ranks of buses of
+# at least min_bits (512) sit on a line of span_um (180) across the bus travel direction (45 degrees at a turn); min_um (40) of
+# free line or the rank keeps its point block.  Absent = byte-identical kits.
+_B["rank_line_types"] = {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False, "properties": {
+    "min_bits": {"type": "integer", "minimum": 1}, "span_um": {"type": "number", "exclusiveMinimum": 0}, "min_um": {"type": "number", "exclusiveMinimum": 0}}}}
 _B["r_dly_lockup"] = {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False, "properties": {
     "seg": {"type": "integer", "minimum": 1}, "tail_groups": {"type": "integer", "minimum": 0}, "pad_min_stations": {"type": "integer", "minimum": 0},
     "inst_seg": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
@@ -2235,6 +2243,12 @@ _PT["placement_guides"] = {
 # RELAY-SITES 11-09: opt-in per type, reset relays numbered from their site (reset_tree.site_relay_id); absent = visit order
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_relay_names"] = {"enum": ["site"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
+# RANK-SEAT 11-22 (FABLE-FIX-S81-COL-RANKSEAT; kit_istations rank_sites_lines / rs_rank_line): opt-in per type, every bit of a wide
+# register rank (key = register name without its last [bit]) FIRM on the line line_um, bit 0 first (asc); absent = byte-identical kits
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_rank_sites"] = {"type": "object", "additionalProperties": {
+    "type": "object", "additionalProperties": False, "required": ["line_um"], "properties": {
+        "line_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+        "order": {"enum": ["asc", "desc"]}, "note": {"type": "string"}}}}
 # S81-LNB-1 11-08 (opt-in, class LN-BROADCAST): per-lane kept copies of the S81 vp coefficient words and per-lane reset
 # relay bits in the private kit copy of the bound module (bind.py kit-rtl -> kit_ln_copies.py; 0 added cycles)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ln_copies"] = {

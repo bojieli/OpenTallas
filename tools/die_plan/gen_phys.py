@@ -38,10 +38,23 @@ from schema import DIE_PART
 
 
 
-def _grt_cong_iters():
-    """FLOW-FIX-0100: GRT congestion iterations per round for generated kits (default 10; 0 or 30 = OpenROAD default, no flag)"""
-    v = os.environ.get("OT_GRT_CONG_ITERS", "10").strip()
-    return int(v) if v.isdigit() else 10
+GRT_CONG_ITERS = 10
+
+
+def _grt_cong_iters(budgets=None, tn=None):
+    """FLOW-FIX-0100: GRT congestion iterations per round for generated kits (default 10; 0 or 30 = OpenROAD default, no flag).
+    GRT-ITERS-PLAN (FABLE-FIX-S81-COL-RANKSEAT 11-22): in order GEN env OT_GRT_CONG_ITERS (an A/B), then the plan:
+    budgets.grt_cong_iters_types {type-name regex: n} (re.search, the longest matching regex wins), budgets.grt_cong_iters, else 10.
+    Why a plan key: S81 col needs more than 10 (col_h10_r1 kit H reached overflow 0 at iteration 16 of 50; every 10-iteration col
+    kit stopped at GRT-0116 with 7-15 % usage), and env rows were dropped on the way to the kit more than once."""
+    v = os.environ.get("OT_GRT_CONG_ITERS", "").strip()
+    if v.isdigit():
+        return int(v)
+    b = budgets or {}
+    hit = [k for k in (b.get("grt_cong_iters_types") or {}) if tn is not None and re.search(k, tn)]
+    if hit:
+        return int(b["grt_cong_iters_types"][max(hit, key=lambda k: (len(k), k))])
+    return int(b.get("grt_cong_iters", GRT_CONG_ITERS))
 
 
 def write_cap_budget(P, tn, kd):
@@ -7568,8 +7581,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # OT_GRT_CONG_ITERS=<n> at generation overrides; 30 (OpenROAD default) or 0 keeps the old line (only the allow-congestion form emits GLOBAL_ROUTE_ARGS).
            *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose"
               + (" -allow_congestion" if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else "")
-              + (f" -congestion_iterations {_grt_cong_iters()}" if _grt_cong_iters() not in (0, 30) else "")]
-             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" or _grt_cong_iters() not in (0, 30) else []),
+              + (f" -congestion_iterations {_grt_cong_iters(P.budgets, tn)}" if _grt_cong_iters(P.budgets, tn) not in (0, 30) else "")]
+             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" or _grt_cong_iters(P.budgets, tn) not in (0, 30) else []),
            # KW-FIX-8 11-04 (COORD GRT loop ruling): opt-in per row through wave item_env, off by default.  TritonCTS by
            # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
            # net by net and restarts its 30 iterations each time.  CTS_ARGS replaces the ORFS argument list, so this is
@@ -8191,7 +8204,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             # The exported exact kit RTL is later rebound from rtl/. Preserve
             # its per-module placement sidecar across that export boundary.
             shutil.copyfile(ist[0], kd / 'rtl' / (t['module'] + '.istations.tcl'))
-    elif t.get("relay_sites"):
+    elif t.get("relay_sites") or t.get("relay_rank_sites"):
         # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
         import kit_istations
         (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, t))

@@ -28,6 +28,7 @@ absent) differs from the plan's count.  --apply writes the plan's depths onto th
 regs_um[j] (ordered from the RTL launch side; regs_um is reversed where the plan's launch pin is the RTL's capture side).
 usage: kit_istations.py PLAN.json TYPE KIT_RTL_DIR [--apply] [--h-tree G,GSI,GSO]
        ->  KIT_RTL_DIR/istations.tcl + edited bound module"""
+import math
 import json
 import re
 import sys
@@ -442,6 +443,202 @@ proc rs_place_all {sites} {
   }
 }
 """
+
+RANK_TCL = r"""# RANK-SEAT (FABLE-FIX-S81-COL-RANKSEAT 11-22): every bit of a wide register rank FIRM on a LINE, in bit order, instead of the
+# compact block that is_place packs round one point.  Why: S81 col kits ended GRT-0116 at 7-15 % total usage and the overflow
+# sat at such blocks (col_h9_r0_p3 u_lpad_xo_i0.q: 1,104 flops in 21.6 x 29 um between the E edge and u_cf = 2,208 nets through
+# 71 um of block edge; col_h10_r0_p4 u_ist_frame_int_o0_0 + u_lpad_x_i0.r[0] side by side).  On a line of length L a rank has
+# n / L nets per um and nothing stacked behind it.
+#   rs_rank_line RANKS x0 y0 x1 y1 order : RANKS = register names below the bound instance WITHOUT the last [bit] (a Tcl list
+#   of alternatives, the first that has registers is used: ot_dp_dly names its last stage q, not r[D-1]); the bits sit evenly
+#   from (x0, y0) to (x1, y1), bit 0 first (order asc) or last (desc), each on the free station-grid cell nearest its line
+#   point (ff_put_near: never on a hard core; bits that share a cell stack beside it).  The cells the station hook gave these
+#   flops are freed first.  A rank that matches no register is a SEAT-MISS (ot_relay_sites_unmatched.txt, is_miss), not silent.
+proc rs_rank_line {ranks x0 y0 x1 y1 order} {
+  global ff_dbu ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_cpitch ff_ns_stride ff_ns_inset is_fh is_miss
+  set want [dict create]
+  foreach r $ranks { dict set want [string map {/ .} $r] 1 }
+  set found [dict create]
+  foreach e [is_dffs ""] {
+    lassign $e i nm mnm
+    regsub {\$_[A-Za-z0-9_]*$} [string map {/ .} $mnm] {} k
+    if {![regexp {^(.*)\[([0-9]+)\]$} $k -> base b]} continue
+    if {![dict exists $want $base]} {
+      regsub {^[^.]*[.]} $base {} base
+      if {![dict exists $want $base]} continue
+    }
+    dict lappend found $base [list $b $i $nm]
+  }
+  set bits {}; set rank [lindex $ranks 0]
+  foreach r $ranks {
+    set a [string map {/ .} $r]
+    if {[dict exists $found $a]} { set bits [dict get $found $a]; set rank $r; break }
+  }
+  set n [llength $bits]
+  if {!$n} {
+    lappend is_miss "relay_rank_sites:$rank"
+    if {[info exists ::env(RESULTS_DIR)] && [file isdirectory $::env(RESULTS_DIR)]} {
+      set uf [open $::env(RESULTS_DIR)/ot_relay_sites_unmatched.txt a]; puts $uf "rank:$rank"; close $uf
+    }
+    puts "OT_RELAY_RANK SEAT-MISS WARNING rank $ranks matches no register"
+    return 0
+  }
+  set bits [lsort -integer -index 0 $bits]
+  if {$order eq "desc"} { set bits [lreverse $bits] }
+  foreach e $bits {
+    set i [lindex $e 1]
+    if {[$i getPlacementStatus] ne "FIRM"} continue
+    lassign [$i getLocation] ox oy
+    dict unset ff_gocc "[expr {int(($ox - $ff_x0) / $ff_cpitch)}],[expr {int(($oy - $ff_y0) / $ff_rh)}]"
+  }
+  # the N / S face bank search of ff_put_near (row stride / inset kits) is for pin registers: a rank line stays clear of it
+  set ylo $ff_y0; set yhi [expr {$ff_y1 - $ff_rh}]
+  if {$ff_ns_stride > 1 || $ff_ns_inset > 0} { set ylo [expr {$ff_y0 + 11 * $ff_dbu}]; set yhi [expr {$ff_y1 - 11 * $ff_dbu}] }
+  set X0 [expr {$x0 * $ff_dbu}]; set Y0 [expr {$y0 * $ff_dbu}]; set X1 [expr {$x1 * $ff_dbu}]; set Y1 [expr {$y1 * $ff_dbu}]
+  set got_n 0; set k 0
+  foreach e $bits {
+    lassign $e b i nm
+    set f [expr {$n > 1 ? double($k) / ($n - 1) : 0.5}]; incr k
+    set px [expr {round($X0 + $f * ($X1 - $X0))}]; set py [expr {round($Y0 + $f * ($Y1 - $Y0))}]
+    set px [expr {max($ff_x0, min($ff_x1 - $ff_cpitch, $px))}]; set py [expr {max($ylo, min($yhi, $py))}]
+    set got [ff_put_near $i $px $py]
+    if {$got eq ""} { lappend is_miss $nm; continue }
+    puts $is_fh "$nm\trank\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t-"
+    incr got_n
+  }
+  puts "OT_RELAY_RANK $rank: $got_n of $n bits FIRM on the line ($x0, $y0) - ($x1, $y1), [format %.1f [expr {hypot($x1 - $x0, $y1 - $y0)}]] um, order $order"
+  return $got_n
+}
+"""
+
+RANK_ORDERS = ("asc", "desc")
+RANK_LINE_MIN_BITS, RANK_LINE_SPAN_UM, RANK_LINE_MIN_UM, RANK_LINE_CLEAR_UM = 512, 180.0, 40.0, 2.0
+
+
+def rank_line_call(ranks, seg, order):
+    """one rs_rank_line Tcl call: ranks = alternative names of ONE rank, seg = (x0, y0, x1, y1) um"""
+    return "rs_rank_line {" + " ".join(ranks) + "} " + " ".join(f"{v:.3f}" for v in seg) + f" {order}"
+
+
+def rank_sites_lines(tn, t, head=True):
+    """RANK-SEAT: plan partition_types[].relay_rank_sites -> istations.tcl lines (RANK_TCL when head, one rs_rank_line per
+    rank); [] when absent.  {rank: {line_um: [[x0, y0], [x1, y1]][, order: asc | desc][, note]}}; rank = the register name
+    below the bound instance without its last [bit] (u_lpad_xo_i0.q, u_lpad_x_i0.r[0], u_ist_frame_int_o0_2.q)."""
+    rk = t.get("relay_rank_sites") or {}
+    if not rk:
+        return []
+    out = [RANK_TCL] if head else []
+    for k, v in sorted(rk.items()):
+        ln = v.get("line_um") if isinstance(v, dict) else None
+        if not (isinstance(v, dict) and set(v) <= {"line_um", "order", "note"} and isinstance(ln, list) and len(ln) == 2
+                and all(isinstance(p, list) and len(p) == 2 and all(isinstance(a, (int, float)) and not isinstance(a, bool) for a in p) for p in ln)
+                and v.get("order", "asc") in RANK_ORDERS):
+            raise SystemExit(f"kit_istations: {tn}: relay_rank_sites[{k}] must be {{line_um: [[x0, y0], [x1, y1]][, order: asc|desc]}}")
+        if not isinstance(k, str) or not k or re.search(r"[\s{}$;\\]", k):
+            raise SystemExit(f"kit_istations: {tn}: relay_rank_sites key {k!r}: a register name without its last [bit] index")
+        if RING_KEY.search(k):
+            raise SystemExit(f"kit_istations: {tn}: relay_rank_sites[{k}]: clock-landing ring registers are packed by the landing hook, not on a rank line")
+        out.append(rank_line_call([k], ln[0] + ln[1], v.get("order", "asc")))
+    return out
+
+
+def rank_line_cfg(budgets, tn):
+    """RANK-SEAT auto form: plan budgets.rank_line_types {type-name regex: {min_bits, span_um, min_um}} -> the row of the longest
+    matching regex with the defaults filled in, or None (no key, no match: the kit is byte-identical)."""
+    per = (budgets or {}).get("rank_line_types") or {}
+    hit = [k for k in per if re.search(k, tn)]
+    if not hit:
+        return None
+    row = per[max(hit, key=lambda k: (len(k), k))] or {}
+    return dict(min_bits=int(row.get("min_bits", RANK_LINE_MIN_BITS)), span_um=float(row.get("span_um", RANK_LINE_SPAN_UM)),
+                min_um=float(row.get("min_um", RANK_LINE_MIN_UM)))
+
+
+def rank_line_blocks(t, halo=RANK_LINE_CLEAR_UM):
+    """boxes a rank line must not enter: placed hard cores and the clock-landing bands (their rings are packed later), + halo"""
+    out = []
+    for hc in t.get("hard_cores") or []:
+        if "origin_um" in hc and "outline_um" in hc:
+            dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+            x, y = hc["origin_um"][0] + dx, hc["origin_um"][1] + dy
+            out.append((x - halo, y - halo, x + hc["outline_um"][0] + halo, y + hc["outline_um"][1] + halo))
+    for band in ((t.get("clock") or {}).get("landing_contract") or {}).get("bands", {}).values():
+        r = band.get("rect_um") if isinstance(band, dict) else None
+        if isinstance(r, list) and len(r) == 4:
+            out.append((r[0] - halo, r[1] - halo, r[2] + halo, r[3] + halo))
+    return out
+
+
+def _rl_dom(a, b):
+    """dominant axis direction a -> b as a unit vector, None for a zero move"""
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    if abs(dx) < 1e-6 and abs(dy) < 1e-6:
+        return None
+    return ((1 if dx > 0 else -1), 0) if abs(dx) >= abs(dy) else (0, (1 if dy > 0 else -1))
+
+
+def _rl_free(p, d, lim, outline, blocks, clear=RANK_LINE_CLEAR_UM, step=1.0):
+    """free length from p along d (components -1 / 0 / 1 per axis; a diagonal counts per axis), at most lim"""
+    s = 0.0
+    while s + step <= lim + 1e-9:
+        x, y = p[0] + d[0] * (s + step), p[1] + d[1] * (s + step)
+        if not (clear <= x <= outline[0] - clear and clear <= y <= outline[1] - clear) or any(b[0] < x < b[2] and b[1] < y < b[3] for b in blocks):
+            break
+        s += step
+    return s
+
+
+# lsb on the LEFT of the travel direction at the face, for order lsb_low (pins run low -> high along the face):
+# IN bus (travel into the type) / OUT bus (travel out of it)
+_RL_LSB_LEFT = {("in", "E"): True, ("in", "N"): False, ("in", "W"): False, ("in", "S"): True,
+                ("out", "N"): True, ("out", "E"): False, ("out", "W"): True, ("out", "S"): False}
+
+
+def auto_rank_line(t, p, prev, nxt, bus, cfg):
+    """RANK-SEAT auto geometry of one station rank at site p of a chain prev -> p -> nxt.  The bus is a ribbon: a rank is the
+    ribbon's cross-section, LEFT edge to RIGHT edge of the travel direction, and the bit order of the face is kept on it.
+      straight stage (same dominant direction in and out, or one end unknown): a line across the travel direction, span_um long,
+        centred on p and slid along itself off the outline, the hard cores and the clock-landing bands;
+      turn (in and out directions at right angles): a 45-degree line from p into the inside of the turn, so every bit has its
+        own row AND its own column: the in wires and the out wires both leave the rank without bundling.
+    Returns ((x0, y0, x1, y1), order) with (x0, y0) the LEFT end, or None when p is in a core or under min_um of line is free."""
+    W, H = t["outline_um"][:2]
+    c = RANK_LINE_CLEAR_UM
+    p = (min(max(p[0], c), W - c), min(max(p[1], c), H - c))
+    blocks = rank_line_blocks(t)
+    if any(b[0] < p[0] < b[2] and b[1] < p[1] < b[3] for b in blocks):
+        return None
+    u_in = _rl_dom(prev, p) if prev is not None else None
+    u_out = _rl_dom(p, nxt) if nxt is not None else None
+    if u_in is None and u_out is None:
+        return None
+    left = lambda u: (-u[1], u[0])
+    lsb_left = _RL_LSB_LEFT.get((bus.get("dir"), bus.get("face")), True) == (bus.get("order", "lsb_low") == "lsb_low")
+    order = "asc" if lsb_left else "desc"
+    span = cfg["span_um"]
+
+    def across(u):
+        l = left(u)
+        a, b = _rl_free(p, l, span, (W, H), blocks), _rl_free(p, (-l[0], -l[1]), span, (W, H), blocks)
+        if a + b > span:
+            a, b = (span / 2, span / 2) if min(a, b) >= span / 2 else ((a, span - a) if a < b else (span - b, b))
+        return (p[0] + l[0] * a, p[1] + l[1] * a, p[0] - l[0] * b, p[1] - l[1] * b), a + b
+
+    cands = []
+    if u_in is not None and u_out is not None and u_in[0] * u_out[0] + u_in[1] * u_out[1] == 0:
+        d = (u_out[0] - u_in[0], u_out[1] - u_in[1])                    # into the inside of the turn
+        s = _rl_free(p, d, span / math.sqrt(2.0), (W, H), blocks)
+        far = (p[0] + d[0] * s, p[1] + d[1] * s)
+        lturn = u_in[0] * u_out[1] - u_in[1] * u_out[0] > 0             # left turn: the inside is the LEFT edge
+        cands.append(((far + p) if lturn else (p + far), s * math.sqrt(2.0)))
+        cands += [across(u_out), across(u_in)]
+    else:
+        cands.append(across(u_in if u_in is not None else u_out))
+    for seg, ln in cands:
+        if ln >= cfg["min_um"]:
+            return tuple(round(v, 3) for v in seg), order
+    return None
+
 
 def _genbug_gate(text):
     """GENBUG-1: the is_place_alt / coverage block is part of a kit's istations.tcl only when the plan has a packed lane-pad
@@ -1326,14 +1523,15 @@ def relay_sites_lines(tn, t):
     rs = t.get("relay_sites") or {}
     sp = t.get("relay_split") or []
     if not rs and not sp:
-        return []
+        return rank_sites_lines(tn, t)                                  # RANK-SEAT: a rank line needs no per-flop key
     for k, v in rs.items():
         if not (isinstance(v, list) and len(v) == 2 and all(isinstance(a, (int, float)) for a in v)):
             raise SystemExit(f"kit_istations: {tn}: relay_sites[{k}] must be [x_um, y_um]")
     _check_split(tn, sp)
     pre = {k: v for k, v in rs.items() if not RING_KEY.search(k)}
     # RESET-RELAY-GEN-1530: the copies exist before rs_place_all seats them (relay_sites keys K__rs<n>)
-    return [RELAY_TCL] + ([RELAY_SPLIT_TCL, _split_call(sp)] if sp else []) + ([_relay_dict(pre)] if pre else [])
+    # RANK-SEAT: rank lines after the per-flop keys (a keyed sample bit of a rank is re-seated on the line with the rest)
+    return [RELAY_TCL] + ([RELAY_SPLIT_TCL, _split_call(sp)] if sp else []) + ([_relay_dict(pre)] if pre else []) + rank_sites_lines(tn, t)
 
 
 def relay_sites_post_tcl(tn, t):
@@ -2072,6 +2270,7 @@ def main(argv):
         soft_cs_placement.prepare(t, txt, source_sha, native_manifest, wrapper_sources)
     tcl = [TCL_HEAD]
     rep = []
+    rl_cfg, rl_calls, rl_rows = rank_line_cfg(raw.get("budgets"), tn), [], []      # RANK-SEAT auto lines (after every is_place)
     bad = [e.get("conn") for e in t.get("internal_stations", []) if e.get("leg_order") == "channel" and not e.get("core")]
     if bad:   # KIT-CHAN-1: the channel order is a core pin-face chain form only (bus chains have no leg order)
         raise SystemExit(f"kit_istations: {tn}: leg_order channel on non-core chain(s) {bad[:4]}")
@@ -2118,10 +2317,18 @@ def main(argv):
                     tcl.append(PACKED_EXACT_BANK_TCL)
                 tcl.append(call)
             sites=packed_sites(regs,packed['depth'])
-            for j,k in sites:
+            for sj,(j,k) in enumerate(sites):
                 if floating or exact_meta is not None:
                     break
                 x,y=regs[k]
+                # RANK-SEAT auto (budgets.rank_line_types): the packed pad rank of a wide bus on a line instead of a block
+                rl_names=[packed['instance']+f'.r[{j}]']+([packed['instance']+'.q'] if j == packed['depth']-1 and packed["master"] == "ot_dp_dly" else [])
+                if rl_cfg and W >= rl_cfg['min_bits'] and not any(nm in (t.get('relay_rank_sites') or {}) for nm in rl_names):
+                    rl=auto_rank_line(t,regs[k],regs[sites[sj-1][1]] if sj else e.get('from_um'),
+                                      regs[sites[sj+1][1]] if sj+1 < len(sites) else e.get('to_um'),b,rl_cfg)
+                    if rl:
+                        rl_calls.append(rank_line_call(rl_names,rl[0],rl[1]))
+                        rl_rows.append(dict(rank=rl_names[-1],line_um=[list(rl[0][:2]),list(rl[0][2:])],order=rl[1]))
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
                 anyg='*'+packed['instance']+'[./]*'
                 if j == packed['depth'] - 1:
@@ -2301,11 +2508,18 @@ def main(argv):
         inst = inst if inst.startswith("u_") else "u_" + inst
         tcl.append(f"is_place {{*{inst}[./]*}} {ox + w / 2:g} {oy + h / 2:g} cell:{c['inst']}")
         rep.append(dict(cell=c["inst"], site=[ox, oy]))
+    # RANK-SEAT auto lines: after every station is_place (they re-seat those flops), before the plan's own keys (which win)
+    if rl_calls:
+        tcl.extend([RANK_TCL] + rl_calls)
+        man["kit_rank_lines"] = rl_rows
+        print(f"kit_istations: {tn}: RANK-SEAT {len(rl_calls)} packed pad ranks on lines (budgets.rank_line_types)")
     # existing RTL stage flops at plan relay sites (0 cycles; DIE-KV-59 10-31)
     rs = relay_sites_lines(tn, t)
     if rs:
         tcl.extend(rs)
         man["kit_relay_sites"] = len(t.get("relay_sites") or {})
+        if t.get("relay_rank_sites"):
+            man["kit_relay_rank_sites"] = len(t["relay_rank_sites"])
         if t.get("relay_split"):
             man["kit_relay_split"] = sum(len(r["clones"]) for r in t["relay_split"])       # not a station entry: receipts list stations only
     tcl += macro_cross_lines(tn, t)

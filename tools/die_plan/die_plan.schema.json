@@ -7415,6 +7415,40 @@
        "maxItems": 2
       }
      },
+     "relay_rank_sites": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "line_um"
+       ],
+       "properties": {
+        "line_um": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 2,
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        },
+        "order": {
+         "enum": [
+          "asc",
+          "desc"
+         ]
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "ln_copies": {
       "type": [
        "boolean",
@@ -9736,6 +9770,40 @@
      "additionalProperties": {
       "type": "string",
       "minLength": 1
+     }
+    },
+    "grt_cong_iters": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 200
+    },
+    "grt_cong_iters_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 200
+     }
+    },
+    "rank_line_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "min_bits": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "span_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "min_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       }
+      }
      }
     },
     "r_dly_lockup": {

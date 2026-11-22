@@ -18,4 +18,4 @@ def test_default_round_is_10_and_overridable(monkeypatch):
 
 def test_config_source_emits_the_iteration_flag():
     src = (Path(__file__).resolve().parent / "gen_phys.py").read_text()
-    assert "-congestion_iterations {_grt_cong_iters()}" in src and 'not in (0, 30)' in src
+    assert "-congestion_iterations {_grt_cong_iters(P.budgets, tn)}" in src and 'not in (0, 30)' in src
