@@ -5,3 +5,4 @@
   (3) Bind speed, measured on KV D27d3: elab 2 min, strict bind >40 min, of which per-type emit is the pole and runs on ONE core. Step A: tools/die_plan/bind_emit_par.py, OT_BIND_EMIT_J=N forks one worker per type and merges state deltas in type order; anything it cannot merge falls back to serial; default off; proof = diff -r against the serial bind. Step B: per-type emit reuse keyed on type inputs, with a verify mode. Die checks (R8, LATCHECK) always run on the whole merged bind.
   (4) Bind host = least loaded host holding the tree (bind_fast host), sealed tree read-only as cwd, out elsewhere: no 50 GB copy for a row change.
   Baseline KV bind running on epyc8 (oth-ubuntu-1198688-1795321386). Landing A + build_graph first.
+- 2026-11-21 20:45 PST DONE [FABLE-PIPELINE-R1] ot-push-main otpush-tolerant-swine-1081570 on tolerant-swine: rc=0 after 112 s, ended 20:45:23, log /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/tmp/push1.log, cmd: ot-push-main 
