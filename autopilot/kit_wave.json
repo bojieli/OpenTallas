@@ -288,7 +288,9 @@
     "kv3_hub_Wi": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 FAIL_PREFLOOR port_bind: 3 extra netlist bits io_pad_die_id[0..2] (bound_only ID strap port) not in the plan pins. Fix = the hub_Wo preflight / plan pin row (FABLE-FIX-KV-HUB-R2), carried in the next KV event. Lift = delete this key when that event is applied.",
     "kv3_pc_v3": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 place PDN-0006 VSS on M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (core OBS vs parent PG grid; same class as kv3_pc__cl254f2e73/cl5a95b461). Fix = plan PG straps or kvpc0 OBS window (FAM-KV-IOPC). Unchanged relaunch fails the same way. Lift = delete when the fix lands.",
     "kv3_hgi_v8": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied.",
-    "kv3_hub_Eo": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied."
+    "kv3_hub_Eo": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied.",
+    "kv3_hg*": "KV-PLAN-R6 11-21 19:1x (FABLE-PD-KV-2000 / COORD): no new hg/hgi/pv builds on D26 or D27d3 (hg -560 / hgi -739 measured, no plan fix before D28; pv split lands in D28). Running kits keep going. Auto-lift on event_adopt:KV-D28.",
+    "kv3_pv*": "KV-PLAN-R6 11-21 19:1x (FABLE-PD-KV-2000 / COORD): no new hg/hgi/pv builds on D26 or D27d3 (hg -560 / hgi -739 measured, no plan fix before D28; pv split lands in D28). Running kits keep going. Auto-lift on event_adopt:KV-D28."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5936,7 +5938,11 @@
     "kv3_hg_v1p2@2:fix=kvplanr5-d26ctl-unshared",
     "kv3_hg_v1p3@3:fix=4f638b4e9f8d",
     "kv3_hgi_v5@2:fix=4f638b4e9f8d"
-   ]
+   ],
+   "hold_release_on": {
+    "kv3_hg*": "event_adopt:KV-D28",
+    "kv3_pv*": "event_adopt:KV-D28"
+   }
   },
   "s81": {
    "enabled": true,
