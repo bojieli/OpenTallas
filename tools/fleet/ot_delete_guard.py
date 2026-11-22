@@ -383,10 +383,13 @@ def closed_unit_refusal(t, exported=None, hold=None):
 
 
 def own_signed_records(t, host=None):
-    """-> [(sha256, relpath)] of the signed / LOCAL_PASS / NEEDS_PARENT records at or under t that are THIS host's results: not a copy inside a unit's
-    input dirs (COPIED_INPUT_DIRS), not repo content under physical/die_plan, and not a record whose "host" names another host (auto_export drain skips those as copies; their origin host keeps them)"""
+    """Signed result records under t, including a returned result whose exact final ODB is local.
+
+    Imported child views and repo content remain outside the result inventory.
+    """
     import hashlib, socket
     host = host or socket.gethostname()
+    root = os.path.realpath(t)
     out = []
     for d, ds, fs in os.walk(t):
         ds[:] = [x for x in ds if not os.path.islink(os.path.join(d, x)) and x not in COPIED_INPUT_DIRS
@@ -403,7 +406,14 @@ def own_signed_records(t, host=None):
                 if not SIGNED_VERDICT.match(str(rec.get("verdict") or "")):
                     continue
                 if rec.get("host") and str(rec.get("host")) != host:
-                    continue
+                    # A sealed return keeps the producer hostname but can leave the last final DB here.
+                    inputs = rec.get("inputs")
+                    odb = inputs.get("odb") if isinstance(inputs, dict) else None
+                    if (not isinstance(odb, str) or not os.path.isabs(odb)
+                            or os.path.basename(odb) != "6_final.odb"
+                            or os.path.commonpath((root, os.path.realpath(odb))) != root
+                            or os.path.islink(odb) or not os.path.isfile(odb)):
+                        continue
                 out.append((hashlib.sha256(raw).hexdigest(), os.path.relpath(q, t)))
             except (OSError, ValueError, AttributeError):
                 continue
