@@ -26,3 +26,10 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
 2. Rep keep proof: when kit_rtl admits, place -> route; read TT ends (xo RESETN class should vanish). Hand OT_KEEP_WIRES ot_s81_rly:rq (or RTL (* keep *) on g_rsreg rq in rtl/dsrom_sys/s81_glue/ot_s81_rly.sv) to S81-J6-ASSEMBLY-R4 + FLOW-OPS-1300 (fleet no-merge default; do not do twice).
 3. When epyc10 admits: launch J7c STAGGER spec above.
 4. On published J7d (u_cf view + guarded ROM-input stage): signable rep from the manifest tree.
+
+## 11-22 03:05 update
+- Kit C (J8 row proof only, src-manifest off): j8c_tree, spec s81_col_h9_r0_p2__t1__cl9f71e63d__pva4376595_1122022216 (env_only OT_GRT_CONG_ITERS added; orig spec tmp/spec_orig_1122022216.json), run-item pid 2263742, log kitc_runitem.log.
+- 7 SEALED counting reps (COORD 03:xx): tmp/sealed_launch.sh ITEM HOST; specs *_11220301..0304; logs sealed_<item>_runitem.log. pids p6 2641923, p1 2669012, p2/cl9f 2688258, p2/cl0045 2711310, p3/cl8ce 2723998, p3/cl0cd 2740564, p3/cl31d 2751065.
+- Old p3/p6 rt404887 kits (pids 55162/43388) = row proofs only.
+- j8s_tree rebind cancelled; j8s_tree partial copy on epyc8 is dead (ot-delete when convenient).
+- Due: combined p1-p6 J8 col row set to S81-J6-ASSEMBLY-R5 by 14:00 (cut 16:00).
