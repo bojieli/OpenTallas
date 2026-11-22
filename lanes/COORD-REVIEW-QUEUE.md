@@ -25398,3 +25398,4 @@ FAILED [AUTOPILOT aef7c331111b] 2026-11-22 08:45:27 PST AUTOPILOT -> KIT-WAVE-3:
   DEAD-OWNER 2, QC: cbn_q00 cl622f65d2 + cldbcda913 (TAP-GRID-R5, no post 2 h).
   STALE 1: S81 col_h9_r0_p6 (FAM-S81-COL-H9R0-R4).
   UNCLASSIFIED 3: KV kv3_hub_C (kit_rtl), QC slw_st_b_v1 cle6023ec2, S81 s81sl_leaf t65 (place error).
+- 2026-11-22 08:52 PST DONE [FAM-S81-COL-H10-R4] ot-run oth-ubuntu-1927680-1795362590 on key-cardinal: rc=0 after 4429 s, ended 08:51:59, log /srv/opentallas-scratch2/claude/fam-s81-col-h10-r4/vprobe2/ot_hdc_v41x_attn_tr_x_xoff0.otrun.log, cmd: --mem 12 --threads 4 --hosts intel1,epyc2,epyc7,epyc9,epyc10 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10-r4/vprobe2 -- env VG=60.4
