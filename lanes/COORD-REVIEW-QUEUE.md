@@ -23238,3 +23238,6 @@ FAILED [AUTOPILOT c34a4cd82d7c] 2026-11-22 00:51:18 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-22 00:54 PST HOURLY free space 00:53 epyc9=2461 intel1=1206 (restore at >=250 GiB; caps 250 on epyc9/intel1)
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-22 00:54 PST DIED [OPUS-FIX-QC-COLL-R3] ot-run oth-ubuntu-2320264-1795336950 on tolerant-swine: rc=1 after 694 s, ended 00:54:02, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pspec_core3s/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkit_core3s --hosts epyc10 -- bash -c [ -f /srv/opentallas-s | class=UNCLASSIFIED cause=ot-run: epyc10 admits 360 GB (avail 612, reserve 0, fresh 0, peak 77.1, headroom 0, waiters 0/0 GB, oldest 0.0
+- 2026-11-22 00:55 PST routed 27 prefix rows (S81 bk_sel/serdes/slice/col/leaf, KV hgi/hub/pv/pc/io, QC slwsle/glue) to live lanes; 361 stale rows superseded (backup /tmp/orf_bak.tsv on intel2)
+  all 15 owner lanes posted in last 6 h; none skipped
+  HELD-OK note added to lanes/handoff/OWNERS-SWEEP.md + owners_sweep.py comment
