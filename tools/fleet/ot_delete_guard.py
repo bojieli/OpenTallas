@@ -213,6 +213,11 @@ def newer_than_current(target, current=None):
         except (OSError, ValueError):
             return ""
     name = os.path.basename(os.path.abspath(target).rstrip("/"))
+    # COORD RULING 11-22 03:05 (hub 6d564bb7): a lane's own superseded private work tree (name contains "_work") named EXACTLY in
+    # OT_DELETE_SUPERSEDED_PRIVATE (colon list of tree roots) is retired by ruling, not an adoption in progress.  Every other check still applies.
+    ok = [q.rstrip("/") for q in os.environ.get("OT_DELETE_SUPERSEDED_PRIVATE", "").split(":") if q]
+    if "_work" in name and os.path.abspath(target).rstrip("/") in ok:
+        return ""
     for prefix, row in (current or {}).items():
         if name.startswith(prefix) and name != row.get("tree") and not name.endswith((".part", ".building")):
             for f in (os.path.join(target, ".src-manifest.json"), target):
@@ -393,7 +398,9 @@ def own_signed_records(t, host=None):
     out = []
     for d, ds, fs in os.walk(t):
         ds[:] = [x for x in ds if not os.path.islink(os.path.join(d, x)) and x not in COPIED_INPUT_DIRS
-                 and not (x == "die_plan" and os.path.basename(d) == "physical")]   # physical/die_plan = git-tracked plan / view content of a source tree (in main), not a result
+                 and not (x in ("die_plan", "ref_tile") and os.path.basename(d) == "physical" and os.path.isdir(os.path.join(d, "die_plan")))]
+        # physical/die_plan + physical/ref_tile of a source tree (has physical/die_plan) = git-tracked plan / signed view content (in main), not a result
+        # (CLEAN-AGGR-R3 11-22: 13 main ref_tile views refused every tree copy on intel2 at 96 %)
         for f in fs:
             if f != "signoff.json" and not f.endswith(".signoff.json"):
                 continue

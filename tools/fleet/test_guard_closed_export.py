@@ -119,3 +119,28 @@ def test_refuse_calls_signed_unexported_with_stale_list_failing_closed_clean_agg
     monkeypatch.setattr(g, "EXPORTED_LIST", str(tmp_path / "missing.txt"))
     why = g.refuse(str(a), protected=set(), ptext="", current={}, allow=set())
     assert why and "exported_records.txt missing or stale" in why
+
+
+def test_superseded_private_override_and_ref_tile_repo_views_clean_aggr_r3(tmp_path, monkeypatch):
+    import json as _j, os as _o, time as _t
+    t = tmp_path / "kw45" / "src_s81_pin_x_work_r2"
+    t.mkdir(parents=True)
+    cur = {"src_s81_": {"tree": "src_s81_cur", "adopted_at": _t.time() - 3600}}
+    assert g.newer_than_current(str(t), cur)
+    monkeypatch.setenv("OT_DELETE_SUPERSEDED_PRIVATE", str(t) + ":/x/y")
+    assert g.newer_than_current(str(t), cur) == ""
+    other = tmp_path / "kw45" / "src_s81_pin_x_r3"
+    other.mkdir()
+    monkeypatch.setenv("OT_DELETE_SUPERSEDED_PRIVATE", str(other))
+    assert g.newer_than_current(str(other), cur)
+    # ref_tile views inside a source tree are repo content, not this host's results
+    v = t / "physical" / "ref_tile" / "a" / "views" / "b"
+    v.mkdir(parents=True)
+    (t / "physical" / "die_plan").mkdir()
+    (v / "signoff.json").write_text(_j.dumps({"verdict": "SIGNED", "host": ""}))
+    assert g.own_signed_records(str(t)) == []
+    # without die_plan (not a source tree) the record still counts
+    lone = tmp_path / "lane" / "physical" / "ref_tile" / "a"
+    lone.mkdir(parents=True)
+    (lone / "signoff.json").write_text(_j.dumps({"verdict": "SIGNED", "host": ""}))
+    assert len(g.own_signed_records(str(tmp_path / "lane"))) == 1
