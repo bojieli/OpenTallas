@@ -28,15 +28,28 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 3. E piece: bands all ring ff; r18e E place still running at 03:5x (dpkit-hd_lep0N-734152 epyc9). E7 CTS: fault path -1007 (relayed in r18),
    coll_i3 fs_q -> wen -216 (fclk), lap_ok -155: re-read on the r18e E placed DB.
 
-## FIX LEP-RINGFF-1 (L/tmp/ringff_fix.py TREE [--dry])
-hd_lep0N_w bands: coll_i1 same rect [17.28,634.24,58.32,840.24] + ring_place ff + spread 1.8697; coll_i2 rect [17.28,110.16,30.24,336.96]
-(pin window y 120-326) + ring_place ff, flops-only reserve 2134.84 um2 (band_use_ff 0.726). Also collector_local_sources band copies,
-wave_prepare.prepared_plan_sha256. Dry on r18e: new plan sha256 c2f3d21378f6, die ring_place_missing 0.
+## E finding (r18e E placed, 3_detailed_place.rpt): TT -800.56 u_cland_face_fault_i_coll_i0_p -> u_cland_agg_1 (cut-leg status child is
+sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
+c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
+
+## STATE 11-22 04:1x PST
+- Tree r18f = fork of r18e + LEP-RINGFF-1 (W bands) + LEP-FACESTAT-1 (E: 4 status relays agg.i_coll_i0_p + local resets f0..f3 + my own
+  equivalent generator patch in the TREE tools, tmp/patch_cl.py). Plan sha256 f23abfbd22780d25. Gates PASS (chain_r18f.otrun.log, unit
+  oth-ubuntu-2529493-1795347713): plan_gate_pre 0 findings, bind PASS, cohort 27/27, LATCHECK 334/334, W wrapper unchanged. bind out epyc9 L/bind_r18f.
+  DO NOT edit the tree any more: the W kit seals it at gen.
+- Rows file: lanes/handoff/FABLE-FIX-HEAD-LEP0N-rows.md (posted to R8 + COORD 03:5x).
+- kit_wave.json item_env.hd_lep0N_w added (coord 424a945b2b91) = hd_lep0N row.
+- MY ONE KIT: hd_lep0N_w from r18f, goal finish, sealed. Spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122035312/spec.json.
+  run-item = systemd --user unit fable-lep0n-w1 on intel2 (pid 339647), log intel2 ~/fable-fix-head-lep0n-1122/runitem_w1.log.
+  Work dir epyc9 /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122035310
+  Waiter: ot-wait --durable 339647 --cmdline run-item --timeout 3000 (on intel2; re-run the same command on exit 75).
+  CHECK FIRST at place: landing_placement.tcl tags ring:coll_i1@1.8697+ff and ring:coll_i2+ff; OT_CLAND pinslot lines; then
+  3_detailed_place.rpt wns (r18e: -495.73). Cancel only if setup < -300 after CTS/GRT repair, flat repair, or functional bug.
+- Lane clone epyc7 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/clone: commit b589d27539 kit_preflight ring_ff judges die s81_head
+  (ot-push-main started 04:1x, log epyc7 .../tmp/push1.log).
 
 ## NEXT
-1. Fork done -> ringff_fix.py on the fork -> plan_gate_pre check (as r18e/apply_r18e.sh, --ref-tools rt 6d2e187f0d65 or current), landing_band_core,
-   landing_place tags (+ff), kit preflight.
-2. item_env.hd_lep0N_w row (= hd_lep0N row) via kit_wave_edit, else --ab keys with --why.
-3. private-spec s81_head hd_lep0N_w --tree fork --plan fork plan --goal finish --host epyc9 --lane FABLE-FIX-HEAD-LEP0N (seal default), run-item
-   under systemd-run --user on intel2, ot-wait --durable. One kit only (W). E is R8's (r18e E run-item after its place).
-4. Rows to R8 + COORD; flow fix: kit_preflight ring_ff must judge s81_head too (ot-push-main from a lane clone).
+1. W kit: read each stage from the final DBs; sign-off + EQUIVALENT routed LEC -> PROVENANCE.json -> AUTO-EXPORT; report COORD.
+2. Post progress every 2 h. If W fails in the 13-um channel (density / GRT), next lever: band rect incl. the face strip x 4.32-17.28
+   (ff_rect_um), or pair 2 MX -> swap so coll_i2 pins face the mid band.
+3. E is R8's build (from r18f or its own tree with the same rows).
