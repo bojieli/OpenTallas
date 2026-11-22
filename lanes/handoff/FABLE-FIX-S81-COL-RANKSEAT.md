@@ -46,3 +46,9 @@ combined J8 col set by 14:00), FAM-S81-COL-H10-R4, S81-J6-ASSEMBLY-R5 (J8 cut 16
   work epyc7 .../kit-wave/s81/18a2688b741/private/FABLE-FIX-S81-COL-RANKSEAT/<item>_<stamp>
 - Check at gen: kit log "RANK-SEAT n packed pad ranks on lines", istations.tcl rs_rank_line calls, config.mk -congestion_iterations 50;
   at place: "OT_RELAY_RANK ... bits FIRM on the line". GRT verdict from final 5_1_grt.odb only.
+
+## COORD 05:4x
+- Kits must reach sign-off via goal route. Mine were spec'd --goal auto (resolves to the runner default; COORD: auto can stop at geom). Left running.
+  IF a run-item ends after geom without CTS: continue by hand: ot-run --hosts epyc7 run_kit.sh <K> route 48 8 (as H10-R4 A2), ot-wait --kit K --stage grt.
+  New specs: always --goal route.
+- Rank-seat form posted to FAM-S81-COL-H10-R4 (L1e/L1f/L1g variants of col_h10_r0_p4) + FAM-S81-COL-H9R0-R4 for the 14:00 J8 row set.
