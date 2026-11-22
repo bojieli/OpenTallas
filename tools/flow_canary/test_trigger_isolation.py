@@ -129,4 +129,36 @@ def test_scheduled_hbm_references_resume_after_unpark(tmp_path, monkeypatch):
     assert ready == ["hbm", "hbm_sram"]
 
 
+
+def test_missing_manifest_batch_skips_checkout_and_replays_mixed_batch(tmp_path, monkeypatch, capsys):
+    missing = tmp_path / "historical_kv_inputs"
+    base = {"die": "qwen_kvsys_core", "item": "kv3_head_eighth_e1", "top": "kv3_head_eighth_e1",
+            "vars": {"inputs": str(missing)}}
+    other = {"die": "s81", "item": "slice_station__t12", "top": "s81p_slice_station__t12"}
+    manifest = tmp_path / "canaries.json"
+    state = tmp_path / "state.json"
+    operations = []
+    monkeypatch.setattr(T, "HERE", tmp_path)
+    monkeypatch.setattr(T, "git", lambda *_: SimpleNamespace(returncode=0, stdout="current"))
+    monkeypatch.setattr(T, "unlock_completed_sources", lambda *_: [])
+    monkeypatch.setattr(T, "live_dies", lambda *_: set())
+    monkeypatch.setattr(T, "source_staging_refusal", lambda *_: operations.append("reserve"))
+    monkeypatch.setattr(T, "source_snapshot", lambda *_: operations.append("checkout") or "/pinned")
+    monkeypatch.setattr(T.subprocess, "run", lambda argv: operations.append(argv) or SimpleNamespace(returncode=0))
+    args = ["--src", "/warm", "--root", str(tmp_path / "runs"), "--state", str(state), "--force"]
+
+    manifest.write_text(json.dumps({"canaries": [base], "watch": []}))
+    assert T.main(args) == 0
+    assert operations == []
+    assert f"CANARY qwen_kvsys_core SKIPPED: input snapshot {missing} has no MANIFEST.json" in capsys.readouterr().out
+    assert json.loads(state.read_text())["die_sha"] == {"qwen_kvsys_core": "current"}
+
+    manifest.write_text(json.dumps({"canaries": [base, other], "watch": []}))
+    assert T.main(args) == 0
+    assert operations[:2] == ["reserve", "checkout"]
+    assert operations[2][-4:] == ["--die", "qwen_kvsys_core", "--die", "s81"]
+
+    templated = dict(base, vars={"inputs": "{src}/inputs"})
+    assert T._canary_module.missing_input_snapshot(templated, tmp_path, before_checkout=True) == ""
+
 if __name__=='__main__':unittest.main()

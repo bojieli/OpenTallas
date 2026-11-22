@@ -23,6 +23,9 @@ _watch_spec = importlib.util.spec_from_file_location("flow_canary_watch", HERE /
 _watch_module = importlib.util.module_from_spec(_watch_spec)
 _watch_spec.loader.exec_module(_watch_module)
 flow_paths = _watch_module.flow_paths
+_canary_spec = importlib.util.spec_from_file_location("flow_canary_runner", HERE / "canary.py")
+_canary_module = importlib.util.module_from_spec(_canary_spec)
+_canary_spec.loader.exec_module(_canary_module)
 STATE = Path.home() / ".local/state/flow_canary/state.json"
 LIVE_S = 12 * 3600
 LOCK_REASON = "FLOW-CANARY live source; release after all referencing clients finish"
@@ -277,19 +280,28 @@ def main(argv=None):
     if a.dry:
         return 0
     if dies:
-        refusal = source_staging_refusal(a.root, new)
-        if refusal:
-            print(f"FLOW_CANARY_TRIGGER source staging deferred: {refusal}")
-            return 0
-        try:
-            pinned_src = source_snapshot(a.src, new, a.root)
-        except RuntimeError as e:
-            print(f"FLOW_CANARY_TRIGGER source staging failed: {e}")
-            return 2
-        r = subprocess.run([sys.executable, "-I", str(HERE / "canary.py"), "submit",
-                            "--src", str(pinned_src), "--root", a.root] + sum([["--die", d] for d in dies], []))
-        if r.returncode:
-            return r.returncode
+        selected = {c["die"]: c for c in spec["canaries"] if c["die"] in dies}
+        source = snapshot_path(a.root, new)
+        missing = {die: _canary_module.missing_input_snapshot(selected[die], source, before_checkout=True)
+                   for die in dies}
+        if all(missing.values()):
+            for die, inp in missing.items():
+                print(f"CANARY {die} SKIPPED: input snapshot {inp} has no MANIFEST.json")
+        else:
+            # Keep mixed batches intact so submit retains its original validation and host order.
+            refusal = source_staging_refusal(a.root, new)
+            if refusal:
+                print(f"FLOW_CANARY_TRIGGER source staging deferred: {refusal}")
+                return 0
+            try:
+                pinned_src = source_snapshot(a.src, new, a.root)
+            except RuntimeError as e:
+                print(f"FLOW_CANARY_TRIGGER source staging failed: {e}")
+                return 2
+            r = subprocess.run([sys.executable, "-I", str(HERE / "canary.py"), "submit",
+                                "--src", str(pinned_src), "--root", a.root] + sum([["--die", d] for d in dies], []))
+            if r.returncode:
+                return r.returncode
         revisions.update({die: new for die in dies})
     state.update(die_sha=revisions, checked=time.strftime("%F %T %Z"), hits=hits[:20], dies=dies)
     if all(revisions.get(die) == new for die in specs):

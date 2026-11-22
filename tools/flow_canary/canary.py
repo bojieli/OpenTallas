@@ -650,6 +650,15 @@ def git_head(src):
     return r.stdout.strip()[:12] or "unknown"
 
 
+def missing_input_snapshot(spec, src, *, before_checkout=False):
+    template = spec.get("vars", {}).get("inputs", "")
+    # Source-relative and templated inputs must be checked after checkout.
+    if before_checkout and (not isinstance(template, str) or not Path(template).is_absolute() or "{" in template):
+        return ""
+    inp = fmt(template, src=str(src), run="", gen="", item=spec["item"], top=spec["top"])
+    return inp if inp and not (Path(inp) / "MANIFEST.json").is_file() else ""
+
+
 def cmd_submit(a):
     specs, _ = load_spec(a.spec)
     dies = a.die or list(specs)
@@ -667,8 +676,8 @@ def cmd_submit(a):
         c = specs[die]
         # FLOW-CANARY-1121: a canary whose recorded input snapshot is gone (flow-canary/inputs/* was lost with epyc1/epyc4) is
         # skipped, not run: it could only fail on "CANARY_INPUTS missing" and would sit as a permanent FAIL reference.
-        inp = fmt(c.get("vars", {}).get("inputs", ""), src=str(src), run="", gen="", item=c["item"], top=c["top"])
-        if inp and not getattr(a, "dry", False) and not (Path(inp) / "MANIFEST.json").is_file():
+        inp = "" if getattr(a, "dry", False) else missing_input_snapshot(c, src)
+        if inp:
             print(f"CANARY {die} SKIPPED: input snapshot {inp} has no MANIFEST.json")
             continue
         run = Path(a.root) / f"{die}_{sha[:9]}_{stamp}"
