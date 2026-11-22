@@ -41,18 +41,20 @@
 - TAP CORRECTION: keep RRGEN-R3 cbf_q00 taps t24/t25/t93/t100. On V2 geometry they measure 100/90/67/68 um; t77/t76 measure 455/640 um.
 - FABLE-PD-QC-1230 item 5 -> QC-PLAN-R11. Still to do: +1 station rows for bc_i00/bc_i10/bc_i30, nb_i12, y_o00, and the cbn_q01/sibling taps, all from the p1 CTS reads.
 
-## Codex takeover 2026-11-21 16:29 PST
-
-All E7 private native proofs use the V2 b20 event `s29q103S4Q9N46R6V2`. Green bind and all 1,921 native lanes pass for S2 matched zero-egress (2169476), paired q10/q11 reset/corridor (2259371), q01 NB fixed roots (2329784), and the six-type CB zero-cycle site bundle (2500497). The first S2 variant needed explicit source root allowance, while its higher-cycle outbound replacement had native type and landing-inventory splits. The first q10/q11 native attempt applied localization ahead of the existing late `reset.inst_taps` override. The corrected rows edit the existing late overrides. Artifact paths and model limits are in `FAM-QC-CB-R2-V3-cb-candidates.json`. Fresh sealed place and propagated timing remain pending for these forms.
-
-- Actual `df1946805779` CBF q00 S2 and both long q01 variants carry exact ISSUES. The V2 q11/q10 short-pipe and reset diagnostics and physical Q-chain fix are in `results/geom_review/QC-CB-V2-7F3C-2A6C.md`. Shared Q reseat main `91f555583460` and q01 segmented D6 main `25e34125ff37` are merged. q01 sealed spec remains host-drained.
-- CBF SerDes measured ordering helper main `687e47d408e`. Per-type path `partition_types.<type>.clock.landing_contract.bands.<band>.pinslot_order`. q01 S2 TX band `lsb_low` now places all 3,444 from pin slots and collapses the failing DCH6 selector's four source X span 462.024 → 1.188 µm. Exact E2 place replay `v2_q01_s2_ring_place` is live. q00 S2 RX `lsb_low` and TX `lsb_high` each convert 3,444 cursor assignments to pin slots on the exact pre-GPL A/B (E7 2991540, `q00_s2_ring_prepl`). Full placed timing pending.
-- cf0b exact E2 CTS and local experiments are under `fam-qc-cb-r2/v2_cf0b_cts`. Frozen `cf0b_nab_sweep_r2.log` proved all 3,084 data-latch bypass endpoints at BC FF ≥+52.16 ps and scoped TT −668.48 → −263.41 ps. Current stock TT after bypass instead limits on tap[0] at −607.02, with +211.16 ps from three HB4 and clk_c3 early −1122.10. Type-specific latch source merged main `aaf7e2e482e`. Exact plan `cf0b_typed_nab.json` and native E7 `cf0b_typed_nab_native` (2888511) use fixed pipes and unchanged lane cycles. This row is still private.
-- cf0b internal FF −1342.61 is u_rst_in → u_srl_69 via clk_t45, whose 17-sink subtree grew by ~267 ps in each of eight padding rounds after interpreting values 0.351169..0.951777 ps as seconds. Shared fix main `ffce7fc59e2` uses OpenSTA command scale. Exact original 3_place → CTS replay `v2_cf0b_cts_units` is live. Hardware and scope changes remain held for timings and real visual review.
-
-## Codex 2026-11-21 17:51 PST
-
-- `cbf_q01_s2` ring order actual place/CTS is E2 4093989/920816. Scoped SerDes DCH6 setup rose −205.23 → +277.30 ps after the actual source span dropped 462.024 → 1.188 µm. Broader TT moved to the compact NK `n_b[372]` interface, −185.97 ps. Exact late-stage candidate oracles in `q01_s2_nab_sweep.log`, `q01_s2_tap0_hb4.log`, `q01_s2_combo_reset.log`, and `q01_s2_internal_ff.log`. Combined 4112 data and four reset latch bypasses, unchanged data pipe registers, and three → one tap[0] HB4 yield stock TT +18.75 with TNS 0 on frozen CTS. BC reset scoped min +177.96; nonport global FF −31.03 (ordinary D7 successive registers, TNS −7718.12). Retained CTS structural FF −106.27 uses its broader deck. All four reset relay sources are positive-edge `ot_dp_rgate`.
-- Preferred source plan `q01_s2_reset_native_form.json` extends the verified five-type NB fixed-roots plan, keeps matched CB16 price, selects `lsb_low` only for the q01 S2 SerDes data band, adds the type-scoped NK port changes and leaves clock/SDC policy stock. Rendered and viewed E7 `q01_s2_reset_form_review.png`. Private strict E7 23207 GREEN, 1,921/1,921. Fallback without reset bypass E7 4152083 also GREEN. Official fresh private spec denied E7 DRAIN with zero eligible generation hosts (`q01_s2_reset_spec.log`). Resume `q01_s2_reset_native/{tree,bind}` under tools `ec1f6f3fd245` for fresh sealed placement, full FSTART/LEC and routed hold.
-- Main `ec1f6f3fd24` adds type-local HB4 counts and physical pipe anchoring by the actual hard-pin graph. It respects the bound logical `qfd_tile_nk_rp2_romleaf_rr` vs placed master `qfd_tile_nk_a0c`. Exact q00/q11 and cf0b typed no-HB4 native both green, 1921/1921. cf0b corrected CTS FF −1342.61 → −442.43 after eliminating 96 bad t45 pads. q11 frozen removal of its 96 same-defect t48 cells changed FF −1285.86 → −135.40. Shared source clock-unit fix main `ffce7fc59e2`.
-- cf0b optional reset-inclusive native E7 3863081 green, 1921/1921. Exact whole sampled-cycle miter at `cf0b_reset_cycle` passes 1,280 samples and catches extra-cycle mutant 352 times. On frozen corrected CTS, reset bypass scoped BC +194.35 minimum. With NK changes and exact NL tap[0] inverter x1→x2, a read-only 180 ps missing-core aperture diagnostic gets TT −32.01. Actual stock clock contract still fails, and no aperture change was adopted. NL local inverter variant is an unadopted measured sizing lever; removing two data repeaters found only 0.4 ps of gain.
+## STAND-DOWN 18:2x PST -> FAM-QC-CB-R3 (context ~290k)
+Read CODEX-LOG.md from line 14146. Codex ran many jobs under FAM-QC-CB-R2 between 14:23 and 18:1x; adopt them:
+- In fam-qc-cb-r2/ on epyc2/epyc7: q01_s2_reset_native, cts_copy_q01_s2.sh (v2_q01_s2_cts.log), q01_serdes_ring_place, glue_exact_chunk, native_bind_s2.sh v3_*.
+- CODEX-LOG 14211: q01 S2 reset-inclusive strict bind, 130 types, 1921 lanes. TT +18.75, TNS 0, internal FF -31.03, no route.
+- CB q01 repeated cut: 514 over-cycle paths at 765/846 um, both HELD. Retained cf0b TT corrected from -659.86 to -380.66 on the stage SDC.
+- Old CB q01 cldd6: watchdog rc143 after true TT -321.75, exact CTS -323.16.
+My own kits. Every run-item ENDED at stage geom PASS, so no CTS ran and cts_read reports UNMEASURED:
+- p1 cbf_q00 and p1 cbn_q01 (private bind fam-qc-cb-r2/p1/b1, epyc7).
+  Place proved the reset-relay class gone: relay -> fabric +300.7 and +631.5.
+  Worst on both is -380.83, the ideal-clock latch -> core pin term.
+- v2 cbf_q00__cl1b5a6458 and v2 cbf_q01_s2 (signable defaults, epyc2): placed, geom PASS.
+  Next: CTS / route them to sign-off, using run_kit GOAL=route on the kit or the wave relaunch. Read the CTS post-hook.
+Open: FABLE-PD-QC-1230 item 5 rows -> QC-PLAN-R11 (successor of R12?).
+- Taps: keep RRGEN t24/t25/t93/t100, measured on V2 geometry.
+- +1 station rows (bc_i00/bc_i10/bc_i30, nb_i12, y_o00) still to write from the CTS reads.
+- cbn_q01 taps: OK on attempt_17 positions; recheck on the V2 placed DB.
+Waiters: none of mine are live (the cbn CTS ot-wait timed out at rc 124).
