@@ -29,6 +29,9 @@ What a fork is:
     Else the tree is fetched once (tar over ssh, under a slot and a per-hash lock, so two lanes asking for the same tree fetch it once) into
     <scratch>/claude/tree-cache/<hash16>, its files checked against the manifest sha256s, made read-only and indexed; then DST is forked from
     that cache.  A SRC without a manifest is fetched straight into DST.forking-<pid> (slot held) and checked like any fork.
+  * PLAN LINKS (FLOW-FLEET-R1 11-22, COORD class fix: a launch-tree copy had physical/die_plan as a symlink into the shared famqc tree,
+    its bind's R8 refresh rewrote the shared table): a symlink at physical, physical/die_plan or physical/die_plan/<die> (or below) whose
+    target lies outside SRC is refused like an event link, event tree or not; --materialize copies its content in (a real private plan).
 A failed fork leaves DST.forking-<pid> (printed); delete it with ot-delete.  Exit: 0 ok, 2 usage, 3 refused (event link / bad DST),
 4 check failed, 5 no room.  Stdlib only.
 """
@@ -364,6 +367,12 @@ def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=pr
     return rec
 
 
+def plan_rel(rel):
+    """True for physical, physical/die_plan and anything below it: the plan side a bind / R8 refresh writes into"""
+    rel = rel.strip("/")
+    return rel in ("physical", "physical/die_plan") or rel.startswith("physical/die_plan/")
+
+
 def plan(src, dst, materialize=False):
     """walk SRC (realpath) -> dict(dirs=[(rel, mode)], files=[(abs_src, rel, mode, size)], links=[(rel, text)], external=[...],
     refused=[...], specials=[...], bytes).  rel paths are relative to the fork root.  Pure read; nothing written."""
@@ -386,7 +395,7 @@ def plan(src, dst, materialize=False):
                             text = os.path.relpath(os.path.join(dst, os.path.relpath(res, src)), os.path.dirname(os.path.join(dst, rel)))
                         P["links"].append((rel, text))
                         continue
-                    ev = event_root(res)
+                    ev = event_root(res) or (f"{res} (a symlinked plan dir {rel} outside SRC)" if plan_rel(rel) else "")
                     if ev:
                         if materialize and os.path.exists(res) and res not in seen:
                             P["materialized"].append((rel, res))
@@ -491,6 +500,8 @@ def verify(dst, src=""):
                 ev = event_root(res)
                 if ev and not inside(os.path.realpath(dst), ev):
                     errs.append(f"EVENT-LINK {rel} -> {text} (into event tree {ev})")
+                elif plan_rel(rel) and not inside(res, os.path.realpath(dst)):
+                    errs.append(f"PLAN-LINK {rel} -> {text} (a plan dir outside the tree: writes to it land in {res})")
                 elif src and inside(res, src) and not inside(res, os.path.realpath(dst)):
                     errs.append(f"SRC-LINK {rel} -> {text} (back into SRC {src})")
     return errs
@@ -515,7 +526,7 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
         os.makedirs(os.path.dirname(dst), exist_ok=True)      # e.g. <lane>/trees/ on first use
     P = plan(src, dst, materialize)
     if P["refused"]:
-        raise Refused(f"{len(P['refused'])} symlink(s) in SRC resolve into an event tree (a write through them lands there): "
+        raise Refused(f"{len(P['refused'])} symlink(s) in SRC resolve into an event tree or are plan dirs outside SRC (a write through them lands there): "
                       + "; ".join(P["refused"][:5]) + ("; ..." if len(P["refused"]) > 5 else "")
                       + ".  Fork that tree on its own, or pass --materialize to copy the targets in.")
     n, gb = len(P["files"]), P["bytes"] / 2**30

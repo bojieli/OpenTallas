@@ -105,6 +105,7 @@ def main(argv=None):
     a.add_argument("bus_groups")
     a.add_argument("--like", required=True, help="current table: its r8 options are reused, its members diffed")
     a.add_argument("--out", required=True)
+    a.add_argument("--root", help="the caller's tree root for the write guard (default: nearest tree marker of --out; tree_write_guard.py)")
     a.add_argument("--json")
     a.add_argument("--pin-pre", help="pre-derive table (.json/.json.gz): apply pin_r8_v2.py to the derivation (the deliberate QC s29 R8 pin)")
     a.add_argument("--pin-extra", type=int, default=0)
@@ -116,6 +117,12 @@ def main(argv=None):
     c.add_argument("--pin-pre", help="pre-derive table (.json/.json.gz): apply pin_r8_v2.py to the derivation (the deliberate QC s29 R8 pin)")
     c.add_argument("--pin-extra", type=int, default=0)
     a = ap.parse_args(argv)
+    if a.cmd == "derive":                                # TREE-WRITE-GUARD (FLOW-FLEET-R1 11-22): --out never resolves outside its tree root
+        import tree_write_guard as TWG
+        why = TWG.refusal(a.out, a.root)
+        if why:
+            print("LAND_R8 REFUSED " + why)
+            return 3
     import schema as S
     raw = S.load(a.plan)
     bg = json.loads(Path(a.bus_groups).read_text())

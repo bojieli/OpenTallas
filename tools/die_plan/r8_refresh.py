@@ -7,7 +7,8 @@ table AND every asbuilt land_r8_extra table from a bind's bus_groups.json, so a 
   2 extras   each table in asbuilt.land_r8_extra is AUTHORITATIVE over the derived table in the bind (Binder.load_r8); a member
              whose id is in the fresh derivation takes its bound/landed from it, its pad and every other field stay
              (tree-align pads are the extra table's own content).  INNER:* members are left alone.
-Tables are replaced via tmp + rename.  Exit 0 = refreshed; the summary line names members changed per table.
+Tables are replaced via tmp + rename.  TREE-WRITE-GUARD (FLOW-FLEET-R1 11-22): every table path must resolve inside its tree root
+(--root when the path is under it, else the nearest tree marker; tree_write_guard.py), else exit 3 before anything is written.  Exit 0 = refreshed; the summary line names members changed per table.
 
 Use it between a bind that reported R8_STALE and the re-bind (see bind_r8_loop in the die bind scripts):
   python3 -I tools/die_plan/r8_refresh.py PLAN BIND_OUT/bus_groups.json TABLE --asbuilt ASBUILT [--pin-pre PRE] [--pin-extra N]
@@ -42,12 +43,21 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("plan"); ap.add_argument("bus_groups"); ap.add_argument("table")
     ap.add_argument("--asbuilt", required=True, help="asbuilt json (its land_r8_extra list, paths relative to --root)")
-    ap.add_argument("--root", default=".", help="tree root the asbuilt paths are relative to (default: cwd)")
+    ap.add_argument("--root", default=None, help="tree root the asbuilt paths are relative to (default: cwd); also the write-guard root")
     ap.add_argument("--pin-pre"); ap.add_argument("--pin-extra")
     A = ap.parse_args(argv)
+    root = Path(A.root or ".")
     tool = next((t for t in (HERE / "land_r8_derive.py", Path.cwd() / "tools/die_plan/land_r8_derive.py") if t.is_file()), None)
     if tool is None:      # a copied r8_refresh.py outside tools/die_plan (QC b12 11-21): derive from the launch tree (cwd)
         print("R8_REFRESH FAIL no land_r8_derive.py next to this tool or under ./tools/die_plan"); return 2
+    sys.path.insert(0, str(tool.parent)); sys.path.append(str(HERE))
+    import tree_write_guard as TWG
+    extras = json.loads(Path(A.asbuilt).read_text()).get("land_r8_extra", [])
+    targets = [Path(A.table)] + [Path(xf) if Path(xf).is_absolute() else root / xf for xf in extras]
+    gr = os.path.abspath(A.root) if A.root else None
+    bad = [w for w in (TWG.refusal(t, gr if gr and TWG.inside(os.path.abspath(t), gr) else None) for t in targets) if w]
+    if bad:
+        print("R8_REFRESH REFUSED " + " | ".join(bad)); return 3
     cmd = [sys.executable, "-I", str(tool), "derive", A.plan, A.bus_groups, "--like", A.table, "--out", A.table]
     if A.pin_pre:
         cmd += ["--pin-pre", A.pin_pre] + (["--pin-extra", A.pin_extra] if A.pin_extra is not None else [])
@@ -56,8 +66,6 @@ def main(argv=None):
     if r.returncode:
         print(f"R8_REFRESH FAIL derive rc {r.returncode}"); return r.returncode
     derived = json.loads(Path(A.table).read_text())
-    root = Path(A.root)
-    extras = json.loads(Path(A.asbuilt).read_text()).get("land_r8_extra", [])
     summary = {}
     for xf in extras:
         p = Path(xf) if Path(xf).is_absolute() else root / xf

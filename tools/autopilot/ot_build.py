@@ -65,6 +65,15 @@ def rt_resolve(rt=None):
     return p, p.name[:12]
 
 
+def tree_write_refusal(path, root):
+    """tools/die_plan/tree_write_guard.py refusal ('' when this checkout has no guard)"""
+    g = Path(__file__).resolve().parents[1] / "die_plan" / "tree_write_guard.py"
+    if not g.is_file():
+        return ""
+    from importlib.machinery import SourceFileLoader
+    return SourceFileLoader("tree_write_guard", str(g)).load_module().refusal(str(path), str(root))
+
+
 def launch_tree(src, rt_dir, root):
     """L = rt tools + the tree's design data (tools/autopilot/rt_launch_tree.sh); idempotent"""
     src, rt_dir = Path(src), Path(rt_dir)
@@ -420,6 +429,11 @@ class BindStage:
                    r8="carried table equals the derivation")
         if rc == 1:
             in_tree = all(str(p).startswith(str(self.src) + "/") for _, _, p in tables) and self.asbuilt is not None
+            if in_tree:                                  # TREE-WRITE-GUARD (FLOW-FLEET-R1 11-22): a table reached through a symlink leaving SRC is not in place
+                linked = [w for w in (tree_write_refusal(p, self.src) for _, _, p in tables) if w]
+                if linked:
+                    log(f"ot-build:   R8 tables of SRC resolve outside it ({linked[0][:240]}): refreshing into OUT instead of in place")
+                    in_tree = False
             if in_tree and not self.seal and all(os.access(p, os.W_OK) for _, _, p in tables):
                 tgt_ab, tgt_main, root, where = self.asbuilt, main, self.base, "in place (unsealed lane tree)"
             else:

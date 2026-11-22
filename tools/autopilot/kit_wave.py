@@ -8609,6 +8609,23 @@ def _tree_fork_mod():
     return SourceFileLoader("ot_tree_fork", str(TREE_FORK)).load_module()
 
 
+def private_tree_plan_link_refusal(tree, die=""):
+    """FLOW-FLEET-R1 11-22 (COORD class fix): '' unless the private --tree has physical, physical/die_plan or physical/die_plan/<die> as a symlink
+    resolving outside the tree (a launch-tree layout or a hand copy: a bind / R8 refresh run from it writes the shared plan).  Stat-only."""
+    if not os.path.isdir(tree):
+        return ""
+    rp = os.path.realpath(tree)
+    for rel in ["physical", "physical/die_plan"] + ([f"physical/die_plan/{die}"] if die else []):
+        q = os.path.join(tree, rel)
+        if os.path.islink(q):
+            res = os.path.realpath(q)
+            if not (res == rp or res.startswith(rp.rstrip("/") + "/")):
+                return (f"private-spec --tree {tree}: {rel} is a symlink to {os.readlink(q)} (resolves to {res}, outside the tree): a bind or R8 "
+                        f"refresh of this private kit would write that shared plan.  Make a real private tree: ot-tree-fork {tree} <lane dir>/tree "
+                        f"--materialize (or private-spec --fork)")
+    return ""
+
+
 def private_tree_event_refusal(tree, src):
     """FLOW-TREEFORK-R1 (FABLE-FLOW-2000 A4, 11-21 D27d3): '' unless --tree reaches an event tree through a symlink (the path given is not where it
     resolves, and it resolves into a kw45 / sealed src_manifest tree other than the die src itself), or holds a symlink into one.  A lane writes into
@@ -8930,7 +8947,7 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
     if tree and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/"):
         old, new = str(sp["src"]), os.path.abspath(tree)
         # FAM-S81-COL-H9R0-R3 11-21: own name, the A/B reason `why` is checked below (--tree + --ab raised 'needs --why')
-        refusal = private_tree_link_refusal(old, new) or private_tree_event_refusal(tree, old)
+        refusal = private_tree_link_refusal(old, new) or private_tree_plan_link_refusal(tree, die) or private_tree_event_refusal(tree, old)
         if refusal:
             raise ValueError(refusal)
         for k, v in list(sp["gen_env"].items()):
