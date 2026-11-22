@@ -39,3 +39,12 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - LIVE hub_Ei private kit: tree_h3 (plan e9be978c3180 + its bind), rt bdb08607ce36, spec OPUS-FIX-KV-HUB-R6/qwen_kvsys_kv3_hub_Ei_1122003620,
   intel2 pid 2287276, log kit2_qwen_kvsys_kv3_hub_Ei_1122003620.log. DO NOT reinstall plans in tree_h3 while it runs.
 - Open: hub_Ei row B/C masters (PLACEREP=0 w145/w129/w175, w549/w523) -> D29.
+
+## 02:2x update after the 01:4x limit (wins)
+- RESUMED posted 02:2x. KV-PLAN-R6 picked up row 3 (plan e9be978c3180) at 00:48 as d28/rows/ROWS_OPUS-FIX-KV-HUB-R6.py.
+  Future rows need a receipt line: ROWS-READY <LANE> <sha12 of row script> types=<...>.
+- FIX-SYNC-KVHEAD KV-C02 band.hard_core flag row for my 25 rings: NO VETO; D28 as the last row if KV-PLAN-R6 binds it before the seal, else D29.
+- epyc2 hub_Ei D26 wave kit died by itself at 01:21 with DRT-0255 (92k violations at 20%). Nothing to cancel.
+- Kits: hub_Ei PLACED, chain goal route, in CTS (02:20). hub_Wo / hub_Eo past global place (the fix works), in resize / detail place.
+  Waiter bolt9appw: failed stage or first cts/grt/route pass.
+- NEXT on GRT: read final 5_1_grt.odb TT setup and FF hold (never 5_global_route.rpt), then route DRC -> signoff chain + routed LEC.
