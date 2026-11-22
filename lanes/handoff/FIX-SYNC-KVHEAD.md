@@ -1,0 +1,28 @@
+# FIX-SYNC-KVHEAD handoff (Opus; started 11-22 01:1x PST). Fix-propagation lane for KV (qwen_kvsys) + HEAD (s81_head).
+Brief: claude scratchpad sync_brief.txt (COORD 11-22 01:3x). Tables: lanes/FIX-SYNC-KV.tsv, lanes/FIX-SYNC-HEAD.tsv.
+Lane dir: epyc8 /srv/opentallas-scratch2/claude/fix-sync-kvhead (repo/ = ot-lane-clone cone tools+physical/common_flow; tmp/; kvc02/);
+epyc10 same path tmp/ (lbc/ runner, sb_r17b.tsv). Deadlines: KV D28 rows to KV-PLAN-R6 by 11:30 PST (seal 12:00), else D29; HEAD rows to
+OPUS-FIX-HEAD-LEP0N-R8 (r18). Report to COORD every 4 h (<250 words).
+
+## Inputs of record
+- KV D28 dry compose: epyc8 kv-plan-r6/d28/dry5_post/plan_post.json (fcfa38bdb65b), base d28/base_d27d3.json (48b92c30c8f6).
+- HEAD live r17b plan: epyc10 kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json (+published/);
+  base r16 same path under s81_head_r16_s0. r18b split tree (LEP0N-R8) s81_head_r18b_split_s0 (building at 01:3x).
+- failure_breakdown 01:26: HEAD types 25/26 signed (only hd_lep0N open) -> HEAD propagation is advisory except hd_lep0N. KV types 6/56.
+
+## Round 1 (01:15-01:50)
+- KV-C01: landing_band_core false [new] errors on hard-ring bands (17 on hub_Ei/Eo/Wo, would fail D28 publish gate --band-base).
+  FIXED main 0c33826deb (hard_ring_buses). Posted to KV-PLAN-R6: put that file in the D28 tree tools. CHECK they did (rerun lbc on final).
+- KV-C02: hub hard rings lack band.hard_core. Row ROWS_FIX-SYNC-KVHEAD-hardcore.py (epyc8 lane dir), dry compose da781647edaa, PRE PASS.
+  Sent to HUB-R6 (veto by 02:45) default D29.
+- KV-C07: pv_v5/v5n station regs inside pvg0_p0/p3 -> PV-R7 advisory D29.
+- KV-C03 packed-face: pc_v1 only (in D28). HEAD 0.
+- HEAD: LBC r17b 14 new all hd_lep0N stage bands (LEP0N-R8 bandfix in r18); inherited hd_ctl a_rx_i/h_rx_i, hd_host_e coll_i1 (signed types,
+  advisory). Sideband audit >405 non-lep0N: hd_serdes 618 est, hd_tile 448, hd_turn_a 443, hd_ctl 437, hd_spn 435 (signed, advisory).
+- Not mine: CLASS-SWEEP-R1 (HB4 over-insert, band capacity/overlap, reset tap), TAP-GRID-R5 (taps), NEARMISS-ECO-R1.
+
+## NEXT
+- Every 30-60 min: harvest posts (KV-PLAN-R6, HUB-R6, PV-R7, HGI-R6, IOPC-R4, HROOT-R1, HUBC-SYSC-R2, RINGMAC, AHUB, WAITBIND, LEP0N-R8,
+  HEAD-CTL-R1, CLASS-SWEEP-R1) for new RULING/ROWS-READY/root causes; add classes; detect; hand rows.
+- Before 11:30: rerun landing_band_core (0c33826deb) + p5/p7 scans on the final D28 compose (after PV-R7/HGI-R6 rows land).
+- Open: KV-C14 strip density (hroot DRT-0255) needs a placed-DB proxy; pc_v3 cells 998k in plan (check placed count with IOPC-R4).
