@@ -12,7 +12,7 @@ inside or contains a LIVE lease; an expired lease protects nothing, so everythin
 
 Lease files: OT_LEASE_DIR (default ~/.local/state/ot-leases), one json per path+owner.  The hub copy of a lease reaches the other hosts through the
 protected list (build_protected_live: live hub leases written host-scoped when --host is given)."""
-import argparse, hashlib, json, os, sys, time
+import argparse, hashlib, json, os, re, sys, time
 
 DEFAULT_DIR = os.path.expanduser("~/.local/state/ot-leases")
 MAX_TTL_H = 72.0
@@ -73,12 +73,17 @@ def leases(d=None, now=None, live_only=True):
     return out
 
 
+# CLEAN-AGGR-R3 11-22: ot-run auto-leases named whole containers (claude/kw45, claude/ot-jobs: 59 live leases), which kept every tree inside them.
+# A lease on a shared container protects the container itself (and what contains it), not the trees below it.
+CONTAINER = re.compile(r"/srv/opentallas-scratch[0-9]*/claude(/(kw45(/snap_[^/]+)?|ot-jobs|rt|autopilot(/closed(/[^/]+)?)?|[^/]+/runs(/[^/]+(/kit-wave)?)?))?")
+
+
 def covering(target, lease_list):
     """the first live lease that protects target: target is the leased path, inside it, or contains it"""
     t = _norm(target)
     for r in lease_list:
         p = r["path"]
-        if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
+        if p == t or p.startswith(t + "/") or (t.startswith(p + "/") and not CONTAINER.fullmatch(p)):
             return r
     return None
 

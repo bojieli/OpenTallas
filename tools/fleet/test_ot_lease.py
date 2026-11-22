@@ -60,3 +60,13 @@ def test_hub_leases_in_protected_list(tmp_path):
     out = set()
     assert B.hub_lease_paths(out, g.canon, d=d) == 2
     assert "@epyc7,intel2 /srv/opentallas-scratch2/claude/lane/tree" in out and "/srv/opentallas-scratch2/claude/rt/abcdef012345" in out
+
+
+
+def test_container_lease_protects_only_itself_clean_aggr_r3():
+    import ot_lease as L
+    ls = [{"path": "/srv/opentallas-scratch2/claude/kw45", "owner": "ot-run/x"}, {"path": "/srv/opentallas-scratch3/claude/ot-jobs", "owner": "ot-run/y"}]
+    assert L.covering("/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s0", ls) is None
+    assert L.covering("/srv/opentallas-scratch3/claude/ot-jobs/job-1", ls) is None
+    assert L.covering("/srv/opentallas-scratch2/claude/kw45", ls) is not None
+    assert L.covering("/srv/opentallas-scratch2/claude/lane/x", [{"path": "/srv/opentallas-scratch2/claude/lane", "owner": "o"}]) is not None
