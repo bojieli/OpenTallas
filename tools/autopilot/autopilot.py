@@ -70,6 +70,7 @@ import wave_balance as WB  # noqa: E402
 import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
 import under_use as UU  # noqa: E402  (FABLE-FLOW-0445 #2: one UNDER-USE log line per tick)
+import bind_doom as BD  # noqa: E402  (BIND-DOOM-1122, FABLE-FLOW-0350 B1: live binds vs rt/current plan_gate_pre)
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -4592,6 +4593,7 @@ def _tick_body(args, st, _t0, _ph, _mark):
             log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
     _mark("loop_gaps")
     run_phase("under_use", UU.step, sys.modules[__name__])   # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
+    run_phase("bind_doom", BD.step, sys.modules[__name__])   # never raises; posts BIND-DOOMED, starts a detached sweep when due
     _mark("under_use")
     try:
         run_phase("retry_unversioned_spare", retry_unversioned_spare, st)   # FLOW-OPS-0900: lowest priority, spare admission only
@@ -4708,6 +4710,15 @@ def write_loop_gaps(st, rows, geom_text):
             KW.overlay_owners(orows, KW.load_state(AP_DIR))  # wave items: owner KIT-WAVE-1, live unit, class + evidence
         except Exception as e:
             log(f"KIT-WAVE overlay failed: {type(e).__name__}: {e}")
+        try:                                           # HOLD-OWNER-1122 (FABLE-FLOW-0350 U1): a hold with no term for 24 h is a die-owner row
+            _kcfg = json.loads((Path(AP_DIR) / "kit_wave.json").read_text())
+            _hr = UU.hold_owner_rows(UU.held_detail(KW.load_state(AP_DIR).get("items") or {}, _kcfg), _kcfg, dies={d for d, _, _ in OWN.DIES})
+            orows += _hr
+            if _hr:
+                log(f"OWNERS HOLD rows {len(_hr)} ({sum(int(r['replicas']) for r in _hr)} held row(s)): "
+                    + "; ".join(f"{r['die']}/{r['item'][5:]} -> {r['owner']}" for r in _hr[:6])[:600])
+        except Exception as e:
+            log(f"OWNERS HOLD rows skipped: {type(e).__name__}: {e}")
         write_file("OWNERS.tsv", OWN.to_tsv(orows, now))
     except Exception as e:
         log(f"OWNERS failed: {type(e).__name__}: {e}")
