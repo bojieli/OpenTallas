@@ -26,6 +26,14 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 08:3x hd_host_n r18j (COORD accepted)
+- hn1 (r18e) routed NOT SIGNED: DRC 3 Rect Only M7 rst_start_raw_0 (510.2,339.2) only; TT +80.3, FF core hold PASS.
+- r18j = r18i + partition_types.hd_host_n.pg_pin_rule=true (tmp/fix18j.py, post8 -> ev/j1). Class sweep tmp/pgscan.py on r18i:
+  17 soft rule-off types, only hd_host_n fails (pgscan_r18i.json). Posted to FIX-SYNC-KV-HEAD (15bf1284) for KV.
+- Next: mk_r18j (mk_r18i with ev/i3->ev/j1, r18i->r18j, report r18j; base r18e) -> sealed hd_host_n kit goal route.
+- hn2: let it finish; if it ends with only the same Rect Only DRC, stop spending on it (r18j kit replaces it). Do not cancel early.
+- W-band r8-w13 on r18i (unit r8-w13-1795362308, spec s81_head_hd_lep0N_w_1122074508, goal route) running.
+
 ## UPDATE 11-22 07:4x
 - E r8-e11 FAILED post-place stop -441 (reset tap u_rrl_380 -> u_rg0.u_pair rst_n at pair centre; rgate QN INV on far macro edge).
   COORD ruled option (b): pair rst_n -> S face (core_pins lep_pair_pins_777r, HEAD-96 rp18) + pair view re-sign, owned by FABLE-FIX-HEAD-LEP0N.
