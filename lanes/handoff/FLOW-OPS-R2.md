@@ -59,3 +59,11 @@ Pushed to main since the last section:
 - c19dbd9b5e6 PLAN-GATE-BESIDE-1122: bind.py forks plan_gate_pre beside elab/bind, joins before return, refusal -> rc 2 + OUT/PLAN_GATE_PRE_REFUSED.txt; OT_PLAN_GATE_PRE_SERIAL=1 old order. ot_build "pre" node still serial.
 In flight: E1 FLEET-GUARD-1122 tools/conftest.py Popen guard (full tools suite run on epyc10 to find tests using real ssh/systemd-run/ot-run); hold-chase fleet-hours scan (hgscan.py, 7 days, dedupe by guard-line hash).
 Queue after: W1 probe detach, canary narrowing (replica_keep ~18 ps), io_guard, lever 9, 8/11/12, push-test triage.
+
+## 2026-11-22 ~07:30 PST update (FLOW-OPS-R2)
+- 7d9c8891149 GEOM-ADVISORY-RC-1122: geom_check.sh rc 0 on an advisory rule FAIL with a verdict line (OT_GEOM_STRICT=1 old).
+- 385e3b15c5b + 2d4444116da FLEET-GUARD-1122 (E1): tools/conftest.py Popen guard stubs real ssh/scp/systemd-run/ot-run/ot-heavy/ot-delete/ot-push-main (rc 255); OT_TEST_FLEET_OK=1 / OT_TEST_FLEET_STRICT=1. Before: ~105 real ssh per autopilot+fleet+die_plan run.
+- PROBE-DETACH-1122 (W1 part 3) commit 53ea5fe3448: bind preflight full probe runs as unit kit_wave.py bind-probe, result <ap_dir>/bind_probe/<key>.json; rows BIND_PREFLIGHT_PENDING meanwhile; OT_BIND_PREFLIGHT_SYNC=1 old. (push in flight at writing)
+- HOLD-DONE measurement posted: 115 kits / 96 h in 7 d (76 h in last 24 h) of margin chunks after ws>=10 & 0 viol.
+- Earlier X1 note: a hub-side temp file I wrote went to intel2 /tmp and was rm'd; from now hub temp files go to the lane tmp dir only.
+Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (replica_keep ~18 ps), io_guard, lever 9, 8/11/12, push-test triage.
