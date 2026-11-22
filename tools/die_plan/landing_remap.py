@@ -25,7 +25,13 @@ the port-pad relay chain at a reset port (kind 'pad'), which reset_resel skips (
 non-tree stage"): a type whose reset_resel step errors is restored and taken by the identity pass alone.  No unique same-identity
 relay -> RemapError (fail closed; the landing branch needs a plan row, not a rename).
 
-  python3 landing_remap.py OLD_PLAN NEW_PLAN OUT [--types T1,T2] [--root DIR] [--receipt FILE] [--keep-anchor]
+BOUND-TREE (FABLE-FIX-S81-J8-TAPROWS 11-22): in anchor mode the OLD identity of a name is where the OLD plan was BOUND, never a
+rebuild of the OLD plan with today's tools: the bound type body (--bound-rtl DIR, reset_anchor.bound_tree) when it carries every
+referenced name, else the OLD plan's own clock.reset_tree_anchor (recorded on the bound tree), and only then the rebuilt tree.
+S81 J8 tap rows: the rebuilt J7 tree reused 53 types' landing names at other depths (leaf__t1 rst_rl_674 bound depth 17, rebuilt
+12), so the names were "kept" and the strict bind failed 53 EMIT "release edge would move" + 37 LF_CS_DEPTH.
+
+  python3 landing_remap.py OLD_PLAN NEW_PLAN OUT [--types T1,T2] [--root DIR] [--receipt FILE] [--keep-anchor] [--bound-rtl DIR]
 """
 import json
 import re
@@ -259,6 +265,28 @@ def identity_remap(old_raw, new_raw, names, ident_fn, strict=True, skipped=None,
     return out
 
 
+def bound_old_tree(tn, t_old, bound_rtl=None):
+    """BOUND-TREE: the reset relays type dict t_old was BOUND with, as far as the plan references them.  -> (source, tree) or
+    None.  source 'bound_rtl': the bound body <bound_rtl>/s81p_<tn>.sv | <tn>.sv holds every referenced name (the tree the bind
+    of record emitted); 'anchor': clock.reset_tree_anchor holds every referenced name (recorded on the bound tree: depth + site
+    of the referenced relays only, which is all the anchor step reads).  A partial source is never used (fail over, not mix)."""
+    names = {c[k] for c, k in RA.refs(t_old)}
+    if not names:
+        return None
+    if bound_rtl:
+        for fn in (f"s81p_{tn}.sv", f"{tn}.sv"):
+            f = Path(bound_rtl) / fn
+            if f.is_file():
+                bt = RA.bound_tree(f.read_text())
+                if bt and names <= {r["q"] for r in bt["relays"]}:
+                    return "bound_rtl", bt
+                break
+    rows = ((t_old.get("clock") or {}).get(RA.KEY) or {}).get("relays") or {}
+    if names <= set(rows):
+        return "anchor", {"relays": [dict(q=q, depth=int(v["depth"]), xy=list(v["xy"])) for q, v in sorted(rows.items())]}
+    return None
+
+
 def resel_resets(old_raw, new_raw, names, plan_dir):
     """default reset step: street_rule.reset_resel (exports, pin sources, START stages, local resets by role + depth +
     nearest old site).  -> {type: record}; mutates new_raw."""
@@ -289,11 +317,13 @@ def rerecord_anchors(old_raw, new_raw, names, root, tree_fn, relay_um_fn):
 
 
 def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, tree_fn=None, groups_fn=None, tol_um=None,
-               ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0, ident_fn=None):
+               ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0, ident_fn=None,
+               bound_rtl=None, bound_old=True):
     """rewrite new_raw in place.  resets: 'resel' (street_rule.reset_resel: raw exports, pin sources, START stages, local
     resets) or 'anchor' (reset_anchor record on the OLD tree + resolve on the NEW tree: START stages / local resets only).
     tree_fn(raw, tn) -> reset tree (anchor mode), groups_fn(raw, tn) -> tap groups, resel_fn(old, new, names, dir):
-    injectable for tests.  -> receipt dict."""
+    injectable for tests.  bound_old (default): anchor mode takes the OLD identity from bound_old_tree (bound_rtl DIR / the OLD
+    plan's reset_tree_anchor) before tree_fn(old_raw, tn); receipt old_tree = {type: source}.  -> receipt dict."""
     import schema
     plans = {}
 
@@ -303,7 +333,7 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         return plans[id(raw)]
     if groups_fn is None:
         groups_fn = lambda raw, tn: tap_groups(plan(raw), tn)  # noqa: E731
-    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[], identity=[], resel_fallback={})
+    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[], identity=[], resel_fallback={}, old_tree={})
 
     def _tree_fn():
         if tree_fn is not None:
@@ -384,7 +414,9 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         if tol is None:
             import reset_tree as RT
             tol = RT.relay_um(plan(old_raw))
-        t_new["clock"][RA.KEY] = RA.record(t_new, tree_fn(old_raw, tn), root, tol)
+        src = bound_old_tree(tn, t_old, bound_rtl) if bound_old else None
+        rec["old_tree"][tn] = src[0] if src else "rebuilt"
+        t_new["clock"][RA.KEY] = RA.record(t_new, src[1] if src else tree_fn(old_raw, tn), root, tol)
         r = RA.resolve(tn, t_new, tree_fn(new_raw, tn), root, ported_fn)
         if r and r["remaps"]:
             rec["resets"].append(r)
@@ -410,11 +442,14 @@ def main(argv):
     ap.add_argument("--no-adopt", action="store_true", help="do not take stale compose names from OLD by key first")
     ap.add_argument("--resets", choices=["resel", "anchor", "identity"], default="resel",
                     help="resel (default; then the identity pass), anchor, or identity = the PORTPAD-1122 identity pass alone")
+    ap.add_argument("--bound-rtl", help="rtl/ of the bind of record of OLD_PLAN: anchor mode reads the OLD relay depth + site there "
+                                        "(then from OLD_PLAN's reset_tree_anchor; the rebuilt OLD tree is the last resort)")
+    ap.add_argument("--rebuilt-old", action="store_true", help="anchor mode: ignore the bound tree, rebuild the OLD tree (pre 11-22 behaviour)")
     a = ap.parse_args(argv[1:])
     old = json.loads(Path(a.old).read_text())
     new = json.loads(Path(a.new).read_text())
     rec = remap_plan(old, new, a.root, Path(a.new).parent, set(filter(None, a.types.split(","))), a.keep_anchor,
-                     resets=a.resets, adopt=not a.no_adopt, keep_xy=not a.move_pins)
+                     resets=a.resets, adopt=not a.no_adopt, keep_xy=not a.move_pins, bound_rtl=a.bound_rtl, bound_old=not a.rebuilt_old)
     Path(a.out).write_text(json.dumps(new, indent=1, ensure_ascii=False) + "\n")
     if a.receipt:
         Path(a.receipt).write_text(json.dumps(rec, indent=1) + "\n")
@@ -429,6 +464,9 @@ def main(argv):
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
         for where, name in r.get("kept") or []:
             print(f"  kept {r['type']}: {where} = {name} (not a relay of the OLD tree)")
+    if rec.get("old_tree"):
+        import collections
+        print("  old tree source (anchor mode): " + json.dumps(dict(collections.Counter(rec["old_tree"].values()))))
     for tn, e in rec.get("resel_fallback", {}).items():
         print(f"  reset {tn}: reset_resel refused ({e[:160]}); identity pass only")
     for r in rec.get("identity") or []:

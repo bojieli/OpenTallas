@@ -281,3 +281,52 @@ def test_identity_pass_keeps_authoritative_anchored_source():
     assert LR.identity_remap(old, new, ["T"], identity, preserve_paths={"T": {path}}) == []
     changed = LR.identity_remap(old, new, ["T"], identity)
     assert changed[0]["new"] == "rst_rl_59"
+
+
+# BOUND-TREE (FABLE-FIX-S81-J8-TAPROWS 11-22): the bound depth + site of an OLD name, not a rebuild of the OLD plan
+BOUND_T = _tree([("rst_rl_0", 1, (0, 0)), ("rst_rl_60", 2, (100, 0))])                       # what the bind of record emitted
+REBUILT_OLD_T = _tree([("rst_rl_0", 1, (0, 0)), ("rst_rl_60", 3, (5, 5)), ("rst_rl_62", 2, (100, 0))])   # today's tools reuse the name
+NEW_BT = _tree([("rst_rl_0", 1, (0, 0)), ("rst_rl_60", 3, (5, 5)), ("rst_rl_70", 2, (100, 3))])
+
+
+def _bound_run(old, new, **kw):
+    return LR.remap_plan(old, new, HERE, HERE, resets="anchor", tol_um=50.0, ported_fn=lambda tree: set(),
+                         tree_fn=lambda raw, tn: REBUILT_OLD_T if raw is old else NEW_BT, groups_fn=lambda raw, tn: {}, **kw)
+
+
+def _raw(pl):
+    return pl["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["b"]["stages"][0]["raw_reset"]
+
+
+def test_anchor_mode_reads_the_bound_anchor_not_a_rebuilt_old_tree():
+    """S81 J8 tap rows: the rebuilt OLD tree still has rst_rl_60, at depth 3; the NEW tree has it there too, so the name was
+    kept and pointed at a relay of the wrong depth (bind EMIT 'release edge would move').  The bound anchor says depth 2 @ (100, 0)."""
+    old, new = _anchored("rst_rl_60", BOUND_T), _anchored("rst_rl_60", BOUND_T)
+    rec = _bound_run(old, new)
+    assert _raw(new) == "rst_rl_70" and rec["old_tree"] == {"T": "anchor"}
+    a = new["partition_types"]["T"]["clock"][RA.KEY]
+    assert a["relays"] == {"rst_rl_70": dict(depth=2, xy=[100.0, 3.0])}        # re-recorded on the NEW tree
+    RA.resolve("T", new["partition_types"]["T"], NEW_BT, HERE, lambda tree: set())
+    old2, new2 = _anchored("rst_rl_60", BOUND_T), _anchored("rst_rl_60", BOUND_T)
+    rec2 = _bound_run(old2, new2, bound_old=False)                             # the old behaviour: stale name kept
+    assert _raw(new2) == "rst_rl_60" and rec2["old_tree"] == {"T": "rebuilt"}
+
+
+def test_anchor_mode_reads_the_bound_rtl_first(tmp_path):
+    """no anchor in the OLD plan: the bound body of the bind of record gives the depth + site (reset_tree.rtl_lines comments)"""
+    (tmp_path / "s81p_T.sv").write_text(
+        "  ot_dp_rrelay u_rst_rl_0 (.clk(clk), .d(rst_n), .q(rst_rl_0));  // depth 1 @ (0.0, 0.0)\n"
+        "  ot_dp_rrelay u_rst_rl_60 (.clk(clk), .d(rst_rl_0), .q(rst_rl_60));  // depth 2 @ (100.0, 0.0)\n")
+    old, new = _plan("rst_rl_60", "clk"), _plan("rst_rl_60", "clk")
+    rec = _bound_run(old, new, bound_rtl=tmp_path)
+    assert _raw(new) == "rst_rl_70" and rec["old_tree"] == {"T": "bound_rtl"}
+    assert LR.bound_old_tree("T", old["partition_types"]["T"], tmp_path)[0] == "bound_rtl"
+
+
+def test_bound_old_tree_never_mixes_a_partial_source(tmp_path):
+    """a bound body or an anchor that lacks one referenced name is not used: the caller falls back to the rebuilt tree"""
+    (tmp_path / "T.sv").write_text("  ot_dp_rrelay u_a (.clk(clk), .d(rst_n), .q(rst_rl_0));  // depth 1 @ (0.0, 0.0)\n")
+    old = _anchored("rst_rl_60", BOUND_T)
+    old["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["b"]["stages"].append(dict(xy_um=[2.0, 2.0], raw_reset="rst_rl_62"))
+    assert LR.bound_old_tree("T", old["partition_types"]["T"], tmp_path) is None
+    assert LR.bound_old_tree("T", {"clock": {}}) is None
