@@ -1115,6 +1115,14 @@ def run_host(host, cmd, inp=None, timeout=60):
                           input=inp, capture_output=True, text=True, timeout=timeout)
 
 
+def action_tsv(action):
+    return "\t".join(str(x) for x in [
+        time.strftime("%F %T", time.localtime(action["t"])), action["host"], action["type"], action["stage"],
+        action["metric"].replace("\t", " "), action["kit"], ",".join(action["containers"]), action["why"],
+        action["gb"], action["cores"], action["cores_busy"],
+    ])
+
+
 def hub(now=None, post=True):
     now = now or time.time()
     keep = read_lines(os.path.join(COORD, "lanes/NOPROG-KEEP.tsv"))
@@ -1154,28 +1162,24 @@ def hub(now=None, post=True):
     except (OSError, ValueError):
         seen = {"offset": {}, "posted": [], "table_sig": ""}
     new_actions = []
+    offsets = dict(seen["offset"])
     for h in HOSTS:
-        lines = [l for l in run_host(h, f"cat {STATE_DIR}/actions.jsonl 2>/dev/null", timeout=40).stdout.splitlines() if l.strip()]
-        for l in lines[seen["offset"].get(h, 0):]:
+        try:
+            ledger = run_host(h, f"cat {STATE_DIR}/actions.jsonl 2>/dev/null", timeout=40)
+        except (subprocess.SubprocessError, OSError):
+            continue
+        if ledger.returncode:
+            continue
+        lines = [line for line in ledger.stdout.splitlines() if line.strip()]
+        for line in lines[offsets.get(h, 0):]:
             try:
-                a = json.loads(l)
+                a = json.loads(line)
                 a["host"] = h
                 new_actions.append(a)
             except ValueError:
                 pass
-        seen["offset"][h] = len(lines)
+        offsets[h] = len(lines)
     files = ["lanes/NOPROG-TABLE.md"]
-    if new_actions:
-        np_path = os.path.join(COORD, "lanes/NOPROG-ACTIONS.tsv")
-        fresh = not os.path.exists(np_path)
-        with open(np_path, "a") as f:
-            if fresh:
-                f.write("time\thost\ttype\tstage\tlast_metric\tkit_dir\tcontainers\twhy\tgb_freed\tcores_reserved\tcores_busy\n")
-            for a in new_actions:
-                f.write("\t".join(str(x) for x in [time.strftime("%F %T", time.localtime(a["t"])), a["host"], a["type"], a["stage"],
-                                                   a["metric"].replace("\t", " "), a["kit"], ",".join(a["containers"]), a["why"],
-                                                   a["gb"], a["cores"], a["cores_busy"]]) + "\n")
-        files.append("lanes/NOPROG-ACTIONS.tsv")
     qlines = []
     sig = json.dumps(sorted({f"{r['host']}|{r['container']}|{r['verdict']}" for r in flagged}))
     if sig != seen.get("table_sig") and flagged:
@@ -1225,10 +1229,35 @@ def hub(now=None, post=True):
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
             f.write("\n".join(qlines) + "\n")
         files.append("lanes/COORD-REVIEW-QUEUE.md")
+    # Save watchdog decisions before publishing so a commit failure cannot repeat a stop.
+    # Advance ledger offsets only after the exact receipt rows are in the pushed branch.
     save_json(seen_path, seen)
+    action_file = "lanes/NOPROG-ACTIONS.tsv"
+    action_rows = [action_tsv(a) for a in new_actions]
+    if action_rows:
+        path = os.path.join(COORD, action_file)
+        known = set(read_lines(path))
+        with open(path, "a") as f:
+            if not known:
+                f.write("time\thost\ttype\tstage\tlast_metric\tkit_dir\tcontainers\twhy\tgb_freed\tcores_reserved\tcores_busy\n")
+            for row in dict.fromkeys(action_rows):
+                if row not in known:
+                    f.write(row + "\n")
+        files.append(action_file)
     if post:
-        subprocess.run(["bash", os.path.join(COORD, "bin/coord-commit.sh"), f"NOPROG-WATCHDOG {stamp}: {len(flagged)} flagged, {len(new_actions)} cancelled"] + files,
-                       capture_output=True, text=True, timeout=600)
+        result = subprocess.run(["bash", os.path.join(COORD, "bin/coord-commit.sh"),
+                                 f"NOPROG-WATCHDOG {stamp}: {len(flagged)} flagged, {len(new_actions)} cancelled", *files],
+                                capture_output=True, text=True, timeout=600)
+        if action_rows:
+            pushed = subprocess.run(["git", "show", f"origin/coord/state:{action_file}"], cwd=COORD,
+                                    capture_output=True, text=True, timeout=30)
+            if pushed.returncode or not set(action_rows).issubset(pushed.stdout.splitlines()):
+                print("noprog hub: action receipts not published; retaining source offsets", file=sys.stderr)
+                return reports, new_actions
+        elif result.returncode:
+            return reports, new_actions
+        seen["offset"] = offsets
+        save_json(seen_path, seen)
     return reports, new_actions
 
 
