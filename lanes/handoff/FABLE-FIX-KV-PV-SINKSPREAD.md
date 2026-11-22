@@ -61,6 +61,26 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 07:40 PST (newest; read this first)
+FINAL CANDIDATES (D28 dry5 base, rt 6390b7bfa650 tools, lane reference, stack-free r1 bins, pure column swap):
+- v6n-only: v6n6 = plan fe2e828014f3 (tree por_d29_all_v6n6_composed; installed as tree plan_of_record).
+  gate v6n6: precheck PASS, PLAN-GATE-PRE 2 x R8STALE only, G0 PASS 0 errors, bind#1 30 x R8_STALE (fail fast, as expected).
+  rebind v6n6r RUNNING since 07:35 PST (r8_refresh OK: vport_w_pads 8, pv_col_pads 54 rebound; r8 557793f1f300):
+  intel2 ~/tmp/ffkvpv/chain_v6n6r.log, epyc8 w/gates/v6n6r{.out,_g0,_bind}. bind#1 output kept in gates/v6n6_bind/bind_of_record.
+- 14 types: m3 = plan 2fc442c938cc (tree por_d29_all_m3_composed; installed in tree2). gate m3: PLAN-GATE-PRE 4 x R8STALE only,
+  bind#1 R8_STALE 30 + R8_UNCOVERED 30 (no crash: the lane reference works for all 14). rebind m3r queued behind the m3 G0
+  (intel2 chain_m3r.log; epyc8 w/gates/m3r*). Model on newest-placement bins: 23/28 pieces 0 over; v12e, v7e inherited;
+  v2ne 1376/1200 (plan bins), v5ne 1145/1000, v6n 1136/1000 (1 tap each; stale-census model, the piece place decides).
+- restation on m3: 33 rows re-spaced, +4 stations, 3 lanes priced (+4 cycles); on v6n6: 2 rows, 0 added.
+- v1n: cut face still full on the pure swap (129 pins short; margin 8.64 -> 2.16 does not help: fragmentation by pinned windows).
+  Stays HELD unsplit until PV-R7's shared-crossing row (posted 11-21 20:24 to KV-PLAN-R6) lands.
+WHEN v6n6r ENDS:
+ - 0 errors + LATCHECK rc 0 -> KIT K1 now (see the 07:00 block for the command; tree = .../fable-fix-kv-pv-sinkspread/tree).
+   bind RTL then exists: T2 path (R3 rows) can also start: r3chain.sh r3 m3r m3r3 <pieces> with FF_TREE=tree2 (plan job).
+ - errors -> read gates/v6n6r_bind/gate.out + errdiff (w/r3/errdiff.py base_bind_report new_bind_report).
+KIT READING: at place read OT_CLOCK_TAPS lines (run_place log) + AUTO-GEOM tap_stuck; then taps.py bins of 3_place.odb -> tap_split
+ -> real tap rows for v6n (and post them); the D23H-based bins are only a seed.
+
 ## STATE 11-22 07:00 PST (newest; read this first)
 - Lane reference DONE: epyc8 w/ref_base_d28.json (2404 lanes, 428,278 bits, payload sha 05b9c281af98 = same payload as PV-R7 D27 ref).
 - G0 PASS 0 errors on the v6n-only recomposition v6n5 c359ae8d0050 (window + ring fixes, restation): gates/v6n5_g0. PLAN-GATE-PRE there
