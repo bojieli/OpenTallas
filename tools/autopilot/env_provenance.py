@@ -63,7 +63,24 @@ def env_diff(wave, env):
     return sorted(k for k in set(wave) | set(env) if str(wave.get(k)) != str(env.get(k)) or (k in wave) != (k in env))
 
 
-def ab_not_consumed(rec, cfg):
+# GEN-CONSUMED-1122 (OPUS-FIX-S81-COLROM-R6): gen-time knobs gen_phys turns into a non-OT config.mk line instead of an OT_* export.
+# key -> regex (with {v} = the kit value) that config.mk must contain; a match counts as consumed.
+GEN_CONSUMED = {
+    "OT_GRT_CONG_ITERS": r"^\s*export\s+GLOBAL_ROUTE_ARGS\s*=.*-congestion_iterations\s+{v}\b",   # gen_phys _grt_cong_iters
+}
+
+
+def gen_consumed(key, value, config_text):
+    """True when gen_phys consumed `key`=`value` into another config.mk line (GEN_CONSUMED)"""
+    pat = GEN_CONSUMED.get(key)
+    if not pat or config_text is None:
+        return False
+    if key == "OT_GRT_CONG_ITERS" and str(value).strip() in ("0", "30"):
+        return True                                      # OpenROAD default: gen_phys writes no flag by design
+    return re.search(pat.format(v=re.escape(str(value).strip())), config_text, re.M) is not None
+
+
+def ab_not_consumed(rec, cfg, config_text=None):
     """[(key, kit value, config.mk value or None)] for A/B keys the kit env sets that config.mk does not export with that value"""
     ab = rec.get("ab") or {}
     keys = set(ab.get("keys") or []) - set(ab.get("env_only") or [])
@@ -76,6 +93,8 @@ def ab_not_consumed(rec, cfg):
         c = cfg.get(k)
         if c is not None and (str(c) == str(v) or (len(str(v).split()) > 1 and set(str(v).split()) <= set(str(c).split()))):
             continue                                     # exported as given, or a list the generator extended (every given item kept)
+        if c is None and gen_consumed(k, v, config_text):
+            continue                                     # GEN-CONSUMED-1122: written as another config.mk line
         out.append((k, str(v), c))
     return out
 
@@ -107,7 +126,7 @@ def judge(rec, config_text, placed=False, kit_path=""):
         lines.append("ENV-PROVENANCE FAIL: kit env differs from the wave env of %s/%s on %d key(s) that are neither plan-derived nor declared A/B: %s"
                      % (rec.get("die"), rec.get("item"), len(bad), "; ".join(f"{k} wave={w.get(k, '<unset>')!s:.60} kit={e.get(k, '<unset>')!s:.60}" for k in bad[:12])))
     if config_text is not None and ab_keys:             # AB-CONSUMED-1122
-        nc = ab_not_consumed(rec, config_ot(config_text))
+        nc = ab_not_consumed(rec, config_ot(config_text), config_text)
         if nc:
             lines.append("ENV-PROVENANCE FAIL: A/B override not consumed: config.mk does not export "
                          + "; ".join(f"{k}={v!s:.40} (config.mk {'<unset>' if c is None else c})" for k, v, c in nc[:12])
