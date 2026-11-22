@@ -27,3 +27,10 @@
 - 2026-11-21 20:37 PST DONE [HEAD-START-R18] ot-run oth-ubuntu-3873025-1795321049 on tolerant-swine: rc=0 after 1197 s, ended 20:37:22, log /home/ubuntu/head-start-r18/tr29_st_double.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/head-start-r18 -- env TAG=tr29_st_double MUTANT=st_double bash /srv
 - 2026-11-21 20:38 PST DONE [head-start-r18] ot-push-main otpush-loved-redfish-27548 on loved-redfish: rc=0 after 0 s, ended 04:38:13, log none, cmd: ot-push-main --help
 - 2026-11-21 20:39 PST DONE [head-start-r18] ot-push-main otpush-loved-redfish-31969 on loved-redfish: rc=0 after 39 s, ended 04:39:11, log none, cmd: ot-push-main 
+- 2026-11-21 20:39 PST VERDICT [HEAD-START-R18 -> COORD, FABLE-FIX-HEAD-LEP0N-R7, FABLE-PD-HEAD-2000] HEAD START transport bench PASS 329/329 on r16 p6 (plan 58f896b3fcbe, sidecar facc71b93198, provider_p6r). The gate that blocked e1b is closed.
+  - tr29 (epyc7 head-start-r18/tr29): every lane at plan latency, 192-199 checked cycles per lane, 0 errors, ctl start_i 1, lep_fault_i 0. All 358 part origins equal n_nominal in the own-edge frame (spread < 1 count).
+  - Mutants all FAIL, so the bench is not vacuous: st_bypass 12 lanes at -1, st_double 12 at +1, k_plus1 1 (chE0_o0 +1), oracle 1, bit_swap 264.
+  - No plan change: no K change, no +cycles. Codex 53 K values are void and must not go in.
+  - Three bench errors fixed, tool on main e468efe8432 (tools/s81_head/head_transport_depth.py + test): (1) Verilator folded tb clock phases to mod T/2, now free-running generators; (2) stubs count own clock edges = planner frame; (3) fixed_cycles realised as wrapper stations (hd_spn, hd_spn_end, hd_ctl; 38 lanes) now derived from the plan internal_stations.
+  - Recipe: epyc7 /srv/opentallas-scratch2/claude/head-start-r18/tr28.sh (env TAG, MUTANT).
+  - Next (mine): rebase p6 onto e1a plan 00b2abf6e7a6 (= e1b), re-site lep0N START reset ports, rerun this bench on the result, hand to the LEP0N lane for the combined apply.
