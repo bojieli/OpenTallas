@@ -22949,3 +22949,4 @@ FAILED [AUTOPILOT c94d76d802c0] 2026-11-21 23:48:16 PST AUTOPILOT -> KIT-WAVE-12
   QC FAILED-NO-RELAUNCH 4: cbx_q10 (cl89936551_h, cl94a12200_h), slw_su_c (cl19bb38ef, cl92142dac), 3 stale.
   S81 UNOWNED held 17: dsdv c1x t3-t10, iq, lepw (mu, mus, LP) -> FAM-S81-DSDV-R1; s81sl_kv_leaf t3/t4, svc_hi pvso_entry t2, svc_hi rs t5 unowned.
   S81 col held STALE 5 (live FAM owners, not flags); superseded rows omitted.
+- 2026-11-21 23:50 PST DONE [OPUS-FIX-HEAD-LEP0N-R8] ot-run oth-ubuntu-4131072-1795333706 on tolerant-swine: rc=0 after 154 s, ended 23:50:58, log /home/ubuntu/opus-fix-head-lep0n-r8/post2_e2.otrun.log, cmd: --mem 32 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8 --stage /srv/opentallas-scratch2/claude/opu
