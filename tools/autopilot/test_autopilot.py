@@ -995,6 +995,47 @@ class TestAdmitAfterWave(TickBase):
         self.assertEqual(j["status"], "RUNNING")
         self.assertEqual(len(self.f.launched), 1)
 
+    def test_balance_runs_after_wave_admission_is_persisted(self):
+        self.queue()
+        self.wave_enqueues(ROW)
+        os.environ["AP_WAVE_BALANCE"] = "1"
+        observed = []
+
+        def balance(_ap, state):
+            saved = json.loads((Path(self.tmp.name) / "state.json").read_text())
+            (j,) = state["jobs"].values()
+            self.assertEqual(saved["jobs"][j["id"]]["status"], "RUNNING")
+            observed.append(j["id"])
+            j["balance_checked"] = True
+
+        self.ap.WB = type("WB", (), {"step": staticmethod(balance)})
+        (j,) = self.tick().values()
+        self.assertEqual(observed, [j["id"]])
+        self.assertTrue(j["balance_checked"])
+        self.assertEqual(len(self.f.launched), 1)
+
+    def test_interrupted_balance_keeps_wave_admission_for_next_tick(self):
+        self.queue()
+        self.wave_enqueues(ROW)
+        os.environ["AP_WAVE_BALANCE"] = "1"
+        old_balance = self.ap.WB
+
+        class ServiceTimeout(BaseException):
+            pass
+
+        def interrupted_balance(_ap, _state):
+            raise ServiceTimeout
+
+        self.ap.WB = type("WB", (), {"step": staticmethod(interrupted_balance)})
+        with self.assertRaises(ServiceTimeout):
+            self.tick()
+        (j,) = json.loads((Path(self.tmp.name) / "state.json").read_text())["jobs"].values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.assertEqual(len(self.f.launched), 1)
+        self.ap.WB = old_balance
+        self.assertEqual(list(self.tick()), [j["id"]])
+        self.assertEqual(len(self.f.launched), 1)
+
     def test_off_switch_waits_for_the_next_tick(self):
         os.environ["AP_ADMIT_AFTER_WAVE"] = "0"
         self.queue()

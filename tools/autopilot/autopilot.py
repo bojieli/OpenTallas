@@ -4605,13 +4605,6 @@ def _tick_body(args, st, _t0, _ph, _mark):
     submitted = run_phase("admit_new", admit_new, st, rows) or 0
     save_state(st)
     _mark("admit_new")
-    if os.environ.get("AP_WAVE_BALANCE", "1") != "0":   # WAVE-BALANCE-1 11-11: inert unless kit_wave.json wave_balance.enabled
-        try:
-            run_phase("wave_balance", WB.step, sys.modules[__name__], st)
-            save_state(st)
-        except Exception as e:                         # a balance pass must never stop the chain
-            log(f"WAVE-BALANCE failed: {type(e).__name__}: {e}")
-    _mark("wave_balance")
     if os.environ.get("AP_KIT_WAVE", "1") != "0":      # KIT-WAVE-1 (owner 10-30 (A)); inert without autopilot/kit_wave.json
         try:
             KW.step(sys.modules[__name__])
@@ -4622,6 +4615,15 @@ def _tick_body(args, st, _t0, _ph, _mark):
         except Exception as e:                         # the next tick admits these rows anyway
             log(f"ADMIT-AFTER-WAVE failed: {type(e).__name__}: {e}")
     _mark("kit_wave_step+admit")
+    # Persist normal wave admissions before balancing. Balance reads fresh host
+    # capacity and may spend the remainder of the tick copying kits.
+    if os.environ.get("AP_WAVE_BALANCE", "1") != "0":   # WAVE-BALANCE-1 11-11: inert unless kit_wave.json wave_balance.enabled
+        try:
+            run_phase("wave_balance", WB.step, sys.modules[__name__], st)
+            save_state(st)
+        except Exception as e:                         # a balance pass must never stop the chain
+            log(f"WAVE-BALANCE failed: {type(e).__name__}: {e}")
+    _mark("wave_balance")
     # WF-1 11-14 (#4): auto-resign has its own lock and state file and no tick state; when autopilot/AUX-RESIGN exists it runs in its
     # own timer (autopilot-aux.timer: autopilot.py aux) instead of serially here (measured 164 s of a 1033 s tick).  Remove the marker to
     # put it back into the tick.
