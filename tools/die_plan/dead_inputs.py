@@ -126,19 +126,15 @@ class ProvenDead:
                 if row.get('method') != 'yosys.proc.opt.no_fanout' or row.get('remaining_loads') != 0:
                     raise ValueError('missing optimized no-fanout proof')
                 decl = plan_declaration(row, rel)
-                typ = (plan_types or {}).get(row['partition_type'])
-                if typ is not None or not plan_types:
-                    if decl not in (typ or {}).get('dead_inputs', []):
-                        raise ValueError('missing or mismatched per-type plan dead-input declaration: ' + row['partition_type'])
-                    self.rows.append(row)
-                    continue
-                # OPUS-FIX-S81-SVC-R9 11-21: a type_split replaced the proof's type by pieces (the unsplit type is
-                # gone from the plan) and carried the exact declaration to the piece that holds the instance
-                # (spec dead_input_pieces).  The row applies to every piece type that declares it verbatim.
-                hosts = sorted(tn for tn, t in plan_types.items() if decl in t.get('dead_inputs', []))
+                tn0 = row['partition_type']
+                # OPUS-FIX-S81-SVC-R9 11-21: type_split moves each declaration to the piece that holds the instance
+                # (spec dead_input_pieces); pieces are the kept type `tn0` and `tn0_<suffix>`.  The row applies to the
+                # type or piece(s) declaring it verbatim; none declaring it still fails closed.
+                hosts = sorted(tn for tn, t in (plan_types or {}).items()
+                               if (tn == tn0 or tn.startswith(tn0 + '_')) and decl in t.get('dead_inputs', []))
                 if not hosts:
-                    raise ValueError('missing or mismatched per-type plan dead-input declaration: ' + row['partition_type'])
-                self.rows.extend(dict(row, partition_type=tn) for tn in hosts)
+                    raise ValueError('missing or mismatched per-type plan dead-input declaration: ' + tn0)
+                self.rows.extend(row if tn == tn0 else dict(row, partition_type=tn) for tn in hosts)
 
     def allows(self, partition_type, cell, port, bit, defaults=()):
         params = dict(defaults)

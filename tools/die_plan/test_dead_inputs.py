@@ -81,3 +81,7 @@ def test_split_piece_carries_the_declaration_of_a_replaced_type(tmp_path):
   ProvenDead(m,tmp_path,wrong)
  with pytest.raises(ValueError,match='plan'):
   ProvenDead(m,tmp_path,{'tile_att':{}})
+ kept={'tile':{},'tile_rs':{'dead_inputs':[plan_declaration(row,'proof.json')]}}
+ d=ProvenDead(m,tmp_path,kept);assert d.allows('tile_rs',cell,'a',1) and not d.allows('tile',cell,'a',1)
+ with pytest.raises(ValueError,match='plan'):
+  ProvenDead(m,tmp_path,{'tile':{},'other':{'dead_inputs':[plan_declaration(row,'proof.json')]}})
