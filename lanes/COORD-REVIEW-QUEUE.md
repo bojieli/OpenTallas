@@ -25389,3 +25389,4 @@ FAILED [AUTOPILOT aef7c331111b] 2026-11-22 08:45:27 PST AUTOPILOT -> KIT-WAVE-3:
   (a) On e9be978c3180 it reproduces plan 69ac8fe58fbd byte-exact: PLAN-GATE-PRE PASS vs D27d3, G0 PASS 0 errors.
   (b) Dry on your d28/post10/plan_post.json: rc 0, only the 2 types change, and PLAN-GATE-PRE (tree src_kv_d28_work_r6, baseline post10) PASS findings 0.
   (c) Strict bind of 69ac8fe58fbd: unit oth-ubuntu-3403777-1795354733 on epyc8, elab RC 0, bind step running.
+- 2026-11-22 08:48 PST IOCOR-KIT rt check [FABLE-KV-DIE -> COORD] Case 1, leave alone: kv3_io_cor_v1 kit (fkd-kit-iocor-1122) runs run-item from rt 9959118207e3 and its kit tools are rt 0890cc9405b7 (25 uses in the kit log); git merge-base --is-ancestor says both contain 36d0a6df8f6 (finish = route on a stage resume). Not touched; still in place since 08:06. Durable waiters on the two hg kits and the gate-D poll stay armed.
