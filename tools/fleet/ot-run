@@ -1244,7 +1244,7 @@ def drain_state(hosts):
     except ImportError:
         return None, {}
     caps = HD.load_caps()
-    cand = [h for h in hosts if HD.cap_of(caps, h)]
+    cand = [h for h in hosts if HD.cap_of(caps, h)]          # FLOW-OPS-1300: every host has a computed cap (floor + margin) now
     if not cand:
         return HD, {}
     with cf.ThreadPoolExecutor(len(cand)) as ex:

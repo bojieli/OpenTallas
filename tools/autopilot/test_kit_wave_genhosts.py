@@ -1,4 +1,5 @@
 """KW-FIX-4 11-03: gen_hosts pick, spillable async PLACE argv default, restage of unstarted waiters"""
+import pytest
 import json, sys, time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -819,3 +820,14 @@ def test_item_inputs_skip_revert_records():
                                                  "kit_rtl": {"bind_out": "/srv/opentallas-scratch2/claude/new/bind"}}}}}}
     got = KW.item_inputs(cfg, "d")
     assert got == {"a": ["/srv/opentallas-scratch2/claude/new/bind"]}, got
+
+
+# FLOW-OPS-1300: these cases pin the load / floor / fallback rules with small scratch figures; the computed drain (host_drain floor + margin) is
+# tested in test_flowops1300_computed_drain.py, so it is off here.
+@pytest.fixture(autouse=True)
+def _flowops1300_no_computed_drain(monkeypatch):
+    monkeypatch.setenv("OT_DRAIN_COMPUTED", "0")
+    _kw = sys.modules.get("kit_wave")
+    _hd = _kw._host_drain() if _kw is not None and hasattr(_kw, "_host_drain") else None
+    if _hd is not None:                                 # never the live hub caps (ssh / cache) in a unit test
+        monkeypatch.setattr(_hd, "load_caps", lambda *a, **k: {})

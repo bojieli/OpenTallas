@@ -72,8 +72,47 @@ def load_caps(now=None, fetch=None):
     return caps
 
 
-def cap_of(caps, host, hub=HUB):
-    return int(caps.get(host) or (caps.get(hub) if host == "localhost" else 0) or 0)
+# FLOW-OPS-1300 / FABLE-FLOW-1900 (COORD URGENT 11-21: the 18:22-18:40 burst put 48 of 57 gens on drained hosts, epyc10 72 -> 35 GB under its floor; the
+# drain was a hand-set 9999 cap that the gen pick never read).  The drain is COMPUTED for every host: a host whose scratch free GB is under
+# floor + margin takes no new job dir.  floor = ot-run's scratch disk floor (OT_RUN_SCRATCH_DISK_FLOOR_GB[_HOSTS], default 50, never below 50),
+# margin = OT_DRAIN_MARGIN_GB (default 40: room for the gens a burst starts before the next free-disk read).  A hand cap (gen_host_min_free_gb,
+# host_drain) still raises it.  This module is THE admission function: ot-run, the wave gen-host pick and the wave hold all call draining() / admit().
+HARD_FLOOR_GB = 50
+DRAIN_MARGIN_GB = int(os.environ.get("OT_DRAIN_MARGIN_GB", "40"))
+
+
+def floor_of(host):
+    """ot-run's scratch disk floor for host (same env and the same 50 GB minimum as ot-run clamp_floor)"""
+    per = {}
+    for x in os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS", "").split(","):
+        k, _, v = x.partition("=")
+        try:
+            per[k.strip()] = int(v)
+        except ValueError:
+            pass
+    try:
+        base = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
+    except ValueError:
+        base = HARD_FLOOR_GB
+    return max(HARD_FLOOR_GB, per.get(host, base))
+
+
+def cap_of(caps, host, hub=HUB, computed=True):
+    """the admit cap of host: max(hand cap, floor + margin).  computed=False = the hand cap only (old meaning)."""
+    hand = int(caps.get(host) or (caps.get(hub) if host == "localhost" else 0) or 0)
+    if not computed or os.environ.get("OT_DRAIN_COMPUTED", "1") == "0":
+        return hand
+    return max(hand, floor_of(host) + DRAIN_MARGIN_GB)
+
+
+def admit(host, free_gb, need_gb=0, caps=None, hub=HUB):
+    """-> (True, "") when host may take a new job dir needing need_gb, else (False, reason).  free_gb None = unknown = admitted."""
+    if free_gb is None:
+        return True, ""
+    c = cap_of(caps if caps is not None else load_caps(), host, hub)
+    if int(free_gb) - int(need_gb or 0) < c:
+        return False, f"{host} DRAINING ({int(free_gb)} GB scratch free{', need %d' % need_gb if need_gb else ''}; cap {c} = max(hand cap, floor {floor_of(host)} + margin {DRAIN_MARGIN_GB}))"
+    return True, ""
 
 
 def draining(caps, free_gb, hub=HUB):
@@ -81,7 +120,7 @@ def draining(caps, free_gb, hub=HUB):
     out = {}
     for h, f in (free_gb or {}).items():
         c = cap_of(caps, h, hub)
-        if c and f is not None and int(f) < c:
+        if c and f is not None and int(f) < c:   # FLOW-OPS-1300: c includes the computed floor + margin
             out[h] = (int(f), c)
     return out
 

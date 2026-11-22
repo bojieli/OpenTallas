@@ -4795,11 +4795,17 @@ def _host_drain():
         return None
 
 
-def draining_hosts(caps, stt, hub=""):
-    """{host} whose scratch free GB (ot-run status) is under its admit cap: die caps merged with the fleet caps of host_drain.load_caps()"""
+def draining_hosts(caps, stt, hub="", cfg=None, die=None):
+    """{host} whose scratch free GB (ot-run status) is under its admit cap: die caps merged with the fleet caps of host_drain.load_caps()
+    (FLOW-OPS-1300: the cap includes the computed floor + margin).  With cfg and die, a host where the work_root probe measured the disk that really
+    holds the die's lane (_workroot_free, KW-FIX-35: S81/QC lanes on a root disk) is judged by that measure, not by ot-run's scratch2 figure."""
     HD = _host_drain()
     if HD is None:
         return set()
+    wf = (cfg or {}).get("_workroot_free") or {}
+    if die and wf:
+        stt = {h: (dict(v or {}, scratch_gb=wf[hh][die]) if die in (wf.get(hh) or {}) else v)
+               for h, v in (stt or {}).items() for hh in [(hub if (h == "localhost" and hub) else h)]}
     allc = dict(HD.load_caps())
     for h, v in (caps or {}).items():
         try:
@@ -5512,7 +5518,7 @@ def gen_hosts(cfg, die, item=None):
     res = [h for h in res if not queued_host_bad(_stt, h, _hub)] or res
     # FLEET-WATCH-R5 11-21 (FABLE-FLOW-0800 class c): a host under its own admit cap (dies.<die>.gen_host_min_free_gb, scratch GB from the ot-run status) is no gen host, whatever the list says, while another stays
     # FLOW-OPS-0900 fix 4: the one drain filter (host_drain.py: die caps + fleet caps); a gen host list of ONLY draining hosts keeps them (ot-run then refuses the new dir)
-    _dr = draining_hosts(d.get("gen_host_min_free_gb") or {}, _stt, _hub)
+    _dr = draining_hosts(d.get("gen_host_min_free_gb") or {}, _stt, _hub, cfg, die)
     res = [h for h in res if h not in _dr] or res
     # KIT-OPS-4 11-14 (COORD): the free INFRA retry of an earlyoom / signal kill leaves the host that killed it while another stays
     av = (cfg.get("_avoid_host") or {}).get((die, item)) if item else None
@@ -6486,6 +6492,14 @@ def load_hold(cfg, die, *names):
     wave instead of queueing behind a host's load cap; "" = launch.  It holds no started job and no NEAR-COUNT row (those
     launch --crit, which bypasses the cap).  No status = unchanged.  cfg load_hold false turns it off."""
     stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    # FLOW-OPS-1300 / FABLE-FLOW-1900 (18:22 burst: 48 of 57 gens on drained hosts): when EVERY gen host of the die is draining (host_drain: scratch free under
+    # floor + margin, computed; the same function ot-run admits by) the row waits.  This is the disk rail, not the load hold: load_hold false does not turn it off.
+    if stt:
+        dr = draining_hosts((cfg["dies"].get(die) or {}).get("gen_host_min_free_gb") or {}, stt, hub, cfg, die)
+        hs0 = gen_hosts(cfg, die)
+        if hs0 and dr and all(h in dr for h in hs0):
+            return "DRAIN-HOLD every gen host draining: " + " ".join(
+                f"{h} {(stt.get('localhost' if h == hub else h) or {}).get('scratch_gb')} GB" for h in hs0)
     if cfg.get("load_hold") is False or not stt or near_count_hit(cfg.get("_near_count") or set(), die, *names):
         return ""
     low = cfg.get("_workroot_low") or {}
@@ -6590,6 +6604,17 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
                       min(_calm(cfg, room or uncapped or hs, key), key=lambda h: (load_rank(cfg, h, key(h))[0], -(sc(h) * host_share(cfg, h)), hs.index(h)))))   # LOADRANK-NOFIT-1119; FLOW-FIX-2045: with no hold (load_hold false) nothing waits for room, so when no host fits the least loaded calm host takes it (5 % steps, each pick adds its threads) and the memory score breaks ties: with no host fitting, hosts above NOFIT_LOAD_X x cores are skipped while a calmer one exists (epyc7 at 473/96 took 325 launches), the memory score still balances the rest
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
+    # FLOW-OPS-1300 / FABLE-FLOW-1900: one tick's burst read the free disk once (epyc10 took 9 gens 72 -> 35 GB): each pick charges the gen's disk to the
+    # cached scratch figure, so the drain filter of the next pick in the same tick sees it.  gen_disk_charge_gb (default 4; 0 = off)
+    _gd = float(cfg.get("gen_disk_charge_gb", 4) or 0)
+    if key(best) is not None and _gd and key(best).get("scratch_gb") is not None:
+        try:
+            key(best)["scratch_gb"] = int(float(key(best)["scratch_gb"]) - _gd)
+            _wf = (cfg.get("_workroot_free") or {}).get(best) or {}
+            if die in _wf:
+                _wf[die] = int(float(_wf[die]) - _gd)
+        except (TypeError, ValueError):
+            pass
     alt_charge(cfg, best)
     if key(best) is not None and threads:
         key(best)["load"] = float(key(best).get("load", 0)) + threads

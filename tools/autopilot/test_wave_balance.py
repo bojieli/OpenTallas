@@ -1,4 +1,5 @@
 """WAVE-BALANCE-1 11-11: waiter migration selection, never moving a started unit, gen host by capacity"""
+import pytest
 import json
 import sys
 from pathlib import Path
@@ -276,3 +277,14 @@ def test_sealed_waiter_matches_on_the_job_spec_kit(tmp_path):
     assert W.waiter_kit({"dir": "/srv/s/claude/ot-jobs", "client_pid": 1}, O()) == "/srv/s/kit/a1/gen/k"
     assert W.waiter_kit({"dir": "/srv/s/kit/a1/gen/k/", "client_pid": 1}, O()) == "/srv/s/kit/a1/gen/k"
     assert W.job_spec_kit(["ot-run"]) == ""
+
+
+# FLOW-OPS-1300: these cases pin the load / floor / fallback rules with small scratch figures; the computed drain (host_drain floor + margin) is
+# tested in test_flowops1300_computed_drain.py, so it is off here.
+@pytest.fixture(autouse=True)
+def _flowops1300_no_computed_drain(monkeypatch):
+    monkeypatch.setenv("OT_DRAIN_COMPUTED", "0")
+    _kw = sys.modules.get("kit_wave")
+    _hd = _kw._host_drain() if _kw is not None and hasattr(_kw, "_host_drain") else None
+    if _hd is not None:                                 # never the live hub caps (ssh / cache) in a unit test
+        monkeypatch.setattr(_hd, "load_caps", lambda *a, **k: {})
