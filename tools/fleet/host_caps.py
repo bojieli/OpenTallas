@@ -11,7 +11,7 @@ its off value (0).  Rails (memory headroom, disk floors, OOM guards) are not cap
 
 Verdicts, one line per finding:  CAP-EXPIRED host KEY=val owner expires (age)  |  CAP-UNOWNED host KEY=val (no #@cap line)
 | CAP-BADTAG host KEY (tag present, owner or expires missing/unparseable)  |  CAP-OK host KEY=val owner expires (left).
-Prints "HOST-CAPS ok" or "HOST-CAPS N flagged: ..." as the last line (the hourly host report appends it).  Read-only.
+Prints "HOST-CAPS ok" or "HOST-CAPS N flagged: ..." plus "; expiring (renew or revert): host:KEY=val owner= expires=" for every owned cap as the last line (the hourly host report appends it).  Read-only.
 Exit 0 always (a report, not a gate); --strict exits 1 when anything is flagged.
 """
 import argparse, datetime as dt, re, socket, subprocess, sys
@@ -87,7 +87,7 @@ def main(argv=None):
     ap.add_argument("--strict", action="store_true")
     a = ap.parse_args(argv)
     now = parse_time(a.now) if a.now else dt.datetime.now(dt.timezone.utc)
-    flagged, ok = [], 0
+    flagged, ok, owned = [], 0, []
     targets = [("file", a.file)] if a.file else [(h, None) for h in a.hosts.split(",") if h]
     for host, path in targets:
         text = open(path).read() if path else read_conf(host, a.conf)
@@ -99,9 +99,11 @@ def main(argv=None):
             print(f"{v} {host} {key}={val} owner={owner or '-'} expires={exp or '-'} ({note})")
             if v == "CAP-OK":
                 ok += 1
+                owned.append(f"{host}:{key}={val} owner={owner} expires={exp} ({note})")
             else:
                 flagged.append(f"{host}:{key}={val}:{v[4:]}")
-    print(f"HOST-CAPS {len(flagged)} flagged: {' '.join(flagged)}" if flagged else f"HOST-CAPS ok ({ok} owned caps)")
+    due = ("; expiring (renew or revert): " + "; ".join(owned)) if owned else ""
+    print((f"HOST-CAPS {len(flagged)} flagged: {' '.join(flagged)}" if flagged else f"HOST-CAPS ok ({ok} owned caps)") + due)
     return 1 if (a.strict and flagged) else 0
 
 

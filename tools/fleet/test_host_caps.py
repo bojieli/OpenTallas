@@ -49,3 +49,11 @@ def test_main_file_mode(tmp_path, capsys):
     assert H.main(["--file", str(f), "--now", "2026-11-22T06:00Z"]) == 0
     assert H.main(["--file", str(f), "--now", "2026-11-22T06:00Z", "--strict"]) == 1
     assert "HOST-CAPS 1 flagged" in capsys.readouterr().out.splitlines()[-1]
+
+
+def test_summary_lists_owned_cap_expiry(tmp_path, capsys):
+    f = tmp_path / "c"
+    f.write_text("#@cap LOAD_CAP_FACTOR owner=FLOW-FLEET-R1 expires=2026-11-23T06:00Z why=x\nLOAD_CAP_FACTOR=1.2\n")
+    assert H.main(["--file", str(f), "--now", "2026-11-22T06:00Z"]) == 0
+    last = capsys.readouterr().out.splitlines()[-1]
+    assert last.startswith("HOST-CAPS ok (1 owned caps); expiring (renew or revert): file:LOAD_CAP_FACTOR=1.2 owner=FLOW-FLEET-R1 expires=2026-11-23T06:00Z (24.0 h left)")
