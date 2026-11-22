@@ -33,7 +33,8 @@ foreach rtd_k [array names ::stb::kids] {
   foreach rtd_s $::stb::sinks($rtd_k) { set rtd_a [stb::arr $rtd_s]; if {$rtd_a eq ""} { incr rtd_na; continue }
     set rtd_pp [get_pins -quiet $rtd_s]
     set rtd_e [get_property $rtd_pp [expr {[info exists ::stb::par($rtd_s)] && $::stb::par($rtd_s) ? "arrival_min_fall" : "arrival_min_rise"}]]
-    if {$rtd_e eq "" || [string match *INF $rtd_e]} { set rtd_e $rtd_a } elseif {abs($rtd_e) < 1.0} { set rtd_e [expr {$rtd_e * 1e12}] }
+    set rtd_e [stb::time_ps $rtd_e]
+    if {$rtd_e eq ""} { set rtd_e $rtd_a }
     puts $rtd_f "S\t$rtd_n\t$rtd_s\t[format %.2f $rtd_a]\t[format %.2f $rtd_e]" }
   if {$rtd_n ne "PORT"} { set rtd_i [$rtd_blk findInst $rtd_n]; if {$rtd_i ne "NULL"} { lassign [$rtd_i getLocation] rtd_x rtd_y; puts $rtd_f "X\t$rtd_n\t$rtd_x\t$rtd_y" } }
 }

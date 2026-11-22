@@ -47,6 +47,8 @@ MOCK = r'''
 namespace eval ord {}
 namespace eval odb {}
 namespace eval sta {}
+set ::mock_ps_per_ui 1.0
+proc sta::time_sta_ui {seconds} { return [expr {$seconds * 1.0e12 / $::mock_ps_per_ui}] }
 proc ord::get_db_block {} { return blk }
 proc ord::get_db {} { return db }
 proc db {m args} { if {$m eq "findMaster"} { return M_[lindex $args 0] } }
@@ -112,7 +114,7 @@ proc get_property {p prop} {
     if {$drv eq ""} break
     set i $A($drv,inst); set t [expr {$t + $DLY($i)}]; set net $A($i.A,net)
   }
-  return $t
+  return [expr {$t / $::mock_ps_per_ui}]
 }
 foreach c {set_propagated_clock estimate_parasitics global_route sta::arrivals_invalid detailed_placement check_placement global_connect} { proc $c {args} {} }
 proc all_clocks {} { return {} }
@@ -159,6 +161,19 @@ def test_balances_each_port_tree_to_its_latest_sink():
     # ck2: target 60 (g2); g1 and the macro pin brought up on their own tree, not to clk's 80
     assert 60 - 8 - 20 < arr["g1"] <= 60 and arr["g2"] == 60 and 60 - 8 - 20 < arr["u_mem"] <= 60, (arr, out)
     assert "OT_STB done:" in out and "on 2 clock trees" in out
+
+
+@pytest.mark.parametrize("ps_per_ui", [1.0, 1000.0])
+def test_subunit_arrival_uses_sta_units_and_does_not_pad_tap(ps_per_ui):
+    env = (f"set ::mock_ps_per_ui {ps_per_ui}\n"
+           "set ::env(OT_STB_EST) placement\nset ::env(OT_STB_PORTS) clk\n"
+           "set DLY(b0) 0.0\nset DLY(b1) 0.351169\nset DLY(b2) 0.951777\n")
+    after = ('puts "NORMALIZED [stb::arr f1/CLK] [stb::arr f3/CLK]"\n')
+    out, _ = _run(env, after=after)
+    assert "OT_STB ERROR" not in out
+    assert "OT_STB done: 0 delay buffers" in out
+    measured = out.split("NORMALIZED ")[1].splitlines()[0].split()
+    assert list(map(float, measured)) == pytest.approx([0.351169, 0.951777])
 
 
 def test_fixed_macro_subtrees_and_protected_spine_are_never_delayed(tmp_path):
