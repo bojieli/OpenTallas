@@ -871,7 +871,7 @@ def ring_reset_load_xy(t, inst, stmt=""):
     return None
 
 
-RING_LITE_KEYS = {"max_width", "monitors"}
+RING_LITE_KEYS = {"max_width", "monitors", "status_copy"}
 
 
 def ring_lite_cfg(t, tn):
@@ -880,6 +880,9 @@ def ring_lite_cfg(t, tn):
     with the SAME K, depth and start depths on every instance of the type form a group; N rings per group (default 1)
     stay full and keep the group's lap / guard / ready / fault monitor, the others are built with LITE(1) = the data
     path only (rtl/common/ot_dp_clk_landing_ca.sv; same pins, same K, same q at every edge, 0 cycles).
+    RING-LITE-2 (FABLE-KV-DIE 11-22): "status_copy": true also groups the rings of a type that carries
+    landing_control_status_copy; a LITE ring has no status flags, so it is built WITHOUT CONTROL_STATUS_COPY while the
+    group's full monitor ring(s) keep it (ring_lite_status_copy).  Absent / false: such a type gets no lite ring, as before.
     -> (max_width, monitors) or None (key absent: byte-identical output)."""
     cfg = t.get("clock", {}).get("landing_ring_lite")
     if cfg is None:
@@ -890,7 +893,15 @@ def ring_lite_cfg(t, tn):
     for name, v, lo, hi in (("max_width", mw, 1, 64), ("monitors", mon, 1, 1 << 20)):
         if isinstance(v, bool) or not isinstance(v, int) or not lo <= v <= hi:
             raise LandingError(f"{tn}: landing_ring_lite.{name} must be an integer in [{lo}, {hi}]")
+    if not isinstance(cfg.get("status_copy", False), bool):
+        raise LandingError(f"{tn}: landing_ring_lite.status_copy must be a boolean")
     return mw, mon
+
+
+def ring_lite_status_copy(t):
+    """RING-LITE-2: True when the type opts its status-copy rings into the lite grouping (see ring_lite_cfg)."""
+    cfg = (t.get("clock") or {}).get("landing_ring_lite")
+    return isinstance(cfg, dict) and cfg.get("status_copy") is True
 
 
 def _natural(name):
@@ -1816,7 +1827,7 @@ class Landings:
         and writer start depth) agree on EVERY instance of the type; groups of one stay full.  The monitors are spread
         evenly over the group in natural name order.  Empty without the key."""
         cfg = ring_lite_cfg(self.types[key], tn)
-        if cfg is None or not cat or self.dataflow or status_copy:
+        if cfg is None or not cat or self.dataflow or (status_copy and not ring_lite_status_copy(self.types[key])):
             return {}
         mw, mon = cfg
         parts = sorted(p for p, v in self.parts.items() if v["type"] == key)
@@ -2086,7 +2097,9 @@ class Landings:
                     ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
                                 f".K({cat['rings'][b]['K']}))")
                     ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n({reader_start})"
-                if status_copy:
+                # RING-LITE-2: a LITE ring builds no status flags, so it takes no private status bank (the RTL refuses
+                # LITE with CONTROL_STATUS_COPY); only reachable with landing_ring_lite.status_copy
+                if status_copy and not (hard is None and b in lite and lite[b]["lite"]):
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
                     self.reset_placements[tn][b].update(control_status_copy=True,
                         status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)

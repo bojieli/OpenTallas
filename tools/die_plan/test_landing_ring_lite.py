@@ -127,4 +127,40 @@ def test_invalid_key_is_rejected(value):
 def test_schema_accepts_the_key():
     import schema
     props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
-    assert props["landing_ring_lite"]["properties"].keys() == {"max_width", "monitors"}
+    assert props["landing_ring_lite"]["properties"].keys() == {"max_width", "monitors", "status_copy"}
+
+
+def test_status_copy_type_needs_the_opt_in_and_lite_rings_take_no_status_bank():
+    """RING-LITE-2 (FABLE-KV-DIE 11-22): a landing_control_status_copy type gets lite rings only with
+    landing_ring_lite.status_copy; the lite rings are built without CONTROL_STATUS_COPY, the monitor keeps it."""
+    p, t = lite_vehicle()
+    a, b = bodies()
+    p["partition_types"]["B"]["landing_control_status_copy"] = True
+    base = Landings(p, t).type_rtl("B", b)
+    assert "LITE" not in base and base.count(".CONTROL_STATUS_COPY(1)") == N + 1
+    set_key(p, {})                                            # RING-LITE-1 reading: key inert on a status-copy type
+    assert Landings(p, t).type_rtl("B", b) == base
+    set_key(p, {"status_copy": False})
+    assert Landings(p, t).type_rtl("B", b) == base
+    set_key(p, {"status_copy": True})
+    land = Landings(p, t)
+    got = land.type_rtl("B", b)
+    r = rings(got)
+    lite = sorted(n for n, m in r.items() if ".LITE(1)" in m)
+    assert lite == ["y0", "y1", "y3", "y4"]
+    assert all(".CONTROL_STATUS_COPY(1)" not in r[n] for n in lite)            # the RTL refuses LITE with a status bank
+    assert ".CONTROL_STATUS_COPY(1)" in r["y2"] and ".CONTROL_STATUS_COPY(1)" in r["y"] and ".LITE(1)" not in r["y2"]
+    strip = lambda x: re.sub(r", \.(LITE|CONTROL_STATUS_COPY)\(1\)", "", x)
+    assert strip(got) == strip(base)                                           # only ring parameters differ
+    rp = land.reset_placements["B"]
+    assert rp["y0"]["ring_lite"] is True and "control_status_copy" not in rp["y0"]
+    assert rp["y2"]["control_status_copy"] is True and rp["y2"]["ring_lite_monitor_of"] == N
+    assert land.manifest()["lane_added_cycles"] == Landings(*lite_vehicle()).manifest()["lane_added_cycles"]
+
+
+def test_status_copy_flag_must_be_boolean():
+    p, t = lite_vehicle()
+    a, b = bodies()
+    set_key(p, {"status_copy": 1})
+    with pytest.raises(LandingError, match="landing_ring_lite"):
+        Landings(p, t).type_rtl("B", b)

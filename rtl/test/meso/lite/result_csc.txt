@@ -1,0 +1,17 @@
+# RING-LITE-2 (FABLE-KV-DIE) evidence 2026-11-22T13:01:39Z, epyc8 via ot-run, base origin/main 58ebc21a507
+## run_csc.sh (verilator lock-step LITE 1 / CONTROL_STATUS_COPY 0 vs LITE 0 / CONTROL_STATUS_COPY 1: q identical every clk edge)
+PASS_RUNS 11 of 11; MISMATCH_LINES 0
+LITE_PASS phase=0 shift=0 ready_word_checks=402136 nonzero=334935
+LITE_PASS phase=41 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=83 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=125 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=208 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=400 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=416 shift=0 ready_word_checks=390418 nonzero=325017
+LITE_PASS phase=433 shift=0 ready_word_checks=401166 nonzero=333457
+LITE_PASS phase=624 shift=0 ready_word_checks=401166 nonzero=333457
+LITE_PASS phase=791 shift=0 ready_word_checks=401166 nonzero=333457
+LITE_PASS phase=830 shift=0 ready_word_checks=401166 nonzero=333457
+NEGCTRL_CAUGHT shift=1 (1054239 mismatch lines)
+MUTANT_CAUGHT LITE (1055353 mismatch lines)
+RC 0

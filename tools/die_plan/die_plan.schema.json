@@ -3681,6 +3681,9 @@
          "monitors": {
           "type": "integer",
           "minimum": 1
+         },
+         "status_copy": {
+          "type": "boolean"
          }
         }
        },
