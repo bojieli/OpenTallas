@@ -22681,3 +22681,5 @@ FAILED [AUTOPILOT 4e4323c4d5b1] 2026-11-21 22:52:25 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 22:53 PST DIED [FAM-S81-COL-H9R0-R4] ot-run oth-ubuntu-3835904-1795329888 on tolerant-swine: rc=1 after 521 s, ended 22:53:27, log /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4/j8c_bind.log, cmd: --mem 108 --threads 8 --hosts epyc8 --priority plan --plan-job bind --disk 80 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 -- b
 - 2026-11-21 22:53 PST intel1 at 1210 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 22:53 PST HOURLY free space 22:53 epyc9=2470 intel1=1210 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
