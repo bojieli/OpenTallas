@@ -21,3 +21,13 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt. V3 = R13 (
 2. R13 base: cr gets a republished sle_sc_v1__cl7479a5ec tree (crt); my treechk does the same on L0 - compare the type block with R13's crt once it differs from cr.
 3. Hand R13 the highest clean layer (plan pre + post-latency, side.json, r8_final, bound dir, intake table).
 4. Sealed private kits on the clean plan: cbf_q00__cl1b5a6458, one st_a (sle_st_a_v2__pv4242de79), slw_su_c__cl92142dac, sle_ctl (private-spec --tree <bound>/tree --bind-out <bound>/bind --goal finish --host epyc8; run-item; ot-wait --durable).
+
+## 09:3x PST state (read this first after compression)
+- MEASURED l0x (probe = L0 without sc republish) strict bind: 1 error = EMIT sle_sc_v1__cl7479a5ec (known). d lineage with my tap fixes is otherwise bind-clean. LATCHECK not reached.
+- Binds running on epyc8 (chain.sh TAG; MEMB default 96 G now; R8IN = refreshed table so one pass): l0 (8 sc republished; 48 G, 2nd pass), l0y (hedge: only cl7479a5ec republished; plan plans/l0y), l1b (L1 again; first L1 bind OOM at 48 G), l2b (L1 + cb site delta + coll_core XEPRE/xev seats).
+- DROPPED: sle_ctl lever-3 (static G0 13 errors on V3 geometry). L2 bind cancelled.
+- plan_gate_pre vs v2r10 = LANDREMAP noise on V3-changed types; rerun vs cr: l0/pgp_vs_cr.log.
+- TAP-GRID-R5 items are mine: rm5b not mergeable (other lineage); method = anchor-mode remap on my bound tree only for types the bind lists as errors (none so far). coll_ftc anchor + cbf_q00 rr_t103 port relay: not seen in l0x (0 errors there).
+- cbn_q00 cl622f65d2 / cldbcda913: I cover; release = first applied plan with rev5 (V3 c5rt or V4).
+- Waiting pattern: foreground loops are cut at 180 s; use bounded for-loops (5 x 30 s) and direct status reads.
+- HANDOVER when clean: post plan pre sha + post-latency plan path, side.json, r8_final.json, bound dir, LATCHECK + post-bind G0, intake table rev 2; then kits (step 4 of NEXT).
