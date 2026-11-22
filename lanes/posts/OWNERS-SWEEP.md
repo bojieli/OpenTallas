@@ -296,3 +296,4 @@
   QC FAILED-NO-RELAUNCH 4: cbx_q10 (cl89936551_h, cl94a12200_h), slw_su_c (cl19bb38ef, cl92142dac), 3 stale.
   S81 UNOWNED held 17: dsdv c1x t3-t10, iq, lepw (mu, mus, LP) -> FAM-S81-DSDV-R1; s81sl_kv_leaf t3/t4, svc_hi pvso_entry t2, svc_hi rs t5 unowned.
   S81 col held STALE 5 (live FAM owners, not flags); superseded rows omitted.
+- 2026-11-22 00:51 PST 01:0x sweep 221 unsigned s81/head/qc/kv rows: HELD-OK 87 (s81 79, kv 8), flagged 76 (DEAD-OWNER 33, STALE 48, UNOWNED 0, FAILED-NO-RELAUNCH 0; some both). s81: FAIL-S81-1 has 20 rows with no post in 2h (6 superseded-await-relaunch stale); S81-CORES 4 cores idle 20h+ no post; OPUS-FIX-S81-LEAF-R10 18 leaf superseded rows stale >3h. kv: KV-R owns 7 hgi/hub_Wo rows with no post (kv3_hub_Wo FAILED); KV-CORES 3 qkd cores dead. qc: 7 qfd_qc_su_lane_w KIT-PLACED PASS kits not enqueued (QC-PLAN); GEOM-UNHOLD-2200 and FABLE-FLOW-2000 no posts. File lanes/OWNERS-SWEEP.tsv
