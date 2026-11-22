@@ -54,3 +54,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 02:26 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-894982-1795342836 on tolerant-swine: rc=0 after 383 s, ended 02:26:57, log /home/ubuntu/fam-s81-serdes-r7/signoff_f3.client.log, cmd: --hosts epyc9 --mem 32 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 --stage /srv/opentallas-scratch2/claude/rt/6d2e18
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-22 02:44 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2848227-1795336343 on tolerant-swine: rc=0 after 7956 s, ended 02:44:56, log /home/ubuntu/fam-s81-serdes-r7/j8p3_gate.client.log, cmd: --hosts epyc9 --mem 40 --threads 4 --disk 20 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 -- bash gate_j8p3.sh
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
