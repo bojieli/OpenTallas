@@ -32,3 +32,5 @@ OPUS-FIX-HEAD-LEP0N-R8 (r18). Report to COORD every 4 h (<250 words).
 - KV-C15 (pc pin stations, IOPC-R4 pcreg) added to table; IOPC-R4 owns siblings pc__cl5a95b461/cl254f2e73; pc_v1 x3 check after D28 bind.
 - Pending D28 rows: PV-R7 (v3 split, bind running), HGI-R6. When both land in kv-plan-r6/d28/rows.json: rerun lbc (rt 6d2e187f0d65) + p5/p7 scans on the final compose.
 - HEAD: LEP0N-R8 r18c split tree s81_head_r18c_split_s0 (45c1f2f8e091), kits on epyc9; nothing to hand.
+
+- 11-22 thin-band scan (COORD ask): S81 J7 a6771d121e95 == J8 draft 53cab071c82f, 96 rects / 22 types (lanes/handoff/FIX-SYNC-KVHEAD-thinband-S81-J7J8.tsv); QC V3 e69de4a70060 6 hits (…-QC-V3.tsv). Advisories posted to SLICE-R6, SVC-R9, FAIL-S81-1, CB-R4, SLWSLE-R1, J6-ASSEMBLY-R5, QC-PLAN-R13. No rows from me; same form on 5 signed leaf types, so this is an advisory, not a gate.
