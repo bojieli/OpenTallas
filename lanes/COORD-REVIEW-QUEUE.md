@@ -22972,3 +22972,4 @@ FAILED [AUTOPILOT c94d76d802c0] 2026-11-21 23:48:16 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 23:53 PST HOURLY free space 23:53 epyc9=2287 intel1=1184 (restore at >=250 GiB; caps 250 on epyc9/intel1)
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 23:54 PST DONE [OPUS-FIX-HEAD-LEP0N-R8] ot-run oth-ubuntu-604718-1795333937 on tolerant-swine: rc=0 after 133 s, ended 23:54:28, log /home/ubuntu/opus-fix-head-lep0n-r8/post3_e3.otrun.log, cmd: --mem 32 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8 --stage /srv/opentallas-scratch2/claude/opu
+- 2026-11-21 23:54 PST DONE [FLOW-FLEET-R1] ot-push-main otpush-renewed-glider-2007876 on renewed-glider: rc=0 after 18 s, ended 07:54:33, log none, cmd: ot-push-main 
