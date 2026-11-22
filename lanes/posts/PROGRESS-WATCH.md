@@ -235,3 +235,4 @@
 - 2026-11-22 04:23 PST ALERT NO-PROGRESS s81: 47 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 64 min (last 03:19); 2 hold(s): 1 without eta, 0 overdue, next eta 11-23 04:15
 - 2026-11-22 04:44 PST ALERT NO-PROGRESS qwen_compute: 7 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 127 min (last 02:36); blocker: plan event s29q103S4Q9N46R6V2 pending (the wave waits for it); 19 hold(s): 17 without eta, 0 overdue, next eta 11-23 12:00
 - 2026-11-22 04:54 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 04:24:49 (30 min; no launch or classify meanwhile) running tick started 04:44:34, last mark 'after wave_balance'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
+- 2026-11-22 04:54 PST ALERT NO-PROGRESS s81_head: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 309 min (last 23:44); NO-LAUNCH x14
