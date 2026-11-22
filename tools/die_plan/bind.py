@@ -6775,6 +6775,8 @@ def kit_reset_sync(tn, rs, sources):
         if body is not None:
             own.append((f, body))
     if not own:
+        if rs_bytes is None:
+            raise BindError(f"kit-rtl {tn}: selected reset synchronizer source {rs} is missing")
         return rs
     try:
         used = _reset_sync_params([E._strip(Path(f).read_text(errors="replace")) for f in sources if Path(f).is_file()])
@@ -7377,7 +7379,9 @@ def cmd_kit_rtl(a):
     if spb_geometry:
         files.append(Path(spb_geometry['rtl']).resolve())
     pkgs = kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)
-    rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
+    # The runtime may contain only tools. The explicit kit tree owns fallback RTL.
+    reset_root = Path(base) if src_tree else Path(__file__).resolve().parents[2]
+    rs = reset_root / "rtl" / "lib" / "ot_reset_sync.sv"
     kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
         [f for f in files if f.name != "bind_cells.sv"]
     if kit_rd_rep and "ot_dp_lk" in (kit_rd_rep.get("needs_cells") or []) \
