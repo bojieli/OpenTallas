@@ -707,9 +707,12 @@ def moved_types(raw, base_raw):
     return out
 
 
-def check_landremap(plan, baseline, tree_fn=None, max_list=4):
+def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None):
     """FAIL LANDREMAP per moved type whose landing reset references were not remapped (see LANDREMAP-1122 in the doc).
-    tree_fn(raw, plan_path, type) -> {relay name: identity}; injectable for tests."""
+    tree_fn(raw, plan_path, type) -> {relay name: identity}; injectable for tests.
+    GATE-AGREE-R1: a stale reference the bind re-picks itself (reset_anchor.repicked_paths, the bind's own predicate) is only
+    WARN LANDREMAP-ADVISORY; one the bind would not repair stays FAIL, and an anchor the bind would refuse is named (FAIL LANDREMAP-BIND).
+    repick_fn(raw, plan_path, type) -> (paths, error); injectable (default none when tree_fn is injected)."""
     if not baseline:
         return []
     raw, braw = _load(plan), _load(baseline)
@@ -722,13 +725,21 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4):
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import schema
         import reset_tree as RT
+        import reset_anchor as RA
         plans = {}
 
-        def tree_fn(r, pp, tn):
+        def _tree(r, pp, tn):
             if id(r) not in plans:
                 plans[id(r)] = schema.Plan(r, Path(pp).parent / "die_plan.json")
+            return RT.for_type(plans[id(r)], tn)
+
+        def tree_fn(r, pp, tn):
             return {x["q"]: (x.get("depth"), tuple(round(float(c), 2) for c in x.get("xy") or ()), x.get("kind"))
-                    for x in RT.for_type(plans[id(r)], tn)["relays"]}
+                    for x in _tree(r, pp, tn)["relays"]}
+
+        if repick_fn is None:
+            def repick_fn(r, pp, tn):
+                return RA.repicked_paths(tn, r["partition_types"][tn], _tree(r, pp, tn), Path(__file__).resolve().parents[2])
     out, bad = [], []
     for tn in sorted(mv):
         rn = landing_reset_refs(raw["partition_types"][tn])
@@ -742,6 +753,21 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4):
             out.append(f"WARN LANDREMAP {tn}: reset tree not built ({type(e).__name__}: {str(e)[:160]}); remap check skipped")
             continue
         stale = sorted((p, v) for p, v in same.items() if tb.get(v) != tw.get(v))
+        if not stale:
+            continue
+        rp, rerr = set(), None
+        if repick_fn is not None:
+            try:
+                rp, rerr = repick_fn(raw, plan, tn)
+            except Exception as e:  # noqa: BLE001 - unknown = the old, blocking reading
+                out.append(f"WARN LANDREMAP {tn}: bind re-pick not evaluated ({type(e).__name__}: {str(e)[:160]}); all findings blocking")
+        auto = [x for x in stale if x[0] in rp]
+        stale = [x for x in stale if x[0] not in rp]
+        if auto:
+            out.append(f"WARN LANDREMAP-ADVISORY {tn}: {len(auto)} stale landing reset reference(s) are re-picked by the bind itself "
+                       f"(reset_tree_anchor / LOCAL-RESET-RAW-1; GATE-AGREE-R1), no landing_remap needed")
+        if rerr:
+            out.append(f"FAIL LANDREMAP-BIND {tn}: the bind would refuse this type: {rerr[:300]}")
         if not stale:
             continue
         inv = {}

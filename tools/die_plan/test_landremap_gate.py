@@ -97,3 +97,87 @@ def test_remap_base_resolves_without_the_lane(tmp_path, monkeypatch):
     assert G.remap_base(n)[1] == "$OT_PLAN_REMAP_BASE"
     assert G.remap_base(n, explicit=b)[1] == "--remap-base"
     assert G.remap_base(n, explicit=n)[0] is None                         # the plan itself is no base
+
+
+# ---- GATE-AGREE-R1: one predicate with the bind (reset_anchor.repicked_paths); QC cr base: 44 findings, the bind re-picks them all
+import reset_anchor as RA  # noqa: E402
+
+
+def qc_type(n=44, anchored=True, extra_unanchored=False):
+    """START transport + local resets naming rst_rl_0..n-1 (the QC V3p7cr crx / b2rx shape), optionally anchored"""
+    rd = [{"stages": [{"raw_reset": f"rst_rl_{i}"}]} for i in range(n - 4)]
+    loc = [{"name": f"l{i}", "raw": f"rst_rl_{n - 4 + i}"} for i in range(4)]
+    t = {"hard_cores": [{"inst": "cl_i_ectl_Q_N_tN", "origin_um": [100.0, 700.0], "outline_um": [50.0, 40.0]}],
+         "clock": {"landing_reader_start": rd, "landing_local_resets": loc}}
+    if anchored:
+        names = [f"rst_rl_{i}" for i in range(n - (1 if extra_unanchored else 0))]
+        t["clock"][RA.KEY] = {"inputs": {}, "tol_um": 405.0,
+                              "relays": {nm: {"depth": 3, "xy": [float(i), 0.0]} for i, nm in enumerate(names)}}
+    return t
+
+
+def qc_plans(tmp_path, new_t):
+    b, n = tmp_path / "base.json", tmp_path / "new.json"
+    base_t = copy.deepcopy(new_t); base_t["hard_cores"][0]["origin_um"] = [100.0, 500.0]
+    b.write_text(json.dumps({"partition_types": {"qc": base_t}})); n.write_text(json.dumps({"partition_types": {"qc": new_t}}))
+    return str(n), str(b)
+
+
+def qc_trees(n=44, shift=100):
+    old = {f"rst_rl_{i}": (3, (float(i), 0.0), "wire") for i in range(n)}
+    new = {f"rst_rl_{i + shift}": (3, (float(i), 0.0), "wire") for i in range(n)}      # renumbered, same sites
+    return old, new
+
+
+def qc_hooks(n=44, shift=100, tol_ok=True):
+    old, new = qc_trees(n, shift)
+    tree = {"relays": [{"q": q, "depth": d, "xy": list(xy)} for q, (d, xy, _k) in new.items()]}
+    if not tol_ok:
+        tree = {"relays": [{"q": q, "depth": d, "xy": [xy[0] + 9999.0, xy[1]]} for q, (d, xy, _k) in new.items()]}
+    tf = lambda raw, path, tn: old if "base" in path else new                                    # noqa: E731
+    rf = lambda raw, path, tn: RA.repicked_paths(tn, raw["partition_types"][tn], tree, ".", lambda t: set())  # noqa: E731
+    return tf, rf
+
+
+def test_qc_anchored_findings_are_advisory_when_bind_repicks(tmp_path):
+    n, b = qc_plans(tmp_path, qc_type())
+    tf, rf = qc_hooks()
+    f = G.check_landremap(n, b, tree_fn=tf, repick_fn=rf)
+    assert not [x for x in f if x.startswith("FAIL")], f                                          # no blocking finding: gates agree
+    assert len(f) == 1 and f[0].startswith("WARN LANDREMAP-ADVISORY qc: 44 stale")
+    # the bind's own resolve_plan accepts exactly this plan (same predicate)
+    raw = json.loads(Path(n).read_text())
+    tree = {"relays": [{"q": q, "depth": d, "xy": list(xy)} for q, (d, xy, _k) in qc_trees()[1].items()]}
+    rec, err = RA.resolve_plan(raw, None, ".", tree_fn=lambda tn: tree, ported_fn=lambda t: set())
+    assert err == [] and rec[0]["refs_rewritten"] == 44
+
+
+def test_qc_unanchored_and_old_behaviour_stay_blocking(tmp_path):
+    n, b = qc_plans(tmp_path, qc_type(anchored=False))
+    tf, rf = qc_hooks()
+    f = G.check_landremap(n, b, tree_fn=tf, repick_fn=rf)
+    adv = [x for x in f if "ADVISORY" in x]
+    assert len(adv) == 1 and "4 stale" in adv[0]                                                  # local raw names: bind re-picks them anyway
+    assert any(x.startswith("FAIL LANDREMAP qc:") and "40 landing reset" in x for x in f)         # START transport: nobody repairs it
+    f = G.check_landremap(n, b, tree_fn=tf)                                                       # no repick_fn = the old reading
+    assert any(x.startswith("FAIL LANDREMAP qc:") and "44 landing reset" in x for x in f)
+
+
+def test_qc_anchor_the_bind_would_refuse_is_blocking_and_named(tmp_path):
+    n, b = qc_plans(tmp_path, qc_type(extra_unanchored=True))                                     # one referenced name not anchored
+    tf, rf = qc_hooks()
+    f = G.check_landremap(n, b, tree_fn=tf, repick_fn=rf)
+    assert any(x.startswith("FAIL LANDREMAP-BIND qc:") and "lacks referenced relay" in x for x in f)
+    n, b = qc_plans(tmp_path, qc_type())
+    tf, rf = qc_hooks(tol_ok=False)                                                               # no relay within the recorded site tolerance
+    f = G.check_landremap(n, b, tree_fn=tf, repick_fn=rf)
+    assert any(x.startswith("FAIL LANDREMAP-BIND qc:") and "site tolerance" in x for x in f)
+    assert not any("ADVISORY" in x for x in f)
+
+
+def test_repick_error_is_warn_and_blocking(tmp_path):
+    n, b = qc_plans(tmp_path, qc_type())
+    tf, _ = qc_hooks()
+    f = G.check_landremap(n, b, tree_fn=tf, repick_fn=lambda *a: 1 / 0)
+    assert any(x.startswith("WARN LANDREMAP qc: bind re-pick not evaluated") for x in f)
+    assert any(x.startswith("FAIL LANDREMAP qc:") for x in f)

@@ -179,6 +179,47 @@ def resolve_plan(raw, P, root, tree_fn=None, ported_fn=ported):
     return receipts, errors
 
 
+LOCAL_RAW = re.compile(r"^clock/landing_local_resets/\d+/raw$")
+
+
+def ref_paths(t):
+    """{plan path: rst_rl_<k>} of every START / local-reset relay name of type dict t, spelled like
+    plan_gate_pre.landing_reset_refs ('clock/<section>/.../<key>'); the same walk as refs()"""
+    out = {}
+
+    def walk(o, path):
+        items = o.items() if isinstance(o, dict) else enumerate(o) if isinstance(o, list) else ()
+        for k, v in items:
+            if isinstance(v, str) and NAME.match(v):
+                out[f"{path}/{k}"] = v
+            else:
+                walk(v, f"{path}/{k}")
+    ck = t.get("clock") or {}
+    for sec in SECTIONS:
+        walk(ck.get(sec) or {}, f"clock/{sec}")
+    return out
+
+
+def repicked_paths(tn, t, tree, root, ported_fn=ported):
+    """GATE-AGREE-R1 (COORD 11-22, QC cr base: plan_gate_pre LANDREMAP 44 findings, strict bind 1 unrelated error -> 4 DIED, 0 QC
+    launches for 123 min): THE predicate for 'a stale rst_rl_<k> reference is repaired by the bind', shared by plan_gate_pre
+    (LANDREMAP: blocking vs advisory) and the bind (resolve_plan runs the same resolve()).  -> (paths, error):
+      paths = the plan paths (ref_paths spelling) the bind re-picks itself on `tree` (the reset tree this plan builds):
+        - a type with clock.reset_tree_anchor: every START / local-reset reference, when resolve() succeeds on a copy of t;
+        - clock.landing_local_resets[i].raw: always (LOCAL-RESET-RAW-1 in clock_landings re-picks on the regenerated relay set);
+      error = the AnchorError text when resolve() raises (the bind then fails the type: nothing is repaired, paths = empty)."""
+    import copy
+    ck = t.get("clock") or {}
+    local = {pth for pth in ref_paths(t) if LOCAL_RAW.match(pth)}
+    if not ck.get(KEY):
+        return local, None
+    try:
+        resolve(tn, copy.deepcopy(t), tree, root, ported_fn)
+    except (AnchorError, OSError) as exc:
+        return set(), f"RESET_ANCHOR {exc}"
+    return set(ref_paths(t)), None
+
+
 def main(argv):
     """record: python3 reset_anchor.py record PLAN OUT [--types T1,T2] [--tol-um 405] [--source tree|snapshot|auto]
     Anchors every type with START/local relay references against the tree of the plan as it stands (plan writers run
