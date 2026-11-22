@@ -1,0 +1,88 @@
+{
+ "lane": "FIX-SYNC-QC",
+ "to": "QC-PLAN-R13 (V4 intake after 06:00); owner FAM-QC-CB-R4 (cbx_q10), FAM-QC-SLWSLE-R1 (sle_ctl advisory)",
+ "base_plan": "epyc10 qc-plan-r13/v3p6/plan_v3p7d.json; draft epyc10 fix-sync-qc/draft_launch_v3p7d.json",
+ "dry_run": "plan_gate_pre check --tree v3p7d_bound/tree --baseline-plan plan_v3p7d.json --skip INPUT: 13 == baseline 13, 0 new",
+ "QS-LAUNCH": {
+  "class": "long launch-side wire into a station (S81 lepe li3): re-site the station toward the hop midpoint",
+  "cycles": 0,
+  "rows": {
+   "cbx_q10__cl89936551": {
+    "conn": "bus:y_o21",
+    "regs_um_old": [
+     [
+      557.28,
+      2496.96
+     ]
+    ],
+    "regs_um_new": [
+     [
+      460.08,
+      2518.56
+     ]
+    ],
+    "hops_old": [
+     363,
+     153
+    ],
+    "hops_new": [
+     244,
+     246
+    ]
+   },
+   "cbx_q10__cl89936551_h": {
+    "conn": "bus:y_o21",
+    "regs_um_old": [
+     [
+      557.28,
+      2531.52
+     ]
+    ],
+    "regs_um_new": [
+     [
+      438.48,
+      2531.52
+     ]
+    ],
+    "hops_old": [
+     363,
+     153
+    ],
+    "hops_new": [
+     244,
+     246
+    ]
+   },
+   "cbx_q10__cl94a12200_h": {
+    "conn": "bus:y_o21",
+    "regs_um_old": [
+     [
+      557.28,
+      2531.52
+     ]
+    ],
+    "regs_um_new": [
+     [
+      438.48,
+      2531.52
+     ]
+    ],
+    "hops_old": [
+     363,
+     153
+    ],
+    "hops_new": [
+     244,
+     246
+    ]
+   }
+  },
+  "form": "partition_types.<type>.internal_stations[conn=bus:y_o21].regs_um = [new]; site core-free (5.4-um halo, 2.16 grid); no per-bit relay_sites for y_o21"
+ },
+ "ADVISORY": {
+  "sle_ctl__cla4f6f12f bus:x_fw_p2_i": "first hop 432 um (>405) is still in the V4 lever-3 type row (hops 432/240/276, sum 948): respace regs to ~316 each, 0 cycles; SLWSLE owns the type replace",
+  "cb window hops 425-445 (nominal <=400)": "bc_i20 cbx_q10 x3 (434.5), bc_o13 cbn_q01 x3 (445), bc_o33 cbn_q11 x2 (445), y_o12 cbf_q01/_s2 + cbn_q01 x3 (438.8), nb_i22 cbf_q11 + cbn_q11 x2 (428.3), na_i00 cbf_q00 x3 + cbn_q00 x3 (425.3): plan_geom_census worst-bit window hop over 405 not in any handed V4 row; CB-R4 decides (limit 405 per its rule)",
+  "cbn_q11__cl5cc92dfe u_rrl_298->u_x_2_3": "CB-R4 cbn_q11-stations has a station row on this reset leg; FIX-SYNC r1 re-picks inst_taps 89->90 (0 cycles, placed leg 232 um) for the same leg: pick ONE (inst_taps is the 0-cycle form)",
+  "stm flt_o (1 bit) 544/536/548": "identical on signed siblings slw_stm_v2 cl1ca9c415 / v3 / v1: not blocking, no row"
+ }
+}
