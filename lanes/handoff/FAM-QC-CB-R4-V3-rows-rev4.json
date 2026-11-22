@@ -1,0 +1,443 @@
+{
+ "lane": "FAM-QC-CB-R4",
+ "made": "2026-11-21 21:0x PST rev 4: row A is FAMILY-WIDE (17 cb types), derived from one static LIB read",
+ "to": "QC-PLAN-R12 (03:00 compose)",
+ "base": "7f9f8260349f",
+ "event": "s29q103S4Q9N46R6V2",
+ "status": "CANDIDATE rows from V2 post-hook CTS reads; none proven by a private kit yet. Apply order: A, B, C, D (street rows are in FAM-QC-CB-R3-V3-cbn-street.json).",
+ "evidence_kits": {
+  "cbf_q00__cl1b5a6458": "epyc2 .../s29q103S4Q9N46R6V2/private/FAM-QC-CB-R2/cbf_q00__cl1b5a6458_1121130035/gen/cbf_q00__cl1b5a6458 (cts_read posthook setup -157.14 / hold -118.86)",
+  "cbf_q01_s2": "epyc2 .../cbf_q01_s2_1121130030/gen/cbf_q01_s2 (setup -205.23 / hold -121.10)"
+ },
+ "A_lockup_latch_to_core_pin": {
+  "path": "u_lk_nk_u_t_1_0_n_b/q[372] (DLL, clk tap clk_t30, tap insertion 271 ps) -> u_t10/n_b[372]: arrival 772.41 vs required 615.27 (core ck 223.6, NK setup 391.7). q01_s2: u_lk_nk_u_t_0_3_n_b -> u_t03 -184.47.",
+  "need": "latch clock latency <= ~114 ps (T/2 launch + 72 ps latch D->Q + core setup); balanced taps sit at 250 ps mean, so every latch on a normal tap loses ~135-157 ps.",
+  "row_form": "existing plan keys only: clock.core_input_lockup.latch_except (bit level, \"n_b[<bit>]\"/\"n_a[<bit>]\") for the bits whose latch tap insertion > 114 ps; the pipe register u_pc_nk_* stays (0 cycles, latch is cycle-neutral) and carries the path with ~+313 ps setup; hold via clock.core_input_lockup.latch_except_hb4 {\"<module>\": {\"n_b[<bit>]\": N}} (HB4xp67 ~37 ps FF each, N=3 as proven for tap[0]).",
+  "alternative_form": "retap the latch group onto the early taps (insertion <=110 ps, e.g. clk_t10 = 94 ps) - needs a tap-ride override in clock_taps.tcl (latches ride the D-driver's tap, QC-MCLK lever 2); not available as a plan row today.",
+  "bit_list": "TO BE CUT from the first kit's TT endpoint list (setup < -42 on u_lk_nk_*/n_a|n_b pins); do NOT apply port-wide: cbn_q01 tap port-wide latch_except failed hold on 1,744 of 1,776 pins.",
+  "proof_needed": "private kit with the rows: TT setup >= -42 on these endpoints and FF hold >= 0 on the hb4-padded bits",
+  "scope_REV2": "PER TYPE ONLY (COORD): plan keys clock.core_input_lockup.latch_except_by_type / latch_except_hb4_by_type (bind.py core_input_latch_except_entries / core_input_hold_pads honour them; exact-type override of the module-wide entries). NO module-wide latch_except entry on qfd_tile_nk_a0c is added.",
+  "plan_fragment": {
+   "clock.core_input_lockup.latch_except_by_type": {
+    "cbf_q00__cl1b5a6458": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[347]",
+      "n_b[372]",
+      "n_b[399]",
+      "n_b[445]",
+      "n_b[475]",
+      "n_b[500]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q01_s2": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[347]",
+      "n_b[354]",
+      "n_b[372]",
+      "n_b[399]",
+      "n_a[471]"
+     ]
+    }
+   },
+   "clock.core_input_lockup.latch_except_hb4_by_type": {
+    "cbf_q00__cl1b5a6458": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[347]": 3,
+      "n_b[372]": 3,
+      "n_b[399]": 3,
+      "n_b[445]": 3,
+      "n_b[475]": 3,
+      "n_b[500]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q01_s2": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[347]": 3,
+      "n_b[354]": 3,
+      "n_b[372]": 3,
+      "n_b[399]": 3,
+      "n_a[471]": 3
+     }
+    }
+   }
+  },
+  "bit_list_cut_from": "TT endpoint STA of each kit's 4_cts.odb (epyc2 fam-qc-cb-r3/out/tt_ends.tsv, tt_ends_q01s2.tsv), latch->core endpoints < -42: cbf_q00 20 (n_b 347/372/399/445/475/500, n_a 471; rst_n t00/t11 -50/-55 excluded: no pipe register), cbf_q01_s2 24 (n_b 347/354/372/399, n_a 471; rst_n excluded).",
+  "types_using_qfd_tile_nk_a0c_NOT_touched": [
+   "cbf_q01",
+   "cbf_q11",
+   "cbf_q00_s2",
+   "cbx_q10__cl89936551",
+   "cbn_q00__cld7bf7197",
+   "cbn_q00__cl622f65d2",
+   "cbn_q00__cldbcda913",
+   "cbn_q01__cldd6ea846",
+   "cbn_q01__clab6e67f2",
+   "cbn_q01__cld9ff4c40",
+   "cbn_q11__cl5cc92dfe",
+   "cbn_q11__cl49ae4555",
+   "cbf_q00__cl870de686",
+   "cbx_q10__cl89936551_h",
+   "cbx_q10__cl94a12200_h"
+  ],
+  "note_private_proof": "the running private cbf_q00 proof (epyc7 fam-qc-cb-r3/bind1) used the module-wide form; for cbf_q00 itself the emitted RTL is identical to the by-type form (same bits), so its CTS read stands for row A as scoped. Other 15 types see no row-A change.",
+  "key_fix": "R3 bind1 failed LATCH_EXCEPT_MODULE: qfd_tile_nk_a0c matches no bound lockup module; the bound lockup module is qfd_tile_nk_rp2_romleaf_rr. bind3 (rt 6dbb162ffe89, plan_gate_pre pass key 6410b0e079388026) uses this key. NOTE: the live pinned runtime 55344f311cde lacks latch_except_by_type: V3 needs runtime >= 6dbb162ffe89."
+ },
+ "B_serdes_tx_ring_cbf_q01_s2": {
+  "path": "u_cland_serdes_tx_tx_flit_i/u_ring.dch[k].sd_c[*] (fclk_in_serdes_tx_tx_flit_i falling edge, edge clock at (340.8, 2.66)) -> u_ring.dch[k].u_dsel/y[*] (clk rising): -205.23 worst, 62 endpoints stuck at -199 after the kit's own TT setup repair (tt_setup_repair.log, 170+ iterations, no gain). A half-cycle path through a slow INVx4 + BUFx12f wire at ring depth 1.",
+  "row_form": "clock.landing_ring_wreg dsrep 1 -> 2 for cbf_q01_s2 (buses serdes_tx_tx_flit_i, serdes_tx_valid_tx_v_i; dsrep is the dsel replica depth, cycle-neutral on the data side) and one registered ring-writer stage (landing_ring_wreg +depth) on serdes_tx_tx_flit_i; lane latency row +1 for the added stage (cycles pre-approved).",
+  "proof_needed": "clock_landing_verify + strict bind + LATCHECK 1921; kit TT read of the 62 dsel endpoints"
+ },
+ "C_arst_n_input_hold_cbf_q01_s2": {
+  "path": "hold: arst_n (vclk 250, in_min -85) -> u_rst_in/q (tap clk_t10, insertion 272) slack -121.10 (arrival 183.96, required 305.06). Input-port hold debt, advisory class (port_in), not an internal FF.",
+  "row_form": "reset first-stage sync flop u_rst_in on an early tap (insertion <= 130 ps) OR 4 x HB4 pad (~150 ps FF) between the arst_n input buffer and u_rst_in/D; reset.sync_stages stays 2 (0 cycles). The kit hold repair in route also covers it; the row only prevents hold-cell growth on a reset root.",
+  "proof_needed": "route hold read on arst_n"
+ },
+ "D_internal_ff_hold_cbf_q00": {
+  "answer_to_FABLE-CLOSURE-2000": "YES, the 1,224 FF-hold ends (gate PASS -110.88; post-hook -118.86) are INTERNAL register-to-register cross-tap ends, not port ends. Worst: u_d10_u_t_1_0_n_y_sg0.r[3][42] (tap clk_t58, clock latency 298 ps) -> .q[42] (tap clk_t39, latency 447 ps): launch 369.26 vs required 488.12 = -118.86; clock skew between the two taps 149 ps on a 1-bit shift stage. The gate only structural-limits to -145, so it passes.",
+  "cause_measured": "4_1_cts.log: OT_TAP_PAIR 14,624 cross-tap short pairs left after 4 passes; OT_TAP_SPAN 36 of 101 taps over the 300 um limit (max 613, clk_t39=449, clk_t38=508); OT_TAP_BALANCE tap insertion spread 240..445 ps vs target 250 (clk_t39 tree 489 ps: 6 long delaybufs); chain groups 8742, 2873 segments joined, 5760 moved. The kit never ran pregrt_ff_hold (no AUTO run), so none of this debt is repaired before GRT.",
+  "row_form": "clock.tap_chain_affinity {max_group 128 -> 64, radius_um 200 -> 150} and clock.tap_radius_um 200 -> 150 so every tap stays under the 300 um span (cbf_q00 has 101 taps; ~36 split), keeping tap_max_sinks 1000; keep budgets.r_dly_lockup/r_dly_spread (one segment per tap). Then the segment r[k]->q pairs share a tap (skew ~0) and the tap insertion spread falls toward the 40 ps tolerance.",
+  "also": "set OT_PREGRT_FF_HOLD AUTO threshold so the kit repairs register-to-register hold before GRT (FLOW-LECGATE-R1 traces why the gate passes).",
+  "proof_needed": "private cbf_q00 kit: OT_TAP_SPAN 0 over, cross-tap short pairs < 1,000, FF hold >= 0 internal"
+ },
+ "A_family_wide": {
+  "source": "core LIB qfd_tile_nk_a0c_tt.lib (qcviews_1111), 1028 n_a/n_b pins, setup_rising constraint per pin; one read, no per-kit CTS needed",
+  "rule": "latch->core slack = |setup| - L_tap - 278 ps (calibrated on cbf_q00 n_b[372]: |S| 391.7, L 271 -> -157.14). Gate -42 holds when |S| >= L + 236. Balanced tap L ~250 (+40 tol) -> every pin with |S| < 526 ps fails on a normal tap.",
+  "pins_below_526": {
+   "n_b[372]": 391.7,
+   "n_b[347]": 468.1,
+   "n_a[471]": 468.6,
+   "n_b[399]": 484.0,
+   "n_b[354]": 520.1
+  },
+  "tier2_tap_dependent_NOT_in_row": {
+   "n_a[470]": 558.8,
+   "n_b[421]": 559.4,
+   "n_b[350]": 560.3,
+   "n_b[431]": 560.5,
+   "n_b[500]": 581.7,
+   "n_b[445]": 619.3,
+   "n_b[475]": 624.4,
+   "note": "fail only when the tap latency L > |S|-236 (cbf_q00 measured 500/445/475 on late taps); keep per-type for cbf_q00__cl1b5a6458; other types read post CTS"
+  },
+  "cbx_q10": "the -659.86 ps place stop on n_b[372] is the same pin (smallest |S| of 1028): covered by the same row",
+  "plan_fragment": {
+   "clock.core_input_lockup.latch_except_by_type": {
+    "cbf_q01": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q11": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q00_s2": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q01_s2": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbx_q10__cl89936551": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q00__cld7bf7197": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q00__cl622f65d2": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q00__cldbcda913": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q01__cldd6ea846": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q01__clab6e67f2": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q01__cld9ff4c40": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q11__cl5cc92dfe": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbn_q11__cl49ae4555": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q00__cl870de686": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbx_q10__cl89936551_h": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbx_q10__cl94a12200_h": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[372]",
+      "n_b[347]",
+      "n_b[399]",
+      "n_b[354]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q00__cl1b5a6458": {
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_b[347]",
+      "n_b[372]",
+      "n_b[399]",
+      "n_b[445]",
+      "n_b[475]",
+      "n_b[500]",
+      "n_a[471]"
+     ]
+    }
+   },
+   "clock.core_input_lockup.latch_except_hb4_by_type": {
+    "cbf_q01": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q11": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q00_s2": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q01_s2": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbx_q10__cl89936551": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q00__cld7bf7197": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q00__cl622f65d2": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q00__cldbcda913": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q01__cldd6ea846": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q01__clab6e67f2": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q01__cld9ff4c40": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q11__cl5cc92dfe": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbn_q11__cl49ae4555": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q00__cl870de686": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbx_q10__cl89936551_h": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbx_q10__cl94a12200_h": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[372]": 3,
+      "n_b[347]": 3,
+      "n_b[399]": 3,
+      "n_b[354]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q00__cl1b5a6458": {
+     "qfd_tile_nk_rp2_romleaf_rr": {
+      "n_b[347]": 3,
+      "n_b[372]": 3,
+      "n_b[399]": 3,
+      "n_b[445]": 3,
+      "n_b[475]": 3,
+      "n_b[500]": 3,
+      "n_a[471]": 3
+     }
+    }
+   }
+  },
+  "bind": "family bind on rt 6dbb162ffe89 with exactly this fragment: epyc7 fam-qc-cb-r3/bindfam (see post)"
+ }
+}
