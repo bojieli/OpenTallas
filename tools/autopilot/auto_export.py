@@ -22,6 +22,10 @@ Flow:
             verifies every sha256 against the hub's hashes, appends its INDEX row, reports back to the hub.
   4. index  next drain: appends the AGIdock INDEX row (status RTX-FULL-AGI-META), posts `AUTO-EXPORT <die>/<element>`
             via ~/coord/bin/post.sh, removes the host spool file.
+  5. view   (EXPLORER-STORE-R1 11-22) every unit that reaches 'done' is queued for its routed-layout pack: a detached
+            `auto_export.py view-packs` worker on the hub cuts it on the build host under ot-run (design_export.py cut,
+            IDENTICAL round trip, at most VIEWPACK_PER_HOST per host) and publishes it into the explorer layout store on
+            the store host (epyc8 LV_STORE), node id <die>.<t|c>.<element>, so every new sign-off is viewable with no lane step.
   Units exported before the split (ledger state 'agi': full copy already on AGIdock) finish the old way, ARCHIVED-BOTH.
 Idempotent: an ODB sha already in the AGIdock INDEX is skipped at every step; the hub ledger keeps per-unit state.
 Never modifies or deletes an existing archive file: new units only, <unit>.partial staging, append-only INDEX.
@@ -29,6 +33,7 @@ Never modifies or deletes an existing archive file: new units only, <unit>.parti
   auto_export.py enqueue SIGNOFF_JSON [--die D] [--element E] [--kind t|c]     (build host; the hook calls this logic)
   auto_export.py drain [--scan] [--list-only] [--hosts h,...] [--budget-s N]    (hub)
   auto_export.py rtx-pull [--hub intel2]                                        (rtx-pro)
+  auto_export.py view-packs                                                     (hub; started by finish(), one at a time)
 """
 import argparse, collections, fcntl, hashlib, json, os, re, shlex, socket, subprocess, sys, time
 
@@ -549,7 +554,138 @@ def finish(L, have):
                     'full record rtx-pro, metadata+display AGIdock' if u['how_stored'] == SPLIT_STATUS else 'full record both stores',
                     u['odb_sha'][:12], u['record'][:12], u.get('tt'), u.get('ff')) for u in done]
         post('\n'.join(lines))
+        if queue_view_packs(done):   # 5. the routed-layout pack of every new sign-off (EXPLORER-STORE-R1)
+            start_view_packs()
     save_ledger(L)
+
+
+# ---- 5. view pack (hub -> build host -> explorer store) ------------------------------------------------------------------
+# EXPLORER-STORE-R1 (OWNER 11-22: every signed-off record shows its routed layout on the explorer, with no lane step).
+VP_ROOT = os.environ.get('OT_VIEWPACK_ROOT', '/srv/opentallas-scratch2/claude/explorer-store-r1')   # per build host: venv/ (brotli + numpy), bin/node, tmp/
+VP_CODE = os.environ.get('OT_VIEWPACK_CODE', '/srv/opentallas-scratch2/claude/rt/current/tools/fleet_viz')   # main checkout on every host
+VP_STORE_HOST = os.environ.get('OT_VIEWPACK_STORE_HOST', 'epyc8')
+VP_STORE_ENV = os.environ.get('OT_VIEWPACK_STORE_ENV', '/srv/opentallas-scratch2/claude/explorer-2-work/explorer2.env')   # LV_STORE, DESIGN_INDEX
+VP_STORE_PY = os.environ.get('OT_VIEWPACK_STORE_PY', '/srv/opentallas-scratch2/claude/explorer-2-work/rt/venv/bin/python3')
+VIEWPACK_PER_HOST = 2
+VP_VARIANT = re.compile(r"__(a\d+_\d{4}|legalrows_\d+)$")
+
+
+def view_pack_node(u):
+    """explorer node id of a unit: <die>.<t|c>.<element without the re-sign suffix> (= design_index tid/cid, any_plan_records.record_id)"""
+    return '%s.%s.%s' % (u['die'], 'c' if u.get('kind') == 'c' else 't', VP_VARIANT.sub('', u['element']))
+
+
+def queue_view_packs(units, state=None):
+    """append one view-pack job per unit to <state>/viewpack_queue.jsonl; -> number queued"""
+    state = state or STATE
+    jobs = [dict(node=view_pack_node(u), host=u['host'], odb=u['odb'], size=u.get('odb_size') or 0, sha=u.get('odb_sha'),
+                 label='%s:%s' % (u['host'], u['odb']), queued=time.strftime('%Y-%m-%dT%H:%M:%S%z')) for u in units if u.get('odb') and u.get('die') and u.get('element')]
+    if jobs:
+        with open(os.path.join(state, 'viewpack_queue.jsonl'), 'a') as f:
+            for j in jobs:
+                f.write(json.dumps(j) + '\n')
+    return len(jobs)
+
+
+def view_pack_pending(state=None):
+    """queued jobs not yet published (newest record per node wins; a job that failed twice is left out)"""
+    state = state or STATE
+    done, tries = set(), collections.Counter()
+    dp = os.path.join(state, 'viewpack_done.jsonl')
+    if os.path.isfile(dp):
+        for line in open(dp):
+            try:
+                d = json.loads(line)
+            except ValueError:
+                continue
+            k = (d.get('node'), d.get('sha') or d.get('label'))
+            if d.get('ok'):
+                done.add(k)
+            else:
+                tries[k] += 1
+    q, qp = {}, os.path.join(state, 'viewpack_queue.jsonl')
+    if os.path.isfile(qp):
+        for line in open(qp):
+            try:
+                j = json.loads(line)
+            except ValueError:
+                continue
+            k = (j.get('node'), j.get('sha') or j.get('label'))
+            if k in done or tries[k] >= 2:
+                continue
+            q[j['node']] = j
+    return list(q.values())
+
+
+def view_pack_cmds(j):
+    """-> (ot-run argv for the cut on the build host, publish command for the store host, pack dir on the build host)"""
+    w = '%s/tmp/auto/%s' % (VP_ROOT, j['node'])
+    mem = int((j.get('size') or 0) * 16 / 1e9 + 16)   # the tile step peaks above the extraction (explorer cut_one.sh)
+    cut = ('mkdir -p {w} && {L}/venv/bin/python3 -I {code}/design_export.py cut --node {n} --db {db} --work {w} --py {L}/venv/bin/python3 '
+           '--node-bin {L}/bin/node --db-label {lab} --no-timing --drop-raw > {w}.log 2>&1; r=$?; tail -2 {w}.log; exit $r').format(
+        w=shlex.quote(w), L=VP_ROOT, code=VP_CODE, n=shlex.quote(j['node']), db=shlex.quote(j['odb']), lab=shlex.quote(j['label']))
+    inc = '%s/incoming/%s' % (VP_ROOT, j['node'])
+    pub = ('set -a; . {env}; set +a; cd {code} && nice -n 10 {py} -I design_export.py publish --node {n} --pack {inc}/{n}.lvp --index "$DESIGN_INDEX" '
+           '--store "$LV_STORE" 2>&1 | tail -1; for f in {inc}/{n}.lvp {inc}/verify.json {inc}/cut.json; do rm -f "$f"; done').format(
+        env=VP_STORE_ENV, code=VP_CODE, py=VP_STORE_PY, n=shlex.quote(j['node']), inc=shlex.quote(inc))
+    return (['ot-run', '--hosts', j['host'], '--dir', VP_ROOT, '--mem', str(mem), '--threads', '4', '--', 'bash', '-c', cut], pub, w, inc)
+
+
+def view_pack_one(j, state=None):
+    """cut one pack on its build host, copy it to the store host, publish; -> (ok, message)"""
+    run, pub, w, inc = view_pack_cmds(j)
+    r = subprocess.run(run, capture_output=True, text=True, timeout=12 * 3600, stdin=subprocess.DEVNULL)
+    if r.returncode:
+        return False, 'cut rc %d: %s' % (r.returncode, (r.stdout + r.stderr)[-300:])
+    subprocess.run(SSH + [VP_STORE_HOST, 'mkdir -p %s' % shlex.quote(inc)], capture_output=True, timeout=120, stdin=subprocess.DEVNULL)
+    for f in (j['node'] + '.lvp', 'verify.json', 'cut.json'):
+        r = subprocess.run(['scp', '-3', '-q', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '%s:%s/%s' % (j['host'], w, f), '%s:%s/' % (VP_STORE_HOST, inc)],
+                           capture_output=True, text=True, timeout=3600)
+        if r.returncode:
+            return False, 'copy %s: %s' % (f, r.stderr[-200:])
+    r = subprocess.run(SSH + [VP_STORE_HOST, pub], capture_output=True, text=True, timeout=1800, stdin=subprocess.DEVNULL)
+    if 'published' not in r.stdout:
+        return False, 'publish: %s %s' % (r.stdout[-200:], r.stderr[-200:])
+    subprocess.run(SSH + [j['host'], 'rm -f %s/%s.lvp' % (shlex.quote(w), shlex.quote(j['node']))], capture_output=True, timeout=120, stdin=subprocess.DEVNULL)
+    return True, r.stdout.strip()[-200:]
+
+
+def view_packs(a=None, state=None, one=view_pack_one):
+    """worker: every pending job, at most VIEWPACK_PER_HOST at a time per build host; results to viewpack_done.jsonl"""
+    import threading
+    state = state or STATE
+    lk = open(os.path.join(state, 'viewpack.lock'), 'w')
+    try:
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0
+    jobs = view_pack_pending(state)
+    sem = collections.defaultdict(lambda: threading.Semaphore(VIEWPACK_PER_HOST))
+    wl = threading.Lock()
+
+    def run(j):
+        with sem[j['host']]:
+            try:
+                ok, msg = one(j)
+            except Exception as e:
+                ok, msg = False, '%s: %s' % (type(e).__name__, e)
+        with wl, open(os.path.join(state, 'viewpack_done.jsonl'), 'a') as f:
+            f.write(json.dumps(dict(node=j['node'], sha=j.get('sha'), label=j['label'], ok=ok, msg=msg[-300:], at=time.strftime('%Y-%m-%dT%H:%M:%S%z'))) + '\n')
+        say('VIEWPACK %s %s %s' % (j['node'], 'published' if ok else 'FAILED', msg[-160:]))
+    ts = [threading.Thread(target=run, args=(j,)) for j in jobs]
+    for t in ts:
+        t.start()
+    for t in ts:
+        t.join()
+    return 0
+
+
+def start_view_packs():
+    """detached worker (the drain never waits for a cut); off with OT_VIEWPACK=0 and under pytest"""
+    if os.environ.get('OT_VIEWPACK', '1') == '0' or 'PYTEST_CURRENT_TEST' in os.environ:
+        return None
+    return subprocess.Popen([sys.executable, '-I', os.path.abspath(__file__), 'view-packs'], start_new_session=True, stdin=subprocess.DEVNULL,
+                            stdout=open(os.path.join(STATE, 'viewpack.log'), 'a'), stderr=subprocess.STDOUT)
 
 
 def evidence_backfill(L, budget_s=1500):
@@ -884,7 +1020,10 @@ def main(argv=None):
     d.add_argument('--budget-s', type=float, default=2400)
     r = sub.add_parser('rtx-pull')
     r.add_argument('--hub', default='intel2')
+    sub.add_parser('view-packs', help='cut + publish the queued routed-layout packs (started by the drain)')
     a = ap.parse_args(argv)
+    if a.cmd == 'view-packs':
+        return view_packs(a)
     if a.cmd == 'enqueue':
         p = enqueue(a.signoff, die=a.die, element=a.element, kind=a.kind)
         print(p or 'not R-MINIMAL SIGNED: nothing queued')

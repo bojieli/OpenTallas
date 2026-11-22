@@ -16,6 +16,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 FV = HERE.parent / 'fleet_viz'
 sys.path.insert(0, str(FV))
 import design_service, layout_service, coverage, die_compose   # noqa: E402  (the engines)
+import any_plan_records as APR, design_index   # noqa: E402  (EXPLORER-STORE-R1: signed records of every plan)
 sys.path.insert(0, str(HERE))
 import refresh_data   # noqa: E402
 
@@ -279,6 +280,7 @@ def dies():
         d['packs_unsigned'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')),
                                    core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')))
         d['cores'] = sum(1 for n in ns if n['level'] == 'core')
+        d['any_plan'] = APR.summary({k: v for k, v in records().items() if v['die'] == d['id']})['dies'].get(d['id'])
         d['instances'] = dict(total=len(p['partitions']))
         st = {}
         for q in p['partitions']:
@@ -306,8 +308,9 @@ def history(nid):
 
 def node(nid):
     idx = index()
-    if nid not in idx['nodes']: raise ApiError(404, 'no such node', nid)
+    if nid not in idx['nodes']: return record_node(nid)
     r = DS.node(nid); n = r['node']
+    r['record'] = records().get(nid)   # the any-plan record of this node (plan label, archive rows), if any
     r['plan'] = plan_ref(idx['nodes'][n['die']]['plan'])
     r['packs'] = history(nid)
     r['archive'] = audit_rows(n)   # SIGNED-DB-AUDIT: where the signed routed database lives now
@@ -337,7 +340,10 @@ def closure(d):
                          pack=bool(s), pack_verify=s.get('verify'), pack_shapes=s.get('shapes'), pack_made=s.get('made'), layout_stage=lay.get('stage'),
                          layout_source=lay.get('source'), db_cls=db_sources(n)['cls'], db_host=((db_sources(n)['resolved'] or {}).get('where') or (db_sources(n)['recorded'] or {}).get('host')), vis=v.get('verdict'), vis_cls=v.get('cls'), vis_cause=v.get('cause'), hard=bool(p.get('hard'))))
     dn = idx['nodes'][d]
-    return dict(die=d, label=dn['label'], plan=plan_ref(dn['plan']), states=idx['states'], counts=dn['counts'], generated=idx['generated'], rows=rows)
+    sup = [dict(id=r['id'], name=r['name'], level=r['level'], plan=r['plan'], plan_label=r['plan_label'], pack=bool(r['pack']), pack_verify=(r['pack'] or {}).get('verify'),
+                archived=r['archive']['agi'] or r['archive']['rtx'], index_status=r['archive']['status']) for r in records().values() if r['die'] == d and r['superseded']]
+    return dict(die=d, label=dn['label'], plan=plan_ref(dn['plan']), states=idx['states'], counts=dn['counts'], generated=idx['generated'], rows=rows,
+                superseded_records=sorted(sup, key=lambda x: x['id']))
 
 
 def elements_compat():
@@ -375,6 +381,13 @@ def search(q, d=None, limit=40):
             tn = idx['nodes'].get(p[1]) or {}
             out.append((score, len(nm), dict(kind='instance', id=p[1], inst=p[0], name=p[0], die=dd, of=tn.get('name'), state=(tn.get('status') or {}).get('state'),
                                              pack=bool((tn.get('layout') or {}).get('store')))))
+    for rid, r in records().items():   # superseded records (no current-plan node): listed with their plan label
+        if rid in idx['nodes']: continue
+        hay = rid.lower() + ' ' + r['name'].lower()
+        if not all(t in hay for t in terms): continue
+        nm = r['name'].lower()
+        score = (0 if nm == q else 1 if nm.startswith(q) else 2) + (0 if not d or r['die'] == d else 3) + 0.5
+        out.append((score, len(nm), dict(kind=r['level'], id=rid, name=r['name'], die=r['die'], state='signed', superseded=True, plan_label=r['plan_label'], pack=bool(r['pack']))))
     out.sort(key=lambda x: (x[0], x[1]))
     return dict(q=q, total=len(out), results=[x[2] for x in out[:limit]])
 
@@ -455,6 +468,45 @@ def archive_index():
     return _ARCH
 
 
+# ---------------------------------------------------------------------------------------------- any-plan signed records
+# EXPLORER-STORE-R1 (OWNER 2026-11-22): the archive and the explorer cover ALL closures on any plan.  The index nodes are the
+# current plan; every archived signed unit of an older block or a retired plan is a record (any_plan_records.py) with its plan
+# label, its archive rows and its routed-layout pack (the same store, keyed <die>.<t|c>.<name>), so it is listed and viewable.
+_REC = dict(key=None, recs={})
+
+
+def records():
+    idx = index()
+    key = (idx.get('generated'), _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120))
+    if key != _REC['key']:
+        d = _json_file(ARCHIVE_INDEX) or {}
+        _REC.update(key=key, recs=APR.build(idx['nodes'], d.get('agidock_index_tsv'), d.get('export'), design_index.store_entry))
+    return _REC['recs']
+
+
+def records_list(d=None, plan=None):
+    R = records()
+    rows = [r for r in R.values() if (not d or r['die'] == d) and (not plan or r['plan'] == plan)]
+    rows.sort(key=lambda r: (r['die'], r['superseded'], r['id']))
+    return dict(schema='opentallas.explorer.records.v1', rule='every signed-off record on any plan: current-plan sign-offs (index nodes) and archived sign-offs of superseded or retired plan blocks; '
+                'id = <die>.<t|c>.<name> (re-sign suffix dropped); pack = routed-layout pack in the layout store', summary=APR.summary(R), total=len(rows), records=rows)
+
+
+def record_node(nid):
+    """a superseded record (no node of the current plan) as a node response, so the element view opens its layout pack"""
+    idx = index(); r = records().get(nid)
+    if not r: raise ApiError(404, 'no such node', nid)
+    dn = idx['nodes'].get(r['die']) or {}
+    n = dict(id=nid, level=r['level'], die=r['die'], name=r['name'], parent=r['die'], superseded=True, plan_label=r['plan_label'],
+             status=dict(state='signed', label='signed off (%s)' % r['plan_label'], archive=r['archive']), layout=dict(stage='6_final', source='archived signed record', store=r['pack']),
+             plan=dict(outline=None, hard_cores=[], buses=[], ft_slots=[], stations=[]), children=[])
+    arch = [dict(where='AGIdock' if r['archive']['agi'] else 'rtx-pro', kind='opentallas-signed-1114', path=u, odb=True) for u in r['archive']['units']]
+    return dict(node=n, die=dict(id=r['die'], label=dn.get('label'), outline=(dn.get('plan') or {}).get('outline'), reach_um=(dn.get('plan') or {}).get('reach_um')),
+                children={}, users={}, placements=[], states=idx['states'], generated=idx['generated'], plan=plan_ref(dn['plan']) if dn.get('plan') else None,
+                packs=history(nid), archive=[], record=r, uses=[],
+                sources=dict(recorded=None, archives=arch, resolved=arch[0] if arch else None, on_rtx_pro=r['archive']['rtx'], on_agidock=r['archive']['agi'], cls='archive' if arch else 'none'))
+
+
 def host_class(h):
     h = (h or '').lower().replace('ot-', '')
     return 'none' if not h else 'archive' if h in {x.lower() for x in ARCHIVE_HOSTS} else 'off-limits' if h in OFF_LIMITS else 'fleet'
@@ -505,7 +557,10 @@ def archive_summary():
     where = {}
     for r in signed:
         k = (r['resolved'] or {}).get('where', 'none') if r['cls'] == 'archive' else 'none'; where[k] = where.get(k, 0) + 1
-    return dict(index=A['meta'], signed=len(signed), signed_by_source=tally(signed), signed_resolved_where=where, signed_recorded_host_class=rec_cls,
+    R = records()
+    return dict(index=A['meta'], any_plan=APR.summary(R), any_plan_rule='signed = every signed-off record on any plan (current plan + superseded blocks + retired plans); archived = a row in the AGIdock INDEX or a full record on rtx-pro; viewable = a routed-layout pack in the layout store',
+                any_plan_not_viewable=sorted(r['id'] for r in R.values() if not r['pack']), any_plan_not_archived=sorted(r['id'] for r in R.values() if not (r['archive']['agi'] or r['archive']['rtx'])),
+                signed=len(signed), signed_by_source=tally(signed), signed_resolved_where=where, signed_recorded_host_class=rec_cls,
                 signed_recorded_hosts={h: sum(1 for r in signed if (r['recorded'] or {}).get('host') == h) for h in sorted({(r['recorded'] or {}).get('host') or '-' for r in signed})},
                 signed_not_in_archive=[dict(id=r['id'], recorded=r['recorded'], pack=r['pack']) for r in signed if r['cls'] != 'archive'],
                 signed_on_both=sum(1 for r in signed if r['rtx'] and r['agi']), signed_rtx_pro_only=sum(1 for r in signed if r['rtx'] and not r['agi']), signed_agidock_only=sum(1 for r in signed if r['agi'] and not r['rtx']),
@@ -734,11 +789,11 @@ class H(BaseHTTPRequestHandler):
         g = lambda k, d='': (q.get(k, [d])[0] or d)
         idx = DS.index(); stamp = idx.get('generated') if idx else None
         if p == 'meta': return self.send(200, json.dumps(meta(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
-        if p == 'dies': return self.json('dies', stamp, dies)
+        if p == 'dies': return self.json('dies', (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), dies)
         if p.startswith('die/'): d = p[4:]; return self.json('die:' + d, stamp, lambda: die(d))
-        if p.startswith('node/'): n = p[5:]; return self.json('node:' + n, (stamp, _mtime(layout_service.LS.STORE / 'elements' / n / 'index.json'), _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime')), lambda: node(n))
+        if p.startswith('node/'): n = p[5:]; return self.json('node:' + n, (stamp, _mtime(layout_service.LS.STORE / 'elements' / n / 'index.json'), _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime'), int(time.time() // 120)), lambda: node(n))
         if p.startswith('compose/'): d = p[8:]; return self.json('compose:' + d, stamp, lambda: compose_of(d))
-        if p.startswith('closure/'): d = p[8:]; return self.json('closure:' + d, (stamp, _mtime(ARCHIVE_INDEX)), lambda: closure(d))
+        if p.startswith('closure/'): d = p[8:]; return self.json('closure:' + d, (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), lambda: closure(d))
         if p == 'resolve': return self.send(200, json.dumps(resolve([x for x in g('q').split(',') if x][:400])).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p == 'search': return self.send(200, json.dumps(search(g('q'), g('die') or None, min(200, int(g('limit', '40') or 40)))).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p.startswith('layout/'): return LS.handle(self, p[7:], q, False)
@@ -769,7 +824,8 @@ class H(BaseHTTPRequestHandler):
                             dies={d: dict(types=i['nodes'][d].get('type_count'), signed_types=v['type']['counted'], pending_archive_types=v['type']['pending'], credited_types=v['type']['before'],
                                           signed_cores=v['core']['counted'], pending_archive_cores=v['core']['pending'], credited_cores=v['core']['before'], pending=v['pending_list']) for d, v in (g.get('dies') or {}).items()})
             return self.json('count', stamp, count)
-        if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime')), archive_summary)
+        if p == 'records': return self.json('records:%s:%s' % (g('die'), g('plan')), (stamp, _mtime(ARCHIVE_INDEX), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), lambda: records_list(g('die') or None, g('plan') or None))
+        if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime'), _mtime(layout_service.LS.STORE / 'elements'), int(time.time() // 120)), archive_summary)
         if p == 'fleet/probe': return self.send(200, json.dumps(fleet_probe(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p.startswith('fleet/'): return self.gz(fleet_get(p[6:]), 'no-store')
         if p == 'coverage':
