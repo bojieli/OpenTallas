@@ -37,3 +37,18 @@ epyc10 is ~1.4 MB/s, so the tree goes to epyc7 by rsync --copy-dest=<epyc7 kw45 
 stage first (needs ~160 ps late clock, else add a stage, no skew). No TT repair on ROM-pin ends (COORD lever 3).
 H9R0-R4 is already running a col_h9_r0_p2 rep on candJ7c (old view) + OT_KEEP_WIRES ot_s81_rly:rq; do not duplicate that type.
 Dead: epyc10 R4/tmp_mkpost.py (ot-delete). After J7 apply: ot-delete epyc10 candJ7cG + gate_j7g (scratch3).
+
+## UPDATE 18:4x PST (after weekly limit): STAND-DOWN -> FABLE-FIX-S81-COLROM-R5
+J7 STATE (posted 384574a): stage + guard GREEN in the J7e gate. Preferred candJ7eL6 a6771d121e95 (epyc10 s81-j6/candJ7eL6) holds guard RTL 90817a5f,
+864/864 cfg7 on rdxg_1121, rom_in 22464, reprove41_cfg7_rdxg_j7_r4, HCP rdxg, signed_view_sha e93af8bb; gate 3516928 rc 0: BIND 0, LAT 873, PRE PASS,
+G0 9 = 8 inherited + 1 empty-list reset line. Assembly owns J7 apply (04:15 PST 11-22). Nothing more needed from this lane for J7.
+STEP 5 BLOCKED (fleet): rep kit col_h10_r1__t1__cld01bb4ae. Tree + bind_out staged on intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-colrom-r4/stage/
+{candJ7cG,bind_out} (real copy of epyc10 candJ7cG + gate_j7g/bind_out). Spec intel2 ~/coord/autopilot/private_specs/FABLE-FIX-S81-COLROM-R4/
+s81_col_h10_r1__t1__cld01bb4ae_1121183110/spec.json (--host intel2, env wave+OT_SIGNED_VIEW_SHA, rt a9ed808a98d5): run-item DIED at first heavy stage
+"every target host is the hub (KW-FIX-45 hub guard)". At 18:4x epyc2/7/8/10 are ALL DRAINING (9999 caps), so no gen host takes a private kit.
+R5: when a gen host undrains, rsync stage/ to it (epyc10->epyc7 is ~1.4 MB/s: use --copy-dest=<host kw45 J5 tree>; epyc10/epyc8/intel2 links are fast),
+re-run private-spec with --host <it> (same args, paths on that host), then run-item; wait with ot-wait --kit. Read ROM pval -> bn output stage first
+(~160 ps late clock needed, else add a pipeline stage, no skew). No TT repair on ROM-pin ends (COORD lever 3). H9R0-R4 owns col_h9_r0_p2 rep.
+Cleanup: epyc10 /srv/opentallas-scratch3/claude/fable-fix-s81-colrom-r4/{candJ7cG,gate_j7g} (root fs, ~65 GB) can go via ot-delete after J7 applies
+(evidence logs are in gate_j7g/*.log/out; bind_out copy on intel2). R3 dirs all deleted. epyc7 stage deleted.
+Open: src_manifest walk_tree dir-symlink bug posted to FLOW-NOADV-R3 (ab594d8). FAIL-CLASS 958ddd525b ACKed (not colrom; moved on).
