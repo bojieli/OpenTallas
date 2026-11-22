@@ -498,6 +498,39 @@ def evidence_backfill(L, budget_s=1500):
     say('evidence backfill: %d unit(s) queued for rtx-pro' % len(queue))
 
 
+def write_guard_exported(L, rows, hosts, push=True):
+    """CLEAN-AGGR-R2 (COORD / FABLE-FLOW-2000 item 5): the delete guard keeps a signed result until it is exported.  Write every exported sign-off record
+    sha (INDEX 'record' column + ledger units in state done) and every exported ODB sha to ~/.local/state/ot-delete-guard/exported_records.txt and push it
+    to the build hosts.  -> number of shas"""
+    shas = set()
+    for r in rows:
+        for c in (r[3], r[7]):
+            if re.fullmatch(r'[0-9a-f]{64}', c or ''):
+                shas.add(c)
+    for u in L.get('units', {}).values():
+        if isinstance(u, dict) and u.get('state') == 'done':
+            for c in (u.get('record'), u.get('odb_sha')):
+                if isinstance(c, str) and re.fullmatch(r'[0-9a-f]{64}', c):
+                    shas.add(c)
+    d = os.path.join(HOME, '.local/state/ot-delete-guard')
+    os.makedirs(d, exist_ok=True)
+    out = os.path.join(d, 'exported_records.txt')
+    with open(out + '.tmp', 'w') as f:
+        f.write('# built %d (auto_export drain: INDEX record + ODB shas, ledger done)\n' % time.time())
+        f.writelines(x + '\n' for x in sorted(shas))
+    os.replace(out + '.tmp', out)
+    if push:
+        for h in hosts:
+            try:
+                subprocess.run(['scp', '-q', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20', '-o', 'ControlPath=none', out,
+                                '%s:.local/state/ot-delete-guard/exported_records.txt.new' % h], timeout=120, capture_output=True)
+                subprocess.run(SSH + [h, 'mv -f ~/.local/state/ot-delete-guard/exported_records.txt.new ~/.local/state/ot-delete-guard/exported_records.txt'],
+                               timeout=120, capture_output=True)
+            except Exception as e:
+                say('guard exported list push %s: %s' % (h, e))
+    return len(shas)
+
+
 def drain(a):
     os.makedirs(STATE, exist_ok=True)
     lk = open(os.path.join(STATE, 'drain.lock'), 'w')
@@ -512,6 +545,10 @@ def drain(a):
     have = {r[7] for r in rows}
     hosts = a.hosts.split(',') if a.hosts else HOSTS
     finish(L, have)
+    try:
+        write_guard_exported(L, rows, HOSTS)
+    except Exception as e:
+        say('guard exported list: %s' % e)
     if a.evidence:
         evidence_backfill(L, a.budget_s)
         return 0

@@ -19,6 +19,13 @@ CURRENT_TREES = os.path.expanduser("~/.local/state/ot-delete-guard/current_trees
 MAX_AGE_H = float(os.environ.get("OT_GUARD_MAX_AGE_H", "6"))
 TREE_ROOT = re.compile(r"^(?P<root>/srv/opentallas-scratch[0-9]*/claude/(?:kw45/snap_[^/]+/[^/]+|kw45/[^/]+|[^/]+/src_[^/]+))(?:/(?P<rest>.+))?$")   # kw45/snap_<die>/<tree>: each snapshot is its own tree (CLEAN-AGGR-1121)
 ROUTED_GRACE_H = float(os.environ.get("OT_GUARD_ROUTED_GRACE_H", "2"))
+# CLEAN-AGGR-R2 (COORD / FABLE-FLOW-2000 item 5, 11-21): a signed result is kept until EXPORTED.  The hub signed store holds only the sign-off json, so it is
+# not an export.  exported_records.txt is written by auto_export drain on the hub (sha256 of each exported sign-off record = AGIdock/rtx INDEX 'record' column,
+# plus each INDEX ODB sha) and pushed to every host; hold_ids.txt lists autopilot ids / unit names / paths that must not be retired (COUNT-REVOKED, open re-LEC).
+EXPORTED_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/exported_records.txt")
+HOLD_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/hold_ids.txt")
+EXPORTED_MAX_AGE_H = float(os.environ.get("OT_GUARD_EXPORTED_MAX_AGE_H", "48"))
+SIGNED_VERDICT = re.compile(r"^(SIGNED|LOCAL_PASS|NEEDS_PARENT)")
 SRV = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9._+/@=-]+")
 
 
@@ -211,7 +218,7 @@ def routed_unsigned_refusal(t):
         return None
     for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
         try:
-            if json.load(open(so)).get("verdict") == "SIGNED":
+            if SIGNED_VERDICT.match(str(json.load(open(so)).get("verdict") or "")):
                 return None
         except (OSError, ValueError, AttributeError):
             continue
@@ -230,14 +237,92 @@ def attempt_dir_of(t):
 
 
 def attempt_signed(ad):
-    """a signoff*.json with verdict SIGNED under the attempt dir"""
+    """a signoff*.json with verdict SIGNED / LOCAL_PASS* / NEEDS_PARENT under the attempt dir (LOCAL_PASS counts as signed, CLEAN-AGGR-R2)"""
     for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
         try:
-            if json.load(open(so)).get("verdict") == "SIGNED":
+            if SIGNED_VERDICT.match(str(json.load(open(so)).get("verdict") or "")):
                 return True
         except (OSError, ValueError, AttributeError):
             continue
     return False
+
+
+def load_exported(path=None, now=None):
+    """-> set of exported sha256 (records and ODBs), or None when the list is missing, unreadable or older than EXPORTED_MAX_AGE_H (callers fail closed)"""
+    now = time.time() if now is None else now
+    try:
+        with open(path or EXPORTED_LIST) as f:
+            head = f.readline()
+            m = re.match(r"# built (\d+)", head)
+            if not m or now - int(m.group(1)) > EXPORTED_MAX_AGE_H * 3600:
+                return None
+            return {ln.split("\t")[0].strip() for ln in f if re.match(r"[0-9a-f]{64}", ln)}
+    except OSError:
+        return None
+
+
+def load_hold(path=None):
+    """-> set of hold tokens (autopilot ids, unit dir names, /srv paths); missing file = empty"""
+    try:
+        return {ln.split("\t")[0].strip() for ln in open(path or HOLD_LIST) if ln.strip() and not ln.startswith("#")}
+    except OSError:
+        return set()
+
+
+def signed_records(t):
+    """-> [(sha256 of the sign-off bytes, relpath)] of every SIGNED / LOCAL_PASS* / NEEDS_PARENT signoff json at or under t (symlinks not followed)"""
+    import hashlib
+    out = []
+    for d, ds, fs in os.walk(t):
+        ds[:] = [x for x in ds if not os.path.islink(os.path.join(d, x))]
+        for f in fs:
+            if f != "signoff.json" and not f.endswith(".signoff.json"):
+                continue
+            p = os.path.join(d, f)
+            try:
+                if os.path.islink(p) or os.path.getsize(p) > 8e6:
+                    continue
+                raw = open(p, "rb").read()
+                if SIGNED_VERDICT.match(str(json.loads(raw).get("verdict") or "")):
+                    out.append((hashlib.sha256(raw).hexdigest(), os.path.relpath(p, t)))
+            except (OSError, ValueError, AttributeError):
+                continue
+    return out
+
+
+CLOSED_PART = re.compile(r"/autopilot/closed(/|$)")
+
+
+def closed_unit_refusal(t, exported=None, hold=None):
+    """CLEAN-AGGR-R2: a target at, inside or above an autopilot/closed unit is refused while (1) it holds a signed / LOCAL_PASS record that is not
+    exported (record sha not in exported_records.txt; a missing or stale list exports nothing), or (2) the unit is on hold (COUNT-REVOKED, open re-LEC).
+    -> reason or None.  Only autopilot/closed targets are walked (the unit dirs are small apart from their DBs)."""
+    if not CLOSED_PART.search(t) and not os.path.isdir(os.path.join(t, "autopilot", "closed")) and not t.endswith("/autopilot"):
+        return None
+    if not os.path.isdir(t):
+        return None
+    hold = load_hold() if hold is None else hold
+    if hold:
+        for d, ds, fs in os.walk(t):
+            ds[:] = [x for x in ds if not os.path.islink(os.path.join(d, x)) and x not in ("run", "results", "base", "objects")]
+            if os.path.basename(d) in hold or d in hold or canon(d) in hold:
+                return "unit on hold (hold_ids.txt: COUNT-REVOKED / open re-LEC): " + os.path.basename(d)
+            if "AUTOPILOT.json" in fs:
+                try:
+                    if str(json.load(open(os.path.join(d, "AUTOPILOT.json"))).get("id")) in hold:
+                        return "unit on hold (hold_ids.txt autopilot id): " + os.path.basename(d)
+                except (OSError, ValueError, AttributeError):
+                    pass
+    recs = signed_records(t)
+    if not recs:
+        return None
+    exported = load_exported() if exported is None else exported
+    if exported is None:
+        return "signed record(s) present and exported_records.txt missing or stale (signed results are kept until exported): " + recs[0][1]
+    miss = [r for s_, r in recs if s_ not in exported]
+    if miss:
+        return "signed record not exported (%d of %d, e.g. %s)" % (len(miss), len(recs), miss[0])
+    return None
 
 
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
@@ -249,6 +334,9 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
     rr = routed_unsigned_refusal(t)
     if rr:
         return rr
+    cr = closed_unit_refusal(os.path.abspath(target))
+    if cr:
+        return cr
     m = TREE_ROOT.match(t)
     if m and m.group("rest"):
         return "partial delete inside source tree %s (whole trees only)" % os.path.basename(m.group("root"))
