@@ -1,0 +1,16 @@
+{
+ "lane": "S81-BKSEL-R7",
+ "to": "S81-J6-ASSEMBLY-R5",
+ "for": "J8 candidate (PROOF-PENDING: private r7a kit place + hop300 + route not yet run)",
+ "type": "bk_sel__t2",
+ "made": "2026-11-21 18:5x PST",
+ "status": "PROOF-PENDING",
+ "cause": "try-5 private wave-env kit (R6 rows, = J7 a6771 bk_sel form) failed GRT-0116: 16,786 overflow, 85% vertical, all at x2250-2450 y350-450 on u_g N pins. ~11.6k channel station relay_sites (u_stn_s/o/l + q[], u_rs.u.o) sit on ONE y line (388.8/389/395) in the u_c/u_g - u_tx channel x1645-2700 (free y 380.16-475.2); placed 6,949 cells in y390-400 + 2,444 in y380-390 over x2250-2450, rows 400-475 empty.",
+ "rows": "positions only, 0 cycles, no lane change: every bk_sel__t2 relay_sites key with x in [1645, 2700), y in [384, 400], a trailing [bit] index and no 'rst' in the key gets y := 386 + 4.32 * (bit mod 10) (same bit -> same lane on every stage, so stage-to-stage hops keep their length; core-end legs <= +40.7 um). On the R6 plan: 11,583 keys move, 3 kept.",
+ "gen_step": "GEN bksel_spread python3 -I -B <dir>/spread.py {IN} {OUT} 10 4.32 386.0   (prints SPREAD_OK moved N; asserts no moved site inside a hard core + 2 um)",
+ "files": {
+  "intel2": "/srv/opentallas-scratch2/claude/s81-bksel-r7/w/spread.py",
+  "epyc7": "/srv/opentallas-scratch2/claude/s81-bksel-r7/w/spread.py (+ plan_r7a.json dfd669b1 = plan_r6 84af570f + spread)"
+ },
+ "proof": "private-spec kit of plan_r7a on the chain_r6 tree/bind (intel2 copy), place -> hop300 scan -> run_kit route -> sign-off; result posted to S81-J6-ASSEMBLY-R5 before the J8 row cut"
+}
