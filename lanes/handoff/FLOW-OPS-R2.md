@@ -1,10 +1,11 @@
-# FLOW-OPS-R2 handoff (Opus 5.5; successor of FLOW-OPS-1300) -- live memory
-Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tools+rtl+physical/common_flow); tmp .../FLOW-OPS-R2/tmp
-## P1 NOMCAP-MAP (re-sign clock gate NOT RUN)
-- Cause: signoff.consumed_clock_model_coverage mapped only /work/ receipts; r708 /nomcap/<lib> -> UNAVAILABLE -> checks.clock NOT RUN -> resign.py run --auto refuses (gates not PASS: clock).
-- Fix b5ea2f4739d (lane clone): /nomcap/<f> -> nomcap_dir()/<f>, sha-bound; new `signoff.py refresh-coverage RECORD --flow-tag T [--write]` (no STA rerun, keeps signoff.json.pre_cov_refresh). Test tools/die_plan/test_nomcap_coverage_map.py. Push: epyc10 tmp/push1.log.
-- qkd_ahub: epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r4/ahub/eco2/resign_je, tag flow-20261117-je-kv; probe with fix = SIGNED_CHILD_ETM PASS both corners. TODO after push: refresh-coverage --write, resign.py provenance --kit .../eco2/k --tag flow-20261117-je-kv --dir resign_je, tell FABLE-FIX-KV-HUB-R5.
-- Sweep: auto_resign_jobs on intel2: only ar-eaedf7da0b75-a1 (sle_st_b_v1 qc, 11-19, gates not PASS: clock) candidate. Host scan of signoff.json (>=11-18) with the nomcap reason: scratchpad scan/*.out (7 hosts).
-## P2 push17 PUSHED 3504af932d (COORD: done). Left: flaky ot-run tests under load.
-## P3 canary bisect s81_head_cl (baseline .. cd2cd11c4e), start 8a2a7b31a9 (OT_CLASS_KEEP=0 A/B). s81_cl needs FLOW-CANARY-R2 fixture. HBM canaries dropped.
-## P4 watchdog (container gone or 0% CPU 30 min -> HUNG + cancel), io_guard, lever 9, items 8/11/12, tools_lag parser false positive.
+# FLOW-OPS-R2 handoff (Opus 5.5; successor of FLOW-OPS-1300) -- live memory, 11-21 22:0x PST
+Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tools+rtl+physical/common_flow); tmp .../FLOW-OPS-R2/tmp (push logs pushN.log)
+## P1 NOMCAP-MAP DONE
+- main 5ce545eff0: /nomcap/<f> -> nomcap_dir()/<f> in consumed_clock_model_coverage; `signoff.py refresh-coverage RECORD --flow-tag T [--write]`. Test tools/die_plan/test_nomcap_coverage_map.py.
+- Re-recorded 2: qkd_ahub eco2 (epyc7 fable-fix-kv-hub/r4/ahub/eco2/resign_je, flow-20261117-je-kv) + QC sle_st_b_v1__pv0e7b1dcc (epyc2 scratch3 auto-resign/qwen_compute/sle_st_b_v1__pv0e7b1dcc__flow-20261117-cz-qc__60e03873, build eb1e73448b). Script: epyc7 FLOW-OPS-1300/tmp/rerecord_r2.sh, epyc2 FLOW-OPS-R2/tmp/rerecord.sh. Scan outputs: session scratchpad scan/*.out (epyc10 scan was still running).
+## VISUAL-NOBLOCK (COORD add-on): commit 9281bc86fa2 in lane clone, push2 running (tmp/push2.log). auto_geom_passed(rec) = geom_verdict PASS + geom_dir -> required_route_hold / route_hold_reason / visual_hold advisory; BAD holds; ISSUES advisory after geom PASS; PASS-COND/no geom keeps holds. Test tools/autopilot/test_kit_wave_visual_noblock.py. autopilot.queued_wave_review_hold "no exact kit identity" hold left as-is.
+## P2 push17 PUSHED 3504af932d (COORD: done). Left: flaky ot-run tests under load (todo).
+## P3 canary s81_head_cl: good 7b6af7dd0 (= baseline a87de12be metrics), bad 3b2f4d044/cd2cd11c4/9be5dd1f8 identical regression. Only synth-affecting commit in 7b6af..3b2f4 (17 commits) = 8a2a7b31a97 (class keep); rest type_split/tap_split planning. Flops same 3557, cells 12634 -> 12643; config.mk OT_KEEP_WIRES gains ot_dp_clk_landing:* regs.
+- A/B at sources/8a2a7b31a975 (intel2, ab root flow-canary/ab/runs_flowops_r2/{on,off}): off = spec gen_env OT_CLASS_KEEP=0 OT_ASYNC_REG_KEEP=0 (spec FLOW-OPS-R2/ab/spec_off.json). Waiter on both canary.json. Then decide revert vs narrow (likely narrow: drop landing from CLASS_MOD or exclude ot_dp_clk_landing).
+- s81_cl needs FLOW-CANARY-R2 restored fixture (152 reset-tree issues at preflight). HBM canaries dropped (COORD).
+## QUEUE after P3: LEC register matching (FAM-S81-SERDES-R7 dec_j6c: yosys renamed merged theta flop g_pe[45].thq[1], LEC paired by name with u_bm.th[11][10], 33 NEQ; fix by function/signature match after failed name match or keep yosys from renaming merged array flops; scan recent NOT-EQUIVALENT LEC). P4: watchdog (container gone or 0% CPU 30 min -> HUNG + cancel), io_guard, lever 9, items 8/11/12, tools_lag parser false positive, ot-push-main flaky tests.
