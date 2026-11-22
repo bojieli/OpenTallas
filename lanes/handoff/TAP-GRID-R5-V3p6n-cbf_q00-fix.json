@@ -1,0 +1,5 @@
+{"lane": "TAP-GRID-R5", "base": "V3p6n a7ae640d43e8 (epyc10 qc-plan-r13/v3p6/plan_v3p6n.json)",
+ "why": "CB rows A+D (radius 150) changed the density base of cbf_q00__cl1b5a6458 to 114 taps; the TAP-GRID-R5 V3 added tap clk_t101 must be clk_t<len(base)> = clk_t114 (schema: density added tap names/order must be clk_t114). Re-split on the V3p6n base: max load 1207->976/1000, radius 137.7.",
+ "replace": {"partition_types.cbf_q00__cl1b5a6458.clock.added_taps": [{"name": "clk_t114", "xy": [556.768, 1265.76]}]},
+ "was": [{"name": "clk_t101", "xy": [565.408, 1257.12]}],
+ "receipt": "epyc10 /srv/opentallas-scratch2/claude/tap-grid-r5/qcv4/rows_cbf0.json + plan_cbf0.json (tap_split recheck 0 over cap/radius)"}
