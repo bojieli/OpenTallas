@@ -431,3 +431,20 @@ def test_check_bound_params_flags_a_parameter_the_tree_rtl_lacks(tmp_path):
     f = PG.check_bound_params(tmp_path, tmp_path / "bind_out")
     assert len(f) == 1 and "ring.LITE" in f[0]
     assert PG.check_bound_params(tmp_path, None) == []
+
+
+def test_inline_static_reads_bound_param_checker_from_candidate(tmp_path):
+    """The shipped python -I -c program has no __file__ on its execution host."""
+    tree, plan = mk_tree(tmp_path)
+    (tree / "rtl").mkdir()
+    (tree / "rtl" / "ring.sv").write_text("module ring #(parameter W=1) (input clk); endmodule\n")
+    bind_out = tmp_path / "bind_out"
+    rtl = bind_out / "rtl"
+    rtl.mkdir(parents=True)
+    (rtl / "part.sv").write_text("module part(input clk); ring #(.W(1), .LITE(1)) u_r(.clk(clk)); endmodule\n")
+    results = PG.static_remote("localhost", str(tmp_path / "gate"), str(tree), str(plan), None,
+                               sha(plan.read_bytes()), bind_out=bind_out)
+    assert results["schema"]["verdict"] == results["pre_g0"]["verdict"] == "PASS"
+    assert results["bound_params"]["verdict"] == "ADVISORY"
+    assert results["bound_params"]["n"] == 1
+    assert "ring.LITE" in results["bound_params"]["findings"][0]

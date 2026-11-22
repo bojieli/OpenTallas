@@ -331,11 +331,16 @@ def check_foreign_trees(tree, files, asbuilts=(), bind_out=None, max_depth=12):
 def check_bound_params(tree, bind_out):
     """-> findings (ADVISORY, BOUND-PARAM-1 11-18): every parameter the bound parts (BIND_OUT/rtl) pass to a module is declared
     by a definition of that module in TREE (KV D23g: plan key landing_ring_lite emitted .LITE(1) rings, the tree kept the ring
-    RTL without LITE; bind/G0/LATCHECK passed, kit elaboration would fail).  Uses this checkout's tools/die_plan/bound_param_check.py."""
+    RTL without LITE; bind/G0/LATCHECK passed, kit elaboration would fail).  Uses the executing checkout when available and the candidate's tool tree for the inline static gate."""
     rtl = os.path.join(str(bind_out or ""), "rtl")
     if not bind_out or not os.path.isdir(rtl):
         return []
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+    source_file = globals().get("__file__")
+    tool_dir = (Path(source_file).resolve().parents[1] / "die_plan" if source_file
+                else Path(tree) / "tools" / "die_plan")
+    if not (tool_dir / "bound_param_check.py").is_file():
+        return [f"BOUND-PARAM unavailable: no checker in {tool_dir}"]
+    sys.path.insert(0, str(tool_dir))
     try:
         import bound_param_check as BPC
     finally:
