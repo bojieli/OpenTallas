@@ -14255,3 +14255,4 @@ Which installed QC SYS_FACE_CFG image and target-6 producer schedule should the 
 
 OWNER?
 Can the KV PC1↔PC2 hard-macro link add one matched pipeline cycle per direction across its payload and companion control bundles, or must it retain its current inter-macro latency? The exact pc_v3 pin-register specimen has 1,113 linked pins at 581.568–894.960 µm against the 405 µm budget. Even the macro-box gap is 492.480 µm. The already approved PHY input station changes do not cover that inter-macro link. The existing latency remains in force while we price a zero-cycle seating alternative.
+The retained placed database confirms 212 PC2-to-PC1 pins exceed 810 µm. A one-cycle ceiling still needs at least 84.96 µm of endpoint compression for two 405 µm legs. The question concerns allowed latency while we price new seating.
