@@ -27,7 +27,8 @@ def host_idle(status_text, exclude=EXCLUDE):
         t = THR_RE.search(part)
         committed = int(t.group(1)) if t else None
         used = max(load, committed or 0)
-        out[m.group(1)] = dict(cores=cores, load=load, committed=committed, idle=max(0, int(round(cores - used))))
+        out[m.group(1)] = dict(cores=cores, load=load, committed=committed, idle=max(0, int(round(cores - used))),
+                               cpu_idle=max(0, int(round(cores - load))))     # FABLE-FLOW-0000 F6: measured, not requested
     return out
 
 
@@ -99,18 +100,34 @@ def hold_counts(items, cfg):
     return Counter(row_classes(items, cfg).values())
 
 
+CPU_LOW_PCT = 70.0     # F6: measured CPU under this with launchable rows waiting -> name the blocking bucket
+
+
 def line(status_text, items, cfg, top=5):
+    """FLOW-FLEET-R1 11-22 (FABLE-FLOW-0000 F6, 2nd report: 'idle 0 of 624 threads (used 100 %)' while load was 390 of 736): the headline is
+    MEASURED CPU (load average per host); the admission thread commitment is shown next to it.  CPU under 70 % with launchable rows waiting
+    names the blocking bucket (the most common launch-gate / hold class)."""
     hosts = host_idle(status_text)
     cores = sum(h["cores"] for h in hosts.values())
-    idle = sum(h["idle"] for h in hosts.values())
-    per = " ".join(f"{h}={v['idle']}(load {v['load']:.0f}/{v['cores']}" + (f", thr {v['committed']}" if v["committed"] is not None else "") + ")"
-                   for h, v in sorted(hosts.items(), key=lambda kv: -kv[1]["idle"]))
+    load = sum(h["load"] for h in hosts.values())
+    cpu_idle = sum(h["cpu_idle"] for h in hosts.values())
+    committed = sum(h["committed"] or 0 for h in hosts.values())
+    per = " ".join(f"{h}=cpu {v['load']:.0f}/{v['cores']}" + (f" thr {v['committed']}" if v["committed"] is not None else "")
+                   for h, v in sorted(hosts.items(), key=lambda kv: -kv[1]["cpu_idle"]))
     holds = hold_counts(items, cfg)
     sup = holds.pop("superseded", 0)
     ranked = ", ".join(f"{k}={n}" for k, n in holds.most_common(top)) or "none"
-    pct = (100.0 * (cores - idle) / cores) if cores else 0.0
-    return (f"UNDER-USE idle {idle} of {cores} threads (used {pct:.0f}%): {per or 'no host status'} | "
-            f"rows not launching {sum(holds.values())}: {ranked} | superseded-event rows (not counted, retire or relaunch) {sup}")
+    pct = (100.0 * load / cores) if cores else 0.0
+    cpct = (100.0 * committed / cores) if cores else 0.0
+    waiting = Counter({k: n for k, n in holds.items() if WAITING_GATE_RE.match(k)})
+    blocked = ""
+    if cores and pct < CPU_LOW_PCT and sum(holds.values()):
+        b, n = (waiting or holds).most_common(1)[0]
+        blocked = (f" | BLOCKED: cpu {pct:.0f}% < {CPU_LOW_PCT:.0f}% with {sum(holds.values())} row(s) not launching "
+                   f"({sum(waiting.values())} waiting for admission); top bucket {b}={n}")
+    return (f"UNDER-USE cpu idle {cpu_idle} of {cores} cores (load {load:.0f}, used {pct:.0f}%), threads committed {committed} ({cpct:.0f}%): "
+            f"{per or 'no host status'} | rows not launching {sum(holds.values())}: {ranked} | "
+            f"superseded-event rows (not counted, retire or relaunch) {sup}{blocked}")
 
 
 NEEDS_ACTION_TICKS = 3

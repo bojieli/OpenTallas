@@ -36,12 +36,21 @@ class UnderUse(unittest.TestCase):
 
     def test_line(self):
         s = UU.line(STATUS, ITEMS, CFG)
-        self.assertTrue(s.startswith("UNDER-USE idle 105 of 224 threads (used 53%)"), s)
-        self.assertIn("epyc2=105(load 23/128, thr 20)", s)
+        # F6: measured CPU leads (load 23 + 177 of 224), committed threads beside it
+        self.assertTrue(s.startswith("UNDER-USE cpu idle 105 of 224 cores (load 200, used 89%), threads committed 116 (52%)"), s)
+        self.assertIn("epyc2=cpu 23/128 thr 20", s)
         self.assertIn("rows not launching 6: tree_switch=3", s)
+        self.assertNotIn("BLOCKED", s)
+
+    def test_low_cpu_names_blocking_bucket(self):
+        st = ("ot-run status: epyc8 admits 400 GB (avail 500, x) load 30/96 run 20 threads 319/96 | "
+              "epyc9 admits 300 GB (avail 400, x) load 40/96 run 20 threads 309/96")
+        s = UU.line(st, ITEMS, CFG)
+        self.assertTrue(s.startswith("UNDER-USE cpu idle 122 of 192 cores (load 70, used 36%), threads committed 628 (327%)"), s)
+        self.assertIn("BLOCKED: cpu 36% < 70% with 6 row(s) not launching (1 waiting for admission); top bucket gate:q_no_queue_status=1", s)
 
     def test_no_status_or_state(self):
-        self.assertTrue(UU.line("", {}, {}).startswith("UNDER-USE idle 0 of 0 threads"))
+        self.assertTrue(UU.line("", {}, {}).startswith("UNDER-USE cpu idle 0 of 0 cores"))
 
     def test_step_logs_once_and_never_raises(self):
         logs = []
@@ -56,7 +65,7 @@ class UnderUse(unittest.TestCase):
                 return 0, STATUS, ""
         UU.step(AP)
         self.assertEqual(len(logs), 1)
-        self.assertTrue(logs[0].startswith("UNDER-USE idle"))
+        self.assertTrue(logs[0].startswith("UNDER-USE cpu idle"))
         AP.sh = staticmethod(lambda cmd, timeout=0: (1, "", "x"))
         UU.step(AP)
         self.assertEqual(logs[1], "UNDER-USE ot-run --status unavailable")
