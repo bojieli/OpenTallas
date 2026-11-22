@@ -5,10 +5,10 @@
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-22 09:10 PST)
-count_hourly: signed any plan 563 | current plan 453 | deferred re-sign 21 (hbm 1, head 9, qc 7, s81 4) | retired-plan 89 (head 1, kv 27, qc 34, s81 27)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-22 10:09 PST)
+count_hourly: signed any plan 565 | current plan 453 | deferred re-sign 22 (hbm 1, head 9, qc 8, s81 4) | retired-plan 90 (head 1, kv 27, qc 34, s81 28)
 - [ ] FAIL.S81.CORES 72/72 signed · open: none
-- [ ] FAIL.S81.TYPES 46/394 signed · kit rows: held by die owner (plan event pending) 148 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +147) · running (lint advisory) 102 (bk_sel__t2, +101) · running 89 · cancelled (superseded) 5 (dsdv_slice_lepe_mu_LP__t2, +4) · other flow error 4 (col_h9_r1__t1__cl49d7a23e__pv4bd36c74, +3) · place error 1 (s81sl_leaf__t65)
+- [ ] FAIL.S81.TYPES 46/394 signed · kit rows: held by die owner (plan event pending) 148 (col_h10_r0_p1__t1__cl574cc59d__pvd7af8531, +147) · running 119 · running (lint advisory) 73 (bk_sel__t2, +72) · cancelled (superseded) 5 (dsdv_slice_lepe_mu_LP__t2, +4) · other flow error 4 (col_h9_r1__t1__cl49d7a23e__pv4bd36c74, +3)
 - [ ] FAIL.HEAD.CORES 5/5 signed · open: none
 - [ ] FAIL.HEAD.TYPES 25/26 signed · kit rows: running (lint advisory) 1 (hd_lep0N)
 - [ ] FAIL.QC.CORES 70/70 signed · open: none
@@ -19,15 +19,15 @@ count_hourly: signed any plan 563 | current plan 453 | deferred re-sign 21 (hbm 
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
 ### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 0 current-event (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
-- TOOLS-LAG qwen_compute 1 commits / missing none
-- TOOLS-LAG qwen_kvsys 1 commits / missing none
-- TOOLS-LAG s81 297 commits / missing r708
-- TOOLS-LAG s81_head 166 commits / missing none
+- TOOLS-LAG qwen_compute 0 commits / missing none
+- TOOLS-LAG qwen_kvsys 0 commits / missing none
+- TOOLS-LAG s81 302 commits / missing r708
+- TOOLS-LAG s81_head 171 commits / missing none
 ### TAP-INSERTION · measured per-tap insertion after CTS (advisory)
-- TAP-INSERTION qwen_compute: 2534 taps in 26 types, 57 over 1650 sinks; insertion max 696 ps (p50 268, p90 285), skew max 107 ps; oversized taps: ins max 340 ps, skew max 90 ps
+- TAP-INSERTION qwen_compute: 2610 taps in 27 types, 57 over 1650 sinks; insertion max 696 ps (p50 268, p90 285), skew max 107 ps; oversized taps: ins max 340 ps, skew max 90 ps
 - TAP-INSERTION qwen_kvsys: 33 taps in 1 types, 3 over 1650 sinks; insertion max 292 ps (p50 267, p90 285), skew max 58 ps; oversized taps: ins max 286 ps, skew max 48 ps
-- TAP-INSERTION s81: 1679 taps in 28 types, 69 over 1650 sinks; insertion max 838 ps (p50 461, p90 497), skew max 328 ps; oversized taps: ins max 838 ps, skew max 245 ps
-- TAP-INSERTION s81_head: 172 taps in 7 types, 2 over 1650 sinks; insertion max 504 ps (p50 464, p90 481), skew max 77 ps; oversized taps: ins max 474 ps, skew max 29 ps
+- TAP-INSERTION s81: 1880 taps in 29 types, 77 over 1650 sinks; insertion max 838 ps (p50 463, p90 499), skew max 328 ps; oversized taps: ins max 838 ps, skew max 245 ps
+- TAP-INSERTION s81_head: 184 taps in 8 types, 8 over 1650 sinks; insertion max 504 ps (p50 465, p90 482), skew max 77 ps; oversized taps: ins max 499 ps, skew max 65 ps
 <!-- BREAKDOWN END -->
 
 ## EDIT · rules
