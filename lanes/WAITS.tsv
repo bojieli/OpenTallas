@@ -60,6 +60,8 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 15:48:58	tolerant-swine	FAM-S81-SERDES-R6	pid	921992	70	8286	no	-
 2026-11-21 16:15:30	tolerant-swine	S81-BKSEL-R7	status	oth-ubuntu-3722601-1795295684	0	10826	no	-
 2026-11-21 16:38:33	tolerant-swine	FAM-S81-COL-H9R0-R4	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-H9R0-R3/col_h9_r0_p2__t1__cl0045af7b__pva2793873_1121120240/gen/col_h9_r0_p2__t1__cl0045af7b__pva2793873:grt	1	11432	no	-
+2026-11-21 18:23:05	tolerant-swine	FABLE-FIX-QC-STRAP-R2	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/private/FABLE-FIX-QC-STRAP-R2/slw_st_a_v2__cl9f076a5c_1121115227/gen/slw_st_a_v2__cl9f076a5c:cts	124	20005	yes	-
+2026-11-21 18:25:24	tolerant-swine	FABLE-FIX-KV-HUB-R4	pid	2747605	0	360	no	-
 2026-11-21 19:41:08	loved-redfish	-	pid	999999999	66	0	no	-
 2026-11-21 19:41:08	loved-redfish	-	status	oth-abc	3	0	no	-
 2026-11-21 19:41:08	loved-redfish	-	status	oth-nope	66	0	no	-
@@ -106,3 +108,6 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 21:06:41	civil-redfish	FAM-S81-SLICE-R5	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SLICE-R4/slice_station__t36_1121074053/gen/slice_station__t36:grt	124	3601	yes	-
 2026-11-21 23:44:27	loved-redfish	FAM-QC-CB-R2	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/private/FAM-QC-CB-R2/cbn_q01__clab6e67f2_1121085408/gen/cbn_q01__clab6e67f2:cts	124	13803	yes	-
 2026-11-22 01:32:26	loved-redfish	-	kit	/srv/opentallas-scratch2/claude/ot-jobs/sle_ctl__cla4f6f12f-route-loved-redfish-485372-1795298505/work:cts	0	10740	no	-
+2026-11-22 02:14:41	loved-redfish	-	status	oth-ubuntu-1645995-1795247826	124	5	yes	-
+2026-11-22 02:17:59	civil-redfish	-	status	oth-ubuntu-3665743-1795282889	124	1	yes	-
+2026-11-22 02:18:00	civil-redfish	-	status	oth-ubuntu-171031-1795284529	124	1	yes	-
