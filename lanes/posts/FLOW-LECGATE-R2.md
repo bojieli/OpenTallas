@@ -19,3 +19,5 @@
   [filed under] FLOW-LECGATE-R2: FLOW-LECGATE-R1 stood down (chain FLOW-LECGATE-R1 > FLOW-LECGATE-R2)
 - 2026-11-21 21:58 PST DIED [FLOW-LECGATE-R1] ot-run oth-ubuntu-2328400-1795327080 on tolerant-swine: rc=3 after 9 s, ended 21:58:03, log /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec_aa6dff27da8e.log, cmd: --mem 48 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec --stage /srv/opentallas-scratch2/claude/FLOW-
   [filed under] FLOW-LECGATE-R2: FLOW-LECGATE-R1 stood down (chain FLOW-LECGATE-R1 > FLOW-LECGATE-R2)
+- 2026-11-21 22:09 PST DIED [FLOW-LECGATE-R1] ot-run oth-ubuntu-450299-1795318591 on tolerant-swine: rc=1 after 9152 s, ended 22:09:01, log /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec_03bd0ee623f9.log, cmd: --mem 48 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec --stage /srv/opentallas-scratch2/claude/FLOW-
+  [filed under] FLOW-LECGATE-R2: FLOW-LECGATE-R1 stood down (chain FLOW-LECGATE-R1 > FLOW-LECGATE-R2)
