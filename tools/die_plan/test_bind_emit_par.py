@@ -1,5 +1,6 @@
 """bind_emit_par: forked per-type emit == the serial loop (state, files, output order), unsafe forms fall back (FABLE-PIPELINE-R1)."""
 import copy
+import os
 import sys
 from pathlib import Path
 
@@ -144,6 +145,25 @@ def test_first_failing_type_raises_with_state_up_to_it(tmp_path, monkeypatch):
     with pytest.raises(Err, match="gap in t3"):
         EP.run(b, tmp_path, files, 3)
     assert state(a) == state(b) and [f.name for f in files] == ["t0.sv", "t1.sv", "t2.sv"]
+
+
+@pytest.mark.parametrize("gate_rc", [0, 2])
+def test_parallel_emit_leaves_plan_gate_status_for_its_owner(tmp_path, gate_rc):
+    gate_pid = os.fork()
+    if gate_pid == 0:
+        os._exit(gate_rc)
+    try:
+        # Make the gate waitable before any worker is started, without reaping it.
+        os.waitid(os.P_PID, gate_pid, os.WEXITED | os.WNOWAIT)
+        EP.run(Fake(n=2), tmp_path, [], 2)
+        pid, status = os.waitpid(gate_pid, 0)
+        assert pid == gate_pid
+        assert os.waitstatus_to_exitcode(status) == gate_rc
+    finally:
+        try:
+            os.waitpid(gate_pid, 0)
+        except ChildProcessError:
+            pass
 
 
 def test_cross_type_counter_is_unsafe_and_leaves_state(tmp_path, monkeypatch):
