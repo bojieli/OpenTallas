@@ -618,7 +618,9 @@ proc is_bits {inst bus face W lx ly k n dir tag {offset 0} {starts {}} {order no
     if {![string match "*${inst}/*" $nm]} continue
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     if {[regexp {/q\\\\?\\[([0-9]+)\\\\?\\]} $nm -> b]} {
-    } elseif {[regexp {/eq\\$} $nm]} { set b $W } else { lappend is_miss $nm; continue }
+    } elseif {[regexp {/eq\\$} $nm]} { set b $W
+    } elseif {$W == 1 && [regexp {/q\\$} $nm]} { set b 0
+    } else { lappend is_miss $nm; continue }
     if {[llength $starts]} {
       if {![dict exists $is_st $b]} { lappend is_miss "$nm:nostart"; continue }
       lassign [dict get $is_st $b] px py

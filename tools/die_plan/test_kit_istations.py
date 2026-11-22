@@ -520,6 +520,30 @@ def test_packed_sites_respread():
     assert K.packed_sites(regs[:8], 6) == [(0, 0), (1, 2), (2, 3), (3, 4), (4, 5), (5, 7)]
 
 
+def test_per_bit_station_places_scalar_payload_and_epoch(tmp_path):
+    import shutil
+    import kit_istations as K
+
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    start = K.TCL_HEAD.index("proc is_bits ")
+    end = K.TCL_HEAD.index("# D-QC-FE-REACH", start)
+    f = tmp_path / "scalar.tcl"
+    f.write_text(K.TCL_HEAD[start:end] + r"""
+proc ff_put_near {i x y} { return [list $x $y] }
+proc is_knee_site {x y args} { return [list $x $y] }
+proc cell_a {arg} { if {$arg eq "getName"} { return {u_bound.u_ist_arm_eo_3/q$_DFF_P_} }; return master }
+proc cell_b {arg} { if {$arg eq "getName"} { return {u_bound.u_ist_arm_eo_3/eq$_DFF_PN0_} }; return master }
+proc master {arg} { return DFFHQNx1 }
+proc block {arg} { return {cell_a cell_b} }
+set ff_blk block; set ff_dbu 1000; set is_fh stdout; set is_miss {}; set is_n 0
+is_bits u_ist_arm_eo_3 arm_eo W 1 300 600 3 4 out ist:arm_eo 0 {0 7 10 1 8 20}
+if {$is_n != 2 || [llength $is_miss]} { error "failed to place both scalar station bits: $is_miss" }
+""")
+    result = subprocess.run(["tclsh", str(f)], capture_output=True, text=True, check=True)
+    assert [row.split("\t")[2:4] for row in result.stdout.splitlines()] == [["7.0", "10.0"], ["8.0", "20.0"]]
+
+
 RELAY_SEP_MOCK = r"""
 proc ff_put_near {i x y} { return [list $x $y] }
 set ::insts {}; set n 0
