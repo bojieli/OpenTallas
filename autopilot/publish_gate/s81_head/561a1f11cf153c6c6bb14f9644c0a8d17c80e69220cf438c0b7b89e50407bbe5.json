@@ -1,43 +1,61 @@
 {
- "advisory": [
-  "contained",
-  "dry_gen",
-  "hashes",
-  "pre_g0",
-  "schema"
- ],
+ "advisory": [],
  "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
   "contained": {
-   "verdict": "FAIL",
-   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+   "findings": [],
+   "verdict": "PASS"
   },
   "dry_gen": {
-   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/561a1f11cf15/hd_lep0N",
-   "gen_host": "intel2",
-   "item": "hd_lep0N",
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/561a1f11cf15/hd_host_e",
+   "gen_host": "epyc7",
+   "item": "hd_host_e",
    "kind": "type",
-   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/561a1f11cf15/hd_lep0N/published_gen_origin.json",
-   "origin_sha256": "9c71393facb8225a1c238391884141a84dced1c7369864bd8501592722e241d7",
-   "published_gen_import_declined": "dry GEN did not finish",
-   "rc": 1,
-   "result": "FAIL",
-   "spec_sha256": "4cb6a9427ccd1bc143fcbdef2ad0c1890a00717f7691bd6301d27303c702942f",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/561a1f11cf15/hd_host_e/published_gen_origin.json",
+   "origin_capture_error": "different origin already recorded; use a new jobdir",
+   "origin_sha256": "e6e3c28b27d068084c4c9e521c5216d92b0ad4fe0cf45e13b2b0d430f11afab3",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "cdd44750c7a6cb521e55d6b184d0dcdb5c8f87eb528a50ee30c13680d312a7c6",
+   "spec_sha256": "23125bee837fec40ba5d98d5b242531bf873dad4a4f95d4f7271849cb2a20af5",
    "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0",
-   "stage": "mkdir",
-   "verdict": "FAIL",
-   "why": "stage mkdir: ssh: Could not resolve hostname intel2: Temporary failure in name resolution"
+   "stage": "preflight",
+   "unit_log_sha256": "9c28fada1a20801d9644e07c9bfc54c69081f6dd83629534be7c142f16572195",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
   },
   "hashes": {
-   "verdict": "FAIL",
-   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
   },
   "pre_g0": {
-   "verdict": "FAIL",
-   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-qjzyajkp/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0 plan=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json findings=0\n\nG0: G0C per type: 21/26 types clean (G3-eligible: 21); die-level {}; reported as WARN (run --completeness)\nG0 PASS: 0 errors, 0 pending-view, 219 warnings; 26 types / 358 partitions (6 in near-duplicate groups); worst cut {'ratio': 0.0578, 'at': 'horizontal@16000'}, worst partition segment {'ratio': 0.3587, 'at': 'horizontal@3500:turnE5b'}; report /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-qjzyajkp/g0_report.json\n",
+   "verdict": "PASS"
   },
   "schema": {
-   "verdict": "FAIL",
-   "why": "no PG_STATIC line (rc 255): ssh: Could not resolve hostname intel2: Temporary failure in name resolution\n"
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "s81_head",
@@ -48,21 +66,21 @@
    "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json"
   ]
  },
- "gate_s": 163.3,
+ "gate_s": 656.0,
  "hosts": [
-  "intel2",
   "epyc7",
+  "intel2",
   "epyc9",
   "epyc10"
  ],
- "item": "hd_lep0N",
+ "item": "hd_host_e",
  "manifest_hash": "561a1f11cf153c6c6bb14f9644c0a8d17c80e69220cf438c0b7b89e50407bbe5",
  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
  "plan_sha256": "62edabc647ac8e87ffdda7506976700eaa0963327bc52aca077602ad546e91ac",
  "rows_proofs": [],
  "schema": "opentallas.publish_gate.v1",
- "static_s": 0.0,
- "t": 1795315863.4185994,
+ "static_s": 46.8,
+ "t": 1795325874.7370691,
  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17a_contained_v2_s0",
- "verdict": "FAIL"
+ "verdict": "PASS"
 }
