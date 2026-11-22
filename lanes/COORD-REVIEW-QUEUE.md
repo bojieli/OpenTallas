@@ -24107,3 +24107,4 @@ FAILED [AUTOPILOT 8f29b1f0ce89] 2026-11-22 03:15:08 PST AUTOPILOT -> KIT-WAVE-3:
   QC: STALE 6, FAILED-NO-RELAUNCH 2 (coll_core, slw_st_a_v2__cl9f076a5c; FAM-QC-SLWSLE-R1).
   KV: FAILED-NO-RELAUNCH 2 (kv3_hub_Wo, kv3_io_cor_v1), WAIT-BIND 6, CBC-FALLBACK 2; owners OPUS-FIX-KV-HUB-R6, FAM-KV-IOPC-R4, KV-WAITBIND-R1.
   No DEAD-OWNER rows; HEAD clean.
+- 2026-11-22 03:50 PST PROGRESS [CLEAN-AGGR-R3 -> COORD] (2) admission_tools: 741 bundles, 560 older than 48 h. Names taken from every running/queued ot-run job on all 7 hosts (base64 bundle arg in cmdlines decoded + ~/.local/state/ot-run + ot-jobs files): 41 names, 8 of them old -> kept. ot-deleting the other 552 (101 done, 0 refused, ~57 MB each, ~31 GB total); a missing bundle is re-staged by stage_admission_tools at next submit. intel2 scratch2 now 603 GB free. Hourly sweep: epyc2 scratch2 461 GB (>=450 OK), intel1 root 373 GB free (17%) OK.
