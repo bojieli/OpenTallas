@@ -8917,6 +8917,7 @@ fi  # GRTM
 RS=0; KWRS_M=  # KWRS
 if [ -f "$K/resume.json" ]; then  # KWRS
   RS=$(python3 -I -c 'import json,sys; print({"floorplan":1,"place":2,"cts":3,"grt":4,"route":5}[json.load(open(sys.argv[1]))["start"]])' "$K/resume.json") || { echo 'FAIL_PREFLOOR stage resume: resume.json unreadable' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # KWRS
+  [ "$GOAL" = finish ] && { echo "KWRS stage resume: goal finish runs as route (route is this runner's sign-off goal; RESUME-GOAL-1122)"; GOAL=route; }  # KWRS
   case "$GOAL" in floorplan|place|cts|grt|route) ;; *) echo "FAIL_PREFLOOR stage resume: goal $GOAL unsupported" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # KWRS
   cat > "$K/kwrs_make.sh" <<'KWRS_MAKE'  # KWRS-BEGIN
 #!/bin/bash

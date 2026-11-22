@@ -9387,9 +9387,7 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
         p = json.loads(got[-1])
     except (IndexError, ValueError):
         return fail("chain_probe", "KW_CHAIN kit probe gave no answer\n" + (ptxt or "")[-1500:], f"{kh}:{K}")
-    g = goal
-    if g == "auto":
-        g = AP.default_goal(p.get("runner") or runner or "run_kit.sh")
+    g = resolve_chain_goal(AP, goal, p, runner)
     g2 = AP.runner_goal(g, p) if p.get("runner") else g
     if g2 != g:
         print(f"KW_CHAIN_GOAL {g} -> {g2} (runner signs off on {'/'.join(p.get('signoff_goals') or [])})", flush=True)
@@ -9656,11 +9654,26 @@ def private_provenance_cmd(a):
 
 def chain_goal_of(sp, goal=None):
     """FLOW-PRIVSPEC-R1: how far run-item drives this spec.  A wave spec always stops at AUTO-GEOM (the tick enqueues it); a private spec
-    follows run-item --goal, else its own goal; a private spec written before goals existed keeps the old stop at geom."""
+    follows run-item --goal, else its own goal.  RESUME-GOAL-1122 (COORD: a resumed private kit stopped after AUTO-GEOM): a private spec
+    with no goal (written before goals, or a resume record without one) or an unknown one is auto -- the runner's sign-off goal --,
+    never geom; only an explicit geom stops at AUTO-GEOM."""
     if not sp.get("private"):
         return "geom"
-    g = str(goal or sp.get("goal") or "geom").strip().lower()
-    return g if g in PRIVATE_GOALS else "geom"
+    g = str(goal or sp.get("goal") or "auto").strip().lower()
+    return g if g in PRIVATE_GOALS else "auto"
+
+
+def resolve_chain_goal(AP, goal, p, runner=""):
+    """RESUME-GOAL-1122 (COORD: H9R0 at CTS and KV-HUB-R6 hub_Ei died 'FAIL_PREFLOOR stage resume: goal finish unsupported'): the chain goal
+    for the probed kit p.  auto (or anything that is not a stage goal) = the runner's sign-off goal (autopilot.default_goal: run_kit.sh ->
+    route), never geom; finish on a kit with a stage resume (p['resume']) = route (a resumed run_kit.sh runs up to route only)."""
+    g = str(goal or "auto").strip().lower()
+    if g not in ("route", "finish", "cts", "grt"):
+        g = AP.default_goal(p.get("runner") or runner or "run_kit.sh")
+    if g == "finish" and p.get("resume"):
+        print("KW_CHAIN_GOAL finish -> route (stage resume %s: finish is route on a resumed kit)" % ((p.get("resume") or {}).get("start") or "?"), flush=True)
+        g = "route"
+    return g
 
 
 def write_env_provenance(K, b64, remote, run, T, src=None):

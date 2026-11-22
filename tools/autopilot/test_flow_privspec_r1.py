@@ -212,7 +212,8 @@ def test_goal_default_and_old_specs():
         KW.private_spec(c, D, I, "intel2", goal="sta")
     old = dict(sp)
     old.pop("goal")
-    assert KW.chain_goal_of(old) == "geom"                          # a spec from before goals: unchanged behaviour
+    assert KW.chain_goal_of(old) == "auto"                          # RESUME-GOAL-1122: no goal = auto (sign-off goal), never geom
+    assert KW.chain_goal_of(sp, "bogus") == "auto"
     assert KW.chain_goal_of(KW.spec_for(c, D, I, "intel2"), "route") == "geom"     # wave specs never chain
 
 
@@ -399,3 +400,16 @@ def test_private_spec_carries_the_wave_provisional_child_views(monkeypatch):
     assert "prov_views" not in KW.private_spec(wave_cfg(kit_rtl={}, prov_view=False), D, I, "intel2", plan_view=pv)
     with pytest.raises(ValueError):
         KW.private_spec(c, D, I, "intel2", plan_view=lambda d: {"error": "ssh failed"})
+
+
+def test_resume_goal_finish_is_route_and_auto_is_signoff_goal():
+    """RESUME-GOAL-1122 (COORD): finish on a resumed kit runs as route; auto resolves to the runner's sign-off goal, never geom"""
+    import autopilot as AP
+    rk = {"runner": "/k/run_kit.sh"}
+    assert KW.resolve_chain_goal(AP, "auto", rk) == "route"
+    assert KW.resolve_chain_goal(AP, None, {}, "/w/gen/run_kit.sh") == "route"
+    assert KW.resolve_chain_goal(AP, "geom", rk) == "route"
+    assert KW.resolve_chain_goal(AP, "finish", rk) == "finish"                         # no resume: as asked
+    assert KW.resolve_chain_goal(AP, "finish", dict(rk, resume={"start": "cts"})) == "route"
+    assert KW.resolve_chain_goal(AP, "cts", dict(rk, resume={"start": "cts"})) == "cts"
+    assert KW.resolve_chain_goal(AP, "auto", {"runner": "/k/run_kit_hbm.sh"}) == "finish"   # another runner's own sign-off goal

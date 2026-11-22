@@ -536,7 +536,7 @@ class RunKitBlock(unittest.TestCase):
             shutil.rmtree(d)
 
     def test_fail_closed(self):
-        for start, goal in (("route", "finish"), ("bogus", "route")):
+        for start, goal in (("route", "post"), ("bogus", "route")):
             d = tempfile.mkdtemp()
             try:
                 rc, _ = self.outer(d, start, goal)
@@ -544,6 +544,18 @@ class RunKitBlock(unittest.TestCase):
                 self.assertTrue(os.path.exists(os.path.join(d, "FAIL_PREFLOOR")))
             finally:
                 shutil.rmtree(d)
+
+
+    def test_finish_on_resume_runs_as_route(self):
+        """RESUME-GOAL-1122 (COORD): GOAL=finish on a stage resume runs as route instead of FAIL_PREFLOOR"""
+        d = tempfile.mkdtemp()
+        try:
+            rc, out = self.outer(d, "cts", "finish")
+            self.assertEqual(rc, 0, out)
+            self.assertIn("goal finish runs as route", out)
+            self.assertFalse(os.path.exists(os.path.join(d, "FAIL_PREFLOOR")))
+        finally:
+            shutil.rmtree(d)
 
 
 class Prepare(unittest.TestCase):
