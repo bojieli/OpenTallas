@@ -5,27 +5,26 @@
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-22 03:08 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-22 03:17 PST)
 count_hourly: signed any plan 549 | current plan 439 | deferred re-sign 21 (hbm 1, head 9, qc 7, s81 4) | retired-plan 89 (head 1, kv 27, qc 34, s81 27)
 - [ ] FAIL.S81.CORES 62/62 signed · open: none
-- [ ] FAIL.S81.TYPES 46/394 signed · kit rows: held by die owner (plan event pending) 274 (col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97, +273) · cancelled (superseded) 63 (bk_sel__t2, +62) · running 9 · signed (count pending) 1 (slice_station__t52)
+- [ ] FAIL.S81.TYPES 46/394 signed · kit rows: held by die owner (plan event pending) 274 (col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97, +273) · cancelled (superseded) 64 (bk_sel__t2, +63) · running 9
 - [ ] FAIL.HEAD.CORES 5/5 signed · open: none
 - [ ] FAIL.HEAD.TYPES 25/26 signed · kit rows: running (lint advisory) 1 (hd_lep0N)
 - [ ] FAIL.QC.CORES 70/70 signed · open: none
-- [ ] FAIL.QC.TYPES 62/127 signed · kit rows: running 41 · held by die owner (plan event pending) 7 (cbf_q00__cl1b5a6458, +6) · cancelled (superseded) 7 (cbn_q01__cldd6ea846, +6) · running (lint advisory) 4 (sle_st_a_v1__cl67389ecd, +3) · other flow error 2 (coll_core, +1) · signed (count pending) 1 (slw_hc3__clccfc3e6b__pvcca9ff41) · withdrawn (lane form) 1 (coll_ftc)
+- [ ] FAIL.QC.TYPES 62/127 signed · kit rows: running 38 · held by die owner (plan event pending) 9 (cbf_q00__cl1b5a6458, +8) · cancelled (superseded) 8 (cbn_q01__cldd6ea846, +7) · running (lint advisory) 4 (sle_st_a_v1__cl67389ecd, +3) · other flow error 2 (coll_core, +1) · signed (count pending) 1 (slw_hc3__clccfc3e6b__pvcca9ff41) · withdrawn (lane form) 1 (coll_ftc)
 - [ ] FAIL.KV.CORES 69/69 signed · open: none
 - [ ] FAIL.KV.TYPES 6/56 signed · kit rows: held by die owner (plan event pending) 41 (kv3_hg, +40) · running 5 · kit_rtl 1 (kv3_hub_C) · other flow error 1 (kv3_hub_Wo) · CLAND ring band 1 (kv3_io_cor_v1)
 - [ ] FAIL.HBM.CORES 90/119 signed · open: cancelled (superseded) 12 (hgi_sfu_opsa_group0, hgi_sfu_opsb_group, hnx_vms_bank_q0_faces__vecd4ae, +5) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · no kit-wave row 7 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group1, +4) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: cancelled (superseded) 90 (NE_io, +89) · held by die owner (plan event pending) 22 (NE_iorly, +21)
-### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 2 current-event (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
-- [ ] STALE.S81 2 (cores 0, types 2) · by owner: FAIL-S81-1 1, FAM-S81-SLICE-R6 1
-  - type slice_station__t52 · SIGNED count @ 2026-11-21 03:03 (24.1h) · owner FAM-S81-SLICE-R6
-  - type iqf__t1 · ROUTE-HELD geom @ 2026-11-21 04:14 (22.9h) · owner FAIL-S81-1
+### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 1 current-event (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
+- [ ] STALE.S81 1 (cores 0, types 1) · by owner: FAIL-S81-1 1
+  - type iqf__t1 · ROUTE-HELD geom @ 2026-11-21 04:14 (23.1h) · owner FAIL-S81-1
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
-- TOOLS-LAG qwen_compute 546 commits / missing r708
-- TOOLS-LAG qwen_kvsys 111 commits / missing none
-- TOOLS-LAG s81 351 commits / missing r708
-- TOOLS-LAG s81_head 88 commits / missing none
+- TOOLS-LAG qwen_compute 551 commits / missing r708
+- TOOLS-LAG qwen_kvsys 116 commits / missing none
+- TOOLS-LAG s81 356 commits / missing r708
+- TOOLS-LAG s81_head 93 commits / missing none
 ### TAP-INSERTION · measured per-tap insertion after CTS (advisory)
 - TAP-INSERTION qwen_compute: 2474 taps in 25 types, 57 over 1650 sinks; insertion max 696 ps (p50 268, p90 285), skew max 107 ps; oversized taps: ins max 340 ps, skew max 90 ps
 - TAP-INSERTION qwen_kvsys: 81 taps in 1 types, 3 over 1650 sinks; insertion max 298 ps (p50 270, p90 286), skew max 73 ps; oversized taps: ins max 298 ps, skew max 54 ps
