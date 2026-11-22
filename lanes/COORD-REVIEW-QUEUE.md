@@ -22372,3 +22372,4 @@ FAILED [AUTOPILOT 0c4abfb40abd] 2026-11-21 21:37:34 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 21:53 PST intel1 at 1219 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 21:53 PST Status $(date +%H:%M): waiting for J7 apply 04:14; timer armed, J7 tree untouched (COORD: hardlinks accepted, no writes into it). Gen hosts undrained per COORD; will post exact refusal if any at 04:14.
+- 2026-11-21 21:53 PST RESUMED FLOW-FLEET-R1 (Opus 5.5, new lane for COORD): source lanes/FABLE-FLOW-2200.md. Items: 1 epyc7 THREAD_CAP revert + cap owner/expiry convention + hourly flag; 2 NOPROG-WATCHDOG GRT-LABEL cancel action; 3 ot-tree-fork/src_manifest copy lock + manifest-hash reuse; 4 count drift 437->431 + 5 uncounted signed rows.
