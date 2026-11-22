@@ -87,6 +87,26 @@
     }
    ],
    "ops_note": "row-local ops (NOT in top-level ops until its bind proof is green); replaces verilog_defines of the type; CRP2 and WREP5 kept"
+  },
+  "N2": {
+   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "class": "local scatter: TX safe_write counter carry (g_tx[0].g_safe_write.g_address[1].count_r)",
+   "evidence": "J7 wave kit 18a2688b741 epyc2 FAIL_POSTPLACE -347.1 (3_detailed_place wns -393.1): count_r[1] -> INV -> 6 x BUFx12f out -> AND2x6 -> 6 x BUFx16f back -> AO21/AO33/AOI21 -> count_r[5]; endpoints 2.8 um apart, ~1,679 um of wire. The AND2 is the shared qualify rd_group = (count!=0 && credit!=0) (g_existing_qualify, MU_EN 1): it also drives the TX SRAM re_group/we_group pins, so placement pulls it to the macro.",
+   "fix": "RTL (pre-approved, 0 cycles, no function change): bare selector OT_S81SL_LEP_TXQ3 uses the SAFE_STD split qualify for any SAFE_FIFO lane: three keep_hierarchy ot_s81sl_std_tx_qualify copies (memory / state / pointer); the state copy feeds only the counter and places with it. Placement-group lever not available in the plan schema (no inst region key); not needed if the split lands.",
+   "ops": [
+    {
+     "op": "replace",
+     "path": "/partition_types/dsdv_slice_lepw_mus_LP__t2/verilog_defines",
+     "value": [
+      "OT_S81SL_LEP_CRP2",
+      "OT_S81SL_LEP_WREP5",
+      "OT_S81SL_LEP_RIP1",
+      "OT_S81SL_LEP_TXQ3"
+     ]
+    }
+   ],
+   "ops_note": "row-local ops (not in top-level ops until main carries the selector + bind dry-run green); bind K unchanged (0 cycles)",
+   "status": "DRAFT 11-22 08:xx: RTL selector in lane clone; bench running (run_lep_mu_bench.sh txq: P_RX_SRAM 1, TX_GROUP_ASSERT, TXQ3 on/off); then ot-push-main, tools_min_sha bump, dry-run bind"
   }
  },
  "ops": [
