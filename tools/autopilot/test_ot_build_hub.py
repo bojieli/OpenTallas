@@ -202,6 +202,28 @@ def test_wave_rebind_states(fleet, tmp_path):
     assert H.wave_rebind(cfg2, "kv", st, now=3000, run=fleet.run, popen=popen, alive=lambda pid: True)["state"] == "STARTED"
 
 
+def test_wave_rebind_one_at_a_time_per_die_and_alias_paths(fleet):
+    st, alive, started = {}, {"v": True}, []
+
+    def popen(cmd, **kw):
+        started.append(cmd)
+        kw["stdout"].write(fleet.eff(0))
+        return P()
+    assert H.wave_rebind(CFG, "kv", st, now=10, run=fleet.run, popen=popen, alive=lambda pid: alive["v"])["state"] == "STARTED"
+    cfg2 = json.loads(json.dumps(CFG))
+    cfg2["dies"]["kv"]["plan"] = SRC + "/p/plan2.json"                     # inputs move while the first rebind runs
+    r = H.wave_rebind(cfg2, "kv", st, now=20, run=fleet.run, popen=popen, alive=lambda pid: alive["v"])
+    assert r["state"] == "RUNNING" and len(started) == 1 and "cap 1 per die" in r["why"]
+    alive["v"] = False
+    assert H.wave_rebind(cfg2, "kv", st, now=30, run=fleet.run, popen=popen, alive=lambda pid: alive["v"])["state"] == "STARTED"
+    assert len(started) == 2                                               # the old verdict was dropped, the new inputs rebind
+    st2 = {}
+    fleet.stale = False
+    fleet.eff_tree, fleet.eff_asbuilt = "/srv/s3/kw/src_kv", "/srv/s3/kw/src_kv/p/ab.json"
+    r = H.wave_rebind(CFG, "kv", st2, now=40, run=fleet.run, popen=popen, alive=lambda pid: False)
+    assert r["state"] == "FRESH" and r["asbuilt"] == SRC + "/p/ab.json"
+
+
 def test_wave_rebind_failure_is_reported_and_backs_off(fleet):
     st = {}
 

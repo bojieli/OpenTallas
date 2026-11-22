@@ -242,6 +242,11 @@ def _alive(pid):
         return False
 
 
+def _home(p, eff, tree):
+    """a path the bind host names inside ITS real path of the tree (epyc2: scratch2 -> scratch3) -> the same path under `tree`"""
+    return swap_prefix(p, eff["tree"], tree) if p and eff and eff.get("tree") else p
+
+
 def wave_rebind(cfg, die, st, lane="KIT-WAVE", now=None, run=sh, popen=None, alive=_alive, rt=None, emit_j="auto", mem="96"):
     """kit_wave tick, die option auto_bind: the wave rows of `die` are BIND-STALE (KIT_TOPOLOGY_BIND_STALE preflight / stage, R8_STALE)
     on the die's own tree and plan.  Instead of waiting for a hand-run bind: make the die's bind fresh with the ot-build bind stage
@@ -258,6 +263,12 @@ def wave_rebind(cfg, die, st, lane="KIT-WAVE", now=None, run=sh, popen=None, ali
         r = resolve(cfg, die)
         key = "|".join([r["tree"], r["plan"], str(r["asbuilt"]), json.dumps(r["env"], sort_keys=True)])
         if rec.get("key") != key:
+            if rec.get("state") in ("STARTED", "RUNNING") and alive(rec.get("pid")):
+                # COORD 11-22: at most ONE auto rebind per die at a time.  The inputs moved while a bind runs: let it end (its
+                # verdict is for the old inputs and is dropped), then the next tick starts the bind of the new inputs
+                rec.update(state="RUNNING", superseded=True)
+                st["auto_bind"][die] = rec
+                return dict(rec, why="inputs changed while a rebind runs; the next rebind starts when it ends (cap 1 per die)")
             rec = {"key": key}
         if rec.get("state") in ("STARTED", "RUNNING"):
             if alive(rec.get("pid")):
@@ -269,7 +280,7 @@ def wave_rebind(cfg, die, st, lane="KIT-WAVE", now=None, run=sh, popen=None, ali
             except OSError:
                 eff = None
             if eff and eff.get("rc") == 0:
-                rec.update(state="FRESH", out=eff["out"], asbuilt=eff.get("asbuilt"), t=now)
+                rec.update(state="FRESH", out=eff["out"], asbuilt=_home(eff.get("asbuilt"), eff, r["tree"]), t=now)
             else:
                 tail = ""
                 try:
@@ -290,7 +301,7 @@ def wave_rebind(cfg, die, st, lane="KIT-WAVE", now=None, run=sh, popen=None, ali
         out_root = f"{SCRATCH}/{lane}/ot-build/{die}/{Path(r['tree']).name}"
         rc, eff, text = bind_status(r, host, rt_dir, out_root, lane, emit_j, [], run=run)
         if rc == 0 and eff:
-            rec.update(state="FRESH", out=eff["out"], asbuilt=eff.get("asbuilt"), host=host, t=now)
+            rec.update(state="FRESH", out=eff["out"], asbuilt=_home(eff.get("asbuilt"), eff, r["tree"]), host=host, t=now)
         elif rc == 3 and eff:
             cmd = bind_job(r, host, rt_dir, out_root, lane, emit_j, mem, [], run=run)
             lf = AP_DIR / "auto_bind" / f"{die}_{time.strftime('%m%d%H%M%S', time.localtime(now))}.log"
