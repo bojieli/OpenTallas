@@ -32,3 +32,16 @@ e1a (hd_lep0N shelf + hd_serdes clock rows, plan 00b2abf6e7a6) is owned by FABLE
 ## Handed hd_host_e items (from FLOW-OBS-GCELL-R2)
 - v2 proof (epyc8 flow-obs-gcell-1121/host_e2/hd_host_e) ENDED NOT SIGNED: DRC 25, all M7 at the u_epc top edge y 60.672 (the he_epc class); TT -83.81 (19 endpoints); internal FF hold -39.50.
 - he_epc M7 check: OPUS-FIX-HEAD-SERDES-R4's kit epyc7 opus-fix-head-serdes-r4/host_e_access1415_retry/gen_access/hd_host_e carries the he_epc lef_override and preflight PASS, but is not built. My private-spec was refused: epyc7 DRAINING; gen hosts are epyc10 (40 GB free) and intel2. BLOCKED on gen-host disk.
+
+## STAND-DOWN update (2026-11-21 ~20:0x PST) -> HEAD-START-R18
+All bench runs below are on epyc7, `N=/srv/opentallas-scratch2/claude/head-start-r17`, inputs in N/w7. Logs are at intel2 ~/head-start-r17/trNN.otrun.log.
+- tr25 (exact integer-ps phases + stubs on local edge counters): FAIL 219.
+  - START origin master cycle - n_nominal = 151 +-1 on all 358 parts, for phases 0.9-7.7 T.
+  - Lane errors are mostly +-1 even between parts of equal phase: 99 exact, 75 +1, 65 -1 (excluding the 38 FIRM lanes).
+- tr26 (exact phases + global stub counter, now the default): FAIL 263, mostly -1/-2.
+- tr27 (tr26 + FIRM oracle fix from Codex tr13 lanes.json, 38 lanes; firm_fix.py): FAIL 263.
+- So START is NOT closed. No converged bench model exists yet. Open question: which count frame do the plan's n_nominal and lane cycles use (root time vs own edges)? This decides how the stubs must count, given phases up to 7.7 T.
+  - Suggested next step: take ONE ring lane (kd, d=562 ps, K=-5, origins 104/110) and trace in tr25 the sender word index at ring write, the receiver count at read, and the origins in local edges. Compare with count_align_plan's L = (K + a_dst - a_src) T + d. This fixes the frame; then make the stub counter match it.
+  - The FIRM 38-lane table is Codex's (epyc9 head-start-r17/tr13/lanes.json, live_stations); its derivation is not reproduced.
+- Tool changes (lane clone epyc10 head-start-r17/repo, unit test OK, NOT pushed): phases subcommand, gen --phases (1ps/1ps integer delays), --stub-local, shared-port mean phase (<= 60 ps). Push only once a bench model converges.
+- Mutants were not run (there was no PASS).
