@@ -4327,6 +4327,13 @@ class Binder:
                 body.append(f"    assign {o} = {i};")
                 continue
             prev = i
+            import gen_rtl as _GH
+            nhs = _GH.ft_hold_hb4(t, h["slot"])
+            if nhs:
+                # HOLDFORM-1 for ft slots (gen_rtl.hold_pad): data + epoch through N kept HB4 per bit into the first station
+                hd, hb, prev = _GH.hold_pad(i, f"{i}[{W}:0]", W + 1, nhs)
+                decl += hd
+                body += hb
             lk = ft_hop_lockup(self.plan, tn)
             for k in range(n):
                 nxt = o if k == n - 1 else f"{o}_s{k}"

@@ -260,10 +260,19 @@ def hold_hb4(t, bus):
     return 0
 
 
+def ft_hold_hb4(t, slot):
+    """HOLDFORM-1 for ft slots: the plan's HB4 count in front of the first station of ft slot <slot> on type record t (0 = none)."""
+    for s in (t or {}).get("ft_slots", []):
+        if s.get("name") == slot:
+            return int(s.get("hold_hb4") or 0)
+    return 0
+
+
 def uses_hold_hb4(raw):
-    """any partition type of the plan declares a hold_hb4 in bus"""
-    return any(int(b.get("hold_hb4") or 0) > 0 and b.get("dir") == "in"
-               for t in ((raw or {}).get("partition_types") or {}).values() for b in t.get("buses", []))
+    """any partition type of the plan declares a hold_hb4 in bus or ft slot"""
+    types = ((raw or {}).get("partition_types") or {}).values()
+    return (any(int(b.get("hold_hb4") or 0) > 0 and b.get("dir") == "in" for t in types for b in t.get("buses", []))
+            or any(int(s.get("hold_hb4") or 0) > 0 for t in types for s in t.get("ft_slots", [])))
 
 
 def hold_pad(n, src, width, N):
@@ -596,6 +605,14 @@ def wrapper(P, tn, epochs, rtl_root=None):
         ep_o = epochs.get((tn, s["name"] + "_o"), True)
         r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
+        nhs = int(s.get("hold_hb4") or 0)
+        if nhs and k:      # HOLDFORM-1 for ft slots: data (+ epoch) through N kept HB4 per bit into the first station
+            hd, hb, w = hold_pad(f"{n}_i", f"{n}_i[{W}:0]" if ep_i else d, W + 1 if ep_i else W, nhs)
+            decl += hd
+            body += hb
+            d = f"{w}[{W - 1}:0]"
+            if ep_i:
+                ea = f"{w}[{W}]"
         lk = ft_hop_lockup(P.raw, tn)
         xt = set(S.ft_hop_xtap(P.raw, tn, s["name"])) if lk else set()
         for j in range(k):

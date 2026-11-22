@@ -114,3 +114,56 @@ if __name__ == "__main__":
             else:
                 f()
             print("PASS", n_)
+
+
+# ------------------------------------------------------------------ HOLDFORM-1 for ft slots (FABLE-FIX-S81-LEAF-TAPHOLD 11-22)
+def _raw_slot(n=None, slot="fz", tn="fa"):
+    raw = copy.deepcopy(PAIR)
+    if n is not None:
+        for s in raw["partition_types"][tn]["ft_slots"]:
+            if s["name"] == slot:
+                s["hold_hb4"] = n
+    return raw
+
+
+def test_ft_slot_default_off_is_byte_same():
+    base, zero = _raw_slot(), _raw_slot(0)
+    assert not gen_rtl.uses_hold_hb4(zero) and gen_rtl.ft_hold_hb4(zero["partition_types"]["fa"], "fz") == 0
+    assert _wrapper(base, "fa") == _wrapper(zero, "fa") and "u_hdly_" not in _wrapper(zero, "fa")
+    assert gen_phys.hold_pad_dont_touch_tcl(schema.Plan(zero), "fa") == ""
+
+
+def test_ft_slot_pads_first_station_only():
+    raw = _raw_slot(3)
+    assert gen_rtl.uses_hold_hb4(raw) and gen_rtl.ft_hold_hb4(raw["partition_types"]["fa"], "fz") == 3
+    P = schema.Plan(raw)
+    sv = _wrapper(raw, "fa")
+    ep = gen_rtl.bus_epochs(P).get(("fa", "fz_i"), True)
+    W = 64 + (1 if ep else 0)
+    assert sv.count("ot_dp_hd ") == 1
+    assert f"ot_dp_hd #(.W({W}), .N(3)) u_hdly_fz_i (.a(fz_i[{W - 1}:0]), .y(fz_i_hd));" in sv
+    m = re.search(r"u_ft_fz_s0 \(.*?\.d\(([^)]*)\).*?\.ea\(([^)]*)\)", sv)
+    assert m and m.group(1) == "fz_i_hd[63:0]" and (not ep or m.group(2) == "fz_i_hd[64]")
+    m1 = re.search(r"u_ft_fz_s1 \(.*?\.d\(([^)]*)\)", sv)
+    assert m1 and "_hd" not in m1.group(1)                    # later stations read the previous station, never the pad
+    tcl = gen_phys.hold_pad_dont_touch_tcl(P, "fa")
+    assert f"plan {3 * 64}..{3 * 65}" in tcl and "u_hdly_" in tcl
+    with tempfile.TemporaryDirectory() as d:
+        gen_rtl.write_rtl(raw, Path(d), emit_die_top=False)
+        assert "module ot_dp_hd" in (Path(d) / "ot_dp_cells.sv").read_text()
+
+
+def test_ft_slot_schema_bounds():
+    spec = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_slots"]["items"]
+    assert spec["properties"]["hold_hb4"] == {"type": "integer", "minimum": 0, "maximum": 8} and "hold_hb4" not in spec["required"]
+    try:
+        import jsonschema
+    except ImportError:
+        return
+    jsonschema.validate(_raw_slot(3), schema.SCHEMA)
+    for bad in (-1, 9):
+        try:
+            jsonschema.validate(_raw_slot(bad), schema.SCHEMA)
+        except jsonschema.ValidationError:
+            continue
+        raise AssertionError(f"ft slot hold_hb4 {bad} accepted")

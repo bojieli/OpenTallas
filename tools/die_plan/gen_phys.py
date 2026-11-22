@@ -3905,6 +3905,8 @@ def hold_pad_dont_touch_tcl(P, tn):
     kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same)."""
     hb = [(int(b["hold_hb4"]), int(b["width"])) for b in P.types[tn].get("buses", [])
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
+    hb += [(int(s["hold_hb4"]), int(s["width"])) for s in P.types[tn].get("ft_slots", [])      # HOLDFORM-1 for ft slots
+           if int(s.get("hold_hb4") or 0) > 0 and int(s.get("stations", 1)) > 0]
     lk = _lockup_pad_type(P, tn)
     if not hb and lk:
         return ("# latch_except_hb4 (clock.core_input_lockup): keep the bit-level lockup hold pads (u_hdly_lk_*, HB4xp67)\n"

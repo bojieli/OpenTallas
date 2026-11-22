@@ -2287,6 +2287,12 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 # (bounded by the child's own signal ports) instead of parent tracks over its OBS.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_slots"]["items"]["properties"]["stations_in"] = {
     "type": "array", "minItems": 1, "uniqueItems": True, "items": _name}
+# FABLE-FIX-S81-LEAF-TAPHOLD 11-22 (HOLDFORM-1 for ft slots; opt-in, absent / 0 = no change): N kept HB4xp67 per bit (data + epoch) in
+# front of the slot's FIRST station (gen_rtl.ot_dp_hd, instance u_hdly_<slot>_i, dont_touch in the kit): the structural pad of a plain
+# (unlanded, vclk) ft input under the seam in_min contract.  S81 leaf t39 GRT DB: 1,980 of 2,578 input-port FF hold ends are ft2_i / ft3_i /
+# ft4_i -> station 0 (ws -97 at the bound vclk), which the in-flow ECO repair pads at ~2 cells per 25 s iteration.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_slots"]["items"]["properties"]["hold_hb4"] = {
+    "type": "integer", "minimum": 0, "maximum": 8}
 
 # DIE-S81-85 11-09 (class fix 1): clock.child_root_taps = a soft parent with 0 flip-flops whose explicit type taps land
 # on hard-child clock root pins (taps.child_root_tap_sites); each such tap carries lands_on.

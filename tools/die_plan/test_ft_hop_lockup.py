@@ -67,6 +67,38 @@ def test_bind_ft_hop_latches_prove(tmp_path, on):
     assert rc == 0 and v["verdict"] == "PASS" and v["counts"]["mismatched"] == 0, v.get("mismatches", [])[:3]
 
 
+@pytest.mark.skipif(not HAVE_YOSYS, reason="no Yosys")
+@pytest.mark.parametrize("n", [0, 2])
+def test_bind_ft_slot_hold_pad_proves(tmp_path, n):
+    """FABLE-FIX-S81-LEAF-TAPHOLD 11-22: plan ft_slots[].hold_hb4 = N kept HB4 per bit in front of the first station (bound RTL), 0 cycles"""
+    P = json.loads((EX / "die_plan_lanes.json").read_text())
+    if n:
+        P["partition_types"]["tf"]["ft_slots"][0]["hold_hb4"] = n
+    P["asbuilt"]["base"] = str(EX)
+    pf = tmp_path / "p.json"
+    pf.write_text(json.dumps(P))
+    out = tmp_path / "o"
+    # the transport proof (verify) parses the cells with SYNTHESIS set and has no HB4xp67 library cell (as for the in-bus form):
+    # the padded case is proven by the emitted text here and by the kit LEC; the unpadded case keeps the full proof
+    for c in ("elab", "bind") + (() if n else ("verify",)):
+        rc = bind.main([c, str(pf), "--out", str(out), "--mem", "4"])
+        if rc:
+            break
+    ft = (out / "rtl" / "bt_tf.sv").read_text()
+    cells = (out / "rtl" / "bind_cells.sv").read_text()
+    if n:
+        assert ft.count("ot_dp_hd #(.W(9), .N(2)) u_hdly_y_i (.a(y_i[8:0]), .y(y_i_hd));") == 1, ft
+        assert re.search(r"u_ft_y_o_0 \(.*?\.d\(y_i_hd\[7:0\]\), \.ea\(y_i_hd\[8\]\)", ft), ft
+        assert "module ot_dp_hd" in cells
+    else:
+        assert "ot_dp_hd" not in ft and "module ot_dp_hd" not in cells
+    assert rc == 0
+    assert ft.count("ot_dp_st #(.W(8))") == json.loads((EX / "die_plan_lanes.json").read_text())["partition_types"]["tf"]["ft_slots"][0].get("stations", 1)
+    if not n:
+        v = json.loads((out / "verify_report.json").read_text())
+        assert v["verdict"] == "PASS" and v["counts"]["mismatched"] == 0, v.get("mismatches", [])[:3]
+
+
 # ------------------------------------------------------------------ face_flops.tcl walkers + hop-latch pass
 FF = (HERE / "face_flops.tcl").read_text()
 MOCK = r'''
