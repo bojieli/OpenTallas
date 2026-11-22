@@ -12428,6 +12428,15 @@ def attempt_rt_sha(prev):
         return ""
 
 
+CLONE_SFX = re.compile(r"__(?:cl|pv)[0-9a-f]{6,}")
+
+
+def type_stem(item):
+    """F1 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000): the type an item variant belongs to -- every __cl<hash> / __pv<hash> clone segment removed
+    (kv3_pc_v1__cl23f6a148 -> kv3_pc_v1; col_h9_r2__t1__clb8d86cd5__pv6a2b031b -> col_h9_r2__t1)"""
+    return CLONE_SFX.sub("", str(item or ""))
+
+
 def cause_cap_held(cfg, st, die, prev, now=None):
     """FLOW-FIX-0400: the second automatic relaunch of the same failure cause on the same plan block is refused (CAUSE_RETRY_CAP = 1); a named fix= retry key resets the count and a changed plan block is
     another key.  Counts are in state cause_retries[die|item|block|cause].  -> '' (go ahead, count taken) or the hold text"""
@@ -12438,7 +12447,14 @@ def cause_cap_held(cfg, st, die, prev, now=None):
         return ""
     item = prev.get("item")
     led = st.setdefault("cause_retries", {})
-    k = f"{die}|{item}|{str(prev.get('block_sha') or '')[:12]}|{ck}"
+    # F1 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000: kv3_pc_v1 __cl23f6a148 / __cl4ea58a5c / __cl7f648944 hit the same kit_topology ValueError 23 times,
+    # each clone variant with its own count): the key is (die, type stem, cause) -- every variant of a type shares one count.  The release on a
+    # changed plan block stays per item: the ledger keeps each item's block, and a failure on another block of an item already counted resets it.
+    blk = str(prev.get('block_sha') or '')[:12]
+    k = f"{die}|{type_stem(item)}|{ck}"
+    _seen = (led.get(k) or {}).get("blocks") or {}
+    if item in _seen and _seen[item] != blk:
+        led.pop(k, None)
     if RS.is_tool_fault(prev.get("stage"), prev.get("q_class") or prev.get("class")):
         # FLOW-OPS-1300 (FABLE-FLOW-1240 a): a hub tool fault at `pipeline` is keyed by the runtime the attempt ran; a relaunch on a newer rt (the fix) is a new key, so
         # the 6 pre-fix E2BIG units relaunch on rt/current instead of holding CAUSE-CAP for the owner.  The same fault twice on ONE rt still caps.
@@ -12451,11 +12467,14 @@ def cause_cap_held(cfg, st, die, prev, now=None):
     if retry_fix_named(cfg, die, prev):
         led.pop(k, None)
         return ""
-    n = int((led.get(k) or {}).get("n") or 0)
+    ent = led.get(k) or {}
+    n = int(ent.get("n") or 0)
     if n >= CAUSE_RETRY_CAP:
-        return (f"CAUSE-CAP [owner {die_owner(cfg, die)[0]}]: attempt {prev.get('attempt')} failed on {ck[:100]} and {n} automatic relaunch(es) already failed the same way; "
-                f"released by a changed plan block or a retry key {item}@{prev.get('attempt')}:fix=<sha>")
-    led[k] = {"n": n + 1, "ts": time.time()}
+        sib = sorted(x for x in (ent.get("blocks") or {}) if x != item)
+        return (f"CAUSE-CAP [owner {die_owner(cfg, die)[0]}]: attempt {prev.get('attempt')} failed on {ck[:100]} and {n} automatic relaunch(es) of type {type_stem(item)} already failed the same way"
+                + (f" (variants {', '.join(sib[:3])})" if sib else "")
+                + f"; released by a changed plan block or a retry key {item}@{prev.get('attempt')}:fix=<sha>")
+    led[k] = {"n": n + 1, "ts": time.time(), "blocks": dict(ent.get("blocks") or {}, **{str(item): blk})}
     return ""
 
 
