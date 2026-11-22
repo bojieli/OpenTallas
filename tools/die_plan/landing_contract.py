@@ -678,13 +678,14 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
     driven by one buffer placed at the source tap (clamped into the core; CTS DPL legalises it). Its input is a
     non-register load of the source net, which TritonCTS keeps at the root, so the source net stays local. The
     synthesized forward driver (assign fclk_out = clk -> BUF, ORFS output buffer) that drives nothing after the move is
-    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged.
+    removed; a non-buffer driver fails closed. The SDC generated clock on the port is unchanged. The exported
+    net and its buffer instance have distinct names so SPEF numeric internal nodes resolve on the net.
 
     FWDCLK-1 11-04: TritonCTS keys the sinks of a clock net by location (HTreeBuilder mapLocationToSink_) after it has
     disconnected every input on the net, so of several buffers at ONE location only the last is reconnected and the
     others keep .Y with no input: all exports on one source tap but one were dead.  The 2nd+ export of a source tap
     therefore sits k rows from the first, toward the core centre (stateless, so k distinct rows = k distinct sink
-    locations by construction; DPL legalises as before).  A tap with one export emits exactly the old text."""
+    locations by construction; DPL legalises as before). A tap with one export keeps its original location."""
     pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
     on_tap={}
     out=["set cland_block [ord::get_db_block]",
@@ -706,21 +707,26 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
          "set cland_ca [$cland_block getCoreArea]"]
     # PLACE may already have materialized these exports before pre-CTS reloads
     # the checkpoint. Reuse only the exact dedicated one-buffer topology.
-    out[1:1] = r"""proc ot_cland_existing {inst master src dst} {
+    out[1:1] = r"""proc ot_cland_existing {inst master src dst net_name} {
   set n [$inst getName]
   if {[[$inst getMaster] getName] ne [$master getName]} {error "OT_CLAND_EXPORT $n existing master mismatch"}
   set a [$inst findITerm A]; set y [$inst findITerm Y]
   if {$a eq "NULL" || $y eq "NULL" || ![$a isInputSignal] || ![$y isOutputSignal]} {error "OT_CLAND_EXPORT $n existing pin shape mismatch"}
   set yn [$y getNet]
   if {[$a getNet] ne $src || $yn eq "NULL" || [$dst getNet] ne $yn} {error "OT_CLAND_EXPORT $n existing connectivity mismatch"}
-  if {[$yn getName] ne $n || [$src getSigType] ne "CLOCK" || [$yn getSigType] ne "CLOCK"} {error "OT_CLAND_EXPORT $n existing net shape mismatch"}
+  if {[$yn getName] ni [list $n $net_name] || [$src getSigType] ne "CLOCK" || [$yn getSigType] ne "CLOCK"} {error "OT_CLAND_EXPORT $n existing net shape mismatch"}
   set ports [$yn getBTerms]; set terms [$yn getITerms]
   if {[llength $ports] != 1 || [[lindex $ports 0] getName] ne [$dst getName]} {error "OT_CLAND_EXPORT $n existing export sharing mismatch"}
   if {[llength $terms] != 1 || [[[lindex $terms 0] getInst] getName] ne $n || [[[lindex $terms 0] getMTerm] getName] ne "Y"} {error "OT_CLAND_EXPORT $n existing export loads mismatch"}
+  if {[$yn getName] eq $n} {
+    $yn rename $net_name
+    if {[$yn getName] ne $net_name} {error "OT_CLAND_EXPORT $n unable to rename the existing net"}
+  }
 }""".splitlines()
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
         n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
+        fw_net = "cland_fwd_net_" + n
         k=on_tap.get(s,0);on_tap[s]=k+1
         out += [f"set cland_dst [$cland_block findBTerm {{{_bterm(n,bit0)}}}]",
                 f"set cland_src [$cland_block findBTerm {{{_bterm(s,bit0)}}}]",
@@ -729,7 +735,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
                 f"set cland_i [$cland_block findInst {{{fw}}}]",
                 'if {$cland_i ne "NULL"} {',
-                '  ot_cland_existing $cland_i $cland_m $cland_net $cland_dst',
+                f'  ot_cland_existing $cland_i $cland_m $cland_net $cland_dst {{{fw_net}}}',
                 f"  puts {{OT_CLAND_EXPORT_REUSE {n} <- {s} via {fw}}}",
                 '} else {',
                 "set cland_old [$cland_dst getNet]",
@@ -742,7 +748,7 @@ def export_tcl_fwd(P,tn,bit0=frozenset()):
                 *([f"set cland_y [expr {{$cland_y + {k} * [$cland_m getHeight] * (2 * $cland_y > [$cland_ca yMin] + [$cland_ca yMax] ? -1 : 1)}}]"] if k else []),
                 "$cland_i setLocation $cland_x $cland_y; $cland_i setPlacementStatus PLACED",
                 "[$cland_i findITerm A] connect $cland_net",
-                f"set cland_fn [odb::dbNet_create $cland_block {{{fw}}}]",
+                f"set cland_fn [odb::dbNet_create $cland_block {{{fw_net}}}]",
                 "[$cland_i findITerm Y] connect $cland_fn",
                 "$cland_dst connect $cland_fn",
                 "$cland_net setSigType CLOCK; $cland_fn setSigType CLOCK",

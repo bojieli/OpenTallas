@@ -52,7 +52,9 @@ def test_fwd_buffer_export_keeps_port_off_the_root_net():
     # the CTS-0114 cause: the port BTerm joined onto the source (root) net
     assert "$cland_dst connect $cland_net" not in s
     assert "[$cland_i findITerm A] connect $cland_net" in s
-    assert "set cland_fn [odb::dbNet_create $cland_block {cland_fwd_fclk_out_o}]" in s
+    assert "set cland_i [odb::dbInst_create $cland_block $cland_m {cland_fwd_fclk_out_o}]" in s
+    assert "set cland_fn [odb::dbNet_create $cland_block {cland_fwd_net_fclk_out_o}]" in s
+    assert "ot_cland_existing $cland_i $cland_m $cland_net $cland_dst {cland_fwd_net_fclk_out_o}" in s
     assert "$cland_dst connect $cland_fn" in s
     assert f"findMaster {{{LC.FWD_BUFFER_MASTER}}}" in s
     assert "ot_cland_drop_orphan $cland_old" in s and "is not a buffer" in s
