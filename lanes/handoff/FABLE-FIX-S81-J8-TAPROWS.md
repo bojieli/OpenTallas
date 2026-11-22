@@ -23,3 +23,10 @@ Local scripts copy: rtx-pro scratchpad j8/ (compose.py, chain.sh, val1.sh, patch
 1. Gate B green -> build delta (schema opentallas.s81.j6_donor_delta.v1 style: replace ops for the 104 row types on base 5433ac309bb4 + recipe) -> post to S81-J6-ASSEMBLY-R5 with receipts, report to COORD.
 2. Errors only from slice v9 -> rerun on epyc8 with BASE=plans/leaf_e_a0a696072693.json (GN=gateA).
 3. Col rows arrive (FAM-S81-COL-H9R0-R4, due 14:00): recipe = tap_split --cap 1650 --radius-um 300 on the composed plan, then landing_remap OLD=composed NEW=split --types <row types>.
+
+## Status 10:5x PST
+- Gate B run 1 (unit 440360) CANCELLED by me 08:45: bind emit had 2 workers (OT_BIND_EMIT_J auto under 128G cap), 152/1187 rtl files in 2 h 55 min. G0 of run 1 is valid and kept: gateB/g0 vs gateB/g0_j7 = 9 vs 9 errors, 2 gone (cuts), 2 new on dsdv_slice_c1x_C__t8 (both already in SLICE-R6 gate_v9t G0 = slice v9, not tap rows).
+- Gate B run 2 RUNNING: epyc7 unit oth-ubuntu-3575624-1795365981 = chain2.sh GN=gateB RTS=58ebc21a5072 EMIT_J=8 (--mem 240), log gateB2.out, bind.log in gateB/ (run-1 log = bind.log.run1_j2_cancelled). 658/1187 files at 10:54; ETA bind ~12:25, LAT+PRE ~12:40.
+- Row file (PROVISIONAL posted 08:28): epyc7 out/j8_tap_rows_delta.json sha aa74848366a5 (104 replace ops, base 5433ac309bb4, result e9645569a711; mkdelta.py).
+- Waiter: local background poll on gateB2.out (FX_GATE_DONE).
+- On green: post GREEN to S81-J6-ASSEMBLY-R5 + COORD report (<250 words). On partial: hand the clean types (drop ops of failing types from the delta: rerun mkdelta with a filter) and post the rest with cause.
