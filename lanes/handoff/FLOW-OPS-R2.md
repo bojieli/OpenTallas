@@ -13,3 +13,10 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tool
 - A/B intel2 flow-canary/runs/ab_flowops_r2/{on,off}/s81_head_cl_8a2a7b31a_1121_2145* (off = OT_CLASS_KEEP=0 OT_ASYNC_REG_KEEP=0); at GRT 22:3x. Then: if off == good -> narrow in tools/die_plan/replica_keep.py (drop "landing" from CLASS_MOD / exclude ot_dp_clk_landing, keep relay/station/ROM/reset-sync) + test_flowops1300_class_keep.py, push, canary on new sha, SendMessage S81-J6-ASSEMBLY-R5 the J8 sha.
 - s81_cl needs FLOW-CANARY-R2 restored fixture. HBM canaries dropped. Old failed runs flow-canary/ab/runs_flowops_r2 -> ot-delete later.
 ## QUEUE: LEC register matching (FAM-S81-SERDES-R7 dec_j6c 33 NEQ, g_pe[45].thq[1] paired by name with u_bm.th[11][10]); watchdog (container gone/0% CPU 30 min -> HUNG + cancel); io_guard, lever 9, items 8/11/12; ot-push-main flaky tests; tools_lag parser false positive.
+## 11-22 08-10 PST update
+- Pushed on main: 7ca4f3bb5f (LEC tap-clone seeding + F1 CAUSE-CAP by type stem), a054ecf388 (F4 dies.<die>.parked; F5 hold owner=/eta=, HOLD-OVERDUE, orphan hold release, NO-PROGRESS blocker), 3b1cea8bec (plan_gate_pre LANDREMAP), 1ca85a2bee (ABSPATH + localize, LANDREMAP baseline from <plan dir>/bind_of_record), ISTCYC + reprice pushing as push15 (b5e5a5e3368).
+- coord: stale_list parked filter bf860c66ba (2b1342e2cf had a quoting bug for ~2 min); kit_wave.json dies.hbm.parked 01ba83565d.
+- LANDREMAP finding posted to OPUS-FIX-KV-HGI-R6: R6g still flags v2 x2 (remap skipped landing_raw_branches.1 "chain ends").
+- Canary s81_head_cl after narrowing (30b1f11ad/ae9a5815f/52e6c7b5f): grt drv 0, TT 117.0 vs base 127.2 (-10.2, tol -10), signoff drv 39 vs 12; face_cover FAIL is older (before regression). TODO: diff for the remaining 10 ps.
+- ABSPATH strict from 2026-11-29 (ABSPATH_STRICT_FROM in plan_gate_pre.py).
+- Queue next: KIT_TOPOLOGY_BIND_STALE, LEC dec_j6c function matching, watchdog/io_guard/lever 9/items 8,11,12, push test triage, tools_lag false positive; publish_gate/ot_build do not pass --baseline-plan yet (LANDREMAP/ISTCYC need it).
