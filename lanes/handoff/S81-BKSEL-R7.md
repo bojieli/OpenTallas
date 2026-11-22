@@ -76,3 +76,8 @@
   Bind: bksel_ids/bind_r7c.sh via ot-run epyc10 (r7b bind cancelled: r7c supersedes it), logs w/bind_r7c/.
   Next: private-spec s81 bk_sel__t2 --plan plan_r7c --tree tree_ids --bind-out <tree_ids native_bind/out> --goal finish.
 - J8 rows 1-3 READY (posted 03:1x).
+- 04:2x C launched: plan_r7c sha e18e5ce80896fce0 (core_tap_direct key dropped: tree_ids schema refuses it; same switch as
+  gen env OT_TAP_CORE_DIRECT=1 via --ab). bind_r7c GREEN (ELAB 0, BIND 0 errors 0, LATCHECK PASS 873/873, PRE_PASS).
+  spec ~/coord/autopilot/private_specs/S81-BKSEL-R7/s81_bk_sel__t2_1122042135, run-item pid 1685261 on intel2, log
+  ~/s81-bksel-r7-logs/r7c_runitem.log, work epyc10 .../kit-wave/s81/18a2688b741/private/S81-BKSEL-R7/bk_sel__t2_1122042103.
+- u_ids formal: EQUIVALENT by strengthened 1-induction (epyc10 w/bksel_ids/inv_B.{sv,ys,log}, xo.sv/xb.sv).
