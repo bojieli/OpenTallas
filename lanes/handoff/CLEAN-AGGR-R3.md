@@ -21,3 +21,13 @@ Lane clone: epyc8 /srv/opentallas-scratch2/claude/clean-aggr-r3/w. Scratch: <scr
 - 40%-free target not met on epyc7 (11%), epyc8 (17%), intel2 (16%), epyc10 (28%). epyc7 class a SKIP 449 GB / class c SKIP 424 GB in the last pass: read the reasons in its manifest next.
 - ot-run/ot-wait auto-lease not wired (FLOW-OPS).
 - base test FLOW-NOADV-R3 post was resolved by fixing test_ot_autoclean_dx in eb170c1a34.
+
+## 11-22 01:3x update (CLEAN-AGGR-R3)
+- Pushed: d10a3cc3ca (autoclean hub wave-root row), 4c26c5bc90 (guard ancestor cmdlines), 1965d1c2d6 (lane_quota kw45 -> CLEAN-AGGR),
+  d7b817cb7a (plan_ref_paths: plan/gen/type/preflight args + private spec.json <48h, 2-level die_plan follow, /home paths),
+  6cf0366cba (signed_unexported_refusal on every target), 1e69ad3796 (container leases protect only the container).
+- s81-die-r3-e8 retired on epyc2+intel1 (unprotect.txt line added). TREE-LINK-AUDIT: 21/22 deleted.
+- Plan-input audit list: lanes/handoff/CLEAN-AGGR-R3-planref-missing-1122.txt. r4_s0, hg11 d25e, n46r4_a4 gone everywhere (retire-superseded 11-21 19:1x).
+- Open: intel2 s2 253 GB (autoclean started 01:2x); epyc2 s2 462 (cannot reach 550 within rules); rtx-pro root 133 GB (owner call on afg/.cache/trainforensics).
+- Lost signed record 8f88a85b... (pv41c959f3) needs ECO re-run; its json survives in an epyc2 inputs.tar.gz.
+- Kept: epyc7 kw44 (79 signed not in main), fam-qc-cb (2 QC views), fam-kv-iopc-r2 (30 R-MIN unexported, repo/results copies).
