@@ -9237,6 +9237,12 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
             bab = bind_asbuilt(u["bind_out"], sp.get("src"))   # (not `ab`: that is the --ab A/B env list)
             if bab:                                      # the as-built manifest THIS bind read, not the wave bind's
                 sp["kit_rtl"]["asbuilt"] = bab
+                ga = sp.get("gen_args") or []
+                clt = asbuilt_clock_landing(bab, sp.get("src"))
+                if clt and "--clock-landing" in ga and ga.index("--clock-landing") + 1 < len(ga):
+                    # ... and the clock-landing sidecar that manifest names (gen_phys refuses a sidecar of another plan: SIDECAR_STALE)
+                    sp["gen_args"] = list(ga)
+                    sp["gen_args"][ga.index("--clock-landing") + 1] = clt
         if "tools_rt" in u and u["tools_rt"] is None:        # the tree's own tools (gen_tools_pin / stamp = tree generators)
             sp.pop("tools_rt", None)
             sp.pop("tools_sha", None)
@@ -9313,6 +9319,20 @@ def bind_asbuilt(bind_out, src):
     if not os.path.isabs(m) and not src:
         return None
     f = Path(m) if os.path.isabs(m) else Path(src) / m
+    return str(f) if f.is_file() else None
+
+
+def asbuilt_clock_landing(asbuilt, src):
+    """FLOW-STRIPBODY-R2 11-22: the clock-landing sidecar an as-built manifest names (clock_landing_table, relative to the src tree
+    or absolute) when it exists here, else None.  A split plan's asbuilt_vN.json names its re-composed eW_sidecar.json; the wave
+    gen --clock-landing still named the base plan's sidecar."""
+    try:
+        t = json.loads(Path(asbuilt).read_text()).get("clock_landing_table")
+    except (OSError, ValueError, AttributeError, TypeError):
+        return None
+    if not t or not isinstance(t, str) or (not os.path.isabs(t) and not src):
+        return None
+    f = Path(t) if os.path.isabs(t) else Path(src) / t
     return str(f) if f.is_file() else None
 
 

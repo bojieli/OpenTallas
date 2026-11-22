@@ -25,3 +25,15 @@ def test_private_spec_does_not_shadow_the_ab_list():
     import inspect
     src = inspect.getsource(KW.private_spec)
     assert "\n            ab = " not in src and "\n        ab = " not in src
+
+
+def test_asbuilt_clock_landing_names_the_split_sidecar(tmp_path):
+    src = tmp_path / "tree"
+    (src / "p").mkdir(parents=True)
+    (src / "p" / "eW_sidecar.json").write_text("{}")
+    ab = src / "p" / "asbuilt_vN.json"
+    ab.write_text(json.dumps(dict(clock_landing_table="p/eW_sidecar.json")))
+    assert KW.asbuilt_clock_landing(ab, src) == str(src / "p" / "eW_sidecar.json")
+    ab.write_text(json.dumps(dict()))
+    assert KW.asbuilt_clock_landing(ab, src) is None
+    assert KW.asbuilt_clock_landing(tmp_path / "none.json", src) is None
