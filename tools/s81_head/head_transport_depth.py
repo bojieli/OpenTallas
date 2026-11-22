@@ -25,6 +25,9 @@ import sys
 from pathlib import Path
 
 WMAX_ALIGN = 64
+# a clock port shared by several partitions (gen top region nets, e.g. clk_region_host: host_nstrip/e/w, 39 ps apart)
+# takes their mean phase when they lie within this spread (crossing margins >= 100 ps); wider fails closed
+SHARED_PHASE_SPREAD_PS = 60.0
 
 
 def load_plan(p):
@@ -43,6 +46,15 @@ def lane_table(plan, repo):
     except Exception as e:  # report, never silently skip
         print('WARN schema.Plan not importable:', repr(e)[:200])
     rows, mism = [], []
+    pt = plan['partition_types']; ptype = {p['name']: p['type'] for p in plan['partitions']}
+
+    def live_regs(part, bus):
+        # a type with realize_internal_stations builds its internal_stations rows in the WRAPPER (gen.py), outside the
+        # stubbed leaf: the regs of the row on this leaf bus are live in the bench
+        t = pt[ptype[part]]
+        if not t.get('realize_internal_stations'):
+            return 0
+        return sum(len(x.get('regs_um', [])) for x in t.get('internal_stations', []) if x.get('conn') == 'bus:' + bus)
     for li, l in enumerate(plan['lanes']):
         s = ports[l['ports'][0]]['src']; d = ports[l['ports'][-1]]['dst']
         cyc = lat[l['id']]['cycles']
@@ -54,11 +66,17 @@ def lane_table(plan, repo):
                     mism.append((l['id'], cyc, c2))
             except Exception as e:
                 mism.append((l['id'], cyc, 'ERR ' + repr(e)[:80]))
-        # fixed_cycles are realized inside the source/dest CORE (e.g. CTL_PRE x_o +1), which this bench stubs:
-        # the wrapper transport must equal cycles - fixed; the core part has its own proof (listed in the switch).
+        # fixed_cycles are realized inside the source/dest CORE (e.g. CTL_PRE x_o +1), which this bench stubs, EXCEPT
+        # the part the plan realizes as wrapper stations on the lane's end buses (live_regs; r16 p6: 38 lanes, spine
+        # b / x, ch*_r / _h, host / mesh rx-tx at hd_ctl, kd).  The bench transport must equal cycles - fixed + live;
+        # the core part has its own proof (listed in the switch).  live > fixed is a plan error (fail closed).
         fx = int(l.get('fixed_cycles', 0))
+        lv = live_regs(s['part'], s['bus']) + live_regs(d['part'], d['bus'])
+        if lv > fx:
+            raise SystemExit('lane %s: %d realized wrapper stations on its end buses > fixed_cycles %d' % (l['id'], lv, fx))
         rows.append(dict(idx=li, id=l['id'], src=s['part'], sbus=s['bus'], dst=d['part'], dbus=d['bus'],
-                         cycles=cyc - fx, plan_cycles_total=cyc, fixed=fx, width=ports[l['ports'][-1]]['width']))
+                         cycles=cyc - fx + lv, plan_cycles_total=cyc, fixed=fx, live_stations=lv,
+                         width=ports[l['ports'][-1]]['width']))
     return rows, mism
 
 
@@ -98,6 +116,15 @@ def gen(args):
             raise SystemExit('two lanes end at one bus: %s %s' % (k, r['id']))
         by_dst[k] = r
     emitted = json.loads((rtl / 'gen_clock_landings.json').read_text()).get('emitted_modules', {})
+    PH = json.loads(Path(args.phases).read_text()) if getattr(args, 'phases', None) else None
+    CHKC = max(1500, args.cycles // 3)
+    # FRAME (count_align_plan / ot_dp_clk_landing_ca): region v's edge k is at k T + phase_v, its count origin a_v and
+    # the bind's n_nominal are indices of its OWN edges, a ring's lag is L = (K + a_dst - a_src) T + d and a lane's plan
+    # cycles are counts in that frame.  So in a phased bench every stub counts its own clock edges (all generators start
+    # at edge 0 = 1000 + D ps).  --stub-root keeps the tb root counter (diagnostic only: wrong by (phase_dst -
+    # phase_src) / T; the tr25 'root frame' reading was the folded-phase artefact, see tb_text).
+    LOC = bool(PH) and not getattr(args, 'stub_root', False)
+    CYC, CLK, CHK = ('lc', 'ck', 'lchk') if LOC else ('$root.tb.cyc', '$root.tb.clk', '$root.tb.chk')
     files, stubs, cover = [], [], dict(types={}, lanes=len(lanes))
     pkg = ['package ot_tb_pkg;',
            '  function automatic [63:0] smix(input [63:0] z0);',
@@ -145,7 +172,7 @@ def gen(args):
                 W = b['width']; bid = busid[(tn, b['name'])]
                 if b['dir'] == 'out':
                     decl.append('    output wire [%d:0] %s' % (W - 1, pname))
-                    body.append('    wire [%d:0] w_%s = ot_tb_pkg::word(PUID, %d, $root.tb.cyc);' % (wmax - 1, pname, bid))
+                    body.append('    wire [%d:0] w_%s = ot_tb_pkg::word(PUID, %d, %s);' % (wmax - 1, pname, bid, CYC))
                     body.append('    assign %s = w_%s[%d:0];' % (pname, pname, W - 1))
                     continue
                 decl.append('    input wire [%d:0] %s' % (W - 1, pname))
@@ -169,14 +196,14 @@ def gen(args):
                     '    localparam [63:0] SI_%s = si_%s(PUID);' % (pname, pname),
                     '    integer %s_err = 0, %s_ok = 0, %s_first = -1, %s_off = 99, %s_d;' % (v, v, v, v, v),
                     '    reg %s_hit; reg [%d:0] %s_x;' % (v, wmax - 1, v),
-                    '    always @(posedge $root.tb.clk) if (SI_%s[15:0] != 16\'hFFFF && $root.tb.chk) begin' % pname,
-                    '      %s_x = ot_tb_pkg::word(SI_%s[63:48], SI_%s[47:32], $root.tb.cyc - SI_%s[31:16]);' % (v, pname, pname, pname),
+                    '    always @(posedge %s) if (SI_%s[15:0] != 16\'hFFFF && %s) begin' % (CLK, pname, CHK),
+                    '      %s_x = ot_tb_pkg::word(SI_%s[63:48], SI_%s[47:32], %s - SI_%s[31:16]);' % (v, pname, pname, CYC, pname),
                     '      if (%s === %s_x[%d:0])' % (pname, v, W - 1),
                     '        %s_ok = %s_ok + 1;' % (v, v),
                     '      else begin',
-                    '        if (%s_err == 0) begin %s_first = $root.tb.cyc; %s_hit = 0;' % (v, v, v),
+                    '        if (%s_err == 0) begin %s_first = %s; %s_hit = 0;' % (v, v, CYC, v),
                     '          for (%s_d = -8; %s_d <= 8; %s_d = %s_d + 1) begin' % (v, v, v, v),
-                    '            %s_x = ot_tb_pkg::word(SI_%s[63:48], SI_%s[47:32], $root.tb.cyc - SI_%s[31:16] - %s_d);' % (v, pname, pname, pname, v),
+                    '            %s_x = ot_tb_pkg::word(SI_%s[63:48], SI_%s[47:32], %s - SI_%s[31:16] - %s_d);' % (v, pname, pname, CYC, pname, v),
                     '            if (!%s_hit && %s === %s_x[%d:0]) begin %s_off = %s_d; %s_hit = 1; end' % (v, pname, v, W - 1, v, v, v),
                     '          end',
                     '        end',
@@ -187,6 +214,9 @@ def gen(args):
                     ' SI_%s[15:0], PUID, %s_ok, %s_err, %s_first, %s_off);' % (pname, pname, v, v, v, v)]
             if tn == 'hd_ctl' and inst == 'u_core':
                 body.append('    final $display("OBSERVER ctl start_i %0d lep_fault_i %0d", start_i, lep_fault_i);')
+            if LOC:  # every stub counts its OWN clock edges (region edge k = k T + phase, planner frame)
+                body = ['    integer lc = 0; reg lchk = 0;',
+                        '    always @(posedge ck) begin lc <= lc + 1; lchk <= (lc >= %d); end' % CHKC] + body
             stubs.append('module %s #(parameter integer PUID = 0) (\n%s\n);\n%s\nendmodule\n' % (
                 sname, ',\n'.join(decl), '\n'.join(body)))
             text = text[:m.start()] + '    %s #(.PUID(PUID)) %s (\n%s\n    );' % (sname, inst, m.group('body')) + text[m.end():]
@@ -232,7 +262,7 @@ def gen(args):
         if hit is None:
             raise SystemExit('cell module not found: ' + mname)
         files.append(hit)
-    tb = tb_text(plan, top, args.cycles, wmax)
+    tb = tb_text(plan, top, args.cycles, wmax, PH)
     (out / 'tb.sv').write_text(tb)
     files.append(out / 'tb.sv')
     names = []
@@ -290,7 +320,7 @@ def mutate_top(mut, top):
     return top
 
 
-def tb_text(plan, top, cycles, WMAXH):
+def tb_text(plan, top, cycles, WMAXH, PH=None):
     hdr = re.search(r'module s81_head_top \((.*?)\);', top, re.S).group(1)
     ios = re.findall(r'^\s*(input|output)\s+wire\s*(?:\[(\d+):0\])?\s*(\w+)\s*;', top, re.M)  # non-ANSI top: port decls are in the body
     decl, conn, drive = [], [], []
@@ -300,7 +330,29 @@ def tb_text(plan, top, cycles, WMAXH):
         conn.append('    .%s(%s)' % (n, n))
         if d == 'input':
             if n.startswith('clk_region') or n.endswith('_rck') or n.startswith('clk') or n.endswith('__clk'):  # __clk: START-stage tap ports of the completed top
-                drive.append('  always @* %s = clk;' % n)
+                ps = None
+                if PH:
+                    ps = PH['clocks'].get(n)
+                    if ps is None and n.endswith('_rck'):  # <part>_*_rck: the part's own phase
+                        ps = PH['clocks'].get('clk_region_' + n.split('_pma_')[0])
+                    if ps is None:  # a region clock port named for another region: the phase of the partitions it clocks
+                        pat = r'(?m)^    \w+ (?:#\([^\n]*\) )?(\w+) \((?:(?!\n    \);).)*?\.clk\(%s\)' % re.escape(n)
+                        vals = {PH['clocks'].get('clk_region_' + u) for u in re.findall(pat, top, re.S)} - {None}
+                        if vals and max(vals) - min(vals) <= SHARED_PHASE_SPREAD_PS:  # one shared region net: mean
+                            ps = sum(vals) / len(vals)
+                    if ps is None:
+                        raise SystemExit('phased bench: no single phase for clock port ' + n)
+                if ps:
+                    # a free-running generator per phased clock, integer ps under `timescale 1ps/1ps.  Verilator 5.050
+                    # (a) rounds a fractional delay to whole time units (#(0.4) under 1ns/1ps = 0, #(6.6) = 7) and
+                    # (b) folds `always @(clk) x <= #(D) clk` to D mod T/2 once D >= T/2 (the always block waits out
+                    # the delay and misses clk events: D = 1055 and 2055 both rise at 3055, 3811 rises at 5811; HEAD-
+                    # START-R18 dly test 11-21).  Either one quantises / folds every phase, so tr11-tr27 are void.
+                    # tb clk rises at 1000 + 2000 k; this port rises at 1000 + D + 2000 k (edge k of the region).
+                    drive.append('  initial begin %s = 0; #(%d); forever begin %s = 1; #1000; %s = 0; #1000; end end' % (
+                        n, 1000 + round(ps * 2000.0 / PH['period_ps']), n, n))
+                else:
+                    drive.append('  always @* %s = clk;' % n)
             elif n == 'rst_n':
                 drive.append('  always @* rst_n = (cyc >= 40);')
             elif n == 'start' or n.startswith('pst_'):
@@ -309,9 +361,9 @@ def tb_text(plan, top, cycles, WMAXH):
                 drive.append('  wire [%d:0] wd_%s = ot_tb_pkg::word(%d, 0, cyc); always @* %s = wd_%s[%d:0];' % (WMAXH - 1, n, 4000 + len(drive), n, n, W - 1))
     decl = [x for x in decl if not re.search(r'\b(clk)\b;', x)]
     return '\n'.join([
-        '`timescale 1ns/1ps', 'module tb;',
+        '`timescale 1ps/1ps' if PH else '`timescale 1ns/1ps', 'module tb;',
         '  reg clk = 0; integer cyc = 0; reg chk = 0;',
-        '  always #1 clk = ~clk;',
+        '  always #1000 clk = ~clk;' if PH else '  always #1 clk = ~clk;',
         '  always @(posedge clk) begin cyc <= cyc + 1; chk <= (cyc >= %d); if (cyc == %d) $finish; end' % (
             max(1500, cycles // 3), cycles)] + decl + drive + [
         '  s81_head_top dut (', ',\n'.join(conn), '  );',
@@ -334,6 +386,49 @@ if [ $rc -ne 0 ]; then echo "BUILD_FAIL rc=$rc"; grep -m20 -E "%Error" "$O/build
 "$O/sim" > "$D/run.log" 2>&1
 echo "RUN rc=$?"; grep -c "^LANE" "$D/run.log"; tail -3 "$D/run.log"
 '''
+
+
+def phases(args):
+    """HEAD-START-R17 phase model (count-aligned HEAD needs it): the plan's K straps, START steps PAD + 2 + J(d) and ring
+    windows are derived from the REAL clock difference d of every START tree edge and crossing, so a single ideal clock
+    is not a model of the die (19 r16 p6 rings are outside their window at d = 0, every rise START edge is 1 count
+    late).  The phase of every region = the sum of the bind's START-edge d along its tree path (root 0), so every tree
+    edge gets exactly its planned d; each crossing's bench d (phase dst - phase src) is checked against its derated
+    [d_lo, d_hi].  Clock ports: START stage taps (stage region) and clk_region_<part> / <part>_*_rck (part region).
+    usage: phases BIND STAGES OUT.json"""
+    bd = json.loads(Path(args.bind).read_text())
+    st = json.loads(read_any(args.stages))
+    R, SP = bd['regions'], bd['start_ports']
+    ph = {}
+
+    def phase(r):
+        if r in ph:
+            return ph[r]
+        v = R[r]
+        ph[r] = 0.0 if v['parent'] is None else phase(v['parent']) + float(SP[v['tree_port']]['d_ps'])
+        return ph[r]
+    sys.setrecursionlimit(100000)
+    for r in R:
+        phase(r)
+    lo = min(ph.values())
+    clocks, dev, bad = {}, [], []
+    for s in st['stages']:
+        clocks[s['clock_port']] = ph[s['region']] - lo
+    for pn, pv in bd['parts'].items():
+        clocks['clk_region_' + pn] = ph[pv['region']] - lo
+    for k, v in bd['ports'].items():
+        ra, rb = bd['parts'][v['src_part']]['region'], bd['parts'][v['dst_part']]['region']
+        d = ph[rb] - ph[ra]
+        dev.append(abs(d - 0.5 * (v['d_lo_ps'] + v['d_hi_ps'])))
+        if not (v['d_lo_ps'] <= d <= v['d_hi_ps']):
+            bad.append((k, round(d, 1), v['d_lo_ps'], v['d_hi_ps']))
+    out = dict(schema='ot_head_bench_phases/1', period_ps=float(bd.get('period_ps', 833.0)), clocks=clocks,
+               check=dict(regions=len(ph), crossings=len(dev), crossing_d_outside_interval=len(bad),
+                          outside=bad[:40], max_dev_from_mid_ps=round(max(dev), 1) if dev else 0.0,
+                          max_phase_ps=round(max(clocks.values()), 1)))
+    Path(args.out).write_text(json.dumps(out, indent=1))
+    print(json.dumps(out['check']))
+    return 1 if bad else 0
 
 
 def report(args):
@@ -375,8 +470,13 @@ def main():
     g.add_argument('--cycles', type=int, default=4000)
     g.add_argument('--top', help='completed die top (.sv or .sv.gz) instead of RTL_DIR/s81_head_top.sv')
     g.add_argument('--extra', action='append', help='extra RTL (e.g. start_stages.sv[.gz]), repeatable')
+    g.add_argument('--phases', help='phases OUT.json: per-clock-port planned phase (count-aligned die model); stubs count own edges')
+    g.add_argument('--stub-root', action='store_true', help='phased: stubs use the tb root counter (diagnostic, not the plan frame)')
+    q = sp.add_parser('phases'); q.add_argument('bind'); q.add_argument('stages'); q.add_argument('out')
     r = sp.add_parser('report'); r.add_argument('plan'); r.add_argument('out'); r.add_argument('run_log')
     a = ap.parse_args()
+    if a.cmd == 'phases':
+        sys.exit(phases(a))
     gen(a) if a.cmd == 'gen' else report(a)
 
 
