@@ -29,3 +29,6 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
 ## COORD item 11-22 symlinked-plan class fix: DONE main c7cf2178a9
 - tools/die_plan/tree_write_guard.py wired into r8_refresh.py, land_r8_derive.py derive --out, ot_build in-place choice; ot-tree-fork PLAN links (refuse / --materialize, verify PLAN-LINK); kit_wave private_tree_plan_link_refusal.
 - Audit lanes/handoff/TREE-LINK-AUDIT-1122.tsv (37 lane-dir trees linking out; 3 live FABLE-PIPELINE-R1 ot-build launch trees). Post 6878853ae3.
+
+## COORD item 11-22 lever 7 landing band x core G0 check: DONE main b7e262fd60
+- tools/die_plan/landing_band_core.py + check.py wiring (ERROR landing_band_core); existing findings S81 t3/t32, KV hg/hgi (16) posted.
