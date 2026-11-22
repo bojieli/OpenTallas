@@ -32,8 +32,19 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
 c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
 
+## NAMES + COORD 09:5x orders (read first)
+- My tree label is r18k (COORD: R8 owns the name r18j = snap_s81_head/s81_head_r18j_split_s0, plan 50efe732a945). On disk my r18k is still
+  epyc9 L/trees/s81_head_r18j_pairs (plan 762441fd7f14); gate dirs L/bind_r18j2, scripts chain_r18j*.sh keep their file names.
+- Plan diff r18k vs R8 r18j (L p8-style diff 09:5x): ONLY hd_host_n {pg_pin_rule: true, note} + the two lep0N pieces; sidecar identical, other 24
+  types identical. Merged plan of record = r18k rows + hd_host_n.pg_pin_rule=true; the W coll_i1/coll_i2 band rects are alternatives (mine on
+  the pin columns vs R8 north of pair 2): take the one whose W kit passes the tap pre-GRT. Agree with R8, post the merged sha.
+- COORD orders: (1) e2 = E variant with relay/station rows for u_bout_o_h2r1_p (-229.6 x186) NOW, fork r18m (L/trees/s81_head_r18m_e2, fork
+  started 09:5x, log fork_r18m.log), also carries hd_host_n.pg_pin_rule; xy probe of the path queued (intel2 sta_e3.otrun.log -> epyc9 L/sta_e3/e_h2r.txt).
+  (2) w10 = W variant with the congestion fix as soon as L/grt_probe30/cong.rpt lands. (3) keep durable waiters on e1, w9, e2, w10.
+- Growth / re-shape of outline and cores is now allowed (owner 11-22), parallel variants and extra cycles pre-approved.
+
 ## LIVE 11-22 09:4x PST (read first)
-- PAIR VIEW SIGNED 09:14 (rst_n on the S face), views built, tree r18j gated, E + W kits launched 09:44. Details: rows file section 7.
+- PAIR VIEW SIGNED 09:14 (rst_n on the S face), views built, tree r18k gated, E + W kits launched 09:44. Details: rows file section 7.
   Tree epyc9 L/trees/s81_head_r18j_pairs, plan 762441fd7f142bf6 (r18h + pair view vE28s + rekeyed reset rows). Gates PASS (L/bind_r18j2).
 - E kit: unit fable-lep0n-e1 on intel2 (pid 1145048), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_1122094359/spec.json,
   log ~/fable-fix-head-lep0n-1122/runitem_e1.log. First E build with: status relays to agg_1 (LEP-FACESTAT-1), new pair view.
@@ -65,7 +76,7 @@ Facts: - pair = ot_s81hd_lep_pair 777.6x492.48, 1.10 M cells, ONE module for rg0
    selected nets -> signoff.py run minimal profile); 11-18 run took 35 min.
  - Open check: bind picks the core reset gate tap nearest the core CENTRE (bind.py ~4700 CORE_SPLIT reset_gate); make it follow the pin or add a tap row.
 Steps: a) kit regen + read net rst_n on the DB; b) pin-move ECO + incremental route of rst_n; c) signoff; d) views (LEF, ETM tt/ff, detail splice,
-clock_contract, signed_view_sha); e) tree r18j = r18h + 4 pair rows (pins_file, lef, lib) + gates; f) E kit --goal route; relaunch W on r18j; tell R8 the sha.
+clock_contract, signed_view_sha); e) tree r18k = r18h + 4 pair rows (pins_file, lef, lib) + gates; f) E kit --goal route; relaunch W on r18k; tell R8 the sha.
 
 ### E reset task progress 08:0x (all on epyc9, P=L/pair, scripts L/tmp/pair_*.sh / pair_eco.tcl; hub logs intel2 ~/fable-fix-head-lep0n-1122/pair_*.otrun.log)
 - DONE a) kit regenerated (gen only): P/kit/ot_s81hd_lep_pair_kit (constraint.sdc identical to the signed golden.sdc; made from tree r18f + lep_ve28 plan).
@@ -78,12 +89,12 @@ clock_contract, signed_view_sha); e) tree r18j = r18h + 4 pair rows (pins_file, 
   P/views/view/ot_s81hd_lep_pair.{lef,_tt.lib,_ff.lib} + splice.json; then clock_contract.json (tools/die_plan/core_clock_contract.py; needs
   PYTHONPATH with physical/die_plan `cores` module: run from a tree, see the old results/head_lep_pair_views_vE28_1118/clock_contract.json form),
   README + source_signoff.json copy -> new tree dir results/head_lep_pair_views_vE28s_1122.
-- NEXT e) tree r18j = fork of r18h + new view dir + core_pins/lep_pair_pins_777s.json (= 777 with rst_n {M5, x 399.384, y 0.042}) + the 4 pair
+- NEXT e) tree r18k = fork of r18h + new view dir + core_pins/lep_pair_pins_777s.json (= 777 with rst_n {M5, x 399.384, y 0.042}) + the 4 pair
   hard_cores rows of hd_lep0N (rg0, rg3) and hd_lep0N_w (rg1, rg2): pins_file, lef, lib -> republish both wrappers (reset tap of the pair
   follows the pin: today tap 204 u_rrl_380 (535.7,1343.5) = pin x, N of rg0) -> bind/cohort/LATCHECK + plan_gate_pre (chain script name must
   start with chain* for ot-run --priority plan).
-- NEXT f) E kit: private-spec s81_head hd_lep0N --tree r18j --goal route --src-manifest seal --rt c9b8d5f226ca (or newer), run-item --goal route;
-  relaunch W on r18j; post the view sha256 to R8 + COORD.
+- NEXT f) E kit: private-spec s81_head hd_lep0N --tree r18k --goal route --src-manifest seal --rt c9b8d5f226ca (or newer), run-item --goal route;
+  relaunch W on r18k; post the view sha256 to R8 + COORD.
 - W build B relaunched 07:44 as unit fable-lep0n-w8 (pid 826765, spec s81_head_hd_lep0N_w_1122074440, plan 163383b979fca607): attempt w7 died at
   place "OT_CLAND no mapped cells found under u_cland_origin" (landing_reader_start.origin_rect_um pins u_cland_origin, absent on a relay
   piece) -> key dropped (L/tmp/rstart3_fix.py). st.sh now reports w8.
