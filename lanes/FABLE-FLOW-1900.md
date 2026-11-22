@@ -1,143 +1,227 @@
-# FABLE-FLOW-1900: procedural and flow failures, 15:45-17:48 PST (2026-11-17)
+# FABLE-FLOW-1900: procedural / flow review, window 11-21 12:23 to 18:50 PST
 
-Reviewer: FABLE-FLOW-1900 (Fable). Read-only: no kills, no deletes, no config edits.
-Measured 17:43-17:50 PST on the intel2 hub and the 6 build hosts. Sources: autopilot/log.txt 15:45-17:46,
-failure_breakdown.py (17:43), `ot-run --status`, kit_wave.json, kit_wave_state.json, rt/history.log, origin/main log,
-lanes/posts 16:50-17:44, tools_refresh log and units, per-host ps / docker images / df. Previous: FABLE-FLOW-1700.
-Shares are estimates from live-job counts and idle threads.
-Not checked: AGIdock, thread-hours per job, whether an old-event plan block equals the current one (class A),
-the cause of the one QC KIT_NOT_SELF_CONTAINED at place (C3).
+Lane FABLE-FLOW-1900 (Fable 5.2). Read-only review, process and tooling only. Nothing cancelled, signalled, launched,
+deleted or edited. Previous: lanes/FABLE-FLOW-1240.md (window 10:40 to 11:56).
+Sources: autopilot/log.txt (12:23 on), autopilot/kit_wave_state.json and kit_wave.json (18:24), lanes/FLOW-HEALTH.tsv (18:07),
+RELEASE_TREE.md failure block (18:17), `ot-run --status` (18:29 and 18:49), ~/.local/state/ot-run/signals.log, disk-rate.log,
+per-host ~/.local/state/ot-auto-retire/log.jsonl and auto-clean/host.log (6 build hosts), ~/.local/state/ot-delete-guard/protected.txt,
+rt/current tools/fleet/ot_delete_guard.py + build_protected_live.py, CODEX-LOG.md 18:11 handoff, posts of FLEET-WATCH-R8,
+FLOW-OPS-1300, FLOW-CANARY-R2, FLEET-OPS-R. Size samples on epyc10, epyc8, intel2 were `ionice -c3 nice du/find` with timeouts.
+Marking: **V** = read or measured this round. **R** = reported by the named lane. **I** = inferred. **P** = proposal.
+Clocks: epyc7 to epyc10 log in UTC (PST + 8 h); intel1, intel2, epyc2 in PST.
+Not done: no git history was read; kw45 total size on epyc10 did not finish in 400 s of du, so that one number is by subtraction.
 
 ## Headline
 
-1. The wave launches again: 60 launches in hour 16, 49 in 17:00-17:46 (QC 60, KV 47, HEAD 2, S81 0). SIGNED: 2.
-   UNDER-USE 17:42: 341 of 624 threads idle (45% used).
-2. 24 of the 28 KIT-WAVE FAIL lines are procedural or infra, none of them a design result: 11 disk full (epyc9),
-   7 partial bind copy (KV), 5 missing docker image (epyc7), 1 QC kit input. The other 3 are one known plan error
-   relaunched through a leaked hold (class D).
-3. 38 of 103 live kit items (37%) run on a superseded plan event: QC 28 of 63, HEAD 10 of 10, KV 1 of 30 (class A).
-4. tools_refresh still applies nowhere. The KV refresher is now a loop: 9 starts today, every one AP_RC=1, 2 units
-   alive at once at 17:48 (class B).
-5. S81: 0 launches in the window, 127 current-event rows in FAIL FLOW, 17 enqueued. It waits for the D6z tree.
+1. **The disk problem has moved to intel2, the only host that still admits.** intel2 scratch2 free: 1263 GB at 11:33, 861 at
+   18:03, 576 at 18:50 (V, df). That is 62 GB/h over the afternoon and about 360 GB/h since 18:03. Writers at
+   18:50 (V, /proc io, 10 s): three rsync pulls from epyc7 at 16 to 17 MB/s each (lane tree `s81-bksel-r7/tree_r6`, a src-manifest
+   replicate, a kit-store snap) plus the die source trees FLEET-WATCH-R8 copied at 18:1x. Lanes and the wave are moving full
+   copies of their trees to the one host with room. If the rate holds, intel2 is at the 100 GB ot-run floor between 20:00 and 20:30.
+2. **The wave launched 57 rows at 18:22 to 18:40, none on intel2, all on the 9999-drained hosts** (V: 48 rows started in the
+   last hour have gen_host epyc2 20, epyc7 11, epyc10 9, epyc8 9; intel2 0). epyc10 fell 72 GB (18:14) to 35 GB (18:43), under
+   the 50 GB floor. `host_drain` stops new ot-run job dirs but not the wave's own gen / kit_rtl staging. Class (a).
+3. **intel2 is in every gen_hosts list but is not usable by the wave.** SRC-INCOMPLETE for qwen_compute, qwen_kvsys and s81 on
+   intel2 at 18:18, 18:30, 18:39, 18:49 with the same first missing file each time (V). The 18:1x rsync copied the die src
+   trees, not the bind / postbind / macro trees the kits also read. The self-heal copies 100-file batches and has not converged
+   in four ticks. Class (b).
+4. **The delete guard fix (item 13, main 10b728cf8e3, 13:30) worked for attempt dirs and freed about 0 GB**, because old attempt
+   dirs are not where the space is. What the guard still refuses is whole kw45 source trees and whole lane trees: 148 distinct
+   kw45 trees and 260 lane top dirs carry at least one protected path (V, protected.txt 3,175 entries), while live wave rows name
+   12 kw45 trees (V). Class (c) and the disk section.
+5. **No kit-wave launch from 12:00 to 18:22 (6.4 h)** (V: launches per hour 75 at 11, 0 from 12 to 17, 57 at 18). 106 rows sat
+   ENQUEUED. Fleet load at 18:29 was 437 of 736 threads (59 %); epyc9 29/96, intel1 36/112, intel2 45/112.
+6. **Sign-off count: 524 any plan, 433 current plan (V 18:20), +14 / +9 since 11:49.**
+7. E2BIG: 0 new FAIL lines in the window (15 in the last one). Class stopped. Canary: every verdict still FAIL. Class (f).
 
-## 1. Fixes since 17:00 and the 1700 "do now" list: live and working?
+Trend against FABLE-FLOW-1240: FAIL lines 18 in 1.3 h then, 10 in 6.4 h now (9 disk not-run, 1 ssh timeout). Draining hosts 2
+then, 6 at 18:29; at 18:49 epyc2, intel1 and epyc8 show DRAINING, epyc7 and epyc9 show no flag, epyc10 was not captured. STALE 109 then, 110 now.
 
-rt/current = main 41129805aac4 on the hub and all 6 hosts (17:37-17:38). r641 is approved, not yet on main.
+## Classes
 
-| Item | Live | Working |
+Fleet base: 159 running units (V 18:29). "Share" is the share of fleet thread-hours in the 6.4 h window, estimated (I).
+
+### (a) Admission and drain do not agree with each other: 182 REQUEUE, 9 FAIL, 75 INFRA-RETRY, rising
+
+- Count (V): `ot-run REQUEUE no host qualifies` 182 since 12:23 (hour 13: 48, 14: 59, 15: 11, 18: 63). Reasons: epyc10 scratch
+  under the 100 GB floor 141, epyc8 same 28, intel2 ssh name resolution 5. `KIT-WAVE FAIL ... NOT RUN: no host with --dir has
+  60 GB` 9 (all 12:25 to 12:55, QC). INFRA-RETRY 75 lines for 14 rows, now at requeue 6 of 8. RETRY-INFRA-STOP NO-HOST 11.
+  LAUNCH-DISK-CAP 79 lines until 17:59, then none.
+- Root cause (V for the facts, I for the mechanism): three separate disk rules decide one launch and they read different things.
+  The wave disk cap passes a die when any host in its list has `free - 150 - in flight` room; adding intel2 at 18:1x made it
+  pass for every die. The gen host is then picked from hosts whose source tree is complete and whose free space is above
+  `gen_disk_min_gb` 70; intel2 is excluded (class b), epyc10 at 72 GB passed. The job dir is therefore on epyc10, and ot-run
+  refuses it there (scratch floor 100, drain 9999). The row can only requeue. `host_drain` is not read by the gen-host pick.
+- The 9999 drains are set and cleared by hand (R: r8watch undrains epyc10 only; epyc2/7/8 by FLEET-WATCH-R8 at > 200 GB). A
+  manual hold with no release term over-holds: epyc7 sat at 266 GB free with a 9999 drain at 18:29.
+- Structural fix (P): one function, used by the wave cap, the gen-host pick and ot-run admission, that answers "can host H take
+  N GB for this row" from the same inputs (free, floor, in-flight peak, drain). A row is launched only with a host that passes
+  it for gen and for place. Drain becomes a computed state with hysteresis (enter below floor + in-flight peak, leave above
+  floor + 1.5 x in-flight peak for 30 min) so nobody undrains by hand. A row whose staged host stops qualifying is restaged once
+  to a qualifying host instead of requeued in place. No floor changes.
+- Owner: FLOW-OPS-1300 (code), FLEET-WATCH-R8 (operate until it lands).
+- Share: about 40 % of fleet thread-hours idle for 6.4 h with 106 rows queued (I, from load 437/736 and zero launches). No
+  compute was burnt by the not-run rows themselves.
+
+### (b) Host added to a host list without its input closure: 12 SRC-INCOMPLETE, 44 SRC-SYNC, new
+
+- Count (V): SRC-INCOMPLETE intel2 x 3 dies x 4 ticks. SRC-SYNC 44 lines (228 + 95 + 286 files named at 18:18). One
+  `rsync error ... file IO (code 11)`. ADOPT-GUARD PLAN_MISSING on intel2 for all five dies once, then 33 ADOPT-GUARD alerts
+  after 18:15; autopilot/ADOPT-GUARD-FAILED present at 18:27. Tick time 481 and 486 s (was 201 to 222 s), 444 s of it in
+  kit_wave_step.
+- Root cause: a host is made a gen host by editing lists. Nothing computes what a kit on that host reads (src tree, bind and
+  postbind snapshots, macro trees outside kw45 such as `s81-j6/candC1n_pf`, plan file). The self-heal repeats the same batch
+  without checking that the missing count fell: a retry on an unfixed cause.
+- Structural fix (P): `kit_wave_edit add-host` refuses unless a closure probe (the list SRC-INCOMPLETE already computes) is
+  empty on that host, and offers the one replicate command for the whole closure. Self-heal stops and posts after two passes
+  with no drop in the missing count.
+- Owner: FLOW-OPS-1300. FLEET-WATCH-R8 to finish the intel2 closure, or take intel2 out of gen_hosts until it is whole.
+- Share: about 1 % (tick time doubled for the whole wave; no kit lost).
+
+### (c) Guard and auto-retire refuse by reference, at whole-tree grain: about 2,000 refusals per host per 6 h, flat
+
+- Count (V, per-host log.jsonl; intel1, epyc2, intel2 over 6 h, epyc7 to epyc10 over 14 h): "protected (kit_wave.json src/bind of
+  record/marker/prov)" 782 to 1,918 per host, the largest class on every host. Next: "named in a hub post of the last 24 h" 7 to
+  1,122, PROTECTED-DBS 84 to 924, FAILED 100 to 1,016 (epyc2), live input 3 to 586, "SIGNED unit not in the signed store" 13 to
+  135. Deletes per 30 min pass fell through the day (epyc10 34 at 11:40 PST to 4 at 18:13; epyc2 45 to 14) with refused constant
+  (epyc2 about 410, intel1 260, intel2 300, epyc10 95). Free space after a pass equals free space before it.
+- What is refused now (V, guard decision replayed on the dirs refused in the last 2 h on epyc10 and intel1): attempt dirs only
+  44 and 11, each listed itself or holding a listed `gen/<type>` or `rtl/kit_rtl.f`. kw45 trees 24 and 19: half listed
+  themselves, half refused for one small file inside (`plan_of_record/latcheck.json`, `sidecar_new.json`, `plan_h2_2249.json`,
+  `signed_view_sha_s81.json`). Lane trees: one protected child refuses the whole lane dir.
+- Root cause: protection is granted by any reference and never bounded. 3,884 CANCELLED wave rows still in state name 42 kw45
+  trees; `superseded_trees` lists hold 76 more names; prov cache 72 h; hub posts 24 h. The unit protected is a file of a few kB;
+  the unit retired is a 30 to 60 GB tree. The log stores the reason cut to about 150 characters, so the protected path is
+  usually unreadable; I had to replay the guard to see it.
+- Structural fix (P): see "Retention rule" below (R1, R2). Log the full protected path.
+- Owner: FLOW-OPS-1300 for the guard list builder and auto_retire candidates; new lane DISK-RETAIN-1 for the record pack and
+  base + overlay source trees (too large for a fix lane that also owns the wave).
+- Share: this is the cause of (a); counted there.
+
+### (d) Stale rows on superseded events: 62 ENQUEUED and 113 ROUTE-HELD, flat
+
+- Count (V): ENQUEUED 106, of them 62 on superseded events (QC 36, S81 23, KV 2, HBM 2), median age 13 h, oldest 19 days.
+  ROUTE-HELD 118, of them 113 on superseded events; 34 older than 3 days, 40 between 1 and 3 days. RETIRE-SUPERSEDED prints
+  "retired 0" on all 18 passes. STALE block: 110 (HBM 104 parked, QC 5 unowned, S81 1).
+- Root cause: an un-started row of a superseded event has no terminal transition (owner 11-20: never start it). A ROUTE-HELD
+  row waits for a visual verdict or a form change that no one will give for an old event. Both count as live or queued for the
+  guard, so each keeps its item dir, two attempts and its source tree.
+- Structural fix (P): ENQUEUED on a superseded event with a current-event row for the same type goes to CANCEL-SUPERSEDED on the
+  next tick. ROUTE-HELD with a BAD verdict or WAIT-VISUAL older than 24 h on a superseded event goes to the same state, keeping
+  reports and images. Running old-plan kits are untouched (owner rule).
+- Owner: FLOW-OPS-1300. The 5 unowned QC types (4 `sle_hc0/slw_hc0` with no kit-wave row, `slw_hc3__clccfc3e6b__pv39aac7a1`
+  SIGNED 13 h with count pending) go to QC-PLAN-R12.
+- Share: 0 compute; it pins disk (source trees d8h, d8i, d8j5, d8j6, d25e3 are held only by these rows, V).
+
+### (e) Tool and source skew: warn-only, rising
+
+- TOOL-SKEW WARN (V 18:17): import-closure modules differing from the die pin: KV 349, S81 234, QC 161, HEAD 9, "launching".
+  TOOLS-LAG: live die source trees are 185 to 380 commits behind main and all four report `missing r708` (nominal clock cap);
+  at 12:25 KV read "97 commits / missing none". FLOW-HEALTH SKEW (18:07): 37 to 48 modules of the gen/bind closure differ from
+  origin/main per live die tree; identical across hosts.
+- rt/current differs between hosts (V 18:35): intel2 and epyc10 at 7b6af7dd0449, epyc8 and intel1 at 97321d8d0310. The guard
+  file is identical in both. ot-tools-sync may have been mid-roll; it has failed before on hosts under 50 GB.
+- Root cause: the source tree is pinned per event and the rule set (r-numbers) moves on main; the check warns and launches.
+- Structural fix (P): a rule marked gate-relevant (r708 changes sign-off STA) makes TOOLS-LAG a launch condition for sign-off
+  stages only: the measurement tcl is read from rt, not from the pinned tree (open since FABLE-FLOW-1000). ot-tools-sync posts
+  when a host stays one snapshot behind for 30 min.
+- Owner: FLOW-CANARY-R2 (which rules are gate-relevant), FLOW-OPS-1300 (the read path). Share: not measurable today; the risk
+  is sign-offs on a stale STA basis, not lost time.
+
+### (f) Canary: 17 verdicts in 6 posts since 17:00, 0 pass, flat
+
+- V: s81_cl has no baseline and fails KIT_PREFLIGHT reset_tree_coherence before GRT, so it can never set one. hbm reports
+  REGRESSION "not measured". STALE-BASELINE verdict and re-baseline landed (R, main 1a2f43e0ea).
+- Structural fix (P): a canary whose inputs fail preflight is INPUT-BROKEN, not FAIL, and is excluded from the release verdict
+  with one owner post; a canary on a parked die (hbm) is not scheduled.
+- Owner: FLOW-CANARY-R2. Share: under 1 %.
+
+### (g) Hub edited outside coord-commit, and alert noise: 11 HUB-SYNC-FAILED, 120 ADOPT-GUARD, flat
+
+- V: HUB-SYNC-FAILED 11 alerts, 5 episodes (12:29 tools/signed_store_ingest.py, 13:32 lanes/posts, 15:32 NOPROG-ACTIONS.tsv,
+  17:17 and 17:43 results/geom_review), still present 18:26. ADOPT-GUARD PLAN_MISSING hbm 60 + FIX 60, bind preflight hbm
+  UNKNOWN 120 lines, DIE-OFF hbm 5: a parked die whose plan path was deleted prints every tick.
+- Structural fix (P): writers of NOPROG-ACTIONS.tsv and geom_review commit through coord-commit in the same step (they are
+  tools, not people). A die marked parked in kit_wave.json is skipped by adopt-guard and bind preflight.
+- Owner: FLOW-OPS-1300. Share: 0; it hides real alerts.
+
+### (h) Writer attribution is missing where the disk is worst: new
+
+- V: lane quota alerts name intel1 only (harvest-eco-2350 36 to 58 GB per window, 4 alerts; kw45 186 and 191 GB per 6 h). The
+  per-host scan timed out at 1,500 s on the 7.4 TB hosts in its last logged runs; `disk_eta_lanes` is empty on every host. The
+  4-hourly "top writers" report last posted 11-18.
+- Structural fix (P): writers record their own bytes at the end of a stage (ot-run job end, wave attempt end, replicate end)
+  into a per-host ledger; no tree walk. Owner: FLEET-WATCH-R8 with FLOW-OPS-1300.
+
+## Why the disk keeps filling
+
+### Stock (V unless marked)
+
+| Host | scratch2 size | free 18:50 | state 18:49 |
+|---|---|---|---|
+| intel1 | 3,520 GB | 126 | draining (< 250) |
+| intel2 | 3,520 GB | 576 | admits, falling |
+| epyc2 | 880 GB (+ scratch3 3,520, 385 free) | 107 | draining 9999 |
+| epyc7 | 7,393 GB | 265 | no drain flag |
+| epyc8 | 7,393 GB | 74 | draining 9999 |
+| epyc9 | 7,393 GB | 199 | no drain flag |
+| epyc10 | 7,393 GB | 35 | under floor |
+
+epyc10 composition: wave run dirs 1,731 GB (kw43-wave-1109n 1,598: 4,103 attempt dirs in 2,382 items over 91 events, of which
+3 events are current); ot-jobs 97; kit-store 95; ot-store 52; rt 51. That is about 2.0 TB of 7.34 TB used. The other 5.3 TB is
+kw45 (205 trees: 139 src + 66 snaps, 107 of them created 11-19 to 11-21) and 285 lane dirs (I, by subtraction). epyc8 is the
+same shape: wave 1,307, 158 kw45 trees. intel2 holds 250 GB in 10 kw45 trees after one afternoon.
+
+### Writers per host per hour (GB/h)
+
+| Host | net fall, window | named writers |
 |---|---|---|
-| r626 QC preflight frame pairs | rt 7/7 | yes: QC 39 launches in hour 16 (0 before) |
-| r628 tools_lag by ancestry | rt 7/7 | yes: TOOLS-LAG now lists r407..r640 per die; HEAD shows r618-r640 |
-| r629 tree_has release term | rt 7/7 | unused: 0 tree_has terms in kit_wave.json (class B) |
-| r630 apply replicates, no narrowing | rt 7/7 | yes for HEAD NF15f (17:23, tree on 4 hosts, ADOPT-ROWS line). QC N1B was applied before it: tree on epyc8 + epyc9 only, gen_hosts = [epyc8] |
-| r632 event lineage | rt 7/7 | yes: HOLD-TERMS "no producer" (NF15c) stopped after 16:36 |
-| r633 ot-run NOT-RUN exit 78 | rt 7/7 | not exercised: 0 NOT-RUN lines |
-| r634/r635 kit self-containment | rt only | not in any die tree (class B) |
-| r636 KV pc keepout | rt only | not in a KV tree; goes with D22 |
-| r637 whole bind_out | rt 7/7 since 17:37 | prevention not exercised (0 SRC-INCOMPLETE lines). State is right now: kv-r3/d16gate/bind has 29 entries, 630 MB on all 6 hosts. Last fail of the class 17:19:29 |
-| r638 serdes H-form part 1 | rt only | no, and DEFECT posted 17:37: serdes_boot_release_local.tcl has t13 coordinates hardcoded; wrong for the other 10 types |
-| r639 host requires + place_prefer | rt 7/7 | derive_gen_hosts ran: KV 4 hosts, HEAD 3, QC 1 (epyc8) |
-| r640 flow image keep list | rt 7/7 | yes: flow_images.txt present; opentallas/orfs:asap7lock-grtoff on 6/6 hosts (17:47). The 5 items that failed are still not relaunched (C1) |
-| r641 family hold margin | no | not on main at 17:44 (FABLE-FIX-QC-N found 0 occurrences in rt) |
-| 1700 F: COUNT-REVOKED sd9f | yes | row present (sha256 e4f6d7f4...) |
-| 1700 C: retry-probe | yes | 3 probes per class run. Release rule still wrong (C2) |
-| 1700 B2: one refresh per die per hour | no | worse (class B) |
-| 1700 H: second term on S81 serdes holds | partly | term added, but it is a `result:` term again (class B) |
-| 1700 I: quota stop | no | still "alert only, nothing stopped"; epyc9 reached 0.5 GB (C3) |
+| intel1 | 21 to 51 (R disk-rate) | harvest-eco-2350 about 8/h; kw45 about 31/h (R lane quota) |
+| intel2 | 62 average, about 360 from 18:03 to 18:50 (V) | rsync of lane and die trees from epyc7, 3 x 17 MB/s = 180/h visible (V) |
+| epyc2 | 13 to 43 (R) | D27c mirror burst to 94 GB free at 15:0x (R FLEET-WATCH-R8) |
+| epyc7 | 23; 130 at 14:4x (R) | two S81 donor transfers 112/h at 14:42 (R) |
+| epyc8 | 20 to 36 (R) | git checkout burst to 85 GB free at 15:0x (R) |
+| epyc9 | up to 51 (R) | not attributed |
+| epyc10 | 11 to 15; 75 at 18:14 to 18:43 (V) | route ECO job dirs 23/h (V: 11.4 GB in 30 min, one job dir is 41 GB); 36 new wave attempts 8/h (V); rest not attributed |
 
-## Classes, ranked by fleet time wasted
+Three writer kinds account for what could be attributed: (1) full copies of source trees, per plan event and per host and now
+per lane move; (2) route and ECO job dirs, where each ECO iteration keeps four 1.9 GB ODBs (5_route, 5_3_fillcell, 6_1_fill,
+6_final); (3) wave attempt dirs, small each (0.15 to 0.3 GB at gen) but never retired for old events with held rows.
+Cleanup removes a few dirs per pass because everything large is protected by reference (class c). Inflow is 15 to 60 GB/h per
+host; guarded outflow is near zero. The disks fill at the inflow rate.
 
-### A. Work on a superseded plan event (37% of live kit items; trend up, was "90 rows" at 1700)
+### Retention rule (P), inside the owner rails: guard, floors and delete path unchanged
 
-- Count: live processes by event (ps on 6 hosts, 17:46): QC L2 18, Q6D 9, S2 1 against N1B 35; HEAD NF15d2r1 9 and
-  NF13a 1 against NF15f 0; KV kvgeom4 1 against HG5 29. State: 63 old-event rows ENQUEUED (QC 37, HEAD 18, KV 5,
-  HBM 2), ages 1-94 h; UNDER-USE line: "superseded-event rows 99".
-- Second effect, an over-hold: LAUNCH-KEEP "one live attempt per item" is keyed by item, not by event. HEAD NF15f
-  has 0 launches 25 min after apply: the pilot hd_lep0N is kept out by its NF13a attempt 3 (a 33-h GRT on epyc10),
-  hd_mesh by its NF15d2r1 attempt 2 (HEAD-PLAN-R4 BLOCKER 17:41). Last tick: 6 QC and 3 KV items kept out the same way.
-- Root cause: adoption does not judge the live rows of the replaced event. RETIRE-SUPERSEDED reports "retired 0,
-  relaunch-on-current 2" each tick.
-- Fix (WAVE-FLOW-R2): at adopt, in the same tick, every live old-event row gets one of two outcomes by plan block sha:
-  block unchanged in the new plan -> REKEY (keeps running, counts on the new event); block changed -> the old attempt
-  is stopped and the item launches on the current event. LAUNCH-KEEP compares block sha, so an old-block attempt never
-  keeps out a current-block launch. ADOPT-ROWS prints `rekeyed n, stopped n, launched n` and alerts on a rest.
-- Now (HEAD-PLAN-R4, QC-PLAN-R3): decide the 10 HEAD and 28 QC old-event jobs by block sha; I stopped nothing.
+- **R1. Protect by need, not by mention.** The guard list builder keeps a kw45 tree only when it is (i) the src or bind of
+  record of a die's current event or the one before it, (ii) named by a RUNNING, ENQUEUED or RETRY row, or (iii) under a live
+  process. CANCELLED rows, `superseded_trees`, prov cache and hub posts stop protecting whole trees. On supersede, the small
+  files those references need (plan_of_record JSONs, sidecars, latcheck, signed_view_sha, about MB per event) are copied once
+  into a per-event record pack in the signed store, and the references are rewritten to it. Expected: 148 protected trees
+  become about 15 per host.
+- **R2. Retire below the protected child.** When a lane tree is refused for a protected child, auto-retire offers the lane's
+  other children as candidates. The guard decides each one as today.
+- **R3. One sealed base per die pin per host, events as deltas.** `publish_onbase --link-from` already exists; make it the only
+  publish path and make lane "move my tree to host X" use it. Fix 3 of FABLE-FLOW-1000, not landed.
+- **R4. Event quota in the wave.** Per die keep attempt dirs of the current event and of events with running rows. For other
+  events keep signed attempts until archived and the latest routed-unsigned attempt (both already guard rules); everything
+  else goes 12 h after supersede. Needs class (d) so that held rows stop counting as queued.
+- **R5. ECO iterations keep 6_final.odb and the latest 5_route.odb.** The duplicate stage ODBs go at the end of each iteration,
+  in the running job (SUBSTEP-1 does this only for terminal attempts). A 41 GB route job dir becomes about 12 GB.
+- **R6. Budget per writer class per host**, enforced at admission by the function of class (a): wave runs, source trees,
+  job dirs, lanes each have a GB budget; a writer over budget waits and the post names the largest guard-allowed and the
+  largest protected holders in that class. Sizes come from the writer ledger of class (h).
 
-### B. Fixes do not reach kits (about 25%; flat, fourth review in a row)
+Budget check for a 7.4 TB host (I, estimate): live route jobs 30 x 12 = 360 GB; wave attempts of 3 current events about
+750 GB; 15 source trees as base + deltas about 300 GB; kit-store and ot-store 150 GB; lanes active in the last 24 h about
+500 GB. About 2.1 TB, so more than 5 TB free against a 250 GB restore line. intel1 and intel2 (3.5 TB) fit the same budget.
+epyc2 scratch2 (880 GB) does not fit wave + store together (R FLEET-OPS-R 11-18) and should hold job dirs only.
 
-- TOOLS-LAG 17:40: s81 674 commits behind, qwen_compute 889, hbm 1986, s81_head 48. HEAD NF15f went live 17:23 on
-  main 8569788b and is already 22 rulings behind (r618-r640). No tree holds r634-r641.
-- KV refresher loop: starts 16:21, 16:40, 17:25, 17:32, 17:40, 17:46; all earlier ones AP_RC=1. The attempt key
-  contains the main sha, so each new main commit is a new attempt. No single-flight: units ...6006 and ...6360 ran
-  together at 17:48. 8 dry trees `_d16_t<sha>` exist (276 MB each, on up to 6 hosts). 17:43 it posted NEEDS-LANE:
-  strict bind cannot run because the delta touches bind.py's import closure (60 modules). It will start again anyway.
-- Release on merge: both S81 serdes holds (11 + 6 items) wait on `result:FABLE-FIX-S81-SERDES2:rail-gen` (posted
-  17:10) and `result:S81-SERDES-GEN:h-form`. When that post comes, 17 items launch on tree d5e, which has neither r620
-  nor r638, and r638 has an open defect.
-- Fix (WAVE-FLOW-R2): (1) refresh is single-flight per die (flock), keyed by die + tree, target = rt/current at start,
-  at most one per hour; a NEEDS-LANE or COMPOSE-FAIL result stops restarts until the lane answers; the previous dry
-  tree is removed when the next one publishes. (2) hold validation refuses a `result:` term for a generator fix
-  without a `tree_has:` term. (3) publish_gate refuses a tree whose tools base lacks a ruling that names its die.
-  S81-TYPES-R3 now: add `tree_has:r638` (and the defect-fix ruling) to both holds.
-- End state (unchanged since 1300): kits take tools from rt/current; a tree pins rtl + plan only.
+## For COORD now
 
-### C. Self-inflicted infra failures (23 of 28 fails; about 4%)
-
-- C1 image prune (5 fails, 17:05-17:26, FLEET-OPS-R). Prevention works (r640). Two gaps: (a) the fail is classed
-  FLOW[design:place] "unclassified", and LAUNCH-REFUSED "same fail key" has no host part, so restoring the image at
-  17:31 released nothing: kv3_hg_v1p3, v1p4, v1p5, kv3_pv_v8, kv3_hgi_v1__cl42bc8b12 are still FAIL at 17:46.
-  (b) FAIL-ROUTE asked 4 owners in 30 min for the same two classes (17:08-17:38) although KV-R3 (17:18) and
-  FLEET-OPS-R (17:31) had answered. Fix (WAVE-PILOT-FIX): "image missing", ENOSPC and PUBLISH FAILED are INFRA (one
-  free retry on another host); the fail key includes the host-requirements digest; FAIL-ROUTE closes a class on a
-  RESULT that names one of its items. Now: retry keys for the 5 items.
-- C2 partial bind copy (7 fails, 16:51-17:19, KV-R3). r637 covers gen hosts. Gaps: (a) the breaker released the
-  class twice on "preflight passes again" (17:00:36, 60 s after opening, and 17:20:28) while preflight could not see
-  the cause; the ContractError class closed at 17:19 on "probe passed gen" for 9 families at once. (b) die bind_out
-  still points into lane dirs: kv-r3/d16gate/bind, and the D21 candidate fable-fix-kv-hg2/d21gate exists on epyc10
-  only. One lane cleanup breaks every KV kit. kv3_hgi_v1__cl141fc26e is still FAIL.
-  Fix (WAVE-FLOW-R2): apply copies bind_out into the tree (`<tree>/bind_out`), kit_wave reads it tree-relative,
-  publish_gate refuses a bind_out outside the tree. A class releases only on a probe that passed the failing stage.
-- C3 disk (11 ENOSPC fails at 17:19 on epyc9, FLEET-OPS-R). GEN-DISK-LOW fired at 16:46 (52 GB); the quota alert
-  (kw45 306 GB in 6 h) stopped nothing; 0.5 GB at about 17:15. Recovery was good: all 11 relaunched on epyc8 by 17:20.
-  One more QC item (slw_fe_v1__cl95cd1d0c, epyc9, 17:12) failed as KIT_NOT_SELF_CONTAINED at place and is refused on
-  the same fail key; probably the same event, not verified.
-  Now: epyc9 149 GB, epyc8 141 (62 GB/h at 17:00), epyc10 70 (the gen floor), localhost REFUSED (112 < 150).
-  QC generates on epyc8 alone. Fix (FLEET-OPS-R): floor ETA under 1 h holds the host for new jobs and starts the
-  cleanup pass by itself; a lane over quota loses new launches on that host. QC-PLAN-R3 now: N1B tree to epyc10,
-  intel1, epyc7.
-
-### D. Hold leak (3 attempts, under 1%)
-
-- QC slw_st_a_v1__clfc5867a6 x2: MPL-0034 known since 10:50. Commit bcec53b re-pointed the QC holds in bulk to
-  `event_adopt:s29q103S4Q9N1B`; the fix is only in N2B. 16:00:20 HOLD-AUTO-RELEASE, launches 16:17 x2 and 16:34
-  ("changed overlay", 16 min after the previous launch), fails 16:46 and 17:05, hold back at 17:05.
-- Fix (WAVE-PILOT-FIX; QC-PLAN-R3 for the records): a hold carries the fail key of its cause; auto-release needs the
-  term AND a changed input of that key. For PLAN fails the key is the error signature (macro, coordinates, core box),
-  compared across events. "changed overlay" relaunches an item only when the overlay part that item reads changed.
-  A bulk re-point of release terms is refused; each hold is re-pointed with a reason.
-
-### E. Hub and hand edits (about 1%)
-
-- `ot-gate-remote` has no argument check: `$1` goes straight to `gate "$1"`, so `--help` starts a gate; on the hub it
-  runs locally (line 45). A second hub gate ran at 17:43 (head-xo-hop). Hub load 23.7, 91 sessions.
-  Fix (FLEET-OPS-R): argument must match `claude/<branch>@<sha>`, else usage and exit 2; refuse on the hub unless
-  OT_GATE_HUB=1.
-- HEAD pilots were set by a direct kit_wave.json commit (3c531443) one minute after the atomic apply. Fix: apply takes
-  `--pilot`.
-- ALERT HUB-SYNC-FAILED 17:11, 17:39, 17:44: cron-written lanes/STALE.tsv and NOPROG.tsv are tracked files with local
-  edits. Fix: generated tables are committed by their writer (coord-commit) or untracked.
-
-### F. Stale and unowned (flat)
-
-STALE current-event 121 (1700: 122): S81 5, QC 16, HBM 107 (parked). Unowned 15: QC 4 (3 FAIL kit_rtl since 06:21,
-1 superseded), HBM 11. NOPROG-DRIFT: noprog_stage.py differs from main on 7 hosts (unchanged).
-
-## Do now
-
-1. WAVE-FLOW-R2: adopt-time rekey-or-stop by block sha, LAUNCH-KEEP by block (A); refresher single-flight (B).
-2. HEAD-PLAN-R4, QC-PLAN-R3: judge the 10 HEAD and 28 QC old-event jobs; N1B tree to 3 more hosts.
-3. WAVE-PILOT-FIX: retry keys for 5 KV image items + kv3_hgi_v1__cl141fc26e; INFRA classes; breaker release on the
-   failing stage only; hold release needs a changed cause.
-4. S81-TYPES-R3: `tree_has:r638` on both serdes holds before S81-SERDES-GEN posts h-form.
-5. FLEET-OPS-R: disk ETA hold + quota stop; ot-gate-remote argument check; tracked cron tables.
-6. KV-R3 + WAVE-FLOW-R2: bind_out inside the tree.
+1. intel2 is falling fast and is the only admitting host. FLEET-WATCH-R8: name the three rsync owners and decide whether lane
+   tree moves to intel2 continue; apply the same 200 GB watch to intel2 as to the others.
+2. epyc10 is at 35 GB with 9 new wave gen dirs on it. FLOW-OPS-1300: gen-host pick must read `host_drain` today (smallest form
+   of class a).
+3. intel2 closure for QC, KV, S81 is not whole after four self-heal ticks: complete it by one replicate or take intel2 out of
+   gen_hosts so the die disk cap stops passing on a host the wave cannot use.
+4. Open a lane for R1 + R3 (DISK-RETAIN-1); FLOW-OPS-1300 takes R2, R4, R5 and class (d).
