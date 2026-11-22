@@ -55,3 +55,17 @@ plan_gate_pre: only TOOLSTALE vs rt c9b8d5f226ca (tree tools are 6d2e + overlay;
   every ring flop is 95-296 um from its pin and the 84 control registers are keyed at bit 1, 135 um from START. E7 CTS fs_q -> wen -216,
   r18e place lap_ok -191.7. Row: band on the pin window if the io stage rows (pin_s0u, pout_s7c at y 686-704) can yield, else ff_rect_um.
 - Guard to add (tool): fail closed when a +ff y-column band does not cover its pin column / the ctlkey bit has no rows above it.
+
+## 6. LEP-RSTART-1 + LEP-RSTART-2 (hd_lep0N_w START relay of the relay piece; plan + republished W wrapper) tree r18h
+Measured on build A (r18g W), CTS post-hook: every ring group met (path delay worst -1.28); setup_ws -347.30, tns -16,424.8 is one
+cluster, the START fan of the relay piece: u_cland_rstart_rx sits FIRM at the fstart_out pins of the W face (y 1154.5, copy y 453.6).
+- RSTART-1: clock.landing_local_resets k3 (raw rst_rl_287 @ [10.0,792.88]) consumers += u_cland_rstart_rx. Was reset by
+  cland_reset_coll_i0 from (814,1085): 810-1440 um, -347.30 / -322.57.
+- RSTART-2: clock.landing_reader_start = {depth 2, origin_rect_um [2.14,1145.89,19.42,1163.17], branches
+  coll_i0 [[131.61,1370.0] rst_rl_258, [485.61,1370.0] rst_rl_256], coll_i1 [[10.0,589.36] rst_rl_157, [10.0,739.98] rst_rl_287],
+  coll_i2 [[10.0,335.11] rst_rl_169, [20.54,220.51] rst_rl_167]} (street path, hops 354 / 151 / 126 um). Was the default reach form
+  (one stage at the ring): rx -> u_cland_reader_start_coll_i0_0 970 um, -183.4 x 33 ends. Boot +1 cycle on the W rings, 0 data cycles.
+  landing_writer_start is refused on a relay piece (no FSTART face flop), so the rx flop stays at the fstart_out pins.
+Tree epyc9 .../fable-fix-head-lep0n-1122/trees/s81_head_r18h_rstart, plan sha256 301a0f1635d65898: plan_gate_pre PASS (TOOLSTALE skipped,
+tree tools 6d2e), bind PASS, cohort 27/27, LATCHECK 334/334 (epyc9 L/bind_r18h2).
+Die-level note (not a type gate): cland_rstart_in enters W at the cut face (818,747) and its rx flop is 1.2 mm away at the W-face pins.

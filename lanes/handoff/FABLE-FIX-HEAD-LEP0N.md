@@ -43,12 +43,16 @@ c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-rep
   PLACED 05:45 (on intel2): tns -484.07 (r18e -62198, r18f -3938), wns -211.84, OT_PLACE_WIRE_RATIO 0; whole piece has 2 violating clk ends +
   path-delay -18.65. Chain (goal route) started 06:00 on epyc9, container dpkit-hd_lep0N_w-880189; CTS wait armed by run-item.
   The 2 ends = u_cland_rstart_rx/q (W face y 1154.5) + copy _otdup1 (y 453.6), reset by cland_reset_coll_i0 from (814,1085): -144 / -145.6.
-- BUILD B (A/B, next): tree r18h (epyc9 L/trees/s81_head_r18h_rstart = r18g + LEP-RSTART-1: u_cland_rstart_rx added to landing_local_resets k3
-  (raw rst_rl_287 @ (10,792.88)); W wrapper republished). L/tmp/rstart_fix.py + chain_r18h.sh (apply + plan_gate_pre + bind/cohort/LATCHECK ->
-  L/bind_r18h), started 05:58 via ot-run pid 691101 on intel2 (log chain_r18h.otrun.log), queued on epyc9 memory (fleet LOADCAP).
-  After CHAIN_DONE with all RC 0: private-spec (rt c9b8d5f226ca, --src-manifest seal) + run-item --goal route as unit fable-lep0n-w7.
-  If A's CTS post-hook already closes the 2 ends (>= -42), B is optional.
-- Rows file lanes/handoff/FABLE-FIX-HEAD-LEP0N-rows.md (sections 1-5; add section 6 LEP-RSTART-1 when B passes gates).
+- BUILD A CTS post-hook 06:24 (on intel2, chain spilled there; kit path same as epyc9): setup_ws -347.30 tns -16424.8, all ring groups met;
+  failing cluster = START relay only (rst -> rstart_rx -347/-322; rstart_rx -> reader_start_coll_i0_0 -183 x33). hold_ws -270 (pre hold repair,
+  u_bin_coll_i2 -> u_rg2.u_pair). Now in pre-GRT (OT_TAP_GRT_PRE). Keep running (GRT/channel probe; cancel only on the measured rule).
+- BUILD B = W attempt 7: tree r18h (epyc9 L/trees/s81_head_r18h_rstart, plan 301a0f1635d65898 = r18g + LEP-RSTART-1 (rstart_rx on local reset k3)
+  + LEP-RSTART-2 (landing_reader_start depth 2)); gates PASS (L/bind_r18h2, chain_r18h2.otrun.log). Spec
+  ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122063509/spec.json (goal route, seal, rt c9b8d5f226ca), unit
+  fable-lep0n-w7 on intel2 (pid 2519647), log ~/fable-fix-head-lep0n-1122/runitem_w7.log. Launched 06:35.
+  CHECK at place: 3_detailed_place.rpt wns/tns (A: -211.84 / -484.07) and that rstart_rx / reader_start ends are met; then CTS post-hook.
+  When B's CTS post-hook is clean and A is still failing the START cluster after GRT repair, cancel A (exact units only).
+- Rows file lanes/handoff/FABLE-FIX-HEAD-LEP0N-rows.md (sections 1-6).
 - STA recipe: ot-run --hosts epyc9 --dir L --stage KIT -- bash L/tmp/sta_kit.sh KIT dp_hd_lep0N_w OUTDIR L/tmp/sta_w.tcl (edit the tcl).
 - Poll with short (<170 s) ssh loops; background waiters do not outlive the turn reliably.
 
