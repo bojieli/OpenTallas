@@ -26,6 +26,12 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 05:1x
+- r8-w11 FAILED place (OT_CLAND coll_i2 band too small: 4382.5 um2 needed vs 2908.5 upper bound in fix18f band [17.28,552.96,64.8,609.12]).
+  Not relaunched: Fable fable-lep0n-w4 (its own r18f fork, W ring-FF form) is past place and in CTS = the single W candidate (posted 85c383af).
+  If w4 fails: build r18g with the W coll_i2 band >= 47.5 x 100 um (e.g. y 552.96..655), via fix18f.py NEW_I2 + mk_r18f pattern.
+- E r8-e11 in place (kwp-d3f1caeda1b3c789505b, place.live.log under private_specs/.../s81_head_hd_lep0N_1122043555).
+
 ## UPDATE 11-22 04:5x COORD rulings
 - SPLIT posted (hub 23199c88a5d3): R8 owns E r8-e11 + W r8-w11 (r18f tree 2fa83144541824aa). FABLE-FIX-HEAD-LEP0N owns the structural
   analysis + every variant, incl. its own W ring-FF kit (fable-lep0n-w1/w4, own r18f fork plan f23abfbd22780d25). First W to sign counts.
