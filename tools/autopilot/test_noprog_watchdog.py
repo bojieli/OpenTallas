@@ -378,3 +378,35 @@ def test_hub_retries_action_receipt_missing_from_successful_push(tmp_path, monke
     _, actions = nw.hub(now=NOW + 1890)
     assert not actions
     assert action_file.read_text().splitlines().count(row) == 1
+
+
+FE_GRT_HOLD = """[INFO GRT-0303] Global routing runtime = 00:17:49
+OT_HOLD_GUARD_GRT chunk 1: hold ws -138.67 (-62.50) tns -65452.5 viol 1071, +202 buffers (cap 200), 2988 s
+OT_HOLD_GUARD_GRT chunk 1: hold ws -131.30 (+7.37) tns -58711.0 viol 1021, +201 buffers (cap 200), 2954 s
+OT_HOLD_GUARD_GRT chunk 5: hold ws -86.96 (+10.78) tns -32656.8 viol 786, +201 buffers (cap 200), 2994 s
+OT_HOLD_GUARD_GRT chunk 6: hold ws -78.03 (+8.93) tns -27175.4 viol 719, +201 buffers (cap 200), 3035 s
+Iteration | Resized | Buffers | Rebuffered | Area | WNS | TNS | Worst Endpoint
+       60 |       0 |     167 |          0 | 0.0% | -71.044 | -22801.389 | d
+    final |       0 |     203 |          0 | 0.0% | -70.184 | -21955.031 | e
+[ERROR RSZ-0060] Max buffer count reached.
+OT_HOLD_GUARD_GRT chunk 7: hold ws -70.18 (+7.85) tns -21955.0 viol 648, +203 buffers (cap 200), 3039 s
+repair_timing -setup_margin 0 -hold_margin 40 -repair_tns 100 -hold
+OT_RC_SIGNAL table: signal unit C M2-M7 swapped into the layer table, estimate_parasitics -global_routing re-run
+"""
+
+
+def test_grt_completed_hold_chunks_preserve_fe_progress_before_next_table():
+    res = nw.extract("grt", FE_GRT_HOLD)
+    assert res["name"] == "grt_hold_TNS"
+    assert [v for _, v in res["series"]] == [58711.0, 32656.8, 27175.4, 21955.0]
+    assert nw.judge(res, anchors_for(res["n"], 10), NOW, exact=True)[0] == "PROGRESS"
+    assert nw.judge(res, anchors_for(res["n"], 16, 8), NOW, exact=True)[0] == "NO-PROGRESS"
+
+
+def test_grt_later_routing_plateau_drops_past_hold_progress():
+    text = FE_GRT_HOLD + "[INFO GRT-0128] incremental global routing: 12 nets\n"
+    text += "[INFO GRT-0102] Start extra iteration 10/30\n" * 40
+    res = nw.extract("grt", text)
+    assert res["name"] is None
+    assert res["growth_idx"] == len(FE_GRT_HOLD.splitlines())
+    assert nw.judge(res, anchors_for(res["n"], 12), NOW, exact=True)[0] == "NO-PROGRESS"
