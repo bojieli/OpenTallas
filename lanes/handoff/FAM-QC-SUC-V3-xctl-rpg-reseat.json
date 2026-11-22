@@ -1,0 +1,230 @@
+{
+  "type": "slw_su_c__cl19bb38ef",
+  "single": {
+    "u_bin_x_ctl_i/q[4]": [
+      579.582,
+      1090.935
+    ],
+    "u_bin_x_ctl_i/q[5]": [
+      480.222,
+      1126.305
+    ],
+    "u_bin_x_ctl_i/q[7]": [
+      516.942,
+      1073.655
+    ]
+  },
+  "joint": [
+    {
+      "bit": 0,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[0]": [
+          458.622,
+          1129.275
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[0]": [
+          326.862,
+          864.405
+        ]
+      },
+      "new_max_um": 397.008,
+      "old_rpg_um": 897.858,
+      "edges": 3
+    },
+    {
+      "bit": 1,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[1]": [
+          540.702,
+          1048.815
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[1]": [
+          540.702,
+          653.535
+        ]
+      },
+      "new_max_um": 395.7,
+      "old_rpg_um": 850.608,
+      "edges": 3
+    },
+    {
+      "bit": 2,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[2]": [
+          709.182,
+          919.755
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[2]": [
+          460.782,
+          812.295
+        ]
+      },
+      "new_max_um": 355.86,
+      "old_rpg_um": 324.513,
+      "edges": 3
+    },
+    {
+      "bit": 3,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[3]": [
+          709.182,
+          935.415
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[3]": [
+          640.062,
+          664.335
+        ]
+      },
+      "new_max_um": 340.2,
+      "old_rpg_um": 331.02,
+      "edges": 3
+    },
+    {
+      "bit": 6,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[6]": [
+          616.302,
+          998.325
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[6]": [
+          337.662,
+          914.085
+        ]
+      },
+      "new_max_um": 365.46,
+      "old_rpg_um": 777.951,
+      "edges": 3
+    },
+    {
+      "bit": 8,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[8]": [
+          631.422,
+          998.595
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[8]": [
+          631.422,
+          641.925
+        ]
+      },
+      "new_max_um": 357.36,
+      "old_rpg_um": 711.801,
+      "edges": 3
+    },
+    {
+      "bit": 9,
+      "site_overrides": {
+        "u_bin_x_ctl_i/q[9]": [
+          618.462,
+          1028.565
+        ],
+        "u_u_suvm_u_vm8q_u_rpg.q[9]": [
+          618.462,
+          691.335
+        ],
+        "g_u_suvm_procdff_60307_q[0]": [
+          620.622,
+          691.335
+        ]
+      },
+      "new_max_um": 339.39,
+      "old_rpg_um": 454.194,
+      "edges": 6
+    }
+  ],
+  "remaining": [],
+  "added_cycles": 0,
+  "relay_sites": {
+    "u_bin_x_ctl_i/q[4]": [
+      579.582,
+      1090.935
+    ],
+    "u_bin_x_ctl_i/q[5]": [
+      480.222,
+      1126.305
+    ],
+    "u_bin_x_ctl_i/q[7]": [
+      516.942,
+      1073.655
+    ],
+    "u_bin_x_ctl_i/q[0]": [
+      458.622,
+      1129.275
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[0]": [
+      326.862,
+      864.405
+    ],
+    "u_bin_x_ctl_i/q[1]": [
+      540.702,
+      1048.815
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[1]": [
+      540.702,
+      653.535
+    ],
+    "u_bin_x_ctl_i/q[2]": [
+      709.182,
+      919.755
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[2]": [
+      460.782,
+      812.295
+    ],
+    "u_bin_x_ctl_i/q[3]": [
+      709.182,
+      935.415
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[3]": [
+      640.062,
+      664.335
+    ],
+    "u_bin_x_ctl_i/q[6]": [
+      616.302,
+      998.325
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[6]": [
+      337.662,
+      914.085
+    ],
+    "u_bin_x_ctl_i/q[8]": [
+      631.422,
+      998.595
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[8]": [
+      631.422,
+      641.925
+    ],
+    "u_bin_x_ctl_i/q[9]": [
+      618.462,
+      1028.565
+    ],
+    "u_u_suvm_u_vm8q_u_rpg.q[9]": [
+      618.462,
+      691.335
+    ],
+    "g_u_suvm_procdff_60307_q[0]": [
+      620.622,
+      691.335
+    ]
+  },
+  "prior_sites": {
+    "u_bin_x_ctl_i/q[4]": [
+      589.65,
+      1100.65
+    ],
+    "u_bin_x_ctl_i/q[5]": [
+      534.65,
+      1224.05
+    ],
+    "u_bin_x_ctl_i/q[0]": [
+      589.0,
+      1129.65
+    ],
+    "u_bin_x_ctl_i/q[6]": [
+      701.0,
+      998.35
+    ]
+  },
+  "actual_correction": "Exact old R6V2 placed model. Same ten bits. Existing DFFs only. Initial cap variant placement remains independent."
+}
