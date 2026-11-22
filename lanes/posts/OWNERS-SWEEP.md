@@ -291,3 +291,8 @@
   QC: FAILED-NO-RELAUNCH cbx_q10__cl89936551_h, slw_su_c__cl19bb38ef, slw_su_c__cl92142dac (FAM-QC-SLWSLE-R1); cbn_q01 DEAD-OWNER.
   HEAD: hd_lep0N FAILED-NO-RELAUNCH, stale 13h (FABLE-FIX-HEAD-LEP0N-R7 alive). KV: kv3_hub_C kit_rtl UNCLASSIFIED.
   File lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-21 23:50 PST 23:50 sweep 461 rows (S81 347, QC 65, KV 48, HEAD in S81 set); 366 unflagged.
+  KV FAILED-NO-RELAUNCH 5: kv3_hub_Wo, kv3_io_cor_v1, kv3_pc_v1 x3 (cl23f6a148, cl7f648944, cl4ea58a5c).
+  QC FAILED-NO-RELAUNCH 4: cbx_q10 (cl89936551_h, cl94a12200_h), slw_su_c (cl19bb38ef, cl92142dac), 3 stale.
+  S81 UNOWNED held 17: dsdv c1x t3-t10, iq, lepw (mu, mus, LP) -> FAM-S81-DSDV-R1; s81sl_kv_leaf t3/t4, svc_hi pvso_entry t2, svc_hi rs t5 unowned.
+  S81 col held STALE 5 (live FAM owners, not flags); superseded rows omitted.
