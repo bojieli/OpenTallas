@@ -21,3 +21,13 @@ report their GRT. No separate col hand-off.
 - ROOT CAUSE south hotspot: lpad_frame_int_i1 ranks keyed with 5 sample bits; 6300 unseated pad flops at y<100 (census epyc9 opus-fix-s81-colrom-r6/tmp/hotE/hot_cells.tsv; tools tmp/hot.sh hot.tcl cong.py).
 - Kits P (planP = planH + all lpad bits at rank sites) work _1122012035, P2 (+ r[1] at 600,170) work _1122012102; specs private_specs/OPUS-FIX-S81-COLROM-R6/..._1122012055/_1122012120; runitem_p/p2.pid in fable-fix-s81-colrom-r5.
 - Systemic: col_h10_r2 (520 keys i0), col_h9_r0_p4/p5 (4 keys) same sample-bit lpad keys. Posted to H9R0-R4/H10-R4/ASSEMBLY.
+
+## UPDATE 03:5x 11-22 -- J8 COL PROOF MET (kit H)
+- H final 5_1_grt.odb: overflow 0, TT WNS -40.79 (KEEP repaired from -80.13), GRT hold guard ws +30.13. Posted to ASSEMBLY-R5 + H9R0-R4 (14d6bd9497).
+  Rows: planH south seats (1212 keys) + item_env OT_RELAY_MID_RE (E) + OT_GRT_CONG_ITERS=50. H continues to route/sign-off (runitem_h.pid in fable-fix-s81-colrom-r5).
+- F: ovf 1186 at 50/50 (planD seats) -> residual retry; D/E dead.
+- Tool fixes pushed: 06b2ca5293 (dead_inputs lexical repo-rel, LAUNCH-LINK-1122), 5c6c4945c8 (env_provenance GEN-CONSUMED-1122 OT_GRT_CONG_ITERS).
+- P/P2 (lpad whole-rank seats; root cause census tmp/hotE) in CTS on epyc9 (runitem_p/p2.pid). P/P2 try1 died: sealed place landed on intel2 disk-ETA hold.
+- G: bind BUILT b_dd5cd9250db5 (rt 06b2ca5293cd). G3 (goal finish) refused: "resume: goal finish unsupported" -> G4 = same work dir, --goal route,
+  --rt-floor-exempt (floor 6d2e187f0d; reset_anchor.py differs -> toolskew), spec _1122035554, runitem_g4.pid in opus-fix-s81-colrom-r6.
+- NEXT: H route/DRC/TT (J5 history: GRT -32 -> route -107; watch), P/P2/G4 GRT reads, post each; cleanup after J8: epyc9 opus-fix-s81-colrom-r6/srcJ8G (54 GB), ot-build out, D/E kits.
