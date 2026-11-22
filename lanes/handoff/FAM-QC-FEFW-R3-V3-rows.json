@@ -42,7 +42,13 @@
     "arm_ei": "u_bound.u_bin_arm_ei -> u_pd8_arm_ei_0.r, max 593 um, no plan row",
     "also": "u_lpad_x_st_b_i.q -> u_bout_rr_eo 562 um (row 6/251 um present); 9 bits over 405 um"
    },
-   "request": "+1 station on arv_ei and arm_ei slots for slw_fe_v2 clf110fab2, with sites (same knee class as R2 finding: cle312294d arv_ei 559 um); this form cannot pass geom without it."
+   "request": "+1 station on arv_ei and arm_ei slots for slw_fe_v2 clf110fab2, with sites (same knee class as R2 finding: cle312294d arv_ei 559 um); this form cannot pass geom without it. ALSO col_v 3.6 and 40 over-cap taps (FABLE-PD-QC-2045).",
+   "target": "V4 (R13 takes only rows with a passing bind; no sites/bind today)",
+   "also_required": {
+    "col_v": "3.6 (FABLE-PD-QC-2045; two 1-bit stations alone do not close clf110fab2)",
+    "over_cap_taps": 40,
+    "note": "the row must carry the col_v fix and the 40 tap splits (TAP-GRID automatic tap split / plan taps) together with the two +1 stations"
+   }
   }
  ]
 }
