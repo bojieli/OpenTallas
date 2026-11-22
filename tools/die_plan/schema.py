@@ -1579,6 +1579,11 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                        "additionalProperties": {
                            "type": "array", "uniqueItems": True, "items": {
                                "type": "string", "pattern": r"^[A-Za-z_][A-Za-z0-9_]*(?:\[[0-9]+\])?$"}}}},
+                   "latch_except_hb4_by_type": {"type": "object", "additionalProperties": {
+                       "type": "object", "propertyNames": {"pattern": r"^[A-Za-z_][A-Za-z0-9_]*$"},
+                       "additionalProperties": {
+                           "type": "object", "propertyNames": {"pattern": r"^[A-Za-z_][A-Za-z0-9_]*\[[0-9]+\]$"},
+                           "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 8}}}},
                    "latch_except_hb4": {"type": "object", "additionalProperties": {
                        "type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8}}},
                    "note": {"type": "string"}}}

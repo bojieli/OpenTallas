@@ -1456,10 +1456,14 @@ def core_input_direct_anchor(raw, tn):
     """Pass the scoped exceptions to the pre-GPL anchor for surviving NK pipe registers."""
     clock = (raw or {}).get("clock") or {}
     cfg = clock.get("core_input_lockup") or {}
-    modules = (cfg.get("latch_except_by_type") or {}).get(tn) or {}
+    modules = {m: set(ports) for m, ports in ((cfg.get("latch_except_by_type") or {}).get(tn) or {}).items()}
+    for module, pads in ((cfg.get("latch_except_hb4_by_type") or {}).get(tn) or {}).items():
+        direct = {bit for bit, count in pads.items() if count == 0}
+        if direct:
+            modules.setdefault(module, set()).update(direct)
     if not modules:
         return ""
-    rows = " ".join(f"{module} {{{' '.join(ports)}}}" for module, ports in sorted(modules.items()))
+    rows = " ".join(f"{module} {{{' '.join(sorted(ports))}}}" for module, ports in sorted(modules.items()))
     return f"set nka_direct {{{rows}}}\n"
 
 
@@ -3837,10 +3841,11 @@ def _lockup_pad_type(P, tn):
         return False
     # FABLE-PLAN-QC-N 11-17: "all": true lists every type (133), but only a type that BINDS a lockup module can have a pad; the keep
     # hook errors when no pad cell exists, so emitting it for the other 115 types stopped them at PRE_FLOORPLAN.
-    mods = set((cfg.get("modules") or {}))
-    if not any(h.get("module") in mods for h in ((P.types.get(tn) or {}).get("hard_cores") or [])):
-        return False
-    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+    import bind
+    mods = (cfg.get("modules") or {}).keys()
+    bound = {h.get("module") for h in ((P.types.get(tn) or {}).get("hard_cores") or [])}
+    return any(int(n or 0) > 0 for module in mods & bound
+               for n in bind.core_input_hold_pads(P.raw, tn, module).values())
 
 
 def hold_pad_dont_touch_tcl(P, tn):
