@@ -23129,3 +23129,5 @@ FAILED [AUTOPILOT 6ec476ad822d] 2026-11-22 00:14:27 PST AUTOPILOT -> KIT-WAVE-1:
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 00:28 PST DIED [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2745322-1795336059 on tolerant-swine: rc=1 after 59 s, ended 00:28:36, log /home/ubuntu/fam-s81-serdes-r7/eco_r7k2.client.log, cmd: --hosts epyc9 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 --stage /srv/opentallas-scratch2/claude/rt/404887 | class=DESIGN-FAIL cause=ECO_LOOP ERROR: late-ECO exhausted (1 it, 55.6 s): TT 10.67->None FF -98.12->None drv 85->None drc 0->None; it
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-22 00:30 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-1270485 on outgoing-giraffe: rc=0 after 19 s, ended 08:30:06, log none, cmd: ot-push-main 
+  [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
