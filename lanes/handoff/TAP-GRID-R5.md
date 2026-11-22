@@ -26,3 +26,10 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - J8 DONE (posted 35f0577d): t39 hold all in2reg, r(slack, capture latency) = -0.988; structural in-port hold ~49 ps below bound; fix = in-port padding, not tap balance. j8/j8_io.py, t39_j8_io.txt, t39_paths.tsv.
 - slw_hc1 cle683a076 t11/t18: 42/27 sinks, CTS depth 2, 29 um wire, yet raw 1874-2143 ps both taps (same range) and OT_STB arrivals ~1e12 (no valid arrival on some sinks). Suspect sinks whose clock arrives via a non-tree path / macro internal latency. ODB trace epyc7 tap-grid-r5/hc1_taps.tcl -> hc1_taps.out (running).
 - KV chain kvnp.sh (intel2, waiter b9ragnd05) at RC_SPLIT radius step; gate -> kv/gate1/gate.out -> KV-PLAN-R6.
+
+## 11-21 22:xx PST update (lever 8)
+- LANDED main 3abf2bba76 subtree_balance sentinel-arrival guard (hc1 cle683a076 cause) and db0d7630d4 tap_split --cap.
+- S81 J8 rows: intel2 tap-grid-r5/s81j8: tap_split --cap 1650 r300 on J7 a6771d121e95 -> rows1650.json / plan1650.json (5823e5b97b52): 103 types +405 taps, over-cap(1650) taps 398 -> 40, max 1912; 31 PARTIAL (leaf 18, col_h9_r0_p2 12) + 4 BLOCKED. Private tree s81j8/tree (real copy). Bind chain s81_bind.sh -> bind.out / gate/ (elab, strict --all-gaps, LATCHECK; rt 404887a342b0). Deliver to S81-J6-ASSEMBLY-R5.
+- QC V4: tap_split on V3p6n adds nothing (116 OK, 9 BLOCKED: no legal site near macro-packed sinks). Posted FIX: V3p6n cbf_q00__cl1b5a6458 clk_t101 -> clk_t114 (lanes/handoff/TAP-GRID-R5-V3p6n-cbf_q00-fix.json).
+- QC bind B (full V3 package on rt 5aab47) on epyc7 bindq_full.sh -> v3pkg_bound (R13 gates V3p6n with my keys anyway). Bind A cancelled, qcsnap.part ot-deleted.
+- KV pv taps now owned by OPUS-FIX-KV-PV-R7. KV D28 non-pv chain kvnp.sh still running (intel2 kv/).
