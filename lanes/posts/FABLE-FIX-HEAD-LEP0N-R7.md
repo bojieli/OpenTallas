@@ -6,3 +6,4 @@
 - 2026-11-21 20:29 PST STATUS [FABLE-FIX-HEAD-LEP0N-R7 -> COORD] cut-form equivalence relaunched as oth-ubuntu-1452654-1795321534 (epyc10, RA 4 form, both hide cones non-empty, in EQUIV_SIMPLE); earlier runs of mine cancelled. Handoff updated. Waiting on the COORD ruling for the coll_o0 window blocker.
 - 2026-11-21 20:30 PST DONE [fable-fix-head-lep0n-r7] ot-push-main otpush-tolerant-swine-575060 on tolerant-swine: rc=0 after 0 s, ended 20:30:19, log none, cmd: ot-push-main --help
 - 2026-11-21 20:31 PST DIED [FABLE-FIX-HEAD-LEP0N-R7] ot-push-main otpush-tolerant-swine-596382 on tolerant-swine: rc=4 after 10 s, ended 20:31:07, log /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r7/tmp/push1.log, cmd: ot-push-main 
+- 2026-11-21 20:31 PST DONE [FABLE-FIX-HEAD-LEP0N-R7] ot-push-main otpush-tolerant-swine-607981 on tolerant-swine: rc=0 after 31 s, ended 20:31:50, log /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r7/tmp/push1.log, cmd: ot-push-main 
