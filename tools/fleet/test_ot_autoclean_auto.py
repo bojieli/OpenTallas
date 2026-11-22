@@ -1007,6 +1007,27 @@ class TestExpiry(Base):
         self.assertFalse(os.path.exists(sup), self.row(sup))          # superseded, below a wave-root row: deleted
         self.assertEqual(self.row(sup)[3], "DELETED")
 
+    def test_hub_wave_root_protect_row_does_not_hold_class_a_clean_aggr_r3(self):
+        wave_root = os.path.join(self.root, "kw-y/runs/hbm/kit-wave")
+        sup = os.path.join(wave_root, "hbm/ev1/items/item_h/attempt_1")
+        touch(os.path.join(sup, "gen/x/run/results/asap7/d/base/3_place.odb"))
+        touch(os.path.join(sup, "geom/auto_geom.json"))
+        age_tree(sup)
+        pd = os.path.join(self.t, "pd_hub")
+        os.makedirs(pd)
+        with open(os.path.join(pd, "hub-kit_wave.txt"), "w") as f:
+            f.write(wave_root + "\n")
+        self.kw = {"attempts": {"hx:" + sup: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {"hx:" + os.path.dirname(sup): 3}, "keep": []}
+        saved = ac.PROTECT_D
+        ac.PROTECT_D = pd
+        try:
+            self.run_job("--classes", "a")
+        finally:
+            ac.PROTECT_D = saved
+        self.assertFalse(os.path.exists(sup), self.row(sup))
+        self.assertTrue(os.path.isdir(wave_root))
+
     def test_wave_root_row_still_holds_itself(self):
         wave_root = os.path.join(self.root, "kw-x/runs/hbm/kit-wave")
         os.makedirs(wave_root)

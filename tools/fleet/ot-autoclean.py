@@ -1767,7 +1767,10 @@ class Job:
                 keep_rows.append((p, src))
             rows = keep_rows
         rows = list(rows) + read_protect_d()      # KIT-OPS-6: protect.d/*.txt = the live source (protect-sync), union = the static base
-        self.protected = PathSet(rows, canon=self.paths.canon)
+        # CLEAN-AGGR-R3 (epyc7 11-21: 245 class a/c rows SKIP "inside .../runs/<die>/kit-wave (protect.d/hub-kit_wave.txt)"): a wave work root row
+        # protects the root and its ancestors, not every attempt below it (same rule as the guard, FLOW-OPS-1300 item 13, and localkeep_trim);
+        # the per-attempt kit-wave state (active / resume / latest / signed), kwkeep, live and age checks decide each attempt.
+        self.protected = PathSet(rows, deep=lambda q: not WAVE_ROOT_RE.search(self.paths.canon(q)), canon=self.paths.canon)
 
     def still_referenced(self, p):
         for ps in (self.counted, self.kwkeep, self.localkeep, self.queue):
