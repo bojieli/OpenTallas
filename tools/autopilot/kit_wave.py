@@ -9747,6 +9747,20 @@ def runitem_reexec(spec_path, argv):
     os.execvp(r["argv"][0], r["argv"])
 
 
+def interim_record(res):
+    """FLOW-FLEET-R2 (COORD 11-22): a result.json written MID-run (seal record, ...) must not say FAIL: res starts as FAIL so an exit that forgets to set a verdict reads
+    as a failure, but waiters (FAM-S81-MISC-R4, FAM-KV-IOPC-R4) took the early 'stage src_manifest, verdict FAIL' for a real failure.  -> a copy with verdict RUNNING
+    (the stage stays); FAIL is written only by fail() on a non-zero stage rc"""
+    return dict(res, verdict="RUNNING") if res.get("verdict") in (None, "", "FAIL", "PENDING") else dict(res)
+
+
+def ended_unit_result(res):
+    """a unit that ended with an interim RUNNING record died without a final verdict: FAIL at that stage (the collector never sees RUNNING)"""
+    if isinstance(res, dict) and res.get("verdict") == "RUNNING":
+        return dict(res, verdict="FAIL", tail=(str(res.get("tail") or "") + f"\nrun-item ended while RUNNING at stage {res.get('stage')} (driver killed or lost)")[-3000:])
+    return res
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
@@ -10200,7 +10214,7 @@ def run_item(spec_path):
         _seal = seal_record(_mtxt) if _mrc == 0 else {}
         if _seal:                                        # FLOW-FLEET-R1 11-22: the tree identity the private sign-off's PROVENANCE names
             res["src_manifest"] = dict(_seal, mode=str(sp.get("src_manifest") or "require"), host=G)
-            (out / "result.json").write_text(json.dumps(res, indent=1))
+            (out / "result.json").write_text(json.dumps(interim_record(res), indent=1))
         print("KW_SRC_MANIFEST ok " + next((ln for ln in (_mtxt or "").splitlines() if ln.startswith(("SRC_MANIFEST SEALED", "SRC_MANIFEST OK"))),
                                            (_mtxt or "")[-200:].strip())[:300], flush=True)
     if sp.get("tools_rt"):
@@ -15220,7 +15234,7 @@ def _collect_body(AP, cfg, st, notices):
             continue
         jd = Path(rec["dir"])
         try:
-            res = json.loads((jd / "result.json").read_text())
+            res = ended_unit_result(json.loads((jd / "result.json").read_text()))
         except (OSError, ValueError):
             ut = ""
             try:
