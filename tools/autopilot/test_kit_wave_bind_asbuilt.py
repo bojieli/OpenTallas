@@ -18,3 +18,10 @@ def test_bind_asbuilt_reads_the_bind_provenance_manifest(tmp_path):
     assert KW.bind_asbuilt(tmp_path / "none", src) is None       # no provenance: keep the spec's asbuilt
     (bo / "provenance_bind.json").write_text(json.dumps(dict(provenance=dict(manifest="p/missing.json"))))
     assert KW.bind_asbuilt(bo, src) is None
+
+
+def test_private_spec_does_not_shadow_the_ab_list():
+    # efe70f16d3 named the manifest `ab` inside private_spec and the --ab loop then iterated its characters ("--ab '/'")
+    import inspect
+    src = inspect.getsource(KW.private_spec)
+    assert "\n            ab = " not in src and "\n        ab = " not in src

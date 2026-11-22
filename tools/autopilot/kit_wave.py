@@ -9234,9 +9234,9 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
             sp["kit_rtl"] = dict(u["kit_rtl_record"])
         if u.get("bind_out"):
             sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=u["bind_out"])
-            ab = bind_asbuilt(u["bind_out"], sp.get("src"))
-            if ab:                                       # the as-built manifest THIS bind read, not the wave bind's
-                sp["kit_rtl"]["asbuilt"] = ab
+            bab = bind_asbuilt(u["bind_out"], sp.get("src"))   # (not `ab`: that is the --ab A/B env list)
+            if bab:                                      # the as-built manifest THIS bind read, not the wave bind's
+                sp["kit_rtl"]["asbuilt"] = bab
         if "tools_rt" in u and u["tools_rt"] is None:        # the tree's own tools (gen_tools_pin / stamp = tree generators)
             sp.pop("tools_rt", None)
             sp.pop("tools_sha", None)
