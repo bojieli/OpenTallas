@@ -1,0 +1,1 @@
+- 2026-11-21 20:15 PST DIED [FABLE-FIX-HEAD-LEP0N-R7] ot-run oth-ubuntu-1188476-1795320546 on tolerant-swine: rc=143 after 387 s, ended 20:15:31, log /home/ubuntu/fable-fix-head-lep0n-r7/cut_equiv_e10.otrun.log, cmd: --mem 40 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r7/cut -- bash /srv/opentallas-scratch2/claud
