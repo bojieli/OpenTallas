@@ -20905,3 +20905,4 @@ FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)) job e3b3a82fceac
 - 2026-11-21 16:54 PST DIED [OPUS-FIX-KV-HGI-R6] ot-run otrun-tolerant-swine-4151606 on tolerant-swine: rc=1 after 0 s, ended 16:54:56, log /home/ubuntu/tmp/opusfixkvhgir6/reset_sync_output.canonical.log, cmd: --hosts epyc9 --dir /srv/opentallas-scratch2/claude/mq-gate --mem 20 --threads 4 --disk 60 --no-spill --priority plan -- ot-gate-remote clau
 - 2026-11-21 16:55 PST Corrected front3 CTS finished and exact layout reviewed. Native FF hold +19.50 with vclk period warning, independent same-period TT/FF measurement next. Route held.
 - 2026-11-21 16:55 PST ALERT NO-PROGRESS qwen_compute: 4 eligible rows, 0 KIT-WAVE LAUNCH for 308 min (last 11:46); no DIE-OFF / NO-LAUNCH line
+- 2026-11-21 16:55 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_host_n, 2026-11-20 22:18)
