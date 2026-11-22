@@ -12,3 +12,5 @@
   [filed under] FABLE-FIX-S81-LEAF-R9: FABLE-FIX-S81-LEAF-R8 stood down (chain FABLE-FIX-S81-LEAF-R8 > FABLE-FIX-S81-LEAF-R9)
 - 2026-11-21 22:11 PST DONE [FABLE-FIX-S81-LEAF-R8] ot-run oth-ubuntu-2469921-1795327559 on tolerant-swine: rc=0 after 336 s, ended 22:11:27, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r8/t39spec/b1/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FABLE-FIX-S81-LEAF-R8/ot
   [filed under] FABLE-FIX-S81-LEAF-R9: FABLE-FIX-S81-LEAF-R8 stood down (chain FABLE-FIX-S81-LEAF-R8 > FABLE-FIX-S81-LEAF-R9)
+- 2026-11-21 22:21 PST DONE [FABLE-FIX-S81-LEAF-R8] ot-run oth-ubuntu-2579442-1795327935 on tolerant-swine: rc=0 after 579 s, ended 22:21:46, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r8/t39spec/b1/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FABLE-FIX-S81-LEAF-R8/o
+  [filed under] FABLE-FIX-S81-LEAF-R9: FABLE-FIX-S81-LEAF-R8 stood down (chain FABLE-FIX-S81-LEAF-R8 > FABLE-FIX-S81-LEAF-R9)
