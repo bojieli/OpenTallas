@@ -27,3 +27,4 @@ RULED (COORD 04:4x): compose order = LEPE-4 rows FIRST, then FABLE-FIX-S81-J8-TA
 
 EXPECTED J8 ROWS (COORD 05:4x): LEPE-4 F2/S1 by 13:30; TAPROWS gate B ~07:30; COLROM-R6 station set ~08:00; H10-R4 channel row; MISC-R4 band row; H9R0-R4 p1-p6 set. Report 14:00 in/missing, then at the 16:00 cut.
 IN 05:20: H10-R4 COL-E15E-CHAN row = intel2 fam-s81-col-h10-r4/rows_COL-E15E-CHAN_J7.json (c88f0eb10156; 336 ops / 132 types: col_h9_r1 60, col_h9_r2 60, col_h10_r2 12; on J7 plan; e15e_row.py d707c48202c7).
+IN 05:5x (COORD APPROVED): RANKSEAT budgets.grt_cong_iters_types {"^col_": 50} only, from fable-fix-s81-col-rankseat/planR1/delta.json (997558d3608f); subset s81-j6-r5/j8_rows_rankseat_iters.json. rank_line_types NOT in: waits for its GRT read (~09-10:00).
