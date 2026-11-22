@@ -18,6 +18,13 @@ def test_not_run_with_a_reason_is_not_ssh_drop():
     assert cls(78, "ot-run: NOT-RUN SSH probe exit 255 on epyc8\n")[0] == "SSH-DROP"
 
 
+def test_rc78_without_log_does_not_infer_ssh_transport_failure():
+    c, cause = DC.classify(78, "--hosts epyc8 --max-wait 3600", "", 3623)
+    assert c == "NO-PATTERN" and "no log" in cause
+    c, cause = cls(78, "NOT-RUN requeue budget exhausted after 3600 s")
+    assert c == "NOT-RUN" and "budget exhausted" in cause
+
+
 def test_bind_emit_and_compare():
     assert cls(1, "elab done\nEMIT relay_depth u_x: 1 row matched no internal sink\n")[0] == "BIND-FAIL"
     assert cls(1, "compare FAIL (361869 mismatched)\n")[0] == "BIND-FAIL"

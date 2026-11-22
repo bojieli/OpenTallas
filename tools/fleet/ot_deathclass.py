@@ -1,7 +1,7 @@
 """ot_deathclass: failure class + one-line cause for a DIED post (FLOW-DEATHCLASS-R1, FABLE-FLOW-0000 class F10).
 
 classify(rc, cmd, log_tail, secs) -> (CLASS, cause).  Classes, first match wins:
-  SSH-DROP     ssh/host unreachable (rc 78 NOT-RUN no host, 255, 141, "Could not resolve", "Connection reset/closed")
+  SSH-DROP     ssh/host unreachable (255, 141, "Could not resolve", "Connection reset/closed")
   OOM          rc 137 / "Killed" / out of memory
   GEOM-FAIL    the kit placed and AUTO-GEOM judged it FAIL (a design verdict; checked first: geom logs also carry advisory GRT kills / tracebacks)
   ADMIT        ot-run memory admission refused it (no host admits the request now: request > admissible, memory admission) -- not a crash
@@ -73,12 +73,12 @@ def classify(rc, cmd="", log_tail="", secs=0):
     if re.search(r"DRAIN(ING)?:|NOT-RUN no host qualifies \((?!.*resolve)[^)]*(scratch|disk|free)|scratch disk", t):
         return _c("RAIL-KILL", _last_line(t, r"DRAIN|NOT-RUN|scratch disk") or "host rail refused the job")
     # FABLE-FLOW-0230 D1: an ot-run NOT-RUN / REFUSED with a reason that is not ssh is that reason, not SSH-DROP (3 disk-ETA holds were labelled SSH-DROP)
-    m = re.search(r"ot-run: (NOT[- ]RUN|REFUSED)\b[^\n]*", t)
+    m = re.search(r"(?:ot-run: |^)(NOT[- ]RUN|REFUSED)\b[^\n]*", t, re.M)
     if m and not re.search(r"resolve hostname|Connection (reset|closed|timed out|refused)|SSH probe|ssh", m.group(0), re.I):
         return _c("NOT-RUN", re.sub(r"\s+", " ", m.group(0))[:110])
     if re.search(r"^\s*(EMIT\b|EMIT_ERROR|BIND_RC=[1-9])|compare FAIL|mismatched\b", t, re.M):
         return _c("BIND-FAIL", _last_line(t, r"EMIT|compare FAIL|mismatch|BIND_RC"))
-    if rc in (78, 255, 141) or re.search(r"Could not resolve hostname|Connection (reset|closed|timed out|refused)|Broken pipe|SSH probe exit|client gone", t):
+    if rc in (255, 141) or re.search(r"Could not resolve hostname|Connection (reset|closed|timed out|refused)|Broken pipe|SSH probe exit|client gone", t):
         return _c("SSH-DROP", _last_line(t, r"resolve hostname|Connection|Broken pipe|SSH probe|NOT-RUN|client gone") or "ssh/host unreachable (rc %s)" % rc)
     if rc == 137 or re.search(r"\bKilled\b|Out of memory|oom-kill|MemoryError|Cannot allocate memory", t):
         return _c("OOM", _last_line(t, r"Killed|memory|oom") or "SIGKILL (rc 137), memory limit")
