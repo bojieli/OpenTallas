@@ -43,3 +43,5 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - COL DECISION 21:5x: col waits for J8 (env-only Kit B cannot seat xd: key/flop mismatch + 52 merged u_w stations need 643ffb9932 + 8a2a7b31a9). J8 tools must include 643ffb9932, 8a2a7b31a9, 4dac1ad0b7, 8ad54f25f4. bk_sel 575 key re-key row owed by BKSEL-R7 (seat-miss-rows.tsv).
 
 - J8 TOOLS (FLOW-OPS-R2 via COORD, hub 04baa8752e): bind J8 on main >= 5a966bb45bc (narrowed class keep: clock-landing ctrl regs out, relay/station/ROM-input/reset-sync kept; includes 643ffb9932, 4dac1ad0b7, 8ad54f25f4, aa0cde9d13). Verify 8a2a7b31a9 ancestry before the bind.
+
+- POST-APPLY TODO (after pilot GEN PASS): release reps-first hold_items for c1x_C, kv_leaf t1-t4, seqhost, phy, iqf; convert 73 non-rep leaf from reps-first to J8 hold record with ETA 11-23 04:15 (owner LEAF-R7); svc stays split-pending. Coverage TSV s81-j6-r5/j7_coverage.tsv. Records carry eta fields.
