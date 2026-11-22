@@ -31,3 +31,16 @@ report their GRT. No separate col hand-off.
 - G: bind BUILT b_dd5cd9250db5 (rt 06b2ca5293cd). G3 (goal finish) refused: "resume: goal finish unsupported" -> G4 = same work dir, --goal route,
   --rt-floor-exempt (floor 6d2e187f0d; reset_anchor.py differs -> toolskew), spec _1122035554, runitem_g4.pid in opus-fix-s81-colrom-r6.
 - NEXT: H route/DRC/TT (J5 history: GRT -32 -> route -107; watch), P/P2/G4 GRT reads, post each; cleanup after J8: epyc9 opus-fix-s81-colrom-r6/srcJ8G (54 GB), ot-build out, D/E kits.
+
+## UPDATE 08:3x 11-22
+- F CANCELLED 04:2x (residual ovf 1186 > 500; unit oth-ubuntu-1499928-1795332575). D/E kit dirs: ot-delete SKIP protected -> asked CLEAN-AGGR.
+- G4 died (private-spec --work on an existing kit rm -rf'd its gen) -> G5 spec _1122040212, work _1122040139, runitem_g5.pid (opus-fix-s81-colrom-r6).
+  G5 CTS post-hook setup -82.50 (H +19.20): STAGGER + keep rq suspect; COORD: drop them from J8 rows if G5 GRT confirms.
+- Spills: P/P2 run on intel1, G5 on intel2 (kit dirs copied back to epyc9 after). Read logs on the spill host (same path).
+  08:0x: P/P2 GRT extra iter 9/50 (~15 min/iter), G5 GRT iter 4/50; P/P2 CTS +19.34/+16.88.
+- H: detail route on epyc9 (DRC iter 2, violations falling). Durable waiter f522513b on intel2 pid 3338988.
+- J8 STATION ROWS (COORD 05:1x/05:4x): record epyc9 opus-fix-s81-colrom-r6/tmp/j8_stn_rows.json; plan srcJ8G/physical/die_plan/s81/plan_h2_2249_stnD.json.
+  11 relay rows + 3 sink raises + 4 lpad-reader sink rows + istation_respace (o0 3->4, o1 2->3, i0 6->9) + c8_3 move (648,881.28)->(578.88,604.8).
+  Gate try3 (stnC) bind FAILED: names must be rel (u_X not u_u_X); relay_depth needs a LEAF sink (lpl_*_w -> ist dropped). Try4 stnD running:
+  intel2 opus-fix-s81-colrom-r6/bindS.pid / bindS.log (ot_build_hub --goal bind), ETA 10:4x-11:1x. On PASS: hand set to S81-J6-ASSEMBLY-R5.
+- KNOWN-OPEN (mine, J9): u_d1_11_Y 1-bit hops 613/758 um (plan in the rows record known_open).
