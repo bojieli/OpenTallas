@@ -13,5 +13,5 @@ srcJ7L1e7 u_cf LEF dsfd_cfifo_crs4.lef sha daea3c41: every derived via-shadow re
 4. pv1619ecc6 J5 internal hold -4.2 -> small ECO after J7.
 
 ## Cleanup owed (ot-delete)
-intel2 fam-s81-col-h10-r4/srcA (55 GB; ot-delete SKIP "protected" by the failed specA prov - retire specA record first or ask COORD); intel2 fam-s81-col-h10-r4/specA, specL1, specL1b, specL1c (failed specs); epyc7 fam-s81-col-h10-r3/rt_tools_launch/srcJ7L1e7@2095d6a53df2 (cache from failed specL1c); plus R3's list (epyc10 srcJ7m/srcJ7r/srcJ7rA/srcJ7L1/clone_l1*, epyc9 peer script). epyc7 srcA/bindA + srcJ7L1e7 after proofs hand over.
+COORD-approved: when run-items specA7 (PID 212032) and specL1d (PID 2620793) exit, ot-delete intel2 fam-s81-col-h10-r4/srcA (55 GB), specA, specL1 (guard holds them: live cmdline prefix + host-scoped protection of srcA). specL1b/specL1c DONE. If still refused then -> CLEAN-AGGR-R3 with exact paths. epyc7 fam-s81-col-h10-r3/rt_tools_launch/srcJ7L1e7@2095d6a53df2 (failed specL1c cache).
 ## Posts: RESUMED, 19:1x launch, 19:4x gen pass, STATUS line for COORD sweep (rows dropped listed there).
