@@ -13,6 +13,7 @@ import pytest
 # a stub that fails like an unreachable host (rc 255; OT_TEST_FLEET_STRICT=1 raises FleetUnderTest instead).  Allowed: a program that resolves (via the call's PATH) to a file under the temp dir / --basetemp (a fake) or inside this checkout
 # (the tool under test, e.g. tools/fleet/ot-run with its hermetic test env); installed copies (~/.local/bin, rt/current, /usr) are refused.  A test that really needs the real tool sets OT_TEST_FLEET_OK=1 (monkeypatch.setenv).  OT_UNDER_TEST=1 is exported for child shells.
 import shutil
+import sys
 import subprocess
 import tempfile
 
@@ -108,6 +109,7 @@ def pytest_terminal_summary(terminalreporter):
 if not getattr(subprocess.Popen.__init__, "_ot_fleet_guard", False):
     _guarded_init._ot_fleet_guard = True
     subprocess.Popen.__init__ = _guarded_init
+    subprocess._ot_fleet_guard_module = sys.modules.get(__name__)   # tests reach the guard helpers through here (conftest module names vary)
 
 # TOOLS-CONVERGE-1115: the kit_wave launch gate (autopilot/tool_skew.py) never ssh-es to a die tree host under test
 os.environ.setdefault("OT_TOOL_SKEW_REMOTE", "0")

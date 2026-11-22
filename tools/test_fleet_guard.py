@@ -5,7 +5,7 @@ import sys
 
 import pytest
 
-C = sys.modules[[m for m in sys.modules if m.endswith("conftest") and hasattr(sys.modules[m], "fleet_refusal")][0]]
+C = subprocess._ot_fleet_guard_module
 
 
 @pytest.mark.parametrize("argv", [["ssh", "-n", "epyc9", "true"], ["timeout", "60", "nice", "-n", "10", "ssh", "h", "x"],
