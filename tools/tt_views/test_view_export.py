@@ -350,7 +350,7 @@ class PgCrossing(unittest.TestCase):
         rep = ve.pg_crossing_report(PG_HEAD + "     RECT  1.9 0 2.2 20 ;\n  END\nEND t\n")
         self.assertEqual((rep["verdict"], rep["nets"]["VDD"]["dead_stripes"]), ("FAIL", 1))
 
-    def run_choose(self, default_obs, exact_obs, env=None):
+    def run_choose(self, default_obs, exact_obs, env=None, pg_access=False):
         calls = []
         with tempfile.TemporaryDirectory() as d:
             out = Path(d)
@@ -364,7 +364,7 @@ class PgCrossing(unittest.TestCase):
             old = {k: os.environ.get(k) for k in (env or {})}
             os.environ.update(env or {})
             try:
-                rec = ve.choose_abstract(out, "t", out, "img")
+                rec = ve.choose_abstract(out, "t", out, "img", pg_access=pg_access)
             finally:
                 ve.subprocess.run = real
                 for k, v in old.items():
@@ -376,6 +376,29 @@ class PgCrossing(unittest.TestCase):
         self.assertEqual((rec["mode"], rec["default_pg_crossing"]["verdict"], rec["pg_crossing"]["verdict"], len(calls)),
                          ("exact_pg", "FAIL", "PASS", 1))
         self.assertNotIn("0 2 20 12", lef)
+
+    def test_m5_pg_window_keeps_routed_metal_and_survives_abstract_finalize(self):
+        m7 = "    LAYER M7 ;\n     RECT  1.6 0 1.8 20 ;\n     RECT  2.3 0 2.5 20 ;\n"
+        default_obs = PG_MERGED_OBS.replace("  END\n", m7 + "  END\n")
+        exact_obs = PG_EXACT_OBS.replace("  END\n", m7 + "  END\n")
+        raw = ve.pg_crossing_report(PG_HEAD + exact_obs)
+        self.assertEqual(raw["verdict"], "PASS")
+        self.assertEqual(ve.pg_crossing_published(PG_HEAD + exact_obs)["verdict"], "FAIL")
+
+        rec, lef, calls = self.run_choose(default_obs, exact_obs, pg_access=True)
+        self.assertEqual((rec["mode"], rec["pg_crossing"]["verdict"], len(calls)), ("exact_pg_windows", "PASS", 1))
+        self.assertEqual(rec["pg_window_patch"]["pg_windows"], 8)
+        self.assertIn("RECT  1.928 2 2.192 2.024 ;", lef)
+        self.assertEqual(rec["pg_crossing"]["nets"], {"VDD": 0.0024, "VSS": 0.0024})
+
+        aps = ve._aps()
+        published, _ = aps.process(lef)
+        self.assertEqual(aps.find_pockets(published)["rects"], [])
+        self.assertEqual(aps.process(published)[0], published)
+        lost_policy = lef.replace(aps.PG_ACCESS_MARK, "")
+        self.assertEqual(ve.pg_crossing_published(lost_policy)["verdict"], "FAIL")
+        legacy, _, _ = self.run_choose(default_obs, exact_obs)
+        self.assertEqual((legacy["mode"], legacy["pg_crossing"]["verdict"]), ("default", "FAIL"))
 
     def test_clean_default_kept_and_forced_exact(self):
         rec, lef, calls = self.run_choose(PG_EXACT_OBS, PG_EXACT_OBS)
