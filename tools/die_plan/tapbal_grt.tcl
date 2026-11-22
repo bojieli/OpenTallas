@@ -31,6 +31,12 @@ if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && $::env(GLOBAL_ROUTE_ARGS) ne ""} {
 set ::ot_grt_res_aware ""
 if {[llength [info commands append_env_var]]} { append_env_var ::ot_grt_res_aware ENABLE_RESISTANCE_AWARE -resistance_aware 0 }
 set tg_args [concat $tg_args $::ot_grt_res_aware]
+# TAPPRE-ALLOW-1 (FABLE-FIX-HEAD-LEP0N 11-22): this pass routes with -allow_congestion (it only needs GRT RC for the tap balance), but
+# the -end_incremental of tap_balance / pinreg_pad / subtree_balance had no such flag, so any residual overflow of the first route
+# killed the kit with GRT-0116 before the real GRT step could judge it (hd_lep0N_w r18g: 688 overflow of 84 M tracks after 30
+# iterations, all in the 17-um W channel -> FAIL_POSTCTS).  The incremental ends of THIS pass take the same flag; the POST-GRT
+# uses of those scripts (no ::ot_grt_inc_allow) are unchanged.
+set ::ot_grt_inc_allow -allow_congestion
 puts "OT_TAP_GRT_PRE global_route $tg_args"
 global_route {*}$tg_args
 estimate_parasitics -global_routing

@@ -195,3 +195,14 @@ def test_prepass_success_keeps_rewritten_odb(tmp_path):
 
 def test_generated_run_kit_parses():
     assert subprocess.run(["bash", "-n"], input=gen_phys.RUN_KIT, text=True).returncode == 0
+
+
+def test_prepass_incremental_ends_allow_congestion():
+    """TAPPRE-ALLOW-1: the pre-pass sets ::ot_grt_inc_allow and every -end_incremental of the balance scripts takes it"""
+    from pathlib import Path
+    here = Path(__file__).resolve().parent
+    assert "set ::ot_grt_inc_allow -allow_congestion" in (here / "tapbal_grt.tcl").read_text()
+    for f in ("tap_balance.tcl", "pinreg_pad.tcl", "subtree_balance.tcl"):
+        txt = (here / f).read_text()
+        assert "global_route -end_incremental" in txt
+        assert "[info exists ::ot_grt_inc_allow] ? $::ot_grt_inc_allow" in txt, f

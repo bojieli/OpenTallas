@@ -83,7 +83,7 @@ proc tb_end {placed} {
   # required pass on stale tag groups and aborted in sta::RequiredCmp::requiredSet (vector index assert; HEAD l48h0
   # hd_st_str, hd_st_n3_*, hd_spn_eshim_tx; deterministic on 4_cts.odb).  Invalidating arrivals makes that query a full,
   # consistent search: hd_st_str repro passes with the same tap/pinreg result as the non-resistance-aware control.
-  if {$tb_grt} { sta::arrivals_invalid; global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] }
+  if {$tb_grt} { sta::arrivals_invalid; global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] {*}[expr {[info exists ::ot_grt_inc_allow] ? $::ot_grt_inc_allow : ""}] }
 }
 set tb_pitch [expr {[info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0}]
 set tb_cell [expr {[info exists ::env(OT_TAP_DELAY_CELL)] ? $::env(OT_TAP_DELAY_CELL) : "BUFx4_ASAP7_75t_R"}]

@@ -231,7 +231,7 @@ proc stb::balance {} {
       if {[llength [info commands ot_pg_connect_all]]} { ot_pg_connect_all subtree_balance } elseif {[llength [info procs ot_pg_standard_bind]]} { ot_pg_standard_bind subtree_balance } else { global_connect }
       detailed_placement
     }
-    if {$::stb::est eq "grt"} { set ::stb::inc 0; sta::arrivals_invalid; global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] }
+    if {$::stb::est eq "grt"} { set ::stb::inc 0; sta::arrivals_invalid; global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] {*}[expr {[info exists ::ot_grt_inc_allow] ? $::ot_grt_inc_allow : ""}] }
     if {!$added} break
     stb::rc
     set lines {}
