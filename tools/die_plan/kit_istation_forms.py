@@ -479,6 +479,14 @@ def _ident_readers(ln, atts):
     return hits
 
 
+def _packed_lpad(txt, n):
+    """(start, end, D) of the plain bind-landed packed receiver delay line of bus `n`
+    (ot_dp_dly #(.W(w+1), .D(d)) u_lpad_<n> (.clk(clk), .d({<n>_eb, <n>_b}), .q({<n>_eq, <n>_q}));), else None"""
+    m = re.search(rf"^[ \t]*ot_dp_dly\s*#\(\s*\.W\((\d+)\)\s*,\s*\.D\((\d+)\)\s*\)\s+u_lpad_{re.escape(n)}\s*\(\s*\.clk\(clk\)\s*,\s*"
+                  rf"\.d\(\{{\s*{re.escape(n)}_eb\s*,\s*{re.escape(n)}_b\s*\}}\)\s*,\s*\.q\(\{{\s*{re.escape(n)}_eq\s*,\s*{re.escape(n)}_q\s*\}}\)\s*\)\s*;[^\n]*\n", txt, re.M)
+    return (m.start(), m.end(), int(m.group(2))) if m else None
+
+
 def station_tree(tn, t, entry, txt, man, tcl, rep, bound_bus_width):
     bus_name = entry["bus"]
     b = next((x for x in t["buses"] if x["name"] == bus_name), None)
@@ -542,10 +550,19 @@ def station_tree(tn, t, entry, txt, man, tcl, rep, bound_bus_width):
     site = {x["id"]: x.get("site_um") for x in nodes}
     if in_bus:
         last_q, last_eq = ((f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq"))
+        feed_q, feed_eq = last_q, last_eq
+        # FAM-KV-IOPC-R4 11-22: a bind-landed packed receiver delay (bind.py u_lpad_<bus>, D = the planned stations) is the pad of
+        # these stations: the tree replaces it, root fed by the in-boundary flop (u_bin_<bus> q / eq), readers keep reading <bus>_q.
+        lp = _packed_lpad(txt, n)
+        if lp is not None and not pads:
+            if lp[2] != k:
+                _fail(tn, bus_name, f"packed receiver delay u_lpad_{n} is D={lp[2]}, the tree plans {k} stations")
+            txt = txt[:lp[0]] + txt[lp[1]:]
+            feed_q, feed_eq = f"{n}_b", f"{n}_eb"
         for i in order:
             w = len(S[i])
             if par[i] is None:
-                d, ea = cat([(last_q, bit) for bit in reversed(S[i])]), last_eq
+                d, ea = cat([(feed_q, bit) for bit in reversed(S[i])]), feed_eq
             else:
                 d, ea = cat([(qn[par[i]], P[par[i]][bit]) for bit in reversed(S[i])]), eqn[par[i]]
             decl.append(_decl(qn[i], eqn[i], w))

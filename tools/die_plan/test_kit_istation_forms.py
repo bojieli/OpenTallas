@@ -304,6 +304,40 @@ def test_in_tree_structure_and_cycles(tmp_path):
     assert latencies(a, 4) == [3] * 4 and latencies(b, 4) == [3] * 4      # face reg + K = 3 stations
 
 
+IN_BOUND_LPAD = IN_BOUND.replace("    ot_dp_st #(.W(6)) u_bin_i (.clk(clk), .rst_n(rst_n), .d(i[5:0]), .ea(i[6]), .q(i_q), .eq(i_eq));",
+    "    wire [5:0] i_b;\n    wire i_eb;\n"
+    "    ot_dp_st #(.W(6)) u_bin_i (.clk(clk), .rst_n(rst_n), .d(i[5:0]), .ea(i[6]), .q(i_b), .eq(i_eb));\n"
+    "    ot_dp_dly #(.W(7), .D(3)) u_lpad_i (.clk(clk), .d({i_eb, i_b}), .q({i_eq, i_q}));  // lane pad: latency table 9 cycles")
+
+
+def test_in_tree_replaces_bind_landed_lpad(tmp_path):
+    """FAM-KV-IOPC-R4 11-22 (kv3_pc_v3 pcreg kit_topology): the bind lands the lane cycles of an IN bus with planned stations as ONE packed
+    receiver delay u_lpad_<bus> (D = planned stations); the station tree is that delay: lpad gone, root fed by the in-boundary flop, readers
+    on the tree, latency unchanged (face reg + K)."""
+    kd = kit(tmp_path, IN_BOUND_LPAD)
+    plan = tree_plan(NODES, [dict(node="t2", core="A"), dict(node="t3", core="B")])
+    r = run_ist(tmp_path, plan, kd)
+    assert r.returncode == 0, r.stderr
+    sv = (kd / "t_part_bound.sv").read_text()
+    assert "u_lpad_i" not in sv
+    assert ".d(i_b[5:0])" in sv.replace(" ", "") or "i_b[" in sv
+    assert ".din(i_tt2_q[3:0])" in sv and ".ev(i_tt3_eq)" in sv
+    tb = """module tb; reg clk=0, rst_n=0; reg [6:0] i=0; wire [3:0] ya, yb; wire ea_o, eb_o; integer t=0; reg [31:0] r;
+      t_part_bound u(.clk(clk), .rst_n(rst_n), .i(i), .ya(ya), .yb(yb), .ea_o(ea_o), .eb_o(eb_o));
+      always #5 clk = ~clk;  initial begin #22 rst_n = 1; end
+      always @(negedge clk) begin r = $random; i <= r[6:0]; end
+      always @(posedge clk) begin t = t + 1; #1 $display("S %0d %b %b", t, i[3:0], ya); $display("S %0d %b %b", t, i[5:2], yb); end
+      initial begin #3000 $finish; end
+    endmodule
+    """
+    lines = sim(tmp_path, [kd / "t_part_bound.sv"], tb)
+    assert latencies(lines[0::2], 4) == [3] * 4 and latencies(lines[1::2], 4) == [3] * 4
+    # a lpad that disagrees with the planned stations fails closed
+    kd2 = kit(tmp_path, IN_BOUND_LPAD.replace(".D(3)", ".D(2)"), "kit2")
+    r2 = run_ist(tmp_path, plan, kd2)
+    assert r2.returncode != 0 and "u_lpad_i is D=2" in (r2.stderr + r2.stdout)
+
+
 def test_in_tree_fail_closed(tmp_path):
     kd = kit(tmp_path, IN_BOUND)
     bad = [dict(NODES[0]), dict(NODES[1]), dict(id="t2", parent="t0", site_um=[500, 50]), dict(NODES[3])]
