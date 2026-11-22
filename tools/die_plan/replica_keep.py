@@ -221,11 +221,42 @@ def station_regs(rtl_dir, ist_files):
     return res
 
 
+# FLOW-OPS-1300 item 6 / FABLE-CLOSURE-1320 lever 2 (no-merge default): yosys opt_merge folds the registers of relay /
+# station / landing / reset-sync cells whose copies see the same D -- S81 col xo: 8 stations -> 1 rq flop driving 2,210
+# pins (552 of 980 failing col ends, -169 ps); QC coll_core ot_reset_sync reset_pipe -> 1 flop on 719 pins; QC st_a
+# rs_n_c -333 ps; c1x_C.  These registers exist only to be placed apart, so every clocked register of such a module and
+# the named reset-synchroniser stages anywhere are kept (Mod:reg, module-scoped).  Function unchanged (keep only stops the
+# folding, LEC names stay 1:1); applies to new synth only.  OT_CLASS_KEEP=0 omits it.
+CLASS_MOD = re.compile(r"(rly|relay|station|_stn[hv]?(?:_|\d|$)|_svc_stn|landing|reset_sync|rst_sync|rst_relay)", re.I)
+CLASS_NAMED = (("*", ("reset_pipe", "r_reset_meta", "sync_q", "rst_meta", "rst_sync_q")),
+               ("_sel_hist", ("gs0", "gs1")))          # FAM-S81-SLICE-R5: WREG gs1 fan-out flop (t9: 124 pins)
+_NB = re.compile(r"(?<![<=!>])\b([A-Za-z_]\w*)\s*(?:\[[^\]]*\]\s*)*<=")
+
+
+def class_regs(rtl_dir):
+    """`Module:reg` for every non-blocking-assigned register of a relay / station / landing / reset-sync module (CLASS_MOD)
+    and the CLASS_NAMED reset-synchroniser / fan-out stages of any module.  -> sorted, de-duplicated list"""
+    res = set()
+    for m, body in parse(rtl_dir).items():
+        regs = set()
+        for d in re.finditer(r"\b(?:reg|logic)\s+(?:signed\s+)?(?:\[[^\]]*\]\s*)*([A-Za-z_]\w*(?:\s*,\s*[A-Za-z_]\w*)*)", body):
+            regs |= set(re.findall(r"[A-Za-z_]\w*", d.group(1)))
+        assigned = {n for n in _NB.findall(body) if n in regs}
+        if CLASS_MOD.search(m):
+            res |= {f"{m}:{r}" for r in assigned}
+        for frag, names in CLASS_NAMED:
+            if frag == "*" or frag in m:
+                res |= {f"{m}:{r}" for r in names if r in assigned}
+    return sorted(res)
+
+
 def main(argv):
     if not argv:
         print(__doc__)
         return 2
     res = derive(argv[0])
+    if "--class" in argv:
+        res += class_regs(argv[0])
     if "--stations" in argv:
         res += station_regs(argv[0], [argv[argv.index("--stations") + 1]])
     if "--json" in argv:

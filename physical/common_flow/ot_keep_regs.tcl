@@ -54,6 +54,17 @@ if {[info exists ::env(OT_KEEP_WIRES)] && [string trim $::env(OT_KEEP_WIRES)] ne
   yosys setattr -set keep 1 @ot_kwn
   puts "OT_KEEP_WIRES: keep on wires named [join $::env(OT_KEEP_WIRES) {, }]"
 }
+# FLOW-OPS-1300 item 6 (COORD 11-21: QC coll_core async_reg reset_pipe merged into 1 flop on 719 pins): a register
+# declared (* async_reg *) is a synchroniser stage and is never merged -- keep on its wires (driving FFs follow below).
+# Function unchanged; OT_ASYNC_REG_KEEP=0 turns it off.
+if {![info exists ::env(OT_ASYNC_REG_KEEP)] || $::env(OT_ASYNC_REG_KEEP) ne "0"} {
+  yosys select -set ot_ark {*}{w:* a:async_reg %i}
+  set ot_ark_s [string trim [yosys tee -q -s result.string select -list {*}{@ot_ark}]]
+  if {$ot_ark_s ne ""} {
+    yosys setattr -set keep 1 {*}{@ot_ark}
+    puts "OT_ASYNC_REG_KEEP: keep on [llength [split $ot_ark_s "\n"]] async_reg wires"
+  }
+}
 # HBM-OWN/SVG 2026-10-21: OpenROAD 26Q3 link_design reads the Verilog dont_touch attribute as an integer (std::stoi)
 # and aborts on a string value: RTL (* dont_touch = "true" *) (1195 sites in rtl/) -> mapped `(* dont_touch = "true" *)`
 # -> "Error: synth_odb.tcl, 4 stoi" before floorplan (hdie_svg_rel8e/f 4a581f01c, packet 91e933ca3; stripping only

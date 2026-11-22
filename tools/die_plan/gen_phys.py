@@ -6236,6 +6236,9 @@ def replica_keep_wires(rtl_dir, extra=None, stations=None):
         names.extend(_RK.derive(rtl_dir))
         # FABLE-FIX-S81-LEAF 11-18: the bound module's plan stations (istations.tcl is_place) fold the same way
         names.extend(_RK.station_regs(rtl_dir, stations))
+        # FLOW-OPS-1300 item 6 / FABLE-CLOSURE-1320 lever 2: relay / station / landing / reset-sync registers never merge
+        if os.environ.get("OT_CLASS_KEEP", "1").strip() != "0":
+            names.extend(_RK.class_regs(rtl_dir))
     names.extend((extra or "").replace(",", " ").split())
     return list(dict.fromkeys(names))
 
