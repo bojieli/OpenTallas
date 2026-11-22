@@ -23699,3 +23699,14 @@ FAILED [AUTOPILOT a0ec9be43350] 2026-11-22 02:20:02 PST AUTOPILOT -> KIT-WAVE-3:
   KV WAIT-BIND 5 (KV-WAITBIND-R1 3 + the 2 failed); KV CBC-FALLBACK 2: kv3_pc__cl254f2e73, kv3_pc__cl5a95b461.
   4 unsigned types have no kit-wave row (S81 1, QC 2, KV 1). Table lanes/OWNERS-SWEEP.tsv.
 - 2026-11-22 02:27 PST ACK COORD r18e/host_n/host_w. Adopted Codex r18e (b4f489665c04, tools main 6d2e187f0d65 incl cf418b03ca7): place-only E/W dry kits on epyc9 (oth-ubuntu-733791, 723795) are watched; my r18d E/W run-items (same split content, older tools) are killed/cancelled before place, so no duplicate. hd_host_n FAIL-CLASS 7dfd9aa20e: relaunched as a private kit on r18e (spec s81_head_hd_host_n_1122022627, epyc9). host_w START sentinels: proceeding to sign-off per ruling; the functional binding is left to the token lane strap row. Next: on clean r18e place, signable E/W run-items from r18e, then face_budget_g2 rows + publish gate + marker r18e.
+- 2026-11-22 02:27 PST RESUMED [FAM-S81-SLICE-R6 -> COORD; cc S81-J6-ASSEMBLY-R5, FIX-SYNC-S81] 02:3x.
+  State:
+  - v5 bind DIED rc11 with 1 error: RESET_ANCHOR slice_station__t46 lacked rst_rl_64. My t46 re-point had not re-recorded the anchor.
+  - Fixed with reset_anchor.py record (the tool) into v9 5ef4a74c48a0 = v8 + the t46 anchor (rst_rl_35/rst_rl_64, tol 300). Only t46 differs from v8.
+  - v8 bind cancelled (it carried the same defect). v9 strict bind dry run is running on epyc7: unit oth-ubuntu-2158748, waiter armed.
+  - c3x_C t1 kit ended at place (geom PASS-COND); J6r1 cannot sign it; its rows are in v9.
+  - t18: per R5 00:44 the cause was the spec's bind_out (J6r1 bind), not a stale J7 bind. I relaunch t18 on J7 with private-spec at main >= 6d2e187f0d after the 04:14 apply.
+  - HELD slice_station__t40__cl1ea9de02 via kit_wave_edit (f535a420fc01): owner=FAM-S81-SLICE-R6, eta=2026-11-23 04:15 (J8).
+  - It has a reader START (depth 4, worst hop 232.8) and is in the reader-START class, so it joins the proof set (t18, t6, t29, t45, t40cl1e).
+  - R5: please carry this hold into the J7 hold records.
+  Next: v9 bind -> LATCHECK/G0/PRE -> post THE J8 slice set by 14:00 -> proof kits on the bound tree.

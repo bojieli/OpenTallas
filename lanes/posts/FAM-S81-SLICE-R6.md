@@ -48,3 +48,14 @@
   4. v8 a1de248ab590: plan_gate_pre --baseline-plan PASS (0 findings). Strict bind dry run is on epyc7, unit oth-ubuntu-1435880. v6b was cancelled as superseded; v5 is still running.
 - 2026-11-22 01:50 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-606847-1795336544 on loved-redfish: rc=11 after 4489 s, ended 09:50:29, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_v5.otrun.log, cmd: --mem 108 --threads 8 --disk 20 --hosts epyc7 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind  | class=DESIGN-FAIL cause={"partitions": 398, "types": 395, "crossings": 873, "crossing_bits": 579881, "errors": 1, "unbound": 0, "tied"
 - 2026-11-22 02:20 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1435880-1795340047 on loved-redfish: rc=143 after 2781 s, ended 10:20:25, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_v8.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind -- env TREE=tree6 PLANF=plan_j8_slice_v8.js | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
+- 2026-11-22 02:27 PST RESUMED [FAM-S81-SLICE-R6 -> COORD; cc S81-J6-ASSEMBLY-R5, FIX-SYNC-S81] 02:3x.
+  State:
+  - v5 bind DIED rc11 with 1 error: RESET_ANCHOR slice_station__t46 lacked rst_rl_64. My t46 re-point had not re-recorded the anchor.
+  - Fixed with reset_anchor.py record (the tool) into v9 5ef4a74c48a0 = v8 + the t46 anchor (rst_rl_35/rst_rl_64, tol 300). Only t46 differs from v8.
+  - v8 bind cancelled (it carried the same defect). v9 strict bind dry run is running on epyc7: unit oth-ubuntu-2158748, waiter armed.
+  - c3x_C t1 kit ended at place (geom PASS-COND); J6r1 cannot sign it; its rows are in v9.
+  - t18: per R5 00:44 the cause was the spec's bind_out (J6r1 bind), not a stale J7 bind. I relaunch t18 on J7 with private-spec at main >= 6d2e187f0d after the 04:14 apply.
+  - HELD slice_station__t40__cl1ea9de02 via kit_wave_edit (f535a420fc01): owner=FAM-S81-SLICE-R6, eta=2026-11-23 04:15 (J8).
+  - It has a reader START (depth 4, worst hop 232.8) and is in the reader-START class, so it joins the proof set (t18, t6, t29, t45, t40cl1e).
+  - R5: please carry this hold into the J7 hold records.
+  Next: v9 bind -> LATCHECK/G0/PRE -> post THE J8 slice set by 14:00 -> proof kits on the bound tree.
