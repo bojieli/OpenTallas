@@ -412,6 +412,22 @@ def plan_ref_paths(cfg, out, canon, maxbytes=64 << 20, prefix="/srv/"):
     return n
 
 
+def hub_lease_paths(out, canon, d=None):
+    """CLEAN-AGGR-R3: live leases taken on the hub reach every host through the list (host-scoped when the lease names a --host)  -> number added"""
+    try:
+        here = os.path.dirname(os.path.realpath(__file__))
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import ot_lease
+    except ImportError:
+        return 0
+    n = 0
+    for r in ot_lease.leases(d):
+        p = canon(r["path"])
+        out.add("@%s,%s %s" % (r["host"], HUB_ALIAS, p) if r.get("host") else p); n += 1
+    return n
+
+
 def main(argv):
     coord, outp, markers = argv[1], argv[2], argv[3:] or [os.path.join(argv[1], "lanes/handoff"), os.path.join(argv[1], "state")]
     here = os.path.dirname(os.path.realpath(__file__))
@@ -429,6 +445,7 @@ def main(argv):
     # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
     live_cmd_paths(s, g.canon)
     plan_ref_paths(cfg, s, g.canon)
+    hub_lease_paths(s, g.canon)
     s |= live                                          # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)

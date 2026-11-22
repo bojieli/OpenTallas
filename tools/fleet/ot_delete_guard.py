@@ -405,11 +405,37 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
             continue                                  # an ancestor of the attempt dir (the rows container): not a protection of the attempt
         if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
             return "protected (kit_wave.json src/bind of record/marker/prov): " + p
+    lr = lease_refusal(t)
+    if lr:
+        return lr
     pt = live_text() if ptext is None else ptext
-    if t in pt or t + "/" in pt:
+    if names_path(pt, t):
         return "live process cwd/open file/cmdline under it"
-    if ad and ad != t and (ad in pt or ad + "/" in pt):
+    if ad and ad != t and names_path(pt, ad):
         return "live process cwd/open file/cmdline under its attempt dir"
+    return None
+
+
+def names_path(text, p):
+    """CLEAN-AGGR-R3 (FABLE-FLOW-2200: a live specA7 run-item kept specA): p occurs in text as a whole path -- followed by '/', the end, or a
+    character that cannot continue a path component -- not as the prefix of a longer name"""
+    if p not in text:
+        return False
+    return re.search(re.escape(p) + r"(?=$|[/\s'\";:,)=|&<>\]}*?`])", text) is not None
+
+
+def lease_refusal(t):
+    """CLEAN-AGGR-R3 leases (tools/fleet/ot_lease.py): a live lease on t, inside t or containing t keeps it"""
+    try:
+        here = os.path.dirname(os.path.abspath(__file__))
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import ot_lease
+    except ImportError:
+        return None
+    r = ot_lease.covering(t, ot_lease.leases())
+    if r:
+        return "leased by %s until %s: %s" % (r.get("owner"), time.strftime("%F %T", time.localtime(float(r.get("expires") or 0))), r.get("path"))
     return None
 
 
