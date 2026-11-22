@@ -22828,3 +22828,5 @@ FAILED [AUTOPILOT 7ec904ab5034] 2026-11-21 23:19:19 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 23:23 PST intel1 at 1201 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 23:23 PST DIED [FABLE-PIPELINE-R1] ot-run oth-ubuntu-2854551-1795327045 on tolerant-swine: rc=1 after 5174 s, ended 23:23:36, log /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/tmp/kvpar2.log, cmd: --hosts epyc8 --mem 110 --threads 10 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/kvob -- bash /s
+- 2026-11-21 23:23 PST HOURLY free space 23:23 epyc9=2344 intel1=1201 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
