@@ -21498,3 +21498,4 @@ FAILED [AUTOPILOT 58dcd151714b] 2026-11-21 19:20:23 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FAM-S81-LEPE-4: FAM-S81-LEPE-3 stood down (chain FAM-S81-LEPE-3 > FAM-S81-LEPE-4)
 - 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fable-fix-qc-sta on intel1 wrote 56 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-21 19:24 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-s81-col on intel1 wrote 48 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-21 19:25 PST DONE [FLOW-STRIPBODY-R2] ot-push-main otpush-tolerant-swine-1842879 on tolerant-swine: rc=0 after 30 s, ended 19:25:06, log /srv/opentallas-scratch2/claude/flow-stripbody-r2/push2.log, cmd: ot-push-main 
