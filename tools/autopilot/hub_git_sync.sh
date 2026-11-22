@@ -35,7 +35,10 @@ URL=git@github.com:bojieli/OpenTallas.git
 # FAIL 07:05-08:22 ("non-log local edits") while the autopilot read a stale checkout.
 # FLOW-HEALTH-2 11-19: a lane that appends to a root <LANE>-FIX-*.md in the hub tree (FABLE-FIX-QC.md, HUB-SYNC-FAILED 11:48-18:xx) is an append log too
 # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6): lane row files lanes/handoff/*-rows*.json written straight into the hub tree wedged the sync twice (19:04, 19:32)
-APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/handoff/[^/]+\.(md|json)|lanes/SIGN-RATE\.tsv|[A-Za-z0-9._]+-FIX-[A-Za-z0-9._-]+\.md|autopilot/(queue|resolved|auto_resign)\.tsv)$'
+# HUB-DIRTY-1122 (FABLE-FLOW-0600 X1): HUB-SYNC-FAILED 04:26-05:5x on lanes/OWNERS-SWEEP.tsv (an owners_sweep.py run with its default
+# --out) and lanes/posts/<LANE>.md (post.sh appends, then commits; a post left between the two, or a lane appending by hand); both are lane
+# text the hub may commit, and the failure line now names each refused file's mtime and any process holding it open
+APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/posts/[^/]+\.md|lanes/OWNERS-SWEEP\.tsv|lanes/handoff/[^/]+\.(md|json)|lanes/SIGN-RATE\.tsv|[A-Za-z0-9._]+-FIX-[A-Za-z0-9._-]+\.md|autopilot/(queue|resolved|auto_resign)\.tsv)$'
 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-2000 d): lanes/NOPROG*.tsv, FLOW-HEALTH.tsv, STALE.tsv, VISUAL-QUEUE.tsv are rewritten on the hub by timers that commit them
 # themselves; a dirty copy between the write and the commit raised HUB-SYNC-FAILED 494 times (19:02-20:22), so they are generated files too
 GENERATED_RE='^(RELEASE_TREE\.md|lanes/(NOPROG|NOPROG-ACTIONS|FLOW-HEALTH|STALE|VISUAL-QUEUE)\.tsv|lanes/NOPROG-TABLE\.md)$'
@@ -191,7 +194,14 @@ for f in $DIRTY; do
   elif is_live "$f"; then LIVE_DIRTY="$LIVE_DIRTY $f"
   elif is_append "$f"; then APP="$APP $f"; else OTHER="$OTHER $f"; fi
 done
-[ -z "$OTHER" ] || fail "non-log local edits in the hub checkout, not touched:$OTHER"
+if [ -n "$OTHER" ]; then
+  WHO=""
+  for f in $OTHER; do
+    w=$(fuser "$f" 2>/dev/null | tr -s ' ' '\n' | grep -E '^[0-9]+' | head -3 | while read -r p; do p=${p%%[!0-9]*}; printf '%s:%s ' "$p" "$(ps -o comm= -p "$p" 2>/dev/null)"; done)
+    WHO="$WHO $f[mtime $(date -r "$f" '+%H:%M:%S' 2>/dev/null)${w:+ open by ${w% }}]"
+  done
+  fail "non-log local edits in the hub checkout, not touched:$OTHER (writers:$WHO)"
+fi
 if [ -n "$APP" ]; then
   case " $APP " in *" HANDOFF.md "*) dedupe_latest;; esac
   # shellcheck disable=SC2086

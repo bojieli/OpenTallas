@@ -158,6 +158,28 @@ class HubSync(unittest.TestCase):
         self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
         self.assertEqual(self.remote_file("lanes/handoff/L-rows.json").strip(), "[1, 2]")
 
+    def test_lane_post_and_owners_sweep_table_are_committed(self):
+        # HUB-DIRTY-1122: lanes/posts/<LANE>.md and lanes/OWNERS-SWEEP.tsv left dirty in the hub tree failed the sync 04:26-05:5x
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "lanes/posts").mkdir(parents=True, exist_ok=True)
+        (self.other / "lanes/posts/L.md").write_text("p1\n")
+        (self.other / "lanes/OWNERS-SWEEP.tsv").write_text("a\n")
+        self.git(self.other, "add", "lanes/posts/L.md", "lanes/OWNERS-SWEEP.tsv")
+        self.git(self.other, "commit", "-qm", "posts")
+        self.git(self.other, "push", "-q", "origin", B)
+        self.assertEqual(self.sync().returncode, 0)
+        self.append(self.hub, "lanes/posts/L.md", "p2")
+        (self.hub / "lanes/OWNERS-SWEEP.tsv").write_text("a\nb\n")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("p2", self.remote_file("lanes/posts/L.md"))
+        self.assertEqual(self.remote_file("lanes/OWNERS-SWEEP.tsv"), "a\nb\n")
+
+    def test_refused_edit_names_its_mtime(self):
+        self.append(self.hub, "BRIEFING.md", "x")
+        self.assertNotEqual(self.sync().returncode, 0)
+        self.assertIn("BRIEFING.md[mtime ", (self.hub / "autopilot/HUB-SYNC-FAILED").read_text())
+
     def test_deeper_handoff_path_is_not_an_append_log(self):
         self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
         (self.other / "lanes/handoff/sub").mkdir(parents=True, exist_ok=True)
