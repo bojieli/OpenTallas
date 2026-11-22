@@ -56,6 +56,13 @@ ABSPATH-1122 (FLOW-OPS-R2, COORD): an absolute path in the plan json (or its --s
   Keys provenance / source* / note* / comment* / receipt* / evidence* / proof* / report* / history / *_log are records.  Fix: `plan_gate_pre.py localize --plan P --out P2` copies each present outside
   file into <plan dir>/inputs/ and rewrites the reference tree-relative (composers run it before G0).
 
+ISTCYC-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every lane whose end-bus internal_stations depth (source OUT bus +
+  destination IN bus, the deepest bus:<name> row as the kit merges them) changed against BASE, and whose BASE fixed_cycles
+  followed the rule fixed_cycles = source + destination, must carry the new source + destination; else FAIL ISTCYC with the
+  lane, the depths and the required cycles (the bind refuses it later: native_istations "fixed_cycles must equal source +
+  destination").  Only lanes on types whose stations changed are read.  Fix: `plan_gate_pre.py reprice --plan P
+  --baseline-plan B --out P2` sets exactly those lanes (fixed_cycles and latency fixed / cycles / natural by the same delta).
+
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -72,7 +79,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -849,6 +856,87 @@ def localize(plan, out, tree=None, sidecar=None):
     return len(done), left
 
 
+def _bus_depth(raw, tn, bus):
+    rows = [e for e in ((raw.get("partition_types") or {}).get(tn) or {}).get("internal_stations") or []
+            if e.get("conn") == "bus:" + str(bus)]
+    return max((len(e.get("regs_um") or []) for e in rows), default=0)
+
+
+def istcyc_lanes(raw, braw):
+    """[(lane id, src (type, bus), dst (type, bus), base depth, new depth, base fixed, new fixed)] for the lanes whose end-bus
+    station depth changed vs the baseline and whose baseline fixed_cycles == baseline source + destination; touched types only"""
+    bt, nt = braw.get("partition_types") or {}, raw.get("partition_types") or {}
+    changed = {tn for tn, t in nt.items() if isinstance(t, dict) and tn in bt
+               and (t.get("internal_stations") or []) != ((bt.get(tn) or {}).get("internal_stations") or [])}
+    if not changed:
+        return []
+    ports = {p.get("id"): p for p in raw.get("ports") or []}
+    parts = {p.get("name"): p for p in raw.get("partitions") or []}
+    blanes = {L.get("id"): L for L in braw.get("lanes") or []}
+    out = []
+    for L in raw.get("lanes") or []:
+        ps = [ports.get(x) for x in L.get("ports") or []]
+        if not ps or not ps[0] or not ps[-1]:
+            continue
+        try:
+            src = (parts[ps[0]["src"]["part"]]["type"], ps[0]["src"]["bus"])
+            dst = (parts[ps[-1]["dst"]["part"]]["type"], ps[-1]["dst"]["bus"])
+        except (KeyError, TypeError):
+            continue
+        if src[0] not in changed and dst[0] not in changed:
+            continue
+        b = blanes.get(L.get("id"))
+        if b is None:
+            continue
+        db = _bus_depth(braw, *src) + _bus_depth(braw, *dst)
+        dn = _bus_depth(raw, *src) + _bus_depth(raw, *dst)
+        bfx, nfx = int(b.get("fixed_cycles", 0) or 0), int(L.get("fixed_cycles", 0) or 0)
+        if dn == db or bfx != db:
+            continue
+        out.append((L.get("id"), src, dst, db, dn, bfx, nfx))
+    return out
+
+
+def check_istcyc(plan, baseline, max_list=8):
+    """FAIL ISTCYC per touched lane whose fixed_cycles was not re-priced (see ISTCYC-1122 in the doc)"""
+    if not baseline:
+        return []
+    raw, braw = _load(plan), _load(baseline)
+    if not raw or not braw:
+        return []
+    bad = [x for x in istcyc_lanes(raw, braw) if x[6] != x[4]]
+    if not bad:
+        return []
+    out = [f"FAIL ISTCYC lane {lid}: stations {s[0]}.{s[1]} -> {d[0]}.{d[1]} source+destination {db} -> {dn}, fixed_cycles "
+           f"{nfx} (base {bfx}), required {dn}" for lid, s, d, db, dn, bfx, nfx in bad[:max_list]]
+    if len(bad) > max_list:
+        out.append(f"FAIL ISTCYC ... {len(bad) - max_list} more lane(s)")
+    out.append(f"FAIL ISTCYC fix: python3 -I tools/die_plan/plan_gate_pre.py reprice --plan {plan} --baseline-plan {baseline} "
+               f"--out PLAN2.json   ({len(bad)} lane(s): " + ",".join(str(x[0]) for x in bad[:20]) + ")")
+    return out
+
+
+def reprice(plan, baseline, out):
+    """set fixed_cycles = new source + destination on exactly the ISTCYC lanes; the latency row (fixed / cycles / natural)
+    moves by the same delta.  -> {lane: (old, new)}"""
+    raw, braw = json.loads(Path(plan).read_text()), json.loads(Path(baseline).read_text())
+    lat = (raw.get("latency") or {}).get("lanes") or {}
+    byid = {L.get("id"): L for L in raw.get("lanes") or []}
+    done = {}
+    for lid, _s, _d, _db, dn, _bfx, nfx in istcyc_lanes(raw, braw):
+        if nfx == dn:
+            continue
+        byid[lid]["fixed_cycles"] = dn
+        r = lat.get(lid)
+        if r is not None:
+            for f in ("fixed", "cycles", "natural"):
+                if f in r:
+                    r[f] = int(r[f]) + (dn - nfx)
+        done[lid] = (nfx, dn)
+    Path(out).write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n")
+    return done
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None):
@@ -866,6 +954,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, baseline)
+    if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
+        findings += check_istcyc(plan, baseline)
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
@@ -904,6 +994,10 @@ def main(argv=None):
     lz.add_argument("--plan", required=True)
     lz.add_argument("--out", required=True)
     lz.add_argument("--tree")
+    rp = sub.add_parser("reprice", help="ISTCYC-1122: re-price fixed_cycles of the lanes whose station count changed vs BASE")
+    rp.add_argument("--plan", required=True)
+    rp.add_argument("--baseline-plan", required=True)
+    rp.add_argument("--out", required=True)
     m = sub.add_parser("mkproof")
     m.add_argument("--plan", required=True)
     m.add_argument("--baseline-plan")
@@ -912,6 +1006,10 @@ def main(argv=None):
     m.add_argument("--out", required=True)
     m.add_argument("--result", default="pass", choices=("pass", "fail", "withdrawn"))
     a = ap.parse_args(argv)
+    if a.cmd == "reprice":
+        d = reprice(a.plan, a.baseline_plan, a.out)
+        print(f"reprice: {len(d)} lane(s) re-priced; wrote {a.out}" + "".join(f"\n  {k}: fixed_cycles {o} -> {n}" for k, (o, n) in sorted(d.items())))
+        return 0
     if a.cmd == "localize":
         n, left = localize(a.plan, a.out, a.tree)
         print(f"localize: {n} outside input file(s) copied into {Path(a.plan).absolute().parent / 'inputs'}; wrote {a.out}"

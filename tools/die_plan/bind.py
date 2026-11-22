@@ -7522,7 +7522,7 @@ def _landremap_prev(a, G):
         if not prev or not Path(prev).is_file() or Path(prev).resolve() == Path(a.plan).resolve() \
                 or Path(prev).read_bytes() == Path(a.plan).read_bytes():
             return []
-        return G.check_landremap(a.plan, prev)
+        return G.check_landremap(a.plan, prev) + (G.check_istcyc(a.plan, prev) if hasattr(G, "check_istcyc") else [])
     except (OSError, ValueError) as e:
         return [f"WARN LANDREMAP previous-bind baseline {prev} unreadable: {e}"]
 
