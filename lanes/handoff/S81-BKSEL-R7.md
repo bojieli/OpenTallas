@@ -42,3 +42,10 @@
 - Copy unit oth-ubuntu-1521480-1795321728 (COL-R6 script /srv/opentallas-scratch2/claude/fam-s81-col-r6/copy_e10.sh) copies tree_r6 to epyc10 SAME path /srv/opentallas-scratch2/claude/s81-bksel-r5/w/tree_r6 + plan_r7a to /srv/opentallas-scratch2/claude/s81-bksel-r7/w/ (31/54 GB at 21:08).
 - Detached intel2 pid 2476582 ~/s81-bksel-r7/launch_e10.sh (log launch_e10.log): ot-wait copy -> verify -> private-spec --host epyc10 --goal auto -> run-item (log ~/s81-bksel-r7/run_item_e10.log). goal auto = through route/sign-off.
 - hop300: epyc10 /srv/opentallas-scratch2/claude/s81-bksel-r7/w/hop300.py <rt/current> <kit geom/geom.tsv> 300 <out.json> (via ot-run) once 3_place + geom exist.
+
+## 22:1x
+- My duplicate epyc10 launch (pid 2476582 + run-item 223174, spec S81-BKSEL-R7/s81_bk_sel__t2_1121215915) killed per COORD; it only reached kit_rtl.
+- r7a proof = COL-R6 run: spec ~/coord/autopilot/private_specs/FAM-S81-COL-R6/s81_bk_sel__t2_1121220051, work epyc10 /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-R6/bk_sel__t2_1121220031, run-item intel2 pid 281955 (tied to COL-R6's ssh session).
+- Guard (detached setsid, intel2 pid 462774, ~/s81-bksel-r7/guard_e10.sh, log guard_e10.log): when 281955 exits without result.json, resumes the same spec (max 3 tries).
+- J8 row 2 READY: bksel_seatmiss.py (drop 575 seat-miss keys; all co-located with seated keys), posted to J6-R5; rows file updated.
+- Next: on 3_place: hop300 (epyc10 w/hop300.py with rt/current on kit geom/geom.tsv) + check placed y-spread at x2250-2450; then route result (spec is goal auto? COL-R6 spec: check), sign-off -> J8 row 1 status.
