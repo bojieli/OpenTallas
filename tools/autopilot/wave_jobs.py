@@ -162,7 +162,39 @@ if ids:
         if any(m.get('Type') == 'bind' and m.get('RW', True) and under(m['Source']) for m in c.get('Mounts', [])) or \
                 any(under(o) for o in origins(c)):
             names.append(c['Name'].lstrip('/'))
+# LANE-SAFE-REAP-1122 (FLOW-OPS-R2; FAM-QC-FEFW-R3 eco_r3_residual/i1 rc 143 after 3.7 h mid sign-off STA): a lane's ECO / sign-off run inside a
+# CANCELLED wave row's kit dir was stopped by this reap although the watchdog had judged it lane-owned.  Same rule as watchdog.wave_owns: a scope
+# whose processes carry OT_LANE, or whose ot-run client tag (OT_HEAVY_TAG otrun-<host>-<pid>-<ms>) names a host other than the hub, is a lane
+# job -- reported as kept, never stopped, and its containers are left too.
+hub = a.get('hub') or ''
+# >>> lane_owner
+def proc_env(p):
+    return dict(e.split('=', 1) for e in open('/proc/%d/environ' % int(p), 'rb').read().decode('utf-8', 'replace').split('\0') if '=' in e)
+def lane_owner(pids, hub, read_env=None):
+    for p in pids:
+        try:
+            env = (read_env or proc_env)(p)
+        except (OSError, ValueError):
+            continue
+        if env.get('OT_LANE'):
+            return 'OT_LANE=' + env['OT_LANE']
+        tag = env.get('OT_HEAVY_TAG') or ''
+        if hub and tag.startswith('otrun-'):
+            h = tag[len('otrun-'):].rsplit('-', 2)[0]
+            if h and h != hub:
+                return 'ot-run client on ' + h
+    return ''
+# <<< lane_owner
+def scope_pids(u):
+    for root, dirs, files in os.walk('/sys/fs/cgroup/user.slice'):
+        if os.path.basename(root) == u:
+            try:
+                return [int(x) for x in open(os.path.join(root, 'cgroup.procs')).read().split()]
+            except OSError:
+                return []
+    return []
 scopes = set()
+cscope = {}
 for pid in filter(str.isdigit, os.listdir('/proc')):
     try:
         av = open('/proc/%s/cmdline' % pid, 'rb').read().decode('utf-8', 'replace').split('\0')
@@ -171,6 +203,9 @@ for pid in filter(str.isdigit, os.listdir('/proc')):
                 u = l.strip().rsplit('/', 1)[-1]
                 if u.startswith('oth-') and u.endswith('.scope'):
                     scopes.add(u)
+                    for n in names:
+                        if n in av or '--name=' + n in av:
+                            cscope[n] = u
     except (OSError, IndexError):
         pass
 # FLOW-FIX-2045 (FABLE-FLOW-1949 class 5: 11 scopes of CANCELLED attempts lived 17-28 h at cpu 0): an ot-heavy scope with NO container (a waiting / dead-client scope) is named by no mount, so the
@@ -201,6 +236,13 @@ for u in act:
         if any(w.startswith('/') and under(w) for w in av):
             scopes.add(u + '.scope')
             break
+kept = {}
+for u in sorted(scopes):
+    why = lane_owner(scope_pids(u), hub)
+    if why:
+        kept[u] = why
+scopes -= set(kept)
+names = [n for n in names if cscope.get(n) not in kept]
 left = []
 if not dry:
     for u in sorted(scopes):
@@ -211,7 +253,7 @@ if not dry:
     for u in sorted(scopes):
         if subprocess.run(['systemctl', '--user', 'is-active', '--quiet', u], capture_output=True).returncode == 0:
             left.append(u)
-print(json.dumps(dict({'containers': names, 'scopes': sorted(scopes)}, **({'left': left} if left else {}))))
+print(json.dumps(dict({'containers': names, 'scopes': sorted(scopes)}, **({'left': left} if left else {}), **({'kept_lane': kept} if kept else {}))))
 '''
 
 
@@ -227,7 +269,7 @@ def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
     roots = sorted({r for r in roots if r})
     if not roots:
         return {}
-    args = json.dumps({'roots': roots, 'dry': bool(dry)})
+    args = json.dumps({'roots': roots, 'dry': bool(dry), 'hub': os.uname().nodename})   # the caller (kit_wave) runs on the hub: its nodename is the hub's client-tag host
 
     def one(h):
         if h in BAD_HOSTS:
