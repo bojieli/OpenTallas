@@ -1,6 +1,8 @@
 # FLOW-OPS-R2 handoff (Opus 5.5; successor of FLOW-OPS-1300) -- live memory, 11-21 22:4x PST
 Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tools+rtl+physical/common_flow); tmp .../FLOW-OPS-R2/tmp (push logs pushN.log, patchN.py). pytest: use `python3 -m pytest` (not -I).
 ## DONE (on main)
+- P1 CLOSED (posted coord ca60a3e8ee): nomcap class = 2 cases, both re-recorded, count +0 (both types already SIGNED in OWNERS.tsv). Sweep: 64 NOT SIGNED on 7 hosts, 0 nomcap/coverage. Backlog 269 WAIT: 184 wait for a counting record, 76 were retired-host probes -> fixed 93fa1eb851 (autopilot rpy/rbash refuse epyc1,3-6; auto-resign SKIP RETIRED-HOST).
+- WAIT-VISUAL: tick 22:08 released 61 advisory rows (51 QUEUED in route queue); dispatch re-check pending (task brumuu9si).
 - P1 NOMCAP-MAP 5ce545eff0 (`signoff.py refresh-coverage RECORD --flow-tag T [--write]`); 2 re-recorded (qkd_ahub eco2 epyc7 fable-fix-kv-hub/r4/ahub/eco2/resign_je; QC sle_st_b_v1__pv0e7b1dcc epyc2 scratch3 auto-resign). Scripts epyc7 FLOW-OPS-1300/tmp/rerecord_r2.sh, epyc2 FLOW-OPS-R2/tmp/rerecord.sh. Other 37 NOT RECORDED have other causes.
 - P2 push17 3504af932d; ot-run spill race (flaky concurrent spill test was real) 305156e71d (flock per lane around stage prep).
 - VISUAL-NOBLOCK 94f0c2e4b8 + PASS-COND 3e9d8db466 (auto_geom_passed = geom_verdict PASS|PASS-COND + geom_dir). kit_wave.json review_before_route.required unset on qwen_compute/s81/s81_head/qwen_kvsys (hub a5e60619f7). Re-adders: d68244fee44 03:07 QC R6V1, 8282888a520 03:24 KV D25e3, a8e47f3cac2 04:12 apply_reviewed_tree_marker, f344cc7b889/019bf090c75 14:16-14:21 unlabelled.
