@@ -22169,3 +22169,5 @@ FAILED [AUTOPILOT 3df3f614925c] 2026-11-21 21:20:37 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 21:22 PST ALERT NO-PROGRESS s81_head: 16 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 127 min (last 19:15); no current launch blocker logged
 - 2026-11-21 21:22 PST DONE [CLEAN-AGGR-R3] ot-push-main otpush-outgoing-giraffe-2225845 on outgoing-giraffe: rc=0 after 14 s, ended 05:22:39, log none, cmd: ot-push-main 
 - 2026-11-21 21:22 PST DONE [KV-PLAN-R6] ot-run oth-ubuntu-1937059-1795324066 on tolerant-swine: rc=0 after 902 s, ended 21:22:46, log /home/ubuntu/tmp/kvplanr6/d27d3_hosts.log, cmd: --hosts epyc8 --mem 4 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/kv-plan-r6 -- python3 -I /srv/opentallas-scratch2/claude/kw
+- 2026-11-21 21:22 PST epyc9 at 2672 GiB: already in gen_hosts, nothing to restore
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
