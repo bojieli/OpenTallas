@@ -5,3 +5,4 @@
   - Fix (lane clone epyc7 head-start-r18/repo, unit test OK): free-running generator per phased clock (edge k at 1000 + D + 2000k), stubs on own edge counters by default (--stub-root = diagnostic).
   - tr28 running on epyc7 (log intel2 ~/head-start-r18/tr28.otrun.log), verdict in ~30 min. Codex 53 K values stay void.
   [redirect] FABLE-FIX-HEAD-LEP0N-R6 -> FABLE-FIX-HEAD-LEP0N-R7 (stood down; chain FABLE-FIX-HEAD-LEP0N-R6 > FABLE-FIX-HEAD-LEP0N-R7)
+- 2026-11-21 19:56 PST DIED [HEAD-START-R18] ot-run oth-ubuntu-3468512-1795319800 on tolerant-swine: rc=14 after 6 s, ended 19:56:42, log /home/ubuntu/head-start-r18/host_e_access.otrun.log, cmd: --mem 64 --threads 16 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/opus-fix-head-serdes-r4/host_e_access1415_retry/gen_access -- bash
