@@ -73,3 +73,8 @@ Lane clone: epyc9 /srv/opentallas-scratch2/claude/FLOW-FLEET-R1/repo (cone tools
 - rtx-pro: cron */15 ~/bin/ot-run-follow.sh keeps ~/.local/lib/fleet/ot-run-main/current = hub rt/current (log ~/.local/state/ot-run-follow.log).
 - Pre-existing failures on main: test_kit_wave_guard_kill (2), test_kit_wave_source RetryOutput (1).
 - PENDING: epyc7 LOAD_CAP decision before 11-23 06:00Z (sampler e7_sample.tsv).
+
+## 11-22 FABLE-FLOW-0230: DONE main b15a8a1023
+- D1 5a9ab12224 DEATHCLASS NOT-RUN/BIND-FAIL/ROUTE-FAIL/VERDICT-FAIL, NO-PATTERN replaces UNCLASSIFIED.
+- U1 b6e130c60f UNDER-USE HELD line (SKIP-HELD/WAIT-FORM by key, owner, age, eta; flagged keys -> NEEDS-ACTION once).
+- T1 d421ed4cc1 rt_floor.py; kit_wave.json min_rt=6d2e187f0d65 (coord 5fb52053d9); rt/MIN_RT written on intel2 intel1 epyc2 epyc7 epyc8 epyc9 epyc10. ot-run --plan-job bind NOT hooked (ot-run has no rt pin).
