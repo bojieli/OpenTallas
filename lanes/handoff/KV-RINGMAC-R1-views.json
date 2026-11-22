@@ -1,0 +1,773 @@
+{
+ "schema": "kv_ringmac_r1.views.v1",
+ "lane": "KV-RINGMAC-R1",
+ "generator": "tools/die_plan/cland_ring_master.py (main 9c4efdf69e)",
+ "hard_landing_tool_fix": "main 79274b7c9b (emit: WREG not a contract term; W32/W33/W44 rows need tools >= this)",
+ "source_rtl": "D27d3 bind_of_record rtl/kv3_hub_C_part.sv sha256 676c219a5437675a",
+ "views_root": "/srv/opentallas-scratch2/claude/kv-ringmac-r1/views/<master> (identical copies on epyc8 and epyc9)",
+ "masters": [
+  {
+   "master": "kv_cland_w175_ew_50ae4",
+   "view": "views/kv_cland_w175_ew_50ae4",
+   "outline_um": [
+    41.04,
+    43.2
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 175,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 7,
+     "PLACEREP": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(175), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(7), .PLACEREP(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_dNd_kv_svc",
+     "MY"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 146.1,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 1589,
+    "proved": 1589,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 4789,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "a20da85f7064b90c620a36fd102be67fa01bb34774f16a65d1f40ac958f013ef",
+    "gates.json": "52f646f4fe760aa0cc7d3e6eda0492ced30b9093d25291478686239e73cc58ff",
+    "kv_cland_w175_ew_50ae4.core.json": "ef917af0e8ac6c63afe185846acd6d8908d852b431c04470df11d051de4a56c9",
+    "kv_cland_w175_ew_50ae4.lef": "a28bd0d477f0e033159da95543ff4be9e5a35981eea05292b597e169382364aa",
+    "kv_cland_w175_ew_50ae4_ff.lib": "46ffe93df752031c8af11e21d198c8a21843ad894553a7fb1033ec2fd4f7e5d9",
+    "kv_cland_w175_ew_50ae4_tt.lib": "0c1d6106c6a06d4ca6c5d471fdfb205777783078074a5fc5a5418ad2de27782e",
+    "pins.json": "efb1bb74a69f5e8585b3c76c1e3dd3d02e87a8181151269ff5ad70563843b90c",
+    "provenance.json": "9d1b69e81c87813aef77559f35c86eb14b73e67873afdfcee94b6d5b70cb7d41",
+    "signoff.json": "b991448c6073ceccdc9f02f2caf79209099795cbc554ab07b82186ddff5227b3"
+   },
+   "signoff_src": "rk/kv_cland_w175_ew_50ae4/kits/kv_cland_w175_ew_50ae4_synth0/signoff/signoff.json",
+   "kit_host": "epyc8"
+  },
+  {
+   "master": "kv_cland_w145_ew_8341d",
+   "view": "views/kv_cland_w145_ew_8341d",
+   "outline_um": [
+    41.04,
+    37.152
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 145,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 7,
+     "PLACEREP": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(145), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(7), .PLACEREP(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_kvs_hroot_EN_o_ctl",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_kvs_hroot_ES_o_ctl",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_kvs_hroot_WN_o_ctl",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_kvs_hroot_WS_o_ctl",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 145.73,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 1439,
+    "proved": 1439,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 4069,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "d704a190e8f79702c6db14c32bedff402a30a5b041f1ae08baf5723e0ad36da6",
+    "gates.json": "3caac645849b90d600982aeb3146c969dd3c5dc6404849c6a8014f237b444870",
+    "kv_cland_w145_ew_8341d.core.json": "983234b50ecccccc409549db0e940050fe2aaf05f0f5ee33528a1f41c5649f22",
+    "kv_cland_w145_ew_8341d.lef": "46a2ea7bbdbbcc9d2e5315d9f5074e845bb5dfd13c6fcf3ed072035c5f6ffd22",
+    "kv_cland_w145_ew_8341d_ff.lib": "ba1401cb6b4db73780546df5f14e18d378976edf304d3d96a3cd67f48d1c343f",
+    "kv_cland_w145_ew_8341d_tt.lib": "95cae8684ce8390ca7966fa9b40b98e26fa2b357a71be3883478a96a2aae4b7f",
+    "pins.json": "54ef8db42a3d929f6692c0b31df195f57ac22629d9493003848affaca9bf4190",
+    "provenance.json": "0d69c372e476f6311fdfde9eda740132a19b88b32a7a0490f821f93d0346b4fc",
+    "signoff.json": "57b69e041681dc52218c70ee9c076acc903b8b44e84258f1ec79a4a6e575f8f0"
+   },
+   "signoff_src": "rk/kv_cland_w145_ew_8341d/kits/kv_cland_w145_ew_8341d_synth0/signoff/signoff.json",
+   "kit_host": "epyc8"
+  },
+  {
+   "master": "kv_cland_w144_ew_5f45d",
+   "view": "views/kv_cland_w144_ew_5f45d",
+   "outline_um": [
+    41.04,
+    37.152
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 144,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 7,
+     "PLACEREP": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(144), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(7), .PLACEREP(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_host_boot_pr",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 144.2,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 1434,
+    "proved": 1434,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 4016,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "0900d2eddd4628ea14a29f3c0276e143d1f011eaa68c462dcde7691415f1d977",
+    "gates.json": "8c9e655c67f46ee027a2fc94d23e1357a2aad1d24e6d5149a2125aed97a27a28",
+    "kv_cland_w144_ew_5f45d.core.json": "1b8ef53becc8448f8a75266a6b4c3c4634023dba75ca3c1783d86a64b4d43e7f",
+    "kv_cland_w144_ew_5f45d.lef": "34c6b7fa0720ab98b9e8a6587b7f12162b081d1991f23b6bb9357b0838216684",
+    "kv_cland_w144_ew_5f45d_ff.lib": "4847c63205d60fa24f86a22b88ff2d0e99559e135f9d06f30dfce2a242ea4e93",
+    "kv_cland_w144_ew_5f45d_tt.lib": "130a673d3cd8bc1a4801ce119256dbd8e9bdbdaf58081c112f47087f826957df",
+    "pins.json": "2c7e5c69d55e11a0107d01baed9a57e1b36265b13c3e6f4584f58255556a79c9",
+    "provenance.json": "89fd62954b58221c2f4841e5885ffa6f1345838acc963688ee8c032fdefea988",
+    "signoff.json": "b72bf07bc25c12c71c270f9955f102a50144e309dd31feaa90fd61740044435a"
+   },
+   "signoff_src": "rk/kv_cland_w144_ew_5f45d/kits/kv_cland_w144_ew_5f45d_synth0/signoff/signoff.json",
+   "kit_host": "epyc8"
+  },
+  {
+   "master": "kv_cland_w129_ew_7738e",
+   "view": "views/kv_cland_w129_ew_7738e",
+   "outline_um": [
+    41.04,
+    34.128
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 129,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 7,
+     "PLACEREP": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(129), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(7), .PLACEREP(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft16_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft17_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft28_i",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft29_i",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 144.61,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 1359,
+    "proved": 1359,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 3675,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "f2832a2b2cba0310b55bdd227e397fbdfe2e1e3eb3a37f144728a25b5cf70cae",
+    "gates.json": "5679f54023449fdc209d874f525cb453c6f8b69f47ced3c33097f64c6bf0604a",
+    "kv_cland_w129_ew_7738e.core.json": "d1f21c27375d9b594e5fdcc0ac44c4a173f82a36eed8eab8381acc2663435703",
+    "kv_cland_w129_ew_7738e.lef": "6eb99394586b208a1e234aca569e4eb30d39f74f466da06d553f97471efc30dc",
+    "kv_cland_w129_ew_7738e_ff.lib": "abd7ed51c239a312ce154e6121665e974dab17c80bdc1cae5ae4f6df82c5428a",
+    "kv_cland_w129_ew_7738e_tt.lib": "acecc7203f4cdfd22e004f20df46b917edc6761716e57065fc81e68fa48d5359",
+    "pins.json": "2c29b7c3acacb150c35a01122d85c598c85e48f23a0065ae7828707040ea7a17",
+    "provenance.json": "d1e9fe4883dbb98b3c79a2c9f2c037240514efe1a1b703403eb0f9eaeaf3a08f",
+    "signoff.json": "2623a51acb0ee88d583ee23827c0e5fc6b815ceccc4fa43192f97a94da9425c0"
+   },
+   "signoff_src": "rk/kv_cland_w129_ew_7738e/kits/kv_cland_w129_ew_7738e_synth0/signoff/signoff.json",
+   "kit_host": "epyc8"
+  },
+  {
+   "master": "kv_cland_w83_ew_4b021",
+   "view": "views/kv_cland_w83_ew_4b021",
+   "outline_um": [
+    41.04,
+    25.056
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 83,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 5,
+     "PLACEREP": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(83), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(5), .PLACEREP(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_host_auth_lp",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 146.34,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 931,
+    "proved": 931,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 2515,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "b4821b6e3755bb21aba6017cd3acec63d9e40e8494a293df153593e8c2d17aa1",
+    "gates.json": "16652608ade4a920ec1faf642725dd80776a537d0f390ab6f31ea4f8c9807596",
+    "kv_cland_w83_ew_4b021.core.json": "0a1bde7863bfaa2819a921576a15f9979f424f182ea9d53c6df6dab05d3f3b97",
+    "kv_cland_w83_ew_4b021.lef": "b0d64f3fa1c9edcf3208d53b16356f5930f72da8851fa79c22f04b97e3d94c74",
+    "kv_cland_w83_ew_4b021_ff.lib": "9c4a8497ed7acc0f26fd63a53327848b906e7ee030fd391b96143f468592fbbd",
+    "kv_cland_w83_ew_4b021_tt.lib": "bbbd4e4189281ac12447071bf8d7d58ffa406e8c11dcabfe7b1b32176c2345d2",
+    "pins.json": "51efb9be13d10d95e5952e6c312509c7e19d465126c4be23fa01ee743cef7445",
+    "provenance.json": "6ced6b9166c0a957e4e63c621d35667ec1370c3abb560a026aba72a21161c16e",
+    "signoff.json": "2b8d113b96fb35c61aaf1c457b4809404e613973a6efc77dfe0d6b434f5603f2"
+   },
+   "signoff_src": "rk/kv_cland_w83_ew_4b021/kits/kv_cland_w83_ew_4b021_synth0/signoff/signoff.json",
+   "kit_host": "epyc8"
+  },
+  {
+   "master": "kv_cland_w65_ew_43b80",
+   "view": "views/kv_cland_w65_ew_43b80",
+   "outline_um": [
+    41.04,
+    21.6
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 65,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 5,
+     "PLACEREP": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(65), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(5), .PLACEREP(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_host_boot_image_digest",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 141.75,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 841,
+    "proved": 841,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 2073,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "bdcbcb27fc8e722c97805512b009196ceb64d1db800ff6430f686b70e425eda5",
+    "gates.json": "39284252db51a8c98b1e4787aef6bbb8c2f73b656adf9252d5913f6b56838bf9",
+    "kv_cland_w65_ew_43b80.core.json": "f4676eb4cadf2b322a9e82e1fa46c8098be696f7730eadc1bad11c4868c4cdcd",
+    "kv_cland_w65_ew_43b80.lef": "eaf401b3347ae64c434481cd555a26796f9f86a6d26522712c9accc0f9286486",
+    "kv_cland_w65_ew_43b80_ff.lib": "0e024e20aab151dd7c450cb95392fbff3c16cf8394522eb2c6b9c7c0fa76f21b",
+    "kv_cland_w65_ew_43b80_tt.lib": "4130747ba2296f4774a21ed3f7f0db81b70d060ce6f9f6528808404188d684c4",
+    "pins.json": "25072c7732fe821e6c28b50c51f2429736d8aaf57e2a05bc209e3f983b474449",
+    "provenance.json": "3c9c8fb369ba46a826d251a4af7793e5ad94f7f6688920ad7915b9ab052ef569",
+    "signoff.json": "847f007e9b656fa77a704a4da99b07fb4c03debf759cd79e04443f918ad7db88"
+   },
+   "signoff_src": "rk/kv_cland_w65_ew_43b80/kits/kv_cland_w65_ew_43b80_synth0/signoff/signoff.json",
+   "kit_host": "epyc9"
+  },
+  {
+   "master": "kv_cland_w44_ew_aca8a",
+   "view": "views/kv_cland_w44_ew_aca8a",
+   "outline_um": [
+    41.04,
+    16.416
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 44,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(44), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_astk_EN__u_strip_u_strip_u_ctl_ap",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_astk_ES__u_strip_u_strip_u_ctl_ap",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_astk_WN__u_strip_u_strip_u_ctl_ap",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_astk_WS__u_strip_u_strip_u_ctl_ap",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 20.99,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 399,
+    "proved": 399,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 1384,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "adc280ac4e0b0d8063299568f4318c2ad83d455a12fae588d0b42ff01edd6fa7",
+    "gates.json": "7996efdc52666b1c91fcdc4f786d184265caf777ef16687bebab1f80626a9c3c",
+    "kv_cland_w44_ew_aca8a.core.json": "70ff080dcbc57dd948bde5497caa7bb47bd6b14bf32661f179c8109f018e9358",
+    "kv_cland_w44_ew_aca8a.lef": "95f1e29edb70e4ed44d7396f828b0e0b2541f6e932c216dddbe0b065d3989adc",
+    "kv_cland_w44_ew_aca8a_ff.lib": "b4367cb18cb8875a6f48cce213deecd32b2a489bd9da5167fd70457aadc38529",
+    "kv_cland_w44_ew_aca8a_tt.lib": "598cc490092842fab0cdf132e48c7c3915dbb09b0610096c9cba077c0094e57e",
+    "pins.json": "1e03a2d103200060b242191200e6f60ded5acda0896dd2102b3c7766bbbe3c2c",
+    "provenance.json": "deaa4b4adc14b4a92579b1244a21f984f359d1d903c782dc81b0dad2597d03fd",
+    "signoff.json": "315168e5940183d152ff36e89ea3b255f616073bc38081e3dc4fca8781d79f26"
+   },
+   "signoff_src": "rk/kv_cland_w44_ew_aca8a/kits/kv_cland_w44_ew_aca8a_synth0/signoff/signoff.json",
+   "kit_host": "epyc9"
+  },
+  {
+   "master": "kv_cland_w33_ew_95a44",
+   "view": "views/kv_cland_w33_ew_95a44",
+   "outline_um": [
+    41.04,
+    14.256
+   ],
+   "orient": "ew",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 33,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(33), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft0_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft10_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft11_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft12_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft13_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft1_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft3_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft4_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft5_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft6_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft7_i",
+     "MY"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_ft8_i",
+     "MY"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 74.34,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 333,
+    "proved": 333,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 1151,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "816911bc667b02a36a7ba901ccce9353838f29e7f4676e0ff82d3225c7e998cc",
+    "gates.json": "8689fcb929062faa76455ff98fee9133f919b7093f04fb6c42f7534256a34c5d",
+    "kv_cland_w33_ew_95a44.core.json": "a8c61fd2c20b31bad95276c17d5bec5ba167ca39a7f2e670c8d7c18b9c8ce54c",
+    "kv_cland_w33_ew_95a44.lef": "45cc205265716b6ac8d71dced43c09111eac475a0ca4fe44891e82b55a7b6d84",
+    "kv_cland_w33_ew_95a44_ff.lib": "226b29f1e0c61175645d6e2581e1c594f9502b06766621abfb6f3811babd8906",
+    "kv_cland_w33_ew_95a44_tt.lib": "383b3a36bab8f906665a0562ec7815bd099558fc9e36f647abcedbe49df574b8",
+    "pins.json": "7b54142efb73235ab3ac0a031e2d1184c61826f7a8c445dbced876a1e037aa94",
+    "provenance.json": "3e3727d44bff920eb0297d8ef7bd828a87fdcfb5fac9c5067dbedcaea1893d27",
+    "signoff.json": "ef686a0afc61991dc44d1912d5377ed5495735d3e1a54d53758976d57f46fb1f"
+   },
+   "signoff_src": "rk/kv_cland_w33_ew_95a44/kits/kv_cland_w33_ew_95a44_synth0/signoff/signoff.json",
+   "kit_host": "epyc9"
+  },
+  {
+   "master": "kv_cland_w32_ns_58467",
+   "view": "views/kv_cland_w32_ns_58467",
+   "outline_um": [
+    12.096,
+    41.04
+   ],
+   "orient": "ns",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 32,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "NARROW": 1
+    }
+   },
+   "param_text": "#(.W(32), .DEPTH(4), .STATUS_REG(1), .GUARD_REG(1), .WFALL(1), .NARROW(1))",
+   "uses": [
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_EN_N_vo",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_EN_N_vo_d1",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_EN_N_vo_d2",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_EN_N_vo_d3",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_ES_N_vo",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_ES_N_vo_d1",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_ES_N_vo_d2",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_ES_N_vo_d3",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WN_N_vo",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WN_N_vo_d1",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WN_N_vo_d2",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WN_N_vo_d3",
+     "MX"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WS_N_vo",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WS_N_vo_d1",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WS_N_vo_d2",
+     "R0"
+    ],
+    [
+     "kv3_hub_C",
+     "u_bound.u_cland_i_vport_WS_N_vo_d3",
+     "R0"
+    ]
+   ],
+   "verdict": "SIGNED",
+   "profile": "minimal",
+   "tt_setup_ps": 77.34,
+   "gates": {
+    "drc": "PASS",
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "fwd_pads": "PASS"
+   },
+   "internal_ff_hold_ps": 0.0,
+   "drc": 0,
+   "antenna": 0,
+   "lec": "EQUIVALENT",
+   "lec_points": {
+    "compare_points": 327,
+    "proved": 327,
+    "differs": 0,
+    "undecided": 0
+   },
+   "cells": 1131,
+   "clock_contract": true,
+   "files_sha256": {
+    "clock_contract.json": "1f2a1764267238a77b9fd2532ae8517ff698be6e46f1ea2ba5e37e6d83b64cd4",
+    "gates.json": "b58be2b283ee4e20f7dbf8bc4621eadfc10a03d891edc17a4b6262542e70b01c",
+    "kv_cland_w32_ns_58467.core.json": "6439d7c0c72a7010beec103c96e37bd974b3ce055a8893766da2672949cc92e3",
+    "kv_cland_w32_ns_58467.lef": "31905845c5e8d4582c010ec8497d78ed6335481a2e5b897af3b572b70b7d6a45",
+    "kv_cland_w32_ns_58467_ff.lib": "4f7c5816f2a3e78559bd0b4bbf63a74a767e8de359a0c98a28e98abcd5226cf3",
+    "kv_cland_w32_ns_58467_tt.lib": "59b014106d439743f2ce0522b4c315c4233c900acbd6d92f9b9125a2a5b224a5",
+    "pins.json": "02037f8d657017ebc52e3b1c5d9747c77eba3ca48661baf8a2c306c128010a5c",
+    "provenance.json": "90466a84318d61b18009a4491a214cba56d17f8ed6c50a356948cee5cb8b9a7f",
+    "signoff.json": "f1a9ad28f6b7f306336f2e3432aa7c74f0e0bda2ca69073c211cbdb910669dd1"
+   },
+   "signoff_src": "rk/kv_cland_w32_ns_58467/kits/kv_cland_w32_ns_58467_synth0/signoff/signoff.json",
+   "kit_host": "epyc9"
+  }
+ ]
+}
