@@ -150,3 +150,4 @@ FABLE-FIX-S81-LEAF-R8	stood-down	FABLE-FIX-S81-LEAF-R9	2026-11-21	20:16 PST | co
 FLOW-OPS-1300	stood-down	none	2026-11-21	21:21 PST | context limit; COORD assigns a successor; open items + in-flight push17 in lanes/handoff/FLOW-OPS-1300.md
 FLEET-EPYC7-R1	stood-down	none	2026-11-21	21:31 PST | task done per COORD; epyc7 recovered (docker run 3.5-7 s); dirty cap live on 7 hosts + main 8082157602; epyc7 keeps LOAD_CAP_FACTOR=1.2 + THREAD_CAP_FACTOR=1.0 (revert .bak-fleet7r1-1122); FLEET-WATCH lanes own epyc10 I/O watch (docker ~14 s)
 FAM-S81-SERDES-R7	stood-down	FAM-S81-SERDES-R8	2026-11-21	21:40 PST
+FAM-S81-COL-R6	stood-down	FAM-S81-COL-R5	2026-11-22	05:48 PST | COORD 11-22 05:4x: R6 not live (handoff 02:21, no posts 3 h); R5 keeps col_h9_r1 end to end; R6 h9_r0/bk_sel triage in lanes/handoff/FAM-S81-COL-R6.md
