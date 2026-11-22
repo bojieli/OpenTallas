@@ -28,7 +28,8 @@ foreach i [$pr_blk getInsts] { lappend pr_insts [list [string map {\\ {}} [$i ge
 set pr_macros {}
 foreach pr_p $pr_insts { set i [lindex $pr_p 1]; if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend pr_macros [list [expr {[$b xMin]/$pr_dbu-2.0}] [expr {[$b yMin]/$pr_dbu-2.0}] [expr {[$b xMax]/$pr_dbu+2.0}] [expr {[$b yMax]/$pr_dbu+2.0}]] } }
 foreach pr_row $::ot_place_regions {
-  lassign $pr_row pr_name pr_re pr_util pr_x pr_y pr_near
+  lassign $pr_row pr_name pr_re pr_util pr_x pr_y pr_near pr_kind pr_box pr_rad
+  if {$pr_kind eq ""} { set pr_kind fence }
   set pr_grp {}; set pr_a 0.0; set pr_sx 0.0; set pr_sy 0.0; set pr_k 0; set pr_mx 0.0; set pr_my 0.0; set pr_mk 0
   foreach pr_p $pr_insts {
     lassign $pr_p pr_n pr_i
@@ -83,16 +84,21 @@ foreach pr_row $::ot_place_regions {
       puts [format "OT_PLACE_REGION_COVERAGE %s: members cover %.3f of the cone (%d members, %d cone cells outside the region group)" $pr_name $pr_cov [llength $pr_grp] [llength $pr_extra]]
     }
   }
-  if {$pr_x ne "" && $pr_y ne ""} { set pr_how plan
+  if {$pr_box ne ""} { lassign $pr_box pr_b0 pr_b1 pr_b2 pr_b3; set pr_x [expr {($pr_b0+$pr_b2)/2.0}]; set pr_y [expr {($pr_b1+$pr_b3)/2.0}]; set pr_how "plan box"
+  } elseif {$pr_x ne "" && $pr_y ne ""} { set pr_how plan
   } elseif {$pr_near ne ""} {
     if {!$pr_k} { error "OT_PLACE_REGION $pr_name: near_re '$pr_near' matches no instance" }
     set pr_x [expr {$pr_sx/$pr_k}]; set pr_y [expr {$pr_sy/$pr_k}]; set pr_how "near ($pr_k instances)"
   } elseif {$pr_mk} { set pr_x [expr {$pr_mx/$pr_mk}]; set pr_y [expr {$pr_my/$pr_mk}]; set pr_how "cone macros ($pr_mk)"
   } else { set pr_x [expr {($pr_cx0+$pr_cx1)/2.0}]; set pr_y [expr {($pr_cy0+$pr_cy1)/2.0}]; set pr_how "core centre" }
   # the box grows (5 % of its area per step) until its area NOT under a macro (bbox + 2 um) holds the cells at the target
-  set pr_need [expr {$pr_a/$pr_util}]; set pr_area $pr_need
+  set pr_need [expr {$pr_a/$pr_util}]; set pr_area $pr_need; set pr_ar 1.0
+  # PLACE-GROUP (FABLE-FIX-CONE-SCATTER 11-22): box_um keeps its aspect and starts at its own area, radius_um starts at (2r)^2; both grow
+  # (same 5 % steps) only when the cells at the target utilisation do not fit
+  if {$pr_box ne ""} { set pr_ar [expr {($pr_b3-$pr_b1)/double($pr_b2-$pr_b0)}]; set pr_area [expr {max($pr_need, ($pr_b2-$pr_b0)*($pr_b3-$pr_b1))}]
+  } elseif {$pr_rad ne ""} { set pr_area [expr {max($pr_need, 4.0*$pr_rad*$pr_rad)}] }
   for {set pr_it 0} {$pr_it < 400} {incr pr_it} {
-    set pr_w [expr {sqrt($pr_area)}]; set pr_h $pr_w
+    set pr_w [expr {sqrt($pr_area/$pr_ar)}]; set pr_h [expr {$pr_w*$pr_ar}]
     if {$pr_w > $pr_cx1-$pr_cx0} { set pr_w [expr {$pr_cx1-$pr_cx0}]; set pr_h [expr {$pr_area/$pr_w}] }
     if {$pr_h > $pr_cy1-$pr_cy0} { set pr_h [expr {$pr_cy1-$pr_cy0}]; set pr_w [expr {min($pr_area/$pr_h, $pr_cx1-$pr_cx0)}] }
     set pr_x0 [expr {max($pr_cx0, min($pr_x-$pr_w/2.0, $pr_cx1-$pr_w))}]; set pr_y0 [expr {max($pr_cy0, min($pr_y-$pr_h/2.0, $pr_cy1-$pr_h))}]
@@ -120,7 +126,7 @@ foreach pr_row $::ot_place_regions {
   set pr_g [odb::dbGroup_create $pr_r ot_region_${pr_name}_grp]
   $pr_g setType PHYSICAL_CLUSTER
   foreach pr_i $pr_grp { $pr_g addInst $pr_i }
-  puts [format "OT_PLACE_REGION %s: %d cells %.0f um2 util %.2f of the macro-free area, box (%.3f %.3f)-(%.3f %.3f) um on the site / row grid, centre %s" $pr_name [llength $pr_grp] $pr_a [expr {$pr_a/$pr_free}] [expr {$pr_bx0/$pr_dbu}] [expr {$pr_by0/$pr_dbu}] [expr {$pr_bx1/$pr_dbu}] [expr {$pr_by1/$pr_dbu}] $pr_how]
+  puts [format "OT_PLACE_REGION %s (%s): %d cells %.0f um2 util %.2f of the macro-free area, box (%.3f %.3f)-(%.3f %.3f) um on the site / row grid, centre %s" $pr_name $pr_kind [llength $pr_grp] $pr_a [expr {$pr_a/$pr_free}] [expr {$pr_bx0/$pr_dbu}] [expr {$pr_by0/$pr_dbu}] [expr {$pr_bx1/$pr_dbu}] [expr {$pr_by1/$pr_dbu}] $pr_how]
 }
 }
 }

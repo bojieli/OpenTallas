@@ -6691,6 +6691,24 @@
         },
         "note": {
          "type": "string"
+        },
+        "kind": {
+         "enum": [
+          "fence",
+          "soft"
+         ]
+        },
+        "box_um": {
+         "type": "array",
+         "minItems": 4,
+         "maxItems": 4,
+         "items": {
+          "type": "number"
+         }
+        },
+        "radius_um": {
+         "type": "number",
+         "exclusiveMinimum": 0
         }
        }
       }

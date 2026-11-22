@@ -1704,7 +1704,12 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
     "properties": {"name": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"}, "inst_re": {"type": "string", "minLength": 1},
                    "util": {"type": "number", "minimum": 0.1, "maximum": 0.9},
                    "centre_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
-                   "near_re": {"type": "string", "minLength": 1}, "note": {"type": "string"}}}}
+                   "near_re": {"type": "string", "minLength": 1}, "note": {"type": "string"},
+                   # PLACE-GROUP (FABLE-FIX-CONE-SCATTER 11-22): fence (default, kept through DPL) | soft (GPL only, released before DPL);
+                   # box_um explicit box, radius_um box of side 2r around the centre (both grow to fit the cells at util)
+                   "kind": {"enum": ["fence", "soft"]},
+                   "box_um": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
+                   "radius_um": {"type": "number", "exclusiveMinimum": 0}}}}
 # UNIFY-TOOLS-0300 11-20 (FABLE-SUPERSET-0415 section 10, U5): a SUPERSET type carries the union pin set of its class.
 # true / object (e.g. {"class": "slw_fe"}) = on; gen_phys.superset_spare_pins pins the ends no die port binds.  Each
 # instance then names its unbound ends in partitions[].spare_ends (a spare input is tied 0 at the parent, a spare output

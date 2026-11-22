@@ -3,6 +3,8 @@
 set ff_blk [ord::get_db_block]
 # FLOW-NOADV-R3 11-20: repair buffers inherit the PLACE-REGION of their neighbours before DPL (place_regions_inherit.tcl, only with place_regions_data.tcl)
 if {[file exists /work/place_regions_data.tcl] && [file exists /work/place_regions_inherit.tcl]} { source /work/place_regions_data.tcl; source /work/place_regions_inherit.tcl }
+# PLACE-GROUP 11-22 (FABLE-FIX-CONE-SCATTER): place_regions rows of kind soft are released here, after the inheritance, before DPL
+if {[file exists /work/place_regions_data.tcl] && [file exists /work/place_regions_release.tcl]} { source /work/place_regions_data.tcl; source /work/place_regions_release.tcl }
 set ff_n 0; set ff_esc 0
 # Kept reset FF/driver pairs have a checked joint footprint; DPL must not split them.
 set ff_reset_fixed {}

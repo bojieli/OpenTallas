@@ -367,7 +367,8 @@ def cone_regions(kit, cells, nets, limit=8):
     pr = Path(kit) / "place_regions_data.tcl"
     if not pr.exists():
         return out
-    rows = re.findall(r"^\s*\{(\S+) \{([^}]*)\} ([\d.]+) (\S+) (\S+) \{([^}]*)\}\}", pr.read_text(), re.M)
+    # PLACE-GROUP 11-22: a row may carry kind / box / radius after near_re (gen_phys.place_regions_tcl)
+    rows = re.findall(r"^\s*\{(\S+) \{([^}]*)\} ([\d.]+) (\S+) (\S+) \{([^}]*)\}(?: \S+ \{[^}]*\} \S+)?\}", pr.read_text(), re.M)
     macro = {n for n, (m, _) in cells.items() if not _STD.search(m)}
     seq = {n for n, (m, _) in cells.items() if _SEQ.match(m)}
     for name, inst_re, util, cx, cy, near in rows:
