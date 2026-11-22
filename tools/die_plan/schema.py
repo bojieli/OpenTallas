@@ -1631,7 +1631,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                        # KV-D23-REACH 11-18: the driver is a reset spine landing (ot_dp_rsync); copies only from the stages after the 2 sync flops
                        "form": {"enum": ["rsync"]},
                        # FABLE-FIX-KV-PV 11-20: rsync copies as synchronous shift relays (no spine on their clear pins)
-                       "tail_clear": {"enum": ["async", "sync"]},
+                       "tail_clear": {"enum": ["async", "sync", "sync_output"]},
                        "lockup_regions": {"type": "boolean"}}}}
 # S81-COLGEN-3 11-17 (S81-TYPES-R3 col relay chains over hard macros, hops > 405 um): per-type relay depth rows read by
 # bind.relay_depth_map: D (1..4) extra relay-named register stages (u_y_xd_*) after the named source leaf's output port, declared
