@@ -44,3 +44,5 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 - 11-22 01:xx PST COORD fallback ruling: S1 primary; if GRT < -42 build F1 (second re-site) + F2 (li3 D 1->2, no CRED raise, 0.75 accepted) in parallel, first to close wins. F2 row drafted.
 
 - 11-22 01:xx PST proof15 F2 dry-run bind (R1 + li3_d/li3_v D2, no S1 sites, no CRED change) running intel2 fam-lepe4/p15 (tree kw45/src_s81_fam_lepe4_p15_work), parallel to proof14.
+
+- 11-22 02:2x PST proof13 bind GREEN (nh_mus_C XMID1): ELAB 0, BIND 0, LAT 873/873 PASS (XMID invisible as expected), G0 9 errors = same set as p12 baseline (0 new), PRE PASS. Private kit spec private_specs/FAM-S81-LEPE-4/s81_dsdv_slice_lepe_nh_mus_C__t1_1122022150 (goal route, intel2) running.
