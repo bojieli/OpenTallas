@@ -1,0 +1,195 @@
+{
+ "lane": "FAM-QC-CB-R4",
+ "made": "2026-11-21 21:2x PST",
+ "to": "QC-PLAN-R13 (V4 unless a passing bind is ready before 06:00)",
+ "status": "CANDIDATE station rows from the placed_scan of the held V2 placements; no bind yet",
+ "rule": "limit 405 um; stations n = max(existing, ceil(max_um/405)-1); regs_um re-sited at equal spacing on the from->to leg (internal_stations regs_um)",
+ "types": {
+  "cbn_q11__cl5cc92dfe": [
+   {
+    "conn": "group:u_bound.u_bin_bc_i22->u_bound.u_u_fab_u_x_2_2.u_st.g_seg.tag",
+    "bits": 32,
+    "max_um": 658,
+    "leg_um": 639,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      490.72,
+      295.72
+     ]
+    ],
+    "hop_um_new": 319.5
+   },
+   {
+    "conn": "group:u_bound.u_bin_bc_i32->u_bound.u_u_fab_u_x_3_2.u_st.g_seg.tag",
+    "bits": 32,
+    "max_um": 596,
+    "leg_um": 579,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      1129.92,
+      291.48
+     ]
+    ],
+    "hop_um_new": 289.5
+   },
+   {
+    "conn": "group:u_bound.u_rrl_298->u_bound.u_u_fab_u_x_2_3.u_st.g_seg.cnt",
+    "bits": 16,
+    "max_um": 2136,
+    "leg_um": 2127,
+    "stations_now": 5,
+    "stations_new": 5,
+    "regs_um_new": [
+     [
+      973.08,
+      912.18
+     ],
+     [
+      791.04,
+      1084.7
+     ],
+     [
+      609.01,
+      1257.22
+     ],
+     [
+      426.98,
+      1429.73
+     ],
+     [
+      244.94,
+      1602.25
+     ]
+    ],
+    "hop_um_new": 354.5
+   },
+   {
+    "conn": "group:u_bound.u_rrl_298->u_bound.u_u_fab_u_x_2_3.u_st.g_seg.run",
+    "bits": 4,
+    "max_um": 2134,
+    "leg_um": 2123,
+    "stations_now": 5,
+    "stations_new": 5,
+    "regs_um_new": [
+     [
+      973.24,
+      911.62
+     ],
+     [
+      791.36,
+      1083.57
+     ],
+     [
+      609.49,
+      1255.53
+     ],
+     [
+      427.62,
+      1427.49
+     ],
+     [
+      245.74,
+      1599.44
+     ]
+    ],
+    "hop_um_new": 353.8
+   },
+   {
+    "conn": "group:u_bound.u_bin_bc_i22->u_bound.u_u_fab_u_x_2_2.u_st.g_seg.go",
+    "bits": 4,
+    "max_um": 789,
+    "leg_um": 750,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      459.83,
+      320.75
+     ]
+    ],
+    "hop_um_new": 375.0
+   },
+   {
+    "conn": "group:u_bound.u_bin_bc_i32->u_bound.u_u_fab_u_x_3_2.u_st.g_seg.go",
+    "bits": 4,
+    "max_um": 703,
+    "leg_um": 692,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      1099.74,
+      319.21
+     ]
+    ],
+    "hop_um_new": 346.0
+   }
+  ],
+  "cbn_q11__cl49ae4555": [
+   {
+    "conn": "group:u_bound.u_bin_bc_i22->u_bound.u_u_fab_u_x_2_2.u_st.g_seg.tag",
+    "bits": 32,
+    "max_um": 709,
+    "leg_um": 656,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      488.94,
+      306.32
+     ]
+    ],
+    "hop_um_new": 328.0
+   },
+   {
+    "conn": "group:u_bound.u_bin_bc_i32->u_bound.u_u_fab_u_x_3_2.u_st.g_seg.tag",
+    "bits": 32,
+    "max_um": 616,
+    "leg_um": 583,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      1129.14,
+      293.98
+     ]
+    ],
+    "hop_um_new": 291.5
+   },
+   {
+    "conn": "group:u_bound.u_bin_bc_i22->u_bound.u_u_fab_u_x_2_2.u_st.g_seg.go",
+    "bits": 4,
+    "max_um": 805,
+    "leg_um": 760,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      460.49,
+      327.71
+     ]
+    ],
+    "hop_um_new": 380.0
+   },
+   {
+    "conn": "group:u_bound.u_bin_bc_i32->u_bound.u_u_fab_u_x_3_2.u_st.g_seg.go",
+    "bits": 4,
+    "max_um": 738,
+    "leg_um": 716,
+    "stations_now": 1,
+    "stations_new": 1,
+    "regs_um_new": [
+     [
+      1101.06,
+      330.58
+     ]
+    ],
+    "hop_um_new": 358.0
+   }
+  ]
+ }
+}
