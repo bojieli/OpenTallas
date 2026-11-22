@@ -2,3 +2,4 @@
 - 2026-11-21 19:32 PST DONE [fable-fix-qc-coll] ot-push-main otpush-loved-redfish-2905821 on loved-redfish: rc=0 after 0 s, ended 03:32:00, log none, cmd: ot-push-main --help
 - 2026-11-21 19:34 PST DONE [fable-fix-qc-coll] ot-push-main otpush-loved-redfish-2909012 on loved-redfish: rc=0 after 137 s, ended 03:34:24, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll/push_relaymid.log, cmd: ot-push-main 
 - 2026-11-21 19:37 PST DONE [fable-fix-qc-coll] ot-push-main otpush-loved-redfish-3036183 on loved-redfish: rc=0 after 0 s, ended 03:37:39, log none, cmd: ot-push-main --help
+- 2026-11-21 19:44 PST DIED [fable-fix-qc-coll] ot-push-main otpush-loved-redfish-3037213 on loved-redfish: rc=4 after 377 s, ended 03:44:02, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll/push_fault.log, cmd: ot-push-main 
