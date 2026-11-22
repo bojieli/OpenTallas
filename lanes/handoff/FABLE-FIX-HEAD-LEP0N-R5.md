@@ -4,13 +4,11 @@ Predecessor: lanes/handoff/FABLE-FIX-HEAD-LEP0N-R4.md (rename map, RTL facts; st
 Lane dir intel2 L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r5 (clone = lane clone of main, plan/, tmp/).
 Stood down on context, not on a blocker. No kit launched. No plan event, no live tree written, nothing resealed.
 
-## In flight (1 unit, adopt it)
-- oth-ubuntu-1136304-1795317736 (epyc9, R4's six-content 0-cycle equivalence). Hub log intel2
-  ~/fable-fix-head-lep0n-r4/parts_equiv_e9.otrun.log, proof log epyc9
-  /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r4/parts/proof/parts_equiv.log.
-  State 19:36 PST: equiv_simple proved 349,132 of 351,685; the other 2,553 are in "6. EQUIV_INDUCT" (normal: Codex's runs
-  also finished in induction). NOT proven yet. Pass = "Equivalence successfully proven" then PARTS_EQUIV_PASS.
-  Do not quote the six-content form as LEC-clean before that line. If cells stay unproven: R4 handoff, "In flight".
+## In flight: none
+- Proof unit oth-ubuntu-1136304-1795317736 (epyc9) FINISHED PASS after stand-down: 351,685 of 351,685 $equiv cells proven,
+  0 unproven, "Equivalence successfully proven", PARTS_EQUIV_PASS, exit 0, 4,902 s. Log epyc9
+  /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r4/parts/proof/parts_equiv.log; hub log intel2
+  ~/fable-fix-head-lep0n-r4/parts_equiv_e9.otrun.log. It covers the UNCUT six-content form (RXA 16'h0330) only.
 
 ## Landed on main (ot-push-main, tests run)
 1. 01fa4a7bcd9 type_split.py + landing_place.py (work order 1, done):
@@ -56,7 +54,7 @@ Measured on plan_parts.json against cuts 907.2 / 1745.28 (script output, 19:5x P
    only the uncut RXA 16'h0330 form.
 
 ## Work order left
-1. PARTS_EQUIV_PASS. Then a private tree (real copies, nlink 1) of v2 + parts RTL + plan_parts.json: gen.py rtl, cohort,
+1. (PARTS_EQUIV_PASS is in.) A private tree (real copies, nlink 1) of v2 + parts RTL + plan_parts.json: gen.py rtl, cohort,
    strict bind 26/26, LATCHECK 329/329 with NO cut.
 2. Plan rows before the split: census items 2-4 as site moves + the three PD rows (RX row y 637.7 break, coll_i1 / coll_i2
    re-seat, measured OT_PREGRT_HOLD_R2R_MARGIN as --ab).
