@@ -8647,7 +8647,7 @@ def _swap_prefix(v, old, new):
 
 # FLOW-PRIVSPEC-R1 (item 7c): goal of a private run-item.  geom = stop after AUTO-GEOM (the old private behaviour); auto = the runner's own
 # sign-off goal (autopilot default_goal / runner_goal: run_kit.sh -> route); route / finish = that goal; cts / grt = diagnostic (never a sign-off)
-PRIVATE_GOALS = ("auto", "route", "finish", "geom", "cts", "grt")
+PRIVATE_GOALS = ("auto", "route", "finish", "place", "geom", "cts", "grt")
 PRIVATE_HUB = "intel2"                                   # the coord hub (OT_HUB_NAME of the hub units); private-spec runs on any gen host
 
 
@@ -9230,8 +9230,9 @@ def private_spec_cmd(a):
     if ti:
         print(f"tree inputs: bind {ti.get('bind', '-')} ({ti.get('bind_from', '-')}); rt {ti.get('rt_from', '-')}; probed on {ti.get('probe_host', '-')}"
               + (f"; record {ti['source']}" if ti.get("source") else ""))
+    stop = {"place": "stops at the placed checkpoint", "geom": "stops after AUTO-GEOM"}.get(sp["goal"])
     print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place; "
-          + ("stops after AUTO-GEOM)" if sp["goal"] == "geom" else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
+          + (f"{stop})" if stop else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
     return 0
 
 
@@ -9704,6 +9705,10 @@ def run_item(spec_path):
             print(f"KW_RENDER_WARN {T}: place finished (3_place.odb present) but run/layout_review has no PNG; advisory only", flush=True)
         if res["cells"] and res["cells"] > SPLIT_CELLS:      # WAVE-FLOW-R2: reported, never a stop (the plan-time SPLIT-NEEDED check owns the limit)
             print(f"KW_CELLS_INFO {T}: {res['cells']} cells above {SPLIT_CELLS} (advisory; plan-time SPLIT-NEEDED is the only cell check)", flush=True)
+        if chain_goal == "place":
+            res.update(stage="place", verdict="PASS", evidence=f"{kh}:{odb}", odb=odb, kit=f"{kh}:{K}")
+            (out / "result.json").write_text(json.dumps(res, indent=1))
+            return 0
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
@@ -19547,7 +19552,7 @@ def main(argv=None):
     s_.add_argument("--dry-run", action="store_true")
     r = sub.add_parser("run-item")
     r.add_argument("spec")
-    r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (geom = stop after AUTO-GEOM; "
+    r.add_argument("--goal", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: private specs only: override the spec goal (place = placed checkpoint; geom = stop after AUTO-GEOM; "
                                                          "auto/route/finish = continue through the wave stage chain to sign-off + routed LEC)")
     ps_ = sub.add_parser("private-spec", help="FLOW-PROC-A: a private kit spec = the item's wave spec now (env, gen args, flow_tag); only plan / tree / overlay differ")
     ps_.add_argument("die"); ps_.add_argument("item")
@@ -19571,7 +19576,7 @@ def main(argv=None):
     ps_.add_argument("--hub", help="coord hub to read the config from when this host has none (default $OT_HUB_NAME or intel2)")
     ps_.add_argument("--config", help="kit_wave.json file instead of the hub autopilot/kit_wave.json")
     ps_.add_argument("--goal", default="auto", choices=PRIVATE_GOALS, help="FLOW-PRIVSPEC-R1: how far run-item drives the kit: auto (default: the runner's "
-                                                                          "sign-off goal, route for run_kit.sh) / route / finish = sign-off + routed LEC; geom = stop after AUTO-GEOM; cts / grt = diagnostic")
+                                                                          "sign-off goal, route for run_kit.sh) / route / finish = sign-off + routed LEC; place = placed checkpoint; geom = stop after AUTO-GEOM; cts / grt = diagnostic")
     ps_.add_argument("--rt", metavar="SHA", help="FLOW-CLKGRT-1121: declared tools runtime = rt/<sha12> snapshot for gen / kit_rtl / the launch tree (e.g. the "
                                                "runtime the bind was made on), recorded in spec private.rt + kit_env_provenance.json; flow scripts are still "
                                                "refreshed from rt/current at each stage (FLOW-FIX-2045), so new flow tcl reach the kit; env and ENV-PROVENANCE unchanged")

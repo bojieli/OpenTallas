@@ -205,6 +205,9 @@ def test_goal_default_and_old_specs():
     sp = KW.private_spec(c, D, I, "intel2")
     assert sp["goal"] == "auto" and KW.chain_goal_of(sp) == "auto" and KW.chain_goal_of(sp, "geom") == "geom"
     assert KW.private_spec(c, D, I, "intel2", goal="route")["goal"] == "route"
+    place = KW.private_spec(c, D, I, "intel2", goal="place")
+    assert KW.chain_goal_of(place) == "place"
+    assert KW.chain_goal_of(KW.spec_for(c, D, I, "intel2"), "place") == "geom"
     with pytest.raises(ValueError):
         KW.private_spec(c, D, I, "intel2", goal="sta")
     old = dict(sp)
