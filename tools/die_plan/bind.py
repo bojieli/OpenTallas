@@ -7506,11 +7506,17 @@ def _plan_expect(B, p, a):
 
 
 def _landremap_prev(a, G):
-    """LANDREMAP-1122: findings of plan_gate_pre.check_landremap(a.plan, plan of OUT/provenance_bind.json) when that plan still
-    exists and differs from a.plan (a seeded / re-used bind_of_record); [] otherwise."""
-    try:
-        prev = json.loads((Path(a.out) / "provenance_bind.json").read_text())["provenance"]["plan"]
-    except (OSError, ValueError, KeyError, TypeError):
+    """LANDREMAP-1122: findings of plan_gate_pre.check_landremap(a.plan, PREV) where PREV is the plan of OUT/provenance_bind.json
+    (a seeded / re-used out dir), else of <plan dir>/bind_of_record/provenance_bind.json (a fresh out dir in a tree that carries
+    its previous bind of record), when PREV still exists and differs from a.plan; [] otherwise."""
+    prev = None
+    for f in (Path(a.out) / "provenance_bind.json", Path(a.plan).parent / "bind_of_record" / "provenance_bind.json"):
+        try:
+            prev = json.loads(f.read_text())["provenance"]["plan"]
+            break
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+    if not prev:
         return []
     try:
         if not prev or not Path(prev).is_file() or Path(prev).resolve() == Path(a.plan).resolve() \
@@ -7551,7 +7557,7 @@ def _plan_gate_pre(a):
         # a tool older than the live tree is a warning in a bind (an event may pin its tools), a FAIL in bind_fast.py precheck
         fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"),
                      elab_dir=a.out, ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
-                     toolstale_level="WARN")
+                     toolstale_level="WARN", abspath_level="warn")      # ABSPATH-1122: a bind warns, G0 / compose refuse
     except (OSError, ValueError) as e:
         print(f"bind: plan_gate_pre could not read its inputs: {e}")
         return 0 if mode == "warn" else 2

@@ -45,7 +45,16 @@ LANDREMAP-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every type whose hard
   landing_writer_start / landing_local_resets / landing_raw_branches; collector_tree excluded) that still names, at the same
   plan path, the same relay as BASE while that name is now a DIFFERENT relay (depth, site, kind) of the new tree was not
   remapped: FAIL LANDREMAP with the landing_remap.py command.  KV R6d (ae4b6866747e vs plan_r6c): 7 EMIT errors after a 1-2 h
-  bind, refused here in ~3 s.  bind.py runs this class against $OT_PLAN_GATE_BASELINE, else the plan recorded in OUT/provenance_bind.json.
+  bind, refused here in ~3 s.  bind.py runs this class against $OT_PLAN_GATE_BASELINE, else the plan recorded in
+  OUT/provenance_bind.json, else in <plan dir>/bind_of_record/provenance_bind.json (the tree's previous bind of record).
+
+ABSPATH-1122 (FLOW-OPS-R2, COORD): an absolute path in the plan json (or its --sidecar, or <plan dir>/wave_prepare.json) that
+  lies outside the plan's own tree (--tree, else the nearest parent holding tools/die_plan or physical+rtl; realpath counted)
+  is an input that dies with its snapshot (HEAD r16/r17: sink censuses into the deleted s81_head_r4_s0 -> kit_rtl /
+  abs_inputs).  ABSPATH-MISSING (target gone) and ABSPATH-OUTSIDE (target present): WARN before ABSPATH_STRICT_FROM (live
+  plans keep cutting), FAIL from it; $OT_PLAN_ABSPATH=fail (composers / new plans) or =warn overrides; a bind always warns.
+  Keys provenance / source* / note* / comment* / receipt* / evidence* / proof* / report* / history / *_log are records.  Fix: `plan_gate_pre.py localize --plan P --out P2` copies each present outside
+  file into <plan dir>/inputs/ and rewrites the reference tree-relative (composers run it before G0).
 
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
@@ -63,7 +72,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -715,9 +724,134 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4):
     return out
 
 
+ABSPATH_STRICT_FROM = "2026-11-29"           # present-but-outside absolute inputs: WARN before this day, FAIL from it
+ABS_RE = re.compile(r"^/(?:srv|home|mnt|data|scratch|tmp|opt|archive|nvme)[^\s\"';|&<>]*$")
+ABS_SKIP = re.compile(r"^(?:provenance|source.*|note.*|comment.*|receipt.*|evidence.*|proof.*|.*_proof|report.*|.*_report|history|why|.*_log)$", re.I)
+
+
+def plan_tree_root(plan, tree=None):
+    """the plan's own tree: --tree, else the nearest parent of the plan holding tools/die_plan or physical + rtl"""
+    if tree:
+        return Path(tree)
+    d = Path(plan).resolve().parent if not Path(plan).is_dir() else Path(plan)
+    for q in [Path(plan).absolute().parent, *Path(plan).absolute().parents, d, *d.parents]:
+        if (q / "tools" / "die_plan").is_dir() or ((q / "physical").is_dir() and (q / "rtl").is_dir()):
+            return q
+    return Path(plan).absolute().parent
+
+
+def abs_refs(obj, path=""):
+    """[(json path, absolute path string)] of every absolute path value outside record keys (ABS_SKIP)"""
+    out = []
+    items = obj.items() if isinstance(obj, dict) else enumerate(obj) if isinstance(obj, list) else ()
+    for k, v in items:
+        if isinstance(k, str) and ABS_SKIP.match(k):
+            continue
+        if isinstance(v, str):
+            if ABS_RE.match(v):
+                out.append((f"{path}/{k}", v))
+        elif isinstance(v, (dict, list)):
+            out += abs_refs(v, f"{path}/{k}")
+    return out
+
+
+def _inside(p, roots):
+    cands = {Path(p).absolute()}
+    try:
+        cands.add(Path(p).resolve())
+    except (OSError, RuntimeError):
+        pass
+    for r in roots:
+        for c in cands:
+            try:
+                c.relative_to(r)
+                return True
+            except ValueError:
+                pass
+    return False
+
+
+def abspath_findings(plan, tree=None, sidecar=None, level=None, today=None, max_list=6, already=""):
+    """FAIL/WARN ABSPATH lines (see ABSPATH-1122 in the doc); a path named in `already` (earlier findings, e.g. INPUT-MISSING) is not repeated."""
+    import time as _t
+    root = plan_tree_root(plan, tree)
+    roots = {root.absolute()}
+    try:
+        roots.add(root.resolve())
+    except OSError:
+        pass
+    lv = (level or os.environ.get("OT_PLAN_ABSPATH") or "").lower()
+    strict = (today or _t.strftime("%Y-%m-%d")) >= ABSPATH_STRICT_FROM
+    files = [Path(plan)] + ([Path(sidecar)] if sidecar else []) + [Path(plan).parent / "wave_prepare.json"]
+    miss, outside = [], []
+    for f in dict.fromkeys(files):
+        if not f.is_file():
+            continue
+        try:
+            doc = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        for jp, v in abs_refs(doc):
+            if _inside(v, roots) or v in already:
+                continue
+            (outside if Path(v).exists() else miss).append(f"{f.name}:{jp} = {v}")
+    out = []
+    if miss:
+        tag = "FAIL" if lv == "fail" or (strict and lv != "warn") else "WARN"
+        out.append(f"{tag} ABSPATH-MISSING {len(miss)} absolute input(s) outside tree {root} do not exist (kit gen dies at "
+                   f"abs_inputs; FAIL from {ABSPATH_STRICT_FROM}): " + "; ".join(miss[:max_list]))
+    if outside:
+        tag = "FAIL" if lv == "fail" or (strict and lv != "warn") else "WARN"
+        out.append(f"{tag} ABSPATH-OUTSIDE {len(outside)} absolute input(s) outside tree {root} (die with their snapshot; "
+                   f"FAIL from {ABSPATH_STRICT_FROM}): " + "; ".join(outside[:max_list]))
+    if out:
+        out.append(f"{out[0].split()[0]} ABSPATH fix: python3 -I tools/die_plan/plan_gate_pre.py localize --plan {plan} --out PLAN2.json"
+                   + (f" --tree {tree}" if tree else ""))
+    return out
+
+
+def localize(plan, out, tree=None, sidecar=None):
+    """copy every present outside absolute input file of the plan into <plan dir>/inputs/<sha12>_<name> and rewrite the
+    reference tree-relative; -> (n copied, [unresolved]).  Directories and missing targets are reported, not changed."""
+    import shutil
+    root = plan_tree_root(plan, tree).absolute()
+    pdir = Path(plan).absolute().parent
+    raw = json.loads(Path(plan).read_text())
+    done, left = {}, []
+
+    def fix(o):
+        items = list(o.items()) if isinstance(o, dict) else list(enumerate(o)) if isinstance(o, list) else []
+        for k, v in items:
+            if isinstance(k, str) and ABS_SKIP.match(k):
+                continue
+            if isinstance(v, str) and ABS_RE.match(v) and not _inside(v, {root, root.resolve()}):
+                src = Path(v)
+                if not src.is_file():
+                    left.append(v)
+                    continue
+                if v not in done:
+                    h = hashlib.sha256(src.read_bytes()).hexdigest()[:12]
+                    dst = pdir / "inputs" / f"{h}_{src.name}"
+                    dst.parent.mkdir(parents=True, exist_ok=True)
+                    if not dst.exists():
+                        tmp = dst.with_name(dst.name + ".part")
+                        shutil.copyfile(src, tmp)
+                        os.replace(tmp, dst)
+                    try:
+                        done[v] = str(dst.relative_to(root))
+                    except ValueError:
+                        done[v] = str(dst)
+                o[k] = done[v]
+            elif isinstance(v, (dict, list)):
+                fix(v)
+    fix(raw)
+    Path(out).write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n")
+    return len(done), left
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
-          toolstale_level="FAIL"):
+          toolstale_level="FAIL", abspath_level=None):
     findings = []
     skip = {s.upper() for s in skip}
     if "SCHEMA" not in skip:
@@ -732,6 +866,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, baseline)
+    if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
+        findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
         sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
         import kit_fit as KF
@@ -764,6 +900,10 @@ def main(argv=None):
     c.add_argument("--list", action="store_true", help="print the resolved input paths (cleanup keep set)")
     c.add_argument("--json")
     c.add_argument("--quiet", action="store_true")
+    lz = sub.add_parser("localize", help="ABSPATH-1122: copy outside absolute inputs into <plan dir>/inputs/, rewrite tree-relative")
+    lz.add_argument("--plan", required=True)
+    lz.add_argument("--out", required=True)
+    lz.add_argument("--tree")
     m = sub.add_parser("mkproof")
     m.add_argument("--plan", required=True)
     m.add_argument("--baseline-plan")
@@ -772,6 +912,11 @@ def main(argv=None):
     m.add_argument("--out", required=True)
     m.add_argument("--result", default="pass", choices=("pass", "fail", "withdrawn"))
     a = ap.parse_args(argv)
+    if a.cmd == "localize":
+        n, left = localize(a.plan, a.out, a.tree)
+        print(f"localize: {n} outside input file(s) copied into {Path(a.plan).absolute().parent / 'inputs'}; wrote {a.out}"
+              + (f"; NOT localized (missing / not a file): {'; '.join(left[:8])}" if left else ""))
+        return 1 if left else 0
     if a.cmd == "mkproof":
         pr = mkproof(a.plan, a.baseline_plan, a.lane, a.evidence, a.result)
         Path(a.out).write_text(json.dumps(pr, indent=1) + "\n")

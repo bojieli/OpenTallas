@@ -74,3 +74,13 @@ def test_bind_uses_previous_bind_plan_as_baseline(tmp_path, monkeypatch):
     (out / "provenance_bind.json").write_text(json.dumps({"provenance": {"plan": n}}))   # same plan: nothing to compare
     assert bind._landremap_prev(SimpleNamespace(out=str(out), plan=n), G) == []
     assert bind._landremap_prev(SimpleNamespace(out=str(tmp_path / "none"), plan=n), G) == []
+
+
+def test_fresh_out_dir_uses_tree_bind_of_record(tmp_path, monkeypatch):
+    import bind
+    n, b = plans(tmp_path, typ(cy=700.0))
+    bor = Path(n).parent / "bind_of_record"; bor.mkdir()
+    (bor / "provenance_bind.json").write_text(json.dumps({"provenance": {"plan": b}}))
+    monkeypatch.setattr(G, "check_landremap", lambda p, base: [f"FAIL LANDREMAP {base}"])
+    fresh = tmp_path / "fresh"; fresh.mkdir()
+    assert bind._landremap_prev(SimpleNamespace(out=str(fresh), plan=n), G) == [f"FAIL LANDREMAP {b}"]
