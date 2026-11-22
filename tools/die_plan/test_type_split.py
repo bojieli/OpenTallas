@@ -1213,3 +1213,79 @@ def test_carried_short_fixed_never_falls_below_the_new_station_rows():
     assert TS.carried_fixed(4, 4, 2) == 2
     assert TS.carried_fixed(2, 2, 1) == 1
     assert TS.carried_fixed(3, 4, 2) == 2
+
+
+def test_cut_face_reserve_keeps_its_span_free_of_windows():
+    """FABLE-FIX-KV-PV-SINKSPREAD (KV pv D29): spec cut_face_reserve_um spans take no cut window; a pinned window
+    whose preference lies in a reserve slides beside it, and the reach-bounded left packing steps over one."""
+    per_um, L = 7.695, 1520.64
+    routes = [("tr:a", 1025, None), ("tr:b", 271, None), ("leg:c", 400, 700.0), ("leg:top", 900, 1460.0)]
+    free = TS.windows_for(list(routes), L, per_um)
+    assert free["tr:a"][0][0] < 60 and free["leg:top"][0][1] > 1400     # unreserved: bottom fill, top pinned leg
+    res = TS.reserve_spans([[1397.52, 1512.0], [8.64, 149.04], [300, 350]], L, "t")
+    assert res == [(8.64, 149.04), (300.0, 350.0), (1397.52, 1512.0)]
+    w = TS.windows_for(list(routes), L, per_um, reserved=res)
+    assert set(w) == {r[0] for r in routes}
+    assert sum(n for segs in w.values() for _, _, n in segs) == 1025 + 271 + 400 + 900
+    spans = sorted((lo, hi) for segs in w.values() for lo, hi, _ in segs)
+    for lo, hi in spans:
+        assert all(hi <= r0 + 1e-6 or lo >= r1 - 1e-6 for r0, r1 in res), (lo, hi)
+    assert all(a[1] <= b[0] + 1e-6 for a, b in zip(spans, spans[1:]))
+    assert w["leg:top"][0][1] <= 1397.52 + 1e-6                          # the pinned leg moved below the top reserve
+    # reach-bounded (ft) windows: the earliest-deadline left packing also leaves the reserve free
+    ranged = [(f"ft:{i}", 600, 120.0 + i, (60.0, 420.0)) for i in range(3)]
+    w2 = TS.windows_for(ranged, L, per_um, reserved=[(150.0, 200.0)])
+    for segs in w2.values():
+        for lo, hi, _ in segs:
+            assert hi <= 150 + 1e-6 or lo >= 200 - 1e-6
+    with pytest.raises(TS.SplitError, match="cut_face_reserve_um"):
+        TS.reserve_spans([[100, 2000]], L, "t")
+    assert TS.windows_for(list(routes), L, per_um, reserved=()) == free
+
+
+def test_cut_face_bank_inset_moves_the_inventory_and_writes_the_kit_key(monkeypatch):
+    """FABLE-FIX-KV-PV-SINKSPREAD (KV pv D29): spec cut_face_bank_inset_um sites the new cut-face banks inside the
+    piece in the sink inventory and gives each piece its budgets.face_flop_ew_types inset on its cut face."""
+    from types import SimpleNamespace
+    import schema
+    import gen_phys
+    a = dict(clock={}, ft_slots=[])
+    b = dict(clock={}, ft_slots=[])
+    ev = TS.Event.__new__(TS.Event)
+    ev.spec = dict(axis="x", cut_face_bank_inset_um=25.92)
+    ev.ts = {"t": SimpleNamespace(tnames=["a", "b"])}
+    ev.out = dict(partition_types=dict(a=a, b=b), partitions=[dict(name="a", type="a"), dict(name="b", type="b")],
+                  budgets=dict(face_flop_ew_types=dict(b=dict(row_stride=2))),
+                  ports=[dict(id="cut", src=dict(part="a", bus="o_x_p"), dst=dict(part="b", bus="i_x_p"))])
+    ev.rep = dict(ports_added=["cut"])
+    monkeypatch.setattr(schema, "Plan", lambda *_args: object())
+    monkeypatch.setattr(gen_phys, "type_pins", lambda _p, tn: [("o_x_p", bit, "M4", 1080.0, 50 + bit, "E") if tn == "a" else
+                                                               ("i_x_p", bit, "M4", 0.0, 50 + bit, "W") for bit in range(2)])
+    ev._inventory_cut_sinks()
+    assert sorted(r[0] for r in a["clock"]["sink_sites_um"]) == [pytest.approx(1080 - 25.92)] * 2
+    assert sorted(r[0] for r in b["clock"]["sink_sites_um"]) == [pytest.approx(25.92)] * 2
+    assert ev.out["budgets"]["face_flop_ew_types"] == dict(a=dict(inset_um=dict(E=25.92)), b=dict(row_stride=2, inset_um=dict(W=25.92)))
+    assert ev.rep["cut_face_bank_inset_um"] == dict(a=dict(E=25.92), b=dict(W=25.92))
+    jsonschema = pytest.importorskip("jsonschema")
+    jsonschema.validate(ev.out["budgets"]["face_flop_ew_types"], schema.SCHEMA["properties"]["budgets"]["properties"]["face_flop_ew_types"])
+    # without the key: the legacy 1-um face site and no budgets row
+    ev2 = TS.Event.__new__(TS.Event)
+    a2, b2 = dict(clock={}, ft_slots=[]), dict(clock={}, ft_slots=[])
+    ev2.out = dict(ev.out, partition_types=dict(a=a2, b=b2), budgets={})
+    ev2.rep = dict(ports_added=["cut"])
+    ev2._inventory_cut_sinks()
+    assert sorted(r[0] for r in b2["clock"]["sink_sites_um"]) == [pytest.approx(1.0)] * 2 and ev2.out["budgets"] == {}
+
+
+def test_drop_clock_keys_drops_reserved_sites_that_straddle_the_cut():
+    """FABLE-FIX-KV-PV-SINKSPREAD (KV pv D29): the die clock spine of a pv type runs on the x 1080 cut; with
+    drop_clock_keys the reserved sites are dropped for re-derivation instead of failing the split."""
+    ck = dict(tap_um=[1131.84, 596.16], reserved_sites_um=[dict(rect_um=[905.0, 10.0, 909.0, 12.0], kind="die_clock_tree"),
+                                                          dict(rect_um=[17.496, 443.34, 20.196, 445.23], kind="die_clock_tree")])
+    ts = _head_keys_split(dict(clock=ck))
+    with pytest.raises(TS.SplitError, match="straddles a cut"):
+        ts._clock_sites(ck, {"tap_um": [0.0, 0.0]}, 0)
+    ts.ev.spec = dict(ts.ev.spec, drop_clock_keys=["reserved_sites_um"])
+    c = {"tap_um": [0.0, 0.0]}
+    ts._clock_sites(ck, c, 0)
+    assert "reserved_sites_um" not in c and len(ck["reserved_sites_um"]) == 2

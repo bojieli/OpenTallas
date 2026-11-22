@@ -34,17 +34,18 @@ def test_schema_accepts_form_and_rejects_unknown_field():
         jsonschema.validate({"sle_fw": {"cpitch_sites": 0}}, sub)
 
 
-def place(pins_y, env):
+def place(pins_y, env, blocks=""):
     """run the E/W branch of face_flops.tcl on E-face pins at y (dbu); -> [(col, x, y)]"""
-    setup = SRC[SRC.index("set ff_ew_cpitch"):SRC.index("\n", SRC.index("set ff_ew_stride")) + 1]
+    setup = SRC[SRC.index("set ff_ew_cpitch"):SRC.index("# FF-EW-SETUP-END")]
     start = SRC.index("    if {$face in {E W}} {")
     end = SRC.index("    } else {", start)
     branch = SRC[start:end] + "    }\n"
     rows = " ".join("r" for _ in range(4000))
     row_ys = " ".join(str(i * 270) for i in range(4000))
     row_proc = re.search(r"proc ff_row_index \{row_ys pin_y\} \{\n.*?\n\}", SRC, re.S).group(0)
-    script = ("set ff_sw 54;set ff_x0 0;set ff_x1 622080;set ff_y0 0;set ff_rh 270;set w 1080;set ff_occ {};set face E\n"
+    script = ("set ff_sw 54;set ff_dbu 1000;set ff_x0 0;set ff_x1 622080;set ff_y0 0;set ff_rh 270;set w 1080;set ff_occ {};set face E\n"
               f"set ff_rows [list {rows}];set ff_row_ys [list {row_ys}]\n" + row_proc + "\n" + "".join(f"set ::env({k}) {v}\n" for k, v in env.items()) + setup +
+              (f"set ff_ew_blk {{{blocks}}}\n" if blocks else "") +
               "foreach py {" + " ".join(map(str, pins_y)) + "} {\n" + branch +
               "if {!$placed} {error unplaced}\nputs \"LOC $c $cx $cy\"\n}\n")
     cp = subprocess.run(["tclsh"], input=script, capture_output=True, text=True, check=True)
@@ -77,3 +78,46 @@ def test_spread_form_is_deeper_sparser_and_legal():
     for py, (c, x, cy) in zip(WIN, form):
         col = (622080 - 1080 - x) // 4320
         assert abs(cy // 270 - py // 270) <= 2 and (cy // 270 + col) % 3 == 0
+
+
+# FACE-EW-INSET (FABLE-FIX-KV-PV-SINKSPREAD 11-22): budgets.face_flop_ew_types[].inset_um -> OT_FF_EW_INSET_UM
+def test_gen_inset_key_and_schema():
+    import jsonschema
+    b = {"face_flop_ew_types": {"kv3_pv_v6n": {"inset_um": {"E": 25.92}}, "kv3_pv_v6ne": {"inset_um": {"W": 25.92, "E": 0}}}}
+    assert GP._face_flop_ew(b, "kv3_pv_v6n") == ["export OT_FF_EW_INSET_UM = E:25.92"]
+    assert GP._face_flop_ew(b, "kv3_pv_v6ne") == ["export OT_FF_EW_INSET_UM = W:25.92"]
+    assert GP._face_flop_ew(b, "kv3_pv_v6") == []
+    sub = S.SCHEMA["properties"]["budgets"]["properties"]["face_flop_ew_types"]
+    jsonschema.validate(b["face_flop_ew_types"], sub)
+    for bad in ({"N": 5}, {"E": 201}, {"E": -1}):
+        with pytest.raises(jsonschema.ValidationError):
+            jsonschema.validate({"t": {"inset_um": bad}}, sub)
+
+
+@tcl
+def test_inset_moves_the_band_inward_and_keeps_rows():
+    base = place(WIN, {})
+    form = place(WIN, {"OT_FF_EW_INSET_UM": "E:25.92"})
+    assert len(form) == 540 and len({(x, y) for _, x, y in form}) == 540
+    # same (column, row) choice, every register 25.92 um (480 sites) further inside
+    assert [(c, x - 25920, y) for c, x, y in base] == form
+    assert max(x + 1080 for _, x, _ in form) <= 622080 - 25920
+    # the W inset does not move an E band
+    assert place(WIN, {"OT_FF_EW_INSET_UM": "W:25.92"}) == base
+
+
+@tcl
+def test_inset_band_skips_placed_blocks():
+    # a block (dbu box, halo included) over the first three columns of the inset band, rows 2100..2200
+    blk = "{589000 567000 596160 594000}"
+    form = place(WIN, {"OT_FF_EW_INSET_UM": "E:25.92"}, blocks=blk)
+    assert len(form) == 540 and len({(x, y) for _, x, y in form}) == 540
+    assert not any(x < 596160 and 589000 < x + 1080 and y < 594000 and 567000 < y + 270 for _, x, y in form)
+    assert any(567000 <= y < 594000 for _, _, y in form)       # the rows are still used, further inside
+
+
+@tcl
+def test_inset_refuses_a_bad_item():
+    # tclsh reads the script from stdin: the Tcl error is reported on stderr, which place() refuses
+    with pytest.raises(AssertionError, match="invalid OT_FF_EW_INSET_UM item N:5"):
+        place(WIN[:2], {"OT_FF_EW_INSET_UM": "N:5"})

@@ -1521,6 +1521,10 @@ class TypeSplit:
         site or a ring bank) goes to the piece that holds its rect, in the piece frame; a clock cell site cannot be
         clipped, so a rect across a cut fails closed (re-site it first: clksite_resite.py)."""
         cut = self.cut
+        # spec drop_clock_keys also drops these two (KV pv x 1080: the die clock spine sites sit ON the cut, 15 to 35
+        # rects per type straddle it; the D28 v3 row drops them for re-derivation by the die clock event)
+        drop = set((getattr(self.ev, "spec", None) or {}).get("drop_clock_keys") or [])
+        ck = {k: v for k, v in ck.items() if k not in drop}
         if "start_capture_um" in ck:
             if "tap_um" not in ck:
                 raise SplitError(f"{self.tn}: clock.start_capture_um without clock.tap_um")
@@ -2246,9 +2250,25 @@ def _nearest(items, out, used, need, length, margin, gap):
         used.append((lo, lo + n))
 
 
-def windows_for(items, length, per_um, margin=8.64, gap=2.16):
+INSET_DIR = {'E': (-1, 0), 'W': (1, 0), 'N': (0, -1), 'S': (0, 1)}       # into the piece, as die_hop_scan.INSET
+
+
+def reserve_spans(spans, length, tn=""):
+    """spec cut_face_reserve_um spans [[lo_um, hi_um], ...] of one cut face -> sorted [(lo, hi)] for windows_for
+    (reserved=): no cut window is placed on them."""
+    out = []
+    for lo, hi in spans or []:
+        lo, hi = float(lo), float(hi)
+        if not 0 <= lo < hi <= length:
+            raise SplitError(f"{tn}: cut_face_reserve_um [{lo}, {hi}] is not a span of the {length:.1f} um cut face")
+        out.append((lo, hi))
+    return sorted(out)
+
+
+def windows_for(items, length, per_um, margin=8.64, gap=2.16, reserved=()):
     """items [(key, pins, x_pref or None[, (cmin, cmax)])] -> {key: [(lo, hi, pins), ...]}: disjoint windows on
-    [margin, L - margin].  Fixed-position items first (one window centred on x_pref, shifted past the ones already
+    [margin, L - margin].  reserved [(lo, hi)] spans are taken before any item (spec cut_face_reserve_um): a pinned
+    window slides to the nearest free spot beside them, the others fill the gaps between them.  Fixed-position items first (one window centred on x_pref, shifted past the ones already
     placed); an optional (cmin, cmax) bounds the window centre (reach of the stations either side) -- those items are
     placed first, tightest first, and fail closed outside it; the others fill the free gaps left to right, split over
     several windows (port segments) where a gap is short."""
@@ -2257,7 +2277,8 @@ def windows_for(items, length, per_um, margin=8.64, gap=2.16):
 
     def cap(Ln):
         return int(math.floor((Ln / G - 1) * G * per_um + 1e-9))
-    out, used = {}, []
+    reserved = [(float(lo), float(hi)) for lo, hi in reserved]
+    out, used = {}, list(reserved)
     fixed = [i for i in items if i[2] is not None]
     # reach-bounded items first, least slack (range width - window width) first
     fixed.sort(key=lambda i: ((0, i[3][1] - i[3][0] - need(i[1])) if len(i) > 3 and i[3] else (1, 0), i[2], i[0]))
@@ -2269,12 +2290,16 @@ def windows_for(items, length, per_um, margin=8.64, gap=2.16):
         # nearest-to-preference packs too loosely: earliest-deadline-first left packing of the reach-bounded windows
         out.clear()
         used.clear()
+        used.extend(reserved)
         cur = margin
         for it in sorted(ranged, key=lambda i: (i[3][1] + need(i[1]) / 2, i[0])):
             k, b, x, rng = it[0], it[1], it[2], it[3]
             n = need(b)
             lo = max(cur, rng[0] - n / 2, margin)
             lo = math.ceil(lo / G - 1e-9) * G
+            for r0, r1 in sorted(reserved):         # left packing steps over a reserved span
+                if lo < r1 + gap and r0 - gap < lo + n:
+                    lo = math.ceil((r1 + gap) / G - 1e-9) * G
             if lo + n / 2 > rng[1] + 1e-9 or lo + n > length - margin + 1e-9:
                 occ = sorted((round(u0, 1), round(u1, 1), kk) for kk, segs in out.items() for u0, u1, _ in segs
                              if u1 > rng[0] and u0 < rng[1])
@@ -3038,9 +3063,16 @@ class Event:
                         raise SplitError(f"{ts.tn}.{r['slot']}: no cut-station site within reach of both neighbours")
                 items.append((r["key"], pins, r["xpref"], rng))
             L = ts.W if ts.cut.ax == 1 else ts.H
+            # spec cut_face_reserve_um {type: [[lo_um, hi_um], ...]} (FABLE-FIX-KV-PV-SINKSPREAD 11-22, KV pv D29): spans of
+            # the cut face that take no window, because no legal clock tap can serve a register bank there (landing-ring
+            # tap keep-outs at the cut corner of kv3_pv_v6n: 969 bank registers on one tap).  The spans are taken
+            # before any window (windows_for reserved=).
+            reserve = reserve_spans((self.spec.get("cut_face_reserve_um") or {}).get(ts.tn, []), L, ts.tn)
+            if reserve:
+                self.rep.setdefault("cut_face_reserve_um", {})[f"{base}:{j}"] = (self.spec.get("cut_face_reserve_um") or {}).get(ts.tn)
             try:
                 # spec cut_face_margin_um (default 8.64): keep-out of the cut windows from the two ends of the cut face
-                win = windows_for(items, L, per_um, margin=float(self.spec.get("cut_face_margin_um", 8.64)))
+                win = windows_for(items, L, per_um, margin=float(self.spec.get("cut_face_margin_um", 8.64)), reserved=reserve)
             except SplitError as e:
                 dem = sum(i[1] for i in items)
                 raise SplitError(f"{base} cut {j}: {e} (demand {dem} pins on a {L:.1f} um face at {per_um}/um = "
@@ -3123,6 +3155,33 @@ class Event:
         self._place_mid_slot_banks()
         self._inventory_cut_sinks()
 
+    def _bank_insets(self):
+        """spec cut_face_bank_inset_um -> {piece type: {face: um}}; writes budgets.face_flop_ew_types[piece].inset_um."""
+        spec = (getattr(self, "spec", None) or {}).get("cut_face_bank_inset_um")
+        if not spec:
+            return {}
+        out = {}
+        for tn, ts in self.ts.items():
+            u = float(spec.get(tn, 0) if isinstance(spec, dict) else spec)
+            if u <= 0:
+                continue
+            if self.spec["axis"] != "x":
+                raise SplitError(f"{tn}: cut_face_bank_inset_um supports cuts along x only (E/W cut faces)")
+            if not 0 < u <= 200:
+                raise SplitError(f"{tn}: cut_face_bank_inset_um {u} outside (0, 200]")
+            for i, nm in enumerate(ts.tnames):
+                faces = {}
+                if i < len(ts.tnames) - 1:
+                    faces["E"] = u
+                if i > 0:
+                    faces["W"] = u
+                out[nm] = faces
+        per = self.out.setdefault("budgets", {}).setdefault("face_flop_ew_types", {})
+        for nm, faces in out.items():
+            per[nm] = dict(per.get(nm) or {}, inset_um=dict(faces))
+        self.rep["cut_face_bank_inset_um"] = {nm: dict(f) for nm, f in out.items()}
+        return out
+
     def _inventory_cut_sinks(self):
         """Keep added FIRM flops visible even when old placed-netlist bins suppress planned_sinks."""
         import schema as S
@@ -3130,6 +3189,12 @@ class Event:
         from die_hop_scan import input_site
         P = S.Plan(self.out, ROOT)
         types = {p["name"]: p["type"] for p in self.out["partitions"]}
+        # spec cut_face_bank_inset_um (number, or {type: number}; FABLE-FIX-KV-PV-SINKSPREAD 11-22, KV pv D29): every new
+        # cut-face register bank of the family (or of that type) sits this far inside its piece (25.92 = tap keep-out
+        # 17.28 + one 8.64 tap step), so a legal clock tap fits between the cut face and the bank.  Same registers, no
+        # cycles.  The kit does it by budgets.face_flop_ew_types[piece].inset_um on the piece's cut face(s), written
+        # here, so the sink inventory below (the tap model input) and the placed bank agree.  Cuts along x only.
+        bank_inset = self._bank_insets()
         added_ids = set(self.rep["ports_added"])
         buses = defaultdict(set)
         for port in self.out["ports"]:
@@ -3145,6 +3210,9 @@ class Event:
                 if bus not in names or (bus.endswith("_o") and bus[:-2] in slots):
                     continue
                 point = input_site((x, y, face))
+                if tn in bank_inset and bank_inset[tn].get(face):
+                    dx, dy = INSET_DIR[face]
+                    point = (x + dx * bank_inset[tn][face], y + dy * bank_inset[tn][face])
                 sites[tn][tuple(round(v, 6) for v in point)] += 1
         for ts, piece, slot in getattr(self, "mid_slot_refs", []):
             tn = ts.tnames[piece]

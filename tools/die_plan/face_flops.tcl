@@ -71,6 +71,35 @@ if {![string is integer -strict $ff_ns_inset] || $ff_ns_inset < 0 || $ff_ns_inse
 # gen_phys._face_flop_ew.  N/S faces are unchanged.
 set ff_ew_cpitch [expr {$ff_sw * ([info exists ::env(OT_FF_EW_CPITCH_SITES)] && $::env(OT_FF_EW_CPITCH_SITES) > 0 ? $::env(OT_FF_EW_CPITCH_SITES) : 40)}]
 set ff_ew_stride [expr {[info exists ::env(OT_FF_EW_ROW_STRIDE)] && $::env(OT_FF_EW_ROW_STRIDE) > 1 ? int($::env(OT_FF_EW_ROW_STRIDE)) : 1}]
+# FACE-EW-INSET (FABLE-FIX-KV-PV-SINKSPREAD 11-22, KV pv D29; opt-in, unset = unchanged): OT_FF_EW_INSET_UM "E:u W:u" starts
+# that face's register band u um inside the core edge (site-snapped), so a legal clock tap fits between the face and the
+# bank (tap keep-out 17.28 um from the outline + one 8.64 tap step = 25.92).  Same registers, same cycles.  An inset band
+# is no longer in the pin strip, so a slot that touches a placed block (+1.08 um) is skipped.  Plan
+# budgets.face_flop_ew_types {type: {inset_um: {E|W: u}}}, gen_phys._face_flop_ew; type_split spec cut_face_bank_inset_um.
+set ff_ew_inset [dict create E 0 W 0]; set ff_ew_blk {}
+if {[info exists ::env(OT_FF_EW_INSET_UM)]} {
+  foreach ff_it $::env(OT_FF_EW_INSET_UM) {
+    if {![regexp {^([EW]):([0-9]+(\.[0-9]+)?)$} $ff_it -> ff_f ff_u] || $ff_u > 200} { error "invalid OT_FF_EW_INSET_UM item $ff_it" }
+    dict set ff_ew_inset $ff_f [expr {int(round($ff_u * $ff_dbu / $ff_sw)) * $ff_sw}]
+  }
+}
+proc ff_ew_blk_hit {boxes x y w h} {
+  foreach b $boxes {
+    lassign $b a bb c d
+    if {$x < $c && $a < $x + $w && $y < $d && $bb < $y + $h} { return 1 }
+  }
+  return 0
+}
+# FF-EW-SETUP-END
+if {[dict get $ff_ew_inset E] > 0 || [dict get $ff_ew_inset W] > 0} {
+  set ff_ew_halo [expr {round(1.08 * $ff_dbu)}]
+  foreach ff_ew_i [$ff_blk getInsts] {
+    if {![[$ff_ew_i getMaster] isBlock] || [$ff_ew_i getPlacementStatus] in {NONE UNPLACED}} continue
+    set ff_ew_b [$ff_ew_i getBBox]
+    lappend ff_ew_blk [list [expr {[$ff_ew_b xMin] - $ff_ew_halo}] [expr {[$ff_ew_b yMin] - $ff_ew_halo}] [expr {[$ff_ew_b xMax] + $ff_ew_halo}] [expr {[$ff_ew_b yMax] + $ff_ew_halo}]]
+  }
+  puts "OT_FACE_FLOPS E/W band inset (dbu) $ff_ew_inset: [llength $ff_ew_blk] placed blocks closed to the band (FACE-EW-INSET)"
+}
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
 # LATCH-FACE 11-03 (CLK table row 1; FLOW-LATCH-1): an out-face lockup latch (ASAP7 DLL / DHL) between the face flop
 # and its port is part of the face chain: the output walker passes ONE latch through its D pin (never CLK) to the
@@ -259,7 +288,8 @@ foreach pass {INPUT OUTPUT} {
           if {$ff_ew_stride > 1 && ($r + $c) % $ff_ew_stride} continue
           dict set ff_occ "$face,$r,$c" 1
           set cy [lindex $ff_row_ys $r]
-          set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_ew_cpitch : $ff_x1 - $c * $ff_ew_cpitch - $w}]
+          set cx [expr {$face eq "W" ? $ff_x0 + [dict get $ff_ew_inset W] + $c * $ff_ew_cpitch : $ff_x1 - [dict get $ff_ew_inset E] - $c * $ff_ew_cpitch - $w}]
+          if {[llength $ff_ew_blk] && [ff_ew_blk_hit $ff_ew_blk $cx $cy $w $ff_rh]} continue
           set placed 1; break
         }
       }

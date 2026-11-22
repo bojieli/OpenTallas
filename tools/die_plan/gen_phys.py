@@ -613,7 +613,9 @@ def _vpw_xr_mid(budgets, tn):
 def _face_flop_ew(budgets, tn):
     """QC-S28-VISFORM 11-12 opt-in (FW-EFACE-BIN): budgets.face_flop_ew_types {type, base or family prefix: {cpitch_sites,
     row_stride}} -> the face_flops.tcl E/W band form (OT_FF_EW_CPITCH_SITES column pitch in sites, default 40;
-    OT_FF_EW_ROW_STRIDE s = column c takes rows with (row + c) mod s = 0, default 1).  [] = unchanged kit."""
+    OT_FF_EW_ROW_STRIDE s = column c takes rows with (row + c) mod s = 0, default 1).  [] = unchanged kit.
+    FACE-EW-INSET (FABLE-FIX-KV-PV-SINKSPREAD 11-22): inset_um {E|W: um} -> OT_FF_EW_INSET_UM "E:u W:u", the band of that
+    face starts u um inside the core edge (a type-split cut face whose register bank must leave room for a clock tap)."""
     per = budgets.get("face_flop_ew_types") or {}
     # type, then its unsplit base, then the longest family prefix ("sle_fw" covers sle_fw_v1__cl.., sle_fw_v3)
     v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
@@ -626,6 +628,9 @@ def _face_flop_ew(budgets, tn):
         out.append(f"export OT_FF_EW_CPITCH_SITES = {int(v['cpitch_sites'])}")
     if int(v.get("row_stride") or 0) > 1:
         out.append(f"export OT_FF_EW_ROW_STRIDE = {int(v['row_stride'])}")
+    ins = {f: float(u) for f, u in sorted((v.get("inset_um") or {}).items()) if float(u) > 0}
+    if ins:
+        out.append("export OT_FF_EW_INSET_UM = " + " ".join(f"{f}:{u:g}" for f, u in ins.items()))
     return out
 
 

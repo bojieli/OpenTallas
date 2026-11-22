@@ -1498,7 +1498,10 @@ SCHEMA = {
             # or unsplit base: column pitch in sites (default 40 = 2.16 um) and the row stride s (column c takes rows (row + c) mod s = 0)
             face_flop_ew_types={"type": "object", "additionalProperties": {
                 "type": "object", "additionalProperties": False, "properties": {
-                    "cpitch_sites": {"type": "integer", "minimum": 1}, "row_stride": {"type": "integer", "minimum": 1}}}},
+                    "cpitch_sites": {"type": "integer", "minimum": 1}, "row_stride": {"type": "integer", "minimum": 1},
+                    # FACE-EW-INSET 11-22 (FABLE-FIX-KV-PV-SINKSPREAD): the band of that face starts this far inside the core edge
+                    "inset_um": {"type": "object", "additionalProperties": False, "properties": {
+                        "E": {"type": "number", "minimum": 0, "maximum": 200}, "W": {"type": "number", "minimum": 0, "maximum": 200}}}}}},
             # DIE-QC-97 11-10 opt-in (absent = unchanged plans): clock_landing_plan face-home re-sites these types' ring
             # bands that sit > 50 um from their own pin face or off their pin window (rehome_far_bands)
             cland_face_home_types={"type": "array", "uniqueItems": True, "items": _name},
