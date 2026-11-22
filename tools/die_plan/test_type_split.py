@@ -1140,20 +1140,28 @@ def _head_region_split(spec=None):
     return ts
 
 
-def test_region_monitor_contract_needs_landing_recompose_and_is_left_to_the_compose():
-    lc = dict(monitor="region", base_type="hd", pins=[dict(name="cland_dn_ready_coll_i1", xy_um=[0, 924.44])], bands={},
+def test_region_monitor_contract_splits_by_bus_and_leaves_the_cut_rows_to_the_compose():
+    lc = dict(monitor="region", base_type="hd",
+              pins=[dict(name="cland_dn_ready_coll_i1", xy_um=[2.144, 924.44], layer="M7"),
+                    dict(name="cland_up_ready_lepk_o0", xy_um=[1890.0, 100.0], layer="M7"),
+                    dict(name="rst_start_raw_0", xy_um=[900.0, 600.0], layer="M7")],
+              bands={"coll_i1": dict(rect_um=[17.28, 634.24, 58.32, 840.24])},
               collector_children=[dict(bus="coll_i1", ready="cland_dn_ready_coll_i1", fault="cland_dn_fault_coll_i1",
                                        xy_um=[0, 924.44], seam=True)],
-              collector_local_sources=[], collector_root_node="cland_up_ready_lepk_o0", collector_tree=None)
+              collector_local_sources=[dict(name="coll_i1", xy_um=[0, 924.44])],
+              collector_root_node="cland_up_ready_lepk_o0", collector_tree=None)
     with pytest.raises(TS.SplitError, match="set spec landing_recompose"):
         _head_region_split()._landing_contract(lc)
     ts = _head_region_split(dict(landing_recompose=True))
     ts._landing_contract(lc)
-    assert [t["clock"]["landing_contract"] for t in ts.T] == [
-        dict(base_type="hd_w", monitor="region", status="RAW_RECOMPOSE_REQUIRED"),
-        dict(base_type="hd", monitor="region", status="RAW_RECOMPOSE_REQUIRED")]
+    w, e = (t["clock"]["landing_contract"] for t in ts.T)
+    assert [p["name"] for p in w["pins"]] == ["cland_dn_ready_coll_i1"] and [p["name"] for p in e["pins"]] == ["cland_up_ready_lepk_o0"]
+    assert e["pins"][0]["xy_um"] == [1069.2, 100.0]                       # E piece frame; the raw START pin is dropped
+    assert list(w["bands"]) == ["coll_i1"] and e["bands"] == {}
+    assert [c["bus"] for c in w["collector_children"]] == ["coll_i1"] and e["collector_children"] == []
+    assert w["collector_root_node"] == "RAW_RECOMPOSE_REQUIRED" and e["collector_root_node"] == "cland_up_ready_lepk_o0"
+    assert w["status"] == e["status"] == "RAW_RECOMPOSE_REQUIRED" and w["base_type"] == "hd_w"
     assert ts.head_recompose and ts.coll_links == [] and ts.relay_links == [] and ts.croot == ts.keep
-    assert "collector_children" in ts.rep["landing_recompose"] and "pins" in ts.rep["landing_recompose"]
 
 
 def test_head_landing_network_pin_follows_its_bus():

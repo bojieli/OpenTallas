@@ -1735,26 +1735,13 @@ class TypeSplit:
         unk = set(lc) - known
         if unk:
             raise SplitError(f"{self.tn}: unhandled landing_contract keys {sorted(unk)}")
-        if lc.get("monitor") == "region":
-            # HEAD region-monitor form (per-bus sideband pins, clock_landing_plan.compose monitor="region"): the contract is
-            # DERIVED by the compose from buses + ports + region table and cannot be split by geometry (head_host_split_delta /
-            # head_n3_split_delta precedent).  The pieces carry only the native stage rows; the contract is re-composed
-            # (tools/s81_head/fallback_land.py compose --monitor region) before any gen / bind.
-            if not self.ev.spec.get("landing_recompose"):
-                raise SplitError(f"{self.tn}: region-monitor landing contract (HEAD) is derived by the landing compose; "
-                                 f"set spec landing_recompose and re-compose the pieces after the split")
-            L = []
-            for i in range(self.n):
-                d = dict(base_type=self.tnames[i], monitor="region", status="RAW_RECOMPOSE_REQUIRED")
-                T[i]["clock"]["landing_contract"] = d
-                L.append(d)
-            self._native_stage_groups(lc.get("native_stage_groups"), L)
-            self.band_clip, self.child_map, self.child_idx = [], {}, [0] * self.n
-            self.croot, self.coll_links, self.relay_links = self.keep, [], []
-            self.head_recompose = True
-            self.infra_x = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
-            self.rep["landing_recompose"] = sorted(k for k in lc if k != "native_stage_groups")
-            return
+        head = lc.get("monitor") == "region"
+        if head and not self.ev.spec.get("landing_recompose"):
+            # HEAD region-monitor form (per-bus sideband pins, clock_landing_plan.compose monitor="region"): pins, bands,
+            # local sources and child rows of the EXISTING buses follow their bus; the rows of the new cut buses, the relay
+            # pins and each piece's root node are derived data written by the landing compose after the split.
+            raise SplitError(f"{self.tn}: region-monitor landing contract (HEAD): the cut-bus rows are derived by the "
+                             f"landing compose; set spec landing_recompose and re-compose the pieces after the split")
         L = []
         for i in range(self.n):
             d = {k: copy.deepcopy(v) for k, v in lc.items() if k not in ("pins", "bands", "collector_tree",
@@ -1775,6 +1762,8 @@ class TypeSplit:
         self.band_clip = []
         busnames = {b["name"] for b in (getattr(self, "t", None) or {}).get("buses", [])}
         for p in lc.get("pins", []):
+            if head and p["name"].startswith("rst_start_raw_"):
+                continue                # raw reset START exports are re-derived per piece (head_reset_exports.py)
             m = LAND_PIN.match(p["name"])
             cm = COLL_PIN.match(p["name"])
             if cm or p["name"] in START_PINS:
@@ -1814,6 +1803,8 @@ class TypeSplit:
                 v = q["xy_um"][cut.ax]
                 if PIN_MARGIN - 1e-6 <= v <= ext - PIN_MARGIN + 1e-6:
                     continue
+                if head and 0.0 <= v <= ext and ((s == 0 and v < PIN_MARGIN) or (s == self.n - 1 and v > ext - PIN_MARGIN)):
+                    continue            # HEAD: a sideband pin on the type's OUTER face abuts its neighbour's pin: never moved
                 used = {(x["layer"], round(x["xy_um"][1 - cut.ax], 3), round(x["xy_um"][cut.ax], 2))
                         for x in pins if x is not q}
                 step = -PIN_STEP if v > ext / 2 else PIN_STEP
@@ -1834,7 +1825,7 @@ class TypeSplit:
                 self.rep.setdefault("pins_nudged", []).append(dict(pin=q["name"], piece=s, old=v, new=w))
         # seam child monitor rings (bands monitor_<index>) follow their child
         cidx, cnt = {}, [0] * self.n
-        for ch in lc.get("collector_children", []):
+        for ch in ([] if head else lc.get("collector_children", [])):
             s = cut.ppiece(ch["xy_um"], f"{self.tn} collector child {ch['part']}")
             cidx[int(ch["index"])] = (s, cnt[s])
             cnt[s] += 1
@@ -1936,6 +1927,25 @@ class TypeSplit:
             L[s]["collector_local_sources"].append(q)
         idx = [0] * self.n
         self.child_map = {}
+        if head:
+            for ch in lc.get("collector_children", []):
+                s = self.bp(ch["bus"])                      # per-bus child row: follows its bus, keeps its names
+                q = copy.deepcopy(ch)
+                q["xy_um"] = cut.sh(ch["xy_um"], s)
+                L[s]["collector_children"].append(q)
+            root = lc.get("collector_root_node", "")
+            hm = HEAD_BUS_PIN.match(root)
+            rp = self.bp(hm.group(2)) if hm and hm.group(2) in busnames else self.keep
+            for i in range(self.n):
+                L[i]["status"] = "RAW_RECOMPOSE_REQUIRED"
+                if i != rp:
+                    L[i]["collector_root_node"] = "RAW_RECOMPOSE_REQUIRED"
+            self.child_idx, self.croot, self.coll_links, self.relay_links = idx, self.keep, [], []
+            self.head_recompose = True
+            self.infra_x = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
+            self.rep["landing_recompose"] = dict(root_piece=rp, pins=[len(x["pins"]) for x in L],
+                                                 bands=[sorted(x["bands"]) for x in L])
+            return
         for ch in lc.get("collector_children", []):
             s = cut.ppiece(ch["xy_um"], f"{self.tn} collector child {ch['part']}")
             q = copy.deepcopy(ch)
@@ -3577,6 +3587,35 @@ class Event:
         self.latency_rows = rows
 
     # ---------------------------------------------------------------- sidecar
+    def _head_cut_bus_geometry(self):
+        """HEAD types place pins from their own bus geometry (ports carry no window) and the landing compose reads a bus's
+        site from it: every cut port between two pieces of a region-monitor type also writes face / window_um (type frame)
+        / layers / order on both end buses."""
+        pieces = {}
+        for ts in getattr(self, "ts", {}).values():
+            if getattr(ts, "head_recompose", False):
+                for base, names in ts.pname.items():
+                    pieces.update({nm: base for nm in names})
+        if not pieces:
+            return
+        parts = {q["name"]: q for q in self.out["partitions"]}
+        n = 0
+        for pr in self.out["ports"]:
+            a, b = pr["src"]["part"], pr["dst"]["part"]
+            if a not in pieces or b not in pieces or pieces[a] != pieces[b] or not pr.get("window_um") or not pr.get("face"):
+                continue
+            ax = 1 if pr["face"] in ("E", "W") else 0           # the window runs along this die axis
+            for end, face in (("src", pr["face"]), ("dst", OPP[pr["face"]])):
+                q = parts[pr[end]["part"]]
+                if q.get("orient", "R0") != "R0":
+                    raise SplitError(f"HEAD cut bus geometry: partition {q['name']} is not R0")
+                t = self.out["partition_types"][q["type"]]
+                bus = next(x for x in t["buses"] if x["name"] == pr[end]["bus"])
+                bus.update(face=face, window_um=[rnd(v - q["origin_um"][ax], 4) for v in pr["window_um"]],
+                           layers=list(pr["layers"]), order=pr.get("order", "lsb_low"))
+                n += 1
+        self.rep["head_cut_bus_geometry"] = n
+
     def _sidecar_head(self, sd):
         """HEAD region table (opentallas.fallback_head_regions.v1: regions[].parts is a COUNT, membership = part centre in
         box_um): every piece stays in its base partition's region (the box grows to hold the piece centres), the port rows
@@ -3623,9 +3662,32 @@ class Event:
                 if r[k] != pr[k]["part"]:
                     r[k] = pr[k]["part"]
                     moved += 1
+        # count-aligned START: the keep piece stays the region origin, every other piece is an intra-region RELAY of it
+        # (cland_rstart_out -> cland_rstart_in, RELAY_STAGES counts): the K of a relay piece's landed ports moves with it.
+        # The compose (clock_landing_plan._ca_relay_pins / _ca_relay_ports) writes the relay pins and ports from these roles.
+        kch, relay = [], {}
+        cab = sd.get("count_aligned")
+        if cab:
+            from count_align_bind import RELAY_STAGES
+            for base, names in self.pmap.items():
+                ts = self.ts[self.raw_type(base)]
+                for i, nm in enumerate(names):
+                    if i != ts.keep:
+                        relay[nm] = names[ts.keep]
+            for nm, org in relay.items():
+                cab["parts"][nm] = dict(region=cab["parts"][org]["region"], role="relay", src=org, stages=RELAY_STAGES)
+            for r in sd["ports"]:
+                c = cab["ports"].get(r["port"])
+                if c is None:
+                    continue
+                dk = (-RELAY_STAGES if r["dst"] in relay else 0) + (RELAY_STAGES if r["src"] in relay else 0)
+                if dk:
+                    kch.append([r["port"], c["K"], c["K"] + dk])
+                    c["K"] = c["K"] + dk
         sd["recompose_required"] = sorted(n for names in self.pmap.values() for n in names)
-        self.rep["sidecar"] = dict(form="head_regions", regions=rec, rows_renamed=moved,
-                                   recompose_required=sd["recompose_required"])
+        self.rep["sidecar"] = dict(form="head_regions", regions=rec, rows_renamed=moved, relay_parts=relay,
+                                   K_changed=len(kch), recompose_required=sd["recompose_required"])
+        self.rep["K_changes"] = kch
 
     def _sidecar(self):
         if self.side is None:
@@ -3758,12 +3820,6 @@ class Event:
                                  "same-region (no landing row)")
 
     def _straps(self):
-        if any(getattr(ts, "head_recompose", False) for ts in self.ts.values()):
-            # HEAD: count_aligned parts / regions of the pieces are written by the landing compose; the strap ties follow it
-            self.rep["straps"] = dict(recompose_required=True)
-            return
-        if not self.side or not (self.side.get("count_aligned") or {}).get("strap_form"):
-            return
         import count_align_bind as CAB
         st = CAB.strap_ties(self.side["count_aligned"], self.out)
         out = {}
@@ -4246,6 +4302,7 @@ class Event:
                     (out / "sink_bins").mkdir(exist_ok=True)
                     md5[f"sink_bins/{nm}.json"] = jdump(ts.sink_bins[i], out / "sink_bins" / f"{nm}.json")
                     ck["sink_bins_file"] = f"{rel_dir}/sink_bins/{nm}.json"
+        self._head_cut_bus_geometry()
         txt = json.dumps(self.out)
         p = out / "plan_c.json"
         if p.exists() or p.is_symlink():
