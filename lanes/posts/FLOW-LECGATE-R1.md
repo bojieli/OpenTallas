@@ -1,2 +1,3 @@
 - 2026-11-21 19:01 PST DONE [FLOW-LECGATE-R1] ot-push-main otpush-tolerant-swine-1047426 on tolerant-swine: rc=0 after 0 s, ended 19:01:57, log none, cmd: ot-push-main --help
 - 2026-11-21 19:02 PST DONE [FLOW-LECGATE-R1] ot-push-main otpush-tolerant-swine-1056766 on tolerant-swine: rc=0 after 34 s, ended 19:02:42, log /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/push.log, cmd: ot-push-main 
+- 2026-11-21 19:07 PST DIED [FLOW-LECGATE-R1] ot-run oth-ubuntu-2033545-1795316860 on tolerant-swine: rc=1 after 6 s, ended 19:07:42, log /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/pilot.log, cmd: --mem 48 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/FLOW-LECGATE-R1/relec --stage /srv/opentallas-scratch2/claude/FLOW-
