@@ -41,3 +41,10 @@ J6 event applied 11-21 04:14; J7 (a6771d121e95) applies 11-22 04:15; J7 col volu
 col_h9_r0 keep + STAGGER proofs: ot-wait --kit <work> --stage place (then cts/grt). bk_sel__t2 r7a proof: BKSEL-R7 spec run-item.
 ## Next
 Representative: col_h9_r0_p2 cl9f71e63d pva4376595 (keep proof, closest: has placed J7 form). Read rq flop count in synth, post-hook CTS, final 5_1_grt.odb TT. Coordinate with H10-R4 (u_cf view, cld01bb4ae ROM-input) and FABLE-FIX-S81-LEAF-R8 (leaf/t39 hold); no duplicate builds.
+
+## 11-21 23:xx update (COORD corrections)
+Own until signed off: col_h9_r0_p4__t1__* and col_h9_r0_p5__t1__* (10 held rows from dead S81-GEOM-OPUS: p4 cl8ef405e8 pv775e5cef pv89bf360c pv91095415, clcb2fbfe8 pvec137455; p5 pv8995e794 pvb22875c0 pvc93af856 pvee6f8140 pvf71da13a pvf731e6ec; plus the 8 cancelled-superseded p4/p5 rows from the first table). Do NOT stand down after the r7a post.
+Col is held until J8 (apply 11-23 04:15), not J7 (11-22 04:14). Cut 11-22 16:00, bind on main >= 5a966bb45bc. J8 col entry: first of COL-H10-R4 / COLROM-R5 / BKSEL-R7 r7a with final-GRT TT>=-42, ovf 0 by 11-22 14:00, else J7 col form.
+Open: confirm with S81-J6-ASSEMBLY-R5 that p4/p5 are in the J8 col release and carry H9R0-R4 keep (OT_KEEP_WIRES + ot_s81_rly:rq) + STAGGER rows (H9R0-R4 kit C, j8c tree, plans p1/p2/p4/p5).
+bk_sel r7a: run-item (spec FAM-S81-COL-R6/s81_bk_sel__t2_1121220051, epyc10), local bg task; on exit post kit dir + result to S81-BKSEL-R7.
+H9R0-R4 J7 p2 results (22:43): keep rep CTS setup WS -17.11 ps (xo recovery class gone, 8 rq flops); STAGGER GRT overflow 829 (was 5,401), e2 strip clear.
