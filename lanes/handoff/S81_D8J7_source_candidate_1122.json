@@ -3980,6 +3980,247 @@
    "follow_plan": false,
    "eta": "2026-11-23 04:15 PST",
    "eta_event": "J8"
+  },
+  {
+   "id": "j7-leaf-j8-regrid-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "leaf siblings: raw reset reach > 405 um on 50 types in J7; RG9 re-grid + reset rows in J8 | ETA J8 apply 2026-11-23 04:15 PST (owner OPUS-FIX-S81-LEAF-R10)",
+   "cause": "leaf raw reset reach over 405 um in the J7 plan (shared leaf family)",
+   "owner": "OPUS-FIX-S81-LEAF-R10",
+   "release": [
+    "proof:S81_LEAF_J8_REGRID_BOUND"
+   ],
+   "items": [
+    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
+    "ot_s81sl_leaf__t13",
+    "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
+    "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24__cl2456157b",
+    "ot_s81sl_leaf__t24__cl81374cd8",
+    "ot_s81sl_leaf__t25__cl431c660f",
+    "ot_s81sl_leaf__t25__cl55642d17",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
+    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
+    "ot_s81sl_leaf__t33",
+    "ot_s81sl_leaf__t34",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
+    "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
+    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40__cl86ea32b3",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S",
+    "ot_s81sl_leaf__t40__clf8bbdae1",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t43",
+    "ot_s81sl_leaf__t44__clf4ea6d4b",
+    "ot_s81sl_leaf__t44__clf6cf8492",
+    "ot_s81sl_leaf__t45",
+    "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t5",
+    "ot_s81sl_leaf__t50",
+    "ot_s81sl_leaf__t51",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t53__cl958451dd",
+    "ot_s81sl_leaf__t53__clb66fa5cb",
+    "ot_s81sl_leaf__t54__cl501e5681",
+    "ot_s81sl_leaf__t54__cl706d9749",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
+    "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
+    "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
+    "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
+    "ot_s81sl_leaf__t75",
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-c1x-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "c1x_C unchanged by J7; measured post-place setup -706 ps, cannot sign on J7 | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-DSDV-R1)",
+   "cause": "c1x_C setup -706 ps post-place (structural, whole family)",
+   "owner": "FAM-S81-DSDV-R1",
+   "release": [
+    "proof:S81_C1X_J8_FORM_BOUND"
+   ],
+   "items": [
+    "dsdv_slice_c1x_C__t1",
+    "dsdv_slice_c1x_C__t10",
+    "dsdv_slice_c1x_C__t3",
+    "dsdv_slice_c1x_C__t4",
+    "dsdv_slice_c1x_C__t5",
+    "dsdv_slice_c1x_C__t6",
+    "dsdv_slice_c1x_C__t7",
+    "dsdv_slice_c1x_C__t8",
+    "dsdv_slice_c1x_C__t9"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-kvleaf-t234-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "kv_leaf t2 split parked to J9; t3/t4 form = LEAF-R10 J8 re-grid | ETA J8 apply 2026-11-23 04:15 PST (owner OPUS-FIX-S81-LEAF-R10)",
+   "cause": "kv_leaf t2-t4 form changes in J8/J9",
+   "owner": "OPUS-FIX-S81-LEAF-R10",
+   "release": [
+    "proof:S81_KVLEAF_T34_J8_BOUND"
+   ],
+   "items": [
+    "ot_s81sl_kv_leaf__t2",
+    "ot_s81sl_kv_leaf__t3",
+    "ot_s81sl_kv_leaf__t4"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-svc-split-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "svc split pending: hi4 re-split + 7 layouts + ft3 rows in J8 | ETA J8 apply 2026-11-23 04:15 PST (owner OPUS-FIX-S81-SVC-R9)",
+   "cause": "svc types re-split in J8 (shared svc family)",
+   "owner": "OPUS-FIX-S81-SVC-R9",
+   "release": [
+    "proof:S81_SVC_J8_SPLIT_BOUND"
+   ],
+   "items": [
+    "svc_hi_dsdv_svc_pvso_entry__t1",
+    "svc_hi_dsdv_svc_pvso_entry__t2",
+    "svc_hi_dsdv_svc_rs__t1",
+    "svc_hi_dsdv_svc_rs__t2",
+    "svc_hi_dsdv_svc_rs__t3",
+    "svc_hi_dsdv_svc_rs__t4",
+    "svc_hi_dsdv_svc_rs__t5",
+    "svc_hi_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t1",
+    "svc_lo_dsdv_svc_rs__t2",
+    "svc_lo_dsdv_svc_rs__t3",
+    "svc_lo_dsdv_svc_rs__t4",
+    "svc_lo_dsdv_svc_rs__t5",
+    "svc_lo_dsdv_svc_rs__t6",
+    "svc_lo_dsdv_svc_rs__t7",
+    "svc_lo_dsdv_svc_rs_w__t1"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-lep-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "lepe/lepw siblings: LEPe 54c1e2 form (bind-proven) enters J8; rep lepe_mu_LP t2 builds on J7 | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-LEPE-4)",
+   "cause": "lepe/lepw family form changes in J8 (54c1e2)",
+   "owner": "FAM-S81-LEPE-4",
+   "release": [
+    "proof:S81_LEP_J8_BOUND"
+   ],
+   "items": [
+    "dsdv_slice_lepe_mu_C__t1",
+    "dsdv_slice_lepe_nh_mus_C__t1",
+    "dsdv_slice_lepe_nh_mus_LP__t1",
+    "dsdv_slice_lepw_mu_C__t1",
+    "dsdv_slice_lepw_mu_LP__t2",
+    "dsdv_slice_lepw_mus_C__t1",
+    "dsdv_slice_lepw_mus_LP__t2"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-dsdv-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "dsdv C slices (iq/kv512/c3x) with c1x_C: J8 form decision by FAM-S81-DSDV-R1 | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-DSDV-R1)",
+   "cause": "dsdv C slice family timing unproven on J7 (c1x_C -706 ps)",
+   "owner": "FAM-S81-DSDV-R1",
+   "release": [
+    "proof:S81_DSDV_J8_FORM_BOUND"
+   ],
+   "items": [
+    "dsdv_slice_c3x_C__t1",
+    "dsdv_slice_iq_C__t1",
+    "dsdv_slice_kv512_C__t1"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-bksel-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "bk_sel__t2: r7a private proof running + 575 relay_sites keys to re-key in J8 | ETA J8 apply 2026-11-23 04:15 PST (owner S81-BKSEL-R7)",
+   "cause": "bk_sel relay_sites keys name absent registers (seat-miss)",
+   "owner": "S81-BKSEL-R7",
+   "release": [
+    "proof:S81_BKSEL_J8_BOUND"
+   ],
+   "items": [
+    "bk_sel__t2"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
+  },
+  {
+   "id": "j7-eng-j8-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "eng__t1 gen fails (dsdv_eng_rr_e LEF without lib); view re-export | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-MISC-R4)",
+   "cause": "eng__t1 view LEF/lib mismatch",
+   "owner": "FAM-S81-MISC-R4",
+   "release": [
+    "proof:S81_ENG_VIEW_FIXED"
+   ],
+   "items": [
+    "eng__t1"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
   }
+ ],
+ "post_apply_release_reps_first": [
+  "gunit__t1",
+  "iqf__t1",
+  "ot_s81sl_kv_leaf__t1",
+  "phy__t1",
+  "seqhost__t1"
  ]
 }
