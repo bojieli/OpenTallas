@@ -13,3 +13,8 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 - proof12 = proof10 + native unit_o0 + coll_i0 channel delta + FT0 repair (54c1e2) + clk_t6 move; private-spec kit (wave env), route to GRT TT.
 - Siblings lepe_nh_mus_C/LP t1 (HELD-EVENT) and lepe_mu_C t1 (J8 split rows lanes/handoff/FAM-S81-LEPE-3-lepeC-split-J8-rows.json) get the LP form after proof12.
 - ot-delete later: epyc10 fam-lepe/p9/k_fail1_rosvar, j7p/tree_fail1_mergeconflict, tree_fail2_clkt6, gate_fail1, gate_fail2_clkt6, fam-lepe/p10 (stale copy).
+## Update 11-21 20:0x PST
+- proof11 DIED rc2 at GRT overflow 2732 (proof10 2991). Tap A/B LOSES (rule 3) -> no lepe tap row.
+- Codex 54c1e2 full-LEPe gate GREEN 19:58 (BIND 0 / LAT873 87->88 only / G0 0 new / PRE PASS) -> J8 (missed 19:00). Tree kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work_lepe_54c1e2.
+- proof12 strict bind RUNNING: intel2 unit oth-ubuntu-2442414-1795317964, /srv/opentallas-scratch2/claude/fam-lepe4/p12 (gate_p12.sh, gate_p12.log, tree/, gate_p12/). Plan = 54c1e2 + hub j7_lepe_donor/p10_grt/lepe_coll_i0_channel_delta.json (type overlay REJECTED: reset tree changes). Waiter: ot-wait that unit on intel2.
+- Next after green: kit_wave.py private-spec s81 dsdv_slice_lepe_mu_LP__t2 --plan <p12 tree plan> --tree fam-lepe4/p12/tree --bind-out <tree>/physical/die_plan/s81/plan_of_record/native_bind/out --src-manifest off --lane FAM-S81-LEPE-4, diff config.mk vs wave kit, run-item; route to GRT TT.
