@@ -14203,6 +14203,24 @@ def event_pending_wait(AP, cfg, st, die, now=None):
     return True
 
 
+def active_spec_controller(AP, unit_prefix, spec_path):
+    """Find an active hub controller with this exact run-item spec, even if its state row was lost."""
+    active = AP.active_unit_set() if hasattr(AP, "active_unit_set") else None
+    unit_name = re.compile(rf"{re.escape(unit_prefix)}[0-9]+\.service")
+    candidates = sorted(name for name in (active or ()) if unit_name.fullmatch(name))
+    if not candidates:
+        return None
+    _, out, _ = AP.sh(["systemctl", "--user", "show", "--property=Id,ActiveState,ExecStart",
+                       *candidates], timeout=10)
+    command = re.compile(rf"(?:^|[/ ])kit_wave\.py +run-item +{re.escape(shlex.quote(str(spec_path)))}(?=[ ;]|$)")
+    for block in out.split("\n\n"):
+        props = dict(line.split("=", 1) for line in block.splitlines() if "=" in line)
+        if (props.get("Id") in candidates and props.get("ActiveState") in {"active", "activating", "reloading"}
+                and command.search(props.get("ExecStart", ""))):
+            return props["Id"]
+    return None
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
@@ -14353,6 +14371,14 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                                                   if v.get("die") == die and v.get("event") == event
                                                   and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
+    spec_path = jd / "spec.json"
+    unit_prefix = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-"
+    # The transient unit logs in jd, so this only probes when an earlier controller could own it.
+    if jd.is_dir() and not AP.DRY:
+        live = active_spec_controller(AP, unit_prefix, spec_path)
+        if live:
+            AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: {live} still owns {spec_path}")
+            return None
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     if r.get("_resign"):
         sp["resign"] = True          # FLOW-NOADV-R3: a superseded-signed re-sign pick (PLACE-SETUP-STOP exempt); not an input of any hash
@@ -14445,7 +14471,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if _h != sp["gen_host"]:
         AP.log(f"KIT-WAVE GEN-HOST-TREE {die}/{r['item']}: {sp['gen_host']} lacks tree {sp.get('src')}; launching on {_h} instead")
         sp["gen_host"] = _h
-    unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
+    unit = f"{unit_prefix}{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
         return None
@@ -14453,7 +14479,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     # Snapshot current approved tool bytes into this new attempt, never another lane's kit.
     if opt(cfg, die, "future_lec") is not False:
         sp["future_lec"] = future_lec_for(cfg, die, jd / "future_lec")
-    (jd / "spec.json").write_text(json.dumps(sp, indent=1))
+    spec_path.write_text(json.dumps(sp, indent=1))
     # LAUNCH-JOURNAL-1122 (FABLE-FLOW-0600 W1): the row is built, put in st and journaled BEFORE systemd-run; the outcome is set after
     ok = None
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
@@ -14490,7 +14516,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     _jdir = cfg.get("_ap_dir") or getattr(AP, "AP_DIR", None)
     journal_launch(_jdir, key, rec)
     try:
-        ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
+        ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(spec_path)])
     except BaseException:
         if _old is None:                                 # launch_safe's contract: a raising launch leaves the row as it was
             st["items"].pop(key, None)
