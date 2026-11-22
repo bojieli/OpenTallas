@@ -64,9 +64,8 @@ class Clean(unittest.TestCase):
         self.assertFalse([c for c in calls if "rm -rf /w/gen" in c and "mkdir" not in c])
 
     def test_gen_on_hub_is_refused_by_the_hub_guard(self):
-        # KW-FIX-45 11-12 (COORD ruling 4): a heavy stage never runs on the hub, so a hub gen host is refused (was: kept hub copy)
-        with self.assertRaises(RuntimeError):
-            self.go(gen_host="intel2")
+        # FLEET-WATCH-R8 11-21 (COORD URGENT, owner 11-12 capped build host): the hub is a capped build host again, ot-run HOST_RESERVE bounds it
+        self.go(gen_host="intel2")      # no hub-guard RuntimeError any more
 
 
 if __name__ == "__main__":
