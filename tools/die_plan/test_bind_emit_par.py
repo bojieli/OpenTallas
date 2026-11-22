@@ -13,6 +13,11 @@ class Err(Exception):
     pass
 
 
+class Rec:
+    def __init__(self, d):
+        self.d = d
+
+
 class Glue:
     """an object that does not pickle (holds a lambda) with nested state the type passes mutate in place (Binder.pc.efs_rec)"""
 
@@ -20,6 +25,8 @@ class Glue:
         self.files = []
         self.rec = {"types": {}}
         self.fn = lambda x: x
+        self.B = None                                  # back reference to the Binder (Binder.pc.B)
+        self.memo = None
 
 
 class Fake:
@@ -35,6 +42,7 @@ class Fake:
         self.io_used = {}
         self.seen = set()
         self.glue = Glue()
+        self.glue.B = self
         self.F = {"cells": {i: {"x": i} for i in range(200000 if big else 10)}}
         self.fail = None
         self._memo = None
@@ -56,6 +64,8 @@ class Fake:
             self._memo2 = ["a", "b"]
         self.glue.files.append(str(f) + ".glue")
         self.glue.rec["types"][tn] = len(ps)
+        if self.glue.memo is None:                     # lazily built record object without __eq__, the same in every worker
+            self.glue.memo = Rec({"taps": [1, 2, 3]})
         self.__dict__.setdefault("_receipts", {})[tn] = dict(n=len(ps))
         if tn.endswith(("1", "4")):
             self.errors.append(f"WARN {tn}")
@@ -75,6 +85,7 @@ def serial(B, out):
 def state(B):
     d = {k: v for k, v in B.__dict__.items() if k not in ("F", "glue", "alias")}
     d["glue_rec"] = B.glue.rec
+    d["glue_memo"] = B.glue.memo.d if B.glue.memo else None
     d["glue_files"] = [Path(x).name for x in B.glue.files]
     d["alias_is_errors"] = B.alias is B.errors
     return copy.deepcopy(d)

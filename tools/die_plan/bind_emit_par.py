@@ -88,7 +88,9 @@ def snapshot(state, deep_max=None, depth=0, seen=None):
         b = _try_pickle(v, deep_max)
         if b is not None:
             snap[k] = ("deep", b)
-        elif hasattr(v, "__dict__") and not isinstance(v, type) and depth < 4 and id(v) not in seen \
+        elif id(v) in seen:
+            snap[k] = ("alias", v)                   # the Binder itself (self.pc.B) or an object already followed: reported at its first path
+        elif hasattr(v, "__dict__") and not isinstance(v, type) and depth < 4 \
                 and not callable(v) and type(v).__module__ != "builtins":
             seen.add(id(v))
             snap[k] = ("obj", v, snapshot(vars(v), deep_max, depth + 1, seen))
@@ -169,6 +171,11 @@ def merge_set(a, b, path):
             same = a == b
         except Exception:
             same = False
+        if same is not True and not isinstance(a, (int, float, list, tuple, str, bytes)):
+            try:                                     # an object without __eq__ (a lazily built plan record): equal when it pickles the same
+                same = pickle.dumps(a, protocol=4) == pickle.dumps(b, protocol=4)
+            except Exception:
+                same = False
         if same is True and (isinstance(a, bool) or not isinstance(a, (int, float))):
             return a
     raise ParUnsafe(f"{_p(path)}: set by more than one type to values that do not merge (a counter / last-writer value)")
@@ -210,6 +217,10 @@ def delta(snap, state, pre=()):
                 ops.append(("set", path, v))
                 continue
             _diff(old, pickle.loads(nb), path, ops)          # diff on plain copies: identical object graphs on both sides
+            continue
+        if s[0] == "alias":
+            if v is not s[1]:
+                ops.append(("set", path, v))
             continue
         if s[0] == "obj":
             if v is not s[1]:
@@ -342,7 +353,7 @@ def _child(B, tn, ps, out, res_path, log_path):
         sys.stdout = os.fdopen(1, "w", closefd=False)    # whatever the parent had installed (a capture, a tee): the worker logs to its file
         sys.stderr = os.fdopen(2, "w", closefd=False)
         t0 = time.time()
-        snap = snapshot(B.__dict__)
+        snap = snapshot(B.__dict__, seen={id(B)})
         t_snap = time.time() - t0
         files, exc = [], None
         try:
@@ -399,6 +410,14 @@ def weight(B, tn, ps):
 
 
 def run(B, out, files, j, rec_path=None):
+    t0 = time.time()
+    try:
+        return _run(B, out, files, j, rec_path)
+    except ParUnsafe as e:
+        raise ParUnsafe(f"{e} (parallel attempt cost {time.time() - t0:.0f} s)") from e
+
+
+def _run(B, out, files, j, rec_path=None):
     """Emit every type of B.by_type with j forked workers; on return B and `files` are as after the serial loop.
     Raises ParUnsafe (B untouched, files untouched; type files on disk are rewritten by the serial rerun) or the first type's
     own exception in sorted type order, like the serial loop."""
