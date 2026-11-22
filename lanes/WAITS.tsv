@@ -180,7 +180,14 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 20:54:04	tolerant-swine	FABLE-FIX-S81-LEAF-R7	status	oth-ubuntu-875159-1795316235	143	6946	no	-
 2026-11-21 20:55:05	tolerant-swine	-	status	oth-ubuntu-1721792-1795323260	66	0	no	-
 2026-11-21 20:57:01	tolerant-swine	FLOW-PRIVSPEC-R1	pid	3352347	70	1210	no	-
+2026-11-21 21:04:05	tolerant-swine	FLOW-PRIVSPEC-R1	pid	2095157	0	175	no	-
+2026-11-21 21:04:06	tolerant-swine	FLOW-PRIVSPEC-R1	pid	2095157	0	390	no	-
+2026-11-21 21:05:06	tolerant-swine	FAM-QC-CB-R4	pid	1745204	124	3000	yes	-
+2026-11-21 21:05:15	tolerant-swine	-	pid	1745204	124	5	yes	-
+2026-11-21 21:05:21	tolerant-swine	-	pid	1745206	124	5	yes	-
 2026-11-21 21:06:41	civil-redfish	FAM-S81-SLICE-R5	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SLICE-R4/slice_station__t36_1121074053/gen/slice_station__t36:grt	124	3601	yes	-
+2026-11-21 21:14:49	tolerant-swine	FAM-QC-CB-R4	status	oth-ubuntu-1910305-1795323435	0	1010	no	-
+2026-11-21 21:16:09	tolerant-swine	FABLE-FIX-KV-HUB-R4	pid	3544907	1	9720	no	-
 2026-11-21 23:44:27	loved-redfish	FAM-QC-CB-R2	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/private/FAM-QC-CB-R2/cbn_q01__clab6e67f2_1121085408/gen/cbn_q01__clab6e67f2:cts	124	13803	yes	-
 2026-11-22 01:32:26	loved-redfish	-	kit	/srv/opentallas-scratch2/claude/ot-jobs/sle_ctl__cla4f6f12f-route-loved-redfish-485372-1795298505/work:cts	0	10740	no	-
 2026-11-22 02:14:41	loved-redfish	-	status	oth-ubuntu-1645995-1795247826	124	5	yes	-
@@ -189,3 +196,6 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-22 03:58:14	loved-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-3314323-1795319375	3	225	no	-
 2026-11-22 04:31:49	loved-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-3591748-1795320119	0	1765	no	-
 2026-11-22 04:51:38	outgoing-giraffe	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-964258-1795320509	143	2540	no	-
+2026-11-22 05:24:25	civil-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-1983038-1795323707	0	1335	no	-
+2026-11-22 05:26:09	civil-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-2125457-1795324276	0	865	no	-
+2026-11-22 05:26:28	loved-redfish	FAM-S81-SLICE-R6	status	oth-ubuntu-2733445-1795317964	11	7216	no	-
