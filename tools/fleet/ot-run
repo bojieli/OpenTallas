@@ -2022,6 +2022,72 @@ LAST_RUN = dict(connfail=False)
 # process every REQUEUE_S) keeps its age for the hub die reservation (ot-reserve / ot-heavy-reconcile --die-waiters).
 RUN_T0 = time.time()
 
+# FLOW-FLEET-R2 P1 (FABLE-FLOW-0800, split with WAVE-OPS-R1 11-22): a FLEET TICKET per --dir.  Every new ot-run client took RUN_T0 = now, so a waiter that a wave tick cancelled and
+# placed again (a new client) went to the back of every host's queue; 183 REQUEUEs, hours per pinned probe.  ~/.local/state/ot-run/tickets.json on the submitting machine maps a
+# normalised --dir to {first, last, lane, state, host}: a client for a dir whose ticket is `waiting` and was touched < TICKET_TTL_S ago keeps `first` as its queue age
+# (OT_HEAVY_WAIT_SINCE), so admission order is by ticket age across clients and hosts; state becomes `started` at admission (the next submit of the dir starts fresh).
+# WAVE-OPS-R1 reads first / state for its restage score (a waiting ticket is not an attempt, an older waiter is never moved for a younger one).
+TICKETS = os.path.expanduser(os.environ.get("OT_RUN_TICKETS", "~/.local/state/ot-run/tickets.json"))
+TICKET_TTL_S = int(os.environ.get("OT_RUN_TICKET_TTL_S", str(3 * 3600)))
+TICKET_KEEP_S = 24 * 3600
+
+
+def _ticket_rw(fn, path=None, now=None):
+    """apply fn(dict) -> result under an flock; the dict is written back (entries older than TICKET_KEEP_S dropped).  Never raises"""
+    import fcntl                                   # (the module-level `import fcntl` of this file sits inside an embedded script)
+    path = path or TICKETS
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path + ".lock", "a") as lk:
+            fcntl.flock(lk, fcntl.LOCK_EX)
+            try:
+                t = json.load(open(path))
+            except (OSError, ValueError):
+                t = {}
+            res = fn(t)
+            now = now or time.time()
+            t = {k: v for k, v in t.items() if now - float(v.get("last", 0)) < TICKET_KEEP_S}
+            tmp = f"{path}.{os.getpid()}.tmp"
+            json.dump(t, open(tmp, "w"))
+            os.replace(tmp, path)
+            return res
+    except Exception:
+        return None
+
+
+def ticket_open(d, now=None, path=None, lane=None):
+    """-> the queue age (epoch) this submit keeps: the first-seen time of a still-waiting ticket of dir d, else now (a fresh ticket)"""
+    now = now or time.time()
+    if not d:
+        return now
+    key = os.path.normpath(d)
+
+    def go(t):
+        e = t.get(key)
+        if e and e.get("state") == "waiting" and now - float(e.get("last", 0)) < TICKET_TTL_S:
+            e["last"] = now
+            return float(e["first"])
+        t[key] = {"first": now, "last": now, "lane": lane if lane is not None else os.environ.get("OT_LANE", ""), "state": "waiting", "host": ""}
+        return now
+    r = _ticket_rw(go, path, now)
+    return now if r is None else r
+
+
+def ticket_touch(d, state=None, host=None, now=None, path=None):
+    """refresh a dir's ticket (last, and state / host when given)"""
+    if not d:
+        return
+
+    def go(t):
+        e = t.get(os.path.normpath(d))
+        if e:
+            e["last"] = now or time.time()
+            if state:
+                e["state"] = state
+            if host:
+                e["host"] = host
+    _ticket_rw(go, path, now)
+
 
 def admission_unit(line, tag):
  if 'OT_RUN_START' in line and tag in line:
@@ -2105,6 +2171,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         if (seen_unit := admission_unit(ln, tag)) is not None:
             state["started"] = True
             state["unit"] = seen_unit
+            ticket_touch(d, "started", host)          # FLOW-FLEET-R2 P1: admitted: the ticket is spent
             if _OTS:
                 _OTS.set_unit(seen_unit)
             if on_start:
@@ -2426,6 +2493,9 @@ def main():
     # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
     d = gate_workdir(cmd, d)
     if not pick:
+        global RUN_T0
+        if d and not os.environ.get("OT_RUN_NO_TICKET"):
+            RUN_T0 = ticket_open(d)               # FLOW-FLEET-R2 P1: a re-submit of a still-waiting dir keeps its first-seen age
         ledger_write(d, hosts if hosts is not HOSTS else None, cmd)          # FLOW-FLEET-R2 C2: submit ledger
         start_leases(lease_paths(d, cmd, STAGE), f"{os.environ.get('OT_LANE') or 'ot-run'}/ot-run-{socket.gethostname().split('.')[0]}-{os.getpid()}")
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
@@ -3814,6 +3884,30 @@ def spill_handoff_cli(tag, goal="place", dry=False, say=print):
 SPILL_REFUSED_REAL = False   # the last forward copy was refused with OT_SPILL_REAL
 
 
+ADMIT_FIRST = os.environ.get("OT_RUN_ADMIT_FIRST", "1") != "0"
+
+
+def admit_probe_cmd(mem, cmd, threads):
+    """the remote command: the destination's own admission verdict for this job (ot-heavy-reconcile --gate prints OK / NO <why>, reads only)"""
+    return f"OT_HEAVY_THREADS={int(threads)} timeout 60 /usr/local/bin/ot-heavy-reconcile --gate {int(mem)} -- " + " ".join(shlex.quote(x) for x in cmd)
+
+
+def admit_first_ok(dst, mem, cmd, say=lambda m: None, run_ssh=None):
+    """FLOW-FLEET-R2 P1: -> False only when dst's gate answers NO now (nothing is copied; the caller places the job again and the ticket keeps its age).  Any other answer, an ssh
+    failure or an old host without --gate proceeds as before (fail open): a probe never blocks a job by itself.  OT_RUN_ADMIT_FIRST=0 turns it off"""
+    if not ADMIT_FIRST:
+        return True
+    try:
+        r = (run_ssh or ssh_sh)(dst, admit_probe_cmd(mem, cmd, int(os.environ.get("OT_RUN_THREADS", THREADS))), timeout=90)
+        line = ((r.stdout or "").strip().splitlines() or [""])[-1]
+    except Exception:
+        return True
+    if line.startswith("NO "):
+        say(f"ot-run: ADMIT-FIRST: {dst} does not admit it now ({line[:160]}); nothing copied, placing again (queue age kept)")
+        return False
+    return True
+
+
 def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     """copy the roots src->dst, run there, copy the files the run wrote back to src.  Returns the exit status, or None
     when the copy failed or (QUEUE-BAL-1) dst did not admit it within REQUEUE_S (nothing ran; the caller places again).  v10: the forward copy is marked first, serialised per lane and retried; a
@@ -3823,6 +3917,8 @@ def spill_run(src, dst, roots, size_gb, mem, cmd, d, max_wait, say, disk=None):
     stamp = f"/tmp/ot-run-spill.{tag}"
     say(f"ot-run: SPILL: copying {', '.join(roots)} ({size_gb:.1f} GB) {src} -> {dst} (no host with --dir admits {mem} GB now)")
     t0 = time.time()
+    if not admit_first_ok(dst, mem, cmd, say):        # FLOW-FLEET-R2 P1: admit first, stage after: nothing is copied to a host whose ot-heavy would say NO now
+        return None
     fits, why = spill_room(dst, roots, size_gb + (disk or 0), SPILL_ROOM_MARGIN_GB, tag="fwd-" + tag)
     if fits is False:            # lost the race for that disk since spill_plan looked: nothing copied, the caller places again
         say(f"ot-run: SPILL to {dst} not started, no room: {why}")

@@ -13,3 +13,8 @@ os.environ.setdefault("OT_RUN_LOAD_GATE_FACTOR", "1.25")
 
 # ROOTOWNED_1114: spill extraction runs under sudo -n tar in production; the spill tests put a fake tar first on PATH, which sudo would bypass
 os.environ.setdefault("OT_SPILL_NO_SUDO", "1")
+
+# FLOW-FLEET-R2 P1 11-22: spill_run asks the destination's ot-heavy-reconcile --gate before copying (admit first); the spill tests run their "ssh" locally, where that would
+# read this host's live admission.  Off for the session; test_ot_run_ticket.py turns it on for its own cases.
+os.environ.setdefault("OT_RUN_ADMIT_FIRST", "0")
+os.environ.setdefault("OT_RUN_TICKETS", os.path.join(tempfile.gettempdir(), "ot-run-test-tickets.json"))
