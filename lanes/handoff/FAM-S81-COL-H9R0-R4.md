@@ -11,6 +11,14 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
   kit_wave.py private-spec s81 col_h9_r0_p2__t1__cl0045af7b__pva2793873 --plan candJ7c/.../plan_h2_2249.json --tree candJ7c --bind-out candJ7c/.../native_bind/out --src-manifest off --host epyc10 --rt 404887a342b0 --ab OT_RELAY_MID_STAGGER=1 --why ... --lane FAM-S81-COL-H9R0-R4
 - J7 wave rt 8d1cff9b1bb6 + tree tools a9ed808a98d5 LACK STAGGER (c54a7596fc); rt 404887a342b0 has it.
 - Rep J7c keep proof (run-item pid 1553808 intel2, R3 spec _1121121601): stuck at kit_rtl since 12:16, ot-run HOLD epyc10 disk-ETA / DRAIN (105 GB). Waiter armed.
+## 18:3x update (after weekly limit / Codex 14:23-18:1x)
+- J6 STAGGER kit DIED at GRT: GRT-0116, 5,401 overflow (4,330 M8). Not a STAGGER test (xo kept). Done.
+- Rep J7c keep run-item ENDED kit_rtl rc 78 (epyc10 69 GB < floor 100). Not built.
+- Lever 4 (xo depth) is already in J7c/a6771d: j7_h9r0_classes.json xo 3 vs 2 stations. No J8 depth rows needed; need placed J7-form proof.
+- BLOCKER to COORD: all J7 trees only on epyc10 (drained); private-spec refuses epyc10/7/8, accepts intel2 only. Asked: (a) admit one J7 rep on epyc10 or (b) copy one J7 tree to intel2.
+- LIVE: J6 keep proof on intel2: spec private_specs/FAM-S81-COL-H9R0-R4/s81_col_h9_r0_p2__t1__cl0045af7b__pva2793873_1121182823, run-item pid 3418257 intel2, log fam-s81-col-h9r0-r4/keep_j6_runitem.log. A/B OT_KEEP_WIRES = wave list + ot_s81_rly:rq. Read: rq flop count in 1_2_yosys.v (expect 8 xo rq, was 1 driving 2,210), then route, TT recovery class at final 5_1_grt.odb.
+- J7c STAGGER spec retry loop (intel2 bash fam-s81-col-h9r0-r4/tmp/stagj7.sh) retries every 15 min until epyc10 admits.
+- item_env caution: OT_KEEP_WIRES must be the full wave list + ot_s81_rly:rq (A/B replaces the list).
 ## Done
 - R3 dead specs _1121120604/_1121120930 ot-deleted (hub); 8K kit stubs on epyc10 guard-protected, left.
 ## Next
