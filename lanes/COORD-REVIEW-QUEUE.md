@@ -21263,3 +21263,4 @@ FAILED [AUTOPILOT dc16e5a6be0d] 2026-11-21 18:37:58 PST AUTOPILOT -> KIT-WAVE-12
   QC: 11 cbn/cbf no-host rows + 2 INFRA fails HOST-BLOCKED; 5 FAILED-NO-RELAUNCH other flow error (cbf_q00_s2, cbx_q10, slw_su_c); 5 STALE.
   KV: 10 FAILED-NO-RELAUNCH (kv3_pv_v* CLAND ring band/400k cells, kv3_hroot dead owner); 22 WAIT-BIND; 2 CBC-FALLBACK (hub_Wi, pc_v3).
   HEAD: hd_lep0N failed place 9 h, owners alive, no relaunch.
+- 2026-11-21 18:52 PST r7a proof kit launched 18:52 on epyc7 (undrained first; launcher prefers whichever admits): spec ~/coord/autopilot/private_specs/S81-BKSEL-R7/s81_bk_sel__t2_1121185210 (plan_r7a dfd669b1, tree_r6 + chain_r6 bind, wave env, rt 18a2688b741f), run-item log ~/s81-bksel-r7/run_item_r7a.log. intel2 tree copy still running as fallback. Next: place -> hop300 + geom -> route -> sign-off; result to S81-J6-ASSEMBLY-R5.
