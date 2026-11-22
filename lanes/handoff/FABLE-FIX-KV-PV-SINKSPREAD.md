@@ -61,6 +61,20 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 08:40 PST (newest; read this first)
+T1 (tree, v6n only), plan 3cce60482b76 (= v6n6 fe2e828014f3 + 1 station on the two forwarded response-data rows, L51 / L219 back to 6):
+- R8: w/rebind_pv.sh v6n6t1 v6n6u1 (PV_HEAD_KEPT=1 REBIND_NO_G0=1) = r8_refresh + pvx_regen.py (--min-pad 10 --e-min-pad 10
+  --extra-first vport_w_pads_b5.json; copy in w/pv/) -> new inputs/pv_col_pads_ffkpv.json + pv_v_pads_ffkpv.json installed
+  (88 V members bound +2/+3, pad -2/-3, landed same; V-D-H bad 0). The strict bind v6n6u1 got PAST R8 (SPLIT_REFERENCE_PREFILL
+  ok, RTL being emitted at 08:30). Waiting for END: epyc8 w/gates/v6n6u1.out, v6n6u1_bind/gate.out (BIND_ERRORS, LATCHECK, BPC).
+- Final G0 gate on this state running: w/gates/v6n6u1_g0 (intel2 ~/tmp/ffkvpv/g0_v6n6u1.log).
+- IF BIND_ERRORS 0 and LATCHECK rc 0: KIT K1 (private-spec command in the 07:00 block; tree = <lane>/tree).
+  The kit must run gen on rt >= 6390b7bfa650 (budgets.face_flop_ew_types inset): the tree tools are rt 6390b7bfa650 + type_split
+  cap patch (d4f31de6bc6e on main); check the spec's tools_rt / rt_from line and config.mk has OT_FF_EW_INSET_UM = E:25.92.
+T2 (tree2, 14 types): chain_full2.sh m5 (cap 11.9, v3n pvg2_p0 -8.64, v5 reserve fitted to 8.64-133.92 + 1389.96-1512) composing;
+  then G0 gate + first bind + loop_pv.sh (pad regen loop, max 4) + final G0. intel2 ~/tmp/ffkvpv/chain_m5.log; gates m5, m5s<i>, m5_final_g0.
+  fit at the cap (fit_cap.sh): v2 v2n v3n v4 v4n v5n fit with their auto reserve; v5 needed the smaller reserve.
+
 ## STATE 11-22 08:10 PST (newest; read this first)
 T1 (tree, v6n only):
 - v6n6 fe2e828014f3: G0 PASS 0 errors; PLAN-GATE-PRE PASS 0 findings after the r8 refresh WHEN the base is in its own root
