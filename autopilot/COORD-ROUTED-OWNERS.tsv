@@ -399,3 +399,6 @@ s81	col_h9_r2__t1__*	FAM-S81-COL-R6	COORD 11-21 20:5x: 57 DEAD-OWNER rows from F
 s81	eng__t1	FAM-S81-COL-R6	COORD 11-21 20:5x: J6 row cancelled-superseded; eng__t1 is on J7 (a6771d121e95), launches after apply
 s81	gunit__t1	FAM-S81-COL-R6	COORD 11-21 20:5x: dead owner TAP-GRID-R4; held J6 prelint row, on J7, launches after apply
 qwen_compute	slw_stm_v2__cl9beb65e6	QC-RELAUNCH-R1	COORD 11-21 20:5x: DEAD-OWNER QC-SLE-R5; V2 kit placed, ISSUES-ACCEPT verdict posted, route
+qwen_compute	cbx_q10__cl89936551_h	FAM-QC-CB-R4	COORD 11-21 21:50 (ownership sweep)
+qwen_compute	cbf_q00_s2	FAM-QC-CB-R4	COORD 11-21 21:50 (ownership sweep)
+qwen_compute	cbn_q01*	FAM-QC-CB-R4	COORD 11-21 21:50 (ownership sweep)
