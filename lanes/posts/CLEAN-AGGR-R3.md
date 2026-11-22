@@ -30,3 +30,4 @@
 - 2026-11-22 02:46 PST DIED [CLEAN-AGGR-R3] ot-run oth-ubuntu-2884175-1795342519 on outgoing-giraffe: rc=1 after 1841 s, ended 10:45:59, log none, cmd: --hosts epyc8 --dir /srv/opentallas-scratch2/claude/mq-gate --mem 12 --threads 2 --disk 60 -- ot-gate-remote claude/fleet-autoclean-push-rea | class=UNCLASSIFIED cause=rc 1 after 1841 s, no log
 - 2026-11-22 03:09 PST DONE [CLEAN-AGGR-R3] ot-push-main otpush-outgoing-giraffe-3901297 on outgoing-giraffe: rc=0 after 29 s, ended 11:09:13, log none, cmd: ot-push-main 
 - 2026-11-22 03:11 PST DONE [CLEAN-AGGR-R3] ot-push-main otpush-outgoing-giraffe-3965036 on outgoing-giraffe: rc=0 after 20 s, ended 11:11:20, log none, cmd: ot-push-main 
+- 2026-11-22 03:13 PST DONE [CLEAN-AGGR-R3] ot-push-main otpush-outgoing-giraffe-4001563 on outgoing-giraffe: rc=0 after 18 s, ended 11:13:02, log none, cmd: ot-push-main 
