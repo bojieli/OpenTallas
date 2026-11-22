@@ -167,6 +167,19 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-21 20:30:00	tolerant-swine	FAM-QC-CB-R4	pid	3540336	0	1390	no	-
 2026-11-21 20:30:00	tolerant-swine	FAM-QC-CB-R4	pid	3540336	0	525	no	-
 2026-11-21 20:30:01	tolerant-swine	FAM-QC-CB-R4	pid	3540336	0	1370	no	-
+2026-11-21 20:30:03	tolerant-swine	-	pid	3540336	0	0	no	-
+2026-11-21 20:32:14	tolerant-swine	FAM-QC-CB-R4	status	oth-ubuntu-4096913-1795321869	143	40	no	-
+2026-11-21 20:35:24	tolerant-swine	FLOW-PRIVSPEC-R1	pid	517723	0	380	no	-
+2026-11-21 20:35:24	tolerant-swine	FLOW-PRIVSPEC-R1	pid	517723	0	395	no	-
+2026-11-21 20:38:02	tolerant-swine	FAM-S81-SERDES-R7	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SERDES-R4/serdes__t4_1121074458/gen/serdes__t4:route	0	5465	no	-
+2026-11-21 20:43:50	tolerant-swine	FAM-S81-SERDES-R7	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SERDES-R4/serdes__t4_1121074458/gen/serdes__t4:finish	0	254	no	-
+2026-11-21 20:44:53	tolerant-swine	FABLE-FIX-HEAD-LEP0N-R6	status	oth-ubuntu-1136304-1795317736	0	3290	no	-
+2026-11-21 20:44:53	tolerant-swine	FABLE-FIX-HEAD-LEP0N-R7	status	oth-ubuntu-1136304-1795317736	0	2945	no	-
+2026-11-21 20:44:55	tolerant-swine	FABLE-FIX-HEAD-LEP0N-R5	status	oth-ubuntu-1136304-1795317736	0	4735	no	-
+2026-11-21 20:53:52	tolerant-swine	FAM-QC-CB-R4	pid	1953776	71	51	no	-
+2026-11-21 20:54:04	tolerant-swine	FABLE-FIX-S81-LEAF-R7	status	oth-ubuntu-875159-1795316235	143	6946	no	-
+2026-11-21 20:55:05	tolerant-swine	-	status	oth-ubuntu-1721792-1795323260	66	0	no	-
+2026-11-21 20:57:01	tolerant-swine	FLOW-PRIVSPEC-R1	pid	3352347	70	1210	no	-
 2026-11-21 21:06:41	civil-redfish	FAM-S81-SLICE-R5	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/dc92652f0d5/private/FAM-S81-SLICE-R4/slice_station__t36_1121074053/gen/slice_station__t36:grt	124	3601	yes	-
 2026-11-21 23:44:27	loved-redfish	FAM-QC-CB-R2	kit	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V1/private/FAM-QC-CB-R2/cbn_q01__clab6e67f2_1121085408/gen/cbn_q01__clab6e67f2:cts	124	13803	yes	-
 2026-11-22 01:32:26	loved-redfish	-	kit	/srv/opentallas-scratch2/claude/ot-jobs/sle_ctl__cla4f6f12f-route-loved-redfish-485372-1795298505/work:cts	0	10740	no	-
@@ -174,3 +187,5 @@ time	host	lane	mode	targets	rc	waited_s	timeout	ended
 2026-11-22 02:17:59	civil-redfish	-	status	oth-ubuntu-3665743-1795282889	124	1	yes	-
 2026-11-22 02:18:00	civil-redfish	-	status	oth-ubuntu-171031-1795284529	124	1	yes	-
 2026-11-22 03:58:14	loved-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-3314323-1795319375	3	225	no	-
+2026-11-22 04:31:49	loved-redfish	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-3591748-1795320119	0	1765	no	-
+2026-11-22 04:51:38	outgoing-giraffe	FABLE-FIX-QC-COLL-R2	status	oth-ubuntu-964258-1795320509	143	2540	no	-
