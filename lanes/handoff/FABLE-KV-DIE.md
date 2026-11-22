@@ -22,18 +22,24 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
-## Gates (private fork tree_a = D28 work tree fork, plan base fcfa38bdb65b saved as base_plan_tree_a.json)
-- gate_a1 (R1 + R1b, plan 6f866b1b34cc): launched 04:58 PST, unit via intel2 ~/tmp/fablekvdie/gate_a1.otrun.log; PRE PASS, ELAB 0; G0 + bind running.
-  Summary lands in gate_a1/gate.sum.  tree_a tools carry the RING-LITE-2 patch (originals in gate_a1/aside).
-- gate_b.sh TAG = R1 + R1b + R5 + landing_remap + pinclear, same gates. Launch AFTER gate A ends (one bind per tree):
-  ot-run --mem 64 --threads 10 --disk 60 --priority plan --plan-job bind --hosts epyc8 --dir .../fable-kv-die
-  --stage <D27d3 tree> --stage kv-d23-compose8/gatein --stage <d16 tree> --stage rt/3fc234318d37 -- bash gate_b.sh gate_b1
-
-## Next
-1. Read gate A: bind errors, LITE ring count (bind_of_record reset placements ring_lite), LATCHECK, BPC. Post.
-2. Gate B. Then hand R1/R1b/R5 to KV-PLAN-R6 (ROWS-READY FABLE-KV-DIE <sha12> types=...), copy scripts to kv-plan-r6 intake as it asks.
-3. Sealed private kits on the bound plan (kit_wave.py private-spec --tree tree_a --plan ... --bind-out ... --lane FABLE-KV-DIE --goal finish;
-   run-item; ot-wait --durable): kv3_hg_v1p2 (compare GRT overflow with FLOW-CLKGRT-R2 566k / 871k), kv3_io_cor_v1 (LITE variant next to
-   IOPC-R4's proof), one hgi / pv after D28 seals with the HGI-R6 / PV-R7 rows (tree_a dry5 lacks them).
-4. After D28 seal (12:00 PST): re-run rows on the D28 final plan, re-gate, hand over for D29.
-5. Open: kv3_hg ft2 corridor (y 213-232 over e0/e1); street_rule legalize cannot re-floor pv/hg/hgi (tool limits listed in the report).
+## State 06:45 PST (supersedes the Gates / Next blocks of 05:2x)
+- COORD rulings: R1 + R1b go into D28 (scripts copied to kv-plan-r6/d28/rows/, shas 9860691ee0da / 74bdc3ee5a86, in rows.json by KV-PLAN-R6;
+  D28 tree tools now rt bc9603f67b09 >= e08eb28ae039). Gate B / R5 also D28 if green by 11:30 PST. sys_c: slot kept, region form (posted).
+- Gate A (gate_a1, R1+R1b on tree_a): ALL GREEN (see report section 7).
+- Gate B (gate_b2, R5 v1 on tree_a): PRE PASS, G0 PASS 0 errors, bind running. R5 v1 is NOT for hand-over (kt rows re-routed straight:
+  routed_reach 14 -> 58). tree_a is busy until gate_b2/gate.sum has END.
+- R5 v2 = rows/ROWS_FABLE-KV-DIE-R5.py c48d8112743f (+ kst_xstreet_v3_fkd.py 095576e60380 beside it; env FKD_TREE, FKD_RT): core_place seed,
+  kt rows restored then re-routed with HGI-R6's x-street generator (collapse / restore of spread kst sites), tap legaliser (hg_v3 clk_t52),
+  ft3 banks compact in the street. Tested on kv-plan-r6/d28/dry6/step08_out.json: rc 0, 11 kt rows per type re-routed, max bit hop 383.4.
+- R5c = rows/ROWS_FABLE-KV-DIE-R5c.py f0a8603e5923: kv3_hg ft2 banks 2-4 into the row channel y 248-320; model H overflow 331k -> 116k.
+- tree_b = second fork of the D28 work tree (tools bc9603f67b09), forking (unit oth-ubuntu-805177-1795357448, --crit because of the load cap).
+- NEXT: when tree_b exists: gate C =
+  ot-run --mem 64 --threads 10 --disk 60 --priority plan --plan-job bind --hosts epyc8 --dir .../fable-kv-die --stage <D27d3 tree>
+  --stage kv-d23-compose8/gatein --stage <d16 tree> --stage rt/3fc234318d37 --stage rt/bc9603f67b09 --stage kv-plan-r6/d28
+  --stage opus-fix-kv-hgi-r6/gen -- bash gate_c.sh gate_c1 <latest kv-plan-r6/d28/dryN/plan_D28.json> <ledger>
+  (base = the plan lane's newest finished compose; gate_c.sh does R5 + R5c + ONE landing_remap vs base_d27d3 on all changed types + pinclear).
+- Gate C green -> copy R5 / R5c / kst copy into the intake, ROWS-READY post, then the <250-word die-level report to COORD (owner relay).
+- Then sealed private kits on tree_b (kv3_hg_v1p2 vs FLOW-CLKGRT-R2 566k / 871k; kv3_io_cor_v1 LITE variant). No further gate on a tree
+  that feeds a kit.
+- ot-run notes: non-crit jobs wait on the epyc8 load cap (load 130-150); --priority plan --plan-job bind and --crit start at once.
+  ot-run needs --stage for every path outside --dir. cut_ledger.py flags a row PARTIAL if it prints skipped / dropped / ignored.
