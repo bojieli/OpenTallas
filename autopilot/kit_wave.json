@@ -40250,22 +40250,6 @@
    ],
    "hold_records": [
     {
-     "id": "pilot-s81-f1525f0d313e",
-     "plan_sha": "e291d6a8e74097b823a588a8cb7a916930ffcdc13c71a7ac6656eb1c4df02612",
-     "reason": "PILOT after tree switch: one GEN pilot (bk_sel__t2) from tree f1525f0d313e must pass GEN + preflight first",
-     "release": [
-      "gen_pilot:s81:f1525f0d313e"
-     ],
-     "items": [
-      "*"
-     ],
-     "pilot_items": [
-      "bk_sel__t2"
-     ],
-     "follow_plan": true,
-     "auto_pilot": true
-    },
-    {
      "id": "j7-col-held-until-view-1122",
      "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
      "reason": "S81 J7 COL held-until-view (COORD ruling 11-21): released when the u_cf view proof, one placed J7-form col read, the xo reset-merge keep A/B and wave tools >= ae660e1299 all exist | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-COL-H10-R4; S81-J6-ASSEMBLY-R5 assembles J8)",
