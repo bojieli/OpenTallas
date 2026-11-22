@@ -36,3 +36,11 @@ Lane clone (adopted): intel2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/c
   log intel2 OPUS-PIPELINE-R2/tmp/e2e3.log, spec ~/coord/autopilot/private_specs/OPUS-PIPELINE-R2/ot-build/qwen_kvsys_kv3_io_cor_v1/1122003502.
   If hub dies: rerun same command (bind FRESH). On sign-off: post result; auto_export enqueued by hub.
 - Landed total: deb04cf0fb, a2fe3bc714, 33fe1ccf07 (default auto), dfcb8055f4.
+
+## 11-22 01:xx E2E result + AUTO-BIND rollout (COORD ruling)
+- e2e3 kit FAILED at place (design): OT_CLAND band u_cland_ft16_i 428.4 um2 needed > 172.5 um2 band (ratio 2.48). Handed to FAM-KV-IOPC-R4 / KV-PLAN-R6 (hub 2e935dbcbd).
+- COORD: auto_bind on S81 (after J7 apply), QC (after V3), KV (after D28 apply), HEAD now; cap 1 concurrent rebind per die; back out on loop/starve.
+- main b0364f78b9: wave_rebind cap 1/die + alias path mapping. HEAD enabled kit_wave 8d946a522d (no-op: kit_rtl mode script).
+- Watcher intel2 pid 2825403, OPUS-PIPELINE-R2/tmp/ab_watch.py (log ab_watch.log): enables s81/qwen_compute/qwen_kvsys on first
+  "atomic apply <die>" hub commit after start, posts first-cycle AUTO-BIND lines (from ~/coord/autopilot/log.txt), backs out >4 STARTED/6 h. 20 h deadline.
+  If it dies: rerun with T0 = now and drop already-enabled dies (check kit_wave.json auto_bind).
