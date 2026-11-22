@@ -1456,15 +1456,15 @@ def core_input_direct_anchor(raw, tn):
     """Pass the scoped exceptions to the pre-GPL anchor for surviving NK pipe registers."""
     clock = (raw or {}).get("clock") or {}
     cfg = clock.get("core_input_lockup") or {}
-    modules = {m: set(ports) for m, ports in ((cfg.get("latch_except_by_type") or {}).get(tn) or {}).items()}
-    for module, pads in ((cfg.get("latch_except_hb4_by_type") or {}).get(tn) or {}).items():
-        direct = {bit for bit, count in pads.items() if count == 0}
-        if direct:
-            modules.setdefault(module, set()).update(direct)
-    if not modules:
+    latch_rows = (cfg.get("latch_except_by_type") or {}).get(tn) or {}
+    pad_rows = (cfg.get("latch_except_hb4_by_type") or {}).get(tn) or {}
+    ports = {port for ports in latch_rows.values() for port in ports}
+    ports.update(bit for pads in pad_rows.values() for bit, count in pads.items() if count == 0)
+    if not ports:
         return ""
-    rows = " ".join(f"{module} {{{' '.join(sorted(ports))}}}" for module, ports in sorted(modules.items()))
-    return f"set nka_direct {{{rows}}}\n"
+    # A native module may be exported as a differently named LEF master.
+    # The Tcl identifies the actual hard pin by tracing its unique NK pipe.
+    return f"set nka_direct {{{' '.join(sorted(ports))}}}\n"
 
 
 def core_input_place(raw, tn):
@@ -3843,8 +3843,12 @@ def _lockup_pad_type(P, tn):
     # hook errors when no pad cell exists, so emitting it for the other 115 types stopped them at PRE_FLOORPLAN.
     import bind
     mods = (cfg.get("modules") or {}).keys()
-    bound = {h.get("module") for h in ((P.types.get(tn) or {}).get("hard_cores") or [])}
-    return any(int(n or 0) > 0 for module in mods & bound
+    physical = {h.get("module") for h in ((P.types.get(tn) or {}).get("hard_cores") or [])}
+    if not mods & physical:
+        return False
+    # Pads are keyed on the bound RTL module, which can differ from the
+    # LEF master that establishes whether this type has a lockup hard core.
+    return any(int(n or 0) > 0 for module in mods
                for n in bind.core_input_hold_pads(P.raw, tn, module).values())
 
 

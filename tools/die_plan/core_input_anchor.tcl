@@ -188,14 +188,12 @@ puts "OT_NK_PAD_ANCHOR chains $nka_pad unresolved $nka_pad_miss (HB4 pad chains 
 if {[info exists nka_direct]} {
   set nka_direct_kept 0; set nka_direct_miss 0
   foreach inst [$nka_blk getInsts] {
-    set master [[$inst getMaster] getName]
-    if {![dict exists $nka_direct $master]} continue
-    set ports [dict get $nka_direct $master]
+    if {![[$inst getMaster] isBlock]} continue
     foreach pin [$inst getITerms] {
       if {![$pin isInputSignal]} continue
       set pn [[$pin getMTerm] getName]
       set base [lindex [split $pn {[}] 0]
-      if {$pn ni $ports && $base ni $ports} continue
+      if {$pn ni $nka_direct && $base ni $nka_direct} continue
       set chain [nka_pipe_chain [$pin getNet] 6 1]
       if {![llength $chain]} { incr nka_direct_miss; continue }
       lassign [nka_out_pos $pin 6] x y

@@ -137,7 +137,7 @@ class CoreInputLatchExcept(unittest.TestCase):
         self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q00", module, "n_b"), set())
         self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q00", module, "tap"), {0})
         self.assertEqual(gen_phys.core_input_direct_anchor(p, "cbn_q11"),
-                         "set nka_direct {qfd_tile_nk_a0c {n_a n_b[372]}}\n")
+                         "set nka_direct {n_a n_b[372]}\n")
         self.assertEqual(gen_phys.core_input_direct_anchor(p, "cbn_q00"), "")
         self.assertEqual(bind.lockup_key_errors(p, {module}, {("cbn_q11", module)}), [])
         self.assertIn("cbn_q11/" + module,
@@ -147,19 +147,20 @@ class CoreInputLatchExcept(unittest.TestCase):
         import gen_phys
         from types import SimpleNamespace as NS
 
-        module = "qfd_tile_nk_a0c"
+        module = "qfd_tile_nk_rp2_romleaf_rr"
         p = self._plan(latch_except={module: ["tap[0]"]},
                        latch_except_hb4={module: {"tap[0]": 3}},
                        latch_except_hb4_by_type={"cbn_q11": {module: {"tap[0]": 0}}})
         p["clock"]["core_input_lockup"]["types"].append("cbn_q00")
-        core = {"hard_cores": [{"module": module}]}
+        p["clock"]["core_input_lockup"]["modules"][module] = ["n_a", "n_b", "tap"]
+        core = {"hard_cores": [{"module": "qfd_tile_nk_a0c"}]}
         P = NS(raw=p, types={"cbn_q11": core, "cbn_q00": core})
         self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q11", module, "tap", 0), 0)
         self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q00", module, "tap", 0), 3)
         self.assertFalse(gen_phys._lockup_pad_type(P, "cbn_q11"))
         self.assertTrue(gen_phys._lockup_pad_type(P, "cbn_q00"))
         self.assertEqual(gen_phys.core_input_direct_anchor(p, "cbn_q11"),
-                         "set nka_direct {qfd_tile_nk_a0c {tap[0]}}\n")
+                         "set nka_direct {tap[0]}\n")
         self.assertEqual(gen_phys.core_input_direct_anchor(p, "cbn_q00"), "")
         seen = {("cbn_q11", module)}
         self.assertEqual(bind.lockup_key_errors(p, {module}, seen), [])
