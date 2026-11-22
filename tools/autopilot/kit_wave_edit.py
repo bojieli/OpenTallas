@@ -24,6 +24,7 @@ import sys
 from pathlib import Path
 
 REL = "autopilot/kit_wave.json"
+HOST_ADD_PROBE = None          # tests inject probe(cfg) -> {host: {die: why}}
 
 
 class PatchError(Exception):
@@ -248,6 +249,56 @@ def commit_config(coord, message, commit_cmd):
     return receipts[-1]
 
 
+def added_gen_hosts(old_doc, new_doc):
+    """{die: [host, ...]} hosts a patch adds to dies.<die>.gen_hosts / gen_host (pure)"""
+    out = {}
+    for die, d in ((new_doc or {}).get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        o = ((old_doc or {}).get("dies") or {}).get(die) or {}
+        was = set(o.get("gen_hosts") or []) | ({o.get("gen_host")} if o.get("gen_host") else set())
+        now = list(d.get("gen_hosts") or []) + ([d.get("gen_host")] if d.get("gen_host") else [])
+        add = [h for h in dict.fromkeys(now) if h and h not in was]
+        if add:
+            out[die] = add
+    return out
+
+
+class _ProbeAP:
+    """the AP surface kit_wave.src_incomplete needs (sh with stdin), run locally / over ssh"""
+    HUB_NAME = os.environ.get("OT_HUB_NAME", "intel2")
+
+    @staticmethod
+    def sh(argv, timeout=180, input=None):
+        try:
+            r = subprocess.run(argv, input=input, capture_output=True, text=True, timeout=timeout)
+            return r.returncode, r.stdout, r.stderr
+        except (OSError, subprocess.SubprocessError) as e:
+            return 255, "", str(e)
+
+
+def host_add_problems(new_doc, added, probe=None):
+    """FLOW-OPS-1300 / FABLE-FLOW-1900 (intel2 joined QC/KV/S81 gen_hosts without the bind / postbind / macro trees: SRC-INCOMPLETE 4 ticks running): a host is
+    added to a die's gen hosts only when the wave's own input-closure probe (kit_wave.src_incomplete) finds nothing missing there.  -> ["die host: why", ...].
+    probe(cfg) -> {host: {die: why}} (tests); default = kit_wave.src_incomplete with a local/ssh AP.  OT_HOST_ADD_FORCE=1 skips (logged in the commit)."""
+    if not added or os.environ.get("OT_HOST_ADD_FORCE") == "1":
+        return []
+    cfg = copy.deepcopy(new_doc)
+    for die, d in list((cfg.get("dies") or {}).items()):
+        if die not in added:
+            d["src_probe"] = False                       # probe only the dies that gain a host ...
+        else:
+            d["gen_hosts"] = list(added[die])            # ... and only on the hosts they gain
+            d["gen_host"] = added[die][0]
+    cfg["_hub"] = _ProbeAP.HUB_NAME
+    if probe is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import kit_wave as _KW
+        probe = lambda c: _KW.src_incomplete(_ProbeAP, c)
+    res = probe(cfg) or {}
+    return [f"{die} {h}: {str(why)[:400]}" for h, ds in sorted(res.items()) for die, why in sorted(ds.items()) if h in added.get(die, [])]
+
+
 def _edit_once(coord, ops, message, dry, commit_cmd):
     """one read-modify-write.  WAVE-PILOT-FIX 11-17 (COORD, 17:5x: a patch applied to a copy of HEAD read minutes earlier reverted another lane's
     commit): the base is the blob sha of HEAD:file read just now; before the commit it is compared again (compare-and-swap) and the patch is
@@ -265,6 +316,9 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
         _old = json.loads(head)
         _newdoc = apply_patch(_old, ops)
         _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc)
+        _hp = host_add_problems(_newdoc, added_gen_hosts(_old, _newdoc), HOST_ADD_PROBE)
+        if _hp:
+            _errs += ["HOST-ADD refused, input closure incomplete (copy the trees, re-run; OT_HOST_ADD_FORCE=1 overrides): " + " | ".join(_hp[:6])]
         if _errs:
             raise PatchError("; ".join(_errs[:6]))
         new = dump(_newdoc)
