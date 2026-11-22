@@ -1,0 +1,41 @@
+{
+  "type": "coll_core",
+  "scope": "Private fault-only return candidate for QC V3",
+  "event_baseline": "s29q103S4Q9N46R6V2",
+  "base_layout": "epyc8:/srv/opentallas-scratch2/claude/fam-qc-coll/pkit10_wall/kit_place/gen/coll_core",
+  "artifacts": "epyc8:/srv/opentallas-scratch2/claude/fam-qc-coll/pkit10_wall/faultpipe_private",
+  "measured_baseline": {
+    "placement_setup_ps": -671.05,
+    "driver": "u_lpad_fltv_s_i.q[0]",
+    "capture": "u_bout_io_collective__fault/q",
+    "placed_path_walk_um": 1918.08,
+    "farthest_fault_source_to_capture_um": 1453.059
+  },
+  "candidate": {
+    "fault_boolean_terms": 29,
+    "partitions_of_the_fault_reduction": ["south", "middle", "north"],
+    "added_stages": 3,
+    "placed_model_max_leg_um": 370.683,
+    "gated_reset": "rst_n_t125",
+    "epoch_source": "rst_n",
+    "epoch_shift_cycles": 3,
+    "lane": "coll_core__fault_io_fault",
+    "path": ["coll_core", "coll_f3", "glue"],
+    "cycles": [8, 11],
+    "fixed_cycles": [0, 3],
+    "other_lane_cycles_changed": 0,
+    "existing_face_codec_stages_changed": 0
+  },
+  "proof": {
+    "fault_and_epoch_checks": 2596,
+    "checked_valid_zero": 395,
+    "checked_valid_one": 1191,
+    "private_bound_parser": "PASS",
+    "synthesis": "PASS",
+    "native_latency_pricing": "PASS, only coll_core__fault_io_fault 8->11 across 1921 lanes",
+    "synthesis_unit": "1836629-1795308613",
+    "latency_price_unit": "1892200-1795308765",
+    "private_place_log": "epyc8:/srv/opentallas-scratch2/claude/fam-qc-coll/pkit10_wall/fault_place.client.log"
+  },
+  "admission": "Owner review of fault publication latency, native integration, and exact physical review remain open. Route held."
+}
