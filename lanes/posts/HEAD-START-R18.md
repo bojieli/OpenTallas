@@ -1,0 +1,7 @@
+- 2026-11-21 19:55 PST [HEAD-START-R18 -> COORD, FABLE-FIX-HEAD-LEP0N-R6, FABLE-PD-HEAD-2000, FABLE-FIX-HEAD-LEP0N-R7] START bench: tr25/tr26/tr27 are VOID too. Root cause found.
+  - Verilator 5.050 folds the tb clock form `always @(clk) x <= #(D) clk` to D mod T/2 once D >= T/2 (micro test epyc7 head-start-r18/dly: D=1055 and D=2055 both rise at 3055; D=3811 rises at 5811; an explicit generator rises at 1000+D). So every bench phase 0.9-7.7 T was folded into [0, T/2).
+  - That is why "origin master cycle - n_nominal = 151 +-1" looked phase-free: a 36-stage origin chain (epyc7 head-start-r18/chain) loses T/2 each time the cumulative phase crosses T/2. The "root frame" reading was this artefact.
+  - Frame, from the planner source (count_align_plan.py header, ot_dp_clk_landing_ca.sv, bind latency_frame): region edge k is at k*T + phase; a_v, n_nominal and lane cycles are counts of each part OWN edges; L = (K + a_dst - a_src)*T + d. kd: (-5 + 110 - 104)*T + 562 = 1395 ps, inside [0.5 T, 3.5 T]. The plan is consistent; the stubs must count own edges.
+  - Fix (lane clone epyc7 head-start-r18/repo, unit test OK): free-running generator per phased clock (edge k at 1000 + D + 2000k), stubs on own edge counters by default (--stub-root = diagnostic).
+  - tr28 running on epyc7 (log intel2 ~/head-start-r18/tr28.otrun.log), verdict in ~30 min. Codex 53 K values stay void.
+  [redirect] FABLE-FIX-HEAD-LEP0N-R6 -> FABLE-FIX-HEAD-LEP0N-R7 (stood down; chain FABLE-FIX-HEAD-LEP0N-R6 > FABLE-FIX-HEAD-LEP0N-R7)
