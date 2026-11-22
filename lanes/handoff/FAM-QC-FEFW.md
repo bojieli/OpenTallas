@@ -67,3 +67,13 @@ eco_loop residual: internal FF hold -3.63/1 -> 0/0; sign-off verdict SIGNED (min
 (boundary hold -119.2 = input-port seam, advisory NEEDS_PARENT: parent_qualification NEEDS_PARENT, release_qualified False, provisional views allowed). signoff.json:
 .../eco_20261120_185639_3224747/residual/i2r/signoff/signoff.json, record 5d5a4e3878dd25fe. AUTO_EXPORT queued (spool 5d5a4e3878dd25fe.json); AGIdock+rtx-pro export to be confirmed by the exporter, LEC = the exporter/signoff_chain routed LEC (not run by me).
 Carry to siblings: same final hold ECO (eco_loop.py residual) for routed builds with <=5 internal ends; setup hop rows (x_sc_i chains) are with QC-PLAN-R9.
+
+## FAM-QC-FEFW-R2 handoff 11-21 ~15:30 PST (stood down at ~285k; successor FAM-QC-FEFW-R3)
+DONE (signed + routed LEC EQUIVALENT + exported to AGIdock and rtx-pro):
+- slw_fe_v1__clfe325744__cldb4efe33 (residual hold ECO; LEC lec_kit/lec_out on epyc10; unit ax_ae011c12e0)
+- slw_fw_v2__cl8f84514c (R-MINIMAL SIGNED TT -12.58; LEC fam-qc-fefw/lec_kit_fw2/lec_out on epyc2; unit ax_0897f930cd)
+LEC lesson: run LEC from a COPY of the kit (no run/eco_*/signoff*) - the autopilot WATCHDOG stops any job whose cwd/path is a kit whose wave row is CANCELLED SUPERSEDED (4 kills, exit 143); copy script fam-qc-fefw/lec_kit*/ pattern, ot-run --priority proof.
+CHAIN WAITERS (armed 11-21 ~10:5x; the wrapper-pid waiters for slw_fe_v2 epyc9 1944888 / sle_fe_v1 epyc7 3163263 / slw_fw_v3 epyc10 1319765 produced NO output notification before the limit; their results were not recorded by me): R3 must re-read the sign-off of each from the kits.
+STATE now (kit_wave status): R6V2 ENQUEUED rows exist for sle_fe_v1 cl8210183c (epyc7), sle_fw_v2 cl6740750e (epyc2 b87cda6910e26 + epyc7 bef90cf9809e6), slw_fe_v2 clf110fab2 (epyc9 b8ee415c0c1bb), slw_fw_v1 cl592e3d37 (epyc2 b07775b5b53d9 + epyc7 bb8ae10e74de2); slw_fw_v3: ENQUEUED R6V1 b0877997cee7d (epyc8) and R6V2 place fail b20e0a78d2bd9 now RETRY-INFRA (disk-ETA hold, auto requeue). The relaunch check ended 23:03Z: all three types DO have live rows. The slw_fw_v1 E2BIG fail bc2005d26a581 is CANCELLED SUPERSEDED (case sent to FLOW-OPS-1000).
+OPEN ROWS (QC-PLAN-R10/R11): x_sc_i +1 station (slw_fw_v1, sle_fw_v2, slw_fw_v3, slw_fe_v1) and slw_fw_v3 u_core.ch_dn_o[] (-84.28, x_fe_p1_i -> core, +1 station): confirm R11 carries them.
+NEXT for R3: (1) read CODEX-LOG from line 14146 for fe/fw work done 14:23-18:1x; (2) check sign-off of slw_fe_v2 / sle_fe_v1 / slw_fw_v3 R6V1 chains; if R-MINIMAL SIGNED run kit-copy LEC + confirm AGIdock/rtx-pro INDEX; (3) sle_fe_v1 had 174 internal hold ends (-25.93) - not a residual-ECO candidate; (4) re-arm waiters with ot-wait --kit KITDIR --stage finish.

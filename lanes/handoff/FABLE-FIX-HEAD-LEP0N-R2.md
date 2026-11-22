@@ -128,3 +128,24 @@ F = epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-env ; hub logs i
     ssh intel2 'ot-wait --kit F/shelf_tg/gen/gen/hd_lep0N --host epyc10 --stage grt --also oth-ubuntu-21834-1795274496 --timeout 27000'
   then route / finish the same way. Sign-off gates: DRC 0, TT >= -42, FF internal hold >= 0, LEC; export AGIdock + rtx-pro.
 - col_we deleted (ot-delete). F/col_bf2 keeps the BANDFIX-2 column plan files (column form parked).
+
+## FINAL STATE 11-21 18:2x PST (R2 stood down -> FABLE-FIX-HEAD-LEP0N-R3; read this section first)
+- e1a NOT APPLIED. Wave still r16 (head_rp21z20NF15f_r16, src s81_head_r16_s0, gen_hosts now [epyc7, epyc10, intel2]).
+- My publish gate run 3 (epyc7) on snapshot s81_head_r17a_s0 / manifest ef50794c86fd: verdict FAIL = pre_g0 FAIL + contained FAIL (foreign_tree advisory);
+  schema, hashes, bound_params, dry_gen (hd_lep0N) PASS. Record autopilot/publish_gate/s81_head/ef50794c86fd...json, log ~/fable-fix-head-lep0n/pgate_r17a_e7.log.
+  I did NOT read the pre_g0 detail and did NOT run the marker. pre_g0 is not the inherited advisory class: do not apply this v1 snapshot optimistically.
+- Codex (CODEX-LOG from line 14146) took it further during the limit: "r17a source-check error is a duplicated kw45 receipt path" (my receipt copy
+  under results/head_native_release_nf15f_r17a is the likely cause), resealed as CONTAINED r17a v2, manifest 561a1f11cf153c6c..., on E7/E9/E10, same plan
+  00b2abf6e7a6 / sidecar, 11 assets repo-relative; static schema/PRE/G0/contained/31 hashes PASS. Its fresh GEN gate + marker are DISK-HELD on E9
+  ("portable E9-first package"). R3: take the v2 package from Codex's notes (do not rebuild mine), run the gate dry gen where disk allows (epyc7 has
+  ~310 GB; --gen-host must be a current gen host of the die), then the marker as head_rp21z20NF15f_r17a (command in the section above, candidate must
+  name the v2 tree/manifest), post to COORD + HEAD-START-R17. My v1 snapshot s81_head_r17a_s0 (ef50794c86fd) is superseded; note the LIVE tree on
+  epyc10/epyc9 was modified by my live_tree apply (check what v2 did with it before any further live_tree apply).
+- Kits (epyc10, both containers still up 18:2x: dpkit-hd_lep0N-1588394 = shelf_we, dpkit-hd_lep0N-22377 = shelf_tg; no 5_1_grt.odb, no FAIL_ file):
+  shelf_we pre-GRT FF hold finished: pass rr 2 margin 40 -> wns +40.0, 0 ends, insts 492,361 = non-tap 393,601 (98.4 % of the 400k cap; pass 1 was
+  363,650). The +40 margin pass cost ~30k buffers. GRT repair will add more: expect over the cap -> COORD lever = TYPE SPLIT, not more repair; an
+  alternative to measure first is the margin (40 vs 5) of that pass. Codex: "shelf_we passed pre-GRT internal guard, routing iterations continue".
+  My GRT waiter on shelf_we timed out (27000 s) with no 5_1_grt.odb: GRT has run > 6 h. Check GRT overflow per round; flat over 2 rounds = cancel rule.
+  epyc10 scratch 69 GB free (100 %): ENOSPC risk for both kits.
+- No waiters are alive. Re-arm (section above), units oth-ubuntu-1587841-1795268678 / oth-ubuntu-21834-1795274496.
+- HEAD-START-R17: tr12 (32 separated measured clocks) still FAIL 219/329 per Codex; e1b stays out.
