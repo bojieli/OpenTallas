@@ -330,3 +330,19 @@ def test_bound_old_tree_never_mixes_a_partial_source(tmp_path):
     old["partition_types"]["T"]["clock"]["landing_reader_start"]["branches"]["b"]["stages"].append(dict(xy_um=[2.0, 2.0], raw_reset="rst_rl_62"))
     assert LR.bound_old_tree("T", old["partition_types"]["T"], tmp_path) is None
     assert LR.bound_old_tree("T", {"clock": {}}) is None
+
+
+def test_cli_prints_an_anchor_mode_receipt(monkeypatch, tmp_path, capsys):
+    """anchor-mode receipts are reset_anchor.resolve receipts (kept = a count): the summary loop raised TypeError after the
+    plan was written, so the S81 J8 run ended rc 1 with a good output (FABLE-FIX-S81-J8-TAPROWS 11-22)."""
+    import json
+    old, new = _anchored("rst_rl_60", BOUND_T), _anchored("rst_rl_60", BOUND_T)
+    (tmp_path / "old.json").write_text(json.dumps(old)); (tmp_path / "new.json").write_text(json.dumps(new))
+    real = LR.remap_plan
+    monkeypatch.setattr(LR, "remap_plan", lambda o, n, root, pd, types, keep, **kw: real(
+        o, n, root, pd, types, keep, tol_um=50.0, ported_fn=lambda tree: set(), groups_fn=lambda raw, tn: {},
+        tree_fn=lambda raw, tn: REBUILT_OLD_T if raw is o else NEW_BT, **kw))
+    rc = LR.main(["landing_remap.py", str(tmp_path / "old.json"), str(tmp_path / "new.json"), str(tmp_path / "out.json"), "--resets", "anchor"])
+    out = capsys.readouterr().out
+    assert rc == 0 and "1 relay name(s)" in out and '"anchor": 1' in out
+    assert _raw(json.loads((tmp_path / "out.json").read_text())) == "rst_rl_70"

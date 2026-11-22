@@ -462,7 +462,7 @@ def main(argv):
           f"reset anchors re-recorded {len(rec.get('anchors') or [])}")
     for r in rec["resets"]:
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
-        for where, name in r.get("kept") or []:
+        for where, name in (r["kept"] if isinstance(r.get("kept"), list) else []):   # anchor-mode receipts carry kept = a count
             print(f"  kept {r['type']}: {where} = {name} (not a relay of the OLD tree)")
     if rec.get("old_tree"):
         import collections
