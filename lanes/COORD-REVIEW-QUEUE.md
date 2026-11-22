@@ -22542,3 +22542,5 @@ FAILED [AUTOPILOT 84c5ab0332f5] 2026-11-21 22:18:50 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 22:23 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 4 event(s): cbf_q00__cl870de686 place FAIL PLAN (FAIL_POSTPLACE PLACE-SETUP-STOP wns -380.81 ps < -300 ps (TT, post-place; routing cannot close it) start=u_bound.u_lk_nk_u_t_0_1_n_b/q[372]$_DLATCH_N_ end=u_bou) job 8b145706c4f6; cbn_q01__clab6e67f2 place FAIL PLAN (FAIL_POSTPLACE PLACE-SETUP-STOP wns -380.77 ps < -300 ps (TT, post-place; routing cannot close it) start=u_bound.u_lk_nk_u_t_1_2_n_b/q[372]$_DLATCH_N_ end=u_bou) job 89a4ecb68150; cbf_q00__cl870de686 LAUNCHED (kw-qwenco-cbfq00cl870de686-3-28593); cbn_q01__clab6e67f2 LAUNCHED (kw-qwenco-cbnq01clab6e67f2-2-28594)
 - 2026-11-21 22:23 PST intel1 at 1214 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 22:23 PST HOURLY free space 22:22 epyc9=2518 intel1=1214 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
