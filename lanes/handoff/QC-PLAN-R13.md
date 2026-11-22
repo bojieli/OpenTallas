@@ -39,3 +39,8 @@ Flag: slw_su_c__cl92142dac still -504 ps setup stop (FAM-QC-SLWSLE-R1).
 - plan_gate_pre on 6d2e: every gated plan PASS. FIXEDCYC 6 only on the pre-latency plan_v3p7d5.json (posted).
 - COORD ruling: p7d5r collective fault fixed_cycles 8->11 is pre-approved; cite it in the apply post. HB4 3->1 only with d5r.
 - FAM-QC-SLWSLE-R1 v4sucE was built on plan_v3p7d (clk_t130); told them to rebase onto plan_v3p7dr.
+
+## 04:1x PST TAPNAME
+- check_tapname (tmp/pgt6d2e tree, tapname.py): bandmove broke the density base of 8 st_a types, so the d lineage (dr/d5r/x) is out and its binds are cancelled. d, band moves and rev5 go to V4 (fix the d lineage with a rename and retap for those 8 types).
+- Order: cr > b2r > n3. Running: crx and b2rx (rt 33fe, in bind since 03:15), cr and b2r (rt 6dbb, launched 04:1x, the seal/pack pin hedge), n3 (6dbb, R8 refresh).
+- Recompose base: plan_v3p7cr.json 83647ad396b8.
