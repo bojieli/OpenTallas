@@ -40,6 +40,7 @@ import fcntl
 import json
 import os
 import re
+import runpy
 import shlex
 import shutil
 import subprocess as S
@@ -1658,8 +1659,13 @@ def redwatch_staging_refusal():
     parent = next(p for p in (root, *root.parents) if p.is_dir())
     launcher = shutil.which("ot-run") or str(HOME / ".local/bin/ot-run")
     try:
+        disk_admission = runpy.run_path(str(Path(__file__).resolve().with_name("ot-run")))
+        # On an authorized second scratch root, ot-run already subtracts the
+        # root reserve. Its required raw target is therefore usable floor + peak.
+        floor = (disk_admission["SCRATCH_SECOND_FLOOR_GB"] if parent.stat().st_dev == Path("/").stat().st_dev
+                 else disk_admission["sfloor"]("localhost"))
         admitted = S.run([launcher, "--hosts", "localhost", "--strict-host", "--dir", str(parent),
-                          "--mem", "4", "--threads", "1", "--disk", "60", "--max-wait", "1", "--pick"],
+                          "--mem", "4", "--threads", "1", "--disk", str(floor + 60), "--max-wait", "1", "--pick"],
                          capture_output=True, text=True, timeout=45)
     except (OSError, S.TimeoutExpired) as exc:
         return str(exc)
