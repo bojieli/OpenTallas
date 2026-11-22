@@ -27,13 +27,13 @@ def paths_in(obj, out, canon):
                 out.add(canon(t))
 
 
-def build(coord, markers=(), canon=os.path.normpath):
+def build(coord, markers=(), canon=os.path.normpath, scope=None):
     out = set()
     try:
         cfg = json.load(open(os.path.join(coord, "autopilot/kit_wave.json")))
-        paths_in(cfg.get("dies") or {}, out, canon)
     except (OSError, ValueError):
         raise SystemExit("kit_wave.json unreadable: refusing to build an empty list")
+    paths_in(scope.dies(cfg) if scope is not None else (cfg.get("dies") or {}), out, canon)
     for d in markers:
         for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
             if f.startswith("tree_switch_") and f.endswith(".json"):
@@ -41,7 +41,10 @@ def build(coord, markers=(), canon=os.path.normpath):
                     mk = json.load(open(os.path.join(d, f)))
                     if isinstance(mk, dict) and str(mk.get("status") or "").upper().startswith("SUPERSEDED"):
                         continue                       # a marker its owner / COORD marked SUPERSEDED no longer protects anything (kept for history)
-                    paths_in(mk, out, canon)
+                    if scope is None:
+                        paths_in(mk, out, canon)
+                    else:
+                        scope.add(mk, out, record_time(os.path.join(d, f)), "marker")
                 except (OSError, ValueError):
                     pass
     for f in ("PROTECTED-DBS.txt", "lanes/PROTECTED-DBS.txt"):
@@ -100,7 +103,7 @@ def name_age_h(base, now):
     return None if best is None else max(best, 0.0)
 
 
-def event_paths(coord, out, canon, now=None, max_age_h=72.0):
+def event_paths(coord, out, canon, now=None, max_age_h=72.0, scope=None):
     """(b) bind / LATCHECK / G0 inputs of in-flight plan events: structured json that names them (tree checks, handoff json: plan events, candidates, receipts), recent only"""
     now = now or time.time()
     for pat in ("autopilot/tree_checks/*", "lanes/handoff/*.json", "autopilot/*candidate*.json", "autopilot/events/*.json"):
@@ -112,9 +115,116 @@ def event_paths(coord, out, canon, now=None, max_age_h=72.0):
                 na = name_age_h(base, now)
                 if na is not None and na > max_age_h:
                     continue                        # the named date wins over an mtime a checkout rewrote
-                paths_in(json.load(open(f)), out, canon)
+                if scope is None:
+                    paths_in(json.load(open(f)), out, canon)
+                else:
+                    scope.add(json.load(open(f)), out, record_time(f, now), "event")
             except (OSError, ValueError):
                 pass
+
+
+# CLEAN-AGGR-1121 (OWNER 11-21 19:1x "apply all the aggressive cleanup rules"; OWNER 11-12: keep only live jobs, live / queued refs, signed until archived, the
+# protected lists).  FLEET-WATCH-R7 / FLOW-CANARY: the guard still refused most idle trees through RECORDS of superseded events: S81 D8D..D8J5 source candidates,
+# old proposal tree_switch markers, KV-D25e3 fault-row lists of CANCELLED attempts.  A record (tree_switch marker, handoff / candidate / tree-check json) now protects
+#   - a source tree only when it is a CURRENT tree (named by the kit_wave.json die config: src, rollback_tree, bound_trees, item_inputs ...) or the record was written
+#     AFTER its die adopted the current tree (the candidate of the next event, applying now);
+#   - a kit-wave attempt dir (.../kit-wave/.../items/<item>/attempt_N) only when a live / queued row lists it (live_attempt_paths);
+#   - every other path as before.  kit_wave.json, PROTECTED-DBS, live command lines, posts and the provenance cache are not scoped.
+TREE_READER_STATES = ("RUNNING", "LAUNCHING", "ENQUEUED", "RETRY-INFRA", "WAITING")
+TREE_OF = re.compile(r"^(/srv/opentallas-scratch[0-9]*/claude/(?:kw45/snap_[^/]+/[^/]+|kw45/[^/]+|[^/]+/src_[^/]+))(?:/|$)")
+WAVE_ATTEMPT_OF = re.compile(r"^(/srv/opentallas-scratch[0-9]*/claude/.*/kit-wave/.*/items/[^/]+/attempt_\d+)(?:/|$)")
+TREE_DIE = (("src_kv_", "qwen_kvsys"), ("src_qc_", "qwen_compute"), ("qwen_compute", "qwen_compute"), ("src_head_", "s81_head"), ("s81_head", "s81_head"),
+            ("src_s81_", "s81"), ("src_hbm_", "hbm"))
+
+
+def tree_root(p):
+    m = TREE_OF.match(p)
+    return m.group(1) if m else None
+
+
+def tree_die(root):
+    name = os.path.basename(root or "")
+    for pre, die in TREE_DIE:
+        if name.startswith(pre):
+            return die
+    return None
+
+
+def record_time(f, now=None):
+    """when a record was written: its mtime, capped by the end of the day named in its file name (a hub checkout rewrites mtimes)"""
+    now = now or time.time()
+    t = os.stat(f).st_mtime
+    na = name_age_h(os.path.basename(f), now)
+    if na:
+        t = min(t, now - na * 3600)
+    return t
+
+
+class RecordScope:
+    """keep(path, written) -> does a record written at `written` still protect `path` (see CLEAN-AGGR-1121 above)"""
+
+    def __init__(self, coord, cfg, canon, live_attempts):
+        self.canon = canon
+        self.adopted = {}
+        for die in ((cfg or {}).get("dies") or {}):
+            try:
+                self.adopted[die] = os.stat(os.path.join(coord, "lanes/handoff/tree_switch_%s.json" % die)).st_mtime
+            except OSError:
+                pass
+        self.live = set(live_attempts)
+        self.dropped = {}
+        # plan shas of rows that will still READ their bound source tree (unstarted / running); ROUTE-HELD / SIGNED rows read only their own attempt dir
+        self.live_plans = set()
+        try:
+            st = json.load(open(os.path.join(coord, "autopilot/kit_wave_state.json")))
+            for r in (st.get("items") or {}).values():
+                if isinstance(r, dict) and str(r.get("status") or "") in TREE_READER_STATES and r.get("plan_sha"):
+                    self.live_plans.add(str(r["plan_sha"]))
+        except (OSError, ValueError, AttributeError):
+            self.live_plans = None                   # unreadable state: every bound tree stays protected
+        cur = set()
+        paths_in(self.dies(cfg), cur, canon)
+        self.dropped.pop("bound_tree", None)
+        self.current = {r for r in (tree_root(p) for p in cur) if r}
+
+    def bound_ok(self, bt):
+        """a kit_wave bound_trees entry protects its tree only while an unstarted / running row is bound to its plan"""
+        if self.live_plans is None or not isinstance(bt, dict):
+            return True
+        ps = str(bt.get("plan_sha256") or bt.get("plan_sha") or "")
+        return not ps or any(ps.startswith(x) or x.startswith(ps) for x in self.live_plans)
+
+    def dies(self, cfg):
+        """kit_wave.json dies with the bound_trees entries no live row reads removed"""
+        out = {}
+        for name, d in ((cfg or {}).get("dies") or {}).items():
+            if isinstance(d, dict) and isinstance(d.get("bound_trees"), list):
+                keep = [bt for bt in d["bound_trees"] if self.bound_ok(bt)]
+                self.dropped["bound_tree"] = self.dropped.get("bound_tree", 0) + len(d["bound_trees"]) - len(keep)
+                d = dict(d, bound_trees=keep)
+            out[name] = d
+        return out
+
+    def keep(self, p, written):
+        r = tree_root(p)
+        if r:
+            if r in self.current:
+                return True
+            at = self.adopted.get(tree_die(r))
+            return at is None or written is None or written > at + 60      # unknown die / no adoption marker: keep; else only the next event's candidate
+        m = WAVE_ATTEMPT_OF.match(p)
+        if m:
+            return m.group(1) in self.live
+        return True
+
+    def add(self, obj, out, written, kind):
+        s = set()
+        paths_in(obj, s, self.canon)
+        for p in s:
+            if self.keep(p, written):
+                out.add(p)
+            else:
+                self.dropped[kind] = self.dropped.get(kind, 0) + 1
 
 
 def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user",)):
@@ -215,17 +325,22 @@ def current_trees(coord, now=None):
         except OSError:
             continue
         res[prefix] = {"tree": os.path.basename(src.rstrip("/")), "adopted_at": at}
+        if os.path.basename(src.rstrip("/")).startswith(die + "_"):
+            res[die + "_"] = dict(res[prefix])      # CLEAN-AGGR-1121: snap trees are named <die>_<rev>; src_qc_ / src_head_ never matched them
     return res
 
 
 def prov_cache_paths(cache, out, canon, max_age_h=72.0, now=None):
     """provenance.json paths of every view in each die's CURRENT tree and rollback tree (prov_paths.py audit): never deleted.  A stale cache still protects (72 h);
     a missing cache protects nothing (the first audit run builds it)."""
+    now = now or time.time()
     try:
         d = json.load(open(cache))
+        if now - float(d.get("time") or os.path.getmtime(cache)) > max_age_h * 3600:
+            return                                  # CLEAN-AGGR-1121: the 11-17 cache (4 days, trees no longer current) kept 706 old attempt / kit paths protected
         for p in d.get("paths") or {}:
             out.add(canon(p))
-    except (OSError, ValueError):
+    except (OSError, ValueError, TypeError):
         pass
 
 
@@ -234,11 +349,18 @@ def main(argv):
     here = os.path.dirname(os.path.realpath(__file__))
     sp = importlib.util.spec_from_file_location("ot_delete_guard", os.path.join(here, "ot_delete_guard.py"))
     g = importlib.util.module_from_spec(sp); sp.loader.exec_module(g)
-    s = build(coord, markers, g.canon)
-    event_paths(coord, s, g.canon)
+    live = set()
+    live_attempt_paths(coord, live, g.canon)
+    try:
+        cfg = json.load(open(os.path.join(coord, "autopilot/kit_wave.json")))
+    except (OSError, ValueError):
+        cfg = None
+    scope = RecordScope(coord, cfg, g.canon, live) if cfg else None
+    s = build(coord, markers, g.canon, scope)
+    event_paths(coord, s, g.canon, scope=scope)
     # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
     live_cmd_paths(s, g.canon)
-    live_attempt_paths(coord, s, g.canon)              # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
+    s |= live                                          # FLOW-OPS-1300 item 13: attempts of live / queued rows, listed exactly
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)
     try:                                           # the guard's newer-than-current input, next to the list (refresh_guard_live.sh pushes both)
@@ -247,7 +369,7 @@ def main(argv):
     except OSError:
         pass
     g.write_list(s, outp)
-    print(len(s), "live protected roots ->", outp)
+    print(len(s), "live protected roots ->", outp, "| record paths dropped (superseded tree / dead attempt):", scope.dropped if scope else {})
     return 0
 
 

@@ -17,7 +17,8 @@ DEFAULT_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/protected.txt"
 ALLOW_EXACT = os.path.expanduser("~/.local/state/ot-delete-guard/allow_exact.txt")   # COORD-ruled narrow exceptions: "<path>\t<expiry epoch>\t<reason>" per line
 CURRENT_TREES = os.path.expanduser("~/.local/state/ot-delete-guard/current_trees.json")   # hub-built: {src_<die prefix>_: {"tree": name, "adopted_at": epoch}}
 MAX_AGE_H = float(os.environ.get("OT_GUARD_MAX_AGE_H", "6"))
-TREE_ROOT = re.compile(r"^(?P<root>/srv/opentallas-scratch[0-9]*/claude/(?:kw45/[^/]+|[^/]+/src_[^/]+))(?:/(?P<rest>.+))?$")
+TREE_ROOT = re.compile(r"^(?P<root>/srv/opentallas-scratch[0-9]*/claude/(?:kw45/snap_[^/]+/[^/]+|kw45/[^/]+|[^/]+/src_[^/]+))(?:/(?P<rest>.+))?$")   # kw45/snap_<die>/<tree>: each snapshot is its own tree (CLEAN-AGGR-1121)
+ROUTED_GRACE_H = float(os.environ.get("OT_GUARD_ROUTED_GRACE_H", "2"))
 SRV = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9._+/@=-]+")
 
 
@@ -202,6 +203,11 @@ def routed_unsigned_refusal(t):
         return None
     ad = t[:m.end()].rstrip("/")
     if not os.path.isdir(ad) or not _routed(ad):
+        return None
+    # CLEAN-AGGR-1121 (OWNER 11-12: unsigned / failed results are deleted directly, 2 h grace after the job ends): a routed unsigned result older than the grace is
+    # protected only by what protects any attempt -- a live / queued row listing it (build_protected_live.live_attempt_paths), PROTECTED-DBS, a live process.
+    newest = max((os.path.getmtime(f) for x in ROUTED_FILES for f in glob.glob(os.path.join(ad, "**", "run", "results", "asap7", "*", "base", x), recursive=True)), default=0)
+    if time.time() - newest > ROUTED_GRACE_H * 3600:
         return None
     for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
         try:
