@@ -335,3 +335,4 @@
   KV: kv3_hub_C kit_rtl FAIL UNCLASSIFIED (FAM-KV-HUBC-SYSC-R2; private kv3_sys_c running).
   QC, HEAD: no flags; cbn_q00 now FABLE-FIX-QC-V4.
   Read-only, nothing changed.
+- 2026-11-22 10:51 PST 11-22 11:0x sweep, 458 rows, 7 flagged (447 clean): S81 UNOWNED 4 (svc_rs t3-6, relaunched prelint 10:45) + DEAD-OWNER 1 (pvso_entry__t1, S81-BKSEL-R7 last post 08:28). QC UNOWNED 2 (cbf_q01_s2, cbf_q11) + DEAD-OWNER 1 (slw_su_c__cl19bb38ef, TAP-GRID-R5). KV 0 flagged (hub_C held/retry D28; pc_v3 relaunched private kit, WAIT-BIND). HEAD 0. S81 leaf t1 held/retry J9 LEAF-R10. FAILED-NO-RELAUNCH 0, STALE 0, UNCLASSIFIED 0 after cuts.
