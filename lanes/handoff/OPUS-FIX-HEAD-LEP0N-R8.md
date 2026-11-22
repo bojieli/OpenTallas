@@ -26,6 +26,15 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 01:3x
+- r18b tree (9a9a2c0193b3) kits e8/w8 FAILED kit_rtl: tree tools (main 385f61b) only know native_stage_groups v1; split plan is v2.
+  R7's F tree = r17a + whole tools/ from L/src. Fix: tree s81_head_r18c_split_s0 = r18b + L/src tools overlay (408 files,
+  manifest 45c1f2f8e091; tmp/mk_r18c.sh; replicated epyc9+epyc7; epyc10 replicate returns empty status twice, not needed).
+- LIVE kits on r18c (epyc9): E runitem_e9.log pid 3382620 spec s81_head_hd_lep0N_1122011820; W runitem_w9.log pid 3387419 spec
+  s81_head_hd_lep0N_w_1122011828. Launcher tmp/launch_r18c.sh (private-spec --tree N --plan N/.../prep/source_plan.json).
+- Old F-tree kits: E7 (place since 23:50) keep until e9 passes place; W7 CTS post-hook setup -1465 (coll_i0 fault -> up_coll_o1,
+  845 ps unrelayed wire; r18 has the status relays) -> kept only to GRT as face probe, then cancel.
+
 ## UPDATE 11-22 00:4x
 - ev/e5 = e1 + bandfix + START exports per piece (start_split.py + head_reset_exports fix, check bad 0) + sideband rows (W: writer/reader
   start dropped, fstart/origin consumers filtered = relay piece) + uncut band_fill set aside: bind/cohort/LATCHECK 334/334, landing_band PASS,
