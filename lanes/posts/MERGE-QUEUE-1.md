@@ -53,3 +53,4 @@
 - 2026-11-22 01:54 PST COORD APPROVED: claude/clean-aggr-r3-sealed-return-1122 @33dd00af4288d830b569562e0b635c85e878f790; canonical exact E8 GREEN 13/13 on e8a66236b21. Protect the local sole final ODB after sealed return.
 - 2026-11-22 01:57 PST COORD APPROVED: claude/hold-sdc-ports-1122 @7bdf02fa56ae551c95d16fdad86cc39b1e55ff7a; exact E9 canonical GREEN 5 files, focused 28, corrected plain bus forms and conservative exact QC result retained.
 - 2026-11-22 01:57 PST COORD APPROVED: claude/s81-serdes-relay-only-cts-1122 @bb0f327c2cb695d8c17912b51cd52f42c2be1c87; exact E8 canonical GREEN 26 files, one independently reproduced main fixture. Exact 258 RRL/zero collector rebind plus missing-required-collector mutant.
+- 2026-11-22 01:59 PST COORD APPROVED: claude/ot-build-hub-remap-base-1122 @f376e606cde6ab9a6bd3b84764153f3f33ce876f; exact E9 canonical GREEN 3/3. Forked plans use the adopted remap base and changed base content invalidates PRE before bind.
