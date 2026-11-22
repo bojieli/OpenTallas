@@ -12,3 +12,4 @@
 - 2026-11-21 18:50 PST DIED [FLOW-OPS-1300] ot-push-main otpush-loved-redfish-1414058 on loved-redfish: rc=4 after 31 s, ended 02:50:19, log /srv/opentallas-scratch2/claude/FLOW-OPS-1300/tmp/push7.log, cmd: ot-push-main 
 - 2026-11-21 18:51 PST DIED [FLOW-OPS-1300] ot-push-main otpush-loved-redfish-1491215 on loved-redfish: rc=4 after 34 s, ended 02:51:56, log /srv/opentallas-scratch2/claude/FLOW-OPS-1300/tmp/push8.log, cmd: ot-push-main 
 - 2026-11-21 18:52 PST DIED [FLOW-OPS-1300] ot-push-main otpush-loved-redfish-1536094 on loved-redfish: rc=4 after 31 s, ended 02:52:53, log /srv/opentallas-scratch2/claude/FLOW-OPS-1300/tmp/push9.log, cmd: ot-push-main 
+- 2026-11-21 18:53 PST DIED [FLOW-OPS-1300] ot-push-main otpush-loved-redfish-1585484 on loved-redfish: rc=4 after 28 s, ended 02:53:57, log /srv/opentallas-scratch2/claude/FLOW-OPS-1300/tmp/push10.log, cmd: ot-push-main 
