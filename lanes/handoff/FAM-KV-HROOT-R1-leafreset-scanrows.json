@@ -1,0 +1,133 @@
+{
+ "type": "kv3_hroot",
+ "limit_um": 405.0,
+ "rows": [
+  {
+   "conn": "group:u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch.u_dsel/y->u_bound.u_bin_i_fch_pc_Q_N",
+   "from_um": [
+    863.89,
+    23.35
+   ],
+   "to_um": [
+    1733.13,
+    230.18
+   ],
+   "regs_um": [
+    [
+     1222.58,
+     23.35
+    ],
+    [
+     1581.26,
+     23.35
+    ]
+   ],
+   "bits": 1,
+   "leg_um": 1076,
+   "max_um": 1076,
+   "stations": 2,
+   "hop_um": 359,
+   "plan_row": "none"
+  },
+  {
+   "conn": "group:u_bound.u_cland_i_fch_pc_Q_N_q/u_ring.dch.u_dsel/y->u_bound.u_bin_i_fch_pc_Q_N_q/eq",
+   "from_um": [
+    866.59,
+    23.35
+   ],
+   "to_um": [
+    1660.39,
+    297.94
+   ],
+   "regs_um": [
+    [
+     1222.72,
+     23.35
+    ],
+    [
+     1578.85,
+     23.35
+    ]
+   ],
+   "bits": 1,
+   "leg_um": 1068,
+   "max_um": 1068,
+   "stations": 2,
+   "hop_um": 356,
+   "plan_row": "none"
+  },
+  {
+   "conn": "group:u_bound.u_cland_i_kvpc_Q_N_pc__fo/u_ring.dch.u_dsel/y->u_bound.u_bin_i_kvpc_Q_N_pc__fo/eq",
+   "from_um": [
+    968.92,
+    19.84
+   ],
+   "to_um": [
+    1663.15,
+    297.94
+   ],
+   "regs_um": [
+    [
+     1293.03,
+     19.84
+    ],
+    [
+     1617.14,
+     19.84
+    ]
+   ],
+   "bits": 1,
+   "leg_um": 972,
+   "max_um": 972,
+   "stations": 2,
+   "hop_um": 324,
+   "plan_row": "none"
+  },
+  {
+   "conn": "group:u_bound.u_cland_i_slg_Q_N_o_ctl/u_ring.dch.u_dsel/y->u_bound.u_bin_i_slg_Q_N_o_ctl/eq",
+   "from_um": [
+    1244.92,
+    49.27
+   ],
+   "to_um": [
+    1649.32,
+    302.53
+   ],
+   "regs_um": [
+    [
+     1573.75,
+     49.27
+    ]
+   ],
+   "bits": 1,
+   "leg_um": 658,
+   "max_um": 658,
+   "stations": 1,
+   "hop_um": 329,
+   "plan_row": "none"
+  },
+  {
+   "conn": "group:u_bound.u_cland_i_seq__g_fan_N__u_fan_kc/u_ring.dch.u_dsel/y->u_bound.u_bin_i_seq__g_fan_N__u_fan_kc/eq",
+   "from_um": [
+    1857.06,
+    806.89
+   ],
+   "to_um": [
+    1733.51,
+    319.0
+   ],
+   "regs_um": [
+    [
+     1733.51,
+     624.73
+    ]
+   ],
+   "bits": 1,
+   "leg_um": 611,
+   "max_um": 611,
+   "stations": 1,
+   "hop_um": 306,
+   "plan_row": "none"
+  }
+ ]
+}
