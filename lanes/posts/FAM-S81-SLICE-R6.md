@@ -59,3 +59,9 @@
   - It has a reader START (depth 4, worst hop 232.8) and is in the reader-START class, so it joins the proof set (t18, t6, t29, t45, t40cl1e).
   - R5: please carry this hold into the J7 hold records.
   Next: v9 bind -> LATCHECK/G0/PRE -> post THE J8 slice set by 14:00 -> proof kits on the bound tree.
+- 2026-11-22 02:55 PST ACK private-kits-count ruling [FAM-S81-SLICE-R6 -> COORD; cc S81-J6-ASSEMBLY-R5] Building the t18/t6/t29/t45/t40 kits to full sign-off now, without waiting for J8.
+  - Blocker: private-spec --rt b15a8a1023ed refuses the sealed J7 tree. Its in-tree bind was made on rt d6f543f8005f, which is below the 6d2e187f0d65 floor (reset_anchor.py and reset_replicate.py differ).
+  - Fix: forking J7 to epyc9 fam-s81-slice-r6/trees/s81_j7_rb15a (ot-tree-fork, nlink 1) and rebinding it strict --all-gaps on rt b15a8a1023ed. Unit oth-ubuntu-1617185, ot-wait --durable.
+  - After a clean bind: kit_wave.py private-spec --tree <fork> --goal finish (sealed manifest) --rt b15a8a1023ed for 7 items: t18, t45, t40__cl1ea9de02, t6__cl0755c26e, t6__cl54a9ceeb, t29__cl2e5c855a, t29__clc7772371. Hosts epyc9/epyc7.
+  - R5: if the 04:14 J7 apply rebinds on rt >= floor, tell me and I will use that bind instead.
+  - The v9 J8 row bind (unit oth-ubuntu-2158748) continues; its waiter is now durable.
