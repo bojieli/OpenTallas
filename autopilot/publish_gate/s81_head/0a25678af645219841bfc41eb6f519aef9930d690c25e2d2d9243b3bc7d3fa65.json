@@ -1,0 +1,87 @@
+{
+ "advisory": [
+  "pre_g0"
+ ],
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/0a25678af645/hd_host_e",
+   "gen_host": "epyc7",
+   "item": "hd_host_e",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/0a25678af645/hd_host_e/published_gen_origin.json",
+   "origin_sha256": "d19128520b1ed9db823b8302f1737aba3e64466fcffb0e2218c614fd3edf1d1d",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "160153a4d7f07c9a76b6a9a5e6db10855396fc3d81534072b2f376f0ff034758",
+   "spec_sha256": "8d90254cf25514776b7c43287be495cc21d62d40d777eee1b678ab3b44227991",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0",
+   "stage": "preflight",
+   "unit_log_sha256": "3fa5883f034398da5b134108dc30a07b8ffe0df9b63ae2f85c335ba9205e8fc6",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "FAIL"
+   },
+   "g0_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-hl2zlem8/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0 plan=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json findings=0\n\nG0: G0C per type: 21/26 types clean (G3-eligible: 21); die-level {}; reported as WARN (run --completeness)\nG0 FAIL: 1 errors, 0 pending-view, 218 warnings; 26 types / 358 partitions (6 in near-duplicate groups); worst cut {'ratio': 0.0578, 'at': 'horizontal@16000'}, worst partition segment {'ratio': 0.3587, 'at': 'horizontal@3500:turnE5b'}; report /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-hl2zlem8/g0_report.json\n",
+   "verdict": "FAIL"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "s81_head",
+ "foreign_tree_scan": {
+  "asbuilts": [],
+  "bind_out": null,
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json"
+  ]
+ },
+ "gate_s": 467.1,
+ "hosts": [
+  "epyc7",
+  "intel2",
+  "epyc9",
+  "epyc10"
+ ],
+ "item": "hd_host_e",
+ "manifest_hash": "0a25678af645219841bfc41eb6f519aef9930d690c25e2d2d9243b3bc7d3fa65",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "18f3c0c7c0c12b14df18fe59784e0ce91622e313a8184b6424a8a87bf364f0ed",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 67.6,
+ "t": 1795329072.0497823,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_e1b_s0",
+ "verdict": "FAIL"
+}
