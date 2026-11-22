@@ -40533,7 +40533,8 @@
    "auto_visual_review_skip": [
     "*"
    ],
-   "gen_host_min_free_gb": {}
+   "gen_host_min_free_gb": {},
+   "auto_bind": true
   },
   "qwen_compute": {
    "enabled": true,
