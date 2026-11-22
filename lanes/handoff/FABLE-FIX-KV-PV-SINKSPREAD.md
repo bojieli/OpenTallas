@@ -61,6 +61,26 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 08:55 PST (newest; read this first)
+*** v6n D29 FORM PROVEN AT PLAN + BIND LEVEL; SEALED KIT K1 RUNNING ***
+T1 = epyc8 <lane>/tree (ot-tree-fork of the D28 work tree at dry5, tools rt 6390b7bfa650 + type_split cap patch = main d4f31de6bc6e):
+- plan_of_record/plan_c.json 3cce60482b76, r8_ev 4ab587194002, pv_col_pads 6a05b8e990a5, pv_v_pads 7ab283f710d0, asbuilt 3ae20d52501c.
+- gate w/gates/v6n6u1_g0: bind_fast precheck PASS, PLAN-GATE-PRE PASS findings=0 (base dry5 in its own root), G0 PASS 0 errors.
+- gate w/gates/v6n6u1_bind: strict bind --all-gaps RC 0, BIND_ERRORS 0 (161 partitions, 57 types, 2558 crossings, 432,005 bits);
+  LATCHECK rc 0 (only INTERNAL_PIPE_UNACKED warn); R8_RECHECK 91 / R8CHECK 32 unequal groups, 7 types = the D28 baseline exactly.
+- DO NOT TOUCH tree/ (plan_of_record, bind_of_record, tools) while K1 runs: it is the kit's source of record.
+KIT K1: spec intel2 ~/coord/autopilot/private_specs/FABLE-FIX-KV-PV-SINKSPREAD/qwen_kvsys_kv3_pv_v6n_1122085105/spec.json
+  (private-spec qwen_kvsys kv3_pv_v6n --tree <tree> --plan <tree plan> --host epyc8 --goal finish; src_manifest seal; env = wave + 1;
+   rt 0890cc9405b7 = the bind's generators, has OT_FF_EW_INSET_UM and both spec keys).
+  run-item: systemd user unit runitem-kv3_pv_v6n.service on intel2, log ~/tmp/ffkvpv/runitem_v6n.log (KW_STAGE lines), result.json next to the spec.
+  kit dir: epyc8 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D27d3/private/FABLE-FIX-KV-PV-SINKSPREAD/kv3_pv_v6n_1122085056/gen/kv3_pv_v6n
+  wait: ot-wait --durable --kit <kit dir> --host epyc8 --stage place|cts|grt|route|finish --timeout 3000 (re-run on exit 75).
+  AT PLACE: read the tap loads (OT_CLOCK_TAPS lines in the place log, AUTO-GEOM tap_stuck), check config.mk OT_FF_EW_INSET_UM = E:25.92,
+  dump registers of 3_place.odb (epyc7 regs/regs.tcl form) -> taps.py bins -> tap_split = the REAL tap rows of the v6n w piece.
+  Cancel only if setup < -300, flat repair or a functional bug.
+T2 = epyc8 <lane>/tree2: chain_full2.sh m5 (14 types, plan 04e1457da0fe) gate + first bind + loop_pv (pad regen) + final G0
+  running since 08:38 (intel2 ~/tmp/ffkvpv/chain_m5.log; gates m5, m5s<i>, m5_final_g0).
+
 ## STATE 11-22 08:40 PST (newest; read this first)
 T1 (tree, v6n only), plan 3cce60482b76 (= v6n6 fe2e828014f3 + 1 station on the two forwarded response-data rows, L51 / L219 back to 6):
 - R8: w/rebind_pv.sh v6n6t1 v6n6u1 (PV_HEAD_KEPT=1 REBIND_NO_G0=1) = r8_refresh + pvx_regen.py (--min-pad 10 --e-min-pad 10
