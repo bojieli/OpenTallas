@@ -4,7 +4,7 @@
  "to": "QC-PLAN-R12",
  "written": "2026-11-21 20:1x PST",
  "type": "coll_core",
- "status": "DELIVERED as a delta keyed by type/row. Private strict bind + LATCHECK receipt PENDING (re-bind epyc7 oth-ubuntu-3591748-1795320119, fable-fix-qc-coll/pk2; this file is updated when it ends). No routed proof yet (private kit follows the bind).",
+ "status": "DELIVERED as a delta keyed by type/row. Private strict bind 0 errors + LATCHECK 1921/1921 PASS (V2 base + package, 11-21 20:31 PST). No routed proof yet (private kit launched after the bind).",
  "coord_ruling": "all 13 lane-latency changes ride V3 (+cycles pre-approved), gate strict 0 + LATCHECK; R8 landing-table refresh for these lanes approved (standard tool only).",
  "base": {
   "composed_on": "V3p5r b1281d55e514 (qc-plan-r12/v3p4/plan_v3p5r.json)",
@@ -118,7 +118,7 @@
  "kit_env": "every coll_core kit: OT_KEEP_WIRES += ot_reset_sync:reset_pipe qfd_static_ch546:r_reset_meta (merged reset flop with 719 loads otherwise; pkit8 proof).",
  "private_proof": {
   "bind_1": "epyc7 oth-ubuntu-3314323-1795319375 rc 3: 30 R8_STALE only; plan, or_groups row, sites=float row and 49,748 seat keys loaded clean",
-  "bind_2": "epyc7 oth-ubuntu-3591748-1795320119 (pk2, V2 base + package, pinned R8 refresh, private launch copy): RUNNING",
+  "bind_2": "epyc7 oth-ubuntu-3591748-1795320119 rc 0 (fable-fix-qc-coll/pk2): strict bind errors 0, unbound 0, crossings 1921 (790,393 bits), R8 0 after the pinned r8_refresh (33 members, table pk2/r8_final.json sha cb7f8940cd90, extras rebound 0); LANE_ASBUILT lanes 1921 passed 1921 failed 0 verdict PASS (pk2/latcheck.json); kit-rtl coll_core written (pk2/rebind_rtl).",
   "kit": "private-spec coll_core to GRT TT and sign-off follows the bind"
  },
  "residual_not_in_package": [
