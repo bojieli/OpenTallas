@@ -49,3 +49,4 @@
 - 2026-11-21 17:00 PST 16:59 checkpoint: old exact decoder LEC active, corrected front3 TT+44.80/internal FF+17.79 but shell AM hold −762.48, private t14 placement fixes and t16 W7 boot-only proof preserved.
 - 2026-11-21 17:07 PST t16 exact W513 W7 K-adjusted ring test PASS both receivers over four resets, 158 equal words and 158 wrong-K catches. t14 combined exact private DPL reduces all over405 captures to 501, with unrelated 754.22um max.
 - 2026-11-21 17:07 PST front3 private 563-cell localized input hold pad passes DPL. Actual new pin-band density viewed; independent corners following to determine shared-reference range. Route held.
+- 2026-11-21 17:26 PST front3 exact padded FF replay +7.30 at 899.85ps with TT+44.80; actual retained parent recovered-clock measurement active, true shell interface open. t14 private placed count 3417→131; t12 exact +1 wrapper epoch reset geometry and syntax proved.
