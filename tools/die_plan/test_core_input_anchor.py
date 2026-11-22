@@ -104,3 +104,11 @@ def test_forward_cycle_refused():
 
 def test_forward_depth_bounded():
     assert run(FORWARD + 'puts x[nka_macro_path pc_q 2]x') == 'xx'
+
+def test_nk_direct_anchor_accepts_only_a_unique_pipe_to_the_core_input():
+    no_bterms = """
+foreach net {pc_q inv_q latch_d} { dict set ::graph $net getBTerms {} }
+"""
+    assert run(FORWARD + no_bterms + "puts [nka_pipe_chain latch_d 6 1]") == "buf inv pc"
+    fanout = "dict set ::graph pc_q getITerms {pc_out_it inv_in_it hard_in}; "
+    assert run(FORWARD + no_bterms + fanout + "puts x[nka_pipe_chain latch_d 6 1]x") == "xx"

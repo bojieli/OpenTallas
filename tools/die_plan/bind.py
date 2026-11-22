@@ -771,6 +771,14 @@ def ft_hop_latched(plan, tn, slot, k):
     return schema.ft_hop_latched(plan, tn, slot, k)
 
 
+def core_input_latch_except_entries(plan, tn, module):
+    """Add the exact type's latch exceptions to the existing module-wide entries."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    common = (cfg.get("latch_except") or {}).get(module) or ()
+    type_map = (cfg.get("latch_except_by_type") or {}).get(tn) or {}
+    return set(common) | set(type_map.get(module) or ())
+
+
 def core_input_latch(plan, tn, module, port):
     """QC cb setup class 11-17 (FABLE-CLOSURE-STRATEGY 03:20, cbn_q01 u_lk_nk_u_t_0_3_tap -> u_t03/tap -108 .. -87 after r534):
     True when the clock.core_input_lockup port keeps its negative-level lockup latch.  latch_except lists ports that keep
@@ -781,8 +789,7 @@ def core_input_latch(plan, tn, module, port):
       {"modules": {...}, "types": [...], "pipe": 1, "latch_except": {"<module>": ["<port>", ...]}}"""
     if port not in core_input_lockup(plan, tn, module):
         return False
-    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
-    return port not in set((cfg.get("latch_except") or {}).get(module) or ())
+    return port not in core_input_latch_except_entries(plan, tn, module)
 
 
 def core_input_latch_except_bits(plan, tn, module, port):
@@ -792,9 +799,8 @@ def core_input_latch_except_bits(plan, tn, module, port):
     latch, port-wide the row failed hold on 1,744 of 1,776 tap pins.  Returns a set of bit indices (empty = none)."""
     if port not in core_input_lockup(plan, tn, module):
         return set()
-    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
     out = set()
-    for ent in (cfg.get("latch_except") or {}).get(module) or ():
+    for ent in core_input_latch_except_entries(plan, tn, module):
         m = re.fullmatch(re.escape(port) + r"\[(\d+)\]", str(ent))
         if m:
             out.add(int(m.group(1)))
@@ -818,14 +824,19 @@ def core_input_uses_pad(plan):
     return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
 
 
-def lockup_key_errors(plan, seen):
+def lockup_key_errors(plan, seen, typed_seen=()):
     """LATCH_EXCEPT_MODULE (FABLE-PLAN-QC-N 11-17): every module named in clock.core_input_lockup.latch_except / latch_except_hb4 must be a
     BOUND lockup module (the leaf module the emitter really saw, e.g. qfd_tile_nk_rp2_romleaf_rr, not the plan hard-core name
     qfd_tile_nk_a0c).  A key that matches nothing silently did nothing in the cbn_q01 pilot: 68/68 tiles kept the 508 latch, 0 pads."""
     cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
     keys = sorted(set(cfg.get("latch_except") or {}) | set(cfg.get("latch_except_hb4") or {}))
-    return [f"LATCH_EXCEPT_MODULE {m}: matches no bound lockup module (bound lockup modules: {sorted(seen)}); "
-            "key the row on the bound leaf module" for m in keys if m not in seen]
+    errors = [f"LATCH_EXCEPT_MODULE {m}: matches no bound lockup module (bound lockup modules: {sorted(seen)}); "
+              "key the row on the bound leaf module" for m in keys if m not in seen]
+    for tn, modules in sorted((cfg.get("latch_except_by_type") or {}).items()):
+        for module in sorted(modules):
+            if (tn, module) not in typed_seen:
+                errors.append(f"LATCH_EXCEPT_MODULE {tn}/{module}: matches no bound lockup module in this type")
+    return errors
 
 
 def rebase_lib_paths(paths, base):
@@ -5060,6 +5071,7 @@ class Binder:
                         e = emit_lp(e, bool)
                     if pn in core_input_lockup(self.plan, tn, c.module):
                         self.__dict__.setdefault("lockup_seen", set()).add(c.module)
+                        self.__dict__.setdefault("typed_lockup_seen", set()).add((tn, c.module))
                         has_latch = core_input_latch(self.plan, tn, c.module, pn)
                         xbits = {i_ for i_ in core_input_latch_except_bits(self.plan, tn, c.module, pn) if i_ < len(bits)} if has_latch else set()
                         if xbits:
@@ -5808,7 +5820,8 @@ def cmd_bind(a):
                                   for p, v in sorted(B._reg_hard.items())}
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
     srcs["lib"] = rebase_lib_paths(srcs.get("lib", []), B.base)
-    B.errors.extend(lockup_key_errors(B.plan, getattr(B, "lockup_seen", set())))
+    B.errors.extend(lockup_key_errors(B.plan, getattr(B, "lockup_seen", set()),
+                                      getattr(B, "typed_lockup_seen", set())))
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     _fresh_write_text(out / "bind.f", "\n".join(fl) + "\n")
     # HCPARAM-ALL 11-15: every hard core, built parameters vs the parameters the bound RTL really instantiates (nested + defaults)

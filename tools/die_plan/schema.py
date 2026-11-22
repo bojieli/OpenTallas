@@ -1574,6 +1574,11 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                    # (plan_gate_pre SCHEMA-UNKNOWN-KEY), so no plan row could use them.
                    "latch_except": {"type": "object", "additionalProperties": {
                        "type": "array", "uniqueItems": True, "items": _name}},
+                   "latch_except_by_type": {"type": "object", "additionalProperties": {
+                       "type": "object", "propertyNames": {"pattern": r"^[A-Za-z_][A-Za-z0-9_]*$"},
+                       "additionalProperties": {
+                           "type": "array", "uniqueItems": True, "items": {
+                               "type": "string", "pattern": r"^[A-Za-z_][A-Za-z0-9_]*(?:\[[0-9]+\])?$"}}}},
                    "latch_except_hb4": {"type": "object", "additionalProperties": {
                        "type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8}}},
                    "note": {"type": "string"}}}

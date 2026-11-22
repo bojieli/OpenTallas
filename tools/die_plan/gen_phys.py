@@ -1452,6 +1452,17 @@ def core_link_pipe_place(raw, tn):
     return tn in set(cfg.get("types") or [])
 
 
+def core_input_direct_anchor(raw, tn):
+    """Pass the scoped exceptions to the pre-GPL anchor for surviving NK pipe registers."""
+    clock = (raw or {}).get("clock") or {}
+    cfg = clock.get("core_input_lockup") or {}
+    modules = (cfg.get("latch_except_by_type") or {}).get(tn) or {}
+    if not modules:
+        return ""
+    rows = " ".join(f"{module} {{{' '.join(ports)}}}" for module, ports in sorted(modules.items()))
+    return f"set nka_direct {{{rows}}}\n"
+
+
 def core_input_place(raw, tn):
     """QC-NK-HOLD 11-11 A+P placement hooks (OWNER 07:39 pipeline cycle, COORD 07:5x APPROVED): True when type tn gets
     declared pipe registers before its core-input lockup latches (bind.core_input_pipe > 0 on any listed module).
@@ -8012,6 +8023,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         with (kd / "latch_restore_post_resize.tcl").open("a") as f_:
             f_.write("source /work/core_input_q_reseat.tcl\n")
         with (kd / "face_flops.tcl").open("a") as f_:
+            f_.write(core_input_direct_anchor(P.raw, tn))
             f_.write(CORE_INPUT_PLACE_ANCHOR)
         # the chain spread runs at PRE_RESIZE (after GPL, before repair_design buffers the new hops; pilot8 at
         # PRE_DETAIL_PLACE left 485 ps BUFx3 stages): appended to the kit's PRE_RESIZE hook (the PLACE-NOCONVERGE gate
