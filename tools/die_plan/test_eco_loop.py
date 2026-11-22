@@ -1371,6 +1371,17 @@ def _residual_env(monkeypatch, n_ends=1, worst=None, plan=True):
     return sel
 
 
+def test_second_hold_iteration_prices_the_route_it_seeds(tmp_path, monkeypatch, three_iter):
+    sel = _residual_env(monkeypatch)
+    k = kit(tmp_path, mm=False)
+    b = base_rec(k, rec(5, -15))
+    r = E.run_loop(k, b, run=Fake([rec(5, -6), rec(5, 3)]), mem=8, cpus=2, **three_iter)
+    assert r["verdict"] == "PASS" and len(r["iterations"]) == 2
+    assert not any(it.get("residual") for it in r["iterations"])
+    assert sel == [(str(b), None), (r["iterations"][0]["signoff"], None)]
+    assert E._BASE_SIGNOFF.get() is None
+
+
 def test_residual_pass_signs_the_leftover_end(tmp_path, monkeypatch):
     sel = _residual_env(monkeypatch)
     k = kit(tmp_path, mm=False)
