@@ -634,7 +634,6 @@
    "gen_hosts": [
     "epyc8",
     "epyc7",
-    "intel2",
     "intel1",
     "epyc2",
     "epyc9",
@@ -5680,11 +5679,13 @@
     "epyc7"
    ],
    "prev_gen_hosts_derive": [
+    "epyc8",
     "epyc7",
-    "epyc2",
+    "intel2",
     "intel1",
-    "epyc10",
-    "epyc9"
+    "epyc2",
+    "epyc9",
+    "epyc10"
    ],
    "tools_refresh": true,
    "event_lineage": [
