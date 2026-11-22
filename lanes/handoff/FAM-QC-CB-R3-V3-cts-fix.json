@@ -1,6 +1,6 @@
 {
  "lane": "FAM-QC-CB-R3",
- "made": "2026-11-21 20:1x PST",
+ "made": "2026-11-21 20:5x PST (rev 2: row A scoped per type)",
  "to": "QC-PLAN-R12 (03:00 compose)",
  "base": "7f9f8260349f",
  "event": "s29q103S4Q9N46R6V2",
@@ -15,7 +15,73 @@
   "row_form": "existing plan keys only: clock.core_input_lockup.latch_except (bit level, \"n_b[<bit>]\"/\"n_a[<bit>]\") for the bits whose latch tap insertion > 114 ps; the pipe register u_pc_nk_* stays (0 cycles, latch is cycle-neutral) and carries the path with ~+313 ps setup; hold via clock.core_input_lockup.latch_except_hb4 {\"<module>\": {\"n_b[<bit>]\": N}} (HB4xp67 ~37 ps FF each, N=3 as proven for tap[0]).",
   "alternative_form": "retap the latch group onto the early taps (insertion <=110 ps, e.g. clk_t10 = 94 ps) - needs a tap-ride override in clock_taps.tcl (latches ride the D-driver's tap, QC-MCLK lever 2); not available as a plan row today.",
   "bit_list": "TO BE CUT from the first kit's TT endpoint list (setup < -42 on u_lk_nk_*/n_a|n_b pins); do NOT apply port-wide: cbn_q01 tap port-wide latch_except failed hold on 1,744 of 1,776 pins.",
-  "proof_needed": "private kit with the rows: TT setup >= -42 on these endpoints and FF hold >= 0 on the hb4-padded bits"
+  "proof_needed": "private kit with the rows: TT setup >= -42 on these endpoints and FF hold >= 0 on the hb4-padded bits",
+  "scope_REV2": "PER TYPE ONLY (COORD): plan keys clock.core_input_lockup.latch_except_by_type / latch_except_hb4_by_type (bind.py core_input_latch_except_entries / core_input_hold_pads honour them; exact-type override of the module-wide entries). NO module-wide latch_except entry on qfd_tile_nk_a0c is added.",
+  "plan_fragment": {
+   "clock.core_input_lockup.latch_except_by_type": {
+    "cbf_q00__cl1b5a6458": {
+     "qfd_tile_nk_a0c": [
+      "n_b[347]",
+      "n_b[372]",
+      "n_b[399]",
+      "n_b[445]",
+      "n_b[475]",
+      "n_b[500]",
+      "n_a[471]"
+     ]
+    },
+    "cbf_q01_s2": {
+     "qfd_tile_nk_a0c": [
+      "n_b[347]",
+      "n_b[354]",
+      "n_b[372]",
+      "n_b[399]",
+      "n_a[471]"
+     ]
+    }
+   },
+   "clock.core_input_lockup.latch_except_hb4_by_type": {
+    "cbf_q00__cl1b5a6458": {
+     "qfd_tile_nk_a0c": {
+      "n_b[347]": 3,
+      "n_b[372]": 3,
+      "n_b[399]": 3,
+      "n_b[445]": 3,
+      "n_b[475]": 3,
+      "n_b[500]": 3,
+      "n_a[471]": 3
+     }
+    },
+    "cbf_q01_s2": {
+     "qfd_tile_nk_a0c": {
+      "n_b[347]": 3,
+      "n_b[354]": 3,
+      "n_b[372]": 3,
+      "n_b[399]": 3,
+      "n_a[471]": 3
+     }
+    }
+   }
+  },
+  "bit_list_cut_from": "TT endpoint STA of each kit's 4_cts.odb (epyc2 fam-qc-cb-r3/out/tt_ends.tsv, tt_ends_q01s2.tsv), latch->core endpoints < -42: cbf_q00 20 (n_b 347/372/399/445/475/500, n_a 471; rst_n t00/t11 -50/-55 excluded: no pipe register), cbf_q01_s2 24 (n_b 347/354/372/399, n_a 471; rst_n excluded).",
+  "types_using_qfd_tile_nk_a0c_NOT_touched": [
+   "cbf_q01",
+   "cbf_q11",
+   "cbf_q00_s2",
+   "cbx_q10__cl89936551",
+   "cbn_q00__cld7bf7197",
+   "cbn_q00__cl622f65d2",
+   "cbn_q00__cldbcda913",
+   "cbn_q01__cldd6ea846",
+   "cbn_q01__clab6e67f2",
+   "cbn_q01__cld9ff4c40",
+   "cbn_q11__cl5cc92dfe",
+   "cbn_q11__cl49ae4555",
+   "cbf_q00__cl870de686",
+   "cbx_q10__cl89936551_h",
+   "cbx_q10__cl94a12200_h"
+  ],
+  "note_private_proof": "the running private cbf_q00 proof (epyc7 fam-qc-cb-r3/bind1) used the module-wide form; for cbf_q00 itself the emitted RTL is identical to the by-type form (same bits), so its CTS read stands for row A as scoped. Other 15 types see no row-A change."
  },
  "B_serdes_tx_ring_cbf_q01_s2": {
   "path": "u_cland_serdes_tx_tx_flit_i/u_ring.dch[k].sd_c[*] (fclk_in_serdes_tx_tx_flit_i falling edge, edge clock at (340.8, 2.66)) -> u_ring.dch[k].u_dsel/y[*] (clk rising): -205.23 worst, 62 endpoints stuck at -199 after the kit's own TT setup repair (tt_setup_repair.log, 170+ iterations, no gain). A half-cycle path through a slow INVx4 + BUFx12f wire at ring depth 1.",
