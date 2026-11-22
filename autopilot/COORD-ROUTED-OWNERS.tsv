@@ -420,3 +420,5 @@ s81	dsdv_slice_lepw_mus_LP__*	FAM-S81-DSDV-R1	COORD 11-21 23:xx: family owner of
 qwen_compute	cbx_q10__*	FAM-QC-CB-R4	COORD 11-21 23:xx (OWNERS-SWEEP; was dead GEOM-UNHOLD-2200)
 s81	s81sl_kv_leaf__*	OPUS-FIX-S81-LEAF-R10	COORD 11-21 23:5x OWNERS-SWEEP: kv_leaf t3/t4 (plan c leaf re-grid, J8 rows) + t2 split (J9); successor of FABLE-FIX-S81-LEAF-R9; exact t1/t5 rows (FAM-S81-MISC-R4) above win
 s81	ot_s81sl_kv_leaf__*	OPUS-FIX-S81-LEAF-R10	COORD 11-21 23:5x OWNERS-SWEEP: same prefix, ot_ name form
+s81	dsdv_slice_c3x_C__t1	FAM-S81-SLICE-R6	COORD 11-21 21:50 ownership sweep: from dead FAM-S81-SLICE-R5; private place proof on J6r1 running (epyc7), J8 xring rows in SLICE-R6 set
+s81	dsdv_slice_lepe_mu_C__t1	FAM-S81-SLICE-R6	COORD 11-21 21:50 ownership sweep: unowned/stale -> SLICE-R6; relaunch on J7 after 04:14 apply if signable there, else J8 rows
