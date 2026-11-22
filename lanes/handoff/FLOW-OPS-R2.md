@@ -20,3 +20,4 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R2/repo (sparse tool
 - Canary s81_head_cl after narrowing (30b1f11ad/ae9a5815f/52e6c7b5f): grt drv 0, TT 117.0 vs base 127.2 (-10.2, tol -10), signoff drv 39 vs 12; face_cover FAIL is older (before regression). TODO: diff for the remaining 10 ps.
 - ABSPATH strict from 2026-11-29 (ABSPATH_STRICT_FROM in plan_gate_pre.py).
 - Queue next: KIT_TOPOLOGY_BIND_STALE, LEC dec_j6c function matching, watchdog/io_guard/lever 9/items 8,11,12, push test triage, tools_lag false positive; publish_gate/ot_build do not pass --baseline-plan yet (LANDREMAP/ISTCYC need it).
+- 11-22 ~10 PST: ISTCYC + reprice on main fda4eaad0e (posted to the die plan lanes); DEADIN on main 16811af012 (posted to COLROM-R6, coord 7b4aaed3e1). The 4 COORD class fixes are done. Next: KIT_TOPOLOGY_BIND_STALE, then the canary 10 ps diff, LEC dec_j6c, watchdog/io_guard etc.
