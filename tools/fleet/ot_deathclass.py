@@ -13,7 +13,11 @@ classify(rc, cmd, log_tail, secs) -> (CLASS, cause).  Classes, first match wins:
   TOOL-TRACEBACK a Python/Tcl traceback or a tool Error line
   DESIGN-FAIL  a flow check reported a design failure (timing, route, bind, LEC, DRC, hold, structural)
   CHECKER-RC   the job ran to its end marker/verdict and exited nonzero (findings, not a crash)
-  UNCLASSIFIED nothing matched; the cause is the last log line
+  NOT-RUN      ot-run refused before running for a named reason that is not ssh (disk-ETA hold, isolation, ...) -- FABLE-FLOW-0230 D1: was SSH-DROP by rc 78
+  BIND-FAIL    a die/core bind stopped on an EMIT / compare error (EMIT ..., compare FAIL)
+  ROUTE-FAIL   the kit's own make flow stopped at a stage (FAIL_route / make: *** [...] Error N)
+  VERDICT-FAIL a checker wrote "verdict": "FAIL" (json) and exited nonzero
+  NO-PATTERN   nothing matched; the cause is the last non-ot-run log line (was UNCLASSIFIED; every DIED post carries class=)
 stdlib only; pure function (tests need no host)."""
 import os
 import re
@@ -68,6 +72,12 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("ADMIT", _last_line(t, r"NOT-RUN|exceeds physical RAM|memory admission") or "memory admission refused the request")
     if re.search(r"DRAIN(ING)?:|NOT-RUN no host qualifies \((?!.*resolve)[^)]*(scratch|disk|free)|scratch disk", t):
         return _c("RAIL-KILL", _last_line(t, r"DRAIN|NOT-RUN|scratch disk") or "host rail refused the job")
+    # FABLE-FLOW-0230 D1: an ot-run NOT-RUN / REFUSED with a reason that is not ssh is that reason, not SSH-DROP (3 disk-ETA holds were labelled SSH-DROP)
+    m = re.search(r"ot-run: (NOT[- ]RUN|REFUSED)\b[^\n]*", t)
+    if m and not re.search(r"resolve hostname|Connection (reset|closed|timed out|refused)|SSH probe|ssh", m.group(0), re.I):
+        return _c("NOT-RUN", re.sub(r"\s+", " ", m.group(0))[:110])
+    if re.search(r"^\s*(EMIT\b|EMIT_ERROR|BIND_RC=[1-9])|compare FAIL|mismatched\b", t, re.M):
+        return _c("BIND-FAIL", _last_line(t, r"EMIT|compare FAIL|mismatch|BIND_RC"))
     if rc in (78, 255, 141) or re.search(r"Could not resolve hostname|Connection (reset|closed|timed out|refused)|Broken pipe|SSH probe exit|client gone", t):
         return _c("SSH-DROP", _last_line(t, r"resolve hostname|Connection|Broken pipe|SSH probe|NOT-RUN|client gone") or "ssh/host unreachable (rc %s)" % rc)
     if rc == 137 or re.search(r"\bKilled\b|Out of memory|oom-kill|MemoryError|Cannot allocate memory", t):
@@ -82,6 +92,10 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("PUSH-CONFLICT", _last_line(t, r"conflict|train"))
     if rc in (64, 126, 127, 14, 10) or re.search(r"No such file or directory|command not found|not a kit-wave attempt|FAIL_PREFLOOR|kit_preflight|Permission denied|usage:", t):
         return _c("SETUP", _last_line(t, r"No such file|not found|not a kit-wave|PREFLOOR|preflight|Permission|usage:|refus") or "command could not start (rc %s)" % rc)
+    if re.search(r"(^|/)FAIL_route\b|make(\[\d+\])?: \*\*\* \[[^\]]*(route|grt|5_)[^\]]*\] Error \d+", t, re.M):
+        return _c("ROUTE-FAIL", _last_line(t, r"FAIL_route|\*\*\*|DPL-|GRT-|DRT-|ERROR"))
+    if re.search(r'"verdict"\s*:\s*"FAIL', t):
+        return _c("VERDICT-FAIL", _last_line(t, r"verdict|FAIL|reason"))
     if re.search(r"Traceback \(most recent call last\)|\[ERROR [A-Z]+-\d+\]|^Error:|\b\w+Error: ", t, re.M):
         return _c("TOOL-TRACEBACK", _last_line(t, r"\w+Error:|\[ERROR|^Error:|Exception"))
     if re.search(r"FAIL_\w+|G0 errors|BIND_RC=[1-9]|setup .*-\d|WNS|hold|overflow|DRC|LEC.*(fail|differ|not equivalent)|violat|hop_um|STRUCT|\bFAIL\b", t, re.I):
@@ -90,7 +104,7 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("CHECKER-RC", _last_line(t, r"_DONE|VERDICT|PASS") + " (finished, exit rc %s: findings or verdict)" % rc)
     if not t.strip() and rc in (1, 2) and secs <= 10:
         return _c("SETUP", "died after %s s with no log: the command failed at start (rc %s)" % (secs, rc))
-    return _c("UNCLASSIFIED", _last_line(t) or ("rc %s after %s s, no log" % (rc, secs)))
+    return _c("NO-PATTERN", _last_line(t) or ("rc %s after %s s, no log" % (rc, secs)))
 
 
 def label(rc, cmd="", log=None, secs=0):
@@ -99,4 +113,4 @@ def label(rc, cmd="", log=None, secs=0):
         cls, cause = classify(rc, cmd, read_tails(log), secs)
         return " | class=%s cause=%s" % (cls, cause)
     except Exception as e:      # a classifier bug must not lose the DIED post
-        return " | class=UNCLASSIFIED cause=classifier error %s" % type(e).__name__
+        return " | class=NO-PATTERN cause=classifier error %s" % type(e).__name__

@@ -154,7 +154,7 @@ def post_text(rec):
             import ot_deathclass      # FLOW-DEATHCLASS-R1: class + one-line cause on every DIED post
             tail = ot_deathclass.label(rec.get("rc"), rec.get("cmd", ""), rec.get("log"), secs)
         except Exception:
-            tail = " | class=UNCLASSIFIED cause=classifier unavailable"
+            tail = " | class=NO-PATTERN cause=classifier unavailable"
     return (f"{head} {what} {rec['unit'] or rec['name']} on {rec['host']}: rc={rec['rc']} after {secs} s, ended "
             f"{time.strftime('%H:%M:%S', time.localtime(rec['t_end']))}{env_tag(rec.get('cmd', ''))}, log {rec.get('log') or 'none'}, cmd: {rec['cmd'][:140]}{tail}")
 

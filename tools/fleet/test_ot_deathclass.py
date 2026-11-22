@@ -21,9 +21,9 @@ def test_classes():
     assert cls(11, "G0 errors 35 inherited 30 new 5") == "DESIGN-FAIL"
     assert cls(1, "ot-run: DRAIN: epyc8 DRAINING (75 of 9999 GB scratch free)") == "RAIL-KILL"
     assert dc.classify(1, "", "", 3)[0] == "SETUP"
-    assert dc.classify(1, "", "", 300)[0] == "UNCLASSIFIED"
+    assert dc.classify(1, "", "", 300)[0] == "NO-PATTERN"
     assert cls(1, "T2_PREP_DONE") == "CHECKER-RC"
-    assert cls(5, "all fine\nbye") == "UNCLASSIFIED"
+    assert cls(5, "all fine\nbye") == "NO-PATTERN"
 
 
 def test_cause_is_one_line_and_bounded():
@@ -38,8 +38,8 @@ def test_label_reads_log_and_survives_missing():
         assert dc.label(137, "", f.name).startswith(" | class=OOM cause=")
     finally:
         os.unlink(f.name)
-    assert dc.label(1, "", "/nonexistent/x.log", 300).startswith(" | class=UNCLASSIFIED")
-    assert dc.label(1, "", "none", 300).startswith(" | class=UNCLASSIFIED")
+    assert dc.label(1, "", "/nonexistent/x.log", 300).startswith(" | class=NO-PATTERN")
+    assert dc.label(1, "", "none", 300).startswith(" | class=NO-PATTERN")
 
 
 def test_post_text_died_has_class_done_does_not():
