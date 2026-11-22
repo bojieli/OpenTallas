@@ -38,3 +38,10 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
 - V4 candidate: pkg8/plan_v2.json (+XEPRE define, clock.tap_reset_split, xev_q[0..3] seats at slice xs_q medians, xe_q -> (519.48,1259.685), xe0_q key removed; rows pkg8/rows_v4cand.json).
   mktree_v4.sh (delta-apply tree_fork + RTL overlay -> tree_v4) + bind_pkg8.sh (rt 59d4d33e92c1, pk8) as one ot-run (client log intel2 opus-fix-qc-coll-r3-mktree_v4.client.log).
   Next: private-spec pspec_core4 from tree_v4 / pk8 (no --ab for split; plan key carries it), rt 59d4d33e92c1.
+
+## 2026-11-22 04:5x PST update
+- V4 candidate kit LAUNCHED 04:48: chain intel2 fable-fix-qc-coll-r2/core4_chain.sh (unit opus-qc-coll-r3-core4, log core4_chain.log), pspec_core4 -> epyc10 pkit_core4. tree_v4 (tree_fork + XEPRE RTL bac6bcfd79, own .src-manifest), plan pk8/bind_plan/zz_coll_core_pkg.json (tap_reset_split + xev_q/xe_q seats), rt 59d4d33e92c1, bind pk8/rebind strict 0 / LATCHECK 1921 PASS.
+- ftcprov waiter BUG (NUL cmdline grep) posted false PROVENANCE at 04:07; correction posted; fixed script re-armed as unit opus-qc-coll-r3-ftcprov. ftc2 run-item pid 2978227 still in finish (route DRC 0).
+- Split LEC pid 616074 epyc10 still running; lecpost pid 2762677 armed (CHAIN_DONE in opus-fix-qc-coll-r3-split_lec.chain.log).
+- v2 pkit_core1 + v3 pkit_core3b both in GRT. Control LEC early_lec_ctl2 not done.
+- Next: on V4 kit CTS read 4_cts_final.rpt (expect no xe0_q path, OT_TAP_RESET_SPLIT line, removal fixed); offer R13 V4 rows (XEPRE define + tap_reset_split + xev_q/xe_q seats) once LEC EQUIVALENT.
