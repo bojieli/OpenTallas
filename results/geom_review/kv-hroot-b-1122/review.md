@@ -1,0 +1,3 @@
+# KV hroot variant B placement review
+
+**FAIL.** Exact D27d3 variant B private kit `kv3_hroot_1122001927`, plan `458a4562142e`, E9. Viewed the [actual placement](placement.png). The sparse core is concentrated against the east/south pin strips. One partial face and 13 collapsed relays remain. The exact placed scan reports 139 over-limit register paths and a 1,756 µm maximum. Plain reset from `u_rrl_81` reaches sinks 687–960 µm away. GRT probe overflow is zero. The C reset-leaf re-seat is underway and still needs a new placement review. The already-admitted B CTS continuation is retained as engineering evidence.
