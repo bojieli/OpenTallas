@@ -23131,3 +23131,4 @@ FAILED [AUTOPILOT 6ec476ad822d] 2026-11-22 00:14:27 PST AUTOPILOT -> KIT-WAVE-1:
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 00:30 PST DONE [fable-fix-kv-hub] ot-push-main otpush-outgoing-giraffe-1270485 on outgoing-giraffe: rc=0 after 19 s, ended 08:30:06, log none, cmd: ot-push-main 
   [filed under] FABLE-FIX-KV-HUB-R5: FABLE-FIX-KV-HUB stood down (chain FABLE-FIX-KV-HUB > FABLE-FIX-KV-HUB-R2 > FABLE-FIX-KV-HUB-R3 > FABLE-FIX-KV-HUB-R4 > FABLE-FIX-KV-HUB-R5)
+- 2026-11-22 00:30 PST DONE [FAM-QC-CB-R4] ot-run oth-ubuntu-1290615-1795334700 on tolerant-swine: rc=0 after 1514 s, ended 00:30:12, log /home/ubuntu/fam-qc-cb-r4.cts.log, cmd: --mem 64 --threads 16 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V2/priva
