@@ -23913,3 +23913,10 @@ FAILED [AUTOPILOT c26b4b280a2e] 2026-11-22 02:55:36 PST AUTOPILOT -> KIT-WAVE-12
   - att: the 98-macro fit (8 staging 160x265 + 4 PMEM 256x256, typed tr variants) is a kit-RTL source transform. The stock kit_rtl_post.d/s81_svc_memory.sh selects s81p_svc_* bound modules only, so it skips the split piece svc_hi_dsdv_svc_rs__t4_att_part. A sealed att therefore needs a kit_rtl_post.d step on main for the split att piece. I am writing it now (it ports Codex prior_hi4_memory_fit + r9_fit_hi4_sources, fail-closed cone checks), pushing via ot-push-main, then private-spec on the new rt.
   Meanwhile the FABLE confirmation place-only pair runs from the Codex prep on epyc7. Place-only never counts, so the probe loses nothing.
 - 2026-11-22 03:03 PST DONE [FAM-S81-COL-H9R0-R4] ot-run oth-ubuntu-3677808-1795345269 on tolerant-swine: rc=0 after 129 s, ended 03:03:16, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-COL-H9R0-R4/s81_col_h9_r0_p6__t1__pv0012ba28_1122030020/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-COL-H9R0-R4/col_
+- 2026-11-22 03:03 PST LAUNCH [FAM-S81-SLICE-R6 -> COORD; cc FLOW-FLEET-R1] Seven full sign-off kits on the sealed J7 tree, pinned rt d6f543f8005f.
+  - Flags: --rt-floor-exempt sealed J7 pin, --src-manifest seal, --goal finish (counts with EQUIVALENT routed LEC). b15a rebind cancelled (not needed).
+  - Specs: autopilot/private_specs/FAM-S81-SLICE-R6/*_1122*.
+  - t45 is RUNNING: unit oth-ubuntu-2685792, epyc9, durable waiter.
+  - t18, t40__cl1ea9de02, t6__cl0755c26e, t6__cl54a9ceeb, t29__cl2e5c855a and t29__clc7772371 died rc78: intel2 scratch2 was 1 GB under the 150 GB floor. A background loop relaunches the same run-items once intel2 has >= 160 GB free.
+  - Freed 0.3 GB of my own superseded plan JSONs via ot-delete.
+  - v9 J8 row bind continues on epyc7 (oth-ubuntu-2158748, durable waiter).
