@@ -26,6 +26,17 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 02:3x COORD: adopt Codex r18e
+- Codex sealed s81_head_r18e_split_s0 (b4f489665c04) = r18b + full tools at main 6d2e187f0d65 (contains cf418b03ca7 reset_tree
+  site-rule cache fix); plan_gate_pre PASS; bind exact r18e/bind_6d2_exact. Tree only on epyc9. Dir epyc9 M/r18e (apply_r18e.sh).
+- r18d is SUPERSEDED (my e10/w10 run-items killed + units oth-ubuntu-968063/968394-1795343007 cancelled before place).
+- ADOPTED place-only dry kits on epyc9: E r18e/hd_lep0N_dry unit oth-ubuntu-733791-1795342482, W r18e/hd_lep0N_w_dry unit
+  oth-ubuntu-723795-1795342459 (run_kit.sh ... place 48 8). Codex also has r18e/hd_host_e_dry. After clean place -> signable
+  run-item kits E/W from r18e (launch pattern tmp/launch_r18d.sh with r18e).
+- hd_host_n FAIL-CLASS 7dfd9aa20e (stale reset_tree cache, rr_t11 x1434.72 vs rst_rl_11 x303.9): relaunched on r18e private kit
+  spec s81_head_hd_host_n_1122022627, runitem_hn1.log pid 1708292 (intel2), host epyc9.
+- host_w START sentinels (stage 255/rank 4/phase off): COORD ruling = sign-off proceeds; functional binding -> token lane strap row later.
+
 ## UPDATE 11-22 02:2x (after weekly limit resume)
 - r18c kits e9/w9 FAILED kit_rtl: missing physical/common_flow/stn_pin_keepout.tcl (R7 F tree also overlaid 6 common_flow files).
 - Tree s81_head_r18d_split_s0 (77e2dbd4209b) = r18c + L/src physical/common_flow (tmp/mk_r18d.sh); replicated epyc9+epyc7.
