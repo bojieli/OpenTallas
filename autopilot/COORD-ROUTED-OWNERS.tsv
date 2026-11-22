@@ -89,3 +89,5 @@ qwen_compute	sle_stm_v*	FAM-QC-SLWSLE-R1	COORD 11-22 OWNERS-ROUTE-FIX: sweep fla
 qwen_compute	tt_ctlm*	FAM-QC-SLWSLE-R1	COORD 11-22 OWNERS-ROUTE-FIX: sweep flagged DEAD-OWNER/STALE; routed to live family/fix lane
 qwen_compute	glue*	TAP-GRID-R5	COORD 11-22 OWNERS-ROUTE-FIX: sweep flagged DEAD-OWNER/STALE; routed to live family/fix lane
 qwen_kvsys	kv3_sys_c	FAM-KV-HUBC-SYSC-R2	COORD 11-22 01:3x orphan adopt: private-spec D27d3 kit qwen_kvsys_kv3_sys_c_1121215912 (CTS done, GRT running)
+qwen_compute	sle_fe_v1__cl1cbb7497	FAM-QC-FEFW-R3	COORD 11-22 orphan: SIGNED-UNVERSIONED (990fa4b2984d), no wave row; private-spec re-sign at flow tag
+qwen_compute	slw_fe_v2__clf110fab2	FAM-QC-FEFW-R3	COORD 11-22 orphan: R4A4 geom NEED-STATION arv_ei/arm_ei; V4 row FEFW-V3-4 + private kit
