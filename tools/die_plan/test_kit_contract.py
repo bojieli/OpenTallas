@@ -2,6 +2,7 @@
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -330,6 +331,35 @@ def test_partition_declared_landing_clock_keeps_all_geometry_checks(kit):
     t = (kit / 'io.tcl').read_text()
     (kit / 'io.tcl').write_text(t.replace('-pin_size {0.0320 0.7680}', '-pin_size {0.01 0.01}'))
     assert any('pin_size' in e for e in KC.clock_pin_geometry(kit)[0])
+
+
+def test_partition_shared_landing_input_reports_the_snapped_edge_center(kit, monkeypatch):
+    import gen_phys as GP
+
+    contract = _landing_clock(kit)
+    pin = contract["pins"][0]
+    name = pin["name"]
+    x, y = pin["xy_um"]
+    nominal = [x, y + 0.125]
+    pin["xy_um"] = nominal.copy()
+    edges = [{"port": name, "tap_um": nominal}]
+    plan = SimpleNamespace(types={"top": {"clock": {"landing_contract": contract, "edge_clocks": edges}}})
+    monkeypatch.setattr(GP, "_snap_tap", lambda *_: (x, y))
+    budget = kit / "budget.json"
+    doc = json.loads(budget.read_text())
+    doc["clock"]["edge_clocks"] = [{"name": name, "xy": [x, y]}]
+    budget.write_text(json.dumps(doc))
+    metadata = kit / "landing_contract.json"
+    metadata.write_text(json.dumps(contract))
+    assert any("conflicts with budget plan tap" in error for error in KC.clock_pin_geometry(kit)[0])
+    metadata.write_text(json.dumps(GP.landing_contract_metadata(plan, "top")))
+    assert pin["xy_um"] == nominal
+    assert not KC.clock_pin_geometry(kit)[0]
+
+    # Differing intentions must still surface as a contract conflict.
+    pin["xy_um"][1] += 1
+    metadata.write_text(json.dumps(GP.landing_contract_metadata(plan, "top")))
+    assert any("conflicts with budget plan tap" in error for error in KC.clock_pin_geometry(kit)[0])
 
 
 @pytest.mark.parametrize('mutate', ['missing', 'data', 'out', 'xy', 'layer'])
