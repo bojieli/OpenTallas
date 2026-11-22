@@ -61,6 +61,27 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 07:00 PST (newest; read this first)
+- Lane reference DONE: epyc8 w/ref_base_d28.json (2404 lanes, 428,278 bits, payload sha 05b9c281af98 = same payload as PV-R7 D27 ref).
+- G0 PASS 0 errors on the v6n-only recomposition v6n5 c359ae8d0050 (window + ring fixes, restation): gates/v6n5_g0. PLAN-GATE-PRE there
+  showed 153 findings only because the baseline pointed at the LIVE D28 work tree plan, which moved to dry6 (ef3219e1ae74 06:29);
+  gate_g0.sh now uses my pinned dry5 copy tree/.../plan_of_record.base_d28/plan_c.json. Expect 2 R8STALE only before the r8 refresh.
+- D23H census is STALE (posted 06:4x): current netlists have ~1.5x the registers (segmented delay lines _sg0..2, hop latches u_fl_*).
+  -> place_regions stack rows DROPPED from the form. Bins variant r1 (w/bins_r1.sh): newest placement per type (regs/regs_<t>_new.txt
+  from FIX-SYNC geom dumps: D26 pv v1 v3n v6 v8, D25e3 v12 v5n, D25e v2; D23H only for v4 v4n v5 v6n v7; v2n none = plan bins),
+  no stacks, per-core registers carried with their core. Real tap rows must come from each piece's own first place.
+- RUNNING: final_compose.sh (intel2 ~/tmp/ffkvpv/final_compose.log): multi.sh v6n6 kv3_pv_v6n:r1 and multi.sh m3 <14 types>:r1 with
+  FF_LANEREF. Then chain_bind.sh v6n6 tree (log chain_v6n6.log) and chain_bind.sh m3 tree2 (log chain_m3.log) start by themselves
+  (plan jobs, already admitted, waiting for plan_final.json): gates epyc8 w/gates/{v6n6,m3}{.out,_g0,_bind}.
+- AFTER the first binds (expect R8_STALE / R8_UNCOVERED only): T1 (tree, v6n-only): w/rebind.sh v6n6 v6n6r kv3_pv_v6n,kv3_pv_v6ne
+  (station fix + ONE r8_refresh + gate) -> clean bind -> kit K1. T2 (tree2, 14 types): w/r3chain.sh r3 m3 m3r3 <pieces> -> banks ->
+  rebind (full PV-R7 row-1 chain) -> K2 only if K1 fails on leaf first hops. Run them as plan jobs:
+  ot-run --priority plan --plan-job bind --mem 64 --threads 8 --hosts epyc8 --dir <lane root> -- [env FF_TREE=<lane>/tree2] bash w/<script> ...
+- KIT (after a strict bind with 0 errors in the tree): on intel2
+  python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_wave.py private-spec qwen_kvsys kv3_pv_v6n --tree <tree>
+    --plan <tree>/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --lane FABLE-FIX-KV-PV-SINKSPREAD --host epyc8 --goal finish
+  (dry probe 06:45: the only refusal was the missing strict bind) then nohup ... kit_wave.py run-item <spec.json>; ot-wait --durable.
+
 ## STATE 11-22 06:25 PST (supersedes any "Running / Next" below)
 Candidates so far (all on D28 base dry5, tools rt 6390b7bfa650, pure column swap):
 - all-14-types ONE event m1 = plan 54ac7f32109f (tree por_d29_all_m1_composed): model 26/28 pieces 0 over cap; v12e, v7e inherited.
