@@ -1302,3 +1302,23 @@ def test_cut_pins_per_um_cap_bounds_the_cut_budget():
     wide = TS.windows_for([("a", 66, None)], 1520.64, TS.cut_budget_cap(13.95, 11.9))["a"][0]
     tight = TS.windows_for([("a", 66, None)], 1520.64, 13.95)["a"][0]
     assert wide[1] - wide[0] > tight[1] - tight[0]
+
+
+def test_dead_relay_start_of_a_piece_without_count_aligned_crossings_is_dropped():
+    # FLOW-STRIPBODY-R2: lepe_mu_C t1 strip_N has no count-aligned crossing, so bind emits no cland_rstart_in; the split must
+    # not leave the pin, its cland_relay__ edge or the keep piece's now unused tx pin cland_rstart_out_1 in the plan
+    from types import SimpleNamespace
+    pin = lambda n, d: dict(name=n, dir=d, kind="ctl", layer="M7", xy_um=[0, 0], epoch=False)  # noqa: E731
+    lc = lambda *ps: dict(clock=dict(landing_contract=dict(pins=list(ps))))  # noqa: E731
+    out = dict(partitions=[dict(name="b", type="B"), dict(name="b__S", type="B__S"), dict(name="b__N", type="B__N")],
+               partition_types=dict(B=lc(pin("cland_rstart_out", "out"), pin("cland_rstart_out_1", "out")),
+                                    B__S=lc(pin("cland_rstart_in", "in")), B__N=lc(pin("cland_rstart_in", "in"), pin("x", "in"))),
+               clock=dict(landing_network=dict(edges=[
+                   dict(id="cland_relay__b__N", src=dict(part="b", bus="cland_rstart_out_1"), dst=dict(part="b__N", bus="cland_rstart_in")),
+                   dict(id="cland_relay__b__S", src=dict(part="b", bus="cland_rstart_out"), dst=dict(part="b__S", bus="cland_rstart_in"))])))
+    me = SimpleNamespace(out=out, rep={})
+    TS.Event._drop_dead_relay_starts(me, {"B__N"})
+    names = lambda tn: [q["name"] for q in out["partition_types"][tn]["clock"]["landing_contract"]["pins"]]  # noqa: E731
+    assert names("B__N") == ["x"] and names("B__S") == ["cland_rstart_in"] and names("B") == ["cland_rstart_out"]
+    assert [e["id"] for e in out["clock"]["landing_network"]["edges"]] == ["cland_relay__b__S"]
+    assert me.rep["relay_starts_dropped"] == dict(edges=["cland_relay__b__N"], rx_types=["B__N"], tx_pins={"B": ["cland_rstart_out_1"]})

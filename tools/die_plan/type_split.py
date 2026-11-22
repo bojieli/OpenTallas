@@ -3993,7 +3993,7 @@ class Event:
     def _straps(self):
         import count_align_bind as CAB
         st = CAB.strap_ties(self.side["count_aligned"], self.out)
-        out = {}
+        out, dead = {}, set()
         for tn, ts in self.ts.items():
             for nm in ts.tnames:
                 info = st["types"].get(nm)
@@ -4001,6 +4001,7 @@ class Event:
                     # FLOW-STRIPBODY-1121: a piece with no count-aligned crossing lands nothing: no count straps
                     info = dict(straps={})
                     self.rep["notes"].append(f"strap ties: {nm} has no count-aligned crossing (no count straps)")
+                    dead.add(nm)
                 if info is None:
                     raise SplitError(f"strap ties: no entry for {nm}")
                 t = self.out["partition_types"][nm]
@@ -4019,6 +4020,35 @@ class Event:
                 if sorted(have) != sorted(info["straps"].items()):
                     self.rep["notes"].append(f"strap ties of untouched type {tn} differ from its count_straps")
         self.rep["count_straps_rederived"] = out
+        if dead:
+            self._drop_dead_relay_starts(dead)
+
+    def _drop_dead_relay_starts(self, dead):
+        """FLOW-STRIPBODY-R2 11-22: a piece type with no count-aligned crossing holds no count frame (clock_landings CA-MIXED-1:
+        no relay role, so bind emits no rx flop and no cland_rstart_in port).  Drop its START relay: the cland_rstart_in pin,
+        its cland_relay__ landing edge, and a keep-piece tx pin (cland_rstart_out*) no remaining relay edge uses; else
+        gen's port bind fails (plan pin, no netlist port).  -> rep relay_starts_dropped."""
+        net = self.out["clock"].get("landing_network") or {}
+        parts = {p["name"]: p["type"] for p in self.out["partitions"]}
+        gone = [e for e in net.get("edges", []) if str(e.get("id", "")).startswith("cland_relay__")
+                and parts.get(e["dst"]["part"]) in dead and e["dst"]["bus"] == "cland_rstart_in"]
+        if not gone:
+            return
+        net["edges"] = [e for e in net["edges"] if e not in gone]
+        for nm in dead:
+            lc = self.out["partition_types"][nm].get("clock", {}).get("landing_contract")
+            if lc:
+                lc["pins"] = [q for q in lc.get("pins", []) if q["name"] != "cland_rstart_in"]
+        used = {(parts.get(e["src"]["part"]), e["src"]["bus"]) for e in net["edges"]}
+        tx = {}
+        for e in gone:
+            tt, bus = parts.get(e["src"]["part"]), e["src"]["bus"]
+            if (tt, bus) not in used:
+                lc = self.out["partition_types"][tt].get("clock", {}).get("landing_contract")
+                if lc:
+                    lc["pins"] = [q for q in lc.get("pins", []) if q["name"] != bus]
+                tx.setdefault(tt, []).append(bus)
+        self.rep["relay_starts_dropped"] = dict(edges=sorted(e["id"] for e in gone), rx_types=sorted(dead), tx_pins=tx)
 
     # ---------------------------------------------------------------- reset trees + collector attach
     def _tap_repair(self):
