@@ -579,8 +579,14 @@ def _run(B, out, files, j, rec_path=None):
                 if pid == 0:
                     _child(B, tn, ps, out, rp, lp)
                 live[pid] = (tn, rp, lp)
-            pid, st = os.wait()
-            if pid not in live:
+            # The bind also owns a concurrent plan-gate child. Collect only
+            # workers so the gate's caller can still join its own status.
+            for pid in live:
+                ready, st = os.waitpid(pid, os.WNOHANG)
+                if ready:
+                    break
+            else:
+                time.sleep(0.02)
                 continue
             tn, rp, lp = live.pop(pid)
             done[tn] = (st, rp, lp)
