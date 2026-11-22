@@ -1693,11 +1693,14 @@ class TypeSplit:
             self._local_resets(ck["landing_local_resets"])
 
     def _local_resets(self, rows):
-        """clock.landing_local_resets (DIE-HEAD-38 R1 copies; S81 J7 START forms, FLOW-STRIPBODY-R2): each copy goes to the
-        piece that holds its site xy_um (shifted to the piece frame) with its consumers.  A consumer landing of a bus
+        """clock.landing_local_resets (DIE-HEAD-38 R1 copies; S81 J7 START forms, FLOW-STRIPBODY-R2): a copy whose site xy_um
+        lies in the keep piece stays there (shifted to the piece frame) with its consumers; a consumer landing of a bus
         (u_cland_<kind>_<bus>) must sit in the bus's piece and the count origin (u_cland_origin) in the keep piece, else
-        the copy would drive across a cut: fail closed.  The raw relay name is re-picked by the bind (LOCAL-RESET-RAW-1);
-        clock.reset_tree_anchor (whole-type input hashes) is a spec drop_clock_keys re-derivation."""
+        the copy would drive across a cut: fail closed.  A copy sited in another piece is DROPPED and reported: it tapped
+        the deep whole-type reset tree (raw depth 9 on lepe_mu_C t1) to bring a same-cycle reset to far face flops, and a
+        cut-off piece builds its own shallow tree (no relay of that depth: bind EMIT 'raw has no registered wavefront
+        driver'); its landings take the piece's own reset, reach judged by G0 R-REACH-5.  The raw relay name of a kept copy
+        is re-picked by the bind (LOCAL-RESET-RAW-1); clock.reset_tree_anchor is a spec drop_clock_keys re-derivation."""
         cut, T = self.cut, self.T
         buses = sorted(self.bus_piece, key=len, reverse=True)
         out = [[] for _ in range(self.n)]
@@ -1712,6 +1715,9 @@ class TypeSplit:
                 if want != i:
                     raise SplitError(f"{self.tn}: landing_local_resets {r.get('name')} at {r['xy_um']} (piece {i}) has "
                                      f"consumer {c} in piece {want}")
+            if i != self.keep:
+                self.rep.setdefault("local_resets_dropped", {}).setdefault(self.tnames[i], []).append(r.get("name"))
+                continue
             out[i].append(copy.deepcopy(r) | {"xy_um": cut.sh(r["xy_um"], i)})
         for i in range(self.n):
             if out[i]:

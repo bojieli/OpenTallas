@@ -881,13 +881,15 @@ def test_landing_local_resets_follow_their_site_and_consumers():
         {"name": "fstart_0", "raw": "rst_rl_32", "xy_um": [1440.72, 453.792], "consumers": ["u_cland_fstart_xring_o0", "u_cland_origin"]},
         {"name": "fstart_1", "raw": "rst_rl_135", "xy_um": [75.392, 2.656], "consumers": ["u_cland_fstart_ft0_o"]},
         {"name": "fstart_9", "raw": "rst_rl_9", "xy_um": [75.392, 1220.0], "consumers": ["u_cland_fstart_leafup_o1"]}])
-    assert [r["name"] for r in ts.T[0]["clock"]["landing_local_resets"]] == ["fstart_1"]
+    # a copy sited in a cut-off piece is dropped (that piece builds its own shallow reset tree) and reported
+    assert "landing_local_resets" not in ts.T[0]["clock"] and "landing_local_resets" not in ts.T[2]["clock"]
     assert ts.T[1]["clock"]["landing_local_resets"][0]["xy_um"] == [1440.72, 410.592]
-    assert ts.T[2]["clock"]["landing_local_resets"][0]["xy_um"] == [75.392, 36.32]
-    assert ts.rep["local_resets"] == {"t__strip_S": ["fstart_1"], "t": ["fstart_0"], "t__strip_N": ["fstart_9"]}
+    assert ts.rep["local_resets"] == {"t": ["fstart_0"]}
+    assert ts.rep["local_resets_dropped"] == {"t__strip_S": ["fstart_1"], "t__strip_N": ["fstart_9"]}
 
 
 def test_landing_local_reset_consumer_across_a_cut_fails_closed():
+    # a keep-piece copy whose consumer landing went to a strip piece
     with pytest.raises(TS.SplitError, match="consumer u_cland_fstart_leafdn_o3 in piece 0"):
         _local_reset_split([{"name": "f", "raw": "r", "xy_um": [400.0, 300.0], "consumers": ["u_cland_fstart_leafdn_o3"]}])
 
