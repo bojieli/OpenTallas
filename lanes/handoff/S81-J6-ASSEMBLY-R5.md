@@ -52,3 +52,9 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - BIND_STALE (SLICE-R6 t18): stale pair was the J6r1 bind + J7 plan in their spec. J7 in-tree bind: PROBE_BIND 0/395 stale; pinned t18 smoke DRY-PASS (s81-j6-r5/pinsmoke2_epyc9). j7_apply.sh now gates the reps release on s81-j6-r5/launch_ok (SET). seqhost__t1 smoke running.
 - planref-missing (CLEAN-AGGR-R3): kit gen reads neither deleted dir; stage_hash_roots = hash-key text only (posted 8ddd67fb).
 - J8 respace lever: epyc9 s81-j6-r5/j8_respace (ledger.json, famsplit.py, plan/ overlay 53cab071c82f, bind.sh -> ot_build.log, ob/). J7 has 0 hops >405; 2241 rows 300-405 vs CBC 300 target. Bind ot-run oth-ubuntu-3032603 epyc9. Compose rule for J8: family rows first, then istation_respace on the composed plan (owner rows win).
+
+## 11-22 05:3x J7 applied + lessons
+- J7 applied 04:20 (75fccc3c44f). Wave stalled 04:24-05:11: s81 bind_preflight first probe (395 items) blew the 15-min tick -> set dies.s81.bind_preflight=false (4b897fae7c4); re-enable after FLOW-OPS-R2 fix.
+- LESSON: on S81 (every stops_off die, OWNER r703) hold_records do NOT block (hold_records.compile_holds skips stops_off dies); only legacy dies.s81.hold_items blocks. My J7 records held nothing and I dropped the 342 J6 hold_items -> 194 intended-held rows launched. Re-held 149 unlaunched as hold_items (34ed268e94e). For J8 holds: write hold_items keys (plus records for owner/ETA bookkeeping).
+- COORD ruling 05:2x: serdes 8 cancelled (kit_wave cancel-rows --event 18a2688b741 --per-block STRUCTURAL); col 72 run with the measured stop rule (>=3 same-stage fails for hold reason -> cancel the remainder of that col class not past the stage); other 114 run.
+- Pilot dsdv_slice_lepe_mu_LP__t2 passed gen + preflight 05:13, in place 05:16.
