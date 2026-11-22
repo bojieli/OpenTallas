@@ -21483,3 +21483,4 @@ FAILED [AUTOPILOT 58dcd151714b] 2026-11-21 19:20:23 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 19:22 PST HOURLY free space 19:22 epyc9=483 intel1=556 (restore at >=250 GiB; caps 250 on epyc9/intel1)
 - 2026-11-21 19:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc2 rt/e5429d32c55e extra: plan_pre_j8.json
 - 2026-11-21 19:23 PST DIED [TAP-GRID-R5] ot-run oth-ubuntu-1704623-1795317630 on tolerant-swine: rc=143 after 397 s, ended 19:23:04, log /srv/opentallas-scratch2/claude/tap-grid-r5/kv/compose.log, cmd: --disk 2 --mem 24 --threads 1 --hosts localhost --dir /srv/opentallas-scratch2/claude/tap-grid-r5/kv -- python3 -I -B /srv/opentallas-scratc
+- 2026-11-21 19:23 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1782120-1795317760 on tolerant-swine: rc=1 after 33 s, ended 19:23:11, log none, cmd: --mem 6 --threads 1 --hosts localhost --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6 --stage /srv/opentallas-scratch2/claude/rt/curr
