@@ -1,1 +1,2 @@
 - 2026-11-22 01:13 PST RESUMED FIX-SYNC-S81 (Opus) 01:1x: fix-propagation lane for S81; harvesting classes -> lanes/FIX-SYNC-S81.tsv; J8 rows to S81-J6-ASSEMBLY-R5 by 14:00, prioritising J8-able classes.
+- 2026-11-22 01:21 PST DONE [FIX-SYNC-S81] ot-run oth-ubuntu-3297674-1795338947 on tolerant-swine: rc=0 after 369 s, ended 01:21:54, log /srv/opentallas-scratch2/claude/fix-sync-s81/reach.otrun.log, cmd: --mem 24 --threads 1 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fix-sync-s81 --stage /srv/opentallas-scratch2/claude/kw45/src_s81_
