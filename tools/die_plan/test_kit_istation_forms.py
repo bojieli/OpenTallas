@@ -341,7 +341,7 @@ def test_in_tree_replaces_bind_landed_lpad(tmp_path):
 def test_in_tree_efault_eq_station_read_is_owned(tmp_path):
     """FAM-KV-IOPC-R4 11-22: the plan's efault eq station (u_efs<D>_efault_<n>, reads <bus>_eq only) must not make a tree fail closed:
     it hangs on the first reader's node (every node carries the epoch at depth K)."""
-    kd = kit(tmp_path, IN_BOUND_LPAD.replace("endmodule", "    ot_dp_dly_keep #(.W(1), .D(7)) u_efs7_efault_1 (.clk(clk), .d(i_eq), .q(u_efs7_efault_1_q));\nendmodule"))
+    kd = kit(tmp_path, IN_BOUND_LPAD.replace("endmodule", "    ot_dp_dly_keep #(.W(1), .D(7)) u_efs7_efault_1 (.clk(clk), .d(i_eq), .q(u_efs7_efault_1_q));  // efault eq station: 660 um in 8 hops\nendmodule"))
     plan = tree_plan(NODES, [dict(node="t2", core="A"), dict(node="t3", core="B")])
     r = run_ist(tmp_path, plan, kd)
     assert r.returncode == 0, r.stderr + r.stdout
