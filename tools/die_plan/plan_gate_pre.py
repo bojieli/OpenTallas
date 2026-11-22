@@ -63,6 +63,10 @@ ISTCYC-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every lane whose end-bus
   destination").  Only lanes on types whose stations changed are read.  Fix: `plan_gate_pre.py reprice --plan P
   --baseline-plan B --out P2` sets exactly those lanes (fixed_cycles and latency fixed / cycles / natural by the same delta).
 
+DEADIN-1122 (FLOW-OPS-R2, COORD): with an as-built that names dead_input_proofs, the bind's own dead_inputs.ProvenDead
+  validation (repository-relative paths, PASS verdict, defines / re-proofs, dependency module hashes, selected source) runs here,
+  before the elab: OPUS-FIX-S81-COLROM-R6 kit G lost 28 min of elab to "dead-input proof must be repository-relative".
+
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -79,7 +83,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -937,6 +941,23 @@ def reprice(plan, baseline, out):
     return done
 
 
+def check_deadin(tree, plan, asbuilt):
+    """FAIL DEADIN <bind error> when dead_inputs.ProvenDead refuses the as-built's dead-input proofs (see DEADIN-1122)"""
+    ab = _load(asbuilt) if asbuilt else None
+    if not isinstance(ab, dict) or not ab.get("dead_input_proofs"):
+        return []
+    raw = _load(plan) or {}
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import dead_inputs
+        dead_inputs.ProvenDead(ab, tree, {k: dict(v) for k, v in (raw.get("partition_types") or {}).items()})
+    except ValueError as e:
+        return [f"FAIL DEADIN {e} (bind.py would refuse this after the elab; as-built {asbuilt})"]
+    except Exception as e:  # noqa: BLE001 - the bind reports anything else itself
+        return [f"WARN DEADIN check not run: {type(e).__name__}: {str(e)[:200]}"]
+    return []
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None):
@@ -954,6 +975,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, baseline)
+    if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
+        findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
         findings += check_istcyc(plan, baseline)
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
