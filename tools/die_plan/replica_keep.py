@@ -256,6 +256,19 @@ def class_regs(rtl_dir):
     return sorted(res)
 
 
+_KEEP_GLUE = re.compile(r"\(\*\s*keep\s*\*\)\s*reg\s*(?:\[[^\]]*\]\s*)?(g_\w+_q)\s*;")
+
+
+def keep_glue_regs(rtl_dir):
+    """KEEP-THROUGH (COORD 11-22, LEPE-4): `Module:reg` of every (* keep *) glue register the binder re-emitted from a (* keep *) source
+    register of a dissolved parent (bind.py _glue: `(* keep *) reg [..] g_<path>_q;`).  Also named in OT_KEEP_WIRES so ot_keep_regs.tcl
+    keeps the cells whatever the frontend does with a reg attribute.  OT_KEEP_THROUGH=0 omits them."""
+    res = []
+    for m, body in sorted(parse(rtl_dir).items()):
+        res.extend(f"{m}:{r}" for r in sorted(set(_KEEP_GLUE.findall(body))))
+    return res
+
+
 def main(argv):
     if not argv:
         print(__doc__)

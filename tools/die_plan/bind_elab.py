@@ -871,11 +871,20 @@ def _pval(v):
 
 
 class Cell:
-    __slots__ = ("path", "module", "params", "ports", "dirs", "kind", "ytype", "yparams", "src")
+    __slots__ = ("path", "module", "params", "ports", "dirs", "kind", "ytype", "yparams", "src", "keep")
 
-    def __init__(self, path, module, params, ports, dirs, kind, ytype=None, yparams=None, src=None):
+    def __init__(self, path, module, params, ports, dirs, kind, ytype=None, yparams=None, src=None, keep=False):
         self.path, self.module, self.params, self.ports, self.dirs, self.kind = path, module, params, ports, dirs, kind
-        self.ytype, self.yparams, self.src = ytype, yparams, src
+        self.ytype, self.yparams, self.src, self.keep = ytype, yparams, src, keep
+
+
+def _attr_true(v):
+    """a Yosys JSON attribute value set (keep = "true" from slang, "000...1" from read_verilog)"""
+    v = str(v if v is not None else "").strip().lower()
+    return v not in ("", "0", "false") and not re.fullmatch(r"0+", v)
+
+
+GLUE_FF = ("$dff", "$adff", "$sdff", "$dffe", "$adffe", "$sdffe", "$sdffce", "$aldff", "$aldffe")
 
 
 class Flat:
@@ -957,6 +966,10 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
                 if isinstance(b, int):
                     nb = max(nb, b + 1)
         base = F.new(nb)
+        # KEEP-THROUGH (COORD 11-22, LEPE-4): bits of the (* keep *) registers of this module; a glue FF driving one is re-emitted
+        # with (* keep *) so the per-copy registers of a dissolved parent are not folded by opt_merge in the bound kit RTL
+        keep_bits = {b for nn in m.get("netnames", {}).values() if _attr_true(nn.get("attributes", {}).get("keep"))
+                     for b in nn["bits"] if isinstance(b, int)}
 
         def g(b):
             if isinstance(b, str):
@@ -1024,8 +1037,10 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
                 walk(ct, cpath, pm, {} if vm is not None else c.get("parameters", {}))
                 continue
             if ct.startswith("$") and ct not in mods:
+                kp = ct in GLUE_FF and (_attr_true(c.get("attributes", {}).get("keep"))
+                                        or any(isinstance(b, int) and b in keep_bits for b in c["connections"].get("Q", [])))
                 F.cells.append(Cell(cpath, ct, {}, conns, dict(c.get("port_directions", {})), "glue", ct,
-                                    dict(c.get("parameters", {})), c.get("attributes", {}).get("src")))
+                                    dict(c.get("parameters", {})), c.get("attributes", {}).get("src"), keep=kp))
                 continue
             if ct in mods:
                 sub = mods[ct]

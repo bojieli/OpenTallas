@@ -33,7 +33,7 @@ def split_cells(cells, specs, Cell):
             newpaths.add(p);params=dict(P);params['WIDTH']=format(len(indices),'b')
             if t=='$adff':params['ARST_VALUE']=''.join(rv[w-1-i] for i in reversed(indices))
             ports={pn:([bs[i]for i in indices]if pn in ('D','Q')else list(bs))for pn,bs in c.ports.items()}
-            fs.append(Cell(p,c.module,copy.deepcopy(c.params),ports,dict(c.dirs),c.kind,ytype=t,yparams=params,src=c.src))
+            fs.append(Cell(p,c.module,copy.deepcopy(c.params),ports,dict(c.dirs),c.kind,ytype=t,yparams=params,src=c.src,**({"keep":True} if getattr(c,"keep",False) else {})))
             rr.append(dict(path=p,original_bits=indices))
         replacements[path]=fs;records.append(dict(member=path,primitive=t,width=w,fragments=rr,terminal_partition_equality=True,controls_and_polarities_unchanged=True))
     out=[f for c in cells for f in replacements.get(c.path,[c])]

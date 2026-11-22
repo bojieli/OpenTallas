@@ -5591,7 +5591,8 @@ def _glue(c, conns, r):
         lines = []
         q = conns["Q"]
         w = int(P.get("WIDTH", "1"), 2) if re.fullmatch(r"[01]+", str(P.get("WIDTH", "1"))) else 1
-        lines.append(f"    reg [{w - 1}:0] {nm}_q;\n    assign {q} = {nm}_q;")
+        kp = "(* keep *) " if getattr(c, "keep", False) and os.environ.get("OT_BIND_KEEP_THROUGH", "1") != "0" else ""
+        lines.append(f"    {kp}reg [{w - 1}:0] {nm}_q;\n    assign {q} = {nm}_q;")
         en = ""
         if "EN" in conns:
             en = f"if ({'' if P.get('EN_POLARITY', '1').endswith('1') else '!'}{conns['EN']}) "
