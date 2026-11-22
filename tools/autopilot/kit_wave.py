@@ -9234,6 +9234,9 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
             sp["kit_rtl"] = dict(u["kit_rtl_record"])
         if u.get("bind_out"):
             sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=u["bind_out"])
+            ab = bind_asbuilt(u["bind_out"], sp.get("src"))
+            if ab:                                       # the as-built manifest THIS bind read, not the wave bind's
+                sp["kit_rtl"]["asbuilt"] = ab
         if "tools_rt" in u and u["tools_rt"] is None:        # the tree's own tools (gen_tools_pin / stamp = tree generators)
             sp.pop("tools_rt", None)
             sp.pop("tools_sha", None)
@@ -9294,6 +9297,23 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         raise ValueError(f"--goal {goal!r}: one of {', '.join(PRIVATE_GOALS)}")
     sp["goal"] = g                                       # FLOW-PRIVSPEC-R1 (item 7c): run-item drives the wave stage chain to this goal
     return sp
+
+
+def bind_asbuilt(bind_out, src):
+    """FLOW-STRIPBODY-R2 11-22: the as-built manifest a bind read (provenance_bind.json provenance.manifest, relative to the src
+    tree), as an absolute path when it exists here, else None.  A private --bind-out made from another manifest than the wave bind
+    (a split plan's asbuilt_vN.json) kept the wave's kit_rtl.asbuilt, so kit_topology.bind_matches compared the bind's
+    asbuilt_sha256 with the wrong file and every item was KIT_TOPOLOGY_BIND_STALE."""
+    try:
+        m = json.loads((Path(bind_out) / "provenance_bind.json").read_text()).get("provenance", {}).get("manifest")
+    except (OSError, ValueError, AttributeError):
+        return None
+    if not m or not isinstance(m, str):
+        return None
+    if not os.path.isabs(m) and not src:
+        return None
+    f = Path(m) if os.path.isabs(m) else Path(src) / m
+    return str(f) if f.is_file() else None
 
 
 def private_bind_stale(sp, item, rpy):
