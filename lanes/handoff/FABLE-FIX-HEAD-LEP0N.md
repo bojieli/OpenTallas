@@ -32,22 +32,25 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
 c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
 
-## LIVE 11-22 05:1x PST (read this first; older sections below are history)
-- W attempt 4 (r18f): PLACED 04:48 on intel1; coll_i2 fixed (all groups met, tns -62198 -> -3938) but coll_i1 ctl_w -> rv -708.55 /
-  lap_ok -548.8: band [634.24..840.24] did not cover the pin column y 640.39..845.59 and START-nearest bit = last bit 513, so
-  cland_place_pinslot dropped 102 control regs to the band bottom (ctl_* y 634.5, rv/lap_ok y 839.5). Still running as GRT/channel probe:
-  unit fable-lep0n-w4 (intel2 pid 1483054), spec ..._1122041412, kit epyc9 .../private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122041410/gen/hd_lep0N_w.
-  CANCEL it (kit_wave cancel-rows / ot-run --cancel of its stage unit, exact unit only) once attempt 5 places clean; evidence = the -708.
-- W attempt 5 (r18g = r18f + LEP-RINGFF-2 coll_i1 rect [17.28,629.64,30.24,864.0]): tree epyc9 L/trees/s81_head_r18g_ringff2, plan sha256
-  0c7056cd38b8b1f6; spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122050625/spec.json, rt c9b8d5f226ca, seal;
-  unit fable-lep0n-w5 on intel2 (pid 2768751), log ~/fable-fix-head-lep0n-1122/runitem_w5.log. Launched 05:06 (seal ~15 min, place ~30 min).
-  CHECK at place: OT_CLAND ctlkey coll_i1 line, then w_xy2-style positions (L/tmp/sta_kit.sh KIT dp_hd_lep0N_w OUT L/tmp/sta_w.tcl via
-  ot-run --dir L --stage KIT), 3_detailed_place.rpt path-delay group (was -708.55).
-- Known residual at place (pre-repair, watch at CTS post-hook): clk u_cland_rst_coll_i0 -> reader_start_coll_i0_0 -104.7 (84 fF relay net).
-- Rows file lanes/handoff/FABLE-FIX-HEAD-LEP0N-rows.md sections 1-5 (5 = E-piece same-class findings for R8: lepk_i0 band top, coll_i3 band off pins,
-  h2r1 cut-face output -229.6).
-- Place jobs may spill to intel1 (job dir /srv/opentallas-scratch2/claude/ot-jobs/hd_lep0N_w-place-*/work); results sync back to epyc9.
-- Waiters do not survive my turn reliably: poll with short (<170 s) ssh loops.
+## LIVE 11-22 06:0x PST (read this first; older sections below are history)
+- FLOW: private-spec/run-item --goal finish DIES at the place->cts hand-over (run_kit.sh stage resume accepts floorplan|place|cts|grt|route only).
+  Use run-item --goal route (wave chain: route + sign-off + routed LEC). Use kit_wave.py + --rt of rt c9b8d5f226ca or newer (seal mode, face-status gen).
+- W attempt 4 (r18f) ENDED by that flow bug (result stage cts FAIL / FAIL_PREFLOOR); it had coll_i1 ctl_w -> rv -708.55 at place. Dead, nothing to cancel.
+- BUILD A = W attempt 6: tree r18g (epyc9 L/trees/s81_head_r18g_ringff2, plan 0c7056cd38b8b1f6 = r18f + LEP-RINGFF-2 coll_i1 rect
+  [17.28,629.64,30.24,864.0]); spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122050625/spec.json; unit
+  fable-lep0n-w6 on intel2 (pid 2920517, run-item --goal route), log ~/fable-fix-head-lep0n-1122/runitem_w6.log.
+  Kit epyc9 /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122050624/gen/hd_lep0N_w
+  PLACED 05:45 (on intel2): tns -484.07 (r18e -62198, r18f -3938), wns -211.84, OT_PLACE_WIRE_RATIO 0; whole piece has 2 violating clk ends +
+  path-delay -18.65. Chain (goal route) started 06:00 on epyc9, container dpkit-hd_lep0N_w-880189; CTS wait armed by run-item.
+  The 2 ends = u_cland_rstart_rx/q (W face y 1154.5) + copy _otdup1 (y 453.6), reset by cland_reset_coll_i0 from (814,1085): -144 / -145.6.
+- BUILD B (A/B, next): tree r18h (epyc9 L/trees/s81_head_r18h_rstart = r18g + LEP-RSTART-1: u_cland_rstart_rx added to landing_local_resets k3
+  (raw rst_rl_287 @ (10,792.88)); W wrapper republished). L/tmp/rstart_fix.py + chain_r18h.sh (apply + plan_gate_pre + bind/cohort/LATCHECK ->
+  L/bind_r18h), started 05:58 via ot-run pid 691101 on intel2 (log chain_r18h.otrun.log), queued on epyc9 memory (fleet LOADCAP).
+  After CHAIN_DONE with all RC 0: private-spec (rt c9b8d5f226ca, --src-manifest seal) + run-item --goal route as unit fable-lep0n-w7.
+  If A's CTS post-hook already closes the 2 ends (>= -42), B is optional.
+- Rows file lanes/handoff/FABLE-FIX-HEAD-LEP0N-rows.md (sections 1-5; add section 6 LEP-RSTART-1 when B passes gates).
+- STA recipe: ot-run --hosts epyc9 --dir L --stage KIT -- bash L/tmp/sta_kit.sh KIT dp_hd_lep0N_w OUTDIR L/tmp/sta_w.tcl (edit the tcl).
+- Poll with short (<170 s) ssh loops; background waiters do not outlive the turn reliably.
 
 ## LIVE KIT (supersedes the spec/unit/pid named in STATE below) 11-22 04:2x PST
 - Attempts 1-3 died before place on tooling: (1) kit_wave.py of rt 6d2e = verify not seal (SRC_MANIFEST DRIFT); (3) rt 6d2e tools replace the
