@@ -102,7 +102,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1151,6 +1151,71 @@ def remap_base(plan, explicit=None, baseline=None):
     return None, "no base (pass --remap-base, set $OT_PLAN_REMAP_BASE, or keep the tree bind_of_record)"
 
 
+def _src_def(text, name):
+    """the source of top-level `def NAME` in TEXT, or ''"""
+    m = re.search(r"(?ms)^def " + re.escape(name) + r"\(.*?(?=^\S)", text + "\nEND\n")
+    return m.group(0) if m else ""
+
+
+def emit_name_fns(tree):
+    """(landing_name(pn), bind_name(pn)) of the TREE's tools, without importing them: bind.emit_top writes partition instance
+    sv_id(pn); the clock-landing pass looks for the expression it re-escapes right before 'expected exactly one bound instance'.
+    None when the tree's tools do not have that form."""
+    d = Path(tree) / "tools" / "die_plan"
+    try:
+        bt, ct = (d / "bind.py").read_text(), (d / "clock_landings.py").read_text()
+    except OSError:
+        return None
+    i = ct.find("expected exactly one bound instance")
+    if i < 0:
+        return None
+    m = list(re.finditer(r"re\.escape\(((?:[^()]|\([^()]*\))*)\) \+ r\" \\\(", ct[max(0, i - 1500):i]))
+    if not m:
+        return None
+    expr = m[-1].group(1)
+    ns = {"re": re}
+    try:
+        for fn in ("ident", "bind_inst_id"):
+            src = _src_def(ct, fn)
+            if src:
+                exec(src, ns)                            # noqa: S102 - the tree's own helper definitions (pure string functions)
+        exec(_src_def(bt, "sv_id"), ns)                  # noqa: S102
+        land = eval("lambda pn: " + expr, ns)            # noqa: S307
+        return land, ns["sv_id"]
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def check_emitname(tree, plan, asbuilt=None):
+    """FAIL EMITNAME (FABLE-FLOW-0230 B1: FLOW-STRIPBODY-R2 1.9 h, then 'EMIT clock landing: expected exactly one bound instance'):
+    with a clock landing table, the partition instance name the landing pass looks for must equal the one bind.emit_top writes,
+    and no two partitions may share an instance name.  Seconds, before the elab."""
+    raw = _load(plan) or {}
+    ab = _load(asbuilt) if asbuilt else raw.get("asbuilt")
+    if not isinstance(ab, dict) or not ab.get("clock_landing_table"):
+        return []
+    fns = emit_name_fns(tree)
+    if fns is None:
+        return ["WARN EMITNAME clock-landing / bind instance-name form not readable from the tree's tools: not checked"]
+    land, bind_id = fns
+    out, seen = [], {}
+    for p in raw.get("partitions") or []:
+        pn = p.get("name") if isinstance(p, dict) else None
+        if not pn:
+            continue
+        try:
+            a, b = land(pn), bind_id(pn)
+        except Exception as e:  # noqa: BLE001
+            return [f"WARN EMITNAME not checked: {type(e).__name__}: {e}"]
+        if a != b:
+            out.append(f"FAIL EMITNAME partition {pn}: the clock-landing pass looks for instance {a}, bind writes {b} -- the bind stops "
+                       f"at EMIT ('clock landing: expected exactly one bound instance'); run the bind on tools where both agree")
+        if b in seen:
+            out.append(f"FAIL EMITNAME partitions {seen[b]} and {pn} share the bound instance name {b} (two matches at EMIT)")
+        seen.setdefault(b, pn)
+    return out[:12] + ([f"FAIL EMITNAME ... {len(out) - 12} more"] if len(out) > 12 else [])
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None, remap=None):
@@ -1177,13 +1242,15 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_istcyc(plan, rb)
     if "R8STALE" not in skip:                            # R8STALE-1122: R8 table not re-derived after a station change
         findings += check_r8stale(tree, plan, rb, asbuilt)
+    if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
+        findings += check_emitname(tree, plan, asbuilt)
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
         sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
         import kit_fit as KF
         findings += ["FAIL " + m for m in KF.findings((_load(plan) or {}).get("partition_types") or {}, halo)]
-    if not set(skip) >= {"FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE"}:       # BIND-SPEED-1118: bind_rowcheck.py, seconds
+    if not set(skip) >= {"FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "RELAYSINK"}:       # BIND-SPEED-1118: bind_rowcheck.py, seconds
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)

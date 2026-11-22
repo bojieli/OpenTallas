@@ -9,6 +9,10 @@ Late bind failures of 11-17/18 that a bind found only after its full run, and th
   ROWSINK    (S81 D8e / QC R8_STALE "no such sink")  every R8 table member (asbuilt.land_r8 + land_r8_extra) whose pad is not 0
              names a sink leaf (and port) that exists in the elaborated die (OUT/asbuilt.json).  Names compare exactly, then in
              instance-name form (u_r0.u_x == u_r0_u_x, bind's sv_id), then by canonical yosys `$op$#` name.  Needs the elab output.
+  RELAYSINK  (FABLE-FLOW-0230 B1: OPUS-FIX-S81-SVC-R9 2.0 h, FAM-S81-COL-R3 139 rows "relay_depth <type>: N row(s) matched no
+             internal sink" at EMIT)  every partition_types[*].relay_depth row names a leaf of the elaborated die (bind.sv_id form,
+             matched as the leaf path's tail, as bind's rel_of inside a partition) that has the row's port.  Rows on bind-generated
+             stations (u_bout_*) are counted in a WARN (they exist only in the emitted RTL).  Needs the elab output.
   MODULES    (rows naming missing modules)  every module named by asbuilt.substitute_inst / substitute / sub_core_leaf exists as RTL (module_index) or in the elaborated netlist.
   TOOLSTALE  (S81 D8e: tools older than rt/current without b8f543dd448)  a tools/die_plan file of the bind tree that differs from the
              live reference tree's (OT_RT_CURRENT, --ref-tools, or <scratch>/claude/rt/current) and is OLDER than it.
@@ -209,6 +213,47 @@ def check_rowsink(plan_path, plan, ab, ab_path, elab_dir, yjs=None):
     return out
 
 
+def _bind_sv(s):
+    """bind.sv_id: non-identifier characters -> '_', runs collapsed, stripped, leading digit prefixed"""
+    s = re.sub(r"_+", "_", re.sub(r"[^A-Za-z0-9_]", "_", str(s))).strip("_")
+    return s if s and not s[0].isdigit() else "n" + s
+
+
+def check_relaysink(plan, ab, yjs):
+    """FAIL RELAYSINK lines: relay_depth rows whose leaf / port the elaborated die lacks (bind EMIT 'matched no internal sink')"""
+    rows = [(tn, row) for tn, ty in ((plan or {}).get("partition_types") or {}).items() if isinstance(ty, dict)
+            for row in (ty.get("relay_depth") or []) if isinstance(row, dict) and row.get("inst")]
+    if not rows:
+        return []
+    cells = leaf_paths(yjs, ab["top"], ab.get("substitute_parent", []))
+    sv = {}
+    for path, (master, ports) in cells.items():
+        sv.setdefault(_bind_sv(path), []).append((master, ports))
+    by_tail = {}                                         # last '_' token -> leaf keys (a key ending in '_' + s shares s's last token)
+    for k in sv:
+        by_tail.setdefault(k.rsplit("_", 1)[-1], []).append(k)
+    out, n_bad, n_gen = [], 0, 0
+    for tn, row in rows:
+        s = _bind_sv(row["inst"])
+        port = row.get("port", "i" if row.get("side") == "sink" else "o")
+        if s.startswith("u_bout_"):
+            n_gen += 1
+            continue
+        hits = sv.get(s) or [h for k in by_tail.get(s.rsplit("_", 1)[-1], ()) if k.endswith("_" + s) for h in sv[k]]
+        if not hits:
+            n_bad += 1
+            out.append(f"FAIL RELAYSINK relay_depth {tn}: {row['inst']}.{port} is no leaf of the elaborated die (bind.sv_id form, any "
+                       f"partition root) -- bind stops at EMIT with 'matched no internal sink'")
+        elif not any(port in ports for _m, ports in hits):
+            n_bad += 1
+            out.append(f"FAIL RELAYSINK relay_depth {tn}: {row['inst']} (master {hits[0][0]}) has no port {port}")
+    out = _cap(out, n_bad, "rows") if out else []
+    if n_gen:
+        out.append(f"WARN RELAYSINK {n_gen} relay_depth row(s) on bind-generated u_bout_* stations: decided only by the bind "
+                   f"(the bind tools must generate that out-bus station)")
+    return out
+
+
 def check_modules(plan_path, plan, ab, ab_path, elab_dir, yjs=None):
     names = {}
     # plan hard-core modules are NOT checked: landing rings (qc_cland_*), station tails and kit wrappers are generated at bind time
@@ -280,8 +325,13 @@ def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=
     ab = json.loads(Path(asbuilt).read_text()) if asbuilt else plan_raw.get("asbuilt")
     if ab and elab_dir and (Path(elab_dir) / "asbuilt.json").is_file():
         yjs = None
-        if "ROWSINK" not in skip or "MODULES" not in skip:
+        if "ROWSINK" not in skip or "MODULES" not in skip or "RELAYSINK" not in skip:
             yjs = json.loads((Path(elab_dir) / "asbuilt.json").read_text())
+        if "RELAYSINK" not in skip:                     # B1 (FABLE-FLOW-0230): relay_depth rows vs the elaborated leaves
+            try:
+                out += check_relaysink(plan_raw, ab, yjs)
+            except (KeyError, TypeError, ValueError) as e:
+                out.append(f"WARN RELAYSINK not run: {type(e).__name__}: {str(e)[:160]}")
         if "ROWSINK" not in skip:
             out += check_rowsink(plan_path, plan_raw, ab, ab_path, elab_dir, yjs)
         if "MODULES" not in skip:
