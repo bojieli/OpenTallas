@@ -15,3 +15,5 @@ S81-RAWRST, S81-REGSUM, S81-STNMACRO, S81-STRAP, S81-CAP400K, S81-FIXEDCYC, S81-
 - 02:3x POSTED S81-FIXEDCYC IQF rows: iqf/j8_iqf_rows_repriced_delta.json 80ee97685c3b (reprice 5 lanes). Open Q to IQF-R1: duplicate conn bus:idx_o0.
 - Other J8 row files: LEPE-4 drafts (owner strict binds), SERDES start rows (owner gate PASS), BKSEL (positions), SLICE strip-body (proposal), CLASS-SWEEP C rows (tap_reset_split; theirs).
 - TODO: post gate result; serdes stations inside u_phy slot advisory -> SERDES-R8; CHANSPREAD scan (relay_sites y-line density) on other types; 4-h report to COORD (first report after gate). Re-scan final J8 compose when R5 publishes it.
+- 04:00 RAWRST strict gate GREEN (grr/: bind 0, LAT 873/873 no change, G0 0 new, PRE PASS, reach5 non-leaf only kv_leaf t3 = LEAF-R10). Posted RESULT + round-1 REPORT to COORD 04:0x. No vetoes on any row set.
+- NEXT: when R5 publishes the composed J8 plan (after 16:00 cut), re-scan: reach_rules check rule 5, fstart_scan.py, plan_gate_pre --baseline-plan J7; answer merge questions; next 4-h report ~08:00. gtree (54 GB) can be ot-deleted after J8 bind if not needed.
