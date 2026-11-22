@@ -7,7 +7,7 @@ import pytest
 import landing_place as LP
 import schema as S
 from clock_landings import Landings, LandingError
-from test_clock_landings import dataflow_vehicle
+from test_clock_landings import dataflow_vehicle, region_vehicle
 
 RELAYS = (" wire rr_far, rr_low;\n"
           " ot_dp_rrelay u_rrl_7 (.clk(clk), .d(rst_n), .q(rr_parent));  // raw tap tap 0 depth 4 @ (9, 1)\n"
@@ -57,6 +57,25 @@ def test_status_input_stages_on_a_local_output():
     assert ".ready_i({cland_ok_w}),\n        .fault_i({cland_bad_w}), .ready_o(cland_up_ready), .fault_o(cland_up_fault)" in aa
     assert c.reset_placements["A"]["monitor"]["status_input_stages"]["x"]["w"]["status_cycles_added"] == 1
     assert base != aa
+
+
+def test_status_input_stages_on_a_same_region_face_input():
+    # OPUS-FIX-HEAD-LEP0N-R8 11-22: a type_split cut face lands a same-region status pin far from the aggregate;
+    # agg stages may relay it after its face flop like a ring (+n status cycles, 0 data cycles)
+    p, t, a, b, c = region_vehicle()
+    base = Landings(p, t).type_rtl("A", a)
+    ck(p, "A")["landing_status_input_stages"] = {"agg": {"v": [{"xy_um": [4, 4]}, {"xy_um": [6, 4]}]}}
+    L = Landings(p, t); aa = L.type_rtl("A", a)
+    assert "ot_dp_landing_face u_cland_face_ready_v (.clk(clk), .d(cland_dn_ready_v), .q(cland_dn_fq_ready_v));" in aa
+    assert ".ready_i({cland_dn_fq_ready_v}),\n        .fault_i({cland_dn_fq_fault_v}), .ready_o(cland_sin_r_agg_v_0)" in aa
+    assert ".ready_i({cland_sin_r_agg_v_0}),\n        .fault_i({cland_sin_f_agg_v_0}), .ready_o(cland_sin_r_agg_v_1)" in aa
+    assert ".ready_i({cland_ok_w, cland_sin_r_agg_v_1}),\n        .fault_i({cland_bad_w, cland_sin_f_agg_v_1})" in aa
+    rec = L.reset_placements["A"]["monitor"]["status_input_stages"]
+    assert rec == {"agg": {"v": dict(stages=2, status_cycles_added=2, data_cycles_added=0)}}
+    assert base != aa
+    ck(p, "A")["landing_status_input_stages"] = {"w": {"v": [{"xy_um": [4, 4]}]}}   # only agg takes a face input
+    with pytest.raises(LandingError):
+        Landings(p, t).type_rtl("A", a)
 
 
 @pytest.mark.parametrize("cfg,why", [

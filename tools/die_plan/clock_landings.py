@@ -2732,11 +2732,14 @@ class Landings:
                                                                      **({"per_bus_origins": [f"u_cland_origin_t{i}" for i in range(len(tbs))]} if multi else {}))
         return logic, raw_used
 
-    def _status_input_stages(self, tn, key, ins, local_outs, collect, logic):
+    def _status_input_stages(self, tn, key, ins, local_outs, collect, logic, faced_in=None):
         """DIE-HEAD-38 R2 (plan clock.landing_status_input_stages, opt-in): n registered 1-input status relays
         u_cland_sin_<target>_<ring>_<k> on ONE ring's ready/fault (agg: cland_ok/cland_bad) before the N-input
         collect of <target>, so a collect fed from opposite faces is no longer one long hop.  ready (AND) and fault
-        (OR) stay monotone; that input's status is observed n cycles later; 0 data cycles."""
+        (OR) stay monotone; that input's status is observed n cycles later; 0 data cycles.
+        OPUS-FIX-HEAD-LEP0N-R8 11-22: target agg may also name a same-region status input (faced_in: its face flop
+        q pair), so a face pin far from the aggregate (a type_split cut face) is relayed like a ring."""
+        faced_in = faced_in or {}
         cfg = self.types[key].get("clock", {}).get("landing_status_input_stages")
         res = dict(agg={}, local={}, record={})
         if cfg is None:
@@ -2749,11 +2752,13 @@ class Landings:
             if not isinstance(rings, dict) or not rings:
                 raise LandingError(f"{tn}: landing_status_input_stages.{tgt} must name landed input rings")
             for ring, stages in sorted(rings.items()):
-                if ring not in ins:
+                face = tgt == "agg" and ring not in ins and ring in faced_in
+                if ring not in ins and not face:
                     raise LandingError(f"{tn}: landing_status_input_stages.{tgt}.{ring} is not a landed input ring")
                 if not isinstance(stages, list) or not stages:
                     raise LandingError(f"{tn}: landing_status_input_stages.{tgt}.{ring} needs >= 1 stage")
-                cur = (f"cland_ok_{ring}", f"cland_bad_{ring}") if tgt == "agg" else (f"landing_ready_{ring}", f"landing_fault_{ring}")
+                cur = ((tuple(faced_in[ring]) if face else (f"cland_ok_{ring}", f"cland_bad_{ring}")) if tgt == "agg"
+                       else (f"landing_ready_{ring}", f"landing_fault_{ring}"))
                 for k, s in enumerate(stages):
                     xy = s.get("xy_um") if isinstance(s, dict) else None
                     if (not isinstance(xy, list) or len(xy) != 2 or
@@ -3057,10 +3062,12 @@ class Landings:
             bad = sorted(set(lsd) - (set(mask["outputs"]) | set(intra_out)) | ({tree_bus} & set(lsd)))
             if bad:raise LandingError(f"{tn}: local_status_depth names {bad}, not a local status output")
         sin = self._status_input_stages(tn, key, ins, [b for b in list(mask["outputs"]) + intra_out if b != tree_bus],
-                                        collect, logic)
+                                        collect, logic, faced_in={b: (f[0], f[1]) for b, f in zip(intra_in, faced)})
         if sin["agg"]:
-            ok_l = ", ".join([sin["agg"].get(b, (f"cland_ok_{b}", f"cland_bad_{b}"))[0] for b in ins] + [f[0] for f in faced])
-            bad_l = ", ".join([sin["agg"].get(b, (f"cland_ok_{b}", f"cland_bad_{b}"))[1] for b in ins] + [f[1] for f in faced])
+            ok_l = ", ".join([sin["agg"].get(b, (f"cland_ok_{b}", f"cland_bad_{b}"))[0] for b in ins]
+                             + [sin["agg"].get(b, f)[0] for b, f in zip(intra_in, faced)])
+            bad_l = ", ".join([sin["agg"].get(b, (f"cland_ok_{b}", f"cland_bad_{b}"))[1] for b in ins]
+                              + [sin["agg"].get(b, f)[1] for b, f in zip(intra_in, faced)])
         prev = None
         for k in range(1, depth):
             ro, fo = f"cland_agg_r{k}", f"cland_agg_f{k}"
