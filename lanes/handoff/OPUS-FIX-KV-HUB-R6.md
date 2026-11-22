@@ -32,3 +32,10 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - hub_Ei rebind: G0 PASS 0 errors (g0gate_ei2), elab 0, strict bind running (bindgate_ei2).
 - D28 GEN needs tools >= bdb08607ce (Eo/Wo, also hub_C rings) and >= ae9a5815f0 (hub_Ei). Posted to KV-PLAN-R6.
 - Lane clone: epyc8 r5/clone branch opus-r6-hard-ring-band (pushed).
+
+## 00:4x update (wins)
+- hub_Ei rebind PASS (G0 0 err, BIND_ERRORS 0, LATCHECK 0, BPC PASS). Ei ROW posted to KV-PLAN-R6: lanes/handoff/OPUS-FIX-KV-HUB-R6-rows_hub_Ei_d28.json
+  (c34fc3e27a87); blocks_d28_Ei.json (e49c0bf85d58) + plan_e9be978c3180.json in intel2 opus-fix-kv-hub-r6/d28. ALL D28 hub rows delivered.
+- LIVE hub_Ei private kit: tree_h3 (plan e9be978c3180 + its bind), rt bdb08607ce36, spec OPUS-FIX-KV-HUB-R6/qwen_kvsys_kv3_hub_Ei_1122003620,
+  intel2 pid 2287276, log kit2_qwen_kvsys_kv3_hub_Ei_1122003620.log. DO NOT reinstall plans in tree_h3 while it runs.
+- Open: hub_Ei row B/C masters (PLACEREP=0 w145/w129/w175, w549/w523) -> D29.
