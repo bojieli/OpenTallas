@@ -1,0 +1,9 @@
+# KV west hub tap load
+
+I viewed the retained Wo/Eo floorplans and the exact Wo sink-and-tap overlay. Wo's southwest hotspot is driven by `clk_t37`. Actual CTS reports 29,953 sinks on that root, 11,251 on t63, and 6,122 on t79. The clock hook reports 107,974 movable sinks for 80 tap inputs capped at 1,200. The total needs at least 90 sites, even with unlimited reach. Tracing the placed register clocks through connected nets yields 107,968 on movable `clk` and excludes 7,950 on other clocks. The hot-root count predicts 31,120 before spill from its physical concentration. The source assignment is consistent with the placed clock connectivity.
+
+All 80 Wo and all 73 Eo retained tap-pin coordinates match D28 post14 (`5f76a4cc2ed9`) after canonical snapping. Eo likewise logged 100,808 sinks for 73 taps with the same cap. Its placed clock graph traces 100,797 to the movable root, with the worst nearest tap at 13,549.
+
+Wo's private append-only draft adds 83 PG-track-snapped sites outside existing hard macro halos and reserved clock-cell rectangles. The model on the 107,968 exact register centres plus the existing control witnesses assigns all loads within 1,200 and 190.939 µm. The 5.4 µm binned nearest model retains t118 with 2,148 and t152 with 1,724. The binned capped model also retains four indivisible-bin overloads. Preserve the exact point table as evidence of feasible capacity. The first emitted clock assignment, reset landing remap, clock-entry route and macro-corner access need separate physical proof. Both previously retained placements have AUTO-GEOM FAIL for other physical checks. No route or active plan changes were submitted.
+
+Rows, source bins, exact point table, capped summary and reviewed image are in Intel2 `/srv/opentallas-scratch2/claude/tap-grid-r4/kv_hub_wo_1122/`.
