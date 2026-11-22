@@ -13,8 +13,8 @@ is DROPPED.  Row script contract (as d28_compose.py): `python3 -I SCRIPT PLAN_IN
 `# PROBLEM: ...` line in the script; the DROPPED post names it.
 
 Statuses: APPLIED clean; PARTIAL applied but the script printed a "matched no ..." / "skipped" / "dropped" line (some ops lost);
-NOOP applied but changed none of its named types; DROPPED script missing or failed; REFUSED stable-key breach (unnamed type or top
-key changed); UNLISTED file not in the manifest.  ACK file: <ledger-dir>/CUT-ACK-<die>-<event>.tsv, lines `ROW<TAB>OWNER<TAB>note`.
+NOOP applied but changed no named types or allowed plan keys; DROPPED script missing or failed; REFUSED stable-key breach
+(unnamed type or top key changed); UNLISTED file not in the manifest.  ACK file: <ledger-dir>/CUT-ACK-<die>-<event>.tsv, lines `ROW<TAB>OWNER<TAB>note`.
 usage:
   cut_ledger.py compose --die KV --event D28 --base BASE.json --out OUT_DIR --manifest rows.json --rows-dir DIR [--ledger-dir D] [--no-post]
   cut_ledger.py seal    --die KV --event D28 [--ledger-dir D] [--allow-drop ROW ...]
@@ -100,7 +100,11 @@ def compose(base, out, manifest, rows_dir=None):
         a, b = cur["partition_types"], new["partition_types"]
         changed = sorted(t for t in set(a) | set(b) if h(a.get(t)) != h(b.get(t)))
         stray = [t for t in changed if t not in named]
-        top = [k for k in set(cur) | set(new) if k not in allow and h(cur.get(k)) != h(new.get(k))]
+        top_changed = {
+            k for k in set(cur) | set(new)
+            if k not in {"partition_types", "note"} and h(cur.get(k)) != h(new.get(k))
+        }
+        top = sorted(top_changed - allow)
         rec["types_changed"] = changed
         if stray or top:
             rec.update(status="REFUSED", reason=f"stable-key breach: unnamed types {stray[:10]} top keys {top[:10]}")
@@ -109,8 +113,8 @@ def compose(base, out, manifest, rows_dir=None):
         lost = [ln.strip() for ln in txt.splitlines() if PARTIAL_RE.search(ln)]
         if lost:
             rec.update(status="PARTIAL", reason=f"{len(lost)} line(s) say ops were lost: {lost[0][:200]}")
-        elif not changed:
-            rec.update(status="NOOP", reason="applied but changed none of its named types")
+        elif not changed and not top_changed:
+            rec.update(status="NOOP", reason="applied but changed no named types or allowed plan keys")
         else:
             rec.update(status="APPLIED", reason="")
     return cur, led

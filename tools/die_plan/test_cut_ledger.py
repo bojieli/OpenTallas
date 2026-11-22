@@ -70,3 +70,22 @@ def test_clean_cut_posts_nothing(tmp_path):
     rc = CL.main(["compose", "--die", "QC", "--event", "V4", "--ledger-dir", str(tmp_path / "l"), "--base", str(base), "--out",
                   str(tmp_path / "o"), "--manifest", str(tmp_path / "m.json"), "--rows-dir", str(rd), "--post-cmd", "/nonexistent"])
     assert rc == 0 and CL.main(["seal", "--die", "QC", "--event", "V4", "--ledger-dir", str(tmp_path / "l")]) == 0
+
+
+def test_top_level_only_edit_requires_allow_top(tmp_path):
+    script = """import json, sys
+p = json.load(open(sys.argv[1]))
+p["budgets"] = {"grt_cong_iters_types": {"^col_": 50}}
+json.dump(p, open(sys.argv[2], "w"))
+"""
+    base, manifest, _ = setup(tmp_path, {"BUDGET": script}, {"BUDGET"})
+    manifest[0]["types"] = []
+    plan, ledger = CL.compose(base, tmp_path / "refused", manifest)
+    assert ledger[0]["status"] == "REFUSED"
+    assert "budgets" not in plan
+
+    manifest[0]["allow_top"] = ["budgets"]
+    plan, ledger = CL.compose(base, tmp_path / "allowed", manifest)
+    assert ledger[0]["status"] == "APPLIED"
+    assert ledger[0]["types_changed"] == []
+    assert plan["budgets"]["grt_cong_iters_types"] == {"^col_": 50}
