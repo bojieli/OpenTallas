@@ -21807,3 +21807,4 @@ FAILED [AUTOPILOT f524e887c46c] 2026-11-21 20:04:28 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-21 20:22 PST DONE [FLOW-TREEFORK-R1] ot-run oth-ubuntu-282925-1795321172 on tolerant-swine: rc=0 after 172 s, ended 20:22:23, log /srv/opentallas-scratch2/claude/FLOW-TREEFORK-R1/tmp/fork_speed1.log, cmd: --hosts intel2 --mem 4 --threads 16 --disk 70 --dir /srv/opentallas-scratch2/claude/FLOW-TREEFORK-R1/tmp --stage /srv/opentallas-scratch2/cl
 - 2026-11-21 20:22 PST epyc9 at 1576 GiB: already in gen_hosts, nothing to restore
 - 2026-11-21 20:22 PST intel1 at 1249 GiB: already in gen_hosts, nothing to restore
+- 2026-11-21 20:22 PST HOURLY free space 20:22 epyc9=1576 intel1=1249 (restore at >=250 GiB; caps 250 on epyc9/intel1)
