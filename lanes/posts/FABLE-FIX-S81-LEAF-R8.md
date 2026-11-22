@@ -1,0 +1,1 @@
+- 2026-11-21 19:08 PST RESUMED (successor of R7). Adopted gates oth-ubuntu-1263880-1795310452 (66-type, strict bind) and oth-ubuntu-875159-1795316235 (68-type, elab/bind); waiters armed. Next: t39 family lever private proof (vsw MX->R0, swr re-site, o_y station bank) on epyc7/epyc9.
