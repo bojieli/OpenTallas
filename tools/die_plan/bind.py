@@ -2810,12 +2810,18 @@ class Binder:
         f = f if f.is_absolute() else Path(self.base) / f
         m = importlib.util.spec_from_file_location("bind_param_regen", f)
         mod = importlib.util.module_from_spec(m)
-        m.loader.exec_module(mod)
+        # A source-tree hook can prepend its own tools directory. Its imports
+        # must not change where this binder resolves later generator imports.
+        saved_path = sys.path[:]
         try:
-            r = mod.regen(self)
-        except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
-            self.errors.append(f"PARAM_REGEN {f.name}: {e}")
-            return
+            m.loader.exec_module(mod)
+            try:
+                r = mod.regen(self)
+            except Exception as e:      # the hook names the inconsistency (e.g. asymmetric relay legs)
+                self.errors.append(f"PARAM_REGEN {f.name}: {e}")
+                return
+        finally:
+            sys.path[:] = saved_path
         changed, derived = [], []
         # DIE-KV-97 11-09: asbuilt.param_regen.declare {RTL master: {param: default}} names parameters the as-built netlist
         # cannot show: those of a per-instance substitute master (substitute_inst, e.g. KV qkd_astk_ep_s_e EO_E / EO_RL;

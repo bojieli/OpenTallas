@@ -145,6 +145,26 @@ def test_bind_wires_key_and_fails_closed_on_missing_driver():
         b.emit_type("src", part)
 
 
+def test_parameter_hook_does_not_shadow_the_bound_reset_generator(tmp_path, monkeypatch):
+    stale = tmp_path / "reset_replicate.py"
+    stale.write_text("raise RuntimeError('loaded the source-tree reset generator')\n")
+    hook = tmp_path / "param_hook.py"
+    hook.write_text(
+        "import sys\n"
+        f"sys.path.insert(0, {str(tmp_path)!r})\n"
+        "def regen(ctx): return {'params': {}}\n"
+    )
+    monkeypatch.delitem(sys.modules, "reset_replicate", raising=False)
+    # Give pytest a fresh list so even a failing assertion cannot leak paths.
+    monkeypatch.setattr(sys, "path", sys.path[:])
+    b = bind.Binder.__new__(bind.Binder)
+    b.ab, b.errors = {"param_regen": {"file": str(hook)}}, []
+    b.regen_params()
+    assert b.errors == []
+    import reset_replicate
+    assert Path(reset_replicate.__file__).resolve() == Path(RR.__file__).resolve()
+
+
 def mod_assign(depth):
     """the 'element pair' shape: assign x = q; x feeds cores of TWO regions (and w_s feeds one region only)"""
     return f"""module top (input wire clk, input wire s, output wire [3:0] o);
