@@ -6781,6 +6781,9 @@
            }
           ]
          },
+         "contents": {
+          "type": "boolean"
+         },
          "extra_um": {
           "type": "array",
           "items": {
@@ -6812,6 +6815,40 @@
            "minLength": 1
           }
          },
+         "members_by_face": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+           "S": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           },
+           "W": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           },
+           "N": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           },
+           "E": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
+          }
+         },
          "note": {
           "type": "string"
          }
@@ -6830,6 +6867,40 @@
           "items": {
            "type": "string",
            "minLength": 1
+          }
+         },
+         "members_by_face": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+           "S": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           },
+           "W": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           },
+           "N": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           },
+           "E": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
           }
          },
          "note": {
@@ -6856,6 +6927,17 @@
           "type": "string"
          }
         }
+       },
+       "split_axis": {
+        "enum": [
+         "x",
+         "y",
+         "auto"
+        ]
+       },
+       "lattice_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
        },
        "trigger": {
         "type": "string"

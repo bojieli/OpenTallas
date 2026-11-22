@@ -4697,9 +4697,24 @@ def gen_env_outside_tree(d, item):
     return sorted(set(out))
 
 
+STRIP_PIECE_RE = re.compile(r"^(.+)__strip_[SWNE]$")
+
+
+def piece_base(item):
+    """FLOW-STRIPBODY-1121: a strip piece type of a strip / body split (tools/die_plan/strip_body.py -> type_split:
+    <type>__strip_<face>) builds with its base type's wave settings (item_env, type_args, hard_wrappers); the body keeps
+    the base name.  -> the base item, or item itself"""
+    m = STRIP_PIECE_RE.fullmatch(str(item))
+    return m.group(1) if m else item
+
+
 def item_env_entry(d, item):
-    """die item_env[item] merged with the glob keys that match it (COORD 11-19: one entry for a whole family, e.g. "col_h9_r2__*"): an exact key wins over a glob, a longer glob over a shorter one"""
+    """die item_env[item] merged with the glob keys that match it (COORD 11-19: one entry for a whole family, e.g. "col_h9_r2__*"): an exact key wins over a glob, a longer glob over a shorter one.
+    A strip piece without its own entry inherits its base type's (piece_base)"""
     tab = (d.get("item_env") or {}) if isinstance(d, dict) else {}
+    base = piece_base(item)
+    if base != item and not any(k == item or (re.search(r"[*?\[]", str(k)) and fnmatch.fnmatchcase(str(item), str(k))) for k in tab):
+        item = base
     out = {}
     for k in sorted((k for k in tab if re.search(r"[*?\[]", str(k)) and fnmatch.fnmatchcase(str(item), str(k))), key=lambda k: (len(str(k)), str(k))):
         out.update(tab[k] or {})
@@ -4903,8 +4918,9 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # KW-FIX-30 11-07 (COORD 15:01 (b)): die option flow_tag -> OT_FLOW_TAG in the gen env (gen.py phys writes K/flow_tag,
             # run_kit.sh passes it to the GRT clock gate); an item_env OT_FLOW_TAG wins.  Unset = as before.
             "gen_env": wave_gen_env(cfg, die, item),
-            "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
+            "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item, (d.get("type_args") or {}).get(piece_base(item))) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
+            **({"piece_of": piece_base(item)} if piece_base(item) != item else {}),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
             "preflight_args": list(["--contract"] if d.get("preflight_args") is None else d["preflight_args"]),
             "geom_waivers": geom_waivers(d, item, parent),

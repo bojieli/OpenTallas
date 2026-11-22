@@ -1,6 +1,8 @@
 """strip_body.py (FAM-S81-SLICE-R4 11-21): the strip / body sub-tile split key of a partition type -- schema, region rule
 (perimeter band minus hard-core / extra keep-out boxes + halo), per-face notches, G0 WARN-only check."""
 import copy
+
+import pytest
 import json
 import sys
 from pathlib import Path
@@ -104,3 +106,64 @@ def test_schema_accepts_strip_body_and_refuses_malformed_and_g0_warns_only():
     R, summ = CK.run(w)
     assert not [e for e in R.errors() if e["check"] == "strip_body"]
     assert summ["strip_body"]["warnings"] == 1 and any(i["check"] == "strip_body" and i["level"] == "WARN" for i in R.items)
+
+
+def _sp_type(**kw):
+    t = _type(**kw)
+    t["outline_um"] = [1002.24, 803.52]          # 116 x 93 lattice steps
+    return t
+
+
+def test_split_axis_plan_clips_band_to_nearest_cutout_on_lattice():
+    t = _sp_type()
+    r = SB.split_axis_plan(t, "t", 8.64)
+    # S: u_xr bottom 50 - halo 5 = 45 -> 43.2 on the lattice; N: u_cap (R90, y 400..700) + halo 705 -> 98.52 -> 95.04
+    assert r["axis"] == "y"
+    assert r["strip_depth_um"] == {"S": 43.2, "N": 95.04}
+    assert r["cuts_um"] == [43.2, round(803.52 - 95.04, 6)]
+    assert [p["suffix"] for p in r["parts"]] == ["__strip_S", "", "__strip_N"] and r["keep"] == 1
+    assert r["faces_in_body"] == ["W", "E"]
+
+
+def test_split_axis_plan_plan_sited_contents_are_cutouts():
+    t = _sp_type(cutouts=dict(hard_cores=False), split_axis="y")
+    t["contents"] = [{"inst": "u_m", "origin_um": [600.0, 20.0], "outline_um": [50.0, 40.0], "orient": "R0"}]
+    r = SB.split_axis_plan(t, "t", 8.64)
+    assert r["band_clip_um"]["S"] == 15.0 and r["strip_depth_um"]["S"] == 8.64
+    t["strip_body"]["cutouts"]["contents"] = False
+    assert SB.split_axis_plan(t, "t", 8.64)["strip_depth_um"]["S"] == 129.6
+
+
+def test_split_axis_plan_explicit_axis_and_one_face():
+    t = _sp_type(split_axis="x", faces=["W"], cutouts=dict(hard_cores=False))
+    r = SB.split_axis_plan(t, "t", 8.64)
+    assert r["axis"] == "x" and r["cuts_um"] == [129.6] and r["keep"] == 1
+    assert [p["suffix"] for p in r["parts"]] == ["__strip_W", ""]
+
+
+def test_split_spec_contents_family_and_face_members():
+    raw = {"grid_um": 8.64, "partition_types": {"a": _sp_type(), "b": _sp_type()}}
+    raw["partition_types"]["a"]["contents"] = [{"inst": "u_c"}, {"inst": "astk_S0"}]
+    raw["partition_types"]["a"]["strip_body"]["strip"]["members_by_face"] = {"S": ["astk_S*"]}
+    sp = SB.split_spec(raw, ["a", "b"], {"plan": "p.json", "sidecar": "s.json"})
+    assert sp["family"] == ["a", "b"] and sp["plan"] == "p.json" and sp["keep"] == 1
+    import re
+    rules = sp["contents"]["a"]
+    piece = next(i for rx, i in rules if re.fullmatch(rx, "astk_S0"))
+    assert piece == 0 and next(i for rx, i in rules if re.fullmatch(rx, "u_c")) == 1
+    assert sp["clip_windows"] and sp["band_reshape"] and "tap_pair_affinity" in sp["drop_clock_keys"]
+    # a content matching a strip glob without a face rule is refused (contents stay in the body)
+    raw["partition_types"]["b"]["contents"] = [{"inst": "u_cland_x"}]
+    with pytest.raises(ValueError, match="match strip member globs"):
+        SB.split_spec(raw, ["b"])
+    # family members with different cuts are refused
+    raw["partition_types"]["b"]["contents"] = []
+    raw["partition_types"]["b"]["strip_body"]["band_um"] = 60
+    with pytest.raises(ValueError, match="different cuts"):
+        SB.split_spec(raw, ["a", "b"])
+
+
+def test_split_axis_plan_refuses_no_strip():
+    t = _sp_type(faces=["S"], cutouts=dict(hard_cores=False, extra_um=[[0, 0, 1002.24, 4]]))
+    with pytest.raises(ValueError, match="no S/N strip fits"):
+        SB.split_axis_plan(t, "t", 8.64)

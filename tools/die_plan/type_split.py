@@ -37,6 +37,9 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       payload back (through the cut lanes) before its greedy packing: an old lane whose
                                       sources moved to another piece keeps its bits (native stations need one lane per
                                       OUT bus) and the census-sized cut lanes are not overfilled
+  clip_windows                        a window on a face parallel to the axis that straddles a cut is clipped to
+                                      the piece holding most of it (clip_margin_um 4.32 off the cut, at most
+                                      clip_max_pins_per_um 8; both port ends share the window; strip_body.py)
   fold_legs                           drop one internal station next to the cut where both hops stay <= reach
                                       (the cut boundary flop pair replaces it: +1 cycle instead of +2)
 
@@ -405,7 +408,7 @@ class TypeSplit:
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
                    "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
                    "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
-                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate"}
+                   "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -1259,7 +1262,7 @@ class TypeSplit:
         if unk:
             raise SplitError(f"{self.tn}: unhandled clock keys {sorted(unk)} (a START / raw transport key can only be "
                              f"dropped for re-derivation: spec drop_clock_keys)")
-        if ck.get("tap_mode") not in (None, "grid", "grid+explicit", "density"):
+        if ck.get("tap_mode") not in (None, "grid", "grid+explicit", "density", "explicit"):
             raise SplitError(f"{self.tn}: clock.tap_mode {ck.get('tap_mode')} not handled")
         dropped_keys = sorted(drop & set(ck))
         if dropped_keys:
@@ -1310,6 +1313,58 @@ class TypeSplit:
             for k in ("sink_sites_um", "reach_fix_sinks"):
                 if k in ck:
                     c[k] = [cut.sh(p[:2], i) + list(p[2:]) for p in ck[k] if cut.ppiece(p, f"{self.tn} {k}") == i]
+        if ck.get("tap_mode") == "explicit":
+            self._explicit_taps(ck)
+        else:
+            self._grid_added_taps(ck, grid, added)
+        # edge clocks by bus
+        self._clock_rest(ck)
+
+    def _explicit_taps(self, ck):
+        """clock.tap_mode explicit (FLOW-STRIPBODY-1121; S81 slice types): every table tap goes to the piece that holds
+        it (shifted, slid clear_um inside a new cut edge), renamed clk, clk_t1, .. in the old order per piece (the
+        names taps.explicit_tap_sites requires); a piece without a tap gets one 'clk' at its centre; core taps
+        (kind core) keep their names.  Old names map to the renamed tap (or the nearest tap of the piece)."""
+        import schema as S
+        cut, T = self.cut, self.T
+        for i in range(self.n):
+            t2 = T[i]
+            clear = S.type_tap_clear(dict(t2, clock=ck))
+            w, h = t2["outline_um"]
+            core = [tp for tp in t2["clock"]["taps"] if tp.get("kind") == "core"]
+            mine = [tp for tp in t2["clock"]["taps"] if tp.get("kind") != "core"]
+            out, slid = [], []
+            for tp in mine:
+                x, y = tp["xy"]
+                x2, y2 = min(max(x, clear), w - clear), min(max(y, clear), h - clear)
+                if (x2, y2) != (x, y):
+                    slid.append(tp["name"])
+                if any(abs(x2 - a) < clear - 1e-8 and abs(y2 - b) < clear - 1e-8 for a, b in
+                       [q["xy"] for q in out]):
+                    self.rep.setdefault("taps_dropped", {}).setdefault(self.tnames[i], []).append(tp["name"])
+                    continue
+                q = copy.deepcopy(tp)
+                q["name"] = "clk" if not out else f"clk_t{len(out)}"
+                q["xy"] = [rnd(x2), rnd(y2)]
+                self.tapmap[i][tp["name"]] = q["name"]
+                out.append(q)
+            if not out:
+                out = [dict(name="clk", xy=[rnd(round(w / 2 / 8.64) * 8.64), rnd(round(h / 2 / 8.64) * 8.64)])]
+            t2["clock"]["taps"] = out + core
+            for tp in ck.get("taps", []):
+                if tp.get("kind") == "core" or tp["name"] in self.tapmap[i]:
+                    continue
+                pp = cut.sh(list(tp["xy"]), i) if cut.ppiece(tp["xy"]) == i else None
+                ref = pp or [w / 2, h / 2]
+                self.tapmap[i][tp["name"]] = min(out, key=lambda q: abs(q["xy"][0] - ref[0]) + abs(q["xy"][1] - ref[1]))["name"]
+            if slid:
+                self.rep.setdefault("taps_slid", {})[self.tnames[i]] = slid
+            self.rep.setdefault("taps", {})[self.tnames[i]] = dict(explicit=len(out), core=len(core))
+        self.rep["old_grid_taps"] = 0
+
+    def _grid_added_taps(self, ck, grid, added):
+        import schema as S
+        cut, T = self.cut, self.T
         # grid taps of each piece, then the added taps in their old order, renamed after the piece grid
         sub = copy.deepcopy(self.ev.raw)
         for i in range(self.n):
@@ -1355,7 +1410,9 @@ class TypeSplit:
                 del T[i]["clock"]["added_taps"]
         old_grid = {n_: (x, y) for n_, x, y in grid}
         self.rep["old_grid_taps"] = len(old_grid)
-        # edge clocks by bus
+
+    def _clock_rest(self, ck):
+        cut, T = self.cut, self.T
         for i in range(self.n):
             T[i]["clock"]["edge_clocks"] = []
         for e in ck.get("edge_clocks", []):
@@ -1481,6 +1538,17 @@ class TypeSplit:
             if mm:
                 s, k = cidx[int(mm.group(1))]
                 bb = copy.deepcopy(b)
+                r = list(b["rect_um"])
+                lo, hi = cut.lo(s), cut.hi(s)
+                span = r[cut.ax + 2] - r[cut.ax]
+                if self.ev.spec.get("band_reshape") and (r[cut.ax] < lo - EPS or r[cut.ax + 2] > hi + EPS) \
+                        and span <= hi - lo + EPS:
+                    # FLOW-STRIPBODY-1121: a monitor ring band across a strip cut slides (same size) into its child's piece
+                    a0 = min(max(r[cut.ax], lo), hi - span)
+                    r[cut.ax], r[cut.ax + 2] = rnd(a0, 4), rnd(a0 + span, 4)
+                    self.band_clip.append(dict(bus=bus, how="moved", old=b["rect_um"], new=r))
+                    bb["resize"] = (bb.get("resize", "") + f" | {self.ev.tag}: moved into piece {s}").lstrip(" |")
+                    b = dict(b, rect_um=r)
                 bb["rect_um"] = cut.shr(b["rect_um"], s)
                 if cut.rect_piece(b["rect_um"], f"{self.tn} band {bus}") != s:
                     raise SplitError(f"{self.tn}: monitor band {bus} is not in its child's piece {s}")
@@ -1502,14 +1570,35 @@ class TypeSplit:
                 if new_a < need - EPS:
                     # too little area left on the bus side: slide the whole band into the piece (same size)
                     span = r[cut.ax + 2] - r[cut.ax]
-                    if span > hi - lo - 2 * 8.64:
+                    if span > hi - lo - 2 * 8.64 and self.ev.spec.get("band_reshape"):
+                        # FLOW-STRIPBODY-1121 (spec band_reshape): a thin strip piece cannot take the band at its
+                        # height: keep the part inside the piece and widen it along the cut until the reserve fits
+                        rr = list(r)
+                        rr[cut.ax], rr[cut.ax + 2] = max(r[cut.ax], lo), min(r[cut.ax + 2], hi)
+                        alen = rr[cut.ax + 2] - rr[cut.ax]
+                        if alen < 8.64:
+                            rr[cut.ax], rr[cut.ax + 2] = lo, hi
+                            alen = hi - lo
+                        cx = 1 - cut.ax
+                        CL = self.W if cx == 0 else self.H
+                        width = max(r[cx + 2] - r[cx], need / alen)
+                        if width > CL - EPS:
+                            raise SplitError(f"{self.tn}: band {bus} reserve {need:.1f} um2 does not fit piece {s}")
+                        c0 = 0.5 * (r[cx] + r[cx + 2]) - width / 2
+                        c0 = min(max(c0, 0.0), CL - width)
+                        rr[cx], rr[cx + 2] = rnd(c0, 4), rnd(c0 + width, 4)
+                        new_a, how = alen * width, "reshaped"
+                    elif span > hi - lo - 2 * 8.64:
                         raise SplitError(f"{self.tn}: band {bus} {r} neither clips ({new_a:.1f} < reserve {need:.1f} "
                                          f"um2) nor fits piece {s}")
-                    rr = list(r)
-                    a0 = min(max(r[cut.ax], lo + 8.64), hi - 8.64 - span)
-                    a0 = round(a0 / 0.27) * 0.27 if a0 > lo + 8.64 else a0
-                    rr[cut.ax], rr[cut.ax + 2] = rnd(a0, 4), rnd(a0 + span, 4)
-                    new_a, how = old_a, "moved"
+                    if how == "reshaped":
+                        pass
+                    else:
+                      rr = list(r)
+                      a0 = min(max(r[cut.ax], lo + 8.64), hi - 8.64 - span)
+                      a0 = round(a0 / 0.27) * 0.27 if a0 > lo + 8.64 else a0
+                      rr[cut.ax], rr[cut.ax + 2] = rnd(a0, 4), rnd(a0 + span, 4)
+                      new_a, how = old_a, "moved"
                 self.band_clip.append(dict(bus=bus, how=how, old=r, new=rr, area=[rnd(old_a, 2), rnd(new_a, 2)],
                                            reserve=need))
                 bb["rect_um"] = rr
@@ -1932,6 +2021,52 @@ class Event:
             if tn not in self.raw["partition_types"]:
                 raise SplitError(f"family type {tn} is not in the plan")
             self.ts[tn] = TypeSplit(self, tn)
+        if spec.get("clip_windows"):
+            self._clip_windows()
+
+    # ---------------------------------------------------------------- window clips (before the split)
+    def _clip_windows(self):
+        """spec clip_windows (FLOW-STRIPBODY-1121, strip_body.py): a port window on a face PARALLEL to the axis that
+        straddles a cut is clipped to the piece holding most of its length (kept clip_margin_um, default 4.32, off the
+        cut), so its bus has one piece.  Both ends of the port share the window, so the neighbour's pins on that port
+        compress inside their old window (no other window moves, no overlap).  Fail closed: a segmented port, a clipped
+        window over clip_max_pins_per_um (default 8.0) or shorter than 2 x margin."""
+        m = float(self.spec.get("clip_margin_um", 4.32))
+        dmax = float(self.spec.get("clip_max_pins_per_um", 8.0))
+        rec = []
+        for tn, ts in self.ts.items():
+            names = {p["name"]: p for p in ts.parts}
+            for pr in self.raw["ports"]:
+                for e in ("src", "dst"):
+                    if pr[e]["part"] not in names:
+                        continue
+                    p = names[pr[e]["part"]]
+                    df = pr["face"] if (e == "src" or pr["src"]["part"] == "@die") else OPP[pr["face"]]
+                    lf = local_face(p.get("orient", "R0"), df)
+                    if lf in ts.cut.axis_faces():
+                        continue
+                    o = p.get("orient", "R0")
+                    org = float(p["origin_um"][ts.cut.ax])
+                    flip = o in (("MX", "R180") if ts.cut.ax == 1 else ("MY", "R180"))
+                    L = ts.cut.L
+                    loc = sorted([(org + L - v) if flip else (v - org) for v in pr["window_um"]])
+                    if not any(loc[0] + EPS < c < loc[1] - EPS for c in ts.cut.cuts):
+                        continue
+                    if pr.get("segments"):
+                        raise SplitError(f"{tn} port {pr['id']}: segmented window straddles a cut (clip_windows)")
+                    ov = [max(0.0, min(loc[1], ts.cut.hi(i)) - max(loc[0], ts.cut.lo(i))) for i in range(ts.n)]
+                    i = max(range(ts.n), key=lambda k: ov[k])
+                    lo = max(loc[0], ts.cut.lo(i) + (m if i > 0 else 0.0))
+                    hi = min(loc[1], ts.cut.hi(i) - (m if i < ts.n - 1 else 0.0))
+                    w = int(pr.get("width") or 1)
+                    if hi - lo < 2 * m or w / (hi - lo) > dmax + EPS:
+                        raise SplitError(f"{tn} port {pr['id']}: clipped window {lo:.3f}..{hi:.3f} too short for "
+                                         f"{w} bits (max {dmax:g} pins/um)")
+                    die = sorted(rnd((org + L - v) if flip else (v + org), 4) for v in (lo, hi))
+                    rec.append(dict(type=tn, port=pr["id"], bus=pr[e]["bus"], face=lf, piece=i,
+                                    old=list(pr["window_um"]), new=die, pins_per_um=round(w / (hi - lo), 3)))
+                    pr["window_um"] = die
+        self.rep["windows_clipped"] = rec
 
     # ---------------------------------------------------------------- core moves (before the split)
     def _core_moves(self):
@@ -2984,7 +3119,11 @@ class Event:
                 old += self._rows(base, btype[bdp], bz["dst"]["bus"], "in") if bdp in btype else 0
                 f0 = int(ln.get("fixed_cycles", 0))
                 if new != old:
-                    if f0 < old:
+                    if f0 < old and self.spec.get("carry_short_fixed"):
+                        # FLOW-STRIPBODY-1121 (spec carry_short_fixed): a base lane whose fixed_cycles is already
+                        # below its station rows (shared / folded rows the base bind accepted) carries the delta
+                        self.rep.setdefault("short_fixed_carried", []).append(dict(lane=lid, fixed=f0, rows=old, new_rows=new))
+                    elif f0 < old:
                         raise SplitError(f"lane {lid}: fixed_cycles {f0} < its station rows {old}")
                     ln["fixed_cycles"] = f0 - old + new
                     ln["note"] = (ln.get("note", "") + f" | {self.tag}: fixed {f0} -> {ln['fixed_cycles']} (internal "
@@ -3185,6 +3324,10 @@ class Event:
         for tn, ts in self.ts.items():
             for nm in ts.tnames:
                 info = st["types"].get(nm)
+                if info is None and self.spec.get("strapless_pieces") and nm != tn:
+                    # FLOW-STRIPBODY-1121: a piece with no count-aligned crossing lands nothing: no count straps
+                    info = dict(straps={})
+                    self.rep["notes"].append(f"strap ties: {nm} has no count-aligned crossing (no count straps)")
                 if info is None:
                     raise SplitError(f"strap ties: no entry for {nm}")
                 t = self.out["partition_types"][nm]
@@ -3437,7 +3580,15 @@ class Event:
             for k, v in src.items():
                 if not isinstance(v, list) or v[0] not in self.pmap:
                     if isinstance(v, str) and v in self.pmap:
-                        raise SplitError(f"map {k}: whole split partition {v} (needs a piece)")
+                        ts = self.ts[self.raw_type(v)]
+                        whole_keep = (self.spec.get("whole_map_to_keep") and ts.pname[v][ts.keep] == v
+                                      and set(ts.content_piece.values()) <= {ts.keep})
+                        if not whole_keep:
+                            raise SplitError(f"map {k}: whole split partition {v} (needs a piece)")
+                        # FLOW-STRIPBODY-1121 (spec whole_map_to_keep): every as-built content of the type sits in
+                        # the keep piece (strip pieces hold only plan-generated face infrastructure), so the whole
+                        # as-built instance stays mapped to the keep piece, which keeps the partition name
+                        self.rep.setdefault("map_whole_to_keep", []).append(dict(inst=k, part=v))
                     continue
                 base, loc = v
                 ts = self.ts[self.raw_type(base)]
@@ -3713,7 +3864,14 @@ def census(spec, bind_dir):
     ev = Event({k: v for k, v in spec.items() if k != "census"})     # the census is this command's OUTPUT
     plan_dir = ev.plan_dir
     ab = ev.ab or {}
-    mf = json.loads((plan_dir / ab["map_file"]).read_text()) if ab.get("map_file") else {}
+    mf = {}
+    if ab.get("map_file"):
+        # relative to the asbuilt folder, else to the plan folder (the lookup of Event._asbuilt; FLOW-STRIPBODY-1121)
+        cands = [ev.ab_path.parent / ab["map_file"], plan_dir / ab["map_file"]]
+        f = next((c for c in cands if c.exists()), None)
+        if f is None:
+            raise SplitError(f"asbuilt map_file {ab['map_file']} not found in {[str(c.parent) for c in cands]}")
+        mf = json.loads(f.read_text())
     parts = {**mf.get("parts", {}), **ab.get("map", {}).get("parts", {})}
     rules = [(re.compile(a), b) for a, b in mf.get("rules", [])]
     TS, BP = {}, {}

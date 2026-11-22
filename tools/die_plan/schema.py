@@ -1857,6 +1857,8 @@ _SB_RECT = {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "nu
 _SB_PART = {"type": "object", "additionalProperties": False, "properties": {
     "suffix": {"type": "string", "pattern": "^__[A-Za-z0-9_]+$"},
     "members": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "members_by_face": {"type": "object", "additionalProperties": False, "properties": {
+        f: {"type": "array", "items": {"type": "string", "minLength": 1}} for f in ("S", "W", "N", "E")}},
     "note": {"type": "string"}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["strip_body"] = {
     "type": "object", "additionalProperties": False, "required": ["band_um", "strip"],
@@ -1868,6 +1870,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["s
         "halo_um": {"type": "number", "minimum": 0},
         "cutouts": {"type": "object", "additionalProperties": False, "properties": {
             "hard_cores": {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string"}}]},
+            "contents": {"type": "boolean"},
             "extra_um": {"type": "array", "items": _SB_RECT},
             "note": {"type": "string"}}},
         "strip": _SB_PART,
@@ -1876,6 +1879,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["s
             "cycles": {"type": "integer", "minimum": 0},
             "registered": {"enum": ["both_sides", "strip_side", "body_side"]},
             "note": {"type": "string"}}},
+        "split_axis": {"enum": ["x", "y", "auto"]},
+        "lattice_um": {"type": "number", "exclusiveMinimum": 0},
         "trigger": {"type": "string"},
         "note": {"type": "string"}}}
 # S81-COLGEN-3 11-17: relay_mid.tcl fails a relay chain hop > 405 um (gen_phys._relay_hop_fail; off = advisory WARN as before)

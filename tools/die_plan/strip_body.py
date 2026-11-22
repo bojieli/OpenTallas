@@ -4,6 +4,7 @@ c1x_C t1..t10 split B and lepe_mu_C t1 split B, FAM-S81-LEPE-3 J8 rows).
 
     python3 -I tools/die_plan/strip_body.py resolve PLAN --type T [--json OUT]    strip region of one type (rects + notches)
     python3 -I tools/die_plan/strip_body.py census  PLAN                          every type that declares strip_body
+    python3 -I tools/die_plan/strip_body.py spec    PLAN --type T --base B --out S  the type_split SPEC of the split
 
 A type over the OpenROAD cell cap (~400k) whose infrastructure (landings, ft stations, relays, ring CA) sits along the
 tile perimeter is split into two kits of the SAME tile: a STRIP kit that holds the perimeter infrastructure and a BODY kit
@@ -16,20 +17,40 @@ Plan key (partition_types.<T>.strip_body, schema.py):
   band_um        number, or {"S"|"W"|"N"|"E": number}   band depth per face (type frame R0)
   faces          ["S","W","N","E"] subset (default all four)
   halo_um        keep-out grown around each cutout (default 5)
-  cutouts        {"hard_cores": true (default) | false | [inst, ..], "extra_um": [[x0, y0, x1, y1], ..], "note"}
+  cutouts        {"hard_cores": true (default) | false | [inst, ..], "contents": true (default: every content row
+                 with origin_um + outline_um, i.e. plan-sited SRAM / ROM macros) | false,
+                 "extra_um": [[x0, y0, x1, y1], ..], "note"}
   strip / body   {"suffix": "__strip" / "__body", "members": [glob, ..] (fnmatch on the instance path), "note"}
+                 strip.members_by_face {"S": [glob, ..], ..}: plan CONTENTS that go to that face's strip piece (soft
+                 face logic, e.g. KV hub astk_ES*); every other content stays in the body
                  body.members empty / absent = everything that is not strip
   crossing       {"cycles": 0, "registered": "both_sides" | "strip_side" | "body_side", "note"}
+  split_axis     "y" (S + N strips) | "x" (W + E strips) | "auto" (default: the axis with the larger strip area)
+  lattice_um     cut lattice (default: the plan grid_um, 8.64)
   trigger, note  free text (why the split exists, e.g. "nontap > 400k at place")
 
 What this module does: schema-level validation (check "strip_body" in G0, WARN only, never a gate: R-MINIMAL) and the
 geometry: strip rectangles, per-face notches in the form the J7/J8 rows use ({from, to, depth} along each face), area.
-What it does not do (yet): emit the two kits.  The split event itself (bind / gen of __strip and __body) consumes
-resolve(); until it exists the key is carried by the plan and checked, and kits of the type build unsplit.
+
+BUILD FORM (FLOW-STRIPBODY-1121): a kit is one rectangular OpenROAD block and die partitions tile the die, so a notched
+strip cannot be its own kit.  The buildable form is a type_split event (tools/die_plan/type_split.py, the svc path) along
+ONE axis: the faces of that axis (S + N for split_axis "y", W + E for "x") each become a STRIP piece, a full-length
+rectangle as deep as the band allows WITHOUT crossing a cutout (band depth clipped to the nearest cutout incl. halo,
+snapped down to the plan lattice), and the middle piece is the BODY (it keeps the type / partition names, region
+origin and START pins: type_split's keep piece).  type_split moves the face infrastructure by geometry (buses by port
+window face, ft slots / internal stations by leg, landings with their bus), so the strip members are what lands in the
+strip rectangle; the faces of the other axis stay in the body.  `spec` writes that type_split SPEC:
+
+    python3 -I tools/die_plan/strip_body.py spec PLAN --type T [--type T2 ..] --base BASE.json --out SPEC.json
+        BASE: the type_split SPEC fields the plan does not carry (plan, plan_dir, sidecar, asbuilt, census, event, ..);
+        written: family, axis, cuts_um, parts (strip suffix + face, body ""), keep, contents (every content -> body).
+        Family members must resolve to the same cuts (type_split R-CAP-3.4), else one event per cut set.
 """
 import argparse
 import fnmatch
 import json
+import math
+import re
 import sys
 from pathlib import Path
 
@@ -68,6 +89,12 @@ def cutouts(t, sb):
         if sel is True or (isinstance(sel, list) and h.get("inst") in sel):
             x0, y0, x1, y1 = core_box(h)
             out.append((h.get("inst", "?"), (x0 - halo, y0 - halo, x1 + halo, y1 + halo)))
+    if c.get("contents", True):
+        # plan-sited macros of soft contents (SRAM / ROM content rows with origin_um + outline_um, e.g. S81 xg u_mem)
+        for h in t.get("contents") or []:
+            if isinstance(h, dict) and "origin_um" in h and "outline_um" in h:
+                x0, y0, x1, y1 = core_box(h)
+                out.append((h.get("inst", "?"), (x0 - halo, y0 - halo, x1 + halo, y1 + halo)))
     for i, r in enumerate(c.get("extra_um") or []):
         x0, y0, x1, y1 = (float(v) for v in r)
         out.append(("extra[%d]" % i, (min(x0, x1) - halo, min(y0, y1) - halo, max(x0, x1) + halo, max(y0, y1) + halo)))
@@ -189,6 +216,118 @@ def resolve(t, tn=""):
                 strip_frac=round(area / (W * H), 4) if W * H else 0.0, notches=notches(W, H, d, cuts))
 
 
+def face_clip(W, H, d, cuts, face):
+    """the depth of a full-length rectangle on `face` that stays inside the band and crosses no cutout"""
+    D = d[face]
+    if D <= 0:
+        return 0.0
+    for _, (x0, y0, x1, y1) in cuts:
+        near, far = {"S": (y0, y1), "N": (H - y1, H - y0), "W": (x0, x1), "E": (W - x1, W - x0)}[face]
+        a, b = (x0, x1) if face in ("S", "N") else (y0, y1)
+        L = W if face in ("S", "N") else H
+        if b <= EPS or a >= L - EPS or far <= EPS:
+            continue                     # cutout off the face extent or wholly outside the tile on this side
+        if near < D:
+            D = near
+    return max(D, 0.0)
+
+
+def split_axis_plan(t, tn="", lattice=8.64):
+    """{axis, cuts_um, faces: {face: depth}, parts, keep, area: {x, y}} of the one-axis split of a strip_body type"""
+    sb = t.get("strip_body")
+    if not sb:
+        raise ValueError(f"type {tn}: no strip_body")
+    if t.get("hard"):
+        raise ValueError(f"type {tn}: a hard type is not split")
+    W, H = (float(v) for v in t["outline_um"])
+    d = band_depths(sb)
+    cuts = cutouts(t, sb)
+    lat = float(sb.get("lattice_um", lattice))
+    dep = {}
+    for f in FACES:
+        c = face_clip(W, H, d, cuts, f)
+        dep[f] = math.floor(c / lat + 1e-6) * lat
+    area = {"y": (dep["S"] + dep["N"]) * W, "x": (dep["W"] + dep["E"]) * H}
+    ax = sb.get("split_axis", "auto")
+    if ax == "auto":
+        ax = "y" if area["y"] >= area["x"] else "x"
+    lo, hi = ("S", "N") if ax == "y" else ("W", "E")
+    L = H if ax == "y" else W
+    if abs(L / lat - round(L / lat)) > 1e-6:
+        raise ValueError(f"type {tn}: outline {L} along {ax} is not on the {lat:g}-um lattice")
+    if dep[lo] <= 0 and dep[hi] <= 0:
+        raise ValueError(f"type {tn}: no {lo}/{hi} strip fits: band clipped by cutouts to "
+                         f"{face_clip(W, H, d, cuts, lo):.2f} / {face_clip(W, H, d, cuts, hi):.2f} um (< lattice {lat:g})")
+    ssfx = (sb.get("strip") or {}).get("suffix", "__strip")
+    cuts_um, parts = [], []
+    if dep[lo] > 0:
+        cuts_um.append(round(dep[lo], 6))
+        parts.append({"suffix": ssfx + "_" + lo})
+    keep = len(parts)
+    parts.append({"suffix": ""})
+    if dep[hi] > 0:
+        cuts_um.append(round(L - dep[hi], 6))
+        parts.append({"suffix": ssfx + "_" + hi})
+    if len(cuts_um) == 2 and cuts_um[1] - cuts_um[0] < lat - EPS:
+        raise ValueError(f"type {tn}: strips {lo} {dep[lo]} + {hi} {dep[hi]} leave no body")
+    other = [f for f in (("W", "E") if ax == "y" else ("S", "N")) if d[f] > 0]
+    return dict(type=tn, axis=ax, cuts_um=cuts_um, parts=parts, keep=keep, lattice_um=lat,
+                strip_depth_um={f: round(v, 4) for f, v in dep.items() if f in (lo, hi)},
+                band_clip_um={f: round(face_clip(W, H, d, cuts, f), 4) for f in FACES if d[f] > 0},
+                faces_in_body=other, area_um2={k: round(v, 2) for k, v in area.items()})
+
+
+def split_spec(raw, types, base=None):
+    """type_split SPEC (dict) of the strip / body split of `types` (one family: same cuts) on plan `raw`"""
+    pt = raw.get("partition_types") or {}
+    grid = float(raw.get("grid_um", 8.64))
+    plans = []
+    for tn in types:
+        if tn not in pt:
+            raise ValueError(f"no type {tn}")
+        plans.append(split_axis_plan(pt[tn], tn, grid))
+    key = {(p["axis"], tuple(p["cuts_um"]), tuple(x["suffix"] for x in p["parts"])) for p in plans}
+    if len(key) != 1:
+        raise ValueError("family members resolve to different cuts (one split event per cut set): "
+                         + "; ".join(f"{p['type']} {p['axis']} {p['cuts_um']}" for p in plans))
+    p0 = plans[0]
+    sp = dict(base or {})
+    sp.update(family=list(types), axis=p0["axis"], cuts_um=p0["cuts_um"], parts=p0["parts"], keep=p0["keep"])
+    sp.setdefault("event", "STRIP-BODY")
+    sp.setdefault("band_reshape", True)      # landing bands deeper than a thin strip piece widen along the cut
+    sp.setdefault("carry_short_fixed", True)  # base lanes below their station rows carry the cut delta
+    sp.setdefault("strapless_pieces", True)   # a strip piece without count-aligned crossings has no count straps
+    sp.setdefault("whole_map_to_keep", True)  # the as-built tile instance maps to the body (keep piece) whole
+    # clock keys type_split re-derives per piece (the svc split precedent, OPUS-FIX-S81-SVC-R6 spec_x_epoch)
+    sp.setdefault("drop_clock_keys", ["band_fixed_um", "band_tap_windows_um", "insertion_target_override",
+                                      "tap_clear_um", "tap_pair_affinity", "tap_reserved_um"])
+    sp.setdefault("clip_windows", True)      # W/E (x: S/N) windows across a strip cut stay with their majority piece
+    contents = dict(sp.get("contents") or {})
+    piece_of_face = {x["suffix"].rsplit("_", 1)[-1]: i for i, x in enumerate(p0["parts"]) if x["suffix"]}
+    for tn in types:
+        t = pt[tn]
+        sb = t["strip_body"]
+        st = (sb.get("strip") or {}).get("members") or []
+        mbf = (sb.get("strip") or {}).get("members_by_face") or {}
+        rules = []
+        for f, globs in sorted(mbf.items()):
+            if f not in piece_of_face:
+                raise ValueError(f"type {tn}: strip.members_by_face {f} is not a strip face of the {p0['axis']} split")
+            rules += [[fnmatch.translate(g).replace("\\Z", "").replace("(?s:", "(?:"), piece_of_face[f]] for g in globs]
+        ruled = [re.compile(rx) for rx, _ in rules]
+        bad = [c["inst"] for c in t.get("contents") or [] if any(fnmatch.fnmatchcase(c["inst"], g) for g in st)
+               and not any(r.fullmatch(c["inst"]) for r in ruled)]
+        if bad:
+            raise ValueError(f"type {tn}: contents {bad[:5]} match strip member globs: plan contents stay in the body "
+                             "unless strip.members_by_face names their face (the strip pieces take face "
+                             "infrastructure by geometry)")
+        contents.setdefault(tn, rules + [[".*", p0["keep"]]])
+    sp["contents"] = contents
+    sp["strip_body"] = {p["type"]: {k: p[k] for k in ("strip_depth_um", "band_clip_um", "faces_in_body", "area_um2")}
+                        for p in plans}
+    return sp
+
+
 def member_errors(t, sb, tn=""):
     """strip / body member globs: non-empty strip list; a hard core never belongs to the strip (cores stay in the body)"""
     errs = []
@@ -241,9 +380,28 @@ def main(argv=None):
     a.add_argument("--json")
     c = sp.add_parser("census")
     c.add_argument("plan")
+    s = sp.add_parser("spec")
+    s.add_argument("plan")
+    s.add_argument("--type", action="append", required=True)
+    s.add_argument("--base", help="type_split SPEC fields the plan does not carry (plan, sidecar, asbuilt, census, ..)")
+    s.add_argument("--out", required=True)
     args = ap.parse_args(argv)
     raw = json.loads(Path(args.plan).read_text())
     pt = raw.get("partition_types") or {}
+    if args.cmd == "spec":
+        base = json.loads(Path(args.base).read_text()) if args.base else {}
+        base.setdefault("plan", str(Path(args.plan).resolve()))
+        try:
+            sp = split_spec(raw, args.type, base)
+        except (ValueError, KeyError, TypeError) as ex:
+            print(f"strip_body spec: FAIL {ex}", file=sys.stderr)
+            return 2
+        Path(args.out).write_text(json.dumps(sp, indent=1) + "\n")
+        for tn, r in sp["strip_body"].items():
+            print(f"STRIP_BODY_SPLIT {tn}: axis {sp['axis']} cuts {sp['cuts_um']} parts "
+                  f"{[x['suffix'] or '(body)' for x in sp['parts']]} strip depth {r['strip_depth_um']} "
+                  f"band clip {r['band_clip_um']} faces left in body {r['faces_in_body']}")
+        return 0
     if args.cmd == "resolve":
         if args.type not in pt:
             print(f"no type {args.type}", file=sys.stderr)
