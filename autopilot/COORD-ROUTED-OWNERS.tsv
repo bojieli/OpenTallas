@@ -407,3 +407,5 @@ qwen_compute	sle_hc2__cl9c4c4509__clf60c5152__pv*	FAM-QC-HCST-R3	COORD 11-21 21:
 qwen_compute	slw_hc3__*	FAM-QC-HCST-R3	COORD 11-21 21:50 (ownership sweep): all 4 pv signed
 s81	ot_s81sl_kv_leaf__t1	FAM-S81-MISC-R4	COORD 11-21 21:50 ownership sweep: unowned+stale, adopted with kv_leaf t5; no lane-core/band overlap, relaunch on J7 after 04:14
 s81	ot_s81sl_kv_leaf__t5	FAM-S81-MISC-R4	COORD 11-21 21:50: lane cores g_ln[4]/g_ln[0] on ft0_i/ft1_i/monitor_0 bands; J8 band-clear row (t5fix); FLOW-PRIVSPEC-R1 builds the tree
+s81	col_h9_r0_p4__t1__*	FAM-S81-COL-R6	COORD 11-21 23:xx: S81-GEOM-OPUS dead; held old-J6 rows stay held, relaunch on J7 (04:14 apply) then J8; coordinate with FAM-S81-COL-H9R0-R4 (keep+STAGGER J8 rows, kit C)
+s81	col_h9_r0_p5__t1__*	FAM-S81-COL-R6	COORD 11-21 23:xx: S81-GEOM-OPUS dead; held old-J6 rows stay held, relaunch on J7 (04:14 apply) then J8; coordinate with FAM-S81-COL-H9R0-R4
