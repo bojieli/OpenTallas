@@ -50,6 +50,27 @@ Facts: - pair = ot_s81hd_lep_pair 777.6x492.48, 1.10 M cells, ONE module for rg0
 Steps: a) kit regen + read net rst_n on the DB; b) pin-move ECO + incremental route of rst_n; c) signoff; d) views (LEF, ETM tt/ff, detail splice,
 clock_contract, signed_view_sha); e) tree r18j = r18h + 4 pair rows (pins_file, lef, lib) + gates; f) E kit --goal route; relaunch W on r18j; tell R8 the sha.
 
+### E reset task progress 08:0x (all on epyc9, P=L/pair, scripts L/tmp/pair_*.sh / pair_eco.tcl; hub logs intel2 ~/fable-fix-head-lep0n-1122/pair_*.otrun.log)
+- DONE a) kit regenerated (gen only): P/kit/ot_s81hd_lep_pair_kit (constraint.sdc identical to the signed golden.sdc; made from tree r18f + lep_ve28 plan).
+- DONE probe: net rst_n = 1 port + 1 load (input8829 BUFx2 at (389.0,245.97)); clk BPin M5 (397.44..397.488, 0..0.48).
+- DONE b) ECO: P/eco/in/6_final.odb (copy of signed DB) -> P/eco/out/pe_routed.odb: rst_n BPin M5 (399.372,0)-(399.396,0.192), only net rst_n
+  re-routed (GRT 257 um), DRC 0 (pe_drc.rpt empty), insts 1,101,619 unchanged, obstructions 0.
+- RUNNING c) sign-off: ot-run pid 1409281 on intel2 (pair_so.otrun.log), script pair_so.sh -> P/so_run, P/so_out/signoff.json, P/so.log; pass =
+  "VERDICT_RC 0". Queued on the epyc9 load cap at 08:02.
+- NEXT d) bash L/tmp/pair_views.sh via ot-run (--mem 96): P/views/views (blanket LEF + tt/ff ETM), P/views/detail/detail_b1.lef, splice ->
+  P/views/view/ot_s81hd_lep_pair.{lef,_tt.lib,_ff.lib} + splice.json; then clock_contract.json (tools/die_plan/core_clock_contract.py; needs
+  PYTHONPATH with physical/die_plan `cores` module: run from a tree, see the old results/head_lep_pair_views_vE28_1118/clock_contract.json form),
+  README + source_signoff.json copy -> new tree dir results/head_lep_pair_views_vE28s_1122.
+- NEXT e) tree r18j = fork of r18h + new view dir + core_pins/lep_pair_pins_777s.json (= 777 with rst_n {M5, x 399.384, y 0.042}) + the 4 pair
+  hard_cores rows of hd_lep0N (rg0, rg3) and hd_lep0N_w (rg1, rg2): pins_file, lef, lib -> republish both wrappers (reset tap of the pair
+  follows the pin: today tap 204 u_rrl_380 (535.7,1343.5) = pin x, N of rg0) -> bind/cohort/LATCHECK + plan_gate_pre (chain script name must
+  start with chain* for ot-run --priority plan).
+- NEXT f) E kit: private-spec s81_head hd_lep0N --tree r18j --goal route --src-manifest seal --rt c9b8d5f226ca (or newer), run-item --goal route;
+  relaunch W on r18j; post the view sha256 to R8 + COORD.
+- W build B relaunched 07:44 as unit fable-lep0n-w8 (pid 826765, spec s81_head_hd_lep0N_w_1122074440, plan 163383b979fca607): attempt w7 died at
+  place "OT_CLAND no mapped cells found under u_cland_origin" (landing_reader_start.origin_rect_um pins u_cland_origin, absent on a relay
+  piece) -> key dropped (L/tmp/rstart3_fix.py). st.sh now reports w8.
+
 ## LIVE 11-22 06:0x PST (read this first; older sections below are history)
 - FLOW: private-spec/run-item --goal finish DIES at the place->cts hand-over (run_kit.sh stage resume accepts floorplan|place|cts|grt|route only).
   Use run-item --goal route (wave chain: route + sign-off + routed LEC). Use kit_wave.py + --rt of rt c9b8d5f226ca or newer (seal mode, face-status gen).
