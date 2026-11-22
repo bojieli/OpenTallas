@@ -8194,7 +8194,7 @@ def copy_back_host(txt, default):
     return got[-1][1] if got else default
 
 
-SPILL_COPY_BACK = re.compile(r"SPILL: outputs copied back (\S+) -> (\S+)")
+SPILL_COPY_BACK = re.compile(r"SPILL: outputs copied back (\S+) -> ([A-Za-z0-9][A-Za-z0-9_.-]*)(?=$|[;\s])")
 
 
 RAN_OK_LINE = re.compile(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]*\))?: exit 0\b")
@@ -10257,12 +10257,12 @@ def run_item(spec_path):
     def after_place(K, rc, txt):
         """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
         released by its fresh physical_completion receipt while the original proof owner keeps running)"""
-        # WAVE-COPYBACK-1115: no sealed record = the kit is where the place RAN (ot-run INPUT HOLD moved it off the gen host)
-        kh = copy_back_host(txt, ran_ok_host(txt, hub) or G)      # the host that holds the kit (sealed copy-back record, else the RAN host)
-        cands = [kh] + [h for h in copy_back_hosts(txt, G, hub) if h != kh]      # WF-1: other hosts a copy-back / spill record names, then G
+        # Spill can remove its execution copy after a successful return, so probe the newest return destination first.
+        cands = copy_back_hosts(txt, G, hub)
+        kh = cands[0]
         rem = lambda cmd: remote_argv(kh, hub, cmd)
         if kh != G:
-            print(f"KW_KIT_HOST {T}: sealed copy-back put the kit on {kh}, not the gen host {G}", flush=True)
+            print(f"KW_KIT_HOST {T}: place receipt names {kh} before the gen host {G}", flush=True)
 
         probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
                  f"ls {q(K)}/run/layout_review/*.png {q(K)}/run/layout_review/*/*.png 2>/dev/null | head -1 | sed 's/^.*$/LAYOUT_PNG/'; "
@@ -10434,16 +10434,17 @@ def run_item(spec_path):
                                   timeout=60).stdout.strip()
             if not _rcs or _act in ("active", "activating", "reloading"):
                 return False
-            _kh = copy_back_host(_txt, G)
-            _p = subprocess.run(remote_argv(_kh, hub, f"ls {q(K or _svc.get('kit', ''))}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; echo KW_PROBE_OK"),
-                                capture_output=True, text=True, timeout=120)
-            _o = _p.stdout or ""
-            if _p.returncode == 0 and "KW_PROBE_OK" in _o and "3_place.odb" not in _o:
-                print(f"KW_PLACE_STALE_SERVICE {_svc.get('unit')}: ended rc {_rcs[-1]} but {K or _svc.get('kit')} has no 3_place.odb; launching a fresh PLACE", flush=True)
-                svc_file.replace(out / "place_service.stale.json")
-                if _lg.exists():
-                    _lg.replace(_lg.with_name("place.stale.log"))
-                return True
+            for _kh in copy_back_hosts(_txt, G, hub):
+                _p = subprocess.run(remote_argv(_kh, hub, f"ls {q(K or _svc.get('kit', ''))}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; echo KW_PROBE_OK"),
+                                    capture_output=True, text=True, timeout=120)
+                _o = _p.stdout or ""
+                if _p.returncode != 0 or "KW_PROBE_OK" not in _o or "3_place.odb" in _o:
+                    return False
+            print(f"KW_PLACE_STALE_SERVICE {_svc.get('unit')}: ended rc {_rcs[-1]} but {K or _svc.get('kit')} has no 3_place.odb; launching a fresh PLACE", flush=True)
+            svc_file.replace(out / "place_service.stale.json")
+            if _lg.exists():
+                _lg.replace(_lg.with_name("place.stale.log"))
+            return True
         except (OSError, ValueError, KeyError, subprocess.TimeoutExpired):
             pass
         return False

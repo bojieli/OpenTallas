@@ -34,6 +34,13 @@ def test_copy_back_hosts_record_stays_authoritative():
     assert KW.copy_back_host(txt, "epyc8") == "epyc7"
 
 
+def test_spill_terminal_destination_precedes_execution_and_gen_hosts():
+    txt = ("ot-run: RAN on epyc10 (unit oth-ubuntu-3520614-1795360035): exit 0\n"
+           "ot-run: SPILL: outputs copied back epyc10 -> epyc2; RAN on epyc10: exit 0\n"
+           "ot-run: SPILL: dropped the stage copy /scratch/kit on epyc10\n")
+    assert KW.copy_back_hosts(txt, "epyc9", "intel2") == ["epyc2", "epyc10", "epyc9"]
+
+
 def test_rc0_no_odb_is_uncharged_infra_without_banner():
     stage_text = BANNER + "Error: plan outline utilization 0.4\n" + LOG
     cls, why = KW.classify("place", stage_text)
