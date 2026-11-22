@@ -26,6 +26,16 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 07:4x
+- E r8-e11 FAILED post-place stop -441 (reset tap u_rrl_380 -> u_rg0.u_pair rst_n at pair centre; rgate QN INV on far macro edge).
+  COORD ruled option (b): pair rst_n -> S face (core_pins lep_pair_pins_777r, HEAD-96 rp18) + pair view re-sign, owned by FABLE-FIX-HEAD-LEP0N.
+  When Fable posts the re-signed pair view: fold it (LEF/libs + pins_file 777r for u_rg0/u_rg3 E and u_rg1/u_rg2 W) into my next tree and launch E (goal route).
+- main 8362730c per-type reset.relay_driver_types (opt-in, harmless) stays; NOT usable on HEAD (clock_landings rrelay-only regex,
+  install_bound_native_reset refuses drivers). Fork trees/r18e_fix carries it in tools (inert without the row).
+- W-band r8-w12 FAILED OT_CLAND fit (r18g coll_i2 band covered stage txread_l2b0). r18i: tmp/fix18i.py (coll_i2 [17.28,545.4,66.96,673.92],
+  coll_i1 bottom 676.08, overlap check incl. stage groups + reserved sites, collector_local_sources band rect_um sync). post7c -> ev/i3.
+  Next: mk_r18i (from mk_r18g with g1->i3, r18g->r18i, report r18i) then launch W goal route (tmp/launch_r18g.sh with N=r18i).
+
 ## UPDATE 11-22 06:0x
 - E r8-e11 place PASS (KW_PLACE_RC 0); post-place wns -556 (pre-CTS): u_rrl_380 -> u_rg0.u_pair rst_n driven by an INVx1 over a long
   wire (slew 1242 ps; repair_design should buffer it), coll_i3 wreg fs_q -> u_wen -38, lepk wen -163, u_bout_o_h2r1_p -> port -218,
