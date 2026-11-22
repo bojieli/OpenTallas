@@ -7,8 +7,8 @@
   "dsdv_slice_lepe_mu_C__t1",
   "dsdv_slice_lepe_nh_mus_C__t1"
  ],
- "status": "DRAFT 11-22 01:xx PST, shared xg/xf form XG-1 (lanes/handoff/FAM-S81-LEPE-4-xgxf-form.json); needs main >= f67a57cea1 RTL and tools >= 9724cdeef8; proof13 (nh_mus_C) strict bind running, private kit next",
- "K": "every XMID stop: line in pin -> line out pin 2 -> 3 edges. Not visible to bind LATCHECK; priced by dv_layer_compile rstop_hop from main 9724cdeef8 (reads OT_S81SL_RSTOP_XMID1 from the bind provenance plan, fails closed). Bind J8 on tools >= 9724cdeef8.",
+ "status": "DRAFT 11-22 01:xx PST, shared xg/xf form XG-1 (lanes/handoff/FAM-S81-LEPE-4-xgxf-form.json); needs main >= f67a57cea1 RTL and tools >= 20a713e74d; proof13 (nh_mus_C) strict bind running, private kit next",
+ "K": "every XMID stop: line in pin -> line out pin 2 -> 3 edges. Not visible to bind LATCHECK; priced by layer_prog/rstop_model.rstop_hop (compiler, dv_cut_replay, compose_tok_ds) from main 20a713e74d (reads OT_S81SL_RSTOP_XMID1 from the bind provenance plan, fails closed). Bind J8 on tools >= 20a713e74d.",
  "ops": [
   {
    "op": "replace",
@@ -29,5 +29,5 @@
   "lepe_mu_C t1 keeps the J8 split rows lanes/handoff/FAM-S81-LEPE-3-lepeC-split-J8-rows.json; u_xg stays whole in one part",
   "XG-3 / XF-1 / RST-1 FIRM sites follow from the proof13 placement (relay_sites), revised before 14:00"
  ],
- "tools_min_sha": "9724cdeef8"
+ "tools_min_sha": "20a713e74d"
 }

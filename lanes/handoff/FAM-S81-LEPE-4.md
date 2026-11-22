@@ -32,3 +32,5 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 - proof12 kit (LP t2) placing; waiters on run-item.
 
 - 11-22 00:0x PST XMID +1 in compiler stop model: main 9724cdeef8 (dv_layer_compile rstop_hop + test_rstop_xmid.py). TOK-VERIFY-2 had no reply/post file. lepeC xg1 J8 rows carry tools_min_sha 9724cdeef8.
+
+- 11-22 PST XMID gaps closed: main 20a713e74d, shared layer_prog/rstop_model.py used by compiler, dv_cut_replay (manifest rstop_xmid, fail closed) and compose_tok_ds (legs enter col-7 XMID stops: +1 per leg end). J8 rows tools_min_sha 20a713e74d.
