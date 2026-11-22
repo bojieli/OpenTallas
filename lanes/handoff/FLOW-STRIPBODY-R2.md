@@ -30,9 +30,12 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
 - round d: 1 error: EMIT clock landing: expected exactly one bound instance s_7N_C__strip_S (sv_id vs ident) -> a699139ec4;
   the J7 tree's clock_landings + this fix rides as overlay tmp/clock_landings_j7_fix.py.
 - round e (full_e.sh, ot-run localhost, PID 2651813): reuses split7d -> pack7e -> tree _stripbody_r2e -> bind7e + latcheck7e.
+- round e: 1 error class: count-strap audit keyed s_7N_C__strip_S vs top instance s_7N_C_strip_S -> main 0af17ef0a4 (bind audit sv_id).
+- round f (bind_f.sh, ot-run localhost PID 1932001): bind of r2e tree from overlay root $L/ovl_e (tools copy + fix, symlinks
+  physical/rtl/results -> r2e), out bind7f, latcheck7f. No new tree: scratch2 at 96%. Kits then: tree r2e, bind-out bind7f.
 ## Cleanup owed
-- trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each) superseded; ot-delete guard refuses now (newer than die tree,
+- trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each; ASK posted to COORD/FLEET-OPS 02:4x) superseded; ot-delete guard refuses now (newer than die tree,
   apply pending). Delete via ot-delete after the J7 apply.
 ## Next
-private-spec script $L/specs.sh (edit tree to r2e, bind-out bind7e; --host intel2 already set) -> run-item to floorplan (epyc7/epyc9 gen; hub gen
+private-spec script $L/specs.sh (edit tree to r2e, bind-out bind7f; --host intel2 already set) -> run-item to floorplan (epyc7/epyc9 gen; hub gen
 guard lifted 2e21a81724) -> cell counts to S81-J6-ASSEMBLY-R5 + FAM-S81-LEPE-4.
