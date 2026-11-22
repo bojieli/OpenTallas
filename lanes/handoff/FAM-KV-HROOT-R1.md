@@ -11,3 +11,10 @@ Chain: epyc8 /srv/opentallas-scratch2/claude/fam-kv-hroot-r1/chain.sh (tree over
 1. bindgate RC_BIND 0 / BIND_ERRORS 0 / RC_LATCHECK 0 / ALL_DONE -> kit_wave.py private-spec qwen_kvsys kv3_hroot --plan W/ana/plan_hroot.json --tree W/tree --bind-out W/tree/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record --src-manifest off --rt 7b6af7dd0449(>=dd507bc8ba2a ok) --host epyc7|epyc9 --lane FAM-KV-HROOT-R1 (on intel2), run-item.
 2. Read post-hook TT, final 5_1_grt.odb, and the E-strip density column in grt/density.png; if still >95% add a second spread (stations on kvpc/slg, TAP-GRID west-tap drop).
 3. On signing: rows to KV-PLAN-R6 (W/ana/hroot-relay-d28.json + gen/h1_hroot_rows.py), rebuild from a manifest tree for export.
+
+## UPDATE 11-21 22:3x PST (supersedes the epyc8 chain above)
+- COORD: D27d3 sealed (manifest fa1d8c9906a3); private tree must be real nlink-1 copy. Done: epyc10 W=/srv/opentallas-scratch2/claude/fam-kv-hroot-r1/tree (rsync -rlpt from sealed epyc8 tree, 0 hardlinks, 12 symlinks all inside). epyc8 skeleton tree/launch removed via ot-delete.
+- Plan 30004fa0b2df (sealed D27d3 + variant A rows). G0 PASS 0 err; strict bind BIND_ERRORS 0, RC_LATCHECK 0; R8 32 unequal + BPC 1 = D27d3 baseline (as HGI-R6 saw). RC_PRE 2 only = missing D24c baseline path on epyc10 (g0.sh BASE), not a plan finding.
+- Kit: kit_wave.py private-spec ... --src-manifest off --rt 7b6af7dd0449 --host epyc10; spec ~/coord/autopilot/private_specs/FAM-KV-HROOT-R1/qwen_kvsys_kv3_hroot_1121212646/. Place PASS (84212 cells, geom advisory only; NEED-STATION advisory 101 bits >405um on reset-relay u_rrl_25 -> efault/bin eq, up to 954 um).
+- Route running (unit via ot-run, client intel2 pid 1518322, log ~/tmp/famkvhrootr1/route.log): run_kit.sh gen/kv3_hroot route 72 8 in kit dir epyc10 .../KV-D26/private/FAM-KV-HROOT-R1/kv3_hroot_1121212646.
+- Next: post-hook TT, final 5_1_grt.odb, DRT result, E-strip density (grt density.png). Pass -> rebuild from manifest tree / carry rows (W/ana/hroot-relay-d28.json + gen/h1_hroot_rows.py) to KV-PLAN-R6 D28 label stable-block. Fail on the reset relay hops (u_rrl_25 716-954 um) -> add reset relay re-site rows.
