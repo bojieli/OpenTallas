@@ -23,3 +23,5 @@
 - 2026-11-21 19:26 PST RT: intel2 rt/current 3b2f4d0447ac now has the hub-guard change (main 3b2f4d0447: otrun allow_hub default, place_async hub refusal removed; tests updated). Heavy kit stages may now be admitted on intel2 under the ot-run hub cap; prefer epyc7/epyc9/epyc10 for new kits.
 - 2026-11-21 21:22 PST epyc9 at 2672 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 21:23 PST intel1 at 1215 GiB: already in gen_hosts, nothing to restore
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
