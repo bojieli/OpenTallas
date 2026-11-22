@@ -47,3 +47,8 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - POST-APPLY TODO (after pilot GEN PASS): release reps-first hold_items for c1x_C, kv_leaf t1-t4, seqhost, phy, iqf; convert 73 non-rep leaf from reps-first to J8 hold record with ETA 11-23 04:15 (owner LEAF-R7); svc stays split-pending. Coverage TSV s81-j6-r5/j7_coverage.tsv. Records carry eta fields.
 
 - 23:xx: 12 hold records in candidate (all owner+ETA J8). Post-apply j7_apply.sh drops 342 reps-first/svc_* hold_items keys (reps_release.py) and writes j7_coverage.tsv. Release: gunit t1, iqf t1, kv_leaf t1, phy t1, seqhost t1. Dry: 52 LAUNCH / 343 HELD.
+
+## 11-22 00:5x update
+- BIND_STALE (SLICE-R6 t18): stale pair was the J6r1 bind + J7 plan in their spec. J7 in-tree bind: PROBE_BIND 0/395 stale; pinned t18 smoke DRY-PASS (s81-j6-r5/pinsmoke2_epyc9). j7_apply.sh now gates the reps release on s81-j6-r5/launch_ok (SET). seqhost__t1 smoke running.
+- planref-missing (CLEAN-AGGR-R3): kit gen reads neither deleted dir; stage_hash_roots = hash-key text only (posted 8ddd67fb).
+- J8 respace lever: epyc9 s81-j6-r5/j8_respace (ledger.json, famsplit.py, plan/ overlay 53cab071c82f, bind.sh -> ot_build.log, ob/). J7 has 0 hops >405; 2241 rows 300-405 vs CBC 300 target. Bind ot-run oth-ubuntu-3032603 epyc9. Compose rule for J8: family rows first, then istation_respace on the composed plan (owner rows win).
