@@ -32,7 +32,19 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
 c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
 
-## STATE 11-22 04:1x PST
+## LIVE KIT (supersedes the spec/unit/pid named in STATE below) 11-22 04:2x PST
+- Attempts 1-3 died before place on tooling: (1) kit_wave.py of rt 6d2e = verify not seal (SRC_MANIFEST DRIFT); (3) rt 6d2e tools replace the
+  tree tools in the launch view, so GEN failed on the E face rows. Attempt 4 = rt c9b8d5f226ca (has c293b03e90 face-status generator and
+  my b589d27539 preflight): spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122041412/spec.json, src_manifest seal,
+  run-item = systemd --user unit fable-lep0n-w4 on intel2 (pid 1483054), log ~/fable-fix-head-lep0n-1122/runitem_w4.log.
+  Kit epyc9 /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122041410/gen/hd_lep0N_w
+  kit_rtl PASS, gen_lint PASS; tags ring:coll_i1@1.8697+ff, ring:coll_i2+ff (verified). Waiter: ot-wait --durable 1483054 --cmdline run-item.
+- COORD 04:1x asked about stage wdq_bank3 4.0 x 169.4 (E): measured NOT a problem (STA on r18e E placed DB, epyc9 L/sta_e: u_land.wdq worst +310.2,
+  0 violating). E census: 443 violating ends, ws -707: agg_1 status (fixed), NEW u_bout_o_h2r1_p/q 186 ends worst -229.6 (hub stamp logic + 590 ps
+  wire to the W cut face), g_rxh.u_ctl -191, lepk reader_start -> dsel -191, rg3 txi v_o -155. Posted 04:1x. E is R8's build.
+- STA recipe (read-only, any kit): L/tmp/sta_e.sh + sta_e.tcl (docker ORFS `make ... RUN_SCRIPT=/out/x.tcl run`, kit mounted ro).
+
+## STATE 11-22 04:0x PST
 - Tree r18f = fork of r18e + LEP-RINGFF-1 (W bands) + LEP-FACESTAT-1 (E: 4 status relays agg.i_coll_i0_p + local resets f0..f3 + my own
   equivalent generator patch in the TREE tools, tmp/patch_cl.py). Plan sha256 f23abfbd22780d25. Gates PASS (chain_r18f.otrun.log, unit
   oth-ubuntu-2529493-1795347713): plan_gate_pre 0 findings, bind PASS, cohort 27/27, LATCHECK 334/334, W wrapper unchanged. bind out epyc9 L/bind_r18f.
