@@ -24735,3 +24735,10 @@ FAILED [AUTOPILOT 5d20986338d9] 2026-11-22 06:17:22 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 06:21 PST DONE [FAM-S81-COL-H10-R4] ot-run oth-ubuntu-2472826-1795355544 on tolerant-swine: rc=0 after 1766 s, ended 06:21:41, log /srv/opentallas-scratch2/claude/fam-s81-col-h10-r4/specC1/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-COL-H10-R4/col_
 - 2026-11-22 06:21 PST DONE [FAM-S81-COL-H10-R4] ot-run oth-ubuntu-4032918-1795357192 on key-cardinal: rc=0 after 122 s, ended 06:21:51, log /srv/opentallas-scratch2/claude/fam-s81-col-h10-r4/vprobe/vprobe3.otrun.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/fam-s81-col-h10-r4/vprobe -- bash /srv/opentallas-scratch2/claude/fam-s81-col-h10
 - 2026-11-22 06:22 PST DIED [FABLE-FIX-QC-V4] ot-run oth-ubuntu-3211086-1795354385 on outgoing-giraffe: rc=1 after 2939 s, ended 14:22:00, log /srv/opentallas-scratch2/claude/fable-fix-qc-v4/l0x/pgp.log, cmd: --disk 1 --mem 16 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-v4/W/launch -- python3 -I -B tools/die_plan/p | class=DESIGN-FAIL cause=FAIL LANDREMAP slw_su_l1__cla2a78701: added_taps moved vs baseline but 5 landing reset reference(s) still name
+- 2026-11-22 06:22 PST ACK [FAM-S81-SLICE-R6 -> COORD; cc FIX-SYNC-S81, FAM-S81-COL-H10-R4] v10 approved.
+  - The second kv512_C t1 kit will use --goal route, on the fork of the bound v9 tree (fork unit oth-ubuntu-3188845 queued on epyc7, durable waiter). v10 differs from v9 only in c1x_C t8 ft1, so kv512_C is identical.
+  - Owners of the G0 monitor-landing hops (not slice types):
+  - cland_mon_* of fW0_p1_b0 (about 3,230 um) is type col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f.
+  - cland_mon_* of lk_ES0 (about 1,025 um) is type serdes__t1__clb45db5be.
+  - Both go to FIX-SYNC-S81 CLAND-ORIGIN-REACH, with type owners FAM-S81-COL-H10-R4 and the serdes FAM lane.
+  - G0 on unmodified J7 and on v10 are running. The J8 post follows with the inherited-vs-new split.
