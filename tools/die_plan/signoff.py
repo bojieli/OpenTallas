@@ -238,6 +238,7 @@ NATIVE_PDK_LIB = re.compile(
 
 # repo / bundle copy (copy_signoff_bundle ships nomcap_libs), then a kit's own staged copy (gen_phys KIT/nomcap)
 NOMCAP_DIRS = (HERE / "nomcap_libs", HERE / "nomcap", HERE.parent / "nomcap")
+NOMCAP_MOUNT = "/nomcap/"   # container path of nomcap_dir() in every corner session
 
 
 def nomcap_dir():
@@ -703,9 +704,19 @@ def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0,
             # These are the exact native PDK groups, not composed child models.
             if NATIVE_PDK_LIB.fullmatch(source):
                 continue
-            if not source.startswith('/work/') or '..' in Path(source).parts:
+            if '..' in Path(source).parts:
                 raise ValueError(f'consumed non-PDK Liberty host mapping unavailable: {source}')
-            host = root / source[len('/work/'):]
+            if source.startswith(NOMCAP_MOUNT):
+                # NOMCAP-MAP (FLOW-OPS-R2 11-21): the r708 nominal clock-pin-cap copies are mounted at /nomcap from
+                # nomcap_dir() (corner session mounts); the receipt sha256 still has to match the host file byte-exact.
+                ncd = nomcap_dir()
+                if ncd is None:
+                    raise ValueError(f'consumed non-PDK Liberty host mapping unavailable (OT_NOMCAP off): {source}')
+                host = Path(ncd) / source[len(NOMCAP_MOUNT):]
+            elif source.startswith('/work/'):
+                host = root / source[len('/work/'):]
+            else:
+                raise ValueError(f'consumed non-PDK Liberty host mapping unavailable: {source}')
             files.append(host); expected[str(host)] = row['sha256']; consumed[str(host)] = source
         result = clock_model_coverage(files, masters, expected)
         for model in result['models']:
@@ -3058,6 +3069,66 @@ def _git_head():
         return None
 
 
+def refresh_clock_coverage(record_path, flow_tag=None, write=False):
+    """NOMCAP-MAP (FLOW-OPS-R2 11-21): re-derive corners.<c>.clock_endpoint_coverage of a FINISHED sign-off record from
+    its own per-corner libraries.json receipt and recorded clock endpoint masters (no STA re-run; same sha-bound
+    inputs), then re-evaluate the record.  For records whose coverage read UNAVAILABLE only because the r708 /nomcap
+    container path had no host mapping.  write=True keeps the old record as signoff.json.pre_cov_refresh."""
+    rp = Path(record_path)
+    rec = json.loads(rp.read_text())
+    inputs = rec.get("inputs") or {}
+    if inputs.get("kit"):
+        disc = {"kit": inputs["kit"]}
+    elif inputs.get("library_config"):
+        disc = {"library_config": inputs["library_config"]}
+    else:
+        raise ValueError(f"{rp}: inputs name no kit or library_config")
+    tag = flow_tag or os.environ.get(FLOW_TAG_ENV) or None
+    changed = {}
+    for c, cj in sorted((rec.get("corners") or {}).items()):
+        if not isinstance(cj, dict) or not cj.get("done"):
+            continue
+        receipt = rp.parent / c / "libraries.json"
+        old = cj.get("clock_endpoint_coverage") or {}
+        new = consumed_clock_model_coverage(receipt, disc, cj.get("clock_endpoint_masters"),
+                                            cj.get("clock_endpoint_mapping_errors"), flow_tag=tag)
+        cj["clock_endpoint_coverage"] = new
+        changed[c] = dict(before=old.get("status"), after=new.get("status"), verdict=new.get("verdict"),
+                          reason=new.get("reason"))
+    before = rec.get("verdict"), ((rec.get("checks") or {}).get("clock") or {}).get("verdict")
+    evaluate(rec)
+    rec["clock_coverage_refresh"] = dict(writer="tools/die_plan/signoff.py refresh-coverage", tool_commit=_git_head(),
+                                         flow_tag=tag, corners=changed, verdict_before=before[0],
+                                         clock_before=before[1], when=datetime.datetime.now().astimezone().strftime("%Y-%m-%d %H:%M %Z"),
+                                         rule="NOMCAP-MAP: coverage re-derived from the record's own receipts, no STA re-run")
+    if write:
+        bak = rp.with_name(rp.name + ".pre_cov_refresh")
+        if not bak.exists():
+            shutil.copy2(rp, bak)
+        tmp = rp.with_name(rp.name + ".tmp")
+        tmp.write_text(json.dumps(rec, indent=1) + "\n")
+        os.replace(tmp, rp)
+        for c in changed:
+            cp = rp.parent / c / "corner.json"
+            if cp.is_file():
+                cr = json.loads(cp.read_text())
+                cr["clock_endpoint_coverage"] = rec["corners"][c]["clock_endpoint_coverage"]
+                ct = cp.with_name("corner.json.tmp")
+                ct.write_text(json.dumps(cr, indent=1) + "\n")
+                os.replace(ct, cp)
+    return rec, changed
+
+
+def cmd_refresh_coverage(a):
+    rec, changed = refresh_clock_coverage(a.record, a.flow_tag, write=a.write)
+    for c, v in changed.items():
+        print(f"COVERAGE {c}: {v['before']} -> {v['after']} ({v['verdict']}){' ' + v['reason'] if v.get('reason') else ''}")
+    print("SIGNOFF " + summary_line(rec) + ("" if a.write else " (dry: record not written; --write)"))
+    clock = ((rec.get("checks") or {}).get("clock") or {}).get("verdict")
+    print(f"CLOCK_GATE {clock}")
+    return 0 if rec["verdict"] == "SIGNED" else 1
+
+
 def cmd_verdict(a):
     rec = json.loads(Path(a.record).read_text())
     evaluate(rec, a.insertion_target)
@@ -3113,6 +3184,11 @@ def main(argv=None):
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
+    rc_ = sub.add_parser("refresh-coverage", help="re-derive child-flop clock coverage of a finished record from its own "
+                         "receipts (NOMCAP-MAP) and re-evaluate; --write to store")
+    rc_.add_argument("record")
+    rc_.add_argument("--flow-tag", help="released flow tag the sign-off ran at (default $OT_FLOW_TAG)")
+    rc_.add_argument("--write", action="store_true")
     lc = sub.add_parser("lec-check", help="OT_LEC_SUPERSET_VEC obligation of one kit's LEC receipts (exit 0 PASS / "
                                          "no obligation, 1 FAIL)")
     lc.add_argument("kit")
@@ -3128,6 +3204,8 @@ def main(argv=None):
         for x in lp or ():
             print(f"  - {x}")
         return 1 if lp else 0
+    if a.cmd == "refresh-coverage":
+        return cmd_refresh_coverage(a)
     if a.cmd == "bundle":
         print("SIGNOFF_BUNDLE " + " ".join(copy_signoff_bundle(a.out, extra=a.extra)))
         return 0
