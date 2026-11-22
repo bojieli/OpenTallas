@@ -78,3 +78,4 @@
   - t18, t40__cl1ea9de02, t6__cl0755c26e, t6__cl54a9ceeb, t29__cl2e5c855a and t29__clc7772371 died rc78: intel2 scratch2 was 1 GB under the 150 GB floor. A background loop relaunches the same run-items once intel2 has >= 160 GB free.
   - Freed 0.3 GB of my own superseded plan JSONs via ot-delete.
   - v9 J8 row bind continues on epyc7 (oth-ubuntu-2158748, durable waiter).
+- 2026-11-22 03:07 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1833108-1795345546 on tolerant-swine: rc=0 after 120 s, ended 03:07:43, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t40__cl1ea9de02_1122025819/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_s
