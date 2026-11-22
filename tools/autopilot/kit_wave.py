@@ -313,6 +313,20 @@ INFRA_RETRY_RE = re.compile(r"(?m)^NOT-RUN\b[^\n]*|ot-run: NOT RUN: no host with
 INFRA_RETRY_BACKOFF_S = (900, 1800, 3600)
 
 
+# FETCH-RACE (COORD 11-22): ot-job refused before its command started (an input fetch failed, an input not in the store) under a wrapper that
+# says 'ot-run: RAN on ... exit 99': the command never ran -> INFRA-RETRY although a RAN-on line follows
+OTJOB_PRESTART_RE = re.compile(r"ot-job: NOT RUN: (?:fetch \S+ failed|input [^\n]*not in the store)[^\n]*")
+
+
+def infra_not_run_line(s):
+    """the INFRA-RETRY line of a try that never started its command, else None"""
+    m = OTJOB_PRESTART_RE.search(s or "")
+    if m:
+        return m.group(0)
+    m = INFRA_RETRY_RE.search(s or "")
+    return m.group(0) if m and "ot-run: RAN on" not in s else None
+
+
 def infra_retry_kind(rec):
     """-> 'not-run' | 'restage' | '' for a FAIL row whose attempt never started its heavy command (FLOW-OPS-1300 item 9)"""
     if rec.get("status") != "FAIL":
@@ -326,6 +340,9 @@ def infra_retry_kind(rec):
             pass
     ms = list(INFRA_RETRY_RE.finditer(txt))
     if ms and "ot-run: RAN on" not in txt[ms[-1].end():]:
+        return "not-run"
+    mj = list(OTJOB_PRESTART_RE.finditer(txt))
+    if mj and not re.search(r"KW_PLACE_RC=0\b|ot-job: (?:RAN|DONE)\b", txt[mj[-1].end():]):
         return "not-run"
     if int(rec.get("restage_n") or 0) > 0 and not (d / "result.json").exists():
         return "restage"                      # moved between hosts while unstarted, its stopped unit then read as a failure
@@ -4044,7 +4061,7 @@ RULES = [
     ("INFRA", None, lambda s: (HOST_ENV_RE.search(s).group(0) if HOST_ENV_RE.search(s) else None), "host environment (image / PDK / docker tool missing, disk full): retry on another host"),
     # FLOW-OPS-1300 item 9 (COORD, QC slw_fw_v3 KW_PLACE_RC=78 'NOT-RUN disk-ETA hold', slw_stm_v2__cl9beb65e6 'no host with --dir has 60 GB'): ot-run refused to START the
     # command (no ot-run: RAN on line): INFRA-RETRY, requeued with backoff and not counted (free_not_run / infra_retry_sweep)
-    ("INFRA", None, lambda s: (INFRA_RETRY_RE.search(s).group(0) if INFRA_RETRY_RE.search(s) and "ot-run: RAN on" not in s else None),
+    ("INFRA", None, infra_not_run_line,
      "INFRA-RETRY (ot-run NOT-RUN: the command never started; requeued with backoff, not an attempt)"),
     ("INFRA", r"^geom_tools$", r"KW_GEOM_TOOLS", "geometry tool closure could not be staged on the checkpoint host"),
     # KITRTL-FAIL-1115: a die src tree's own (older) bind.py lacks a flag the wave passes: tool skew, one stable reason

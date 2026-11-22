@@ -127,17 +127,47 @@ def load_spec(a):
     return s
 
 
-def tar_fetch(host, path, dest):
-    """copy host:path (a file or dir) to dest through ssh; dest must not exist"""
-    os.makedirs(dest)
+FETCH_TRIES = 3
+FETCH_CHANGED = "file changed as we read it"
+ECO_DIR_GLOB = "eco_[0-9]*_[0-9]*_[0-9]*"     # eco_loop.py run roots (kit/eco_<date>_<time>_<pid>): later-stage scratch of another run
+
+
+def tar_fetch(host, path, dest, tries=None, sleep=time.sleep, popen=None, run=None):
+    """copy host:path (a file or dir) to dest through ssh; dest must not exist.
+    FETCH-RACE (COORD 11-22, QC slw_st_b_v1 cle6023ec2: the sealed place never ran: an ECO run was writing in the same wave kit gen dir and
+    the remote tar exited 1 'file changed as we read it'): such a copy is retried (fresh dest) up to OT_JOB_FETCH_TRIES (3) times; the
+    kit's own eco_<date>_<time>_<pid> run roots are not copied (OT_JOB_FETCH_ECO=1 copies them)."""
+    popen = popen or subprocess.Popen
+    run = run or subprocess.run
+    if tries is None:
+        try:
+            tries = max(1, int(os.environ.get("OT_JOB_FETCH_TRIES", FETCH_TRIES)))
+        except ValueError:
+            tries = FETCH_TRIES
     parent, base = os.path.dirname(path.rstrip("/")), os.path.basename(path.rstrip("/"))
-    p1 = subprocess.Popen(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
-                           f"tar -C '{parent}' -cf - '{base}'"], stdout=subprocess.PIPE)
-    p2 = subprocess.run(["tar", "-C", dest, "-xf", "-"], stdin=p1.stdout)
-    p1.stdout.close()
-    if p1.wait() != 0 or p2.returncode != 0:
-        raise JobError(f"fetch {host}:{path} failed")
-    return os.path.join(dest, base)
+    excl = "" if os.environ.get("OT_JOB_FETCH_ECO") == "1" else f" --anchored --exclude='{base}/{ECO_DIR_GLOB}'"
+    why = ""
+    for i in range(tries):
+        if os.path.lexists(dest):
+            shutil.rmtree(dest)
+        os.makedirs(dest)
+        p1 = popen(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
+                    f"tar -C '{parent}'{excl} -cf - '{base}'"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p2 = run(["tar", "-C", dest, "-xf", "-"], stdin=p1.stdout)
+        p1.stdout.close()
+        err = p1.stderr.read().decode("utf-8", "replace") if p1.stderr else ""
+        rc1 = p1.wait()
+        if err:
+            sys.stderr.write(err)
+        if rc1 == 0 and p2.returncode == 0:
+            return os.path.join(dest, base)
+        changed = rc1 == 1 and FETCH_CHANGED in err
+        why = f"remote tar rc {rc1}, local tar rc {p2.returncode}" + (f" ({FETCH_CHANGED}: a writer is active in the source)" if changed else "")
+        if not changed or i + 1 >= tries:
+            break
+        say(f"FETCH-RACE {host}:{path}: {why}; retry {i + 2}/{tries}")
+        sleep(10 * (i + 1))
+    raise JobError(f"fetch {host}:{path} failed: {why}")
 
 
 def seed_mtimes(path):
