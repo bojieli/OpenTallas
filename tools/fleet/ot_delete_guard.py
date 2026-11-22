@@ -153,13 +153,28 @@ def live_text(skip=(), ttl=20):
     return v
 
 
+def ancestor_pids(pid=None, proc="/proc"):
+    """CLEAN-AGGR-R3 11-21: the caller's own process chain (pid -> init).  `timeout N ot-delete <path>` or an ssh `bash -c '... <path>'`
+    named the target in an ANCESTOR cmdline, so the live check refused every delete run that way (s81-die-r3-e8 on epyc2/intel1)."""
+    out, pid = set(), os.getpid() if pid is None else pid
+    while pid > 1 and pid not in out:
+        out.add(pid)
+        try:
+            pid = int(open(f"{proc}/{pid}/stat").read().rsplit(")", 1)[1].split()[1])
+        except (OSError, ValueError, IndexError):
+            break
+    return out
+
+
 def _live_text(skip=()):
     t, me = [], {os.getpid(), os.getppid(), *skip}
+    anc = ancestor_pids()
     for p in glob.glob("/proc/[0-9]*"):
         if int(p[6:]) in me:
             continue
         try:
-            t.append(open(p + "/cmdline", "rb").read().decode("latin1"))
+            if int(p[6:]) not in anc:      # an ancestor's cmdline is the delete request itself; its cwd / open files still count
+                t.append(open(p + "/cmdline", "rb").read().decode("latin1"))
             t.append(os.readlink(p + "/cwd"))
         except OSError:
             continue

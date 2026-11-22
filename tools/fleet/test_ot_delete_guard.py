@@ -145,3 +145,19 @@ def test_private_kit_not_protected_by_kit_wave_ancestor_clean_aggr_r3(tmp_path):
     assert g.refuse(str(k), protected={wr_s}, ptext="", current={}, allow=set())
     assert g.refuse(str(wr / "qwen_compute" / "planX" / "private" / "LANE-A"), protected={wr_s}, ptext="", current={}, allow=set())
 
+
+
+def test_ancestor_cmdline_not_live_clean_aggr_r3(tmp_path):
+    d = tmp_path / "victim_tree"; d.mkdir()
+    code = ("import importlib.util as u,sys;s=u.spec_from_file_location('g',sys.argv[1]);g=u.module_from_spec(s);s.loader.exec_module(g);"
+            "print('HIT' if sys.argv[2] in g._live_text() else 'MISS')")
+    gp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot_delete_guard.py")
+    # the grandparent sh names the target in its cmdline (like `timeout N ot-delete <path>`): not a live user of the tree
+    out = subprocess.run(["sh", "-c", 'timeout 50 ' + sys.executable + ' -I -c "$0" "$1" "$2"; : ' + str(d), code, gp, str(d)],
+                         capture_output=True, text=True, timeout=60).stdout
+    assert "MISS" in out, out
+
+
+def test_ancestor_pids_walks_to_init():
+    s = g.ancestor_pids()
+    assert os.getpid() in s and os.getppid() in s and 1 not in s
