@@ -1,0 +1,94 @@
+{
+ "type": "svc_hi_dsdv_svc_rs__t6",
+ "physical_scope": "private Attention piece",
+ "move_um": [
+  -4.32,
+  0
+ ],
+ "macro_origins": [
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[6].u_c",
+   "before_um": [
+    345.6,
+    570.24
+   ],
+   "after_um": [
+    341.28,
+    570.24
+   ]
+  },
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[2].u_c",
+   "before_um": [
+    345.6,
+    838.08
+   ],
+   "after_um": [
+    341.28,
+    838.08
+   ]
+  },
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[6].u_c",
+   "before_um": [
+    345.6,
+    1105.92
+   ],
+   "after_um": [
+    341.28,
+    1106.448
+   ]
+  },
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[2].g_ts.u_t.u_hc.g_h[2].u_c",
+   "before_um": [
+    345.6,
+    1373.76
+   ],
+   "after_um": [
+    341.28,
+    1374.816
+   ]
+  },
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[2].g_ts.u_t.u_hc.g_h[6].u_c",
+   "before_um": [
+    345.6,
+    1641.6
+   ],
+   "after_um": [
+    341.28,
+    1643.232
+   ]
+  },
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[2].u_c",
+   "before_um": [
+    345.6,
+    1909.44
+   ],
+   "after_um": [
+    341.28,
+    1911.6
+   ]
+  },
+  {
+   "instance": "u_rsv.u_att.u_a.u_eng.g_t[3].g_ts.u_t.u_hc.g_h[6].u_c",
+   "before_um": [
+    345.6,
+    2177.28
+   ],
+   "after_um": [
+    341.28,
+    2179.44
+   ]
+  }
+ ],
+ "target_count": 44,
+ "local_targets_max_um": 239.88,
+ "stock_tree": {
+  "depth": 13,
+  "relays": 695
+ },
+ "receipt_source": "epyc2:/srv/opentallas-scratch2/claude/opus-fix-s81-svc-r8-north/j8/seven_structural_pre_tap"
+}

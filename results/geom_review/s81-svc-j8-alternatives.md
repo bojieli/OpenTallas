@@ -18,6 +18,8 @@ The combined pre-cut plan and sidecar are in epyc2 `/srv/opentallas-scratch2/cla
 
 The combined structural plan also clears the exact post-cut feedthrough scan. Four existing SVC-to-Slice ports initially had 268 over-length outlet bits once the receiver-side leg was included. Moving only those 268 final SVC cells keeps the stage counts and brings all 228 scanned ports and 32 internal chains within reach. The combined maxima are 404.881 µm across ports and 404.749 µm internally. The corrected plan and report are epyc2 `j8/seven_structural_pre_tap/plan_pre_tap_outlets_legal.json` and `seven_post_cut_hops_legal.json`.
 
+The t6 Attention layout now includes on-track reset access. Five small y shifts reopen four relay rows, and shifting the seven-core column 4.32 µm west connects them to the reset spine. The four formerly blocked local hops fall from 354.36 to 4.428 µm. The stock wavefront solver reaches all 44 hard-core reset targets and derives a depth-13 tree with 695 relays. The inspected detail shows the physical aisle and one reopened relay row. [T6 reset geometry image](s81-svc-j8-t6-reset-aisle.png) [T6 exact macro delta](s81-svc-j8-t6-reset-delta.json)
+
 [Seven split layouts](s81-svc-j8-alternatives.png)
 
 [Exact paired exterior windows](s81-svc-j8-exterior-windows.json)
