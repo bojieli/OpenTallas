@@ -1652,6 +1652,22 @@ def commit_lane(c):
     return git("log", "-1", "--format=%an", c, check=False).stdout.strip() or "COORD"
 
 
+def redwatch_staging_refusal():
+    """Use the launcher and reservation used by standard gates, on the local worktree volume."""
+    root = WT.absolute()
+    parent = next(p for p in (root, *root.parents) if p.is_dir())
+    launcher = shutil.which("ot-run") or str(HOME / ".local/bin/ot-run")
+    try:
+        admitted = S.run([launcher, "--hosts", "localhost", "--strict-host", "--dir", str(parent),
+                          "--mem", "4", "--threads", "1", "--disk", "60", "--max-wait", "1", "--pick"],
+                         capture_output=True, text=True, timeout=45)
+    except (OSError, S.TimeoutExpired) as exc:
+        return str(exc)
+    if admitted.returncode == 0 and admitted.stdout.strip() == "localhost":
+        return ""
+    return (admitted.stderr or admitted.stdout).strip()[-500:] or f"admission exit {admitted.returncode}"
+
+
 def redwatch():
     """OWNER 11-18: the queue is no gate any more.  Alarm only: for each NEW commit on main (first-parent, newest MQ_REDWATCH_MAX), run the
     tests its touched files select (the same gate() run, against the commit's first parent, so a failure main already had is baseline); a
@@ -1671,19 +1687,31 @@ def redwatch():
     seen = rs.get("seen", "")
     if not seen or not rev(seen) or not is_ancestor(seen, base):
         rs["seen"] = base
+        rs.pop("deferred", None)
         f.write_text(json.dumps(rs, indent=1))
         log(f"redwatch: start at main {base[:11]}")
         return 0
     commits = git("rev-list", "--first-parent", "--reverse", f"{seen}..{base}").stdout.split()
+    deferred = set(rs.pop("deferred", [])) & set(commits)
     cap = int(os.environ.get("MQ_REDWATCH_MAX", "4"))
-    if len(commits) > cap:
-        log(f"redwatch: {len(commits)} new commits, checking the newest {cap}")
-        commits = commits[-cap:]
+    if cap > 0 and len(commits) > cap:
+        first = [c for c in commits if c in deferred][:cap]
+        remaining = cap - len(first)
+        newer = [c for c in commits if c not in deferred]
+        selected = set(first + (newer[-remaining:] if remaining else []))
+        log(f"redwatch: {len(commits)} new commits, checking {cap} ({len(first)} deferred first)")
+        commits = [c for c in commits if c in selected]
     st = {"posts": []}
-    for c in commits:
+    for index, c in enumerate(commits):
         par = rev(f"{c}^1")
         if not par:
+            rs["seen"] = c
+            deferred.discard(c)
             continue
+        if reason := redwatch_staging_refusal():
+            log(f"redwatch {c[:11]}: source staging deferred: {reason}")
+            deferred.update(commits[index:])
+            break
         it = {"id": f"rw-{c[:10]}", "key": f"main@{c[:11]}"}
         try:
             wt_make(it["id"], c)
@@ -1699,8 +1727,11 @@ def redwatch():
             queue_post(st, "KNOWN-RED", lane, f"main {c[:11]} ('{subj}') made test(s) red: {note[:900]}. Not blocking anyone; "
                                               f"fix on main (ot-push-main) or revert.")
             rs.setdefault("red", {})[c] = note[:300]
+        rs["seen"] = c
+        deferred.discard(c)
     flush_posts(st)
-    rs["seen"] = base
+    if deferred:
+        rs["deferred"] = sorted(deferred)
     f.write_text(json.dumps(rs, indent=1))
     return 0
 

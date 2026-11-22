@@ -355,8 +355,50 @@ class EndToEnd(unittest.TestCase):
         r = self._omq("merge-now", "claude/good", self.shas["good"]); self.assertEqual(r.returncode, 6, r.stdout + r.stderr)
         self.assertIn("gate it again", r.stdout)
 
+    def _redwatch_pick(self, admitted):
+        bindir = self.d / "bin"
+        bindir.mkdir(exist_ok=True)
+        shim = bindir / "ot-run"
+        script = "printf 'localhost\\n'\n" if admitted else "printf 'NOT-RUN disk floor\\n' >&2\nexit 78\n"
+        shim.write_text("#!/bin/sh\n" + script)
+        shim.chmod(0o755)
+        self.env["PATH"] = str(bindir) + os.pathsep + os.environ["PATH"]
+
+    def test_redwatch_defers_untested_commit_without_losing_it_to_the_newest_cap(self):
+        q = self._auto_setup()
+        self.env["MQ_REDWATCH_MAX"] = "1"
+        self._redwatch_pick(False)
+        state = self.d / "mq/redwatch.json"
+
+        self.assertEqual(self._omq("redwatch").returncode, 0)
+        old = json.loads(state.read_text())["seen"]
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 0\n")
+        sh(*self.g, "commit", "-qam", "[LANE-BREAK] break f", cwd=self.dev)
+        red = sh("git", "rev-parse", "HEAD", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        self.assertEqual(self._omq("redwatch").returncode, 0)
+        self.assertEqual(json.loads(state.read_text()), {"seen": old, "deferred": [red]})
+        self.assertFalse((self.d / "wt" / f"rw-{red[:10]}").exists())
+        self.assertNotIn("KNOWN-RED", q.read_text())
+
+        harmless = self.dev / "tools/x/other.txt"
+        harmless.write_text("fine\n")
+        sh(*self.g, "add", str(harmless), cwd=self.dev)
+        sh(*self.g, "commit", "-qm", "[LANE-OK] harmless", cwd=self.dev)
+        tip = sh("git", "rev-parse", "HEAD", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        self._redwatch_pick(True)
+        self.assertEqual(self._omq("redwatch").returncode, 0)
+        self.assertEqual(json.loads(state.read_text())["seen"], red)
+        self.assertEqual(q.read_text().count("KNOWN-RED"), 1)
+        self.assertEqual(self._omq("redwatch").returncode, 0)
+        self.assertEqual(json.loads(state.read_text())["seen"], tip)
+        self.assertEqual(q.read_text().count("KNOWN-RED"), 1)
+
     def test_redwatch_posts_known_red_for_a_commit_that_breaks_tests_and_blocks_nobody(self):
         q = self._auto_setup()
+        self._redwatch_pick(True)
         self.assertEqual(self._omq("redwatch").returncode, 0)                               # first run: start at current main
         sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
         (self.dev / "tools/x/mod.py").write_text("def f():\n    return 0\n")
