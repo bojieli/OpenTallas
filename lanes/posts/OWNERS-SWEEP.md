@@ -286,3 +286,8 @@
   HEAD: hd_lep0N FAILED-NO-RELAUNCH+STALE 11h, owner FABLE-FIX-HEAD-LEP0N-R7 live.
   COORD-ROUTED-OWNERS.tsv is in autopilot/, not coord root.
 - 2026-11-21 21:51 PST 21:50 sweep: 467 unsigned rows (S81 348, QC 68, KV ~50, HEAD 1). Flags: S81 UNOWNED 43, DEAD-OWNER 19 (18 S81-GEOM-OPUS col_h10_r2, 1 SLICE-R5), STALE 65. QC FAILED-NO-RELAUNCH 4, STALE 8. KV FAILED-NO-RELAUNCH 3 (hroot, pc_v3, hub_Wo), 15 WAIT-BIND (owned-held). HEAD hd_lep0N FAILED-NO-RELAUNCH+STALE 11h (R7 alive). Table lanes/OWNERS-SWEEP.tsv.
+- 2026-11-21 22:50 PST 22:50 sweep 463 rows (S81 347, QC 67, KV 48, HEAD 1; HBM skipped); 63 superseded rows not flagged.
+  S81: 32 UNOWNED held-by-die-owner (col_h9_r0_p6 x11, dsdv_slice_c1x_C x9, s81sl_kv_leaf x3, dsdv_slice_lepw/lepe/iq, svc_hi_dsdv_svc); 10 col_h9_r0_p4/p5 DEAD-OWNER (S81-GEOM-OPUS).
+  QC: FAILED-NO-RELAUNCH cbx_q10__cl89936551_h, slw_su_c__cl19bb38ef, slw_su_c__cl92142dac (FAM-QC-SLWSLE-R1); cbn_q01 DEAD-OWNER.
+  HEAD: hd_lep0N FAILED-NO-RELAUNCH, stale 13h (FABLE-FIX-HEAD-LEP0N-R7 alive). KV: kv3_hub_C kit_rtl UNCLASSIFIED.
+  File lanes/OWNERS-SWEEP.tsv committed.
