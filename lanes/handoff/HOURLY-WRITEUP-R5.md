@@ -24,3 +24,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 562 any / 452 current (+4/+5 vs 07:05): S81 cores 72, QC types 64. J7 wave items live under kit-wave/s81/18a2688b741/items/*/geom/auto_geom.png (intel2). Next round 09:15 (waiter armed). After commit, verify HANDOFF line exists (a 07:05 commit once reported NOTHING-COMMITTED).
 ## State 09:25 PST 11-22
 563 any / 453 current (+1/+1 vs 08:15, QC slw_st_b_v1__cle6023ec2). Wave 93 S81 launches, 9 BIND-GEN-TOOLSKEW fails fixed. Next round 10:15 (waiter armed).
+## State 10:25 PST 11-22
+565 any / 453 current (any +2, current flat vs 09:06). QC slw_sc_v2 signed 09:59 counted as superseded. Next round 11:15 (waiter armed).
