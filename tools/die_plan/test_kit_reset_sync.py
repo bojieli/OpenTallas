@@ -75,6 +75,15 @@ def test_no_closure_copy_adds_the_tool_copy(tree):
     assert bind.kit_reset_sync("q_su31", rs, [wrap, leaf]) == rs.resolve()
 
 
+def test_missing_fallback_reports_the_source_path_and_keeps_valid_closures(tree):
+    rs, old, leaf, wrap = tree
+    rs.unlink()
+    assert bind.kit_reset_sync("q_hub_nw", rs, [wrap, leaf, old]) is None
+    with pytest.raises(bind.BindError, match="selected reset synchronizer source") as error:
+        bind.kit_reset_sync("q_su31", rs, [wrap, leaf])
+    assert str(rs) in str(error.value)
+
+
 def test_missing_parameter_fails_closed(tree):
     rs, old, leaf, wrap = tree
     wrap.write_text(WRAP.replace("#(.ASYNC_STAGES(2))", "#(.ASYNC_STAGES(2), .OUTPUT_COPIES(4))"))
