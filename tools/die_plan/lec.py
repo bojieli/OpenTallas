@@ -3231,6 +3231,32 @@ def register_alias_proposals(L, log):
     log.append(f"register aliases: {n} same-name / register-output relations proposed")
 
 
+# RST-COTAP clones (clock.tap_reset_split, main 6135636053bb, tap_reset_split.tcl): a last reset stage copied once per other clock tap is
+# named <source instance>_rtap_<tap net>[_N]; its key then keeps the source's type suffix before the clone suffix.
+TAP_CLONE = re.compile(r"_rtap_[A-Za-z0-9_]+$")
+
+
+def tap_clone_proposals(L, log):
+    """FLOW-OPS-R2 11-22 (COORD, OPUS-FIX-QC-COLL-R3 tap_reset_split): seed each gate-only <src>_rtap_<tap> clone as a duplicate of its
+    source register (same master, D, RESETN / SETN; CLK on a tap the wrapper ties to the same clock root, clock_tap_ties).  The name only
+    proposes: the relation goes through the normal inductive proof / refinement like every other hypothesis, so a clone that is not a copy
+    is refuted and stays a differ.  Partner side: the gold register when the source is matched (as the discovery passes pair it), else the
+    gate source.  -> number proposed"""
+    n = 0
+    matched = set(getattr(L, "matched", ()) or ())
+    for k in L.tonly:
+        if not k.startswith("ff:") or ("gate", k) in L.hyp or not TAP_CLONE.search(k):
+            continue
+        base = TYPE_SFX.sub("", TAP_CLONE.sub("", k))
+        if base == k or base not in L.tp:
+            continue
+        L.hyp[("gate", k)] = ("eq", "gold" if base in matched else "gate", base, 0)
+        n += 1
+    if n:
+        log.append(f"tap clone proposal: {n} <src>_rtap_<tap> reset-stage copies paired with their source (tap_reset_split)")
+    return n
+
+
 def cone_sim(m, lits, fixed, words, seed):
     """bit-parallel simulation of only the cone of `lits` (inputs: `fixed` {var: int}, others random)."""
     import random
@@ -6534,6 +6560,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)
+    tap_clone_proposals(L, log)
     if getattr(L, "preseed_hints", None):
         seed = apply_hints(L, L.preseed_hints, work, conflicts, log, propose_only=True)
         log.append(f"explicit untrusted hints preseeded before discovery: {seed['applied']} applied")
