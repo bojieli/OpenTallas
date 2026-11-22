@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """KW-RESUME-1 tests: stage fingerprints -> resume step, checkpoint fallbacks, apply/verify/release + resume.json
 provenance, nochange refusal, the gen_phys RUN_KIT resume block, and kit_wave.resume_prepare end to end (local host)."""
+import errno
 import json
 import os
 import re
@@ -11,6 +12,7 @@ import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -294,6 +296,25 @@ class Apply(unittest.TestCase):
         self.assertTrue(KR.verify(str(self.nK)))
         self.assertTrue(KR.release(str(self.nK)))
         self.assertFalse((self.oK / ".keep").exists())
+
+    def test_readable_checkpoint_denied_hardlink_is_copied(self):
+        real_link = os.link
+
+        def protect_synth(source, destination):
+            if Path(source).name == "1_synth.odb":
+                raise PermissionError(errno.EPERM, "protected hardlink")
+            return real_link(source, destination)
+
+        with patch.object(KR.os, "link", side_effect=protect_synth):
+            record = KR.apply(str(self.nK), str(self.oK), self.dec, self.meta)
+        files = {entry["rel"]: entry["mode"] for entry in record["links"]}
+        self.assertEqual(files[f"{BASE}/1_synth.odb"], "copy")
+        self.assertEqual(files[f"{BASE}/3_3_place_gp.odb"], "link")
+        source = self.oK / BASE / "1_synth.odb"
+        resumed = self.nK / BASE / "1_synth.odb"
+        self.assertEqual(source.read_bytes(), resumed.read_bytes())
+        self.assertNotEqual(source.stat().st_ino, resumed.stat().st_ino)
+        self.assertEqual(KR.verify(str(self.nK)), [])
 
     def test_stale_step_markers_dropped(self):
         # COORD 11-05 class fix: a cp -al copy carries .kwrs_done.<ppid>; the old run's steps must not read as done
