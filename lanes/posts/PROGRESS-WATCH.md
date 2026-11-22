@@ -256,3 +256,4 @@
 - 2026-11-22 13:00 PST ALERT NO-ADVANCE s81: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (ot_s81sl_leaf__t51 x2@place)
 - 2026-11-22 13:30 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 12:59:52 (31 min; no launch or classify meanwhile) running tick started 13:19:42, last mark 'after wave_balance'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
 - 2026-11-22 14:00 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (col_h9_r1__t1__cl49d7a23e__pv1c15776f x2@kit_rtl, ot_s81sl_leaf__t51 x2@place)
+- 2026-11-22 14:31 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 12:59:52 (91 min; no launch or classify meanwhile) running tick started 14:29:19, last mark 'after reviews_retry'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
