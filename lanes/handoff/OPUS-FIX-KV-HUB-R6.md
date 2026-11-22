@@ -74,3 +74,14 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
   LIVE: rerun with --goal route (pid 3064271, log kit3c_*Ei*). route = sign-off + routed LEC for run_kit kits; check that chain.log shows signoff_chain + LEC.
 - Sealed hub_Wo / hub_Eo: preempt_route.sh (intel2 ~/tmp/opusfixkvhub-r6) waits for place rc 0, stops the goal-finish runner (exact PID, cmdline
   checked), and re-runs --goal route (logs kit3r_*). Outputs preempt_Wo.out / preempt_Eo.out.
+
+## 06:1x hub_Eo reset reach (wins)
+- hub_Eo proof post-hook CTS setup -754.69: RESET path u_bin_i_host_die_rst_n/q -> u_astk_EN.g_phys_fault_u_fault__rst_n (~2,200 um, 33 bufs).
+  Known (RESET-RELAY-GEN-1530 form M rows, cut from D27d2 because relay_depth matched no sink). In the D27d3 base; hub_Wo mirrors it (astk_WN).
+- Rows: reset_leg_plan.py on e9be978c3180 from the proof kit geom (epyc8 opus-fix-kv-hub-r6/rr: plan_eo.json, plan_eowo.json 69ac8fe58fbd,
+  rep_eo.json / rep_wo.json). Eo legs >300 um 34->0 (+8 reset cycles), Wo 30->0 (+9).
+- LIVE bind: fork tree_r (tree_h3 + tools/common_flow from rt 6d2e187f0d65 = D28 tools), unit oth-ubuntu-3403777-1795354733,
+  log intel2 ~/tmp/opusfixkvhub-r6/rr_bind.log, out opus-fix-kv-hub-r6/rr/{g0gate,bindgate}. Waiter bwhl9169b.
+- On BIND_ERRORS 0: new D28 row = plan 69ac8fe58fbd (replaces e9be978c3180) + ROWS-READY receipt line; relaunch sealed hub_Eo/hub_Wo on it.
+- CANCELLED the sealed hub_Eo twin (_1122025542) per COORD rule (proof setup -755 < -300 after CTS): runner 2512829 and preempt script killed;
+  place scope stopped. hub_Eo PROOF keeps running for GRT/route evidence. Sealed hub_Wo waits for the Wo proof CTS number.
