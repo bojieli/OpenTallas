@@ -101,3 +101,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-21 23:45 PST CANARY hbm_sram @ 4c26c5bc90: FAIL failing vclk_basis,signoff (STALE-BASELINE STALE-BASELINE: identical 4 regressed metric(s) at 6 source commits (3504af932d1b, 3c2f3758f4c1, 93fa1eb851d4, a67ae35f4ddd); baseline canary-ru)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 00:00 PST CANARY s81_head_cl @ ae9a5815f0: FAIL failing face_cover (REGRESSION signoff setup_tt_wns 127.2 -> 117.0 -10.20 ps (tol -10); signoff drv 12.0 -> 39.0 39 vs 12 (0 new)); CANARY s81_cl @ 9724cdeef8: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: no metric measured (flow stopped before GRT))
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
