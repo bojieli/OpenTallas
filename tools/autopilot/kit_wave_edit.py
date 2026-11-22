@@ -169,6 +169,24 @@ def edit(coord, ops, message, dry=False, commit_cmd=None):
         lock.close()
 
 
+def required_review_problems(old_doc, new_doc):
+    """VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, FABLE-FLOW-2200 item 1; owner rule "visual review never blocks"): a die's
+    review_before_route.required = true held 50 rows WAIT-VISUAL 24-39 h after it was put back 11-21 03:07-04:12 and 14:16-14:21.
+    An edit that sets it (where the die did not already carry it) is refused; removing it is always allowed.  -> [problem text]"""
+    od, nd = (old_doc or {}).get("dies") or {}, (new_doc or {}).get("dies") or {}
+    out = []
+    for die, d in sorted(nd.items()):
+        if not isinstance(d, dict):
+            continue
+        new_req = ((d.get("review_before_route") or {}) if isinstance(d.get("review_before_route"), dict) else {}).get("required") is True
+        o = (od.get(die) or {}).get("review_before_route") if isinstance(od.get(die), dict) else None
+        old_req = isinstance(o, dict) and o.get("required") is True
+        if new_req and not old_req:
+            out.append(f"REQUIRED-REVIEW refused for {die}: review_before_route.required makes visual review a route hold; owner rule: visual "
+                       "review never blocks (advisory review: leave out 'required', the GEOM queue lists the rows)")
+    return out
+
+
 def event_problems(old_doc, new_doc):
     """FLOW-1949 (1): a die whose event CHANGED must carry an event the wave's die gate can resolve: a label of the die's accepted list (GATE_EVENTS exact + gate_events_extra) or, for a commit-typed
     die, a hex commit id.  A synthetic key (spaces, empty, an unlisted label) would turn the die off at the next tick.  -> [problem text].  Needs kit_wave (same dir); absent -> no check"""
@@ -315,7 +333,7 @@ def _edit_once(coord, ops, message, dry, commit_cmd):
     try:
         _old = json.loads(head)
         _newdoc = apply_patch(_old, ops)
-        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc)
+        _errs = release_repoint_errors(_old, _newdoc, ops) + event_problems(_old, _newdoc) + required_review_problems(_old, _newdoc)
         _hp = host_add_problems(_newdoc, added_gen_hosts(_old, _newdoc), HOST_ADD_PROBE)
         if _hp:
             _errs += ["HOST-ADD refused, input closure incomplete (copy the trees, re-run; OT_HOST_ADD_FORCE=1 overrides): " + " | ".join(_hp[:6])]
