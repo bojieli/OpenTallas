@@ -417,10 +417,10 @@ def owner_post(stale, prev=(), stamp=None, unreachable=()):
 def parked_dies(path=None):
     """F4 (FLOW-OPS-R2 11-22, FABLE-FLOW-0000): dies with dies.<die>.parked in autopilot/kit_wave.json are not listed as stale"""
     try:
-        d = json.load(open(path or os.path.join(COORD, autopilot/kit_wave.json))).get(dies) or {}
+        d = json.load(open(path or os.path.join(COORD, 'autopilot/kit_wave.json'))).get('dies') or {}
     except (OSError, ValueError):
         return set()
-    return {k for k, v in d.items() if isinstance(v, dict) and v.get(parked)}
+    return {k for k, v in d.items() if isinstance(v, dict) and v.get('parked')}
 
 
 def unparked(dies, parked=None):
