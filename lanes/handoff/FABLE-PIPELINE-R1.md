@@ -11,27 +11,34 @@ Steps: 1 design post (DONE 20:3x), 2 land small steps via ot-push-main with test
 Peers: FLOW-PRIVSPEC-R1 (private-spec --tree/--bind-out/--rt, run-item --goal; LANDED, in rt/current), FLOW-TREEFORK-R1 (tools/fleet/ot-tree-fork, landed),
 FLOW-OPS-1300 (drain, push tests).
 
-## Landed on main
-- 11fc581363: tools/die_plan/bind_emit_par.py + Binder._emit_one (OT_BIND_EMIT_J=N forked per-type emit, default serial) ; tools/autopilot/build_graph.py
-- a593d9b734: tools/autopilot/ot-build, ot_build.py (bind stage + plan-overlay), ot_build_hub.py (DIE TYPE driver), tests (26)
-Push recipe: scratchpad fp/ files -> scp to intel2 clone /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/clone -> git add explicit paths, commit
-(trailer Fable 5.2) -> nohup python3 -I rt/current/tools/fleet/ot-push-main > tmp/pushN.log. Tests: /srv/opentallas-scratch2/claude/mq-gate/venv/bin/python -m pytest
-(the -q summary line is suppressed there: use the exit status). Local working copies: scratchpad/fp/*.py (source of truth = clone).
+## Landed on main (push recipe below)
+- 11fc581363 bind_emit_par + Binder._emit_one + build_graph ; a593d9b734 ot-build (ot_build.py bind stage / plan-overlay, ot_build_hub.py DIE TYPE)
+- 035f8e7d6b kit_wave.py auto_rebind hook (die option auto_bind, default OFF) + ot_build_hub.wave_rebind ; fff2e6eaf2 alias/memo fix
+- 0092847a58 counters summed (`add` op, COUNTER_RE names), pick_host skips draining hosts (disk < 250 GB), realpath plan paths
+Push recipe: edit scratchpad fp/*.py (local tests: python3 -m pytest fp/test_*.py) -> scp to intel2 .../FABLE-PIPELINE-R1/tmp -> script (see scratchpad fp_c5.sh):
+fetch warm repo, git rebase refs/remotes/origin/main, cp into clone, venv pytest (exit status; do NOT set OT_BIND_EMIT_J for test_ot_build*), git add explicit paths,
+commit (trailer Fable 5.2), nohup python3 -I rt/current/tools/fleet/ot-push-main > tmp/pushN.log. rt/<sha12> syncs to hosts in ~2 min.
 
-## Measurements (KV D27d3 sealed tree kw45/src_kv_pin_eb1e73448bd0_hg15_48b92c30_t4e46a7ec_d27d3, plan_c 48b92c30, epyc8 load ~0.65/cpu)
-- BEFORE (KV-PLAN-R6 portable bind, serial, warm caches): elab ~2 min + strict bind + LATCHECK + BPC = 4567 s (76 min) total (ot-run oth-ubuntu-593030-1795318945).
-- My phase-timed serial baseline (OT_BIND_GATE_CACHE=off): epyc8 kvbase/ (unit oth-ubuntu-1198688-1795321386): elab 649 s (540 s = plan_package cold),
-  bind head 108 s (analyse 38, _bind_through_landings 108), regen_params 16 s, emit = the rest (running). out kvbase/out = diff -r reference.
-- AFTER run 1: ot-build bind stage, same inputs, --emit-j 8: epyc8 kvob/b_55caed3292c4 (unit oth-ubuntu-1778893-1795323490, client log intel2 tmp/kvpar1.log):
-  pre 34 s, elab 88 s, r8 ..., bind ... (waiters bp2igjao3 / bube5fnxa in my session; else read the logs).
-- TODO after both finish: diff -r kvbase/out/rtl kvob/b_*/rtl (+ bind_report.json) = byte-identity proof of parallel emit on KV;
-  then row-change run: ot-build plan-overlay + one row (kv3_io_cor_v1 reset.bank_taps or a lane station) -> time pre/adopt elab/r8/bind.
+## Measurements (KV D27d3 sealed tree kw45/src_kv_pin_eb1e73448bd0_hg15_48b92c30_t4e46a7ec_d27d3, plan_c 48b92c30, epyc8 load ~0.6/cpu)
+- BEFORE serial (my phase-timed baseline, epyc8 kvbase/, out kvbase/out): elab 649 s cold (88-130 s warm), strict bind 4087 s = head 108 + regen 16 + emit 3646 (one core) ; LATCHECK 3 s.
+  KV-PLAN-R6 portable bind same inputs: 4567 s total.
+- ot-build nodes: pre 34-48 s, elab 88-130 s, r8 (head + table check) 127-148 s (KV table fresh).
+- Parallel emit J=8: all 56 types emitted in 704 s (vs 3646 s), worker private mem ~6 GB each (parent 8 GB) -> ot-run --mem ~ 8 + 6*J (+margin; used 110).
+  Run 1 (kvob/b_55caed3292c4, plan unchanged) and run 2 (kvob/b_103ca094a86c, delta1 one-row plan) FELL BACK to serial (safe): (1) self.pc.B alias +
+  clock_landings._physical_clock_plan memo -> fixed fff2e6eaf2; (2) self.pc.stats['cells_emitted'] counter -> fixed 0092847a58.
+  Run 3 = kvob/par3.sh (delta1 plan, rt 0092847a5866), client log intel2 tmp/kvpar3.log, waiter b8csqb5k0. If it merges: diff -r its rtl vs b_103ca094a86c/rtl
+  (same plan, serial fallback) = byte-identity proof; report timings as AFTER.
+- Row change = kvob/delta1 (plan-overlay of plan_of_record, kv3_io_cor_v1 reset.bank_taps row 0 {'tap':1,'sinks':['u_ft_ft4_o_4']} dropped).
+
+## E2E (COORD said YES 21:1x: kv3_io_cor_v1 on sealed D27d3, outputs in my lane dir, sign-off counts; post result + every ot-build defect)
+- Running from intel2: python3 -I rt/fff2e6eaf2fb/tools/autopilot/ot-build qwen_kvsys kv3_io_cor_v1 --tree <d27d3> --lane FABLE-PIPELINE-R1 --rt fff2e6eaf2fb --host epyc2 --emit-j 8 --bind-mem 110
+  log intel2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/tmp/e2e1.log ; bind out epyc2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/ot-build/qwen_kvsys/<tree>/b_10566ab423ec
+  (this bind also falls back to serial ~70 min, then private-spec + run-item --goal finish + auto_export enqueue; kit stamp dir ~/coord/autopilot/private_specs/FABLE-PIPELINE-R1/ot-build/qwen_kvsys_kv3_io_cor_v1).
+  If the hub process dies: rerun the same command (bind FRESH by stamps, kit reruns).
+- Defects so far: D1 host pick ignored draining hosts (fixed), D2 parallel emit unsafe forms on KV (2 fixed), D3 scratch alias path (fixed).
 
 ## Open
-- ASK posted 21:0x to FAM-KV-IOPC-R4: use kv3_io_cor_v1 on D27d3 as the e2e proof (ot-build qwen_kvsys kv3_io_cor_v1 --lane FAM-KV-IOPC-R4); default at 22:00 = a KV type nobody has in flight.
-- Hub driver untested against the real private-spec / run-item (only fake fleet): expect fixes during e2e (result.json location, --rt arg form, --goal).
-- The wave config still points KV at D26 (apply of D27d3 pending by KV-PLAN-R6): for e2e pass --tree <d27d3 tree> (plan/asbuilt follow by prefix swap).
-- Step B (per-type emit memo keyed on type inputs, verify mode) not started; decide after measuring J=8.
-- Step 4: kit_wave uses ot-build for wave rows (bind freshness via stamps; KIT_TOPOLOGY_BIND_STALE / R8_STALE class) not started.
-- R8 pre-check: no exact plan-only invariant exists (bound == lane cycles holds for 48% of KV members only); staleness is decided by the r8 node
-  (bind head ~2 min KV) + stamps.
+- Step B (per-type emit reuse keyed on type inputs) not started; kit-level per-type reuse exists (kit stamp = type block + bound RTL + plan rest).
+- auto_bind is OFF for every die; to turn on: kit_wave_edit dies.<die>.auto_bind true (COORD decision) after the e2e proof.
+- R8 pre-check: no exact plan-only invariant (bound == lane cycles holds for 48% of KV members); staleness decided by r8 node (head ~2 min KV).
+- Report COORD <250 words when proven.
