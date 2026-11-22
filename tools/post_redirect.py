@@ -94,6 +94,9 @@ def resolve(lane, status, limit=10):
             nxt = latest_r(cur, status) if (chain or (st and st[0] == "stood-down") or RNUM.match(cur).group(2)) else ""
             if not nxt or nxt in seen:
                 break
+            nst = status.get(nxt)      # COORD 11-22 (FAM-S81-COL-R5 reclaim): a higher-numbered lane that stood down BACK to a lane of this chain ends it
+            if nst and nst[0] == "stood-down" and nst[1] in seen:
+                break
         else:
             break
         cur = nxt

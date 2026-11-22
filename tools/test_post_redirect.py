@@ -91,3 +91,11 @@ def test_unregistered_higher_r_successor_ends_the_chain():
         assert PR.resolve("B", {}) == []              # a live lane without a stand-down row is never moved by a sibling
     finally:
         PR.KNOWN.clear()
+
+
+def test_reclaim_by_earlier_lane():
+    # COORD 11-22: R6 stood down back to R5 -> R5 is live again, posts to R5 stay on R5
+    st = {"X-R4": ("stood-down", "X-R5"), "X-R6": ("stood-down", "X-R5")}
+    assert pr.resolve("X-R5", st) == []
+    assert pr.resolve("X-R4", st) == ["X-R5"]
+    assert pr.resolve("X-R6", st) == ["X-R5"]
