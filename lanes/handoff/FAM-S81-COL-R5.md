@@ -24,3 +24,10 @@ Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL
 - GATE: epyc10 j8/ (plan_j8r5.json sha ec692ca478d7, symlinked plan dir, ot_build.log, ob/). Script rst/gate_j8r5.sh, started 06:53 PST; local waiter bnc6kbd7s.
 - tc_e8 cancelled 14:08Z: DRT flat at 1430, Lef58EolKeepOut on hard-core pins (H10-R4 owns the pin-access fix). GRT TT classes = H10-R4 class 1 (qbank -> e*.u_w) + class 2 (ROM c*_6 -> s* q6). The lever is COL-E15E-CHAN / COL-H10R2-CTAP.
 - Worst-path report on epyc8 grtread/run2.sh tc writes ep2_tc.tsv.to.
+
+## 11-22 10:1x PST update (FAM-S81-COL-R5)
+- J8 gate GREEN (epyc10 j8/ob/b_0ce2d64bf6cc): strict bind 0 errors, LATCHECK 873/873, pv1c15776f 28 is_place per o1 station. Handed to S81-J6-ASSEMBLY-R5 (hub ede1742a0c9).
+- Solid-view proof kits (COORD 07:xx): intel2 fam-s81-col-r5/wave_tc8s2 and wave_rb8s2 (rt 0890cc9405b7, --ab OT_POROUS_VIEWS = 9 modules without hw/he/payload536, goal route). Work dirs epyc8 fam-s81-col-r5/kits/tc8s2 and rb8s2. run-item pids on intel2: 3668210 (tc, KW_RUNITEM_NO_UNIT=1) and 3650263 (rb). In CTS since 09:00. Auto-geom FAIL (advisory). The src_manifest seal was refused (R4 private trees).
+  READOUT: Lef58EolKeepOut count in 5_route_drc.rpt vs tc_e8 at 1430, then GRT TT from the final 5_1_grt.odb.
+- Finding: tc_e8 and rb_rest used the porous rewrites of the J8 base LEFs (POROUS-DEFAULT-s81.tsv), so the EOL markers trace to the porous splice. H10-R4's vprobe5 control is that same porous hw LEF.
+- J9: 485 residual reset hops, ETA 11-23 10:00 PST.
