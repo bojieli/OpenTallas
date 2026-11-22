@@ -14,3 +14,8 @@ Row cut 11-22 06:00 PST; apply >= 11:16. Tools pin rt 6dbb162ffe89 (has 3c2f3758
 V4 (11-23 event) MUST carry: (1) the 66 internal-station hops > 405 um in 19 types (V3p6 = V2 reach); (2) family-wide cb row A (FAM-QC-CB-R4; V3 has cbf_q00 only);
 (3) coll_core reset + slit re-seats (FABLE-FIX-QC-COLL-R2); (4) SETUP_TRIAGE station rows (FAM-QC-HCST-R3, FAM-QC-FEFW-R3) incl st_a + glue setup stations
 (insertion_ps raise in the tap pkg is NOT their fix); (5) 400k-cell splits. Also pending from R12: calendar K-C=-8 overlay, HC1 rs_return, FE START +2, FW five-bank, cbf_q01_s2 rows A/B/C, cbn street.
+## From FABLE-FIX-QC-STRAP-R2 (ended; COORD 21:5x) -> V4
+- (1) st_a u_bin_b_tw_data_i -> u_pd1_b_tw_data_i_*_u_r3_1: +1 pad stage or mid seat (first hop 925-931 um, 5 ends, worst -43.6).
+- (2) st_a btab read path -> u_u_r3/bt_q_p (22 ends, worst -195.3): btab rows 2b/2c ARE in V3 (V3p3 onward); re-read on V3 kits, add rows in V4 if still failing.
+- (3) Row 2a (R8 keep/seat, st_a scoped): IN V3 (budgets.r_r8_core_seat [slw_st_a, sle_st_a] + asbuilt land_pad_tail_split.r8_keep true via ASB_MERGE). main 289287760f / 3fba1b4bc0.
+## Live (21:47): epyc10 v3p6/chain_v3p6n2.log (FALLBACK pre fb6bc61e8db0) + chain_v3p7b.log (PRIMARY pre 1c1589949555 = + coll v2 + cb family row A); both carry tap fix clk_t101->clk_t114 on cbf_q00__cl1b5a6458. Cleanup debt (ot-delete): v3p6/{v3p6,v3p6n,v3p7}_bound partial dirs.
