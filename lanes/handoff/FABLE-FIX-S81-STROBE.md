@@ -18,3 +18,16 @@ Intake ledger: lanes/handoff/QC-PLAN-R12-V3-INTAKE.md (cut 11-22 06:00, apply >=
   was not confirmed: run src_manifest.py verify before use, or ot-delete. epyc10 copy is published + verified (3aa2196d96b1).
 - NO PROOF KIT BUILT. 18:3x every build host is DRAINING (new job dirs refused). Next: when a host admits, private-spec slice_station__t18 on the J7eL6 tree
   (not my J6r1 tree) -> place stop read (expect path_um/stages on the line, main b9735df11e) -> route chain -> sign-off; then serdes__t16 with the chosen form.
+
+## STAND-DOWN 11-21 18:4x PST (309k context; COORD rulings 18:2x) -> successor FAM-S81-SERDES-R6; t18 kit to FAM-S81-SLICE-R5
+- t18 private kit on the J7eL6 tree (intel2) NOT RUNNING: two run-items both ended at stage bind_toolskew rc 3, before kit_rtl (no build, no unit, nothing live).
+  specs intel2 ~/coord/autopilot/private_specs/FABLE-FIX-S81-STROBE/s81_slice_station__t18_1121182726 (rt 7b6af7dd0449) and ..._1121183147 (--rt a9ed808a98d5);
+  logs intel2 /srv/opentallas-scratch2/claude/fable-fix-s81-strobe/runitem_*.log.
+  Cause: BIND-GEN-TOOLSKEW, the in-tree bind kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out was made with the
+  TREE's own tools (bind_tool_stamp check --tools <tree> = ok); reset_replicate.py differs in rt 7b6af7dd0449 and a9ed808a98d5, and none of the 40 newest rt
+  snapshots matches. Fix for FAM-S81-SLICE-R5 / S81-J6-ASSEMBLY-R4: a strict rebind of J7eL6 on the gen rt (as J7 apply does), or a private-spec --rt of a snapshot made
+  from the tree tools; then run-item, place-stop read (expect PASS; path_um/stages on the line), route chain, sign-off.
+- Serdes START rows for J8 -> FAM-S81-SERDES-R6 (COORD ruling): t16 WRITER = SERDES-R6's 7-stage W1 form. Regenerate on J7eL6 and keep t3 reader+writer, t4 / t13 /
+  t15 cla2127225 writer, t16 READER: reach_rules.py fix <J7eL6 plan> --rules 1 --types '^serdes__' then drop the t16 landing_writer_start op.
+  Reference (J6r1 form): lanes/handoff/FABLE-FIX-S81-STROBE-serdes-start-rows.json.
+- epyc7 tree copy + bind copy: ot-delete issued 18:4x (see post). epyc10 J6r1 proof tree kw45/..._fxstrobe_l6s (+_bind) is superseded by J7eL6: can be ot-deleted.
