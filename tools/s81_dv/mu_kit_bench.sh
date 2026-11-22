@@ -27,7 +27,7 @@ lepmu)
    physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
    physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
    $SL/ot_s81sl_slice_lep.sv $SL/dsdv_mu_land.sv $SL/test/tb_s81sl_lep_mu.sv"
-  D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2"
+  D="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 ${OT_LEP_BENCH_DEFS:-}"   # OT_LEP_BENCH_DEFS: extra +define+ args (per-type selectors, e.g. TXQ3; FAM-S81-LEPE-4 11-22)
   case $M in none) ;; LANDOVR) D="$D +define+OT_DSDV_MU_LAND_MUT_OVR" ;; *) D="$D +define+OT_S81SL_LEP_MUT_$M" ;; esac
   R=lepmu_${M}_$S; G=""
   [ "${5:-}" = n32 ] && { G="-GP_RX_SRAM=1 -GP_IN_PIPE=1 -GP_NATIVE32=1"; R=lepmu_n32_${M}_$S

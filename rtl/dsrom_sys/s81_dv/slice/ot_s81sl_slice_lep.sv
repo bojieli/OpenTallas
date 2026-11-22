@@ -253,6 +253,16 @@ module ot_s81sl_lep_core #(
 );
     localparam integer H = 552;
     localparam integer SAFE_STD=(NATIVE32_STD!=0 && MU_EN==0);
+// FAM-S81-LEPE-4 11-22 (N2, COORD: lepw_mus_LP__t2 J7 place -347 ps count_r[1] -> count_r[5], endpoints 2.8 um apart, 1,679 um of
+// wire): with the shared qualify (g_existing_qualify) rd_group / wr_group feed both the TX SRAM group ports and the count / pointer
+// updates, so the one AND2 sat at the macro and the counter carry went out and back.  Bare selector OT_S81SL_LEP_TXQ3 takes the
+// SAFE_STD form for any SAFE_FIFO lane: three kept ot_s81sl_std_tx_qualify copies (memory / state / pointer), each the same
+// function of {push, count_r, credit_r}, so the state copy places at the counter.  No cycle or function change (bind K 0).
+`ifdef OT_S81SL_LEP_TXQ3
+    localparam integer TXQS = 1;
+`else
+    localparam integer TXQS = 0;
+`endif
     localparam integer SAFE_FIFO=(MU_EN!=0 || SAFE_STD) && RX_SRAM!=0;
     localparam integer SAFE_CONTROL=((NATIVE32!=0 && MU_EN!=0) || SAFE_STD) && RX_SRAM!=0;
     localparam integer AT = $clog2(DT), AR = $clog2(DR);
@@ -697,7 +707,7 @@ module ot_s81sl_lep_core #(
                 (* keep="true" *) reg [CW-1:0] credit_r;
                 (* keep="true" *) reg credit_pin_r;
                 wire wr_update,rd_update,wr_pointer,rd_pointer;
-                if(SAFE_STD) begin:g_std_qualify
+                if(SAFE_STD || TXQS) begin:g_std_qualify
                   // Separate genuine state/pointer/memory consumer cones. A
                   // single write/read predicate otherwise fans ~45 ABC pins.
                   (* keep=1 *) ot_s81sl_std_tx_qualify #(.AT(AT),.CW(CW),.DT(DT)) u_memory(
