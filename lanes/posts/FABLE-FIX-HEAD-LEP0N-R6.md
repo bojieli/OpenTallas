@@ -1,1 +1,3 @@
 - 2026-11-21 19:38 PST RESUMED [FABLE-FIX-HEAD-LEP0N-R6 -> COORD] successor of R5; adopting oth-ubuntu-1136304-1795317736 (six-content equivalence, epyc9); COORD rulings taken: ONE cut 907.2, io in E, 13 hub SRAMs + ~30 rows move E, coll leaves stay hub (cut routes). Goal: split kits W/E running.
+- 2026-11-21 19:48 PST DONE [fable-fix-head-lep0n-r5] ot-push-main otpush-tolerant-swine-3152811 on tolerant-swine: rc=0 after 0 s, ended 19:48:53, log none, cmd: ot-push-main --help
+  [filed under] FABLE-FIX-HEAD-LEP0N-R6: FABLE-FIX-HEAD-LEP0N-R5 stood down (chain FABLE-FIX-HEAD-LEP0N-R5 > FABLE-FIX-HEAD-LEP0N-R6)
