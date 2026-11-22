@@ -378,6 +378,52 @@ def host_pins(h, r):
         rtp.HOSTS = hosts0
 
 
+def pins_backfill(manifest, pinf=None, setter=None, limit=int(os.environ.get("OT_PINS_BACKFILL_LIMIT", 40)), live=None, tried=None, now=None, retry_s=6 * 3600):
+    """FLOW-FLEET-R2 X1 (FABLE-FLOW-0600): a store entry ingested BEFORE its run dir could give pins (10 signed S81 prov_1119 cores: no PROVENANCE.json routed_db yet)
+    keeps pins None for ever -- the counter reads the store, so it said 'pins not readable' after FAM-S81-NOWAVE-R1 wrote PROVENANCE.json.  Only 'late provenance' ever filled
+    a pin table.  Now: every entry with pins None whose origin is a live host copy is asked again (host_pins: routed DEF of PROVENANCE routed_db first), at most LIMIT per run
+    and once per RETRY_S per entry (TRIED {id: time}); a table that comes back is stored with set_pins (an existing one is never replaced).  -> [ids set]"""
+    pinf, setter = pinf or host_pins, setter or ss.set_pins
+    live = live or LIVE
+    tried = {} if tried is None else tried
+    now = time.time() if now is None else now
+    out, n = [], 0
+    for e in manifest:
+        if e.get('pins') is not None: continue
+        h, _, path = str(e.get('origin') or '').partition(':')
+        if h not in live or not path.startswith('/'): continue
+        if now - tried.get(e['id'], 0) < retry_s: continue
+        if n >= limit: break
+        n += 1; tried[e['id']] = now
+        r = dict((e.get('scan') or {}), path=path, scan_host=h, direct=True)
+        if not r.get('pins_path'): continue
+        pins = pinf(h, r)
+        if pins and setter(e['id'], pins):
+            out.append(e['id']); say('PINS BACKFILL', e['id'][:12], h, path)
+    return out
+
+
+PINS_TRIED = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_pins_tried.json'
+
+
+def backfill_cli(dry=False):
+    try: tried = json.loads(PINS_TRIED.read_text())
+    except (OSError, ValueError): tried = {}
+    manifest = ss.read_manifest()
+    todo = [e for e in manifest if e.get('pins') is None and str(e.get('origin') or '').partition(':')[0] in LIVE]
+    say('pins backfill: entries without pins on live hosts', len(todo))
+    if dry: return 0
+    done = pins_backfill(manifest, tried=tried)
+    try: PINS_TRIED.write_text(json.dumps(tried))
+    except OSError: pass
+    if done:
+        c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: pins backfill on %d entries' % len(done)] + [relto(ss.entry_path(i)) for i in done], None, 280)
+        say('pins backfill committed', len(done), 'rc', c.returncode)
+        return c.returncode
+    say('pins backfill: nothing set')
+    return 0
+
+
 def late_pass(late, fails, archive=None, collect=None, pinf=None):
     """archive + verify the unit again (new files only are sent), require every stored file unchanged, then late_provenance"""
     archive = archive or archive_host
@@ -422,6 +468,8 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
         say('another ingest is running'); return 0
+    if '--backfill-pins' in sys.argv:
+        return backfill_cli('--dry' in sys.argv)
     if '--sweep-only' in sys.argv:
         fails = []
         add = marker_sweep(fails)
@@ -505,6 +553,9 @@ def main():
             rel = [relto(ss.entry_path(i)) for i in lated]
             c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: late provenance on %d entries' % len(rel)] + rel, None, 280)
             if c.returncode: fails.append(['coord', '*', 'late commit rc %d' % c.returncode])
+    if not dry:                                          # FLOW-FLEET-R2 X1: pins of entries ingested before their provenance could give them
+        try: backfill_cli()
+        except Exception as x: fails.append(['*', '*', 'pins backfill: %s: %s' % (type(x).__name__, str(x)[:160])])
     holds = [] if dry else marker_sweep(fails)
     res = dict(holds=holds, late=lated, late_candidates=[e['id'] for e, r in late], time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
                unreachable=unreachable, commit_rc=commit, dry=dry)
