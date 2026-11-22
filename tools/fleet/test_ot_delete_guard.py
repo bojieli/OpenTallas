@@ -136,6 +136,10 @@ def test_private_kit_not_protected_by_kit_wave_ancestor_clean_aggr_r3(tmp_path):
     assert g.refuse(str(k / "gen"), protected={wr_s}, ptext="", current={}, allow=set()) is None
     assert g.refuse(str(k), protected={wr_s, k_s}, ptext="", current={}, allow=set())
     assert g.refuse(str(k), protected={wr_s}, ptext="cmd " + k_s + " x", current={}, allow=set())
+    cv = k / "gen" / "slw_su_c_1" / "ft_physical" / "child_v"
+    cv.mkdir(parents=True)
+    (cv / "signoff.json").write_text('{"verdict": "SIGNED"}')          # a copied child-view record: not this kit's result
+    assert g.refuse(str(k), protected={wr_s}, ptext="", current={}, allow=set()) is None
     (k / "signoff").mkdir()
     (k / "signoff" / "signoff.json").write_text('{"verdict": "SIGNED"}')
     assert g.refuse(str(k), protected={wr_s}, ptext="", current={}, allow=set())

@@ -270,9 +270,17 @@ def unit_dir_of(t):
     return m.group(0).rstrip("/") if m else None
 
 
+# CLEAN-AGGR-R3 (COORD 11-21): a kit carries COPIES of its child views' sign-offs as inputs (gen/<item>/ft_physical/<child>/signoff.json, the view
+# cache, rtl/, plandir/); a copied record is not this unit's result and must not make a failed kit "signed".
+COPIED_INPUT_DIRS = {"ft_physical", ".cache", "rtl", "plandir"}
+
+
 def attempt_signed(ad):
-    """a signoff*.json with verdict SIGNED / LOCAL_PASS* / NEEDS_PARENT under the attempt dir (LOCAL_PASS counts as signed, CLEAN-AGGR-R2)"""
+    """a signoff*.json with verdict SIGNED / LOCAL_PASS* / NEEDS_PARENT under the attempt dir (LOCAL_PASS counts as signed, CLEAN-AGGR-R2),
+    not counting copies inside the unit's input dirs (COPIED_INPUT_DIRS)"""
     for so in glob.glob(os.path.join(ad, "**", "signoff*.json"), recursive=True):
+        if COPIED_INPUT_DIRS & set(os.path.relpath(so, ad).split(os.sep)[:-1]):
+            continue
         try:
             if SIGNED_VERDICT.match(str(json.load(open(so)).get("verdict") or "")):
                 return True
