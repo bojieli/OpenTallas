@@ -119,6 +119,9 @@ through core_place and re-routed with OPUS-FIX-KV-HGI-R6's x-street generator (1
 legaliser (hg_v3 clk_t52 +43.2 um), ft3 banks rebuilt compact in the street. R5c = kv3_hg ft2 banks 2-4 compact in the row channel y 248-320
 (model H overflow 331k -> 116k).
 
+KV-PLAN-R6 took all four rows into the D28 compose (dry10, 16 rows, all four APPLIED). Its rehearsal rh8 (plan 97a61b154060) shows no finding on
+my rows: the one G0 error is kv3_pv_v3 (landing band over a core, PV lane) and the 60 bind errors are R8_STALE / R8_UNCOVERED of the PV split.
+
 LITE rings in the Gate A bound RTL: pv_v12 / v7 56, pv_v6 / v6n 50, pv_v5 / v5n 41, pv_v4 / v4n 34, pv_v3 / v3n 25, pv_v2 / v2n 18, pv_v1 / v1n 9,
 hgi_v3..v8 11-12, hroot 7, pc_v1 x3 / pc_v3 7, pc x2 4, io_cor_v1 12, sys_c 14, hg_v1.. 4.
 

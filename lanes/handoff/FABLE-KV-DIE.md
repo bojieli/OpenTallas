@@ -22,17 +22,20 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
-## State 08:00 PST (supersedes earlier state blocks)
-- D28 intake (kv-plan-r6/d28/rows/): R1 9860691ee0da, R1b 74bdc3ee5a86 (in rows.json, APPLIED in the plan lane's dry7 / dry8),
-  R5 6281f8f48b0a, R5c 6e86608e1250, helper kst_xstreet_v3_fkd.py 095576e60380 (ROWS-READY posted 07:5x; plan lane decides D28 vs D29).
-  ORDER: R5, R5c after HGI-R6 + TAP-GRID + R1/R1b, before the landing_remap.
-- Gates: gate_a1 GREEN (R1+R1b). gate_b3 GREEN (R1+R1b+R5 v2+R5c on tree_a, plan 01eb79c44cd6). gate_c3 on tree_b refused by a foreign
-  pv_v3 finding; gate_c4 (pv_v3 at base) queued behind gate_c3's G0: intel2 ~/tmp/fablekvdie/gate_c4.otrun.log, epyc8 fable-kv-die/gate_c4/gate.sum.
-- tree_a now FEEDS A KIT (do not gate on it again): sealed private kit kv3_io_cor_v1 (LITE variant), spec
-  ~/coord/autopilot/private_specs/FABLE-KV-DIE/qwen_kvsys_kv3_io_cor_v1_1122075233/spec.json, runner = intel2 user unit
-  fkd-kit-iocor-1122 (log ~/tmp/fablekvdie/kit_iocor.log), work epyc8 .../KV-D27d3/private/FABLE-KV-DIE/kv3_io_cor_v1_1122075221.
-- tree_b = D28 work tree fork made by ot-tree-fork; the tool exited 1 at the very end (source bind_of_record moved by the plan lane during the
-  copy); content equal by file count except bind_of_record, renamed from .forking-805612 by me, --verify OK.
-- NEXT: (1) gate_c4 result -> post. (2) hg kit: private-spec qwen_kvsys kv3_hg_v1p2 --tree tree_b (has R6h reset rows) --host epyc8 --goal finish,
-  run-item under systemd-run --user; compare 5_1_grt overflow with FLOW-CLKGRT-R2 (566k clock-first / 871k base). Only after gate_c4 binds.
-  (3) ot-wait --durable on both kits. (4) After D28 applies: re-check hg_v3 taps with TAP-GRID-R5; pv R3 / hgi R4 geometry with the family lanes.
+## State 08:40 PST (supersedes earlier state blocks)
+- ALL FOUR ROWS ARE IN THE D28 COMPOSE: KV-PLAN-R6 dry10 (16 rows) has R1, R1b, R5, R5c APPLIED (intake kv-plan-r6/d28/rows/: R1 9860691ee0da,
+  R1b 74bdc3ee5a86, R5 6281f8f48b0a, R5c 6e86608e1250, helper kst_xstreet_v3_fkd.py 095576e60380). Its rehearsal rh8 (plan 97a61b154060) is the
+  gate of record: G0 1 error = kv3_pv_v3 landing band (PV lane), bind errors = 60 R8_STALE / R8_UNCOVERED on the PV split (PV lane / plan lane).
+  Nothing on my rows; hg findings there: routed_reach 18, station_core 10, tap_sink_cap 2 (hg_v3 clk_t52 5,347 and clk_t36 3,372 > 3000).
+- My gates: gate_a1 GREEN (R1+R1b), gate_b3 GREEN (R1+R1b+R5 v2+R5c, plan 01eb79c44cd6, tree_a). gate_c3 / gate_c4 (tree_b, plan lane dry7
+  compose) stopped by a foreign kv3_pv_v3 finding; abandoned in favour of rh8.
+- Kit: kv3_io_cor_v1 sealed private kit on tree_a (plan 01eb79c44cd6), goal finish. Runner intel2 user unit fkd-kit-iocor-1122, log
+  ~/tmp/fablekvdie/kit_iocor.log; work epyc8 .../kit-wave/qwen_kvsys/KV-D27d3/private/FABLE-KV-DIE/kv3_io_cor_v1_1122075221; place since 08:06.
+  Durable waiters (re-run the same command to read them): ot-wait --durable --kit <work>/gen/kv3_io_cor_v1 --host epyc8 --stage place | finish.
+- tree_a FEEDS THE KIT: never gate on it. tree_b (51 GB) is no longer needed: ot-delete refused it (lane dir protected by the private spec);
+  retry after the kit ends. Also deletable then: leg1-3 plans, gate_* aside dirs, r5* trial dirs.
+- No private hg / pv kit from me (posted 08:30: hg needs R6h + R5 bound = D28; pv waits on the PV lanes).
+- NEXT: (1) read the io_cor_v1 kit (place -> finish; cancel only if measured unable to sign). (2) After D28 applies: first kv3_hg_v1p2 D28 kit GRT
+  overflow vs 566k / 871k (FLOW-CLKGRT-R2); hg_v3 taps with TAP-GRID-R5. (3) D29 candidates still open at die level: pv in-tile re-floor (R3),
+  hgi array north (R4), band re-site at pins for the lite rings (R2), sys_c place region (HUBC-SYSC-R2), street_rule tool limits
+  (event JSON crash line 3073; cannot re-floor pv / hg / hgi). (4) Main: RING-LITE-2 e08eb28ae039 pushed; lane clone epyc8 fable-kv-die/repo.
