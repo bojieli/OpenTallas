@@ -80,3 +80,5 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - Swept 7 d of signoff.json on 7 gen hosts (~20k records). No NOT SIGNED record has unconstrained in its reasons, because the minimal profile already makes it advisory (it only appears in legacy_reasons). Nothing written. Posted coord 19da330592.
 - Scripts: <host>:/srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/{soscan,sotally,sopar}.py
 - Next: read canary arms landing/rrelay/rstsync (intel2 flow-canary/runs/ab_flowops_r2), narrow replica_keep; then io_guard, lever 9, items 8/11/12, push-test triage.
+- Canary arms read (coord ff9a2b7d04): only the rrelay keep moves TT, 124.4 -> 105.94. That is placement noise on a MET half-cycle path (u_face q[568] -> u_wen, fclk_in_t_i), not a relay path. Kept the class keep. Recommended rebasing the canary baseline to 105.94 (FLOW-CANARY-R2). The canary item is closed.
+- Next: io_guard, lever 9, items 8/11/12, push-test triage (test_repeat_stop 2 FAILs seen in bfjxwrdt9: hd_serdes_post_cts_five_times / station_row_overlap blocked_at_third).
