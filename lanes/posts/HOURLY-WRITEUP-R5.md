@@ -1,0 +1,1 @@
+- 2026-11-21 23:10 PST 23:05 hourly: signed any plan 530 | current 434 (was 528/432 at 22:05; +2/+2, QC slw_su_l0__cl1a1c1f8f 22:27). S81 46/394, HEAD 25/26, QC 57/127, KV 6/56, HBM 4/84 parked; deferred 21, retired 75. SIGN-RATE row, 2 GEOM verdicts, RELEASE_TREE line 3, HANDOFF committed (40bb4b2d4e1).
