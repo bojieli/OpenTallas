@@ -26,6 +26,16 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 05:4x W-band r18g (COORD 05:2x/05:4x)
+- Split: R8 = E (r8-e11, r18f) + W-band; Fable = W-ringFF (fable-lep0n-w4). Parallel forms, first W to sign counts.
+- Tree s81_head_r18g_split_s0 (3bde930bae13, epyc9; plan c6eab9a2e92b; tmp/fix18g.py + post6.sh + mk_r18g.sh; ev/g1):
+  W coll_i2 band [17.28,511.92,66.96,656.64] 7190 um2, coll_i1 bottom 658.8 (7446 um2), area_reserve = measured 4382.5.
+  AREA CHECK in fix18g.py: band area >= measured reserve / 0.7 for every moved band (unmeasured bands: report only, x1.66 model).
+  Gates: plan_gate_pre 0, bind/cohort PASS, LATCHECK 334/334, band core PASS, G0 = 6 face_budget_g2. Receipt ev/g1/receipt.
+- LIVE W kit r8-w12 goal ROUTE: unit r8-w12-1795355071, spec s81_head_hd_lep0N_w_1122054431, runitem_w12.log (launcher tmp/launch_r18g.sh on intel2 M).
+- E r8-e11 passed the OT_CLAND fit check (E bands left alone). r8-e11 is goal AUTO: if it stops at geom, relaunch with route.
+  hn2 is goal finish: if it dies on stage resume, relaunch with route (COORD: finish dies on resume).
+
 ## UPDATE 11-22 05:1x
 - r8-w11 FAILED place (OT_CLAND coll_i2 band too small: 4382.5 um2 needed vs 2908.5 upper bound in fix18f band [17.28,552.96,64.8,609.12]).
   Not relaunched: Fable fable-lep0n-w4 (its own r18f fork, W ring-FF form) is past place and in CTS = the single W candidate (posted 85c383af).
