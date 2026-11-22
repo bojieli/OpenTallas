@@ -8570,6 +8570,55 @@ def private_tree_link_refusal(src, tree):
             f"instead of linking there) or put it next to the base tree")
 
 
+TREE_FORK = Path(__file__).resolve().parents[1] / "fleet" / "ot-tree-fork"
+
+
+def _tree_fork_mod():
+    """tools/fleet/ot-tree-fork as a module (None when this checkout has no such file)"""
+    if not TREE_FORK.is_file():
+        return None
+    from importlib.machinery import SourceFileLoader
+    return SourceFileLoader("ot_tree_fork", str(TREE_FORK)).load_module()
+
+
+def private_tree_event_refusal(tree, src):
+    """FLOW-TREEFORK-R1 (FABLE-FLOW-2000 A4, 11-21 D27d3): '' unless --tree reaches an event tree through a symlink (the path given is not where it
+    resolves, and it resolves into a kw45 / sealed src_manifest tree other than the die src itself), or holds a symlink into one.  A lane writes into
+    its private tree; through such a link those writes land in the event tree.  Stat-only; a tree not readable here is not judged."""
+    TF = _tree_fork_mod()
+    if TF is None or not os.path.isdir(tree):
+        return ""
+    ab, rp = os.path.abspath(tree).rstrip("/"), os.path.realpath(tree)
+    srcr = os.path.realpath(src) if src else "/nonexistent"
+    ev = TF.event_root(rp)
+    if ev and rp != ab and rp != srcr:
+        return (f"private-spec --tree {tree} is a link into event tree {ev} (resolves to {rp}): writes to your private tree would land there. "
+                f"Make a private copy: ot-tree-fork {rp} <your lane dir>/tree (or private-spec --fork)")
+    bad = []
+    for dp, dn, fn in os.walk(rp):
+        for n in dn + fn:
+            q = os.path.join(dp, n)
+            if os.path.islink(q):
+                res = os.path.realpath(q)
+                if TF.event_root(res) and not TF.inside(res, srcr) and not TF.inside(res, rp):
+                    bad.append(f"{os.path.relpath(q, rp)} -> {os.readlink(q)}")
+        if len(bad) >= 5:
+            break
+    if bad:
+        return (f"private-spec --tree {tree} holds symlink(s) into an event tree ({'; '.join(bad[:3])}): writes through them land there; "
+                f"re-make it with ot-tree-fork (it refuses such links; --materialize copies their content)")
+    return ""
+
+
+def fork_private_tree(src, dst, host, run=subprocess.run):
+    """FLOW-TREEFORK-R1: private-spec --fork: ot-tree-fork SRC DST on the private kit's gen host -> (rc, output)"""
+    if not TREE_FORK.is_file():
+        return 2, f"no {TREE_FORK} in this checkout"
+    argv = ["python3", "-I", str(TREE_FORK), src, dst] + (["--host", host] if host else [])
+    p = run(argv, capture_output=True, text=True, timeout=86400)
+    return p.returncode, ((p.stdout or "") + (p.stderr or "")).strip()
+
+
 def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), why="", lane="", work=None, kind="type", src_sha=None,
                  host=None, bind_out=None, src_manifest=None, rt=None):
     """FLOW-PROC-A (FABLE-FLOW-0800 class a): the spec of a PRIVATE kit of die/item = the item's wave spec computed NOW (spec_for + rt tools,
@@ -8599,7 +8648,7 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
     if tree and os.path.abspath(tree).rstrip("/") != str(sp["src"]).rstrip("/"):
         old, new = str(sp["src"]), os.path.abspath(tree)
         # FAM-S81-COL-H9R0-R3 11-21: own name, the A/B reason `why` is checked below (--tree + --ab raised 'needs --why')
-        refusal = private_tree_link_refusal(old, new)
+        refusal = private_tree_link_refusal(old, new) or private_tree_event_refusal(tree, old)
         if refusal:
             raise ValueError(refusal)
         for k, v in list(sp["gen_env"].items()):
@@ -8678,6 +8727,17 @@ def private_spec_cmd(a):
             print(f"private-spec: --host {a.host} is DRAINING (scratch free under its admit cap, dies.<die>.gen_host_min_free_gb); pick another --host "
                   f"(gen hosts: {', '.join(h for h in gen_hosts(cfg, a.die, a.item) if h not in _dr)})", file=sys.stderr)
             return 2
+    fork_src = None
+    if getattr(a, "fork", None):                          # FLOW-TREEFORK-R1: --fork SRC|src = a private nlink-1 copy made by ot-tree-fork on the gen host
+        if a.tree:
+            print("private-spec: --fork makes the tree; do not also pass --tree", file=sys.stderr)
+            return 2
+        fork_src = ((cfg.get("dies") or {}).get(a.die) or {}).get("src", "") if a.fork == "src" else a.fork
+        if not fork_src:
+            print(f"private-spec: --fork src: die {a.die} has no src in the wave config", file=sys.stderr)
+            return 2
+        a.tree = a.fork_dst or (f"/srv/opentallas-scratch2/claude/{re.sub(r'[^A-Za-z0-9_.-]', '_', lane or 'lane')}/trees/"
+                                f"{a.die}_{re.sub(r'[^A-Za-z0-9_.-]', '_', a.item)}_{time.strftime('%m%d%H%M%S')}")
     try:
         sp = private_spec(cfg, a.die, a.item, hub, plan=a.plan, tree=a.tree, overlays=a.overlay, ab=a.ab, why=a.why, lane=lane,
                           work=a.work, kind=a.kind, src_sha=a.src_sha, host=a.host, bind_out=a.bind_out, src_manifest=a.src_manifest,
@@ -8685,6 +8745,13 @@ def private_spec_cmd(a):
     except ValueError as e:
         print(f"private-spec: {e}", file=sys.stderr)
         return 2
+    if fork_src:
+        rc, msg = fork_private_tree(fork_src, a.tree, sp.get("gen_host") or "")
+        print(msg)
+        if rc != 0:
+            print(f"private-spec: ot-tree-fork {fork_src} -> {sp.get('gen_host')}:{a.tree} failed rc {rc}; no spec written", file=sys.stderr)
+            return 2
+        sp["private"]["tree_fork"] = {"src": fork_src, "dst": a.tree, "host": sp.get("gen_host") or "", "tool": "ot-tree-fork"}
     out = Path(a.out or (AP_DIR / "private_specs" / re.sub(r"[^A-Za-z0-9_.-]", "_", lane or "lane") / f"{a.die}_{a.item}_{time.strftime('%m%d%H%M%S')}"))
     out.mkdir(parents=True, exist_ok=True)
     (out / "spec.json").write_text(json.dumps(sp, indent=1))
@@ -18604,6 +18671,9 @@ def main(argv=None):
     ps_.add_argument("die"); ps_.add_argument("item")
     ps_.add_argument("--plan", help="private plan of record (default: the wave plan)")
     ps_.add_argument("--tree", help="private source tree (default: the die src); env / kit_rtl paths under the die tree follow it")
+    ps_.add_argument("--fork", metavar="SRC|src", help="FLOW-TREEFORK-R1: make the private tree with ot-tree-fork (nlink-1 real copy, .fork.json) of SRC "
+                                                     "('src' = the die src of record) on the gen host, then use it as --tree")
+    ps_.add_argument("--fork-dst", help="with --fork: where the fork goes (default <scratch2>/claude/<lane>/trees/<die>_<item>_<stamp>)")
     ps_.add_argument("--src-sha", default=None, help="commit of --tree (recorded)")
     ps_.add_argument("--overlay", action="append", default=[], help="positions-only type overlay (type_overlay.py); one per kit")
     ps_.add_argument("--ab", action="append", default=[], metavar="KEY=VAL", help="deliberate A/B env change (KEY= unsets); needs --why")

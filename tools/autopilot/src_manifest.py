@@ -12,6 +12,8 @@ drifts from main; 26 files hand-patched live) are closed by three rules this too
             A change is a NEW tree dir + a pointer switch; nothing is ever edited in place.
   verify    manifest hash self-consistent, equals --expect when given, every listed file present with its sha256, no file the
             manifest does not list, none writable (--ro).  Names each drifted file.  Exit 1 on any drift.
+            On drift the CLI also names the WRITER (FLOW-TREEFORK-R1): other hardlink names of a shared file, symlinks into the tree, live
+            processes inside it, newest changed files, forks from the ot-tree-fork log (--no-writers skips the scan).
   hosts     run verify on every gen host over ssh (adoption: the event is switched only when this passes on all of them).
   replicate rsync a published tree to other hosts (no hard links), verify it there before the final rename, keep it read-only.
   derive    list the files of a LIVE tree that differ from main at a sha (candidate overlay.json: explicit, with sha256).
@@ -25,6 +27,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shlex
 import shutil
 import stat
@@ -449,6 +452,189 @@ def links_report(root, find_in=(), show=20):
     return errs, len(bad)
 
 
+
+# ---- who broke a seal (FLOW-TREEFORK-R1, FABLE-FLOW-2000 A4) ---------------------------------------------------------
+# 11-21: the D27d3 verify --ro said "324,773 files nlink 11" and nothing else; it took a lane an hour to find that a cp -al compose and
+# a lane's cp -al of a symlink were the writers.  On a failed verify the CLI now names them, from stat calls only (bounded time):
+#   - other names of a shared inode: the same relpath probed under every dir up to depth 4 below <scratch>/claude (cp -al keeps the layout);
+#   - symlinks in those dirs that resolve into the tree (a lane "private" tree that is really this one);
+#   - live processes whose cwd or open files are inside the tree (pid, OT_LANE, cmdline);
+#   - for modified / extra files: the newest mtimes;
+#   - forks of this tree from ~/.local/state/ot-tree-fork/forks.jsonl (those are nlink-1, listed for completeness).
+WRITER_DEPTH = 4
+WRITER_MAX_DIRS = 200000
+
+
+def _scan_roots():
+    env = os.environ.get("OT_SEAL_SCAN_ROOTS")
+    if env is not None:
+        return [r for r in env.split(":") if r]
+    import glob
+    return sorted(glob.glob("/srv/opentallas-scratch*/claude"))
+
+
+def _lane_of(path):
+    parts = path.split("/")
+    for i in range(len(parts) - 2, -1, -1):
+        if parts[i] == "claude":
+            return parts[i + 1]
+    return "?"
+
+
+def _candidate_dirs(roots, skip, budget_end, depth=WRITER_DEPTH):
+    """(dir) up to depth below each root, never descending into skip (the tree itself) or through symlinks; bounded"""
+    n = 0
+    seen = set()
+    for r in roots:
+        frontier = [(r, 0)]
+        while frontier:
+            d, k = frontier.pop()
+            rd = os.path.realpath(d)
+            if rd in seen or rd == skip or rd.startswith(skip + "/"):
+                continue
+            seen.add(rd)
+            yield d
+            n += 1
+            if n >= WRITER_MAX_DIRS or time.time() > budget_end:
+                return
+            if k >= depth:
+                continue
+            try:
+                with os.scandir(d) as it:
+                    for e in it:
+                        if e.is_dir(follow_symlinks=False) and e.name not in SKIP_DIRS:
+                            frontier.append((e.path, k + 1))
+                        elif e.is_symlink():
+                            yield e.path
+            except OSError:
+                pass
+
+
+def writer_report(root, errs, scan_roots=None, budget_s=None, show=5):
+    """-> ['SRC_MANIFEST WRITER ...'] naming who wrote into / linked to ROOT, for the drift kinds in errs"""
+    root = os.path.realpath(root)
+    budget_end = time.time() + float(budget_s if budget_s is not None else os.environ.get("OT_SEAL_WRITER_BUDGET_S", "120"))
+    kinds = {}
+    for e in errs:
+        m = re.match(r"SRC_MANIFEST DRIFT (\S+) \((\w+)", e)
+        if m and m.group(1) != ".":
+            kinds.setdefault(m.group(2), []).append(m.group(1))
+    out = []
+    try:
+        rdev = os.lstat(root).st_dev
+    except OSError:
+        return out
+    roots = _scan_roots() if scan_roots is None else list(scan_roots)
+    shared = []
+    for rel in kinds.get("hardlinked", [])[:show]:
+        try:
+            st = os.lstat(os.path.join(root, rel))
+            shared.append((rel, st.st_ino, st.st_nlink))
+        except OSError:
+            pass
+    partners, intolinks = {}, []
+    for d in _candidate_dirs(roots, root, budget_end):
+        if os.path.islink(d):
+            try:
+                res = os.path.realpath(d)
+            except OSError:
+                continue
+            if res == root or res.startswith(root + "/"):
+                intolinks.append((d, os.readlink(d)))
+            continue
+        for rel, ino, _n in shared:
+            q = os.path.join(d, rel)
+            try:
+                st = os.lstat(q)
+            except OSError:
+                continue
+            if st.st_ino == ino and st.st_dev == rdev and os.path.realpath(q) != os.path.join(root, rel):
+                partners.setdefault(rel, []).append((d, st.st_mtime))
+    nshared = len(kinds.get("hardlinked", []))
+    for rel, ino, n in shared:
+        ps = partners.get(rel, [])
+        if ps:
+            names = ", ".join(f"{p} (lane {_lane_of(p)}, mtime {time.strftime('%m-%d %H:%M', time.localtime(mt))})" for p, mt in ps[:6])
+            out.append(f"SRC_MANIFEST WRITER hardlink {rel} (nlink {n}) also named in tree(s): {names}"
+                       + (f" and {len(ps) - 6} more" if len(ps) > 6 else ""))
+        else:
+            out.append(f"SRC_MANIFEST WRITER hardlink {rel} (nlink {n}): other names not found at the same relpath under {':'.join(roots) or '-'} "
+                       f"(run `src_manifest.py links {root} --find-in DIR`)")
+    if nshared:
+        trees = sorted({p for ps in partners.values() for p, _ in ps})
+        out.append(f"SRC_MANIFEST WRITER hardlink summary: {nshared} shared file(s); trees holding other names: "
+                   + (", ".join(trees[:10]) if trees else "none found") + ".  Fix: the other tree is re-made with ot-tree-fork (nlink-1), "
+                   "or this tree's files are privatised (copy + mv) before the seal")
+    for d, t in intolinks[:10]:
+        out.append(f"SRC_MANIFEST WRITER symlink {d} -> {t} (lane {_lane_of(d)}) resolves into this tree: writes through it land here; "
+                   f"that lane needs `ot-tree-fork {root} <its dir>`")
+    for pid, lane, what, cmd in _procs_in(root)[:10]:
+        out.append(f"SRC_MANIFEST WRITER process pid {pid} lane {lane or '?'} has {what} inside the tree: {cmd[:160]}")
+    changed = kinds.get("modified", []) + kinds.get("extra", []) + kinds.get("writable", [])
+    if changed:
+        rows = []
+        for rel in changed:
+            try:
+                st = os.lstat(os.path.join(root, rel))
+                rows.append((st.st_mtime, rel, st.st_uid))
+            except OSError:
+                pass
+        rows.sort(reverse=True)
+        out.append(f"SRC_MANIFEST WRITER changed {len(changed)} file(s) (modified/extra/writable), newest: "
+                   + ", ".join(f"{r} {time.strftime('%m-%d %H:%M:%S', time.localtime(mt))} uid {u}" for mt, r, u in rows[:show]))
+    try:
+        with open(os.path.expanduser("~/.local/state/ot-tree-fork/forks.jsonl")) as f:
+            fk = [json.loads(l) for l in f if root in l]
+        for r in [x for x in fk if x.get("src_real") == root][-5:]:
+            out.append(f"SRC_MANIFEST WRITER fork (nlink-1, harmless) {r.get('dst')} lane {r.get('lane') or '?'} at {r.get('time_utc')}")
+    except (OSError, ValueError):
+        pass
+    if time.time() > budget_end:
+        out.append("SRC_MANIFEST WRITER scan stopped at its time budget (OT_SEAL_WRITER_BUDGET_S): the list may be incomplete")
+    return out
+
+
+def _procs_in(root):
+    """[(pid, OT_LANE, 'cwd'|'open file <path>', cmdline)] of this user's processes with cwd or an open fd inside root"""
+    out = []
+    me = os.getpid()
+    try:
+        pids = [int(p) for p in os.listdir("/proc") if p.isdigit()]
+    except OSError:
+        return out
+    pre = root + "/"
+    for pid in pids:
+        if pid == me:
+            continue
+        hit = ""
+        try:
+            cwd = os.readlink(f"/proc/{pid}/cwd")
+            if cwd == root or cwd.startswith(pre):
+                hit = "cwd"
+            else:
+                for fd in os.listdir(f"/proc/{pid}/fd"):
+                    try:
+                        t = os.readlink(f"/proc/{pid}/fd/{fd}")
+                    except OSError:
+                        continue
+                    if t.startswith(pre):
+                        hit = f"open file {t[len(pre):]}"
+                        break
+        except OSError:
+            continue
+        if not hit:
+            continue
+        lane, cmd = "", ""
+        try:
+            env = open(f"/proc/{pid}/environ", "rb").read().split(b"\0")
+            lane = next((e[8:].decode(errors="replace") for e in env if e.startswith(b"OT_LANE=")), "")
+            cmd = open(f"/proc/{pid}/cmdline", "rb").read().replace(b"\0", b" ").decode(errors="replace").strip()
+        except OSError:
+            pass
+        out.append((pid, lane, hit, cmd))
+    return out
+
+
 def report(errs):
     for e in errs[:MAX_SHOW]:
         print(e)
@@ -665,6 +851,8 @@ def publish(tree, pointer=""):
     errs, info = verify(tree, ro=True, full=True)
     if errs:
         report(errs)
+        for w in writer_report(tree, errs):
+            print(w)
         raise SystemExit("publish refused: tree not read-only after chmod")
     if pointer:
         if os.path.lexists(pointer) and not os.path.islink(pointer):
@@ -1051,6 +1239,7 @@ def main(argv=None):
     v.add_argument("--expect", default="")
     v.add_argument("--ro", action="store_true")
     v.add_argument("--full", action="store_true")
+    v.add_argument("--no-writers", action="store_true", help="on drift, skip the scan that names the writers (other hardlink names, symlinks into the tree, live processes)")
     cr = sp.add_parser("cached-receipt", help="reuse an exact completed verification plus current immutable metadata, no payload rehash")
     cr.add_argument("tree")
     cr.add_argument("--expect", default="")
@@ -1109,6 +1298,9 @@ def main(argv=None):
         errs, info = verify(a.tree, a.expect, a.ro, a.full)
         if errs:
             report(errs)
+            if not a.no_writers:
+                for w in writer_report(a.tree, errs):
+                    print(w)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
     elif a.cmd == "receipt":
