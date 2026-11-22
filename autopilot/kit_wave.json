@@ -275,20 +275,13 @@
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
    "hold_items": {
-    "kv3_pc__cl254f2e73": "KV-FAILED-ROWS-2100 11-20: PDN-0006 VSS M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (plan PG geometry, kv_pcsplit_views_1119). Unchanged relaunch fails the same; plan fix = D27 row (merged-obstruction re-export). Lift = delete this key when D27 is applied.",
-    "kv3_pc__cl5a95b461": "KV-FAILED-ROWS-2100 11-20: PDN-0006 VSS M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (plan PG geometry, kv_pcsplit_views_1119). Unchanged relaunch fails the same; plan fix = D27 row (merged-obstruction re-export). Lift = delete this key when D27 is applied.",
-    "kv3_pc_v1__cl23f6a148": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
-    "kv3_pc_v1__cl4ea58a5c": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
-    "kv3_pc_v1__cl7f648944": "KV-FAILED-ROWS-2100 11-20: kit_topology: i_ectl_Q_N_kf carries packed exact banks AND a face-register move (plan carries both forms on one bus); FAILed 3x. Plan fix = D27 pc_v1 row (third bank, drop face move). Lift = delete this key when D27 is applied.",
     "kv3_pv_v6n": "KV-FAILED-ROWS-2100 11-20: OT_CLAND no legal row/site in the reserved band for u_bound.u_cla.. (pinslot already read from spec cland_pinslot, so band geometry). Plan fix = D27 pv re-site row (OPUS-FIX-KV-PV-R4 / FABLE-FIX-KV-PV-R2). Lift = delete this key when D27 is applied.",
     "kv3_hgi": "KV-D25e3 retained e50e0f9be689 geometry fails and exact corrected post-place TT -349.66 ps below -300. Hold new picks until D26 or changed geometry review.",
     "kv3_hgi_v7": "KV-D25e3 attempt 5 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
     "kv3_pv_v1n": "KV-D25e3 attempt 7 repeats captured collector_tree reset identity mismatch at gen. Hold new picks until coherent D26 bind.",
     "kv3_hgi_v6": "KV-D25e3 v6 a4 failed captured collector_tree reset identity; a5 admitted with unchanged gen fail key ed0f0a2ea1f07192. Hold new picks until coherent D26 bind.",
     "kv3_hub_Wi": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 FAIL_PREFLOOR port_bind: 3 extra netlist bits io_pad_die_id[0..2] (bound_only ID strap port) not in the plan pins. Fix = the hub_Wo preflight / plan pin row (FABLE-FIX-KV-HUB-R2), carried in the next KV event. Lift = delete this key when that event is applied.",
-    "kv3_pc_v3": "KV-PLAN-R5 11-21 08:1x (COORD): D26 a1 place PDN-0006 VSS on M5 blocked by M6/M7 obstructions over u_bound.u_kvpc0 (core OBS vs parent PG grid; same class as kv3_pc__cl254f2e73/cl5a95b461). Fix = plan PG straps or kvpc0 OBS window (FAM-KV-IOPC). Unchanged relaunch fails the same way. Lift = delete when the fix lands.",
-    "kv3_hgi_v8": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied.",
-    "kv3_hub_Eo": "KV-PLAN-R6 11-21 11:4x (COORD lever 6, FABLE-CLOSURE-STRATEGY): no new D26 relaunch; running kits finish. Lift = delete this key when KV-D27d2/D28 is applied.",
+    "kv3_hub_Eo": "KV-PLAN-R6 11-21 22:0x: D27d3 applied with only the r14 relay cut; hub_Eo stays over the 400k cap without the HUB-R4 ring rows (FABLE-PD-KV-2000). Lift = D28 hub ring rows applied.",
     "kv3_hg*": "KV-PLAN-R6 11-21 19:1x (FABLE-PD-KV-2000 / COORD): no new hg/hgi/pv builds on D26 or D27d3 (hg -560 / hgi -739 measured, no plan fix before D28; pv split lands in D28). Running kits keep going. Auto-lift on event_adopt:KV-D28.",
     "kv3_pv*": "KV-PLAN-R6 11-21 19:1x (FABLE-PD-KV-2000 / COORD): no new hg/hgi/pv builds on D26 or D27d3 (hg -560 / hgi -739 measured, no plan fix before D28; pv split lands in D28). Running kits keep going. Auto-lift on event_adopt:KV-D28."
    },
@@ -5932,18 +5925,6 @@
    },
    "gen_host_min_free_gb": {},
    "retry": [],
-   "retry_prev_kvr6_nod26": [
-    "kv3_hgi_v3@6:fix=5294e088f553",
-    "kv3_hgi_v5@6:fix=5294e088f553",
-    "kv3_hgi_v8@6:fix=5294e088f553",
-    "kv3_sys_c@7:fix=5294e088f553",
-    "kv3_hg_v1p3@2:fix=kvplanr5-d26ctl-unshared",
-    "kv3_hg_v1p4@3:fix=kvplanr5-d26ctl-unshared",
-    "kv3_hg_v1@1:fix=55256552eef2",
-    "kv3_hg_v1p2@2:fix=kvplanr5-d26ctl-unshared",
-    "kv3_hg_v1p3@3:fix=4f638b4e9f8d",
-    "kv3_hgi_v5@2:fix=4f638b4e9f8d"
-   ],
    "hold_release_on": {
     "kv3_hg*": "event_adopt:KV-D28",
     "kv3_pv*": "event_adopt:KV-D28"
