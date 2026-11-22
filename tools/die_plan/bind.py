@@ -807,6 +807,14 @@ def core_input_latch_except_bits(plan, tn, module, port):
     return out
 
 
+def core_input_hold_pads(plan, tn, module):
+    """Clock boundary hold-pad counts, with exact-type overrides for individual bits."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    common = (cfg.get("latch_except_hb4") or {}).get(module) or {}
+    exact = ((cfg.get("latch_except_hb4_by_type") or {}).get(tn) or {}).get(module) or {}
+    return common | exact
+
+
 def core_input_latch_except_hb4(plan, tn, module, port, bit):
     """Explicit hold pad of a latch-less bit (FABLE-CLOSURE-STRATEGY 11-17): clock.core_input_lockup.latch_except_hb4
     {"<module>": {"<port>[<bit>]": N}} puts N kept HB4xp67 (gen_rtl.ot_dp_hd, instance u_hdly_*, ~37 ps FF each) between the
@@ -814,14 +822,16 @@ def core_input_latch_except_hb4(plan, tn, module, port, bit):
     cbn_q01 tap[0]: N = 3 (120-170 ps TT; t12 FF hold -14.0 without it).  0 = none (absent key, byte-identical RTL)."""
     if port not in core_input_lockup(plan, tn, module):
         return 0
-    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
-    return int(((cfg.get("latch_except_hb4") or {}).get(module) or {}).get(f"{port}[{bit}]") or 0)
+    return int(core_input_hold_pads(plan, tn, module).get(f"{port}[{bit}]") or 0)
 
 
 def core_input_uses_pad(plan):
     """any module of clock.core_input_lockup declares a latch_except_hb4 pad (the cell file then carries ot_dp_hd)."""
     cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
-    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+    common = cfg.get("latch_except_hb4") or {}
+    exact = (cfg.get("latch_except_hb4_by_type") or {}).values()
+    return any(int(n or 0) > 0 for row in (common, *exact)
+               for bits in row.values() for n in bits.values())
 
 
 def lockup_key_errors(plan, seen, typed_seen=()):
@@ -832,10 +842,17 @@ def lockup_key_errors(plan, seen, typed_seen=()):
     keys = sorted(set(cfg.get("latch_except") or {}) | set(cfg.get("latch_except_hb4") or {}))
     errors = [f"LATCH_EXCEPT_MODULE {m}: matches no bound lockup module (bound lockup modules: {sorted(seen)}); "
               "key the row on the bound leaf module" for m in keys if m not in seen]
-    for tn, modules in sorted((cfg.get("latch_except_by_type") or {}).items()):
-        for module in sorted(modules):
+    typed_latches = cfg.get("latch_except_by_type") or {}
+    typed_pads = cfg.get("latch_except_hb4_by_type") or {}
+    for tn in sorted(typed_latches.keys() | typed_pads.keys()):
+        pads = typed_pads.get(tn) or {}
+        for module in sorted((typed_latches.get(tn) or {}).keys() | pads.keys()):
             if (tn, module) not in typed_seen:
                 errors.append(f"LATCH_EXCEPT_MODULE {tn}/{module}: matches no bound lockup module in this type")
+            entries = core_input_latch_except_entries(plan, tn, module)
+            for bit in sorted(pads.get(module) or {}):
+                if bit not in entries or bit.split("[", 1)[0] in entries:
+                    errors.append(f"LATCH_EXCEPT_HB4 {tn}/{module}/{bit}: requires an individual latch exception")
     return errors
 
 

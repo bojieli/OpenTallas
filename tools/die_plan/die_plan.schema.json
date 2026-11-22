@@ -8666,6 +8666,26 @@
         }
        }
       },
+      "latch_except_hb4_by_type": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "propertyNames": {
+         "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "additionalProperties": {
+         "type": "object",
+         "propertyNames": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*\\[[0-9]+\\]$"
+         },
+         "additionalProperties": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+         }
+        }
+       }
+      },
       "latch_except_hb4": {
        "type": "object",
        "additionalProperties": {

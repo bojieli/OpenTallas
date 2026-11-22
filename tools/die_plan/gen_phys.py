@@ -1456,11 +1456,15 @@ def core_input_direct_anchor(raw, tn):
     """Pass the scoped exceptions to the pre-GPL anchor for surviving NK pipe registers."""
     clock = (raw or {}).get("clock") or {}
     cfg = clock.get("core_input_lockup") or {}
-    modules = (cfg.get("latch_except_by_type") or {}).get(tn) or {}
-    if not modules:
+    latch_rows = (cfg.get("latch_except_by_type") or {}).get(tn) or {}
+    pad_rows = (cfg.get("latch_except_hb4_by_type") or {}).get(tn) or {}
+    ports = {port for ports in latch_rows.values() for port in ports}
+    ports.update(bit for pads in pad_rows.values() for bit, count in pads.items() if count == 0)
+    if not ports:
         return ""
-    rows = " ".join(f"{module} {{{' '.join(ports)}}}" for module, ports in sorted(modules.items()))
-    return f"set nka_direct {{{rows}}}\n"
+    # A native module may be exported as a differently named LEF master.
+    # The Tcl identifies the actual hard pin by tracing its unique NK pipe.
+    return f"set nka_direct {{{' '.join(sorted(ports))}}}\n"
 
 
 def core_input_place(raw, tn):
@@ -3837,10 +3841,15 @@ def _lockup_pad_type(P, tn):
         return False
     # FABLE-PLAN-QC-N 11-17: "all": true lists every type (133), but only a type that BINDS a lockup module can have a pad; the keep
     # hook errors when no pad cell exists, so emitting it for the other 115 types stopped them at PRE_FLOORPLAN.
-    mods = set((cfg.get("modules") or {}))
-    if not any(h.get("module") in mods for h in ((P.types.get(tn) or {}).get("hard_cores") or [])):
+    import bind
+    mods = (cfg.get("modules") or {}).keys()
+    physical = {h.get("module") for h in ((P.types.get(tn) or {}).get("hard_cores") or [])}
+    if not mods & physical:
         return False
-    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+    # Pads are keyed on the bound RTL module, which can differ from the
+    # LEF master that establishes whether this type has a lockup hard core.
+    return any(int(n or 0) > 0 for module in mods
+               for n in bind.core_input_hold_pads(P.raw, tn, module).values())
 
 
 def hold_pad_dont_touch_tcl(P, tn):
