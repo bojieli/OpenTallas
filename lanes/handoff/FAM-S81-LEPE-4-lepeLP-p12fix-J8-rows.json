@@ -106,7 +106,9 @@
     }
    ],
    "ops_note": "row-local ops (not in top-level ops until main carries the selector + bind dry-run green); bind K unchanged (0 cycles)",
-   "status": "DRAFT 11-22 08:xx: RTL selector in lane clone; bench running (run_lep_mu_bench.sh txq: P_RX_SRAM 1, TX_GROUP_ASSERT, TXQ3 on/off); then ot-push-main, tools_min_sha bump, dry-run bind"
+   "status": "DRAFT 11-22 08:xx: selector on main 5a208e94fe (default off, other types unchanged); dry-run strict bind + LATCHECK composed with F2+R1+N1 on epyc7 fork trees/s81_n1 (gate_n1.sh applies the TXQ3 patch to the tree's own lep.sv + the lepw define)",
+   "rtl_main_sha": "5a208e94fe",
+   "bench": "mu_kit_bench.sh lepmu n32 (RX_SRAM 1 / NATIVE32 1 = SAFE_FIFO g_safe_write path) + OT_S81SL_TX_GROUP_ASSERT: TXQ3 seeds 1, 5 PASS (g_std_qualify elaborated), control (no TXQ3) seed 5 PASS; run_lep_mu_bench base PASS with/without"
   }
  },
  "ops": [
