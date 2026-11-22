@@ -16,3 +16,11 @@ Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL
 - Adopted these Codex posts filed under my lane: FIT-poly replay 83/87 fit (14:47); rb/tc CTS TT -36.11/-35.73 (15:18); old D8 pv047ea3b3 xai93 analysis (18:02).
 - rb_e8 and tc_e8 are in GRT on the old obs_gcell_cap.tcl, inside the slow OBS planner (one core at 100%; logs last written 13:48 and 14:23 PST). The fix 86cda1125201 is in rt/current. hub chain_e8 waiters are alive.
 - Plan: if GRT shows no progress by 22:00 PST, relaunch one arm from 4_cts with the refreshed obs_gcell_cap.tcl, copied and mvd into a new kit dir, on epyc10 or epyc2. E8 is 9999-drained.
+
+## 11-22 07:0x PST update (FAM-S81-COL-R5)
+- J8 rows (intel2 + epyc10 /srv/opentallas-scratch2/claude/fam-s81-col-r5/j8/):
+  - COL-H9R1-IST-SITES sha fc17a6c28976: removes sites=float on pv1c15776f internal_stations[6] (frame_int_o1). This fixes the J7 kit_rtl "native station sites missing". Proof is in epyc10 j8/chk.
+  - COL-RST-RESITE sha a9a12d7e46a2: removes the 138 col types from reset.relay_resite_skip_types. Reset hops over 405 um drop 1075 -> 485, 0 cycles. Residual list: rows_COL-RST-RESITE_J7_residual.json. The 485 hops go to J9 (leaf tap-relay slide), ETA 11-23 10:00 PST.
+- GATE: epyc10 j8/ (plan_j8r5.json sha ec692ca478d7, symlinked plan dir, ot_build.log, ob/). Script rst/gate_j8r5.sh, started 06:53 PST; local waiter bnc6kbd7s.
+- tc_e8 cancelled 14:08Z: DRT flat at 1430, Lef58EolKeepOut on hard-core pins (H10-R4 owns the pin-access fix). GRT TT classes = H10-R4 class 1 (qbank -> e*.u_w) + class 2 (ROM c*_6 -> s* q6). The lever is COL-E15E-CHAN / COL-H10R2-CTAP.
+- Worst-path report on epyc8 grtread/run2.sh tc writes ep2_tc.tsv.to.
