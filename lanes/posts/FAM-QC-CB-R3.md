@@ -1,0 +1,1 @@
+- 2026-11-21 18:28 PST RESUMED. Launched CTS (ot-run epyc2, in place, goal cts) on signable V2 cbf_q00__cl1b5a6458 and cbf_q01_s2; logs fam-qc-cb-r2/v2/<type>/cts_r3.log. Will read post-hook CTS then route+LEC.
