@@ -28,3 +28,8 @@
 - Launcher (detached nohup, intel2 pid 483341): ~/s81-bksel-r7/launch_r7a.sh, log launch_r7a.log; every 5 min tries private-spec on intel2 (after copy) then epyc7; on success runs run-item (log ~/s81-bksel-r7/run_item_r7a.log). Old launcher killed.
 - J8 candidate row (PROOF-PENDING) posted to S81-J6-ASSEMBLY-R5: lanes/handoff/S81-BKSEL-R7-J8-rows.json; GEN spread.py {IN} {OUT} 10 4.32 386.0.
 - Next after place: hop300 scan (R4 /srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r4/hop300.py on the geom.tsv), then ot-run route (run_kit.sh KIT route 48 16) in the kit work dir; read final 5_1_grt.odb / signoff.json; post to J6-R5.
+
+## 20:3x
+- intel2 fallback copy cancelled (oth-ubuntu-315702) + partial tree ot-deleted per COORD 18:5x.
+- r7a spec ~/coord/autopilot/private_specs/S81-BKSEL-R7/s81_bk_sel__t2_1121185210 (epyc7, rt 18a2688b741f): gen OK, gen_lint killed rc 143 after 4479 s -> run-item FAIL. Cause: epyc7 docker hung (trivial docker run > 60 s; ~25 lanes' docker stages stuck).
+- Detached retry: intel2 pid 584384 ~/s81-bksel-r7/retry_r7a.sh (log retry_r7a.log): reruns run-item on the same spec after 2 consecutive docker runs < 15 s; output ~/s81-bksel-r7/run_item_r7a_2.log. Successor: check it; then hop300 + route as above.
