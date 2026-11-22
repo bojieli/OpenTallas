@@ -65,14 +65,21 @@ def test_remote_finds_a_live_bind_and_runs_the_checker(tmp_path):
     (rt / "tools" / "die_plan").mkdir(parents=True)
     (rt / "tools" / "die_plan" / "plan_gate_pre.py").write_text(
         "import sys\nprint('FAIL TAPNAME t: density base gives 3 taps; clk_t4 should be clk_t3')\nprint('PLAN-GATE-PRE FAIL tree=x')\nsys.exit(1)\n")
+    (rt / "tools" / "die_plan" / "plan_gate_pre.py").write_text(
+        "import sys, os\nopen(os.path.join(%r, 'calls'), 'a').write(sys.argv[sys.argv.index('--tree') + 1] + chr(10))\n" % str(tmp_path)
+        + "print('FAIL TAPNAME t: density base gives 3 taps; clk_t4 should be clk_t3')\nprint('PLAN-GATE-PRE FAIL tree=x')\nsys.exit(1)\n")
     pr = subprocess.Popen([sys.executable, "-I", str(fake), "bind", "p.json", "--out", "o"], cwd=str(tree))
+    pr2 = subprocess.Popen([sys.executable, "-I", str(fake), "elab", "p.json", "--out", "o2"], cwd=str(tree))   # same plan + tree: one check
     try:
-        arg = json.dumps({"rt": str(rt), "classes": list(B.ONLY), "all_classes": list(B.ALL_CLASSES), "skip": [], "timeout": 60})
+        arg = json.dumps({"rt": str(rt), "classes": list(B.ONLY), "all_classes": list(B.ALL_CLASSES), "skip": [], "timeout": 60, "par": 4})
         r = subprocess.run([sys.executable, "-I", "-c", B.REMOTE, arg], capture_output=True, text=True, timeout=120)
         got = json.loads(r.stdout.strip().splitlines()[-1])
     finally:
-        pr.kill()
-        pr.wait()
+        for x in (pr, pr2):
+            x.kill()
+            x.wait()
+    assert (tmp_path / "calls").read_text().splitlines().count(str(tree)) == 1   # deduped by (plan sha, tree, asbuilt); other live binds add lines
+    assert B.doomed([b for b in got["binds"] if b["pid"] == pr2.pid][0])
     mine = [b for b in got["binds"] if b["pid"] == pr.pid]
     assert got["has_pgp"] and len(mine) == 1
     b = mine[0]

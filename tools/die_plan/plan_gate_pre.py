@@ -1066,14 +1066,33 @@ def check_deadin(tree, plan, asbuilt):
     return []
 
 
-def check_tapname(plan, base_fn=None, max_list=6, tree=None):
+# clock keys the density tap solve never reads: kit-side exports only (gen_phys.tap_balance_to_exports -> tap_balance.tcl, TAP-GRID-R5)
+TAPNAME_KIT_ONLY_KEYS = ("tap_balance_to", "tap_slowest_max_ps")
+
+
+def _tap_clock(ck):
+    return json.dumps({k: v for k, v in (ck or {}).items() if k not in TAPNAME_KIT_ONLY_KEYS}, sort_keys=True)
+
+
+def check_tapname(plan, base_fn=None, max_list=6, tree=None, base=None, solve_all=False):
     """FAIL TAPNAME / TAPNAME-RETAP lines (see TAPNAME-1122).  base_fn(P, raw, type) -> density base tap count; injectable.
     TAPNAME-UNCHECKED-1122 (COORD, QC-PLAN-R13 / QC-SLE-R5: run from a bare rt dir the density base inputs were not found, a WARN was
     printed and the broken v3p7d plan reported PASS): the base is solved with the plan's repo-relative inputs read from --tree; a base
-    that still cannot be solved is FAIL TAPNAME-UNCHECKED (non-zero, verdict UNCHECKED), never a silent PASS."""
+    that still cannot be solved is FAIL TAPNAME-UNCHECKED (non-zero, verdict UNCHECKED), never a silent PASS.
+    TAPNAME-DELTA-1122 (COORD: on a full QC plan the density solve of every type ran ~1 h CPU per check, a serial hour on every QC bind
+    chain): with a base plan (--remap-base / --baseline-plan / bind_of_record) only the density types whose clock section differs from the
+    base's (kit-only keys TAPNAME_KIT_ONLY_KEYS aside) are solved; a type whose clock section is identical to the bound base keeps the base's tap names (one WARN line counts them).
+    solve_all ($OT_TAPNAME_ALL=1) or no base: every density type is solved."""
     raw = _load(plan)
     if not raw:
         return []
+    bty = {}
+    if base and not solve_all:
+        try:
+            bty = _load(base).get("partition_types") or {}
+        except (OSError, ValueError):
+            bty = {}
+    same = 0
     todo = []
     for tn, ty in (raw.get("partition_types") or {}).items():
         ck = (ty or {}).get("clock") or {} if isinstance(ty, dict) else {}
@@ -1081,9 +1100,15 @@ def check_tapname(plan, base_fn=None, max_list=6, tree=None):
             continue
         refs = [v for v in _tap_ref_names(ck)]
         if ck.get("added_taps") or refs:
+            bck = ((bty.get(tn) or {}).get("clock") if isinstance(bty.get(tn), dict) else None)
+            if bck is not None and _tap_clock(bck) == _tap_clock(ck):
+                same += 1                                # clock section as bound in the base: names already proven there
+                continue
             todo.append((tn, ck, refs))
+    note = ([f"WARN TAPNAME {same} density type(s) with a clock section identical to base {base} not re-solved "
+             f"(OT_TAPNAME_ALL=1 solves all)"] if same else [])
     if not todo:
-        return []
+        return note
     if base_fn is None:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import schema
@@ -1125,7 +1150,7 @@ def check_tapname(plan, base_fn=None, max_list=6, tree=None):
         if bad:
             out.append(f"FAIL TAPNAME-RETAP {tn}: clock references name {len(bad)} tap(s) that are not taps of the solved base "
                        f"({nb} density + {len(added)} added): {', '.join(bad[:max_list])}; re-run the tap package (retap) on this base")
-    return out
+    return out + note
 
 
 _PLAN_OBJ = {}
@@ -1402,8 +1427,11 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, rb)
+    _base = None
+    if {"TAPNAME", "RESETPUB"} - skip:
+        _base = rb if rb else remap_base(plan, remap, baseline)[0]
     if "TAPNAME" not in skip:                            # TAPNAME-1122: density added tap names, seconds before the bind
-        findings += check_tapname(plan, tree=tree)
+        findings += check_tapname(plan, tree=tree, base=_base, solve_all=os.environ.get("OT_TAPNAME_ALL") == "1")
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
@@ -1413,7 +1441,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
     if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
-        findings += check_resetpub(tree, plan, base=rb if rb else remap_base(plan, remap, baseline)[0],
+        findings += check_resetpub(tree, plan, base=_base,
                                    solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))

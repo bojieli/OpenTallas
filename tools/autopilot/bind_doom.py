@@ -23,8 +23,9 @@ from pathlib import Path
 
 SWEEP_S = 600                 # a new bind is checked within ~10 min of its start
 RECHECK_S = 3600              # every live bind at least hourly
-CHECK_TIMEOUT_S = 900
-RUN_STALE_S = 3 * 3600
+CHECK_TIMEOUT_S = 3600        # COORD 11-22: a cold QC TAPNAME density solve took > 900 s (2 of 5 epyc10 QC binds were left unchecked)
+CHECK_PAR = 4                 # checks run in parallel per host; binds of the same (plan sha, tree) share one check
+RUN_STALE_S = 4 * 3600
 STATE = "bind_doom.json"
 RUNFILE = "bind_doom.run"
 DOOMED_TSV = "DOOMED-PLANS.tsv"
@@ -75,7 +76,18 @@ for p in os.listdir("/proc"):
         continue
     b = {"pid": int(p), "start": start, "key": f"{p}@{start}", "age_s": round(up - start / hz), "sub": argv[i + 1], "cwd": cwd,
          "plan": plan_abs, "plan_sha": sha, "asbuilt": ab(opt.get("asbuilt")), "out": ab(opt.get("out")), "findings": None}
-    if b["key"] + "|" + sha + "|" + rt not in a["skip"] and out["has_pgp"]:
+    out["binds"].append(b)
+jobs = {}
+for b in out["binds"]:
+    if b["key"] + "|" + b["plan_sha"] + "|" + rt not in a["skip"] and out["has_pgp"]:
+        jobs.setdefault((b["plan_sha"], b["cwd"], b["asbuilt"]), []).append(b)
+
+
+def check(job):
+    sha, cwd, asb = job
+    b = {"cwd": cwd, "plan": jobs[job][0]["plan"], "asbuilt": asb}
+    if True:
+        plan_abs = b["plan"]
         cmd = [sys.executable, "-I", "-B", pgp, "check", "--tree", cwd, "--plan", plan_abs, "--quiet"]
         if b["asbuilt"]:
             cmd += ["--asbuilt", b["asbuilt"]]
@@ -89,10 +101,17 @@ for p in os.listdir("/proc"):
             b["findings"] = [x for x in lines if x.startswith("FAIL ")][:20]
             b["verdict"] = next((x for x in lines if x.startswith("PLAN-GATE-PRE ")), "")[:300]
             if not b["verdict"]:
-                b["error"] = "\n".join(lines[-3:])[:400]
+                b["error"] = ("check timed out after %ss" % a["timeout"]) if r.returncode == 124 else "\n".join(lines[-3:])[:400]
         except OSError as e:
             b["error"] = str(e)[:300]
-    out["binds"].append(b)
+    for x in jobs[job]:
+        x.update({k: b[k] for k in ("rc", "findings", "verdict", "error") if k in b})
+
+
+if jobs:
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=max(1, int(a.get("par") or 1))) as ex:
+        list(ex.map(check, list(jobs)))
 print(json.dumps(out))
 '''
 
@@ -124,7 +143,7 @@ def ssh(host, hub):
 
 def probe_host(host, hub, skip, rt=RT_DEFAULT, timeout=CHECK_TIMEOUT_S, run=subprocess.run):
     """one host: -> parsed REMOTE output, or {'error': ...}"""
-    arg = json.dumps({"rt": rt, "classes": list(ONLY), "all_classes": list(ALL_CLASSES), "skip": sorted(skip), "timeout": timeout})
+    arg = json.dumps({"rt": rt, "classes": list(ONLY), "all_classes": list(ALL_CLASSES), "skip": sorted(skip), "timeout": timeout, "par": CHECK_PAR})
     cmd = ssh(host, hub)
     if cmd:                                       # remote: the code goes as one quoted argument
         import shlex

@@ -65,3 +65,34 @@ def test_density_base_solved_inside_tree(tmp_path):
     finally:
         TP._density_base, schema.Plan = orig, oplan
     assert f == [] and seen and seen[0] == tmp_path.resolve() and TP._root() != tmp_path.resolve()
+
+
+def test_only_types_changed_vs_base_are_solved(tmp_path):
+    """TAPNAME-DELTA-1122: a type whose clock section equals the base's is not re-solved (the QC full-plan solve took ~1 h)"""
+    calls = []
+    fn = lambda P, raw, tn: calls.append(tn) or 114  # noqa: E731
+    b = tmp_path / "b"
+    b.mkdir()
+    base = plan(b, ["clk_t114"])
+    assert G.check_tapname(plan(tmp_path, ["clk_t114"]), base_fn=fn, base=base) == [
+        f"WARN TAPNAME 1 density type(s) with a clock section identical to base {base} not re-solved (OT_TAPNAME_ALL=1 solves all)"]
+    assert calls == []
+    f = G.check_tapname(plan(tmp_path, ["clk_t115"]), base_fn=fn, base=base)     # changed vs base: solved and refused
+    assert calls == ["cbf_q00"] and f[0].startswith("FAIL TAPNAME cbf_q00:")
+    calls.clear()
+    G.check_tapname(plan(tmp_path, ["clk_t114"]), base_fn=fn, base=base, solve_all=True)
+    assert calls == ["cbf_q00"]
+
+
+def test_kit_only_clock_keys_do_not_trigger_a_solve(tmp_path):
+    """TAP-GRID-R5 set tap_balance_to / tap_slowest_max_ps on 108 QC types: kit-side keys, not density inputs"""
+    calls = []
+    fn = lambda P, raw, tn: calls.append(tn) or 114  # noqa: E731
+    b = tmp_path / "b"
+    b.mkdir()
+    base = plan(b, ["clk_t114"])
+    p = Path(plan(tmp_path, ["clk_t114"]))
+    raw = json.loads(p.read_text())
+    raw["partition_types"]["cbf_q00"]["clock"].update(tap_balance_to="slowest", tap_slowest_max_ps=265.0)
+    p.write_text(json.dumps(raw))
+    assert G.check_tapname(str(p), base_fn=fn, base=base)[0].startswith("WARN TAPNAME 1 density type(s)") and calls == []
