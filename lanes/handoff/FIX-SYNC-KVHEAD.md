@@ -35,3 +35,5 @@ OPUS-FIX-HEAD-LEP0N-R8 (r18). Report to COORD every 4 h (<250 words).
 
 - 11-22 thin-band scan (COORD ask): S81 J7 a6771d121e95 == J8 draft 53cab071c82f, 96 rects / 22 types (lanes/handoff/FIX-SYNC-KVHEAD-thinband-S81-J7J8.tsv); QC V3 e69de4a70060 6 hits (…-QC-V3.tsv). Advisories posted to SLICE-R6, SVC-R9, FAIL-S81-1, CB-R4, SLWSLE-R1, J6-ASSEMBLY-R5, QC-PLAN-R13. No rows from me; same form on 5 signed leaf types, so this is an advisory, not a gate.
 | H-C08 | FABLE-FIX-HEAD-LEP0N LEP-RINGFF-1 | split re-compose dropped bands[coll_i*].ring_place=ff -> whole ring packed FIRM in netlist order (W -496) | band ring_place ff in base/split parent, not ff in new plan | restore ring_place ff + rect on pin window | fable 04:14 | HEAD hd_lep0N_w FIXED-by-owner; KV/S81/QC 0 hits |
+
+- 05:0x COORD: posted missing D28 rows (KV-C02 c2736959a155, RINGMAC 3a0f01f89763) to KV-PLAN-R6 (810264dd56). Tools floors 79274b7c9b/9cdc3bde91 are in rt 6d2e187f0d. Re-check rows/ vs rows.json at 11:00; post any gaps to COORD.
