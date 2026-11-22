@@ -1,5 +1,5 @@
 """KW-FIX-5: a spill destination below its disk floor receives no spill (ot-run SPILL_DST_FLOOR)."""
-import importlib.machinery, importlib.util, pathlib
+import importlib.machinery, importlib.util, os, pathlib
 
 
 def load():
@@ -54,8 +54,15 @@ def _drop(tmp_path, setup):
     r.mkdir()
     (tmp_path / "mark").touch()
     setup(r)
+    # hermetic: the busy check asks `docker ps` / `docker inspect`; on a fleet host with ~100 churning containers inspect fails when one vanishes and the check
+    # fails closed (FLOW-FLEET-R2 11-22: this test failed twice in the push gate on epyc9 at load 230).  A fake docker with no containers.
+    fake = tmp_path / "fakebin"
+    fake.mkdir(exist_ok=True)
+    (fake / "docker").write_text("#!/bin/sh\nexit 0\n")
+    (fake / "docker").chmod(0o755)
+    env = dict(os.environ, PATH=f"{fake}:{os.environ.get('PATH', '')}")
     out = subprocess.run(["sh", "-c", m.spill_drop_cmd(str(r), shlex.quote(str(tmp_path / "mark")), shlex.quote(str(r / "nomark")))],
-                         capture_output=True, text=True).stdout
+                         capture_output=True, text=True, env=env).stdout
     return "DROPPED" in out, r.exists()
 
 
