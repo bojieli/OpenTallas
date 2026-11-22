@@ -99,6 +99,7 @@ OWNER, verbatim: "real near misses should still use late stage fixes, but do not
 
 ## WAITER-STD-1600 11-20: wait with ot-wait, never pgrep -f
 - Never wait with `while pgrep -f ...; do sleep; done`: the waiter matches itself and never ends (181 such shells on the fleet; the lepe proof7 exit 2 went unseen for 16 h). Run `export OT_LANE=<LANE>`, start ot-run (`&`) or ot-push-main, then `ot-wait otrun-$(hostname)-$!` (or `ot-wait <oth- unit>`, or `ot-wait <exact pid> --cmdline <text>`). It exits with the job rc (66 not found, 70 plain pid ended, 71 client killed, 124 timeout). ot-run and ot-push-main write ~/.local/state/ot-status/<name>.json and post DONE/DIED under your lane name themselves.
+- FLOW-OPS-1300 item 14 (COORD 11-21): wait with `ot-wait UNIT` or `ot-run --status UNIT` in a run_in_background poll loop (`until ot-run --status U >/dev/null; r=$?; [ $r -ne 75 ] && [ $r -ne 76 ]; do sleep 300; done`; --status exit: job rc when done, 75 running, 76 queued, 71 died, 66 missing). On localhost/rtx-pro `ot-wait` forwards to intel2, where the records live.
 
 ## UNSIGNABLE-WATCHDOG 11-21 (FLOW-OPS-0900, COORD ruling; owner-approved cancel rule 11-20): the watchdog cancels
 - tools/autopilot/noprog_watchdog.py (noprog.timer on intel2, every 15 min, rt/current) cancels a job that has run >3 h and is measured unable to sign: setup < -300 ps, setup repair flat while still worse than -42 ps, GRT overflow flat over 2 rounds, or a functional bug listed in lanes/UNSIGNABLE-FUNCTIONAL.tsv. Exempt: proofs / private-spec kits, ECOs, hold-only jobs, LEC, HBM.
