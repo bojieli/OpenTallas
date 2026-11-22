@@ -1,0 +1,1 @@
+- 2026-11-22 02:52 PST DIED [explorer-store-r1] ot-push-main otpush-outgoing-giraffe-3489827 on outgoing-giraffe: rc=4 after 5 s, ended 10:52:54, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 5 s, no log
