@@ -198,6 +198,41 @@ def held_detail(items, cfg, now=None):
     return sorted(out, key=lambda x: (x["bucket"], -x["n"], -x["age_h"]))
 
 
+HOLD_ROW_H = 24.0
+
+
+def die_owner_lane(cfg, die):
+    """the die owner lane of kit_wave.json (dies.<die>.die_owner, else the lane in owner_lane '(...)'), never a KIT-WAVE lane"""
+    d = ((cfg or {}).get("dies") or {}).get(die) or {}
+    if d.get("die_owner"):
+        return str(d["die_owner"])
+    m = re.search(r"\(([A-Z][A-Z0-9-]+)\)", str(d.get("owner_lane") or ""))
+    return m.group(1) if m else f"{die} die owner (unnamed)"
+
+
+def hold_owner_rows(detail, cfg, dies=None, now=None):
+    """HOLD-OWNER-1122 (FABLE-FLOW-0350 U1: 59 hold keys with no owner or no term held 184 rows while 30-39 % of cores idled; the UNDER-USE
+    flag was a report nothing acted on): a hold key with no release term (no eta=) for >= HOLD_ROW_H, or with no owner, held that long,
+    becomes one OWNERS row (kind hold, state FIX) assigned to the die owner lane, with its row count, age and the hold text.  Parked dies
+    are left out.  dies = the die names OWNERS.tsv knows (others skipped).  -> [row dict in ownership.TSV_COLS]"""
+    now = time.time() if now is None else now
+    out = []
+    for x in detail or []:
+        d = ((cfg or {}).get("dies") or {}).get(x["die"]) or {}
+        if (dies is not None and x["die"] not in dies) or (isinstance(d, dict) and d.get("parked")):
+            continue
+        if x["age_h"] < HOLD_ROW_H or x["eta"] is not None:
+            continue
+        lane = die_owner_lane(cfg, x["die"])
+        named = x["owner"] if x["owner"] and not str(x["owner"]).startswith("(") and "NO-OWNER" not in x["flags"] else ""
+        out.append({"die": x["die"], "item": f"HOLD {x['bucket']} {x['key']}", "kind": "hold", "state": "FIX", "owner": lane, "live_job": "none",
+                    "last_activity": f"{int(x['age_h'] * 60)}m",
+                    "next_step": (f"{x['n']} row(s) held {x['age_h']} h with no release term" + (f" (hold names {named})" if named else " and no owner")
+                                  + ": set owner=<lane> eta=<YYYY-mm-dd HH:MM> on the hold, or drop it (HOLD-ORPHAN release then applies)"),
+                    "evidence": x["why"], "default_owner": lane, "replicas": x["n"], "members": ""})
+    return out
+
+
 def held_line(detail, top=8):
     """'UNDER-USE HELD SKIP-HELD 75: s81/hd_* 40 [owner X, 26.1 h, FLAGGED NO-OWNER] ...; WAIT-FORM 42: ...'"""
     if not detail:
@@ -257,10 +292,13 @@ def step(AP):
             except (OSError, ValueError):
                 st_ = {}
             seen = st_.setdefault("held_flag_posted", {})
-            new = [x for x in det if x["flags"] and seen.get(f"{x['bucket']}|{x['die']}|{x['key']}") != "+".join(x["flags"])]
-            if new:
+            new = [x for x in det if x["flags"] and seen.get(f"{x['bucket']}|{x['die']}|{x['key']}") != "+".join(x["flags"])
+                   and not ((cfg.get("dies") or {}).get(x["die"]) or {}).get("parked")]
+            if new:                                      # HOLD-OWNER-1122: an unowned hold goes to the die owner lane, not COORD only
                 AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
-                                f"- {time.strftime('%Y-%m-%d %H:%M %Z')} NEEDS-ACTION [AUTOPILOT -> " + ", ".join(sorted({x['owner'] or 'COORD' for x in new})) + ", COORD] "
+                                f"- {time.strftime('%Y-%m-%d %H:%M %Z')} NEEDS-ACTION [AUTOPILOT -> " + ", ".join(sorted({
+                                    (x['owner'] if x['owner'] and not str(x['owner']).startswith('(') and 'NO-OWNER' not in x['flags'] else die_owner_lane(cfg, x['die']))
+                                    for x in new})) + ", COORD] "
                                 + "HELD rows: " + "; ".join(f"{x['bucket']} {x['die']}/{x['key']} {x['n']} row(s) {x['age_h']} h {'+'.join(x['flags'])}" for x in new[:15])[:1500]
                                 + " -- set owner= and eta= on the hold, or release it")
                 for x in new:
