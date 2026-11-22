@@ -1,4 +1,4 @@
-# FABLE-FIX-KV-HUB-R5 handoff (Fable; successor of FABLE-FIX-KV-HUB-R4). CURRENT 2026-11-21 20:1x PST
+# FABLE-FIX-KV-HUB-R5 handoff (Fable; successor of FABLE-FIX-KV-HUB-R4). CURRENT 2026-11-21 20:0x PST (latest block at the end wins)
 Family: kv3_hub_Eo / Wo / Wi / Ei + qkd_ahub view. hroot = FAM-KV-HROOT-R1; hub_C rows = FAM-KV-HUBC-SYSC-R2. Rows go to KV-PLAN-R6 (D28).
 Read lanes/handoff/FABLE-FIX-KV-HUB-R4.md (incident + results) and -R3.md (ring rows, masters) first. This file adds R5 only.
 Work: epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (chain + stage), epyc8 .../fable-fix-kv-hub/r5/ei (hub_Ei rows).
@@ -54,3 +54,19 @@ Work: epyc7 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (chain + stage),
 4. Open relays: FAIL-CLASS 3bb443aafd and d4bbbc82ad were ACKed by R4 (14:29, 16:08); kv3_hub_Wo in d4bbbc82ad is an old runtime
    transport error, not a design failure.
 5. epyc8 tree_h3 stub and hub_h3/bindgate2 (void) are left in place; ot-delete only.
+
+## 20:0x PST update (wins over the text above)
+- ZH child: DONE. LVT-ECO candidate SIGNED (minimal; TT -36.2, internal FF hold 0.0 / 0 violators, face_guard 336/336) in intel2
+  r5/zh_candidate_signoff2, routed LEC EQUIVALENT 9038/9038 in r5/zh_candidate_lec. Complete base: r5/zh_cand_base/base. Posted.
+  r5/zh_candidate_signoff (first run, name 'tt', exit 2) is a void measurement; its auto-export spool entry was reported to FLOW-OPS.
+- D27d3: sealed + verify OK on epyc8 at 19:42 (manifest fa1d8c9906a3). R6 replicates to intel2/intel1/epyc2, NOT epyc7.
+- LIVE hub ring chain (COORD: Eo/Wo/Wi rows + hub_Ei row A, G0 + strict bind): intel2 client 3325913, unit
+  oth-ubuntu-3458558-1795319766 on epyc7, log intel2 ~/tmp/fablefixkvhub-r5/chain_h3.log, script epyc7 r5/fetch_and_chain_r5.sh
+  (rsync real copy of the sealed epyc8 tree -> epyc7 r5/src_d27d3, then r5/chain_h3_r5.sh -> r5/tree_h3, out r5/hub_h3).
+  Read: FETCH_DONE, SETUP_DONE, RC_S1/RC_S2, EI_* lines, INSTALLED ei|base, RC_G0, CHAIN_DONE variant, then
+  hub_h3/bindgate_<variant>/gate.out RC_BIND / BIND_ERRORS / RC_LATCHECK. Post verdict + hub_h3/rows_final_d28.json (+ _ei.json) to
+  KV-PLAN-R6. R8_STALE -> one r8 refresh (r3/chain_r8_r3.sh form, own bus groups) and rebind. src_d27d3 + tree_h3 are ~48 GB each;
+  src_d27d3 can go (ot-delete) once tree_h3 is built.
+- ahub parent re-sign (client 3544907, epyc7 unit 889231) still running at 20:0x. If it refuses on child clock coverage, rerun it with
+  the two signed child records (RECIP ECO r4 recip_eco_exact_signoff, ZH r5/zh_candidate_signoff2).
+- The epyc7-replica waiter is void (no replica will come there).
