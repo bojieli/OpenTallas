@@ -22,3 +22,9 @@ Lane clone epyc9 /srv/opentallas-scratch2/claude/fam-s81-serdes-r7-core = main 5
 - Plan rows are in the J8 combined gate above (phy_eng_pair + eng view). Next: private-spec s81 phy__t1 --plan <candJ8s plan_j8p.json> --tree candJ8s --bind-out <candJ8s native_bind/out> --host epyc9 --src-manifest off (proof), diff config.mk vs wave kit, run-item, route. epyc9 is now an s81 gen host.
 
 ## 5. t12/t14/t16: ride the J8 START rows (COORD). t12 a4 / t16 a4 wave running, t14 a5 ENQUEUED. Codex t14 private fixes are ODB move chains incl. reset copies (not a positions-only overlay).
+
+## RESUMED 21:4x (COORD: no stand-down; R7 continues)
+- J8 combined plan G0/PRE: PRE PASS; G0 FAIL 10 errors (dfi__svc_14__phy_hbm hop 924 um, 2 cuts, 6 monitor cland hops, reset msg). Base-vs-J8 G0 diff running (intel2 PID 4174329, epyc9 gates/G0base) to tell inherited from new.
+- phy__t1 private kit: spec ~/coord/autopilot/private_specs/FAM-S81-SERDES-R7/s81_phy__t1_1121214212, run-item intel2 PID 3945510 (log ~/fam-s81-serdes-r7/phy_t1_runitem.log), host epyc9, plan = combined J8 (candJ8s).
+- t4 front3 path (stations on the PMA->dec legs, 0 cycles): worktree epyc9 /srv/opentallas-scratch2/claude/fam-s81-serdes-r7-f3 branch claude/s81-serdes-rx-front3-1121 (764fbb8bb2 keep-th + 191a63ac2d RX_FRONT3 RTL from Codex rx_shell_j7_proof_1415 / r6-push overlays). Child kit physical/ref_tile/s81fam_kp4_dec_front3 (untracked copy). Child build decf3_r7a: intel2 PID 4138606, out epyc9 fam-s81-serdes-r7/build/decf3_r7a.
+- J8 t4 rows generator: epyc9 fam-s81-serdes-r7/gen_split_front3_delta.py (R6 gen_split_delta + extra_defines [OT_S81_SERDES_RX_FRONT3] + dec module override + core_taps). Hold fix = early core taps (kind core) at u_core.u_dec.ck [1439.1,777.6] (insertion from decf3 view insertion.json boundary means) and u_core.u_enc.clk [842.44,599.96] (enchp_j6b TT 270.6 / FF 223.8 boundary means). Layout file to write once the decf3 view exists.
