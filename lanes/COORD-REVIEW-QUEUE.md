@@ -22973,3 +22973,5 @@ FAILED [AUTOPILOT c94d76d802c0] 2026-11-21 23:48:16 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 23:54 PST DONE [OPUS-FIX-HEAD-LEP0N-R8] ot-run oth-ubuntu-604718-1795333937 on tolerant-swine: rc=0 after 133 s, ended 23:54:28, log /home/ubuntu/opus-fix-head-lep0n-r8/post3_e3.otrun.log, cmd: --mem 32 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8 --stage /srv/opentallas-scratch2/claude/opu
 - 2026-11-21 23:54 PST DONE [FLOW-FLEET-R1] ot-push-main otpush-renewed-glider-2007876 on renewed-glider: rc=0 after 18 s, ended 07:54:33, log none, cmd: ot-push-main 
+- 2026-11-21 23:54 PST owners_sweep.py now reads COORD-ROUTED-OWNERS.tsv prefix rows (first match wins; owned if the lane posted in 6 h), commit 472964cd. Flagged UNOWNED 16 -> 10 (S81); DEAD-OWNER 1 unchanged; no-flag rows 371 -> 377.
+- 2026-11-21 23:54 PST ALERT STUCK-STATE s81: 37 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)

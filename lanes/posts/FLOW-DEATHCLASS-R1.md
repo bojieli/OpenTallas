@@ -1,0 +1,1 @@
+- 2026-11-21 23:54 PST owners_sweep.py now reads COORD-ROUTED-OWNERS.tsv prefix rows (first match wins; owned if the lane posted in 6 h), commit 472964cd. Flagged UNOWNED 16 -> 10 (S81); DEAD-OWNER 1 unchanged; no-flag rows 371 -> 377.
