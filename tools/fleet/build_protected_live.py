@@ -246,15 +246,38 @@ def otrun_hosts(cmd):
     return sorted(hs | {HUB_ALIAS}) if hs else None
 
 
+SSH_OPT_ARG = set("BbcDEeFIiJLlmOoPpQRSWw")
+FLEET = re.compile(r"^(intel\d+|epyc\d+)$")
+
+
+def ssh_host(argv):
+    """the fleet host an `ssh [opts] HOST cmd` argv runs on (ot-run's remote job leg), else None"""
+    if not argv or os.path.basename(argv[0]) != "ssh":
+        return None
+    i = 1
+    while i < len(argv):
+        a = argv[i]
+        if a.startswith("-") and len(a) > 1:
+            i += 2 if (len(a) == 2 and a[1] in SSH_OPT_ARG) else 1
+            continue
+        h = a.split("@", 1)[-1]
+        return h if FLEET.match(h) else None
+    return None
+
+
 def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user",)):
     """(c) scratch paths named by running process command lines on this host (ot-run queue clients and waiters, jobs) and by user systemd unit files.
     A path from an ot-run command line with --hosts is written host-scoped ("@h1,h2 /srv/..."): the guard applies it only on those hosts and the hub."""
     for c in glob.glob(os.path.join(proc, "[0-9]*", "cmdline")):
         try:
-            t = open(c, "rb").read().replace(b"\0", b" ").decode("latin1")
+            raw = open(c, "rb").read()
+            t = raw.replace(b"\0", b" ").decode("latin1")
         except OSError:
             continue
         hs = otrun_hosts(t)
+        sh = ssh_host(raw.decode("latin1").split("\0"))
+        if hs is None and sh:
+            hs = sorted({sh, HUB_ALIAS})
         for m in RX.finditer(t):
             x = m.group().rstrip("/.-")
             if x.count("/") >= 5:

@@ -86,12 +86,16 @@ def test_host_scoped_otrun_paths_and_plan_refs_clean_aggr_r3(tmp_path, monkeypat
     proc = tmp_path / "proc"
     (proc / "11").mkdir(parents=True)
     (proc / "11" / "cmdline").write_bytes(b"python3\0/x/ot-run\0--hosts\0epyc8\0--dir\0/srv/opentallas-scratch2/claude/lane-a/r5\0--\0bash\0/srv/opentallas-scratch2/claude/lane-a/r5/go.sh")
+    (proc / "13").mkdir()
+    (proc / "13" / "cmdline").write_bytes(b"ssh\0-o\0ServerAliveInterval=30\0epyc8\0cd /srv/opentallas-scratch2/claude/lane-c/r5 && go")
     (proc / "12").mkdir()
     (proc / "12" / "cmdline").write_bytes(b"bash\0/srv/opentallas-scratch2/claude/lane-b/job/run.sh")
     out = set()
     B.live_cmd_paths(out, G.canon, proc=str(proc), unit_dirs=())
     assert "@epyc8,intel2 /srv/opentallas-scratch2/claude/lane-a/r5" in out
     assert "/srv/opentallas-scratch2/claude/lane-b/job/run.sh" in out
+    assert "@epyc8,intel2 /srv/opentallas-scratch2/claude/lane-c/r5" in out
+    assert B.ssh_host(["ssh", "-i", "k", "ubuntu@epyc7", "x"]) == "epyc7" and B.ssh_host(["ssh", "rtx-pro", "x"]) is None
     lst = tmp_path / "p.txt"
     G.write_list(out, str(lst))
     for host, want in (("loved-redfish", False), ("outgoing-giraffe", True), ("tolerant-swine", True), ("unknown-box", True)):
