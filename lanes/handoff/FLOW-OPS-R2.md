@@ -75,3 +75,8 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - S81 bind_preflight re-enabled 07:35 (a093cbb0ba): ticks 305 s / 354 s, no stranded rows (posted 5cb7493a3c).
 - Canary narrowing arms running (intel2 ot-run via canary.py): runs/ab_flowops_r2/{classoff,asyncoff} on d14cac8bd26f (baseline keep-on 105.94, keep-off 124.4 ps TT setup).
 - Next: read canary arms; io_guard, lever 9, items 8/11/12, push-test triage; optional S1 hold_guard + FIX-REACH.tsv; tick hang in plan_dies prewarm_probes (07:33).
+
+## 11-22 ~18:4x: RESCORE-SWEEP done, nothing to rescore
+- Swept 7 d of signoff.json on 7 gen hosts (~20k records). No NOT SIGNED record has unconstrained in its reasons, because the minimal profile already makes it advisory (it only appears in legacy_reasons). Nothing written. Posted coord 19da330592.
+- Scripts: <host>:/srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/{soscan,sotally,sopar}.py
+- Next: read canary arms landing/rrelay/rstsync (intel2 flow-canary/runs/ab_flowops_r2), narrow replica_keep; then io_guard, lever 9, items 8/11/12, push-test triage.
