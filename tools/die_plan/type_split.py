@@ -2253,6 +2253,16 @@ def _nearest(items, out, used, need, length, margin, gap):
 INSET_DIR = {'E': (-1, 0), 'W': (1, 0), 'N': (0, -1), 'S': (0, 1)}       # into the piece, as die_hop_scan.INSET
 
 
+def cut_budget_cap(per_um, cap):
+    """spec cut_pins_per_um_cap: the cut budget never exceeds it (None / absent = unchanged)."""
+    if cap is None:
+        return per_um
+    cap = float(cap)
+    if cap <= 0:
+        raise SplitError(f"cut_pins_per_um_cap {cap} must be positive")
+    return min(per_um, cap)
+
+
 def reserve_spans(spans, length, tn=""):
     """spec cut_face_reserve_um spans [[lo_um, hi_um], ...] of one cut face -> sorted [(lo, hi)] for windows_for
     (reserved=): no cut window is placed on them."""
@@ -3043,6 +3053,11 @@ class Event:
             # A cut spends only 90% of the inherited face budget: discrete two-layer pin snapping and
             # epoch/infrastructure boundaries otherwise exceeded the 10-um window limit (pv6: 231 errors).
             per_um *= 0.90
+            # spec cut_pins_per_um_cap (FABLE-FIX-KV-PV-SINKSPREAD 11-22, KV pv D29): upper bound of the cut budget.  An x
+            # cut carries its pins on M4/M6; at 0.6 pins per usable M6 track (G0 faces) that is 12 pins/um, while the type
+            # budget is the one proven on the N/S faces (M5/M7): kv3_pv_v5 15.5 x 0.9 = 13.95/um gave "33 pins on 52 M6
+            # tracks = 0.63 > 0.6" on two cut ports.
+            per_um = cut_budget_cap(per_um, self.spec.get("cut_pins_per_um_cap"))
             p = next(x for x in self.raw["partitions"] if x["name"] == base)
             items = []
             # infrastructure pins (collector / relay) sit on the cut face around infra_x: keep that span clear

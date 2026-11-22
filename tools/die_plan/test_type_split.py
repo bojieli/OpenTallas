@@ -1289,3 +1289,16 @@ def test_drop_clock_keys_drops_reserved_sites_that_straddle_the_cut():
     c = {"tap_um": [0.0, 0.0]}
     ts._clock_sites(ck, c, 0)
     assert "reserved_sites_um" not in c and len(ck["reserved_sites_um"]) == 2
+
+
+def test_cut_pins_per_um_cap_bounds_the_cut_budget():
+    """FABLE-FIX-KV-PV-SINKSPREAD (KV pv D29): spec cut_pins_per_um_cap bounds the type budget on the cut face."""
+    assert TS.cut_budget_cap(13.95, None) == 13.95
+    assert TS.cut_budget_cap(13.95, 11.9) == 11.9
+    assert TS.cut_budget_cap(9.45, 11.9) == 9.45
+    with pytest.raises(TS.SplitError, match="cut_pins_per_um_cap"):
+        TS.cut_budget_cap(10.0, 0)
+    # the capped budget widens a 66-pin window from 5.2 um to at least 5.5 um (0.6 pins per M6 track holds)
+    wide = TS.windows_for([("a", 66, None)], 1520.64, TS.cut_budget_cap(13.95, 11.9))["a"][0]
+    tight = TS.windows_for([("a", 66, None)], 1520.64, 13.95)["a"][0]
+    assert wide[1] - wide[0] > tight[1] - tight[0]
