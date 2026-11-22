@@ -23830,3 +23830,4 @@ FAILED [AUTOPILOT 20d5395e14bc] 2026-11-22 02:40:14 PST AUTOPILOT -> KIT-WAVE-1:
   STALE: S81 68 (unchanged), QC 7. HEAD clean.
   377 rows no flag; file lanes/OWNERS-SWEEP.tsv
 - 2026-11-22 02:50 PST DONE [FLOW-FLEET-R1] ot-push-main otpush-renewed-glider-1370284 on renewed-glider: rc=0 after 422 s, ended 10:50:49, log none, cmd: ot-push-main 
+- 2026-11-22 02:51 PST DONE [LOCKUP-STATION-R3] ot-run oth-ubuntu-2602654-1795344458 on loved-redfish: rc=0 after 202 s, ended 10:50:58, log /srv/opentallas-scratch2/claude/lockup-station-r3/qcproof/spec/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/lockup-station-r3/qcproof/work --hosts epyc7 -- bash -c [ -f /srv/opentallas-scra
