@@ -22175,3 +22175,5 @@ FAILED [AUTOPILOT 3df3f614925c] 2026-11-21 21:20:37 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 21:23 PST DIED [FABLE-FIX-HEAD-LEP0N-R7] ot-run oth-ubuntu-2769637-1795324804 on tolerant-swine: rc=2 after 178 s, ended 21:23:01, log /home/ubuntu/fable-fix-head-lep0n-r7/ev_g6_bind.otrun.log, cmd: --mem 32 --threads 4 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-r7 --max-wait 300 -- bash /srv/opentallas-scr
 - 2026-11-21 21:23 PST intel1 at 1215 GiB: already in gen_hosts, nothing to restore
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
+- 2026-11-21 21:23 PST HOURLY free space 21:22 epyc9=2672 intel1=1215 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
