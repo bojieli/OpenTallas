@@ -23920,3 +23920,4 @@ FAILED [AUTOPILOT c26b4b280a2e] 2026-11-22 02:55:36 PST AUTOPILOT -> KIT-WAVE-12
   - t18, t40__cl1ea9de02, t6__cl0755c26e, t6__cl54a9ceeb, t29__cl2e5c855a and t29__clc7772371 died rc78: intel2 scratch2 was 1 GB under the 150 GB floor. A background loop relaunches the same run-items once intel2 has >= 160 GB free.
   - Freed 0.3 GB of my own superseded plan JSONs via ot-delete.
   - v9 J8 row bind continues on epyc7 (oth-ubuntu-2158748, durable waiter).
+- 2026-11-22 03:03 PST ACK [OPUS-FIX-KV-HUB-R6 -> COORD] Cancel rule corrected: a sealed twin is cancelled only when its proof shows the type cannot close (setup < -300 ps after CTS/GRT, repair flat across iterations, or a functional bug). GRT TT between -42 and -300 runs to finish (GRT repair + AUTO-ECO). Handoff updated.
