@@ -32,6 +32,24 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
 c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
 
+## NEW TASK 07:1x (COORD ruling, mine): E reset blocker, option (b) = pair rst_n pin to the S face, re-sign the pair view, E kit --goal route
+Problem (R8 hub 3316ceac): hd_lep0N E PLACE-SETUP-STOP -441: gated reset tap u_rrl_380 (535.7,1343.5) -> u_rg0.u_pair rst_n, M5 pin at the pair
+centre (388.824,246.24) under full M4/M5 OBS; rg3 mirror (u_rrl_234). Plan + ETA posted 07:15 (view ~10:30, E kit ~11:15).
+Facts: - pair = ot_s81hd_lep_pair 777.6x492.48, 1.10 M cells, ONE module for rg0/rg3 (E) and rg1/rg2 (W): new view changes W too.
+ - signed view results/head_lep_pair_views_vE28_1118 (README, splice.json, clock_contract.json, source_signoff.json). Signed routed DB:
+   epyc9 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n/ve28_hold2/so_run/results/asap7/hbc_ot_s81hd_lep_pair/base/6_final.odb; sign-off session
+   .../ve28_hold2/so_out/{tt,ff}/(cmd.sh, session.tcl, libraries.json); view inputs .../fable-fix-head-lep0n/ve28_views/(run_views.sh, res/, views/).
+ - DELETED 11-21: kit epyc9 /srv/opentallas-scratch2/claude/head-lep0n-opus/lep_ve28/kit/ot_s81hd_lep_pair_kit (only kit/_inputs left) and
+   head-plan-r4/ve28_detail (M6/M7 detail splice). Regenerate the kit (gen only): python3 -I head-lep0n-opus/lep_ve28/lep_pair_kit_ve28.py TREE
+   SRC_PLAN OUT_PLAN_DIR KITROOT (plan_lep_pair_kitview.json in lep_ve28/plan).
+ - core_pins/lep_pair_pins_777r.json (rst_n S face x 397.464) COLLIDES with the signed clk entry (397.464,0.24 M5): use a new file
+   lep_pair_pins_777s.json with rst_n at (399.384, 0.042) M5; only rst_n differs from 777.
+ - ECO recipe to copy: rt tools/die_plan/hold_eco_internal_run.py (steps 3-5: docker drv.tcl -> post_route_drv/hold_eco_internal_route.tcl with
+   selected nets -> signoff.py run minimal profile); 11-18 run took 35 min.
+ - Open check: bind picks the core reset gate tap nearest the core CENTRE (bind.py ~4700 CORE_SPLIT reset_gate); make it follow the pin or add a tap row.
+Steps: a) kit regen + read net rst_n on the DB; b) pin-move ECO + incremental route of rst_n; c) signoff; d) views (LEF, ETM tt/ff, detail splice,
+clock_contract, signed_view_sha); e) tree r18j = r18h + 4 pair rows (pins_file, lef, lib) + gates; f) E kit --goal route; relaunch W on r18j; tell R8 the sha.
+
 ## LIVE 11-22 06:0x PST (read this first; older sections below are history)
 - FLOW: private-spec/run-item --goal finish DIES at the place->cts hand-over (run_kit.sh stage resume accepts floorplan|place|cts|grt|route only).
   Use run-item --goal route (wave chain: route + sign-off + routed LEC). Use kit_wave.py + --rt of rt c9b8d5f226ca or newer (seal mode, face-status gen).
