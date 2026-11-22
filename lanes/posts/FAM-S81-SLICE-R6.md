@@ -65,3 +65,4 @@
   - After a clean bind: kit_wave.py private-spec --tree <fork> --goal finish (sealed manifest) --rt b15a8a1023ed for 7 items: t18, t45, t40__cl1ea9de02, t6__cl0755c26e, t6__cl54a9ceeb, t29__cl2e5c855a, t29__clc7772371. Hosts epyc9/epyc7.
   - R5: if the 04:14 J7 apply rebinds on rt >= floor, tell me and I will use that bind instead.
   - The v9 J8 row bind (unit oth-ubuntu-2158748) continues; its waiter is now durable.
+- 2026-11-22 02:56 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1617185-1795344917 on renewed-glider: rc=143 after 68 s, ended 10:56:22, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/rebind.otrun.log, cmd: --mem 64 --threads 16 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6 --stage /srv/opentallas-scratch2/claude/kw45/src_ | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
