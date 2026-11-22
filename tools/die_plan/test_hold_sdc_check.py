@@ -55,12 +55,25 @@ set d [lindex $argv 0]; set mode [lindex $argv 1]
 proc all_outputs {} { return {o0 o1} }
 proc all_inputs {args} { return {i0} }
 proc get_full_name {p} { return $p }
-proc get_ports {args} { return [lindex $args end] }
+proc get_ports {args} {
+    set ports [lindex $args end]
+    if {$ports eq {bus[*]}} { return {bus[0] bus[1]} }
+    return $ports
+}
 set ::log {}
 proc set_output_delay {args} { lappend ::log $args }
 proc set_input_delay {args} { lappend ::log $args }
 set session "set_output_delay -clock vclk -max 30.0 {o0 o1}"
 if {$mode eq "equal"} { set session "set_output_delay -clock vclk -min 12.0 {o0 o1}" }
+if {[string match "bus_*" $mode]} {
+    set session {set_output_delay 12.0000 -clock [get_clocks {vclk}] -min -add_delay [get_ports {bus[0]}]}
+    if {$mode eq "bus_equal"} {
+        append session "\n" {set_output_delay 12.0000 -clock [get_clocks {vclk}] -min -add_delay [get_ports {bus[1]}]}
+    }
+    if {$mode eq "bus_mismatch"} {
+        append session "\n" {set_output_delay 13.0000 -clock [get_clocks {vclk}] -min -add_delay [get_ports {bus[1]}]}
+    }
+}
 proc write_sdc {args} { global session; set f [open [lindex $args end] w]; puts $f $session; close $f }
 proc repair_timing {args} { global rt; set rt $args }
 source $d/hold_sdc_guard.tcl
@@ -72,7 +85,10 @@ if {[catch {repair_timing -hold} err]} { puts "ERR $err" } else { puts "OK rt=$r
     def run_(self, mode):
         d = Path(tempfile.mkdtemp())
         (d / "hold_sdc_guard.tcl").write_text((HERE / "hold_sdc_guard.tcl").read_text())
-        (d / "constraint.sdc").write_text("set_output_delay -min 12.0 -clock vclk [get_ports {o0 o1}]\n")
+        ports = "bus[*]" if mode.startswith("bus_") else "o0 o1"
+        (d / "constraint.sdc").write_text(
+            f"set_output_delay -min 12.0 -clock vclk [get_ports {{{ports}}}]\n"
+        )
         (d / "s.tcl").write_text(self.SCRIPT)
         return subprocess.run(["tclsh", str(d / "s.tcl"), str(d), mode], capture_output=True, text=True).stdout
 
@@ -85,6 +101,18 @@ if {[catch {repair_timing -hold} err]} { puts "ERR $err" } else { puts "OK rt=$r
         o = self.run_("equal")
         self.assertIn("session_missing 0 reapplied_lines 0", o)
         self.assertIn("applied=0", o)
+
+    def test_written_clock_collection_and_bus_match(self):
+        o = self.run_("bus_equal")
+        self.assertIn("io_golden 2 session_missing 0 reapplied_lines 0", o)
+        self.assertIn("OK rt=-hold applied=0", o)
+
+    def test_bus_bit_missing_or_mismatched_is_reapplied(self):
+        for mode in ("bus_missing", "bus_mismatch"):
+            with self.subTest(mode=mode):
+                o = self.run_(mode)
+                self.assertIn("io_golden 2 session_missing 1 reapplied_lines 1", o)
+                self.assertIn("OK rt=-hold applied=1", o)
 
     def test_hash_mismatch_fails_the_stage(self):
         self.assertIn("ERR HOLD-SDC-MISMATCH", self.run_("badhash"))
