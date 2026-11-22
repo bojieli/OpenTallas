@@ -37,3 +37,5 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - COORD 21:4x: S81-J7-HELD-R1 ended; R5 owns post-apply too (held rows, relaunch checks, first J7 wave launches). No handoff. SLICE-R6 resumed for t37 sweep, t46, t6.
 
 - RELAY-INST 643ffb9932 (kit_istations: whole-station relay_sites keys): cannot enter J7 (pin = tree tools; newer rt => toolskew rc3 w/o rebind). Goes in J8 (rt >= max(8ad54f25f4, 643ffb9932)). Rec: keep col held until J8.
+
+- COORD RULING 22:xx: J7 as sealed; 643ffb9932 -> J8. Col held until J8 UNLESS COLROM-R5 Kit B (OT_RELAY_MID_RE excluding u_y_xd_, J7 tools) shows xd stages <= 50 um from seats AND CTS TT >= -42 (post-hook) -> release col on J7 with that env as override (use item_env on col_* items, NOT die_gen_env, to avoid die_env_stale rearm of every kit) + remove hold record j7-col-held-until-view-1122. Post decision when Kit B reads.
