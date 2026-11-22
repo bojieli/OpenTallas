@@ -69,3 +69,21 @@ cluster, the START fan of the relay piece: u_cland_rstart_rx sits FIRM at the fs
 Tree epyc9 .../fable-fix-head-lep0n-1122/trees/s81_head_r18h_rstart, plan sha256 301a0f1635d65898: plan_gate_pre PASS (TOOLSTALE skipped,
 tree tools 6d2e), bind PASS, cohort 27/27, LATCHECK 334/334 (epyc9 L/bind_r18h2).
 Die-level note (not a type gate): cland_rstart_in enters W at the cut face (818,747) and its rx flop is 1.2 mm away at the W-face pins.
+
+## 7. LEP-PAIR-RSTPIN-1 (COORD ruling option b; ot_s81hd_lep_pair, all 4 instances: rg0/rg3 in hd_lep0N, rg1/rg2 in hd_lep0N_w) tree r18j
+- New SIGNED pair view results/head_lep_pair_views_vE28s_1122 (in tree r18j): rst_n BPin M5 on the S face (399.372,0)-(399.396,0.192);
+  pin-move ECO on the signed vE28 DB, only net rst_n re-routed (257 um), DRC 0, 1,101,619 insts; sign-off SIGNED (minimal profile) TT setup
+  +13.98, FF hold -182.94 boundary, pair skew 77.0/64.2. sha256: lef a18a0f164d454448, tt.lib b06737eb11e43fc3, ff.lib acca9f17f1cdd633,
+  clock_contract d41f12d068b9b3d4 (clk pin-register mean TT 558.17, was 553.42). Work dir epyc9 fable-fix-head-lep0n-1122/pair.
+- core_pins/lep_pair_pins_777s.json = 777 with rst_n {M5, 399.384, 0.042} (777r's x 397.464 is the signed clk entry: not usable).
+- hard_cores rows (4): pins_file core_pins/lep_pair_pins_777s.json, lef/lib -> the vE28s dir.
+- Consequence handled in the same tree: the pair reset gate taps follow the pin (E: tap 204 (535.7,1343.5) -> (546.3,842.4), tap 205
+  (535.7,13.0) -> (525.1,514.1)), the reset trees are re-solved and renumbered, so head_reset_exports.py fix + L/tmp/rekey_resets.py
+  (sites kept, raw relay names re-picked: 13 rows on hd_lep0N, 4 on hd_lep0N_w) + both wrappers republished.
+Tree epyc9 .../fable-fix-head-lep0n-1122/trees/s81_head_r18j_pairs (= r18h + this), plan sha256 762441fd7f142bf6: plan_gate_pre PASS
+(TOOLSTALE skipped), reset exports check PASS, bind PASS, cohort 27/27, LATCHECK 334/334 (L/bind_r18j2).
+Kits from r18j, goal route, sealed, rt c9b8d5f226ca: E spec s81_head_hd_lep0N_1122094359 (unit fable-lep0n-e1), W spec
+s81_head_hd_lep0N_w_1122094408 (unit fable-lep0n-w9).
+Open on W (build A probe, GRT 8 iterations): vertical congestion in the W channel at the top of the two ring bands (x 0-60, y 300-350: 1,073;
+y 850-900: 478) and in the TX SRAM mid band (x 210-660, y 600-700: about 3,900); the two pair-centre rst_n nets (capacity 0) are removed by
+this view. 30-iteration probe running (intel2 L/grt_probe30).

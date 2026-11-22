@@ -32,6 +32,23 @@ r18 added the status relays. r18b/c/d died in kit_rtl on tools (v1 stage groups,
 sidecar mask.intra_inputs; head_sideband_street_rows only relays mask.inputs). R8 found it too and pushed the generator support to main
 c293b03e90 (03:49, in rt b9cca3992f80). coll_i3 lap_ok -191.73 at place (pre-repair). E build is R8's.
 
+## LIVE 11-22 09:4x PST (read first)
+- PAIR VIEW SIGNED 09:14 (rst_n on the S face), views built, tree r18j gated, E + W kits launched 09:44. Details: rows file section 7.
+  Tree epyc9 L/trees/s81_head_r18j_pairs, plan 762441fd7f142bf6 (r18h + pair view vE28s + rekeyed reset rows). Gates PASS (L/bind_r18j2).
+- E kit: unit fable-lep0n-e1 on intel2 (pid 1145048), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_1122094359/spec.json,
+  log ~/fable-fix-head-lep0n-1122/runitem_e1.log. First E build with: status relays to agg_1 (LEP-FACESTAT-1), new pair view.
+  Known E risks at place (r18e census): u_bout_o_h2r1_p -229.6 x186 (hub stamp logic + 590 ps wire to the W cut face), lepk_i0 band top 501.13 <
+  pin top 510.98 (44 bits fall to the band bottom), coll_i3 band y 854-941 vs pins y 645-759, g_rxh.u_ctl -191. Read 3_detailed_place.rpt first.
+- W kit: unit fable-lep0n-w9 (pid 1151380), spec .../s81_head_hd_lep0N_w_1122094408/spec.json, log runitem_w9.log. Rows RINGFF-1/2 + RSTART-1/2 + pair view.
+  W build A (r18g) died FAIL_POSTCTS GRT-0116 in the tap pre-pass (688 overflow after 30 its); expect w9 to need a congestion row:
+  probe (8 its) = W channel top of the ring bands (x 0-60, y 300-350 and 850-900, vertical) + TX SRAM mid band x 210-660 y 600-700.
+  30-iteration probe: intel2 L/grt_probe30/cong.rpt (summarise with ~/fable-fix-head-lep0n-1122/cong.py-style regex on "bbox = (x, y)").
+- w8 (r18h) stopped before place admission (superseded by w9). A, w4, w7 dead. Nothing else of mine is running except e1, w9, probe30.
+- ot-run --direct is allowed ONLY for the pair sign-off/views (NEAR-CLOSE.tsv row 218, done). Kits use the normal queue.
+- Durable waiters: ot-wait --durable <pid> --cmdline run-item for 1145048 and 1151380 (re-run the same command to re-attach).
+- NEXT: read E/W place (3_detailed_place.rpt), CTS post-hook, pre-GRT; fix rows by measurement; sign-off + EQUIVALENT routed LEC -> PROVENANCE
+  -> AUTO-EXPORT; post every 2 h; flow follow-ups: guard for +ff y-column bands not covering their pin column; landing_reader_start origin on relay pieces.
+
 ## NEW TASK 07:1x (COORD ruling, mine): E reset blocker, option (b) = pair rst_n pin to the S face, re-sign the pair view, E kit --goal route
 Problem (R8 hub 3316ceac): hd_lep0N E PLACE-SETUP-STOP -441: gated reset tap u_rrl_380 (535.7,1343.5) -> u_rg0.u_pair rst_n, M5 pin at the pair
 centre (388.824,246.24) under full M4/M5 OBS; rg3 mirror (u_rrl_234). Plan + ETA posted 07:15 (view ~10:30, E kit ~11:15).
