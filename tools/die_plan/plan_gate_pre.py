@@ -40,6 +40,13 @@ BIND-SPEED-1118 adds four classes (bind_rowcheck.py; run inside `bind` after the
   the elaborated die (names compared in u_r0_u_x instance form too; --elab-dir OUT); MODULES modules named by asbuilt.substitute_inst /
   substitute / sub_core_leaf that exist nowhere; TOOLSTALE tools/die_plan files older than the live tree (--ref-tools, $OT_RT_CURRENT).
 
+LANDREMAP-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every type whose hard core (landing cl_*, ectl, any) or clock tap
+  table moved against BASE re-solves its reset tree and renumbers rst_rl_<k>.  A landing reset reference (landing_reader_start /
+  landing_writer_start / landing_local_resets / landing_raw_branches; collector_tree excluded) that still names, at the same
+  plan path, the same relay as BASE while that name is now a DIFFERENT relay (depth, site, kind) of the new tree was not
+  remapped: FAIL LANDREMAP with the landing_remap.py command.  KV R6d (ae4b6866747e vs plan_r6c): 7 EMIT errors after a 1-2 h
+  bind, refused here in ~3 s.  bind.py runs this class against $OT_PLAN_GATE_BASELINE, else the plan recorded in OUT/provenance_bind.json.
+
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -56,7 +63,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -623,6 +630,91 @@ def check_geom(plan, halo=0.0, strict_cores=False, baseline=None, refuse=REFUSE_
 
 
 # ---------------------------------------------------------------- driver
+LR_NAME = re.compile(r"^rst_rl_\d+$")
+LR_SKIP = ("collector_tree",)        # a self-contained tree with its own relay names
+
+
+def landing_reset_refs(t):
+    """{plan path: rst_rl_<k>} of every generated reset relay name the type's clock section references (collector_tree excluded)"""
+    out = {}
+
+    def walk(o, path):
+        items = o.items() if isinstance(o, dict) else enumerate(o) if isinstance(o, list) else ()
+        for k, v in items:
+            if k in LR_SKIP:
+                continue
+            if isinstance(v, str) and LR_NAME.match(v):
+                out[f"{path}/{k}"] = v
+            else:
+                walk(v, f"{path}/{k}")
+    walk(t.get("clock") or {}, "clock")
+    return out
+
+
+def moved_types(raw, base_raw):
+    """{type: [what moved]}: hard-core boxes (origin / outline) or the clock tap tables differ from the baseline"""
+    out = {}
+    bt = base_raw.get("partition_types") or {}
+    for tn, t in (raw.get("partition_types") or {}).items():
+        b = bt.get(tn)
+        if not isinstance(b, dict) or not isinstance(t, dict) or t.get("hard"):
+            continue
+        cb, cn = {c[0]: c[1:] for c in core_boxes(b)}, {c[0]: c[1:] for c in core_boxes(t)}
+        why = [k for k in cn if k in cb and cn[k] != cb[k]]
+        ck, bk = t.get("clock") or {}, b.get("clock") or {}
+        why += [k for k in ("taps", "added_taps") if ck.get(k) != bk.get(k)]
+        if why:
+            out[tn] = why
+    return out
+
+
+def check_landremap(plan, baseline, tree_fn=None, max_list=4):
+    """FAIL LANDREMAP per moved type whose landing reset references were not remapped (see LANDREMAP-1122 in the doc).
+    tree_fn(raw, plan_path, type) -> {relay name: identity}; injectable for tests."""
+    if not baseline:
+        return []
+    raw, braw = _load(plan), _load(baseline)
+    if not raw or not braw:
+        return []
+    mv = moved_types(raw, braw)
+    if not mv:
+        return []
+    if tree_fn is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import schema
+        import reset_tree as RT
+        plans = {}
+
+        def tree_fn(r, pp, tn):
+            if id(r) not in plans:
+                plans[id(r)] = schema.Plan(r, Path(pp).parent / "die_plan.json")
+            return {x["q"]: (x.get("depth"), tuple(round(float(c), 2) for c in x.get("xy") or ()), x.get("kind"))
+                    for x in RT.for_type(plans[id(r)], tn)["relays"]}
+    out, bad = [], []
+    for tn in sorted(mv):
+        rn = landing_reset_refs(raw["partition_types"][tn])
+        rb = landing_reset_refs(braw["partition_types"][tn])
+        same = {p: v for p, v in rn.items() if rb.get(p) == v}
+        if not same:
+            continue
+        try:
+            tb, tw = tree_fn(braw, baseline, tn), tree_fn(raw, plan, tn)
+        except Exception as e:  # noqa: BLE001 - the bind reports the tree error itself
+            out.append(f"WARN LANDREMAP {tn}: reset tree not built ({type(e).__name__}: {str(e)[:160]}); remap check skipped")
+            continue
+        stale = sorted((p, v) for p, v in same.items() if tb.get(v) != tw.get(v))
+        if not stale:
+            continue
+        bad.append(tn)
+        ex = "; ".join(f"{p} = {v} was {tb.get(v)} now {tw.get(v)}" for p, v in stale[:max_list])
+        out.append(f"FAIL LANDREMAP {tn}: {','.join(mv[tn][:3])} moved vs baseline but {len(stale)} landing reset "
+                   f"reference(s) still name the old relays ({ex})")
+    if bad:
+        out.append(f"FAIL LANDREMAP RUN landing_remap: python3 -I tools/die_plan/landing_remap.py {baseline} {plan} OUT.json "
+                   f"--types {','.join(bad)} --root . --receipt RECEIPT.json   (then bind OUT.json)")
+    return out
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL"):
@@ -638,6 +730,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_rows(plan, baseline, proofs, rows_files)
     if "GEOM" not in skip:
         findings += check_geom(plan, halo, strict_cores, baseline)
+    if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
+        findings += check_landremap(plan, baseline)
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
         sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
         import kit_fit as KF

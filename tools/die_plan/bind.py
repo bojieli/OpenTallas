@@ -7505,6 +7505,22 @@ def _plan_expect(B, p, a):
     return None
 
 
+def _landremap_prev(a, G):
+    """LANDREMAP-1122: findings of plan_gate_pre.check_landremap(a.plan, plan of OUT/provenance_bind.json) when that plan still
+    exists and differs from a.plan (a seeded / re-used bind_of_record); [] otherwise."""
+    try:
+        prev = json.loads((Path(a.out) / "provenance_bind.json").read_text())["provenance"]["plan"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return []
+    try:
+        if not prev or not Path(prev).is_file() or Path(prev).resolve() == Path(a.plan).resolve() \
+                or Path(prev).read_bytes() == Path(a.plan).read_bytes():
+            return []
+        return G.check_landremap(a.plan, prev)
+    except (OSError, ValueError) as e:
+        return [f"WARN LANDREMAP previous-bind baseline {prev} unreadable: {e}"]
+
+
 def _plan_gate_pre(a):
     """PLAN-GATE-PRE-1115 (COORD r213): before a die elab/bind, run tools/die_plan/plan_gate_pre.py on THIS tree (schema keys,
     as-built inputs, tool vintage; rows and station-in-core overlaps only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
@@ -7546,6 +7562,16 @@ def _plan_gate_pre(a):
         print(f"bind: REFUSED by plan_gate_pre ({len(fails)} findings; OT_PLAN_GATE_PRE=warn or off to override, "
               f"tools/die_plan/plan_gate_pre.py check --tree . --plan {a.plan} to re-run)")
         return 2
+    if not base and "LANDREMAP" not in os.environ.get("OT_PLAN_GATE_SKIP", "").upper():
+        # LANDREMAP-1122: no adopted baseline named -> compare with the plan the previous bind into this OUT was made from
+        lr = _landremap_prev(a, G)
+        for x in lr:
+            print(f"bind: plan_gate_pre {x}")
+        fails += [x for x in lr if x.startswith("FAIL")]
+        if fails and mode != "warn":
+            print(f"bind: REFUSED by plan_gate_pre LANDREMAP ({len(fails)} findings; run tools/die_plan/landing_remap.py as printed, "
+                  f"or OT_PLAN_GATE_PRE=warn to override)")
+            return 2
     if not fails and key:
         try:
             Path(a.out).mkdir(parents=True, exist_ok=True)
