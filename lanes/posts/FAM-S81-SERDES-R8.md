@@ -1,0 +1,2 @@
+- 2026-11-21 21:41 PST RESUMED (COORD: no stand-down, no R8). Order: (1) dec_r7k waiter -> signoff -> routed LEC -> push b4d98fc16875 -> export; (2) J8 G0/PRE unit oth-ubuntu-2591672-1795321761 -> hand 6+31 ops; (3) t4 split rows + front3 hold for the 16:00 cut, t4 stop stays; (4) phy__t1 private kit epyc9.
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
