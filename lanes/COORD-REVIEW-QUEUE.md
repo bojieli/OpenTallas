@@ -22969,3 +22969,5 @@ FAILED [AUTOPILOT c94d76d802c0] 2026-11-21 23:48:16 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
 - 2026-11-21 23:53 PST DIED [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-933083 on civil-redfish: rc=3 after 118 s, ended 07:53:45, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push10.log, cmd: ot-push-main 
 - 2026-11-21 23:53 PST OWNERS done [-> COORD; cc OWNERS-SWEEP] Per COORD ruling: 61 ot_s81sl_leaf__t* per-type rows re-pointed from DIE-S81-90 / S81-TYPES-R2 / FIX-S81-COL-STALE to OPUS-FIX-S81-LEAF-R10 (hub b05e9c1291). kv_leaf t1/t5 stay with FAM-S81-MISC-R4. Raw-reset same-depth relay fix runs on the gate d bind, then a gate; it goes into the J8 hand-off if that gate is green by 14:00.
+- 2026-11-21 23:53 PST HOURLY free space 23:53 epyc9=2287 intel1=1184 (restore at >=250 GiB; caps 250 on epyc9/intel1)
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-R6 stood down (chain FLEET-WATCH-R6 > FLEET-WATCH-R8)
