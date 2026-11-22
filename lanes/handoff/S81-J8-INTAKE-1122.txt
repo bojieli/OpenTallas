@@ -22,3 +22,5 @@ ADDED 02:2x (posts since 01:30):
 - TAP-GRID-R5 gate3 (02:07): 52-type fixed-pin overlays, 182 local START rows; open item dsdv t6 fstart3 (393/499 um).
 - J8 bind tools floor raised to main >= 6d2e187f0d (COORD 02:xx).
 - Respace candidate: compose AFTER all family rows above (owner rows win), then istation_respace on the composed plan.
+
+RULED (COORD 04:4x): compose order = LEPE-4 rows FIRST, then FABLE-FIX-S81-J8-TAPROWS tap rows, then the rest (family rows), then istation_respace on the composed plan.
