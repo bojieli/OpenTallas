@@ -26,6 +26,11 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 18:2x SEALED MERGED TREE + hd_ctl
+- HEAD-CTL-R1 hd_ctl wrcap rows (65 tap_offset + 65 tap_window) are already in ev/k1, identical, so no compose was needed.
+- Tree epyc9 M/trees/r18jk_merged = ot-tree-fork of Fable s81_head_r18j_pairs + k1 prep files (plan 5e1f38e1530b).
+- Kit r8-ctl1 (hd_ctl, seal, goal route, epyc9): unit r8-ctl1-1795371195, spec s81_head_hd_ctl_1122101315, launcher M/tmp/launch_jk.sh (ITEMS=type:tag:host).
+
 ## UPDATE 11-22 10:xx MERGED PLAN OF RECORD (COORD)
 - Merged = FABLE r18k (trees/s81_head_r18j_pairs, 762441fd7f14) + R8 hd_host_n pg_pin_rule: sha256 5e1f38e1530b8d0d.
   Prep epyc9 M/ev/k1/prep (tmp/post9.sh; tools/RTL root = Fable tree read-only). Gates PASS (bind, cohort 27/27, LATCHECK 334/334,
