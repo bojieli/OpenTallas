@@ -19,6 +19,9 @@ def load(path):
     # cores only incidentally (pve 43/28).  The cap-aware placement (QUEUE-BAL-1) is tested in test_ot_run_queue_bal.py.
     module.LOAD_CAP_FACTOR = 0
     module.LOAD_GATE_FACTOR = 0   # LOADGATE_1110: test_ot_run_load_gate.py
+    # FLOW-OPS-1300: placement order only; the drain (host_drain, now computed for every host) reads the live hub caps and an
+    # earlier suite's leftovers, so it is out of these cases (tested in test_host_drain / test_flowops1300_computed_drain)
+    module.drain_hosts = lambda hosts, *a, **k: hosts
     return module
 
 
