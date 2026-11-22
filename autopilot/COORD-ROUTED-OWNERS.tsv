@@ -16,7 +16,7 @@ hbm	PHY_NW	DIE-HBM-98	COORD 11-10 23:2x
 hbm	q_mcb	DIE-HBM-98	COORD 11-10 23:2x
 s81	col_h10_r0_p4__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	col_h9_r0_p5__t1	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	col_h9_r0_p6__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p6__t1	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was DIE-S81-90)
 s81	col_h9_r0_p1__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
 s81	serdes__t3	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	serdes__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
@@ -80,9 +80,9 @@ s81	col_h9_r2__t1__clce45cab5	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPER
 s81	col_h9_r2__t1__clb8d86cd5	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
 s81	col_h9_r2__t1__cl87f3ff59	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
 s81	col_h9_r2__t1__cl774acf45	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
-s81	col_h9_r0_p3__t1__cl31d0dc4b	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
-s81	col_h9_r0_p3__t1__cl8ce97bcb	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
-s81	col_h9_r0_p3__t1__cl0cd90c0e	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
+s81	col_h9_r0_p3__t1__cl31d0dc4b	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FAIL-S81-1)
+s81	col_h9_r0_p3__t1__cl8ce97bcb	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was DIE-S81-90)
+s81	col_h9_r0_p3__t1__cl0cd90c0e	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FAIL-S81-1)
 s81	col_h9_r0_p4__t1__cl8ef405e8	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	col_h9_r0_p4__t1__clcb2fbfe8	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
 s81	serdes__t15__cla2127225	FAIL-S81-1	COORD 11-13 (EXPERT-REVIEW-5) re-owned dead DIE-S81-90/KIT-WAVE-1
@@ -137,18 +137,18 @@ s81	col_h9_r0_p5__t1__pvb22875c0	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL
 s81	col_h9_r0_p5__t1__pvc93af856	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r0_p5__t1__pvf71da13a	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r0_p5__t1__pvbca8d846	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv8d617470	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv0012ba28	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv8241ebb8	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pvbdbd69f2	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pvb38a9d6c	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv6398a5b7	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv082a7609	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv87853a7e	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pvde240d6d	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv7808008f	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pv9da72aa7	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p6__t1__pvea45abf3	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
+s81	col_h9_r0_p6__t1__pv8d617470	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv0012ba28	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv8241ebb8	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pvbdbd69f2	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pvb38a9d6c	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv6398a5b7	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv082a7609	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv87853a7e	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pvde240d6d	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv7808008f	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pv9da72aa7	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p6__t1__pvea45abf3	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
 s81	col_h9_r0_p1__t1__pvb49c16c8	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r0_p1__t1__pvf9acce4c	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r0_p1__t1__pv697f40c9	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
@@ -304,17 +304,17 @@ s81	col_h9_r2__t1__cl774acf45__pvf8d9f9e5	FIX-S81-COL-STALE	COORD 11-16 19:3x FI
 s81	col_h9_r2__t1__cl774acf45__pv858fb2ba	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r2__t1__cl774acf45__pvea45273b	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r2__t1__cl774acf45__pve3ab90e7	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
-s81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
+s81	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
+s81	col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760	FAM-S81-COL-H9R0-R4	COORD 11-21 21:50 ownership sweep: adopted by col_h9_r0 family owner (was FIX-S81-COL-STALE)
 s81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
 s81	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	FIX-S81-COL-STALE	COORD 11-16 19:3x FIX-S81-COL-STALE brief (re-owned: no live owner, 59-62 h stale)
