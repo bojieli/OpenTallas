@@ -575,3 +575,13 @@ def test_stage_rows_carry_a_lockup_latch_by_default(tmp_path):
     assert "u_lk_xd_" in btxt
     btxt2, rec2 = KRD.apply(FWD_BOUND, "f", t2["relay_depth"], lambda i: "u_" + RLP.sv_id(i), RLP.sv_id)
     assert "ot_dp_lk" not in btxt2 and "needs_cells" not in rec2
+
+
+def test_stage_key_is_the_bind_stage_instance():
+    """RD-LEAF-1122: a relay_sites stage key names the flop of the stage bind.py emits for the row (emit_lp:
+    short_id('u_y_xd_' + sv_id(leaf) + '_' + port + '_' + k + '_' + s, 100)), also for a port with '__'."""
+    import bind
+    for leaf, port in (("astk_WN", "g_phys_fault_u_fault__rst_n"), ("u_land", "rst_n"), ("seq_g_fan_0_u_fan", "rst_n")):
+        for s in range(3):
+            key = RLP.STAGE_KEY.format(sid=RLP.sv_id(leaf), port=RLP.sv_id(port), k=5, s=s)
+            assert key == bind.short_id("u_y_xd_" + bind.sv_id(leaf) + "_" + port + "_0_" + str(s), 100) + ".q"

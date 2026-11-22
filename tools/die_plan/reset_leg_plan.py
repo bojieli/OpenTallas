@@ -65,7 +65,8 @@ TREE_CELL = re.compile(r"^(?:u_rrl_\d+|u_srl_\d+|u_rst_root|u_rst_in|u_rsync_t\d
 # stage flop name of a relay_depth sink row (RD-LEAF-1122): the strict bind emits the stages of a plan row itself, instance
 # u_y_xd_<leaf>_<port>_<k>_<s> (bind.py emit_lp; k = 0 for a reset port, one depth group), Yosys flop <inst>.q.  kit_relay_depth
 # only stages rows the bind never saw (u_y_xd_<leaf>_<port>_k<row>_<s>); a D28 plan row is always bound, so the sites follow the
-# bind form.  sid = the row's leaf name (bind_leaf), never the bound instance name.
+# bind form.  sid = the row's leaf name (bind_leaf), never the bound instance name; port = sv_id(port), as bind's short_id
+# collapses '__' (hub_Wo astk_WN g_phys_fault_u_fault__rst_n -> u_y_xd_astk_WN_g_phys_fault_u_fault_rst_n_0_<s>).
 STAGE_KEY = "u_y_xd_{sid}_{port}_0_{s}.q"
 
 
@@ -499,7 +500,7 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 row.update(lockup=True) if lockup else None
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
-                skey = [stage_key.format(sid=sv_id(bind_leaf(inst)), port=port, k=k, s=s_) for s_ in range(Dn)]
+                skey = [stage_key.format(sid=sv_id(bind_leaf(inst)), port=sv_id(port), k=k, s=s_) for s_ in range(Dn)]
                 if stage_sites or multi:
                     for s_ in range(Ds):
                         f = (s_ + 1) / (Ds + 1)
@@ -619,10 +620,10 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
                 if sites and stage_sites:
-                    chains.append((src, [stage_key.format(sid=sv_id(bind_leaf(inst)), port=port, k=k, s=s_) for s_ in range(Dn)], pins))
+                    chains.append((src, [stage_key.format(sid=sv_id(bind_leaf(inst)), port=sv_id(port), k=k, s=s_) for s_ in range(Dn)], pins))
                     for s_ in range(Dn):
                         f = (s_ + 1) / (Dn + 1)
-                        rs_sites[stage_key.format(sid=sv_id(bind_leaf(inst)), port=port, k=k, s=s_)] = [
+                        rs_sites[stage_key.format(sid=sv_id(bind_leaf(inst)), port=sv_id(port), k=k, s=s_)] = [
                             round(src[0] + (T[0] - src[0]) * f, 3), round(src[1] + (T[1] - src[1]) * f, 3)]
             after = worst(Dn)
             rep["legs_over_after"] += after > reach + 1e-6
