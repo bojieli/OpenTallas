@@ -1,0 +1,43 @@
+# st_b/hc split table (FAM-QC-HCST-R3, for QC-PLAN-R12 V3 item 4). Source qc-plan-r9/cells_census.tsv (measured post-synth nontap counts).
+# Rule: cap 400k projected per piece. projected = measured x GRT factor (own post-GRT ratio where measured: 1.32-1.39; else 1.39 high end) x 1.03 cut-interface overhead / pieces.
+# Evidence the band is pessimistic: 15 rows in this family signed WHOLE at 334k-394k synth (status SIGNED); sle_hc2__clcc5e3e61 post-GRT ratio only 1.10. Split only where status says SPLIT, others are fallback.
+# Pieces are an even 2-way cut for every row; per-piece projected 233k-285k. 4 hc0 variants UNMEASURED: no split until a synth count exists.
+type	measured_synth	grt_factor	factor_src	projected_whole	pieces	status	projected_per_piece
+sle_st_b_v1__pv0e7b1dcc	394124	1.39	band x1.32-1.39 (HI used)	547832	2	SIGNED (no split needed, closed whole)	282134
+sle_st_b_v1__pvc5a85fd4__pv7b7fafb4	393649	1.39	band x1.32-1.39 (HI used)	547172	2	RUN WHOLE (sibling of a signed whole type at same synth count); 2-piece split only as fallback	281794
+sle_st_b_v1__pvc5a85fd4__pv38472fb8	390105	1.39	band x1.32-1.39 (HI used)	542246	2	SIGNED (no split needed, closed whole)	279257
+slw_st_b_v1__cl6357f1cc__pv6ace3e48	384967	1.39	band x1.32-1.39 (HI used)	535104	2	SIGNED (no split needed, closed whole)	275579
+slw_st_b_v1__cle6023ec2	384735	1.39	band x1.32-1.39 (HI used)	534782	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	275413
+sle_hc1__cl22c1ff36__pve289215f	384417	1.39	band x1.32-1.39 (HI used)	534340	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	275185
+sle_hc1__cl7d360508__pv97423966	383579	1.39	band x1.32-1.39 (HI used)	533175	2	SIGNED (no split needed, closed whole)	274585
+sle_hc1__cl7d360508__pv77c16c8a	382293	1.39	band x1.32-1.39 (HI used)	531387	2	RUN WHOLE (sibling of a signed whole type at same synth count); 2-piece split only as fallback	273664
+sle_st_b_v2__cl14c98df5__pvcd986c42	379119	1.39	band x1.32-1.39 (HI used)	526975	2	SIGNED (no split needed, closed whole)	271392
+sle_st_b_v2__cl14c98df5__pv41c959f3	378574	1.39	band x1.32-1.39 (HI used)	526218	2	SIGNED (no split needed, closed whole)	271002
+sle_st_b_v2__clfde1249e	378327	1.39	band x1.32-1.39 (HI used)	525875	2	SIGNED (no split needed, closed whole)	270825
+sle_hc1__cl22c1ff36__pve230954c	377415	1.39	band x1.32-1.39 (HI used)	524607	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	270173
+slw_hc1__cl68f9248e__cle683a076	376646	1.39	band x1.32-1.39 (HI used)	523538	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	269622
+slw_st_b_v1__cl6357f1cc__pvffd43fdc	373598	1.39	band x1.32-1.39 (HI used)	519301	2	RUN WHOLE (sibling of a signed whole type at same synth count); 2-piece split only as fallback	267440
+slw_hc1__cl3449ea95	371442	1.39	band x1.32-1.39 (HI used)	516304	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	265897
+slw_st_b_v2__pva66d0f22__pvb80e2003	366846	1.39	band x1.32-1.39 (HI used)	509916	2	SIGNED (no split needed, closed whole)	262607
+slw_st_b_v2__pva66d0f22__pv3d7bec84	365101	1.39	band x1.32-1.39 (HI used)	507490	2	SIGNED (no split needed, closed whole)	261358
+slw_st_b_v2__pvc2ec5bfb	364445	1.39	measured post-GRT	506723	2	SPLIT 2 pieces (measured GRT >400k)	260962
+slw_hc3__clccfc3e6b__pv39aac7a1	363287	1.39	band x1.32-1.39 (HI used)	504969	2	SIGNED (no split needed, closed whole)	260059
+slw_hc3__cld86a7ad4__pvfd488b8f	362624	1.39	band x1.32-1.39 (HI used)	504047	2	SIGNED (no split needed, closed whole)	259584
+slw_hc3__clccfc3e6b__pvcca9ff41	362171	1.39	band x1.32-1.39 (HI used)	503418	2	SIGNED (no split needed, closed whole)	259260
+slw_hc3__cld86a7ad4__pv6c2c33ed	361455	1.39	band x1.32-1.39 (HI used)	502422	2	SIGNED (no split needed, closed whole)	258748
+sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304	352975	1.39	band x1.32-1.39 (HI used)	490635	2	SIGNED (no split needed, closed whole)	252677
+sle_hc2__cl9c4c4509__cl3edce1b8	348842	1.39	band x1.32-1.39 (HI used)	484890	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	249719
+slw_hc2__cla3497502__cldc737267	348513	1.39	band x1.32-1.39 (HI used)	484433	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	249483
+sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9	347457	1.39	band x1.32-1.39 (HI used)	482965	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	248727
+slw_hc1__cl68f9248e__cl144ee7b3	365110	1.321	measured post-GRT	482222	2	SPLIT 2 pieces (measured GRT >400k)	248344
+slw_hc2__cl6bcaba89	343641	1.39	band x1.32-1.39 (HI used)	477661	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	245995
+sle_hc0__cl929603c0__cl38badc56	343010	1.39	band x1.32-1.39 (HI used)	476784	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	245544
+sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b	340693	1.39	band x1.32-1.39 (HI used)	473563	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	243885
+slw_hc2__cla3497502__cl16607c7a	337208	1.39	band x1.32-1.39 (HI used)	468719	2	2-piece split ready if whole fails (projection band unmeasured; whole signs seen at 394k synth)	241390
+slw_hc0__cl1bc59e1c	343544	1.339	measured post-GRT	459853	2	SPLIT 2 pieces (measured GRT >400k)	236824
+sle_hc0__cl05696ed1	334366	1.337	measured post-GRT	447140	2	SPLIT 2 pieces (measured GRT >400k)	230277
+sle_hc2__clcc5e3e61	348249	1.1	measured post-GRT	382918	1	ok whole	382918
+slw_hc0__cl4f54b7a3__pvde134a90						UNMEASURED: no count; hold split until a synth count exists	
+slw_hc0__cl4f54b7a3__pvd0aa3ddc						UNMEASURED: no count; hold split until a synth count exists	
+sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv6e886d59						UNMEASURED: no count; hold split until a synth count exists	
+sle_hc0__cl929603c0__cl4baa7c9c__pv1c2f9baa__pv48712631						UNMEASURED: no count; hold split until a synth count exists	
