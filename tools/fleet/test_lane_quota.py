@@ -24,6 +24,15 @@ class Quota(unittest.TestCase):
         self.assertEqual(len(a), 1); self.assertEqual(b, []); self.assertIn("laneA on epyc7 wrote 200 GB", a[0]); self.assertIn("alert only", posts[0])
 
 
+    def test_shared_kw45_alert_routes_to_clean_aggr(self):
+        coord = tempfile.mkdtemp(); posts = []
+        def run(cmd, **kw):
+            if cmd[0] == "ssh": return types.SimpleNamespace(stdout=json.dumps({"scratch3:kw45": 280.0, "laneA": 200.0}) + "\n")
+            posts.append(cmd[-1]); return types.SimpleNamespace(stdout="")
+        out = Q.hub(["epyc2"], coord, run=run, state=os.path.join(coord, "s.json"))
+        kw = [l for l in out if "kw45" in l][0]; la = [l for l in out if "laneA" in l][0]
+        self.assertIn("[FLEET-OPS-R -> CLEAN-AGGR; cc COORD]", kw); self.assertIn("[FLEET-OPS-R -> COORD]", la)
+
 class Tiers(unittest.TestCase):
     def test_burst_tier_catches_a_39gb_clone_and_a_dead_host_does_not_abort_the_poll(self):
         root = tempfile.mkdtemp(); os.makedirs(root + "/scratch2/claude/laneA"); os.makedirs(root + "/scratch3/claude/laneB")

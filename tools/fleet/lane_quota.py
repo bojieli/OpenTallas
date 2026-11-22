@@ -10,6 +10,13 @@ WINDOW_H, QUOTA_GB = 6.0, 150.0
 BURST_H, BURST_GB = 1.0, 30.0      # 11-17: a 39 GB lane clone (QC-TYPES-R3) never reached 150 GB / 6 h; a burst tier alerts at 30 GB / 1 h
 ROOTS = ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude")   # epyc2 lanes live on scratch3 too
 SKIP = {"rt", "git", "signed-store", "hub-coord", "mq1", "mq-gate"}
+# COORD flow review F8 11-22: kw45 (shared kit-wave replicas / event trees) matched no lane, so its alerts had no owner.  Shared dirs name their owning lane here;
+# the alert goes to that lane (COORD cc).  Lookup ignores the "scratch3:" volume tag.
+OWNER = {"kw45": "CLEAN-AGGR"}
+
+
+def owner_of(lane):
+    return OWNER.get(lane.split(":", 1)[-1])
 
 
 def scan_all(roots=ROOTS, now=None):
@@ -66,7 +73,11 @@ def hub(hosts, coord, run=subprocess.run, state=None, now=None):
             k = "%s/%s" % (h, lane)
             if seen.get(k) == day: continue
             seen[k] = day
-            line = "ALERT [FLEET-OPS-R -> COORD] lane quota: %s on %s wrote %.0f GB in the last window (quota %g GB/lane/%g h or %g GB/%g h burst; alert only, nothing stopped); owner please prune or confirm" % (lane, h, gb, QUOTA_GB, WINDOW_H, BURST_GB, BURST_H)
+            own = owner_of(lane)
+            to = "%s; cc COORD" % own if own else "COORD"
+            line = "ALERT [FLEET-OPS-R -> %s] lane quota: %s on %s wrote %.0f GB in the last window (quota %g GB/lane/%g h or %g GB/%g h burst; alert only, nothing stopped); %s" % (
+                to, lane, h, gb, QUOTA_GB, WINDOW_H, BURST_GB, BURST_H,
+                "%s prunes superseded event trees and replicas no live or queued row references" % own if own else "owner please prune or confirm")
             run(["bash", os.path.join(coord, "bin/post.sh"), "FLEET-OPS-R", line], capture_output=True, text=True)
             posted.append(line)
     os.makedirs(os.path.dirname(state), exist_ok=True)
