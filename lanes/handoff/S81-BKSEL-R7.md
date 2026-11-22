@@ -22,3 +22,9 @@
 - Codex adopted: u_g -12.96 um audit (intel2 tap-grid-r4/bksel_j7_ug/out/ug_phase_audit.json) = optional, needs bind; not used in r7a.
 - J7: preferred a6771d121e95 carries bk_sel R6 rows + R6 taps (BIND+LAT873+PRE PASS). r7a positions go to J8 once proven (GEN: apply the same spread to bk_sel__t2 relay_sites).
 - BLOCKED: fleet drain; private-spec refuses epyc7. Auto-launcher (my session) intel2 ~/s81-bksel-r7/launch_r7a.sh, log launch_r7a.log: makes the r7a spec + run-item when epyc7 admits. Successor: re-run it if my session is gone. After place: hop300 scan (R4 hop300.py) + geom, then run_kit route 48 16 via ot-run in the kit work dir.
+
+## 18:4x COORD ruling applied
+- tree_r6 plain copy (rsync -a, no link-dest/delete) epyc7 -> intel2 /srv/opentallas-scratch2/claude/s81-bksel-r7/tree_r6 (+ w/plan_r7a.json, w/spread.py) via ot-run --hosts localhost on intel2 (script w/copy_tree.sh; plan_r7a.json appears last = copy done).
+- Launcher (detached nohup, intel2 pid 483341): ~/s81-bksel-r7/launch_r7a.sh, log launch_r7a.log; every 5 min tries private-spec on intel2 (after copy) then epyc7; on success runs run-item (log ~/s81-bksel-r7/run_item_r7a.log). Old launcher killed.
+- J8 candidate row (PROOF-PENDING) posted to S81-J6-ASSEMBLY-R5: lanes/handoff/S81-BKSEL-R7-J8-rows.json; GEN spread.py {IN} {OUT} 10 4.32 386.0.
+- Next after place: hop300 scan (R4 /srv/opentallas-scratch2/claude/opus-fix-s81-bksel-r4/hop300.py on the geom.tsv), then ot-run route (run_kit.sh KIT route 48 16) in the kit work dir; read final 5_1_grt.odb / signoff.json; post to J6-R5.
