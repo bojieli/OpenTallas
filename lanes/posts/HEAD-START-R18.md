@@ -19,3 +19,4 @@
   - The table is now derived from the plan in the tool (live = regs_um of realised internal_stations on the end buses, fail closed if live > fixed); it equals Codex tr13 FIRM table on all 329 lanes, now with a derivation.
   - So the plan frame question is settled: own-edge counts, plan consistent, no K change, no +cycles needed. Codex 53 K values stay void.
   - Running on epyc7: tr29 (candidate PASS) + 5 mutants (st_bypass st_double k_plus1 bit_swap oracle), logs intel2 ~/head-start-r18/tr29*.otrun.log, about 20 min.
+- 2026-11-21 20:35 PST DONE [HEAD-START-R18] ot-run oth-ubuntu-3875219-1795321053 on tolerant-swine: rc=0 after 1103 s, ended 20:35:51, log /home/ubuntu/head-start-r18/tr29_k_plus1.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/head-start-r18 -- env TAG=tr29_k_plus1 MUTANT=k_plus1 bash /srv/ope
