@@ -49,6 +49,10 @@ before at every load (x releases after n - k edges, then k shifts: the copies ha
 ASSERT reaches the loads k clocks after the spine (x clears asynchronously, then k shifts), the same k at every region, so
 all copies assert on the same edge.  Needs the clock running for >= k cycles while the spine is held (boot holds rst_n
 >= 64 clk).  Only the near-port synchroniser keeps the spine on its clear pins.
+"tail_clear": "sync_output" takes asynchronous clear from the common synchroniser Q. Q asserts asynchronously and
+already supplies the relay D. Its release after the common stages keeps the copies' first high sample and total release
+edge unchanged. The raw input serves only the common synchroniser. Qualify its Q-to-clear recovery and fanout as
+internal timing paths when placing this form.
 Each copy line carries the tail-copy marker `// landing pad tail copy for core <region>:` so the siting hook
 (gen_phys.tail_copy_place / tail_copy_anchor.tcl) lists it; use region_re "^(.*)$" for one copy per consumer instance.
 With "lockup_regions", a generated NK latch on the reset load belongs to the hard core wired to its Q.
@@ -124,10 +128,11 @@ def apply(text, specs, positions=None):
         drv, drv_re = spec.get("driver"), spec.get("driver_re")
         if spec.get("form") not in (None, "rsync"):
             raise ReplicateError(f"reset_replicate form {spec.get('form')!r}: expected \"rsync\" or no form")
-        if spec.get("tail_clear") not in (None, "async", "sync"):
-            raise ReplicateError(f"reset_replicate tail_clear {spec.get('tail_clear')!r}: expected \"async\" or \"sync\"")
-        if spec.get("tail_clear") == "sync" and spec.get("form") != "rsync":
-            raise ReplicateError("reset_replicate tail_clear sync needs form rsync")
+        tail_clear = spec.get("tail_clear")
+        if tail_clear not in (None, "async", "sync", "sync_output"):
+            raise ReplicateError(f"reset_replicate tail_clear {tail_clear!r}: expected async, sync or sync_output")
+        if tail_clear in ("sync", "sync_output") and spec.get("form") != "rsync":
+            raise ReplicateError(f"reset_replicate tail_clear {tail_clear} needs form rsync")
         if not drv and not drv_re:
             raise ReplicateError("reset_replicate entry needs driver or driver_re")
         hits = []
@@ -285,13 +290,14 @@ def _one(lines, di, m, spec, positions):
             blank.add(i)
     for j in blank:
         lines[j] = ""
+    tail_clear = spec.get("tail_clear")
     cells = []
     for r in sorted(allr):
         cells.append(f"    wire [0:0] {wire[r]};")
         prev = src
         if rsync:
-            sync_tail = spec.get("tail_clear") == "sync"
-            aexpr = "1'b1" if sync_tail else dexpr
+            sync_tail = tail_clear == "sync"
+            aexpr = {"sync": "1'b1", "sync_output": src}.get(tail_clear, dexpr)
             cells.append(f"    {TAIL} #(.D({kk})) {names[r]} (.clk({clk}), .a({aexpr}), .d({prev}), "
                          f".q({wire[r]}[0]));  "
                          f"// landing pad tail copy for core {r}: reset spine relay ({leaf[r]} load(s)); {D} stage(s) total"
@@ -318,7 +324,8 @@ def _one(lines, di, m, spec, positions):
     lines[di + 1:di + 1] = new
     row = dict(driver=inst, depth=D, common_depth=D - kk if D > 1 else 0, copy_depth=kk, regions=len(allr), copies=len(allr),
                **(dict(form="rsync") if rsync else {}),
-               **(dict(tail_clear="sync", assert_delay_clk=kk) if spec.get("tail_clear") == "sync" else {}),
+               **(dict(tail_clear="sync", assert_delay_clk=kk) if tail_clear == "sync" else {}),
+               **(dict(tail_clear="sync_output", assert_delay_clk=0) if tail_clear == "sync_output" else {}),
                chain_flops=len(allr) * kk,
                loads=len(uses), assign_splits=len(top) - len(dead), dead_assigns=len(dead), region_names=sorted(allr),
                loads_per_region=dict(sorted(leaf.items())), shared_rest=("rest" in allr))
