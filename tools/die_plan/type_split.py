@@ -1988,6 +1988,9 @@ class Event:
 
             before = {nm for nm, p in points(t) if any(inside(p, box(h)) for h in cores.values())}
             mv = moves.get(tn, {})
+            # Re-seat stations against the completed cut, including cores
+            # moved later in this loop.
+            final_boxes = [box(h, mv.get(inst)) for inst, h in cores.items()]
             moved_now = []
             for inst, org in mv.items():
                 h = cores.get(inst)
@@ -2061,7 +2064,7 @@ class Event:
                                         got.append([rnd(s0[0] + (s1[0] - s0[0]) * fr), rnd(s0[1] + (s1[1] - s0[1]) * fr)])
                                         break
                                     u -= ln
-                            if len(got) == n and not any(inside(q, box(o)) for q in got for o in cores.values()):
+                            if len(got) == n and not any(inside(q, b) for q in got for b in final_boxes):
                                 regs = got
                                 break
                         if regs is None:
