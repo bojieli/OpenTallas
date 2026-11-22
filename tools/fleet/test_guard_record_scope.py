@@ -115,7 +115,8 @@ def test_bound_trees_need_a_tree_reading_row(tmp_path):
                                          {"src": K + "src_s81_pin_x_d8j5_work", "plan_sha256": "cccc3333"}]
     (c / "autopilot/kit_wave.json").write_text(json.dumps(cfg))
     (c / "autopilot/kit_wave_state.json").write_text(json.dumps({"items": {
-        "a": {"status": "ENQUEUED", "plan_sha": "aaaa", "attempt": 1, "work": W + "/s81/e/items/a"},
+        "a": {"status": "RUNNING", "plan_sha": "aaaa", "attempt": 1, "work": W + "/s81/e/items/a"},
+        "a2": {"status": "ENQUEUED", "plan_sha": "bbbb", "attempt": 1, "work": W + "/s81/e/items/a2"},
         "b": {"status": "ROUTE-HELD", "plan_sha": "bbbb2222", "attempt": 2, "work": W + "/s81/e/items/b"},
         "c": {"status": "CANCELLED", "plan_sha": "cccc3333", "attempt": 2, "work": W + "/s81/e/items/c"}}}))
     scope = B.RecordScope(str(c), cfg, os.path.normpath, set())

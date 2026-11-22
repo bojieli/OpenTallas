@@ -130,7 +130,9 @@ def event_paths(coord, out, canon, now=None, max_age_h=72.0, scope=None):
 #     AFTER its die adopted the current tree (the candidate of the next event, applying now);
 #   - a kit-wave attempt dir (.../kit-wave/.../items/<item>/attempt_N) only when a live / queued row lists it (live_attempt_paths);
 #   - every other path as before.  kit_wave.json, PROTECTED-DBS, live command lines, posts and the provenance cache are not scoped.
-TREE_READER_STATES = ("RUNNING", "LAUNCHING", "ENQUEUED", "RETRY-INFRA", "WAITING")
+# ENQUEUED rows sit in the route queue with a complete kit in their attempt dir (gen done): they read the attempt, not the source tree (COORD 11-21 FABLE-FLOW-1900:
+# 62 ENQUEUED + 113 ROUTE-HELD rows on superseded events pinned old trees).  A route that reads outside its kit is the kit failure (OWNER 11-12).
+TREE_READER_STATES = ("RUNNING", "LAUNCHING", "RETRY-INFRA", "WAITING")
 TREE_OF = re.compile(r"^(/srv/opentallas-scratch[0-9]*/claude/(?:kw45/snap_[^/]+/[^/]+|kw45/[^/]+|[^/]+/src_[^/]+))(?:/|$)")
 WAVE_ATTEMPT_OF = re.compile(r"^(/srv/opentallas-scratch[0-9]*/claude/.*/kit-wave/.*/items/[^/]+/attempt_\d+)(?:/|$)")
 TREE_DIE = (("src_kv_", "qwen_kvsys"), ("src_qc_", "qwen_compute"), ("qwen_compute", "qwen_compute"), ("src_head_", "s81_head"), ("s81_head", "s81_head"),
