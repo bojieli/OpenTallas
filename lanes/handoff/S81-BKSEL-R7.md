@@ -49,3 +49,8 @@
 - Guard (detached setsid, intel2 pid 462774, ~/s81-bksel-r7/guard_e10.sh, log guard_e10.log): when 281955 exits without result.json, resumes the same spec (max 3 tries).
 - J8 row 2 READY: bksel_seatmiss.py (drop 575 seat-miss keys; all co-located with seated keys), posted to J6-R5; rows file updated.
 - Next: on 3_place: hop300 (epyc10 w/hop300.py with rt/current on kit geom/geom.tsv) + check placed y-spread at x2250-2450; then route result (spec is goal auto? COL-R6 spec: check), sign-off -> J8 row 1 status.
+
+## 23:1x r7a PLACED (epyc10, COL-R6 spec)
+- 3_place.odb 07:01 UTC. hop300 (w/hop300_r7a.json): 0 groups >405 except known R2R_MAX 1202.5 u_rrl_11 -> u_cland_fstart_flt_o0 (unchanged since R4). Non-reset >300: u_sel.u_stn_s.g_r chain 78 caps max 314.7, u_sel.u_rn rsreg->o 54 caps 313.7 (both <405; R6 had only u_ids.vr->lo 303.4). Reset relays u_rrl 300-383.
+- Hot window x2250-2450 placed y: cells now spread y380-430 (3138/2576/1765/2035/1728 per 10 um) instead of a single line stack.
+- Geom GRT running (spec geom.live.log); goal auto continues to route. Waiter on my session.
