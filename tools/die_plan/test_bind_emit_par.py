@@ -205,6 +205,9 @@ def test_removed_key_is_unsafe(tmp_path, monkeypatch):
 
 def test_jobs_env(monkeypatch):
     monkeypatch.delenv("OT_BIND_EMIT_J", raising=False)
+    monkeypatch.setattr(EP, "mem_jobs", lambda: 3)
+    assert EP.jobs() == min(3, max(1, min(8, (EP.os.cpu_count() or 4) // 4)))     # default auto, capped by memory
+    monkeypatch.setenv("OT_BIND_EMIT_J", "1")
     assert EP.jobs() == 1
     monkeypatch.setenv("OT_BIND_EMIT_J", "6")
     assert EP.jobs() == 6
@@ -212,3 +215,12 @@ def test_jobs_env(monkeypatch):
     assert 1 <= EP.jobs() <= 8
     monkeypatch.setenv("OT_BIND_EMIT_J", "x")
     assert EP.jobs() == 1
+
+
+def test_mem_jobs():
+    G = 1 << 30
+    assert EP.mem_jobs(rss=8 * G, limit=110 * G) == 15                 # KV: 8 GB parent, ot-run --mem 110
+    assert EP.mem_jobs(rss=8 * G, limit=24 * G) == 2
+    assert EP.mem_jobs(rss=8 * G, limit=9 * G) == 1
+    assert EP.mem_jobs(rss=0, limit=None) == 8
+    assert EP._mem_limit_bytes() is None or EP._mem_limit_bytes() > 0

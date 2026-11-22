@@ -3703,7 +3703,7 @@ class Binder:
         self.io_used = {}
         self.parent_id_ports = {}
         self.parent_id_values = {}
-        # FABLE-PIPELINE-R1: OT_BIND_EMIT_J=N (default 1) emits the types in N forked workers and merges their state changes in
+        # FABLE-PIPELINE-R1: OT_BIND_EMIT_J=N (default auto, OPUS-PIPELINE-R2 11-21; 1 = serial) emits the types in N forked workers and merges their state changes in
         # sorted type order (bind_emit_par.py); a state change it cannot merge falls back to this serial loop.
         import bind_emit_par
         _par = False

@@ -15,7 +15,7 @@ whole value), extend (list tail), union (set).  Anything else (a removed key, a 
 values that do not merge) is UNSAFE: the parent raises ParUnsafe before touching its state and the caller reruns the plain serial loop, so a
 form this module does not understand costs time, never a wrong bind.
 
-    OT_BIND_EMIT_J=N     workers (default 1 = the serial loop, byte-identical to before; `auto` = min(8, cpus/4))
+    OT_BIND_EMIT_J=N     workers (default `auto` = min(8, cpus/4, what the memory limit holds); 1 = the plain serial loop)
     OT_BIND_EMIT_PAR_REC=FILE   per-type wall / worker private memory record (default OUT/bind_emit_par.json)
 
 Proof duty of a caller that turns it on for a new die: one serial and one parallel bind of the same inputs, `diff -r` of the two out
@@ -39,10 +39,62 @@ class ParUnsafe(Exception):
     """a state change the delta cannot express, or a cross-type conflict: the caller falls back to the serial loop"""
 
 
+DEFAULT_J = "auto"         # proven byte-identical to the serial loop on KV D27d3 (OPUS-PIPELINE-R2 11-21); OT_BIND_EMIT_J=1 = serial
+WORKER_FRAC = 0.8          # a worker's private (dirtied) memory per byte of the parent's RSS: KV D27d3 ~6 GB per 8 GB parent
+
+
+def _mem_limit_bytes():
+    """-> the tightest memory limit over this process's cgroup (v2 memory.max up the tree) and MemAvailable + own RSS"""
+    lims = []
+    try:
+        for ln in open("/proc/meminfo"):
+            if ln.startswith("MemAvailable:"):
+                lims.append(int(ln.split()[1]) * 1024 + _rss_bytes())
+    except OSError:
+        pass
+    try:
+        rel = [ln.split(":", 2)[2].strip() for ln in open("/proc/self/cgroup") if ln.startswith("0::")]
+        p = "/sys/fs/cgroup" + (rel[0] if rel else "")
+        while p.startswith("/sys/fs/cgroup"):
+            try:
+                v = open(os.path.join(p, "memory.max")).read().strip()
+                if v != "max":
+                    used = int(open(os.path.join(p, "memory.current")).read().strip())
+                    lims.append(int(v) - used + _rss_bytes())
+            except (OSError, ValueError):
+                pass
+            if p == "/sys/fs/cgroup":
+                break
+            p = os.path.dirname(p)
+    except OSError:
+        pass
+    return min(lims) if lims else None
+
+
+def _rss_bytes():
+    try:
+        for ln in open("/proc/self/status"):
+            if ln.startswith("VmRSS:"):
+                return int(ln.split()[1]) * 1024
+    except OSError:
+        pass
+    return 0
+
+
+def mem_jobs(rss=None, limit=None):
+    """-> how many workers fit next to the parent in the memory this process may use (at least 1)"""
+    rss = _rss_bytes() if rss is None else rss
+    limit = _mem_limit_bytes() if limit is None else limit
+    if not rss or not limit:
+        return 8
+    return max(1, int((limit - 1.1 * rss) // (WORKER_FRAC * rss)))
+
+
 def jobs():
-    v = os.environ.get("OT_BIND_EMIT_J", "1").strip() or "1"
+    """OT_BIND_EMIT_J: N workers, 1 = the serial loop, `auto` (the default) = min(8, cpus/4, what the memory limit holds)"""
+    v = os.environ.get("OT_BIND_EMIT_J", DEFAULT_J).strip() or DEFAULT_J
     if v == "auto":
-        return max(1, min(8, (os.cpu_count() or 4) // 4))
+        return max(1, min(8, (os.cpu_count() or 4) // 4, mem_jobs()))
     try:
         return max(1, int(v))
     except ValueError:
