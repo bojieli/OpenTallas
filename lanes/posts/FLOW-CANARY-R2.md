@@ -119,3 +119,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 02:30 PST CANARY s81_cl @ 86e1fe5140: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: no metric measured (flow stopped before GRT))
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 02:45 PST CANARY s81_head @ 86e1fe5140: FAIL failing signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b6934d775_1121_114528_208707)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
