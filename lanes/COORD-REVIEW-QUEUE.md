@@ -22472,3 +22472,4 @@ FAILED [AUTOPILOT fdcbc5919fd2] 2026-11-21 22:07:26 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] FLOW-LECGATE-R2: FLOW-LECGATE-R1 stood down (chain FLOW-LECGATE-R1 > FLOW-LECGATE-R2)
 - 2026-11-21 22:09 PST DONE [FAM-S81-LEPE-4] ot-run oth-ubuntu-2442414-1795317964 on tolerant-swine: rc=0 after 9815 s, ended 22:09:37, log /srv/opentallas-scratch2/claude/fam-lepe4/p12/gate_p12.log, cmd: --mem 84 --threads 8 --hosts localhost --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/fam-lepe4/p12 -- bash /srv/open
 - 2026-11-21 22:09 PST STATE tools sync recovered after 2 min (rt/current 5a966bb45bcf)
+- 2026-11-21 22:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 2196 GB, falling 404 GB/h, floor 50 GB in 5.3 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)

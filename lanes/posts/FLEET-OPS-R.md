@@ -1053,3 +1053,4 @@
 - 2026-11-21 22:05 PST HOST-REPORT 2026-11-21 22:05 | tolera L63.64/112 units0 free562G | key-ca L32.35/112 units171 free1224G | dear-c L29.25/128 units408 free408G | loved- L61.23/96 units49 free850G | outgoi L51.59/96 units156 free1318G | renewe L41.64/96 units50 free2547G | civil- L64.50/96 units32 free2078G | HOST-CAPS ok (1 owned caps)
 - 2026-11-21 22:06 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7312afb7a304: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-21 22:09 PST STATE tools sync recovered after 2 min (rt/current 5a966bb45bcf)
+- 2026-11-21 22:10 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 2196 GB, falling 404 GB/h, floor 50 GB in 5.3 h (state 1, was 0) LSOF+L1 holders: none (>=10 MB) on /srv/opentallas-scratch2 (cron disk_rate.py; read-only)
