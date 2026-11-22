@@ -196,3 +196,16 @@ def test_reference_lane_uses_its_own_bus_cut_leg_before_a_lower_id_wide_cut_lane
     c.out["A0"]=sorted(c.out["A0"]+[w2],key=lambda x:x["id"])
     c.prefill(c.reference())
     assert list(w2["carried"])==[c.key("a",i)for i in range(2)] and not c.byid["cut_A"]["carried"]
+
+
+def test_own_cut_leg_of_an_unprefixed_bus_is_o_prefixed():
+    """FLOW-STRIPBODY-R2 11-21 (S81 lepe_mu_C t1 strip split bind: 'native stations s_7N_C.o_leafdn_o2_p: expected one
+    outgoing lane'): type_split names the cut leg of bus leafdn_o2 o_leafdn_o2_p; it is the lane's own leg too."""
+    b=Toy()
+    wide=lane("cut_0wide","A0","A1",8);b.lanes.append(wide);b.byid[wide["id"]]=wide
+    b.out["A0"]=sorted(b.out["A0"]+[wide],key=lambda x:x["id"])
+    for x in b.lanes:x["oname"]="o_other"
+    b.byid["L0"]["oname"]="bus";b.byid["cut_A"]["oname"]="o_bus_p"
+    b.prefill(b.reference())
+    assert list(b.byid["cut_A"]["carried"])==[b.key("a",i)for i in range(2)]
+    assert not wide["carried"] and wide["left"]==8
