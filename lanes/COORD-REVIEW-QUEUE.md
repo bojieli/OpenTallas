@@ -22167,3 +22167,4 @@ FAILED [AUTOPILOT 3df3f614925c] 2026-11-21 21:20:37 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-21 21:22 PST RESUMED (Opus 5.5, successor of FLOW-OPS-1300). P1 re-sign nomcap path map, P2 adopt push17, P3 s81_head_cl canary bisect (8a2a7b31a9 first), P4 open items.
 - 2026-11-21 21:22 PST DONE [QC-PLAN-R13] ot-run oth-ubuntu-1485062-1795321627 on civil-redfish: rc=0 after 3328 s, ended 05:22:34, log /srv/opentallas-scratch2/claude/qc-plan-r13/v3p6/v3p6/g0.log, cmd: --disk 1 --mem 32 --threads 2 --priority plan --plan-job g0 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/qc-plan-r13/e10/v3p5r_bound
 - 2026-11-21 21:22 PST ALERT NO-PROGRESS s81_head: 16 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 127 min (last 19:15); no current launch blocker logged
+- 2026-11-21 21:22 PST DONE [CLEAN-AGGR-R3] ot-push-main otpush-outgoing-giraffe-2225845 on outgoing-giraffe: rc=0 after 14 s, ended 05:22:39, log none, cmd: ot-push-main 
