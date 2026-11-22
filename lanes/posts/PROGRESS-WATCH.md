@@ -209,3 +209,4 @@
 - 2026-11-21 19:51 PST ALERT NO-PROGRESS s81: 42 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 67 min (last 18:44); no current launch blocker logged
 - 2026-11-21 19:51 PST ALERT STUCK-STATE s81: 35 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. bk_sel__t2, 2026-11-21 04:14)
 - 2026-11-21 20:21 PST ALERT NO-PROGRESS s81_head: 16 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 66 min (last 19:15); no current launch blocker logged
+- 2026-11-21 20:52 PST ALERT NO-PROGRESS qwen_compute: 3 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 60 min (last 19:51); no current launch blocker logged
