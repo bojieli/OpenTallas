@@ -1,0 +1,222 @@
+[
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N_w",
+  "tag": "stage:krx1_r0",
+  "path": "partition_types.hd_lep0N_w.clock.landing_contract.native_stage_groups.groups[tag=stage:krx1_r0].rect_um",
+  "was": [
+   274.32,
+   769.96,
+   285.12,
+   844.72
+  ],
+  "value": [
+   244.08,
+   761.94,
+   254.88,
+   836.7
+  ],
+  "why": "stage band 100% inside stage:ktx1_r0 (807.4 um2)",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N_w",
+  "tag": "stage:txread_l2b3",
+  "path": "partition_types.hd_lep0N_w.clock.landing_contract.native_stage_groups.groups[tag=stage:txread_l2b3].rect_um",
+  "was": [
+   440.88,
+   656.34,
+   473.28,
+   674.7
+  ],
+  "value": [
+   465.48,
+   656.37,
+   497.88,
+   674.73
+  ],
+  "why": "overlaps stage:krx1_r2 193.3 um2",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N_w",
+  "tag": "stage:txread_l1b1",
+  "path": "partition_types.hd_lep0N_w.clock.landing_contract.native_stage_groups.groups[tag=stage:txread_l1b1].rect_um",
+  "was": [
+   280.8,
+   691.2,
+   313.2,
+   709.56
+  ],
+  "value": [
+   285.12,
+   693.09,
+   317.52,
+   711.45
+  ],
+  "why": "overlaps stage:ktx1_r0 79.3 um2",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:pout_s3",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:pout_s3].rect_um",
+  "was": [
+   1003.76,
+   300.24,
+   1039.76,
+   324.24
+  ],
+  "value": [
+   944.622,
+   294.57,
+   980.64,
+   318.57
+  ],
+  "why": "stage band 100% inside ring band lepk_i0 (864 um2)",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:pin_s0",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:pin_s0].rect_um",
+  "was": [
+   961.44,
+   355.62,
+   997.44,
+   391.62
+  ],
+  "value": [
+   932.472,
+   356.13,
+   968.49,
+   392.13
+  ],
+  "why": "overlaps ring band lepk_i0 604.8 um2",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:rxh_l1",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:rxh_l1].rect_um",
+  "was": [
+   174.96,
+   652.24,
+   185.76,
+   768.92
+  ],
+  "value": [
+   90.72,
+   655.56,
+   101.52,
+   772.24
+  ],
+  "why": "overlaps stage:txi0_r0 1133.2 um2 (90%)",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:rxbank_l0b0",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:rxbank_l0b0].rect_um",
+  "was": [
+   177.12,
+   697.68,
+   209.52,
+   716.04
+  ],
+  "value": [
+   187.11,
+   727.65,
+   219.51,
+   746.01
+  ],
+  "why": "overlaps stage:rxh_l1 / txi0_r0",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:rxbank_l1b1",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:rxbank_l1b1].rect_um",
+  "was": [
+   181.44,
+   663.12,
+   213.84,
+   681.48
+  ],
+  "value": [
+   202.77,
+   615.6,
+   235.17,
+   633.96
+  ],
+  "why": "overlaps stage:rxh_l1 / txi0_r0",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:rid_low",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:rid_low].rect_um",
+  "was": [
+   163.79,
+   635.51,
+   186.14,
+   657.3
+  ],
+  "value": [
+   186.84,
+   670.41,
+   209.196,
+   692.2
+  ],
+  "why": "overlaps stage:rxh_l1 / txi0_r0",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:mlwd_h2",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:mlwd_h2].rect_um",
+  "was": [
+   431.5,
+   640,
+   443.5,
+   658
+  ],
+  "value": [
+   417.798,
+   614.25,
+   429.84,
+   632.25
+  ],
+  "why": "overlaps stage:txi3_r0 164.5 um2 (76%)",
+  "cls": "B"
+ },
+ {
+  "op": "set_stage_rect",
+  "type": "hd_lep0N",
+  "tag": "stage:pin_s3",
+  "path": "partition_types.hd_lep0N.clock.landing_contract.native_stage_groups.groups[tag=stage:pin_s3].rect_um",
+  "was": [
+   409.44,
+   659.54,
+   517.44,
+   671.54
+  ],
+  "value": [
+   454.14,
+   614.25,
+   562.14,
+   626.25
+  ],
+  "why": "overlaps stage:rxh_l3 and stage:txi3_r0 129.6 um2 each",
+  "cls": "B"
+ }
+]
