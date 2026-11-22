@@ -1,0 +1,2 @@
+- 2026-11-21 18:30 PST DIED [FABLE-FIX-HEAD-LEP0N] ot-run oth-ubuntu-21834-1795274496 on tolerant-swine: rc=143 after 40113 s, ended 18:30:07, log /home/ubuntu/fable-fix-head-lep0n/shelf_tg_kit.otrun.log, cmd: --mem 48 --threads 12 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-env/shelf_tg/gen -- bash /srv/opentallas-scr
+  [filed under] FABLE-FIX-HEAD-LEP0N-R3: FABLE-FIX-HEAD-LEP0N stood down (chain FABLE-FIX-HEAD-LEP0N > FABLE-FIX-HEAD-LEP0N-R2 > FABLE-FIX-HEAD-LEP0N-R3)
