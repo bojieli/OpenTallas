@@ -20,3 +20,10 @@ def _no_real_host_verify(monkeypatch, request):
     if request.module.__name__ == "test_snap_ro_1119":
         return
     monkeypatch.setattr(_A, "verify_tree_on_all_hosts", lambda *a, **k: ({}, {}))
+
+
+@pytest.fixture(autouse=True)
+def _no_bind_stamp_ssh(monkeypatch):
+    """T1 (WAVE-OPS-R1): rt_tools_fields reads the bind's stamp over ssh; a test never does (tests inject BIND_STAMP_LOADER)"""
+    import kit_wave as _KW
+    monkeypatch.setattr(_KW, "BIND_STAMP_LOADER", lambda cfg, die, bind_out: None)

@@ -13328,7 +13328,87 @@ def rt_tools_fields(cfg, die, root=None):
     if opt(cfg, die, "tools_from_rt") is False:
         return {}
     rt, full = scheduler_rt(root)
-    return {"tools_rt": rt, "tools_sha": full} if rt else {}
+    f = {"tools_rt": rt, "tools_sha": full} if rt else {}
+    if f and root is None and opt(cfg, die, "bind_rt_follow") is not False:
+        f = bind_rt_follow(cfg, die, f)
+    return f
+
+
+# T1 (WAVE-OPS-R1 11-22, FABLE-FLOW-0800): rt/current moved 16 times in 108 min; the bind of record keeps the generators of the rt it ran on, and a gen on the
+# newer rt failed BIND-GEN-TOOLSKEW (18 rows, S81 class breaker open).  A launch composes its tools from the rt snapshot the bind's own stamp (bind_tool.json)
+# fits, so bind and gen of one row can never land on different reset / relay generators.  No fitting snapshot: the current rt (the row then fails the toolskew
+# check, which does not count toward a class breaker, and needs a rebind).
+BIND_STAMP_CACHE = {}          # bind_out -> stamp dict (a bind dir is read-only once written)
+BIND_STAMP_NEG = {}            # bind_out -> time of the last failed read
+BIND_STAMP_LOADER = None       # tests: loader(cfg, die, bind_out) -> stamp dict or None
+BIND_RT_FIT = {}               # (bind_out, rt dir) -> (dir, full sha) or None
+BIND_RT_SCAN_MAX = 300
+
+
+def load_bind_stamp(cfg, die, bind_out):
+    if bind_out in BIND_STAMP_CACHE:
+        return BIND_STAMP_CACHE[bind_out]
+    if BIND_STAMP_LOADER is not None:
+        return BIND_STAMP_LOADER(cfg, die, bind_out)
+    if time.time() - BIND_STAMP_NEG.get(bind_out, 0) < 600:
+        return None
+    rec, d = None, (cfg.get("dies") or {}).get(die) or {}
+    try:
+        rec = json.loads((Path(bind_out) / "bind_tool.json").read_text())
+    except (OSError, ValueError):
+        for h in dict.fromkeys(list(d.get("gen_hosts") or []) + [d.get("gen_host")] + list(cfg.get("hosts") or [])):
+            if not h or h in ("localhost", cfg.get("_hub") or "-"):
+                continue
+            try:
+                p = subprocess.run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=8", h, "cat", shlex.quote(bind_out) + "/bind_tool.json"],
+                                   capture_output=True, text=True, timeout=25)
+                if p.returncode == 0:
+                    rec = json.loads(p.stdout)
+                    break
+            except (OSError, ValueError, subprocess.SubprocessError):
+                continue
+    if isinstance(rec, dict) and rec.get("generators"):
+        BIND_STAMP_CACHE[bind_out] = rec
+        return rec
+    BIND_STAMP_NEG[bind_out] = time.time()
+    return None
+
+
+def rt_fit_for_stamp(stamp, rt_root, cur_dir):
+    """(dir, full sha) of the newest rt snapshot whose reset / relay generators equal the stamp's (the stamp's own tools_sha first): hashes 20 files per snapshot, never the manifests"""
+    named = str((stamp or {}).get("tools_sha") or "")[:12]
+    try:
+        names = [n for n in os.listdir(rt_root) if RT_NAME_RE.fullmatch(n)]
+    except OSError:
+        return None
+    names.sort(key=lambda n: (n != named, -os.path.getmtime(os.path.join(rt_root, n))))
+    for n in names[:BIND_RT_SCAN_MAX]:
+        dd = os.path.join(rt_root, n)
+        if os.path.isfile(os.path.join(dd, "tools", "autopilot", "rt_launch_tree.sh")) and not stamp_diff(stamp, rt_generator_hashes(dd)):
+            return dd, (scheduler_rt(dd)[1] or n)
+    return None
+
+
+def bind_rt_follow(cfg, die, f):
+    """f = {tools_rt, tools_sha} of the scheduler rt -> the same, or the rt snapshot the die's bind of record was made on when the scheduler's generators differ from it"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    kr = d.get("kit_rtl") or {}
+    bind_out = kr.get("bind_out") if isinstance(kr, dict) and kr.get("mode") == "bind" else None
+    if not bind_out or d.get("gen_tools_pin") or not f.get("tools_rt"):
+        return f
+    try:
+        stamp = load_bind_stamp(cfg, die, str(bind_out))
+        if not stamp:
+            return f
+        if not stamp_diff(stamp, rt_generator_hashes(f["tools_rt"])):
+            return f
+        key = (str(bind_out), f["tools_rt"])
+        if key not in BIND_RT_FIT:
+            BIND_RT_FIT[key] = rt_fit_for_stamp(stamp, os.path.dirname(f["tools_rt"].rstrip("/")), f["tools_rt"])
+        hit = BIND_RT_FIT[key]
+    except Exception:                                  # a lookup never stops a launch
+        return f
+    return {"tools_rt": hit[0], "tools_sha": hit[1]} if hit else f
 
 
 def rt_launch_path(src, rt):

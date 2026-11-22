@@ -575,6 +575,8 @@ def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, sta
     now = time.time() if now is None else now
     g = fg_state(st)
     key = norm_class(cls, why)
+    if (stage or fail_stage(why) or "") == "bind_toolskew":
+        return key                       # T1 (WAVE-OPS-R1): a tool skew is the bind's, not a class of the die's rows: it never opens or counts toward a breaker
     g["last"][f"{die}/{item}"] = key
     # class breaker over (die, stage, class) across items: >= CLASS_N in CLASS_WINDOW_S holds the class's items (half-open after the cooldown)
     k2 = f"CLASS {die}|{stage or fail_stage(why) or '-'}|{key}"[:200]
