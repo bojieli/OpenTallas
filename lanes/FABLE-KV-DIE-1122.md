@@ -110,7 +110,14 @@ bench `rtl/test/meso/lite/run_csc.sh` 11 of 11 phases, 0 mismatches, shift and m
 | Gate | Rows | Plan | Result |
 |---|---|---|---|
 | A (`gate_a1`) | R1 + R1b | 6f866b1b34cc | precheck PASS, PLAN-GATE-PRE PASS 0, G0 PASS 0 errors / 2585 warnings, ELAB 0, strict bind 0 errors (160 / 56 / 2545), LATCHECK rc 0, BPC PASS 570, R8 = baseline (91 / 32 / 7). COORD ruled R1 + R1b into D28; scripts in `kv-plan-r6/d28/rows/` (9860691ee0da, 74bdc3ee5a86). |
-| B (`gate_b2`) | R1 + R1b + R5 + landing_remap + pinclear | 0585b4608c74 | row RC 0 (hg_v3 added tap clk_t52 moved 43.2 um off head0_e5), remap RC 0, pinclear 0 moves, PLAN-GATE-PRE PASS 0; G0 + bind running at 06:1x PST |
+| B (`gate_b2`) | R1 + R1b + R5 v1 + landing_remap + pinclear | 0585b4608c74 | all gates green (G0 0 errors, bind 0, LATCHECK 0), but R5 v1 let core_place re-route the head kt rows on straight legs: hg routed_reach 14 -> 58. Not handed over. |
+| B3 (`gate_b3`) | R1 + R1b + R5 v2 + R5c + landing_remap + pinclear | 01eb79c44cd6 | PRE PASS 0, G0 PASS 0 errors / 2571 warnings, ELAB 0, strict bind 0 errors, LATCHECK rc 0, BPC PASS, R8 = baseline, 0 cycles. hg findings vs Gate A: routed_reach 32 -> 18, station_core 58 -> 15, tap_sink_cap 0 -> 2 (hg_v3 clk_t52 / clk_t36: its `__tapnet` sink bins were measured on the old floor; TAP-GRID-R5 to re-tap). R5 + R5c in the D28 intake (6281f8f48b0a, 6e86608e1250, helper kst_xstreet_v3_fkd.py 095576e60380). |
+| C (`gate_c3` / `gate_c4`, fork `tree_b`, tools rt bc9603f67b09) | KV-PLAN-R6 dry7 compose (11 rows incl. HGI-R6 R6h, R1, R1b) + R5 v2 + R5c + the plan lane's post steps | 464f4cdd3603 (c3) | c3: rows RC 0, remap RC 0, pinclear 0 moves, reprice 0 lanes; the one PRE finding is TAPNAME-RETAP kv3_pv_v3 (dry7 has the TAP-GRID pv_v3 taps without the PV-R7 split row), and the bind refuses on it. c4 = same with pv_v3 at its D27d3 block in the input: running. |
+
+R5 v2 = core_place seed (head0/1_e4, e5 + astk g_ex strips +43.2 um y; the legaliser adds <= 8.64 um on head1_e4 / head0_e4), kt rows kept
+through core_place and re-routed with OPUS-FIX-KV-HGI-R6's x-street generator (11 rows per type, max routed bit hop 383.4 um), added-tap
+legaliser (hg_v3 clk_t52 +43.2 um), ft3 banks rebuilt compact in the street. R5c = kv3_hg ft2 banks 2-4 compact in the row channel y 248-320
+(model H overflow 331k -> 116k).
 
 LITE rings in the Gate A bound RTL: pv_v12 / v7 56, pv_v6 / v6n 50, pv_v5 / v5n 41, pv_v4 / v4n 34, pv_v3 / v3n 25, pv_v2 / v2n 18, pv_v1 / v1n 9,
 hgi_v3..v8 11-12, hroot 7, pc_v1 x3 / pc_v3 7, pc x2 4, io_cor_v1 12, sys_c 14, hg_v1.. 4.

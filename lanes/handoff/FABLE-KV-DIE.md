@@ -22,24 +22,17 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
-## State 06:45 PST (supersedes the Gates / Next blocks of 05:2x)
-- COORD rulings: R1 + R1b go into D28 (scripts copied to kv-plan-r6/d28/rows/, shas 9860691ee0da / 74bdc3ee5a86, in rows.json by KV-PLAN-R6;
-  D28 tree tools now rt bc9603f67b09 >= e08eb28ae039). Gate B / R5 also D28 if green by 11:30 PST. sys_c: slot kept, region form (posted).
-- Gate A (gate_a1, R1+R1b on tree_a): ALL GREEN (see report section 7).
-- Gate B (gate_b2, R5 v1 on tree_a): PRE PASS, G0 PASS 0 errors, bind running. R5 v1 is NOT for hand-over (kt rows re-routed straight:
-  routed_reach 14 -> 58). tree_a is busy until gate_b2/gate.sum has END.
-- R5 v2 = rows/ROWS_FABLE-KV-DIE-R5.py c48d8112743f (+ kst_xstreet_v3_fkd.py 095576e60380 beside it; env FKD_TREE, FKD_RT): core_place seed,
-  kt rows restored then re-routed with HGI-R6's x-street generator (collapse / restore of spread kst sites), tap legaliser (hg_v3 clk_t52),
-  ft3 banks compact in the street. Tested on kv-plan-r6/d28/dry6/step08_out.json: rc 0, 11 kt rows per type re-routed, max bit hop 383.4.
-- R5c = rows/ROWS_FABLE-KV-DIE-R5c.py f0a8603e5923: kv3_hg ft2 banks 2-4 into the row channel y 248-320; model H overflow 331k -> 116k.
-- tree_b = second fork of the D28 work tree (tools bc9603f67b09), forking (unit oth-ubuntu-805177-1795357448, --crit because of the load cap).
-- NEXT: when tree_b exists: gate C =
-  ot-run --mem 64 --threads 10 --disk 60 --priority plan --plan-job bind --hosts epyc8 --dir .../fable-kv-die --stage <D27d3 tree>
-  --stage kv-d23-compose8/gatein --stage <d16 tree> --stage rt/3fc234318d37 --stage rt/bc9603f67b09 --stage kv-plan-r6/d28
-  --stage opus-fix-kv-hgi-r6/gen -- bash gate_c.sh gate_c1 <latest kv-plan-r6/d28/dryN/plan_D28.json> <ledger>
-  (base = the plan lane's newest finished compose; gate_c.sh does R5 + R5c + ONE landing_remap vs base_d27d3 on all changed types + pinclear).
-- Gate C green -> copy R5 / R5c / kst copy into the intake, ROWS-READY post, then the <250-word die-level report to COORD (owner relay).
-- Then sealed private kits on tree_b (kv3_hg_v1p2 vs FLOW-CLKGRT-R2 566k / 871k; kv3_io_cor_v1 LITE variant). No further gate on a tree
-  that feeds a kit.
-- ot-run notes: non-crit jobs wait on the epyc8 load cap (load 130-150); --priority plan --plan-job bind and --crit start at once.
-  ot-run needs --stage for every path outside --dir. cut_ledger.py flags a row PARTIAL if it prints skipped / dropped / ignored.
+## State 08:00 PST (supersedes earlier state blocks)
+- D28 intake (kv-plan-r6/d28/rows/): R1 9860691ee0da, R1b 74bdc3ee5a86 (in rows.json, APPLIED in the plan lane's dry7 / dry8),
+  R5 6281f8f48b0a, R5c 6e86608e1250, helper kst_xstreet_v3_fkd.py 095576e60380 (ROWS-READY posted 07:5x; plan lane decides D28 vs D29).
+  ORDER: R5, R5c after HGI-R6 + TAP-GRID + R1/R1b, before the landing_remap.
+- Gates: gate_a1 GREEN (R1+R1b). gate_b3 GREEN (R1+R1b+R5 v2+R5c on tree_a, plan 01eb79c44cd6). gate_c3 on tree_b refused by a foreign
+  pv_v3 finding; gate_c4 (pv_v3 at base) queued behind gate_c3's G0: intel2 ~/tmp/fablekvdie/gate_c4.otrun.log, epyc8 fable-kv-die/gate_c4/gate.sum.
+- tree_a now FEEDS A KIT (do not gate on it again): sealed private kit kv3_io_cor_v1 (LITE variant), spec
+  ~/coord/autopilot/private_specs/FABLE-KV-DIE/qwen_kvsys_kv3_io_cor_v1_1122075233/spec.json, runner = intel2 user unit
+  fkd-kit-iocor-1122 (log ~/tmp/fablekvdie/kit_iocor.log), work epyc8 .../KV-D27d3/private/FABLE-KV-DIE/kv3_io_cor_v1_1122075221.
+- tree_b = D28 work tree fork made by ot-tree-fork; the tool exited 1 at the very end (source bind_of_record moved by the plan lane during the
+  copy); content equal by file count except bind_of_record, renamed from .forking-805612 by me, --verify OK.
+- NEXT: (1) gate_c4 result -> post. (2) hg kit: private-spec qwen_kvsys kv3_hg_v1p2 --tree tree_b (has R6h reset rows) --host epyc8 --goal finish,
+  run-item under systemd-run --user; compare 5_1_grt overflow with FLOW-CLKGRT-R2 (566k clock-first / 871k base). Only after gate_c4 binds.
+  (3) ot-wait --durable on both kits. (4) After D28 applies: re-check hg_v3 taps with TAP-GRID-R5; pv R3 / hgi R4 geometry with the family lanes.
