@@ -10,3 +10,6 @@ Dirs: epyc8 /srv/opentallas-scratch2/claude/fam-kv-iopc-r4 (ROWS_FAM-KV-IOPC-R4.
 2. pc_v3: read the worst path from the placed DB, structural fix row for D28 via KV-PLAN-R6.
 3. Carry proven rows to siblings (io_cor, pc, pc_v1 variants) via KV-PLAN-R6.
 4. Leftovers to ot-delete: intel2 fam-kv-iopc-r4/tree_unsealed (48 GB), R3 list (epyc7 fam-kv-iopc-r2/tree_pc, views_d27b, diag_ioc; tree_a1, tree_s1, proof_a1 on epyc8; tree_d26b).
+## Update 11-22 02:2x
+- pc_v3 worst paths read from the wave D27d3 placed DB (diag in intel1 fam-kv-iopc-r4/diag): detour via id-merge logic in the kvpc1/kvpc2 channel (u_hsl1 lpc_status), 1450 viol endpoints, 290 kvpcN/pc__pi. Fix = register macro input pins + split id fanout (bound-RTL/compiler row, D29 candidate); NOT proven. My pc_v3 private proof killed before place (same plan as wave attempt).
+- io_cor band row delivered; proof needs the D28 strict bind (private kit on changed plan = KIT_TOPOLOGY_BIND_STALE). Waiter: R6 post D28 green -> private-spec io_cor_v1 on D28 tree.
