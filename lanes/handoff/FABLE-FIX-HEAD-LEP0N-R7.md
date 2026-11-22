@@ -8,11 +8,12 @@ No kit launched, no plan event, no live tree written, nothing resealed. R6 and e
 ## In flight (2 units, adopt both)
 - oth-ubuntu-1136304-1795317736 (epyc9, R4's six-content 0-cycle equivalence). Still in "6. EQUIV_INDUCT" at 20:3x PST.
   Pass = PARTS_EQUIV_PASS in intel2 ~/fable-fix-head-lep0n-r4/parts_equiv_e9.otrun.log. NOT proven yet.
-- ot-run client pid 186566 on intel2 (epyc10, L/cut/prove_cut.sh): cut form == six-content form. Log
-  ~/fable-fix-head-lep0n-r7/cut_equiv_ra4_e10.otrun.log, proof log epyc10 L/cut/proof/cut_equiv.log. Pass = CUT_EQUIV_PASS.
-  Both elaborations passed on the first (RA 2) run, which I cancelled myself (unit oth-ubuntu-1188476-1795320546) when the
-  form changed to RA 4. If $equiv cells stay unproven: look for same-named wires two edges apart that the hide cones
-  (prove_cut.sh, @fwd / @bwd) missed, and hide them in the gate.
+- oth-ubuntu-1452654-1795321534 (ot-run client pid 432115 on intel2; epyc10, L/cut/prove_cut.sh): cut form (RA 4) == six-content form. Log
+  ~/fable-fix-head-lep0n-r7/cut_equiv_ra4c_e10.otrun.log, proof log epyc10 L/cut/proof/cut_equiv.log. Pass = CUT_EQUIV_PASS.
+  At 20:3x PST in EQUIV_SIMPLE, 372,023 cells; hide cones 98 (forward) and 1,129 (backward) wires. NOT proven yet.
+  Three earlier runs of mine were cancelled by me (RA 2 form; an empty backward cone; a relaunch that collided with a
+  cancel that had timed out). If $equiv cells stay unproven: look for same-named wires two edges apart that the hide
+  cones (prove_cut.sh, @fwd / @bwd) missed, and hide them in the gate.
 
 ## BLOCKER for COORD: no street cut passes type_split, 846.72 and 855.36 included
 Bus coll_o0 (512 bits, N face, type frame x 831.28-1036.48) straddles every cut in 846.72-967.68. Its pins abut
