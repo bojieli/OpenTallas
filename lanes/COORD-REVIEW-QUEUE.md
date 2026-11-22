@@ -23829,3 +23829,4 @@ FAILED [AUTOPILOT 20d5395e14bc] 2026-11-22 02:40:14 PST AUTOPILOT -> KIT-WAVE-1:
   Still flagged: KV 3 failed (kv3_hub_Wo, kv3_io_cor_v1, kv3_pc__cl254f2e73), QC 1 failed (slw_st_a_v2__cl9f076a5c, FAM-QC-SLWSLE-R1), KV 5 WAIT-BIND.
   STALE: S81 68 (unchanged), QC 7. HEAD clean.
   377 rows no flag; file lanes/OWNERS-SWEEP.tsv
+- 2026-11-22 02:50 PST DONE [FLOW-FLEET-R1] ot-push-main otpush-renewed-glider-1370284 on renewed-glider: rc=0 after 422 s, ended 10:50:49, log none, cmd: ot-push-main 
