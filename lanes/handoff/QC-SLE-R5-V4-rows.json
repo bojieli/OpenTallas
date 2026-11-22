@@ -1,0 +1,15 @@
+{"event":"QC V4 intake: sle_ctl__cla4f6f12f TT classes from variant C","base":"s29q103S4Q9N46R6V2:7f9f8260349f","status":"PROPOSED, not yet proven by a kit",
+ "evidence":"epyc8:/srv/opentallas-scratch2/claude/QC-SLE-R5/sta/tt_meas.out (TT libs, RC=grt, kit frame, variant C 5_1_grt_pre_tt: 2616 violating endpoints, WNS -355.8)",
+ "rows":[
+  {"id":"A","class":"half-cycle port->landing D, no flop: cws2_i -110.8 (400 eps), x_hc1_st_b_i -99.3 (400), cws1_i -92.3 (400)",
+   "tool":"main commit FREG-BUSES-1 (lane clone epyc8 QC-SLE-R5/clone 01a08b2178, ot-push-main in flight; sha follows in a post)",
+   "plan":{"partition_types.sle_ctl__cla4f6f12f.clock.landing_ring_wreg.freg_buses":["cws1_i","cws2_i","x_hc1_st_b_i"],
+           "partition_types.sle_ctl__cla4f6f12f.clock.landing_contract.bands.{cws1_i,cws2_i,x_hc1_st_b_i}.freg_rect_um":"1 x ~89 x 10 um macro-free rect under each bus pin span, inside the die edge (cws2_i pins N face x 1114-1203, y 1339.2 -> rect about [1114,1326,1203,1336]); derive with landing_place band_rects + core boxes",
+           "cws2_i ft regs_um[0]":[1158.813,1338.2]},
+   "sidecar":"every crossing into those three buses: count_aligned.ports[pid].sched_lat +1 and freg:1 (FREG-DECL-1) and the source added_cycles +1; LATCHECK/latency regen as for any +1 cycle (pre-approved)",
+   "cycles":"+1 on 3 buses","expect":"port->face flop budget is a full rising-edge cycle (833 ps) instead of the half cycle (110-130 ps)"},
+  {"id":"B","class":"R8 pad flop -> u_ist_x_su_c_p2_o_0/q D -276 (379 eps), p1 -177 (18): start u_r8b_strap_r8pad_u_rp_chd_q_1_f flop, HB4 hold buffer 188 ps, ~14 repeaters, 1080 ps in one cycle",
+   "plan":{"budgets.r_r8_core_seat":["slw_st_a","sle_st_a","sle_ctl"],"asbuilt.land_pad_tail_split.types":"extend the (sle|slw)_st_a.* selector to include sle_ctl (keep r8_keep true)"},
+   "cycles":0,"caveat":"R8-CORE-SEAT seats at hard-core pin faces; the consumer here is the x_su_c_p2_o station mux, so the seat may not apply: PROVISIONAL, needs a private bind (r8_keep acts only on equal-source groups) and a placed read before adoption; fallback = +1 station on the chd_q_1 R8 path"},
+  {"id":"C","class":"u_u_tap/rst_n -355.8 (one endpoint, reset leg); u_u_ctl chd_q/pc_bad -165/-148","plan":"R12 rprog/hard-tap retap rows (lanes/handoff/QC-SLE-R5-V3-rprog-retap.json, -hard-tap-retap.json) already target this; re-read on the V3 kit. u_u_ctl chd_q/pc_bad not yet diagnosed."}
+ ]}
