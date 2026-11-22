@@ -54,3 +54,12 @@
 - 3_place.odb 07:01 UTC. hop300 (w/hop300_r7a.json): 0 groups >405 except known R2R_MAX 1202.5 u_rrl_11 -> u_cland_fstart_flt_o0 (unchanged since R4). Non-reset >300: u_sel.u_stn_s.g_r chain 78 caps max 314.7, u_sel.u_rn rsreg->o 54 caps 313.7 (both <405; R6 had only u_ids.vr->lo 303.4). Reset relays u_rrl 300-383.
 - Hot window x2250-2450 placed y: cells now spread y380-430 (3138/2576/1765/2035/1728 per 10 um) instead of a single line stack.
 - Geom GRT running (spec geom.live.log); goal auto continues to route. Waiter on my session.
+
+## 11-22 03:xx RESUMED after the weekly limit
+- r7a proof (COL-R6 spec) ended 02:19: route FAIL_POSTCTS at GRT TT gate. GRT overflow 323 (try5 16,786) -> J8 row 1 spread PROVEN for congestion.
+- STA breakdown (epyc10 s81-bksel-r7/w/bksel_ids: viol_tt.tsv, sta_path.log, sta_r01.log, sta_mac.log; scripts sta_*.tcl/sh, docker openroad full path /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad):
+  4,876 eps g_q -> u_stn_s/o r[0] -337/-362 (quarter eco3 view OLL 2 negedge out-face; core tap padded 262 ps by tap_balance tb0 chain), 463 u_ids to -1928, 110 u_c->u_stn_c -62, u_g +/-65, fstart -406.
+  Per-core window: g_q OUT -251..-362, IN +217..+286 -> no clock-only fix. NEG0 r0->r1 half-cycle -72/-57/-46.
+- Posted BLOCKER with options A (re-sign bksel_q OLL 0), B (+1 stage; t_s/t_c blocked: u_c XDX uses RS/RC), C (NEG0 + quarter clock ~100 ps early + r[0] re-site). Default A at 05:00 if no ruling.
+- RTL candidates (epyc10 w/bksel_ids): selids_A/B.sv (u_ids remaining-count; B + cnt/pre registered from vo[99:84]), dsdv_bk_sel_neg0.sv (dsdv_bk_stn NEG0, define OT_BKSEL_NEG0, inert unless set). Sim PASS (tb3 23,607 x3 MUT; tb_stn 1,990). Formal BMC/induction yosys running (eq_*.log).
+- Private fork tree_ids (ot-tree-fork of tree_r6, 53.7 GB) patched: dsdv_bk_sel.sv eb490a6c, portfix178 dsdv_idx_l20s.sv 5716d3de. plan_r7b.json (8e55cee7) = r7a + row3 fstart + OT_BKSEL_NEG0. Strict elab/bind/LATCHECK/PRE running (bind_r7b.sh, log w/bind_r7b/).
