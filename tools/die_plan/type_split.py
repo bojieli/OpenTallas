@@ -1256,7 +1256,7 @@ class TypeSplit:
         known = {"tap_um", "layer", "insertion_ps", "insertion_tol_ps", "tap_pitch_um", "tap_edge_y_um", "taps",
                  "core_taps", "edge_clocks", "landing_contract", "added_taps", "tap_mode", "sink_sites_um",
                  "reach_fix_sinks", "tap_radius_um", "tap_max_sinks", "tap_target_sinks", "die_islands_um",
-                 "keepouts_um", "sink_bins_file", "landing_ring_wreg"}
+                 "keepouts_um", "sink_bins_file", "landing_ring_wreg", "landing_local_resets"}
         drop = set(self.ev.spec.get("drop_clock_keys") or [])
         unk = set(ck) - known - drop
         if unk:
@@ -1276,7 +1276,8 @@ class TypeSplit:
             c = T[i]["clock"] = {k: copy.deepcopy(v) for k, v in ck.items()
                                  if k not in ("taps", "edge_clocks", "landing_contract", "added_taps", "sink_sites_um",
                                               "reach_fix_sinks", "tap_um", "tap_edge_y_um", "die_islands_um",
-                                              "keepouts_um", "sink_bins_file", "landing_ring_wreg") and k not in drop}
+                                              "keepouts_um", "sink_bins_file", "landing_ring_wreg",
+                                              "landing_local_resets") and k not in drop}
             for k in ("die_islands_um", "keepouts_um"):
                 if k in ck:
                     # a reservation / keep-out rect is kept on every piece it touches (clipped: the part inside)
@@ -1434,6 +1435,34 @@ class TypeSplit:
                 if bs:
                     T[i]["clock"]["landing_ring_wreg"] = copy.deepcopy(wr) | {"buses": bs}
         self._landing_contract(ck.get("landing_contract"))
+        if "landing_local_resets" in ck:
+            self._local_resets(ck["landing_local_resets"])
+
+    def _local_resets(self, rows):
+        """clock.landing_local_resets (DIE-HEAD-38 R1 copies; S81 J7 START forms, FLOW-STRIPBODY-R2): each copy goes to the
+        piece that holds its site xy_um (shifted to the piece frame) with its consumers.  A consumer landing of a bus
+        (u_cland_<kind>_<bus>) must sit in the bus's piece and the count origin (u_cland_origin) in the keep piece, else
+        the copy would drive across a cut: fail closed.  The raw relay name is re-picked by the bind (LOCAL-RESET-RAW-1);
+        clock.reset_tree_anchor (whole-type input hashes) is a spec drop_clock_keys re-derivation."""
+        cut, T = self.cut, self.T
+        buses = sorted(self.bus_piece, key=len, reverse=True)
+        out = [[] for _ in range(self.n)]
+        for r in rows:
+            i = cut.ppiece(r["xy_um"], f"{self.tn} landing_local_resets {r.get('name')}")
+            for c in r.get("consumers") or []:
+                if c == "u_cland_origin":
+                    want = self.keep
+                else:
+                    b = next((b for b in buses if c.endswith("_" + b) and c.startswith("u_cland_")), None)
+                    want = self.bp(b) if b is not None else i
+                if want != i:
+                    raise SplitError(f"{self.tn}: landing_local_resets {r.get('name')} at {r['xy_um']} (piece {i}) has "
+                                     f"consumer {c} in piece {want}")
+            out[i].append(copy.deepcopy(r) | {"xy_um": cut.sh(r["xy_um"], i)})
+        for i in range(self.n):
+            if out[i]:
+                T[i]["clock"]["landing_local_resets"] = out[i]
+        self.rep["local_resets"] = {self.tnames[i]: [r["name"] for r in out[i]] for i in range(self.n) if out[i]}
 
     def _load_sink_bins(self, path):
         import taps

@@ -862,3 +862,31 @@ def test_reset_consumer_sites_are_dropped_per_piece():
     assert all("consumer_sites_um" not in ts.T[i]["reset"] for i in range(2))
     assert ts.rep["reset_consumer_sites_dropped"] == ["T", "Te"]
     assert ts.T[1]["reset"]["local_taps_um"] == [[420.0, 50.0]]
+
+def _local_reset_split(rows):
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.n, ts.keep = "t", 3, 1
+    ts.tnames = ["t__strip_S", "t", "t__strip_N"]
+    ts.cut = TS.Cut("y", [43.2, 1183.68], 1226.88)
+    ts.bus_piece = {"ft0_o": 0, "leafdn_o3": 0, "xring_o0": 1, "leafup_o1": 2}
+    ts.T = [{"clock": {}} for _ in range(3)]
+    ts.rep = {}
+    ts._local_resets(rows)
+    return ts
+
+
+def test_landing_local_resets_follow_their_site_and_consumers():
+    # FLOW-STRIPBODY-R2 11-21 (S81 J7 lepe_mu_C t1): a local reset copy goes to the piece of its site, in the piece frame
+    ts = _local_reset_split([
+        {"name": "fstart_0", "raw": "rst_rl_32", "xy_um": [1440.72, 453.792], "consumers": ["u_cland_fstart_xring_o0", "u_cland_origin"]},
+        {"name": "fstart_1", "raw": "rst_rl_135", "xy_um": [75.392, 2.656], "consumers": ["u_cland_fstart_ft0_o"]},
+        {"name": "fstart_9", "raw": "rst_rl_9", "xy_um": [75.392, 1220.0], "consumers": ["u_cland_fstart_leafup_o1"]}])
+    assert [r["name"] for r in ts.T[0]["clock"]["landing_local_resets"]] == ["fstart_1"]
+    assert ts.T[1]["clock"]["landing_local_resets"][0]["xy_um"] == [1440.72, 410.592]
+    assert ts.T[2]["clock"]["landing_local_resets"][0]["xy_um"] == [75.392, 36.32]
+    assert ts.rep["local_resets"] == {"t__strip_S": ["fstart_1"], "t": ["fstart_0"], "t__strip_N": ["fstart_9"]}
+
+
+def test_landing_local_reset_consumer_across_a_cut_fails_closed():
+    with pytest.raises(TS.SplitError, match="consumer u_cland_fstart_leafdn_o3 in piece 0"):
+        _local_reset_split([{"name": "f", "raw": "r", "xy_um": [400.0, 300.0], "consumers": ["u_cland_fstart_leafdn_o3"]}])
