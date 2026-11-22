@@ -248,6 +248,7 @@ class BindStage:
             raise G.BuildError(f"tree {a.tree} missing on {os.uname().nodename}")
         # real paths: a tree reached through a scratch alias (epyc2: scratch2 -> scratch3) is still the tree
         self.plan = Path(os.path.realpath(a.plan))
+        self.remap_base = getattr(a, "remap_base", None)
         self.asbuilt = Path(os.path.realpath(a.asbuilt)) if a.asbuilt else None
         self.rt_dir, self.rt_sha = rt_resolve(a.rt)
         self.env = {}
@@ -389,6 +390,9 @@ class BindStage:
         argv = ["check", "--tree", self._launch(), "--plan", self.plan, "--skip", "TOOLSTALE", "--json", js, "--quiet"]
         if self.asbuilt:
             argv += ["--asbuilt", self.asbuilt]
+        rb = getattr(self, "remap_base", None) or os.environ.get("OT_PLAN_REMAP_BASE")
+        if rb:                                           # REMAP-BASE-1122; without it plan_gate_pre falls back to <plan dir>/bind_of_record
+            argv += ["--remap-base", rb]
         try:
             self._tool("plan_gate_pre.py", argv, "pre.log", ok=(0, 1))
             got = load_json(js)
@@ -607,6 +611,7 @@ def parser():
     b.add_argument("--upto", choices=BIND_NODES)
     b.add_argument("--force", action="append", default=[], choices=BIND_NODES)
     b.add_argument("--type", action="append", default=[], help="report this type's plan-block and bound-RTL hashes (kit stamp inputs)")
+    b.add_argument("--remap-base", help="REMAP-BASE-1122: base plan for plan_gate_pre LANDREMAP / ISTCYC (default $OT_PLAN_REMAP_BASE, else the tree bind_of_record plan)")
     b.add_argument("--r8-pin-pre")
     b.add_argument("--r8-pin-extra")
     b.set_defaults(fn=cmd_bind)

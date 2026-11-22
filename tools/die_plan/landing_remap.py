@@ -17,6 +17,13 @@ still resolve to the same relay / tap is left byte-identical.  A reference that 
 landing_raw_branches stage on the landing-side relay cland_reset_<bus>) is never rewritten; the receipt lists it under
 resets[].kept.  Output: the new plan with every reference rewritten
 plus a receipt (old -> new, moved um, overlap).
+IDENTITY pass (PORTPAD-1122, FLOW-OPS-R2; OPUS-FIX-KV-HGI-R6 padremap.py): after the reset step, every landing reset reference
+(plan_gate_pre.landing_reset_refs: clock sections, collector_tree excluded) that still names at the SAME plan path the same
+rst_rl_<k> as OLD while that name is another relay of the NEW tree is rewritten to the unique NEW relay with the same identity
+(depth, site, kind) -- the exact rule of plan_gate_pre LANDREMAP, so a plan this pass leaves clean passes that check.  It covers
+the port-pad relay chain at a reset port (kind 'pad'), which reset_resel skips ("chain ends") or refuses ("tree relay after a
+non-tree stage"): a type whose reset_resel step errors is restored and taken by the identity pass alone.  No unique same-identity
+relay -> RemapError (fail closed; the landing branch needs a plan row, not a rename).
 
   python3 landing_remap.py OLD_PLAN NEW_PLAN OUT [--types T1,T2] [--root DIR] [--receipt FILE] [--keep-anchor]
 """
@@ -188,6 +195,68 @@ def _xy_restore(t, snap, max_um):
     return far
 
 
+def relay_identity_map(tree):
+    """{relay name: (depth, (x, y) rounded 0.01, kind)} of a reset tree (plan_gate_pre LANDREMAP identity)"""
+    return {x["q"]: (x.get("depth"), tuple(round(float(c), 2) for c in x.get("xy") or ()), x.get("kind")) for x in tree["relays"]}
+
+
+def _get(node, path):
+    for k in path:
+        node = node[int(k)] if isinstance(node, list) else node[k]
+    return node
+
+
+def _set(node, path, v):
+    node = _get(node, path[:-1])
+    if isinstance(node, list):
+        node[int(path[-1])] = v
+    else:
+        node[path[-1]] = v
+
+
+def identity_remap(old_raw, new_raw, names, ident_fn, strict=True, skipped=None):
+    """PORTPAD-1122: rewrite stale same-path references by relay identity.  ident_fn(raw, tn) -> {name: identity}.
+    -> [{type, path, old, new, identity}].  strict (identity mode, or a type reset_resel refused): a stale reference without a
+    unique same-identity NEW relay, or a tree that does not build, raises RemapError; not strict (after a reset_resel that
+    succeeded): such references are left as reset_resel chose them and listed in `skipped`."""
+    import plan_gate_pre as G
+    out = []
+    skipped = [] if skipped is None else skipped
+    for tn in names:
+        rn = G.landing_reset_refs(new_raw["partition_types"][tn])
+        rb = G.landing_reset_refs(old_raw["partition_types"][tn])
+        same = {pth: v for pth, v in rn.items() if rb.get(pth) == v}
+        if not same:
+            continue
+        try:
+            tb, tw = ident_fn(old_raw, tn), ident_fn(new_raw, tn)
+        except Exception as e:  # noqa: BLE001
+            if strict:
+                raise RemapError(f"{tn}: identity remap: reset tree not built: {type(e).__name__}: {str(e)[:200]}") from e
+            skipped.append(f"{tn}: identity pass skipped (reset tree not built: {type(e).__name__})")
+            continue
+        stale = {pth: v for pth, v in same.items() if tb.get(v) != tw.get(v)}
+        if not stale:
+            continue
+        inv = {}
+        for n, idt in tw.items():
+            inv.setdefault(idt, []).append(n)
+        bad = []
+        for pth, v in sorted(stale.items()):
+            cand = inv.get(tb.get(v), [])
+            if len(cand) != 1:
+                bad.append(f"{pth} = {v} {tb.get(v)}: {len(cand)} NEW relay(s) of that identity")
+                continue
+            keys = pth.split("/")
+            _set(new_raw["partition_types"][tn], keys, cand[0])
+            out.append(dict(type=tn, path=pth, old=v, new=cand[0], identity=[str(x) for x in tb.get(v) or ()]))
+        if bad and not strict:
+            skipped.append(f"{tn}: identity pass left {len(bad)} reference(s) as reset_resel chose them: " + "; ".join(bad[:3]))
+        elif bad:
+            raise RemapError(f"{tn}: identity remap cannot place {len(bad)} reference(s) (needs a plan row): " + "; ".join(bad[:4]))
+    return out
+
+
 def resel_resets(old_raw, new_raw, names, plan_dir):
     """default reset step: street_rule.reset_resel (exports, pin sources, START stages, local resets by role + depth +
     nearest old site).  -> {type: record}; mutates new_raw."""
@@ -218,7 +287,7 @@ def rerecord_anchors(old_raw, new_raw, names, root, tree_fn, relay_um_fn):
 
 
 def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, tree_fn=None, groups_fn=None, tol_um=None,
-               ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0):
+               ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0, ident_fn=None):
     """rewrite new_raw in place.  resets: 'resel' (street_rule.reset_resel: raw exports, pin sources, START stages, local
     resets) or 'anchor' (reset_anchor record on the OLD tree + resolve on the NEW tree: START stages / local resets only).
     tree_fn(raw, tn) -> reset tree (anchor mode), groups_fn(raw, tn) -> tap groups, resel_fn(old, new, names, dir):
@@ -232,7 +301,7 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         return plans[id(raw)]
     if groups_fn is None:
         groups_fn = lambda raw, tn: tap_groups(plan(raw), tn)  # noqa: E731
-    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[])
+    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[], identity=[], resel_fallback={})
 
     def _tree_fn():
         if tree_fn is not None:
@@ -264,10 +333,23 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         rows = remap_type_taps(tn, t_new, m)
         if rows:
             rec["taps"].append(dict(type=tn, remaps=rows))
+    if ident_fn is None:
+        ident_fn = lambda raw, tn: relay_identity_map(_tree_fn()(raw, tn))  # noqa: E731
+    if resets == "identity":                            # PORTPAD-1122: identity pass only
+        rec["identity"] = identity_remap(old_raw, new_raw, names, ident_fn)
+        rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, _tree_fn(), _relay_um)
+        return rec
     if resets == "resel":
+        import copy as _copy
         fn = resel_fn or resel_resets
         keep = {tn: _xy_snapshot(new_raw["partition_types"][tn]) for tn in names} if keep_xy else {}
+        pre = {tn: _copy.deepcopy(new_raw["partition_types"][tn]) for tn in names}
         out = fn(old_raw, new_raw, [tn for tn in names], plan_dir)
+        for tn, r in list(out.items()):                 # PORTPAD-1122: a type reset_resel refuses goes to the identity pass alone
+            if r.get("error") and tn in pre and "non-tree stage" in str(r["error"]):
+                new_raw["partition_types"][tn] = pre[tn]
+                rec["resel_fallback"][tn] = str(r["error"])[:300]
+                del out[tn]
         for tn in names:
             if keep_xy:
                 far = _xy_restore(new_raw["partition_types"][tn], keep[tn], max_um)
@@ -277,6 +359,13 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             if r.get("error"):
                 raise RemapError(f"{tn}: reset_resel: {r['error']}")
             rec["resets"].append(dict(type=tn, **r))
+        try:
+            rec["identity"] = identity_remap(old_raw, new_raw, [tn for tn in names if tn in rec["resel_fallback"]], ident_fn)
+            rec["identity"] += identity_remap(old_raw, new_raw, [tn for tn in names if tn not in rec["resel_fallback"]], ident_fn,
+                                              strict=False, skipped=rec["skipped"])
+        except RemapError as e:
+            fb = "; ".join(f"{k}: reset_resel {v}" for k, v in rec["resel_fallback"].items())
+            raise RemapError(str(e) + (f" (after {fb})" if fb else "")) from e
         rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, _tree_fn(), _relay_um)
         return rec
     tree_fn = _tree_fn()
@@ -314,7 +403,8 @@ def main(argv):
     ap.add_argument("--keep-anchor", action="store_true")
     ap.add_argument("--move-pins", action="store_true", help="let reset_resel move export rows / landing pins onto the relay (default: rename only, pin sites kept)")
     ap.add_argument("--no-adopt", action="store_true", help="do not take stale compose names from OLD by key first")
-    ap.add_argument("--resets", choices=["resel", "anchor"], default="resel")
+    ap.add_argument("--resets", choices=["resel", "anchor", "identity"], default="resel",
+                    help="resel (default; then the identity pass), anchor, or identity = the PORTPAD-1122 identity pass alone")
     a = ap.parse_args(argv[1:])
     old = json.loads(Path(a.old).read_text())
     new = json.loads(Path(a.new).read_text())
@@ -327,12 +417,17 @@ def main(argv):
     nt = sum(len(r["remaps"]) for r in rec["taps"])
     for tn, ad in rec["adopted"].items():
         print(f"  adopted by key {tn}: {len(ad)} name(s)")
+    nr += len(rec.get("identity") or [])
     print(f"landing_remap: {nr} relay name(s), {nt} tap name(s) rewritten; skipped {len(rec['skipped'])}; "
           f"reset anchors re-recorded {len(rec.get('anchors') or [])}")
     for r in rec["resets"]:
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
         for where, name in r.get("kept") or []:
             print(f"  kept {r['type']}: {where} = {name} (not a relay of the OLD tree)")
+    for tn, e in rec.get("resel_fallback", {}).items():
+        print(f"  reset {tn}: reset_resel refused ({e[:160]}); identity pass only")
+    for r in rec.get("identity") or []:
+        print(f"  identity {r['type']}: {r['path']} {r['old']} -> {r['new']} {tuple(r['identity'])}")
     for r in rec["taps"]:
         for m in r["remaps"]:
             print(f"  tap {r['type']}: {m['name']} -> {m['to']} ({m['moved_um']} um, {m['shared_sinks']} shared sinks)")

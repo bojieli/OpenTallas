@@ -84,3 +84,16 @@ def test_fresh_out_dir_uses_tree_bind_of_record(tmp_path, monkeypatch):
     monkeypatch.setattr(G, "check_landremap", lambda p, base: [f"FAIL LANDREMAP {base}"])
     fresh = tmp_path / "fresh"; fresh.mkdir()
     assert bind._landremap_prev(SimpleNamespace(out=str(fresh), plan=n), G) == [f"FAIL LANDREMAP {b}"]
+
+
+def test_remap_base_resolves_without_the_lane(tmp_path, monkeypatch):
+    n, b = plans(tmp_path, typ(cy=700.0))
+    monkeypatch.delenv("OT_PLAN_REMAP_BASE", raising=False)
+    assert G.remap_base(n)[0] is None
+    bor = Path(n).parent / "bind_of_record"; bor.mkdir()
+    (bor / "provenance_bind.json").write_text(json.dumps({"provenance": {"plan": b}}))
+    assert G.remap_base(n) == (b, "bind_of_record/provenance_bind.json")
+    monkeypatch.setenv("OT_PLAN_REMAP_BASE", b)
+    assert G.remap_base(n)[1] == "$OT_PLAN_REMAP_BASE"
+    assert G.remap_base(n, explicit=b)[1] == "--remap-base"
+    assert G.remap_base(n, explicit=n)[0] is None                         # the plan itself is no base

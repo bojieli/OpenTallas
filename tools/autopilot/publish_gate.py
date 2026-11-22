@@ -364,6 +364,9 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     # QC N2B 11-17: new consumer_localization rows need their rows proof (ROWS-NO-PROOF otherwise); candidate.rows_proofs -> --rows-proof
     for rp in proof_paths(tree, rows_proofs):
         pre += ["--rows-proof", rp]
+    # REMAP-BASE-1122: LANDREMAP / ISTCYC compare with the die's live plan of record (band_base), when the tree's checker knows --remap-base
+    if band_base and os.path.isfile(band_base) and "--remap-base" in Path(dp, "plan_gate_pre.py").read_text(errors="replace"):
+        pre += ["--remap-base", str(band_base)]
     rc1, t1 = _sub(pre, tree)
     Path(work).mkdir(parents=True, exist_ok=True)
     g0_dir = tempfile.mkdtemp(prefix="g0-", dir=work)  # never accept a stale report after a crashed checker

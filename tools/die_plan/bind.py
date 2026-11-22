@@ -7505,6 +7505,16 @@ def _plan_expect(B, p, a):
     return None
 
 
+def _prev_bind_plan(a):
+    """REMAP-BASE-1122: the plan of OUT/provenance_bind.json (a seeded / re-used out dir), else None (plan_gate_pre then falls back to
+    <plan dir>/bind_of_record/provenance_bind.json itself)"""
+    try:
+        prev = json.loads((Path(a.out) / "provenance_bind.json").read_text())["provenance"]["plan"]
+        return prev if prev and Path(prev).is_file() else None
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 def _landremap_prev(a, G):
     """LANDREMAP-1122: findings of plan_gate_pre.check_landremap(a.plan, PREV) where PREV is the plan of OUT/provenance_bind.json
     (a seeded / re-used out dir), else of <plan dir>/bind_of_record/provenance_bind.json (a fresh out dir in a tree that carries
@@ -7555,9 +7565,12 @@ def _plan_gate_pre(a):
     try:
         # BIND-SPEED-1118: the elab output of this run (OUT/asbuilt.json) lets the row checks (ROWSINK, MODULES) run here too;
         # a tool older than the live tree is a warning in a bind (an event may pin its tools), a FAIL in bind_fast.py precheck
+        import inspect as _insp
+        _new = "remap" in _insp.signature(G.check).parameters      # REMAP-BASE-1122: the checker resolves the LANDREMAP / ISTCYC base itself
+        _kw = dict(remap=_prev_bind_plan(a)) if _new else {}
         fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"),
                      elab_dir=a.out, ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
-                     toolstale_level="WARN", abspath_level="warn")      # ABSPATH-1122: a bind warns, G0 / compose refuse
+                     toolstale_level="WARN", abspath_level="warn", **_kw)      # ABSPATH-1122: a bind warns, G0 / compose refuse
     except (OSError, ValueError) as e:
         print(f"bind: plan_gate_pre could not read its inputs: {e}")
         return 0 if mode == "warn" else 2
@@ -7568,7 +7581,7 @@ def _plan_gate_pre(a):
         print(f"bind: REFUSED by plan_gate_pre ({len(fails)} findings; OT_PLAN_GATE_PRE=warn or off to override, "
               f"tools/die_plan/plan_gate_pre.py check --tree . --plan {a.plan} to re-run)")
         return 2
-    if not base and "LANDREMAP" not in os.environ.get("OT_PLAN_GATE_SKIP", "").upper():
+    if not base and not _new and "LANDREMAP" not in os.environ.get("OT_PLAN_GATE_SKIP", "").upper():
         # LANDREMAP-1122: no adopted baseline named -> compare with the plan the previous bind into this OUT was made from
         lr = _landremap_prev(a, G)
         for x in lr:

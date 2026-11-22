@@ -67,6 +67,11 @@ DEADIN-1122 (FLOW-OPS-R2, COORD): with an as-built that names dead_input_proofs,
   validation (repository-relative paths, PASS verdict, defines / re-proofs, dependency module hashes, selected source) runs here,
   before the elab: OPUS-FIX-S81-COLROM-R6 kit G lost 28 min of elab to "dead-input proof must be repository-relative".
 
+REMAP-BASE-1122 (FLOW-OPS-R2, COORD): LANDREMAP and ISTCYC compare against the remap base, resolved without the lane naming
+  it: --remap-base, else --baseline-plan, else $OT_PLAN_REMAP_BASE, else the plan recorded in <plan dir>/bind_of_record/
+  provenance_bind.json (the tree's last bind).  publish_gate passes the die's live plan (kit_wave.json), ot_build passes its
+  --remap-base / the same fallback, private-spec the wave plan it forks from.  The base used is printed as a WARN-free LIST line.
+
 TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with clock.added_taps, the density base is solved
   exactly as the bind does (taps._density_base) and the added names must be clk_t<base>, clk_t<base+1>, ... in order (cbf_q00
   clk_t101 for t114, coll_core clk_t130 for t126: EMIT "density added tap names/order must be ..." after 30+ min of bind).
@@ -732,6 +737,16 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4):
         stale = sorted((p, v) for p, v in same.items() if tb.get(v) != tw.get(v))
         if not stale:
             continue
+        inv = {}
+        for n_, idt in tw.items():
+            inv.setdefault(idt, []).append(n_)
+        nofix = [(p, v) for p, v in stale if len(inv.get(tb.get(v), [])) != 1]
+        if nofix:                                        # PORTPAD-1122: landing_remap's identity pass cannot place these; never suggest it
+            ex = "; ".join(f"{p} = {v} {tb.get(v)}: {len(inv.get(tb.get(v), []))} new relay(s) of that identity" for p, v in nofix[:max_list])
+            out.append(f"FAIL LANDREMAP-NOREMAP {tn}: {len(nofix)} landing reset reference(s) name a relay with no unique successor "
+                       f"in the new reset tree ({ex}); landing_remap cannot fix this: re-site the landing branch with a plan row")
+            if len(nofix) == len(stale):
+                continue
         bad.append(tn)
         ex = "; ".join(f"{p} = {v} was {tb.get(v)} now {tw.get(v)}" for p, v in stale[:max_list])
         out.append(f"FAIL LANDREMAP {tn}: {','.join(mv[tn][:3])} moved vs baseline but {len(stale)} landing reset "
@@ -1028,10 +1043,33 @@ def _tap_ref_names(ck):
     return out
 
 
+def remap_base(plan, explicit=None, baseline=None):
+    """(path, how) of the LANDREMAP / ISTCYC base (REMAP-BASE-1122); (None, why) when none resolves or it is the plan itself"""
+    cands = [(explicit, "--remap-base"), (baseline, "--baseline-plan"), (os.environ.get("OT_PLAN_REMAP_BASE"), "$OT_PLAN_REMAP_BASE")]
+    try:
+        prov = json.loads((Path(plan).parent / "bind_of_record" / "provenance_bind.json").read_text())["provenance"]["plan"]
+        cands.append((prov, "bind_of_record/provenance_bind.json"))
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    for c, how in cands:
+        if not c:
+            continue
+        try:
+            if not Path(c).is_file():
+                continue
+            if Path(c).resolve() == Path(plan).resolve() or Path(c).read_bytes() == Path(plan).read_bytes():
+                return None, f"{how} {c} is the plan itself"
+        except OSError:
+            continue
+        return str(c), how
+    return None, "no base (pass --remap-base, set $OT_PLAN_REMAP_BASE, or keep the tree bind_of_record)"
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
-          toolstale_level="FAIL", abspath_level=None):
+          toolstale_level="FAIL", abspath_level=None, remap=None):
     findings = []
+    rb, rb_how = remap_base(plan, remap, baseline) if not {"LANDREMAP", "ISTCYC"} <= {s.upper() for s in skip} else (None, "")
     skip = {s.upper() for s in skip}
     if "SCHEMA" not in skip:
         findings += check_schema(tree, plan, compose_tree)
@@ -1044,13 +1082,13 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "GEOM" not in skip:
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
-        findings += check_landremap(plan, baseline)
+        findings += check_landremap(plan, rb)
     if "TAPNAME" not in skip:                            # TAPNAME-1122: density added tap names, seconds before the bind
         findings += check_tapname(plan)
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
-        findings += check_istcyc(plan, baseline)
+        findings += check_istcyc(plan, rb)
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
@@ -1061,6 +1099,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
+    if rb:
+        findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
 
 
@@ -1074,6 +1114,7 @@ def main(argv=None):
     c.add_argument("--asbuilt")
     c.add_argument("--compose-tree")
     c.add_argument("--baseline-plan")
+    c.add_argument("--remap-base", help="REMAP-BASE-1122: base plan for LANDREMAP / ISTCYC only (default: --baseline-plan, $OT_PLAN_REMAP_BASE, <plan dir>/bind_of_record)")
     c.add_argument("--rows-proof", action="append", default=[])
     c.add_argument("--rows", action="append", default=[])
     c.add_argument("--skip", action="append", default=[], choices=CLASSES)
@@ -1117,7 +1158,7 @@ def main(argv=None):
         return 0
     try:
         f = check(a.tree, a.plan, a.sidecar, a.asbuilt, a.compose_tree, a.baseline_plan, a.rows_proof, a.rows, a.skip,
-                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools)
+                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools, remap=a.remap_base)
     except (OSError, ValueError) as e:
         print(f"plan_gate_pre: cannot read input: {e}", file=sys.stderr)
         return 2
