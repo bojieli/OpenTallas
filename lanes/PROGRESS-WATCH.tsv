@@ -247,3 +247,4 @@ time	die	class	state	posted	text
 2026-11-22 06:26:17	qwen_compute	NO-PROGRESS	alert	yes	NO-PROGRESS qwen_compute: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 62 min (last 05:24); blocker: plan event s29q103S4Q9N46R6V2 pending (the wave waits for it); 19 hold(s): 17 without eta, 0 overdue, next eta 11-23 12:00
 2026-11-22 06:56:42	s81_head	NO-PROGRESS	alert	yes	NO-PROGRESS s81_head: 10 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 431 min (last 23:44); NO-LAUNCH x24
 2026-11-22 07:06:59	s81	STUCK-STATE	alert	yes	STUCK-STATE s81: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. phy__t1, 2026-11-21 04:14)
+2026-11-22 07:17:18	qwen_compute	STUCK-STATE	alert	yes	STUCK-STATE qwen_compute: 10 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9, 2026-11-22 05:20)
