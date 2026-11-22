@@ -35,3 +35,7 @@ Lane clone epyc9 /srv/opentallas-scratch2/claude/fam-s81-serdes-r7-core = main 5
 - J8: 6 serdes START ops READY alone (posted). PHY/ENG: plan_j8p3 = J8 + phy_eng_pair_delta(31) + eng_view_lib_delta + eng_ft_regs_fix.json(2) + phy_seam_shift.json(7). Gate gates/J8p3 (intel2 PID 1615013). Then rerun phy__t1 private kit on candJ8s (spec copy of s81_phy__t1_1121214212) -- previous GRT-0116 NE corner hotspot.
 - t4 front3: decf3_r7a routed EXIT 0; sign-off signoff_f3.sh (intel2 PID 1537550, rt 6d2e187f0d65). Rows: gen_split_front3_delta.py + layout (dec module ot_s81_kp4_dec_lp_core_front3, extra_defines OT_S81_SERDES_RX_FRONT3, core_taps for u_core.u_dec / u_core.u_enc).
 - R8 exists (Codex-side?) and owns t12/t14/t16 per my RESUMED post.
+
+## 06:1x
+- dec_r7k CLOSED: hold ECO broke TT (-89 on CMEM->bsrc); not exported; superseded by front3 decf3_r7a (R8 owns t4 front3 rows + export).
+- PHY/ENG rows READY in lanes/handoff/FAM-S81-SERDES-R7-j8-phy-eng (J8p3 gate clean). phy__t1 J8p3 kit: GRT ovf 42 (was 225), GRT-0116 NE corner. J8p4 = + macro x -0.012 (phy_macro_grid.json); kit run-item intel2 PID 1801800 (log ~/fam-s81-serdes-r7/phy_t1_j8p4_runitem.log, spec s81_phy__t1_1122061135). candJ8s tree plan = J8p4 now.

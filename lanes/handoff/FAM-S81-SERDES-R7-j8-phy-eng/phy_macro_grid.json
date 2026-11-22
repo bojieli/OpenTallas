@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.j6_donor_delta.v1",
+ "lane": "FAM-S81-SERDES-R7",
+ "base": "J8p3 9fe026d10b26",
+ "note": "phy__t1 HBM PHY macro x 77.76 -> 77.748: puts its 14,150 M5 signal pins on the M5 track grid (offset 0.024 pitch 0.048; they were 12 nm off = preflight macro_pin_grid FAIL) under the NE-corner GRT-0116 hotspot (M5 vertical at the macro top edge). M7 pins (5,754) move from 12 to 24 nm off (no shift aligns both grids). 0 cycles.",
+ "ops": [
+  {
+   "op": "replace",
+   "path": "/partition_types/phy__t1/contents/0/origin_um",
+   "expected_old": [
+    77.76,
+    4.32
+   ],
+   "value": [
+    77.748,
+    4.32
+   ]
+  }
+ ]
+}
