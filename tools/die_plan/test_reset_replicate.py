@@ -425,6 +425,19 @@ def test_rsync_sync_tail_text_and_errors():
         RR.apply(mod(7), [dict(SPEC[0], tail_clear="sync")])
 
 
+def test_rsync_async_tail_clears_from_the_sync_output():
+    spec = [dict(RS_SPEC[0], tail_clear="sync_output")]
+    ref, _ = RR.apply(rs_mod(6), RS_SPEC)
+    assert ref.count(".a(ri_pv_rst_n), .d(ri_pv_rst_n_q[0])") == 4
+    new, report = RR.apply(rs_mod(6), spec)
+    assert ref.replace(".a(ri_pv_rst_n), .d(ri_pv_rst_n_q[0])",
+                       ".a(ri_pv_rst_n_q[0]), .d(ri_pv_rst_n_q[0])") == new
+    assert report[0]["copy_depth"] == 4
+    assert report[0]["tail_clear"] == "sync_output" and report[0]["assert_delay_clk"] == 0
+    with pytest.raises(RR.ReplicateError, match="sync_output needs form rsync"):
+        RR.apply(mod(7), [dict(SPEC[0], tail_clear="sync_output")])
+
+
 @pytest.mark.skipif(not shutil.which("iverilog"), reason="iverilog")
 def test_rsync_sync_tail_bench_iverilog(tmp_path):
     """BENCH (COORD approval of the sync-tail form): one 6-stage synchroniser (all stages spine-cleared) vs synchroniser + per-core
