@@ -56,7 +56,11 @@ HASHFILE = ".src-manifest.sha256"
 LOG = os.path.expanduser("~/.local/state/ot-tree-fork/forks.jsonl")
 COPY_LOCK_DIR = os.environ.get("OT_TREE_COPY_LOCK_DIR", "/var/tmp/ot-tree-copy")
 TREE_INDEX = os.path.expanduser(os.environ.get("OT_TREE_INDEX", "~/.local/state/ot-tree-copy/trees.jsonl"))
-SSH = os.environ.get("OT_TREE_FORK_SSH", "ssh -o BatchMode=yes -o ControlPath=none").split()
+# FLOW-FLEET-R2 11-22 (FABLE-FLOW-0800): the HROOT fork fetched epyc8 -> epyc7 at about 1.6 GB/h: ONE tar stream over a default-cipher ssh.  Now (1) a host that already holds a
+# same-manifest tree is asked first (HOLDER_HOSTS, their trees.jsonl index), and (2) the fetch runs STREAMS parallel tar streams over a fast cipher, files balanced by size.
+SSH = os.environ.get("OT_TREE_FORK_SSH", "ssh -o BatchMode=yes -o ControlPath=none -o Compression=no -c aes128-gcm@openssh.com").split()
+STREAMS = int(os.environ.get("OT_TREE_FORK_STREAMS", "4"))
+HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10").split(",") if h]
 VERSION = 1
 
 
@@ -275,9 +279,87 @@ def ssh_out(host, cmd, timeout=600):
     return p.returncode, p.stdout
 
 
+def parse_holder_index(text, h):
+    """trees.jsonl text of a host -> paths of trees with manifest hash h, newest first"""
+    out = []
+    for ln in reversed(text.splitlines()[-20000:]):
+        try:
+            e = json.loads(ln)
+        except ValueError:
+            continue
+        if e.get("hash") == h and e.get("path") and e["path"] not in out and not e["path"].endswith(".part"):
+            out.append(e["path"])
+    return out
+
+
+def find_holder(h, skip=(), hosts=None, ask=None):
+    """-> (host, path) of another fleet host that holds a verified tree of manifest hash h (its tree index names it and the tree's own hash file agrees), else None"""
+    ask = ask or ssh_out
+    here = socket.gethostname().split(".")[0]
+    for host in (HOLDER_HOSTS if hosts is None else hosts):
+        if host == here or host in skip:
+            continue
+        rc, txt = ask(host, "tail -n 20000 ~/.local/state/ot-tree-copy/trees.jsonl 2>/dev/null", timeout=60)
+        if rc != 0:
+            continue
+        for pth in parse_holder_index(txt, h)[:3]:
+            rc, got = ask(host, f"cat {shlex.quote(pth + '/' + HASHFILE)} 2>/dev/null", timeout=60)
+            if rc == 0 and got.strip() == h:
+                return host, pth
+    return None
+
+
+def partition(entries, k):
+    """entries [(size, relpath)] -> k lists of relpaths with about equal bytes (largest first onto the lightest list)"""
+    bins = [[0, []] for _ in range(max(1, k))]
+    for size, rel in sorted(entries, key=lambda e: -e[0]):
+        b = min(bins, key=lambda x: x[0])
+        b[0] += size; b[1].append(rel)
+    return [b[1] for b in bins if b[1]]
+
+
+def list_remote(src_host, src):
+    """-> ([dirs], [(size, relpath)] of every non-directory entry), without FORK_JSON"""
+    rc, txt = ssh_out(src_host, f"cd {shlex.quote(src)} && find . -mindepth 1 -printf '%y %s %P\\n'", timeout=1800)
+    if rc != 0:
+        raise SystemExit(f"TREE-FORK FETCH FAILED {src_host}:{src}: listing rc {rc}")
+    dirs, files = [], []
+    for ln in txt.splitlines():
+        t, sz, rel = ln.split(" ", 2)
+        if rel == FORK_JSON:
+            continue
+        (dirs if t == "d" else files).append(rel if t == "d" else (int(sz), rel))
+    return dirs, files
+
+
+def fetch_parallel(src_host, src, into, streams, out=print):
+    """directories first (one small stream), then STREAMS tar streams of size-balanced file lists; any failing stream fails the fetch"""
+    dirs, files = list_remote(src_host, src)
+    q = shlex.quote
+    base = " ".join(q(x) for x in ["timeout", "86400"] + SSH + [src_host])
+    procs = []
+    if dirs:
+        p = subprocess.Popen(["bash", "-c", f"set -o pipefail; {base} {q(f'tar -C {q(src)} --no-recursion -cf - -T -')} | tar -C {q(into)} -xpf -"], stdin=subprocess.PIPE, text=True)
+        p.communicate("\n".join(dirs) + "\n")
+        if p.returncode:
+            raise SystemExit(f"TREE-FORK FETCH FAILED {src_host}:{src} -> {into}: directories rc {p.returncode} (partial copy kept: delete it with ot-delete {into})")
+    for i, lst in enumerate(partition(files, streams)):
+        p = subprocess.Popen(["bash", "-c", f"set -o pipefail; {base} {q(f'tar -C {q(src)} --no-recursion -cf - -T -')} | tar -C {q(into)} -xpf -"], stdin=subprocess.PIPE, text=True)
+        p.stdin.write("\n".join(lst) + "\n"); p.stdin.close()
+        procs.append(p)
+    out(f"TREE-FORK FETCH {src_host}:{src}: {len(files)} files, {len(dirs)} dirs in {len(procs)} parallel stream(s)")
+    bad = [p.wait() for p in procs]
+    if any(bad):
+        raise SystemExit(f"TREE-FORK FETCH FAILED {src_host}:{src} -> {into} rc {max(bad)} (partial copy kept: delete it with ot-delete {into})")
+
+
 def fetch(src_host, src, into, out=print):
     """tar SRC from src_host into the fresh dir INTO under a copy slot of this host.  -> bytes fetched (du of INTO)"""
     os.makedirs(into)
+    if STREAMS > 1:
+        with CopySlot(out=out, what=f"fetch {src_host}:{src}"):
+            fetch_parallel(src_host, src, into, STREAMS, out)
+        return sum(os.lstat(os.path.join(dp, f)).st_size for dp, _dn, fn in os.walk(into) for f in fn)
     with CopySlot(out=out, what=f"fetch {src_host}:{src}"):
         remote = f"tar -C {shlex.quote(src)} --exclude=./{FORK_JSON} -cf - ."
         cmd = " ".join(shlex.quote(x) for x in ["timeout", "86400"] + SSH + [src_host, remote]) + f" | tar -C {shlex.quote(into)} -xpf -"
@@ -318,7 +400,17 @@ def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=pr
                 else:
                     tmp = f"{local}.fetch-{os.getpid()}"
                     os.makedirs(os.path.dirname(local), exist_ok=True)
-                    n = fetch(src_host, src, tmp, out)
+                    hold = find_holder(h, skip=(src_host,))             # a host that already holds this manifest tree: fetch from it first
+                    fsrc = (hold[0], hold[1]) if hold else (src_host, src)
+                    if hold:
+                        out(f"TREE-FORK HOLDER {hold[0]}:{hold[1]} holds manifest {h[:12]}; fetching from it instead of {src_host}")
+                    try:
+                        n = fetch(fsrc[0], fsrc[1], tmp, out)
+                    except SystemExit:
+                        if not hold:
+                            raise
+                        out(f"TREE-FORK HOLDER fetch failed; falling back to {src_host}:{src}")
+                        n = fetch(src_host, src, tmp + ".b", out); tmp = tmp + ".b"
                     bad = same_manifest(tmp, h, full=True)
                     if bad:
                         raise SystemExit(f"TREE-FORK FETCH CHECK FAILED {tmp}: {bad} (not the manifest {h[:12]} of {src_host}:{src}; delete it with ot-delete {tmp})")

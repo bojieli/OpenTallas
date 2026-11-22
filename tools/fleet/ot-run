@@ -1660,6 +1660,83 @@ def take_cancel_reason(pid):
     return txt[0] if txt and txt[0] in CANCEL_REASONS else None
 
 
+# FLOW-FLEET-R2 C2 (FABLE-FLOW-0800): `ot-run --cancel` found no unit about 25 % of the time (15 cancels: 4 "(no client)", 11 cancel-dir DEAD-CLIENT): it looks for the live client process,
+# and a job whose client is gone, or sits on another host, has no entry.  Every submit now appends one line to a ledger on the submitting machine (the hub for lane jobs):
+# {ts, tag, pid, node, dir, lane, hosts, cmd}.  --cancel with no live client resolves the selector from the ledger -- an exact dir, an exact tag (otrun-<node>-<pid>-), the pid
+# of the old client, or lane:<LANE> -- and stops every unit and container of that tag on every fleet host (ot-heavy-stop --tag), then the exact dir's containers.
+SUBMIT_LEDGER = os.path.expanduser(os.environ.get("OT_RUN_LEDGER", "~/.local/state/ot-run/submit.jsonl"))
+LEDGER_MAX_AGE_H = 96
+LEDGER_KEEP_LINES = 20000
+
+
+def ledger_write(d, hosts, cmd, ledger=None, now=None, pid=None, node=None):
+    """append this client's submit record; never raises.  -> the record or None"""
+    ledger = ledger or SUBMIT_LEDGER
+    pid = pid or os.getpid(); node = node or socket.gethostname().split(".")[0]
+    rec = {"ts": int(now or time.time()), "tag": f"otrun-{node}-{pid}-", "pid": pid, "node": node, "dir": os.path.normpath(d) if d else "",
+           "lane": os.environ.get("OT_LANE", ""), "hosts": list(hosts or [])[:12], "cmd": " ".join(str(x) for x in (cmd or []))[:200]}
+    try:
+        os.makedirs(os.path.dirname(ledger), exist_ok=True)
+        if os.path.exists(ledger) and os.path.getsize(ledger) > 8 << 20:
+            keep = open(ledger).read().splitlines()[-LEDGER_KEEP_LINES:]
+            tmp = ledger + f".{pid}.tmp"
+            open(tmp, "w").write("\n".join(keep) + "\n"); os.replace(tmp, ledger)
+        with open(ledger, "a") as fh:
+            fh.write(json.dumps(rec) + "\n")
+        return rec
+    except OSError:
+        return None
+
+
+def ledger_find(sub, ledger=None, now=None):
+    """ledger records a --cancel selector names (newest first): an exact dir, an exact tag, a client pid, or lane:<LANE>; only records of the last LEDGER_MAX_AGE_H h"""
+    ledger = ledger or SUBMIT_LEDGER
+    now = now or time.time()
+    try:
+        lines = open(ledger).read().splitlines()
+    except OSError:
+        return []
+    want_dir = os.path.normpath(sub) if sub.startswith("/") else None
+    out = []
+    for ln in reversed(lines):
+        try:
+            r = json.loads(ln)
+        except ValueError:
+            continue
+        if now - r.get("ts", 0) > LEDGER_MAX_AGE_H * 3600:
+            break
+        if (want_dir and r.get("dir") == want_dir) or sub == r.get("tag") or sub == str(r.get("pid")) or (sub.startswith("lane:") and r.get("lane") == sub[5:] and sub[5:]):
+            out.append(r)
+    return out
+
+
+def cancel_ledger(sub, all_dirs=False, ledger=None, run=None, fleet=None):
+    """-> rc, or None when the ledger names nothing.  A lane: selector spanning several dirs needs --all-dirs, like a client prefix"""
+    recs = ledger_find(sub, ledger)
+    if not recs:
+        return None
+    dirs = sorted({r["dir"] for r in recs if r.get("dir")})
+    if len(dirs) > 1 and not all_dirs:
+        print(f"ot-run --cancel: REFUSED: {sub!r} names {len(recs)} submitted jobs in {len(dirs)} dirs in the submit ledger ({', '.join(dirs)[:400]}); pass --all-dirs after reading the list.  Nothing stopped.")
+        return 2
+    fleet = list(HOSTS if fleet is None else fleet)
+    rc, any_found = 0, False
+    for tag in dict.fromkeys(r["tag"] for r in recs):
+        print(f"ot-run --cancel: submit ledger: {tag} (dir {next(r['dir'] for r in recs if r['tag'] == tag)}, lane {next(r['lane'] for r in recs if r['tag'] == tag) or '-'})")
+        r_ = cancel_unit(tag, run=run, fleet=fleet)
+        any_found = any_found or r_ == 0
+        rc = 3 if r_ == 3 else rc
+    got = stop_by_path([d for d in dirs if d.startswith("/srv/")], run=run, fleet=fleet)
+    any_found = any_found or bool(got)
+    if any(("STILL RUNNING" in l) for _h, l in got):
+        rc = 3
+    log_signal(f"--cancel {sub!r} (submit ledger, no client) by pid {os.getpid()} parent {sender(os.getppid())}: tags {[r['tag'] for r in recs][:6]} found={any_found}")
+    if not any_found and rc == 0:
+        print(f"ot-run --cancel: the ledger names {len(recs)} submit(s) of {sub!r} but nothing of them runs on any fleet host (finished or never started)")
+        return 1
+    return rc
+
+
 def cancel(sub, all_dirs, reason="manual"):
     hit = {p: v for p, v in clients().items() if client_matches(sub, p, v[0], v[1])}
     if not hit and sub.startswith(("oth-", "otrun-")):
@@ -1669,6 +1746,10 @@ def cancel(sub, all_dirs, reason="manual"):
         if got:
             log_signal(f"--cancel {sub!r} (no client) by pid {os.getpid()} parent {sender(os.getppid())}: containers of the exact dir stopped on {[h for h, _l in got]}")
             return 0 if not any("STILL RUNNING" in l for _h, l in got) else 3
+    if not hit:                                         # FLOW-FLEET-R2 C2: no live client -> the submit ledger
+        _lr = cancel_ledger(sub, all_dirs)
+        if _lr is not None:
+            return _lr
     dirs = sorted({str(v[1]) for v in hit.values()})
     for p, (rest, d) in sorted(hit.items()):
         print(f"ot-run --cancel: pid {p} dir {d}: {' '.join(rest)[:200]}")
@@ -2345,6 +2426,7 @@ def main():
     # A bare gate still has no established lane for drain admission, but its disk probe has a real target.
     d = gate_workdir(cmd, d)
     if not pick:
+        ledger_write(d, hosts if hosts is not HOSTS else None, cmd)          # FLOW-FLEET-R2 C2: submit ledger
         start_leases(lease_paths(d, cmd, STAGE), f"{os.environ.get('OT_LANE') or 'ot-run'}/ot-run-{socket.gethostname().split('.')[0]}-{os.getpid()}")
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "

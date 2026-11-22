@@ -160,12 +160,40 @@ def holders_text(host, disk, run=None, top=3):
     return " LSOF+L1 top holders on %s: %s" % (disk, "; ".join(out))
 
 
+UNIT_DIRS_CMD = r"""for f in $(find /sys/fs/cgroup/user.slice -maxdepth 7 -name 'oth-*.scope' 2>/dev/null); do p=$(head -1 $f/cgroup.procs 2>/dev/null); [ -n "$p" ] && echo "$(basename $f .scope) $(readlink /proc/$p/cwd 2>/dev/null)"; done"""
+
+
+def parse_unit_dirs(text):
+    """'<unit> <cwd>' lines -> [(unit, cwd)]"""
+    return [(p[0], p[1]) for p in (ln.split(None, 1) for ln in text.splitlines()) if len(p) == 2 and p[1].startswith("/")]
+
+
+def writers_text(host, run=None, root=LANE_ROOT, top=5):
+    """FLOW-FLEET-R2 K2 (FABLE-FLOW-0800): the alert names the top writers, not just the rate.  Lanes by GB written in the last hour (lane_quota scan, the same measure as
+    the lane hold), each with the running ot-run units whose working dir is under it (unit scope cwd).  Best effort, never raises"""
+    try:
+        r = sh_host(host, LANE_SCAN % root, run, 600)
+        rows = json.loads((r.stdout or "").strip().splitlines()[-1])
+    except Exception as e:
+        return " TOP-WRITERS unavailable: %s" % str(e)[:60]
+    try:
+        units = parse_unit_dirs(sh_host(host, UNIT_DIRS_CMD, run, 60).stdout or "")
+    except Exception:
+        units = []
+    out = []
+    for lane, gb in sorted(rows.items(), key=lambda kv: -kv[1])[:top]:
+        path = os.path.join(root, lane.split(":")[-1])
+        us = sorted({u for u, d in units if d == path or d.startswith(path + "/")})
+        out.append("%s %.0f GB/h%s" % (lane, gb, " units " + ",".join(us[:4]) + (" +%d" % (len(us) - 4) if len(us) > 4 else "") if us else ""))
+    return " TOP-WRITERS on %s (written last hour): %s" % (host, "; ".join(out)) if out else " TOP-WRITERS on %s: none found" % host
+
+
 def level(hours):
     """alert state: 3 = floor within 1 h, 2 = within 2 h, 1 = within HORIZON_H, 0 = fine"""
     return 0 if hours is None else 3 if hours <= STOP_HOURS else 2 if hours <= AUTO_HOURS else 1 if hours <= HORIZON_H else 0
 
 
-def main(post=True, now=None, pusher=None, stopper=None, clearer=None, holder=None):
+def main(post=True, now=None, pusher=None, stopper=None, clearer=None, holder=None, writers=None):
     now = now or time.time()
     try:
         h = json.load(open(HIST))
@@ -187,7 +215,7 @@ def main(post=True, now=None, pusher=None, stopper=None, clearer=None, holder=No
             if lv > prev:                                   # one alert per state change (entering or escalating), never a repeat
                 h["alerted"][k] = now
                 alerts.append("DISK-RATE %s %s: free %.0f GB, falling %.0f GB/h, floor 50 GB in %.1f h (state %d, was %d)" % (host, disk, free / 1e9, pr[1], pr[0], lv, prev)
-                              + (holder or holders_text)(host, disk) + auto_retire(host, disk, pr[0])
+                              + (holder or holders_text)(host, disk) + (writers or writers_text)(host) + auto_retire(host, disk, pr[0])
                               + ((stopper or hold_top_lane)(host) if pr[0] <= STOP_HOURS and disk.endswith("scratch2") else ""))
     os.makedirs(os.path.dirname(HIST), exist_ok=True)
     json.dump(h, open(HIST, "w"))
