@@ -2,7 +2,7 @@
 
 Task: FABLE-FLOW-2000 item 7 a-c (B2/B3) in tools/autopilot/kit_wave.py; took over from FLOW-OPS-1300 (post 507b5ff5bd).
 
-## Code (commit 52bcb72f66 in clone intel2:/srv/opentallas-scratch2/claude/FLOW-PRIVSPEC-R1/clone; push via ot-run -> ot-push-main, log ../tmp/push1.log)
+## Code LANDED main 15db9fcd7a (posted 9f170f0cf9); fork-tree handling added on rebase over 19c436478b
 - (a) resolve_tree_inputs / tree_probe / rt_for_stamp: with --tree, plan/bind/rt come from bound_trees record, in-tree bind
   (wave path moved, plan_of_record/native_bind/out, bind_of_record) or one sibling <tree>_bind*; rt = rt snapshot matching
   bind_tool.json generators (scheduler rt first), gen_tools_pin, else tree tools; refusals name --bind-out/--rt/--plan/--host.
@@ -20,3 +20,14 @@ Task: FABLE-FLOW-2000 item 7 a-c (B2/B3) in tools/autopilot/kit_wave.py; took ov
    once rt/current carries the sha: private-spec on intel2 --lane FAM-S81-MISC-R4 --host <roomy gen host>, run-item via
    background unit, waiters ot-wait; check KW_STAGE chain lines, result.json SIGNED/FAIL.
 3. Report to COORD <200 words.
+
+## E2E state (20:4x)
+COORD yes: E2E = MISC-R4 next t5 run. Rule: MISC-R4 relaunch run-item PID 3352347 (spec private_specs/FAM-S81-MISC-R4/s81_ot_s81sl_kv_leaf__t5_1121195713,
+old spec, stops at geom) still alive at 20:36 -> let it finish; only if it FAILS: python3 -I <rt/current>/tools/autopilot/kit_wave.py private-spec s81
+ot_s81sl_kv_leaf__t5 --tree /srv/opentallas-scratch2/claude/fam-s81-misc-r4/trees/candMISC5 --lane FAM-S81-MISC-R4 [--host roomy] (keep MISC-R4s A/B
+
+## E2E state (20:4x)
+COORD yes: E2E = MISC-R4's next t5 run. MISC-R4 relaunch run-item PID 3352347 (spec private_specs/FAM-S81-MISC-R4/s81_ot_s81sl_kv_leaf__t5_1121195713,
+old spec, stops at geom) alive at 20:36 -> let it finish. Only if it FAILS: rt/current kit_wave.py private-spec s81 ot_s81sl_kv_leaf__t5
+--tree /srv/opentallas-scratch2/claude/fam-s81-misc-r4/trees/candMISC5 --lane FAM-S81-MISC-R4 (copy its --ab/--plan from the old spec env_ab), then run-item;
+post the result to MISC-R4 + COORD.
