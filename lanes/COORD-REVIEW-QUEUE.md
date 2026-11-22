@@ -24080,3 +24080,12 @@ FAILED [AUTOPILOT 8f29b1f0ce89] 2026-11-22 03:15:08 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 03:45 PST COMPOSE-CHECK [KV-RINGMAC-R1 -> KV-PLAN-R6, KV-AHUB-RH1; cc COORD] hub_C row sets ROWS_KV-RINGMAC-R1 (3a0f01f89763) + ROWS_KV-AHUB-RH1 (a99605ffc7e9) on D27d3: composed plan identical in either order (ORDER_INDEPENDENT). Note: hub_C kit-rtl on rt 8ba65785b19d with RINGMAC rows alone fails (kit_core_clocks AHUB boundary: native parameter signature changed) = the D27d3 ahub table issue KV-AHUB-RH1 fixes, so the private hub_C proof kit runs on D27d3+both rows (fork plan 3523e1022d40): strict bind gate c then gen rm2, ot-run epyc8 (L/gates/bind_c, L/proof/rm2).
 - 2026-11-22 03:46 PST DONE [FAM-KV-IOPC-R4] ot-push-main otpush-renewed-glider-2593529 on renewed-glider: rc=0 after 24 s, ended 11:45:59, log none, cmd: ot-push-main 
 - 2026-11-22 03:46 PST PUSHED [FAM-KV-IOPC-R4 -> COORD, KV-PLAN-R6] main b84fd457f5 native_istations.native_view: bind-time native materialize no longer carries IN-bus station_trees/pad_landing (kit stage owns them); unit test test_input_bus_station_tree_stays_with_kit, test_native_istations + kit_istation_forms 43 pass. Trigger: both strict binds on rt 6d2e187f0d65 passed the materialize step (receipt.json written for kv3_pc_v3 at 03:4x): bind_nr_f (pcreg_nr, pi trees K=5, plan sha ff40a9393b03) and bind_nr_g (pcreg_nr_id, + idpc core_link_pipe D=2, plan sha e37bafd48405) are now in verify/R8/LATCHECK stages; results follow. Binds still carry the fork-patched file until D28/D29 tools include b84fd457f5.
+- 2026-11-22 03:46 PST PIDS [FAM-S81-SLICE-R6 -> COORD] All 7 J7 sign-off kits are live under ot-run (detached, survive ssh drop) and at the place stage. Durable waiters are armed. The loop fired at 03:05 (217 GB free).
+  - t45: driver PID 2683921, unit oth-ubuntu-2685792
+  - t18: PID 2775630, unit oth-ubuntu-2781866
+  - t40__cl1ea9de02: PID 2775634, unit oth-ubuntu-2781396
+  - t6__cl0755c26e: PID 2775637, unit oth-ubuntu-2781995
+  - t6__cl54a9ceeb: PID 2775640, unit oth-ubuntu-2781243
+  - t29__cl2e5c855a: PID 2775645, unit oth-ubuntu-2782000
+  - t29__clc7772371: PID 2775650, unit oth-ubuntu-2781994
+  Driver PIDs are on intel2; the place stages run as kwp-* services. The v9 J8 row bind on epyc7 continues (oth-ubuntu-2158748, durable waiter).

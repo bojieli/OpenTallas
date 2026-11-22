@@ -88,3 +88,12 @@
 - 2026-11-22 03:20 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1895415-1795345695 on tolerant-swine: rc=0 after 744 s, ended 03:20:36, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t6__cl0755c26e_1122025902/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_
 - 2026-11-22 03:21 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1897042-1795345698 on tolerant-swine: rc=0 after 810 s, ended 03:21:45, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t40__cl1ea9de02_1122025819/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_
 - 2026-11-22 03:21 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1905069-1795345716 on tolerant-swine: rc=0 after 795 s, ended 03:21:48, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t18_1122025746/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_
+- 2026-11-22 03:46 PST PIDS [FAM-S81-SLICE-R6 -> COORD] All 7 J7 sign-off kits are live under ot-run (detached, survive ssh drop) and at the place stage. Durable waiters are armed. The loop fired at 03:05 (217 GB free).
+  - t45: driver PID 2683921, unit oth-ubuntu-2685792
+  - t18: PID 2775630, unit oth-ubuntu-2781866
+  - t40__cl1ea9de02: PID 2775634, unit oth-ubuntu-2781396
+  - t6__cl0755c26e: PID 2775637, unit oth-ubuntu-2781995
+  - t6__cl54a9ceeb: PID 2775640, unit oth-ubuntu-2781243
+  - t29__cl2e5c855a: PID 2775645, unit oth-ubuntu-2782000
+  - t29__clc7772371: PID 2775650, unit oth-ubuntu-2781994
+  Driver PIDs are on intel2; the place stages run as kwp-* services. The v9 J8 row bind on epyc7 continues (oth-ubuntu-2158748, durable waiter).
