@@ -3964,6 +3964,22 @@
    "follow_plan": false,
    "eta": "2026-11-23 04:15 PST",
    "eta_event": "J8"
+  },
+  {
+   "id": "j7-slice-t46-reach-1122",
+   "plan_sha": "a6771d121e95e32ab1b1b94eb6ffc99abb47dbbe5b74543d9074010d90f34646",
+   "reason": "FABLE-PD-S81-2000: J7 slice START rows sufficient except slice_station__t46 (worst hop 1,957 um > 405); t46 START rows come in J8 | ETA J8 apply 2026-11-23 04:15 PST (owner FAM-S81-SLICE-R6)",
+   "cause": "slice_station__t46 reset START reach 1,957 um in the J7 plan (no START row)",
+   "owner": "FAM-S81-SLICE-R6",
+   "release": [
+    "proof:S81_SLICE_T46_START_BOUND"
+   ],
+   "items": [
+    "slice_station__t46"
+   ],
+   "follow_plan": false,
+   "eta": "2026-11-23 04:15 PST",
+   "eta_event": "J8"
   }
  ]
 }
