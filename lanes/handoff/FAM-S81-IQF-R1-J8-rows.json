@@ -1,0 +1,201 @@
+{
+ "lane": "FAM-S81-IQF-R1",
+ "for": "S81-J6-ASSEMBLY-R5 J8",
+ "basis": "placed_scan.py --limit 405 on J6r1 private kit iqf__t1_1121185816 geom.tsv (9 groups over 405 um, worst 918 um); stations = ceil(leg/405)-1, sites on the Manhattan leg launch->capture; on every placed hop over 405",
+ "rows": {
+  "iqf__t1": {
+   "internal_stations": [
+    {
+     "conn": "bus:ql_i0",
+     "launch": "u_bound.u_cland_ql_i0/u_ring.dch.u_dsel/y",
+     "capture": "u_bound.u_bin_ql_i0",
+     "from_um": [
+      516.83,
+      1183.89
+     ],
+     "to_um": [
+      963.56,
+      796.22
+     ],
+     "regs_um": [
+      [
+       794.96,
+       1183.89
+      ],
+      [
+       963.56,
+       1074.35
+      ]
+     ],
+     "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 918 um max over 405 on 513 bits; 2 station(s), hop 278 um; +2 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:idx_i0",
+     "launch": "u_bound.u_cland_idx_i0/u_ring.dch.u_dsel/y",
+     "capture": "u_bound.u_bin_idx_i0",
+     "from_um": [
+      1416.36,
+      649.56
+     ],
+     "to_um": [
+      1039.19,
+      729.27
+     ],
+     "regs_um": [
+      [
+       1187.92,
+       649.56
+      ]
+     ],
+     "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 529 um max over 405 on 447 bits; 1 station(s), hop 228 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:qc_o0",
+     "launch": "u_bound.u_core.qc",
+     "capture": "u_bound.u_bout_qc_o0",
+     "from_um": [
+      1017.51,
+      809.17
+     ],
+     "to_um": [
+      605.19,
+      1221.17
+     ],
+     "regs_um": [
+      [
+       742.74,
+       809.17
+      ],
+      [
+       605.19,
+       946.4
+      ]
+     ],
+     "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 920 um max over 405 on 258 bits; 2 station(s), hop 275 um; +2 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:idx_o0",
+     "launch": "u_bound.u_core.u_qf.qr",
+     "capture": "u_bound.u_bout_idx_o0",
+     "from_um": [
+      1026.37,
+      770.25
+     ],
+     "to_um": [
+      1436.85,
+      748.09
+     ],
+     "regs_um": [
+      [
+       1242.69,
+       770.25
+      ]
+     ],
+     "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 494 um max over 405 on 149 bits; 1 station(s), hop 216 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:flt_o0",
+     "launch": "u_bound.u_core.fault",
+     "capture": "u_bound.u_bout_flt_o0",
+     "from_um": [
+      1025.14,
+      805.0
+     ],
+     "to_um": [
+      1437.91,
+      553.63
+     ],
+     "regs_um": [
+      [
+       1357.21,
+       805.0
+      ]
+     ],
+     "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 664 um max over 405 on 1 bits; 1 station(s), hop 332 um; +1 cycle(s) pre-approved"
+    },
+    {
+     "conn": "bus:idx_o0",
+     "launch": "u_bound.u_core.u_qf.qr_v",
+     "capture": "u_bound.u_bout_idx_o0",
+     "from_um": [
+      1030.37,
+      800.14
+     ],
+     "to_um": [
+      1436.72,
+      711.32
+     ],
+     "regs_um": [
+      [
+       1277.96,
+       800.14
+      ]
+     ],
+     "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 495 um max over 405 on 1 bits; 1 station(s), hop 248 um; +1 cycle(s) pre-approved"
+    }
+   ],
+   "reset_relay_hops": [
+    {
+     "src": "u_bound.u_rrl_67",
+     "to": "u_bound.u_core.rs1",
+     "from_um": [
+      626.94,
+      611.68
+     ],
+     "to_um": [
+      1013.15,
+      796.1
+     ],
+     "relay_sites_um": [
+      [
+       912.25,
+       611.68
+      ]
+     ],
+     "leg_um": 571,
+     "max_um": 571
+    },
+    {
+     "src": "u_bound.u_rrl_67",
+     "to": "u_bound.u_core.u_qf.rs0",
+     "from_um": [
+      626.94,
+      611.68
+     ],
+     "to_um": [
+      1011.8,
+      796.63
+     ],
+     "relay_sites_um": [
+      [
+       911.84,
+       611.68
+      ]
+     ],
+     "leg_um": 570,
+     "max_um": 570
+    },
+    {
+     "src": "u_bound.u_rrl_67",
+     "to": "u_bound.u_bin_idx_i0/eq",
+     "from_um": [
+      626.94,
+      611.68
+     ],
+     "to_um": [
+      1013.69,
+      708.08
+     ],
+     "relay_sites_um": [
+      [
+       868.51,
+       611.68
+      ]
+     ],
+     "leg_um": 483,
+     "max_um": 483
+    }
+   ]
+  }
+ }
+}
