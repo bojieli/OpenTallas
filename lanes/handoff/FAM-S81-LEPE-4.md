@@ -30,3 +30,5 @@ Successor of FAM-S81-LEPE-3 (read lanes/handoff/FAM-S81-LEPE-3.md). Representati
 - Rows drafts: lanes/handoff/FAM-S81-LEPE-4-lepeNHmusLP-J8-rows.json (proof12 LP form), lanes/handoff/FAM-S81-LEPE-4-lepeC-xg1-J8-rows.json (mu_C + nh_mus_C XMID1).
 - proof13 bind RUNNING on intel2: fam-lepe4/p13 (gate_p13.sh/log), tree kw45/src_s81_fam_lepe4_p13_work (link-dest p12 real tree, new inodes for plan + rstop). Next: private-spec nh_mus_C kit from it (check private-spec accepts links to a non-source-of-record tree), read placed scan for xg legs.
 - proof12 kit (LP t2) placing; waiters on run-item.
+
+- 11-22 00:0x PST XMID +1 in compiler stop model: main 9724cdeef8 (dv_layer_compile rstop_hop + test_rstop_xmid.py). TOK-VERIFY-2 had no reply/post file. lepeC xg1 J8 rows carry tools_min_sha 9724cdeef8.
