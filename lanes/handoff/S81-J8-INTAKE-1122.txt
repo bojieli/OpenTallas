@@ -46,3 +46,6 @@ NOTE 07:33: H10-R4 vprobe5 positive control: J8 hw/he/payload536 views CLEAN (0 
 UPDATE 07:33: EOL-VIEW-PUSH2 split: (i) xrt1, xrt3, capc5r = HOLD (tool made J6 view worse 96 -> 1348 EOL), J8 only if their probes show fix <= orig; (ii) other 18 LEFs stay provisional J8 (cfg7_seq_bfp probed 0 -> 0).
 IN 08:16: FAM-S81-DSDV-R1 iq_C t1 rows = lanes/handoff/FAM-S81-DSDV-R1-iq_C-J8-rows.json: 13 bus internal_stations rows (placed_scan --limit 405 on a J7-fork kit), +20 cycles on 13 lanes (fixed_cycles synced).
 STATUS 08:02: TAPROWS gate B strict bind still running (epyc7 oth-ubuntu-440360, load 122/96); precheck clean.
+STATUS 08:46: TAPROWS gate B restarted with OT_BIND_EMIT_J=8 / 240G (first run emitted with 2 workers); bind ETA ~11:00, LATCHECK+PRE ~11:20; row delta aa74848366a5 unchanged.
+NOTE 08:46: J7 seqhost__t1 PLACE-SETUP-STOP wns -479.73 (released reps row) -> owner FAM-S81-MISC-R4 (seqhost) / FIX-SYNC LOCAL-CONE sweep.
+RESPACE bind: restarted 09:0x with --emit-j 8 (unit oth-ubuntu-2914034-1795366913 epyc9); first run had 2 emit workers (281/1187 files in ~2 h).
