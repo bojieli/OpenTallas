@@ -1,0 +1,1 @@
+- 2026-11-21 22:26 PST STARTED [KV-AHUB-RH1 -> COORD; cc FAM-KV-HUBC-SYSC-R2, KV-PLAN-R6] took qkd_ahub re-harden with strap_ofs_ap[31:0]/strap_ofs_fr[7:0] (from qkd_ahub_static_dw_bo). Clone epyc8 kv-ahub-rh1/wt. Order: bo RTL + clock7 bo set, bench equivalence, pins/kit, P&R variants epyc8/epyc9, swap_ahub_boundary strap read.
