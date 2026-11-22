@@ -252,3 +252,4 @@
 - 2026-11-22 11:09 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_C x2@kit_rtl, kv3_io_cor_v1 x2@place)
 - 2026-11-22 11:09 PST ALERT NO-ADVANCE s81: 5 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (col_h9_r1__t1__cl49d7a23e__pv1c15776f x2@kit_rtl, svc_hi_dsdv_svc_rs__t6 x2@place, svc_hi_dsdv_svc_pvso_entry__t2 x2@place)
 - 2026-11-22 11:49 PST ALERT NO-PROGRESS qwen_kvsys: 3 eligible rows, 0 KIT-WAVE LAUNCH for 75 min (last 10:33); 14 hold(s): 12 without eta, 0 overdue, next eta 11-23 12:00; NO-LAUNCH x2
+- 2026-11-22 12:29 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 12:08:52 (21 min; no launch or classify meanwhile) running tick started 12:29:00, last mark 'after geom'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
