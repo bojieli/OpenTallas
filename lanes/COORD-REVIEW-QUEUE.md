@@ -24089,3 +24089,4 @@ FAILED [AUTOPILOT 8f29b1f0ce89] 2026-11-22 03:15:08 PST AUTOPILOT -> KIT-WAVE-3:
   - t29__cl2e5c855a: PID 2775645, unit oth-ubuntu-2782000
   - t29__clc7772371: PID 2775650, unit oth-ubuntu-2781994
   Driver PIDs are on intel2; the place stages run as kwp-* services. The v9 J8 row bind on epyc7 continues (oth-ubuntu-2158748, durable waiter).
+- 2026-11-22 03:46 PST DONE [fable-fix-s81-leaf-taphold] ot-push-main otpush-loved-redfish-3478205 on loved-redfish: rc=0 after 747 s, ended 11:46:30, log /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-taphold/push.log, cmd: ot-push-main 
