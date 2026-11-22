@@ -80,6 +80,9 @@ WAVE_ECO_STATUS = "DONE-NEAR-MISS"        # COORD 11-19 (lever 5, FABLE-CLOSURE-
 WAVE_ECO_MEM_GB = 24                      # eco_loop on a routed kit: about 22-24 GB, 8-11 h (HEAD-MESH-O)
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}   # = eco_loop.ECO_FAILS
 NEAR_ENDPOINTS = 100                                  # COORD 11-07 05:37, = eco_loop.NEAR_ENDPOINTS
+# COORD 11-22 ruling (2) (NEARMISS-ECO-R1): R-MINIMAL window = autopilot NEAR_MIN_* (DRC <= 50, TT >= -80 ps or <= 20 ep, internal FF >= -40 ps)
+MIN_TT_PS, MIN_TT_EP, MIN_FF_PS, MIN_DRC = -80.0, 20, -40.0, 50
+MINIMAL_ADVISORY = {"clock", "unconstrained"}
 ECO_MEM_GB = 64
 ECO_DISK_GB = 40
 MAX_ECO_INFLIGHT = 4
@@ -361,14 +364,24 @@ def judge_eco(c, e, it, holds, near_wns, near_drc):
     nums = "TT %s FF %s DRC %s, fails %s" % (e.get("tt"), e.get("ff"), e.get("drc"), ",".join(sorted(fails)))
     if not fails:
         return "WAIT", "no FAIL gate (%s), not an ECO case" % e.get("verdict")
-    if fails - ECO_FAILS:
+    minimal = os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() != "legacy"
+    if fails - ECO_FAILS - (MINIMAL_ADVISORY if minimal else set()):
         return "SKIP", "not an ECO class: " + nums
-    # port-only hold is not a FAIL; a mixed record scores hold on the core-owned split, the same set eco_loop.near_miss judges (COORD R4)
-    timing = [(e.get(k), e.get(k + "_n")) for k, g in (("tt", "setup_tt"), ("ff", "hold_ff")) if g in fails and k != "ff"]
-    if "hold_ff" in fails:
-        timing.append((e["ff_core"], e["ff_core_n"]) if e.get("ff_core_n") is not None else (e.get("ff"), e.get("ff_n")))
-    if any((w is not None and w < near_wns) or (n or 0) > NEAR_ENDPOINTS for w, n in timing) or (e.get("drc") or 0) >= near_drc:
-        return "SKIP", "outside the near-miss bound: " + nums
+    if minimal:
+        # COORD 11-22 ruling (2): the autopilot's R-MINIMAL near-miss window (= autopilot.minimal_near_miss): DRC <= 50, TT >= -80 ps
+        # or <= 20 failing endpoints, INTERNAL FF hold >= -40 ps (port hold is the parent's); no endpoint-count limit on hold
+        tt, tt_n = e.get("tt"), e.get("tt_n")
+        ffi = e["ff_core"] if e.get("ff_core_n") is not None else e.get("ff")
+        if ((tt is not None and tt < MIN_TT_PS and not (tt_n is not None and tt_n <= MIN_TT_EP))
+                or (ffi is not None and ffi < MIN_FF_PS) or (e.get("drc") or 0) > MIN_DRC):
+            return "SKIP", "outside the R-MINIMAL near-miss window: " + nums
+    else:
+        # port-only hold is not a FAIL; a mixed record scores hold on the core-owned split, the same set eco_loop.near_miss judges (COORD R4)
+        timing = [(e.get(k), e.get(k + "_n")) for k, g in (("tt", "setup_tt"), ("ff", "hold_ff")) if g in fails and k != "ff"]
+        if "hold_ff" in fails:
+            timing.append((e["ff_core"], e["ff_core_n"]) if e.get("ff_core_n") is not None else (e.get("ff"), e.get("ff_n")))
+        if any((w is not None and w < near_wns) or (n or 0) > NEAR_ENDPOINTS for w, n in timing) or (e.get("drc") or 0) >= near_drc:
+            return "SKIP", "outside the near-miss bound: " + nums
     if e.get("late_eco_off"):
         return "SKIP", "KIT/late_eco.off"
     if not e.get("odb_sha"):

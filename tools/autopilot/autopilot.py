@@ -101,6 +101,14 @@ else:
     MIRROR_DEFAULT = "localhost"                        # every other host's archives mirror to the hub
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
+# COORD 11-22 ruling (NEARMISS-ECO-R1 AUTO-ECO gap 1+2): under R-MINIMAL a routed record is a NEAR-MISS (late-ECO class) when
+# DRC <= NEAR_DRC_MAX, TT setup >= NEAR_MIN_TT_PS or on at most NEAR_MIN_TT_EP endpoints, and the INTERNAL FF hold >= NEAR_MIN_FF_PS
+# (port hold is the parent's); clock / unconstrained are advisory.  63 such jobs sat in DONE-STRUCTURAL in 4 days under the
+# legacy -30 ps whole-FF window, so the AUTO-ECO never saw them.  The -300..-550 ps class stays STRUCTURAL.
+NEAR_MIN_TT_PS = -80.0
+NEAR_MIN_TT_EP = 20
+NEAR_MIN_FF_PS = -40.0
+NEAR_MIN_STRUCTURAL = frozenset({"sdc_lint", "face_guard", "antenna", "pg"})
 RENDER_MEM_GB = 8
 ORPHAN_IDLE_S = 3 * 3600
 CHAIN_VERSION = 2
@@ -729,10 +737,13 @@ if so:
         "release_qualified": d.get("release_qualified"), "parent_qualification": d.get("parent_qualification"), "reasons": d.get("reasons"),
         "fails": sorted(k for k, v in c.items() if isinstance(v, dict) and v.get("verdict") == "FAIL"),
         "tt_wns": (c.get("setup_tt") or {}).get("wns_ps"), "ff_wns": (c.get("hold_ff") or {}).get("wns_ps"),
+        "tt_n": (c.get("setup_tt") or {}).get("violators"), "ff_n": (c.get("hold_ff") or {}).get("violators"),
         "drc": (c.get("drc") or {}).get("count"), "antenna": (c.get("antenna") or {}).get("count"),
         "pg": (c.get("pg") or {}).get("verdict"),
         "base": (d.get("inputs") or {}).get("base"), "odb": (d.get("inputs") or {}).get("odb")}
     ff = (d.get("corners") or {}).get("ff")
+    if isinstance(ff, dict):        # COORD 11-22 (1): the internal FF census the R-MINIMAL near-miss window reads (not a gate input)
+        out["signoff"]["ff_census"] = {k: ff[k] for k in ("done", "rc", "errors", "std_min_start", "std_wns_min", "std_nviol_min") if k in ff}
     if a.get("retained_return_to") and isinstance(ff, dict):
         out["signoff"]["corners"] = {"ff": {k: ff[k] for k in ("done", "rc", "errors", "std_min_start",
                                                              "std_wns_min", "std_nviol_min") if k in ff}}
@@ -1262,6 +1273,39 @@ print("AP_JSON " + json.dumps(out))
 
 
 # ------------------------------------------------------------------------------------------------ classification
+def internal_ff_ps(so):
+    """the INTERNAL FF hold WNS of a sign-off summary: the complete native census (ff_census / corners.ff) when present,
+    else the whole FF WNS (a bound: whole <= internal).  None when neither is known."""
+    for ff in (so.get("ff_census"), (so.get("corners") or {}).get("ff")):
+        if isinstance(ff, dict):
+            m = SP.internal_hold_measurement({"corners": {"ff": ff}})
+            if m.get("complete"):
+                return m["wns_ps"]
+    return SP._num(so.get("ff_wns"))
+
+
+def minimal_near_miss(c, so, jm=None):
+    """COORD 11-22 ruling (1): R-MINIMAL near-miss window (see NEAR_MIN_*).  True only for a NOT SIGNED routed record that
+    misses DRC / TT setup / internal FF hold inside the window, with no GRT overflow, no period or fwd_pads problem and no
+    sdc_lint / face_guard / antenna / pg FAIL (clock and unconstrained are advisory)."""
+    if not SP.is_minimal() or not isinstance(so, dict) or c.get("grt_overflow") not in (None, 0):
+        return False
+    jm = jm or SP.judge(so)
+    if jm.get("verdict") == "SIGNED" or jm.get("period_problem") or (jm.get("gates") or {}).get("fwd_pads") == "FAIL":
+        return False
+    if set(so.get("fails") or []) & NEAR_MIN_STRUCTURAL:
+        return False
+    drc, tt, tt_n = so.get("drc"), SP._num(so.get("tt_wns")), SP._num(so.get("tt_n"))
+    if drc is None or tt is None or int(drc) > NEAR_DRC_MAX:
+        return False
+    if tt < NEAR_MIN_TT_PS and not (tt_n is not None and tt_n <= NEAR_MIN_TT_EP):
+        return False
+    ffi = internal_ff_ps(so)
+    if ffi is not None and ffi < NEAR_MIN_FF_PS:
+        return False
+    return int(drc) > 0 or tt < -SP.setup_tolerance_ps(jm.get("die")) or (ffi is not None and ffi < 0)
+
+
 def classify(c, client):
     if client.get("cancelled"):
         # an explicit ot-run --cancel (exit 143 = SIGTERM): an operator decision, never an infra crash or a resubmit
@@ -1287,6 +1331,8 @@ def classify(c, client):
             adv = "; ".join(jm["advisories"])[:300]
             return "SIGNED", "signed", (f"SIGNED (R-MINIMAL, achieved period {jm['achieved_period_ps']} ps"
                                         + (f"; advisory: {adv}" if adv else "") + ")")
+        if minimal_near_miss(c, so, jm):
+            return "NEAR-MISS", "routed", "; ".join(so.get("reasons") or jm.get("reasons") or []) or "NOT SIGNED"
     if so:
         if so.get("verdict") == "LOCAL_PASS_NEEDS_PARENT" and so.get("local_verdict") == "SIGNED":
             return "WAIT-PARENT", "parent-receipt-pending", "; ".join(so.get("reasons") or []) or "matching actual parent seam receipt required"

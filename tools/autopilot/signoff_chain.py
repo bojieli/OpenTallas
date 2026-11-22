@@ -150,7 +150,29 @@ def late_eco(kit, record, runner, mem, threads, run=subprocess.call, current=cur
     spec.loader.exec_module(mod)
     res = mod.run_loop(kit, record, runner=runner, mem=mem, cpus=threads, run=run, tools=tool.parent)
     res["summary"] = mod.summary(res)
+    retry = eco_error_retry(kit, res)
+    if retry is not None:
+        # COORD 11-22 ruling (3) (NEARMISS-ECO-R1): a late ECO that ends in a TOOL ERROR after an attempt retries ONCE; a kit
+        # with no 5_2_route.odb seeds the retry from 5_1_grt.odb (the 6_final seed carries FILLER cells that fail DPL-0033 at
+        # the incremental GRT: slw_fe_v1__clfe325744__cl08d14f0d 11-18 and 11-22)
+        print(f"LATE_ECO_RETRY {res.get('verdict')}: {str(res.get('reason'))[:200]} -> once more, from {retry or 'the default seed'}", flush=True)
+        first = res
+        res = mod.run_loop(kit, record, root=str(Path(kit) / ("eco_retry_" + str(time.time_ns()))), runner=runner, mem=mem,
+                           cpus=threads, run=run, tools=tool.parent, from_mode=retry)
+        res["summary"] = mod.summary(res)
+        res["error_retry"] = dict(first_verdict=first.get("verdict"), first_reason=first.get("reason"), first_root=first.get("root"),
+                                  from_mode=retry or "default")
     return res
+
+
+def eco_error_retry(kit, res):
+    """-> None (no retry) or the retry's from_mode: 'grt' when the kit has a 5_1_grt.odb but no 5_2_route.odb, else '' (default seed)"""
+    if not isinstance(res, dict) or res.get("verdict") != "ERROR" or not res.get("iterations"):
+        return None
+    base = list(Path(kit).glob("run/results/asap7/*/base"))
+    has_route = any((b / "5_2_route.odb").is_file() for b in base)
+    has_grt = any((b / "5_1_grt.odb").is_file() for b in base)
+    return "grt" if has_grt and not has_route else ""
 
 
 def eco_receipt(res):
