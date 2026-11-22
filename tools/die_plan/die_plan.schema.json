@@ -9557,6 +9557,13 @@
       }
      }
     },
+    "vpw_bank_aff_types": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "uniqueItems": true
+    },
     "face_flop_ns_types": {
      "type": "object",
      "additionalProperties": {
