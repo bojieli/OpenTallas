@@ -47,3 +47,17 @@ def test_route_make_fail_without_first_error_uses_tail():
     assert kind == "route-make-fail" and "GRT-0116" in why and "see run_route" not in why, why
     c = {"FAIL_route": "make exit 2 (see run_route.log)", "runlog_tail": "nothing useful"}
     assert "see run_route.log" in AP.classify(c, {})[2]       # nothing to name: the text stays as it was
+
+
+def test_terminal_grt_overflow_marker_keeps_routing_verdict():
+    import autopilot as AP
+
+    error = "[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer."
+    marker = f"make exit 2: 5_1_grt.log: {error}"
+    client = {"exit": 2}
+    assert AP.classify({"FAIL_route": marker}, client) == ("FAIL", "grt-overflow", error)
+    assert AP.classify({"FAIL_route": "make exit 2 (see run_route.log)",
+                        "first_error": f"5_1_grt.log: {error}"}, client) == ("FAIL", "grt-overflow", error)
+    assert AP.classify({"FAIL_route": marker, "oom": "exact kernel OOM"}, {"exit": 137})[:2] == ("CRASH", "infra-oom")
+    assert AP.classify({"FAIL_route": marker.replace("5_1_grt.log", "6_report.log")}, client)[:2] == (
+        "CRASH", "route-make-fail")

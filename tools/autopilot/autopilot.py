@@ -1406,6 +1406,9 @@ def classify(c, client):
             fe = KW.FIRST_TOOL_ERR_RE.search("\n".join(str(x) for x in (c.get("orfs_error"), c.get("runlog_tail")) if x))
             if fe:
                 fr = re.sub(r"\(see run_\w+\.log\)", "", fr).strip() + ": " + fe.group(0).strip()[:200]
+        overflow = re.search(r"\b5_1_grt\.log: (\[ERROR GRT-0116\][^\n]*)", fr)
+        if overflow:
+            return "FAIL", "grt-overflow", overflow[1][:300]
         return "CRASH", "route-make-fail", fr[:300]
     # DIE-HBM-97 11-10 (COORD): a global placement that stopped at the per-pass Nesterov cap above overflow 0.1 is the
     # cause of what follows it (kv_line vC: 459k resizer buffers, DPL-0038 at 153%), not a crash or a congestion row
