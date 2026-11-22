@@ -70,3 +70,13 @@ def test_container_lease_protects_only_itself_clean_aggr_r3():
     assert L.covering("/srv/opentallas-scratch3/claude/ot-jobs/job-1", ls) is None
     assert L.covering("/srv/opentallas-scratch2/claude/kw45", ls) is not None
     assert L.covering("/srv/opentallas-scratch2/claude/lane/x", [{"path": "/srv/opentallas-scratch2/claude/lane", "owner": "o"}]) is not None
+
+
+def test_hub_container_lease_not_a_list_row_clean_aggr_r3(tmp_path):
+    sp = importlib.util.spec_from_file_location("bpl_c", os.path.join(H, "build_protected_live.py")); B = importlib.util.module_from_spec(sp); sp.loader.exec_module(B)
+    d = str(tmp_path / "hc")
+    L.take("/srv/opentallas-scratch2/claude/kw45", "FLOW-OPS-R2", 1, d=d)
+    L.take("/srv/opentallas-scratch2/claude/kw45/src_x_work", "X", 1, d=d)
+    out = set()
+    assert B.hub_lease_paths(out, g.canon, d=d) == 1
+    assert out == {"/srv/opentallas-scratch2/claude/kw45/src_x_work"}
