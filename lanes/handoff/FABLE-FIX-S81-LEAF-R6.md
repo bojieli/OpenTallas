@@ -1,7 +1,16 @@
-# FABLE-FIX-S81-LEAF-R6 handoff (Fable; succeeds FABLE-FIX-S81-LEAF-R5; owns ot_s81sl_leaf__t* + kv_leaf regrid rows)
+# FABLE-FIX-S81-LEAF-R6 handoff (Fable; succeeds R5; owns ot_s81sl_leaf__t* + kv_leaf t1 t3 t4 t5)
 
-NOTHING IS SIGNED. NO ROWS HANDED. Read order: this file, lanes/posts/FABLE-FIX-S81-LEAF-R6.md, lanes/handoff/FABLE-FIX-S81-LEAF-R5.md, lanes/FABLE-PD-S81-0830.md section 1.
-Paths on epyc10 under R6 = /srv/opentallas-scratch2/claude/fable-fix-s81-leaf-r6 (R5 = .../fable-fix-s81-leaf-r5). Lane clone R6/repo.
+NOTHING IS SIGNED. NO ROWS APPLIED. Stood down on context 2026-11-21 ~18:3x PST -> FABLE-FIX-S81-LEAF-R7.
+
+## STATE AT STAND-DOWN (18:3x PST; read this first, the sections below are history)
+- J7 is SEALED without the leaf re-grid (preferred a6771d121e95, intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work; apply 11-22 04:15). The leaf re-grid is a J8 item.
+- My 69-type gate d8 FAILED 14:03: bind 3 errors = LATCHECK 2 lanes off the table (up_s_2N_L1 and up_s_6N_L2 deliver +2: the grown leafup_o0 groups of t28 / t60, class UNPRICED_KIT_STATIONS). Log R6/d8.otrun.log.
+- Codex (limit cover 14:23-18:1x) dropped t28 + t60: rg9 / d9 = 67 types on J7 v5 ec6693a0: strict bind BIND_RC=0, LATCHECK 873/873 PASS, 2 lanes +1 vs base (dn_s_1S_L2, dn_s_6S_L1). Files R6/rg9 (plan_d.json, die_b178_lfcs_d.v, types.json, held.json), R6/d9, log R6/d9.otrun.log, scripts R6/r6_rg9.sh r6_d9.sh. THIS is the first green gate of the re-grid.
+- Codex then rebased it on the sealed J7 as 66 types (kv_leaf t5 left to FAM-S81-MISC, "MISC5d"): intel2 /srv/opentallas-scratch2/claude/s81-j6-r2-hub/leaf_followups_codex (rg9_rebased_on_j7, rg9_on_j7_geometry_delta.json, source patch 5cdca2ec226f = 126 LF_CS nibbles, script gate_rg9_rebased.sh). Fresh gate RUNNING: unit oth-ubuntu-1263880-1795310452 on intel2 (Codex's unit, not mine), out gate_2e60f7, client log gate_2e60f7.otrun.log; elaboration done (RG9_ELAB_RC=0) at 18:2x, bind next. NEXT: wait on it (ot-wait oth-ubuntu-1263880-1795310452); green = hand the 66-type rows + source patch to S81-J6-ASSEMBLY-R4 for J8. CHECK that the source patch was made by stage_lfcs_netlist.py (main 44ed532f4d, --vp-xr / --vp-sr / --hi-gs / --ho-gs), not by hand: COORD ruling 2 forbids hand-edited nibbles; stage_rg9_selected.py is Codex's own stager and has not been reviewed by me.
+- Codex t28 / t60 follow-up (not reviewed by me): leaf_followups_codex/d8_exact_bank_r5, a six-op donor that prices +2 on up_s_2N_L1 / up_s_6N_L2.
+- t39 PROOF KIT DID NOT PASS: route stage exit 6 at 16:33. GRT ended with congestion, total overflow 4,612 (p3 baseline 39.1 k at iteration 10; target < 1,000) and the post-CTS TT gate reads setup_est -178.56 (PLAN-TRIAGE FAIL, < -150). So the re-grid cuts overflow about 8x on t39 but the form is NOT proven to sign-off. Kit K (path below), 5_1_grt.odb exists: read real overflow location and TT from it before any next build (which lanes / gcells; the proof is on the J6 base without keys / reset-leg / FSTART rows, a3 control was TT -50.6). Do not relaunch the same kit.
+- Held, second set: t6, t40__clf8bbdae1 (geometry); t21, t25__cl431c660f, t37 (explicit tap tables); t41, t51, t56, t7 (local reset depth); t43 (ver growth plan 2 / bound 1); t28, t60 (leafup depth, Codex donor); kv_leaf t5 (MISC).
+- No job of mine is running. Tools on main from this lane: 58ecd8429c, 197076cf03, 2b4fe8f295, 44ed532f4d, 00ff12f70a.
 
 ## Done (main)
 - 58ecd8429c stage_lfcs_netlist.py: kv leaves with hard cores are XR leaves (HI_D = plan HI - 1, GS 0); the bank leaf kv_leaf t2 is not staged and its mask bit is not priced. Restage of the unchanged J6 base 44be6051 with --vp-xr TYPE:1 on all 79 staged leaf types (R6/tmp/xr.args) is byte-identical to the record (sha 3340107e82f0). R5's skip patch (R5/repo2, uncommitted) is dead.
