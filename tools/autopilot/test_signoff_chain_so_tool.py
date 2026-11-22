@@ -51,3 +51,17 @@ def test_native_nominal_libraries_are_preserved(tmp_path):
     assert record
     assert manifest.read_text() == "kit-pinned manifest"
     assert not (kit / "nomcap_libs").exists()
+
+
+def test_stage_signoff_tool_repairs_retained_pin_audit_without_replacing_it(tmp_path):
+    source = HERE.parent / "die_plan"
+    audit = tmp_path / "pin_audit.py"
+    audit.write_text("# retained pin audit\n")
+    record = SC.stage_signoff_tool(tmp_path, source=source)
+    helper = tmp_path / "native_pin_contract.py"
+    assert helper.name in record["replaced"]
+    assert helper.read_bytes() == (source / helper.name).read_bytes()
+    assert audit.read_text() == "# retained pin audit\n"
+    helper.write_text("# kit helper\n")
+    assert helper.name not in SC.stage_signoff_tool(tmp_path, source=source)["replaced"]
+    assert helper.read_text() == "# kit helper\n"
