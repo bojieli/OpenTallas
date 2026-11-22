@@ -40,6 +40,54 @@ def payload_sha256(lanes):
     return hashlib.sha256(body.encode()).hexdigest()
 
 
+
+def reserve_ingress_cuts(b, declared, lanes, old_ids, inverse, recv, put):
+    """Keep the frozen inlet payload on an explicitly named, full-width intra-group cut.
+
+    An ingress cut carries the bits from one original lane whose local inlet is
+    named in the reference. Both endpoints of this new cut belong to the same
+    old partition. Bit order is inherited from that original inlet.
+    """
+    if not isinstance(declared, dict):
+        raise SplitRouteError("ingress_cuts must map cut lane IDs to ingress bus names")
+    if not declared:
+        return 0
+    planned = []
+    used = set()
+    notes = {row["id"]: row.get("note", "") for row in b.plan.get("lanes", [])}
+    for cut_id, inlet in declared.items():
+        cut = lanes.get(cut_id)
+        if (cut is None or cut_id in old_ids or cut["src"] not in inverse
+                or inverse[cut["src"]] != inverse.get(cut["dst"])):
+            raise SplitRouteError(f"ingress cut {cut_id} is not a new intra-group lane")
+        source_label = re.search(r"\bcut leg of bus:(\S+) piece [0-9]+ -> [0-9]+", notes.get(cut_id, ""))
+        if source_label is None or source_label[1] != inlet:
+            raise SplitRouteError(f"ingress cut {cut_id} does not declare launch bus {inlet!r}")
+        incoming = [lanes[old_id] for old_id in old_ids
+                    if lanes[old_id]["dst"] == cut["src"] and lanes[old_id].get("iname") == inlet]
+        if not isinstance(inlet, str) or not inlet or len(incoming) != 1:
+            raise SplitRouteError(f"ingress cut {cut_id} needs one frozen inlet {inlet!r}")
+        source = incoming[0]
+        keys = list(source["carried"])
+        if cut["left"] != cut["cap"] or len(keys) != cut["cap"]:
+            raise SplitRouteError(f"ingress cut {cut_id} cannot reserve full payload of inlet {inlet}")
+        for key in keys:
+            cell, pin, bit = key
+            source_part = b.cpart[cell]
+            sink_key = (cut["dst"],) + key
+            previous = recv.get((cut["src"],) + key)
+            demand = b.cross.get((source_part, cut["dst"]), {}).get((cell, pin), ())
+            if (previous is None or previous[0] is not source or bit not in demand
+                    or sink_key in recv or sink_key in used):
+                raise SplitRouteError(f"ingress cut {cut_id} is not the unique next hop for inlet {inlet}")
+            used.add(sink_key)
+        planned.append((cut, keys))
+    for cut, keys in planned:
+        for key in keys:
+            put(cut, key, None)
+    return len(used)
+
+
 def prefill(b, reference, allL, put, recv, holders, out_of, heapq):
     """Prefill frozen original payloads, returning a small receipt.
 
@@ -200,5 +248,10 @@ def prefill(b, reference, allL, put, recv, holders, out_of, heapq):
             text="; ".join(f"{r['id']}: {reasons[r['id']]}" for r,_L,_k in later[:12])
             raise SplitRouteError(f"reference prefill stalled on {len(later)} lanes: {text}")
         pending=later
-    return dict(enabled=True,original_lanes=done,original_bits=nbits,cut_puts=cut_puts,
-                source_cells=len(checked),passes=passes)
+    ingress_puts = reserve_ingress_cuts(b, reference.get("ingress_cuts", {}),
+                                        lanes, seen, inverse, recv, put)
+    receipt = dict(enabled=True,original_lanes=done,original_bits=nbits,cut_puts=cut_puts,
+                   source_cells=len(checked),passes=passes)
+    if ingress_puts:
+        receipt["ingress_cut_puts"] = ingress_puts
+    return receipt

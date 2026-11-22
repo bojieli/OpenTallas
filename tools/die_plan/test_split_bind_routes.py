@@ -230,3 +230,45 @@ def test_second_bus_of_the_same_source_keeps_its_own_cut_leg():
     keys=[b.key("a",i)for i in range(2)]
     assert sorted(b.byid["cut_A"]["carried"])==keys
     assert sorted(leg2["carried"])==keys
+
+
+def test_named_ingress_cuts_keep_logical_sources_when_greedy_order_reverses_their_delays():
+    def carrier():
+        b = Toy()
+        b.cpart = {cell_index: "A1" for cell_index in b.cpart}
+        b.byid["L0"].update(iname="leafup_i0")
+        b.byid["L1"].update(dst="B0", iname="leafup_i2")
+        b.byid["cut_B01"]["cycles"] = 2
+        b.byid["cut_B10"].update(src="B0", dst="B1", cycles=3)
+        b.out["B1"].clear()
+        b.out["B0"].append(b.byid["cut_B10"])
+        b.plan["lanes"] = [
+            {"id": "cut_B01", "note": "split: cut leg of bus:leafup_i0 piece 2 -> 1"},
+            {"id": "cut_B10", "note": "split: cut leg of bus:leafup_i2 piece 2 -> 1"},
+        ]
+        b.cross = {("A1", "B1"): {(b.by_path[name], "q"): {0, 1} for name in ("a", "b")}}
+        return b
+
+    baseline = carrier()
+    baseline.prefill(baseline.reference())
+    for name in ("b", "a"):
+        for bit in (0, 1):
+            assert baseline.deliver(baseline.key(name, bit), "B1")
+    assert list(baseline.byid["cut_B01"]["carried"]) == [baseline.key("b", bit) for bit in (0, 1)]
+
+    fixed = carrier()
+    reference = fixed.reference()
+    declared = {"cut_B01": "leafup_i0", "cut_B10": "leafup_i2"}
+    reference["ingress_cuts"] = declared
+    assert fixed.prefill(reference)["ingress_cut_puts"] == 4
+    assert list(fixed.byid["cut_B01"]["carried"]) == [fixed.key("a", bit) for bit in (0, 1)]
+    assert list(fixed.byid["cut_B10"]["carried"]) == [fixed.key("b", bit) for bit in (0, 1)]
+    assert fixed.byid["cut_B01"]["items"] == [("fwd", "L0", bit) for bit in (0, 1)]
+    assert fixed.byid["cut_B10"]["items"] == [("fwd", "L1", bit) for bit in (0, 1)]
+
+    mutant = carrier()
+    reference["ingress_cuts"] = {key: "leafup_i2" if v == "leafup_i0" else "leafup_i0"
+                                 for key, v in declared.items()}
+    with pytest.raises(SplitRouteError, match="does not declare launch bus"):
+        mutant.prefill(reference)
+    assert not mutant.byid["cut_B01"]["carried"] and not mutant.byid["cut_B10"]["carried"]
