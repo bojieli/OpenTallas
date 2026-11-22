@@ -41,6 +41,7 @@ HASHFILE = ".src-manifest.sha256"
 SNAPGROUP = ".snap-group"        # TOOLS-DECOUPLE phase 2 (live_tree.py): a snapshot of the die's live tree; its files share inodes with the live tree and the
                                  # die's other snapshots by design (read-only files, rename-only writes), so the shared-inode check does not apply
 SNAPDELTA = ".snap-delta"        # SNAP-RO-1119: {"parent_manifest_hash", "changed": [paths]} written by live_tree.py when a snapshot is derived from a live tree that a pack just changed
+FORK_JSON = ".fork.json"         # FLOW-FLEET-R1 11-22: ot-tree-fork provenance record of a fork; never part of a tree's content (a private sys_c build refused it as extra)
 LINKBASE = ".link-base"          # STAGE A (COORD 11-17, QC D-steps wrote 57 GB each): text file naming the published base tree whose inodes this tree shares
 DEFAULT_SCOPE = ["tools", "rtl", "physical", "plans"]
 SKIP_DIRS = ("__pycache__", ".git", ".pytest_cache")
@@ -79,7 +80,7 @@ def walk_tree(root):
         for f in sorted(fn + links):
             p = os.path.join(dp, f)
             rel = os.path.relpath(p, root)
-            if rel in (MANIFEST, HASHFILE, LINKBASE, SNAPGROUP, SNAPDELTA) or skipped(rel):
+            if rel in (MANIFEST, HASHFILE, LINKBASE, SNAPGROUP, SNAPDELTA, FORK_JSON) or skipped(rel):
                 continue
             out[rel] = p
     return out
@@ -858,6 +859,7 @@ def publish(tree, pointer=""):
         if os.path.lexists(pointer) and not os.path.islink(pointer):
             raise SystemExit(f"refuse: pointer {pointer} exists and is not a symlink")
         switch_pointer(pointer, tree)
+    index_add(tree, info.get("manifest_hash", ""))
     return info
 
 
@@ -1178,7 +1180,7 @@ def tar_copy(tree, host, part, run=subprocess.run):
     """TAR-PIPE (COORD 11-18): `tar -C tree -cf - . | ssh host 'tar -C part -xpf -'` into the (fresh, empty) .part dir; the caller verifies the result against the manifest hash before the final rename.
     The source's own .link-base is excluded.  pipefail: either side failing fails the copy."""
     cmd = (f"set -o pipefail; tar -C {shlex.quote(tree)} --exclude=./{LINKBASE} -cf - . | "
-           f"{RSYNC_SSH} {shlex.quote(host)} {shlex.quote('mkdir -p ' + shlex.quote(part) + ' && tar -C ' + shlex.quote(part) + ' -xpf -')}")
+           f"{RSYNC_SSH} {shlex.quote(host)} {shlex.quote(slot_sh() + 'mkdir -p ' + shlex.quote(part) + ' && tar -C ' + shlex.quote(part) + ' -xpf -')}")
     return run(["bash", "-c", cmd])
 
 
@@ -1215,6 +1217,94 @@ def remote_verify(host, path, expect, ro=True):
           (" --ro" if ro else "")
     p = subprocess.run(SSH + [host, cmd], capture_output=True, text=True)
     return p.returncode, (p.stdout + p.stderr).strip()
+
+
+# ---- copy slots + same-manifest reuse (FLOW-FLEET-R1 11-22, FABLE-FLOW-2200 A4) ------------------------------------------------
+# Six raw tree copies ran at once on 11-21, mostly duplicates of two trees on epyc10, and its docker took 14 s per call behind the disk.
+# (1) Every tree copy onto a host holds one of OT_TREE_COPY_SLOTS (default 2) flock slots in /var/tmp/ot-tree-copy on THAT host for its whole
+#     run (replicate: the remote rsync / tar is started under the slot; ot-tree-fork takes the same slots locally), so a third copy waits.
+# (2) Each host keeps ~/.local/state/ot-tree-copy/trees.jsonl: published / replicated / cached manifest trees ({path, hash}).  Before a copy
+#     goes over the network, the target is asked for a verified read-only tree with the same manifest hash; when it has one, the new tree
+#     is made on the target from it (rsync --link-dest from that tree: hardlinks + .link-base, 0 bytes over the network, the usual verify).
+COPY_LOCK_DIR = os.environ.get("OT_TREE_COPY_LOCK_DIR", "/var/tmp/ot-tree-copy")
+TREE_INDEX = os.path.expanduser(os.environ.get("OT_TREE_INDEX", "~/.local/state/ot-tree-copy/trees.jsonl"))
+
+
+def copy_slots():
+    try:
+        return max(1, int(os.environ.get("OT_TREE_COPY_SLOTS", "2")))
+    except ValueError:
+        return 2
+
+
+def slot_sh(n=None, lock_dir=None):
+    """a POSIX sh prefix that waits for one of n flock slots and holds it on fd 9 for the command that follows it"""
+    n = n or copy_slots()
+    d = shlex.quote(lock_dir or COPY_LOCK_DIR)
+    return (f"mkdir -p {d} 2>/dev/null; chmod 1777 {d} 2>/dev/null; while :; do for i in $(seq 0 {n - 1}); do exec 9>>{d}/slot-$i.lock; "
+            f"flock -n 9 && break 2; done; sleep 15; done; ")
+
+
+def index_add(path, h="", index=None):
+    """append {path, hash} for a manifest tree to this host's tree index (a hint; same_tree re-checks every candidate)"""
+    index = index or TREE_INDEX
+    path = os.path.realpath(path)
+    if not h:
+        try:
+            h = open(os.path.join(path, HASHFILE)).read().strip()
+        except OSError:
+            return False
+    try:
+        os.makedirs(os.path.dirname(index), exist_ok=True)
+        with open(index, "a") as f:
+            f.write(json.dumps({"path": path, "hash": h, "t": int(time.time())}) + "\n")
+        return True
+    except OSError:
+        return False
+
+
+def quick_same(path, h):
+    """-> '' when PATH is a read-only manifest tree whose manifest is self-consistent, equals hash h and lists only files that exist read-only; else why not.
+    Stat only (no content hashes): the full hash verify runs on the copy made from it."""
+    m = load_manifest(path)
+    if not m:
+        return "no manifest"
+    if m.get("manifest_hash") != h or manifest_hash(m) != h:
+        return "other manifest hash"
+    if writable(path):
+        return "tree dir writable (not published)"
+    for rel in m.get("files") or {}:
+        q = os.path.join(path, rel)
+        try:
+            st = os.lstat(q)
+        except OSError:
+            return f"missing {rel}"
+        if not stat.S_ISLNK(st.st_mode) and st.st_mode & 0o222:
+            return f"writable {rel}"
+    return ""
+
+
+def same_tree(h, exclude="", index=None):
+    """-> realpath of a verified (quick_same) tree with manifest hash h on this host, newest index entry first; '' when none"""
+    index = index or TREE_INDEX
+    seen = set()
+    try:
+        lines = open(index).read().splitlines()
+    except OSError:
+        return ""
+    ex = os.path.realpath(exclude) if exclude else ""
+    for ln in reversed(lines[-20000:]):
+        try:
+            e = json.loads(ln)
+        except ValueError:
+            continue
+        pth = e.get("path") or ""
+        if e.get("hash") != h or pth in seen or pth == ex or pth.endswith(".part"):
+            continue
+        seen.add(pth)
+        if os.path.isdir(pth) and not quick_same(pth, h):
+            return pth
+    return ""
 
 
 def main(argv=None):
@@ -1273,6 +1363,11 @@ def main(argv=None):
     h.add_argument("--expect", default="")
     h.add_argument("--links-only", action="store_true", help="per host: stat-only shared-inode check instead of the full hash verify")
     h.add_argument("--cached-receipts", action="store_true", help="per host: exact completed verification receipt, fail on cache miss")
+    st_ = sp.add_parser("same-tree", help="print a verified read-only tree with this manifest hash on this host (tree index), exit 1 when none")
+    st_.add_argument("hash")
+    st_.add_argument("--exclude", default="")
+    ia_ = sp.add_parser("index-add", help="record a manifest tree in this host's tree index")
+    ia_.add_argument("tree")
     r = sp.add_parser("replicate")
     r.add_argument("tree")
     r.add_argument("--hosts", required=True)
@@ -1361,8 +1456,28 @@ def main(argv=None):
             raise SystemExit("not a manifest tree")
         bad = 0
         size = tree_gb(tree)
+        script = open(os.path.abspath(__file__)).read()
         for host in a.hosts.split(","):
             part = f"{tree}.part"
+            # same manifest already on the target (another path): make the tree there from it, nothing crosses the network
+            sp_ = subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} same-tree {m['manifest_hash']} --exclude {shlex.quote(tree)}"],
+                                 capture_output=True, text=True)
+            local_from = (sp_.stdout.strip().splitlines() or [""])[-1] if sp_.returncode == 0 else ""
+            if local_from.startswith("/"):
+                prep = subprocess.run(SSH + [host, f"test ! -e {shlex.quote(tree)} && {{ [ ! -d {shlex.quote(part)} ] || find {shlex.quote(part)} -type d -exec chmod u+w {{}} + ; }} && rm -rf {shlex.quote(part)} && mkdir -p {shlex.quote(os.path.dirname(tree))}"])
+                if prep.returncode:
+                    print(f"{host}: refuse (target exists or not writable)"); bad = 1; continue
+                lf = shlex.quote(local_from)
+                rs = subprocess.run(SSH + [host, slot_sh() + f"rsync -a --exclude=/{LINKBASE} --link-dest={lf}/ {lf}/ {shlex.quote(part)}/ && cd {shlex.quote(part)} && chmod u+w . && "
+                                                 f"echo {lf} > {LINKBASE}.tmp && chmod a-w {LINKBASE}.tmp && mv -f {LINKBASE}.tmp {LINKBASE} && chmod a-w ."])
+                rc, txt = remote_verify(host, part, m["manifest_hash"], ro=True) if rs.returncode == 0 else (1, "local reuse copy failed")
+                if rc == 0:
+                    rc = subprocess.run(SSH + [host, f"mv -T {shlex.quote(part)} {shlex.quote(tree)}"]).returncode
+                if rc == 0:
+                    subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} index-add {shlex.quote(tree)}"], capture_output=True)
+                print(f"{host}: " + (f"OK (reused same-manifest tree {local_from} on the target: hardlinks, 0 bytes over the network)" if rc == 0 else txt[:1500]))
+                bad |= bool(rc)
+                continue
             free, have = remote_free_gb(host, os.path.dirname(tree), part)
             if free is None:
                 print(f"{host}: refuse (cannot read the target's free space)"); bad = 1; continue
@@ -1397,7 +1512,7 @@ def main(argv=None):
                 rs = tar_copy(tree, host, part)
             else:
                 rs = subprocess.run(["rsync", "-a", "--exclude=/" + LINKBASE, *([f"--link-dest={linkdir}/"] if linkdir else []), "-e",
-                                     RSYNC_SSH, tree + "/", f"{host}:{part}/"])
+                                     RSYNC_SSH, "--rsync-path=" + slot_sh() + "rsync", tree + "/", f"{host}:{part}/"])
             if rs.returncode == 0 and linkdir:
                 lw = subprocess.run(SSH + [host, f"cd {shlex.quote(part)} && chmod u+w . && readlink -f {shlex.quote(linkdir)} > {LINKBASE}.tmp && "
                                                  f"chmod a-w {LINKBASE}.tmp && mv -f {LINKBASE}.tmp {LINKBASE} && chmod a-w ."])
@@ -1405,11 +1520,20 @@ def main(argv=None):
             rc, txt = remote_verify(host, part, m["manifest_hash"], ro=True) if rs.returncode == 0 else (1, "rsync failed")
             if rc == 0:
                 rc = subprocess.run(SSH + [host, f"mv -T {shlex.quote(part)} {shlex.quote(tree)}"]).returncode
+            if rc == 0:
+                subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} index-add {shlex.quote(tree)}"], capture_output=True)
             print(f"{host}: " + ("OK" if rc == 0 else txt[:1500]))
             bad |= bool(rc)
         return 1 if bad else 0
     elif a.cmd == "derive":
         print(json.dumps(derive(a.live, a.repo, a.sha, a.scope), indent=1, sort_keys=True))
+    elif a.cmd == "same-tree":
+        t = same_tree(a.hash, a.exclude)
+        if not t:
+            return 1
+        print(t)
+    elif a.cmd == "index-add":
+        return 0 if index_add(a.tree) else 1
     return 0
 
 
