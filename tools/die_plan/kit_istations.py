@@ -334,15 +334,32 @@ proc rs_dff_succ {i} {
   if {[llength $hits] == 1} { return [lindex $hits 0] }
   return ""
 }
+proc rs_norm {n} {
+  set n [string map {/ .} $n]
+  regsub {^(u_u_)lf[0-9]+_u_} $n {\\1} n
+  regsub -all {[.]g_[A-Za-z0-9_]*(\\[[0-9]+\\])?(?=[.])} $n {} n
+  return $n
+}
 proc rs_place_all {sites} {
   global ff_blk ff_dbu is_fh is_miss
-  set n 0; set hit [dict create]; set hit_i [dict create]; set used [dict create]; set al 0; set ni 0; set inst_k [dict create]
+  set n 0; set hit [dict create]; set hit_i [dict create]; set used [dict create]; set al 0; set ni 0; set inst_k [dict create]; set nn 0
   # RELAY-SEP (FABLE-FIX-QC 11-18): Yosys writes `inst.q[3]` for a register of a flattened instance and `inst/q[3]` where the
   # hierarchy is kept, and which one a module gets changes with the flow.  A key that matches no flop as written is tried with
   # '/' and '.' taken as the same separator (QC su_c x3: 1,034 of 1,034 keys u_u_suvm_u_vm8q_u_twb/q[N] matched nothing, the
   # flops are u_u_suvm_u_vm8q_u_twb.q[N]).  Exact names win; a separator-blind name shared by two keys is not used.
   set sep [dict create]
   dict for {k v} $sites { set a [string map {/ .} $k]; if {[dict exists $sep $a]} { dict set sep $a "" } else { dict set sep $a $k } }
+  # RELAY-NORM (FABLE-FIX-S81-COLROM-R5 11-21, the silent-miss class: 57 placed kits had unmatched keys): a key that still finds no
+  # flop is compared with the flop name NORMALISED for the two naming forms the plan side cannot see:
+  #   image-flat leaf prefix   key u_u_crr_rxsb/q            flop u_u_lf0_u_crr_rxsb/q   (S81 ot_s81sl_leaf: 25 of 25 keys unmatched)
+  #   generate scope           key u_u_fab_u_x_2_2.u_st.run  flop u_u_fab_u_x_2_2.u_st.g_seg[0].run   (QC cbn_q11)
+  # Only when exactly ONE flop normalises to the key (rs_norm_n): two flops of different generate scopes never share a seat.
+  set nrm_n [dict create]
+  foreach i [$ff_blk getInsts] {
+    if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+    regsub {\\$_[A-Za-z0-9_]*$} [string map {\\\\ {}} [$i getName]] {} k0
+    foreach c [lsort -unique [list [rs_norm $k0] [rs_norm [regsub {^[^./]*[./]} $k0 {}]]]] { if {[dict exists $sep $c]} { dict incr nrm_n $c } }
+  }
   foreach i [$ff_blk getInsts] {
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     set nm [string map {\\\\ {}} [$i getName]]
@@ -354,6 +371,14 @@ proc rs_place_all {sites} {
       foreach c [list $k0 [regsub {^[^./]*[./]} $k0 {}]] {
         set a [string map {/ .} $c]
         if {[dict exists $sep $a] && [dict get $sep $a] ne ""} { set k [dict get $sep $a]; break }
+      }
+      if {$k eq ""} {
+        foreach c [list $k0 [regsub {^[^./]*[./]} $k0 {}]] {
+          set a [rs_norm $c]
+          if {[dict exists $sep $a] && [dict get $sep $a] ne "" && [dict exists $nrm_n $a] && [dict get $nrm_n $a] == 1 && ![dict exists $hit [dict get $sep $a]]} {
+            set k [dict get $sep $a]; incr nn; break
+          }
+        }
       }
       if {$k eq ""} {
         # RELAY-INST (FABLE-FIX-S81-COLROM-R5 11-21, S81 J7 col ROM stages): a key that is no flop name but the INSTANCE the flop
@@ -391,11 +416,28 @@ proc rs_place_all {sites} {
       dict set hit $k 1; dict set hit_i $k $i; dict set used $i 1; incr n; incr al; set more 1
     }
   }
+  if {$nn} { puts "OT_RELAY_SITES RELAY-NORM: $nn keys matched on the normalised flop name (leaf lf prefix / generate scope)" }
   if {$ni} { puts "OT_RELAY_SITES RELAY-INST: $ni flops of [dict size $inst_k] instance keys sited as clusters at their plan sites" }
   if {$al} { puts "OT_RELAY_SITES RELAY-IDX: $al keys NAME\\[k\\] sited on the shift-stage successor of NAME\\[k-1\\]" }
   set miss [expr {[dict size $sites] - [dict size $hit]}]
   if {$miss} { lappend is_miss "relay_sites:$miss" }
   puts "OT_RELAY_SITES placed $n flops FIRM (plan keys unmatched: $miss of [dict size $sites])"
+  # SEAT-MISS (COORD 11-21: silent misses are the bug class): every plan seat key that found no register is listed, and the kit
+  # stops here unless the miss is waived.  OT_RELAY_SITES_UNMATCHED_MAX = the number of unmatched keys this kit may have
+  # (default 0; set it per item with the reason when the plan seats bits that synthesis removed).
+  if {$miss} {
+    set lim 0
+    if {[info exists ::env(OT_RELAY_SITES_UNMATCHED_MAX)] && [string is integer -strict $::env(OT_RELAY_SITES_UNMATCHED_MAX)]} { set lim $::env(OT_RELAY_SITES_UNMATCHED_MAX) }
+    set un {}
+    dict for {k v} $sites { if {![dict exists $hit $k]} { lappend un $k } }
+    if {[info exists ::env(RESULTS_DIR)] && [file isdirectory $::env(RESULTS_DIR)]} {
+      set uf [open $::env(RESULTS_DIR)/ot_relay_sites_unmatched.txt a]; foreach k $un { puts $uf $k }; close $uf
+    }
+    puts "OT_RELAY_SITES SEAT-MISS $miss plan seat keys match no register (limit $lim): [join [lrange $un 0 5] { }][expr {$miss > 6 ? { ...} : {}}]"
+    if {$miss > $lim} {
+      error "OT_RELAY_SITES SEAT-MISS: $miss of [dict size $sites] plan relay_sites keys match no register (first: [lindex $un 0]); fix the plan key or the matcher, or waive with OT_RELAY_SITES_UNMATCHED_MAX=$miss (ot_relay_sites_unmatched.txt lists them)"
+    }
+  }
 }
 """
 
