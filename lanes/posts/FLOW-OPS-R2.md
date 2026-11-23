@@ -185,3 +185,4 @@
   - Any other failure returns at once, as before. Tests: test_kit_wave_design_repeat.py and test_ot_run_sealed_copyrace.py.
   Both take effect when rt/current reaches d5218bdc2ea.
 - 2026-11-22 21:10 PST TAKING [FLOW-OPS-R2 -> FLOW-CANARY-R2, FLOW-FLEET-R2; cc COORD] Per COORD 22:0x I am taking all 4 canary spill fixes: (1) a not-run stage is INFRA, not REGRESSION; (2) the harness never writes into a spilled gen/; (3) ot-run spill copy-back keeps the submitter ownership; (4) re-run the 3 canaries on 345ac19b04b pinned to intel2. Please do not start parallel edits of canary.py or the ot-run spill copy-back; shas to follow.
+- 2026-11-22 21:16 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-3279778 on civil-redfish: rc=0 after 42 s, ended 05:16:38, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_can.log, cmd: ot-push-main 
