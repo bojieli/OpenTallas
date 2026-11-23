@@ -17,7 +17,10 @@ sys.path.insert(0, os.path.join(COORD, 'tools'))
 import failure_breakdown as fb
 
 DIES = [d for d in fb.DIES if d[0] != 'hbm']
-EXCLUDE_LANES = {'COORD', 'OWNERS-SWEEP', 'KIT-WAVE-1', 'KIT-WAVE-3', 'KIT-WAVE-5', 'KIT-WAVE-12'}
+SUCCESSOR = {"FABLE-FIX-KV-HG": "OPUS-FIX-KV-HG-R8", "FABLE-FIX-HEAD-LEP0N": "OPUS-FIX-HEAD-LEP0N-R9", "FABLE-FIX-QC-V4": "OPUS-FIX-QC-V4-R2",
+             "FABLE-FIX-KV-PV-SINKSPREAD": "OPUS-FIX-KV-PV-SINKSPREAD-R2", "FABLE-KV-DIE": "OPUS-KV-DIE-R2",
+             "FABLE-FIX-S81-LEAF-TAPHOLD": "OPUS-FIX-S81-LEAF-TAPHOLD-R2", "FABLE-FIX-S81-COL-RANKSEAT": "OPUS-FIX-S81-COL-RANKSEAT-R2"}   # 11-22 22:3x Fable limit
+EXCLUDE_LANES = {"QC-RELAUNCH-R1", 'COORD', 'OWNERS-SWEEP', 'KIT-WAVE-1', 'KIT-WAVE-3', 'KIT-WAVE-5', 'KIT-WAVE-12'}
 NOT_FAILED = {'running', 'running (lint advisory)', 'running (>150k advisory)', 'waits on child core', 'signed (count pending)',
               'cancelled (superseded)', 'duplicate (twin running)', 'needs parent receipt (re-sign)', 'withdrawn (lane form)',
               'placed, route held', 'held by die owner (plan event pending)', 'dedup orphan'}
@@ -311,6 +314,12 @@ def main():
             f = l.rstrip('\n').split('\t')
             if len(f) >= 2: ids[f[0]] = f[1]       # later rows win
     idx, lastpost = load_lanes(now, win)
+    for tk, d in idx.items():      # dead Fable lane -> successor (11-22 22:3x)
+        for dead, succ in SUCCESSOR.items():
+            if dead in d:
+                v = d.pop(dead)
+                if succ not in d or v[0] > d[succ][0]: d[succ] = v
+    for dead in SUCCESSOR: lastpost.pop(dead, None)
     lanes_known = set(lastpost) | set(ids)
     cache = json.load(open(fb.CACHE))
     rows = list(csv.DictReader(open(fb.STAGES), delimiter='\t'))
