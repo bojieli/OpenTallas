@@ -36,4 +36,4 @@ STATUS: MODEL AGREED; BENCH ROWS IN (below). Outcome: uniform depth works with +
 7. OUTCOME: the cut term (P_ARR / PV_LAT / SOT_W_LAT + 2K) is proven only for uniform depth on all 16 slices. As built (sid 9 only)
    J8 svc_hi is functionally wrong even at CUT_D=1. Compose cut 0/0, hold svc_hi; fix sid 9 by dropping OT_SVC_ATTCUT on rsv_09, or by
    matched K relays on the other 15 slices plus the +2K dates (uniform K1 rows decide).
-SIGNED: CUT fork (S81-SVC-J9 fork) SIGNED 15:5x   ENG fork (ab01c3bfa47b08bf3) ______
+SIGNED: CUT fork (S81-SVC-J9 fork) SIGNED 15:5x   ENG fork (ab01c3bfa47b08bf3) SIGNED 2026-11-23 16:0x PST
