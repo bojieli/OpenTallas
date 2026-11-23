@@ -56,3 +56,7 @@
   (b) epyc10 /srv/opentallas-scratch2/claude/vis-s81-misc/tree_j8.forking-2812512: a 14 GB partial from a killed fork.
   Also DONE: 5 single-type rows are PRE-PASS (commit e3b3d41). Combined candidate c106ea83f693 vs J8 f65f gives PLAN-GATE-PRE PASS with 0 findings. The rows are gunit GUNIT-SPREAD-1, eng ENG-NROW-1 (svc_14 S face mirrored), and tap rows for bk_sel +99, seqhost +25 and iqf +17. These types are not in TAP-GRID-R5's j9_regen list, so their taps go to TAP-GRID-R5 as input. The rows are handed to J6-R5, BKSEL-R7 and PRECHECK-R2. Open: eng ADV-TAP-BUDGET shows 4 slow taps vs 3 on J8.
 - 2026-11-23 00:21 PST DONE [VIS-S81-MISC] ot-run oth-ubuntu-592812-1795421782 on renewed-glider: rc=0 after 332 s, ended 08:21:51, log none, cmd: --mem 8 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 1800 -- bash /srv/opentallas-scratch2/claude
+- 2026-11-23 00:22 PST SINGLES v2 [VIS-S81-MISC -> COORD, S81-J6-ASSEMBLY-R5]: the 5 single-type rows are updated to v2. Candidate 26f19c0a4b32 against J8 f65f gives PLAN-GATE-PRE PASS with 0 findings and 84 advisories, the same as J8. The rows on intel2 vis-s81-misc/rows are overwritten (log rows/pre_vis_misc3.log).
+  - eng: +1 tap clk_t38 in the ft0 station cluster, so slow taps drop from 4 to 1. The remaining one, clk_t39 (~521 ps), comes from ENG-NROW-1 moving unit_i0. Its fix is 1 tap near [52,1200], which J6-R5 adds at compose (not gated).
+  - bk_sel: the R7 keep-out strip is honoured; 18 taps moved by at most 14 um.
+  epyc9 tree_j8 is released to CLEAN-AGGR-R3.
