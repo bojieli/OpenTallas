@@ -25,3 +25,14 @@ Hold u_lpl_2_r o[] -> u_chn -124: u_chn = hard macro ot_s81_kp4_dchn, lib hold 1
   Read: postplace_setup.log OT_POSTPLACE_WORST, then 4_cts_post_hook.rpt (lpr paths) under the full-cause census (fe8a2a5).
 ## Not done
 ROWS-READY post; ledger status; ot-push-main of the branch (add trailer commit + a test for the hook chain).
+
+## 15:55 PST state: REASONED posted (15:5x) + OWNERS-SWEEP answer
+- PRE row = base = RC 0 / 0 findings (epyc10 x14row/gate/pre_row.json). Scoped strict bind serdes__t14 errors 0: x14row/gate_1517.otrun.log
+  (plan 31b4b322c8fb = e6b802bb36da + Codex private fstart_0 re-seat) and intel1 x14_type_codex/rebind_exact_r2.otrun.log (J8-live).
+  11-type scoped bind OOM at 110 GB. gate_1439 error: EMIT landing_local_resets.fstart_0 depth 14 != 11 (Wave A reset replan; inferred not the row).
+- LATCHECK and probe impossible on a probe-only bind (no s81_bound_top.sv): x14row/lat_1517.otrun.log, x14row/probe_spec/kit_rtl.log.
+- Benches: MUT1/MUT2 caught, MUT4 not caught in any form incl. base (bench weakness).
+- NEXT: row rides the next full bind after B1 (ops replay by old value; 5 tree files incl. gen_phys.py). Then
+  kit_wave.py private-spec s81 serdes__t14 --plan P --tree T --bind-out FULL_OUT --goal cts; run-item; read OT_POSTPLACE_WORST + 4_cts_post_hook.
+- Still to do: ot-push-main of branch claude/s81-serdes-lpr-forest-1123 (add trailer + hook-chain test); ledger row -> REASONED (PRECHECK-LEDGER-R3).
+- Private fork epyc10 x14row/tree is 81 GB on a 96% disk: ot-delete it once the row is carried.
