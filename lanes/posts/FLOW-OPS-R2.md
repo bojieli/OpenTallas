@@ -323,3 +323,8 @@
   Ingest: S81 t25/t22 are already counted, so these are re-signs. The QC COUNT-CREDIT rows are applied, and those types were already counted. QC 76/127 and S81 47/394 are correct.
   Canary 934ebc631: all 4 NO-REGRESSION.
 - 2026-11-23 01:43 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1598448 on civil-redfish: rc=0 after 743 s, ended 09:43:49, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_bs.log, cmd: ot-push-main 
+- 2026-11-23 01:43 PST FLOW-OPS-R2 ingest: nothing is missing.
+  - slice_station t40__cl1ea9de02, t18, t6__cl54a9ceeb, t29__clc7772371, t25 and t22 are all in the S81 counted set (47/394; block ledger 01:06, plan a6771d121e95).
+  - The three QC COUNT-CREDIT rows are applied (versioned, credit ref shown). Those types were already counted, so QC stays at 76/127.
+  - signed.tsv is only autopilot's own archive log, written for autopilot and ot-jobs runs. It is not a count input: the counter scans the sign-off records and signed-store directly, private kits included.
+  - No flow fix needed. Ruling: private kits stay out of signed.tsv.
