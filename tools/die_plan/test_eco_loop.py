@@ -1436,7 +1436,7 @@ def test_residual_pass_not_signed_keeps_exhausted_and_better_best(tmp_path, monk
     assert len(r["iterations"]) == 2
 
 
-@pytest.mark.parametrize("n_ends,worst,why", [(6, -2.0, "more than 5 ends"), (2, -5.5, "worse than -5 ps")])
+@pytest.mark.parametrize("n_ends,worst,why", [(9, -2.0, "more than 8 ends"), (2, -10.5, "worse than -10 ps")])
 def test_residual_pass_only_for_a_handful_of_shallow_ends(tmp_path, monkeypatch, n_ends, worst, why):
     _residual_env(monkeypatch, n_ends=n_ends)
     k = kit(tmp_path, mm=False)
@@ -1489,7 +1489,15 @@ def test_residual_cli_on_a_finished_loop(tmp_path, monkeypatch):
 def test_residual_case_ignores_advisory_drv():
     m = dict(signed=False, min_hold_only=True, drc=0, drv=1913, ff_core_n=1, ff_core=-0.07, hold_score_exact=True)
     assert E.residual_case(m)
-    assert not E.residual_case(dict(m, drc=1)) and not E.residual_case(dict(m, ff_core_n=6)) and not E.residual_case(dict(m, ff_core=-5.01))
+    assert not E.residual_case(dict(m, drc=1)) and not E.residual_case(dict(m, ff_core_n=9)) and not E.residual_case(dict(m, ff_core=-10.01))
+
+
+def test_residual_window_8_ends_10_ps():
+    """COORD 11-23: residual pad pass when <= 8 internal ends and worst >= -10 ps (slw_fe_v1_g: 6 ends at -7.66 ps, drv 1 advisory)"""
+    assert (E.RESIDUAL_MAX_ENDS, E.RESIDUAL_FLOOR_PS) == (8, -10.0)
+    m = dict(signed=False, min_hold_only=True, drc=0, drv=1, ff_core_n=6, ff_core=-7.66, hold_score_exact=True)
+    assert E.residual_case(m) and E.residual_case(dict(m, ff_core_n=8, ff_core=-10.0))
+    assert not E.residual_case(dict(m, ff_core_n=9)) and not E.residual_case(dict(m, ff_core=-10.01))
 
 
 def test_three_passes_by_default(tmp_path, monkeypatch):

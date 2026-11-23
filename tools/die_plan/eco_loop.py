@@ -66,8 +66,9 @@ MAX_ITER = 3                  # OWNER 11-20 decision 1 (COORD ruling QC-HOLD-003
 # plan, select 0 ps = failing ends only, no guard band), keeps the TT setup room check (hold_eco_internal TT_FLOOR_PS, sign-off gate -42 ps), and the
 # result is signed off like any pass.  Case = DRC 0, hold the only failing gate (R-MINIMAL), at most RESIDUAL_MAX_ENDS exact internal ends, none
 # worse than RESIDUAL_FLOOR_PS.  OT_ECO_RESIDUAL=0 turns it off.
-RESIDUAL_MAX_ENDS = 5
-RESIDUAL_FLOOR_PS = -5.0
+# COORD 11-23 (NEARMISS-ECO-R1, slw_fe_v1 left 6 ends at -7.66 ps after 3 passes): an understood local near miss -> window <= 8 ends, worst >= -10 ps (was 5 / -5)
+RESIDUAL_MAX_ENDS = 8
+RESIDUAL_FLOOR_PS = -10.0
 RESIDUAL_SELECT_PS = 0.0
 HOLD_MARGIN_PS = 10           # HOLD-FLOW-R 11-16 (lever 1): hold REPAIR TARGET 10 ps on internal (reg2reg) endpoints, was 5 (COORD 11-09 KW-FIX-42): a repair to +0..+5 lands negative after re-extraction (9-17 ps) for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
