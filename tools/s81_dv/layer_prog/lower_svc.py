@@ -127,6 +127,10 @@ SERVICE_TIMING = {
     # scores), and KPV +7 on top of PO (which already follows PIO): P.V drain +14 a pass.  Same arithmetic, new dates.
     'legacy_fg3_srx7': dict(pio=285 + 7, kpv=55 + 7, engine_profile='legacy_fg3', srx=7),
     'closing_allq_srx7': dict(pio=297 + 7, kpv=78 + 7, engine_profile='closing', srx=7),
+    # S81-SVC-J9 (11-23): -DOT_SVC_SRX=7 with -DOT_SVC_ENG_XS (two kept engine stages in ot_s81_svc_attn_s: tile input and
+    # tile output).  From outside it is the SRX signature with n = 7 + 2 (svc_srx_lockstep.py --eng-xs: scores +9,
+    # p feed +9, P.V +18), so the dates move like srx7: PIO +9, KPV +9.  Same arithmetic, new dates.
+    'closing_allq_srx7_xs': dict(pio=297 + 9, kpv=78 + 9, engine_profile='closing', srx=7, eng_xs=2),
 }
 
 # TOK-DS-CMP (10-26): compressed-row (DSA) layers -- 128 window rows + the indexer's nsel selected compressed rows,
@@ -652,7 +656,7 @@ class Job:
         """t_q0: the CFG word's cycle (own row ready), t_q: q_rope done, t_exp: P (exp) ready -- all at the q pins.
         Returns {frame: first word cycle} and the job's derived cycles."""
         T = self.T
-        if self.timing_profile in ('closing_allq', 'closing_allq_srx7') and not ((T == 128 or self.compressed) and self.allq and self.so and PPATH):
+        if self.timing_profile in ('closing_allq', 'closing_allq_srx7', 'closing_allq_srx7_xs') and not ((T == 128 or self.compressed) and self.allq and self.so and PPATH):
             raise ValueError('closing_allq timing requires the H16/D512 ALLQ+SMT on-die-P programme (T128, or T128+nsel '
                              'compressed with the T-scaled PIO)')
         if self.npass > 1:
