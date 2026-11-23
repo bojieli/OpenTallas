@@ -15648,11 +15648,13 @@ def newest_log(top):
                     best = max(best, os.stat(os.path.join(dp, f)).st_mtime)
                 except OSError:
                     pass
-    # ORFS writes report_metrics to a report file before the global-place ODB.
-    # On a large kit the stage log can stay silent while this report advances.
+    # ORFS can advance its global-place and resizer reports while stdout
+    # stays silent before the corresponding placement checkpoint is written.
     for prefix in (top, os.path.join(top, 'gen', '*')):
-        pattern = os.path.join(prefix, 'run', 'reports', '*', '*', '*', '3_global_place.rpt')
+        pattern = os.path.join(prefix, 'run', 'reports', '*', '*', '*', '3_*.rpt')
         for report in glob.glob(pattern):
+            if os.path.basename(report) not in ('3_global_place.rpt', '3_resizer.rpt'):
+                continue
             try:
                 st = os.stat(report, follow_symlinks=False)
                 if st.st_size and stat.S_ISREG(st.st_mode):
