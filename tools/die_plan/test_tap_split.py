@@ -344,3 +344,22 @@ def test_protect_rings_regex_limits_the_rings():
     s.w, s.h, s.clear, s.boxes, s.core, s.protect = 800.0, 800.0, 1.0, [], [], []
     s.fixed = [(150.0, 489.0), (150.0, 100.0)]
     assert s.protect_rings(r"fclk_in_ft1_i$") == 1 and s.ok(100.0, 100.0, s.fixed) and not s.ok(100.0, 489.0, s.fixed)
+
+
+def test_fresh_rebuilds_a_uniform_grid_onto_the_sink_mass(monkeypatch):
+    """FRESH (TAP-GRID-R5 11-23, rc66 serdes__t2 form): a 4 x 2 uniform grid over 800 x 800, all 4000 sinks in one
+    200 x 100 corner block -> the grid has 1 tap over cap and 6-7 (near) empty; FRESH writes an explicit table on the block:
+    every tap <= cap, >= 30 sinks, within the radius."""
+    tps = [("clk" if i == 0 else f"clk_t{i}", 100.0 + 200.0 * (i % 4), 200.0 + 400.0 * (i // 4)) for i in range(8)]
+    sinks = _dense(80, 50, 600.0, 650.0, 199.0, 99.0)
+    P = _setup(monkeypatch, "grid+explicit", tps, sinks)
+    rep, rows = TS.fresh_type(P, "t", 200.0)
+    assert rep["before"]["over_cap"] == 1 and rep["before"]["under_min"] >= 6
+    assert rep["status"] == "SPLIT" and rep["key"] == "replace_taps", rep
+    assert rows[0]["name"] == "clk" and all(600.0 <= r["xy"][0] <= 800.0 and 650.0 <= r["xy"][1] <= 750.0 for r in rows)
+    loads = taps.tap_loads([tuple(r["xy"]) for r in rows], sinks)
+    assert max(n for n, _ in loads) <= 1000 and min(n for n, _ in loads) >= 30 and max(f for _, f in loads) <= 200.0
+    raw = {"partition_types": {"t": {"clock": {"tap_mode": "grid+explicit", "added_taps": [{"name": "clk_t9"}]}}}}
+    TS.apply_rows(raw, {"t": ("replace_taps", rows)})
+    ck = raw["partition_types"]["t"]["clock"]
+    assert ck["tap_mode"] == "explicit" and ck["taps"] == rows and "added_taps" not in ck

@@ -55,6 +55,15 @@ split from its own sinks: the k-medians centre nearest the neighbour pulls thous
 (cap * margin)) - fixed, at least 1, +3 tried) by constrained weighted k-medians (assign to all, move only the free
 ones), each legalised, all sinks re-assigned, kept when the excess drops.
 
+FRESH (TAP-GRID-R5 11-23, rc66 SPARSE-TAP-1 serdes): --fresh TYPES rebuilds the WHOLE tap table of those types from their
+sinks instead of appending (serdes__t2: a uniform grid over 2886 x 1227 vs a sink median at (1550, 255), 8 taps over
+cap, 7 under 30 sinks, 37 % of sinks > 200 um from a tap).  k = ceil(load / (cap x margin)) weighted L1 k-medians,
+legalised; then while a tap is over cap or radius its group is split by 2-medians (far part own centre); taps
+under --fresh-min-sinks are dropped and their sinks re-assigned; centres relaxed to their group medians.  Written as
+clock.tap_mode explicit, clock.taps = [clk, clk_t1, ...], clock.added_taps removed (row key "replace_taps"); the
+landing references are re-anchored by the REMAP-ALWAYS pass like any row.  No tap over empty area: every kept tap
+serves >= min sinks.
+
 PROTECT-RINGS (TAP-GRID-R5 11-23, rc117 KV kv3_sys_c): a landing ring copies the raw reset of the tap NEAREST its
 receive window (clock_landings: bus face / window_um midpoint, ft_slot in_face / in_window_um, landing_contract pin
 fclk_in_<bus>) and the plan's
@@ -420,6 +429,112 @@ def global_pass(site, added, idx, dist, X, Y, W, TX, TY, cap, margin, radius, n0
     return added, idx, dist
 
 
+def fresh_type(P, tn, radius, cap=None, margin=0.9, min_sinks=30, max_taps=400, require_placed=False):
+    """FRESH: a new explicit tap table for type tn from its sinks; -> (rep, rows) with rep["key"] = "replace_taps"."""
+    import math
+    import gen_phys
+    import schema
+    np = _np()
+    t = P.types[tn]
+    cap = min(gen_phys._tap_cap(t), cap) if cap else gen_phys._tap_cap(t)
+    rep = dict(type=tn, mode="fresh", cap=cap, radius_um=radius, sink_basis=sink_basis(P, tn), min_sinks=min_sinks)
+    if require_placed and rep["sink_basis"] != "placed":
+        rep["status"] = "NO_PLACED"
+        return rep, []
+    sinks = type_sinks(P, tn)
+    if not sinks:
+        rep["status"] = "NO_SINKS"
+        return rep, []
+    S_ = np.array(sinks, dtype=float)
+    X, Y, W = S_[:, 0], S_[:, 1], S_[:, 2]
+    tp = schema.tap_grid(P, tn)
+    rep["taps_before"] = len(tp)
+    if tp:
+        i0, d0 = nearest(np.array([q[1] for q in tp], float), np.array([q[2] for q in tp], float), X, Y)
+        l0, f0, b0 = stats(i0, d0, W, len(tp), radius)
+        rep["before"] = dict(max_load=int(round(l0.max())), over_cap=int((np.round(l0) > cap).sum()),
+                             under_min=int((l0 < min_sinks).sum()), max_radius=round(float(f0.max()), 3),
+                             over_radius=int((f0 > radius + 1e-6).sum()), excess=excess(l0, b0, cap))
+    site = Site(P, tn, [])
+
+    def legal(C):
+        out = []
+        for cx, cy in C:
+            s_ = site.place(float(cx), float(cy), out)
+            if s_ is not None and s_ not in out:
+                out.append(s_)
+        return out
+
+    def assign(C):
+        return nearest(np.array([a for a, _ in C], float), np.array([b for _, b in C], float), X, Y)
+
+    k0 = max(1, int(math.ceil(float(W.sum()) / (cap * margin))))
+    C = legal(kmedians(X, Y, W, k0))
+    if not C:
+        rep["status"] = "BLOCKED"
+        rep["why"] = "no legal tap site"
+        return rep, []
+    blocked = set()
+    for _ in range(4 * max_taps):
+        idx, dist = assign(C)
+        load, far, _b = stats(idx, dist, W, len(C), radius)
+        bad = [int(k) for k in np.argsort(-np.maximum(np.round(load) / cap, far / radius), kind="stable")
+               if (round(load[k]) > cap or far[k] > radius + 1e-6) and tuple(C[k]) not in blocked]
+        if not bad or len(C) >= max_taps:
+            break
+        k = bad[0]
+        mem = np.nonzero(idx == k)[0]
+        e0 = excess(load, _b, cap)
+        best = None
+        for kk in (2, 3):
+            if len(mem) < kk:
+                break
+            new = legal(kmedians(X[mem], Y[mem], W[mem], kk))
+            tr = C[:k] + C[k + 1:]
+            tr = tr + [q for q in new if q not in tr]
+            i2, d2 = assign(tr)
+            l2, _f2, b2 = stats(i2, d2, W, len(tr), radius)
+            e2 = excess(l2, b2, cap)
+            if e2 < e0 - 1e-9 and (best is None or e2 < best[0]):
+                best = (e2, tr)
+        if best is None:
+            blocked.add(tuple(C[k]))
+            continue
+        C = best[1]
+    for _ in range(5):                               # drop taps under min_sinks, relax centres to their medians
+        idx, dist = assign(C)
+        load, far, _b = stats(idx, dist, W, len(C), radius)
+        keep = [C[j] for j in range(len(C)) if load[j] >= min_sinks]
+        if keep and len(keep) < len(C):
+            C = keep
+            idx, dist = assign(C)
+            load, far, _b = stats(idx, dist, W, len(C), radius)
+        e0 = excess(load, _b, cap)
+        R_ = []
+        for j in range(len(C)):
+            m = idx == j
+            R_.append((wmedian(X[m], W[m]), wmedian(Y[m], W[m])) if m.any() else C[j])
+        R_ = legal(R_)
+        if len(R_) != len(C):
+            break
+        i2, d2 = assign(R_)
+        l2, _f2, b2 = stats(i2, d2, W, len(R_), radius)
+        if excess(l2, b2, cap) > e0 + 1e-9 or (l2 < min_sinks).any() or R_ == C:
+            break
+        C = R_
+    idx, dist = assign(C)
+    load, far, beyond = stats(idx, dist, W, len(C), radius)
+    rep["after"] = dict(max_load=int(round(load.max())), over_cap=int((np.round(load) > cap).sum()),
+                        under_min=int((load < min_sinks).sum()), max_radius=round(float(far.max()), 3),
+                        over_radius=int((far > radius + 1e-6).sum()), excess=excess(load, beyond, cap),
+                        taps=len(C), beyond_radius_share=round(float(W[dist > radius + 1e-6].sum() / W.sum()), 4))
+    ok = rep["after"]["excess"] <= 0 and not rep["after"]["under_min"]
+    rep["status"] = "SPLIT" if ok else "PARTIAL"
+    rep["key"] = "replace_taps"
+    rows = [{"name": "clk" if i == 0 else f"clk_t{i}", "xy": [round(x, 3), round(y, 3)]} for i, (x, y) in enumerate(C)]
+    return rep, rows
+
+
 def spans(idx, X, Y, nt):
     """W + H of the bounding box of each tap's sinks (0 for an empty tap)."""
     np = _np()
@@ -745,6 +860,11 @@ def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, 
 def apply_rows(raw, rows_by_type):
     for tn, (key, rows) in rows_by_type.items():
         ck = raw["partition_types"][tn].setdefault("clock", {})
+        if key == "replace_taps":                   # FRESH: the whole table, explicit
+            ck["tap_mode"] = "explicit"
+            ck["taps"] = list(rows)
+            ck.pop("added_taps", None)
+            continue
         ck.setdefault(key, [])
         ck[key] = list(ck[key]) + rows
 
@@ -780,6 +900,9 @@ def main(argv=None):
                     help="a type without sink_bins_file or placed sinks is NO_PLACED (no rows) instead of split on planned sinks")
     ap.add_argument("--multi-margin", type=float, default=0.9,
                     help="MULTI-TAP: k = ceil(load / (cap * M)) taps at the k-medians of a dense cluster when no single tap helps; 0 = off")
+    ap.add_argument("--fresh", default="", metavar="TYPES",
+                    help="FRESH: comma list of types whose tap table is rebuilt from their sinks (explicit, replaces taps)")
+    ap.add_argument("--fresh-min-sinks", type=int, default=30, help="FRESH: drop taps serving fewer sinks")
     ap.add_argument("--protect-rings", nargs="?", const=".*", default=None, metavar="REGEX",
                     help="PROTECT-RINGS: no new tap nearer a landing receive window (fclk_in_<bus> name matching REGEX, "
                          "default all) than its current nearest tap; e.g. only the ring feeding a raw-branch role")
@@ -817,7 +940,11 @@ def main(argv=None):
     reps, rows_by_type = [], {}
     for tn in types:
         try:
-            rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed,
+            if tn in set(x for x in a.fresh.split(",") if x):
+                rep, rows = fresh_type(P, tn, a.radius_um, cap=a.cap or None, margin=a.multi_margin or 0.9,
+                                       min_sinks=a.fresh_min_sinks, require_placed=a.require_placed)
+            else:
+                rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed,
                                     multi_margin=a.multi_margin, multi_nbhd=a.multi_nbhd, span_um=a.span_um or None,
                                     global_rounds=a.global_rounds, protect_rings=a.protect_rings)
         except Exception as ex:
