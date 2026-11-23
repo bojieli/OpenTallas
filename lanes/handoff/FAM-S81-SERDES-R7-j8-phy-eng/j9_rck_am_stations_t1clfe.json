@@ -1,0 +1,187 @@
+{
+ "schema": "opentallas.j6_donor_delta.v1",
+ "lane": "FAM-S81-SERDES-R7",
+ "target_event": "J9",
+ "type": "serdes__t1__clfe1f0815",
+ "measured_from": "epyc7 items/serdes__t1__clfe1f0815 @1 event 18a2688b741 geom/geom.tsv (3_place)",
+ "cause": "OT_S81_RCK_RELAY4 transport: txl_mid.tcl spaces each u_rck_transport4 bit between its source and the first non-buffer input after q. For the 9 AM partial bits (545..553) that is a comb gate of the am_a cone, not a register. All 4 stages therefore sat within 400 um of the AM face (2451.8,934.0): stage x 2354/2256/2157/2057. That left the 19-level cone and 1,288 um of wire to u_syn.g_ampipe.am_a at (1362.8,318.2): -312 ps post-place.",
+ "fix": "FIRM relay_sites for the 36 AM-bit stage flops on the straight face->am_a line at s = 405/810/1215/1620 um (Manhattan, of 1704.8). Register legs 405/405/405/405, then q->am_a 84.8 um for the 19-level cone. 0 cycles, no RTL change; txl_mid leaves FIRM rows alone.",
+ "legs_um": [
+  405.0,
+  405.0,
+  405.0,
+  405.0,
+  84.8
+ ],
+ "row_centres": [
+  [
+   2193.092,
+   787.708
+  ],
+  [
+   1934.384,
+   641.416
+  ],
+  [
+   1675.677,
+   495.123
+  ],
+  [
+   1416.969,
+   348.831
+  ]
+ ],
+ "ops": [
+  {
+   "op": "add",
+   "path": "/partition_types/serdes__t1__clfe1f0815/relay_sites",
+   "expected_absent": true,
+   "value": {
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][545]": [
+     2187.908,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][546]": [
+     2189.204,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][547]": [
+     2190.5,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][548]": [
+     2191.796,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][549]": [
+     2193.092,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][550]": [
+     2194.388,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][551]": [
+     2195.684,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][552]": [
+     2196.98,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[0][553]": [
+     2198.276,
+     787.708
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][545]": [
+     1929.2,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][546]": [
+     1930.496,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][547]": [
+     1931.792,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][548]": [
+     1933.088,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][549]": [
+     1934.384,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][550]": [
+     1935.68,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][551]": [
+     1936.976,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][552]": [
+     1938.272,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[1][553]": [
+     1939.568,
+     641.416
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][545]": [
+     1670.493,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][546]": [
+     1671.789,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][547]": [
+     1673.085,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][548]": [
+     1674.381,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][549]": [
+     1675.677,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][550]": [
+     1676.973,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][551]": [
+     1678.269,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][552]": [
+     1679.565,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.g_reg.r[2][553]": [
+     1680.861,
+     495.123
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[545]": [
+     1411.785,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[546]": [
+     1413.081,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[547]": [
+     1414.377,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[548]": [
+     1415.673,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[549]": [
+     1416.969,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[550]": [
+     1418.265,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[551]": [
+     1419.561,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[552]": [
+     1420.857,
+     348.831
+    ],
+    "u_bound.u_core.u_dec.u_rck_transport4.q[553]": [
+     1422.153,
+     348.831
+    ]
+   }
+  }
+ ]
+}
