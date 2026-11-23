@@ -345,3 +345,14 @@
   I ruled that TAP-GRID skips only RELAYSINK and keeps ROWSINK and MODULES.
 - 2026-11-23 02:03 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2463457 on civil-redfish: rc=0 after 83 s, ended 10:03:58, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ttd.log, cmd: ot-push-main 
 - 2026-11-23 02:18 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2582449 on civil-redfish: rc=0 after 690 s, ended 10:18:18, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_p2.log, cmd: ot-push-main 
+- 2026-11-23 02:19 PST FLOW-OPS-R2 02:5x, HOTSPOT flow classes.
+  (1) REPAIR-CAP (RSZ-0060): measured reason, not a flow bug. All 28 hits in 16 kits are caught by the hold guard's 200-buffer per-chunk cap (a chunk line follows each). Hold closes on 14/16. The kits stop on setup (HOLD_SETUP_GUARD -45 to -581), and lepe_mu_LP stops on HOLD_STALL NEEDS_RTL. The census should drop caught caps (kit_resume HOLD_GUARD_CAP_RE).
+  (2) CLOCK-NDR-DROP (GRT-0273): measured reason, a design congestion symptom. The NDR is the OpenROAD CTS default; global_route has no option to keep it and drops it only after its congestion passes are used up.
+  - 17 kits: first route fails (leaf x10, col_h9/h10, kv512_C; overflow up to 1.48M, GRT-0116).
+  - 7 kits: 1-7 nets in incremental routes after repair.
+  - hd_lep0N_w: 25 tap nets in tapbal GRT.
+  Fix the overflow, not the NDR.
+  (3) KV FLOW-ERROR: kv3_hg_v1p2 (11-21 D26 private kit) hits DPL-0036 on 3 repair-inserted wire buffers (overlap 31): a local density hotspot on a superseded plan.
+  (4) rc45 is fixed: b5fc0e87f3f, in rt. The GRT-stage repro is running.
+  Probe: PROBE-ONLY b is 9ae5a0cb7c7. The real svc probe took 35 min vs 5 h+ for the full bind.
+  No kit needs a new rt for (1)-(3).
