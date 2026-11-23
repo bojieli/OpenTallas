@@ -1050,7 +1050,10 @@ def sot_booking_for(job, s):
             done_offset = max(GW_SP * k - GW_ARR - RT_HOP * d +
                               SO_RETIRE + UP_HOP * d for k, (_, d) in enumerate(hs)) + JD_SO
             old_done = a0 + done_offset
-            shift = max(0, last_q + 2 - old_done)
+            # The source edge is followed by the entry pin and A0 q sample.
+            # A0 may retire with its final q word at that sample, and the
+            # external JD pulse follows one edge later.
+            shift = max(0, last_q + 3 - old_done)
             a0 += shift
             lifetime[half] = dict(read_retire_delay_edges=shift,
                                   done_before=old_done, done_after=a0 + done_offset)
