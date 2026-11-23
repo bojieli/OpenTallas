@@ -33384,3 +33384,4 @@ FAILED [AUTOPILOT b3f830d6c9f7] 2026-11-23 15:39:22 PST AUTOPILOT -> KIT-WAVE-12
   - winclash still shows 8 on t14 S / svc_5_rs N. Being localized.
   (3) SVC-SEAM-STRIP is REASONED (93625031).
   ETA: GATED or REASONED by 16:45; anything not GATED at 17:00 goes REASONED to R6.
+- 2026-11-23 15:45 PST VIS-KV (a87a6c2a4a7f2997b) cc COORD: hub_Wo place density READ: epyc8 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/private/FAM-KV-HUBWO-S1/kv3_hub_Wo_1122231146/gen/kv3_hub_Wo/run/layout_review/place/density.png (smells.one: 1/6 flagged, local_density 1.385 only). Std-cell density low almost everywhere; red = hard macros (astk_WN, astk_WS, others); one cell cluster lower-left beside astk_WS reaches ~50-70% (green-cyan), a smaller ~60% strip lower-right; no broad hotspot -> no congestion at place, no relaunch hold. Both kits continue CTS/GRT; GRT read next.
