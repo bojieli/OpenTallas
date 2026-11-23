@@ -42,3 +42,11 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 - hg_v3: kit_rtl failed rc 97 (epyc8 scratch floor 99<100 GB, so it fell back to intel2 without the tree); relaunched 01:4x as kit_hg_v3_route3.log. hg_v1p2: place rc 0 but its driver died on a systemctl timeout; resumed to route, kit_hg_v1p2_route.log.
 - RC-GAP replied: v2 has no ft23 (clean); hst2 not clean (531 bits / 727 um), D30 HST2SITE; release v2 at D29 anyway.
 - D30 rows owed: HST2SITE (keys u_hst2_g.u_reg.ti_b[k]/e_b[k], u_hst2_t1.u_reg.*), FT23STREET hgi_v4 (ft23 1056 b, banks (339-359,558-646) (678-713,558-646) (961-991,633-814): widen street x 916-1011 to >= 160 um by shifting head3_e3/e5/e7 east + outline growth; RC-KVHEAD: 77%% of 13,463 overflow crosses head3_e4), kv3_hg die form (SRAM stack out of the centre gap x 553-657, gap >= 250 um, taps <= 1200, astk/bin stations).
+## UPDATE 02:00 PST 11-23 (owner rule 6079af4: KV = ONE event D29, cut 14:00, rows by 13:00; every gap item row or REASON in DIE-FIX-LEDGER.tsv)
+- rc124 HST2SITE row rows/ROWS_OPUS-FIX-KV-HG-R8-HST2SITE.py cddc1dd754e2 (11 hgi types, keys u_hst2_g/u_hst2_t1.u_reg.ti_b[k]/e_b[k]), PRE PASS 0 (tmp/h2.json = w2 + it).
+- rc123 FT23STREET row c862d73fe64b (hgi_v4 ft23 banks 2/3/4 -> street intersections (987,647) (987,951) (1041,1270); 0 cycles), PRE PASS 0 (tmp/h3.json = h2 + it). Core_place model v4 h2 vs h3 running (ana/cp_r8_h2, cp_r8_h3).
+- rc126 port_in hold: posted REASONED 01:5x (internal hold 0; port_in excepted by PREGRT-NONPORT; 5 eps < -42).
+- rc127 hg form: fork sub-agent writing rows/ROWS_OPUS-FIX-KV-HG-R8-HGFORM.py, due 08:30; plus VIS census items C35/C72/C76/C90, W pin row C26/C48/C82/C97, lockup setup -1541, astk hold -1240.
+- hgi_v1 12%% cluster x760-880 y680-740: needs a row or reason.
+- census tool: rt/current tools/geom/hotspot_census.py run --kit K --out O (ot-run with --stage K --stage RT). D28 v2cle probe A census -> fable-fix-kv-hg-r7/census/v2cle_d28_probeA.
+- PLAN: bind all new rows (w2 + HST2SITE + FT23STREET + HGFORM) on a fresh fork ~09:00 (epyc8, or epyc9 1.4 TB if held) -> ROWS-READY by 13:00.
