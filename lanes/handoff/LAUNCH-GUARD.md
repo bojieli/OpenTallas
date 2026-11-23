@@ -12,3 +12,7 @@ WAVE-OPS-R1 told (post 00:54) that LAUNCH-GUARD builds FIX 3.
 
 ## 02:2x DONE
 main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. NOPROG 02:00: 7 design-fail units cancelled, scopes verified gone. Lane goal done; watch only.
+
+## 11-23 03:5x
+- main feedad5ec7 (rt feedad5ec7e6): FIX 3 hardened (PLACE-SETUP-STOP < -300 ps = design; older design fail not hidden by later cancel/infra attempt) + ENV-EFFECT run_item gate (kit_wave.env_effect_refusal, tools/autopilot/env_effect.py; scan CLI). seqhost/kv512/c1x repeats all launched before 01:56 via stale pending keys.
+- Scan 03:4x: 1 mismatch col_h10_r1__t1__cl95b37463__pv1a6ec9c2@2 OT_KEEP_WIRES (stage-resumed kit). MISC kit 1 did have OT_TAP_GRT_PRE=1.
