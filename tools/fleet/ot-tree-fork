@@ -392,6 +392,47 @@ def make_ro_tree(root):
         os.chmod(dp, os.lstat(dp).st_mode & ~0o222)
 
 
+VERIFY_PY = r"""
+import hashlib, json, os, sys
+src = sys.argv[1]; m = json.load(open(os.path.join(src, ".src-manifest.json")))
+if m.get("manifest_hash") != sys.argv[2]:
+    print("OT_VERIFY other manifest hash"); sys.exit(0)
+for rel, want in sorted((m.get("files") or {}).items()):
+    q = os.path.join(src, rel)
+    try:
+        if os.path.islink(q):
+            got = "link:" + hashlib.sha256(os.readlink(q).encode()).hexdigest()
+        else:
+            h = hashlib.sha256()
+            with open(q, "rb") as f:
+                for b in iter(lambda: f.read(1 << 20), b""):
+                    h.update(b)
+            got = h.hexdigest()
+    except OSError:
+        print("OT_VERIFY missing " + rel); sys.exit(0)
+    if got != want:
+        print("OT_VERIFY modified " + rel); sys.exit(0)
+print("OT_VERIFY ok")
+"""
+
+
+def remote_src_identity(src_host, src, h):
+    """FORK-IDENTITY-1122: '' when SRC on src_host provably holds the content of manifest h, else why not (edited).
+    A fork (.fork.json) is edited by definition; a writable tree is hashed in full on src_host.  Raises Refused if the check cannot run."""
+    rc, txt = ssh_out(src_host, f"cd {shlex.quote(src)} && {{ test -e .fork.json && echo OT_FORK; test -w . && echo OT_WRITABLE; echo OT_PROBE; }}", timeout=120)
+    if rc != 0 or "OT_PROBE" not in txt:
+        raise Refused(f"TREE-FORK IDENTITY {src_host}:{src}: cannot probe the source (rc {rc}); refused rather than substitute manifest {h[:12]}")
+    if "OT_FORK" in txt:
+        return "SRC is a fork (.fork.json): its manifest hash is its parent's"
+    if "OT_WRITABLE" not in txt:
+        return ""
+    rc, txt = ssh_out(src_host, f"python3 -I -c {shlex.quote(VERIFY_PY)} {shlex.quote(src)} {shlex.quote(h)}", timeout=3600)
+    v = [x for x in txt.splitlines() if x.startswith("OT_VERIFY ")]
+    if rc != 0 or not v:
+        raise Refused(f"TREE-FORK IDENTITY {src_host}:{src}: writable source could not be checked against manifest {h[:12]} (rc {rc}); refused rather than substitute")
+    return "" if v[-1] == "OT_VERIFY ok" else "writable SRC differs from its manifest (" + v[-1][len("OT_VERIFY "):] + ")"
+
+
 def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=print, no_manifest=False):
     """SRC on src_host -> DST here: reuse a same-manifest tree of this host, else fetch once into the tree cache, then a local fork"""
     why = check_dst("/nonexistent-src-of-a-remote-fork", dst)
@@ -399,6 +440,15 @@ def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=pr
         raise Refused(why)
     rc, h = ssh_out(src_host, f"cat {shlex.quote(src.rstrip('/') + '/' + HASHFILE)} 2>/dev/null", timeout=120)
     h = h.strip() if rc == 0 else ""
+    if h and not no_manifest:
+        # FORK-IDENTITY-1122 (COORD 20:5x, OPUS-FIX-KV-PV-R7 78159f8a): an EDITED fork on src_host still carries its parent's
+        # manifest hash, so the manifest route matched it to the local seal copy and forked the UNEDITED tree (rows silently lost,
+        # caught only from the plan sha).  The hash file alone never proves SRC's content: SRC must be a read-only, non-fork tree,
+        # or its files must hash to the manifest on src_host.  Edited -> the plain fetch of SRC itself; cannot check -> refuse.
+        why = remote_src_identity(src_host, src, h)
+        if why:
+            out(f"TREE-FORK EDITED {src_host}:{src}: {why}; manifest {h[:12]} NOT used (it would substitute the unedited tree), plain fetch")
+            no_manifest = True
     if no_manifest and h:
         # FABLE-FIX-KV-PV-SINKSPREAD 11-22: a private fork EDITED after its manifest (tools re-pinned, a candidate plan installed)
         # still carries the parent manifest hash; the manifest route fetched 372,605 files and then refused them
