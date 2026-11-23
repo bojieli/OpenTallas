@@ -282,3 +282,12 @@
 - 2026-11-23 01:39 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2007228-1795400160 on tolerant-swine: rc=0 after 26597 s, ended 01:39:12, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t40__cl1ea9de02_1122025819/runitem_r.otrun.log, cmd: --mem 8 --threads 2 --hosts localhost --dir /home/ubuntu/coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t40__cl1ea9de02_1
 - 2026-11-23 01:40 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2753827-1795425940 on tolerant-swine: rc=1 after 3992 s, ended 01:40:57, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_dsdv_slice_kv512_C__t1_1122065315/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SLICE-R6/dsdv_s | class=GEOM-FAIL cause=AP_AUTO_GEOM AUTO-GEOM FAIL dsdv_slice_kv512_C__t1 KIT-WAVE 18a2688b741 3_place fill=FAIL(0.0764) empty=FAIL(0
 - 2026-11-23 01:41 PST SIGNED: slice_station__t40__cl1ea9de02 (private kit _1122025819, sealed J7 manifest 12af64d4f18d): all gates PASS, routed LEC EQUIVALENT, PROVENANCE SIGNED. The type was never signed before. Its J7 wave hold stays, so the wave does not re-sign a signed type. Slice sign-offs this session: t52, t45 (both re-signs), plus t18, t6cl54, t29clc7, t40cl1e (new types). Running: t6cl07 (after guard kill), kv512_C v9 + probe, c1x_C t9 v9, c1x_C t8 v10.
+- 2026-11-23 01:45 PST J9 slice C rows (COORD: cut 18:00, gate by 17:00, nothing deferred per 6079af4; to S81-J6-ASSEMBLY-R5 and FIX-LEDGER):
+  (a) cap/xr slit + pin strip (rc28/29): ROW xga2 + lp_xf_driver, 8d45ed26eb63; gate queued epyc8.
+  (b) reset relay u_rrl->u_cap (rc31): ROW in build (reach vs skew split; per-type relay_um / local reset taps, K kept). Composes on 1b.
+  (c) hold cells in pocket (rc35): MEASURED, not argued: t4 + c1x_C t1 probes with OT_PREGRT_FF_HOLD=1 on the 1b bind. Hold-cell count and location go in the census.
+  (d) port->u_bin hold / u_bout->port (rc33): ROW in build: shallow pin-face tap per C type, composed before the TAP-GRID-R5 regen.
+  (e) C async removal (rc34): ROW in build: LEPE-4 R1 tap_reset_split on C types, gated on the OPUS-FIX-QC-COLL-R3 cloned-stage LEC.
+  (f) negedge capture (rc30 xf): RTL ot_s81dv_xfin XFP/FLR in the lane clone; benches running; ot-push-main on PASS.
+  rc30 inner xg legs: helper lane requested from FIX-LEDGER.
+  Target: all composed on 1b and gated by 10:30; hard stop 17:00.
