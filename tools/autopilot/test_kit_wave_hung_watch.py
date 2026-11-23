@@ -90,7 +90,7 @@ class Judge(unittest.TestCase):
 
 
 class StageOutput(unittest.TestCase):
-    def test_global_place_report_progress_prevents_early_hang_cancel(self):
+    def test_native_place_report_progress_prevents_early_hang_cancel(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             now = 20_000.0
@@ -101,7 +101,7 @@ class StageOutput(unittest.TestCase):
 
             reports = root / "gen" / "hub_c" / "run" / "reports" / "asap7" / "dp_hub_c" / "base"
             reports.mkdir(parents=True)
-            unrelated = reports / "unrelated.rpt"
+            unrelated = reports / "3_unrelated.rpt"
             unrelated.write_text("not native stage output")
             os.utime(unrelated, (now, now))
             report = reports / "3_global_place.rpt"
@@ -121,6 +121,12 @@ class StageOutput(unittest.TestCase):
             rec = {"stage": "place", "hang_reported": [now - 33 * 60, log_time]}
             self.assertEqual(KW.hang_judge(rec, {"log": log_time}, now)[0], "cancel")
             self.assertIsNone(KW.hang_judge(rec, {"log": progress}, now)[0])
+
+            resizer = reports / "3_resizer.rpt"
+            resizer.write_text("resizer report_clock_min_period\nvclk period_min = 0.00\n")
+            resizer_time = now - 28 * 60
+            os.utime(resizer, (resizer_time, resizer_time))
+            self.assertEqual(probe["newest_log"](str(root)), resizer_time)
 
 
 class Reap(unittest.TestCase):
