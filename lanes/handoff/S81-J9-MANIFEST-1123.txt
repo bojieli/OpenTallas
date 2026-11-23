@@ -144,3 +144,12 @@ COMPOSE-LEVEL ASBUILT DELTA (VIS-S81-MISC 04:xx): in J8, internal_stations on iq
      Gate 10 LATCHECK scope is MISC rows only, on J8 f65f. Its iqf change is only the u_bin_ql_i0/idx_i0 relay seats (0 cycles).
      First-time-built J8 iqf OUT stations: qc_o0 x2, idx_o0 x1, flt_o0 x1. LATCHECK shows whether J8 cycles already price them.
      MISC then runs a LATCHECK-only pass with IQF J9-4 + iqf_ft47_lane_ops on top. The composed J9 gate is authoritative.
+FINAL VIS-DIE TOOLS (epyc10 vis-die-s81/tmp/), both PRE PASS 0 findings:
+   col_ygrow.py f62e467e6c4a --form swap|ecorr (default swap). Idempotent (2nd run 0/0/0).
+     --form ecorr expects the ECORR type rows already in its input; no re-apply, no swaps; die and neighbour windows are derived from the col-side window. Test 56d5 + ECORR -> t_e_out.json 67bf80fcfa63, PRE PASS.
+     --form swap reproduces 055f9c7d6dc6. FORM = the winner COL names at 09:30.
+   die_grow.py f52c38b543c3 with --cut0 20900.16 (WESTRIP request). phy_hbm, gunit, bk_sel and s_2N_L0 stay fixed; the slab gap opens at col6|col7.
+     On J8: ops 6846b1b177fe, plan plan_j8_grow20900.json 81e1d537c37d. Default cut0 reproduces c9a4.
+     13 types differ vs c9a4; the only leaf type is t55 (seam re-snaps), so LEAF must rebase t55 in j9F (new j9F sha needed).
+   ORDER: COL type rows (RANKSEAT, 3e GROW, SEAMBLK, TAPSPLIT, TAPGRT, REACH v2, ECORR?) -> col_ygrow --form <winner> -> die_grow --cut0 20900.16 -> LEAF j9F -> WESTRIP -> ytrade -> edgestrip --tapfix -> reprice -> reset relays -> PRE -> TAP-GRID-R5 regen -> FIXCHK -> PRE -> G0 -> strict bind.
+   RE-CHECK: any row gated on c9a4 (WESTRIP b, LEAF j9F) re-confirms on the cut0 frame. The old-value check at compose catches misses.
