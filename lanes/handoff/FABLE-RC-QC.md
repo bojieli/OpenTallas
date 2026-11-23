@@ -45,3 +45,4 @@ Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual
 - Rejected deferrals: ledger row 71 su_l1 ft_slot re-site (SLWSLE) -> V4 row; row 69 cb landing bands (CB-R4/VIS-QC) -> V4 rows, gate by 13:00; slw_fe_v2 clf110fab2 core partition (V4-R2 745b777) -> not accepted without a measured TT setup >= -42 on the leaf-to-logic paths.
 - QC no-launch 86 min: autopilot alive; 27 owner holds (17 cb, 6 st_a, 2 su_c, coll_core, sle_su_c). Needs owner: slw_fe_v1 cl08d14f0d stale 'kit busy'; phy_serdes_b ITEM-SYNC rc=2; slw_st_a_v1 pvdf8e5ca4 unheld and failing on CLAND band.
 - Gate for all V4 rows: 13:00. Still due: 03:30 reply check + uncovered-gap report.
+- 03:05 x7 slw_fe_v2 clf110fab2: ACCEPTED as REASONED on place timing (+6.2 worst, verified on epyc10 R6V3); reopen only if 4_cts_post_hook shows < -42 on a u_core leaf path.
