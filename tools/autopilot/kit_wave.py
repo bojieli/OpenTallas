@@ -9494,6 +9494,27 @@ def private_bind_stale(sp, item, rpy):
     return "", ""
 
 
+def headroom_host(cands, stt, hub="intel2", drain=(), mem_gb=48, floors=None):
+    """FLOW-FLEET-R2 (COORD 11-22 17:5x item 4): the home host of a private kit when the lane gave no --host: of the die's gen hosts, the one with the lowest load / cores that admits
+    mem_gb now, is not draining and is over its scratch floor (ties: fewest queued GB, most admit).  252 of 259 private specs sat on one roam host and 99 of them on epyc9.  -> (host, why) or ('', why)"""
+    floors = SCRATCH_REFUSE_GB if floors is None else floors
+    best, rows = "", []
+    for h in cands:
+        if h in (hub, "localhost") or h in set(drain or ()):
+            continue
+        r = stt.get("localhost" if h == hub else h) or {}
+        if not r or r.get("admit", 0) < mem_gb or not r.get("cores"):
+            continue
+        sc = r.get("scratch_gb")
+        if sc is not None and sc < floors.get(h, 50):
+            continue
+        rows.append((round(r["load"] / r["cores"], 2), r.get("wait_gb", 0), -r["admit"], h, r))
+    if not rows:
+        return "", "no gen host admits it now"
+    _, _, _, best, r = min(rows)
+    return best, f"load {r['load']:.0f}/{r['cores']}, admits {r['admit']} GB, {r.get('wait_n', 0)} queued ({r.get('wait_gb', 0)} GB)"
+
+
 def private_spec_cmd(a):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
@@ -9516,6 +9537,17 @@ def private_spec_cmd(a):
             print(f"private-spec: --host {a.host} is DRAINING (scratch free under its admit cap, dies.<die>.gen_host_min_free_gb); pick another --host "
                   f"(gen hosts: {', '.join(h for h in gen_hosts(cfg, a.die, a.item) if h not in _dr)})", file=sys.stderr)
             return 2
+    if not a.host and (getattr(a, "fork", None) or not a.tree) and not getattr(a, "wave_host", False) and os.environ.get("KW_PRIVATE_HOST") != "wave":
+        try:                                              # FLOW-FLEET-R2: no --host -> the gen host with the most headroom now (a private kit stays on its home host for every later stage)
+            _p = subprocess.run([OT_RUN, "--status"], capture_output=True, text=True, timeout=180)
+            _stt = parse_otrun_status(_p.stdout if _p.returncode == 0 else "")
+            _dr2 = draining_hosts(((cfg.get("dies") or {}).get(a.die) or {}).get("gen_host_min_free_gb") or {}, _stt, hub)
+            _h, _why = headroom_host(gen_hosts(cfg, a.die, a.item), _stt, hub, _dr2)
+            if _h:
+                a.host = _h
+                print(f"private-spec: no --host: home host {_h} (most headroom: {_why}); pass --host or --wave-host to choose", file=sys.stderr)
+        except Exception as _e:                           # a status read never blocks a spec: the wave pick stays
+            print(f"private-spec: headroom host skipped ({type(_e).__name__}: {_e})", file=sys.stderr)
     fork_src = None
     if getattr(a, "fork", None):                          # FLOW-TREEFORK-R1: --fork SRC|src = a private nlink-1 copy made by ot-tree-fork on the gen host
         if a.tree:
@@ -20612,7 +20644,8 @@ def main(argv=None):
     ps_.add_argument("--work", help="work dir on the gen host (default <work_root>/<die>/<event>/private/<lane>/<item>_<stamp>)")
     ps_.add_argument("--out", help="dir for spec.json (default AP_DIR/private_specs/<lane>/<die>_<item>_<stamp>)")
     ps_.add_argument("--kind", default="type")
-    ps_.add_argument("--host", help="gen / place host of the private kit (default: the wave pick)")
+    ps_.add_argument("--host", help="gen / place host of the private kit (default: the die gen host with the most headroom now; with --tree the wave pick)")
+    ps_.add_argument("--wave-host", action="store_true", help="FLOW-FLEET-R2: keep the wave pick as the home host (no headroom default)")
     ps_.add_argument("--bind-out", help="private strict bind dir (kit_rtl bind_out; default: the wave bind, moved with --tree)")
     ps_.add_argument("--allow-bind-stale", action="store_true", help="KIT-TOPO-STALE-1122: write the spec although the bind probe finds the bind made from another plan")
     ps_.add_argument("--src-manifest", choices=("seal", "on", "off"), help="seal (default with --tree/--fork, FLOW-FLEET-R1): the tree's manifest at gen = parent main sha + "
