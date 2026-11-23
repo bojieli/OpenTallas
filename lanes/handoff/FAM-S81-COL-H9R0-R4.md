@@ -55,3 +55,9 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
 
 ## 11-22 21:5x PST v3 (COORD 21:4x)
 - Rows v3 d71e3f9c3e4e (984 ops) in j9/: + t2 xa/xb relay and payload chain re-site FIRM (0 cycles) on p1/p3/p6; PRE PASS 0 plan 865db3304669. p2 identical to v2. Private bind stays on v2 (started before v3); J9 bind carries v3.
+
+## 11-23 02:1x RC-GAP rows (FIX-LEDGER rc71/72/73)
+- rc71 COL-H9R0-NE-NODES: intel2 fam-s81-col-h9r0-r4/j9/rows_COL-H9R0-NE-NODES_J9.json 243907ae3dc1 (gen ne_nodes_rows.py), compose f65f -> v3 d71e3f9c3e4e -> strip ac3a5c74d618 -> NE = 687ca0e7a0e4 (epyc10 lane tmp plan_v3_strip_ne.json); PRE PASS 0.
+- rc73: merged ot_s81_rly g_rsreg.rq (xo*_0/_1) -> item_env col_h9_r0_* OT_KEEP_WIRES "ot_dp_dly:r ot_s81_rly:rq" (kit_wave a5addcb). Verify next kit netlist: one g_rsreg.rq per xo instance.
+- rc72 u_cf: no growth (VIS-DIE: does not fit). 22/22 M5 shorts inside u_cf view OBS at S pins -> view pin-access fix, owner TBD by FIX-LEDGER; probe on p3 when it lands.
+- p3 cl0cd90c0e NOT SIGNED (RSZ-0060 finish, GRT TT -142); no retry. Waiters: bjx4657s2 (kits+bind 2381456), br890tt2g (probe route 2507698).
