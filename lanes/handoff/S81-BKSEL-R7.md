@@ -141,3 +141,8 @@
   PROBE-PASS now needs the full-cause census (hub fe8a2a5): every GRT cluster >= 50 ovfl or >= 1% and top-50 path classes, each with a row; total ovfl < 10% of baseline (C 1039 -> < 104).
   TAPSPLIT-1 v2 (VIS-S81-MISC): 0 of 99 taps in my channel strips, verified.
   RC-GAP lp_q->u_vm.r check: J8 plan seats u_lpd r0..r2/q (L4 LPS 4), all hops <= 241 um; C and r7a synth keep u_lpd.g_r.r[0..2] (274 flops each). Asked VIS-S81-MISC for the kit/DB behind the 584 um hop.
+- 02:0x ROOT CAUSE RC-GAP lp_q->u_vm.r (J7 wave kit epyc7 kw43 18a2688b741/items/bk_sel__t2, place_setup_stop.json -604, hop 584):
+  J7/J8 portfix178 dsdv_idx_l20s.sv (J8 51beecd2dc38) LACKS the whole OT_BKSEL_L4 implementation (u_lpd LPS4, u_dsp DSP3, u_fsp FSP3,
+  u_rst_relay_tx RRD, u_rst_relay_dsp RSD; main f93495530bc + earlier) while the plan defines OT_BKSEL_L4 and seats u_lpd/u_dsp/relays.
+  Wave kit synth: 0 u_lpd cells. Fix folded into J9 SOURCE row: l20s v2 = MAIN l20s (L4 + u_ids-B) + b1 split, w/l20s_j9.sv 9617ad7537cc
+  (v1 900bf2d5bdbe kept as l20s_j9_v1.sv). Same selids module (inv_S proof applies). BKSEL-VM-STN-J10 not needed (covered by J9 source row).
