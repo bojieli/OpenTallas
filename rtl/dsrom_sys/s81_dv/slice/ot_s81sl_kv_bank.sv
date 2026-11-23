@@ -102,12 +102,35 @@ module ot_s81sl_kv_bank #(
         // engine ke = position ke / 2, data half ke % 2 = quarters 2 (ke % 2), 2 (ke % 2) + 1; equal-depth relays
         localparam integer KP = ke / 2, KH = ke % 2;
         wire iv, igk, ef, pv, yv; wire [255:0] ix, yd; wire [1:0] igr, igw; wire [31:0] pd; wire rv; wire [31:0] rd;
+`ifdef OT_S81_KVLEAF_INPUT_RELAYS
+        // Keep the three relay sites independently placeable. The option only
+        // replaces existing engine ingress registers; capture ages are unchanged.
+        wire [ERL:0] relay_iv, relay_rv;
+        wire [260:0] relay_d [0:ERL];
+        wire [31:0] relay_rd [0:ERL];
+        assign relay_iv[0] = kt_v[2 * KH][KP];
+        assign relay_d[0] = {kt_d[2 * KH + 1][128 * KP +: 128], kt_d[2 * KH][128 * KP +: 128], kt_gk, kt_gr, kt_gw};
+        assign relay_rv[0] = ks_v;
+        assign relay_rd[0] = ks_d;
+        for (genvar stage = 0; stage < ERL; stage++) begin : g_input_relay
+            dsfd_su_t_kvi u_relay (
+                .ck(sk), .rst(rst[0]), .i_v(relay_iv[stage]), .i_d(relay_d[stage]),
+                .i_rv(relay_rv[stage]), .i_rd(relay_rd[stage]),
+                .o_v(relay_iv[stage+1]), .o_d(relay_d[stage+1]),
+                .o_rv(relay_rv[stage+1]), .o_rd(relay_rd[stage+1]));
+        end
+        assign iv = relay_iv[ERL];
+        assign {ix, igk, igr, igw} = relay_d[ERL];
+        assign rv = relay_rv[ERL];
+        assign rd = relay_rd[ERL];
+`else
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_iv (.clk(sk), .rst_n(rst[0]), .d(kt_v[2 * KH][KP]), .q(iv));
         ot_hdc_delay #(.W(256 + 5), .D(ERL)) u_id (.clk(sk), .rst_n(rst[0]),
             .d({kt_d[2 * KH + 1][128 * KP +: 128], kt_d[2 * KH][128 * KP +: 128], kt_gk, kt_gr, kt_gw}),
             .q({ix, igk, igr, igw}));
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[0]), .d(ks_v), .q(rv));
         ot_hdc_delay #(.W(32), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[0]), .d(ks_d), .q(rd));
+`endif
         if (HARD_RQ >= 2 && ke >= NKE - NRP) begin : g_rpc
             // the RoPE engine as its hard master (dsfd_su_t_kvpc); same relays as g_rp
             localparam integer K = ke - (NKE - NRP);

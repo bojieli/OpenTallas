@@ -71,3 +71,19 @@ module dsfd_su_t_ikr (
         .ck_half({2{ck}}), .rs_half({2{rst}}), .ck_reduce(ck), .rs_reduce(rst), .go(go), .eps(eps),
         .p_v(p_v), .p_d(p_d), .r_v(r_v), .r_d(r_d), .fault(fault));
 endmodule
+
+
+// One implemented bank-to-engine relay. A separate master per stage lets the
+// parent keep three physical reaches without exposing a new timing calendar.
+module dsfd_su_t_kvi (
+    input wire ck, rst,
+    input wire i_v, input wire [260:0] i_d,
+    input wire i_rv, input wire [31:0] i_rd,
+    output wire o_v, output wire [260:0] o_d,
+    output wire o_rv, output wire [31:0] o_rd
+);
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_iv (.clk(ck), .rst_n(rst), .d(i_v), .q(o_v));
+    ot_hdc_delay #(.W(261), .D(1)) u_id (.clk(ck), .rst_n(rst), .d(i_d), .q(o_d));
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_rv (.clk(ck), .rst_n(rst), .d(i_rv), .q(o_rv));
+    ot_hdc_delay #(.W(32), .D(1)) u_rd (.clk(ck), .rst_n(rst), .d(i_rd), .q(o_rd));
+endmodule
