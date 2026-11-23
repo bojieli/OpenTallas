@@ -76,3 +76,16 @@ COL-R5, H9R0-R4, H10-R4, COLROM-R6 feed levers here; they start no new variant k
 Inputs: COLROM stnE/stnEH plans epyc9 opus-fix-s81-colrom-r6/srcJ8G/physical/die_plan/s81/plan_h2_2249_stnEH.json (gate bindEH, intel2
 opus-fix-s81-colrom-r6/bindEH.log); relay_depth rows = existing +1-cycle stage mechanism (schema relay_depth {inst, D, side}).
 Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once sealed, else J7 + stnEH.
+
+## 18:3x ROM-INPUT STAGE design state
+- Worst path p3: xs_q station launch clk 477 -> ROM u_w falling capture, core early tap clock 272, lib setup 347: budget launch-edge->pin 142 ps
+  (clk->Q+INV = 92). A +1 stage on the soft tap gains nothing; stage flop must be clocked from the ROM core early tap (clk_c<k>) -> ~+220.
+- COLROM-R6 (agent ae0436ab6d9c2030f) confirmed: NO existing plan key does that (core_tap_rows raises on non hard_cores inst; tap_balance.tcl
+  tb_direct_core / tb_passthru gate on isBlock; core_pin_lead_ps is hard-core only). It warned FF hold stage->ROM -175 (I expect half-cycle
+  path = safe; MEASURE). COLROM sends S1/S0 GRT on stnEH + stnEH plan/bind when bindEH passes.
+- I OPEN the flow change (in lane clone epyc8 fable-fix-s81-col-rankseat/clone, rebase on origin/main first):
+  new key clock.stage_core_tap [{inst (rel u_y_xd_<sink>_<port>_k* stage or regex), tap (core tap name)}]:
+  simplest form = pre-CTS Tcl hook that moves the CLK pins of the matching stage flops onto the net of the named core clock pin (port clk_c<k>),
+  so STA prices them with the core tap source latency and tap_balance drives them with the core; touch gen_phys.core_tap_rows (accept),
+  tap_balance.tcl (tb_direct_core/tb_passthru isBlock gates, tb_sinks), core_tap_ff_sdc, relay_depth sink rows D1 for the stage itself. Tests.
+- Then: row plan (J8 base or J7+stnEH) -> ONE strict bind -> 3 sealed --goal route reps (h9_r0, h10_r0, h9_r1).
