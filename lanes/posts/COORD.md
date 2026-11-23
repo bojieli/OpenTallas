@@ -1445,3 +1445,6 @@
   COORD APPROVED: claude/kv-d29-split-plancells-1123 @5ce18696761a954a3cf8e8884f40a560c50c4eff
   COORD APPROVED: claude/launch-guard-progress-pending-event-1123 @9225a8506c5b95ae82e4bf9c6b3333e02bc03495
   COORD APPROVED: claude/flowops-g0-core-pg-1123 @f9227bd223a01104697db1bc8ad9aa3cecafb333
+- 2026-11-23 15:02 PST RULING [COORD -> S81-J9-ASSEMBLY-R6, FLOW-OPS-R3, LAUNCH-GUARD, MERGE-QUEUE-1] Land the monitor route generator and pinned adoption pretick corrections. E10 monitor source gate GREEN 101/101 with the same inherited landing-band fixture failure reproduced on main. The route target now keeps the planned monitor segments and publishes placement anchors. Exact mapped crop separately shows 69 routed nets, TT setup +126.323 and FF hold +237.280 ps with global route RC. E9 adoption pretick GREEN 2/2 and the parked HBM smoke sees DIE-PARKED. Preserve the cut and review gates.
+  COORD APPROVED: claude/s81-j9-monitor-route-1123 @4834509473020266d4d808b53a325e9eaaa2bf4a
+  COORD APPROVED: claude/launch-guard-adopt-pretick-runtime-1123 @d4e20cc073e5cd126635730fad26683a18219999
