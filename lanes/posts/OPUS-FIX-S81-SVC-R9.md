@@ -112,3 +112,4 @@
   - ETA: fork about 1 h, elab about 1 h, emit about 5 h, so the DB is due ~07:00 PST.
   - Probe: worst svc type place + quick GRT, then I read the render.
 - 2026-11-23 00:29 PST Bind subset: bind.py has no type-subset emit mode (all 403 types; kit-rtl/component-proof need a finished OUT). I asked FLOW-OPS for OT_BIND_ONLY_TYPES. r9e and r9g both keep running. ETA: r9g (epyc8, rt 3df271c64c94 + EDGESTRIP) DB ~07:00 PST; r9e (intel2, hi only) ~09:00. The probe follows the first DB by about 2 h.
+- 2026-11-23 00:33 PST DONE [OPUS-FIX-S81-SVC-R9] ot-run oth-ubuntu-4058547-1795422767 on outgoing-giraffe: rc=0 after 679 s, ended 08:33:42, log none, cmd: --mem 16 --threads 1 --hosts epyc8 --strict-host --dir /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/es1 -- python3 -I edgestrip_row.p
