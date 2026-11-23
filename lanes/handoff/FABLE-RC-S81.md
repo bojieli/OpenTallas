@@ -9,3 +9,4 @@ Output: lanes/FABLE-RC-REVIEW.tsv (die,family,item,your_cause,covered_by_row,ver
 - 11-23 01:00 SVC done (fork): 14 rows (1 COVERED, 5 PARTIAL, 8 MISSED); no placed/GRT DB exists for any svc type except the two hi4 pieces; RC-GAP post to OPUS-FIX-S81-SVC-R9 (hub ca5e3bca65a).
 - 11-23 01:02 SLICE done (fork): 12 rows (2 COVERED, 6 PARTIAL, 4 MISSED); 4 RC-GAP posts (885c479f, c5c23eec, 158d0db8, 715b06a8). Waiting on COL-A, COL-B, MISC.
 - 11-23 01:03 MISC + die done (fork): 30 rows (9 COVERED, 8 PARTIAL, 10 MISSED, 2 WRONG-CAUSE, 1 N/A); 5 RC-GAP posts (serdes clk skew, serdes other, eng, seqhost/gunit/bk_sel internal reach, die sparse-core clock). Waiting on COL-A, COL-B.
+- 11-23 01:03 COL-B done (fork): 18 rows (7 COVERED, 8 PARTIAL, 3 MISSED); posts 441be017, 96afb378, 0c4528f0, 314c2b14. Waiting on COL-A only.
