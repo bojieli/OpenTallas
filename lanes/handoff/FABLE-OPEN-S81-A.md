@@ -11,3 +11,7 @@ Scope: S81 OPEN ledger items rc35, rc37, x6, x14. Deadline: ROWS-READY to S81-J9
 
 ## rc37 / x6 / x14
 Workers (subagents) resumed 10:50 with Codex's 07:30-08:59 results (posts under this lane name): x14 private source de45a42c85cd ready for PRE; x6 plan 0e32aea4d155 MISC10c seats 22/22 face buses max 291.5 um; rc37 per-class STA recovered, lpc pad rank seating in progress, data intel1 fable-open-s81-a/rc37/. Their returns go into ROWS-READY / REASONED posts.
+
+## 11:15 COORD note
+- x6: covered by SEQHOST-VLG-STN-1 in MISC gate 10c (plan 0e32aea4d155, PRE PASS, strict bind running); 9 legs +45..+51 ps at place (epyc9 fable-open-s81-a/sta/j8wave_place.log); accepted by FABLE-RC-ALL. Left: 10c bind, LATCHECK, placed re-scan -> then ledger GATED.
+- rc35: COORD/FABLE-RC-ALL ask: classify the ~3,250 internal ends < 0 (cross-tap / cross-leaf / IO) + row per class; post by 14:30 with the replay. Dump running intel2 fable-open-s81-a/wf4 (neg_ends.tsv, unit oth-ubuntu-453014).
