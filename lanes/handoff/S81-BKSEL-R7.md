@@ -147,3 +147,4 @@
   Wave kit synth: 0 u_lpd cells. Fix folded into J9 SOURCE row: l20s v2 = MAIN l20s (L4 + u_ids-B) + b1 split, w/l20s_j9.sv 9617ad7537cc
   (v1 900bf2d5bdbe kept as l20s_j9_v1.sv). Same selids module (inv_S proof applies). BKSEL-VM-STN-J10 not needed (covered by J9 source row).
 - 02:3x FIX-LEDGER rc62 (lp_q->u_vm.r): answered COVERED by J9 source row v2 (L4 RTL restored), no station row. J9 = only S81 event, cut 18:00 (6079af4); rows to ASSEMBLY target 10:30, hard stop 17:00. Gate queued epyc7 (load cap), waiter armed.
+- 02:5x HOTSPOT-GAPS: bk_sel LOGIC-DEPTH u_sel.u_g->g_sel.u_ids.cnt -388 (71 bufs/151 stages = wire, 4 FA logic) answered COVERED by BKSEL-IDS-RSPLIT (cnt/pre FIRM at vo_s[84..99] window). +1 stage NOT taken: eo ORs into vo_n rung slots (mf on busy slot) -> +1 edge is a protocol change; only if probe short.
