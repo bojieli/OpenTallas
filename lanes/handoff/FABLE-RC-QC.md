@@ -40,3 +40,8 @@ Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual
 - rc112: accepted. hg-QC-REPAIR-CAP: accepted as symptom, linked to SEAT-1c; DPL-0033 after repair on 4 st_a kits goes to the STA-1b row. hg-QC-CLOCK-NDR-DROP: accepted, probe must show 0 GRT-0273.
 - V4 cut is now stated as 14:00 by FIX-LEDGER.
 - 03:30 reply check still due; the local waiter may not have survived, so run it by hand.
+
+## 02:55 COORD flow review: no V5 / no next event (post DEFERRAL-VERDICTS)
+- Rejected deferrals: ledger row 71 su_l1 ft_slot re-site (SLWSLE) -> V4 row; row 69 cb landing bands (CB-R4/VIS-QC) -> V4 rows, gate by 13:00; slw_fe_v2 clf110fab2 core partition (V4-R2 745b777) -> not accepted without a measured TT setup >= -42 on the leaf-to-logic paths.
+- QC no-launch 86 min: autopilot alive; 27 owner holds (17 cb, 6 st_a, 2 su_c, coll_core, sle_su_c). Needs owner: slw_fe_v1 cl08d14f0d stale 'kit busy'; phy_serdes_b ITEM-SYNC rc=2; slw_st_a_v1 pvdf8e5ca4 unheld and failing on CLAND band.
+- Gate for all V4 rows: 13:00. Still due: 03:30 reply check + uncovered-gap report.
