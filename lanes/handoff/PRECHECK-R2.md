@@ -12,3 +12,4 @@ run over current plans; post per die before cuts (KV D29 02:00, QC V4 ~06:00, S8
 - HEAD r18n 341dbb140f8f epyc9 fable-fix-head-lep0n-1122/trees/s81_head_r18n_w11/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json; r18m 3dd49f406010 trees/s81_head_r18m_e2
 ## Status
 - 18:1x: design = tools/die_plan/plan_advisory.py called from plan_gate_pre.check() in try/except, WARN ADV-<CHECK> lines. Subagents researching checks.
+- 18:4x: lane clone has tools/die_plan/plan_advisory.py (driver, CHECKS -> adv_<check>.py modules) + plan_gate_pre ADVISORY class patch (uncommitted; tests pass). 6 helper agents write work/<check>/adv_*.py + tests; TAP-LOAD added per COORD 18:1x (planned tap load vs netlist flops x1.3; placed >1500).
