@@ -9,3 +9,6 @@ Plan: no duplicate rows, no private kit until J8 compose outcome is known; map e
 - Built: plan_svc5_v2 (drop pvq) / v2b (drop pvq+land) PRE PASS; plan_svc5_j7.json (J7 base, drop pvq+land, tr paths) for the proof. fit tool on main e589d7c0e6 (s81_svc_att_fit_all.py + s81_svc_memory_att_fit.sh); rt e589d7c0e609 on all hosts.
 - Proof: private-spec lo t3 running (epyc7 fork, goal route, rt e589d7c0e609), out spec_lo3. Land stays soft: measure kit cell count.
 - COORD 18:0x: R9 makes the closure per-helper (replaces my witness script). NO more per-type witness code. Keep lo t3 proof for cell count; when R9 tool lands re-run lo t3 on it, then relaunch the 5 types.
+
+## 11-22 23:3x
+- lo t3 proof on J7 bind BLOCKED by BIND-GEN-TOOLSKEW: J7 bind of record stamp (reset_anchor/reset_leg_plan/reset_replicate/reset_tree.py differ) fits only the wave tools pin 404887a342b0, which lacks R9 closure (540c4f7/94845431e6b2). 4 attempts (e589d7c0e609, 6a5e06ea1267, aa4dda6568c1, 94845431e6b2) died at bind_toolskew/bind_rt rc 3, no unit started. Options: (a) run proof on J8 bind (R9 r9d, rt-matched) when green; (b) rebind J7 on new rt (hours). Waiting COORD ruling; no waiters left running.
