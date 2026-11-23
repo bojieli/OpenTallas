@@ -18,6 +18,9 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
   PORT-PIN         a wrapper port of the strict bind output with no planned pin (KV pv_v3e ri_pv_u_g1_j_rst_n: split piece without
                    its reset pin, died at place)
   MERGE-RESET-DEPTH core reset pins merged into one port whose delay rows carry different depths (OPUS-FIX-KV-HUB-R6)
+  PATH-SEAT        a short pin-to-seat span whose path detours behind a macro (S81 leaf t15: 5 um span, 1,885 um path), and
+                   planned paths over ~20 logic stages at 833 ps (lepw_mus_C 28)
+  PHANTOM-STATION  a plan station row priced +N cycles on a lane with no stage register in the bound RTL (HEAD hd_lep0N e1/e2)
 
     python3 -I tools/die_plan/plan_advisory.py --plan PLAN.json [--tree TREE] [--checks A,B] [--json OUT]   (exit 0 always, 2 = bad input)
 """
@@ -36,7 +39,8 @@ HERE = Path(__file__).resolve().parent
 CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), ("SITE-COLLIDE", "adv_site_collide"),
           ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("DENSITY", "adv_density"),
           ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"),
-          ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"))
+          ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
+          ("PHANTOM-STATION", "adv_phantom_station"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
@@ -123,6 +127,7 @@ def main(argv=None):
     ap.add_argument("--checks", default="")
     ap.add_argument("--asbuilt")
     ap.add_argument("--bind-out")
+    ap.add_argument("--baseline", help="base plan (changed-lane scope, e.g. PHANTOM-STATION)")
     ap.add_argument("--json")
     ap.add_argument("--all", action="store_true", help="no per-check line cap")
     a = ap.parse_args(argv)
@@ -133,7 +138,7 @@ def main(argv=None):
         return 2
     tm = {}
     lines = run(raw, a.plan, a.tree, [c for c in a.checks.split(",") if c] or None, timing=tm, cap=not a.all,
-                asbuilt=a.asbuilt, bind_out=a.bind_out)
+                asbuilt=a.asbuilt, bind_out=a.bind_out, baseline=a.baseline)
     for x in lines:
         print(x)
     print(f"PLAN-ADVISORY plan={a.plan} lines={len(lines)} ({summary(lines) or 'no findings'}) seconds={tm}")

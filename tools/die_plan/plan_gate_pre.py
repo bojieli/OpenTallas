@@ -1537,13 +1537,13 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
-        findings += advisory_lines(tree, plan, asbuilt)
+        findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
 
 
-def advisory_lines(tree, plan, asbuilt=None):
+def advisory_lines(tree, plan, asbuilt=None, baseline=None):
     """PRECHECK-R2: plan_advisory.run() lines, each forced to a WARN (an estimator never refuses); [] when the tree has no module."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
     try:
@@ -1551,7 +1551,7 @@ def advisory_lines(tree, plan, asbuilt=None):
     except ImportError:
         return []
     try:
-        lines = PA.run(_load(plan), plan, tree, asbuilt=asbuilt)
+        lines = PA.run(_load(plan), plan, tree, asbuilt=asbuilt, baseline=baseline)
     except Exception as e:  # noqa: BLE001
         return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
     return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
