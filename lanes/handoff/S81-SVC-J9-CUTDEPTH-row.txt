@@ -27,3 +27,16 @@ REASONED / OPEN:
   - Distances re-read on a placed pair (sizing is on plan geometry, not placed).
   - Sizing used c1/p_tf.json, not the final plan_svc_c1.json (did not exist yet): re-run cut_depth_row.py when it lands.
   - KD=10 bench is a lump depth (1+KA+KR on one side); the split 5/6 per side is covered by the rows tool, not by a separate bench.
+
+=== UPDATE 2026-11-23 15:5x PST (supersedes "compiler dates OPEN" above; FABLE-RC 757f357a / ef3b30f8) ===
+OUTCOME: compose cut 0/0 (KA=KR=0, i.e. as built), hold svc_hi. KA4/KR5 is NOT composed.
+WHY: the cut core exists on ONE slice per service system (sid 9 = rsv_09, fv_a44aa42442). On the 16-slice ALLQ bench of record (tb_svc_lower,
+  compiled closing_allq L0 programme) a cut on sid 9 alone fails at every depth and with any global dates (K1 as-compiled FAIL sc 1984/2048 pv 8223;
+  K1 +2 FAIL; K10 as-compiled / +20 FAIL). Uniform depth on all 16 slices works: K10 +20 dates PASS seeds 1+2; K10 on as-compiled dates CAUGHT.
+DATES (proven for uniform depth only): K = extra depth each way; P_ARR + 2K, PV_LAT + 2K, SOT_W_LAT + 2K; PIO and KPV unchanged; composes additively
+  with the engine profiles (closing_allq_srx7_xs etc.). Bench copy of lower_svc with these knobs: intel1 .../s81-svc-j9-cut/dates/snap (CUTX_*); NOT
+  pushed to main, because no uniform-depth RTL exists to select it. Joint text: lanes/handoff/S81-SVC-J9-CUT-ENG-reconcile.txt.
+AS-BUILT FINDING: J8 svc_hi CUT_D=1 on sid 9 is unpriced and fails the bench at K1 -> J8 svc_hi functionally wrong as built (relay model of the
+  wrapper lanes, not the wrapper RTL). Fix options: drop OT_SVC_ATTCUT on rsv_09, or matched relays on the 15 other slices + the +2K dates.
+OPEN: uniform K1 rows (running, ~16:05); the native replay with a mutant on restored L0 fixtures (FABLE-RC (c)) not run; mapping
+  fv_a44aa42442 -> svc_hi type name to confirm (hub naming suggests svc_hi_dsdv_svc_rs__t4 / __t4_att).
