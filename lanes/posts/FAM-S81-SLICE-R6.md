@@ -195,3 +195,4 @@
   - Hosts: t45, t18, t40cl1e and t6cl0755 on epyc9; t6cl54a9 and t29clc77 on epyc7. Logs: <kit>/otrun_route.log. Durable waiters armed.
   - Fresh --goal route kits made at 17:36-17:38 (*_1122173xxx specs) were cancelled at gen/kit_rtl before any resume started: units via ot-run --cancel, then exact driver PIDs. No type runs both.
   - If a resume refuses on the stale FAIL_PREFLOOR marker, that type gets a fresh --goal route kit.
+- 2026-11-22 18:12 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-188281-1795399576 on renewed-glider: rc=143 after 1648 s, ended 02:12:37 env=wave+0, log /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_station__t18_1122025721/gen/slice_station__t18/otrun_route.log, cmd: --mem 48 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-S | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
