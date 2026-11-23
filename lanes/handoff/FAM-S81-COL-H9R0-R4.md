@@ -33,3 +33,9 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
 - Old p3/p6 rt404887 kits (pids 55162/43388) = row proofs only.
 - j8s_tree rebind cancelled; j8s_tree partial copy on epyc8 is dead (ot-delete when convenient).
 - Due: combined p1-p6 J8 col row set to S81-J6-ASSEMBLY-R5 by 14:00 (cut 16:00).
+
+## 11-22 17:3x update (after the 11:1x-17:2x limit)
+- J8 rows posted late to R5 (3044937458): R1 p1 macro moves (live in J7), R2 family env keep+STAGGER+RE+GRT50. Not ready: kit C seat-fix rebind (TT -158.79), p3 cl31d0dc4b (-207.9 est), p2 cl0045af7b (-92.8), p1 GRT pending.
+- Live sealed: p6 2641923 route, p1 2669012 GRT (intel1), p2 cl0045 2711310 route, p3 cl0cd 2740564 route, fresh p2 434285 geom (event 18a2688b741), fresh p3 455182 place.
+- Race copies (old placed kits, run_kit route epyc8): p2 cl9f 526974, p3 cl8ce 526975; detailed route. First copy to sign off wins; cancel the other by exact unit.
+- Ended: kit C (FAIL_POSTCTS TT), sealed p3 cl31d0dc4b (FAIL_POSTCTS TT), old row proofs p3/p6 (rc 21).
