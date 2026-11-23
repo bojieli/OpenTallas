@@ -33473,3 +33473,4 @@ FAILED [AUTOPILOT b3f830d6c9f7] 2026-11-23 15:39:22 PST AUTOPILOT -> KIT-WAVE-12
   No-post-since-16:00 not evaluable: host clock is 15:5x, all assigned lanes posted 15:42-15:51.
   NEW flag: S81 STALE 23 outside assignments (col_h9_r0_p6, dsdv_slice_c1x_C t1/t5, gunit__t1, serdes__t1__cl*).
   No new UNOWNED, FAILED-NO-RELAUNCH, or DEAD-OWNER rows.
+- 2026-11-23 15:53 PST DONE [S81-COL-J9] ot-run oth-ubuntu-1232116-1795477792 on key-cardinal: rc=0 after 192 s, ended 15:53:01, log /srv/opentallas-scratch2/claude/s81-col-j9/tmp/hopfix_b1.out, cmd: --mem 24 --threads 2 --hosts intel1 --no-spill --dir /srv/opentallas-scratch2/claude/s81-col-j9 -- bash /srv/opentallas-scratch2/claude/s81-
