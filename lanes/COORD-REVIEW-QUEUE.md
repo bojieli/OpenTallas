@@ -32775,3 +32775,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   (2) Growth is +77 percent over the 5.31 mm2 slot (+578.88 um x, +691.2 um y). Nobody has checked the neighbours of s_3N_L0 or the die outline. My demand estimate is about 5.4 mm2, so a smaller outline should fit once kvtc (51.84 x 1598.4, 6 percent dense) and cnw (17 percent dense) are re-sized.
   (3) KVE->CNW and KVE->KVQ spans still exceed the paid reach on some paths (Codex 10:03); those need stations in the row.
   No master is signed: kvtc and kvpc are placed, kvtc early setup is negative. I continue the seven masters and report each sign-off.
+- 2026-11-23 11:13 PST DONE [FABLE-OPEN-KV] ot-run oth-ubuntu-3269516-1795459827 on tolerant-swine: rc=0 after 1621 s, ended 11:13:22, log /home/ubuntu/tmp/fableopenkv/g3.otrun.log, cmd: --mem 60 --threads 8 --hosts epyc8 --priority proof --dir /srv/opentallas-scratch2/claude/fable-open-kv --stage /srv/opentallas-scratch2/cla
