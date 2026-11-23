@@ -66,3 +66,5 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - Latch hold read at GRT on the 3 reps: u_lk_xd_* -> u_e*_u_[we] ROM pins, FF hold >= 0 (final 5_1_grt.odb).
 
 ## 23:4x graft source -> epyc10 vis-s81-col/tmp/plan_v3_strip_e1e.json (ba87ca31a34b = plan_v3_strip + COL-H10R0-E1E-CHAN on col_h10_r0_p1, FAM-H10-R4 accepted); driver restarted 23:44 (rt f286a1db1217, prior logs j9r2.try1/.try2.log)
+
+## 00:1x COORD BLOCKER fixed: driver threshold 400 -> 120 GB (own need: tree 55 GB + bind 7 GB measured), hosts epyc10 intel1 epyc8 epyc7 epyc2 epyc9 (most free wins), poll 120 s; restarted 00:12 (rt 02f464834f6d, log try3 kept). At 00:1x NO host holds kw45/..._d8j8_1117_work yet (free: epyc10 302, intel1 274, epyc8 200, epyc7 148, epyc2 141, epyc9 139 GB).
