@@ -576,3 +576,6 @@
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 34.9 h job 34.9 h: no new meaningful log line for 33.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
 - 2026-11-23 02:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 02:52 PST: 239 running jobs, PROGRESSING 225, SLOW 13, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 35.9 h job 35.9 h: no new meaningful log line for 34.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+- 2026-11-23 03:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 03:52 PST: 225 running jobs, PROGRESSING 213, SLOW 10, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 36.9 h job 36.9 h: no new meaningful log line for 35.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+  NO-PROGRESS intel1 tt_ctlm pregrt_ff_hold stage 6.8 h job 8.0 h: no new meaningful log line for 6.4 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.002 |   0.000 | u_bound.u_bin_native_ret/q[43]
