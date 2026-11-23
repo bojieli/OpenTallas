@@ -1,0 +1,59 @@
+# FABLE-UNC-S81-SVC -> S81-J6-ASSEMBLY-R5 / FIX-LEDGER / OPUS-FIX-S81-SVC-R9: J9 svc rows (manifest row 3j), 11-23
+All four are svc-type-local TOOLS that adapt to the plan they run on (like svc_ytrade_row / edgestrip_row). Do not replay ops (whole-key replaces).
+Files: intel2 /srv/opentallas-scratch2/claude/fable-unc-s81-svc/
+  att_order_row_v6.py    a703f3891f97   SVC-ATT-ENG-ORDER (rc14, rc20, hop-S81-svc engine classes) + ft-station sub-row (lo t1/t7)
+    att_layouts/lo.py 589e0b81b6c7  pvso.py b4defe6fb68b  rs_t1_t6.py 73060b6ffc39  rs_t2att_t3.py 8d0e27c904b6  ref_anchor.json 66e5afb4abb5
+  landcap_row_v2.py      beb344508852   SVC-LAND-CAP (COORD ADV-LAND-CAP + band x core OVERLAP)
+  strap_site_row.py      6cc4bc78ff7d   SVC-STRAP-SITE (rc19)
+  att_order_post_v7.py   27d915ee5fac   post: explicit taps, reset tree republish, sidecar (needs the tree: rt tools)
+  gate_j9_v5.sh          73b181c0fb80   the recipe: row -> landcap -> strap -> post -> PRE
+    gate_j9_v5.sh TAG BASE_PLAN TREE SIDECAR ASBUILT RT [BASELINE_PLAN]   (env LCRT = rt with adv_land_cap.py, default 139380c2ba3c)
+GATE RUN v12 on r9h 417840aae146 (SVC-R9 treeJ8g, rt 3df271c64c94; intel2 unit oth-ubuntu-2079461-1795434261):
+  plan_svcrows_v12.json 4e824d8ec6b1   eW_sidecar_v12.json 8a7077536c21 (collector.types[<type>].tree of the 16 types = the plan's republished tree)
+  ops_v12.atto.json d1d08feb0a65  ops_v12.landcap.json c56cc03581fd  ops_v12.strap.json ab477307afe9  (for reading only)
+  PLAN-GATE-PRE PASS findings 0, advisories 66 (= r9h; pre_v12.log).  Tap rule PASS + reset_tree.for_type PASS on all 16 types.
+  ADV-LAND-CAP (139380c2ba3c) on the result: 0 svc bands >= 0.90 and 0 svc band x core overlaps (119 svc bands).
+  Same row steps on SVC-R9's rebased f65f plan 189008ce34df (no tree yet): apply the same way (frame shift 0, same types).
+WHAT EACH ROW DOES
+1 SVC-ATT-ENG-ORDER. Cause: the generator packed the attention-engine hard cores by class in index order (32 hcores, then all
+  merge h4 / tr); in the bound RTL tile t is g_tr[t].eib -> its 8 hcores (.ib) and hcores g_h[4j..4j+3] -> g_m[t].g_h4[j], so every
+  tile's provider and merge sat 1.4-3.0 mm from its hcores.  Form: per-tile blocks (each engine row = hcores of one tile half with
+  its h4, the tr on one row per tile); hcore slots keep their sites where possible; nothing outside the engine cores moves except
+  small SRAMs / idx hslices named in the layout.  16 types: hi rs t1, t2_att, t3, t4_att, t5_att, t6, pvso_entry t1, t2; lo rs
+  t1-t7, rs_w t1.  Engine pin-to-pin (bound RTL, bit slices resolved), max before -> after, um:
+    type          hcore->h4      tr->hcore      stage SRAM->tr
+    hi t4_att     2411 -> 515    2154 -> 824    1613 -> 1173
+    hi t5_att     2130 -> 515    1936 -> 828    1726 -> 1173
+    hi t2_att     2159 -> 1066   2214 -> 918    1313 -> 1287
+    hi t3         2355 -> 515    2282 -> 820    3160 -> 2175
+    hi t1         2986 -> 626    1407 -> 809    1987 -> 2655
+    hi t6          943 -> 604    2783 -> 742    2732 -> 2748
+    pvso t1       2355 -> 515    2244 -> 820    2512 -> 2175
+    pvso t2       2882 -> 515    2219 -> 820    1564 -> 2175
+    lo x8          731 -> 731    1355 -> 819    3171 -> 2635      (lo is already tile-blocked; only the tr seat moves)
+  PRECHECK hop tool (adv_hop_gap 8762b9672bfa) on hi t4_att: 104 hops worst 2617 um -> 37 hops worst 831 um.
+  Sub-row ft stations: an ft station (register + bit sites) seated between cores the row moves goes with them (+69.12 x):
+  lo t1 ft0 station 3; lo t7 ft0 stations 1, 2 and ft4 stations 2, 3; no bit site under a core, every hop <= 405 um.
+  Frame shifts by other rows (WESTRIP +34.56 x, ES1 dY) are read from an anchor macro (ref_anchor.json); tested.
+2 SVC-LAND-CAP. Every svc landing band rect trimmed clear of all hard cores + 2.16, then grown / re-seated to fill <= 0.85.
+  On the 16-type plan it changes 13 bands; fills over 0.90 before: hi t3 attn_i1 1.36, t3_rs ft1_i 0.91, t4 ft1_i 0.91, lo t1 ft0_i
+  0.92, lo t1 vid_i0 4.17, lo t7 unit_i1 (no free rows).  MUST run after SVC-WE-STRIP (WESTRIP moves band rects with the interior).
+3 SVC-STRAP-SITE. Cause: svc count straps had no sites_um, so the kit placed the pins anywhere (23 on the wrong face in the hi4
+  place).  106 strap_ca_k_<bus> straps on 21 svc types get sites_um + layer M7 inside their own landing band (slice_station form).
+4 att_order_post. Early core taps follow their core (in row 1); explicit taps the tap rule newly refuses are re-sited
+  (schema.tap_clear); the landing collector_tree is re-solved (reset_tree.for_type) and republished on the 16 types, and the same
+  tree is written to the sidecar (SVC-R9 ruling).  THE SIDECAR IT WRITES REPLACES physical/die_plan/s81/split_hi4x_r9/eW_sidecar.json.
+  Per type: collector depth old -> new / clock tap count old -> new / explicit taps re-sited (max move um):
+    hi t4_att 13->13 / 96->96 / 0      hi t5_att 14->14 / 119->119 / 2 (60.5)   hi t2_att 12->12 / 99->99 / 1 (92.9)
+    hi t3 12->12 / 112->112 / 4 (118.8)  hi t1 14->13 / 85->85 / 5 (64.8)      hi t6 13->13 / 85->85 / 2 (95.0)
+    pvso t1 14->14 / 119->119 / 4 (153.4)  pvso t2 12->12 / 102->102 / 3 (291.6)
+    lo t1 16->16 / 55->55 / 3 (17.3)   lo t2 16->16 / 38->48 / 0   lo t3 15->16 / 37->47 / 0   lo t4 15->16 / 32->37 / 0
+    lo t5 15->16 / 37->41 / 0   lo t6 16->16 / 46->111 / 0   lo t7 16->16 / 71->93 / 4 (10.8)   lo rs_w 16->16 / 48->68 / 0
+  The lo tap-count and depth deltas come from the published snapshot in r9h being stale against the current tools (SVC-R9: accepted
+  when tap rule, reset tree and PRE pass).  hi t1 depth 14 -> 13.  The reprice + reset.die_relays step after it picks these up.
+COMPOSE ORDER (svc chain, recorded by R5): SPLIT-F65F -> die_grow -> SVC-WE-STRIP (+ WESTRIP seam move / re-stack if it lands)
+  -> att_order_row -> landcap_row -> YTRADE -> ES1 regenerated (+tapfix) -> strap_site_row -> att_order_post (last svc geometry step)
+  -> tapfix for the other types -> reprice -> reset.die_relays -> PRE.  TAP-GRID-R5 regen touches no svc type (confirmed).
+NOT GATED BY ME (REASONED to FABLE-RC-S81): strict bind + LATCHECK and the place+GRT probe of these rows ride the composed J9 gate
+  bind: a kit of the re-ordered plan needs a bind of it (reset identity changes), no placed svc DB exists, and intel2 (the only host
+  with the tree and memory) is held by SVC-R9's r9h bind until ~08:00.
