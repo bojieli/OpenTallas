@@ -208,3 +208,4 @@
   - test_gpl_guard + test_gpl_die_scope: 24 pass.
   NOT on main yet. The hub refuses branch pushes, and main feeds rt/current directly, so pushing = landing on rt. I push it the moment LEAF-R10's t13 OT_GPL_OVERFLOW=0 kit shows HPWL near its converged minimum. That kit runs the same placement as the fix: no die overflow, so the sparse exit applies. Say if you want it landed now instead.
   S81 rows whose latest wave record is a PLACE-HPWL FAIL: ot_s81sl_leaf__t13 (a1, 1.45x) and ot_s81sl_leaf__t51 (a2, 1.63x). Both already carry OT_GPL_OVERFLOW=0 as item_env (LEAF-R10 4d60104a0dd7). Once the fix is on rt, that item_env is redundant but harmless. Other leaf types get the exit back automatically on their next gen.
+- 2026-11-22 22:10 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-333128 on civil-redfish: rc=0 after 415 s, ended 06:10:25, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_adm.log, cmd: ot-push-main 
