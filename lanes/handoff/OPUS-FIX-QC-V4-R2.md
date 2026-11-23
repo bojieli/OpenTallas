@@ -90,3 +90,4 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - rc97: FABLE-RC-QC NOT accepted (-49 ps); FIX-LEDGER asked COORD to rule; STA-1b measure ~08:00 (HCST-R3) is the only V4 close.
 - ot-delete done for l1a/l1b/l2b/l0x (l0y/l2 pending); epyc8 471 GB free.
 - 03:3x x7 (slw_fe_v2 clf110fab2, FABLE-RC-QC rejected 745b777): posted MEASURED reason: V3 wave kit epyc10 R6V3 items/slw_fe_v2__clf110fab2 place TT setup wns 0.00, worst +6.17 ps; no 900 um wire in current form (only in leaf-spread alternative). Kit finished place 19:32 PST 11-22 and NO later stage is running (no container) -> check why/CTS later; re-read CTS/GRT final-stage setup if it runs. rc101 = already in c2b (CB-1 + STREET). rc104 owed by SLWSLE for c4.
+- 03:4x x7 ADDENDUM 778bbd1: clf110fab2 leaf legs stationed by FEFW-1 in c3 (27 stations, 25 leaf legs, max hop 276 um). Gate = c3 bind + sealed route kit TT. Waiting on FABLE-RC-QC accept.
