@@ -41,3 +41,11 @@ Dirs: epyc8 /srv/opentallas-scratch2/claude/kv-plan-r6 (d27d3/, pinclear2/, rema
 - LEF overlay 492184c472 WITHDRAWN (D29). rh8 (dry10): only R8 classes + 1 G0 band error (fixed). R8 refresh tested RC 0.
 - Seal: one pair recompile (d28_r8pair.sh pair, OT_KV_CAL_OFS=-8) after final bind; WAITBIND PARTIAL is a false positive (--allow-drop or ACK).
 - tools_f407/: git archive of main f407b779cf63 tools (RD-LEAF-1122 relay_depth leaf-name fix) for regenerating reset rows.
+
+## 18:1x PST 11-22: D28 SEALED, apply running (KV-PLAN-R6)
+- Codex took the lane during the 11:1x limit: isolated rh11/rh12 on my rh10 (plan 43da792f36f4) -> rh12 plan 44c3cbf51e50 (hgi raw-branch fix in 3 types, proven hub Eo/Wo relay depths restored). All gates 0.
+- Sealed tree epyc8 kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate, manifest 302e13c28f5a; portable bind rh12_rebind/portable_bind_transport; pair transport-only f687b2bde70f (K-C -8). bind_sinks.json shared inode with rh11 snapshot was privatised before verify.
+- Ledger: ~/coord/autopilot/CUT-LEDGER-KV-D28.tsv + CUT-ACK (seal rc 0). Ledger dir on epyc8 d28/dry14.
+- Distribution: rh12_rebind/distribute.log (Codex d28_distribute_off_hub.sh, linked replicas per COORD 17:5x). Apply: intel2 ~/tmp/kvplanr6/apply_d28.sh -> apply_d28.out (guard, candidate cand_d28.json via epyc7 mk_candidate_g0.py, visual D28_PLAN_VISUAL, publish_apply expect KV-D27d3). If it fails, read apply_d28.out and rerun the failing step only.
+- D29 queue: LEF overlay 492184c472, relay_depth on 6 pv types (stripped), pv_v6n split (SINKSPREAD), sys_c A1, hub_Ei, R8_STRAP_PAD pc (IOPC-R4), ectl 42/31 cores (FABLE-KV-DIE), HROOT 370 um (+1 station on 8 hub ft chains) if HROOT-R1 wants it.
+- Cleanup owed (ot-delete): d28/hrootwin/*, d28/hw1..hw5*, d28/post8..post14, dry1..dry13, resettest*, rh6..rh10 dirs, epyc8 kw45/src_kv_d28_work_r6 after apply.
