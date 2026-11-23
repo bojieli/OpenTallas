@@ -55,3 +55,9 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 
 ## 23:5x PST after 23:3x outage: all units alive (epyc8 l1r + l0su bind.py ~3h20; epyc10 v5b + v5c bind.py ~1h05); waiter bgc4q40uc alive (seen l1a). No change, no RESUMED post needed.
 - Speed rule (hub f95aac4): probes never wait for review; I may self-review: render + READ my probe, set PROBE-PASS in VIS-COVERAGE.tsv with render path + 1-line verdict; 30-min SLA; holds release on PROBE-PASS/NONE-NEEDED.
+
+## 00:2x PST 11-23
+- SLWSLE l0su (= V3 cr + su_c cap2b) bound CLEAN 00:21: strict 0, LATCHECK 1921/1921 (epyc8 FAM-QC-SLWSLE-R1/v4r/l0su_bound). SLWSLE owns its hand-over.
+- LAUNCHED slw_su_c__cl19bb38ef sealed --goal route on l0su_bound (rt 0890cc9405b7, host epyc8): spec intel2 ~/coord/autopilot/private_specs/OPUS-FIX-QC-V4-R2/qwen_compute_slw_su_c__cl19bb38ef_1123002439, run-item pid 3797619 on intel2 (systemd unit runitem-slw_su_c__cl19bb38ef), log hub-coord/autopilot/private_specs/OPUS-FIX-QC-V4-R2/cl19_runitem.log, work epyc8 .../s29q103S4Q9N46R6V3/private/OPUS-FIX-QC-V4-R2/slw_su_c__cl19bb38ef_1123002417. Render at place + GRT, READ, post to VIS-QC (self PROBE-PASS after 30 min).
+- PROBE-THROUGH GAP: OT_PROBE_THROUGH needs rt >= 934ebc63141a (22:20), whose reset generators (kit_relay_depth/reset_anchor/reset_leg_plan/reset_tree) differ from the bind rt 0890/c9b8 (sig a22a11397762), so private-spec refuses --rt on every V4/V5 bind. Ruling: sealed --goal route kits double as the probes (read place + GRT renders en route). Unused probe spec _1123002309 left (never run).
+- Waiter bfjstrraz (seen l0su,l1a) for l1r / v5b / v5c.
