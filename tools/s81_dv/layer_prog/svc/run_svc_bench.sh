@@ -9,6 +9,8 @@ set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=$(realpath -m "$1"); IMG=$2; JOBS=${JOBS:-8}   # absolute: the tb link runs inside $O/obj
 source tools/s81_dv/svc_rs/rs_files.sh
+# SVC_SRC: extra source files (e.g. rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att_cut.sv with SVC_DEFS=-DOT_SVC_RS_CUT ...)
+RS_SRC+=(${SVC_SRC:-})
 PROFILE=${SVC_ENGINE_PROFILE:-closing}
 case "$PROFILE" in
  closing)
