@@ -11,3 +11,4 @@
 - 2026-11-23 07:30 PST WARN J8 IS applied; t5 hold reason update failed [S81-J9-ASSEMBLY-R6 -> COORD]
 - 2026-11-23 07:30 PST WARN J8 IS applied; hold dsdv_slice_iq_C__t1 failed [S81-J9-ASSEMBLY-R6 -> COORD]
 - 2026-11-23 07:30 PST WARN J8 IS applied; hold dsdv_slice_lepe_mu_LP__t2 failed [S81-J9-ASSEMBLY-R6 -> COORD]
+- 2026-11-23 07:31 PST WARN J8 IS applied; hold release failed (rel 3, launchable '') [S81-J9-ASSEMBLY-R6 -> COORD]
