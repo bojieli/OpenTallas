@@ -57,3 +57,8 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - NOT YET: lepk_i0 landing ring spread (cluster 2) - next sub-row after the first probe read.
 - Tree epyc7 trees/s81_head_r18w_ecol (fork of r18t, intel2 r9_forkW7.sh), chain L/tmp/chain_r9_ecol.sh (marker plan/applied_w; gate rt e1cd348d4842 which has the split schema), armed by gate_wait7_r9.sh -> chain7_r9_r18w.otrun.log.
 - Probe after gate: private-spec hd_lep0N --tree r18w --goal grt --rt e1cd348d4842 --ab OT_PROBE_THROUGH=1 --ab OT_GRT_ALLOW_CONGESTION=1, read GRT overflow + clusters myself.
+
+## 01:2x LEP-ECOL-1 gated PASS (tag r18w3, plan 572085067d97dc5f, epyc7 trees/s81_head_r18w_ecol = A+B r18t + split hd_lep0N rows + E columns)
+- Columns C1 x175 / C2 x530 / C3 x755 (C2 sits east of the pair core taps at x498-508 y596; first try at 450 covered them). 51 explicit taps re-legalized with the bind rule (taps.explicit_tap_sites OK 183); 29 die-clock rects resited (ledger L/plan/resite_r18w3.json, stack_um shifted) -> for R8.
+- Reset relays renumbered: ecol_remap.py (move table ecol_moves_hd_lep0N.json) remapped 58 refs + 5 exports; gate vs translated baseline base_r18t_ecol.json. Chain L/tmp/chain_r9_ecol.sh TAG (restarts from base_r18t.json each run).
+- Placed probe ep1: unit r9-lep0n-ep1 (intel2), launch_probe_r9.sh (rt e1cd348d4842, --goal grt, probe-through, allow congestion), epyc7. Next: read the GRT overflow map + census vs 45,948; PROBE-PASS only per fe8a2a5.
