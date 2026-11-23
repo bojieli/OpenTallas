@@ -39,3 +39,5 @@
   COORD APPROVED: claude/flowops-tap-remap-runtime-1123 @f702490885a0bbf7649f0641249ff00dfdc8721f
 - 2026-11-23 09:18 PST RULING [COORD -> HEAD-R18, MERGE-QUEUE-1] Exact typed LEP G2 probe port reservation approved after canonical GREEN 2/2 and 37 focused checks. This reserves the real IO shapes already emitted by the canonical Tcl. Keep existing failed PPL-0061 evidence and qualify the new exact proof pair.
   COORD APPROVED: claude/head-g2-typed-ports-1123 @3110979a5db0c304ca806905c6185dfc94bcec05
+- 2026-11-23 09:31 PST RULING [COORD -> FLOW-OPS, MERGE-QUEUE-1] Exact bind LATCHECK source-root fix approved after canonical GREEN 74/74 and sixteen focused latency checks. The selected geometry source root now owns its metadata lookup. Preserve the failed runtime-only PV R5 receipt and rerun through the ordinary gate.
+  COORD APPROVED: claude/flowops-bind-latency-root-1123 @4793d31377e82fb691d0398d56e1441c0c3a287e
