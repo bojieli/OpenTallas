@@ -44371,7 +44371,8 @@
     "sle_st_a_v1__cl989804f6__cled3c1d7b": "LOOK-BEFORE-LAUNCH owner=FAM-QC-SLWSLE-R1 eta=2026-11-23 08:00 (QC V4 apply): place fails OT_CLAND band u_cland_x_st_b_i vs btab g_btb[1] keepout; FABLE l0b moves it to y 725.76 (clear of band y 713-721.6); release when V4 applies and VIS-QC verdict on the V4 placement. Running kits untouched.",
     "sle_st_a_v2__pv30dda31f__pvd2ec7769": "LOOK-BEFORE-LAUNCH owner=FAM-QC-SLWSLE-R1 eta=2026-11-23 08:00 (QC V4 apply): place fails OT_CLAND band u_cland_x_st_b_i vs btab g_btb[1] keepout; FABLE l0b moves it to y 725.76 (clear of band y 713-721.6); release when V4 applies and VIS-QC verdict on the V4 placement. Running kits untouched.",
     "sle_st_a_v2__pv30dda31f__pv88773f93": "LOOK-BEFORE-LAUNCH owner=FAM-QC-SLWSLE-R1 eta=2026-11-23 08:00 (QC V4 apply): place fails OT_CLAND band u_cland_x_st_b_i vs btab g_btb[1] keepout; FABLE l0b moves it to y 725.76 (clear of band y 713-721.6); release when V4 applies and VIS-QC verdict on the V4 placement. Running kits untouched.",
-    "sle_su_c": "owner=FAM-QC-SLWSLE-R1 eta=2026-11-23 08:00 (QC V4 apply): qct13 btab views restored 11-23 (FLOW-OPS-R2) and my sealed probe passed prov_views rc 0, so the INFRA-VIEW-MISSING reason is gone; kept for the V4 relaunch with the su_c cap2b rows because an as-built V3 kit repeats the su_c street hotspot. Release on V4 apply."
+    "sle_su_c": "owner=FAM-QC-SLWSLE-R1 eta=2026-11-23 08:00 (QC V4 apply): qct13 btab views restored 11-23 (FLOW-OPS-R2) and my sealed probe passed prov_views rc 0, so the INFRA-VIEW-MISSING reason is gone; kept for the V4 relaunch with the su_c cap2b rows because an as-built V3 kit repeats the su_c street hotspot. Release on V4 apply.",
+    "phy_serdes_b": "LOOK-BEFORE-LAUNCH: QC V3 exact preflight and reviewed geometry pending after obsolete PHY-B plan override retirement; owner=KIT-WAVE-3 eta=2026-11-23 08:45"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -49127,9 +49128,6 @@
     "epyc7"
    ],
    "item_inputs": {
-    "phy_serdes_b": {
-     "plan": "/srv/opentallas-scratch2/claude/tl-qcphysdb/por/plan_s29_qc103_phyb.json"
-    },
     "coll_core": {
      "note_codex_raw_reset_1117": "Full127receipt census:16comment-only relocatedHDL mismatches,0functional mismatch; originalrawHDL restored byte-exact to unchanged emittedresetreceipts; nativebind_matches+resetidentity all16PASS. Sameplan/source/cycles.",
      "kit_rtl_prev_qcplanr3_n1b": {
