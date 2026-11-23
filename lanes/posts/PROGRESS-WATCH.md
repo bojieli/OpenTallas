@@ -273,3 +273,4 @@
 - 2026-11-22 22:05 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_Wo x4@kit_rtl, kv3_hg_v3 x2@gen_lint)
 - 2026-11-22 23:05 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_Wo x5@kit_rtl, kv3_hg_v3 x2@gen_lint)
 - 2026-11-22 23:25 PST ALERT SELF-STOP qwen_kvsys: 1 job(s) stopped by the wave 0 s after its own REAP-REVIVE (latest kv3_hgi_v3@1 at 23:20:53: superseded by attempt 2 of the same item (further progress))
+- 2026-11-23 00:06 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_Wo x6@kit_rtl, kv3_hg_v3 x2@gen_lint)
