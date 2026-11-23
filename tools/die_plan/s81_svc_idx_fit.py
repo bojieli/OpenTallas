@@ -167,6 +167,89 @@ def bound_kind(b):
     return None
 
 
+# SVC-R9 11-22 FLAT: J7/J8 binds flatten the svc_lo reader into the type bound, so there is no dsdv_idx_rg3 instance and
+# fit_bound finds nothing: the 13 dsdv_idx_rg2_m1k memories stand at the bound top level as u_u_irg_NN[_u_rg3]_<role>.
+# fit_flat applies the SAME transform to them (MEMS parameters, mq_ring tail) after checking
+#  - provenance: every flat memory sits in a bound whose irg logic cites structural_full/<key>_dsdv_idx_rg3.sv (or
+#    _nq_native for the u_rg3 form), and the source tree's portfix178 copy of that module is a proven source with every
+#    proof precondition (fit_source; the structural copy is the comment-stripped source);
+#  - netlist: exactly the 13 roles under one prefix; lm ra / wa and h1 ra = {2'b0, x[7:0]}; iq / sq / mq wd zero above
+#    35 / 39 / 23 bits; u_mq re = we = 1, ra = wa - D with D = EL + KR - 1 a constant: D < 128 direct ring,
+#    128 <= D < 144 128x23 read D - T behind + T = D - 127 stage FF tail (= mq_ring), else refused.
+FLAT_ROLES = {**{'g_land_%d_u_h0' % k: (768, 256) for k in range(4)}, **{'g_land_%d_u_h1' % k: (256, 256) for k in range(4)},
+              'g_lm_0_u_mem': (256, 256), 'g_lm_1_u_mem': (256, 256), 'u_iq': (1024, 35), 'u_sq': (1024, 39),
+              'u_mq': (128, 23)}
+FLAT_RE = re.compile(r"^(\s*)dsdv_idx_rg2_m1k #\(\.SRAM_MACRO\(1'b1\)\) (u_u_irg_\d+_(?:u_rg3_)?)(\w+) \((.*?\n\s*)\);", re.M | re.S)
+SRC_REL = 'physical/die_plan/s81/bind/source_modules/portfix178/'
+
+
+def _ports(body):
+    return dict(re.findall(r'^\s*\.(\w+)\((.*)\),?\s*$', body, re.M))
+
+
+def fit_flat(b, tree):
+    """bound text with the flat reader -> (text, n, macros, receipt); (b, 0, {}, None) when the bound has none."""
+    hits = list(FLAT_RE.finditer(b))
+    if not hits: return b, 0, {}, None
+    pre = {m[2] for m in hits}
+    if len(pre) != 1: raise ValueError('idx flat: %d flat reader prefixes %s' % (len(pre), sorted(pre)))
+    P = pre.pop(); roles = {m[3]: m for m in hits}
+    if len(hits) != 13 or set(roles) != set(FLAT_ROLES):
+        raise ValueError('idx flat: flat memories %s are not the 13 reader roles' % sorted(roles))
+    nq = P.endswith('_u_rg3_'); mod = 'dsdv_idx_rg3_nq_native' if nq else 'dsdv_idx_rg3'
+    if not re.search(r'structural_full/[0-9a-f]{12}_%s\.sv:' % mod, b):
+        raise ValueError('idx flat: no structural_full/*_%s.sv provenance in the bound' % mod)
+    src = Path(tree) / SRC_REL / (mod + '.sv')
+    if not src.is_file(): raise ValueError('idx flat: proven source %s missing' % src)
+    fit_source(src.read_text(), nq=nq)                  # sha in the proven set + every proof precondition
+    pt = {r: _ports(m[4]) for r, m in roles.items()}
+    z8 = re.compile(r"\{\{2\{1'b0\}\}, \w+\[7:0\]\}")
+    for r in ('g_lm_0_u_mem', 'g_lm_1_u_mem'):
+        if not (z8.fullmatch(pt[r].get('ra', '')) and z8.fullmatch(pt[r].get('wa', ''))):
+            raise ValueError('idx flat: %s address is not 8-bit' % r)
+    for k in range(4):
+        if not z8.fullmatch(pt['g_land_%d_u_h1' % k].get('ra', '')):
+            raise ValueError('idx flat: g_land_%d_u_h1 ra is not c_row {2b0, ..}' % k)
+    for r, (w, bits) in FLAT_ROLES.items():
+        if bits < 256 and not pt[r].get('wd', '').startswith("{{%d{1'b0}}, " % (256 - bits)):
+            raise ValueError('idx flat: %s wd is not zero above bit %d' % (r, bits))
+    mq = pt['u_mq']
+    if mq.get('re') != "1'b1" or mq.get('we') != "1'b1": raise ValueError('idx flat: u_mq must read / write every edge')
+    ra = re.fullmatch(r'(\w+)\[9:0\]', mq.get('ra', '')); wa = re.fullmatch(r'(\w+)\[9:0\]', mq.get('wa', ''))
+    if not (ra and wa): raise ValueError('idx flat: u_mq address form')
+    d = re.findall(r'^\s*assign %s = %s\[9:0\] - 10\'b([01]{10});' % (re.escape(ra[1]), re.escape(wa[1])), b, re.M)
+    if len(d) != 1: raise ValueError('idx flat: u_mq ra is not wa - constant')
+    D = int(d[0], 2)
+    if D >= 144: raise ValueError('idx flat: u_mq ring depth %d >= 144 has no 128x23 + FF tail form' % D)
+    T = 0 if D < 128 else D - 127
+    out = b
+    for r, m in roles.items():
+        w, bits = FLAT_ROLES[r]
+        head = m[0][:m[0].index(' (') + 2]
+        new = head.replace("dsdv_idx_rg2_m1k #(.SRAM_MACRO(1'b1))",
+                           "dsdv_idx_fit_mem #(.SRAM_MACRO(1'b1), .WORDS(%d), .BITS(%d))" % (w, bits), 1)
+        body = m[0][len(head):]
+        if r == 'u_mq' and T:
+            rd = mq.get('rd', '')
+            if not re.fullmatch(r'\w+', rd) or len(re.findall(r'^\s*wire \[255:0\] %s;' % re.escape(rd), b, re.M)) != 1 \
+                    or len(re.findall(r'\b%s\b' % re.escape(rd), b)) < 2:
+                raise ValueError('idx flat: u_mq rd must be a declared 256-bit wire')
+            if re.search(r'^\s*assign %s\b' % re.escape(rd), b, re.M): raise ValueError('idx flat: u_mq rd driven twice')
+            ck = mq.get('ck', '')
+            body = body.replace('.ra(%s)' % mq['ra'], '.ra(%smq_ra_fit)' % P, 1).replace('.rd(%s)' % rd, '.rd(%smq_qm)' % P, 1)
+            ind = m[1].split('\n')[-1]
+            decl = (f"{ind}// SVC-R9 idx flat: u_mq ring depth {D} -> 128x23 read {D - T} behind + {T}-stage FF tail (mq_ring)\n"
+                    f"{ind}wire [9:0] {P}mq_ra_fit = {wa[1]}[9:0] - 10'd{D - T};\n{ind}wire [255:0] {P}mq_qm;\n"
+                    f"{ind}reg [{23 * T - 1}:0] {P}mq_sh;\n{ind}always @(posedge {ck}) {P}mq_sh <= {{{P}mq_sh, {P}mq_qm[22:0]}};\n"
+                    f"{ind}assign {rd} = {{{{233{{1'b0}}}}, {P}mq_sh[{23 * T - 1} -: 23]}};\n")
+            new = decl + new
+        if out.count(m[0]) != 1: raise ValueError('idx flat: instance %s%s not unique' % (P, r))
+        out = out.replace(m[0], new + body, 1)
+    if re.search(r"^\s*dsdv_idx_rg2_m1k #\(", out, re.M): raise ValueError('idx flat: dsdv_idx_rg2_m1k left behind')
+    return out, 13, dict(MACROS), dict(kind='flat', prefix=P, source=str(src), source_sha=sha12(src.read_text()),
+                                       mq_depth=D, mq_tail=T)
+
+
 if __name__ == '__main__':
     src = Path(sys.argv[1]); out = Path(sys.argv[2])
     out.write_text(fit_source(src.read_text(), nq=src.name == 'dsdv_idx_rg3_nq_native.sv'))

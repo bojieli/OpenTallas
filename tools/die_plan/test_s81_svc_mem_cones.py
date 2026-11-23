@@ -186,3 +186,60 @@ def test_apply_kit_struct_retypes_tr_cores_of_the_plan_type(tmp_path, monkeypatc
     assert 'ot_tr_x0_bb.v' in names(tmp_path / 'kit_rtl.f') and 'ot_tr_x0_bb.v' not in names(tmp_path / 'kit_rtl_sim.f')
     assert 'ot_tr_x3_bb.v' in [x.rsplit('/', 1)[-1] for x in json.loads((tmp_path / 'kit_rtl.json').read_text())['files']]
     assert MC.tr_rows(dict(hard_cores=[dict(module=R9.TR_LOGICAL)])) == [] and MC.tr_rows(None) == []
+
+
+def flat_bound(P='u_u_irg_03_', D=139, cite='35b4139a8c40_dsdv_idx_rg3.sv'):
+    """a bound with the flat svc_lo reader (13 top-level dsdv_idx_rg2_m1k, J7/J8 bind form)"""
+    W = 'w_' + P[2:]
+    z8 = lambda n: "{{2{1'b0}}, %s[7:0]}" % n
+    def inst(role, ra, wa, wd, re_='x_re[0]', we='x_we[0]'):
+        return (f"    dsdv_idx_rg2_m1k #(.SRAM_MACRO(1'b1)) {P}{role} (\n        .ck(clk),\n        .ra({ra}),\n"
+                f"        .rd({W}{role}_rd),\n        .re({re_}),\n        .wa({wa}),\n        .wd({wd}),\n        .we({we})\n    );")
+    L = ['module s81p_svc_lo_dsdv_svc_rs__t3_bound(input clk);',
+         f'    assign {W}x_Y = {W}y;  // structural_full/{cite}:12.1-12.9']
+    for k in range(4):
+        L.append(inst('g_land_%d_u_h0' % k, f'{W}h0r{k}[9:0]', f'{W}lwa{k}[9:0]', f'{W}lwd{k}[255:0]'))
+        L.append(inst('g_land_%d_u_h1' % k, z8(f'{W}c_row'), f'{W}lwa{k}[9:0]', f'{W}lwd{k}[255:0]'))
+    for k in range(2):
+        L.append(inst('g_lm_%d_u_mem' % k, z8(f'{W}lfr'), z8(f'{W}lfw'), f'{W}lfd[255:0]'))
+    L.append(inst('u_iq', f'{W}iqr[9:0]', f'{W}iqw[9:0]', "{{221{1'b0}}, %siqd[34:0]}" % W))
+    L.append(inst('u_sq', f'{W}sqr[9:0]', f'{W}sqw[9:0]', "{{217{1'b0}}, %ssqd[38:0]}" % W))
+    L += [f'    wire [255:0] {W}u_mq_rd;', f"    assign {W}mqra_Y = {W}mw_Q[9:0] - 10'b{D:010b};",
+          inst('u_mq', f'{W}mqra_Y[9:0]', f'{W}mw_Q[9:0]', "{{233{1'b0}}, %smqd[22:0]}" % W, "1'b1", "1'b1"),
+          f'    assign {W}use = {W}u_mq_rd[22:0];', 'endmodule']
+    return '\n'.join(L) + '\n'
+
+
+@pytest.mark.parametrize('P,D,T', [('u_u_irg_03_', 139, 12), ('u_u_irg_07_u_rg3_', 139, 12), ('u_u_irg_01_', 123, 0)])
+def test_flat_idx_fit_retypes_the_13_reader_memories(P, D, T):
+    import s81_svc_idx_fit as IDX
+    cite = ('797dbb85dc12_dsdv_idx_rg3_nq_native.sv' if 'u_rg3' in P else '35b4139a8c40_dsdv_idx_rg3.sv')
+    b = flat_bound(P, D, cite)
+    out, n, mac, rep = IDX.fit_flat(b, MC.ROOT)
+    assert n == 13 and mac == IDX.MACROS and rep['mq_depth'] == D and rep['mq_tail'] == T and rep['prefix'] == P
+    assert 'dsdv_idx_rg2_m1k' not in out
+    assert out.count("dsdv_idx_fit_mem #(.SRAM_MACRO(1'b1), .WORDS(768), .BITS(256)) %sg_land_" % P) == 4
+    assert out.count("dsdv_idx_fit_mem #(.SRAM_MACRO(1'b1), .WORDS(256), .BITS(256))") == 6
+    assert "dsdv_idx_fit_mem #(.SRAM_MACRO(1'b1), .WORDS(128), .BITS(23)) %su_mq (" % P in out
+    W = 'w_' + P[2:]
+    if T:
+        assert f"wire [9:0] {P}mq_ra_fit = {W}mw_Q[9:0] - 10'd127;" in out and f'.ra({P}mq_ra_fit)' in out
+        assert f'reg [{23 * T - 1}:0] {P}mq_sh;' in out and f"assign {W}u_mq_rd = {{{{233{{1'b0}}}}, {P}mq_sh[{23 * T - 1} -: 23]}};" in out
+    else:
+        assert 'mq_ra_fit' not in out and f'.rd({W}u_mq_rd)' in out
+    assert IDX.fit_flat('module m; endmodule\n', MC.ROOT) == ('module m; endmodule\n', 0, {}, None)
+
+
+@pytest.mark.parametrize('old,new,why', [
+    ("{{2{1'b0}}, w_u_irg_03_lfr[7:0]}", 'w_u_irg_03_lfr[9:0]', '8-bit'),
+    ("{{217{1'b0}}, ", "{{216{1'b0}}, ", 'wd is not zero'),
+    ("10'b0010001011", "10'b0010010000", '>= 144'),
+    ('structural_full/35b4139a8c40_dsdv_idx_rg3.sv', 'structural_full/35b4139a8c40_other.sv', 'provenance'),
+    ('u_u_irg_03_u_iq (', 'u_u_irg_03_u_iqx (', 'reader roles'),
+])
+def test_flat_idx_fit_refuses_any_netlist_difference(old, new, why):
+    import s81_svc_idx_fit as IDX
+    b = flat_bound()
+    assert old in b
+    with pytest.raises(ValueError, match=why):
+        IDX.fit_flat(b.replace(old, new), MC.ROOT)

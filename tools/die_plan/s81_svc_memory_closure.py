@@ -64,7 +64,7 @@ def children(form):
     return CHILDREN if form == 'v1' else CHILDREN_V2
 
 
-def idx_fit(closed, files, rtl=None):
+def idx_fit(closed, files, rtl=None, tree=None):
     """MEM idx fit (v2 only): rename the svc_lo dsdv_idx_rg3 instance to dsdv_idx_rg3_fit and generate that child
     from the dsdv_idx_rg3.sv the kit lists (`files`; sha-checked + proof preconditions in s81_svc_idx_fit).
     DIE-S81-66 11-05: the chain-end reader dsdv_idx_rg3_nq (svc_lo t7) -> dsdv_idx_rg3_nq_fit + dsdv_idx_rg3_nq_native_fit
@@ -72,7 +72,11 @@ def idx_fit(closed, files, rtl=None):
     Returns (closed, {child name: text}, macros, receipt) - no children / macros when the bound has no reader."""
     closed, n = IDX.fit_bound(closed)
     kind = IDX.bound_kind(closed)
-    if kind is None: return closed, {}, {}, None
+    if kind is None:
+        # SVC-R9 11-22: J7/J8 binds flatten the reader into the bound (13 top-level dsdv_idx_rg2_m1k)
+        closed, n, macros, rep = IDX.fit_flat(closed, Path(tree or ROOT))
+        if not n: return closed, {}, {}, None
+        return closed, {'dsdv_idx_fit_mem.sv': (ROOT / IDX.FIT_MEM).read_text()}, macros, dict(rep, renamed=n, dropped=[])
 
     def one(name):
         srcs = [f for f in files if Path(f).name == name]
@@ -421,7 +425,7 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None, typ=None, tr
         rep['v1_after_sha256'] = sha(closed); closed = fit_v2(closed); rep['after_sha256'] = sha(closed)
     idx_kids, idx_macros, drop = {}, {}, []
     if form == 'v2':
-        closed, idx_kids, idx_macros, idx_rep = idx_fit(closed, kr['files'], bound)
+        closed, idx_kids, idx_macros, idx_rep = idx_fit(closed, kr['files'], bound, tree)
         if idx_rep:
             rep['v2_after_sha256'] = rep['after_sha256']; rep['after_sha256'] = sha(closed); rep['idx_fit'] = idx_rep
             drop = idx_rep['dropped']
