@@ -27,6 +27,21 @@ die box whose origin is subtracted).  Each new site is legalised by schema.tap_c
 taps are) and must pass the added-tap validator rules (outline, hard-core / placed macro / keepout halo, spacing to
 every tap and early core tap).
 
+SINK-EST (TAP-GRID-R5 11-23, COORD class item: QC q00 plan 976 vs CTS 1,531 on clk_t60, cbx_q10 ~955 vs 3,265 placed).
+Cause: the planned basis (taps.sink_sites without clock.sink_bins_file) is the face / ft / station / control registers
+only; the soft-logic flops (datapath pipelines, FIFOs, FSMs, banks) are not in the plan at all, and a sink_bins_file
+from an older netlist can lag the placed one (KV pv_v4 126k vs 200k).  Calibration vs the kit's per-tap CTS load (PRECHECK
+cache placed per-tap max) on types whose plan tap count is within 10 % of the kit's: S81 J9 v2 (33 types, 8 families)
+planned max x3.44 median (p90 5.34) under CTS, placed registers on the plan taps (nearest tap) 0.89 x it (p90 1.12);
+KV D29 r5 (17 types, 16 families) placed-nearest 0.52 x CTS median (p90 0.93; max 1.65 kv3_hg_v3), planned/bins up to x11
+under (hub_Eo 1,148 vs 12,903).  Placed regs = 1.52 x netlist flops (median of 398 kits: ICG / latch / split multibit).
+So every type without a --sinks file or sink_bins_file
+now takes, in order: (1) the shared PRECHECK flops cache placed_bins of its exact type, else of its base type
+(__cl / __pv / _h suffix stripped) with the same outline (+-2 um) -> basis "cache"; (2) else, with a netlist flop count
+in the cache, the planned sinks plus the residual REG_PER_FLOP x flops - planned spread uniformly over the outline on a
+20 um grid -> basis "planned+flops"; (3) else planned (SINK-MODEL-PLANNED-ONLY as before).  --flops-cache PATH
+(default $OT_FLOPS_CACHE, else the PRECHECK cache path when it exists); --flops-cache none = the old behaviour.
+
 Solver: while a tap is over the cap or over the radius, the worst one is split: its nearest-sink set is cut at the
 weighted median (both axes) and at the radius; a new tap goes to the weighted median of a part, legalised; the
 candidate that lowers the total excess (sum of load over the cap + sink weight beyond the radius) most is kept.  A tap
@@ -112,6 +127,55 @@ def _np():
 
 
 PLACED = {}          # type -> [(x, y, w)] placed register inventory (TAP-SOFTFLOP); set by main / tests
+BASIS = {}           # type -> sink basis label of a PLACED entry that did not come from a --sinks file (SINK-EST)
+FLOPS_CACHE_DEFAULT = "/srv/opentallas-scratch2/claude/precheck-cache/flops_cache.json"
+STALE_BINS = 1.2     # SINK-EST: KV pv_v4 sink_bins_file 126k sinks vs 200k placed registers (plan max 1,699 vs CTS 10,042)
+REG_PER_FLOP = 1.52  # SINK-EST: median placed clock sinks per netlist flop over 398 kits (p10 1.07, p90 2.99)
+FILL_UM = 20.0
+
+
+def _base_names(tn):
+    import re
+    out, cur = [tn], tn
+    for pat in (r"_h$", r"__pv[0-9a-f]+$", r"__cl[0-9a-f]+$"):
+        nxt = re.sub(pat, "", cur)
+        if nxt != cur:
+            out.append(nxt)
+            cur = nxt
+    return out
+
+
+def estimate_sinks(P, tn, cache, planned=None):
+    """SINK-EST: ([(x, y, w)], basis) for a type without a placed file / sink_bins_file (see the module doc), or (None, None)."""
+    t = P.types[tn]
+    W_, H_ = (float(v) for v in t["outline_um"][:2])
+    bins = cache.get("placed_bins") or {}
+    for n in _base_names(tn):
+        b = bins.get(n)
+        if b and b.get("die_um") and abs(float(b["die_um"][0]) - W_) <= 2.0 and abs(float(b["die_um"][1]) - H_) <= 2.0:
+            return [(float(r[0]), float(r[1]), float(r[2])) for r in b["bins"]], "cache" if n == tn else f"cache:{n}"
+    FL = cache.get("flops") or {}
+    fl = next((FL[n]["flops"] for n in _base_names(tn) if (FL.get(n) or {}).get("flops")), None)
+    if not fl:
+        return None, None
+    if planned is None:
+        import taps as TP
+        planned = TP.sink_sites(P, tn)
+    rest = REG_PER_FLOP * fl - sum(w for *_, w in planned)
+    if rest <= 0:
+        return None, None
+    nx, ny = max(1, int(W_ // FILL_UM)), max(1, int(H_ // FILL_UM))
+    w = rest / (nx * ny)
+    return list(planned) + [((i + 0.5) * W_ / nx, (j + 0.5) * H_ / ny, w) for i in range(nx) for j in range(ny)], "planned+flops"
+
+
+def load_cache(path):
+    import os
+    if path is None:
+        path = os.environ.get("OT_FLOPS_CACHE") or (FLOPS_CACHE_DEFAULT if Path(FLOPS_CACHE_DEFAULT).is_file() else None)
+    if not path or path == "none":
+        return {}
+    return json.loads(Path(path).read_text())
 
 
 def load_placed(path):
@@ -139,7 +203,7 @@ def load_placed(path):
 
 def sink_basis(P, tn):
     if tn in PLACED:
-        return "placed"
+        return BASIS.get(tn, "placed")
     return "bins" if (P.types[tn].get("clock") or {}).get("sink_bins_file") else "planned"
 
 
@@ -442,7 +506,7 @@ def fresh_type(P, tn, radius, cap=None, margin=0.9, min_sinks=30, max_taps=400, 
     t = P.types[tn]
     cap = min(gen_phys._tap_cap(t), cap) if cap else gen_phys._tap_cap(t)
     rep = dict(type=tn, mode="fresh", cap=cap, radius_um=radius, sink_basis=sink_basis(P, tn), min_sinks=min_sinks)
-    if require_placed and rep["sink_basis"] != "placed":
+    if require_placed and not rep["sink_basis"].startswith(("placed", "cache")):
         rep["status"] = "NO_PLACED"
         return rep, []
     sinks = type_sinks(P, tn)
@@ -634,6 +698,8 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_mar
         return rep, []
     tp = schema.tap_grid(P, tn)
     rep["sink_basis"] = basis = sink_basis(P, tn)
+    if basis == "planned+flops":
+        rep["why"] = "SINK-EST planned + netlist flop residual spread uniformly (no placed kit of this outline)"
     if basis == "planned":
         rep["why"] = "SINK-MODEL-PLANNED-ONLY (no sink_bins_file, no --sinks): soft-logic flops not counted"
         if require_placed:
@@ -913,6 +979,9 @@ def main(argv=None):
     ap.add_argument("--sinks", action="append", default=[], metavar="TYPE=FILE",
                     help="placed register inventory of TYPE (TAP-SOFTFLOP): .reg / bins JSON / geometry dump / [[x,y]] list")
     ap.add_argument("--sinks-dir", help="DIR/<type>.reg or DIR/<type>.json for every type that has one")
+    ap.add_argument("--flops-cache", default=None,
+                    help="SINK-EST: PRECHECK flops cache (placed_bins / flops) for types without --sinks or sink_bins_file; "
+                         "default $OT_FLOPS_CACHE else the shared cache when present; 'none' = planned sinks only")
     ap.add_argument("--require-placed", action="store_true",
                     help="a type without sink_bins_file or placed sinks is NO_PLACED (no rows) instead of split on planned sinks")
     ap.add_argument("--multi-margin", type=float, default=0.9,
@@ -957,6 +1026,27 @@ def main(argv=None):
                 f = Path(a.sinks_dir) / f"{tn}{ext}"
                 if tn not in PLACED and f.is_file():
                     PLACED[tn] = load_placed(f)
+    BASIS.clear()
+    cache = load_cache(a.flops_cache)
+    if cache:
+        for tn in types:
+            if tn in PLACED or tn not in P.types:
+                continue
+            binned = bool((P.types[tn].get("clock") or {}).get("sink_bins_file"))
+            try:
+                est, basis = estimate_sinks(P, tn, cache)
+                if binned:                            # a sink_bins_file stays unless a placed kit holds > STALE_BINS x its sinks
+                    nb = sum(w for *_, w in TP.sink_sites(P, tn))
+                    if not (basis or "").startswith("cache") or sum(w for *_, w in est) <= STALE_BINS * nb:
+                        continue
+                    basis = basis.replace("cache", "cache>bins", 1)
+            except Exception as e:                    # an estimate never blocks the split; the type keeps its planned basis
+                print(f"TAP_SPLIT SINK-EST {tn}: skipped ({type(e).__name__}: {str(e)[:120]})", flush=True)
+                continue
+            if est:
+                PLACED[tn], BASIS[tn] = est, basis
+        print(f"TAP_SPLIT SINK-EST " + " ".join(f"{b}={sum(1 for v in BASIS.values() if v.split(':')[0] == b)}"
+                                                 for b in ("cache", "cache>bins", "planned+flops")), flush=True)
     reps, rows_by_type = [], {}
     for tn in types:
         try:

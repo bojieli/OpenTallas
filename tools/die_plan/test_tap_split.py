@@ -404,3 +404,42 @@ def test_remap_rows_isolates_an_unnamed_error(tmp_path):
     rec, failed = TS.remap_rows(orig, raw, str(tmp_path / "in.json"), str(tmp_path / "out.json"), ["a", "b"], str(tmp_path),
                                 remap_fn=remap_fn, check_fn=lambda n, o: [])
     assert set(failed) == {"b"} and rec == {"ok": ["a"]} and raw["partition_types"]["b"]["clock"]["v"] == 0
+
+
+@pytest.fixture(autouse=True)
+def _no_shared_flops_cache(monkeypatch):
+    monkeypatch.setenv("OT_FLOPS_CACHE", "none")      # SINK-EST: tests never read the host's shared PRECHECK cache
+
+
+def test_sinkest_cache_exact_then_base_and_outline_check():
+    """SINK-EST: the PRECHECK cache's placed bins replace the planned basis (exact type, else base type, same outline)."""
+    class P:
+        types = {"a__cl12ab": {"outline_um": [100.0, 50.0], "clock": {}}, "b": {"outline_um": [100.0, 50.0], "clock": {}}}
+    cache = {"placed_bins": {"a": {"die_um": [100.5, 49.0], "bins": [[5, 5, 10], [95, 45, 30]]},
+                             "b": {"die_um": [300.0, 50.0], "bins": [[5, 5, 1]]}},
+             "flops": {"b": {"flops": 1000}}}
+    est, basis = TS.estimate_sinks(P, "a__cl12ab", cache)
+    assert basis == "cache:a" and sum(w for *_, w in est) == 40
+    est, basis = TS.estimate_sinks(P, "b", cache, planned=[(50.0, 0.0, 20.0)])   # wrong outline -> flops residual
+    assert basis == "planned+flops"
+    assert abs(sum(w for *_, w in est) - TS.REG_PER_FLOP * 1000) < 1e-6 and est[0] == (50.0, 0.0, 20.0)
+    assert len(est) == 1 + 5 * 2                                                 # 20 um fill grid on 100 x 50
+    assert TS.estimate_sinks(P, "b", {"flops": {}}, planned=[]) == (None, None)
+
+
+def test_sinkest_basis_label_and_main_flag(tmp_path):
+    TS.PLACED.clear(); TS.BASIS.clear()
+    TS.PLACED["x"] = [(0.0, 0.0, 1.0)]; TS.BASIS["x"] = "cache"
+    assert TS.sink_basis(None, "x") == "cache"
+    TS.PLACED.clear(); TS.BASIS.clear()
+    assert TS.load_cache("none") == {}
+    f = tmp_path / "c.json"; f.write_text('{"placed_bins": {}}')
+    assert TS.load_cache(str(f)) == {"placed_bins": {}}
+
+
+def test_sinkest_bins_kept_unless_placed_kit_is_larger(monkeypatch):
+    """SINK-EST: a sink_bins_file is replaced by the cache only when the placed kit holds > STALE_BINS x its sinks."""
+    calls = {}
+    monkeypatch.setattr(TS, "estimate_sinks", lambda P, tn, cache: ([(1.0, 1.0, 130.0)], "cache"))
+    monkeypatch.setattr(taps, "sink_sites", lambda P, tn: [(0.0, 0.0, 100.0)])
+    assert TS.STALE_BINS == 1.2 and 130.0 > TS.STALE_BINS * 100.0
