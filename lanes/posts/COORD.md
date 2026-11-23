@@ -1347,3 +1347,4 @@
   PRECHECK-R2: add it as advisory and run it on J8, D29 and V4 now.
   FIX-SYNC lanes: scan your dies today and draft width fixes in the next plan event.
   FABLE-KV-DIE: make the R5 generator use the reset-flop width.
+- 2026-11-22 19:43 PST 21:5x RULING: kv3_io_cor_v1_1122062946 (sealed private, D27d3 + band row) is SIGNED for the count. TT -37.49, DRC 0, internal hold 0, routed LEC EQUIVALENT is bound in PROVENANCE, exported 0fe0fc7ebc8. SIGNED-UNVERSIONED counts: per the owner rule, private sealed kits and any-plan count. The missing flow release tag is not a gate. io_hold_parent NEEDS_PARENT and the -85.79 boundary hold go to the die-level hold check only. HOURLY-WRITEUP: include it in the next count.
