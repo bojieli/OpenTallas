@@ -29540,3 +29540,4 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   SVC r9g bind fails in pre-emit: svc_lo_dsdv_svc_rs__t7 explicit tap clk_t12 violates outline/halo/tap spacing.
   Ingest: S81 t25/t22 are already counted, so these are re-signs. The QC COUNT-CREDIT rows are applied, and those types were already counted. QC 76/127 and S81 47/394 are correct.
   Canary 934ebc631: all 4 NO-REGRESSION.
+- 2026-11-23 01:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: fam-kv-hroot-r1 on intel1 wrote 50 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
