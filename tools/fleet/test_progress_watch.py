@@ -118,6 +118,24 @@ class Rules(unittest.TestCase):
         out = [f for f in P.detect([], D(2026, 11, 19, 10, 30), st) if f["cls"] == "STUCK-STATE"]
         self.assertEqual(len(out), 1); self.assertIn("1 current-plan row", out[0]["text"]); self.assertIn("stuck", out[0]["text"])
 
+    def test_design_watchdog_cancellations_are_not_launch_candidates(self):
+        import json, tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            ap = Path(tmp) / "autopilot"
+            ap.mkdir()
+            (ap / "kit_wave.json").write_text(json.dumps({"dies": {"qwen_kvsys": {}, "s81": {}}}))
+            (ap / "kit_wave_stages.tsv").write_text(
+                "die\titem\tstatus\tclass\tplan_current\treason\n"
+                "qwen_kvsys\thgi\tCANCELLED\tQUEUE-CANCELLED\tyes\t"
+                "queue job abcd cancelled: cancelled by DESIGN-FAIL watchdog at 2026-11-23 07:00:04 "
+                "(not an OOM kill): CANCEL-DESIGN: GRT-LABEL DESIGN-FAIL: overflow 4392\n"
+                "s81\tleaf\tCANCELLED\tQUEUE-CANCELLED\tyes\tqueue job efgh cancelled: host drain\n"
+            )
+            state = P.load_state(tmp)
+        self.assertEqual(state["eligible"], {"qwen_kvsys": 0, "s81": 1})
+        alerts = P.detect([], D(2026, 11, 23, 8, 18), state)
+        self.assertEqual([row["die"] for row in alerts if row["cls"] == "NO-PROGRESS"], ["s81"])
+
     def test_dedup_one_per_die_class_hour(self):
         f = [{"die": "s81", "cls": "NO-PROGRESS", "state": "alert", "text": "t"}]
         now = D(2026, 11, 19, 12, 0)

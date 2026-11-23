@@ -316,7 +316,11 @@ def load_state(coord):
         pass
     # eligible = current-plan rows that were cancelled/superseded and are waiting for a relaunch (not in flight, LINT, WAIT-*, held)
     for r in st["rows"]:
-        if r.get("plan_current") == "yes" and r.get("status") == "CANCELLED" and (r.get("class") or "") in ("SUPERSEDED", "QUEUE-CANCELLED", ""):
+        cls = r.get("class") or ""
+        if cls == "QUEUE-CANCELLED" and ": CANCEL-DESIGN: " in (r.get("reason") or ""):
+            # The design watchdog records terminal failures with the generic queue cancellation class.
+            continue
+        if r.get("plan_current") == "yes" and r.get("status") == "CANCELLED" and cls in ("SUPERSEDED", "QUEUE-CANCELLED", ""):
             st["eligible"][r["die"]] = st["eligible"].get(r["die"], 0) + 1
     for d in st["known"]:
         st["eligible"].setdefault(d, 0)
