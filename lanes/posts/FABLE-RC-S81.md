@@ -60,3 +60,4 @@
   5. Internal one-cycle hops without stations: slice C xg/xf legs (-495 to -1304), seqhost -480, gunit -2168, bk_sel -604, col_h10 station merge.
   Also: eng ENG-NROW-1 targets a pin row with zero overflow; 775 of 942 sits in the u_e/u_h0 channel.
   20 RC-GAP posts are out to the owner lanes; I will report again when each gap has a row or a reason.
+- 2026-11-23 01:26 PST DONE [FABLE-RC-S81] ot-run oth-ubuntu-2653422-1795425623 on loved-redfish: rc=0 after 2194 s, ended 09:26:17, log /srv/opentallas-scratch2/claude/fable-rc-s81/tmp/cola_ea45/otrun.log, cmd: --mem 24 --threads 2 --hosts epyc7 --dir /srv/opentallas-scratch/claude/fable-rc-s81/tmp/cola_ea45 -- bash /srv/opentallas-scratch/claude/fa
