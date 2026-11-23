@@ -482,6 +482,18 @@ def _macros_all_plan_fixed(t):
     return bool(t.get("hard")) and (bool(t.get("hard_cores")) or S.full_area_hard_ip(t))
 
 
+def _gutter_block_keep(budgets, tn):
+    """GUTTER-KEEP 11-23 (FABLE-OPEN-KV, KV rc118): keep the gutter blockages after global placement (gutter_release.tcl re-cuts
+    them around fixed cells instead of removing them).  Measured on kv3_pc_v3: the GPL-only form leaves 865 / 1316 / 1194 cells in
+    the 8.64 um pcc|pcf slits at 3_place (resizer wire buffers, chain cells legalised back in) and the nets cross the macro.
+    GEN env OT_GUTTER_BLOCK_KEEP (1 / 0) wins; else budgets.gutter_block_keep_types lists the types (type or unsplit base)."""
+    v = os.environ.get("OT_GUTTER_BLOCK_KEEP", "").strip()
+    if v:
+        return v == "1"
+    on = budgets.get("gutter_block_keep_types") or []
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
 def _gutter_block_min_span_um(budgets):
     """S81-TYPES-7-COLH 11-08 (class C ROM walls): only gaps whose facing span is >= this many um get a gutter
     blockage (GEN env OT_GUTTER_BLOCK_MIN_SPAN_UM wins, else budgets.gutter_block_min_span_um); None = every gap
@@ -7928,6 +7940,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export OT_RELAY_POLY_FAIL = 1"] if macros and _relay_hop_fail(P.budgets, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
+           *(["export OT_GUTTER_BLOCK_KEEP = 1"] if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_keep(P.budgets, tn) else []),
            *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]
              if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)

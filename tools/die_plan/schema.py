@@ -3923,6 +3923,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 SCHEMA["properties"]["budgets"]["properties"]["gutter_block_um"] = {"type": "number", "exclusiveMinimum": 0}
 SCHEMA["properties"]["budgets"]["properties"]["gutter_block_min_span_um"] = {"type": "number", "exclusiveMinimum": 0}
 SCHEMA["properties"]["budgets"]["properties"]["gutter_block_types"] = {"type": "array", "items": {"type": "string", "minLength": 1}}
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_keep_types"] = {"type": "array", "items": {"type": "string", "minLength": 1}}   # GUTTER-KEEP 11-23
 
 
 def main(argv):
