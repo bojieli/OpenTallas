@@ -7610,7 +7610,7 @@ def _plan_gate_pre(a):
         _new = "remap" in _insp.signature(G.check).parameters      # REMAP-BASE-1122: the checker resolves the LANDREMAP / ISTCYC base itself
         _kw = dict(remap=_prev_bind_plan(a)) if _new else {}
         fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"),
-                     elab_dir=a.out, ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
+                     elab_dir=_pg_elab_dir(a), ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
                      toolstale_level="WARN", abspath_level="warn", **_kw)      # ABSPATH-1122: a bind warns, G0 / compose refuse
     except (OSError, ValueError) as e:
         print(f"bind: plan_gate_pre could not read its inputs: {e}")
@@ -7642,6 +7642,18 @@ def _plan_gate_pre(a):
 
 
 _PG_CHILD = {}
+_PG_BESIDE = [False]      # PRE-ELAB-RACE-1122: True inside the forked gate child (elab of this run is being written beside it)
+
+
+def _pg_elab_dir(a):
+    """PRE-ELAB-RACE-1122 (TAP-GRID-R5 / KV-PLAN-R6 D29: 337-345 RELAYSINK "is no leaf of the elaborated die" on types the rows never touch;
+    standalone PRE on the same plan 0 findings): the row checks (RELAYSINK, ROWSINK, MODULES) read OUT/asbuilt.json.  Beside the bind the
+    elab of THIS run is writing that file, and before an elab / all run it is the previous run's elab (another plan).  Only a `bind` run in
+    the old serial order, after its own `elab` call, has this plan's elab there.  -> elab dir for plan_gate_pre or None (row checks skipped;
+    bind EMIT still refuses a sink that matches nothing, and bind_fast.py precheck runs them on a finished elab)."""
+    if _PG_BESIDE[0] or getattr(a, "cmd", None) != "bind":
+        return None
+    return a.out
 
 
 def _plan_gate_pre_start(a):
@@ -7665,6 +7677,7 @@ def _plan_gate_pre_start(a):
             os.dup2(f.fileno(), 1)
             os.dup2(f.fileno(), 2)
             sys.stdout = sys.stderr = f                  # a wrapped stdout (pytest capture, a pipe wrapper) writes to the log too
+            _PG_BESIDE[0] = True                         # PRE-ELAB-RACE-1122: never read the elab being written beside us
             rc = _plan_gate_pre(a)
         except BaseException as e:                       # noqa: BLE001 -- any crash is a gate that could not judge
             try:

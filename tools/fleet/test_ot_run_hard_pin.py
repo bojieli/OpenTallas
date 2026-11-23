@@ -32,14 +32,18 @@ def test_soft_pin_restores_old_behaviour(monkeypatch):
 def test_pin_wait_on_transient_refusal(monkeypatch):
     monkeypatch.delenv("OT_RUN_SOFT_PIN", raising=False)
     # epyc8 holds the kit dir but is under its scratch floor: wait there
-    assert RUN.pin_wait(True, False, ["epyc8"], [], None, 5000)
-    assert RUN.pin_wait(True, False, ["epyc8"], [], 600, 100)
-    assert not RUN.pin_wait(True, False, ["epyc8"], [], 600, 700)          # --max-wait is kept
-    assert not RUN.pin_wait(True, False, ["epyc8"], ["epyc8"], None, 0)    # the dir is missing there: SETUP NOT RUN, not a wait
+    assert RUN.pin_wait(True, False, ["epyc8"], [], None, 5000, d="/srv/k")
+    assert RUN.pin_wait(True, False, ["epyc8"], [], 600, 100, d="/srv/k")
+    assert not RUN.pin_wait(True, False, ["epyc8"], [], 600, 700, d="/srv/k")          # --max-wait is kept
+    assert not RUN.pin_wait(True, False, ["epyc8"], ["epyc8"], None, 0, d="/srv/k")    # the dir is missing there: SETUP NOT RUN, not a wait
     assert not RUN.pin_wait(False, False, ["epyc8"], [], None, 0)          # unpinned jobs keep their spill / NOT RUN path
     assert not RUN.pin_wait(True, True, ["epyc8"], [], None, 0)            # --pick answers now
+    assert not RUN.pin_wait(True, False, ["epyc8"], [], None, 0)                       # no --dir: nothing ties it to the pin, loud NOT RUN
+    monkeypatch.setenv("OT_RUN_STRICT_HOST", "1")
+    assert not RUN.pin_wait(True, False, ["epyc8"], [], None, 0, d="/srv/k")           # --strict-host: answer now
+    monkeypatch.delenv("OT_RUN_STRICT_HOST")
     monkeypatch.setenv("OT_RUN_SOFT_PIN", "1")
-    assert not RUN.pin_wait(True, False, ["epyc8"], [], None, 0)
+    assert not RUN.pin_wait(True, False, ["epyc8"], [], None, 0, d="/srv/k")
 
 
 def test_main_wiring():
