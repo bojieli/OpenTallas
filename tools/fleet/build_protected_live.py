@@ -466,7 +466,7 @@ def hub_lease_paths(out, canon, d=None):
     n = 0
     for r in ot_lease.leases(d):
         p = canon(r["path"])
-        if ot_lease.CONTAINER.fullmatch(p):
+        if ot_lease.CONTAINER.fullmatch(p) or (hasattr(ot_lease, "_container") and ot_lease._container(dict(r, path=p))):
             # CLEAN-AGGR-R3 11-22: a container lease (kw45, ot-jobs, ...) protects only the container itself (ot_lease.covering); as a list row it
             # protected every tree below it (intel2 at 150 GB: 220 GB of ruled-superseded kw45 trees refused).  A target that holds a protected row still refuses.
             continue

@@ -82,6 +82,17 @@ def test_hub_container_lease_not_a_list_row_clean_aggr_r3(tmp_path):
     assert out == {"/srv/opentallas-scratch2/claude/kw45/src_x_work"}
 
 
+def test_hub_otrun_lane_root_lease_not_a_list_row_clean_aggr_r3(tmp_path):
+    sp = importlib.util.spec_from_file_location("bpl_lr", os.path.join(H, "build_protected_live.py")); B = importlib.util.module_from_spec(sp); sp.loader.exec_module(B)
+    d = str(tmp_path / "hlr")
+    L.take("/srv/opentallas-scratch2/claude/vis-s81-misc", "VIS-S81-MISC/ot-run-tolerant-swine-1", 1, d=d)
+    L.take("/srv/opentallas-scratch2/claude/vis-s81-misc/tools", "VIS-S81-MISC/ot-run-tolerant-swine-1", 1, d=d)
+    L.take("/srv/opentallas-scratch2/claude/lane-z", "LANE-Z", 1, d=d)            # an explicit lane lease stays a row
+    out = set()
+    assert B.hub_lease_paths(out, g.canon, d=d) == 2
+    assert out == {"/srv/opentallas-scratch2/claude/vis-s81-misc/tools", "/srv/opentallas-scratch2/claude/lane-z"}
+
+
 def test_otrun_auto_lease_on_lane_root_keeps_only_root_and_leased_inputs_clean_aggr_r3(tmp_path):
     d = str(tmp_path / "lr")
     root = "/srv/opentallas-scratch2/claude/fable-fix-qc-v4"
