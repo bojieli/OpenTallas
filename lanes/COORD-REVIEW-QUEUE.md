@@ -33066,3 +33066,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 12:15 PST CANARY s81 @ fd1115e442: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-23 12:15 PST DONE [S81-KVLEAF-T2-ARCH-R2] ot-run oth-ubuntu-2460736-1795461313 on renewed-glider: rc=0 after 3636 s, ended 20:15:46, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex/route_r2/ikw.otrun.log, cmd: --mem 40 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex -- bash route_from_cts_r2.sh
+- 2026-11-23 12:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned none
