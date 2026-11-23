@@ -5,7 +5,8 @@ whose bits resolve (kit_bus_bitgroups.out_bit_owners on the J8 bound RTL) and th
 core's box point nearest the face (vp: the centre of its u_b0/u_b1 bank union, where its soft driver regs place), regs_um = n sites (n = chain depth, 0 cycles) on the
 Manhattan box between face point and core point, outside every hard core by >= 20 um (no flop piles in inter-core streets), max hop <= 400 um.  A source over 405 um
 at depth n is written only when it is >= 50 um better than its merged-site hop (NEAR-REACH note), else listed for +1 station.
-Kit-level OT_MACRO_MOVES (live wave item_env + pending rows, e.g. J9-LEAF-GRTCONG form M) override the plan box origin:
+Kit-level OT_MACRO_MOVES (live wave item_env + pending rows, e.g. J9-LEAF-GRTCONG form M) override the plan box origin
+(sites also stay clear of the unmoved plan box, which plan_gate_pre checks):
 env OT_IST_FAM_MOVES=FILE.json {type: "inst:x:y[:orient],..."}.
 usage: s81_ist_leafup_rows.py TOOLS PLAN RTL_DIR OUT_PLAN REPORT.json [TYPE ...]"""
 import json, sys, os, re, itertools
@@ -73,8 +74,9 @@ for tn, t in sorted(p['partition_types'].items()):
             if o in ('R90', 'R270', 'MXR90', 'MYR90'):
                 h['outline_um'] = [h['outline_um'][1], h['outline_um'][0]]
         hcs.append(h)
-    bx = [box(h) for h in hcs]
     hb = {h['inst']: box(h) for h in hcs}
+    # obstacles: kit boxes (moved) AND plan boxes (plan_gate_pre GEOM-STATION-IN-CORE checks the plan origin)
+    bx = [box(h) for h in hcs] + [box(h) for h in t['hard_cores'] if h['inst'] in mv]
     new = []
     for c in SRC:
         if c in have or not bits[c]:
