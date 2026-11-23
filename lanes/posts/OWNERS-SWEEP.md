@@ -382,3 +382,4 @@
   New vs a6ef39f: FAILED-NO-RELAUNCH S81 col_h9_r0_p2__t1__cl0045af7b + dsdv_slice_c1x_C__t7 (FAM-S81-COL-H9R0-R4 / FAM-S81-SLICE-R6); STALE QC sle_su_l1__cl5ea486db, S81 dsdv_slice_c1x_C__t8; HELD-EVENT +2 KV +1 S81.
   Still failed, not relaunched: S81 leaf t29/t71/t44f6 (OPUS-FIX-S81-LEAF-R10), col_h9_r0_p5 x2, col_h10_r1, lepe_nh_mus; QC slw_st_a_v1 + sle_st_a_v2 CLAND ring band (OWN-QC-1123).
   Cleared since a6ef39f: all 3 DEAD-OWNER, 13 of 15 STALE.
+- 2026-11-23 03:52 PST 03:51 sweep, 445 unsigned rows (S81 347, QC 49, KV 51, HEAD 1). Flags: FAILED-NO-RELAUNCH 17 (S81 11, KV 3, QC 3), STALE 140 (S81 131, QC 9), UNOWNED 1 (S81 dsdv_slice_iq_C__t1), DEAD-OWNER 0. KV 11 WAIT-BIND. S81 stale concentrated: LEAF-R10 44, COL-H9R0-R4 21, COLROM-R6 18, SVC-R9 16. File lanes/OWNERS-SWEEP.tsv committed d680a9c
