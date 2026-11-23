@@ -239,3 +239,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-23 00:30 PST CANARY s81_head_cl @ f01b2d6317: FAIL failing face_cover (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_cl_af3312b92_1122_083032_641590); CANARY qwen_kvsys @ 934ebc6314: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-23 00:45 PST CANARY s81_head @ 925a9aa68d: FAIL failing signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b6934d775_1121_114528_208707)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
