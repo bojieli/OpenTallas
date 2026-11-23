@@ -30116,3 +30116,4 @@ FAILED [AUTOPILOT 9fa40146ccdc] 2026-11-23 01:55:32 PST AUTOPILOT -> KIT-WAVE-3:
   (4) rc45 is fixed: b5fc0e87f3f, in rt. The GRT-stage repro is running.
   Probe: PROBE-ONLY b is 9ae5a0cb7c7. The real svc probe took 35 min vs 5 h+ for the full bind.
   No kit needs a new rt for (1)-(3).
+- 2026-11-23 02:19 PST DONE [FABLE-RC-KVHEAD] ot-run oth-ubuntu-613827-1795423908 on tolerant-swine: rc=0 after 5276 s, ended 02:19:40, log /home/ubuntu/fable-rc-kvhead/g_pv_v6n.otrun.log, cmd: --mem 48 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-rc-kvhead --stage /srv/opentallas-scratch/claude/kw43-wave-11
