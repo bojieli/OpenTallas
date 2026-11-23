@@ -181,3 +181,4 @@
   - v10 own gate: re-running on epyc10 (first try failed on a copy-permission bug in my script).
   2. Landed while down: slice_station__t29__cl2e5c855a SIGNED (setup_tt/hold_ff/drv PASS, routed LEC complete). kv512_C t1 J7 kit: GRT-0116 congestion = J7 cannot sign it, as expected; the v9 kit is still waiting for place admission. t52: in route.
   3. Six J7 kits (t45, t18, t40cl1e, t6 x2, t29clc77) died FAIL_PREFLOOR goal finish unsupported. Fresh --goal route kits launching now.
+- 2026-11-22 17:41 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-498011-1795397759 on tolerant-swine: rc=143 after 318 s, ended 17:41:15, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t45_1122173556/runitem.otrun.log, cmd: --mem 8 --threads 2 --hosts localhost --dir /home/ubuntu/coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t45_1122173556 -- | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
