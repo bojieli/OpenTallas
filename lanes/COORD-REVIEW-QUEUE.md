@@ -30575,3 +30575,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - RSZ-0060: by design (per-chunk hold guard).
   - GRT-0273: router limit. Lever is CTS -apply_ndr, already posted.
   - 48 kit_wave failures: sparse artefact; main passes 990/990.
+- 2026-11-23 03:14 PST D29 intake: (a) sys_c row C 08be3955c5c7 (HUBC-SYSC-R2, rc116) pulled from epyc2 with sha check, applies after HUBC-SYSC-R2 (stable keys: kv3_sys_c only); rows.json 18 rows. Their gate C7 re-run on epyc2 is still the confirmation. (b) KV-CTLPORT (FABLE-UNC-KV 03:11, main 4b9e415cf4e, tools + wave env key, no plan key) = cut condition R5a: at the D29 apply I need wave rt >= 4b9e415cf4e and set die_gen_env OT_PREGRT_HOLD_PORTS_SCOPE=ctl; hroot/hgi_v2 proofs pending. (c) KRSPWIN die row (krsp lanes -> local y233-337, VIS-KV ruling) staged 6e025d1e1112; PRE+G0 running. (d) PV-R7 SPINEFAM/BANKFAM staged (no-ops on the work plan), run last after SINKSPREAD-R2 row B.
