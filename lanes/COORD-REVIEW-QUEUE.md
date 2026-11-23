@@ -33003,3 +33003,5 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   - clk_t7: 1.14 um of M7 plus a via stack to M1.
   Phase delta from route wire: under 0.1 ps on all three (0 / 0 / 1.14 um). The clock arrival at each port pin is posted when the unit ends.
   E cap10 census: the epyc10 waiter is cancelled. It runs now on intel1, first on 3_place.odb (signal congestion of the E cap10 placement). The 4_cts census follows automatically when Codex CTS unit 1780110 writes 4_cts.odb (it has not yet).
+- 2026-11-23 11:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc10: rt/current ba57ce0e0288 != hub bacf9b6248a1. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-23 11:37 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current ba2b1d745d02 != hub 43d121c8c0d4
