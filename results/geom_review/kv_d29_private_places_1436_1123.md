@@ -26,3 +26,11 @@ The split-family results support corridor and clock/sink locality work after the
 - sys_c RANKS ODB ec400081dc82. Native placement flags 62 opposite-face spans, 1603.768 µm clock reach, 1618.1 µm nonclock fanout spread and 0.701 local density. The shifted D2DOUT candidate needs a new exact placement.
 - PC23 BANK2 ODB 723e73929748. Native local density 0.919; full clock and channel reach remain unavailable in that render.
 - R7 PV west/east synth top counts 375,324 and 355,938. The ODB instance counts above also include placement infrastructure.
+
+## Inherited R7 v3/v3e reference forms, viewed 15:38 PST
+
+Viewed exact OpenROAD native layout and density images of both E10 BANKCORE `354768183cef` reference forms. They predate the present D29 package. Both are BAD for any new route admission on these forms.
+
+- E10 `/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/private/OPUS-FIX-KV-PV-R7/kv3_pv_v3_1122231545/gen/kv3_pv_v3/run/layout_review/place/{layout,density}.png`, SHA12 `f3f8f225fba7` and `0c0f7f33caa7`. Two macro columns leave a visible central opening, but the dominant cell strip crowds a horizontal lower aperture just below the two small central SRAMs, then turns into a long eastern boundary wall. Native peak local density ratio 1.108. Hot cells concentrate at the center intersection, south-center and east exit while other corridors remain sparse. Inherited route log previously restored TT `-738.53 ps` and screened true FF hold `-249.73 ps` across 23,679 endpoints.
+- E10 same root, `kv3_pv_v3e_1122231609/gen/kv3_pv_v3e/run/layout_review/place/{layout,density}.png`, SHA12 `2b3d8560749f` and `084562c89446`. Native peak local density ratio 1.169. The lower cross-path is instead choked westward under u_g1_j, with a saturated western inlet, a narrow saturated vertical stitch parallel to the SRAM column and some concentrated NE bump approaches. Old TT restore `-1222.99 ps`; old GRT phase warned NDR drops. Separate focused CAD route diagnostics are historical only.
+- Preserve these receipts as exact changed-form guidance. Distribute bank-access and output/cross-lane channels accordingly, then inspect exact fresh placement before any future route. Both latest controllers were inherited; this review starts no CAD route or STA.

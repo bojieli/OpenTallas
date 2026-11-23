@@ -82,3 +82,10 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
 - ROWS-READY 78c282b8: SPINEFAM 1da95b140499 + BANKFAM af97ec64b5c9 at epyc8 opus-fix-kv-pv-r7/d29_rows_fam/ (run LAST after row B). rc129 = BANKCORE (in D29 work b07a614e4d04); asked FIX-LEDGER to mark GATED.
 - rc128 SINKSPREAD A/B/C rows owned by SINKSPREAD-R2 (row B post-compose 12:30); do not duplicate.
 - pv_v8 GRT-0228 rerun: epyc9 opus-fix-kv-pv-r7/pv8/{fstart,hifo} (probe.sh MODE; own run.tcl), ot-run clients intel2 runs/pv8_*.otrun.log. RC probe routed clk (220157 pins) as a signal pre-CTS. Verdict due 12:00.
+
+## 11-23 15:38 PST takeover follow-through
+
+- The 14:00 D29 cut was held. Live KV-D28 remains in force. SPINEFAM/BANKFAM and reworked LANDCAP remain isolated D29 material, with full K3g gates running as described in KV-D29.md.
+- The exact inherited BANKCORE v3 and v3e (354768183cef) E10 place images were both viewed with BAD verdicts. v3 dominant lower horizontal/east exit choke, 1.108 local density, TT −738.53 ps and FF true worst −249.73 ps. v3e west inlet/lower horizontal/vertical SRAM stitch choke, 1.169 density, TT −1222.99 ps and native NDR warnings. Exact kit/visual hashes in results/geom_review/kv_d29_private_places_1436_1123.md. Keep both unavailable for new unchanged route. The old v3 wrapper is an inherited GRT waiter. Distinguish old v3e native scope retirement from its outstanding wrapper receipt.
+- PV v8 historical fstart unit E9 4065807 fails GRT-0228 (pre-CTS root routed as a signal, horizontal usage 65,535 vs 4,000). HIFO probe E9 3783449 eliminates the hard per-edge overflow exception but retains 1,088,978 global overflow after a quick GRT. Treat HIFO outer rc0 as probe execution only, no closure or unchanged retry.
+- Row-B v5n/v5ne standalone both synth under 400k, both actual placed BAD. Main blocker remains the packed lower/center bank and feedthrough corridors. Keep R7 stand-alone receipts separate from D29 full bind; no new route or STA started.
