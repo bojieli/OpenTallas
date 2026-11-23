@@ -1,0 +1,5793 @@
+{
+ "schema": "opentallas.qwen.head_record_inner_candidate.v1",
+ "scope": "SOURCE_CANDIDATE; append to current manifest land_r8_extra only in approved ONE-QC event",
+ "members": [
+  {
+   "id": "INNER:glue:sys_face.prog_witness_slot<-d2d_rom.prog_witness_slot@4",
+   "kind": "intra",
+   "sink": "sys_face",
+   "sink_port": "prog_witness_slot",
+   "source": "d2d_rom",
+   "source_port": "prog_witness_slot",
+   "asbuilt": 4,
+   "bound": 4,
+   "landed": 8,
+   "pad": 4,
+   "sink_part": "glue",
+   "src_part": "glue",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "lane": "INNER:glue"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r0",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r0",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r0",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r0",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r0",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r0",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r1",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r1",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r1",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r1",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r1",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r1",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r2",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r2",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r2",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r2",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r2",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r2",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r3",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r3",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r3",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r3",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r3",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E0.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E0.u_core.u_sub.u_r3",
+   "sink_part": "sl_E0_st_a",
+   "src_part": "sl_E0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r0",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r0",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r0",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r0",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r0",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r0",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r1",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r1",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r1",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r1",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r1",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r1",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r2",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r2",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r2",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r2",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r2",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r2",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r3",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r3",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r3",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r3",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r3",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E1.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_E1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E1.u_core.u_sub.u_r3",
+   "sink_part": "sl_E1_st_a",
+   "src_part": "sl_E1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r0",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r0",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r0",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r0",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r0",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r0",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r1",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r1",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r1",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r1",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r1",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r1",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r2",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r2",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r2",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r2",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r2",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r2",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r3",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r3",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r3",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r3",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r3",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E2.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_E2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E2.u_core.u_sub.u_r3",
+   "sink_part": "sl_E2_st_a",
+   "src_part": "sl_E2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r0",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r0",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r0",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r0",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r0",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r0",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r1",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r1",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r1",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r1",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r1",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r1",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r2",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r2",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r2",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r2",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r2",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r2",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r3",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r3",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r3",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r3",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r3",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E3.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_E3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E3.u_core.u_sub.u_r3",
+   "sink_part": "sl_E3_st_a",
+   "src_part": "sl_E3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r0",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r0",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r0",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r0",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r0",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r0",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r1",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r1",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r1",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r1",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r1",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r1",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r2",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r2",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r2",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r2",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r2",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r2",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r3",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r3",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r3",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r3",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r3",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E4.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_E4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E4.u_core.u_sub.u_r3",
+   "sink_part": "sl_E4_st_a",
+   "src_part": "sl_E4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r0",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r0",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r0",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r0",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r0",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r0",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r1",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r1",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r1",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r1",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r1",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r1",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r2",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r2",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r2",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r2",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r2",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r2",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r3",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r3",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r3",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r3",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r3",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_E5.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_E5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_E5.u_core.u_sub.u_r3",
+   "sink_part": "sl_E5_st_a",
+   "src_part": "sl_E5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_E5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 10,
+   "pad": 4,
+   "landed": 14,
+   "lane": "sl_E5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r0",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r0",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r0",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r0",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r0",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r0",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r1",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r1",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r1",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r1",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r1",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r1",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r2",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r2",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r2",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r2",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r2",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r2",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r3",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r3",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r3",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r3",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r3",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W0.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_W0.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W0.u_core.u_sub.u_r3",
+   "sink_part": "sl_W0_st_a",
+   "src_part": "sl_W0_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W0.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W0_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r0",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r0",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r0",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r0",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r0",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r0",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r1",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r1",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r1",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r1",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r1",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r1",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r2",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r2",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r2",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r2",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r2",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r2",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r3",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r3",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r3",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r3",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r3",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W1.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_W1.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W1.u_core.u_sub.u_r3",
+   "sink_part": "sl_W1_st_a",
+   "src_part": "sl_W1_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W1.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W1_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r0",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r0",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r0",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r0",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r0",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r0",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r1",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r1",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r1",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r1",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r1",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r1",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r2",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r2",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r2",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r2",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r2",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r2",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r3",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r3",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r3",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r3",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r3",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W2.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_W2.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W2.u_core.u_sub.u_r3",
+   "sink_part": "sl_W2_st_a",
+   "src_part": "sl_W2_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W2.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W2_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r0",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r0",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r0",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r0",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r0",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r0",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r1",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r1",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r1",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r1",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r1",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r1",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r2",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r2",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r2",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r2",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r2",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r2",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r3",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r3",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r3",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r3",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r3",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W3.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_W3.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W3.u_core.u_sub.u_r3",
+   "sink_part": "sl_W3_st_a",
+   "src_part": "sl_W3_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W3.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W3_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r0",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r0",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r0",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r0",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r0",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r0",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r1",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r1",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r1",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r1",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r1",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r1",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r2",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r2",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r2",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r2",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r2",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r2",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r3",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r3",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r3",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r3",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r3",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W4.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_W4.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W4.u_core.u_sub.u_r3",
+   "sink_part": "sl_W4_st_a",
+   "src_part": "sl_W4_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W4.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W4_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r0",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r0.cfg_mode_p[0:1]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r0",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r0.cfg_nwords_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r0",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r0.cfg_sbase_p[0:8]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r0",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r0.cfg_v_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r0",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r0.cfg_wsrc_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r0",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r1.cfg_kcm1_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r1",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r1.cfg_mode_p[0:1]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r1",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r1.cfg_nwords_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r1",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r1.cfg_sbase_p[0:8]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r1",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r1.cfg_v_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r1",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r1.cfg_wsrc_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r1",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r2.cfg_kcm1_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r2",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r2.cfg_mode_p[0:1]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r2",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r2.cfg_nwords_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r2",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r2.cfg_sbase_p[0:8]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r2",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r2.cfg_v_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r2",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r2.cfg_wsrc_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r2",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r3.cfg_kcm1_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r3",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_kcm1_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r3.cfg_mode_p[0:1]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r3",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_mode_p",
+   "sink_bits": [
+    [
+     0,
+     1
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r3.cfg_nwords_p[0:7]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r3",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_nwords_p",
+   "sink_bits": [
+    [
+     0,
+     7
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r3.cfg_sbase_p[0:8]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r3",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_sbase_p",
+   "sink_bits": [
+    [
+     0,
+     8
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r3.cfg_v_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r3",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_v_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  },
+  {
+   "id": "dvs_W5.u_core.u_sub.u_r3.cfg_wsrc_p[0:0]<-dvs_W5.u_core.u_sub.u_ctl.stn_cfg@0",
+   "sink": "dvs_W5.u_core.u_sub.u_r3",
+   "sink_part": "sl_W5_st_a",
+   "src_part": "sl_W5_ctl",
+   "sink_port": "cfg_wsrc_p",
+   "sink_bits": [
+    [
+     0,
+     0
+    ]
+   ],
+   "source": "dvs_W5.u_core.u_sub.u_ctl.stn_cfg",
+   "asbuilt": 0,
+   "bound": 9,
+   "pad": 4,
+   "landed": 13,
+   "lane": "sl_W5_ctl__b_tw_data_ctl_st_a",
+   "why": "STA-BTW-1 (FABLE-UNC-QC 11-23, rc96): stn_cfg broadcast bin -> u_r0..u_r3, 4 pad cycles = stations (tail split copies per core)"
+  }
+ ]
+}
