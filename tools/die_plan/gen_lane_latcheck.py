@@ -28,7 +28,10 @@ cycle change is checked against the RTL it claims (both FAIL, exit 4):
   UNREALIZED_PLAN_CYCLES  a lane's table cycles changed vs the base while its RTL-observed stages (delivered minus plan-derived
                           kit_ist) did not and both end
                           types' RTL is byte-identical to the base: plan bookkeeping only
-Without --base-plan the run is unchanged and prints LATCHECK_BASE NONE (in-core cycle changes unchecked).
+Default base (LATCHECK-BASE-1122, COORD 20:5x): without --base-plan the base is the LIVE plan of the plan's die:
+$OT_LATCHECK_BASE_PLAN, else kit_wave.json dies.<die>.plan ($OT_COORD or ~/coord/autopilot/kit_wave.json), with RTL
+<base dir>/published; --no-base opts out.  A base that is the plan itself, or one that cannot be read, prints
+LATCHECK_BASE NONE (<why>) and the run is unchanged.
 Modules resolve from the RTL dirs in order (first hit wins: e.g. the wave-prepared published/ cohort, then the gen.py rtl
 output); a type with no wrapper is UNOBSERVED (listed, not a failure), as in lane_asbuilt_latency.
 
@@ -37,6 +40,7 @@ output); a type with no wrapper is UNOBSERVED (listed, not a failure), as in lan
 Exit 0 PASS, 4 FAIL, 5 no failure but some lane UNOBSERVED (lane_asbuilt_latency's codes)."""
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -208,6 +212,35 @@ def realized_check(plan, recs, rtl_dirs, base_plan, base_recs, base_rtl):
     return errs
 
 
+def live_base(plan_path, plan, env=None):
+    """(base plan path, base rtl dirs, why) of the LIVE plan of this plan's die, or (None, None, why)"""
+    env = os.environ if env is None else env
+    c = env.get("OT_LATCHECK_BASE_PLAN")
+    how = "$OT_LATCHECK_BASE_PLAN"
+    if not c:
+        die = (plan.get("die") or {}).get("name") if isinstance(plan.get("die"), dict) else plan.get("die")
+        kw = Path(env.get("OT_COORD") or Path.home() / "coord") / "autopilot/kit_wave.json"
+        try:
+            c = ((json.loads(kw.read_text()).get("dies") or {}).get(die) or {}).get("plan")
+        except (OSError, ValueError):
+            c = None
+        how = f"kit_wave.json dies.{die}.plan"
+        if not c:
+            return None, None, f"no live plan ({how} unreadable or unset)"
+    b = Path(c)
+    try:
+        if not b.is_file():
+            return None, None, f"{how} {c} not on this host"
+        if b.resolve() == Path(plan_path).resolve() or b.read_bytes() == Path(plan_path).read_bytes():
+            return None, None, f"{how} {c} is the plan itself"
+    except OSError as e:
+        return None, None, f"{how} {c}: {e}"
+    pub = b.parent / "published"
+    if not pub.is_dir():
+        return None, None, f"{how} {c}: no published/ RTL beside it"
+    return str(b), [str(pub)], how
+
+
 def run(plan, rtl_dirs, landings=None, fixed_in_core=False, base_plan=None, base_rtl=None, base_landings=None):
     parts = parts_of(plan)
     rows, bad = lane_rows(plan)
@@ -235,15 +268,22 @@ def main(argv=None):
     ap.add_argument("--base-plan", help="LATCHECK-REALIZED-1122: plan of record the cycle changes are checked against")
     ap.add_argument("--base-rtl", action="append", help="RTL dir(s) of --base-plan (repeatable)")
     ap.add_argument("--base-landings", help="gen_clock_landings.json of --base-plan")
+    ap.add_argument("--no-base", action="store_true", help="no base plan (not even the live-plan default)")
     ap.add_argument("--tsv")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
     landings = json.loads(Path(a.landings).read_text()) if a.landings else None
+    why = "--base-plan"
+    if not a.base_plan and not a.no_base:
+        a.base_plan, a.base_rtl, why = live_base(a.plan, plan)
+    elif a.no_base:
+        why = "--no-base"
     base = json.loads(Path(a.base_plan).read_text()) if a.base_plan else None
     if base is not None and not a.base_rtl:
         ap.error("--base-plan needs --base-rtl")
-    print(f"LATCHECK_BASE {a.base_plan or 'NONE (in-core cycle changes unchecked)'}")
+    print(f"LATCHECK_BASE {a.base_plan} ({why})" if base is not None else
+          f"LATCHECK_BASE NONE ({why}; in-core cycle changes unchecked)")
     recs, errs, src = run(plan, a.rtl, landings, a.fixed_in_core, base, a.base_rtl,
                           json.loads(Path(a.base_landings).read_text()) if a.base_landings else None)
     sm_fixed = sum(1 for r in recs if r.get("fixed_in_core"))

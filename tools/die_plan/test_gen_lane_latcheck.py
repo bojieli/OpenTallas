@@ -1,5 +1,6 @@
 """HEAD-BIND-1: gen_lane_latcheck (LATCHECK-1 on plan-generated wrappers) and head_gen_cohort."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -187,3 +188,25 @@ def test_realized_check_refuses_plan_only_cycles(tmp_path):
     assert not any(e.startswith("UNREALIZED") for e in errs)
     recs, errs, _ = G.run(base, [base_d], fixed_in_core=True, base_plan=base, base_rtl=[base_d])
     assert errs == []                                                  # no change vs base: unchanged verdict
+
+
+def test_live_base_default(tmp_path):
+    """LATCHECK-BASE-1122: the default base is the die's live plan (kit_wave.json dies.<die>.plan, RTL <dir>/published)"""
+    live = tmp_path / "live"
+    (live / "published").mkdir(parents=True)
+    lp = live / "source_plan.json"
+    lp.write_text(json.dumps(plan(cycles=5, fixed=1)))
+    new = tmp_path / "new.json"
+    new.write_text(json.dumps(plan(cycles=6, fixed=2)))
+    coord = tmp_path / "coord"
+    (coord / "autopilot").mkdir(parents=True)
+    (coord / "autopilot/kit_wave.json").write_text(json.dumps({"dies": {"t": {"plan": str(lp)}}}))
+    b, r, why = G.live_base(new, json.loads(new.read_text()), {"OT_COORD": str(coord)})
+    assert b == str(lp) and r == [str(live / "published")] and "dies.t.plan" in why
+    assert G.live_base(lp, json.loads(lp.read_text()), {"OT_COORD": str(coord)})[0] is None        # the plan itself
+    assert G.live_base(new, {}, {"OT_LATCHECK_BASE_PLAN": str(lp)})[0] == str(lp)
+    assert G.live_base(new, {}, {"OT_COORD": str(tmp_path / "none")})[0] is None
+    d = rtl(tmp_path)
+    r = subprocess.run([sys.executable, str(HERE / "gen_lane_latcheck.py"), str(new), "--rtl", str(d), "--fixed-in-core"],
+                       capture_output=True, text=True, env=dict(os.environ, OT_COORD=str(coord)))
+    assert "LATCHECK_BASE " + str(lp) in r.stdout
