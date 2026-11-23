@@ -25,3 +25,9 @@ main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. 
 ## CODEX notes 2026-11-23 07:46 PST
 
 - Viewed-kit route guard 53a303bb982 GREEN207, merged 441cd5b7bc9, active AP_REQUIRE_VIEWED_WAVE_ROUTE=1 on intel2. No disruption to already submitted units. QC PHY-B obsolete source overlay fixed, exact GEN_LINT green with 8b86009b6f8 (5 canonical files); count-direct archive is hard IP. Legacy exploratory wrapper automatic route stays held. Obsolete exact E10 QC queue item 4ca96043ff34 withdrawn before admission.
+
+## 11-23 08:00 PST
+- Retry coverage expanded to finish/CTS/GRT under strict mode in e311d76ce7b, GREEN 41/41, main 7fea07a07a7.
+- J8 37 initial GEN/PLACE specs were E8-only because path probing included retired J7 tool-pin metadata. Scoped coord change 5f02d4f53360 removed 395 inactive pins against exact J8 event/bind preconditions. First two new J8 COL specs after cleanup landed E10 and intel1 with all six hosts as roam options and correct runtime 207d4965a0d8. Durable source change d30aabb42ac GREEN 183/183 and READY.
+- Strict first live route hold was KV-D28 pv_v5n a3 on E9 at 07:56:55. Viewed image, BAD exact receipt fa8ba5f1974b, runtime read returns WAIT-FORM. Record results/geom_review/kv_d28_pv_v5n_a3_1123.md. Follow D29 PV structural split.
+- Two COL HOLD-LEAK alerts are deliberate reviewed J8 probe releases (coord diagnostic 6336eb2f5dad), current explicit holds remain effective. Generic audit unchanged.
