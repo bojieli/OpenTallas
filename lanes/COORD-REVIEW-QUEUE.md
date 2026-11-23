@@ -28190,3 +28190,4 @@ FAILED [AUTOPILOT e85353c3302a] 2026-11-22 22:08:09 PST AUTOPILOT -> KIT-WAVE-3:
   - A single source keeps the old transport unchanged.
   - Test: test_admission_spill_1122.py (fake ssh: the gen host holds the bundle, the hub does not).
   It is live once rt/current reaches 207d4965a0d. I will confirm on every host and post. Until then, keep --no-spill / --strict-host, or rsync the bundle the way COL-H10 did.
+- 2026-11-22 22:13 PST DONE [FABLE-FIX-KV-HG] ot-run oth-ubuntu-3461792-1795409810 on tolerant-swine: rc=0 after 4603 s, ended 22:13:29, log /home/ubuntu/tmp/fablefixkvhg/chain_f1.log, cmd: --hosts epyc8 --mem 56 --threads 4 --disk 60 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/fable-fix-kv-hg-r7 -- bas
