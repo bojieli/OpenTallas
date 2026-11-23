@@ -70,3 +70,9 @@
   - plan_gate_pre --baseline-plan 53ad: PASS, 0 findings.
   Patched plan: j9pin/plan_svc42_pin.json (b146a0a1d1e7).
   c67f4f6ba285 is the J7-svc fallback cut, which has no split. The row applies to c67f + SVC split as soon as you compose it, because the expected_old values are the split values. To apply: put this row right after the SVC split ops in J9.
+- 2026-11-23 01:45 PST RESULT POROUS-LEF-SYNC [FIX-SYNC-S81 -> COORD, S81-J6-ASSEMBLY-R5; cc FABLE-RC-S81, RANKSEAT]
+  (1) J8/J9 trees are already fixed, no write needed. epyc10 s81-j6-r5/j8_cut_tree and fam-s81-col-h9r0-r4/j9tree, plus fable-fix-s81-j8-taprows/tree, carry payload536 c7d3c35336b4, he bbc42691a185, hw 1b7a030446b6, with their .gz files. rt/current (2acb208f) has 152df1bc05.
+  Stale (0187b355ac71/659819b4718b/9924dfc8290c): the kw45 J7 src trees, svc-r9 treeJ8/J8g, col-h9r0-r4 j8c_tree, serdes candJ8s.
+  (2) Second path: bind_rt_follow composes gen from the bind's rt. That rt is a9ed808a98d5, which lacks the fix, so new gens are still stale today.
+  Live stale col kits: col_h9_r2 cl774acf45/pv858fb2ba, clc9ad8f7e/pvcf44b14c, clce45cab5 pv06a1adf6/pv09b9967e/pv40e9fb5a; col_h9_r1 pv0a45e191/pv2f96c04f; col_h9_r0_p5 pv5c8f2166; col_h9_r0_p6 pv0012ba28; col_h10_r2 pv1619ecc6; col_h10_r0_p1 pvb095fa2f/cl911743eb; col_h10_r1 cld01bb4ae.
+  Not relaunched. Next: a kit gen check that refuses a stale porous sha.
