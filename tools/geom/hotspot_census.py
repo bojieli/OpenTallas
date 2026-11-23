@@ -26,6 +26,7 @@ report (4_cts_post_hook.rpt) is preferred over 4_cts_final.rpt (rules: read the 
 """
 import argparse
 import collections
+import math
 import glob
 import json
 import os
@@ -37,6 +38,8 @@ MIN_OV = 50
 MIN_FRAC = 0.01
 MIN_ABS = 10            # the 1% clause needs at least this much overflow (HOTSPOT-CENSUS ruling: 1-5 ovfl specks are DRT noise)
 GAP = 2                 # gcells: two overflow gcells this close are one cluster (closing)
+GAP_UM = 4.0            # ... and never less than this many um (visual check 11-23: 0.57 um gcells split speckled
+                        # overflow over a macro / channel into 100+ fragments)
 CHANNEL_UM = 30.0
 STATION_RE = re.compile(r"(stn|station|relay|_rly|(^|[._/])u?_?ft[_\d]|pipe_?st|hop_?reg|_st\d|istn)", re.I)
 CLOCK_MASTER_RE = re.compile(r"^(ICG|CKINV|CKBUF|CLKBUF)")
@@ -101,10 +104,11 @@ def gcell_pitch(markers):
     return (ws[len(ws) // 2] if ws else 1.0), (hs[len(hs) // 2] if hs else 1.0)
 
 
-def clusters(markers, min_ov=MIN_OV, min_frac=MIN_FRAC, gap=GAP):
+def clusters(markers, min_ov=MIN_OV, min_frac=MIN_FRAC, gap=GAP, gap_um=GAP_UM):
     """-> (list of cluster dicts sorted by overflow, totals per direction)."""
     res, totals = [], {}
     gx, gy = gcell_pitch(markers) if markers else (1.0, 1.0)
+    gap = max(gap, int(math.ceil(gap_um / max(1e-6, min(gx, gy)))))
     for d in ("H", "V"):
         cells = {}
         for m in markers:
@@ -259,7 +263,8 @@ def cluster_cause(c, ctx):
     if not ctx:
         return ("UNKNOWN-NOGEOM", [])
     s["OVER-MACRO"] = 2.0 * ctx["ov_on_macro"]
-    if ctx.get("channel"):
+    b = c["bbox"]
+    if ctx.get("channel") and min(b[2] - b[0], b[3] - b[1]) <= 3 * CHANNEL_UM:   # a channel-sized cluster, not a field
         s["MACRO-CHANNEL"] = 1.2 + ctx["ov_macro_edge3um"]
     s["MACRO-PIN-FACE"] = 1.5 * ctx["ov_macro_edge3um"]
     s["BLOCKAGE-RESERVED"] = 1.8 * ctx["ov_cellfree"]
@@ -585,16 +590,37 @@ def render(a, g, cl, totals, tc, markers):
 
 
 # ----------------------------------------------------------------------------------------------- odb gcell map (v2)
-def extract_gcells(odb_path, out):
+def extract_gcells(odb_path, out, probe=None):
     """Run under `openroad -python`: full GRT gcell map from the odb dbGCellGrid (no 20000-marker cap).
     Writes OUT json: {die, gcell_um, totals{H,V}, hot90{H,V}, markers:[[d,x0,y0,x1,y1,cap,use,ov,{layer:over}]...]}."""
     import array
     import odb  # noqa: F401 - only inside OpenROAD
-    db = odb.dbDatabase.create()
-    odb.read_db(db, odb_path)
-    blk = db.getChip().getBlock()
-    g = blk.getGCellGrid()
     res = dict(odb=odb_path, markers=[], totals={}, hot90={})
+    if probe:
+        # GRT probe of a placed / CTS DB (deck after tools/autopilot/geom_grt.tcl: clock nets special, kit layers and
+        # adjustment, >= 50 congestion iterations, owner rule); in memory only, nothing is written back
+        from openroad import Design, Tech
+        tech = Tech()
+        design = Design(tech)
+        design.readDb(odb_path)
+        db = tech.getDB() if hasattr(tech, "getDB") else design.getBlock().getDataBase()
+        blk = design.getBlock()
+        for n in blk.getNets():
+            if n.getSigType() == "CLOCK" or n.getName() in ("clk", "ck", "tile_clk"):
+                n.setSpecial()
+        for bt in blk.getBTerms():
+            if re.sub(r"\[\d+\]$", "", bt.getName()) in probe.get("clock_ports", ()) and bt.getNet():
+                bt.getNet().setSpecial()
+        lo, hi, adj, it = probe.get("min", "M2"), probe.get("max", "M5"), probe.get("adj", 0.25), probe.get("iter", 50)
+        design.evalTclString(f"set_routing_layers -signal {lo}-{hi}")
+        design.evalTclString(f"set_global_routing_layer_adjustment {lo}-{hi} {adj}")
+        design.evalTclString(f"global_route -congestion_iterations {it} -allow_congestion -verbose")
+        res["probe"] = dict(probe)
+    else:
+        db = odb.dbDatabase.create()
+        odb.read_db(db, odb_path)
+        blk = db.getChip().getBlock()
+    g = blk.getGCellGrid()
     if g is None:
         res["error"] = "no gcell grid in odb"
         json.dump(res, open(out, "w"))
@@ -670,7 +696,7 @@ COVER = {
     "HOLD-SKEW": r"TAP|CLOCK|CTS|SKEW|HOLD|LOCKUP|SHARED|BALANCE",
     "HOLD-SHORT-PATH": r"HOLD|LOCKUP|ECO|PAD",
     "RESET-ASYNC": r"RESET|RST|RELAY",
-    "IO-BOUNDARY": r"PIN|IO|BOUNDARY|LAND|VCLK|PAD|FIFO|FACE",
+    "IO-BOUNDARY": r"PIN|(?<![A-Z])IO(?![A-Z])|BOUNDARY|LAND|VCLK|PAD|FIFO|FACE",
     "MACRO-IO": r"MACRO|VIEW|ETM|LATENCY|PIN",
     "REACH": r"STATION|STN|REACH|RELAY|HOP|STAGE|PIPE|CYCLE",
     "LOGIC-DEPTH": r"STAGE|PIPE|CYCLE|DEPTH|FOLD|RTL|RETIME",
@@ -835,6 +861,35 @@ def _docker(a, odb_dir, inner, extra=()):
     return subprocess.call(cmd)
 
 
+def kit_grt_deck(kit):
+    """GRT probe deck from the kit config.mk / constraint.sdc (as tools/autopilot/geom_check.sh)."""
+    def kv(name, dflt):
+        try:
+            txt = open(os.path.join(kit, "config.mk"), errors="replace").read()
+        except OSError:
+            return dflt
+        m = re.findall(r"^\s*(?:export\s+)?" + name + r"\s*[:?]?=\s*(\S+)", txt, re.M)
+        return m[-1] if m else dflt
+    ports = []
+    try:
+        t = open(os.path.join(kit, "constraint.sdc"), errors="replace").read()
+        for m in re.finditer(r"create_clock[^\n]*?\[get_ports\s+(\{[^}]*\}|\S+?)\s*\]", t):
+            ports += m.group(1).strip("{}").split()
+    except OSError:
+        pass
+    # HOTSPOT-CENSUS ruling 11-23: the census probe locates clusters, it does not pass-judge GRT, so it runs the kit's
+    # own GRT iteration count (GLOBAL_ROUTE_ARGS -congestion_iterations, default 10); 50 iterations took ~10 min each
+    # on an S81 leaf (8 h per probe).
+    it = 10
+    try:
+        m = re.search(r"-congestion_iterations\s+(\d+)", open(os.path.join(kit, "config.mk"), errors="replace").read())
+        it = int(m.group(1)) if m else 10
+    except OSError:
+        pass
+    return dict(min=kv("MIN_ROUTING_LAYER", "M2"), max=kv("MAX_ROUTING_LAYER", "M5"),
+                adj=float(kv("ROUTING_LAYER_ADJUSTMENT", "0.25")), iter=min(it, 10), clock_ports=sorted(set(ports)))
+
+
 def run_kit(a):
     src = kit_sources(a.kit)
     os.makedirs(a.out, exist_ok=True)
@@ -854,12 +909,17 @@ def run_kit(a):
                 print(f"HOTSPOT_CENSUS geom dump failed rc {rc} ({src['odb']}); continuing without geometry", file=sys.stderr)
                 geom = None
     gc = a.gcells
-    if not gc and not a.no_gcells and src["odb"] and re.match(r"(5_|6_)", src["stage"] or ""):
+    probe = None
+    if not gc and a.grt_probe and src["odb"] and not re.match(r"(5_|6_)", src["stage"] or ""):
+        probe = kit_grt_deck(a.kit)
+    if not gc and not a.no_gcells and src["odb"] and (probe or re.match(r"(5_|6_)", src["stage"] or "")):
         gc = os.path.join(a.out, "gcells.json")
         if not os.path.isfile(gc) or os.path.getsize(gc) == 0:
             tool = os.path.abspath(__file__)
-            rc = _docker(a, odb_dir, f"openroad -python -exit /tool/{os.path.basename(tool)} extract-gcells "
-                                     f"--odb /odb/{os.path.basename(src['odb'])} --out /out/gcells.json > /out/gcells.log 2>&1",
+            pa = f" --probe '{json.dumps(probe)}'" if probe else ""
+            to = f"timeout {int(a.probe_wall_s)} " if probe else ""
+            rc = _docker(a, odb_dir, f"{to}openroad -python -exit /tool/{os.path.basename(tool)} extract-gcells "
+                                     f"--odb /odb/{os.path.basename(src['odb'])} --out /out/gcells.json{pa} > /out/gcells.log 2>&1",
                          extra=("-v", f"{os.path.dirname(tool)}:/tool:ro"))
             if rc != 0 or not os.path.isfile(gc):
                 print(f"HOTSPOT_CENSUS gcell map failed rc {rc}; falling back to the congestion report", file=sys.stderr)
@@ -888,12 +948,16 @@ def main(argv=None):
         s.add_argument("--gcells", help="extract-gcells json (full map; replaces the capped congestion report)")
         if n == "run":
             s.add_argument("--no-gcells", action="store_true", help="skip the odb gcell map (report markers only)")
+            s.add_argument("--grt-probe", action="store_true", help="placed/CTS DB without GRT: run a 10-iteration GRT "
+                                                                     "probe in memory first (geom_grt.tcl deck)")
+            s.add_argument("--probe-wall-s", type=float, default=4 * 3600)
             s.add_argument("--kit", required=True)
             s.add_argument("--geom-dump")
             s.add_argument("--mem", type=int, default=24)
             s.add_argument("--docker-image", default="openroad/orfs:asap7lock")
     s = sub.add_parser("extract-gcells", help="inside `openroad -python`: full gcell map of a GRT odb")
     s.add_argument("--odb", required=True); s.add_argument("--out", required=True)
+    s.add_argument("--probe", help="json {min,max,adj,iter,clock_ports}: run a GRT probe on a placed/CTS DB first")
     s = sub.add_parser("gaps", help="census.json files + VIS-COVERAGE.tsv -> HOTSPOT-GAPS.tsv")
     s.add_argument("--coverage", required=True); s.add_argument("--owners"); s.add_argument("--out", required=True)
     s.add_argument("census", nargs="+")
@@ -904,7 +968,7 @@ def main(argv=None):
     s.add_argument("--baseline", help="census.json of the failing baseline build")
     a = ap.parse_args(argv)
     if a.cmd == "extract-gcells":
-        return extract_gcells(a.odb, a.out)
+        return extract_gcells(a.odb, a.out, json.loads(a.probe) if a.probe else None)
     if a.cmd == "gaps":
         return gaps(a)
     if a.cmd == "check":
