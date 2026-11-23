@@ -26,3 +26,8 @@ TODO: D28 die render epyc8 /srv/opentallas-scratch2/claude/vis-kv/tmp/die/d28_di
 - hroot: probe D28-geom read: NOT PROBE-PASS, row PRE-PASS. Rows: BAND (D29 if clean), RES+EFS (D30, chain_i 73bf36e8597b), reset.leaf_clusters tool (0 cycles, HROOT-R1 lane clone epyc10) -> D30. HROOT-R1 resumed.
 - PROBE-PASS is now full-cause (fe8a2a5): census of every GRT cluster + path class needed.
 - pc: growth G=112.32 D30 PC-CHANNEL-WIDEN (type row ROWS_PCGROW PRE 0; die ports by KV-PLAN-R6 after the D29 apply).
+
+## 11-23 01:5x OWNER rule 6079af4
+- D29 = one comprehensive KV event, cut 14:00 PST (02:00 cut and 06:00 apply cancelled). Every former-D30 item folds in; ledger lanes/DIE-FIX-LEDGER.tsv (FIX-LEDGER lane chases owners). My job: whole-die render of the composed plan before the cut, plus probe reads (full-cause rule fe8a2a5).
+- Told owners the D29 by-13:00 targets: HROOT-R1 (BAND posted; RING+RES+EFS combined 56e157569c57 chain_j binding; leaf_clusters tool push failing), IOPC-R4 (pc slit-widen + tap re-cut; growth conditional), HUBC-SYSC-R2 (row C 08be3955c5c7 + R-DCAL-RT), HG-R8 (HST2SITE + hg form + ft23), SINKSPREAD-R2 (pv A/B/C + pad FIFO).
+- hub_Wo/Eo owner per Codex: FAM-KV-HUBWO-S1 (ASTK-MERGE). ADV-MERGE-RESET-DEPTH on r5_post: clean 0/8.
