@@ -357,3 +357,8 @@
   Top S81 groups: s81sl_leaf (OPUS-FIX-S81-LEAF-R10) ~27 stale + 14 failed; col_h9_r0_p (FAM-S81-COL-H9R0-R4) 14 stale+1 failed; col_h9_r rom (OPUS-FIX-S81-COLROM-R6) ~12 stale+3 failed.
   Next: svc_hi/lo dsdv_svc_rs (OPUS-FIX-S81-SVC-R9) 10 stale + 3 unclassified; serdes (FAM-S81-SERDES-R7) 5 stale; dsdv_slice_* ~9 stale (FAM-S81-SLICE-R6 etc).
   Table: lanes/OWNERS-SWEEP.tsv (tool bin/owners_sweep.py).
+- 2026-11-22 21:50 PST 21:5x sweep (lanes/OWNERS-SWEEP.tsv, HBM skipped)
+  S81: 35 STALE (11 are cancelled-superseded, no kit), 55 HELD-EVENT (J9/plan event, expected), 26 FAILED-NO-RELAUNCH (LEAF-R10 ~19, COLROM-R6 3, COL-H9R0-R4 2+), 1 DEAD-OWNER iqf__t1 (FAM-S81-DSDV-R1)
+  QC: 2 FAILED-NO-RELAUNCH sle_su_l1__cl5ea486db (FAM-QC-SLWSLE-R1; place error, also UNCLASSIFIED), slw_st_a_v2__clf4365a62 (FAIL-ROUTE-1115; CLAND ring band)
+  KV: 1 UNCLASSIFIED kv3_hub_Wo (OPUS-FIX-KV-HUB-R6, kit_rtl FAIL); HEAD clean
+  New vs 20:50: S81 UNCLASSIFIED 3 -> 0, STALE 77 -> 35 (+55 re-marked HELD-EVENT), FAILED 18 -> 26, DEAD-OWNER iqf__t1 new
