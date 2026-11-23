@@ -1,0 +1,3 @@
+# COL3_C isolated explicit power grid trial
+
+**OK for PDN-only trial**, 2026-11-23 15:1x PST. Viewed E9 `FLOW-OPS-R3/pwr_col_1123/explicit_pair/probe_geometry.png`, generated from the same two rectangles as `probe_geometry.tcl`. The R0 and MY exact `cd64688b278c` COL3_C abstracts sit inside a 518.4 × 285.12 µm die with a 33.672 µm open center gap and more than 30 µm to the outline. The original parent M6 direction, pitch, stripe pair and phase are retained. Translating the instances by integer pitches preserves their local phase. This trial has no signal lanes or clock tree. The admitted scope is pad planning and native PDN contacts in this isolated geometry.
