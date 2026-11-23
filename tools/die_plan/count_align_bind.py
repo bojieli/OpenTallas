@@ -63,8 +63,24 @@ def relay_tx_stages(t):
     return n
 
 
+# RELAY-RX-STAGES (FABLE-FIX-HEAD-LEP0N 11-22, COORD 21:0x): opt-in partition_types[<relay type>].landing_relay_rx_stages = n adds n
+# ot_dp_landing_relay stages u_cland_rstart_rx_p0..p<n-1> between the cland_rstart_in pin and the rx flop of THAT relay type (HEAD
+# hd_lep0N_w: pin on the cut face, rx flop at the far-face fstart pins, 1.1-1.2 mm in one hop, CTS -148).  Only that partition starts
+# n counts later; the K of its crossings shifts by n (the relay identity).  relay_extra carries it under the key "rx:<partition>".
+RELAY_RX_KEY = "landing_relay_rx_stages"
+
+
+def relay_rx_stages(t):
+    """extra rx pipeline stages of a relay partition type (0 when the key is absent)"""
+    n = (t or {}).get(RELAY_RX_KEY, 0)
+    if isinstance(n, bool) or not isinstance(n, int) or not 0 <= n <= RELAY_TX_MAX:
+        raise BindError(f"{RELAY_RX_KEY} must be an integer 0..{RELAY_TX_MAX} (got {n!r})")
+    return n
+
+
 def relay_extra_from_plan(die_plan):
-    """{origin-candidate partition: extra tx stages} for every partition whose type declares the key (non-zero only)"""
+    """{origin-candidate partition: extra tx stages} for every partition whose type declares the key (non-zero only);
+    RELAY-RX-STAGES adds {"rx:<partition>": extra rx stages} for partitions whose type declares landing_relay_rx_stages"""
     types = die_plan.get("partition_types") or {}
     parts = die_plan.get("partitions") or []
     parts = parts.values() if isinstance(parts, dict) else parts
@@ -73,6 +89,9 @@ def relay_extra_from_plan(die_plan):
         n = relay_tx_stages(types.get(p.get("type")))
         if n:
             out[p["name"]] = n
+        m = relay_rx_stages(types.get(p.get("type")))
+        if m:
+            out["rx:" + p["name"]] = m
     return out
 
 
@@ -268,6 +287,7 @@ def bind_parts(b, parts, relay_extra=None):
     def relays(x):
         for q in sorted(reg_parts[x] - {origin[x]}):
             st = RELAY_STAGES + int((relay_extra or {}).get(origin[x], 0))   # RELAY-TX-STAGES: the origin type's extra tx stages
+            st += int((relay_extra or {}).get("rx:" + q, 0))                 # RELAY-RX-STAGES: this relay type's own rx stages
             N[q] = N[origin[x]] + st
             pinfo[q] = dict(region=x, role="relay", src=origin[x], stages=st, n_nominal=N[q])
         pinfo[origin[x]] = dict(region=x, role="origin", src=None, stages=0, n_nominal=N[origin[x]])

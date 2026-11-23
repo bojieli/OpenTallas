@@ -864,3 +864,19 @@ def test_bind_inst_id_matches_the_bind_instance_name():
     from clock_landings import bind_inst_id
     for pn in ("s_7N_C__strip_S", "s_7N_C", "hub__Eo_0", "1x", "a.b__c"):
         assert bind_inst_id(pn) == bind.sv_id(pn)
+
+
+def test_relay_rx_stages_emit_a_chain_before_the_rx_flop():
+    """RELAY-RX-STAGES (FABLE-FIX-HEAD-LEP0N 11-22): partition_types[relay type].landing_relay_rx_stages = 2 puts two kept relay
+    stages between cland_rstart_in and the rx flop; the bind role of that relay must say stages 4, else the compose stops."""
+    p, t = ca_relay_vehicle()
+    base = Landings(p, t).type_rtl("C", C_BODY)
+    p["partition_types"]["C"]["landing_relay_rx_stages"] = 2
+    with pytest.raises(LandingError, match=r"relay\(b, 4\)"):
+        Landings(p, t)
+    t["count_aligned"]["parts"]["c"]["stages"] = 4
+    cc = Landings(p, t).type_rtl("C", C_BODY)
+    assert "ot_dp_landing_relay u_cland_rstart_rx_p0 (" in cc and ".d(cland_rstart_in), .q(cland_rstart_rx_p0));" in cc
+    assert ".d(cland_rstart_rx_p0), .q(cland_rstart_rx_p1));" in cc
+    assert ".d(cland_rstart_rx_p1), .q(cland_start));" in cc and ".d(cland_rstart_in), .q(cland_start));" not in cc
+    assert "u_cland_rstart_rx_p0" not in base

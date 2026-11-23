@@ -970,6 +970,15 @@ def _relay_tx_extra_stages(t):
         raise LandingError(str(ex)) from ex
 
 
+def _relay_rx_extra_stages(t):
+    """RELAY-RX-STAGES (FABLE-FIX-HEAD-LEP0N 11-22): partition_types[t].landing_relay_rx_stages, 0 when absent"""
+    import count_align_bind as CAB
+    try:
+        return CAB.relay_rx_stages(t)
+    except CAB.BindError as ex:
+        raise LandingError(str(ex)) from ex
+
+
 def relay_tx_extra(t):
     """[(pin, suffix)] of the EXTRA start-relay tx pins of an origin type: landing-contract out pins cland_rstart_out_<n>
     (type_split: relay pieces on both sides of the keep piece, one pin per side).  Each gets its own tx flop
@@ -1551,6 +1560,7 @@ class Landings:
                     c = cparts[pn]
                     # RELAY-TX-STAGES: the origin TYPE's declared extra tx stages (count_align_bind.relay_tx_stages; absent = 0)
                     rst_n = RELAY_STAGES + _relay_tx_extra_stages(getattr(self, "types", {}).get(self.parts[org]["type"]))
+                    rst_n += _relay_rx_extra_stages(getattr(self, "types", {}).get(self.parts[pn]["type"]))   # RELAY-RX-STAGES
                     if c["role"] != "relay" or c["src"] != org or int(c["stages"]) != rst_n:
                         raise LandingError(f"count-aligned landing: {pn} relay role {c} != relay({org}, {rst_n})")
                     role = ("relay", org, rst_n)
@@ -2576,7 +2586,20 @@ class Landings:
             # rx Q; synthesis then drops u_cland_rstart_rx and global_place stops "OT_CLAND no mapped cells found under
             # u_cland_rstart_rx" (slw_hc3 pvfd488b8f a4).  Keep the one flop, as the writer START stages are kept.
             keep = '(* keep = "true" *) ' if getattr(self, "types", {}).get(type_key or tn, {}).get("landing_relay_start_copy", False) else ""
-            return raw_logic + [f"    {keep}ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
+            # RELAY-RX-STAGES: n kept same-clock relay stages between the pin and the rx flop; each takes the raw copy nearest its
+            # plan site (relay_sites u_cland_rstart_rx_p<i>/q), as the tx stages do; no site = the rx raw
+            rx_d, T_ = "cland_rstart_in", (getattr(self, "types", {}).get(type_key or tn) or {})
+            for i in range(_relay_rx_extra_stages(T_)):
+                site = (T_.get("relay_sites") or {}).get(f"u_cland_rstart_rx_p{i}/q")
+                rawp = raw if site is None else self._tx_raw(tn, type_key or tn, raw, ca_raw, raw_logic, sfx=f"_rxp{i}", at=site,
+                                                             limit=LOCAL_RESET_REACH_UM)
+                raw_logic += [f"    wire cland_rstart_rx_p{i};",
+                              f'    (* keep = "true" *) ot_dp_landing_relay u_cland_rstart_rx_p{i} (.clk(clk), .rst_raw_n({rawp}), '
+                              f".d({rx_d}), .q(cland_rstart_rx_p{i}));"]
+                rx_d = f"cland_rstart_rx_p{i}"
+            if rx_d != "cland_rstart_in":
+                raw_logic = [ln.replace("assign cland_start_d = cland_rstart_in;", f"assign cland_start_d = {rx_d};") for ln in raw_logic]
+            return raw_logic + [f"    {keep}ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d({rx_d}), "
                     f".q(cland_start));"]
         if role[0] == "rolestrap":
             logic, raw = self._origin_rolestrap_rtl(tn, role, ca_raw, extra, local_raw, raw_logic)

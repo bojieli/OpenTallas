@@ -851,6 +851,7 @@ class Verification:
             for q in sorted(rel):
                 v=cparts[q]
                 rsn=2+CL._relay_tx_extra_stages(self.raw['partition_types'].get(self.parts[pn]['type']))
+                nrx=CL._relay_rx_extra_stages(self.raw['partition_types'].get(self.parts[q]['type']));rsn+=nrx   # RELAY-RX-STAGES
                 if v.get('src')!=pn or int(v.get('stages',-1))!=rsn:
                     self.fail(f'count-aligned relay {q}: bind relay {v} != relay({pn}, {rsn} stages)');continue
                 rx=self.instance(ident(q)+'.u_cland_rstart_rx','ot_dp_landing_relay')
@@ -858,7 +859,12 @@ class Verification:
                     qi=self.collector['types'][self.parts[q]['type']]
                     node,relay=self._raw_node(q,ins,qi)
                     self.clock(rx,q);self.check_reset(rx,q,node,relay,port='rst_raw_n')
-                    self.equal_input(rx,'d',[self.output(ident(pn)+'.u_cland_rstart_tx'+txpin.get(q,CL.RELAY_TX_PIN)[len(CL.RELAY_TX_PIN):],'q')])
+                    rxd=self.output(ident(pn)+'.u_cland_rstart_tx'+txpin.get(q,CL.RELAY_TX_PIN)[len(CL.RELAY_TX_PIN):],'q')
+                    for i in range(nrx):   # RELAY-RX-STAGES: n declared stages between the pin and the rx flop (same clock)
+                        st=self.instance(ident(q)+f'.u_cland_rstart_rx_p{i}','ot_dp_landing_relay')
+                        if not st:break
+                        self.clock(st,q);self.equal_input(st,'d',[rxd]);rxd=self.output(ident(q)+f'.u_cland_rstart_rx_p{i}','q')
+                    self.equal_input(rx,'d',[rxd])
 
     def observer_input(self,c,port,bit):
         """Return original input net only after the exact live gate is proved."""

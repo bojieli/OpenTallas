@@ -367,6 +367,25 @@ def test_relay_tx_stages_shift_only_that_regions_relays_and_keep_the_identity():
             CB.relay_tx_stages({"landing_relay_tx_stages": bad})
 
 
+def test_relay_rx_stages_shift_only_that_relay_partition():
+    """RELAY-RX-STAGES (FABLE-FIX-HEAD-LEP0N 11-22): a relay type's own rx stages delay only that partition; identity holds"""
+    rows, parts = multi_rows()
+    b0 = CB.bind(plan(rows), parts=parts)
+    q = sorted(x for x, p in b0["parts"].items() if p["role"] == "relay")[0]
+    b = CB.bind(plan(rows), parts=parts, relay_extra={"rx:" + q: 2})
+    v = CB.verify(b, 400)
+    assert not v["identity_and_loop_errors"] and v["sim_window_violations"] == 0, v
+    for x, p in b["parts"].items():
+        assert p["stages"] == b0["parts"][x]["stages"] + (2 if x == q else 0)
+    assert b["parts"][q]["n_nominal"] == b0["parts"][q]["n_nominal"] + 2
+    assert b["parts"][q]["stages"] == b0["parts"][q]["stages"] + 2
+    die = dict(partition_types=dict(t=dict(landing_relay_rx_stages=2), u={}), partitions=[dict(name="p", type="t"), dict(name="r", type="u")])
+    assert CB.relay_extra_from_plan(die) == {"rx:p": 2}
+    for bad in (True, -1, 9, "2"):
+        with pytest.raises(CB.BindError):
+            CB.relay_rx_stages({"landing_relay_rx_stages": bad})
+
+
 def test_onemodel_rise_sample_keeps_ambiguous_tree_crossing_correlated():
     # HEAD-CROSSING-1119 (HEAD NF15f chE0_t__1): FLOW-ONEMODEL-1 gives every tree edge a sample interval; on a RISE
     # edge it is the tree port's own rise interval, so the start count and the ring lag see ONE phase.  An ambiguous

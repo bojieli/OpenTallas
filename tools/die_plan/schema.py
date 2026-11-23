@@ -531,6 +531,8 @@ SCHEMA = {
                     "landing_role_strap": {"type": "boolean"},
                     # RELAY-TX-STAGES (FABLE-FIX-QC 11-19): extra start-relay stages before the tx flop of an origin type
                     "landing_relay_tx_stages": {"type": "integer", "minimum": 0, "maximum": 8},
+                    # RELAY-RX-STAGES (FABLE-FIX-HEAD-LEP0N 11-22): extra start-relay stages before the rx flop of a relay type
+                    "landing_relay_rx_stages": {"type": "integer", "minimum": 0, "maximum": 8},
                     "private_reset_start_exports": {"type": "boolean"},
                     # HEAD SOURCE7: actual existing registered raw reset Q exports.
                     # head_start_reset_aliases verifies each source instance/net in emitted RTL.
