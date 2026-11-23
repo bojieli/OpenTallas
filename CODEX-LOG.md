@@ -14279,3 +14279,9 @@ OWNER?
 - QC: exact installed 72-bit SYS_FACE_CFG / target6 producer dates required for real native timing witness selection.
 - HEAD: external installed START/HBC identity and parent timing receipts for current variants remain required. Existing question remains in this log.
 
+
+Handback terminal receipts collected after drafting:
+- Three-row S81 canary stock GRT on E7 unit2898332 exited 0. Retained `variant3/gen/slice_station__t24__cl66b71008/run/results/asap7/dp_slice_station__t24__cl66b71008/base/5_1_grt.odb` is 689,680,444 bytes. Final gate PASS, TT policy GRT setup +176.60 ps, FF policy hold −57.62 ps and advisory TT insertion dev20.41 ps. This is GRT evidence; next review uses this actual checkpoint. No DRT was dispatched.
+- Historical exact ST_B E2 unit1915804-1795391513 admitted, archived V checksum and reset receipt repair passed. No terminal equivalence result in the client log at handback; leave the proof running and only lift revocation on exact all-shown equality.
+- QC CP2 exact routed proof count in the preceding note is 127,651 / 127,662; the abbreviated “117?” carried no result.
+
