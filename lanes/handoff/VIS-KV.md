@@ -20,3 +20,9 @@ TODO: D28 die render epyc8 /srv/opentallas-scratch2/claude/vis-kv/tmp/die/d28_di
 
 ## 11-23 00:4x
 - D29 r4 composed (epyc8 kv-plan-r6/d29/r4_post/plan_reset.json, 12 rows, gates PASS) read at die level against base_d28: no partition and no hard core moved; die outline is the same. 32 types changed, only in internal_stations/relay_sites/relay_depth/clock/ft_slots/reset_spine_pins/contents (sys_c). Die render viskv/q_d29r4.png matches D28. So the die-neighbourhood check is clean; per-type evidence comes from the probe kits (no PROBE-PASS yet). pc channel widen is not in D29; it is D30 PC-CHANNEL-WIDEN.
+
+## 11-23 01:3x (resume after the 5-h limit)
+- ADV-MERGE-RESET-DEPTH: r5_post plan_post/plan_reset = 0 findings on 8 merge groups (clean). Waiter epyc8 vis-kv/tmp/cutwatch.sh (out cutwatch.out) runs the check on the final cut dir *_post when it lands.
+- hroot: probe D28-geom read: NOT PROBE-PASS, row PRE-PASS. Rows: BAND (D29 if clean), RES+EFS (D30, chain_i 73bf36e8597b), reset.leaf_clusters tool (0 cycles, HROOT-R1 lane clone epyc10) -> D30. HROOT-R1 resumed.
+- PROBE-PASS is now full-cause (fe8a2a5): census of every GRT cluster + path class needed.
+- pc: growth G=112.32 D30 PC-CHANNEL-WIDEN (type row ROWS_PCGROW PRE 0; die ports by KV-PLAN-R6 after the D29 apply).
