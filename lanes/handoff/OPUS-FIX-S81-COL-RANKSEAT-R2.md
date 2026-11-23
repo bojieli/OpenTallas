@@ -79,3 +79,13 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
   setup ws -94.94 = latch u_lk_xd_u_e5_u_e_cfg_d -> ROM cfg_d; latch clk 490.6 vs ROM pin clk -161.4 (skew), latch hold OK.
   J10 lever if GRT stays < -42: clock lockup/stage from ROM early core tap (~100 ps earlier).
 - Kit hosts: h9r1 on intel2 (spill), h10p4 on epyc2 (scratch3 path), p3 geom epyc7, probe epyc7, p6 epyc10.
+
+## 02:0x update (COORD 01:4x: no J10 for known items)
+- J9 rows posted to the hub and sent to ASSEMBLY. Order: H9R0 v3, H9R0 STRIP+E4E, H10R0 E1E, COL-H9R12-SSTRIP (VIS), COL-FAMILY-ROW-R2 (apply_r2.py), COL-ROMIN-LAG (apply_lag.py: core_pin_lead_ps -120 on ROM-half clk, all 216 col types).
+- Tap re-cut: TAP-GRID-R5 runs it once on the fully composed J9 plan (ASSEMBLY ruling). It is not in my plan.
+- Graft source: epyc10 vis-s81-col/tmp/plan_v3_strip_e1e_ss.json 3c285d644712 (no grow; COL-H10-GROW comes via die_grow).
+- Driver j9/j9r2.sh (restarted 01:56) waits for epyc10 kw45/..._d8j8_1117_work (ETA 03:30-04:30).
+- When green, the driver writes j9/w/ops/{ops_types,ops_outside}.json for ASSEMBLY. It also keeps plan_r2_nolag.json.
+- Lag probe: col_h9_r1 pv0a45e191 on planR2L (e6200c7e9b8a). Spec private_specs/OPUS-FIX-S81-COL-RANKSEAT-R2/s81_col_h9_r1__t1__cl49d7a23e__pv0a45e191_1123015327; log runitem_lag_h9r1.log.
+- Lag decision deadline 10:30 (wave A). Without a decision, A ships without the lag row and B (12:30) adds it. If the probe shows the row is unneeded or the ROM outputs lose, mark it REASONED.
+- Porous: FIX-SYNC-S81 confirms the J8 cut tree and the j9tree carry the fixed hw 1b7a030446b6. POROUS-FRESH-1123 is in tests.
