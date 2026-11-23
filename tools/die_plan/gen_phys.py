@@ -9569,7 +9569,7 @@ if [ $rc != 0 ] && ! ls "$K"/FAIL_* >/dev/null 2>&1; then
   FE=$(grep -hE '\[ERROR DRT-[0-9]+\]' "$K"/run/logs/asap7/*/base/5_2_route.log "$K/run_$GOAL.log" 2>/dev/null | head -1 | cut -c1-300)
   # FLOW-PROC-A 11-21 (FABLE-FLOW-0800 e: 7 'make exit 2 (see run_route.log)' lines with no cause; kv3_hub_Wo was a cts.tcl Tcl error): no DRT line -> the FIRST
   # tool / Tcl error line of the stage log that stopped (the newest ORFS log), named with its log, so the per-cause cap and the fail key see the cause
-  FERE='^\[ERROR [A-Z]+-[0-9]+\]|^Error: |^ERROR: |can.t read "|invalid command name|^Traceback|Segmentation fault|Signal 11 received'
+  FERE='^\[ERROR [A-Z]+-[0-9]+\]|^\[ERROR\] LEF Cell .* has no matching GDS/OAS cell\.|^Error: |^ERROR: |can.t read "|invalid command name|^Traceback|Segmentation fault|Signal 11 received'
   if [ -z "$FE" ]; then for LL in $(ls -t "$K"/run/logs/asap7/*/base/*.log 2>/dev/null | head -1) "$K/run_$GOAL.log"; do
       FL=$(grep -m1 -E "$FERE" "$LL" 2>/dev/null | cut -c1-260)
       if [ "$(basename "$LL")" = 5_1_grt.log ] && [[ "$FL" == "[ERROR RSZ-0060]"* ]]; then
