@@ -16,3 +16,11 @@ Read the four predecessor handoffs for background. My dir: epyc9 /srv/opentallas
 ## Codex 08:47 PST
 
 - C3 from R_final (LANDED + SELREP12 + same-depth geometry on 79 types) removes shadowed CRR_PRE2, 0 modeled legs >405. E10 input af7ddd448d45 PRE 0/324. Inherited blanket J9 RTL overlay removed native VP XR, so first strict ELAB refused. Private C3 restored exact R10 VP XR+SELREP 2a7dbb06ab12 and LANDED reset source 56f2c50c018c, with old bytes and source ledger kept under `inputs/leaf_c3_abi_0824`. W_fc (old row3d) bind also stopped on solved reset parent svc_8→svc_2. Replan retry fixed missing plan pin-table root; E10 `leaf_c3_replan_0833/run.otrun.log` rebuilds die reset then runs exact strict bind/LAT/G0 in private tree. C3 remains Wave B. Old t14 changed layout still stopped at 1458 overflow, keep held.
+
+## 11-23 11:2x (after the 06:4x-10:40 limit; resume_1123c)
+- Target: leaf 3d + all-type PRE for the J9 SECOND compose (PRE-clean 15:30, compose <17:00, Fable 16:30, cut 18:00); post the all-type PRE by 13:00.
+- Codex leaf C3 aeae2fe163db (ADOPTED): E10 /srv/opentallas-scratch2/claude/s81-j9-r6/leaf_c3_tree (J9 tree fork, J9 tools), plan physical/die_plan/s81/plan_j9_leaf_c3_qualified_0933_relays.json. PRE 0 (gate_leaf_c3_qualified_0933), G0 5 errors. Strict bind live: asbuilt_run_leafc3_j8stn_1042.json -> native_bind/j9_leaf_c3_j8stn_1042_out (log leaf_c3_qualified_0905/gate_1042.otrun.log). 21 types keep older cores (unpublished lane-footprint views).
+- C3 aim: 316 legs >405 (max 1190) on 15 types. C4a (epyc9 s81-leaf-j9/c4/) = C3 + reaim/hopfix on those 15 types: 0 >405 (max 404.9), hopfix +~60 stations. C4b = C4a + patched ftclear (ftclear_j9.py, snap away from the face): 89/174 moved, t22 ft1 x317 -> 291.2. sha C4b 77be3ec690fc.
+- C4 all-type reprice + PRE + G0 vs C3 running on E10: s81-leaf-j9/c4pre.sh, log c4pre.otrun.log, plan leaf_c3_tree/.../plan_j9_leaf_s81leafj9_C4.json.
+- t14 a1 (OT_GPL_OVERFLOW=0): GRT total overflow 12,070 (J7 19.9k; target 1.99k NOT met). Clusters: vp cst_hi src x960-1120 y400-480 (vn east channel), ft0_i hdly x1360-1440 y160-240. a2 GRT still running at 11:2x.
+- TAPHOLD gate_f2 bind (--mem 240) running E10 oth-ubuntu-3370750-1795452310; J9-gate reproof bind (Codex, E10 oth-ubuntu-2975509) still running at 5.8 h; LEC chain on intel2 waits for its latcheck.log.
