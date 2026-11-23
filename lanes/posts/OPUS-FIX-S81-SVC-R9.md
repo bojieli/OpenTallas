@@ -128,3 +128,11 @@
   10/11/14 no placed DB (pvso_entry, lo rs, lo rs_w): r9h DB ~08:00 PST, then the SVC-OWN lo t3 probe and pvso_entry/rs_w probes. PROBE-PASS only after the render is read.
   13 lo START/reset relays perimeter-only, depth 16: J10 row SVC-LO-START-INTERIOR (interior relay sites in the u_c row gaps, sized from the lo t3 probe density).
 - 2026-11-23 02:22 PST DIED [OPUS-FIX-S81-SVC-R9] ot-run oth-ubuntu-690249-1795406306 on tolerant-swine: rc=143 after 23026 s, ended 02:22:09, log /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/bind_r9e.otrun.log, cmd: --mem 200 --threads 4 --hosts intel2 --strict-host --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9 | class=RAIL-KILL cause=ot-run: DRAIN: localhost DRAINING (380 of 9999 GB scratch free): --dir /srv/opentallas-scratch2/claude/opus-fi
+- 2026-11-23 02:43 PST J9 svc status 02:4x.
+  (1) SVC-HI4-SPLIT-F65F: rebase_svc.py carries the svc family (24 svc types/parts from r9h 417840aae146) onto f65f, 3-way vs J7 a6771. Result: 0 conflicts; f65f touched svc in only 12 units, taken as theirs; 2 split-owned die units forced (relay fW0_p1_b0, split census map).
+  Overlay files onto the J8 cut tree: 3 svc_rs RTL (superset of J8, ifdef OT_SVC_ATTCUT/LAND_SRAM), split_hi4x/_r9 sidecars, census/start maps. asbuilt equals J8 except its note.
+  Gate bind job bind_j9svc.sh runs on epyc7 under --priority plan: fork j8_cut_tree -> overlay -> plan -> tap scan -> PRE --baseline f65f -> strict bind, rt a36b0f. The fork waits for an epyc7 copy slot (2 busy: KV + SLICE forks). Bind ETA ~11:00-12:00 PST, so Wave B, not A.
+  (2) rc14/20 ATT-ENG-ORDER: FABLE-UNC owns it. v2 tool (t4_att/t5_att first) rides R5 composed gate as a TOOL after SPLIT-F65F.
+  (3) rc15 CUT-STATION: the cut is fixed-latency lockstep (att_cut in +1/out +1), so stations must be uniform per direction plus lane cycles; FABLE-UNC is designing to that.
+  (4) rc16 BCAST, rc25 LOSTART, rc17/21/24 WESTRIP: helper lanes started by FIX-LEDGER.
+  (5) Probes: r9h full bind (DB ~08:00) and r9h probe-subset bind (lo rs t3, pvso t1/t2, rs_w t1; rt a36b0f) both run on intel2. r9e cancelled (superseded, old rt). intel2 scratch2 is at the 150 GB floor; my old treeJ8/r9e outputs are ot-delete-protected, so FLOW-OPS please clear them.
