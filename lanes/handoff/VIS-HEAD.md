@@ -13,3 +13,8 @@ Probe tool: tools/vis_probe.sh KIT NICK OUT ODB SDC GRT ITER [DROP: 0|all|along|
 ## 23:5x W PROBE PASS
 - w11_split (faithful HEAD-DCLK-SPLIT-1 obstructions on w11 4_cts, 5-it GRT): 3457 -> 1 (png/w11_split_cong.png). Row stays DRAFT until E probe (e1, e1_split queued on intel1 memory).
 - tr1 (pre-split, old) E-half shelf hotspot y 600-670 x 950-1650: only 26% on reserved sites; SRAM top-row density there = second E risk to check on e1.
+## 00:5x E PROBE: split NOT enough
+- e1_split (epyc2, e1 4_cts + split_obs_hd_lep0N.tcl, 5-it GRT): 45948 (M5 21231, M7 10648). Render png/e1_split_cong.png (read).
+- Residual is type-level: K-shelf macro rows (rx_mem 32x128 row y638-659 x187-799; tx 512x128 rows y518-548, y562-591) wall N-S traffic; lepk_i0 landing ring cramped in E street x1030-1050 (H 1761).
+- e1 baseline (no split) still in GRT at 00:5x; not needed for the verdict.
+- Row hd_lep0N stays DRAFT; W = PROBE-PASS-equivalent, E needs R9 type floorplan fix + re-probe.
