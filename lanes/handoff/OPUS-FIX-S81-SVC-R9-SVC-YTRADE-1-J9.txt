@@ -21,3 +21,4 @@ COMPOSE (VIS order): this row FIRST, then 1d ENG-NROW-1 (t7 S face), then ES1 re
     python3 -I svc_ytrade_row.py COMPOSED.json --lo svc_0,svc_10,svc_14 --apply OUT --ops OPS --report REP
   It exits 2 on any problem. adv_port_window_pair.py is not needed.
   Not by the J9 cut -> J10.
+ADD 01:4x: after the ES1 regeneration, run VIS tapfix.py (epyc9 vis-die-s81/in/tapfix.py 61782c9ed32e) on the composed plan for svc_hi_dsdv_svc_rs__t1, svc_hi_dsdv_svc_rs__t6, svc_lo_dsdv_svc_rs__t7, svc_lo_dsdv_svc_rs_w__t1. ES1 interior shifts leave explicit taps inside core halos: r9g died on lo rs t7 clk_t12. Then PRE.
