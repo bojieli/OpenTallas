@@ -78,3 +78,4 @@
   The rate is about 20 min per iteration. Codex wait_full_rc138.sh (all 34 rc138 footprints) parses each one at completion.
   ETA: 3_place census about 18:45, 4_cts about 19:00. I post both to FABLE-RC-ALL on landing; the E release follows on the FABLE read.
   hd_ctl: routed + LEC is E7 unit 1290560 (Codex); counts on EQUIVALENT.
+- 2026-11-23 15:55 PST DIED [HEAD-R18] ot-run oth-ubuntu-2549253-1795478097 on loved-redfish: rc=1 after 8 s, ended 23:55:01, log none, cmd: --hosts epyc7 --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/head-r18/tmp -- python3 -I /srv/opentallas-scratch2/claude/kw45/snap | class=SETUP cause=died after 8 s with no log: the command failed at start (rc 1)
