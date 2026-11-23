@@ -34,3 +34,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 578 any / 462 current (+4/+4 vs 18:05). Hourly at :05 via wait3.sh (computes next :05, skips if <5 min).
 ## State 20:25 PST 11-22
 580 any / 478 current (+2/+16 vs 19:05; KV plan change: cores 83). Round ran 20:05; COORD pinged 20:1x while the count job was running.
+## State 21:25 PST 11-22
+581 any / 479 current (+1/+1 vs 20:05). Hourly on the :05 via wait3.sh.
