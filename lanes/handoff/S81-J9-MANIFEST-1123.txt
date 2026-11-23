@@ -211,3 +211,29 @@ SLICE C (R6 / VIS-MISC 03:28): 15 overloaded clock landing bands on 7 slice C ty
    Fix row j9_cland_ops: 35 bands re-sited or resized on 15 types (70 ops, within 405 um). Worst after 0.70, 0 overloaded.
    Current J9 slice C plan a9e1ba6bfc6d (hub d0393d7). R6 runs G0 then strict bind on an epyc9 fork.
    Composer: take R6's GATED sha. ADV-LAND-CAP (main 0d6ca16289) must show 0 on the composed plan.
+3j FABLE-UNC-S81-SVC TOOL ROWS (intel2 fable-unc-s81-svc/). Final shas follow the v10 gate (16 types). v8 = PRE PASS 0 findings / 66 ADV base.
+   1. SVC-ATT-ENG-ORDER (rc14/rc20 + svc hop): att_order_row_v6.py + att_layouts/. Att macro blocks on 8 hi att + 8 lo types, incl. ft stations on lo t1/t7.
+   2. SVC-LAND-CAP: landcap_row_v1.py. Re-seats svc bands over 0.90 fill.
+   3. SVC-STRAP-SITE (rc19): strap_site_row.py. sites_um + M7 for strap_ca_k_* inside the band.
+   4. att_order_post_v6.py (needs the tree): re-sites refused taps, re-solves reset_tree.for_type, republishes clock.landing_contract.collector_tree, writes the sidecar.
+      Its sidecar REPLACES physical/die_plan/s81/split_hi4x_r9/eW_sidecar.json in the J9 tree (copy+mv, record sha).
+   Wrapper: gate_j9_v3.sh TAG BASE_PLAN TREE SIDECAR ASBUILT RT [BASELINE].
+MERGED J9 COMPOSE ORDER (supersedes earlier lists):
+   0. tree fork + step-0 sync (u_cf views, ADV-TREE-DRIFT hits, asbuilt internal_stations_types +seqhost/iqf/gunit)
+   1. replayed type op rows (RANKSEAT, ENG-NROW-1, MISC, IQF J9-4, XGA2/slice C, iqf lane ops, eng clk_t49, COL 3e GROW, SEAMBLK, TAPSPLIT, TAPGRT, REACH v2, ECORR?)
+   2. SPLIT-F65F (SVC-R9 rebase), if gated
+   3. col_ygrow f62e467e6c4a --form <COL winner>
+   4. die_grow f52c38b543c3 --cut0 20900.16
+   5. LEAF j9Z
+   6. SVC-WE-STRIP 13fde4e891b6 (tool)
+   7. att_order_row
+   8. landcap_row
+   9. YTRADE
+   10. ES1 regen = edgestrip_row 005d0a80844f --tapfix
+   11. strap_site_row
+   12. att_order_post (svc taps + collector tree + sidecar)
+   13. tapfix 22c28916bb44 for the remaining types
+   14. TGR5-J9-SERDES-DENS-1
+   15. one reprice -> reset.die_relays -> PRE
+   16. TAP-GRID-R5 regen v4 -> FIXCHK -> PRE -> G0 -> strict bind (rt/current 3b25e3b42d4d)
+   OPEN: does TAP-GRID regen (16) re-touch svc taps that att_order_post set? It must append only (prefix rule) and leave the svc collector tree intact.
