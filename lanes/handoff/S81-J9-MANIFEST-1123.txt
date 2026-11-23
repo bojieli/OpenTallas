@@ -100,3 +100,8 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
      - ygrow.png is MISSING; re-render requested from VIS-DIE.
      - COL probe conclusions are unchanged.
      - NEW DRAFT ROW COL-H10R0P1-ECORR: the resnap puts col_h10_r0_p1 x_i0 on the E node column (unfixed EAST-CORRIDOR cause). Proposed die window swap: x_i0 -> y870-1130, ft0 -> old mouth. Owner VIS-DIE + COL. Asked to fold it into col_ygrow; deadline 12:30.
+3h FAM-S81-COL-H10-R4 rows (PRE PASS 0 on composed 393114adec1a, base 56d5a17e72bc), intel2 fam-s81-col-h10-r4/:
+   rows_COL-H10R0P4-SEAMBLK_J9.json 5dbaeeb50fbd (6 ops), rows_COL-H10R1-TAPSPLIT_J9.json 0c8530ca4c1c (24), rows_COL-H10-TAPGRT_J9.json ef09171c92b8 (24; supersedes earlier TAPGRT).
+   Order: 3e GROW -> SEAMBLK -> TAPSPLIT -> TAPGRT (type rows, before col_ygrow). COL-H10-REACH (HOP-GAPS) to follow.
+   ADV: 20 ADV-PORT-WINDOW-PAIR "validate refuses" on col_h10_r0_p4 vs h9_r0_p3/p5 windows (+25.92 offset). Expect col_ygrow's E/W re-snap to clear them; the composer must see 0 such ADV after col_ygrow, or VIS-DIE fixes them.
+J9 BIND RT: rt/current = 3b25e3b42d4d (includes POROUS-FRESH-1123 3b25e3b42d4 + 152df1bc05). NOT a9ed808a98d5. J9 source = J8 sealed tree (fixed views). The stale trees (kw45 J7 src, svc-r9 treeJ8/treeJ8g, col-h9r0-r4 j8c_tree, serdes candJ8s) are never J9 sources.
