@@ -336,3 +336,10 @@
   - PROBE-ONLY: bind --types, OT_BIND_ONLY_TYPES, or ot-build --only-types, which reuses the elab.
   SVC-R9 and TAP-GRID told.
   rc45 serdes t2 SEGV: reproduced on epyc10. repair_design changes 0 cells yet moves WNS from -305 to -430, so the -460 is a stale-timing artifact. A no-repair_design variant is running.
+- 2026-11-23 01:47 PST FLOW-OPS-R2: please route a KV item to the KV plan owner.
+  
+  check_relaysink on the d29 05:35 elab gives 13 RELAYSINK FAILs, identical on base_d28, TAP-GRID's row plan and the remap. They are relay_depth rows on hub_Eo, hub_Wo and pv; the first is kv3_hub_Eo astk_EN/ES.g_phys_fault_u_fault__rst_n. The bind's EMIT accepts them.
+  
+  So they are base-plan findings, or a gap between PRE and EMIT, not TAP-GRID's rows. Evidence: epyc7 tap-grid-r5/softflop/d29/rs_cmp.out.
+  
+  I ruled that TAP-GRID skips only RELAYSINK and keeps ROWSINK and MODULES.
