@@ -977,6 +977,13 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # LEAF-CLUSTERS (FAM-KV-HROOT-R1 11-23): per-bus-group reset leaf: the bin/bout/ft flops of the listed buses take
+                        # the rst_n_t<k> of the consumer tap nearest leaf_um instead of the type's single leaf (reset_tree.pick_cluster_taps)
+                        "leaf_clusters": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                                          "required": ["leaf_um"], "anyOf": [{"required": ["buses"]}, {"required": ["insts"]}],
+                                          "properties": {"leaf_um": _xy,
+                                                         "buses": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                                                         "insts": {"type": "array", "minItems": 1, "items": {"type": "string"}}}}},
                         # RESET-KEY 11-19: frozen reset consumer sites [[name, x, y], ...]; when present the reset tree is solved from
                         # these, not from the clock tap table, so a clock tap added later needs no new bind (reset_tree._taps).
                         "consumer_sites_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 3, "maxItems": 3,

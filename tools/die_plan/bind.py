@@ -4083,6 +4083,8 @@ class Binder:
         P = self.wavefront_plan()
         rtree = None
         reg = p in self.reg_hard()          # registered-pin hard partition: no flop of ours inside (reg_hard)
+        rst_for = lambda bus: "rst_n"     # LEAF-CLUSTERS: per-bus reset net of the bin/bout/ft flops (plain rst_n unless reset.leaf_clusters)
+        inst_rst = {}                       # LEAF-CLUSTERS: leaf instance path -> rst_n_t<k> (reset.leaf_clusters[].insts)
         if reg:
             body.append("    wire rst_n = arst_n;  // registered-pin hard partition: the delivered reset, no synchroniser")
         elif P is not None:
@@ -4102,6 +4104,13 @@ class Binder:
                               for n, _x, _y in RT.start_out_pins(P, ptn)]
                 body += RT.rtl_lines(rtree)
                 body.append(f"    wire rst_n = rst_n_t{RT.leaf_tap(P, ptn)};")
+                _lc = RT.leaf_cluster_taps(P, ptn)
+                if _lc:
+                    rst_for = lambda bus, _lc=_lc: f"rst_n_t{_lc[bus]}" if bus in _lc else "rst_n"
+                    body.append("    // reset.leaf_clusters: " + ", ".join(f"{b}->rst_n_t{k}" for b, k in sorted(_lc.items())))
+                inst_rst = {n: f"rst_n_t{k}" for n, k in RT.leaf_cluster_inst_taps(P, ptn).items()}
+                if inst_rst:
+                    body.append("    // reset.leaf_clusters insts: " + ", ".join(f"{n}->{v}" for n, v in sorted(inst_rst.items())))
         else:
             body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                         f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
@@ -4267,7 +4276,7 @@ class Binder:
                 # the latency table's pad (R8 groups / replica depth): reset-less stages after the in-boundary flop,
                 # data and epoch together, so the lane lands at its table cycles
                 decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
-                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({rst_for(n)}), .d({din}), .ea({dea}), "
                             f".q({n}_b), .eq({n}_eb));")
                 if count:
                     site, span = count
@@ -4281,7 +4290,7 @@ class Binder:
                     body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
                                 f".q({{{n}_eq, {n}_q}}));  // lane pad: latency table {L['cycles']} cycles")
                 continue
-            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
+            body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n({rst_for(n)}), .d({din}), .ea({dea}), "
                         f".q({n}_q), .eq({n}_eq));")
         # driver wires: one per (cell, output port)
         drv_w = {}
@@ -4327,7 +4336,7 @@ class Binder:
                 body.append(f"    assign {n} = {d};  // reset spine (async; landed by ot_dp_rsync in the sink)")
                 continue
             if L.get("plan"):
-                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
+                body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({rst_for(n)}), .d(pb_{n}), .ea(rst_n), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
                 continue
             if reg:
@@ -4348,7 +4357,7 @@ class Binder:
                 continue
             d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
                          for it in L["items"]])
-            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .ea(rst_n), "
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n({rst_for(n)}), .d({d}), .ea(rst_n), "
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
         for L, h in sorted(self.ft_bus[p], key=lambda x: x[1]["ibus"]):
@@ -4373,7 +4382,7 @@ class Binder:
                 nxt = o if k == n - 1 else f"{o}_s{k}"
                 if k < n - 1:
                     decl.append(f"    wire [{W}:0] {nxt};")
-                body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), "
+                body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n({rst_for(o)}), .d({prev}[{W - 1}:0]), "
                             f".ea({prev}[{W}]), .q({nxt}[{W - 1}:0]), .eq({nxt}[{W}]));")
                 prev = nxt
                 if lk and k < n - 1 and k in xt:
@@ -4652,6 +4661,8 @@ class Binder:
                 return self.cport(p, d[1])
             if k == "rst":
                 reset = core_reset.get((ci, pn), "rst_n")
+                if (ci, pn) not in core_reset and F.cells[ci].path in inst_rst:
+                    reset = inst_rst[F.cells[ci].path]
                 if d[1] == "low":
                     return reset
                 if reset != "rst_n":

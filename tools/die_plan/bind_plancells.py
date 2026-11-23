@@ -299,6 +299,14 @@ class PlanCells:
             e = [render(bits[j]) if j in bits else undriven(f"out bus {b}[{j}] has no plan driver") for j in range(W)]
             body.append(f"    assign pb_{b} = {_concat(e)};  // plan-driven out bus")
         efs = self._efs_emit(p, pt, tn, t, render, decl, body) if self.efs_cfg is not None else {}
+        # LEAF-CLUSTERS (reset.leaf_clusters[].insts): a plan cell named there takes rst_n_t<k> of the consumer tap nearest the cluster's leaf_um
+        inst_rst = {}
+        _P = B.wavefront_plan()
+        if _P is not None:
+            import reset_tree as _RT
+            _ptn = B.plan["partition_types"][tn].get("split_of", tn)
+            if not _P.types[_ptn].get("hard"):
+                inst_rst = {n: f"rst_n_t{k}" for n, k in _RT.leaf_cluster_inst_taps(_P, _ptn).items()}
         for inst, c in sorted(t["cells"].items()):
             mod = self.iface.get(c["module"])
             if mod is None:
@@ -325,7 +333,7 @@ class PlanCells:
                 if inst in efs and port == "eq":
                     cs.append(f"        .{port}({_concat([efs[inst]['q'][j] for j in range(len(atoms))])})")
                     continue
-                cs.append(f"        .{port}({_concat([render(a) for a in atoms])})")
+                cs.append(f"        .{port}({_concat([inst_rst[inst] if (inst in inst_rst and a[0] == 'net' and a[1] != 'clk') else render(a) for a in atoms])})")
             ps = ", ".join(f".{k}({v})" for k, v in sorted(c.get("params", {}).items()))
             body.append(f"    // plan cell ({pt})\n    {c['module']}" + (f" #({ps})" if ps else "") +
                         f" u_{inst} (\n" + ",\n".join(cs) + "\n    );")

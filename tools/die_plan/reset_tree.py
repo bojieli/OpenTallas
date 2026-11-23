@@ -1101,6 +1101,53 @@ def _clock_taps(P, tn):
 _S_TAP_GRID = S.tap_grid
 
 
+def pick_cluster_taps(taps, clusters, tn="?"):
+    """LEAF-CLUSTERS (FAM-KV-HROOT-R1 11-23, opt-in type.reset.leaf_clusters = [{"leaf_um": [x, y], "buses": [bus, ...]}]):
+    {bus: tap index} where the tap is the consumer tap nearest (L1, ties lowest index) the cluster's leaf_um.  Every consumer tap is a
+    terminal relay of the SAME release depth, so a cluster net is an alias of another tap's rst_n_t<k> net: +0 cycles, and a type without
+    leaf_clusters binds byte-identical."""
+    out = {}
+    for c in clusters:
+        if not (isinstance(c, dict) and len(c.get("leaf_um") or ()) == 2 and (c.get("buses") or c.get("insts"))):
+            raise ResetError(f"type {tn}: reset.leaf_clusters entry needs leaf_um [x, y] and a non-empty buses and/or insts list: {c!r}")
+        x, y = map(float, c["leaf_um"])
+        k = min(range(len(taps)), key=lambda i: (abs(taps[i][1] - x) + abs(taps[i][2] - y), i))
+        for b in c.get("buses") or ():
+            if b in out:
+                raise ResetError(f"type {tn}: bus {b} is in two reset.leaf_clusters")
+            out[b] = k
+    return out
+
+
+def pick_cluster_inst_taps(taps, clusters, tn="?"):
+    """leaf_clusters[].insts: {leaf instance path (F.cells[].path, e.g. u_efault): tap index}, same nearest-tap rule as pick_cluster_taps;
+    the instance's rst port (k == 'rst') takes rst_n_t<k> instead of rst_n."""
+    out = {}
+    for c in clusters:
+        insts = c.get("insts") or ()
+        if not insts:
+            continue
+        x, y = map(float, c["leaf_um"])
+        k = min(range(len(taps)), key=lambda i: (abs(taps[i][1] - x) + abs(taps[i][2] - y), i))
+        for n in insts:
+            if n in out:
+                raise ResetError(f"type {tn}: instance {n} is in two reset.leaf_clusters")
+            out[n] = k
+    return out
+
+
+def leaf_cluster_inst_taps(P, tn):
+    """{leaf instance path: tap index} of the plan's reset.leaf_clusters[].insts ({} when absent)."""
+    cl = P.types[tn].get("reset", {}).get("leaf_clusters")
+    return pick_cluster_inst_taps(consumer_taps(P, tn), cl, tn) if cl else {}
+
+
+def leaf_cluster_taps(P, tn):
+    """{bus: tap index} of the plan's reset.leaf_clusters ({} when absent)."""
+    cl = P.types[tn].get("reset", {}).get("leaf_clusters")
+    return pick_cluster_taps(consumer_taps(P, tn), cl, tn) if cl else {}
+
+
 def consumer_taps(P, tn):
     """Reset consumers independent of clock entry pins (opt-in type.reset.local_taps_um).
 

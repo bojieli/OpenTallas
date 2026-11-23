@@ -5150,6 +5150,52 @@
          "maxItems": 2
         }
        },
+       "leaf_clusters": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "leaf_um"
+         ],
+         "anyOf": [
+          {
+           "required": [
+            "buses"
+           ]
+          },
+          {
+           "required": [
+            "insts"
+           ]
+          }
+         ],
+         "properties": {
+          "leaf_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          },
+          "buses": {
+           "type": "array",
+           "minItems": 1,
+           "items": {
+            "type": "string"
+           }
+          },
+          "insts": {
+           "type": "array",
+           "minItems": 1,
+           "items": {
+            "type": "string"
+           }
+          }
+         }
+        }
+       },
        "consumer_sites_um": {
         "type": "array",
         "minItems": 1,
