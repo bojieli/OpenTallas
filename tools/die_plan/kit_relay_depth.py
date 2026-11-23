@@ -76,7 +76,9 @@ def apply(btxt, tn, rows, leaf_id, sv_id):
                                  "cannot add a source-side stage: re-run bind.py on this plan")
             rec["rows"].append(dict(row=name, D=D, how="bound"))
             continue
-        if re.search(rf"\bu_y_xd_{re.escape(sid)}_{re.escape(port)}_\w+\s*\(", btxt):
+        # bind names the chain with sv_id (runs of "_" collapsed): merged-core native pin u_zn__rst_n is u_zn_rst_n there
+        pn = re.sub(r"_+", "_", port)
+        if re.search(rf"\bu_y_xd_{re.escape(sid)}_(?:{re.escape(port)}|{re.escape(pn)})_\w+\s*\(", btxt):
             rec["rows"].append(dict(row=name, D=D, how="bound"))
             continue
         if D < 1:

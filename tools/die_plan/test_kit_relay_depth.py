@@ -88,6 +88,14 @@ def test_rows_the_bind_already_emitted_are_left_alone():
     assert txt == pre and rec["applied"] == 0 and rec["bound"] == 2
 
 
+def test_bound_chain_of_a_double_underscore_port_is_left_alone():
+    # merged hard-core native pin k_zn__rst_n: the bind names its chain with the collapsed id (k_zn_rst_n)
+    pre = BOUND.replace("    assign o", "    ot_dp_dly #(.W(1), .D(1)) u_y_xd_u_lnl0_k_zn_rst_n_0_0 (.clk(clk), .d(w_u_lep_li0_r), .q(x));\n"
+                                      "    assign o")
+    txt, rec = KRD.apply(pre, "t", [{"inst": "u_lnl0", "port": "k_zn__rst_n", "side": "sink", "D": 1}], leaf, bind.sv_id)
+    assert txt == pre and rec["applied"] == 0 and rec["bound"] == 1
+
+
 @pytest.mark.parametrize("row, why", [
     ({"inst": "u_lep", "port": "v", "D": 1}, "row u_lep.v (source side, D 1) is not in the bound module"),
     ({"inst": "u_lnl9", "port": "k_li_r", "side": "sink", "D": 1}, "row u_lnl9.k_li_r: sink instance u_u_lnl9 is not in"),
