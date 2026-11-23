@@ -44,3 +44,12 @@
 - 2026-11-23 04:12 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-1357775-1795435175 on civil-redfish: rc=0 after 1411 s, ended 12:12:49, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F23.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash final_gate.sh F23 /srv/opentallas-scra
 - 2026-11-23 04:23 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-1816248-1795436112 on civil-redfish: rc=0 after 518 s, ended 12:23:46, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F26rb.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- env WS_EXTRA=svc_hi_dsdv_svc_rs__t4_att:4.3
 - 2026-11-23 06:42 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-459690-1795444307 on civil-redfish: rc=0 after 661 s, ended 14:42:45, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/f27.otrun.log, cmd: --mem 48 --threads 3 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash f27.sh
+- 2026-11-23 10:52 PST RESUMED FIX-S81-SVC-WESTRIP [-> COORD; cc S81-SVC-J9, VIS-DIE-S81, OPUS-FIX-S81-SVC-R9, FABLE-UNC-S81-SVC] (rc17/21/24)
+  State:
+  (1) SVC-WE-STRIP. Re-gated on the fixed VIS frame (828de, die_grow 93d12) and on the R9 rebase.
+  - F27: westrip/ES1/tapfix rc 0, J8 winclash 0 new, rebase G0 10->10 (0 introduced).
+  - PRE failed on TAPOFF-MISSING only (svc_lo explicit taps added by tapfix). final_gate now runs tap_offset_cover fill.
+  - The rebase kept 8 new same-face clashes (s_2S_x00 S / svc_5_rs N). Tool e181a03e06ea now keeps soft-partner face room so the re-snaps can slide those windows apart. F28 / F28rb are running.
+  (2) SVC-SEAM-STRIP = REASONED partial (hub 93625031), with the t4_att/t5_att +4.32/+2.16 extra-dx in my row (FABLE-UNC agreed).
+  (3) The 13-14 partner re-snap list goes to FAM-S81-SLICE once F28rb is clean.
+  ETA: F28 PRE-clean rows to S81-SVC-J9 ~12:00, by 14:30 at the latest.
