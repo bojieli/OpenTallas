@@ -316,3 +316,38 @@ foreach i $::insts {
     dst = p[r"u_bound.u_core.u_rxf_q\[544\]$_DFF_N_"]
     assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
     assert "bits moved 545 of 545" in r.stdout
+
+
+COMB_SINK = r'''
+set ::M(AND) [obj master name AND2x2_ASAP7_75t_R block 0]
+chain u_dec.u_rck_transport4 545 4 0 100 0 AND
+set g1 [lindex [lsearch -inline -all -glob $::insts *] end]
+set n1 [net]; conn $g1 Y OUTPUT $n1
+set g2 [cell "u_dec.u_syn.g_ampipe.cmp" AND 120 0]; conn $g2 A INPUT $n1
+set n2 [net]; conn $g2 Y OUTPUT $n2
+set am [cell "u_dec.u_syn.g_ampipe.am_a\$_DFF_P_" DFF 5000 0]; conn $am D INPUT $n2
+'''
+
+
+def test_comb_sink_walks_to_register(tmp_path):
+    """FAM-S81-SERDES-R7 11-23: a q whose first load is logic spaces its rows to the register the logic feeds
+    (am_a), and its cone moves onto the last leg; before this the rows stopped at the gate 100 um away."""
+    r = mock_run(tmp_path, COMB_SINK, chains="u_dec.u_rck_transport4")
+    assert r.returncode == 0, r.stderr
+    assert "comb-sink bits to registers 1, cone cells moved 3" in r.stdout
+    p = pos(r.stdout)
+    xs = [p[k][0] for k in p if "u_rck_transport4" in k and "DFF" in k]
+    assert sorted(xs) == pytest.approx([1000, 2000, 3000, 4000], abs=5)
+    q = p["u_dec.u_rck_transport4.q\\[545\\]$_DFF_P_"][0]
+    for g in ("u_dec.u_rck_transport4.pma545", "u_dec.u_syn.g_ampipe.cmp"):
+        assert q <= p[g][0] <= 5001
+    assert p["u_dec.u_syn.g_ampipe.am_a$_DFF_P_"] == (5000, 0)
+
+
+def test_comb_sink_without_register_keeps_old_endpoint(tmp_path):
+    body = "set ::M(AND) [obj master name AND2x2_ASAP7_75t_R block 0]\nchain u_dec.u_rck_transport4 545 4 0 1000 0 AND\n"
+    r = mock_run(tmp_path, body, chains="u_dec.u_rck_transport4")
+    assert r.returncode == 0, r.stderr
+    assert "comb-sink" not in r.stdout
+    xs = sorted(v[0] for k, v in pos(r.stdout).items() if "u_rck_transport4" in k and "DFF" in k)
+    assert xs == pytest.approx([200, 400, 600, 800], abs=5)

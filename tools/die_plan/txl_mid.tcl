@@ -11,6 +11,11 @@
 # The buffers / inverters of each hop (the QN polarity inverter of every row is one) move with it, evenly spaced on the
 # hop: pilot 11-10 moved rows only and left those cells at their GPL spot, so r[2] -> q ran 1136 -> 2170 -> 107 -> 587 um
 # through a 49-cell chain (TT -1326 ps at GRT, W=180).
+# Comb sink (FAM-S81-SERDES-R7 11-23, serdes__t1__clfe1f0815 -312 ps): a bit whose first non-buffer load after q is LOGIC
+# (the 9 RCK4 AM partial bits 545..553 feed the u_syn.g_ampipe am_a cone) used that gate's GPL spot as the endpoint, so all
+# 4 rows sat within 400 um of the AM face and the 19-level cone carried 1,288 um to am_a.  Such a bit now walks forward
+# through the logic (<= 40 levels) to the registers it feeds: the endpoint is their centroid, and the cone cells move
+# evenly onto the last-row -> endpoint leg (each cell once).  No register reached = the old endpoint (same moves, same log).
 # Kit use: copy to the kit and add "export OT_TXL_MID = 1" and "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl".
 # OT_TXL_MID_CHAINS (default "u_txl"): space-separated ot_pl_pad instance paths (rows <C>.g_reg.r[k][b], last <C>.q[b]) to
 # space the same way, e.g. "u_txl u_dec.u_rck_transport4" (DIE-S81-85 11-10: vC t14 GRT rck_transport4 r0 -> r1 1850 um,
@@ -123,6 +128,28 @@ namespace eval ot_txl_mid {
     }
     return $k
   }
+  proc is_reg {inst} { return [regexp {DFF|^DHL|^DLL|^SDF|^ICG} [[$inst getMaster] getName]] }
+  # logic cells from an output iterm forward to the registers / macros they feed (<= maxd levels, nearest q first):
+  # {cells terminal_iterms}
+  proc fwd_cone {it maxd} {
+    set cells {}; set seen [dict create]; set terms {}; set front [list $it]
+    for {set l 0} {$l < $maxd && [llength $front] && [llength $cells] < 4000} {incr l} {
+      set next {}
+      foreach o $front {
+        set n [$o getNet]; if {$n eq "NULL"} continue
+        foreach t [$n getITerms] {
+          if {[[$t getMTerm] getIoType] ne "INPUT"} continue
+          set i [$t getInst]
+          if {[[$i getMaster] isBlock] || [is_reg $i]} { lappend terms $t; continue }
+          if {[dict exists $seen [$i getName]]} continue
+          dict set seen [$i getName] 1; lappend cells $i
+          foreach u [$i getITerms] { if {[[$u getMTerm] getIoType] eq "OUTPUT"} { lappend next $u } }
+        }
+      }
+      set front $next
+    }
+    return [list $cells $terms]
+  }
   # first non-buffer load of an output iterm: iterm or {}
   proc down {it} {
     for {set l 0} {$l < 40} {incr l} {
@@ -180,6 +207,7 @@ namespace eval ot_txl_mid {
       if {$rxneg && [dict size $bits] != 545} {error "OT_TXL_MID RXNEG face width [dict size $bits], expected 545 data/valid bits"}
     }
     set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0; set nface 0
+    set nreg 0; set ncone 0; set conedone [dict create]
     set face [expr {[info exists ::env(OT_TXL_MID_FACE)] && $::env(OT_TXL_MID_FACE) eq "1"}]
     foreach q $clasts {
       # rows oldest first, ending with q; src = enc driver output iterm
@@ -194,6 +222,17 @@ namespace eval ot_txl_mid {
       set snk [expr {$qo eq "" ? "" : [down $qo]}]
       if {$src eq "" || $snk eq ""} { incr skip; continue }
       lassign [ctr $src] ax ay; lassign [ctr $snk] bx by
+      set cone {}
+      set si [$snk getInst]
+      if {![[$si getMaster] isBlock] && ![is_reg $si] && ![is_buf $si]} {
+        lassign [fwd_cone $qo 40] cone terms
+        if {[llength $terms]} {
+          set sx 0.0; set sy 0.0
+          foreach t $terms { lassign [ctr $t] tx ty; set sx [expr {$sx+$tx}]; set sy [expr {$sy+$ty}] }
+          set bx [expr {$sx/[llength $terms]}]; set by [expr {$sy/[llength $terms]}]
+          incr nreg
+        } else { set cone {} }
+      }
       set n [llength $chain]
       set end {}
       if {$face} {
@@ -247,12 +286,17 @@ namespace eval ot_txl_mid {
         set px $x; set py $y
       }
       incr hcells [place_hop $snkcells $px $py $bx $by $macs $core $step $maxr]
+      if {[llength $cone]} {
+        set todo {}
+        foreach c $cone { if {![dict exists $conedone [$c getName]]} { dict set conedone [$c getName] 1; lappend todo $c } }
+        incr ncone [place_hop [lreverse $todo] $px $py $bx $by $macs $core $step $maxr]
+      }
       set h [expr {(abs($bx-$px)+abs($by-$py))/$dbu}]
       if {$h > $hmax} { set hmax $h }
       incr moved
     }
     set tag [expr {$chains eq "u_txl" ? "" : " chain $C"}]
-    puts "OT_TXL_MID$tag bits moved $moved of [llength $clasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um[expr {$face ? ", macro-face anchored $nface" : ""}]"
+    puts "OT_TXL_MID$tag bits moved $moved of [llength $clasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um[expr {$face ? ", macro-face anchored $nface" : ""}][expr {$nreg ? ", comb-sink bits to registers $nreg, cone cells moved $ncone" : ""}]"
     lappend ret [list $moved [llength $clasts] $hmax]
     }
     return [expr {[llength $ret] == 1 ? [lindex $ret 0] : $ret}]
