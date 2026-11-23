@@ -39,3 +39,10 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
 - Live sealed: p6 2641923 route, p1 2669012 GRT (intel1), p2 cl0045 2711310 route, p3 cl0cd 2740564 route, fresh p2 434285 geom (event 18a2688b741), fresh p3 455182 place.
 - Race copies (old placed kits, run_kit route epyc8): p2 cl9f 526974, p3 cl8ce 526975; detailed route. First copy to sign off wins; cancel the other by exact unit.
 - Ended: kit C (FAIL_POSTCTS TT), sealed p3 cl31d0dc4b (FAIL_POSTCTS TT), old row proofs p3/p6 (rc 21).
+
+## 11-22 20:5x PST J9 rows S81-HC-INPUT-REACH (COORD 21:3x approved)
+- Rows: intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4/j9/rows_COL-H9R0-HC-INPUT-REACH_J8.json (01d8c337986a, 468 ops, 42 types) on J8 f65f62779bef; PRE PASS 0 on J8 tree (plan 178c3c611c3a); generator h9r0_j9_rows.py + jpatch.py next to it. Handed to R5 (post f8100c35).
+- (a) bs0 i_x0/i_x1 D bump (all p1/p2/p3/p6); (c) p2 t2 aligned group D=1; (b) env OT_KEEP_WIRES += ot_dp_dly:r (opt_merge folded per-half ROM input stations; yosys test 8->24 flops).
+- Probe: OT_PROBE_THROUGH=1 sealed p2 pva4376595 with (b), rt 345ac19b04b3, epyc8, run-item pid 2055609 (intel2), log probe_*_runitem.log. Check: u_y_xd_u_r0_u_e1_u_w_* cells > 0 in geom.tsv; e1 u_w TT.
+- Open: t0 -> xa/xb_1_bs0_0 branch-copy legs 650-760 (p3/p6), p1 t2 503, p3/p6 xb_2->t2 448 (existing rows).
+- Waiter b7y6yb3gc: digest on 2641923 2669012 2711310 2740564 434285 455182 526975 2055609.
