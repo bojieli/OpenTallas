@@ -572,3 +572,5 @@
   NO-PROGRESS intel2 native59 pregrt_ff_hold stage 8.5 h job 13.1 h: no new meaningful log line for 6.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_bin_native_cmd/q[235
 - 2026-11-23 00:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 00:52 PST: 263 running jobs, PROGRESSING 254, SLOW 8, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 33.9 h job 33.9 h: no new meaningful log line for 32.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+- 2026-11-23 01:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 01:52 PST: 266 running jobs, PROGRESSING 255, SLOW 10, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 34.9 h job 34.9 h: no new meaningful log line for 33.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
