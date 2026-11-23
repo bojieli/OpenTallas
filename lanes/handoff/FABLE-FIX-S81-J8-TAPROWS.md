@@ -30,3 +30,10 @@ Local scripts copy: rtx-pro scratchpad j8/ (compose.py, chain.sh, val1.sh, patch
 - Row file (PROVISIONAL posted 08:28): epyc7 out/j8_tap_rows_delta.json sha aa74848366a5 (104 replace ops, base 5433ac309bb4, result e9645569a711; mkdelta.py).
 - Waiter: local background poll on gateB2.out (FX_GATE_DONE).
 - On green: post GREEN to S81-J6-ASSEMBLY-R5 + COORD report (<250 words). On partial: hand the clean types (drop ops of failing types from the delta: rerun mkdelta with a filter) and post the rest with cause.
+
+## Status 17:3x PST (after the 11:1x weekly limit; RESUMED 45d67854)
+- Gate B run 2 ended 13:10: strict bind rc 1, ONE error = EMIT yosys "Unexpected EOF in JSON string" on native glue helper 193c9bdc (emit worker race, tool). 0 errors on the 104 row types; PRE PASS; LATCHECK skipped (script ran it only on rc 0). run-2 report kept as gateB/bind_report.run2.json, log bind.log.run2_emit_race.
+- R5/Codex took delta aa74848366a5 into the J8 cut as CONDITIONAL TAP104 (14:00 post). Race fix claude/codex-s81-native-glue-lock-1122 @2ea3a30545d COORD-approved, not on main at 17:30.
+- RUNNING: epyc7 chain3.sh -> gateB3.out: LATCHECK on run-2 out (gateB/latcheck_run2.*), then strict bind with toolfix/bind_native_glue.py (= 2ea3a30545d; only diff vs rt 58ebc21a5072 is that commit) EMIT_J=8, then LATCHECK (gateB/latcheck.*) + PRE. Markers FX3_LAT_run2_RC FX3_BIND_RC FX3_BIND_ERRORS FX3_LAT_VS_LEAF_GATE_E FX3_PRE_RC FX3_GATE_DONE. ETA ~21:30 PST.
+- Someone (R5/Codex) left epyc7 j8cut_assembly_preview/ in my dir (tap replan of c1x_C t8 + leaf t39 on their base); not mine, leave.
+- On FX3 green: post GREEN to R5 + report COORD (<250 words). Else post error list + cause.
