@@ -251,6 +251,14 @@ class HostLive(T.Base):
         self.snap_kw({d: {"history": "superseded: x"}})
         orig = ac.Job.stub_verified
         ac.Job.stub_verified = lambda self_, u: None if u == unit else "no ARCHIVED.json"
+        # the shared delete guard keeps a signed record until its sha256 is in the export ledger (6cf0366cba): the verified export is in it
+        import hashlib, time as _t
+        led = os.path.join(self.t, "exported_records.txt")
+        with open(led, "w") as f:
+            f.write("# built %d\n%s\n" % (_t.time(), hashlib.sha256(open(os.path.join(unit, "signoff.json"), "rb").read()).hexdigest()))
+        orig_led = ac._dg.EXPORTED_LIST
+        ac._dg.EXPORTED_LIST = led
+        self.addCleanup(setattr, ac._dg, "EXPORTED_LIST", orig_led)
         try:
             self.run_job("--classes", "a", "--live-refs-only")
             self.assertTrue(os.path.isdir(d), "not without --aggressive")
