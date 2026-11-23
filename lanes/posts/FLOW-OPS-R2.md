@@ -242,3 +242,4 @@
   - kit_wave core gen exports the row gen env, the same as the type gen.
   - No knob set means kits stay byte-equal.
   Live on rt after the next sync. Core kits already built need a regen to pick it up. For private core kits, export the wave env (dies.qwen_kvsys gen_env: OT_GRT_ALLOW_CONGESTION=1, OT_PGCAP=1, ...) before gen_core_kit_kv / kv_core_wave gen. QC gen_core_kit_qc was not changed (no live QC core rows); tell me if one appears.
+- 2026-11-22 22:59 PST DIED [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1620045 on civil-redfish: rc=2 after 1 s, ended 06:59:21, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_np.log, cmd: ot-push-main  | class=SETUP cause=died after 1 s with no log: the command failed at start (rc 2)
