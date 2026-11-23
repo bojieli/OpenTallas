@@ -48,3 +48,5 @@ The independent E9 all-mode fill completed with 6,137 additions in 197 types, 90
 ## 10:40 LEPE R4 terminal result
 
 Scoped strict E9 1427436 completed rc1 after PRE passed, the inactive native station bus was isolated, and the North and South RTL emitted. The only recorded error is body EMIT `landing_local_resets.fstart_0`. The consumer `u_cland_fstart_xring_o0` now uses regenerated `cland_start_raw` at depth 7, while inherited `rst_rl_66` at depth 5 makes the local registered copy depth 6. The older depth-five fix used the r9j depth-six contract from before the current retap. A scoped plain depth-six reselect with 300 µm reach guard is active under E9 `split_body_clocks/r4_fstart_depth6/reselect.otrun.log`. Scope remains diagnostic and the physical hold still applies.
+
+The exact reselect completed on E9 1872442 with rc0. Candidate `acd1a232aa4e` uses plain `rst_rl_80` at depth six, 235.248 µm from the local site, preserving required release depth seven. Fresh scoped strict replay is active in `r4_fstart_depth6/replay.otrun.log` under the same STRIPBODY lane. The existing physical hold remains.
