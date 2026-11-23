@@ -6,8 +6,11 @@ Gate tree: epyc9 fam-s81-slice-r6/trees/s81_j9cmp (J8 cut fork + main 25064b2fc2
 ## Codex units adopted (epyc9): oth-ubuntu-3620552 rc33m reset_r1 (c398c4cdd9c4, lacks FSTART reseat), oth-ubuntu-3838609 xga2tl depth7 (c0bec71dd7c6 = 1b gate). Inner-xg old gate intel2 oth-ubuntu-2204361 (c494, old tree, lacks reseat).
 ## xfin: bench intel2 oth-ubuntu-2439948 (run2.sh, norm16 slice compiling); xfin16 base PASS + mutbase caught. RTL in fam-s81-slice-r6/clone (uncommitted) -> ot-push-main on PASS.
 ## Owned types (COORD sweep): iq_C t1, lepw_mu_C t1, lepw_mus_C t1 -> C chain; lepw_mu_LP t2, lepw_mus_LP t2 -> LP variant; lepe_nh_mus_LP t1 -> LEPE-4 rows (R1/RS1/PT1/F2/LK1).
-
-## Codex 08:47 PST
-
-- Combined exact W2/F2/R1 + RS1/N2 after RC31/34 and LP t27 split, anchored dd2974603ab5. Old bound C1X C t1 / LEPE nh_mus C t1 / LEPE mu LP t2 all depth9 while changed shape would shorten to depth8; explicit existing wavefront_min_depth 9 restored old release and 12 raw relay aliases were safely re-anchored. Final RC33 is after actual TAP-GRID, then repeat exact reset/seat check where required. Old E9 gate's FSTART parser dropped origin `rst_n_tNN`; repaired in separate `reseat_origin_v2_codex.py`, 7 source seats solved at the same copy depth.
-- KV512 old probe-through watchdog rolled back at last extra GRT iteration, 58,805 overflow retained, gf_q to on-die SRAM -1287.15 ps. Changed v9 measured a distinct xfv_q→own -1545.91 ps while fast-reset removal remains open. Keep held pending exact J9 placement. XFIN focused 16×4 ENG pass and tag mutant detected 32 errors, code 17a29101a3d merged via GREEN canonical 13/13 with two baseline fixture-only errors; separate repair 6d77e7d8ca33 landed 092e201e11a. Replaying selected tests on merged snapshot, original broader batch stays active.
+## 11-23 11:25 PST (after 06:4x-10:40 limit)
+- Slice C chain is IN Wave A 4662b734580b (Codex composed). xfin landed by Codex 174935ee5e9.
+- My chain probes 1-4 left FSTART depth EMITs (bind reports first bad row/type). Old cg.sh loop bug fell through to FINAL; those 2 full binds cancelled.
+  reseat2.py (all rows of failing types, origin rows too) + cg2.sh: probe5 running E9 (w/: plan_sj9_c5 d6f56456a2a8; wlp/: 4893f2995d14).
+- waprobe.sh: C/LP/station --types probe of 4662b on Wave A tree (E10) -> B1 fix row if EMITs.
+- B2 station rows: b2stn.py + b2gate.sh (E10 s81-slice-j9/b2/): t30 6e8c (B1) + t7/t44 ft2 S band + t31 ft2/ft3 S rings + t36 95 relay_sites. PRE baseline 4662b.
+- s_2S_x00 t14 growth: someone else live in compose/g0_station_t14_growth_1048; not duplicated.
+- Wave A plan copy on epyc9: s81-slice-j9/wavea_4662b.json.
