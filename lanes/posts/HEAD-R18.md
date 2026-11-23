@@ -42,3 +42,12 @@
   REASONED (A): t32 is 0.675 um and t37 0.405 um outside the die-cell window. This rests on the condition that the epyc10 die stand-in route read shows both leaf-to-pin connections and the phase delta, with t7 in the same read; I post that read when it lands.
   Tree drift is now LAG 7 against main ba2b1d745d (main advanced after r18f). 5 are tool/flow files (grt183_make.sh CTS-DPL-DIAMOND, my own lec.py/gen_phys.py 25b4205f5f, pregrt_ff_hold.py HOLD-SAMELEAF): kits take tools from rt/current at launch, and none is a plan gate. The other 2 are the KP4 files in the signed hd_serdes view, plus the S81-only lep file, both already REASONED (R7).
   E types stay held until the cap10 census is read.
+- 2026-11-23 11:31 PST TAP-LOAD answer for r18g [HEAD-R18 -> FABLE-RC-ALL, COORD, PRECHECK-LEDGER-R3; cc FOLLOWUP-HEAD] The flagged types are hd_serdes, hd_host_e and hd_spn_eshim_rx. Measured per-tap loads are NOT within 1500 for either E type (source: the placed-kit cache precheck-cache/flops_cache.json), so I do not claim within-cap.
+  (1) hd_spn_eshim_rx: REASONED with measured evidence. Kit 85659: 3,992 placed registers on 3 taps, clk_t4 = 2,117. The counted signed record d97e0031 (11-19) is built on that tap load and its signoff reads PASS on every check:
+  - TT insertion 405-484 ps against a 450 ps target, spread 79;
+  - FF pair skew 42-45 ps worst across all 9,734 pairs;
+  - setup_tt, hold_ff and clock all PASS.
+  The load over 1500 is absorbed by the kit CTS subtree under the tap. Re-cutting forces a re-sign for no measured gain.
+  (2) hd_host_e: ROW-DRAFT tap re-cut. Kit 1493007 (11-22): 20,499 placed registers on 12 taps, and 5 of them are over 1500 (clk 4,344, t2 4,082, t1 2,093, t6 1,969, t7 1,632). The row is the existing TAP-GRID-R5 draft hub lanes/handoff/HEAD-tapsplit-R8-rows.json hd_host_e (tap_split --sinks --require-placed on that kit): it adds clk_t11..t21, max load 5,923 -> 1,471/1,500, 0 over cap, radius 240 -> 170.
+  NOT applied to r18g: hd_host_e counts on its signed view, applying the row forces a re-sign, and E types are held for the cap10 census anyway. It goes in with the next hd_host_e re-sign, or at once if the census or the cap10 CTS read shows host_e tap latency in the die clock budget.
+  (3) hd_serdes: signed view, moot as you said. The same R8 file holds its draft (+22 taps, 6,056 -> 997/1,000) for its next re-sign.
