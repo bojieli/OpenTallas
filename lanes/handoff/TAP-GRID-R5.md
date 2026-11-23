@@ -51,3 +51,19 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - POSTED table lanes/handoff/TAP-GRID-R5-TAP-SOFTFLOP-table.tsv; S81 J9 rows 599b16f05a82 (plan epyc7 softflop/plan_j9f.json 28759c909fdc, base J8 e9645569a711); KV rows eab983d96c31 (base D28 plan_np_remap).
 - OPEN: QC V4 l0b (epyc8 fable-fix-qc-v4/l0b/plan.json c32c923389be; tools l0b_bound/tree) 4 types, HEAD r18n (epyc9 s81_head_r18n_w11 source_plan 341dbb140f8f) 3 types, S81 c1x_C t1/c3x_C t1/lepe_mu_C t1/lepw_mus_C t1 on plan_j9f: dumps xdumps/ queued (xlist_<host>.tsv, xrun_<host>.out); then split + follow-up post.
 - Residual: S81 59 types >1500 after J9 (PARTIAL, macro-packed) -> J10 reshape/growth.
+
+## 11-23 01:4x PST (after the 01:17 5-h limit; resumed)
+- main: 0b6c516615 REMAP-ALWAYS (tap_split --out-plan always runs landing_remap anchor + PRE LANDREMAP, REMAP_FAIL exit 3);
+  925a9aa68d MULTI-TAP (k-medians joint split); e08b45a0cd NEIGHBOURHOOD re-solve; f503637a50 ADV-RESET-NAME (plan_advisory).
+- KV D29: KV-PLAN-R6 took the 17-type row (sys_c dropped -> D30): epyc8 softflop/d29/rows17 (script 81c74ca21d0b, SHA256SUMS
+  1358ae4db605). Gate 7 (epyc7 softflop/d29/gate7): 14 EMIT -> 1 (kv3_sys_c origin reset rst_n_t71 != rst_n_t31, tap-named).
+  ADV-RESET-NAME validation (d29/advchk.out): base 0, row plan 11/16 stale, remapped 0.
+- S81 J9: epyc10 softflop/. Primary set j9_regen.sh 7fbbc740acb0 + j9_sinkshift.py 4a79656d2056; fallback j9_regen_ds2.sh
+  46f21c4a3849 (= dry run 2, clean: PRE1/PRE2 0, FIXCHK PASS, 3842 taps); both tap_split_e08b.py 5f1446c0bee5 + j9_fixchk.py
+  9658e13d4ac3. J9_EXCLUDE default "ot_s81sl_leaf__t32 serdes__t13"; 5 VIS-S81-MISC fixed types held by FIXCHK.
+  Dry run 3 (regen_dry3, 135 types, sinkshift) running; post PRE1/PRE2/FIXCHK/reverts/taps to S81-J6-ASSEMBLY-R5 before 09:00;
+  no tool change after 09:00. Real run: j9_regen.sh COMPOSED SHA12 OUTDIR when assembly posts the composed plan.
+- J9 residual 28 (multi59c): causes NEAR-CAP 8 / STRIP 8 / DENSE-REGION 3 / OTHER 8 / radius 1 -> global re-solve J10.
+- RC-GAP 3/3 col_h9_r1/r2 (span 514 um clk_t13): replied J10 (a5382a18): add --span-um to tap_split, reg dumps of r2
+  clce45cab5/cl774 CTS DBs, J10 row on post-S-strip plan.
+- Housekeeping: ot-delete epyc10 softflop/j9b/tree.forking-2751687 (lease ended), later fork trees epyc7 d29/tree, epyc10 j9bt/tree.
