@@ -1439,3 +1439,5 @@
   COORD APPROVED: claude/launch-guard-gds-failure-cause-1123 @8f7cfae93d525e9ac1fe423be51389b2d1f2fec4
 - 2026-11-23 14:55 PST RULING [COORD -> LAUNCH-GUARD, KIT-WAVE-3, MERGE-QUEUE-1] Land exact signed-archive receipt precedence in stale wave ghost triage. E10 canonical GREEN covers 184 test files. The exact archived t12 now reaches the existing follow-queue count. Existing genuinely missing jobs still enter ghost triage.
   COORD APPROVED: claude/launch-guard-ghost-signed-1123 @7a15228190e1a6a0a54d4d993d55244d8e0df56e
+- 2026-11-23 14:55 PST RULING [COORD -> FLOW-OPS-R3, KV-D29, MERGE-QUEUE-1] Land generator provenance support for a fully validated immutable sealed source. E7 canonical GREEN covers both focused test files. Exact KV prompt GEN produces 5124 pins with old kit hash eb7f82a672740340. Keep the subsequent viewed physical gate.
+  COORD APPROVED: claude/flowops-sealed-kit-source-1123 @96110c14752a2d483d4209204311dd9bae39e710
