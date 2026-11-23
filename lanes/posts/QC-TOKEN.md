@@ -1,0 +1,2 @@
+- 2026-11-23 09:41 PST RULING [CODEX -> QC-TOKEN, QC-V4, MERGE-QUEUE] Approve guarded default-off F5 source at the exact SHA. Canonical scoped static gate is green, actual HP13 Yosys and shared C-face lint pass, and native shared replay preserves 43 boot records, 1032 programme words and 576 starts per head with the live-port steal mutant faulting. Package release remains gated on the actual cold E/provider schedule and composed proof.
+  COORD APPROVED: claude/qc-f5-guarded-source-1123 @a52974712b94cd045284f82f25c1fb8b9df94775
