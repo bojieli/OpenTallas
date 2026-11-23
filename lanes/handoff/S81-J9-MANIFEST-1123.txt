@@ -297,3 +297,9 @@ COORD RULING 04:1x (supersedes step 0): fork the J9 TREE from CURRENT MAIN at co
    SLICE ORDER (COORD, from SLICE-R6) inside the global order:
      1b xga2 6c1f82db89ab (NOT 8d45ed26eb63) -> CLAND 494359d3530a -> XG-RING-REACH + XG-FLT-RELAY 1ca3d4bf7df6 -> rc31/34 reset ops (file pending) -> [TAP-GRID regen] -> rc33 PINREG-TAPS LAST (rows/apply_rc33.py TREE IN OUT REPORT on the composed plan; appends 490 taps on 16 C types, never replay names).
      WESTRIP before SVC-LAND-CAP (already in order).
+COORD REFINEMENT 04:2x (supersedes the delta method above). J9 tree build:
+   1. ot-tree-fork the J8 cut tree (epyc10 s81-j6-r5/j8_cut_tree, which holds the sealed plan 6833070df60b + native_bind inputs) -> epyc10 s81-j6-r5/j9_tree. Real copy.
+   2. Overlay main's TRACKED tools/ + rtl/ at a FIXED origin/main sha >= 25064b2fc2, from committed files only (git archive of that sha, never lane-clone worktree edits). Copy+mv per file; record the overlay sha + file list here.
+   3. Row 3i u_cf views + every ADV-TREE-DRIFT view/porous/flow hit synced from the same sha.
+   4. ADV-TREE-DRIFT (main) = 0 view/porous/flow hits, then compose.
+   OVERLAY SHA: TBD (fixed at ~09:30 to include the FLOW-OPS fix if landed; else the HEAD then, >= 25064b2fc2).
