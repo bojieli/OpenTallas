@@ -101,6 +101,22 @@ def test_signoff_vs_golden():
     assert C.chk_signoff(so, None, 15)["why"].startswith("BASELINE")
 
 
+def test_minimal_local_hold_uses_internal_scope():
+    so = dict(verdict="SIGNED", profile="minimal",
+              checks=dict(setup_tt=dict(wns_ps=403.81), hold_ff=dict(wns_ps=-54.81)),
+              io_hold=dict(basis="ff_hold_port_start_only"),
+              internal_hold=dict(complete=True, wns_ps=0.0),
+              profile_gates=dict(hold_ff="PASS"))
+    golden = dict(verdict="SIGNED", setup_tt_wns=18.24, hold_ff_wns=8.62)
+    stage = C.chk_signoff(so, golden, 15)
+    assert stage["verdict"] == "PASS"
+    assert stage["hold_ff_wns"] == -54.81
+    assert stage["hold_ff_internal_wns"] == 0.0
+    assert C.chk_signoff(so, dict(golden, hold_ff_internal_wns=20.0), 15)["verdict"] == "FAIL"
+    assert C.chk_signoff(dict(so, internal_hold=dict(complete=False)), golden, 15)["verdict"] == "FAIL"
+    assert C.chk_signoff(dict(so, internal_hold=dict(complete=True, wns_ps=-1.0)), None, 15)["verdict"] == "FAIL"
+
+
 def test_check_run_missing_evidence_fails(tmp_path):
     kit = tmp_path / "kit"
     kit.mkdir()
