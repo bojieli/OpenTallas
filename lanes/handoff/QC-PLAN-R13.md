@@ -44,3 +44,9 @@ Flag: slw_su_c__cl92142dac still -504 ps setup stop (FAM-QC-SLWSLE-R1).
 - check_tapname (tmp/pgt6d2e tree, tapname.py): bandmove broke the density base of 8 st_a types, so the d lineage (dr/d5r/x) is out and its binds are cancelled. d, band moves and rev5 go to V4 (fix the d lineage with a rename and retap for those 8 types).
 - Order: cr > b2r > n3. Running: crx and b2rx (rt 33fe, in bind since 03:15), cr and b2r (rt 6dbb, launched 04:1x, the seal/pack pin hedge), n3 (6dbb, R8 refresh).
 - Recompose base: plan_v3p7cr.json 83647ad396b8.
+
+## 18:0x PST 11-22 APPLIED
+- V3 p7c5rt is live: event R6V3, tree qwen_compute_v3p7c5rt (04a3ee602c9c), plan 24f8b509b6fd. Rollback v2r10. The coll_core legacy hold was added before apply; 20 holds preserved.
+- V4 intake = FABLE-FIX-QC-V4 l0b_bound + its intake tsv; FABLE-FIX-QC-V4 composes.
+- FEFW: x_sc_i five-bank rows (slw_fw_v2 cl8537f156) are not in V3; FEFW drafts them for V4. arv_ei/arm_ei = V4 rank 13.
+- Cleanup due (ot-delete): v3p6/* partial bound dirs, retap*, e10/v3p5r_bound, the epyc8 qc-plan-r13-e8 staging.
