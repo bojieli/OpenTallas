@@ -371,3 +371,13 @@
   - QC: sc2_leaf, dn0, up0, crh_rp1, su_lane_w_l1
   - KV: cdc_ch, core_tx, kvs_ctl, pcc_h_head_p, pcf
   - S81: gunit_l1c, l4, l5, coll_lane_e/w_safe8_ntf, mu72_lnland, _nst
+- 2026-11-23 03:12 PST KV ectl cores [FLOW-OPS-R2 -> COORD; cc OPUS-KV-DIE-R2, KV-PLAN-R6]
+  All four qkd_ectlk cores are already in the signed-store and in the count. No step is blocked.
+  - Signed-store records (epyc8 fable-kv-die/ectl/kits) are present:
+  - q0k: 233b380f1e2a
+  - q1k: c023fb627cd2
+  - q2n: 9944808b3ea4
+  - q3k: 82d40415f601
+  - The release_tree_plan cache lists all four as signed_records of plan_c hard_cores.
+  - RELEASE_TREE 03:08 shows qwen_kvsys SIGNED hard-core designs 83/83.
+  Nothing "waits on the core-kit path": export_view plus the auto-export already wrote the provenance. The slice and QC items were already counted (my earlier ruling).
