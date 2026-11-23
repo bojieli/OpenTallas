@@ -18,3 +18,23 @@
 - 2026-11-23 03:23 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-165070-1795432417 on civil-redfish: rc=0 after 594 s, ended 11:23:27, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F21rb.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash final_gate.sh F21rb /srv/opentallas-sc
 - 2026-11-23 03:24 PST ROW-GATED SVC-WE-STRIP (rc17/rc21/rc24, J9 row 3f) on VIS die_grow --cut0 20900.16 frame 81e1d537c37d. Form (VIS-DIE agreed): 8 svc columns +69.12 x (34.56/side; type W strip 34.56->69.12, E 41.04->75.6), all from col0|col1 seam gap; cols1-7 one abutted block 12035.52..22619.52, seam0 gap 25.92 (f2s4 channels resized), 0 die growth, s_7S untouched, 0 die-window moves, 0 partner re-snaps (no strict bind). epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/: tool svc_westrip_row.py 13fde4e891b6, row ops F21/ws_ops.json de2962f91e20, row plan F21/p_ws0.json 044308bca780; chain +YTRADE+ES1+tapfix -> F21/p_ws_tf.json 345df5946ff1. PRE --baseline-plan f65f62779bef PASS findings 0, svc ADV-EDGE-STRIP 0, ADV-PORT-WINDOW-PAIR 0; G0 (check.py --street-rule warn) vs 81e1: ERRORs 10->10, introduced 0. CUT0=12096 proven infeasible (hard phy_hbm dfi windows). hi4 x-split rebase (R9 189008ce34df)+cut: tool OK but 11 slice seam re-snaps (strict bind) and split-internal W/E strips 13-17 um remain (R9 form).
 - 2026-11-23 03:41 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-810406-1795433947 on civil-redfish: rc=0 after 759 s, ended 11:41:26, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F22rb.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash final_gate.sh F22rb /srv/opentallas-sc
+- 2026-11-23 03:49 PST REASONED-PARTIAL [FIX-S81-SVC-WESTRIP -> FABLE-RC-S81; cc OPUS-FIX-S81-SVC-R9, FABLE-UNC-S81-SVC, FIX-LEDGER, VIS-DIE-S81] row SVC-SEAM-STRIP (hi4 split internal seams, 7 columns, 14 faces): full trade does not fit; seam strip sized by escape demand = 17.28 um; 12 of 14 faces meet it, 2 go to FABLE-UNC att_order_row.
+  Evidence is in epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/ST/ (census.json fb541d996d46, escape.log 9d9210f95f89, seamplan.log 7faaaae11ebc). Tools: seam_trade_row.py a1fd088c3ba2 --full, escape.py 12ffafc52087. Plan: R9 rebase + WE-STRIP, F21rb/p_ws_tf.json 7eaacc862fed.
+  (1) Why the full trade fails:
+  - Growth needs about 690 um of x; about 56 is available at reticle.
+  - In-piece shift fixes 0 of 15 faces.
+  - In-column x trade (the seam moves into the piece with more N free space by the dense piece's need, interiors fixed) fails R9 condition 1 (no partner effects) in 7 of 7 columns:
+  - every receiver has die N/S windows that straddle the moved seam: attn_* 1.6k-bit S windows, hbm/rsv/unit/xtier/rt, 16 ports;
+  - each would have to re-snap on slice/station partners or re-home its port.
+  - Per receiver it also needs 5-106 cores re-stacked: svc_11_rs 106 (ingress mems), svc_5 11 (att engine), others 5-11 sms/sx.
+  - So col2 and col3 do not fit either, and neither do the other 5.
+  (2) Escape demand per seam:
+  - Window density is <= 7.19 bit/um on M4+M6. The track cap is 36.5/um (ASAP7 pitch 0.048/0.064), so it uses <= 20%.
+  - Landing flops: bits x 1.404x0.27 cell / 0.6 util / window span = 3.7-4.5 um deep.
+  - Cores are obs_max <= M5, so M6/M7 run over the cores and bits need no turn room in the strip.
+  - Demand strip = landing depth plus core halo, which falls under the EDGESTRIP-1 core margin of 17.28 (2 x 8.64). 69.12 is the COL convergence threshold, not a demand.
+  (3) Faces against 17.28:
+  - Meet it: svc_1_rs E 34.99 / svc_1 W 17.28; svc_5_rs E 17.28 / svc_5 W 32.4; svc_7_rs E 34.56 / svc_7 W 32.4; svc_9 W 25.92; svc_11 E 17.28 / svc_11_rs W 17.28; svc_13 W 43.2; svc_15 E 25.92 / svc_15_rs W 17.71.
+  - Below it: svc_9_att (rs t4_att) E 12.96, needs +4.32; svc_13_att (rs t5_att) E 15.12, needs +2.16.
+  - Fix for those two: an att-core nudge inside FABLE-UNC att_order_row (the att pieces are laid out after my row; t4_att has 28 um of x slack).
+  - Open risk: the seams are not yet proven at 69.12-class convergence. A failure would show first as M4 congestion at the seam landing bands in GRT of these pieces.
