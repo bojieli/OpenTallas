@@ -343,3 +343,4 @@
   So they are base-plan findings, or a gap between PRE and EMIT, not TAP-GRID's rows. Evidence: epyc7 tap-grid-r5/softflop/d29/rs_cmp.out.
   
   I ruled that TAP-GRID skips only RELAYSINK and keeps ROWSINK and MODULES.
+- 2026-11-23 02:03 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2463457 on civil-redfish: rc=0 after 83 s, ended 10:03:58, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ttd.log, cmd: ot-push-main 
