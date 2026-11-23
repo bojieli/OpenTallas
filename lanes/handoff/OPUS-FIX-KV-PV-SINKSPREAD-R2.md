@@ -38,3 +38,7 @@ Client logs intel2 ~/tmp/ffkvpv/. Watchers post under the OLD lane name (FABLE-F
   pad column), cland->bin stations/bins near landing, census tap grid cap 1200 + fclk slg leaves split 4+, outliers (pv/v8 N-only pins,
   v4/v4n SW blob, v12/v7 S face). FIFO (ot_meso_fifo) for pad chains ASKED to KV-PLAN-R6 (post 23:2x).
 - Disk: tree3 deleted (50 GB), clone deleted (7); tree4 pending guard list 07:30Z rebuild (del4.sh loop).
+- 23:4x DISK DONE: tree4 deleted 07:31Z (156.7), total 213 GB freed; epyc8 scratch2 321 GB free. Lane dir = tree, tree2, w (+small).
+- Watchers: old watch_k2.sh EXITED on the intermediate result.json (stage chain_probe PASS) -> replaced by watch_k2b.sh (systemd
+  user unit watch-k2b-r3) and watch_v12b.sh (unit watch-v12b-r3; old pid 4099926 killed), both skip stage chain_probe. Same state files.
+- K2 at CTS (chain goal route attempt 1, 22:41). K3 past gen_lint.
