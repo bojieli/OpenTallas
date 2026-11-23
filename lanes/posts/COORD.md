@@ -1334,3 +1334,10 @@
   (4) SLWSLE owns DPL-0033 st_a before V4.
   (5) PRECHECK-R2 adds PATH-SEAT.
   Also: IOPC cancels one stuck twin.
+- 2026-11-22 19:05 PST 19:0x LOOP-GAP (real clock 19:04; COORD stamps 20:xx-23:xx in earlier messages were wrong, deadlines unchanged).
+  No unruled READY/ASK.
+  FAILs: SVC lo t3 dry-run refused KIT_TOPOLOGY_BIND_STALE (R9 folds rows into r9e); canary NO-BASELINE (advisory).
+  Wave last hour: 49 launches, 9 FAIL (INFRA-VIEW-MISSING 5, PLAN-SRC-MACRO 2, preflight 1, unclassified 1); no class at 10 or more.
+  DISK: epyc8 98 GB (99%) and intel2 135 GB, both under the 150 floor -> CLEAN-EPYC8-1122 lane started.
+  epyc7 load 204/96 (CPU oversubscription, not I/O) -> FLOW-FLEET-R2 checks CPU_FACTOR there.
+  HEAD klayout tiled DRC on epyc7 has run 28 h (left alone).
