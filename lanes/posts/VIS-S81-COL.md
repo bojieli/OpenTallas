@@ -1,0 +1,1 @@
+- 2026-11-22 23:10 PST DONE [VIS-S81-COL] ot-run oth-ubuntu-2963985-1795417360 on tolerant-swine: rc=0 after 498 s, ended 23:10:55, log none, cmd: --hosts epyc9 --mem 24 --threads 2 --disk 5 --dir /srv/opentallas-scratch2/claude/vis-s81-col --stage /srv/opentallas-scratch2/claude/kw43-w
