@@ -85,3 +85,6 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    Gating on (b) c9a4768659a1 and (a) f65f. (a) without die_grow is partial (+34.56/col).
    Compose position: after die_grow + COL-YGROW-1, then ytrade.
    OPEN: confirm the tool is idempotent on COL-YGROW-1 output.
+   COL-YGROW-1 (col_ygrow.py 2dbaf2b1359d) reads outline_um from its INPUT plan, so 3e ops (02b182e95344) MUST precede it. Without 3e it is a no-op.
+   COMPOSE SELF-CHECK after 3e: outline_um[1] col_h10_r0_p4* = old + 25.92, col_h10_r1* = old + 60.48. col_ygrow report must list 16 overlaps. FAIL if it lists 0.
+   MX/R180 instances: local-S pins move UP by dH in the die frame. The N/S abutment check must use the grown box() (VIS-DIE to confirm).
