@@ -66,6 +66,23 @@ def test_part_probe_files_and_worst():
         assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + nt  # fz_i from die IO: no epoch
 
 
+def test_part_probe_reserves_typed_strap_and_landing_pins(tmp_path):
+    import copy
+    raw = copy.deepcopy(PAIR)
+    t = raw["partition_types"]["fa"]
+    t["id_straps"] = [
+        {"name": "strap_rst_ph", "width": 1, "layer": "M7", "sites_um": [[10.016, 4.32]]}
+    ]
+    t.setdefault("clock", {})["landing_contract"] = {
+        "pins": [{"name": "rst_start_raw_0", "dir": "out", "kind": "reset", "layer": "M7", "xy_um": [21.984, 13.408]}]
+    }
+    out = g2.part_probe(schema.Plan(raw), "fa", tmp_path)
+    v = (out / "probe.v").read_text()
+    io = (out / "io.tcl").read_text()
+    assert "input [0:0] strap_rst_ph" in v and "strap_rst_ph[0]" in io
+    assert "output rst_start_raw_0" in v and "rst_start_raw_0" in io
+
+
 def test_assembly_die_flow():
     import gen_phys
     with tempfile.TemporaryDirectory() as d:
