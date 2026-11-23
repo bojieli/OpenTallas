@@ -24,6 +24,21 @@ def test_set_copies_hook_and_writes_chains():
         assert not any(c.startswith("export OT_TXL_MID_CHAINS") for c in G.txl_mid_exports([], d, env={"OT_TXL_MID": "1"}))
 
 
+def test_forest_recluster_hook_is_chained_before_the_serdes_hook():
+    """S81-LPR-FOREST (ledger x14): a serdes kit whose sources hold the landing reset forest keeps forest_recluster.tcl,
+    run first from one wrapper; any other POST_GLOBAL_PLACE hook is still refused."""
+    hook = "export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"
+    with tempfile.TemporaryDirectory() as d:
+        cfg = ["export X = 1", hook]
+        out = G.txl_mid_exports(cfg, d, env={}, defines=["-DOT_S81_SERDES_TXPIPE", "-DOT_S81_SERDES_RXPIPE"])
+        assert cfg == ["export X = 1"]
+        assert [c for c in out if c.startswith("export POST_GLOBAL_PLACE_TCL")] == [
+            "export POST_GLOBAL_PLACE_TCL = /work/serdes_forest_post_gpl.tcl"]
+        lines = (Path(d) / "serdes_forest_post_gpl.tcl").read_text().splitlines()
+        assert lines[0] == "source /work/forest_recluster.tcl" and len(lines) == 2
+        assert lines[1].startswith("source /work/") and lines[1] != lines[0]
+
+
 def test_refuses_second_post_global_place_hook():
     with tempfile.TemporaryDirectory() as d:
         try:
