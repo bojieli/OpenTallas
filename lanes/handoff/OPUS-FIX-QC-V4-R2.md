@@ -35,3 +35,8 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 ## 22:5x PST COORD: watch slw_su_c__cl92142dac
 - Wave row = HELD by FAM-QC-SLWSLE-R1 (hold_items, eta 11-23 12:00 V4: GRT hotspot (500,400)/(600,200) + setup -278..-504; needs cap2b rows). No live attempt on any of 6 hosts (ps 22:5x). -> include it in the V5c kits (probe-through + sealed route).
 - Gap: v5c = L0 + re-seat + taps, NO cap2b (cap2b is in l1a). If l1a binds clean, compose v5e = l1a + su re-seat + taps (+ clk_t181) so cl92142dac gets cap2b + taps together.
+
+## 23:0x PST COORD: cancelled slw_su_c__cl19bb38ef GRT proof (epyc10 sonnet-fix-qc-vmrproof2/gen), reason design
+- 75 h, 2nd GRT round (1st took 153927 s, ended congested), overflow ~1525 flat; goal grt (cannot sign); pre-V5/V3 plan.
+- Old rt/7ceb ot-run client (intel2 pid 1022671) was not matched by --cancel -> TERM by exact pid + ot-run --cancel-dir --reason design; remote run.sh/run_kit.sh TERM by exact pid + docker stop dpkit-slw_su_c__cl19bb38ef-1614513. Kit dir kept (VIS-QC dumps read its 3_place.odb).
+- What supersedes it is the V4 cap2b in l1a, not V5: cl19bb38ef is not a V5 re-seat or tap type. TODO: sealed --goal route kit for cl19bb38ef on l1a_bound (or on the V4 wave) once l1a binds clean.
