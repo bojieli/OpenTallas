@@ -34,11 +34,21 @@ module dsdv_sm_so_target #(
     output wire fault,
     output reg [11:0] fault_code
 );
+`ifdef OT_SVC_BCAST
+    // SVC-BCAST-STAGE (rc16, 11-23, -DOT_SVC_BCAST, opt-in): the synchroniser as KEPT flops (ot_hdc_v41x_kreg).  Synthesis
+    // merged the identical 2-flop synchronisers of every block of the slice (rs_c, sx_hrow, smq, SO target, PC faces:
+    // same D, same clock, same async clear) into ONE pair, so one flop reset ~10k flops over the 2 mm piece; kept, each
+    // block keeps its own pair beside its logic.  Same edges, same values; LEC maps every copy by name.
+    wire rl0, rn;
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rl0 (.clk(clk), .rst_n(rst_n), .d(1'b1), .q(rl0));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn (.clk(clk), .rst_n(rst_n), .d(rl0), .q(rn));
+`else
     reg [1:0] reset_landing;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) reset_landing <= 0;
         else reset_landing <= {reset_landing[0],1'b1};
     wire rn = reset_landing[1];
+`endif
     reg [3:0] head_q;
     always @(posedge clk) head_q <= head;
     wire [3:0] hd = (HEAD >= 0) ? 4'(HEAD) : head_q;

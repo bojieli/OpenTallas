@@ -61,8 +61,18 @@ module ot_s81_su_smq #(
 );
     localparam [3:0] K_SE = 4, K_SO = 5;
     // regional reset relay
+`ifdef OT_SVC_BCAST
+    // SVC-BCAST-STAGE (rc16, 11-23, -DOT_SVC_BCAST, opt-in): the synchroniser as KEPT flops (ot_hdc_v41x_kreg).  Synthesis
+    // merged the identical 2-flop synchronisers of every block of the slice (rs_c, sx_hrow, smq, SO target, PC faces:
+    // same D, same clock, same async clear) into ONE pair, so one flop reset ~10k flops over the 2 mm piece; kept, each
+    // block keeps its own pair beside its logic.  Same edges, same values; LEC maps every copy by name.
+    wire rr0, rr1;
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rr0 (.clk(clk), .rst_n(rst_in), .d(1'b1), .q(rr0));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rr1 (.clk(clk), .rst_n(rst_in), .d(rr0), .q(rr1));
+`else
     reg rr0, rr1;
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
+`endif
     wire rst_n = rr1;
 
     // ------------------------------------------------------------------ pin flops

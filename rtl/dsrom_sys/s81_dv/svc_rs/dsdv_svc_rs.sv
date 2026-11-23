@@ -135,9 +135,26 @@ module dsdv_svc_rs_c #(
     localparam bit P2 = H < 16;                       // R5 two-pass slice
     localparam logic [3:0] FM_DI = FM[3:0], FM_DO = FM[7:4], FM_UI = FM[11:8], FM_UO = FM[15:12], FM_RI = FM[19:16],
                            FM_RO = FM[23:20], FM_GI = FM[27:24], FM_GO = FM[31:28], FM_SI = FM[35:32], FM_SO = FM[39:36];
+`ifdef OT_SVC_BCAST
+    // SVC-BCAST-STAGE (rc16, 11-23, -DOT_SVC_BCAST, opt-in): the synchroniser as KEPT flops (ot_hdc_v41x_kreg).  Synthesis
+    // merged the identical 2-flop synchronisers of every block of the slice (rs_c, sx_hrow, smq, SO target, PC faces:
+    // same D, same clock, same async clear) into ONE pair, so one flop reset ~10k flops over the 2 mm piece; kept, each
+    // block keeps its own pair beside its logic.  Same edges, same values; LEC maps every copy by name.  Stage 2 is
+    // built as 3 copies with the same D (rs0): rn (this core), rn_up (up / reduce tree), rn_z (SO target / gather / den
+    // stamp).  The attention share takes rs0 and builds its own stage-2 copies (dsdv_svc_att SVC-BCAST-STAGE), so its
+    // reset releases on the same edge as rn.
+    wire rs0, rn, rn_up, rn_z;
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rs0 (.clk(ck), .rst_n(rst), .d(1'b1), .q(rs0));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn (.clk(ck), .rst_n(rst), .d(rs0), .q(rn));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn_up (.clk(ck), .rst_n(rst), .d(rs0), .q(rn_up));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn_z (.clk(ck), .rst_n(rst), .d(rs0), .q(rn_z));
+    wire rn_att = rs0;
+`else
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
+    wire rn_up = rn, rn_z = rn, rn_att = rn;
+`endif
 `ifdef OT_SVC_ALLQ
     wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
     // RTLGAP-SO (10-21): CFG [54] ALLQ -> every slice drains its tile's P.V in its all-owner window (rs_pvslot_all)
@@ -243,7 +260,7 @@ module dsdv_svc_rs_c #(
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .H(H)) u_att (
-        .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
+        .clk(ck), .rst_n(rn_att), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
@@ -444,7 +461,7 @@ module dsdv_svc_rs_c #(
     wire [11:0] zt_fc; wire gw_v, gw_f; wire [512:0] gw_d;
     reg so_pend;
     generate if (SMT) begin : g_smt
-        dsdv_svc_sot u_sot (.clk(ck), .rst_n(rn), .tile(tile), .q_v(cs[0]), .q_d(cs[512:1]), .cfg_v(zt_cfg_v),
+        dsdv_svc_sot u_sot (.clk(ck), .rst_n(rn_z), .tile(tile), .q_v(cs[0]), .q_d(cs[512:1]), .cfg_v(zt_cfg_v),
             .cfg_owner(zt_owner), .cfg_se_jid(zt_se), .cfg_so_jid(zt_so), .cfg_obase(zt_obase), .cfg_first(zt_first),
             .cfg_last(zt_last), .cfg_read(zt_read), .cfg_retire(zt_ret), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
             .fault_code(sot_fc));
@@ -454,7 +471,7 @@ module dsdv_svc_rs_c #(
             .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd),
             .g_owner(zt_gown), .g_group(zt_ggrp), .retired(zt_ret_v), .retire_error(zt_ret_e), .retire_owner(zt_rown),
             .fault(zt_f), .fault_code(zt_fc));
-        dsdv_sm_gw u_gw (.clk(ck), .rst_n(rn), .head(tile), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd), .g_owner(zt_gown),
+        dsdv_sm_gw u_gw (.clk(ck), .rst_n(rn_z), .head(tile), .g_v(zt_gv), .g_idx(zt_gidx), .g_d(zt_gd), .g_owner(zt_gown),
             .g_group(zt_ggrp), .gw_v(gw_v), .gw_d(gw_d), .fault(gw_f));
         // joined completion: a configured SO keeps the slice's done low until its booked retire is clean
         always @(posedge ck or negedge rn)
@@ -500,7 +517,7 @@ module dsdv_svc_rs_c #(
     // PVSO source fence: each tile carries proof of its OWN real SE denominator
     // in otherwise-unused P.V header bits. This is not compiler-asserted proof.
     wire[512:0]a_pv_stamped;
-    dsdv_pv_den_stamp #(.ENABLE(PV_IDENTITY)) u_den_stamp(.clk(ck),.rst_n(rn),
+    dsdv_pv_den_stamp #(.ENABLE(PV_IDENTITY)) u_den_stamp(.clk(ck),.rst_n(rn_z),
       .cfg_v(zt_cfg_v),.cfg_owner(zt_owner),.cfg_se_jid(zt_se),
       .op_st(sm_st),.op_kind(sm_kind),.op_jid(sm_jid),.den(o_den),.result_jid(o_rjid),.error(o_fu||o_fo),
       .pv_d(a_pv_d),.stamped(a_pv_stamped));
@@ -527,7 +544,7 @@ module dsdv_svc_rs_c #(
     always @(posedge ck or negedge rn) if (!rn) pv_v <= 1'b0; else pv_v <= ENTRY && rm_v && par == 3'd0 && !pwin;
     always @(posedge ck) pv_d <= rm_d;
     generate if (ENTRY && SMT) begin : g_gx
-        dsdv_sm_gx u_gx (.clk(ck), .rst_n(rn), .cfg_v(zt_cfg_v), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
+        dsdv_sm_gx u_gx (.clk(ck), .rst_n(rn_z), .cfg_v(zt_cfg_v), .route(zt_route), .gw_first(zt_gw0), .gw_last(zt_gw1),
             .w_v(rm_v && par == 3'd0), .pv_x(pv_x));
     end else begin : g_nogx
         assign pv_x = 48'd0;
@@ -561,7 +578,7 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ up tree: {rg fault, rg live, done, fault, cr 6, ack 6}
     // (dsdv_svc_rs_up below; RTL-BUILD-S81 10-18: + the region status {fault, live} of the half's ctrl_rg2 controllers)
     wire [UW-1:0] uc;
-    dsdv_svc_rs_up #(.UW(UW), .FM_UI(FM_UI), .FM_UO(FM_UO)) u_up (.ck(ck), .rn(rn), .chm(chm), .par(par), .done(done && !so_pend), .fl(hs_f), .hcr(hcr), .hack(hack),
+    dsdv_svc_rs_up #(.UW(UW), .FM_UI(FM_UI), .FM_UO(FM_UO)) u_up (.ck(ck), .rn(rn_up), .chm(chm), .par(par), .done(done && !so_pend), .fl(hs_f), .hcr(hcr), .hack(hack),
         .hs_s(hs1), .up_i(up_i), .up_o(up_o), .uc(uc));
 
     // ------------------------------------------------------------------ entry: job done (END), host credits / acks, fault

@@ -53,12 +53,45 @@ module ot_s81_su_smh #(
     ot_hdc_delay #(.W(2), .D(SRL), .RESET(1)) u_rv (.clk(clk), .rst_n(rst_in), .d({mv, dv0}), .q({rmv, rdv}));
     ot_hdc_delay #(.W(64), .D(SRL)) u_rd (.clk(clk), .rst_n(rst_in), .d({nmb, den}), .q({rnmb, rden}));
     genvar ln, pp;
+    // SVC-SMS-ORDER (rc16, 11-23, -DOT_SVC_BCAST, opt-in): the SRL stations above are ONE shared chain each, so their last
+    // stage drives all 16 u_sml and 8 u_smd over the 4 engine rows.  Under BCAST each lane pair (2 u_sml + its u_smd, one
+    // pair per engine row) takes a KEPT copy of the last station (same D, same depth SRL, 0 cycles); the shared chains
+    // end in 8 loads.  The originals still feed the sum / root and den_v.
+    wire [7:0]   b_cv, b_sv, b_mv, b_pv, b_csv, b_dv;
+    wire [7*8-1:0] b_nv; wire [32*8-1:0] b_scale, b_sink, b_nmb, b_den; wire [5*8-1:0] b_csi; wire [64*8-1:0] b_csd;
+`ifdef OT_SVC_BCAST
+    generate if (SRL >= 1) begin : g_bc
+        wire m_cv, m_sv, m_pv, m_csv, m_mv, m_dv; wire [6:0] m_nv; wire [31:0] m_scale, m_sink, m_nmb, m_den;
+        wire [4:0] m_csi; wire [63:0] m_csd;
+        ot_hdc_delay #(.W(4), .D(SRL - 1), .RESET(1)) u_tvm (.clk(clk), .rst_n(rst_in), .d({s_v, p_v, c_v, cs_v}),
+            .q({m_sv, m_pv, m_cv, m_csv}));
+        ot_hdc_delay #(.W(7 + 32 + 32 + 5 + 64), .D(SRL - 1)) u_tdm (.clk(clk), .rst_n(rst_in),
+            .d({c_nv, c_scale, c_sink, cs_i, cs_d}), .q({m_nv, m_scale, m_sink, m_csi, m_csd}));
+        ot_hdc_delay #(.W(2), .D(SRL - 1), .RESET(1)) u_rvm (.clk(clk), .rst_n(rst_in), .d({mv, dv0}), .q({m_mv, m_dv}));
+        ot_hdc_delay #(.W(64), .D(SRL - 1)) u_rdm (.clk(clk), .rst_n(rst_in), .d({nmb, den}), .q({m_nmb, m_den}));
+        for (pp = 0; pp < 8; pp = pp + 1) begin : g_k
+            ot_hdc_v41x_kreg #(.W(6), .R(1)) u_v (.clk(clk), .rst_n(rst_in), .d({m_cv, m_sv, m_mv, m_pv, m_csv, m_dv}),
+                .q({b_cv[pp], b_sv[pp], b_mv[pp], b_pv[pp], b_csv[pp], b_dv[pp]}));
+            ot_hdc_v41x_kreg #(.W(7 + 32 + 32 + 32 + 5 + 64 + 32), .R(0)) u_d (.clk(clk), .rst_n(rst_in),
+                .d({m_nv, m_scale, m_sink, m_nmb, m_csi, m_csd, m_den}),
+                .q({b_nv[7*pp +: 7], b_scale[32*pp +: 32], b_sink[32*pp +: 32], b_nmb[32*pp +: 32], b_csi[5*pp +: 5],
+                    b_csd[64*pp +: 64], b_den[32*pp +: 32]}));
+        end
+    end else begin : g_bc0
+`else
+    generate if (1) begin : g_bc0
+`endif
+        assign b_cv = {8{rc_v}}; assign b_sv = {8{rs_v}}; assign b_mv = {8{rmv}}; assign b_pv = {8{rp_v}};
+        assign b_csv = {8{rcs_v}}; assign b_dv = {8{rdv}};
+        assign b_nv = {8{rc_nv}}; assign b_scale = {8{rc_scale}}; assign b_sink = {8{rc_sink}}; assign b_nmb = {8{rnmb}};
+        assign b_den = {8{rden}}; assign b_csi = {8{rcs_i}}; assign b_csd = {8{rcs_d}};
+    end endgenerate
     generate for (ln = 0; ln < 16; ln = ln + 1) begin : g_l
         wire sken = (ln == 0);
         ot_s81_su_sml #(.NVMAX(SM_NVMAX), .LM(LM), .LA(LA)) u_sml (
-            .clk(clk), .rst_in(rst_in), .sk_en(sken), .i_cv(rc_v), .i_nv(rc_nv), .i_scale(rc_scale),
-            .i_sink(rc_sink), .i_sv(rs_v), .i_s(rd_d[32 * ln +: 32]),
-            .i_mv(rmv), .i_nmb(rnmb), .o_mxv(l_mxv[ln]), .o_mx(l_mx[32 * ln +: 32]),
+            .clk(clk), .rst_in(rst_in), .sk_en(sken), .i_cv(b_cv[ln/2]), .i_nv(b_nv[7*(ln/2) +: 7]), .i_scale(b_scale[32*(ln/2) +: 32]),
+            .i_sink(b_sink[32*(ln/2) +: 32]), .i_sv(b_sv[ln/2]), .i_s(rd_d[32 * ln +: 32]),
+            .i_mv(b_mv[ln/2]), .i_nmb(b_nmb[32*(ln/2) +: 32]), .o_mxv(l_mxv[ln]), .o_mx(l_mx[32 * ln +: 32]),
             .o_ev(l_ev[ln]), .o_es(l_es[ln]), .o_el(l_el[ln]), .o_e(l_e[32 * ln +: 32]));
     end endgenerate
     // lane outputs relayed to the sum / root / tap
@@ -81,8 +114,8 @@ module ot_s81_su_smh #(
     generate for (pp = 0; pp < 8; pp = pp + 1) begin : g_p
         wire [2:0] CP = pp;
         ot_s81_su_smd #(.LPH(16), .LM(LM), .LA(LA), .STALEDEN(MUT == 5)) u_smd (
-            .clk(clk), .rst_in(rst_in), .cfg_p(CP), .i_pv(rp_v), .i_pa(rd_d[64 * pp +: 64]),
-            .i_dv(rdv), .i_den(rden), .i_csv(rcs_v), .i_csi(rcs_i), .i_csd(rcs_d),
+            .clk(clk), .rst_in(rst_in), .cfg_p(CP), .i_pv(b_pv[pp]), .i_pa(rd_d[64 * pp +: 64]),
+            .i_dv(b_dv[pp]), .i_den(b_den[32*pp +: 32]), .i_csv(b_csv[pp]), .i_csi(b_csi[5*pp +: 5]), .i_csd(b_csd[64*pp +: 64]),
             .o_ov(d_ov[pp]), .o_o(d_o[32 * pp +: 32]), .o_f(f[pp]));
     end endgenerate
     // e / o rows to the tap
