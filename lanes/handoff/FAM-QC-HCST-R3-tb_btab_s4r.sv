@@ -6,13 +6,13 @@ module tb; reg ck=0; always #5 ck=~ck;
  wire [127:0] l0,h0,l1,h1;
  qfd_dv_s5_btab_s4  A(.ck(ck),.bt_re(re),.bt_word(w),.bt_ql(l0),.bt_qh(h0),.tw_we(we),.tw_kind(kind),.tw_addr(a),.tw_lo(d[511:0]),.tw_hi(d[1023:512]));
  qfd_dv_s5_btab_s4r B(.ck(ck),.bt_re(re),.bt_word(w),.bt_ql(l1),.bt_qh(h1),.tw_we(we),.tw_kind(kind),.tw_addr(a),.tw_lo(d[511:0]),.tw_hi(d[1023:512]));
- reg [255:0] pq; integer i,err=0;
+ reg [255:0] pq; integer i,err=0,nz=0,nr=0;
  always @(posedge ck) pq <= {h0,l0};
- always @(negedge ck) if (i>40) begin if ({h1,l1} !== pq) err=err+1; end
+ always @(negedge ck) if (i>40) begin begin if ({h1,l1} !== pq) err=err+1; if (pq!=0) nz=nz+1; nr=nr+1; end end
  initial begin
   for(i=0;i<600;i=i+1) begin @(negedge ck);
    we=(i<200); kind=2; a=i[8:0]; d={4{$random,$random,$random,$random,$random,$random,$random,$random}};
    re=(i>=200)&&($random&1); w=$random;
   end
-  $display("RESULT mismatches=%0d", err); $finish; end
+  $display("RESULT mismatches=%0d nonzero_samples=%0d of %0d", err, nz, nr); $finish; end
 endmodule
