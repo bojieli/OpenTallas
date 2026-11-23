@@ -41603,7 +41603,8 @@
     "ot_s81sl_leaf__t71": "LOOK-BEFORE-LAUNCH s81sl_leaf: OWNER rule 11-22 23:2x (COORD): no relaunch / first attempt until the family row in lanes/VIS-COVERAGE.tsv is PROBE-PASS or NONE-NEEDED; the VIS lane releases this hold. owner=LEAF-ROUTE-CBC eta=2026-11-23 12:00 (VIS review; S81-J6-ASSEMBLY-R5 placed it)",
     "ot_s81sl_leaf__t73": "LOOK-BEFORE-LAUNCH s81sl_leaf: OWNER rule 11-22 23:2x (COORD): no relaunch / first attempt until the family row in lanes/VIS-COVERAGE.tsv is PROBE-PASS or NONE-NEEDED; the VIS lane releases this hold. owner=LEAF-ROUTE-CBC eta=2026-11-23 12:00 (VIS review; S81-J6-ASSEMBLY-R5 placed it)",
     "seqhost__t1": "LOOK-BEFORE-LAUNCH seqhost: OWNER rule 11-22 23:2x (COORD): no relaunch / first attempt until the family row in lanes/VIS-COVERAGE.tsv is PROBE-PASS or NONE-NEEDED; the VIS lane releases this hold. owner=VIS-S81-MISC eta=2026-11-23 12:00 (VIS review; S81-J6-ASSEMBLY-R5 placed it)",
-    "serdes__t4": "LOOK-BEFORE-LAUNCH serdes: OWNER rule 11-22 23:2x (COORD): no relaunch / first attempt until the family row in lanes/VIS-COVERAGE.tsv is PROBE-PASS or NONE-NEEDED; the VIS lane releases this hold. owner=VIS-S81-MISC eta=2026-11-23 12:00 (VIS review; S81-J6-ASSEMBLY-R5 placed it)"
+    "serdes__t4": "LOOK-BEFORE-LAUNCH serdes: OWNER rule 11-22 23:2x (COORD): no relaunch / first attempt until the family row in lanes/VIS-COVERAGE.tsv is PROBE-PASS or NONE-NEEDED; the VIS lane releases this hold. owner=VIS-S81-MISC eta=2026-11-23 12:00 (VIS review; S81-J6-ASSEMBLY-R5 placed it)",
+    "slice_station__t18": "LOOK-BEFORE-LAUNCH t18: J8 exact rendered ft6 station utilization 5.767, 562 bits; reseat before route. owner=S81-J9-ASSEMBLY-R6 eta=2026-11-23 18:00"
    },
    "auto_visual_review_skip": [
     "*"
