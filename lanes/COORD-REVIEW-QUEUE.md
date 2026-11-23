@@ -30241,3 +30241,4 @@ FAILED [AUTOPILOT 9fa40146ccdc] 2026-11-23 01:55:32 PST AUTOPILOT -> KIT-WAVE-3:
   (2) CANCELLED + STRUCT-STOP, both DRT >3h: pvcf44b14c (it4 1494) and pv40e9fb5a (it4 1913). The rest are not stuck in DRT; I kept them.
   (3) POROUS-FRESH-1123 is on main 3b25e3b42d4, rt/current = 3b25e3b42d4d. Every OT_POROUS_VIEWS gen now re-syncs fixed views into the launch tree, or fails porous_stale on a die tree. Tests: 25 pass.
   (4) Relaunch from J9 bind.
+- 2026-11-23 02:35 PST DONE [OPUS-FIX-HEAD-LEP0N-R9] ot-run oth-ubuntu-3976216-1795429098 on tolerant-swine: rc=0 after 1022 s, ended 02:35:11, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/OPUS-FIX-HEAD-LEP0N-R9/s81_head_hd_lep0N_w_1123001313/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/OP
