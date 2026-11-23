@@ -276,6 +276,7 @@ def detect(events, now, state=None, parked=PARKED_DEFAULT):
 def load_state(coord):
     ap = Path(coord) / "autopilot"
     st = {"parked": [], "known": [], "rows": [], "eligible": {}}
+    configured_pending = {}
     try:
         tp = json.load(open(ap / ".tick.progress"))
         if not tp.get("done"):
@@ -287,6 +288,9 @@ def load_state(coord):
         for die, v in (json.load(open(ap / "kit_wave.json")).get("dies") or {}).items():
             if isinstance(v, dict):
                 st["known"].append(die)
+                pending = v.get("event_pending")
+                if isinstance(pending, dict) and pending.get("event"):
+                    configured_pending[die] = str(pending["event"])
                 if v.get("parked"):
                     st["parked"].append(die)
                 if isinstance(v.get("hold_items"), dict) and v["hold_items"]:
@@ -300,9 +304,10 @@ def load_state(coord):
         return st
     try:
         _ks = json.load(open(ap / "kit_wave_state.json"))
-        for die, w in (_ks.get("event_pending_log") or {}).items():       # F5: the plan event the wave waits for ('wait:<event>')
-            if str(w).startswith("wait:"):
-                st.setdefault("pending_event", {})[die] = str(w)[5:]
+        for die, event in configured_pending.items():
+            # The wave keeps the historical log marker after an event is applied.
+            if (_ks.get("event_pending_log") or {}).get(die) == f"wait:{event}":
+                st.setdefault("pending_event", {})[die] = event
     except (OSError, ValueError, AttributeError):
         pass
     try:

@@ -102,6 +102,28 @@ class Rules(unittest.TestCase):
         self.assertFalse([f for f in P.detect([], now, {"rows": [row, succ]}) if f["cls"] == "STUCK-STATE"])
         self.assertFalse([f for f in P.detect([], D(2026, 11, 19, 9, 30), {"rows": [row]}) if f["cls"] == "STUCK-STATE"])
 
+    def test_pending_event_needs_matching_live_config_and_wave_marker(self):
+        import json
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            ap = Path(tmp) / "autopilot"
+            ap.mkdir()
+            (ap / "kit_wave_stages.tsv").write_text("die\titem\tstatus\n")
+            (ap / "kit_wave.json").write_text(json.dumps({"dies": {
+                "s81": {"event": "j8"},
+                "qwen_kvsys": {"event_pending": {"event": "d29"}},
+                "s81_head": {"event_pending": {"event": "r18"}},
+                "qwen_compute": {"event_pending": {"event": "v4"}},
+            }}))
+            (ap / "kit_wave_state.json").write_text(json.dumps({"event_pending_log": {
+                "s81": "wait:j8",
+                "qwen_kvsys": "wait:d29",
+                "s81_head": "wait:r17",
+                "qwen_compute": "expired:v4",
+            }}))
+            self.assertEqual(P.load_state(tmp).get("pending_event"), {"qwen_kvsys": "d29"})
+
     def test_signed_and_deferred_rows_are_not_stuck(self):
         """FLOW-FIX-2045: a CANCELLED/SUPERSEDED row of a type signed on that event, or retired by OWNER r711 (resign-defer), is terminal / waiting on purpose, not stuck"""
         import csv, json, tempfile
