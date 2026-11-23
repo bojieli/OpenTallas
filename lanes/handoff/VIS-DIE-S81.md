@@ -13,3 +13,12 @@ Work: epyc9 /srv/opentallas-scratch3/claude/vis-die-s81 (in/plan_j8.json = f65f6
 - dsdv: withdrawn from my row. With xg contents macros counted, 12/16 PARTIAL on J8 and on MISC xga1 b37598492d25 -> strip constraint goes into SLICEC-XGARRAY-1 (VIS-S81-MISC). gunit -> GUNIT-SPREAD-1 (MISC).
 - Leaf: LEAF-ROUTE-CBC row PASS on 53 OK types (lanech_before_after.png READ); 20 PARTIAL-STRIP + t15/t30 on its J10 re-shape list.
 - svc probe: no svc bind/placed DB since 11-19 (R9 hi4 bind OOM), so a placed probe waits on that bind; evidence = PRE + render.
+
+## 2026-11-23 J9 die rows (VIS-DIE-S81)
+- EDGESTRIP-1-TF: ops epyc10 /srv/opentallas-scratch2/claude/vis-die-s81/tmp/es1s_tf_ops.json 15c1e2a4c1d1, plan plan_j8_es1s_tf.json 5083e8acea36, PRE PASS. edgestrip_row.py 005d0a80844f takes --tapfix (tapfix.py 22c28916bb44) and re-seats the 8 table taps that ES1 put inside core halos.
+- LEAF-GROW-276 v3 -> J9: tool die_grow.py cd6b7ac4526b (epyc9 /srv/opentallas-scratch3/claude/vis-die-s81/in/). On J8 it gives ops 27d92851eb60 and plan c9a4768659a1, die 32970.24 x 25980.48, PRE PASS. Row 19690: t8 does not grow and t75 takes +112.32, which avoids the 1600-um tap-grid renumber. The tool has a J8-width guard; a commutation test on misc_v2 kept 441 edits and changed none.
+- COL-YGROW-1: tool col_ygrow.py 2dbaf2b1359d (epyc10 tmp/). On COL 56d5a17e72bc: 16 overlaps -> 0, 18 col parts moved down, 22 E/W port slides (strict bind), PRE PASS. Render: epyc9 out/ygrow.png.
+- R5 compose order: type rows -> col_ygrow -> die_grow -> LEAF j9F -> WESTRIP -> ytrade -> edgestrip --tapfix -> tapfix -> PRE.
+- Agreed with WESTRIP: its svc +69.12/column runs in the grown frame and takes the growth from the 578.88 seam gap; the station column is untouched.
+- rc72 col_h9_r0: no growth (FAM chose a view pin-access fix). rc66 SPARSE-TAP-1 = 11 serdes types, to TAP-GRID-R5, co-owned by FABLE-UNC-S81-DIE. rc67 waits on HOP-GAPS.tsv. rc68 no-row verdict is waiting for FABLE-RC-S81 to accept it.
+- Open: G0 on grow_tf is running on epyc9 (out/g0c_plan_j8_grow_tf.log). The svc W/E strip is covered by WESTRIP.
