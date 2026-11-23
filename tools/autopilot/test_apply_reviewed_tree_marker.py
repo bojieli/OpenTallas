@@ -56,6 +56,22 @@ class Apply(unittest.TestCase):
         self.assertEqual(d["event"], "E1")
         self.assertEqual(d["review_before_route"], scope)
 
+    def test_required_route_review_is_kept_exactly(self):
+        # REVIEW-REQUIRED-KEEP-1123 (COORD 15:5x): review_before_route.required is projected as the candidate gives it
+        for scope in ({"event": "E1", "items": ["t1", "t2"], "required": True},
+                      {"event": "E1", "all_items": True, "required": False}):
+            c = mk()
+            cfgpath = c / "autopilot" / "kit_wave.json"
+            res = apply(c, dict(cand(), config={"event": "E1", "review_before_route": scope}), "/x/old", "E0",
+                        pilot_item="t1", TC=TC)
+            d = json.loads(cfgpath.read_text())["dies"]["kv"]
+            self.assertEqual(d["review_before_route"], scope)
+            self.assertFalse(any("required dropped" in w for w in (res or {}).get("warnings", [])))
+        with self.assertRaisesRegex(AssertionError, "required must be boolean"):
+            apply(mk(), dict(cand(), config={"event": "E1", "review_before_route": {"event": "E1", "all_items": True,
+                                                                                    "required": "yes"}}),
+                  "/x/old", "E0", pilot_item="t1", TC=TC)
+
     def test_atomic_apply_adds_the_pilot_hold_and_queues_the_old_tree(self):
         c = mk()
         r = apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)

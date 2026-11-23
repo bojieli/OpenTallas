@@ -251,11 +251,10 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         assert isinstance(all_items, bool), "review_before_route all_items must be boolean"
         assert isinstance(items, list) and all(isinstance(it, str) and it and not any(c in it for c in "*?[") for it in items), "review_before_route requires exact item names"
         assert items or all_items, "review_before_route requires exact item names or all_items"
-        if review.get("required") is True:
-            # VISUAL-NOBLOCK (FLOW-OPS-R2 11-22, FABLE-FLOW-2200 item 1): owner rule "visual review never blocks"; the review stays advisory
-            review = {k: v for k, v in review.items() if k != "required"}
-            mc["review_before_route"] = review
-            warnings.append("review_before_route.required dropped (owner rule: visual review never blocks; the review stays advisory)")
+        # REVIEW-REQUIRED-KEEP-1123 (COORD 15:5x, HEAD r18g): the candidate's review_before_route is projected EXACTLY as given,
+        # `required` included (OWNER 11-22 look-before-launch: an unclosed type's route waits for its review).  The former
+        # VISUAL-NOBLOCK strip (11-22) silently disabled the rule in kit_wave.review_before_route / required_route_review.
+        assert "required" not in review or isinstance(review["required"], bool), "review_before_route required must be boolean"
     check_tools_pin(mc)
     kr = marker_kit_rtl(marker)
     if kr:
