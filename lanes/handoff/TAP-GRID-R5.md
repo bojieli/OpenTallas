@@ -67,3 +67,12 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - RC-GAP 3/3 col_h9_r1/r2 (span 514 um clk_t13): replied J10 (a5382a18): add --span-um to tap_split, reg dumps of r2
   clce45cab5/cl774 CTS DBs, J10 row on post-S-strip plan.
 - Housekeeping: ot-delete epyc10 softflop/j9b/tree.forking-2751687 (lease ended), later fork trees epyc7 d29/tree, epyc10 j9bt/tree.
+
+## 11-23 03:xx PST (owner rule 6079af4: J9 = one S81 event, D29 = one KV event; NO J10)
+- tap_split main: 384dae6b00 --span-um, 37dc7af0ed --global-rounds, 34c9f7257d --protect-rings [REGEX], fresh mode (--fresh, push pending/landed after 34c9f).
+- S81 J9 v4: epyc10 softflop/j9_regen_v4.sh (ea55e3ed8065) + tap_split_v4.py (26fdc653c8b1) + j9_r12proxy.py; kit copy dr4kit/ (paths -> $K). s3 = col_h9_r1/r2 span on proxy dumps r12all/ (7 dumps). Probe r12t: 120 SPLIT, over-span 2255 -> 0, +4038 taps.
+- Dry run 4: inputs rsync epyc10 -> epyc9 (epyc10 scratch DRAINING), then ot-run on epyc9: j9_regen_v4.sh dr4kit/composed_in.json 56d5a17e72bc dr4kit/out.
+- Dry run 3 CLEAN: FINAL 2c4a35246162 ROWS c73014fa9f11 (old composed).
+- KV rc117 sys_c: row TGR5-D29-SYSC-1 = epyc8 d29/sysc/rows_b.json (+54, --protect-rings fclk_in_ft1_i$, --global-rounds 2). Gate8 epyc7 d29/gate8 (rows17 + sys_c, remap resel, PRE PASS, bind running). Re-split due on FAM-KV-HUBC-SYSC-R2 C+D plan when its D2 gates.
+- rc66 serdes: fresh table, waiting on R7 post-move bins (asked R7 for bins_postmove/); gate = FABLE-UNC census + R7 serdes_tap_latency.py <= 108 ps; caps 1000 and 1700 both built.
+- Deadlines: S81 Wave A 10:30, Wave B 12:30 hard; KV 13:00.
