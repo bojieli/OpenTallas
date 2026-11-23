@@ -262,3 +262,4 @@
   - Route demand is not mine: ADV-ROUTE-DEMAND stays with LEAF-ROUTE-CBC.
   Code: plan_advisory CHECKS (adv_geom_static.py), push running; sha follows.
 - 2026-11-22 23:12 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1969669 on civil-redfish: rc=0 after 22 s, ended 07:12:30, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_geo.log, cmd: ot-push-main 
+- 2026-11-22 23:16 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2056582 on civil-redfish: rc=0 after 77 s, ended 07:16:52, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_vl.log, cmd: ot-push-main 
