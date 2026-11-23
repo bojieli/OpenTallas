@@ -44,3 +44,10 @@ Lane dirs: intel2 /srv/opentallas-scratch2/claude/fable-fix-cone-scatter (clone/
 - Place queued through the limit; admitted on epyc8 17:19 (A oth-ubuntu-2666901-1795394364) / 17:20 (B oth-ubuntu-2712767-1795394442).
 - Waiters intel2 pids 3706320 (A-fence-u05) / 3706321 (B-fence-u03) alive: ot-wait --kit place then route, post PROOF lines. Baseline J7: -347.11 ps count_r[1]->count_r[5].
 - COORD 10:04 ruling: A/B approved; proven rows -> DSDV-R1 + S81-J6-ASSEMBLY-R5 (J9 now); kv3_pc_v3 row -> FAM-KV-IOPC-R4 if same class.
+
+## 17:4x-21:3x
+- B placed 17:38: ALL 20 rows OT_PLACE_REGION_DROP (auto cone > 8 x members). A/B = baseline twins, left running (route waiters live).
+- Pushed dabe421818ef: place_regions row key cone auto|between (ot_pr_cone_between in place_regions_cone.tcl; member->member cells only, never DROP). 71 tests pass.
+- Proof C (fence util .5 between rad 20) / D (soft, same): fork epyc8 trees/s81_j7_lcs2 (manifest 12af64d4f18d), plans plan_lcsC/D.json written.
+  Private rebind on rt dabe421818ef: epyc8 lcs_bind.sh via ot-run (log lcs2_bind.otrun.log, queued 21:2x). After LCSB_DONE: private-spec --tree fork2 --plan plan_lcsC/D --rt dabe421818ef --goal route, then waiters.
+- 21:2x COORD: leaf wdo_q cone (t14/t74/t31/t45) -> lever form posted to LEAF-R10 (hub c5a7d1af8c). Census rule widened: path>=800, span<0.2*path, wns<=-150, st>=10; 72 h = 8 hits.
