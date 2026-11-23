@@ -262,15 +262,21 @@ def kit_rtl_paths(kd):
         if not files:
             return ["kit RTL closure has no source files"], True
         # A copy-back may rewrite .f path prefixes while leaving JSON untouched.
-        # Recover only the current package prefix from a unique exact relative
-        # manifest path; never infer a new permitted source/bind root.
-        first = Path(files[0])
-        matches = [Path(k) for k in closure["files"]
-                   if str(first).endswith("/" + k) and not Path(k).is_absolute()
-                   and ".." not in Path(k).parts]
-        if len(matches) != 1:
+        # Recover the package prefix from exact relative manifest paths. A
+        # dedup source can share a filename with its original, so disambiguate
+        # first-file matches using the other declared sources in the same package.
+        source_paths = [Path(x) for x in files]
+        first = source_paths[0]
+        candidates = {first.parents[len(Path(k).parts) - 1] for k in closure["files"]
+                      if str(first).endswith("/" + k) and not Path(k).is_absolute()
+                      and ".." not in Path(k).parts}
+        if len(candidates) > 1:
+            candidates = {root for root in candidates
+                          if all(p.is_relative_to(root) and str(p.relative_to(root)) in closure["files"]
+                                 for p in source_paths)}
+        if len(candidates) != 1:
             return [f"kit RTL closure cannot identify current package root: {first}"], True
-        package_root = first.parents[len(matches[0].parts) - 1]
+        package_root = candidates.pop()
         for x in files:
             p = Path(x)
             try:

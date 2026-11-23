@@ -134,3 +134,42 @@ def test_outside_error_carries_flow_class_marker():
     """S81-FAILS-1118: the bind's outside-the-kit-tree refusal names its class so the wave never files it UNCLASSIFIED"""
     src = Path(B.__file__).read_text()
     assert re.search(r'OT_CLASS: flow kit-rtl .*outside the kit source tree', src)
+
+
+
+def test_lint_resolves_dedup_filename_collision_using_other_sources(tmp_path):
+    import hashlib
+
+    rtl = tmp_path / "rtl"
+    rtl.mkdir()
+    (rtl / "dedup").mkdir()
+    closure_files = {}
+    for rel in ("core.sv", "dedup/core.sv", "wrapper.sv"):
+        path = rtl / rel
+        content = f"// {rel}\\n".encode()
+        path.write_bytes(content)
+        closure_files[rel] = {"original": str(tmp_path / "src" / rel),
+                              "sha256": hashlib.sha256(content).hexdigest()}
+
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    receipt = kd / "kit_rtl_paths.json"
+    dedup = rtl / "dedup/core.sv"
+    metadata = {"input_closure": {"sealed": True, "roots": [str(tmp_path / "src")],
+                                  "files": closure_files},
+                "files": [str(dedup), str(rtl / "wrapper.sv")]}
+    receipt.write_text(json.dumps(metadata))
+    assert GL.kit_rtl_paths(kd) == ([], True)
+
+    metadata["files"] = [str(dedup)]
+    receipt.write_text(json.dumps(metadata))
+    assert "cannot identify current package root" in GL.kit_rtl_paths(kd)[0][0]
+
+    metadata["files"] = [str(dedup), str(rtl / "unlisted.sv")]
+    receipt.write_text(json.dumps(metadata))
+    assert "cannot identify current package root" in GL.kit_rtl_paths(kd)[0][0]
+
+    metadata["files"] = [str(dedup), str(rtl / "wrapper.sv")]
+    receipt.write_text(json.dumps(metadata))
+    (rtl / "wrapper.sv").write_text("// corrupted source")
+    assert "content mismatch" in GL.kit_rtl_paths(kd)[0][0]
