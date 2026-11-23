@@ -34,3 +34,7 @@ Client logs intel2 ~/tmp/ffkvpv/. Watchers post under the OLD lane name (FABLE-F
   i_astk_W_p_2 E window y560-790, fork (520,700), tails in channels; FIFO (ot_meso_fifo) form raised with KV-PLAN-R6. (B) cut legs
   need stations o_pvw__u_TNQN_N_rN_b_d2_p +3, o_pvw__u_ctl_cmd_p +4 (regs_um in VIS-KV msg; scripts epyc8 vis-kv/tmp/pv/). (C) cut bus
   widths from bind (4,028 dead/over-wide E pins). All three -> D30 row B. LOOK-BEFORE-LAUNCH: no pv relaunch w/o placed probe PROBE-PASS.
+- 23:2x VIS-KV family report (13 renders, cov files rtx-pro scratchpad viskv/): D30 row B scope widened: channel >=200 um (trunk out of
+  pad column), cland->bin stations/bins near landing, census tap grid cap 1200 + fclk slg leaves split 4+, outliers (pv/v8 N-only pins,
+  v4/v4n SW blob, v12/v7 S face). FIFO (ot_meso_fifo) for pad chains ASKED to KV-PLAN-R6 (post 23:2x).
+- Disk: tree3 deleted (50 GB), clone deleted (7); tree4 pending guard list 07:30Z rebuild (del4.sh loop).
