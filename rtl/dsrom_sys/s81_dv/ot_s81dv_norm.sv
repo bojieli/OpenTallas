@@ -772,7 +772,19 @@ module ot_s81dv_xfin #(
     // fan-out becomes two placed hops.  rb_* and e_* leave one cycle later (consumers are valid-qualified); the result
     // clear (epd, e_v) follows the delayed go; the finish faults are ignored in the delayed-go cycle (stale, sticky).
     // DLV = 0 is the previous form bit for bit.
-    parameter integer DLV = 1
+    parameter integer DLV = 1,
+    // FAM-S81-SLICE-R6 11-23 (COORD all-causes ruling; S81-DIE-R5 398cc43ec9b): XFP = 1 clocks the rb_* / e_* / fault
+    // output stage on the RISING edge (+1 cycle on rstd, ENG totals and fault; consumers are valid-qualified, the compiler
+    // edge is dv_layer_compile XFIN last_partial_to_rstd).  The falling-edge face gave the finish-core -> u_xr hop
+    // (about 1.6 mm on slice C: src -> driver_rb_v_q -733 ps placed, c1x_C t10) only T/2; the rising-edge stage makes it
+    // two full-cycle hops.  The ring faces eo_* / wo_* keep the falling-edge face (ring hop timing unchanged).
+    // XFP = 0 (or +define+OT_S81DV_XF_NOLATCH / _OLATCH) is the previous form bit for bit.
+    parameter integer XFP = 1,
+    // FLR = 1: the sticky fault of every finish core (u_f rf, u_e cf) is registered once (kept) before the sticky flt, so
+    // the core -> flt reach (cp_3_u_e -> driver_flt_q 1,439 um, -646 ps placed, lepe_nh_mus_C t1) becomes two full-cycle
+    // hops; fault reports one cycle later and the go masking follows (go_c and go_f both clear the registered copy).
+    // FLR = 0 is the previous form bit for bit.
+    parameter integer FLR = 1
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -813,8 +825,20 @@ module ot_s81dv_xfin #(
 `else
     always @(negedge clk) begin
         eo_v <= eo_v_q; eo_h <= eo_h_q; eo_b <= eo_b_q; eo_d <= eo_d_q; wo_v <= wo_v_q; wo_h <= wo_h_q; wo_b <= wo_b_q; wo_d <= wo_d_q;
-        rb_v <= rb_v_q; rb_d <= rb_d_q; e_v <= e_v_q; e_c <= e_c_q; e_hh <= e_hh_q; e_kk <= e_kk_q; e_dd <= e_dd_q; fault <= fault_q;
     end
+    generate
+        if (XFP != 0) begin : g_xfp
+            always @(posedge clk) begin
+                rb_v <= rb_v_q; rb_d <= rb_d_q; e_v <= e_v_q; e_c <= e_c_q; e_hh <= e_hh_q; e_kk <= e_kk_q; e_dd <= e_dd_q;
+                fault <= fault_q;
+            end
+        end else begin : g_xfn
+            always @(negedge clk) begin
+                rb_v <= rb_v_q; rb_d <= rb_d_q; e_v <= e_v_q; e_c <= e_c_q; e_hh <= e_hh_q; e_kk <= e_kk_q; e_dd <= e_dd_q;
+                fault <= fault_q;
+            end
+        end
+    endgenerate
 `endif
     // ENG mode (RTL-BUILD-S81 10-18, the in-slice Engram mix; S81U-MIX verdict build_plan "xfin ENG mode"):
     //   12 vectors a go, v = kind * 4 + copy (kind 0 hh, 1 kk, 2 dd), each NVL beat partials (s_i = v * NVL + leaf, any
@@ -982,7 +1006,19 @@ module ot_s81dv_xfin #(
     end
     (* keep = "true" *) reg flt;                        // sticky state (kept); the fault pin flop loads its next value
     // DLV = 1: the finish faults (rf, cf: sticky until their own, delayed go) still show the previous go in the go_f cycle
-    wire flt_set = xf || eflt || (|tbad) || (!go_f && (rf || (|cf)));
+    wire fin_f;
+    generate
+        if (FLR != 0) begin : g_flr
+            (* keep *) reg rf_r; (* keep *) reg [3:0] cf_r;
+            always @(posedge clk or negedge rstn)
+                if (!rstn) begin rf_r <= 1'b0; cf_r <= 4'd0; end
+                else begin rf_r <= rf && !go_f && !go_c; cf_r <= cf & {4{!go_f && !go_c}}; end
+            assign fin_f = rf_r || (|cf_r);
+        end else begin : g_flr0
+            assign fin_f = !go_f && (rf || (|cf));
+        end
+    endgenerate
+    wire flt_set = xf || eflt || (|tbad) || fin_f;
     always @(posedge clk or negedge rstn)
         if (!rstn) begin flt <= 1'b0; fault_q <= 1'b0; end
         else if (go_c) begin flt <= 1'b0; fault_q <= 1'b0; end

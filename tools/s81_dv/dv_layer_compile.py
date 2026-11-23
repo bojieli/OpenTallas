@@ -103,7 +103,13 @@ BEAT['post_cmd_to_last_hw'] += VP_CFX
 # partial sets issued one edge earlier, the unshifted schedule FAILS) -> collector = 5 + the p face edges of the bound
 # u_xr (xtier_land, from the RTL); dl = the slice's leaf relay depth DL (ot_s81sl_slice default, from the RTL).
 XFIN_COLLECTOR_XR = 5
-XFIN = dict(dl=XTIER.form()['slice_dl'], collector=XFIN_COLLECTOR_XR + XTIER.face_edges('p'), last_partial_to_rstd=261)
+# FAM-S81-SLICE-R6 11-23 (COORD all-causes ruling): ot_s81dv_xfin XFP = 1 (default) clocks the rb_* / e_* / fault face on
+# the rising edge (+1 edge) and DLV = 1 (11-20) delays the finish one edge; tb_s81dv_xfin16 on that RTL measures first rstd
+# 245, spread 18 -> last partial -> last rstd 263 (the 261 below was the 11-05 DLV 0 / falling-edge-face measurement).
+XFIN_XFP_EDGES = 1
+XFIN_DLV_EDGES = 1
+XFIN = dict(dl=XTIER.form()['slice_dl'], collector=XFIN_COLLECTOR_XR + XTIER.face_edges('p'),
+            last_partial_to_rstd=261 + XFIN_DLV_EDGES + XFIN_XFP_EDGES)
 XFIN['rstd_to_xq_ring'] = BEAT['rstd_to_xq'] + 4 * 4 + XFIN['dl']        # 59 + 4 * 4 (last leaf) + DL 4
 # TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
 # depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
