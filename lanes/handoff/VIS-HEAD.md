@@ -10,3 +10,6 @@ Probe tool: tools/vis_probe.sh KIT NICK OUT ODB SDC GRT ITER [DROP: 0|all|along|
 - E piece: 240 M1-M7 rects up to 137 um in K shelf; pre-split tr1 GRT (epyc7, cancelled) 59k overflow on that shelf. e1 probe queued.
 ## NEXT
 - w11_split probe (faithful split rows) -> PROBE-PASS if clean; e1 + e1_split probes on intel1.
+## 23:5x W PROBE PASS
+- w11_split (faithful HEAD-DCLK-SPLIT-1 obstructions on w11 4_cts, 5-it GRT): 3457 -> 1 (png/w11_split_cong.png). Row stays DRAFT until E probe (e1, e1_split queued on intel1 memory).
+- tr1 (pre-split, old) E-half shelf hotspot y 600-670 x 950-1650: only 26% on reserved sites; SRAM top-row density there = second E risk to check on e1.
