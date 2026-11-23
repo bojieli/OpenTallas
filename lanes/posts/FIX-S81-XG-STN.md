@@ -1,0 +1,1 @@
+- 2026-11-23 02:29 PST DIED [FIX-S81-XG-STN] ot-run oth-ubuntu-100997-1795429297 on outgoing-giraffe: rc=1 after 836 s, ended 10:29:24, log none, cmd: --mem 16 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fix-s81-xg-stn -- python3 -I /srv/opentallas-scratch2/claude/fix-s8 | class=NO-PATTERN cause=rc 1 after 836 s, no log
