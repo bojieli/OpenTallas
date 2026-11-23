@@ -131,3 +131,7 @@ J9 BIND RT: rt/current = 3b25e3b42d4d (includes POROUS-FRESH-1123 3b25e3b42d4 + 
      ECORR via ecorr_row.py v2 54d31991b23a: x_i0 window y520.56-760.524 on all 6 types.
      Sequence: REACH v2 -> ECORR -> col_ygrow. H10-R4 posts the composed plan sha + PRE.
      ONE-MECHANISM RULE: ECORR must not be applied twice, as type ops AND as VIS-DIE's col_ygrow --form ecorr. If ECORR wins: col_ygrow runs with no swap and only re-derives die/neighbour windows from the col-side window. Check: x_i0 = 520.56-760.524 on all 6 types and 0 port-window advisories.
+   REACH v2: rows_COL-H10-REACH_J9.json sha 5f8b2104a625 (59 ops), supersedes e699bbf9200f.
+     r0_p1: +1 fixed E-face station on u_cf->ret_o0 (+1 cycle), no u_cf move.
+     r2 u_s15 -15.12 x (12 types), r1 u_c8_3 -8.64 x (11 types). Relays and rr_1_0 stage unchanged.
+     Final gate (REACH v2 + ECORR + col_ygrow + PRE + checks a/b) running on epyc10.
