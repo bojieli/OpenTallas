@@ -92,8 +92,8 @@ json.dump(p, open(sys.argv[2], "w"))
 
 
 def test_landing_remap_zero_counts_do_not_mark_a_row_partial(tmp_path):
-    clean = ROW_OK + "print(json.dumps(dict(raw=26, kept=0, skipped=0, dropped=[])))\n"
-    partial = ROW_OK + "print(json.dumps(dict(raw=26, kept=0, skipped=1)))\n"
+    clean = ROW_OK + "print('reset kv3_hg_v3: ' + json.dumps(dict(exports=0, raw=26, skipped=0, kept=0, tree_republished=2)))\n"
+    partial = ROW_OK + "print('reset kv3_hg_v3: ' + json.dumps(dict(raw=26, kept=0, skipped=1)))\n"
     _, ledger = run(tmp_path, {"KRSPCORE": clean}, {"KRSPCORE"})
     assert ledger["KRSPCORE"]["status"] == "APPLIED"
     (tmp_path / "partial").mkdir()

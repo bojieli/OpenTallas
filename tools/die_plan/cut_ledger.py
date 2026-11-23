@@ -75,8 +75,14 @@ def collect(manifest, rows_dir):
 def reports_lost_ops(line):
     if not PARTIAL_RE.search(line):
         return False
+    payload = line.lstrip()
+    if not payload.startswith("{"):
+        prefix, sep, tail = payload.partition(": {")
+        if not sep or PARTIAL_RE.search(prefix):
+            return True
+        payload = "{" + tail
     try:
-        receipt = json.loads(line)
+        receipt = json.loads(payload)
     except ValueError:
         return True
     if not isinstance(receipt, dict):
