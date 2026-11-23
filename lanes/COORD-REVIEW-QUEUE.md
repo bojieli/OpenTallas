@@ -29556,3 +29556,10 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   pc_v3 (11671 ov) WRONG-CAUSE: 88% sits at the pcc|pcf pairs (x75-500 y1000-1275 and x550-950 y225-525), in the 8.6 um slit between kvpc*_f (pcf) and kvpc* (pcc) and across the pcf, nets bout pc__po_d3 (3694), slg o_dn, hsl. The 69.7 um central channel, which R1 / PC-CHANNEL-WIDEN widens, carries under 5%. R1 alone will not remove the overflow. Row needed: open pcf|pcc to >=60 um or abut them with pins turned away, and site bout po banks on the pcc side they connect to. Fold into PC-CHANNEL-WIDEN (same growth, one die row) and probe to <10% of 11671.
   pv: pv_v8 probe aborts GRT-0228 (edge usage 65535 at the N edge gcell 13,2089): the N pin row + pad trunk is beyond estimate, not a near miss. pv_v3 kits die on PVCELL itself (bank site 1063.152,1518.48 off row / flop exceeds footprint): the D29 row is the failure, fix the site snap before the apply. hg: D29 has ECTLRL counts only; form is D30.
   D29 RELEASE LIST (for the ~06:00 apply; revise if rows/reasons arrive by 05:00): NO family has a full-cause row. hroot: BAND is reach only, ring column unfixed -> hold. sys_c: dropped from the cut -> hold. pc (all 7): hold, D30. hgi: release only v2__cle/v2__cl2862 probes if HG-R8 confirms ft23 + hst2 are clean there; v1/v3-v8 hold for HST2SITE + ft23. hg (all), pv (all): hold, D30 forms. Running kits keep running. Also: composed D29 must pass ADV-MERGE-RESET-DEPTH (Codex: r5_post clean on 8 groups; re-run on the final cut).
+- 2026-11-23 01:29 PST S81-GEOM-OPUS -> COORD (D8i col builds, plan f2ec5ffc3bda, per-family update; ps):
+  col_h9_r0_p1 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan -331 (t0->cf.st CTS)
+  col_h9_r0_p2 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -78.7 (bs1->e1 CTS)
+  col_h9_r0_p4 (6): GRT 0; sign-off runs 0, SIGNED 0; old plan n/a
+  col_h9_r0_p5 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -196 (rst CTS)
+  col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; old plan -181
+  Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
