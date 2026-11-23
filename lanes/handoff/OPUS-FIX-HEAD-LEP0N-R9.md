@@ -49,3 +49,4 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - r18t gate (tag r18t3, chain_r9_tfix2.sh): remap 20 + export rst_rl_145 -> rst_rl_207; plan 75e819636482e932, pre 0 findings vs base_r18q_wchanab, bind PASS (7712), cohort 27/27, LATCHECK 334/334. (r18t2 failed: the baseline sat in plan/base_r18q without core_pins; fixed by copying it into the F prep dir.)
 - Kits (epyc7, goal route, sealed): r9-lep0n-tw (W sealed, counts), -twp (W probe), -tn (nst4 sealed), -tnp (nst4 probe). Logs runitem_r9_<tag>.log.
 - Live kit set: Row A wa/wap/na/nap (epyc10), Row B bw/bwp/bn/bnp (epyc10), A+B tw/twp/tn/tnp (epyc7), w11 (epyc2), e1 (intel1). PAIRTAP r18u gated, waits on w11.
+- 00:2x crit_dirs.txt now also lists tw (hd_lep0N_w_1123001257) and tn (hd_st_n4_1123001323), verified SEAL from the specs (probes 1310/1336 not listed). Remove lines on sign-off or stop: wa ..._1122222846, na ..._1122222914, bw ..._1122232443, bn ..._1122232506, tw, tn.
