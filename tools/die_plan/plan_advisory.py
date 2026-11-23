@@ -12,6 +12,7 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
   PORT-WINDOW-PAIR the two ends of a die-level port pair no longer carry matching windows after a split / nudge (S81 J8 svc
                    rt_W0_out_1__6, rt_E0_out_0__5)
   DEPTH-VS-RTL     plan stage counts beyond what the RTL parameters allow (S81 istation_respace vs LF_CS_DEPTH: 102 bind errors)
+  CELLCAP          flat standard-cell count above the native CELL-CAP reference using a retained kit count or an estimate
   DENSITY          std-cell utilisation of a piece from the synth cell count > ~0.6 (S81 strip_S 0.91)
   TAP-BUDGET       estimated clock insertion of a pin-register cluster from its tap distance > 450 ps (S81 t5 / col 478-538 ps)
   TAP-LOAD         planned max tap load > 1.3x below the netlist flop estimate; placed tap load > 1,500 (S81 t5 1,099 vs 8,000)
@@ -60,6 +61,7 @@ HERE = Path(__file__).resolve().parent
 # (check name, module in this directory); a module absent from an older tree is skipped quietly
 CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), ("SITE-COLLIDE", "adv_site_collide"),
           ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("DENSITY", "adv_density"),
+          ("CELLCAP", "adv_cellcap"),
           ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"),
           ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
           ("PHANTOM-STATION", "adv_phantom_station"), ("BANK-OFFAREA", "adv_bank_offarea"),
