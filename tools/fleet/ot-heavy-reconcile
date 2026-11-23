@@ -1316,14 +1316,26 @@ def gate(mem, argv):
         return gate_locked(mem, argv)
 
 
+class PeakHist(dict):
+    """REQ-CHARGE-1122: class -> sorted peaks (as before) plus .launch = class -> [(launch GB, peak GB)] of the same runs"""
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.launch = {}
+
+
 def peak_history(path=None):
     """SIMPLE_PEAK: class -> sorted peak RSS (GB) of this host's COMPLETED runs of the class (peaks.tsv status 0)"""
-    h = {}
+    h = PeakHist()
     for ln in rd(path or PEAKS).splitlines():
         f = ln.split("\t")
         if len(f) >= 7 and f[6] == "0":
             try:
-                h.setdefault(f[2], []).append(float(f[4]))
+                pk = float(f[4])
+            except ValueError:
+                continue
+            h.setdefault(f[2], []).append(pk)
+            try:
+                h.launch.setdefault(f[2], []).append((float(f[3]), pk))
             except ValueError:
                 pass
     for v in h.values():
@@ -1331,10 +1343,27 @@ def peak_history(path=None):
     return h
 
 
+# REQ-CHARGE-1122 (COORD 11-23: S81-BKSEL-R7 asked --mem 110, was charged 7 GB from the past peaks of other runs with the same script name,
+# yosys elab OOM-killed rc 137 on epyc10 with 54 GB free): a class (script basename) mixes jobs of very different size.  Only runs launched
+# at >= PEAK_REQ_CMP (default 0.5) x this request describe this job; with fewer than min_n of them the job is charged its request.  So an
+# explicit large request sets the charge = max(request-sized history p90, ...) bounded by the request (MemoryMax), and a repeated job of the
+# same size keeps its measured charge (ADMIT-TUNE-1).  PEAK_REQ_CMP=0 = the old class-wide history.
+PEAK_REQ_CMP = float(os.environ.get("PEAK_REQ_CMP", "0.5") or 0)
+
+
+def comparable_peaks(cls, req, hist, cmp_frac=None):
+    """peaks of the completed runs of cls launched at >= cmp_frac x req (all runs of cls when hist has no launch sizes or cmp_frac <= 0)"""
+    cmp_frac = PEAK_REQ_CMP if cmp_frac is None else cmp_frac
+    pairs = getattr(hist, "launch", {}).get(cls)
+    if cmp_frac <= 0 or pairs is None:
+        return hist.get(cls) or []
+    return sorted(p for l, p in pairs if l >= cmp_frac * float(req))
+
+
 def expected_peak(cls, req, hist, pct=0.9, min_n=3, fallback=1.0):
     """expected peak RSS of a job of this class: the pct-quantile of its completed runs (>= min_n of them), never above its request
     (MemoryMax); no history -> the request"""
-    v = hist.get(cls) or []
+    v = comparable_peaks(cls, req, hist)               # REQ-CHARGE-1122: runs of a comparable request only
     if len(v) < min_n:
         return float(req) * fallback      # PEAK_FALLBACK_SHARE: no history -> a share of the request (measured peak/--mem p95 = 0.5 on 11-14), 1.0 for a NEW job
     return min(float(req), v[min(len(v) - 1, int(pct * len(v)))])
