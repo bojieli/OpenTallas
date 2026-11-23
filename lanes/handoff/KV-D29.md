@@ -121,3 +121,10 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - rows_in/A on epyc8: HGSTREET r2, KRSPCORE 399f5d95fb70 (output-only change vs 2cd742a118b1), T1SPLIT 9ee67918a951 (+ Codex T1SPLIT-V5, HGIV8-FT4).
 - Unused spec: private_specs/KV-D29/qwen_kvsys_kv3_hg_v1p2_1123105145 (hk6 HGFORM probe, goal grt). It was never run.
 - ot-delete owed: epyc9 opus-fix-kv-hg-r8/trees/{hk (partial),hk3,hk5}; intel1 kv-d29-a/trees/hk6; clone epyc9 kv-d29-a/repo.
+
+## E-PV (fork E, stood down 10:5x PST 11-23 per COORD; K3 f75a71af72eb holds row B, V3FT, PADRAM)
+- Deliverables: epyc8 kv-plan-r6/d29/rows_in/E (PADRAM 5b820a595475 + g1 gate; row B 3-way wrapper + rowb/ base b07a614e4d04 / src 4ab4ea1ed3dd; rowb_payload.py; pv_tables_regen.sh; pvx_regen.py). Row B self-test merge differs from src in partitions; check before reuse.
+- V3FT fork epyc10 opus-fix-kv-pv-r7/trees/d28_pv_v3fix: pad extras restored to the original (pre_e copy); bind heads kept in v3ft_gate/rebind_r3, rebind_r4. pvx1 refused by TREE-WRITE (r8_refresh --root). Not needed now (K3).
+- Cancels: v4n/v3n/v5n ended by themselves. v6n K2 + v12 1122220657: SIGTERM sent 10:5x to the intel2 ot-run clients 776947 + 174990, still alive after 1 min. UNCONFIRMED; re-check.
+- Proof run epyc7 sinkspread/w/gates/b5x_sysc_d28clk_e/gate.out (row B with D28 sys_c clock) ended 06:46, not read.
+- Owed cleanup (ot-delete): epyc7 sinkspread/w/kvd29e_rowb (136 MB), rows_in/E/tmp.
