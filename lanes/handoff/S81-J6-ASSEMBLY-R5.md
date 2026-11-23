@@ -65,3 +65,13 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - Then in order: epyc10 j8_stage_scripts/j8_seal.sh (relay_mid_re row + schema + PRE + pack + publish) -> j8_replicate.sh <gen hosts+intel2> -> intel2 j8_stage_scripts/j8_smoke.sh epyc9 <manifest> -> j8_event.sh <manifest> <plan sha> -> mk_cand_j8.py (template S81_D8J7 candidate; gate dir copy) -> copy cand to lanes/handoff/S81_D8J8_source_candidate_1122.json -> j8_apply.sh (posts APPLIED; unsets col OT_RELAY_MID_RE env; t5 hold).
 - COORD: apply as soon as gate green (no 04:15 wait).
 - 19:0x: J8 plan = f65f62779bef (c67f4f6ba285 + iq_C t1 / lepe_mu_LP t2 back to J7, PRE reprice 5 lanes; COORD 20:0x accepted). No replan (Codex replan broken). Gate run4b log intel2 s81-j6-r5/tmp/j8cut/j8_cut_run4b.otrun.log (run4 queued on --disk 150, client killed, relaunched --disk 60). Apply pilot slice_station__t18; apply holds iq_C t1 + lepe_mu_LP t2.
+
+## 23:3x LOOK-BEFORE-LAUNCH (OWNER rule 11-22 23:2x via COORD)
+- 25 col_h10_r2/col_h9_r2 types held "j9-grtflat-hold" (eta 11-23 14:00) and 4 live @2 retry rows cancelled --no-stop (d579376408b).
+- 43 FAILED/CANCELLED unsigned S81 types that were neither running nor held got "LOOK-BEFORE-LAUNCH <family>" holds (695023f9ef1).
+  Family helper: intel2 /srv/opentallas-scratch2/claude/s81-j6-r5/j8_stage_scripts/lbl_family.py.
+- j8_apply.sh, before the switch: lbl_holds.py holds every J8 partition type whose VIS-COVERAGE row is not PROBE-PASS/IN-EVENT/SIGNED/NONE-NEEDED
+  (pilot slice_station__t18 exempt). Dry run: 119 new + 275 already held.
+- j8_hold_split.py (argv6 = VIS-COVERAGE.tsv): a J8-eta release becomes a LOOK-BEFORE-LAUNCH hold unless the type is a probe or VIS-passed.
+  Dry run: 3 probes released, 17 converted. J8 regex also fixed: no longer matches "J8+" or holds with an 11-23 12:00/14:00 eta.
+- J9 apply: reuse lbl_holds.py + split argv6.
