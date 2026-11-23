@@ -304,7 +304,7 @@ class PlanCells:
         _P = B.wavefront_plan()
         if _P is not None:
             import reset_tree as _RT
-            _ptn = B.plan["partition_types"][tn].get("split_of", tn)
+            _ptn = B.types[tn].get("split_of", tn)
             if not _P.types[_ptn].get("hard"):
                 inst_rst = {n: f"rst_n_t{k}" for n, k in _RT.leaf_cluster_inst_taps(_P, _ptn).items()}
         for inst, c in sorted(t["cells"].items()):
