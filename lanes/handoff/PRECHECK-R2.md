@@ -20,3 +20,4 @@ run over current plans; post per die before cuts (KV D29 02:00, QC V4 ~06:00, S8
 - 11-23 00:xx: other lanes added ROUTE-DEMAND, EDGE-STRIP (?) and RESET-NAME (TAP-GRID-R5, f503637a50) to plan_advisory.CHECKS; reviewed RESET-NAME OK. VIS-S81-MISC eng__t1 slow taps = existing TAP-BUDGET (replied: tap near [212,847]).
 - 11-23 0x:xx LANDED main f7d6888bcc: HOP-GAP + OFF-GRID advisories. lanes/HOP-GAPS.tsv = S81 J8 f65f (15.5k rows; bind out J7-era). Posted per family + OFF-GRID. TODO: rerun HOP-GAP on J9 composed plan (epyc10 s81-j6-r5/j9_compose/ when a plan appears), refresh HOP-GAPS.tsv.
 - LANDED main 4d4999fb65 TREE-DRIFT; posted hits. LAND-CAP helper running (work/land_cap).
+- LANDED main 0d6ca16289 LAND-CAP; posted (QC V4 st_a bands BLOCKED by btab halo 0.21 um).
