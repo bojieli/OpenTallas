@@ -21,6 +21,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
   PATH-SEAT        a short pin-to-seat span whose path detours behind a macro (S81 leaf t15: 5 um span, 1,885 um path), and
                    planned paths over ~20 logic stages at 833 ps (lepw_mus_C 28)
   PHANTOM-STATION  a plan station row priced +N cycles on a lane with no stage register in the bound RTL (HEAD hd_lep0N e1/e2)
+  BANK-OFFAREA     exact / bank flop sites (internal_stations bit_sites_um / face_bit_sites_um, soft_reg_banks) outside CORE_AREA,
+                   the outline minus the core inset: place refuses them not on row/site (KV kv3_pv_v3 / v3e D28 R5: 749 sites)
 
     python3 -I tools/die_plan/plan_advisory.py --plan PLAN.json [--tree TREE] [--checks A,B] [--json OUT]   (exit 0 always, 2 = bad input)
 """
@@ -40,7 +42,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("PORT-WINDOW-PAIR", "adv_port_window_pair"), ("DEPTH-VS-RTL", "adv_depth_vs_rtl"), ("DENSITY", "adv_density"),
           ("TAP-BUDGET", "adv_tap_budget"), ("TAP-LOAD", "adv_tap_load"),
           ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
-          ("PHANTOM-STATION", "adv_phantom_station"))
+          ("PHANTOM-STATION", "adv_phantom_station"), ("BANK-OFFAREA", "adv_bank_offarea"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 

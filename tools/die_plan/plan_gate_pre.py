@@ -87,7 +87,7 @@ TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with 
   old tap indices; re-run the tap package (retap.py) on the solved base.
 
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
-  GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD) run on every check and add WARN ADV-<CHECK>
+  GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
   --skip ADVISORY or OT_PLAN_ADVISORY=off leaves them out.
 
