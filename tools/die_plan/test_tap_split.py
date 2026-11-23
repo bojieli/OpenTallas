@@ -205,3 +205,45 @@ def test_kmedians_seeds_and_converges():
     X, Y, W = (np.array([p[i] for p in pts]) for i in range(3))
     C = sorted(TS.kmedians(X, Y, W, 3))
     assert len(C) == 3 and C[0][0] < 30 < C[1][0] < 60 < C[2][0]
+
+
+def test_neighbourhood_resolve_beats_own_group_on_strip_between_loaded_neighbours():
+    """NEIGHBOURHOOD (TAP-GRID-R5 11-23): S81 col_h9_r0_p3 clk_t46 form -- an over-cap tap on a 10 um strip between two
+    40 um blocks whose three taps each sit at the cap.  The own-group k-medians centres pull neighbour sinks (excess 1283
+    -> 894 at best); re-solving the region with the neighbour taps fixed reaches 0."""
+    import numpy as np
+
+    class Free:
+        def place(self, x, y, added):
+            return (round(x, 2), round(y, 2))
+    sinks = _dense(20, 200, 300.0, 250.0, 10.0, 100.0)
+    tps = [(305.0, 300.0)]
+    for x0 in (260.0, 311.0):
+        sinks += _dense(26, 66, x0, 250.0, 39.0, 100.0)
+        tps += [(x0 + 20.0, 250.0 + 100.0 * (q + 0.5) / 3) for q in range(3)]
+    S_ = np.array(sinks)
+    X, Y, W = S_[:, 0], S_[:, 1], S_[:, 2]
+    TX, TY = np.array([t[0] for t in tps]), np.array([t[1] for t in tps])
+    idx, dist = TS.nearest(TX, TY, X, Y)
+    load, _far, beyond = TS.stats(idx, dist, W, len(tps), 300.0)
+    cap = int(max(load[1:]) * 1.02)
+    e0 = TS.excess(load, beyond, cap)
+
+    def full(ax, ay):
+        return TS.nearest(np.concatenate([TX, ax]), np.concatenate([TY, ay]), X, Y)
+    mem = np.nonzero(idx == 0)[0]
+    m = TS.multi_add(Free(), [], mem, X, Y, W, load[0], cap, 0.9, e0, full, 300.0, len(tps))
+    n = TS.nbhd_add(Free(), [], 0, idx, np.column_stack([TX, TY]), X, Y, W, load, cap, 0.9, e0, full, 300.0, len(tps))
+    assert e0 > 1000 and m is not None and m[0] > 500
+    assert n is not None and n[0] == 0
+    i2, d2 = n[2], n[3]
+    l2, _f, _b = TS.stats(i2, d2, W, len(tps) + len(n[1]), 300.0)
+    assert l2.max() <= cap and (l2[len(tps):] > 0).all()
+
+
+def test_fixed_kmedians_keeps_fixed_centres():
+    import numpy as np
+    pts = _dense(40, 10, 0.0, 0.0, 120.0, 9.0)
+    X, Y, W = (np.array([p[i] for p in pts]) for i in range(3))
+    C = TS.fixed_kmedians(X, Y, W, [(10.0, 4.5)], [(15.0, 4.5)])
+    assert len(C) == 1 and C[0][0] > 40      # the free centre moves away from the fixed one to the unserved side
