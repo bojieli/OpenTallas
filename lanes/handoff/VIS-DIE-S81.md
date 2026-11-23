@@ -22,3 +22,8 @@ Work: epyc9 /srv/opentallas-scratch3/claude/vis-die-s81 (in/plan_j8.json = f65f6
 - Agreed with WESTRIP: its svc +69.12/column runs in the grown frame and takes the growth from the 578.88 seam gap; the station column is untouched.
 - rc72 col_h9_r0: no growth (FAM chose a view pin-access fix). rc66 SPARSE-TAP-1 = 11 serdes types, to TAP-GRID-R5, co-owned by FABLE-UNC-S81-DIE. rc67 waits on HOP-GAPS.tsv. rc68 no-row verdict is waiting for FABLE-RC-S81 to accept it.
 - Open: G0 on grow_tf is running on epyc9 (out/g0c_plan_j8_grow_tf.log). The svc W/E strip is covered by WESTRIP.
+
+## 11-23 06:3x PST
+- Real-frame G0 (81e1+tapfix) vs J8: 78 new. Breakdown: slab gap (WESTRIP closes) 16; hops+stations 49 (ft_hop_fix --limit 400 closes 51/52; order: after reprice, before PRE; LEAF runs it post-j9Z); WINCLASH 12; reset env 1.
+- die_grow 93d12be1c5c5 WINCLASH-1 (pair-side + iterative side flip) -> frame epyc10 vis-die-s81/tmp/plan_g2_20900.16.json 828de609d6aa, ops 84c58f25c0bc, PRE PASS. Changes 4 non-leaf types + 5 ports vs 81e1. Sent to R5 + WESTRIP (rerun on 828de). checker tmp/winclash.py f789cbd26d6d.
+- Evidence epyc9 /srv/opentallas-scratch2/claude/vis-die-s81/out/ (hopfix.log, hops_bytype_g20900.txt, g0_plan_g2tf/, g0_plan_g2hf/ running).
