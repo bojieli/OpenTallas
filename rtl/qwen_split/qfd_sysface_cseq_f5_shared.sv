@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 module qfd_sysface_cseq_f5_shared #(
     parameter [8*8-1:0] CTL_PAD = {8'd0, 8'd1, 8'd1, 8'd2, 8'd2, 8'd3, 8'd3, 8'd2},
-    parameter integer   CS_EP_SKEW = -9
+    parameter integer   CS_EP_SKEW = -9,
+    parameter integer   FRESH_WARM_OWNER = 0
 ) (
     input  wire        ck, rst_n, reload, epoch_go, halt,
     input  wire        media_hold,
@@ -34,7 +35,7 @@ module qfd_sysface_cseq_f5_shared #(
         else if (addr_tx != addr_rx || s_cs != r_cs || (s_cs && {s_sg,tx_user} != {r_sg,rx_user}))
             addr_fault <= 1'b1;
 
-    ot_qwen_d2d_ovl_seq_shared #(.AW(9),.COLD_PREFIX(1),.ADM(1),
+    ot_qwen_d2d_ovl_seq_shared #(.AW(9),.COLD_PREFIX(1),.ADM(1),.FRESH_WARM_OWNER(FRESH_WARM_OWNER),
         .TX_IMG(CAL0),.RX_IMG(CAL1),.TX_SEG1(BASE0),.RX_SEG1(BASE1),
         .TX_SEG2(ADM_BASE0),.RX_SEG2(ADM_BASE1),
         .ADM_OFS(ADM_OFS),.ADM_LEN(ADM_LEN),.FIRST_OFS(FIRST_TOKEN-LIST_LEAD),
