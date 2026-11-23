@@ -21,3 +21,12 @@ J8 E15E-CHAN covers h9_r1/h9_r2/h10_r2 (IN-EVENT). J9 planR2 = no geometry; ROM 
 - All 3 private probes (p4b, colh10r0p, colh10r1) DIED at kit_topology: KIT_TOPOLOGY_BIND_STALE (private plan changes stations/relays; kit reused J7 tree bind 1122064402). --allow-bind-stale does not reach kit_topology. Fix = own bind.
 - New path: combined probe plan intel2 vis-s81-col/tmp/plan_probe_combo.json (1e431c3917df; J7 base + h9_r0_p4 strip + h10_r0_p4 grow + h10_r1 grow). Fork J7 tree -> intel1 /srv/opentallas-scratch2/claude/vis-s81-col/treeJ7V (54 GB, ot-tree-fork), plan replaced, then ot_build_hub --goal bind once, then --goal finish per type (place..route, renders en route).
 - E1E PRE on plan_v3_strip_e1e still pending (waiter b7u271jsf). RANKSEAT j9r2 driver pid 2662682 waiting for J8 tree (>400G host).
+## 02:xx update (11-23)
+- Probe 1: combined plan 1e431c3917df (J7 + h9_r0_p4 strip + h10_r0_p4/h10_r1 grow) on fork intel1 vis-s81-col/treeJ7V. ot_build_hub --goal finish, rt 02f464834f6d. Log intel2 vis-s81-col/bld/p4.log, pid in p4.pid. Bind out intel1 /srv/opentallas-scratch2/claude/VIS-S81-COL/ot-build/s81/treeJ7V/b_b7093ee5bc75. pre rc0, elab done. NEXT: once the bind finishes, launch the same command for col_h10_r0_p4__t1__pvcc166a6d and col_h10_r1__t1__cl95b37463__pv0713a75a.
+- RC-GAP (FABLE-RC-REVIEW): replied fe401909, then a correction post.
+  - (2) Row COL-H9R12-SSTRIP. Generator vis-s81-col/sstrip_row.py: t<n>__payload/t<n> +25.92 y; lpad r[k] y 0 -> 30.24. Ops j9/rows_COL-H9R12-SSTRIP_J8.json.
+  - J9 candidate: epyc10 tmp/plan_v3_strip_e1e_ss.json (3c285d644712). PRE log pre_ss.otrun.log. Probe 2: cl774 pvea45273b, combo2 ec0fc94977a0, on fork intel1 treeJ7V2. Log bld/cl774.log.
+  - (3) clk_t13: J10, owner TAP-GRID-R5; still to send them the per-tap span census.
+  - (1) porous: launch dir data comes from the rt. Sealed J7 kits are pinned to the old rt d6f543, so they get stale views. Check the kit gb_hw sha at gen.
+- PROBE-PASS now needs the full-cause census (fe8a2a5): every cluster of >=50 ovfl or >=1% of total, total <10% of baseline, and every path class below -42 TT or hold <0 at CTS has a row.
+- FIX-LEDGER wants COL-H10-GROW in J9 (cut 18:00, rule 6079af4). Asked H10-R4 to accept.
