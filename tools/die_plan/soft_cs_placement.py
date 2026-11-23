@@ -60,6 +60,34 @@ def emit(rows):
 
 
 TCL=r'''
+# SOFTCS-EDGE-1122 (OPUS-FIX-S81-LEAF-R10): a bank flop whose mapped master is wider than the allocation cell (the bank's async-reset
+# valid flop, DFFASRHQNx1, in a bank sized for DFFHQNx1) takes a site with no other bank site of the same row under its width; the
+# actual-width overlap checks below still guard every placement.  -> {sites edges}
+proc is_cs_edge_reorder {names sites insts adjuncts fw dbu} {
+  set wide {}
+  foreach nm $names {
+    set i [dict get $insts $nm]; set w [[$i getMaster] getWidth]
+    if {[dict exists $adjuncts $nm]} {foreach a [dict get $adjuncts $nm] {incr w [[$a getMaster] getWidth]}}
+    if {$w>$fw*$dbu+1} {lappend wide [list $nm $w]}
+  }
+  if {![llength $wide]} {return [list $sites {}]}
+  set k 0; set idx {}; foreach nm $names {dict set idx $nm $k; incr k}
+  set used {}; set edges {}
+  foreach pair $wide {
+    lassign $pair nm w; set wum [expr {double($w)/$dbu}]; set best -1
+    for {set j 0} {$j<[llength $sites]} {incr j} {
+      if {[dict exists $used $j]} continue
+      lassign [lindex $sites $j] x y; set clear 1
+      foreach s $sites {lassign $s sx sy; if {abs($sy-$y)<1e-6 && $sx>$x+1e-6 && $sx<$x+$wum-1e-6} {set clear 0; break}}
+      if {$clear} {set best $j; break}
+    }
+    if {$best<0} {error "soft CS bank mapped master exceeds footprint and no edge site is free: $nm"}
+    set k [dict get $idx $nm]
+    set a [lindex $sites $k]; set b [lindex $sites $best]; lset sites $k $b; lset sites $best $a
+    dict set used $k 1; dict set edges $nm 1
+  }
+  return [list $sites $edges]
+}
 # Preflight every declared CS bank before moving any of its mapped flops.
 proc is_soft_cs_banks {banks} {
   global ff_blk ff_dbu ff_orient ff_sw ff_x0 ff_y0 ff_x1 ff_y1 ff_explicit_occ ff_rh is_n is_fh
@@ -139,6 +167,7 @@ proc is_soft_cs_banks {banks} {
       set names [lsort -dictionary $names]
     }
     if {[llength $names] != [llength $sites]} {error "soft CS bank $id actual mapped count [llength $names] != allocation [llength $sites]"}
+    lassign [is_cs_edge_reorder $names $sites $insts $adjuncts $fw $ff_dbu] sites edges
     foreach nm $names site $sites {
       set i [dict get $insts $nm]; set m [$i getMaster]
       lassign $site x y
@@ -151,7 +180,7 @@ proc is_soft_cs_banks {banks} {
         incr w [$mm getWidth]
         set h [expr {max($h,[$mm getHeight])}]
       }
-      if {$w>$fw*$ff_dbu+1 || $h>$fh*$ff_dbu+1} {error "soft CS bank $id mapped master exceeds footprint: $nm"}
+      if {($w>$fw*$ff_dbu+1 && ![dict exists $edges $nm]) || $h>$fh*$ff_dbu+1} {error "soft CS bank $id mapped master exceeds footprint: $nm"}
       if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw!=0} {error "soft CS bank $id off row/site: $x $y"}
       if {$cx<$ff_x0 || $cy<$ff_y0 || $cx+$w>$ff_x1 || $cy+$h>$ff_y1} {error "soft CS bank $id outside core"}
       if {[ff_hits_explicit $cx $cy $w $h]} {error "soft CS bank $id overlaps reserved footprint"}
@@ -210,6 +239,34 @@ def preserve_drivers(txt, rows):
 
 # Preserve legacy generated kits byte for byte unless native source banks opt in.
 LEGACY_TCL = r'''
+# SOFTCS-EDGE-1122 (OPUS-FIX-S81-LEAF-R10): a bank flop whose mapped master is wider than the allocation cell (the bank's async-reset
+# valid flop, DFFASRHQNx1, in a bank sized for DFFHQNx1) takes a site with no other bank site of the same row under its width; the
+# actual-width overlap checks below still guard every placement.  -> {sites edges}
+proc is_cs_edge_reorder {names sites insts adjuncts fw dbu} {
+  set wide {}
+  foreach nm $names {
+    set i [dict get $insts $nm]; set w [[$i getMaster] getWidth]
+    if {[dict exists $adjuncts $nm]} {foreach a [dict get $adjuncts $nm] {incr w [[$a getMaster] getWidth]}}
+    if {$w>$fw*$dbu+1} {lappend wide [list $nm $w]}
+  }
+  if {![llength $wide]} {return [list $sites {}]}
+  set k 0; set idx {}; foreach nm $names {dict set idx $nm $k; incr k}
+  set used {}; set edges {}
+  foreach pair $wide {
+    lassign $pair nm w; set wum [expr {double($w)/$dbu}]; set best -1
+    for {set j 0} {$j<[llength $sites]} {incr j} {
+      if {[dict exists $used $j]} continue
+      lassign [lindex $sites $j] x y; set clear 1
+      foreach s $sites {lassign $s sx sy; if {abs($sy-$y)<1e-6 && $sx>$x+1e-6 && $sx<$x+$wum-1e-6} {set clear 0; break}}
+      if {$clear} {set best $j; break}
+    }
+    if {$best<0} {error "soft CS bank mapped master exceeds footprint and no edge site is free: $nm"}
+    set k [dict get $idx $nm]
+    set a [lindex $sites $k]; set b [lindex $sites $best]; lset sites $k $b; lset sites $best $a
+    dict set used $k 1; dict set edges $nm 1
+  }
+  return [list $sites $edges]
+}
 # Preflight every declared CS bank before moving any of its mapped flops.
 proc is_soft_cs_banks {banks} {
   global ff_blk ff_dbu ff_orient ff_sw ff_x0 ff_y0 ff_x1 ff_y1 ff_explicit_occ ff_rh is_n is_fh
@@ -232,12 +289,13 @@ proc is_soft_cs_banks {banks} {
     }
     set names [lsort -dictionary $names]
     if {[llength $names] != [llength $sites]} {error "soft CS bank $id actual mapped count [llength $names] != allocation [llength $sites]"}
+    lassign [is_cs_edge_reorder $names $sites $insts {} $fw $ff_dbu] sites edges
     foreach nm $names site $sites {
       set i [dict get $insts $nm]; set m [$i getMaster]
       lassign $site x y
       set cx [expr {round($x*$ff_dbu)}]; set cy [expr {round($y*$ff_dbu)}]
       set w [$m getWidth]; set h [$m getHeight]
-      if {$w>$fw*$ff_dbu+1 || $h>$fh*$ff_dbu+1} {error "soft CS bank $id mapped master exceeds footprint: $nm"}
+      if {($w>$fw*$ff_dbu+1 && ![dict exists $edges $nm]) || $h>$fh*$ff_dbu+1} {error "soft CS bank $id mapped master exceeds footprint: $nm"}
       if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw!=0} {error "soft CS bank $id off row/site: $x $y"}
       if {$cx<$ff_x0 || $cy<$ff_y0 || $cx+$w>$ff_x1 || $cy+$h>$ff_y1} {error "soft CS bank $id outside core"}
       if {[ff_hits_explicit $cx $cy $w $h]} {error "soft CS bank $id overlaps reserved footprint"}

@@ -41,7 +41,7 @@ def test_bad_manifest_refuses(mutant):
 def test_absent_metadata_legacy_noop():
     assert prepare({},'irrelevant')==([],set()) and emit([])==[]
 
-@pytest.mark.parametrize('mode',['ok','count','footprint','offrow','overlap'])
+@pytest.mark.parametrize('mode',['ok','count','footprint','offrow','overlap','edge'])
 def test_actual_tcl_atomic_preflight(tmp_path,mode):
     import shutil, subprocess
     from soft_cs_placement import TCL
@@ -51,22 +51,29 @@ set ff_dbu 1000;set ff_sw 10;set ff_x0 0;set ff_y0 0;set ff_x1 100000;set ff_y1 
 set ff_orient [dict create 0 R0];set ff_explicit_occ {};set is_n 0;set writes 0
 set is_fh [open /dev/null w]
 proc master {m args} {switch $m {getName {return DFF} getWidth {return 1000} getHeight {return 270} isBlock {return 0}}}
+proc wmaster {m args} {switch $m {getName {return DFFASR} getWidth {return 1300} getHeight {return 270} isBlock {return 0}}}
+proc cellw {name m args} {global writes;switch $m {getName {return $name} getMaster {return wmaster} setLocation {incr writes} setPlacementStatus {} setOrient {}}}
 proc cell {name m args} {global writes;switch $m {getName {return $name} getMaster {return master} setLocation {incr writes} setPlacementStatus {} setOrient {}}}
-interp alias {} c0 {} cell g_u_cst_ve_gd_s_0_u_q0
+interp alias {} c0 {} CELL0 g_u_cst_ve_gd_s_0_u_q0
 interp alias {} c1 {} cell g_u_cst_ve_gd_s_0_u_q1
 proc block {m} {return {c0 c1}}
 set ff_blk block
 proc ff_hits_explicit {args} {return 0}
 '''
+    setup=setup.replace('CELL0','cellw' if mode in ('edge','footprint') else 'cell')
+    if mode=='footprint':setup=setup.replace('{} cell g_u_cst_ve_gd_s_0_u_q1','{} cellw g_u_cst_ve_gd_s_0_u_q1')
     count=1 if mode=='count' else 2
     sites=['{0 0}','{2 0}'][:count]
     if mode=='offrow':sites[1]='{2 0.1}'
     if mode=='overlap':sites[1]='{0.5 0}'
-    width=.5 if mode=='footprint' else 1
+    # SOFTCS-EDGE-1122: a wider master (async-reset valid) goes to a site with no bank site under its width;
+    # footprint: two wider masters, one free edge -> refused; edge: q0 wider, swapped onto the edge site {1.2 0}
+    if mode in ('edge','footprint'):sites=['{0 0}','{1.2 0}']
+    width=1
     call='is_soft_cs_banks {{bank {*g_u_cst_ve_gd_s_0_u_*} {'+' '.join(sites)+'} '+str(width)+' .27}}'
     script=tmp_path/'probe.tcl';script.write_text(setup+TCL+'\nset rc [catch {'+call+'} msg]\nputs "RESULT $rc $writes $is_n $msg"\n')
     run=subprocess.run(['tclsh',str(script)],text=True,capture_output=True,check=True)
-    if mode=='ok':assert 'RESULT 0 2 2' in run.stdout
+    if mode in ('ok','edge'):assert 'RESULT 0 2 2' in run.stdout, run.stdout
     else:assert 'RESULT 1 0 0' in run.stdout
 
 
