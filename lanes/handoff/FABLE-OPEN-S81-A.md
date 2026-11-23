@@ -15,3 +15,7 @@ Workers (subagents) resumed 10:50 with Codex's 07:30-08:59 results (posts under 
 ## 11:15 COORD note
 - x6: covered by SEQHOST-VLG-STN-1 in MISC gate 10c (plan 0e32aea4d155, PRE PASS, strict bind running); 9 legs +45..+51 ps at place (epyc9 fable-open-s81-a/sta/j8wave_place.log); accepted by FABLE-RC-ALL. Left: 10c bind, LATCHECK, placed re-scan -> then ledger GATED.
 - rc35: COORD/FABLE-RC-ALL ask: classify the ~3,250 internal ends < 0 (cross-tap / cross-leaf / IO) + row per class; post by 14:30 with the replay. Dump running intel2 fable-open-s81-a/wf4 (neg_ends.tsv, unit oth-ubuntu-453014).
+
+## 15:55 state
+- rc35: HOLD-SAMELEAF-1 replay PASS (44,612 -> 26,247 cells; replay1/pregrt_ff_hold.log); in B1 overlay + env. SLICEC-TAPPAIR-CAP-1 ops epyc10 fable-open-s81-a/tprow/ops_tpcap.json af658d95d0f9, PRE PASS on Wave A, old-value ok on B2 a6e153d98ff6; no built kit. Lockup row epyc10 fable-open-s81-a/lk/row ops 69a5599765ce (worker aa2277e). ROWS-READY posted 15:55.
+- x14 (worker af62b67: epyc10 fable-open-s81-a/x14row, gate_1517), rc37 (worker a97bce3: LP-PROFILE-1, probes done), lockup worker: all resumed 15:45, final posts due 16:40. x6 REASONED accepted.
