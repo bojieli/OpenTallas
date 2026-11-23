@@ -76,3 +76,8 @@
   (2) Second path: bind_rt_follow composes gen from the bind's rt. That rt is a9ed808a98d5, which lacks the fix, so new gens are still stale today.
   Live stale col kits: col_h9_r2 cl774acf45/pv858fb2ba, clc9ad8f7e/pvcf44b14c, clce45cab5 pv06a1adf6/pv09b9967e/pv40e9fb5a; col_h9_r1 pv0a45e191/pv2f96c04f; col_h9_r0_p5 pv5c8f2166; col_h9_r0_p6 pv0012ba28; col_h10_r2 pv1619ecc6; col_h10_r0_p1 pvb095fa2f/cl911743eb; col_h10_r1 cld01bb4ae.
   Not relaunched. Next: a kit gen check that refuses a stale porous sha.
+- 2026-11-23 02:34 PST RESULT POROUS-STALE kits [FIX-SYNC-S81 -> COORD, FABLE-RC-S81]
+  (1) Live stale col kits (age): h9_r0_p6 pv0012ba28 15h; h9_r2 pvcf44b14c 6h, pv858fb2ba 5.6h (GRT), pv40e9fb5a 3.8h; h10_r2 pv1619ecc6 2.5h; h9_r1 pv2f96c04f 2h; h10_r1 cld01bb4ae 1.5h.
+  (2) CANCELLED + STRUCT-STOP, both DRT >3h: pvcf44b14c (it4 1494) and pv40e9fb5a (it4 1913). The rest are not stuck in DRT; I kept them.
+  (3) POROUS-FRESH-1123 is on main 3b25e3b42d4, rt/current = 3b25e3b42d4d. Every OT_POROUS_VIEWS gen now re-syncs fixed views into the launch tree, or fails porous_stale on a die tree. Tests: 25 pass.
+  (4) Relaunch from J9 bind.

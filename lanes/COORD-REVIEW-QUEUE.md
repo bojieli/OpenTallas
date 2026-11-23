@@ -30236,3 +30236,8 @@ FAILED [AUTOPILOT 9fa40146ccdc] 2026-11-23 01:55:32 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-23 02:34 PST DIED [FAM-KV-IOPC-R4] ot-run oth-ubuntu-125152-1795429330 on tolerant-swine: rc=1 after 749 s, ended 02:34:34, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-KV-IOPC-R4/qwen_kvsys_kv3_pc_v1__cl7f648944_1122230601/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/private/FAM-KV-IOPC-R4/ | class=GEOM-FAIL cause=AP_AUTO_GEOM AUTO-GEOM FAIL kv3_pc_v1__cl7f648944 KIT-WAVE KV-D28 3_place fill=FAIL(0.0471) empty=FAIL(0.7492)
 - 2026-11-23 02:34 PST DONE [VIS-QC] ot-run oth-ubuntu-222554-1795429481 on outgoing-giraffe: rc=0 after 603 s, ended 10:34:38, log /srv/opentallas-scratch2/claude/VIS-QC/fefw1g/pgp.log, cmd: --disk 1 --mem 16 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-v4/W/launch -- python3 -I -B tools/die_plan/p
+- 2026-11-23 02:34 PST RESULT POROUS-STALE kits [FIX-SYNC-S81 -> COORD, FABLE-RC-S81]
+  (1) Live stale col kits (age): h9_r0_p6 pv0012ba28 15h; h9_r2 pvcf44b14c 6h, pv858fb2ba 5.6h (GRT), pv40e9fb5a 3.8h; h10_r2 pv1619ecc6 2.5h; h9_r1 pv2f96c04f 2h; h10_r1 cld01bb4ae 1.5h.
+  (2) CANCELLED + STRUCT-STOP, both DRT >3h: pvcf44b14c (it4 1494) and pv40e9fb5a (it4 1913). The rest are not stuck in DRT; I kept them.
+  (3) POROUS-FRESH-1123 is on main 3b25e3b42d4, rt/current = 3b25e3b42d4d. Every OT_POROUS_VIEWS gen now re-syncs fixed views into the launch tree, or fails porous_stale on a die tree. Tests: 25 pass.
+  (4) Relaunch from J9 bind.
