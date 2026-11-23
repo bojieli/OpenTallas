@@ -459,3 +459,14 @@ def test_window_rows_use_runtime_coverage_with_older_geometry_tree(monkeypatch, 
     }
     rows = {"t": ("taps", [{"name": "clk_t4", "xy": [20, 20]}])}
     assert TS.window_rows(raw, tmp_path / "plan.json", rows) == {"t": {"clk_t4": 35.0}}
+
+
+def test_remap_rows_uses_runtime_check_with_older_geometry_tree(monkeypatch, tmp_path):
+    monkeypatch.setitem(sys.modules, "plan_gate_pre", SimpleNamespace())
+    remap = SimpleNamespace(RemapError=ValueError, remap_plan=lambda *args, **kw: {"resets": []})
+    monkeypatch.setitem(sys.modules, "landing_remap", remap)
+    raw = {"partition_types": {"t": {"clock": {}}}}
+    base = tmp_path / "base.json"
+    base.write_text(json.dumps(raw))
+    output = tmp_path / "candidate.json"
+    assert TS.remap_rows(raw, dict(raw), base, output, ["t"], tmp_path) == ({"resets": []}, {})

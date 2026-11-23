@@ -881,6 +881,18 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_mar
     return rep, rows
 
 
+def _runtime_helper(name):
+    """Load a CLI helper from the same runtime while retaining the selected geometry modules."""
+    import importlib.util
+    source = Path(__file__).resolve().with_name(name + ".py")
+    spec = importlib.util.spec_from_file_location("_tap_split_" + name, source)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load tap-split runtime tool from {source}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, remap_fn=None, check_fn=None, resets="anchor"):
     """REMAP-ALWAYS: landing_remap (anchor mode) over `types` on raw (rows applied), write out_plan, then the PRE
     LANDREMAP check vs plan_path.  Failing types are restored from orig_raw.  -> (receipt, {type: why})."""
@@ -888,7 +900,7 @@ def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, 
     import re
     if remap_fn is None or check_fn is None:
         import landing_remap as LR
-        import plan_gate_pre as PG
+        PG = _runtime_helper("plan_gate_pre")
 
         def remap_fn(old, new, names):
             try:
@@ -984,13 +996,7 @@ def window_rows(raw, plan, rows_by_type):
         return {}
     # The coverage API is coupled to this tool. An older die tree selected for
     # geometry can have a tap_offset_cover.fill() without window support.
-    import importlib.util
-    coverage = Path(__file__).resolve().with_name("tap_offset_cover.py")
-    spec = importlib.util.spec_from_file_location("_tap_split_tap_offset_cover", coverage)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"cannot load tap coverage tool from {coverage}")
-    TC = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(TC)
+    TC = _runtime_helper("tap_offset_cover")
     tr = copy.deepcopy(raw)
     apply_rows(tr, rows_by_type)
     before = {tn: set(tr["clock"]["tap_window"]["per_port_ps"][tn]) for tn in types}
