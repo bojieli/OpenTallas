@@ -139,3 +139,8 @@ COMPOSE-LEVEL ASBUILT DELTA (VIS-S81-MISC 04:xx): in J8, internal_stations on iq
    J9 asbuilt/bind config MUST add iqf__t1, seqhost__t1 and gunit__t1 to internal_stations_types. Otherwise the IQF J9-4, iqf ft4/ft7 lane and MISC station rows are silently dropped.
    MISC v3 candidate (gate 10, epyc7) binds with the 3 added and carries cycle adds: ~+3 per seqhost/eng face bus, gunit l1f D=6, l1c D=5. LATCHECK in gate 10 decides. Exact asbuilt delta + sha due ~05:00.
    COMPOSER CHECK: every type with internal_stations in the J9 plan must be in asbuilt internal_stations_types. FAIL on any miss.
+   ASBUILT DELTA EXACT: asbuilt_run.json (a898b6a9c246): append to internal_stations_types, in order, seqhost__t1, iqf__t1, gunit__t1. Nothing else changes.
+     Ref file: epyc7 vis-s81-misc/tree_j8c/.../native_bind/asbuilt_run_vism.json (sha due with the result).
+     Gate 10 LATCHECK scope is MISC rows only, on J8 f65f. Its iqf change is only the u_bin_ql_i0/idx_i0 relay seats (0 cycles).
+     First-time-built J8 iqf OUT stations: qc_o0 x2, idx_o0 x1, flt_o0 x1. LATCHECK shows whether J8 cycles already price them.
+     MISC then runs a LATCHECK-only pass with IQF J9-4 + iqf_ft47_lane_ops on top. The composed J9 gate is authoritative.
