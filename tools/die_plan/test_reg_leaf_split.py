@@ -99,6 +99,23 @@ def test_split_is_cycle_equivalent(tmp_path):
     assert ref.count("\n") >= 39 and "xx" not in ref.splitlines()[-1] and _sim(tmp_path, new) == ref
 
 
+@pytest.mark.skipif(not shutil.which("iverilog"), reason="iverilog not installed")
+def test_cascade_preserves_packed_consumers_and_mutant_changes_outputs(tmp_path):
+    part = PART.replace(".ti_a(a)", ".ti_a(a[9:0])").replace(".e_a(e)", ".e_a(e[1:0])")
+    first, _ = R.split_text(part, ROW)
+    upstream = {"leaf": "u_t1", "copies": [
+        {"name": "a", "pins": ["u_t2_rls_a.d"], "site_um": [7, 10]},
+        {"name": "b", "pins": ["u_t2_rls_b.d"], "site_um": [11, 10]},
+    ]}
+    new, receipt = R.split_text(first, upstream)
+    assert [(c["inst"], c["bits"]) for c in receipt["copies"]] == [("u_t1_rls_a", 8), ("u_t1_rls_b", 8)]
+    assert "u_t2_rls_a (.clk(clk), .d(w_t1_rls_a_q[7:0]), .q(" in new
+    ref = _sim(tmp_path, PART)
+    assert _sim(tmp_path, new) == ref
+    mutant = new.replace(".W(8), .D(1)) u_t1_rls_a", ".W(8), .D(2)) u_t1_rls_a")
+    assert mutant != new and _sim(tmp_path, mutant) != ref
+
+
 @pytest.mark.parametrize("row,msg", [
     (dict(ROW, copies=[dict(ROW["copies"][0], pins=["u_c0.x"]), ROW["copies"][1]]), "matches 0 copies"),
     (dict(ROW, copies=[dict(ROW["copies"][0], pins=["u_c*"]), ROW["copies"][1]]), "matches 2 copies"),

@@ -57,6 +57,11 @@ LK1 = re.compile(rf"^(\s*)ot_dp_lk\s*#\(\s*\.W\((\d+)\)\s*\)\s+({ID})\s*\(\s*\.c
                  rf"\s*\.q\(({ID})\)\s*\)\s*;\s*(//.*)?$")
 
 
+# The exact single-line copy emitted by split_text. A second split can retarget its packed d connection.
+KEEP1 = re.compile(rf"^\s*{KEEP_MODULE} #\(\.W\((\d+)\), \.D\(1\)\) ({ID}) "
+                   rf"\(\.clk\([^()]*\), \.d\(([^()]*)\), \.q\(({ID})\)\);$")
+
+
 def config(t):
     """validated reg_leaf_split rows of one partition type; [] when absent"""
     rows = t.get(KEY) or []
@@ -226,8 +231,9 @@ def split_text(text, row, what="bound RTL"):
     for k in drop:
         if any(n not in src for n, v in decls.items() if v[2] == k):
             raise ValueError(f"{KEY} {leaf}: line {k + 1} declares a leaf output together with other wires")
-    pins = []   # (line, inst, port, wire, bits)
+    pins = []   # (line, inst, port, [(wire, bit)] in hardware bit order)
     alias = {}  # line of a core-input lockup latch -> "<core inst>.<core port>" it feeds
+    kept_consumers = {}
     inst = None
     for k in range(a, b):
         if HEAD.match(lines[k]):
@@ -239,8 +245,17 @@ def split_text(text, row, what="bound RTL"):
             w, bb = _bits(lm.group(5).strip(), decls, f"{lm.group(3)}.d")
             if w not in src or max(bb) >= len(src[w]):
                 raise ValueError(f"{KEY} {leaf}: line {k + 1}: latch d {lm.group(5)!r} is not a slice of one leaf output")
-            pins.append((k, lm.group(3), "d", w, bb))
+            pins.append((k, lm.group(3), "d", [(w, x) for x in bb]))
             alias[k] = _latch_core(lines, a, b, lm.group(6), leaf)
+            continue
+        kept = KEEP1.match(lines[k])
+        if kept:
+            expr = kept.group(3)
+            refs = _concat_bits(expr)
+            if len(refs) != int(kept.group(1)) or any(w not in src or x >= len(src[w]) for w, x in refs):
+                raise ValueError(f"{KEY} {leaf}: kept {kept.group(2)}.d is not fully driven by this leaf")
+            kept_consumers[k] = kept
+            pins.append((k, kept.group(2), "d", refs))
             continue
         m = PORT.match(lines[k])
         if not m or inst is None:
@@ -248,14 +263,14 @@ def split_text(text, row, what="bound RTL"):
         w, bb = _bits(m.group(2).strip(), decls, f"{inst}.{m.group(1)}")
         if w not in src or max(bb) >= len(src[w]):
             raise ValueError(f"{KEY} {leaf}: line {k + 1}: {m.group(2)!r} is not a slice of one leaf output")
-        pins.append((k, inst, m.group(1), w, bb))
+        pins.append((k, inst, m.group(1), [(w, x) for x in bb]))
     if not pins:
         raise ValueError(f"{KEY} {leaf}: the leaf drives no instance pin")
     if min(p[0] for p in pins) < min(drop):
         raise ValueError(f"{KEY} {leaf}: a leaf output is used before its declaration")
     # assign pins to copies
     owner = {}
-    for k, ins, prt, w, bb in pins:
+    for k, ins, prt, refs in pins:
         key = alias.get(k, f"{ins}.{prt}")
         hit = [c["name"] for c in row["copies"] if any(fnmatch.fnmatchcase(key, p) for p in c["pins"])]
         if len(hit) != 1:
@@ -264,7 +279,8 @@ def split_text(text, row, what="bound RTL"):
     rec = dict(leaf=leaf, module=mod, bits=sum(len(v) for v in src.values()), copies=[])
     new_inst, new_wires, rewire = [], [], {}
     used = {n for n in decls} | {HEAD.match(l).group(4) for l in lines[a:b] if HEAD.match(l)}
-    order = list(src)
+    used |= {m.group(2) for l in lines[a:b] if (m := KEEP1.match(l))}
+    order = {w: i for i, w in enumerate(src)}
     for c in row["copies"]:
         cn = f"{leaf}{SUFFIX}{c['name']}"
         qn = f"w_{cn.removeprefix('u_')}_q"
@@ -274,11 +290,11 @@ def split_text(text, row, what="bound RTL"):
         if not mine:
             raise ValueError(f"{KEY} {leaf}.{c['name']}: pins {c['pins']} match no consumer pin")
         slot = {}
-        for _, _, _, w, bb in sorted(mine, key=lambda p: (order.index(p[3]), p[0])):
-            for x in bb:
-                slot.setdefault((w, x), len(slot))
-        for k, ins, prt, w, bb in mine:
-            rewire[k] = (prt, _runs(qn, [slot[(w, x)] for x in bb]))
+        for _, _, _, refs in sorted(mine, key=lambda p: (min(order[w] for w, _ in p[3]), p[0])):
+            for ref in refs:
+                slot.setdefault(ref, len(slot))
+        for k, ins, prt, refs in mine:
+            rewire[k] = (prt, _runs(qn, [slot[ref] for ref in refs]))
         n = len(slot)
         d = _src_concat([src[w][x] for (w, x) in sorted(slot, key=slot.get)])
         new_wires.append(f"    wire [{n - 1}:0] {qn};   // {KEY} {leaf} copy {c['name']}")
@@ -300,6 +316,9 @@ def split_text(text, row, what="bound RTL"):
         if k in rewire and k in alias:
             lm = LK1.match(l)
             l = l[:lm.start(5)] + rewire[k][1] + l[lm.end(5):]
+        elif k in rewire and k in kept_consumers:
+            kept = kept_consumers[k]
+            l = l[:kept.start(3)] + rewire[k][1] + l[kept.end(3):]
         elif k in rewire:
             prt, ex = rewire[k]
             ind = l[:len(l) - len(l.lstrip())]
@@ -308,7 +327,7 @@ def split_text(text, row, what="bound RTL"):
         out.append(l)
     rec["flops_added"] = sum(c["bits"] for c in rec["copies"])
     new = "\n".join(out)
-    _self_check(new, rec, clk, {(p[1], p[2]): [src[p[3]][x] for x in p[4]] for p in pins})
+    _self_check(new, rec, clk, {(p[1], p[2]): [src[w][x] for w, x in p[3]] for p in pins})
     return new, rec
 
 
@@ -347,6 +366,10 @@ def _self_check(new, rec, clk, want):
         lm = LK1.match(l)
         if lm and (lm.group(3), "d") in want and any(q in lm.group(5) for q in qsrc):
             got[(lm.group(3), "d")] = [qsrc[w][x] for w, x in _concat_bits(lm.group(5))]
+            continue
+        kept = KEEP1.match(l)
+        if kept and (kept.group(2), "d") in want:
+            got[(kept.group(2), "d")] = [qsrc[w][x] for w, x in _concat_bits(kept.group(3))]
             continue
         m = PORT.match(l)
         if m and (inst, m.group(1)) in want and any(q in m.group(2) for q in qsrc):
