@@ -121,3 +121,5 @@
   J9 PLAN rows on J8 f65f62779bef: channel (w/bksel_chan.py) + cnt[4:0]/pre FIRM at (2331.6,198.72) under u_g vo_s[84..99] (w/bksel_ids_site.py) -> w/plan_j9_bksel.json 436a1beb8536.
   Gate w/gate_j9.sh on fork w/tree_j9 (overlay l20s, elab+bind strict into native_bind/j9_bksel_out, LATCHECK, PRE). Then one OT_PROBE_THROUGH=1 --goal route kit.
   Queued: fork (running), formal inv_S (ot-run epyc10 load cap, log intel2 ~/s81-bksel-r7-logs/inv_S.otrun.log).
+- 23:2x COORD: RTL reset split APPROVED (+1 edge OK, boot rst_n >= 64 clk; induction + kit routed LEC suffice, no u_core port).
+  If the probe shows u_ids popcount path (vo_s -> cnt) worse than -42 with cnt/pre FIRM, add one register stage on it (+1 cycle pre-approved).
