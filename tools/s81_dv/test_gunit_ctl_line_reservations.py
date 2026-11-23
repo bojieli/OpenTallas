@@ -7,6 +7,8 @@ import unittest
 from unittest.mock import patch
 
 HERE=Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from layer_prog.rstop_model import rstop_hop
 
 def function(path,name,scope):
     node=next(n for n in ast.parse(path.read_text()).body if isinstance(n,ast.FunctionDef) and n.name==name)
@@ -17,10 +19,10 @@ class LineReservationTest(unittest.TestCase):
     def setUp(self):
         self.path=HERE/'dv_layer_compile.py'
         self.ctl=lambda die,sl:dict(edges=6+4*abs(int(sl[4:-1])-4),entry_port='ri_e' if int(sl[4:-1])<4 else 'ri_w')
-        self.scope=dict(RSTOP_HOP=3,ENG={'VN':0,'VS':1},_line_hop=lambda *args:4,ctl_path=self.ctl)
+        self.scope=dict(rstop_hop=rstop_hop,ENG={'VN':0,'VS':1},_line_hop=lambda *args:4,ctl_path=self.ctl)
         self.reserve=function(self.path,'gunit_ctl_line_reservations',self.scope)
         self.conflicts=function(self.path,'line_slot_conflicts',self.scope)
-        self.die=SimpleNamespace(timing_contract={'v_ctl_inject':2},links={'tvN_gunit':{'age_edges':5}})
+        self.die=SimpleNamespace(rstop_xmid=frozenset(f'u_s_{col}N' for col in range(8)), timing_contract={'v_ctl_inject':2},links={'tvN_gunit':{'age_edges':5}})
         self.prog=SimpleNamespace(events=[dict(inst='u_gunit',dir='out',kind='CTL',port='vo_n',cycle=100,tag='hc.coef0')],rows=[])
 
     def test_exact_source_path_inverse(self):
