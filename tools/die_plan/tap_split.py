@@ -39,6 +39,15 @@ Usage (heavy plans: run through ot-run):
 --over: only types with a tap over the cap or the radius.  --out-plan writes PLAN with the rows appended and re-checks
 every touched type on the written plan with G0's own functions (schema.tap_grid + taps.sink_sites + taps.tap_loads).
 
+MULTI-TAP (TAP-GRID-R5 11-23, COORD): a tap over the cap that serves a DENSE sink cluster cannot be split one tap at a
+time -- by nearest-tap assignment any single new tap next to the cluster takes nearly all of it (S81 leaf t47 clk_t29:
+2759 sinks in a 98x28 um box, every one-tap add left a new tap of 3073-3160), so the greedy loop found no improving
+candidate and stopped with free legal sites all around (257 of the 261 J9 residual over-cap taps).  When no single tap
+improves, the splitter now adds k = ceil(load / (cap * 0.9)) taps together: weighted k-medians (L1, the metric of the
+assignment) on that tap's sink coordinates, each centre legalised to the nearest legal site (Site.place, same rules
+as a single add), all sinks re-assigned, and the group kept when the excess drops (k, k+1, k+2 tried).
+--multi-margin sets the 0.9; --multi-margin 0 turns the mode off.
+
 REMAP-ALWAYS (TAP-GRID-R5 11-23, COORD: third tap row in one night that broke its reset anchors -- S81 J8, HEAD Row B,
 KV D29 14 EMIT): new taps renumber the reset tree, so every --out-plan run ALWAYS follows the rows with
 landing_remap.remap_plan(resets="anchor", --bound-rtl when given) over every touched type, then plan_gate_pre's own
@@ -183,7 +192,63 @@ class Site:
         return (x, y) if self.ok(x, y, taken) else None
 
 
-def split_type(P, tn, radius, max_add, cap=None, require_placed=False):
+def kmedians(X, Y, W, k, iters=25):
+    """weighted k-medians (L1) of points (X, Y, W); seeds = weighted quantiles along the longer axis.  -> [(x, y)]."""
+    np = _np()
+    if k <= 1 or len(X) <= 1:
+        return [(wmedian(X, W), wmedian(Y, W))]
+    k = min(k, len(X))
+    ax, ou = (X, Y) if (X.max() - X.min()) >= (Y.max() - Y.min()) else (Y, X)
+    o = np.argsort(ax, kind="stable")
+    c = np.cumsum(W[o])
+    C = []
+    for q in ((i + 0.5) / k for i in range(k)):
+        j = o[min(int(np.searchsorted(c, q * c[-1])), len(o) - 1)]
+        C.append((float(X[j]), float(Y[j])))
+    C = np.array(C, dtype=float)
+    lab = None
+    for _ in range(iters):
+        D = np.abs(X[:, None] - C[None, :, 0]) + np.abs(Y[:, None] - C[None, :, 1])
+        nl = D.argmin(axis=1)
+        if lab is not None and (nl == lab).all():
+            break
+        lab = nl
+        for j in range(len(C)):
+            m = lab == j
+            if m.any():
+                C[j] = (wmedian(X[m], W[m]), wmedian(Y[m], W[m]))
+    return [(float(a), float(b)) for a, b in C]
+
+
+def multi_add(site, added, mem, X, Y, W, load_k, cap, margin, before, full, radius, n0, tries=3):
+    """MULTI-TAP: k = ceil(load_k / (cap * margin)) taps at the k-medians of the tap's sinks, legalised one by one,
+    all sinks re-assigned; -> (excess, new sites, idx, dist) of the best k that lowers the excess, else None."""
+    import math
+    np = _np()
+    if margin <= 0 or len(mem) < 2:
+        return None
+    k0 = max(2, int(math.ceil(load_k / (cap * margin))))
+    best = None
+    for k in range(k0, k0 + tries):
+        new = []
+        for cx, cy in kmedians(X[mem], Y[mem], W[mem], k):
+            s_ = site.place(cx, cy, added + new)
+            if s_ is not None and s_ not in added and s_ not in new:
+                new.append(s_)
+        if len(new) < 2:
+            continue
+        tr = added + new
+        i2, d2 = full([a for a, _ in tr], [b for _, b in tr])
+        l2, _f2, b2 = stats(i2, d2, W, n0 + len(tr), radius)
+        e2 = excess(l2, b2, cap)
+        if e2 < before - 1e-9 and (best is None or e2 < best[0]):
+            best = (e2, new, i2, d2)
+        if best is not None and best[0] <= 0:
+            break
+    return best
+
+
+def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_margin=0.9):
     import schema, taps as TP, gen_phys
     np = _np()
     t = P.types[tn]
@@ -293,7 +358,14 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False):
             if e2 < before - 1e-9 and (best is None or e2 < best[0]):
                 best = (e2, s, i2, d2)
         if best is None:
-            blocked.add(k)
+            mb = multi_add(site, added, mem, X, Y, W, float(load[k]), cap, multi_margin, before, full, radius, n0)
+            if mb is None or len(added) + len(mb[1]) > max_add:
+                blocked.add(k)
+                continue
+            added.extend(mb[1])
+            idx, dist = mb[2], mb[3]
+            rep["multi"] = rep.get("multi", 0) + 1
+            blocked.clear()
             continue
         added.append(best[1])
         idx, dist = best[2], best[3]
@@ -425,6 +497,8 @@ def main(argv=None):
     ap.add_argument("--sinks-dir", help="DIR/<type>.reg or DIR/<type>.json for every type that has one")
     ap.add_argument("--require-placed", action="store_true",
                     help="a type without sink_bins_file or placed sinks is NO_PLACED (no rows) instead of split on planned sinks")
+    ap.add_argument("--multi-margin", type=float, default=0.9,
+                    help="MULTI-TAP: k = ceil(load / (cap * M)) taps at the k-medians of a dense cluster when no single tap helps; 0 = off")
     ap.add_argument("--rows", required=True)
     ap.add_argument("--out-plan")
     ap.add_argument("--tools", help="tools/die_plan of the tree to plan with (default: next to this file)")
@@ -453,7 +527,8 @@ def main(argv=None):
     reps, rows_by_type = [], {}
     for tn in types:
         try:
-            rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed)
+            rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed,
+                                    multi_margin=a.multi_margin)
         except Exception as ex:
             rep, rows = dict(type=tn, status="ERROR", why=f"{type(ex).__name__}: {str(ex)[:200]}"), []
         if rows:

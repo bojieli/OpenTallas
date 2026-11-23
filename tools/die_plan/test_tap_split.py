@@ -176,3 +176,32 @@ def test_main_out_plan_always_remaps_and_exits_3_on_stale(monkeypatch, tmp_path)
     src = inspect.getsource(TS.main)
     assert "remap_rows(" in src and "return rc" in src and "--no-remap" not in src
     assert 'resets="anchor"' in inspect.getsource(TS.remap_rows)
+
+
+def _dense(nx, ny, x0, y0, w, h):
+    return [(x0 + w * i / (nx - 1), y0 + h * j / (ny - 1), 1.0) for i in range(nx) for j in range(ny)]
+
+
+def test_multi_tap_splits_dense_cluster_single_add_cannot(monkeypatch):
+    """MULTI-TAP (TAP-GRID-R5 11-23, COORD): leaf t47 clk_t29 form -- 2,700 sinks in a 98 x 28 um box served by one tap.
+    Any single new tap takes the whole cluster (no improvement, greedy stops); k-medians k = ceil(2700/900) = 3 splits it."""
+    # the serving tap sits 240 um off the cluster (L1 diameter 126 um): every sink is nearer ANY new tap in the box
+    tps = [("clk", 180.0, 180.0)]
+    sinks = _dense(90, 30, 300.0, 300.0, 98.0, 28.0)
+    P = _setup(monkeypatch, "grid+explicit", tps, sinks)
+    rep0, rows0 = TS.split_type(P, "t", 400.0, 50, multi_margin=0)
+    assert rep0["status"] == "BLOCKED" and not rows0 and rep0["after"]["max_load"] == 2700
+    rep, rows = TS.split_type(P, "t", 400.0, 50)
+    assert rep["status"] == "SPLIT" and rep.get("multi", 0) >= 1, rep
+    allt = [(x, y) for _, x, y in tps] + [tuple(r["xy"]) for r in rows]
+    loads = taps.tap_loads(allt, sinks)
+    assert max(n for n, _ in loads) <= 1000 and max(f for _, f in loads) <= 400.0
+    assert all(n > 0 for n, _ in loads[1:]) and 3 <= len(rows) <= 5
+
+
+def test_kmedians_seeds_and_converges():
+    import numpy as np
+    pts = _dense(30, 10, 0.0, 0.0, 90.0, 9.0)
+    X, Y, W = (np.array([p[i] for p in pts]) for i in range(3))
+    C = sorted(TS.kmedians(X, Y, W, 3))
+    assert len(C) == 3 and C[0][0] < 30 < C[1][0] < 60 < C[2][0]
