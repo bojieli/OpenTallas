@@ -73,3 +73,8 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - Sent to FABLE-RC-KVHEAD a2afa1acb28fd2355 for pre-cut re-review (03:3x). Shelf render intel2 ~/fable-fix-head-lep0n-1122/ecol_r18x3_shelf.png.
 - Probes: r9-lep0n-ep2 (E) + r9-lep0n-wp2 (W), launch_probe_r9.sh (grt goal, probe-through), epyc7. Waiter: either unit end. Next: GRT render + census vs 45,948 (E), hold endpoints vs 17,932 (W); REASONED list to FABLE-RC if ep2 not at GRT by 10:30.
 - Partial fork trees/s81_head_r18x_event: ot-delete SKIP (protected marker copied); left for cleanup.
+
+## 04:0x r18z2 GATED plan 23e33a4497865202 (tree epyc7 trees/s81_head_r18w_ecol, TREE FROZEN until ep3/wp3 past gen)
+- = r18x3 (3682da8c) + exact W core rows (old core port under each W pair tap - lead 210) + LEP-ETAPREKEY-1 (FABLE-UNC-HEAD e_tapoff_rekey.py: 185 E ports keyed to the die tap they sit on) ; ADV-TREE-DRIFT carried in place (473 + 4 files; 3 rtl LAG REASONED). Gates r18z1/r18z2 PASS (PRE 0, bind, cohort 27/27, LAT 334/334).
+- ep2/wp2 died kit_rtl "prepared plan changed" (my in-place re-gates). ep3 kit hd_lep0N_1123035944, wp3 kit hd_lep0N_w_1123035958 (units r9-lep0n-ep3/wp3); crit_dirs asked of FLOW-OPS-R2.
+- FABLE-RC-KVHEAD accept needs: E total < 4,595 + no cluster >= 50 (C2|C3 x700-757, tx slit y565-579, C3 rx y578.9, C1 4-bank blocks), x810 stripe; W cross-tap hold < 1,793 + buffer count post-hold DB; per-tap split of hold for W t56-63 and E 18 ports at 200 (rule: 107 ps estimate row if they carry it, setup check first); CTS classes txi v_o->wp_r, ctl_w->lap_ok, wn[1]->rg3 txi.
