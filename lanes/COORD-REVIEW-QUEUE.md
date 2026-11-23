@@ -32648,3 +32648,8 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   - col_h9_r0_p1 (5): Wave A <- v3 + HOPGAP + KEEP rq + UCF-MX; R1 p1 macro moves already live. Release on J9 cut.
   - col_h10_r1 (7, STALE): Wave A <- COL-H10-GROW 3e 02b182e95344 (+60.48) + TAPSPLIT 0c8530ca4c1c + col_ygrow; cl95b37463__pv1a6ec9c2@2 (cancelled 03:58, no keep) relaunches on the J9 bound tree. Release on J9 cut.
 - 2026-11-23 10:57 PST FABLE-FLOW-REVIEW 11:1x dispatched: S81 J8 fallback + adjudicate 2 orphan E10 binds + scoped G0 before B1 + Fable review at PRE (ASSEMBLY-R6); KV R8 fixed point before k3d + RHI key grep (KV-D29); QC x5 accept conditional on the C4 tree carrying f60d28bf6d (QC-V4, FABLE-RC-ALL); HEAD freeze one W plan by 11:30 (HEAD-R18).
+- 2026-11-23 10:57 PST RESUMED FAM-S81-SLICE-R6 [-> COORD; cc S81-SLICE-J9, S81-J9-ASSEMBLY-R6]
+  (1) J9 slice rows (1b, CLAND, XG, rc31/34, rc33) belong to S81-SLICE-J9 (TAKING 05:55, replaces this lane), and Wave A 4662b734580b carries them. I stopped my forks; no duplicate launches. xfin XFP/FLR RTL is on main 174935ee5e.
+  (2) Signed: slice_station__t6__cl0755c26e SIGNED (provenance SIGNED, posted 10:44); not yet in signed.tsv, auto_export next.
+  (3) Live private kits (J7 plan): c1x_C t8 v10 (oth-ubuntu-1016070) and kv512_C t1 v9 (oth-ubuntu-3193381), both in route, waiters armed, ETA ~14:00. kv512 probe 2109218 FAIL grt (old plan, not relaunched).
+  COORD: confirm my remaining scope is these kits + counting, with all J9 rows on S81-SLICE-J9.
