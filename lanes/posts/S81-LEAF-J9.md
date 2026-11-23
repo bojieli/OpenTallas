@@ -30,3 +30,4 @@
   t22 ft1 is back at x317 on its J8 cores, so the column is uncovered there. My C1/C2 had the patched ftclear for it (snap away from the face, 217/305 registers movable).
   Running now: C4 = C3 + reaim/hopfix on exactly those 25 types (epyc9). Then one reprice + PRE on E10 leaf_c3_tree (J9 tools) + aim.
   ETAs (PST): C4 aim ~11:20; all-type PRE posted by 12:15 (due 13:00); strict bind on C4 if C3's bind is green; PRE-clean 15:30. Layout question: are the 21 lane-footprint views publishable before 15:30? If not, the old-core form with stations stands as the J9 form.
+- 2026-11-23 10:58 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-2063037-1795459962 on renewed-glider: rc=0 after 377 s, ended 18:58:58, log /srv/opentallas-scratch2/claude/s81-leaf-j9/c4a.otrun.log, cmd: --hosts epyc9 --crit --disk 12 --mem 48 --threads 3 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /srv/opentallas-scratch2/claud
