@@ -269,3 +269,4 @@
 - 2026-11-22 20:14 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 19:50:09 (24 min; no launch or classify meanwhile) running tick started 20:10:15, last mark 'after admit_new'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
 - 2026-11-22 20:24 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (svc_hi_dsdv_svc_rs__t1 x2@kit_rtl, svc_lo_dsdv_svc_rs__t5 x2@kit_rtl)
 - 2026-11-22 21:04 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_Wo x3@kit_rtl, kv3_hg_v3 x2@gen_lint)
+- 2026-11-22 21:24 PST ALERT NO-ADVANCE s81: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (svc_hi_dsdv_svc_rs__t1 x3@kit_rtl, svc_lo_dsdv_svc_rs__t5 x2@kit_rtl)
