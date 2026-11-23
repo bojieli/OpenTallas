@@ -425,6 +425,35 @@ def _geom_index(g, bin_um=10.0):
     g["_die_density"] = round(sum(_area(cl[2]) for cl in g["cells"]) / max(1.0, W * H - mac), 4)
 
 
+FLOW_CODES = {"GRT-0273": "CLOCK-NDR-DROP", "RSZ-0060": "REPAIR-CAP", "GRT-0116": "GRT-OVERFLOW-STOP",
+              "GRT-0118": "GRT-OVERFLOW-STOP", "CTS-0018": "CTS-FAIL", "DRT-0006": "DRT-FAIL"}
+
+
+def flow_findings(logs):
+    """stage logs -> [{code, count, stage, cause, line}]: the design-class messages a cluster map does not show
+    (GRT-0273 clock NDR dropped under congestion, RSZ-0060 repair buffer cap, any [ERROR ...])."""
+    out = {}
+    for p in logs or []:
+        st = os.path.basename(p).split(".")[0]
+        try:
+            with open(p, errors="replace") as f:
+                for ln in f:
+                    m = re.search(r"\[(ERROR|WARNING) ([A-Z]{2,4}-\d{4})\]", ln)
+                    if not m:
+                        continue
+                    code = m.group(2)
+                    if m.group(1) == "WARNING" and code not in FLOW_CODES:
+                        continue
+                    k = (code, st)
+                    if k not in out:
+                        out[k] = dict(code=code, stage=st, count=0, line=ln.strip()[:200],
+                                      cause=FLOW_CODES.get(code, "FLOW-ERROR"))
+                    out[k]["count"] += 1
+        except OSError:
+            continue
+    return list(out.values())
+
+
 def analyze(a):
     os.makedirs(a.out, exist_ok=True)
     g = load_geom(a.geom) if a.geom and os.path.isfile(a.geom) else None
@@ -460,7 +489,8 @@ def analyze(a):
         if os.path.isfile(p):
             paths += parse_sta(p)
     tc = timing_classes(paths, a.top, a.bound_ps)
-    res = dict(name=a.name, cong=a.cong, sta=a.sta, geom=a.geom, gcells=getattr(a, "gcells", None), totals=totals,
+    ff = flow_findings((getattr(a, "src", None) or {}).get("logs"))
+    res = dict(flow=ff, name=a.name, cong=a.cong, sta=a.sta, geom=a.geom, gcells=getattr(a, "gcells", None), totals=totals,
                markers=len(markers), capped=capped,
                die=(g["die"] if g else None), die_density=(g["_die_density"] if g else None),
                clusters=[{k: v for k, v in c.items() if k != "pts"} for c in cl], timing=tc,
@@ -484,6 +514,8 @@ def analyze(a):
                     f'{t["start_grp"]}->{t["end_grp"]} [{t["path_group"]}]\t{t["cause"]}\t\t'
                     f'lat L/C {t["lat_launch"]}/{t["lat_capture"]} skew {t["skew"]} ins_share {t["insertion_share"]} '
                     f'bufs {t["bufs"]}/{t["stages"]}\n')
+        for x in ff:
+            f.write(f'{a.name}\tF-{x["code"]}\tflow\t{x["count"]}x in {x["stage"]}\t{x["code"]}\t{x["cause"]}\t\t{x["line"]}\n')
     try:
         render(a, g, cl, totals, tc, markers)
     except Exception as e:  # noqa: BLE001 - the PNG is advisory; the TSV/JSON stand alone
@@ -641,6 +673,10 @@ COVER = {
     "MACRO-IO": r"MACRO|VIEW|ETM|LATENCY|PIN",
     "REACH": r"STATION|STN|REACH|RELAY|HOP|STAGE|PIPE|CYCLE",
     "LOGIC-DEPTH": r"STAGE|PIPE|CYCLE|DEPTH|FOLD|RTL|RETIME",
+    "CLOCK-NDR-DROP": r"NDR|CLKGRT|CLOCK-?ROUTE|CLOCK-?GRT|TAP-?GRID|CTS",
+    "REPAIR-CAP": r"STATION|STN|REACH|RELAY|HOP|STAGE|CYCLE|REPAIR",
+    "GRT-OVERFLOW-STOP": r"CHAN|JUNCTION|LANECH|GROW|OUTLINE|SHAPE|DENS|SPREAD",
+    "CTS-FAIL": r"TAP|CTS|CLOCK", "DRT-FAIL": r"DRT|ROUTE|PIN", "FLOW-ERROR": r"FLOW|INFRA",
 }
 
 
@@ -660,6 +696,8 @@ def census_items(res, setup_tns=-42.0):
         if (t["kind"] == "setup" and t["worst"] < setup_tns) or (t["kind"] == "hold" and t["worst"] < 0):
             items.append(dict(item=f'{t["kind"]} {t["start_grp"]}->{t["end_grp"]} [{t["path_group"]}]',
                               size=f'{t["count"]}p worst {t["worst"]} skew {t["skew"]}', cause=t["cause"], also=[]))
+    for x in res.get("flow", []) or []:
+        items.append(dict(item=f'flow {x["code"]} in {x["stage"]}', size=f'{x["count"]}x', cause=x["cause"], also=[]))
     return items
 
 
@@ -726,8 +764,20 @@ def check(a):
     none = [r for r in mine if r[6] == "NONE"]
     for r in none:
         print(f"HOTSPOT_CHECK {a.type} UNCOVERED {r[3]} {r[4]} {r[5]}")
-    print(f"HOTSPOT_CHECK {a.type} {'PASS' if not none else 'FAIL'} items {len(mine)} uncovered {len(none)}")
-    return 0 if not none else 1
+    bad = bool(none)
+    if a.probe:      # COORD fe8a2a5 (2): probe TOTAL overflow < 10% of baseline and no cluster left above threshold
+        pr = json.load(open(a.probe))
+        ptot = sum(v.get("overflow", 0) for v in pr.get("totals", {}).values())
+        btot = None
+        if a.baseline:
+            bl = json.load(open(a.baseline))
+            btot = sum(v.get("overflow", 0) for v in bl.get("totals", {}).values())
+        left = pr.get("clusters", [])
+        ok = not left and (btot is None or ptot < 0.1 * max(btot, 1e-9))
+        print(f"HOTSPOT_CHECK {a.type} PROBE total {ptot} baseline {btot} clusters_left {len(left)} -> {'OK' if ok else 'NOT-CLEAN'}")
+        bad = bad or not ok
+    print(f"HOTSPOT_CHECK {a.type} {'PASS' if not bad else 'FAIL'} items {len(mine)} uncovered {len(none)}")
+    return 0 if not bad else 1
 
 
 # ----------------------------------------------------------------------------------------------- kit discovery + run
@@ -743,7 +793,10 @@ def kit_sources(kit):
     run = kit if os.path.isdir(os.path.join(kit, "results")) else os.path.join(kit, "run")
     base = (glob.glob(os.path.join(run, "results", "*", "*", "base")) or [None])[0]
     rep = (glob.glob(os.path.join(run, "reports", "*", "*", "base")) or [None])[0]
-    src = dict(odb=None, cong=[], sta=[], bound_ps=None, stage=None)
+    src = dict(odb=None, cong=[], sta=[], bound_ps=None, stage=None, logs=[])
+    lg = (glob.glob(os.path.join(run, "logs", "*", "*", "base")) or [None])[0]
+    if lg:
+        src["logs"] = sorted(p for p in glob.glob(os.path.join(lg, "*.log")) if re.match(r"[456]_", os.path.basename(p)))
     if base:
         for o in STAGE_ODBS:
             p = os.path.join(base, o)
@@ -844,6 +897,8 @@ def main(argv=None):
     s = sub.add_parser("check", help="PROBE-PASS census gate for one type (exit 0 = every item covered)")
     s.add_argument("--gaps", required=True); s.add_argument("--type", required=True)
     s.add_argument("--allow-clean", action="store_true")
+    s.add_argument("--probe", help="census.json of the fast probe (needs 0 clusters and < 10%% of --baseline overflow)")
+    s.add_argument("--baseline", help="census.json of the failing baseline build")
     a = ap.parse_args(argv)
     if a.cmd == "extract-gcells":
         return extract_gcells(a.odb, a.out)

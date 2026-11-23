@@ -165,3 +165,24 @@ def test_load_gcells_layer_mix(tmp_path):
     ms, _ = HC.load_gcells(str(g))
     cl, tot = HC.clusters(ms)
     assert tot["H"]["overflow"] == 60 and cl[0]["layers"] == {"M4": 40, "M6": 20}
+
+
+def test_flow_findings(tmp_path):
+    lg = tmp_path / "5_1_grt.log"
+    lg.write_text("[WARNING GRT-0273] Clock net clk_t3 NDR dropped\n[WARNING GRT-0273] Clock net clk_t4 NDR dropped\n"
+                  "[WARNING STA-1212] noise\n[ERROR RSZ-0060] max buffer count reached\n")
+    ff = {x["code"]: x for x in HC.flow_findings([str(lg)])}
+    assert ff["GRT-0273"]["count"] == 2 and ff["GRT-0273"]["cause"] == "CLOCK-NDR-DROP"
+    assert ff["RSZ-0060"]["cause"] == "REPAIR-CAP" and "STA-1212" not in ff
+
+
+def test_check_probe_vs_baseline(tmp_path):
+    gp = tmp_path / "G.tsv"
+    gp.write_text("die\ttype\tfamily\titem\tsize\tcause\tcovering_row\towner_lane\tcensus\n"
+                  "s81\ts81sl_leaf__t4\tleaf\tC1\t9\tMACRO-CHANNEL\tROW1\tL\tx\n")
+    b = tmp_path / "b.json"; b.write_text(json.dumps(dict(totals={"H": {"overflow": 1000}, "V": {"overflow": 0}}, clusters=[1])))
+    p = tmp_path / "p.json"; p.write_text(json.dumps(dict(totals={"H": {"overflow": 50}, "V": {"overflow": 0}}, clusters=[])))
+    q = tmp_path / "q.json"; q.write_text(json.dumps(dict(totals={"H": {"overflow": 200}, "V": {"overflow": 0}}, clusters=[])))
+    base = ["check", "--gaps", str(gp), "--type", "s81sl_leaf__t4", "--baseline", str(b)]
+    assert HC.main(base + ["--probe", str(p)]) == 0
+    assert HC.main(base + ["--probe", str(q)]) == 1
