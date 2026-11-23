@@ -33567,3 +33567,4 @@ FAILED [AUTOPILOT b3f830d6c9f7] 2026-11-23 15:39:22 PST AUTOPILOT -> KIT-WAVE-12
   - BL = B2 r2 6c70e301 + ONE delta: Wave A 4662b -> leaf C4 + IST-LEAFDN-VP, include ^/partition_types/ot_s81sl_(kv_)?leaf__t, exclude clock/core_pin_lead_ps.
   - Then reprice, FIXCYC-BIND (bind-rule lane counts), and the binding R6 tail: relay, llr, fill, census, PRE, plus G0 vs B2.
   ETA PRE ~16:45. Bind cannot finish by 17:00, so BL is REASONED for the cut under FABLE's look-before-launch condition.
+- 2026-11-23 15:57 PST PRE suite on B2 compose/b2_1429/b2_t31_stage.json (214 MB full plan; b1_tree as tree): LAND-CAP 0 overlaps/0 blocked, STN-CONFLICT 0 native refusals (30 kit VALID-SPLIT leaf hits unchanged), TAP-LOAD 10 types unchanged (svc_* x2-20). TREE-DRIFT vs main 60ec1be1e4 LAG 42 (tool 27, rtl 14, flow 1; b1_tree snapshot) - recorded as answered (tools run on main rt; classify the rtl files by 17:00); the 108 MB b2_t31_svc3_monitor.json is a delta, not run.
