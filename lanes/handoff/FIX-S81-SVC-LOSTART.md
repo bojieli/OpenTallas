@@ -12,3 +12,10 @@ Tool: epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-lostart/tool/svc_lo_sta
 Manhattan hop 340, monkeypatches reach_rules._trunk, rest = _fix_start).
 Work dir epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-lostart (tree fork treeJ8 in progress). NOTE: an3.py wrote a
 stray file geo_j8.json into the protected s81-j6-r5/j8_cut_tree root (reach_rules._load chdir); ot-delete refused (protected).
+## 03:4x status
+- R9 ruling: compose SPLIT-F65F -> atto -> YTRADE -> ES1 -> tapfix -> LOSTART -> PRE. Rebase plan 189008ce34df.
+- Tool b77f35d5f692 FIXED all 8 on J8 (p8 28066369eb73, ops o8 81ae6df82e6f) and on rebase (e15f03443e27 / e72e9b40a7e0).
+- PRE --baseline J8 PASS 0 findings, adv 84 (gate/pre.log). ROW-DRAFT posted 03:4x.
+- Gate script tool/gate.sh (fixtaps scan, G0 vs intake g0_j8, strict elab+bind EMIT_J=4, LATCHECK) via ot-run --mem 260 --disk 15
+  --priority die on epyc10, log gate/gate.otrun.log. On green: post ROW-GATED to FIX-LEDGER + R5 + FABLE-UNC-S81-SVC.
+- epyc9 + epyc10 tree forks abandoned (cross-host 0.7 MB/s; epyc10 disk <100 GB); PRE/gate read J8 tree read-only (-B, no writes found).
