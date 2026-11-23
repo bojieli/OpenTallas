@@ -26,11 +26,13 @@ esac
 # The hook text comes from the RUNNING kit_wave.py, the closure tool from the wave SOURCE: a frozen source whose tool
 # predates 94845431e6 has no --plan/--type/--src-tree (it fails "unrecognized arguments"), so pass them only when the
 # source tool takes them (SVC-R9 11-22 fix of the kit_rtl re-fails on hi rs t1, lo rs t1/t5).
-EXTRA=()
+# Use positional arguments so systemd's ExecStart expansion cannot parse
+# Bash array parameter expressions inside the inlined hook.
+set --
 if [ -n "${PLAN:-}" ] && grep -q -- "'--src-tree'" tools/die_plan/s81_svc_memory_closure.py; then
-    EXTRA=(--plan "$PLAN" --type "$TYPE" --src-tree .)
+    set -- --plan "$PLAN" --type "$TYPE" --src-tree .
 fi
-python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT" ${EXTRA[@]+"${EXTRA[@]}"}
+python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT" "$@"
 # The receipt must say APPLIED, or NOT_APPLICABLE (a bound without the native helper set, e.g. a later source-level
 # macro form). A closure that left a behavioural staging memory behind must not reach GEN.
 python3 -I - "$OUT" "$BM" <<'PY'
