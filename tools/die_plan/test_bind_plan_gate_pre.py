@@ -66,6 +66,19 @@ def test_modes_and_baseline(fake, monkeypatch):
     assert calls[-1]["baseline"] == "/x/base.json" and calls[-1]["skip"] == ()
 
 
+def test_relay_sink_skip_is_forwarded_without_reusing_its_receipt(fake, monkeypatch):
+    mod, calls, plan, out = fake
+    monkeypatch.setenv("OT_PLAN_GATE_BASELINE", "/x/adopted.json")
+    monkeypatch.setenv("OT_PLAN_GATE_SKIP", "RELAYSINK")
+    assert bind._plan_gate_pre(NS(plan, out)) == 0
+    assert calls[-1]["skip"] == ("RELAYSINK",)
+
+    mod.findings = ["FAIL RELAYSINK instance no leaf"]
+    monkeypatch.delenv("OT_PLAN_GATE_SKIP")
+    assert bind._plan_gate_pre(NS(plan, out)) == 2
+    assert calls[-1]["skip"] == () and len(calls) == 2
+
+
 def test_missing_module_does_not_block(monkeypatch, tmp_path):
     monkeypatch.setitem(sys.modules, "plan_gate_pre", None)     # ImportError
     p = tmp_path / "p.json"
