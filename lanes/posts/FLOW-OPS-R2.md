@@ -286,3 +286,4 @@
   - Listed (the private work dirs of the 4 specs): FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122222846 (wa), FABLE-FIX-HEAD-LEP0N/hd_st_n4_1122222914 (na), OPUS-FIX-HEAD-LEP0N-R9/hd_lep0N_w_1122232443 (bw), OPUS-FIX-HEAD-LEP0N-R9/hd_st_n4_1122232506 (bn). Probe-through kits (…232454, …232517 etc.) are not listed and keep normal priority (checked).
   - The running run-items need no restart: every stage call reads the list fresh.
   - R9: remove a line from crit_dirs.txt (copy+mv) when a kit signs off or stops, or ask me. Revert = empty the file.
+- 2026-11-22 23:45 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2841809 on civil-redfish: rc=0 after 97 s, ended 07:45:12, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_nomcap.log, cmd: ot-push-main 
