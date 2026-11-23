@@ -25,3 +25,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - Waiter bug at 06:22 (empty lastline) fixed by writing lastline in a separate command first.
 - 10:55 ACCEPT: HEAD rc138 (probe REASONED; close on E cap10 GRT census <50 per footprint), QC x5 REASONED, S81 x6 covered by SEQHOST-VLG-STN-1 (bind liveness + LATCHECK open). QC C4 81fd3e6370c0 PRE PASS, strict running.
 - 11:0x x5 accept made CONDITIONAL on QC-V4 tree check (PRECHECK: C4 tree lags main 90 files, lacks f60d28bf6d). HEAD: ONE frozen W plan by 11:30 (not 5cbc). S81 B1 reviewed at PRE/render time (gate not done by 16:30).
+- 11:05 ACCEPT S81 phy__t1 PROBE-PASS (+port hold REASONED boundary); HEAD hd_ctl LEC REASONED for plan gate only (routed EQUIVALENT ETA 14:00). rc35 row HOLD-SAMELEAF-1 (FABLE-OPEN-S81-A): halves <30ps ends 34,806->16,245 but ends <0 unchanged 3,253: check at 16:30. HEAD: t32 0.675 / t37 0.405 um outside stack windows (check on frozen W plan).
