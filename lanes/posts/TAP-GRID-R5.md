@@ -148,3 +148,4 @@
 - 2026-11-23 02:13 PST DONE [TAP-GRID-R5] ot-push-main otpush-tolerant-swine-3439481 on tolerant-swine: rc=0 after 25 s, ended 02:13:22, log none, cmd: ot-push-main 
 - 2026-11-23 02:25 PST DONE [TAP-GRID-R5] ot-run oth-ubuntu-146193-1795429360 on outgoing-giraffe: rc=0 after 202 s, ended 10:25:56, log none, cmd: --crit --mem 16 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/tap-grid-r5/softflop/d29/sysc -- bash /srv/opentallas-scratc
 - 2026-11-23 02:39 PST DONE [TAP-GRID-R5] ot-run oth-ubuntu-2687212-1795428602 on civil-redfish: rc=0 after 1765 s, ended 10:39:22, log /srv/opentallas-scratch2/claude/tap-grid-r5/softflop/globp.out, cmd: --mem 48 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/tap-grid-r5/softflop/globp --stage /srv/opentallas-scratch2/claude
+- 2026-11-23 02:42 PST DONE [TAP-GRID-R5] ot-push-main otpush-tolerant-swine-90084 on tolerant-swine: rc=0 after 22 s, ended 02:42:30, log none, cmd: ot-push-main 
