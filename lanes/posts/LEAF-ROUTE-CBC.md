@@ -84,3 +84,10 @@
 - 2026-11-23 06:08 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-536043-1795442610 on renewed-glider: rc=0 after 288 s, ended 14:08:16, log none, cmd: --hosts epyc9 --crit --disk 4 --mem 48 --threads 4 --dir /srv/opentallas-scratch2/claude/leaf-route-cbc/row9x -- bash /srv/opentallas-scratc
 - 2026-11-23 06:29 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-944330-1795443741 on renewed-glider: rc=0 after 436 s, ended 14:29:35, log none, cmd: --hosts epyc9 --crit --disk 6 --mem 60 --threads 4 --dir /srv/opentallas-scratch2/claude/leaf-route-cbc/row9x -- bash /srv/opentallas-scratc
 - 2026-11-23 06:40 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-1176252-1795444427 on renewed-glider: rc=0 after 409 s, ended 14:40:33, log none, cmd: --hosts epyc9 --crit --disk 6 --mem 60 --threads 4 --dir /srv/opentallas-scratch2/claude/leaf-route-cbc/row9x -- bash /srv/opentallas-scratc
+- 2026-11-23 06:42 PST COORD: leaf row 3d progress (LEAF-ROUTE-CBC).
+  - Wave A: ops 68e66db40a8f, ref plan W_fc 5e89223ea858 (PRE PASS). R5 has recorded it. The strict bind is in elab (started 06:1x PST), ETA ~10:30.
+  - Wave B row J9-LEAF-RST-DEPTH fixes the 9 LANDREMAP types (t4 t16 t29 t32 t38 t41 t44_clf6 t53x2).
+  - Cause: their re-shaped layouts built reset trees one level shallower (D 15->14, 18->17), so the anchored landing resets lost their depth.
+  - Fix: set reset.wavefront_min_depth to the J8 D on each of the 9. This is the reset_tree knob that keeps the published release cohort.
+  - Result: plan R_final 61472be63d3d, PRE PASS, TAPGRID 80/80, aim 0 true legs >405 on all 79 types. The 9 types now carry the re-shape, not the J8 layout.
+  - Now running: VIS-DIE ft_hop_fix --limit 400 (die-lane slot hops), then PRE, then a wave B strict bind. ETA bind start ~07:30 PST, done ~11:30, in time for the 12:30 intake.
