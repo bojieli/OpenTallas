@@ -310,3 +310,12 @@ COORD REFINEMENT 04:2x (supersedes the delta method above). J9 tree build:
    SWAP-FORM ALT GATED (H10-R4): epyc10 fam-s81-col-h10-r4/j9/yg8/plan_final.json ae2b9ab9abc7.
      Chain: REACH v2 (no ECORR) -> col_ygrow --form swap -> reprice (same 6 rt_* +1).
      PRE PASS 0 findings, 0 port-window ADV. Base is 56d5 (_ss). Rebased onto 95ddb only if COL picks swap.
+J8 REPLICATED 05:1x to epyc2/7/9/8/intel1/intel2 (61701f3e485d). Smoke on epyc9 running.
+3e/3h COL-H10 FINAL ON R2 (H10-R4 r2m; lane hit the weekly Opus limit 05:0x, ASSEMBLY adopts the result):
+   plan epyc10 fam-s81-col-h10-r4/j9/r2m/plan_final.json sha 708e94880349.
+   = 3-way merge: base _ss (plan_v3_strip_e1e_ss), mine yg7 30dd3d6e03cc (ECORR form), theirs RANKSEAT 95ddb61ae6f6 (LAG), then reprice.
+   6 conflicts (relay_depth LIST-UNION). R2-diff leaves 22280 preserved, 0 lost.
+   chk_vis: 24 types differ only in R2-expected clock keys (core_pin_lead_ps, tap_grt_pre).
+   PRE PASS (baseline 95ddb) 0 findings / 84 ADV.
+   COMPOSE: RANKSEAT ops (LAG or NO-LAG) first, then the H10 delta = (708e94880349 - 95ddb61ae6f6) EXCLUDING core_pin_lead_ps keys, so the lag choice stays RANKSEAT's.
+   If COL names SWAP: needs the same r2m rebase of yg8 ae2b9ab9abc7. H10-R4 is down, so ASSEMBLY runs it (copy of runm.sh with yg8).
