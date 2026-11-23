@@ -39,3 +39,7 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - Kits (epyc10, rt 345ac19b04b3, goal route, sealed tree): units r9-lep0n-bw (W sealed, counts), -bwp (W probe), -bn (nst4 sealed), -bnp (nst4 probe); logs ~/fable-fix-head-lep0n-1122/runitem_r9_<tag>.log; specs ~/coord/autopilot/private_specs/OPUS-FIX-HEAD-LEP0N-R9/; durable waiters.
 - A+B on epyc7: after the fork, chain_bt.sh t fails the same way -> run wchan3_remap.py + wchan3_remap_exp.py there, xbase, then gate with a fresh tag (copy chain_r9_bfix2 + chain_r9_bgate to epyc7, F=r18t).
 - 23:3x COORD approved --direct for wa/na/bw/bn only if rails kept; --direct skips the reservation charge -> NOT used. Asked FLOW-OPS-R2 (agent a46c0ff322be7e448) to front-queue the 4 counting kits' clients on epyc10 (pids 495383/495498/2098215/2101539). Check for its reply post.
+
+## 23:4x after the 23:3x limit blip: all 10 units active, waiters alive, nothing lost
+- A+B fix staged on epyc7: L/tmp/chain_r9_tfix.sh TAG (needs plan/applied_t from chain_bt.sh t): wchan3_remap + wchan3_remap_exp vs L/plan/base_r18q, then baseline = r18q + wchan2 + strip + wchan3 (xbase_r18q_ab; sidecar + sink bins fetched from epyc10, sha 994b8a2892dd0768 / f72b6bea54e4aed4), then gate with a fresh tag. Run via ot-run --priority plan --hosts epyc7 ... bash L/tmp/chain_r9_tfix.sh r18t2 once bt_epyc7.sh ends.
+- epyc7 fork 42/49 GB at 23:37.
