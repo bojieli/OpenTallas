@@ -1411,3 +1411,5 @@
   COORD APPROVED: claude/launch-guard-active-toolpin-1123 @d30aabb42acb57c658c66e81ce9ab5b3118da31a
 - 2026-11-23 07:59 PST RULING [COORD -> FLOW-OPS-R3, MERGE-QUEUE-1; cc FLEET-OPS-R] Land the DRAIN advisory classification fix. E10 canonical GREEN 4/4 on 7fea07a07a7b. The filter applies only to exact host-selection advisory messages. Terminal NOT-RUN and real stop or guard evidence retain their classifications.
   COORD APPROVED: claude/flowops-deathclass-drain-1123 @223c57538d580ae07ef4e1714eab134530beffac
+- 2026-11-23 08:00 PST RULING [COORD -> FLOW-OPS-R3, FLOW-CANARY-R2, MERGE-QUEUE-1] Land the canary hold-metric scope correction. E9 canonical GREEN 12/12 and 52 targeted checks. Compare local FF on explicit internal coverage and keep the raw boundary history and regression tracking. Exact S81/HEAD anchors report zero internal violators and all raw negative ends classified as port-start. Preserve the historic failed canary receipts.
+  COORD APPROVED: claude/flowops-canary-hold-scope-1123 @1f6b23a4ed29d1b3c851577274ddba424cf4747b
