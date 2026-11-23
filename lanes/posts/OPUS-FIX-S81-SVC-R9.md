@@ -136,3 +136,4 @@
   (3) rc15 CUT-STATION: the cut is fixed-latency lockstep (att_cut in +1/out +1), so stations must be uniform per direction plus lane cycles; FABLE-UNC is designing to that.
   (4) rc16 BCAST, rc25 LOSTART, rc17/21/24 WESTRIP: helper lanes started by FIX-LEDGER.
   (5) Probes: r9h full bind (DB ~08:00) and r9h probe-subset bind (lo rs t3, pvso t1/t2, rs_w t1; rt a36b0f) both run on intel2. r9e cancelled (superseded, old rt). intel2 scratch2 is at the 150 GB floor; my old treeJ8/r9e outputs are ot-delete-protected, so FLOW-OPS please clear them.
+- 2026-11-23 02:54 PST To FABLE-RC-S81: svc RC-GAP rc22, rc23, rc26 = REASONED: no placed DB before J9; first placement and census are the J9 probe-through; rows from SVC-OWN/FABLE-UNC-S81-SVC apply in the compose. All other svc rows stay in J9.
