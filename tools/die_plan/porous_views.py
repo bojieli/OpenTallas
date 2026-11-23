@@ -710,6 +710,37 @@ def build(base, detail, out, layers=None, source=None, exact=None, tech=None):
     return rep
 
 
+def refresh_eol(name, out_dir, data=DATA):
+    """POROUS-EOL-REFRESH (FAM-S81-COL-H10-R4 11-22): a stored row built before build() ran abstract_pin_stub step 4
+    (receipt without eol_stubs) keeps own-conductor stubs shorter than the EOL keep-out next to its covered pins: 2
+    Lef58EolKeepOut per stub per instance (hw/he/payload536 rows: 96/106/72 in the view-alone probe, the ~1430 flat DRT of
+    the col kits tc_e8/rb_rest; with step 4: 0/0/0).  Writes OUT_DIR/<name> (the stored LEF + step 4 only) and its receipt
+    (the stored receipt + eol_stubs, refreshed_from); the self-guard refuses an output with more eolstub or pinabut than
+    the stored LEF (pinobs is the deliberate pin cover here, not a defect).  -> dict, or None when nothing to do."""
+    sys.path.insert(0, str(HERE.parent / "hier_contract"))
+    import abstract_pin_stub as APS
+    row = json.loads((data / "map.json").read_text())[name]
+    raw = gzip.decompress((data / row["file"]).read_bytes()).decode()
+    h_, o_ = APS.split_lef(raw)
+    o2, eol = APS.eol_stubs(h_, o_, force=True)
+    if not eol:
+        return None
+    new = h_ + o2
+    before, after = APS.defects(raw), APS.defects(new)
+    worse = [k for k in ("eolstub", "pinabut") if after[k] > before[k]]
+    if worse:
+        raise SystemExit(f"{name}: refresh REFUSED, more {', '.join(worse)} than the stored row: {before} -> {after}")
+    out = Path(out_dir) / name
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(new)
+    r = json.loads((data / row["receipt"]).read_text())
+    r.update(eol_stubs=len(eol), out=str(out), out_sha256=sha_file(out), refreshed_from=dict(sha256=row["sha256"], file=row["file"]),
+             refresh_defects=dict(before=before, after=after))
+    (Path(out_dir) / (name + ".receipt.json")).write_text(json.dumps(r, indent=1, sort_keys=True) + "\n")
+    return dict(name=name, module=row["module"], die=row["die"], eol_stubs=len(eol), before=before, after=after,
+                out_sha256=r["out_sha256"])
+
+
 def probe_verdict(probe_dir, out_sha256):
     """the TritonRoute probe of exactly this LEF passed: probe.json names its sha, probe.log reached the end marker with
     no DRT-0073 and no Error -> summary dict, else SystemExit"""
@@ -799,6 +830,9 @@ def main(argv=None):
     o.add_argument("--check", action="store_true")
     a2.add_argument("--probe", required=True, help="DIR of a passing probe of this LEF (probe.json, probe.log)")
     a2.add_argument("--name", default=None, help="kit LEF file name the view replaces (e.g. ot_s81sl_vq_tpl.lef)")
+    rf = sub.add_parser("refresh", help="stored rows without step-4 EOL stubs -> OUT/<name> + receipt (then probe + add)")
+    rf.add_argument("--out", required=True)
+    rf.add_argument("--name", action="append", default=None, help="map row (kit LEF name); default every row")
     pr = sub.add_parser("probe", help="write DIR/probe.def + DIR/probe.tcl: TritonRoute pin_access of the view alone "
                                       "(run: openroad -no_init -exit probe.tcl; pass = PV_PROBE_PIN_ACCESS_DONE, no DRT-0073)")
     pr.add_argument("--lef", required=True)
@@ -815,6 +849,11 @@ def main(argv=None):
         (d / "probe.def").write_text(text)
         (d / "probe.tcl").write_text(probe_tcl(a.tech_path, a.lef_path or a.lef, a.def_path or str(d / "probe.def")))
         print(json.dumps(dict(macro=macro, lef_sha256=sha_file(a.lef), phase_nm=probe_phase(lines), tracks=PROBE_TRACKS)))
+        return 0
+    if a.cmd == "refresh":
+        names = a.name or sorted(json.loads((DATA / "map.json").read_text()))
+        for n in names:
+            print(json.dumps(dict(name=n, result=refresh_eol(n, a.out))), flush=True)
         return 0
     if a.cmd == "build":
         src = json.load(open(a.source)) if a.source else None

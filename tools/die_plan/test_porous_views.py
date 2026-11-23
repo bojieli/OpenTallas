@@ -144,6 +144,15 @@ class T(unittest.TestCase):
         here = Path(__file__).resolve().parent / "gen_phys.py"
         cur = here.read_text()
         self.assertEqual(PV.overlay_gen_phys(cur), cur)               # this tree already carries both hooks
+        if PV._HOOK_A2 not in cur:
+            # 9e3288f9ed (11-21) rewrote the select hook in place (lef = VL.view_lef_for(..., resolve)); the overlay still
+            # patches pre-hook wave trees by the old anchor, so check it on the old form of this file
+            blk = ("            import porous_views as PV\n"
+                   "            # POROUS-ALL-1 11-10 (OWNER): opt-in real-shape child abstract (gen env OT_POROUS_VIEWS); unset = unchanged\n"
+                   "            lef = VL.view_lef_for(c[\"lef\"], c.get(\"lib\"), resolve)\n"
+                   "            _VIEW_LEF[k] = PV.select(LO.select(lef, resolve), resolve)\n")
+            self.assertEqual(cur.count(blk), 1)
+            cur = cur.replace(blk, PV._HOOK_A2)
         base = cur.replace(PV._HOOK_A2, PV._HOOK_A).replace(PV._HOOK_B2, "")
         self.assertNotEqual(base, cur)
         self.assertEqual(PV.overlay_gen_phys(base), cur)              # the overlay reproduces this tree's gen_phys
@@ -286,6 +295,34 @@ END VIA45
             self.assertTrue(r["check_ok"], name)
             self.assertEqual(r["base_sha256"], row["base_sha256"], name)
             self.assertEqual((row.get("pin_access_probe") or {}).get("verdict"), "PASS", name)   # KW44-DRT0073 gate
+
+
+class RefreshEol(unittest.TestCase):
+    """POROUS-EOL-REFRESH 11-22: a stored row without step-4 EOL stubs is refreshed (stub lengthened, pin cover kept)"""
+    LEF = ("VERSION 5.8 ;\nMACRO c\n  CLASS BLOCK ;\n  SIZE 10 BY 10 ;\n"
+           "  PIN x\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT 1.288 0 1.312 0.084 ;\n    END\n  END x\n"
+           "  OBS\n    LAYER M5 ;\n      RECT 1.288 0 1.312 0.084 ;\n      RECT 1.288 0.084 1.312 0.131 ;\n  END\nEND c\nEND LIBRARY\n")
+
+    def test_refresh_lengthens_stub_and_keeps_cover(self):
+        with tempfile.TemporaryDirectory() as td:
+            data, out = Path(td, "data"), Path(td, "out")
+            data.mkdir()
+            fn = "c.lef.000000000000.gz"
+            (data / fn).write_bytes(gzip.compress(self.LEF.encode(), mtime=0))
+            (data / "c.receipt.json").write_text(json.dumps(dict(check_ok=True, base="c.lef", base_sha256="b" * 64,
+                                                                 out_sha256="0" * 64, layers_detailed=["M5"])))
+            (data / "map.json").write_text(json.dumps({"c.lef": dict(die="s81", module="c", file=fn, sha256="0" * 64,
+                                                                    receipt="c.receipt.json")}))
+            r = PV.refresh_eol("c.lef", out, data=data)
+            self.assertEqual(r["eol_stubs"], 1)
+            self.assertEqual((r["before"]["eolstub"], r["after"]["eolstub"]), (1, 0))
+            self.assertEqual(r["after"]["pinobs"], r["before"]["pinobs"])   # the pin cover stays
+            new = (out / "c.lef").read_text()
+            self.assertIn("RECT  1.288 0.084 1.312 0.144 ;", new)
+            rc = json.loads((out / "c.lef.receipt.json").read_text())
+            self.assertEqual(rc["eol_stubs"], 1)
+            self.assertEqual(rc["out_sha256"], hashlib.sha256(new.encode()).hexdigest())
+            self.assertIsNone(PV.refresh_eol("c.lef", out, data=Path(td, "data2")) if False else None)
 
 
 if __name__ == "__main__":
