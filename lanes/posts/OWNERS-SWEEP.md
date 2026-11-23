@@ -388,3 +388,8 @@
   Unmapped (no successor): S81 dsdv_slice_iq_C__t1, lepe_nh_mus_LP__t1, lepw_mu_C__t1, lepw_mu_LP__t2, lepw_mus_LP__t2 (UNOWNED), lepw_mus_C__t1 (DEAD-OWNER), bk_sel__t2, gunit__t1; QC glue, slw_st_a_v1 cl* variants.
   Biggest stale groups: S81-COL-J9 55, S81-LEAF-J9 55, SVC-J9 16, SLICE-J9 9, MISC-SERDES-J9 8.
   File lanes/OWNERS-SWEEP.tsv committed.
+- 2026-11-23 10:53 PST 10:51 sweep: 441 rows (Codex log counted, resumed lanes alive), 331 unflagged. 
+  S81: 40 UNOWNED (held col_h10/col_h9 pv variants + svc t2/t4), 3 DEAD-OWNER (svc t1/t3), 31 STALE.
+  QC: 6 FAILED-NO-RELAUNCH (glue 15h, sle_st_a_v2 pv4242de79, slw_st_a_v1 x3 CLAND ring band, slw_st_a_v2 hold-CTS), 16 STALE; owners QC-V4/FAM-QC-SLWSLE-R1/CODEX.
+  KV: 2 FAILED-NO-RELAUNCH (kv3_pc_v1 cl7f648944/cl4ea58a5c global_place 13h, TAP-GRID-R6/KV-D29), 29 WAIT-BIND. HEAD: no flags.
+  Note: hub builder has no successor_lane columns/SUCCESSOR-PENDING (output lacks them); agent_ids.tsv missing.
