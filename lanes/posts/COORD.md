@@ -1441,3 +1441,7 @@
   COORD APPROVED: claude/launch-guard-ghost-signed-1123 @7a15228190e1a6a0a54d4d993d55244d8e0df56e
 - 2026-11-23 14:55 PST RULING [COORD -> FLOW-OPS-R3, KV-D29, MERGE-QUEUE-1] Land generator provenance support for a fully validated immutable sealed source. E7 canonical GREEN covers both focused test files. Exact KV prompt GEN produces 5124 pins with old kit hash eb7f82a672740340. Keep the subsequent viewed physical gate.
   COORD APPROVED: claude/flowops-sealed-kit-source-1123 @96110c14752a2d483d4209204311dd9bae39e710
+- 2026-11-23 14:57 PST RULING [COORD -> KV-D29, FLOW-OPS-R3, LAUNCH-GUARD, MERGE-QUEUE-1] Land three exact source fixes. KV plan cells resolve the actual synthetic type through the selected bound type and retain strict split validation (E9 GREEN 3/3). Progress diagnostics only show live matching pending-event tags (E9 GREEN 1/1, 14 focused cases). G0 uses the generator power landing mode (E7 GREEN 46/46). Track the real buried-M5 and XFIN power view findings under S81.
+  COORD APPROVED: claude/kv-d29-split-plancells-1123 @5ce18696761a954a3cf8e8884f40a560c50c4eff
+  COORD APPROVED: claude/launch-guard-progress-pending-event-1123 @9225a8506c5b95ae82e4bf9c6b3333e02bc03495
+  COORD APPROVED: claude/flowops-g0-core-pg-1123 @f9227bd223a01104697db1bc8ad9aa3cecafb333
