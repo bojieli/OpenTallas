@@ -41,10 +41,11 @@ def vectors(d: Path, seed: int):
     return len(kv), len(p)
 
 
-def build(a, srx, mut, nkv, np_):
+def build(a, srx, mut, nkv, np_, ref=False):
+    xs = bool(a.eng_xs) and not ref
     ns = a.nstage if srx else 2
     band = a.band if srx else 0
-    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + (f"_band{band}m{a.bandm}t{a.bandt}" if band else "") + ("_hc" if a.hcore else "")
+    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + (f"_band{band}m{a.bandm}t{a.bandt}" if band else "") + ("_hc" if a.hcore else "") + ("_xs" if xs else "") + ("_bc" if (a.bcast and not ref) else "")
     if a.analyze_only:
         if not (a.work / f"run_{tag}.log").is_file():
             sys.exit(f"analysis log missing: run_{tag}.log")
@@ -74,6 +75,8 @@ def build(a, srx, mut, nkv, np_):
            *(["+define+SRX_DUT_S81", "+define+OT_SVC_MERGE_H4"] if a.dut == "s81" else []),
            *(["+define+OT_ATTN_HCORE", "+define+OT_S81C_HCORE_CTLA", "+define+OT_S81C_HCORE_RST_TIMED", "+define+OT_SVC_H8", "+define+OT_SVC_H8_REUSE_RT2"] if a.hcore else []),
            *(["+define+OT_SVC_NATIVE_RT2_CALENDAR"] if a.rt2_calendar else []),
+           *(["+define+OT_SVC_ENG_XS"] if xs else []),
+           *(["+define+OT_SVC_BCAST"] if (a.bcast and not ref) else []),
            *(["+define+OT_S81C_TILE_PAIR", "+define+OT_S81C_TILE_REACH" if a.bandt == 5 else "+define+OT_S81C_TILE_STAGE"] if (a.hcore and band and a.bandt) else []),
            *[x for y in ys for x in ("-y", f"{r}/{y}")],
            *[f"-G{k}={v}" for k, v in prm.items()], *[f"{r}/{f}" for f in files],
@@ -137,6 +140,8 @@ def main():
     ap.add_argument("--rt2-calendar", action="store_true", help="explicit opt-in static native RT2 replay slots; source programme must match")
     ap.add_argument("--hcore", action="store_true", help="build reference and DUT with the S81 H8 RT2 head-core tile (OT_ATTN_HCORE ...)")
     ap.add_argument("--bandm", type=int, default=0, help="BANDM: 1 = merge inputs registered in the band (P.V +1 more)")
+    ap.add_argument("--bcast", action="store_true", help="DUT only: +define+OT_SVC_BCAST (SVC-BCAST-STAGE per-tile copies, 0 cycles)")
+    ap.add_argument("--eng-xs", action="store_true", help="DUT only: +define+OT_SVC_ENG_XS (two kept engine stages; the SRX signature with n = SRX + 2); the reference stays as built")
     ap.add_argument("--image", default="verilator/verilator:v5.032")
     ap.add_argument("--analyze-only", action="store_true", help="read existing build/run logs without executing tools; requires a fresh --report")
     ap.add_argument("--report", type=Path, help="new report filename under --work (default lockstep.json)")
@@ -145,6 +150,10 @@ def main():
     if a.band and a.dut != "s81":
         sys.exit("--band needs --dut s81")
     n = a.srx + ((a.band + 1 + a.bandt) if a.band else 0)     # scores +n (band: capture stages + output register)
+    if a.eng_xs:
+        if a.band or a.dut != "s81":
+            sys.exit("--eng-xs needs --dut s81 and no --band")
+        n += 2                                                # SVC-ENG-XS: tile input stage + tile output stage
     engine_source = a.root / "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv"
     fixed_rt2_calendar = a.rt2_calendar and a.hcore and a.dut == "s81" and "ot_s81_svc_rt2_load_calendar u_calendar" in engine_source.read_text()
     # The known phase-zero native load calendar rounds an odd feedback shift
@@ -163,10 +172,10 @@ def main():
     from concurrent.futures import ThreadPoolExecutor
     muts = [0] + [int(m) for m in a.mut.split(",") if m]
     with ThreadPoolExecutor(len(muts) + 1) as ex:
-        tags = list(ex.map(lambda sm: build(a, sm[0], sm[1], nkv, np_), [(0, 0)] + [(a.srx, m) for m in muts]))
+        tags = list(ex.map(lambda sm: build(a, sm[0], sm[1], nkv, np_, sm[2]), [(0, 0, True)] + [(a.srx, m, False) for m in muts]))
     ref_tag = tags[0]
     ref, rs = run(a, ref_tag)
-    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=a.band, bandm=a.bandm, bandt=a.bandt, hcore=a.hcore, rt2_calendar=a.rt2_calendar, shift=n, shift_pv=npv, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
+    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, eng_xs=a.eng_xs, srx=a.srx, band=a.band, bandm=a.bandm, bandt=a.bandt, hcore=a.hcore, rt2_calendar=a.rt2_calendar, shift=n, shift_pv=npv, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
     rec["analyze_only"] = a.analyze_only
     rec["p_feed_shift"] = p_feed_shift
