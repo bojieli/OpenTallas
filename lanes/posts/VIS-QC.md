@@ -54,3 +54,4 @@
   Gates: TAPNAME 0 / ADDTAP 0; latency/PGP/G0 running (epyc8 VIS-QC/su1g).
   rc104: SLWSLE can base its ft_slot re-site on this plan now. Not in this row: the pad/station band and the hold taps, which are SEAT-1c (tap affinity, rc103).
 - 2026-11-23 03:22 PST DONE [VIS-QC] ot-run oth-ubuntu-2215068-1795432449 on outgoing-giraffe: rc=0 after 1120 s, ended 11:22:39, log /srv/opentallas-scratch2/claude/VIS-QC/su1g/lat_gen.log, cmd: --disk 1 --mem 16 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-v4/W/launch -- python3 -I -B tools/die_plan/g
+- 2026-11-23 03:49 PST DONE [VIS-QC] ot-run oth-ubuntu-3964865-1795420915 on dear-crayfish: rc=0 after 13639 s, ended 03:49:09, log /srv/opentallas-scratch2/claude/VIS-QC/cb1/logs/chain_cb1d.log, cmd: --hosts epyc2 --no-spill --priority plan --plan-job bind --mem 96 --threads 4 --disk 70 --dir /srv/opentallas-scratch2/claude/VIS-QC/cb1 -- 
