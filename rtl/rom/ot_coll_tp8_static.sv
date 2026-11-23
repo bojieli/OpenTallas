@@ -189,7 +189,17 @@ module ot_coll_tp8_static #(
     always @(posedge clk) dpr_q <= dp_rec;
     always @(posedge clk or negedge rs_p) if (!rs_p) dpv_q <= 1'b0; else dpv_q <= dp_valid;
     wire b_lnk = (dpv_q != tb_v);
+`ifdef OT_TP8S_RDPIPE
+    // OPUS-FIX-QC-COLL-R3 11-22 (V4 CTS worst -255: u_pring macro rd_out 334 ps -> 34-bit tag compare -> f_md):
+    // the pairing-tag compare operands are registered first, the compare runs one cycle later (+1 cycle on the
+    // sticky fault flag f_md only; no data, schedule or output word moves).
+    reg bm_v; reg [TAGW+1:0] bm_a, bm_b;
+    always @(posedge clk) begin bm_a <= dpr_q[FW +: TAGW + 2]; bm_b <= pr_rd[FW +: TAGW + 2]; end
+    always @(posedge clk or negedge rs_q) if (!rs_q) bm_v <= 1'b0; else bm_v <= tb_v && dpv_q;
+    wire b_md  = bm_v && (bm_a != bm_b);
+`else
     wire b_md  = tb_v && dpv_q && (dpr_q[FW +: TAGW + 2] != pr_rd[FW +: TAGW + 2]);
+`endif
     // s4 fanout structure (s1/s3 gates: strap PK/DI and token-valid broadcasts drove 2,000-4,600 loads each over the
     // 860-um cluster and crashed the resizer): every wide-word select comes from its own registered copy per 128-bit
     // slice (keep_hierarchy, distinct IDs: no merge), loaded from the same D as the original -> identical cycle.
@@ -296,6 +306,11 @@ module ot_coll_tp8_static #(
     // (cc - LS: the word written LS >= 2 cycles before; read-before-write macro) and its output is registered on the
     // macro's own clock, so s_rd carries the same word in the same cycle as the unregistered form (0 added cycles) while
     // the macro clk->Q drives one flop instead of the gather / fold select cones (coll_core g_sring[*].u_m -> out_data).
+`ifdef OT_TP8S_RDPIPE
+`ifndef OT_TP8S_SRDREG
+    initial $error("ot_coll_tp8_static: OT_TP8S_RDPIPE needs OT_TP8S_SRDREG");
+`endif
+`endif
 `ifdef OT_TP8S_SWDREG
     initial if (LS < 3) $error("ot_coll_tp8_static: OT_TP8S_SWDREG needs LS >= 3");
 `else
@@ -363,11 +378,26 @@ module ot_coll_tp8_static #(
     wire d_lnk = (srv_q != exp_sr);
     reg  d_md;
     integer jj;
+`ifdef OT_TP8S_RDPIPE
+    // same split for the SerDes tag check (+1 cycle on f_md only)
+    reg [2:0] dm_v; reg [TAGW+1:0] dm_a [0:2]; reg [TAGW+1:0] dm_b;
+    always @(posedge clk) begin
+        dm_b <= {td_t, td_m, td_l};
+        for (jj = 0; jj < 3; jj = jj + 1) dm_a[jj] <= srr_q[jj][FW +: TAGW + 2];
+    end
+    always @(posedge clk or negedge rs_q) if (!rs_q) dm_v <= 3'b0; else dm_v <= exp_sr & srv_q;
+    always @(*) begin
+        d_md = 1'b0;
+        for (jj = 0; jj < 3; jj = jj + 1)
+            if (dm_v[jj] && (dm_a[jj] != dm_b)) d_md = 1'b1;
+    end
+`else
     always @(*) begin
         d_md = 1'b0;
         for (jj = 0; jj < 3; jj = jj + 1)
             if (exp_sr[jj] && srv_q[jj] && (srr_q[jj][FW +: TAGW + 2] != {td_t, td_m, td_l})) d_md = 1'b1;
     end
+`endif
     wire red2 = td_v && !td_m && td_od;
     wire [4*FW-1:0] xsrc;
     genvar gq;
@@ -395,8 +425,24 @@ module ot_coll_tp8_static #(
             .sum(xs_sum[gs*128 +: 128]), .v_out(xs_v[gs]), .e_out(xs_e[gs]));
     end endgenerate
     // gather output (D + 1)
+`ifdef OT_TP8S_RDPIPE
+    // OPUS-FIX-QC-COLL-R3 11-22 (v3 GRT worst: g_sring[4].s_rd_q[36] = td_r[1] -> 512-bit g_out select -> gq_q):
+    // the gather rank select is decoded from the macro output s_rd_m (rank field 548:547) and registered per 128-bit
+    // slice on the same macro clock edge that loads s_rd_q, so each one-hot {own, port2, port1, port0} copy carries
+    // the same cycle as td_r (0 added cycles) and drives 128 mux bits next to its slice.
+    wire [FW-1:0] g_out;
+    wire [1:0] jr_m = s_rd_m[548:547] - PK + 2'd3;
+    generate for (gr = 0; gr < NS; gr = gr + 1) begin : g_gsel
+        wire [3:0] gs1;
+        ot_coll_rep_reg #(.W(4), .ID(64 + gr), .RST(0)) u_gs (.clk(CCLK ? clk_mem[2 + SEW/128 - 1] : clk), .rst_n(1'b1),
+            .d({jr_m == 2'd3, jr_m == 2'd2, jr_m == 2'd1, jr_m == 2'd0}), .q(gs1));
+        assign g_out[gr*128 +: 128] = (td_d[gr*128 +: 128] & {128{gs1[3]}}) | (srr_q[0][gr*128 +: 128] & {128{gs1[0]}})
+                                    | (srr_q[1][gr*128 +: 128] & {128{gs1[1]}}) | (srr_q[2][gr*128 +: 128] & {128{gs1[2]}});
+    end endgenerate
+`else
     wire [FW-1:0] g_out = (td_r == PK) ? td_d : (jr == 2'd0) ? srr_q[0][FW-1:0] : (jr == 2'd1) ? srr_q[1][FW-1:0]
                                                                                               : srr_q[2][FW-1:0];
+`endif
     wire gd_v = td_v && td_m;
     // reduce token D -> E (SL + 1 edges): {v, own, last}
 `ifdef OT_TP8S_XRPIPE
