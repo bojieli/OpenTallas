@@ -34,7 +34,10 @@ module tb_s81_col_rst_tree;
     ot_s81_rate_match #(.RLEAF(1)) u_rmb (.wclk(cb), .wrst_n(rm_wr), .w_v(w_v), .w_d(w_d), .rclk(ca), .rrst_n(rm_rr), .r_d(rd_b),
                                 .fault(fb));
 `else
-    ot_s81_rate_match_rt u_rmb (.wclk(cb), .wrst_n(rm_wr), .w_v(w_v), .w_d(w_d), .rclk(ca), .rrst_nc(rm_rr), .rrst_nd({8{rm_rr}}),
+    // WPL adds a third synchronized write-pointer age. This unit check
+    // compares the separated-reset base and tied-reset reference edge for
+    // edge. The two actual columns below keep the selected WPL implementation.
+    ot_s81_rate_match_rt #(.LOCAL_WP(0)) u_rmb (.wclk(cb), .wrst_n(rm_wr), .w_v(w_v), .w_d(w_d), .rclk(ca), .rrst_nc(rm_rr), .rrst_nd({8{rm_rr}}),
                                 .r_d(rd_b), .fault(fb));
 `endif
     integer rm_chk = 0, rm_nonidle = 0;

@@ -7242,7 +7242,11 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
             if not (dec_core and c.startswith(SERDES_DEC_CORE_PREFIX))]
     if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
-    assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
+    # S81-LPR-FOREST 11-23 (ledger x14): a serdes kit whose decoder carries landing reset forests (OT_S81_LPR_FOREST) already
+    # holds the forest_recluster.tcl POST_GLOBAL_PLACE hook; it runs first, then the serdes hook, from one wrapper.
+    forest_hook = "export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"
+    forest = forest_hook in cfg
+    assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") and c != forest_hook for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
     chains = env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split() if env.get("OT_TXL_MID") == "1" else []
     if dec_core:
         chains = [c for c in chains if not c.startswith(SERDES_DEC_CORE_PREFIX)]
@@ -7263,6 +7267,10 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     serdes_h = rck4 and serdes_phy_region(kd) and env.get("OT_SERDES_H_FORM") != "0"
     if serdes_h:
         post_gpl = serdes_h_post_gpl(kd, names, post_gpl)
+    if forest:
+        cfg.remove(forest_hook)
+        (Path(kd) / "serdes_forest_post_gpl.tcl").write_text(f"source /work/forest_recluster.tcl\nsource /work/{post_gpl}\n")
+        post_gpl = "serdes_forest_post_gpl.tcl"
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
             *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
             *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),

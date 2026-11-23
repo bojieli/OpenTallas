@@ -36,7 +36,7 @@ $VL --binary --timing -j ${COL_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style 
   $d --top-module $top $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" \
   "$L/ot_s81_kp4_bm.sv" "$L/ot_s81_kp4_dsyn.sv" "$L/ot_s81_kp4_ddly.sv" "$L/ot_s81_kp4_dchn.sv" "$L/ot_s81_kp4_dout.sv" \
   "$L/ot_s81_kp4_dec.sv" "$L/ot_pdie_serdes.sv" "$L/ot_pdie_serdes_locksafe.sv" "$L/native/ot_s81_kp4_dec_native_flat.sv" \
-  "$L/lp/ot_s81_kp4_dec_native_flat_lp.sv" "$R/rtl/common/landed_parent/ot_pl_land.sv" "$L/col/ot_pdie_serdes_col.sv" \
+  "$L/lp/ot_s81_kp4_dec_native_flat_lp.sv" "$R/rtl/common/landed_parent/ot_pl_land.sv" "$R/rtl/common/landed_parent/ot_pl_land_field_copies.sv" "$R/rtl/common/landed_parent/ot_pl_land_reset_forest.sv" "$L/col/ot_pdie_serdes_col.sv" \
   "$M/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v" "$M/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v" \
   "$L/col/$top.sv" > "$out/build.log" 2>&1 || { echo "RST_TREE BUILD_FAIL $mode"; tail -5 "$out/build.log"; exit 2; }
 "$out/obj/tb" +verilator+seed+${COL_SEED:-11} > "$out/run.log" 2>&1
