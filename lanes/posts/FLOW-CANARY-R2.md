@@ -195,3 +195,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 17:00 PST CANARY hbm_sram @ f7813a08ab: FAIL failing vclk_basis,signoff (STALE-BASELINE STALE-BASELINE: identical 4 regressed metric(s) at 14 source commits (2eba10c7aee8, 3504af932d1b, 3b1cea8bec21, 3c2f3758f4c1); baseline canary-r)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 17:15 PST CANARY s81_head_cl @ 701c377048: FAIL failing face_cover (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_cl_af3312b92_1122_083032_641590); CANARY hbm @ f7813a08ab: FAIL failing lec,vclk_basis,cts,grt_gate,route,rcx (REGRESSION grt hold_ff_wns 0.0 -> None not measured; the baseline run measured it; grt hold_ff_ep 0.0 -> None not measured; the baseline run measured it; stage)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
