@@ -248,3 +248,8 @@ MERGED J9 COMPOSE ORDER (supersedes earlier lists):
      Checks: LAND-CAP (main 139380c2ba) 0 over / 0 overlap on slice C; 0 band-core/halo overlaps, 0 band-band overlaps, 0 bad taps.
      Remaining 4 over + 5 overlap are on svc_*_dsdv_svc_rs. Owner FABLE-UNC-S81-SVC (SVC-LAND-CAP row 3j must clear them).
      Strict bind on 494359d3530a pending; probes t4, c1x_C t1, lepe_nh_mus_C t1.
+   3j UPDATE (FABLE-UNC-S81-SVC):
+     (1) TAP-GRID regen list has 0 svc_* names. FIXCHK holds non-row clock/landing_contract byte-identical, so att_order_post keeps its place.
+     (2) landcap_row_v2.py trims every svc band clear of hard cores (+2.16 row cut), then grows or re-seats to fill <= 0.85.
+         Dry run with 139380c2ba3c: 11 bands fixed; 0 band-core overlaps and 0 fills >= 0.90 left on svc (119 bands). Re-reads split hi pieces after SPLIT-F65F.
+     (3) v11 (16 types, land-cap v1) PRE PASS 0 / 66 ADV. v12 (+ land-cap v2) running. ROWS-READY shas + sidecar + gate_j9_v5.sh before 10:30.
