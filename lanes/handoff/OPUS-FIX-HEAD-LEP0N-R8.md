@@ -26,6 +26,13 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 20:4x PST PRECHECK-R2 (phantom + taps)
+- r18m/r18n carry the phantom +1 on L2/L4 (3 cycles, 2 regs). Plan of record goes back to 5e1f38e1530b (clean, gated) until Fable posts a stripped plan that gates.
+- w13 retired: FAIL_PREFLOOR ring_ff needs ring_place=ff, which only r18k/r18m carry. W = Fable w10.
+- Tap draft rows: lanes/handoff/HEAD-tapsplit-R8-rows.json (hub 3b556ccf643), working dir epyc9 M/tapsplit. Waiting on TAP-GRID-R5 cross-check, then into the next HEAD event.
+  hd_host_e: +11 taps, max load 1471/1500. hd_serdes: +22 taps, max load 997/1000.
+- Live: hn3 (route), ctl1 (chain). Waiter bs1tmzz31 (w5.sh).
+
 ## UPDATE 11-22 18:2x PST DIRECT PLACE (COORD 17:5x/18:1x)
 - Plan of record r18m 3dd49f406010 confirmed. NEAR-CLOSE row hub 73aedae5cae.
 - Queued kwp place units were restarted under the same names with ot-run --direct, using M/tmp/direct_place.py <unit> <spec_dir> go (intel2).
