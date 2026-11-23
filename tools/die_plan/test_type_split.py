@@ -1362,3 +1362,11 @@ def test_piece_without_a_core_of_the_spine_module_gets_no_spine_pin():
     TS.TypeSplit._reset_spine_pins(ts_)
     assert "reset_spine_pins" not in ts_.T[1]
     assert "reset_spine_added" not in ts_.rep
+
+
+def test_ring_flags_copied_to_pieces():
+    """RING-LITE-1 type flags (clock.landing_ring_lite / landing_ring_narrow) are type-level config: the split copies them"""
+    import importlib.util, pathlib
+    sp = importlib.util.spec_from_file_location("type_split_rf", pathlib.Path(__file__).with_name("type_split.py"))
+    m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+    assert {"landing_ring_lite", "landing_ring_narrow"} <= m.CLOCK_COPY_KEYS
