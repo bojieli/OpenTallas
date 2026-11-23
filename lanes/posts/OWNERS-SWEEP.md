@@ -373,3 +373,8 @@
   92 held-with-reason rows no longer STALE; 193 held for plan events.
   Detail lanes/OWNERS-SWEEP.tsv
 - 2026-11-23 00:51 PST 00:55 rows 448 (HEAD 0 flagged; S81/QC/KV only). S81: 111 STALE, 1 UNOWNED (dsdv_slice_lepe_nh_mus_C__t1), 3 HELD-LBL. QC: 2 STALE, 1 HELD-LBL. KV: 3 HELD-LBL (kv3_sys_c, kv3_pc_v1 cl*), 2 DEAD-OWNER (kv3_hub_Wi, kv3_hub_C), 6 WAIT-BIND. FAILED-NO-RELAUNCH 0 outside LBL holds. Columns per spec; tool bin/owners_sweep.py + VIS-COVERAGE join.
+- 2026-11-23 01:58 PST 01:58 sweep, 449 rows (HEAD 2, KV 48, QC 50, S81 348); tool bin/owners_sweep.py + HELD-EVENT for plan-event holds (D29/V4/r18/J9).
+  S81: 1 UNOWNED (dsdv_slice_iq_C__t1), 7 FAILED-NO-RELAUNCH (COL-H9R0-R4 2, COL-H10-R4 1, LEAF-R10 3 s81sl_leaf t29/t44/t71, SLICE-R6 1), 15 STALE>3h cancelled/superseded, 248 HELD-EVENT, 77 OK.
+  QC: 2 FAILED-NO-RELAUNCH (CLAND ring band, owner FAIL-ROUTE-1115), 1 DEAD-OWNER (sle_fw_v1__clf58b4dfb, VIS-QC-form_fefw), 27 HELD-EVENT.
+  KV: 2 DEAD-OWNER (kv3_hub_Wi FABLE-FIX-KV-HG; kv3_hub_C KV-RINGMAC-R1), 26 HELD-EVENT incl 3 failed rows waiting D29 bind (kv3_pc_v1 cl4ea58a5c/cl23f6a148 FAM-KV-IOPC-R4, kv3_sys_c FAM-KV-HUBC-SYSC-R2).
+  HEAD: 2 OK. FABLE-UNC-S81-* lanes not yet posting. Detail lanes/OWNERS-SWEEP.tsv
