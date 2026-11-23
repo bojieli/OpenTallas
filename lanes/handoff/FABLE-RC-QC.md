@@ -48,3 +48,7 @@ Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual
 - 03:05 x7 slw_fe_v2 clf110fab2: ACCEPTED as REASONED on place timing (+6.2 worst, verified on epyc10 R6V3); reopen only if 4_cts_post_hook shows < -42 on a u_core leaf path.
 - 03:10 rc97 ruling: CONDITIONAL ACCEPT for the cut (V4 cuts 14:00 with st_a held); hold releases on one measured SRAM->g_read setup >= -42 at 4_cts_post_hook on pvd2ec7769/pv88773f93/pv4242de79, from STA-1b+SEAT-1c probe (by 13:00) or btab_s4r harden. No measured REASON from HCST-R3 found on the hub.
 - 03:15 rc97 clarified: for arm (b) the tile-level SRAM->q setup >= -42 in the btab_s4r kit 4_cts_post_hook releases the st_a hold, given strict bind + LATCHECK with the consumer patch; arm (a) keeps the type-level number.
+
+## 03:30 reply check done (RC-REPORT-2 posted)
+- Ledger QC: 4 REASONED, 12 ROW-DRAFT, 5 OPEN. Uncovered: rc97/hg-REACH (HCST-R3, unmeasured), rc96 b_tw (SLWSLE, no row/ETA), rc104+rc103 su_l1 rows not built (SLWSLE, c4 08:00), x5 DPL-0033 rerun, rc98 SEAT-1c tap row ungated.
+- NEXT: (1) cross-check lanes/HOTSPOT-GAPS.tsv per-type QC items vs my rows; (2) re-check ledger ~08:00 (c4 start, sta1c bind) and ~12:30 before the 13:00 gate; (3) update verdict column in lanes/FABLE-RC-REVIEW.tsv as rows gate.
