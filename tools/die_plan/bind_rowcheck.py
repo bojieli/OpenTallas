@@ -240,6 +240,14 @@ def check_relaysink(plan, ab, yjs):
             n_gen += 1
             continue
         hits = sv.get(s) or [h for k in by_tail.get(s.rsplit("_", 1)[-1], ()) if k.endswith("_" + s) for h in sv[k]]
+        if not hits and "__" in port:
+            # ASTK-MERGE-1122: a sink row on a dissolved hard core (kv3_astk astk_WN) names a native pin <path>__<pin>; the bound
+            # core is not a leaf, the native cell <inst>__<path> is (bind EMIT matches these: BIND_ERRORS 0 on plan 240c9e69c3f1)
+            pre, _, pin = port.rpartition("__")
+            k_ = _bind_sv(row["inst"] + "_" + pre)
+            native = sv.get(k_) or [h for k in by_tail.get(k_.rsplit("_", 1)[-1], ()) if k.endswith("_" + k_) for h in sv[k]]
+            if native:
+                hits, port = native, pin
         if not hits:
             n_bad += 1
             out.append(f"FAIL RELAYSINK relay_depth {tn}: {row['inst']}.{port} is no leaf of the elaborated die (bind.sv_id form, any "
