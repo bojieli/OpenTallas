@@ -25,3 +25,10 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 - Class items: CLASS-FIX-RHI writes the HEAD die rows for RESET-ASYNC + IO-BOUNDARY (its TAKING post 02:16; my AGREE 9dd7f242). GRT-0273 handed to FLOW-OPS-R2 (d10c8eb7).
 - Posts: CLAIM 34587e25, REPORT-1 821a9c26, ROW-DRAFT 9b91990b, AGREE 9dd7f242, HANDOVER d10c8eb7.
 - rc138: e1 geometry shows die-clock reserved rects [805.2,651.2,813.7,654.2], [810.6,609.1,813.7,632.6], [825.8,634.5,828.3,656.9] beside rx_mem g_rx[3] bank[2] (x747-799): a 11-27 um slot. ECOL moved the macros; decide on ep1 census.
+
+## 03:0x state
+- EQUIV PASS: 168,059 compare points, 0 unproven (post 14130750).
+- R9 changed course 02:55: ep1 FAILED at GPL (ECOL row bug, fixed), r18x fork abandoned, the event (r18x1 FAIL republish tie, r18x2 queued) is composed IN PLACE in R9 trees/s81_head_r18w_ecol.
+- My fork r18y_pushdup finished (2419 s) but copied that tree WHILE R9 edited it (plan 3682da8c mid-state, no plan_r18w3.json): NOT gate-able. Do not gate or probe from it as is. Delete via ot-delete once not needed, or re-sync after R9's gate.
+- Asked R9 (SendMessage a318dc59168bed8ac + post a2f0b1a9) to run pushdup_rtl.py on its tree before the r18x2 gate / ep2 probe, so ONE E probe covers ECOL + PUSHDUP. Waiting for its answer. Fallback: re-fork after R9's r18x2 gate PASS, chain_unch_gate.sh, own probe.
+- Review note sent to R9: E per-port windows median 77 / max 131 -> W estimate still ~90 ps; W probe must report hold endpoints vs 17,932.
