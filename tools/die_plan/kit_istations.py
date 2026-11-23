@@ -928,10 +928,31 @@ proc is_chain {bus W names face core_glob tag} {
 """
 
 EXACT_BANK_TCL = r'''
+# BANK-SITE-WIDTH-1122 (COORD 21:0x; KV kv3_pv_v3 D28 1.188-um bank sites holding a 1.404-um DFFASRHQNx1 reset flop): the same rule as
+# soft_cs_placement SOFTCS-EDGE-1122 (S81 leaf t31): a bank member wider than the site pitch takes a site of its bank with no other
+# site of the same row under its actual width (swap within the bank); refused only when no such site is free.  -> {sites edges}
+proc ot_bank_edge_sites {members sites fw dbu} {
+  set edges {}; set used {}
+  foreach mb $members {
+    lassign $mb k w
+    if {$w <= $fw*$dbu+1} continue
+    set wum [expr {double($w)/$dbu}]; set best -1
+    for {set j 0} {$j < [llength $sites]} {incr j} {
+      if {[dict exists $used $j]} continue
+      lassign [lindex $sites $j] x y; set clear 1
+      foreach s2 $sites {lassign $s2 sx sy; if {abs($sy-$y)<1e-6 && $sx>$x+1e-6 && $sx<$x+$wum-1e-6} {set clear 0; break}}
+      if {$clear} {set best $j; break}
+    }
+    if {$best < 0} { return -code error "no free edge site for bank member $k ($wum um)" }
+    set a [lindex $sites $k]; set b [lindex $sites $best]; lset sites $k $b; lset sites $best $a
+    dict set used $k 1; dict set edges $k 1
+  }
+  return [list $sites $edges]
+}
 # Generic exact internal/face FF banks: no spiral or post-measurement placement.
 proc is_exact_bank {inst W sites fw fh tag {epoch_unobserved 0}} {
   global ff_blk ff_dbu ff_orient ff_sw ff_x0 ff_y0 ff_x1 ff_y1 is_n is_fh
-  set seen {}
+  set seen {}; set mem {}
   foreach i [$ff_blk getInsts] {
     set nm [string map {\\ {}} [$i getName]]
     if {![string match "*${inst}\[./\]*" $nm]} continue
@@ -943,13 +964,24 @@ proc is_exact_bank {inst W sites fw fh tag {epoch_unobserved 0}} {
     if {$bit < 0 || $bit > $W || [dict exists $seen $bit]} {
       error "duplicate/out-of-range exact internal bank bit: $nm"
     }
+    dict set seen $bit 1
+    lappend mem [list $i $nm $bit]
+  }
+  set members {}
+  foreach r $mem { lassign $r i nm bit; lappend members [list $bit [[$i getMaster] getWidth]] }
+  if {[catch {ot_bank_edge_sites $members $sites $fw $ff_dbu} got]} {
+    error "exact internal bank flop exceeds its footprint and no edge site is free: $inst ($got)"
+  }
+  lassign $got sites edges
+  foreach r $mem {
+    lassign $r i nm bit
     lassign [lindex $sites $bit] x y
     set cx [expr {round($x*$ff_dbu)}]; set cy [expr {round($y*$ff_dbu)}]
     if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw != 0} {
       error "exact internal bank site is not on row/site: $nm $x $y"
     }
     set m [$i getMaster]
-    if {[$m getWidth] > $fw*$ff_dbu+1 || [$m getHeight] > $fh*$ff_dbu+1} {
+    if {([$m getWidth] > $fw*$ff_dbu+1 && ![dict exists $edges $bit]) || [$m getHeight] > $fh*$ff_dbu+1} {
       error "exact internal bank flop exceeds its footprint: $nm"
     }
     if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$m getWidth] > $ff_x1 || $cy+[$m getHeight] > $ff_y1} {
@@ -959,7 +991,7 @@ proc is_exact_bank {inst W sites fw fh tag {epoch_unobserved 0}} {
     $i setOrient [dict get $ff_orient $cy]
     $i setLocation $cx $cy
     $i setPlacementStatus FIRM
-    dict set seen $bit 1
+    if {[dict exists $edges $bit]} { puts "OT_ISTATIONS exact bank $inst: $nm ([expr {[$m getWidth]/double($ff_dbu)}] um) on free edge site $x $y (BANK-SITE-WIDTH)" }
     puts $is_fh "$nm\t$tag\t$x\t$y\t-"
     incr is_n
   }
