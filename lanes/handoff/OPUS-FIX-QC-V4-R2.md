@@ -42,3 +42,8 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - What supersedes it is the V4 cap2b in l1a, not V5: cl19bb38ef is not a V5 re-seat or tap type. TODO: sealed --goal route kit for cl19bb38ef on l1a_bound (or on the V4 wave) once l1a binds clean.
 
 ## 23:0x PST l1a DONE = NOT clean (3 errs: LANE_ASBUILT arm_wo_arm_ei / arv_wo_arv_ei 12 vs 8, unpriced kit stations; static G0 0). l1r = the same + fixed_cycles 4->8 on those lanes -> the V4 hand-over candidate. cap2b-dependent kits (cl19bb38ef, cl92142dac v5e) move to l1r_bound. Waiter bgc4q40uc (seen l1a).
+
+## 23:2x PST OWNER LOOK-BEFORE-LAUNCH (scratchpad visual_brief2.txt; VIS-QC a2e32d9bfa40faa1f; lanes/VIS-COVERAGE.tsv NOT yet created at 23:3x)
+- V5 kit order changed: on clean v5b/v5c launch ONLY the OT_PROBE_THROUGH=1 probe kits now (slw_su_l1__clcc9d0155, sle_fw_v2__cl6740750e, slw_su_c__cl92142dac). Render + read the placed/GRT result, post it to VIS-QC; the sealed --goal route kits start only once the family row is PROBE-PASS (or NONE-NEEDED).
+- cl19bb38ef on l1r_bound: probe first, too.
+- V4 hand-over to R13 carries the note: first V4 attempts start only for families at PROBE-PASS/NONE-NEEDED; R13 holds the rest with kit_wave_edit, reason "LOOK-BEFORE-LAUNCH <family>". Running kits keep running.
