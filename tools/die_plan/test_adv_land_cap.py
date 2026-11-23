@@ -102,3 +102,23 @@ def test_hard_ring_child_band_skipped_and_never_raises():
     assert A.band_fills(raw) == []
     assert A.findings({"partition_types": {"x": {"clock": 3}}}, "p")[0].startswith("WARN ADV-LAND-CAP not checked")
     assert A.findings(None, "p")[0].startswith("WARN ADV-LAND-CAP not checked")
+
+
+def test_overlap_monitor_band_on_core():
+    """FAM-S81-SLICE-R6: monitor_0 band over a hard core by 92 um2 (no ring flops: fill is not computed) -> OVERLAP"""
+    t = {"outline_um": [1442.88, 1226.88],
+         "hard_cores": [{"inst": "u_c.u_lep", "origin_um": [400.0, 300.0], "outline_um": [200.0, 200.0]}],
+         "clock": {"landing_contract": {"bands": {"monitor_0": {"rect_um": [390.8, 290.0, 410.0, 310.0]}}}}}
+    raw = {"partition_types": {"dsdv_slice_lepe_nh_mus_C__t1": t}, "partitions": [{"name": "s", "type": "dsdv_slice_lepe_nh_mus_C__t1"}]}
+    ov = A.band_overlaps(raw)
+    assert len(ov) == 1 and ov[0][1] == "monitor_0" and abs(ov[0][3] - 100.0) < 1e-6
+    out = A.findings(raw, "p.json")
+    assert any(" OVERLAP band monitor_0 " in x and "u_c.u_lep" in x for x in out), out
+    t["clock"]["landing_contract"]["bands"]["monitor_0"]["rect_um"] = [370.0, 290.0, 399.0, 310.0]
+    assert A.band_overlaps(raw) == []
+
+
+def test_overlap_halo_only():
+    raw = qc_st_a(btb_y=725.76)          # V4 v5c: core clear of the band, its 4.32-um halo 0.21 um into it
+    ov = A.band_overlaps(raw)
+    assert ov and ov[0][3] <= 1e-6 and ov[0][4] > 0

@@ -267,6 +267,36 @@ def type_bands(raw, tn, t, **kw):
     return out
 
 
+def band_overlaps(raw):
+    """OVERLAP (COORD 11-23, FAM-S81-SLICE-R6 monitor_0 on t8 / lepe_nh_mus 92 um2): every landing band rect (any band,
+    flops or not) overlapping a hard core / lef macro, or its halo_um ring, of the same type by > 0 um2 (own cl_ core
+    excluded) -> [(type, band, inst, core_um2, halo_um2, rect)]"""
+    types = raw.get("partition_types") or {}
+    used = _used_types(raw)
+    res = []
+    for tn, t in sorted(types.items()):
+        if not isinstance(t, dict) or t.get("hard") is True or (used and tn not in used):
+            continue
+        bands = ((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}
+        if not isinstance(bands, dict) or not bands:
+            continue
+        cores = _cores(t)
+        if not cores:
+            continue
+        for nm, b in sorted(bands.items()):
+            if not isinstance(b, dict) or any(c[4] == f"cl_{nm}" for c in cores):
+                continue
+            rects = [x for x in (_rect(v) for v in (b.get("rects_um") or [b.get("rect_um")])) if x]
+            for x0, y0, x1, y1, inst, halo in cores:
+                if _own(nm, b, inst):
+                    continue
+                co = sum(_ov(r, (x0, y0, x1, y1)) for r in rects)
+                ho = sum(_ov(r, (x0 - halo, y0 - halo, x1 + halo, y1 + halo)) for r in rects) - co if halo > 0 else 0.0
+                if co > EPS or ho > EPS:
+                    res.append((tn, nm, inst, co, ho, list(rects[0])))
+    return res
+
+
 def band_fills(raw, **kw):
     types = raw.get("partition_types") or {}
     used = _used_types(raw)
@@ -286,8 +316,14 @@ def findings(raw, plan_path, tree=None, warn=FILL_WARN, **kw):
         if not isinstance(raw, dict) or not raw.get("partition_types"):
             return [f"WARN {CHECK} not checked: plan has no partition_types"]
         res = band_fills(raw, **kw)
+        ovl = band_overlaps(raw)
+        olines = [f"WARN {CHECK} {tn}: OVERLAP band {nm} {[round(v, 2) for v in r]} overlaps hard core {inst} by "
+                  f"{co:.0f} um2{f' + {ho:.0f} um2 of its halo' if ho > EPS else ''}; the kit legalises landing cells out of "
+                  f"the core (or fails 'no legal site'); fix: move / trim the band clear of {inst} and its halo"
+                  for tn, nm, inst, co, ho, r in sorted(ovl, key=lambda x: -(x[3] + x[4]))]
         if not res:
-            return [f"WARN {CHECK} not checked: no soft clock.landing_contract.bands in the placed types"]
+            return (olines[:MAX_LINES] + ([f"WARN {CHECK} {len(ovl)} band x core overlap(s)"] if ovl else [])) or \
+                [f"WARN {CHECK} not checked: no soft clock.landing_contract.bands in the placed types"]
         bad = sorted([x for x in res if x[2] >= warn], key=lambda x: (-x[2], x[0], x[1]))
         lines = []
         for tn, nm, fill, i in bad:
@@ -306,7 +342,7 @@ def findings(raw, plan_path, tree=None, warn=FILL_WARN, **kw):
                          f"{[round(v, 2) for v in i['rect']]}{' (under ' + hit + ' um2)' if hit else ''}; risk 'OT_CLAND no "
                          f"legal nonoverlapping row/site in reserved band'; fix: move the band clear of the cores or grow it "
                          f"to >= {i['demand'] / 0.75:.0f} um2 free")
-        out = lines[:MAX_LINES]
+        out = lines[:MAX_LINES] + olines[:max(5, MAX_LINES - len(lines))]
         fin = [x[2] for x in res]
         buck = [sum(1 for f in fin if f < 0.5), sum(1 for f in fin if 0.5 <= f < 0.7), sum(1 for f in fin if 0.7 <= f < warn),
                 sum(1 for f in fin if f >= warn), sum(1 for x in res if x[3]["blocked"])]
@@ -315,6 +351,7 @@ def findings(raw, plan_path, tree=None, warn=FILL_WARN, **kw):
         nbad_t = len({x[0] for x in bad})
         out.append(f"WARN {CHECK} {len(bad)} band(s) in {nbad_t} type(s) at fill >= {warn:g} ({buck[4]} BLOCKED by a halo ring)"
                    f"{' (first ' + str(len(lines[:MAX_LINES])) + ' listed)' if len(lines) > MAX_LINES else ''}; "
+                   f"{len(ovl)} band x core OVERLAP(s) in {len({x[0] for x in ovl})} type(s); "
                    f"{len(res)} soft ring bands in {ntypes} types: fill <0.5 {buck[0]}, 0.5-0.7 {buck[1]}, 0.7-{warn:g} {buck[2]}, "
                    f">={warn:g} {buck[3]}; top: "
                    + ", ".join(f"{tn}/{nm} {'BLOCKED' if f == math.inf and i['blocked'] else _f(f)}" for tn, nm, f, i in top)
