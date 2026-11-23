@@ -13,3 +13,10 @@ Batches (intel2 .../hotspot-census/tmp): batch.sh JOBS (die type host kit; ot-ru
 Collect: tmp/collect.sh -> central/<die>__<type>/census.*; gaps: hotspot_census.py gaps --coverage ~/coord/lanes/VIS-COVERAGE.tsv --owners ~/coord/lanes/OWNERS-SWEEP.tsv --out tmp/GAPS.tsv central/*__*/census.json  (old central/s81_leaf_t44 is the v1 dup: skip it).
 LAUNCH-GUARD asked (b696bb1) to treat PROBE-PASS valid only when `check` passes.
 Next: rerun all GRT kits with v2.1 (gcells + flow items), GRT probes for placed-only named targets, publish lanes/HOTSPOT-GAPS.tsv, notify owners of NONE items, read 10 worst PNGs, milestone 2.
+
+## Update 11-23 ~03:xx PST
+- v2.3+v2.4 on main e5250f824d (probe at kit iters <=10; 4-um cluster merge; MACRO-CHANNEL only short side <=90 um). Deployed all 7 gen hosts.
+- lanes/HOTSPOT-GAPS.tsv published (e4a2ac3): 47 census dirs, 1058 items, 744 covered, 314 NONE. Owner posts sent: LEAF-ROUTE-CBC 71, VIS-KV 76, VIS-QC 20, VIS-S81-COL 104, VIS-S81-MISC 43 (1-h reply window).
+- Visual check of 10 worst PNGs done: census matches the renders; fixes went into v2.4 (fragmentation, channel mislabel).
+- Running (intel2 tmp/): probes2.log (15 GRT-probe placed-only targets, crit), rerun2.log (v2.4 rerun of batch1/2 done kits). When done: collect.sh, render10.sh, regenerate gaps (same command as e4a2ac3), re-notify only new NONE, milestone 3.
+- Still no DB: leaf t39, svc, hd_lep0N_e.
