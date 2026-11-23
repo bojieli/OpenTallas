@@ -23,6 +23,8 @@ def test_colliding_identity_keys_recompute_distinct_plan_geometry(monkeypatch, m
     # Simulate CPython reusing an old plan's integer address without relying on allocator timing.
     monkeypatch.setattr(T, "id", lambda p: 17, raising=False)
     monkeypatch.setattr(T, "planned_sinks", lambda p, tn, *a, **kw: p.types[tn]["clock"]["sink_sites_um"])
+    # This test checks the process cache, independent of a warm fleet disk cache.
+    monkeypatch.setenv("OT_BIND_GATE_CACHE", "off")
     a, b = plan(40.), plan(240.)
     if mode == "density":
         call = lambda p: T.density_taps(p, "x")
@@ -44,3 +46,12 @@ def test_colliding_identity_keys_recompute_distinct_plan_geometry(monkeypatch, m
     else:
         assert any(value[0] is a for value in T._CACHE.values())
     T._CACHE.clear()
+
+
+def test_grid_sink_kmedians_vector_assignment_preserves_center_and_group_order(monkeypatch):
+    pytest.importorskip("numpy")
+    points = [(float(x), float(y)) for x in range(19) for y in range(15)]
+    points.extend([(3.0, 2.0), (11.0, 13.0), (18.0, 14.0)])
+    vector = T._kmedians(points, 13)
+    monkeypatch.setitem(sys.modules, "numpy", None)
+    assert T._kmedians(points, 13) == vector

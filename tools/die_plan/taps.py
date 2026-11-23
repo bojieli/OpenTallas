@@ -311,9 +311,30 @@ def _kmedians(pts, k, iters=25):
         c = pts[i]
         cen.append(c)
         dmin = [min(d, abs(p[0] - c[0]) + abs(p[1] - c[1])) for d, p in zip(dmin, pts)]
+    xy = None
+    if len(pts) >= 128 and all(type(x) is float and math.isfinite(x) and abs(x) < 1e100 for p in pts for x in p):
+        try:
+            import numpy as np
+        except ImportError:
+            pass
+        else:
+            xy = np.asarray(pts, dtype=np.float64)
     asg = None
     for _ in range(iters):
-        new = [min(range(len(cen)), key=lambda c: (abs(p[0] - cen[c][0]) + abs(p[1] - cen[c][1]), c)) for p in pts]
+        if xy is None:
+            new = [min(range(len(cen)), key=lambda c: (abs(p[0] - cen[c][0]) + abs(p[1] - cen[c][1]), c))
+                   for p in pts]
+        else:
+            # Manhattan distance in the same two binary64 operations; argmin keeps the first index on a tie.
+            # Chunk the rows so dense legacy grid+sinks types never hold the full point/center matrix.
+            centers = np.asarray(cen, dtype=np.float64)
+            chunk = max(1, 262144 // len(cen))
+            new = []
+            for start in range(0, len(xy), chunk):
+                block = xy[start:start + chunk]
+                distances = np.abs(block[:, 0, None] - centers[:, 0])
+                distances += np.abs(block[:, 1, None] - centers[:, 1])
+                new.extend(distances.argmin(axis=1).tolist())
         if new == asg:
             break
         asg = new
