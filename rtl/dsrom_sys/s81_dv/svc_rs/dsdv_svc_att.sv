@@ -208,6 +208,18 @@ module dsdv_svc_att #(
 `endif
     , output wire               hb_o               // R5 (H < 16): the pass head base (ATTN_Q spec[448]); 0 at H = 16
 );
+    // SVC-BCAST-STAGE (rc16, 11-23, -DOT_SVC_BCAST, opt-in; else rn_a = rn_e = rst_n, as built): the slice reset enters
+    // this share on ONE net (split hi4 form: one landing flop at the cut face, 1,796 loads over 3.5 mm).  Two kept
+    // regional relays (ot_hdc_v41x_kreg: async assert from rst_n, release +1 edge; never merged, LEC maps each) reset
+    // the share's own logic (rn_a) and the engine (rn_e); each is placed by its loads.  Every stream into the share is
+    // idle (valid bits reset) in the first cycle after release, so no frame and no output moves.
+`ifdef OT_SVC_BCAST
+    wire rn_a, rn_e;
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn_a (.clk(clk), .rst_n(rst_n), .d(1'b1), .q(rn_a));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn_e (.clk(clk), .rst_n(rst_n), .d(1'b1), .q(rn_e));
+`else
+    wire rn_a = rst_n, rn_e = rst_n;
+`endif
     localparam integer D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam bit P2 = H < 16;                    // R5 two-pass build
     // Private static-calendar candidate; producer and compiler must select the same define.
@@ -243,8 +255,8 @@ module dsdv_svc_att #(
     wire [11:0] h_len  = q_d[491:480];
     wire is_hdr = q_v && !in_frame;
     wire is_pay = q_v && in_frame;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; end
+    always @(posedge clk or negedge rn_a) begin
+        if (!rn_a) begin in_frame <= 0; left <= 0; f_type <= 0; f_mine <= 0; f_idx <= 0; end
         else if (is_hdr) begin
             f_type <= h_type; f_mine <= h_mask[0]; f_idx <= 0; left <= h_len; in_frame <= h_len != 0;
         end else if (is_pay) begin
@@ -260,8 +272,8 @@ module dsdv_svc_att #(
     reg [1:0] st_r;                                 // stack position: CFG [31:30] when [32], else the parameter ST
 `ifdef OT_SVC_ALLQ
     reg allq_r;                                     // RTLGAP-SO: CFG [54], all 16 slices own their tile's P.V
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) allq_r <= 1'b0;
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) allq_r <= 1'b0;
         else if (hdr_mine && h_type == 4'd12) allq_r <= q_d[54];
     assign allq_o = allq_r;
 `endif
@@ -273,14 +285,14 @@ module dsdv_svc_att #(
 `endif
     wire [439:0] pv_provenance;wire pv_identity_bad;
     dsdv_pv_source_identity #(.ENABLE(PV_IDENTITY)) u_pv_identity (
-      .clk(clk),.rst_n(rst_n),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
+      .clk(clk),.rst_n(rn_a),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
       .launch(go),.launch_ok(job_open && !job_active && !run && !dr_arm && !dr_on),.user_id(wuser),.tag_id(tagj),.quarter(pv_owner_quarter),.tile(tile),.position(wposition),
       .provenance(pv_provenance),.bad(pv_identity_bad));
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wposition <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wposition <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
             if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
@@ -310,8 +322,8 @@ module dsdv_svc_att #(
     wire [29:0] rs_wb = q_d[29:0] + 30'(wuser) * 30'd68;
     wire [29:0] rs_wu = wb + 30'(q_d[458:449]) * 30'd68;
     reg [29:0] ring_r;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) ring_r <= 30'd0;
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) ring_r <= 30'd0;
         else ring_r <= ld_wb ? rs_wb : ld_wu ? rs_wu : rs_keep;
     wire [29:0] ring = ring_r;
 `else
@@ -363,15 +375,15 @@ module dsdv_svc_att #(
         ik_base <= q_d[29:0] + 30'({q_d[479:468], 5'd0}) + 30'({q_d[479:468], 1'b0});
         ik_c <= q_d[466:463]; ik_pc <= q_d[467]; ik_sc <= q_d[63:32];
     end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) ik_own <= 1'b0;
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) ik_own <= 1'b0;
         else if (ik_hdr) ik_own <= ik_rg(q_d[479:459]) == sid;
     wire        ik_pay = pay_mine && f_type == 4'd15 && f_idx == 12'd0 && ik_own;
     reg         ik_scl;                                                    // scale write: the edge after the payload
-    always @(posedge clk or negedge rst_n) if (!rst_n) ik_scl <= 1'b0; else ik_scl <= ik_pay;
+    always @(posedge clk or negedge rn_a) if (!rn_a) ik_scl <= 1'b0; else ik_scl <= ik_pay;
     wire [2:0]  ik_by = (MUT == 5) ? ik_c[2:0] ^ 3'd1 : ik_c[2:0];
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) wpush <= 0;
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) wpush <= 0;
         else wpush <= {hw_mine, ow_blk | ik_pay | ik_scl, ow_blk | ik_pay};
     always @(posedge clk) begin
         // class 0: OWN_ROW codes | IK_ROW codes[255:0]; class 1: OWN_ROW scale | IK_ROW codes[511:256], then its scales
@@ -413,8 +425,8 @@ module dsdv_svc_att #(
     // S81-ROWX: the die position is a CFG field (ROWX = 1: CFG [57] valid, [56:55] position; else the parameter DIE_ID)
     // -- one die type serves every TP position, so a parameter cannot tell the dies apart
     reg [1:0] dp_r;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) dp_r <= 2'(DIE_ID);
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) dp_r <= 2'(DIE_ID);
         else if (RX && hdr_mine && h_type == 4'd12 && q_d[57]) dp_r <= q_d[56:55];
     wire g_own = sid_g[5:4] == (RX ? dp_r : 2'(DIE_ID)) && sid_g[7:6] == st_r;
 `ifdef OT_SVC_ATT_RDPIPE
@@ -532,7 +544,7 @@ module dsdv_svc_att #(
     reg [4:0] q_launch_count;                       // native Q head index, independent of the KV row clock
     wire native_load_slot;
     generate if(NATIVE_RT2_LOAD_CAL) begin:g_native_load_calendar
-        ot_s81_svc_rt2_load_calendar u_calendar(.clk(clk),.rst_n(rst_n),.load_slot(native_load_slot));
+        ot_s81_svc_rt2_load_calendar u_calendar(.clk(clk),.rst_n(rn_a),.load_slot(native_load_slot));
     end else begin:g_legacy_load_calendar
         assign native_load_slot=1'b1;
     end endgenerate
@@ -546,8 +558,8 @@ module dsdv_svc_att #(
     // more_h / hb_h: GO spec[48] / ATTN_Q spec[448] as they arrive; more_p / hb_p: the values of the running pass,
     // taken at its start (go), so a later pass's frames may arrive while this pass still runs.
     reg more_h, more_p, hb_h, hb_p;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin more_h <= 1'b0; more_p <= 1'b0; hb_h <= 1'b0; hb_p <= 1'b0; end
+    always @(posedge clk or negedge rn_a)
+        if (!rn_a) begin more_h <= 1'b0; more_p <= 1'b0; hb_h <= 1'b0; hb_p <= 1'b0; end
         else if (P2) begin
             if (hdr_mine && h_type == 4'd13) more_h <= q_d[48];
             if (hdr_mine && h_type == 4'd1) hb_h <= q_d[448];
@@ -698,7 +710,7 @@ module dsdv_svc_att #(
 `endif
 `endif
                          ) u_eng (
-        .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
+        .clk(clk), .rst_n(rn_e), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
         .q_v(eq_v), .q_w(eq_w), .q_ready(eq_ready),
         .kv_v(ekv_v), .kv_m(ekv_m), .kv_w(ekv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(1'b0),
@@ -824,11 +836,11 @@ module dsdv_svc_att #(
 `ifndef SYNTHESIS
     // bench visibility (warm-reset lock-step): the read pointers of the last edge before reset assertion
     reg [5:0] tb_sw_r, tb_sw_w; reg [23:0] tb_wq_r; reg [9:0] tb_rc;
-    always @(posedge clk) if (rst_n) begin
+    always @(posedge clk) if (rn_a) begin
         tb_sw_r <= sw_r; tb_sw_w <= sw_w; tb_rc <= rc;
         tb_wq_r <= {wq_r[2][1], wq_r[2][0], wq_r[1][1], wq_r[1][0], wq_r[0][1], wq_r[0][0]};
     end
-    always @(negedge rst_n) if ($time > 10)
+    always @(negedge rn_a) if ($time > 10)
         $display("SVC_ATT_WRST %m t=%0t sw_r=%0d sw_w=%0d wq_r=%06h rc=%0d", $time, tb_sw_r, tb_sw_w, tb_wq_r, tb_rc);
 `endif
 `endif
@@ -902,8 +914,8 @@ module dsdv_svc_att #(
 `endif
     end
 
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rn_a) begin
+        if (!rn_a) begin
             for (k = 0; k < 3; k = k + 1) begin wq_w[k][0] <= 0; wq_w[k][1] <= 0; wq_r[k][0] <= 0; wq_r[k][1] <= 0; end
             for (k = 0; k < 2; k = k + 1) begin
                 cr[k] <= 4'(DQ); wk_w[k] <= 0; wk_r[k] <= 0; wr_on[k] <= 0; wr_r[k] <= 0; sc_n[k] <= 0;

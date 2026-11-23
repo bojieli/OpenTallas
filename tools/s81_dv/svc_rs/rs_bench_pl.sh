@@ -26,7 +26,7 @@ TOPDEF=(); TAG=obj
 mkdir -p "$B"
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
         --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS ${ENGDEF:+-D$ENGDEF}
-        "${RS_DEF[@]}" -DMUT=$MUTV "${DEF[@]}")
+        "${RS_DEF[@]}" -DMUT=$MUTV "${DEF[@]}" ${XDEF:-})   # XDEF: extra defines, word-split (e.g. XDEF=-DOT_SVC_BCAST)
 lib() {  # $1 = module
   local L=$B/pl_$1
   [ -f "$L/lib$1_pl.a" ] && return 0

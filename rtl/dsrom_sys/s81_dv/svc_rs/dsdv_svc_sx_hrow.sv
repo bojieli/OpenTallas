@@ -77,9 +77,19 @@ module dsdv_svc_sx_hrow #(
 `endif
 `endif
     localparam integer W = 269, N = 8, TW = 5, SW = 137, SL = 33, NS = 4;
+`ifdef OT_SVC_BCAST
+    // SVC-BCAST-STAGE (rc16, 11-23, -DOT_SVC_BCAST, opt-in): the synchroniser as KEPT flops (ot_hdc_v41x_kreg).  Synthesis
+    // merged the identical 2-flop synchronisers of every block of the slice (rs_c, sx_hrow, smq, SO target, PC faces:
+    // same D, same clock, same async clear) into ONE pair, so one flop reset ~10k flops over the 2 mm piece; kept, each
+    // block keeps its own pair beside its logic.  Same edges, same values; LEC maps every copy by name.
+    wire rs0, rn;
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rs0 (.clk(ck), .rst_n(rst), .d(1'b1), .q(rs0));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn (.clk(ck), .rst_n(rst), .d(rs0), .q(rn));
+`else
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
+`endif
     // S81U-SVCX3: the sid strap lands in a pin flop first (gate 2: sid -> role ROM was 4 levels from the port); the
     // strap is static and sid_q settles during the 2-cycle reset synchroniser, so role is unchanged from rn release.
     // S81-KITS-HROW: keep -- with the decode in front of the select registers, yosys memory_dff otherwise folds sid_q into

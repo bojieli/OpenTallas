@@ -27,9 +27,19 @@ module dsfd_svc_pc (
     output reg  [16:0]  qr_tag,
     output reg  [3:0]   qr_beat
 );
+`ifdef OT_SVC_BCAST
+    // SVC-BCAST-STAGE (rc16, 11-23, -DOT_SVC_BCAST, opt-in): the synchroniser as KEPT flops (ot_hdc_v41x_kreg).  Synthesis
+    // merged the identical 2-flop synchronisers of every block of the slice (rs_c, sx_hrow, smq, SO target, PC faces:
+    // same D, same clock, same async clear) into ONE pair, so one flop reset ~10k flops over the 2 mm piece; kept, each
+    // block keeps its own pair beside its logic.  Same edges, same values; LEC maps every copy by name.
+    wire rs0, rn;
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rs0 (.clk(ck[0]), .rst_n(rst[0]), .d(1'b1), .q(rs0));
+    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn (.clk(ck[0]), .rst_n(rst[0]), .d(rs0), .q(rn));
+`else
     reg [1:0] rst_s;
     always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rn = rst_s[1];
+`endif
     always @(posedge ck[0] or negedge rn)
         if (!rn) begin rq[0] <= 1'b0; qrk <= 1'b0; qwd <= 1'b0; qrv <= 1'b0; end
         else begin

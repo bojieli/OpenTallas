@@ -3,6 +3,14 @@
 // instantiated by dsdv_svc_att only under -DOT_SVC_MERGE_H4.  The only difference: under OT_SVC_MERGE_H4 the H8 merge
 // is ot_s81_svc_merge_h8_split (two hard H4 providers u_m.g_h4[0..1].u_h4, zero added cycles; tb_svc_merge_h4).
 // A build lists rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv as well (merge_x / merge_s / tr_x and the helpers stay there).
+// SVC-BCAST-STAGE (rc16, 11-23, opt-in; -DOT_SVC_BCAST sets the default, else 0 = as built): see TREP below.
+`ifndef OT_SVC_TREP_D
+`ifdef OT_SVC_BCAST
+`define OT_SVC_TREP_D 1
+`else
+`define OT_SVC_TREP_D 0
+`endif
+`endif
 module ot_s81_svc_attn_s #(
     parameter integer H = 16,          // heads per die
     parameter integer D = 512,         // head_dim
@@ -77,6 +85,16 @@ module ot_s81_svc_attn_s #(
     // transposer pins (fill words trimmed to the tile's dims, raw q.k word of its lane).  0 = one shared chain.
     parameter integer SRX = 0,
     parameter [1023:0] SRXT = 1024'd0,
+    // SVC-BCAST-STAGE (rc16, 11-23, opt-in; 0 = as built; V = 1, TEXT = 0 and BANDX = 0 only, else ignored): PER-TILE copies of
+    // the broadcast tile controls.  The E1 load / issue controls {ld_v, iv} (reset) and {ld_mode, ld_w2v, ld_bank,
+    // ibank, ld_grp} were ONE register each driving every tile (S81 svc: e_iv / e_ibank one driver to all 32 head
+    // cores over 2.5 mm).  TREP 1: tile k takes its own copy, an ot_hdc_v41x_kreg (kept hierarchy: never merged, LEC
+    // maps every copy as its own register) with the SAME D as the shared register (SRX 0: the E1 next-state; SRX > 0:
+    // a per-tile copy of the SRX-stage control line from the E1 register), so every tile sees the same values on the
+    // same edges (0 cycles).  Each tile also takes its own reset relay (one kept flop, async assert from rst_n,
+    // release +1 edge) for its transposer, tile and p.v merge; no input of those reaches them in the first cycle
+    // after release (every control is reset or idle), so the outputs are unchanged.
+    parameter integer TREP = `OT_SVC_TREP_D,
     parameter integer SRXMUT = 0,      // SRX bench negative controls: 1 = output tags not delayed, 2 = load / issue line one
                                        //   stage short, 3 = tile 0's fill rows one stage short (controls on time)
     // S81 svc BAND (HARD-S81-SVC-1 11-13, COORD "svc option A", R-CAP-3 point 2; opt-in, 0 = as built): every tile's
@@ -718,6 +736,11 @@ module ot_s81_svc_attn_s #(
     wire [BW-1:0]     z_ld_bank, z_ibank;
     wire [7:0]        z_ld_grp;
     wire [PWORDS*TD*16-1:0] z_ldw;
+    // SVC-BCAST-STAGE: per-tile control copies and reset relays (TREP 0: the shared z_* / rst_n)
+    localparam bit TR_ON = (TREP != 0) && (V == 1) && (TEXT == 0) && (BANDX == 0);
+    wire [NT-1:0]    zt_ld_v, zt_ld_mode, zt_ld_w2v, zt_iv, zt_rn;
+    wire [NT*BW-1:0] zt_ld_bank, zt_ibank;
+    wire [NT*8-1:0]  zt_ld_grp;
     generate if (SRX > 0) begin : g_srx
         wire bsx, fsx;
         ot_hdc_v41x_kreg #(.W(2), .R(0)) u_sel (.clk(clk), .rst_n(rst_n), .d({st_bbuf_r, st_fbuf_r}), .q({bsx, fsx}));
@@ -851,7 +874,7 @@ module ot_s81_svc_attn_s #(
                     assign qk_x = qk_ib[gk*TD*18 +: TD*18];
                 end
                 ot_hdc_v41x_attn_tr_x #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32)) u_tr (
-                    .clk(clk), .rst_n(rst_n),
+                    .clk(clk), .rst_n(zt_rn[gk]),
                     .w_en_i((SRX > 0) ? zo[1] : (XD != 0) ? fill_wr : (fl_go && ((NSTAGE >= 2) || !qk_go))),
                     .w_half_i((SRX > 0) ? zo[2] : (XD != 0) ? fill_blk_d[0] : fl_blk[0]),
                     .w_cnt_i((SRX > 0) ? zo[10:3] : (XD != 0) ? fill_cnt_d : fl_cnt),
@@ -862,7 +885,7 @@ module ot_s81_svc_attn_s #(
                     .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
             end else if (PHYS == 0) begin : g_real
                 ot_hdc_v41x_attn_tr #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
-                    .clk(clk), .rst_n(rst_n),
+                    .clk(clk), .rst_n(zt_rn[gk]),
                     .w_en_i((XD != 0) ? fill_wr : (REPL != 0) ? (fl_go && ((NSTAGE >= 2) || !qk_go)) : fill_wr),
                     .w_half_i((XD != 0) ? fill_blk_d[0] : (REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
                     .w_cnt_i((XD != 0) ? fill_cnt_d : (REPL != 0) ? fl_cnt : fill_cnt_d),
@@ -873,7 +896,7 @@ module ot_s81_svc_attn_s #(
                     .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
             end else begin : g_phs
                 ot_hdc_v41x_attn_tr_phs #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
-                    .clk(clk), .rst_n(rst_n),
+                    .clk(clk), .rst_n(zt_rn[gk]),
                     .w_en_i((XD != 0) ? fill_wr : (REPL != 0) ? (fl_go && ((NSTAGE >= 2) || !qk_go)) : fill_wr),
                     .w_half_i((XD != 0) ? fill_blk_d[0] : (REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
                     .w_cnt_i((XD != 0) ? fill_cnt_d : (REPL != 0) ? fl_cnt : fill_cnt_d),
@@ -901,23 +924,31 @@ module ot_s81_svc_attn_s #(
         end
     endgenerate
 
+    // E1 next-state of the tile load / issue controls (also the D of the SVC-BCAST-STAGE per-tile copies)
+    wire          n_ld_v = q_go || p_go;
+    wire          n_iv = rd_qk_s || pv_e;
+    wire          n_ld_mode = p_go;
+    wire          n_ld_w2v = p_go && p_w2v;
+    wire [BW-1:0] n_ld_bank = p_go ? ((pl_word == 0) ? nb_p : pl_bank) : ((q_cnt == 0) ? nb_q : q_bank);
+    wire [7:0]    n_ld_grp = p_go ? pl_word : q_cnt;
+    wire [BW-1:0] n_ibank = pv_e ? e_iss_bank : rd_bank_s;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin e_ld_v <= 1'b0; e_iv <= 1'b0; e_pv <= 1'b0; end
         else begin
-            e_ld_v <= q_go || p_go;
-            e_iv <= rd_qk_s || pv_e;
+            e_ld_v <= n_ld_v;
+            e_iv <= n_iv;
             e_pv <= pv_e;
         end
     end
     integer li;
     always @(posedge clk) begin
-        e_ld_mode <= p_go;
-        e_ld_w2v <= p_go && p_w2v;
-        e_ld_bank <= p_go ? ((pl_word == 0) ? nb_p : pl_bank) : ((q_cnt == 0) ? nb_q : q_bank);
-        e_ld_grp <= p_go ? pl_word : q_cnt;
+        e_ld_mode <= n_ld_mode;
+        e_ld_w2v <= n_ld_w2v;
+        e_ld_bank <= n_ld_bank;
+        e_ld_grp <= n_ld_grp;
         e_p_w <= p_w_i;
         e_q_w <= q_w;
-        e_ibank <= pv_e ? e_iss_bank : rd_bank_s;
+        e_ibank <= n_ibank;
         e_ib_c <= pv_e ? tr_col : qk_ib;
         e_row0 <= r0_qk_s;
         for (li = 0; li < NL; li = li + 1) e_mask[li] <= (r0_qk_s + li) < T;
@@ -925,6 +956,52 @@ module ot_s81_svc_attn_s #(
         e_blk <= e_iss_blk[MLEV-1:0];
         e_c <= e_iss_c;
     end
+
+    // SVC-BCAST-STAGE per-tile copies (TREP; header).  SRX 0: one kept register per tile with the E1 next-state as D
+    // (same value, same edge as e_*).  SRX > 0: one kept SRX-stage line per tile from the E1 register (same edges as
+    // the shared u_lv / u_iv / u_ld controls; SRXMUT 2 shortens the load controls as there).
+    localparam integer TRC = 2 + 2*BW + 8;
+    generate
+        for (gk = 0; gk < NT; gk = gk + 1) begin : g_trep
+            if (TR_ON) begin : g_on
+                wire [TRC-1:0] cq;
+                if (SRX == 0) begin : g_e1
+                    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_lv (.clk(clk), .rst_n(rst_n), .d(n_ld_v), .q(zt_ld_v[gk]));
+`ifdef OT_SVC_TREP_MUT
+                    // bench negative control only: tile 0's issue-valid copy one edge late (D = the E1 register)
+                    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_iv (.clk(clk), .rst_n(rst_n), .d((gk == 0) ? e_iv : n_iv), .q(zt_iv[gk]));
+`else
+                    ot_hdc_v41x_kreg #(.W(1), .R(1)) u_iv (.clk(clk), .rst_n(rst_n), .d(n_iv), .q(zt_iv[gk]));
+`endif
+                    ot_hdc_v41x_kreg #(.W(TRC), .R(0)) u_c (.clk(clk), .rst_n(rst_n),
+                        .d({n_ld_mode, n_ld_w2v, n_ld_bank, n_ibank, n_ld_grp}), .q(cq));
+                end else begin : g_sx
+                    localparam integer SRXL_T = (SRXMUT == 2) ? SRX - 1 : SRX;
+                    ot_hdc_v41x_vdly #(.D(SRXL_T)) u_lv (.clk(clk), .rst_n(rst_n), .d(e_ld_v), .q(zt_ld_v[gk]));
+`ifdef OT_SVC_TREP_MUT
+                    // bench negative control only: tile 0's issue-valid line one stage long
+                    ot_hdc_v41x_vdly #(.D(SRX + ((gk == 0) ? 1 : 0))) u_iv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(zt_iv[gk]));
+`else
+                    ot_hdc_v41x_vdly #(.D(SRX)) u_iv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(zt_iv[gk]));
+`endif
+                    wire [TRC-1:0] cs [0:SRXL_T];
+                    assign cs[0] = {e_ld_mode, e_ld_w2v, e_ld_bank, e_ibank, e_ld_grp};
+                    for (gs = 1; gs <= SRXL_T; gs = gs + 1) begin : g_s
+                        ot_hdc_v41x_kreg #(.W(TRC), .R(0)) u_c (.clk(clk), .rst_n(rst_n), .d(cs[gs-1]), .q(cs[gs]));
+                    end
+                    assign cq = cs[SRXL_T];
+                end
+                assign {zt_ld_mode[gk], zt_ld_w2v[gk], zt_ld_bank[gk*BW +: BW], zt_ibank[gk*BW +: BW],
+                        zt_ld_grp[gk*8 +: 8]} = cq;
+                ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rn (.clk(clk), .rst_n(rst_n), .d(1'b1), .q(zt_rn[gk]));
+            end else begin : g_off
+                assign zt_ld_v[gk] = z_ld_v; assign zt_iv[gk] = z_iv; assign zt_ld_mode[gk] = z_ld_mode;
+                assign zt_ld_w2v[gk] = z_ld_w2v; assign zt_ld_bank[gk*BW +: BW] = z_ld_bank;
+                assign zt_ibank[gk*BW +: BW] = z_ibank; assign zt_ld_grp[gk*8 +: 8] = z_ld_grp;
+                assign zt_rn[gk] = rst_n;
+            end
+        end
+    endgenerate
 
 `ifdef OT_ATTN_SETCHECK
     // ================= stationary-set checker (simulation only) =================
@@ -1050,8 +1127,8 @@ module ot_s81_svc_attn_s #(
         end
         if (V == 1) begin : g_v1
             for (gk = 0; gk < NT; gk = gk + 1) begin : g_p
-                assign p_iv[gk] = z_iv;
-                assign p_ibank[gk*BW +: BW] = z_ibank;
+                assign p_iv[gk] = zt_iv[gk];
+                assign p_ibank[gk*BW +: BW] = zt_ibank[gk*BW +: BW];
                 assign p_ib[gk*TD*18 +: TD*18] = e_ib[gk*TD*18 +: TD*18];
             end
             assign t_ov = p_ov; assign t_y = p_y; assign t_f = p_f;
@@ -1112,7 +1189,8 @@ module ot_s81_svc_attn_s #(
         end
         for (gk = 0; gk < NTQ; gk = gk + 1) begin : g_t
             localparam integer SL = gk % S;
-            wire [PWORDS*TD*16-1:0] ldw = (SRX > 0) ? z_ldw : e_ld_mode ? e_p_w : (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
+            wire [PWORDS*TD*16-1:0] ldw = (SRX > 0) ? z_ldw : (TR_ON ? zt_ld_mode[gk] : e_ld_mode) ? e_p_w :
+                                                (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
             wire          b_ov;
             wire [H*32-1:0] b_y;
             wire [H-1:0]  b_f;
@@ -1135,14 +1213,14 @@ module ot_s81_svc_attn_s #(
             end else if (TILE_S != 0) begin : g_ts
                 assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML), .F12(F12)) u_t (
-                    .clk(clk), .rst_n(rst_n), .ld_v(z_ld_v), .ld_mode(z_ld_mode), .ld_bank(z_ld_bank),
-                    .ld_grp(z_ld_grp), .ld_w(ldw), .ld_w2v(z_ld_w2v), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
+                    .clk(clk), .rst_n(zt_rn[gk]), .ld_v(zt_ld_v[gk]), .ld_mode(zt_ld_mode[gk]),
+                    .ld_bank(zt_ld_bank[gk*BW +: BW]), .ld_grp(zt_ld_grp[gk*8 +: 8]), .ld_w(ldw), .ld_w2v(zt_ld_w2v[gk]), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
                     .ib(p_ib[gk*TD*18 +: TD*18]), .ov(b_ov), .oy(b_y), .oflt(b_f));
             end else begin : g_tl
                 assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_l #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_t (
-                    .clk(clk), .rst_n(rst_n), .ld_v(z_ld_v), .ld_mode(z_ld_mode), .ld_bank(z_ld_bank),
-                    .ld_grp(z_ld_grp), .ld_w(ldw), .ld_w2v(z_ld_w2v), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
+                    .clk(clk), .rst_n(zt_rn[gk]), .ld_v(zt_ld_v[gk]), .ld_mode(zt_ld_mode[gk]),
+                    .ld_bank(zt_ld_bank[gk*BW +: BW]), .ld_grp(zt_ld_grp[gk*8 +: 8]), .ld_w(ldw), .ld_w2v(zt_ld_w2v[gk]), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
                     .ib(p_ib[gk*TD*18 +: TD*18]), .ov(b_ov), .oy(b_y), .oflt(b_f));
             end
             assign p_ov[gk] = b_ov;
@@ -1166,6 +1244,23 @@ module ot_s81_svc_attn_s #(
     end endgenerate
     ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT)) u_tag (.clk(clk),
         .d({e_row0, e_mask, e_pv, e_fin, e_blk, e_c}), .q({t_row0, t_mask, t_pv, t_fin, t_blk, t_c}));
+    // SVC-BCAST-STAGE (rc16, 11-23, FABLE-UNC t4_att): the merge tags {pv, fin, blk} reach every tile's merge (8 H4
+    // providers = 24 pin ends over 4 tiles) from the one u_tag line.  With TR_ON each tile gets its own kept copy of the
+    // line's LAST stage (same D, same total delay, 0 cycles): the shared line ends in 4 loads, one copy beside each merge.
+    localparam integer TAGD = TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT;
+    wire [NT-1:0]      zt_pv, zt_fin;
+    wire [NT*MLEV-1:0] zt_blk;
+    generate if (TR_ON && TAGD >= 2) begin : g_ttag
+        wire mpv, mfin;
+        wire [MLEV-1:0] mblk;
+        ot_hdc_v41x_dly #(.W(2 + MLEV), .D(TAGD - 1)) u_tagm (.clk(clk), .d({e_pv, e_fin, e_blk}), .q({mpv, mfin, mblk}));
+        for (gk = 0; gk < NT; gk = gk + 1) begin : g_k
+            ot_hdc_v41x_kreg #(.W(2 + MLEV), .R(0)) u_t (.clk(clk), .rst_n(rst_n), .d({mpv, mfin, mblk}),
+                                                       .q({zt_pv[gk], zt_fin[gk], zt_blk[gk*MLEV +: MLEV]}));
+        end
+    end else begin : g_ttag0
+        assign zt_pv = {NT{t_pv}}; assign zt_fin = {NT{t_fin}}; assign zt_blk = {NT{t_blk}};
+    end endgenerate
     generate if (V > 1) begin : g_tv
         ot_hdc_v41x_vdly #(.D(TLAT + TLX + VT)) u_tv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(t_vv));
     end else begin : g_tv1
@@ -1235,24 +1330,24 @@ module ot_s81_svc_attn_s #(
                 $error("OT_SVC_MERGE_H4 needs H == 8");
             end
             ot_s81_svc_merge_h8_split #(.DPT(DPT), .MLEV(MLEV), .FPL(FX), .F12(F12)) u_m (
-                .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
+                .clk(clk), .rst_n(zt_rn[gk]), .iv(t_ov[gk] && zt_pv[gk]), .ifin(zt_fin[gk]), .iblk(zt_blk[gk*MLEV +: MLEV]),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
 `else
             ot_hdc_v41x_attn_merge_x #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FX), .F12(F12)) u_m (
-                .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
+                .clk(clk), .rst_n(zt_rn[gk]), .iv(t_ov[gk] && zt_pv[gk]), .ifin(zt_fin[gk]), .iblk(zt_blk[gk*MLEV +: MLEV]),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
 `endif
             end else begin : g_s
             ot_hdc_v41x_attn_merge_s #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FX)) u_m (
-                .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
+                .clk(clk), .rst_n(zt_rn[gk]), .iv(t_ov[gk] && zt_pv[gk]), .ifin(zt_fin[gk]), .iblk(zt_blk[gk*MLEV +: MLEV]),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
             end
             end else begin : g_phs
             ot_hdc_v41x_attn_merge_phs #(.H(H), .DPT(DPT), .MLEV(MLEV)) u_m (
-                .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
+                .clk(clk), .rst_n(zt_rn[gk]), .iv(t_ov[gk] && zt_pv[gk]), .ifin(zt_fin[gk]), .iblk(zt_blk[gk*MLEV +: MLEV]),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
             end
