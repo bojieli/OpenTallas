@@ -77,7 +77,7 @@ module ot_qwen_d2d_ovl_seq_shared #(
     assign running = s_run | t_run | r_run;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) fault <= 1'b0;
-        else if (s_fault || t_f || r_f || (s_start && (t_start || r_start)) || (go && (!s_ready || (!s_adm && (!COLD_PREFIX || !ADM || e < E_SW)) || t_run || r_run))
+        else if ((media_hold && (go || t_run || r_run)) || s_fault || t_f || r_f || (s_start && (t_start || r_start)) || (go && (!s_ready || (!s_adm && (!COLD_PREFIX || !ADM || e < E_SW)) || t_run || r_run))
                  || (COLD_PREFIX && (t_start || r_start) && !s_adm))
             fault <= 1'b1;
 endmodule
