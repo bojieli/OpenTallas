@@ -363,3 +363,44 @@ def test_fresh_rebuilds_a_uniform_grid_onto_the_sink_mass(monkeypatch):
     TS.apply_rows(raw, {"t": ("replace_taps", rows)})
     ck = raw["partition_types"]["t"]["clock"]
     assert ck["tap_mode"] == "explicit" and ck["taps"] == rows and "added_taps" not in ck
+
+
+def test_remap_rows_drops_a_type_on_any_type_named_error(tmp_path):
+    """REMAP-ALWAYS: a reset_anchor AnchorError ('serdes__t13: reset_tree_anchor: ...') is not a RemapError; the type is
+    restored and REMAP_FAIL instead of aborting every row (TAP-GRID-R5 11-23 serdes FRESH)."""
+    import copy
+
+    class AnchorError(Exception):
+        pass
+
+    orig = {"partition_types": {"a": {"clock": {"v": 0}}, "b": {"clock": {"v": 0}}}}
+    raw = copy.deepcopy(orig)
+    raw["partition_types"]["a"]["clock"]["v"] = 1
+    raw["partition_types"]["b"]["clock"]["v"] = 1
+
+    def remap_fn(old, new, names):
+        if "a" in names:
+            raise AnchorError("a: reset_tree_anchor: 1 anchored relay(s) have no relay within the recorded site tolerance")
+        return {"ok": sorted(names)}
+
+    rec, failed = TS.remap_rows(orig, raw, str(tmp_path / "in.json"), str(tmp_path / "out.json"), ["a", "b"], str(tmp_path),
+                                remap_fn=remap_fn, check_fn=lambda n, o: [])
+    assert set(failed) == {"a"} and rec == {"ok": ["b"]}
+    assert raw["partition_types"]["a"]["clock"]["v"] == 0 and raw["partition_types"]["b"]["clock"]["v"] == 1
+
+
+def test_remap_rows_isolates_an_unnamed_error(tmp_path):
+    import copy
+    orig = {"partition_types": {"a": {"clock": {"v": 0}}, "b": {"clock": {"v": 0}}}}
+    raw = copy.deepcopy(orig)
+    for t in "ab":
+        raw["partition_types"][t]["clock"]["v"] = 1
+
+    def remap_fn(old, new, names):
+        if "b" in names:
+            raise RuntimeError("reset_tree_anchor: 1 referenced relay(s) not in the tree: ['rst_rl_13']")
+        return {"ok": sorted(names)}
+
+    rec, failed = TS.remap_rows(orig, raw, str(tmp_path / "in.json"), str(tmp_path / "out.json"), ["a", "b"], str(tmp_path),
+                                remap_fn=remap_fn, check_fn=lambda n, o: [])
+    assert set(failed) == {"b"} and rec == {"ok": ["a"]} and raw["partition_types"]["b"]["clock"]["v"] == 0

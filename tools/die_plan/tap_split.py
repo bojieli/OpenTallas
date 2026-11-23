@@ -809,7 +809,7 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_mar
     return rep, rows
 
 
-def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, remap_fn=None, check_fn=None):
+def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, remap_fn=None, check_fn=None, resets="anchor"):
     """REMAP-ALWAYS: landing_remap (anchor mode) over `types` on raw (rows applied), write out_plan, then the PRE
     LANDREMAP check vs plan_path.  Failing types are restored from orig_raw.  -> (receipt, {type: why})."""
     import copy
@@ -820,9 +820,9 @@ def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, 
 
         def remap_fn(old, new, names):
             try:
-                return LR.remap_plan(old, new, root, Path(out_plan).parent, set(names), resets="anchor", bound_rtl=bound_rtl)
+                return LR.remap_plan(old, new, root, Path(out_plan).parent, set(names), resets=resets, bound_rtl=bound_rtl)
             except TypeError:                       # older tool trees: no bound_rtl keyword
-                return LR.remap_plan(old, new, root, Path(out_plan).parent, set(names), resets="anchor")
+                return LR.remap_plan(old, new, root, Path(out_plan).parent, set(names), resets=resets)
         check_fn = check_fn or (lambda new_path, old_path: PG.check_landremap(new_path, old_path))
         err_cls = LR.RemapError
     else:
@@ -837,10 +837,23 @@ def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, 
             rec = remap_fn(orig_raw, trial, sorted(todo))
             raw.clear(); raw.update(trial)
             break
-        except err_cls as e:
+        except Exception as e:                      # RemapError, reset_anchor.AnchorError (serdes fresh tables), ...
             tn = str(e).split(":", 1)[0].strip()
             if tn not in todo:
-                raise
+                # the error names no type (reset_anchor.record: 'referenced relay(s) not in the tree'): find the
+                # failing types one by one; nothing isolated -> re-raise
+                bad = {}
+                for t1 in sorted(todo):
+                    try:
+                        remap_fn(orig_raw, copy.deepcopy(raw), [t1])
+                    except Exception as e1:
+                        bad[t1] = e1
+                if not bad or len(todo) == 1:
+                    raise
+                for t1, e1 in bad.items():
+                    failed[t1] = f"REMAP_FAIL landing_remap: {str(e1)[:240]}"
+                    todo.discard(t1); restore(t1)
+                continue
             failed[tn] = f"REMAP_FAIL landing_remap: {str(e)[:240]}"
             todo.discard(tn); restore(tn)
     for _ in range(3):
@@ -916,6 +929,9 @@ def main(argv=None):
     ap.add_argument("--out-plan")
     ap.add_argument("--tools", help="tools/die_plan of the tree to plan with (default: next to this file)")
     ap.add_argument("--root", help="tree root for landing_remap (default: the --tools tree root)")
+    ap.add_argument("--remap-resets", default="anchor", choices=("anchor", "resel"),
+                    help="landing_remap reset mode (default anchor); resel = fresh relay selection by role + depth (a "
+                         "FRESH table re-solves the reset tree: anchor finds no same-depth relay within tolerance)")
     ap.add_argument("--bound-rtl", help="rtl/ of the bind of record of PLAN: landing_remap anchor mode reads OLD relay identities there")
     a = ap.parse_args(argv)
     if a.radius_um <= 0 or a.radius_um > 300:
@@ -964,7 +980,8 @@ def main(argv=None):
         orig = json.loads(Path(a.plan).read_text())
         apply_rows(raw, rows_by_type)
         root = a.root or str((Path(a.tools).resolve() if a.tools else Path(__file__).resolve().parent).parents[1])
-        rec, failed = remap_rows(orig, raw, a.plan, a.out_plan, sorted(rows_by_type), root, a.bound_rtl)
+        rec, failed = remap_rows(orig, raw, a.plan, a.out_plan, sorted(rows_by_type), root, a.bound_rtl,
+                                 resets=a.remap_resets)
         for tn, why in failed.items():
             rows_by_type.pop(tn, None)
             for r in reps:
@@ -972,8 +989,8 @@ def main(argv=None):
                     r["status"], r["why"] = "REMAP_FAIL", why
             print(f"TAP_SPLIT {tn} REMAP_FAIL: rows dropped, type restored ({why[:200]})", flush=True)
         out["rows"] = {tn: {"key": k, "rows": r} for tn, (k, r) in rows_by_type.items()}
-        out["remap"] = dict(mode="anchor", failed=failed, receipt=rec)
-        print(f"TAP_SPLIT REMAP anchor: {len(rows_by_type)} types remapped clean, {len(failed)} REMAP_FAIL", flush=True)
+        out["remap"] = dict(mode=a.remap_resets, failed=failed, receipt=rec)
+        print(f"TAP_SPLIT REMAP {a.remap_resets}: {len(rows_by_type)} types remapped clean, {len(failed)} REMAP_FAIL", flush=True)
         rc = 3 if failed else 0
         P2 = S.Plan(json.loads(Path(a.out_plan).read_text()), a.out_plan)
         out["recheck"] = recheck(P2, sorted(rows_by_type), a.radius_um, a.cap or None)
