@@ -46,3 +46,10 @@ def test_narrow_window_not_flagged():
 def test_mirrored_partner_maps_face():
     rows = ES.strips(_plan(orient_b="MX"))
     assert rows and rows[0][0] == "svc" and rows[0][2] == "S", rows
+
+
+def test_contents_macro_counts():
+    p = _plan(core_x=400.0)
+    p["partition_types"]["svc"]["contents"] = [{"inst": "u_c"}, {"inst": "m0", "origin_um": [130.0, 20.0], "outline_um": [95.0, 41.0]}]
+    out = ES.findings(p, "p.json")
+    assert any("strip 20.0 um to m0" in x for x in out), out

@@ -7,7 +7,8 @@ u_m 34.6, col u_c 43.2-51.8); 0 of 47 signed types and 40 of 51 failing types ha
 threshold: strip 43-52 um -> GRT overflow 1160-4928, >= 69.12 um converges (h9_r1 69.1, p1/p3 86.4).
 
 For every die port of width >= MIN_BITS, on both partitions (src face and partner face mapped to the type frame through
-origin + orient), the strip = distance from the face to the nearest hard core whose span along the face overlaps the
+origin + orient), the strip = distance from the face to the nearest hard core or placed
+contents macro whose span along the face overlaps the
 window span.  A strip < STRIP_UM is one line per type (worst window first).  The fix is the EDGESTRIP-1 form
 (edgestrip_row.py: rigid / band interior shift inside the outline) or a re-shape; window moves do not help when the
 core row runs along the whole face.
@@ -68,8 +69,8 @@ def strips(raw, min_bits=MIN_BITS):
             tf, a, b = _type_span(p, t, df, lo, hi)
             W, H = t["outline_um"]
             best = None
-            for c in t.get("hard_cores") or []:
-                if "origin_um" not in c or "outline_um" not in c:
+            for c in (t.get("hard_cores") or []) + [m for m in t.get("contents") or [] if isinstance(m, dict)]:
+                if "origin_um" not in c or "outline_um" not in c:   # hard cores and placed contents macros (sram/rom)
                     continue
                 x0, y0 = c["origin_um"]
                 x1, y1 = x0 + c["outline_um"][0], y0 + c["outline_um"][1]
