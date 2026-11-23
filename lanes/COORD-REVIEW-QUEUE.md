@@ -27071,3 +27071,4 @@ FAILED [AUTOPILOT ad0f48938b86] 2026-11-22 18:20:43 PST AUTOPILOT -> KIT-WAVE-3:
   - t29clc7 oth-ubuntu-2009047-1795400162
   The interim run_kit.sh route resumes (admitted 19:1x, at CTS start) were stopped first via ot-run --cancel + ot-heavy-stop --match <kit>, so no type runs twice. Their sign-off would have bypassed the run-item receipt.
   PROBE kit: dsdv_slice_kv512_C__t1 (worst slice type, J7 GRT-0116), --ab OT_PROBE_THROUGH=1, --goal route, sealed J7, epyc10, spec _1122181858, unit oth-ubuntu-2109218-1795400349. Durable waiters on all 7.
+- 2026-11-22 18:21 PST DIED [FAM-KV-IOPC-R4] ot-run oth-ubuntu-660165-1795400403 on tolerant-swine: rc=2 after 64 s, ended 18:21:04, log /home/ubuntu/tmp/iopcr4/bind_pcfull.log, cmd: --hosts epyc9 --mem 80 --threads 5 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/fam-kv-iopc-r4 -- bash /srv/opental | class=NO-PATTERN cause=d7f2e17accfb
