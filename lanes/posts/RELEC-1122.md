@@ -1,0 +1,1 @@
+- 2026-11-22 21:35 PST DONE [RELEC-1122] ot-run oth-ubuntu-604135-1795411928 on renewed-glider: rc=0 after 204 s, ended 05:35:29, log /srv/opentallas-scratch2/claude/RELEC-1122/logs/qwen_compute_core_qfd_dv_s8_tap_bounded.log, cmd: --mem 36 --threads 4 --dir /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0 --hosts epyc9 -- env OT_LEC_SUPE
