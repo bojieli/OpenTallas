@@ -56,3 +56,12 @@ report their GRT. No separate col hand-off.
 ## RETIRED 18:0x 11-22 (COORD sweep hub 98fd8f9f): not relaunched one by one -> FABLE-FIX-S81-COL-RANKSEAT single col family row
 - col_h9_r2__t1__cl774acf45__pvea45273b, col_h9_r2__t1__clb8d86cd5__pv6a2b031b, col_h10_r1__t1__cl95b37463__pv86f5e3b9 (COL-H10's): RETIRED-TO-RANKSEAT-FAMILY-ROW.
 - Evidence sent to RANKSEAT: stnEH plan + H seats + P/P2 whole-rank-seat GRT data (see post 18:1x).
+
+## 2026-11-22 20:05 PST state
+- H CANCELLED (owner cancel rule, 82f82141cf): ECO WNS -147.75 -> -130.13 -> -123.68 pre-route, structural x2_4_0->t4. Routed DBs kept in the kit (base 6_final, eco_.../i1).
+- stnEH gate PASS: bind b_7f671fd67a3a (epyc9 ot-build/s81/srcJ8G), rt 9c133d90aec1.
+- S1 (OT_TT_SETUP_MARGIN=90): spec ...1122195700, runitem pid 684503, unit runitem-col_h10_r1__t1__cld01bb4ae, log intel2 $D/runitem_S1.log.
+- S0 (guard off): spec ...1122195744, pid 701007, unit runitem-col_h10_r1__t1__cld01bb4ae-S0 (manual systemd-run, name clash), log $D/runitem_S0.log.
+- Next: read GRT TT/FF + overflow from the final 5_1_grt.odb of S1 and S0 -> RANKSEAT (a1150360902837787) + COORD.
+- Held col congestion rows (await RANKSEAT J9): 51536676fa (3 rows), 833046f2e3 (pv6a2b031b; attempt_2 was live in DRT on epyc2).
+- RANKSEAT owns the lockup +1 / IFN / token-table fix; no stage_core_tap key.
