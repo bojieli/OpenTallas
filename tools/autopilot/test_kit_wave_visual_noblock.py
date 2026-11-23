@@ -66,18 +66,21 @@ def test_takeover_requires_viewed_exact_attempt_after_auto_geom(monkeypatch, tmp
     review = tmp_path / "coord/lanes/GEOM-REVIEW.md"
     review.parent.mkdir(parents=True)
     review.write_text(
-        "GEOM VERDICT [LANE viewed] s81/t1 a1: GOOD kit=epyc8:/k\n"
-        "GEOM VERDICT [LANE viewed] s81/t1 a2: GOOD kit=epyc9:/k\n"
-        "GEOM VERDICT [AUTO-VISUAL-REVIEW] s81/t1 a1: GOOD kit=epyc9:/k\n"
+        "- 2026-11-23 07:10 PST GEOM VERDICT [LANE viewed] s81/t1 a1: GOOD kit=epyc9:/k\n"
+        "- 2026-11-23 07:11 PST GEOM VERDICT [LANE viewed] s81/t1 a1: GOOD kit=epyc8:/k\n"
+        "- 2026-11-23 07:11 PST GEOM VERDICT [LANE viewed] s81/t1 a2: GOOD kit=epyc9:/k\n"
+        "- 2026-11-23 07:11 PST GEOM VERDICT [AUTO-VISUAL-REVIEW] s81/t1 a1: GOOD kit=epyc9:/k\n"
     )
+    build_start = K.verdict_line_ts("- 2026-11-23 07:11 PST ") + 17
+    row = dict(ROW, started=build_start)
     cfg = {"dies": {"s81": {"event": "J"}}}
-    assert K.route_hold_reason(cfg, dict(ROW)).startswith("WAIT-VISUAL")
+    assert K.route_hold_reason(cfg, row).startswith("WAIT-VISUAL")
 
     with review.open("a") as out:
-        out.write("GEOM VERDICT [LANE viewed] s81/t1 a1: ISSUES kit=epyc9:/k\n")
-    assert K.route_hold_reason(cfg, dict(ROW)).startswith("WAIT-FORM")
+        out.write("- 2026-11-23 07:12 PST GEOM VERDICT [LANE viewed] s81/t1 a1: ISSUES kit=epyc9:/k\n")
+    assert K.route_hold_reason(cfg, row).startswith("WAIT-FORM")
 
     with review.open("a") as out:
-        out.write("GEOM VERDICT [LANE viewed] s81/t1 a1: OK kit=epyc9:/k\n")
-    assert K.route_hold_reason(cfg, dict(ROW)) is None
+        out.write("- 2026-11-23 07:15 PST GEOM VERDICT [LANE viewed] s81/t1 a1: OK kit=epyc9:/k\n")
+    assert K.route_hold_reason(cfg, row) is None
     assert not K.strict_wave_route_review("hbm")

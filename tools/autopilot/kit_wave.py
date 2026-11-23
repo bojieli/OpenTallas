@@ -17916,12 +17916,12 @@ def visual_verdicts():
         if p.exists():
             break
     else:
-        _VISUAL_CACHE.update(mtime=None, v={}, ts={}, exact={}, viewed={}, unparsed=[])
+        _VISUAL_CACHE.update(mtime=None, v={}, ts={}, exact={}, viewed={}, viewed_ts={}, unparsed=[])
         return {}
     try:
         mt = (str(p), p.stat().st_mtime)
         if _VISUAL_CACHE["mtime"] != mt:
-            v, ts, exact, viewed, bad = {}, {}, {}, {}, []
+            v, ts, exact, viewed, viewed_ts, bad = {}, {}, {}, {}, {}, []
             for ln in p.read_text(errors="replace").splitlines():
                 r = parse_visual_line(ln)
                 if r == "UNPARSED":
@@ -17934,7 +17934,8 @@ def visual_verdicts():
                         exact[key] = r[3]
                         if "GEOM VERDICT [AUTO-VISUAL-REVIEW" not in ln:
                             viewed[key] = r[3]
-            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, exact=exact, viewed=viewed, unparsed=bad)
+                            viewed_ts[key] = ts[r[:3]]
+            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, exact=exact, viewed=viewed, viewed_ts=viewed_ts, unparsed=bad)
     except OSError:
         pass
     return _VISUAL_CACHE["v"]
@@ -18230,6 +18231,12 @@ def exact_kit_visual_verdict(rec, viewed_only=False):
     visual_verdicts()
     key = (rec["die"], rec["item"], int(rec.get("attempt") or 0), kit)
     index = "viewed" if viewed_only else "exact"
+    if viewed_only and strict_wave_route_review(rec["die"]) and rec.get("started"):
+        # The coord log records minute precision. A previous launch can reuse a kit path.
+        build_minute = int(float(rec["started"])) // 60 * 60
+        reviewed = (_VISUAL_CACHE.get("viewed_ts") or {}).get(key)
+        if reviewed is None or reviewed < build_minute:
+            return None
     return (_VISUAL_CACHE.get(index) or {}).get(key)
 
 
