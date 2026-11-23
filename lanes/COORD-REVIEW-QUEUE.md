@@ -28884,3 +28884,4 @@ FAILED [AUTOPILOT 8cb278349502] 2026-11-22 23:47:43 PST AUTOPILOT -> KIT-WAVE-3:
   - PRE-PASS 2: col_h9_r0_p4 pv3544fb31 + p5 pv35382794 (COL-H9R0-STRIP).
   - IN-EVENT 2, held until their event is live, then the 15-min tick drops them: col_h9_r1 clf32cde8d pv387d6579 (J8), dsdv_slice_c1x_C__t6 (SLICEC-XGARRAY-1, J9).
   - PROBE-PASS / NONE-NEEDED: 0, so nothing to relaunch.
+- 2026-11-22 23:52 PST DIED [VIS-S81-MISC] ot-run oth-ubuntu-3150328-1795420000 on tolerant-swine: rc=3 after 3434 s, ended 23:52:55, log /home/ubuntu/vis-s81-misc/lepwmuLP_t2.log, cmd: --mem 24 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 3600 -- bash /srv/opentallas-scratch2/clau | class=TOOL-TRACEBACK cause=Error: dump.tcl, 1 ORD-0007
