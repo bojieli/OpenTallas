@@ -44,3 +44,11 @@ report their GRT. No separate col hand-off.
   Gate try3 (stnC) bind FAILED: names must be rel (u_X not u_u_X); relay_depth needs a LEAF sink (lpl_*_w -> ist dropped). Try4 stnD running:
   intel2 opus-fix-s81-colrom-r6/bindS.pid / bindS.log (ot_build_hub --goal bind), ETA 10:4x-11:1x. On PASS: hand set to S81-J6-ASSEMBLY-R5.
 - KNOWN-OPEN (mine, J9): u_d1_11_Y 1-bit hops 613/758 um (plan in the rows record known_open).
+
+## UPDATE 17:3x 11-22 (after weekly limit 11:1x-17:2x)
+- Gates PASSED: stnD b_72a25708e674, stnE (stnD + u_y_x2_4_0.o D1) b_91bf277e4ffa (epyc9 OPUS-FIX-S81-COLROM-R6/ot-build/s81/srcJ8G). ASSEMBLY took stnE into J8.
+- H NOT SIGNED: TT -147.75 (37 ep x2_4_0 -> t4_payload), FF hold port-only (hold_ff PASS, parent), drv slew (post_route_drv ECO eco_20261122_174935, pass1 253->134), unconstrained 204 = UNCONST-IN-HARDVIEW (posted to FLOW-OPS-R2).
+- G5 cancelled (GRT TT -133.74). srcJ8G plans have NO Kit H seats (166 relay_sites vs planH 1378). P died OOM 17:24, P2 cancelled 09:1x.
+- NOW: plan stnEH = stnE + planH 1212 seats (srcJ8G/physical/die_plan/s81/plan_h2_2249_stnEH.json), gate bindEH.pid/log (intel2 opus-fix-s81-colrom-r6).
+  On PASS: kits S1 (OT_TT_SETUP_MARGIN=90) + S0 via kit_wave private-spec --bind-out <EH bind> --goal route, H env: E RE + OT_GRT_CONG_ITERS=50 (no STAGGER/keep-rq). Template specG5.sh (scratch).
+- KNOWN-OPEN J9: u_d1_11_Y hops (rows record known_open).
