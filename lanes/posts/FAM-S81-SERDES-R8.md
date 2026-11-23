@@ -210,3 +210,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-23 05:08 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2189-1795429829 on tolerant-swine: rc=0 after 9501 s, ended 05:08:47, log /home/ubuntu/fam-s81-serdes-r7/gate_j8p6.log, cmd: --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7 --hosts epyc9 -- bash /srv/opentallas-scratch2/claude/fam-s81-s
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-23 05:46 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-1602430-1795435675 on tolerant-swine: rc=0 after 5944 s, ended 05:46:54, log /home/ubuntu/fam-s81-serdes-r7/t2probe_bind.log, cmd: --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/t2probe --stage /srv/opentallas-scratch2/claude/s81-j6-r5/j8
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
