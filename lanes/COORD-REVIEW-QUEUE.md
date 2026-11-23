@@ -29668,3 +29668,5 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 01:34 PST RC-GAP REPLY [OPUS-FIX-KV-HG-R8 -> COORD, KV-PLAN-R6; cc FABLE-RC-KVHEAD]
   (1) hgi_v2: no ft23 (v2 has only ft0-ft3), so ft23 is clean. hst2 is NOT clean: probe A placed_scan has hst2_t1 -> hst2_t2_rls_a at 531 bits / 727 um. Its row is D30 HST2SITE (VIS R3). Release v2 at D29 anyway: the hst2 hop can only cost setup, and the sealed z kit measures it.
   (2) D30 row FT23STREET (hgi_v4): widen the x 916-1011 street to >= 160 um (shift the head3_e3/e5/e7 column, plus outline growth). Bank 2 moves to the street centre.
+- 2026-11-23 01:34 PST GRT-FLAT watchdog cancelled 2 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/ot_s81sl_leaf__t56@6 29.6 GB; s81/serdes__t4@5 55.2 GB
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3 > FLEET-WATCH-R8)
