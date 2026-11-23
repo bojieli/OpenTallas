@@ -111,3 +111,13 @@
   Row BKSEL-CORE-TOP-CHANNEL (generator epyc10 s81-bksel-r7/w/bksel_chan.py, on J8 plan_j8_cut_reset f65f62779bef -> w/plan_j9_chan.json 7de79f24e130):
   12.96 um relay-free channel above u_c/u_g top faces (+-21.6 um), 3670 sites re-seated rank-uniform over the next 60.48 um (below u_tx-8.64), x kept, max dy 50.3.
   Proof: fork w/tree_j9 (of j8_cut_tree, running) -> w/gate_j9.sh (schema, strict bind, LATCHECK, PRE vs J8) -> one OT_PROBE_THROUGH=1 --goal route kit.
+- 22:4x COORD: channel approved + reset split in same J9 submission, one fork + one gate.
+  FINDING: C TT -388/-372 worst is NOT the reset path: u_g vo_s[85] -> popcount -> u_ids.cnt[4] (u_ids-B registered cnt; ~900 ps wire+bufs).
+  Reset recovery u_rrl_30 -> u_ids.b1 is -243 (C) / -409 (r7a). J8 tree carries OLD u_ids (l20s 51beecd2dc38 = main minus u_ids-B minus L4 header);
+  r7a old-u_ids worst was cp[64] -> armed -2497. So J9 must carry u_ids-B source too.
+  Same-depth plan relays cannot reach b1: they sit inside u_core (one rst_n port); landing_local_resets/consumer_localization only retarget u_cland_*/instance pins.
+  J9 SOURCE row BKSEL-IDS-RSPLIT: w/l20s_j9.sv 900bf2d5bdbe (generator w/mk_l20s_j9.py) = J8 l20s + u_ids-B + b1 reset from 5 local kept copies
+  u_rb1[g] (dsdv_bk_rrd D=1, d=rst), <=56 b1 bits each (+1 edge on b1 only; o/fault unchanged). Proof w/bksel_ids/inv_S.{sv,ys} (B vs S induction; B vs old proven earlier).
+  J9 PLAN rows on J8 f65f62779bef: channel (w/bksel_chan.py) + cnt[4:0]/pre FIRM at (2331.6,198.72) under u_g vo_s[84..99] (w/bksel_ids_site.py) -> w/plan_j9_bksel.json 436a1beb8536.
+  Gate w/gate_j9.sh on fork w/tree_j9 (overlay l20s, elab+bind strict into native_bind/j9_bksel_out, LATCHECK, PRE). Then one OT_PROBE_THROUGH=1 --goal route kit.
+  Queued: fork (running), formal inv_S (ot-run epyc10 load cap, log intel2 ~/s81-bksel-r7-logs/inv_S.otrun.log).
