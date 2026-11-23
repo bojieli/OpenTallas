@@ -2479,7 +2479,8 @@ def resume_move(j, mem):
 
 
 def submit(st, j, attempt_note=""):
-    if attempt_note and j.get("goal") in ("auto", "route"):
+    if attempt_note and (j.get("goal") in ("auto", "route")
+                         or KW.strict_wave_route_review(canonical_die(j.get("die") or ""))):
         event = queued_wave_event(j)
         if event and hold_wave_submission(st, j, wave_review_snapshot(), event):
             return
