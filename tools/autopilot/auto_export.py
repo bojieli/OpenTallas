@@ -631,7 +631,10 @@ def view_pack_cmds(j):
     pub = ('set -a; . {env}; set +a; cd {code} && nice -n 10 {py} -I design_export.py publish --node {n} --pack {inc}/{n}.lvp --index "$DESIGN_INDEX" '
            '--store "$LV_STORE" 2>&1 | tail -1; for f in {inc}/{n}.lvp {inc}/verify.json {inc}/cut.json; do rm -f "$f"; done').format(
         env=VP_STORE_ENV, code=VP_CODE, py=VP_STORE_PY, n=shlex.quote(j['node']), inc=shlex.quote(inc))
-    return ([OT_RUN, '--hosts', j['host'], '--dir', VP_ROOT, '--mem', str(mem), '--threads', '4', '--', 'bash', '-c', cut], pub, w, inc)
+    run = [OT_RUN, '--hosts', j['host'], '--dir', VP_ROOT, '--no-spill',
+           '--stage', VP_CODE, '--stage', j['odb'], '--mem', str(mem), '--threads', '4',
+           '--', 'bash', '-c', cut]
+    return run, pub, w, inc
 
 
 def view_pack_one(j, state=None):
