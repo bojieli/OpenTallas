@@ -166,6 +166,11 @@ fi
 # cts.tcl copy captures the args BEFORE the erase (::ot_kit_dpl_args, read by clk_leaf_repeat.tcl) and, only when they
 # select -use_diamond_legalizer (FLOW-7 opt-in), gives a bare detailed_placement in that process the same args.  Kits
 # without the opt-in: unchanged.  No gate, check or margin changes.  'export OT_CTS_DPL_ARGS = 0' in config.mk opts out.
+# CTS-DPL-DIAMOND-1123 (COORD 11:0x, QC btab_s4r DPL-0033 after CTS on repair_clock_nets wire buffers, 35 cells left at 26 %
+# utilization, on a tree that already had GRT-DPL-DIAMOND f60d28bf6dc): the same rule as the GRT stage.  The wrapper is now
+# installed on every kit: a bare call takes the kit args when they select -use_diamond_legalizer (unchanged), and any
+# non-diamond pass (both cts.tcl calls, clk_leaf_repeat) that leaves check_placement failing gets ONE diamond pass (the kit
+# diamond args, else -use_diamond_legalizer).  A legal result is untouched.
 CT=$SD/cts.tcl
 if [ -f "$CT" ] && ! grep -qF "OT_CTS_DPL_ARGS" "$CT" && ! grep -Eq '^export OT_CTS_DPL_ARGS[[:space:]]*=[[:space:]]*0[[:space:]]*$' "$W/config.mk" 2>/dev/null; then
   if grep -q '^ *erase_non_stage_variables cts' "$CT"; then
@@ -174,11 +179,18 @@ import re, sys
 from pathlib import Path
 p = Path(sys.argv[1])
 line = ('set ::ot_kit_dpl_args [expr {[info exists ::env(DETAIL_PLACEMENT_ARGS)] ? [string trim $::env(DETAIL_PLACEMENT_ARGS)] : ""}]; '
-        'if {[string first -use_diamond_legalizer $::ot_kit_dpl_args] >= 0 && [info commands ::ot_cts_dpl_orig] eq "" '
-        '&& [info commands ::detailed_placement] ne ""} { rename ::detailed_placement ::ot_cts_dpl_orig; '
-        'proc ::detailed_placement {args} { if {![llength $args]} { set args $::ot_kit_dpl_args }; '
-        'uplevel 1 [list ::ot_cts_dpl_orig {*}$args] }; '
-        'puts "OT_CTS_DPL_ARGS: CTS detailed_placement uses the kit 3_5 legalizer: $::ot_kit_dpl_args" } ;# OT_CTS_DPL_ARGS')
+        'if {[info commands ::ot_cts_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} { '
+        'rename ::detailed_placement ::ot_cts_dpl_orig; '
+        'proc ::detailed_placement {args} { '
+        'set kd [expr {[string first -use_diamond_legalizer $::ot_kit_dpl_args] >= 0}]; '
+        'if {![llength $args] && $kd} { set args $::ot_kit_dpl_args }; '
+        'set rc [catch {uplevel 1 [list ::ot_cts_dpl_orig {*}$args]} res opts]; '
+        'if {[lsearch -exact $args -use_diamond_legalizer] < 0 && [catch {check_placement}]} { '
+        'set da [expr {$kd ? $::ot_kit_dpl_args : "-use_diamond_legalizer"}]; '
+        'puts "OT_CTS_DPL_ARGS residual: CTS detailed_placement left an illegal placement (rc $rc), one diamond pass: $da"; '
+        'return [uplevel 1 [list ::ot_cts_dpl_orig {*}$da]] }; '
+        'return -options $opts $res }; '
+        'puts "OT_CTS_DPL_ARGS: CTS detailed_placement kit args [expr {[string first -use_diamond_legalizer $::ot_kit_dpl_args] >= 0 ? $::ot_kit_dpl_args : {(negotiation; diamond pass on an illegal result)}}]" } ;# OT_CTS_DPL_ARGS')
 s = p.read_text()
 s, n = re.subn(r'(?m)^( *)(erase_non_stage_variables cts)', lambda m: m.group(1) + line + '\n' + m.group(1) + m.group(2), s, count=1)
 assert n == 1

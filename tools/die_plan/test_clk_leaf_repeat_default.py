@@ -347,15 +347,25 @@ def test_wrapper_cts_dpl_args_opt_out(tmp_path):
     assert "OT_CTS_DPL_ARGS" not in (s / "cts.tcl").read_text()
 
 
-@pytest.mark.parametrize("kit", [KIT_DPL, "", "-disallow_one_site_gaps"])
-def test_cts_dpl_args_line_behaviour(tmp_path, kit):
+# CTS-DPL-DIAMOND-1123: a legal result is untouched; a non-diamond pass that leaves check_placement failing gets one diamond
+# pass (kit diamond args, else -use_diamond_legalizer); explicit args always pass through unchanged.
+@pytest.mark.parametrize("kit,illegal,want", [
+    (KIT_DPL, 0, ["dpl " + KIT_DPL, "dpl -max_displacement {5 1}", "check_placement"]),
+    ("", 0, ["dpl", "check_placement", "dpl -max_displacement {5 1}", "check_placement"]),
+    ("", 1, ["dpl", "check_placement", "dpl -use_diamond_legalizer", "dpl -max_displacement {5 1}", "check_placement"]),
+    ("-disallow_one_site_gaps", 1, ["dpl", "check_placement", "dpl -use_diamond_legalizer",
+                                    "dpl -max_displacement {5 1}", "check_placement"]),
+])
+def test_cts_dpl_args_line_behaviour(tmp_path, kit, illegal, want):
     if not shutil.which("tclsh"):
         pytest.skip("tclsh unavailable")
     w, s = wrap_cts(tmp_path)
     assert run_wrap(w, s).returncode == 0
     line = next(x for x in (s / "cts.tcl").read_text().splitlines() if "OT_CTS_DPL_ARGS" in x)
     t = tmp_path / "l.tcl"
-    t.write_text("set ::log {}\nproc detailed_placement {args} { lappend ::log [string trim \"dpl $args\"] }\n" + line + "\n"
+    t.write_text("set ::log {}\nset ::bad %d\nproc detailed_placement {args} { lappend ::log [string trim \"dpl $args\"] }\n"
+                 "proc check_placement {args} { lappend ::log check_placement; if {$::bad} { set ::bad 0; error DPL-0033 } }\n"
+                 % illegal + line + "\n"
                  "array unset ::env DETAIL_PLACEMENT_ARGS\n"            # ORFS erase after the capture
                  "detailed_placement\ndetailed_placement -max_displacement {5 1}\nputs LOG=[join $::log |]\n")
     e = {k: v for k, v in os.environ.items() if k != "DETAIL_PLACEMENT_ARGS"}
@@ -364,9 +374,10 @@ def test_cts_dpl_args_line_behaviour(tmp_path, kit):
     p = subprocess.run(["tclsh", str(t)], env=e, capture_output=True, text=True)
     assert p.returncode == 0, p.stdout + p.stderr
     log = [x for x in p.stdout.splitlines() if x.startswith("LOG=")][0][4:].split("|")
-    first = "dpl " + kit if "diamond" in kit else "dpl"
-    assert log == [first, "dpl -max_displacement {5 1}"], log      # explicit args always pass through unchanged
-    assert ("OT_CTS_DPL_ARGS:" in p.stdout) == ("diamond" in kit)
+    assert log == want, log
+    assert "OT_CTS_DPL_ARGS:" in p.stdout
+    assert ("OT_CTS_DPL_ARGS residual" in p.stdout) == bool(illegal)
+
 
 # HEAD sd8g GRT residue must be repaired and checked before routing is committed.
 def test_grt_clean_legalization_precedes_route_commit(tmp_path):
