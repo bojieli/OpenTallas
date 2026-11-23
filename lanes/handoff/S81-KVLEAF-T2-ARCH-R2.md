@@ -16,3 +16,7 @@ Correction to predecessor: closed masters usable as-is = kvq, kvr, qnh only. kve
 2. Commit RTL in wt with slice top LEFT at KV_HARD_RQ 0 for J9 (zero netlist change), push via ot-push-main with tests.
 3. Master private kits (7 new + re-check of 3 closed under the current flow), intel1.
 4. t2 floorplan draft (hard_cores around the SRAM columns, A|B cut) to FAM-S81-MISC-R4.
+## State 06:4x
+- Posts: TAKING d0c915e8, VERDICT a2a395cb, PLAN 6e13a6dd (owners + ETAs; J9 = REASONED asked of FABLE-RC-S81; earliest GATED 11-24 evening, estimate).
+- RTL committed on lane branch s81-kvleaf-t2-hardkv @ 9deebeb5cf (4 files; defaults unchanged). The slice-top line KV_HARD_RQ(2) is NOT in the commit: saved as tmp/slice_w3_hardrq2.patch in the lane dir, apply only in the private t2 tree. NOT pushed to main (bench pending).
+- Open: bench images (asked in PLAN post); 7 ref_tile specs under tools/ref_tile/specs_s81su/ (model on s81su_kve_ref.json etc.; old masters used the 10-12 M5-cap ref_tile flow, current leaf cores use cores/views/rt22m_hx_1030 with obs_max M7 + pins_file: check contract); floorplan input to FAM-S81-MISC-R4 by 14:00; no reply read yet from FABLE-RC-S81 / FAM-S81-MISC-R4 / FIX-LEDGER.
