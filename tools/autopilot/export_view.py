@@ -131,7 +131,7 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
              chain=dict(lec_verdict=lec_v, lec=lec, lec_all_shown=lec_all_shown(lec_doc)),
              src_commit=src_commit or sdoc.get("src_commit"), flow_tag=flow_tag or sdoc.get("flow_tag"))
     mod = r.get("module")
-    lib_basis = {}
+    lib_basis = dict(r.get("lib_basis") or {})     # VIEW-LIB-1122: the probe itself now falls back to the base ETM
     for corner, orfs in (("tt", "tc"), ("ff", "bc")):     # the routed run's own ETM (ORFS finish write_timing_model of
         rel, alt = f"{mod}_{corner}.lib", os.path.join(base, f"{mod}_{orfs}.lib")   # 6_final), as s81_eco/publish_view.sh
         if not os.path.isfile(alt) and os.path.isfile(os.path.join(base, f"{mod}_{orfs.upper()}.lib")):

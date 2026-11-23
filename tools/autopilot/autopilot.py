@@ -1151,14 +1151,25 @@ if not mod:
     mod = os.path.basename(lefs[0])[:-4] if len(lefs) == 1 else None
 out["module"] = mod
 files = {}
+lib_basis = {}
+# VIEW-LIB-1122 (COORD flow review item 4: all 64 autopilot sign-offs since 10-27 exported INCOMPLETE views): ORFS writes the
+# abstract libs as base/<mod>_tc.lib (TT) and base/<mod>_bc.lib (FF); only s81_eco/publish_view.sh renamed them, so the
+# kit/views + signoff-dir lookup never found a lib.  Same corner alias as signoff.py (tt = tt/typ/tc, ff = ff/bc); the view
+# keeps its <mod>_tt.lib / <mod>_ff.lib name.  kit/views and the signoff dir still win over base.
+LIBSUF = {"tt": ("tt", "typ", "tc", "TC"), "ff": ("ff", "bc", "BC")}
+def libc(m, c):
+    return [os.path.join(d, m + "_" + x + ".lib") for d in (os.path.join(K, "views"), S, B) for x in LIBSUF[c]]
 if mod:
     for rel, cands in ((mod + ".lef", [os.path.join(K, "views", mod + ".lef"), os.path.join(B, mod + ".lef")]),
-                       (mod + "_tt.lib", [os.path.join(K, "views", mod + "_tt.lib"), os.path.join(S, mod + "_tt.lib")]),
-                       (mod + "_ff.lib", [os.path.join(K, "views", mod + "_ff.lib"), os.path.join(S, mod + "_ff.lib")])):
+                       (mod + "_tt.lib", libc(mod, "tt")), (mod + "_ff.lib", libc(mod, "ff"))):
         for c in cands:
             if os.path.isfile(c):
-                files[rel] = c; break
+                files[rel] = c
+                if rel.endswith(".lib") and os.path.dirname(c) == B.rstrip("/"):
+                    lib_basis[rel] = "base " + os.path.basename(c) + " (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+                break
 out["files"] = files
+out["lib_basis"] = lib_basis
 out["files_sha256"] = {rel: sha(path) for rel, path in files.items()}
 # Passive retention only: a missing/invalid graph never becomes clock coverage.
 W = a.get("clock_witness_dir") or S
