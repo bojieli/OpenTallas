@@ -13,5 +13,5 @@ Next: v9 clean -> post THE set to S81-J6-ASSEMBLY-R5 by 14:00; proof kits t18 t6
 ## 02:5x COORD ruling done
 - AUTO-ECO fix pushed main b7bb403485 (classify window, judge_eco window, late-ECO ERROR retry; test_nearmiss_window.py). Lane clone intel1 /srv/opentallas-scratch2/claude/nearmiss-eco-r1/clone (branch nearmiss-eco-r1-autoeco).
 - Rescan of 63 DONE-STRUCTURAL: 23 in window, 15 signed types, 3 DBs deleted, 4 setup-EXHAUSTED, 1 launched: kv3_io_cor_v1 epyc8 (root nearmiss-eco-r1/kv3_io_cor_v1; waiter wait_eco.sh).
-- Live ECOs: slw_stm_v2 (epyc8), slw_fe_v1_g (epyc9, --from grt), serdes__t13_g (epyc9, pass 2 --from grt after pass-1 ODB-0420 ERROR).
+- Live ECOs: slw_stm_v2 (epyc8), slw_fe_v1_g (epyc9, --from grt), serdes__t13_p3 (epyc9 unit oth-ubuntu-3362312-1795397870, pass 3 route-keep with pad_abut_strip count fix 0efed5dab8a; pass 2 _g died 14:29 ODB-0420 + PSM-0069 VDD).
 - kv3_io_cor_v1: retry ERROR DRT-0206 ft11_i[3]/[7] in hold pass, same as wave 11-21; handed to KV owner, no further retry.
