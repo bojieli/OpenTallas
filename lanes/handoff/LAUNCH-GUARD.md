@@ -9,3 +9,6 @@ kit_wave_pending.tsv rows (11-05/06, attempt numbers of older events) were perma
 recorded but container alive never retried, private kits exempt from UNSIGNABLE, ECOs never judged, 30 min grace.
 State: focused tests 49 pass; broader subset running; next: ot-push-main, deploy check (rt/current), first-pass count, REPORT to COORD.
 WAVE-OPS-R1 told (post 00:54) that LAUNCH-GUARD builds FIX 3.
+
+## 02:2x DONE
+main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. NOPROG 02:00: 7 design-fail units cancelled, scopes verified gone. Lane goal done; watch only.
