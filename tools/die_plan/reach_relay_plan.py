@@ -38,6 +38,7 @@ Plan step (opt-in, guarded): nothing else in the plan changes.
 """
 import argparse
 import copy
+from functools import cache
 import json
 import math
 import sys
@@ -424,6 +425,70 @@ def mon_relays(P, ln, segs, taken, unplaced=None):
     return rows
 
 
+def reprice_monitor_budget(side, rows):
+    """Charge status-only relays in the existing collector boot model."""
+    collector = side.get("collector")
+    if not rows or not collector:
+        return None
+    if side.get("source_boot_readiness_contract"):
+        raise RelayError("monitor relay changed a measured collector graph; remeasure the emitted boot RTL")
+    targets = {(row["src"], row["dst"], row["bundle"]): row["relays"] for row in rows}
+    edges = {}
+    children = {}
+    for edge in collector["edges"]:
+        key = (edge["src"], edge["dst"], edge.get("port", edge["src"]))
+        if key in targets:
+            if key in edges:
+                raise RelayError(f"ambiguous collector boot edge {key}")
+            edges[key] = edge
+        children.setdefault(edge["dst"], []).append(edge)
+    if missing := targets.keys() - edges.keys():
+        raise RelayError(f"monitor relay missing collector boot edge: {sorted(missing)}")
+
+    budget = collector.get("boot_budget")
+    depths = budget.get("local_registered_depths") if budget else None
+
+    def ready_bound():
+        train = budget["ring_train_max_cycles"]
+        initial = budget["raw_reset_release_max_cycles"] + train
+
+        @cache
+        def deadline(part):
+            arrivals = [initial]
+            for edge in children.get(part, ()):
+                transfer = edge["boot_transport_extra_cycles"]
+                if edge["seam"]:
+                    transfer = train + edge.get("monitor_relay_cycles", 0)
+                arrivals.append(deadline(edge["src"]) + transfer)
+            return max(arrivals) + depths[part]
+
+        return deadline(collector["root"])
+
+    previous = budget.get("ready_at_glue_max_cycles") if budget else None
+    reconstructed = ready_bound() if depths else None
+    for key, count in targets.items():
+        edge = edges[key]
+        if edge.get("monitor_relay_cycles", 0):
+            raise RelayError(f"collector monitor boot edge already priced: {key}")
+        edge["monitor_relay_cycles"] = count
+        edge["boot_transport_extra_cycles"] += count
+
+    updated = None
+    if depths:
+        updated = ready_bound()
+        budget["ready_at_glue_max_cycles"] = updated
+    elif previous is not None:
+        # The older collector format lacks per-part registered depths.
+        updated = previous + sum(targets.values())
+        budget["ready_at_glue_max_cycles"] = updated
+    if budget is not None:
+        budget["source_causal_bound_qualified"] = False
+        budget["physical_clock_phase_qualified"] = False
+    return dict(previous_root_cycles=previous, reconstructed_previous_root_cycles=reconstructed,
+                root_cycles=updated, status_cycles_per_bundle={k[2]: n for k, n in targets.items()},
+                data_cycles_added=0)
+
+
 def depth_stats(pv):
     by = {n["region"]: n for n in pv["nodes"]}
     memo = {}
@@ -537,6 +602,9 @@ def plan(raw, side, skip_unplaced=False, trunks_doc=None, reset=True):
                             edges=sum(r["edges"] for r in mrows), status_cycles_added_max=max([r["relays"] for r in mrows] or [0]),
                             unplaced=unplaced or [], rows=mrows),
                data_cycles_added=0)
+    boot_reprice = reprice_monitor_budget(side, mrows)
+    if boot_reprice is not None:
+        rep["monitor"]["boot_budget"] = boot_reprice
     import reset_tree as RT
     if reset and RT.wavefront(P):
         rep["reset"] = reset_relays(P, raw)

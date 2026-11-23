@@ -339,3 +339,27 @@ endmodule
         out = subprocess.run(["vvp", "-n", exe], capture_output=True, text=True).stdout
         import re
         assert [int(x) for x in re.findall(r"REL \d+ (-?\d+)", out)] == want, out[-1500:]
+
+
+def test_relay_budget_updates_exact_monitor_edge_and_recomputes_root():
+    observed = dict(src="west", dst="root", seam=True, boot_transport_extra_cycles=3)
+    other = dict(src="north", dst="root", seam=False, boot_transport_extra_cycles=1)
+    budget = dict(ready_at_glue_max_cycles=54, raw_reset_release_max_cycles=8, ring_train_max_cycles=21,
+                  local_registered_depths={"root": 3, "west": 2, "north": 15}, physical_clock_phase_qualified=True)
+    side = dict(collector=dict(root="root", edges=[observed, other], boot_budget=budget))
+    rows = [dict(src="west", dst="root", bundle="west", relays=11)]
+    report = RP.reprice_monitor_budget(side, rows)
+    assert report["previous_root_cycles"] == 54
+    assert report["reconstructed_previous_root_cycles"] == 55
+    assert report["root_cycles"] == budget["ready_at_glue_max_cycles"] == 66
+    assert [observed["boot_transport_extra_cycles"], other["boot_transport_extra_cycles"]] == [14, 1]
+    assert not budget["source_causal_bound_qualified"] and not budget["physical_clock_phase_qualified"]
+    assert report["data_cycles_added"] == 0
+
+
+def test_relay_budget_protects_old_measured_clock_graph():
+    side = dict(collector=dict(), source_boot_readiness_contract={"measurement_sha256": "old"})
+    assert RP.reprice_monitor_budget(side, []) is None
+    side["collector"]["root"] = "root"
+    with pytest.raises(RP.RelayError, match="remeasure the emitted boot RTL"):
+        RP.reprice_monitor_budget(side, [dict(src="west", dst="root", bundle="west", relays=11)])
