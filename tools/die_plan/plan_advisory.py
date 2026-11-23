@@ -36,6 +36,7 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
                    241 types, 0/47 signed, 40/51 failing); fix = edgestrip_row.py interior shift or re-shape (adv_edge_strip.py)
 
   HOP-GAP          internal one-cycle reg-to-reg / reg-to-core-pin hop > 405 um with no station (FABLE-RC-S81: gunit -2168 ps)
+  LAND-CAP         a clock-landing band filled >= 90 % or crossed by a foreign halo (S81 c1x_C t9, QC st_a x_st_b_i)
   TREE-DRIFT       a view LEF / porous map / flow script / tool fix on main the bound tree lacks (u_cf view 31c7ccbd1b on J7/J8)
   OFF-GRID         exact station / bank sites off the placement grid (KV sys_c row C)
   RESET-NAME       a generated reset relay (rst_rl_<k>) / density tap (clk_t<i>) name the clock section references that the
@@ -64,7 +65,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("STATION-DENSITY", "adv_station_density"), ("SITE-ON-ROW", "adv_site_on_row"), ("PLACE-REGION", "adv_place_region"),
           ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"), ("LANE-STATIONS", "adv_lane_stations"),
           ("ROUTE-DEMAND", "adv_route_demand"), ("EDGE-STRIP", "adv_edge_strip"), ("RESET-NAME", "adv_reset_names"),
-          ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"))
+          ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
