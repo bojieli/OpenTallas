@@ -443,3 +443,19 @@ def test_sinkest_bins_kept_unless_placed_kit_is_larger(monkeypatch):
     monkeypatch.setattr(TS, "estimate_sinks", lambda P, tn, cache: ([(1.0, 1.0, 130.0)], "cache"))
     monkeypatch.setattr(taps, "sink_sites", lambda P, tn: [(0.0, 0.0, 100.0)])
     assert TS.STALE_BINS == 1.2 and 130.0 > TS.STALE_BINS * 100.0
+
+
+def test_window_rows_use_runtime_coverage_with_older_geometry_tree(monkeypatch, tmp_path):
+    old_cover = SimpleNamespace(fill=lambda raw, plan, types=None: [])
+    monkeypatch.setitem(sys.modules, "tap_offset_cover", old_cover)
+    monkeypatch.setattr(schema, "Plan", lambda raw, path: object())
+    monkeypatch.setattr(schema, "core_taps", lambda plan, name: [])
+    sites = [("clk", 0.0, 0.0), ("clk_t1", 60.0, 0.0),
+             ("clk_t2", 0.0, 60.0), ("clk_t3", 60.0, 60.0)]
+    monkeypatch.setattr(schema, "tap_grid", lambda plan, name: sites + [("clk_t4", 20.0, 20.0)])
+    raw = {
+        "clock": {"tap_window": {"per_port_ps": {"t": {name: 35.0 for name, _, _ in sites}}}},
+        "partition_types": {"t": {"clock": {"taps": [{"name": n, "xy": [x, y]} for n, x, y in sites]}}},
+    }
+    rows = {"t": ("taps", [{"name": "clk_t4", "xy": [20, 20]}])}
+    assert TS.window_rows(raw, tmp_path / "plan.json", rows) == {"t": {"clk_t4": 35.0}}
