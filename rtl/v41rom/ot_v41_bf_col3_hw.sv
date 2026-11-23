@@ -36,16 +36,19 @@ module ot_v41_bf_col3_hw (
     wire [12:0]   h_t_a, h_t_b;
     wire [31:0]   r_val_a, r_val_b;
     wire [7:0]    r_t_a, r_t_b;
-    ot_v41_bf_col3_c u_c (
+    // S81-COL-J9 11-23 (RELEC-1122 col774 LEC 78 pts): the hard cores were hardened at MTP 1 / TRW 7 (Liberty i1_t[16:0],
+    // h_t_*[12:0], r_t_a[7:0], t[12:0], otag[7:0]); without these literals the kit blackbox took the RTL defaults (MTP 0, TRW 2),
+    // the widths disagreed with the wires and synthesis left the whole tag loop unconnected (_NC).
+    ot_v41_bf_col3_c #(.MTP(1)) u_c (
         .clk(clk), .rst_n_pin(rst_n_pin), .ze_d(ze_d), .issue(issue), .a_ctr(a_ctr), .i1_v(i1_v), .i1_bk(i1_bk), .i1_bf(i1_bf),
         .i1_t(i1_t), .i2x_q0(i2x_q0), .i2x_e0(i2x_e0), .i2x_q1(i2x_q1), .i2x_e1(i2x_e1), .so_row(so_row), .so_idx(so_idx),
         .so_n(so_n), .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr), .ppos(ppos), .qy_bkf(qy_bkf),
         .h_v_a(h_v_a), .h_v_b(h_v_b), .h_w_a(h_w_a), .h_x_a(h_x_a), .h_w_b(h_w_b), .h_x_b(h_x_b), .h_t_a(h_t_a), .h_t_b(h_t_b),
         .r_v_a(r_v_a), .r_val_a(r_val_a), .r_val_b(r_val_b), .r_err_a(r_err_a), .r_err_b(r_err_b), .r_t_a(r_t_a),
         .r_f_a(r_f_a), .r_f_b(r_f_b), .h_rst_a(h_rst_a), .h_ze_a(h_ze_a), .h_rst_b(h_rst_b), .h_ze_b(h_ze_b));
-    ot_v41_bf16_half u_ha (.clk(clk), .rst_c(h_rst_a), .ze_c(h_ze_a), .v(h_v_a), .w(h_w_a), .x(h_x_a),
+    ot_v41_bf16_half #(.TRW(7)) u_ha (.clk(clk), .rst_c(h_rst_a), .ze_c(h_ze_a), .v(h_v_a), .w(h_w_a), .x(h_x_a),
         .t(h_t_a), .ov(r_v_a), .oval(r_val_a), .oerr(r_err_a), .otag(r_t_a), .fault(r_f_a));
-    ot_v41_bf16_half u_hb (.clk(clk), .rst_c(h_rst_b), .ze_c(h_ze_b), .v(h_v_b), .w(h_w_b), .x(h_x_b),
+    ot_v41_bf16_half #(.TRW(7)) u_hb (.clk(clk), .rst_c(h_rst_b), .ze_c(h_ze_b), .v(h_v_b), .w(h_w_b), .x(h_x_b),
         .t(h_t_b), .ov(r_v_b), .oval(r_val_b), .oerr(r_err_b), .otag(r_t_b), .fault(r_f_b));
 `else
     ot_v41_bf_col3 #(.NSEG(8), .NCH(16), .XF(8), .LV(5), .BF16(1), .NCHB(8), .NB(2), .MTP(1), .EARLY(1), .CG(1), .DRAIN(200),
