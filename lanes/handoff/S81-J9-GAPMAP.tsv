@@ -1,6 +1,6 @@
 # S81-J9-ASSEMBLY-R6 11-23 06:1x: 75 HOTSPOT-GAPS(NONE) + 23 FAILED-NO-RELAUNCH S81 items (from FOLLOWUP-S81.tsv 06:03). Owner lane fills j9_row (row id + plan/ops sha12) or REASONED:<reason sent to FABLE-RC-ALL>. Hotspots by 10:00, relaunch decisions by 15:30. Edit only your own rows (coord-commit.sh).
 kind	item	family	owner_lane	deadline	j9_row_or_REASONED
-RELAUNCH	bk_sel__t2	bk_sel	S81-MISC-SERDES-J9	15:30	OPEN
+RELAUNCH	bk_sel__t2	bk_sel	S81-MISC-SERDES-J9	15:30	ROW BKSEL-IDS-RSPLIT v2 src l20s_j9 9617ad7537cc + BKSEL-CORE-TOP-CHANNEL plan 436a1beb8536 (S81-BKSEL-R7 J9 gate, strict bind running epyc7) + BKSEL-TAPSPLIT-1 v2 in VIS-MISC 10c plan 0e32aea4d155; relaunch on J9; LPS+4 loop-back schedule: OPEN owner question (see post)
 RELAUNCH	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	col_h10_r0_p1	S81-COL-J9	15:30	OPEN
 RELAUNCH	col_h10_r1__t1__cl95b37463__pv69c7e9a6	col_h10_r1	S81-COL-J9	15:30	OPEN
 RELAUNCH	col_h9_r0_p2__t1__cl0045af7b__pva2793873	col_h9_r0_p2	S81-COL-J9	15:30	OPEN
@@ -12,7 +12,7 @@ RELAUNCH	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	col_h9_r1	S81-COL-J9	15:30	OPEN
 RELAUNCH	dsdv_slice_c1x_C__t7	dsdv_slice_c1x_C	S81-SLICE-J9	15:30	OPEN
 RELAUNCH	dsdv_slice_c1x_C__t8	dsdv_slice_c1x_C	S81-SLICE-J9	15:30	OPEN
 RELAUNCH	dsdv_slice_lepe_nh_mus_C__t1	dsdv_slice_lepe_nh_mus_C	S81-SLICE-J9	15:30	OPEN
-RELAUNCH	gunit__t1	gunit	S81-MISC-SERDES-J9	15:30	OPEN
+RELAUNCH	gunit__t1	gunit	S81-MISC-SERDES-J9	15:30	ROW GUNIT-TAPS-1 + GUNIT l1f/l1c relays 3/2 (bench d0/d30/d32/d65 PASS, MUT10 caught) in VIS-MISC gate10c plan 0e32aea4d155 asbuilt 09487b062b71 (gate running epyc7); relaunch on J9
 RELAUNCH	s81sl_kv_leaf__t3	s81sl_kv_leaf	S81-KVLEAF-T2-ARCH-R2	15:30	OPEN
 RELAUNCH	s81sl_leaf__t29	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
 RELAUNCH	s81sl_leaf__t32	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
@@ -22,11 +22,11 @@ RELAUNCH	s81sl_leaf__t44__clf6cf8492	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
 RELAUNCH	s81sl_leaf__t45	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
 RELAUNCH	s81sl_leaf__t7	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
 RELAUNCH	s81sl_leaf__t71	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
-RELAUNCH	seqhost__t1	seqhost	S81-MISC-SERDES-J9	15:30	OPEN
-HOTSPOT	bk_sel LOGIC-DEPTH x1 (max 5p worst -388.05 skew 269.4)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	bk_sel RESET-ASYNC x2 (max 5p worst -243.26 skew -175.3)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	bk_sel HOLD-SHORT-PATH x1 (max 5p worst -222.3 skew -305.7)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	bk_sel IO-BOUNDARY x3 (max 3p worst -12.65 skew 94.5)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
+RELAUNCH	seqhost__t1	seqhost	S81-MISC-SERDES-J9	15:30	ROW SEQHOST-VLG-STN-1 stations (22 face buses) in VIS-MISC gate10c plan 0e32aea4d155 asbuilt 09487b062b71 (5 OUT buses kept KIT-priced); probe after bind; relaunch on J9
+HOTSPOT	bk_sel LOGIC-DEPTH x1 (max 5p worst -388.05 skew 269.4)	bk_sel	S81-MISC-SERDES-J9	10:00	ROW BKSEL-IDS-RSPLIT v2 9617ad7537cc (cnt/pre FIRM at vo_s window; u_g->u_ids.cnt 71 bufs = wire) + plan 436a1beb8536
+HOTSPOT	bk_sel RESET-ASYNC x2 (max 5p worst -243.26 skew -175.3)	bk_sel	S81-MISC-SERDES-J9	10:00	ROW BKSEL-IDS-RSPLIT v2 9617ad7537cc (b1 reset split into 5 local copies <=56 fanout, induction proof SUCCESS; L4 RRD/RSD relays restored) + plan 436a1beb8536
+HOTSPOT	bk_sel HOLD-SHORT-PATH x1 (max 5p worst -222.3 skew -305.7)	bk_sel	S81-MISC-SERDES-J9	10:00	ROW BKSEL-TAPSPLIT-1 v2 (+99 taps, max load 10243->966; skew -305.7 = tap insertion spread) in plan 0e32aea4d155
+HOTSPOT	bk_sel IO-BOUNDARY x3 (max 3p worst -12.65 skew 94.5)	bk_sel	S81-MISC-SERDES-J9	10:00	REASONED: worst -12.65 ps is inside the TT gate (>= -42); no row needed
 HOTSPOT	col_h10_r0_p1 CLOCK-SKEW x3 (max 2p worst -57.05 skew -601.4)	col_h10	FABLE-OPEN-S81-B	10:00	OPEN
 HOTSPOT	col_h10_r0_p1 RESET-ASYNC x2 (max 5p worst -27.85 skew 73.3)	col_h10	S81-COL-J9	10:00	OPEN
 HOTSPOT	col_h10_r0_p1 IO-BOUNDARY x2 (max 5p worst -12.88 skew 98.9)	col_h10	S81-COL-J9	10:00	OPEN
@@ -78,13 +78,13 @@ HOTSPOT	dsdv_slice_lepe_mu_LP CLOCK-NDR-DROP x1 (max 5x)	dsdv_slice_lepe_mu_LP	S
 HOTSPOT	dsdv_slice_lepe_mu_LP REPAIR-CAP x1 (max 3x)	dsdv_slice_lepe_mu_LP	S81-SLICE-J9	10:00	OPEN
 HOTSPOT	dsdv_slice_lepe_nh_mus_C REACH x2 (max 3p worst -633.32 skew -47.4)	dsdv_slice_lepe_nh_mus_C	S81-SLICE-J9	10:00	OPEN
 HOTSPOT	dsdv_slice_lepe_nh_mus_C RESET-ASYNC x1 (max 5p worst -15.2 skew 48.9)	dsdv_slice_lepe_nh_mus_C	S81-SLICE-J9	10:00	OPEN
-HOTSPOT	eng OVER-MACRO x1 (max 173.0 ovfl 22.3%)	eng	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	eng STATION-CLUSTER x1 (max 122.0 ovfl 73.0%)	eng	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	eng MACRO-CHANNEL x1 (max 22.0 ovfl 13.2%)	eng	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	eng REACH x1 (max 1p worst -223.66 skew 196.8)	eng	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	eng RESET-ASYNC x1 (max 5p worst -22.1 skew 37.8)	eng	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	iqf IO-BOUNDARY x2 (max 1p worst -154.64 skew 83.0)	iqf	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	iqf HOLD-SKEW x1 (max 1p worst -18.31 skew 121.8)	iqf	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	eng OVER-MACRO x1 (max 173.0 ovfl 22.3%)	eng	S81-MISC-SERDES-J9	10:00	ROW ENG-UEH0-CHAN-1 (u_h0/u_h1 60 um S, channel 17->77 um) in plan 0e32aea4d155
+HOTSPOT	eng STATION-CLUSTER x1 (max 122.0 ovfl 73.0%)	eng	S81-MISC-SERDES-J9	10:00	ROW ENG-UEH0-CHAN-1 (ft1_o bank moved W to x<=795.36, >=60 um off u_e W window) in plan 0e32aea4d155
+HOTSPOT	eng MACRO-CHANNEL x1 (max 22.0 ovfl 13.2%)	eng	S81-MISC-SERDES-J9	10:00	ROW ENG-UEH0-CHAN-1 in plan 0e32aea4d155
+HOTSPOT	eng REACH x1 (max 1p worst -223.66 skew 196.8)	eng	S81-MISC-SERDES-J9	10:00	REASONED-PENDING: u_hN->hx_res -224; hx_res relay D2 fails eng lockstep bench (2/2, 3/4 10514 mismatches; 0/0 1/1 PASS) so the stage is a protocol change (hash result captured on fixed edge lastl[12], no valid); kept J8 D1/D1; ENG-XT1 face stations in 0e32aea4d155 cover xtier legs
+HOTSPOT	eng RESET-ASYNC x1 (max 5p worst -22.1 skew 37.8)	eng	S81-MISC-SERDES-J9	10:00	REASONED: worst -22.1 ps is inside the TT gate (>= -42)
+HOTSPOT	iqf IO-BOUNDARY x2 (max 1p worst -154.64 skew 83.0)	iqf	S81-MISC-SERDES-J9	10:00	ROW IQF stations (STATION-SITE-IQF-1 u_bin seats + OUT stations, IQF-IDXO0-ONE-1 qr_v merged onto qr) in plan 0e32aea4d155 + IQF-MERGED-J9-4 ft4/ft7 4->5
+HOTSPOT	iqf HOLD-SKEW x1 (max 1p worst -18.31 skew 121.8)	iqf	S81-MISC-SERDES-J9	10:00	ROW iqf__t1 TAPSPLIT (+17 taps, IQF-MERGED-J9-4 tap set) in plan 0e32aea4d155
 HOTSPOT	s81sl_leaf REACH x10 (max 5p worst -214.9 skew -0.9)	leaf	S81-LEAF-J9	10:00	OPEN
 HOTSPOT	s81sl_leaf RESET-ASYNC x24 (max 5p worst -184.29 skew -39.1)	leaf	S81-LEAF-J9	10:00	OPEN
 HOTSPOT	s81sl_leaf CLOCK-SKEW x7 (max 5p worst -126.48 skew -344.3)	leaf	FABLE-OPEN-S81-B	10:00	OPEN
