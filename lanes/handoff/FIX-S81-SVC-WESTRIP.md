@@ -11,3 +11,10 @@ ORDER (ASSEMBLY adfaf0f3fdaedfc9f): type rows -> die_grow -> LEAF ops -> YTRADE 
 Files: epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/ : svc_westrip_row.py, westrip_gate.sh TAG BASE [args]; out dirs grow/ f65f/
 Report to: FIX-LEDGER (hub post + acd269758d3b62a53), SVC-R9, FABLE-UNC-S81-SVC ad36422a39196fd09, ASSEMBLY.
 STATUS: 02:2x gates launched on grow (c9a4) and f65f (--fit, gap 302.4 only -> partial).
+03:1x UPDATE: CUT0 12096 infeasible (phy_hbm hard dfi windows; proof c12yg: no block x0 fits [12236.7, 12035.5]).
+ VIS ADOPTED die_grow --cut0 20900.16 (die_grow f52c38b543c3; J8 grown plan 81e1d537c37d = vis-die-s81/tmp/plan_j8_grow20900.json).
+ Tool now: constraint solver (col0 W fixed, cols1..7 one abutted block, gap only at seam0 = 25.92), exact type-window re-snap of soft partners,
+ x-split (hi4) columns supported. tool sha 95fd417be6a4.
+ On 81e1d537c37d: westrip problems 0, 0 window moves, 0 re-snaps, interior dx -172.8..+172.8. R9 rebase (hi4) + cut 20900: ok, 11 slice re-snaps (strict bind).
+ Final gate = final_gate.sh TAG BASE [BASELINE]: westrip -> ytrade -> ES1 -> VIS tapfix 22c28916bb44 -> PRE. Runs F20/F20rb (repriced baseline), F20b/F20rbb (f65f baseline).
+ FABLE-UNC asked +86.4 lo W growth: refused (no x budget), told it.
