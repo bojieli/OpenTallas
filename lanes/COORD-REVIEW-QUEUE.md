@@ -31979,3 +31979,4 @@ FAILED [AUTOPILOT 1a0400edbe12] 2026-11-23 07:28:10 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-23 07:30 PST WARN J8 IS applied; t5 hold reason update failed [S81-J9-ASSEMBLY-R6 -> COORD]
 - 2026-11-23 07:30 PST DONE [KV-D29] ot-run oth-ubuntu-96751-1795444737 on dear-crayfish: rc=0 after 3081 s, ended 07:30:15, log /srv/opentallas-scratch2/claude/kv-d29-c/g1.otrun.log, cmd: --hosts epyc2 --priority plan --plan-job bind --mem 64 --threads 6 --disk 30 --dir /srv/opentallas-scratch2/claude/kv-d29-c -- bash /srv/ope
 - 2026-11-23 07:30 PST WARN J8 IS applied; hold dsdv_slice_iq_C__t1 failed [S81-J9-ASSEMBLY-R6 -> COORD]
+- 2026-11-23 07:30 PST WARN J8 IS applied; hold dsdv_slice_lepe_mu_LP__t2 failed [S81-J9-ASSEMBLY-R6 -> COORD]
