@@ -34,11 +34,16 @@ class CoreLinkPipe(unittest.TestCase):
         self.assertIn("self.declare_core_input_pipe(tn, p, ci, pn, depth", src)
 
     def test_keep_option(self):
-        """FAM-KV-IOPC-R4 11-22: core_link_pipe.keep emits the kept module (no yosys merge with an identical consumer flop); default off"""
-        import schema
-        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
-        self.assertIn('.get("core_link_pipe") or {}).get("keep")', src)
+        import jsonschema, schema
         node = schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"]
+        self.assertEqual(bind.core_link_pipe_module({}, "kv3_pc_v3"), "ot_dp_dly")
+        scoped = {"modules": MODS, "keep": False, "keep_types": ["kv3_pc_v3"]}
+        plan = {"clock": {"core_link_pipe": scoped}}
+        jsonschema.validate(scoped, node)
+        self.assertEqual(bind.core_link_pipe_module(plan, "kv3_pc_v3"), "ot_dp_dly_keep")
+        self.assertEqual(bind.core_link_pipe_module(plan, "kv3_pv_v1n"), "ot_dp_dly")
+        self.assertEqual(bind.core_link_pipe_module({"clock": {"core_link_pipe": {"keep": True}}},
+                                                    "kv3_pv_v1n"), "ot_dp_dly_keep")
         self.assertEqual(node["properties"]["keep"], {"type": "boolean"})
 
     def test_schema(self):

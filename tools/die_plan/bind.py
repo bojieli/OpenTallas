@@ -926,6 +926,14 @@ def core_link_pipe_spec(plan, tn, module, port, key="modules"):
     return out
 
 
+def core_link_pipe_module(plan, tn):
+    """Keep replicated link-pipe registers on explicitly selected partition types."""
+    config = (plan.get("clock") or {}).get("core_link_pipe") or {}
+    if config.get("keep") or tn in (config.get("keep_types") or []):
+        return TS.KEEP_MODULE
+    return "ot_dp_dly"
+
+
 def core_link_pipe(plan, tn, module, port):
     """Deepest declared link pipe D on that port (0 = none); see core_link_pipe_spec."""
     return max((d for d, _, _ in core_link_pipe_spec(plan, tn, module, port)), default=0)
@@ -5143,10 +5151,8 @@ class Binder:
                                                     f"(.clk(clk), .d({qf_}), .q({qn}));  // relay_depth lockup latch")
                                     prev = qn
                             else:
-                                # FAM-KV-IOPC-R4 11-22: plan clock.core_link_pipe.keep = true emits the stage as the kept module, so yosys
-                                # opt_merge cannot fold its first flop into an identical flop of another consumer (pc_v3: lpc_status of the
-                                # hsl slice, which dragged the macro id pin copy 361 um away, -599 ps)
-                                lp_mod = TS.KEEP_MODULE if ((self.plan.get("clock") or {}).get("core_link_pipe") or {}).get("keep") else "ot_dp_dly"
+                                # Keep the local register from merging into an identical distant consumer.
+                                lp_mod = core_link_pipe_module(self.plan, tn)
                                 body.append(f"    {lp_mod} #(.W({len(idx)}), .D({depth})) "
                                             f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
                                             f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
