@@ -44134,7 +44134,7 @@
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_1122203742",
     "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
@@ -55174,7 +55174,10 @@
    "gen_host_min_free_gb": {},
    "note_tools_sha_qcr11": "QC-PLAN-R11 2026-11-21 12:1x PST: pin bump 65f3f85d7c5f -> b6934d7751d6 (f656e319b7) REVERTED. dies.<die>.tools_sha is the tree-tools reference (tool_skew pin mode, apply marker 'the rt the die tools came from'); it is not the kit runtime. With b6934 the skew read 229 of 18947 modules differ (tree v2r10 packs 639df bind/G0 tools) vs 3 with 65f3 - noise, not a runtime change. Kit stages run the scheduler rt/current per launch (TOOLS-DECOUPLE): V2 launches 11:28-11:51 recorded c2047d41ccdf / a13768301176, which carry 3ed87c352a, 4f638b4e9f, f56d99cf55, 8d1cff9b1b, a0fc9811a19 (a1376 also 289287760f/3fba1b4bc0). The tree-side tools (kit_rtl bind) move with V3, packed from main >= 3fba1b4bc0; the pin moves to that tree's rt then.",
    "tools_from_rt": false,
-   "auto_bind": true
+   "auto_bind": true,
+   "bind_copy_of_record": [
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_postbind_1122173805"
+   ]
   },
   "hbm": {
    "enabled": true,
