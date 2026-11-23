@@ -889,6 +889,29 @@ def test_kept_wire_alias_copies_relaid_gate_array(tmp_path):
     assert lec.kept_registers(L,keep)[1]
 
 
+def test_kept_alias_is_per_bit_not_all_or_nothing(tmp_path):
+    """FAM-QC-HCST-R3 (hc3 relay_q[2..9]): a kept bit with no gate flop must not void the alias match of the bits that
+    do have their own flop.  Positive: copy0/copy1 keep their flops under the output spelling, only the orphan is
+    missing.  Negative 1 (merge): two kept names on one flop -> one of them stays missing.  Negative 2 (no driver):
+    the orphan has no flop and stays missing."""
+    keep=tmp_path/'gold.keep'
+    keep.write_text("lec_top/u_dut.copy0"+chr(10)+"lec_top/u_dut.copy1"+chr(10)+"lec_top/u_dut.orphan"+chr(10))
+    alias=keep.with_suffix('.aliases.json')
+    g,gm=_seq(tmp_path,'pbgold',['d'],['copy0','copy1','orphan'],
+              lambda m,x:{'copy0':x['d'],'copy1':x['d'],'orphan':x['d']})
+    t,tm=_seq(tmp_path,'pbgate',['d'],['port0','port1'],lambda m,x:{'port0':x['d'],'port1':x['d']})
+    L=lec.Lec(g,gm,t,tm)
+    names={'u_dut.copy0':{'bits':[10]},'u_dut.port0':{'bits':[10]},'u_dut.copy1':{'bits':[11]},
+           'u_dut.port1':{'bits':[11]},'u_dut.orphan':{'bits':[12]}}
+    alias.write_text(json.dumps({'modules':{lec.WRAP:{'netnames':names}}}))
+    assert lec.kept_registers(L,keep)[1]==['ff:u_dut.orphan']                  # positive + no driver
+    assert L.kept_alias_unassigned==['ff:u_dut.orphan']                        # the log line names the voiding bit
+    names['u_dut.copy1']={'bits':[10]}                                        # copy0 and copy1 both on port0
+    alias.write_text(json.dumps({'modules':{lec.WRAP:{'netnames':names}}}))
+    miss=lec.kept_registers(L,keep)[1]
+    assert 'ff:u_dut.orphan' in miss and len({'ff:u_dut.copy0','ff:u_dut.copy1'}&set(miss))==1   # merge: exactly one refused
+
+
 def test_gold_records_kept_wire_aliases():
     s=lec.gold_script({'VERILOG_FILES':'a.v','DESIGN_NAME':'t'},'/k','verilog',[],'s.v','w.v','f.v','/o/gold')
     assert 'write_json /o/gold.aliases.json' in s
@@ -1399,6 +1422,21 @@ def test_merged_twin_is_reproposed_after_its_constant_falls():
     L.hyp.clear()
     tried[("gold", "ff:u.rd_bin[2]", "ff:u.rd_gray[2]", 0)] = 2        # refuted twice: stays free
     assert not lec.merged_reproposals(L, log, tried) and not L.hyp
+
+
+def test_merged_twin_tries_next_candidate_after_first_pick_is_refuted():
+    """RELEC / hc3: gold-only k merged into B; the first same-support pick A is refuted, the re-proposal picks B.
+    Bounded: no untried candidate left -> the old re-propose-twice rule, a refuted pair stays free after 2."""
+    from types import SimpleNamespace
+    k, A, B = "ff:u.k", "ff:u.A", "ff:u.B"
+    L = SimpleNamespace(hyp={}, merged_choice={k: A}, merged_cands={k: [A, B]})
+    tried, log = collections.Counter({("gold", k, A, 0): 1}), []
+    assert lec.merged_reproposals(L, log, tried)
+    assert L.hyp == {("gold", k): ("eq", "gold", B, 0)} and L.merged_choice[k] == B
+    L.hyp.clear(); tried[("gold", k, B, 0)] = 1                      # B refuted too: falls back to re-proposing B once more
+    assert lec.merged_reproposals(L, log, tried) and L.hyp[("gold", k)][2] == B
+    L.hyp.clear(); tried[("gold", k, B, 0)] = 2
+    assert not lec.merged_reproposals(L, log, tried) and not L.hyp   # refuted twice: stays free (never assumed)
 
 
 def test_packed_vector_rename_heuristic_does_not_rekey_real_changed_bits(tmp_path):

@@ -3952,9 +3952,17 @@ def kept_wire_alias_copies(L, declared, aliases_file):
         return False
     # All kept demands participate, including the already name-matched ones.
     # This prevents an alias from reusing a gate flop already counted elsewhere.
-    if all(assign(k,set()) for k in sorted(candidates, key=lambda k:len(candidates[k]))):
-        return set(candidates)
-    return set()
+    # FAM-QC-HCST-R3 11-23 (hc3 relay_q[2..9] KEEP FAIL): one declared bit with no distinct gate flop used to void EVERY
+    # alias match of the die (all-or-nothing), so 8 kept bits that DO have their own flop (named after the output alias
+    # wire) were reported missing.  Count each bit that gets its own flop in the maximum 1:1 matching; a bit left
+    # without a flop (two kept names on one flop, or no driver) stays missing and still fails the check.
+    for k in sorted(candidates, key=lambda k:len(candidates[k])):
+        assign(k, set())
+    got = set(assigned.values())
+    # Name the bits that got no distinct flop (FAM-QC-HCST-R3: which kept bit voided the hc3 alias match); reported in
+    # the kept_registers record as alias_unassigned, informational, the missing list stays the verdict.
+    L.kept_alias_unassigned = sorted(k for k in candidates if k not in got)
+    return got
 
 
 RRS_COPY = re.compile(r"^(ff:.*?)ot_rrs__([A-Za-z0-9_]+)__c(\d+)$")
@@ -6321,8 +6329,17 @@ def merged_reproposals(L, log, tried):
     it, and rd_bin[2] then stayed free -> rd_gray[1], rd_gray[2] differ).  Propose the pair again at the fixpoint, at
     most twice per pair; the induction proves it like every other hypothesis.  -> any proposed."""
     n = 0
-    for k, c in getattr(L, "merged_choice", {}).items():
-        if ("gold", k) not in L.hyp and tried[("gold", k, c, 0)] < 2:
+    for k, c in list(getattr(L, "merged_choice", {}).items()):
+        if ("gold", k) in L.hyp:
+            continue
+        # FAM-QC-HCST-R3 / RELEC 11-23 (hc3 mux_rep16 leaf points changed per run on one netlist): when the first
+        # same-support pick was refuted, try the NEXT untried candidate (at most 4 per register) before re-proposing
+        # the refuted one; each is still proved by the joint induction, a wrong one is dropped, never assumed.
+        if tried[("gold", k, c, 0)] >= 1:
+            alt = [x for x in getattr(L, "merged_cands", {}).get(k, ()) if tried[("gold", k, x, 0)] == 0]
+            if alt:
+                L.merged_choice[k] = c = alt[0]
+        if tried[("gold", k, c, 0)] < 2:
             L.hyp[("gold", k)] = ("eq", "gold", c, 0)
             n += 1
     if n:
@@ -6488,6 +6505,8 @@ def merged_proposals(L, log, cap=4096):
                     del pending[k]                   # none agrees: keep the first (refinement drops it)
     n_dis = sum(1 for k, c in choice.items() if len(cands[k]) > 1 and c != cands[k][0])
     L.merged_choice = {**getattr(L, "merged_choice", {}), **choice}
+    L.merged_cands = {**getattr(L, "merged_cands", {}),
+                      **{k: ([c] + [x for x in cands[k] if x != c])[:4] for k, c in choice.items() if len(cands[k]) > 1}}
     for k, c in choice.items():
         L.hyp[("gold", k)] = ("eq", "gold", c, 0)
         n += 1
@@ -8410,6 +8429,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                          in_netlist=len(kdecl) - len(kmiss) - len(kconst) - len(kdead) - len(kfree)
                                          - len(ktwin) - len(kmerged),
                                          constant_proved=lst(kconst), missing=lst(kmiss),
+                                         alias_unassigned=lst(getattr(L, "kept_alias_unassigned", [])),
                                          unobservable_removed=lst(kdead),
                                          unobservable_reason="no compare point (output / black-box input) observes "
                                                              "it in the gold AIG: dead logic, removal is not a merge" if kdead else None,
