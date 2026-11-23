@@ -17,3 +17,8 @@ Lane dir epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-taphold-r2 (R2)
 1. On final 5_1_grt.odb: `ot-run --hosts epyc7 --dir L --stage K -- env TH_VCLK_MEAS=385.95 bash L/th_probe.sh K 5_1_grt.odb R2/probe_k1` + th_tt2.sh. Judge internal FF hold >= 0 and TT >= -42.
 2. If TT is pad-limited: J9 row = guard 60-75 (pads + latches stand). Post to R5 / R10 / COORD.
 3. Let route/finish continue to sign-off; LEC routed.
+
+## State 23:4x PST (after limit outage, COORD resume)
+- k1 unit still live. Attempt-1 post-GRT repair_design (max_wire 100) flat 1800 s -> OT_GRT_REPAIR_NO_PROGRESS 06:58 UTC: GRT re-run once in a fresh process with max-wire repair skipped (5_1_grt.repair_nostall.json). At 07:37 UTC in extra iteration 9/50. Waiters unchanged.
+- If attempt 2 also stalls: flow row (OT_MAXWIRE off for leaf GRT) -> FLOW lane + R10, not a plan row.
+- Fast-review rule f95aac4: self-review renders allowed; probes never wait for review.
