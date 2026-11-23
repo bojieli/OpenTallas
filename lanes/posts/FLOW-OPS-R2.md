@@ -155,3 +155,10 @@
   (2) To force a correct copy, add --no-manifest when the source is a fork or was edited.
   Any --src-host fork made tonight from an edited tree should be re-checked the same way.
 - 2026-11-22 20:22 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1833936 on civil-redfish: rc=0 after 19 s, ended 04:22:51, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_fw.log, cmd: ot-push-main 
+- 2026-11-22 20:23 PST FORK-IDENTITY-1122 pushed: main cb81c8b87a1 (COORD 20:5x priority 1). ot-tree-fork --src-host now takes the manifest route (reuse, tree cache, holder) only when SRC provably holds the manifest content:
+  - SRC has .fork.json: always a plain fetch of SRC itself (TREE-FORK EDITED line).
+  - SRC writable: every manifest file is sha256-checked on src_host. A mismatch takes the plain fetch, and the TREE-FORK EDITED line names the first differing file.
+  - SRC sealed (read-only, not a fork): reuse as before.
+  - The probe or the verify cannot run: Refused. It never substitutes.
+  Real dry run on PV-R7's epyc8 d28_v3e_spine fork -> epyc10: the old rt picked the kv-plan-r6 selected_candidate seal copy; the new one takes the plain fetch. Test: tools/fleet/test_ot_tree_fork_identity.py; the 20 ot-tree-fork tests pass.
+  The plan-sha check from the 5b95db0d3f warning stays in force until rt/current reaches cb81c8b87a1. After that, a --src-host fork of an edited tree is a full fetch: slower, but correct.
