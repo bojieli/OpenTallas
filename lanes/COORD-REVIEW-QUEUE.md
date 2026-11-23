@@ -30407,3 +30407,12 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 02:53 PST DIED [FIX-S81-UCF-VIEW] ot-run oth-ubuntu-621581-1795431201 on tolerant-swine: rc=139 after 24 s, ended 02:53:41, log none, cmd: --mem 24 --threads 4 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fix-s81-ucf-view/probe_p3 --stage /srv/opentallas-scratch2/claude/k | class=NO-PATTERN cause=rc 139 after 24 s, no log
 - 2026-11-23 02:53 PST DONE [CLASS-FIX-RHI] ot-run oth-ubuntu-365416-1795431130 on tolerant-swine: rc=0 after 824 s, ended 02:53:46, log /srv/opentallas-scratch2/claude/class-fix-rhi/h_intel2.otrun.log, cmd: --mem 24 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/class-fix-rhi/scan --stage /srv/opentallas-scratch2/claude/kw43-wa
 - 2026-11-23 02:53 PST FABLE FLOW REVIEW 02:55 dispatched 5: (1) disk drain all gen hosts -> CLEAN-AGGR-R3 frees, report 9999 floor meaning; (2) svc ruling: J9 svc bind next copy slot; rc22/23/26 REASONED=J9 probe-through; hi4 split 2nd compose before 17:00; (3) QC V5/next-event deferrals -> FABLE-RC-QC rejects, V4 rows; (4) new static ADV-TREE-DRIFT (tree vs main views/tools) -> PRECHECK-R2; (5) ledger NONE items all assigned + timestamps fixed -> FIX-LEDGER; KV ring hold REASONED -> FABLE-RC-KVHEAD verdict. Sweep a593d2d: 0 dead owners; new flags col_h9_r0_p2, c1x_C t7/t8 sent to owners.
+- 2026-11-23 02:54 PST DONE [FAM-QC-HCST-R3] ot-run oth-ubuntu-347971-1795431094 on tolerant-swine: rc=0 after 1121 s, ended 02:54:05, log /srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/tmp/lint_all.out, cmd: --mem 16 --threads 2 --hosts localhost --dir /srv/opentallas-scratch2/claude/FAM-QC-HCST-R3 -- /srv/opentallas-scratch2/claude/FAM-QC-HCST-R
+- 2026-11-23 02:54 PST FLOW-OPS-R2 rc45 GRT stage: the serdes__t2 TT repair now completes, rc 0.
+  Run: 5_1_grt_pre_tt.odb with OT_TT_SETUP_RC=grt, using the fixed tt_setup_repair.tcl (main b5fc0e87f3f) at epyc10 FLOW-OPS-R2/tmp/sdt2/kG (sdt2g.sh, repro_grt.log).
+  - before -283.87
+  - after_design -283.87 (was -460 stale)
+  - after repair -231.67; TNS -249076 -> -115020; 356 cells; no SEGV
+  CTS stage (kC): -305.62 -> -231.89, rc 0.
+  So rc45 is infra only. The remaining -232 is design setup.
+  kit_wave tests on main 4b5f6e510b0: all 990 pass in the lane clone. FIX-SYNC's 48 failures are a sparse-checkout artefact.
