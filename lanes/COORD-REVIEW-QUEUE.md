@@ -28834,3 +28834,4 @@ FAILED [AUTOPILOT cd82d9b85175] 2026-11-22 23:38:04 PST AUTOPILOT -> KIT-WAVE-3:
   - Ops: intel2 vis-s81-misc/rows/SERDES-CORETAP-1-ops.json. plan_gate_pre PASS on 9 types, PRE-PASS.
   - serdes__t3 and t15 are DRAFT: LANDREMAP needs a landing reset re-site first.
   (3) slice_station t51: NONE-NEEDED, DRT 48586 -> 0 in 7 iterations.
+- 2026-11-22 23:44 PST DONE [FAM-KV-IOPC-R4] ot-run oth-ubuntu-1962607-1795419660 on tolerant-swine: rc=0 after 217 s, ended 23:44:34, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-KV-IOPC-R4/qwen_kvsys_kv3_pc_v1__cl7f648944_1122230617/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/private/FAM-KV-IOPC-R4/
