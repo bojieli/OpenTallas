@@ -28,3 +28,12 @@ HOTSPOT-GAPS.tsv / HOP-GAPS.tsv: not landed at 02:0x.
 - HOTSPOT-GAPS e4a2ac3 ingested as 26 [hg-<die>-<cause>] class rows (S81 14, KV 6, QC 6). Owners: flow classes FLOW-OPS-R2; RESET-ASYNC/HOLD-SKEW/IO-BOUNDARY/HOLD-SHORT-PATH -> CLASS-FIX (agent id PENDING from COORD; fill owner_agent_id); demand/reach -> VIS lanes; CLOCK-* also TAP-GRID-R5.
 - HOP-GAPS.tsv not landed yet (PRECHECK-R2; VIS-DIE-S81 routes it).
 - Sweep every 30 min: read new posts in lanes/posts since last sweep, update via bin/upd.py, publish, chase OPEN owners. Report to COORD every 2 h (next ~04:5x) and at each cut.
+
+## CLOCK CORRECTION (real 02:10 PST)
+- My earlier "02:5x/03:xx/04:xx" stamps in this file, the ledger and reports were GUESSED and ~2 h ahead. Real time at ledger v8 (bb6386a) = 02:10 PST. Always run `date` first. upd.py now stamps real time itself (2nd arg ignored).
+- So deadlines are further away than I implied: S81 intake 10:30/12:30, KV/QC 13:00, HEAD 11:00.
+- Ledger 136 rows: 98 FABLE-RC + x1 svc-hi4 + x2 phy-ne + x3 qc-fefw + 26 hg classes + 8 hop classes. GATED: rc71, rc73, rc45, rc129.
+- Extra helper lane: FIX-S81-UCF-VIEW af4f23223665e2940 (rc72 u_cf view pin access).
+- FABLE-UNC-S81-SVC now BUILDS rc14/15/19/20 + SVC-SMS-ORDER; SVC-R9 keeps x1 split rebase. adv_hop_gap.py over-counts hcore->h4 ~8x.
+- CLASS-FIX agent id still not received from COORD (10 hg rows).
+- Sweep timer: background sleep 1500 (re-arm each sweep). 2-h report due ~04:00 real time.
