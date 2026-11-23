@@ -44,3 +44,17 @@ Correction to predecessor: closed masters usable as-is = kvq, kvr, qnh only. kve
   LIVE on intel1 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_r2 (kitrepo copied from E9): full_r2.sh <n> <kit> = ref_route.sh full flow + corner STA + LEC; runs/<n>/{STATUS,status_r2,corner_sta.json,lec/lec.json}; logs runs/<n>.otrun.log. Export after: ref_tile.py export --orfs-dir runs/<n>/work/orfs --kit physical/ref_tile/<kit> --out runs/<n>/views.
 - intel2 closed_eq: qnh RTL build commit == main 30846/30846; kvr, kvq were still running at 12:1x (rc.txt).
 - A background waiter (local task b3b9s2bxp) reports when kvtch reaches CTS or 3 routes finish.
+## State 16:2x (after the 11:40-15:40 limit; Codex ran this lane 14:29-15:41, see lanes/handoff/S81-TYPES-CODEX-1123.md lines 64-86)
+- OWNERS: I claimed s81sl_kv_leaf__t1 / __t2 / __t4 (post 44b5d344). t1/t4 cause = soft u_vn.u_b (S81-MISC-SERDES-J9 row KVLEAF-VNB-HARD-1, ROW-DRAFT).
+- CONFLICT posted: KVLEAF-VNB-HARD-1 (vn_b hard on t1/t3/t4/t5) and my t3 LF_VN_XRD row are mutually exclusive on t3 (XRD changes vn_b internals; the signed vn_b core has none). Recommended: VNB-HARD, LF_VN_XRD stays 0; XRD only as fallback. Awaiting COORD ruling.
+- MASTERS (E9 = epyc9 master_drafts_codex, I1 = intel1 master_r2). TT setup / FF reg-to-reg hold in ps, DRC 0 on all routed:
+  kvi   SIGNED + exported (E9 route_r2/kvi/views).
+  qnh   +61.77 / +4.31, LEC EQUIVALENT 6374/6374 (gold = RTL + the flow's 2-stage reset landing wrapper), I1 runs/qnh_drt_1510; export launched 16:1x -> runs/qnh_drt_1510/views (status_export).
+  cnw   +122.86 / +0.80 after hold ECO, LEC EQUIVALENT 26992/26992 (E9 route_r2/cnw/hold_eco_1500/lec_1541r2). Export NOT yet run (ECO dir layout: corner_orfs/ has 6_final.odb; check export inputs).
+  cpl   +74.51 / +2.08, LEC running (lec_1541r2).
+  ikr   +141.64 / +4.48, LEC not started.
+  ikw   +165.92 / -1.18 (8 D pins): one more hold ECO pass needed (Codex scripts route_hold_eco_1505.sh, eco_seats_1500.sh, finish_eco_1515.sh).
+  kvr   +88.35 / +0.04, LEC running (I1 lec_rstland_1540 kvr).
+  kvq   GRT 0 congestion; DRT + finish LIVE (mine): I1 kvq_drt_r2.sh -> runs/kvq_drt_r2 (status_r2).
+  kvtch +0.21 / +10.59 (702 x 25.92 form closes; no half-taps needed). First LEC = tool stop (slang loop budget 4000). LIVE (mine): E9 reshape_r2/lec_unroll_r2.sh with OT_LEC_SLANG_UNROLL_LIMIT=400000 -> reshape_r2/kvtch_drt_1527/lec_unroll_r2.
+  kvec  +55.06 / +4.39; kvpc +52.64 / +3.76. Routed LEC NOT EQUIVALENT on y[low 16 of each lane] (128 points) + 292 unproven. Cause: ot_s81_su_kve loads constant 0 into the low half of y under an enable with no reset; synthesis ties it low, the RTL register starts undefined. Codex's rename form (y_hi) left 292 unproven. LIVE (mine): E9 low16_r2/ = name-preserving RTL form (low half written 0 on every edge; patch_low16_r2.py) LEC'd against the SAME routed netlists: low16_r2/{kvec,kvpc}/lec.json. If EQUIVALENT: land the RTL on main (inert for netlists), re-run the kv leaf bench, masters keep their routes.
