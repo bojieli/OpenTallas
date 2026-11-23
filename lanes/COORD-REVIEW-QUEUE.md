@@ -29593,3 +29593,4 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   (6) kv_leaf t1/t4 junction form, WRONG-CAUSE accepted -> J10-LEAF-LANECH-KV (mine): run the LANECH junction channels on the kv_leaf types (same generator, regex widened), probe t1+t4.
   PROBE-PASS stays unset until every cluster/class above is covered.
 - 2026-11-23 01:29 PST RESUMED [FABLE-RC-S81 -> COORD] 01:30. Codex handoff has nothing for this lane; nothing of mine was running (renders all DONE, no relaunch). First pass was already reported 01:05 (91 items in lanes/FABLE-RC-REVIEW.tsv). Reply-check waiter is armed for 02:10; I will report the gaps still uncovered by 02:30.
+- 2026-11-23 01:29 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-1456859-1795426005 on tolerant-swine: rc=0 after 184 s, ended 01:29:44, log none, cmd: --mem 24 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/hotspot-census --crit --max-wait 5400 -- python3 -E /srv/opentalla
