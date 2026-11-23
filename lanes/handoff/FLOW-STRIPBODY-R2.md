@@ -47,6 +47,10 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
   body (PID 4164179) gen_lint/place pending on bind7g (still valid for body).
 - round i (full_i.sh, ot-run PID 2168194): split7i/pack7i/tree _stripbody_r2i/bind7i/latcheck7i (LATCHECK via lc).
   Then specs2.sh with r2i/bind7i -> run-item strip_N (+ body if g body fails).
+- 17:3x RESUME: round i BIND PASS + LATCHECK 893/893 (bind7i, tree _stripbody_r2i). body synth 281,576 cells, PORT_BIND PASS,
+  DPL since 14:39 (run-item PID 4164179, round-g kit; job dir ot-jobs/dsdv_slice_lepe_mu_C__t1-place-tolerant-swine-2889539-1795372551).
+  strip_N re-kit on bind7i goal route: specs3.sh -> speci_<item>, run-item PID 370705 (runitem3_*.log).
+  strip_S blocked on J9 height row (t1 core moves, LEPE-4/R5). Delete r2g tree only after body kit ends (it may read it).
 ## Cleanup owed
 - trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each; ASK posted to COORD/FLEET-OPS 02:4x) superseded; ot-delete guard refuses now (newer than die tree,
   apply pending). Delete via ot-delete after the J7 apply.
