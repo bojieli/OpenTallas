@@ -3882,3 +3882,5 @@ CODEX: 2026-11-23 07:16 PST takeover of the current die/cut, token, fleet and sh
 CODEX: 2026-11-23 07:22 PST restored two registered KV child views on epyc8/9/10, and recorded manual FAIL on KV D28 PV v3n and v4n. D29 owns structural replacement.
 
 CODEX: 2026-11-23 07:27 PST restored exact east/west detailed S81 col-lane child views on five registered hosts. Together with KV restore, all four VIEW-CANARY missing modules have live donors.
+
+CODEX: 2026-11-23 07:31 PST S81 J8 live (891100ef774, sealed source 61701f3e485d, six replicas, 380 holds at atomic apply). t18 carries manual-review hold with J9 revision fcc21829441f.
