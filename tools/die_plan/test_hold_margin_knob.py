@@ -42,11 +42,14 @@ def test_pregrt_hold_ports_scope_vclk(monkeypatch):
     assert not any("OT_PREGRT_HOLD_PORTS " in ln for ln in PG.config_lines(t))
     monkeypatch.setenv("OT_PREGRT_HOLD_PORTS_SCOPE", "vclk")
     assert "export OT_PREGRT_HOLD_PORTS = vclk" in PG.config_lines(t)
+    monkeypatch.setenv("OT_PREGRT_HOLD_PORTS_SCOPE", "ctl")
+    assert "export OT_PREGRT_HOLD_PORTS = ctl" in PG.config_lines(t)
     monkeypatch.setenv("OT_PREGRT_HOLD_PORTS_SCOPE", "all")
     with pytest.raises(ValueError):
         PG.config_lines(t)
     src = Path(PG.__file__).read_text()
-    assert 'eq "vclk"' in src and "set pg_np_in $pg_in" in src
+    assert "in {vclk ctl}" in src and "set pg_np_in $pg_in" in src
+    assert "set pg_ctl_globs {arst_n start_i cland_tstart_in* cland_rstart_in* ri_*}" in src
     assert "set_false_path -hold -from $::pg_np_in" in src and "unset_path_exceptions -hold -from $::pg_np_in" in src
     assert src.index("set pg_np_in $pg_in") < src.index("proc pg_np_apply") < src.index("foreach pg_tag {all rr xt}")
     gp = Path(PG.__file__).with_name("gen_phys.py").read_text()
