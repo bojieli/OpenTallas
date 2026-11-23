@@ -1,0 +1,1 @@
+- 2026-11-23 02:35 PST DONE [FIX-S81-UCF-VIEW] ot-run oth-ubuntu-4164667-1795429768 on tolerant-swine: rc=0 after 372 s, ended 02:35:35, log /srv/opentallas-scratch2/claude/fix-s81-ucf-view/tmp/census_p3.json, cmd: --mem 6 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fix-s81-ucf-view/tmp --stage /srv/opentallas-scratch2/claude/kw43-wa
