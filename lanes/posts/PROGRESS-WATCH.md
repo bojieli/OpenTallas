@@ -307,3 +307,4 @@
 - 2026-11-23 13:51 PST ALERT NO-PROGRESS s81: 27 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 182 min (last 10:49); blocker: plan event 891100ef774 pending (the wave waits for it); 372 hold(s): 0 without eta, 336 overdue, next eta 11-23 14:00; NO-LAUNCH x34
 - 2026-11-23 14:41 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
 - 2026-11-23 14:52 PST ALERT NO-PROGRESS s81: 27 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 243 min (last 10:49); blocker: plan event 891100ef774 pending (the wave waits for it); 372 hold(s): 0 without eta, 361 overdue, next eta 11-23 16:00; NO-LAUNCH x47
+- 2026-11-23 15:22 PST ALERT NO-PROGRESS qwen_compute: 2 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 160 min (last 12:42); 28 hold(s): 17 without eta, 11 overdue
