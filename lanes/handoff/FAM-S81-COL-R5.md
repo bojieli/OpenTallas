@@ -38,3 +38,5 @@ Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL
   - Strict bind: waiter intel2 pid 522540 (fam-s81-col-r5/wait_j8_then_bind.sh, log wait_j8_then_bind.log) launches rst/bind_j9.sh once the assembly lane posts J8 GATE GREEN. Then read j9/ot_build.log and post.
   - Builders: rst/slide_probe.py -> rst/slide_j8.json; rst/mkslide.py.
 - Residue of 437 hops: proposal posted (05703bff2bb) to close it by routed recovery measurement. tc_e8 GRT has 0 failing reset endpoints; the worst reset recovery slack is +249 ps.
+
+- 2026-11-22 20:2x RULING COORD 20:1x: col reset hop >405 um CLOSED when routed recovery+removal >=0 on its endpoints; rows only for routed fails. Relayed to FIX-SYNC-S81 + PRECHECK-R2 (hub 8eb69970849, reach checks -> advisory). Every col kit readout must include reset recovery/removal read. J9 TAPSLIDE (48) bind after J8 GATE GREEN unchanged.
