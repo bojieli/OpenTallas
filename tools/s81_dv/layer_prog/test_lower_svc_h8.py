@@ -191,7 +191,7 @@ def test_h8_pass0_matches_h16_up_to_go():
 
 
 def test_h8_sot_is_todays_booking_of_all_heads():
-    from smwire_cal import sot_decode
+    from tools.s81_dv.sm_target.smwire_cal import sot_decode
     b = synth(8)
     s = run(b)
     rec = s['sot']
