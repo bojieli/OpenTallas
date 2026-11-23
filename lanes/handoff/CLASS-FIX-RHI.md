@@ -9,3 +9,10 @@ Coordination: FABLE-UNC-KV owns KV cland port_in hold row (I review). FABLE-UNC-
 - Census evidence: intel2 /srv/opentallas-scratch2/claude/hotspot-census/central/*/census.json; 50/51 kits had no tap_reset_split (only lepe_mu_LP t2: split 205 sources, still -62 intra-tap + arst_n port -162).
 ## Next
 - PRE on each die's composed plan; probes (KV hroot+sys_c, QC sle_su_l1, S81 col_h9_r2 + leaf t47, HEAD lep0N_w); ROWS-READY to plan lanes + FIX-LEDGER.
+## 02:5x
+- Harness (in-memory affinity+split on 44 census CTS DBs, ot-run per host): logs intel2 /srv/opentallas-scratch2/claude/class-fix-rhi/h_<host>.otrun.log; mismatched reset sinks after split <=17 everywhere (col_h9_r0_p4 393->6).
+- Probes (private-spec wave plan, --goal grt, rows as --ab env): intel2 class-fix-rhi/probe_chain.sh DIE ITEM TAG PAIR; logs probe/<tag>.chain.log, spec probe/pspec_<tag>/ (run.log, result.json): kvhroot, qcsu (sle_su_l1__cl5ea486db), s81col (col_h9_r1 pv4bd36c74), s81leaf (leaf t47), head (hd_lep0N_w).
+- Posts: ROW-DRAFT e400f4de, ASK TAP-GRID-R5 SEAT-1c die-wide 6f5c6ed0, ANSWER ledger/HEAD a6668871 (ring IO class = FABLE-UNC-KV REASON e7e8752c; reset REACH legs not mine -> FABLE-UNC-S81-DIE; HSP -> R9 PAIRTAP / BKSEL Row 4).
+- Census stage note: S81 HSK 85/93 and RST 131/165 path counts come from pre-repair DBs (4_cts / grt-failed).
+- Macro HSK sub-class (col u_u_sN, leaf u_vs, QC u_tN: hard-core launch at 0-117 ps): early core tap; macro_follow in RHI-HSK is the lever, probe s81col decides (setup risk on macro paths).
+## Gates owed: HEAD 11:00, S81 12:30, KV/QC 13:00 (PRE on composed plan by plan lane; my probe read under fe8a2a5).
