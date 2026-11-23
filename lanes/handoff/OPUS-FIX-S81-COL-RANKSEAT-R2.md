@@ -31,3 +31,14 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
   rows .../tmp/j8_stn_rows.json) -> J10 (planR3) unless S1/S0 sign and it is cheap.
 - planR3 / J10: IFN(1) plan-kit regen, latency.internal_pipe_ack, frame_schedule_asb --schedule-relay-depth, X-age re-qual,
   go-pin + bank_free/sh_free loop check.
+
+## 22:5x
+- FINDING: gen_phys._relay_mid_re: env OT_RELAY_MID_RE WINS over plan budgets.relay_mid_re_types. Wave item_env sets the old
+  all-u_y_ regex on every col type -> the 3 planR2 reps (wave env) do NOT apply the E regex; they prove lockup only.
+  J8 apply unsets col OT_RELAY_MID_RE (ASSEMBLY j8_apply.sh) -> J9 form = E regex from plan.
+- PROBE launched (J9 form): col_h9_r2__t1__clce45cab5__pv06a1adf6, planR2 bind b_ab86b11e195d, --ab OT_PROBE_THROUGH=1 --ab OT_RELAY_MID_RE=
+  (unset), porous + keep_wires from col_h*; spec ~/coord/autopilot/private_specs/OPUS-FIX-S81-COL-RANKSEAT-R2/s81_col_h9_r2__t1__clce45cab5__pv06a1adf6_1122225205,
+  run-item intel2 opus-fix-s81-col-rankseat-r2/runitem_probe_h9r2.{pid,log}. (first try _1122224838 stopped by me at kit_rtl to add the unset.)
+- r2h10p4 waits on epyc7 load admission (load 124/96) at gen_lint; p3 in place.
+- Read-only subagent checks go-pin / bank_free-sh_free loop + schedule pricing (for planR3/J10).
+- Waiter: local background poll of intel2 opus-fix-s81-col-rankseat-r2/snap.sh.
