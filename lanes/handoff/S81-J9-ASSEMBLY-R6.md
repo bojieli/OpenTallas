@@ -9,3 +9,10 @@ Work dirs: intel2 /srv/opentallas-scratch2/claude/s81-j9-r6 (j8_finish.sh, j8_ap
 ## J9 tree (epyc10)
 - ot-tree-fork j8_cut_tree -> s81-j6-r5/j9_tree: systemd user unit s81-j9-treefork-0556 (log s81-j6-r5/tmp/j9_treefork.log).
 - Overlay sha af3f7514266bda35f4dd80bd5aca158c88c6cedc (origin/main 05:50; per-type define bind fix NOT on main yet). git archive tools/ rtl/ -> s81-j9-r6/overlay_af3f7514266b (unit s81-j9-overlay-0607). Then copy+mv per file into j9_tree, + row 3i u_cf 4 files + ADV-TREE-DRIFT view/porous/flow hits from same sha.
+
+## 06:4x state
+- J8: smokes 3/3 DRY-PASS 06:20; intel2 unit s81-j8-finish-0621 (APPLY=1 s81-j9-r6/j8_finish.sh): candidate committed (c0c20d96), LBL +59 holds, publish_apply running (log s81-j6-r5/j8_stage_hub/apply_j8.log, j8_apply.out). Local waiter bt7fx9898.
+- J9 TREE DONE: epyc10 s81-j6-r5/j9_tree (fork 914 s) + overlay af3f7514266b (s81-j9-r6/overlay_applied.json) + u_cf 4 files + portfix178 3 carries + asbuilt cb499519b9f8 (+seqhost/iqf/gunit). ADV-TREE-DRIFT LAG 0 MISSING 0 (s81-j9-r6/drift2.txt). Posted to hub 06:20.
+- GAP MAP lanes/handoff/S81-J9-GAPMAP.tsv (75 hotspot + 23 relaunch, owner lanes fill). Count mapped/unmapped at 10:30 -> COORD.
+- COMPOSER epyc10 s81-j9-r6/compose/{jlib.py,compose.py}: recipe JSON steps ops|delta|tool|skip, old-value check, ledger.json. trial1.json (col r2m delta excl core_pin_lead_ps + NO-LAG lead + slice f65f->1ca3d4bf7df6 + col_ygrow --form ecorr + die_grow --cut0 20900.16) = 0 conflicts, final 997c39644f83 (trial1_out). f65f == 6833 except budgets.relay_mid_re_types.
+- Gate template: R5 j8_cut_intake/j8_cut_gate.sh (PRE, G0 both, elab --mem 64, bind --strict --all-gaps, lane_asbuilt_latency, G0 compare). J9: reuse J8 g0 report j8_cut_intake/gate/g0_j8. Reset relays: tools/die_plan/reach_relay_plan.py plan PLAN SIDECAR --out-plan --out-sidecar --report. Reprice: plan_gate_pre.py reprice --plan --baseline-plan --out.
