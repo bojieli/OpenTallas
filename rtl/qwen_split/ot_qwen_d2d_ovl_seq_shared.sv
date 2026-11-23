@@ -13,7 +13,8 @@ module ot_qwen_d2d_ovl_seq_shared #(
     parameter integer ADM_OFS = 72,
     parameter integer ADM_LEN = 1100,
     parameter integer FIRST_OFS = 1176,  // anchor edge of the start lists, edges after the anchored epoch strobe
-    parameter integer EP_SKEW = 0
+    parameter integer EP_SKEW = 0,
+    parameter integer FRESH_WARM_OWNER = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -64,9 +65,9 @@ module ot_qwen_d2d_ovl_seq_shared #(
             else if (act) begin e <= e + 32'd1; if (go) act <= 1'b0; end
         end
     wire t_start, t_seg, r_start, r_seg, t_run, r_run, t_f, r_f; wire [1:0] t_u, r_u;
-    ot_qwen_d2d_list_play_f5_shared #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .WRAP_ADDR(AW'(COLD_PREFIX))) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload | media_hold), .rom_addr(tx_rom_addr),
+    ot_qwen_d2d_list_play_f5_shared #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .FRESH_WARM_OWNER(FRESH_WARM_OWNER), .WRAP_ADDR(AW'(COLD_PREFIX))) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload | media_hold), .rom_addr(tx_rom_addr),
         .rom_q(tx_rom_q), .start(t_start), .seg(t_seg), .user(t_u), .running(t_run), .fault(t_f));
-    ot_qwen_d2d_list_play_f5_shared #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .WRAP_ADDR(AW'(COLD_PREFIX))) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload | media_hold), .rom_addr(rx_rom_addr),
+    ot_qwen_d2d_list_play_f5_shared #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .FRESH_WARM_OWNER(FRESH_WARM_OWNER), .WRAP_ADDR(AW'(COLD_PREFIX))) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload | media_hold), .rom_addr(rx_rom_addr),
         .rom_q(rx_rom_q), .start(r_start), .seg(r_seg), .user(r_u), .running(r_run), .fault(r_f));
     assign cal_start    = s_start | t_start;
     assign cal_seg      = s_start ? s_seg : t_seg;

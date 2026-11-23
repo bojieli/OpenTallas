@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module ot_qwen_d2d_list_play_f5_shared #(parameter integer AW = 11, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0, parameter [AW-1:0] WRAP_ADDR = '0) (
+module ot_qwen_d2d_list_play_f5_shared #(parameter integer AW = 11, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0, parameter [AW-1:0] WRAP_ADDR = '0, parameter integer FRESH_WARM_OWNER = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          go,            // anchor: entry 0's dt counts from this edge
@@ -19,6 +19,20 @@ module ot_qwen_d2d_list_play_f5_shared #(parameter integer AW = 11, parameter in
     reg [19:0]   cnt;
     reg [31:0]   cur;
     assign rom_addr = addr;
+    wire owner_ready;
+    generate if (FRESH_WARM_OWNER != 0) begin : g_fresh_warm_owner
+        // The initial frame can contain a warm tail from before this epoch.
+        // Publish a warm start only after this owner has had a cold start.
+        reg [3:0] seen_cold;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) seen_cold <= 4'd0;
+            else if (halt || go) seen_cold <= 4'd0;
+            else if (running && cnt == 20'd1 && cur[11] && cur[10])
+                seen_cold[cur[9:8]] <= 1'b1;
+        assign owner_ready = cur[10] || seen_cold[cur[9:8]];
+    end else begin : g_all_warm
+        assign owner_ready = 1'b1;
+    end endgenerate
     wire bad_n = (nxt[31:12] < MIN_DT) || (|nxt[6:0]);
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
@@ -42,7 +56,7 @@ module ot_qwen_d2d_list_play_f5_shared #(parameter integer AW = 11, parameter in
             end
             else if (go || (running && cnt == 20'd1)) begin
                 if (go && running) fault <= 1'b1;
-                if (!go && cur[11]) begin start <= 1'b1; seg <= cur[10]; user <= cur[9:8]; end
+                if (!go && cur[11] && owner_ready) begin start <= 1'b1; seg <= cur[10]; user <= cur[9:8]; end
                 if (!nv || bad_n) fault <= 1'b1;
                 running <= 1'b1;
                 cur <= nxt; cnt <= nxt[31:12]; nv <= 1'b0; age <= 2'd0;

@@ -17,7 +17,7 @@
 //     collision = fault).  halt (the end's epoch_abort) stops both players; the next epoch strobe re-anchors.
 // ROM ports: synchronous read (q = mem[addr] one edge after addr); the die GEN binds one ROM macro per list.
 // =====================================================================================================================
-module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0) (
+module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_DT = 4, parameter integer MUT_HALT_REWIND = 0, parameter integer FRESH_WARM_OWNER = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          go,            // anchor: entry 0's dt counts from this edge
@@ -37,6 +37,20 @@ module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_
     reg [19:0]   cnt;
     reg [31:0]   cur;
     assign rom_addr = addr;
+    wire owner_ready;
+    generate if (FRESH_WARM_OWNER != 0) begin : g_fresh_warm_owner
+        // The initial frame can contain a warm tail from before this epoch.
+        // Publish a warm start only after this owner has had a cold start.
+        reg [3:0] seen_cold;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) seen_cold <= 4'd0;
+            else if (halt || go) seen_cold <= 4'd0;
+            else if (running && cnt == 20'd1 && cur[11] && cur[10])
+                seen_cold[cur[9:8]] <= 1'b1;
+        assign owner_ready = cur[10] || seen_cold[cur[9:8]];
+    end else begin : g_all_warm
+        assign owner_ready = 1'b1;
+    end endgenerate
     wire bad_n = (nxt[31:12] < MIN_DT) || (|nxt[6:0]);
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
@@ -60,7 +74,7 @@ module ot_qwen_d2d_list_play #(parameter integer AW = 11, parameter integer MIN_
             end
             else if (go || (running && cnt == 20'd1)) begin
                 if (go && running) fault <= 1'b1;
-                if (!go && cur[11]) begin start <= 1'b1; seg <= cur[10]; user <= cur[9:8]; end
+                if (!go && cur[11] && owner_ready) begin start <= 1'b1; seg <= cur[10]; user <= cur[9:8]; end
                 if (!nv || bad_n) fault <= 1'b1;
                 running <= 1'b1;
                 cur <= nxt; cnt <= nxt[31:12]; nv <= 1'b0; age <= 2'd0;
@@ -84,7 +98,8 @@ module ot_qwen_d2d_ovl_seq #(
     parameter integer ADM_OFS = 72,
     parameter integer ADM_LEN = 1100,
     parameter integer FIRST_OFS = 1176,  // anchor edge of the start lists, edges after the anchored epoch strobe
-    parameter integer EP_SKEW = 0
+    parameter integer EP_SKEW = 0,
+    parameter integer FRESH_WARM_OWNER = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -133,9 +148,9 @@ module ot_qwen_d2d_ovl_seq #(
             else if (act) begin e <= e + 32'd1; if (go) act <= 1'b0; end
         end
     wire t_start, t_seg, r_start, r_seg, t_run, r_run, t_f, r_f; wire [1:0] t_u, r_u;
-    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(tx_rom_addr),
+    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .FRESH_WARM_OWNER(FRESH_WARM_OWNER)) u_tx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(tx_rom_addr),
         .rom_q(tx_rom_q), .start(t_start), .seg(t_seg), .user(t_u), .running(t_run), .fault(t_f));
-    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND)) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(rx_rom_addr),
+    ot_qwen_d2d_list_play #(.AW(AW), .MUT_HALT_REWIND(MUT_HALT_REWIND), .FRESH_WARM_OWNER(FRESH_WARM_OWNER)) u_rx (.ck(ck), .rst_n(rst_n), .go(go), .halt(halt | reload), .rom_addr(rx_rom_addr),
         .rom_q(rx_rom_q), .start(r_start), .seg(r_seg), .user(r_u), .running(r_run), .fault(r_f));
     assign cal_start    = s_start | t_start;
     assign cal_seg      = s_start ? s_seg : t_seg;
