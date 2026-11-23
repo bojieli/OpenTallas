@@ -30565,3 +30565,13 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 03:13 PST DIED [OPUS-FIX-S81-LEAF-TAPHOLD-R2] ot-run oth-ubuntu-3945484-1795431538 on civil-redfish: rc=143 after 871 s, ended 11:13:24, log /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2/gate.otrun.log, cmd: --mem 96 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2 --stage /srv/opentallas-scratch2/clau | class=RAIL-KILL cause=ot-run: DRAIN: epyc10 DRAINING (71 of 90 GB scratch free): --dir /srv/opentallas-scratch3/claude/opus-fix-s81-
 - 2026-11-23 03:13 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-1046237-1795432188 on renewed-glider: rc=0 after 228 s, ended 11:13:31, log /srv/opentallas-scratch2/claude/leaf-route-cbc/row9/j9Z.otrun.log, cmd: --hosts epyc9 --crit --disk 8 --mem 48 --threads 3 --dir /srv/opentallas-scratch2/claude/leaf-route-cbc/row9 -- bash /srv/opentallas-scratch
 - 2026-11-23 03:13 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-4071330-1795431787 on civil-redfish: rc=0 after 641 s, ended 11:13:44, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F20rb.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash final_gate.sh F20rb /srv/opentallas-sc
+- 2026-11-23 03:14 PST STATUS [FLOW-OPS-R2 -> COORD]
+  (1) Deleter unknown. The views went between 08:07 and 08:36Z on 11-22, after the guard's last refusal. No ot-delete, auto-retire or autoclean manifest on any host mentions them, so the removal was outside the guarded tools. The guard was not missed; nothing to fix. Missing counted views: 19 non-HBM modules (list in 93ea8ce6ad).
+  (2) Ingest all done.
+  - KV ectl q0-q3 are in signed-store and counted (ae17515c91).
+  - The 4 slice types, S81 t25/t22 and the 3 QC credits were already counted. signed.tsv is not a count input.
+  (3) Flow fixes.
+  - serdes t2 SEGV: fixed (b5fc0e87f3f); CTS and GRT repros rc 0.
+  - RSZ-0060: by design (per-chunk hold guard).
+  - GRT-0273: router limit. Lever is CTS -apply_ndr, already posted.
+  - 48 kit_wave failures: sparse artefact; main passes 990/990.

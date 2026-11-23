@@ -381,3 +381,13 @@
   - The release_tree_plan cache lists all four as signed_records of plan_c hard_cores.
   - RELEASE_TREE 03:08 shows qwen_kvsys SIGNED hard-core designs 83/83.
   Nothing "waits on the core-kit path": export_view plus the auto-export already wrote the provenance. The slice and QC items were already counted (my earlier ruling).
+- 2026-11-23 03:14 PST STATUS [FLOW-OPS-R2 -> COORD]
+  (1) Deleter unknown. The views went between 08:07 and 08:36Z on 11-22, after the guard's last refusal. No ot-delete, auto-retire or autoclean manifest on any host mentions them, so the removal was outside the guarded tools. The guard was not missed; nothing to fix. Missing counted views: 19 non-HBM modules (list in 93ea8ce6ad).
+  (2) Ingest all done.
+  - KV ectl q0-q3 are in signed-store and counted (ae17515c91).
+  - The 4 slice types, S81 t25/t22 and the 3 QC credits were already counted. signed.tsv is not a count input.
+  (3) Flow fixes.
+  - serdes t2 SEGV: fixed (b5fc0e87f3f); CTS and GRT repros rc 0.
+  - RSZ-0060: by design (per-chunk hold guard).
+  - GRT-0273: router limit. Lever is CTS -apply_ndr, already posted.
+  - 48 kit_wave failures: sparse artefact; main passes 990/990.
