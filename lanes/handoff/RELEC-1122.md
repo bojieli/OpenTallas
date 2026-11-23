@@ -42,3 +42,16 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - epyc10 memory pressure killed 5 QC LECs (-9/-15); outputs moved to lec_routed_relec1122_killE10; kits copied (tar of top-level minus run/, + counted 6_final.v, sha checked) to epyc8 $L/mk/<tag>/kit; b12l.txt on epyc8, P=3, 128 GB/8 thr.
 - slw_hc1 cle683a076 (b10) still running epyc10 at 96 GB.
 - Next 2-h list ~03:45.
+
+## 11:0x 11-23 (resume after 06:4x-10:40 limit)
+- Codex posted the audit baseline 07:35: 116 EQ / 8 NOT-EQ / 20 UNPROVEN / 24 NO-NETLIST / 0 PENDING. Receipts in coord 615ed04c1a23.
+- COORD rulings: no revocation without a classified cause. Cause classes are LEC-SETUP / WRONG-RTL / REAL. Revoke only when the type still fails against its own RTL after the LEC fix AND its base passes.
+- Triage so far:
+  - col774: the 96 clock pins were LEC-SETUP, fixed by main lec 14fb2c78. 78 points remain, the same in the base: hard-core tag inputs that are _NC in the routed netlist. REAL candidate.
+  - slw_hc3 x2: the keep failure is relay_q[9] merged into its twin relay_q[8] (proved equal). Separately, 68/85 points differ in q[48..63]+q_bad across 3-4 of 8 identical leaves; main lec still fails.
+  - coll_s: the base fails the same as the ECO (20 differs + 1 undecided), so the ECO did not cause it. Codex says async re capture.
+  - attn_tr_x: main lec still gives 502.
+  - rxsb: the full original kit (claude/s81-kits-c3-1024r kits_repin) is still NOT-EQ.
+- hd_ctl (first, HEAD gate 13:00): HEAD-R18 patched lec (epyc9 head-r18/clone, staged to RELEC-1122/m2) left 101 points because lec mis-paired ek. The yosys FSM_RECODE table (fsm/ + fsm_c/, tmp/fsmhint.py) gives cube hints. Runs: ml/hdctl_r8_fsmhint (R8 ctl1) and ml/hdctl_counted_fsmhint (counted 092e72b3, kit copy mk/s81_head_type_hd_ctl_0ce42cbd), both epyc9, runner tmp/mlech.sh.
+- LECGATE-R2 hc3 records 03bd0ee623f9/d5f3d7812269/827de5708c20/822d3873e2eb: same 51-68 differs. Rerun once the slw_hc3 cause is found.
+- 2fa9961fbc78 = t52: proved EQ twice; no re-revoke (posted 7bd3d4a6).
