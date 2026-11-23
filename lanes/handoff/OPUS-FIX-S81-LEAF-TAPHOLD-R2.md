@@ -52,3 +52,10 @@ Lane dir epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-taphold-r2 (R2)
 - Composed plan: epyc10 R3/trees/j8_r2/physical/die_plan/s81/plan_j9_r2.json sha 526ee5b094ce (only t39 changed). R3 = /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2 (epyc10). Fork tree tools patched with spare.patch.
 - GATE running: ot-run unit oth-ubuntu-3945484-1795431538 epyc10, R3/gate_r2.sh (PRE vs J8, G0 j8 vs j9 same tree, elab, PROBE-ONLY strict bind t39, LATCHECK, SPARE_PADS grep), log R3/gate.otrun.log, outputs R3/gate/.
 - Cleanup owed: epyc7 R/trees/j8_r2.forking-4019146 (ot-delete).
+
+## State 04:0x PST 11-23
+- SPARE tool ON MAIN 14db891545 (push 2). Generator commit 46ea670ff3 tools/die_plan/s81_ist_leafup_rows.py pushing (epyc7 log R/push3.log, PID 1330796).
+- IST row widened to FAMILY (IST-LEAFUP-FAM): every leaf leafup_o0 lacks a vp row. Generator (epyc10 R3/ist_fam.py = s81_ist_leafup_rows.py) with live OT_MACRO_MOVES (t7/t8/t17) + R10 GRTCONG form M (t50/t68), moves file R3/j9/moves.json: 44 types, 105 rows, 22 NEAR-REACH (vp up to 459 um vs merged 825), 0 left for +1. Rules: sites >= 20 um clear of hard cores (t39 street site rejected), types whose bit groups stay auto-off left unchanged (16), clones without bound sv skipped (t24/t25/t40/t44/t53/t54 clones), t28/t60/t43 row forms skipped.
+- Plan: epyc10 R3/trees/j8_r2/physical/die_plan/s81/plan_j9_r2f.json sha 594298446976 (IST-LEAFUP-FAM + SPARE-PAD-T39). Delta: R3/j9/OPUS-FIX-S81-LEAF-TAPHOLD-R2-J9-LEAF-IST-SPARE.json (status GATE PENDING).
+- GATE (3rd launch; t39-only and no-moves gates cancelled): ot-run epyc10, R3/gate_r2f.sh (PRE, G0 j8 vs j9 same tree, elab, PROBE-ONLY strict bind of the 44 types in R3/j9/types.txt, LATCHECK, SPARE grep), log R3/gate_f.otrun.log, out R3/gate_f. Waiting on epyc10 load cap at 11:4x UTC.
+- TT census of k1 final 5_1_grt.odb: epyc7 R/tt_k1f (queued).
