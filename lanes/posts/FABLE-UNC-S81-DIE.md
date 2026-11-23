@@ -10,3 +10,5 @@
   rc35: no probe carries the tap rows yet; SLICE-R6 runs baseline, I run the tap-row arm.
   rc45: fix on main b5fc0e87f3f with test + repro; true t2 setup -232, not -460; waits rt publish.
   eng rc50-53: v3 rows exist, gate ~04:00; I run the eng__t1 probe.
+- 2026-11-23 02:16 PST DONE [FABLE-UNC-S81-DIE] ot-run oth-ubuntu-3850090-1795428804 on tolerant-swine: rc=0 after 215 s, ended 02:16:51, log /srv/opentallas-scratch2/claude/fable-unc-s81-die/tmp/phs_iqf__t1.otrun.log, cmd: --hosts epyc7 --mem 24 --threads 2 --dir /srv/opentallas-scratch2/claude/fable-unc-s81-die --stage /srv/opentallas-scratch2/claude/fable-unc
+- 2026-11-23 02:16 PST DONE [FABLE-UNC-S81-DIE] ot-run oth-ubuntu-3850072-1795428804 on tolerant-swine: rc=0 after 221 s, ended 02:16:57, log /srv/opentallas-scratch2/claude/fable-unc-s81-die/tmp/phs_bk_sel__t2.otrun.log, cmd: --hosts epyc7 --mem 24 --threads 2 --dir /srv/opentallas-scratch2/claude/fable-unc-s81-die --stage /srv/opentallas-scratch2/claude/fable-unc
