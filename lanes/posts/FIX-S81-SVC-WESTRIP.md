@@ -1,0 +1,1 @@
+- 2026-11-23 01:46 PST START rc17/rc21/rc24 SVC-WE-STRIP: surveying W/E svc strips on J8 f65f + SVC-YTRADE-1 8ae8d1e24afa (epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-westrip)
