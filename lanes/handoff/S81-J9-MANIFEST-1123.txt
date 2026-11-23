@@ -72,3 +72,4 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    (replaces outline/hard_cores/buses/stations/clock/reset/relays on 18 types: 6 col_h10_r0_p4 H+25.92, 12 col_h10_r1 H+60.48; widths unchanged).
    J8-based twin: intel2 vis-s81-col/j9/rows_COL-H10-GROW_J8.json. Composed ref 56d5a17e72bc. PRE (pre_ss_grow) pending; bind probe intel1 treeJ7V 1e431c3917df (inner PRE rc0, GRT read pending).
    ORDER: after RANKSEAT _ss replay, BEFORE die_grow (die_grow v4 adds the COL Y shift of the stacked parts); H10-R4 TAPGRT v2/SEAMBLK/TAPSPLIT + TAP-GRID-R5 re-split after die_grow.
+   3e GATED (type-level): PRE 0 findings on _ss_grow 56d5a17e72bc (ot-run epyc10 oth-ubuntu-2090341-1795427266, json epyc10 vis-s81-col/tmp/pre_ss_grow.json); op file sha256 02b182e95344. Die-level Y overlap (16) still open -> die_grow v4 (VIS-DIE-S81). treeJ7V GRT read pending.
