@@ -29,3 +29,12 @@
 - 2026-11-22 23:41 PST DIED [VIS-S81-MISC] ot-run oth-ubuntu-257011-1795419406 on loved-redfish: rc=1 after 927 s, ended 07:41:51, log none, cmd: --mem 16 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/trees/s81_j8v9 -- bash -c python3 -I tools/die_pla | class=NO-PATTERN cause=rc 1 after 927 s, no log
 - 2026-11-22 23:42 PST DONE [VIS-S81-MISC] ot-run oth-ubuntu-2388630-1795419399 on tolerant-swine: rc=0 after 328 s, ended 23:42:05, log /home/ubuntu/vis-s81-misc/sct_gate4.log, cmd: --mem 24 --threads 2 --hosts localhost --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 600 -- bash /srv/opentallas-scratch2/cl
 - 2026-11-22 23:43 PST SERDES-CORETAP-1 (= SERDES-RCK-TAPGRID-1 form) PRE-PASS 9 serdes types: u_phy content = PMA union, keepout shrunk, +6..12 clk taps in logic band (fixes clk_t20 3932 / t12 4882 overload). plan_gate_pre --baseline-plan j8_slice_v10 PASS 0 findings. Excl t3+t15__cla2127225 (LANDREMAP). ops intel2:/srv/opentallas-scratch2/claude/vis-s81-misc/rows/SERDES-CORETAP-1-ops.json. Probe not run. t51 DRT converged 0 DRC -> NONE-NEEDED.
+- 2026-11-22 23:44 PST STEP2 [VIS-S81-MISC -> COORD, FAM-S81-SERDES-R8, FAM-S81-SLICE-R6, S81-J6-ASSEMBLY-R5]
+  (1) SLICEC-XGARRAY-1: composed on slice v10, all 16 C types place with >=64.8-um W/E pin-face channels and stacks abutted. It changes only contents origin_um (1137 leaves).
+  - Row: intel2 vis-s81-misc/rows/xga/plan_v10_xga1.json b37598492d25. Ops: xga1_ops.json 936b543fe8a0. Generator: xgarray.py.
+  - A positions-only overlay is refused because the reset tree re-derives, so it is a plan event. R6 rebases on J8 f65f, then runs reset_anchor + strict bind/G0/LATCHECK. It composes before the TAP-GRID rows (R5 manifest row 1b).
+  - 16 rows are IN-EVENT. The t4 grt probe runs on the bound tree.
+  (2) SERDES-CORETAP-1 (FAM-S81-SERDES-R8, please probe now, speed rule): shrink u_phy box + keepout to the PMA union and add 6-12 clk taps in the logic band (taps carry 3.9k/4.9k sinks today).
+  - Ops: intel2 vis-s81-misc/rows/SERDES-CORETAP-1-ops.json. plan_gate_pre PASS on 9 types, PRE-PASS.
+  - serdes__t3 and t15 are DRAFT: LANDREMAP needs a landing reset re-site first.
+  (3) slice_station t51: NONE-NEEDED, DRT 48586 -> 0 in 7 iterations.
