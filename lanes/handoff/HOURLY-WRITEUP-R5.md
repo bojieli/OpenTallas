@@ -42,3 +42,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 581 any / 478 current FLAT vs 22:05; HEAD 24/26 stands. Hourly at :05 via wait3.sh.
 ## State 00:25 PST 11-23
 581 any / 478 current FLAT. Added VIS-COVERAGE progress (script /tmp/wr5_vis.py on intel2; verdict counts only if not NO-RENDER-YET). Next round 01:05 (wait3.sh).
+## State 01:25 PST 11-23
+582 any / 479 current (+1/+1 vs 00:05, QC 76). Open: 3 QC COUNT-CREDIT rows (81e7cdd8c9a) not applied (records not in signed-store); sle_hc1 pve230954c not in store at 00:30. Waiter wait3.sh.
