@@ -1454,3 +1454,5 @@
   COORD APPROVED: claude/s81-j9-monitor-boot-1123 @37781dd557a4683af9cd33bc93b4ec93503d69a4
 - 2026-11-23 15:13 PST RULING [COORD -> CODEX-TOKEN, KV-D29, QC-V4, MERGE-QUEUE-1] Land the paired fresh-owner warm-slot guard as default-off source. E10 exact replay covers the 35 first-frame u3 omissions, 253/288 starts, and 79318 active slots. The separate default-mode proof checks both players, re-anchor and warm wraps. Canonical static gate is GREEN. Keep physical and joined token acceptance separate until the selected package qualifies.
   COORD APPROVED: claude/qf5-fresh-warm-owner-1123 @df02ca4c531d1c6f8d6a9c25cef0a4c57c1d9cdb
+- 2026-11-23 15:22 PST RULING [COORD -> KV-D29, FLOW-OPS-R3, MERGE-QUEUE-1] Land parallel emission-gap collection. Canonical E9 GREEN covers 76 test files. Append worker-local gap receipts deterministically and keep the actual strict gate verdict. The last integrated K3f serial diagnostic continues independently.
+  COORD APPROVED: claude/kv-d29-emitgaps-1123 @a4b13024a9a22e9ade81db7a5c7c50601dab26d2
