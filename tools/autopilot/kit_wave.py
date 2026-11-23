@@ -3694,6 +3694,8 @@ def select(rows, cfg, die, state, plan_types=None):
                    f"changed, then stays FAIL as a NEEDS-LANE row (owners_sweep flag UNCLASSIFIED); a lane may classify it: kit_wave.py classify-fail --die {die} --item {r['item']} --class PLAN|FLOW|RTL|INFRA|STRUCTURAL")
         elif struct_stop_gate(None, cfg, state, die, r["item"], blk(r["item"])):
             why = struct_stop_gate(None, cfg, state, die, r["item"], blk(r["item"]))
+        elif rec and so_failed(rec) and f"{r['item']}@{rec.get('attempt')}" not in retry and design_repeat_hold(cfg, die, r, rec):
+            why = design_repeat_hold(cfg, die, r, rec)
         elif rec and FG.stops_off_die(cfg, die) and so_failed(rec) and f"{r['item']}@{rec.get('attempt')}" not in retry and so_same_input(cfg, die, r, rec):
             why = "SKIP-SAME-INPUT: full input hash equals the attempt that failed (rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it"
         elif rec and rec.get("status") == "ENQUEUED" and not (
@@ -16614,6 +16616,63 @@ def stale_cancel(rec, d):
     """WAVE-PILOT-FIX 11-18 (COORD durable class fix, FLOW-1000 (2)): a CANCELLED row (SUPERSEDED, HUNG, QUEUE-CANCELLED ...: no verdict) is not 'already in the wave', whatever its event:
     the type relaunches under stops_off without a retry key (a cancelled volume row keeps its own rule)"""
     return rec.get("status") == "CANCELLED" and not rec.get("volume")
+
+
+DESIGN_REPEAT_N = 2
+
+
+def design_digest(ip):
+    """DESIGN-REPEAT-1122: the design inputs of an attempt (plan / bind / env): block, src, snapshot, bind_context, views and the launch env; '' when unknown.
+    Tool digests are left out on purpose: an rt move is no design change."""
+    ip = ip or {}
+    pc, env = ip.get("pc") or {}, ip.get("env")
+    if not pc or env is None:
+        return ""
+    body = {k: pc.get(k) for k in ("block", "src", "snapshot", "bind_context", "views")}
+    body["env"] = env
+    return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
+
+
+def fail_signature(rec):
+    """the failure of an attempt without what changes run to run (paths, shas, attempt numbers, times): stage + normalized reason"""
+    q = rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL"
+    why = str((rec.get("q_reason") if q else rec.get("reason")) or "")
+    why = re.sub(r"\S*/\S*", "", why)
+    why = re.sub(r"\b[0-9a-f]{8,}\b", "", why)
+    why = re.sub(r"attempt[_ ]?\d+|\ba\d+\b|\b\d{1,2}:\d{2}(?::\d{2})?\b|\b\d+(?:\.\d+)? ?s\b", "", why)
+    why = re.sub(r"\s+", " ", why).strip()[:240]
+    return f"{(rec.get('q_stage') if q else rec.get('stage')) or ''}|{why}" if why else ""
+
+
+def note_design_fail(rec):
+    """DESIGN-REPEAT-1122: record this attempt's (design digest, failure signature) once in rec['design_fails'] ({attempt: [digest, sig]}, last 8).
+    -> how many recorded attempts share the latest attempt's digest and signature"""
+    if (not so_failed(rec) or is_infra_fail(rec) or infra_retry_kind(rec) or str(rec.get("q_class") or rec.get("class") or "") == "INFRA"
+            or INFRA_FAIL_RE.search(str(rec.get("q_reason") or "")) or infra_not_run_line(str(rec.get("q_reason") or ""))):
+        return 0
+    dg, sig = design_digest(rec.get("input_parts")), fail_signature(rec)
+    if not dg or not sig:
+        return 0
+    hist = rec.setdefault("design_fails", {})
+    hist[str(rec.get("attempt"))] = [dg, sig]
+    for k in sorted(hist, key=lambda x: int(x) if str(x).isdigit() else 0)[:-8]:
+        del hist[k]
+    return sum(1 for v in hist.values() if v == [dg, sig])
+
+
+def design_repeat_hold(cfg, die, r, rec):
+    """DESIGN-REPEAT-1122 (COORD 22:3x, Fable flow review: kv512_C relaunched 4x byte-identical, each FAIL at -1154 ps): a design failure that
+    reproduced on DESIGN_REPEAT_N attempts with the same plan / bind / env is deterministic; its next relaunch is held until those inputs change
+    (an rt move alone does not release it; a lane retry key item@attempt does).  Infra failures never count.  -> hold reason or ''"""
+    n = note_design_fail(rec)
+    if n < DESIGN_REPEAT_N:
+        return ""
+    now = design_digest(input_parts(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha")))
+    if not now or now != design_digest(rec.get("input_parts")):
+        return ""
+    return (f"DESIGN-REPEAT: the same failure reproduced on {n} attempts with unchanged plan / bind / env (design digest {now}): "
+            f"{fail_signature(rec)[:160]}; held until the plan, bind or env changes (a tools-only rt move does not release it), "
+            f"or a lane sets retry {r.get('item')}@{rec.get('attempt')}")
 
 
 def so_same_input(cfg, die, r, rec):
