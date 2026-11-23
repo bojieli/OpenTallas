@@ -84,14 +84,15 @@ def tables(raw, form="all"):
     return [x for x in out if x[1] in raw["partition_types"]]
 
 
-def census(raw, plan_path=None, types=None, form="all"):
+def census(raw, plan_path=None, types=None, form="all", port_results=None):
     """[row dict] for every type with a per_port_ps table (offsets or window form)."""
     P = S.Plan(raw, Path(plan_path)) if plan_path else S.Plan(raw)
     rows = []
     for fm, tn, tab in tables(raw, form):
         if types and not re.search(types, tn):
             continue
-        sites, core, why = type_ports(P, raw, tn)
+        cached = port_results.get(tn) if port_results is not None else None
+        sites, core, why = cached if cached is not None else type_ports(P, raw, tn)
         miss = [p for p in sites if p not in tab]
         rows.append(dict(type=tn, form=fm, tap_mode=(raw["partition_types"][tn].get("clock") or {}).get("tap_mode") or "grid",
                          status="UNEVALUATED" if why else ("MISSING" if miss else "OK"), grid_ports=len(sites), rows=len(tab),
@@ -128,7 +129,7 @@ def _fill_window(tab, sites, miss, r):
     return True
 
 
-def fill(raw, plan_path=None, max_tol=40.0, types=None, form="all"):
+def fill(raw, plan_path=None, max_tol=40.0, types=None, form="all", port_results=None):
     """extend raw's per_port_ps tables in place -> [report row dict]."""
     P = S.Plan(raw, Path(plan_path)) if plan_path else S.Plan(raw)
     rep = []
@@ -137,6 +138,8 @@ def fill(raw, plan_path=None, max_tol=40.0, types=None, form="all"):
         if types and not re.search(types, tn):
             continue
         sites, core, why = type_ports(P, raw, tn)
+        if port_results is not None:
+            port_results[tn] = sites, core, why
         miss = [p for p in sites if p not in tab]
         stale = [] if why else [p for p in tab if p not in sites and p not in core]
         if not miss and not stale:
@@ -202,6 +205,19 @@ def census_rc(rows):
     return 1 if any(r["status"] != "OK" for r in rows) else 0
 
 
+def _report_census(rows, out):
+    if out:
+        Path(out).write_text(_tsv(rows, CCOLS))
+    bad = [r for r in rows if r["status"] != "OK"]
+    for r in bad:
+        print("\t".join(str(r[k]) for k in CCOLS)[:300])
+    print(f"TAPOFF-ALL census: listed types {len(rows)} ok {len(rows) - len(bad)} missing_types {sum(r['status'] == 'MISSING' for r in rows)} "
+          f"missing_ports {sum(r['missing'] for r in rows if r['status'] == 'MISSING')} unevaluated_types {sum(r['status'] == 'UNEVALUATED' for r in rows)} "
+          f"(added taps without a row there, by name: {sum(r['missing'] for r in rows if r['status'] == 'UNEVALUATED')}) stale_rows {sum(r['stale'] for r in rows)} "
+          f"core_missing {sum(r['core_missing'] for r in rows)} -> {'FAIL' if bad else 'PASS'}")
+    return census_rc(rows)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -215,23 +231,17 @@ def main(argv=None):
     f.add_argument("out")
     f.add_argument("--max-tol", type=float, default=40.0)
     f.add_argument("--report")
+    f.add_argument("--census-out", help="also run the completed plan census and write its TSV")
     f.add_argument("--types")
     f.add_argument("--form", choices=("all", "offset", "window"), default="all")
     a = ap.parse_args(argv)
     raw = json.load(open(a.plan))
     if a.cmd == "census":
-        rows = census(raw, a.plan, a.types, a.form)
-        if a.out:
-            Path(a.out).write_text(_tsv(rows, CCOLS))
-        bad = [r for r in rows if r["status"] != "OK"]
-        for r in bad:
-            print("\t".join(str(r[k]) for k in CCOLS)[:300])
-        print(f"TAPOFF-ALL census: listed types {len(rows)} ok {len(rows) - len(bad)} missing_types {sum(r['status'] == 'MISSING' for r in rows)} "
-              f"missing_ports {sum(r['missing'] for r in rows if r['status'] == 'MISSING')} unevaluated_types {sum(r['status'] == 'UNEVALUATED' for r in rows)} "
-              f"(added taps without a row there, by name: {sum(r['missing'] for r in rows if r['status'] == 'UNEVALUATED')}) stale_rows {sum(r['stale'] for r in rows)} "
-              f"core_missing {sum(r['core_missing'] for r in rows)} -> {'FAIL' if bad else 'PASS'}")
-        return census_rc(rows)
-    rep = fill(raw, a.plan, a.max_tol, a.types, a.form)
+        return _report_census(census(raw, a.plan, a.types, a.form), a.out)
+    # Fill changes only per-port timing values. The geometry and relative inputs
+    # are identical for sibling plans, so census can reuse their resolved ports.
+    port_results = {} if a.census_out and Path(a.plan).resolve().parent == Path(a.out).resolve().parent else None
+    rep = fill(raw, a.plan, a.max_tol, a.types, a.form, port_results)
     Path(a.out).write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n")
     if a.report:
         Path(a.report).write_text(_tsv(rep, FCOLS))
@@ -239,7 +249,11 @@ def main(argv=None):
     skipped = [r for r in rep if r["status"].startswith("SKIP")]
     print(f"TAPOFF-ALL fill: ports {sum(r['added'] for r in rep)} types {sum(1 for r in rep if r['added'])} stale_removed {sum(r['stale_removed'] for r in rep)} "
           f"skipped {len(skipped)} -> {'FAIL' if skipped else 'OK'}")
-    return 1 if skipped else 0
+    census_status = 0
+    if a.census_out:
+        rows = census(raw, a.out, a.types, a.form, port_results)
+        census_status = _report_census(rows, a.census_out)
+    return 1 if skipped else census_status
 
 
 if __name__ == "__main__":

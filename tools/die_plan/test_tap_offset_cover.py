@@ -143,3 +143,26 @@ def test_tap_split_writes_window_rows_for_appended_taps_same_step(monkeypatch):
     got = TS.window_rows(raw, None, rows)
     assert got == {"src": {"clk_t5": 12, "clk_t6": 13}}
     assert "clk_t5" not in raw["clock"]["tap_window"]["per_port_ps"]["src"]      # the caller writes them (out-plan)
+
+
+def test_fill_with_census_reuses_sibling_ports_and_keeps_failed_status(tmp_path, monkeypatch):
+    src = tmp_path / "in.json"
+    out = tmp_path / "out.json"
+    combined = tmp_path / "combined.tsv"
+    separate = tmp_path / "separate.tsv"
+    src.write_text(json.dumps(_wraw(set(SITES) - {"clk_t6"}, added=("clk_t6",))))
+    for failure in (None, "tap geometry invalid"):
+        _grid(monkeypatch, fail=failure)
+        calls = []
+        grid = schema.tap_grid
+
+        def counted(P, tn):
+            calls.append(tn)
+            return grid(P, tn)
+
+        monkeypatch.setattr(schema, "tap_grid", counted)
+        verdict = int(failure is not None)
+        assert C.main(["fill", str(src), str(out), "--census-out", str(combined)]) == verdict
+        assert calls == ["src"]
+        assert C.main(["census", str(out), "--out", str(separate)]) == verdict
+        assert combined.read_bytes() == separate.read_bytes()
