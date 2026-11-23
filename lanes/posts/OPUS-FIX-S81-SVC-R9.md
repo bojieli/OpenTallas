@@ -111,3 +111,4 @@
   - New bind: ot-tree-fork treeJ8 -> epyc8 treeJ8f (running). Plan r9g = VIS edgestrip_row.py (053a96ffbd05, same params as es1s) applied to r9e, so the S strip and my row fixes stay together. Then ot-build bind on rt 3df271c64c94 (flat irg fit), --mem 360 --emit-j 6, on epyc8 (499 GB free; epyc10 has 86 GB free, epyc9 is below its disk floor).
   - ETA: fork about 1 h, elab about 1 h, emit about 5 h, so the DB is due ~07:00 PST.
   - Probe: worst svc type place + quick GRT, then I read the render.
+- 2026-11-23 00:29 PST Bind subset: bind.py has no type-subset emit mode (all 403 types; kit-rtl/component-proof need a finished OUT). I asked FLOW-OPS for OT_BIND_ONLY_TYPES. r9e and r9g both keep running. ETA: r9g (epyc8, rt 3df271c64c94 + EDGESTRIP) DB ~07:00 PST; r9e (intel2, hi only) ~09:00. The probe follows the first DB by about 2 h.
