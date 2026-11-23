@@ -114,3 +114,4 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
   - nomcap bundle guard.
   - HEAD turn canary golden.
   - io_guard, lever 9, items 8/11/12.
+- FORK-IDENTITY-1122 main cb81c8b87a1: ot-tree-fork --src-host no longer substitutes a same-manifest local tree for an edited fork/writable SRC (plain fetch; refuse if unprovable). Warning 5b95db0d3f, sha post follows. Open: confirm rt/current reaches cb81c8b87a1 (then lanes may drop the plan-sha check).
