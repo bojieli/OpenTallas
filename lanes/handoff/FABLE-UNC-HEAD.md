@@ -47,3 +47,9 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 - R9 probes launched: ep2 (E, r9-lep0n-ep2, runitem_r9_ep2.log) and wp2 (W). Background waiter on ep2 CTS / fail.
 - CLEAN-AGGR-R3 asked to ot-delete my unused r18y fork; confirmed (nothing reads it; keep tmp/ and eq/).
 ## NEXT: on ep2 CTS post-hook -> rc140 slack; on ep2 GRT -> census clusters (rc136-139); wp2 -> hold endpoints vs 17,932; then REPORT-2. If probes miss 11:00 -> REASONED to FABLE-RC-KVHEAD (a2afa1acb28fd2355).
+
+## 03:5x ledger x11 (FIX-LEDGER -> me + TAP-GRID-R5): stale tap_offset census on HEAD r18
+- Ran FABLE-UNC-QC-tapoff_census.py on plan 3682da8c (density types): 0 missing. Explicit types (script skips them): hd_lep0N_w OK; hd_lep0N E table MIS-KEYED (unsplit port names; 0/183 taps read their own die tap's row; error med 16.5 / max 142.8 ps; clk_c1 reads rg1 row).
+- Row LEP-ETAPREKEY-1: epyc7 D/tmp/e_tapoff_rekey.py PLAN KIT_TREE OUT (local scratchpad/unch/e_tapoff_rekey.py); sample D/plan/rows_LEP-ETAPREKEY-1.json sha 44a95a02774b. Sent to R9 (SendMessage + post 9e77a4af) to regenerate on its current plan (tag r18z1 gating) and apply with die_rows.py.
+- R9 tags moved on: r18z1 = current gate. ep2/wp2 running. My waiter bun4xth7l on ep2.
+## NEXT (adds): confirm R9 gate includes ETAPREKEY (plan clock.tap_offset.per_port_ps.hd_lep0N has 185 rows, clk_t179 TT 109.1); then ledger x11 GATED.
