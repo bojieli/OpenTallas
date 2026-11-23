@@ -53,3 +53,9 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 - Row LEP-ETAPREKEY-1: epyc7 D/tmp/e_tapoff_rekey.py PLAN KIT_TREE OUT (local scratchpad/unch/e_tapoff_rekey.py); sample D/plan/rows_LEP-ETAPREKEY-1.json sha 44a95a02774b. Sent to R9 (SendMessage + post 9e77a4af) to regenerate on its current plan (tag r18z1 gating) and apply with die_rows.py.
 - R9 tags moved on: r18z1 = current gate. ep2/wp2 running. My waiter bun4xth7l on ep2.
 ## NEXT (adds): confirm R9 gate includes ETAPREKEY (plan clock.tap_offset.per_port_ps.hd_lep0N has 185 rows, clk_t179 TT 109.1); then ledger x11 GATED.
+
+## 04:0x r18z2 GATE PASS = event plan 23e33a4497865202 (R9 tree trees/s81_head_r18w_ecol, frozen until ep3/wp3 are past gen)
+- Contains: ECOL (re-sited), SPLIT-1, PAIRTAP 210, WTAPOFF (W cores exact: c0 -302.1, c1 -306.5), RHI rows, LEP-PUSHDUP-1 RTL (6a04159bb196), LEP-ETAPREKEY-1 (hd_lep0N 185 rows; clk_t179 TT 109.1; clk_c1 -114.1). PRE PASS, bind 7668, cohort 27/27, LATCHECK 334/334 (chain7_r9_r18z2.otrun.log, unit oth-ubuntu-2001940-1795434511).
+- ep2 + wp2 DIED 03:49 at kit_rtl "prepared plan changed" (load-cap wait 28 min + in-place plan edits). R9 relaunches ep3 / wp3 from the frozen tree, asks FLOW-OPS-R2 for crit_dirs. Posts 43edbcda (died), 9e77a4af (x11).
+- Waiter blv2456if on runitem_r9_ep3.log (CTS / stage fail / unit stop).
+## NEXT: ep3 CTS post-hook -> rc140 slack vs -179.76 + E hold; ep3 GRT -> census rc136-139; wp3 -> hold endpoints vs 17,932 + the 8 wide-window W ports; REPORT-2. If probes miss 11:00 -> REASONED to FABLE-RC-KVHEAD.
