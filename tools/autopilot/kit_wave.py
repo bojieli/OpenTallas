@@ -6305,6 +6305,7 @@ def sync_item_inputs(AP, cfg, run=None):
         return []
     inc = cfg.get("_item_incomplete") or {}
     done = []
+    attempted = set()
     if not inc:
         return done
     if run is None:
@@ -6321,9 +6322,15 @@ def sync_item_inputs(AP, cfg, run=None):
                         continue
                     hk = "item|%s|%s|%s|%s" % (h, die, item, p)
                     live.add(hk)
-                    bk = "itembo|%s|%s" % (h, p)               # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 E): back off by cause, per (host, path), not per item
+                    # Probe messages can name a missing dependency of an existing plan.
+                    sp = p
+                    if ": " in part:
+                        dep = part.split(": ", 1)[1].replace(" missing", "").strip()
+                        if _ITEM_SYNC_OK.match(dep) and ".." not in dep:
+                            sp = dep
+                    bk = "itembo|%s|%s" % (h, sp)               # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 E): back off by cause, per (host, path), not per item
                     live.update((bk, bk + "#n"))
-                    if float(tries.get(bk) or 0) > time.time():
+                    if (h, sp) in attempted or float(tries.get(bk) or 0) > time.time():
                         continue
                     if heal_blocked(tries, hk):
                         heal_stop_note(AP, tries, hk, "ITEM-SYNC %s/%s %s on %s" % (die, item, p, h))
@@ -6332,24 +6339,16 @@ def sync_item_inputs(AP, cfg, run=None):
                                 and p not in str((inc[g].get(die) or {}).get(item) or "")), None)
                     if not src:
                         continue
-                    # FLOW-HEALTH-2 11-19 (FABLE-FLOW-1949 class 6, phy_serdes_b rc=2 every tick since 13:55): "<plan>.json: <pins file> missing" means the plan EXISTS on
-                    # the host and the file it names (pins_file) is absent; copying the plan always fails (tar --keep-old-files on an existing file = rc 2).  Copy the named file.
-                    sp = p
-                    if ": " in part:
-                        _t = part.split(": ", 1)[1].replace(" missing", "").strip()
-                        if _ITEM_SYNC_OK.match(_t) and ".." not in _t:
-                            sp = _t
+                    attempted.add((h, sp))
                     q = shlex.quote(sp)
                     pipe = (f"{' '.join(ssh)} {src} 'test -e {q} && [ $(du -sm {q} | cut -f1) -le {ITEM_SYNC_MAX_MB} ] && "
                             f"tar -C / --hard-dereference -cf - {shlex.quote(sp.lstrip('/'))}' | "
                             f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(sp))} && "
                             f"{tar_extract_cmd([sp])}'")
                     try:
-                        for _try in range(5):                   # sshd MaxStartups / banner timeouts are transient
-                            rc = run(["bash", "-c", "set -o pipefail; " + pipe])
-                            if rc == 0:
-                                break
-                            time.sleep(8 + 8 * _try)
+                        # The existing backoff retries on later ticks. An SSH or tar
+                        # failure must not stall every other die in this tick.
+                        rc = run(["bash", "-c", "set -o pipefail; " + pipe])
                     except Exception as e:
                         AP.log(f"KIT-WAVE ITEM-SYNC {src}->{h} {p}: skipped: {e}")
                         continue
