@@ -25,3 +25,22 @@ def test_first_two_failures_retry_next_tick():
     AP.archive_backoff(j, LINE, now=5)
     AP.archive_backoff(j, LINE, now=6)
     assert AP.archive_due(j, now=7)
+
+
+def test_already_reported_permanent_archive_error_becomes_terminal(monkeypatch):
+    def unexpected(*args, **kwargs):
+        raise AssertionError("terminal historic archive should neither probe nor post again")
+
+    for name in ("rpy", "coord_append", "resolve_provenance"):
+        monkeypatch.setattr(AP, name, unexpected)
+    j = {"id": "3054c87a89d6", "status": "SIGNED", "archive_posted": 100,
+         "archive_fail_n": 39, "archive_fail_err": LINE, "archive_retry_at": 9e10,
+         "history": [["2026-11-14 02:05:05 PST", "SIGNED", "original signoff"]]}
+    AP.archive({"jobs": {j["id"]: j}}, j)
+    assert j["status"] == "SIGNED-NOT-ARCHIVED"
+    assert j["archive_posted"] == 100
+    assert [entry[1] for entry in j["history"]] == ["SIGNED", "SIGNED-NOT-ARCHIVED"]
+
+    transient = dict(j, status="SIGNED", archive_fail_err="ssh transport failure")
+    AP.archive({"jobs": {transient["id"]: transient}}, transient)
+    assert transient["status"] == "SIGNED"
