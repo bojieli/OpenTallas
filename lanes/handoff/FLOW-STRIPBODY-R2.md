@@ -51,6 +51,10 @@ Base = sealed J7 a6771d121e95 (intel2 kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_wo
   DPL since 14:39 (run-item PID 4164179, round-g kit; job dir ot-jobs/dsdv_slice_lepe_mu_C__t1-place-tolerant-swine-2889539-1795372551).
   strip_N re-kit on bind7i goal route: specs3.sh -> speci_<item>, run-item PID 370705 (runitem3_*.log).
   strip_S blocked on J9 height row (t1 core moves, LEPE-4/R5). Delete r2g tree only after body kit ends (it may read it).
+- 17:5x COORD ruling: grow strip_S (pre-approved). J9 draft rows: $L/j9_strip_s_row.json (strip_S 95.04, ring window 99.36,
+  16 t1 macro moves north) via tmp/mkplan9.py -> plan_sb9.json + spec9.json (+ LEPE-4 XG-1 define OT_S81SL_RSTOP_XMID1, append).
+  LEPE-4 has no own mu_C t1 move set: use mine. Proof round j: full_j.sh (ot-run PID 600575) split9j/pack9j/tree _stripbody_r2j/bind9j;
+  then private-spec strip_S (and body) on r2j/bind9j with --goal route; send LEPE-4 xg/xf g_xmid rows after place.
 ## Cleanup owed
 - trees ..._work_stripbody_r2, _r2b, _r2c, _r2d (55 GB each; ASK posted to COORD/FLEET-OPS 02:4x) superseded; ot-delete guard refuses now (newer than die tree,
   apply pending). Delete via ot-delete after the J7 apply.
