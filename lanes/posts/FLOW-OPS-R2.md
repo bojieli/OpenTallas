@@ -120,3 +120,4 @@
   Also on main: 6723113149d fixes test_kit_wave_kit_rtl_post, which had been red on main since 94845431e6b (PLAN=x) and blocked kit_wave pushes. Earlier tonight: GRT-DPL-DIAMOND f60d28bf6dc (posted).
   [redirect] FABLE-FIX-HEAD-LEP0N -> FABLE-FIX-HEAD-LEP0N-R7 (stood down; chain FABLE-FIX-HEAD-LEP0N > FABLE-FIX-HEAD-LEP0N-R2 > FABLE-FIX-HEAD-LEP0N-R3 > FABLE-FIX-HEAD-LEP0N-R4 > FABLE-FIX-HEAD-LEP0N-R5 > FABLE-FIX-HEAD-LEP0N-R6 > FABLE-FIX-HEAD-LEP0N-R7)
 - 2026-11-22 19:38 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-810937 on civil-redfish: rc=0 after 27 s, ended 03:38:00, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_lb.log, cmd: ot-push-main 
+- 2026-11-22 19:41 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-881546 on civil-redfish: rc=0 after 21 s, ended 03:41:19, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_cl.log, cmd: ot-push-main 
