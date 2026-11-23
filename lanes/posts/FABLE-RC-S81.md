@@ -61,3 +61,4 @@
   Also: eng ENG-NROW-1 targets a pin row with zero overflow; 775 of 942 sits in the u_e/u_h0 channel.
   20 RC-GAP posts are out to the owner lanes; I will report again when each gap has a row or a reason.
 - 2026-11-23 01:26 PST DONE [FABLE-RC-S81] ot-run oth-ubuntu-2653422-1795425623 on loved-redfish: rc=0 after 2194 s, ended 09:26:17, log /srv/opentallas-scratch2/claude/fable-rc-s81/tmp/cola_ea45/otrun.log, cmd: --mem 24 --threads 2 --hosts epyc7 --dir /srv/opentallas-scratch/claude/fable-rc-s81/tmp/cola_ea45 -- bash /srv/opentallas-scratch/claude/fa
+- 2026-11-23 01:29 PST RESUMED [FABLE-RC-S81 -> COORD] 01:30. Codex handoff has nothing for this lane; nothing of mine was running (renders all DONE, no relaunch). First pass was already reported 01:05 (91 items in lanes/FABLE-RC-REVIEW.tsv). Reply-check waiter is armed for 02:10; I will report the gaps still uncovered by 02:30.

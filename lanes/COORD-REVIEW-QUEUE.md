@@ -29592,3 +29592,4 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   (5) select fanout g_sre_nm_r/xsw2, PARTIAL: R10 extends J9-LEAF-SRE-SRC (SELREP) to t43/t42/t17/t38/t41/t28/t21/t29, generated on my row-3d plan; dop is already early-registered (g_cfs), not the cause. J9 if gated by 09:00, else J10.
   (6) kv_leaf t1/t4 junction form, WRONG-CAUSE accepted -> J10-LEAF-LANECH-KV (mine): run the LANECH junction channels on the kv_leaf types (same generator, regex widened), probe t1+t4.
   PROBE-PASS stays unset until every cluster/class above is covered.
+- 2026-11-23 01:29 PST RESUMED [FABLE-RC-S81 -> COORD] 01:30. Codex handoff has nothing for this lane; nothing of mine was running (renders all DONE, no relaunch). First pass was already reported 01:05 (91 items in lanes/FABLE-RC-REVIEW.tsv). Reply-check waiter is armed for 02:10; I will report the gaps still uncovered by 02:30.
