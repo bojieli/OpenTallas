@@ -628,6 +628,61 @@ def related_clock_sdc(per, related):
 
 
 
+def _gen_phys():
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "tools/die_plan"))
+    import gen_phys
+    return gen_phys
+
+
+def core_place_max_fanout():
+    """WAVE-ENV-CORE-1122: the fanout cap of the core flow's max_fanout.tcl (every repair_design stage).  64 unless the gen
+    environment (kit_wave die_gen_env / item_env, or a private kit copying the wave env) sets OT_PLACE_MAX_FANOUT (2..1000)."""
+    import os
+    if not os.environ.get("OT_PLACE_MAX_FANOUT", "").strip():
+        return 64
+    return _gen_phys().place_max_fanout()
+
+
+def wave_env_cfg(cfg):
+    """WAVE-ENV-CORE-1122 (COORD, FABLE-KV-DIE): the core kit's config.mk lines for the gen-env knobs the type kits translate.
+    The container (run_kit_kv.sh docker run) gets no host env, so a knob counts only when config.mk names it; before this the
+    core generator read only OT_IO_HOLD and silently dropped OT_GRT_ALLOW_CONGESTION, OT_GRT_CONG_ITERS and OT_PGCAP*.
+    Same forms as gen_phys (the type kit): GLOBAL_ROUTE_ARGS -allow_congestion / -congestion_iterations N (an existing recipe
+    GLOBAL_ROUTE_ARGS line keeps its words and gets only the missing flags), gen_phys.pgcap_cfg() (+ pgcap_install after the
+    config.mk write).  No knob set = no line (kits byte-equal).  -> (cfg, applied {knob: value})"""
+    import os
+    gp = _gen_phys()
+    applied = {}
+    ac = os.environ.get("OT_GRT_ALLOW_CONGESTION", "").strip() == "1"
+    it = os.environ.get("OT_GRT_CONG_ITERS", "").strip()
+    if it and not it.isdigit():
+        raise SystemExit(f"OT_GRT_CONG_ITERS={it!r}: not a non-negative integer")
+    itn = int(it) if it and int(it) not in (0, 30) else None
+    flags = ([("-allow_congestion", "OT_GRT_ALLOW_CONGESTION", "1")] if ac else []) + \
+            ([(f"-congestion_iterations {itn}", "OT_GRT_CONG_ITERS", str(itn))] if itn is not None else [])
+    if flags:
+        k = [i for i, l in enumerate(cfg) if l.startswith("export GLOBAL_ROUTE_ARGS = ")]
+        if k:
+            line = cfg[k[-1]]
+            for f, knob, v in flags:
+                if f.split()[0] not in line.split():
+                    line += " " + f
+                    applied[knob] = v
+            cfg[k[-1]] = line
+        else:
+            cfg.append("export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose" + "".join(" " + f for f, _, _ in flags))
+            applied.update({knob: v for _, knob, v in flags})
+    pg = gp.pgcap_cfg()
+    if pg:
+        cfg += pg
+        applied.update({l.split()[1]: l.split(" = ", 1)[1] for l in pg if l.startswith("export ")})
+    if applied:
+        cfg.append("# WAVE-ENV-CORE-1122: gen env knobs written into this core kit: "
+                   + " ".join(f"{k}={v}" for k, v in sorted(applied.items())))
+    return cfg, applied
+
+
 def _reset_sdc(rsts, per):
     """reset ports: the shared core-kit reset IO rule tools/die_plan/gen_phys.core_reset_sdc (no local copy)."""
     import sys
@@ -1963,8 +2018,10 @@ def main():
         # Match the sign-off fanout ceiling at every repair_design stage. A tighter cap of 24
         # split timing-critical decode broadcasts into serial weak-buffer chains (FLOW-FANOUT).
         # Keep the routed slew/cap margins; timing-driven repair chooses the buffer tree.
-        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
-                                           "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
+        fo = core_place_max_fanout()   # WAVE-ENV-CORE-1122: gen env OT_PLACE_MAX_FANOUT, else 64 (file unchanged)
+        (kd / "max_fanout.tcl").write_text(f"# KV 10-25 core flow basis: fanout cap {fo} for every repair_design (in-flow, not in the golden SDC)\n"
+                                           + (f"# WAVE-ENV-CORE-1122: gen env OT_PLACE_MAX_FANOUT={fo}\n" if fo != 64 else "")
+                                           + f"set_max_fanout {fo} [current_design]\nputs \"KVCORES max_fanout {fo}\"\n")
     mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
@@ -2101,7 +2158,12 @@ def main():
         cfg = ahub_clock7.stage_anchors(kd, cfg)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
+    cfg, wave_env = wave_env_cfg(cfg)   # WAVE-ENV-CORE-1122: env-only knobs -> config.mk (the container gets no host env)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    if wave_env.get("OT_PGCAP") == "1" and not _gen_phys().pgcap_install(kd):
+        raise SystemExit(f"{tid}: OT_PGCAP=1 written to config.mk but pg_pair_cap.tcl was not staged")
+    if wave_env:
+        print("WAVE_ENV_CORE " + " ".join(f"{k}={v}" for k, v in sorted(wave_env.items())))
     # MACRO-SITES-GEN-1122 (COORD 19:xx, FABLE-KV-DIE): the static FIRM memory-macro sites (cores/macro_sites/<module>.json) are a
     # generation step, applied here before kit_hash / freeze.json / PROVENANCE.json, so the receipt covers the final config.mk.
     if lefs and not hard_children:

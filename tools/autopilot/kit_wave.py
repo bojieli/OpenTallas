@@ -10741,7 +10741,10 @@ def run_item(spec_path):
     if core:
         _, _, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], tsrc, plan, sp["root"], W, T)
         rgp, rga = region_guide_cmd(sp, True)
-        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(tsrc)} && {rgp}{gcmd}{rga}", gh))
+        # WAVE-ENV-CORE-1122 (COORD, FABLE-KV-DIE): the core generator gets the row's gen env exactly as the type gen does (it
+        # writes the env-only knobs into the core kit's config.mk); before this a kind=core row generated with no gen env at all
+        cenv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items())) + "export OT_KIT_WAVE=1; "
+        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(tsrc)} && {cenv}{rgp}{gcmd}{rga}", gh))
         if rc:
             return fail("gen", txt)
         rc, kt = run("gen_kit", idempotent=True, argv=remote(kfind))
