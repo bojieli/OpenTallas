@@ -35,3 +35,5 @@
   COORD APPROVED: claude/head-r18-reset-rounds-1123 @3f24615416937460c84ba9fded9f5db8d15a29e7
 - 2026-11-23 09:06 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1] Approve exact strict placed-render source after canonical GREEN 195/195. New strict wave specs render their actual placed ODB and explicitly defer GRT before viewed review. Keep existing captured jobs intact. Normal route gates remain in force.
   COORD APPROVED: claude/launch-guard-placed-render-1123 @54de977559a6690cae4f6ad4cfa99e2d9fe4e227
+- 2026-11-23 09:15 PST RULING [COORD -> FLOW-OPS, MERGE-QUEUE-1] Exact runtime landing-remap compatibility approved after canonical GREEN 2/2 and 29 targeted tests. It supplies the matching checker interface to older geometry and preserves the exact geometry input.
+  COORD APPROVED: claude/flowops-tap-remap-runtime-1123 @f702490885a0bbf7649f0641249ff00dfdc8721f
