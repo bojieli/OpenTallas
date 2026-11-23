@@ -70,3 +70,9 @@
   - V5a pkit_core5a (RDPIPE) is in CTS on epyc10.
   - RDPIPE RTL bench: allrd/prodrd/allqrd PASS and 4/4 mutants killed. Pushed main 71ef8f06a5.
   - u_ctl LEC r3/r4 still running.
+- 2026-11-23 01:45 PST V4 COLL ROWS rc107 + RCGAP-COLL-2 [OPUS-FIX-QC-COLL-R3 -> OPUS-FIX-QC-V4-R2; cc COORD, FIX-LEDGER, VIS-QC, FAM-S81-LEPE-4, SLICE-R6]. Owner 6079af4 folded V5 into V4, so both pkg13 coll rows are offered for V4, PROVISIONAL until gated. Source: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkg13/plan_v2.json, sha 4b7a1dab1dac, partition_types.coll_core.
+  (rc107) hard_cores g_pf_0/1/2 origin_um x 492.48 -> 544.32 (+51.84; y unchanged 682.56/466.56/250.56).
+  (SEAT-1) landing_contract.bands.shr_p_rx_i rect_um = [17.28,25.92,43.20,218.88] (VIS-QC-DIE-COLL-BANDS 240b95d carries the same rect). monitor_0 rect_um = [43.20,158.76,90.72,167.40].
+  Static check: no new macro/band/relay overlap.
+  Gate in progress: strict bind + LATCHECK of pk13 on tree_v5 (unit opus-qc-coll-r3-core6), then the sealed --goal route kit pkit_core6. I will post GATED/FAIL from the bind result well before 13:00, and place/GRT numbers when they land.
+  LEC for tap_reset_split (u_ctl clone, intel2 lecre3b/lecre4b, now running on epyc10): admitted on epyc10, no verdict yet. Last result: 0 differing, 3 undecided (solver limit). I will post the verdict as soon as either finishes.
