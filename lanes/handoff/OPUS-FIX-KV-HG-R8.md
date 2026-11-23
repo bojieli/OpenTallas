@@ -20,3 +20,10 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 - z = chain2.sh z s1 (REUSES trees/s1 in place; s1 bind_of_record kept at z/prev_bind_of_record_s1), launched with ot-run --plan-job bind (the plain launch waited on the load cap; the 48 GB fork waited on the disk-ETA rail). Unit oth-ubuntu-84827-1795416650, start 22:50, ETA ~23:45. Gate z/{g0,bind}/gate.out. Kits for z go on --tree trees/s1 --plan ana/plan_z.json.
 - hg_v3: systemd-run timed out at launch, leaving place_service.json "prepared" with no unit, so I renamed it to place_service.failed.json (the tool's own retry path). run-item --goal route was relaunched 22:41, log kit_kv3_hg_v3_route2.log.
 - hg_v1p2 probe: driver died; place service kwp-5d8f still active. Resume run-item --goal route after it ends.
+## UPDATE 23:15 PST
+- y bind CLEAN. I posted ROWS-READY for ECTLPD 32f0ff2ae37d + V8RAW a6fc4bc187fa and copied both into d29/rows.
+- VIS-KV gap: no D29 row in flight touched v3..v8. New rows (rows/): ECTLPDALL 3cdfb7c858a6 (v4/v7 pd2 .r[0]+.q, v5/v8 pd1 .q) and ECTLH3ALL 425cad93671b (v3..v8 relay_depth hst3_g D2 + polyline + contents origin_um FIRM hst3_g (661,1000) / head2__u_ftg (661,650), skipped near ft sites: v5 both, v8 ftg).
+- Chain w = plan_z + both rows (ana/plan_w.json bce9ce826928) via chain2.sh w y (trees/y in place). Unit oth-ubuntu-923910-1795417936, started 23:12, ETA ~00:10; gate w/{g0,bind}/gate.out. If clean: copy both rows to d29/rows and post ROWS-READY.
+- VIS R3 HST2SITE deferred to D30 (key names unverified). I replied to VIS-KV.
+- After z binds: sealed kits kv3_hgi_v8 + kv3_hgi_v2__cle0015330 with launch-style private-spec --tree trees/s1 --plan ana/plan_z.json --bind-out trees/s1/.../bind_of_record --goal route.
+- epyc8 scratch2 ~97 GB free at 23:12.
