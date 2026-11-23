@@ -28,6 +28,11 @@ Findings:
   HOP-SITE a HOP with a seated plan stage (relay_sites) on one end where a seat within reach of every judged end of
           that stage exists (for an unseated u_bin_/u_bout_ face register: a point on its bus window): re-seat / pin it
           there (0 stations) instead of adding stations.
+  CDC-SYNC / CLOCK-UNKNOWN  (FABLE-RC-S81 11-23) clock domains come from the wrapper's clock-port connections: clk and
+          every clk_t<i> / clk_c<k> tap are one domain, io_pma_rck*, fclk_* and any other clock net are their own.  A HOP
+          / SOFT row whose two instances share no clock is CDC-SYNC (a synchroniser arc, 0 stations, kept for review);
+          when one instance has several clocks and they overlap, the register's clock is not known from the wrapper:
+          CLOCK-UNKNOWN (stations as if same clock).  Reset arcs are never judged here (reset ports are skipped).
   SOFT-GAP / SOFT-SITE  a soft as-built leaf with no plan seat (e.g. col u_y_xa_* / u_y_cc_* relays, slice xg): the
           free placer puts it near the bit-weighted centroid of its judged ends.  A leg from the centroid to a hard pin
           > reach is SOFT-SITE when SOME site is within reach of every end (minimax site in u = x + y, v = x - y; fix =
@@ -680,6 +685,7 @@ def type_rows(tn, t, files, pins, reach, stats):
                 alias.setdefault(ids[0][0], []).append(rhs)
         widths = decl_widths(text)
         sources = SegResolver(assigns, widths, drv, SKIP_NET).sources
+        cdom = clock_domains(insts, assigns)
 
         for name, (mod, path, conns) in insts.items():
             if SKIP_MOD.match(mod):
@@ -700,16 +706,17 @@ def type_rows(tn, t, files, pins, reach, stats):
                         continue
                     a, al = end_pos(sn, sp)
                     nb = 1 if lo is None else hi - lo + 1
+                    cls = clock_class(cdom, sn, name)
                     if a and not b and _is_soft(insts, name, hard, nested):
-                        soft.setdefault(name, []).append((a, al, nb, "in", p))
+                        soft.setdefault(name, []).append((a, al, nb, "in", p, cls))
                     if b and not a and _is_soft(insts, sn, hard, nested):
-                        soft.setdefault(sn, []).append((b, bl, nb, "out", sp))
+                        soft.setdefault(sn, []).append((b, bl, nb, "out", sp, cls))
                     if not a or not b:
                         continue
                     stats["judged"] += 1
                     d = _man(a, b)
                     for lab_, other in ((al, b), (bl, a)):
-                        if lab_ and "." not in lab_:
+                        if lab_ and "." not in lab_ and not cls:
                             stage_ends.setdefault(lab_, []).append(other)
                             fm = re.match(r"u_b(?:in|out)_(\w+)$", lab_)
                             if fm and fm.group(1) in buses and not (rs and any(k.startswith(lab_ + "/") for k in rs)):
@@ -721,15 +728,15 @@ def type_rows(tn, t, files, pins, reach, stats):
                     if d > reach and not _is_planned(planned, al, bl):
                         k = (al, bl)
                         if k not in hops or hops[k][0] < d:
-                            hops[k] = (d, a, b)
+                            hops[k] = (d, a, b, cls)
         # SOFT: a soft leaf with no plan seat sits (placer-like) at the bit-weighted centroid of its judged register ends
         seated = {k.split(".", 1)[0] for k in rs if "." in k.split("/", 1)[0]} if rs else set()
         for sn, ends in soft.items():
             if sn in seated:                       # the plan seats this soft core's registers (relay_sites): not estimated
                 continue
             agg = {}
-            for pos, lab, nb, dr, port in ends:
-                r = agg.setdefault((lab, dr, port), [pos, 0])
+            for pos, lab, nb, dr, port, cls in ends:
+                r = agg.setdefault((lab, dr, port), [pos, 0, cls])
                 r[1] += nb
             tot = sum(v[1] for v in agg.values())
             if len(agg) < 2 or not tot:
@@ -738,7 +745,7 @@ def type_rows(tn, t, files, pins, reach, stats):
             cy = sum(v[0][1] * v[1] for v in agg.values()) / tot
             site, rmin = minimax_site([v[0] for v in agg.values()], ol)
             sp_ = insts[sn][1] or sn
-            for (lab, dr, port), (pos, nb) in agg.items():
+            for (lab, dr, port), (pos, nb, cls) in agg.items():
                 d = _man((cx, cy), pos)
                 if d <= reach or "." not in lab:  # legs to hard-core pins only (a face leg is the leaf's own I/O flop)
                     continue
@@ -757,7 +764,7 @@ def type_rows(tn, t, files, pins, reach, stats):
                           f"{_f(rmin)} um from its farthest end, {len(agg)} ends)")
                 k = (kind, lab, sl) if dr == "in" else (kind, sl, lab)
                 if k not in softhops or softhops[k][0] < dd:
-                    softhops[k] = (dd, nb)
+                    softhops[k] = (dd, nb, cls)
         # DUPSTN: ot_dp_dly stations with identical resolved d bits
         groups = {}
         for name, (mod, path, conns) in insts.items():
@@ -822,7 +829,13 @@ def type_rows(tn, t, files, pins, reach, stats):
                 reseat[nm] = best
         elif not nm.startswith(("u_bin_", "u_bout_")):
             reseat[nm] = minimax_site(pts, ol)
-    for (al, bl), (d, a, b) in hops.items():
+    for (al, bl), (d, a, b, cls) in hops.items():
+        if cls:
+            sync = cls[0] == "CDC-SYNC"
+            rows.append(dict(type=tn, family=family(tn), kind=cls[0], was="HOP", src=al, dst=bl, len_um=round(d, 1),
+                             stations=0 if sync else int(math.ceil(d / reach)) - 1,
+                             over_ps=0 if sync else round((d - reach) * PS_PER_UM), a=a, b=b, clocks=cls[1]))
+            continue
         # a seated plan stage (relay_sites) on one end: if some seat is within reach of ALL its ends, re-seat it (0 stations)
         mv = next((x for x in (al, bl) if x in reseat and reseat[x][1] <= reach), None)
         if mv:
@@ -834,7 +847,14 @@ def type_rows(tn, t, files, pins, reach, stats):
         rows.append(dict(type=tn, family=family(tn), kind="HOP", src=al, dst=bl, len_um=round(d, 1),
                          stations=int(math.ceil(d / reach)) - 1, over_ps=round((d - reach) * PS_PER_UM),
                          a=a, b=b))
-    for (kind, al, bl), (d, nb) in softhops.items():
+    for (kind, al, bl), (d, nb, cls) in softhops.items():
+        if cls:
+            sync = cls[0] == "CDC-SYNC"
+            rows.append(dict(type=tn, family=family(tn), kind=cls[0], was=kind, src=al, dst=bl, len_um=round(d, 1),
+                             stations=0 if sync or kind == "SOFT-SITE" else int(math.ceil(d / reach)) - 1,
+                             over_ps=0 if sync or kind == "SOFT-SITE" else round((d - reach) * PS_PER_UM), a=None, b=None,
+                             clocks=cls[1]))
+            continue
         site = kind == "SOFT-SITE"
         rows.append(dict(type=tn, family=family(tn), kind=kind, src=al, dst=bl, len_um=round(d, 1),
                          stations=0 if site else int(math.ceil(d / reach)) - 1,
@@ -844,6 +864,54 @@ def type_rows(tn, t, files, pins, reach, stats):
                          dst=f"{cb} (e.g. {ex[1]}_*; {n} duplicate stations on shared d)", len_um=round(d, 1),
                          stations=0, over_ps=round(d * PS_PER_UM), a=None, b=None))
     return rows
+
+
+CLOCK_PORT = re.compile(r"^(?:\w*clk\w*|ck\w*|\w*_?rck\w*|\w*_?tck\w*)$")
+MAIN_CLOCK = re.compile(r"^clk(?:_[tc]\d+)?$")
+
+
+def clock_domains(insts, assigns):
+    """{inst: frozenset(domain)} from the clock-port connections of the wrapper.  clk and every clk_t<i> / clk_c<k> tap
+    are ONE domain ("clk"); any other clock root (io_pma_rck*, fclk_*, an instance-driven clock net) is its own."""
+    al = {}
+    for lhs, rhs in assigns:
+        m = _SLICE.match(lhs.strip())
+        if m:
+            al.setdefault(m.group(1), []).append(rhs)
+
+    def roots(expr, depth=0, seen=None):
+        seen = set() if seen is None else seen
+        out = set()
+        for nm, lo, hi in _idents(expr):
+            if nm in seen:
+                continue
+            seen.add(nm)
+            if nm in al and depth < TRACE_DEPTH and not MAIN_CLOCK.match(nm):
+                for r in al[nm]:
+                    out |= roots(r, depth + 1, seen)
+            else:
+                out.add("clk" if MAIN_CLOCK.match(nm) else nm)
+        return out
+
+    dom = {}
+    for name, (mod, path, conns) in insts.items():
+        flat = "w_" + (name[2:] if name.startswith("u_") else name) + "_"
+        ds = set()
+        for p, e in conns.items():
+            if CLOCK_PORT.match(p) and e != flat + p:
+                ds |= roots(e)
+        dom[name] = frozenset(ds)
+    return dom
+
+
+def clock_class(dom, a, b):
+    """None (same domain / no information), ("CDC-SYNC", note) when the two instances share no clock, or
+    ("CLOCK-UNKNOWN", note) when one has several clocks and the wrapper does not say which one the register uses."""
+    da, db = dom.get(a) or EMPTY, dom.get(b) or EMPTY
+    if not da or not db or (da == db and len(da) == 1):
+        return None
+    note = f"clocks {'+'.join(sorted(da))} -> {'+'.join(sorted(db))}"
+    return ("CLOCK-UNKNOWN" if da & db else "CDC-SYNC", note)
 
 
 def minimax_site(pts, outline=None):
@@ -983,6 +1051,14 @@ def findings(raw, plan_path, tree=None, bind_out=None, **kw):
                 out.append(f"WARN {CHECK} {r['type']}: HOP {r['src']} -> {r['dst']} is one cycle with no station: "
                            f"{_f(r['len_um'])} um > reach {reach:g} (~{r['over_ps']} ps over at {PS_PER_UM} ps/um); "
                            f"fix: +{r['stations']} station(s) on the hop, or seat the two ends <= {reach:g} um apart")
+            elif r["kind"] == "CDC-SYNC":
+                out.append(f"WARN {CHECK} {r['type']}: CDC-SYNC {r['src']} -> {r['dst']} ({r['clocks']}): launch and capture "
+                           f"are on different clocks, not a same-cycle hop ({_f(r['len_um'])} um, was {r['was']}); 0 stations; "
+                           f"check the kit SDC bounds it (set_max_delay) and the first sync flop sits near the launch")
+            elif r["kind"] == "CLOCK-UNKNOWN":
+                out.append(f"WARN {CHECK} {r['type']}: CLOCK-UNKNOWN {r['src']} -> {r['dst']} ({r['clocks']}): one end has several "
+                           f"clocks and the wrapper does not say which this register uses; {_f(r['len_um'])} um > reach {reach:g} "
+                           f"(was {r['was']}, +{r['stations']} station(s) if same clock; CDC-SYNC if not)")
             elif r["kind"] == "HOP-SITE":
                 out.append(f"WARN {CHECK} {r['type']}: HOP-SITE {r['src']} -> {r['dst']} is {_f(r['len_um'])} um > reach "
                            f"{reach:g} at the plan seat, but a seat within reach of every end of the stage exists; fix: re-seat "
@@ -1003,6 +1079,8 @@ def findings(raw, plan_path, tree=None, bind_out=None, **kw):
         if rr:
             nh = sum(1 for r in rr if r["kind"] == "HOP")
             nhs = sum(1 for r in rr if r["kind"] == "HOP-SITE")
+            ncdc = sum(1 for r in rr if r["kind"] == "CDC-SYNC")
+            nunk = sum(1 for r in rr if r["kind"] == "CLOCK-UNKNOWN")
             ng = sum(1 for r in rr if r["kind"] == "SOFT-GAP")
             nsite = sum(1 for r in rr if r["kind"] == "SOFT-SITE")
             ns = ng + nsite
@@ -1011,7 +1089,7 @@ def findings(raw, plan_path, tree=None, bind_out=None, **kw):
                        f"{len({r['family'] for r in rr if r['kind'] == 'HOP'})} families, {nhs} HOP-SITE (re-seat the stage, 0 stations), {ng} SOFT-GAP (no feasible site) in "
                        f"{len({r['type'] for r in rr if r['kind'] == 'SOFT-GAP'})} type(s), {nsite} SOFT-SITE (feasible site, pin it) in "
                        f"{len({r['type'] for r in rr if r['kind'] == 'SOFT-SITE'})} type(s), "
-                       f"{len(rr) - nh - nhs - ns} DUPSTN group(s); {st['judged']} hop(s) judged over {st['bound']}/{st['types']} bound types "
+                       f"{len(rr) - nh - nhs - ns - ncdc - nunk} DUPSTN group(s), {ncdc} CDC-SYNC (different clocks, 0 stations), {nunk} CLOCK-UNKNOWN; {st['judged']} hop(s) judged over {st['bound']}/{st['types']} bound types "
                        f"(bind out {st['bind_out']}) in {time.time() - t0:.1f} s"
                        f"{' (first ' + str(cap) + ' listed)' if len(rr) > cap else ''}")
         return out
@@ -1046,6 +1124,8 @@ if __name__ == "__main__":
                 src = r["src"] if r["kind"] == "HOP" else r["kind"] + " " + r["src"]
                 if r.get("site"):
                     src += f" [re-seat {r['site']}]"
+                if r.get("clocks"):
+                    src += f" [{r['clocks']}; was {r['was']}]"
                 f.write(f"{sha}\t{r['type']}\t{r['family']}\t{src}\t{r['dst']}\t{r['len_um']}\t{r['stations']}\t{r['over_ps']}\n")
         print(f"# {len(rr or [])} rows -> {opts['tsv']} ({st})")
         kw["_rows"] = (rr, st)

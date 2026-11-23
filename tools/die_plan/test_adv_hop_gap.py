@@ -319,3 +319,44 @@ endmodule
         raw, plan, tree = _tree(sub, {"col_h10_r0_p1__t1": t}, {"col_h10_r0_p1__t1": ("col_f", sv)}, pins)
         rr, _ = H.rows(raw, plan, tree)
         assert [r["kind"] for r in rr] == [kind], (lo, rr)
+
+
+# (3) clock domains (FABLE-RC-S81 11-23): launch and capture on different clocks -> CDC-SYNC (0 stations), a multi-clock
+#     end whose clocks overlap the other end's -> CLOCK-UNKNOWN; clk / clk_t<i> are one domain.
+CDC_SV = """module cdc_t (input clk, input clk_t3, input [0:0] io_pma_rck);
+    wire [0:0] w_0_Y;
+    assign w_0_Y = clk_t3;
+    // as-built u_r0.u_a
+    ot_ca u_u_a (
+        .q(w_u_a_q),
+        %s
+    );
+    // as-built u_r0.u_b
+    ot_cb u_u_b (
+        .xai(w_u_a_q[0]),
+        .ck(w_0_Y[0])
+    );
+endmodule
+"""
+
+
+def _cdc(tmp, clocks):
+    cores = [{"inst": "u_r0.u_a", "module": "ot_ca", "origin_um": [0.0, 0.0], "outline_um": [10, 10], "orient": "R0",
+              "pins_file": "inputs/core_pins/ca.json"},
+             {"inst": "u_r0.u_b", "module": "ot_cb", "origin_um": [900.0, 0.0], "outline_um": [10, 10], "orient": "R0",
+              "pins_file": "inputs/core_pins/cb.json"}]
+    pins = {"ca": [{"name": "q[0]", "x": 0.0, "y": 0.0}], "cb": [{"name": "xai", "x": 0.0, "y": 0.0}]}
+    t = {"outline_um": [1200.0, 400.0], "hard_cores": cores}
+    return _tree(tmp, {"s81p_serdes__t2": t}, {"s81p_serdes__t2": ("cdc_t", CDC_SV % clocks)}, pins)
+
+
+def test_clock_classes(tmp_path):
+    for i, (clocks, kind, st) in enumerate(((".clk(clk)", "HOP", 2),                       # clk vs clk_t3 tap: one domain
+                                            (".pma_rck(io_pma_rck[0])", "CDC-SYNC", 0),
+                                            (".clk(clk),\n        .pma_rck(io_pma_rck[0])", "CLOCK-UNKNOWN", 2))):
+        raw, plan, tree = _cdc(tmp_path / str(i), clocks)
+        rr, _ = H.rows(raw, plan, tree)
+        assert [(r["kind"], r["stations"]) for r in rr] == [(kind, st)], (clocks, rr)
+        if kind != "HOP":
+            assert rr[0]["was"] == "HOP" and "io_pma_rck" in rr[0]["clocks"]
+            assert any(kind in ln for ln in H.findings(raw, plan, tree))
