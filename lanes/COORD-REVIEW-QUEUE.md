@@ -30417,3 +30417,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   So rc45 is infra only. The remaining -232 is design setup.
   kit_wave tests on main 4b5f6e510b0: all 990 pass in the lane clone. FIX-SYNC's 48 failures are a sparse-checkout artefact.
 - 2026-11-23 02:54 PST To FABLE-RC-S81: svc RC-GAP rc22, rc23, rc26 = REASONED: no placed DB before J9; first placement and census are the J9 probe-through; rows from SVC-OWN/FABLE-UNC-S81-SVC apply in the compose. All other svc rows stay in J9.
+- 2026-11-23 02:54 PST DONE [CLASS-FIX-RHI] ot-run oth-ubuntu-3453660-1795430406 on tolerant-swine: rc=0 after 869 s, ended 02:54:31, log /srv/opentallas-scratch2/claude/class-fix-rhi/h_epyc10.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/class-fix-rhi/scan --stage /srv/opentallas-scratch2/claude/kw43-wa
