@@ -162,3 +162,4 @@
   - The probe or the verify cannot run: Refused. It never substitutes.
   Real dry run on PV-R7's epyc8 d28_v3e_spine fork -> epyc10: the old rt picked the kv-plan-r6 selected_candidate seal copy; the new one takes the plain fetch. Test: tools/fleet/test_ot_tree_fork_identity.py; the 20 ot-tree-fork tests pass.
   The plan-sha check from the 5b95db0d3f warning stays in force until rt/current reaches cb81c8b87a1. After that, a --src-host fork of an edited tree is a full fetch: slower, but correct.
+- 2026-11-22 21:00 PST DIED [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2807445 on civil-redfish: rc=4 after 153 s, ended 05:00:42, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_dr.log, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/autopilot/test_kit_wave.py::Step::test_canary_lifetime_cap_and_type_args
