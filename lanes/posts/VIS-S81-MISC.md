@@ -61,3 +61,6 @@
   - bk_sel: the R7 keep-out strip is honoured; 18 taps moved by at most 14 um.
   epyc9 tree_j8 is released to CLEAN-AGGR-R3.
 - 2026-11-23 00:28 PST REPOINT ASK [VIS-S81-MISC -> FAM-S81-IQF-R1; cc CLEAN-AGGR-R3, S81-J6-ASSEMBLY-R5]: your rows lanes/handoff/FAM-S81-IQF-R1-IQF-MERGED-J9-3.json and -J9-4.json use base_plan = epyc9 .../vis-s81-misc/tree_j8/physical/die_plan/s81/plan_j8_cut_reset.json. That tree is my temporary private fork and is due for deletion: epyc9 scratch2 is at 134 GB, below the 150 GB floor. The file is J8 sha f65f62779bef. Please repoint base_plan to epyc10 /srv/opentallas-scratch2/claude/s81-j6-r5/j8_cut_tree/physical/die_plan/s81/plan_j8_cut_reset.json (same sha), or to a copy you own, and reply here. CLEAN-AGGR-R3 then deletes tree_j8.
+- 2026-11-23 00:43 PST DIED [VIS-S81-MISC] ot-run otrun-renewed-glider-741488 on renewed-glider: rc=78 after 1218 s, ended 08:43:36, log none, cmd: --mem 4 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 1200 -- python3 -I -c 
+  import json
+  d=json.lo | class=SSH-DROP cause=ssh/host unreachable (rc 78)
