@@ -22,6 +22,23 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 17:45 PST after the weekly limit (CURRENT; blocks below are history)
+- hg kits kv3_hg_v1p2 / kv3_hg (units fkd-kit-hgv1p2-1122 / fkd-kit-hg-1122) FAILED at gen_lint 08:52: rtl_check
+  qkd_ectl3_kiss_st_cols__columns_built_for_other_params. CAUSE (read from files): binds since D27d3 (D27d3 bind_of_record, gate_a1 / gate_b3,
+  plan lane rh1 + rh12_rebind) instantiate qkd_ectl3_kiss_st_cols with QK_ISSUE_AGE 42 / RESPONSE_LAT 31; the signed qkd_ectlk_q0..q3 views
+  (plan lef/lib physical/die_plan/qwen_kvsys/kvhg1_views_1116/qkd_ectlk_q<k>/, guard CORE_QK 37 / CORE_RL 26 in
+  cores/harden/ectlk_q/qkd_ectl3_kiss_st_cols.sv) were built at 37/26 (D26 bound 37/26). ALL 8 hg types (32 partitions) stop at GEN on
+  D27d3 and D28 until the 4 quarter cores are rebuilt at 42/31. Do NOT relaunch hg kits before that.
+- Rebuild inputs: the 11-16 signed kits (epyc10 fable-fix-kv-pv-ectlk/q<k>_m10_p2) are DELETED on every host; only final views survive
+  (rtx-pro ~/signed-export-1114/Qwen_ROM/qkd_ectlk_q0: 6_final.odb/def/spef/v + signoff.json; intel2 kv-ectlk-rl-cores37/q0,q1,q3 = run/
+  residue only). So new kits must be generated: cores/harden/ectlk_q_corejson.py -> core.json, gen_core_kit_kv.py --core-json ... --plan ...,
+  -G QK_ISSUE_AGE=42 RESPONSE_LAT=31 (KV-ECTLK-RL handoff 11-15 describes the parameter-only rebuild), run_kit_kv.sh route, signoff, then
+  CORE_QK/CORE_RL = 42/31 + new view dir + hard_cores lef/lib rows on the 8 hg types. About 128k cells per quarter.
+- io_cor_v1 kit (fkd-kit-iocor-1122): placed, CTS done, in GRT since 17:13; auto-geom FAIL is advisory. Durable waiters on grt and route:
+  ot-wait --durable --kit <work>/gen/kv3_io_cor_v1 --host epyc8 --stage grt|route. Kit rt contains 36d0a6df8f6: leave alone.
+- Gate-D poll (fkd-rearm-gate-d) still active; plan lane rh10 bind had 30 R8_STALE at 17:20; KV-PLAN-R6 resumed 17:25 and is sealing D28.
+- Rows in the D28 intake unchanged: R1, R1b, R5, R5c, R6 (dry13 applied all).
+
 ## State 08:50 PST (COORD 08:4x: three tasks; this block is current, the 08:40 block below still holds for rows / gates)
 - KITS (sealed, --goal route, from tree_a = gate_b3 plan 01eb79c44cd6; gen host epyc8 only because the tree is there; nothing pinned):
   kv3_hg_v1p2  unit fkd-kit-hgv1p2-1122  spec ~/coord/autopilot/private_specs/FABLE-KV-DIE/qwen_kvsys_kv3_hg_v1p2_1122083950  work .../private/FABLE-KV-DIE/kv3_hg_v1p2_1122083937
