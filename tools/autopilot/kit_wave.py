@@ -16027,6 +16027,10 @@ def reap_ghost_rows(AP, cfg, st, notices, now=None, minutes=GHOST_MIN, jobs=None
             out[r["die"]] += 1
         else:
             j = own_job(r, jobs)
+            # The wave's RUNNING cache can outlive the queue signoff. follow_queue
+            # reads the exact receipt after this pass and then counts the item.
+            if j.get("status") in ("SIGNED", "SIGNED-UNVERSIONED", "ARCHIVED", "TRIAL-SIGNED"):
+                continue
             if j.get("unit") and active.get(j["unit"], False):
                 continue
             queue_rows.append((k, r, age_m, j))
