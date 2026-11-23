@@ -47,3 +47,4 @@
   - sle_su_l1 cl5ea486db: REASONED, live private kit in DRT (CTS -67.48).
   - glue: G3/G4 taps sealed after the C4 kickoff -> REASONED (AP 05ca36 routed TT -72.9 after ECO, internal FF 0 viol).
   - rc112: REASONED, accepted 02:26.
+- 2026-11-23 10:50 PST DONE [QC-V4] ot-run oth-ubuntu-3277884-1795459839 on outgoing-giraffe: rc=0 after 254 s, ended 18:50:47, log none, cmd: --hosts epyc8 --mem 16 --threads 1 --disk 1 --dir /srv/opentallas-scratch2/claude/QC-V4 -- python3 -I /srv/opentallas-scratch2/claude/QC-V4/
