@@ -25,3 +25,21 @@ Work: local scratch /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-
 - QC-DIE-SEAT-1 doc: lanes/handoff/VIS-QC-QC-DIE-SEAT-1.md (DIE-1 dropped). RC-GAP reply posted 1315acab (11 gaps, row or reason). VIS-COVERAGE: 45 rows -> +QC-DIE-SEAT-1, STA-1 -> STA-2 (733d27c).
 - Chains (all survived): sta2 intel1 sta1/logs/chain_sta2.log (PLAN 203d8a7f576f); cb1d epyc2 cb1/logs/chain_cb1d.log (b7eadc0810be); cb1s intel1 cb1s/logs/chain_cb1s2.log (ff8e792599a8). Waiter bgrd7hvqv.
 - On pass: intel2 ~/visqc_probe.sh ITEM HOST TREE BINDOUT TAG -> sta2: slw_st_a_v2__cl9f076a5c + clf4365a62 (intel1 sta1/tree, sta1/sta2/bind); cb1d: cbn_q01__cldd6ea846 + cbf_q01_s2 (epyc2); cb1s: cbn_q00__cl622f65d2. Then census-rule self-review. TARGET: V4 only (cut 14:00, rows GATED by 13:00; no V5, post 6079af4).
+
+## 03:5x PST 11-23
+- Rows delivered to V4-R2 (base c2b 4ee5a470fef2), all in epyc2 /srv/opentallas-scratch2/claude/VIS-QC/fefw1/:
+  - FEFW-1 row_fefw1.json (ec5259b742df): in c3.
+  - SU-2 row_su2.json (6c198f9a7419) and SU-1 row_su1.json (99e4719d32c1): staged for c4.
+  - slw_fe_v2 and sle_su_l1 E channel: REASONs (single leaf; ft-width-bound, growth by SLWSLE probe before 12:00).
+- Static gates on epyc8 VIS-QC/{fefw1g,su2g,su1g}: all latency 0 changed; FEFW-1 PGP rc 0; G0 and remaining PGPs still running.
+- cb1d: G0 PASS, but the bind was REFUSED by PGP on st_a only (stale STA-1 + tap names); cb/coll have 0 findings. sta2 and cb1s were stopped (same stale st_a tables). The gate of record is V4-R2s c2b/c3n.
+
+## 03:5x PST 11-23
+- Rows delivered to V4-R2 (base c2b 4ee5a470fef2), all in epyc2 /srv/opentallas-scratch2/claude/VIS-QC/fefw1/:
+  - FEFW-1 row_fefw1.json (ec5259b742df): in c3.
+  - SU-2 row_su2.json (6c198f9a7419) and SU-1 row_su1.json (99e4719d32c1): staged for c4.
+  - slw_fe_v2 and sle_su_l1 E channel: REASONs (single leaf; ft-width-bound, growth by SLWSLE probe before 12:00).
+- Static gates on epyc8 VIS-QC/{fefw1g,su2g,su1g}: all latency 0 changed; FEFW-1 PGP rc 0; G0 and the other PGPs still running.
+- cb1d: G0 PASS, but the bind was REFUSED by PGP on st_a only (stale STA-1 + tap names); cb/coll have 0 findings. sta2 and cb1s were stopped (same stale st_a tables). The gate of record is V4-R2 c3 (old rt) / c3n (rt 0d6ca1628921).
+- New probe bind cb1F on epyc2 (plan_cF 91077cd30398 = CB-1 + FEFW-1, V3 st_a; rt f01b includes the DPL fix f60d28), log cb1/logs/chain_cb1F.log. Then probes cbn_q01 cldd6ea846, cbf_q01_s2, sle_fw_v2 cl69f5e854.
+- st_a probe: fork epyc8 fable-fix-qc-v4/c3n_bound ONLY after "LATCHECK complete" in c3n_bind.out (V4-R2 ok).
