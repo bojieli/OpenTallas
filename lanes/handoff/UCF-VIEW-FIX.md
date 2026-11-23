@@ -12,3 +12,9 @@
 - epyc10/intel2/epyc9 /srv/opentallas-scratch2/claude/ucf-view-fix/sync/ucf_view_sync.sh TREE [--check]; sources view_31c7ccbd1b/ (sha-pinned). cp+mv only.
 ## Clone
 - epyc9 /srv/opentallas-scratch2/claude/ucf-view-fix/repo (sparse, main 9ae5a0cb7c).
+## 04:0x update (COORD ruling: I own the probe; FIX-S81-UCF-VIEW cancels its copy; J9 carries row 3i, the probe is evidence only)
+- epyc9/epyc7 waiters killed by exact PID (never started). Single probe: intel2 unit oth-ubuntu-2670192-1795435218, 32 thr,
+  /srv/opentallas-scratch2/claude/ucf-view-fix/probe_p3 (out/route.log, out/5_route_drc.rpt-N). Master OBS 16210 -> 20817.
+- TODO at it60: post u_cf count to R5, H9R0-R4, FIX-LEDGER (+SendMessage adfaf0f3fdaedfc9f, a5e1bcda8cb082c39, acd269758d3b62a53);
+  render (scratch render.py kit LEF, main LEF, old rpt, new rpt). If V3/M4 shorts at u_cf appear -> M3-shadow variant into J9.
+- Staged odb copies (880 MB) in epyc7 + intel2 probe_p3/in: ot-delete when done.
