@@ -1,0 +1,149 @@
+{
+ "die": "qwen_kvsys",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg15_48b92c30_t4e46a7ec_d27d3",
+  "event": "KV-D27d3",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg15_48b92c30_t4e46a7ec_d27d3/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "plan_sha256": "48b92c30c8f6a6e88500ce6812ca02ed6745bfc280e0f4b04763d1f90c0872c9",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/portable_bind_transport",
+   "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
+  }
+ },
+ "marker": {
+  "die": "qwen_kvsys",
+  "tree": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate",
+  "manifest_hash": "302e13c28f5a68dc8af2b1bb0cd2b2120e2bcfe348940846b58c2baa3a30b0b3",
+  "src_manifest_sha": "302e13c28f5a68dc8af2b1bb0cd2b2120e2bcfe348940846b58c2baa3a30b0b3",
+  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "hosts": [
+   "epyc8",
+   "epyc7",
+   "intel1",
+   "epyc2",
+   "epyc9",
+   "epyc10"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "KV-D28 rh12 plan 44c3cbf51e50 (isolated, sealed 302e13c28f5a): RC_PRECHECK 0 bind_fast precheck: no OUT/asbuilt.json (elab not run): ROWSINK and the elab half of MODULES skipped BIND- RC_PRE 0 PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selec RC_G0 0 G0 PASS: 0 errors, 0 pending-view, 2725 warnings; 57 types / 161 partitions (19 in near-duplicate groups); worst RC_ELAB 0 {\"modules\": 74, \"full_files\": 3, \"lib_files\": 39, \"ambiguous\": 0, \"undefined\": 0, \"substituted\": [{\"orig\": \"qk RC_BIND 0 {\"partitions\": 161, \"types\": 57, \"crossings\": 2576, \"crossing_bits\": 433684, \"errors\": 0, \"unbound\": 0, \"tied\" RC_R8CHECK 1 R8 FAIL {\"groups\": 3009, \"groups_unequal\": 32, \"inversions\": 0, \"landed_bundles\": 0, \"landed_over_margin\":  RC_LATCHECK 0 LANE_ASBUILT WARN INTERNAL_PIPE_UNACKED (owner S81-DIE-R3, next S81 event): 151491 declared internal-pipe  RC_BPC 0 BOUND-PARAM-CHECK PASS modules=67 params=570 errors=0 warnings=24 undefined_modules=0 ; seal gate + dual kit_rtl/topology OK (post_transport/seal_gate); cut_ledger seal rc 0 (autopilot/CUT-LEDGER-KV-D28.tsv, 19 rows); pair transport-only f687b2bde70f K-C -8; rt bc9603f67b09",
+  "plan": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "plan_sha256": "44c3cbf51e50d3ce440376b80aa2a00a4e0704053aa6f62b8c3bbe9cb7df8164",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+  "asbuilt_sha256": "3e78cb28f45ebf481f3a26e249f136d6edd3a5ff8b7c262ac0cf36d0f98287de",
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate_bind_1120113734",
+  "sidecar": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+  "sidecar_sha256": "4d262af530bf8426cf82e3070dfdcd1ebba55f14493d447b84e896cd6353bede",
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_KV_HEAD_KST": "2",
+   "OT_PLACE_MAX_TRANSITION": "320"
+  },
+  "config": {
+   "event": "KV-D28",
+   "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "tools_sha": "bc9603f67b09f72b32a57bc7d5cd36a20d35e80f",
+   "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "plan_sha256": "44c3cbf51e50d3ce440376b80aa2a00a4e0704053aa6f62b8c3bbe9cb7df8164",
+   "gen_hosts": [
+    "epyc8",
+    "epyc7",
+    "intel1",
+    "epyc2",
+    "epyc9",
+    "epyc10"
+   ],
+   "gen_host": "epyc8",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/portable_bind_transport"
+   },
+   "gate": {
+    "g0c": "PASS",
+    "bind": "POST-APPLY r712 (linked copy, kits relaunched on its result)",
+    "clock": "PASS",
+    "evidence": "KV-D28 rh12 plan 44c3cbf51e50 (isolated, sealed 302e13c28f5a): RC_PRECHECK 0 bind_fast precheck: no OUT/asbuilt.json (elab not run): ROWSINK and the elab half of MODULES skipped BIND- RC_PRE 0 PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selec RC_G0 0 G0 PASS: 0 errors, 0 pending-view, 2725 warnings; 57 types / 161 partitions (19 in near-duplicate groups); worst RC_ELAB 0 {\"modules\": 74, \"full_files\": 3, \"lib_files\": 39, \"ambiguous\": 0, \"undefined\": 0, \"substituted\": [{\"orig\": \"qk RC_BIND 0 {\"partitions\": 161, \"types\": 57, \"crossings\": 2576, \"crossing_bits\": 433684, \"errors\": 0, \"unbound\": 0, \"tied\" RC_R8CHECK 1 R8 FAIL {\"groups\": 3009, \"groups_unequal\": 32, \"inversions\": 0, \"landed_bundles\": 0, \"landed_over_margin\":  RC_LATCHECK 0 LANE_ASBUILT WARN INTERNAL_PIPE_UNACKED (owner S81-DIE-R3, next S81 event): 151491 declared internal-pipe  RC_BPC 0 BOUND-PARAM-CHECK PASS modules=67 params=570 errors=0 warnings=24 undefined_modules=0 ; seal gate + dual kit_rtl/topology OK (post_transport/seal_gate); cut_ledger seal rc 0 (autopilot/CUT-LEDGER-KV-D28.tsv, 19 rows); pair transport-only f687b2bde70f K-C -8; rt bc9603f67b09"
+   },
+   "planned_events": [
+    "KV-7uh",
+    "KV-7y",
+    "KV-HG1",
+    "KV-PCDELTA",
+    "KV-PCV3-R8",
+    "KV-PVSPLIT",
+    "kvgeom7yhr",
+    "KV-HG3",
+    "KV-HG5",
+    "KV-D22",
+    "KV-D23",
+    "KV-D23H",
+    "KV-D24",
+    "KV-D25e3",
+    "KV-D26",
+    "KV-D27d3"
+   ],
+   "gen_env_outside_allow": [],
+   "die_gen_env": {
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0",
+    "OT_PREGRT_FF_HOLD_AUTO": "-1",
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0",
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_GRT_ALLOW_CONGESTION": "1",
+    "OT_CLAND_STRIP_DENS": "1.0",
+    "OT_TT_SETUP_REPAIR": "both",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PGCAP": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "1",
+    "OT_KV_HEAD_KST": "2",
+    "OT_PLACE_MAX_TRANSITION": "320"
+   },
+   "review_before_route": {
+    "event": "KV-D28",
+    "all_items": true,
+    "required": true
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ]
+  },
+  "written_by": "root-authorized lane atomic apply",
+  "status": "ADOPTED reviewed tuple"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/f95a82e3495e60f5f4c16077e8a2a737b9f55b4a737fbcab5865ef2bd7188434/result.json",
+ "candidate": "/home/ubuntu/tmp/kvplanr6/cand_d28.json",
+ "optimistic": true,
+ "warnings": [
+  "review_before_route.required dropped (owner rule: visual review never blocks; the review stays advisory)",
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/qwen_kvsys/302e13c28f5a68dc8af2b1bb0cd2b2120e2bcfe348940846b58c2baa3a30b0b3.json (run tools/autopilot/publish_gate.py run on this candidate first)",
+  "ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}"
+ ]
+}
