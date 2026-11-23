@@ -1,0 +1,8 @@
+# KV D28 PV v3n and v4n placement review
+
+Codex viewed both exact attempt 1 placement renders on 2026-11-23 at 07:17 PST. Both verdicts are **FAIL**. These placement-stage reviews are for the inherited D28 attempts.
+
+- v3n image `epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/items/kv3_pv_v3n/geom/auto_geom.png`. The vertical strip near x=1070 µm packs cells and tap groups through the central macro seam. The strip is much denser than the side channels. North and south face pin concentrations leave four partial-face groups. South M5 peaks at 12.4 pins/µm. The adjacent census measures a 2325.46 µm register hop, 2130 collapsed relay chains, 1843.69 µm to the farthest sink's assigned driver, and 6260 sinks on the largest tap.
+- v4n image `epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/items/kv3_pv_v4n/geom/auto_geom.png`. The x≈1100 µm seam and southwest tap cluster remain dense while the large side areas are sparse. South M5 peaks at 13.3 pins/µm. Four partial-face groups remain. The census measures a 1418.53 µm register hop, 904 collapsed relay chains, 1847.37 µm to the farthest sink's assigned driver, and 12361 sinks on the largest tap.
+
+Both are above the CAD capacity target at 514383 and 496135 placed standard cells, respectively. D29 needs the functional PV split, with landing and relay registers near each child face and clock taps assigned to local groups. Reserve routable space through the seam before placing the new pair. Confirm pin alignment and PDN continuity in the revised plan and review that plan and its placement before further route.
