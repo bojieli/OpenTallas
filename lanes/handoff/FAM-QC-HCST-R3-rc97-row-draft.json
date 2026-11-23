@@ -1,0 +1,9 @@
+{"lane":"FAM-QC-HCST-R3","ledger":"rc97 / hg-QC-REACH","status":"ROW DRAFT (PRE due 10:00, GATED or REASONED 13:00)",
+"row":{"kind":"view_swap_read_pipe","view":"qfd_dv_s5_btab_s4 -> qfd_dv_s5_btab_s4r","effect":"+1 cycle on bt_q: SRAM rd_out captured in a 1024-bit stage register at the btab face, then bank AND-OR + q flop",
+ "types":"st_a types holding the closed s4 view (pvd2ec7769, pv88773f93, pv4242de79 first)",
+ "rtl":"rtl/qwen_dv/s5/qfd_dv_s5_btab_s4r.sv (main c3253c09fc); consumers: BT_LAT=2 on the 8 station regions (patch lanes/handoff/FAM-QC-HCST-R3-btab_s4r-consumers.patch, ifdef OT_BTAB_S4R, default off)",
+ "views":"physical/ref_tile/qfd_dv_s5_btab_s4r and qfd_dv_slice2_stnrgc_bt2 (BT_LAT=2) on main, default off; routes running on intel1"},
+"measured":{"rtl_equivalence":"iverilog 560-cycle random bench, 142 nonzero samples: s4r == s4 delayed 1 cycle, 0 mismatches",
+ "current_arc":"SRAM -> AND-OR(4:1) -> g_read.q: -58..-81 ps at CTS, -207 routed (FABLE report)"},
+"estimate_NOT_MEASURED":"removing the AND-OR from the SRAM->flop arc takes the logic delay off that path; if the AND-OR plus select fanout is >= ~60-80 ps of the arc it closes the CTS number to >= -42 ps, but the routed -207 would also need the wire part to shrink; this cannot be confirmed before the btab_s4r tile 4_cts_post_hook.rpt exists",
+"open":["btab_s4r route not yet admitted/finished","strict bind + LATCHECK with consumer patch on st_a types not run","LEC of the tile after harden","latency contract update for +1 cycle not written","station fallback: +1 register station on the btab face if tile route misses -42 ps"]}
