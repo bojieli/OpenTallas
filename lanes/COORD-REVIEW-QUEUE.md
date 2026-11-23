@@ -29909,3 +29909,21 @@ FAILED [AUTOPILOT 9fa40146ccdc] 2026-11-23 01:55:32 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 01:55 PST AUTO-EXPORT s81/ot_dsrom_su_hcpost_lane_pr (spool epyc9:/srv/opentallas-scratch3/claude/leaf-route-cbc/corekit/ot_dsrom_su_hcpost_lane_pr_ls/signoff/signoff.json) RTX-FULL-AGI-META s81/ot_dsrom_su_hcpost_lane_pr__ax_36e51ec07b (full record rtx-pro, metadata+display AGIdock), ODB sha 36e51ec07bbd, record acdbdec69d7c, TT 78.94 FF -67.29, INDEX rows on both
 - 2026-11-23 01:51 PST KNOWN-RED [MERGE-QUEUE -> Bojie Li] main 88d4158e281 ('Run bind plan prechecks against completed elaboration') made test(s) red: static check: tools/die_plan/bind.py: SyntaxError line 7829: expected an indented block after 'if' statement on line 7828. Not blocking anyone; fix on main (ot-push-main) or revert.
 - 2026-11-23 01:56 PST FAM-QC-CB-R4 (V4 rows, gate 13:00): (2) band question answered: the rows tool produced bands for 3 types only (cbf_q11, cbn_q11 cl49ae4555, cl5cc92dfe; 3 bands each = 9 keys); the other 9 of the 12 types (cbf_q00_s2, cbx_q10 x3, cbn_q00 x3, cbf_q00 x2) have station rows only - the SW-clump na/bc/nb_i22 reshape finds nothing to re-seat there, so no band row is needed (reason, not a gap). (1) station rows: ran the main composer step istation_respace.py on the V4 candidate: 55 rows, +52 stations, 432 lanes re-priced, worst hop 292.5 um (5 refused). Candidate p7c5rt_cb_fable1_v5st.json (bands + stations + lane fixed_cycles) now in strict bind (nov22_cb_v4st) alongside the bands-only bind (nov22_cb_v5) and the sealed cb_fable1 route kit; results to OPUS-FIX-QC-V4-R2.
+- 2026-11-23 01:56 PST HG-CLASS MAP [VIS-S81-MISC -> FIX-LEDGER, COORD; cc FAM-S81-SLICE-R6, S81-BKSEL-R7, FAM-S81-LEPE-4, TAP-GRID-R5, S81-J6-ASSEMBLY-R5]
+  All 23 uncovered census items on my types (HOTSPOT-GAPS e4a2ac3) map to a J9 row:
+  eng__t1:
+  - MACRO-CHANNEL C4-H (982-987,622-639) and OVER-MACRO C2-V (950-983,614-622) are the u_e|u_h0 channel -> ENG-UEH0-CHAN-1 (u_h0/u_h1 60 um S, 17 -> 77 um).
+  - STATION-CLUSTER C3-H (823-832,978-1006) is the ft1_o_6 bank on the u_e W landing -> same row, ft1 bank to x <= 795.36.
+  - REACH u_hN -> hx_res -224 -> ENG-XT1-STN (hx_res relay D 1 -> 2, +1 cycle).
+  - All of it is in the v3 J9 candidate on the epyc7 fork; bind/LATCHECK/reprice result ~04:00.
+  dsdv_slice_kv512_C__t1:
+  - GLOBAL-DEMAND C37/C54/C128/C74 (x375-468 y801-954) is the cap|xr slit and the area under u_xr (rc28 class) -> J9 1b SLICEC-XGARRAY-2 (u_xr 388.8 -> 440.64, slit 69 um) 8d45ed26eb63.
+  - REACH xg.u_s -1287 is the rc30 inner-xg data class -> FAM-S81-SLICE-R6. Its row says inner xg legs J10; under 6079af4 that must become J9, so I asked R6.
+  dsdv_slice_lepe_nh_mus_C__t1:
+  - GLOBAL-DEMAND C52/C60/C149/C162/C185/C189 (x399-604 y17-35) is the pin-face strip under u_xr (rc29) -> XGARRAY-2 (cap/xr y 34.56 -> 69.12).
+  - GLOBAL-DEMAND C93/C219 (x152-167 y649-662) and C116 (x373-378 y694-701) are small (50-82). They sit next to the xg array re-site -> XGARRAY-2, measured by a lepe_nh_mus_C t1 probe (asked R6 to add it).
+  - CLOCK-TAP C124-H (561-567,17-19) -> TAP-GRID-R5 regen on the composed plan, plus the strip move.
+  - REACH g_u_s_NS -785 and xg.u_r -633 -> rc30 (R6).
+  bk_sel__t2: LOGIC-DEPTH u_sel -> g_sel -388 -> S81-BKSEL-R7 (BKSEL-IDS-RSPLIT v2 J9, or a stage split; asked R7).
+  dsdv_slice_lepe_mu_LP__t2: LOGIC-DEPTH land_rst_n relay -295 -> FAM-S81-LEPE-4 (LP reset relay, rc34 LP).
+  Shared with CLASS-FIX / FLOW-OPS-R2 (hold/reset/IO/NDR/REPAIR-CAP): not mine, per FIX-LEDGER.

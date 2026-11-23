@@ -97,3 +97,21 @@
   bk_sel -604 lp_q->u_vm.r: covered by S81-BKSEL-R7, which is adding the stage. We are not duplicating it; my worker is confirming with R7 that the stage covers the 584-um hop.
   Also: the VIS-DIE G0 illegal-tap errors on clk_t38 likely come from my v2 eng tap; my worker is fixing it in v3.
 - 2026-11-23 01:30 PST CORRECTION [VIS-S81-MISC -> COORD, VIS-DIE-S81]: the G0 illegal-tap errors on clk_t38 are NOT from my eng row. They come from VIS-DIE-S81's own leaf tap-fix grow plan (plan_j8_grow.json; tapfix_report.json move ot_s81sl_leaf__t57 clk_t38 [583.2,1192.728] -> [589.68,1192.728]). eng__t1 is not in tapfix_types. My eng clk_t38 ([836.45,865.51]) passes taps.explicit_tap_sites and PRE, and the name is unique in eng (J8 eng taps go up to clk_t37). No eng change.
+- 2026-11-23 01:56 PST HG-CLASS MAP [VIS-S81-MISC -> FIX-LEDGER, COORD; cc FAM-S81-SLICE-R6, S81-BKSEL-R7, FAM-S81-LEPE-4, TAP-GRID-R5, S81-J6-ASSEMBLY-R5]
+  All 23 uncovered census items on my types (HOTSPOT-GAPS e4a2ac3) map to a J9 row:
+  eng__t1:
+  - MACRO-CHANNEL C4-H (982-987,622-639) and OVER-MACRO C2-V (950-983,614-622) are the u_e|u_h0 channel -> ENG-UEH0-CHAN-1 (u_h0/u_h1 60 um S, 17 -> 77 um).
+  - STATION-CLUSTER C3-H (823-832,978-1006) is the ft1_o_6 bank on the u_e W landing -> same row, ft1 bank to x <= 795.36.
+  - REACH u_hN -> hx_res -224 -> ENG-XT1-STN (hx_res relay D 1 -> 2, +1 cycle).
+  - All of it is in the v3 J9 candidate on the epyc7 fork; bind/LATCHECK/reprice result ~04:00.
+  dsdv_slice_kv512_C__t1:
+  - GLOBAL-DEMAND C37/C54/C128/C74 (x375-468 y801-954) is the cap|xr slit and the area under u_xr (rc28 class) -> J9 1b SLICEC-XGARRAY-2 (u_xr 388.8 -> 440.64, slit 69 um) 8d45ed26eb63.
+  - REACH xg.u_s -1287 is the rc30 inner-xg data class -> FAM-S81-SLICE-R6. Its row says inner xg legs J10; under 6079af4 that must become J9, so I asked R6.
+  dsdv_slice_lepe_nh_mus_C__t1:
+  - GLOBAL-DEMAND C52/C60/C149/C162/C185/C189 (x399-604 y17-35) is the pin-face strip under u_xr (rc29) -> XGARRAY-2 (cap/xr y 34.56 -> 69.12).
+  - GLOBAL-DEMAND C93/C219 (x152-167 y649-662) and C116 (x373-378 y694-701) are small (50-82). They sit next to the xg array re-site -> XGARRAY-2, measured by a lepe_nh_mus_C t1 probe (asked R6 to add it).
+  - CLOCK-TAP C124-H (561-567,17-19) -> TAP-GRID-R5 regen on the composed plan, plus the strip move.
+  - REACH g_u_s_NS -785 and xg.u_r -633 -> rc30 (R6).
+  bk_sel__t2: LOGIC-DEPTH u_sel -> g_sel -388 -> S81-BKSEL-R7 (BKSEL-IDS-RSPLIT v2 J9, or a stage split; asked R7).
+  dsdv_slice_lepe_mu_LP__t2: LOGIC-DEPTH land_rst_n relay -295 -> FAM-S81-LEPE-4 (LP reset relay, rc34 LP).
+  Shared with CLASS-FIX / FLOW-OPS-R2 (hold/reset/IO/NDR/REPAIR-CAP): not mine, per FIX-LEDGER.
