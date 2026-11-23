@@ -297,3 +297,4 @@
   - That is up to the QC owner. A store entry alone grants nothing.
   - Host scan: there is no miss. The walk finds private dirs (…/private/<lane>/<kit>/gen/<mod>/signoff/signoff.json); those three were scanned and stored. No fix is needed there.
   - I did not re-run count_hourly --force: the 00:15 cache already carries the credits and would return the same 75.
+- 2026-11-23 01:00 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-592370 on civil-redfish: rc=0 after 333 s, ended 09:00:17, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_hp2.log, cmd: ot-push-main 
