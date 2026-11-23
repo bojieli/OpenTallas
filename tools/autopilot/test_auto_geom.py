@@ -85,6 +85,20 @@ class TestRules(unittest.TestCase):
         m = self._metrics(str(self.base(far=150.0)), odb="3_place.odb")
         self.assertEqual([r["status"] for r in G.judge(m, None, [200, 200])[0] if r["rule"] == "grt"], ["NA"])
 
+    def test_deliberately_deferred_grt_is_explicit_but_unmeasured(self):
+        metrics = self._metrics(str(self.base(far=150.0)), odb="3_place.odb")
+        rules, _ = G.judge(metrics, None, [200, 200])
+        grt = next(rule for rule in rules if rule["rule"] == "grt")
+        self.assertEqual(grt["status"], "NA")
+
+        metrics.update(grt_deferred=True, grt_note="GRT deferred until exact placement review")
+        rules, verdict = G.judge(metrics, None, [200, 200])
+        grt = next(rule for rule in rules if rule["rule"] == "grt")
+        self.assertEqual(grt["status"], "INFO")
+        self.assertIsNone(grt["value"])
+        self.assertIn("deferred", grt["detail"])
+        self.assertNotIn("grt=NA", G.verdict_line(verdict, rules))
+
     def test_clock_entry_on_macro_and_cells_on_macro(self):
         carpet = [c for c in fill_cells(100, 3600) if not (60 < c[1] < 140 and 60 < c[2] < 140)]
         carpet.append((99, 100, 100))                          # one std cell on the macro

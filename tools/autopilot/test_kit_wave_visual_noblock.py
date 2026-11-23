@@ -60,6 +60,21 @@ def test_route_mode_visual_hold(monkeypatch):
     assert K.visual_hold(cfg, dict(rec)).startswith("WAIT-FORM")
 
 
+def test_placed_geometry_defers_routing_only_in_captured_takeover_spec():
+    spec = {"item": "t1", "event": "J", "geom_mem_gb": 24}
+    checkpoint = "/exact/3_place.odb"
+    inherited = K.placed_geom_check(spec, checkpoint, "10x20")
+    assert inherited["grt"] is True
+    assert "--grt-deferred" not in inherited["rules_args"]
+
+    placed = K.placed_geom_check(dict(spec, geom_grt_deferred=True), checkpoint, "10x20")
+    assert placed["grt"] is False
+    assert placed["odb"] == checkpoint
+    assert placed["rules_args"] == ["--all-kits", "--outline", "10x20", "--title",
+                                    "t1 KIT-WAVE J 3_place", "--grt-deferred"]
+    assert placed["grt_wall_s"] == inherited["grt_wall_s"]
+
+
 def test_takeover_requires_viewed_exact_attempt_after_auto_geom(monkeypatch, tmp_path):
     monkeypatch.setenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", "1")
     monkeypatch.setattr(K.Path, "home", lambda: tmp_path)
