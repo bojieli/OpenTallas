@@ -1,0 +1,426 @@
+{
+ "schema": "vis-s81-misc.row.v1",
+ "lane": "FAM-S81-IQF-R1+VIS-S81-MISC",
+ "row": "IQF-MERGED-J9-4",
+ "type": "iqf__t1",
+ "base_plan": "/srv/opentallas-scratch2/claude/vis-s81-misc/tree_j8/physical/die_plan/s81/plan_j8_cut_reset.json",
+ "base_plan_sha": "f65f62779bef",
+ "status": "DRAFT",
+ "ops": [
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t47",
+    "xy": [
+     1415.841,
+     621.211
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t48",
+    "xy": [
+     1415.913,
+     690.936
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t49",
+    "xy": [
+     945.334,
+     783.718
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t50",
+    "xy": [
+     1016.533,
+     762.119
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t51",
+    "xy": [
+     1032.796,
+     797.956
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t52",
+    "xy": [
+     259.998,
+     1197.655
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t53",
+    "xy": [
+     344.109,
+     1195.834
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t54",
+    "xy": [
+     393.481,
+     1196.009
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t55",
+    "xy": [
+     479.975,
+     1196.395
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t56",
+    "xy": [
+     619.437,
+     1179.677
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t57",
+    "xy": [
+     927.519,
+     1196.441
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t58",
+    "xy": [
+     998.415,
+     1195.247
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t59",
+    "xy": [
+     1040.713,
+     1195.168
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t60",
+    "xy": [
+     1111.931,
+     1194.111
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t61",
+    "xy": [
+     1038.32,
+     736.319
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t62",
+    "xy": [
+     1050.459,
+     793.697
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/clock/taps/-",
+   "value": {
+    "name": "clk_t63",
+    "xy": [
+     507.915,
+     1194.887
+    ]
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/internal_stations/-",
+   "value": {
+    "conn": "bus:ql_i0",
+    "launch": "u_bound.u_cland_ql_i0/u_ring.dch.u_dsel/y",
+    "capture": "u_bound.u_bin_ql_i0",
+    "from_um": [
+     516.83,
+     1183.89
+    ],
+    "to_um": [
+     963.56,
+     796.22
+    ],
+    "regs_um": [
+     [
+      794.96,
+      1183.89
+     ],
+     [
+      963.56,
+      1074.35
+     ]
+    ],
+    "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 918 um max over 405 on 513 bits; 2 station(s), hop 278 um; +2 cycle(s) pre-approved"
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/internal_stations/-",
+   "value": {
+    "conn": "bus:idx_i0",
+    "launch": "u_bound.u_cland_idx_i0/u_ring.dch.u_dsel/y",
+    "capture": "u_bound.u_bin_idx_i0",
+    "from_um": [
+     1416.36,
+     649.56
+    ],
+    "to_um": [
+     1039.19,
+     729.27
+    ],
+    "regs_um": [
+     [
+      1187.92,
+      649.56
+     ]
+    ],
+    "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 529 um max over 405 on 447 bits; 1 station(s), hop 228 um; +1 cycle(s) pre-approved"
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/internal_stations/-",
+   "value": {
+    "conn": "bus:qc_o0",
+    "launch": "u_bound.u_core.qc",
+    "capture": "u_bound.u_bout_qc_o0",
+    "from_um": [
+     1017.51,
+     809.17
+    ],
+    "to_um": [
+     605.19,
+     1221.17
+    ],
+    "regs_um": [
+     [
+      742.74,
+      809.17
+     ],
+     [
+      605.19,
+      946.4
+     ]
+    ],
+    "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 920 um max over 405 on 258 bits; 2 station(s), hop 275 um; +2 cycle(s) pre-approved"
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/internal_stations/-",
+   "value": {
+    "conn": "bus:idx_o0",
+    "launch": "u_bound.u_core.u_qf.qr",
+    "capture": "u_bound.u_bout_idx_o0",
+    "from_um": [
+     1026.37,
+     770.25
+    ],
+    "to_um": [
+     1436.85,
+     748.09
+    ],
+    "regs_um": [
+     [
+      1242.69,
+      770.25
+     ]
+    ],
+    "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 494 um max over 405 on 149 bits; 1 station(s), hop 216 um; +1 cycle(s) pre-approved"
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/internal_stations/-",
+   "value": {
+    "conn": "bus:flt_o0",
+    "launch": "u_bound.u_core.fault",
+    "capture": "u_bound.u_bout_flt_o0",
+    "from_um": [
+     1025.14,
+     805.0
+    ],
+    "to_um": [
+     1437.91,
+     553.63
+    ],
+    "regs_um": [
+     [
+      1357.21,
+      805.0
+     ]
+    ],
+    "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 664 um max over 405 on 1 bits; 1 station(s), hop 332 um; +1 cycle(s) pre-approved"
+   }
+  },
+  {
+   "op": "add",
+   "path": "/partition_types/iqf__t1/internal_stations/-",
+   "value": {
+    "conn": "bus:idx_o0",
+    "launch": "u_bound.u_core.u_qf.qr_v",
+    "capture": "u_bound.u_bout_idx_o0",
+    "from_um": [
+     1030.37,
+     800.14
+    ],
+    "to_um": [
+     1436.72,
+     711.32
+    ],
+    "regs_um": [
+     [
+      1277.96,
+      800.14
+     ]
+    ],
+    "note": "FAM-S81-IQF-R1 J8: placed scan (J6r1 kit, a9ed808a98d) hop 495 um max over 405 on 1 bits; 1 station(s), hop 248 um; +1 cycle(s) pre-approved"
+   }
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/iqf__t1/ft_slots/2/stations",
+   "value": 5,
+   "why": "FAM-S81-IQF-R1: ft7 o_2->o_3 hold -17.87 (bit 187, 291 um hop) / ft4 o_0 pin hop 364 um + slew -1.04 at ft4_o_2: +1 station, equal-arc sites by the generator; +1 cycle pre-approved"
+  },
+  {
+   "op": "replace",
+   "path": "/partition_types/iqf__t1/ft_slots/5/stations",
+   "value": 5,
+   "why": "FAM-S81-IQF-R1: ft7 o_2->o_3 hold -17.87 (bit 187, 291 um hop) / ft4 o_0 pin hop 364 um + slew -1.04 at ft4_o_2: +1 station, equal-arc sites by the generator; +1 cycle pre-approved"
+  }
+ ],
+ "reset_relay_hops": [
+  {
+   "src": "u_bound.u_rrl_67",
+   "to": "u_bound.u_core.rs1",
+   "from_um": [
+    626.94,
+    611.68
+   ],
+   "to_um": [
+    1013.15,
+    796.1
+   ],
+   "relay_sites_um": [
+    [
+     912.25,
+     611.68
+    ]
+   ],
+   "leg_um": 571,
+   "max_um": 571
+  },
+  {
+   "src": "u_bound.u_rrl_67",
+   "to": "u_bound.u_core.u_qf.rs0",
+   "from_um": [
+    626.94,
+    611.68
+   ],
+   "to_um": [
+    1011.8,
+    796.63
+   ],
+   "relay_sites_um": [
+    [
+     911.84,
+     611.68
+    ]
+   ],
+   "leg_um": 570,
+   "max_um": 570
+  },
+  {
+   "src": "u_bound.u_rrl_67",
+   "to": "u_bound.u_bin_idx_i0/eq",
+   "from_um": [
+    626.94,
+    611.68
+   ],
+   "to_um": [
+    1013.69,
+    708.08
+   ],
+   "relay_sites_um": [
+    [
+     868.51,
+     611.68
+    ]
+   ],
+   "leg_um": 483,
+   "max_um": 483
+  }
+ ],
+ "note": "17 VIS tap-split ops + 6 FAM-S81-IQF-R1 internal_stations; 3 reset relays left to reset.die_relays tool | J9-4: clk_t56 moved 40 um inward (y 1219.677 -> 1179.677) for tap spacing",
+ "start_chain": "No row: J8 plan_j8_cut_reset already carries clock.landing_writer_start branch flt_o0 (7 stages, hops ~299 um, xy_um+raw_reset form); the J6r1 kit plan had none (that is the -110 ps path). Rebuild on J8 fixes (a)."
+}
