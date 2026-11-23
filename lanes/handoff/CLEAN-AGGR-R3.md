@@ -31,3 +31,12 @@ Lane clone: epyc8 /srv/opentallas-scratch2/claude/clean-aggr-r3/w. Scratch: <scr
 - Open: intel2 s2 253 GB (autoclean started 01:2x); epyc2 s2 462 (cannot reach 550 within rules); rtx-pro root 133 GB (owner call on afg/.cache/trainforensics).
 - Lost signed record 8f88a85b... (pv41c959f3) needs ECO re-run; its json survives in an epyc2 inputs.tar.gz.
 - Kept: epyc7 kw44 (79 signed not in main), fam-qc-cb (2 QC views), fam-kv-iopc-r2 (30 R-MIN unexported, repo/results copies).
+
+## 11-23 01:3x update (CLEAN-AGGR-R3)
+- Pushed e1cd348d48: build_protected_live skips ot-run auto-leases on a lane root (ccdd6dc38a made ot_lease do the same).
+- 61 dead-owner hub leases released via ot_lease (incl VIS-S81-MISC/1976980 on claude/vis-s81-misc).
+- Deleted: epyc10 vis-s81-misc/tree_j8.forking-2812512; epyc9 vis-s81-misc/tree_j8 (62 GB, after FAM-S81-IQF-R1 repointed J9-3/-4 base_plan).
+- Idle-tree passes (>12 h, no process, scratch2, guarded ot-delete): epyc10 191->488 GB, epyc8 batch ~98 GB (jobs re-used),
+  epyc9 121->1260 GB (582 deleted), epyc7 117->846 GB (414 deleted, loop still running: clean-aggr-r3/tmp/idq_0?.out).
+- Kept: epyc7 s81-bksel-r7/w/tree_j9 (live ot-tree-fork); vis-s81-misc out/ rows/.
+- Open: epyc8 192 GB / intel2 181 GB are next if COORD asks; scanner clean-aggr-r3/tmp/idlescan.py on each host.
