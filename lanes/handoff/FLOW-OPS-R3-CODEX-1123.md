@@ -44,3 +44,7 @@ FLOW-CLKGRT default-on watch had no hook error in the retained 45-kit census. Th
 ## 10:34 Wave A coverage
 
 The independent E9 all-mode fill completed with 6,137 additions in 197 types, 904 stale removals and zero skips. The immutable plan is `51a130aa9118` and its fill TSV is `6cf9e9c2ea32` under the Wave A `exact_outputs_520b067a45c9/final` folder. PRE1 is active on E9 1324015. LEPE R4 strict is still active after PRE and the prior native L9 failure point. It has initialized the RTL output directory.
+
+## 10:40 LEPE R4 terminal result
+
+Scoped strict E9 1427436 completed rc1 after PRE passed, the inactive native station bus was isolated, and the North and South RTL emitted. The only recorded error is body EMIT `landing_local_resets.fstart_0`. The consumer `u_cland_fstart_xring_o0` now uses regenerated `cland_start_raw` at depth 7, while inherited `rst_rl_66` at depth 5 makes the local registered copy depth 6. The older depth-five fix used the r9j depth-six contract from before the current retap. A scoped plain depth-six reselect with 300 µm reach guard is active under E9 `split_body_clocks/r4_fstart_depth6/reselect.otrun.log`. Scope remains diagnostic and the physical hold still applies.
