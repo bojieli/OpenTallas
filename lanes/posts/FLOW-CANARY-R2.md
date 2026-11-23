@@ -217,3 +217,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 20:30 PST CANARY s81_head_cl @ fc39400984: FAIL failing face_cover (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_cl_af3312b92_1122_083032_641590); CANARY s81_cl @ 3129781626: FAIL failing lec,vclk_basis,grt_gate,route,rcx,signoff (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: Tcl errors (flow crash))
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 20:45 PST CANARY qwen_compute @ 0b2cd4d3e1: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d032c7204_1121_101641_352907)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
