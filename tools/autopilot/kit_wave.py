@@ -10774,7 +10774,9 @@ def run_item(spec_path):
         # reset identity"); the stamp bind.py wrote is checked now, before any heavy stage.  A bind with no stamp (older) passes.
         if sp.get("tools_rt") and not core:
             _tsk = f"{tsrc}/tools/die_plan/bind_tool_stamp.py"
-            rc, txt = run("bind_toolskew", remote(f"if [ -f {q(_tsk)} ]; then python3 -I {q(_tsk)} check --bind-out {q(bind)} --tools {q(tsrc)}; else echo 'BIND-GEN-TOOLSKEW skipped: no checker in this rt'; fi"), idempotent=True)
+            # SEMANTIC-TOOLSKEW-1122: a checker that can replay gets the bind's plan + this kit's type (hash rule otherwise)
+            _sem = f"$(grep -q semantic_replay {q(_tsk)} && echo --plan {q(plan)} --type {q(T)})"
+            rc, txt = run("bind_toolskew", remote(f"if [ -f {q(_tsk)} ]; then python3 -I {q(_tsk)} check --bind-out {q(bind)} --tools {q(tsrc)} {_sem}; else echo 'BIND-GEN-TOOLSKEW skipped: no checker in this rt'; fi"), idempotent=True)
             if rc and os.environ.get("OT_BIND_RT", "1") != "0":
                 # T1 (FABLE-FLOW-0800: rt/current moved 16x in 108 min; 18 S81 BIND-GEN-TOOLSKEW FAILs): gen runs the generators of the
                 # bind's OWN rt.  The rt snapshot on G whose reset / relay generators fit the bind stamp (the stamp's tools_sha first) becomes
