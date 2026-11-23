@@ -27498,3 +27498,4 @@ FAILED [AUTOPILOT e42754d8eb97] 2026-11-22 19:36:11 PST AUTOPILOT -> KIT-WAVE-12
   SVC-R9 svc rows, col_h10_r1, dsdv c1x_C/lepe_mu_C now held for plan event with live owner, so OK; held/cancelled/relaunched STALE filtered.
   KV 0 flagged (was 4: kv3_hub_C kit_rtl cleared); QC sle_su_l1 place error 0.8h UNCLASSIFIED (PRECHECK-R2, new); HEAD hd_lep0N ok.
   Read-only; lanes/OWNERS-SWEEP.tsv.
+- 2026-11-22 19:51 PST DONE [TAP-GRID-R5] ot-run oth-ubuntu-266257-1795405298 on dear-crayfish: rc=0 after 1209 s, ended 19:51:25, log /srv/opentallas-scratch2/claude/tap-grid-r5/softflop/xrun_epyc2.out, cmd: --disk 2 --mem 24 --threads 2 --hosts epyc2 --dir /srv/opentallas-scratch2/claude/tap-grid-r5/softflop --stage /srv/opentallas-scratch2/clau
