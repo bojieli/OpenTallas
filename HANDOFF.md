@@ -3886,3 +3886,5 @@ CODEX: 2026-11-23 07:27 PST restored exact east/west detailed S81 col-lane child
 CODEX: 2026-11-23 07:31 PST S81 J8 live (891100ef774, sealed source 61701f3e485d, six replicas, 380 holds at atomic apply). t18 carries manual-review hold with J9 revision fcc21829441f.
 
 CODEX: 2026-11-23 08:25 PST Qwen F5 fixed-link CALR analytical repack clears exact issue contention, 117760/117760 distinct, +41 max ordinary tail/END with 282 cycles same-owner margin. Native media proof under token lane.
+
+CODEX: 2026-11-23 08:45 PST Shared Qwen CALR ROM passed native cold/warm on the same physical masks (1021 entries). The earlier TABLE_NEXT gives +260 cycles of modeled guarded row0 setup. Exact four-owner native frame replay queued; target6 and arithmetic remain.
