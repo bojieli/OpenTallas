@@ -29,3 +29,7 @@ Viewed exact floorplan and density images under each `review_1502` directory.
 
 - Intel1 `runs/kvq_mm_1514/review_1518` exact CTS SHA 74a42f927cb1, 2 SRAMs, 2,310 pins and fill 0.562. Center channel and outer sides remain open, with two concentrated bottom clusters and continuous PDN. The native FF repair scoped to internal paths is +10.01 ps. Boundary FF remains −240.56 ps, visible and held. PASS-COND for isolated GRT to measure routing capacity and the boundary independently.
 - E9 `reshape_r2/kvtch_grt_1510/review_1526` exact GRT SHA 0da87272a352, 7,127 pins, fill 0.386, with 18.78% aggregate demand and zero overflow. Pins remain in N/S bands, the spread cell strip is bounded on both lateral sides, and PDN access crosses the length. PASS-COND for isolated detailed route and extract, with TT/FF closure and LEC still owed.
+
+## QNH final routed geometry 15:33 PST
+
+Viewed intel1 QNH `runs/qnh_drt_1510/review_1531`, final ODB SHA af60d38afaaa. The 624 pin positions and continuous 42-record PDN remain visible with fill 0.493 and no hard macro wall. There are local red density bins in the lower pin band and centre, while detailed route is DRC 0 and antenna 0. PASS for exact TT/FF and netlist LEC. The final-report-only rerun corrects ASAP7 corner spelling from unsupported TT to TC after DRC-zero route and retains this routed geometry.
