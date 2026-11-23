@@ -199,3 +199,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 18:00 PST CANARY s81_cl @ 701c377048: FAIL failing lec,vclk_basis,grt_gate,route,rcx,signoff (NO-BASELINE no baseline for s81_cl/slice_station__t24__cl66b71008 and this run cannot set one: Tcl errors (flow crash)); CANARY s81 @ 0efed5dab8: FAIL failing signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 18:15 PST CANARY qwen_kvsys @ 9885ad2a06: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d032c7204_1121_101641_352907)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
