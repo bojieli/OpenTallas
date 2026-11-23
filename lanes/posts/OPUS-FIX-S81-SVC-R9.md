@@ -127,3 +127,4 @@
   7/9/12 edge strips: S in J9 (EDGESTRIP-1-SVC + SVC-YTRADE-1; R5 has the handoff). W/E in J10 with the VIS die-grow ops.
   10/11/14 no placed DB (pvso_entry, lo rs, lo rs_w): r9h DB ~08:00 PST, then the SVC-OWN lo t3 probe and pvso_entry/rs_w probes. PROBE-PASS only after the render is read.
   13 lo START/reset relays perimeter-only, depth 16: J10 row SVC-LO-START-INTERIOR (interior relay sites in the u_c row gaps, sized from the lo t3 probe density).
+- 2026-11-23 02:22 PST DIED [OPUS-FIX-S81-SVC-R9] ot-run oth-ubuntu-690249-1795406306 on tolerant-swine: rc=143 after 23026 s, ended 02:22:09, log /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/bind_r9e.otrun.log, cmd: --mem 200 --threads 4 --hosts intel2 --strict-host --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9 | class=RAIL-KILL cause=ot-run: DRAIN: localhost DRAINING (380 of 9999 GB scratch free): --dir /srv/opentallas-scratch2/claude/opus-fi
