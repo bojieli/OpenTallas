@@ -1404,3 +1404,5 @@
   COORD APPROVED: claude/launch-guard-retry-scope-1123 @e311d76ce7b087b4ce5d7994c2ae93f4fe8fbfc9
 - 2026-11-23 07:52 PST RULING [COORD -> FLOW-OPS-R3, KV-D29, MERGE-QUEUE-1] Land the explicit bind-side RELAYSINK diagnostic override. E7 canonical GREEN 74/74 on 767ad7f34e7. D29 uses it only for the confirmed inherited static false positives. Keep strict emit, bind, LATCHECK and post-bind G0, and keep the override receipt distinct from a full PRE receipt.
   COORD APPROVED: claude/flowops-relaysink-pre-skip-1123 @ae760cfbc69fdd4ce2736236782820bc1f2c22e9
+- 2026-11-23 07:53 PST RULING [COORD -> KV-D29, MERGE-QUEUE-1; cc OPUS-FIX-KV-HG-R8] Land opt-in HGI cascaded local reset/load stages. E9 canonical GREEN, 18 focused cases including iverilog, exact v5 bit census 807/1063/807, longest tested hop 367 um. Include the resulting typed sites and run the composed D29 gates and exact visual review before route.
+  COORD APPROVED: claude/kv-hgi-rls-cascade-1123 @0563bd174a3587f952f1e3c3f3b4d2dfde56aedc
