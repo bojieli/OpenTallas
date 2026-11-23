@@ -1,3 +1,4 @@
 - 2026-11-23 10:52 PST DONE [s81-svc-j9-eng] ot-push-main otpush-key-cardinal-419862 on key-cardinal: rc=0 after 0 s, ended 10:52:15, log none, cmd: ot-push-main --help
 - 2026-11-23 11:18 PST DIED [s81-svc-j9-eng] ot-push-main otpush-key-cardinal-966087 on key-cardinal: rc=4 after 24 s, ended 11:18:31, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 4 after 24 s, no log
 - 2026-11-23 11:28 PST DIED [s81-svc-j9-eng] ot-push-main otpush-civil-redfish-3277490 on civil-redfish: rc=3 after 27 s, ended 19:28:08, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 27 s, no log
+- 2026-11-23 12:13 PST DONE [s81-svc-j9-eng] ot-push-main otpush-civil-redfish-3504990 on civil-redfish: rc=0 after 2504 s, ended 20:13:18, log /srv/opentallas-scratch2/claude/s81-svc-j9-eng/push_eng.log, cmd: ot-push-main 
