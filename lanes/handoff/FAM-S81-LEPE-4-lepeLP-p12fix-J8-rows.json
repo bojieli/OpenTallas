@@ -64,9 +64,33 @@
      "set": {
       "D": 2
      }
+    },
+    {
+     "op": "replace_in_list",
+     "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/internal_stations",
+     "match": {
+      "conn": "bus:coll_i1"
+     },
+     "set": {
+      "regs_um": [
+       [
+        618.6,
+        1222.937
+       ],
+       [
+        646.52,
+        988.257
+       ],
+       [
+        646.52,
+        853.712
+       ]
+      ]
+     }
     }
    ],
-   "race_kit": "epyc7 fam-lepe4/trees/s81_mu_LP_f2 (ot-tree-fork of proof15 tree + F2 sites), private-spec --goal route --src-manifest seal"
+   "race_kit": "epyc7 fam-lepe4/trees/s81_mu_LP_f2 (ot-tree-fork of proof15 tree + F2 sites), private-spec --goal route --src-manifest seal",
+   "coll_i1": "J9 (S81-J6-ASSEMBLY-R5 18:20 ask 2): with u_bound.u_u_ln1 at [345.6,648,641.52,1092.96] the coll_i1 regs (618.6,988.257) and (617.708,853.712) sat inside the core; moved to x 646.52 (5 um E of its edge), same y, same count (no cycle). Legs: face (387.9,1226.9) -> (618.6,1222.9) 235 -> (646.5,988.3) 263 -> (646.5,853.7) 135 -> u_ln1.rx (518.5,619.0) 363 um (all <= 405)"
   },
   "N1": {
    "type": "dsdv_slice_lepe_nh_mus_LP__t1",
