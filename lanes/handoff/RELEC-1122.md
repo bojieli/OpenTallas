@@ -1,0 +1,18 @@
+# RELEC-1122 handoff (Opus, started 11-22 22:5x PST by COORD)
+Goal: routed LEC EQUIVALENT evidence for the 168 AT-RISK rows of lanes/COUNT-LEC-AUDIT.tsv (hub 0369b02b). Output lanes/RELEC-1122.tsv
+(die, item, record, netlist sha, routed LEC result, evidence). Never write COUNT-REVOKED. Post NOT-EQUIVALENT + NO-NETLIST lists every 2 h + end.
+Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after HEAD+S81 and at the end.
+
+## Method
+- Record -> origin kit: signed-store record (~/coord/signed-store/records/<id[:2]>/<id>.json.gz): origin, files[] (6_final.v path+sha), netlist_sha.
+- Archive (AGIdock /archive/opentallas-signed-1106/<host>/<path>) holds 6_final.v but NO RTL/config.mk/lec.py.
+- Routed LEC = autopilot signoff_chain form: env OT_LEC_SUPERSET_VEC=1 python3 -I KIT/lec.py KIT --netlist <6_final.v> --out KIT/lec_routed_relec1122 [--mem --jobs]
+  via ot-run --dir KIT --hosts <origin>. Launcher: <host>:/srv/opentallas-scratch2/claude/RELEC-1122/tmp/rlec.sh TAG KIT NET HOST MEM JOBS
+  logs: <host>:/srv/opentallas-scratch2/claude/RELEC-1122/logs/{runs.log,TAG.log}
+- Work files (rtx localhost scratchpad relec/): meta.tsv (row->record->origin), out_<host>.jsonl (probe), sib.jsonl, hits_<host>.txt (sha search of 6_final.v across hosts).
+
+## State
+- 22:5x probe: of 153 rows with a store record, only ~55 have a live kit+netlist on the origin host; 15 rows have no record ("(none)").
+- Already EQUIVALENT routed on same file (audit missed): qc sle_st_b_v1__pv0e7b1dcc, slw_st_b_v2__pva66d0f22__pv3d7bec84, sle_st_b_v1__pvc5a85fd4__pv38472fb8.
+- KEEP FAIL routed (=NOT-EQUIVALENT class): qc slw_hc3__clccfc3e6b__pvcca9ff41 (epyc9 lec_routed_autopilot_1795360240568320193).
+- HEAD: hd_spn routed LEC launched epyc7 23:1x. hd_host_w/hd_ctl/hd_mesh/hd_host_e/hd_serdes origin kits deleted; searching other hosts by sha.
