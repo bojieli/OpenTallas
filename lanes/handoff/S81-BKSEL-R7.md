@@ -98,3 +98,6 @@
 - 08:4x COORD ack: C rt 2bc14507b4dc contains 36d0a6df8f6 (chain runs "goal route attempt 1"); new private kits use explicit --goal route.
   Row 4 goes to J6-R5 as soon as A or C gives the answer (pre-routed evidence OK). DISK for EPYC10-DISK after C ends:
   epyc10 /srv/opentallas-scratch2/claude/s81-bksel-r7/w/tree_sealed (54 GB, unused sealed fork) - reclaim via ot-delete; do not touch before C ends.
+- 17:3x RESUMED after weekly limit. Landed while down: A routed (E2 6_final; Codex recovery fork coreA/signoff_recovery_codex, missing helper modules) -> signoff NOT SIGNED only on FF hold -0.77 ps (TT setup -2.98 info, pin audit 1803/1803). One-endpoint hold-only route-keep ECO (one_hold_pad, u_q.sqd[373]) running on epyc2 since 17:25 -> signoff in one_hold_pad/signoff.
+  C: CTS rc0 (quarter taps pin -49, effective 463-465 vs target 450 OK; no pad), GRT running on epyc10 since 16:32.
+  J8 cut 16:00 shipped BKSEL1-3 without row 4; row 4 now goes to J9 via S81-J6-ASSEMBLY-R5.
