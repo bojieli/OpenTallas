@@ -29,3 +29,7 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - Fix: epyc10 L/tmp/wchan3_remap.py TOOLS TREE BASE [DX] [--dry]: old relay xy through the Row B x-map -> unique same depth+kind NEW relay within 2 um, else the nearest same-depth relay within 370 um (COPY_REACH). Dry run: 20 refs, all placed (max 139 um).
 - Re-gate: chain L/tmp/chain_r9_bfix.sh (marker plan/applied_s_remap), intel2 log chain10_r9_r18s_fix.otrun.log.
 - A+B (r18t, epyc7) will hit the same failure: the remap is copied to epyc7 L/tmp; run it there next (base = r18q copy L/plan/base_r18q/source_plan.json).
+
+## 23:2x PAIRTAP gated; Row B gate 3 running
+- r18u (Row A + LEP-PAIRTAP-1 lead 170) GATE PASS: plan 1702f67e4cf0ba31, pre 0 findings vs r18r, bind PASS, cohort 27/27, LATCHECK 334/334. (gate 1 failed on my clock.note key; moved to the type note via chain_r9_pairtap2.sh.) READY: launch_kit_r9.sh u1 s81_head_r18u_pairtap hd_lep0N_w epyc10 seal (+ u1p probe) when w11 GRT confirms the hold.
+- Row B gate 2: remap OK (20 refs), but the raw START exports u_rrl_145 went stale and LANDREMAP flagged false positives (rst_rl_35 / rst_rl_17 moved with the shift, same name). Gate 3: L/tmp/chain_r9_bfix2.sh = wchan3_remap_exp.py (exports + pins) + baseline = r18q through the same wchan3 transform (F prep/base_r18q_wchan3.json). Log chain10_r9_r18s_fix2.otrun.log.
