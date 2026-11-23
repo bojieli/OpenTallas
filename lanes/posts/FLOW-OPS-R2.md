@@ -328,3 +328,11 @@
   - The three QC COUNT-CREDIT rows are applied (versioned, credit ref shown). Those types were already counted, so QC stays at 76/127.
   - signed.tsv is only autopilot's own archive log, written for autopilot and ot-jobs runs. It is not a count input: the counter scans the sign-off records and signed-store directly, private kits included.
   - No flow fix needed. Ruling: private kits stay out of signed.tsv.
+- 2026-11-23 01:46 PST FLOW-OPS-R2 02:0x: bind speed is on main.
+  - 88d4158e281 PRE-ORDER: PRE starts only after this run's elab writes asbuilt.json, ordered in the chain; no env needed.
+  - a36b0f07e4d:
+  - EMIT-PAR-MERGE: no more ParUnsafe fallback on bound_group_products, which saves the 88 min that l0b/l1r/l1a/l0su wasted;
+  - EMIT-SCHED: the slowest types start first;
+  - PROBE-ONLY: bind --types, OT_BIND_ONLY_TYPES, or ot-build --only-types, which reuses the elab.
+  SVC-R9 and TAP-GRID told.
+  rc45 serdes t2 SEGV: reproduced on epyc10. repair_design changes 0 cells yet moves WNS from -305 to -430, so the -460 is a stale-timing artifact. A no-repair_design variant is running.

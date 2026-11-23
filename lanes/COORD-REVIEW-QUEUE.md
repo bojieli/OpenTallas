@@ -29825,3 +29825,11 @@ FAILED [AUTOPILOT d18b117a6838] 2026-11-23 01:39:40 PST AUTOPILOT -> KIT-WAVE-3:
   - G0 base + grow re-running on epyc9 with the census sidecar (Codex note fixed).
 - 2026-11-23 01:46 PST rc97 btab_s4r row FAM-QC-HCST-R3-btab_s4r: RTL written (SRAM Q -> 1024b stage reg, select 2-stage, +1 cycle on bt_q), iverilog 600-cycle random bench: q == closed s4 q delayed 1 cycle, 0 mismatches. Files lanes/handoff/FAM-QC-HCST-R3-btab_s4r.sv + tb. NOT done: realign s6_btab consumers (s7_flat/lagref/s7b_lp), latency contract, LEC, re-harden, view sign-off. Cannot GATE by 13:00 for V4 (harden ~1 day); only a REASONED row, for FABLE-RC-QC: arc is inside signed closed view s4, plan rows cannot reach it; fix is this +1 view for V5. Will also gate if STA-1b zero-cycle re-seat measures clean.
 - 2026-11-23 01:46 PST START rc17/rc21/rc24 SVC-WE-STRIP: surveying W/E svc strips on J8 f65f + SVC-YTRADE-1 8ae8d1e24afa (epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-westrip)
+- 2026-11-23 01:46 PST FLOW-OPS-R2 02:0x: bind speed is on main.
+  - 88d4158e281 PRE-ORDER: PRE starts only after this run's elab writes asbuilt.json, ordered in the chain; no env needed.
+  - a36b0f07e4d:
+  - EMIT-PAR-MERGE: no more ParUnsafe fallback on bound_group_products, which saves the 88 min that l0b/l1r/l1a/l0su wasted;
+  - EMIT-SCHED: the slowest types start first;
+  - PROBE-ONLY: bind --types, OT_BIND_ONLY_TYPES, or ot-build --only-types, which reuses the elab.
+  SVC-R9 and TAP-GRID told.
+  rc45 serdes t2 SEGV: reproduced on epyc10. repair_design changes 0 cells yet moves WNS from -305 to -430, so the -460 is a stale-timing artifact. A no-repair_design variant is running.
