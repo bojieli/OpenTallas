@@ -138,3 +138,14 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
   - canary verdicts 934ebc631 (waiter bm43p7avx) and 345ac (b5lsbjt2l);
   - QC core env check;
   - the 64-view re-export.
+
+## 11-23 01:4x update (FLOW-OPS-R2)
+- On main: 3563ba76c76 HARD-PIN (PIN-WAIT only with --dir; --strict-host stays NOT RUN), 76538e0aec1 PRE-ELAB-RACE, be264ec7a59 REQ-CHARGE, 0000c57cdad DISK-EXPLICIT + BLOCK-NOTE.
+- Branch flowops-bindspeed-1123 (epyc10 lane clone): 3fc656f182f PRE-ORDER (Codex committed it). Uncommitted:
+  - EMIT-PAR-MERGE + EMIT-SCHED in bind_emit_par.py;
+  - PROBE-ONLY (bind.py OT_BIND_ONLY_TYPES / --types; ot_build --only-types);
+  - test_bind_emit_sched.py.
+  Codex focus tests passed (tmp/bindspeed_focus_1123.log). Next: commit and push.
+- Real probe test on intel2: tmp/pr/probe_run.sh (r9e plan, b_ff4284b42ec7 elab, launch copy tmp/pr/L). Logs: tmp/pr/probe_bind.log and probe.otrun.log.
+- SVC r9g bind fails in pre-emit with a tap spacing error on svc_lo_dsdv_svc_rs__t7 clk_t12. Told COORD.
+- Ingest: S81 t25 and t22 are already counted. The QC credits are applied but redundant.
