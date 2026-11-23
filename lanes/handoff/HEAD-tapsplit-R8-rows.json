@@ -1,0 +1,277 @@
+{
+ "lane": "OPUS-FIX-HEAD-LEP0N-R8",
+ "to": "TAP-GRID-R5",
+ "what": "HEAD tap-split rows on the placed register inventory (TAP-SOFTFLOP) for the PRECHECK-R2 ADV-TAP-LOAD shortfall; cap = HEAD kit split cap, radius = plan tap_radius_um; DRAFT for cross-check",
+ "base_plan": "merged HEAD 5e1f38e1530b (epyc9 opus-fix-head-lep0n-r8/trees/r18jk_merged); hd_host_e/hd_serdes entries equal in r18m 3dd49f406010",
+ "tools": "rt/current tools/die_plan/tap_split.py --sinks --require-placed, --tools = tree tools/die_plan",
+ "apply": "per type: append rows to clock.taps (tap_mode explicit; names continue the table)",
+ "types": {
+  "hd_host_e": {
+   "rows": {
+    "key": "taps",
+    "rows": [
+     {
+      "name": "clk_t11",
+      "xy": [
+       225.0,
+       205.0
+      ]
+     },
+     {
+      "name": "clk_t12",
+      "xy": [
+       435.0,
+       25.0
+      ]
+     },
+     {
+      "name": "clk_t13",
+      "xy": [
+       205.0,
+       255.0
+      ]
+     },
+     {
+      "name": "clk_t14",
+      "xy": [
+       285.0,
+       305.0
+      ]
+     },
+     {
+      "name": "clk_t15",
+      "xy": [
+       425.0,
+       45.0
+      ]
+     },
+     {
+      "name": "clk_t16",
+      "xy": [
+       295.0,
+       395.0
+      ]
+     },
+     {
+      "name": "clk_t17",
+      "xy": [
+       412.84,
+       75.0
+      ]
+     },
+     {
+      "name": "clk_t18",
+      "xy": [
+       235.0,
+       135.0
+      ]
+     },
+     {
+      "name": "clk_t19",
+      "xy": [
+       175.0,
+       285.0
+      ]
+     },
+     {
+      "name": "clk_t20",
+      "xy": [
+       345.0,
+       125.0
+      ]
+     },
+     {
+      "name": "clk_t21",
+      "xy": [
+       395.0,
+       465.0
+      ]
+     }
+    ]
+   },
+   "cap": 1500,
+   "radius_um": 180,
+   "sinks": {
+    "basis": "placed",
+    "kit": "civil-redfish:hd_host_e-route-civil-redfish-1493007-1795335111",
+    "file": "epyc9 /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8/tapsplit/sinks/hd_host_e.json"
+   },
+   "split": [
+    "TAP_SPLIT hd_host_e SPLIT [placed]: taps 11 +11; max load 5923->1471/1500, over cap 5->0, max radius 240.491->170.0",
+    "TAP_SPLIT RECHECK 1 types on /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8/tapsplit/plan_hd_host_e.json: 0 still over cap/radius"
+   ]
+  },
+  "hd_serdes": {
+   "rows": {
+    "key": "taps",
+    "rows": [
+     {
+      "name": "clk_t37",
+      "xy": [
+       1895.008,
+       264.992
+      ]
+     },
+     {
+      "name": "clk_t38",
+      "xy": [
+       1765.024,
+       255.008
+      ]
+     },
+     {
+      "name": "clk_t39",
+      "xy": [
+       2055.008,
+       184.992
+      ]
+     },
+     {
+      "name": "clk_t40",
+      "xy": [
+       1885.024,
+       344.992
+      ]
+     },
+     {
+      "name": "clk_t41",
+      "xy": [
+       1544.992,
+       34.976
+      ]
+     },
+     {
+      "name": "clk_t42",
+      "xy": [
+       1965.024,
+       194.976
+      ]
+     },
+     {
+      "name": "clk_t43",
+      "xy": [
+       1914.976,
+       24.992
+      ]
+     },
+     {
+      "name": "clk_t44",
+      "xy": [
+       1575.008,
+       64.992
+      ]
+     },
+     {
+      "name": "clk_t45",
+      "xy": [
+       1539.36,
+       245.024
+      ]
+     },
+     {
+      "name": "clk_t46",
+      "xy": [
+       1664.992,
+       255.008
+      ]
+     },
+     {
+      "name": "clk_t47",
+      "xy": [
+       1855.008,
+       165.024
+      ]
+     },
+     {
+      "name": "clk_t48",
+      "xy": [
+       2005.024,
+       24.992
+      ]
+     },
+     {
+      "name": "clk_t49",
+      "xy": [
+       1495.2,
+       55.008
+      ]
+     },
+     {
+      "name": "clk_t50",
+      "xy": [
+       1965.024,
+       274.976
+      ]
+     },
+     {
+      "name": "clk_t51",
+      "xy": [
+       1834.976,
+       34.976
+      ]
+     },
+     {
+      "name": "clk_t52",
+      "xy": [
+       1525.472,
+       145.248
+      ]
+     },
+     {
+      "name": "clk_t53",
+      "xy": [
+       1855.008,
+       325.024
+      ]
+     },
+     {
+      "name": "clk_t54",
+      "xy": [
+       2035.232,
+       274.976
+      ]
+     },
+     {
+      "name": "clk_t55",
+      "xy": [
+       1864.992,
+       245.024
+      ]
+     },
+     {
+      "name": "clk_t56",
+      "xy": [
+       1615.008,
+       85.024
+      ]
+     },
+     {
+      "name": "clk_t57",
+      "xy": [
+       1904.608,
+       114.976
+      ]
+     },
+     {
+      "name": "clk_t58",
+      "xy": [
+       1615.008,
+       255.008
+      ]
+     }
+    ]
+   },
+   "cap": 1000,
+   "radius_um": 200,
+   "sinks": {
+    "basis": "placed",
+    "kit": "civil-redfish:hd_serdes-route-civil-redfish-3302484-1795134227",
+    "file": "epyc9 /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8/tapsplit/sinks/hd_serdes.json"
+   },
+   "split": [
+    "TAP_SPLIT hd_serdes SPLIT [placed]: taps 37 +22; max load 6056->997/1000, over cap 8->0, max radius 390.96->172.528",
+    "TAP_SPLIT RECHECK 1 types on /srv/opentallas-scratch2/claude/opus-fix-head-lep0n-r8/tapsplit/plan_hd_serdes.json: 0 still over cap/radius"
+   ]
+  }
+ }
+}
