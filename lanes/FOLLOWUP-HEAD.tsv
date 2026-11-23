@@ -1,8 +1,7 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-rc138 E stripe (LEP-CLKWALL-1)	hd_lep0N	DIE-FIX-LEDGER	FABLE-OPEN-HEAD-QC (+HEAD-R18)	11-23 07:17	ROWS-READY cw1 plan 9b79a291e87c: PRE0, bind0, cohort 27/27, LAT334; placement A/B inconclusive (GRT-0228), localized ovf 53->3; compose with LEP-LONGFCLK-1/W shelf	208	13:00	ROWS-READY	WATCH: lane silent since 07:17, composition into r18 plan pending
-hd_ctl routed LEC NOT-EQ (LEC-FSM-SUPERSET-1)	hd_ctl	HEAD-R18	HEAD-R18	11-23 06:27	row ROW-DRAFT; no later landing seen in Codex log or post	260	13:00	ROW-DRAFT	AT-RISK-CHECK: confirm lec.py fix landed + hd_ctl re-LEC
-West structural (LEP-WPLACE-1)	hd_lep0N_w	geom review	HEAD-R18/Codex	11-23 10:28	west halo-legal 5cbc5cda8aa0 (nested bind/cohort27/LAT334 PASS); native FF late clock-first route still open (t37 + c1 M5 edge); private replay staged; E7 strict unit1664805	16	13:00	IN-PROGRESS	
-E r18 cap10 plan 7085500b8b4d (G0/PRE0, LAT334, fresh place-only)	hd_lep0N	Codex log 09:54	HEAD-R18/Codex	11-23 10:28	E native CTS diag converges round9; ep3 watchdog stopped 10:30	16	13:00	RUNNING	
-wp3 W probe / NDR-DROP closure	hd_lep0N_w	REASONED	HEAD-R18	11-23 10:28	NDR drops t7/t32/t37 fixed by pin escapes in replay; phase2 zero GRT-0273 across 123156 nets; aggregate pending (E10 1553689)	16	13:00	RUNNING	
-Stale intel1 kit 1532240	hd_lep0N	NOPROG 04:15	none	11-23 04:15	ESCALATEd 06:32; ep3 watchdog stopped 10:30 per HEAD-R18 (verify unit ended)	-	-	VERIFY	
-FABLE-RC-ALL re-review of REASONED holds on composed r18 packet	HEAD die	Codex FOR-CLAUDE	FABLE-RC-ALL	11-23 10:36	pre-cut packet 5cbc5cda posted 10:28; no cut requested	-	13:00	PENDING-REVIEW	
+r18f plan 08fd2712 (one composed plan, W frozen) gate	HEAD die	HEAD-R18 11:10	HEAD-R18	11-23 11:11	FROZEN; PRE0, bind, cohort 27/27, LAT334, G0 0; ledger rows GATED	5	13:00	GATED	
+hd_ctl routed LEC (LEC-SETUP)	hd_ctl	ledger	HEAD-R18	11-23 11:11	REASONED; lec fix on main 25b4205f5f85; binary kit routed LEC EQUIV count ETA ~14:00	5	13:00 (REASONED accept) / 14:00 count	REASONED-pending	AT-RISK: proof lands after gate; needs FABLE-RC-ALL accept
+rc138 LEP-CLKWALL-1	hd_lep0N	FABLE-OPEN-HEAD-QC 10:54	FABLE-OPEN-HEAD-QC	11-23 10:54	in E cap10 and W plans; probe part REASONED, closes on E cap10 GRT census	22	13:00	REASONED-pending	waits FABLE-RC-ALL accept
+LEP-WOPENREG-1 (wn[5]->stamp->rg3)	hd_lep0N	HEAD-R18 11:11 R2	HEAD-R18	11-23 11:11	not built, needs RTL + induction LEC; in REASONED post	5	13:00	REASONED-pending	
+E cap10 / W native clock-first GRT census	hd_lep0N	probes	HEAD-R18	11-23 11:10	t32/t37 0.4-0.7 um outside stack windows (FABLE-OPEN-HEAD-QC 10:52), addressed by r18f die-drop windows	5	13:00	RUNNING	
+Stale intel1 kit 1532240	hd_lep0N	ESCALATEd 06:32	none	-	COORD 10:54 ownership sweep says HEAD clean; unit not re-verified	-	-	CLOSED-by-sweep	
