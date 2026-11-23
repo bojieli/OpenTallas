@@ -33346,3 +33346,4 @@ FAILED [AUTOPILOT b3f830d6c9f7] 2026-11-23 15:39:22 PST AUTOPILOT -> KIT-WAVE-12
   ETAs:
   - 16:30: the C4/C6 leaf delta as ONE ops file (base aeae2fe -> new), with PRE on the B2 plan.
   - Not GATED by 17:00: posted REASONED to FABLE-RC-S81.
+- 2026-11-23 15:44 PST RESUMED FAM-KV-HUBWO-S1 15:4x: sealed hub_Eo (1122231141) CTS done, in GRT; hub_Wo (1122231157) in CTS; both runners live (runitem-kv3_hub_Eo/Wo), nothing relaunched. ETA GRT read (final 5_1_grt.odb TT/hold) for Eo ~17:30, Wo after CTS; then route + LEC + private-provenance. hub_Wo place render read pending.
