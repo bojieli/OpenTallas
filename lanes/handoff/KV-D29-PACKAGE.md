@@ -40,3 +40,9 @@
 - KV-D28 remains the live wave event. KV-D29 missed the 14:00 cut and has no release candidate. K3e `698bf5a0cf52` did not reach its final strict gate. Four native EMIT crashes left stale 11:11 PST reports that the fixed-point script mistakenly reused.
 - The fresh exact head has 0 errors, 5,940 R8 members and current effective owner-pad coverage. Actual remaining bind blocker is the strict cl4ea PC cohort split plus an independent bound-only variant plan-cell lookup crash. See `KV-D29.md` 14:4x and E8 native scoped receipts.
 - Standalone row-B R7 functional receipts remain valid in their scope. Exact v5n daughter placement remains held, as do the PC and sys_c corrections named above. Consult `results/geom_review/kv_d29_private_places_1436_1123.md` for six viewed results, the corrected render-refusal class, and the HGFORM row-grid first error.
+
+## Current isolated cure at 15:3x PST
+
+- K3f exact PRE/G0 green, full native emit not cleared. The merged generic synthetic-variant and parallel diagnostic fixes address independent mechanics. The exact PC receiving-pad split has a proved W292/Dmax1 count strap with no lane date effect.
+- K3g `324af451f9be` combines HGTN and the two minimal-scope literal-origin corrections. Exact native PC probes and full isolated gates are described in KV-D29.md. VPORT owner-semantic r2 is diagnostic only: correct 32 bus-count parity, zero replica mismatches, one remaining changed cl7f counted-site diagnostic versus sealed D28.
+- Keep HGTN exact placement, R7 PV seam/bank layout, sys_c E D2DOUT, hub_C H2–H4 and all PC unchanged-form holds. Whole-die plan visual is collected for K3f+HGTN; changed exact placed visual receipts are still required. Zero routes/STA admitted by this takeover.
