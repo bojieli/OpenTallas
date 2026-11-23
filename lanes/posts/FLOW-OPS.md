@@ -1,0 +1,1 @@
+- 2026-11-23 09:15 PST READY claude/flowops-tap-remap-runtime-1123@f702490885a0bbf7649f0641249ff00dfdc8721f; runtime remap checker compatible with older explicit STRIPBODY geometry; E8 canonical GREEN 2/2 main93c595782c6, targeted29/29; exact recovered STRIPBODY role/depth remap rc0.
