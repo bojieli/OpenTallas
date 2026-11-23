@@ -30,3 +30,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 11:25 serdes t2: hold accepted, P1/P2/P14 need RTL rows; kv512_C rows accepted as ROW-DRAFT (place read 13:30); rc15: compiler has no cut term, matrix verdict 13:15.
 - 11:30 RULED svc ENGINE row ACCEPT (ROW-DRAFT till bind); cut dates CONDITIONAL: (a) reconcile P.V +18 vs 4K, (b) ALLQ matrix PASS + mutant by 15:30, (c) native replay before sign-off; else compose cut 0/0.
 - 11:32 QC rc96/rc104/x3 content in C4 accepted (REASONED-probe, types held); sle_su_l1 cl5ea486db rsn ft -67 REJECTED (needs C4 amendment row); S81 ENG-HXFACE-1 accepted ROW-DRAFT.
+- 11:40 HEAD GATE VERDICT r18g=5f4c ACCEPT (verified sha + gate logs); E held for cap10 census (intel1); closing reads: die stand-in t32/t37/t7, hd_ctl routed LEC, rc138 census, WOPENREG post-repair, host_e tap latency. KV D29 package arrived 11:30: lanes/handoff/KV-D29-PACKAGE.md (K3 f75a71af72eb, gate candidate k3e).
