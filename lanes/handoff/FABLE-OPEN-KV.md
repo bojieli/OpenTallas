@@ -8,3 +8,7 @@ Split: parent = rc118 + rc121 (pc rows); fork hroot = x15 + h1/h2/h3; fork taps 
 - Row PCGUT: budgets.gutter_block_um 12 + gutter_block_types (6 pc types). Seam capacity (COORD): measuring; PCGROW (IOPC, +112.32) or W-pair shift.
 ## log
 - 06:00 TAKING; 06:35 ACK+CAUSE post; forks spawned 06:40.
+
+## fork taps (Opus 5.5, stood down 11-23 ~11:00 PST per COORD; K3 f75a71af72eb holds PCONEXT)
+- Work dir epyc8 /srv/opentallas-scratch2/claude/fable-open-kv/taps: dumps/kv3_pc_v3.reg (kit A 4_cts placed regs), split3.sh (tap_split, placed sinks), pre.sh, row/ROWS_FABLE-OPEN-KV-PCTAPS.py eae0e44c976c (unused, superseded), row/ROWS_FABLE-OPEN-KV-PCONEXT.py 9c58e1d1c17c (in K3), tmp/rows_k3c1500.json (+33 taps that would bring K3 pc_v3 max load 2321 -> 1496 at cap 1500, advisory).
+- x10: chain9 TAPOFF census 56/56 ok on k1, and K3 reports 56/56. Nothing is running.
