@@ -4068,6 +4068,12 @@ def archive_due(j, now=None):
 
 
 def archive(st, j):
+    # Older ticks posted a permanent error before SIGNED-NOT-ARCHIVED existed.
+    # Keep the prior notice and reconcile that already-diagnosed terminal job.
+    previous_error = str(j.get("archive_fail_err") or "")
+    if j.get("archive_posted") and ARCHIVE_PERMANENT_RE.search(previous_error):
+        set_status(st, j, "SIGNED-NOT-ARCHIVED", "archive path gone (permanent): " + previous_error[-160:])
+        return
     if not archive_due(j):                                           # backed off after repeated failures (archive_backoff)
         return
     host = ssh_host(j.get("probe") or j["host"])
