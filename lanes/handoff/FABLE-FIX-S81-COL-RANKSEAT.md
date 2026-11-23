@@ -89,3 +89,21 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
   so STA prices them with the core tap source latency and tap_balance drives them with the core; touch gen_phys.core_tap_rows (accept),
   tap_balance.tcl (tb_direct_core/tb_passthru isBlock gates, tb_sinks), core_tap_ff_sdc, relay_depth sink rows D1 for the stage itself. Tests.
 - Then: row plan (J8 base or J7+stnEH) -> ONE strict bind -> 3 sealed --goal route reps (h9_r0, h10_r0, h9_r1).
+
+## 19:0x ROM-INPUT STAGE = EXISTING KEYS (supersedes the stage_core_tap flow-change idea of 18:3x; NOT opened)
+- ROM RTL rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv line 111: boundary register on NEGEDGE clk (xs_*_n); lib: 13 input ports
+  (cfg_v go xs_v cfg_a cfg_d go_tag xs_b xs_e0 xs_e1 xs_p xs_pos xs_q0 xs_q1) setup_falling -273 / hold_falling 295. So station(posedge, clock 477)
+  -> ROM negedge reg (core tap 205 early) is a half-cycle path with 142 ps budget.
+- Fix by existing plan key: relay_depth SINK row {inst: <ROM core>, port, side sink, D 1, lockup true} = posedge stage + negative-level
+  lockup latch (ot_dp_lk) at the pin: latch opens at soft fall edge 893, ROM captures next fall edge (required 1452): est +490 setup,
+  FF hold est +180. Declared cycles (+1 stage, +1 from the latch crossing the ROM negedge). No clock-tree change.
+- planR2 (intel2 + epyc7 fable-fix-s81-col-rankseat/planR2/plan_h2_2249.json sha f37d8afdb43c, delta.json; script scratch mkplan2.py):
+  J7 plan + on ALL 216 col types: clock.tap_grt_pre true; budgets.rank_line_types {^col_}, grt_cong_iters_types {^col_: 50},
+  relay_mid_re_types {each col base name: E regex}; relay_depth sink+lockup rows on every ot_v41_rom_elem_q_*_gb_h[ew] core x 13 ports.
+  NOT yet in it: kit-H 1,212 south seats (col_h10_r1 only; take from COLROM stnEH), stnE station rows.
+- private-spec on old bind refused (KIT_TOPOLOGY_BIND_STALE) -> strict bind of planR2 RUNNING: intel2 bindR2.sh/.log/.pid, epyc7 unit
+  oth-ubuntu-1293818-1795399798, OUT .../FABLE-FIX-S81-COL-RANKSEAT/ot-build/s81/src_s81_pin_3c913dbdfb23_d8j7_1117_work/b_ddbcd2eeb544 (rt 79f34e2ad42e).
+  RISK: bind may refuse sink rows on ports that already have a source-level relay_depth stage ("also has a source-level pipe") -> then
+  fall back to lockup on the existing source rows (needs bind.py relay_depth_lockup for source rows) .
+- After bind: 3 reps --goal route --rt 73fdcdf7365e (or current if toolskew ok) on epyc7: col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898,
+  col_h10_r0_p4__t1__pvcc166a6d, col_h9_r1__t1__cl49d7a23e__pv0a45e191 (spec2.sh in scratch: spec.sh with planR2 + --goal route + new --bind-out).
