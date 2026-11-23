@@ -18,3 +18,7 @@ STATUS: 02:2x gates launched on grow (c9a4) and f65f (--fit, gap 302.4 only -> p
  On 81e1d537c37d: westrip problems 0, 0 window moves, 0 re-snaps, interior dx -172.8..+172.8. R9 rebase (hi4) + cut 20900: ok, 11 slice re-snaps (strict bind).
  Final gate = final_gate.sh TAG BASE [BASELINE]: westrip -> ytrade -> ES1 -> VIS tapfix 22c28916bb44 -> PRE. Runs F20/F20rb (repriced baseline), F20b/F20rbb (f65f baseline).
  FABLE-UNC asked +86.4 lo W growth: refused (no x budget), told it.
+03:3x ROW-GATED (hub post 6a9450da): frame 81e1d537c37d; tool 13fde4e891b6 (rects move too); ops F21/ws_ops.json de2962f91e20;
+ row plan F21/p_ws0.json 044308bca780; +YTRADE+ES1+tapfix F21/p_ws_tf.json 345df5946ff1; PRE PASS f0 (baseline f65f), G0 10->10 introduced 0.
+ Sent to R5 (J9 3f), FIX-LEDGER, R9, FABLE-UNC. Open (R9's form): hi4 split-internal strips 13-17 um; 11 slice re-snaps -> strict bind if hi4 lands.
+ Recipe: final_gate.sh TAG BASE [BASELINE]; g0_cmp.sh OUT BASE CAND.
