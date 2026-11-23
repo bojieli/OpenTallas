@@ -191,3 +191,5 @@ J8 SEAL: admitted 03:0x; GATE_OK g0 8->6, lat 873/873, BIND errors [], pack add 
      8 svc cols at 1512 pitch: col1-7 abutted at x12035.52-22619.52, col0 W edge stays 10497.6. seam0 gap 25.92 (f2s4 channels 25.92). col6|col7 slab gap consumed. Interior dx +-172.8. No die window moves.
      Tool epyc10 fix-s81-svc-westrip/svc_westrip_row.py, v2 13fde4e891b6 (v95fd417be6a4 left the band/tap rects in place: +27 BAND ADV). F21 rerun running; GATED shas before 10:30.
      If SVC-HI4-SPLIT (R9) is in J9: 11 slice/station seam re-snaps, those ports go to strict bind.
+   ECORR revert = OLD col_ygrow 9c728ba3526d, no --form (H10-R4 run5). Rerun run7 (epyc10 fam-s81-col-h10-r4/j9/yg7/run7.sh): REACH v2 -> ECORR -> col_ygrow f62e467e6c4a --form ecorr -> reprice (6 rt_* ISTCYC lanes from ret_o0 +1) -> PRE.
+     H10-R4 probe kits L1t/K2 carry the solid ROM-half LEFs (hw 996bfbfe9fcf, he 2b6de51c97b5), not the porous 9924dfc8290c.
