@@ -2,7 +2,7 @@
  "schema": "opus-fix-qc-coll.v4pkg.v1",
  "lane": "OPUS-FIX-QC-COLL-R3",
  "to": "FABLE-FIX-QC-V4 (V4 composer, base cr); cc QC-PLAN-R13",
- "status": "PROVISIONAL (drop when split LEC of the tap_reset_split clones is EQUIVALENT; LEC running epyc10 pid 616074)",
+ "status": "CLONE-LEC CLEARED 22:1x (r2, rt 14fb2c787336 core-tap ties): split + control 0 differs, all 100 clone points proved; 3 pre-existing face_1 codec u_ctl solver-limit cones undecided in both (r3 escalated run queued). RDPIPE V5 race (pkit_core5a/5b) supersedes the coll_core timing rows when it measures GRT TT >= -42.",
  "written": "2026-11-22 05:0x PST",
  "rows_coll_core": [
   {
