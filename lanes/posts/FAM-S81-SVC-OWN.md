@@ -5,3 +5,4 @@
 - 2026-11-22 17:43 PST DONE [FAM-S81-SVC-OWN] ot-run oth-ubuntu-733615-1795398078 on tolerant-swine: rc=0 after 138 s, ended 17:43:33, log none, cmd: --mem 32 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fam-s81-svc-own --stage /srv/opentallas-scratch2/claude/opus-fix-s
 - 2026-11-22 17:44 PST DONE [FAM-S81-SVC-OWN] ot-push-main otpush-tolerant-swine-839405 on tolerant-swine: rc=0 after 20 s, ended 17:44:54, log none, cmd: ot-push-main 
 - 2026-11-22 17:46 PST DONE [FAM-S81-SVC-OWN] ot-run oth-ubuntu-751868-1795398117 on tolerant-swine: rc=0 after 265 s, ended 17:46:18, log none, cmd: --mem 32 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fam-s81-svc-own --stage /srv/opentallas-scratch2/claude/opus-fix-s
+- 2026-11-22 17:46 PST DONE [FAM-S81-SVC-OWN] ot-push-main otpush-tolerant-swine-905575 on tolerant-swine: rc=0 after 15 s, ended 17:46:23, log none, cmd: ot-push-main 
