@@ -25,6 +25,16 @@ Register ends:
 Findings:
   HOP     direct hop > reach: len (Manhattan, um), stations needed = ceil(len / reach) - 1, est over = (len - reach) *
           PS_PER_UM (0.6845 ps/um: 833 ps over 1,217 um of repeated wire, the S81 xg/xf 1.2-1.5 ns / ~1 mm legs);
+  HOP-SITE a HOP with a seated plan stage (relay_sites) on one end where a seat within reach of every judged end of
+          that stage exists (for an unseated u_bin_/u_bout_ face register: a point on its bus window): re-seat / pin it
+          there (0 stations) instead of adding stations.
+  SOFT-GAP / SOFT-SITE  a soft as-built leaf with no plan seat (e.g. col u_y_xa_* / u_y_cc_* relays, slice xg): the
+          free placer puts it near the bit-weighted centroid of its judged ends.  A leg from the centroid to a hard pin
+          > reach is SOFT-SITE when SOME site is within reach of every end (minimax site in u = x + y, v = x - y; fix =
+          pin the leaf there, 0 stations; FAM-S81-COL-H10-R4: 76 col_h10 legs 408-455 um) and SOFT-GAP when none is
+          (len = distance from the best seat, real stations needed).
+  Bit slices are resolved per bit through wiring assigns (concats, slices, replication, sel ? {..} : {..}), so a sink
+          slice of a concat bus is driven only by the cores in its slice (S81 svc hcore -> h4: was ~8x over-counted).
   DUPSTN  two or more ot_dp_dly stations whose d is the same source bits through alias assigns (u_y_xd_u_e11_u_e_* and
           u_y_xd_u_e11_u_w_* both = w_u_e11_0_Y[..]) feeding different sinks: synthesis merges them unless the kit keeps
           them (OT_KEEP_WIRES += ot_dp_dly:r), and then one station drives both sinks (col_h10 FABLE-RC-S81 RC-GAP 1/3).
@@ -144,6 +154,332 @@ def parse_wrapper(text):
         insts[name] = (mod, path, conns)
     assigns = [(a.strip(), b.strip()) for a, b in _ASSIGN.findall(text)]
     return insts, assigns
+
+
+_DECL = re.compile(r"^[ \t]*(?:input|output|inout|wire|logic|reg)\b(?:[ \t]+(?:wire|logic|reg|signed))*[ \t]*"
+                   r"(?:\[\s*(\d+)\s*:\s*(\d+)\s*\])?[ \t]*([A-Za-z_][\w \t,]*?)[ \t]*[;,]?[ \t]*(?://.*)?$", re.M)
+_SLICE = re.compile(r"^([A-Za-z_]\w*)\s*(?:\[\s*(\d+)\s*(?::\s*(\d+)\s*)?\])?$")
+_LIT = re.compile(r"^(\d+)\s*'\s*[sS]?[bBdDhHoO]\s*[0-9a-fA-FxXzZ_?]+$")
+BITS_MAX = 1 << 16
+EMPTY = frozenset()
+_SIMPLE = re.compile(r"^[A-Za-z_]\w*\s*(?:\[\s*\d+\s*(?::\s*\d+\s*)?\])?$")
+
+
+def decl_widths(text):
+    """{net: (lsb, msb)} of the wrapper's port / wire declarations."""
+    out = {}
+    for m in _DECL.finditer(text):
+        hi, lo = m.group(1), m.group(2)
+        rng = (0, 0) if hi is None else (min(int(hi), int(lo)), max(int(hi), int(lo)))
+        for nm in m.group(3).split(","):
+            nm = nm.strip()
+            if re.fullmatch(r"[A-Za-z_]\w*", nm) and nm not in KEYWORDS:
+                out[nm] = rng
+    return out
+
+
+def _split_top(s, sep):
+    """split s on sep at bracket depth 0."""
+    out, d, cur = [], 0, []
+    for ch in s:
+        if ch in "([{":
+            d += 1
+        elif ch in ")]}":
+            d -= 1
+        if ch == sep and d == 0:
+            out.append("".join(cur))
+            cur = []
+        else:
+            cur.append(ch)
+    out.append("".join(cur))
+    return out
+
+
+def _closes_at_end(e):
+    d = 0
+    for i, ch in enumerate(e):
+        d += ch in "([{"
+        d -= ch in ")]}"
+        if d == 0 and i < len(e) - 1:
+            return False
+    return True
+
+
+def _split_bitwise(e):
+    """operands of top-level binary | & ^ (not || && ^~ reductions), else [e]."""
+    out, d, cur, i, n = [], 0, [], 0, len(e)
+    while i < n:
+        ch = e[i]
+        if ch in "([{":
+            d += 1
+        elif ch in ")]}":
+            d -= 1
+        if d == 0 and ch in "|&^":
+            nxt = e[i + 1] if i + 1 < n else ""
+            prev = "".join(cur).strip()
+            if nxt == ch or nxt == "~" or not prev or prev[-1] in "~!|&^(":
+                return [e]                         # logical || / &&, xnor, or a unary reduction: not bitwise
+            out.append(prev)
+            cur = []
+            i += 1
+            continue
+        cur.append(ch)
+        i += 1
+    if not out:
+        return [e]
+    out.append("".join(cur).strip())
+    return out
+
+
+def _strip_parens(e):
+    e = e.strip()
+    while e.startswith("(") and e.endswith(")"):
+        d = 0
+        for i, ch in enumerate(e):
+            d += ch == "("
+            d -= ch == ")"
+            if d == 0 and i < len(e) - 1:
+                return e
+        e = e[1:-1].strip()
+    return e
+
+
+def _ternary(e):
+    """(sel, a, b) of a top-level sel ? a : b, else None."""
+    d, q = 0, -1
+    for i, ch in enumerate(e):
+        if ch in "([{":
+            d += 1
+        elif ch in ")]}":
+            d -= 1
+        elif d == 0 and ch == "?" and q < 0:
+            q = i
+        elif d == 0 and ch == ":" and q >= 0:
+            return e[:q], e[q + 1:i], e[i + 1:]
+    return None
+
+
+def _lsb(segs):
+    """MSB-first [(w, srcs)] -> LSB-first [(off, w, srcs)]."""
+    out, off = [], 0
+    for w, srcs in reversed(segs):
+        out.append((off, w, srcs))
+        off += w
+    return out
+
+
+def _cut(src, k):
+    """a source shifted k bits up inside its element (bitwise sources move, whole-range ones do not)."""
+    return ("b", src[1], src[2] + k) if src[0] == "b" else src
+
+
+def _align(parts):
+    """bitwise union of MSB-first segment lists (right aligned, the short ones zero-extended)."""
+    ls = [_lsb(x) for x in parts]
+    n = max((x[-1][0] + x[-1][1]) if x else 0 for x in ls)
+    cuts = {0, n}
+    for x in ls:
+        for off, w, _ in x:
+            cuts.add(off)
+            cuts.add(off + w)
+    cuts = sorted(c for c in cuts if c <= n)
+    out = []
+    for lo, hi in zip(cuts, cuts[1:]):
+        srcs = set()
+        for x in ls:
+            for off, w, ss in x:
+                if off <= lo < off + w:
+                    srcs.update(_cut(q, lo - off) for q in ss)
+                    break
+        out.append((hi - lo, frozenset(srcs)))
+    out.reverse()
+    return out
+
+
+def _whole(expr):
+    """frozenset of whole-range sources ("a", net, lo, hi) of every ident of a logic expression."""
+    return frozenset(("a", nm, lo, hi) for nm, lo, hi in _idents(expr))
+
+
+def expr_segs(expr, widths, depth=0):
+    """MSB-first [(width, frozenset(src))] of a connection / assign expression, or None when it is not a wiring
+    expression.  src = ("b", net, lsb): element bit i is net bit lsb + i; ("a", net, lo, hi): every element bit depends
+    on the whole range (lo None = the whole net).  Handles idents, [i] / [h:l] slices, {a, b} concats, {N{x}}, sized
+    literals, bitwise | & ^ ~ (per bit), and sel ? A : B (per bit of both arms, sel whole)."""
+    e = _strip_parens(expr)
+    if not e or depth > 8:
+        return None
+    if e[0] != "{" and _SIMPLE.match(e):           # fast path: a plain ident / slice
+        m = _SLICE.match(e)
+        nm = m.group(1)
+        if nm in KEYWORDS:
+            return None
+        if m.group(2) is None:
+            if nm not in widths:
+                return None
+            lo, hi = widths[nm]
+        else:
+            h = int(m.group(2))
+            l_ = int(m.group(3)) if m.group(3) is not None else h
+            lo, hi = min(h, l_), max(h, l_)
+        return [(hi - lo + 1, frozenset((("b", nm, lo),)))]
+    t = _ternary(e) if "?" in e else None
+    if t:
+        x, y = expr_segs(t[1], widths, depth + 1), expr_segs(t[2], widths, depth + 1)
+        if x is None or y is None:
+            return None
+        sel = _whole(t[0])
+        return [(w, ss | sel) for w, ss in _align([x, y])]
+    ops = _split_bitwise(e) if ("|" in e or "&" in e or "^" in e) else (e,)
+    if len(ops) > 1:
+        parts = [expr_segs(x, widths, depth + 1) for x in ops]
+        if any(x is None for x in parts):
+            return None
+        return _align(parts)
+    if e.startswith("~") and not e.startswith(("~&", "~|", "~^")):
+        return expr_segs(e[1:], widths, depth + 1)
+    if e.startswith("{") and e.endswith("}") and _closes_at_end(e):
+        inner = e[1:-1].strip()
+        m = re.match(r"^(\d+)\s*(\{.*\})$", inner, re.S)
+        if m:
+            x = expr_segs(m.group(2), widths, depth + 1)
+            return None if x is None or int(m.group(1)) * len(x) > BITS_MAX else x * int(m.group(1))
+        out = []
+        for part in _split_top(inner, ","):
+            x = expr_segs(part, widths, depth + 1)
+            if x is None:
+                return None
+            out.extend(x)
+        return out
+    m = _LIT.match(e)
+    if m:
+        return [(int(m.group(1)), EMPTY)]
+    m = _SLICE.match(e)
+    if m:
+        nm = m.group(1)
+        if nm in KEYWORDS:
+            return None
+        if m.group(2) is None:
+            if nm not in widths:
+                return None
+            lo, hi = widths[nm]
+        else:
+            h = int(m.group(2))
+            l_ = int(m.group(3)) if m.group(3) is not None else h
+            lo, hi = min(h, l_), max(h, l_)
+        return [(hi - lo + 1, frozenset((("b", nm, lo),)))]
+    return None
+
+
+def expr_bits(expr, widths):
+    """MSB-first [frozenset((net, bit or None))] (test / debug view of expr_segs)."""
+    sg = expr_segs(expr, widths)
+    if sg is None:
+        return None
+    out = []
+    for w, ss in sg:
+        for i in range(w - 1, -1, -1):
+            out.append(frozenset((q[1], q[2] + i) if q[0] == "b" else (q[1], None) for q in ss))
+    return out
+
+
+class SegResolver:
+    """register ends (inst, port) -> bits driving a net range, through wiring assigns, at segment granularity."""
+
+    def __init__(self, assigns, widths, drv, skip):
+        self.widths, self.drv, self.skip = widths, drv, skip
+        self.by_net, self.maps, self.memo, self.skipc = {}, {}, {}, {}
+        for lhs, rhs in assigns:
+            m = _SLICE.match(lhs.strip())
+            names = [m.group(1)] if m else [nm for nm, lo, hi in _idents(lhs)]
+            for nm in names:
+                self.by_net.setdefault(nm, []).append((lhs, rhs))
+
+    def _map(self, nm):
+        """[(lo, hi, srcs)] of net nm (lo None = whole net) from the assigns that drive it."""
+        mp = self.maps.get(nm)
+        if mp is not None:
+            return mp
+        mp = []
+        for lhs, rhs in self.by_net.get(nm, ()):
+            L = expr_segs(lhs, self.widths)
+            R = expr_segs(rhs, self.widths)
+            if L is None or any(len(ss) != 1 or next(iter(ss))[0] != "b" for w, ss in L):
+                mp.append((None, None, _whole(rhs)))   # LHS not a plain net / slice / concat: whole net, all of RHS
+                continue
+            if R is None:
+                R = [(sum(w for w, _ in L), _whole(rhs))]
+            ll, rl = _lsb(L), _lsb(R)
+            for off, w, ss in ll:
+                q = next(iter(ss))
+                if q[1] != nm:
+                    continue
+                for roff, rw, rss in rl:
+                    lo, hi = max(off, roff), min(off + w, roff + rw)
+                    if lo < hi:
+                        mp.append((q[2] + lo - off, q[2] + hi - 1 - off, frozenset(_cut(x, lo - roff) for x in rss)))
+        self.maps[nm] = mp
+        return mp
+
+    def _width(self, nm, lo, hi):
+        if lo is not None:
+            return hi - lo + 1
+        w = self.widths.get(nm)
+        return (w[1] - w[0] + 1) if w else 1
+
+    def resolve(self, nm, lo, hi, depth=0):
+        """{(inst, port): bits} driving nm[lo:hi] (lo None = whole net)."""
+        key = (nm, lo, hi)
+        r = self.memo.get(key)
+        if r is not None:
+            return r
+        self.memo[key] = {}                            # cycle guard
+        res = {}
+        if self.skip.match(nm):
+            pass
+        elif nm in self.drv:
+            for dn, dp, dlo, dhi in self.drv[nm]:
+                if lo is None or dlo is None:
+                    n = self._width(nm, lo, hi) if dlo is None else dhi - dlo + 1
+                else:
+                    n = min(hi, dhi) - max(lo, dlo) + 1
+                if n > 0:
+                    res[(dn, dp)] = res.get((dn, dp), 0) + n
+        elif depth < 4 * TRACE_DEPTH:
+            for mlo, mhi, srcs in self._map(nm):
+                if mlo is None or lo is None:
+                    olo, ohi = (mlo, mhi) if lo is None else (lo, hi)
+                    if olo is None:
+                        olo, ohi = 0, self._width(nm, None, None) - 1
+                    base = olo if mlo is None else mlo
+                else:
+                    olo, ohi = max(lo, mlo), min(hi, mhi)
+                    base = mlo
+                    if olo > ohi:
+                        continue
+                n = ohi - olo + 1
+                for q in srcs:
+                    if q[0] == "b":
+                        sub = self.resolve(q[1], q[2] + olo - base, q[2] + ohi - base, depth + 1)
+                    else:
+                        sub = self.resolve(q[1], q[2], q[3], depth + 1)
+                    for k, v in sub.items():
+                        res[k] = res.get(k, 0) + min(v, n)
+        self.memo[key] = res
+        return res
+
+    def sources(self, expr):
+        """[(inst, port, 0, nbits - 1)] of the register ends driving a sink connection expression."""
+        sg = expr_segs(expr, self.widths)
+        if sg is None:
+            sg = [(1, _whole(expr))]
+        cnt = {}
+        for w, ss in sg:
+            for q in ss:
+                sub = self.resolve(q[1], q[2], q[2] + w - 1) if q[0] == "b" else self.resolve(q[1], q[2], q[3])
+                for k, v in sub.items():
+                    cnt[k] = cnt.get(k, 0) + (min(v, w) if q[0] == "b" else v)
+        return [(k[0], k[1], 0, max(1, n) - 1) for k, n in cnt.items()]
 
 
 def _bisect_le(arr, x):
@@ -274,6 +610,8 @@ def type_rows(tn, t, files, pins, reach, stats):
     rs = t.get("relay_sites") if isinstance(t.get("relay_sites"), dict) else {}
     buses = {b.get("name"): b for b in t.get("buses") or [] if isinstance(b, dict)}
     hops, dups, softhops = {}, {}, {}
+    stage_ends = {}                                # seated movable stage -> positions of its judged register ends
+    face_seg = {}                                  # unseated face register -> its bus window segment on the face
     planned = planned_ends(t)
     for fp in files:
         try:
@@ -282,6 +620,8 @@ def type_rows(tn, t, files, pins, reach, stats):
         except OSError:
             continue
         insts, assigns = parse_wrapper(text)
+        stats.setdefault("files", 0)
+        stats["files"] += 1
         hard, nested = match_cores(t, insts)
         if rs and nested:
             seated = {k.split(".", 1)[0] for k in rs if "." in k.split("/", 1)[0]}
@@ -338,20 +678,8 @@ def type_rows(tn, t, files, pins, reach, stats):
             ids = _idents(lhs)
             if ids:
                 alias.setdefault(ids[0][0], []).append(rhs)
-
-        def sources(expr, depth=0, seen=None):
-            seen = set() if seen is None else seen
-            out = []
-            for nm, lo, hi in _idents(expr):
-                if SKIP_NET.match(nm) or nm in seen:
-                    continue
-                if nm in drv:
-                    out.extend(drv[nm])
-                elif nm in alias and depth < TRACE_DEPTH:
-                    seen.add(nm)
-                    for r in alias[nm]:
-                        out.extend(sources(r, depth + 1, seen))
-            return out
+        widths = decl_widths(text)
+        sources = SegResolver(assigns, widths, drv, SKIP_NET).sources
 
         for name, (mod, path, conns) in insts.items():
             if SKIP_MOD.match(mod):
@@ -380,6 +708,16 @@ def type_rows(tn, t, files, pins, reach, stats):
                         continue
                     stats["judged"] += 1
                     d = _man(a, b)
+                    for lab_, other in ((al, b), (bl, a)):
+                        if lab_ and "." not in lab_:
+                            stage_ends.setdefault(lab_, []).append(other)
+                            fm = re.match(r"u_b(?:in|out)_(\w+)$", lab_)
+                            if fm and fm.group(1) in buses and not (rs and any(k.startswith(lab_ + "/") for k in rs)):
+                                bb = buses[fm.group(1)]
+                                w_ = bb.get("window_um") or ()
+                                if len(w_) >= 2:
+                                    face_seg[lab_] = (pin_xy(bb.get("face"), (w_[0], w_[0]), ol),
+                                                      pin_xy(bb.get("face"), (w_[1], w_[1]), ol))
                     if d > reach and not _is_planned(planned, al, bl):
                         k = (al, bl)
                         if k not in hops or hops[k][0] < d:
@@ -398,14 +736,28 @@ def type_rows(tn, t, files, pins, reach, stats):
                 continue
             cx = sum(v[0][0] * v[1] for v in agg.values()) / tot
             cy = sum(v[0][1] * v[1] for v in agg.values()) / tot
+            site, rmin = minimax_site([v[0] for v in agg.values()], ol)
             sp_ = insts[sn][1] or sn
             for (lab, dr, port), (pos, nb) in agg.items():
                 d = _man((cx, cy), pos)
-                if d > reach and "." in lab:      # legs to hard-core pins only (a face leg is the leaf's own I/O flop)
-                    sl = f"{sp_}.{port} (soft, est. seat ({_f(cx)},{_f(cy)}) = centroid of {len(agg)} ends)"
-                    k = (lab, sl) if dr == "in" else (sl, lab)
-                    if k not in softhops or softhops[k][0] < d:
-                        softhops[k] = (d, nb)
+                if d <= reach or "." not in lab:  # legs to hard-core pins only (a face leg is the leaf's own I/O flop)
+                    continue
+                if rmin <= reach:
+                    # SOFT-SITE: a site within reach of EVERY end exists; the free placer's centroid is not it -> pin it
+                    kind, dd = "SOFT-SITE", d
+                    sl = (f"{sp_}.{port} (soft, centroid ({_f(cx)},{_f(cy)}) of {len(agg)} ends; feasible site "
+                          f"({_f(site[0])},{_f(site[1])}) within {_f(rmin)} um of every end)")
+                else:
+                    # SOFT-GAP: no site is within reach of every end: a real gap (stations on the far legs)
+                    dd = _man(site, pos)
+                    if dd <= reach:
+                        continue
+                    kind = "SOFT-GAP"
+                    sl = (f"{sp_}.{port} (soft, no feasible site: best seat ({_f(site[0])},{_f(site[1])}) is "
+                          f"{_f(rmin)} um from its farthest end, {len(agg)} ends)")
+                k = (kind, lab, sl) if dr == "in" else (kind, sl, lab)
+                if k not in softhops or softhops[k][0] < dd:
+                    softhops[k] = (dd, nb)
         # DUPSTN: ot_dp_dly stations with identical resolved d bits
         groups = {}
         for name, (mod, path, conns) in insts.items():
@@ -456,18 +808,57 @@ def type_rows(tn, t, files, pins, reach, stats):
                     if best[0] > r[0]:
                         r[0], r[2] = best[0], (st, st2, best[1][1], best[2][1])
     rows = []
+    reseat = {}
+    for nm, pts in stage_ends.items():
+        if nm in face_seg:                         # a face register sits on its window: best point along the window
+            p0, p1 = face_seg[nm]
+            if p0 and p1:
+                best = None
+                for i in range(65):
+                    q = (p0[0] + (p1[0] - p0[0]) * i / 64.0, p0[1] + (p1[1] - p0[1]) * i / 64.0)
+                    r = max(_man(q, x) for x in pts)
+                    if best is None or r < best[1]:
+                        best = (q, r)
+                reseat[nm] = best
+        elif not nm.startswith(("u_bin_", "u_bout_")):
+            reseat[nm] = minimax_site(pts, ol)
     for (al, bl), (d, a, b) in hops.items():
+        # a seated plan stage (relay_sites) on one end: if some seat is within reach of ALL its ends, re-seat it (0 stations)
+        mv = next((x for x in (al, bl) if x in reseat and reseat[x][1] <= reach), None)
+        if mv:
+            (sx, sy), r = reseat[mv]
+            rows.append(dict(type=tn, family=family(tn), kind="HOP-SITE", src=al, dst=bl, len_um=round(d, 1), stations=0,
+                             over_ps=0, a=a, b=b, site=f"{mv} -> ({_f(sx)},{_f(sy)}), {_f(r)} um from its farthest of "
+                                                      f"{len(stage_ends[mv])} ends"))
+            continue
         rows.append(dict(type=tn, family=family(tn), kind="HOP", src=al, dst=bl, len_um=round(d, 1),
                          stations=int(math.ceil(d / reach)) - 1, over_ps=round((d - reach) * PS_PER_UM),
                          a=a, b=b))
-    for (al, bl), (d, nb) in softhops.items():
-        rows.append(dict(type=tn, family=family(tn), kind="SOFT", src=al, dst=bl, len_um=round(d, 1),
-                         stations=int(math.ceil(d / reach)) - 1, over_ps=round((d - reach) * PS_PER_UM), a=None, b=None))
+    for (kind, al, bl), (d, nb) in softhops.items():
+        site = kind == "SOFT-SITE"
+        rows.append(dict(type=tn, family=family(tn), kind=kind, src=al, dst=bl, len_um=round(d, 1),
+                         stations=0 if site else int(math.ceil(d / reach)) - 1,
+                         over_ps=0 if site else round((d - reach) * PS_PER_UM), a=None, b=None))
     for (ca, cb), (d, n, ex) in dups.items():
         rows.append(dict(type=tn, family=family(tn), kind="DUPSTN", src=f"{ca} (e.g. {ex[0]}_*)",
                          dst=f"{cb} (e.g. {ex[1]}_*; {n} duplicate stations on shared d)", len_um=round(d, 1),
                          stations=0, over_ps=round(d * PS_PER_UM), a=None, b=None))
     return rows
+
+
+def minimax_site(pts, outline=None):
+    """(site, r): the point whose largest Manhattan distance to pts is smallest (L1 balls are squares in u = x + y,
+    v = x - y, so r = max(u range, v range) / 2), clamped into the outline; r is the largest distance from that site."""
+    us = [p[0] + p[1] for p in pts]
+    vs = [p[0] - p[1] for p in pts]
+    u, v = (max(us) + min(us)) / 2.0, (max(vs) + min(vs)) / 2.0
+    x, y = (u + v) / 2.0, (u - v) / 2.0
+    try:
+        x = min(max(x, 0.0), float(outline[0]))
+        y = min(max(y, 0.0), float(outline[1]))
+    except (TypeError, ValueError, IndexError):
+        pass
+    return (x, y), max(_man((x, y), p) for p in pts)
 
 
 def planned_ends(t):
@@ -580,7 +971,8 @@ def findings(raw, plan_path, tree=None, bind_out=None, **kw):
         t0 = time.time()
         if not isinstance(raw, dict) or not raw.get("partition_types"):
             return [f"WARN {CHECK} not checked: plan has no partition_types"]
-        rr, st = rows(raw, plan_path, tree, bind_out, **kw)
+        pre = kw.pop("_rows", None)
+        rr, st = pre if pre else rows(raw, plan_path, tree, bind_out, **kw)
         if rr is None:
             return [f"WARN {CHECK} not checked: no strict bind out (bind_report.json + rtl/) beside the plan or under the tree"]
         reach = st["reach"]
@@ -591,10 +983,18 @@ def findings(raw, plan_path, tree=None, bind_out=None, **kw):
                 out.append(f"WARN {CHECK} {r['type']}: HOP {r['src']} -> {r['dst']} is one cycle with no station: "
                            f"{_f(r['len_um'])} um > reach {reach:g} (~{r['over_ps']} ps over at {PS_PER_UM} ps/um); "
                            f"fix: +{r['stations']} station(s) on the hop, or seat the two ends <= {reach:g} um apart")
-            elif r["kind"] == "SOFT":
-                out.append(f"WARN {CHECK} {r['type']}: SOFT {r['src']} -> {r['dst']} is one cycle with no station (estimate: "
-                           f"the soft leaf has no plan seat): {_f(r['len_um'])} um > reach {reach:g} (~{r['over_ps']} ps over); "
-                           f"fix: +{r['stations']} station(s) on the leg, or a place_region / relay seat for the leaf near this end")
+            elif r["kind"] == "HOP-SITE":
+                out.append(f"WARN {CHECK} {r['type']}: HOP-SITE {r['src']} -> {r['dst']} is {_f(r['len_um'])} um > reach "
+                           f"{reach:g} at the plan seat, but a seat within reach of every end of the stage exists; fix: re-seat "
+                           f"relay_sites {r['site']}, no station needed")
+            elif r["kind"] == "SOFT-GAP":
+                out.append(f"WARN {CHECK} {r['type']}: SOFT-GAP {r['src']} -> {r['dst']} is one cycle with no station and NO "
+                           f"site of the soft leaf is within reach of all its ends (estimate): {_f(r['len_um'])} um from the best seat "
+                           f"> reach {reach:g} (~{r['over_ps']} ps over); fix: +{r['stations']} station(s) on the leg")
+            elif r["kind"] == "SOFT-SITE":
+                out.append(f"WARN {CHECK} {r['type']}: SOFT-SITE {r['src']} -> {r['dst']}: the unplaced leaf's centroid is "
+                           f"{_f(r['len_um'])} um from this end (> reach {reach:g}) but a feasible site exists; fix: pin the leaf at "
+                           f"that site (relay_sites / place_region row), no station needed")
             else:
                 out.append(f"WARN {CHECK} {r['type']}: DUPSTN {r['src']} / {r['dst']}: duplicate ot_dp_dly stations "
                            f"on the same source bits, sinks {_f(r['len_um'])} um apart (~{r['over_ps']} ps of wire added to the far sink if merged); synthesis merges them unless kept, "
@@ -602,12 +1002,16 @@ def findings(raw, plan_path, tree=None, bind_out=None, **kw):
                            f"with distinct d")
         if rr:
             nh = sum(1 for r in rr if r["kind"] == "HOP")
-            ns = sum(1 for r in rr if r["kind"] == "SOFT")
+            nhs = sum(1 for r in rr if r["kind"] == "HOP-SITE")
+            ng = sum(1 for r in rr if r["kind"] == "SOFT-GAP")
+            nsite = sum(1 for r in rr if r["kind"] == "SOFT-SITE")
+            ns = ng + nsite
             out.append(f"WARN {CHECK} summary: {nh} direct one-cycle hop(s) > {reach:g} um in "
                        f"{len({r['type'] for r in rr if r['kind'] == 'HOP'})} type(s) / "
-                       f"{len({r['family'] for r in rr if r['kind'] == 'HOP'})} families, {ns} SOFT estimate(s) in "
-                       f"{len({r['type'] for r in rr if r['kind'] == 'SOFT'})} type(s), "
-                       f"{len(rr) - nh - ns} DUPSTN group(s); {st['judged']} hop(s) judged over {st['bound']}/{st['types']} bound types "
+                       f"{len({r['family'] for r in rr if r['kind'] == 'HOP'})} families, {nhs} HOP-SITE (re-seat the stage, 0 stations), {ng} SOFT-GAP (no feasible site) in "
+                       f"{len({r['type'] for r in rr if r['kind'] == 'SOFT-GAP'})} type(s), {nsite} SOFT-SITE (feasible site, pin it) in "
+                       f"{len({r['type'] for r in rr if r['kind'] == 'SOFT-SITE'})} type(s), "
+                       f"{len(rr) - nh - nhs - ns} DUPSTN group(s); {st['judged']} hop(s) judged over {st['bound']}/{st['types']} bound types "
                        f"(bind out {st['bind_out']}) in {time.time() - t0:.1f} s"
                        f"{' (first ' + str(cap) + ' listed)' if len(rr) > cap else ''}")
         return out
@@ -640,8 +1044,11 @@ if __name__ == "__main__":
                 f.write("plan_sha\ttype\tfamily\tfrom\tto\tlen_um\tstations_needed\test_over_ps\n")
             for r in rr or []:
                 src = r["src"] if r["kind"] == "HOP" else r["kind"] + " " + r["src"]
+                if r.get("site"):
+                    src += f" [re-seat {r['site']}]"
                 f.write(f"{sha}\t{r['type']}\t{r['family']}\t{src}\t{r['dst']}\t{r['len_um']}\t{r['stations']}\t{r['over_ps']}\n")
         print(f"# {len(rr or [])} rows -> {opts['tsv']} ({st})")
+        kw["_rows"] = (rr, st)
     for ln in findings(raw, a[0], tree, opts.get("bind_out"), max_lines=100000 if "--all" in sys.argv else None, **kw):
         print(ln)
     print(f"# load {t1 - t0:.1f} s, check {time.time() - t1:.2f} s")
