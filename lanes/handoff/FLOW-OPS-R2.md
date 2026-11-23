@@ -149,3 +149,16 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - Real probe test on intel2: tmp/pr/probe_run.sh (r9e plan, b_ff4284b42ec7 elab, launch copy tmp/pr/L). Logs: tmp/pr/probe_bind.log and probe.otrun.log.
 - SVC r9g bind fails in pre-emit with a tap spacing error on svc_lo_dsdv_svc_rs__t7 clk_t12. Told COORD.
 - Ingest: S81 t25 and t22 are already counted. The QC credits are applied but redundant.
+
+## 11-23 02:5x update (FLOW-OPS-R2)
+- On main:
+  - 88d4158e281 PRE-ORDER;
+  - a36b0f07e4d EMIT-PAR-MERGE + EMIT-SCHED + PROBE-ONLY;
+  - 9ae5a0cb7c7 PROBE-ONLY b (LF_CS_DEPTH filter);
+  - b5fc0e87f3f TT-DESIGN-REEST (rc45 serdes t2 SEGV).
+  rt/current auto-publishes from main.
+- Real svc probe (4 of 403 types): 35 min, 56 GB RSS. The full bind takes 5 h+.
+- rc45 repro: epyc10 tmp/sdt2 (k/kB/kC on CTS; kG is the GRT-stage DB, running for FABLE-UNC-S81-DIE). Post the result under rc45.
+- HOTSPOT flow classes are posted as measured reasons (849445c566): REPAIR-CAP is caught by design; CLOCK-NDR-DROP is a congestion symptom.
+- Ingest: all items were already counted (3a62dec578).
+- Note: the measurement subagent left /tmp/ndr_a.py and /tmp/ndr_b.py on 7 hosts. They are small scripts and should be removed via ot-delete.
