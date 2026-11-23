@@ -95,3 +95,23 @@ def test_tap_tie_switch_reaches_the_container(monkeypatch, tmp_path):
                               gold_frontend=None, hints=None, port_map=None)
     lec.via_docker(a, "img", 1)
     assert "OT_LEC_TAP_TIE=0" in " ".join(map(str, seen.get("cmd", [])))
+
+
+def test_core_taps_are_tied_like_grid_taps(tmp_path, monkeypatch):
+    """OPUS-FIX-QC-COLL-R3 11-22: CP2 early core taps (budget.json clock.core_taps, clk_c0..) in the root create_clock
+    are tied to the root (coll_core CTS LEC: 8 u_fs black-box clk differs on clk_c0..clk_c7); a core tap outside the
+    root clock, or wider than 1 bit, stays a free input (fail closed)."""
+    monkeypatch.delenv("OT_LEC_TAP_TIE", raising=False)
+    ports = PORTS + [("clk_c0", "input", 1, 0), ("clk_c1", "input", 1, 0), ("clk_c2", "input", 2, 0),
+                     ("clk_c3", "input", 1, 0)]
+    (tmp_path / "budget.json").write_text(json.dumps({"clock": {
+        "taps": [{"name": t, "kind": "density"} for t in ("clk", "clk_t1")],
+        "core_taps": [{"port": p, "inst": "u.f", "pin": "clk"} for p in ("clk_c0", "clk_c1", "clk_c2", "clk_c3")]}}))
+    (tmp_path / "constraint.sdc").write_text(
+        "create_clock -name clk -period 833 [get_ports {clk clk_t1 clk_c0 clk_c1 clk_c2}]\n"
+        "create_clock -name other -period 833 [get_ports clk_c3]\n")
+    r = lec.clock_tap_ties(tmp_path, ports)
+    assert r["root"] == "clk" and r["ports"] == ["clk_t1", "clk_c0", "clk_c1"]
+    assert {u["port"] for u in r["untied"]} == {"clk_c2", "clk_c3"}
+    v = lec.wrapper_verilog("top", ports, ties={p: r["root"] for p in r["ports"]})
+    assert ".clk_c0(clk)" in v and ".clk_c1(clk)" in v and ".clk_c3(clk_c3)" in v

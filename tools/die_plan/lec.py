@@ -4749,11 +4749,18 @@ def clock_tap_ties(kit, top_ports):
         return None
     kit = Path(kit)
     try:
-        taps = [str(t["name"]) for t in (json.loads((kit / "budget.json").read_text()).get("clock") or {})
-                .get("taps") or [] if isinstance(t, dict) and t.get("name")]
+        ck = json.loads((kit / "budget.json").read_text()).get("clock") or {}
+        taps = [str(t["name"]) for t in ck.get("taps") or [] if isinstance(t, dict) and t.get("name")]
+        # CP2 early core taps (budget.json clock.core_taps: clk_c0 .. clk_cN, one port per hard-core clock pin) sit in
+        # the same create_clock as the grid taps; after CTS the core clock pin hangs on its own port while the gold RTL
+        # drives it from the root.  Same fail-closed checks as a grid tap (OPUS-FIX-QC-COLL-R3 11-22: coll_core LEC
+        # 8 differs = the 8 u_fs core taps clk_c0..clk_c7).
+        grid = list(taps)
+        taps += [str(t["port"]) for t in ck.get("core_taps") or []
+                 if isinstance(t, dict) and t.get("port") and str(t["port"]) not in taps]
     except (OSError, ValueError, AttributeError, TypeError):
         return None
-    if len(taps) < 2:
+    if len(grid) < 2:
         return None
     try:
         sdc = (kit / "constraint.sdc").read_text()
@@ -4774,7 +4781,7 @@ def clock_tap_ties(kit, top_ports):
         nm = re.search(r"-name\s+(\S+)", args)
         clocks.append((nm.group(1) if nm else (ports[0] if ports else None), ports))
     ins = {p: w for p, d, w, lo in top_ports if d == "input"}
-    tapset = set(taps)
+    tapset = set(grid)          # the home clock and the root come from the grid taps; core taps only join it
     home = [(c, ps) for c, ps in clocks if tapset & set(ps)]
     if len(home) != 1:
         return dict(root=None, clock=None, ports=[], basis="budget.json clock.taps + constraint.sdc create_clock",
