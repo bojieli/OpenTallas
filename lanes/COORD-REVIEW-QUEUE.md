@@ -30952,3 +30952,5 @@ FAILED [AUTOPILOT bce2db956e3f] 2026-11-23 03:38:20 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 03:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 03:52 PST: 225 running jobs, PROGRESSING 213, SLOW 10, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 36.9 h job 36.9 h: no new meaningful log line for 35.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS intel1 tt_ctlm pregrt_ff_hold stage 6.8 h job 8.0 h: no new meaningful log line for 6.4 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.002 |   0.000 | u_bound.u_bin_native_ret/q[43]
+- 2026-11-23 03:52 PST GRT-FLAT watchdog cancelled 1 wave attempt(s) (class PLAN design:grt_flat_overflow): s81/ot_s81sl_leaf__t11@2 23.7 GB
+  [filed under] FLEET-WATCH-R8: FLEET-WATCH-2000 stood down (chain FLEET-WATCH-2000 > FLEET-WATCH-R3 > FLEET-WATCH-R8)
