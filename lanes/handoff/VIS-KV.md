@@ -17,3 +17,6 @@ TODO: D28 die render epyc8 /srv/opentallas-scratch2/claude/vis-kv/tmp/die/d28_di
 - Die floorplan render read (D28 + D29r3, viskv/q_*.png via dieq.py on epyc8 venv; render.py stuck in check / sink_bins path). Verdict in GEOM-REVIEW.
 - pc: R1 no-growth fails PRE; R1b rotate not allowed (schema orient). Ruled growth G=112.32: IOPC-R4 builds the type transform + probes; KV-PLAN-R6 queued die shift PC-CHANNEL-WIDEN in D30_QUEUE.txt.
 - Waiting: probe renders hgi_v5 (HG-R8), sys_c row C (HUBC C6 -> probe), pc_v1 PCV1BANK cl7f648944, hroot D28 kits (intel1 place), hub_Wo/Eo. After D29 seal ~03:00: render changed types, then pass list to KV-PLAN-R6 before 06:00.
+
+## 11-23 00:4x
+- D29 r4 composed (epyc8 kv-plan-r6/d29/r4_post/plan_reset.json, 12 rows, gates PASS) read at die level against base_d28: no partition and no hard core moved; die outline is the same. 32 types changed, only in internal_stations/relay_sites/relay_depth/clock/ft_slots/reset_spine_pins/contents (sys_c). Die render viskv/q_d29r4.png matches D28. So the die-neighbourhood check is clean; per-type evidence comes from the probe kits (no PROBE-PASS yet). pc channel widen is not in D29; it is D30 PC-CHANNEL-WIDEN.
