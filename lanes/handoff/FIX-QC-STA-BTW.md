@@ -11,3 +11,9 @@ Report to FIX-LEDGER (acd269758d3b62a53) at ROOT-CAUSE, ROW-DRAFT, GATED/REASONE
   cl67389ecd +19.24 (r3 view ..._h17_n9_s10, cfg arc credit 125-128 ps, arr 922) -> same wire, +40 ps from the macro view
   clf4365a62 +34.41 (n7_s8 view credit 80-91, arr 854 = ~70 ps shorter wire)
 - Kit GRT basis (tt_setup_repair_grt.log, setRC_rcx + OT_RC_SIGNAL x1.25): worst endpoint after repair u_u_r3/cfg_nwords_p[5] -216.8 (repair stall), wns -218.27. Own STA on final 5_1_grt.odb: running (epyc2 meas/cled_grt).
+## 04:0x ROOT-CAUSE (hub post c7b845c)
+- Own STA on final 5_1_grt.odb (epyc2 FIX-QC-STA-BTW/meas/cled_grt, btw_meas.sh/tcl): b_tw q[22] -> u_u_r3/cfg_nwords_p[5] -218.27 (= type WNS); r3 arc 1073 um Manhattan, 17 stages, 0 stations; r2 724 um -18.9; r0/r1 +236/+274. Region cfg pins r0 (430,163) r1 (404,490) r2 (395,831) r3 (395,1172); bank output buffers (430-505,293).
+- Form ruled: adopt FABLE-UNC-QC STA-BTW-0 (0 cycles; q[0..28] FIRM (412.5,666.8)). Reasons: one cfg shift per slice preserved; +1 station form withdrawn (needs st_b RTL).
+- Gate: epyc8 /srv/opentallas-scratch2/claude/FIX-QC-STA-BTW/gate_btw0.sh btw0g (apply on c2b -> reprice 0 lanes -> TAPNAME 0/0 -> latency -> pgp check -> G0). Local log scratchpad gate_btw0.out.
+- Asked HCST-R3 (ad1cb539e214811d9) for the STA-1b/btab_s4r btab origins, to clear the (412,667) site.
+- NEXT: when PRE+G0 pass -> ROW-DRAFT to FIX-LEDGER + V4-R2 (a0667f53915fbc5a6) for c4 08:00; probe = sealed st_a kit on c4 bound (or a private bind of btw0g) for setup >= -42 on the b_tw class + census incl q[29..1079] -> btab.
