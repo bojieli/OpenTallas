@@ -15,3 +15,12 @@ Viewed exact images on 2026-11-23. The source checkpoints and their render log h
 ## Post-seat hold ECO review 15:05 PST
 
 Viewed the exact E9 seated checkpoint floorplans and density images in `master_drafts_codex/route_r2/<type>/hold_eco_1500/review`. CNW SHA a9831b9a2d8c has two new internal HB4 cells, CPL 2c23c845520f and IKR 9c11486093324 have one each, and IKW ef974ee40a58 has 32. The CNW and IKW north pin edge is dense, with clear interior and continuous PG tracks. CPL and IKR keep separate logic islands and open channels. All four have no macro obstructions, present the original face pin counts and show continuous PDN. PASS for isolated incremental routing of the named HB4 nets. Use fresh extraction and corner checks before promotion.
+
+## KVQ placement, QNH/KVR global route and horizontal KVT CTS 15:09 PST
+
+Viewed exact floorplan and density images under each `review_1502` directory.
+
+- Intel1 `runs/kvq_place_1437` SHA fbabb4c25a3d has 2 SRAMs, 2,310 pins and 0.537 site fill. The 2 SRAMs preserve open side and middle channels, with narrow populated strips. The two bottom pin clusters remain distinct. PASS for TT/FF CTS on this checkpoint.
+- Intel1 `runs/qnh_grt_1450` SHA 74b995b3f34e has 624 pins, 0.493 fill, and 23.04% aggregate GRT demand with zero overflow. Some mid/upper local density is high but shows breaks and open edge space. PASS-COND for isolated detailed route and fresh corner checking.
+- Intel1 `runs/kvr_grt_1450` SHA 19895162232f has 261 pins, 0.530 fill, and 21.33% aggregate GRT demand with zero overflow. The northwest hot area is local and the south and southeast retain routing room. PASS-COND for isolated detailed route and fresh corner checking.
+- E9 `cts_codex/mm/kvtch_place_1437` SHA 5b981ab8f82f has 7,127 pins, 0.386 fill and 260 PG records. The approximate 702×25.92 µm strip preserves N/S separation and clear edge approaches, continuous PG, and a centre clock entry. PASS-COND for isolated global-route capacity measurement. Setup repair left endpoints to diagnose before adopting the master.
