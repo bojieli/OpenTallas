@@ -273,3 +273,17 @@ FIX-LEDGER x13 (per-type verilog_defines dead for flattened logic/explicit param
      WITH LAG 95ddb61ae6f6 (b_822b131dc371) / NO-LAG 6251a023d393 (bindNolag). They differ only in 216 clock core_pin_lead_ps ops (no-lag ops in j9/w/ops_nolag/).
      Rule: if the lag probe CTS (~09:30-10:30) improves latch->ROM setup and ROM-out is not worse -> LAG; else, or if not done by 10:30 -> NO-LAG in wave A and LAG to wave B.
      DEFAULT = NO-LAG 6251a023d393. The H10/COL rebase on 95ddb is valid for either, since only core_pin_lead_ps differs (old-value check).
+   3j ROWS-READY (hub db0f2a27e78f, lanes/handoff/FABLE-UNC-S81-SVC-J9-rows.txt):
+     Gate v12 on r9h 417840aae146 (SVC-R9 treeJ8g, rt 3df271c64c94): PRE 0 findings / 66 ADV (= base); tap rule + reset_tree PASS on 16 types; land-cap 0 >= 0.90, 0 band-core overlaps.
+     Tools (intel2 fable-unc-s81-svc/):
+       gate_j9_v5.sh 73b181c0fb80
+       att_order_row_v6.py a703f3891f97 + att_layouts: lo 589e0b81b6c7, pvso b4defe6fb68b, rs_t1_t6 73060b6ffc39, rs_t2att_t3 8d0e27c904b6, ref_anchor 66e5afb4abb5
+       landcap_row_v2.py beb344508852, strap_site_row.py 6cc4bc78ff7d, att_order_post_v7.py 27d915ee5fac
+     Refs: plan_svcrows_v12.json 4e824d8ec6b1, sidecar eW_sidecar_v12.json 8a7077536c21.
+     On the composed plan the recipe writes eW_sidecar_<TAG>.json, which replaces split_hi4x_r9/eW_sidecar.json before the bind.
+     Compose checks:
+       - run the TOOLS, not the ops (post step needs the tree + rt tools).
+       - after reprice/reset.die_relays: hi rs t1 collector depth 14->13, lo t3/t4/t5 15->16.
+       - WESTRIP's local +4.32/+2.16 dx on rs t4_att/t5_att precedes; the anchor follows it.
+       - the gate used a stale tree (treeJ8g) and rt 3df271c64c94 only as a row gate. The composed run is on the J8 sealed fork + rt/current 3b25e3b42d4d.
+     Strict bind/LAT + place/GRT probe ride the composed gate (REASONED to FABLE-RC-S81).
