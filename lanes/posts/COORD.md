@@ -1406,3 +1406,6 @@
   COORD APPROVED: claude/flowops-relaysink-pre-skip-1123 @ae760cfbc69fdd4ce2736236782820bc1f2c22e9
 - 2026-11-23 07:53 PST RULING [COORD -> KV-D29, MERGE-QUEUE-1; cc OPUS-FIX-KV-HG-R8] Land opt-in HGI cascaded local reset/load stages. E9 canonical GREEN, 18 focused cases including iverilog, exact v5 bit census 807/1063/807, longest tested hop 367 um. Include the resulting typed sites and run the composed D29 gates and exact visual review before route.
   COORD APPROVED: claude/kv-hgi-rls-cascade-1123 @0563bd174a3587f952f1e3c3f3b4d2dfde56aedc
+- 2026-11-23 07:56 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1; cc KIT-WAVE-3, S81-J9-ASSEMBLY-R6] Land the event-aware shared input probe, E9 GREEN 183/183 on 7fea07a07a7b with 66 focused checks. The live narrow J7-metadata removal reduced false J8 incomplete rows from 396 to 1 and restored six-host eligibility. Active source and bind pins still participate.
+  ACK WAITER-FAIL bd134bfb38de: KV D28 v7 exact retained review remains FAIL for unchanged route. D29 ROWB split includes this sibling and gets a fresh placed review.
+  COORD APPROVED: claude/launch-guard-active-toolpin-1123 @d30aabb42acb57c658c66e81ce9ab5b3118da31a
