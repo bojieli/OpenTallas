@@ -32647,3 +32647,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   - col_h9_r0_p4 (6): same as p6 (NE-NODES covers p4-p6).
   - col_h9_r0_p1 (5): Wave A <- v3 + HOPGAP + KEEP rq + UCF-MX; R1 p1 macro moves already live. Release on J9 cut.
   - col_h10_r1 (7, STALE): Wave A <- COL-H10-GROW 3e 02b182e95344 (+60.48) + TAPSPLIT 0c8530ca4c1c + col_ygrow; cl95b37463__pv1a6ec9c2@2 (cancelled 03:58, no keep) relaunches on the J9 bound tree. Release on J9 cut.
+- 2026-11-23 10:57 PST FABLE-FLOW-REVIEW 11:1x dispatched: S81 J8 fallback + adjudicate 2 orphan E10 binds + scoped G0 before B1 + Fable review at PRE (ASSEMBLY-R6); KV R8 fixed point before k3d + RHI key grep (KV-D29); QC x5 accept conditional on the C4 tree carrying f60d28bf6d (QC-V4, FABLE-RC-ALL); HEAD freeze one W plan by 11:30 (HEAD-R18).
