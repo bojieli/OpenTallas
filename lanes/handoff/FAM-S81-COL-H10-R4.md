@@ -68,3 +68,11 @@ Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fa
 - porous 3 rows live main 152df1bc05; abstract_pin_stub follow-up main 9c133d90aec; porous refresh_eol main 373d0e97716. Push 2 withdrawn (solid views already 0).
 - L1e/f/g GRT ovf 0, TT -166..-174 (pinreg 485-490 vs 450, taps balanced on placement RC). J9 row COL-H10R0P4-TAPGRT (rows_COL-H10R0P4-TAPGRT_J9.json 217b77b58c2c). Proof L1t epyc7 specL1t/runL1t.log (waiter: GRT TT gate).
 - A2/C1 real stop = DRT flat 1385 EOL from stale porous rows (RSZ-0060 = hold chunk cap). C2 = C1 porous off, epyc7 specC2/runC2.log (waiter: run end).
+
+## 11-23 01:4x state
+- Spill bug (ADMISSION_TOOLS missing bundle) owned by FLOW-OPS-R2. Launch every kit pinned: OT_RUN_STRICT_HOST=1 OT_RUN_NO_SPILL=1 OT_RUN_NO_PIN_SPILL=1 OT_RUN_NO_LOAD_SPILL=1.
+- L1t (h10_r0_p4 pvcc166a6d, kit _1123013932): attempt 3 runs on epyc9 (container dpkit-...-2109433). Tap pre-pass OK (taps 442-460), CTS TT -50.6, now in GRT. Orphan epyc10 copies stopped. GRT TT goes to FIX-SYNC-S81.
+- C2 (h10_r2 pv1619ecc6, C1 with porous off): pinned on epyc7, in CTS.
+- K2 = C2 + OT_KEEP_WIRES ot_dp_dly:r (DUPSTN-MERGE), kit _1123093337, epyc7 specK2/runK2.log; the waiter counts u_w stations at synth.
+- J9: accepted VIS COL-H10R0-E1E-CHAN (ed768119171b). Owe ASSEMBLY TAPGRT v2 (add col_h10_r0_p1 + col_h10_r2) before 09:00.
+- RC-GAP reply dc8c5004d41 (+ item 7 update 9ff825de10d). Rows still to draft: SEAMBLK (r0_p4 ROM seam blockage, J9/J10), H10R1-TAPSPLIT (J10, hand to RANKSEAT-R2/VIS).
