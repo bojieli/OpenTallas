@@ -29692,3 +29692,4 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   (10) coll g_pf[1] W pack -> SEAT-1a: spread into the empty SE quarter, built by COLL-R3 (extend COLL-1 beyond g_xf).
   (11) coll shr_p_rx_i -> SEAT-1b ROW: ring to its own window, folded into VIS-QC-DIE-COLL-BANDS.
   Probes: st_a / cb (3 types) / su_l1 under the full-census rule.
+- 2026-11-23 01:35 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-2632702-1795426188 on tolerant-swine: rc=0 after 342 s, ended 01:35:26, log none, cmd: --mem 24 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/hotspot-census --crit --max-wait 5400 -- python3 -E /srv/opentallas
