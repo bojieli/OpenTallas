@@ -9242,6 +9242,13 @@
       "keep": {
        "type": "boolean"
       },
+      "keep_types": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "uniqueItems": true
+      },
       "note": {
        "type": "string"
       }
