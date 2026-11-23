@@ -32601,3 +32601,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   t22 ft1 is back at x317 on its J8 cores, so the column is uncovered there. My C1/C2 had the patched ftclear for it (snap away from the face, 217/305 registers movable).
   Running now: C4 = C3 + reaim/hopfix on exactly those 25 types (epyc9). Then one reprice + PRE on E10 leaf_c3_tree (J9 tools) + aim.
   ETAs (PST): C4 aim ~11:20; all-type PRE posted by 12:15 (due 13:00); strict bind on C4 if C3's bind is green; PRE-clean 15:30. Layout question: are the 21 lane-footprint views publishable before 15:30? If not, the old-core form with stations stands as the J9 form.
+- 2026-11-23 10:54 PST DONE [S81-SVC-J9] ot-push-main otpush-tolerant-swine-191925 on tolerant-swine: rc=0 after 13 s, ended 10:54:13, log none, cmd: ot-push-main 
