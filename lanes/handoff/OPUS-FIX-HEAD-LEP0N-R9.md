@@ -62,3 +62,9 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - Columns C1 x175 / C2 x530 / C3 x755 (C2 sits east of the pair core taps at x498-508 y596; first try at 450 covered them). 51 explicit taps re-legalized with the bind rule (taps.explicit_tap_sites OK 183); 29 die-clock rects resited (ledger L/plan/resite_r18w3.json, stack_um shifted) -> for R8.
 - Reset relays renumbered: ecol_remap.py (move table ecol_moves_hd_lep0N.json) remapped 58 refs + 5 exports; gate vs translated baseline base_r18t_ecol.json. Chain L/tmp/chain_r9_ecol.sh TAG (restarts from base_r18t.json each run).
 - Placed probe ep1: unit r9-lep0n-ep1 (intel2), launch_probe_r9.sh (rt e1cd348d4842, --goal grt, probe-through, allow congestion), epyc7. Next: read the GRT overflow map + census vs 45,948; PROBE-PASS only per fe8a2a5.
+
+## 02:5x ep1 FAILED at GPL (structural, mine): OT_CLAND no legal site in band stage:rxbank_l1b2 - generic re-site put rxbank_l1b1+l1b2 in ONE rect.
+- Fix in ecol_rows.py: stage groups handled per tag; bank groups (rxbank_l<g>b<b>, txwd/txread_l<r>b<b>) follow their own macro delta; all groups legalized vs macros+3 um halo and vs other tags (no overlap); rx row pitch 45.36 (macro + its group), C1 rx 4 wide (10 banks, 3 rows).
+- r18x fork timed out (FORK_RC 124, epyc7 load 146) -> ot-delete of partial r18x; composed event now built in trees/s81_head_r18w_ecol (ep1 done, tree free).
+- Composed r18x1 = r18t + ECOL(new) + SPLIT E + SPLIT W (x-mapped +34.56, wsplit_rows.py) + W resite + coll_i0 spread 2.6 + PAIRTAP 210 + WTAPOFF (66 ports) + CLASS-FIX-RHI RST,HSK,IO --only hd_lep0N,hd_lep0N_w. Chain L/tmp/chain_r9_compose.sh r18x1 (ot-run epyc7, log intel2 chain7_r9_r18x1.otrun.log). Next: placed probe ep2 + census, then send to FABLE-RC-KVHEAD.
+- nap: FAIL_route RSZ-0060 at GRT, post-GRT hold -131 (probe only).
