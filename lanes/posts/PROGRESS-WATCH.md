@@ -278,3 +278,4 @@
 - 2026-11-23 02:06 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_Wo x7@kit_rtl, kv3_hg_v3 x2@gen_lint)
 - 2026-11-23 02:47 PST ALERT NO-PROGRESS qwen_compute: 3 eligible rows, 0 KIT-WAVE LAUNCH for 86 min (last 01:20); 27 hold(s): 17 without eta, 0 overdue, next eta 11-23 03:00; NO-LAUNCH x1
 - 2026-11-23 03:07 PST ALERT NO-PROGRESS qwen_kvsys: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 62 min (last 02:05); 12 hold(s): 8 without eta, 1 overdue, next eta 11-23 03:35; NO-LAUNCH x1
+- 2026-11-23 03:08 PST ALERT NO-ADVANCE qwen_kvsys: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_hub_Wo x5@kit_rtl, kv3_hg_v1p5 x2@gen_lint)
