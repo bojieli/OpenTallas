@@ -32969,3 +32969,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   Family: about 60 leaf types get the row. Worst hops go from 400-760 down to 400 or less. 6 rows are NEAR-REACH at 406-434 (t21 t27 t29 t42 t58 t68); each needs +1 station, which goes in the census.
   The other 2 groups are reset (u_rr/crr): CRR_PRE2 is die-wide in C5.
   Folded into C6 (see t75 post). ETA PRE ~13:30.
+- 2026-11-23 11:34 PST DONE [S81-KVLEAF-T2-ARCH-R2] ot-run oth-ubuntu-1007058-1795462055 on tolerant-swine: rc=0 after 388 s, ended 11:34:01, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/closed_eq/otrun.log, cmd: --mem 64 --threads 4 --hosts localhost --dir /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch -- bash closed_eq/run.sh
