@@ -206,3 +206,8 @@ STEP 0 TREE SYNC (COORD 06:xx): the J9 fork of the J8 sealed tree gets the 4 u_c
      - No window moves, so no extra strict bind.
    Recipe: final_gate.sh dd1bcdcaee1a, g0_cmp.sh e71ba2e5e810.
    With hi4 (R9 189008ce34df): PRE passes, but 11 slice/station seam re-snaps need strict bind.
+SLICE C (R6 / VIS-MISC 03:28): 15 overloaded clock landing bands on 7 slice C types (plan 6c1f82db89ab). The cause is xr_move/xgarray, which never checked landing bands.
+   Worst before fix: t9 xtier_i0 3.36, leafup_i3 1.95, lepe_nh_mus ret_i3 6.23.
+   Fix row j9_cland_ops: 35 bands re-sited or resized on 15 types (70 ops, within 405 um). Worst after 0.70, 0 overloaded.
+   Current J9 slice C plan a9e1ba6bfc6d (hub d0393d7). R6 runs G0 then strict bind on an epyc9 fork.
+   Composer: take R6's GATED sha. ADV-LAND-CAP (main 0d6ca16289) must show 0 on the composed plan.
