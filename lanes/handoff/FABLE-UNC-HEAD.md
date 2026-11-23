@@ -15,3 +15,13 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 ## NEXT
 1. LEP-PUSHDUP-1: lane clone, generator patch, regen, sim/equiv, apply on r18x tree, gate, E probe.
 2. ep1 census read. 3. r18x1 review of WTAPOFF/PAIRTAP. 4. reports (1) and (2) to COORD.
+
+## 02:3x state (LEP-PUSHDUP-1 in build)
+- Row script: epyc7 /srv/opentallas-scratch2/claude/fable-unc-head/tmp/pushdup_rtl.py FILE (idempotent; rtl/dsrom_sys/s81_head/ot_s81hd_lep0N_split_tx_io_stages.sv ade1bb2fe54f -> 6a04159bb196; file is tree-only, not on main). Local copies: scratchpad/unch/{pushdup_rtl.py,pushdup_equiv.sh,eq_docker.sh,chain_unch_gate.sh}.
+- Equiv (hub ot_s81hd_lep0N_noidx_hubc, E wrapper params, kit RTL of ep1 vs patched): intel2 ~/fable-unc-head/eq1.otrun.log, unit oth-ubuntu-4047734-1795429277 epyc7, out epyc7 D/eq/out (D=/srv/opentallas-scratch2/claude/fable-unc-head). PASS line = LEP_PUSHDUP_EQUIV PASS.
+- Fork: intel2 ~/fable-unc-head/forkY7.sh -> epyc7 D/trees/s81_head_r18y_pushdup (from R9 r18w_ecol), log fork7_r18y.log (slow: disk load; R9's r18x fork also slow).
+- After fork: `ot-run --priority plan --hosts epyc7 --no-spill --mem 24 --threads 4 --disk 5 --dir D -- bash D/tmp/chain_unch_gate.sh r18y1 > ~/fable-unc-head/chain_r18y1.otrun.log` (applies the patch, PRE vs base_r18t_ecol, bind, cohort, LATCHECK).
+- Then probe: intel2 ~/fable-unc-head/launch_probe.sh yp1 s81_head_r18y_pushdup hd_lep0N epyc7 probe (unit unch-lep0n-yp1, goal grt, probe-through). A/B vs R9 ep1 (same plan, no patch): expect wn[1] -> rg3 txi gone.
+- Class items: CLASS-FIX-RHI writes the HEAD die rows for RESET-ASYNC + IO-BOUNDARY (its TAKING post 02:16; my AGREE 9dd7f242). GRT-0273 handed to FLOW-OPS-R2 (d10c8eb7).
+- Posts: CLAIM 34587e25, REPORT-1 821a9c26, ROW-DRAFT 9b91990b, AGREE 9dd7f242, HANDOVER d10c8eb7.
+- rc138: e1 geometry shows die-clock reserved rects [805.2,651.2,813.7,654.2], [810.6,609.1,813.7,632.6], [825.8,634.5,828.3,656.9] beside rx_mem g_rx[3] bank[2] (x747-799): a 11-27 um slot. ECOL moved the macros; decide on ep1 census.
