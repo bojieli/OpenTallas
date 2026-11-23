@@ -10,12 +10,12 @@ sys.path.insert(0, str(HERE))
 import check  # noqa: E402
 
 
-def _lef(d, name, vdd="M5", vss="M5"):
+def _lef(d, name, vdd="M5", vss="M5", obs=""):
     def pin(p, use, lay):
         geo = f"    PORT\n      LAYER {lay} ;\n        RECT 3.0 1.0 3.2 9.0 ;\n    END\n" if lay else ""
         return f"  PIN {p}\n    USE {use} ;\n{geo}  END {p}\n"
     p = Path(d) / f"{name}.lef"
-    p.write_text(f"MACRO {name}\n  SIZE 20 BY 10 ;\n{pin('VDD', 'POWER', vdd)}{pin('VSS', 'GROUND', vss)}END {name}\n")
+    p.write_text(f"MACRO {name}\n  SIZE 20 BY 10 ;\n{pin('VDD', 'POWER', vdd)}{pin('VSS', 'GROUND', vss)}{obs}END {name}\n")
     return str(p)
 
 
@@ -52,8 +52,8 @@ def test_mutant_missing_core_pg_connect_warn_then_error():
 
 
 def test_mutant_lef_without_pg_geometry():
-    """no VSS geometry, M7-only PG pins, and VDD/VSS on different layers are each a finding even with the opt-in set"""
-    for kw in (dict(vss=None), dict(vdd="M7", vss="M7"), dict(vdd="M5", vss="M4")):
+    """Missing a supply or using unmatched layers is a finding even with the opt-in set."""
+    for kw in (dict(vss=None), dict(vdd="M7"), dict(vdd="M5", vss="M4")):
         with tempfile.TemporaryDirectory() as d:
             R, s = _run(_P(d, lef_kw=kw), strict=True)
             assert len(R.errors()) == 1, kw
@@ -76,3 +76,21 @@ def test_type_without_macros_not_flagged():
         P.types["hd"]["hard_cores"][0].pop("lef")       # a declared core without a view places no macro
         R, s = _run(P, strict=True)
         assert R.items == [] and s["types_with_macros"] == 0 and s["types_cores_without_lef"] == ["hd"]
+
+
+def test_m7_only_pg_is_published_to_die_grid():
+    with tempfile.TemporaryDirectory() as d:
+        for connect in (True, None):
+            R, summary = _run(_P(d, connect=connect, lef_kw=dict(vdd="M7", vss="M7")), strict=True)
+            assert not R.items and not summary["lefs_no_pg"]
+
+
+def test_pg_check_uses_per_type_landing_mode_for_shared_lef():
+    obs = "  OBS\n    LAYER M6 ;\n    RECT 0 0 20 10 ;\n  END\n"
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d, connect=None, lef_kw=dict(obs=obs))
+        P.types["hd_explicit"] = dict(P.types["hd"], core_pg_connect=True)
+        P.parts["p_explicit"] = {"type": "hd_explicit"}
+        R, summary = _run(P, strict=True)
+        assert len(R.errors()) == 1 and "buried under OBS on M6" in R.errors()[0]["msg"]
+        assert summary["insts_no_pg"] == 2

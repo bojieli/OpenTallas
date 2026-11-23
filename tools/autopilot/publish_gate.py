@@ -370,7 +370,9 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     for rp in proof_paths(tree, rows_proofs):
         pre += ["--rows-proof", rp]
     # REMAP-BASE-1122: LANDREMAP / ISTCYC compare with the die's live plan of record (band_base), when the tree's checker knows --remap-base
-    if band_base and os.path.isfile(band_base) and "--remap-base" in Path(dp, "plan_gate_pre.py").read_text(errors="replace"):
+    band_base_ready = band_base and os.path.isfile(band_base)
+    pre_tool = Path(dp, "plan_gate_pre.py")
+    if band_base_ready and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
         pre += ["--remap-base", str(band_base)]
     rc1, t1 = _sub(pre, tree)
     Path(work).mkdir(parents=True, exist_ok=True)
@@ -378,7 +380,8 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     g0 = [py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", g0_dir]
     # LANDING-BAND-CORE (COORD 11-22): the die's live plan of record is the base: its band x core overlaps are inherited (WARN), new ones ERROR.
     # Only a check.py that knows --band-base gets it (an older tree's checker has no landing_band_core at all).
-    if band_base and os.path.isfile(band_base) and "--band-base" in Path(dp, "check.py").read_text(errors="replace"):
+    g0_tool = Path(dp, "check.py")
+    if band_base_ready and g0_tool.is_file() and "--band-base" in g0_tool.read_text(errors="replace"):
         g0 += ["--band-base", band_base]
     rc2, t2 = _sub(g0, tree)
     try:
