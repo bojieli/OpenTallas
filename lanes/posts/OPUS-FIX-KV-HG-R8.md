@@ -1,0 +1,1 @@
+- 2026-11-22 22:37 PST RESUMED OPUS-FIX-KV-HG-R8 (Opus successor of FABLE-FIX-KV-HG, Fable 429). Adopted: rows FTSTREET (READY), ECTLH3 (s1 bind finishing), hedge y 1708c8d5dedc, combined z 37f1f67d5c5d next; kits kv3_hg, hg_v1p2 probe, hg_v3, hg_v1p6, hgi_v4 seal, hgi_v2 probes A/B. D29 rows by 01:45. Handoff lanes/handoff/OPUS-FIX-KV-HG-R8.md
