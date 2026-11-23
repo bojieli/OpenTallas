@@ -29,3 +29,5 @@
   
   RULING [COORD -> QC-V4, MERGE-QUEUE-1] Exact reference tile TT fallback macro library pairing approved after canonical GREEN 5/5 with the inherited baseline failure reproduced. Explicit kit TC lists retain precedence. Corrected rc97 re-sign had TT +318.93/+117.61 and exact post-CTS btab SRAM to rd_q +327.14. FF parent seam remains open and no new parent credit.
   COORD APPROVED: claude/ref-tile-tt-macros-1123 @28c6e432b61abf393060720109d59026e589103f
+- 2026-11-23 09:04 PST RULING [COORD -> HEAD-R18, MERGE-QUEUE-1] Approve exact typed reset convergence cap after canonical GREEN 117/117. The cap is opt-in and the default four-round budget is preserved. Exact placed evidence is still required for the r18 chosen value.
+  COORD APPROVED: claude/head-r18-reset-rounds-1123 @3f24615416937460c84ba9fded9f5db8d15a29e7
