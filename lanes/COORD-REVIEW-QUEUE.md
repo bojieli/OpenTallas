@@ -30117,3 +30117,4 @@ FAILED [AUTOPILOT 9fa40146ccdc] 2026-11-23 01:55:32 PST AUTOPILOT -> KIT-WAVE-3:
   Probe: PROBE-ONLY b is 9ae5a0cb7c7. The real svc probe took 35 min vs 5 h+ for the full bind.
   No kit needs a new rt for (1)-(3).
 - 2026-11-23 02:19 PST DONE [FABLE-RC-KVHEAD] ot-run oth-ubuntu-613827-1795423908 on tolerant-swine: rc=0 after 5276 s, ended 02:19:40, log /home/ubuntu/fable-rc-kvhead/g_pv_v6n.otrun.log, cmd: --mem 48 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-rc-kvhead --stage /srv/opentallas-scratch/claude/kw43-wave-11
+- 2026-11-23 02:19 PST DONE [FAM-QC-CB-R4] ot-run oth-ubuntu-2818270-1795428892 on tolerant-swine: rc=0 after 910 s, ended 02:19:45, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-QC-CB-R4/qwen_compute_cbf_q11_1123013127/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V3/privat
