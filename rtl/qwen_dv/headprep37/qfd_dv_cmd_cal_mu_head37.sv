@@ -135,7 +135,9 @@ module qfd_dv_cmd_cal_mu_head37 #(
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
+    parameter integer COLD_DELTA = 0,
     parameter integer HEAD_STAGE37 = 0,            // PREP only: explicit stage37 LOCAL4 acceptance, default remains36
+    parameter integer TABLE_NEXT = 0,               // opt-in LOCAL4 bit 11: request the following stage
     parameter integer TABLE_ROM = 0,                // opt-in LOCAL4 explicit table-load pulse (with CALENDAR_ROM)
     parameter integer CALENDAR_ROM = 0,             // opt-in CALR10 / two-ROM calendar fetch; +1 fetch edge
     parameter integer CTX_DW = 0,                   // 1: DW5 / DW6 = the MU context record (ctx_dw / ctx_load)
@@ -207,7 +209,7 @@ module qfd_dv_cmd_cal_mu_head37 #(
     wire [9:0]  nent_n = CALENDAR_ROM ? d0_n[9:0] : {1'b0, d0_n[8:0]};
     reg  [18:0] csa_s, csa_c, csa_t;
     always @* begin
-        sb_n = (CALENDAR_ROM ? (d0_n[63:32] != 32'h43414c52 || d0_n[31:10] != 22'd0) :
+        sb_n = (CALENDAR_ROM ? (d0_n[63:32] != 32'h43414c52 || (d0_n[31:11] != 21'd0 || d0_n[10] != (COLD_DELTA != 0))) :
                (d0_n[63:32] != 32'h43414c44 || d0_n[31:26] != 6'd0 || d0_n[15:9] != 7'd0 || base_n[2:0] != 3'd0 ||
                 {1'b0, base_n} + {nent_n, 1'b0} > 11'd976 || {4'd0, base_n} < {meta_n, 4'd0})) ||
                nent_n == 10'd0 ||
@@ -242,7 +244,7 @@ module qfd_dv_cmd_cal_mu_head37 #(
         reg [9:0] b, n;
         begin
             b = d[25:16]; n = nent8(d);
-            hdr8 = (CALENDAR_ROM ? (d[63:32] != 32'h43414c52 || d[31:10] != 22'd0) :
+            hdr8 = (CALENDAR_ROM ? (d[63:32] != 32'h43414c52 || (d[31:11] != 21'd0 || d[10] != (COLD_DELTA != 0))) :
                     (d[63:32] != 32'h43414c44 || d[31:26] != 6'd0 || d[15:9] != 7'd0 || b[2:0] != 3'd0 ||
                      {1'b0, b} + {n, 1'b0} > 11'd976)) || n == 10'd0;
         end
@@ -610,10 +612,14 @@ module qfd_dv_cmd_cal_mu_head37 #(
     // TABLE_REL: the stage each playhead was started on (payload, unreset: read only by a REL LOCAL4 entry of the
     // segment that this very start opened; loaded on the same edge and condition as the playhead's run state)
     reg  [5:0]    pst [0:NU-1];
+    reg  [5:0]    next_pst [0:NU-1];
     integer       pk;
     always @(posedge ck)
         for (pk = 0; pk < NU; pk = pk + 1)
-            if (go_u[pk] && !start_bad && g_cnt_nz) pst[pk] <= boot_go ? 6'd0 : c_stage;
+            if (go_u[pk] && !start_bad && g_cnt_nz) begin
+                pst[pk] <= boot_go ? 6'd0 : c_stage;
+                if (TABLE_NEXT != 0) next_pst[pk] <= boot_go ? 6'd1 : c_stage + 6'd1;
+            end
 
     // ================================================================ fetch / head, per playhead (combinational)
     reg  [NU-1:0]  can_read, gnt, hv, late, hgo, zd;
@@ -743,23 +749,29 @@ module qfd_dv_cmd_cal_mu_head37 #(
     // CALENDAR_ROM: the granted playhead's 4-entry request goes to the two-ROM calendar (pin register inside); the
     // capture register returns on the rd_v edge of that playhead (rce_q -> rce2_q -> rd_v, as the ROM's pv -> mv -> valid)
     wire       rom_valid, rom_fault; wire [1:0] rom_user; wire [5:0] rom_stage; wire [2:0] rom_count;
-    reg        rom_req; reg [9:0] rom_first; reg [2:0] rom_n; reg [1:0] rom_u;
+    reg        rom_req; reg [9:0] rom_first; reg [2:0] rom_n; reg [1:0] rom_u; reg [5:0] rom_stage_in;
     integer    ri;
     always @* begin
-        rom_req = 1'b0; rom_first = 10'd0; rom_n = 3'd0; rom_u = 2'd0;
+        rom_req = 1'b0; rom_first = 10'd0; rom_n = 3'd0; rom_u = 2'd0; rom_stage_in = 6'd0;
         for (ri = 0; ri < NU; ri = ri + 1) if (gnt[ri]) begin
             rom_req = 1'b1; rom_first = f_idx[ri]; rom_n = f_n[ri]; rom_u = 2'(ri);
+            if (COLD_DELTA != 0) rom_stage_in = pst[ri];
         end
     end
-    generate if (CALENDAR_ROM != 0) begin : g_calrom
+    generate if (CALENDAR_ROM != 0 && COLD_DELTA == 0) begin : g_calrom
         qfd_dv_calendar_rom #(.NENT(1023)) u_rom (.ck(ck), .rst_n(rst_n), .req(rom_req),
             .first(rom_first), .count(rom_n), .user_id(rom_u), .stage(6'd0),
+            .install(pw_v && running), .running(running), .valid(rom_valid), .data(rom_data),
+            .out_user(rom_user), .out_stage(rom_stage), .out_count(rom_count), .fault(rom_fault));
+    end else if (CALENDAR_ROM != 0) begin : g_dual_calrom
+        qfd_dv_calendar_rom_dual_age #(.NENT(1023), .COLD_DELTA(COLD_DELTA)) u_rom (.ck(ck), .rst_n(rst_n), .req(rom_req),
+            .first(rom_first), .count(rom_n), .user_id(rom_u), .stage(rom_stage_in),
             .install(pw_v && running), .running(running), .valid(rom_valid), .data(rom_data),
             .out_user(rom_user), .out_stage(rom_stage), .out_count(rom_count), .fault(rom_fault));
     end else begin : g_no_calrom
         assign rom_valid = 1'b0; assign rom_fault = 1'b0; assign rom_data = 512'd0;
         assign rom_user = 2'd0; assign rom_stage = 6'd0; assign rom_count = 3'd0;
-        wire unused_rom = &{1'b0, rom_req, rom_first, rom_n, rom_u};
+        wire unused_rom = &{1'b0, rom_req, rom_first, rom_n, rom_u, rom_stage_in};
     end endgenerate
     // the ROM's own valid / user / count must agree with the playhead pipeline (a mismatch is an image fault)
     wire       rom_mis = (CALENDAR_ROM != 0) && (rom_valid != (|rd_v) ||
@@ -816,8 +828,9 @@ module qfd_dv_cmd_cal_mu_head37 #(
             // TABLE_ROM (LOCAL kind 4): explicit table-load request, checked from the registered head
             trk[v] = (TABLE_ROM != 0) && (CALENDAR_ROM != 0) && hu[115:112] == 4'hE && hu[3:1] == 3'd4;
             // TABLE_REL: bit 10 = stage-relative (the playhead's started stage pst, image field [9:4] = 0)
-            tst[v] = hu[10] ? pst[v] : hu[9:4];
-            trb[v] = hu[111:11] != 101'd0 || (hu[10] && hu[9:4] != 6'd0) || tst[v] < 6'd1 || tst[v] > (HEAD_STAGE37 ? 6'd37 : 6'd36);
+            tst[v] = hu[10] ? ((TABLE_NEXT != 0 && hu[11]) ? next_pst[v] : pst[v]) : hu[9:4];
+            trb[v] = hu[111:12] != 100'd0 || (hu[11] && (TABLE_NEXT == 0 || !hu[10])) ||
+                     (hu[10] && hu[9:4] != 6'd0) || tst[v] < 6'd1 || tst[v] > (HEAD_STAGE37 ? 6'd37 : 6'd36);
         end
     end
     // the issuing playhead: the lowest with a go entry this edge (one-hot select); a second one is a collision
