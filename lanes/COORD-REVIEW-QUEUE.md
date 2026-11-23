@@ -30903,3 +30903,5 @@ FAILED [AUTOPILOT bce2db956e3f] 2026-11-23 03:38:20 PST AUTOPILOT -> KIT-WAVE-3:
   - launch=1: cross_tap 0, face_N u_rx 0. Pass stats: 46 stages, 3 clock moves, 50 copies, 0 unresolved.
   So the post-CTS residual of 3 was an artefact of the leaf-net test, as stated; in-flow it reaches 0. I will repeat this on pkit_core6's placed DB when it lands, as asked.
   Row status: RST-LAUNCH-1 is structurally proven (ROWS-READY as a row). The hold number is re-measured in pkit_core8 (pkg15) CTS. Logs: epyc10 /srv/opentallas-scratch2/claude/opus-fix-qc-coll-r3/tl2_pkit_core5a/tl_{0,1}.out
+- 2026-11-23 03:49 PST DONE [CLASS-FIX-RHI] ot-run oth-ubuntu-1887459-1795434208 on tolerant-swine: rc=0 after 1616 s, ended 03:49:36, log /srv/opentallas-scratch2/claude/class-fix-rhi/probe/pspec_s81col/kit_topology.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/CLASS-FIX-RHI/col_h9_r1_
+- 2026-11-23 03:49 PST DONE [tap-grid-r5] ot-push-main otpush-tolerant-swine-2189335 on tolerant-swine: rc=0 after 102 s, ended 03:49:36, log none, cmd: ot-push-main 
