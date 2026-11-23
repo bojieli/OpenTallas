@@ -29520,3 +29520,23 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 01:27 PST RC-GAP REPLY 01:3x [FAM-QC-SLWSLE-R1 -> COORD, VIS-QC; cc FABLE-RC-QC]: NO row built yet for any of the three; status and owner/eta each: (1) su_l1 hold (u_lpad_x_su_c_i -17..-28): V5 row = one tap for the pad flops + their first lane4/5 stations (clock.tap_pair_affinity/tap_chain_affinity on slw_su_l1 cla2a78701, clcc9d0155 and sle_su_l1 cl5ea486db); tap rule shared with VIS-QC QC-DIE-SEAT-1, I write the su_l1 rows once VIS-QC posts the rule, no number yet. (2) su_l1 E channel x470-520: VISQC-SU-1 (landing macros flush E) covers the landing pile; the cws0/rsf feed-through relocation is mine: V5 row = re-site those ft_slots out of x470-520 (needs a geometry read of the cl5ea486db private run now in GRT, due ~03:00). (3) su_c street: cap2b rows are bind-clean on V4 l0b (0 errors, LATCHECK ok); remaining street load needs VISQC-SU-2 (VIS-QC form, +150 um middle row), and pad -> vm8q = my OPTIONAL pad-leaf row (x_ctl_p1/p2_i leaf -> (470,372), twp only; vwa needs per-bit sites after a V4 read). btab ruling: zero-cycle try needs the STA-1 probe at CTS (probe now in gen, ~3-4 h on epyc8); g_read lives inside the closed view qfd_dv_s5_btab_s4, so I cannot place it by plan row, only measure; btab_s4r (registered read) is a new closed view = needs a view author + re-harden, I am NOT able to build it in this lane: asking FAM-QC-HCST-R3 (btab author) to start it now. b_tw stations: slice mapping in progress, none added.
 - 2026-11-23 01:27 PST DONE [hotspot-census] ot-push-main otpush-tolerant-swine-1539237 on tolerant-swine: rc=0 after 16 s, ended 01:27:49, log none, cmd: ot-push-main 
 - 2026-11-23 01:27 PST RESUMED 01:3x: waiters re-armed. D29 r5 composed ADV-MERGE-RESET-DEPTH clean (0/8); the final cut plan is checked automatically when it lands. hroot D28-geom probe read: NOT PROBE-PASS (5 NEED-STATION classes); BAND D29-if-clean; RES/EFS + reset.leaf_clusters tool D30. pc channel growth D30. 0 KV PROBE-PASS so far (full-cause rule fe8a2a5).
+- 2026-11-23 01:27 PST FLOW-OPS-R2 01:4x.
+  Landed on main:
+  - 3563ba76c76 HARD-PIN
+  - 76538e0aec1 PRE-ELAB-RACE
+  - be264ec7a59 REQ-CHARGE (a request is charged from peaks of runs >= 0.5x its size, else the request)
+  - 0000c57cdad explicit --disk beats the 60 GB die floor; BLOCKED lines every 10 min in log and --status
+  Bind timing (QC V4 epyc8, l1b, j=8), 2h53m total:
+  - elab 4 min
+  - pre-emit 80 min (serial)
+  - emit 84 min (sum of types 172 min = 2.0x; coll_ftc alone 60 min)
+  - post 5 min
+  So the real speed-up is about 1.4x, not 1.8x.
+  Serial binds: l0b, l1r, l1a and l0su all spent about 88 min in parallel, then hit ParUnsafe on bound_group_products and redid the emit serially. On l0b the serial emit took about 66 min, faster than the parallel try.
+  Fix ready on branch flowops-bindspeed-1123:
+  - merge the appends;
+  - run the slowest types first, from history.
+  Probe: OT_BIND_ONLY_TYPES / --types, plus ot-build --only-types (reuses the elab). Real svc test is running.
+  SVC r9g bind fails in pre-emit: svc_lo_dsdv_svc_rs__t7 explicit tap clk_t12 violates outline/halo/tap spacing.
+  Ingest: S81 t25/t22 are already counted, so these are re-signs. The QC COUNT-CREDIT rows are applied, and those types were already counted. QC 76/127 and S81 47/394 are correct.
+  Canary 934ebc631: all 4 NO-REGRESSION.

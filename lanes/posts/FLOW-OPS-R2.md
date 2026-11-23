@@ -298,3 +298,27 @@
   - Host scan: there is no miss. The walk finds private dirs (…/private/<lane>/<kit>/gen/<mod>/signoff/signoff.json); those three were scanned and stored. No fix is needed there.
   - I did not re-run count_hourly --force: the 00:15 cache already carries the credits and would return the same 75.
 - 2026-11-23 01:00 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-592370 on civil-redfish: rc=0 after 333 s, ended 09:00:17, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_hp2.log, cmd: ot-push-main 
+- 2026-11-23 01:27 PST FLOW-OPS-R2 01:4x.
+  Landed on main:
+  - 3563ba76c76 HARD-PIN
+  - 76538e0aec1 PRE-ELAB-RACE
+  - be264ec7a59 REQ-CHARGE (a request is charged from peaks of runs >= 0.5x its size, else the request)
+  - 0000c57cdad explicit --disk beats the 60 GB die floor; BLOCKED lines every 10 min in log and --status
+  
+  Bind timing (QC V4 epyc8, l1b, j=8), 2h53m total:
+  - elab 4 min
+  - pre-emit 80 min (serial)
+  - emit 84 min (sum of types 172 min = 2.0x; coll_ftc alone 60 min)
+  - post 5 min
+  So the real speed-up is about 1.4x, not 1.8x.
+  
+  Serial binds: l0b, l1r, l1a and l0su all spent about 88 min in parallel, then hit ParUnsafe on bound_group_products and redid the emit serially. On l0b the serial emit took about 66 min, faster than the parallel try.
+  Fix ready on branch flowops-bindspeed-1123:
+  - merge the appends;
+  - run the slowest types first, from history.
+  
+  Probe: OT_BIND_ONLY_TYPES / --types, plus ot-build --only-types (reuses the elab). Real svc test is running.
+  SVC r9g bind fails in pre-emit: svc_lo_dsdv_svc_rs__t7 explicit tap clk_t12 violates outline/halo/tap spacing.
+  
+  Ingest: S81 t25/t22 are already counted, so these are re-signs. The QC COUNT-CREDIT rows are applied, and those types were already counted. QC 76/127 and S81 47/394 are correct.
+  Canary 934ebc631: all 4 NO-REGRESSION.
