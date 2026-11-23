@@ -335,7 +335,13 @@ while :; do
   fi
   flock -u 8; exec 8>&-
   case "$WHY" in "load cap:"*|"load gate:"*) _wf=load;; "short pool:"*) _wf=short-slot;; *) _wf=memory;; esac
-  [ $waited = 0 ] && echo "ot-heavy: waiting for $_wf on $(hostname): $WHY" >&2
+  # BLOCK-NOTE-1123 (COORD 11-23: LEAF-ROUTE-CBC J9 gates queued ~1 h with no visible reason): the first wait line, then every 10 min
+  # the rail that still holds the job (memory / load / slot, with its numbers), so a long wait names its cause in the job's own log
+  _wnow=$(date +%s)
+  if [ $waited = 0 ]; then echo "ot-heavy: waiting for $_wf on $(hostname): $WHY" >&2; _wlast=$_wnow
+  elif [ $(( _wnow - ${_wlast:-0} )) -ge "${OT_HEAVY_BLOCK_NOTE_S:-600}" ]; then
+    echo "ot-heavy: BLOCKED $(( (_wnow - T0) / 60 )) min on $(hostname) by $_wf: $WHY" >&2; _wlast=$_wnow
+  fi
   waited=1
   case "$MAXWAIT" in ''|*[!0-9]*) ;; *) [ $(( $(date +%s) - T0 )) -ge "$MAXWAIT" ] && { echo "ot-heavy: NOT RUN: no memory on $(hostname) within ${MAXWAIT} s ($WHY)" >&2; exit 75; };; esac
   if [ "${OT_HEAVY_PRIO:-}" = die ]; then sleep 5; else sleep 20; fi   # v11: a die waiter re-tries first (DIE-FIRST v2 = order)

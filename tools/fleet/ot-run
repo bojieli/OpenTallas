@@ -280,11 +280,15 @@ PIN_FALLBACK = [False]
 PIN_WAITED = [False]
 
 
-def pin_wait(pinned, pick, hosts, nodir, max_wait, elapsed):
+def pin_wait(pinned, pick, hosts, nodir, max_wait, elapsed, d=None):
     """HARD-PIN-1122: True when a pinned request no pinned host admits should wait and re-place on them (not NOT RUN, not elsewhere):
     hard pin (the request named --hosts), not --pick, inside --max-wait, and at least one pinned host refuses for a passing reason
-    (nodir = pinned hosts that never will: no --dir there, request above physical RAM)"""
-    if not pinned or pick or soft_pin() or not hosts:
+    (nodir = pinned hosts that never will: no --dir there, request above physical RAM).  Only a job with a --dir (the host-local data that
+    ties it to the pin) waits; a pinned job without one keeps its loud NOT RUN, and so does --strict-host / OT_RUN_STRICT_HOST / OT_RUN_HARD_PIN
+    (the caller asked for an immediate answer)."""
+    if not pinned or pick or soft_pin() or not hosts or not d:
+        return False
+    if os.environ.get("OT_RUN_STRICT_HOST") or os.environ.get("OT_RUN_HARD_PIN"):
         return False
     if max_wait is not None and elapsed >= max_wait:
         return False
@@ -967,7 +971,7 @@ def drop_eta(ok, need_gb, say=None, now=None, d=None, plan=False):
     return out, held
 
 
-def drop_low_disk(ok, die, need, say=None):
+def drop_low_disk(ok, die, need, say=None, explicit=False):
     """Reserve active die scopes and queued launchers once; unknowns use 60 GB.
 
     Hosts below DISK_RESERVE_BELOW_GB retain this future-write budget in addition
@@ -980,7 +984,9 @@ def drop_low_disk(ok, die, need, say=None):
     out = dict(ok)
     for h, r in ok.items():
         free = r.get("disk_gb", 0)
-        if free - need < DIE_FREE_FLOOR_GB:
+        # DISK-EXPLICIT-1123 (COORD: J9 gates --crit --disk 2 sat ~1 h on epyc9 behind this 60 GB die default): a job that names its own --disk is
+        # judged on it; the die real-free floor is the default for die jobs that declare nothing.  Host floors (scratch / root guard) are unchanged.
+        if not explicit and free - need < DIE_FREE_FLOOR_GB:
             out.pop(h)
             if say:
                 say(f"ot-run: {h} skipped for this die job: DISK {free} GB free - {need} GB this job < {DIE_FREE_FLOOR_GB} GB real-free floor")
@@ -1430,6 +1436,8 @@ def status(hosts):
     if best2 and best2 != best:
         next_job += f" | with --dir on scratch2 -> {best2}" + (" (would queue)" if queue2 else "")
     print("ot-run status: " + " | ".join(out) + next_job)
+    for _d, _age, _ln, _w in blocked_tickets()[:20]:      # BLOCK-NOTE-1123: this hub's blocked waiters and the rail that holds each
+        print(f"ot-run status: BLOCKED {_age / 60:.0f} min {_ln or '-'} {_d}: {_w}")
 
 
 def drain_state(hosts):
@@ -2096,8 +2104,33 @@ def ticket_open(d, now=None, path=None, lane=None):
     return now if r is None else r
 
 
-def ticket_touch(d, state=None, host=None, now=None, path=None):
-    """refresh a dir's ticket (last, and state / host when given)"""
+BLOCK_NOTE_S = int(os.environ.get("OT_RUN_BLOCK_NOTE_S", "600"))
+
+
+def block_why(notes, hosts, place_notes, disk, explicit):
+    """BLOCK-NOTE-1123: one line naming what holds a waiting client: the disk-rail notes of this pass, then each candidate's refusal"""
+    parts = [str(x).replace("ot-run: ", "") for x in notes][:4]
+    parts += [f"{h}: {place_notes[h]}" for h in hosts if place_notes.get(h)][:4]
+    if not parts:
+        parts = ["no refusal on the ot-run side: the host queue (ot-heavy memory / load / slot) holds it, see its BLOCKED line"]
+    return f"--disk {disk} GB{'' if explicit else ' (default)'}; " + "; ".join(parts)[:700]
+
+
+def blocked_tickets(path=None, now=None, older_s=None):
+    """[(dir, age s, lane, why)] of waiting tickets older than older_s (default BLOCK_NOTE_S) that carry a BLOCKED reason"""
+    now = now or time.time()
+    older_s = BLOCK_NOTE_S if older_s is None else older_s
+    try:
+        t = json.load(open(path or TICKETS))
+    except (OSError, ValueError):
+        return []
+    out = [(k, now - float(v.get("first", now)), v.get("lane", ""), v["why"]) for k, v in t.items()
+           if v.get("state") == "waiting" and v.get("why") and now - float(v.get("first", now)) >= older_s and now - float(v.get("last", 0)) < TICKET_TTL_S]
+    return sorted(out, key=lambda x: -x[1])
+
+
+def ticket_touch(d, state=None, host=None, now=None, path=None, why=None):
+    """refresh a dir's ticket (last, and state / host / BLOCKED reason when given)"""
     if not d:
         return
 
@@ -2109,6 +2142,10 @@ def ticket_touch(d, state=None, host=None, now=None, path=None):
                 e["state"] = state
             if host:
                 e["host"] = host
+            if why:
+                e["why"] = why
+            elif state and state != "waiting":
+                e.pop("why", None)
     _ticket_rw(go, path, now)
 
 
@@ -2604,8 +2641,10 @@ def main():
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
+    disk_explicit = disk is not None
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
     say = lambda m: print(m, file=sys.stderr, flush=True)
+    _block = {"last": 0.0}
     eta_stage_tried = False
     while True:
         if not first and not pinned:    # v9 RE-PLACE: hosts added / held / released since this client started count now
@@ -2622,7 +2661,16 @@ def main():
             if _pf:
                 say(f"ot-run: NOT RUN: {_pf}")
                 not_run(_pf)
-        ok = drop_low_disk(raw, die, disk, say if first else None)
+        _bn = []                                     # BLOCK-NOTE-1123: the rail notes of this pass
+        ok = drop_low_disk(raw, die, disk, (say if first else _bn.append), explicit=disk_explicit)
+        _el_b = time.time() - t0
+        if not first and _el_b >= BLOCK_NOTE_S and time.time() - _block["last"] >= BLOCK_NOTE_S:
+            # BLOCK-NOTE-1123: a client re-placing for over 10 min names the rail that holds it (disk numbers per host; memory / load waits are
+            # named by the host's ot-heavy BLOCKED line), in its log and in its fleet ticket (ot-run --status lists blocked tickets)
+            _why = block_why(_bn, hosts, PLACE_NOTES, disk, disk_explicit)
+            say(f"ot-run: BLOCKED {int(_el_b / 60)} min: {_why}")
+            ticket_touch(d, state="waiting", why=f"{time.strftime('%H:%M')} {_why}")
+            _block["last"] = time.time()
         ok, eta_held = drop_eta(ok, disk, say if first else None, d=d, plan="OT_HEAVY_PRIO=plan" in os.environ.get("OT_RUN_PRIO_ENV", ""))
         if eta_held and not ok:
             # every candidate would cross its floor within the horizon: a HOLD, not a failure -- wait and re-place (NOT-RUN only when --max-wait ends)
@@ -2752,7 +2800,7 @@ def main():
                 continue
             _nod = [h for h in hosts if PLACE_NOTES.get(h) == "no " + str(d)]
             if pin_wait(_pinned_req is not None, pick, hosts, _nod + [h for h in hosts if "exceeds physical RAM" in str(PLACE_NOTES.get(h) or "")],
-                        max_wait, elapsed):
+                        max_wait, elapsed, d=d):
                 # HARD-PIN-1122: the pinned hosts refuse now for a reason that passes (disk floor, probe, memory): wait there, re-place
                 if first or not PIN_WAITED[0]:
                     say(f"ot-run: PIN-WAIT: pinned {','.join(hosts)} admits no job now ({why[:300]}); waiting there (a --hosts pin never runs "
