@@ -37,3 +37,8 @@ HOTSPOT-GAPS.tsv / HOP-GAPS.tsv: not landed at 02:0x.
 - FABLE-UNC-S81-SVC now BUILDS rc14/15/19/20 + SVC-SMS-ORDER; SVC-R9 keeps x1 split rebase. adv_hop_gap.py over-counts hcore->h4 ~8x.
 - CLASS-FIX agent id still not received from COORD (10 hg rows).
 - Sweep timer: background sleep 1500 (re-arm each sweep). 2-h report due ~04:00 real time.
+
+## 02:54 (intel2 clock)
+- Recounted the hg rows against HOTSPOT-GAPS v2.4 (05b3ebe0ae0). All 313 NONE items (S81 204, KV 74, QC 20, HEAD 15) sit in owned class rows. Ledger hub beed724.
+- Counts were posted to COORD (072cd94). The next per-die OPEN post is due 05:00, then every 2 h. Stamp times from `ssh intel2 date`; it matched local time at 02:54.
+- Slice C row re-issued as plan_f65f_xga2_xf_tl.json 6c1f82db89ab on epyc8/9 (tap halo fix by R6). Its gate is on epyc9.
