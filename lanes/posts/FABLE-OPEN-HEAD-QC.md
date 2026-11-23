@@ -1,0 +1,1 @@
+- 2026-11-23 05:57 PST TAKING FABLE-OPEN-HEAD-QC: items rc138 (HEAD hd_lep0N E stripe x810 y650-660 + shared-cause check with W spec 1123040001 manual FAIL) and x5 (QC st_a DPL-0033 after repair). Plan: (1) read ep3/wp3 probe + geom review, own render of the stripe; (2) check V3/V4 trees for f60d28bf6d + read rerun logs; (3) one row each or REASONED: HEAD by 10:30, QC by 12:30.
