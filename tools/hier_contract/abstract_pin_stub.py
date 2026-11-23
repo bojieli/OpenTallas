@@ -448,6 +448,16 @@ SHADOW_MIN_LEVEL = 4
 # (relay / face flop) beside the macro keeps M2..M4 access within the 0.072 um wide-shape spacing of the shadow OBS
 # (col pv11b73b67 ECO: DRT-1231 on a DFF pin beside u_cf).  OT_OBS_SHADOW_EDGE_UM=<um> overrides it.
 SHADOW_EDGE_UM = 0.30
+# FIX-S81-UCF-VIEW 11-23 (COORD: VIA34 fallback for u_cf rc72): OT_OBS_SHADOW_MIN_LEVEL=3 (opt-in; default 4) also shadows
+# M3 under the M4 OBS (+ shadow), so no free M3 pocket sits under a closed M4 (VIA34-through-OBS class).  Levels below
+# M4 keep the wider SHADOW_LOW_EDGE_UM inset (OT_OBS_SHADOW_LOW_EDGE_UM), so parent std cells beside the macro keep M2/M3
+# pin access (the DRT-1231 reason the default stops at M4).
+SHADOW_LOW_EDGE_UM = 1.0
+
+
+def shadow_min_level():
+    v = os.environ.get("OT_OBS_SHADOW_MIN_LEVEL")
+    return max(3, int(v)) if v and v.strip().isdigit() else SHADOW_MIN_LEVEL
 EOL_FWD_UM = {"M4": 0.048, "M5": 0.048, "M6": 0.048, "M7": 0.048}   # asap7 LEF58_EOLKEEPOUT forward extension
 EOL_WIDTH_UM = {"M4": 0.025, "M5": 0.025, "M6": 0.05, "M7": 0.05}  # ... applies below this line-end width
 
@@ -503,10 +513,12 @@ def shadow_lower(head, obs, only=None, mark=True):
     ms = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", head)
     full = (_iu(float(ms.group(1))) * _iu(float(ms.group(2)))) if ms else 0
     ed = _iu(float(os.environ.get("OT_OBS_SHADOW_EDGE_UM", SHADOW_EDGE_UM)))
-    inner = (ed, ed, _iu(float(ms.group(1))) - ed, _iu(float(ms.group(2))) - ed) if ms else None
-    clip = lambda q: q if inner is None else (max(q[0], inner[0]), max(q[1], inner[1]), min(q[2], inner[2]), min(q[3], inner[3]))
-    for n in range(int(top[1:]) - 1, SHADOW_MIN_LEVEL - 1, -1):
+    edl = max(ed, _iu(float(os.environ.get("OT_OBS_SHADOW_LOW_EDGE_UM", SHADOW_LOW_EDGE_UM))))
+    box = lambda e: (e, e, _iu(float(ms.group(1))) - e, _iu(float(ms.group(2))) - e) if ms else None
+    for n in range(int(top[1:]) - 1, shadow_min_level() - 1, -1):
         L, up = "M%d" % n, "M%d" % (n + 1)
+        inner = box(ed if n >= SHADOW_MIN_LEVEL else edl)
+        clip = lambda q, inner=inner: q if inner is None else (max(q[0], inner[0]), max(q[1], inner[1]), min(q[2], inner[2]), min(q[3], inner[3]))
         own = [norm(tuple(map(_iu, r))) for r in by.get(L, [])]
         if full and any((r[2] - r[0]) * (r[3] - r[1]) >= 0.9 * full for r in own):
             break          # blanket layer (and everything below it in a kit view): nothing reachable to shadow

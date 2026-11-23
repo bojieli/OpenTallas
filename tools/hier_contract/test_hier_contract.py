@@ -553,6 +553,26 @@ class ViaShadowEolStub(unittest.TestCase):
             self.assertLessEqual(r[3], sz[1] - 0.30 + 1e-9, r)
         self.assertTrue(any(r[0] <= 0.3 + 1e-9 and r[1] <= 0.3 + 1e-9 and r[3] >= 5.9 for r in m4), m4)
 
+    def test_shadow_min_level3_low_inset(self):
+        """FIX-S81-UCF-VIEW 11-23: OT_OBS_SHADOW_MIN_LEVEL=3 adds an M3 shadow under the M4 OBS, >= 1.0 um inside the outline;
+        the default (unset) stops at M4 and is unchanged"""
+        import abstract_pin_stub as APS, os
+        t = lef(obs=[("M5", 0, 0, 20, 6)], sig=(("a", "M4", 10.0, 9.0),))
+        head, ob = APS.split_lef(t)
+        base = APS.shadow_lower(head, ob)
+        self.assertNotIn("M3", base[2])
+        os.environ["OT_OBS_SHADOW_MIN_LEVEL"] = "3"
+        try:
+            _, ob3, added = APS.shadow_lower(head, ob)
+        finally:
+            del os.environ["OT_OBS_SHADOW_MIN_LEVEL"]
+        m3 = APS.obs_rects(ob3)["M3"]
+        self.assertTrue(added["M3"] and m3, m3)
+        for r in m3:
+            self.assertGreaterEqual(min(r[0], r[1]), 1.0 - 1e-9, r)
+            self.assertLessEqual(r[2], 20.0 - 1.0 + 1e-9, r)
+        self.assertEqual(APS.obs_rects(ob3)["M4"], APS.obs_rects(base[1])["M4"])
+
     def test_shadow_only_and_disable(self):
         import abstract_pin_stub as APS, os
         head, ob = APS.split_lef(lef(obs=[("M5", 4, 2, 16, 6)], sig=(("a", "M5", 5.0, 0.0),)))

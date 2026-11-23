@@ -120,7 +120,8 @@ def finalize(out, top, helper, lint_module, lint_kwargs=None, transform=True):
         raw.write_bytes(lef.read_bytes())
         candidate = provenance / (top + '.candidate.lef')
         receipt.update(input={'path': str(raw.relative_to(out)), 'sha256': expected},
-                       environment={key: os.environ.get(key) for key in ('OT_OBS_CLOSE', 'OT_OBS_CLOSE_UM')})
+                       environment={key: os.environ.get(key) for key in ('OT_OBS_CLOSE', 'OT_OBS_CLOSE_UM')
+                                    + tuple(k for k in ('OT_OBS_SHADOW_MIN_LEVEL', 'OT_OBS_SHADOW_LOW_EDGE_UM') if os.environ.get(k))})
         if transform is True:
             helper_hash = sha(helper)
             receipt['helper'] = {'path': str(helper), 'sha256': helper_hash}
