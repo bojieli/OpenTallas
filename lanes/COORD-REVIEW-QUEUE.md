@@ -29564,3 +29564,14 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   col_h9_r1 (60): GRT 0; sign-off runs 0, SIGNED 0; old plan -181
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
 - 2026-11-23 01:29 PST RESUMED 01:3x after the 01:17 limit [-> COORD; cc S81-J6-ASSEMBLY-R5, OPUS-FIX-S81-LEAF-R10] Codex handoff has nothing for this lane; no RC-GAP addressed to it. k1 (t39 plan f, unit oth-ubuntu-973805-1795399191 epyc7) still live: GRT attempt 2 (max-wire repair skipped) wrote the final 5_1_grt.odb 01:18, 0 overflow, 0 DRV; flow GRT hold repair ended hold ws +17.4 / 0 violators at its corner, then the post-GRT repair stall-stopped at kit-corner setup -573.9 / hold -62.3 (96 setup / 6 hold ends; corner to be confirmed). Kit is now in its own TT setup repair (tt_setup_repair.tcl). Launched 2 read-only probes on the final ODB via ot-run epyc7 (th_tt2 TT census, th_probe FF hold classes) to read internal FF hold and TT with path groups. Not a proof yet; the J9 guard row (keep 100 or lower to 60-75) follows from these reads before the 12:00 cut.
+- 2026-11-23 01:29 PST RC-GAP slice C/LP reply (FABLE-RC-REVIEW rows 28-37; split with FAM-S81-LEPE-4)
+  28 cap|xr slit: J9 1b. xga2 moves u_xr east, so the cap|xr channel is >=64.8 um on 16/16 types (plan 8d45ed26eb63, gate queued epyc8). Owner me.
+  29 pin-face strip under u_xr: J9 1b, same plan: u_cap/u_xr sit >=69.12 um off the pin face on lepe_nh_mus/lepw_mu/lepw_mus. Owner me.
+  30 xg/xf one-cycle legs: xf part = xfin XFP/FLR RTL (J9 if gated by 09:00, else J10) + lp_xf_driver region (J9 1b). Inner xg.u_r/u_s legs need RTL stations -> J10, owner me.
+  31 reset relay u_rrl->u_cap: J10, local relays per C core (one relay per core today, 1.7 ns reach). Owner me.
+  32 clock insertion: TAP-GRID-R5 rows regenerated on the composed J9 plan (taps last); the 4 residual types -> J10 with TAP-GRID-R5.
+  33 port->u_bin hold: J10, a dedicated shallow pin-face tap per C type, with TAP-GRID-R5. Owner me; LP part LEPE-4.
+  34 async removal: J10, reset launch flops co-tapped with their sinks (LEPE-4 R1 tap_reset_split form) on C types. Owner me; LP is LEPE-4 R1.
+  35 hold cells in pocket: no row of its own, a consequence of 32-34. The probes run OT_PREGRT_FF_HOLD=1 to measure it.
+  36 LP residual GRT: LEPE-4 (XGARRAY-1 LP form).
+  37 LP W<->E setup: LEPE-4 (F2/N1 + stations).
