@@ -153,3 +153,10 @@ FINAL VIS-DIE TOOLS (epyc10 vis-die-s81/tmp/), both PRE PASS 0 findings:
      13 types differ vs c9a4; the only leaf type is t55 (seam re-snaps), so LEAF must rebase t55 in j9F (new j9F sha needed).
    ORDER: COL type rows (RANKSEAT, 3e GROW, SEAMBLK, TAPSPLIT, TAPGRT, REACH v2, ECORR?) -> col_ygrow --form <winner> -> die_grow --cut0 20900.16 -> LEAF j9F -> WESTRIP -> ytrade -> edgestrip --tapfix -> reprice -> reset relays -> PRE -> TAP-GRID-R5 regen -> FIXCHK -> PRE -> G0 -> strict bind.
    RE-CHECK: any row gated on c9a4 (WESTRIP b, LEAF j9F) re-confirms on the cut0 frame. The old-value check at compose catches misses.
+   3d -> v3 (LEAF): 57c87ed2a8f0 WITHDRAWN. New ops row/j9Z_type_ops.json + ref row/j9Z_f.json (epyc9 leaf-route-cbc), base plan_j8_grow20900 81e1d537c37d, replayed after die_grow --cut0.
+     Fixes:
+       - FABLE-UNC review: t58 ve_m|vsw corridor, t61 ~69um, kv t4 W=0; generator patched with L-path corridors and kv margin 8.64.
+       - tapfix covers explicit-mode taps (t21 kit_rtl death).
+       - t75 collector relays clamped to the outline.
+       - t55 rebased on cut0.
+     Gates: PRE + landing_remap on LANDREMAP types + tap_grid check on all leaf types. Sha ETA ~06:00. Strict bind on j9Z_f follows.
