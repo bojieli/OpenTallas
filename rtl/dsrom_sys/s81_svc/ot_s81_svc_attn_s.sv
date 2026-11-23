@@ -175,6 +175,19 @@ module ot_s81_svc_attn_s #(
     localparam integer LVT = $clog2(TD / 8);
     localparam integer FX = (FPLX > 0) ? FPLX : FPL;         // lane-tree / merge add latency
     localparam integer TLAT = 3 + FML + FPL * (7 + LVT);   // tile: input -> ov (27 + 3 LVT as built)
+    // SVC-ENG-XS (FABLE-UNC-S81-SVC 11-23, OPUS-FIX-S81-SVC-R9 ruling (b); -DOT_SVC_ENG_XS, undefined = as built): two
+    // kept plain register stages in this soft parent, between the hard cores, no hierarchy change:
+    //   g_t[k].g_ts.g_xsi  one copy per tile of EVERY tile input (transposer operands eib -> ib with its issue line
+    //                      iv / ibank, and the load line ld_* / ld_w, so load and issue keep their order): tile +1;
+    //   g_v1.g_xso[k]      one copy per merge half (H/2 heads) of the tile outputs oy / oflt, ov per tile, ahead of the
+    //                      H4 merges and the score lanes: +1.
+    // The tags wait 2 more (XSD), exactly like TLX; nothing else moves.  Seen from outside this is the SRX signature
+    // with n = SRX + 2: scores +2, the p feed +2 (compiler PIO), P.V +4.
+`ifdef OT_SVC_ENG_XS
+    localparam integer XSD = 2;
+`else
+    localparam integer XSD = 0;
+`endif
     localparam integer LS = (S <= 1) ? 0 : $clog2(S);  // lane-tree levels
     localparam integer NTQ = (NTP > 0) ? NTP : NT;      // ATTN1: physical tiles
     localparam integer V = NT / NTQ;                    // virtual tiles per physical tile (1 = as built)
@@ -224,6 +237,9 @@ module ot_s81_svc_attn_s #(
         if (BANDX != 0 && (SRX < 1 || TRX == 0 || REPL < 2 || TILE_S == 0 || MFAN == 0 || TD != 32 || H != 8 ||
                            SRXMUT == 3)) begin : g_bad_band
             initial $error("ot_s81_svc_attn_s: BANDX needs SRX >= 1, TRX 1, REPL 2, TILE_S 1, MFAN 1, TD 32, H 8");
+        end
+        if (XSD != 0 && (BANDX != 0 || TEXT != 0 || TILE_S == 0 || PHYS != 0 || (H % 2) != 0 || NT != NTQ)) begin : g_bad_xs
+            initial $error("ot_s81_svc_attn_s: OT_SVC_ENG_XS needs BANDX 0, TEXT 0, TILE_S 1, PHYS 0, even H, NTP 0");
         end
         if (!(PWORDS == 1 || (PWORDS == 2 && (PB % 2) == 0))) begin : g_bad_pwords
             initial $error("ot_hdc_v41x_attn: PWORDS must be 1, or 2 with an even word count per block");
@@ -1131,7 +1147,18 @@ module ot_s81_svc_attn_s #(
                 assign p_ibank[gk*BW +: BW] = zt_ibank[gk*BW +: BW];
                 assign p_ib[gk*TD*18 +: TD*18] = e_ib[gk*TD*18 +: TD*18];
             end
+`ifdef OT_SVC_ENG_XS
+            for (gk = 0; gk < NT; gk = gk + 1) begin : g_xso
+                ot_hdc_v41x_kreg #(.W(1), .R(1)) u_v (.clk(clk), .rst_n(rst_n), .d(p_ov[gk]), .q(t_ov[gk]));
+                for (gh = 0; gh < 2; gh = gh + 1) begin : g_h
+                    ot_hdc_v41x_kreg #(.W((H/2)*32 + H/2), .R(0)) u_y (.clk(clk), .rst_n(rst_n),
+                        .d({p_f[gk*H + gh*(H/2) +: H/2], p_y[(gk*H + gh*(H/2))*32 +: (H/2)*32]}),
+                        .q({t_f[gk*H + gh*(H/2) +: H/2], t_y[(gk*H + gh*(H/2))*32 +: (H/2)*32]}));
+                end
+            end
+`else
             assign t_ov = p_ov; assign t_y = p_y; assign t_f = p_f;
+`endif
         end else begin : g_vm
             // sub-beat sequencer: e_iv starts V sub-beats (beats are >= V cycles apart: vbusy)
             reg [7:0] sb_n;                       // sub-beats still to send after this cycle's
@@ -1212,10 +1239,29 @@ module ot_s81_svc_attn_s #(
                 assign {b_f, b_y, b_ov} = r;
             end else if (TILE_S != 0) begin : g_ts
                 assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
+`ifdef OT_SVC_ENG_XS
+                wire x_ld_v, x_iv, x_ld_mode, x_ld_w2v;
+                wire [BW-1:0] x_ld_bank, x_ibank;
+                wire [7:0] x_ld_grp;
+                wire [PWORDS*TD*16-1:0] x_ldw;
+                wire [TD*18-1:0] x_ib;
+                begin : g_xsi
+                    ot_hdc_v41x_kreg #(.W(2), .R(1)) u_v (.clk(clk), .rst_n(rst_n), .d({zt_ld_v[gk], p_iv[gk]}), .q({x_ld_v, x_iv}));
+                    ot_hdc_v41x_kreg #(.W(2 + 2*BW + 8 + PWORDS*TD*16), .R(0)) u_l (.clk(clk), .rst_n(rst_n),
+                        .d({zt_ld_mode[gk], zt_ld_w2v[gk], zt_ld_bank[gk*BW +: BW], p_ibank[gk*BW +: BW], zt_ld_grp[gk*8 +: 8], ldw}),
+                        .q({x_ld_mode, x_ld_w2v, x_ld_bank, x_ibank, x_ld_grp, x_ldw}));
+                    ot_hdc_v41x_kreg #(.W(TD*18), .R(0)) u_ib (.clk(clk), .rst_n(rst_n), .d(p_ib[gk*TD*18 +: TD*18]), .q(x_ib));
+                end
+                ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML), .F12(F12)) u_t (
+                    .clk(clk), .rst_n(zt_rn[gk]), .ld_v(x_ld_v), .ld_mode(x_ld_mode), .ld_bank(x_ld_bank),
+                    .ld_grp(x_ld_grp), .ld_w(x_ldw), .ld_w2v(x_ld_w2v), .iv(x_iv), .ibank(x_ibank),
+                    .ib(x_ib), .ov(b_ov), .oy(b_y), .oflt(b_f));
+`else
                 ot_hdc_v41x_attn_tile_s #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML), .F12(F12)) u_t (
                     .clk(clk), .rst_n(zt_rn[gk]), .ld_v(zt_ld_v[gk]), .ld_mode(zt_ld_mode[gk]),
                     .ld_bank(zt_ld_bank[gk*BW +: BW]), .ld_grp(zt_ld_grp[gk*8 +: 8]), .ld_w(ldw), .ld_w2v(zt_ld_w2v[gk]), .iv(p_iv[gk]), .ibank(p_ibank[gk*BW +: BW]),
                     .ib(p_ib[gk*TD*18 +: TD*18]), .ov(b_ov), .oy(b_y), .oflt(b_f));
+`endif
             end else begin : g_tl
                 assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
                 ot_hdc_v41x_attn_tile_l #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_t (
@@ -1242,12 +1288,12 @@ module ot_s81_svc_attn_s #(
     end else begin : g_btag0
         assign bt_pv = 1'b0; assign bt_fin = 1'b0; assign bt_blk = {MLEV{1'b0}};
     end endgenerate
-    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT)) u_tag (.clk(clk),
+    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD)) u_tag (.clk(clk),
         .d({e_row0, e_mask, e_pv, e_fin, e_blk, e_c}), .q({t_row0, t_mask, t_pv, t_fin, t_blk, t_c}));
     // SVC-BCAST-STAGE (rc16, 11-23, FABLE-UNC t4_att): the merge tags {pv, fin, blk} reach every tile's merge (8 H4
     // providers = 24 pin ends over 4 tiles) from the one u_tag line.  With TR_ON each tile gets its own kept copy of the
     // line's LAST stage (same D, same total delay, 0 cycles): the shared line ends in 4 loads, one copy beside each merge.
-    localparam integer TAGD = TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT;
+    localparam integer TAGD = TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD;   // = the u_tag depth
     wire [NT-1:0]      zt_pv, zt_fin;
     wire [NT*MLEV-1:0] zt_blk;
     generate if (TR_ON && TAGD >= 2) begin : g_ttag
