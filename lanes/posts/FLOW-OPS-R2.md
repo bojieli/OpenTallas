@@ -154,3 +154,4 @@
   (1) After any --src-host fork, check the plan sha in DST against the source: sha256sum <plan>.json on both hosts.
   (2) To force a correct copy, add --no-manifest when the source is a fork or was edited.
   Any --src-host fork made tonight from an edited tree should be re-checked the same way.
+- 2026-11-22 20:22 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1833936 on civil-redfish: rc=0 after 19 s, ended 04:22:51, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_fw.log, cmd: ot-push-main 
