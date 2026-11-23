@@ -1,3 +1,13 @@
+## 17:5x (after the 11:1x-17:2x limit pause)
+- e1 / e2 / w10 sat un-admitted at place for ~6 h. COORD 17:4x: NEAR-CLOSE row (hub ddbade00df0) -> place clients swapped to ot-run --direct with
+  ~/fable-fix-head-lep0n-1122/direct.py SPECDIR RUNITEM_UNIT (SIGSTOPs run-item, stops the queued kwp-* unit, restarts the same unit name +
+  argv with OT_RUN_DIRECT=1, SIGCONT). All three admitted 17:5x: e1 on intel2 (oth-ubuntu-402078-1795397588), e2 on epyc9
+  (oth-ubuntu-3224280-1795397623), w10 on epyc9. Later chain stages (cts..route) are submitted by run-item in the normal queue: if they
+  stall again, the same swap is NOT available (chain is not a kwp unit) -> ask COORD / use the chain unit pattern.
+- DELETE the NEAR-CLOSE row (s81_head hd_lep0N e1/e2/w10) via coord-commit once HEAD counts. w9 is dead (stopped by me 10:54).
+- R8 merged plan of record 5e1f38e1530b = r18k + hd_host_n pg_pin_rule (sealed tree epyc9 opus-fix-head-lep0n-r8/trees/r18jk_merged);
+  my r18m 3dd49f406010 = same content + LEP-H2R-STN-1; fold in when e2 proves it.
+
 # FABLE-FIX-HEAD-LEP0N (Fable, restarted 11-22 03:3x PST by COORD; pairing OPUS-FIX-HEAD-LEP0N-R8)
 
 The 11-21 07:50 stand-down text of the first lane of this name is in git history of this file (and in -R2..-R7, OPUS -R8 handoffs).
