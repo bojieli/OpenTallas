@@ -42,3 +42,5 @@ Client logs intel2 ~/tmp/ffkvpv/. Watchers post under the OLD lane name (FABLE-F
 - Watchers: old watch_k2.sh EXITED on the intermediate result.json (stage chain_probe PASS) -> replaced by watch_k2b.sh (systemd
   user unit watch-k2b-r3) and watch_v12b.sh (unit watch-v12b-r3; old pid 4099926 killed), both skip stage chain_probe. Same state files.
 - K2 at CTS (chain goal route attempt 1, 22:41). K3 past gen_lint.
+- 01:3x RESUMED after the 5-h limit. K2 CTS runs SPILLED on epyc9 (kit path same on epyc9; files go back to epyc8): tap spread 375 ps.
+  K3 in place since 23:44. D30 probe must meet full-cause PROBE-PASS (hub fe8a2a5: whole-type hotspot census, total ovfl <10% base).
