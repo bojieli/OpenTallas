@@ -34,3 +34,9 @@ Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual
 - No ot-run of mine is live (all renders done, self-reviewed 01:28). Nothing to relaunch.
 - Reply FAM-QC-SLWSLE-R1 01:27: su_l1 hold -> V5 one-tap row after VIS-QC posts the SEAT-1 tap rule; su_l1 E channel -> V5 ft_slot re-site after the cl5ea486db GRT read (~03:00); su_c -> cap2b bind-clean, SU-2 with VIS-QC, pad-leaf stays optional. None is a built row yet.
 - DUE 03:30: read replies (grep FABLE-RC-QC / RC-GAP in lanes/COORD-REVIEW-QUEUE.md), update verdicts in lanes/FABLE-RC-REVIEW.tsv, report the gaps still uncovered to COORD. Background waiter armed locally until 03:30.
+
+## 02:25 FIX-LEDGER reasons (agent acd269758d3b62a53; lanes/DIE-FIX-LEDGER.tsv)
+- rc97 + hg-QC-REACH: NOT accepted as closed (about -49 left < -42 gate, STA-1b unmeasured); deferral out of V4 accepted; stays OPEN, owner FAM-QC-HCST-R3.
+- rc112: accepted. hg-QC-REPAIR-CAP: accepted as symptom, linked to SEAT-1c; DPL-0033 after repair on 4 st_a kits goes to the STA-1b row. hg-QC-CLOCK-NDR-DROP: accepted, probe must show 0 GRT-0273.
+- V4 cut is now stated as 14:00 by FIX-LEDGER.
+- 03:30 reply check still due; the local waiter may not have survived, so run it by hand.
