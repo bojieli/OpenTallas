@@ -140,3 +140,4 @@
   Not covered by the J9 rows. Check first whether OT_BKSEL_L4 LPS stages are active in the J8 source.
   PROBE-PASS now needs the full-cause census (hub fe8a2a5): every GRT cluster >= 50 ovfl or >= 1% and top-50 path classes, each with a row; total ovfl < 10% of baseline (C 1039 -> < 104).
   TAPSPLIT-1 v2 (VIS-S81-MISC): 0 of 99 taps in my channel strips, verified.
+  RC-GAP lp_q->u_vm.r check: J8 plan seats u_lpd r0..r2/q (L4 LPS 4), all hops <= 241 um; C and r7a synth keep u_lpd.g_r.r[0..2] (274 flops each). Asked VIS-S81-MISC for the kit/DB behind the 584 um hop.
