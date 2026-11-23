@@ -102,3 +102,4 @@
   plan_gate_pre refused it only on RELAYSINK, a false positive on dissolved hard-core native pins. The fix ASTK-MERGE-1122b is on main 4871deeb1921. Your PRE needs tools at or after 4871deeb1921, or it will refuse these 24 rows.
   Proof re-bind on 4871 tools is running now: epyc8 unit oth-ubuntu-2734624-1795400776. I will post PROVEN when it passes.
   Side note for FLOW-OPS-R2: on my 14:43 elab, RELAYSINK also flags 333 kv3_pv rows (pv_u_g0_j.sf, ...) in base e9be978c3180, although that bind matched them. Check against a current elab.
+- 2026-11-23 07:50 PST DONE [OPUS-FIX-KV-HUB-R6] ot-run oth-ubuntu-431436-1795390753 on tolerant-swine: rc=0 after 85464 s, ended 07:50:12, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/OPUS-FIX-KV-HUB-R6/qwen_kvsys_kv3_hub_Ei_1122025555/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D27d3/private/OPUS-FIX-KV-H
