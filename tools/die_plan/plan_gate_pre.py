@@ -94,6 +94,14 @@ TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with 
   type (k >= base + added), or to a misnamed added tap, is FAIL TAPNAME-RETAP: the reset tree / consumer sites still carry
   old tap indices; re-run the tap package (retap.py) on the solved base.
 
+ANCHORDRY-1123 (RESET-ANCHOR-TAPGUARD-1123, COORD; S81 J9 slice C c1x_C t1/t10/t7, iq_C t1, lepe_nh_mus_C t1): a type's
+  clock.reset_tree_anchor names relays at the depth the bind will keep (resolve() re-picks only at the anchored depth).  For every
+  START / local-reset reference path the anchored depth is compared with the depth the remap base (REMAP-BASE-1122) anchors at
+  the same path (its anchor, else its published collector_tree): a different depth is FAIL ANCHORDRY (`reset_anchor record
+  --source tree` after a tap row re-anchored renumbered names: EMIT 'release edge would move').  Without a base depth the plan's
+  own collector_tree is compared, WARN ANCHORDRY-ADVISORY only.  $OT_ANCHORDRY_SOLVE=1 also dry-runs the bind's resolve() on the
+  solved reset trees (anchor_dry.py; slow on wavefront dies): refusals / re-picks are WARN ANCHORDRY-ADVISORY.  Seconds by default.
+
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
   GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
@@ -115,7 +123,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1525,6 +1533,28 @@ def check_emitname(tree, plan, asbuilt=None):
     return out[:12] + ([f"FAIL EMITNAME ... {len(out) - 12} more"] if len(out) > 12 else [])
 
 
+def check_anchordry(tree, plan, base=None, solve=False, tree_fn=None, ported_fn=None):
+    """ANCHORDRY-1123 lines (see the doc): anchor_dry.static_findings vs BASE; with solve, anchor_dry.dry_rows too."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import anchor_dry as AD
+    raw = _load(plan) or {}
+    if not any(((t or {}).get("clock") or {}).get("reset_tree_anchor") for t in (raw.get("partition_types") or {}).values()):
+        return []
+    try:
+        braw = _load(base) if base else None
+    except (OSError, ValueError) as e:
+        return [f"WARN ANCHORDRY base {base} not readable ({type(e).__name__}); not checked"]
+    out = AD.static_findings(raw, braw)
+    if solve:
+        if tree_fn is None:
+            import reset_tree as RT
+            P = _shared_plan(plan, raw)
+            tree_fn = lambda tn: _in_tree(tree, lambda: RT.for_type(P, tn))  # noqa: E731
+        root = str(Path(tree).resolve()) if tree else str(Path(__file__).resolve().parents[2])
+        out += AD.dry_findings(AD.dry_rows(root, raw, plan, tree_fn=tree_fn, **({"ported_fn": ported_fn} if ported_fn else {})))
+    return out
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None, remap=None):
@@ -1563,6 +1593,9 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
         findings += check_resetpub(tree, plan, base=_base,
                                    solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")
+    if "ANCHORDRY" not in skip:                          # ANCHORDRY-1123: anchored reset depths vs the remap base, seconds
+        _abase = _base if _base else (rb if rb else remap_base(plan, remap, baseline)[0])
+        findings += check_anchordry(tree, plan, base=_abase, solve=os.environ.get("OT_ANCHORDRY_SOLVE") == "1")
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type

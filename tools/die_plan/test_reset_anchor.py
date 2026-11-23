@@ -201,3 +201,86 @@ def test_record_repick_keeps_depth_after_names_disappear(tmp_path, monkeypatch):
     assert rc == 1 and got["BAD"] == base
     assert _names(got["T"]) == ["rst_rl_5", "rst_rl_6", "rst_rl_5"]
     assert [a["depth"] for a in got["T"]["clock"][RA.KEY]["relays"].values()] == [2, 3]
+
+
+# ---- RESET-ANCHOR-TAPGUARD-1123: record --source tree must not re-anchor renumbered names
+
+
+def _record_cli(tmp_path, monkeypatch, raw, tree, *extra):
+    import reset_tree as RT
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    monkeypatch.setattr(schema, "Plan", lambda r, f: object())
+    monkeypatch.setattr(RT, "for_type", lambda P, tn: tree)
+    monkeypatch.setattr(RT, "relay_um", lambda P: 50.0)
+    monkeypatch.setattr(RA, "ported", lambda tr: set())
+    out = tmp_path / "out.json"
+    rc = RA.main(["reset_anchor.py", "record", str(plan), str(out), "--root", str(HERE), *extra])
+    return rc, json.loads(out.read_text())["partition_types"]
+
+
+def test_tap_digest_covers_added_taps_and_legacy_form():
+    t = _type("rst_rl_1")
+    base = RA.tap_rows_sha(t)
+    assert base == RA.tap_rows_sha(t, legacy=True)           # no added_taps: both forms agree (old records stay valid)
+    t["clock"]["added_taps"] = [dict(name="clk_t9", xy=[1.0, 2.0])]
+    assert RA.tap_rows_sha(t) != base and RA.tap_rows_sha(t, legacy=True) == base
+    assert RA.input_shas(t, HERE)["taps"] == RA.tap_rows_sha(t)
+
+
+def test_rerecord_on_renumbered_tree_is_refused_and_keeps_the_old_anchor(tmp_path, monkeypatch, capsys):
+    """the S81 J9 slice C class: names anchored on OLD, tree renumbered (rst_rl_1 is now depth 1): refused, anchor unchanged"""
+    t = _anchored("rst_rl_1", "rst_rl_2", "rst_rl_3")
+    t["clock"]["added_taps"] = [dict(name="clk_t9", xy=[300.0, 0.0])]       # the tap row that renumbered the tree
+    old = copy.deepcopy(t["clock"][RA.KEY])
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": t, "U": _type("rst_rl_0")}}, NEW)
+    text = capsys.readouterr().out
+    assert rc == 1
+    assert got["S"]["clock"][RA.KEY] == old                  # good anchor kept: the bind re-picks it by depth + site
+    assert RA.KEY in got["U"]["clock"]                       # other types still anchored
+    assert "REFUSED S:" in text and "another depth" in text and "rst_rl_1 anchored depth 2" in text
+    assert "1 type(s) REFUSED" in text and text.splitlines()[-1].endswith("S")
+
+
+def test_rerecord_repick_follows_depth_and_allow_keeps_old_behaviour(tmp_path, monkeypatch, capsys):
+    t = _anchored("rst_rl_1", "rst_rl_2", "rst_rl_3")
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": copy.deepcopy(t)}}, NEW, "--repick")
+    assert rc == 0
+    s = got["S"]
+    assert _names(s) == ["rst_rl_2", "rst_rl_3", "rst_rl_4", "rst_rl_2"]
+    assert {n: a["depth"] for n, a in s["clock"][RA.KEY]["relays"].items()} == {"rst_rl_2": 2, "rst_rl_3": 2, "rst_rl_4": 3}
+    assert "re-picked 3 relay name(s)" in capsys.readouterr().out
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": copy.deepcopy(t)}}, NEW, "--allow-tap-change", "S")
+    assert rc == 0 and got["S"]["clock"][RA.KEY]["relays"]["rst_rl_1"]["depth"] == 1      # by name (pre-1123)
+
+
+def test_rerecord_unchanged_tree_passes_even_after_a_tap_change(tmp_path, monkeypatch):
+    t = _anchored("rst_rl_1", "rst_rl_3")
+    t["clock"]["tap_pitch_um"] = 99                                          # tap rows changed, relays did not move
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": t}}, OLD)
+    assert rc == 0 and got["S"]["clock"][RA.KEY]["inputs"]["taps"] == RA.tap_rows_sha(t)
+
+
+def test_rerecord_after_tap_change_refuses_unanchored_new_names(tmp_path, monkeypatch, capsys):
+    t = _anchored("rst_rl_1")
+    t["clock"]["tap_pitch_um"] = 99
+    t["clock"]["landing_local_resets"][0]["raw"] = "rst_rl_2"           # a name the anchor never saw
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": t}}, OLD)
+    assert rc == 1 and "rst_rl_2 not anchored" in capsys.readouterr().out
+    t["clock"]["tap_pitch_um"] = t["clock"].pop("tap_pitch_um")         # same rows: a new name alone is fine
+    t2 = _anchored("rst_rl_1")
+    t2["clock"]["landing_local_resets"][0]["raw"] = "rst_rl_2"
+    rc, _ = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": t2}}, OLD)
+    assert rc == 0
+
+
+def test_rerecord_legacy_digest_warns_and_refuses_a_site_move(tmp_path, monkeypatch, capsys):
+    t = _anchored("rst_rl_3")
+    t["clock"]["added_taps"] = [dict(name="clk_t9", xy=[1.0, 1.0])]
+    t["clock"][RA.KEY]["inputs"]["taps"] = RA.tap_rows_sha(t, legacy=True)     # a pre-1123 record
+    moved = _tree([("rst_rl_0", 1, (0, 0)), ("rst_rl_1", 2, (100, 0)), ("rst_rl_2", 2, (0, 100)), ("rst_rl_3", 3, (100, 140))])
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": copy.deepcopy(t)}}, moved)
+    text = capsys.readouterr().out
+    assert rc == 1 and "pre-1123 tap digest" in text and "REFUSED S:" in text
+    rc, got = _record_cli(tmp_path, monkeypatch, {"partition_types": {"S": copy.deepcopy(t)}}, OLD)
+    assert rc == 0 and "pre-1123 tap digest" in capsys.readouterr().out

@@ -31,6 +31,10 @@ class AnchorError(ValueError):
     pass
 
 
+class TapGuardError(AnchorError):
+    """record --source tree refused: re-anchoring by name would move anchors onto renumbered relays (TAPGUARD-1123)"""
+
+
 def _sha(obj):
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
@@ -44,8 +48,18 @@ def input_shas(t, root):
         import taps as _taps
         p = _taps.input_path(ck["sink_bins_file"], root=root)
         bins = hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else "missing"
-    taps = {k: v for k, v in ck.items() if k == "taps" or k.startswith("tap_")}
-    return dict(sink_bins=bins, ft_slots=_sha(t.get("ft_slots") or []), taps=_sha(taps))
+    return dict(sink_bins=bins, ft_slots=_sha(t.get("ft_slots") or []), taps=tap_rows_sha(t))
+
+
+def tap_rows_sha(t, legacy=False):
+    """RESET-ANCHOR-TAPGUARD-1123: sha256 of the type's clock tap rows -- clock.taps, clock.added_taps and every clock.tap_*
+    key.  The digest anchors record as inputs.taps.  legacy=True: the pre-1123 digest (added_taps left out), which records
+    made before 1123 carry; a type without added_taps has the same digest in both forms."""
+    ck = t.get("clock") or {}
+    keep = ("taps",) if legacy else ("taps", "added_taps")
+    return _sha({k: v for k, v in ck.items() if k in keep or k.startswith("tap_")})
+
+
 
 
 def refs(t):
@@ -220,6 +234,72 @@ def repicked_paths(tn, t, tree, root, ported_fn=ported):
     return set(ref_paths(t)), None
 
 
+def rerecord_guard(tn, t, tree, root):
+    """RESET-ANCHOR-TAPGUARD-1123 (COORD; S81 slice c1x_C t1/t10/t7, iq_C t1, lepe_nh_mus_C t1): `record --source tree` after a
+    tap-changing plan row re-anchored the plan's relay NAMES on the renumbered tree, i.e. at other relays and other depths
+    (lepe t1 local resets: depth 8 -> 2/4/5), overwriting good anchors; the bind then failed 'release edge would move'.  The
+    bind itself would have re-picked the OLD anchors by depth + site.  -> (refuse_reason or None, [warnings]) for re-recording
+    type dict t (which already carries an anchor) by name on `tree`:
+      - an anchored, still referenced name that sits at another DEPTH on the tree: refused (always; its release edge moves);
+      - tap rows changed since the anchor was recorded (inputs.taps vs tap_rows_sha): refused unless every referenced name is
+        still the anchored relay (same name, depth and site), i.e. the re-record changes nothing but the digests;
+      - an anchor recorded before 1123 (inputs.taps = the legacy digest, added_taps not covered): a WARN, then the depth rule
+        and a site move of an anchored name refuse;
+      - other inputs changed (sink bins / ft_slots) with a same-depth site move: WARN (the bind re-picks such names itself).
+    No anchor: (None, [])."""
+    prev = (t.get("clock") or {}).get(KEY)
+    if not prev:
+        return None, []
+    pin = prev.get("inputs") or {}
+    rows = prev.get("relays") or {}
+    names = sorted({c[k] for c, k in refs(t)})
+    by = {r["q"]: r for r in tree["relays"]}
+    now = input_shas(t, root)
+    warns = []
+    if "taps" not in pin:
+        taps = "unknown"
+        warns.append(f"{tn}: existing anchor has no tap digest: cannot tell whether tap rows changed since it was recorded")
+    elif pin["taps"] == now["taps"]:
+        taps = "same"
+    elif pin["taps"] == tap_rows_sha(t, legacy=True):
+        taps = "unknown"
+        warns.append(f"{tn}: existing anchor carries the pre-1123 tap digest (clock.added_taps not covered): "
+                     f"a clock.added_taps change since it was recorded is not detectable; checking relay depth and site only")
+    else:
+        taps = "changed"
+    other = sorted(k for k in ("sink_bins", "ft_slots") if k in pin and pin[k] != now.get(k))
+    depth, site, new = [], [], []
+    for n in names:
+        if n not in rows:
+            new.append(n)
+            continue
+        a, r = rows[n], by.get(n)
+        if r is None:
+            continue                                       # record() names it ('not in the tree')
+        if int(r["depth"]) != int(a["depth"]):
+            depth.append(f"{n} anchored depth {a['depth']} @ {a['xy']} is depth {r['depth']} @ "
+                         f"{[round(float(v), 1) for v in r['xy']]} on this tree")
+        elif _d(r["xy"], a["xy"]) > SITE_EPS_UM:
+            site.append(f"{n} depth {a['depth']} moved {_d(r['xy'], a['xy']):.1f} um")
+    fix = ("old anchor kept (the bind re-picks it by depth + site); to re-pick the names onto this tree use --repick, "
+           "to re-anchor by name anyway --allow-tap-change " + tn)
+    if depth:
+        return (f"{tn}: {len(depth)} anchored relay name(s) sit at another depth on this tree (renumbered: tap rows "
+                f"{taps}{', ' + '/'.join(other) + ' changed' if other else ''}); re-anchoring by name would move their "
+                f"release edge: " + "; ".join(depth[:4]) + f"; {fix}"), warns
+    if taps == "changed" and (site or new):
+        return (f"{tn}: clock tap rows (taps / added_taps / tap_*) changed since the anchor was recorded and "
+                f"{len(site) + len(new)} referenced relay name(s) are not the anchored relays ("
+                + "; ".join((site + [f'{n} not anchored' for n in new])[:4]) + f"); {fix}"), warns
+    if taps == "unknown" and site:
+        return (f"{tn}: {len(site)} anchored relay name(s) moved on this tree and the anchor cannot show whether tap rows "
+                f"changed: " + "; ".join(site[:4]) + f"; {fix}"), warns
+    if site:
+        warns.append(f"{tn}: {len(site)} anchored relay name(s) moved at the same depth ({'/'.join(other) or 'no'} input "
+                     f"change): " + "; ".join(site[:3]))
+    return None, warns
+
+
 def main(argv):
     """record: python3 reset_anchor.py record PLAN OUT [--types T1,T2] [--tol-um 405] [--source tree|snapshot|auto]
     Anchors every type with START/local relay references against the tree of the plan as it stands (plan writers run
@@ -230,7 +310,11 @@ def main(argv):
     every source) is listed as FAILED and left unchanged; every other type is still anchored and OUT is written; the
     exit status is 1 when any type failed (TAP-GRID-R5 11-22: one stale QC reference blocked 98 re-records).
     --repick uses the existing anchor to select a same-depth relay within the old site tolerance of a known reference
-    before writing the new anchor. A type whose references cannot be preserved is left unchanged."""
+    before writing the new anchor. A type whose references cannot be preserved is left unchanged.
+    TAPGUARD-1123: with the tree as source and no --repick, a type that already has an anchor is re-anchored by name only
+    when rerecord_guard passes (no anchored name moved depth; tap rows unchanged, or every name still the anchored relay);
+    otherwise it is listed REFUSED and keeps its old anchor (exit 1; the bind re-picks it by depth + site).  Use --repick,
+    or --allow-tap-change T1,T2|all to re-anchor by name regardless (the pre-1123 behaviour)."""
     import argparse
     import sys
     ap = argparse.ArgumentParser(description=main.__doc__)
@@ -249,6 +333,8 @@ def main(argv):
     ap.add_argument("--bound-plan", help="the plan the --bound-rtl bind bound")
     ap.add_argument("--repick", action="store_true",
                     help="re-pick old anchors by recorded depth and site, using the same resolver as the bind")
+    ap.add_argument("--allow-tap-change", default="", metavar="T1,T2|all",
+                    help="TAPGUARD-1123: re-anchor these types by name even when the guard refuses (the pre-1123 behaviour)")
     a = ap.parse_args(argv[1:])
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import schema
@@ -264,7 +350,8 @@ def main(argv):
     tol = a.tol_um if a.tol_um is not None else RT.relay_um(P)
     want = set(filter(None, a.types.split(",")))
     bplan = json.loads(Path(a.bound_plan).read_text())["partition_types"] if a.bound_plan and a.bound_rtl else {}
-    n, failed = 0, {}
+    n, failed, refused = 0, {}, {}
+    allow = set(filter(None, a.allow_tap_change.split(",")))
     for tn, t in raw["partition_types"].items():
         if (want and tn not in want) or not refs(t):
             continue
@@ -289,14 +376,23 @@ def main(argv):
             if tree is None:
                 raise AnchorError(f"{tn}: no source holds every referenced relay (bound / tree / snapshot)")
             note = ""
+            if src == "tree" and not repick and tn not in allow and "all" not in allow:
+                why, warns = rerecord_guard(tn, t, tree, a.root)
+                for w in warns:
+                    print(f"WARN {w}", flush=True)
+                if why:
+                    raise TapGuardError(why)
             if repick:
                 t = copy.deepcopy(t)
-                receipt = resolve(tn, t, tree, a.root)
+                receipt = resolve(tn, t, tree, a.root, ported)
                 note = f", re-picked {len(receipt['remaps'])} relay name(s)"
             t["clock"][KEY] = record(t, tree, a.root, tol)
             raw["partition_types"][tn] = t
             n += 1
             print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s) from the {src}, tol {tol:g} um{note}", flush=True)
+        except TapGuardError as e:
+            refused[tn] = str(e)[:600]
+            print(f"REFUSED {refused[tn]}", flush=True)
         except Exception as e:                       # TAP-GRID-R5 11-22: one bad type never blocks the rest
             failed[tn] = f"{type(e).__name__}: {str(e)[:300]}"
             print(f"FAILED {tn}: {failed[tn]}", flush=True)
@@ -304,10 +400,12 @@ def main(argv):
         raw["partition_types"][tn]["clock"]["sink_bins_file"] = f
     Path(a.out).write_text(json.dumps(raw, separators=(",", ":")))
     print(f"wrote {a.out} sha256 {hashlib.sha256(Path(a.out).read_bytes()).hexdigest()[:12]} ({n} types)")
+    if refused:
+        print(f"reset_anchor record: {len(refused)} type(s) REFUSED (anchor would move to renumbered relays; old anchor kept, "
+              f"--repick or --allow-tap-change T1,T2): " + ", ".join(sorted(refused)))
     if failed:
         print(f"reset_anchor record: {len(failed)} type(s) NOT anchored (left as they were): " + ", ".join(sorted(failed)))
-        return 1
-    return 0
+    return 1 if failed or refused else 0
 
 
 if __name__ == "__main__":
