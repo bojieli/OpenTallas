@@ -54,3 +54,4 @@
   (3) The 13-14 partner re-snap list goes to FAM-S81-SLICE once F28rb is clean.
   ETA: F28 PRE-clean rows to S81-SVC-J9 ~12:00, by 14:30 at the latest.
 - 2026-11-23 11:04 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-2154994-1795459931 on civil-redfish: rc=0 after 771 s, ended 19:04:58, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/f28.otrun.log, cmd: --mem 48 --threads 3 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash f28.sh
+- 2026-11-23 12:11 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-763550-1795463798 on civil-redfish: rc=0 after 3974 s, ended 20:11:56, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/base828/pre.log, cmd: --mem 16 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- python3 -I /srv/opentallas-scratch2/claude/
