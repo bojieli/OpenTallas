@@ -269,3 +269,7 @@ FIX-LEDGER x13 (per-type verilog_defines dead for flattened logic/explicit param
    Bind out: epyc10 OPUS-FIX-S81-COL-RANKSEAT-R2/ot-build/s81/treeJ8R2/b_822b131dc371.
    CONFLICT RISK: COL 3e GROW + H10-R4 rows were built on _ss (56d5), NOT on R2. If they replace whole subtrees (/clock, /internal_stations, /buses) on the 18 h10 types, they can drop RANKSEAT's lockup/tap_grt_pre/LAG keys.
      The composer applies RANKSEAT first, then old-value-checks every later col key. On a mismatch, H10-R4/COL rebase on 95ddb61ae6f6.
+   1a LAG DECISION (RANKSEAT): both plans binding on epyc10.
+     WITH LAG 95ddb61ae6f6 (b_822b131dc371) / NO-LAG 6251a023d393 (bindNolag). They differ only in 216 clock core_pin_lead_ps ops (no-lag ops in j9/w/ops_nolag/).
+     Rule: if the lag probe CTS (~09:30-10:30) improves latch->ROM setup and ROM-out is not worse -> LAG; else, or if not done by 10:30 -> NO-LAG in wave A and LAG to wave B.
+     DEFAULT = NO-LAG 6251a023d393. The H10/COL rebase on 95ddb is valid for either, since only core_pin_lead_ps differs (old-value check).
