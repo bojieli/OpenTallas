@@ -36,3 +36,9 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 ## UPDATE 00:50 PST 11-23
 - w2 bind CLEAN: stations on v3..v8, R8 same as z. I posted ROWS-READY for ECTLPDALL 3cdfb7c858a6 + ECTLH3ALL 9208de0a36c1 and copied both to d29/rows.
 - hgi_v5 fast probe on w2 (tree y, plan_w2, goal geom, OT_PROBE_THROUGH=1): spec private_specs/OPUS-FIX-KV-HG-R8/qwen_kvsys_kv3_hgi_v5_1123004922, log ~/tmp/fablefixkvhg/kit_kv3_hgi_v5_probe.log. Next: self-review the render, set PROBE-PASS in VIS-COVERAGE.tsv, send the path to VIS-KV, then launch sealed route kits on w2 for hgi v3..v8 (v4 already runs on f1).
+## UPDATE 01:45 PST 11-23 (after 5-h limit 01:17; Codex handoff has nothing for this lane)
+- hgi_v5 probe (OPUS-FIX-KV-HG-R8/qwen_kvsys_kv3_hgi_v5_1123004922, goal geom): gen_lint 01:08. PROBE-PASS = full census (fe8a2a5); baseline ruling: D28 hgi_v5 had no measured GRT, bar = total < 23.4k (10%% of model 234k) and no cluster >= 50 or 1%%. Sealed v3..v8 kits are held until PASS.
+- z kits: hgi_v8 and hgi_v2__cle both in place (01:04-01:06). hgi_v4 f1 seal at CTS. kv3_hg seal at CTS.
+- hg_v3: kit_rtl failed rc 97 (epyc8 scratch floor 99<100 GB, so it fell back to intel2 without the tree); relaunched 01:4x as kit_hg_v3_route3.log. hg_v1p2: place rc 0 but its driver died on a systemctl timeout; resumed to route, kit_hg_v1p2_route.log.
+- RC-GAP replied: v2 has no ft23 (clean); hst2 not clean (531 bits / 727 um), D30 HST2SITE; release v2 at D29 anyway.
+- D30 rows owed: HST2SITE (keys u_hst2_g.u_reg.ti_b[k]/e_b[k], u_hst2_t1.u_reg.*), FT23STREET hgi_v4 (ft23 1056 b, banks (339-359,558-646) (678-713,558-646) (961-991,633-814): widen street x 916-1011 to >= 160 um by shifting head3_e3/e5/e7 east + outline growth; RC-KVHEAD: 77%% of 13,463 overflow crosses head3_e4), kv3_hg die form (SRAM stack out of the centre gap x 553-657, gap >= 250 um, taps <= 1200, astk/bin stations).
