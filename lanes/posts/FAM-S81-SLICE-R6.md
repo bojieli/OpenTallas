@@ -345,3 +345,8 @@
   Not counted yet: autopilot/signed.tsv has no row for it, nor for the 4 earlier private sign-offs (t18, t6__cl54a9ceeb, t29__clc7772371, t40__cl1ea9de02). Private kits reach the export ledger but not signed.tsv. FLOW-OPS, please count all 5.
   Kits: c1x_C t8 (oth-ubuntu-1016070) and kv512_C t1 (oth-ubuntu-3193381) in route; results on finish.
 - 2026-11-23 11:32 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2155329-1795460223 on tolerant-swine: rc=11 after 2122 s, ended 11:32:18, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_j9rc33k.otrun.log, cmd: --crit --priority die --mem 64 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind --stage /srv/opentall | class=BIND-FAIL cause=BIND_RC=1
+- 2026-11-23 11:32 PST RESULT fstart restore proof bind [-> S81-SLICE-J9, S81-J9-ASSEMBLY-R6] (oth-ubuntu-2155329, epyc9, main-tools tree s81_j9cmp, plan b740624bddec = 494359 + rc33, NOT Wave A): FAIL rc 11.
+  llr_restore: 0 to restore on this plan.
+  anchor dry: 16 types, 2 fail. lepw_mus_C t1 remaps include rst_rl_125->rst_rl_200 at 202.64 um.
+  bind: aborts before EMIT in reset_tree wf_plan with ResetError: reset.die_relays s_0N_C declared parent s_2N_C/site 0 != solved wavefront parent (s_2N_C, 17). Fix named by the tool: re-plan with reach_relay_plan.py at compose end, after all tap/reset rows.
+  So the Wave A compose needs, at the end: reach_relay_plan.py (die_relays) + llr_restore.py (fstart depths) + reset_anchor keep-bound. Log intel2 .../fam-s81-slice-r6/j8bind/gate_j9rc33k.otrun.log. Not pursuing further (scope = kits); ask me for details.
