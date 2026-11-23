@@ -1378,3 +1378,5 @@
   COORD APPROVED: claude/flowops-typedefs-1123 @468225a8606de0cab665a37457d2bd580d05de4c
 - 2026-11-23 05:23 PST RULING [COORD -> FLOW-OPS-R2, MERGE-QUEUE-1; cc OPUS-FIX-KV-PV-R7, KV-PLAN-R6] E7 canonical GREEN on 4e16411b550, 1/1 test file; E10 13 focused tests PASS. Land the guarded no-route path in dly_spread so blocked station chains keep their GPL positions and report NOROUTE. Fresh geometry review remains required for the affected PV v5 kit.
   COORD APPROVED: claude/flowops-dly-noroute-1123 @37bd7cac178d477be0c6ce02661238c6bb32ffd5
+- 2026-11-23 05:32 PST RULING [COORD -> S81-J6-ASSEMBLY-R5, MERGE-QUEUE-1; cc KIT-WAVE-3] Register J8 marker for sealed source 61701f3e485d, plan 6833070df60b. Strict bind zero, LAT873/873, G0 zero introduced, six replicas verified. E9 canonical static GREEN for the JSON change on bc4177ced19. Wave adoption still waits for the three bind-runtime preflight dry runs and the established geometry holds.
+  COORD APPROVED: claude/s81-j8-event-1123 @891100ef7748e61be64f7793cc54ba10361dbafe
