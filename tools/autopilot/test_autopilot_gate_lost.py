@@ -188,6 +188,25 @@ def test_grt_terminal_dpl_after_proven_caught_rsz(tmp_path):
     assert run.stdout.strip() == marker.read_text().strip() == expected
 
 
+def test_route_end_reports_missing_child_gds_from_latest_merge_stage(tmp_path):
+    k = kit_with_marker(tmp_path)
+    (k / "FAIL_POSTCTS").unlink()
+    logs = k / "run/logs/asap7/x/base"
+    early = logs / "5_1_grt.log"
+    early.write_text("[ERROR RSZ-0060] Max buffer count reached.\ncontinuing on the repaired design\n")
+    old = time.time() - 30
+    os.utime(early, (old, old))
+    terminal = "[ERROR] LEF Cell 'dsfd_qbank_N' has no matching GDS/OAS cell. Cell will be empty."
+    (logs / "6_1_merge.log").write_text("[INFO] Reporting cells prior to loading DEF ...\n" + terminal + "\n")
+    (k / "run_finish.log").write_text(early.read_text() + terminal + "\nmake[1]: *** [Makefile:720: do-gds-merged] Error 18\n")
+    source = (Path(A.__file__).resolve().parents[1] / "die_plan/gen_phys.py").read_text()
+    start = source.index('if [ $rc != 0 ] && ! ls "$K"/FAIL_*')
+    end = source.index("# Route success alone is not sign-off.", start)
+    run = subprocess.run(["bash", "-c", "K=$1; rc=2; GOAL=finish\n" + source[start:end], "runner", str(k)],
+                         check=True, capture_output=True, text=True, timeout=30)
+    assert run.stdout.strip() == "FAIL_route make exit 2: 6_1_merge.log: " + terminal
+
+
 def test_grt_terminal_dpl_does_not_replace_uncaught_or_old_failure(tmp_path):
     k = kit_with_marker(tmp_path)
     (k / "FAIL_POSTCTS").unlink()
