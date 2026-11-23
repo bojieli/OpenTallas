@@ -162,7 +162,7 @@ def test_plan_priority_and_bind_jobs_are_excluded_die_priority_is_not():
 
 def test_hbm_detection_and_type_names():
     assert nw.is_hbm("hbmcore-ot_hbm_accel_smh_pt_w_ptwc31112_-402259")
-    assert nw.is_hbm("/srv/x/hbm-collect-1/ptwc3/kit")
+    assert not nw.is_hbm("/srv/x/hbm-collect-1/ptwc3/kit")     # HBM-DIE-FIELD-1122: a path substring is never the die
     assert nw.is_hbm("trialhbm-fabric-3957235")
     assert not nw.is_hbm("dpkit-ot_s81sl_leaf__t1-4093762")
     # KIT-OPS-6 11-14: a HEAD core built by the HBM core-kit generator is not HBM (die metadata decides, not the generator name)
@@ -171,7 +171,7 @@ def test_hbm_detection_and_type_names():
     assert not nw.is_hbm(head)
     # an HBM-die kit is still HBM, with or without the generator name
     assert nw.is_hbm("hbmcore-kit_x-1 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/ev/items/PHY_NE/gen/k run_kit_hbm.sh")
-    assert nw.is_hbm("dpkit-PHY_NE-1 /srv/x/claude/kit-ops-1/hbm_pEv11c/kit")
+    assert not nw.is_hbm("dpkit-PHY_NE-1 /srv/x/claude/kit-ops-1/hbm_pEv11c/kit")   # no die field: a lane dir name says nothing
     assert nw.base_type("dpkit-col_h9_r0_p5__t1__pvb22875c0-1143335") == "col_h9_r0_p5__t1"
     assert nw.base_type("dpkit-serdes__t2-3945605-lec") == "serdes__t2"
     assert nw.base_type("dpkit-sle_sc_v1__cl64543eaf__cl5e017c6f-3460358") == "sle_sc_v1"
@@ -410,3 +410,21 @@ def test_grt_later_routing_plateau_drops_past_hold_progress():
     assert res["name"] is None
     assert res["growth_idx"] == len(FE_GRT_HOLD.splitlines())
     assert nw.judge(res, anchors_for(res["n"], 12), NOW, exact=True)[0] == "NO-PROGRESS"
+
+
+def test_hbm_die_field_only(tmp_path):
+    """HBM-DIE-FIELD-1122 (COORD flow review): QC design_export jobs whose stale cwd held 'hbm' were listed CANCEL-NOW 'HBM is parked'"""
+    qc = ("otc-3175921-5303 /srv/opentallas-scratch2/claude/explorer-store-r1/tmp/w/hbm.t.q_spt2/raw "
+          "/srv/opentallas-scratch2/claude/explorer-store-r1/tmp/w/hbm.t.q_spt2/raw /x/log/qwen_compute.t.slw_hc2__cla3497502__cldc737267.log")
+    assert nw.die_of(qc) == "qwen_compute" and not nw.is_hbm(qc)
+    assert not nw.is_hbm("otc-829738-11844 /srv/opentallas-scratch2/claude/explorer-store-r1/tmp /x/hbm_stuff/run")
+    assert nw.is_hbm("otc-1-2 /x/w/hbm.t.q_spt2")                     # its own design id
+    k = tmp_path / "hbm_lane" / "kit"
+    k.mkdir(parents=True)
+    (k / "freeze.json").write_text('{"die": "hbm", "type": "PHY_NE"}')
+    assert nw.is_hbm(f"dpkit-PHY_NE-1 {k}")
+    (k / "freeze.json").write_text('{"die": "qwen_kvsys", "type": "kv3_hbm_if"}')
+    nw._KIT_DIE.clear()
+    assert not nw.is_hbm(f"dpkit-kv3_hbm_if-1 {k} /srv/x/runs/hbm/old")   # the kit's die wins over a path segment
+    assert nw.is_hbm("dpkit-ot_hbm_pt_w-12 /srv/x/k")
+    assert not nw.is_hbm("dpkit-kv3_hbmlink-12 /srv/x/k")

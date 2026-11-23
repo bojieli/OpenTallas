@@ -695,8 +695,61 @@ def is_plan(env_prio, text):
 GENERATOR_RE = re.compile(r"(?i)(?:^|(?<=[\s/]))hbmcore-|run_kit_hbm\.sh")
 
 
+# HBM-DIE-FIELD-1122 (COORD flow review: QC slw_su_l0 epyc2 / slw_hc2 epyc8 design_export jobs listed CANCEL-NOW "HBM is parked" because
+# HBM_RE matched "hbm" anywhere in the ident, here a stale cwd .../w/hbm.t.q_spt2/raw): HBM is decided by the job's DIE FIELD only, never
+# by a substring of a path.  The die field, first hit wins:
+#   1. the job's own design id <die>.t.<type> in the container name or in a path basename (explorer / export jobs);
+#   2. the kit's freeze.json "die" (every gen_phys type kit) for each path of the ident;
+#   3. a die path segment /runs/<die>/, /kit-wave/<die>/, /die_plan/<die>/;
+#   4. HBM die type names: ot_hbm_* (after the container prefix) or a trialhbm-* container.
+# The generator name (hbmcore-*, run_kit_hbm.sh) is never a die (KIT-OPS-6 11-14).
+DIE_NAMES = ("qwen_compute", "qwen_kvsys", "s81_head", "s81", "hbm")
+DESIGN_ID_RE = re.compile(r"(?<![A-Za-z0-9_])(" + "|".join(DIE_NAMES) + r")\.t\.")
+DIE_SEG_RE = re.compile(r"/(?:runs|kit-wave|die_plan)/(" + "|".join(DIE_NAMES) + r")(?=/|$)")
+HBM_TYPE_RE = re.compile(r"^(?:trialhbm-|(?:dpkit|hbmcore|trialhbm|prd|kqc|klegacy|otc)-ot_hbm_|ot_hbm_)")
+_KIT_DIE = {}
+
+
+def kit_die(path):
+    """-> the die named by <path>/freeze.json (cached; '' when absent / unreadable)"""
+    if not path or not path.startswith("/"):
+        return ""
+    if path not in _KIT_DIE:
+        try:
+            with open(os.path.join(path, "freeze.json")) as f:
+                d = json.load(f).get("die")
+            _KIT_DIE[path] = d if isinstance(d, str) else ""
+        except (OSError, ValueError, AttributeError):
+            _KIT_DIE[path] = ""
+    return _KIT_DIE[path]
+
+
+def die_of(text):
+    """-> the die field of a job ident ('<container> <kit> <work> [<log>] ...'), '' when it names none.  See HBM-DIE-FIELD-1122."""
+    toks = (text or "").split()
+    if not toks:
+        return ""
+    name, paths = ("", toks) if toks[0].startswith("/") else (toks[0], toks[1:])
+    paths = [t for t in paths if t.startswith("/")]
+    for t in [name] + [os.path.basename(t.rstrip("/")) for t in paths]:
+        m = DESIGN_ID_RE.search(t)
+        if m:
+            return m.group(1)
+    for t in paths:
+        d = kit_die(t.rstrip("/"))
+        if d:
+            return d
+    for t in paths:
+        m = DIE_SEG_RE.search(t)
+        if m:
+            return m.group(1)
+    if HBM_TYPE_RE.search(name):
+        return "hbm"
+    return ""
+
+
 def is_hbm(text):
-    return bool(HBM_RE.search(GENERATOR_RE.sub(" ", text)))
+    return die_of(text) == "hbm"
 
 
 def base_type(name):
@@ -990,7 +1043,7 @@ def scan(now=None, act=False, probe_s=4):
         row = {"host": hostname, "container": name, "unit": unit, "type": base_type(name), "kit": kit, "work": work,
                "log": log, "stage": stage, "kind": kind, "age_h": round((now - started) / 3600, 1),
                "threads": int(th[1]) if th else 1, "gb": round(mem_gb(cg), 1), "prio": prio, "lane": lane, "_cg": cg, "_cpu0": cpu_a}
-        ident = " ".join([name, kit or "", work or ""])
+        ident = " ".join([name, kit or "", work or "", log or ""])
         k = keep_match(keep, ident)
         if k:
             row.update(verdict="KEEP", why=k.strip()[:120])
@@ -1016,6 +1069,8 @@ def scan(now=None, act=False, probe_s=4):
                 rdir = os.path.dirname(log).replace("/logs/", "/reports/")
                 rounds_ = grt_rounds(rdir)
                 row["grt_flat"] = grt_flat(rounds_)
+                if rounds_:
+                    row["grt_ovf"] = rounds_[-1][1]       # GRT-LABEL-NOTICE-1122: latest total overflow (hub tracks it over time)
                 special = judge_grt_rounds(rounds_, read_text(log) if os.path.isfile(log) else "")
                 if special:
                     # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
@@ -1244,6 +1299,7 @@ def hub(now=None, post=True):
     if udone:
         files.append("lanes/CANCEL-UNSIGNABLE-1120.tsv")
     gmode, gcand, gdone = grt_flat_pass(rows, seen, now, post=post)
+    grt_label_notice_pass(rows, seen, now, post=post)
     if gdone:
         files.append("lanes/CANCEL-GRT-FLAT.tsv")
     if qlines:
@@ -1602,6 +1658,49 @@ def grt_flat_pass(rows, seen, now, post=True, cancel=wave_cancel_rows):
         except (subprocess.SubprocessError, OSError):
             pass
     return mode, [v for v in cand.values()], done
+
+
+# ---------------------------------------------------------------- GRT-LABEL notice (GRT-LABEL-NOTICE-1122, COORD flow review item 3)
+# A GRT-LABEL DESIGN-FAIL job is a label only: grt_flat_pass cancels wave attempts, and lane / private kits had no action at all (33 labelled jobs
+# on the 22:45 table, some 61-75 h).  The hub now tracks each labelled job's latest overflow; once it has been flat or rising (never 2 % below the
+# overflow when the clock started) for >= 3 h, ONE NOTICE goes to the owning lane, the same route as UNSIGNABLE.  Notice only: the owner cancels
+# (ot-run --cancel <unit>) or posts KEEP.  A fall of >= 2 % restarts the clock (and allows a later notice).  Wave attempts that grt_flat_pass takes,
+# KEEP / EXCLUDED jobs (their verdict is not GRT-LABEL) and keys unseen 6 h are skipped / forgotten.
+GRT_LABEL_NOTICE_S = 3 * 3600
+
+
+def grt_label_notice_pass(rows, seen, now, post=True):
+    """-> [(owner, line)] noticed this pass"""
+    poster = os.environ.get("NOPROG_POST_LANE", "FLEET-WATCH-1015")
+    st = seen.setdefault("grt_label", {})
+    out = []
+    for r in rows:
+        if r.get("verdict") != GRT_LABEL or not str(r.get("why") or "").startswith("DESIGN-FAIL") or r.get("grt_ovf") is None:
+            continue
+        if grt_flat_candidate(r):
+            continue                     # a wave attempt: grt_flat_pass cancels it through the wave
+        ov = float(r["grt_ovf"])
+        k = f"{r['host']}|{r.get('unit') or r.get('container')}"
+        e = st.get(k)
+        if e is None or ov < e["ov0"] * (1 - MIN_IMPROVE):
+            e = st[k] = {"first": now, "ov0": ov}
+        e.update(last=now, ov=ov)
+        if now - e["first"] >= GRT_LABEL_NOTICE_S and not e.get("notice"):
+            e["notice"] = now
+            out.append((owner_of([r]), f"{r['host']} {r.get('unit') or r.get('container')} {r.get('type', '')} ({str(r.get('why'))[:120]}; overflow "
+                                       f"{e['ov0']:.0f} -> {ov:.0f} over {(now - e['first']) / 3600:.1f} h; job {r.get('age_h')} h, {r.get('gb', 0):.0f} GB)"))
+    for k in list(st):
+        if now - st[k].get("last", now) > UNSIGNABLE_FORGET_S:
+            del st[k]
+    if post:
+        by = {}
+        for o_, ln in out:
+            by.setdefault(o_, []).append(ln)
+        for owner, ls in sorted(by.items()):
+            _post(poster, f"NOTICE [{poster} -> {owner}] GRT-LABEL watchdog: {len(ls)} job(s) with a GRT DESIGN-FAIL label whose overflow has been flat or "
+                          f"rising for >= {GRT_LABEL_NOTICE_S // 3600} h: " + "; ".join(ls[:40])
+                  + f". Notice only, the watchdog does not cancel: {owner} decides (ot-run --cancel <unit>) or posts 'KEEP <unit> <why>'.")
+    return out
 
 
 def main(argv=None):
