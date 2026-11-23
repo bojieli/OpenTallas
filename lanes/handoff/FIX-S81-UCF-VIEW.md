@@ -10,3 +10,7 @@ Goal: rc72 u_cf (dsfd_cfifo_crs4) 22/22 M5 shorts on p3 cl0cd90c0e -> view fix s
 - Lane clone: intel2 /srv/opentallas-scratch2/claude/fix-s81-ucf-view/repo (no commits).
 ## Next
 - Watch R5 ack + the probe result (UCF-VIEW-FIX/H9R0). If the probe shows VIA34 shorts into the M4 shadow -> view variant with an M3 shadow (abstract_pin_stub SHADOW_MIN_LEVEL) for J10.
+## 03:2x probe (H9R0-R4 asked me to run it; R5 recorded J9 row 3i = 4-file sync; told R5 no J8 hold)
+- epyc9 /srv/opentallas-scratch2/claude/fix-s81-ucf-view/probe_p3: probe.tcl = 5_1_grt.odb (kit mounted ro) + read_lef new_v2.lef (renamed master) + swapMaster u_bound.u_u_cf + kit DRT args; run.sh docker 24 cpu. dry.tcl = same, no DRT.
+- swapMaster segfaulted twice in sta equivCellsArcs (no liberty for v2); now v2_tt.lib (renamed cell) read before read_db; dry rerun queued.
+- main probe ot-run client pid 793539 (intel2), log fix-s81-ucf-view/tmp/probe_otrun.log, queued on epyc9 load cap. Output probe_p3/out/5_route_drc.rpt, probe.log.
