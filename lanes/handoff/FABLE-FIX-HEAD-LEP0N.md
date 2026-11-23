@@ -1,3 +1,18 @@
+## 22:xx COORD 21:0x/21:2x work: three structural W rows (all approved)
+- Measured on w11 placed geom.tsv: (2) ring ctl regs are within 10 um of rv/lap_ok on all rings -> logic cone scatter, not sites; (3) txi stage 1
+  (x 560-643) -> g_safe_write wp_r (x 23-544) up to 690 um; (1) cland_rstart_in pin (818,747) -> rx copies (5,1155) / (5,454) 1.1-1.2 mm.
+- Fork r18p (epyc9 L/trees/s81_head_r18p_w12 = r18n + L/tmp/w12_rows.py): LEP-TXI-SITE-1 (txi2_r0 -> [497.88,568.62,508.68,711.06], txi2_s0 ->
+  [230.04,562.14,294.04,574.14], txi1_r0 -> [532.44,639.36,543.24,760.58], txi1_s0 -> [176.58,752.22,240.58,764.22]), LEP-RINGCTL-1 (3 place_regions
+  kind soft cone between radius 24 at the ctl regs), void L2/L4 rows stripped. Plan sha 0fc19ee36f705903 (before republish).
+- GATE RULE (COORD): never copy tools into a fork; gate with a published rt through a composed launch tree: L/tmp/chain_gate_rt.sh TREE RTSHA TAG
+  [TYPES] (ot-run --priority plan needs the chain* script name). r18p gate running with rt 2a24a958d719 (a4c5 lacks place_regions "cone"):
+  log intel2 ~/fable-fix-head-lep0n-1122/chain_gate_r18p.otrun.log, outputs L/plan/pre_r18p.*, L/bind_r18p.
+- RELAY-RX-STAGES pushed: main 345ac19b04b3 (key landing_relay_rx_stages on the relay type, relay_sites u_cland_rstart_rx_p<i>/q, bind role
+  +n via relay_extra "rx:<part>"). Row posted to R8 22:xx: hd_lep0N_w n = 3, sites p0 [552,754], p1 [300,754], p2 [10,812]; needs the sidecar
+  re-bind (count_aligned parts.lep0N_w stages 2 -> 5, K shift) = R8's recompose. Waiting on R8 for the prep or the command.
+- NEXT: gate PASS -> W probe kit from r18p: private-spec ... --rt 2a24a958d719 (or newer) --ab OT_PROBE_THROUGH=1 --ab OT_GRT_ALLOW_CONGESTION=1
+  --why ..., run-item --goal route; then rows to R8 (rows file sections 10-12 to write).
+
 ## 20:3x
 - w11 chain runs on epyc2 (SPILL; kit copy /srv/opentallas-scratch3/claude/kw43-wave-1109n/.../FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122175825/gen/hd_lep0N_w,
   container dpkit-hd_lep0N_w-3963146, unit oth-ubuntu-3954018-1795404254). CTS post-hook 20:1x: setup_ws -272.24 tns -15,927 hold_ws -285.78.
