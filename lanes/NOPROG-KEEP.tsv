@@ -14,3 +14,7 @@ fable-fix-qc-collcore/opus/pkits/pkw4_coll	QC-PLAN-R5	coll_core read-register cl
 dpkit-coll_core-987854	QC-PLAN-R5	pkw4 container name (same proof)
 fable-fix-qc-collcore/opus/pkits/pkw2b_coll	QC-PLAN-R5	coll_core proof, GRT repair WNS -240 (> -300); keep while above -300 (COORD 11-20)
 dpkit-coll_core-1096606	QC-PLAN-R5	pkw2b container name (same proof)
+otc-829738-11844	FLOW-OPS-R2	qwen_compute slw_su_l0__cl76fb247e (epyc2): not HBM, is_hbm path false positive (COORD 11-22 22:5x)
+otc-3175921-5303	FLOW-OPS-R2	qwen_compute slw_hc2__cla3497502__cldc737267 (epyc8): not HBM, is_hbm path false positive (COORD 11-22 22:5x)
+qwen_compute.t.slw_su_l0__cl76fb247e	FLOW-OPS-R2	same job (type ident)
+qwen_compute.t.slw_hc2__cla3497502__cldc737267	FLOW-OPS-R2	same job (type ident)
