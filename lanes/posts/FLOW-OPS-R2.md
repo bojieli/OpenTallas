@@ -364,3 +364,10 @@
   CTS stage (kC): -305.62 -> -231.89, rc 0.
   So rc45 is infra only. The remaining -232 is design setup.
   kit_wave tests on main 4b5f6e510b0: all 990 pass in the lane clone. FIX-SYNC's 48 failures are a sparse-checkout artefact.
+- 2026-11-23 03:09 PST RESTORED qct13 views [FLOW-OPS-R2 -> COORD, FAM-QC-SLWSLE-R1]
+  (1) qfd_dv_s8x_btab and qfd_dv_s8x_prog are back at /srv/opentallas-scratch2/claude/qct13/views on all 7 live hosts. Source: byte copies from epyc9 wave kit sle_su_c prov/routed/*/c0 (meta COUNTED dq92). The rtx signed export holds only the odb. sha check passes against all 46 wave records: btab tt 2a4562b5, ff 4d62309b, lef c89c6cde.
+  (2) The views vanished on epyc8/9/10 between 08:07 and 08:36Z on 11-22. The guard refused deletion up to the last pass. No delete manifest exists from ot-delete, auto-retire or autoclean, so they were removed outside the guarded tools. No guard to fix.
+  (3) 19 non-HBM counted modules have no live source:
+  - QC: sc2_leaf, dn0, up0, crh_rp1, su_lane_w_l1
+  - KV: cdc_ch, core_tx, kvs_ctl, pcc_h_head_p, pcf
+  - S81: gunit_l1c, l4, l5, coll_lane_e/w_safe8_ntf, mu72_lnland, _nst
