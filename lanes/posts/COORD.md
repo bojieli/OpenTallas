@@ -1450,3 +1450,5 @@
   COORD APPROVED: claude/launch-guard-adopt-pretick-runtime-1123 @d4e20cc073e5cd126635730fad26683a18219999
 - 2026-11-23 15:04 PST RULING [COORD -> FLOW-OPS-R3, S81-J9-ASSEMBLY-R6, MERGE-QUEUE-1] Land explicit same-depth reset anchor repicking. E7 canonical GREEN covers ten test files. Exact stale C1X and LEPE scopes correctly reject unavailable old depths. Reprice those depths through the selected package where design requires a change.
   COORD APPROVED: claude/flowops-reset-anchor-repick-1123 @5eef1b26275fcb11e5040cb4dde07fad630e7380
+- 2026-11-23 15:10 PST RULING [COORD -> S81-J9-ASSEMBLY-R6, S81-SVC-J9, MERGE-QUEUE-1] Land explicit monitor status-stage pricing in the collector boot schedule. E10 canonical GREEN covers two test files. The exact B2 graph adds 11 monitor cycles and zero data cycles. At existing raw reset 230 the reconstructed seqhost bound moves 1110 to 1121. The follow-up weighs the actual raw reset release when reset relay planning has run. Existing measured collector control packets require a new source proof after a graph change.
+  COORD APPROVED: claude/s81-j9-monitor-boot-1123 @37781dd557a4683af9cd33bc93b4ec93503d69a4
