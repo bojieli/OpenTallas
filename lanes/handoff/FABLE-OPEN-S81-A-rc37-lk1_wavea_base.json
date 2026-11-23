@@ -1,0 +1,137 @@
+{
+  "schema": "ot_s81_lep_profile/1",
+  "scope": "Core-local edge debt and credit feedback; not a whole-token compile.",
+  "plan_sha256": "4662b734580b6fdb5d263388a7c4708a26fa7af49a8671922ef462de06739515",
+  "source_sha256": "c37011a52ce25d55b3eaf53ae0fab8bd9ffe1cc6957cc2fd4b1de2abacde74a3",
+  "priced": {
+    "s_0S_LP": {
+      "type": "dsdv_slice_lepw_mus_LP__t2",
+      "module": "ot_s81sl_lep_mu_ab_tpr",
+      "macros": {
+        "RIP": 1,
+        "ROS": 0,
+        "CRP": 2
+      },
+      "ingress_extra_edges": {
+        "ro": 0,
+        "t_host": 0,
+        "t_kd": 0,
+        "mu_c": 0
+      },
+      "egress_extra_edges": {
+        "ri": 1
+      },
+      "credit_feedback_extra_edges": {
+        "lo0_r": 2,
+        "lo1_r": 2,
+        "lo2_r": 2,
+        "lo3_r": 2
+      },
+      "non_ros_inputs": [
+        "tl",
+        "tq",
+        "tp_in"
+      ],
+      "mu_rt_output_extra_edges": 0,
+      "modeled_local_credit_roundtrip_edges": 10,
+      "credit_depth": 12
+    },
+    "s_0N_LP": {
+      "type": "dsdv_slice_lepw_mu_LP__t2",
+      "module": "ot_s81sl_lep_mu_ab_idxq",
+      "macros": {
+        "RIP": 1,
+        "ROS": 0,
+        "CRP": 2
+      },
+      "ingress_extra_edges": {
+        "ro": 0,
+        "t_host": 0,
+        "t_kd": 0,
+        "mu_c": 0
+      },
+      "egress_extra_edges": {
+        "ri": 1
+      },
+      "credit_feedback_extra_edges": {
+        "lo0_r": 2,
+        "lo1_r": 2,
+        "lo2_r": 2,
+        "lo3_r": 2
+      },
+      "non_ros_inputs": [
+        "tl",
+        "tq",
+        "tp_in"
+      ],
+      "mu_rt_output_extra_edges": 0,
+      "modeled_local_credit_roundtrip_edges": 10,
+      "credit_depth": 12
+    },
+    "s_7S_LP": {
+      "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+      "module": "ot_s81sl_lep_mu_a_tpt",
+      "macros": {
+        "RIP": 3,
+        "ROS": 3,
+        "CRP": 2
+      },
+      "ingress_extra_edges": {
+        "ro": 3,
+        "t_host": 3,
+        "t_kd": 3,
+        "mu_c": 3
+      },
+      "egress_extra_edges": {
+        "ri": 3
+      },
+      "credit_feedback_extra_edges": {
+        "lo0_r": 2,
+        "lo1_r": 2,
+        "lo2_r": 2,
+        "lo3_r": 2
+      },
+      "non_ros_inputs": [
+        "tl",
+        "tq",
+        "tp_in"
+      ],
+      "mu_rt_output_extra_edges": 0,
+      "modeled_local_credit_roundtrip_edges": 10,
+      "credit_depth": 12
+    },
+    "s_7N_LP": {
+      "type": "dsdv_slice_lepe_mu_LP__t2",
+      "module": "ot_s81sl_lep_mu_hab_tp",
+      "macros": {
+        "RIP": 1,
+        "ROS": 0,
+        "CRP": 2
+      },
+      "ingress_extra_edges": {
+        "ro": 0,
+        "t_host": 0,
+        "t_kd": 0,
+        "mu_c": 0
+      },
+      "egress_extra_edges": {
+        "ri": 1
+      },
+      "credit_feedback_extra_edges": {
+        "lo0_r": 2,
+        "lo1_r": 2,
+        "lo2_r": 2,
+        "lo3_r": 2
+      },
+      "non_ros_inputs": [
+        "tl",
+        "tq",
+        "tp_in"
+      ],
+      "mu_rt_output_extra_edges": 0,
+      "modeled_local_credit_roundtrip_edges": 10,
+      "credit_depth": 12
+    }
+  },
+  "unresolved": {}
+}
