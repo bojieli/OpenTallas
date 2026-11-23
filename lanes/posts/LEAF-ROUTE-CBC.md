@@ -79,3 +79,4 @@
   - Fix running: reset fixed_cycles to the grow base, re-run reprice vs J8, re-run PRE, relaunch the bind. ETA bind start ~06:30 PST, bind done ~10:30.
   - Plan W_revert_lt 7395d11b2003 already passes PRE and TAPGRID 80/80. aim: 0 true legs >405 on all non-reverted types.
   - The 9 reverted types (t4 t16 t29 t32 t38 t41 t44 t53x2) keep their J8 layouts. They also keep the J8 long first legs (160 rows, up to 887 um), which are not regressions. Each still needs a reset-tree plan row, because landing_remap anchor and identity both fail ("needs a plan row"). Rule: that row goes into the J9 18:00 cut as a delta.
+- 2026-11-23 05:56 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-250035-1795441934 on renewed-glider: rc=0 after 249 s, ended 13:56:21, log none, cmd: --hosts epyc9 --crit --disk 4 --mem 48 --threads 4 --dir /srv/opentallas-scratch2/claude/leaf-route-cbc/row9x -- bash /srv/opentallas-scratc
