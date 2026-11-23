@@ -3730,14 +3730,23 @@ class Binder:
         # sorted type order (bind_emit_par.py); a state change it cannot merge falls back to this serial loop.
         import bind_emit_par
         _par = False
-        if bind_emit_par.jobs() > 1 and len(self.by_type) > 1:
+        emit_set = self.by_type
+        only = only_types_select(self.by_type, self.types)
+        if only is not None:
+            emit_set = {tn: self.by_type[tn] for tn in only}
+            self.probe_only = dict(requested=sorted(only_types_requested()), emitted=sorted(only),
+                                   skipped=len(self.by_type) - len(only), of=len(self.by_type))
+            print(f"bind: PROBE-ONLY (OT_BIND_ONLY_TYPES) emits {len(only)} of {len(self.by_type)} types: {sorted(only)}; "
+                  f"no bound top; this OUT is a probe, never a die bind", flush=True)
+        self._emit_set = emit_set
+        if bind_emit_par.jobs() > 1 and len(emit_set) > 1:
             try:
                 bind_emit_par.run(self, out, files, bind_emit_par.jobs())
                 _par = True
             except bind_emit_par.ParUnsafe as exc:
                 print(f"bind: emit parallel fell back to serial: {exc}", flush=True)
         if not _par:
-            for tn, ps in sorted(self.by_type.items()):
+            for tn, ps in sorted(emit_set.items()):
                 self._emit_one(tn, ps, out, files)
         if getattr(self, "_bound_core_resets", None):
             (out.parent / "bind_core_resets.json").write_text(
@@ -3749,6 +3758,8 @@ class Binder:
             files.extend(self._native_glue.files)
         if getattr(self, "emit_gaps", None):
             return files                          # --all-gaps: gaps recorded; no bound top from an incomplete type set
+        if getattr(self, "probe_only", None):
+            return files                          # PROBE-ONLY-1123: no bound top from a type subset
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         top_text = self.emit_top()
         if getattr(self, "clock_landings", None):
@@ -5717,6 +5728,30 @@ def _write_provenance(a, step):
     (Path(a.out) / f"provenance_{step}.json").write_text(json.dumps(dict(provenance=rec), indent=1) + "\n")
 
 
+def only_types_requested():
+    """PROBE-ONLY-1123 (OPUS-FIX-S81-SVC-R9 / COORD 11-23: a svc probe waited on a full 403-type bind): OT_BIND_ONLY_TYPES=a,b (or
+    bind/all --types a,b; fnmatch patterns allowed) -> the set of requested names, or None"""
+    v = os.environ.get("OT_BIND_ONLY_TYPES", "").strip()
+    return {x.strip() for x in v.split(",") if x.strip()} or None
+
+
+def only_types_select(by_type, types):
+    """the bound types a probe-only bind emits: a requested name / pattern matches the type, its split base (split_of) or its
+    variant base (T__vN -> T).  None = a full bind.  A request that matches nothing is a BindError (a typo never binds nothing)."""
+    import fnmatch
+    req = only_types_requested()
+    if req is None:
+        return None
+    def keys(tn):
+        t = types.get(tn) or {}
+        return {tn, t.get("split_of") or tn, tn.split("__v")[0]}
+    sel = {tn for tn in by_type if any(fnmatch.fnmatchcase(k, r) for k in keys(tn) for r in req)}
+    miss = sorted(r for r in req if not any(fnmatch.fnmatchcase(k, r) for tn in by_type for k in keys(tn)))
+    if miss:
+        raise BindError(f"OT_BIND_ONLY_TYPES: {miss} match no bound type (bound: {sorted(by_type)[:20]}...)")
+    return sel
+
+
 def cmd_elab(a):
     raw = load_plan(a.plan)
     import manifest_paths
@@ -5920,6 +5955,11 @@ def cmd_bind(a):
         berrs, strict_info["bundle_depth"] = bundle_depth_check.gate(raw)
         B.errors.extend(berrs)
     rep["files"] = [str(f) for f in files]
+    if getattr(B, "probe_only", None):
+        rep["probe_only"] = B.probe_only            # PROBE-ONLY-1123: kit_rtl of these types only; never a die bind / sign-off input
+        _fresh_write_text(out / "BIND_PROBE_ONLY.json", json.dumps(B.probe_only, indent=1) + "\n")
+    else:
+        (out / "BIND_PROBE_ONLY.json").unlink(missing_ok=True)
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
     if strict_info is not None:
@@ -7052,6 +7092,9 @@ def cmd_kit_rtl(a):
     elif rep.get("n_errors", 0):
         raise BindError("kit-rtl: failing global bind needs an explicit verified LOCAL component proof")
     key = a.variant or tn
+    _po = rep.get("probe_only") or {}
+    if _po and key not in _po.get("emitted", []) and tn not in _po.get("emitted", []):
+        raise BindError(f"kit-rtl: {out} is a PROBE-ONLY bind of {_po.get('emitted')}; type {key} was not emitted (stale rtl/ files)")
     if component_report is not None and key != tn:
         raise BindError("kit-rtl: LOCAL component proof does not authorize a different type variant")
     variants = sorted(k for k in rep["types"] if k == tn or k.startswith(tn + "__"))
@@ -7779,6 +7822,8 @@ def _main(argv=None):
                        help="report every EMIT plan/source gap (core reset leaf, parent ID, glue) in one run instead of "
                             "stopping at the first; no new checks; the bound top is not emitted while gaps remain")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
+        s.add_argument("--types", help="PROBE-ONLY-1123: emit only these bound types (comma list, fnmatch; = env OT_BIND_ONLY_TYPES); "
+                                       "no bound top, OUT/BIND_PROBE_ONLY.json marks the OUT a probe")
         s.add_argument("--allow-src-root", action="append", default=[], metavar="PATH",
                        help="strict bind: also allow bind.f paths under PATH (a legitimate external source root; "
                             "recorded in bind_report strict_src; plan key asbuilt.external_roots is the durable form)")
@@ -7798,6 +7843,8 @@ def _main(argv=None):
             print(f"bind: PLAN-PACKAGE {'WARNING' if _ok else 'ERROR'} {_msg}")
         if not _ok:
             return 2
+    if getattr(a, "types", None):
+        os.environ["OT_BIND_ONLY_TYPES"] = a.types
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     if a.cmd == "bind":            # PRE-ORDER-1123: elab / all start the gate after their own elab (below)
@@ -7826,6 +7873,7 @@ def _main(argv=None):
         if a.cmd == "elab":
             r = cmd_elab(a)
             if r:
+                return r
             _PG_ELAB_DONE[0] = True
             return _pg_run(a)
         if a.cmd == "bind":
@@ -7844,6 +7892,9 @@ def _main(argv=None):
                 _PG_ELAB_DONE[0] = True
                 r = _pg_run(a)       # PRE-ORDER-1123: beside the bind, on this run's finished elab
             r = r or cmd_bind(a)
+            if not r and only_types_requested():
+                print("bind: PROBE-ONLY: verify skipped (no bound top)")
+                return r
             return r or bind_verify.cmd_verify(a)
     except (BindError, E.ElabError) as e:
         print(f"bind: ERROR {e}")

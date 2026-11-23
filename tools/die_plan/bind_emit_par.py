@@ -225,12 +225,20 @@ def _new(path, v, ops):
     ops.append(("set", path, v))
 
 
+# EMIT-PAR-MERGE-1123 (COORD 11-23: QC V4 l0b / l1r / l1a / l0su binds fell back to serial after 5255-5945 s of parallel work on
+# "self.bound_group_products: set by more than one type"): attributes every type APPENDS its own entries to (bound_groups.py: one product
+# dir per bound group).  Merged in sorted type order (the serial loop's order) as a + the entries of b not already in a.
+APPEND_LISTS = frozenset({"bound_group_products"})
+
+
 def merge_set(a, b, path):
     """two types set one path.  Equal non-numeric values are one memo / flag (computed by whichever type came first: once); two dicts
     are merged key by key (`self.__dict__.setdefault("_receipts", {})[tn] = r`); two sets are united.  Everything else -- equal
     numbers (a counter: 0 -> 1 in every worker), different lists or scalars (last writer) -- is a cross-type value: ParUnsafe."""
     if _num(a) and _num(b) and _is_counter(path):
         return a + b                                 # a count first created by the workers themselves (stats.get(k, 0) + n): absent = 0
+    if isinstance(a, list) and isinstance(b, list) and len(path) == 1 and path[0][0] == "k" and path[0][1] in APPEND_LISTS:
+        return a + [x for x in b if x not in a]      # EMIT-PAR-MERGE-1123: per-type appends
     if type(a) is type(b):
         if isinstance(a, dict):
             out = copy.copy(a)                       # keeps a defaultdict / Counter what it is
@@ -531,6 +539,46 @@ def _child(B, tn, ps, out, res_path, log_path):
         os._exit(rc)
 
 
+HIST = os.path.expanduser(os.environ.get("OT_BIND_EMIT_HIST", "~/.local/state/bind-emit/type_walls.json"))
+
+
+def hist_load(out=None, path=None):
+    """EMIT-SCHED-1123: type -> last measured emit wall (s): this host's history file, then the previous bind_emit_par.json of this OUT"""
+    h = {}
+    for f in (path or HIST, os.path.join(os.path.dirname(os.path.abspath(str(out))), "bind_emit_par.json") if out else None):
+        try:
+            d = json.load(open(f)) if f else {}
+        except (OSError, ValueError):
+            continue
+        if isinstance(d, dict) and isinstance(d.get("per_type"), list):
+            d = {r.get("type"): r.get("wall_s") for r in d["per_type"] if isinstance(r, dict)}
+        for k, v in (d or {}).items():
+            if isinstance(k, str) and isinstance(v, (int, float)):
+                h[k] = max(float(v), h.get(k, 0.0))
+    return h
+
+
+def hist_save(recs, path=None):
+    """record the per-type walls of this run (newest wins), atomically; never raises"""
+    path = path or HIST
+    try:
+        try:
+            d = json.load(open(path))
+        except (OSError, ValueError):
+            d = {}
+        d = d if isinstance(d, dict) and "per_type" not in d else {}
+        for r in recs:
+            if r.get("type") and isinstance(r.get("wall_s"), (int, float)):
+                d[r["type"]] = r["wall_s"]
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        tmp = f"{path}.{os.getpid()}"
+        with open(tmp, "w") as f:
+            json.dump(d, f, indent=0, sort_keys=True)
+        os.replace(tmp, path)
+    except OSError:
+        pass
+
+
 def weight(B, tn, ps):
     """a rough per-type cost for largest-first scheduling (only order, never results, depends on it)"""
     try:
@@ -554,7 +602,7 @@ def _run(B, out, files, j, rec_path=None):
     own exception in sorted type order, like the serial loop."""
     import gc
     from pathlib import Path
-    order = sorted(B.by_type.items())
+    order = sorted((getattr(B, "_emit_set", None) or B.by_type).items())     # PROBE-ONLY-1123: the emitted subset
     if j <= 1 or len(order) <= 1 or not hasattr(os, "fork"):
         raise ParUnsafe("nothing to parallelise")
     t0 = time.time()
@@ -562,7 +610,10 @@ def _run(B, out, files, j, rec_path=None):
     if keep:
         os.makedirs(keep, exist_ok=True)
     work = keep or tempfile.mkdtemp(prefix="bind_emit_par_", dir=os.environ.get("TMPDIR") or None)
-    todo = sorted(order, key=lambda kv: -weight(B, kv[0], kv[1]))
+    # EMIT-SCHED-1123 (QC V4 l0x / l1b: coll_ftc alone is 3018-3575 s of a 4756-5070 s emit; the next type ~130 s): the types with the
+    # longest measured emit go first (history by type name), then the member-count weight; only the order changes, never results
+    _h = hist_load(out)
+    todo = sorted(order, key=lambda kv: (-_h.get(kv[0], 0.0), -weight(B, kv[0], kv[1])))
     live, done = {}, {}
     sys.stdout.flush()
     sys.stderr.flush()
@@ -634,6 +685,7 @@ def _run(B, out, files, j, rec_path=None):
                serial_sum_s=round(sum(r["wall_s"] for r in recs), 1), max_private_mb=max([r.get("private_mb") or 0 for r in recs] or [0]),
                shallow_attrs=sorted({k for r in recs for k in r.pop("shallow", [])}),
                per_type=sorted(recs, key=lambda r: -r["wall_s"]))
+    hist_save(rec["per_type"])
     print(f"bind: emit parallel j={j}: {len(order)} types in {rec['wall_s']} s (sum of type walls {rec['serial_sum_s']} s, "
           f"max worker private {rec['max_private_mb']} MB)", flush=True)
     try:

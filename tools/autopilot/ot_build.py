@@ -262,6 +262,8 @@ class BindStage:
             if not eq or not re.fullmatch(r"[A-Z][A-Z0-9_]*", k):
                 raise G.BuildError(f"--env {kv!r}: KEY=VALUE")
             self.env[k] = v
+        if "OT_BIND_ONLY_TYPES" in self.env:     # PROBE-ONLY-1123: a probe shares the full bind's OUT / elab; the types are --only-types
+            a.only_types = a.only_types or self.env.pop("OT_BIND_ONLY_TYPES")
         remap_base = a.remap_base or self.env.get("OT_PLAN_REMAP_BASE", os.environ.get("OT_PLAN_REMAP_BASE"))
         self.remap_base = Path(remap_base).resolve() if remap_base else None
         self.seal = tree_id(self.src)
@@ -546,9 +548,57 @@ class BindStage:
             raise G.BuildError(f"bound_param_check.py: {len(block)} finding(s) in the RTL of {', '.join(sorted(mods))}; log {lf}")
         return 0
 
+    PROBE_SKIP = ("rtl", "native_internal_stations", "native_glue", "kit_rtl", G.STAMP_DIR)
+
+    def _probe_seed(self, probe):
+        """PROBE-ONLY-1123: the probe OUT starts from this OUT's elab: asbuilt.json(.gz) hard-linked (bind only reads it), the other
+        elab files copied; bind outputs (rtl/, bind_*, provenance_bind) and other probes are not taken"""
+        import shutil
+        probe.mkdir(parents=True, exist_ok=True)
+        for e in sorted(self.out.iterdir()):
+            n = e.name
+            if n in self.PROBE_SKIP or n.startswith(("probe_", "bind_", "BIND_", "PLAN_GATE_PRE_REFUSED", "provenance_bind")):
+                continue
+            t = probe / n
+            if t.is_dir() and not t.is_symlink():
+                shutil.rmtree(t)
+            elif t.exists() or t.is_symlink():
+                t.unlink()
+            if e.is_dir():
+                shutil.copytree(e, t, symlinks=True)
+            elif n.startswith("asbuilt.json"):
+                os.link(e, t)
+            else:
+                shutil.copy2(e, t)
+
+    def probe(self):
+        """PROBE-ONLY-1123 (OPUS-FIX-S81-SVC-R9 / COORD 11-23): pre + elab (+ r8) of the full bind as usual (same OUT, same stamps:
+        a later full bind reuses that elab), then bind.py with OT_BIND_ONLY_TYPES in OUT/probe_<h>: only the listed types are emitted,
+        no bound top; OUT/probe_<h>/BIND_PROBE_ONLY.json marks it.  Never stamped, never a die bind."""
+        a = self.a
+        goal = "r8" if any(n.name == "r8" for n in self._nodes) else "elab"
+        rc = G.build(self._nodes, goal, dry=a.status or a.dry, log=log, force=tuple(a.force or ()))
+        if rc or a.status or a.dry:
+            return rc
+        h = G.sha_obj(sorted(x.strip() for x in a.only_types.split(",") if x.strip()))[:8]
+        probe = self.out / f"probe_{h}"
+        self._probe_seed(probe)
+        log(f"OT-BUILD PROBE-OUT {probe} types {a.only_types}")
+        t0 = time.time()
+        rc, _ = self._tool("bind.py", ["bind", self.plan, "--out", probe, "--mem", a.mem, "--strict", "--all-gaps"] + self._ab_args(True),
+                           f"probe_{h}.log", extra_env={"OT_BIND_EMIT_J": str(a.emit_j), "OT_BIND_ONLY_TYPES": a.only_types},
+                           ok=(0, 1, 2))
+        rep = load_json(probe / "bind_report.json") if (probe / "bind_report.json").is_file() else {}
+        n = rep.get("n_errors")
+        log(f"ot-build: probe bind rc={rc} n_errors={n} in {time.time() - t0:.0f} s; errors {json.dumps(rep.get('errors', [])[:5])[:600]}")
+        return 0 if rc == 0 and n == 0 else 1
+
     def main(self):
         a = self.a
         self._nodes = self.nodes()
+        if getattr(a, "only_types", None):
+            log(f"OT-BUILD OUT {self.out}")
+            return self.probe()
         goal = a.upto or "bpc"
         if goal == "bpc":
             goal = ["latcheck", "bpc"]
@@ -616,6 +666,8 @@ def parser():
     b.add_argument("--rt-floor-exempt", default="", metavar="WHY", help="FABLE-FLOW-0230 T1: bind on an rt below the floor (sealed / pinned plan tree); logged")
     b.add_argument("--env", action="append", default=[], metavar="OT_KEY=VALUE")
     b.add_argument("--emit-j", default="auto")
+    b.add_argument("--only-types", help="PROBE-ONLY-1123: pre + elab as usual, then a bind of only these types (comma list, fnmatch) in "
+                                        "OUT/probe_<h>; no bound top, never stamped, never a die bind")
     b.add_argument("--mem", default="48")
     b.add_argument("--status", action="store_true", help="hash and report; run nothing (exit 3 when a node is stale)")
     b.add_argument("--dry", action="store_true")
