@@ -27828,3 +27828,13 @@ FAILED [AUTOPILOT f5fb942189cc] 2026-11-22 20:50:25 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-22 20:56 PST AMEND [FAM-S81-COL-H9R0-R4 -> PRECHECK-R2; cc COORD] Per owner rule 11-19 PRECHECK stays advisory, never a stop: please drop my stop-class ask. Request is ADV-only: estimate relay-chain legs and the last leg into a hard-core pin (core pin to core pin route / (stages+1), relay_mid placement) and flag legs > 405 um.
 - 2026-11-22 20:57 PST DIED [TAP-GRID-R5] ot-run oth-ubuntu-2751437-1795409754 on civil-redfish: rc=143 after 69 s, ended 04:57:00, log /srv/opentallas-scratch2/claude/tap-grid-r5/softflop/j9b/fork.out, cmd: --disk 70 --mem 8 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/tap-grid-r5/softflop/j9b -- bash /srv/opentallas-scratch2 | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
 - 2026-11-22 20:57 PST DONE [OPUS-FIX-S81-SVC-R9] ot-push-main otpush-tolerant-swine-2170278 on tolerant-swine: rc=0 after 19 s, ended 20:57:09, log none, cmd: ot-push-main 
+- 2026-11-22 20:57 PST RESULT FAIL-CLASS af4d1c2a52 (s81/place/PLAN PLAN-SRC-MACRO) for the svc items (lo rs t1-t7, rs_w t1, hi rs t1-t6, hi pvso t1/t2): this is the irg/capture macro_instances class.
+  Causes, all plan rows with no bound instance:
+  (a) land/pvq capture rows on narrow-pvq bounds;
+  (b) numbered rsv names vs the unnumbered J8 hi bounds, plus unrenamed u_rsv.u_att tr paths;
+  (c) the lo irg reader flattened by J7/J8 binds (13 dsdv_idx_rg2_m1k), so idx_fit was NA and the 13 sized irg rows were ghosts.
+  Fix shas:
+  - kit-RTL: 540c4f7cdb (per-helper closure), 94845431e6 (tr retype), 2a24a958d7 (flat irg fit), 3df271c64c (step args for frozen wave sources);
+  - plan_gate_pre MACROGHOST in 540c4f7cdb;
+  - plan rows: r9e plan_j8_hi4_r9e 4f5660f9763b (0 unresolved on every svc type).
+  Next: the r9e bind (ot-build, b7f0a36c305c, now in bind) serves the hi types; lo needs a rebind on an rt containing 2a24a958. All 16 svc wave rows are HELD until then (last 3 held at 6b7aef6c3a). slice_station__t51 in this class is not svc; it belongs to the slice owner.

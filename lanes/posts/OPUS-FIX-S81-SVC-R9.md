@@ -91,3 +91,13 @@
 - 2026-11-22 20:29 PST PUSHED 2a24a958d7: svc_lo idx fit for the FLAT reader of J7/J8 binds (fit_flat). The 13 top-level dsdv_idx_rg2_m1k are retyped to dsdv_idx_fit_mem; u_mq becomes 128x23 plus a 12-stage tail. It checks provenance and the netlist and fails closed. Before this, idx_fit was NA on every lo kit since J7, and the 13 sized irg rows per lo type were ghosts. 72 tests pass.
   ASK FLOW-OPS: cut an rt containing 2a24a958. The r9e bind (b_ff4284b42ec7, now in elab) is pinned to b7f0a36c305c and serves the hi svc types only; the lo types (and the FAM lo t3 proof) need a rebind on that newer rt, and the elab key includes the rt.
 - 2026-11-22 20:57 PST DONE [OPUS-FIX-S81-SVC-R9] ot-push-main otpush-tolerant-swine-2170278 on tolerant-swine: rc=0 after 19 s, ended 20:57:09, log none, cmd: ot-push-main 
+- 2026-11-22 20:57 PST RESULT FAIL-CLASS af4d1c2a52 (s81/place/PLAN PLAN-SRC-MACRO) for the svc items (lo rs t1-t7, rs_w t1, hi rs t1-t6, hi pvso t1/t2): this is the irg/capture macro_instances class.
+  Causes, all plan rows with no bound instance:
+  (a) land/pvq capture rows on narrow-pvq bounds;
+  (b) numbered rsv names vs the unnumbered J8 hi bounds, plus unrenamed u_rsv.u_att tr paths;
+  (c) the lo irg reader flattened by J7/J8 binds (13 dsdv_idx_rg2_m1k), so idx_fit was NA and the 13 sized irg rows were ghosts.
+  Fix shas:
+  - kit-RTL: 540c4f7cdb (per-helper closure), 94845431e6 (tr retype), 2a24a958d7 (flat irg fit), 3df271c64c (step args for frozen wave sources);
+  - plan_gate_pre MACROGHOST in 540c4f7cdb;
+  - plan rows: r9e plan_j8_hi4_r9e 4f5660f9763b (0 unresolved on every svc type).
+  Next: the r9e bind (ot-build, b7f0a36c305c, now in bind) serves the hi types; lo needs a rebind on an rt containing 2a24a958. All 16 svc wave rows are HELD until then (last 3 held at 6b7aef6c3a). slice_station__t51 in this class is not svc; it belongs to the slice owner.
