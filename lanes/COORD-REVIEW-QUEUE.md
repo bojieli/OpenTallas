@@ -30533,3 +30533,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - KV: cdc_ch, core_tx, kvs_ctl, pcc_h_head_p, pcf
   - S81: gunit_l1c, l4, l5, coll_lane_e/w_safe8_ntf, mu72_lnland, _nst
 - 2026-11-23 03:09 PST DONE [RELEC-1122] ot-run oth-ubuntu-1842846-1795414973 on renewed-glider: rc=0 after 17200 s, ended 11:09:30, log /srv/opentallas-scratch2/claude/RELEC-1122/logs/qwen_compute_type_sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304_32da6c3b.log, cmd: --mem 36 --threads 4 --dir /srv/opentallas-scratch2/claude/RELEC-1122/ak/qwen_compute_type_sle_hc0__cl929603c0__cl4baa7c9c__pvcaa93304_32da6
+- 2026-11-23 03:09 PST DONE [FABLE-UNC-KV] ot-push-main otpush-civil-redfish-37090 on civil-redfish: rc=0 after 53 s, ended 11:09:53, log /srv/opentallas-scratch2/claude/fable-unc-kv/tmp/push_real.log, cmd: ot-push-main 
