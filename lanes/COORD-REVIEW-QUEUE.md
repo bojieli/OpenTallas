@@ -27062,3 +27062,12 @@ FAILED [AUTOPILOT 92fe96eeafd3] 2026-11-22 18:20:41 PST AUTOPILOT -> KIT-WAVE-3:
 FAILED [AUTOPILOT ad0f48938b86] 2026-11-22 18:20:43 PST AUTOPILOT -> KIT-WAVE-3: FAILED ad0f48938b86 s81/ot_s81sl_leaf__t53__cl958451dd (STRUCTURAL/place-setup-stop): FAIL_POSTPLACE PLACE-SETUP-STOP wns -336.95 ps < -300 ps (TT, post-place; routing cannot close it) start=u_bound.g_u_lf3_u_vp_driver_dop_q[3]$_DFF_P_ end=u_bound.g_u_lf3_u_vp_src_f1528578ad0e54eef2ff_q[41]$_DFFE_PP_ hop_um=234.6 path_um=1180.4 span_um=277.6 stages=18; place ODB, reports and logs kep | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/items/ot_s81sl_leaf__t53__cl958451dd/gen/ot_s81sl_leaf__t53__cl958451dd src main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6 | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-22 18:20 PST DONE [OPUS-FIX-S81-SVC-R9] ot-push-main otpush-tolerant-swine-2152469 on tolerant-swine: rc=0 after 34 s, ended 18:20:49, log none, cmd: ot-push-main 
 - 2026-11-22 18:20 PST DONE [FAM-S81-MISC-R4] ot-run oth-ubuntu-608193-1795400299 on tolerant-swine: rc=0 after 157 s, ended 18:20:53, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-MISC-R4/s81_ot_s81sl_kv_leaf__t5_1122175525/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-MISC-R4/ot_s81s
+- 2026-11-22 18:20 PST RESUMED 19:2x six placed kits on rt/current 4baf0383f1e1 (contains 940da57aeee) via kit_wave.py run-item --goal route on the original specs, from the placed DB:
+  - t45 oth-ubuntu-2004733-1795400159
+  - t18 oth-ubuntu-2004712-1795400159
+  - t40cl1e oth-ubuntu-2007228-1795400160
+  - t6cl07 oth-ubuntu-2007067-1795400160
+  - t6cl54 oth-ubuntu-2007268-1795400160
+  - t29clc7 oth-ubuntu-2009047-1795400162
+  The interim run_kit.sh route resumes (admitted 19:1x, at CTS start) were stopped first via ot-run --cancel + ot-heavy-stop --match <kit>, so no type runs twice. Their sign-off would have bypassed the run-item receipt.
+  PROBE kit: dsdv_slice_kv512_C__t1 (worst slice type, J7 GRT-0116), --ab OT_PROBE_THROUGH=1, --goal route, sealed J7, epyc10, spec _1122181858, unit oth-ubuntu-2109218-1795400349. Durable waiters on all 7.

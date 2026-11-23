@@ -201,3 +201,12 @@
 - 2026-11-22 18:14 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-370319-1795399859 on renewed-glider: rc=143 after 1932 s, ended 02:14:02 env=wave+0, log /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_station__t45_1122025632/gen/slice_station__t45/otrun_route.log, cmd: --mem 48 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-S | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
 - 2026-11-22 18:14 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1168052-1795399636 on loved-redfish: rc=143 after 1764 s, ended 02:14:39 env=wave+0, log /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_station__t29__clc7772371_1122030026/gen/slice_station__t29__clc7772371/otrun_route.log, cmd: --mem 48 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-S | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
 - 2026-11-22 18:15 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1170294-1795399638 on loved-redfish: rc=143 after 1791 s, ended 02:15:04 env=wave+0, log /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_station__t6__cl54a9ceeb_1122025909/gen/slice_station__t6__cl54a9ceeb/otrun_route.log, cmd: --mem 48 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-S | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
+- 2026-11-22 18:20 PST RESUMED 19:2x six placed kits on rt/current 4baf0383f1e1 (contains 940da57aeee) via kit_wave.py run-item --goal route on the original specs, from the placed DB:
+  - t45 oth-ubuntu-2004733-1795400159
+  - t18 oth-ubuntu-2004712-1795400159
+  - t40cl1e oth-ubuntu-2007228-1795400160
+  - t6cl07 oth-ubuntu-2007067-1795400160
+  - t6cl54 oth-ubuntu-2007268-1795400160
+  - t29clc7 oth-ubuntu-2009047-1795400162
+  The interim run_kit.sh route resumes (admitted 19:1x, at CTS start) were stopped first via ot-run --cancel + ot-heavy-stop --match <kit>, so no type runs twice. Their sign-off would have bypassed the run-item receipt.
+  PROBE kit: dsdv_slice_kv512_C__t1 (worst slice type, J7 GRT-0116), --ab OT_PROBE_THROUGH=1, --goal route, sealed J7, epyc10, spec _1122181858, unit oth-ubuntu-2109218-1795400349. Durable waiters on all 7.
