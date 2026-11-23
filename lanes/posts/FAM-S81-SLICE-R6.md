@@ -273,3 +273,8 @@
   35 hold cells in pocket: no row of its own, a consequence of 32-34. The probes run OT_PREGRT_FF_HOLD=1 to measure it.
   36 LP residual GRT: LEPE-4 (XGARRAY-1 LP form).
   37 LP W<->E setup: LEPE-4 (F2/N1 + stations).
+- 2026-11-23 01:38 PST SIGNED (never-signed slice types, private J7-seal kits, routed LEC EQUIVALENT, PROVENANCE SIGNED):
+  - slice_station__t18: TT -21.26 ps, 64 endpoints, within -42. rec c901849575c0.
+  - slice_station__t6__cl54a9ceeb: rec 0752f208098d.
+  - slice_station__t29__clc7772371: rec 75fb9dad6899. Its provenance needed --kit epyc2 scratch3, because the kit signed on a scratch3 copy.
+  All three are AUTO-EXPORTED but not yet in signed.tsv; waiting on the export drain. Still running: t40cl1e, t6cl07, kv512_C v9 + probe, c1x_C t9 (v9), c1x_C t8 (v10).
