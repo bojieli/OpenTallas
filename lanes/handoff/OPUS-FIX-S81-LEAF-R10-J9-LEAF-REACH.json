@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.s81_plan_row.v1",
+ "owner": "OPUS-FIX-S81-LEAF-R10",
+ "row": "J9-LEAF-REACH (t24 cl2456157b, kv_leaf t3, t72)",
+ "approved": "COORD 11-22 21:1x (same sweep)",
+ "cause": "t24 -609 u_wv line[38] -> vp_driver hw_d_q[78] span 436 um 16 st; kv_leaf t3 -329 vn rb_v_c -> u_x.q[21] span 610 um 20 st; t72 -420 cland_fstart_in_ft1_i[0] -> u_cland_ft1_i ring g_wreg wen (span 380 um, 833 um path, 11 st). kv_leaf t4 moved to SRE-SRC (path read: g_sre nm_r select fanout)",
+ "fix": "CBC: one station on each hop > 405 um (cycle pre-approved, timeline constants follow); first check whether a place_regions cone-between closes t24 (span only 31 um over reach)",
+ "status": "draft",
+ "t72_fix": "CLAND-ORIGIN-REACH class (landing START reach); FIX-SYNC-S81 v1/v2 ops (j8_cland_origin_reach_ops*.json) do not cover leaf t72: asked FIX-SYNC-S81 to add a landing_reader_start ft1_i branch op with its generator",
+ "overlap": "t24 is in TAP-GRID-R5 res59: station vs tap rows, no conflict"
+}

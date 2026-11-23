@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.s81_plan_row.v1",
+ "owner": "OPUS-FIX-S81-LEAF-R10",
+ "row": "J9-LEAF-GRTCONG (t50, t54 cl706d9749, t68, t13, t51; t21/t36 measure)",
+ "approved": "COORD 11-22 22:5x (draft now; pre-approved levers: outline growth, macro channel widening, re-floor)",
+ "base_plan": "J8 plan_j8_cut_reset.json f65f62779bef (E10 s81-j6-r5/j8_cut_tree); copy intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10/grtc/plan_j8_cut_reset.f65f62779bef.json",
+ "cause": {
+  "t68": "GRT-0116 J7: 3648 viol (2979 V), 70% in x480-560 y160-320 = the 8.66 um channel between ve_m (x..509.76) and vn_u_b (x518.40..), carrying leafup_o0 / ft5_o / ist_leafup; 2nd pinch: vn_u_a top 527.04 vs b0 531.36 (4.32 um). Both unchanged in J8.",
+  "t50": "GRT-0116 J7: 832 viol (max ovf 6-7, usage 6.8%) at x280-400 y800-920 = 15.1 um channel ln_7 / b0-b1 bank pair; J8 restage moved the lanes but boxes the banks again: ln_8 15.1 um below b1, ln_7 16.4 um east of the banks.",
+  "t54": "GRT-0116 J7: 9834 viol at x280-400 y320-640 = 15.1 um ln_7 / bank channel + vp hig station cone; J8 restage puts ln_7 at x146.88..261.36: channel 58.3 um. No extra move on J8.",
+  "t13,t51": "PLACE-HPWL 1.45x / 1.63x: not congestion. GPL diverges in its last phase (t13 overflow 0.208 -> 0.241 -> 0.196, HPWL 9.98e6 -> 1.45e7) at 0.64% movable util. The SPARSE EXIT (face_flops.tcl ot_gpl_exit_args, OT_GPL_SPARSE_OVERFLOW 0.25) is skipped whenever the call already names -overflow, and gen_phys gpl_overflow always emits GLOBAL_PLACEMENT_ARGS -overflow 0.2 on S81: the two S81 knobs cancel.",
+  "t21,t36": "GRT noconverge twice; J7 wave attempts running again (t21 epyc10 a2, t36 epyc7 a4); measure their congestion map, then same form M"
+ },
+ "forms": {
+  "M_macro_moves": {
+   "kit_only": true,
+   "no_rebind": true,
+   "item_env": {
+    "ot_s81sl_leaf__t68": {
+     "OT_MACRO_MOVES": "u_lf.u_vn.u_b:548.64:172.8,u_lf.u_vp.u_b0:686.88:548.64,u_lf.u_vp.u_b1:699.84:604.8"
+    },
+    "ot_s81sl_leaf__t50": {
+     "OT_MACRO_MOVES": "u_lf.u_vp.u_b0:302.4:920.16,u_lf.u_vp.u_b1:302.4:868.32"
+    }
+   },
+   "effect": "t68 ve_m/vn_u_b channel 8.66 -> 38.9 um, vn_u_a/b0 4.32 -> 21.6 um; t50 banks -17.28 x / +30.24 y: ln_7 gap 16.4 -> 33.7 um, ln_8 gap 15.1 -> 45.4 um, ln_0 41 um, vn_u_b 61.6 um",
+   "gate": "item_env_moves_gate.py on J8 f65f62779bef: PASS t50 + t68 (and all 5 existing leaf moves). J8-only: on J7 t50 overlaps J7 ln_7 and t68 J7 ln_3 (lane sites differ); the J7 probe emulates J8 lane sites + these moves (gate PASS on J7)",
+   "plan_form_alt": "same coordinates as hard_cores origin_um ops if assembly prefers in-plan (then LANDREMAP re-solve + rebind of t50/t68)"
+  },
+  "G_gpl_sparse_exit": {
+   "kit_only": true,
+   "no_rebind": true,
+   "item_env": {
+    "ot_s81sl_leaf__t13": {
+     "OT_GPL_OVERFLOW": "0"
+    },
+    "ot_s81sl_leaf__t51": {
+     "OT_GPL_OVERFLOW": "0"
+    }
+   },
+   "effect": "GLOBAL_PLACEMENT_ARGS dropped, so the designed sparse exit (-overflow 0.25, keep 0.35, net reweight 0.30) applies; t13 log: overflow 0.2948 at HPWL 9.98e6 = 1.00x of the minimum",
+   "class_note": "die-wide tool defect for FLOW: ot_gpl_exit_args should take max(call -overflow, sparse exit) instead of skipping; not changed die-wide here"
+  }
+ },
+ "overlap_tap_grid_r5": "res59 (TAP-GRID-R5-S81-J10-res59.txt) has leaf t13 only from this row; form G is a GPL env, tap rows are plan clock taps: no conflict. t50/t54/t68/t51/t21/t36 not in res59. TAP-GRID form (B) channel widen is not proposed on these types.",
+ "proof": {
+  "probe": "t68 OT_PROBE_THROUGH=1 --goal route on intel1 probe fork (rt ae24d7e87d7a, bind rt 0a84fc), OT_MACRO_MOVES = J8 lane sites + form M: /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10/grtc/t68_chain.sh (waits for the fork bind)",
+  "gpl": "t13 --goal place on the J7 wave tree with OT_GPL_OVERFLOW=0: /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10/grtc/spec13",
+  "plan_gate_pre": "no plan delta (kit-only forms); moves gate on J8 PASS"
+ },
+ "status": "draft, proofs running"
+}

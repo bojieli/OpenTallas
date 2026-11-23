@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.s81_plan_row.v1",
+ "owner": "OPUS-FIX-S81-LEAF-R10",
+ "row": "J9-LEAF-SRE-SRC (t37, t8, t16, kv_leaf t4)",
+ "approved": "COORD 11-22 21:2x (t37 station + depth split, draft separately)",
+ "cause": "one select flop drives a 128/256-bit register mux: t37 -817 / t8 -855 g_sre.nm_r -> n_pre (vp_src_*_q), t16 -462 xsw2 -> x_qd[199]; span 43-613 um, 20-26 stages; kv_leaf t4 -478.71 (CTS post-hook, 18a2688b741 epyc8) g_sre_nm_r_q -> vp_src_*_q[17] (AND2 fanout 11 + 700 ps of wire buffers; launch clock 635 vs capture 391 ps)",
+ "tree_overlay": {
+  "tool": "tools/die_plan/s81_vp_selrep_overlay.py (lane copy intel2/epyc7 L/tools; main after the proof)",
+  "args": [
+   "<event tree root>"
+  ],
+  "die_wide_effect": "none unless a type selects OT_S81SL_VP_SELREP; no source line moves"
+ },
+ "plan_ops": [
+  {
+   "op": "type_list_add",
+   "type": "ot_s81sl_leaf__t37",
+   "key": "verilog_defines",
+   "value": "OT_S81SL_VP_SELREP"
+  },
+  {
+   "op": "type_list_add",
+   "type": "ot_s81sl_leaf__t8",
+   "key": "verilog_defines",
+   "value": "OT_S81SL_VP_SELREP"
+  },
+  {
+   "op": "type_list_add",
+   "type": "ot_s81sl_leaf__t16",
+   "key": "verilog_defines",
+   "value": "OT_S81SL_VP_SELREP"
+  },
+  {
+   "op": "type_list_add",
+   "type": "ot_s81sl_kv_leaf__t4",
+   "key": "verilog_defines",
+   "value": "OT_S81SL_VP_SELREP"
+  }
+ ],
+ "cycles": 0,
+ "area": "+16 flops per vp (8 nm_r copies, 8 xsw2 copies)",
+ "rebind": "t37, t8, t16, kv_leaf t4",
+ "proof": "vp lock-step Verilator bench vs J7 vp (SR1 x3, dense x2, SR0 x2 PASS; off + mutant running); epyc7 fork L/trees/s81_sre_selrep bind (L/sre/r10_selrep.sh), then sealed --goal route t37",
+ "fallback": "if replicas alone leave > -42 ps: +1 station on the nm_r / xsw2 hop (cycle pre-approved) with the vp timeline constants",
+ "overlap": "kv_leaf t4 J9 tap rows are TAP-GRID-R5 (599b16f05a82, J8 base): plan clock taps vs this RTL define, no conflict"
+}
