@@ -131,3 +131,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-22 21:25 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-3959986-1795409506 on tolerant-swine: rc=0 after 2022 s, ended 21:25:24, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SERDES-R7/s81_phy__t1_1122203913/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SERDES-R7/phy__
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-22 21:28 PST ACK [-> COORD] The clfe1f0815 proof place is not stuck on epyc2. ot-run REBALANCE moved it to epyc8, where it has run for 41 min (ot-heavy oth-ubuntu-3098518, run_kit.sh PID 3100063) and is now at 2_4_floorplan_pdn. No fork or cancel needed; I keep watching it there. phy__t1 J8p5 kit (epyc9) is at preflight.
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
