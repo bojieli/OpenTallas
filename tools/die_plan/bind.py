@@ -5785,9 +5785,10 @@ def cmd_elab(a):
     # define-on trial with checked scope when explicitly enabled. Default mode reports unapplied requests.
     # OUT/type_defines.json records the closure assessment used by bind.
     import type_define_effect as TDE
-    td = TDE.elab_pass(raw, raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, Rules(raw["asbuilt"]).part_of,
-                       E.elab, load_asbuilt_netlist, E.flatten)
-    rec["type_defines"] = {k: td[k] for k in ("verdict", "added", "realized", "no_change", "outside") if k in td}
+    if TDE.mode() != "off" and TDE.has_defines(raw):
+        td = TDE.elab_pass(raw, raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, Rules(raw["asbuilt"]).part_of,
+                           E.elab, load_asbuilt_netlist, E.flatten)
+        rec["type_defines"] = {k: td[k] for k in ("verdict", "added", "realized", "no_change", "outside") if k in td}
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0
 

@@ -138,10 +138,10 @@ def test_tiny_dead_define_fails_and_warn_mode_passes(tmp_path, monkeypatch):
 
 
 @needs_yosys
-def test_tiny_no_defines_writes_none_needed(tmp_path):
+def test_tiny_no_defines_keeps_original_artifact_shape(tmp_path):
     out = tmp_path / "o"
     assert _run(_tiny(tmp_path, {}), out, "elab", "bind") == 0
-    assert json.loads((out / "type_defines.json").read_text())["verdict"] == "NONE_NEEDED"
+    assert not (out / "type_defines.json").exists()
     assert not (out / TDE.VARIANT_DIR).exists()
 
 @needs_yosys
