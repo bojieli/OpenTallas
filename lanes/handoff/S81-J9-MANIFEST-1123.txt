@@ -135,3 +135,7 @@ J9 BIND RT: rt/current = 3b25e3b42d4d (includes POROUS-FRESH-1123 3b25e3b42d4 + 
      r0_p1: +1 fixed E-face station on u_cf->ret_o0 (+1 cycle), no u_cf move.
      r2 u_s15 -15.12 x (12 types), r1 u_c8_3 -8.64 x (11 types). Relays and rr_1_0 stage unchanged.
      Final gate (REACH v2 + ECORR + col_ygrow + PRE + checks a/b) running on epyc10.
+COMPOSE-LEVEL ASBUILT DELTA (VIS-S81-MISC 04:xx): in J8, internal_stations on iqf__t1, seqhost__t1 and gunit__t1 are PHANTOM. asbuilt internal_stations_types lists only eng + slice/col, so the bind never built them.
+   J9 asbuilt/bind config MUST add iqf__t1, seqhost__t1 and gunit__t1 to internal_stations_types. Otherwise the IQF J9-4, iqf ft4/ft7 lane and MISC station rows are silently dropped.
+   MISC v3 candidate (gate 10, epyc7) binds with the 3 added and carries cycle adds: ~+3 per seqhost/eng face bus, gunit l1f D=6, l1c D=5. LATCHECK in gate 10 decides. Exact asbuilt delta + sha due ~05:00.
+   COMPOSER CHECK: every type with internal_stations in the J9 plan must be in asbuilt internal_stations_types. FAIL on any miss.
