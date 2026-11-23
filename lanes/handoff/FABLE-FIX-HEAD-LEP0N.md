@@ -1,3 +1,8 @@
+## COORD 18:1x standing approval
+If any CTS / GRT / route / sign-off stage of e1, e2 or w10 waits > 30 min for admission: put that stage on ot-run --direct myself (one copy
+each, never a duplicate) and post it; no need to ask. (Chain stages are run-item ot-run-wave clients, not kwp units: find the exact queued
+client pid under the run-item pid, check its log shows no "admitted", then re-drive that stage with OT_RUN_DIRECT=1.)
+
 ## 17:5x (after the 11:1x-17:2x limit pause)
 - e1 / e2 / w10 sat un-admitted at place for ~6 h. COORD 17:4x: NEAR-CLOSE row (hub ddbade00df0) -> place clients swapped to ot-run --direct with
   ~/fable-fix-head-lep0n-1122/direct.py SPECDIR RUNITEM_UNIT (SIGSTOPs run-item, stops the queued kwp-* unit, restarts the same unit name +
