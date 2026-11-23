@@ -1,5 +1,3 @@
-## 21:4x w13 LAUNCHED
-
 ## 11-22 22:3x — Rows A/B/A+B forking; RINGCTL withdrawn; w13 stopped (NEWEST)
 COORD latest order: correction + both rows accepted. Row B transform + bind in parallel with Row A, plus A+B; nst4 rebuild/re-sign approved;
 each row that gates gets a probe-through kit AND a sealed `--goal route` kit side by side (hd_lep0N_w and hd_st_n4); use the first that signs.
@@ -24,6 +22,7 @@ each row that gates gets a probe-through kit AND a sealed `--goal route` kit sid
 - Live: **w11** (r18n) real GRT on epyc2, kit `/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122175825/gen/hd_lep0N_w`
   (tap pre-pass passed 21:59, TT setup after CTS repair -135.28 / tns -6573). **e1** (r18k) CTS on intel1. w12 dead (GPL-0304). w13 stopped.
 
+## 21:4x w13 LAUNCHED
 - w13 = sealed W kit of the plan of record r18q: tree epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/trees/s81_head_r18q_rx
   (fork of R8 r18q_rx, shas verified d1f98516900cc0ba / 994b8a2892dd0768), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/
   s81_head_hd_lep0N_w_1122213825/spec.json, host epyc10, rt 345ac19b04b3, OT_GRT_ALLOW_CONGESTION=1, unit fable-lep0n-w13 (intel2 pid 3344189),
