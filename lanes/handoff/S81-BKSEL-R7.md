@@ -105,3 +105,9 @@
   post-CTS TT setup -372.45 after repair (stalled at -270), FF hold -256. Worst post-CTS: async reset recovery u_bound.u_rrl_30 -> u_ids.b1[*] RESETN
   (one INVx3 drives 199 sinks, 1.1 ns wire). Kit epyc10 .../private/S81-BKSEL-R7/bk_sel__t2_1122054328 (spec s81_bk_sel__t2_1122054404). C closed; row 4 = A.
   DISK RELEASE for EPYC10-DISK (ot-delete): epyc10 /srv/opentallas-scratch2/claude/s81-bksel-r7/w/tree_sealed (54 GB) and the C kit dir above.
+- 21:3x COORD ask: J9 structural row from C congestion. Where: C 1039 ovfl = 755 in x2340-2380 y390-400 (just above u_g top face, the vo_n pin window
+  local x160-200; +67 stn_c r[0] sites from the r7c shift landed there) + base corners shared with r7a (323): u_c/u_g top corners y370-390 at x1620/1700/2180/2400.
+  Cause: the 95 um band between u_c/u_g tops (y380.16) and u_tx bottom (475.2) holds ~3670 station sites in its lowest 26 um, on the pin rows.
+  Row BKSEL-CORE-TOP-CHANNEL (generator epyc10 s81-bksel-r7/w/bksel_chan.py, on J8 plan_j8_cut_reset f65f62779bef -> w/plan_j9_chan.json 7de79f24e130):
+  12.96 um relay-free channel above u_c/u_g top faces (+-21.6 um), 3670 sites re-seated rank-uniform over the next 60.48 um (below u_tx-8.64), x kept, max dy 50.3.
+  Proof: fork w/tree_j9 (of j8_cut_tree, running) -> w/gate_j9.sh (schema, strict bind, LATCHECK, PRE vs J8) -> one OT_PROBE_THROUGH=1 --goal route kit.
