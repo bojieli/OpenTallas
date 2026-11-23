@@ -12,3 +12,6 @@ Plan: no duplicate rows, no private kit until J8 compose outcome is known; map e
 
 ## 11-22 23:3x
 - lo t3 proof on J7 bind BLOCKED by BIND-GEN-TOOLSKEW: J7 bind of record stamp (reset_anchor/reset_leg_plan/reset_replicate/reset_tree.py differ) fits only the wave tools pin 404887a342b0, which lacks R9 closure (540c4f7/94845431e6b2). 4 attempts (e589d7c0e609, 6a5e06ea1267, aa4dda6568c1, 94845431e6b2) died at bind_toolskew/bind_rt rc 3, no unit started. Options: (a) run proof on J8 bind (R9 r9d, rt-matched) when green; (b) rebind J7 on new rt (hours). Waiting COORD ruling; no waiters left running.
+
+## 11-23 01:3x RESUME
+- Codex handoff 01:19: nothing on my lane. r9g bind (R9, intel2 unit oth-ubuntu-4184583) DIED rc1: svc_lo_dsdv_svc_rs__t7 explicit tap clk_t12 violates outline/halo/tap spacing (VIS edgestrip move). R9 is itself limited until 04:30. r9e (hi+lo, no flat irg fit) still emitting, ETA ~09:00: lo t3 probe-through on r9e then. No kit/waiter of mine to re-arm except bind_r9e watcher.
