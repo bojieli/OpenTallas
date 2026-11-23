@@ -27,3 +27,12 @@ Lane dirs: epyc10 + intel2 /srv/opentallas-scratch2/claude/s81-col-j9 (nehg/, tm
 
 - Exact old H10 ECORR and SSTRIP diagnostic GENs failed on unmatched seam windows (+25.92 W0 and +60.48 E1). Latest J9 trial6 native GEN validation had zero errors, current composed ECORR precise dir in ASSEMBLY. Keep old forms held. ROM-in LAG exact placement reviewed for CTS diagnostic only. Inherited finish proceeded with OT_PROBE_THROUGH and automatic geometry measured 4,164 tap sinks / 645.73 µm r2r. Preserve diagnostic output, keep NO-LAG and require exact revised review for new finish.
 - J9 p5 12 FSTART release errors fixed with actual depth8 source seats, worst 232.54 µm, step 02 trial4 9a92e97732b1. J8 previously approved single R1/R2 pilots are active and handed to fleet for exact placed review.
+
+## State 11:45 PST (Opus, after compaction)
+- HOPGAP t36 fix: final plan nehg/plan_final2.json 4761af67cf19 (clk_t36 -> 388.368,907.2). Wave A plan (and plan_ew1 d38f42da603e) VERIFIED carries it + p5 u_cf MX (intel1 tmp/peekwa.py).
+- Census committed lanes/handoff/S81-COL-J9-census.tsv (179 items, 0 NONE). Ownership sweep lines posted 397b59bd0ed9.
+- RELEC-1122 col774 78 pts = REAL: ot_v41_bf_col3_hw synthesis cores had no params -> bb defaults MTP0/TRW2 -> tag ports resized -> _NC. FIX pushed main 52aebeb23d (u_c #(.MTP(1)), u_ha/u_hb #(.TRW(7))); yosys 8 resizes -> 0 (intel2 s81-col-j9/tmp/ychk.sh). ASSEMBLY to carry in B2 (RTL -> re-ELAB); all bf_col3_hw col types re-sign. Lane clone intel2 s81-col-j9/clone.
+- Macro HSK col_h9_r1 (-133) = pre-repair; GRT hold guard nonport +30; end -70 = port hold (IO). REASONED, no TAP row (post e518dedc).
+- EW-1 + UCF-MX probes: intel1 s81-col-j9/ew1probe.sh (launched by waitlaunch.sh after fork treeWA from epyc10 wave_a/tree), plan tmp/plan_ew1.json d38f42da603e, rt ba57ce0e0288; bind then p5 pvbca8d846 + p3 cl8ce97bcb__pv1489a898 goal finish; logs tmp/ew1probe.out, tmp/probe_p5.log, tmp/probe_p3.log. Read post-hook CTS _he/_hw + final 5_1_grt.
+- Lag probe (epyc7, planR2L) superseded by EW-1 (FABLE-B: lag has no window on _he); still in GRT, informational.
+- Leftover partial forks to ot-delete later: intel1 s81-col-j9/treeJ9P.forking-917382.
