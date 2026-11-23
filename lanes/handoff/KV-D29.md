@@ -7,3 +7,8 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 ## Sub-forks (spawned 06:0x): A HG, B HROOT, C hub_C+sys_c, D pc, E pv. Each delivers row+sha+gate evidence into D/rows_in/<X>/ or a REASON.
 ## Log
 - 05:55 TAKING posted (dc5e493).
+- 06:0x forks A-E spawned. rows_in/{A..E} on epyc8 d29. x10: tap_offset_fill fill+check PASS on c25 (1676 ports/19 types), cover census PASS 56/56 (kvd29/tapoff_t1). d29_chain9.sh = chain8 + all-mode TAPOFF (OT_LANE KV-D29, GATE_HOSTS env).
+- 06:03 rehearsal k1 (28 rows 160c8f935f99, R8=1 RESET=1 graft r5, POSTROWS PCV1BANK) via kvd29/launch_k1.sh; log d29/k1.chain.
+- 06:1x CLASS-FIX-RHI 72b268847ec4 added as row 29 (wrapper rows/ROWS_CLASS-FIX-RHI-KV.py 377b5d393209, allow_top clock); rows.json 859a3f633da1 (old 28 in kvd29/rows.json.28_*).
+- 11:30 cut-over: kvd29/cutover.sh <rt sha12> (refuses if a chain runs / required commit missing); then c25 no-op recompose, then final chain (copy chain9 -> chain10 with RT = new rt).
+- At APPLY: kit_wave_edit --set /dies/qwen_kvsys/die_gen_env/OT_PREGRT_HOLD_PORTS_SCOPE=ctl (KV-CTLPORT dbc5c772e0d); WAIT-BIND 16 rows release; hub_Wo/Eo hold if kit_relay_depth __rst_n fix not in wave rt.
