@@ -354,3 +354,12 @@ def test_rsz0074_net_name_is_unquoted_for_dont_touch():
     msg = "[ERROR RSZ-0074] Failed to build tree from global routes for pin \x27wire155183/Y\x27 and net \x27net155182\x27 at grid (216885, 311505): found route to 1 pins, expected 2"
     out = subprocess.run([TCLSH], input="set err {%s}\nif {[regexp %s $err -> n]} {puts \"<$n>\"}\n" % (msg, m.group(1)), capture_output=True, text=True)
     assert out.stdout.strip() == "<net155182>", out.stdout + out.stderr
+
+
+def test_reestimate_after_repair_design():
+    """TT-DESIGN-REEST-1123: parasitics re-estimated between repair_design and the repair_timing chunks (serdes__t2 SEGV)"""
+    from pathlib import Path
+    src = (Path(__file__).resolve().parent / "tt_setup_repair.tcl").read_text()
+    i = src.index("repair_design -verbose")
+    blk = src[i:i + 900]
+    assert blk.index("ot_tt_est") < blk.index("ot_tt_wns after_design")

@@ -398,6 +398,10 @@ if {$w0 < $mg || $ot_tt_design} {
   }
   if {$ot_tt_design} {
     repair_design -verbose
+    # TT-DESIGN-REEST-1123 (rc45, S81 serdes__t2): repair_design with 0 changes left the parasitics stale (WNS -305 -> -430 placement,
+    # -284 -> -460 GRT) and the repair_timing after it died in sta::PathExpanded::expand (SIGSEGV, rc 139, both steps unrepaired).
+    # A re-estimate restores the true timing (-305 exactly) and repair_timing then runs (-305 -> -232, rc 0).
+    ot_tt_est
     ot_tt_wns after_design
   }
   # r268: the GRT-stage pass must not rebuild fanouts the place stage split (sd2: 26 buffers removed, 11 pins / 20 fF -> 42 pins / 103 fF = +412 ps);
