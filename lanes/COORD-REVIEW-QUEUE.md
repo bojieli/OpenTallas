@@ -32804,3 +32804,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   LANDED stays out: ot_rst_relay is used die-wide, so the define is not inert outside the leaf types.
   (4) LEAF-VSW-LAG-1 b35a870ca2d3: no veto. Clock-only key; vsw out setup stays >= +128 after -120 ps. Condition: the probe must read vsw OUT-side hold.
   (5) t47 (OPS-SUPPORT): NOT covered by C4. The 23 groups are lpad_leafdn_i0.q -> vp g_wr1 XR soft regs (sw_d/cw_d/sv/sa; ~460 bits, 600-810 um), plus u_rr/crr reset (CRR_PRE2). t47 has no leafdn_i0 row toward vp, so those bits ride the vs station at (610,86). Next: a leafdn_i0 vp row (IST-LEAFUP-FAM form, IN direction) for t47 and the family, by 14:30.
+- 2026-11-23 11:15 PST DONE [KV-D29] ot-push-main otpush-loved-redfish-2387450 on loved-redfish: rc=0 after 20 s, ended 19:15:14, log /srv/opentallas-scratch2/claude/kv-d29-h/tmp/push.log, cmd: ot-push-main 
