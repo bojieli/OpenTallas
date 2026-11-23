@@ -16,3 +16,10 @@ census.sh = TAPOFF-ALL census, caloc.sh + cal_oc.py = SINK-EST calibration + ove
 - rc98 QC pinreg (TGR5-QCV4-PINREG-1): Codex delivered c4 latest0814_pinreg_filled d2c83b3d7fbb; QC C4 81fd3e6370c0 is gating -> confirm row in V4 to QC-V4.
 - D29 SOFTFLOP + rc119 pc: DELIVERED, in K3 (Codex rs6 k2 ba59584701e3, pc_socket_search 1b52ed206c35).
 - J9 tap regen: Codex Wave A tap delivery 63bafd10e3c5 / 4662b734580b; my dry5b out2 had no plan_j9taps (check log) - superseded by Codex j9_regen_v6.
+
+## 15:50 PST update (after the 11:40-15:40 limit)
+- Wave A 4662b734580b TAPOFF census 395/395 PASS (also GATED independently by FABLE-OPEN-S81-B); over-cap posted 11:29 (census/oc_s81_wavea_4662.tsv epyc10).
+- x9: j9_regen_v5 RETIRED (posted 11:31). ASSEMBLY-R6 tail order: tap deltas -> tap_offset_cover fill --form all -> llr_restore -> census 0 -> PRE.
+- svc re-cut CANCELLED (4.5 h without converging; stale 11-18/20 flop basis predates the svc ENGINE row) -> REASONED. Trigger: the S81-SVC-J9 c9 kit CTS tap loads; re-cut on its placed sinks if any tap > 800.
+- rc98 confirmed in C4 (11:02). rc119 in K3. KV pv_v3e/pv_v1n split offered, waiting GO from KV-D29.
+- Nothing running.
