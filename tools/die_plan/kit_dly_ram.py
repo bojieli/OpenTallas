@@ -26,7 +26,7 @@ Form, per in-lane bus b of a selected type (plan partition_types[t].pad_ram = {"
               Taken only when n x R >= min_flops and R >= 4; otherwise the chunk stays as bound.
   placement   each RAM macro (u_bound.u_pdram_<k>.g_b[0].u_m, R0) at the free site nearest to the centroid of the hard cores
               its bits feed (tail-copy `for core <tag>` markers, or the cores reading the pad directly): inside the outline
-              (edge margin), clear of every placed hard core / content macro / earlier RAM by `clear_um`, never in a gap
+              (edge margin), clear of hard cores, content macros, earlier RAMs, fixed stations/relay seats and clock taps by `clear_um`, never in a gap
               narrower than the macro + 2 x clear_um (the centre trunk channel stays free).  No site = the chunk stays
               as bound (recorded), never an error.
 Outputs: rewritten *_bound.sv, record dly_ram.json, extra macros for gen_phys (type_macros form), extra source files.
@@ -132,7 +132,33 @@ def scan(txt):
     return cand, readers
 
 
-def type_geom(t, pins=()):
+def _seat_points(entries):
+    for item in entries:
+        if not isinstance(item, (tuple, list)):
+            continue
+        if len(item) >= 2 and all(isinstance(coord, (int, float)) for coord in item[:2]):
+            yield item[0], item[1]
+        else:
+            yield from _seat_points(item)
+
+
+def _seat_obstacles(t, clock_sites):
+    """Coalesce nearby exact seats so search cost depends on occupied regions."""
+    groups = [(t.get("relay_sites") or {}).values(), ((x, y) for _, x, y in clock_sites)]
+    for row in (*(t.get("internal_stations") or ()), *(t.get("ft_slots") or ())):
+        groups.extend((row.get("regs_um") or (), row.get("bit_sites_um") or ()))
+    tiles = {}
+    for entries in groups:
+        for x, y in _seat_points(entries):
+            key = int(x // 43.2), int(y // 43.2)
+            box = tiles.setdefault(key, [x, y, x, y])
+            box[0], box[1] = min(box[0], x), min(box[1], y)
+            box[2], box[3] = max(box[2], x), max(box[3], y)
+    # Seats can be cell lower-left coordinates, while tap sites are pin centres.
+    return [(x0, y0, x1 + 1.404, y1 + 0.27) for x0, y0, x1, y1 in tiles.values()]
+
+
+def type_geom(t, pins=(), clock_sites=()):
     """obstacles [(x0, y0, x1, y1)] + core centres {norm(inst): (x, y)} + pin centroid per bus, in the type frame"""
     obs, centre = [], {}
     for c in list(t.get("hard_cores", [])) + list(t.get("contents", [])):
@@ -154,7 +180,7 @@ def type_geom(t, pins=()):
         a[1] += y
         a[2] += 1
     pin = {k: (v[0] / v[2], v[1] / v[2]) for k, v in acc.items()}
-    return dict(outline=tuple(t["outline_um"]), obstacles=obs, centre=centre, pins=pin)
+    return dict(outline=tuple(t["outline_um"]), obstacles=obs + _seat_obstacles(t, clock_sites), centre=centre, pins=pin)
 
 
 def _bus_pin(geom, bus):
@@ -204,11 +230,11 @@ def site(geom, target, placed, c):
     return None if best is None else (best[1], best[2])
 
 
-def plan(txt, t, pins=(), c=None, tag=""):
+def plan(txt, t, pins=(), c=None, tag="", *, clock_sites=()):
     """-> (chunks [dict], record) without changing txt"""
     c = c or cfg_of(t) or dict(DEFAULTS)
     cand, readers = scan(txt)
-    geom = type_geom(t, pins)
+    geom = type_geom(t, pins, clock_sites)
     W, H = geom["outline"]
     by_bus = {}
     for n, x in cand.items():
@@ -344,7 +370,7 @@ def extra_sources():
     return [Path(__file__).resolve().parent / "ot_dp_dly_ram.sv"], [f"{MACRO_DIR}/{MACRO}_bb.v"]
 
 
-def plan_kit(rtl_files, t, pins=()):
+def plan_kit(rtl_files, t, pins=(), *, clock_sites=()):
     """gen_phys entry, BEFORE the macro block: {bound file name: (chunks, stats, cand)} of the type's bound RTL"""
     c = cfg_of(t)
     out = {}
@@ -357,7 +383,7 @@ def plan_kit(rtl_files, t, pins=()):
         txt = f.read_text()
         if "ot_dp_dly" not in txt:
             continue
-        out[f.name] = (txt,) + plan(txt, t, pins, c)
+        out[f.name] = (txt,) + plan(txt, t, pins, c, clock_sites=clock_sites)
     return out
 
 

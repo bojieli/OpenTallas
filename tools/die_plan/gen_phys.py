@@ -7325,7 +7325,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # SRAM rings (ot_dp_dly_ram, cycle-exact).  Planned on the bound source here so its RAM macros join the plan macros (staged,
     # placed, track-snapped and PG'd like any content macro); applied to the staged copy below, before kit_dly_lockup.
     import kit_dly_ram as _KDR
-    dram_plan = _KDR.plan_kit(rtl_files, t, type_pins(P, tn)) if _KDR.cfg_of(t) else {}
+    dram_plan = (_KDR.plan_kit(rtl_files, t, type_pins(P, tn), clock_sites=tap_pins(P, tn))
+                 if _KDR.cfg_of(t) else {})
     for _src, _chunks, _st, _cand in dram_plan.values():
         macros = list(macros) + _KDR.macros_of(_chunks)
     # A physical abstract alone leaves macro paths untimed and prevents load-driven

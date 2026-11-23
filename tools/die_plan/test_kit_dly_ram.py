@@ -112,6 +112,24 @@ def test_plan_chunks_sites_and_counts():
     assert [m[0] for m in kr.macros_of(chunks)] == [f"u_bound.{c['inst']}.g_b[0].u_m" for c in chunks]
 
 
+def test_respects_firm_seats_and_assigned_taps(tmp_path):
+    f = tmp_path / "top_bound.sv"
+    f.write_text(bound_text())
+    base = kr.plan_kit([f], TYPE, PINS)[f.name][1]
+    seats = [(r["origin_um"][0] + kr.MACRO_UM[0] / 2, r["origin_um"][1] + kr.MACRO_UM[1] / 2)
+             for r in base]
+    t = dict(TYPE, internal_stations=[{"bit_sites_um": [[list(seats[0])]]}],
+             relay_sites={"relay": list(seats[1])})
+    clock_sites = [("clk_t2", *seats[2])]
+    chunks = kr.plan_kit([f], t, PINS, clock_sites=clock_sites)[f.name][1]
+    assert len(chunks) == len(base)
+    for row in chunks:
+        x, y = row["origin_um"]
+        w, h = kr.MACRO_UM
+        for sx, sy in seats:
+            assert not (x - 10 < sx < x + w + 10 and y - 10 < sy < y + h + 10)
+
+
 def test_absent_key_is_no_change(tmp_path):
     f = tmp_path / "top_bound.sv"
     f.write_text(bound_text())
