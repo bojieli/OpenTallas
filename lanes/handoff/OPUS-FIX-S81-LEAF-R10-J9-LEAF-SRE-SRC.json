@@ -5,7 +5,7 @@
  "approved": "COORD 11-22 21:2x (t37 station + depth split, draft separately)",
  "cause": "one select flop drives a 128/256-bit register mux: t37 -817 / t8 -855 g_sre.nm_r -> n_pre (vp_src_*_q), t16 -462 xsw2 -> x_qd[199]; span 43-613 um, 20-26 stages; kv_leaf t4 -478.71 (CTS post-hook, 18a2688b741 epyc8) g_sre_nm_r_q -> vp_src_*_q[17] (AND2 fanout 11 + 700 ps of wire buffers; launch clock 635 vs capture 391 ps)",
  "tree_overlay": {
-  "tool": "tools/die_plan/s81_vp_selrep_overlay.py (lane copy intel2/epyc7 L/tools; main after the proof)",
+  "tool": "tools/die_plan/s81_vp_selrep_overlay.py (main dd5a80bad4b0, test_s81_vp_selrep_overlay.py)",
   "args": [
    "<event tree root>"
   ],
