@@ -27792,3 +27792,5 @@ FAILED [AUTOPILOT f5fb942189cc] 2026-11-22 20:50:25 PST AUTOPILOT -> KIT-WAVE-3:
   Top S81 groups: s81sl_leaf (OPUS-FIX-S81-LEAF-R10) ~27 stale + 14 failed; col_h9_r0_p (FAM-S81-COL-H9R0-R4) 14 stale+1 failed; col_h9_r rom (OPUS-FIX-S81-COLROM-R6) ~12 stale+3 failed.
   Next: svc_hi/lo dsdv_svc_rs (OPUS-FIX-S81-SVC-R9) 10 stale + 3 unclassified; serdes (FAM-S81-SERDES-R7) 5 stale; dsdv_slice_* ~9 stale (FAM-S81-SLICE-R6 etc).
   Table: lanes/OWNERS-SWEEP.tsv (tool bin/owners_sweep.py).
+- 2026-11-22 20:51 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-3775635-1795409102 on tolerant-swine: rc=0 after 395 s, ended 20:51:33, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SERDES-R7/s81_phy__t1_1122203913/kit_topology.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SERDES-R7/phy__t
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
