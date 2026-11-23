@@ -322,3 +322,4 @@
   
   Ingest: S81 t25/t22 are already counted, so these are re-signs. The QC COUNT-CREDIT rows are applied, and those types were already counted. QC 76/127 and S81 47/394 are correct.
   Canary 934ebc631: all 4 NO-REGRESSION.
+- 2026-11-23 01:43 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1598448 on civil-redfish: rc=0 after 743 s, ended 09:43:49, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_bs.log, cmd: ot-push-main 
