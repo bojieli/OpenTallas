@@ -9,3 +9,8 @@ Work: local scratch /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-
 ## Die level (V4 l1r plan, plan_review pack epyc9 VIS-QC/renders/die_cores.png, die_wire.png)
 - QC die 31216 x 25644 um (800 mm2; reticle 26 x 33 -> +1.78 mm width / +0.36 mm height available). 12 slice columns (E0-5, W0-5) in a 4.5-mm middle band (y 10.2-14.7 mm) carry all the lane wire; ROM arrays above/below are quiet. All unsigned slice types share 613-622 um widths (aspect up to 2.99 on stm/sc). Channel fraction only 2.3%.
 - Cross-type cause: slice strips are too narrow for their bus columns (fe/fw stacked on spine; su_l1 E channel 190 um with mid-channel landing macro; st_a btab wall in E corridor). Die-level form VISQC-DIE-1 (proposal to QC plan lane, not V4): grow die width by up to 1.78 mm and give it to the slice band as +~150 um on one strip per slice column (fe/fw strip 622->778 per FEFW-1, or su_l1 622->700 + st_a corridor), ROM columns get a matching channel. Decide per column after the FEFW-1 / SU-1 probes show which width each needs.
+
+## 11-22 23:5x update
+- 51/51 QC rows have verdicts (commits 1f91d83, 293937c). DRAFT 45, NONE-NEEDED 5, PRE-PASS 1 (glue).
+- cb family (17): VISQC-CB-1 form at lanes/handoff/VIS-QC-form_cb.md. Channel tap grid from placed sink bins (cap 900) plus margin landing re-site. GRT is not the blocker (overflow 707-4615); the over-cap taps line up with the pin-window hotspots at x~691. Owner: FAM-QC-CB-R4.
+- V4 gate is unchanged. The cb types are held until a CB-1 probe passes.
