@@ -7642,18 +7642,27 @@ def _plan_gate_pre(a):
 
 
 _PG_CHILD = {}
-_PG_BESIDE = [False]      # PRE-ELAB-RACE-1122: True inside the forked gate child (elab of this run is being written beside it)
+_PG_ELAB_DONE = [False]   # PRE-ORDER-1123: True once THIS process finished its own elab (a forked gate child inherits it)
 
 
 def _pg_elab_dir(a):
-    """PRE-ELAB-RACE-1122 (TAP-GRID-R5 / KV-PLAN-R6 D29: 337-345 RELAYSINK "is no leaf of the elaborated die" on types the rows never touch;
-    standalone PRE on the same plan 0 findings): the row checks (RELAYSINK, ROWSINK, MODULES) read OUT/asbuilt.json.  Beside the bind the
-    elab of THIS run is writing that file, and before an elab / all run it is the previous run's elab (another plan).  Only a `bind` run in
-    the old serial order, after its own `elab` call, has this plan's elab there.  -> elab dir for plan_gate_pre or None (row checks skipped;
-    bind EMIT still refuses a sink that matches nothing, and bind_fast.py precheck runs them on a finished elab)."""
-    if _PG_BESIDE[0] or getattr(a, "cmd", None) != "bind":
+    """PRE-ELAB-RACE-1122 / PRE-ORDER-1123 (TAP-GRID-R5 / KV-PLAN-R6 D29: 337-345 RELAYSINK "is no leaf of the elaborated die" on types the
+    rows never touch; standalone PRE on the same plan 0 findings; COORD 11-23: order PRE in the chain, not by env).  The row checks
+    (RELAYSINK, ROWSINK, MODULES) read OUT/asbuilt.json.  The gate now starts only after that file is final: `elab` / `all` start it when
+    their own elab returned, `bind` (reads, never writes, the elab) starts it at once.  A gate run in an elab / all call before its elab
+    finished (none in main()) gets None: the row checks are skipped rather than read a half-written or previous-run elab."""
+    if getattr(a, "cmd", None) in ("elab", "all") and not _PG_ELAB_DONE[0]:
         return None
     return a.out
+
+
+def _pg_run(a):
+    """start the gate beside what follows (PLAN-GATE-BESIDE-1122), or run it now (OT_PLAN_GATE_PRE_SERIAL=1 / off / fork failed) -> rc"""
+    if "PYTEST_CURRENT_TEST" in os.environ:   # tests call main() on toy plans
+        return 0
+    if os.environ.get("OT_PLAN_GATE_PRE_SERIAL") == "1" or os.environ.get("OT_PLAN_GATE_PRE") == "off" or not _plan_gate_pre_start(a):
+        return _plan_gate_pre(a)
+    return 0
 
 
 def _plan_gate_pre_start(a):
@@ -7677,7 +7686,6 @@ def _plan_gate_pre_start(a):
             os.dup2(f.fileno(), 1)
             os.dup2(f.fileno(), 2)
             sys.stdout = sys.stderr = f                  # a wrapped stdout (pytest capture, a pipe wrapper) writes to the log too
-            _PG_BESIDE[0] = True                         # PRE-ELAB-RACE-1122: never read the elab being written beside us
             rc = _plan_gate_pre(a)
         except BaseException as e:                       # noqa: BLE001 -- any crash is a gate that could not judge
             try:
@@ -7733,6 +7741,7 @@ def main(argv=None):
 
 
 def _main(argv=None):
+    _PG_ELAB_DONE[0] = False
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     k = sub.add_parser("kit-rtl", help="G3 kit RTL: bound partition module inside the plan wrapper + filelist")
@@ -7791,11 +7800,10 @@ def _main(argv=None):
             return 2
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
-    if a.cmd in ("elab", "bind", "all") and "PYTEST_CURRENT_TEST" not in os.environ:   # tests call main() on toy plans
-        if os.environ.get("OT_PLAN_GATE_PRE_SERIAL") == "1" or os.environ.get("OT_PLAN_GATE_PRE") == "off" or not _plan_gate_pre_start(a):
-            rc = _plan_gate_pre(a)
-            if rc:
-                return rc
+    if a.cmd == "bind":            # PRE-ORDER-1123: elab / all start the gate after their own elab (below)
+        rc = _pg_run(a)
+        if rc:
+            return rc
     try:
         if a.cmd == "component-proof":
             import bind_component
@@ -7816,7 +7824,10 @@ def _main(argv=None):
         if a.cmd == "kit-rtl":
             return cmd_kit_rtl(a)
         if a.cmd == "elab":
-            return cmd_elab(a)
+            r = cmd_elab(a)
+            if r:
+            _PG_ELAB_DONE[0] = True
+            return _pg_run(a)
         if a.cmd == "bind":
             return cmd_bind(a)
         if a.cmd == "r8-prepass":
@@ -7829,6 +7840,9 @@ def _main(argv=None):
         if a.cmd == "all":
             import bind_verify
             r = cmd_elab(a)
+            if not r:
+                _PG_ELAB_DONE[0] = True
+                r = _pg_run(a)       # PRE-ORDER-1123: beside the bind, on this run's finished elab
             r = r or cmd_bind(a)
             return r or bind_verify.cmd_verify(a)
     except (BindError, E.ElabError) as e:
