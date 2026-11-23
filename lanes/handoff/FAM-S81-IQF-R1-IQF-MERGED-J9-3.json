@@ -3,9 +3,9 @@
  "lane": "FAM-S81-IQF-R1+VIS-S81-MISC",
  "row": "IQF-MERGED-J9-3",
  "type": "iqf__t1",
- "base_plan": "/srv/opentallas-scratch2/claude/vis-s81-misc/tree_j8/physical/die_plan/s81/plan_j8_cut_reset.json",
+ "base_plan": "epyc10:/srv/opentallas-scratch2/claude/s81-j6-r5/j8_cut_tree/physical/die_plan/s81/plan_j8_cut_reset.json",
  "base_plan_sha": "f65f62779bef",
- "status": "DRAFT",
+ "status": "SUPERSEDED",
  "ops": [
   {
    "op": "add",
@@ -422,5 +422,6 @@
   }
  ],
  "note": "17 VIS tap-split ops + 6 FAM-S81-IQF-R1 internal_stations; 3 reset relays left to reset.die_relays tool",
- "start_chain": "No row: J8 plan_j8_cut_reset already carries clock.landing_writer_start branch flt_o0 (7 stages, hops ~299 um, xy_um+raw_reset form); the J6r1 kit plan had none (that is the -110 ps path). Rebuild on J8 fixes (a)."
+ "start_chain": "No row: J8 plan_j8_cut_reset already carries clock.landing_writer_start branch flt_o0 (7 stages, hops ~299 um, xy_um+raw_reset form); the J6r1 kit plan had none (that is the -110 ps path). Rebuild on J8 fixes (a).",
+ "superseded_by": "IQF-MERGED-J9-4"
 }
