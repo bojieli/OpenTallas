@@ -16,3 +16,9 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - No r18q/r18r tree on epyc7 or intel1 (searched). Row B: intel2 r9_forkB10.sh (pid 727140): local ot-tree-fork epyc10 r18q_rx -> trees/s81_head_r18s_wchan3 (log fork10_r9_r18s.log), then gate_wait_r9.sh -> chain_bt.sh s on epyc10 (log chain10_r9_r18s.otrun.log).
 - Row B kits launch with --host epyc10 (launch_kit_r9.sh TAG s81_head_r18s_wchan3 ITEM epyc10 seal|probe; units r9-lep0n-TAG).
 - epyc7 bt_epyc7.sh keeps going for A+B (r18t). Its own r18s gate on epyc7 is only a cross-check: launch NO Row B kits from epyc7. A+B kits use --host epyc7.
+
+## 22:5x LEP-PAIRTAP-1 (COORD: draft the hold row now, bind it, build on the w11 GRT verdict)
+- Measured w11 OT_TAP_CORE: u_rg1/u_rg2.u_pair/clk pin -40..+1 + internal 612 = effective 573..613 vs 450 ("early core tap still late").
+- Ruling: use clock.core_tap_lead_ps = 170 on hd_lep0N_w (schema FABLE-FIX-S81-COLTAP key). It is the in-type form of the raise: the spine delivers the pair taps 273 ps early, and tap_balance pads them back to 450. The type insertion stays 450, so the die common latency and the 80 ps neighbour skew are not touched. A plain type insertion 610 would break both on every face.
+- Script epyc10 L/tmp/pairtap_rows.py TREE [LEAD]; chain L/tmp/chain_r9_pairtap.sh (marker plan/applied_u). Fork r18r_wchan2 -> trees/s81_head_r18u_pairtap on epyc10 (intel2 r9_forkU.sh pid 841395, logs fork10_r9_r18u.log, chain10_r9_r18u.otrun.log; base = r18r).
+- Build: kits ONLY if w11 GRT hold repair shows the cross-tap hold / channel buffers matter (launch_kit_r9.sh u.. s81_head_r18u_pairtap hd_lep0N_w epyc10 seal|probe). Same fix applies to the E piece hd_lep0N (581/635) = R8.
