@@ -1,0 +1,98 @@
+# FABLE-UNC-KV ring eye evidence 11-23 (KV D29, DIE-FIX-LEDGER rc114/rc117/rc119/rc126 port_in hold, RING class)
+# sender m = min(data arrival - fclk_out arrival) at the sender port, 4_cts DB, TT libs, placement RC (probe rprobe.tcl); FF ~ 0.81 x m
+# die eye slack of a ring = receiver kit FF port_in slack (at its contract value c) - c + 0.81*m ; receiver slack already carries 25 ps uncertainty + hold
+section	sender_type	ring_out	m_tt_ps	ends
+SENDER	hgi_v2cle	ft3_o	44.1	1058
+SENDER	hgi_v2cle	ft2_o	83.0	258
+SENDER	hgi_v2cle	ft0_o	135.9	3
+SENDER	hgi_v2cle	ft1_o	207.8	17
+SENDER	hgi_v2cle	o_hst_Q_N_N_sN_s_b	209.0	36
+SENDER	hgi_v2cle	o_head_Q_N_N__u_fts_s_b	210.7	36
+SENDER	hroot	o_fch_hroot_Q_q	-61.6	3
+SENDER	hroot	o_host_hbm_rst_n	-56.1	3
+SENDER	hroot	o_kvs_hroot_Q_o_cN	31.4	42
+SENDER	hroot	o_kvs_hroot_Q_o_pc	33.1	782
+SENDER	hroot	o_kvs_hroot_Q_o_ctl	39.1	146
+SENDER	hroot	o_kvs_hroot_Q_o_emb	42.0	301
+SENDER	hroot	o_kvs_hroot_Q_o_kg	43.3	25
+SENDER	hroot	ft13_o	43.8	3
+SENDER	hroot	ft11_o	44.3	34
+SENDER	hroot	ft12_o	46.1	34
+SENDER	hroot	ft6_o	49.3	34
+SENDER	hroot	ft7_o	49.6	34
+SENDER	hroot	ft4_o	49.7	18
+SENDER	hroot	o_kc_Q_ko	49.8	35
+SENDER	hroot	o_idhr_Q_y	50.3	4
+SENDER	hroot	ft5_o	51.1	20
+SENDER	hroot	ft2_o	51.1	293
+SENDER	hroot	o_kc_Q_kf	51.4	3
+SENDER	hroot	o_kvs_hroot_Q_o_chN	52.0	273
+SENDER	hroot	o_host_hbm_rst_n_d1	54.6	3
+SENDER	hroot	ft3_o	54.6	3
+SENDER	hroot	ft10_o	55.0	34
+SENDER	hroot	ft8_o	57.1	3
+SENDER	hroot	ft9_o	57.4	34
+SENDER	hroot	ft0_o	68.7	15
+SENDER	hroot	ft1_o	68.8	3
+SENDER	pc_v3	o_hsl_Q_N_ao	94.4	34
+SENDER	pc_v3	o_embgw_est	94.7	15
+SENDER	pc_v3	o_hsl_Q_N_co	96.0	34
+SENDER	pc_v3	o_kvs_emb_px_tep	96.3	18
+SENDER	pc_v3	o_host_host_rst_n	96.8	3
+SENDER	pc_v3	o_hsl_Q_N_sdo	96.9	34
+SENDER	pc_v3	o_hsl_Q_N_bgo	97.2	3
+SENDER	pc_v3	o_kvs_emb_px_tok	97.5	20
+SENDER	pc_v3	o_host_hbm_rst_n	97.9	3
+SENDER	pc_v3	o_kvpc_Q_N_pc__fo	98.0	3
+SENDER	pc_v3	o_hsl_Q_N_sko	98.1	34
+SENDER	pc_v3	o_hsl_Q_N_sfo	99.0	34
+SENDER	pc_v3	o_slg_Q_N_af__fault	99.2	3
+SENDER	pc_v3	o_hsl_Q_N_soo	100.2	34
+SENDER	pc_v3	o_hsl_Q_N_fault_o	100.3	3
+SENDER	pc_v3	o_kvpc_Q_N_o_prev	100.4	782
+SENDER	pc_v3	o_slg_Q_N_o_ctl	100.7	146
+SENDER	pc_v3	ft1_o	104.7	3
+SENDER	pc_v3	o_slg_Q_N_o_dn	107.3	273
+SENDER	pc_v3	o_slg_Q_N_krsp	113.9	1064
+SENDER	pc_v3	o_kvpc_Q_N_o_next	131.1	301
+SENDER	pc_v3	ft0_o	134.3	4
+SENDER	pc_v3	o_efault_pc_Q_N_fault	137.3	3
+SENDER	pc_v3	o_slg_Q_N_rsp	177.2	1058
+SENDER	pc_v3	o_kvpc_Q_N_pc__ko	272.7	35
+SENDER	pc_v3	o_hsl_Q_N_fo	274.1	293
+SENDER	sys_c	o_dNd_kv_rx_payload	5.6	550
+SENDER	sys_c	o_dNd_kv_kvn_word_identity	57.0	61
+SENDER	sys_c	o_dNd_kv_rec_rx	59.5	554
+SENDER	sys_c	o_dNd_kv_kvn_word_generation	67.3	4
+SENDER	sys_c	o_dNd_kv_att_tx_kind	80.6	6
+SENDER	sys_c	o_dNd_kv_att_tx_slot	82.3	3
+SENDER	sys_c	o_dNd_kv_att_tx_beat	88.0	7
+SENDER	sys_c	o_dNd_kv_rcy	92.2	34
+SENDER	sys_c	ft1_o	103.7	524
+SENDER	sys_c	o_dNd_kv_emb_tx_slot	105.9	3
+SENDER	sys_c	o_host_link_rst_n	113.4	3
+SENDER	sys_c	o_dNd_kv_lup	130.1	4
+SENDER	sys_c	o_dNd_kv_lpf	130.5	3
+SENDER	sys_c	o_dcal_lay	141.3	8
+SENDER	sys_c	o_dNd_kv_skw	144.9	14
+SENDER	sys_c	o_dcal_dob	147.8	5
+SENDER	sys_c	o_dNd_kv_srx	155.6	524
+SENDER	sys_c	o_dNd_kv_svc_d1	158.6	176
+SENDER	sys_c	o_dcal_tks	173.9	3
+SENDER	sys_c	o_dNd_kv_svc	176.6	176
+SENDER	sys_c	o_dcal_flt	191.6	3
+SENDER	sys_c	o_serdes_E_tx_up	376.4	3
+section	sender	ring_out	m_tt_ps	receiver	ring_in	rx_kit_ff_slack_ps	contract_ps	die_eye_ps
+PAIR	kv3_hroot	o_kvs_hroot_Q_o_chN	52.0	kv3_pc_v3	i_kvs_hroot_Q_o_chN	-230.8	-385	196.3
+PAIR	kv3_hroot	o_kvs_hroot_Q_o_pc	33.1	kv3_pc_v3	i_kvs_hroot_Q_o_pc	-183.9	-385	227.9
+PAIR	kv3_hroot	ft2_o	51.1	kv3_pc_v3	i_host_chfN	-155.9	-385	270.5
+PAIR	kv3_hroot	ft0_o	68.7	kv3_pc_v3	i_embgw_est	-9.8	-385	430.8
+PAIR	kv3_hroot	o_idhr_Q_y	50.3	kv3_pc_v3	ft0_i	0.0	-385	425.7
+PAIR	kv3_hroot	o_kc_Q_ko	49.8	kv3_pc_v3	i_kc_Q_ko	0.0	-385	425.3
+PAIR	kv3_hroot	o_host_hbm_rst_n_d1	54.6	kv3_pc_v3	i_host_hbm_rst_n	0.0	-385	429.2
+PAIR	kv3_pc_v3(sibling of sender kv3_pc_v1__cl4ea58a5c)	o_kvpc_Q_N_o_next	131.1	kv3_pc_v3	i_kvpc_Q_N_o_next	-338.7	-385	152.5
+PAIR	kv3_pc_v3(sibling)	o_slg_Q_N_o_ctl	100.7	kv3_pc_v3	i_slg_Q_N_o_ctl	-114.0	-385	352.6
+PAIR	kv3_pc_v3(sibling)	o_hsl_Q_N_sdo	96.9	kv3_pc_v3	i_hsl_Q_N_sdo	-13.2	-385	450.3
+PAIR	kv3_sys_c	o_dNd_kv_rx_payload (worst sys_c ring)	5.6	kv3_io_cor / io_cor_v1 (signed)	-	>=0 at -50	-50	>=54.5
+PAIR	kv3_pc_v3	all 26 rings (min)	94.4	kv3_hroot	all rings	>=0 at -50	-50	>=126.5
+WORST-HYPOTHETICAL	any measured sender	min m	-61.6	any measured receiver	worst ring	-338.7	-385	-15.3
