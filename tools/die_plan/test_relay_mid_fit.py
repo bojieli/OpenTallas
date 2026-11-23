@@ -160,6 +160,7 @@ def test_gutter_keep_stays_through_dpl_and_is_cut_around_fixed_cells():
 
 
 def test_gutter_keep_switch(monkeypatch):
+    import gen_phys as G
     monkeypatch.delenv("OT_GUTTER_BLOCK_KEEP", raising=False)
     assert G._gutter_block_keep({}, "a__t1") is False
     assert G._gutter_block_keep({"gutter_block_keep_types": ["a"]}, "a__t1") and not G._gutter_block_keep({"gutter_block_keep_types": ["a"]}, "b")
