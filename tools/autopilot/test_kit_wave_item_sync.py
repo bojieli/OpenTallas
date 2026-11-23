@@ -94,3 +94,17 @@ def test_die_off_line_is_hourly_per_die_and_reason():
     import inspect
     src = inspect.getsource(KW)
     assert 'st.setdefault("die_off_logged"' in src and ">= 3600" in src
+
+
+def test_item_sync_tries_shared_dependencies_once_per_host(tmp_path, monkeypatch):
+    monkeypatch.setattr(KW, "_heal_path", lambda: str(tmp_path / "heal.json"))
+    c = cfg()
+    c["_item_incomplete"]["epyc8"]["s81"]["t63"] = f"{P} missing"
+    calls = []
+
+    def fail(argv):
+        calls.append(argv)
+        return 2
+
+    KW.sync_item_inputs(AP(), c, run=fail)
+    assert len(calls) == 2
