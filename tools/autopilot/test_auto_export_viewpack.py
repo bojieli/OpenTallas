@@ -35,6 +35,8 @@ def test_cut_and_publish_commands():
     j = dict(node='s81.t.a', host='epyc9', odb='/srv/x/a b/6_final.odb', size=2_000_000_000, label='epyc9:/srv/x/a b/6_final.odb')
     run, pub, w, inc = AE.view_pack_cmds(j)
     assert os.path.basename(run[0]) == 'ot-run' and run[1:4] == ['--hosts', 'epyc9', '--dir'] and run[run.index('--mem') + 1] == '48'
+    assert '--no-spill' in run
+    assert [run[i + 1] for i, word in enumerate(run) if word == '--stage'] == [AE.VP_CODE, j['odb']]
     assert run[-3:-1] == ['bash', '-c'] and 'design_export.py cut --node s81.t.a' in run[-1] and "'/srv/x/a b/6_final.odb'" in run[-1]
     assert '--drop-raw' in run[-1] and '--no-timing' in run[-1]
     assert 'design_export.py publish --node s81.t.a' in pub and '$LV_STORE' in pub and inc.endswith('/incoming/s81.t.a')
