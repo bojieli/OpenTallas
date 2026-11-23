@@ -58,3 +58,9 @@ R9/t2s: census done; type_split patches in R9/clone (ts_patch.py, ts_patch2.py b
 | leaf t51 | @1 FAIL place PLACE-HPWL 1.63x converged | retired-to-J9: J9-LEAF-GRTCONG (place density/region read with t29/t54) |
 | leaf t21 | live: a2 route running epyc10 | keep |
 | kv_leaf t4 | CANCEL-UNSIGNABLE 12:30 (TT -439, 3.7 h); its route docker dpkit-ot_s81sl_kv_leaf__t4-1087646 still alive on intel1 (not my PID) | retired-to-J9: J9-LEAF-VPW-CONE if the path is the vp write-out, else own row (path read next) |
+
+## 11-22 18:3x J9-LEAF-VPW-CONE (COORD 21:2x/17:49 ruling: forms a + b, t14 proof)
+- form (a) place_regions: plan epyc8 L/trees/s81_t31_j7/physical/die_plan/s81/plan_t14A.json (52693b0a0cca) = fork plan + t14 place_regions lcs_wdo_b0/b1 (inst_re u_vp_g_wr1_u_w.(wdo_q[k]|wmw_q[k]|g_slr.g_b[k].), near_re SRAM u_vp_u_b<k>, util .5, cone auto). Uses the GREEN fork bind (no rebind: place_regions is kit-only). Spec intel2 L/t14A/specA, run-item rt d0103507e0c2 launched 18:3x, log L/t14A/runA.log.
+- form (b) S81-VPW-SPR: tool L/tools/s81_vpw_spr_overlay.py (scratch copy, not on main yet) = per (bank, slice) 6 one-hot data selects pre-decoded from the raw pins and registered on the XR edge (same edge as sv_q/sa_q), wdo_q D = one AND-OR level; 0 cycles; opt-in define OT_S81SL_VP_SPR; apply after XRB. iverilog lock-step bench SPR0 vs SPR1 PASS (19,996 cycles, 0 mismatches), select mutant FAIL (6,068); XRB1+SPR1 vs plain PASS.
+- form (b) is folded into the queued XRB bind (L/t31fix/r10_t31xrb.sh, not started yet, epyc8 memory wait): after XRB it applies SPR and t14 verilog_defines += OT_S81SL_VP_SPR. One bind serves t31/t1 (XRB) and t14 (SPR); t14 spec after R10X_DONE.
+- t31 plain-fix kit (spec4): kit_topology 0 (soft-CS restamp works), now src_manifest -> place.
