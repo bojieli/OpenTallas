@@ -91,3 +91,4 @@
   - Fix: set reset.wavefront_min_depth to the J8 D on each of the 9. This is the reset_tree knob that keeps the published release cohort.
   - Result: plan R_final 61472be63d3d, PRE PASS, TAPGRID 80/80, aim 0 true legs >405 on all 79 types. The 9 types now carry the re-shape, not the J8 layout.
   - Now running: VIS-DIE ft_hop_fix --limit 400 (die-lane slot hops), then PRE, then a wave B strict bind. ETA bind start ~07:30 PST, done ~11:30, in time for the 12:30 intake.
+- 2026-11-23 06:47 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-1335748-1795444917 on renewed-glider: rc=0 after 364 s, ended 14:47:58, log none, cmd: --hosts epyc9 --crit --disk 6 --mem 60 --threads 4 --dir /srv/opentallas-scratch2/claude/leaf-route-cbc/row9x -- bash /srv/opentallas-scratc
