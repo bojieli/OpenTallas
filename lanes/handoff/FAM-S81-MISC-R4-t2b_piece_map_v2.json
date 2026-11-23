@@ -1,0 +1,719 @@
+{
+ "schema": "opentallas.s81.t2b_piece_map.draft.v2",
+ "lane": "FAM-S81-MISC-R3",
+ "N": 28,
+ "cap_placed": 350000,
+ "calib_generic_to_placed": 4.58,
+ "source": "epyc10 fam-s81-misc/census5B/stat.txt (yosys generic, hard cores bb) + kw43 224567138ab t2 RTL instance names",
+ "note": "COORD ruling: t2 part B split along kv_bank/su_kve/su_kvq/cmp_pool instance boundaries, <=350k placed, N=28. Sum of pieces = yosys 2,031,431 generic = 9.30M placed (95% of 28x350k); kveA x6 pieces sit at the cap (349.9k). TODO next event: region per piece + 405um stations at cut faces; reach unmeasured.",
+ "pieces": [
+  {
+   "piece": "t2b_p00",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[0] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[0].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[1].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_pool glue (rtree, 11 psf_go, mem)",
+     "generic": 300
+    }
+   ],
+   "generic": 75103,
+   "placed_est": 343972
+  },
+  {
+   "piece": "t2b_p01",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[1] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[2].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[3].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p02",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[2] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[4].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[5].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p03",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[3] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[6].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[7].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p04",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[4] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[8].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[9].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p05",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[5] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[10].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[11].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p06",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[6] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[12].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[13].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p07",
+   "group": "pool",
+   "instances": [
+    {
+     "inst": "u_pool/g_l[7] (cmp_pool_lane)",
+     "generic": 67635
+    },
+    {
+     "inst": "u_bank/g_kvq[14].g_cn.u_cn_write",
+     "generic": 3584
+    },
+    {
+     "inst": "u_bank/g_kvq[15].g_cn.u_cn_write",
+     "generic": 3584
+    }
+   ],
+   "generic": 74803,
+   "placed_est": 342598
+  },
+  {
+   "piece": "t2b_p08",
+   "group": "kvq",
+   "instances": [
+    {
+     "inst": "u_bank/g_kvq[0].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[1].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[2].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[3].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kve[0].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76296,
+   "placed_est": 349436
+  },
+  {
+   "piece": "t2b_p09",
+   "group": "kvq",
+   "instances": [
+    {
+     "inst": "u_bank/g_kvq[4].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[5].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[6].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[7].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kve[1].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76296,
+   "placed_est": 349436
+  },
+  {
+   "piece": "t2b_p10",
+   "group": "kvq",
+   "instances": [
+    {
+     "inst": "u_bank/g_kvq[8].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[9].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[10].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[11].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kve[2].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76296,
+   "placed_est": 349436
+  },
+  {
+   "piece": "t2b_p11",
+   "group": "kvq",
+   "instances": [
+    {
+     "inst": "u_bank/g_kvq[12].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[13].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[14].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kvq[15].g_rtl.u_kvq",
+     "generic": 15891
+    },
+    {
+     "inst": "u_bank/g_kve[3].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76296,
+   "placed_est": 349436
+  },
+  {
+   "piece": "t2b_p12",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[4].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[5].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[6].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[7].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[8].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[9].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p13",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[10].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[11].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[12].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[13].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[14].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[15].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p14",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[16].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[17].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[18].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[19].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[20].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[21].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p15",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[22].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[23].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[24].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[25].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[26].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[27].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p16",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[28].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[29].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[30].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[31].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[32].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[33].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p17",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[34].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[35].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[36].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[37].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[38].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[39].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p18",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[40].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[41].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[42].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[43].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[44].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[45].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p19",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[46].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[47].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[48].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[49].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[50].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[51].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 76392,
+   "placed_est": 349875
+  },
+  {
+   "piece": "t2b_p20",
+   "group": "kveA",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[52].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[53].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[54].g_np.u_kve",
+     "generic": 12732
+    },
+    {
+     "inst": "u_bank/g_kve[55].g_np.u_kve",
+     "generic": 12732
+    }
+   ],
+   "generic": 50928,
+   "placed_est": 233250
+  },
+  {
+   "piece": "t2b_p21",
+   "group": "kveB",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[56].g_rp.u_kve",
+     "generic": 23601
+    },
+    {
+     "inst": "u_bank/g_kve[57].g_rp.u_kve",
+     "generic": 23601
+    },
+    {
+     "inst": "u_bank/g_kve[58].g_rp.u_kve",
+     "generic": 23601
+    }
+   ],
+   "generic": 70803,
+   "placed_est": 324278
+  },
+  {
+   "piece": "t2b_p22",
+   "group": "kveB",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[59].g_rp.u_kve",
+     "generic": 23601
+    },
+    {
+     "inst": "u_bank/g_kve[60].g_rp.u_kve",
+     "generic": 23601
+    },
+    {
+     "inst": "u_bank/g_kve[61].g_rp.u_kve",
+     "generic": 23601
+    }
+   ],
+   "generic": 70803,
+   "placed_est": 324278
+  },
+  {
+   "piece": "t2b_p23",
+   "group": "kveB",
+   "instances": [
+    {
+     "inst": "u_bank/g_kve[62].g_rp.u_kve",
+     "generic": 23601
+    },
+    {
+     "inst": "u_bank/g_kve[63].g_rp.u_kve",
+     "generic": 23601
+    },
+    {
+     "inst": "u_bank/g_kvq[15].g_cn.g_ik_write.u_ik_write",
+     "generic": 15837
+    }
+   ],
+   "generic": 63039,
+   "placed_est": 288719
+  },
+  {
+   "piece": "t2b_p24",
+   "group": "misc",
+   "instances": [
+    {
+     "inst": "u_bank/u_ik_reduce",
+     "generic": 40669
+    },
+    {
+     "inst": "u_bank/g_kvr.u_kvr (qnr)",
+     "generic": 24230
+    },
+    {
+     "inst": "u_bank glue + 515 ot_hdc_delay stations + 16 cn_norm_write + 16 keep_ff",
+     "generic": 1484
+    },
+    {
+     "inst": "kv_leaf glue (144 SRAM macros hard)",
+     "generic": 731
+    }
+   ],
+   "generic": 67114,
+   "placed_est": 307382
+  },
+  {
+   "piece": "t2b_p25",
+   "group": "misc",
+   "instances": [
+    {
+     "inst": "u_bank/g_kvr.g_kvh[0].u_qnh",
+     "generic": 20477
+    },
+    {
+     "inst": "u_bank/g_kvr.g_kvh[1].u_qnh",
+     "generic": 20477
+    },
+    {
+     "inst": "u_bank/g_kvr.g_kvh[2].u_qnh",
+     "generic": 20477
+    }
+   ],
+   "generic": 61431,
+   "placed_est": 281354
+  },
+  {
+   "piece": "t2b_p26",
+   "group": "misc",
+   "instances": [
+    {
+     "inst": "u_bank/g_kvr.g_kvh[3].u_qnh",
+     "generic": 20477
+    },
+    {
+     "inst": "u_bank/.../g_u[0].u_kvt",
+     "generic": 16172
+    },
+    {
+     "inst": "u_bank/.../g_u[1].u_kvt",
+     "generic": 16172
+    },
+    {
+     "inst": "u_bank/.../g_u[2].u_kvt",
+     "generic": 16172
+    }
+   ],
+   "generic": 68993,
+   "placed_est": 315988
+  },
+  {
+   "piece": "t2b_p27",
+   "group": "misc",
+   "instances": [
+    {
+     "inst": "u_bank/.../g_u[3].u_kvt",
+     "generic": 16172
+    },
+    {
+     "inst": "u_bank/g_kvq[12].g_cn.g_ik_write.u_ik_write",
+     "generic": 15837
+    },
+    {
+     "inst": "u_bank/g_kvq[13].g_cn.g_ik_write.u_ik_write",
+     "generic": 15837
+    },
+    {
+     "inst": "u_bank/g_kvq[14].g_cn.g_ik_write.u_ik_write",
+     "generic": 15837
+    }
+   ],
+   "generic": 63683,
+   "placed_est": 291668
+  }
+ ]
+}
