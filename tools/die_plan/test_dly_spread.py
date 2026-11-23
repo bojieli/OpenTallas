@@ -207,6 +207,26 @@ def test_dly_spread_station_form_groups_stages():
         assert "fail 0" in out, out[-2000:]
 
 
+def test_dly_spread_keeps_unroutable_station_chains():
+    """No clear path around hard macros keeps the GPL positions and records NOROUTE."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    source = r"""
+set ::env(OT_DLY_SPREAD_STATION_UM) 800
+set hook [open /w/dly_spread.tcl r]
+set script [read $hook]
+close $hook
+set blocked_route "proc ds_route {a b} { return {} }"
+eval [string map [list "\nds_main\n" "\n$blocked_route\nds_main\n"] $script]
+"""
+    with tempfile.TemporaryDirectory() as d:
+        out = _run(TCL.replace("source /w/dly_spread.tcl", source), d)
+    assert re.search(r"OT_DLY_SPREAD NOROUTE [1-9]\d* chains", out), out[-2000:]
+    before = re.search(r"BEFORE_A (.+)", out)
+    after = re.search(r"AFTER_A (.+)", out)
+    assert before and after and before.group(1) == after.group(1), out[-2000:]
+
+
 def test_dly_spread_station_key():
     import gen_phys
     import schema
