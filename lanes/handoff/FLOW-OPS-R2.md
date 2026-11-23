@@ -87,3 +87,8 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - Glue lock 2ea3a30545d is on main as d8bcb5f08e1 (13:38). Codex's 3bccf4b00a6f = main merge of bind-worker-wait c99220d870a (bind_emit_par waitpid scoped to workers), not a second lock. rt/current 9c133d90aec1 on all 7 gen hosts carries both. Posted coord 097a2123ee (lanes not reachable via SendMessage).
 - Open: signoff.py copy_signoff_bundle nomcap guard checks destination/nomcap/MANIFEST.json but copies into nomcap_libs, so every repeat install re-copies over read-only libs (BKSEL 12:01). Fix: skip when destination nomcap_libs/MANIFEST.json equals the source one, else replace through a temp file. Also HEAD turn canary a087287d5 October golden FF -20.85 stale (12:44 WAITER-FAIL) -> FLOW-CANARY-R2 rebase like s81_head_cl.
 - Then: io_guard, lever 9, items 8/11/12, push-test triage.
+
+## 11-22 ~19:3x PST: GOAL-MARK + PROBE-THROUGH
+- GOAL-MARK-1122 main 940da57aeee: private_chain moves a goal-only FAIL_PREFLOOR aside, and a private run-item re-execs rt/current kit_wave. Sweep: 9 placed goal-finish kits, 7 need resume (6 FAM-S81-SLICE-R6 + TAPHOLD t39; both owners live, list posted coord 30efde7e93), 2 superseded (LEP0N w, COLROM col_h10 024540). H9R0 not in the 4-day window. Root cause of geom stop: lanes ran the pinned rt kit_wave (b15a8a1023ed / 255a1cf9cd3b), which predates RESUME-STAGE.
+- PROBE-THROUGH-1122 main 5fb3e1e7822: OT_PROBE_THROUGH=1 probe kits, PROBE.json via probe_report.py, signoff.probe_guard. Posted to FAM/FIX lanes coord 0e4452e5d3.
+- Next: check that SLICE/TAPHOLD resumes chain (KW_CHAIN_GOAL_MARK CLEARED); then nomcap bundle re-copy, HEAD turn canary golden, io_guard, lever 9, items 8/11/12.
