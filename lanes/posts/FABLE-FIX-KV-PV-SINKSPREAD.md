@@ -111,3 +111,4 @@
 - 2026-11-23 02:45 PST DONE [FABLE-FIX-KV-PV-SINKSPREAD] ot-run oth-ubuntu-463625-1795429850 on tolerant-swine: rc=0 after 888 s, ended 02:45:33, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FABLE-FIX-KV-PV-SINKSPREAD/qwen_kvsys_kv3_pv_v12_1122220711/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/private/FABLE-FIX-KV-PV
 - 2026-11-23 02:45 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) sealed kit kv3_pv_v12 (D29 14-type plan 9d9579bd19c9 w piece, goal route): stage geom=0.
 - 2026-11-23 06:10 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) sealed kit kv3_pv_v12 (D29 14-type plan 9d9579bd19c9 w piece, goal route): stage cts=0.
+- 2026-11-23 11:01 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) sealed kit kv3_pv_v6n (D29 split w piece, v6n6v1 plan, goal route): stage cts=0.
