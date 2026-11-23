@@ -1,7 +1,7 @@
 # QC-DIE-SEAT-1 (VIS-QC, 11-23 01:4x PST). Replaces VISQC-DIE-1, which is DROPPED (FABLE-RC-QC: WRONG-CAUSE; COORD ruling)
 
 One die row with three parts, applied per family. No die growth. Growth only where a probe shows it is needed (fe/fw, su_l1 E channel).
-Target event: V5, or V4 if it gates before 06:00. PROBE-PASS uses the full-cause census rule (fe8a2a5): every cluster >=50 ovfl or >=1 %, total overflow <10 % of baseline, and every path class worse than -42 TT or hold <0 has a row.
+Target event: V4 (single QC event, cut 11-23 14:00, owner post 6079af4; V5 is gone). Rows must be GATED by 13:00. PROBE-PASS uses the full-cause census rule (fe8a2a5): every cluster >=50 ovfl or >=1 %, total overflow <10 % of baseline, and every path class worse than -42 TT or hold <0 has a row.
 
 ## (a) No hard macro inside a bus corridor
 - Corridor demand comes from station legs, ft legs, relay-site density, pin-escape strips (200 um deep) and pin-window -> band legs (tool: intel1 /srv/opentallas-scratch3/claude/VIS-QC/sta1/seat_find.py).

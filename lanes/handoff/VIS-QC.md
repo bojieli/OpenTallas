@@ -24,4 +24,4 @@ Work: local scratch /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-
 ## 01:4x PST 11-23 (resumed after 01:17 limit)
 - QC-DIE-SEAT-1 doc: lanes/handoff/VIS-QC-QC-DIE-SEAT-1.md (DIE-1 dropped). RC-GAP reply posted 1315acab (11 gaps, row or reason). VIS-COVERAGE: 45 rows -> +QC-DIE-SEAT-1, STA-1 -> STA-2 (733d27c).
 - Chains (all survived): sta2 intel1 sta1/logs/chain_sta2.log (PLAN 203d8a7f576f); cb1d epyc2 cb1/logs/chain_cb1d.log (b7eadc0810be); cb1s intel1 cb1s/logs/chain_cb1s2.log (ff8e792599a8). Waiter bgrd7hvqv.
-- On pass: intel2 ~/visqc_probe.sh ITEM HOST TREE BINDOUT TAG -> sta2: slw_st_a_v2__cl9f076a5c + clf4365a62 (intel1 sta1/tree, sta1/sta2/bind); cb1d: cbn_q01__cldd6ea846 + cbf_q01_s2 (epyc2); cb1s: cbn_q00__cl622f65d2. Then census-rule self-review.
+- On pass: intel2 ~/visqc_probe.sh ITEM HOST TREE BINDOUT TAG -> sta2: slw_st_a_v2__cl9f076a5c + clf4365a62 (intel1 sta1/tree, sta1/sta2/bind); cb1d: cbn_q01__cldd6ea846 + cbf_q01_s2 (epyc2); cb1s: cbn_q00__cl622f65d2. Then census-rule self-review. TARGET: V4 only (cut 14:00, rows GATED by 13:00; no V5, post 6079af4).
