@@ -1,9 +1,8 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
- "manifest_hash": "05adcac27458cd62776d04c70bfd3fe5c68d0586cb8f651e65a02906cfc18d0c",
- "src_manifest_sha": "05adcac27458cd62776d04c70bfd3fe5c68d0586cb8f651e65a02906cfc18d0c",
- "tools_sha": "65f3f85d7c5fa1027622d43ef759816131b43e01",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
+ "manifest_hash": "04a3ee602c9c51ae37e58ee778656dbed0bec9e69f3e13bd56fa456222292333",
+ "src_manifest_sha": "04a3ee602c9c51ae37e58ee778656dbed0bec9e69f3e13bd56fa456222292333",
  "hosts": [
   "epyc10",
   "epyc2",
@@ -12,38 +11,36 @@
   "epyc9",
   "intel1"
  ],
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+ "plan_sha256": "24f8b509b6fd5f3665c6086e91b86f80343e9edfcabcbba4232645e579a52368",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+ "asbuilt_sha256": "4f295367a8755001af98bd05075ce496ffb2962c5ad8ba302ee7d56434fec379",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
+ "sidecar_sha256": "466b3f222e62ef0af641d387d380ca1aeae2eeb1525e8cbc33f5fce37238b59e",
+ "tools_sha": "6dbb162ffe89c822984c3d69d79783b7bc283435",
+ "rows_proofs": [
+  "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+ ],
  "smoke": "PASS",
- "smoke_detail": "V2 = QC-PLAN-R10 b20 (plan 7f9f8260349f, sidecar 466b3f222e62) on V1 qwen_compute_v1r6, bind/G0 on rt/639df6b7b265 (packed into the tree); wave runtime stays V1 rt/65f3f85d7c5f (639df has no rt manifest; tools_refresh false). Rows: R8 V2b compose (cb reset R3 + sites_v2b + apply_lanes + R7 c345 + r7 hop300), 12 zero-cycle HC/ST ft sites, 2 hc0 param-class clones (PCS), cbf_q01/_s2 reset inst_taps (RESET-RELAY-GEN-R3), sle_ctl cws2 regs0 midway + x_hc1_st_b sites (R9 b17), latency regen (gen.py latency), 23 hop300 slots reverted to V1 (no macro-free spread / non-uniform su_vmw pads; -> V3), E su_l0 fixed 7->8, W su_c x_su_l1_ctl 32->33 (+1 cycle W su_vmw lanes). Strict bind b20: 0 errors; LATCHECK 1921/1921 PASS; G0 PASS 0 errors (0 new vs V1 control, rt 639df); static G0 0. Not a 300 um / close-by-construction plan (FABLE-PD-QC-0840): hop/tap/reset-leg rows go to V3.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
- "plan_sha256": "7f9f8260349fddf6f8f3b46e027ee1a313d3fc8301ea5aa779ba1fab219f3494",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
- "asbuilt_sha256": "cf0f2400edbc7f2116af25239b62816789f9ef8e292baa63753e66e3777bda48",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
- "die_gen_env": {
-  "OT_PLACE_MAX_FANOUT": "64",
-  "OT_GRT_NONPORT_HOLD": "1",
-  "OT_CORE_TAP_REACH_UM": "0",
-  "OT_PREGRT_FF_HOLD_AUTO": "-1",
-  "OT_MAX_BUFFER_PERCENT": "100",
-  "OT_GRT_POST_MAX_S": "0",
-  "OT_HOLD_STOP_PS": "-1000000",
-  "OT_GRT_ALLOW_CONGESTION": "1",
-  "OT_TT_SETUP_REPAIR": "both",
-  "OT_PG_DIE_PHASE": "1",
-  "OT_PGCAP": "1",
-  "OT_PG_TRACK_TRUTH": "1",
-  "OT_PG_PIN_CHECK": "1",
-  "OT_GPL_SPARSE_UTIL": "0.10"
- },
  "config": {
-  "event": "s29q103S4Q9N46R6V2",
-  "plan_event": "s29q103S4Q9N1B",
+  "event": "s29q103S4Q9N46R6V3",
+  "plan_event": "s29q103S4Q9N46R6V3",
+  "review_before_route": {
+   "event": "s29q103S4Q9N46R6V3",
+   "all_items": true
+  },
+  "auto_visual_review_skip": [
+   "*"
+  ],
+  "tools_sha": "6dbb162ffe89c822984c3d69d79783b7bc283435",
+  "tools_from_rt": false,
+  "tools_refresh": false,
   "gen_hosts": [
-   "epyc9",
-   "epyc8",
    "epyc2",
    "intel1",
    "epyc10",
+   "epyc9",
+   "epyc8",
    "epyc7"
   ],
   "gen_host": "epyc10",
@@ -53,47 +50,26 @@
    "--max-wire-um",
    "120",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release"
   },
-  "cancel_superseded": false,
-  "planned_events": [
-   "S4q6d",
-   "S4q6e",
-   "S4q7h",
-   "S4q8",
-   "S4q9l2",
-   "S4q9l2d",
-   "S4q9m",
-   "s29q103S4Q9L2",
-   "s29q103S4Q9M",
-   "s29q103S4Q9N1B",
-   "s29q103S4Q9N3"
-  ],
-  "tools_sha": "65f3f85d7c5fa1027622d43ef759816131b43e01",
-  "tools_refresh": false
- },
- "rows_proofs": [
-  "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
- ],
- "bind_out_relocation": {
-  "from": "epyc9:/srv/opentallas-scratch2/claude/qc-plan-r3-n41p/bind/bind_s29q103S4Q9N43BQ",
-  "to": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ",
-  "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N43BQ/RELOCATED.json"
+  "cancel_superseded": false
  },
  "live_tree": {
-  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
-  "made": "2026-11-21 10:22:39 PST",
+  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
+  "made": "2026-11-22 12:52:38 PST",
   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
  },
- "sidecar_sha256": "466b3f222e62ef0af641d387d380ca1aeae2eeb1525e8cbc33f5fce37238b59e",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release",
+ "die_gen_env": {},
+ "smoke_detail": "Preferred p7c5rt strict zero, exact LATCHECK 1921/1921, post-bind G0 unit1277482 zero errors and pending views, stock publish gate including target E10 dry generation, all-six source guard and exact OUT-SYNC. Viewed planned geometry coord d3b64972716. Exact coll_core legacy hold staged separately.",
+ "keep_gen_hosts": true,
  "optimistic": true,
- "_path": "/home/ubuntu/qc-plan-r10/cand_v2_bound.json",
+ "_path": "/home/ubuntu/qc-plan-r13-release-1122/candidate_approved.json",
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
 }

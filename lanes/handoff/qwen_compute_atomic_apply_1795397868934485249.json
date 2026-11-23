@@ -1,0 +1,100 @@
+{
+ "die": "qwen_compute",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
+  "event": "s29q103S4Q9N46R6V2",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+  "plan_sha256": "7f9f8260349fddf6f8f3b46e027ee1a313d3fc8301ea5aa779ba1fab219f3494",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release",
+   "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
+   "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
+   "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
+  }
+ },
+ "marker": {
+  "die": "qwen_compute",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
+  "manifest_hash": "04a3ee602c9c51ae37e58ee778656dbed0bec9e69f3e13bd56fa456222292333",
+  "src_manifest_sha": "04a3ee602c9c51ae37e58ee778656dbed0bec9e69f3e13bd56fa456222292333",
+  "hosts": [
+   "epyc10",
+   "epyc2",
+   "epyc7",
+   "epyc8",
+   "epyc9",
+   "intel1"
+  ],
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+  "plan_sha256": "24f8b509b6fd5f3665c6086e91b86f80343e9edfcabcbba4232645e579a52368",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+  "asbuilt_sha256": "4f295367a8755001af98bd05075ce496ffb2962c5ad8ba302ee7d56434fec379",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
+  "sidecar_sha256": "466b3f222e62ef0af641d387d380ca1aeae2eeb1525e8cbc33f5fce37238b59e",
+  "tools_sha": "6dbb162ffe89c822984c3d69d79783b7bc283435",
+  "rows_proofs": [
+   "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+  ],
+  "smoke": "PASS",
+  "config": {
+   "event": "s29q103S4Q9N46R6V3",
+   "plan_event": "s29q103S4Q9N46R6V3",
+   "review_before_route": {
+    "event": "s29q103S4Q9N46R6V3",
+    "all_items": true
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ],
+   "tools_sha": "6dbb162ffe89c822984c3d69d79783b7bc283435",
+   "tools_from_rt": false,
+   "tools_refresh": false,
+   "gen_hosts": [
+    "epyc2",
+    "intel1",
+    "epyc10",
+    "epyc9",
+    "epyc8",
+    "epyc7"
+   ],
+   "gen_host": "epyc10",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "120",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release"
+   },
+   "cancel_superseded": false
+  },
+  "live_tree": {
+   "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
+   "made": "2026-11-22 12:52:38 PST",
+   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
+  },
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release",
+  "die_gen_env": {},
+  "smoke_detail": "Preferred p7c5rt strict zero, exact LATCHECK 1921/1921, post-bind G0 unit1277482 zero errors and pending views, stock publish gate including target E10 dry generation, all-six source guard and exact OUT-SYNC. Viewed planned geometry coord d3b64972716. Exact coll_core legacy hold staged separately.",
+  "keep_gen_hosts": true,
+  "optimistic": true,
+  "_path": "/home/ubuntu/qc-plan-r13-release-1122/candidate_approved.json",
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/dea113f408daf61bbcf0836f0380279fdeff44fbc77754aad1d6e5d86fcea2b5/result.json",
+ "candidate": "/home/ubuntu/qc-plan-r13-release-1122/candidate_approved.json",
+ "optimistic": true,
+ "warnings": []
+}

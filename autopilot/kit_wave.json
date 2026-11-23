@@ -44089,7 +44089,7 @@
   },
   "qwen_compute": {
    "enabled": true,
-   "event": "s29q103S4Q9N46R6V2",
+   "event": "s29q103S4Q9N46R6V3",
    "coord_enable": "COORD 00:43 + 01:0x ruling (1) to KIT-WAVE-12: QC on at the collector-fix merge 5346b95c915 (claude/die-qc-58-coll-1031@00452027cbe, strict bind 0)",
    "gate": {
     "g0c": "PASS",
@@ -44097,14 +44097,14 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
    "gen_host": "epyc10",
-   "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
+   "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt",
    "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_bind_release",
     "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
@@ -44115,7 +44115,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json"
    ],
    "kinds": [
     "type"
@@ -52340,7 +52340,7 @@
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
-   "plan_sha256": "7f9f8260349fddf6f8f3b46e027ee1a313d3fc8301ea5aa779ba1fab219f3494",
+   "plan_sha256": "24f8b509b6fd5f3665c6086e91b86f80343e9edfcabcbba4232645e579a52368",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -53060,7 +53060,8 @@
     "s29q103S4Q9N46V0E",
     "s29q103S4Q9N46R4A4",
     "s29q103S4Q9N46R6V1",
-    "s29q103S4Q9N46R6V2"
+    "s29q103S4Q9N46R6V2",
+    "s29q103S4Q9N46R6V3"
    ],
    "hold_items_lifted_kitops3_qcs29": {
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -54717,8 +54718,8 @@
     "s29q103S4Q9N1B",
     "s29q103S4Q9N3"
    ],
-   "src_manifest_hash": "05adcac27458cd62776d04c70bfd3fe5c68d0586cb8f651e65a02906cfc18d0c",
-   "tools_sha": "65f3f85d7c5fa1027622d43ef759816131b43e01",
+   "src_manifest_hash": "04a3ee602c9c51ae37e58ee778656dbed0bec9e69f3e13bd56fa456222292333",
+   "tools_sha": "6dbb162ffe89c822984c3d69d79783b7bc283435",
    "only_items_prev_qcpin": [
     "cbf_q01",
     "cbf_q01_s2",
@@ -54955,9 +54956,10 @@
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s2",
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s2_p20261120004922",
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46v0e_s2",
-    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4"
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46r4_a4",
+    "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6"
    ],
-   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6",
+   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
    "prev_gen_hosts_derive": [
     "epyc2",
     "intel1",
@@ -54966,7 +54968,7 @@
     "epyc8"
    ],
    "tools_refresh": false,
-   "plan_event": "s29q103S4Q9N1B",
+   "plan_event": "s29q103S4Q9N46R6V3",
    "pilot_item": "sle_st_a_v2__pv4242de79",
    "event_lineage": [
     "S4q6d",
@@ -54991,7 +54993,8 @@
     "s29q103S4Q9N46R3",
     "s29q103S4Q9N46V0E",
     "s29q103S4Q9N46R4A4",
-    "s29q103S4Q9N46R6V1"
+    "s29q103S4Q9N46R6V1",
+    "s29q103S4Q9N46R6V2"
    ],
    "breaker_fix": "QC-TYPES-R3 11-18: OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18; rt_tools: TOOLS-DECOUPLE aed901b rt mirror",
    "note_only_items_qcplanr3_1118": "11-18 07:1x QC-PLAN-R3: + sle_st_a_v2__pv30dda31f__pv88773f93,sle_st_a_v2__pv30dda31f__pvd2ec7769,slw_st_b_v2__pva66d0f22__pv3d7bec84,slw_st_b_v2__pva66d0f22__pvb80e2003,sle_ctl__cl503337ff__padE0,sle_ctl__cl503337ff__padE4,sle_ctl__cl67434795__padW5 (N3 plan split children; parents in only_items are pre-split names, never selected)",
@@ -55007,6 +55010,36 @@
     "slw_su_c__cl92142dac@1"
    ],
    "bound_trees": [
+    {
+     "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10",
+     "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+     "plan_sha256": "7f9f8260349fddf6f8f3b46e027ee1a313d3fc8301ea5aa779ba1fab219f3494",
+     "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+     "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+     "src_manifest_hash": "05adcac27458cd62776d04c70bfd3fe5c68d0586cb8f651e65a02906cfc18d0c",
+     "kit_rtl": {
+      "mode": "bind",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n46r4_final_preview.json",
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v2r10_bind_1121102346"
+     },
+     "event": "s29q103S4Q9N46R6V2",
+     "gen_env": {
+      "OT_PLACE_MAX_FANOUT": "64",
+      "OT_GRT_NONPORT_HOLD": "1",
+      "OT_CORE_TAP_REACH_UM": "0",
+      "OT_PREGRT_FF_HOLD_AUTO": "-1",
+      "OT_MAX_BUFFER_PERCENT": "100",
+      "OT_GRT_POST_MAX_S": "0",
+      "OT_HOLD_STOP_PS": "-1000000",
+      "OT_GRT_ALLOW_CONGESTION": "1",
+      "OT_TT_SETUP_REPAIR": "both",
+      "OT_PG_DIE_PHASE": "1",
+      "OT_PGCAP": "1",
+      "OT_PG_TRACK_TRUTH": "1",
+      "OT_PG_PIN_CHECK": "1",
+      "OT_GPL_SPARSE_UTIL": "0.10"
+     }
+    },
     {
      "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6",
      "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v1r6/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
@@ -55098,49 +55131,18 @@
       "OT_RESET_HOP_CAP_UM": "405",
       "OT_CBC_REACH_UM": "405"
      }
-    },
-    {
-     "src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s2_p20261120004922",
-     "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s2_p20261120004922/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r3.json",
-     "plan_sha256": "ce3a7b3c46714c260e2ec4c301e6c5328336bfbac8bbb69b0b197b98cec6e8fe",
-     "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
-     "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
-     "src_manifest_hash": "973f59d3566c14dbf1e841007d90cecea9d63890ffb563dc838fa81c671a0389",
-     "kit_rtl": {
-      "mode": "bind",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s2_p20261120004922/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n43_portable.json",
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_n46_s2_bind_1119215052"
-     },
-     "event": "s29q103S4Q9N46R3",
-     "gen_env": {
-      "OT_PLACE_MAX_FANOUT": "64",
-      "OT_GRT_NONPORT_HOLD": "1",
-      "OT_CORE_TAP_REACH_UM": "0",
-      "OT_PREGRT_FF_HOLD_AUTO": "-1",
-      "OT_MAX_BUFFER_PERCENT": "100",
-      "OT_GRT_POST_MAX_S": "0",
-      "OT_HOLD_STOP_PS": "-1000000",
-      "OT_GRT_ALLOW_CONGESTION": "1",
-      "OT_TT_SETUP_REPAIR": "both",
-      "OT_PG_DIE_PHASE": "1",
-      "OT_PGCAP": "1",
-      "OT_PG_TRACK_TRUTH": "1",
-      "OT_PG_PIN_CHECK": "1",
-      "OT_GPL_SPARSE_UTIL": "0.10",
-      "OT_RESET_HOP_CAP_UM": "405",
-      "OT_CBC_REACH_UM": "405"
-     }
     }
    ],
    "review_before_route": {
-    "event": "s29q103S4Q9N46R6V2",
+    "event": "s29q103S4Q9N46R6V3",
     "all_items": true
    },
    "auto_visual_review_skip": [
     "*"
    ],
    "gen_host_min_free_gb": {},
-   "note_tools_sha_qcr11": "QC-PLAN-R11 2026-11-21 12:1x PST: pin bump 65f3f85d7c5f -> b6934d7751d6 (f656e319b7) REVERTED. dies.<die>.tools_sha is the tree-tools reference (tool_skew pin mode, apply marker 'the rt the die tools came from'); it is not the kit runtime. With b6934 the skew read 229 of 18947 modules differ (tree v2r10 packs 639df bind/G0 tools) vs 3 with 65f3 - noise, not a runtime change. Kit stages run the scheduler rt/current per launch (TOOLS-DECOUPLE): V2 launches 11:28-11:51 recorded c2047d41ccdf / a13768301176, which carry 3ed87c352a, 4f638b4e9f, f56d99cf55, 8d1cff9b1b, a0fc9811a19 (a1376 also 289287760f/3fba1b4bc0). The tree-side tools (kit_rtl bind) move with V3, packed from main >= 3fba1b4bc0; the pin moves to that tree's rt then."
+   "note_tools_sha_qcr11": "QC-PLAN-R11 2026-11-21 12:1x PST: pin bump 65f3f85d7c5f -> b6934d7751d6 (f656e319b7) REVERTED. dies.<die>.tools_sha is the tree-tools reference (tool_skew pin mode, apply marker 'the rt the die tools came from'); it is not the kit runtime. With b6934 the skew read 229 of 18947 modules differ (tree v2r10 packs 639df bind/G0 tools) vs 3 with 65f3 - noise, not a runtime change. Kit stages run the scheduler rt/current per launch (TOOLS-DECOUPLE): V2 launches 11:28-11:51 recorded c2047d41ccdf / a13768301176, which carry 3ed87c352a, 4f638b4e9f, f56d99cf55, 8d1cff9b1b, a0fc9811a19 (a1376 also 289287760f/3fba1b4bc0). The tree-side tools (kit_rtl bind) move with V3, packed from main >= 3fba1b4bc0; the pin moves to that tree's rt then.",
+   "tools_from_rt": false
   },
   "hbm": {
    "enabled": true,
