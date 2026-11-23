@@ -132,3 +132,14 @@ def test_offsets_row_wins_over_a_window_row_of_the_same_type(monkeypatch):
     raw = _raw(SITES, set(SITES))
     raw["clock"]["tap_window"] = dict(window_ps=80.0, per_port_ps={"src": {"clk": 12}})
     assert [(r["form"], r["status"]) for r in C.census(raw)] == [("offset", "OK")]
+
+
+def test_tap_split_writes_window_rows_for_appended_taps_same_step(monkeypatch):
+    """TAPOFF-ALL (TAP-GRID-R6): tap_split gives an appended tap of a window-form type its tap_window row in the same step."""
+    import tap_split as TS
+    _grid(monkeypatch)
+    raw = _wraw(set(SITES) - {"clk_t5", "clk_t6"})
+    rows = {"src": ("added_taps", [dict(name="clk_t5", xy=[150.0, 10.0]), dict(name="clk_t6", xy=[250.0, 10.0])])}
+    got = TS.window_rows(raw, None, rows)
+    assert got == {"src": {"clk_t5": 12, "clk_t6": 13}}
+    assert "clk_t5" not in raw["clock"]["tap_window"]["per_port_ps"]["src"]      # the caller writes them (out-plan)

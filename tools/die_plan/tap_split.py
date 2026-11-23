@@ -72,7 +72,9 @@ ones), each legalised, all sinks re-assigned, kept when the excess drops.
 
 TAPOFF (TAP-GRID-R5 11-23, COORD class ruling): a type with a plan clock.tap_offset.per_port_ps row gets a row for every
 appended / fresh tap in the same step (tap_offset_fill.fill: the nearest listed tap's row): written into --out-plan and
-listed in the rows JSON as "tap_offset" {type: {port: row}} for row scripts that apply the taps themselves.
+listed in the rows JSON as "tap_offset" {type: {port: row}} for row scripts that apply the taps themselves.  TAPOFF-ALL
+(TAP-GRID-R6): a type in the window form (clock.tap_window.per_port_ps row, no offsets row) gets its window rows the same
+way (tap_offset_cover rule), rows JSON "tap_window" {type: {port: D}}.
 
 FRESH (TAP-GRID-R5 11-23, rc66 SPARSE-TAP-1 serdes): --fresh TYPES rebuilds the WHOLE tap table of those types from their
 sinks instead of appending (serdes__t2: a uniform grid over 2886 x 1227 vs a sink median at (1550, 255), 8 taps over
@@ -968,6 +970,30 @@ def recheck(P, types, radius, cap_max=None):
     return out
 
 
+def window_rows(raw, plan, rows_by_type):
+    """TAPOFF-ALL (TAP-GRID-R6): {type: {port: D}} clock.tap_window rows for the appended taps of the row types that time in the
+    window form (a tap_window row and no tap_offset row): tap_offset_cover's rule (largest window of the 3 nearest listed
+    taps).  A type it cannot fill keeps no row and PRE TAPOFF-MISSING names it."""
+    import copy
+    import re
+    ck = raw.get("clock") or {}
+    win = (ck.get("tap_window") or {}).get("per_port_ps") or {}
+    off = (ck.get("tap_offset") or {}).get("per_port_ps") or {}
+    types = [tn for tn in rows_by_type if win.get(tn) and not off.get(tn)]
+    if not types:
+        return {}
+    import tap_offset_cover as TC
+    tr = copy.deepcopy(raw)
+    apply_rows(tr, rows_by_type)
+    before = {tn: set(tr["clock"]["tap_window"]["per_port_ps"][tn]) for tn in types}
+    rep = TC.fill(tr, plan, types="^(" + "|".join(re.escape(t) for t in types) + ")$", form="window")
+    for r in rep:
+        if str(r.get("status", "")).startswith("SKIP"):
+            print(f"TAP_SPLIT TAPWIN {r['type']}: {r['status']} (PRE TAPOFF-MISSING will name it)", flush=True)
+    return {tn: {p: v for p, v in tr["clock"]["tap_window"]["per_port_ps"][tn].items() if p not in before[tn]} for tn in types
+            if set(tr["clock"]["tap_window"]["per_port_ps"][tn]) - before[tn]}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan")
@@ -1076,6 +1102,7 @@ def main(argv=None):
         tr = copy.deepcopy(raw)
         apply_rows(tr, rows_by_type)
         out["tap_offset"] = TF.fill(tr, S.Plan(tr, a.plan), types=set(rows_by_type))
+    out["tap_window"] = window_rows(raw, a.plan, rows_by_type) if rows_by_type else {}
     if a.out_plan:
         orig = json.loads(Path(a.plan).read_text())
         apply_rows(raw, rows_by_type)
@@ -1099,6 +1126,15 @@ def main(argv=None):
             Path(a.out_plan).write_text(json.dumps(w, indent=1, sort_keys=False) + "\n")
             print(f"TAP_SPLIT TAPOFF {sum(len(v) for v in out['tap_offset'].values())} tap_offset rows written "
                   f"({len(out['tap_offset'])} types)", flush=True)
+        if out.get("tap_window"):                   # TAPOFF-ALL: window-form rows of the kept types, same step
+            out["tap_window"] = {tn: v for tn, v in out["tap_window"].items() if tn in rows_by_type}
+            w = json.loads(Path(a.out_plan).read_text())
+            tab = w["clock"]["tap_window"]["per_port_ps"]
+            for tn, v in out["tap_window"].items():
+                tab.setdefault(tn, {}).update(v)
+            Path(a.out_plan).write_text(json.dumps(w, indent=1, sort_keys=False) + "\n")
+            print(f"TAP_SPLIT TAPWIN {sum(len(v) for v in out['tap_window'].values())} tap_window rows written "
+                  f"({len(out['tap_window'])} types)", flush=True)
         out["remap"] = dict(mode=a.remap_resets, failed=failed, receipt=rec)
         print(f"TAP_SPLIT REMAP {a.remap_resets}: {len(rows_by_type)} types remapped clean, {len(failed)} REMAP_FAIL", flush=True)
         rc = 3 if failed else 0

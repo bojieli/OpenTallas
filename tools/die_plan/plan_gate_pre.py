@@ -83,6 +83,9 @@ TAPOFF-1123 (TAP-GRID-R5, COORD class ruling; KV x10): a type with a plan clock.
   times every tap port at its row; a port with no row silently takes the window [-W, 0].  Every tap of such a type
   (schema.tap_grid, core clk_c* ports aside) must have a row: FAIL TAPOFF-MISSING per type with the missing ports and the fix
   (tools/die_plan/tap_offset_fill.py fill: the nearest listed tap's row; tap_split writes it in the same step as an append).
+  TAPOFF-ALL (TAP-GRID-R6 11-23): the check is tap_offset_cover.census, so it reads every tap mode (density, grid,
+  grid+explicit, explicit) and the window form (clock.tap_window.per_port_ps rows); a type whose tap grid does not solve
+  still FAILs on its added taps named without a row (else WARN TAPOFF-UNCHECKED).  Fix: tap_offset_cover.py fill.
 
 TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with clock.added_taps, the density base is solved
   exactly as the bind does (taps._density_base) and the added names must be clk_t<base>, clk_t<base+1>, ... in order (cbf_q00
@@ -1111,19 +1114,30 @@ def _tap_clock(ck):
 
 
 def check_tapoff(plan, max_list=6):
-    """FAIL TAPOFF-MISSING per type whose clock.tap_offset row misses a tap port (see TAPOFF-1123)."""
+    """FAIL TAPOFF-MISSING per type whose per-port clock row (clock.tap_offset.per_port_ps, or clock.tap_window.per_port_ps
+    for a type without an offsets row) misses a tap port, in EVERY tap mode (tap_offset_cover census; see TAPOFF-1123)."""
     raw = json.loads(Path(plan).read_text())
-    if not (((raw.get("clock") or {}).get("tap_offset") or {}).get("per_port_ps")):
+    ck = raw.get("clock") or {}
+    if not ((ck.get("tap_offset") or {}).get("per_port_ps") or (ck.get("tap_window") or {}).get("per_port_ps")):
         return []
     try:
-        import tap_offset_fill as TF
-        import schema as S
-        miss = TF.missing(raw, P=S.Plan(raw, plan))
+        import tap_offset_cover as TC
+        rows = TC.census(raw, plan)
     except Exception as e:                                  # an unloadable plan is SCHEMA-LOAD's finding, not this one
         return [f"WARN TAPOFF-UNCHECKED {type(e).__name__}: {str(e)[:200]}"]
-    return [f"FAIL TAPOFF-MISSING {tn}: {len(ps)} tap port(s) without a clock.tap_offset.per_port_ps row ({', '.join(ps[:max_list])}"
-            f"{' ...' if len(ps) > max_list else ''}): they time at the window [-W, 0]; fix: python3 -I tools/die_plan/tap_offset_fill.py "
-            f"fill {plan} OUT.json --types {tn}" for tn, ps in miss.items()]
+    out, warn = [], []
+    for r in rows:
+        if r["status"] == "OK":
+            continue
+        if r["status"] == "UNEVALUATED" and not r["missing"]:
+            warn.append(f"WARN TAPOFF-UNCHECKED {r['type']}: tap grid not solvable ({r['why']}); its added taps all have a row")
+            continue
+        tbl = "clock.tap_offset.per_port_ps" if r["form"] == "offset" else "clock.tap_window.per_port_ps"
+        low = " (tap grid unsolvable: added taps by name, a lower bound)" if r["status"] == "UNEVALUATED" else ""
+        out.append(f"FAIL TAPOFF-MISSING {r['type']}: {r['missing']} {r['tap_mode']}-mode tap port(s) without a {tbl} row{low} "
+                   f"({r['sample']}{' ...' if r['missing'] > 4 else ''}): they time at the type's full window; fix: python3 -I "
+                   f"tools/die_plan/tap_offset_cover.py fill {plan} OUT.json --types '^{r['type']}$'")
+    return out + warn
 
 
 def check_tapname(plan, base_fn=None, max_list=6, tree=None, base=None, solve_all=False):
