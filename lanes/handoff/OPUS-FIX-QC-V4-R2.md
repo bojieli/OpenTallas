@@ -52,3 +52,6 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - May start after V4 apply: sle_hc1 x2, native59, tt_ctlm, sle_st_b_v2. NOT passed: st_a, su_c, su_l1, fe/fw, coll_core (DRAFT rows in lanes/VIS-COVERAGE.tsv) -> include in the V4 hand-over to R13 (LOOK-BEFORE-LAUNCH holds).
 - Probes wanted (send placed + GRT render paths to VIS-QC; it answers in 30 min, then I may set PROBE-PASS): su_c cl19bb38ef on l1r; st_a cl9f076a5c + clf4365a62 (on l1r, coordinate SLWSLE); fe clf110fab2 + su_l1 clcc9d0155 on v5b/v5c (plus sle_fw_v2 cl6740750e, slw_su_c cl92142dac).
 - VISQC-SU-1 (if the clcc9d0155 probe shows a hotspot west of cl_x_su_c_i): landing macros flush to the E edge, pads + first station as a band along the lane4 E face, density taps there. v5b keeps the landing-slit blob (455-510,170-320) and adds x_su_c_i columns to the same 190 um E channel.
+
+## 23:5x PST after 23:3x outage: all units alive (epyc8 l1r + l0su bind.py ~3h20; epyc10 v5b + v5c bind.py ~1h05); waiter bgc4q40uc alive (seen l1a). No change, no RESUMED post needed.
+- Speed rule (hub f95aac4): probes never wait for review; I may self-review: render + READ my probe, set PROBE-PASS in VIS-COVERAGE.tsv with render path + 1-line verdict; 30-min SLA; holds release on PROBE-PASS/NONE-NEEDED.
