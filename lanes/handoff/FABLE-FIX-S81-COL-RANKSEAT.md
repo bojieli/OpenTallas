@@ -131,3 +131,20 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
   RTL = view (ask ROM owner / ASSEMBLY where IFN(0) comes from); (4) token lane: confirm the element input stream is valid-qualified
   (xs_v/go/cfg_v ride with data, all 13 ports +1 uniformly) and add +1 to the element output schedule in the compiler latency table.
 - Current bindR2 (unpriced) stays: physical proof kits do not depend on the pricing; final row gets ONE more bind with the priced plan.
+
+## COORD RULING 20:2x: I OWN THE WHOLE LOCKUP +1 FIX incl. the S81 col token/compiler latency table (no live owner). ONE row, 4 items:
+ (1) bind.py +1 rule + test, pushed to main EARLY; (2) latency.internal_pipe_ack digest; (3) ROM .IFN(1); (4) +1 on the element output
+ schedule in the compiler/token table. Evidence must confirm all 13 ROM inputs are valid-qualified; any that is not gets a matching stage
+ on its sibling path. Re-bind the priced plan once planR2 proves timing + congestion, then hand to S81-J6-ASSEMBLY-R5 for J9.
+ COORD sends the cross-die sweep to FIX-SYNC-S81 / KV-HEAD / QC / LOCKUP-STATION-R3.
+- (1) DONE in clone, commit 57f5a9d39e2 (on origin/main 8bb9f7f7817): relay_depth sink row key lockup_cycles 0|1 (needs lockup true);
+  bind.relay_depth_lockup_cycles -> declared with D in bind_core_input_pipe.json; kit_relay_depth cycles_added D+1; schema;
+  test_lockup_negedge_cycle.py (iverilog bench 2->3 / 2->2). PUSH RUNNING: epyc8 fable-fix-s81-col-rankseat/tmp/push2.log (PUSH_RC).
+- (3) FINDING: .IFN(0) is written in the design RTL: rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h10_l4_lp_plan_kit.sv (and siblings):
+  ot_v41_rom_elem_q_qxpq_w10_gb_split #(.OLAT(1), .IFN(0)) u_e<k>. Split module default IFN=1. View lib romq_split_1106 has 586
+  setup_falling / 19 setup_rising pins. OPEN: confirm from the view build record (not found yet: views/romq_split_1106 holds only libs;
+  LEF in cores/elem_boundary) whether the hard view was built with IFN=1, or whether falling checks come from OLAT/EARLY logic at IFN=0.
+  If view = IFN 1: RTL change .IFN(1) in the *_plan_kit.sv generator (find generator), new elab + manifest.
+- (2)(4) TODO: find S81 col compiler/token latency table (lanes/TOK-*.md, CODEX-TOKEN-*.md, tools/dsrom_* in tree); valid-qualification of
+  the 13 inputs: cfg_v (cfg_a,cfg_d), go (go_tag), xs_v (xs_p, xs_b, xs_e0/1, xs_q0/1, xs_pos) -> read ot_v41_rom_elem_q_qxpq_w10_gb.sv use.
+- planR3 = planR2 + lockup_cycles: 1 on the 104 rows per type + ack digest; bind after planR2 kits prove timing.
