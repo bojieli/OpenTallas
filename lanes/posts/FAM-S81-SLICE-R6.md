@@ -321,3 +321,4 @@
   Fix in build: a deterministic compose-end step (re-anchor + landing raw relay re-select) for ASSEMBLY to run after the TAP-GRID regen and rc33. Proof bind on intel2 main-tools tree.
   Also: the 16 plan_gate_pre FAILs are svc_* MACROGHOST (29 ghost macro rows each, svc_hi/lo_dsdv_svc_rs/pvso_entry), not slice; for FABLE-UNC-S81-SVC.
   t6__cl0755c26e private kit SIGNED (all checks PASS); provenance + export next.
+- 2026-11-23 08:02 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1924434-1795419612 on tolerant-swine: rc=143 after 30163 s, ended 08:02:07, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_dsdv_slice_kv512_C__t1_1122181858/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SLICE-R6/dsdv_s | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
