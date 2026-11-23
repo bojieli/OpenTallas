@@ -68,3 +68,7 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
      cores/leaf/lef/...ls15120x8640.lef 84bc48d555c1
      cores/legacy/recipes_laneshape.json b828268f67aa
    COMPOSER CHECK: if die_grow changes (e.g. the COL Y shift is added), then for every key j9F replaces, the new die_grow value must equal the v3 base value (old-value check). If not, LEAF rebases on the new grow.
+3e COL-H10-GROW (VIS-S81-COL 02:1x, H10-R4 accepted): type ops on RANKSEAT _ss graft (3c285d644712): epyc10 vis-s81-col/tmp/ops_grow_on_ss.json
+   (replaces outline/hard_cores/buses/stations/clock/reset/relays on 18 types: 6 col_h10_r0_p4 H+25.92, 12 col_h10_r1 H+60.48; widths unchanged).
+   J8-based twin: intel2 vis-s81-col/j9/rows_COL-H10-GROW_J8.json. Composed ref 56d5a17e72bc. PRE (pre_ss_grow) pending; bind probe intel1 treeJ7V 1e431c3917df (inner PRE rc0, GRT read pending).
+   ORDER: after RANKSEAT _ss replay, BEFORE die_grow (die_grow v4 adds the COL Y shift of the stacked parts); H10-R4 TAPGRT v2/SEAMBLK/TAPSPLIT + TAP-GRID-R5 re-split after die_grow.
