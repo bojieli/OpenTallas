@@ -355,19 +355,24 @@ class EndToEnd(unittest.TestCase):
         r = self._omq("merge-now", "claude/good", self.shas["good"]); self.assertEqual(r.returncode, 6, r.stdout + r.stderr)
         self.assertIn("gate it again", r.stdout)
 
-    def _redwatch_pick(self, admitted):
+    def _redwatch_pick(self, free_gb):
         bindir = self.d / "bin"
         bindir.mkdir(exist_ok=True)
         shim = bindir / "ot-run"
-        script = "printf 'localhost\\n'\n" if admitted else "printf 'NOT-RUN disk floor\\n' >&2\nexit 78\n"
-        shim.write_text("#!/bin/sh\n" + script)
+        shim.write_text("#!/bin/sh\n"
+                        'while [ "$1" != "--disk" ]; do shift; done\n'
+                        'printf "%s\\n" "$2" > "$MQ_HOME/redwatch-requested-gb"\n'
+                        f'if [ "$2" -le {free_gb} ]; then printf "localhost\\n"; exit 0; fi\n'
+                        'printf "NOT-RUN disk floor\\n" >&2\nexit 78\n')
         shim.chmod(0o755)
         self.env["PATH"] = str(bindir) + os.pathsep + os.environ["PATH"]
 
     def test_redwatch_defers_untested_commit_without_losing_it_to_the_newest_cap(self):
         q = self._auto_setup()
         self.env["MQ_REDWATCH_MAX"] = "1"
-        self._redwatch_pick(False)
+        self.env["OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS"] = "localhost=150"
+        self.env["OT_RUN_SCRATCH_SECOND_FLOOR_GB"] = "150"
+        self._redwatch_pick(175)
         state = self.d / "mq/redwatch.json"
 
         self.assertEqual(self._omq("redwatch").returncode, 0)
@@ -379,6 +384,7 @@ class EndToEnd(unittest.TestCase):
         sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
         self.assertEqual(self._omq("redwatch").returncode, 0)
         self.assertEqual(json.loads(state.read_text()), {"seen": old, "deferred": [red]})
+        self.assertEqual((self.d / "mq/redwatch-requested-gb").read_text().strip(), "210")
         self.assertFalse((self.d / "wt" / f"rw-{red[:10]}").exists())
         self.assertNotIn("KNOWN-RED", q.read_text())
 
@@ -388,7 +394,7 @@ class EndToEnd(unittest.TestCase):
         sh(*self.g, "commit", "-qm", "[LANE-OK] harmless", cwd=self.dev)
         tip = sh("git", "rev-parse", "HEAD", cwd=self.dev)
         sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
-        self._redwatch_pick(True)
+        self._redwatch_pick(211)
         self.assertEqual(self._omq("redwatch").returncode, 0)
         self.assertEqual(json.loads(state.read_text())["seen"], red)
         self.assertEqual(q.read_text().count("KNOWN-RED"), 1)
@@ -398,7 +404,7 @@ class EndToEnd(unittest.TestCase):
 
     def test_redwatch_posts_known_red_for_a_commit_that_breaks_tests_and_blocks_nobody(self):
         q = self._auto_setup()
-        self._redwatch_pick(True)
+        self._redwatch_pick(300)
         self.assertEqual(self._omq("redwatch").returncode, 0)                               # first run: start at current main
         sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
         (self.dev / "tools/x/mod.py").write_text("def f():\n    return 0\n")
