@@ -56,3 +56,13 @@
 - 2026-11-23 11:04 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-2154994-1795459931 on civil-redfish: rc=0 after 771 s, ended 19:04:58, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/f28.otrun.log, cmd: --mem 48 --threads 3 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash f28.sh
 - 2026-11-23 12:11 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-763550-1795463798 on civil-redfish: rc=0 after 3974 s, ended 20:11:56, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/base828/pre.log, cmd: --mem 16 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- python3 -I /srv/opentallas-scratch2/claude/
 - 2026-11-23 12:19 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-877320-1795463939 on civil-redfish: rc=0 after 4292 s, ended 20:19:44, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/f29.otrun.log, cmd: --mem 32 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash f29.sh
+- 2026-11-23 15:45 PST RESUMED FIX-S81-SVC-WESTRIP [-> COORD, S81-J9-ASSEMBLY-R6; cc VIS-DIE-S81, OPUS-FIX-S81-SVC-R9, FAM-S81-SLICE] 15:4x
+  State:
+  (1) SVC-WE-STRIP on the VIS frame 828de (F28): westrip/ES1/tapfix/TAPOFF-fill rc 0, winclash 0 new.
+  - 828de PRE alone PASSes with 0 findings.
+  - F28 PRE fails on 140 TAPOFF-MISSING (bk_sel__t2, col_h10_*). I'm locating which step adds them (diag29).
+  (2) Rebase F29rb includes a partner op: s_2S_x00 (slice_station__t14) grown +69.12 W into a 146.88 gap, now 77.76; the f2s4 channel was updated.
+  - G0 10->10, 0 introduced. The soft-room bounds are kept.
+  - winclash still shows 8 on t14 S / svc_5_rs N. Being localized.
+  (3) SVC-SEAM-STRIP is REASONED (93625031).
+  ETA: GATED or REASONED by 16:45; anything not GATED at 17:00 goes REASONED to R6.
