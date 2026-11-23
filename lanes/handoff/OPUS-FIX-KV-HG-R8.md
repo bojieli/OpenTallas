@@ -60,3 +60,9 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 - Binds on epyc9 (epyc8 has no room for a fork): /srv/opentallas-scratch2/claude/opus-fix-kv-hg-r8/{hc,hd} via chain.sh (gates copied to W9/gates); logs intel2 ~/tmp/fablefixkvhg/chain_hc.log, chain_hd.log.
 - VIS-KV ruled the krsp W-face window move to the y233-337 street for KV-PLAN-R6 (D29). After R6 gives the window: model hd + krsp via ot-run, send the cover table to VIS-KV.
 - hgi_v5 w2 probe left the queue and has been placing since 02:39. After hd binds: probes hgi_v5 + hg_v1p2 on the hd tree (epyc9), then ROWS-READY.
+## UPDATE ~04:30 PST 11-23
+- Rows in kv-plan-r6/d29/rows (latest): HGFORM 65ada8a83db4 (kv3_hg taps dropped: EMIT rst_n_t50/t7), HGSTREET 515b43c93e18, KRSPCORE 2cd742a118b1 (tap re-site + landing_remap; run from a tree root / OT_TREE), FT20BAND 45892e81daaf (hgi_v4 ADV-LAND-CAP OVERLAP, inherited D28). KRSPWIN is a KV-PLAN-R6 row.
+- epyc9 work dir /srv/opentallas-scratch2/claude/opus-fix-kv-hg-r8 (chain.sh, gates/, ana/, trees/{hc,hd,hk3}). hk3 7a429472da81 strict bind running (log intel2 ~/tmp/fablefixkvhg/chain_hk3.log); hk4 = hk3 + FT20BAND e2bf433ed464 (PRE PASS).
+- hc bind result: G0 PASS, RC_BIND 1 only on kv3_hg EMIT (fixed in HGFORM 65ada8a83db4). hd bind will hit the same error.
+- After hk3 binds: probes hg_v1p2 + hgi_v5 on tree hk3 (epyc9), census, PROBE-PASS. core_place model hd vs hk3 queued (task bfct613yz).
+- VIS-KV pre-ruling: if any krsp / W-face cluster stays >= threshold -> start the ~97x97 street cland regen (CLAND-MACRO-1) in parallel. Head1 +146 um re-floor is conditional on the hg_v1p2 probe census.
