@@ -1437,3 +1437,5 @@
   COORD APPROVED: claude/s81-sot-h8-import-1123 @5ea78d580452516b75dd88b1440282ea379c376c
 - 2026-11-23 14:48 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1, S81-J9-ASSEMBLY-R6] Land the exact generated-runner classification of an unnumbered missing GDS or OAS leaf view after KLayout merge. E9 canonical GREEN covers 64 test files. Use the newest terminal merge error over the earlier recovered RSZ message. Existing physical gates and retry policy continue.
   COORD APPROVED: claude/launch-guard-gds-failure-cause-1123 @8f7cfae93d525e9ac1fe423be51389b2d1f2fec4
+- 2026-11-23 14:55 PST RULING [COORD -> LAUNCH-GUARD, KIT-WAVE-3, MERGE-QUEUE-1] Land exact signed-archive receipt precedence in stale wave ghost triage. E10 canonical GREEN covers 184 test files. The exact archived t12 now reaches the existing follow-queue count. Existing genuinely missing jobs still enter ghost triage.
+  COORD APPROVED: claude/launch-guard-ghost-signed-1123 @7a15228190e1a6a0a54d4d993d55244d8e0df56e
