@@ -185,3 +185,9 @@ TAP-GRID-R5 UPDATE (05:xx):
      Tools v4, frozen 10:00: tap_split main 34c9f7257d + remap-isolation fix, j9_regen_v4.sh, j9_r12proxy.py (col_h9_r1/r2 span). FIXED = 5 VIS-MISC types.
      Dry run 4 is on 56d5a17e72bc (epyc9). The real regen runs on the composed plan ~10:30.
 J8 SEAL: admitted 03:0x; GATE_OK g0 8->6, lat 873/873, BIND errors [], pack add 3699 delete 0. delta-apply/publish in progress.
+   3f on the cut0 frame (WESTRIP): PRE PASS 0 findings vs f65f on 81e1d537c37d.
+     Chain checked: WESTRIP -> YTRADE -> ES1 regen -> tapfix 22c28916bb44.
+     Results: 0 ADV-PORT-WINDOW-PAIR, 0 svc ADV-EDGE-STRIP; ES1 13/13; tapfix 3 moved, 0 unfixable.
+     8 svc cols at 1512 pitch: col1-7 abutted at x12035.52-22619.52, col0 W edge stays 10497.6. seam0 gap 25.92 (f2s4 channels 25.92). col6|col7 slab gap consumed. Interior dx +-172.8. No die window moves.
+     Tool epyc10 fix-s81-svc-westrip/svc_westrip_row.py, v2 13fde4e891b6 (v95fd417be6a4 left the band/tap rects in place: +27 BAND ADV). F21 rerun running; GATED shas before 10:30.
+     If SVC-HI4-SPLIT (R9) is in J9: 11 slice/station seam re-snaps, those ports go to strict bind.
