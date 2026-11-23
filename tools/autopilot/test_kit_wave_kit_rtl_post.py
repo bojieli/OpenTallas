@@ -144,3 +144,25 @@ def test_irg_pr_without_fastpad_sources_fails(tmp_path):
 def test_irg_step_runs_after_the_memory_closure():
     names = [p.name for p in sorted((ROOT / "tools/autopilot/kit_rtl_post.d").glob("*.sh"))]
     assert names.index("s81_svc_memory.sh") < names.index("s81_svc_pr_irg.sh")
+
+
+def test_frozen_closure_tool_gets_no_plan_args(tmp_path):
+    # SVC-R9 11-22: the step text comes from the running kit_wave.py, the closure tool from the frozen wave source.  A
+    # source tool from before 94845431e6 has no --plan/--type/--src-tree; passing them failed hi rs t1 / lo rs t1/t5 at
+    # kit_rtl ("unrecognized arguments").  The step passes them only to a tool that takes them.
+    src = tmp_path / "src"
+    (src / "tools/die_plan").mkdir(parents=True)
+    (src / "tools/die_plan/s81_svc_memory_closure.py").write_text(
+        "import argparse\nap = argparse.ArgumentParser()\nap.add_argument('--form'); ap.add_argument('--kit-rtl', nargs='+')\n"
+        "a = ap.parse_args()\nprint(a.kit_rtl[0], 'NOT_APPLICABLE')\n")
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / "kit_rtl.json").write_text(json.dumps({"bound_module": "s81p_svc_hi_dsdv_svc_rs__t1_bound", "files": []}))
+    (kit / "s81p_svc_hi_dsdv_svc_rs__t1_bound.sv").write_text("module s81p_svc_hi_dsdv_svc_rs__t1_bound; endmodule\n")
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"partition_types": {}}))
+    r = subprocess.run(["bash", str(POST)], cwd=src, env=dict(os.environ, TYPE="svc_hi_dsdv_svc_rs__t1", OUT=str(kit), PLAN=str(plan)),
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "S81_KIT_RTL_POST PASS" in r.stdout
+    assert "'--src-tree'" in (ROOT / "tools/die_plan/s81_svc_memory_closure.py").read_text()   # current tool: args passed
