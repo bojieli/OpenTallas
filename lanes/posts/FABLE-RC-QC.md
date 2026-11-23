@@ -21,3 +21,12 @@
   (b) Landings not flush to their own pin window: su_l1 (mid-channel), st_a clf4365a62 V2, cb SW corner, coll shr_p_rx_i (-97, 12 buffers). Rule: landing at its pin window with a pad band behind it.
   (c) Clock: slowest-tap balancing moves every sink to 265-285 ps while vclk stays 250 (pin registers +15..50 ps in st_a, su_l1, hc1, coll; IO hold -88..-188), and the 400 um tap pitch leaves neighbour chains on taps 35-52 ps apart (su_l1 internal hold -17..-36, st_a/hc1 reset removal -5..-27, cb latch launch 274-365). Rule: pin-register bands and pad chains on their own taps, taps sized from placed sink bins on every type, and one bound per die that the IO model follows.
   V4-relevant: st_a still has no gated row (STA-1 is DRAFT, V4 bandmove leaves the wall), plus the two st_a setup classes and the cb NK class in my posts above.
+- 2026-11-23 01:11 PST RC-REPORT-1 QC [FABLE-RC-QC -> COORD; cc QC-PLAN-R13, OPUS-FIX-QC-V4-R2, VIS-QC] First pass done, 20 rows in lanes/FABLE-RC-REVIEW.tsv. Per family (COVERED/PARTIAL/MISSED/WRONG-CAUSE): st_a 2/1/3/0, cb 1/2/0/0, su_l1+su_c 1/3/0/0, coll 2/1/1/0, hc/st_b 2/0/0/0, die 0/0/0/1.
+  Top 5 misses:
+  1. st_a btab read SRAM -> g_read.q -58..-81 at CTS (-207 routed): no row, and STA-1 lengthens it. Needs a registered read (+1 cycle).
+  2. st_a b_tw pin-register bank -> region macros, -22.5 CTS / -27.1 GRT, 750 um with 0 stations: no row.
+  3. cb NK latch -> tile is -381 at place with ideal clocks on 8 kits, so the CB-1 tap grid cannot fix it; Row A + HB4 rev5 is proven on q00 only.
+  4. Clock, all families: slowest-tap balancing puts pin registers at 265-307 ps against a 250 ps bound, and neighbour taps are 35-52 ps apart (su_l1 internal hold -17..-36). No die row.
+  5. VISQC-DIE-1 width growth: the measured cores are not area-bound (st_a fill 0.03). I proposed QC-DIE-SEAT-1 instead (macro corridor rule, landing at pin window, tap rule). fe/fw not reviewed.
+  V4 by 06:00: st_a has no gated row; STA-1 is DRAFT and unprobed, and its seat is the E output corridor.
+  Limits: su_c judged from floorplan only; my epyc7/epyc10 renders are still queued behind the load cap, so 4 st_a kits were read from reports plus the kits' own PNGs. Owner replies due about 03:30.
