@@ -52,7 +52,7 @@ def test_repeated_name_is_refused(tmp_path):
 def test_schema_has_the_key():
     p = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["place_regions"]
     assert p["items"]["required"] == ["name", "inst_re"] and p["items"]["additionalProperties"] is False
-    assert set(p["items"]["properties"]) == {"name", "inst_re", "util", "centre_um", "near_re", "note", "kind", "box_um", "radius_um"}
+    assert set(p["items"]["properties"]) == {"name", "inst_re", "util", "centre_um", "near_re", "note", "kind", "box_um", "radius_um", "cone"}
 
 
 def test_region_box_is_snapped_to_the_placement_grid():
@@ -152,3 +152,28 @@ def test_precheck_parses_short_and_long_rows(tmp_path):
     out = PP.cone_regions(tmp_path, cells, {"n1": [("u.cnt_q[0]", 0), ("g1", 1)]})
     names = {f["key"] for f in out}
     assert "core" in names and "ctr" not in names          # core matches nothing; ctr is parsed and matches its flop
+
+
+def test_cone_between_row_and_tcl():
+    import tempfile
+    d = Path(tempfile.mkdtemp())
+    gen_phys.install_place_regions(d, [{"name": "ctr", "inst_re": "count_r", "cone": "between"}])
+    assert r"  {ctr {count_r} 0.55 {} {} {} fence {} {} between}" in (d / "place_regions_data.tcl").read_text()
+    with pytest.raises(ValueError):
+        gen_phys.place_regions_tcl([{"name": "c", "inst_re": "x", "cone": "all"}])
+    t = (HERE / "place_regions.tcl").read_text()
+    assert "pr_rad pr_cone" in t and "ot_pr_cone_between" in t and "OT_PLACE_REGION_BETWEEN" in t
+
+
+def test_between_cone_is_only_the_member_to_member_cells():
+    # f0 -> g0 -> g1 -> f1 (between); f0 -> g2 -> x (to a non-member flop: forward only); y -> g3 -> f1 (backward only)
+    net = """
+array set fo {f0 {g0 g2} g0 {g1} g1 {f1} g2 {x} g3 {f1} y {g3}}
+array set fi {f1 {g1 g3} g1 {g0} g0 {f0} g3 {y} g2 {f0} x {g2}}
+proc nout {i} { global fo; if {[info exists fo($i)]} { return $fo($i) } else { return {} } }
+proc nin {i} { global fi; if {[info exists fi($i)]} { return $fi($i) } else { return {} } }
+proc cand {i} { return [expr {[string index $i 0] eq "g"}] }
+"""
+    assert _tcl(net + "puts [lsort [ot_pr_cone_between {f0 f1} nin nout cand 64]]") == "g0 g1"
+    # the walk caps at LIMIT x members and never errors
+    assert _tcl(net + "puts [llength [ot_pr_cone_between {f0 f1} nin nout cand 1]]") in ("0", "1", "2")

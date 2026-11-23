@@ -368,10 +368,10 @@ def cone_regions(kit, cells, nets, limit=8):
     if not pr.exists():
         return out
     # PLACE-GROUP 11-22: a row may carry kind / box / radius after near_re (gen_phys.place_regions_tcl)
-    rows = re.findall(r"^\s*\{(\S+) \{([^}]*)\} ([\d.]+) (\S+) (\S+) \{([^}]*)\}(?: \S+ \{[^}]*\} \S+)?\}", pr.read_text(), re.M)
+    rows = re.findall(r"^\s*\{(\S+) \{([^}]*)\} ([\d.]+) (\S+) (\S+) \{([^}]*)\}(?: \S+ \{[^}]*\} \S+( between| auto)?)?\}", pr.read_text(), re.M)
     macro = {n for n, (m, _) in cells.items() if not _STD.search(m)}
     seq = {n for n, (m, _) in cells.items() if _SEQ.match(m)}
-    for name, inst_re, util, cx, cy, near in rows:
+    for name, inst_re, util, cx, cy, near, cone in rows:
         rx = re.compile(inst_re)
         members = [n for n in cells if n not in macro and rx.search(n)]
         if not members:
@@ -392,7 +392,7 @@ def cone_regions(kit, cells, nets, limit=8):
                 queue.append(nb)
                 if extra > cap:
                     break
-        if extra > cap:
+        if extra > cap and cone.strip() != "between":           # a between cone never drops (place_regions_cone.tcl ot_pr_cone_between)
             out.append(F("CONE", name, f"cone has more than {cap} cells (> {limit} x {len(members)} members): not separable from the design "
                          f"(tools >= 124d829 DROP this region; older tools stop global_place)", members=len(members), sub="DROP"))
     return out

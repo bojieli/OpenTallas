@@ -1709,7 +1709,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
                    # box_um explicit box, radius_um box of side 2r around the centre (both grow to fit the cells at util)
                    "kind": {"enum": ["fence", "soft"]},
                    "box_um": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
-                   "radius_um": {"type": "number", "exclusiveMinimum": 0}}}}
+                   "radius_um": {"type": "number", "exclusiveMinimum": 0},
+                   # cone auto (default: both-way cone, joined under 0.5 coverage, DROP when > 8 x members) | between (only the cells on
+                   # member -> member paths join, always; LOCAL-CONE-SCATTER counters / decode cones)
+                   "cone": {"enum": ["auto", "between"]}}}}
 # UNIFY-TOOLS-0300 11-20 (FABLE-SUPERSET-0415 section 10, U5): a SUPERSET type carries the union pin set of its class.
 # true / object (e.g. {"class": "slw_fe"}) = on; gen_phys.superset_spare_pins pins the ends no die port binds.  Each
 # instance then names its unbound ends in partitions[].spare_ends (a spare input is tied 0 at the parent, a spare output

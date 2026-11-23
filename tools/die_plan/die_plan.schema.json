@@ -6709,6 +6709,12 @@
         "radius_um": {
          "type": "number",
          "exclusiveMinimum": 0
+        },
+        "cone": {
+         "enum": [
+          "auto",
+          "between"
+         ]
         }
        }
       }

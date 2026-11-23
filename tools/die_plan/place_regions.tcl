@@ -28,7 +28,8 @@ foreach i [$pr_blk getInsts] { lappend pr_insts [list [string map {\\ {}} [$i ge
 set pr_macros {}
 foreach pr_p $pr_insts { set i [lindex $pr_p 1]; if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend pr_macros [list [expr {[$b xMin]/$pr_dbu-2.0}] [expr {[$b yMin]/$pr_dbu-2.0}] [expr {[$b xMax]/$pr_dbu+2.0}] [expr {[$b yMax]/$pr_dbu+2.0}]] } }
 foreach pr_row $::ot_place_regions {
-  lassign $pr_row pr_name pr_re pr_util pr_x pr_y pr_near pr_kind pr_box pr_rad
+  lassign $pr_row pr_name pr_re pr_util pr_x pr_y pr_near pr_kind pr_box pr_rad pr_cone
+  if {$pr_cone eq ""} { set pr_cone auto }
   if {$pr_kind eq ""} { set pr_kind fence }
   set pr_grp {}; set pr_a 0.0; set pr_sx 0.0; set pr_sy 0.0; set pr_k 0; set pr_mx 0.0; set pr_my 0.0; set pr_mk 0
   foreach pr_p $pr_insts {
@@ -67,14 +68,24 @@ foreach pr_row $::ot_place_regions {
     # S81-DIE-R5 11-20 (COORD; J6 C1d/C2d drop the serdes regions, FABLE-PD-S81-2340): a cone that is not separable (> 8 x the members)
     # gets NO region, loudly: its members place with the design (no group, no box).  The refusal stopped every J5 serdes at global place
     # (serdes_tx_encoder: > 47,400 cone cells for 5,925 members); the region-less form passed DPL on serdes t4 and is what J6 builds.
-    if {[catch {ot_pr_cone $pr_grp ot_pr_nbrs_in ot_pr_nbrs_out ot_pr_is_cand 8} pr_extra]} {
+    # PLACE-GROUP cone between (11-22): only the cells on member -> member paths join (always), never a DROP
+    if {$pr_cone eq "between"} {
+      set pr_extra [ot_pr_cone_between $pr_grp ot_pr_nbrs_in ot_pr_nbrs_out ot_pr_is_cand 64]
+      set pr_nm [llength $pr_grp]
+      foreach pr_e $pr_extra {
+        lappend pr_grp $pr_e; set ot_pr_taken($pr_e) 1
+        set pr_em [$pr_e getMaster]; set pr_a [expr {$pr_a + [$pr_em getWidth]*[$pr_em getHeight]/$pr_dbu/$pr_dbu}]
+      }
+      puts [format "OT_PLACE_REGION_BETWEEN %s: %d members + %d cells on member-to-member paths joined the group" $pr_name $pr_nm [llength $pr_extra]]
+    } elseif {[catch {ot_pr_cone $pr_grp ot_pr_nbrs_in ot_pr_nbrs_out ot_pr_is_cand 8} pr_extra]} {
       if {![string match "cone has more than*" $pr_extra]} { error $pr_extra $::errorInfo }
       foreach pr_t $pr_grp { unset -nocomplain ot_pr_taken($pr_t) }
       puts "OT_PLACE_REGION_DROP $pr_name: $pr_extra ([llength $pr_grp] members): no region for this cone, its cells place with the design"
       continue
     }
     set pr_cov [ot_pr_coverage [llength $pr_grp] [llength $pr_extra]]
-    if {$pr_cov < 0.5} {
+    if {$pr_cone eq "between"} {
+    } elseif {$pr_cov < 0.5} {
       foreach pr_e $pr_extra {
         lappend pr_grp $pr_e; set ot_pr_taken($pr_e) 1
         set pr_em [$pr_e getMaster]; set pr_a [expr {$pr_a + [$pr_em getWidth]*[$pr_em getHeight]/$pr_dbu/$pr_dbu}]
