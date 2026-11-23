@@ -1,2 +1,1 @@
 ROWS_KV-WAITBIND-R1.py	KV-PLAN-R6	false positive: row prints DROPPED as its intended action (pc_v1 x3 18 ops each, per its ROWS-READY); applied; no owner reply by seal
-ROWS_OPUS-FIX-KV-HUB-R6-RESET.py	KV-PLAN-R6	applied post-compose LAST (after R8 refresh) in the chain per owner instruction, sha 80449f4195bd, rt f407b779cf63; relay_depth kept only where proven (Codex rh11 restore)
