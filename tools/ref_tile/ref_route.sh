@@ -104,9 +104,17 @@ cp $K/signoff.sdc $W/signoff.sdc
 # core-view golden SDC (ref_tile.py gen_core_view_sdc): signoff.py's kit constraint.sdc; replaces
 # run_abi3_physical.py's Tcl placeholder there (config.mk SDC_FILE already points the flow at clock.sdc)
 [ -s $K/constraint.sdc ] && cp $K/constraint.sdc $W/work/orfs/constraint.sdc
-# sign-off TT libraries: the route times WC on TC NLDM (WC_NLDM_LIB_FILES override); declare TC_LIB_FILES (S81 core kit
-# config.mk form) so signoff.py resolves its exact TT library list
-grep -q '^export TC_LIB_FILES' $W/work/orfs/config.mk 2>/dev/null || printf '%s\n' 'export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)' >> $W/work/orfs/config.mk
+# Supply the same exact TT macro views used by corner_sta_ref when this route configured only WC and BC.
+# Keep a kit's explicitly authored TC library list.
+if ! grep -q '^export TC_LIB_FILES' "$W/work/orfs/config.mk"; then
+  {
+    printf '%s' 'export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)'
+    for m in "${MACROS[@]}"; do
+      printf ' /src/%s/%s_tt.lib' "$m" "${m##*/}"
+    done
+    printf '\n'
+  } >> "$W/work/orfs/config.mk"
+fi
 python3 tools/w18/corner_sta_ref.py --orfs-dir $W/work/orfs --extra-sdc $W/signoff.sdc "${M[@]}" \
   --output $W/corner_sta.json > $W/sta.log 2>&1
 src=$?
