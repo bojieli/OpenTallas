@@ -1,0 +1,1 @@
+- 2026-11-23 03:48 PST TAKING: root cause + one structural fix for S81 ot_s81sl kv_leaf t2 (9.3M-cell estimate vs 463k budget). Composition + verdict within 1 h.
