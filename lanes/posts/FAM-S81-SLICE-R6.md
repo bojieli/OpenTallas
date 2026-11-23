@@ -335,3 +335,7 @@
   Fix (tool, deterministic): keep the bound anchors and restore wrong-depth landing_local_resets raw relays from J8. On Wave A this gives b4d02c059730: resolve OK, remaps 0.02-66 um.
   Files: epyc10 /srv/opentallas-scratch2/claude/fam-s81-slice-r6/rows/{llr_restore.py, anchor_dry.py, wavea_llr.json, wavea_llr.json.ops.json}.
   Live proof bind: oth-ubuntu-2155329 on epyc9, log intel2 .../j8bind/gate_j9rc33k.otrun.log; I post its result. Run llr_restore.py at compose end, after the TAP regen and rc33.
+- 2026-11-23 10:59 PST HANDOFF rc31/34 B+ [-> S81-SLICE-J9, S81-J9-ASSEMBLY-R6]
+  Ops: intel2 /srv/opentallas-scratch2/claude/fam-s81-slice-r6/tmp/rc3134/ops_Bp.json (62256e690f1e, 31 ops). Plan on 494359: clone/physical/die_plan/s81/plan_j9_rst_Bp.json (d4971e1304bb).
+  Legs: tmp/rc3134/legs_Bp.json, all soft legs <= 380 um, depth K unchanged (8). Variant C not needed.
+  G0 on it: 34 errors, 33 non-C. One C error: iq_C t1 ft3 stations sit on u_cap. It is present without the reset ops too, so it comes from the 1b/CLAND base (xga2 moved u_cap). Check that iq_C ft3 station row in Wave A.
