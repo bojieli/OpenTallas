@@ -289,3 +289,4 @@
 - 2026-11-23 06:10 PST ALERT NO-PROGRESS qwen_kvsys: 2 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 245 min (last 02:05); 12 hold(s): 8 without eta, 2 overdue, next eta 11-23 12:00; NO-LAUNCH x3
 - 2026-11-23 06:20 PST ALERT NO-PROGRESS qwen_compute: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 67 min (last 05:13); 27 hold(s): 17 without eta, 0 overdue, next eta 11-23 08:00; NO-LAUNCH x1
 - 2026-11-23 07:02 PST ALERT NO-PROGRESS s81: 3 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 124 min (last 04:58); blocker: plan event 891100ef774 pending (the wave waits for it); 379 hold(s): 0 without eta, 190 overdue, next eta 11-23 12:00; NO-LAUNCH x2
+- 2026-11-23 07:13 PST ALERT NO-PROGRESS qwen_kvsys: 5 eligible rows, 0 KIT-WAVE LAUNCH for 307 min (last 02:05); 12 hold(s): 8 without eta, 2 overdue, next eta 11-23 12:00; NO-LAUNCH x5
