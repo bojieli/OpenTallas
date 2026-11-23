@@ -78,3 +78,10 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    UPDATE (LEAF via VIS-DIE): NO die_grow v4. The COL Y shift is a separate tool, COL-YGROW-1 (col_ygrow.py 2dbaf2b1359d, VIS-DIE-S81), and it touches only col_* types; leaf/kv_leaf keys are byte-identical to v3.
    Compose order: die_grow v3 (c9a4768659a1 frame) -> COL-YGROW-1 -> LEAF j9F 57c87ed2a8f0 (final for wave A).
    The old-value check still runs at compose.
+3f SVC-WE-STRIP (FIX-S81-SVC-WESTRIP 03:xx): CONFLICTS CLEARED.
+   VIS-DIE-S81 agreed the form. The tool runs after die_grow and takes 552.96 (8 x 69.12) from the 578.88 col0|col1 seam gap, leaving 25.92.
+   Channels f2s4_refloor_3d40fd53e3a8 and _cbf6bf842c41 get rect/width 25.92. s_7S_x11..x14 is untouched, so no s_7S owner OK is needed.
+   SVC-HI4-SPLIT-F65F is owned by OPUS-FIX-S81-SVC-R9 (x split of svc_N_rs/_att; f65f rebase ~1 h). The tool handles both forms.
+   Gating on (b) c9a4768659a1 and (a) f65f. (a) without die_grow is partial (+34.56/col).
+   Compose position: after die_grow + COL-YGROW-1, then ytrade.
+   OPEN: confirm the tool is idempotent on COL-YGROW-1 output.
