@@ -48,3 +48,6 @@ Goal: clock nets keep near-CTS routes through congestion GRT. Work dir epyc8 /sr
 - hg_v1p2 private kits both ended exit 2 DPL-0033 (repair wire buffers, central channel; geometry). Harness base control on its CTS
   still running epyc8 out_hg (waiter): pre-repair overflow control vs 565,769 (cf) / 553,144 (combined). Informational only.
 - Next: watch first new-gen kits (5_1_grt.log OT_GRT_CLOCK_FIRST lines, GRT runtime); revert to opt-in on any hook error class.
+
+## 11-22 17:3x PST
+- Watch 04:49-16:23: 9 default-on kits through GRT, 0 hook failures (S81 serdes/slice_station/col x3, KV io_cor_v1, tt_ctlm). Watch re-armed (scratchpad cf_poll.sh + cf_scan_host.sh on rtx-pro).
