@@ -20,3 +20,8 @@ cb*/cbx*: FAM-QC-CB-R4. coll_core/coll_ftc: OPUS-FIX-QC-COLL-R3. hc/st/su: FAM-Q
 2. After R13 06:00 V3 pick: recompose r1+r2 rows onto the pick (mk_rleg_draft.py / mk_launch_draft.py / strap_sites.py take BASE), re-run plan_gate_pre --baseline-plan pick, hand plan paths to QC-PLAN-R13 as V4 intake.
 3. After the V4 tap compose (TAP-GRID-R5): re-run scan2.sh (reset_leaf_legs) for inst_taps drift (QS-ITAPDRIFT).
 4. Harvest every 30-60 min (posts/handoffs of QC lanes + CLASS-SWEEP-R1); next COORD report ~06:3x.
+
+## 11-22 18:1x resume state
+- V4 intake (FABLE-FIX-QC-V4-intake.tsv): r1 QS-RLEG cbn_q11 = rank 14 L1; r2 QS-LAUNCH cbx_q10 x3 = rank 7 L1; QS-STRAP slw_fw NOT CARRIED (routing, setup -20.7) accepted.
+- Running: QS-ITAPDRIFT check = reset_leaf_legs.py on epyc8 fable-fix-qc-v4/l0b_bound bind (pid 701854, ot-run), out epyc8 /srv/opentallas-scratch2/claude/fix-sync-qc/rleg_v4l0b.{tsv,json,log} (script scan_itap.sh B P TAG).
+- Next: read rleg_v4l0b; off-consumer / >300 um rows -> reset_leg_plan re-pick -> rows r3 to FABLE-FIX-QC-V4 + QC-PLAN-R13 + FAM-QC-CB-R4. Same check on l1a_bound when FABLE-FIX-QC-V4 L1 bind lands (do not rebind).
