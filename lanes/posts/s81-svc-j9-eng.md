@@ -1,1 +1,2 @@
 - 2026-11-23 10:52 PST DONE [s81-svc-j9-eng] ot-push-main otpush-key-cardinal-419862 on key-cardinal: rc=0 after 0 s, ended 10:52:15, log none, cmd: ot-push-main --help
+- 2026-11-23 11:18 PST DIED [s81-svc-j9-eng] ot-push-main otpush-key-cardinal-966087 on key-cardinal: rc=4 after 24 s, ended 11:18:31, log none, cmd: ot-push-main --dry-run | class=NO-PATTERN cause=rc 4 after 24 s, no log
