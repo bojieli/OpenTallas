@@ -18,3 +18,11 @@ The split-family results support corridor and clock/sink locality work after the
 - Inherited HGFORM `kv3_hg_v1p2_1123105128` read back OT_TAP_RESET_AFFINITY/SPLIT and OT_TAP_PAIR_MACRO in config.mk. It stopped before placement at GPL: the first exact tN epoch flop seat `(1006.04,1260.79)` is off the actual row/site grid. There is no GRT result for this attempt. Preserve exact seats and correct the physical row-grid transform before a fresh placement.
 - Historical HROOT D27d3 private `kv3_hroot_1122093152` has an ODB and explicit OT_DRT_NO_PROGRESS at detailed route round 20 (24,261 violations), followed by wrapper rc21. The alert's OOM classification is incorrect. Separate D28 shared `68bb968a0a3e` is watchdog DRT (best 1489 vs pre-window 1269); neither older branch warrants an unchanged restart.
 - D28 PV v12 a3 separate exact review is `results/geom_review/kv_d28_pv_v12_a3_1123.md`. BAD. Do not use it as an R7 daughter measurement.
+
+## Native placement diagnostics recovered
+
+- HGI v4 HK6 ODB 312cbd55133e. The macro channels in the first image stay open. Native 3_5 placement bins quantify a repeated E-face boundary concentration at x1274.4 with peak 1.385 and 1397 µm spread on HST2 t1. Keep this form held pending edge-bank and fanout correction plus a new visual review.
+- HROOT B4 ODB d13ad2155767. The E stripe peaks 0.856, with 649.4 µm nonclock fanout spread and 1645.573 µm root-to-sink centroid distance. Preserve open macro-free geometry and hold pending the RHI-enabled and clock-localized form.
+- sys_c RANKS ODB ec400081dc82. Native placement flags 62 opposite-face spans, 1603.768 µm clock reach, 1618.1 µm nonclock fanout spread and 0.701 local density. The shifted D2DOUT candidate needs a new exact placement.
+- PC23 BANK2 ODB 723e73929748. Native local density 0.919; full clock and channel reach remain unavailable in that render.
+- R7 PV west/east synth top counts 375,324 and 355,938. The ODB instance counts above also include placement infrastructure.
