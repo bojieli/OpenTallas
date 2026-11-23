@@ -13,5 +13,5 @@ foreach i [$b getInsts] {
  $g addInst $i
  incr cnt
 }
-if {$cnt != 320} {error "BTAB_BAND expected 320 band registers (rd_q stage regs excluded), got $cnt"}
-puts "BTAB_BAND all320 registers in one full-width N band"
+if {$cnt != 384} {error "BTAB_BAND expected 384 band registers (256 q + 128 two-stage select, rd_q excluded), got $cnt"}
+puts "BTAB_BAND 256 q + 128 select registers in one full-width N band"

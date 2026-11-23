@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qfd_dv_redstn2_region.lef",
+    "sha256": "ae9adb7b3225ff6016ce045ae53e3262d499b6cf93fbbefde41f84a6b1914d64"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/wt/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "766f4408abda82a043be6274d50c09021c42a9555ec7d2f76a0d3bcc1549bf1d"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/wt/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/hard/qfd_dv_slice2_stnrgc_bt2/views/qfd_dv_redstn2_region/provenance/raw/qfd_dv_redstn2_region.lef",
+    "/srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/hard/qfd_dv_slice2_stnrgc_bt2/views/qfd_dv_redstn2_region/provenance/qfd_dv_redstn2_region.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub-defects before pinobs=199 eolstub=0 dupport=0 pinabut=0 after pinobs=0 eolstub=0 dupport=0 pinabut=0\npinstub: 191 OBS rects moved into 191 pins: bt_q_p[0], bt_q_p[10], bt_q_p[11], bt_q_p[12], bt_q_p[13], bt_q_p[14], bt_q_p[15], bt_q_p[16], bt_q_p[17], bt_q_p[18], bt_q_p[19], bt_q_p[1]; chain: 198 abutting own-conductor OBS rects moved into 171 pins; pockets: 1503 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles); via shadow: M4 +4568\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "pg_crossing": {
+    "verdict": "PASS",
+    "pair": "M5:M6+M7",
+    "block_max": 0.25,
+    "fails": [],
+    "nets": {
+      "VDD": 0.0,
+      "VSS": 0.0
+    }
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/FAM-QC-HCST-R3/hard/qfd_dv_slice2_stnrgc_bt2/views/qfd_dv_redstn2_region/provenance/qfd_dv_redstn2_region.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qfd_dv_redstn2_region 151.2 x 151.2: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 560 blocked-above 0 blocked-same 0; clock ck insertion 305 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qfd_dv_redstn2_region",
+      "W": 151.2,
+      "H": 151.2,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.964,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.964,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 560,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 305.4,
+          "min_ps": 200.02
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 1503
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "qfd_dv_redstn2_region.lef",
+    "sha256": "cb153812d63e4059142a8adbf8b630ef322fa4ab4036758ed37db678b42a7720"
+  }
+}
