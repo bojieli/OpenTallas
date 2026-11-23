@@ -3875,3 +3875,4 @@ CODEX: 2026-11-22 14:15 PST count 570 any /456 current, +4/+2 since 13:15, QC cu
 
 CODEX: 2026-11-23 04:54 PST took over 04:50 limit, pushed KV cut-ledger fix, started QC landing remap and S81 reset relay regeneration.
 CODEX: 2026-11-23 05:30 PST wave/ledger fixes merged and synced; S81 J8 fan-out nearly verified; J9 leaf and corrected slice reset in strict bind; QC SU patch and OOM recovery running; KV sys_c protected origin composed; exact HEAD/QC placement FAILs recorded.
+OPS-SUPPORT-R1: 2026-11-23 06:06 PST hourly writeup: 585 any / 484 current (+0/+1 vs 04:05); VIS-COVERAGE 435/451 (96%), PROBE-PASS 1; delete guard now protects lane dirs named by handoffs/posts <24 h (main b8f24c64def).
