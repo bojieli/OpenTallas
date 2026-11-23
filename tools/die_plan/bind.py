@@ -5104,7 +5104,11 @@ class Binder:
                                                     f"(.clk(clk), .d({qf_}), .q({qn}));  // relay_depth lockup latch")
                                     prev = qn
                             else:
-                                body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
+                                # FAM-KV-IOPC-R4 11-22: plan clock.core_link_pipe.keep = true emits the stage as the kept module, so yosys
+                                # opt_merge cannot fold its first flop into an identical flop of another consumer (pc_v3: lpc_status of the
+                                # hsl slice, which dragged the macro id pin copy 361 um away, -599 ps)
+                                lp_mod = TS.KEEP_MODULE if ((self.plan.get("clock") or {}).get("core_link_pipe") or {}).get("keep") else "ot_dp_dly"
+                                body.append(f"    {lp_mod} #(.W({len(idx)}), .D({depth})) "
                                             f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
                                             f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
                                             f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")

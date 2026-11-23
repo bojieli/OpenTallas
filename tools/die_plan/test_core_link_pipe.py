@@ -33,6 +33,14 @@ class CoreLinkPipe(unittest.TestCase):
         # the declaration goes through the shared record read by bind_verify / LATCHECK / compiler
         self.assertIn("self.declare_core_input_pipe(tn, p, ci, pn, depth", src)
 
+    def test_keep_option(self):
+        """FAM-KV-IOPC-R4 11-22: core_link_pipe.keep emits the kept module (no yosys merge with an identical consumer flop); default off"""
+        import schema
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
+        self.assertIn('.get("core_link_pipe") or {}).get("keep")', src)
+        node = schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"]
+        self.assertEqual(node["properties"]["keep"], {"type": "boolean"})
+
     def test_schema(self):
         import schema
         node = schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"]

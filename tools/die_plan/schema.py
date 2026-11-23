@@ -1619,6 +1619,7 @@ SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"] = {
                            _LP_D, _LP_RUN, {"type": "array", "minItems": 1, "items": _LP_RUN}]}}},
                    "all": {"type": "boolean"}, "except": {"type": "array", "uniqueItems": True, "items": _name},
                    "types": {"type": "array", "uniqueItems": True, "items": _name},
+                   "keep": {"type": "boolean"},      # FAM-KV-IOPC-R4 11-22: emit the stages as ot_dp_dly_keep (no opt_merge into a twin flop)
                    "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
