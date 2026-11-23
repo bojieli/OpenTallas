@@ -40,3 +40,7 @@ FLOW-CLKGRT default-on watch had no hook error in the retained 45-kit census. Th
 - LEPE R4 with the scoped inactive-bus kit station manifest passed plan PRE at key `ae60be98800923dc`. Split prefill completed on 873 lanes. Strict bind remains active on E9 1427436. The physical cap and clustering hold still applies.
 - Independent S81 all-mode fill/PRE remains active on E9 1324015 and has progressed through the COL r2 coverage. Exact measured geometry and timing still depend on the die lane's later selected gates.
 - HEAD East cap10 `7085500b8b4d` stock pre-CTS recount from prior reviewed 3_place `df341ae8` has eight taps above 800, ranging from 803 to 830. The count is from the reused-place diagnostic. The fresh cap10 GPL remains separate with HEAD. Exact warning is `epyc10:/srv/opentallas-scratch2/claude/head-r18/e_cap10_reused_place_diag/cts_diag.log`.
+
+## 10:34 Wave A coverage
+
+The independent E9 all-mode fill completed with 6,137 additions in 197 types, 904 stale removals and zero skips. The immutable plan is `51a130aa9118` and its fill TSV is `6cf9e9c2ea32` under the Wave A `exact_outputs_520b067a45c9/final` folder. PRE1 is active on E9 1324015. LEPE R4 strict is still active after PRE and the prior native L9 failure point. It has initialized the RTL output directory.
