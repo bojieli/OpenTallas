@@ -105,3 +105,6 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    Order: 3e GROW -> SEAMBLK -> TAPSPLIT -> TAPGRT (type rows, before col_ygrow). COL-H10-REACH (HOP-GAPS) to follow.
    ADV: 20 ADV-PORT-WINDOW-PAIR "validate refuses" on col_h10_r0_p4 vs h9_r0_p3/p5 windows (+25.92 offset). Expect col_ygrow's E/W re-snap to clear them; the composer must see 0 such ADV after col_ygrow, or VIS-DIE fixes them.
 J9 BIND RT: rt/current = 3b25e3b42d4d (includes POROUS-FRESH-1123 3b25e3b42d4 + 152df1bc05). NOT a9ed808a98d5. J9 source = J8 sealed tree (fixed views). The stale trees (kw45 J7 src, svc-r9 treeJ8/treeJ8g, col-h9r0-r4 j8c_tree, serdes candJ8s) are never J9 sources.
+   3g UPDATE: col_ygrow now outputs 055f9c7d6dc6, which includes the x_i0<->ft0 swap on fW1/fE1_p1_b0 (supersedes 6d0aa023037b; to be confirmed with VIS-DIE).
+     Competing form COL-H10R0P1-ECORR: x_i0 E window -> [519.0, 758.964]; ops epyc10 vis-s81-col/tmp/ops_ecorr_on_ygrow.json 249d439b7dce (12 ops, 6 types); die dy -220.584 (4 types) / -401.256 (2 swapped types).
+     Probe of both forms: epyc8 treeJ7V3 plan 3c5ea4d75be0. Winner named by 09:30 and folded into col_ygrow. Default if no word: the swap.
