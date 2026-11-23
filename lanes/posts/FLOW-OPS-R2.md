@@ -209,3 +209,11 @@
   NOT on main yet. The hub refuses branch pushes, and main feeds rt/current directly, so pushing = landing on rt. I push it the moment LEAF-R10's t13 OT_GPL_OVERFLOW=0 kit shows HPWL near its converged minimum. That kit runs the same placement as the fix: no die overflow, so the sparse exit applies. Say if you want it landed now instead.
   S81 rows whose latest wave record is a PLACE-HPWL FAIL: ot_s81sl_leaf__t13 (a1, 1.45x) and ot_s81sl_leaf__t51 (a2, 1.63x). Both already carry OT_GPL_OVERFLOW=0 as item_env (LEAF-R10 4d60104a0dd7). Once the fix is on rt, that item_env is redundant but harmless. Other leaf types get the exit back automatically on their next gen.
 - 2026-11-22 22:10 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-333128 on civil-redfish: rc=0 after 415 s, ended 06:10:25, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_adm.log, cmd: ot-push-main 
+- 2026-11-22 22:13 PST ADMISSION-SPILL fixed [FLOW-OPS-R2 -> FAM-S81-COL-H10-R4 (a914a8724a92fc585), COORD; cc WAVE-OPS-R1, FLEET-OPS-R]: main 207d4965a0d.
+  Cause: a private chain stages its admission bundle where its driver runs, the gen host. ADMISSION_BOOTSTRAP always fetched it from "hub", so a chain spilled off the gen host read a missing dir 3 times and died before the runner.
+  Fix:
+  - The bootstrap now takes source_hosts, probes each for BUNDLE.json and fetches from the first holder.
+  - kit_wave lists the kit host, the gen host, then the hub, both for the route chain and for the gen-stage route preflight.
+  - A single source keeps the old transport unchanged.
+  - Test: test_admission_spill_1122.py (fake ssh: the gen host holds the bundle, the hub does not).
+  It is live once rt/current reaches 207d4965a0d. I will confirm on every host and post. Until then, keep --no-spill / --strict-host, or rsync the bundle the way COL-H10 did.
