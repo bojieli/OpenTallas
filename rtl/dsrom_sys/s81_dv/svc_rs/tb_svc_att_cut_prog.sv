@@ -215,10 +215,23 @@ module tb_svc_att_cut_prog;
     end
     // ---------------------------------------------------------------- DUT copies
     // the cut copies see the page-cache responses and the reset one edge later
-    reg rst_c = 0; reg [1:0] qrk_c = 0, qwd_c = 0, qrv_c = 0; reg [511:0] qr_data_c = 0; reg [33:0] qr_tag_c = 0; reg [7:0] qr_beat_c = 0;
+    // SVC-CUT-DEPTH bench (FABLE-UNC-S81-SVC 11-23): total cut depth KD per direction (-DCUT_KD=<n>, default 1 = CUT-BENCH-1):
+    // the cut copies see the page-cache responses and the reset KD edges later; c.qrq == f.qrq KD edges earlier, every other
+    // output == f 2 KD edges earlier.
+`ifdef CUT_KD
+    localparam integer KD = `CUT_KD;
+`else
+    localparam integer KD = 1;
+`endif
+    localparam integer PCW = 1 + 2 + 2 + 2 + 512 + 34 + 8;
+    reg [PCW-1:0] pc_s [0:KD-1];
+    initial for (int i = 0; i < KD; i++) pc_s[i] = 0;
     always @(posedge clk) begin
-        rst_c <= rst_n; qrk_c <= qrk; qwd_c <= qwd; qrv_c <= qrv; qr_data_c <= qr_data; qr_tag_c <= qr_tag; qr_beat_c <= qr_beat;
+        pc_s[0] <= {rst_n, qrk, qwd, qrv, qr_data, qr_tag, qr_beat};
+        for (int i = 1; i < KD; i++) pc_s[i] <= pc_s[i-1];
     end
+    wire rst_c; wire [1:0] qrk_c, qwd_c, qrv_c; wire [511:0] qr_data_c; wire [33:0] qr_tag_c; wire [7:0] qr_beat_c;
+    assign {rst_c, qrk_c, qwd_c, qrv_c, qr_data_c, qr_tag_c, qr_beat_c} = pc_s[KD-1];
 `define ATT_OUTS(P) \
         .l_v(P``_l_v), .l_d(P``_l_d), .pv_ov(P``_pv_ov), .pv_od(P``_pv_od), \
         .sm_st(P``_o[0]), .sm_kind(P``_o[4:1]), .sm_jid(P``_o[12:5]), .sm_rv(P``_o[13]), .sm_rp(P``_o[14]), .sm_rj(P``_o[17:15]), \
@@ -243,9 +256,9 @@ module tb_svc_att_cut_prog;
     `ATT_WIRES(m2)
     `ATT_WIRES(m3)
     dsdv_svc_att     #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1)) u_f (`ATT_PORTS_F(f));
-    dsdv_svc_att_cut #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1)) u_c (`ATT_PORTS_C(c));
-    dsdv_svc_att_cut #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .CUTMUT(2)) u_m2 (`ATT_PORTS_C(m2));
-    dsdv_svc_att_cut #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .CUTMUT(3)) u_m3 (`ATT_PORTS_C(m3));
+    dsdv_svc_att_cut #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .CUT_D(KD)) u_c (`ATT_PORTS_C(c));
+    dsdv_svc_att_cut #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .CUTMUT(2), .CUT_D(KD)) u_m2 (`ATT_PORTS_C(m2));
+    dsdv_svc_att_cut #(.H(H), .SRAM_MACRO(1), .PV_IDENTITY(1), .CUTMUT(3), .CUT_D(KD)) u_m3 (`ATT_PORTS_C(m3));
     // ---------------------------------------------------------------- lock-step check
     // lane groups: 0 qrq (+1), 1 scores l_v / l_d, 2 P.V pv_ov / pv_od, 3 SM row sm_rv / sm_rp / sm_rj / sm_rd,
     // 4 the other o lanes (sm_st / kind / jid, go, tjob, done, tagj, hcr, hack, fault), 5 fault_code + taps x
@@ -257,7 +270,9 @@ module tb_svc_att_cut_prog;
         grp[4] = (a[O_O+12:O_O] != d2[O_O+12:O_O]) || (a[O_O+42:O_O+18] != d2[O_O+42:O_O+18]);
         grp[5] = a[O_SMRD-1:0] != d2[O_SMRD-1:0];
     endfunction
-    reg [AW-1:0] f_d1 = 0, f_d2 = 0;
+    reg [AW-1:0] f_dl [0:2*KD-1];
+    initial for (int i = 0; i < 2*KD; i++) f_dl[i] = 0;
+    wire [AW-1:0] f_d1 = f_dl[KD-1], f_d2 = f_dl[2*KD-1];
     integer chk = 0, err_c = 0, err_m2 = 0, err_m3 = 0, first_c = -1, first_m2 = -1, first_m3 = -1;
     integer gc [0:5], g2 [0:5], g3 [0:5];
     integer n_l = 0, n_pv = 0, n_pvh = 0, n_smst = 0, n_smrv = 0, n_smr = 0, n_flt = 0, n_done = 0, n_goo = 0, n_q = 0, n_hcr = 0, n_hack = 0, first_flt = -1;
@@ -269,8 +284,8 @@ module tb_svc_att_cut_prog;
     always @(posedge clk) begin
         if (fdmp != 0) $fwrite(fdmp, "%0d %h %h %h %h %h %h %h %h %h %h\n", cyc, rst_n, q_v, q_d, hw_v, hw_d, qrk, qwd, qrv, {qr_tag, qr_beat}, qr_data);
         cyc <= cyc + 1;
-        f_d1 <= f_all; f_d2 <= f_d1;
-        if (cyc > 12) begin
+        f_dl[0] <= f_all; for (int i = 1; i < 2*KD; i++) f_dl[i] <= f_dl[i-1];
+        if (cyc > 12 + 2*KD) begin
             chk = chk + 1;
             if (gm_c != 0) begin
                 err_c = err_c + 1;
