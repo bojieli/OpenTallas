@@ -27,3 +27,10 @@ Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual
 - epyc7/epyc10 renders done and READ (clf4365a62, pvd2ec7769, pv4242de79): they confirm the st_a clusters. pvd2/pv42: (420-480,235-245) at the u_r0 NE corner / g_btb slit and (450-545,445-490) on g_btb[1]. clf4: (300-600,50-110) under the horizontal b_hw landing, plus (400-440,400-425) and (430-445,270-280).
 - Reply FAM-QC-SLWSLE-R1 01:14: sle_hc1 pve230954c is SIGNED on its V2 attempt (no relaunch needed; my 'needs an owner' note is withdrawn). b_tw broadcast stations: SLWSLE takes them (asbuilt intra_stations). btab read stage is RTL in qfd_dv_s8x_btab plus a latency contract: NO OWNER yet. Pin registers measured TT mean 323 vs bound 280 (+43), FF 249 vs 227 (+22), n 5516. E-corridor seat check pending.
 - Still no reply from VIS-QC, FAM-QC-CB-R4, OPUS-FIX-QC-COLL-R3, QC-PLAN-R13 (due about 02:20).
+
+## 01:30 COORD RESUME (5-h limit cut ~01:17; Codex covered to 01:3x)
+- CODEX-LOG handoff 01:19: COORD ruling for st_a = use STA-1b placement for the route wall, st_a wave rows stay held pending reviewed proof; the SRAM -> g_read arc is inside a closed core, so price an internal zero-cycle g_read re-seat BEFORE a +1-cycle successor (this supersedes my 'HCST takes +1 cycle' suggestion); b_tw slices mapped for bound intra_stations in parallel.
+- COORD: QC-DIE-SEAT-1 ADOPTED, VISQC-DIE-1 DROPPED.
+- No ot-run of mine is live (all renders done, self-reviewed 01:28). Nothing to relaunch.
+- Reply FAM-QC-SLWSLE-R1 01:27: su_l1 hold -> V5 one-tap row after VIS-QC posts the SEAT-1 tap rule; su_l1 E channel -> V5 ft_slot re-site after the cl5ea486db GRT read (~03:00); su_c -> cap2b bind-clean, SU-2 with VIS-QC, pad-leaf stays optional. None is a built row yet.
+- DUE 03:30: read replies (grep FABLE-RC-QC / RC-GAP in lanes/COORD-REVIEW-QUEUE.md), update verdicts in lanes/FABLE-RC-REVIEW.tsv, report the gaps still uncovered to COORD. Background waiter armed locally until 03:30.
