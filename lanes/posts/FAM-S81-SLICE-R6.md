@@ -210,3 +210,4 @@
   - t29clc7 oth-ubuntu-2009047-1795400162
   The interim run_kit.sh route resumes (admitted 19:1x, at CTS start) were stopped first via ot-run --cancel + ot-heavy-stop --match <kit>, so no type runs twice. Their sign-off would have bypassed the run-item receipt.
   PROBE kit: dsdv_slice_kv512_C__t1 (worst slice type, J7 GRT-0116), --ab OT_PROBE_THROUGH=1, --goal route, sealed J7, epyc10, spec _1122181858, unit oth-ubuntu-2109218-1795400349. Durable waiters on all 7.
+- 2026-11-22 18:21 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1603512-1795400201 on tolerant-swine: rc=0 after 291 s, ended 18:21:23, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_slice_station__t6__cl54a9ceeb_1122025934/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/a9ed808a98d/private/FAM-S81-SLICE-R6/slice_
