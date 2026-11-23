@@ -168,3 +168,12 @@ ON COMPOSED J9 (~10:30), SendMessage the plan path + sha to:
    - TAP-GRID-R5 aba2f9b4a22cfb556 (tap regen)
    - FABLE-RC-S81 a4aeac78edf747378 (re-review)
    Also post it on the hub.
+VIS-DIE SUMMARY (05:xx): all die rows PRE 0 vs J8. G0 on the grown plan is PENDING (first run timed out at 50 min; Codex base run crashed on a missing census_map.json sidecar, now staged; ~75 min each).
+   EDGESTRIP-1-TF replaces ES1: edgestrip_row.py 005d0a80844f --tapfix re-seats 8 halo clock taps (<=25 um). G0 schema catches these; PRE does not.
+   die_grow f52c38b543c3: die 32970.24 x 25980.48 (29.76 X headroom). t8 no longer grows (tap renumber); t75 takes 112.32. Refuses non-J8 widths.
+   svc +69.12/col uses the col6|col7 slab gap + the 302.4 svc seam gap; E station column untouched.
+   rc72 col_h9_r0 +43.2: NO die row (does not fit 60 instances); FAM-S81-COL-H9R0-R4 does a view pin-access fix instead.
+   rc66 SPARSE-TAP-1 (11 serdes types): form posted; TAP-GRID-R5 builds it.
+   rc67 HOP-GAPS: waits on PRECHECK-R2 HOP-GAPS.tsv.
+   rc68 slice_station trunks: VIS-DIE no-row verdict; needs FABLE-RC-S81 acceptance (FABLE-UNC-S81-DIE co-owns rc66-68).
+   NOTE: on epyc9, ot-run sees scratch3 as root; new lane outputs go to scratch2.
