@@ -247,3 +247,31 @@ def test_fixed_kmedians_keeps_fixed_centres():
     X, Y, W = (np.array([p[i] for p in pts]) for i in range(3))
     C = TS.fixed_kmedians(X, Y, W, [(10.0, 4.5)], [(15.0, 4.5)])
     assert len(C) == 1 and C[0][0] > 40      # the free centre moves away from the fixed one to the unserved side
+
+
+def test_span_rule_splits_far_flop_within_radius(monkeypatch):
+    """SPAN (TAP-GRID-R5 11-23, RC-GAP 3/3): col_h9_r2 clk_t13 form -- 183 flops beside the tap plus one far flop, all inside
+    the 300 um L1 radius and under the cap, but the sink box W + H = 305 > 300 (the kit OT_TAP_SPAN rule).  Without
+    --span-um the type is OK; with it a tap goes to the far flop and every span is <= 300."""
+    import numpy as np
+    tps = [("clk", 200.0, 200.0)]
+    sinks = _dense(61, 3, 150.0, 195.0, 10.0, 10.0) + [(330.0, 320.0, 1.0)]
+    P = _setup(monkeypatch, "grid+explicit", tps, sinks)
+    rep0, rows0 = TS.split_type(P, "t", 300.0, 50)
+    assert rep0["status"] == "OK" and not rows0
+    rep, rows = TS.split_type(P, "t", 300.0, 50, span_um=300.0)
+    assert rep["before"]["over_span"] == 1 and rep["before"]["max_span"] > 300
+    assert rep["status"] == "SPLIT" and rep["after"]["over_span"] == 0 and rep.get("span_adds", 0) >= 1, rep
+    allt = [(x, y) for _, x, y in tps] + [tuple(r["xy"]) for r in rows]
+    S_ = np.array(sinks)
+    idx, _ = TS.nearest(np.array([a for a, _ in allt]), np.array([b for _, b in allt]), S_[:, 0], S_[:, 1])
+    assert TS.spans(idx, S_[:, 0], S_[:, 1], len(allt)).max() <= 300.0
+    assert all(n > 0 for n, _ in taps.tap_loads(allt, sinks))
+
+
+def test_spans_and_farthest_point_seeds():
+    import numpy as np
+    X, Y, W = np.array([0.0, 10.0, 100.0]), np.array([0.0, 5.0, 50.0]), np.ones(3)
+    sp = TS.spans(np.array([0, 0, 1]), X, Y, 3)
+    assert list(sp) == [15.0, 0.0, 0.0]
+    assert TS.fp_seeds(X, Y, W, 2)[1] == (100.0, 50.0)
