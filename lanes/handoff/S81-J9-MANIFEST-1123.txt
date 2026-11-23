@@ -162,3 +162,9 @@ FINAL VIS-DIE TOOLS (epyc10 vis-die-s81/tmp/), both PRE PASS 0 findings:
      Gates: PRE + landing_remap on LANDREMAP types + tap_grid check on all leaf types. Sha ETA ~06:00. Strict bind on j9Z_f follows.
    3h ADV RESOLVED: H10-R4's 3 rows + col_ygrow (plan 580538fbf67f) PRE 0 findings and 0 port-window-pair advisories, so the 20 ADV clear.
      REACH v2 checked against the corrected adv_hop_gap TSV (23 SOFT-SITE / 12 SOFT-GAP / 40 HOP match). H10-R4 keeps its own r0_p4 relay sites, because the tool sites fall inside ROM u_e2.u_e (hub e6bd972f63f).
+ON COMPOSED J9 (~10:30), SendMessage the plan path + sha to:
+   - HOP-GAP lane a47df1e4283c40bd5 (HOP-GAP, OFF-GRID)
+   - PRECHECK-R2 af50832f374778f64 (ADV-TREE-DRIFT, ADV-LAND-CAP)
+   - TAP-GRID-R5 aba2f9b4a22cfb556 (tap regen)
+   - FABLE-RC-S81 a4aeac78edf747378 (re-review)
+   Also post it on the hub.
