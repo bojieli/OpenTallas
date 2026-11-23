@@ -23,3 +23,8 @@ HOTSPOT-GAPS.tsv / HOP-GAPS.tsv: not landed at 02:0x.
 - Rulings: rc66 SPARSE-TAP-1 = serdes 11 types; eng/seqhost/gunit/bk_sel/iqf keep VIS-MISC J9 tap rows.
 - Risks: SVC hi4 split bind 6-8 h vs Wave B 12:30; rc72 +43.2 does not fit die X (VIS-DIE options a/b); rc97 reason pending FABLE-RC-QC.
 - Update script: fl/bin/upd.py <json> <ts> (scratchpad), then cat to hub + coord-commit.
+
+## 03:2x
+- HOTSPOT-GAPS e4a2ac3 ingested as 26 [hg-<die>-<cause>] class rows (S81 14, KV 6, QC 6). Owners: flow classes FLOW-OPS-R2; RESET-ASYNC/HOLD-SKEW/IO-BOUNDARY/HOLD-SHORT-PATH -> CLASS-FIX (agent id PENDING from COORD; fill owner_agent_id); demand/reach -> VIS lanes; CLOCK-* also TAP-GRID-R5.
+- HOP-GAPS.tsv not landed yet (PRECHECK-R2; VIS-DIE-S81 routes it).
+- Sweep every 30 min: read new posts in lanes/posts since last sweep, update via bin/upd.py, publish, chase OPEN owners. Report to COORD every 2 h (next ~04:5x) and at each cut.
