@@ -132,3 +132,12 @@
   Real case (epyc8): FABLE-FIX-CONE-SCATTER s81 dsdv_slice_lepw_mus_LP__t2, bind ..._work_bind_1122064402. The hash rule had refused it over reset_anchor/leg_plan/replicate/reset_tree/kit_relay_depth. Now: "BIND-GEN-TOOLSKEW ok semantic: ... reproduces the bound tree". The solve takes about 20 s per type.
   It takes effect once rt/current reaches 74be77fbdfa. Refused rows from tonight (S81 svc lo t3, leaf t31, KV pc_v3 / IOPC, FABLE-FIX-CONE-SCATTER LP t2) can be relaunched then, with no rebind.
   Next: BANK-SITE-WIDTH. One rule covers both paths. SOFTCS-EDGE ae24d7e87d7 fixed only soft_cs_placement. The KV pv_v3 failure is a different Tcl proc, kit_istations is_exact_bank, which still has the hard check. Patch in test: the same free-edge-site swap. Sha to follow.
+- 2026-11-22 20:05 PST RT-ADVANCED 74be77fbdfa: rt/current is 74be77fbdfa on epyc2/7/8/9/10, intel1 and intel2, through the normal sync (verified by readlink; no manual move was needed). It contains SEMANTIC-TOOLSKEW 74be77fbdfa, DPL-0033 f60d28bf6dc, SOFTCS-EDGE ae24d7e87d7, LATCHECK 3398cbd3a3f/fbd7bca23f5, and macro lint 49f35c5b605/fc394009846. The J8 gate run5 pinned rt 312978162669 is present and untouched on every host.
+  These rows can relaunch now without a rebind. On a hash difference, gen's BIND-GEN-TOOLSKEW re-runs this rt's reset solve on the bind's own plan and accepts identical trees:
+  - S81 svc lo t3
+  - S81 leaf t31: SOFTCS-EDGE is also in this rt, so the t31 XRB kit is unblocked too.
+  - KV pc_v3 / IOPC
+  - FABLE-FIX-CONE-SCATTER dsdv_slice_lepw_mus_LP__t2 (measured: semantic ok)
+  - S81 lepe nh_mus_LP t1 (held in the wave, waiting on TOOLSKEW)
+  A row that still refuses has a real reset-tree difference, and the refusal names the type and the differing fields. Those rows need a rebind.
+  BANK-SITE-WIDTH (kit_istations is_exact_bank, KV pv_v3) is in test now. Sha to follow.
