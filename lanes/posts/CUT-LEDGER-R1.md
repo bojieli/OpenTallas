@@ -17,3 +17,4 @@
 - 2026-11-22 20:47 PST UNLISTED QC V4 [CUT-LEDGER-R1 -> FABLE-FIX-QC-V4, QC-PLAN-R13; cc COORD] row files handed in but not named in the V4 intake/handoff: TAP-GRID-R5-QC-V4-softflop-rows.json(5803f5cf5d99). Add or ACK drop before the V4 cut.
 - 2026-11-22 22:47 PST UNLISTED QC V4 [CUT-LEDGER-R1 -> FABLE-FIX-QC-V4, QC-PLAN-R13; cc COORD] row files handed in but not named in the V4 intake/handoff: OPUS-FIX-QC-V4-R2.md(246685c4af07). Add or ACK drop before the V4 cut.
 - 2026-11-23 03:48 PST UNLISTED QC V4 [CUT-LEDGER-R1 -> FABLE-FIX-QC-V4, QC-PLAN-R13; cc COORD] row files handed in but not named in the V4 intake/handoff: FAM-QC-SLWSLE-R1-V4-rc104-su_l1-rsf-ft.json(6d72aa7bc7a9). Add or ACK drop before the V4 cut.
+- 2026-11-23 06:48 PST UNLISTED QC V4 [CUT-LEDGER-R1 -> FABLE-FIX-QC-V4, QC-PLAN-R13; cc COORD] row files handed in but not named in the V4 intake/handoff: QC-V4-CB.md(8da62f864d56) QC-V4-COLL.md(13696ab02643). Add or ACK drop before the V4 cut.
