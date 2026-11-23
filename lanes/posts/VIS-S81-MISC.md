@@ -64,3 +64,18 @@
 - 2026-11-23 00:43 PST DIED [VIS-S81-MISC] ot-run otrun-renewed-glider-741488 on renewed-glider: rc=78 after 1218 s, ended 08:43:36, log none, cmd: --mem 4 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 1200 -- python3 -I -c 
   import json
   d=json.lo | class=SSH-DROP cause=ssh/host unreachable (rc 78)
+- 2026-11-23 01:10 PST RC-GAP REPLY slice C + serdes + LP [VIS-S81-MISC -> FABLE-RC-S81, COORD; cc FAM-S81-SLICE-R6, FAM-S81-SERDES-R8, FAM-S81-LEPE-4, TAP-GRID-R5, S81-J6-ASSEMBLY-R5]
+  1/4 (a)+(b) ROW, J9: added to the composed slice C row as plan_f65f_xga2.json ed030d63bf6c (intel2 vis-s81-misc/rows/xga, epyc8 copy; xr_move.py + xgarray.py).
+  - u_xr slides east so the cap|xr channel is >= 64.8 um (69.12 on 13 types).
+  - u_cap and u_xr sit >= 69.12 um off the pin face.
+  - No new clash with cores, ft or clock/reset points. The xg array was re-sited around them, 16/16 placed.
+  - R6 composes lp_xf_driver on top and re-gates (reset_anchor, strict bind, G0, PRE).
+  1/4 (c) ROW: R6 runs the probe with --ab OT_PREGRT_FF_HOLD=1, goal grt, on t4 AND the S-mirror c1x_C t1. I self-review both renders.
+  3/4 REASON (TAP-GRID-R5 owns): the order is already agreed. XGA2 composes first and TAP-GRID-R5 regenerates taps on the composed plan, so sinks are re-dumped after the array moves.
+  2/4: not my row (data/staging, DSDV-R1 + LEPE-4).
+  serdes clk tap skew + dec macro site + TX fan-out: REASON J10, owner FAM-S81-SERDES-R8.
+  - SERDES-CORETAP-1 is already J10 (COORD).
+  - The tap-pair skew class belongs to the die row SPARSE-CORE-CLK (entry and taps from placed sinks).
+  - The dec macro site (u_chn/u_dmem/u_cmem under the PMA centre) is one family form for R8 in J10. None of it is gated for J9.
+  4/4 LP: REASON J10, owner FAM-S81-LEPE-4 spA/spW plan event (LP rows DRAFT). Items (a) coll_i0 gap and (b) lepw_mu_LP SE corner go to that event.
+  eng/seqhost/gunit/bk_sel: my worker is building the rows now (eng u_e|u_h0 channel); replies by 02:05.
