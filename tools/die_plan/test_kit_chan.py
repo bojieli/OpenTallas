@@ -136,13 +136,13 @@ def test_kit_channel_start_core_keeps_starts(tmp_path):
                                              "14.0000 3 80.0000 15.0000}") for r in rows)
 
 
-@pytest.mark.parametrize("mut,msg", [("no_um", "channel_um"), ("non_core", "leg_order channel on non-core")])
-def test_kit_channel_must_fail(tmp_path, mut, msg):
-    p = _chan_plan(um=None) if mut == "no_um" else F.plan()
-    if mut == "non_core":
+@pytest.mark.parametrize("mut", ["core", "ordinary"])
+def test_kit_channel_must_fail_without_channel_um(tmp_path, mut):
+    p = _chan_plan(um=None) if mut == "core" else F.plan()
+    if mut == "ordinary":
         p["partition_types"]["t"]["internal_stations"].append(
             dict(conn="bus:x", bit_route="per_bit", leaf_um=[5.0, 5.0], regs_um=[[1.0, 1.0]], leg_order="channel",
-                 channel_um=[1.0, 2.0], from_um=[0.0, 0.0], to_um=[5.0, 5.0]))
+                 from_um=[0.0, 0.0], to_um=[5.0, 5.0]))
     pf = tmp_path / "plan.json"
     pf.write_text(json.dumps(p))
     kd = tmp_path / "kit"
@@ -152,7 +152,7 @@ def test_kit_channel_must_fail(tmp_path, mut, msg):
     (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(bf)])))
     r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd), "--apply"],
                        capture_output=True, text=True)
-    assert r.returncode != 0 and msg in (r.stderr + r.stdout), r.stderr[-300:]
+    assert r.returncode != 0 and "channel_um" in (r.stderr + r.stdout), r.stderr[-300:]
     assert bf.read_text() == F.BOUND
 
 
