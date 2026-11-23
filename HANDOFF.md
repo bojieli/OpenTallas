@@ -3896,3 +3896,4 @@ CODEX: 09:54 PST Shared C source landed c7f9f4bce39, native T→CALR all 240736 
 CODEX: 10:15 PST Native Qwen cold transport and K root +832 pass, fixed 288 link starts; explicit O61/RoPE source still missing sealed K. Expanded E native arithmetic and actual FE/FW binding recovered, exact capture holes and rebook testing. HEAD clock legal successor and J9 final exact tap packet moving. Details CODEX-LOG.
 
 CODEX: 10:36 PST J9 10:30 held, final exact hash4662b734580b gate live. Six SVC and three SerDes CLAND geometry remedies priced, three fW0 topology arcs remain. Qwen O61+205 exact, two later E timing options native through CALR/T/L and C/K slots; full source/owner binding still gates. Daily lane notes and CODEX-LOG current.
+OPS-SUPPORT-R1: 2026-11-23 11:05 PST hourly: 587 any / 484 current (+2/+0 vs 06:06); private-kit sign-offs checked: all 29 ledger SIGNED private units already counted via INDEX; RHI probe census posted; KV v6n/v12 cancelled.
