@@ -124,6 +124,41 @@ OT_AC_TCL
   else echo "OT_GRT_ALLOW_CONG_HOOK inactive: no PRE GLOBAL_ROUTE step in $S"; fi
 fi
 # OT_GRT_ALLOW_CONG_HOOK end
+# GRT-DPL-DIAMOND-1122 (COORD 23:0x, FAM-QC-SLWSLE-R1 DPL-0033 class: slw/sle_st_a_v2 x3, QC V4): ORFS global_route.tcl
+# erases DETAIL_PLACEMENT_ARGS too, so its post-repair 'log_cmd detailed_placement' calls (after repair_design / repair_timing)
+# ran the negotiation legalizer even on a diamond opt-in kit; it stalled 665-1375 s (DPL-0702 / DPL-0701 6..171 left) on repair
+# buffer overlaps in ctl bus chains and check_placement failed at 22 % utilization.  The disposable global_route.tcl copy
+# captures the args before the erase (::ot_grt_dpl_args); a bare detailed_placement then uses the kit args when they select
+# -use_diamond_legalizer, and any non-diamond pass that leaves the placement illegal (check_placement fails) gets ONE diamond
+# pass (the kit's diamond args, else -use_diamond_legalizer) before the stage's own checks.  A legal result is untouched; no gate
+# or margin changes.  'export OT_GRT_DPL_ARGS = 0' in config.mk opts out.
+if [ -f "$S" ] && ! grep -qF "OT_GRT_DPL_ARGS" "$S" && ! grep -Eq '^export OT_GRT_DPL_ARGS[[:space:]]*=[[:space:]]*0[[:space:]]*$' "$W/config.mk" 2>/dev/null; then
+  if grep -q '^ *erase_non_stage_variables grt' "$S"; then
+    python3 - "$S" <<'OT_GRT_DPL_PY'
+import re, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+line = ('set ::ot_grt_dpl_args [expr {[info exists ::env(DETAIL_PLACEMENT_ARGS)] ? [string trim $::env(DETAIL_PLACEMENT_ARGS)] : ""}]; '
+        'if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} { '
+        'rename ::detailed_placement ::ot_grt_dpl_orig; '
+        'proc ::detailed_placement {args} { '
+        'set kd [expr {[string first -use_diamond_legalizer $::ot_grt_dpl_args] >= 0}]; '
+        'if {![llength $args] && $kd} { set args $::ot_grt_dpl_args }; '
+        'set rc [catch {uplevel 1 [list ::ot_grt_dpl_orig {*}$args]} res opts]; '
+        'if {[lsearch -exact $args -use_diamond_legalizer] < 0 && [catch {check_placement}]} { '
+        'set da [expr {$kd ? $::ot_grt_dpl_args : "-use_diamond_legalizer"}]; '
+        'puts "OT_GRT_DPL_ARGS residual: GRT detailed_placement left an illegal placement (rc $rc), one diamond pass: $da"; '
+        'return [uplevel 1 [list ::ot_grt_dpl_orig {*}$da]] }; '
+        'return -options $opts $res }; '
+        'puts "OT_GRT_DPL_ARGS: GRT detailed_placement kit args [expr {[string first -use_diamond_legalizer $::ot_grt_dpl_args] >= 0 ? $::ot_grt_dpl_args : {(negotiation; diamond pass on an illegal result)}}]" } ;# OT_GRT_DPL_ARGS')
+s = p.read_text()
+s, n = re.subn(r'(?m)^( *)(erase_non_stage_variables grt)', lambda m: m.group(1) + line + '\n' + m.group(1) + m.group(2), s, count=1)
+assert n == 1
+p.write_text(s)
+OT_GRT_DPL_PY
+    [ "$?" = 0 ] || exit 2
+  else echo "OT_GRT_DPL_ARGS inactive: no erase_non_stage_variables grt in $S"; fi
+fi
 # KW-FIX-35-F2 11-08 (FLOW class F follow-up, CTS DPL-0033): CTS-stage legalization uses the kit's own 3_5 legalizer.
 # ORFS erases DETAIL_PLACEMENT_ARGS outside the place stage, so stock cts.tcl (and clk_leaf_repeat) call a bare
 # detailed_placement = the negotiation legalizer, which stalled with residual overlaps where 3_5's diamond pass was 100 %
