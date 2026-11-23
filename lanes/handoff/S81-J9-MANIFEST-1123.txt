@@ -108,3 +108,7 @@ J9 BIND RT: rt/current = 3b25e3b42d4d (includes POROUS-FRESH-1123 3b25e3b42d4 + 
    3g UPDATE: col_ygrow now outputs 055f9c7d6dc6, which includes the x_i0<->ft0 swap on fW1/fE1_p1_b0 (supersedes 6d0aa023037b; to be confirmed with VIS-DIE).
      Competing form COL-H10R0P1-ECORR: x_i0 E window -> [519.0, 758.964]; ops epyc10 vis-s81-col/tmp/ops_ecorr_on_ygrow.json 249d439b7dce (12 ops, 6 types); die dy -220.584 (4 types) / -401.256 (2 swapped types).
      Probe of both forms: epyc8 treeJ7V3 plan 3c5ea4d75be0. Winner named by 09:30 and folded into col_ygrow. Default if no word: the swap.
+   3g CURRENT (VIS-DIE): col_ygrow.py 9c728ba3526d -> plan_col_ygrow.json 055f9c7d6dc6, ops ygrow_ops.json e15dad6d8d74. 6d0aa023037b is SUPERSEDED.
+     Includes the x_i0<->ft0 swap on fW1/fE1_p1_b0 plus the ft0_o/ft1_o out-window swap on slice_station__t37 (s_0S_x04) and __t27 (s_7S_x16). The composer old-value-checks these against any other station row.
+     PRE on 055f is running. Render ygrow.png on epyc9 vis-die-s81/out, epyc10 vis-die-s81/tmp, intel2 vis-die-s81/out.
+     If ECORR wins: VIS-DIE adds a `--form ecorr` override (no swap, COL's 12 ops after resnap, windows re-derived) and sends new shas plus PRE.
