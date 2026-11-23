@@ -59,3 +59,9 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 - ep2 + wp2 DIED 03:49 at kit_rtl "prepared plan changed" (load-cap wait 28 min + in-place plan edits). R9 relaunches ep3 / wp3 from the frozen tree, asks FLOW-OPS-R2 for crit_dirs. Posts 43edbcda (died), 9e77a4af (x11).
 - Waiter blv2456if on runitem_r9_ep3.log (CTS / stage fail / unit stop).
 ## NEXT: ep3 CTS post-hook -> rc140 slack vs -179.76 + E hold; ep3 GRT -> census rc136-139; wp3 -> hold endpoints vs 17,932 + the 8 wide-window W ports; REPORT-2. If probes miss 11:00 -> REASONED to FABLE-RC-KVHEAD.
+
+## 10:5x RESUMED after the 06:4x-10:40 limit. HEAD-R18 (Opus) replaced R9 + this lane 05:57; gate now 13:00; COORD: hand everything to HEAD-R18 by 12:00. DONE in post PACKET (see lanes/posts).
+- ep3 (r18z2, has PUSHDUP + ETAPREKEY) CTS post-hook, epyc7 kit hd_lep0N_1123035944: rc140 path wn[1] -> rg3 txi v_o GONE (0 v_o endpoints in the report, 252 per-lane push cells in netlist; was -179.76). Residual same region: wn[5] -> g_frame_local.g_slice[132].u_stamp -> rg3 txi d_o[508] -112.90 (4 ends, data 910 ps: 8-bit wn!=0 OR tree + stamp + OAI mux on x1 cells, slews 108-195). Proposed row LEP-WOPENREG-1 (registered wopen flag, 0 cycles, needs induction equiv) NOT built.
+- ep3 worst setup -1073 = reset INV 65 loads (HEAD-R18/Codex fixpoint row). E hold tns -151.8k (was -225.7k): lepk port-in -74, pair c0i -> u_rg0.u_pair -78.6 (capture 24 ps = core lead on E, cap10 has it).
+- My rows carried: RTL 6a04159bb196 in head-r18 trees r18r + r18e_recovery; E table 185 rows (t179 109.1) in plans 157a6b19 and 7085500b (cap10).
+- Open for HEAD-R18: ep3 GRT census (4_2_tapbal_grt iter 7/30 at 10:55), 8 wide-window W ports, LEP-WOPENREG-1.
