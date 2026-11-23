@@ -2131,6 +2131,7 @@ def gate_trial_grt(case: Path, results_dir: Path, source: Path, image: str,
                "-w", "/OpenROAD-flow-scripts/flow", image, "bash", "-lc",
                "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
                "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && "
+               "python3 /src/tools/orfs_dpl_diamond.py /OpenROAD-flow-scripts/flow/scripts /work/config.mk && "
                "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
                "GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 " + goal]
         with log.open("w") as stream:
@@ -2751,6 +2752,7 @@ def run_pnr(
             "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; "
             "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
             "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && "
+            "python3 /src/tools/orfs_dpl_diamond.py /OpenROAD-flow-scripts/flow/scripts /work/config.mk && "
             "python3 /src/tools/orfs_allcorner_spef.py "
             "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && "
             "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base "
