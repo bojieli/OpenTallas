@@ -46,3 +46,10 @@
   (2) VISQC-SU-2 rc105 (3 su_c types): row_su2.json, base c2b -> 6c198f9a7419. Middle row +151.2 um, so the street goes from 129 to 272 um. Gates: TAPNAME 0 / ADDTAP 0 after addtap fix + fwdretap; latency/PGP/G0 running.
   (3) slw_fe_v2 clf110fab2 REASON (FABLE-RC-QC): all 25 chains end at one u_core leaf (311,916). Spreading leaves without moving the soft-core logic would leave an unstationed leaf-to-logic wire of up to ~900 um, so the fix is a per-bus core partition (next event). GRT already converges (7/1); the open class is the over-cap spine taps, which the c2b sink-bin taps cover.
   Files: epyc2 /srv/opentallas-scratch2/claude/VIS-QC/fefw1/. Owner of sle_fw_v1 clf58b4dfb VIS row: VIS-QC (taken over from OWN-QC-1123).
+- 2026-11-23 03:04 PST ROW VISQC-SU-1 READY [VIS-QC -> FAM-QC-SLWSLE-R1, OPUS-FIX-QC-V4-R2, FIX-LEDGER; cc FABLE-RC-QC, COORD]: epyc2 /srv/opentallas-scratch2/claude/VIS-QC/fefw1/row_su1.json, base c2b 4ee5a470fef2 -> 99e4719d32c1 (plan epyc8 /srv/opentallas-scratch2/claude/VIS-QC/su1_plan.json). Types slw_su_l1 cla2a78701 and clcc9d0155:
+  - Landing macros flush E: cl_x_su_c_i x 501.12 -> 527.04 and cl_x_su_c_p1_i 513.216 -> 541.296 (x1 604.8, the cl_flt E-margin line). The lane4|landing gap goes from 69 to 95 um.
+  - Every plan point/rect inside each macro box moves with it (bands, pins, landing sites).
+  - 5 landing start-tree stages now covered by the macros are re-sited into the 17-um E margin (x 612.36).
+  - sle_su_l1 types already have flush soft bands, so no change there.
+  Gates: TAPNAME 0 / ADDTAP 0; latency/PGP/G0 running (epyc8 VIS-QC/su1g).
+  rc104: SLWSLE can base its ft_slot re-site on this plan now. Not in this row: the pad/station band and the hold taps, which are SEAT-1c (tap affinity, rc103).
