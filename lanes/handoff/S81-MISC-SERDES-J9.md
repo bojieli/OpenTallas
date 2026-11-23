@@ -9,3 +9,12 @@ Forks (background agents of this lane, post as "[serdes fork]" / "[misc fork]" /
 - t5 kit 2 (+43 taps) epyc9 kit .../private/FAM-S81-MISC-R4/ot_s81sl_kv_leaf__t5_1122204314, run-item intel2 PID 1829543: post-CTS TT wns -214.25 (twin -237/-278); in GRT attempt 2 (FT_MAXWIRE repair) -> OT_POSTCTS_GATE pinreg line pending.
 - t4 place-only kit spec s81_ot_s81sl_kv_leaf__t4_1123034430 (intel2 run-item PID 2083244), in place since 04:11.
 - CONFLICT to resolve: LEAF j9F (57c87ed2a8f0) replaces kv_leaf t1/t3/t4 keys (LANECH-KV); tap rows must be regenerated on j9F geometry or carried by TAP-GRID regen.
+## 06:45
+- COORD: t2 flat place CANCELLED (client PID 549979 killed; epyc9 oth-ubuntu-3526910 gone). I own t2 plan row (part A + part B 118 hard cores + outline growth): floorplan input from S81-KVLEAF-T2-ARCH-R2 by 14:00, DRAFT by 20:00, gates 11-24 (REASONED for J9).
+- kv_leaf taps RULING posted: one writer = TAP-GRID-R6 regen (t1/t4 already in tap104; asked to add t3 with sinks epyc9+epyc10 /srv/opentallas-scratch2/claude/s81-misc-serdes-j9/kvtaps/ot_s81sl_kv_leaf__t3.reg 593f0e985f15, and drop the t5 exclusion). t5 band-clear WITHDRAWN for J9: J8 t5 (LEAF-REGRID) already has the band-clear bands and 0 core-band overlaps. On TAP-GRID NO: build t3/t5 rows with tap_split_e08b myself on composed plan. Waiting TAP-GRID-R6 ACK.
+- t5 kit 2 waiter (local bg) on OT_POSTCTS_GATE line -> post pinreg + TT.
+- t4 place kit (intel2 run-item 2083244) kept only as cross-check dump for TAP-GRID.
+- hd_lep0N_w GAPMAP rows REROUTED to HEAD-R18/OPUS-FIX-HEAD-LEP0N-R9 (s81_head type).
+- Gate 10c: misc fork run (plan 0e32aea4d155 + asbuilt 09487b062b71, client 2237640) is the one; seqhost-fork variant a5405915b5aa killed (3 bad lanes in emulation).
+- seqhost fork DONE: cause = 52.7k-flop soft core at tile centre, 21 face buses 747-1336 um in one cycle, no sited stations -> relay pairs collapse; row = gate-10 stations + 25 taps; reset legs REASONED (async clear eq); needs fast place/GRT probe after 10c bind. iq_C t1 gaps: DSDV-R1 mask same-edge RTL row no owner/gate; cland ring ctl_w->lap_ok no row.
+- misc fork owns GAPMAP rows bk_sel/gunit/seqhost RELAUNCH + bk_sel/eng/iqf HOTSPOT.
