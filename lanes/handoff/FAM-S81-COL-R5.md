@@ -31,3 +31,10 @@ Scope: col_h9_r1 and col_h9_r2, plus the shared J7 col rows. h9_r0 = FAM-S81-COL
   READOUT: Lef58EolKeepOut count in 5_route_drc.rpt vs tc_e8 at 1430, then GRT TT from the final 5_1_grt.odb.
 - Finding: tc_e8 and rb_rest used the porous rewrites of the J8 base LEFs (POROUS-DEFAULT-s81.tsv), so the EOL markers trace to the porous splice. H10-R4's vprobe5 control is that same porous hw LEF.
 - J9: 485 residual reset hops, ETA 11-23 10:00 PST.
+
+## 11-22 19:5x PST update (FAM-S81-COL-R5)
+- tc8s2 (solid J8 views) FAILED GRT-0116: overflow 2831 vs 1924 porous. The EOL fix belongs in the porous LEFs 9924dfc8290c / 659819b4718b / 0187b355ac71. Asked H10-R4 (hub 6d878c00f3a); no reply yet. When the fix exists: one sealed private col_h9_r1 kit with --goal route, plus a twin with --ab OT_PROBE_THROUGH=1 (rt >= 5fb3e1e7822). rb8s2 was stopped.
+- J9 COL-RST-TAPSLIDE: epyc10 fam-s81-col-r5/j9/ (row, plan_j9_tapslide.json be87d01d774c on J8 f65f62779bef). PRE PASS 0 findings; reset hops 485 -> 437.
+  - Strict bind: waiter intel2 pid 522540 (fam-s81-col-r5/wait_j8_then_bind.sh, log wait_j8_then_bind.log) launches rst/bind_j9.sh once the assembly lane posts J8 GATE GREEN. Then read j9/ot_build.log and post.
+  - Builders: rst/slide_probe.py -> rst/slide_j8.json; rst/mkslide.py.
+- Residue of 437 hops: proposal posted (05703bff2bb) to close it by routed recovery measurement. tc_e8 GRT has 0 failing reset endpoints; the worst reset recovery slack is +249 ps.
