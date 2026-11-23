@@ -5951,7 +5951,7 @@
    "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j8_1117_work/physical/die_plan/s81/plan_of_record/native_bind/j8_cut_out",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j8_1117_work_bind_1123095650",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j8_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
     "note": "J8 strict-gated bind /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j8_1117_work/physical/die_plan/s81/plan_of_record/native_bind/j8_cut_out (gate epyc10:/srv/opentallas-scratch2/claude/s81-j6-r5/j8_cut_intake/gate). Rollback J7 18a2688b741."
    },
@@ -38200,6 +38200,7 @@
     }
    ],
    "bind_copy_of_record": [
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j8_1117_work_postbind_1123072950",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work_postbind_1122042101",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j5_1117_work_postbind_1120135739",
     "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8i_1117_work_postbind_1120021437"
