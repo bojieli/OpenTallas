@@ -80,3 +80,12 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - ot-delete of l1b/l2b/l1a/l0x/l0y/l2 _bound running on epyc8 (disk 89 -> 135 GB free and rising).
 - VISQC-FEFW-1 (sle_fw spine stacking, from OWN-QC-1123): ruled V4; asked FIX-LEDGER to add the row and VIS-QC for row JSON by 07:30.
 - 02:4x: c2b TAPNAME 0/0, chain in bind. STAGED for c3: rows/fefw1.json (VISQC-FEFW-1, base c2b 4ee5a470fef2 -> ec5259b742df, 6 fe/fw types, internal_stations leg_order channel; VIS-QC gating it on epyc8 VIS-QC/fefw1g). VIS-QC also builds rc105 VISQC-SU-2 (unless SLWSLE has it) + slw_fe_v2 clf110fab2 leaf-spread by 07:30.
+
+## 03:1x PST
+- c3 (EARLY gate of staged rows) = c2b + VISQC-FEFW-1 (6 types) + COLL-R3 pkg13 leaves + FIX-SYNC r1/r2 (cbn_q11 cl5cc92dfe tap 89->90; cbx_q10 x3 y_o21 regs) + reprice (0 lanes) -> pre 3b5d2af7f2b0, TAPNAME 0/0, chain c3 running (c3.log). Script c3.sh TAG composes c2b + every rows/*.json with base_sha 4ee5a470fef2 (wholesale types) + coll13 edits + r1/r2.
+- c4 = FINAL at 08:00: bash c3.sh c4 after renaming staged rows: rows/su2.json.staged -> su2.json (VISQC-SU-2: sle_su_c + slw_su_c x2, middle row +151.2 um, street y276-549) + SLWSLE/HCST/TAP-GRID rows (must be base c2b; else merge3).
+- 13 gate findings (FIX-SYNC pgp on l1r): 7 SCHEMA-UNKNOWN-KEY = old c9b8 schema in l1r_bound/tree vs live V3 keys -> REASONED infra (rerun pgp on a current-rt tree). 6 coll_core FIXEDCYC (fault_io_fault, crec_tx_s0/1/2, fltc, fltvc): reprice touched 0; read c3/pgp.log; if present, fix the latency table rows or reason (LATCHECK 1921/1921 as-bound passes).
+- slw_fe_v2 clf110fab2: no leaf-spread (VIS-QC reason: 25 chains end at one u_core leaf; needs core partition per bus = next event; GRT ovf 7/1; spine taps covered by c2b sink-bin taps) -> REASONED, to FABLE-RC-QC.
+- DPL-0033 (ledger x5, 4 st_a kits): fixed on main f60d28bf6dc; V4 st_a kits must run flow from rt/current (flow scripts refresh from rt/current per stage) and record 0 DPL-0033.
+- rc97: FABLE-RC-QC NOT accepted (-49 ps); FIX-LEDGER asked COORD to rule; STA-1b measure ~08:00 (HCST-R3) is the only V4 close.
+- ot-delete done for l1a/l1b/l2b/l0x (l0y/l2 pending); epyc8 471 GB free.
