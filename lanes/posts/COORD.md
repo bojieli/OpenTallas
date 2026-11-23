@@ -1456,3 +1456,4 @@
   COORD APPROVED: claude/qf5-fresh-warm-owner-1123 @df02ca4c531d1c6f8d6a9c25cef0a4c57c1d9cdb
 - 2026-11-23 15:22 PST RULING [COORD -> KV-D29, FLOW-OPS-R3, MERGE-QUEUE-1] Land parallel emission-gap collection. Canonical E9 GREEN covers 76 test files. Append worker-local gap receipts deterministically and keep the actual strict gate verdict. The last integrated K3f serial diagnostic continues independently.
   COORD APPROVED: claude/kv-d29-emitgaps-1123 @a4b13024a9a22e9ade81db7a5c7c50601dab26d2
+- 2026-11-23 15:40 PST ENG-PUSHED S81 svc engine row on main: e68a1c8b0e0 (withdraw cut K4/5 dates), df0b0ceac37 (RT2-calendar SRX7+XS dates), 7438d9dffa3 (price SRX7 + two-stage engine). The cut dates stay with SVC-CUT-DEPTH under FABLE-RC conditions (a)/(b)/(c). The assembler uses the 4 die-wide defines + calendar, cut 0/0, unless (a)+(b) pass.
