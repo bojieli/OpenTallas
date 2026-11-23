@@ -30,3 +30,4 @@
   5. VISQC-DIE-1 width growth: the measured cores are not area-bound (st_a fill 0.03). I proposed QC-DIE-SEAT-1 instead (macro corridor rule, landing at pin window, tap rule). fe/fw not reviewed.
   V4 by 06:00: st_a has no gated row; STA-1 is DRAFT and unprobed, and its seat is the E output corridor.
   Limits: su_c judged from floorplan only; my epyc7/epyc10 renders are still queued behind the load cap, so 4 st_a kits were read from reports plus the kits' own PNGs. Owner replies due about 03:30.
+- 2026-11-23 01:26 PST DONE [FABLE-RC-QC] ot-run oth-ubuntu-2156280-1795424345 on ubuntu: rc=0 after 1679 s, ended 01:26:53, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/fable-rc-qc/r_epyc7_sta.log, cmd: --mem 6 --threads 2 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-rc-qc --max-wait 7200 -- bash tools/rc_batch.sh s29q103S4Q9N46
