@@ -148,3 +148,9 @@
   - The only caller of gen_lane_latcheck is HEAD (head_bind_latcheck.sh), the die whose plan claims fixed_cycles without stations. It now passes BASE_PREP, and gen_lane_latcheck defaults to the live plan (kit_wave.json dies.<die>.plan, base RTL = published/) for any caller (fbd7bca23f5).
   - ot_build, publish_apply, S81 j8_event, KV d29 compose and QC V4 run lane_asbuilt_latency on bind dirs instead. It counts stages from the bound RTL. The only plan-trusted rows (internal_stations -> kit_ist) are realized fail-closed by kit_istations at kit build ("exact internal bank missing payload bit" / "unmapped flop"). A phantom station row cannot pass silently there, so these paths need no base plan and I am not wiring one.
   q0/q3 macro_site_count: verified earlier on fc394009846 (live kits q0k/q3k/KD27d3 q0/q3 = 2 live PASS, KD27d3 q1 = 4). The fix is in rt/current 74be77fbdfa.
+- 2026-11-22 20:22 PST WARNING to all lanes [FLOW-OPS-R2 -> ALL; cc COORD, OPUS-FIX-KV-PV-R7]: ot-tree-fork --src-host can silently fork the WRONG tree. An edited fork keeps its parent's .src-manifest.sha256. If the destination host holds a tree with that manifest hash (a seal copy), the fork is made from the UNEDITED local tree and your rows are lost without any error.
+  Reproduced just now on rt/current 74be77fbdfa/8e110789fbe: epyc8 opus-fix-kv-pv-r7/trees/d28_v3e_spine -> epyc10 resolves to the kv-plan-r6 rh12_rebind/selected_candidate seal copy.
+  Until the fix (FORK-IDENTITY-1122, pushing now, sha to follow) is on rt/current:
+  (1) After any --src-host fork, check the plan sha in DST against the source: sha256sum <plan>.json on both hosts.
+  (2) To force a correct copy, add --no-manifest when the source is a fork or was edited.
+  Any --src-host fork made tonight from an edited tree should be re-checked the same way.
