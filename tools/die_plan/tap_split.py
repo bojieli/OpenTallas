@@ -982,7 +982,15 @@ def window_rows(raw, plan, rows_by_type):
     types = [tn for tn in rows_by_type if win.get(tn) and not off.get(tn)]
     if not types:
         return {}
-    import tap_offset_cover as TC
+    # The coverage API is coupled to this tool. An older die tree selected for
+    # geometry can have a tap_offset_cover.fill() without window support.
+    import importlib.util
+    coverage = Path(__file__).resolve().with_name("tap_offset_cover.py")
+    spec = importlib.util.spec_from_file_location("_tap_split_tap_offset_cover", coverage)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load tap coverage tool from {coverage}")
+    TC = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(TC)
     tr = copy.deepcopy(raw)
     apply_rows(tr, rows_by_type)
     before = {tn: set(tr["clock"]["tap_window"]["per_port_ps"][tn]) for tn in types}
