@@ -14,6 +14,8 @@
   example site; the printed pad values are not compared (kv3_pc_v1__cl7f648944 example pads [3,7] -> [3,8] moved only because of the vport
   rebind); any site-count or site change still fails. kv3_pc_v1__cl7f648944 stays HELD at apply. Checker + test on main 501a435935e8
   (tools/die_plan/r8_baseline_check.py, test_r8_baseline_check.py, 6 pass); gate copy d29/kvd29/check_r8_baseline_v2.py.
+- COORD RULING 11-23 (TAP-LOAD): K3g TAP-LOAD 17/50 is REASONED for the D29 gate (the tap cap is advisory; routed timing decides).
+  The pv_v3e / pv_v1n split rows from TAP-GRID go into the 20:00 amendment with FABLE-OPEN-KV (same amendment as pc G1-G3).
 - R8 bar = D28 seal baseline (32 unequal groups, 7 conflicting types, 4 afk/kreq inversions BENIGN).
 - FABLE-RC pre-verdict (hub 89a2ca96): pc, sys_c, hub_C accepted held-at-apply; D29 is a partial fix of the die.
 ## Rev 1 compose detail (K3)
@@ -41,6 +43,7 @@
 | hub_C row E | GATED-pending-k3h (row E 1656764949d7) / residual REASONED | fork F: H1 kvs_attn + delay chains -> HUBC-E2 c95f773d3e97 (2519 seats, PRE+G0 0, not strict-bound) = same-day amendment; H2 reset fanout 210 bits -> reset.leaf_clusters row; H3 seq->bout fork +1 E station; H4 u_d38 N/S split. Proposal: HOLD kv3_hub_C at apply until E2 + H2-H4 rows. |
 | CLASS-FIX-RHI row 29 | RST+HSK GATED-pending-k3h; IO REASONED | probe config.mk OT_TAP_RESET_AFFINITY/SPLIT=1, OT_TAP_PAIR_MACRO=1; IO sender_min gives no io_hold.tcl on KV (0 proved sender ports) -> IO-BOUNDARY stays under cb9a415f619 + CTLPORT; CTS-log effect pending the probe |
 | KV-CTLPORT rc114 CTL | GATED (tools) | main dbc5c772e0d; apply: kit_wave_edit --set /dies/qwen_kvsys/die_gen_env/OT_PREGRT_HOLD_PORTS_SCOPE=ctl |
+| TAP-LOAD 17/50 (K3g) | REASONED (COORD ruling, advisory cap) | pv_v3e / pv_v1n TAP-GRID split rows -> 20:00 amendment with FABLE-OPEN-KV |
 | LAND-CAP pv_v5n / pv_v12 | GATED-pending-k3h | LANDCAP 96bd25042a92 |
 ## At apply (if k3h passes)
 - HOLD: all pc types (amendment; incl. kv3_pc_v1__cl7f648944 per COORD R8 ruling), kv3_sys_c (SYSC-D2DOUT), kv3_hub_C (E2 + H2-H4); hub_Wo/Eo if the kit_relay_depth __rst_n fix is not in the wave rt.
