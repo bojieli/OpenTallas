@@ -1,3 +1,15 @@
+## 19:1x RETRACTION + state (read first)
+- LEP-H2R-STN-1 (rows section 8) is VOID: internal_stations with launch u_core.* generate nothing on hd_lep0N (e1 and e2 kit RTL identical, sha
+  08543f8b2efa; placed timing identical). r18m / r18n carry wrong L2/L4 fixed_cycles / latency rows: STRIP them (lanes L2, L4: drop fixed_cycles;
+  latency.lanes L2/L4 back to cycles 2, fixed 0, natural 2; drop the 2 internal_stations rows) before handing any plan over. Plan of record for E
+  stays R8's 5e1f38e1530b (= r18k + host_n row); for W add RINGFF-1/2 (already in r18k), RSTART-1/2 + 2c sites (r18n values).
+- e2 STOPPED 19:1x (duplicate of e1). LIVE: e1 (r18k, placed wns -214.30 / tns -24,764; unit fable-lep0n-e1 pid 1145048) and w11 (r18n, placed
+  wns -333; unit fable-lep0n-w11 pid 1324524), both queued at geom on the epyc9 load cap (w11 since 18:46, e1 since 19:06).
+- Later stages direct (COORD 18:1x): geom/chain clients are children of run-item (cannot swap in place). Recipe if a CHAIN queues > 30 min: read the
+  queued client argv from /proc/<pid>/cmdline, stop the run-item unit (cancels the client), run the same argv once with ot-run --direct under
+  systemd-run --user, wait on it, then kit_wave.py private-provenance for the hand-signed kit. For geom (advisory): prefer waiting.
+- A real fix for h2r1 / rg3 txi (-214 at place) is RTL in the hub wrapper (a stage on h2r3 / TXI param); decide from e1 CTS post-hook.
+
 ## 18:5x placed results
 - e2 (r18m) PLACED 18:52 on epyc9: wns -214.30 (g_mtx.wn[1] -> u_rg3 txi g_s[0] v_o; r18e had -155 there), tns -24,764, coll_i3 lap_ok -41.25,
   agg_1 status path and h2r1 face no longer among the worst, wire-ratio violations 0. Pre-repair; goes on to geom/CTS.

@@ -88,7 +88,7 @@ Open on W (build A probe, GRT 8 iterations): vertical congestion in the W channe
 y 850-900: 478) and in the TX SRAM mid band (x 210-660, y 600-700: about 3,900); the two pair-centre rst_n nets (capacity 0) are removed by
 this view. 30-iteration probe running (intel2 L/grt_probe30).
 
-## 8. LEP-H2R-STN-1 (hd_lep0N E piece, plan only) + merge row -> tree r18m = MERGED PLAN CANDIDATE
+## 8. VOID (retracted 19:1x: generates no register; do not apply the station / lane rows; hd_host_n row is valid) LEP-H2R-STN-1 (hd_lep0N E piece, plan only) + merge row -> tree r18m = MERGED PLAN CANDIDATE
 - partition_types.hd_lep0N.internal_stations += {conn bus:o_h2r1_p, launch u_core.h2r1, from_um [344,605], to_um [0,795.312], regs_um [[200,720]],
   bits 574} and {conn bus:o_h2r2_p, launch u_core.h2r2, from_um [344,605], to_um [0,625.536], regs_um [[215,612]], bits 574};
   lanes L2 / L4 fixed_cycles 1; latency.lanes L2 / L4 {cycles 3, fixed 1, natural 3}. +1 cycle on the two hub -> W-piece cut lanes.
