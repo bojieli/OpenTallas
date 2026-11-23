@@ -1036,6 +1036,10 @@ def main(argv=None):
     if a.radius_um <= 0 or a.radius_um > 300:
         ap.error("--radius-um must be in (0, 300] (COORD: tap sink radius <= 300 um)")
     sys.path.insert(0, str(Path(a.tools).resolve() if a.tools else Path(__file__).resolve().parent))
+    # TAPOFF siblings (tap_offset_fill / tap_offset_cover) that an older --tools tree lacks come from this file's own dir
+    # (python3 -I does not put the script dir on sys.path): appended, so the tree's schema / taps / landing_remap still win
+    if str(Path(__file__).resolve().parent) not in sys.path:
+        sys.path.append(str(Path(__file__).resolve().parent))
     import schema as S
     import taps as TP
     raw = json.loads(Path(a.plan).read_text())
