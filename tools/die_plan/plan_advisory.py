@@ -26,6 +26,8 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
   STATION-DENSITY / SITE-ON-ROW / PLACE-REGION / BAND-BLOCKAGE / BAND-GAP  static placement geometry (adv_geom_static.py, COORD
                    flow review 11-22): exact sites over a bin's capacity, internal exact sites off the row/site grid, place
                    regions that cannot hold movable cells, soft landing bands under hard cores, bands too small for their flops
+  LANE-STATIONS    lanes whose planned kit stations (both end buses, kit_depth) exceed fixed_cycles + pad, so the strict bind
+                   would deliver late (LANE_ASBUILT UNPRICED_KIT_STATIONS; QC V4 l1a sl_W4_fw arm/arv 12 vs 8)
 
     python3 -I tools/die_plan/plan_advisory.py --plan PLAN.json [--tree TREE] [--checks A,B] [--json OUT]   (exit 0 always, 2 = bad input)
 """
@@ -47,7 +49,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("PORT-PIN", "adv_port_pin"), ("MERGE-RESET-DEPTH", "adv_merge_reset_depth"), ("PATH-SEAT", "adv_path_seat"),
           ("PHANTOM-STATION", "adv_phantom_station"), ("BANK-OFFAREA", "adv_bank_offarea"),
           ("STATION-DENSITY", "adv_station_density"), ("SITE-ON-ROW", "adv_site_on_row"), ("PLACE-REGION", "adv_place_region"),
-          ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"))
+          ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"), ("LANE-STATIONS", "adv_lane_stations"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
