@@ -171,8 +171,11 @@ close $f
 """
 
 # MACRO-SITES-GEN-1122: per-master instance count of the elaborated design (flattened copy; the census above is unchanged)
+# COUNT-LIVE-1122 (COORD 21:1x, FABLE-KV-DIE q0k/q3k): count LIVE instances only -- flatten + opt_clean -purge drops dead branches
+# (q0 u_leaf.u_b g_macro[0..1], outputs unused) exactly as synth does: elaborated 4, opt_clean 2 = the synth netlist 1_2_yosys.v
 MACRO_COUNT_TCL = r"""design -save ot_gl
 flatten
+opt_clean -purge
 set f [open /work/gen_lint_macros.tsv w]
 foreach m {@MASTERS@} {
   set s [string trim [tee -q -s result.string select -list t:$m]]
@@ -205,7 +208,7 @@ def macro_site_count(kd, measured):
         return [], False
     if measured is None:
         return [f"{sorted(sites)}: instance count not measured (yosys elaboration failed, see rtl_check)"], True
-    return [f"{m}: {n} static site(s) in macro_place.tcl but {measured.get(m, 0)} instance(s) in the elaborated design "
+    return [f"{m}: {n} static site(s) in macro_place.tcl but {measured.get(m, 0)} live instance(s) in the elaborated design (flatten + opt_clean, as synth) "
             f"(fix cores/macro_sites/<module>.json: one site per instance)" for m, n in sorted(sites.items())
             if measured.get(m, 0) != n], True
 

@@ -32,7 +32,7 @@ def test_count_mismatch_fails_closed(tmp_path):
     kd = kit(tmp_path, TCL)
     assert GL.macro_site_count(kd, {"sram_a": 2, "sram_b": 1}) == ([], True)
     errs, applies = GL.macro_site_count(kd, {"sram_a": 4, "sram_b": 1})
-    assert applies and len(errs) == 1 and "sram_a: 2 static site(s)" in errs[0] and "4 instance(s)" in errs[0]
+    assert applies and len(errs) == 1 and "sram_a: 2 static site(s)" in errs[0] and "4 live instance(s)" in errs[0]
     errs, _ = GL.macro_site_count(kd, None)                       # not measured: fail closed
     assert errs and "not measured" in errs[0]
 
@@ -45,7 +45,7 @@ def test_other_placement_forms_are_na(tmp_path):
 def test_lint_tcl_counts_only_kv_site_masters():
     cfg = {"DESIGN_NAME": ["top"]}
     t = GL.lint_tcl(cfg, ["sram_a", "sram_b"])
-    assert "flatten" in t and "foreach m {sram_a sram_b}" in t and "gen_lint_macros.tsv" in t and "@" not in t
+    assert "flatten\nopt_clean -purge\n" in t and "foreach m {sram_a sram_b}" in t and "gen_lint_macros.tsv" in t and "@" not in t
     assert "gen_lint_macros.tsv" not in GL.lint_tcl(cfg) and "@MACRO_COUNT@" not in GL.lint_tcl(cfg)
 
 
