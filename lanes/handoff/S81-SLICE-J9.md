@@ -14,3 +14,7 @@ Gate tree: epyc9 fam-s81-slice-r6/trees/s81_j9cmp (J8 cut fork + main 25064b2fc2
 - B2 station rows: b2stn.py + b2gate.sh (E10 s81-slice-j9/b2/): t30 6e8c (B1) + t7/t44 ft2 S band + t31 ft2/ft3 S rings + t36 95 relay_sites. PRE baseline 4662b.
 - s_2S_x00 t14 growth: someone else live in compose/g0_station_t14_growth_1048; not duplicated.
 - Wave A plan copy on epyc9: s81-slice-j9/wavea_4662b.json.
+
+## 19:2x update (kv512_C answer posted b1264cf98)
+- kv512_C rows: KV512-PREMASK (rstop fragment premask, bench 24012 PASS, rtl sha256 3aa3cd9e0cf8, E7 place unit oth-ubuntu-935215 in GP; kit epyc7 fam-s81-slice-r6/xga/kv512_premask_v9_0942) for xfv_q->own -1546; SLICEC-XGARRAY-2 1b 6c1f82db89ab (in 4662b) for gf_q[2]->wd_in -1287, GFLOCAL fallback; rc31/34 B+ for async reset. Owe place-read numbers by 15:30.
+- probe5 running epyc9 (cg2 d6f56456a2a8, cglp2 4893f2995d14); waprobe running epyc10; b2gate3 queued epyc10 (b2gate2 died: t36 file is receipt.json, fixed).
