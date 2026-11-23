@@ -139,7 +139,7 @@ module ot_s81sl_kv_leaf #(
   wire pstart=start && is_cp && !kbusy && !pbusy;
   wire pbad=start && is_cp && (c_d[31:24]!=32 || imm[127:14]!=0 || imm[3:0]!=K_CP);
   wire [255:0] y32;wire [15:0] pa;
-  ot_s81sl_cmp_pool #(.MUT(CP_MUT)) u_pool(.clk(clk),.rst_n(rst_n),.start(pstart && !pbad),.b0(c_d[13:4]),.b1(c_d[23:14]),
+  ot_s81sl_cmp_pool #(.MUT(CP_MUT),.HARD((HARD_RQ>=2 && CP_MUT==0)?1:0)) u_pool(.clk(clk),.rst_n(rst_n),.start(pstart && !pbad),.b0(c_d[13:4]),.b1(c_d[23:14]),
    .ob(imm[13:4]),.busy(pbusy),.done(pdone),.fault(pfault),.x_rv(px_rv),.x_ra(px_ra),.x_qv(x_qv && pbusy),.x_qd(x_qd),
    .x_wv(px_wv),.x_wa(px_wa),.x_wm(px_wm),.x_wd(px_wd),.dbg_y32(y32),.dbg_age(pa));
   reg pcf;

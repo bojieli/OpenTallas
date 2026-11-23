@@ -17,7 +17,10 @@
 module ot_s81sl_kv_bank #(
     parameter integer MUT=0,
     parameter integer CNIK=0,
-    parameter integer HARD_RQ=0, // reuse exact CLOSED D512 LM5/LA4 reduce and quant masters
+    parameter integer HARD_RQ=0, // 1: reuse exact CLOSED D512 LM5/LA4 reduce and quant masters; 2 (S81-KVLEAF-T2-ARCH
+                                 // 11-23): every engine is its hard master (tap, norm, RoPE norm, half tree, CN / IK
+                                 // writers, IK reduce: dsfd_su_t_kv.sv, dsfd_su_t_qn.sv, dsfd_su_t_kvcn.sv); the bank
+                                 // keeps only relays + the slot merge soft.  Same bodies, same cycles; needs MUT == 0
     parameter integer CNIK_MUT=0      // bench negative controls only (0 in every build): 1 IK applies the D512 QNR rstd
                                       // (wrong tree / divisor); 2 CN norm rows carry the neighbour block's norm
 )(
@@ -31,6 +34,9 @@ module ot_s81sl_kv_bank #(
 );
     localparam integer KV_N=512,S_RD=16,S_WR=16,LM=5,LA=4,NKE=64,NKQ=16,ERL=3;
     wire [0:0] rst={rst_n};
+`ifndef SYNTHESIS
+    initial if (HARD_RQ >= 2 && MUT != 0) $fatal(1, "ot_s81sl_kv_bank: HARD_RQ >= 2 needs MUT == 0 (the hard tap master has no mutant)");
+`endif
     // ------------------------------------------------------------------ KV: norm engines + reduce + quant (off the spine)
     localparam integer KL = KV_N / 16;                 // KV tap positions (rows a vector)
     localparam integer NRP = 64 / 8;                   // RoPE engines (RD 64)
@@ -68,10 +74,16 @@ module ot_s81sl_kv_bank #(
         wire ikr_v, ikr_f; wire [31:0] ikr_d;
         // IK's logical chunk order 0..15 maps to physical KVE48..63 (hub dsfd_sp_su_h); the zero prefix is in
         // neither tree nor the divisor.  Partials are the relayed kp (ERL after the engines), as in the hub.
+        if (HARD_RQ >= 2) begin : g_closed
+        dsfd_su_t_ikr u_ik_reduce(.ck(sk),.rst(rst[0]),.go(kt_go),.eps(kt_eps),
+            .p_v(kp_v[NKE-16+:16] & {16{kt_mode==2'd2}}),.p_d(kp_d[32*(NKE-16)+:512]),
+            .r_v(ikr_v),.r_d(ikr_d),.fault(ikr_f));
+        end else begin : g_rtl
         ot_s81_su_ik_reduce u_ik_reduce(.ck_half({2{sk}}),.rs_half({2{rst[0]}}),
             .ck_reduce(sk),.rs_reduce(rst[0]),.go(kt_go),.eps(kt_eps),
             .p_v(kp_v[NKE-16+:16] & {16{kt_mode==2'd2}}),.p_d(kp_d[32*(NKE-16)+:512]),
             .r_v(ikr_v),.r_d(ikr_d),.fault(ikr_f));
+        end
         assign ks_v = (kt_mode == 2'd2 && CNIK_MUT != 1) ? ikr_v : kr_v;
         assign ks_d = (kt_mode == 2'd2 && CNIK_MUT != 1) ? ikr_d : kr_d;
         assign ik_f = ikr_f;
@@ -96,7 +108,20 @@ module ot_s81sl_kv_bank #(
             .q({ix, igk, igr, igw}));
         ot_hdc_delay #(.W(1), .D(ERL), .RESET(1)) u_rv (.clk(sk), .rst_n(rst[0]), .d(ks_v), .q(rv));
         ot_hdc_delay #(.W(32), .D(ERL)) u_rd (.clk(sk), .rst_n(rst[0]), .d(ks_d), .q(rd));
-        if (ke >= NKE - NRP) begin : g_rp
+        if (HARD_RQ >= 2 && ke >= NKE - NRP) begin : g_rpc
+            // the RoPE engine as its hard master (dsfd_su_t_kvpc); same relays as g_rp
+            localparam integer K = ke - (NKE - NRP);
+            wire [127:0] cc, sn;
+            ot_hdc_delay #(.W(256), .D(ERL)) u_cs (.clk(sk), .rst_n(rst[0]),
+                .d({kt_cs[K % 4][(K < 4 ? 256 : 384) +: 128], kt_cs[K % 4][(K < 4 ? 0 : 128) +: 128]}), .q({sn, cc}));
+            dsfd_su_t_kvpc u_kve (
+                .ck(sk), .rst(rst[0]), .i_v(iv), .i_x(ix), .i_gk(igk), .i_gr(igr), .i_gw(igw), .i_cos(cc), .i_sin(sn),
+                .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .norm_v(kn_v[ke]),.norm_y(kn_d[128*ke+:128]),.y_v(yv), .y(yd), .o_f(ef));
+        end else if (HARD_RQ >= 2) begin : g_npc
+            dsfd_su_t_kvec u_kve (
+                .ck(sk), .rst(rst[0]), .i_v(iv), .i_x(ix), .i_gk(igk), .i_gr(igr), .i_gw(igw),
+                .r_v(rv), .r_d(rd), .p_v(pv), .p_d(pd), .norm_v(kn_v[ke]),.norm_y(kn_d[128*ke+:128]),.y_v(yv), .y(yd), .o_f(ef));
+        end else if (ke >= NKE - NRP) begin : g_rp
             // RoPE engine k: cos / sin of lane pairs 4 k .. 4 k + 3 = quarter k % 4 of param rows 1 / 2 (cos), 3 / 4 (sin)
             localparam integer K = ke - (NKE - NRP);
             wire [127:0] cc, sn;
@@ -123,9 +148,15 @@ module ot_s81sl_kv_bank #(
         wire [NKH-1:0] hv, hp, hf; wire [NKH*32-1:0] hd;
         genvar hh;
         for (hh = 0; hh < NKH; hh = hh + 1) begin : g_kvh
+            if (HARD_RQ >= 2) begin : g_closed
+            dsfd_su_t_qnh u_qnh (
+                .ck(sk), .rst(rst[0]), .i_go(go), .p_v(kp_v[16 * hh +: 16]), .p_p(16'd0),
+                .p_d(kp_d[512 * hh +: 512]), .s_v(hv[hh]), .s_p(hp[hh]), .s_d(hd[32 * hh +: 32]), .o_f(hf[hh]));
+            end else begin : g_rtl
             ot_s81_su_qnh #(.NE(16), .LA(LA)) u_qnh (
                 .clk(sk), .rst_in(rst[0]), .i_go(go), .p_v(kp_v[16 * hh +: 16]), .p_p(16'd0),
                 .p_d(kp_d[512 * hh +: 512]), .s_v(hv[hh]), .s_p(hp[hh]), .s_d(hd[32 * hh +: 32]), .o_f(hf[hh]));
+            end
         end
         if(HARD_RQ!=0)begin:g_closed
         dsfd_su_t_kvr u_kvr (
@@ -163,16 +194,28 @@ module ot_s81sl_kv_bank #(
                 .i_v(kn_v[4*kb] && bm==2'd1),.i_x(kn_d[512*((CNIK_MUT == 2) ? (kb ^ 1) : kb)+:512]),
                 .i_ob(kt_nb),.i_block(CB),.o_v(nv),.o_a(na),.o_d(nd));
             wire cv, cf; wire [13:0] ca; wire [15:0] cm; wire [511:0] cd;
+            if (HARD_RQ >= 2) begin : g_cwc
+            dsfd_su_t_cnw u_cn_write(.ck(sk),.rst(rst[0]),
+                .i_v(rv && bm==2'd1),.i_x(ry),.i_ob(rob),.i_block(CB),
+                .o_v(cv),.o_a(ca),.o_m(cm),.o_d(cd),.o_fault(cf));
+            end else begin : g_cws
             ot_s81_su_cn_write #(.E4M3(1)) u_cn_write(.clk(sk),.rst_in(rst[0]),
                 .i_v(rv && bm==2'd1),.i_x(ry),.i_ob(rob),.i_block(CB),
                 .o_v(cv),.o_a(ca),.o_m(cm),.o_d(cd),.o_fault(cf));
+            end
             wire iv, ifl; wire [13:0] ia; wire [15:0] im; wire [511:0] id;
             if (kb >= NKQ - 4) begin : g_ik_write
                 // IK block IB = kb - 12 (KVE48..63) writes slot IB: qdq row obase + IB, raw row obase + 4 + IB
                 wire [3:0] IBC = kb - (NKQ - 4);
+                if (HARD_RQ >= 2) begin : g_iwc
+                dsfd_su_t_ikw u_ik_write(.ck(sk),.rst(rst[0]),
+                    .i_v(rv && bm==2'd2),.i_x(ry),.i_ob(rob),.i_block(IBC),
+                    .o_v(iv),.o_a(ia),.o_m(im),.o_d(id),.o_fault(ifl));
+                end else begin : g_iws
                 ot_s81_su_cn_write #(.E4M3(0)) u_ik_write(.clk(sk),.rst_in(rst[0]),
                     .i_v(rv && bm==2'd2),.i_x(ry),.i_ob(rob),.i_block(IBC),
                     .o_v(iv),.o_a(ia),.o_m(im),.o_d(id),.o_fault(ifl));
+                end
             end else begin : g_ik0
                 assign iv = 1'b0; assign ifl = 1'b0; assign ia = 14'd0; assign im = 16'd0; assign id = 512'd0;
             end
@@ -223,12 +266,21 @@ module ot_s81sl_kv_bank #(
                     assign dq[128 * s2 +: 128] = dn_d[512 * s2 + 128 * u +: 128];
                 end
                 wire ugk, ugo, ufu, ufo, ual, ude, urd; wire [1:0] ugr, ugw, umode; wire [13:0] uob, unb; wire [31:0] uep; wire [7:0] urj;
+                if (HARD_RQ >= 2) begin : g_closed
+                dsfd_su_t_kvtc u_kvt (
+                    .ck(sk), .rst(rst[0]),
+                    .dn_st(dn_st), .dn_kind(dn_kind), .dn_gsel(dn_gsel), .dn_jid(dn_jid), .dn_v(dn_v), .dn_d(dq),
+                    .i_f(u == 0 ? kv_f : {(NKE + 1){1'b0}}), .e_v(kt_v[u]), .e_d(kt_d[u]), .e_gk(ugk), .e_gr(ugr),
+                    .e_gw(ugw), .e_go(ugo), .e_mode(umode), .e_ob(uob), .e_nb(unb), .e_eps(uep), .e_cs(kt_cs[u]), .o_fu(ufu), .o_fo(ufo),
+                    .o_alive(ual), .o_den(ude), .o_rdy(urd), .o_rjid(urj));
+                end else begin : g_rtl
                 ot_s81_su_kvt #(.N(KV_N), .S_RD(S_RD), .NFI(NKE + 1), .MUT(MUT)) u_kvt (
                     .clk(sk), .rst_in(rst[0]),
                     .dn_st_i(dn_st), .dn_kind_i(dn_kind), .dn_gsel_i(dn_gsel), .dn_jid_i(dn_jid), .dn_v_i(dn_v), .dn_d_i(dq),
                     .i_f(u == 0 ? kv_f : {(NKE + 1){1'b0}}), .e_v(kt_v[u]), .e_d(kt_d[u]), .e_gk(ugk), .e_gr(ugr),
                     .e_gw(ugw), .e_go(ugo), .e_mode(umode), .e_ob(uob), .e_nb(unb), .e_eps(uep), .e_cs(kt_cs[u]), .o_fu(ufu), .o_fo(ufo),
                     .o_alive(ual), .o_den(ude), .o_rdy(urd), .o_rjid(urj));
+                end
                 if (u == 0) begin : g_u0
                     assign kt_gk = ugk; assign kt_gr = ugr; assign kt_gw = ugw; assign kt_go = ugo; assign kt_ob = uob;
                     assign kt_eps = uep; assign kt_mode=umode; assign kt_nb=unb;
