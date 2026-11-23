@@ -135,3 +135,8 @@
   Gate moves to epyc7: fork epyc7 w/tree_j9 (ot-tree-fork --src-host epyc10 of s81-j6-r5/j8_cut_tree, log w/fork_j9.log); inputs staged in epyc7 w/
   (plan_j9_bksel 436a1beb8536, l20s_j9 900bf2d5bdbe). Waiter submits w/bksel_elabbind_j9.sh on epyc7 (log intel2 ~/s81-bksel-r7-logs/gate_j9c.otrun.log).
   DISK for EPYC10-DISK (ot-delete): epyc10 s81-bksel-r7/w/tree_j9 (61 GB, now unused) + w/tree_sealed (54 GB) + C kit dir bk_sel__t2_1122054328.
+- 01:4x RESUMED (5-h limit 01:17). Codex handoff: nothing for this lane. epyc7 fork w/tree_j9 59/61 GB, still copying (pid 1033847); gate waiter armed (submits bksel_elabbind_j9.sh on epyc7 when fork OK).
+  RC-GAP 01:13 (VIS-S81-MISC): u_core.lp_q -> u_vm.r hop 584 um / -604 ps -> J10 row BKSEL-VM-STN-J10, owner = this lane (midpoint station, +1 cycle; or u_vm.r seat at landing).
+  Not covered by the J9 rows. Check first whether OT_BKSEL_L4 LPS stages are active in the J8 source.
+  PROBE-PASS now needs the full-cause census (hub fe8a2a5): every GRT cluster >= 50 ovfl or >= 1% and top-50 path classes, each with a row; total ovfl < 10% of baseline (C 1039 -> < 104).
+  TAPSPLIT-1 v2 (VIS-S81-MISC): 0 of 99 taps in my channel strips, verified.
