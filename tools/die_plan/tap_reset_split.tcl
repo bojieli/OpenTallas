@@ -152,12 +152,13 @@ namespace eval ::ot_tap_rsplit {
   # RST-LAUNCH rounds (COORD 11-23 04:xx: pkit_core5a launch=0 31 split sources, launch=1 32): a launch copy / moved launcher is a
   # NEW async sink of the reset source that drives its RESETN/SETN (u_rrl_340 gained sinks on 11 taps, u_rrl_234 on 6).  Run
   # inline, the launch pass let a parent visited AFTER it see those sinks and a parent visited BEFORE it miss them (order bug).
-  # Now: split ALL sources, then launch ALL stages of the round, then split again for the sinks the launch added, until a
-  # launch round changes nothing (OT_TAP_RESET_SPLIT_ROUNDS, default 4).  Without the launch pass: one round, as before.
+  # A split also adds async sinks without a launch change: HEAD LEP region root copies turned one upstream reset load
+  # into 65. Iterate until neither pass changes the reset network (OT_TAP_RESET_SPLIT_ROUNDS, default 4).
+  # Without the launch pass: one round, as before.
   set maxr [expr {$ldo ? ([info exists ::env(OT_TAP_RESET_SPLIT_ROUNDS)] ? $::env(OT_TAP_RESET_SPLIT_ROUNDS) : 4) : 1}]
   set nsrc 0; set ncopy 0; set nchain 0; set nsink 0; set nround 0; set converged [expr {!$ldo}]
   for {set round 1} {$round <= $maxr} {incr round} {
-  incr nround; set pend {}
+  incr nround; set pend {}; set copies_at_start $ncopy
   # collect sources first (the edit below adds DFFs that must not be visited)
   set srcs {}
   foreach inst [$blk getInsts] {
@@ -240,7 +241,7 @@ namespace eval ::ot_tap_rsplit {
   set k0 [expr {([dict exists $lstat copies] ? [dict get $lstat copies] : 0) + ([dict exists $lstat moved] ? [dict get $lstat moved] : 0)}]
   foreach pt $pend {lassign $pt x t; launch $blk $x $t 1 $maxd; incr nlsrc}
   set k1 [expr {([dict exists $lstat copies] ? [dict get $lstat copies] : 0) + ([dict exists $lstat moved] ? [dict get $lstat moved] : 0)}]
-  if {$k1 == $k0} {set converged 1; break}
+  if {$k1 == $k0 && $ncopy == $copies_at_start} {set converged 1; break}
   }
   puts "OT_TAP_RESET_SPLIT sources $nsrc copies $ncopy chain_cells $nchain sinks_repointed $nsink min_sinks $minn"
   if {$ldo} {

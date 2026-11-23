@@ -1,8 +1,12 @@
 """QC-COLL RST-COTAP 11-22: opt-in clock.tap_reset_split (tap_reset_split.tcl, per-tap copy of the last reset stage)."""
 import json
 import re
+import shutil
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -71,3 +75,23 @@ def test_launch_runs_after_the_whole_split_round_until_converged():
     loop = run[run.index("foreach inst $srcs {"):run.index("if {!$ldo} break")]
     assert "launch $blk" not in loop and "lappend pend" in loop
     assert "OT_TAP_RESET_SPLIT_ROUNDS" in run and "converged" in run
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="no tclsh")
+def test_split_only_change_revisits_upstream_async_driver(tmp_path):
+    # HEAD ep3: each original root drove one downstream async branch. Its copies add
+    # reset loads to their parent even when no D-launch stage moves or is copied.
+    text = (HERE / "tap_reset_split.tcl").read_text()
+    run = text[text.index("proc run {}"):]
+    start = run[run.index("  for {set round 1}"):run.index("  # collect sources first")]
+    end = run[run.index("  if {!$ldo} break"):run.index('  puts "OT_TAP_RESET_SPLIT sources')]
+    script = tmp_path / "split_fixed_point.tcl"
+    script.write_text(
+        "set maxr 4; set ldo 1; set ncopy 0; set nround 0; set lstat {}; set converged 0; set pend {}\n"
+        + start
+        + "  if {$round <= 2} {incr ncopy}\n"
+        + end
+        + 'puts "$nround $ncopy $converged"\n'
+    )
+    result = subprocess.run(["tclsh", str(script)], check=True, capture_output=True, text=True)
+    assert result.stdout.strip() == "3 2 1"
