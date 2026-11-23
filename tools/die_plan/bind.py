@@ -6076,7 +6076,8 @@ def cmd_bind(a):
     rep["bus_groups"] = bg["summary"]
     # DIE-HBM-92-LCHK F4: R8 on every bind + declared fixed-latency contracts vs the landed deltas (bind correctness)
     import latency_consumers as LC
-    lc = LC.check(LC.binder_leaves(B, yjs), bg, B.param_regen, B.ab, raw, LC.r8_options(B.ab, B.base))
+    lc = LC.check(LC.binder_leaves(B, yjs), bg, B.param_regen, B.ab, raw,
+                  LC.r8_options(B.ab, B.base), src_root=B.base)
     _fresh_write_text(out / "bind_latency_consumers.json", json.dumps(lc, indent=1, default=str) + "\n")
     rep["latency_consumers"] = dict(stats=lc["stats"], r8={k: v for k, v in lc["r8"].items() if k != "messages"},
                                     advisory=[f"{x['module']} n={x['n']} {sorted(x['params'])}" for x in lc["advisory"]][:50])
