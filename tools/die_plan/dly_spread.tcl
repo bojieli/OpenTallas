@@ -313,12 +313,17 @@ dict for {nm head} $ds_cand {
       lappend rts $rt_
     }
   }
+  # Use the direct span for an unchanged chain. Routed runs below replace both
+  # the length and the number of hops with their measured values.
+  set rlen [ds_md $src $T]
+  set nhop [expr {$n + 1}]
+  set nmovable 0
   if {$wb <= $ds_min && !$haslk} { set wa $wb; ds_repfix $P $hb $segb $n } elseif {![llength $rts]} {
     # DLY-REPAIR-1 (2): no clear route for a run: the chain keeps its GPL sites
-    set wa $wb; incr ::ds_noroute; set nmovable 0
+    set wa $wb; incr ::ds_noroute
   } else {
     # anchors: indexes (0 = src, n+1 = T) plus every stage that is not movable; run of movable stages between anchors -> equal hops
-    set nmovable 0; foreach s_ $seq { if {[ds_movable $s_]} { incr nmovable } }
+    foreach s_ $seq { if {[ds_movable $s_]} { incr nmovable } }
     # one route per run (anchor -> anchor), around the hard cores; stage k of a run at (k-k0)/(k1-k0) of its length
     set runs {}; set hoprun {}; set rlen 0; set fr [dict create]; set nhop 0
     for {set a 0} {$a < [llength $anch]-1} {incr a} {
@@ -379,7 +384,7 @@ dict for {nm head} $ds_cand {
   lappend ::ds_fin [list $head $seq $tl]
   set ds_ha [expr {max($ds_ha, $wa)}]; if {$wa > $ds_min} { incr ds_oa }
   if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG [ds_clean $nm] stages $n loads [llength $tl] hops [format %.0f [expr {$wb/double($ds_dbu)}]] -> [format %.0f [expr {$wa/double($ds_dbu)}]] um" }
-  set ideal [expr {(($wb <= $ds_min && !$haslk) ? [ds_md $src $T] : $rlen) / double((($wb > $ds_min && $ds_st > 0) || $haslk) ? $nhop : $n + 1)}]   ;# route length: a detour around a core is not a defect
+  set ideal [expr {$rlen / double($nhop)}]   ;# route length: a detour around a core is not a defect
   if {$ideal > 0} {
     set r [expr {$wa / $ideal}]
     if {$r > $ds_wr} { set ds_wr $r }
