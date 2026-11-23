@@ -88,6 +88,11 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("BIND-FAIL", _last_line(t, r"EMIT|compare FAIL|mismatch|BIND_RC"))
     if rc in (78, 255, 141) or re.search(r"Could not resolve hostname|Connection (reset|closed|timed out|refused)|Broken pipe|SSH probe exit|client gone", t):
         return _c("SSH-DROP", _last_line(t, r"resolve hostname|Connection|Broken pipe|SSH probe|NOT-RUN|client gone") or "ssh/host unreachable (rc %s)" % rc)
+    # The DRT watchdog logs its decision before killing the OpenROAD process.
+    # A shell "Killed" after this exact terminal marker is the stop mechanism.
+    drt_stop = _last_line(t, r"^OT_DRT_NO_PROGRESS stage=\S+ class=DRT_NO_PROGRESS: .*stopping the stage \(FAILFAST-1\)")
+    if rc and drt_stop:
+        return _c("ROUTE-FAIL", drt_stop)
     if rc == 137 or re.search(r"\bKilled\b|Out of memory|oom-kill|MemoryError|Cannot allocate memory", t):
         return _c("OOM", _last_line(t, r"Killed|memory|oom") or "SIGKILL (rc 137), memory limit")
     if re.search(r"stopped by [\w./-]+:|disk floor|DISK-RAIL|memory admission|guard kill|reaper|ot-guard|rail kill", t, re.I):

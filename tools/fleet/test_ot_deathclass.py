@@ -35,6 +35,18 @@ def test_advisory_drain_does_not_hide_later_execution_failure():
     assert cls(1, denied_host + "\not-run: NOT-RUN no host qualifies (scratch disk under floor)") == "RAIL-KILL"
 
 
+def test_drt_watchdog_kill_is_a_route_failure():
+    marker = (
+        "OT_DRT_NO_PROGRESS stage=route class=DRT_NO_PROGRESS: iteration 20 has "
+        "24261 violations > 10000; stopping the stage (FAILFAST-1)"
+    )
+    killed = '/work/grt183_make.sh: line 297: 6571 Killed setsid "$@"'
+    report = dc.classify(21, "", marker + "\n" + killed)
+    assert report[0] == "ROUTE-FAIL"
+    assert report[1].startswith("OT_DRT_NO_PROGRESS stage=route")
+    assert cls(137, "watch for " + marker + "\n" + killed) == "OOM"
+
+
 def test_cause_is_one_line_and_bounded():
     c, cause = dc.classify(1, "", "Traceback (most recent call last):\nValueError: " + "x" * 500)
     assert c == "TOOL-TRACEBACK" and "\n" not in cause and len(cause) <= 120
