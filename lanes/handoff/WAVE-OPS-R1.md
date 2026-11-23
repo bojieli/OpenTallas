@@ -4,3 +4,4 @@ Cancelled (systemctl --user stop of the exact older unit, same as cancel-rows do
 Already one live (older unit dead): col_h9_r0_p6, col_h9_r2 clce45cab5, dsdv iq_C, kv512_C: nothing to do. dsdv lepe_nh_mus_LP t1: both dead (row stage geom).
 H1: main 7d5348dba7 kit_wave_edit refuses no-op hold records on stops_off dies; hold_items removal needs --expect-launch N (dry select count, prints LAUNCHABLE n); event_census hold passes N from a dry run. Lane clone intel2:/srv/opentallas-scratch2/claude/wave-ops-r1/repo.
 Open: watch next ticks that no -53xxx row turns CANCELLED/dead.
+- 11-22 18:0x RESUMED then DONE: T1 1c8b40168f landed; 0 TOOLSKEW fails 08:05-17:xx; W1 dups, H1 7d5348dba7, HOLD-LEAK 397d746987 done. P1 (ot-run ticket) open with FLOW-FLEET-R2.
