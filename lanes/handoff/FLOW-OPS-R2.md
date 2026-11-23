@@ -162,3 +162,12 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - HOTSPOT flow classes are posted as measured reasons (849445c566): REPAIR-CAP is caught by design; CLOCK-NDR-DROP is a congestion symptom.
 - Ingest: all items were already counted (3a62dec578).
 - Note: the measurement subagent left /tmp/ndr_a.py and /tmp/ndr_b.py on 7 hosts. They are small scripts and should be removed via ot-delete.
+
+## 03:2x PST 11-23 update
+- rc45 closed: the GRT-stage repro (kG) passes, rc 0, WNS -283.87 -> -231.67 (post 12c2fb1db6).
+- kit_wave tests on main 4b5f6e510b0: all 990 pass in the lane clone. FIX-SYNC's 48 failures are a sparse-checkout artefact.
+- qct13 views (s8x_btab and s8x_prog) restored on all 7 live hosts, sha verified (post 93ea8ce6ad).
+  - 19 non-HBM counted modules still have no live source (listed in that post).
+  - The deleter is unknown: no manifest from any guarded tool.
+- KV ectlk q0-q3 are already in signed-store and the count (post ae17515c91).
+- SVC-R9: LF_CS_DEPTH probe errors are fixed by 9ae5a0cb7c7, which is in rt.
