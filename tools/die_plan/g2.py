@@ -365,6 +365,23 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                     reset_pair_specs.append((c, c + "_drive" if driven else "", *rl["xy"]))
             for j, (nm, _, _) in enumerate(souts):
                 cells.append(f"  assign {nm} = pr_run_rst_n_t{RT.consumer_count(tree) + j};")
+    # io_tcl also reserves interior strap and scalar landing pin shapes. The
+    # G2 traffic model covers the boundary buses and station paths, so these
+    # auxiliary ports reserve their exact sites without synthetic traffic.
+    strap_sites = {name for name, _, _, _ in gen_phys.strap_pin_sites(P, tn)}
+    for strap in (t.get("id_straps") or []) + (t.get("count_straps") or []):
+        name = strap["name"]
+        if name in strap_sites:
+            ports.append(f"  input {name}")
+        elif f"{name}[0]" in strap_sites:
+            ports.append(f"  input [{strap['width'] - 1}:0] {name}")
+    declared_scalar = {name for name, _, _ in tp + reset_outs}
+    for pin in (t.get("clock", {}).get("landing_contract") or {}).get("pins", []):
+        name = pin["name"]
+        if name not in declared_scalar:
+            direction = "input" if pin["dir"] == "in" else "output"
+            ports.append(f"  {direction} {name}")
+            declared_scalar.add(name)
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:
