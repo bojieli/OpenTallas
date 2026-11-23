@@ -51,6 +51,7 @@ def test_probe_does_not_retry_a_real_refusal(monkeypatch):
 
 
 def test_pin_fallback_once_and_strict(monkeypatch):
+    monkeypatch.setenv("OT_RUN_SOFT_PIN", "1")          # HARD-PIN-1122: fallback is opt-in
     monkeypatch.delenv("OT_RUN_STRICT_HOST", raising=False)
     monkeypatch.delenv("OT_RUN_HARD_PIN", raising=False)
     monkeypatch.setattr(RUN, "PIN_FALLBACK", [False])
@@ -65,6 +66,7 @@ def test_pin_fallback_once_and_strict(monkeypatch):
 
 
 def test_pin_fallback_skips_gate_hosts(monkeypatch):
+    monkeypatch.setenv("OT_RUN_SOFT_PIN", "1")          # HARD-PIN-1122: fallback is opt-in
     monkeypatch.delenv("OT_RUN_STRICT_HOST", raising=False)
     monkeypatch.setenv("OT_RUN_SELF_ALIAS", "")
     monkeypatch.setattr(RUN, "PIN_FALLBACK", [False])
@@ -126,6 +128,7 @@ def test_main_wiring():
 
 
 def test_pin_fallback_pool_names_this_machine_once(monkeypatch):
+    monkeypatch.setenv("OT_RUN_SOFT_PIN", "1")          # HARD-PIN-1122: fallback is opt-in
     monkeypatch.delenv("OT_RUN_STRICT_HOST", raising=False)
     monkeypatch.setenv("OT_RUN_SELF_ALIAS", "epyc9")
     monkeypatch.setattr(RUN, "PIN_FALLBACK", [False])

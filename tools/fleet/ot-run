@@ -271,10 +271,33 @@ def canon_hosts(hosts, me=None):
 # copied); --strict-host (or OT_RUN_STRICT_HOST=1 / OT_RUN_HARD_PIN=1) keeps the old hard pin and its NOT-RUN.
 PIN_FALLBACK = [False]
 
+# HARD-PIN-1122 (COORD 11-22 23:4x, two rc-127 deaths in one night): a job that names --hosts depends on what is on those hosts (its kit dir,
+# its script, its tree).  SLWSLE sle_su_l1 geom (--hosts epyc8, epyc8 scratch 99 < 100 GB floor) PIN-FALLBACK'ed to epyc2, which has no kit dir:
+# geom_check.sh rc 127.  QC-COLL-R3 LEC r4 (--hosts epyc10 --stage ...) was PIN-SPILL widened after 30 min and ran on epyc2: rc 127.  Rule: --hosts
+# is a hard pin.  No PIN-FALLBACK, no PIN-SPILL, no OVERLOAD pinned spill; a pinned job the pinned hosts refuse now (disk floor, unreachable probe,
+# memory) WAITS and re-places on them (PIN-WAIT), it never runs elsewhere and never files NOT RUN for a transient refusal.  A host list
+# (--hosts a,b,c) stays a set of alternatives (MULTIHOST-SPILL inside the list).  OT_RUN_SOFT_PIN=1 = the old fallback / pin-spill behaviour.
+PIN_WAITED = [False]
+
+
+def pin_wait(pinned, pick, hosts, nodir, max_wait, elapsed):
+    """HARD-PIN-1122: True when a pinned request no pinned host admits should wait and re-place on them (not NOT RUN, not elsewhere):
+    hard pin (the request named --hosts), not --pick, inside --max-wait, and at least one pinned host refuses for a passing reason
+    (nodir = pinned hosts that never will: no --dir there, request above physical RAM)"""
+    if not pinned or pick or soft_pin() or not hosts:
+        return False
+    if max_wait is not None and elapsed >= max_wait:
+        return False
+    return any(h not in nodir for h in hosts)
+
+
+def soft_pin(env=None):
+    return (os.environ if env is None else env).get("OT_RUN_SOFT_PIN", "") not in ("", "0")
+
 
 def pin_fallback_pool(pinned, held=None, cmd=(), pool=None):
     """-> the hosts to try after every pinned host refused, or None (strict, already fell back, nothing else to try)"""
-    if os.environ.get("OT_RUN_STRICT_HOST") or os.environ.get("OT_RUN_HARD_PIN") or PIN_FALLBACK[0]:
+    if not soft_pin() or os.environ.get("OT_RUN_STRICT_HOST") or os.environ.get("OT_RUN_HARD_PIN") or PIN_FALLBACK[0]:
         return None
     rest = [h for h in canon_hosts(HOSTS if pool is None else pool) if h not in (held or {}) and h not in pinned]
     rest = drop_no_heavy(rest)
@@ -2374,7 +2397,7 @@ PIN_SPILL_AFTER_S = int(os.environ.get("OT_RUN_PIN_SPILL_AFTER_S", "1800"))
 def pin_spill_args(a, elapsed, fleet, env=None):
     """-> argv `a` with a single --hosts pin widened to the pin + fleet when the request qualifies (see above), else `a` unchanged"""
     env = os.environ if env is None else env
-    if env.get("OT_RUN_NO_PIN_SPILL") or env.get("OT_RUN_STRICT_HOST") or env.get("OT_RUN_HARD_PIN") or env.get("OT_RUN_NO_SPILL") or PIN_SPILL_AFTER_S < 0:
+    if not soft_pin(env) or env.get("OT_RUN_NO_PIN_SPILL") or env.get("OT_RUN_STRICT_HOST") or env.get("OT_RUN_HARD_PIN") or env.get("OT_RUN_NO_SPILL") or PIN_SPILL_AFTER_S < 0:
         return a
     sep = a.index("--") if "--" in a else len(a)
     head = a[:sep]
@@ -2577,7 +2600,7 @@ def main():
                   + "); stage them with --replicate DIR or --stage, or set OT_RUN_NO_NEEDS_CHECK=1", file=sys.stderr)
             not_run("no candidate host has the job's input paths")
         hosts = _kept
-    if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0:
+    if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0 and soft_pin():   # HARD-PIN-1122
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
@@ -2728,6 +2751,17 @@ def main():
                 first = True
                 continue
             _nod = [h for h in hosts if PLACE_NOTES.get(h) == "no " + str(d)]
+            if pin_wait(_pinned_req is not None, pick, hosts, _nod + [h for h in hosts if "exceeds physical RAM" in str(PLACE_NOTES.get(h) or "")],
+                        max_wait, elapsed):
+                # HARD-PIN-1122: the pinned hosts refuse now for a reason that passes (disk floor, probe, memory): wait there, re-place
+                if first or not PIN_WAITED[0]:
+                    say(f"ot-run: PIN-WAIT: pinned {','.join(hosts)} admits no job now ({why[:300]}); waiting there (a --hosts pin never runs "
+                        f"elsewhere; OT_RUN_SOFT_PIN=1 = old fallback), re-placing every {REQUEUE_S} s")
+                    log_signal(f"ot-run PIN-WAIT {','.join(hosts)} dir {d}: {why[:160]}")
+                    PIN_WAITED[0] = True
+                time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - elapsed)))
+                first = False
+                continue
             if d and _nod and all(h in _nod or str(PLACE_NOTES.get(h) or "").startswith("SSH probe") for h in hosts):
                 _pf = f"SETUP: --dir {d} exists on none of the candidate hosts ({', '.join(hosts)}); create it or fix the path"
                 say(f"ot-run: NOT RUN: {_pf}")
