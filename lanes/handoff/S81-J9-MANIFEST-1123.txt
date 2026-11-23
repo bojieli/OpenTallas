@@ -253,3 +253,11 @@ MERGED J9 COMPOSE ORDER (supersedes earlier lists):
      (2) landcap_row_v2.py trims every svc band clear of hard cores (+2.16 row cut), then grows or re-seats to fill <= 0.85.
          Dry run with 139380c2ba3c: 11 bands fixed; 0 band-core overlaps and 0 fills >= 0.90 left on svc (119 bands). Re-reads split hi pieces after SPLIT-F65F.
      (3) v11 (16 types, land-cap v1) PRE PASS 0 / 66 ADV. v12 (+ land-cap v2) running. ROWS-READY shas + sidecar + gate_j9_v5.sh before 10:30.
+   r0_p4 CLOSURE (H10-R4): REACH v2 (gated in 30dd3d6e03cc) + wave KEEP_WIRES env (kit_wave item_env col_h* ot_dp_dly:r). L1t lacked both. L1t pre-repair GRT wns -54.1.
+     (a) reg -> ROM half (rc86 class): fixed by KEEP_WIRES.
+     (b) x_i0[493] port -> u_bin_x_i0 -88.9: NO ROW. Written reason to FABLE-RC-S81 (die-side x_i0 window budget, 1 flop at the port).
+         ASSEMBLY ruling: also gate the fallback +1 relay stage on x_i0 into r0_p4 (+reprice) for WAVE B 12:30, so a FABLE rejection costs no time.
+     (c) local cland ring: covered by the landing-band rows.
+     -175.6 = runaway GRT repair (RSZ-0060). PROBE-PASS needs an r0_p4 kit on the bound J9 tree with the wave env.
+   --form swap alt (no ECORR): epyc10 fam-s81-col-h10-r4/j9/yg8/plan_final.json, running.
+FIX-LEDGER x13 (per-type verilog_defines dead for flattened logic/explicit params): static scan of J9 row ops is running. Classes: (a) kept leaf body, (b) move to a die-wide asbuilt define.
