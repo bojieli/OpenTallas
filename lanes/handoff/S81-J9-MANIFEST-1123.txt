@@ -2,7 +2,7 @@
 # compose order (owner rows win; each row needs its own green gate: strict bind 0, LATCHECK, PRE 0, G0 no new):
 1  FAM-S81-SLICE-R6 slice v10 (hub e44beaf15ef)                                 READY (bind 0, LAT 873, PRE 0, G0 = J7)
 2  FAM-S81-COL-R5 COL-RST-TAPSLIDE be87d01d774c                                  file/gate status: owner to post
-3  FABLE-FIX-S81-COL-RANKSEAT planR2 rows (0fced563a60d on J7: lockup:true on 104 ROM-input sink rows x 216 col types + tap_grt_pre + rank_line + iters + relay_mid_re). planR2 BIND PASSED 21:1x on J7 (epyc7 b_ab86b11e195d); 3 reps routing. NEEDED for J9: delta re-applied on J8 f65f62779bef (relay_mid_re/iters already in J8) + green J8-fork gate. CRITICAL PATH (216 col types, 161 held)
+3  OPUS-FIX-S81-COL-RANKSEAT-R2 (successor of FABLE-FIX-S81-COL-RANKSEAT; COORD ruling: planR2 in J9, planR3 lockup_cycles in J10) planR2 rows (0fced563a60d on J7: lockup:true on 104 ROM-input sink rows x 216 col types + tap_grt_pre + rank_line + iters + relay_mid_re). planR2 BIND PASSED 21:1x on J7 (epyc7 b_ab86b11e195d); 3 reps routing. NEEDED for J9: delta re-applied on J8 f65f62779bef (relay_mid_re/iters already in J8) + green J8-fork gate. CRITICAL PATH (216 col types, 161 held)
 4  FAM-S81-LEPE-4 F2 row incl coll_i1 station move (dsdv_slice_lepe_mu_LP__t2)   owed
 5  FAM-S81-DSDV-R1 iq_C t1 stations outside hard cores                           owed
 6  FIX-SYNC-S81 SVC 2-port realign (rt_W0_out_1__6, rt_E0_out_0__5) + SVC primary/+42   owed (asked 1d10b642)
