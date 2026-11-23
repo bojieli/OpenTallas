@@ -116,3 +116,4 @@
   dsdv_slice_lepe_mu_LP__t2: LOGIC-DEPTH land_rst_n relay -295 -> FAM-S81-LEPE-4 (LP reset relay, rc34 LP).
   Shared with CLASS-FIX / FLOW-OPS-R2 (hold/reset/IO/NDR/REPAIR-CAP): not mine, per FIX-LEDGER.
 - 2026-11-23 02:12 PST DIED [VIS-S81-MISC] ot-run otrun-tolerant-swine-3418387 on tolerant-swine: rc=1 after 0 s, ended 02:12:31, log none, cmd: --mem 12 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 3600 --detach -- bash /srv/opentallas-scrat | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
+- 2026-11-23 02:23 PST DIED [VIS-S81-MISC] ot-run oth-ubuntu-3855100-1795428813 on tolerant-swine: rc=1 after 584 s, ended 02:23:10, log none, cmd: --mem 12 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 3000 -- bash /srv/opentallas-scratch2/claud | class=NO-PATTERN cause=rc 1 after 584 s, no log
