@@ -31,3 +31,13 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt. V3 = R13 (
 - cbn_q00 cl622f65d2 / cldbcda913: I cover; release = first applied plan with rev5 (V3 c5rt or V4).
 - Waiting pattern: foreground loops are cut at 180 s; use bounded for-loops (5 x 30 s) and direct status reads.
 - HANDOVER when clean: post plan pre sha + post-latency plan path, side.json, r8_final.json, bound dir, LATCHECK + post-bind G0, intake table rev 2; then kits (step 4 of NEXT).
+
+## 17:4x PST 11-22 RESUMED after weekly limit (read first)
+- V4 CORE BIND-CLEAN = L0: epyc8 fable-fix-qc-v4/l0b_bound (strict 0, LATCHECK 1921/1921, post-bind G0 0 errors, tree-fork verify OK). Pre-latency plans/l0/plan.json da1e2800d0cc; post-latency l0b/plan.json c32c923389be; side in/side.json 466b3f222e62; R8 l0b_bound/r8_final.json 5d42f2c51a72. = R13 V3 c5rt + 10 band-moved st_a blocks. HANDED to R13 (post 17:4x).
+- l0y (only cl7479a5ec republished): EMIT sle_sc_v2 -> the bind stops one sc type at a time; all 8 republishes are needed (R13 did all 8).
+- l1b / l2b FAILED 51: 36 LANE_LANDING_LATENCY (SLE freg: table clock_landing is 1 short of bound hardware on sl_*_hc1__cws1 / hc2__cws2 / x_hc1_st_b -> the +1 must be in the latency table clock_landing, sidecar alone is not enough: QC-SLE-R5), 4 TYPE_SPLIT (cbn_q00 x2 bc_i10, cbx_q10 _h x2 bc_i20) + EMIT parent ID cbn_q00 cl622f65d2 + 10 LATCH_EXCEPT_MODULE on cb types: cause unknown (suspect R8IN from the OOM-killed l1 tree, or r1/r2 rows) -> bisect.
+- Running: l1a.sh -> chain l1a = L0 + su_c cap2b + coll_ftc axis_r4 + FEFW (no freg, no cb rows), R8IN = l0b table. If clean -> hand as V4 layer 2; then l1c = l1a + r1 RLEG + r2 LAUNCH + cb site delta to isolate the cb errors.
+- coll tap_reset_split LEC = NOT EQUIVALENT (13:28): stays out. V3: R13 staged c5rt (rev5 included) 12:55, publish gate running; check whether applied.
+- SLWSLE launched slw_st_a_v2__cl9f076a5c proof kit on l0b_bound (src_manifest off). My sealed kits (step 4) still to launch from l0b_bound: --goal route (memory: finish dies on resume).
+- Dead dirs ot-delete in flight (tmp/del.log): l0_bound l1_bound l2_bound l0x_bound l0y_bound; keep l0b_bound; l1b/l2b until bisect ends.
+- Adopted sweep rows: cbn_q00 x2, cbf_q01_s2, cbf_q11 (release = V3 c5rt apply, rev5), slw_su_c cl19bb38ef (needs cap2b = l1a).
