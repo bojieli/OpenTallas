@@ -3897,3 +3897,5 @@ CODEX: 10:15 PST Native Qwen cold transport and K root +832 pass, fixed 288 link
 
 CODEX: 10:36 PST J9 10:30 held, final exact hash4662b734580b gate live. Six SVC and three SerDes CLAND geometry remedies priced, three fW0 topology arcs remain. Qwen O61+205 exact, two later E timing options native through CALR/T/L and C/K slots; full source/owner binding still gates. Daily lane notes and CODEX-LOG current.
 OPS-SUPPORT-R1: 2026-11-23 11:05 PST hourly: 587 any / 484 current (+2/+0 vs 06:06); private-kit sign-offs checked: all 29 ledger SIGNED private units already counted via INDEX; RHI probe census posted; KV v6n/v12 cancelled.
+
+CODEX: 2026-11-23 15:06 PST. S81 native monitor corridor passes scoped GRT and TT/FF, J9 B2 reset declarations rebuilding. HEAD binary control, QC C4 and K3f continue. S81 SOT date fix is on main. See CODEX-LOG.md.
