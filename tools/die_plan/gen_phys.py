@@ -9916,6 +9916,9 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     modules = list(re.finditer(r"^\s*module\s+(\w+)(.*?)\bendmodule\b", clean, re.S | re.M))
     paths, owner = {}, None
     verified_cell_classes = set()
+    reset_cells = gen_rtl.CELLS + getattr(gen_rtl, "LOCKUP_CELLS", "")
+    if tree.get("pin_entry_fall"):
+        reset_cells += gen_rtl.ENTRY_FALL_CELLS
 
     def canonical_cell(src, module):
         src = re.sub(r"//[^\n]*|/\*.*?\*/", "", src, flags=re.S)
@@ -9926,7 +9929,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         nonlocal owner
         if module not in verified_cell_classes:
             actual_cell = canonical_cell(text, module)
-            if actual_cell is None or actual_cell != canonical_cell(gen_rtl.CELLS + getattr(gen_rtl, "LOCKUP_CELLS", ""), module):
+            if actual_cell is None or actual_cell != canonical_cell(reset_cells, module):
                 raise gen_rtl.GenError(f"type {tn}: native reset cell {module} source differs from canonical stage/gate behavior")
             verified_cell_classes.add(module)
         path = _kit_inst_path(scoped_text, name, re.escape(module),
@@ -9953,7 +9956,9 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
 
     sync = tree["entry"] == "sync"
     ent = "u_rst_root" if sync else "u_rst_in"
-    mod = "ot_dp_rsync_s2" if sync else "ot_dp_rrelay"
+    # The captured contract selects the same two-edge pin cell as the binder.
+    # Keep both its canonical body and its local wrapper connections under audit.
+    mod = "ot_dp_rsync_s2" if sync else "ot_dp_rrelay_fn" if tree.get("pin_entry_fall") else "ot_dp_rrelay"
     body = check(ent, mod, {"clk": "clk", "async_rst_n" if sync else "d": "arst_n",
                             "sync_rst_n" if sync else "q": "rst_por_n" if lock else "rst_root_n"})
     for c in pin_copies[1:]:

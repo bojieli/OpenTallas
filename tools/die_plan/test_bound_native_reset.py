@@ -19,11 +19,13 @@ def tree(entry='relayed'):
                 n_tree=1, n_pad=0, max_hop_um=17.28, reach_um=405, outs=[], core_resets=[], relay_driver=False)
 
 
-def fixture(tmp_path, entry='relayed', mutate=lambda s:s, start=False):
+def fixture(tmp_path, entry='relayed', mutate=lambda s:s, start=False, entry_fall=False):
     t = tree(entry)
+    if entry_fall:t.update(pin_entry_fall=True, pin_entry_added_flops=1+int(start))
     if start:t.update(start=True,start_in=[8.64,10.8],start_role='mission',tap_roles={'0':'mission'},start_tap=None)
     text = ('module top(input clk, arst_n);\n bound u_bound(.clk(clk), .arst_n(arst_n));\nendmodule\n'
-            'module bound(input clk, arst_n);\n' + '\n'.join(R.rtl_lines(t)) + '\nendmodule\n' + gen_rtl.CELLS)
+            'module bound(input clk, arst_n);\n' + '\n'.join(R.rtl_lines(t)) + '\nendmodule\n' + gen_rtl.CELLS
+            + (gen_rtl.ENTRY_FALL_CELLS if entry_fall else ''))
     f = tmp_path/'native.sv'; f.write_text(mutate(text))
     p = SimpleNamespace(types={'t':dict(module='top', outline_um=[100,100],
                                       clock=dict(landing_contract=dict(collector_tree=t)))})
@@ -39,6 +41,25 @@ def test_receiver_uses_exact_tree_entry_and_coordinates(tmp_path):
     text=R.tcl_text(R.for_type(p,'t'),native_paths=c['native_paths'])
     assert 'u_bound[./]u_rst_in[./]*' in text and '*u_rst_root[./]*' not in text
     assert len(c['native_paths'])==2
+
+
+def test_declared_falling_entry_with_start_and_canonical_cell(tmp_path):
+    p, f = fixture(tmp_path, start=True, entry_fall=True)
+    c = G.install_bound_native_reset(p, 't', [f])
+    assert c["entry_path"] == "u_bound.u_rst_in"
+    assert c["native_paths"]["u_run_in"] == "u_bound.u_run_in"
+    assert "ot_dp_rrelay_fn" in c["verified_cell_classes"]
+
+
+@pytest.mark.parametrize("mutation, error", [
+    (lambda s: s.replace("ot_dp_rrelay_fn u_rst_in", "ot_dp_rrelay u_rst_in"), "wrong-module"),
+    (lambda s: s.replace("always @(negedge clk) pre <= d", "always @(posedge clk) pre <= d"),
+     "canonical stage/gate behavior"),
+])
+def test_falling_entry_rejects_wrong_cell_and_edge(tmp_path, mutation, error):
+    p, f = fixture(tmp_path, mutate=mutation, entry_fall=True)
+    with pytest.raises(gen_rtl.GenError, match=error):
+        G.install_bound_native_reset(p, 't', [f])
 
 
 def test_positive_nested_root_has_exact_two_bit_exception(tmp_path):
