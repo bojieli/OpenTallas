@@ -303,3 +303,7 @@ COORD REFINEMENT 04:2x (supersedes the delta method above). J9 tree build:
    3. Row 3i u_cf views + every ADV-TREE-DRIFT view/porous/flow hit synced from the same sha.
    4. ADV-TREE-DRIFT (main) = 0 view/porous/flow hits, then compose.
    OVERLAY SHA: TBD (fixed at ~09:30 to include the FLOW-OPS fix if landed; else the HEAD then, >= 25064b2fc2).
+   SLICE-R6: apply_rc33.py sha256 d0c6c9604136 (epyc7/epyc8 fam-s81-slice-r6/rows/, intel2 .../tmp/). Needs tree main >= 426e4a5524.
+     Pending: rc31/34 ops file (static check running); 1b strict bind (epyc9); XG gate (intel2); rc33 proof bind b740624bddec.
+   H10-R4 CORRECTION: r0_p4 x_i0 -88.9 is a HOLD path removed by GRT repair, so no relay row. Real setup is wns -54.1 (rc86 reg->ROM half), fixed by KEEP_WIRES. -175.6 is an advisory post-CTS model estimate.
+     H10 R2 rebase running (epyc10 fam-s81-col-h10-r4/j9/r2m): 3-way merge onto 95ddb61ae6f6, R2 kept on conflict, R2-key preservation check. TAPGRT is a no-op on R2.
