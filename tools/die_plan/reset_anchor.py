@@ -15,6 +15,7 @@ rst_rl relay of the SAME depth nearest (Manhattan) to the recorded site, ties by
 the input whose sha changed.  No relay within tol_um of the site, or a referenced name the anchor does not carry,
 fails closed.  A plan without an anchor, or whose anchored relays all still match, binds byte-identically.
 """
+import copy
 import hashlib
 import json
 import re
@@ -208,7 +209,6 @@ def repicked_paths(tn, t, tree, root, ported_fn=ported):
         - a type with clock.reset_tree_anchor: every START / local-reset reference, when resolve() succeeds on a copy of t;
         - clock.landing_local_resets[i].raw: always (LOCAL-RESET-RAW-1 in clock_landings re-picks on the regenerated relay set);
       error = the AnchorError text when resolve() raises (the bind then fails the type: nothing is repaired, paths = empty)."""
-    import copy
     ck = t.get("clock") or {}
     local = {pth for pth in ref_paths(t) if LOCAL_RAW.match(pth)}
     if not ck.get(KEY):
@@ -228,7 +228,9 @@ def main(argv):
     names were picked before a later event or generator change renumbered the tree (auto: snapshot when it holds every
     referenced name, else the tree).  Per type: a type that cannot be anchored (e.g. a referenced relay missing from
     every source) is listed as FAILED and left unchanged; every other type is still anchored and OUT is written; the
-    exit status is 1 when any type failed (TAP-GRID-R5 11-22: one stale QC reference blocked 98 re-records)."""
+    exit status is 1 when any type failed (TAP-GRID-R5 11-22: one stale QC reference blocked 98 re-records).
+    --repick uses the existing anchor to select a same-depth relay within the old site tolerance of a known reference
+    before writing the new anchor. A type whose references cannot be preserved is left unchanged."""
     import argparse
     import sys
     ap = argparse.ArgumentParser(description=main.__doc__)
@@ -245,6 +247,8 @@ def main(argv):
     ap.add_argument("--bound-rtl", help="rtl/ of a bind of record: with --bound-plan, a type whose references equal "
                                         "that plan's is anchored where that bind emitted the relays (first choice)")
     ap.add_argument("--bound-plan", help="the plan the --bound-rtl bind bound")
+    ap.add_argument("--repick", action="store_true",
+                    help="re-pick old anchors by recorded depth and site, using the same resolver as the bind")
     a = ap.parse_args(argv[1:])
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import schema
@@ -268,6 +272,7 @@ def main(argv):
             names = {c[k] for c, k in refs(t)}
             has = lambda tr: tr is not None and names <= {r["q"] for r in tr["relays"]}  # noqa: E731
             src, tree = None, None
+            repick = a.repick and bool(t["clock"].get(KEY))
             if a.source == "auto" and tn in bplan and [c[k] for c, k in refs(bplan[tn])] == [c[k] for c, k in refs(t)]:
                 f = Path(a.bound_rtl) / f"{tn}.sv"
                 bt = bound_tree(f.read_text()) if f.is_file() else None
@@ -275,7 +280,7 @@ def main(argv):
                     src, tree = "bound", bt
             if tree is None and a.source in ("tree", "auto"):
                 tt = RT.for_type(P, tn)
-                if a.source == "tree" or has(tt):
+                if a.source == "tree" or repick or has(tt):
                     src, tree = "tree", tt
             if tree is None:
                 snap = snapshot(t)
@@ -283,9 +288,15 @@ def main(argv):
                     src, tree = "snapshot", snap
             if tree is None:
                 raise AnchorError(f"{tn}: no source holds every referenced relay (bound / tree / snapshot)")
+            note = ""
+            if repick:
+                t = copy.deepcopy(t)
+                receipt = resolve(tn, t, tree, a.root)
+                note = f", re-picked {len(receipt['remaps'])} relay name(s)"
             t["clock"][KEY] = record(t, tree, a.root, tol)
+            raw["partition_types"][tn] = t
             n += 1
-            print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s) from the {src}, tol {tol:g} um", flush=True)
+            print(f"{tn}: anchored {len(t['clock'][KEY]['relays'])} relay(s) from the {src}, tol {tol:g} um{note}", flush=True)
         except Exception as e:                       # TAP-GRID-R5 11-22: one bad type never blocks the rest
             failed[tn] = f"{type(e).__name__}: {str(e)[:300]}"
             print(f"FAILED {tn}: {failed[tn]}", flush=True)
