@@ -27,3 +27,9 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 - VIS R3 HST2SITE deferred to D30 (key names unverified). I replied to VIS-KV.
 - After z binds: sealed kits kv3_hgi_v8 + kv3_hgi_v2__cle0015330 with launch-style private-spec --tree trees/s1 --plan ana/plan_z.json --bind-out trees/s1/.../bind_of_record --goal route.
 - epyc8 scratch2 ~97 GB free at 23:12.
+## UPDATE 00:32 PST 11-23
+- w (plan bce9ce826928) REFUSED by schema: soft-cell outline_um 0. ECTLH3ALL fixed to 9208de0a36c1 (4.32 um plan cell centred on the site). plan_w2 ab4cb6fff587, PRE PASS with baseline. w2 = chain2.sh w2 y, unit oth-ubuntu-1206458-1795418390, G0 PASS, bind running (slow, started 23:19).
+- z bind CLEAN 00:2x (R8 = D28 set + 4 benign). I posted ROWS-READY D29 COMBINED.
+- Sealed --goal route kits on z (tree s1, plan_z), launched with ~/tmp/fablefixkvhg/launch_r8.sh (OT_LANE=OPUS-FIX-KV-HG-R8): kv3_hgi_v8 spec private_specs/OPUS-FIX-KV-HG-R8/qwen_kvsys_kv3_hgi_v8_1123003029 (log kit_kv3_hgi_v8_zseal.log), kv3_hgi_v2__cle0015330 spec ..._1123003049 (log kit_kv3_hgi_v2__cle0015330_zseal.log).
+- NEXT: w2 clean -> ROWS-READY ECTLPDALL/ECTLH3ALL (copy to d29/rows); hgi_v5 probe: launch_r8.sh y plan_w2.json kv3_hgi_v5 probe --goal geom --ab OT_PROBE_THROUGH=1 --why "..." ; self-review its render, set PROBE-PASS in VIS-COVERAGE.tsv (f95aac4), tell VIS-KV. D30: VIS R3 HST2SITE keys u_hst2_g.u_reg.ti_b[k]/e_b[k], u_hst2_t1.u_reg.*; hg die form (SRAM stack out of the centre gap, gap >= 250 um, taps <= 1200, astk/bin stations) = mine.
+- Stray file epyc8:/tmp/w2check.json (mine, harmless).
