@@ -117,3 +117,17 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
   COLROM-R6 warned: sink row + source-level pipe on same bit is refused (bind.py ~4936), stationed port with core_input_lockup refused (~4868);
   not expected here since rows already bind in J7, only the lockup flag is new.
 - Cycle note: latch across the ROM negedge = +1 cycle at the ROM (declared? lockup is documented 0 cycles; LATCHECK / token lane must price it).
+
+## 20:1x LOCKUP CYCLE VERDICT (COORD 19:5x): TRUE +1 cycle, not a half-cycle lockup
+- Sim intel2 fable-fix-s81-col-rankseat/lk/tb_lockup_rom_negedge.v (iverilog; stage posedge -> ot_dp_lk -> ROM): with the ROM negedge
+  boundary copy (IFN=1) latency 2 -> 3 with the latch, for ROM clock early 0/100/205/300 ps; with a posedge-only ROM (IFN=0) 2 -> 2.
+- Physical view HAS the negedge copy: views/romq_split_1106 lib 586 setup_falling pins; rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb_split.sv
+  halves default IFN=1. BUT the bound text instantiates the halves with .IFN(0) -> RTL/token sim shows 0 added cycles, silicon +1. Hidden.
+- Pricing facts: these are CORE-INPUT (internal) pipes, not die lanes: plan latency has only "lanes", no internal_pipe_ack; the existing
+  lever-1 +1 stage of J7 is itself only a WARN in lane_asbuilt_latency.internal_pipe_check. plan_gate_pre reprice prices lane station counts,
+  not these.
+- TODO in my row (before J9 hand-off): (1) bind.py: a lockup latch on a port whose view lib check is falling-edge counts +1 in
+  bind_core_input_pipe.json (new row flag lockup_cycle: 1, test); (2) plan latency.internal_pipe_ack digest; (3) bound ROM halves .IFN(1) so
+  RTL = view (ask ROM owner / ASSEMBLY where IFN(0) comes from); (4) token lane: confirm the element input stream is valid-qualified
+  (xs_v/go/cfg_v ride with data, all 13 ports +1 uniformly) and add +1 to the element output schedule in the compiler latency table.
+- Current bindR2 (unpriced) stays: physical proof kits do not depend on the pricing; final row gets ONE more bind with the priced plan.
