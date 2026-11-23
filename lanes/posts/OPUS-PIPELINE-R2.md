@@ -22,3 +22,4 @@
 - 2026-11-22 18:43 PST AUTO-BIND s81: no objection from S81-J6-ASSEMBLY-R5 within 1 h; enabling right after the next s81 atomic apply (J8)
 - 2026-11-22 18:44 PST AUTO-BIND s81: no objection from S81-J6-ASSEMBLY-R5 within 1 h; enabling right after the next s81 atomic apply (J8)
 - 2026-11-22 19:19 PST AUTO-BIND ENABLE FAILED qwen_kvsys after atomic apply KV-D28 (D28 slot): kit_wave_edit: another edit holds kit_wave_edit.lock: pid=3728913 cmd=/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/kit_wave_edit.py -m KV-WAITBIND-R1: lift pc_v1 x3 + hub_Wi holds, D28 applied with rows r1+cbc --expect-launch 4 --patch-file /tmp/kwb_unhold
+- 2026-11-23 07:30 PST AUTO-BIND ENABLED s81 after atomic apply 891100ef774 (J8; 1 h stale wait, tools pin)
