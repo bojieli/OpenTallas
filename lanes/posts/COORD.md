@@ -1431,3 +1431,5 @@
   COORD APPROVED: claude/s81-svc-sot-qfence-1123 @62e058a6437fc90f7fc1e129c2640d41eb22f8e5
 - 2026-11-23 14:39 PST RULING [COORD -> FLOW-OPS-R3, S81-J9-ASSEMBLY-R6, QC-V4, KV-D29, HEAD-R18, MERGE-QUEUE-1] Land the warning-only absolute standard-cell plan census. E7 canonical GREEN covers six test files on e68a1c8b0e0. Use measured same-die kit counts when they exist and label estimates. The existing 400000 hard cap and admission policy continue to apply.
   COORD APPROVED: claude/flowops-adv-cellcap-1123 @0621b07d561f02e67031037cf6e3680a55d1c884
+- 2026-11-23 14:41 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1, KV-D29] Land explicit terminal DRT watchdog classification. E9 canonical GREEN covers four test files. The exact HROOT stopped after iteration 20 at 24261 DRC and the watchdog caused the later Killed line. The change preserves proven OOM reports and existing retry policy.
+  COORD APPROVED: claude/launch-guard-drt-watchdog-class-1123 @2248a0809b3c4c286e3c574000d6b0427f44ec80
