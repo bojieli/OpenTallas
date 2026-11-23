@@ -5787,6 +5787,14 @@ def cmd_elab(a):
                         "restore the declared source instead of falling back to an automatic stub:\n" + "\n".join(missing))
     _write_provenance(a, "elab")
     rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
+    # TYPE-DEFINES-1123: a per-type verilog_defines entry read by a kept (top / dissolved) module is realized by one
+    # define-on trial with checked scope when explicitly enabled. Default mode reports unapplied requests.
+    # OUT/type_defines.json records the closure assessment used by bind.
+    import type_define_effect as TDE
+    if TDE.mode() != "off" and TDE.has_defines(raw):
+        td = TDE.elab_pass(raw, raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, Rules(raw["asbuilt"]).part_of,
+                           E.elab, load_asbuilt_netlist, E.flatten)
+        rec["type_defines"] = {k: td[k] for k in ("verdict", "added", "realized", "no_change", "outside") if k in td}
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0
 
@@ -5814,6 +5822,12 @@ def _bind_through_landings(a):
     input_topology = kit_topology.native_contract(raw,getattr(a, "asbuilt",None),a.plan)
     yjs = load_asbuilt_netlist(out)
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
+    import type_define_effect as TDE          # TYPE-DEFINES-1123: every requested per-type define took effect
+    _td_err, _td_warn = TDE.bind_check(raw, B.ab, out, B.base)
+    B.errors.extend(_td_err)
+    B.warns.extend(_td_warn)
+    for _m in _td_err + _td_warn:
+        print(f"   {_m}")
     B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
     B.source_plan = Path(a.plan).resolve()
     import taps as _taps_pd
@@ -7541,6 +7555,7 @@ def cmd_kit_rtl(a):
                **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, **(dict(unbound_input_buses=unbound_inputs) if unbound_inputs else {}),
                bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
+               **({"type_defines": list(t["verilog_defines"])} if t.get("verilog_defines") else {}),
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
