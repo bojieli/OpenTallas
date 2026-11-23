@@ -12,3 +12,8 @@ Rows handed (owner agent ids): hroot BAND 43a1ac7be69f D29 (FAM-KV-HROOT-R1 ac3a
  sys_c R-DOB/R-RST (D29 if bind-clean) / R-DCAL-RT D30 (FAM-KV-HUBC-SYSC-R2 acfac8231202b7f41).
 COORD speed: answer probe renders <=30 min else owner self-marks PROBE-PASS; never hold probe kits. KV-PLAN-R6 (a5df7e7d283adf549) holds only previously-failed types.
 TODO: D28 die render epyc8 /srv/opentallas-scratch2/claude/vis-kv/tmp/die/d28_die.png (render.log); render+read composed D29 plan before 06:00 apply.
+
+## 11-23 00:0x
+- Die floorplan render read (D28 + D29r3, viskv/q_*.png via dieq.py on epyc8 venv; render.py stuck in check / sink_bins path). Verdict in GEOM-REVIEW.
+- pc: R1 no-growth fails PRE; R1b rotate not allowed (schema orient). Ruled growth G=112.32: IOPC-R4 builds the type transform + probes; KV-PLAN-R6 queued die shift PC-CHANNEL-WIDEN in D30_QUEUE.txt.
+- Waiting: probe renders hgi_v5 (HG-R8), sys_c row C (HUBC C6 -> probe), pc_v1 PCV1BANK cl7f648944, hroot D28 kits (intel1 place), hub_Wo/Eo. After D29 seal ~03:00: render changed types, then pass list to KV-PLAN-R6 before 06:00.
