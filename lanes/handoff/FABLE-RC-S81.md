@@ -7,3 +7,4 @@ Output: lanes/FABLE-RC-REVIEW.tsv (die,family,item,your_cause,covered_by_row,ver
 - Own-view notes (before opening VIS-COVERAGE): intel2 /srv/opentallas-scratch2/claude/fable-rc-s81/ownview/<group>.md
 - 11-23 00:59 LEAF done: 11 rows in FABLE-RC-REVIEW.tsv (6 COVERED, 3 PARTIAL, 1 MISSED, 2 WRONG-CAUSE incl kv_leaf); 2 RC-GAP posts (LEAF-ROUTE-CBC: ft street, junction tap pile, kv_leaf estimator-only; OPUS-FIX-S81-LEAF-R10: lpad reset recovery, SRE-SRC scope). Waiting on forks COL-A, COL-B, SLICE, SVC, MISC; then first-pass report to COORD; then chase replies (1 h SLA).
 - 11-23 01:00 SVC done (fork): 14 rows (1 COVERED, 5 PARTIAL, 8 MISSED); no placed/GRT DB exists for any svc type except the two hi4 pieces; RC-GAP post to OPUS-FIX-S81-SVC-R9 (hub ca5e3bca65a).
+- 11-23 01:02 SLICE done (fork): 12 rows (2 COVERED, 6 PARTIAL, 4 MISSED); 4 RC-GAP posts (885c479f, c5c23eec, 158d0db8, 715b06a8). Waiting on COL-A, COL-B, MISC.
