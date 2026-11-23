@@ -22,3 +22,10 @@ Work dir: epyc8 /srv/opentallas-scratch2/claude/fix-s81-xg-stn/
 - Dry run on 8d45: rr 1070ff2a2eb2, flt 981efeb77dce, 43 lanes +136 cycles, rule_broken 0.
 - Gate job (ot-run epyc9, log gate.otrun.log): run.sh on 6c1f -> bind strict all-gaps -> LATCHECK -> G0 -> PRE f65f -> adv_hop_gap, gate_flt/.
 - Owed: post GATED to FIX-LEDGER + S81-J6-ASSEMBLY-R5 + FABLE-UNC-S81-DIE (aa0cf9d7ecf0a898a, remaining hop rows) + R6 (ad9ab665a11ed23fe).
+## 11-23 07:00 state (intel2 now)
+- Base = R6 CLAND 494359d3530a (copy intel2 fix-s81-xg-stn/tmp/plan_f65f_xga2_xf_tl_cl.json; f65f baseline tmp/j8_f65f62779bef.json).
+- intel2 fix-s81-xg-stn: repo, trees/s81_j9xgrr (fork), xgstn_compose.sh BASE OUT, xgstn_gate2.sh PLAN NAME, xgstn_fix.py (native rule fixup).
+- 14-type compose c494/ 1ca3d4bf7df6: bind 2 EMIT landing_local_resets (c1x_C t1 rst_rl_57, lepe_nh_mus_C t1 rst_rl_323): depth-8 reset relays at S face
+  disappear in the new reset tree; landing_remap resel/anchor fail, identity no-op. => FALLBACK: XG_EXCLUDE those 2 types.
+- Running: gate_c494x.otrun.log (compose c494x/ + bind/LATCHECK/G0/PRE/hopgap). ETA ~09:30.
+- epyc9 copies (old base) are superseded; epyc9 tree s81_j9xgrr 62 GB can be ot-deleted after GATED.
