@@ -22,3 +22,18 @@ STATUS: 02:2x gates launched on grow (c9a4) and f65f (--fit, gap 302.4 only -> p
  row plan F21/p_ws0.json 044308bca780; +YTRADE+ES1+tapfix F21/p_ws_tf.json 345df5946ff1; PRE PASS f0 (baseline f65f), G0 10->10 introduced 0.
  Sent to R5 (J9 3f), FIX-LEDGER, R9, FABLE-UNC. Open (R9's form): hi4 split-internal strips 13-17 um; 11 slice re-snaps -> strict bind if hi4 lands.
  Recipe: final_gate.sh TAG BASE [BASELINE]; g0_cmp.sh OUT BASE CAND.
+04:4x R9 rulings (11-23 ~04:0x):
+ (1) 11 partner re-snaps OK if listed + posted to slice/station owners + G0 0 new ERRORs.
+ (2) I own row SVC-SEAM-STRIP (hi4 internal seams).
+ (3) ES1 over all 24 svc types.
+ SEAM-STRIP RESULT = REASONED partial (hub 93625031 -> FABLE-RC-S81). Why:
+  - growth needs ~690 um of x vs ~56 available;
+  - in-piece shift fixes 0/15;
+  - in-column x trade fails R9 cond 1 (no partner effects) in 7/7 columns: N/S die windows straddle each moved seam, and the receivers need 5-106 cores re-stacked.
+ Demand-sized seam strip 17.28 (<= 7.19 b/um vs 36.5 tracks/um M4+M6; landing 4.5 um; cores obs <= M5).
+  - 12/14 faces meet it.
+  - t4_att E 12.96 and t5_att E 15.12 asked of FABLE-UNC att_order_row (cut-face margin 17.28).
+ Evidence: epyc10 .../fix-s81-svc-westrip/ST/ (census.json, escape.log, seamplan.log); tools seam_trade_row.py --full, escape.py.
+ WE-STRIP tool d01dacafc1e5: external N/S windows take minimal moves with order-preserving packing per face.
+  - 13fde stacked the 3 xtier windows; 98e3 group-delta was infeasible for the svc_5 face.
+  - Gates F23 (81e1) / F23rb (rebase) running; then G0 on F23rb; then the re-snap list goes to FAM-S81-SLICE/station.
