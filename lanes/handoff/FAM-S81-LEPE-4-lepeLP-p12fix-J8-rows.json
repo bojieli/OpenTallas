@@ -133,6 +133,48 @@
    "status": "DRAFT 11-22 08:xx: selector on main 5a208e94fe (default off, other types unchanged); dry-run strict bind + LATCHECK composed with F2+R1+N1 on epyc7 fork trees/s81_n1 (gate_n1.sh applies the TXQ3 patch to the tree's own lep.sv + the lepw define)",
    "rtl_main_sha": "5a208e94fe",
    "bench": "mu_kit_bench.sh lepmu n32 (RX_SRAM 1 / NATIVE32 1 = SAFE_FIFO g_safe_write path) + OT_S81SL_TX_GROUP_ASSERT: TXQ3 seeds 1, 5 PASS (g_std_qualify elaborated), control (no TXQ3) seed 5 PASS; run_lep_mu_bench base PASS with/without"
+  },
+  "RS1": {
+   "what": "relay_rank_sites for the lep input-face ROS stages: seat ros_r[0] at 1/3 and ros_r[1] at 2/3 of the rop->roq line (ros_r[2] stays with roq)",
+   "types": [
+    "dsdv_slice_lepe_nh_mus_LP__t1"
+   ],
+   "evidence": "N1 kit (intel1 ..._1122173332) 4_cts.odb: rop mean (1364,312) at the E face; ros_r[0] (900,599), ros_r[1] (852,630), ros_r[2] (831,648), roq (813,656). The 3 ROS stages exist (OT_S81SL_LEP_ROS3), but placement pulls all 3 into the roq cluster, so rop->ros_r[0] is one ~750-um hop: setup -320.6 (rop[733]->ros_r[0][733]) and 5 paths below -263. FABLE-RC-S81 rc37.",
+   "K": "0 (positions only; the stages already exist)",
+   "ops": [
+    {
+     "op": "set",
+     "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/relay_rank_sites",
+     "value": {
+      "u_u_lep.u.g_inpipe.g_rs.ros_r[0]": {
+       "line_um": [
+        [
+         1100.5,
+         300.0
+        ],
+        [
+         1259.5,
+         554.0
+        ]
+       ]
+      },
+      "u_u_lep.u.g_inpipe.g_rs.ros_r[1]": {
+       "line_um": [
+        [
+         917.5,
+         414.0
+        ],
+        [
+         1076.5,
+         668.0
+        ]
+       ]
+      }
+     }
+    }
+   ],
+   "risk": "each line holds 1104 bits on 300 um (3.7 bits/um, below the 1104-in-71-um RANK-SEAT case); no hard core in x 880-1300, y 280-700",
+   "status": "DRAFT J9; mu_LP t2 (ROS3 too) gets the same op only if its SP probe shows rop->ros_r[0] < -150"
   }
  },
  "ops": [
