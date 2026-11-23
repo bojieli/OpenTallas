@@ -28868,3 +28868,4 @@ FAILED [AUTOPILOT 8cb278349502] 2026-11-22 23:47:43 PST AUTOPILOT -> KIT-WAVE-3:
   STALE 17 (S81 only, non-held: cancelled-superseded/failed): COLROM-R6 3, LEAF-R10 5, COL-H9R0-R4 3.
   92 held-with-reason rows no longer STALE; 193 held for plan events.
   Detail lanes/OWNERS-SWEEP.tsv
+- 2026-11-22 23:51 PST DONE [HEAD-CTL-R1] ot-run oth-ubuntu-4016544-1795420090 on tolerant-swine: rc=0 after 808 s, ended 23:51:18, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-CTL-R1/s81_head_hd_ctl_1122233733/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch3/claude/head-ctl-r1/kit5 --hosts epyc9 -- bash -c cd /srv/opentallas-scratch2/claude/kw45/
