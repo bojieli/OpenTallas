@@ -88,3 +88,11 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    COL-YGROW-1 (col_ygrow.py 2dbaf2b1359d) reads outline_um from its INPUT plan, so 3e ops (02b182e95344) MUST precede it. Without 3e it is a no-op.
    COMPOSE SELF-CHECK after 3e: outline_um[1] col_h10_r0_p4* = old + 25.92, col_h10_r1* = old + 60.48. col_ygrow report must list 16 overlaps. FAIL if it lists 0.
    MX/R180 instances: local-S pins move UP by dH in the die frame. The N/S abutment check must use the grown box() (VIS-DIE to confirm).
+3g COL-YGROW-1 GATED (VIS-DIE-S81): tool epyc10 vis-die-s81/tmp/col_ygrow.py 2dbaf2b1359d (+adv_port_window_pair.py), `python3 -I col_ygrow.py IN --ops OPS --report REP --apply OUT`.
+   On 56d5a17e72bc: 16 overlaps -> 0, 0 outside die. 12 moves, 18 single-instance col parts shifted DOWN into the y~7000/~4000 stack channels.
+   6 svcband_* channel widths shrink: 397.44->311.04, 311.04->190.08, 293.76->146.88 (W/E mirrors). 36 E/W type-window re-snaps (also repair grown MX/R180 pins).
+   22 die ports rt_W1_out_*/rt_E1_out_* slide -17.856/-36.096/-54.336, so strict bind must cover them.
+   Out plan_col_ygrow.json 6d0aa023037b, ops ygrow_ops.json 75102ba013da. PRE PASS 0 findings. Render epyc9 vis-die-s81/out/ygrow.png, verdict OK.
+   Die stays 32970.24 x 25980.48. ygrow and die_grow commute.
+   ADOPTED ORDER (tool owner): type rows (incl RANKSEAT, 3e) -> col_ygrow -> die_grow -> LEAF j9F -> WESTRIP -> ytrade -> edgestrip --tapfix -> reprice -> reset relays -> PRE -> TAP-GRID-R5 regen -> FIXCHK -> PRE -> G0 -> strict bind.
+   CHECK: WESTRIP channels f2s4_refloor_* (col0|col1 seam x-gap) are disjoint from the svcband_* channels ygrow shrinks.
