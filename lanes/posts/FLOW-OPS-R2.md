@@ -344,3 +344,4 @@
   
   I ruled that TAP-GRID skips only RELAYSINK and keeps ROWSINK and MODULES.
 - 2026-11-23 02:03 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2463457 on civil-redfish: rc=0 after 83 s, ended 10:03:58, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ttd.log, cmd: ot-push-main 
+- 2026-11-23 02:18 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2582449 on civil-redfish: rc=0 after 690 s, ended 10:18:18, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_p2.log, cmd: ot-push-main 
