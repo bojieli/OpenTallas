@@ -318,10 +318,14 @@ def core_tap_reach_rows(kit):
                     masters.setdefault(row['inst'], row['module'])
         except (ValueError, AttributeError):
             pass
+    placements = list(_PLACE_MACRO.finditer(mp.read_text()))
+    sole_master = next(iter(sizes)) if len(sizes) == len(placements) == 1 else None
     boxes = {}
-    for m in _PLACE_MACRO.finditer(mp.read_text()):
+    for m in placements:
         inst, x, y, orient = m.group(1).replace('\\', ''), float(m.group(2)), float(m.group(3)), m.group(4) or 'R0'
-        w, h = sizes.get(masters.get(inst), (0.0, 0.0))
+        # A single-reference kit may omit both manifest maps. Its one placed
+        # macro can only have the single declared LEF master.
+        w, h = sizes.get(masters.get(inst, sole_master), (0.0, 0.0))
         if orient in ('R90', 'R270', 'MXR90', 'MYR90'):
             w, h = h, w
         boxes[inst] = (x, y, x+w, y+h)

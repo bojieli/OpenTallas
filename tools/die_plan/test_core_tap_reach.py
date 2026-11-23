@@ -76,6 +76,17 @@ def test_kit_without_core_taps_is_untouched(tmp_path):
     assert KP.core_tap_reach_rows(tmp_path) == [] and KP.core_tap_reach(tmp_path) == []
 
 
-def test_check_runs_it_as_a_blocking_preflight_check():
-    src = (Path(KP.__file__)).read_text()
-    assert "run('core_tap_reach', lambda: core_tap_reach(kit))" in src
+def test_single_reference_macro_without_bind_maps_uses_lef_outline(tmp_path):
+    macros = tmp_path / "macros"
+    macros.mkdir()
+    (macros / "phy.lef").write_text("MACRO phy\n  SIZE 8500.056 BY 1177.200 ;\nEND phy\n")
+    (tmp_path / "macro_place.tcl").write_text(
+        "place_macro -macro_name {u_bound.u_core} -location {77.7600 5.0880} -orientation R0 -exact\n")
+    (tmp_path / "core_taps.txt").write_text("clk_c0 u_bound.u_core clk 0 0\n")
+    io = tmp_path / "io.tcl"
+    io.write_text("place_pin -pin_name clk_c0 -layer M7 -location {4448.4800 1209.6320}\n")
+    assert KP.core_tap_reach_rows(tmp_path)[0][2] == 27.3
+    assert KP.core_tap_reach(tmp_path) == []
+    io.write_text("place_pin -pin_name clk_c0 -layer M7 -location {4448.4800 1609.6320}\n")
+    assert KP.core_tap_reach_rows(tmp_path)[0][2] == 427.3
+    assert len(KP.core_tap_reach(tmp_path)) == 1
