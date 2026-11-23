@@ -131,3 +131,7 @@
   inv_Sm mutant (b1 group 2 never loads): FAIL as expected -> inv_S proof non-vacuous.
 - 00:1x J9 gate 1: SCHEMA 0, PRE PASS (0 findings, 84 advisories), ELAB yosys rc 137 (OOM: ot-run charged class p90 7 GB, epyc10 MemAvailable 54) -> bind/LAT not run.
   Re-run as w/bksel_elabbind_j9.sh (new class, charged 110 GB), log intel2 ~/s81-bksel-r7-logs/gate_j9b.otrun.log, out w/gate_j9b.
+- 00:3x COORD: cancelled epyc10 gate (ot-run --cancel .../bksel_elabbind_j9.sh --reason infra; orphan remote ot-heavy waiter pid 3534028 killed after cmdline check).
+  Gate moves to epyc7: fork epyc7 w/tree_j9 (ot-tree-fork --src-host epyc10 of s81-j6-r5/j8_cut_tree, log w/fork_j9.log); inputs staged in epyc7 w/
+  (plan_j9_bksel 436a1beb8536, l20s_j9 900bf2d5bdbe). Waiter submits w/bksel_elabbind_j9.sh on epyc7 (log intel2 ~/s81-bksel-r7-logs/gate_j9c.otrun.log).
+  DISK for EPYC10-DISK (ot-delete): epyc10 s81-bksel-r7/w/tree_j9 (61 GB, now unused) + w/tree_sealed (54 GB) + C kit dir bk_sel__t2_1122054328.
