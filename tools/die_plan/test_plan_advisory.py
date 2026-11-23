@@ -45,3 +45,30 @@ def test_gate_advisory_never_fails(monkeypatch, tmp_path):
 def test_real_checks_on_empty_plan_are_quiet():
     out = PA.run({"partition_types": {}, "ports": [], "lanes": []}, "p.json")
     assert all(x.startswith("WARN ADV-") for x in out)
+
+
+def test_cellcap_reports_retained_and_estimated_counts_above_reference():
+    p = {
+        "die": {"name": "d"},
+        "partition_types": {
+            "tile__cl987654": {},
+            "tile__cl123456": {},
+            "at_limit": {"cells": 400_000},
+            "plan_only": {"cells": 400_001},
+            "unmeasured": {},
+            "unused": {"cells": 900_000},
+        },
+        "partitions": [
+            {"type": name} for name in ("tile__cl987654", "tile__cl123456", "at_limit", "plan_only", "unmeasured")
+        ],
+    }
+    cache = {"cells": {
+        "d": {"tile__cl987654": {"last": {"cells": 420_000, "t0": 1}}},
+        "other": {"unmeasured": {"cells": 970_000}},
+    }}
+    out = PA.run(p, "p.json", checks=("CELLCAP",), cells_cache=cache, cap=False)
+    assert all(line.startswith("WARN ADV-CELLCAP") for line in out)
+    assert "tile__cl123456: 420,000 standard cells (estimate from base kit tile__cl987654)" in out[0]
+    assert "tile__cl987654: 420,000 standard cells (retained kit count)" in out[1]
+    assert "plan_only: 400,001 standard cells (estimate from plan type.cells)" in out[2]
+    assert out[3].endswith("3 above reference, 1 retained kit counts, 3 estimates, 1 unmeasured")
