@@ -18,3 +18,10 @@ Split: parent = rc118 + rc121 (pc rows); fork hroot = x15 + h1/h2/h3; fork taps 
 - h1/h2/h3: ROWS_FABLE-OPEN-KV-HROOT-RINGFORM.py sha12 97083c85fd86 (epyc8 kv-plan-r6/d29/rows_in/B + intel1 fable-open-kv/hroot): budgets.cland_strip_rows_types.kv3_hroot=5 (pinslot-dense body-to-body packing = cause of E wall + ft2_i blob), o_next band 642 -> 300 um.
 - Gated stack B4 plan 468788f372eb (intel1 fam-kv-hroot-r1/fork_d29g = R1+BAND+RING+RES+EFS+GEOM+RINGFORM+tapoff fill): PRE 0, G0 0, strict bind 0 errors, LATCHECK 2434/2434, BPC 0 (d29geom g0gate_r3, bindgate_r4). Probe: Codex place kit d29geom/b4_place (unit oth-ubuntu-3847728-1795457470), not mine.
 - Nothing launched after 10:45. My superseded fork_rf/launch_rf being removed via ot-delete on intel1.
+## parent state 10:55 PST (after the 06:4x-10:40 limit; COORD: review K3 rows, build no parallel rows)
+- K3 compose f75a71af72eb (Codex/KV-D29) holds rc118 PCGUT 823a4142c484 (mine) + PCSLIT 32447daeb2e6 (pcf cores out 25.92, slits 34.56, gutter 35), rc119 PCONEXT/PCTAPEGRESS, rc121 PCST + PCKEEP (IOPC arm B, keep_types tool), x15 hroot rows. Gate = k3c.
+- Probes: epyc9 fable-open-kv/p1 (kit A 4_cts + permanent slit blockage + DPL): 5-it GRT 11,671 -> 3,284, kvpc*_f interiors 6,813 -> 110. p2 (4.32 ring on 8 cores): 3,220. Residual = four inner pcc faces (seam).
+- Real kit epyc8 KV-D28/private/FABLE-OPEN-KV/kv3_pc_v3_1123063652 (D28 + OT_GUTTER_BLOCK_UM=12, goal geom, place done 08:47, AUTO-GEOM grt NA = 600 s wall): gutter is GPL-ONLY (released before DPL); slits still hold 865/1316/1194/48 cells at 3_place. 5-it GRT of that 3_place: epyc8 fable-open-kv/g3 (running 10:5x).
+- REVIEW-GAPS posted 10:54 to KV-D29: G1 gutter released before DPL (needs keep+carve flow key or k3c probe proof), G2 seam not covered by K3 (row PCGROW or REASONED on k3c full-iteration GRT), G3 no pc__po_d3 station.
+- Next: read g3; read the k3c pc_v3 probe when KV-D29 names it; post GATED/REASONED per item to PRECHECK-LEDGER-R3; REPORT to COORD.
+- ROWS_FABLE-OPEN-KV-PCSLIT.py (halo_um form, epyc8 fable-open-kv/rows) is NOT delivered: refuses on 55 bit sites per pc_v1 clone inside the ring.
