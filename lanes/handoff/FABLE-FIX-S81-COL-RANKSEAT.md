@@ -52,3 +52,17 @@ combined J8 col set by 14:00), FAM-S81-COL-H10-R4, S81-J6-ASSEMBLY-R5 (J8 cut 16
   IF a run-item ends after geom without CTS: continue by hand: ot-run --hosts epyc7 run_kit.sh <K> route 48 8 (as H10-R4 A2), ot-wait --kit K --stage grt.
   New specs: always --goal route.
 - Rank-seat form posted to FAM-S81-COL-H10-R4 (L1e/L1f/L1g variants of col_h10_r0_p4) + FAM-S81-COL-H9R0-R4 for the 14:00 J8 row set.
+
+## RESUMED 17:4x 11-22 (after weekly limit 11:1x-17:2x)
+- p3 (unit oth-ubuntu-20617-1795361471, died 16:42 rc 6) and h10_r0_p4 (oth-ubuntu-817309-1795360527, died 11:56 rc 6): GRT OVERFLOW 0/0/0
+  (p3 at extra iteration 24, was 1784; h10_r0_p4 at 17, was 2475), all rank lines placed 1104/1104. Death = FAIL_POSTCTS SETUP_TRIAGE:
+  TT setup_est -160.16 (p3) / -170.72 (h10p4) < -150. Not congestion. Final 5_1_grt.odb kept in both kits (epyc7).
+- Worst setup class (4_cts_post_hook.rpt + 5_global_route.rpt, both kits AND H10-R4 baseline _1121190309): xd ROM stage station
+  u_y_xd_*_u_e_xs_q*/go_tag .q -> u_e*_u_w ROM pin (-85/-93 at CTS post-hook), then port->u_bin hold; hold repair then drags setup
+  (OT_HOLD_SETUP_GUARD stop -78 / -113). Same class H10-R4 L1e/f/g (-165..-174) and H9R0 kit C on seat-fix rebind (-158.79) while the
+  same p3 type on the J7 bind + E RELAY_MID_RE row is -22.3 (H9R0-R4 17:30). => floor tools RELAY-INST seat the xd xs_q stations at
+  plan sites (= COLROM kit D, -81); my kits lack the E row (wave env only).
+- p6 ALIVE: run-item intel2 runitem_p6.pid, container dpkit-col_h9_r0_p6__t1__pv0012ba28-3655650 on epyc7 in 5_1_grt (2 h CPU at 17:36).
+- H9R0-R4 has p3/p6/p2 on J7 bind in detailed route (GRT gate passed): do NOT rebuild those forms.
+- NEXT: (1) p6 GRT verdict. (2) one p3 + one h10_r0_p4 kit on planR2 = planR1 + budgets.relay_mid_re_types {"^col_": <E regex>} (plan key,
+  no env), goal route, on bind b_24a9496dfcdb; if TT >= -42 at GRT -> fan out siblings. (3) tell ASSEMBLY: J8 col needs the E row as plan key.
