@@ -3747,6 +3747,8 @@ class Binder:
             print(f"bind: PROBE-ONLY (OT_BIND_ONLY_TYPES) emits {len(only)} of {len(self.by_type)} types: {sorted(only)}; "
                   f"no bound top; this OUT is a probe, never a die bind", flush=True)
         self._emit_set = emit_set
+        if getattr(self, "collect_gaps", False):
+            self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
         if bind_emit_par.jobs() > 1 and len(emit_set) > 1:
             try:
                 bind_emit_par.run(self, out, files, bind_emit_par.jobs())

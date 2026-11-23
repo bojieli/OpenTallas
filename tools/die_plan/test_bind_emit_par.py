@@ -244,3 +244,26 @@ def test_mem_jobs():
     assert EP.mem_jobs(rss=8 * G, limit=9 * G) == 1
     assert EP.mem_jobs(rss=0, limit=None) == 8
     assert EP._mem_limit_bytes() is None or EP._mem_limit_bytes() > 0
+
+def test_all_gaps_from_separate_types_remain_parallel(tmp_path, capfd, monkeypatch):
+    import bind
+
+    monkeypatch.setenv("OT_BIND_EMIT_J", "2")
+    monkeypatch.delenv("OT_BIND_ONLY_TYPES", raising=False)
+    monkeypatch.setattr(bind.Binder, "wavefront_plan", lambda self: None)
+
+    def reject_type(self, name, parts, out, files):
+        self._gap(f"unresolved input in {name}")
+
+    monkeypatch.setattr(bind.Binder, "_emit_one", reject_type)
+    b = bind.Binder.__new__(bind.Binder)
+    b.plan = {}
+    b.ab = {}
+    b.collect_gaps = True
+    b.by_type = {"first": ["p0"], "second": ["p1"]}
+    b.types = {"first": {}, "second": {}}
+    b.emit(tmp_path)
+
+    assert b.emit_gaps == ["unresolved input in first", "unresolved input in second"]
+    assert "emit parallel fell back" not in capfd.readouterr().out
+    assert (tmp_path / "bind_emit_par.json").is_file()
