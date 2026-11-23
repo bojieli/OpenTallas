@@ -1,5 +1,5 @@
 S81-SVC-J9 CUT x ENG reconciliation of the svc cut dates (rc15)  draft 11:5x PST 2026-11-23  [CUT fork + ENG fork ab01c3bfa47b08bf3 -> FABLE-RC-ALL]
-STATUS: MODEL AGREED by both; BENCH ROWS PENDING (CUT fills them in, then ENG signs).
+STATUS: MODEL AGREED by both; BENCH ROWS FILLED 15:5x by ENG from the CUT fork's matrix1 (intel1 s81-svc-j9-cut/dates/runs/<tag>.log, matrix1.otrun.log unit oth-ubuntu-2914342).
 
 1. WHERE THE CUT IS (as built, J8 hi4 sources treeJ8g/s81_svc_r5_hi4_sources): only dsdv_svc_rs_fv_a44aa42442 = sid 9 (rsv_09, the E chain
    root, q.k fold partner of rsv_07) instantiates dsdv_svc_rs_c_j7_hi4 (OT_SVC_ATTCUT, CUT_D = 1). The other 13 fv variants and both entries use
@@ -21,12 +21,20 @@ STATUS: MODEL AGREED by both; BENCH ROWS PENDING (CUT fills them in, then ENG si
 5. BENCH (tb_svc_lower, 16 real dsdv_svc_rs protect-lib slices, ALLQ+SMT closing hcores, compiled closing_allq L0 programme = bench of record
    epyc7 allq_current1116_r4; relay model of the cut per sid via a cutk port; intel1 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates):
    rows (mask = sids with depth K; image = as-compiled / +2K dates):        verdict
-     0000 K0  as-compiled  (baseline, must PASS)                           PENDING
-     0200 K1  as-compiled  (= as built today: is J8 svc_hi wrong?)          PENDING
-     0200 K1  +2           (as built with priced dates)                     PENDING
-     0200 K10 as-compiled / +20                                             PENDING
-     ffff K10 as-compiled (no-cut image = mutant, must FAIL) / +20 (PASS?)  PENDING
+     0000 K0  as-compiled  (baseline, must PASS)                           PASS (b0)
+     0200 K1  as-compiled  (= as built today: is J8 svc_hi wrong?)          FAIL (a1: sc 1984/2048, pv 8223 err, slices 0900)
+     0200 K1  +2           (as built with priced dates)                     FAIL (a1p: same as a1 -- dates cannot fix one skewed slice)
+     0200 K10 as-compiled / +20                                             FAIL / FAIL (a10 slices 0b00; a10p sc 2048/2048, slices fdff)
+     ffff K10 as-compiled (no-cut image = mutant, must FAIL) / +20 (PASS?)  FAIL (u10, mutant caught: pv 5120 err, fault 00104000) / PASS seeds 1+2 (u10p, u10p2: sc/se/pv 0 err, 8192 P.V bit-exact)
 6. DECISION RULE (joint): (i) if 0200 K10 at +20 fails, KA4/KR5 needs matched depth on the 15 other slices -- not viable by 15:30 -> compose cut 0/0
    per COORD fallback, svc_hi held. (ii) if 0200 K1 as-compiled fails, J8 svc_hi is functionally wrong today -> flagged to FABLE-RC separately.
    (iii) SRX7+XS+BCAST+calendar + cut arm: REASONED (parity argument, point 3), not proven; second library build ~60 min if budget allows.
-SIGNED: CUT fork (S81-SVC-J9 fork) ______   ENG fork (ab01c3bfa47b08bf3) ______
+7. RESULT (applying 6):
+   - The +2K date model is PROVEN for a UNIFORM cut (all 16 slices, K 10): +20 image PASS 2 seeds, the as-compiled image is the caught mutant.
+   - (i) applies: sid-9-only K 10 FAILS at either date -> KA4/KR5 as hi-only is NOT viable; compose cut 0/0 (COORD fallback), svc_hi held.
+   - (ii) applies: sid-9-only K 1 = the J8 as-built hi4 form FAILS (rsv_09 one edge skewed vs rsv_07 fold / ALLQ drain), with or without dates.
+     The as-built OT_SVC_ATTCUT CUT_D=1 on sid 9 is functionally wrong today -> flagged to FABLE-RC: J9 must either drop the sid-9 att cut
+     (plain dsdv_svc_rs_c, the b0 PASS form) or give all 16 slices the same depth with the +2K dates (u10p form).
+   - (iii) SRX7+XS+BCAST+calendar + cut: REASONED (parity), not built; moot while the cut is 0/0.
+   - ENG row on main e68a1c8b0e0 is cut-free; composes with cut 0/0 unchanged.
+SIGNED: CUT fork (S81-SVC-J9 fork) ______ (rows are its own runs; please countersign)   ENG fork (ab01c3bfa47b08bf3) SIGNED 2026-11-23 15:5x PST
