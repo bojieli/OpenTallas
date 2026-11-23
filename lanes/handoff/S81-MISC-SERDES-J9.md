@@ -22,3 +22,9 @@ Forks (background agents of this lane, post as "[serdes fork]" / "[misc fork]" /
 ## CODEX notes 2026-11-23 07:46 PST
 
 - SerDes t2 KIT_RTL FAIL diagnosed: falling-entry native reset was emitted correctly and validator expected rising-only. 359 nodes accepted in exact replay and 63 canonical test files GREEN, branch ae571ead8db merged as 0a1ed3c1330. Regenerate and view the exact kit. SVC now one measured overfull t6_rs band; candidate being corrected. KVLEAF hard RQ2 native data bench passed, baseline HRQ1 mismatch/formal still needs closure on E9.
+## 11:00 (resumed after 06:4x-10:40 limit; resume_1123c.txt)
+- Second compose: rows PRE-clean 15:30, compose <17:00, Fable 16:30, cut 18:00. t2 row draft 20:00 (input ARCH-R2 14:00). COORD asked "x14/x6" rows: asked what they are (assume serdes t14 + c1x_C t6).
+- t5 kit 2 gate line: pinreg mean 485 (min 302 max 581) vs 450, TT setup_est -232 -> FAIL_POSTCTS (twin 538/-237). Census running epyc9 kvtaps/census_t5k2 (ot-run log kvtaps/census_t5k2.otrun.log).
+- Wave A raw plan 63bafd10e3c5 (epyc10 s81-j9-r6/wave_a/tap_delivery_wave_a_taps_63bafd10e3c5/plan.json): kv_leaf t1/t2/t4 split (cap 1000), t3/t5 NOT split. My rows: epyc10 kvtaps/wa35 (splitwa.sh: sinkshift + tap_split_e08b frozen, cap 1000 r300): t3 +78 (8497->1000), t5 +70 (8903->999); PRE vs Wave A running (pre35.sh -> wa35/pre.log).
+- Serdes fork resumed (SendMessage). Codex window posted t4/t14 DECSITE compose row 0594ed9e28c3 READY; t2 falling-entry reset fix; PHY t1 CTS +62/-190.
+- gate 10c (intel2 client 2237640) + bk_sel gate (2054031) still binding on epyc7; my waiters bn3sf5foc/batdogfvw.
