@@ -42,3 +42,19 @@ R9/t2s: census done; type_split patches in R9/clone (ts_patch.py, ts_patch2.py b
 - t31 J7 proof: epyc8 fork L/trees/s81_t31_j7 (tools.j7 = J7 tools, tools = rt da102e4d499a, native_bind/out fresh, out.j7 = J7 bind); bind via L/t31fix/r10_t31bind.sh (ot-run log intel2 L/t31fix/bind.otrun.log, markers R10B_*). Next: private-spec s81 ot_s81sl_leaf__t31 --tree L/trees/s81_t31_j7 --bind-out L/trees/s81_t31_j7/physical/die_plan/s81/plan_of_record/native_bind/out --rt da102e4d499a --host epyc8 --goal route, then run-item; read place for the wdo_q class.
 - J9 row J9-LEAF-T31-XRB (COORD approved): intel2 L/j9/j9_t31_xrb_row.json; tools in main af3312b925a4: s81_vpw_xrb_overlay.py (define OT_S81SL_VP_XRB), s81_vpw_bank.tcl BANK-AFF (budgets.vpw_bank_aff_types). Proof kit after the J7 place read confirms the cause. -503 cause read: 5 gates + 17 repeaters; bank fill is name-ordered nearest-either so bank-0 FFs land at bank 1.
 - 09xx sweep leaf rows t2/t12/t33/t44__clf6cf8492/t45/t47/t52 = BIND-GEN-TOOLSKEW, re-armed by WAVE-OPS-R1 1c8b40168f (t12/t47 a2 running); t65 = copy-back tar race (place passed), re-armed.
+
+## 11-22 18:1x ownership sweep table (COORD 18:0x, OWNERS-SWEEP 98fd8f9f); event 18a2688b741 J7, read from autopilot/jobs a*.log
+| type | last result | action |
+|---|---|---|
+| leaf t1 | live: a2 route running intel2 (dpkit-ot_s81sl_leaf__t1-283252) | keep; XRB proof kit (t31+t1 bind queued epyc8) = J9-LEAF-VPW-XRB |
+| leaf t14 | @2 PLACE-SETUP-STOP -512 hi_sw->wdo_q, span 65, path 1649, 23 st | retired-to-J9: J9-LEAF-VPW-CONE (form a place_regions + form b SPR select reg); t14 = proof kit |
+| leaf t74 | @2 -301 a_hs->wdo_q, span 37, path 1190 | retired-to-J9: J9-LEAF-VPW-CONE |
+| leaf t31 | wave row cancelled by me; private twin (spec4, fork bind GREEN) running epyc8 | private twin + XRB kit; J9-LEAF-VPW-XRB / VPW-CONE |
+| leaf t37 | @1 -817 vp_driver_g_sre_nm_r_q->vp_src_q[10], span 613, 26 st | retired-to-J9: J9-LEAF-SRE-SRC (station + depth split, draft) |
+| leaf t8 | @1 -855 vp_driver_g_sre_nm_r_q->vp_src_q[97], path 1808 | retired-to-J9: J9-LEAF-SRE-SRC (same driver class as t37) |
+| leaf t16 | @1 -462 vp_driver_xsw2_q->x_qd_q[199], span 519, 20 st | retired-to-J9: J9-LEAF-SRE-SRC (driver reach+depth, same row) |
+| leaf t29 | @1 FAIL route GRT-0116 congestion | retired-to-J9: J9-LEAF-GRTCONG (read congestion map, draft) |
+| leaf t54 cl501e5681, cl706d9749 | @1 FAIL route GRT-0116 congestion (both) | retired-to-J9: J9-LEAF-GRTCONG |
+| leaf t51 | @1 FAIL place PLACE-HPWL 1.63x converged | retired-to-J9: J9-LEAF-GRTCONG (place density/region read with t29/t54) |
+| leaf t21 | live: a2 route running epyc10 | keep |
+| kv_leaf t4 | CANCEL-UNSIGNABLE 12:30 (TT -439, 3.7 h); its route docker dpkit-ot_s81sl_kv_leaf__t4-1087646 still alive on intel1 (not my PID) | retired-to-J9: J9-LEAF-VPW-CONE if the path is the vp write-out, else own row (path read next) |
