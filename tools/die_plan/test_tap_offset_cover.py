@@ -101,3 +101,34 @@ def test_cli_rc(tmp_path, monkeypatch):
     assert C.main(["fill", str(p), str(tmp_path / "out.json"), "--report", str(tmp_path / "f.tsv")]) == 0
     assert C.main(["census", str(tmp_path / "out.json")]) == 0
     assert "clk_t6" in (tmp_path / "f.tsv").read_text() or "ESTIMATED" in (tmp_path / "f.tsv").read_text()
+
+
+def _wraw(listed, added=()):
+    raw = json.loads((HERE / "examples/tiny_plan.json").read_text())
+    raw["clock"]["seam_hold"] = dict(sender_ps=25, seam_ps=80)
+    raw["clock"]["tap_window"] = dict(window_ps=80.0, related_pair_ps=80.0, note="flat W",
+                                      per_port_ps={"src": {p: 10 + int(SITES[p][0] // 100) for p in SITES if p in listed}})
+    raw["partition_types"]["src"].setdefault("clock", {})["added_taps"] = [dict(name=p, xy=list(SITES[p])) for p in added]
+    return raw
+
+
+def test_window_form_census_and_fill(monkeypatch):
+    """TAPWIN-ALL (S81 x9): a port missing from a clock.tap_window.per_port_ps row falls back to the flat W_t."""
+    _grid(monkeypatch)
+    raw = _wraw(set(SITES) - {"clk_t5", "clk_t6"}, added=("clk_t5", "clk_t6"))
+    r = C.census(raw)[0]
+    assert (r["form"], r["status"], r["missing"]) == ("window", "MISSING", 2) and C.census_rc([r]) == 1
+    assert C.census(raw, form="offset") == []
+    rep = C.fill(raw)
+    tab = raw["clock"]["tap_window"]["per_port_ps"]["src"]
+    assert rep[0]["status"] == "NEIGHBOUR-MAX" and rep[0]["added"] == 2
+    assert tab["clk_t5"] == 12 and tab["clk_t6"] == 13          # the largest window of the 3 nearest listed taps, no interpolation
+    assert "tap_offset_cover fill: 2" in raw["clock"]["tap_window"]["note"]
+    assert C.census_rc(C.census(raw)) == 0 and schema.validate(raw) == []
+
+
+def test_offsets_row_wins_over_a_window_row_of_the_same_type(monkeypatch):
+    _grid(monkeypatch)
+    raw = _raw(SITES, set(SITES))
+    raw["clock"]["tap_window"] = dict(window_ps=80.0, per_port_ps={"src": {"clk": 12}})
+    assert [(r["form"], r["status"]) for r in C.census(raw)] == [("offset", "OK")]

@@ -25,6 +25,13 @@ A type is skipped (and the run fails) when it has fewer than 4 listed sited taps
 the type's offset span (an estimate must beat the [-W, 0] it replaces).  An unevaluated type is filled from its listed ADDED taps (their sites
 are in the plan) when it has at least 4 of them, added taps only.  Stale rows are removed.  Estimates stand until die_sta_related
 --kit-offset-out re-measures; clock.tap_offset.source records the fill.  Die-agnostic: nothing here names a die or a type.
+
+WINDOW form (TAPWIN-ALL, S81 x9): a type with a clock.tap_window.per_port_ps row and NO offsets row times each port with its measured window
+D_p; a port missing from the row falls back to the type's flat W_t (gen_phys.port_window_ps), so taps added after the measurement are timed
+against the wider window.  Both commands cover these types too (column form = window; --form offset|window|all, default all).  The census
+rule is the same.  fill writes D = the LARGEST window of the 3 nearest listed taps of the type (a window is a per-tap uncertainty, not a
+field over the die: no interpolation, the cautious neighbour), never above the type's largest listed window; tap_window_measure.py on the
+kit CTS replaces it.
 """
 import argparse
 import json
@@ -66,18 +73,27 @@ def type_ports(P, raw, tn):
         return added, core, f"{type(e).__name__}: {str(e)[:160]}"
 
 
-def census(raw, plan_path=None, types=None):
-    """[row dict] for every type with a per_port_ps table."""
+def tables(raw, form="all"):
+    """[(form, type, row)] the offsets rows, then the window rows of the types that have no offsets row (the offsets form wins in gen_phys)."""
+    ck = raw.get("clock") or {}
+    off = (ck.get("tap_offset") or {}).get("per_port_ps") or {}
+    win = (ck.get("tap_window") or {}).get("per_port_ps") or {}
+    out = [("offset", tn, off[tn]) for tn in sorted(off)] if form in ("all", "offset") else []
+    if form in ("all", "window"):
+        out += [("window", tn, win[tn]) for tn in sorted(win) if win[tn] and not off.get(tn)]
+    return [x for x in out if x[1] in raw["partition_types"]]
+
+
+def census(raw, plan_path=None, types=None, form="all"):
+    """[row dict] for every type with a per_port_ps table (offsets or window form)."""
     P = S.Plan(raw, Path(plan_path)) if plan_path else S.Plan(raw)
-    off = ((raw.get("clock") or {}).get("tap_offset") or {}).get("per_port_ps") or {}
     rows = []
-    for tn in sorted(off):
-        if tn not in raw["partition_types"] or (types and not re.search(types, tn)):
+    for fm, tn, tab in tables(raw, form):
+        if types and not re.search(types, tn):
             continue
-        tab = off[tn]
         sites, core, why = type_ports(P, raw, tn)
         miss = [p for p in sites if p not in tab]
-        rows.append(dict(type=tn, tap_mode=(raw["partition_types"][tn].get("clock") or {}).get("tap_mode") or "grid",
+        rows.append(dict(type=tn, form=fm, tap_mode=(raw["partition_types"][tn].get("clock") or {}).get("tap_mode") or "grid",
                          status="UNEVALUATED" if why else ("MISSING" if miss else "OK"), grid_ports=len(sites), rows=len(tab),
                          missing=len(miss), core_missing=len([c for c in core if c not in tab]),
                          stale=0 if why else len([p for p in tab if p not in sites and p not in core]),
@@ -94,21 +110,48 @@ def _est(xy, pts, k=3):
     return tt, ff, (max(pts[i][2] for _d, i in d) - min(pts[i][2] for _d, i in d)) / 2.0
 
 
-def fill(raw, plan_path=None, max_tol=40.0, types=None):
-    """extend raw's per_port_ps in place -> [report row dict]."""
+def _fill_window(tab, sites, miss, r):
+    """window form: D of a missing port = the largest window of its 3 nearest listed sited taps (<= the largest listed window)."""
+    known = [(sites[p][0], sites[p][1], float(tab[p])) for p in tab if p in sites]
+    if len(known) < 4:
+        r["status"] = f"SKIP fewer than 4 listed sited taps ({len(known)})"
+        return False
+    top = max(q[2] for q in known)
+    ds = []
+    for p in miss:
+        near = sorted((abs(sites[p][0] - q[0]) + abs(sites[p][1] - q[1]), q[2]) for q in known)[:3]
+        d = min(top, max(x[1] for x in near))
+        d = int(d) if float(d).is_integer() else _up(d)
+        tab[p] = d
+        ds.append(d)
+    r.update(added=len(miss), tol=f"{min(ds):g}..{max(ds):g}")
+    return True
+
+
+def fill(raw, plan_path=None, max_tol=40.0, types=None, form="all"):
+    """extend raw's per_port_ps tables in place -> [report row dict]."""
     P = S.Plan(raw, Path(plan_path)) if plan_path else S.Plan(raw)
-    off = ((raw.get("clock") or {}).get("tap_offset") or {}).get("per_port_ps") or {}
     rep = []
-    for tn in sorted(off):
-        if tn not in raw["partition_types"] or (types and not re.search(types, tn)):
+    nwin = 0
+    for fm, tn, tab in tables(raw, form):
+        if types and not re.search(types, tn):
             continue
-        tab = off[tn]
         sites, core, why = type_ports(P, raw, tn)
         miss = [p for p in sites if p not in tab]
         stale = [] if why else [p for p in tab if p not in sites and p not in core]
         if not miss and not stale:
             continue
-        r = dict(type=tn, added=0, stale_removed=0, status="", loo_p95="", tol="", why=why or "")
+        r = dict(type=tn, form=fm, added=0, stale_removed=0, status="", loo_p95="", tol="", why=why or "")
+        if fm == "window":
+            if miss and not _fill_window(tab, sites, miss, r):
+                rep.append(r)
+                continue
+            for p in stale:
+                del tab[p]
+            nwin += r["added"]
+            r.update(stale_removed=len(stale), status="NEIGHBOUR-MAX (added taps only: grid unevaluated)" if why else "NEIGHBOUR-MAX")
+            rep.append(r)
+            continue
         known = [(sites[p][0], sites[p][1], float(tab[p]["TT"]), float(tab[p]["FF"])) for p in tab if p in sites]
         if miss and len(known) < 4:
             r["status"] = f"SKIP fewer than 4 listed sited taps ({len(known)})"
@@ -135,7 +178,11 @@ def fill(raw, plan_path=None, max_tol=40.0, types=None):
             del tab[p]
         r.update(stale_removed=len(stale), status="ESTIMATED (added taps only: grid unevaluated)" if why else "ESTIMATED")
         rep.append(r)
-    n = sum(x["added"] for x in rep)
+    if nwin:
+        tw = raw["clock"]["tap_window"]
+        tw["note"] = (str(tw.get("note") or "") + f" | tap_offset_cover fill: {nwin} grid tap ports without a per-port window took the largest "
+                      "window of their 3 nearest listed taps; tap_window_measure.py on the kit CTS replaces them").strip(" |")
+    n = sum(x["added"] for x in rep if x["form"] == "offset")
     if n:
         to = raw["clock"]["tap_offset"]
         to["source"] = (str(to.get("source") or "") + f" | tap_offset_cover fill: {n} grid tap ports without a row ESTIMATED from the 3 nearest "
@@ -147,8 +194,8 @@ def _tsv(rows, cols):
     return "\t".join(cols) + "\n" + "".join("\t".join(str(r[c]) for c in cols) + "\n" for r in rows)
 
 
-CCOLS = ["type", "tap_mode", "status", "grid_ports", "rows", "missing", "core_missing", "stale", "sample", "why"]
-FCOLS = ["type", "added", "stale_removed", "status", "loo_p95", "tol", "why"]
+CCOLS = ["type", "form", "tap_mode", "status", "grid_ports", "rows", "missing", "core_missing", "stale", "sample", "why"]
+FCOLS = ["type", "form", "added", "stale_removed", "status", "loo_p95", "tol", "why"]
 
 
 def census_rc(rows):
@@ -162,16 +209,18 @@ def main(argv=None):
     c.add_argument("plan")
     c.add_argument("--out")
     c.add_argument("--types")
+    c.add_argument("--form", choices=("all", "offset", "window"), default="all")
     f = sub.add_parser("fill")
     f.add_argument("plan")
     f.add_argument("out")
     f.add_argument("--max-tol", type=float, default=40.0)
     f.add_argument("--report")
     f.add_argument("--types")
+    f.add_argument("--form", choices=("all", "offset", "window"), default="all")
     a = ap.parse_args(argv)
     raw = json.load(open(a.plan))
     if a.cmd == "census":
-        rows = census(raw, a.plan, a.types)
+        rows = census(raw, a.plan, a.types, a.form)
         if a.out:
             Path(a.out).write_text(_tsv(rows, CCOLS))
         bad = [r for r in rows if r["status"] != "OK"]
@@ -182,7 +231,7 @@ def main(argv=None):
               f"(added taps without a row there, by name: {sum(r['missing'] for r in rows if r['status'] == 'UNEVALUATED')}) stale_rows {sum(r['stale'] for r in rows)} "
               f"core_missing {sum(r['core_missing'] for r in rows)} -> {'FAIL' if bad else 'PASS'}")
         return census_rc(rows)
-    rep = fill(raw, a.plan, a.max_tol, a.types)
+    rep = fill(raw, a.plan, a.max_tol, a.types, a.form)
     Path(a.out).write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n")
     if a.report:
         Path(a.report).write_text(_tsv(rep, FCOLS))
