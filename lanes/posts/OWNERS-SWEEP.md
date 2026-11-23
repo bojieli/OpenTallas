@@ -383,3 +383,8 @@
   Still failed, not relaunched: S81 leaf t29/t71/t44f6 (OPUS-FIX-S81-LEAF-R10), col_h9_r0_p5 x2, col_h10_r1, lepe_nh_mus; QC slw_st_a_v1 + sle_st_a_v2 CLAND ring band (OWN-QC-1123).
   Cleared since a6ef39f: all 3 DEAD-OWNER, 13 of 15 STALE.
 - 2026-11-23 03:52 PST 03:51 sweep, 445 unsigned rows (S81 347, QC 49, KV 51, HEAD 1). Flags: FAILED-NO-RELAUNCH 17 (S81 11, KV 3, QC 3), STALE 140 (S81 131, QC 9), UNOWNED 1 (S81 dsdv_slice_iq_C__t1), DEAD-OWNER 0. KV 11 WAIT-BIND. S81 stale concentrated: LEAF-R10 44, COL-H9R0-R4 21, COLROM-R6 18, SVC-R9 16. File lanes/OWNERS-SWEEP.tsv committed d680a9c
+- 2026-11-23 05:53 PST 05:55 sweep, 444 rows (S81 347, KV, QC, HEAD none flagged); new cols successor_lane, successor_alive. Only S81-J9-ASSEMBLY-R6 has posted TAKING (05:51); all other successors pending (no post file yet) so SUCCESSOR-PENDING on 413 mapped rows (S81 337, KV 41, QC 35).
+  Flags: S81 STALE 151, FAILED-NO-RELAUNCH 23, UNOWNED 5, DEAD-OWNER 1; QC STALE 12, FAILED-NO-RELAUNCH 5; KV FAILED-NO-RELAUNCH 2, WAIT-BIND 16.
+  Unmapped (no successor): S81 dsdv_slice_iq_C__t1, lepe_nh_mus_LP__t1, lepw_mu_C__t1, lepw_mu_LP__t2, lepw_mus_LP__t2 (UNOWNED), lepw_mus_C__t1 (DEAD-OWNER), bk_sel__t2, gunit__t1; QC glue, slw_st_a_v1 cl* variants.
+  Biggest stale groups: S81-COL-J9 55, S81-LEAF-J9 55, SVC-J9 16, SLICE-J9 9, MISC-SERDES-J9 8.
+  File lanes/OWNERS-SWEEP.tsv committed.
