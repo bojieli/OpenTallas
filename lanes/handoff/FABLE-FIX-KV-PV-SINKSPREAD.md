@@ -61,6 +61,20 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 21:30 PST (newest; read first)
+- ROW B HANDED 19:2x and ACCEPTED by COORD: 14-type split event m8, bound plan 9d9579bd19c9 in tree2 (PRE 0, G0 0, bind 0, LAT 0),
+  package w/handoff/D29_pv_14types_package.json (sha 51bc8861a115). Rebase on the sealed D28 tree when KV-PLAN-R6 asks
+  (w/chain_full3.sh on a fork; base for D29 rows = kv-plan-r6/d29/base_d28.json 44c3cbf51e50, rt 94845431e6b2).
+- ROW kv3_pv_v3 tap split HANDED 21:2x (COORD ask, due 01:45): kv-plan-r6/d29/rows/ROWS_FABLE-FIX-KV-PV-SINKSPREAD-V3TAPS.py
+  (sha ed71a9739295) + rows/fable_sinkspread_v3taps/. Made by w/v3_taps.sh (census of PV-R7 kit kv3_pv_v3_1122174357
+  3_2_place_iop.odb: 179,656 tap-net regs vs 59,695 plan bins) + w/v3row_chain.sh v3t1 on tree3 (= fork of the sealed D28 tree,
+  plan now a61fde764cec): PRE 0 (rt 9484), G0 0, strict bind 0, LATCHECK 0. 2 taps left over cap (1,514 / 1,218). Work dir w/v3row.
+  Open: kv3_pv_v3e and the pv_v12 pieces need the same once a placement exists.
+- K2 (sealed v6n kit, goal route): place admitted 19:07 on epyc8, runs sealed in /srv/opentallas-scratch2/claude/ot-jobs/
+  kv3_pv_v6n-place-outgoing-giraffe-*-17954032*; expect ~4 h (K1 took 4 h 10 to its failure). Watcher watch_k2.sh posts stages.
+  At place: tap loads -> real tap rows for the v6n w piece (same method as v3_taps.sh, on 3_place.odb).
+- Cleanup later (ot-delete): epyc10 <lane>/tree, epyc8 <lane>/clone, tree2 por_d29_all_m6* and *_p1 dirs, tree3 after D29 seals.
+
 ## STATE 11-22 18:20 PST (newest; read this first; older blocks are history)
 - K1 (first sealed v6n kit, admitted 11:5x) FAILED at global place 16:24: "explicit FT site outside core: ft48,3,0". Cause:
   type_split leaves explicit bit sites (ft_slots[].bit_sites_um) of crossing slots past the piece core edge. Fix w/fix_bit_sites.py
