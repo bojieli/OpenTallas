@@ -58,3 +58,9 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
   J8BASE = epyc10 s81-j6-r5/tmp_dry/plan_v3_repriced.json (f65f62779bef), COMPOSED = epyc10 fam-s81-col-h9r0-r4/tmp/plan_v3_strip.json
   (ac3a5c74d618 = J8 + H9R0 HC-INPUT-REACH v3 + VIS COL-H9R0-STRIP+E4E-CHAN), then apply_r2.py, then PRE + strict bind + LATCHECK.
 - VIS-S81-COL (agent a9076e7cb7097565b): PRE on plan_v3_strip log intel2 vis-s81-col/pre_v3strip.otrun.log; p4 probe vis-s81-col/probe/runitem_p4.log.
+
+## 23:3x RESUMED after short limit; COLROM-R6 hit 429 (to 11-29) -> I READ its stnEH kits (no relaunch)
+- S1 (margin 90) spec private_specs/OPUS-FIX-S81-COLROM-R6/s81_col_h10_r1__t1__cld01bb4ae_1122195700, work epyc9 .../private/OPUS-FIX-S81-COLROM-R6/col_h10_r1__t1__cld01bb4ae_1122195627 (GRT since 22:59)
+- S0 (off) spec ..._1122195744, work epyc9 .../col_h10_r1__t1__cld01bb4ae_1122195708 (CTS since 22:23)
+- Station-merge checker: epyc9 opus-fix-s81-colrom-r6/tmp/romhalf_stn2.py <1_2_yosys.v>.
+- Latch hold read at GRT on the 3 reps: u_lk_xd_* -> u_e*_u_[we] ROM pins, FF hold >= 0 (final 5_1_grt.odb).
