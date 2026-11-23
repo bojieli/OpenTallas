@@ -38,7 +38,9 @@ class Launch(unittest.TestCase):
    self.assertIn('--stage '+str(run/'gen'),cmd)
    self.assertIn('GENERATED',cmd)
    route=(run/'route.sh').read_text()
-   self.assertIn(str(run/'gen/runtime_source'),route)
+   self.assertIn(str(run/'harness/runtime_source'),route)
+   self.assertIn('--stage '+str(run/'harness'),cmd)
+   self.assertNotIn('/gen/route_canary.sh',cmd)
    self.assertNotIn(str(Path(d)/'physical/'),route)
    self.assertNotIn('hold_step.sh',(run/'job.sh').read_text())
    for text in (cmd,route,(run/'job.sh').read_text()):

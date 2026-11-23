@@ -714,7 +714,11 @@ def cmd_submit(a):
         # Once generated, the expensive physical run needs only its self-contained gen/
         # tree.  Stage that tree so admission can use the rest of the fleet instead of
         # queueing every canary beside the coordinator's source worktree.
-        runtime_src = run / "gen" / "runtime_source"
+        # CANARY-SPILL-1122 (COORD 21:0x/22:0x): a spilled gen job's copy-back can leave run/gen root-owned; the harness then failed to write
+        # route_canary.sh / canary.py / runtime_source into it (Permission denied) and the route job ran 'No such file' (exit 127) on 3 dies.
+        # Harness files live in run/harness (written by this user, staged with the route job), never inside gen/.
+        harness = run / "harness"
+        runtime_src = harness / "runtime_source"
         runtime_kv = dict(kv, src=str(runtime_src))
         route = fmt(c["run"], **runtime_kv)
         prepare_runtime = ""
@@ -730,19 +734,19 @@ def cmd_submit(a):
                                f"{runtime_src}/physical/die_plan/qwen_kvsys/cores/harden/; ")
         route_script = "#!/bin/bash\nset -u\n" + route + '\necho "CANARY_FLOW_RC $?"\n'
         if c.get("flow") == "type":
-            proof_cmd = ["python3", "-I", str(run / "gen/canary.py"), "prove-routed",
+            proof_cmd = ["python3", "-I", str(harness / "canary.py"), "prove-routed",
                          "--kit", kit, "--mem", str(kv["mem"]), "--jobs", str(kv["cpus"])]
             route_script += shlex.join(proof_cmd) + '\necho "CANARY_ROUTED_LEC_RC $?"\n'
-            prepare_runtime += f"cp {run}/canary.py {run}/gen/canary.py; "
+            prepare_runtime += f"cp {run}/canary.py {harness}/canary.py; "
         (run / "route.sh").write_text(route_script)
         # ot-run ISOLATION step 3 (enforced since 11-10): the generation job names the source snapshot and any input snapshot, so it
         # declares them with --stage (every die was REFUSED, exit 96, when the canary restarted 11-21).
         stage = f"--stage {src} --stage {run} " + (f"--stage {kv['inputs']} " if kv.get("inputs") else "")
         launch = (f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} --dir {run} {stage}-- bash {run}/job.sh; "
-                  f"if [ -f {run}/GENERATED ]; then {prepare_runtime}"
-                  f"cp {run}/route.sh {run}/gen/route_canary.sh; "
+                  f"if [ -f {run}/GENERATED ]; then mkdir -p {harness}; {prepare_runtime}"
+                  f"cp {run}/route.sh {harness}/route_canary.sh; "
                   f"{OT_RUN} {CRIT}{PIN}--mem {c['mem_gb']} --threads {kv['cpus']} "
-                  f"--dir {run}/gen --stage {run}/gen -- bash {run}/gen/route_canary.sh; "
+                  f"--dir {run}/gen --stage {run}/gen --stage {harness} -- bash {harness}/route_canary.sh; "
                   f"python3 -I {run}/canary.py check --run {run}; fi")
         cmd = f"( {launch} ) > {run}/otrun.log 2>&1"
         print(f"CANARY {die} {c['item']} src {sha}: {run}")

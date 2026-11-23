@@ -3717,6 +3717,19 @@ def spill_copy_back(src, dst, roots, stamp, say=lambda m: None, only=None, wait_
         spill_room_release(src, tag)
 
 
+def spill_owner_sh(roots):
+    """CANARY-SPILL-1122 (COORD 22:0x): after a back-copy, entries under each root that came back owned by root (a docker job on dst; the
+    sudo extraction restores archived owners, ROOTOWNED_1114) are given back to the owner of that root on src, the submitter's lane dir,
+    so the submitter can write next to them again (the flow canary harness failed 'Permission denied' on a root-owned gen/).  A root dir
+    owned by root itself is left alone.  OT_SPILL_KEEP_OWNER=1 turns it off.  Best effort: never fails the back-copy."""
+    parts = []
+    for r in roots:
+        q = shlex.quote(os.path.normpath(r))
+        parts.append(f"if [ -d {q} ]; then o=$(stat -c %u:%g {q}); if [ \"$o\" != 0:0 ] && [ -n \"$(find {q} -xdev -uid 0 -print -quit 2>/dev/null)\" ]; then "
+                     f"sudo -n chown -R -h --from=0:0 \"$o\" {q} 2>/dev/null || sudo -n chown -R -h --from=0 \"$o\" {q} 2>/dev/null || true; fi; fi")
+    return "; ".join(parts) + "; true"
+
+
 def spill_copy_back_tries(src, dst, roots, stamp, say, only):
     err = ""
     for k in range(SPILL_BACK_TRIES):
@@ -3726,6 +3739,11 @@ def spill_copy_back_tries(src, dst, roots, stamp, say, only):
             if err:              # the stamp and the pending record stay: not completed
                 say(f"ot-run: SPILL back-copy {dst} -> {src}: {err[-160:]}")
                 return False, err
+            if not os.environ.get("OT_SPILL_KEEP_OWNER"):
+                try:
+                    ssh_sh(src, spill_owner_sh(roots), timeout=1800)
+                except Exception:
+                    pass
             ssh_sh(dst, f"rm -f {stamp} {stamp}.next {stamp}.inputs {stamp}.scope", timeout=60)
             return True, ""
         err = b.stderr.strip()[-300:]

@@ -445,8 +445,28 @@ def identical_other_shas(root, m, bad):
     return out
 
 
+def flow_not_started(run):
+    """CANARY-SPILL-1122 (COORD 22:0x): '' when the physical flow of a generated canary started, else why not.  route.sh prints
+    CANARY_FLOW_RC when the flow command returns; a generated run (GENERATED) whose otrun.log has no such line never ran its flow
+    (harness / spill / host failure: route_canary.sh 'No such file', exit 127).  No otrun.log or no GENERATED: '' (not judged here)."""
+    run = Path(run)
+    try:
+        log = (run / "otrun.log").read_text(errors="replace")
+    except OSError:
+        return ""
+    if not (run / "GENERATED").exists() or "CANARY_FLOW_RC" in log:
+        return ""
+    tail = [l for l in log.splitlines() if re.search(r"No such file|Permission denied|RAN on \S+ .*exit \d+|NOT RUN", l)]
+    return "the physical flow never started (no CANARY_FLOW_RC in otrun.log)" + (": " + " | ".join(tail[-3:])[:300] if tail else "")
+
+
 def verdict(run, root, spec=None, seed=True):
     """regression verdict of one COMPLETED canary run: dict(verdict, why, rows, notes, baseline)"""
+    nf = flow_not_started(run)
+    if nf:
+        # an INFRA run is no evidence about the flow: neither a release (RELEASE) nor a REGRESSION; never seeds a baseline
+        return dict(verdict="INFRA", why="INFRA: " + nf + "; re-run the canary", rows=[], notes=[], baseline=None,
+                    metrics=dict(die=(jload(Path(run) / "canary.json") or {}).get("die"), item=(jload(Path(run) / "canary.json") or {}).get("item")))
     m = run_metrics(run)
     die, item = m["die"], m["item"]
     base = load(root, die, item)
