@@ -61,8 +61,8 @@ def test_script_mode_uses_the_same_step():
     assert os.access(POST, os.X_OK) and os.access(WRAP, os.X_OK)
 
 
-def run_post(out, typ, cwd):
-    return subprocess.run(["bash", str(WRAP)], cwd=cwd, env=dict(os.environ, TYPE=typ, OUT=str(out), PLAN="x"),
+def run_post(out, typ, cwd, plan="x"):
+    return subprocess.run(["bash", str(WRAP)], cwd=cwd, env=dict(os.environ, TYPE=typ, OUT=str(out), PLAN=str(plan)),
                           capture_output=True, text=True)
 
 
@@ -93,7 +93,10 @@ def test_svc_bound_without_native_helpers_passes(tmp_path):
     (tmp_path / "kit_rtl.json").write_text(json.dumps({"bound_module": "s81p_svc_hi_dsdv_svc_rs__t1_bound", "files": []}))
     b = tmp_path / "s81p_svc_hi_dsdv_svc_rs__t1_bound.sv"
     b.write_text("module s81p_svc_hi_dsdv_svc_rs__t1_bound; endmodule\n")
-    r = run_post(tmp_path, "svc_hi_dsdv_svc_rs__t1", ROOT)
+    # 94845431e6b: the closure now reads the kit plan row (--plan/--type retype); give it a real plan file (PLAN=x no longer exists)
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"partition_types": {"svc_hi_dsdv_svc_rs__t1": {}}}))
+    r = run_post(tmp_path, "svc_hi_dsdv_svc_rs__t1", ROOT, plan)
     assert r.returncode == 0, r.stdout + r.stderr
     assert "S81_KIT_RTL_POST PASS" in r.stdout and "NOT_APPLICABLE" in r.stdout
     assert b.read_text() == "module s81p_svc_hi_dsdv_svc_rs__t1_bound; endmodule\n"
