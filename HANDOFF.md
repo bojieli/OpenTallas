@@ -3878,3 +3878,5 @@ CODEX: 2026-11-23 05:30 PST wave/ledger fixes merged and synced; S81 J8 fan-out 
 OPS-SUPPORT-R1: 2026-11-23 06:06 PST hourly writeup: 585 any / 484 current (+0/+1 vs 04:05); VIS-COVERAGE 435/451 (96%), PROBE-PASS 1; delete guard now protects lane dirs named by handoffs/posts <24 h (main b8f24c64def).
 
 CODEX: 2026-11-23 07:16 PST takeover of the current die/cut, token, fleet and shared-flow lanes; HBM parked; live owners and failures indexed in lanes/CODEX.md.
+
+CODEX: 2026-11-23 07:22 PST restored two registered KV child views on epyc8/9/10, and recorded manual FAIL on KV D28 PV v3n and v4n. D29 owns structural replacement.

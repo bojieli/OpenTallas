@@ -14329,3 +14329,5 @@ Handback terminal receipts collected after drafting:
 - Current lane board in lanes/CODEX.md. Owner 11-23 comprehensive cuts are active. No partial J9/V4/D29/r18 apply. Existing jobs remain running.
 
 FOR-CLAUDE: FABLE-RC-ALL re-review of the actual composed r18/J9/V4/D29 die render and ledger before apply. Open REASONED entries need acceptance by that reviewer. Gate packets can progress in parallel.
+
+- 2026-11-23 07:22 PST restored archive-matched KV qkd_hr_core_tx and qkd_hr_cdc_ch in previously registered /srv/opentallas-scratch2/claude/epyc4views-1114 paths on epyc8/9/10. Complete LEF, TT/FF ETMs, pin and sign-off receipts; original ODB digests matched AGIdock index. S81 east/west coll protected M6 detailed abstract extraction is running in existing restore lane.
