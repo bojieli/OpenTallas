@@ -1,0 +1,1 @@
+- 2026-11-23 00:49 PST DIED [FABLE-RC-KVHEAD] ot-run oth-ubuntu-490386-1795423743 on tolerant-swine: rc=2 after 55 s, ended 00:49:53, log /home/ubuntu/fable-rc-kvhead/hg.otrun.log, cmd: --mem 40 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-rc-kvhead --stage /srv/opentallas-scratch/claude/kw43-wave-11 | class=TOOL-TRACEBACK cause=Error: run.tcl, 4 ORD-0007
