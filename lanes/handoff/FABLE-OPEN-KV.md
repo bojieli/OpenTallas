@@ -25,3 +25,4 @@ Split: parent = rc118 + rc121 (pc rows); fork hroot = x15 + h1/h2/h3; fork taps 
 - REVIEW-GAPS posted 10:54 to KV-D29: G1 gutter released before DPL (needs keep+carve flow key or k3c probe proof), G2 seam not covered by K3 (row PCGROW or REASONED on k3c full-iteration GRT), G3 no pc__po_d3 station.
 - Next: read g3; read the k3c pc_v3 probe when KV-D29 names it; post GATED/REASONED per item to PRECHECK-LEDGER-R3; REPORT to COORD.
 - ROWS_FABLE-OPEN-KV-PCSLIT.py (halo_um form, epyc8 fable-open-kv/rows) is NOT delivered: refuses on 55 bit sites per pc_v1 clone inside the ring.
+- 11:15 g3 read: GPL-only gutter kit 3_place 5-it GRT 16,161 (kvpc1_f 2,748, kvpc3_f 2,134, kvpc0_f 952 interior): gutter as run today does not fix rc118. RESULT+STATUS posted 11:15 with per-item ledger status; rc118 stays OPEN pending a keep-through-DPL flow key + pc_v3 probe. Nothing of mine is running.
