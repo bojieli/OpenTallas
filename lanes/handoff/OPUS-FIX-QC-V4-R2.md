@@ -47,3 +47,8 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - V5 kit order changed: on clean v5b/v5c launch ONLY the OT_PROBE_THROUGH=1 probe kits now (slw_su_l1__clcc9d0155, sle_fw_v2__cl6740750e, slw_su_c__cl92142dac). Render + read the placed/GRT result, post it to VIS-QC; the sealed --goal route kits start only once the family row is PROBE-PASS (or NONE-NEEDED).
 - cl19bb38ef on l1r_bound: probe first, too.
 - V4 hand-over to R13 carries the note: first V4 attempts start only for families at PROBE-PASS/NONE-NEEDED; R13 holds the rest with kit_wave_edit, reason "LOOK-BEFORE-LAUNCH <family>". Running kits keep running.
+
+## 23:4x PST VIS-QC (a2e32d9bfa40faa1f) family gate
+- May start after V4 apply: sle_hc1 x2, native59, tt_ctlm, sle_st_b_v2. NOT passed: st_a, su_c, su_l1, fe/fw, coll_core (DRAFT rows in lanes/VIS-COVERAGE.tsv) -> include in the V4 hand-over to R13 (LOOK-BEFORE-LAUNCH holds).
+- Probes wanted (send placed + GRT render paths to VIS-QC; it answers in 30 min, then I may set PROBE-PASS): su_c cl19bb38ef on l1r; st_a cl9f076a5c + clf4365a62 (on l1r, coordinate SLWSLE); fe clf110fab2 + su_l1 clcc9d0155 on v5b/v5c (plus sle_fw_v2 cl6740750e, slw_su_c cl92142dac).
+- VISQC-SU-1 (if the clcc9d0155 probe shows a hotspot west of cl_x_su_c_i): landing macros flush to the E edge, pads + first station as a band along the lane4 E face, density taps there. v5b keeps the landing-slit blob (455-510,170-320) and adds x_su_c_i columns to the same 190 um E channel.
