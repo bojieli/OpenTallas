@@ -287,3 +287,13 @@ FIX-LEDGER x13 (per-type verilog_defines dead for flattened logic/explicit param
        - WESTRIP's local +4.32/+2.16 dx on rs t4_att/t5_att precedes; the anchor follows it.
        - the gate used a stale tree (treeJ8g) and rt 3df271c64c94 only as a row gate. The composed run is on the J8 sealed fork + rt/current 3b25e3b42d4d.
      Strict bind/LAT + place/GRT probe ride the composed gate (REASONED to FABLE-RC-S81).
+COORD RULING 04:1x (supersedes step 0): fork the J9 TREE from CURRENT MAIN at compose time, not the J8 cut tree.
+   Must carry: PINREG-TAPS 426e4a5524, ADV-LAND-CAP 139380c2ba + b058ab911c, UCF 31c7ccbd1b, POROUS-FRESH 3b25e3b42d4, LAUNCH-GUARD feedad5ec7, and the FLOW-OPS per-type-define bind fix if it lands by ~09:00. SELREP is already die-wide, so J9 does not depend on that fix.
+   Checked: rt/current is now feedad5ec7e6 and contains all of these. The old 3b25e3b42d4d LACKS 426e4a5524 / 139380c2ba / 4d4999fb65.
+   Method: src_manifest delta-make on the J8 sealed tree --sha <main HEAD> (--drop-overlay where main wins) on intel2 (laneclone), then delta-apply on epyc10 to a REAL copy (no --link) at kw45/src_s81_pin_<main12>_d8j9_1123_work.
+     Plan of record = J8 sealed plan 6833070df60b + J9 rows.
+     ADV-TREE-DRIFT (main) must show 0 view/porous/flow hits before the bind.
+   Host: epyc10 (1007 GB RAM, 277 GB free scratch2). Bind --mem 400.
+   SLICE ORDER (COORD, from SLICE-R6) inside the global order:
+     1b xga2 6c1f82db89ab (NOT 8d45ed26eb63) -> CLAND 494359d3530a -> XG-RING-REACH + XG-FLT-RELAY 1ca3d4bf7df6 -> rc31/34 reset ops (file pending) -> [TAP-GRID regen] -> rc33 PINREG-TAPS LAST (rows/apply_rc33.py TREE IN OUT REPORT on the composed plan; appends 490 taps on 16 C types, never replay names).
+     WESTRIP before SVC-LAND-CAP (already in order).
