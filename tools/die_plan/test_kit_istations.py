@@ -106,6 +106,39 @@ def test_inserts_and_sites(tmp_path):
     assert ".a(i_a_is2_q[0])" in sv and sv.count("u_ist_i_a_1 (") == 1 and ".q(i_a_is1_q)" in sv
 
 
+def test_soft_bus_channel_changes_station_sites_without_changing_rtl(tmp_path):
+    entry = dict(conn="bus:i_a", from_um=[0, 10], to_um=[80, 55], regs_um=[[40, 10]],
+                 bit_route="per_bit", leaf_um=[80, 55])
+    plan = dict(partition_types=dict(t=dict(
+        buses=[dict(name="i_a", dir="in", width=1, kind="data", face="W")],
+        internal_stations=[entry])))
+    pf = tmp_path / "plan.json"
+    proof = {}
+    for form in ("ordinary", "channel", "missing per-bit route"):
+        kd = tmp_path / form
+        kd.mkdir()
+        bound = kd / "t_part_bound.sv"
+        bound.write_text(BOUND)
+        (kd / "kit_rtl.json").write_text(json.dumps(dict(
+            bound_module="t_part_bound", files=[str(bound)])))
+        pf.write_text(json.dumps(plan))
+        result = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
+                                capture_output=True, text=True)
+        if form == "missing per-bit route":
+            assert result.returncode != 0
+            assert "requires a per-bit bus chain" in result.stderr
+            continue
+        assert result.returncode == 0, result.stderr
+        proof[form] = (bound.read_text(), (kd / "istations.tcl").read_text())
+        if form == "ordinary":
+            entry.update(leg_order="channel", channel_um=[24, 48])
+        else:
+            del entry["bit_route"]
+    assert proof["channel"][0] == proof["ordinary"][0]
+    assert "is_bits u_ist_i_a_0 i_a W 1 80 55 0 1 in ist:i_a 0" in proof["ordinary"][1]
+    assert "is_chan_bits u_ist_i_a_0 i_a W 1 80 55 0 1 in ist:i_a 24.0000 48.0000 0" in proof["channel"][1]
+
+
 # ---- S81-PLAN R3 (10-25): core<->core stations -> the leaf's CS_* station chains
 LEAF_BOUND = """module t_leaf_bound (input wire clk, input wire rst_n);
     ot_s81sl_leaf #(.AQ_XMEM(2)) u_lf (.clk(clk), .rst_n(rst_n));
@@ -478,6 +511,29 @@ def _packed_txt(w, d):
             f"    ot_dp_st #(.W({w})) u_bin_a (.clk(clk), .rst_n(rst_n), .d(x), .ea(y), .q(a_b), .eq(a_eb));\n"
             f"    ot_dp_dly #(.W({w + 1}), .D({d})) u_lpad_a (.clk(clk), .d({{a_eb, a_b}}), .q({{a_eq, a_q}}));\n"
             f"endmodule\n")
+
+
+def test_packed_channel_seats_existing_depth(tmp_path):
+    kt = tmp_path / "k"
+    kt.mkdir()
+    bound = kt / "m.sv"
+    rtl = _packed_txt(8, 3)
+    bound.write_text(rtl)
+    (kt / "kit_rtl.json").write_text(json.dumps(dict(bound_module="m", files=[str(bound)])))
+    plan = dict(partition_types=dict(t=dict(
+        buses=[dict(name="a", dir="in", width=8, kind="data", face="E")],
+        internal_stations=[dict(conn="bus:a", from_um=[180, 30], to_um=[64, 80], regs_um=[[110, 30]],
+                                bit_route="per_bit", leaf_um=[64, 80], leg_order="channel", channel_um=[85, 120])])))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kt)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert bound.read_text() == rtl
+    tcl = (kt / "istations.tcl").read_text()
+    assert "is_chan_packed_bits u_lpad_a a E 8 64 80 3 ist:a 85.0000 120.0000" in tcl
+    receipt = json.loads((kt / "kit_rtl.json").read_text())["kit_istations"][0]
+    assert (receipt["bound_pads"], receipt["channel_stages"], receipt["inserted"]) == (3, 3, 0)
 
 
 def test_packed_delay_deeper_than_plan_pins_first_sites_only():
