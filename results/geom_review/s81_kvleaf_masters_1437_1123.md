@@ -38,3 +38,7 @@ Viewed intel1 QNH `runs/qnh_drt_1510/review_1531`, final ODB SHA af60d38afaaa. T
 
 - E9 CPL `route_r2/cpl/hold_eco_1500/incremental/review_1533` SHA 2eb17135595e and CNW `route_r2/cnw/hold_eco_1500/incremental/review_1534` SHA e5ec00739fa5 have zero DRC markers and were visually reviewed. CPL retains clusters separated by thin open channels, 167 pins, and 64 PDN records. CNW retains its dense north pin band, open interior and 66 PDN records, with 1,655 pins. PASS for fresh extraction and TT/FF checks of these exact incremental routed ODBs.
 - Intel1 KVR `runs/kvr_drt_1510/review_1534` SHA bd49d763bfe9 shows 261 pins, 52 PDN records, site fill 0.530 and concentrated northwest density with open southern approaches. Detailed route has zero DRC markers. PASS for exact TT/FF and netlist LEC.
+
+## Horizontal KVT final geometry 15:39 PST
+
+Viewed E9 `reshape_r2/kvtch_drt_1527/review_1538` final SHA 3999a6680ff9. Exact 7,127 pins and 260 PDN records, N/S pin bands and centre clock remain separated across the 702×25.92 µm strip. The interior bands are spread along the length, with no macro or new wall. Detailed route is DRC0. PASS for TT/FF and netlist LEC. Parent adoption and corner/LEC gates are pending.
