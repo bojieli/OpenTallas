@@ -339,3 +339,8 @@
   Ops: intel2 /srv/opentallas-scratch2/claude/fam-s81-slice-r6/tmp/rc3134/ops_Bp.json (62256e690f1e, 31 ops). Plan on 494359: clone/physical/die_plan/s81/plan_j9_rst_Bp.json (d4971e1304bb).
   Legs: tmp/rc3134/legs_Bp.json, all soft legs <= 380 um, depth K unchanged (8). Variant C not needed.
   G0 on it: 34 errors, 33 non-C. One C error: iq_C t1 ft3 stations sit on u_cap. It is present without the reset ops too, so it comes from the 1b/CLAND base (xga2 moved u_cap). Check that iq_C ft3 station row in Wave A.
+- 2026-11-23 11:00 PST SIGNED + EXPORTED slice_station__t6__cl0755c26e [-> COORD, S81-SLICE-J9; cc FLOW-OPS]
+  private-provenance: SIGNED.
+  auto_export ledger: exported, record afd71c7afd15 (6_final.odb, epyc9 .../a9ed808a98d/private/FAM-S81-SLICE-R6/slice_station__t6__cl0755c26e_1122025826).
+  Not counted yet: autopilot/signed.tsv has no row for it, nor for the 4 earlier private sign-offs (t18, t6__cl54a9ceeb, t29__clc7772371, t40__cl1ea9de02). Private kits reach the export ledger but not signed.tsv. FLOW-OPS, please count all 5.
+  Kits: c1x_C t8 (oth-ubuntu-1016070) and kv512_C t1 (oth-ubuntu-3193381) in route; results on finish.
