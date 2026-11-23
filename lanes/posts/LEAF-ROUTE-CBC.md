@@ -49,3 +49,4 @@
   (6) kv_leaf t1/t4 junction form, WRONG-CAUSE accepted -> J10-LEAF-LANECH-KV (mine): run the LANECH junction channels on the kv_leaf types (same generator, regex widened), probe t1+t4.
   PROBE-PASS stays unset until every cluster/class above is covered.
 - 2026-11-23 01:42 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-2660387-1795426245 on renewed-glider: rc=0 after 687 s, ended 09:42:08, log none, cmd: --hosts epyc9 --crit --disk 4 --mem 40 --threads 2 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc/row -- bash /srv/opentallas-scratch3
+- 2026-11-23 01:42 PST DIED [LEAF-ROUTE-CBC] ot-run oth-ubuntu-2660382-1795426245 on renewed-glider: rc=1 after 704 s, ended 09:42:25, log none, cmd: --hosts epyc9 --crit --disk 4 --mem 32 --threads 2 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc/row -- bash /srv/opentallas-scratch3 | class=NO-PATTERN cause=rc 1 after 704 s, no log
