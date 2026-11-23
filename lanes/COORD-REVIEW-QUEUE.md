@@ -32540,3 +32540,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   - glue: G3/G4 taps sealed after the C4 kickoff -> REASONED (AP 05ca36 routed TT -72.9 after ECO, internal FF 0 viol).
   - rc112: REASONED, accepted 02:26.
 - 2026-11-23 10:49 PST COORD 10:5x reconciled the Codex 10:42 handoff. All Claude lanes were resumed at 10:45 on their own contexts (resume_1123c), and they adopt Codex units per CODEX-LOG/lanes/CODEX.md. QC RED: either the 2-cycle or the same-cycle form, first GATED wins. epyc8 and epyc2 scratch-low cleanup dispatched to OPS-SUPPORT-R1. epyc11 (Cherry 1069798, 84.32.189.120) is deployed but rejects the agidock_ot key; waiting on the owner.
+- 2026-11-23 10:50 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-tolerant-swine-80476 on tolerant-swine: rc=0 after 20 s, ended 10:50:01, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/tmp/push_1045.log, cmd: ot-push-main 
