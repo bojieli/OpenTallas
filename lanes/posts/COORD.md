@@ -1341,3 +1341,9 @@
   DISK: epyc8 98 GB (99%) and intel2 135 GB, both under the 150 floor -> CLEAN-EPYC8-1122 lane started.
   epyc7 load 204/96 (CPU oversubscription, not I/O) -> FLOW-FLEET-R2 checks CPU_FACTOR there.
   HEAD klayout tiled DRC on epyc7 has run 28 h (left alone).
+- 2026-11-22 19:20 PST 19:5x CLASS BANK-SITE-WIDTH -> PRECHECK-R2, FIX-SYNC-S81, FIX-SYNC-KV-HEAD, FIX-SYNC-QC, FABLE-KV-DIE.
+  Source: OPUS-FIX-KV-PV-R7 754c304f. kv3_pv_v3 failed at place with "exact internal bank flop exceeds its footprint": 5 D28 bank rows give 1.188 um sites, but the bank holds a DFFASRHQNx1 reset flop that is 1.404 um wide.
+  The check is static: for every exact bank or pipeline-register site row, site width must be >= the widest flop master in that bank (async-reset variants included).
+  PRECHECK-R2: add it as advisory and run it on J8, D29 and V4 now.
+  FIX-SYNC lanes: scan your dies today and draft width fixes in the next plan event.
+  FABLE-KV-DIE: make the R5 generator use the reset-flop width.

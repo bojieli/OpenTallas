@@ -27376,3 +27376,9 @@ FAILED [AUTOPILOT ed679c3ab50a] 2026-11-22 19:12:40 PST AUTOPILOT -> KIT-WAVE-3:
   TAP-CAP: kv3_pc_v1 3 (kv3_pc_v1__cl23f6a148: 7 taps over cap 1000 after the 200-um rebalance (clk_t21 1661, clk_t72 1468, clk_t36 1416,); kv3_hgi_v1 2 (kv3_hgi_v1__cl141fc26e: 5 taps over cap 1000 after the 200-um rebalance (clk_t31 2043, clk_t40 1926, clk_t8 1905, ); kv3_hgi_v2 2 (kv3_hgi_v2__cl2862d491: 7 taps over cap 1000 after the 200-um rebalance (clk_t51 2745, clk_t2 2294, clk_t50 2169, ); +9 families
   TAP-COVER: kv3_sys_SD 1 (kv3_sys_SD: 1.787 mm2 of 2.059 mm2 free area > 200 um from every tap (centroid (861, 531)); flops plac); kv3_sys_SD_v1 1 (kv3_sys_SD_v1: 1.805 mm2 of 2.080 mm2 free area > 200 um from every tap (centroid (871, 533)); flops plac)
   BOUNDARY-REG: kv3_hgi_v1 2 (kv3_hgi_v1__cl141fc26e: 1057 of 3813 port bits on 1 ports have no planned register within 50 um (ft2_o 1057b none ); kv3_hgi_v2 2 (kv3_hgi_v2__cl2862d491: 1105 of 4327 port bits on 2 ports have no planned register within 50 um (ft3_o 1057b none ); kv3_hg 1 (kv3_hg: 870 of 7398 port bits on 1 ports have no planned register within 50 um (ft2_o 870b none ne); +34 families
+- 2026-11-22 19:20 PST 19:5x CLASS BANK-SITE-WIDTH -> PRECHECK-R2, FIX-SYNC-S81, FIX-SYNC-KV-HEAD, FIX-SYNC-QC, FABLE-KV-DIE.
+  Source: OPUS-FIX-KV-PV-R7 754c304f. kv3_pv_v3 failed at place with "exact internal bank flop exceeds its footprint": 5 D28 bank rows give 1.188 um sites, but the bank holds a DFFASRHQNx1 reset flop that is 1.404 um wide.
+  The check is static: for every exact bank or pipeline-register site row, site width must be >= the widest flop master in that bank (async-reset variants included).
+  PRECHECK-R2: add it as advisory and run it on J8, D29 and V4 now.
+  FIX-SYNC lanes: scan your dies today and draft width fixes in the next plan event.
+  FABLE-KV-DIE: make the R5 generator use the reset-flop width.
