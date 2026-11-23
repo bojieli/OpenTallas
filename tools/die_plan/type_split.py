@@ -2094,7 +2094,11 @@ class TypeSplit:
         """reset_spine_pins (bound-only ri_*/rs_* wrapper pins of a reset net, one interior site per bit): the pin goes
         to the piece of the content / hard core its name names (ri_<inst with __ -> _>_rst_n), else to the piece of its
         sites.  A site outside that piece is re-sited by the pin's own rule (nearest the piece's reset tap on the 8.64
-        lattice, clear of the piece's hard cores) and reported."""
+        lattice, clear of the piece's hard cores) and reported.
+        SPINE-PIN-SPLIT 11-22 (kv3_pv_v3e D28 PORT_BIND extra ri_pv_u_g1_j_rst_n): after the split every piece that holds a
+        hard core of the named core's module is its own sink partition of that spine, and the bind names the piece's
+        wrapper port after its first such core (ri_<inst with __ -> _>_rst_n, sorted inst names).  A piece that holds such
+        cores but did not get the parent pin gets that pin, one site by the same rule (a one-bit pin only)."""
         t, cut, T = self.t, self.cut, self.T
         sp = t.get("reset_spine_pins")
         if sp is None:
@@ -2118,31 +2122,67 @@ class TypeSplit:
                 if cut.ppiece(x) == i:
                     sites.append(cut.sh(x, i))
                     continue
-                tap = T[i].get("reset", {}).get("tap_um") or [v / 2 for v in T[i]["outline_um"]]
-                boxes = [(h["origin_um"][0], h["origin_um"][1],
-                          h["origin_um"][0] + h["outline_um"][h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90")],
-                          h["origin_um"][1] + h["outline_um"][h.get("orient", "R0") not in ("R90", "R270", "MXR90", "MYR90")])
-                         for h in T[i].get("hard_cores", [])]
-                g = 8.64
-                cands = sorted(((abs(gx * g - tap[0]) + abs(gy * g - tap[1]), gx * g, gy * g)
-                                for gx in range(1, int(T[i]["outline_um"][0] / g))
-                                for gy in range(1, int(T[i]["outline_um"][1] / g))
-                                if abs(gx * g - tap[0]) + abs(gy * g - tap[1]) < 400), key=lambda c: c[0])
-                site = next(([rnd(a), rnd(b)] for _, a, b in cands
-                             if not any(b0 - 2.16 <= a <= b2 + 2.16 and b1 - 2.16 <= b <= b3 + 2.16
-                                        for b0, b1, b2, b3 in boxes)
-                             and [rnd(a), rnd(b)] not in sites), None)
-                if site is None:
-                    raise SplitError(f"{self.tn}: reset spine pin {q['name']}: no free site in piece {i}")
+                site = self._spine_site(i, q["name"], sites)
                 sites.append(site)
                 self.rep.setdefault("reset_spine_resited", []).append(dict(pin=q["name"], piece=i, old=x, new=site))
             qq["sites_um"] = sites
             if sites != [cut.sh(x, i) for x in q["sites_um"]]:
                 qq["note"] = (qq.get("note", "") + f" | {self.ev.tag}: re-sited in piece {i} (its consumer's piece)")
             T[i]["reset_spine_pins"].append(qq)
+            self._spine_piece_copies(q, who, i)
         for i in range(self.n):
             if not T[i]["reset_spine_pins"]:
                 del T[i]["reset_spine_pins"]
+
+    def _spine_piece_copies(self, q, who, own):
+        """SPINE-PIN-SPLIT: the own spine pin of every other piece holding a core of the named core's module"""
+        t, T = self.t, self.T
+        core = next((h for h in t.get("hard_cores", []) if h["inst"] == who), None) if who else None
+        if core is None or not core.get("module"):
+            return
+        flat = who.replace("__", "_")
+        if q["name"].count(flat) != 1:
+            return
+        for j in range(self.n):
+            if j == own:
+                continue
+            mates = sorted(h["inst"] for h in T[j].get("hard_cores", []) if h.get("module") == core["module"])
+            if not mates:
+                continue
+            name = q["name"].replace(flat, mates[0].replace("__", "_"))
+            if any(r["name"] == name for r in T[j]["reset_spine_pins"]):
+                continue
+            if len(q["sites_um"]) != 1:
+                raise SplitError(f"{self.tn}: reset spine pin {q['name']}: {len(q['sites_um'])} bits; a piece copy "
+                                 f"({name}, piece {j}) needs one site per bit")
+            site = self._spine_site(j, name, [])
+            qj = {k: copy.deepcopy(v) for k, v in q.items() if k not in ("sites_um", "note")}
+            qj.update(name=name, sites_um=[site],
+                      note=(q.get("note", "") + f" | {self.ev.tag}: piece {j} own spine port (the bind names it after "
+                                                f"its first {core['module']} core {mates[0]})"))
+            T[j]["reset_spine_pins"].append(qj)
+            self.rep.setdefault("reset_spine_added", []).append(dict(pin=name, piece=j, site=site, of=q["name"]))
+
+    def _spine_site(self, i, name, taken):
+        """the reset-spine pin rule: nearest the piece's reset tap on the 8.64 lattice, clear of its hard cores (2.16 um)"""
+        T = self.T
+        tap = T[i].get("reset", {}).get("tap_um") or [v / 2 for v in T[i]["outline_um"]]
+        boxes = [(h["origin_um"][0], h["origin_um"][1],
+                  h["origin_um"][0] + h["outline_um"][h.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90")],
+                  h["origin_um"][1] + h["outline_um"][h.get("orient", "R0") not in ("R90", "R270", "MXR90", "MYR90")])
+                 for h in T[i].get("hard_cores", [])]
+        g = 8.64
+        cands = sorted(((abs(gx * g - tap[0]) + abs(gy * g - tap[1]), gx * g, gy * g)
+                        for gx in range(1, int(T[i]["outline_um"][0] / g))
+                        for gy in range(1, int(T[i]["outline_um"][1] / g))
+                        if abs(gx * g - tap[0]) + abs(gy * g - tap[1]) < 400), key=lambda c: c[0])
+        site = next(([rnd(a), rnd(b)] for _, a, b in cands
+                     if not any(b0 - 2.16 <= a <= b2 + 2.16 and b1 - 2.16 <= b <= b3 + 2.16
+                                for b0, b1, b2, b3 in boxes)
+                     and [rnd(a), rnd(b)] not in taken), None)
+        if site is None:
+            raise SplitError(f"{self.tn}: reset spine pin {name}: no free site in piece {i}")
+        return site
 
     def _pads(self):
         """pads (die IO pads a partition hosts): every pad goes to the keep piece unless spec pads_piece names it;

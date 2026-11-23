@@ -1322,3 +1322,43 @@ def test_dead_relay_start_of_a_piece_without_count_aligned_crossings_is_dropped(
     assert names("B__N") == ["x"] and names("B__S") == ["cland_rstart_in"] and names("B") == ["cland_rstart_out"]
     assert [e["id"] for e in out["clock"]["landing_network"]["edges"]] == ["cland_relay__b__S"]
     assert me.rep["relay_starts_dropped"] == dict(edges=["cland_relay__b__N"], rx_types=["B__N"], tx_pins={"B": ["cland_rstart_out_1"]})
+
+
+def _spine_ts(n_pieces_cores):
+    """a TypeSplit stub for _reset_spine_pins: two x pieces of 100 x 100 um, cut at x 100"""
+    from types import SimpleNamespace as NS
+    core = lambda inst, x: dict(inst=inst, module="ot_join", origin_um=[x, 10.0], outline_um=[20.0, 20.0], orient="R0")
+    parent = dict(hard_cores=[core("pv__u_g0_j", 10.0), core("pv__u_g1_j", 110.0), core("pv__u_g3_j", 150.0)],
+                  reset_spine_pins=[dict(name="ri_pv_u_g0_j_rst_n", width=1, layer="M7", sites_um=[[60.48, 51.84]],
+                                         note="spine")])
+    T = [dict(outline_um=[100.0, 100.0], reset=dict(tap_um=[51.84, 51.84]), hard_cores=[core("pv__u_g0_j", 10.0)]),
+         dict(outline_um=[100.0, 100.0], reset=dict(tap_um=[51.84, 51.84]),
+              hard_cores=[core("pv__u_g3_j", 50.0), core("pv__u_g1_j", 10.0)][:n_pieces_cores])]
+    cut = NS(ppiece=lambda x, *a: 0 if x[0] < 100 else 1, sh=lambda x, i: [x[0] - 100 * i, x[1]])
+    ev = NS(tag="tst", _local_piece=lambda ts, who: 0 if who == "pv__u_g0_j" else 1)
+    return NS(t=parent, cut=cut, T=T, n=2, ev=ev, rep={}, tn="kv3_pv_t",
+              _spine_site=lambda i, name, taken: TS.TypeSplit._spine_site(ts_, i, name, taken),
+              _spine_piece_copies=lambda q, who, own: TS.TypeSplit._spine_piece_copies(ts_, q, who, own)), parent
+
+
+def test_each_split_piece_gets_its_own_reset_spine_pin():
+    """SPINE-PIN-SPLIT 11-22 (D28 kv3_pv_v3e PORT_BIND extra ri_pv_u_g1_j_rst_n): the piece without the parent pin but
+    with cores of its module gets ri_<first such core>_rst_n on the reset-pin site rule; the parent pin stays put"""
+    global ts_
+    ts_, _ = _spine_ts(2)
+    TS.TypeSplit._reset_spine_pins(ts_)
+    assert [r["name"] for r in ts_.T[0]["reset_spine_pins"]] == ["ri_pv_u_g0_j_rst_n"]
+    assert ts_.T[0]["reset_spine_pins"][0]["sites_um"] == [[60.48, 51.84]]
+    (r1,) = ts_.T[1]["reset_spine_pins"]
+    assert r1["name"] == "ri_pv_u_g1_j_rst_n" and r1["width"] == 1 and r1["layer"] == "M7"
+    assert r1["sites_um"] == [[51.84, 51.84]]          # the piece tap, clear of both cores
+    assert ts_.rep["reset_spine_added"] == [dict(pin="ri_pv_u_g1_j_rst_n", piece=1, site=[51.84, 51.84],
+                                                 of="ri_pv_u_g0_j_rst_n")]
+
+
+def test_piece_without_a_core_of_the_spine_module_gets_no_spine_pin():
+    global ts_
+    ts_, _ = _spine_ts(0)
+    TS.TypeSplit._reset_spine_pins(ts_)
+    assert "reset_spine_pins" not in ts_.T[1]
+    assert "reset_spine_added" not in ts_.rep
