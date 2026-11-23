@@ -5,3 +5,6 @@ Split: parent does KV (hgi/hg, pc, hroot, sys_c, pv); a fork does HEAD (hd_lep0N
 Deadlines: KV families without a full-cause row -> tell KV-PLAN-R6 + VIS-KV by 05:00 (not released at D29 apply ~06:00); new rows -> D30.
 ## log
 - 00:45 started; own view first, VIS-COVERAGE not opened yet.
+- 00:58 HEAD fork done (13 TSV lines returned to parent; 1 post 7e850385f82 to VIS-HEAD + OPUS-FIX-HEAD-LEP0N-R9: tap-window die row MISSED, E-half macro rows PARTIAL, twist COVERED).
+- 00:58 KV probes via ot-run from intel2 ~/fable-rc-kvhead (logs g_*.otrun.log = 5-it GRT congestion, t_*.otrun.log = timing classes); outputs epyc8/9/10 /srv/opentallas-scratch2/claude/fable-rc-kvhead/{g_*,t_*}; tools there (vis_probe.*, tprobe.*, cong_census.py, pgrp.py). Load cap makes them trickle.
+- KV own view so far: hroot = E-strip landing cland_i_kvs_ctl_o_hroot_Q x1850-1900 y450-650 (1523 GRT ov, 20425/20426 DRC); sys_c = GRT clean, setup -342..-387 TNS -21k..-71k, pinreg max 431; pc_v3 = setup -531..-807 TNS -218k..-290k, 86 unstationed reach classes, 74k hold cells, port_in hold -269; hgi_v2 = ectl pd -> hst3 path 1.8 mm -285..-361, W strips x25-300 y600-850 / y950-1250 ov 6155; pc_v1 x3 + pv_v3 = exact bank/site flow errors.
