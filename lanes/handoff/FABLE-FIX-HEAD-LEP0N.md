@@ -1,3 +1,14 @@
+## 21:3x COORD rulings (latest)
+- Plan of record for the next HEAD event = R8 r18q (plan d1f98516900cc0ba, sidecar 994b8a2892dd0768; = r18p + 3 rx relay stages + re-bind;
+  tree epyc9 opus-fix-head-lep0n-r8/trees/r18q_rx). W sealed kit w13 from r18q: fork to epyc10 (epyc9 scratch below floor) running
+  (intel2 fork_r18q.log), launch script ~/fable-fix-head-lep0n-1122/launch_w13.sh (background task; checks the two shas, then private-spec
+  --host epyc10 --rt 345ac19b04b3 --ab OT_GRT_ALLOW_CONGESTION=1, run-item --goal route as unit fable-lep0n-w13). If FLOW-OPS-R2 posts
+  RT-ROLLBACK for 345ac19b04: relaunch on the rolled-back rt.
+- W channel (structural): LEP-WCHAN-1 = cut 820.8 -> 829.44, pairs 1/2 x 34.56 -> 43.2, channel 17.28 -> 25.92 (max: coll_o0 N window starts
+  831.28); re-split chain is R8's (asked 21:2x). Fallback WCHAN-2 = lk_WN2 hd_serdes instance MX. Third lever (COORD 21:3x): move hd_serdes
+  instances west / grow the die outline; signed status of hd_serdes must NOT cap the channel. Size from the w11 GRT map; prove with PRE + probe.
+- GATE RULE: gate via published rt + composed launch tree (L/tmp/chain_gate_rt.sh), never copy tools into a fork.
+
 ## 20:5x (PST) w12 probe launched
 - r18p gate PASS (rt 2a24a958d719): plan_gate_pre vs 5e1f38e1530b 0 findings, bind PASS, cohort 27/27, LATCHECK 334/334.
 - w12 = W probe kit from r18p: unit fable-lep0n-w12 (intel2 pid 1880713), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/
