@@ -213,3 +213,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-22 20:00 PST CANARY s81_head @ 3129781626: FAIL failing signoff (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b6934d775_1121_114528_208707)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-22 20:15 PST CANARY s81_head @ 74be77fbdf: FAIL failing sdc_lint,selrange,synth,lec,face_guard,face_cover (REGRESSION grt ins_tt 277.95 -> None not measured; the baseline run measured it; grt ins_ff 217.51 -> None not measured; the baseline run measured it; grt hold)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
