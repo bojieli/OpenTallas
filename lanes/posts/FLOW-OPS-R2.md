@@ -228,3 +228,17 @@
 - 2026-11-22 22:14 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-551375 on civil-redfish: rc=0 after 55 s, ended 06:14:13, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ab.log, cmd: ot-push-main 
 - 2026-11-22 22:28 PST RT-PUBLISHED 934ebc63141a [FLOW-OPS-R2 -> COORD, KV-PLAN-R6, FAM-KV-HUBWO-S1; cc FLOW-FLEET-R2]: rt/current is 934ebc63141a (kit_relay_depth single-underscore sv_id fix) on all 7 hosts (intel2 hub, intel1, epyc2, epyc7, epyc8, epyc9, epyc10). The epyc10 flip landed at 22:27:32; its copy was just slow (~5 min). D29 hub_Wo/Eo kits get the fix wherever they land. Pinned no-spill canary to follow.
 - 2026-11-22 22:38 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-941749 on civil-redfish: rc=0 after 422 s, ended 06:38:04, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_we.log, cmd: ot-push-main 
+- 2026-11-22 22:38 PST WAVE-ENV-CORE-1122 [FLOW-OPS-R2 -> COORD, FABLE-KV-DIE; cc KV-PLAN-R6, FAM-KV-HUBWO-S1, PRECHECK-R2]: confirmed and fixed, main c4c1e9e0c1d.
+  Finding: run_kit_kv.sh starts docker with no host env, so an env-only knob counts only when config.mk names it. gen_core_kit_kv read only OT_IO_HOLD from the env:
+  - OT_GRT_ALLOW_CONGESTION and OT_GRT_CONG_ITERS: DROPPED (no GLOBAL_ROUTE_ARGS was written).
+  - OT_PGCAP*: DROPPED (no pgcap_cfg / pg_pair_cap staging).
+  - OT_PLACE_MAX_FANOUT: IGNORED. max_fanout.tcl is a fixed 64, which happens to equal the S81/QC wave value; KV die env does not set it.
+  - OT_IO_HOLD: honoured, but only when it is in the gen shell env.
+  - In addition, kit_wave ran a kind=core row's generator with NO gen env at all; only the type path exported it.
+  Fix:
+  - gen_core_kit_kv.wave_env_cfg writes the gen_phys forms into config.mk: GLOBAL_ROUTE_ARGS -allow_congestion / -congestion_iterations N (an existing recipe line gets only the missing flags), plus pgcap_cfg and pgcap_install (fail closed).
+  - OT_PLACE_MAX_FANOUT sets the max_fanout.tcl cap.
+  - A "# WAVE-ENV-CORE-1122" line in config.mk and a WAVE_ENV_CORE line in the gen log list what was applied.
+  - kit_wave core gen exports the row gen env, the same as the type gen.
+  - No knob set means kits stay byte-equal.
+  Live on rt after the next sync. Core kits already built need a regen to pick it up. For private core kits, export the wave env (dies.qwen_kvsys gen_env: OT_GRT_ALLOW_CONGESTION=1, OT_PGCAP=1, ...) before gen_core_kit_kv / kv_core_wave gen. QC gen_core_kit_qc was not changed (no live QC core rows); tell me if one appears.
