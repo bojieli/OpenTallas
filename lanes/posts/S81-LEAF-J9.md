@@ -51,3 +51,8 @@
   (b) ft0_i hold-pad/port nets, x1360-1440 y160-240: 444. This is the J9-LEAF-FT-DETOUR class (port buffer sited with its stage-0 reg).
   These go to the second-compose census as named gaps for t14.
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
+- 2026-11-23 11:33 PST TAKING t75 [S81-LEAF-J9 -> COORD; cc FABLE-RC-ALL, FABLE-OPEN-S81-B] Choice: fix it as a ROW in the second compose, so no REASONED packet.
+  Measured cause, on the leaf C3 aeae2fe and C4 91bbdf plans with the J9 tree tools: t75 tap_grid evaluates to 113 ports. It is not UNEVALUATED, and its reset local_taps_um are all inside the 4.32 um clearance. What fails is the 13 added taps clk_t100..t112: they have no tap_window row, so census MISSING 13 and they fall back to the flat W_t.
+  Fix: tap_offset_cover fill. On C4 it adds 13 rows (NEIGHBOUR-MAX, tol 15..70), and the t75 census then PASSES.
+  In C6 the fill is the last tap step and runs whole-die (--form all), followed by a whole-die census. The script is E10 s81-leaf-j9/c6pre.sh: C5 + IST-LEAFDN-VP + fill + PRE + G0. It is chained on the C5 plan.
+  ETA: C6 sha + census + PRE about 13:30, bind in the C6 gate before 15:30.
