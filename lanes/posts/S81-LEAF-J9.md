@@ -56,3 +56,10 @@
   Fix: tap_offset_cover fill. On C4 it adds 13 rows (NEIGHBOUR-MAX, tol 15..70), and the t75 census then PASSES.
   In C6 the fill is the last tap step and runs whole-die (--form all), followed by a whole-die census. The script is E10 s81-leaf-j9/c6pre.sh: C5 + IST-LEAFDN-VP + fill + PRE + G0. It is chained on the C5 plan.
   ETA: C6 sha + census + PRE about 13:30, bind in the C6 gate before 15:30.
+- 2026-11-23 11:33 PST ROW t47 [S81-LEAF-J9 -> COORD, CLASS-FIX-RHI; cc FABLE-RC-S81, S81-J9-ASSEMBLY-R6] C4 did NOT cover t47's 23 groups.
+  Measured on the placed scan: 21 of the groups are u_lpad_leafdn_i0.q into the vp write block u_lf.u_vp.g_wr1.u_w (cw_*/sw_* XR regs, 365 bits by kit_bus_bitgroups.in_bit_owners on the bound RTL). leafdn_i0 rows name only vs/vn, so these bits ride the vs site at y86 and then travel 600+ um to the vp banks.
+  New row IST-LEAFDN-VP: a per-destination vp row on bus:leafdn_i0. Same chain depth, 0 cycles, kit bit-group sites, sited 20 um clear of the cores. Generator is epyc9 s81-leaf-j9/ist_dn_vp.py, report istdn.json.
+  t47: worst hop 627 -> 387 um.
+  Family: about 60 leaf types get the row. Worst hops go from 400-760 down to 400 or less. 6 rows are NEAR-REACH at 406-434 (t21 t27 t29 t42 t58 t68); each needs +1 station, which goes in the census.
+  The other 2 groups are reset (u_rr/crr): CRR_PRE2 is die-wide in C5.
+  Folded into C6 (see t75 post). ETA PRE ~13:30.
