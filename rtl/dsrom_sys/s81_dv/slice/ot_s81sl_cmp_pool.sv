@@ -36,7 +36,9 @@
 // 3 no bf16 rounding (truncation); 4 max picks s0 always; 5 KLAG - 2 (the calendar drifts: kv before p).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cmp_pool #(
-    parameter integer LM = 5, LA = 4, MUT = 0
+    parameter integer LM = 5, LA = 4, MUT = 0,
+    parameter integer HARD = 0        // S81-KVLEAF-T2-ARCH 11-23: 1 = each lane is the hard master dsfd_sl_t_cpl (x8; same body,
+                                      // LM 5 / LA 4 / MUT 0 only); 0 = the lanes stay soft (instance names unchanged)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -112,11 +114,20 @@ module ot_s81sl_cmp_pool #(
     wire [7:0] lo_v, lf;
     wire [255:0] lo_y, lo_y32;
     genvar l;
-    generate for (l = 0; l < 8; l = l + 1) begin : g_lane
+    // HARD picks one of the two loops (the other has zero iterations), so the soft lanes keep the path g_lane[l].u_l
+    generate for (l = 0; l < ((HARD != 0) ? 0 : 8); l = l + 1) begin : g_lane
         ot_s81sl_cmp_pool_lane #(.LM(LM), .LA(LA), .MUT(MUT)) u_l (
             .clk(clk), .rst_n(rst_n), .i_v(l_v), .i_role(l_role), .i_d(l_d[32 * l +: 32]),
             .o_v(lo_v[l]), .o_y(lo_y[32 * l +: 32]), .o_y32(lo_y32[32 * l +: 32]), .fault(lf[l]));
+    end
+    for (l = 0; l < ((HARD != 0) ? 8 : 0); l = l + 1) begin : g_lanec
+        dsfd_sl_t_cpl u_l (
+            .ck(clk), .rst(rst_n), .i_v(l_v), .i_role(l_role), .i_d(l_d[32 * l +: 32]),
+            .o_v(lo_v[l]), .o_y(lo_y[32 * l +: 32]), .o_y32(lo_y32[32 * l +: 32]), .fault(lf[l]));
     end endgenerate
+`ifndef SYNTHESIS
+    initial if (HARD != 0 && (LM != 5 || LA != 4 || MUT != 0)) $fatal(1, "ot_s81sl_cmp_pool: HARD needs LM 5, LA 4, MUT 0");
+`endif
     assign dbg_y32 = lo_y32;
     integer i;
     always @(posedge clk) begin
@@ -290,4 +301,13 @@ module ot_s81sl_cmp_pool_lane #(
             if (sf || ef || df || pf || mf || yf) fault <= 1'b1;
         end
     end
+endmodule
+// S81-KVLEAF-T2-ARCH 11-23: the pool lane as a hard master (x8 in ot_s81sl_cmp_pool HARD 1).  Wrapper only.
+module dsfd_sl_t_cpl (
+    input  wire        ck, rst,
+    input  wire        i_v, input wire [1:0] i_role, input wire [31:0] i_d,
+    output wire        o_v, output wire [31:0] o_y, output wire [31:0] o_y32, output wire fault
+);
+    ot_s81sl_cmp_pool_lane #(.LM(5), .LA(4), .MUT(0)) u_l (
+        .clk(ck), .rst_n(rst), .i_v(i_v), .i_role(i_role), .i_d(i_d), .o_v(o_v), .o_y(o_y), .o_y32(o_y32), .fault(fault));
 endmodule
