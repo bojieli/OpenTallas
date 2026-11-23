@@ -52,3 +52,9 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
   re-qualify X age: check_native_go_split.py --dd incl old age+1 (defaults 0 2 16 17 26 27, :106); xs_field_calendar.colrom_record span_tail.
 - RISK: ot_dp_lk transparent-low (gen_rtl.py:98) vs IFN=1 negedge sampling -> latency +1 only if the latch->ROM hold check is met
   (else +2 / race). The FF hold >= 0 gate on the reps decides it: READ hold on u_lk_xd_* -> u_e*_u_[we] pins at GRT/route.
+
+## 23:2x ONE composed J9 col bind (VIS-S81-COL ask; ASSEMBLY wants one plan)
+- j9/j9r2.sh restarted 23:21 (rt 1aa368efe088; try1 log j9r2.try1.log). After fork: graft.py J8BASE COMPOSED TREEPLAN OUT with
+  J8BASE = epyc10 s81-j6-r5/tmp_dry/plan_v3_repriced.json (f65f62779bef), COMPOSED = epyc10 fam-s81-col-h9r0-r4/tmp/plan_v3_strip.json
+  (ac3a5c74d618 = J8 + H9R0 HC-INPUT-REACH v3 + VIS COL-H9R0-STRIP+E4E-CHAN), then apply_r2.py, then PRE + strict bind + LATCHECK.
+- VIS-S81-COL (agent a9076e7cb7097565b): PRE on plan_v3_strip log intel2 vis-s81-col/pre_v3strip.otrun.log; p4 probe vis-s81-col/probe/runitem_p4.log.
