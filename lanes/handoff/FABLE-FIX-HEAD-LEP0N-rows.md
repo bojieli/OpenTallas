@@ -99,3 +99,8 @@ Tree epyc9 .../fable-fix-head-lep0n-1122/trees/s81_head_r18m_e2, plan sha256 3dd
 exports check PASS, bind PASS, cohort 27/27, LATCHECK 334/334 (L/bind_r18m). E kit e2: spec s81_head_hd_lep0N_1122104411 (unit fable-lep0n-e2,
 rt a4c5d882015d). Still unaddressed E placed-scan groups (R8 kit geom/placed_scan.tsv, 22 NEED-STATION): u_land.rd -> g_rxm dm 657 um,
 g_rx.wp -> qwa 615, u_rg3 g_txr -> credit_pin_r 986 (9 bits), u_land SRAM -> rd 625; internal reg-to-reg, need RTL stages, not plan rows.
+
+## 9. LEP-RSTART-2c (hd_lep0N_w, site rows; fixes my section 6 sites) tree r18n, plan 341dbb140f8fb054
+clock.landing_reader_start.branches: coll_i0 stages xy [131.61,1380.0], [485.61,1380.0] (were y 1370.0, on the status relays / lrst k12:
+w10 place died "OT_CLAND no legal site u_cland_sin_coll_o1_coll_i0_0"); coll_i2 stage 1 xy [10.0,222.0] (was [20.54,220.51], inside the
+coll_i2 band). No origin_rect_um on the relay piece. Raw relay names re-keyed (L/tmp/rekey_resets.py). Check tool: L/tmp/sites.py PLAN TYPE.

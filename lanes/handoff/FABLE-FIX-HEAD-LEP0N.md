@@ -1,3 +1,10 @@
+## 18:0x
+- w10 DIED at place (my reader START sites collided with status relays at (487,1370)). Fixed in tree r18n (epyc9 L/trees/s81_head_r18n_w11, plan
+  341dbb140f8fb054 = r18m + LEP-RSTART-2c), gates PASS (L/bind_r18n). w11 launched 17:58: unit fable-lep0n-w11 (intel2 pid 1324524), spec
+  ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/s81_head_hd_lep0N_w_1122175827/spec.json, log runitem_w11.log, durable waiter armed.
+- LIVE: e1 (r18k), e2 (r18m) placing under --direct since 17:5x; w11 in early stages (normal queue; >30 min wait at any stage -> direct.py swap for
+  place, COORD 18:1x approval for later stages). r18n is now the newest full plan (superset of r18m).
+
 ## COORD 18:1x standing approval
 If any CTS / GRT / route / sign-off stage of e1, e2 or w10 waits > 30 min for admission: put that stage on ot-run --direct myself (one copy
 each, never a duplicate) and post it; no need to ask. (Chain stages are run-item ot-run-wave clients, not kwp units: find the exact queued
