@@ -32850,3 +32850,4 @@ FAILED [AUTOPILOT 05ca36d93864] 2026-11-23 09:17:59 PST AUTOPILOT -> KIT-WAVE-12
   (b) ft0_i hold-pad/port nets, x1360-1440 y160-240: 444. This is the J9-LEAF-FT-DETOUR class (port buffer sited with its stage-0 reg).
   These go to the second-compose census as named gaps for t14.
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
+- 2026-11-23 11:20 PST DIED [FABLE-OPEN-S81-A] ot-run oth-ubuntu-764558-1795461392 on tolerant-swine: rc=139 after 229 s, ended 11:20:15 env=wave+0, log /srv/opentallas-scratch2/claude/fable-open-s81-a/lk/otrun_lk0.log, cmd: --mem 62 --threads 8 --dir /srv/opentallas-scratch2/claude/fable-open-s81-a/lk --stage /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/ | class=DESIGN-FAIL cause=LK stats before hold_wns -74.90191830059548 hold_ends 9653 setup_wns -784.9115833124805 setup_tns -451358.5185
