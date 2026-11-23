@@ -61,6 +61,27 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 18:20 PST (newest; read this first; older blocks are history)
+- K1 (first sealed v6n kit, admitted 11:5x) FAILED at global place 16:24: "explicit FT site outside core: ft48,3,0". Cause:
+  type_split leaves explicit bit sites (ft_slots[].bit_sites_um) of crossing slots past the piece core edge. Fix w/fix_bit_sites.py
+  IN OUT RECEIPT TYPES (re-sites only those cells; 61 on v6n/v6ne, 2,079 on the 14-type event, 0 unfixable); multi.sh runs it.
+  ROW A as handed 09:3x is WITHDRAWN until re-issued from the fixed plan.
+- T1 (tree/): fixed v6n plan installed by w/resite_rebind.sh tree w/gates/bs/plan_v6n_bs.json v6n6u1 v6n6v1: PLAN-GATE-PRE 0,
+  G0 PASS 0 errors, strict bind 0 errors (161 / 57 / 2558), LATCHECK 0, R8CHECK = baseline. Gates w/gates/v6n6v1_*.
+- K2 = new sealed kit of that plan, --goal route (COORD ruling: never finish), --rt 0890cc9405b7, started 18:14:
+  spec intel2 ~/coord/autopilot/private_specs/FABLE-FIX-KV-PV-SINKSPREAD/qwen_kvsys_kv3_pv_v6n_1122181350/spec.json,
+  log ~/tmp/ffkvpv/runitem_v6n_k2.log, unit runitem-kv3_pv_v6n, kit epyc8 .../private/FABLE-FIX-KV-PV-SINKSPREAD/
+  kv3_pv_v6n_1122181338/gen/kv3_pv_v6n. Watcher ~/tmp/ffkvpv/watch_k2.sh (state watch_k2.state) posts stages + verdict.
+  DO NOT TOUCH tree/ while K2 runs. At place: tap loads, then real tap rows (see RESUME block a.).
+- T2 (tree2/): m7 bound clean but final G0 1 error (KITFIT-OUTLINE v1 ring 0.444 um past kit core at the cut) -> compose.py
+  ringside rings now 8.64 off the cut. Chain m8 (w/chain_full3.sh m8 tree2, D29_RINGSIDE=w/d29/ringside_all_m8.json, log intel2
+  ~/tmp/ffkvpv/chain_m8.log): compose ok (plan 9d9579bd19c9), PLAN-GATE-PRE 0, G0 PASS 0 errors, first bind R8 30+30 (expected),
+  pad loop running. On CHAIN_FULL_DONE m8 with final G0 PASS: cd tree2; python3 -I w/package_d29.py m8 tree2
+  w/handoff/D29_pv_14types_package.json; post ROWS-READY (row B contains v6n, so it supersedes row A).
+- ot-tree-fork --no-manifest on main a087287d53. epyc10 <lane>/tree fork (old plan, unused) -> ot-delete. The epyc2 failed fetch
+  /srv/opentallas-scratch2/claude/tree-cache/fa1d8c9906a306e4.fetch-3335283: ot-delete was issued 11:05, verify it is gone.
+- KV-PLAN-R6 is sealing D28 (rh12 plan 44c3cbf51e50): when its seal tree is posted, re-compose rows on it (RESUME block d.).
+
 ## STATE 11-22 10:30 PST (newest; supersedes the T2 lines of the blocks below)
 - T2 m5 bind after ONE pad regeneration got past R8 and failed on 2 real classes (gates/m5s1_bind):
   (a) 9 HARD_CORE_PARAM_WRAP "expected one bound instance u_cland_<bus>, found 0": type_split binds a landing ring in the piece of
