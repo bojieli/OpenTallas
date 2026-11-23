@@ -55,3 +55,10 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - hd_ctl (first, HEAD gate 13:00): HEAD-R18 patched lec (epyc9 head-r18/clone, staged to RELEC-1122/m2) left 101 points because lec mis-paired ek. The yosys FSM_RECODE table (fsm/ + fsm_c/, tmp/fsmhint.py) gives cube hints. Runs: ml/hdctl_r8_fsmhint (R8 ctl1) and ml/hdctl_counted_fsmhint (counted 092e72b3, kit copy mk/s81_head_type_hd_ctl_0ce42cbd), both epyc9, runner tmp/mlech.sh.
 - LECGATE-R2 hc3 records 03bd0ee623f9/d5f3d7812269/827de5708c20/822d3873e2eb: same 51-68 differs. Rerun once the slw_hc3 cause is found.
 - 2fa9961fbc78 = t52: proved EQ twice; no re-revoke (posted 7bd3d4a6).
+
+## 15:5x 11-23 (resume after 11:40-15:40 limit)
+- hd_ctl counted 092e72b3 with patched lec + 12/12 yosys FSM cube hints: still UNPROVEN, 101 points (st/ek gold bits unmatched). Superseded by the Codex binary rebuild (mapped LEC 69457/69457 EQ). The historic row stays revoked.
+- hd_mesh historic: NOT-EQ, 9097 points (SRAM FIFO black box).
+- Cause classes posted 3eb1993b. No revocations: no type fails after its LEC fix while its base passes.
+- slw_hc3 (6 records): the failing leaf set changes with the LEC run on the same netlist, so this is LEC-SETUP. Points sit at the mux_rep16 last level, fed by kept select replicas g_c[].f, plus the merged-proposal re-choice. Posted aef0b3ec to FAM-QC-HCST-R3/FLOW-LECGATE-R2 with a suggested lec fix. Re-run all 6 once a fix lands; restore only on EQUIVALENT.
+- Open: attn_tr_x (502, gold-only tr regs), rxsb (968; gate 546 inputs vs gold 99), col774 78 _NC tag inputs (REAL candidate, S81 owner).
