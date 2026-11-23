@@ -184,3 +184,20 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
   s81_col_h10_r0_p4__t1__pvcc166a6d_1122210903, s81_col_h9_r1__t1__cl49d7a23e__pv0a45e191_1122210950
 - WATCH: epyc7 scratch2 96% (362 GB free at 21:07). Old p6 rank-line kit still alive (runitem_p6).
 - Read at CTS: post-hook setup on u_y_xd_*xs_q* -> ROM (expect the class gone); at GRT: overflow + OT_POSTCTS_GATE TT/FF.
+
+## 21:3x TOKEN / COMPILER SCHEDULE MAP (read-only search of the J7 tree; unverified items marked ?)
+- Input dates: tools/s81_dv/frame_schedule_asb.py: measure() l.519-546 traces when each xs_* / CONTROL_PINS (go, go_tag, cfg_*) reaches the
+  station; l.795 st_out[e] = {inputs, control, added_edges=[add_lp+dx] ("X age"), all_x_inputs_equal_added_edges}; l.800-802 hard-code
+  go_boundary_edges = 1, required_go_issue_advance_edges = 1.
+- relay_depth is NOT in the default schedule: l.1002-1004 fails RELAY_DEPTH_UNSCHEDULED; opt-in --schedule-relay-depth (l.866-869) via
+  RD_NET / RD_PIN (l.81-82, l.523 x = RD_NET.get(b,0) + RD_PIN.get((cn,port,base+k),0)). => the lockup +1 must enter RD_PIN (D + lockup_cycles).
+- Consumer: tools/s81_dv/layer_prog/lower_xs.py:411-424 requires GB station, required_go_issue_advance_edges == 1, added[0] in
+  rec['qualified_x_ages'] (record from tokfunc/check_native_go_split.py:140). => X age +1 must be RE-QUALIFIED (new record; bench with latch).
+- layer_prog/bound_die.py:119-226 loads bind_core_input_pipe.json as declared pipes.
+- Output dates (pv, busy, bank_free..) for consumers: NOT FOUND in tools/s81_dv, tools/die_plan (?).
+- Valid-qualification: qx_pq_w10.sv:320-323 boundary regs capture go/cfg_v/cfg_a/cfg_d/go_tag every clock; cfg_a/d used under cfg_v_x (l.466,477);
+  xs_* registered under wen (l.411-414); go_pin used COMBINATIONALLY outside a strobe: l.561 st_bank_free <= pq_bank_free && (.. !go_pin && !go),
+  l.625 clock-gate z_d = go_pin || ..; counters advance on issue/go_e only (not exhaustive). _gb.sv GO_BOUNDARY go_q/tag_q every clock.
+- Back-pressure: col_h9_l4_lp_plan_kit.sv l.20719 bank_free/sh_free -> ot_s81_cfg7_seq u_s0 .ef (loop to the go/cfg issuer; live or checked = ?);
+  busy/fault -> dsfd_qbank_N u_bn0 .e_st (l.20654); walking unconnected.
+- TODO: read ot_s81_cfg7_seq .ef use + dsfd_qbank_N .e_st; run frame_schedule_asb.py --schedule-relay-depth on planR3; re-qualify X age.
