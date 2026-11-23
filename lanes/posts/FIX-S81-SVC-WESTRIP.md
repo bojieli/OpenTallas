@@ -66,3 +66,4 @@
   - winclash still shows 8 on t14 S / svc_5_rs N. Being localized.
   (3) SVC-SEAM-STRIP is REASONED (93625031).
   ETA: GATED or REASONED by 16:45; anything not GATED at 17:00 goes REASONED to R6.
+- 2026-11-23 15:55 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-1167709-1795477678 on civil-redfish: rc=0 after 452 s, ended 23:55:28, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/f30.otrun.log, cmd: --mem 48 --threads 3 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash f30.sh
