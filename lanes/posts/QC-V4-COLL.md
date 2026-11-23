@@ -12,3 +12,4 @@
   - Left out on purpose: the xev_q/xe_q seats and the XEPRE/RDPIPE defines, because bind elab ignores per-type defines.
   - Apply in c4.sh: replace the coll13_edits block with exec(e["apply"]) on pt (the one-liner is in the file).
   Status: PRE-PASS until the census. Gate basis is now pkit_core9 = pkg17 (pkg15 + the same snap, 91d21665533a) on rt a98811abf9fc (bind running, intel2 unit qc-v4-coll-core9 -> probe kit core9g). If pkit_core8 or 9 misses 12:30, I write the REASONED text with the census for FABLE-RC-QC.
+- 2026-11-23 06:29 PST DONE [QC-V4-COLL] ot-run oth-ubuntu-347775-1795444005 on tolerant-swine: rc=0 after 155 s, ended 06:29:18, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pspec_core8g/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkit_core8 --hosts epyc10 -- bash -c [ -f /srv/opentallas-scr
