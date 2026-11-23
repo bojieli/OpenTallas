@@ -24,3 +24,12 @@ Read the four predecessor handoffs for background. My dir: epyc9 /srv/opentallas
 - C4 all-type reprice + PRE + G0 vs C3 running on E10: s81-leaf-j9/c4pre.sh, log c4pre.otrun.log, plan leaf_c3_tree/.../plan_j9_leaf_s81leafj9_C4.json.
 - t14 a1 (OT_GPL_OVERFLOW=0): GRT total overflow 12,070 (J7 19.9k; target 1.99k NOT met). Clusters: vp cst_hi src x960-1120 y400-480 (vn east channel), ft0_i hdly x1360-1440 y160-240. a2 GRT still running at 11:2x.
 - TAPHOLD gate_f2 bind (--mem 240) running E10 oth-ubuntu-3370750-1795452310; J9-gate reproof bind (Codex, E10 oth-ubuntu-2975509) still running at 5.8 h; LEC chain on intel2 waits for its latcheck.log.
+
+## 11-23 11:3x
+- C4 91bbdf0c8719 PRE PASS on J9 tree (all-type PRE posted hub 19daabf). G0 5 = C3.
+- C3 bind blocker: 17 dn_s lanes over-priced vs bind (native_istations source+dest); fix tool E10 s81-leaf-j9/fixcyc.py.
+- CRR_PRE2 + LANDED were dead in C3 (no per-type define support in bind; no overlay). C5 = C4 + fixcyc + S81-CRR-PRE overlay + die-wide OT_S81SL_CRR_PRE2 (leaf-only module => inert elsewhere); LANDED left out (ot_rst_relay die-wide).
+- C5 gate: E10 s81-leaf-j9/c5gate.sh (fork tree_c5 of leaf_c3_tree, PRE+elab+bind+LAT+G0), log c5gate.otrun.log, out c5/gate.
+- C6 = C5 + IST-LEAFDN-VP rows (generator epyc9 s81-leaf-j9/ist_dn_vp.py; rows in epyc9 c4/C4dn.json, report istdn.json): leafdn_i0 -> vp g_wr1.u_w per-source row, same depth, 0 cycles; covers t47 23 groups (t47 627 -> 387 um) + family (~60 types; NEAR-REACH t21 t27 t29 t42 t58 t68 <= 434). Script E10 s81-leaf-j9/c6pre.sh (run after C5 plan exists).
+- t14: GRT round-10 overflow a1 1,458 / a2 1,414 vs J7 19,881: target met, a1 wins; FLOW-OPS asked to default OT_GPL_OVERFLOW=0 (hub 763c15b). Residual clusters vp cst_hi (vn east channel) + ft0_i hdly (FT-DETOUR).
+- LEAF-VSW-LAG-1: no veto (cond: read vsw out hold).
