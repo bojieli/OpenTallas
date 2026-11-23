@@ -175,3 +175,12 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
 - HEADS-UP: OT_POROUS_VIEWS=all is NOT in the col wave env; H10-R4 measured solid views ~+900 GRT overflow vs porous (1924 -> 2831).
   TODO: decide porous for ^col_ in the family row (check my planR2 kits' env: they are wave env = solid too; they still reached overflow 0).
 - Fold into row for col_h10_r1: stnEH rows (H 1,212 south seats + stnE station rows) -> take from that plan when composing planR3.
+
+## 21:1x planR2 BIND PASSED + 3 family-row reps LAUNCHED
+- bind epyc7 /srv/opentallas-scratch2/claude/FABLE-FIX-S81-COL-RANKSEAT/ot-build/s81/src_s81_pin_3c913dbdfb23_d8j7_1117_work/b_ab86b11e195d
+  (rt 73fdcdf7365e; pre/elab 3081 s/bind 6994 s/latcheck BUILT). Bound p3 text: 104 ot_dp_lk latches (u_lk_xd_<rom>_<port>_*).
+- reps (epyc7, --goal route, wave env, planR2 sha 0fced563a60d, rt 73fdcdf7365e); run-items intel2 runitem_{r2p3,r2h10p4,r2h9r1}.pid/.log:
+  specs ~/coord/autopilot/private_specs/FABLE-FIX-S81-COL-RANKSEAT/s81_col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898_1122210801,
+  s81_col_h10_r0_p4__t1__pvcc166a6d_1122210903, s81_col_h9_r1__t1__cl49d7a23e__pv0a45e191_1122210950
+- WATCH: epyc7 scratch2 96% (362 GB free at 21:07). Old p6 rank-line kit still alive (runitem_p6).
+- Read at CTS: post-hook setup on u_y_xd_*xs_q* -> ROM (expect the class gone); at GRT: overflow + OT_POSTCTS_GATE TT/FF.
