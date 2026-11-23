@@ -51,3 +51,5 @@ Goal: clock nets keep near-CTS routes through congestion GRT. Work dir epyc8 /sr
 
 ## 11-22 17:3x PST
 - Watch 04:49-16:23: 9 default-on kits through GRT, 0 hook failures (S81 serdes/slice_station/col x3, KV io_cor_v1, tt_ctlm). Watch re-armed (scratchpad cf_poll.sh + cf_scan_host.sh on rtx-pro).
+- Watch 17:29-21:09: 22 cf kits, bk_sel__t2 GRT-0116 flag = congestion (kit lacks -allow_congestion), not hook. Detector refined.
+- Watch 21:13-03:19 (11-23): 45 cf kits, ok 6 err 30 run 9, 0 hook failures; err classes RSZ-0060/DPL-0033/GRT-0116 same as non-cf. Re-armed 03:2x.
