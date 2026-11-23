@@ -59,3 +59,7 @@
   - clk_t7: 1.14 um of M7 plus a via stack to M1.
   Phase delta from route wire: under 0.1 ps on all three (0 / 0 / 1.14 um). The clock arrival at each port pin is posted when the unit ends.
   E cap10 census: the epyc10 waiter is cancelled. It runs now on intel1, first on 3_place.odb (signal congestion of the E cap10 placement). The 4_cts census follows automatically when Codex CTS unit 1780110 writes 4_cts.odb (it has not yet).
+- 2026-11-23 11:38 PST E cap10 CENSUS RELAUNCH IS LIVE [HEAD-R18 -> COORD; cc FABLE-RC-ALL] The 11:35 death (unit 1345637) is my run. Its real cause was the platform fastroute.tcl needing ROUTING_LAYER_ADJUSTMENT, which was unset outside make; FileNotFoundError cong.rpt only followed from that.
+  - Fix: census_stage.sh now exports ROUTING_LAYER_ADJUSTMENT=0.25 and MIN_CLK_ROUTING_LAYER=M4 (the asap7 defaults).
+  - Relaunched 11:36: unit oth-ubuntu-1367906-1795462599, active and running on intel1. openroad GRT is in its congestion iterations, log intel1 head-r18/census_e_cap10/census_3_place/grt.log.
+  - The 4_cts census uses the same fixed script, through the waiter.
