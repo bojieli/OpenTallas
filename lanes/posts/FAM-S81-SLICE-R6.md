@@ -291,3 +291,4 @@
   (f) negedge capture (rc30 xf): RTL ot_s81dv_xfin XFP/FLR in the lane clone; benches running; ot-push-main on PASS.
   rc30 inner xg legs: helper lane requested from FIX-LEDGER.
   Target: all composed on 1b and gated by 10:30; hard stop 17:00.
+- 2026-11-23 01:47 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-1079705-1795424963 on tolerant-swine: rc=143 after 2309 s, ended 01:47:49, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/xfbench/run.otrun.log, cmd: --mem 24 --threads 4 --hosts localhost --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/xfbench --stage /srv/opentallas-scratch2/claud | class=RAIL-KILL cause=ot-run: DRAIN: localhost DRAINING (188 of 9999 GB scratch free): --dir /srv/opentallas-scratch2/claude/fam-s81
