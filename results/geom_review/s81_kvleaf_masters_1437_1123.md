@@ -1,0 +1,8 @@
+# S81 KVLEAF master geometry review
+
+Viewed exact images on 2026-11-23. The source checkpoints and their render log hashes stay with each lane output.
+
+- Intel1 `s81-kvleaf-t2-arch/master_r2/runs/qnh/layout` and `kvr/layout` show actual 3_place. QNH is 114.5 µm square, 624 pins, fill 0.467. KVR is 140.4 µm square, 261 pins, fill 0.501. Both have a clear PDN and edge-local port registers, no macro walls, and a few local dense bins. PASS for repaired TT/FF CTS, with a fresh result review before GRT.
+- Intel1 `runs/kvq_floorplan_1433`, exact 2_floorplan SHA6f1ae2a1598b. Two central stacked SRAMs in the 259.2 µm square leave both side channels open and their PDN crosses the central corridor. PASS for placement after restoring the tracked hold-protection hook. Review post-place pin density and channels before CTS or route.
+- E9 `master_drafts_codex/reshape_r2/kvtch_floorplan_1433`, exact 2_floorplan SHAe1dd070e5627. The 702×25.92 µm bit-banded strip shows clean N/S edge separation and continuous PG crossings. PASS for placement with the proven `o_fo` low tie. Review actual routed reach, clock distribution and density separately after it places.
+- E9 `master_drafts_codex/route_r2/{cnw,cpl,ikr,ikw,kvpc,kvec}/geometry_1436` shows six exact routed final geometries. All six inherited detailed-route reports have zero markers. PDN crossings and edge pin ordering are clear; CNW and IKW retain dense thin north pin strips with a largely open core. CPL and IKR show separated clusters with no macro obstruction. KVPC spreads uniformly across the rectangle. KVEC shows interleaved banks and localized hot cells without a wall. PASS for TT/FF verdict on the exact routed checkpoints.
