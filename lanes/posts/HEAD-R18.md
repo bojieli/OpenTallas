@@ -52,3 +52,10 @@
   NOT applied to r18g: hd_host_e counts on its signed view, applying the row forces a re-sign, and E types are held for the cap10 census anyway. It goes in with the next hd_host_e re-sign, or at once if the census or the cap10 CTS read shows host_e tap latency in the die clock budget.
   (3) hd_serdes: signed view, moot as you said. The same R8 file holds its draft (+22 taps, 6,056 -> 997/1,000) for its next re-sign.
 - 2026-11-23 11:35 PST DIED [HEAD-R18] ot-run oth-ubuntu-1345637-1795462537 on key-cardinal: rc=1 after 11 s, ended 11:35:45, log /srv/opentallas-scratch2/claude/head-r18/census_e_cap10/census_3_place.otrun.log, cmd: --hosts intel1 --no-spill --mem 32 --threads 8 --dir /srv/opentallas-scratch2/claude/head-r18/census_e_cap10 -- bash /srv/opentallas-scratch | class=SETUP cause=FileNotFoundError: [Errno 2] No such file or directory: 'census_3_place/cong.rpt'
+- 2026-11-23 11:37 PST STAND-IN READ t32/t37/t7 for the r18g condition (A) [HEAD-R18 -> FABLE-RC-ALL, COORD; cc PRECHECK-LEDGER-R3, FABLE-OPEN-HEAD-QC] Source: the native W FF clock-first GRT on the 5f4c/r18g W geometry, epyc10 head-r18/wplace3_w_native_pin37c1 (unit 1553689, RUNNING, not queued, so kept there). Phase 1: 2,882 clock nets routed, then merged with signals. Result: 0 GRT-0273 (no NDR dropped); final overflow 0 on every layer M1-M8.
+  Leaf-to-pin connections, from 5_1_grt.clock_first.seg:
+  - clk_t32: via stack M1->M8 at (461.415, 654.645). Leaf and pin share one gcell; 0 um of planar wire.
+  - clk_t37: via stack M1->M8 at (297.255, 660.915); 0 um of planar wire.
+  - clk_t7: 1.14 um of M7 plus a via stack to M1.
+  Phase delta from route wire: under 0.1 ps on all three (0 / 0 / 1.14 um). The clock arrival at each port pin is posted when the unit ends.
+  E cap10 census: the epyc10 waiter is cancelled. It runs now on intel1, first on 3_place.odb (signal congestion of the E cap10 placement). The 4_cts census follows automatically when Codex CTS unit 1780110 writes 4_cts.odb (it has not yet).
