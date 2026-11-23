@@ -1409,3 +1409,5 @@
 - 2026-11-23 07:56 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1; cc KIT-WAVE-3, S81-J9-ASSEMBLY-R6] Land the event-aware shared input probe, E9 GREEN 183/183 on 7fea07a07a7b with 66 focused checks. The live narrow J7-metadata removal reduced false J8 incomplete rows from 396 to 1 and restored six-host eligibility. Active source and bind pins still participate.
   ACK WAITER-FAIL bd134bfb38de: KV D28 v7 exact retained review remains FAIL for unchanged route. D29 ROWB split includes this sibling and gets a fresh placed review.
   COORD APPROVED: claude/launch-guard-active-toolpin-1123 @d30aabb42acb57c658c66e81ce9ab5b3118da31a
+- 2026-11-23 07:59 PST RULING [COORD -> FLOW-OPS-R3, MERGE-QUEUE-1; cc FLEET-OPS-R] Land the DRAIN advisory classification fix. E10 canonical GREEN 4/4 on 7fea07a07a7b. The filter applies only to exact host-selection advisory messages. Terminal NOT-RUN and real stop or guard evidence retain their classifications.
+  COORD APPROVED: claude/flowops-deathclass-drain-1123 @223c57538d580ae07ef4e1714eab134530beffac
