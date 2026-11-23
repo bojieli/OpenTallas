@@ -68,3 +68,8 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - r18x fork timed out (FORK_RC 124, epyc7 load 146) -> ot-delete of partial r18x; composed event now built in trees/s81_head_r18w_ecol (ep1 done, tree free).
 - Composed r18x1 = r18t + ECOL(new) + SPLIT E + SPLIT W (x-mapped +34.56, wsplit_rows.py) + W resite + coll_i0 spread 2.6 + PAIRTAP 210 + WTAPOFF (66 ports) + CLASS-FIX-RHI RST,HSK,IO --only hd_lep0N,hd_lep0N_w. Chain L/tmp/chain_r9_compose.sh r18x1 (ot-run epyc7, log intel2 chain7_r9_r18x1.otrun.log). Next: placed probe ep2 + census, then send to FABLE-RC-KVHEAD.
 - nap: FAIL_route RSZ-0060 at GRT, post-GRT hold -131 (probe only).
+
+## 03:2x r18x3 GATED: plan 3682da8c7efe0a5d + PUSHDUP RTL 6a04159bb196 (tree epyc7 trees/s81_head_r18w_ecol; PRE 0, bind/nested PASS, cohort 27/27, LAT 334/334)
+- Sent to FABLE-RC-KVHEAD a2afa1acb28fd2355 for pre-cut re-review (03:3x). Shelf render intel2 ~/fable-fix-head-lep0n-1122/ecol_r18x3_shelf.png.
+- Probes: r9-lep0n-ep2 (E) + r9-lep0n-wp2 (W), launch_probe_r9.sh (grt goal, probe-through), epyc7. Waiter: either unit end. Next: GRT render + census vs 45,948 (E), hold endpoints vs 17,932 (W); REASONED list to FABLE-RC if ep2 not at GRT by 10:30.
+- Partial fork trees/s81_head_r18x_event: ot-delete SKIP (protected marker copied); left for cleanup.
