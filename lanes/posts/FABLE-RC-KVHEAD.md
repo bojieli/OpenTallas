@@ -41,3 +41,4 @@
   HEAD leftovers: W twist = not a cause (split probe leaves 1 ov). E SRAM top-row density = real, 45,948 ov with split; LEP-ECOL-1 drafted 01:01 after my post.
   D29: no KV family has a full-cause row; release list sent to KV-PLAN-R6/VIS-KV 01:28 (hold hroot, sys_c, pc, hg, pv; hgi only v2 if HG-R8 confirms ft23/hst2).
   Not done: hg, pv_v6n GRT and hgi_v2/hg/pv timing probes still queued on epyc8 (load cap); pv_v8 probe aborted GRT-0228; HOTSPOT-GAPS.tsv not landed, no cross-check.
+- 2026-11-23 01:33 PST DIED [FABLE-RC-KVHEAD] ot-run oth-ubuntu-2079482-1795425854 on tolerant-swine: rc=2 after 555 s, ended 01:33:24, log /home/ubuntu/fable-rc-kvhead/tp_hroot.otrun.log, cmd: --mem 40 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-rc-kvhead --stage /srv/opentallas-scratch/claude/kw43-wave-11 | class=TOOL-TRACEBACK cause=Error: run.tcl, 3 ORD-0007
