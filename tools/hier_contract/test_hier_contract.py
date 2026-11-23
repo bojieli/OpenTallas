@@ -578,6 +578,20 @@ class ViaShadowEolStub(unittest.TestCase):
         self.assertIn((1.288, 0.084, 1.312, 0.144), APS.obs_rects(ob2)["M5"])
         self.assertEqual(APS.eol_stubs(head, ob2)[1], [])
 
+class PinStubChainAxis(unittest.TestCase):
+    def test_side_band_is_not_the_pin_conductor(self):
+        """dsfd_node_NNfu fo[0]: a wide M5 band of the pin's height abutting the SIDE of a vertical pin stays OBS; the
+        in-line stub abutting the pin's end moves into the PORT"""
+        import abstract_pin_stub as APS
+        t = ("VERSION 5.8 ;\nMACRO c\n  CLASS BLOCK ;\n  SIZE 10 BY 10 ;\n"
+             "  PIN x\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M5 ;\n        RECT 1.288 0 1.312 0.084 ;\n    END\n  END x\n"
+             "  OBS\n    LAYER M5 ;\n      RECT 1.312 0 5.0 0.084 ;\n      RECT 1.288 0.084 1.312 2.0 ;\n  END\nEND c\nEND LIBRARY\n")
+        h, o = APS.split_lef(t)
+        h2, o2, moved = APS.chain_stubs(h, o)
+        self.assertEqual(moved, {"x": [("M5", ("1.288", "0.084", "1.312", "2.0"))]})
+        self.assertIn((1.312, 0.0, 5.0, 0.084), APS.obs_rects(o2)["M5"])
+
+
 class PinStubSelfGuard(unittest.TestCase):
     """FAM-S81-COL-H10-R4 / FABLE-FLOW-0800 class A1 11-22: the J6 hw ROM view (j6ctl_rom_elem_q_hw) exported every face
     pin's metal a second time as a same-size OBS rect.  Moving those into new PORTs gave 96 -> 1444 Lef58EolKeepOut in the
@@ -625,7 +639,7 @@ class PinStubSelfGuard(unittest.TestCase):
             src, dst = Path(td, "in.lef"), Path(td, "out.lef")
             src.write_text(text)
             orig = APS.process
-            APS.process = lambda t: (t.replace("  END cfg_a[0]", "    PORT\n      LAYER M5 ;\n        RECT  142.848 0 142.872 0.084 ;\n    END\n  END cfg_a[0]"), "x")
+            APS.process = lambda t: (t.replace("     RECT 142.8480 0.0000 142.8720 0.0840 ;\n", ""), "x")   # uncover cfg_a[0]: pinabut +1
             try:
                 with contextlib.redirect_stdout(io.StringIO()) as so, contextlib.redirect_stderr(io.StringIO()) as se:
                     rc = APS.main([str(src), str(dst)])
