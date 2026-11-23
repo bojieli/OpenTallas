@@ -11,3 +11,7 @@ Two separate causes.
 - Applied on S81-COL-J9 nehg/plan_final2.json 0c0f1f0890b3 -> plan_mx.json 68df55f22d67, ops_ucf_mx.json a820825accbe (96 whole-key replaces), report.json; reprice 0 lanes -> plan_mx_rp.json; PRE (check --baseline-plan plan_final2, tree j8_cut_tree) = see run_pre.log / pre_mx.json (unit oth-ubuntu-214387-1795443678).
 - Not done by me: strict bind + LATCHECK + placed/GRT probe (S81-COL-J9 owns col binds/probes; asked in hub post 41801287 to fold the tool as the last h9_r0 step and probe one p5 + one p3).
 - Residual to watch in the probe: p4 cluster 1/p5 NE pocket and N strip are other rows (STRIP+E4E-CHAN, NE-NODES); new view M4 shadow removes over-body M4 for GRT, which matters less once the through-routes are gone.
+
+## 06:3x PRE PASS
+- plan_mx_rp.json 086ed33cf5c7: plan_gate_pre check vs plan_final2 0c0f1f0890b3 = 0 findings, 84 advisories (same as base pre2); reprice 0 lanes; scope = hard_cores + internal_stations on 48 types (p1 6, p3 12, p4 6, p5 12, p6 12), NONTYPE 0. Log epyc10 fable-open-s81-b/rc72/tmp/run_pre.log.
+- Status: (V) GATED by tree check (J9 tree OK x4). (C) ROW PRE-PASS; strict bind + LATCHECK + probe ride S81-COL-J9 col delta / the composed J9 gate. If S81-COL-J9 declines: fork j9_tree (ot-tree-fork), bind plan_mx_rp for the 48 types, probe p5 pvbca8d846 + p3 cl0cd90c0e pv13474472 to GRT.
