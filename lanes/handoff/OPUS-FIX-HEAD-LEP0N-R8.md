@@ -26,6 +26,13 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 17:3x PST RESUMED (after weekly limit)
+- Nothing landed while down. w13, hn3 and ctl1 are all live but stuck at PLACE ADMISSION. INPUT HOLD pins them to epyc9, where CPU_CHARGE >96, the lock is busy and 81 waiters are queued. Waiter b8mhjl87l is armed.
+- hn2 ended NOT SIGNED, DRC 3 Rect Only only (as ruled, no more spend).
+- PLAN OF RECORD = FABLE r18m 3dd49f406010 (tree fable.../trees/s81_head_r18m_e2) = 5e1f38 + LEP-H2R-STN-1.
+  The plans differ in 9 paths, all hd_lep0N or L2/L4 lanes. R8 checked r18m: receipt PASS, G0 6 face_budget_g2 only (M/ev/m1). hd_ctl rows identical.
+- hd_ctl routed LEC = HEAD-CTL-R1 (queued epyc9). ctl1 LEC runs in its own chain after route.
+
 ## UPDATE 11-22 18:2x SEALED MERGED TREE + hd_ctl
 - HEAD-CTL-R1 hd_ctl wrcap rows (65 tap_offset + 65 tap_window) are already in ev/k1, identical, so no compose was needed.
 - Tree epyc9 M/trees/r18jk_merged = ot-tree-fork of Fable s81_head_r18j_pairs + k1 prep files (plan 5e1f38e1530b).
