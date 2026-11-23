@@ -2075,7 +2075,7 @@ class TypeSplit:
         if rs is None:
             return
         unk = set(rs) - {"tap_um", "sync_stages", "start_role", "local_taps_um", "obstacle_model", "wavefront_min_depth",
-                         "consumer_sites_um", "pin_entry_phase"}     # pin_entry_phase (HEAD): each piece's own reset entry
+                         "consumer_sites_um", "pin_entry_phase", "inst_taps"}     # pin_entry_phase (HEAD): each piece's own reset entry
         if unk:
             raise SplitError(f"{self.tn}: unhandled reset keys {sorted(unk)}")
         for i in range(self.n):
@@ -2090,6 +2090,11 @@ class TypeSplit:
             # follow its own taps (OPUS-FIX-KV-PV-R5 11-21: kv3_pv / kv3_pv_v8 in the D28 all-16 pv split)
             if r.pop("consumer_sites_um", None) is not None:
                 self.rep.setdefault("reset_consumer_sites_dropped", []).append(self.tnames[i])
+            # inst_taps (KV-C17 reset legs: {tap: index into local_taps_um, sinks: [inst]}) index the BASE local tap list,
+            # which the split re-cuts per piece, so the indices are stale: dropped; the reset-leg solver (reset_leg_plan.py)
+            # re-derives them on the pieces (OPUS-FIX-KV-PV-SINKSPREAD-R2 11-23; PV-R7 D28 v3/v3e pieces carry none)
+            if r.pop("inst_taps", None) is not None:
+                self.rep.setdefault("reset_inst_taps_dropped", []).append(self.tnames[i])
 
     def _reset_spine_pins(self):
         """reset_spine_pins (bound-only ri_*/rs_* wrapper pins of a reset net, one interior site per bit): the pin goes

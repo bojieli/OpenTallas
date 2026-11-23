@@ -1370,3 +1370,17 @@ def test_ring_flags_copied_to_pieces():
     sp = importlib.util.spec_from_file_location("type_split_rf", pathlib.Path(__file__).with_name("type_split.py"))
     m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
     assert {"landing_ring_lite", "landing_ring_narrow"} <= m.CLOCK_COPY_KEYS
+
+
+def test_reset_inst_taps_are_dropped_per_piece():
+    """OPUS-FIX-KV-PV-SINKSPREAD-R2 11-23: reset.inst_taps (KV-C17 legs) index the base local tap list, which the split
+    re-cuts; each piece drops it (reported) instead of failing unhandled reset keys."""
+    ts = TS.TypeSplit.__new__(TS.TypeSplit)
+    ts.tn, ts.n, ts.tnames, ts.rep = "T", 2, ["T", "Te"], {}
+    ts.cut = TS.Cut("x", [1080.0], 2160.0)
+    ts.t = dict(reset=dict(tap_um=[100.0, 100.0], local_taps_um=[[50.0, 50.0], [1500.0, 50.0]],
+                           inst_taps=[dict(tap=1, sinks=["u_bin_a"])]))
+    ts.T = [dict(outline_um=[1080.0, 1520.64]), dict(outline_um=[1080.0, 1520.64])]
+    ts._reset()
+    assert all("inst_taps" not in ts.T[i]["reset"] for i in range(2))
+    assert ts.rep["reset_inst_taps_dropped"] == ["T", "Te"]
