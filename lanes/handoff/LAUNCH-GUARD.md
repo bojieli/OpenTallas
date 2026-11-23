@@ -16,3 +16,8 @@ main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. 
 ## 11-23 03:5x
 - main feedad5ec7 (rt feedad5ec7e6): FIX 3 hardened (PLACE-SETUP-STOP < -300 ps = design; older design fail not hidden by later cancel/infra attempt) + ENV-EFFECT run_item gate (kit_wave.env_effect_refusal, tools/autopilot/env_effect.py; scan CLI). seqhost/kv512/c1x repeats all launched before 01:56 via stale pending keys.
 - Scan 03:4x: 1 mismatch col_h10_r1__t1__cl95b37463__pv1a6ec9c2@2 OT_KEEP_WIRES (stage-resumed kit). MISC kit 1 did have OT_TAP_GRT_PRE=1.
+
+## 11-23 07:37 PST Codex takeover
+- Exact reviewed-wave dispatch guard 53a303bb9822, canonical 207/207 GREEN, running in intel2 rt/current 441cd5b7bc9d. User autopilot drop-in zzzzzz-codex-takeover-viewed-route.conf sets AP_REQUIRE_VIEWED_WAVE_ROUTE=1. No service restart or change to running work. Matching exact kit/attempt/build-start minute on enqueue and submit, route below visual wait, generation and placed renders proceed.
+- QC obsolete pending E10 V2 slw_fe_v1__clfe325744__cl08d14f0d queue 4ca96043ff34 withdrawn via cfdc0297d83a, AP confirmed. Already-started E2 V2 and E9 V3 survive.
+- PHY-B sealed LINT basename-collision correction 8b86009b6f87, canonical 5/5 GREEN, E9 exact GEN_LINT PASS. Wrapper preflight independent structural failure remains held, see TL-QCPHYSDB.
