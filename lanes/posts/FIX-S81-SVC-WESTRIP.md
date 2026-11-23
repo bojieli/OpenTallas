@@ -38,3 +38,4 @@
   - Below it: svc_9_att (rs t4_att) E 12.96, needs +4.32; svc_13_att (rs t5_att) E 15.12, needs +2.16.
   - Fix for those two: an att-core nudge inside FABLE-UNC att_order_row (the att pieces are laid out after my row; t4_att has 28 um of x slack).
   - Open risk: the seams are not yet proven at 69.12-class convergence. A failure would show first as M4 congestion at the seam landing bands in GRT of these pieces.
+- 2026-11-23 03:50 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-812411-1795433949 on civil-redfish: rc=0 after 1277 s, ended 11:50:04, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F22.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash final_gate.sh F22 /srv/opentallas-scra
