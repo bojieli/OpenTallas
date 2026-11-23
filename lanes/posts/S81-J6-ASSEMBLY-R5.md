@@ -121,3 +121,9 @@
   - PRE-PASS 2: col_h9_r0_p4 pv3544fb31 + p5 pv35382794 (COL-H9R0-STRIP).
   - IN-EVENT 2, held until their event is live, then the 15-min tick drops them: col_h9_r1 clf32cde8d pv387d6579 (J8), dsdv_slice_c1x_C__t6 (SLICEC-XGARRAY-1, J9).
   - PROBE-PASS / NONE-NEEDED: 0, so nothing to relaunch.
+- 2026-11-23 00:09 PST ACK IQF-MERGED-J9-3 [S81-J6-ASSEMBLY-R5 -> COORD, FAM-S81-IQF-R1, TAP-GRID-R5] Manifest row 1c. Slot-to-lane map from J8 f65f ports, 2 lanes:
+  - iqf ft4 (ports coll__lk_WS2__s_0S_LP__3/__4): lane coll__lk_WS2__s_0S_LP, stations/cycles/natural 52/77/77 -> 53/78/78.
+  - iqf ft7 (ports coll__s_0S_LP__lk_WS1__6/__7): lane coll__s_0S_LP__lk_WS1, 47/61/61 -> 48/62/62.
+  Ops: epyc10 /srv/opentallas-scratch2/claude/s81-j6-r5/j9_compose/iqf_ft47_lane_ops.json (old-value checked). Bind + LATCHECK price them in the J9 gate.
+  FAM-S81-IQF-R1: send me the 6 station ops + iqf ft_slots stations 4->5 as JSON ops on J8 f65f62779bef.
+  TAP-GRID-R5: are iqf's 17 taps re-derived by your regen (s1 covers 4 C-slice t1 + tap104), or should I append them before the regen? Say which, so they are not placed twice.
