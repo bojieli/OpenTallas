@@ -1,0 +1,180 @@
+type	cause	item	size	j9_row	basis
+col_h10_r0_p1__t1__cl911743eb	OVER-MACRO	C1-V x1394-1421 y731-736	295.0 ovfl 98.0%	COL-H10R0-E1E-CHAN	VIS-COVERAGE map
+col_h10_r0_p1__t1__cl911743eb	OVER-MACRO	C2-H x1398-1400 y728-735	39.0 ovfl 52.7%	COL-H10R0-E1E-CHAN	VIS-COVERAGE map
+col_h10_r0_p1__t1__cl911743eb	OVER-MACRO	C3-H x1412-1414 y734-740	34.0 ovfl 46.0%	COL-H10R0-E1E-CHAN	VIS-COVERAGE map
+col_h10_r0_p1__t1__cl911743eb	CLOCK-SKEW	setup u_y_xd_u_rN_u_eN_u_e_xs_qN_N_N->u_u_rN_u_eN [clk]	2p worst -57.05 skew -601.4	COL-FAMILY-ROW-R2 lockup (1a) + KEEP ot_dp_dly:r [+ COL-ROMIN-LAG if probe wins]	ROM-half input xs/cfg -> ROM, ROM early tap
+col_h10_r0_p1__t1__cl911743eb	CLOCK-SKEW	setup u_y_xd_u_rN_u_eN_u_e_xs_eN_N_N->u_u_rN_u_eN [clk]	2p worst -55.81 skew -601.5	COL-FAMILY-ROW-R2 lockup (1a) + KEEP ot_dp_dly:r [+ COL-ROMIN-LAG if probe wins]	ROM-half input xs/cfg -> ROM, ROM early tap
+col_h10_r0_p1__t1__cl911743eb	CLOCK-SKEW	setup u_y_xd_u_rN_u_eN_u_e_xs_b_N_N->u_u_rN_u_eN [clk]	1p worst -54.81 skew -601.8	COL-FAMILY-ROW-R2 lockup (1a) + KEEP ot_dp_dly:r [+ COL-ROMIN-LAG if probe wins]	ROM-half input xs/cfg -> ROM, ROM early tap
+col_h10_r0_p1__t1__cl911743eb	RESET-ASYNC	hold port:arst_n->u_rst_in [clk]	1p worst -80.17 skew 24.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p1__t1__cl911743eb	IO-BOUNDARY	hold port:x_iN->u_bin_x_iN [clk]	4p worst -76.55 skew 29.9	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p1__t1__cl911743eb	RESET-ASYNC	hold u_dN_u_rN_u_cf_rs_rN->u_u_rN_u_y_rt_Na_N.u [asynchronous]	5p worst -27.85 skew 73.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p1__t1__cl911743eb	IO-BOUNDARY	hold u_bout_frame_int_oN->port:frame_int_oN [vclk]	5p worst -12.88 skew 98.9	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p1__t1__cl911743eb	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	2x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h10_r0_p1__t1__cl911743eb	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-H10R0-E1E-CHAN	VIS-COVERAGE map
+col_h10_r0_p4__t1__pvcc166a6d	CLOCK-SKEW	setup u_y_xd_u_rN_u_eN_u_e_xs_qN_N_N->u_u_rN_u_eN [clk]	5p worst -93.14 skew -614.2	COL-FAMILY-ROW-R2 lockup (1a) + KEEP ot_dp_dly:r [+ COL-ROMIN-LAG if probe wins]	ROM-half input xs/cfg -> ROM, ROM early tap
+col_h10_r0_p4__t1__pvcc166a6d	IO-BOUNDARY	hold port:x_iN->u_bin_x_iN [clk]	5p worst -67.77 skew 18.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p4__t1__pvcc166a6d	RESET-ASYNC	hold u_dN_u_rN_u_cf_rs_rN->u_u_rN_u_y_xa_N_bsN_N.u [asynchronous]	1p worst -26.19 skew 52.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p4__t1__pvcc166a6d	RESET-ASYNC	hold u_u_rN_u_y_xN_N_N.u->u_u_rN_u_y_xN_N_N.u [asynchronous]	4p worst -14.09 skew 66.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r0_p4__t1__pvcc166a6d	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	1x	COL-H10-REACH v2 + KEEP ot_dp_dly:r (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h10_r1__t1__cl95b37463__pv6a7ae122	GLOBAL-DEMAND	C1-V x421-458 y10-15	673.0 ovfl 40.6%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv6a7ae122	OVER-MACRO	C2-H x630-635 y75-87	505.0 ovfl 99.8%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv6a7ae122	OVER-MACRO	C3-V x626-645 y75-82	495.0 ovfl 29.9%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv6a7ae122	GLOBAL-DEMAND	C4-V x553-593 y10-15	450.0 ovfl 27.1%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv6a7ae122	HOLD-SKEW	hold u_bin_frame_int_iN->u_lpad_frame_int_iN [clk]	3p worst -78.43 skew 99.9	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv6a7ae122	RESET-ASYNC	hold port:arst_n->u_rst_in [clk]	1p worst -73.97 skew 23.4	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv6a7ae122	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	1p worst -68.61 skew 21.0	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv6a7ae122	RESET-ASYNC	hold u_u_y_xN_N_N.u->u_u_y_xN_N_N.u [asynchronous]	5p worst -57.91 skew 106.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv6a7ae122	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	GLOBAL-DEMAND	C1-V x556-593 y10-15	518.0 ovfl 51.6%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	OVER-MACRO	C2-H x630-635 y75-88	483.0 ovfl 98.0%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	OVER-MACRO	C3-V x626-645 y76-82	436.0 ovfl 43.5%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	OVER-MACRO	C4-V x708-718 y70-70	15.0 ovfl 1.5%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	OVER-MACRO	C5-V x552-554 y717-718	12.0 ovfl 1.2%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	HOLD-SKEW	hold u_u_bsN->u_y_xd_u_eN_u_e_xs_qN_N_N [clk]	5p worst -72.92 skew 382.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	RESET-ASYNC	hold u_u_y_xN_N_N.u->u_u_y_xN_N_N.u [asynchronous]	1p worst -40.82 skew 78.2	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	RESET-ASYNC	hold u_u_lpl_N_r.g_chunk[]->u_u_lpl_N_r.u_y_q [asynchronous]	4p worst -39.72 skew 78.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	3x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h10_r1__t1__cl95b37463__pv86f5e3b9	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C1-V x618-854 y110-247	8792 ovfl 53.2%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C2-H x795-841 y211-356	8187 ovfl 47.0%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C3-H x1073-1115 y227-376	7028 ovfl 40.4%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	MACRO-CHANNEL	C4-V x829-912 y294-322	4500 ovfl 27.2%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C5-V x676-783 y284-324	2738 ovfl 16.6%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C6-H x691-724 y128-188	847 ovfl 4.9%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C7-H x616-635 y134-187	549 ovfl 3.1%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C8-H x695-718 y256-308	449 ovfl 2.6%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C9-H x864-870 y293-320	191 ovfl 1.1%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C10-V x628-637 y273-277	103 ovfl 0.6%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	MACRO-CHANNEL	C11-V x772-803 y310-324	84 ovfl 0.5%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	OVER-MACRO	C12-V x915-930 y294-316	56 ovfl 0.3%	COL-H10-GROW 3e 02b182e95344 (+ TAPSPLIT 0c8530ca4c1c)	VIS-COVERAGE map
+col_h10_r1__t1__cld01bb4ae	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	5p worst -63.15 skew 13.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cld01bb4ae	RESET-ASYNC	hold u_u_lpl_N_r.g_chunk[]->u_u_lpl_N_r.u_y_q [asynchronous]	3p worst -51.6 skew 70.2	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cld01bb4ae	RESET-ASYNC	hold u_u_lpl_N_r->u_u_lpl_N_r.u_y_q [asynchronous]	2p worst -33.94 skew 59.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h10_r1__t1__cld01bb4ae	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	8x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r0_p2__t1__cl0045af7b__pva2793873	REACH	setup u_u_rN_u_tN->u_u_rN_u_y_xN_N_N.u [clk]	1p worst -474.8 skew 182.6	COL-H9R0-HC-INPUT-REACH v3 (t2 xa/xb re-site) + COL-H9R0-HOPGAP 680e3fa669c4	t2 -> x relay reach
+col_h9_r0_p2__t1__cl0045af7b__pva2793873	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	1p worst -97.66 skew 49.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl0045af7b__pva2793873	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	2x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r0_p2__t1__cl0045af7b__pva2793873	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	2x	HC-INPUT-REACH v3 + HOPGAP + rc73 KEEP rq (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	RESET-ASYNC	setup u_u_rN_u_y_xoN_N.g_rsreg->u_u_rN_u_y_xoN_N [asynchronous]	5p worst -415.2 skew -40.3	rc73 item_env col_h9_r0_* OT_KEEP_WIRES += ot_s81_rly:rq (GATED)	yosys merged g_rsreg.rq
+col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	IO-BOUNDARY	hold port:ftN_i->u_ft_ftN_o_N [clk]	3p worst -81.86 skew 33.4	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	IO-BOUNDARY	hold port:xo_iN->u_bin_xo_iN [clk]	2p worst -80.75 skew 32.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	RESET-ASYNC	hold u_u_rN_u_lpl_N_r.g_chunk[]->u_u_rN_u_lpl_N_r.u_y_q [asynchronous]	5p worst -30.87 skew 81.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	1x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	1x	HC-INPUT-REACH v3 + HOPGAP + rc73 KEEP rq (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	IO-BOUNDARY	hold port:ftN_i->u_ft_ftN_o_N [clk]	5p worst -77.31 skew 30.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	RESET-ASYNC	hold u_dN_u_rN_u_cf_rs_rN->u_u_rN_u_y_rr_N_N.u [asynchronous]	2p worst -53.54 skew 78.0	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	RESET-ASYNC	hold u_u_rN_u_y_rr_N_N.u->u_u_rN_u_y_rr_N_N.u [asynchronous]	2p worst -45.09 skew 69.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	RESET-ASYNC	hold u_u_rN_u_y_xoN_N.g_rsreg->u_u_rN_u_y_xoN_N [asynchronous]	1p worst -29.97 skew 62.0	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	IO-BOUNDARY	hold u_bout_frame_int_oN->port:frame_int_oN [vclk]	5p worst -0.42 skew 82.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	1x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r0_p2__t1__cl9f71e63d__pva4376595	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	1x	HC-INPUT-REACH v3 + HOPGAP + rc73 KEEP rq (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	CLOCK-SKEW	setup u_y_xd_u_bsN_i_xN_N_N->u_u_bsN [clk]	1p worst -351.77 skew -332.6	COL-H9R0-HC-INPUT-REACH v3 d71e3f9c3e4e (bs0 i_x D=3 FIRM)	bs0 input chain
+col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	1p worst -98.19 skew 50.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	2x	HC-INPUT-REACH v3 + rc73 KEEP rq (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h9_r0_p3__t1__cl31d0dc4b	CLOCK-SKEW	setup u_y_xd_u_bsN_i_xN_N_N->u_u_bsN [clk]	5p worst -90.81 skew -308.0	COL-H9R0-HC-INPUT-REACH v3 d71e3f9c3e4e (bs0 i_x D=3 FIRM)	bs0 input chain
+col_h9_r0_p3__t1__cl31d0dc4b	HOLD-SKEW	hold u_u_y_cc_N_N.u->u_y_xd_u_sN_lc_N_N [clk]	1p worst -69.82 skew 99.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl31d0dc4b	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	3p worst -67.83 skew 20.4	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl31d0dc4b	HOLD-SKEW	hold u_u_bsN->u_y_xd_u_eN_u_e_xs_qN_N_N [clk]	1p worst -67.35 skew 371.4	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl31d0dc4b	RESET-ASYNC	hold u_u_y_rt_Na_N.u->u_u_y_rt_Na_N.u [asynchronous]	5p worst -42.66 skew 75.2	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl31d0dc4b	IO-BOUNDARY	hold u_bout_frame_int_oN->port:frame_int_oN [vclk]	5p worst -14.24 skew 93.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl31d0dc4b	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	3x	HC-INPUT-REACH v3 + rc73 KEEP rq (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	OVER-MACRO	C1-V x1359-1402 y667-673	33 ovfl 89.2%	row 3i u_cf view sync (31c7ccbd1b)	u_cf E corridor (rc72)
+col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	HOLD-SKEW	hold u_u_bsN->u_y_xd_u_eN_u_e_cfg_d_N_N [clk]	1p worst -63.09 skew 368.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	3p worst -63.04 skew 15.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	RESET-ASYNC	hold port:arst_n->u_rst_in [clk]	1p worst -62.75 skew 14.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	RESET-ASYNC	hold u_u_y_rt_Na_N.u->u_u_y_rt_Na_N.u [asynchronous]	5p worst -18.67 skew 50.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	IO-BOUNDARY	hold u_bout_frame_int_oN->port:frame_int_oN [vclk]	5p worst -2.11 skew 81.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C1-V x803-896 y1166-1188	1117.0 ovfl 34.8%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C2-V x1357-1442 y625-649	1070.0 ovfl 33.3%	row 3i u_cf view sync (31c7ccbd1b)	u_cf E corridor (rc72)
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C3-V x1321-1411 y666-673	649.0 ovfl 20.2%	row 3i u_cf view sync (31c7ccbd1b)	u_cf E corridor (rc72)
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C4-H x680-711 y1176-1231	490.0 ovfl 59.3%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C5-H x819-860 y1170-1233	127.0 ovfl 15.4%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C6-V x701-706 y1190-1192	67.0 ovfl 2.1%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C7-H x1404-1410 y617-643	65.0 ovfl 7.9%	row 3i u_cf view sync (31c7ccbd1b)	u_cf E corridor (rc72)
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C8-V x826-885 y1154-1160	56.0 ovfl 1.8%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C9-H x789-824 y1163-1188	42.0 ovfl 5.1%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C10-H x776-782 y1169-1187	23.0 ovfl 2.8%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	OVER-MACRO	C11-H x765-768 y1170-1187	15.0 ovfl 1.8%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	RESET-ASYNC	setup u_u_rN_u_y_xoN_N.g_rsreg->u_u_rN_u_y_xoN_N [asynchronous]	5p worst -331.47 skew -38.9	rc73 item_env col_h9_r0_* OT_KEEP_WIRES += ot_s81_rly:rq (GATED)	yosys merged g_rsreg.rq
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	IO-BOUNDARY	hold port:x_iN->u_bin_x_iN [clk]	5p worst -74.72 skew 25.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	RESET-ASYNC	hold u_u_rN_u_lpl_N_w.g_rsreg->u_u_rN_u_lpl_N_w.u_y_w [asynchronous]	5p worst -16.55 skew 84.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	2x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p5__t1__pvbca8d846	PIN-ROW	C1-V x1374-1442 y975-1021	5025.0 ovfl 77.5%	COL-H9R0-NE-NODES 243907ae3dc1 (S81-COL-J9 nehg delta)	NE pocket x1380-1440 y960-1200 (rc71)
+col_h9_r0_p5__t1__pvbca8d846	LOCAL-DENSITY	C2-H x1385-1405 y1062-1235	1571.0 ovfl 47.8%	COL-H9R0-NE-NODES 243907ae3dc1 (S81-COL-J9 nehg delta)	NE pocket x1380-1440 y960-1200 (rc71)
+col_h9_r0_p5__t1__pvbca8d846	LOCAL-DENSITY	C3-H x1367-1396 y980-1061	1131.0 ovfl 34.4%	COL-H9R0-NE-NODES 243907ae3dc1 (S81-COL-J9 nehg delta)	NE pocket x1380-1440 y960-1200 (rc71)
+col_h9_r0_p5__t1__pvbca8d846	OVER-MACRO	C4-V x824-892 y1166-1188	902.0 ovfl 13.9%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p5__t1__pvbca8d846	OVER-MACRO	C5-V x1288-1402 y609-625	354.0 ovfl 5.5%	row 3i u_cf view sync (31c7ccbd1b)	u_cf E corridor (rc72)
+col_h9_r0_p5__t1__pvbca8d846	OVER-MACRO	C6-H x820-850 y1174-1235	235.0 ovfl 7.1%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p5__t1__pvbca8d846	LOCAL-DENSITY	C7-H x1415-1425 y1005-1024	113.0 ovfl 3.4%	COL-H9R0-NE-NODES 243907ae3dc1 (S81-COL-J9 nehg delta)	NE pocket x1380-1440 y960-1200 (rc71)
+col_h9_r0_p5__t1__pvbca8d846	OVER-MACRO	C8-V x1339-1400 y667-673	92.0 ovfl 1.4%	row 3i u_cf view sync (31c7ccbd1b)	u_cf E corridor (rc72)
+col_h9_r0_p5__t1__pvbca8d846	OVER-MACRO	C9-H x687-704 y1183-1203	76.0 ovfl 2.3%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p5__t1__pvbca8d846	OVER-MACRO	C10-H x776-824 y1167-1188	52.0 ovfl 1.6%	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p5__t1__pvbca8d846	RESET-ASYNC	setup u_u_rN_u_y_xoN_N.g_rsreg->u_u_rN_u_y_xoN_N [asynchronous]	5p worst -251.39 skew -23.6	rc73 item_env col_h9_r0_* OT_KEEP_WIRES += ot_s81_rly:rq (GATED)	yosys merged g_rsreg.rq
+col_h9_r0_p5__t1__pvbca8d846	CLOCK-SKEW	setup u_y_xd_u_rN_u_eN_u_e_cfg_d_N_N->u_u_rN_u_eN [clk]	4p worst -71.55 skew -587.4	COL-FAMILY-ROW-R2 lockup (1a) + KEEP ot_dp_dly:r [+ COL-ROMIN-LAG if probe wins]	ROM-half input xs/cfg -> ROM, ROM early tap
+col_h9_r0_p5__t1__pvbca8d846	CLOCK-SKEW	setup u_y_xd_u_rN_u_eN_u_e_cfg_a_N_N->u_u_rN_u_eN [clk]	1p worst -71.04 skew -588.2	COL-FAMILY-ROW-R2 lockup (1a) + KEEP ot_dp_dly:r [+ COL-ROMIN-LAG if probe wins]	ROM-half input xs/cfg -> ROM, ROM early tap
+col_h9_r0_p5__t1__pvbca8d846	HOLD-SKEW	hold u_bin_xo_iN->u_lpad_xo_iN [clk]	5p worst -81.99 skew 100.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p5__t1__pvbca8d846	RESET-ASYNC	hold u_rrl_N->u_ist_frame_int_oN_N [asynchronous]	1p worst -54.86 skew 82.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p5__t1__pvbca8d846	RESET-ASYNC	hold u_dN_u_rN_u_cf_rs_rN->u_u_rN_u_y_rt_Nb_sk.u [asynchronous]	4p worst -29.42 skew 62.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p5__t1__pvbca8d846	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	5x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r0_p5__t1__pvbca8d846	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-H9R0-STRIP+E4E-CHAN	VIS-COVERAGE map
+col_h9_r0_p6__t1__pv0012ba28	RESET-ASYNC	hold port:arst_n->u_rst_in [clk]	1p worst -78.14 skew 29.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p6__t1__pv0012ba28	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	4p worst -67.5 skew 17.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p6__t1__pv0012ba28	RESET-ASYNC	hold u_u_y_fp_pN_N.u->u_u_y_fp_pN_N.u [asynchronous]	1p worst -22.91 skew 78.1	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p6__t1__pv0012ba28	RESET-ASYNC	hold u_dN_u_cf_rs_rN->u_u_y_cc_N_tN_N.u [asynchronous]	1p worst -1.37 skew 48.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r0_p6__t1__pv0012ba28	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	1x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	OVER-MACRO	C1-V x854-867 y1015-1025	40.0 ovfl 20.9%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	OVER-MACRO	C2-V x791-815 y1127-1135	32.0 ovfl 16.8%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	OVER-MACRO	C3-V x799-809 y1056-1067	14.0 ovfl 7.3%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	OVER-MACRO	C4-V x860-864 y1039-1045	11.0 ovfl 5.8%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	HOLD-SKEW	hold u_u_sN->u_y_xd_u_eN_u_e_go_tag_N_N [clk]	4p worst -130.56 skew 454.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	IO-BOUNDARY	hold port:frame_int_iN->u_bin_frame_int_iN [clk]	1p worst -81.57 skew 23.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_rt_Nb_N.u [asynchronous]	3p worst -45.24 skew 73.0	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	RESET-ASYNC	hold u_u_y_rt_Nb_N.u->u_u_y_rt_Nb_N.u [asynchronous]	2p worst -43.98 skew 74.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	2x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	OVER-MACRO	C1-V x858-867 y1015-1025	35.0 ovfl 18.4%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	OVER-MACRO	C2-V x795-815 y1127-1135	32.0 ovfl 16.8%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	OVER-MACRO	C3-V x860-866 y1039-1045	12.0 ovfl 6.3%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	GLOBAL-DEMAND	C4-V x563-573 y11-13	11.0 ovfl 5.8%	COL-H9R12-SSTRIP (in _ss 3c285d644712)	S-edge strip (rc88)
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	OVER-MACRO	C5-V x726-732 y1034-1040	11.0 ovfl 5.8%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	HOLD-SKEW	hold u_u_sN->u_y_xd_u_eN_u_e_go_tag_N_N [clk]	5p worst -156.51 skew 472.2	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_rt_Na_N.u [asynchronous]	1p worst -38.59 skew 80.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_es_pN_N.u [asynchronous]	1p worst -37.54 skew 50.1	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	RESET-ASYNC	hold u_u_y_rt_Nb_N.u->u_u_y_rt_Nb_N.u [asynchronous]	3p worst -36.65 skew 67.3	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__clf32cde8d__pv387d6579	OVER-MACRO	C1-V x858-870 y1015-1025	40.0 ovfl 27.2%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__clf32cde8d__pv387d6579	OVER-MACRO	C2-V x791-816 y1127-1135	23.0 ovfl 15.7%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__clf32cde8d__pv387d6579	OVER-MACRO	C3-V x858-864 y1039-1045	14.0 ovfl 9.5%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r1__t1__clf32cde8d__pv387d6579	HOLD-SKEW	hold u_u_sN->u_y_xd_u_eN_u_e_go_tag_N_N [clk]	5p worst -150.56 skew 459.0	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__clf32cde8d__pv387d6579	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_es_pN_N.u [asynchronous]	1p worst -48.64 skew 60.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__clf32cde8d__pv387d6579	RESET-ASYNC	hold u_u_lpl_N_r.g_chunk[]->u_u_lpl_N_r.u_y_q [asynchronous]	4p worst -29.64 skew 66.2	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r1__t1__clf32cde8d__pv387d6579	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__cl774acf45__pvea45273b	LOCAL-DENSITY	C1-V x624-653 y11-16	286.0 ovfl 46.9%	COL-H9R12-SSTRIP (in _ss 3c285d644712)	S-edge strip (rc88)
+col_h9_r2__t1__cl774acf45__pvea45273b	GLOBAL-DEMAND	C2-V x568-598 y11-14	265.0 ovfl 43.4%	COL-H9R12-SSTRIP (in _ss 3c285d644712)	S-edge strip (rc88)
+col_h9_r2__t1__cl774acf45__pvea45273b	OVER-MACRO	C3-V x859-865 y1015-1025	13.0 ovfl 2.1%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__cl774acf45__pvea45273b	HOLD-SKEW	hold u_rrl_N->u_rrl_N [clk]	1p worst -173.9 skew 346.1	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__cl774acf45__pvea45273b	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_ga_eN_f_prog_N.u [asynchronous]	1p worst -162.1 skew 181.0	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__cl774acf45__pvea45273b	HOLD-SKEW	hold u_u_sN->u_y_xd_u_eN_u_e_go_tag_N_N [clk]	4p worst -159.45 skew 485.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__cl774acf45__pvea45273b	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_cfg_pN_N.u [asynchronous]	4p worst -142.43 skew 184.4	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__cl774acf45__pvea45273b	IO-BOUNDARY	hold u_rrl_N->port:rst_o_N [vclk]	1p worst -10.03 skew 93.7	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__cl774acf45__pvea45273b	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	1x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r2__t1__cl774acf45__pvea45273b	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	OVER-MACRO	C1-V x858-870 y1015-1025	36.0 ovfl 37.9%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	OVER-MACRO	C2-V x858-861 y1039-1045	10.0 ovfl 10.5%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	HOLD-SKEW	hold u_dN_u_sN_go_e->u_dN_u_sN_go_e [clk]	1p worst -183.02 skew 225.1	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	HOLD-SKEW	hold u_u_y_fp_pN_N.u->u_u_y_ga_eN_f_prog_N.u [clk]	4p worst -177.99 skew 225.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_cfg_pN_N.u [asynchronous]	5p worst -177.01 skew 227.2	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__clce45cab5__pv06a1adf6	HOLD-SKEW	hold u_u_sN->u_y_xd_u_eN_u_e_go_tag_N_N [clk]	2p worst -165.23 skew 494.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv06a1adf6	HOLD-SKEW	hold u_dN_u_sN_go_e->u_dN_u_sN_go_e [clk]	1p worst -128.29 skew 169.1	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv06a1adf6	HOLD-SKEW	hold u_u_y_fp_pN_N.u->u_u_y_ga_eN_f_prog_N.u [clk]	2p worst -121.83 skew 171.5	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv06a1adf6	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_cfg_pN_N.u [asynchronous]	5p worst -121.63 skew 176.4	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv06a1adf6	REPAIR-CAP	flow RSZ-0060 in 5_1_grt	1x	SSTRIP + E15E-CHAN + R2 (+ class PT1 S81-SLICE-J9)	RSZ-0060 = runaway TT repair downstream of the type's timing class
+col_h9_r2__t1__clce45cab5__pv14626557	OVER-MACRO	C1-V x858-866 y1015-1025	30.0 ovfl 33.3%	COL-E15E-CHAN	VIS-COVERAGE map
+col_h9_r2__t1__clce45cab5__pv14626557	HOLD-SKEW	hold u_dN_u_sN_go_e->u_dN_u_sN_go_e [clk]	1p worst -185.75 skew 226.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv14626557	RESET-ASYNC	hold u_dN_N_Y_rN->u_u_y_cfg_pN_N.u [asynchronous]	5p worst -178.93 skew 232.9	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv14626557	HOLD-SKEW	hold u_u_y_fp_pN_N.u->u_u_y_ga_eN_f_prog_N.u [clk]	3p worst -178.38 skew 226.6	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv14626557	HOLD-SKEW	hold u_u_sN->u_u_y_cfg_pN_N.u [clk]	1p worst -176.84 skew 489.8	CLASS-FIX-RHI die rows (ROWS_CLASS-FIX-RHI.py 72b268847ec4)	CTS-stage pre-repair hold; class row, not col-local
+col_h9_r2__t1__clce45cab5__pv14626557	CLOCK-NDR-DROP	flow GRT-0273 in 5_1_grt	1x	REASONED FLOW-OPS (FABLE-RC-S81 ACCEPT 02:25)	congestion symptom; closes with the type's overflow rows
+col_h9_r2__t1__clce45cab5__pv14626557	GRT-OVERFLOW-STOP	flow GRT-0116 in 5_1_grt	1x	COL-E15E-CHAN	VIS-COVERAGE map
