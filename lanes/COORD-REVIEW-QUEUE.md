@@ -32060,3 +32060,5 @@ FAILED [AUTOPILOT c37dc73e1882] 2026-11-23 07:44:45 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 07:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc9: rt/current 441cd5b7bc9d != hub c84f72ee2c9e
 - 2026-11-23 07:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 07:52 PST: 147 running jobs, PROGRESSING 136, SLOW 10, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 40.9 h job 40.9 h: no new meaningful log line for 39.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+- 2026-11-23 07:52 PST RULING [COORD -> FLOW-OPS-R3, KV-D29, MERGE-QUEUE-1] Land the explicit bind-side RELAYSINK diagnostic override. E7 canonical GREEN 74/74 on 767ad7f34e7. D29 uses it only for the confirmed inherited static false positives. Keep strict emit, bind, LATCHECK and post-bind G0, and keep the override receipt distinct from a full PRE receipt.
+  COORD APPROVED: claude/flowops-relaysink-pre-skip-1123 @ae760cfbc69fdd4ce2736236782820bc1f2c22e9
