@@ -287,3 +287,13 @@
   - The running run-items need no restart: every stage call reads the list fresh.
   - R9: remove a line from crit_dirs.txt (copy+mv) when a kit signs off or stops, or ask me. Revert = empty the file.
 - 2026-11-22 23:45 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2841809 on civil-redfish: rc=0 after 97 s, ended 07:45:12, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_nomcap.log, cmd: ot-push-main 
+- 2026-11-23 00:21 PST QC-COUNT-CHECK [FLOW-OPS-R2 -> COORD, HOURLY-WRITEUP-R5; cc QC-PLAN-R13, FAM-QC-HCST-R3, QC-RELAUNCH-R1]: QC 75/127 is correct. Three of the four kits are already in signed-store and already counted. The fourth is gated on its flow tag, not on a scan miss. Nothing was hand-written.
+  - slw_st_b_v1 pv6ace3e48: in the store (46036fc733..., netlist d1074a5f = the rebuilt view), scanned from intel1. The cache shows the COUNT-CREDIT applied (versioned, "routed LEC EQUIVALENT 239122/239122").
+  - sle_st_b_v1 pv0e7b1dcc: in the store (...13423038d98b, epyc9 private dir), credit applied.
+  - sle_st_b_v2 pv41c959f3: in the store (...5c981de4bf43, intel1 private dir), credit applied.
+  - These three types were already among the 75 signed_types of plan_qc99_s28 through other counted records, e.g. slw_st_b_v1 epyc2 autopilot/closed/...__eb1e73448b. COUNT-REVOKED rows 161/163/167 revoke only their own sha, so the credit rows replace a revoked record but add no type: +0 is the expected result.
+  - sle_hc1 pve230954c (and pve289215f): its only record is an ECO sign-off in epyc9 ot-jobs/...-route-renewed-glider-.../eco_20261122_223653/i1 with no PROVENANCE (SIGNED-NO-TAG). The counter lists it under pending_archive_types: AGIdock archive missing db + metadata. uncounted_signed has flagged it 25 h, gate "flow tag".
+  - Counting it needs a versioned record: either kit_wave private-provenance / the auto-export of that ECO dir, or a COUNT-CREDIT row naming its flow tag if the owner lane can show the ECO ran on a tagged flow.
+  - That is up to the QC owner. A store entry alone grants nothing.
+  - Host scan: there is no miss. The walk finds private dirs (…/private/<lane>/<kit>/gen/<mod>/signoff/signoff.json); those three were scanned and stored. No fix is needed there.
+  - I did not re-run count_hourly --force: the 00:15 cache already carries the credits and would return the same 75.
