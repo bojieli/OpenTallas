@@ -612,14 +612,20 @@ def type_delta(tn, t, sv, D, reach=REACH_UM, local_taps=False, sites=True, stage
                 rep["legs_over_after"] += 1
                 rep["local"].append(e)
                 continue
-            for port in ports:
+            # ASTK-MERGE-1122: a core whose native_port_adapter merges several native reset pins into this port (kv3_astk:
+            # 6 pins -> g_phys_fault_u_fault__rst_n) needs the SAME stages on every native pin of the group, else kit-rtl's merge
+            # check sees two nets; the adapter keeps the port's own chain (sited here), the other chains are dead after the merge
+            merge = next(((hc.get("native_port_adapter") or {}).get("merge") or {} for hc in t.get("hard_cores") or []
+                          if hc.get("inst") == bind_leaf(inst)), {})
+            for port, native in [(q, n) for q in ports for n in (merge.get(q) or [q])]:
                 k = len(rd_rows)
-                row = dict(inst=bind_leaf(inst), port=port, side="sink", D=Dn, path_um=round(L, 1),
-                           note=f"RESET-RELAY-GEN-1530 form M: {G.name[r[1]]} -> hard-core reset pin {inst}.{port}")
+                row = dict(inst=bind_leaf(inst), port=native, side="sink", D=Dn, path_um=round(L, 1),
+                           note=f"RESET-RELAY-GEN-1530 form M: {G.name[r[1]]} -> hard-core reset pin {inst}.{port}"
+                                + (f" (native pin {native} of the merged core port)" if native != port else ""))
                 row.update(lockup=True) if lockup else None
                 rd_rows.append(row)
                 rep["relay_depth"].append(dict(row, over_cap=False))
-                if sites and stage_sites:
+                if sites and stage_sites and native == port:
                     chains.append((src, [stage_key.format(sid=sv_id(bind_leaf(inst)), port=sv_id(port), k=k, s=s_) for s_ in range(Dn)], pins))
                     for s_ in range(Dn):
                         f = (s_ + 1) / (Dn + 1)

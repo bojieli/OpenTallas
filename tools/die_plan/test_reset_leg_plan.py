@@ -585,3 +585,19 @@ def test_stage_key_is_the_bind_stage_instance():
         for s in range(3):
             key = RLP.STAGE_KEY.format(sid=RLP.sv_id(leaf), port=RLP.sv_id(port), k=5, s=s)
             assert key == bind.short_id("u_y_xd_" + bind.sv_id(leaf) + "_" + port + "_0_" + str(s), 100) + ".q"
+
+
+def test_merged_core_reset_port_stages_every_native_pin(tmp_path):
+    """ASTK-MERGE-1122: a core whose native_port_adapter merges native reset pins into rst_n (kv3_astk) gets the SAME
+    stages on every native pin of the group; only the port's own chain is sited (the adapter keeps it)."""
+    D = fwd_design(tmp_path)
+    p = tmp_path / "geom.tsv"
+    p.write_text(p.read_text() + "MR\t8\t300\t20\n")
+    D = geom_rules.Design(str(p))
+    t = plan_type()
+    t["hard_cores"] = [dict(inst="hc", module="hard_core", native_port_adapter=dict(merge={"rst_n": ["rst_n", "u_a__rst_n", "u_b__rst_n"]}))]
+    RLP.type_delta("f", t, FWD_BOUND, D, reach=300)
+    rows = [r for r in t["relay_depth"] if r["inst"] == "hc"]
+    assert [r["port"] for r in rows] == ["rst_n", "u_a__rst_n", "u_b__rst_n"]
+    assert len({r["D"] for r in rows}) == 1
+    assert all(k.startswith("u_y_xd_hc_rst_n_0_") for k in t["relay_sites"] if k.startswith("u_y_xd_hc_"))

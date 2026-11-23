@@ -50,6 +50,33 @@ def swap_native_cores(bound, hard_cores):
     return bound, receipt
 
 
+def _sv_id(s):
+    s = re.sub(r"[^A-Za-z0-9_]", "_", s)
+    s = re.sub(r"_+", "_", s).strip("_")
+    return s if s and not s[0].isdigit() else "n" + s
+
+
+def equal_stage_chains(bound, inst, port, names, nets):
+    """ASTK-MERGE-1122 (kv3_hub_Eo/Wo astk reset reach): the bind gave every native pin of a merged core port its own
+    relay_depth chain (u_y_xd_<inst>_<pin>_0_<s> -> lp_<inst>_<pin>_0).  The chains are one net when each pin's
+    connection is its chain output, all chains have the same stage count and the same first-stage input.  -> the net of
+    the port's own pin (else the first pin), or None (anything else stays an error)."""
+    sid, depth, src, out = _sv_id(inst), None, None, {}
+    for name in names:
+        lp = f"lp_{sid}_{_sv_id(name)}_0"
+        got = [n for n in nets if re.fullmatch(re.escape(lp) + r"(?:\[0\])?", n)]
+        stages = re.findall(r"\bu_y_xd_" + re.escape(sid + "_" + _sv_id(name)) + r"_0_(\d+)\s*\(\s*\.clk\([^()]*\),\s*\.d\(([^()]*)\)", bound)
+        if len(got) != 1 or not stages:
+            return None
+        first = [d.strip() for s_, d in stages if s_ == "0"]
+        if len(first) != 1 or (depth is not None and len(stages) != depth) or (src is not None and first[0] != src):
+            return None
+        depth, src, out[name] = len(stages), first[0], got[0]
+    if set(out.values()) != set(nets):
+        return None
+    return out.get(port) or out[names[0]]
+
+
 def adapt_core_ports(bound, hard_cores):
     """-> (bound, receipt): a plan core with native_port_adapter has a different port form from the leaves the bind
     wired (DIE-KV-69 11-04, kv3_astk).  In the private kit copy, each merge group becomes one connection, which must
@@ -77,7 +104,10 @@ def adapt_core_ports(bound, hard_cores):
                 if n != 1:
                     raise ValueError(f"core {core['inst']}: merge pin {name} found {n} times")
             if len(nets) != 1:
-                raise ValueError(f"core {core['inst']}: {port} merge group is not one net: {sorted(nets)}")
+                net = equal_stage_chains(bound, core["inst"], port, names, nets)
+                if net is None:
+                    raise ValueError(f"core {core['inst']}: {port} merge group is not one net: {sorted(nets)}")
+                nets = {net}
             rows.append((port, nets.pop()))
         for port, value in spec.get("tie", {}).items():
             if re.search(r"\." + port + r"\(", body):
