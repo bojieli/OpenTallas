@@ -73,7 +73,6 @@ set ::env(RESULTS_DIR) /w
 set ::env(OT_RELAY_MID_RE) {^(u_y_[a-z]+)[.]}
 source /w/relay_mid.tcl
 source /w/gutter_block.tcl
-if {[info exists ::env(T_FIRM_IN_GUTTER)]} { foreach i [$blk getInsts] { if {[string match src* [$i getName]]} { $i setLocation [expr {720 * $u}] [expr {700 * $u}]; break } } }
 if {[info exists ::env(T_RELEASE)]} { source /w/gutter_release.tcl }
 foreach i [$blk getInsts] {
   set n [string map {\\ {}} [$i getName]]
@@ -149,13 +148,15 @@ def test_gutter_release_removes_only_listed_blockages():
 
 def test_gutter_keep_stays_through_dpl_and_is_cut_around_fixed_cells():
     # GUTTER-KEEP 11-23: default release is unchanged (test above); with the key the 40-um gutter blockage survives ...
-    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "T_RELEASE": "1", "OT_GUTTER_BLOCK_KEEP": "1"})
+    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "T_RELEASE": "1", "OT_GUTTER_BLOCK_KEEP": "1", "OT_RELAY_MID_FIT": "1"})
     assert "OT_GUTTER_BLOCK kept 1 of 1 gutter placement blockages through DPL (re-cut into 1 around 0 fixed cells)" in out, out[-2000:]
     assert len(blk) == 1 and blk[0][0] == 700.0 and blk[0][2] == 740.0
-    # ... and a FIRM cell inside the gutter is left outside every piece
-    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "T_RELEASE": "1", "OT_GUTTER_BLOCK_KEEP": "1", "T_FIRM_IN_GUTTER": "1"})
-    assert "around 1 fixed cells" in out and len(blk) > 1, out[-2000:]
-    assert not any(x0 <= 720.0 < x1 and y0 <= 700.0 < y1 for x0, y0, x1, y1 in blk), blk
+    # ... and FIRM cells inside the gutter (the relay flops of the default, un-fitted form) are left outside every piece
+    out, pos, blk = _run({"OT_GUTTER_BLOCK_UM": "45", "T_RELEASE": "1", "OT_GUTTER_BLOCK_KEEP": "1"})
+    m = re.search(r"OT_GUTTER_BLOCK kept 1 of 1 gutter placement blockages through DPL \(re-cut into (\d+) around (\d+) fixed cells\)", out)
+    assert m and int(m.group(1)) > 1 and int(m.group(2)) >= W, out[-2000:]
+    assert sum(_in_channel(x, y) for x, y in pos) == W
+    assert not any(x0 <= x < x1 and y0 <= y < y1 for x, y in pos for x0, y0, x1, y1 in blk), blk
 
 
 def test_gutter_keep_switch(monkeypatch):

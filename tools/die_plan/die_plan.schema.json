@@ -3547,6 +3547,13 @@
        "tap_reset_split": {
         "type": "boolean"
        },
+       "tap_reset_split_launch": {
+        "type": "boolean"
+       },
+       "tap_reset_split_rounds": {
+        "type": "integer",
+        "minimum": 1
+       },
        "pregrt_hold_guard_ps": {
         "type": "number",
         "minimum": 0,
@@ -4113,13 +4120,6 @@
           }
          }
         }
-       },
-       "tap_reset_split_launch": {
-        "type": "boolean"
-       },
-       "tap_reset_split_rounds": {
-        "type": "integer",
-        "minimum": 1
        }
       }
      },
@@ -10200,6 +10200,13 @@
      "exclusiveMinimum": 0
     },
     "gutter_block_types": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "gutter_block_keep_types": {
      "type": "array",
      "items": {
       "type": "string",
