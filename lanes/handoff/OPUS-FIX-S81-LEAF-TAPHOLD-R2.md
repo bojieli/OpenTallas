@@ -22,3 +22,8 @@ Lane dir epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-taphold-r2 (R2)
 - k1 unit still live. Attempt-1 post-GRT repair_design (max_wire 100) flat 1800 s -> OT_GRT_REPAIR_NO_PROGRESS 06:58 UTC: GRT re-run once in a fresh process with max-wire repair skipped (5_1_grt.repair_nostall.json). At 07:37 UTC in extra iteration 9/50. Waiters unchanged.
 - If attempt 2 also stalls: flow row (OT_MAXWIRE off for leaf GRT) -> FLOW lane + R10, not a plan row.
 - Fast-review rule f95aac4: self-review renders allowed; probes never wait for review.
+
+## State 01:3x PST 11-23 (after 01:17 limit; Codex handoff: nothing for this lane)
+- k1 final 5_1_grt.odb 09:18 UTC (attempt 2, max-wire repair skipped): 0 overflow, 0 DRV, 0 antenna. Flow GRT hold repair: ws +17.4, 0 violators. Post-GRT repair stall-stop at kit corner setup -573.9 / TNS -17,918 / 96 ends; hold -62.3 / 6 ends (corner unconfirmed). Kit now in tt_setup_repair.tcl (inside container dpkit-ot_s81sl_leaf__t39-1181364).
+- Probes launched 09:3x UTC via ot-run epyc7, read-only: th_tt2 -> R2/tt_k1 (log R2/tt_k1.otrun.log, client PID 2797813); th_probe FF (TH_VCLK_MEAS 385.95) -> R2/probe_k1 (PID 2797814). Local background waiter armed.
+- PROBE-PASS now needs a full-cause census (hub fe8a2a5): every overflow cluster + every failing path class with a row. Apply this to the t39 read.
