@@ -61,4 +61,13 @@ def test_launch_cotap_walks_back_to_tie_and_never_deletes():
     assert 'puts "OT_TAP_RESET_SPLIT_LAUNCH stages' in t
     # the launch pass is gated: the default (no env) leaves the split byte-for-byte in behaviour
     run = t[t.index("proc run {}"):]
-    assert run.count("if {$ldo}") == 3
+    assert run.count("if {$ldo}") == 3 and "if {!$ldo} break" in run
+
+
+def test_launch_runs_after_the_whole_split_round_until_converged():
+    # order fix (pkit_core5a: u_rrl_340 / u_rrl_234 gained launch-copy sinks): no launch inside the per-source loop
+    t = (HERE / "tap_reset_split.tcl").read_text()
+    run = t[t.index("proc run {}"):]
+    loop = run[run.index("foreach inst $srcs {"):run.index("if {!$ldo} break")]
+    assert "launch $blk" not in loop and "lappend pend" in loop
+    assert "OT_TAP_RESET_SPLIT_ROUNDS" in run and "converged" in run

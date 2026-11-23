@@ -149,6 +149,15 @@ namespace eval ::ot_tap_rsplit {
   variable lmemo {}; variable lstat {}; set nlsrc 0
   set tapnets {}
   foreach tp $ct_taps {dict set tapnets [[lindex $tp 1] getName] 1}
+  # RST-LAUNCH rounds (COORD 11-23 04:xx: pkit_core5a launch=0 31 split sources, launch=1 32): a launch copy / moved launcher is a
+  # NEW async sink of the reset source that drives its RESETN/SETN (u_rrl_340 gained sinks on 11 taps, u_rrl_234 on 6).  Run
+  # inline, the launch pass let a parent visited AFTER it see those sinks and a parent visited BEFORE it miss them (order bug).
+  # Now: split ALL sources, then launch ALL stages of the round, then split again for the sinks the launch added, until a
+  # launch round changes nothing (OT_TAP_RESET_SPLIT_ROUNDS, default 4).  Without the launch pass: one round, as before.
+  set maxr [expr {$ldo ? ([info exists ::env(OT_TAP_RESET_SPLIT_ROUNDS)] ? $::env(OT_TAP_RESET_SPLIT_ROUNDS) : 4) : 1}]
+  set nsrc 0; set ncopy 0; set nchain 0; set nsink 0; set nround 0; set converged [expr {!$ldo}]
+  for {set round 1} {$round <= $maxr} {incr round} {
+  incr nround; set pend {}
   # collect sources first (the edit below adds DFFs that must not be visited)
   set srcs {}
   foreach inst [$blk getInsts] {
@@ -158,7 +167,6 @@ namespace eval ::ot_tap_rsplit {
    if {$ck eq {} || [$ck getNet] eq "NULL" || ![dict exists $tapnets [[$ck getNet] getName]]} continue
    lappend srcs $inst
   }
-  set nsrc 0; set ncopy 0; set nchain 0; set nsink 0
   foreach inst $srcs {
    set ck [clkterm $inst]; set stap [[$ck getNet] getName]
    set out {}; set other 0
@@ -178,7 +186,7 @@ namespace eval ::ot_tap_rsplit {
    }
    set clones {}
    if {[dict size $by] == 0} {
-    if {$ldo} {launch $blk $inst $stap 1 $maxd; incr nlsrc}
+    if {$ldo} {lappend pend [list $inst $stap]}
     continue
    }
    incr nsrc
@@ -224,14 +232,20 @@ namespace eval ::ot_tap_rsplit {
     }
    }
    if {$ldo} {
-    foreach ct $clones {lassign $ct c t; launch $blk $c $t 1 $maxd}
-    launch $blk $inst $stap 1 $maxd; incr nlsrc
+    foreach ct $clones {lappend pend $ct}
+    lappend pend [list $inst $stap]
    }
+  }
+  if {!$ldo} break
+  set k0 [expr {([dict exists $lstat copies] ? [dict get $lstat copies] : 0) + ([dict exists $lstat moved] ? [dict get $lstat moved] : 0)}]
+  foreach pt $pend {lassign $pt x t; launch $blk $x $t 1 $maxd; incr nlsrc}
+  set k1 [expr {([dict exists $lstat copies] ? [dict get $lstat copies] : 0) + ([dict exists $lstat moved] ? [dict get $lstat moved] : 0)}]
+  if {$k1 == $k0} {set converged 1; break}
   }
   puts "OT_TAP_RESET_SPLIT sources $nsrc copies $ncopy chain_cells $nchain sinks_repointed $nsink min_sinks $minn"
   if {$ldo} {
    set g {}; foreach k {moved copies chain reuse unresolved} {lappend g $k [expr {[dict exists $lstat $k] ? [dict get $lstat $k] : 0}]}
-   puts "OT_TAP_RESET_SPLIT_LAUNCH stages $nlsrc [join $g { }] max_depth $maxd"
+   puts "OT_TAP_RESET_SPLIT_LAUNCH stages $nlsrc [join $g { }] max_depth $maxd rounds $nround converged $converged"
   }
  }
 }
