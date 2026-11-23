@@ -482,6 +482,8 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None, allo
         if ad_free and ad.startswith(p + "/"):
             continue                                  # an ancestor of the attempt dir (the rows container): not a protection of the attempt
         if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
+            if p.endswith("/."):                      # OPS-SUPPORT-R1: "<lane dir>/." = a lane dir a handoff / post of the last 24 h names (build_protected_live.lane_root_paths)
+                return "live lane dir (named by a handoff or lane post updated in the last 24 h; delete its idle trees, not the lane dir): " + p[:-2]
             return "protected (kit_wave.json src/bind of record/marker/prov): " + p
     su = signed_unexported_refusal(os.path.abspath(target))      # after the list: a protected tree keeps its own reason
     if su:

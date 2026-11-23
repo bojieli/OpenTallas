@@ -75,6 +75,54 @@ def prose_paths(files, out, canon, now=None, max_age_h=24.0, skip=("COORD-REVIEW
             pass
 
 
+# OPS-SUPPORT-R1 (OWNER 11-23, epyc10 fam-s81-misc deleted at 00:25 while FAM-S81-MISC-R4 still used its package files): a LANE DIRECTORY (<scratch>/claude/<lane>)
+# is protected as a root when a lane handoff file (lanes/handoff/*.md|json) changed in the last 24 h names it, or its name is the lane (-R<n> suffix kept or stripped, so a
+# successor keeps the predecessor family dir) of a handoff or post file changed in the last 24 h.  The entry is "<lane dir>/." : ot_delete_guard.refuse() then refuses the
+# lane dir itself and any parent of it, but still lets a stale tree INSIDE a live lane dir be retired (the aggressive cleanup keeps its reach); files a handoff names
+# deeper are kept by event_paths / paths_in.  A live process cwd / open file under the dir is refused separately by ot_delete_guard.live_text.
+LANE_ROOT = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9._+@=~-]+")      # the first component: the lane dir, whatever deeper path names it
+LANE_STEM = re.compile(r"^(?P<lane>.+?-R\d+)(?=-|$)", re.I)
+SCRATCH = "/srv/opentallas-scratch2/claude/"
+LANE_SKIP = ("COORD", "CODEX", "tree_switch", "FABLE-BRIEF")
+
+
+def lane_dir_names(base):
+    """lane dir names a handoff / post file name stands for: 'FAM-S81-MISC-R4-J9-x.json' -> fam-s81-misc-r4, fam-s81-misc; 'CLEAN-AGGR-R3.md' -> clean-aggr-r3, clean-aggr"""
+    stem = os.path.splitext(base)[0]
+    if stem.startswith(LANE_SKIP) or RECEIPT_NAME.search(stem):
+        return []
+    m = LANE_STEM.match(stem)
+    lane = (m.group("lane") if m else stem).lower()
+    out = {lane}
+    fam = re.sub(r"-r\d+$", "", lane)
+    if fam and fam != lane:
+        out.add(fam)
+    return sorted(out)
+
+
+def lane_root_paths(coord, out, canon, now=None, max_age_h=24.0):
+    now = now or time.time()
+    for sub in ("lanes/handoff", "lanes/posts"):
+        for f in glob.glob(os.path.join(coord, sub, "*")):
+            base = os.path.basename(f)
+            if not os.path.isfile(f):
+                continue
+            try:
+                if now - os.stat(f).st_mtime > max_age_h * 3600:
+                    continue
+                na = name_age_h(base, now)
+                if na is not None and na > max_age_h:
+                    continue
+                names = lane_dir_names(base)
+                for n in names:
+                    out.add(canon(SCRATCH + n) + "/.")
+                if sub == "lanes/handoff" and names and base.endswith((".md", ".json", ".txt")):
+                    for m in LANE_ROOT.finditer(open(f, errors="replace").read()):
+                        out.add(canon(m.group()) + "/.")
+            except OSError:
+                pass
+
+
 # FLOW-OPS-1300 item 13b (FLOW-CANARY retire pass 11-21 freed ~0 GB): a hub checkout rewrote the mtime of 457 / 488 lanes/handoff/*.json at 11-19 05:56, so 5-day-old
 # receipts counted as "recent", and a delete-pass receipt (E9_DELETE_GUARD_REAL_PASS_1116.json, its allow list) protected the 60 trees it had cleared for deletion.
 # The age is the date in the file name when it carries one (_1116, -1120, 20261120-...), else the mtime; delete / retire / cleanup receipts never protect.
@@ -489,6 +537,7 @@ def main(argv):
     s = build(coord, markers, g.canon, scope)
     event_paths(coord, s, g.canon, scope=scope)
     # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
+    lane_root_paths(coord, s, g.canon)
     live_cmd_paths(s, g.canon)
     plan_ref_paths(cfg, s, g.canon, coord=coord)
     hub_lease_paths(s, g.canon)

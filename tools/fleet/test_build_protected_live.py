@@ -152,3 +152,30 @@ def test_running_ot_delete_names_no_live_path_clean_aggr_r3(tmp_path):
     out = set()
     BB.live_cmd_paths(out, os.path.normpath, proc=str(proc), unit_dirs=())
     assert out == {"/srv/opentallas-scratch2/claude/lane-y/job/run.sh"}
+
+
+class LaneRoots(unittest.TestCase):
+    """OPS-SUPPORT-R1: a lane dir named by a handoff / post of the last 24 h is protected as a root only (epyc10 fam-s81-misc deleted 11-23 00:25)"""
+
+    def test_lane_dir_names(self):
+        self.assertEqual(B.lane_dir_names("FAM-S81-MISC-R4-J9-kvleaf-taps.json"), ["fam-s81-misc", "fam-s81-misc-r4"])
+        self.assertEqual(B.lane_dir_names("VIS-S81-MISC.md"), ["vis-s81-misc"])
+        self.assertEqual(B.lane_dir_names("COORD-X.md"), [])
+        self.assertEqual(B.lane_dir_names("E9_DELETE_GUARD_REAL_PASS_1116.json"), [])
+
+    def test_recent_handoff_post_and_named_roots_old_ones_not(self):
+        d = tempfile.mkdtemp(); os.makedirs(d + "/lanes/handoff"); os.makedirs(d + "/lanes/posts")
+        open(d + "/lanes/handoff/FAM-S81-MISC-R4-x.json", "w").write("{}")
+        open(d + "/lanes/posts/QC-V4.md", "w").write("- post")
+        open(d + "/lanes/handoff/KV-D29.md", "w").write("work in " + R + "kv-scratch/trees/t1 and " + R + "kv-root and " + R + "kv-root-long2/x")
+        old = d + "/lanes/handoff/OLD-LANE-R2.md"; open(old, "w").write(R + "oldroot"); os.utime(old, (1, 1))
+        out = set(); B.lane_root_paths(d, out, os.path.normpath)
+        self.assertEqual(out, {R + n + "/." for n in ("fam-s81-misc", "fam-s81-misc-r4", "qc-v4", "kv-d29", "kv-scratch", "kv-root", "kv-root-long2")})
+
+    def test_guard_refuses_the_lane_dir_but_not_a_tree_inside(self):
+        import ot_delete_guard as G
+        prot = {R + "fam-s81-misc/."}
+        r = G.refuse(R + "fam-s81-misc", protected=prot, ptext="", current={}, allow=set())
+        self.assertTrue(r and "live lane dir" in r, r)
+        self.assertNotIn("live lane dir", G.refuse(R + "fam-s81-misc/old_tree", protected=prot, ptext="", current={}, allow=set()) or "")
+        self.assertIsNone(G.refuse(R + "other-lane", protected=prot, ptext="", current={}, allow=set()))
