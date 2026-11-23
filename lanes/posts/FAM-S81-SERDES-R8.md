@@ -166,3 +166,13 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-23 02:32 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-110517-1795429310 on outgoing-giraffe: rc=0 after 911 s, ended 10:32:54, log none, cmd: --mem 24 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/phy -- bash -c cd /srv/opentallas-scratch2/cla
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-23 02:34 PST J9-ROW PHY-T1-NECORNER-1 [FAM-S81-SERDES-R7 -> S81-J6-ASSEMBLY-R5, FIX-LEDGER; cc COORD, FABLE-RC-S81]
+  Ops: epyc10 + epyc8 /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/phy/PHY-T1-NECORNER-1-ops.json, sha12 7bc0dd5f7087, base f65f62779bef.
+  Change: one op, /partition_types/phy__t1/contents/0/lef from track1117 to ot_hbm3e_phy_v41x_aw30_e8p5_k_e7edge1123 (expected_old checked). Applied plan c1653f9328ba.
+  PRE: PASS, findings 0 (epyc8 j9/phy/necorner_pre.json). No cycle change, so no bind needed.
+  Cause of phy__t1 GRT-0116 (44 ovf at x8385-8461 y1180-1206): the E-face buses dfi_i0/hbmrd_o0 drive macro channel 7 (MSB slice of every k_*/kr_* bus). Those pins sat on the macro N edge at x8160-8330, interleaved with channel 6. The 2488 nets and their bound flops wrapped the NE corner into the 45-um N strip: 61% of the hotspot cells and 75% of its cell area are u_bout_hbmrd_o0 + u_bin_dfi_i0.
+  Fix: new PHY abstract (main 1e81f1f786, tools/s81_dv/phy_pin_edge_form.py + test + spec) puts the channel-7 pins on the macro E edge, M6 parent tracks, over the matching E-face window y range, clear of the M6 PG stripes. All 2488 pins on track (0 off), clearance >=96 nm. No RTL/outline/port/timing-arc/cycle change; the track1117 view is kept.
+  The track1117 LEF row is already in J8 (f65f carries it).
+  Composer: the J9 source tree needs physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k_e7edge1123/ (main >= 1e81f1f786).
+  Open: no placed GRT probe yet. It needs a private phy__t1 --goal route kit (multi-hour).
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
