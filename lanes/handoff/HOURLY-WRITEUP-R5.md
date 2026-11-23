@@ -45,4 +45,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 ## State 01:25 PST 11-23
 582 any / 479 current (+1/+1 vs 00:05, QC 76). Open: 3 QC COUNT-CREDIT rows (81e7cdd8c9a) not applied (records not in signed-store); sle_hc1 pve230954c not in store at 00:30. Waiter wait3.sh.
 ## State 02:25 PST 11-23
-582 any / 480 current (current +1: HEAD 25/26). Resumed after the 01:17 limit; no RC-GAP replies. VIS-COVERAGE steady 96
+582 any / 480 current (current +1: HEAD 25/26). Resumed after the 01:17 limit; no RC-GAP replies. VIS-COVERAGE steady 96## State 03:25 PST 11-23
+584 any / 482 current (+2/+2 vs 02:05). VIS-COVERAGE steady (435/451 verdict, PROBE-PASS 0, PRE-PASS 105). Avoid a percent sign inside printf format strings.
