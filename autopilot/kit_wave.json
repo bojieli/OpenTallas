@@ -55142,7 +55142,8 @@
    ],
    "gen_host_min_free_gb": {},
    "note_tools_sha_qcr11": "QC-PLAN-R11 2026-11-21 12:1x PST: pin bump 65f3f85d7c5f -> b6934d7751d6 (f656e319b7) REVERTED. dies.<die>.tools_sha is the tree-tools reference (tool_skew pin mode, apply marker 'the rt the die tools came from'); it is not the kit runtime. With b6934 the skew read 229 of 18947 modules differ (tree v2r10 packs 639df bind/G0 tools) vs 3 with 65f3 - noise, not a runtime change. Kit stages run the scheduler rt/current per launch (TOOLS-DECOUPLE): V2 launches 11:28-11:51 recorded c2047d41ccdf / a13768301176, which carry 3ed87c352a, 4f638b4e9f, f56d99cf55, 8d1cff9b1b, a0fc9811a19 (a1376 also 289287760f/3fba1b4bc0). The tree-side tools (kit_rtl bind) move with V3, packed from main >= 3fba1b4bc0; the pin moves to that tree's rt then.",
-   "tools_from_rt": false
+   "tools_from_rt": false,
+   "auto_bind": true
   },
   "hbm": {
    "enabled": true,
