@@ -4,7 +4,7 @@
 Owner 11-23: visual-review fixes targeted the most visible hotspot of a type, not every cause.  PROBE-PASS now needs a
 census of ALL causes.  For one kit (or one set of reports) this lists:
   (a) every GRT overflow cluster: connected components (8-neighbour, after closing gaps of --gap gcells) of gcells over
-      100% capacity, H and V separately, kept when overflow >= --min-ov (50) or >= 1% of that direction's total; per
+      100% capacity, H and V separately, kept when overflow >= --min-ov (50) or >= 1% of that direction's total (and >= 10); per
       cluster bbox, overflow, layer mix (when the report names layers), and what sits inside / next to it: hard macros,
       blockage / reserved (cell-free, non-macro) area, top pins, station / relay cells, clock cells, placement density;
   (b) timing path classes from the latest STA reports (setup and hold, top --top paths each), grouped by
@@ -35,6 +35,7 @@ import sys
 
 MIN_OV = 50
 MIN_FRAC = 0.01
+MIN_ABS = 10            # the 1% clause needs at least this much overflow (HOTSPOT-CENSUS ruling: 1-5 ovfl specks are DRT noise)
 GAP = 2                 # gcells: two overflow gcells this close are one cluster (closing)
 CHANNEL_UM = 30.0
 STATION_RE = re.compile(r"(stn|station|relay|_rly|(^|[._/])u?_?ft[_\d]|pipe_?st|hop_?reg|_st\d|istn)", re.I)
@@ -140,7 +141,7 @@ def clusters(markers, min_ov=MIN_OV, min_frac=MIN_FRAC, gap=GAP):
             comps.append(comp)
         for comp in comps:
             ov = sum(cells[k]["ov"] for k in comp)
-            if ov < min_ov and ov < min_frac * max(1, tot):
+            if ov < min_ov and (ov < min_frac * max(1, tot) or ov < MIN_ABS):
                 continue
             bx = [cells[k]["box"] for k in comp]
             lay = collections.Counter()
@@ -689,6 +690,8 @@ def census_items(res, setup_tns=-42.0):
     """census.json -> items needing a row: every cluster; setup classes < -42; hold classes < 0 (COORD fe8a2a5 (1)-(3))."""
     items = []
     for c in res.get("clusters", []):
+        if c["ov"] < MIN_ABS:
+            continue
         b = c["bbox"]
         items.append(dict(item=f'C{c["id"]}-{c["d"]} x{b[0]:.0f}-{b[2]:.0f} y{b[1]:.0f}-{b[3]:.0f}',
                           size=f'{c["ov"]} ovfl {100*c["frac"]:.1f}%', cause=c["cause"], also=c.get("also", [])))
@@ -729,7 +732,7 @@ def gaps(a):
     if a.owners and os.path.isfile(a.owners):
         for ln in open(a.owners, errors="replace"):
             t = ln.rstrip("\n").split("\t")
-            if len(t) > 3 and t[0] in ("S81", "HEAD", "QC", "KV"):
+            if len(t) > 3 and t[0] in ("S81", "HEAD", "QC", "KV") and t[3].split():
                 owners[base_type(t[1])] = t[3].split()[0]
     out = ["die\ttype\tfamily\titem\tsize\tcause\tcovering_row\towner_lane\tcensus"]
     n = collections.Counter()
