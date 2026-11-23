@@ -1,3 +1,11 @@
+## 21:4x w13 LAUNCHED
+- w13 = sealed W kit of the plan of record r18q: tree epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/trees/s81_head_r18q_rx
+  (fork of R8 r18q_rx, shas verified d1f98516900cc0ba / 994b8a2892dd0768), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/
+  s81_head_hd_lep0N_w_1122213825/spec.json, host epyc10, rt 345ac19b04b3, OT_GRT_ALLOW_CONGESTION=1, unit fable-lep0n-w13 (intel2 pid 3344189),
+  log runitem_w13.log, durable waiter armed. THIS is the W kit that can count. w11 (r18n) and w12 (r18p probe) are older forms kept as probes.
+- LIVE: e1 (CTS, intel1 spill), w11 (tap pre-GRT it 24+/30, epyc2 spill; waiter reads epyc2 log directly), w12 (probe), w13.
+  Chain output of spilled kits is NOT in the hub chain_a1.live.log: read <kit>/run_route.log on the spill host (epyc2 path under /srv/opentallas-scratch3).
+
 ## 21:3x COORD rulings (latest)
 - Plan of record for the next HEAD event = R8 r18q (plan d1f98516900cc0ba, sidecar 994b8a2892dd0768; = r18p + 3 rx relay stages + re-bind;
   tree epyc9 opus-fix-head-lep0n-r8/trees/r18q_rx). W sealed kit w13 from r18q: fork to epyc10 (epyc9 scratch below floor) running
