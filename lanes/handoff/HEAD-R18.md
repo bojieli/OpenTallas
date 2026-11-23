@@ -92,3 +92,5 @@ yosys FSM_RECODE st[2:0] (7 states) -> one-hot st[0..6]; OT_LEC_SUPERSET_VEC=1 n
 ## 11:15 r18f GATED and sent
 - r18f sha 08fd271226683f51 (prep_r18f) PRE 0 findings (TAPOFF ran), portbind/nested PASS, cohort 27/27, LAT 334/334, native release 0, G0 0; render bind_r18f/g0_render/die_plan.png reviewed. Posted FROZEN + REASONED (R1-R7) to FABLE-RC-ALL/PRECHECK-LEDGER-R3.
 - Open: E cap10 census (epyc10 census_e_cap10.otrun.log, load-cap queued) -> post rc136-139 numbers; binary hd_ctl routed LEC (RELEC-1122); E cap10 post-CTS setup for WOPENREG residual; await FABLE-RC-ALL verdict before 13:00.
+- 11:4x r18g = 5f4c (sha 5f4c8fa1af13...) replaces withdrawn r18f per FABLE-RC-ALL be7c8742 (b); all gates PASS (epyc7 head-r18/bind_r18g). t32/t37 pin-outside-window REASONED pending the epyc10 stand-in route read (leaf-to-pin connections + phase delta + t7).
+- 11:4x TAP-LOAD: eshim_rx REASONED (signed d97e0031 clock/setup/hold PASS at clk_t4 2117); hd_host_e ROW-DRAFT = HEAD-tapsplit-R8-rows.json (deferred to the next re-sign); hd_serdes moot (signed).
