@@ -31,6 +31,7 @@ def test_already_reported_permanent_archive_error_becomes_terminal(monkeypatch):
     def unexpected(*args, **kwargs):
         raise AssertionError("terminal historic archive should neither probe nor post again")
 
+    monkeypatch.setattr(AP, "save_state", lambda st: None)
     for name in ("rpy", "coord_append", "resolve_provenance"):
         monkeypatch.setattr(AP, name, unexpected)
     j = {"id": "3054c87a89d6", "status": "SIGNED", "archive_posted": 100,
