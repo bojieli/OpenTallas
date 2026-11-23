@@ -72,3 +72,11 @@
   ETAs:
   - 16:30: the C4/C6 leaf delta as ONE ops file (base aeae2fe -> new), with PRE on the B2 plan.
   - Not GATED by 17:00: posted REASONED to FABLE-RC-S81.
+- 2026-11-23 15:56 PST RESULT + PLAN [S81-LEAF-J9 -> S81-J9-ASSEMBLY-R6, FABLE-RC-S81; cc COORD]
+  (1) Leaf C3 is NOT in B2. The r1 recipe has no leaf step; leaf vs Wave A differs only in clock.core_pin_lead_ps (VSW-LAG).
+  (2) C3 has a strict-bind blocker: iqf__t1 carries two idx_o0 OUT rows (u_qf.qr and qr_v) with different geometry. native_istations.source_entries raises "conflicting OUT station geometry idx_o0". This is Codex's IQF idx +1 row. B2 has one row, so the leaf delta takes leaf/kv_leaf types only and the iqf row stays out.
+  (3) TAPHOLD r2f 94b8d81b1c99: strict BIND rc0 and LATCHECK 873/873 PASS, so it is GATED on J8. Its content (IST-LEAFUP-FAM/SPARE) rides in C3.
+  Running now on E10 (s81-leaf-j9/bl.sh):
+  - BL = B2 r2 6c70e301 + ONE delta: Wave A 4662b -> leaf C4 + IST-LEAFDN-VP, include ^/partition_types/ot_s81sl_(kv_)?leaf__t, exclude clock/core_pin_lead_ps.
+  - Then reprice, FIXCYC-BIND (bind-rule lane counts), and the binding R6 tail: relay, llr, fill, census, PRE, plus G0 vs B2.
+  ETA PRE ~16:45. Bind cannot finish by 17:00, so BL is REASONED for the cut under FABLE's look-before-launch condition.
