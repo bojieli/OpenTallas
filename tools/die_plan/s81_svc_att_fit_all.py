@@ -73,17 +73,12 @@ def replace_pmem(source):
     assert set(ports) == {'RD_ADDR', 'RD_DATA', 'WR_ADDR', 'WR_CLK', 'WR_DATA', 'WR_EN'}
     assert source.count(f'assign {inc} = {pr} + 9\'b000000001;') == 1
     # packed / second / phase
-    m = re.search(r'^\s*assign (' + re.escape(P) + r'src_\w+_Y) = (\S+)\[0\] \? \{(' + re.escape(P) + r'src_\w+_Y)\[511:0\], '
-                  + re.escape(pm) + r"\[1023:512\]\} : \{1024\{1'b0\}\};", source, re.M)
-    assert m and len(re.findall(re.escape(pm) + r'\[1023:512\]', source)) == 1
-    packed, owner, second = m[1], m[2], m[3]
-    m = re.search(r'^\s*assign ' + re.escape(second) + r' = (' + re.escape(P) + r'src_\w+_Y)\[0\] \? ' + re.escape(pm)
-                  + r"\[511:0\] : \{512\{1'b1\}\};", source, re.M)
-    assert m
-    phase2 = m[1]
-    m = re.search(r'^\s*assign ' + re.escape(phase2) + r" = (\S+_Y)\[1:0\] == 2'b10;", source, re.M)
-    assert m
-    phase = m[1] + '[1:0]'
+    packed, owner, second = one(r'^\s*assign (' + re.escape(P) + r'src_\w+_Y) = (\S+)\[0\] \? \{(' + re.escape(P) + r'src_\w+_Y)\[511:0\], '
+                                + re.escape(pm) + r"\[1023:512\]\} : \{1024\{1'b0\}\};", source, 'packed')
+    assert len(re.findall(re.escape(pm) + r'\[1023:512\]', source)) == 1
+    phase2 = one(r'^\s*assign ' + re.escape(second) + r' = (' + re.escape(P) + r'src_\w+_Y)\[0\] \? ' + re.escape(pm)
+                 + r"\[511:0\] : \{512\{1'b1\}\};", source, 'second')
+    phase = one(r'^\s*assign ' + re.escape(phase2) + r" = (\S+_Y)\[1:0\] == 2'b10;", source, 'phase2') + '[1:0]'
     payload = one(r'^\s*assign (\S+_Y) = ' + re.escape(packed) + r'\[1023:0\];', source, 'payload')
     owner = owner + '[0]'
     wp = E + 'driver_g_pskid_wp_Q[0]'
@@ -99,10 +94,15 @@ def replace_pmem(source):
                        + r'\[1023:0\] : ' + re.escape(sk[i]) + r'\[1023:0\];', source, f'mux{i}'))
     # two '!wptr' assigns exist (rp/wp next-state and select); pick the one that feeds select0
     push = one(r'^\s*assign ' + re.escape(sel[1]) + r' = (\S+_Y\[0\]) && ' + re.escape(wp) + r';', source, 'select1')
-    m = re.search(r'^\s*assign ' + re.escape(sel[0]) + r' = ' + re.escape(push) + r' && (\S+_Y)\[0\];', source, re.M)
-    assert m
-    not_wptr = m[1]
+    not_wptr = one(r'^\s*assign ' + re.escape(sel[0]) + r' = ' + re.escape(push) + r' && (\S+_Y)\[0\];', source, 'select0')
     assert source.count(f'assign {not_wptr} = !{wp};') == 1
+    for i in range(2):
+        refs = [l.strip() for l in source.splitlines() if re.search(r'\b' + re.escape(skreg[i]) + r'\b', l)]
+        want = {f'always @(posedge clk) {skreg[i]} <= {mux[i]}[1023:0];',
+                f'assign {sk[i]} = {skreg[i]};'}
+        got = {re.sub(r'\s*//.*$', '', x) for x in refs}
+        decl = {x for x in got if re.fullmatch(r'reg \[1023:0\] ' + re.escape(skreg[i]) + ';', x)}
+        assert len(refs) == 3 and got - decl == want and len(decl) == 1, (skreg[i], refs)
     cut = {pm, payload, packed, second, mux[0], mux[1], *skreg}
     remove = re.compile(r'(^\s*(?:wire|assign) (?:\[.*?\] )?(?:' + '|'.join(re.escape(x) for x in cut - set(skreg)) + r')\b)|\b(?:'
                         + '|'.join(re.escape(x) for x in skreg) + r')\b', re.M)
@@ -124,12 +124,11 @@ def replace_pmem(source):
 
 def typed_tr(source, typ, tree, G):
     """R9 typed_tr with this type's engine prefix (its `current` name is hardcoded to the t4_att piece)"""
-    old = R9.typed_tr.__code__
     src = R9.typed_tr
     # re-implement through R9's code path by temporarily presenting its expected instance name
     flat = 'u_' + G[2:] + 'u_eng_g_tr_'
     pat = 'u_u_rsv_u_att_u_a_u_eng_g_tr_'
-    marker = 'tmp_rename'
+    assert pat not in source, 'foreign t4_att engine names in the bound'
     s2 = source.replace(flat, pat)
     s2, assets = src(s2, typ, tree)
     return s2.replace(pat, flat), assets
