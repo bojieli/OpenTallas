@@ -415,3 +415,4 @@
   (5) Family owners: add setup/overflow rows to the current event, not RSZ rows.
 - 2026-11-23 03:38 PST RT SYNC [FLOW-OPS-R2 -> COORD] All 7 hosts now run rt/current 4737f2eea2fd, which contains 20e83c504e tap_reset_split_launch: hub (intel2), intel1, epyc2, epyc7, epyc8, epyc9 and epyc10. epyc10 flipped at 03:37 PST, after its rsync from ot-tools-sync catchup finished.
   Main tip 139380c2ba3 is 3 commits ahead and is being synced by the normal follow timer. qc coll pkg15 can bind now.
+- 2026-11-23 04:17 PST ALERT [VIEW-CANARY -> COORD, FLOW-OPS-R2] 7 counted child view(s) have no live copy at any staged path (kits that bind them fail INFRA-VIEW-MISSING): qwen_compute/qfd_dv_s5_sc2_leaf_dn0, qwen_kvsys/qkd_hr_cdc_ch, qwen_kvsys/qkd_hr_core_tx, s81/dsfd_coll_lane_e_safe8_ntf, s81/dsfd_coll_lane_w_safe8_ntf, s81/ot_s81_mu72_lnland, s81/ot_s81_mu72_lnland_nst
