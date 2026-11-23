@@ -26,3 +26,9 @@ def test_unknown_name_refuses(monkeypatch):
     monkeypatch.setenv("OT_BIND_ONLY_TYPES", "slw_b,nope")
     with pytest.raises(bind.BindError):
         bind.only_types_select(BY, TY)
+
+
+def test_whole_die_gate_findings_filtered_on_probe():
+    errs = ["LF_CS_DEPTH ot_leaf__t1: no bound module file in /o/rtl", "LF_CS_DEPTH svc_a__t1: depth 3 != 2"]
+    assert bind.probe_only_filter(errs, None) == errs
+    assert bind.probe_only_filter(errs, {"emitted": ["svc_a__t1"]}) == errs[1:]
