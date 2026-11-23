@@ -1360,10 +1360,20 @@ class TypeSplit:
         # the reset-leg solver re-derives it on the pieces (OPUS-FIX-KV-PV-SINKSPREAD-R2 11-23)
         rep.setdefault("relay_split", [0] * self.n); rep.setdefault("relay_split_dropped", [])
         def _pc(name):
-            try:
-                return self._local_piece_of(name.split(".")[0])
-            except SplitError:
-                return None
+            # a bound-netlist name: u_<content> (the bind prefix) or u_y_xd_<content>_<port>_<k>_<j> (a relay_depth
+            # stage of that content's port); the row lives where its content lives
+            base = name.split(".")[0]
+            cands = [base]
+            if base.startswith("u_y_xd_"):
+                cands += [c for c in sorted(self.content_piece, key=len, reverse=True) if base[7:].startswith(c + "_")][:1]
+            elif base.startswith("u_"):
+                cands.append(base[2:])
+            for c in cands:
+                try:
+                    return self._local_piece_of(c)
+                except SplitError:
+                    pass
+            return None
         for row in t.get("relay_split") or []:
             i = _pc(row["flop"])
             ps = {_pc(sk) for c in row.get("clones") or [] for sk in c.get("sinks") or [] if not sk.startswith(row["flop"])}

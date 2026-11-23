@@ -1395,3 +1395,25 @@ def test_relay_split_follows_its_flop_instance():
     TS.TypeSplit._relay_keys(s)
     assert [r["flop"] for r in s.T[0]["relay_split"]] == ["u_g0_a.rst_q"] and "relay_split" not in s.T[1]
     assert s.rep["relay_keys"]["relay_split_dropped"] == ["u_g3_b.rst_q"]
+
+
+def test_relay_split_resolves_bound_netlist_names():
+    """OPUS-FIX-KV-PV-SINKSPREAD-R2 11-23 (D29 b5): relay_split rows name BOUND instances -- u_<content> (bind prefix) and
+    u_y_xd_<content>_<port>_<k>_<j> (a relay_depth stage); they follow their content's piece instead of being dropped"""
+    class _NK(_RK):
+        content_piece = {"vport_W": 0, "vport_E": 1}
+
+        def _local_piece_of(self, inst):
+            if inst not in self.content_piece:
+                raise TS.SplitError(f"instance {inst} has no piece")
+            return self.content_piece[inst]
+    s = _NK()
+    s.t = dict(relay_split=[
+        dict(flop="u_vport_E.rst_q", clones=[dict(name="u_vport_E.rst_q__rs1", sinks=["u_vport_E.sv[1]", "u_vport_E.val_q[0]"])]),
+        dict(flop="u_y_xd_vport_E_rst_n_0_1.q", clones=[dict(name="u_y_xd_vport_E_rst_n_0_1.q__rs1", sinks=["u_vport_E.rst_q__rs1"])]),
+        dict(flop="u_vport_W.rst_q", clones=[dict(name="u_vport_W.rst_q__rs1", sinks=["u_vport_W.sv[3]"])]),
+        dict(flop="u_vport_W.rst_q2", clones=[dict(name="u_vport_W.rst_q2__rs1", sinks=["u_vport_E.sv[9]"])])])
+    TS.TypeSplit._relay_keys(s)
+    assert [r["flop"] for r in s.T[1]["relay_split"]] == ["u_vport_E.rst_q", "u_y_xd_vport_E_rst_n_0_1.q"]
+    assert [r["flop"] for r in s.T[0]["relay_split"]] == ["u_vport_W.rst_q"]
+    assert s.rep["relay_keys"]["relay_split_dropped"] == ["u_vport_W.rst_q2"]
