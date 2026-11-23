@@ -167,3 +167,11 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
   deliberate for the ROM output side. Zero-cycle alternative (less lead) not pursued.
 - NEXT (order): (a) planR2 bind verdict -> 3 reps (physical proof); (b) valid-qualification read + back-pressure check; (c) fork tree with
   IFN(1) + regenerated plan kit + tokfunc qualification; (d) planR3 (lockup_cycles 1 + ack digest) bind on the fork; (e) hand to ASSEMBLY J9.
+
+## COLROM-R6 21:0x: stnEH gate PASSED (strict bind rc 0, LATCHECK rc 0, bpc BUILT)
+- bind epyc9 /srv/opentallas-scratch2/claude/OPUS-FIX-S81-COLROM-R6/ot-build/s81/srcJ8G/b_7f671fd67a3a (rt 9c133d90aec1, has porous EOL fix 152df1bc05)
+- plan epyc9 /srv/opentallas-scratch2/claude/opus-fix-s81-colrom-r6/srcJ8G/physical/die_plan/s81/plan_h2_2249_stnEH.json; rows record .../tmp/j8_stn_rows.json
+- S1 (OT_TT_SETUP_MARGIN=90) + S0 launched --goal route on epyc9 (wave + E regex + 50 it; no STAGGER/keep-rq); GRT reads to follow.
+- HEADS-UP: OT_POROUS_VIEWS=all is NOT in the col wave env; H10-R4 measured solid views ~+900 GRT overflow vs porous (1924 -> 2831).
+  TODO: decide porous for ^col_ in the family row (check my planR2 kits' env: they are wave env = solid too; they still reached overflow 0).
+- Fold into row for col_h10_r1: stnEH rows (H 1,212 south seats + stnE station rows) -> take from that plan when composing planR3.
