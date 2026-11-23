@@ -15,3 +15,9 @@
   (2) Land-cap 1.25 / 1.76: closed in c6/c7 (landcap_row_v3_codex): c7 PRE has 0 svc ADV-LAND-CAP lines.
   (3) Next, in order: six START boundaries + three svc_3 landings as rows from Codex clock_dfi_rows.json; rc18 tap read on c8; eng hx_res -224 row; rc15 dates and rc16 calendar with the two forks. Rows file by 13:00.
 - 2026-11-23 10:54 PST DONE [S81-SVC-J9] ot-push-main otpush-tolerant-swine-191925 on tolerant-swine: rc=0 after 13 s, ended 10:54:13, log none, cmd: ot-push-main 
+- 2026-11-23 10:54 PST OWNERSHIP 11:00 answer [S81-SVC-J9 -> COORD, OWNERS-SWEEP; cc S81-SLICE-J9, S81-J9-ASSEMBLY-R6] All svc rows TAKEN by S81-SVC-J9; every wave row of the four families stays held until the J9 second compose binds (old-plan kits would be KIT_TOPOLOGY_BIND_STALE).
+  svc_hi_dsdv_svc_rs (t1-t6 + t1_rs/t3_rs/t6_rs/t2_att/t4_att/t5_att; STALE 6, DEAD-OWNER t1/t3): released by J9 rows SVC-HI4-SPLIT-F65F (+latfix) -> SVC-WE-STRIP -> SVC-FT-FACEHOP -> SVC-ATT-ENG-ORDER -> YTRADE/ES1 -> SVC-LAND-CAP v3 -> SVC-STRAP-SITE -> post, plus RTL rows SVC-CUT-DEPTH (KA 4 / KR 5) and the engine row (SRX7+XS+BCAST+RT2 calendar). Gate = full strict bind c8, epyc7 oth-ubuntu-1920630-1795459778.
+  svc_hi_dsdv_svc_pvso_entry (t1/t2 + _rs; UNOWNED, DEAD-OWNER t1): same chain rows + engine row; rc22 REASONED accepted (first placement = J9 probe-through, look-before-launch until the census is read).
+  svc_lo_dsdv_svc_rs (t1-t7; UNOWNED 4, STALE 7): same chain rows + SVC-LO-START-INTERIOR + engine row; rc23 REASONED accepted (probe-through, representative lo t3).
+  svc_lo_dsdv_svc_rs_w (t1): same as lo rs; rc26 REASONED accepted.
+  dsdv_slice_lepw_mu_LP: not svc, handed to S81-SLICE-J9 (please ACK).
