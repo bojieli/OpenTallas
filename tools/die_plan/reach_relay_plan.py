@@ -425,7 +425,7 @@ def mon_relays(P, ln, segs, taken, unplaced=None):
     return rows
 
 
-def reprice_monitor_budget(side, rows):
+def reprice_monitor_budget(side, rows, raw_release_cycles=None):
     """Charge status-only relays in the existing collector boot model."""
     collector = side.get("collector")
     if not rows or not collector:
@@ -465,7 +465,10 @@ def reprice_monitor_budget(side, rows):
         return deadline(collector["root"])
 
     previous = budget.get("ready_at_glue_max_cycles") if budget else None
+    previous_release = budget.get("raw_reset_release_max_cycles") if budget else None
     reconstructed = ready_bound() if depths else None
+    if budget is not None and raw_release_cycles is not None:
+        budget["raw_reset_release_max_cycles"] = raw_release_cycles
     for key, count in targets.items():
         edge = edges[key]
         if edge.get("monitor_relay_cycles", 0):
@@ -479,13 +482,16 @@ def reprice_monitor_budget(side, rows):
         budget["ready_at_glue_max_cycles"] = updated
     elif previous is not None:
         # The older collector format lacks per-part registered depths.
-        updated = previous + sum(targets.values())
+        additional_reset = (max(0, raw_release_cycles - previous_release)
+                            if raw_release_cycles is not None and previous_release is not None else 0)
+        updated = previous + sum(targets.values()) + additional_reset
         budget["ready_at_glue_max_cycles"] = updated
     if budget is not None:
         budget["source_causal_bound_qualified"] = False
         budget["physical_clock_phase_qualified"] = False
     return dict(previous_root_cycles=previous, reconstructed_previous_root_cycles=reconstructed,
                 root_cycles=updated, status_cycles_per_bundle={k[2]: n for k, n in targets.items()},
+                raw_reset_cycles=budget.get("raw_reset_release_max_cycles") if budget is not None else None,
                 data_cycles_added=0)
 
 
@@ -602,12 +608,13 @@ def plan(raw, side, skip_unplaced=False, trunks_doc=None, reset=True):
                             edges=sum(r["edges"] for r in mrows), status_cycles_added_max=max([r["relays"] for r in mrows] or [0]),
                             unplaced=unplaced or [], rows=mrows),
                data_cycles_added=0)
-    boot_reprice = reprice_monitor_budget(side, mrows)
-    if boot_reprice is not None:
-        rep["monitor"]["boot_budget"] = boot_reprice
     import reset_tree as RT
     if reset and RT.wavefront(P):
         rep["reset"] = reset_relays(P, raw)
+    actual_raw_release = rep["reset"]["after"]["max_release"] if "reset" in rep else None
+    boot_reprice = reprice_monitor_budget(side, mrows, actual_raw_release)
+    if boot_reprice is not None:
+        rep["monitor"]["boot_budget"] = boot_reprice
     if trunks_doc is not None and pv is not None:
         rep["built_clock"] = dict(rewrite=rewrite, rejected_region_sites=len(rejected),
                                   relays_src_side=sum(1 for n in pv["nodes"] if n.get("kind") == "relay" and n.get("clock_side") != "dst"),
