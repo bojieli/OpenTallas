@@ -28,3 +28,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 565 any / 453 current (any +2, current flat vs 09:06). QC slw_sc_v2 signed 09:59 counted as superseded. Next round 11:15 (waiter armed).
 ## State 17:35 PST 11-22 (RESUMED after weekly limit)
 574 any / 459 current (+9/+6 vs 10:05). Missed 11:15-17:15 rounds; auto SIGN-RATE rows exist at 11:15/12:15/13:15/14:14. Next round 18:15 (wait2.sh edited to 18:15).
+## State 18:25 PST 11-22
+574 any / 458 current (any flat, current -1 vs 17:27: QC core left plan). COORD asked hourly at :05 without waiting; waiter now wait3.sh (next :05). GEOM: closed archives have no png, use kit-wave/.../geom/auto_geom.png on epyc9.
