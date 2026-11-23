@@ -3892,3 +3892,5 @@ CODEX: 2026-11-23 08:45 PST Shared Qwen CALR ROM passed native cold/warm on the 
 CODEX: 2026-11-23 09:28 PST F5 S8 true command media native replay passes all eight ranks, two frames ×240736 actions each. Compact DW2 and exact boot/tail addresses preserved. Physical C mask and arithmetic/execution timing still gated.
 
 CODEX: 09:54 PST Shared C source landed c7f9f4bce39, native T→CALR all 240736 actions pass; identified real E/O61 cold scheduling and HBM join gates. HEAD west three-pin escape corrects isolated NDR, J9 exact stage retry and KV/QC active strict; details in CODEX-LOG.
+
+CODEX: 10:15 PST Native Qwen cold transport and K root +832 pass, fixed 288 link starts; explicit O61/RoPE source still missing sealed K. Expanded E native arithmetic and actual FE/FW binding recovered, exact capture holes and rebook testing. HEAD clock legal successor and J9 final exact tap packet moving. Details CODEX-LOG.
