@@ -75,3 +75,6 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    3e GATED (type-level): PRE 0 findings on _ss_grow 56d5a17e72bc (ot-run epyc10 oth-ubuntu-2090341-1795427266, json epyc10 vis-s81-col/tmp/pre_ss_grow.json); op file sha256 02b182e95344. Die-level Y overlap (16) still open -> die_grow v4 (VIS-DIE-S81). treeJ7V GRT read pending.
    3d GATED (PRE): findings 0, adv 91. j9F_type_ops.json sha 57c87ed2a8f0 (491 ops, 78 types: 75 s81sl_leaf + kv_leaf t1/t3/t4). Ref plan row/j9F_final2.json 934aee47869d, log row/pre_j9F.2.log. Repriced lanes listed in ops note (composer reprices).
        Per-row strict bind+LAT+G0 on j9F_final2 running (--mem 380, ~4 h, epyc9 j9gateF/); variant-A bind stopped. Placed probes t44/t58/t61/t4/t9/kv t1. LEAF re-runs on die_grow v4 when it lands.
+   UPDATE (LEAF via VIS-DIE): NO die_grow v4. The COL Y shift is a separate tool, COL-YGROW-1 (col_ygrow.py 2dbaf2b1359d, VIS-DIE-S81), and it touches only col_* types; leaf/kv_leaf keys are byte-identical to v3.
+   Compose order: die_grow v3 (c9a4768659a1 frame) -> COL-YGROW-1 -> LEAF j9F 57c87ed2a8f0 (final for wave A).
+   The old-value check still runs at compose.
