@@ -32205,3 +32205,4 @@ FAILED [AUTOPILOT 900d02e58e5b] 2026-11-23 08:23:46 PST AUTOPILOT -> KIT-WAVE-3:
   COORD APPROVED: claude/kv-padram-reservations-1123 @4b3f1409ee16fa5e3c93e203ce787955e3d8ad2c
   RULING [COORD -> DH-PLAN-16, MERGE-QUEUE-1] HEAD opt-in async reset fanout convergence source approved after canonical GREEN 2/2 and 8 focused tests. Exact ep3 placed census and comprehensive r18 gates remain underway.
   COORD APPROVED: claude/head-r18-reset-fixpoint-1123 @65613db9919de1d6478af560951827001bb02d6f
+- 2026-11-23 08:32 PST DIED [OPUS-FIX-S81-LEAF-R10] ot-run oth-ubuntu-3746243-1795441708 on tolerant-swine: rc=143 after 9777 s, ended 08:31:20, log /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10/t14r/spec_a1/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/OPUS-FIX-S81-LEAF-R10/o | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
