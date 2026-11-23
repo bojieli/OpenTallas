@@ -29782,3 +29782,4 @@ FAILED [AUTOPILOT d18b117a6838] 2026-11-23 01:39:40 PST AUTOPILOT -> KIT-WAVE-3:
   - The three QC COUNT-CREDIT rows are applied (versioned, credit ref shown). Those types were already counted, so QC stays at 76/127.
   - signed.tsv is only autopilot's own archive log, written for autopilot and ot-jobs runs. It is not a count input: the counter scans the sign-off records and signed-store directly, private kits included.
   - No flow fix needed. Ruling: private kits stay out of signed.tsv.
+- 2026-11-23 01:44 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-2693304-1795426824 on tolerant-swine: rc=0 after 1454 s, ended 01:44:15, log none, cmd: --mem 24 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/hotspot-census --max-wait 5400 -- python3 -E /srv/opentallas-scratc
