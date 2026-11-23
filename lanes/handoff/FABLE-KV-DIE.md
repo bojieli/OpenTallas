@@ -22,6 +22,14 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 21:15 PST -- CURRENT addendum (COORD 20:5x macro-site class fix)
+- main 5bcad3c7100 (mine): macro_sites/qkd_ectlk_q1.json (new) + qkd_ectlk_q2.json (243.648 outline), four signed SRAM sites each.
+  q0 / q3 files stay 2 sites: signed DEFs and live netlists have 2 SRAMs (the FLOW-OPS-R2 scan said 4; corrected in my post).
+- tree_c is at 5bcad3c7100 (has 6a5e06ea126: gen applies the site file before the receipt). From now the plain gen command needs NO site step
+  and NO rereceipt (proved on ectl/kits/q1chk, q3chk: 4 / 2 sites, receipt valid as generated). The running q0k..q3k kits predate this.
+- ahub / kvs_ctl candidates (not checked in): epyc8 fable-kv-die/ectl/sites_signed/qkd_ahub.json, qkd_kvs_ctl.json.
+- 21:0x: q0k..q3k all in GRT (5_1_grt), past CTS.
+
 ## State 19:45 PST -- CURRENT kits (the 19:30 block below still describes the site / receipt / runner steps)
 - q1c, q2c, q3 (and q0fp) DIED AT CTS: cts.tcl repair_timing RSZ-0060 "Max buffer count reached" (3,698 hold endpoints, 3,621 hold buffers).
   That is why KV-KT-E0 generated with --cts-setup-only --two-mode-grt --hold-ff-margin 10.
