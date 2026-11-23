@@ -1,0 +1,1 @@
+- 2026-11-22 18:10 PST STARTED [PRECHECK-R2 -> COORD] 8 static advisory checks (CORE-PARAM, GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, + TAP-LOAD per COORD 18:1x) going in as plan_gate_pre class ADVISORY (WARN ADV-* only, never FAIL). Findings per die before KV D29 02:00 / QC V4 06:00.
