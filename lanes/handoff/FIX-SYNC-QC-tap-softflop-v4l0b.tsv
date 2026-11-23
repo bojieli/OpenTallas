@@ -1,0 +1,14 @@
+type	bins_n	bound_rtl_station_bits_lowerbound	ratio	bins_file	bins_source
+slw_fe_v2__clf110fab2	43454	86332	1.99	plan_of_record/sink_bins/hf1c/slw_fe_v2__clf110fab2.json	DIE-QC-97 PGR 11-10 epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compu
+slw_su_l1__clcc9d0155	10665	19753	1.85	plan_of_record/sink_bins/hf1c/slw_su_l1__clcc9d0155.json	QC-EVENT-S28 11-12 intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_comp
+slw_su_l1__cla2a78701	10660	19697	1.85	plan_of_record/sink_bins/hf1c/slw_su_l1__cla2a78701.json	QC-EVENT-S28 11-12 intel2:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_comp
+sle_su_c	39004	67484	1.73	plan_of_record/sink_bins/hf1c/sle_su_c.json	VISLAYOUT2-QC 11-12 epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_comp
+slw_fe_v1__clfe325744__cl08d14f0d	56177	86341	1.54	plan_of_record/sink_bins/hf1c/slw_fe_v1__clfe325744__cl08d14f0d.json	/d/3_place.odb
+slw_fe_v1__clfe325744__cldb4efe33	58923	86177	1.46	plan_of_record/sink_bins/hf1c/slw_fe_v1__clfe325744__cldb4efe33.json	/d/3_place.odb
+slw_su_c__cl92142dac	58374	84727	1.45	plan_of_record/sink_bins/hf1c/slw_su_c__cl92142dac.json	/d/3_place.odb
+sle_fw_v2__cl6740750e	35529	51551	1.45	plan_of_record/sink_bins/hf1c/sle_fw_v2__cl6740750e.json	DIE-QC-97 PGR 11-10 epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/qwen_compute/kit-wave/qwen_compu
+slw_fe_v2__cle312294d	58206	84349	1.45	plan_of_record/sink_bins/hf1c/slw_fe_v2__cle312294d.json	/d/3_place.odb
+slw_fe_v1__cl95cd1d0c	59213	83460	1.41	plan_of_record/sink_bins/hf1c/slw_fe_v1__cl95cd1d0c.json	/d/3_place.odb
+slw_su_c__cl19bb38ef	64597	84809	1.31	plan_of_record/sink_bins/hf1c/slw_su_c__cl19bb38ef.json	/d/3_place.odb-equivalent:cl19bb38ef/attempt_4/4_cts.odb
+coll_ftc	NONE	~19.4k (99 st 18752 + 605 rrelay + landings)	-	no sink_bins_file (grid+sinks, 1 plan tap)	planned-only
+coll_ft__cla4a25d77	NONE	~9.0k (24 st 8868 + 160 rrelay)	-	no sink_bins_file (explicit 17 taps, max 1000)	planned-only
