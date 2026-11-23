@@ -44,3 +44,10 @@ Lane clone (adopted): intel2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/c
 - Watcher intel2 pid 2825403, OPUS-PIPELINE-R2/tmp/ab_watch.py (log ab_watch.log): enables s81/qwen_compute/qwen_kvsys on first
   "atomic apply <die>" hub commit after start, posts first-cycle AUTO-BIND lines (from ~/coord/autopilot/log.txt), backs out >4 STARTED/6 h. 20 h deadline.
   If it dies: rerun with T0 = now and drop already-enabled dies (check kit_wave.json auto_bind).
+
+## 11-22 17:5x RESUMED after weekly limit
+- S81: enabled 04:22 after J7 apply; first auto rebind 07:56 STARTED on epyc10 (rt/current d4f31de6bc6e), 08:41 FAILED (job died after pre);
+  it duplicated the plan lane's 07:17 adopted bind -> S81-J6-ASSEMBLY-R5 set auto_bind false 09:08. Left OFF (die lane's call).
+- Fix main 7dc6aacdcc: AUTO_BIND_GRACE_S 3600 (rows must stay stale 1 h; WAITING state) + rebind on rt/<tools_sha[:12]>.
+- QC V3 / KV D28 not applied yet. Watcher restarted: intel2 pid 640025, ab_watch2.py (QC + KV only, 36 h), log ab_watch2.log.
+- HEAD auto_bind true (no-op, mode script).
