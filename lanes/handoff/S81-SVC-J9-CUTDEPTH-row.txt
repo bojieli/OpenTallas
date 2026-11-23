@@ -1,0 +1,29 @@
+S81-SVC-J9 row SVC-CUT-DEPTH (rc15)  2026-11-23 11:00 PST  [fork of S81-SVC-J9 -> COORD; cc FABLE-RC-S81, S81-J6-ASSEMBLY-R5]
+STATUS: RTL LANDED main 936b871fa31 (ot-push-main, tests 2/2 pass). Default CUT_D=1 = as built (inert). Depth is applied by the hi4 overlay only.
+
+DEFINES (die-wide in asbuilt_run.json; read ONLY by s81_svc_r5_hi4_sources/{dsdv_svc_att_cut_j7_hi4,dsdv_svc_rs_c_j7_hi4}.sv; main dsdv_svc_rs_c has no wrapper):
+  OT_SVC_CUT_KA=4 (att side, wrapper CUT_D=1+KA)  OT_SVC_CUT_KR=5 (rest side, g_cutr relays u_cutr_i/u_cutr_o). Written in-file as a `define/`undef pair in the hi4 rs_c (bind ignores per-type verilog_defines).
+SIZING (chain c1/p_tf.json c635154606c8, window centre -> hard cores, Manhattan, reach 405 um, K=ceil(d/405)-1, rule = K of the largest median):
+  pair   att med/max  rest med/max (um)
+  svc_1  1136/2570    1558/2327
+  svc_3  1631/2813     940/1652
+  svc_5  1704/2948    1666/2582
+  svc_7  1624/2868    1442/2496
+  svc_9  1603/2951    1043/1877
+  svc_11 1461/2705    1684/2427
+  svc_13 1323/2671    1216/2115
+  svc_15 1536/2985    2278/2874
+  -> KA=4 (1704; max 2985 would need 7), KR=5 (2278; max 2874 would need 7). sizing json epyc7 /srv/opentallas-scratch/claude/s81-svc-j9-cut/cutdepth_sizing.json 4813c9b81264
+OVERLAY (v3, flop vectors, no reg arrays): k45 att_cut 9ded0ec339af, rs_c e590d98645e6; k0 rs_c aaae3c50ea03; inputs treeJ8g att_cut 3a2fb214f9a8 / rs_c b0a34739e5ef. Patcher also applies on BCAST rs_c (epyc10 fix-s81-svc-bcast/hi4_port), delta identical.
+TOOLS (main): apply_cutdepth.py 080d68f14976, cut_depth_row.py 54eab1239ad9, cut_inert_graph.py 6f98a2946f11, dsdv_svc_att_cut.sv 0f103e539810, test_cut_depth_row.py, tb_svc_att_cut_prog.sv (-DCUT_KD), run_att_cut_prog.sh (KD=).
+PROOFS:
+  INERT KA=KR=0 (v3 k0 vs treeJ8g), only CUT_D=1 + yosys auto MEMID normalised: att_cut EXACT allq+noallq (0 normalisations); rs_c EXACT allq (MEMID 6, CUT_D 1) and noallq (MEMID 4, CUT_D 1). intel2 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/inert_v3/witness_normalized.log (ot-run oth-ubuntu-2743942 exit 0).
+  BENCH CUT_PROG_VERDICT PASS 3/3 seeds at KD=1 and KD=10 (=1+KA+KR): c mismatches 0, m2+m3 caught, pv_words 160, sm_row_beats 20, fault_cycles 0. intel1 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/bench_kd{1,10}.log. Stub latency TB CUTD_TB PASS bad=0.
+PLAN DELTA / LATENCY ROWS: R-RTL-6 kind RTL-INTERNAL, 31 lanes x +9 cycles (KA+KR), 62176 bits, 8 pairs (2 in + 2 out each, svc_9 1 in); LATCHECK lane table UNCHANGED (L1..L100 stay boundary 2). epyc7 .../cutdepth_latency_rows_k45.json 27c72473a7e1.
+SCHEDULE SHIFT: att share runs KA+KR=9 edges later; registered out-lanes reach the slice 2(KA+KR)=18 edges later.
+REASONED / OPEN:
+  - Compiler dates for +9/+18: OPEN (dv_layer_compile.py only has SRX 0/7 dates; owned by the engine-timing row).
+  - Opaque-SRAM formal (inert witness is a graph compare with the macro opaque; no sequential equivalence across the SRAM).
+  - Distances re-read on a placed pair (sizing is on plan geometry, not placed).
+  - Sizing used c1/p_tf.json, not the final plan_svc_c1.json (did not exist yet): re-run cut_depth_row.py when it lands.
+  - KD=10 bench is a lump depth (1+KA+KR on one side); the split 5/6 per side is covered by the rows tool, not by a separate bench.
