@@ -15620,7 +15620,7 @@ def hang_judge(rec, w, now, minutes=HANG_OUTPUT_MIN, cancel_after=HANG_CANCEL_AF
     return "report", why
 HUNG_PROBE = r"""
 # HUNG_PROBE
-import glob, json, os, re, subprocess, sys
+import glob, json, os, re, stat, subprocess, sys
 roots = [r.rstrip('/') for r in json.loads(sys.argv[1])]
 me = os.getpid()
 hz = float(os.sysconf('SC_CLK_TCK'))
@@ -15648,6 +15648,17 @@ def newest_log(top):
                     best = max(best, os.stat(os.path.join(dp, f)).st_mtime)
                 except OSError:
                     pass
+    # ORFS writes report_metrics to a report file before the global-place ODB.
+    # On a large kit the stage log can stay silent while this report advances.
+    for prefix in (top, os.path.join(top, 'gen', '*')):
+        pattern = os.path.join(prefix, 'run', 'reports', '*', '*', '*', '3_global_place.rpt')
+        for report in glob.glob(pattern):
+            try:
+                st = os.stat(report, follow_symlinks=False)
+                if st.st_size and stat.S_ISREG(st.st_mode):
+                    best = max(best, st.st_mtime)
+            except OSError:
+                pass
     return best
 procs = {}
 for pid in filter(str.isdigit, os.listdir('/proc')):

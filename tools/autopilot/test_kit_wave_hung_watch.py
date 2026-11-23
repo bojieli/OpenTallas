@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """KIT-OPS-1 11-13 HUNG-WATCH: a silent but alive row is cancelled (CANCELLED class HUNG) only when both its stage logs and the CPU
 time of its processes stopped growing for hung_watch_min; any CPU progress keeps it report-only."""
+import glob
 import json
 import os
+import stat
 import subprocess
 import sys
 import tempfile
@@ -85,6 +87,40 @@ class Judge(unittest.TestCase):
         hung, w, _ = KW.hung_judge({"cpu": 900, "t": 0.0}, {"cpu": 5, "log": 0}, 0, 50_000.0, 120)
         self.assertFalse(hung)
         self.assertEqual(w["t"], 50_000.0)
+
+
+class StageOutput(unittest.TestCase):
+    def test_global_place_report_progress_prevents_early_hang_cancel(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            now = 20_000.0
+            stdout = root / "place.log"
+            stdout.write_text("Report metrics stage 3, global place...\n")
+            log_time = now - 131 * 60
+            os.utime(stdout, (log_time, log_time))
+
+            reports = root / "gen" / "hub_c" / "run" / "reports" / "asap7" / "dp_hub_c" / "base"
+            reports.mkdir(parents=True)
+            unrelated = reports / "unrelated.rpt"
+            unrelated.write_text("not native stage output")
+            os.utime(unrelated, (now, now))
+            report = reports / "3_global_place.rpt"
+            report.touch()
+
+            # Exercise the actual fleet probe's file scanner without scanning host processes.
+            scanner = KW.HUNG_PROBE.split("def newest_log(top):", 1)[1].split("\nprocs = {}", 1)[0]
+            probe = {"glob": glob, "os": os, "stat": stat}
+            exec("def newest_log(top):" + scanner, probe)
+            self.assertEqual(probe["newest_log"](str(root)), log_time)
+
+            report.write_text("global place report_clock_min_period\nvclk period_min = 0.00\n")
+            report_time = now - 38 * 60
+            os.utime(report, (report_time, report_time))
+            progress = probe["newest_log"](str(root))
+            self.assertEqual(progress, report_time)
+            rec = {"stage": "place", "hang_reported": [now - 33 * 60, log_time]}
+            self.assertEqual(KW.hang_judge(rec, {"log": log_time}, now)[0], "cancel")
+            self.assertIsNone(KW.hang_judge(rec, {"log": progress}, now)[0])
 
 
 class Reap(unittest.TestCase):
