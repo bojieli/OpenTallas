@@ -1,0 +1,6 @@
+{"lane":"FAM-S81-DSDV-R1","for":"S81-J6-ASSEMBLY-R5 J9","ruling":"COORD 11-22 18:0x (Fable review)","name":"iqc-mask-same-edge",
+ "types":["dsdv_slice_iq_C__t1","dsdv_slice_kv512_C__t1","dsdv_slice_c1x_C__t*"],
+ "change":"RTL overlay rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs.sv (shared by xg/xgt/xs4 users): the SRAM mask quadrants mw_m[gs][gm][64*wm+:64] are driven from 4 ot_v41_kreg copies per bank macro (captured on the existing XG input edge, 0 added cycles), (* keep *) on the instance; ot_v41_kreg already survives opt_merge; OT_KEEP_WIRES via tools >= ef3e9e54d69. Source: handoff FAM-S81-DSDV-R1-mask-same-edge-ot_s81sl_xs.sv (= Codex mask_local.patch applied on the J7 fork file sha 120c5c5d, ifdef removed).",
+ "seats":"intel1 /srv/opentallas-scratch2/claude/lanes/CODEX-IQC-POSTPLACE-1122/mask_sites.json: 96 seats, max placed mask-pin leg 31.06 um (iq_C t1 placement); kv512_C/c1x get their own seats from their placement (mask_seats.py)",
+ "equivalence":"Codex write_tb: GF_CAPTURE 4096 edges, 24 macro ports each, differing_edges=0 for the patch, 2337 for the negative mutant (epyc8 fam-s81-dsdv-r1/iqc_mask_same_edge_1122/native.client.log)",
+ "tools_min_sha":"ef3e9e54d69","proof":"sealed --goal route iq_C kit on fork epyc9 trees/j7_mask (in progress, post follows)"}
