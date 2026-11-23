@@ -34,3 +34,9 @@
 - HOLD: all pc types (amendment), kv3_sys_c (SYSC-D2DOUT), kv3_hub_C (E2 + H2-H4); hub_Wo/Eo if the kit_relay_depth __rst_n fix is not in the wave rt.
 - Release the 16 WAIT-BIND rows (hgi_*, hg_v1p5/v1p6/v3, hub_Wo). Set the KV-CTLPORT wave key.
 - Owed before the cut: whole-die render of the k3e plan (VIS-KV) + ADV-MERGE-RESET-DEPTH / ADV-RESET-NAME on the k3e plan (kv-d29-k3d-reset-1123 waiter does the k3d one).
+
+## Cut outcome at 14:4x PST
+
+- KV-D28 remains the live wave event. KV-D29 missed the 14:00 cut and has no release candidate. K3e `698bf5a0cf52` did not reach its final strict gate. Four native EMIT crashes left stale 11:11 PST reports that the fixed-point script mistakenly reused.
+- The fresh exact head has 0 errors, 5,940 R8 members and current effective owner-pad coverage. Actual remaining bind blocker is the strict cl4ea PC cohort split plus an independent bound-only variant plan-cell lookup crash. See `KV-D29.md` 14:4x and E8 native scoped receipts.
+- Standalone row-B R7 functional receipts remain valid in their scope. Exact v5n daughter placement remains held, as do the PC and sys_c corrections named above. Consult `results/geom_review/kv_d29_private_places_1436_1123.md` for six viewed results, the corrected render-refusal class, and the HGFORM row-grid first error.
