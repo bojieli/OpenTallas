@@ -1277,6 +1277,29 @@ module ot_s81_svc_attn_s #(
 
     // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule; VT: ATTN1 sub-beats)
     localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) + BANDT : 0;   // band capture stages + output register
+    // The direct H8 RT2 tile's distributed input stages also delay its valid.
+    // The band extension and external tile round trip are already priced by BANDT/TLX.
+    localparam integer LOCAL_TILE_RELAY =
+`ifdef OT_ATTN_HCORE
+`ifdef OT_SVC_H8
+`ifdef OT_SVC_H8_REUSE_RT2
+`ifdef OT_S81C_TILE_REACH
+        5;
+`elsif OT_S81C_TILE_STAGE
+        1;
+`else
+        0;
+`endif
+`else
+        0;
+`endif
+`else
+        0;
+`endif
+`else
+        0;
+`endif
+    localparam integer LOCAL_TILE_TAG_DELAY = (BANDX == 0 && TEXT == 0 && TILE_S != 0) ? LOCAL_TILE_RELAY : 0;
     generate if (BANDX == 0) begin : g_bd0
         assign bd_ov = {NT{1'b0}}; assign bd_mov = {NT{1'b0}};
         assign bd_y = {(NT*H*32){1'b0}}; assign bd_my = {(NT*H*32){1'b0}};
@@ -1288,12 +1311,12 @@ module ot_s81_svc_attn_s #(
     end else begin : g_btag0
         assign bt_pv = 1'b0; assign bt_fin = 1'b0; assign bt_blk = {MLEV{1'b0}};
     end endgenerate
-    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD)) u_tag (.clk(clk),
+    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD + LOCAL_TILE_TAG_DELAY)) u_tag (.clk(clk),
         .d({e_row0, e_mask, e_pv, e_fin, e_blk, e_c}), .q({t_row0, t_mask, t_pv, t_fin, t_blk, t_c}));
     // SVC-BCAST-STAGE (rc16, 11-23, FABLE-UNC t4_att): the merge tags {pv, fin, blk} reach every tile's merge (8 H4
     // providers = 24 pin ends over 4 tiles) from the one u_tag line.  With TR_ON each tile gets its own kept copy of the
     // line's LAST stage (same D, same total delay, 0 cycles): the shared line ends in 4 loads, one copy beside each merge.
-    localparam integer TAGD = TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD;   // = the u_tag depth
+    localparam integer TAGD = TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD + LOCAL_TILE_TAG_DELAY;   // = the u_tag depth
     wire [NT-1:0]      zt_pv, zt_fin;
     wire [NT*MLEV-1:0] zt_blk;
     generate if (TR_ON && TAGD >= 2) begin : g_ttag
@@ -1308,7 +1331,7 @@ module ot_s81_svc_attn_s #(
         assign zt_pv = {NT{t_pv}}; assign zt_fin = {NT{t_fin}}; assign zt_blk = {NT{t_blk}};
     end endgenerate
     generate if (V > 1) begin : g_tv
-        ot_hdc_v41x_vdly #(.D(TLAT + TLX + VT)) u_tv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(t_vv));
+        ot_hdc_v41x_vdly #(.D(TLAT + TLX + VT + LOCAL_TILE_TAG_DELAY)) u_tv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(t_vv));
     end else begin : g_tv1
         assign t_vv = 1'b0;
     end endgenerate
