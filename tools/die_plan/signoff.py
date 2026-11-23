@@ -90,6 +90,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -480,11 +481,24 @@ def copy_signoff_bundle(destination, source=HERE, extra=()):
         target = destination / name
         if path.resolve() != target.resolve():
             shutil.copyfile(path, target)
-    # NOMCAP-1118 r708: the nominal clock-pin-cap liberty copies travel with the sign-off tool (nomcap_dir())
-    nsrc = source / "nomcap_libs"
-    if (nsrc / "MANIFEST.json").is_file() and not (destination / "nomcap" / "MANIFEST.json").is_file() \
-            and nsrc.resolve() != (destination / "nomcap_libs").resolve():
-        shutil.copytree(nsrc, destination / "nomcap_libs", dirs_exist_ok=True)
+    # Keep the kit-specific NOMCAP payload if the kit already staged one.
+    nomcap_source = source / "nomcap_libs"
+    nomcap_target = destination / "nomcap_libs"
+    if ((nomcap_source / "MANIFEST.json").is_file()
+            and not (destination / "nomcap" / "MANIFEST.json").is_file()
+            and nomcap_source.resolve() != nomcap_target.resolve()):
+        nomcap_target.mkdir(exist_ok=True)
+        # Install the manifest after its payload. Atomic replacement also works
+        # when a prior install left a library read-only or linked to a source.
+        files = sorted(nomcap_source.iterdir(), key=lambda p: (p.name == "MANIFEST.json", p.name))
+        for path in files:
+            target = nomcap_target / path.name
+            if target.is_file() and _sha_file(path) == _sha_file(target):
+                continue
+            with tempfile.TemporaryDirectory(dir=nomcap_target) as tmp:
+                staged = Path(tmp) / path.name
+                shutil.copy2(path, staged)
+                os.replace(staged, target)
     return list(paths)
 
 
