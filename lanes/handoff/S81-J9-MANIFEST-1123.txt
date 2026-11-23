@@ -244,3 +244,7 @@ MERGED J9 COMPOSE ORDER (supersedes earlier lists):
    Reprice +1: rt_E0_in_0 2->3, rt_E1_in_0 6->7, rt_E2_in_0 6->7, rt_W0_in_0 2->3, rt_W1_in_0 3->4, rt_W2_in_0 6->7.
    This assumes ECORR wins at 09:30. If the swap wins: --form swap, and ECORR rows dropped.
    OPEN (all-causes): L1t GRT TT -175.6 after repair, so TAPGRT alone does not close col_h10_r0_p4 (hub 9935afb4533). Needs a gated J9 row, or a reason FABLE-RC-S81 accepts.
+   SLICE C UPDATE: plan 494359d3530a supersedes a9e1ba6bfc6d. j9_cland_ops is now 78 ops.
+     Checks: LAND-CAP (main 139380c2ba) 0 over / 0 overlap on slice C; 0 band-core/halo overlaps, 0 band-band overlaps, 0 bad taps.
+     Remaining 4 over + 5 overlap are on svc_*_dsdv_svc_rs. Owner FABLE-UNC-S81-SVC (SVC-LAND-CAP row 3j must clear them).
+     Strict bind on 494359d3530a pending; probes t4, c1x_C t1, lepe_nh_mus_C t1.
