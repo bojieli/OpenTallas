@@ -137,3 +137,5 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - HGFORM probe kv3_hg_v1p2 (hk6, RHI keys in plan): run-item unit runitem-kv3_hg_v1p2-60288, log intel2 ~/tmp/kvd29/kit_hg_v1p2_hgform.log, kit intel1 .../KV-D28/private/KV-D29/kv3_hg_v1p2_1123105128. Gives row 29 config.mk proof + rc127 GRT.
 - b4_place config.mk: only OT_HOLD_IN_MIN -75 (no RHI) -> not RHI proof.
 - pc_v1 cl7f/cl4ea: relaunch on K3 after the strict bind.
+- 11:2x COORD ruling: D29 gates 13:30 with ALL pc types HELD at apply; rc118/119/121 REASONED-OPEN (FABLE-OPEN-KV evidence: PCSLIT/PCGUT blockage released before DPL, GRT 16,161; seam ~3.2k no row; pc__po_d3 no station). FABLE-OPEN-KV G1-G3 + pc_v3 probe = same-day D29 amendment. pc_v1 cl7f/cl4ea NOT relaunched until the amendment lands.
+- RHI proof: HGFORM kit config.mk has OT_TAP_RESET_AFFINITY/SPLIT + OT_TAP_PAIR_MACRO; IO class = no-op on KV (input_hold_min empty, no io_hold.tcl) -> IO-BOUNDARY stays REASONED (RING/CTL + CTLPORT).
