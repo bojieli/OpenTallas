@@ -224,17 +224,33 @@ def chk_signoff(so, golden, tol):
     out = dict(verdict_so=so.get("verdict"), setup_tt_wns=s, hold_ff_wns=h, parasitics=par,
                reasons=(so.get("reasons") or [])[:8])
     g = golden or {}
-    if not g.get("verdict"):
-        return st(so.get("verdict") is not None, "BASELINE (no golden record): " + str(so.get("verdict")), **out)
     bad = []
+    io_hold = so.get("io_hold") or {}
+    hold_key, hold_wns = "hold_ff_wns", h
+    hold_note = ""
+    if so.get("profile") == "minimal" and io_hold.get("basis") == "ff_hold_port_start_only":
+        # R-MINIMAL assigns these interface paths to the parent. The old
+        # golden's whole-kit number has a different scope from local hold.
+        internal = so.get("internal_hold") or {}
+        hold_key, hold_wns = "hold_ff_internal_wns", internal.get("wns_ps")
+        out[hold_key] = hold_wns
+        if (internal.get("complete") is not True or hold_wns is None or hold_wns < 0
+                or (so.get("profile_gates") or {}).get("hold_ff") != "PASS"):
+            bad.append(f"local FF hold lacks a passing internal census (WNS {hold_wns})")
+        hold_note = f", internal hold_ff {hold_wns}; boundary-inclusive hold_ff {h} tracked by QoR"
+    if not g.get("verdict"):
+        return st(not bad and so.get("verdict") is not None,
+                  "; ".join(bad) or f"BASELINE (no golden record): {so.get('verdict')}{hold_note}", **out)
     if g["verdict"] == "SIGNED" and so.get("verdict") != "SIGNED":
         bad.append(f"verdict {so.get('verdict')} vs golden SIGNED")
-    for k, v in (("setup_tt_wns", s), ("hold_ff_wns", h)):
+    for k, v in (("setup_tt_wns", s), (hold_key, hold_wns)):
         gv = g.get(k)
         if gv is not None and (v is None or v < gv - tol):
             bad.append(f"{k} {v} vs golden {gv} (tol {tol})")
+    if not hold_note:
+        hold_note = f", hold_ff {h} vs {g.get('hold_ff_wns')}"
     return st(not bad, "; ".join(bad) or f"verdict {so.get('verdict')} (golden {g['verdict']}), "
-              f"setup_tt {s} vs {g.get('setup_tt_wns')}, hold_ff {h} vs {g.get('hold_ff_wns')}", **out)
+              f"setup_tt {s} vs {g.get('setup_tt_wns')}{hold_note}", **out)
 
 
 def configured_clock_ports(sdc):
