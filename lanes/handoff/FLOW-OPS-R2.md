@@ -122,3 +122,19 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - rt/current = 934ebc63141a on all 7 hosts (22:27:32; RT-PUBLISHED post 82862cceee). Pinned no-spill canary on src snapshot flow-canary/sources/934ebc63141a: runs/{qwen_kvsys,qwen_compute,s81_head,s81_head_cl}_934ebc631_1122_223036_372908. Post the verdicts.
 - Pushing c4c1e9e0c1d WAVE-ENV-CORE-1122 (log epyc10 tmp/push_we.log): gen_core_kit_kv writes OT_GRT_ALLOW_CONGESTION / CONG_ITERS / OT_PGCAP* / OT_PLACE_MAX_FANOUT into config.mk; kit_wave kind=core gen exports the row gen env. Post to FABLE-KV-DIE + COORD once it is pushed.
 - Still pending: the 345ac canary reruns (runs/*_345ac19b0_1122_211842_060262); the GPL fix 8d6c6ec61f9 on branch flowops-gpl-1122 waits for the t13 proof; QC gen_core_kit_qc env not checked (no live QC core rows).
+
+## 11-22 23:5x update (FLOW-OPS-R2)
+- Landed on main tonight:
+  - VIEW-LIB 1aa368efe08: the autopilot view probe now finds the base/<mod>_tc/_bc ETM. The 64 old sign-offs still need a re-export (export_view.py per archive); not started.
+  - GPL-EXIT-WINS 68094dba81d: rt f01b2d631780 on all hosts.
+  - ADV-LANE-STATIONS 9b9c08b6e4b.
+  - Codex NOMCAP install fix 391a545bc03 (from branch claude/flowops-lanest-1122 eefd95e2fa3).
+  - HARD-PIN-1122 196ac54cb57 (pushing; check tmp/push_hp.log on epyc10): --hosts is a hard pin, PIN-WAIT, OT_RUN_SOFT_PIN=1 = old behaviour.
+- CRIT-DIRS-1122:
+  - intel2 ~/.local/lib/kw42/ot-run (backup ot-run.bak-critdirs-1122) plus crit_dirs.txt: a listed --dir prefix runs with OT_RUN_CRIT=1.
+  - It holds the 4 HEAD counting kits (wa/na/bw/bn). OPUS-FIX-HEAD-LEP0N-R9 removes each line when its kit signs off or stops.
+- HUB-SYNC-FAILED cleared: HUB-SYNC-OK at 23:45:53.
+- Open:
+  - canary verdicts 934ebc631 (waiter bm43p7avx) and 345ac (b5lsbjt2l);
+  - QC core env check;
+  - the 64-view re-export.
