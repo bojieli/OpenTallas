@@ -44,3 +44,10 @@ Predecessor: lanes/handoff/TAP-GRID-R4.md. Posts lanes/posts/TAP-GRID-R5.md. Lan
 - COORD: FABLE-FIX-S81-J8-TAPROWS owns the 53 failing J8 types (fix on main 3e5de95c409b). My bind4 is cancelled (oth-ubuntu-3692769-1795347965). The 50 clean types are delivered to S81-J6-ASSEMBLY-R5: lanes/handoff/TAP-GRID-R5-S81-J8-clean50.json (b9e1df91), plan intel2 s81j8/plan_rm3.json 612857f52632, gate3 0 errors on those 50, LATCHECK not run (whole-plan rc 1). READY post 4f07c5d3.
 - QC V4 intake: plan_rm5b 4631425ff607 (epyc7 pkg/) has 2 bind errors. coll_ftc RESET_ANCHOR is inherited (same on the V3P3 entry). cbf_q00 writer-START rr_t10x drives an output port; it moves between variants (cl1b5a6458 -> cl870de686 when reverted). Posted e2153ba4; offered to do the cbf_q00 non-port re-pick.
 - Nothing of mine is running now.
+
+## TAP-SOFTFLOP 11-22 20:xx PST (COORD 18:1x + 20:3x)
+- Tool fix pushed main c85b8eab02 (tap_split --sinks/--sinks-dir/--require-placed, sink_basis per row).
+- Work dir: intel2 + epyc7 /srv/opentallas-scratch2/claude/tap-grid-r5/softflop (dumps/ kvdumps/ xdumps/ = .reg placed register dumps via reg_dump.tcl/reg_run.sh under ot-run).
+- POSTED table lanes/handoff/TAP-GRID-R5-TAP-SOFTFLOP-table.tsv; S81 J9 rows 599b16f05a82 (plan epyc7 softflop/plan_j9f.json 28759c909fdc, base J8 e9645569a711); KV rows eab983d96c31 (base D28 plan_np_remap).
+- OPEN: QC V4 l0b (epyc8 fable-fix-qc-v4/l0b/plan.json c32c923389be; tools l0b_bound/tree) 4 types, HEAD r18n (epyc9 s81_head_r18n_w11 source_plan 341dbb140f8f) 3 types, S81 c1x_C t1/c3x_C t1/lepe_mu_C t1/lepw_mus_C t1 on plan_j9f: dumps xdumps/ queued (xlist_<host>.tsv, xrun_<host>.out); then split + follow-up post.
+- Residual: S81 59 types >1500 after J9 (PARTIAL, macro-packed) -> J10 reshape/growth.
