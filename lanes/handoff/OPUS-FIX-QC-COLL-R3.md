@@ -52,3 +52,10 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
 - pkit_core1 cancelled by the watchdog (GRT -512); pkit_core3b cancelled by me (GRT TT -422 after repair). pkit_core4 runs on INTEL1 (ot-run moved it), CTS -255, now GRT.
 - coll_core worst classes: CTS v3 xe0_q (fixed by XEPRE); V4 CTS u_pring SRAM rd_out -> tag compare -> f_md (-255); GRT v3 g_sring[4].s_rd_q -> gq_q (-292 pre-repair).
 - Next: RTL pipeline of the SRAM-read compares (b_md tag reg) + a scan of the pr_rd/s_rd consumers; consider a coll_core reshape.
+
+## 2026-11-23 01:5x update
+- RC-GAP rows answered (post 52f6bbde4c): pkg13 = pkg10 + g_pf[0..2] +51.84 E + shr_p_rx_i band [17.28,25.92,43.20,218.88] (+ monitor_0 x43.2); sha 4b7a1dab1dac; render epyc10 opus-fix-qc-coll-r3/rcgap_pkg13.png.
+- pkit_core6 = sealed --goal route of pkg13 on tree_v5: intel2 unit opus-qc-coll-r3-core6, log fable-fix-qc-coll-r2/core6_chain.log (bind pk13 on epyc10).
+- V4 pkit_core4 (intel1) GRT post-repair setup -259.6 -> not a -42 row; control only. pkit_core5a (RDPIPE) in CTS on epyc10.
+- RDPIPE RTL pushed main 71ef8f06a5 (bench PASS, 4/4 mutants killed).
+- LEC u_ctl r3/r4 running (intel2 opus-fix-qc-coll-r3-lecre{3,4b}); waiter on CHAIN_DONE.
