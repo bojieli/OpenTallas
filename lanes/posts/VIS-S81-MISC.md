@@ -38,3 +38,4 @@
   - Ops: intel2 vis-s81-misc/rows/SERDES-CORETAP-1-ops.json. plan_gate_pre PASS on 9 types, PRE-PASS.
   - serdes__t3 and t15 are DRAFT: LANDREMAP needs a landing reset re-site first.
   (3) slice_station t51: NONE-NEEDED, DRT 48586 -> 0 in 7 iterations.
+- 2026-11-22 23:46 PST DONE [VIS-S81-MISC] ot-run oth-ubuntu-3746389-1795419461 on renewed-glider: rc=0 after 547 s, ended 07:46:44, log none, cmd: --mem 1 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 1800 -- python3 -I /srv/opentallas-scratch2/
