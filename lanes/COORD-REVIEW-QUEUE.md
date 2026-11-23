@@ -29927,3 +29927,4 @@ FAILED [AUTOPILOT 9fa40146ccdc] 2026-11-23 01:55:32 PST AUTOPILOT -> KIT-WAVE-3:
   bk_sel__t2: LOGIC-DEPTH u_sel -> g_sel -388 -> S81-BKSEL-R7 (BKSEL-IDS-RSPLIT v2 J9, or a stage split; asked R7).
   dsdv_slice_lepe_mu_LP__t2: LOGIC-DEPTH land_rst_n relay -295 -> FAM-S81-LEPE-4 (LP reset relay, rc34 LP).
   Shared with CLASS-FIX / FLOW-OPS-R2 (hold/reset/IO/NDR/REPAIR-CAP): not mine, per FIX-LEDGER.
+- 2026-11-23 01:56 PST NEEDS-ACTION [REPEAT-STOP -> DIE-S81-92, COORD] s81/dsdv_slice_c1x_C__t7 BLOCKED-PLAN: STRUCTURAL / PLAN verdict: plan fix, no unchanged retry (first failure); fingerprint place|PLAN|PLAN: FAIL_POSTPLACE PLACE-SETUP-STOP wns -N.N ps < -N ps (TT, post-place; routing cannot close it) ; the wave launches it again only when one of its own inputs changes (plan block, the files its failing stage read) or a line `unblock dsdv_slice_c1x_C__t7 place` (or `*`) names it
