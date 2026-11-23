@@ -50,5 +50,5 @@
   "plan_gate_pre": "no plan delta (kit-only forms); moves gate on J8 PASS"
  },
  "status": "draft, proofs running",
- "collab": "LEAF-ROUTE-CBC 23:4x: keep t50/t68 kit-only moves; its in-plan J9-LEAF-LANECH (junction set: lanes, vp.u_b0/b1, vn_a/vn_b) supersedes them on overlapping cores when gated (it notifies first); t68 ve_m|vn_u_b channel is outside LANECH. ADV-ROUTE-DEMAND main f01b2d6317."
+ "collab": "LEAF-ROUTE-CBC 23:4x: keep t50/t68 kit-only moves; its in-plan J9-LEAF-LANECH (junction set: lanes, vp.u_b0/b1, vn_a/vn_b) supersedes them on overlapping cores when gated (it notifies first); t68 ve_m|vn_u_b channel is outside LANECH. ADV-ROUTE-DEMAND main f01b2d6317. | 23:5x LEAF-ROUTE-CBC notice: in-plan J9-LEAF-LANECH+EDGESTRIP (J8 base, gating on epyc9) re-sites hard cores of 73 leaf types incl t50/t68. When it is gated into J9, R10 removes the t50/t68 OT_MACRO_MOVES item_env (kit_wave_edit) in the same step; until then they apply to J8 kits only (J7 moves gate FAILs, rows held)."
 }
