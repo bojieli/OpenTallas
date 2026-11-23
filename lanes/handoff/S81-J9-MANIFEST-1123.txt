@@ -196,3 +196,13 @@ J8 SEAL: admitted 03:0x; GATE_OK g0 8->6, lat 873/873, BIND errors [], pack add 
 STEP 0 TREE SYNC (COORD 06:xx): the J9 fork of the J8 sealed tree gets the 4 u_cf view files from 31c7ccbd1b (row 3i), plus every porous map.json and common_flow file that ADV-TREE-DRIFT (main 4d4999fb65) flags.
    Runtime = rt/current 3b25e3b42d4d (POROUS-FRESH).
    ADV-TREE-DRIFT must show 0 view, porous and flow hits on the J9 tree before PRE/G0/bind. Abort the compose otherwise.
+3f GATED (WESTRIP, frame 81e1d537c37d): RUN THE TOOL on the composed plan, do not replay the ops.
+   Tool: epyc10 fix-s81-svc-westrip/svc_westrip_row.py 13fde4e891b6. Exits 2 on any problem.
+   Ref files: ops F21/ws_ops.json de2962f91e20 (298), plan F21/p_ws0.json 044308bca780, chain plan F21/p_ws_tf.json 345df5946ff1.
+   Gates:
+     - PRE 0 findings; 0 svc edge-strip ADV, 0 port-window ADV.
+     - G0 errors 10 -> 10, 0 introduced (F21/g0/g0_comparison.json).
+     - BAND-GAP/BLOCKAGE 21/14, same as YTRADE's own.
+     - No window moves, so no extra strict bind.
+   Recipe: final_gate.sh dd1bcdcaee1a, g0_cmp.sh e71ba2e5e810.
+   With hi4 (R9 189008ce34df): PRE passes, but 11 slice/station seam re-snaps need strict bind.
