@@ -61,6 +61,21 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt; lanes/FABL
   tree por_d29_kv3_pv_v6n_1080_c4_composed/plan_c.json (rt 6390b7bfa650 tools; 23 taps added, 10 in-core ft moved, 21+19 place_regions).
 - unplaced (plan bins, v3 table, no reserve; n1): v3n closes 1182/1134 (cap 1200); v2ne 2 over, v6 3 over; v1n cut face full (16,267 pins).
 
+## STATE 11-22 22:20 PST (newest; read first)
+- ROW B RULED TO D30 (my ruling inside COORD's 22:1x ruling: FIX-SYNC reset row f8571aa7760a has priority on v1 v12 v5 v5n v7;
+  row B only if re-solved on top of it with relay_depth on the split pieces and bind-clean by 01:45 = not feasible, > 3.5 h).
+  D30 work: when KV-PLAN-R6 posts the D29 seal tree: ot-tree-fork it, move its plan_of_record aside as plan_of_record.base_d28
+  form the composer expects (see compose.py FF_BASE / multi.sh), re-export the split lane reference from ITS bind (w/refexp.sh),
+  FF_BASEPLAN for gate_g0.sh = the D29 seal plan, then w/chain_full3.sh. Ask FIX-SYNC-KVHEAD how to re-run its reset solver
+  (fsk_reset, relay_depth) on the split pieces; type_split does not carry relay_depth rows as far as I know (CHECK first).
+- V3TAPS row is IN D29 as row 4 (KV-PLAN-R6 receipt 21:01, sha ed71a9739295).
+- FAIL-CLASS 91fe7a21a9 (hub_Wo, hgi_v8 preflight): answered RESULT not mine -> HGI-R6 / HUB-R6.
+- K2 kv3_pv_v6n (tree, goal route): place past global place, in detailed place at 22:05; waiter + watch_k2.sh.
+- K3 kv3_pv_v12 w piece from the 14-type plan (tree2, plan 9d9579bd19c9, goal route), started 22:07: spec
+  ~/coord/autopilot/private_specs/FABLE-FIX-KV-PV-SINKSPREAD/qwen_kvsys_kv3_pv_v12_1122220711, log ~/tmp/ffkvpv/runitem_v12.log,
+  unit runitem-kv3_pv_v12, work epyc8 .../KV-D28/private/FABLE-FIX-KV-PV-SINKSPREAD/kv3_pv_v12_1122220657. watch_v12.sh posts
+  stages (its tap-line path still says KV-D27d3: read the place log by hand). DO NOT TOUCH tree2/ while K3 runs.
+
 ## STATE 11-22 21:30 PST (newest; read first)
 - ROW B HANDED 19:2x and ACCEPTED by COORD: 14-type split event m8, bound plan 9d9579bd19c9 in tree2 (PRE 0, G0 0, bind 0, LAT 0),
   package w/handoff/D29_pv_14types_package.json (sha 51bc8861a115). Rebase on the sealed D28 tree when KV-PLAN-R6 asks
