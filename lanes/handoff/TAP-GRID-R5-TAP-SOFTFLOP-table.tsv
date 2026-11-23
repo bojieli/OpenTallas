@@ -124,3 +124,14 @@ KV	kv3_pc_v1__cl4ea58a5c	placed		68	3701	19	31	1602	3	PARTIAL
 KV	kv3_phy	placed		8	1809	2	3	1193	0	SPLIT	
 KV	kv3_phy_v1	placed		10	1810	2	5	1139	0	SPLIT	
 KV	kv3_sys_c	placed		46	4736	17	42	2460	3	PARTIAL	
+S81-x	dsdv_slice_c1x_C__t1	placed	90081	37	21685	21	103	1592	3	PARTIAL	J10
+S81-x	dsdv_slice_c3x_C__t1	placed	99735	43	17660	22	60	1791	1	PARTIAL	J10
+S81-x	dsdv_slice_lepe_mu_C__t1	placed	98677	40	11266	19	59	2010	4	PARTIAL	J10
+S81-x	dsdv_slice_lepw_mus_C__t1	placed	96330	44	18483	15	55	1498	0	SPLIT	
+QC	sle_su_c	placed	120114	86	6186	40	95	1130	3	PARTIAL	<=1500; plan cap 1000
+QC	slw_fe_v2__clf110fab2	placed	127481	74	6916	53	104	1273	6	PARTIAL	<=1500; plan cap 1000
+QC	sle_fw_v2__cl6740750e	placed	110002	66	8995	40	86	1494	4	PARTIAL	<=1500; plan cap 1000
+QC	slw_su_c__cl92142dac	placed	107331	114	4645	28	55	1065	1	PARTIAL	<=1500; plan cap 1000
+HEAD	hd_host_e	placed	20499	11	5807	2	5	2956	0	SPLIT	plan cap 3000
+HEAD	hd_serdes	placed	36458	37	5947	9	25	992	0	SPLIT	
+HEAD	hd_spn_eshim_rx	placed	3992	5	2234	2	2	1488	0	SPLIT	

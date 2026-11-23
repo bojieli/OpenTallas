@@ -1,0 +1,353 @@
+{
+ "tool": "tap_split.py",
+ "plan": "/srv/opentallas-scratch2/claude/tap-grid-r5/softflop/hd/plan_r18n.json",
+ "radius_um": 300.0,
+ "cap": null,
+ "rows": {
+  "hd_host_e": {
+   "key": "taps",
+   "rows": [
+    {
+     "name": "clk_t11",
+     "xy": [
+      292.518,
+      264.465
+     ]
+    },
+    {
+     "name": "clk_t12",
+     "xy": [
+      406.026,
+      128.655
+     ]
+    },
+    {
+     "name": "clk_t13",
+     "xy": [
+      187.596,
+      308.745
+     ]
+    },
+    {
+     "name": "clk_t14",
+     "xy": [
+      215.244,
+      186.705
+     ]
+    },
+    {
+     "name": "clk_t15",
+     "xy": [
+      420.39,
+      42.795
+     ]
+    }
+   ]
+  },
+  "hd_serdes": {
+   "key": "taps",
+   "rows": [
+    {
+     "name": "clk_t37",
+     "xy": [
+      1874.4,
+      301.216
+     ]
+    },
+    {
+     "name": "clk_t38",
+     "xy": [
+      1832.352,
+      263.136
+     ]
+    },
+    {
+     "name": "clk_t39",
+     "xy": [
+      1943.2,
+      273.824
+     ]
+    },
+    {
+     "name": "clk_t40",
+     "xy": [
+      1568.8,
+      85.216
+     ]
+    },
+    {
+     "name": "clk_t41",
+     "xy": [
+      2010.464,
+      171.168
+     ]
+    },
+    {
+     "name": "clk_t42",
+     "xy": [
+      1849.76,
+      101.024
+     ]
+    },
+    {
+     "name": "clk_t43",
+     "xy": [
+      1569.12,
+      254.24
+     ]
+    },
+    {
+     "name": "clk_t44",
+     "xy": [
+      1213.408,
+      23.264
+     ]
+    },
+    {
+     "name": "clk_t45",
+     "xy": [
+      2008.288,
+      26.336
+     ]
+    },
+    {
+     "name": "clk_t46",
+     "xy": [
+      1621.408,
+      78.944
+     ]
+    },
+    {
+     "name": "clk_t47",
+     "xy": [
+      1928.8,
+      184.288
+     ]
+    },
+    {
+     "name": "clk_t48",
+     "xy": [
+      1829.728,
+      28.576
+     ]
+    },
+    {
+     "name": "clk_t49",
+     "xy": [
+      1861.408,
+      342.496
+     ]
+    },
+    {
+     "name": "clk_t50",
+     "xy": [
+      1522.592,
+      80.416
+     ]
+    },
+    {
+     "name": "clk_t51",
+     "xy": [
+      1535.968,
+      216.928
+     ]
+    },
+    {
+     "name": "clk_t52",
+     "xy": [
+      2018.976,
+      271.456
+     ]
+    },
+    {
+     "name": "clk_t53",
+     "xy": [
+      1681.248,
+      82.464
+     ]
+    },
+    {
+     "name": "clk_t54",
+     "xy": [
+      1837.472,
+      185.056
+     ]
+    },
+    {
+     "name": "clk_t55",
+     "xy": [
+      1573.216,
+      44.704
+     ]
+    },
+    {
+     "name": "clk_t56",
+     "xy": [
+      1218.72,
+      194.784
+     ]
+    },
+    {
+     "name": "clk_t57",
+     "xy": [
+      1966.112,
+      99.232
+     ]
+    },
+    {
+     "name": "clk_t58",
+     "xy": [
+      1244.832,
+      46.816
+     ]
+    },
+    {
+     "name": "clk_t59",
+     "xy": [
+      1505.952,
+      257.568
+     ]
+    },
+    {
+     "name": "clk_t60",
+     "xy": [
+      1908.64,
+      24.736
+     ]
+    },
+    {
+     "name": "clk_t61",
+     "xy": [
+      1744.8,
+      62.112
+     ]
+    }
+   ]
+  },
+  "hd_spn_eshim_rx": {
+   "key": "added_taps",
+   "rows": [
+    {
+     "name": "clk_t5",
+     "xy": [
+      77.76,
+      888.165
+     ]
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      20.52,
+      830.115
+     ]
+    }
+   ]
+  }
+ },
+ "report": [
+  {
+   "type": "hd_host_e",
+   "mode": "explicit",
+   "sink_basis": "placed",
+   "cap": 3000,
+   "radius_um": 300.0,
+   "taps_before": 11,
+   "before": {
+    "max_load": 5807,
+    "over_cap": 2,
+    "max_radius": 242.312,
+    "over_radius": 0,
+    "excess": 4177.0
+   },
+   "after": {
+    "max_load": 2956,
+    "over_cap": 0,
+    "max_radius": 205.726,
+    "over_radius": 0,
+    "excess": 0.0,
+    "added": 5,
+    "min_added_load": 1695
+   },
+   "status": "SPLIT",
+   "key": "taps"
+  },
+  {
+   "type": "hd_serdes",
+   "mode": "explicit",
+   "sink_basis": "placed",
+   "cap": 1000,
+   "radius_um": 300.0,
+   "taps_before": 37,
+   "before": {
+    "max_load": 5947,
+    "over_cap": 9,
+    "max_radius": 401.455,
+    "over_radius": 5,
+    "excess": 19166.0
+   },
+   "after": {
+    "max_load": 992,
+    "over_cap": 0,
+    "max_radius": 204.093,
+    "over_radius": 0,
+    "excess": 0.0,
+    "added": 25,
+    "min_added_load": 548
+   },
+   "status": "SPLIT",
+   "key": "taps"
+  },
+  {
+   "type": "hd_spn_eshim_rx",
+   "mode": "density",
+   "sink_basis": "placed",
+   "cap": 1500,
+   "radius_um": 300.0,
+   "taps_before": 5,
+   "before": {
+    "max_load": 2234,
+    "over_cap": 2,
+    "max_radius": 186.975,
+    "over_radius": 0,
+    "excess": 950.0
+   },
+   "after": {
+    "max_load": 1488,
+    "over_cap": 0,
+    "max_radius": 186.975,
+    "over_radius": 0,
+    "excess": 0.0,
+    "added": 2,
+    "min_added_load": 218
+   },
+   "status": "SPLIT",
+   "key": "added_taps"
+  }
+ ],
+ "recheck": {
+  "hd_host_e": {
+   "taps": 16,
+   "sink_basis": "placed",
+   "max_load": 2956,
+   "over_cap": 0,
+   "max_radius": 205.726,
+   "over_radius": 0
+  },
+  "hd_serdes": {
+   "taps": 62,
+   "sink_basis": "placed",
+   "max_load": 992,
+   "over_cap": 0,
+   "max_radius": 204.093,
+   "over_radius": 0
+  },
+  "hd_spn_eshim_rx": {
+   "taps": 7,
+   "sink_basis": "placed",
+   "max_load": 1488,
+   "over_cap": 0,
+   "max_radius": 186.975,
+   "over_radius": 0
+  }
+ }
+}
