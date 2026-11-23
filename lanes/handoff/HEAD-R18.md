@@ -88,3 +88,7 @@ yosys FSM_RECODE st[2:0] (7 states) -> one-hot st[0..6]; OT_LEC_SUPERSET_VEC=1 n
 - E cap10 GRT census armed: epyc10 head-r18/tmp/census_run.sh (waits for e_cap10_reused_place_wrapped CTS, then GRT 20 it + census windows rc136-139 incl rc138 x800-850 y640-705 + 3 former rects), log tmp/census_e_cap10.otrun.log, out e_cap10_reused_place_wrapped/census/census.json.
 - W native FF GRT (E10 wplace3_w_native_pin37c1, unit 1553689): clock + signal phases 0/0 congestion, no GRT-0273; hold repair near 0 at 11:0x.
 - REASONED list for FABLE-RC-ALL 12:15: hd_ctl LEC (LEC-SETUP), LEP-WOPENREG-1 (-112.9 pre-repair 4 ends, x1 slews), ep3 -1073 reset INV (cap10 rounds 10: round9 converged, 0 unresolved), rc138 until census, W pin-escape faults.
+
+## 11:15 r18f GATED and sent
+- r18f sha 08fd271226683f51 (prep_r18f) PRE 0 findings (TAPOFF ran), portbind/nested PASS, cohort 27/27, LAT 334/334, native release 0, G0 0; render bind_r18f/g0_render/die_plan.png reviewed. Posted FROZEN + REASONED (R1-R7) to FABLE-RC-ALL/PRECHECK-LEDGER-R3.
+- Open: E cap10 census (epyc10 census_e_cap10.otrun.log, load-cap queued) -> post rc136-139 numbers; binary hd_ctl routed LEC (RELEC-1122); E cap10 post-CTS setup for WOPENREG residual; await FABLE-RC-ALL verdict before 13:00.
