@@ -11,3 +11,8 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 ## NEXT
 - On gate PASS r18s / r18t: private-spec hd_lep0N_w + hd_st_n4 each sealed + probe (--host epyc7; see launch_kit.sh), durable waiters.
 - epyc10 r18q_rx baseline: delete via ot-delete once epyc7 copy verified (sha d1f98516900c in fork7_r18s.log).
+
+## 22:4x COORD: epyc7 copy too slow -> Row B forks LOCAL on epyc10
+- No r18q/r18r tree on epyc7 or intel1 (searched). Row B: intel2 r9_forkB10.sh (pid 727140): local ot-tree-fork epyc10 r18q_rx -> trees/s81_head_r18s_wchan3 (log fork10_r9_r18s.log), then gate_wait_r9.sh -> chain_bt.sh s on epyc10 (log chain10_r9_r18s.otrun.log).
+- Row B kits launch with --host epyc10 (launch_kit_r9.sh TAG s81_head_r18s_wchan3 ITEM epyc10 seal|probe; units r9-lep0n-TAG).
+- epyc7 bt_epyc7.sh keeps going for A+B (r18t). Its own r18s gate on epyc7 is only a cross-check: launch NO Row B kits from epyc7. A+B kits use --host epyc7.
