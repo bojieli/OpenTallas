@@ -352,3 +352,8 @@
   SVC-R9 svc rows, col_h10_r1, dsdv c1x_C/lepe_mu_C now held for plan event with live owner, so OK; held/cancelled/relaunched STALE filtered.
   KV 0 flagged (was 4: kv3_hub_C kit_rtl cleared); QC sle_su_l1 place error 0.8h UNCLASSIFIED (PRECHECK-R2, new); HEAD hd_lep0N ok.
   Read-only; lanes/OWNERS-SWEEP.tsv.
+- 2026-11-22 20:51 PST OWNERS-SWEEP 20:50: 448 unsigned rows (HEAD/KV/QC/S81, HBM skipped); 365 unflagged.
+  UNOWNED 0, DEAD-OWNER 0 on all dies; S81 STALE-3H 77, FAILED-NORELAUNCH 18, UNCLASSIFIED 3; QC FAILED-NORELAUNCH 2 (sle_su_l1, slw_st_a_v2), UNCLASSIFIED 1; KV UNCLASSIFIED 1 (kv3_hub_Wo); HEAD clean.
+  Top S81 groups: s81sl_leaf (OPUS-FIX-S81-LEAF-R10) ~27 stale + 14 failed; col_h9_r0_p (FAM-S81-COL-H9R0-R4) 14 stale+1 failed; col_h9_r rom (OPUS-FIX-S81-COLROM-R6) ~12 stale+3 failed.
+  Next: svc_hi/lo dsdv_svc_rs (OPUS-FIX-S81-SVC-R9) 10 stale + 3 unclassified; serdes (FAM-S81-SERDES-R7) 5 stale; dsdv_slice_* ~9 stale (FAM-S81-SLICE-R6 etc).
+  Table: lanes/OWNERS-SWEEP.tsv (tool bin/owners_sweep.py).
