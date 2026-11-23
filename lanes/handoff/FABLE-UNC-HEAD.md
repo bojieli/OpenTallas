@@ -40,3 +40,10 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 1. On r18x3 gate: check PUSHDUP_ applied sha 6a04159bb196 in the tree, bind/cohort/LATCHECK PASS, WTAPOFF rows file (L/plan/rows_r18x*-WTAPOFF.json: window min/med/max), post review.
 2. On ep2 (R9 unit r9-lep0n-ep2): CTS post-hook: wn[1] -> rg3 txi slack vs -179.76; GRT census: rc136/137/138/139 clusters vs 45,948 (PROBE-PASS rule fe8a2a5). Row for any surviving cluster, else COVERED. If ep2 cannot finish by 11:00: REASONED (equiv PASS + measured geometry) to FABLE-RC-KVHEAD.
 3. REPORT-2 to COORD (<200 words) when every item is GATED or REASONED.
+
+## 03:2x r18x3 GATE PASS with LEP-PUSHDUP-1 (R9 tree trees/s81_head_r18w_ecol, in place)
+- chain7_r9_r18x3.otrun.log: PUSHDUP applied 6a04159bb196, PRE PASS, bind PASS 7668, cohort 27/27, LATCHECK 334/334, plan 3682da8c7efe0a5d. Post 81abc102 (gate + tap-row review).
+- Plan has: W core_tap_lead_ps 210, tap_reset_split + tap_pair_affinity (RHI) on both pieces, 66 W per-port rows (window 40 / 96.5 / 200; 8 ports >= 150 = my open review gap, asked R9 to list them in the W probe read).
+- R9 probes launched: ep2 (E, r9-lep0n-ep2, runitem_r9_ep2.log) and wp2 (W). Background waiter on ep2 CTS / fail.
+- CLEAN-AGGR-R3 asked to ot-delete my unused r18y fork; confirmed (nothing reads it; keep tmp/ and eq/).
+## NEXT: on ep2 CTS post-hook -> rc140 slack; on ep2 GRT -> census clusters (rc136-139); wp2 -> hold endpoints vs 17,932; then REPORT-2. If probes miss 11:00 -> REASONED to FABLE-RC-KVHEAD (a2afa1acb28fd2355).
