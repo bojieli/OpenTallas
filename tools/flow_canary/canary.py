@@ -49,6 +49,10 @@ def pin_for(n):
 
 
 CRIT = "" if os.environ.get("OT_CANARY_CRIT", "1") == "0" else "--crit "
+# CANARY-SPILL-1122: OT_CANARY_NO_SPILL=1 keeps both canary jobs on the pinned / hub host (ot-run --no-spill); the systemd-run client does not
+# inherit the submitter env, so the flag is written into the ot-run command line
+if os.environ.get("OT_CANARY_NO_SPILL") == "1":
+    CRIT += "--no-spill "
 # A face register is required on every partition port except the clock / async reset inputs.  Unlike
 # tools/die_plan/face_guard.SKIP_RE this does NOT skip rst_o_* / start_o_* (reset wavefront outs are registered relays).
 CLOCK_ONLY_SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_i|start_i)$"

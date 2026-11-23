@@ -57,6 +57,14 @@ class Launch(unittest.TestCase):
    result=json.loads(next((Path(d)/'runs').glob('*/canary.json')).read_text())
    self.assertEqual(result['verdict'],'FAIL');self.assertEqual(result['failing'],['launch'])
 
+ def test_no_spill_flag_reaches_both_ot_run_calls(self):
+  import importlib
+  with patch.dict(os.environ,{'OT_CANARY_NO_SPILL':'1'}):
+   C2=importlib.reload(C)
+   self.assertIn('--no-spill',C2.CRIT)
+  importlib.reload(C)
+  self.assertNotIn('--no-spill',C.CRIT)
+
 class ImmutableSource(unittest.TestCase):
  def test_submit_refuses_mutable_worktree_source(self):
   # FLOW-SHARED-9: qwen_kvsys_core_167d3a11a ran from the lane worktree wt/qk-cores-6
