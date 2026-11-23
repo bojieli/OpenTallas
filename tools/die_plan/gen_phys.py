@@ -7661,9 +7661,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW-FIX-0100 (FABLE-FLOW-2350 f): congestion iterations per GRT round 30 -> 10 (66 jobs sat 5 h+ in 17-19 min iterations; a round was up to 9.5 h).
            # OT_GRT_CONG_ITERS=<n> at generation overrides; 30 (OpenROAD default) or 0 keeps the old line (only the allow-congestion form emits GLOBAL_ROUTE_ARGS).
            *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose"
-              + (" -allow_congestion" if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else "")
+              + (" -allow_congestion" if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" or probe_through() else "")
               + (f" -congestion_iterations {_grt_cong_iters(P.budgets, tn)}" if _grt_cong_iters(P.budgets, tn) not in (0, 30) else "")]
-             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" or _grt_cong_iters(P.budgets, tn) not in (0, 30) else []),
+             if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" or probe_through() or _grt_cong_iters(P.budgets, tn) not in (0, 30) else []),
+           *(["# PROBE-THROUGH-1122: full-depth probe kit (estimate mode past triage stops, GRT congestion allowed; never a sign-off)",
+              "export OT_PROBE_THROUGH = 1"] if probe_through() else []),
            # KW-FIX-8 11-04 (COORD GRT loop ruling): opt-in per row through wave item_env, off by default.  TritonCTS by
            # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
            # net by net and restarts its 30 iterations each time.  CTS_ARGS replaces the ORFS argument list, so this is
@@ -8468,6 +8470,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             shutil.copyfile(Path(__file__).with_name("hold_after_tt.sh"), kd / "hold_after_tt.sh")
             shutil.copyfile(Path(__file__).with_name("hold_after_tt_keep.py"), kd / "hold_after_tt_keep.py")
     _pps = postplace_stop_ps()       # PLACE-SETUP-STOP: run_kit measures TT setup of 3_place.odb and stops below this (flag file read by run_kit.sh)
+    if probe_through():              # PROBE-THROUGH-1122: measure post-place setup at the normal stop, record it, never stop (run_kit.sh)
+        _pps = -300.0 if _pps is None else _pps
+        shutil.copyfile(Path(__file__).with_name("probe_report.py"), kd / "probe_report.py")
+        (kd / "probe_through.on").write_text("OT_PROBE_THROUGH=1 (PROBE-THROUGH-1122): estimate mode past triage stops; never a sign-off\n")
     if _pps is not None:
         for _f in ("tt_setup_repair.tcl", "postplace_setup_stop.py"):
             shutil.copyfile(Path(__file__).with_name(_f), kd / _f)
@@ -8749,6 +8755,16 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else []) + (
         [f"# PLACE-SLEW (CORE-LIB-LIMITS-1330): design max_transition for place repair; hard-core pins have no liberty limit",
          f"export OT_PLACE_MAX_TRANSITION = {mt:g}"] if (mt := place_max_transition(die)) else [])
+
+
+def probe_through(env=None):
+    """PROBE-THROUGH-1122 (COORD 18:5x, "each fix exposes the next problem a day later"): OT_PROBE_THROUGH=1 in the gen environment makes a
+    full-depth PROBE kit.  run_kit.sh runs past the triage stops (post-place PLACE-SETUP-STOP, post-CTS/GRT SETUP_TRIAGE and insertion band
+    gate, FF structural hold gate, GRT policy gate, hop census) -- each is a line in K/PROBE_STOPS.log instead of a FAIL_* marker -- with GRT
+    congestion allowed, then writes K/PROBE.json (probe_report.py: every failing class: setup paths by class, clock insertion vs target,
+    congestion hotspots, hold, DRV).  signoff.py never signs a probe kit (reason probe_through).  Run it beside the real kit, never instead."""
+    env = os.environ if env is None else env
+    return env.get("OT_PROBE_THROUGH", "").strip() == "1"
 
 
 def postplace_stop_ps(env=None):
@@ -9373,12 +9389,12 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && [ -f /work/hop_census.on ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
     if [ \$rc = 0 ]; then PO=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); GATE=1 ODB=\$PO TAG='$NAME' OUT=/work/hop_census.json openroad -python -exit /work/hop_census.py > /work/hop_census.log 2>&1; hc=\$?; grep -h -E '^HOPSUM|^OT_HOP_CENSUS' /work/hop_census.log; \
-      if [ \$hc != 0 ] && ! grep -q warn /work/hop_census.on; then echo 'FAIL_POSTPLACE hop census (GENBUG-5.2: zero-logic hops over reach / across a hard core, see hop_census.log)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
+      if [ \$hc != 0 ] && ! grep -q warn /work/hop_census.on; then echo 'FAIL_POSTPLACE hop census (GENBUG-5.2: zero-logic hops over reach / across a hard core, see hop_census.log)' | tee -a \$( [ -f /work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS); [ -f /work/probe_through.on ] || rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -f /work/postplace_setup_stop.on ] && [ -f /work/postplace_setup_stop.py ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
     if [ \$rc = 0 ]; then PP3=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); \
       if [ -n \"\$PP3\" ]; then OT_TT_SETUP_MEASURE=1 OT_POSTPLACE_WORST=1 ODB=\"\$PP3\" openroad -exit /work/tt_setup_repair.tcl > /work/postplace_setup.log 2>&1; \
-        python3 -I /work/postplace_setup_stop.py --log /work/postplace_setup.log --stop \$(head -1 /work/postplace_setup_stop.on) --marker /work/FAIL_POSTCTS --json /work/place_setup_stop.json; ppr=\$?; \
-        if [ \$ppr = 6 ]; then rc=6; fi; fi; fi; fi; \
+        python3 -I /work/postplace_setup_stop.py --log /work/postplace_setup.log --stop \$(head -1 /work/postplace_setup_stop.on) --marker \$( [ -f /work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS) --json /work/place_setup_stop.json; ppr=\$?; \
+        if [ \$ppr = 6 ] && [ ! -f /work/probe_through.on ]; then rc=6; fi; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
     G5X=; G5F=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb 2>/dev/null | head -1); C4F=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
@@ -9404,7 +9420,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         OT_HOLD_STOP_PS=\$(sed -n 's/^export OT_HOLD_STOP_PS = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
-      if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+      if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a \$( [ -f /work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS); [ -f /work/probe_through.on ] || rc=4; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -z \"\$G5X\" ] && { [ $GOAL = route ] || [ $GOAL = grt ] || [ $GOAL = finish ]; } && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
     PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" TLIBS=\"\$(\$M print-TC_LIB_FILES 2>/dev/null | sed -n 's/^TC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
       OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
@@ -9433,9 +9449,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
     if grep -hq 'OT_POSTCTS_GATE.*SETUP_TRIAGE' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
-      grep -h 'OT_POSTCTS_GATE.*SETUP_TRIAGE' /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): /' >> /work/FAIL_POSTCTS; rc=6; \
+      grep -h 'OT_POSTCTS_GATE.*SETUP_TRIAGE' /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): /' >> \$( [ -f /work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS); [ -f /work/probe_through.on ] || rc=6; \
     elif grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
-      if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; \
+      if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> \$( [ -f /work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS); [ -f /work/probe_through.on ] || rc=6; \
       else grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/OT_POSTCTS_ADVISORY pre-route insertion gate (not a stop, OWNER 11-03 19:12; signoff.json insertion_band): /' | tee -a /work/postcts_advisory.log; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     if [ -z \"\$HM\" ]; then \
@@ -9446,7 +9462,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       else \$M grt; rc=\$?; fi; \
     fi; \
     if [ \$rc = 0 ]; then python3 -I /work/legacy_gate.py /work grt; rc=\$?; \
-      if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
+      if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS final GRT released TT/FF policy (grt_policy.json)' | tee -a \$( [ -f /work/probe_through.on ] && echo /work/PROBE_STOPS.log || echo /work/FAIL_POSTCTS); [ -f /work/probe_through.on ] || rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != grt ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/core_infra_post.v ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist /work/core_infra_post.v --out /work/lec_post > /work/lec_post.log 2>&1; lr=\$?; tail -1 /work/lec_post.log; \
     if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
@@ -9463,6 +9479,8 @@ if [ -n "$GRTM" ] && [ $rc = 0 ]; then GL=$(ls "$K"/run/logs/asap7/*/base/5_1_gr
 fi  # GRTM
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
+# PROBE-THROUGH-1122 (COORD 18:5x): a probe kit (OT_PROBE_THROUGH=1 at gen) ran past the triage stops; PROBE.json lists every class found.
+if [ -f "$K/probe_through.on" ] && [ -f "$K/probe_report.py" ]; then python3 -I "$K/probe_report.py" "$K" --goal "$GOAL" --rc "$rc" 2>&1 | tail -1; fi
 # FABLE-FIX-HEAD-MESH 11-18: detail route that dies on [ERROR DRT-0255] / 'make do-5_2_route Error 1' left no FAIL_* marker (a silent stop: only the make error in run_route.log).  Any non-zero make exit
 # with no FAIL_* marker of this run writes FAIL_route carrying the first DRT error line (or the make exit), so the autopilot / wave classify it (DRT-0255 -> class DRT-NOPATH with the net name).
 if [ $rc != 0 ] && ! ls "$K"/FAIL_* >/dev/null 2>&1; then

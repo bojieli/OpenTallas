@@ -2863,6 +2863,24 @@ def evaluate(rec, insertion_target=None):
     # DRC 0 + TT setup WNS >= -42 ps + FF hold >= 0; every other check above (and io_hold_parent) is an advisory.
     # The full legacy verdict/reasons stay in the record as legacy_verdict / legacy_reasons.
     _SP.apply(rec)
+    probe_guard(rec)
+    return rec
+
+
+def probe_guard(rec):
+    """PROBE-THROUGH-1122 (COORD 18:5x): a full-depth probe kit (gen OT_PROBE_THROUGH=1, K/probe_through.on) ran past the triage stops in
+    estimate mode: it is never a sign-off, under any profile.  Applied after the profile hook, so it is the last word on the verdict."""
+    kit = (rec.get("inputs") or {}).get("kit")
+    if not kit or not os.path.exists(os.path.join(str(kit), "probe_through.on")):
+        return rec
+    why = "probe_through: FAIL probe kit (OT_PROBE_THROUGH=1): estimate mode past triage stops, never a sign-off"
+    rec.setdefault("checks", {})["probe_through"] = {"verdict": "FAIL", "reason": why}
+    rec["reasons"] = [r for r in (rec.get("reasons") or []) if not str(r).startswith("probe_through:")] + [why]
+    rec["verdict"] = "NOT SIGNED"
+    for k in ("local_verdict", "release_qualified"):
+        if k in rec:
+            rec[k] = "NOT SIGNED" if k == "local_verdict" else False
+    rec["probe"] = True
     return rec
 
 
