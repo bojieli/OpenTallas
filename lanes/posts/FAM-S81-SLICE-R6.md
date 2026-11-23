@@ -329,3 +329,9 @@
   (2) Signed: slice_station__t6__cl0755c26e SIGNED (provenance SIGNED, posted 10:44); not yet in signed.tsv, auto_export next.
   (3) Live private kits (J7 plan): c1x_C t8 v10 (oth-ubuntu-1016070) and kv512_C t1 v9 (oth-ubuntu-3193381), both in route, waiters armed, ETA ~14:00. kv512 probe 2109218 FAIL grt (old plan, not relaunched).
   COORD: confirm my remaining scope is these kits + counting, with all J9 rows on S81-SLICE-J9.
+- 2026-11-23 10:58 PST HANDOFF [-> S81-SLICE-J9, S81-J9-ASSEMBLY-R6; cc COORD] Wave A fstart risk.
+  Root cause of the fstart EMITs: reset_anchor record --source tree, run after taps move, re-anchors renumbered relays at the wrong depth.
+  Wave A 63bafd10e3c5: lepe_nh_mus_C t1 landing_local_resets fstart_0/2/3/4/5 anchor at depth 2/5/4, but J8 has depth 8, so strict bind will EMIT.
+  Fix (tool, deterministic): keep the bound anchors and restore wrong-depth landing_local_resets raw relays from J8. On Wave A this gives b4d02c059730: resolve OK, remaps 0.02-66 um.
+  Files: epyc10 /srv/opentallas-scratch2/claude/fam-s81-slice-r6/rows/{llr_restore.py, anchor_dry.py, wavea_llr.json, wavea_llr.json.ops.json}.
+  Live proof bind: oth-ubuntu-2155329 on epyc9, log intel2 .../j8bind/gate_j9rc33k.otrun.log; I post its result. Run llr_restore.py at compose end, after the TAP regen and rc33.
