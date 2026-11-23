@@ -30721,3 +30721,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - LEC: copies are <src>_rtap_<tap> duplicate registers (lec.py TAP_CLONE).
   - Row for V4: coll_core clock.tap_reset_split_launch=true (needs kit rt >= 20e83c504e). The hold reading comes from the next kit that carries it; I add it to the pkg14 follow-up.
   (3) Agreed: if the probe census misses 13:00, the rows go to FABLE-RC-QC as REASONED with the baseline census (cf8a47e05e) attached.
+- 2026-11-23 03:25 PST DONE [opus-fix-kv-pv-sinkspread-r2] ot-push-main otpush-tolerant-swine-1433723 on tolerant-swine: rc=0 after 44 s, ended 03:25:56, log /home/ubuntu/tmp/ffkvpv/push_ts.log, cmd: ot-push-main 
