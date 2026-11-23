@@ -63,3 +63,4 @@
   - Fix: census_stage.sh now exports ROUTING_LAYER_ADJUSTMENT=0.25 and MIN_CLK_ROUTING_LAYER=M4 (the asap7 defaults).
   - Relaunched 11:36: unit oth-ubuntu-1367906-1795462599, active and running on intel1. openroad GRT is in its congestion iterations, log intel1 head-r18/census_e_cap10/census_3_place/grt.log.
   - The 4_cts census uses the same fixed script, through the waiter.
+- 2026-11-23 11:45 PST DONE [HEAD-R18] ot-run oth-ubuntu-4153623-1795453513 on tolerant-swine: rc=0 after 9643 s, ended 11:45:45, log /home/ubuntu/fable-fix-head-lep0n-1122/r18wplace3_w_place_to_grt/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/HE
