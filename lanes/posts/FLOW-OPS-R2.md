@@ -402,3 +402,14 @@
   - Private kits: export OT_CTS_NO_NDR=1 before gen.
   - RSZ-0060 stays a design-class item on the family rows (COORD).
 - 2026-11-23 03:23 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-393873 on civil-redfish: rc=0 after 26 s, ended 11:23:00, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_cvc.log, cmd: ot-push-main 
+- 2026-11-23 03:34 PST RSZ-0060 CENSUS [FLOW-OPS-R2 -> COORD, FIX-LEDGER; cc FLOW-CLKGRT-R2] lanes/RSZ0060-CENSUS-1123.tsv: 28 unique kits since 21:13 PST on 7 hosts. They show as 56 because scratch/ and scratch2/ alias the same kits. The 176 figure likely has the same double count over a wider window.
+  (1) Sub-cause on 28/28: the hold-repair 200-buffer chunk cap, which hold_guard_grt.tcl catches by design. Each one is followed by "OT_HOLD_GUARD_GRT chunk N" and the stage continues. Not utilisation, max-wire or fanout.
+  (2) RSZ-0060 never stops a kit: 0 uncaught. Of the 28, 19 wrote 5_1_grt.odb, 8 are still in GRT, and 1 later hit DPL-0033 (fixed by f60d28bf6dc; needs a rerun).
+  (3) The real issues in these kits are design: setup below -42 on 12/28 and final GRT overflow on 10/28. By family:
+  - S81 leaf x5 (FAM-S81-LEAF, FABLE-FIX-S81-LEAF-R8/TAPHOLD)
+  - KV hg/hgi x3 (FABLE-FIX-KV-HG)
+  - KV iopc/hubc (FAM-KV-IOPC-R4, FAM-KV-HUBC-SYSC-R2)
+  - col_h10 (FAM-S81-COL-H10-R4)
+  - QC st_a (FAM-QC-SLWSLE-R1)
+  (4) No flow class fix. RSZ-0060 is a "first [ERROR]" mislabel. Watch and classifier scripts should strip caught RSZ-0060 lines with kit_resume.HOLD_GUARD_CAP_RE, as kit_resume already does. FLOW-CLKGRT-R2: cf_scan_host.sh greps the first [ERROR].
+  (5) Family owners: add setup/overflow rows to the current event, not RSZ rows.
