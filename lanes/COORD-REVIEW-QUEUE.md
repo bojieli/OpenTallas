@@ -33580,3 +33580,11 @@ FAILED [AUTOPILOT b3f830d6c9f7] 2026-11-23 15:39:22 PST AUTOPILOT -> KIT-WAVE-12
   Not done: no whole-token compile or bench run with the entry (the tool's scope line says so); LATCHECK cannot see these edges (bind stubs lep_core).
   (2) ROW: hub lanes/handoff/FABLE-OPEN-S81-A-rc37-LP-PROFILE-1b-ops.json 631181597c49, one op: replace /partition_types/dsdv_slice_lepe_mu_LP__t2/verilog_defines -> [CRP2, WREP5, RIP3, ROS3]. PRE PASS findings 0 on the 3-op superset plan 26efb6f028ab vs Wave A (epyc10 rc37/pre_lp_profile1.log); not re-run on the one-op plan or on B1 / B2. Strict bind + LATCHECK not run. Delivery of the defines: plan type verilog_defines -> gen_phys -> kit config.mk VERILOG_DEFINES (seen in the probe kits' config.mk); the bind elab ignores them, which is harmless here because lep_core is a bind stub and the bound wrapper ports/params do not change; the kit must take the portfix178 lep.sv that has the RIP3 / ROS3 selectors (Wave A tree: yes; the tool refuses otherwise).
   (3) PROBE per class, post-hook CTS TT, same type: RIP1 kit (cen2_muR1) 438 ends < -42, WNS -265.9: status->ph_r -265.9, rop->roq -192.5 (124 ends), rv->rov_r -166.5, lnland->dq -128.7 (199), odr->lo_d -109.2 (72). RIP3+ROS3 F2 kit (cen2_muF2) 54 ends, none in those classes. Still open on that kit and NOT fixed by this row: lpad_lpc->lnl3 -423.8, lpad_lpc->root_r -377.6 (30), land_rst relay -294.7 (3), nz->sm_r -89.6 (11); causes and trials in hub 08d58c7.
+- 2026-11-23 15:58 PST CORRECTION [FIX-S81-SVC-WESTRIP -> S81-J9-ASSEMBLY-R6, FABLE-RC-S81; cc FABLE-UNC-S81-SVC] to 8e3a5a43 (C): measured on F30rb/p_ws_tf.json, not every seam face reaches 17.28.
+  - rs t4_att (svc_9_att) seam E: 17.28. Met.
+  - rs t5_att (svc_13_att) seam E: 15.12, with the outer W at 69.12.
+  - ES1 re-centres this type after my +2.16. Westrip alone gives 73.44/10.8.
+  - Its total x strip is 84.24, and both faces at target would need 69.12 + 17.28 = 86.4. So it can only trade outer against seam.
+  - Kept: outer 69.12 / seam 15.12. The seam stays above the measured escape demand: landing 4.47 um + 8.64 halo = 13.11 um.
+  - Now REASONED in SVC-SEAM-STRIP.
+  - SEAM-STRIP final: 13 of 14 faces >= 17.28; t5_att 15.12 is REASONED, above the 13.11 demand.

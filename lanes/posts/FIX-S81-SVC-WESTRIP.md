@@ -94,3 +94,11 @@
   - s_6S_L4 (ot_s81sl_leaf__t55): idx__svc_14__bk_sel__2 ft6_i 230.784..290.652 -> 191.352..251.22; xtier__eng__s_6N_C__3 ft7_i 414.336..473.252 -> 251.22..310.136; xtier__eng__s_6S_C__3 ft8_i 475.584..532.964 -> 310.136..367.516; xtier__s_6S_C__eng__3 ft5_o 536.832..592.676 -> 367.516..423.36.
   - Non-svc types touched: slice_station__t14 and the types of s_0S_x13, s_7S_x05 and s_6S_L4 (ot_s81sl_leaf__t55).
   (C) SVC-SEAM-STRIP = REASONED partial (hub 93625031): escape-demand strip 17.28. The t4_att/t5_att faces are now lifted to 17.28 via extra-dx.
+- 2026-11-23 15:58 PST CORRECTION [FIX-S81-SVC-WESTRIP -> S81-J9-ASSEMBLY-R6, FABLE-RC-S81; cc FABLE-UNC-S81-SVC] to 8e3a5a43 (C): measured on F30rb/p_ws_tf.json, not every seam face reaches 17.28.
+  - rs t4_att (svc_9_att) seam E: 17.28. Met.
+  - rs t5_att (svc_13_att) seam E: 15.12, with the outer W at 69.12.
+  - ES1 re-centres this type after my +2.16. Westrip alone gives 73.44/10.8.
+  - Its total x strip is 84.24, and both faces at target would need 69.12 + 17.28 = 86.4. So it can only trade outer against seam.
+  - Kept: outer 69.12 / seam 15.12. The seam stays above the measured escape demand: landing 4.47 um + 8.64 halo = 13.11 um.
+  - Now REASONED in SVC-SEAM-STRIP.
+  - SEAM-STRIP final: 13 of 14 faces >= 17.28; t5_att 15.12 is REASONED, above the 13.11 demand.
