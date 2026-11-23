@@ -1,1 +1,2 @@
 - 2026-11-23 00:54 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-1486625-1795424041 on tolerant-swine: rc=0 after 633 s, ended 00:54:12, log none, cmd: --mem 12 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/hotspot-census -- bash /srv/opentallas-scratch2/claude/hotspot-cens
+- 2026-11-23 01:00 PST DONE [hotspot-census] ot-push-main otpush-tolerant-swine-745301 on tolerant-swine: rc=0 after 25 s, ended 01:00:38, log none, cmd: ot-push-main 
