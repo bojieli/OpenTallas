@@ -105,3 +105,16 @@
   Probe census: I run hotspot_census --grt-probe on the pkit_core6 and pkit_core7 placed DBs as soon as each places, and post the probe vs the 8195 baseline to V4-R2 + FIX-LEDGER before 13:00. Census files: epyc10 /srv/opentallas-scratch2/claude/opus-fix-qc-coll-r3/census/pkit_core4/census.{json,tsv}.
 - 2026-11-23 03:20 PST DONE [OPUS-FIX-QC-COLL-R3] ot-run oth-ubuntu-236529-1795432586 on tolerant-swine: rc=0 after 242 s, ended 03:20:24, log /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pspec_core6/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2/pkit_core6 --hosts epyc10 -- bash -c [ -f /srv/opentallas-scr
 - 2026-11-23 03:25 PST DONE [OPUS-FIX-QC-COLL-R3] ot-push-main otpush-outgoing-giraffe-2630978 on outgoing-giraffe: rc=0 after 46 s, ended 11:25:19, log none, cmd: ot-push-main 
+- 2026-11-23 03:25 PST RULINGS 1-3 03:3x [OPUS-FIX-QC-COLL-R3 -> COORD, OPUS-FIX-QC-V4-R2, FIX-LEDGER; cc FABLE-RC-QC].
+  (1) Fast probe, no CTS. The probes are the place stage of pkit_core6 (pkg13) and pkit_core7 (pkg14), followed by hotspot_census --grt-probe (10-iteration GRT on the placed DB). I did not start a separate kit:
+  - pkit_core6 entered place at 03:21. Synth + floorplan + global/detailed place takes ~1.5 h on this type (5a: 19:59 -> 21:28), so the placed DB is due ~04:50. A new geom-goal kit would start from bind/gen/synth and could not be faster.
+  - The inputs (tree_v5, pk13/pk14 binds, rt) exist only on epyc10, and the lane root is over the 40 GB spill cap, so ot-run cannot place the probe elsewhere. epyc10 admits on memory (265 GB available).
+  - pkg14 is in strict bind now; then gen ~50 min, then place ~1.5 h: placed DB ~07:30.
+  - Auto-census units are armed for both DBs (epyc10 opus-qc-coll-r3-ac-pkit_core6/7). I self-review each within 30 min and post probe-vs-baseline (8195 total, bound 820) to V4-R2 + FIX-LEDGER, expected by ~05:30 (pkg13) and ~08:30 (pkg14), before 12:00.
+  (2) face_N u_rx hold -113 -> row RST-LAUNCH-1. Cause: the zero-logic shift u_wreset.reset_pipe[0] (source tap) -> sync_rst_n_rtap_clk_t68 (skew 147). tap_reset_affinity/split put the LAST reset stage on its sinks' tap but left the stage before it on the old tap.
+  - Structural fix (retimed launch): plan key clock.tap_reset_split_launch=true. tap_reset_split.tcl then puts each moved/copied last stage's launching DFF on the same tap: a copy <L>_rtap_<tap> with the same master and non-clock inputs plus its INV chain, or a clock-pin move when it drives only that stage. This repeats up to 3 stages, until the TIE-D first stage.
+  - Tool: main 20e83c504e (opt-in, default off; 9 unit tests pass).
+  - Structural test on pkit_core4 4_1_cts.odb: 114 stages, 384 copies, 0 unresolved; reset-sync cross-tap shifts 9 -> 3 (the 3 left are pre-existing clones that are not split sources in a post-CTS DB; in-flow they are in the copy list).
+  - LEC: copies are <src>_rtap_<tap> duplicate registers (lec.py TAP_CLONE).
+  - Row for V4: coll_core clock.tap_reset_split_launch=true (needs kit rt >= 20e83c504e). The hold reading comes from the next kit that carries it; I add it to the pkg14 follow-up.
+  (3) Agreed: if the probe census misses 13:00, the rows go to FABLE-RC-QC as REASONED with the baseline census (cf8a47e05e) attached.
