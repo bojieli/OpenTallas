@@ -48,7 +48,7 @@ def test_gen_stage_runs_route_preflight_before_place():
     src = (HERE / "kit_wave.py").read_text()
     i_pf = src.index('rc, txt = run("preflight", otrun(8, 2, W, pf, gh))')
     i_rp = src.index('run("preflight_route", otrun(8, 2, W, _rpc, gh))')
-    assert src.index("_rpc = route_preflight_cmd(AP, K, _rpr)") < i_rp
+    assert src.index("_rpc = route_preflight_cmd(AP, K, _rpr, hosts=(G,))") < i_rp
     i_adv = src.index('_, rtxt = run("preflight_adv"')
     assert i_pf < i_rp < i_adv
 

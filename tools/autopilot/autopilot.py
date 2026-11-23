@@ -2060,12 +2060,24 @@ try:
         if not str(dest).startswith("/"+"srv/opentallas-scratch") or "/claude/" not in str(dest):
             raise RuntimeError("admission bundle must be under an owned scratch lane")
         dest.parent.mkdir(parents=True,exist_ok=True)
+        # ADMISSION-SPILL-1122 (FAM-S81-COL-H10-R4 21:54): a private chain stages its bundle on its GEN host, not the hub; spilled off that
+        # host, the fetch from "hub" read a missing dir (3 x "Cannot open").  meta source_hosts lists every host that may hold it (the
+        # staging / kit host first, the hub last); each attempt takes the first one whose BUNDLE.json is there.
+        sources=[h for h in dict.fromkeys(list(meta.get("source_hosts") or [])+[meta.get("source_host") or "hub"]) if h]
+        def holder():
+            if len(sources) == 1:return sources[0]          # one source: no probe (the pre-1122 transport, byte for byte)
+            for h in sources:
+                probe=subprocess.run(["ssh","-n","-o","BatchMode=yes","-o","ControlPath=none","-o","ConnectTimeout=20",h,
+                                      "test -f "+shlex.quote(str(dest/"BUNDLE.json"))],stdin=subprocess.DEVNULL)
+                if probe.returncode == 0:return h
+            return sources[-1]
         # Retry only a failed pre-payload transport, each into a fresh temporary tree.
         for attempt in range(1,4):
             with tempfile.TemporaryDirectory(prefix=".fetch-",dir=dest.parent) as temporary:
                 target=Path(temporary)/"bundle";target.mkdir()
                 command="tar -C "+shlex.quote(str(dest))+" -cf - ."
-                source=subprocess.Popen(["ssh","-o","BatchMode=yes","-o","ControlPath=none",meta["source_host"],command],
+                host=holder()
+                source=subprocess.Popen(["ssh","-o","BatchMode=yes","-o","ControlPath=none",host,command],
                                         stdin=subprocess.DEVNULL,stdout=subprocess.PIPE)
                 try:
                     extracted=subprocess.run(["tar","-C",str(target),"-xf","-"],stdin=source.stdout)
@@ -2073,8 +2085,8 @@ try:
                     source.stdout.close()
                 if source.wait() or extracted.returncode:
                     if attempt == 3:
-                        raise RuntimeError("admission tool transfer failed after 3 attempts; physical runner not started")
-                    print("ADMISSION_TOOLS transport retry "+str(attempt)+"/3; physical runner not started",flush=True)
+                        raise RuntimeError("admission tool transfer failed after 3 attempts (sources "+",".join(sources)+"); physical runner not started")
+                    print("ADMISSION_TOOLS transport retry "+str(attempt)+"/3 from "+host+"; physical runner not started",flush=True)
                     continue
                 manifest=json.loads((target/"BUNDLE.json").read_text())
                 if manifest.get("sha256") != meta["sha256"]:

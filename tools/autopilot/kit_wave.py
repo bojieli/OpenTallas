@@ -9686,13 +9686,20 @@ def chain_hosts(sp, host, hub, avoid=()):
     return home + target_hosts(alts, hub, allow_hub=False)
 
 
-def route_preflight_cmd(AP, kit, runner, bundle=None):
+def admission_sources(*hosts):
+    """ADMISSION-SPILL-1122: the hosts an admission bundle may be fetched from, in order (the staging / kit host first, the hub last)"""
+    hub = os.environ.get("AP_ADMISSION_HUB", "hub")
+    return [h for h in dict.fromkeys([str(x) for x in hosts if x and str(x) not in ("localhost", "hub")] + [hub]) if h]
+
+
+def route_preflight_cmd(AP, kit, runner, bundle=None, hosts=()):
     """PREFLIGHT-EARLY-1122 (COORD 21:0x): HEAD w13 placed for hours, then the route chain's kit_preflight (the admission
     bundle = this driver's tools, newer than the kit source) refused its landing rings (ring_place=ff).  The gen stage runs
     that same chain preflight (same bundle, same signoff_chain continue_kit call, --preflight-only) right after the
     source-tree preflight, so a kit the route chain will refuse fails in minutes, before place."""
     bundle = dict(bundle if bundle is not None else AP.stage_admission_tools())
     bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
+    bundle.setdefault("source_hosts", admission_sources(*hosts))
     enc = base64.b64encode(json.dumps(bundle).encode()).decode()
     return " ".join(shlex.quote(a) for a in ["python3", "-c", AP.ADMISSION_BOOTSTRAP, enc, "--preflight-only",
                                              runner or "-", kit, "route", "8", "2"])
@@ -9718,6 +9725,8 @@ def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None, avoi
         return argv + ["--", "bash", runner, kit, goal, str(mem), str(thr)]
     bundle = dict(bundle if bundle is not None else AP.stage_admission_tools())
     bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
+    # ADMISSION-SPILL-1122: this driver staged the bundle where it runs (a private chain: the kit's gen host); a spilled job fetches it from there first
+    bundle["source_hosts"] = admission_sources(host, sp.get("gen_host"), hub)
     enc = base64.b64encode(json.dumps(bundle).encode()).decode()
     return argv + ["--", "python3", "-c", AP.ADMISSION_BOOTSTRAP, enc] + ([] if AP.late_eco_on() else ["--no-late-eco"]) + [runner, kit, goal, str(mem), str(thr)]
 
@@ -11032,7 +11041,7 @@ def run_item(spec_path):
         import autopilot as AP
         _rpr = runner.format(kit=K, work=W) if core else W + "/gen/run_kit.sh"
         try:
-            _rpc = route_preflight_cmd(AP, K, _rpr)
+            _rpc = route_preflight_cmd(AP, K, _rpr, hosts=(G,))
         except Exception as _e:                           # bundle staging is infra: the route chain still checks
             _rpc = f"echo {q('ADMISSION_TOOLS FAIL: bundle not staged: ' + type(_e).__name__)}; exit 3"
         rc, txt = run("preflight_route", otrun(8, 2, W, _rpc, gh))
