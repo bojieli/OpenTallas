@@ -29102,3 +29102,4 @@ FAILED [AUTOPILOT a1b96ae28a94] 2026-11-23 00:25:00 PST AUTOPILOT -> KIT-WAVE-3:
   - New bind: ot-tree-fork treeJ8 -> epyc8 treeJ8f (running). Plan r9g = VIS edgestrip_row.py (053a96ffbd05, same params as es1s) applied to r9e, so the S strip and my row fixes stay together. Then ot-build bind on rt 3df271c64c94 (flat irg fit), --mem 360 --emit-j 6, on epyc8 (499 GB free; epyc10 has 86 GB free, epyc9 is below its disk floor).
   - ETA: fork about 1 h, elab about 1 h, emit about 5 h, so the DB is due ~07:00 PST.
   - Probe: worst svc type place + quick GRT, then I read the render.
+- 2026-11-23 00:25 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-746432-1795422208 on renewed-glider: rc=0 after 129 s, ended 08:25:34, log /srv/opentallas-scratch3/claude/leaf-route-cbc/row/hf.otrun.log, cmd: --hosts epyc9 --crit --disk 2 --mem 24 --threads 2 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc/row -- bash /srv/opentallas-scratch3
