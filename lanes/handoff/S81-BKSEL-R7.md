@@ -123,3 +123,8 @@
   Queued: fork (running), formal inv_S (ot-run epyc10 load cap, log intel2 ~/s81-bksel-r7-logs/inv_S.otrun.log).
 - 23:2x COORD: RTL reset split APPROVED (+1 edge OK, boot rst_n >= 64 clk; induction + kit routed LEC suffice, no u_core port).
   If the probe shows u_ids popcount path (vo_s -> cnt) worse than -42 with cnt/pre FIRM, add one register stage on it (+1 cycle pre-approved).
+- 23:4x RESUMED. A SIGNED OFF: dsdv_bksel_q OLL0 (kl_dsdv_bksel_q_vC) one-pad hold ECO epyc2 coreA/signoff_recovery_codex/one_hold_pad/signoff/signoff.json:
+  verdict SIGNED profile minimal (reasons []), FF hold +0.39, TT setup -2.98 within tolerance (achieved 835.98 ps), DRC 0, pin audit 1803/1803,
+  LEC EQUIVALENT 44133/44133 (pass/lec/lec.json). AUTO_EXPORT spool 3d28aa7c533f4ef6 (epyc2 ~/.local/state/ot-auto-export). Row 4 = swap g_q[0..3] view to it.
+  Formal inv_S (u_ids B vs split): base + induction SUCCESS (w/bksel_ids/inv_S.log); mutant inv_Sm queued (non-vacuity).
+  Fork waiter bug: pgrep -f inside ssh bash -c matched its own command -> gate never submitted; gate submitted 23:4x (intel2 ~/s81-bksel-r7-logs/gate_j9.otrun.log).
