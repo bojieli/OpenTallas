@@ -26,6 +26,15 @@ def test_classes():
     assert cls(5, "all fine\nbye") == "NO-PATTERN"
 
 
+def test_advisory_drain_does_not_hide_later_execution_failure():
+    stage = ("ot-run: DRAIN: localhost DRAINING (155 of 9999 GB scratch free): "
+             "--dir /srv/kit already holds data there, the job may run there")
+    denied_host = ("ot-run: DRAIN: epyc8 DRAINING: not used for this job (new job dir)")
+    cancelled = "ot-run: RAN on epyc2 (unit oth-ubuntu-3113290-1795402371): exit 143"
+    assert cls(143, stage + "\n" + denied_host + "\n" + cancelled) == "CANCEL"
+    assert cls(1, denied_host + "\not-run: NOT-RUN no host qualifies (scratch disk under floor)") == "RAIL-KILL"
+
+
 def test_cause_is_one_line_and_bounded():
     c, cause = dc.classify(1, "", "Traceback (most recent call last):\nValueError: " + "x" * 500)
     assert c == "TOOL-TRACEBACK" and "\n" not in cause and len(cause) <= 120

@@ -52,6 +52,14 @@ def read_tail(path, n=TAIL_BYTES):
 BOILER = re.compile(r"^(ot-run: (RAN on|->|admitted|\S+\s+admits\s+\d+ GB)|ot-heavy:|rc=\d+ wall|\+ |\W*$)")
 
 
+# ot-run prints these when choosing hosts. Neither line says the job was refused
+# or stopped: an existing job may run, and a new job may choose another host.
+_DRAIN_ADVISORY = re.compile(
+    r"^ot-run: DRAIN:[^\n]*(?:the job may run there|not used for this job \(new job dir\))\s*$",
+    re.MULTILINE,
+)
+
+
 def _last_line(tail, pat=None):
     for ln in reversed([x.strip() for x in tail.splitlines() if x.strip() and not BOILER.match(x.strip())]):
         if pat is None or re.search(pat, ln, re.I):
@@ -64,7 +72,7 @@ def _c(cls, cause):
 
 
 def classify(rc, cmd="", log_tail="", secs=0):
-    t = log_tail or ""
+    t = _DRAIN_ADVISORY.sub("", log_tail or "")
     cmd = cmd or ""
     if rc != 0 and re.search(r"AUTO-GEOM FAIL\b", t):
         return _c("GEOM-FAIL", _last_line(t, r"AUTO-GEOM FAIL"))
