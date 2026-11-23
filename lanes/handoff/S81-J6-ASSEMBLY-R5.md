@@ -58,3 +58,9 @@ LEPe proof10 (unit 258364), svc hi4 + 7 svc layouts, serdes START rows (lanes/ha
 - LESSON: on S81 (every stops_off die, OWNER r703) hold_records do NOT block (hold_records.compile_holds skips stops_off dies); only legacy dies.s81.hold_items blocks. My J7 records held nothing and I dropped the 342 J6 hold_items -> 194 intended-held rows launched. Re-held 149 unlaunched as hold_items (34ed268e94e). For J8 holds: write hold_items keys (plus records for owner/ETA bookkeeping).
 - COORD ruling 05:2x: serdes 8 cancelled (kit_wave cancel-rows --event 18a2688b741 --per-block STRUCTURAL); col 72 run with the measured stop rule (>=3 same-stage fails for hold reason -> cancel the remainder of that col class not past the stage); other 114 run.
 - Pilot dsdv_slice_lepe_mu_LP__t2 passed gen + preflight 05:13, in place 05:16.
+
+## 11-22 18:0x PST J8 (after weekly limit; Codex covered 11:xx-14:xx, notes intel2 s81-j6-r5/tmp/j8cut/RESUME.md)
+- J8 cut v2 = no-SVC c67f4f6ba285 (SVC primary fails schema on 2 port windows -> J9). Respace -> J9 (bind FAILED 13:39). tap_grt_pre -> J9 (enters bind reset digest). MISC t5 band-clear -> J9 (t5 held).
+- Gate run2: ot-run epyc10, intel2 log s81-j6-r5/tmp/j8cut/j8_cut_run2.otrun.log; script epyc10 s81-j6-r5/j8_cut_intake/j8_cut_run.sh (replan without respace -> j8_cut_gate.sh). Prints J8_GATE_GREEN.
+- Then in order: epyc10 j8_stage_scripts/j8_seal.sh (relay_mid_re row + schema + PRE + pack + publish) -> j8_replicate.sh <gen hosts+intel2> -> intel2 j8_stage_scripts/j8_smoke.sh epyc9 <manifest> -> j8_event.sh <manifest> <plan sha> -> mk_cand_j8.py (template S81_D8J7 candidate; gate dir copy) -> copy cand to lanes/handoff/S81_D8J8_source_candidate_1122.json -> j8_apply.sh (posts APPLIED; unsets col OT_RELAY_MID_RE env; t5 hold).
+- COORD: apply as soon as gate green (no 04:15 wait).
