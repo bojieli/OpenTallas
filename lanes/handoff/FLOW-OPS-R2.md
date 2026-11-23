@@ -97,3 +97,20 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - All posted (coord b261b314d0, 4300cd5dfe). Static scan of KV macro site files is in the post: q0/q3 files are stale (2 sites vs 4 SRAMs), and q1/q2 243.648 outline, ahub and kvs_ctl have none.
 - Pre-existing hang: tools/autopilot/test_kit_wave_clean.py hangs on main too (not mine); run it with a timeout.
 - Not done yet: DPL fix verified on a real OpenROAD GRT (watch next slw/sle_st_a_v2 log); BASE_PREP wiring in HEAD publish/ot_build (same gap as ISTCYC --baseline-plan); SLICE/TAPHOLD resume confirm; nomcap bundle guard (copy_signoff_bundle checks nomcap/MANIFEST.json but copies to nomcap_libs); HEAD turn canary golden -> FLOW-CANARY-R2; io_guard, lever 9, items 8/11/12.
+
+## 11-22 ~20-21 PST update
+- On main:
+  - fbd7bca23f5: LATCHECK live-plan base default.
+  - fc394009846: COUNT-LIVE-1122, macro_site_count counts only live SRAMs (flatten + opt_clean). The q0/q3 "stale" claim was withdrawn: they are 2 = 2.
+  - 74be77fbdfa: SEMANTIC-TOOLSKEW-1122. bind_tool_stamp check --plan --type replays the reset_tree.for_type solve and accepts identical trees. kit_wave passes the flags. Real case: CONE-SCATTER LP t2 now passes.
+  - 8e110789fbe: BANK-SITE-WIDTH-1122. kit_istations is_exact_bank lets a wide member take a free edge site (KV pv_v3).
+- rt/current = 74be77fbdfa on epyc2/7/8/9/10, intel1 and intel2. The J8 pinned rt 312978162669 is untouched. RT-ADVANCED was posted (coord 65dc72546c) with the relaunch list: svc lo t3, leaf t31, KV pc_v3/IOPC, CONE-SCATTER LP t2, lepe nh_mus_LP t1.
+- LATCHECK wiring ruling (coord 45ca0534b9): only HEAD calls gen_lane_latcheck. The other dies run lane_asbuilt_latency, whose kit_ist rows kit_istations realizes fail-closed, so no base plan is wired there.
+- Open:
+  - Confirm rt/current reaches 8e110789fbe.
+  - PACKED_EXACT_BANK_TCL still has a hard width check; extend it if a case appears.
+  - DPL fix on a real GRT.
+  - SLICE/TAPHOLD resume confirm.
+  - nomcap bundle guard.
+  - HEAD turn canary golden.
+  - io_guard, lever 9, items 8/11/12.
