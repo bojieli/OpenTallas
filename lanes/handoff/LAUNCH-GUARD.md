@@ -31,3 +31,10 @@ main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. 
 - J8 37 initial GEN/PLACE specs were E8-only because path probing included retired J7 tool-pin metadata. Scoped coord change 5f02d4f53360 removed 395 inactive pins against exact J8 event/bind preconditions. First two new J8 COL specs after cleanup landed E10 and intel1 with all six hosts as roam options and correct runtime 207d4965a0d8. Durable source change d30aabb42ac GREEN 183/183 and READY.
 - Strict first live route hold was KV-D28 pv_v5n a3 on E9 at 07:56:55. Viewed image, BAD exact receipt fa8ba5f1974b, runtime read returns WAIT-FORM. Record results/geom_review/kv_d28_pv_v5n_a3_1123.md. Follow D29 PV structural split.
 - Two COL HOLD-LEAK alerts are deliberate reviewed J8 probe releases (coord diagnostic 6336eb2f5dad), current explicit holds remain effective. Generic audit unchanged.
+
+## 11-23 09:02 PST
+
+- J8 c3x and c1x t1/t5 exact reviewed structural holds restored after old LBL cron released the mixed prefix at 08:00: e3029da4ada and 1e3d3540335. In-flight placements preserved. Standing helper ed1690a0d0e4b now accepts the exact lbl_family.reason receipt and compares event and hold before removal. 08:30 tick released 0, preserved J9 XGA2 gate.
+- Exact terminal watchdog CANCEL-DESIGN rows removed from progress eligibility only, e123566ac21 merged and rt/current. Current false KV 4→0/QC 2→0, real retry candidates remain.
+- Exact J8 reviewed E8 t12, t7 cl503f4913 and cl945bc067, t27, and t50 cl39451317 PASS-COND. t20, t44, t7 cl362204c4, t24 cl64811a5d, t29 clc7772371 and t14 BAD. Exact review records and receipts posted. First approved t12/cl503f4913 enqueued at 08:49, BADs transitioned WAIT-FORM.
+- Strict newly captured wave GEOM now proposed as placed ODB render with GRT explicitly deferred until exact review, branch 54de977559a6. Focused 57 pass. E10 canonical gate oth-ubuntu-3411249-1795452445 ongoing; inherited active work retains original diagnostic evidence.
