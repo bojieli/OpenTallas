@@ -175,6 +175,39 @@
    ],
    "risk": "each line holds 1104 bits on 300 um (3.7 bits/um, below the 1104-in-71-um RANK-SEAT case); no hard core in x 880-1300, y 280-700",
    "status": "DRAFT J9; mu_LP t2 (ROS3 too) gets the same op only if its SP probe shows rop->ros_r[0] < -150"
+  },
+  "PT1": {
+   "what": "clock.tap_balance_to slowest (cap 390 ps): every tap is balanced to the slowest raw tap instead of being padded only up to the 250-ps plan insertion, so the face pin registers on the far edge taps stop sitting up to +140 ps late against the other taps (TAP-GRID-R5 form, gen_phys.tap_balance_to_exports)",
+   "types": [
+    "dsdv_slice_lepe_mu_LP__t2",
+    "dsdv_slice_lepe_nh_mus_LP__t1"
+   ],
+   "evidence": "F2 kit (epyc7 ..._1122050440) OT_TAP_BALANCE: raw tap means 233..387 ps, spread 154, target 250. Slowest: edge taps clk_t2 (96.8,17.3) 387, clk_t8 (1426,453) 360, clk_t22 (1392,1210) 305 (root clk at (652,613), up to ~1150 um away), and loaded interior taps t42 369, t35 344, t34 322. The pin-register clock mean is 292.9 TT / 231.2 FF against bound 250 / 202.5 (8077 samples). Port hold: 3726 port_in endpoints at -146.5 pre-GRT; FF port hold_est -197.8; IO-BOUNDARY lpc_i0/lepf_i0 -> u_bin -153 (capture 355). FABLE-RC-S81 rc33 (LP) + hg-S81-REPAIR-CAP port class.",
+   "K": "0 (clock insertion only; measured-vclk hold binds the new mean)",
+   "ops": [
+    {
+     "op": "set",
+     "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/clock/tap_balance_to",
+     "value": "slowest"
+    },
+    {
+     "op": "set",
+     "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/clock/tap_slowest_max_ps",
+     "value": 390
+    },
+    {
+     "op": "set",
+     "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/clock/tap_balance_to",
+     "value": "slowest"
+    },
+    {
+     "op": "set",
+     "path": "/partition_types/dsdv_slice_lepe_nh_mus_LP__t1/clock/tap_slowest_max_ps",
+     "value": 390
+    }
+   ],
+   "risk": "insertion rises toward 390 on every tap (more delay cells, clock power). The vclk-measured hold binds the mean, so the uniform shift cancels at the boundary; the per-register deviation (the hold cause) drops. Setup across the boundary is unchanged when the neighbour tiles shift the same way; checked on the SP probe (kit env A/B on the W2 bind).",
+   "status": "DRAFT J9; probe = SP W2 bind + --ab OT_TAP_BALANCE_TO=slowest OT_TAP_SLOWEST_MAX_PS=390"
   }
  },
  "ops": [
