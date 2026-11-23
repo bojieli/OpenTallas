@@ -66,3 +66,13 @@ combined J8 col set by 14:00), FAM-S81-COL-H10-R4, S81-J6-ASSEMBLY-R5 (J8 cut 16
 - H9R0-R4 has p3/p6/p2 on J7 bind in detailed route (GRT gate passed): do NOT rebuild those forms.
 - NEXT: (1) p6 GRT verdict. (2) one p3 + one h10_r0_p4 kit on planR2 = planR1 + budgets.relay_mid_re_types {"^col_": <E regex>} (plan key,
   no env), goal route, on bind b_24a9496dfcdb; if TT >= -42 at GRT -> fan out siblings. (3) tell ASSEMBLY: J8 col needs the E row as plan key.
+
+## COORD RULING 18:0x (Fable review, hub 503187672f): THIS LANE INTEGRATES ONE COL FAMILY ROW (all col_*, ~214 types) for J9
+Row = budgets.relay_mid_re (E regex; already J8 plan key via ASSEMBLY) + clock.tap_grt_pre=true on every col type + grt_cong_iters_types
+{^col_: 50} + COLROM kit-H 1,212 south seats (planH, col_h10_r1) + rank lines (rank_line_types ^col_) ; NO STAGGER, NO keep-rq.
+Residual -90..-207 (xs_q station -> ROM u_w pin; x2_4_0 -> t4_payload): registered ROM-input stage at the pin, +1 cycle, family-wide.
+Proof: 3 sealed --goal route reps (one h9_r0, one h10_r0, one h9_r1), then hand row to S81-J6-ASSEMBLY-R5 for J9.
+COL-R5, H9R0-R4, H10-R4, COLROM-R6 feed levers here; they start no new variant kits outside this row.
+Inputs: COLROM stnE/stnEH plans epyc9 opus-fix-s81-colrom-r6/srcJ8G/physical/die_plan/s81/plan_h2_2249_stnEH.json (gate bindEH, intel2
+opus-fix-s81-colrom-r6/bindEH.log); relay_depth rows = existing +1-cycle stage mechanism (schema relay_depth {inst, D, side}).
+Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once sealed, else J7 + stnEH.
