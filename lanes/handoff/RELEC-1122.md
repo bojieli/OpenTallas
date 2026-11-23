@@ -23,3 +23,8 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - Collect: bash collect.sh on each host (scratchpad relec/collect.sh) -> TAG|lec.json|verdict|...
 - Known NOT-EQUIVALENT (existing): s81 ot_hdc_v41x_attn_tr_x (epyc7 s81-svcrs-4/prov/resign/trx0_120p96x259p2_ni/lec/lec.json, 502 differs); qc slw_hc3__clccfc3e6b__pvcca9ff41 KEEP FAIL.
 - No RTL anywhere (expected UNPROVEN-NO-RTL): HEAD hd_host_w, hd_host_e, hd_serdes (archive has netlist only); S81 legacy core views dsfd_node_LL*, dsdv_gunit_l5f/l4r, dsdv_svc_sx_hrow (no netlist in view -> NO-NETLIST).
+- 22:0x: b5 qkd_hr_core_order (epyc7 kw44/epyc4-move kit, earlier UNPROVEN 15 undecided); b6 sle_sc_v1__cl115da35f superset rerun (existing EQUIVALENT w/o superset at epyc9 opus-fix-qc-sle-r4-sc/reloc/lec_routed/kit/lec_routed/lec.json);
+  b7 = 9 QC sealed ot-job routes: netlist from host ot-store (route-run artifact via gen/<t>/.ot-job-<job>.json), kit copied w/o run/ into RELEC-1122/oj/<tag>/kit (otj.sh).
+  col774 (S81 col_h9_r2 p774): exporting 6_final.v from signed so_run ODB with ORFS write_verilog -remove_cells physical-only -> xk/col774 (epyc9).
+- hd_spn routed LEC EQUIVALENT (epyc7 kit lec_routed_relec1122).
+- TSV builder: scratchpad relec/build.py (inputs res.txt from collect.sh, meta.tsv, out_*.jsonl, l1/l2/fetched/otj_out).
