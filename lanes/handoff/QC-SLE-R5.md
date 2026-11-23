@@ -11,3 +11,10 @@ Family: QC sle_ctl / sle_sc / sle_stm (+ su_c per R4 handoff).
 - k_b2 ended GRT_STOP noconverge (-85..-94, cws2 class): station lever dead.
 - Next: on C result, port the cws2 landing row to V2 E/W split -> QC-PLAN-R11 (V3). Fallback tool change: per-bus FREG list (landing_ring_wreg) + freg_rect_um. x_su_l0_i pad strap sub-key: I take the bind sub-key, R11 the rows. Delete planc (11G) via ot-delete after C finishes.
 - Waiters: run-item 2293139-successor on intel2 (result.json in spec dir), V2 sle_ctl wave row, sle_sc_v1 routed LEC unit oth-ubuntu-3604109-1795289971.
+
+## Update 11-22 18:4x (after the weekly limit)
+- sle_ctl__cla4f6f12f wave row is CANCELLED (unsignable, ownership sweep). It is SUPERSEDED by my sealed sle_ctl all-rows kit: cr + freg_buses rows + count_aligned_cycles +1 + sidecar declaration, built on the signed FREG hard children sle_cland_w517_n_s10_freg / _s10_1_freg / _s10_2_freg (all signed + AUTO-EXPORTED 11-22 13:50-14:15). The kit launches (private-spec --tree fork, sealed manifest, goal route) when the parent bind is clean.
+- Parent bind: epyc10 QC-SLE-R5/freg_hard_children/private_parent_input/bound, rt c9b8d5f226ca, bind.py pid 1728955 on R8 re-bind pass 2 of 3 (alive, CPU rising); poll waiter armed (run_in_background, 10.8 h timeout). Relaunch on rt/current 9c133d90aec1 only if it dies or has no CPU for 2 h.
+- v4e bind (without FREG children) ended with the single EMIT cws1_i (FREG vs signed child lacking FREG); superseded by the above. v4c/v4d/v4a3 cancelled or dead; their trees deleted except v4c_bound, v4e_bound (ot-delete when no longer needed).
+- Adopted DEAD-OWNER kits (FLOW-FLEET-R1): sle_hc1 pve230954c/pve289215f/pv77c16c8a, slw_fe_v1 cl95cd1d0c, sle_st_b_v2 pv41c959f3/clfde1249e: wave rows running, none signed; export on sign-off. slw_stm_v2 cl9beb65e6 is with QC-RELAUNCH-R1.
+- Open V4 rows: lanes/handoff/QC-SLE-R5-V4-rows.json (A freg, B r8 seat provisional, C reset retap) and QC-SLE-R5-V4-tapfix.json.
