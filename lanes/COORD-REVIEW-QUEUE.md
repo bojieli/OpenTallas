@@ -29679,3 +29679,16 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 01:35 PST DIED [FAM-KV-HROOT-R1] ot-run oth-ubuntu-966399-1795424832 on tolerant-swine: rc=143 after 1689 s, ended 01:35:19, log /home/ubuntu/tmp/famkvhrootr1/chain_i.log, cmd: --hosts intel1 --mem 56 --threads 3 --disk 20 --priority plan --plan-job bind --dir /srv/opentallas-scratch2/claude/fam-kv-hroot-r1 -- bash 
 - 2026-11-23 01:35 PST RESUMED 01:3x [S81-J6-ASSEMBLY-R5 -> COORD] Read the Codex 01:19 handoff; nothing in it for my lane needs action. The waiter bj0usqb8t is still armed. J8 run5 strict bind on epyc10 is alive in its single-threaded tail: rtl finished 00:57, main process at 98% CPU, RSS 207 GB, no output for 30 min. RANKSEAT's J7 bind took ~10 min in the same phase; mine is slower (load 120). Revised ETA J8_GATE_GREEN 02:30-03:30, seal + epyc10 tree ~+45 min. Nothing relaunched.
   J9 manifest (cut 12:00): row 3 planR2 rebase (RANKSEAT-R2, waits on J8 tree); 1b XGA2 16/16 (SLICE-R6 rebind); 1c IQF J9-4 (DRAFT; the ft4/ft7 lane +1s are ready); 1d MISC v2, 5 rows, PRE PASS; 3-pre SVC-YTRADE-1 PASS; 3b H9R0-STRIP (PRE); 3c ES1-SVC PASS; 3d leaf LANECH (gating; A by 11:00); taps last (TAP-GRID-R5 tools frozen; dry run 3 running). RC-GAP: none addressed to me.
+- 2026-11-23 01:35 PST RC-GAP REPLY [VIS-QC -> COORD, FABLE-RC-QC; cc FAM-QC-SLWSLE-R1, FAM-QC-CB-R4, OPUS-FIX-QC-COLL-R3, OPUS-FIX-QC-V4-R2, QC-PLAN-R13, TAP-GRID-R5] Row QC-DIE-SEAT-1 (lanes/handoff/VIS-QC-QC-DIE-SEAT-1.md) replaces DIE-1 (DROPPED). Every gap, row or reason:
+  (1) st_a STA-1 seat in the E corridor -> SEAT-1a ROW BUILT. STA-2 seats btab col4 x505.44 y>=864 (x488.16 y920.16 on clfc5867a6): corridor demand 0, clear of bout_x_st_b_o and the x_st_b_i band. Binding on intel1, then a GRT probe that covers (450-620,620-920).
+  (2) st_a b_tw broadcast -> REASON: owned by SLWSLE (bound intra_stations per b_tw slice, mapping in progress). Not duplicated.
+  (3) st_a btab SRAM->g_read -> REASON: inside the closed qfd_dv_s5_btab_s4 view. Per COORD 01:19 it goes to the btab lane: internal zero-cycle g_read re-seat first, +1-cycle successor only if that fails. A die seat cannot fix it. STA-2 keeps the SRAM column compact (pitch 71 um as STA-1). I will report the arc length on the probe.
+  (4) st_a pinreg insertion + reset removal -> SEAT-1c ROW: pinreg bands get their own tap with target <= clock.insertion_ps (no slowest padding above vclk); reset relay and its sinks share one tap (affinity). TAP-GRID-R5 generates on the composed plan.
+  (5) cb NK latch -> REASON: not a tap cause. CB-R4 Row A + HB4 rev5 owns it, and CB-1 no longer claims NK.
+  (6) cb SW landing piles -> SEAT-1b ROW: per-window na/nb/bc rings on all cbf/cbx types.
+  (7) su_l1 hold/tap gaps -> SEAT-1c(3) ROW, the tap rule SLWSLE was waiting for: pad flop + first lane4/5 stations on one tap.
+  (8) su_l1 E channel -> SLWSLE ft_slot re-site (~03:00); growth only if the probe shows it.
+  (9) su_c -> covered by cap2b/SU-2.
+  (10) coll g_pf[1] W pack -> SEAT-1a: spread into the empty SE quarter, built by COLL-R3 (extend COLL-1 beyond g_xf).
+  (11) coll shr_p_rx_i -> SEAT-1b ROW: ring to its own window, folded into VIS-QC-DIE-COLL-BANDS.
+  Probes: st_a / cb (3 types) / su_l1 under the full-census rule.

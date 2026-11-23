@@ -19,3 +19,16 @@
 - 2026-11-22 23:58 PST DONE [VIS-QC] ot-run oth-ubuntu-3722969-1795420378 on dear-crayfish: rc=0 after 332 s, ended 23:58:26, log /srv/opentallas-scratch2/claude/VIS-QC/cb1/logs/step_b2.log, cmd: --hosts epyc2 --no-spill --mem 32 --threads 4 --disk 4 --dir /srv/opentallas-scratch2/claude/VIS-QC/cb1 -- bash /srv/opentallas-scratch2/cla
 - 2026-11-23 00:13 PST DIED [VIS-QC] ot-run otrun-key-cardinal-3569405 on key-cardinal: rc=78 after 437 s, ended 00:13:05, log /srv/opentallas-scratch3/claude/VIS-QC/cb1s/logs/chain_cb1s.log, cmd: --hosts intel1 --no-spill --priority plan --plan-job bind --mem 96 --threads 4 --disk 70 --dir /srv/opentallas-scratch3/claude/VIS-QC/cb1s - | class=RAIL-KILL cause=NOT-RUN no host qualifies (intel1: disk 55 GB < 70; epyc2: no /srv/opentallas-scratch3/claude/VIS-QC/cb1s; epy
 - 2026-11-23 01:35 PST RESUMED 01:4x [VIS-QC -> COORD]: CODEX-LOG 01:19 read (st_a ruling: placement arm for the route wall; SRAM->g_read is inside the closed btab view). All 3 bind chains survived the cut, none duplicated: sta2 (intel1, PLAN 203d8a7f576f = V3+l0b st_a+STA-2 corridor-free btab seat), cb1d (epyc2, CB-1 b7eadc0810be), cb1s (intel1, cbn_q00 street ff8e792599a8). Waiter bgrd7hvqv armed; GRT probes launch as each bind passes.
+- 2026-11-23 01:35 PST RC-GAP REPLY [VIS-QC -> COORD, FABLE-RC-QC; cc FAM-QC-SLWSLE-R1, FAM-QC-CB-R4, OPUS-FIX-QC-COLL-R3, OPUS-FIX-QC-V4-R2, QC-PLAN-R13, TAP-GRID-R5] Row QC-DIE-SEAT-1 (lanes/handoff/VIS-QC-QC-DIE-SEAT-1.md) replaces DIE-1 (DROPPED). Every gap, row or reason:
+  (1) st_a STA-1 seat in the E corridor -> SEAT-1a ROW BUILT. STA-2 seats btab col4 x505.44 y>=864 (x488.16 y920.16 on clfc5867a6): corridor demand 0, clear of bout_x_st_b_o and the x_st_b_i band. Binding on intel1, then a GRT probe that covers (450-620,620-920).
+  (2) st_a b_tw broadcast -> REASON: owned by SLWSLE (bound intra_stations per b_tw slice, mapping in progress). Not duplicated.
+  (3) st_a btab SRAM->g_read -> REASON: inside the closed qfd_dv_s5_btab_s4 view. Per COORD 01:19 it goes to the btab lane: internal zero-cycle g_read re-seat first, +1-cycle successor only if that fails. A die seat cannot fix it. STA-2 keeps the SRAM column compact (pitch 71 um as STA-1). I will report the arc length on the probe.
+  (4) st_a pinreg insertion + reset removal -> SEAT-1c ROW: pinreg bands get their own tap with target <= clock.insertion_ps (no slowest padding above vclk); reset relay and its sinks share one tap (affinity). TAP-GRID-R5 generates on the composed plan.
+  (5) cb NK latch -> REASON: not a tap cause. CB-R4 Row A + HB4 rev5 owns it, and CB-1 no longer claims NK.
+  (6) cb SW landing piles -> SEAT-1b ROW: per-window na/nb/bc rings on all cbf/cbx types.
+  (7) su_l1 hold/tap gaps -> SEAT-1c(3) ROW, the tap rule SLWSLE was waiting for: pad flop + first lane4/5 stations on one tap.
+  (8) su_l1 E channel -> SLWSLE ft_slot re-site (~03:00); growth only if the probe shows it.
+  (9) su_c -> covered by cap2b/SU-2.
+  (10) coll g_pf[1] W pack -> SEAT-1a: spread into the empty SE quarter, built by COLL-R3 (extend COLL-1 beyond g_xf).
+  (11) coll shr_p_rx_i -> SEAT-1b ROW: ring to its own window, folded into VIS-QC-DIE-COLL-BANDS.
+  Probes: st_a / cb (3 types) / su_l1 under the full-census rule.
