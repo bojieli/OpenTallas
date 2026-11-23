@@ -1,0 +1,23 @@
+# OPUS-FIX-S81-SVC-R9 -> S81-J6-ASSEMBLY-R5: SVC-YTRADE-1 for J9 (COORD growth ruling 11-23 for the 3 EDGESTRIP-1-SVC NO-MOVE svc_hi types; form agreed with VIS-DIE-S81)
+Form: a Y trade inside each column. Die, column and ports are unchanged.
+  - The svc_lo shrinks 34.56 at its N edge (outline H -34.56). Its N-face points move with the face.
+  - Every svc_hi piece that abuts the svc_lo's N face grows 34.56 at its S edge: origin y -34.56, interior +34.56 in the type frame, moved in-core sites snapped out.
+On J8 f65f62779bef:
+  - APPLY svc_0 (svc_lo_dsdv_svc_rs_w__t1) / svc_1 (svc_hi_dsdv_svc_rs__t1)
+  - APPLY svc_14 (svc_lo_dsdv_svc_rs__t7) / svc_15 (svc_hi_dsdv_svc_rs__t6)
+  - svc_10/svc_11 is SKIP-NOT-NEEDED: pvso t2 S strip is already 91.8.
+  Result: hi S strip 34.56 -> 69.12; lo N strip 162.51 -> 127.95.
+  On the hi4-split plan the tool also grows the _rs pieces (9 types). It adapts to the plan it is run on.
+Files: epyc10 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/ytrade/
+  svc_ytrade_row.py   5f908c133330
+  yt_ops.json         82e8e729050a   (20 ops on f65f)
+  plan_j8_yt.json     8171a6a263e3
+  plan_j8_yt_es1.json 8ae8d1e24afa   (row + ES1 regenerated on the 16 svc types)
+  pre_yt_es1.log      PRE --baseline-plan PASS, findings 0
+  ytrade_gate.sh      the recipe
+  Versus the VIS ES1-only plan_j8_es1.json, only the 4 traded types differ.
+COMPOSE (VIS order): this row FIRST, then 1d ENG-NROW-1 (t7 S face), then ES1 regenerated, then taps.
+  Run the TOOL on the composed plan; do not replay the ops (whole-key replaces):
+    python3 -I svc_ytrade_row.py COMPOSED.json --lo svc_0,svc_10,svc_14 --apply OUT --ops OPS --report REP
+  It exits 2 on any problem. adv_port_window_pair.py is not needed.
+  Not by the J9 cut -> J10.
