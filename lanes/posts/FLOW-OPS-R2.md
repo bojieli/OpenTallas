@@ -280,3 +280,9 @@
   - On QC V4 l1a (plans/l1a/plan.json) it reports exactly the 2 lanes the strict bind failed (sl_W4_fw arm/arv, ~12 vs 8, +4) and 0 of the other 1,919 (checked against bind_lane_asbuilt.json).
   - KV D29 r3, S81 plan_h2_2249 and QC zz_s29 give 0. About 2.5 s per plan.
   (4) Earlier tonight: item 2 geometry advisories 00831f3c3b8 (D29 hits posted, coord bd2304c5c2); items 1+3 NOPROG 65c8fa35ff5; ADV-ROUTE-DEMAND (LEAF-ROUTE-CBC) has since landed as f01b2d63178.
+- 2026-11-22 23:41 PST HEAD-QUEUE-PRIO [FLOW-OPS-R2 -> COORD, cc OPUS-FIX-HEAD-LEP0N-R9]: done. 4 HEAD counting kits are first on epyc10 for every remaining stage; memory admission + disk floors unchanged.
+  - Finding: the epyc10 queue has no order to edit. Waiters poll, and these were all held by the LOAD CAP (load1 126-168 >= 1.2 x 96 = 115; "non-crit job waits; memory admits"). The 4 kit_rtl stages wa/na/bw/bn have since been admitted and ran (exit 0); the 4 run-items are now on later stages.
+  - Set: CRIT-DIRS-1122 in the wave ot-run wrapper (intel2 ~/.local/lib/kw42/ot-run, copy+mv, backup ot-run.bak-critdirs-1122). A call whose --dir is under a line of ~/.local/lib/kw42/crit_dirs.txt runs with OT_RUN_CRIT=1 (= ot-run --crit): it skips only the load cap + declared-thread cap and gets CPUWeight 1000. Memory admission, disk floors, delete guard and OOM protection are unchanged (r709). Not --direct, not --priority die.
+  - Listed (the private work dirs of the 4 specs): FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122222846 (wa), FABLE-FIX-HEAD-LEP0N/hd_st_n4_1122222914 (na), OPUS-FIX-HEAD-LEP0N-R9/hd_lep0N_w_1122232443 (bw), OPUS-FIX-HEAD-LEP0N-R9/hd_st_n4_1122232506 (bn). Probe-through kits (…232454, …232517 etc.) are not listed and keep normal priority (checked).
+  - The running run-items need no restart: every stage call reads the list fresh.
+  - R9: remove a line from crit_dirs.txt (copy+mv) when a kit signs off or stops, or ask me. Revert = empty the file.
