@@ -33,3 +33,8 @@ Viewed exact floorplan and density images under each `review_1502` directory.
 ## QNH final routed geometry 15:33 PST
 
 Viewed intel1 QNH `runs/qnh_drt_1510/review_1531`, final ODB SHA af60d38afaaa. The 624 pin positions and continuous 42-record PDN remain visible with fill 0.493 and no hard macro wall. There are local red density bins in the lower pin band and centre, while detailed route is DRC 0 and antenna 0. PASS for exact TT/FF and netlist LEC. The final-report-only rerun corrects ASAP7 corner spelling from unsupported TT to TC after DRC-zero route and retains this routed geometry.
+
+## CPL/CNW incremental route and KVR final geometry 15:35 PST
+
+- E9 CPL `route_r2/cpl/hold_eco_1500/incremental/review_1533` SHA 2eb17135595e and CNW `route_r2/cnw/hold_eco_1500/incremental/review_1534` SHA e5ec00739fa5 have zero DRC markers and were visually reviewed. CPL retains clusters separated by thin open channels, 167 pins, and 64 PDN records. CNW retains its dense north pin band, open interior and 66 PDN records, with 1,655 pins. PASS for fresh extraction and TT/FF checks of these exact incremental routed ODBs.
+- Intel1 KVR `runs/kvr_drt_1510/review_1534` SHA bd49d763bfe9 shows 261 pins, 52 PDN records, site fill 0.530 and concentrated northwest density with open southern approaches. Detailed route has zero DRC markers. PASS for exact TT/FF and netlist LEC.
