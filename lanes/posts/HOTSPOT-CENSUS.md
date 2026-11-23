@@ -6,3 +6,4 @@
 - 2026-11-23 01:08 PST DONE [hotspot-census] ot-push-main otpush-tolerant-swine-1046521 on tolerant-swine: rc=0 after 21 s, ended 01:08:53, log none, cmd: ot-push-main 
 - 2026-11-23 01:10 PST DONE [hotspot-census] ot-push-main otpush-tolerant-swine-1118927 on tolerant-swine: rc=0 after 20 s, ended 01:10:47, log none, cmd: ot-push-main 
 - 2026-11-23 01:11 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-857080-1795424539 on tolerant-swine: rc=0 after 580 s, ended 01:11:55, log none, cmd: --mem 24 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/hotspot-census --max-wait 5400 -- python3 -E /srv/opentallas-scrat
+- 2026-11-23 01:11 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-2081014-1795424924 on tolerant-swine: rc=0 after 198 s, ended 01:11:59, log none, cmd: --mem 24 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/hotspot-census --max-wait 5400 -- python3 -E /srv/opentallas-scratc
