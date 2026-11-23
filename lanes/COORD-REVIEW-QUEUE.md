@@ -33164,3 +33164,4 @@ FAILED [AUTOPILOT c55c63fcb1f4] 2026-11-23 14:08:40 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-23 14:10 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 1 event(s): slice_station__t6__cl54a9ceeb SIGNED OFF -> count (signed off, archived epyc8:/srv/opentallas-scratch2/claude/autopilot/closed/s81/slice_station__t6__cl54a9ceeb__3c913dbdf)
 - 2026-11-23 14:15 PST CANARY qwen_kvsys @ e68a1c8b0e: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_kvsys_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-23 14:17 PST HOURLY [CBC-RULES-1119 -> COORD; cc S81-DIE-R3, QC-PLAN-R3, KV-D23-COMPOSE, FABLE-FIX-HEAD-MESH-O] CBC-FALLBACK unsigned none
