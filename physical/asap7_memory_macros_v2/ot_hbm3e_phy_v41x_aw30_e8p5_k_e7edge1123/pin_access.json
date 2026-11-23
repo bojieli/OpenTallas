@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.phy.pin_edge_form.v1",
+ "moved_pins": 2488,
+ "edge": "E",
+ "layer": "M6",
+ "edge_rect_x_nm": [
+  8499864,
+  8500056
+ ],
+ "groups": [
+  {
+   "name": "dfi_i0 (E window 873.6-1170.98)",
+   "pins": 1368,
+   "range_um": [
+    869.28,
+    1166.66
+   ],
+   "candidate_tracks": 3714,
+   "min_step_nm": 128
+  },
+  {
+   "name": "hbmrd_o0 (E window 627.84-867.036)",
+   "pins": 1120,
+   "range_um": [
+    623.52,
+    862.716
+   ],
+   "candidate_tracks": 2981,
+   "min_step_nm": 128
+  }
+ ],
+ "minimum_same_layer_clearance_nm": 96,
+ "names_sha256": "fa21623257bc4f1665a35221330c58c79ea2b4fd11500672364e62d37adc60d1",
+ "outline_unchanged": true,
+ "added_cells": 0,
+ "added_cycles": 0,
+ "timing_arcs_unchanged": true,
+ "pg_bands": [
+  {
+   "period_nm": 4320,
+   "lo_nm": 1968,
+   "hi_nm": 2640
+  }
+ ],
+ "origin_um": [
+  77.76,
+  4.32
+ ],
+ "contract_basis": "Generated PHY macro abstract, not a routed hard-child/GDS view. Pin moves are explicit new physical contract; timing arcs unchanged, no invented routed timing.",
+ "source_sha256": "a34a477569dfc60f8d639e667a69980654fc4ebc4517ca029ee90ee4e69be7c0",
+ "output_sha256": "5f851c590942133b85c2ac4ab822b3bbf9735393e678d3ad61db435bb6417e8a"
+}

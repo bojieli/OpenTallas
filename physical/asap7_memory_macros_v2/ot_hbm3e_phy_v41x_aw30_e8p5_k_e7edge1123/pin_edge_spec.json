@@ -1,0 +1,114 @@
+{
+ "row": "PHY-T1-NECORNER-1",
+ "note": "phy__t1: macro channel 7 (MSB slice of every k_*/kr_* bus) feeds the E-face buses dfi_i0 / hbmrd_o0 (rtl s81p_phy__t1_bound.sv u_core concat). Its pins move from the N edge (x 8160-8330, interleaved with channel 6) onto the macro E edge, M6, over the y range of the matching partition E-face window (phy-local window - macro origin y 4.32). PG: kit pdn.tcl M6 stripes width 0.288 spacing 0.096 pitch 4.32 offset 1.968 (VDD+VSS pair = 1.968..2.640 in the partition).",
+ "edge": "E",
+ "layer": "M6",
+ "pitch_nm": 64,
+ "offset_nm": 32,
+ "pin_len_nm": 192,
+ "pin_w_nm": 32,
+ "origin_um": [
+  77.76,
+  4.32
+ ],
+ "clearance_nm": 72,
+ "pg_bands": [
+  {
+   "period_nm": 4320,
+   "lo_nm": 1968,
+   "hi_nm": 2640
+  }
+ ],
+ "groups": [
+  {
+   "name": "dfi_i0 (E window 873.6-1170.98)",
+   "range_um": [
+    869.28,
+    1166.66
+   ],
+   "order": "desc",
+   "bits": [
+    [
+     "k_addr",
+     840,
+     960
+    ],
+    [
+     "k_len",
+     112,
+     128
+    ],
+    [
+     "k_tag",
+     476,
+     544
+    ],
+    [
+     "k_v",
+     28,
+     32
+    ],
+    [
+     "k_wdata",
+     7168,
+     8192
+    ],
+    [
+     "k_we",
+     28,
+     32
+    ],
+    [
+     "k_wstrb",
+     896,
+     1024
+    ],
+    [
+     "kr_rdy",
+     28,
+     32
+    ]
+   ]
+  },
+  {
+   "name": "hbmrd_o0 (E window 627.84-867.036)",
+   "range_um": [
+    623.52,
+    862.716
+   ],
+   "order": "asc",
+   "bits": [
+    [
+     "k_rdy",
+     28,
+     32
+    ],
+    [
+     "k_wr_done",
+     28,
+     32
+    ],
+    [
+     "kr_beat",
+     112,
+     128
+    ],
+    [
+     "kr_data",
+     7168,
+     8192
+    ],
+    [
+     "kr_tag",
+     476,
+     544
+    ],
+    [
+     "kr_v",
+     28,
+     32
+    ]
+   ]
+  }
+ ]
+}
