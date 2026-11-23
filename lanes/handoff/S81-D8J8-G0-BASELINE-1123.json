@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.publish_gate.g0_baseline.v1",
+ "review": "S81 J8 vs J7 lane gate: 0 introduced G0 errors (g0_comparison.json); every accepted error exists on J7.",
+ "accepted_errors": [
+  {
+   "level": "ERROR",
+   "check": "clock_landings",
+   "msg": "cland_mon_ready__fW0_p1_b0: actual endpoint hop 3232.640um exceeds405"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock_landings",
+   "msg": "cland_mon_fault__fW0_p1_b0: actual endpoint hop 3228.288um exceeds405"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock_landings",
+   "msg": "cland_mon_clk__fW0_p1_b0: actual endpoint hop 3236.992um exceeds405"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock_landings",
+   "msg": "cland_mon_ready__lk_ES0: actual endpoint hop 1025.216um exceeds405"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock_landings",
+   "msg": "cland_mon_fault__lk_ES0: actual endpoint hop 1020.864um exceeds405"
+  },
+  {
+   "level": "ERROR",
+   "check": "clock_landings",
+   "msg": "cland_mon_clk__lk_ES0: actual endpoint hop 1029.568um exceeds405"
+  }
+ ],
+ "reviewed_g0_sha256": "1be472ac608331f0ec0c1b0fa5f627e695a4111828ba977d82accca6b4679361",
+ "reviewed_g0_source": "epyc10:/srv/opentallas-scratch2/claude/s81-j6-r5/j8_cut_intake/gate/g0_j8/g0_report.json",
+ "reviewed_plan_sha256": "6833070df60bd4f3d5f5fc0dc6eecbce1a2123c16edd45e375799698abbe9664"
+}
