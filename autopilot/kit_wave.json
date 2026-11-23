@@ -41023,7 +41023,6 @@
    "gen_host_min_free_gb": {},
    "retry": [
     "slice_station__t24__cl66b71008@21",
-    "col_h9_r2__t1__cl774acf45__pvea45273b@4",
     "eng__t1@16",
     "gunit__t1@19",
     "ot_s81sl_leaf__t56@19",
@@ -41064,7 +41063,6 @@
     "col_h9_r0_p1__t1__pvf9acce4c@1:fix=047a97aa1aa",
     "col_h9_r2__t1__cl87f3ff59@1:fix=1c8b40168f9",
     "col_h9_r1__t1__cl49d7a23e__pv4bd36c74@1:fix=1c8b40168f9",
-    "col_h9_r2__t1__clce45cab5__pv7c30fd4e@1:fix=1c8b40168f9",
     "col_h9_r2__t1__clce45cab5__pvdc7d4221@1:fix=1c8b40168f9",
     "ot_s81sl_leaf__t65@1"
    ],
@@ -41410,7 +41408,10 @@
     "leaf__t24__cl2456157b": "await J9 leaf rows (COORD 22:4x): same-class repeat fails. owner=OPUS-FIX-S81-LEAF-R10 eta=2026-11-24 12:00 (J9); row J9-LEAF-REACH",
     "leaf__t53__cl958451dd": "await J9 leaf rows (COORD 22:4x): same-class repeat fails. owner=OPUS-FIX-S81-LEAF-R10 eta=2026-11-24 12:00 (J9); row J9 leaf sweep (class read pending)",
     "leaf__t21": "await J9 leaf rows (COORD 22:4x): GRT noconverge twice since 08:00. owner=OPUS-FIX-S81-LEAF-R10 eta=2026-11-24 12:00 (J9); row J9-LEAF-GRTCONG",
-    "leaf__t36": "await J9 leaf rows (COORD 22:4x): GRT noconverge twice since 08:00. owner=OPUS-FIX-S81-LEAF-R10 eta=2026-11-24 12:00 (J9); row J9-LEAF-GRTCONG"
+    "leaf__t36": "await J9 leaf rows (COORD 22:4x): GRT noconverge twice since 08:00. owner=OPUS-FIX-S81-LEAF-R10 eta=2026-11-24 12:00 (J9); row J9-LEAF-GRTCONG",
+    "col_h9_r2__t1__cl774acf45__pvea45273b": "await RANKSEAT family row (J9) (COORD 22:5x OWNERS-SWEEP): FAILED on GRT congestion (GRT-0116 / grt_flat_overflow), no relaunch; col congestion = porous-LEF EOL / RANKSEAT family fix. owner=FABLE-FIX-S81-COL-RANKSEAT eta=2026-11-24 12:00 (J9); row S81-COL family row",
+    "col_h9_r2__t1__clce45cab5__pv7c30fd4e": "await RANKSEAT family row (J9) (COORD 22:5x OWNERS-SWEEP): FAILED on GRT congestion (GRT-0116 / grt_flat_overflow), no relaunch; col congestion = porous-LEF EOL / RANKSEAT family fix. owner=FABLE-FIX-S81-COL-RANKSEAT eta=2026-11-24 12:00 (J9); row S81-COL family row",
+    "col_h10_r1__t1__cl95b37463__pv86f5e3b9": "await RANKSEAT family row (J9) (COORD 22:5x OWNERS-SWEEP): FAILED on GRT congestion (GRT-0116 / grt_flat_overflow), no relaunch; col congestion = porous-LEF EOL / RANKSEAT family fix. owner=FABLE-FIX-S81-COL-RANKSEAT eta=2026-11-24 12:00 (J9); row S81-COL family row"
    },
    "auto_visual_review_skip": [
     "*"
