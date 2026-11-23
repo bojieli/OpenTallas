@@ -17,3 +17,8 @@ Report to FIX-LEDGER (acd269758d3b62a53) at ROOT-CAUSE, ROW-DRAFT, GATED/REASONE
 - Gate: epyc8 /srv/opentallas-scratch2/claude/FIX-QC-STA-BTW/gate_btw0.sh btw0g (apply on c2b -> reprice 0 lanes -> TAPNAME 0/0 -> latency -> pgp check -> G0). Local log scratchpad gate_btw0.out.
 - Asked HCST-R3 (ad1cb539e214811d9) for the STA-1b/btab_s4r btab origins, to clear the (412,667) site.
 - NEXT: when PRE+G0 pass -> ROW-DRAFT to FIX-LEDGER + V4-R2 (a0667f53915fbc5a6) for c4 08:00; probe = sealed st_a kit on c4 bound (or a private bind of btw0g) for setup >= -42 on the b_tw class + census incl q[29..1079] -> btab.
+## 04:2x
+- Estimate posted (hub 01fb016): 0.645 ps/um buffered at the GRT basis, overhead 196, required 916.45 -> bank->r3 at 529 um slack = 365 - T_bank (+67 at 298, +15 at 350); landing->bank about +400. FABLE-RC-QC agreed, no per-hop station (892ab26d); acceptance = probe >= -42 on the 3 types from the final GRT, report the bank tap, re-read if SEAT-1c lands.
+- What-if on the DB (epyc2 FIX-QC-STA-BTW/whatif/cled_w*) INVALID: remove_buffers ignored the list and removed all 116k buffers, and the clock was not re-tapped (launch 567). Not used. Placement-basis base reads -88 vs -218 at GRT.
+- Row sent to V4-R2 for c4 as a key-merge applied LAST (btw0_rows.py --apply). No private bind: c2b-size fork needs 107 GB on epyc8 (c2b bind was refused for disk).
+- pgp check + G0 running (epyc8 btw0g, started 11:47 UTC).
