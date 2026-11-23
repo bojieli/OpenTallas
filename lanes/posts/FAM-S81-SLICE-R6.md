@@ -344,3 +344,4 @@
   auto_export ledger: exported, record afd71c7afd15 (6_final.odb, epyc9 .../a9ed808a98d/private/FAM-S81-SLICE-R6/slice_station__t6__cl0755c26e_1122025826).
   Not counted yet: autopilot/signed.tsv has no row for it, nor for the 4 earlier private sign-offs (t18, t6__cl54a9ceeb, t29__clc7772371, t40__cl1ea9de02). Private kits reach the export ledger but not signed.tsv. FLOW-OPS, please count all 5.
   Kits: c1x_C t8 (oth-ubuntu-1016070) and kv512_C t1 (oth-ubuntu-3193381) in route; results on finish.
+- 2026-11-23 11:32 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2155329-1795460223 on tolerant-swine: rc=11 after 2122 s, ended 11:32:18, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_j9rc33k.otrun.log, cmd: --crit --priority die --mem 64 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind --stage /srv/opentall | class=BIND-FAIL cause=BIND_RC=1
