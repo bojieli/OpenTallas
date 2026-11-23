@@ -3,12 +3,18 @@
 // Focused fixed-source programme/control/timing qualification, not whole-die G5.
 module tb_svc_native_programme;
  reg clk=0;always #0.5 clk=~clk;reg rst_n=0,qv=0;reg[511:0]q=0;
+ integer tail=0;
  integer phase_case=0,mut=0,errors=0,cycle=0,origin=-1,gphase=-1;
  integer qc=0,kc=0,pc=0,lastq=-1,lastk=-1,lastp=-1,qerr=0,phaseerr=0;
  wire[31:0]fc;
  integer nonzero_s=0,nonzero_p=0,ns=0,np=0,firsts=-1,lasts=-1,firstv=-1,lastv=-1,drains=0,firstd=-1,lastd=-1,afseen=0,paccept=0;
  reg[1075:0]scores[0:7];reg[1063:0]pvsaved[0:7];
+`ifdef OT_SVC_BAND
  wire af=u.u_eng.g_tr[0].g_xb.u_band.u_t.u_hc.u_expand.fault | u.u_eng.g_tr[1].g_xb.u_band.u_t.u_hc.u_expand.fault | u.u_eng.g_tr[2].g_xb.u_band.u_t.u_hc.u_expand.fault | u.u_eng.g_tr[3].g_xb.u_band.u_t.u_hc.u_expand.fault;
+`else
+ // no band (as built / SRX / OT_SVC_ENG_XS forms): the tiles sit directly in the engine
+ wire af=u.u_eng.g_t[0].g_ts.u_t.u_hc.u_expand.fault | u.u_eng.g_t[1].g_ts.u_t.u_hc.u_expand.fault | u.u_eng.g_t[2].g_ts.u_t.u_hc.u_expand.fault | u.u_eng.g_t[3].g_ts.u_t.u_hc.u_expand.fault;
+`endif
  dsdv_svc_att #(.H(8)) u(.clk(clk),.rst_n(rst_n),.sid(4'd3),.tile(4'd0),.gd(8'd0),.pvs(8'd0),.root(1'b0),
   .q_v(qv),.q_d(q),.hw_v(1'b0),.hw_d(291'd0),.qrq(),.qrk(2'd0),.qwd(2'd0),.qrv(2'd0),.qr_data(512'd0),.qr_tag(34'd0),.qr_beat(8'd0),
   .l_v(),.l_d(),.pv_ov(),.pv_od(),.sm_st(),.sm_kind(),.sm_jid(),.sm_rv(),.sm_rp(),.sm_rj(),.sm_rd(),
@@ -58,6 +64,7 @@ module tb_svc_native_programme;
  initial begin
   reg[511:0]h;integer nominal_bad;integer seen[0:1];
   void'($value$plusargs("mut=%d",mut));
+  void'($value$plusargs("tail=%d",tail));   // extra wait after GO for forms with later scores / P.V (SRX, ENG_XS)
   for(integer p=0;p<2;p++)begin
    phase_case=p;rst_n=0;qv=0;repeat(64)@(negedge clk);rst_n=1;
    nonzero_s=0;nonzero_p=0;ns=0;np=0;drains=0;afseen=0;paccept=0;firsts=-1;lasts=-1;firstv=-1;lastv=-1;firstd=-1;lastd=-1;qc=0;kc=0;pc=0;lastq=-1;lastp=-1;lastk=-1;qerr=0;phaseerr=0;origin=-1;
@@ -70,7 +77,7 @@ module tb_svc_native_programme;
    word(hdr(1,128));for(integer j=0;j<128;j++)begin h=0;for(integer w=0;w<32;w++)h[16*w+:16]=16'(16000+32*(j/16)+w);word(h);end gap();
    word(hdr(5,8));for(integer j=0;j<8;j++)begin h=0;for(integer w=0;w<32;w++)h[16*w+:16]=16'(15872+32*j+w);word(h);end gap();
    repeat(p)@(negedge clk);
-   h=hdr(13,0);h[15:0]=64;h[31:16]=200;word(h);gap();repeat(260)@(negedge clk);
+   h=hdr(13,0);h[15:0]=64;h[31:16]=200;word(h);gap();repeat(260+tail)@(negedge clk);
    seen[p]=gphase;
    nominal_bad=(qc!=8||kc!=8||pc!=4||qerr!=0||phaseerr!=0||fc!=0||afseen!=0||ns!=8||np!=8||paccept!=4||drains!=40||!u.done||nonzero_s!=8||nonzero_p!=8);
    $display("NATIVE_PROGRAMME case%0d go_phase%0d Q%0d KV%0d Ppush%0d Paccept%0d scores%0d rawPV%0d drainedWords%0d payloadErrors%0d phaseErrors%0d fc%08x afSeen%0d scoreDates%0d:%0d rawPVDates%0d:%0d drainDates%0d:%0d done%0d",p,gphase,qc,kc,pc,paccept,ns,np,drains,qerr,phaseerr,fc,afseen,firsts,lasts,firstv,lastv,firstd,lastd,u.done);

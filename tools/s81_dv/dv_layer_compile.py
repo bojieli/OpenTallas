@@ -1166,9 +1166,14 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError(f'OT_SVC_SRX {sorted(srx)} has no service timing dates (0 or 7)')
         if srx == {7}:
             expected += '_srx7'
+        # S81-SVC-J9: -DOT_SVC_ENG_XS (two kept engine stages) only has dates on top of SRX 7 with the closing engine
+        if 'OT_SVC_ENG_XS' in defines:
+            if expected != 'closing_allq_srx7':
+                raise ValueError('OT_SVC_ENG_XS has service timing dates only with OT_SVC_SRX=7 and the closing_allq engine')
+            expected += '_xs'
         if svc_timing_profile != expected:
             raise ValueError(f'service timing profile {svc_timing_profile} disagrees with selected source {expected}')
-        if svc_timing_profile in ('closing_allq', 'closing_allq_srx7'):
+        if svc_timing_profile in ('closing_allq', 'closing_allq_srx7', 'closing_allq_srx7_xs'):
             required = {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RST_TIMED', 'OT_SVC_ALLQ'}
             if not required <= defines:
                 raise ValueError('closing_allq timing requires selected source defines ' + ','.join(sorted(required)))
@@ -1534,7 +1539,7 @@ def main(argv=None):
                     help='Checkpoint-derived Engram sidecars for actual attention-entry native rows and NX partials')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
-    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq', 'legacy_fg3_srx7', 'closing_allq_srx7'), default=None,
+    ap.add_argument('--svc-timing-profile', choices=('legacy_fg3', 'closing_allq', 'legacy_fg3_srx7', 'closing_allq_srx7', 'closing_allq_srx7_xs'), default=None,
                     help='Service engine timing calendar; closing_allq requires actual ALLQ+SMT source')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
