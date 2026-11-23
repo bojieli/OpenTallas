@@ -1,0 +1,96 @@
+{
+ "advisory": [
+  "dry_gen",
+  "foreign_tree"
+ ],
+ "band_base": null,
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/302e13c28f5a/kv3_hg_v1",
+   "gen_host": "epyc8",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_kvsys/302e13c28f5a/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "3f5349757900199cef99f3fac26f0026ea0dd8013159398155865cfeded30df5",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "ffa669bbd233983813fdec2102da1f7cc5a7c6cca03c50eca63dde760fd7c934",
+   "spec_src": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate",
+   "stage": "gen_lint",
+   "verdict": "FAIL",
+   "why": "stage gen_lint: GEN_LINT FAIL issues 2 pins_vs_plan=PASS clock_export_form=PASS macro_tcl=PASS kit_rtl_paths=PASS rtl_check=FAIL memory_bits=FAIL\n- GEN_LINT FAIL rtl_check: ERROR: Module `\\qkd_ectl3_kiss_st_cols__columns_built_for_other_params' referenced in module `$paramod$7dc9580f331151ed58964a77433b6425ded343f1\\qkd_ectl3_kiss_st_cols' in cell `\\g_param_mismatch.u_param_mismatch' is not part of the design.\n- GEN_LINT FAIL memory_bits: not measured: yosys elaboration failed (see rtl_check)"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE kit_rtl.bind_out /srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate_bind_1120113734 is outside the candidate tree /srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate"
+   ],
+   "n": 1,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 79
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/pubgate/g0-52f87ctc/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate plan=/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json findings=0\n\nG0: des)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t28 radius=238.08/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t33 radius=208.558/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_pc_v3: grid+explicit tap clk_t42 radius=205.2/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t10 radius=205.631/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t20 load=533/1200, radius=221.059/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t20 radius=221.059/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t25 radius=213.75/200.0 (advisory)\nTAP-LIMIT-INFO kv3_sys_c: grid+explicit tap clk_t30 load=536/1200, radius=234.315/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_sys_c: grid+explicit tap clk_t30 radius=234.315/200.0 (advisory)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate_bind_1120113734/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate_bind_1120113734",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate_bind_1120113734/bind.f",
+   "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate_bind_1120113734/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 2986.6,
+ "hosts": [
+  "epyc8",
+  "epyc7",
+  "intel1",
+  "epyc2",
+  "epyc9",
+  "epyc10",
+  "intel2"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "302e13c28f5a68dc8af2b1bb0cd2b2120e2bcfe348940846b58c2baa3a30b0b3",
+ "plan": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "44c3cbf51e50d3ce440376b80aa2a00a4e0704053aa6f62b8c3bbe9cb7df8164",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 1451.7,
+ "t": 1795403864.5913658,
+ "tree": "/srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate",
+ "verdict": "FAIL"
+}
