@@ -193,3 +193,6 @@ J8 SEAL: admitted 03:0x; GATE_OK g0 8->6, lat 873/873, BIND errors [], pack add 
      If SVC-HI4-SPLIT (R9) is in J9: 11 slice/station seam re-snaps, those ports go to strict bind.
    ECORR revert = OLD col_ygrow 9c728ba3526d, no --form (H10-R4 run5). Rerun run7 (epyc10 fam-s81-col-h10-r4/j9/yg7/run7.sh): REACH v2 -> ECORR -> col_ygrow f62e467e6c4a --form ecorr -> reprice (6 rt_* ISTCYC lanes from ret_o0 +1) -> PRE.
      H10-R4 probe kits L1t/K2 carry the solid ROM-half LEFs (hw 996bfbfe9fcf, he 2b6de51c97b5), not the porous 9924dfc8290c.
+STEP 0 TREE SYNC (COORD 06:xx): the J9 fork of the J8 sealed tree gets the 4 u_cf view files from 31c7ccbd1b (row 3i), plus every porous map.json and common_flow file that ADV-TREE-DRIFT (main 4d4999fb65) flags.
+   Runtime = rt/current 3b25e3b42d4d (POROUS-FRESH).
+   ADV-TREE-DRIFT must show 0 view, porous and flow hits on the J9 tree before PRE/G0/bind. Abort the compose otherwise.
