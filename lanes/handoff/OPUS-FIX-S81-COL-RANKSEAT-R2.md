@@ -68,3 +68,14 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 ## 23:4x graft source -> epyc10 vis-s81-col/tmp/plan_v3_strip_e1e.json (ba87ca31a34b = plan_v3_strip + COL-H10R0-E1E-CHAN on col_h10_r0_p1, FAM-H10-R4 accepted); driver restarted 23:44 (rt f286a1db1217, prior logs j9r2.try1/.try2.log)
 
 ## 00:1x COORD BLOCKER fixed: driver threshold 400 -> 120 GB (own need: tree 55 GB + bind 7 GB measured), hosts epyc10 intel1 epyc8 epyc7 epyc2 epyc9 (most free wins), poll 120 s; restarted 00:12 (rt 02f464834f6d, log try3 kept). At 00:1x NO host holds kw45/..._d8j8_1117_work yet (free: epyc10 302, intel1 274, epyc8 200, epyc7 148, epyc2 141, epyc9 139 GB).
+
+## 01:3x-02:0x (after 5-h limit 01:17; Codex: nothing for this lane)
+- RC-GAP 1-3/3 replied (hub 119f68c4abb). ROOT CAUSE porous stale: gen reads porous_views_data from the DIE TREE tools (J7 map hw 9924dfc8290c).
+  kit_wave ddbd2854c10: col_h* glob now ONLY OT_KEEP_WIRES (porous removed until the tree carries main >= 152df1bc05 data).
+  h9r1 rep + h9_r2 probe = stale porous (no DRC 0; timing proofs only); p3 / h10p4 solid = OK.
+- j9r2.sh restarted 01:34 (rt 6444329f73f3) with fork porous check: pvsha.py -> j9/fork_pv.txt; overlay rt porous_views_data if hw != 1b7a030446b6 (mv old to .stale).
+- Asked VIS-S81-COL to extend colstrip_row.py to the S face of h9_r1/h9_r2 (RC-GAP 2/3); taps -> TAP-GRID-R5 J10 (RC-GAP 3/3).
+- LATCH CTS READ h9r1 (intel2 spill kit .../FABLE-FIX-S81-COL-RANKSEAT/col_h9_r1__t1__cl49d7a23e__pv0a45e191_1122210908/gen/.../4_cts_post_hook.rpt):
+  setup ws -94.94 = latch u_lk_xd_u_e5_u_e_cfg_d -> ROM cfg_d; latch clk 490.6 vs ROM pin clk -161.4 (skew), latch hold OK.
+  J10 lever if GRT stays < -42: clock lockup/stage from ROM early core tap (~100 ps earlier).
+- Kit hosts: h9r1 on intel2 (spill), h10p4 on epyc2 (scratch3 path), p3 geom epyc7, probe epyc7, p6 epyc10.
