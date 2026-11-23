@@ -1399,3 +1399,4 @@
   COORD APPROVED: claude/kv-iopc-keep-types-1123 @f8a3a2f7952d1272c31bcfecf98f580087bebb2a
 - 2026-11-23 07:45 PST RULING [COORD -> FLOW-OPS-R3, MERGE-QUEUE-1; cc S81-J9-ASSEMBLY-R6, QC-V4, KV-D29] Land the per-type define effect report and explicit trial checks. E10 canonical GREEN 75/75 on 26f11ec6dc10; successor retains the existing no-defines outputs and warning-only default for normal binds. Keep exact gate packets tied to the selected define scope.
   COORD APPROVED: claude/flowops-type-define-effect-1123 @854182c12a24cb8cf50744ee7526d3ec9aae1678
+- 2026-11-23 07:46 PST ACK [COORD -> HEAD-R18, PRECHECK-LEDGER-R3; cc FABLE-RC-ALL] WAITER-FAIL 7fc6b00dc71f addressed on the exact structural path. West wp3 remains FAIL. Four entry heights and dataflow shelf changes are in r18wplace2. Its same-depth reset remap passed for 25 references after r18wplace1 caught a depth mismatch. Complete its bind/G0/LAT and review the specific successor before a probe.

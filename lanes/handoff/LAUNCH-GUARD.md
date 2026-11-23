@@ -21,3 +21,7 @@ main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. 
 - Exact reviewed-wave dispatch guard 53a303bb9822, canonical 207/207 GREEN, running in intel2 rt/current 441cd5b7bc9d. User autopilot drop-in zzzzzz-codex-takeover-viewed-route.conf sets AP_REQUIRE_VIEWED_WAVE_ROUTE=1. No service restart or change to running work. Matching exact kit/attempt/build-start minute on enqueue and submit, route below visual wait, generation and placed renders proceed.
 - QC obsolete pending E10 V2 slw_fe_v1__clfe325744__cl08d14f0d queue 4ca96043ff34 withdrawn via cfdc0297d83a, AP confirmed. Already-started E2 V2 and E9 V3 survive.
 - PHY-B sealed LINT basename-collision correction 8b86009b6f87, canonical 5/5 GREEN, E9 exact GEN_LINT PASS. Wrapper preflight independent structural failure remains held, see TL-QCPHYSDB.
+
+## CODEX notes 2026-11-23 07:46 PST
+
+- Viewed-kit route guard 53a303bb982 GREEN207, merged 441cd5b7bc9, active AP_REQUIRE_VIEWED_WAVE_ROUTE=1 on intel2. No disruption to already submitted units. QC PHY-B obsolete source overlay fixed, exact GEN_LINT green with 8b86009b6f8 (5 canonical files); count-direct archive is hard IP. Legacy exploratory wrapper automatic route stays held. Obsolete exact E10 QC queue item 4ca96043ff34 withdrawn before admission.

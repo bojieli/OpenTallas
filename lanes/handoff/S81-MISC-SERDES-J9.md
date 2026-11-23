@@ -18,3 +18,7 @@ Forks (background agents of this lane, post as "[serdes fork]" / "[misc fork]" /
 - Gate 10c: misc fork run (plan 0e32aea4d155 + asbuilt 09487b062b71, client 2237640) is the one; seqhost-fork variant a5405915b5aa killed (3 bad lanes in emulation).
 - seqhost fork DONE: cause = 52.7k-flop soft core at tile centre, 21 face buses 747-1336 um in one cycle, no sited stations -> relay pairs collapse; row = gate-10 stations + 25 taps; reset legs REASONED (async clear eq); needs fast place/GRT probe after 10c bind. iq_C t1 gaps: DSDV-R1 mask same-edge RTL row no owner/gate; cland ring ctl_w->lap_ok no row.
 - misc fork owns GAPMAP rows bk_sel/gunit/seqhost RELAUNCH + bk_sel/eng/iqf HOTSPOT.
+
+## CODEX notes 2026-11-23 07:46 PST
+
+- SerDes t2 KIT_RTL FAIL diagnosed: falling-entry native reset was emitted correctly and validator expected rising-only. 359 nodes accepted in exact replay and 63 canonical test files GREEN, branch ae571ead8db merged as 0a1ed3c1330. Regenerate and view the exact kit. SVC now one measured overfull t6_rs band; candidate being corrected. KVLEAF hard RQ2 native data bench passed, baseline HRQ1 mismatch/formal still needs closure on E9.

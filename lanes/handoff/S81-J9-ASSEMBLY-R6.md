@@ -16,3 +16,7 @@ Work dirs: intel2 /srv/opentallas-scratch2/claude/s81-j9-r6 (j8_finish.sh, j8_ap
 - GAP MAP lanes/handoff/S81-J9-GAPMAP.tsv (75 hotspot + 23 relaunch, owner lanes fill). Count mapped/unmapped at 10:30 -> COORD.
 - COMPOSER epyc10 s81-j9-r6/compose/{jlib.py,compose.py}: recipe JSON steps ops|delta|tool|skip, old-value check, ledger.json. trial1.json (col r2m delta excl core_pin_lead_ps + NO-LAG lead + slice f65f->1ca3d4bf7df6 + col_ygrow --form ecorr + die_grow --cut0 20900.16) = 0 conflicts, final 997c39644f83 (trial1_out). f65f == 6833 except budgets.relay_mid_re_types.
 - Gate template: R5 j8_cut_intake/j8_cut_gate.sh (PRE, G0 both, elab --mem 64, bind --strict --all-gaps, lane_asbuilt_latency, G0 compare). J9: reuse J8 g0 report j8_cut_intake/gate/g0_j8. Reset relays: tools/die_plan/reach_relay_plan.py plan PLAN SIDECAR --out-plan --out-sidecar --report. Reprice: plan_gate_pre.py reprice --plan --baseline-plan --out.
+
+## CODEX notes 2026-11-23 07:46 PST
+
+- J8 891100ef774 applied on six replicas (source 61701f3e485d, bind 395/395, 552 files). E9 two same-byte foreign .fork.json inodes repaired. t18 FAIL on ft6 demand 5.767, held; J9 reviewed revision fcc21829441f demand 0.893, exact composed bind pending. c1x_C t5 and c3x remain held for XGA2. Two reviewed COL diagnostic pilots eligible; detached E8 preflight.

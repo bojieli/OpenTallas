@@ -22,3 +22,7 @@ yosys FSM_RECODE st[2:0] (7 states) -> one-hot st[0..6]; OT_LEC_SUPERSET_VEC=1 n
 - r18r cold tree epyc9 fork is copying roughly 47.6 GB over the network at about 2 MB/s. Existing client oth-ubuntu-1343343-1795444932 retained. Only Codex's dependent wait service on epyc9 was stopped. Faster local epyc7 fork and gate started through ot-run under head-r18-wplace1-gate.service PID 2050612, waiting on host load admission. Work under /srv/opentallas-scratch2/claude/head-r18, log tmp/r18wplace1.otrun.log. Candidate uses current pinned runtime c84f72ee2c9e.
 - hd_st_n4 sealed 1123001323 signed TT +75.74, FF-int 0/0, DRC 0, LEC 28870/28870. AGIdock index latest __ax_93d39da9d0 ODB size matches. hd_ctl exact 6_final FSM-corrected LEC epyc9 oth-ubuntu-928356-1795443707 progressing; original failure kept. Independent Fable sign-off review on exact final plan pending.
 
+
+## CODEX notes 2026-11-23 07:46 PST
+
+- West wp3 clock NDR FAIL 7fc6b00dc71f, 5/0 clock/signal overflow, four adjacent low-capacity root entries. Sibling r18wplace1 was refused for depth-6 raw relay at a depth-7 consumer. r18wplace2 same-depth remap passes 25 refs/0 skipped; E7 oth-ubuntu-2402179-1795448660 gating. E7 clock-wall form PRE0/bind0/LAT334; local stripe improved 53 to 3, absolute GRT proof still open. hd_st_n4 archived exact SIGNED TT +75.74, internal FF 0, DRC 0, routed LEC 28,870.
