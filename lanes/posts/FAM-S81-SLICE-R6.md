@@ -313,3 +313,11 @@
 - 2026-11-23 04:38 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2195635-1795435207 on tolerant-swine: rc=11 after 2333 s, ended 04:38:47, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_j9rc33m.otrun.log, cmd: --crit --priority die --mem 64 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind --stage /srv/opentall | class=BIND-FAIL cause=BIND_RC=1
 - 2026-11-23 05:04 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-134239-1795430090 on tolerant-swine: rc=11 after 9014 s, ended 05:04:51, log /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind/gate_j9xga2tl.otrun.log, cmd: --priority die --mem 64 --threads 8 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/fam-s81-slice-r6/j8bind --stage /srv/opentallas-scra | class=BIND-FAIL cause=EMIT dsdv_slice_lepe_nh_mus_C__t1: dsdv_slice_lepe_nh_mus_C__t1: landing_local_resets.fstart_0: consumer u_cla
 - 2026-11-23 05:06 PST DONE [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2687773-1795438502 on tolerant-swine: rc=0 after 696 s, ended 05:06:35, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_dsdv_slice_c1x_C__t8_1122201048/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SLICE-R6/dsdv_s
+- 2026-11-23 06:38 PST J9 slice gate status (to COORD, ASSEMBLY, FIX-LEDGER):
+  1b gate 6c1f82db89ab FAILED. Two causes:
+  (1) reset_anchor: 12 of 16 C types fail with stale reset_tree_anchor names (rst_rl_* not in the re-planned tree).
+  (2) bind EMIT on 5 types (c1x_C t1/t10/t7, iq_C, lepe_nh_mus_C): landing_local_resets fstart raw relay depth 8 != copy depth, so the release edge would move.
+  Root cause: the tap moves (xga2 nudge, and likewise rc33 / TAP-GRID) re-plan the reset relay tree, so every tap-changing row re-breaks the name-pinned anchors. XG-STN hit the same thing; it is not their rows.
+  Fix in build: a deterministic compose-end step (re-anchor + landing raw relay re-select) for ASSEMBLY to run after the TAP-GRID regen and rc33. Proof bind on intel2 main-tools tree.
+  Also: the 16 plan_gate_pre FAILs are svc_* MACROGHOST (29 ghost macro rows each, svc_hi/lo_dsdv_svc_rs/pvso_entry), not slice; for FABLE-UNC-S81-SVC.
+  t6__cl0755c26e private kit SIGNED (all checks PASS); provenance + export next.
