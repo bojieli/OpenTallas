@@ -237,3 +237,10 @@ MERGED J9 COMPOSE ORDER (supersedes earlier lists):
    15. one reprice -> reset.die_relays -> PRE
    16. TAP-GRID-R5 regen v4 -> FIXCHK -> PRE -> G0 -> strict bind (rt/current 3b25e3b42d4d)
    OPEN: does TAP-GRID regen (16) re-touch svc taps that att_order_post set? It must append only (prefix rule) and leave the svc collector tree intact.
+3e/3h COL-H10 GATED (H10-R4 run7): PRE PASS, 0 findings / 84 ADV, 0 ADV-PORT-WINDOW-PAIR.
+   Plan epyc10 fam-s81-col-h10-r4/j9/yg7/plan_final.json 30dd3d6e03cc.
+   Chain: 56d5 GROW -> SEAMBLK 5dbaeeb50fbd -> TAPSPLIT 0c8530ca4c1c -> TAPGRT ef09171c92b8 -> REACH v2 5f8b2104a625 -> ECORR (auto) -> col_ygrow f62e467e6c4a --form ecorr -> reprice.
+   Check (a) PASS: x_i0 [520.56,760.524] on all 6 r0_p1 types, ft0 unswapped, 1 ret_o0 station per type.
+   Reprice +1: rt_E0_in_0 2->3, rt_E1_in_0 6->7, rt_E2_in_0 6->7, rt_W0_in_0 2->3, rt_W1_in_0 3->4, rt_W2_in_0 6->7.
+   This assumes ECORR wins at 09:30. If the swap wins: --form swap, and ECORR rows dropped.
+   OPEN (all-causes): L1t GRT TT -175.6 after repair, so TAPGRT alone does not close col_h10_r0_p4 (hub 9935afb4533). Needs a gated J9 row, or a reason FABLE-RC-S81 accepts.
