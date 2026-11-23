@@ -240,3 +240,21 @@ def test_release_pending_drops_stale_rows():
     rows = [{"sha": "6d4bed7abfe", "scope": "hub", "die": "s81", "retry": "dsdv_slice_c1x_C__t10@3", "lane": "KW"}]
     KW.release_pending(c, st, rows, lambda *a: True, {})
     assert "dsdv_slice_c1x_C__t10@3" not in (c["dies"]["s81"].get("retry") or [])
+
+
+def test_place_setup_stop_below_minus_300_is_design_even_when_stored_infra_or_flow():
+    """COORD 11-23: seqhost__t1 attempts 4-6 all PLACE-SETUP-STOP wns -479.73 ps on one block / event / src"""
+    for k in ({"q_class": "", "class": "INFRA", "status": "FAIL", "q_status": None, "reason": "FAIL_POSTPLACE PLACE-SETUP-STOP wns -479.73 ps < -300 ps"},
+              {"q_class": "FLOW"}):
+        assert KW._rec_design_class(failed(**k)).startswith("PLACE-SETUP-STOP -"), k
+        assert KW.same_input_repeat_refused(AP(), cfg_(), st_with(failed(**k)), "s81", R) is True, k
+
+
+def test_an_older_design_failure_is_not_hidden_by_a_later_cancelled_attempt():
+    st = st_with(failed())
+    st["items"]["later"] = failed(attempt=3, status="CANCELLED", q_status="", q_class="", **{"class": "SUPERSEDED"}, q_reason="", started=3000.0, updated=3100.0)
+    assert KW.same_input_repeat_refused(AP(), cfg_(), st, "s81", R) is True
+    assert KW.same_input_repeat_refused(AP(), cfg_(src_sha="src2"), st, "s81", R) is False
+    c = cfg_(retry=["dsdv_slice_c1x_C__t10@3"])
+    st["retry_seen"] = {"s81|EV1|dsdv_slice_c1x_C__t10@3": 2500.0}
+    assert KW.same_input_repeat_refused(AP(), c, st, "s81", R) is False

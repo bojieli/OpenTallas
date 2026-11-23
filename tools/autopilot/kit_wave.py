@@ -85,6 +85,7 @@ import kit_wave_roam as ROAM
 import flow_guard as FG
 import repeat_stop as RS
 import lbl_gate as LBL
+import env_effect as EE
 OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
 
 # A main merge can happen during a long tick. Never release a merged fix with
@@ -10234,6 +10235,24 @@ def private_lbl_refusal(sp, chain_goal, hub=None, record=True):
     return f"{code}: {why}"
 
 
+ENV_EFFECT_MARK = "ENV_EFFECT_CONFIG_BEGIN"
+
+
+def env_effect_refusal(sp, run, remote, K):
+    """LAUNCH-GUARD 11-23 (COORD; FAM-S81-MISC kit 1 class, the 11-21 private-kit env miss): every OT_* the launcher requests in gen_env (OT_GEN_<X> as OT_<X>)
+    that the current tools write into a kit config.mk must appear there with that value after gen / stage resume, else the mismatch text ('' = OK).
+    Opt-outs: spec env_effect_check false, OT_ENV_EFFECT_CHECK=0.  A kit without config.mk (core freeze.json) is not checked."""
+    if sp.get("env_effect_check") is False or os.environ.get("OT_ENV_EFFECT_CHECK", "1").strip() == "0":
+        return ""
+    env = dict(sp.get("gen_env") or {})
+    if not any(EE.target(str(k), EE.known_keys()) for k in env) and not sp.get("plan_fields"):
+        return ""
+    rc, txt = run("env_effect", remote(f"if [ -f {shlex.quote(K)}/config.mk ]; then echo {ENV_EFFECT_MARK}; cat {shlex.quote(K)}/config.mk; fi"), idempotent=True)
+    if rc or ENV_EFFECT_MARK not in str(txt or ""):
+        return ""
+    return EE.describe(EE.mismatches(env, str(txt).split(ENV_EFFECT_MARK, 1)[1], plan_fields=sp.get("plan_fields")))
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
@@ -11079,6 +11098,10 @@ def run_item(spec_path):
           f"{q(K)} --plan-dir {q(pdir)} --mem {int(sp.get('lint_mem_gb') or 8)}; else echo 'KW_NOTE no kit_gen_lint.py in this source'; fi")
     if kit_rtl_arg:
         gl = kit_rtl_closure_cmd(W, src, "relocate", chain=False, guard=True) + gl
+    _ee = env_effect_refusal(sp, run, remote, K)
+    if _ee:                                              # LAUNCH-GUARD 11-23 (COORD): a requested OT_* knob that did not reach the kit's effective config.mk
+        print(f"KW_STAGE env_effect {now_s()} :: LAUNCH-REFUSED {sp['die']}/{T}: ENV-EFFECT {_ee}", flush=True)
+        return fail("env_effect", f"LAUNCH-REFUSED (kit not routed): ENV-EFFECT {_ee}", f"{G}:{K}/config.mk")
     rc, txt = run("gen_lint", otrun(int(sp.get("lint_mem_gb") or 8) + 2, 2, W, gl, gh))
     if rc:
         return fail("gen_lint", txt, f"{G}:{K}/gen_lint.json")
@@ -14543,8 +14566,26 @@ def _rec_ended_failed(rec):
     return s in ("FAIL", "CANCELLED", "RETRY-INFRA") or (s == "ENQUEUED" and q in ("FAIL", "CANCELLED")) or (s == "ROUTE-HELD" and q == "FAIL")
 
 
+PLACE_STOP_WNS_RE = re.compile(r"PLACE-SETUP-STOP\s+wns\s+(-?\d+(?:\.\d+)?)\s*ps", re.I)
+PLACE_STOP_LIMIT_PS = -300.0
+
+
+def place_stop_wns(rec):
+    """-> the post-place TT wns (ps) of a PLACE-SETUP-STOP verdict in the attempt's reason / evidence, else None"""
+    q = rec.get("status") in ("ENQUEUED", "ROUTE-HELD")      # q_reason belongs to the routed job of a queue-path attempt only (never a stale one)
+    m = PLACE_STOP_WNS_RE.search(" ".join(str(rec.get(k) or "") for k in ((("q_reason",) if q else ()) + ("reason", "evidence_tail"))))
+    try:
+        return float(m.group(1)) if m else None
+    except ValueError:
+        return None
+
+
 def _rec_design_class(rec):
-    """-> the design class text of an ended attempt, '' when it is infra / flow / superseded / operator"""
+    """-> the design class text of an ended attempt, '' when it is infra / flow / superseded / operator.
+    COORD 11-23 03:1x: a place-setup-stop below -300 ps is a design verdict whatever class was stored (the block cannot close as built)."""
+    w = place_stop_wns(rec)
+    if w is not None and w < PLACE_STOP_LIMIT_PS:
+        return f"PLACE-SETUP-STOP {w:.2f} ps"
     if is_infra_fail(rec):
         return ""
     for c in (rec.get("q_class"), rec.get("class")):
@@ -14596,6 +14637,12 @@ def _latest_rec(st, die, item):
     return max(recs, key=lambda x: (float(x.get("started") or 0), int(x.get("attempt") or 0))) if recs else None
 
 
+def _last_design_fail(st, die, item):
+    """-> the most recent ended attempt of the item with a design-class failure, else None"""
+    recs = [x for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == item and _rec_ended_failed(x) and _rec_design_class(x)]
+    return max(recs, key=lambda x: (float(x.get("started") or 0), int(x.get("attempt") or 0))) if recs else None
+
+
 def fresh_retry_key(cfg, st, die, item, after):
     """a retry key item@N in the die config that was first seen after `after` (a lane / COORD answered THIS failure), else ''"""
     d = (cfg.get("dies") or {}).get(die) or {}
@@ -14625,11 +14672,17 @@ def same_input_repeat_refused(AP, cfg, st, die, r, now=None):
     prev = _latest_rec(st, die, item)
     if not prev or not _rec_ended_failed(prev):
         return False
-    old, cur = _digest_of(st, die, item, prev), _digest_now(cfg, die, item, r)
-    chg = digest_changed(old, cur)
-    if chg:
-        return False
     if any(u[0] == item for u in (cfg.get("_unblocks") or ())):
+        return False
+    cur = _digest_now(cfg, die, item, r)
+    dprev = prev if _rec_design_class(prev) else _last_design_fail(st, die, item)
+    if dprev is not None:                                # an older design failure is not hidden by a later cancelled / superseded / infra attempt
+        old = _digest_of(st, die, item, dprev)
+        ended = float(dprev.get("updated") or dprev.get("q_updated") or dprev.get("started") or 0)
+        if not digest_changed(old, cur) and not fresh_retry_key(cfg, st, die, item, ended):
+            prev = dprev
+    old = _digest_of(st, die, item, prev)
+    if digest_changed(old, cur):
         return False
     ended = float(prev.get("updated") or prev.get("q_updated") or prev.get("started") or 0)
     if fresh_retry_key(cfg, st, die, item, ended):
