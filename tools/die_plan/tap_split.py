@@ -38,6 +38,13 @@ Usage (heavy plans: run through ot-run):
                           [--out-plan PLAN2.json] [--tools DIR]
 --over: only types with a tap over the cap or the radius.  --out-plan writes PLAN with the rows appended and re-checks
 every touched type on the written plan with G0's own functions (schema.tap_grid + taps.sink_sites + taps.tap_loads).
+
+REMAP-ALWAYS (TAP-GRID-R5 11-23, COORD: third tap row in one night that broke its reset anchors -- S81 J8, HEAD Row B,
+KV D29 14 EMIT): new taps renumber the reset tree, so every --out-plan run ALWAYS follows the rows with
+landing_remap.remap_plan(resets="anchor", --bound-rtl when given) over every touched type, then plan_gate_pre's own
+check_landremap against the input plan.  A type the remap refuses (RemapError) or whose landing reset references stay
+stale (any FAIL LANDREMAP*) is restored to the input plan, its rows are dropped, its report status is REMAP_FAIL, and
+the run exits 3.  The rows file then holds only rows whose written plan has no stale landing reference.
 """
 import argparse, json, math, sys
 from pathlib import Path
@@ -334,6 +341,54 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False):
     return rep, rows
 
 
+def remap_rows(orig_raw, raw, plan_path, out_plan, types, root, bound_rtl=None, remap_fn=None, check_fn=None):
+    """REMAP-ALWAYS: landing_remap (anchor mode) over `types` on raw (rows applied), write out_plan, then the PRE
+    LANDREMAP check vs plan_path.  Failing types are restored from orig_raw.  -> (receipt, {type: why})."""
+    import copy
+    import re
+    if remap_fn is None or check_fn is None:
+        import landing_remap as LR
+        import plan_gate_pre as PG
+
+        def remap_fn(old, new, names):
+            try:
+                return LR.remap_plan(old, new, root, Path(out_plan).parent, set(names), resets="anchor", bound_rtl=bound_rtl)
+            except TypeError:                       # older tool trees: no bound_rtl keyword
+                return LR.remap_plan(old, new, root, Path(out_plan).parent, set(names), resets="anchor")
+        check_fn = check_fn or (lambda new_path, old_path: PG.check_landremap(new_path, old_path))
+        err_cls = LR.RemapError
+    else:
+        err_cls = ValueError
+    failed, todo, rec = {}, set(types), None
+
+    def restore(tn):
+        raw["partition_types"][tn] = copy.deepcopy(orig_raw["partition_types"][tn])
+    while todo:
+        trial = copy.deepcopy(raw)
+        try:
+            rec = remap_fn(orig_raw, trial, sorted(todo))
+            raw.clear(); raw.update(trial)
+            break
+        except err_cls as e:
+            tn = str(e).split(":", 1)[0].strip()
+            if tn not in todo:
+                raise
+            failed[tn] = f"REMAP_FAIL landing_remap: {str(e)[:240]}"
+            todo.discard(tn); restore(tn)
+    for _ in range(3):
+        Path(out_plan).write_text(json.dumps(raw, indent=1, sort_keys=False) + "\n")
+        new = {}
+        for ln in check_fn(str(out_plan), str(plan_path)):
+            m = re.match(r"FAIL (LANDREMAP\S*) (\S+?):", ln)
+            if m and m.group(2) in types and m.group(2) not in failed:
+                new[m.group(2)] = f"REMAP_FAIL {ln[:300]}"
+        if not new:
+            break
+        for tn, why in new.items():
+            failed[tn] = why; restore(tn)
+    return rec, failed
+
+
 def apply_rows(raw, rows_by_type):
     for tn, (key, rows) in rows_by_type.items():
         ck = raw["partition_types"][tn].setdefault("clock", {})
@@ -373,6 +428,8 @@ def main(argv=None):
     ap.add_argument("--rows", required=True)
     ap.add_argument("--out-plan")
     ap.add_argument("--tools", help="tools/die_plan of the tree to plan with (default: next to this file)")
+    ap.add_argument("--root", help="tree root for landing_remap (default: the --tools tree root)")
+    ap.add_argument("--bound-rtl", help="rtl/ of the bind of record of PLAN: landing_remap anchor mode reads OLD relay identities there")
     a = ap.parse_args(argv)
     if a.radius_um <= 0 or a.radius_um > 300:
         ap.error("--radius-um must be in (0, 300] (COORD: tap sink radius <= 300 um)")
@@ -409,18 +466,31 @@ def main(argv=None):
               f"{' ' + rep['why'] if rep.get('why') else ''}", flush=True)
     out = dict(tool="tap_split.py", plan=str(a.plan), radius_um=a.radius_um, cap=a.cap or None,
                rows={tn: {"key": k, "rows": r} for tn, (k, r) in rows_by_type.items()}, report=reps)
+    rc = 0
     if a.out_plan:
+        orig = json.loads(Path(a.plan).read_text())
         apply_rows(raw, rows_by_type)
-        Path(a.out_plan).write_text(json.dumps(raw, indent=1, sort_keys=False) + "\n")
+        root = a.root or str((Path(a.tools).resolve() if a.tools else Path(__file__).resolve().parent).parents[1])
+        rec, failed = remap_rows(orig, raw, a.plan, a.out_plan, sorted(rows_by_type), root, a.bound_rtl)
+        for tn, why in failed.items():
+            rows_by_type.pop(tn, None)
+            for r in reps:
+                if r.get("type") == tn:
+                    r["status"], r["why"] = "REMAP_FAIL", why
+            print(f"TAP_SPLIT {tn} REMAP_FAIL: rows dropped, type restored ({why[:200]})", flush=True)
+        out["rows"] = {tn: {"key": k, "rows": r} for tn, (k, r) in rows_by_type.items()}
+        out["remap"] = dict(mode="anchor", failed=failed, receipt=rec)
+        print(f"TAP_SPLIT REMAP anchor: {len(rows_by_type)} types remapped clean, {len(failed)} REMAP_FAIL", flush=True)
+        rc = 3 if failed else 0
         P2 = S.Plan(json.loads(Path(a.out_plan).read_text()), a.out_plan)
         out["recheck"] = recheck(P2, sorted(rows_by_type), a.radius_um, a.cap or None)
         bad = {k: v for k, v in out["recheck"].items() if v["over_cap"] or v["over_radius"]}
         print(f"TAP_SPLIT RECHECK {len(out['recheck'])} types on {a.out_plan}: {len(bad)} still over cap/radius", flush=True)
     Path(a.rows).write_text(json.dumps(out, indent=1) + "\n")
-    tot = {s: sum(1 for r in reps if r.get("status") == s) for s in ("OK", "SPLIT", "PARTIAL", "BLOCKED", "UNSUPPORTED", "ERROR", "NO_SINKS", "NO_PLACED")}
+    tot = {s: sum(1 for r in reps if r.get("status") == s) for s in ("OK", "SPLIT", "PARTIAL", "BLOCKED", "UNSUPPORTED", "ERROR", "NO_SINKS", "NO_PLACED", "REMAP_FAIL")}
     print("TAP_SPLIT SUMMARY " + " ".join(f"{k}={v}" for k, v in tot.items()) +
           f"; taps added {sum(len(r) for _, r in rows_by_type.values())}", flush=True)
-    return 0
+    return rc
 
 
 if __name__ == "__main__":

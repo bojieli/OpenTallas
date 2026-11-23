@@ -130,3 +130,49 @@ def test_load_placed_formats(tmp_path):
     (tmp_path / "l.json").write_text(json.dumps([[1.0, 2.0], [3.0, 4.0]]))
     assert TS.load_placed(tmp_path / "b.json") == [(5.4, 5.4, 3.0)]
     assert TS.load_placed(tmp_path / "l.json") == [(1.0, 2.0, 1.0), (3.0, 4.0, 1.0)]
+
+
+def _raw2():
+    return {"partition_types": {
+        "a": {"clock": {"added_taps": [], "landing_local_resets": [{"raw": "rst_rl_1"}]}},
+        "b": {"clock": {"added_taps": [], "landing_local_resets": [{"raw": "rst_rl_2"}]}},
+        "c": {"clock": {"added_taps": []}}}}
+
+
+def test_remap_always_runs_anchor_and_drops_stale_types(tmp_path):
+    """REMAP-ALWAYS (TAP-GRID-R5 11-23, COORD): every touched type is remapped; a type the remap refuses (a) or whose
+    landing reference the PRE check still finds stale (b) is restored to the input plan and reported; c stays."""
+    import copy
+    orig = _raw2()
+    raw = copy.deepcopy(orig)
+    for t in ("a", "b", "c"):
+        raw["partition_types"][t]["clock"]["added_taps"] = [{"name": f"clk_t9{t}", "xy": [1, 2]}]
+    seen = {}
+
+    def remap_fn(old, new, names):
+        seen.setdefault("calls", []).append(list(names))
+        if "a" in names:
+            raise ValueError("a: 1 relay(s) with no successor")
+        for t in names:
+            new["partition_types"][t]["clock"]["remapped"] = True
+        return {"resets": []}
+
+    def check_fn(new_path, old_path):
+        d = json.loads(Path(new_path).read_text())["partition_types"]
+        return ["FAIL LANDREMAP b: 1 stale"] if d["b"]["clock"].get("added_taps") else []
+
+    out = tmp_path / "out.json"
+    rec, failed = TS.remap_rows(orig, raw, str(tmp_path / "in.json"), str(out), ["a", "b", "c"], str(tmp_path),
+                                remap_fn=remap_fn, check_fn=check_fn)
+    assert seen["calls"][0] == ["a", "b", "c"] and seen["calls"][1] == ["b", "c"]
+    assert set(failed) == {"a", "b"} and all(v.startswith("REMAP_FAIL") for v in failed.values())
+    w = json.loads(out.read_text())["partition_types"]
+    assert w["a"] == orig["partition_types"]["a"] and w["b"] == orig["partition_types"]["b"]
+    assert w["c"]["clock"]["added_taps"] and w["c"]["clock"].get("remapped")
+
+
+def test_main_out_plan_always_remaps_and_exits_3_on_stale(monkeypatch, tmp_path):
+    import inspect
+    src = inspect.getsource(TS.main)
+    assert "remap_rows(" in src and "return rc" in src and "--no-remap" not in src
+    assert 'resets="anchor"' in inspect.getsource(TS.remap_rows)
