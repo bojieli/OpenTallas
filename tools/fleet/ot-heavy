@@ -325,13 +325,14 @@ while :; do
     if [ "${OT_HEAVY_PRIO:-}" != die ]; then echo 0 > /proc/self/oom_score_adj 2>/dev/null || true; fi
     if [ "${OT_HEAVY_PRIO:-}" = proof ] || /usr/local/bin/ot-heavy-reconcile --is-proof -- "$@"; then : > "$D/proof.job.$$"; fi   # PROOF-PRIO-1119: ot-oom-age guard spares this job while a wave job can be the victim
     if [ "${OT_HEAVY_PRIO:-}" = plan ]; then : > "$D/plan.job.$$"; fi   # PLANBYPASS_1114: ot-oom-age sets this job's openroad/yosys/python processes to -1000 (marker = launcher pid)
+    # Pass argv verbatim. The payload shell owns variable expansion.
     if [ "$_short" = 1 ]; then
       # Keep the lease in this waiting parent: systemd may close inherited FDs.
       echo "$(date -Is) $UNIT SHORT_POOL slot $_slot/$_slots threads $OT_HEAVY_THREADS mem ${MEM}G" >> "$D/admit.log"
-      systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 "${_CW[@]}" -- "${_OTX[@]}" "$@"
+      systemd-run --user --scope -q --expand-environment=no --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 "${_CW[@]}" -- "${_OTX[@]}" "$@"
       _rc=$?; exec 9>&-; exit "$_rc"
     fi
-    exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 "${_CW[@]}" -- "${_OTX[@]}" "$@"
+    exec systemd-run --user --scope -q --expand-environment=no --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 "${_CW[@]}" -- "${_OTX[@]}" "$@"
   fi
   flock -u 8; exec 8>&-
   case "$WHY" in "load cap:"*|"load gate:"*) _wf=load;; "short pool:"*) _wf=short-slot;; *) _wf=memory;; esac

@@ -1,6 +1,7 @@
 """ot-heavy (fleet rule 2026-10-10): a capped command is killed at its MemoryMax; big slots are exclusive."""
 import os
 import pathlib
+import shlex
 import subprocess
 import tempfile
 import sys
@@ -25,6 +26,20 @@ class OtHeavy(unittest.TestCase):
             self.assertNotIn("leak", r.stdout)
             r = subprocess.run([str(wrapper), "--mem", "1", "--", "python3", "-c", "print('ok')"], capture_output=True, text=True, env=env, timeout=120)
             self.assertEqual(r.stdout.strip(), "ok", r.stderr)
+
+    def test_scope_preserves_nested_shell_arguments(self):
+        payload = """args=(first second)
+printf '%s\n' ${args[@]+"${args[@]}"}
+"""
+        with tempfile.TemporaryDirectory() as temporary:
+            wrapper, env = self._isolated(pathlib.Path(temporary), stub_systemd=False)
+            command = ["bash", "-c", "bash -c " + shlex.quote(payload)]
+            result = subprocess.run(
+                [str(wrapper), "--mem", "1", "--", *command],
+                capture_output=True, text=True, env=env, timeout=120,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.splitlines(), ["first", "second"])
 
     def test_usage(self):
         self.assertEqual(subprocess.run([T, "--", "true"], capture_output=True, env=ENV).returncode, 2)
