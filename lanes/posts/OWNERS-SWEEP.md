@@ -337,3 +337,8 @@
   Read-only, nothing changed.
 - 2026-11-22 10:51 PST 11-22 11:0x sweep, 458 rows, 7 flagged (447 clean): S81 UNOWNED 4 (svc_rs t3-6, relaunched prelint 10:45) + DEAD-OWNER 1 (pvso_entry__t1, S81-BKSEL-R7 last post 08:28). QC UNOWNED 2 (cbf_q01_s2, cbf_q11) + DEAD-OWNER 1 (slw_su_c__cl19bb38ef, TAP-GRID-R5). KV 0 flagged (hub_C held/retry D28; pc_v3 relaunched private kit, WAIT-BIND). HEAD 0. S81 leaf t1 held/retry J9 LEAF-R10. FAILED-NO-RELAUNCH 0, STALE 0, UNCLASSIFIED 0 after cuts.
 - 2026-11-22 17:52 PST 21xx sweep: unsigned owned 100pct (S81 348, QC 56, KV 47, HEAD 1); 0 UNOWNED, 0 DEAD-OWNER after fixing FAM-QC-FEFW->R2/R3 id. S81 FAILED-NO-RELAUNCH 17 (LEAF-R10 11, COLROM-R6 2, SLICE-R6 2, COL-H10-R4 1, S81-DIE-R5 1); S81 STALE ~24 after svc/held filter (leaf, dsdv cancelled, col_h9_r2). QC STALE 1 sle_ctl__cla4f6f12f (cancelled, LOCKUP-STATION-R3). KV WAIT-BIND 4 + kv3_hub_C kit_rtl UNCLASSIFIED (KV-RINGMAC-R1). File lanes/OWNERS-SWEEP.tsv (tool bin/owners_sweep.py + post-filter).
+- 2026-11-22 18:53 PST 18:50 sweep 451 unsigned rows (S81 348, QC 55, KV 47, HEAD 1; HBM skipped); 0 UNOWNED, 0 DEAD-OWNER.
+  S81 FAILED-NO-RELAUNCH 26 (stale 3-10h): LEAF-R10 leaf t1/t8/t14-16/t24/t37/t53/t54/t74; SVC-R9 svc_rs t2-7, rs_w, pvso_entry t1/t2; SLICE-R6 lepe_mu_C, c1x_C t9; COLROM-R6 col_h9_r2 x2; COL-H10-R4 col_h10_r1.
+  S81 held/cancelled-superseded rows with live owners (COL-H9R0-R4, SERDES-R7, LEAF-R10, COLROM-R6) filtered from STALE.
+  KV: kv3_hub_C kit_rtl FAILED UNCLASSIFIED + WAIT-BIND (KV-RINGMAC-R1); WAIT-BIND 3 more (kv3_sys_c, kv3_pc_v3).
+  QC 55 clean, HEAD hd_lep0N running. Read-only; lanes/OWNERS-SWEEP.tsv.
