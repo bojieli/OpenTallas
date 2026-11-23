@@ -34,3 +34,11 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - S81 group done (bksel_q EQ). HEAD pending: hd_ctl (epyc8), hd_mesh (epyc9); waiter b5v6leq07.
 - Reruns at 96 GB: b10 slw_hc1 cle683a076 (OOM), b11 slw_hc2__cla3497502__cl16607c7a (epyc10, yosys -15; old out moved to lec_routed_relec1122_term32).
 - Next: HEAD+S81 report to COORD when hd_ctl/hd_mesh end; 2-h post ~01:20.
+
+## 01:4x 11-23 update (after 5-h limit; CODEX-LOG handoff had nothing for RELEC)
+- build.py fix: skip res.txt lines with <7 fields (multi-line reasons).
+- Table e16dfc14: 94 EQ, 7 NOT-EQ, 24 NO-NETLIST, ~19 UNPROVEN, ~24 running. S81+HEAD report + 2-h list posted 1d89c184.
+- hd_ctl NOT-EQUIVALENT (727 pts). hd_mesh still running epyc9.
+- epyc10 memory pressure killed 5 QC LECs (-9/-15); outputs moved to lec_routed_relec1122_killE10; kits copied (tar of top-level minus run/, + counted 6_final.v, sha checked) to epyc8 $L/mk/<tag>/kit; b12l.txt on epyc8, P=3, 128 GB/8 thr.
+- slw_hc1 cle683a076 (b10) still running epyc10 at 96 GB.
+- Next 2-h list ~03:45.
