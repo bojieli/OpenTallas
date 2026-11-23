@@ -84,3 +84,12 @@ R9/t2s: census done; type_split patches in R9/clone (ts_patch.py, ts_patch2.py b
   t1/t14 route kits on epyc8 XRB fork (L/xrbk/run_t1.log, run_t14.log); SELREP bind moved to intel1 (L/sre/i1_chain.sh, bind_i1.otrun.log, then t37 + kv_leaf t4 kits);
   ft trace relaunched unpinned (L/ft/t15.otrun.log; earlier exit 125 = duplicate docker mount); probe chain t15/t31/t14A2 unchanged.
 - Open: t72 op asked from FIX-SYNC-S81; GPL sparse-exit tool defect for FLOW; t21/t36 congestion maps after current runs; SELREP to main with test.
+
+## 11-23 02:3x (after the 01:17 limit)
+- RC-GAP replies sent (hub 085b2b80). Owner rule 6079af4: S81 = J9 only. FIX-LEDGER: rows must be GATED on f65f by 10:30 (Wave A), hard stop 12:30.
+- J9-LEAF-RST-LAND (rc8): main 358d836ceea3 tools/die_plan/s81_rst_relay_land_overlay.py, define OT_RST_RELAY_LANDED (ot_rst_relay relay clears from the last sync stage = ot_rst_relay_l waveform, 0 cycles). iverilog bench PASS (0/46,818; the mutant fails).
+- Part 2 (crr, agreed with LEAF-ROUTE-CBC): tools/die_plan/s81_crr_pre_overlay.py, define OT_S81SL_CRR_PRE2 (2 kept pre-flops before every ot_s81sl_crr q; crr release goes +1 -> +3, the same as u_rr). Bench at intel2 L/rrl/c1. Push after the bench passes.
+- rc9 SELREP is extended to t43/t42/t17/t38/t41/t28/t21/t29 (12 types with t37/t8/t16/kv t4).
+- Gate: epyc10 L/j9gate/j9gate.sh (fork of j8_cut_tree -> L/trees/j9gate_f65f_b; overlays SELREP + LAND + CRR; ops SELREP x12, LANDED + CRR_PRE2 on all 80 leaf types; plan_gate_pre, elab, bind, LATCHECK). Log run_b.otrun.log. trees/j9gate_f65f is a partial fork from a cancelled run: ot-delete it.
+- Next: after the gate, run private --goal route kits t43 (+t23 crr) on the fork. Post the sha and gate to S81-J6-ASSEMBLY-R5 by 10:30.
+- Sweep a6ef39f: holds t29/t71/t44f6, STALE t31/t55/kv t4 cleared to J9 (kit_wave 2898386c).
