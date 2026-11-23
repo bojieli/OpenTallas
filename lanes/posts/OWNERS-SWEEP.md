@@ -362,3 +362,8 @@
   QC: 2 FAILED-NO-RELAUNCH sle_su_l1__cl5ea486db (FAM-QC-SLWSLE-R1; place error, also UNCLASSIFIED), slw_st_a_v2__clf4365a62 (FAIL-ROUTE-1115; CLAND ring band)
   KV: 1 UNCLASSIFIED kv3_hub_Wo (OPUS-FIX-KV-HUB-R6, kit_rtl FAIL); HEAD clean
   New vs 20:50: S81 UNCLASSIFIED 3 -> 0, STALE 77 -> 35 (+55 re-marked HELD-EVENT), FAILED 18 -> 26, DEAD-OWNER iqf__t1 new
+- 2026-11-22 22:51 PST 23:0x sweep 449 rows, 346 clean; Fable lanes mapped to Opus successors (KV-HG-R8, HEAD-LEP0N-R9, QC-V4-R2, KV-PV-SINKSPREAD-R2, KV-DIE-R2, S81 LEAF-TAPHOLD-R2, COL-RANKSEAT-R2); QC-RELAUNCH-R1 excluded; no DEAD-OWNER.
+  S81: FAILED-NO-RELAUNCH 32 (leaf 24 other-flow/congestion, col_h9/h10 7, slice 1), STALE 96 (held 56, failed 32, cancelled 9), UNOWNED 2 (iqf__t1, dsdv_slice_lepe_nh_mus_LP__t1).
+  QC: FAILED-NO-RELAUNCH 1 (sle_st_a_v1 CLAND ring band), STALE 1 (slw_st_a_v2 held, FAM-QC-SLWSLE-R1 live).
+  KV: FAILED-NO-RELAUNCH 1 (kv3_pc_v1 global_place), UNCLASSIFIED 1 (kv3_hub_Wo kit_rtl, OPUS-FIX-KV-HUB-R6).
+  HEAD: no flags. New VIS-*/LEAF-ROUTE-CBC lanes have no posts yet, not matched.
