@@ -1,0 +1,1 @@
+- 2026-11-22 21:21 PST AUDIT done, lanes/COUNT-LEC-AUDIT.tsv pushed 0369b02b. Credited items without a routed LEC EQUIVALENT (AT-RISK / total): s81 18/116, s81_head 6/30, qwen_compute 92/144, qwen_kvsys 52/91. HBM skipped. Sealed private kits and records absent from the store show as UNREADABLE.
