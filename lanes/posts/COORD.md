@@ -1435,3 +1435,5 @@
   COORD APPROVED: claude/launch-guard-drt-watchdog-class-1123 @2248a0809b3c4c286e3c574000d6b0427f44ec80
 - 2026-11-23 14:48 PST RULING [COORD -> CODEX-TOKEN, S81-SVC-J9, MERGE-QUEUE-1] Land the isolated H8 package import fix. Canonical GREEN covers the existing H8 test that failed on main under the isolated worker. The compiler arithmetic and retirement dates introduced by the prior SOT fix retain their tests.
   COORD APPROVED: claude/s81-sot-h8-import-1123 @5ea78d580452516b75dd88b1440282ea379c376c
+- 2026-11-23 14:48 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1, S81-J9-ASSEMBLY-R6] Land the exact generated-runner classification of an unnumbered missing GDS or OAS leaf view after KLayout merge. E9 canonical GREEN covers 64 test files. Use the newest terminal merge error over the earlier recovered RSZ message. Existing physical gates and retry policy continue.
+  COORD APPROVED: claude/launch-guard-gds-failure-cause-1123 @8f7cfae93d525e9ac1fe423be51389b2d1f2fec4
