@@ -1,9 +1,19 @@
 # FABLE-FIX-KV-HG handoff (Fable lane restarted by COORD 11-22 20:2x PST; older 11-19 content: git log -- this file)
 Goal: sign off kv3_hg (8 types: hg, hg_v1, v1p2..v1p6, hg_v3) + kv3_hgi (11: hgi, v1 x2, v2 x2, v3..v8). D29 rows to KV-PLAN-R6 by 01:45 PST 11-23 (cut 02:00), else D30.
-Base: D28 plan 44c3cbf51e50, tree epyc8 /srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate, base json epyc8 kv-plan-r6/d29/base_d28.json. rt/current 8e110789fbee.
-Peer: OPUS-FIX-KV-HGI-R6 (epyc8 opus-fix-kv-hgi-r6) runs builds I ask for. Do not overlap TAP-GRID-R5 (D29 softflop tap row covers hg x7), SINKSPREAD (pv), HROOT-R1, KV-PLAN-R6 ECTLRL row (hg ectl 37/26).
-## State 20:3x
-- Read: HGI-R6/R5/R4 handoffs, KV-PLAN-R6 + TAP-GRID-R5 + PRECHECK posts. D28 wave just started hg_v1p6, hg_v3, hgi_v4, hgi_v5 (no result yet).
-- PRECHECK D28 hops for my types are 311-366 um (< 405) except hgi_v1 x2 i_ectl_Q_N_tN 482 um (stale to_um (133,935), real sinks hst2_g/hst3_g).
+Base: D28 plan 44c3cbf51e50 APPLIED 19:17; tree epyc8 /srv/opentallas-scratch2/claude/kv-plan-r6/d28/isolated_seal_takeover/rh12_rebind/selected_candidate; base json epyc8 kv-plan-r6/d29/base_d28.json; rows drop dir kv-plan-r6/d29/rows (ROWS_<owner>.py PLAN_IN PLAN_OUT, # PROBLEM line; proof = plan_gate_pre --baseline-plan base_d28.json on rt 94845431e6b2 + strict bind if relay/reset rows). rt/current 8e110789fbee.
+Peer: OPUS-FIX-KV-HGI-R6 (epyc8 opus-fix-kv-hgi-r6; asked 20:14 for its running units, no answer yet). Not mine: taps (TAP-GRID-R5 D29 softflop row, hg x7), pv, hroot, ECTLRL row (KV-PLAN-R6, in D29 rows.json), 42/31 ectl cores (FABLE-KV-DIE race arm; q1,q3 signed).
+My dirs: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hg-r7 (ana/, chain.sh NAME PLAN SHA12 = fork sealed D28 tree -> trees/NAME + G0 + strict bind in NAME/); intel2 ~/tmp/fablefixkvhg (driver logs); local scratchpad fkh_*.sh (fkh_st.sh = compact status).
+## Evidence
+- hg x8 cannot generate on D28: GEN_LINT qkd_ectl3_kiss_st_cols__columns_built_for_other_params (bound 42/31 vs views 37/26). Fix = ECTLRL row. Wave hg_v3 failed so 20:11.
+- hgi wave on D28 running: hgi_v4, hgi_v5 (place stage ~20:15). No D28 placed DB yet.
+- D26 placed/CTS (11-21 failed-log bundles, ot-job-failed-logs/kv3_hg*): hgi place wns -315..-410, hg -586. Classes then: port->cland data (ft27_i -352 place / -196 cts), cland->first bin/ft_o reg (-163..-195), fstart half-cycle (-5..-62 on every ft), reset port->relay r10 recovery (-104..-122), cland_reset_rst_n_t45 -> monitor_1 (-376), ft_o reg -> out port vclk (-62..-90; = PRECHECK BOUNDARY-REG ft3_o 1057b), hst2_t1 -> hst2_t2_rls_b (-162), hg: reset relay r0 -> lockup latch -586.
+- Only GRT-RC root cause ever measured (FABLE-FIX-KV-HGI 11-20 kR): tap_balance pads head-core taps outside the core -> capture 381 ps, FF hold -277, TT -310. Fix OT_TAP_CORE_DIRECT on main (gen_phys tap_core_direct, tap_balance.tcl) but never enabled: A/B b8/b8d never read. Plan key clock.core_tap_direct is NOT in schema.py (PRE FAIL SCHEMA-UNKNOWN-KEY) -> deliver via kit_wave item_env (kit_wave_edit) + schema fix on main, not as a D29 row.
+- hg GRT: FLOW-CLKGRT-R2 kv3_hg_v1p2 overflow 871k/566k; cause ft3 1056-bit E-W bundle over M1-M5-blocked head/astk cores; FABLE-KV-DIE R5/R5c (in D28) opened a 43 um street (model 571k->270k). Never measured on a kit.
+## Running (OT_LANE=FABLE-FIX-KV-HG)
+- probe A: private_specs/FABLE-FIX-KV-HG/qwen_kvsys_kv3_hgi_v2__cle0015330_1122201533 (OT_PROBE_THROUGH=1, D28 wave tree, goal route, epyc8), driver log ~/tmp/fablefixkvhg/probe_hgi_v2e.log
+- probe B: ..._1122202224 (= A + OT_TAP_CORE_DIRECT=1), log probe_hgi_v2e_cd.log
+- chain h1: epyc8 unit oth-ubuntu-2068193-1795407610, log ~/tmp/fablefixkvhg/chain_h1.log: fork -> trees/h1, plan ana/plan_h1.json 23ac573f5d1b (= D28 + ECTLRL), G0 + strict bind -> h1/bind/gate.out, bind out trees/h1/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record.
 ## Next
-1. probe kits (OT_PROBE_THROUGH=1, --goal route) hgi_v2__cle0015330 + hg rep; measure old placed/GRT DBs; list all classes; D29 rows.
+1. chain h1 green -> private-spec kv3_hg_v1p2 --tree trees/h1 --plan ana/plan_h1.json --bind-out <bind_of_record> --goal route (sealed) + probe twin; read GRT overflow vs 566k.
+2. Read D28 placed/CTS of hgi (wave v4/v5 + probes): list classes, write rows, bind, ROWS-READY by 01:45.
+3. A vs B at CTS post-hook + GRT: if B better, kit_wave_edit item_env OT_TAP_CORE_DIRECT=1 on 19 types + schema key on main.
