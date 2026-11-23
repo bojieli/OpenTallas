@@ -76,3 +76,11 @@ R9/t2s: census done; type_split patches in R9/clone (ts_patch.py, ts_patch2.py b
   Row J9-LEAF-FT-DETOUR: site the port buffer of each ft*_i bit with its stage-0 reg (pin-slot site, FIRM), or skip buffer_ports on ft inputs. A DB trace (L/ft/ft_trace.tcl) is queued on epyc7 (load cap). Sweep: only t15 has the ft-port signature in every post-place marker since 11-19.
 - t24 (436 um span, line[38] -> hw_d_q[78]) and kv_leaf t3 (610 um, vn rb_v_c -> u_x.q[21]): reach above 405 -> J9-LEAF-REACH (station on the hop, CBC). kv_leaf t4 is in the same sweep.
 - SELREP bench: SR1 x3, dense x2 and SR0 x2 all PASS; off/mutant cases still running. SELREP bind on epyc7 is queued (fork L/trees/s81_sre_selrep).
+
+## 11-22 21:2x (COORD 22:5x order)
+- Hold etas -> 2026-11-23 12:00 (18 rows, kit_wave 3032208b20d5).
+- J9 rows on hub: lanes/handoff/OPUS-FIX-S81-LEAF-R10-J9-LEAF-{GRTCONG,SRE-SRC,REACH}.json (post 21cf932456). GRTCONG J8 base f65f62779bef (copy intel2 L/grtc/plan_j8_cut_reset.f65f62779bef.json).
+- Running: t68 probe chain intel2 L/grtc/t68_chain.sh (waits for intel1 probe bind; log t68_chain.log, run68.log); t13 GPL place kit L/grtc/spec13 run13.log;
+  t1/t14 route kits on epyc8 XRB fork (L/xrbk/run_t1.log, run_t14.log); SELREP bind moved to intel1 (L/sre/i1_chain.sh, bind_i1.otrun.log, then t37 + kv_leaf t4 kits);
+  ft trace relaunched unpinned (L/ft/t15.otrun.log; earlier exit 125 = duplicate docker mount); probe chain t15/t31/t14A2 unchanged.
+- Open: t72 op asked from FIX-SYNC-S81; GPL sparse-exit tool defect for FLOW; t21/t36 congestion maps after current runs; SELREP to main with test.
