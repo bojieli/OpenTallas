@@ -36,3 +36,10 @@ Lane dirs: epyc10 + intel2 /srv/opentallas-scratch2/claude/s81-col-j9 (nehg/, tm
 - EW-1 + UCF-MX probes: intel1 s81-col-j9/ew1probe.sh (launched by waitlaunch.sh after fork treeWA from epyc10 wave_a/tree), plan tmp/plan_ew1.json d38f42da603e, rt ba57ce0e0288; bind then p5 pvbca8d846 + p3 cl8ce97bcb__pv1489a898 goal finish; logs tmp/ew1probe.out, tmp/probe_p5.log, tmp/probe_p3.log. Read post-hook CTS _he/_hw + final 5_1_grt.
 - Lag probe (epyc7, planR2L) superseded by EW-1 (FABLE-B: lag has no window on _he); still in GRT, informational.
 - Leftover partial forks to ot-delete later: intel1 s81-col-j9/treeJ9P.forking-917382.
+
+## State 16:45 PST (after 11:40-15:40 limit)
+- col774 row = main 52aebeb23d, HELD to next ELAB (post 0ad62c39 to FABLE-RC-ALL).
+- Frame hop row COL-FRAME-HOPFIX-1: ft_hop_fix.py --limit 400 --lane ^rt_(W1|E1)_out_[012]$ on B1 ae3101241d6b -> intel1 s81-col-j9/tmp/hopfix_b1/plan_hf.json c71de97d3e91 (removed 6 hops, introduced 0; +1 station on p5 ft0 slots). Ungated; B2/next event.
+- EW-1/UCF-MX probe adopted by Codex: intel1 s81-col-j9/ew1_place_1438 (launch.py, bind b_f9a1db3e37dd, types p5 pvbca8d846 + p3 cl8ce97bcb__pv1489a898). Read the GRT overflow when it lands, then post to COORD/FABLE-RC-S81.
+- My ew1probe.sh/waitlaunch.sh failed (hub needs ~/coord, so run it from intel2); superseded by Codex launch.py. Do not relaunch.
+- Sweep col_h10 posted 189ffdb6: relaunch reps on the cut tree after 18:00 (h10_r0_p1 pvd7af8531, r0_p4 pv07945c1e, r1 cl95b37463__pv1a6ec9c2, r2 cl1f5d6c2a__pv418d3dc0).
