@@ -55,3 +55,8 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 - v2cle D28 probe A census at epyc8 W/census/v2cle_d28_probeA: 0 GRT clusters; REACH setup covered by ECTLPD/ECTLH3/HST2SITE; rest is CLASS-FIX/hold repair.
 - hgi_v5 w2 probe: gen_lint is held in the epyc8 ot-heavy queue (load cap), ot-run pid 1049134 on intel2; waiter b7lo47rdl still armed.
 - HGFORM fork sub-agent a3e3ce0ad4ee58f3d is running (cover table due 08:30). Next: composed bind w2+HST2SITE+FT23STREET+HGFORM on a fresh fork ~09:00.
+## UPDATE 03:00 PST 11-23
+- HGFORM df2c2113a47f + HGSTREET 515b43c93e18 (sub-agent a3e3ce0ad4ee58f3d) in d29/rows. Plans: hc 234c56ff4b50 (w2+HST2SITE+FT23STREET+HGFORM), hd 03e773d494b6 (hc+HGSTREET), both PRE PASS 0.
+- Binds on epyc9 (epyc8 has no room for a fork): /srv/opentallas-scratch2/claude/opus-fix-kv-hg-r8/{hc,hd} via chain.sh (gates copied to W9/gates); logs intel2 ~/tmp/fablefixkvhg/chain_hc.log, chain_hd.log.
+- VIS-KV ruled the krsp W-face window move to the y233-337 street for KV-PLAN-R6 (D29). After R6 gives the window: model hd + krsp via ot-run, send the cover table to VIS-KV.
+- hgi_v5 w2 probe left the queue and has been placing since 02:39. After hd binds: probes hgi_v5 + hg_v1p2 on the hd tree (epyc9), then ROWS-READY.
