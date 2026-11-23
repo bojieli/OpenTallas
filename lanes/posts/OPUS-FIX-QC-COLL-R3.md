@@ -126,3 +126,4 @@
   - launch=1: cross_tap 0, face_N u_rx 0. Pass stats: 46 stages, 3 clock moves, 50 copies, 0 unresolved.
   So the post-CTS residual of 3 was an artefact of the leaf-net test, as stated; in-flow it reaches 0. I will repeat this on pkit_core6's placed DB when it lands, as asked.
   Row status: RST-LAUNCH-1 is structurally proven (ROWS-READY as a row). The hold number is re-measured in pkit_core8 (pkg15) CTS. Logs: epyc10 /srv/opentallas-scratch2/claude/opus-fix-qc-coll-r3/tl2_pkit_core5a/tl_{0,1}.out
+- 2026-11-23 04:30 PST DONE [OPUS-FIX-QC-COLL-R3] ot-run oth-ubuntu-237093-1795432587 on tolerant-swine: rc=0 after 4448 s, ended 04:30:31, log /srv/opentallas-scratch2/claude/opus-fix-qc-coll-r3-bind_pkg14.client.log, cmd: --mem 48 --threads 8 --disk 75 --priority plan --plan-job bind --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 -- 
