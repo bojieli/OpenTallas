@@ -275,3 +275,34 @@ def test_spans_and_farthest_point_seeds():
     sp = TS.spans(np.array([0, 0, 1]), X, Y, 3)
     assert list(sp) == [15.0, 0.0, 0.0]
     assert TS.fp_seeds(X, Y, W, 2)[1] == (100.0, 50.0)
+
+
+def test_global_pass_moves_added_taps_out_of_a_local_optimum():
+    """GLOBAL (TAP-GRID-R5 11-23, rc32/rc7): plan tap at (0, 0) over a 3000-sink strip x 0..300 (cap 1000); one added tap
+    stranded at (290, 0) took only the far tail, so the plan tap keeps ~2700.  With the added tap movable plus seeds, the
+    region is re-solved: excess drops, the plan tap does not move, every tap ends <= cap."""
+    import numpy as np
+
+    class _Site:
+        def place(self, x, y, taken):
+            return (round(x, 3), round(y, 3))
+
+    X = np.repeat(np.linspace(0.0, 300.0, 300), 10)
+    Y = np.tile(np.linspace(0.0, 9.0, 10), 300)
+    W = np.ones_like(X)
+    TX, TY = np.array([0.0]), np.array([0.0])
+
+    def full(ax, ay):
+        return TS.nearest(np.concatenate([TX, np.array(ax, float)]), np.concatenate([TY, np.array(ay, float)]), X, Y)
+
+    added = [(290.0, 0.0)]
+    idx, dist = full([290.0], [0.0])
+    l0, _, b0 = TS.stats(idx, dist, W, 2, 400.0)
+    e0 = TS.excess(l0, b0, 1000)
+    rep = {}
+    a2, i2, d2 = TS.global_pass(_Site(), added, idx, dist, X, Y, W, TX, TY, 1000, 0.9, 400.0, 1, full, 50, rep, rounds=3)
+    l2, _, b2 = TS.stats(i2, d2, W, 1 + len(a2), 400.0)
+    assert e0 > 0 and rep.get("global", 0) >= 1
+    assert TS.excess(l2, b2, 1000) < e0 and l2.max() <= 1000, (l2, a2)
+    a3, _, _ = TS.global_pass(_Site(), added, idx, dist, X, Y, W, TX, TY, 1000, 0.9, 400.0, 1, full, 50, {}, rounds=0)
+    assert a3 == added

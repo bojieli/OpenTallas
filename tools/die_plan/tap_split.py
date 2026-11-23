@@ -55,6 +55,14 @@ split from its own sinks: the k-medians centre nearest the neighbour pulls thous
 (cap * margin)) - fixed, at least 1, +3 tried) by constrained weighted k-medians (assign to all, move only the free
 ones), each legalised, all sinks re-assigned, kept when the excess drops.
 
+GLOBAL (TAP-GRID-R5 11-23, FABLE-RC-S81 rc32 / rc7): the greedy, MULTI-TAP and NEIGHBOURHOOD passes only add taps and
+never move an added tap once later taps exist, so a type can stall in a local optimum (dry run 3: 22 leaf + 3 slice C
+types over cap).  --global-rounds R (default 0 = off): after the relax step, every round takes the over-cap taps plus
+their --multi-nbhd nearest taps as one region; the plan taps there stay FIXED, every ADDED tap there is MOVABLE, and
+ceil(load / (cap x margin)) - 1 extra seeds go into each over-cap tap (k-medians of its sinks).  Weighted L1 k-medians
+over the region's sinks (fixed + free centres), legalise the free ones, re-assign every sink; kept only when the
+cap / radius excess drops.  Plan taps never move (FIXCHK prefix rule).
+
 SPAN (TAP-GRID-R5 11-23, FABLE-RC-S81 RC-GAP 3/3): --span-um S bounds each tap's sink box (W + H of the bounding box of
 the sinks it serves, the kit's OT_TAP_SPAN rule; the L1 radius alone allows up to 4x radius).  After the cap / radius
 split, a tap with span > S is split by k-medians seeded farthest-point (one far flop gets its own centre: col_h9_r2
@@ -319,6 +327,60 @@ def multi_add(site, added, mem, X, Y, W, load_k, cap, margin, before, full, radi
     return best
 
 
+def global_pass(site, added, idx, dist, X, Y, W, TX, TY, cap, margin, radius, n0, full, max_add, rep, rounds=2, nbhd=8):
+    """GLOBAL: re-solve each over-cap region with all added taps there movable; -> (added, idx, dist)."""
+    import math
+    np = _np()
+    if margin <= 0:
+        return added, idx, dist
+    for _ in range(rounds):
+        nt = n0 + len(added)
+        load, _far, beyond = stats(idx, dist, W, nt, radius)
+        e0 = excess(load, beyond, cap)
+        over = [int(k) for k in np.nonzero(np.round(load) > cap)[0]]
+        if e0 <= 0 or not over:
+            break
+        TA = np.column_stack([np.concatenate([TX, np.array([a for a, _ in added], dtype=float)]),
+                              np.concatenate([TY, np.array([b for _, b in added], dtype=float)])])
+        nb = set()
+        for k in over:
+            d = np.abs(TA[:, 0] - TA[k, 0]) + np.abs(TA[:, 1] - TA[k, 1])
+            nb.update(int(j) for j in np.argsort(d, kind="stable")[:nbhd + 1])
+        nb = sorted(nb)
+        fixed = [j for j in nb if j < n0]
+        free = [j for j in nb if j >= n0]
+        seeds = [tuple(TA[j]) for j in free]
+        for k in over:
+            kk = int(math.ceil(float(load[k]) / (cap * margin)))
+            if kk <= 1:
+                continue
+            mem = np.nonzero(idx == k)[0]
+            C = kmedians(X[mem], Y[mem], W[mem], kk)
+            C.sort(key=lambda c: abs(c[0] - TA[k, 0]) + abs(c[1] - TA[k, 1]))
+            seeds += C[1:]                         # the centre nearest the tap stays with the tap itself
+        keep = [added[j - n0] for j in range(n0, nt) if j not in set(free)]
+        if len(keep) + len(seeds) > max_add:
+            seeds = seeds[:max(0, max_add - len(keep))]
+        if not seeds:
+            break
+        reg = np.nonzero(np.isin(idx, nb))[0]
+        C = fixed_kmedians(X[reg], Y[reg], W[reg], TA[fixed] if fixed else np.zeros((0, 2)), seeds)
+        new = []
+        for cx, cy in C:
+            s_ = site.place(float(cx), float(cy), keep + new)
+            if s_ is not None and s_ not in keep and s_ not in new:
+                new.append(s_)
+        tr = keep + new
+        i2, d2 = full([a for a, _ in tr], [b for _, b in tr])
+        l2, _f2, b2 = stats(i2, d2, W, n0 + len(tr), radius)
+        e2 = excess(l2, b2, cap)
+        if e2 >= e0 - 1e-9:
+            break
+        added, idx, dist = tr, i2, d2
+        rep["global"] = rep.get("global", 0) + 1
+    return added, idx, dist
+
+
 def spans(idx, X, Y, nt):
     """W + H of the bounding box of each tap's sinks (0 for an empty tap)."""
     np = _np()
@@ -401,7 +463,8 @@ def span_pass(site, added, idx, dist, X, Y, W, cap, radius, n0, span_um, max_add
     return added, idx, dist
 
 
-def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_margin=0.9, multi_nbhd=8, span_um=None):
+def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_margin=0.9, multi_nbhd=8, span_um=None,
+               global_rounds=0):
     import schema, taps as TP, gen_phys
     np = _np()
     t = P.types[tn]
@@ -554,6 +617,9 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_mar
                 added, idx, dist, moved = trial, i2, d2, True
         if not moved:
             break
+    if global_rounds and added:
+        added, idx, dist = global_pass(site, added, idx, dist, X, Y, W, TX, TY, cap, multi_margin, radius, n0, full,
+                                       max_add, rep, rounds=global_rounds, nbhd=multi_nbhd or 8)
     # drop added taps left without sinks (an empty tap is a TAP-LIMIT finding); recompute
     if added:
         load, _, _ = stats(idx, dist, W, n0 + len(added), radius)
@@ -673,6 +739,8 @@ def main(argv=None):
                     help="a type without sink_bins_file or placed sinks is NO_PLACED (no rows) instead of split on planned sinks")
     ap.add_argument("--multi-margin", type=float, default=0.9,
                     help="MULTI-TAP: k = ceil(load / (cap * M)) taps at the k-medians of a dense cluster when no single tap helps; 0 = off")
+    ap.add_argument("--global-rounds", type=int, default=0,
+                    help="GLOBAL: rounds of over-cap region re-solve with added taps movable (0 = off)")
     ap.add_argument("--span-um", type=float, default=0.0,
                     help="SPAN: also bound each tap's sink box W + H to this (kit OT_TAP_SPAN rule, e.g. 300); 0 = off")
     ap.add_argument("--multi-nbhd", type=int, default=8,
@@ -706,7 +774,8 @@ def main(argv=None):
     for tn in types:
         try:
             rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed,
-                                    multi_margin=a.multi_margin, multi_nbhd=a.multi_nbhd, span_um=a.span_um or None)
+                                    multi_margin=a.multi_margin, multi_nbhd=a.multi_nbhd, span_um=a.span_um or None,
+                                    global_rounds=a.global_rounds)
         except Exception as ex:
             rep, rows = dict(type=tn, status="ERROR", why=f"{type(ex).__name__}: {str(ex)[:200]}"), []
         if rows:
