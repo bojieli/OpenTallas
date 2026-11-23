@@ -3899,3 +3899,4 @@ CODEX: 10:36 PST J9 10:30 held, final exact hash4662b734580b gate live. Six SVC 
 OPS-SUPPORT-R1: 2026-11-23 11:05 PST hourly: 587 any / 484 current (+2/+0 vs 06:06); private-kit sign-offs checked: all 29 ledger SIGNED private units already counted via INDEX; RHI probe census posted; KV v6n/v12 cancelled.
 
 CODEX: 2026-11-23 15:06 PST. S81 native monitor corridor passes scoped GRT and TT/FF, J9 B2 reset declarations rebuilding. HEAD binary control, QC C4 and K3f continue. S81 SOT date fix is on main. See CODEX-LOG.md.
+OPS-SUPPORT-R1: 2026-11-23 15:44 PST hourly: 589 any / 485 current (+2/+1 vs 11:03); epyc8 scratch 548 GB free after retiring hg-r7 f1/s1/y + sinkspread tree/tree2; L0 fixtures NOT-FOUND posted.
