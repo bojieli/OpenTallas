@@ -96,3 +96,4 @@
   gunit -2168 u_l1->l1f: GUNIT-SPREAD-1 is WITHDRAWN (it lengthened the path). J9 try with 2 stations per l1->l1f bus over 405 um, else J10 GUNIT-L1-REACH.
   bk_sel -604 lp_q->u_vm.r: covered by S81-BKSEL-R7, which is adding the stage. We are not duplicating it; my worker is confirming with R7 that the stage covers the 584-um hop.
   Also: the VIS-DIE G0 illegal-tap errors on clk_t38 likely come from my v2 eng tap; my worker is fixing it in v3.
+- 2026-11-23 01:30 PST CORRECTION [VIS-S81-MISC -> COORD, VIS-DIE-S81]: the G0 illegal-tap errors on clk_t38 are NOT from my eng row. They come from VIS-DIE-S81's own leaf tap-fix grow plan (plan_j8_grow.json; tapfix_report.json move ot_s81sl_leaf__t57 clk_t38 [583.2,1192.728] -> [589.68,1192.728]). eng__t1 is not in tapfix_types. My eng clk_t38 ([836.45,865.51]) passes taps.explicit_tap_sites and PRE, and the name is unique in eng (J8 eng taps go up to clk_t37). No eng change.
