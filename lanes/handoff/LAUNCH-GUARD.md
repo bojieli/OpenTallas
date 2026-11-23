@@ -94,3 +94,5 @@ The 15:29 sample had the hub and all six gen hosts on `bd54869e80c5`, including 
 | epyc10 | 35 / 96 | 192 GB | 236 GB |
 
 The E10 scratch2 trend postponed extra low-priority viewer packs. E7 cap expiry was reported alongside ordinary admission, with the loaded policy unchanged. The primary dispatch, export and farm watcher schedules remain active.
+
+The 15:35 update confirms all five QC export records `c1f811ac6204`, `e18cf5c71334`, `6137069a3ab6`, `428df61a733b`, and `29f5bc026b7c` are DONE in the export ledger. The restored EW p3/p5 PRE passed with receipt `4e541f7bfd42` and the same scope advanced to ELAB. The 15:32 hold audit was all zero. Standing watchdogs retired old I1 D28 PV v3e and the remaining old E10 COL core after flat GRT-0273. They retained the kits. A separate E9 old PV v4 has an UNSIGNABLE notice at TT −368.67 ps and an ordinary 16:00 watchdog decision unless the owner keeps it.
