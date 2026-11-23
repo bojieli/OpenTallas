@@ -1,3 +1,14 @@
+## 20:3x
+- w11 chain runs on epyc2 (SPILL; kit copy /srv/opentallas-scratch3/claude/kw43-wave-1109n/.../FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122175825/gen/hd_lep0N_w,
+  container dpkit-hd_lep0N_w-3963146, unit oth-ubuntu-3954018-1795404254). CTS post-hook 20:1x: setup_ws -272.24 tns -15,927 hold_ws -285.78.
+  START reset + reader fan (RSTART-1/2) are GONE from the list. Worst now: path-delay coll_i1 ctl_w[3] -> lap_ok -272 / glo0 -211; coll_i0 ctl_w[2]
+  -> lap_ok -185 / rv -172 / glo0 -166 (build A had these met: placement-dependent ctl-reg vs rv/lap_ok distance, see ctlkey note); clk
+  cland_rstart_in (pin (818,747) cut face) -> u_cland_rstart_rx -148 (1.2 mm; die-level pin should sit at the W face, or add an rx relay);
+  u_rg2 txi g_s[1] v_o -> g_safe_write wp_r -136. Now in tap pre-GRT (30 iterations, the test of TAPPRE-ALLOW-1).
+- e1 chain admitted 19:5x on intel1 (SPILL, unit oth-ubuntu-1532240-1795405774, container dpkit-hd_lep0N-1545648), in CTS.
+- NEXT W rows if they survive GRT repair: (a) ring control regs: pin rv / lap_ok / glo / ghi beside ctl_* (same key group) in
+  landing_placement cland_ctl_rekey, or band ff_rect; (b) cland_rstart_in pin to W face y ~1154 (type_split relay pin site) ; (c) rg2 txi.
+
 ## 19:1x RETRACTION + state (read first)
 - LEP-H2R-STN-1 (rows section 8) is VOID: internal_stations with launch u_core.* generate nothing on hd_lep0N (e1 and e2 kit RTL identical, sha
   08543f8b2efa; placed timing identical). r18m / r18n carry wrong L2/L4 fixed_cycles / latency rows: STRIP them (lanes L2, L4: drop fixed_cycles;
