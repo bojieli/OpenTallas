@@ -4152,8 +4152,8 @@ RULES = [
     ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
     # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 d): generation-time lint (tools/die_plan/kit_gen_lint.py), one class per check
     ("RTL", r"^gen_lint$", r"GEN_LINT FAIL rtl_check", "RTL hierarchy / undriven / multi-driven at gen (GEN_LINT)"),
-    ("PLAN", r"^gen_lint$", r"GEN_LINT FAIL (?:macro_tcl|pins_vs_plan)",
-     "plan at gen: no static macro sites / kit pins differ from the plan (GEN_LINT)"),
+    ("PLAN", r"^gen_lint$", r"GEN_LINT FAIL (?:macro_tcl|macro_site_count|pins_vs_plan)",
+     "plan at gen: no static macro sites or site count != instances / kit pins differ from the plan (GEN_LINT)"),
     ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL (?:memory_bits|clock_export_form)",
      "kit recipe at gen: memory bits over SYNTH_MEMORY_MAX_BITS / tie clock export form (GEN_LINT)"),
     ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL src_skew",
@@ -9684,6 +9684,28 @@ def chain_hosts(sp, host, hub, avoid=()):
     return home + target_hosts(alts, hub, allow_hub=False)
 
 
+def route_preflight_cmd(AP, kit, runner, bundle=None):
+    """PREFLIGHT-EARLY-1122 (COORD 21:0x): HEAD w13 placed for hours, then the route chain's kit_preflight (the admission
+    bundle = this driver's tools, newer than the kit source) refused its landing rings (ring_place=ff).  The gen stage runs
+    that same chain preflight (same bundle, same signoff_chain continue_kit call, --preflight-only) right after the
+    source-tree preflight, so a kit the route chain will refuse fails in minutes, before place."""
+    bundle = dict(bundle if bundle is not None else AP.stage_admission_tools())
+    bundle["source_host"] = os.environ.get("AP_ADMISSION_HUB", "hub")
+    enc = base64.b64encode(json.dumps(bundle).encode()).decode()
+    return " ".join(shlex.quote(a) for a in ["python3", "-c", AP.ADMISSION_BOOTSTRAP, enc, "--preflight-only",
+                                             runner or "-", kit, "route", "8", "2"])
+
+
+ROUTE_PREFLIGHT_INFRA_RE = re.compile(r"ADMISSION_TOOLS FAIL")
+
+
+def route_preflight_on(env=None):
+    """KW_ROUTE_PREFLIGHT=0 opts out; under pytest it is off unless KW_ROUTE_PREFLIGHT=1 (no admission bundle staging in unit tests)"""
+    env = os.environ if env is None else env
+    v = env.get("KW_ROUTE_PREFLIGHT")
+    return v == "1" if (v is not None or env.get("PYTEST_CURRENT_TEST")) else True
+
+
 def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None, avoid=()):
     """the autopilot.submit argv for this kit (ot-run on the hub; the kit host first, spill alternatives after it: chain_hosts)"""
     argv = [sp.get("ot_run") or OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit,
@@ -11001,6 +11023,21 @@ def run_item(spec_path):
         rc = 0
     if rc:
         return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/{pfo}")
+    if route_preflight_on() and not sp.get("dry_gen"):
+        # PREFLIGHT-EARLY-1122: the route chain's own preflight (driver admission bundle) at gen, before place
+        import autopilot as AP
+        _rpr = runner.format(kit=K, work=W) if core else W + "/gen/run_kit.sh"
+        try:
+            _rpc = route_preflight_cmd(AP, K, _rpr)
+        except Exception as _e:                           # bundle staging is infra: the route chain still checks
+            _rpc = f"echo {q('ADMISSION_TOOLS FAIL: bundle not staged: ' + type(_e).__name__)}; exit 3"
+        rc, txt = run("preflight_route", otrun(8, 2, W, _rpc, gh))
+        if rc and ROUTE_PREFLIGHT_INFRA_RE.search(txt or ""):
+            print(f"KW_NOTE route-chain preflight not run (admission bundle transport, exit {rc}); the route chain checks it", flush=True)
+            rc = 0
+        if rc:
+            return fail("preflight", "KIT_PREFLIGHT FAIL (route-chain preflight at gen, PREFLIGHT-EARLY-1122)\n" + txt,
+                        f"{G}:{K}")
     # KW-FIX-44 11-10 (DIE-KV-97): the contract advisories of this --plan-dir run (macro_pin_grid, macro_channels ...)
     # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
     _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)

@@ -315,7 +315,7 @@ def stage_signoff_tool(kit, bundle=None, source=None):
 
 
 def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight=None, proof_only=False, lec=None,
-                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh, so_tool=stage_signoff_tool):
+                 late=True, eco_loop=late_eco, plan_dir=None, refresh=flow_refresh, so_tool=stage_signoff_tool, preflight_only=False):
     kit = Path(kit).resolve()
     started = time.time()
     prior = {str(p): (p.stat().st_mtime_ns, p.stat().st_size)
@@ -340,6 +340,10 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
         if rc:
             print("KIT_PREFLIGHT FAIL: autopilot stopped before physical runner", flush=True)
             return rc
+    if preflight_only:
+        # PREFLIGHT-EARLY-1122 (COORD 21:0x, HEAD w13): kit_wave runs this exact route-chain preflight at gen, before place
+        print(f"KIT_PREFLIGHT ROUTE-CHAIN {'PASS' if preflight.is_file() else 'NA (no kit_preflight.py)'}: preflight-only, no runner", flush=True)
+        return 0
     if not proof_only and refresh:
         t_ref = time.time()
         frc = refresh(kit, goal)
@@ -463,6 +467,8 @@ def main():
     ap.add_argument("--lec", help="separately staged current main lec.py (routed proof); default KIT/lec.py")
     ap.add_argument("--no-late-eco", action="store_true", help="KW-ECO-1 opt-out: no late-stage ECO loop on a NOT SIGNED route")
     ap.add_argument("--plan-dir", help="plan dir for the kit preflight's plan-reading contract checks (optional)")
+    ap.add_argument("--preflight-only", action="store_true",
+                    help="PREFLIGHT-EARLY-1122: run only the chain's kit preflight (same tool and args as the route chain), then exit")
     ap.add_argument("runner")
     ap.add_argument("kit")
     ap.add_argument("goal")
@@ -470,7 +476,7 @@ def main():
     ap.add_argument("threads", type=int)
     a = ap.parse_args()
     return continue_kit(a.kit, a.runner, a.goal, a.mem, a.threads, preflight=a.preflight, proof_only=a.proof_only, lec=a.lec,
-                        late=not a.no_late_eco, plan_dir=a.plan_dir)
+                        late=not a.no_late_eco, plan_dir=a.plan_dir, preflight_only=a.preflight_only)
 
 
 if __name__ == "__main__":
