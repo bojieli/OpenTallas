@@ -162,3 +162,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-23 02:11 PST DONE [FAM-S81-SERDES-R7] ot-push-main otpush-renewed-glider-3622893 on renewed-glider: rc=0 after 23 s, ended 10:11:09, log none, cmd: ot-push-main 
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-23 02:22 PST DIED [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2831410-1795428911 on civil-redfish: rc=143 after 459 s, ended 10:22:47, log /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/place/pre_decsite.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/place --hosts epyc10 -- bash /srv/opentallas-scratch2/claude | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
