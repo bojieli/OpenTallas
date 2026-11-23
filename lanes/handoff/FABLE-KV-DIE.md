@@ -22,6 +22,18 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 22:15 PST -- CURRENT (cores)
+- private-provenance on q1 / q3: SIGNED-UNVERSIONED rc 1 (no manifest seal for a git-checkout kit; lec.json has no superset_vec.all_shown; empty
+  flow tag). Asked FLOW-OPS-R2 for a kind-core path (post b965768). Re-run when it exists:
+  kit_wave.py private-provenance <spec> --kit epyc8:<kit> --signoff <kit>/signoff/signoff.json --lec <kit>/lec_final/lec.json
+  (specs intel2 ~/tmp/fablekvdie/ectl_specs_c.txt; kits q1k, q3k; later q0k and the q2 kit that signs).
+- q2k FAILED at GRT: after the two-mode hold repair (hold met, ws +8.18) the incremental global route left 13 overflow -> GRT-0232, plus
+  RSZ-0060 max buffers. The core flow's allow-congestion hook only turns on when config.mk mentions OT_GRT_ALLOW_CONGESTION (the env is not
+  passed into the container). NEW q2 kit: ectl/kits/q2n = same gen + --orfs-var OT_GRT_ALLOW_CONGESTION=1, on tree_c 5bcad3c7100 (sites applied
+  by gen, receipt valid as generated). Unit fkd-core-ectln-q2n-1122, log ~/tmp/fablekvdie/core_ectln_q2n.log. (ectl/kits/q2m = unrun duplicate.)
+- q0k: route done, in generate_abstract / corners since about 21:00 (unit fkd-core-ectlk-q0k-1122).
+- On each sign-off: bash ectl/lec_final.sh KIT via ot-run --crit --mem 48 --dir fable-kv-die/ectl, then post; export is automatic (hook).
+
 ## State 21:10 PST -- CURRENT (cores + hg ownership)
 - hg / hgi belong to FABLE-FIX-KV-HG since 20:2x (COORD). I launch NO hg kit; my hg findings + rows were handed over on the hub (post 46c77a3).
 - qkd_ectlk_q1 and q3 at 42/31: SIGNED (minimal, 833 ps; q1 TT +212.53, q3 TT +254.44; DRC 0; internal FF hold 0 violators), synth LEC and
