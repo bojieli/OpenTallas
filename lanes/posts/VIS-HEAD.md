@@ -1,0 +1,1 @@
+- 2026-11-22 23:05 PST DONE [VIS-HEAD] ot-run oth-ubuntu-2165396-1795417114 on tolerant-swine: rc=0 after 390 s, ended 23:05:01, log /home/ubuntu/vis-head/w11.otrun.log, cmd: --mem 40 --threads 8 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/vis-head --stage /srv/opentallas-scratch3/claude/kw43-wave-1109n/ru
