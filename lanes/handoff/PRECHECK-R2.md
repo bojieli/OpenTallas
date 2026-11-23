@@ -13,3 +13,5 @@ run over current plans; post per die before cuts (KV D29 02:00, QC V4 ~06:00, S8
 ## Status
 - 18:1x: design = tools/die_plan/plan_advisory.py called from plan_gate_pre.check() in try/except, WARN ADV-<CHECK> lines. Subagents researching checks.
 - 18:4x: lane clone has tools/die_plan/plan_advisory.py (driver, CHECKS -> adv_<check>.py modules) + plan_gate_pre ADVISORY class patch (uncommitted; tests pass). 6 helper agents write work/<check>/adv_*.py + tests; TAP-LOAD added per COORD 18:1x (planned tap load vs netlist flops x1.3; placed >1500).
+- 22:xx LANDED main 0a84fc98a0: plan_advisory.py + 10 adv_*.py (+PORT-PIN, MERGE-RESET-DEPTH per COORD 20:4x) in plan_gate_pre class ADVISORY. Caches on all gen hosts /srv/opentallas-scratch2/claude/precheck-cache/{cells,flops}_cache.json (snapshot 11-22 18:2x; harvesters tools/precheck/adv_harvest_*.py; NOT yet on a refresh timer). Run outputs intel2 PRECHECK-R2/runs/. Per-die ADVISORY posts sent.
+- TODO: PATH-SEAT (COORD 22:4x, helper running -> work/path_seat), run on S81 J9 when it exists; cache refresh timer; re-run on composed D29 (cut 02:00) / V4 (~06:00).
