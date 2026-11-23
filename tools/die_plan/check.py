@@ -2679,7 +2679,7 @@ def check_core_pg(P, R, plan_dir=None, strict=False, max_msgs=1000):
     col_h10_r2 134/134 / 21001 untouched by tile PG metal = physical open).  Every type that places hard-core /
     hardened macros (gen_phys.type_macros, PHY-domain macros excluded: their VDDPHY grid lands them) must set
     partition_types.<t>.core_pg_connect: true, and every such macro LEF must carry PG pin geometry gen_phys can land
-    (gen_phys.core_pg_connect_layer: VDD+VSS on one of M4/M5/M6).  WARN by default (dies regenerate their kits first);
+    (gen_phys.core_pg_mode: tile grid landing or M7 pin publication for the die grid).  WARN by default;
     ERROR with --strict-core-pg (COORD flips it once the dies have regenerated).  A LEF that does not resolve is a WARN
     (unchecked) in both modes."""
     import cores as C
@@ -2719,23 +2719,26 @@ def check_core_pg(P, R, plan_dir=None, strict=False, max_msgs=1000):
             say(emit, f"type {tn}: {len(mac)} placed hard-core macro(s) ({mac[0][0]} ...) without core_pg_connect: true "
                 f"-- the kit PDN lands no via on their PG pins (physical PG open); set core_pg_connect and regenerate",
                 type=tn)
+        strict_landing = GP._core_pg_strict(P, tn)
         for inst, _mod, lef, *_ in mac:
-            if lef not in lef_ok:
+            key = (lef, strict_landing)
+            if key not in lef_ok:
                 cand = [C.resolve(lef)] + ([Path(plan_dir) / lef] if plan_dir and not Path(lef).is_absolute() else [])
                 f = next((c for c in cand if c.is_file()), None)
                 if f is None:
-                    lef_ok[lef] = "unresolved"
-                    out["lefs_unresolved"].append(lef)
+                    lef_ok[key] = "unresolved"
+                    if lef not in out["lefs_unresolved"]:
+                        out["lefs_unresolved"].append(lef)
                     say(R.warn, f"type {tn}: macro {inst} LEF {lef} not found; PG pin geometry unchecked", type=tn)
                 else:
                     try:
-                        GP.core_pg_connect_layer(f)
-                        lef_ok[lef] = "ok"
+                        GP.core_pg_mode(f, strict=strict_landing)
+                        lef_ok[key] = "ok"
                     except ValueError as ex:
-                        lef_ok[lef] = str(ex)
-                        out["lefs_no_pg"][lef] = 0
+                        lef_ok[key] = "failed"
+                        out["lefs_no_pg"].setdefault(lef, 0)
                         say(emit, f"type {tn}: macro {inst}: {ex}", type=tn)
-            if lef in out["lefs_no_pg"]:
+            if lef_ok[key] == "failed":
                 out["lefs_no_pg"][lef] += max(ninst, 1)
                 out["insts_no_pg"] += max(ninst, 1)
     if n[0] > max_msgs:
