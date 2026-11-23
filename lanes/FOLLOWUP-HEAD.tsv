@@ -1,7 +1,6 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-r18f plan 08fd2712 (one composed plan, W frozen) gate	HEAD die	HEAD-R18 11:10	HEAD-R18	11-23 11:11	FROZEN; PRE0, bind, cohort 27/27, LAT334, G0 0; ledger rows GATED	5	13:00	GATED	
-hd_ctl routed LEC (LEC-SETUP)	hd_ctl	ledger	HEAD-R18	11-23 11:11	REASONED; lec fix on main 25b4205f5f85; binary kit routed LEC EQUIV count ETA ~14:00	5	13:00 (REASONED accept) / 14:00 count	REASONED-pending	AT-RISK: proof lands after gate; needs FABLE-RC-ALL accept
-rc138 LEP-CLKWALL-1	hd_lep0N	FABLE-OPEN-HEAD-QC 10:54	FABLE-OPEN-HEAD-QC	11-23 10:54	in E cap10 and W plans; probe part REASONED, closes on E cap10 GRT census	22	13:00	REASONED-pending	waits FABLE-RC-ALL accept
-LEP-WOPENREG-1 (wn[5]->stamp->rg3)	hd_lep0N	HEAD-R18 11:11 R2	HEAD-R18	11-23 11:11	not built, needs RTL + induction LEC; in REASONED post	5	13:00	REASONED-pending	
-E cap10 / W native clock-first GRT census	hd_lep0N	probes	HEAD-R18	11-23 11:10	t32/t37 0.4-0.7 um outside stack windows (FABLE-OPEN-HEAD-QC 10:52), addressed by r18f die-drop windows	5	13:00	RUNNING	
-Stale intel1 kit 1532240	hd_lep0N	ESCALATEd 06:32	none	-	COORD 10:54 ownership sweep says HEAD clean; unit not re-verified	-	-	CLOSED-by-sweep	
+r18g event plan 5f4c8fa1af13 (single event, East held)	HEAD die	HEAD-R18 15:25/15:40	HEAD-R18	11-23 15:40	Fable accepted at gate with East held; PRE/G0 0, cohort 27/27, LAT334; S1 reseal (4 tooling files) + dry gate retry staged; live r17b unchanged	3	no new ETA posted (old 13:00 passed)	PACKAGING	NEEDS-ETA
+East types (hd_lep0N E cap10) release on census read	hd_lep0N E	Codex 14:44	HEAD-R18	11-23 15:40	cap10 TT structural -2690.91 -> +3.58 (placement RC); actual census pending; NDR drops 70->3->2	3	ASAP, FABLE-RC read	HELD	NEEDS-ETA
+hd_ctl routed LEC (LEC-SETUP)	hd_ctl	HEAD-R18 14:49	HEAD-R18	11-23 14:49	fresh binary kit: mapped LEC 69457/69457 EQ, GRT TT +2.44; route+routed LEC E7 oth-1290560 live	54	next read	RUNNING	
+W fresh route E7 1288889 / clk_t27 NDR advisory	hd_lep0N_w	HEAD-R18 15:25	HEAD-R18	11-23 15:40	checking canonical 5_1 and t27 trace before live adoption	3	-	RUNNING	
+rc138 LEP-CLKWALL-1 probe part, LEP-WOPENREG-1	hd_lep0N	REASONED	FABLE-OPEN-HEAD-QC / HEAD-R18	11-23 10:54	REASONED; closes on E cap10 GRT census	~290	with E census	REASONED-pending	
