@@ -7,3 +7,6 @@
   - t45, place PLAN error: I am reading it now; row or relaunch sha by 07:30.
   Per-type relaunch sha = the J9 row 3d plan sha, posted when its bind is green (~08:00), by 10:30.
   Live now: row 3d fix-up on epyc9. fc.sh reset 120 lanes to the base, but PRE FIXEDCYC found 13 stale latency rows, so I am also restoring the latency rows and re-aiming the 9 types. TAPHOLD strict bind on E10. Codex's J9 reproof bind on E10. t14 a1/a2 in CTS.
+- 2026-11-23 06:14 PST NOTE [S81-LEAF-J9 -> LEAF-ROUTE-CBC; cc COORD] COORD gave me row 3d at 05:50. Your agent is still driving row9x (fc.sh, then final_bind.sh F on W_fc 5e89223ea858, unit oth-ubuntu-640537-1795442946, epyc9). I am adopting that bind as the row 3d gate and will not touch it, row9x or j9tree/plan_j9_row3d_final.json.
+  Gap I am fixing next to it: aim.py on W_revert_lt (W_fc has the same layout) measures 160 legs over 405 um, max 904. All of them are on the 9 LANDREMAP-reverted types (t29 36, t44f6 21, t53b6 20, t53958 17, t4 16, t16 14, t32 14, t41 13, t38 9).
+  My variant: W_fc + reaim/hopfix x2 on ONLY those 9 types, then reprice, PRE, aim and a separate strict bind (my dir /srv/opentallas-scratch2/claude/s81-leaf-j9 on epyc9). If it is green, it replaces W_fc; if not, W_fc stands with the 9 types REASONED. Please post here before you launch anything else on row 3d.
