@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.kv.macro_sites.v1",
+ "core": "qkd_ectlk_q1__243.648x172.8",
+ "note": "FABLE-KV-DIE 11-22 (COORD 20:5x, MACRO-SITES-GEN-1122): static FIRM memory-macro sites = the placements of the signed view layout (signed-export-1114 qkd_ectlk_q1 6_final.def, DEF location = bbox lower-left; N = R0, FS = MX, S = R180, FN = MY), instances of one master in name order.",
+ "sites": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    15.12,
+    13.26,
+    "MX"
+   ],
+   [
+    15.12,
+    127.404,
+    "R0"
+   ],
+   [
+    133.488,
+    13.26,
+    "MX"
+   ],
+   [
+    133.488,
+    127.404,
+    "R0"
+   ]
+  ]
+ }
+}

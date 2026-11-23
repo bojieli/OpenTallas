@@ -1,16 +1,26 @@
 {
  "schema": "opentallas.kv.macro_sites.v1",
- "core": "qkd_ectlk_q2__216x172.8",
- "note": "KV-CORES-R10 10-27: same static FIRM SRAM sites as qkd_ectlk_q0 (same 216x172.8 outline, same 2x ot_sram_1r1w_128x256_m1_r2c2, same plan island_ft rect 102.168..103.788 x 8.64..8.91 and 12.8a entry island 103.68..112.32 x 82.08..90.72; pin faces W/E/S like q0). Root cause of the Codex q2 kit 086bf8b8 3_3 GPL OT_ISLAND_FT_NO_ROW mp_isl0_ck0 (102.168, 8.64) = the q0 class (rtlmp macro halo over the island row). Sites clear the island row by the q0 margin (13.26 - 4.32 = 8.94 >= 8.91).",
+ "core": "qkd_ectlk_q2__243.648x172.8",
+ "note": "FABLE-KV-DIE 11-22 (COORD 20:5x, MACRO-SITES-GEN-1122): static FIRM memory-macro sites = the placements of the signed view layout (signed-export-1114 qkd_ectlk_q2 6_final.def, DEF location = bbox lower-left; N = R0, FS = MX, S = R180, FN = MY), instances of one master in name order.",
  "sites": {
   "ot_sram_1r1w_128x256_m1_r2c2": [
    [
-    15.552,
+    15.12,
     13.26,
     "MX"
    ],
    [
-    15.552,
+    15.12,
+    127.404,
+    "R0"
+   ],
+   [
+    133.488,
+    13.26,
+    "MX"
+   ],
+   [
+    133.488,
     127.404,
     "R0"
    ]
