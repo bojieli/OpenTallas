@@ -1,3 +1,13 @@
+## 18:5x placed results
+- e2 (r18m) PLACED 18:52 on epyc9: wns -214.30 (g_mtx.wn[1] -> u_rg3 txi g_s[0] v_o; r18e had -155 there), tns -24,764, coll_i3 lap_ok -41.25,
+  agg_1 status path and h2r1 face no longer among the worst, wire-ratio violations 0. Pre-repair; goes on to geom/CTS.
+- e1 (r18k) still in GPL on intel2 (job /srv/opentallas-scratch2/claude/ot-jobs/hd_lep0N-place-tolerant-swine-403657-1795397590/work),
+  timing-driven worst slack +22 / +63 ps mid-GPL.
+- w11 (r18n) PLACED 18:45: wns -333.42 = coll_i1 ctl_w[3] -> lap_ok (path delay), clk worst -137.16 coll_i1 g_oh -> glo0; START cluster gone;
+  local_density 0.938 flagged. Build A had the same ring groups met after CTS repair: judge at CTS post-hook. geom stage queued on epyc9 load cap 18:46.
+- If the rg3 txi path stays < -42 after CTS/GRT repair on e2: row = TXI stage / station on hub -> rg3 h2r3 net (type-internal net, needs an
+  RTL stage: TXI[15:12] 2 -> 3 or a g_txi stage site nearer the hub).
+
 ## 18:0x
 - w10 DIED at place (my reader START sites collided with status relays at (487,1370)). Fixed in tree r18n (epyc9 L/trees/s81_head_r18n_w11, plan
   341dbb140f8fb054 = r18m + LEP-RSTART-2c), gates PASS (L/bind_r18n). w11 launched 17:58: unit fable-lep0n-w11 (intel2 pid 1324524), spec
