@@ -52,3 +52,6 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
 - item_env col_h9_r0_* OT_KEEP_WIRES=ot_dp_dly:r (2dadd51b4aa9). Classes posted: S81-HC-INPUT-REACH, S81-DUPSTN-MERGE.
 - Private bind: epyc10 fam-s81-col-h9r0-r4/j9bind.sh -> j9tree (fork of s81-j6-r5/j8_cut_tree), out j9tree/physical/die_plan/s81/plan_of_record/native_bind/h9r0_j9_out, gate logs j9gate/. ot-run client 2381456 (intel2), log j9bind.otrun.log.
 - Chain tmp/j9_chain.sh (intel2) waits for 2381456, then runs tmp/j9_launch.sh p2 pva4376595 on epyc10 -> log j9_chain.log / j9_*_runitem.log. If BIND_NOT_DONE, read j9gate/*.log.
+
+## 11-22 21:5x PST v3 (COORD 21:4x)
+- Rows v3 d71e3f9c3e4e (984 ops) in j9/: + t2 xa/xb relay and payload chain re-site FIRM (0 cycles) on p1/p3/p6; PRE PASS 0 plan 865db3304669. p2 identical to v2. Private bind stays on v2 (started before v3); J9 bind carries v3.
