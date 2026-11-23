@@ -1,4 +1,29 @@
 ## 21:4x w13 LAUNCHED
+
+## 11-22 22:3x — Rows A/B/A+B forking; RINGCTL withdrawn; w13 stopped (NEWEST)
+COORD latest order: correction + both rows accepted. Row B transform + bind in parallel with Row A, plus A+B; nst4 rebuild/re-sign approved;
+each row that gates gets a probe-through kit AND a sealed `--goal route` kit side by side (hd_lep0N_w and hd_st_n4); use the first that signs.
+- **LEP-RINGCTL-1 WITHDRAWN** (posted 101f6a56e7e): w12 (r18p) died in GPL: 3 soft regions each matched only 2 FIRM control regs, 0 movable
+  -> GPL-0304 nan. r18q (d1f98516900c) carries the same key -> any W kit on r18q dies at global place. I stopped w13 (was at kit_rtl).
+  R8 asked to drop place_regions in plan of record. Script epyc10 `L/tmp/strip_ringctl.py TREE`. Flow follow-up: hook_place_regions should skip 0-movable groups.
+- Trees on epyc10 (L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122, all forks of r18q): `trees/s81_head_r18r_wchan2` (Row A),
+  `trees/s81_head_r18s_wchan3` (Row B), `trees/s81_head_r18t_wchanab` (A+B). Forks driven from intel2 (`fork_r18r.log`, `fork_bt.sh` ->
+  `fork_s81_head_r18s_wchan3.log`, `fork_s81_head_r18t_wchanab.log`; OK marker "TREE-FORK OK").
+- Gate waiters on intel2 (setsid, `~/fable-fix-head-lep0n-1122/gate_wait.sh FORKLOG OUT CHAIN [ARG]`): outputs `chain_r18r.otrun.log`,
+  `chain_r18s.otrun.log`, `chain_r18t.otrun.log`. Chains on epyc10: `L/tmp/chain_r18r.sh` (strip + wchan2_rows + gate, tag r18r),
+  `L/tmp/chain_bt.sh s|t` (strip [+ wchan2] + wchan3_rows + gate, tags r18s / r18t). Markers `L/plan/applied_{r,s,t}` (REFUSE on re-run:
+  rm -f the marker only if the tree was re-forked). Gate = `chain_gate_rt.sh TREE 345ac19b04b3 TAG hd_lep0N_w,hd_st_n4` -> `L/plan/pre_<TAG>.*`, `L/bind_<TAG>`.
+- **Row B = LEP-WCHAN-3** `L/tmp/wchan3_rows.py TREE [DX]`, DX **34.56** (17.28 is off the 0.256 M6/M7 pitch; 34.56 = on all pitches + 8.64 grid + M9 PG).
+  hd_lep0N_w 820.8->855.36 grows west (origin x 6963.84->6929.28); x>=34.56 objects +DX (absolute kept), W-face objects stay; reserved die-clock
+  sites always +DX; sink bins file copied to `..._wchan3.json`. nst4 993.6->959.04, objects x>900 -DX, die islands absolute (3 in strip -> W
+  reserved sites). Channels hk4_free_nst4_0 x1 -> 6929.28; sidecar regions + collector.types.hd_lep0N_w moved. Dry run clean (0 outside).
+  Not yet through plan_gate_pre/bind: expect possible issues with reset relay names (rst_rl_N re-key: epyc9 L/tmp/rekey_resets.py), die clock taps, nst4 reset in_sites.
+- After a gate PASS: per tree, for hd_lep0N_w and hd_st_n4: `kit_wave.py private-spec s81_head <item> --tree <tree> --plan <plan> --host epyc10
+  --lane FABLE-FIX-HEAD-LEP0N --goal route --src-manifest seal --rt 345ac19b04b3` (+ `--ab OT_GRT_ALLOW_CONGESTION=1` on W; probe copy adds
+  `--ab OT_PROBE_THROUGH=1 --why ...`), run-item under systemd-run --user (see intel2 launch_w13.sh), durable waiters. hd_st_n4 may need an item_env row in kit_wave.json (check).
+- Live: **w11** (r18n) real GRT on epyc2, kit `/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/FABLE-FIX-HEAD-LEP0N/hd_lep0N_w_1122175825/gen/hd_lep0N_w`
+  (tap pre-pass passed 21:59, TT setup after CTS repair -135.28 / tns -6573). **e1** (r18k) CTS on intel1. w12 dead (GPL-0304). w13 stopped.
+
 - w13 = sealed W kit of the plan of record r18q: tree epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/trees/s81_head_r18q_rx
   (fork of R8 r18q_rx, shas verified d1f98516900cc0ba / 994b8a2892dd0768), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/
   s81_head_hd_lep0N_w_1122213825/spec.json, host epyc10, rt 345ac19b04b3, OT_GRT_ALLOW_CONGESTION=1, unit fable-lep0n-w13 (intel2 pid 3344189),
