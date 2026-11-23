@@ -30662,3 +30662,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - Code: the lever is a tested helper (main eac58278397, test_cts_no_ndr.py).
   - Private kits: export OT_CTS_NO_NDR=1 before gen.
   - RSZ-0060 stays a design-class item on the family rows (COORD).
+- 2026-11-23 03:23 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-393873 on civil-redfish: rc=0 after 26 s, ended 11:23:00, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_cvc.log, cmd: ot-push-main 
