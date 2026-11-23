@@ -38,3 +38,8 @@ main 48869414f4, live rt 6734f6deff0f 01:56. First tick 02:17: 12 LBL refusals. 
 - Exact terminal watchdog CANCEL-DESIGN rows removed from progress eligibility only, e123566ac21 merged and rt/current. Current false KV 4→0/QC 2→0, real retry candidates remain.
 - Exact J8 reviewed E8 t12, t7 cl503f4913 and cl945bc067, t27, and t50 cl39451317 PASS-COND. t20, t44, t7 cl362204c4, t24 cl64811a5d, t29 clc7772371 and t14 BAD. Exact review records and receipts posted. First approved t12/cl503f4913 enqueued at 08:49, BADs transitioned WAIT-FORM.
 - Strict newly captured wave GEOM now proposed as placed ODB render with GRT explicitly deferred until exact review, branch 54de977559a6. Focused 57 pass. E10 canonical gate oth-ubuntu-3411249-1795452445 ongoing; inherited active work retains original diagnostic evidence.
+
+## Codex 10:02 PST
+
+- Managed wave render-before-route 54de977559a6 merged 3da0b587bfd; present in the running runtime. New captured geometry runs are static placed-ODB review with GRT deferred. The existing viewer index needs the exact kit and attempt. New private placement probes use goal place and inspect the native render.
+- HUNG-WATCH global-place native report fix a7a5a9d13d54, exact E10 source gate 183/183 on c7f9f4bce39, focused 20. Scope oth-ubuntu-715277-1795456256 exit0. KV D28 hub_C report progressed at 09:00:59 despite stdout silence since 07:23, so 09:39 stop was premature. Count only its native report in the existing output clock. Polled exact wave path and direct stage work. No new old form started. Current VIS-COVERAGE DRAFT holds its free retry until D29 strict emit/exact placement. Full evidence and all 26 retired S81 rows in results/kit_wave_3/stuck_state_s81_j7_1123.md.
