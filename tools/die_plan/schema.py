@@ -1663,7 +1663,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                        "stages_existing": {"type": "integer", "minimum": 0}, "note": {"type": "string"},
                        # RESET-RELAY-GEN-R2 11-21 (FABLE-CLOSURE-1930 lever 2): a negative-level lockup latch (ot_dp_lk) after
                        # every stage of this row: a same-edge stage pair across clock taps is a zero-logic hold pair
-                       "lockup": {"type": "boolean"}}}}
+                       "lockup": {"type": "boolean"},
+                       # LOCKUP-NEGEDGE 11-22 (bind.relay_depth_lockup_cycles): the latch feeds a FALLING-edge captured core input
+                       # = +1 cycle, declared with D in bind_core_input_pipe.json
+                       "lockup_cycles": {"type": "integer", "minimum": 0, "maximum": 1}}}}
 # RESET-RELAY-GEN-R2 11-21 (COORD, OPUS-FIX-S81-BKSEL-R4): reset stages on the reset pins of a hard core NESTED below a bound
 # instance (u_core.u_sel.g_q[0].u_q): the bound text has no call to stage, so these are NOT relay_depth rows (bind would
 # refuse them); rows {inst (path below the bound module), ports, D, path_um, src, pins}; sites are relay_sites keys.

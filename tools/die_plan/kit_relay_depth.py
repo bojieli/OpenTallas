@@ -134,8 +134,11 @@ def apply(btxt, tn, rows, leaf_id, sv_id):
         new = wout if W > 1 else f"{wout}[0]"
         seg = seg[:i0] + new + seg[j - 1:]
         btxt = btxt[:a] + seg + btxt[b:]
+        lkc = int(r.get("lockup_cycles") or 0)          # LOCKUP-NEGEDGE: the latch in front of a falling-edge capture is +1 cycle
+        if lkc and not lk:
+            raise ValueError(f"relay_depth {tn}: row {name}: lockup_cycles needs lockup true")
         rec["rows"].append(dict(row=name, D=D, bits=[lo, hi], how="kit-rtl", stages=[f"{base}_{s}" for s in range(D)],
-                                cycles_added=D))
+                                cycles_added=D + lkc, **({"lockup_cycles": lkc} if lkc else {})))
     if decl:
         # declarations right after the port list (the sink instance uses the new wires), stages before endmodule
         h = re.search(r"^\s*\);[ \t]*$", btxt, re.M)

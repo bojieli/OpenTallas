@@ -982,6 +982,23 @@ def relay_depth_lockup(plan, tn, inst, port):
                for row in t.get("relay_depth") or [])
 
 
+def relay_depth_lockup_cycles(plan, tn, inst, port):
+    """LOCKUP-NEGEDGE (FABLE-FIX-S81-COL-RANKSEAT 11-22, COORD 20:2x): cycles a relay_depth lockup latch ADDS at its sink port.
+    A negative-level latch (ot_dp_lk) after a rising-edge stage is 0 cycles in front of a rising-edge capture, but its output
+    only changes at the falling clock edge: a core input that is captured on the FALLING edge (S81 ot_v41_rom_elem_q_*_gb_hw/he
+    boundary copy, view lib setup_falling) samples the old value and sees the data ONE cycle later (bench
+    test_lockup_negedge_cycle.py: latency 2 -> 3 with the latch, 2 -> 2 at a rising-edge capture).  The plan row states it:
+    {.., side: sink, lockup: true, lockup_cycles: 1}; the cycle is DECLARED with the row's D in bind_core_input_pipe.json, so
+    bind_verify / LATCHECK internal_pipe_check / the compiler price the real number.  Absent = 0 (byte-identical records)."""
+    t = ((plan or {}).get("partition_types") or {}).get(tn) or {}
+    n = [int(row.get("lockup_cycles") or 0) for row in t.get("relay_depth") or []
+         if row.get("side") == "sink" and sv_id(row["inst"]) == inst and row.get("port", "i") == port]
+    bad = [row for row in t.get("relay_depth") or [] if row.get("lockup_cycles") and not (row.get("side") == "sink" and row.get("lockup"))]
+    if bad:
+        raise BindError(f"relay_depth {tn}: {bad[0].get('inst')}.{bad[0].get('port', 'i')} lockup_cycles needs side sink and lockup true")
+    return max(n) if n else 0
+
+
 def relay_depth_sink_map(plan, tn):
     """relay_depth rows with "side": "sink" (a DIRECT core-to-core wire, no relay on it): {(sink leaf name, input port):
     [(D, lo, hi)]} -- D new relay-named stages (u_y_xd_*) in front of those bits of the sink's input port, whatever drives them.
@@ -5115,7 +5132,8 @@ class Binder:
                             for j_, i_ in enumerate(idx):
                                 e[i_] = f"{lp}[{j_}]"
                                 self.declare_core_input_pipe(tn, p, ci, pn, depth + int(core_input_pipe(
-                                    self.plan, tn, c.module, pn) or 0), bit=i_)
+                                    self.plan, tn, c.module, pn) or 0)
+                                    + (relay_depth_lockup_cycles(self.plan, tn, sv_id(r), pn) if rd_ else 0), bit=i_)   # LOCKUP-NEGEDGE
                         return e
 
                     if lp_pre:

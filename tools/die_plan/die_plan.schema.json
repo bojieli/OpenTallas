@@ -6497,6 +6497,11 @@
         },
         "lockup": {
          "type": "boolean"
+        },
+        "lockup_cycles": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 1
         }
        }
       }
