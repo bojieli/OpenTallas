@@ -1,12 +1,10 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-rc138 E stripe x810 y650-660 0.9k (no dedicated row)	hd_lep0N	DIE-FIX-LEDGER OPEN	FABLE-OPEN-HEAD-QC (+HEAD-R18)	11-23 05:57	FABLE-OPEN-HEAD-QC TAKING 05:57: row or REASONED by 10:30	1	10:30 row / 11:00 gate	OPEN	
-hd_ctl routed LEC NOT-EQ (318 pts g_seqf.u_seq; ctl1 physically signed, LEC_FAIL)	hd_ctl	OPUS-FIX-HEAD-LEP0N-R9 post 05:55 / HEAD-R18 plan (1)	HEAD-R18	11-23 05:57	HEAD-R18 plan: RELEC class + fix ETA 08:00; ctl1 DRC0 TT+4.35 but LEC fails on every plan	1	08:00 fix / 11:00 gate	OPEN	NO-LEDGER-ROW (add to DIE-FIX-LEDGER)
-West structural row (spec 1123040001 manual FAIL: 8 opposite-face pins, clock entry 912.8 um, fanout 1207.9 um)	hd_lep0N_w	geom review 05:21 GEOM VERDICT	HEAD-R18	11-23 05:57	HEAD-R18 plan (2) on re-forked tree ETA 09:30	1	09:30 / 11:00	OPEN	NO-LEDGER-ROW (verdict has no row)
-Tree drift re-fork vs main + re-gate of r18z2 (23e33a44)	HEAD die	HEAD-R18 plan	HEAD-R18	11-23 05:57	HEAD-R18 plan (2) ETA 09:30	1	09:30 / 11:00	OPEN	
-ep3 E probe (intel1, GPL iter 80 at 05:54) -> GRT census	hd_lep0N	DIE-FIX-LEDGER rc136/137/139/140 GATED-pending probe	HEAD-R18	11-23 05:57	GPL iter 80 05:54; census needed by 10:30	1	10:30 plan / 11:00	RUNNING	
-wp3 W probe (epyc7, at GRT since 05:26) -> hold read; gates rc130/131/132/134 + NDR-DROP	hd_lep0N_w	DIE-FIX-LEDGER GATED-pending probe	HEAD-R18	11-23 05:57	at GRT since 05:26	1	10:30 / 11:00	RUNNING	
-hg-HEAD-CLOCK-NDR-DROP (REASONED; close when wp3 GRT shows no GRT-0273 and ovf <10% of baseline)	hd_lep0N_w	DIE-FIX-LEDGER REASONED	FLOW-OPS-R2 (stale: HEAD-R18 owns wp3)	11-23 04:03	REASONED accepted 04:03	115	11:00	REASONED-pending	OWNER-FIELD-STALE
-OWNERS-SWEEP hd_lep0N row: owner shown NOPROG-WATCHDOG/R9 (R9, FABLE-UNC-HEAD, HEAD-CTL-R1 replaced by HEAD-R18 05:57)	hd_lep0N	OWNERS-SWEEP 05:52	HEAD-R18	11-23 05:57	running (lint advisory)	1	11:00	WATCH	OWNER-FIELD-STALE
-Stale kit FABLE-FIX-HEAD-LEP0N hd_lep0N_1122094356 intel1 oth-ubuntu-1532240-1795405774 (4_2_tapbal_grt 8.4h, NO-PROGRESS 6.3h)	hd_lep0N	NOPROG-WATCHDOG 04:15	NONE (FABLE-FIX-HEAD-LEP0N stood down; chain ends R7)	11-23 04:15	no new log line 6.3 h at 04:15	~105+	ASAP	OPEN	NO-OWNER (cancel or KEEP needed; confirm vs ep3 which is a different unit)
-hd_lep0N E per-tap rc137 pitch row (conditional on ep3 >=50 ov y565-579)	hd_lep0N	DIE-FIX-LEDGER rc137 note	HEAD-R18	11-23 05:57	conditional	1	10:30	CONDITIONAL	
-8 of 66 W ports window >=150 (+18 E ports at 200) per-tap split decision	hd_lep0N	FABLE-UNC-HEAD 03:21 / rc130	HEAD-R18	11-23 05:57	pending wp3/ep3 read	1	10:30	CONDITIONAL	
+rc138 E stripe x810 y650-660	hd_lep0N	DIE-FIX-LEDGER	FABLE-OPEN-HEAD-QC	11-23 06:29	ROW-DRAFT LEP-CLKWALL-1 06:19; gating alone on fork r18z2_clkwall (epyc7) 06:29	2	10:30 row / 11:00 gate	ROW-DRAFT	
+hd_ctl routed LEC NOT-EQ (318 g_seqf pts)	hd_ctl	HEAD-R18 plan (1)	HEAD-R18	11-23 06:27	classified LEC-SETUP, row LEC-FSM-SUPERSET-1 (lec.py FSM superset rule), ROW-DRAFT in ledger; fix ETA 08:00	4	08:00 fix / 11:00	ROW-DRAFT	
+West structural (spec 1123040001 FAIL)	hd_lep0N_w	geom review 05:21	HEAD-R18	11-23 06:27	ledger row LEP-WPLACE-1 OPEN (w1-w4 causes)	4	09:30 / 11:00	OPEN	
+Tree drift re-fork vs main + re-gate	HEAD die	HEAD-R18 plan	HEAD-R18	11-23 06:27	plan of record named (r18z2 23e33a44); re-fork follows, path at gate	4	09:30 / 11:00	OPEN	
+ep3 E probe (intel1) -> GRT census	hd_lep0N	probe pending	HEAD-R18	11-23 06:27	no new ep3 line since 05:54 GPL iter 80 (watch)	37	10:30 / 11:00	RUNNING	WATCH-NO-POST
+wp3 W probe (epyc7) -> hold read	hd_lep0N_w	probe pending	HEAD-R18	11-23 06:27	causes w1-w4 read from wp3 (06:27)	4	10:30 / 11:00	RUNNING	
+hg-HEAD-CLOCK-NDR-DROP (REASONED)	hd_lep0N_w	DIE-FIX-LEDGER	FLOW-OPS-R2 / HEAD-R18	11-23 04:03	closes on wp3 GRT read	150	11:00	REASONED-pending	OWNER-FIELD-STALE
+Stale intel1 kit 1532240 (FABLE-FIX-HEAD-LEP0N)	hd_lep0N	NOPROG-WATCHDOG 04:15	NONE	11-23 04:15	no reply to my 05:58 ask	~150	ASAP	OPEN	NO-OWNER (flagged 2 rounds, ESCALATE)
+rc137 pitch row / 8 W + 18 E wide-window ports	hd_lep0N	conditional	HEAD-R18	11-23 06:27	pending probes	4	10:30	CONDITIONAL	
