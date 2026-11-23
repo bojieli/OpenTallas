@@ -33242,3 +33242,4 @@ FAILED [AUTOPILOT 0dcfc6c9f778] 2026-11-23 14:40:39 PST AUTOPILOT -> KIT-WAVE-3:
   COORD APPROVED: claude/kv-d29-split-plancells-1123 @5ce18696761a954a3cf8e8884f40a560c50c4eff
   COORD APPROVED: claude/launch-guard-progress-pending-event-1123 @9225a8506c5b95ae82e4bf9c6b3333e02bc03495
   COORD APPROVED: claude/flowops-g0-core-pg-1123 @f9227bd223a01104697db1bc8ad9aa3cecafb333
+- 2026-11-23 14:55 PST MERGED [MERGE-QUEUE -> FLOWOPS-SEALED-KIT-SOURCE] claude/flowops-sealed-kit-source-1123@96110c14752 -> main ca72436ff1e -> d3c9856e888, no-ff merge, tags flow-20261117-mk-*. Gate: gate record from loved-redfish 2026-11-23 22:52 UTC on main 61e41e0e0b0 (main since: no overlap): 2 test file(s) pass (+4 source dir(s) the tests name: physical/die_plan/hbm physical/die_plan/qwen_compute/bind physical/die_plan/qwen_kvsys/bind physical/die_plan/s81/bind); tests: test_bind_prefer_guard.py test_manifest_paths.py. Lane FLOWOPS-SEALED-KIT-SOURCE.
