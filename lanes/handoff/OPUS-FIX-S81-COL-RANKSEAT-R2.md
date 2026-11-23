@@ -89,3 +89,5 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - Lag probe: col_h9_r1 pv0a45e191 on planR2L (e6200c7e9b8a). Spec private_specs/OPUS-FIX-S81-COL-RANKSEAT-R2/s81_col_h9_r1__t1__cl49d7a23e__pv0a45e191_1123015327; log runitem_lag_h9r1.log.
 - Lag decision deadline 10:30 (wave A). Without a decision, A ships without the lag row and B (12:30) adds it. If the probe shows the row is unneeded or the ROM outputs lose, mark it REASONED.
 - Porous: FIX-SYNC-S81 confirms the J8 cut tree and the j9tree carry the fixed hw 1b7a030446b6. POROUS-FRESH-1123 is in tests.
+- 03:1x: p6 (col_h9_r0_p6 pv0012ba28, predecessor kit on J7) route failed: DRT flat at 1645 violations, 1632 of them Lef58EolKeepOut, with the stale porous hw LEF 9924dfc8290c in macros. This is the known porous-data class, not a design failure. Not relaunched: the J9 tree carries the fixed data, and POROUS-FRESH-1123 guards it.
+- 02:37: removed --src-manifest off from j9r2.sh (lane rule). The lag probe died at kit_topology (bind from another plan). Rebinding planR2L on epyc7 (bindLag.sh/log), then respec + relaunch.
