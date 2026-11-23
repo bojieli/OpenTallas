@@ -28869,3 +28869,4 @@ FAILED [AUTOPILOT 8cb278349502] 2026-11-22 23:47:43 PST AUTOPILOT -> KIT-WAVE-3:
   92 held-with-reason rows no longer STALE; 193 held for plan events.
   Detail lanes/OWNERS-SWEEP.tsv
 - 2026-11-22 23:51 PST DONE [HEAD-CTL-R1] ot-run oth-ubuntu-4016544-1795420090 on tolerant-swine: rc=0 after 808 s, ended 23:51:18, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-CTL-R1/s81_head_hd_ctl_1122233733/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch3/claude/head-ctl-r1/kit5 --hosts epyc9 -- bash -c cd /srv/opentallas-scratch2/claude/kw45/
+- 2026-11-22 23:51 PST DONE [VIS-S81-COL] ot-run oth-ubuntu-3923724-1795419879 on tolerant-swine: rc=0 after 412 s, ended 23:51:28, log /srv/opentallas-scratch2/claude/vis-s81-col/probe/spec_colh10r0p/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/VIS-S81-COL/col_h10_r0_p
