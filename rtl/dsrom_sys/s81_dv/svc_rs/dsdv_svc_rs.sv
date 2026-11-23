@@ -259,21 +259,7 @@ module dsdv_svc_rs_c #(
     wire l_v; wire [LW-1:0] l_d; wire a_pv_v; wire [512:0] a_pv_d; wire a_hb;
     wire sm_st, sm_rv, sm_rp; wire [3:0] sm_kind; wire [7:0] sm_jid; wire [2:0] sm_rj; wire [511:0] sm_rd;
     wire go, done; wire [9:0] tjob; wire [7:0] tagj; wire [1:0] hcr, hack; wire a_f; wire [31:0] a_fc;
-    // SVC-CUT-DEPTH native replay (S81-SVC-J9 11-23, bench only): -DOT_SVC_RS_CUT puts the hi attention cut wrapper
-    // (dsdv_svc_att_cut, CUT_D = 1 + `OT_SVC_CUT_KA + `OT_SVC_CUT_KR: the whole per-direction depth on the att side) in
-    // every slice, so tb_svc_lower replays the compiler's cut dates on the 16 real slices.  Not defined = as built.
-`ifdef OT_SVC_RS_CUT
-`ifndef OT_SVC_CUT_KA
-`define OT_SVC_CUT_KA 0
-`endif
-`ifndef OT_SVC_CUT_KR
-`define OT_SVC_CUT_KR 0
-`endif
-    dsdv_svc_att_cut #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .H(H),
-        .CUT_D(1 + `OT_SVC_CUT_KA + `OT_SVC_CUT_KR)) u_att (
-`else
     dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .H(H)) u_att (
-`endif
         .clk(ck), .rst_n(rn_att), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),
         .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data), .qr_tag(qr_tag), .qr_beat(qr_beat),

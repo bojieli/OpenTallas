@@ -134,13 +134,6 @@ SERVICE_TIMING = {
     # --rt2-calendar --eng-xs: data-equal at exactly those shifts, mutants caught).  So PIO +10 (P after the SM e rows, on
     # the slot), KPV +9 on top of PO.
     'closing_allq_srx7_xs': dict(pio=297 + 10, kpv=78 + 9, engine_profile='closing', srx=7, eng_xs=2),
-    # SVC-CUT-DEPTH rc15 (936b871fa31, KA 4 / KR 5 = 9 more relay stages each way on the hi attention cut, lock-step; the
-    # HBM page-cache lanes stay unregistered): the attention share runs cut = 9 edges later against the dn stream and its
-    # out-lanes reach the slice 2 cut = 18 later.  Dates: the SM e rows follow the scores at the slice, PIO + 18 (PO / PVO
-    # follow, the att sees GO and P through the same in-cut); the P.V words reach the entry pins a further 2 cut later
-    # (PV_LAT + 18, cut_lat).  Native replay: tb_svc_lower with -DOT_SVC_RS_CUT (dsdv_svc_att_cut CUT_D 1 + 9).
-    'closing_allq_cutk45': dict(pio=297 + 18, kpv=78, engine_profile='closing', cut=9),
-    'closing_allq_srx7_xs_cutk45': dict(pio=297 + 10 + 18, kpv=78 + 9, engine_profile='closing', srx=7, eng_xs=2, cut=9),
 }
 
 # TOK-DS-CMP (10-26): compressed-row (DSA) layers -- 128 window rows + the indexer's nsel selected compressed rows,
@@ -701,7 +694,7 @@ class Job:
             if name == 'PV':
                 t = self.go + self.pvs + (40 if self.mutant == 'late' else 0)   # MUTANT 'late': PV frame 40 edges late
             if name == 'SMJ_SO':                       # after the last P.V word (both entries) + SO_GAP
-                t = max(t, self.go + self.pvo + PV_LAT + 2 * self.timing.get('cut', 0) + (2 * NPVQ if self.allq else NPVQ) - 1 + SO_GAP)
+                t = max(t, self.go + self.pvo + PV_LAT + (2 * NPVQ if self.allq else NPVQ) - 1 + SO_GAP)
             if name.startswith('SMJ_OP') and not any(k.startswith('SMJ_OP') for k in at):   # first operand frame:
                 t = max(t, at['SMJ_SO'] + (6 if getattr(self, 'so_input_profile', 'legacy') == 'bridge6' else 6 + SO_CS_LEAD - 1))
             if name == 'IK_ROW':
@@ -719,7 +712,7 @@ class Job:
             t += len(ws)
         j_pin = t_q0 - Q_ARM
         s_j = j_pin - max(j_age_w, j_age_e)
-        pv_first = self.go + self.pvo + PV_LAT + 2 * self.timing.get('cut', 0)
+        pv_first = self.go + self.pvo + PV_LAT
         npv = 2 * NPVQ if self.allq else NPVQ           # ALLQ: 8 tiles a half, both entries in parallel
         return dict(at=at, words=words, frame_words=fw, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
                     po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + npv - 1, npv=npv, allq=self.allq,
@@ -744,7 +737,7 @@ class Job:
                    not (self.mutant == 'pass_drop'))
         w = hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32) | (more << GO_MORE))
         npv = 2 * NPVQ if self.allq else NPVQ
-        pv_first = go + pvo + PV_LAT + 2 * self.timing.get('cut', 0)
+        pv_first = go + pvo + PV_LAT
         rec = dict(k=k, go=go, pio=pio, pvs=pvs, po=po, pvo=pvo, npw=npw, more=more, pv_first=pv_first,
                    pv_last=pv_first + npv - 1, npv=npv, feed_interval=H8_FEED_INTERVAL)
         if getattr(self, 'native_rt2_prospective', False):
@@ -780,7 +773,7 @@ class Job:
                     self.pio, self.go, self.pvs, self.po, self.pvo = rec['pio'], go, rec['pvs'], rec['po'], rec['pvo']
             if name == 'SMJ_SO':
                 pl = self.passes[-1]
-                t = max(t, pl['go'] + pl['pvo'] + PV_LAT + 2 * self.timing.get('cut', 0) + pl['npv'] - 1 + SO_GAP)
+                t = max(t, pl['go'] + pl['pvo'] + PV_LAT + pl['npv'] - 1 + SO_GAP)
             if name.startswith('SMJ_OP') and not any(k_.startswith('SMJ_OP') for k_ in at):
                 t = max(t, at['SMJ_SO'] + (6 if getattr(self, 'so_input_profile', 'legacy') == 'bridge6' else 6 + SO_CS_LEAD - 1))
             if name == 'IK_ROW':
