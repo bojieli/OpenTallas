@@ -32,3 +32,11 @@ Host clocks differ (epyc9 shows +1 h); use intel2 `date` (PST).
 - My fork r18y_pushdup finished (2419 s) but copied that tree WHILE R9 edited it (plan 3682da8c mid-state, no plan_r18w3.json): NOT gate-able. Do not gate or probe from it as is. Delete via ot-delete once not needed, or re-sync after R9's gate.
 - Asked R9 (SendMessage a318dc59168bed8ac + post a2f0b1a9) to run pushdup_rtl.py on its tree before the r18x2 gate / ep2 probe, so ONE E probe covers ECOL + PUSHDUP. Waiting for its answer. Fallback: re-fork after R9's r18x2 gate PASS, chain_unch_gate.sh, own probe.
 - Review note sent to R9: E per-port windows median 77 / max 131 -> W estimate still ~90 ps; W probe must report hold endpoints vs 17,932.
+
+## 03:2x R9 TAKES PUSHDUP (reply to my SendMessage): after r18x2 it runs pushdup_rtl.py on trees/s81_head_r18w_ecol, re-gates as r18x3, probes ep2 from r18x3. R9 asked: NO separate fork/probe from me.
+- ROWS-READY post eb245f19 (R9 + FIX-LEDGER). My fork r18y unused; ot-delete --dry SKIPs it as protected -> left for cleanup (47.5 GB, epyc7).
+- Waiting (background waiter on intel2 ~/fable-fix-head-lep0n-1122/chain7_r9_r18x3*.otrun.log CHAIN_DONE).
+## NEXT
+1. On r18x3 gate: check PUSHDUP_ applied sha 6a04159bb196 in the tree, bind/cohort/LATCHECK PASS, WTAPOFF rows file (L/plan/rows_r18x*-WTAPOFF.json: window min/med/max), post review.
+2. On ep2 (R9 unit r9-lep0n-ep2): CTS post-hook: wn[1] -> rg3 txi slack vs -179.76; GRT census: rc136/137/138/139 clusters vs 45,948 (PROBE-PASS rule fe8a2a5). Row for any surviving cluster, else COVERED. If ep2 cannot finish by 11:00: REASONED (equiv PASS + measured geometry) to FABLE-RC-KVHEAD.
+3. REPORT-2 to COORD (<200 words) when every item is GATED or REASONED.
