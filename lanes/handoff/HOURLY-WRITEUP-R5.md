@@ -26,3 +26,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 563 any / 453 current (+1/+1 vs 08:15, QC slw_st_b_v1__cle6023ec2). Wave 93 S81 launches, 9 BIND-GEN-TOOLSKEW fails fixed. Next round 10:15 (waiter armed).
 ## State 10:25 PST 11-22
 565 any / 453 current (any +2, current flat vs 09:06). QC slw_sc_v2 signed 09:59 counted as superseded. Next round 11:15 (waiter armed).
+## State 17:35 PST 11-22 (RESUMED after weekly limit)
+574 any / 459 current (+9/+6 vs 10:05). Missed 11:15-17:15 rounds; auto SIGN-RATE rows exist at 11:15/12:15/13:15/14:14. Next round 18:15 (wait2.sh edited to 18:15).
