@@ -715,6 +715,12 @@ SCHEMA = {
                         # Default-off (DIE-QC-97 11-10, gen_phys.tap_group_exports -> OT_TAP_GROUP_RE, clock_taps.tcl
                         # CLOCK-RESET group form): every sink matching re goes with its group (capture 1 = key) to the
                         # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
+                        # Default-off (PINREG-TAPS 11-23, gen_phys.pinreg_tap_exports -> OT_PINREG_TAPS, clock_taps.tcl last
+                        # pass): boundary pin-register chunks only on the named pin-face taps (names from taps/added_taps).
+                        "pinreg_taps": {"type": "object", "additionalProperties": False, "required": ["ports"],
+                            "properties": {"ports": {"type": "array", "minItems": 1, "items": _name},
+                                           "chunk": {"type": "integer", "minimum": 1, "maximum": 4096},
+                                           "re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
                             "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
                                 "follow_re": {"type": "string"},

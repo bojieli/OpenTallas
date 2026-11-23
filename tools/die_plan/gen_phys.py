@@ -4299,6 +4299,37 @@ def tap_group_exports(t):
     return out
 
 
+def pinreg_tap_exports(t):
+    """PINREG-TAPS 11-23 (FABLE-RC-REVIEW row 33): default-off clock.pinreg_taps {"ports": [added tap names], "chunk": n,
+    "re": capture regex} -> OT_PINREG_TAPS / OT_PINREG_CHUNK / OT_PINREG_TAP_RE (clock_taps.tcl last pass): boundary
+    pin-register chunks hang only on the named pin-face taps, every other sink leaves them.  Every port must be a
+    clock.taps / added_taps name, so the spine already feeds it."""
+    clock = t.get("clock", {})
+    if "pinreg_taps" not in clock:
+        return []
+    pr = clock["pinreg_taps"]
+    ports = pr.get("ports", [])
+    names = {e.get("name") for k in ("taps", "added_taps") for e in clock.get(k, []) if isinstance(e, dict)}
+    import re as _re
+    if not ports or len(set(ports)) != len(ports):
+        raise ValueError("clock.pinreg_taps.ports must be a non-empty list of distinct tap names")
+    for nm in ports:
+        if not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(nm)) or nm not in names:
+            raise ValueError(f"clock.pinreg_taps port {nm!r} is not a clock.taps / added_taps name")
+    if len(names - set(ports)) < 1:
+        raise ValueError("clock.pinreg_taps leaves no ordinary tap")
+    out = ["export OT_PINREG_TAPS = " + " ".join(ports)]
+    if "chunk" in pr:
+        out.append(f"export OT_PINREG_CHUNK = {int(pr['chunk'])}")
+    rx = pr.get("re", "")
+    if rx:
+        if any(c in rx for c in "#$ \t\n") or "(" not in rx:
+            raise ValueError("clock.pinreg_taps.re must be a capture regex without '#', '$' or whitespace")
+        _re.compile(rx)
+        out.append(f"export OT_PINREG_TAP_RE = {rx}")
+    return out
+
+
 def ft_stage0_exports(t):
     """Default-off explicit stage0 placement for selected unlanded FT slots."""
     slots = []
@@ -7986,6 +8017,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_TAP_RESET_SPLIT = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
+    cfg += pinreg_tap_exports(t)
     cfg += ft_stage0_exports(t)
     cfg += ft_keep_firm_exports(t)
     cfg += private_leaf_exports(t)

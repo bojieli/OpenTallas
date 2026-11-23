@@ -1205,6 +1205,75 @@ if {[llength $ct_taps] >= 2 && $ct_cap > 0} {
     puts "OT_CLOCK_TAPS cap recheck after hop latches: $ct_rmv sinks re-assigned in [dict size $ct_ul] launch units + single sinks; over cap now: [expr {[llength $ct_over] ? [join $ct_over {, }] : {none}}]"
   }
 }
+# PINREG-TAPS 11-23 (FABLE-RC-REVIEW row 33, S81 slice C: port->u_bin hold -73..-900, u_bout->port setup -1330; c1x_C t4
+# leafup_i1 u_bin capture 678 ps vs vclk 250 on 7.5k-9.8k-sink taps).  Opt-in, default off: plan clock.pinreg_taps
+# {ports, re, chunk} -> OT_PINREG_TAPS (space-separated grid tap ports from added_taps, placed over the pin-register strip)
+# and OT_PINREG_TAP_RE (capture 1 = register bus, optional capture 2 = bit index).  After EVERY pass above, each pin-register
+# chunk (bus + bit/OT_PINREG_CHUNK) goes to the nearest pin-face port by chunk centroid (next nearest with room when that port
+# would pass the cap), and every other sink on a pin-face port moves to its nearest ordinary tap, so the pin-face trees carry
+# boundary registers only (light, shallow trees near the bound insertion; pinreg_pad.tcl can then pad, never trim).
+if {[llength $ct_taps] >= 2 && [info exists ::env(OT_PINREG_TAPS)] && [string trim $::env(OT_PINREG_TAPS)] ne ""} {
+  set ct_prre [expr {[info exists ::env(OT_PINREG_TAP_RE)] && $::env(OT_PINREG_TAP_RE) ne "" ? $::env(OT_PINREG_TAP_RE) : {(?:^|[/.])(u_b(?:in|out)_[A-Za-z0-9_]+)[/.](?:q\[([0-9]+)\])?}}]
+  set ct_prch [expr {[info exists ::env(OT_PINREG_CHUNK)] ? int($::env(OT_PINREG_CHUNK)) : 32}]
+  if {$ct_prch < 1} {error "OT_PINREG_CHUNK must be >= 1"}
+  set ct_prp {}; set ct_pro {}
+  set ct_prnames [regexp -all -inline {\S+} $::env(OT_PINREG_TAPS)]
+  foreach tp $ct_taps {
+    if {[lsearch -exact $ct_prnames [lindex $tp 0]] >= 0} {
+      dict set ct_prp [lindex $tp 0] $tp
+    } else { lappend ct_pro $tp }
+  }
+  foreach nm $ct_prnames {
+    if {![dict exists $ct_prp $nm]} {error "OT_PINREG_TAPS unknown or non-grid clock port: $nm"}
+  }
+  if {![llength $ct_pro]} {error "OT_PINREG_TAPS leaves no ordinary tap"}
+  set ct_prg {}; set ct_prev {}
+  foreach tp $ct_taps {
+    foreach it [[lindex $tp 1] getITerms] {
+      if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+      set ci [$it getInst]
+      set isb [expr {![catch {[$ci getMaster] isBlock} b] && $b eq "1"}]
+      set bus ""; set bit ""
+      if {!$isb && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp -- $ct_prre [$ci getName] -> bus bit] && $bus ne ""} {
+        set key [expr {$bit ne "" ? "$bus/[expr {$bit / $ct_prch}]" : "$bus/c"}]
+        dict lappend ct_prg $key $it
+      } elseif {[dict exists $ct_prp [lindex $tp 0]]} { lappend ct_prev $it }
+    }
+  }
+  if {![dict size $ct_prg]} {error "OT_PINREG_TAPS no pin-register clock pins match '$ct_prre'"}
+  set ct_prload {}; dict for {nm tp} $ct_prp {dict set ct_prload $nm 0}
+  set ct_prmv 0
+  foreach key [lsort [dict keys $ct_prg]] {
+    set its [dict get $ct_prg $key]; set sx 0.0; set sy 0.0
+    foreach it $its {lassign [[$it getInst] getLocation] x y; set sx [expr {$sx + $x}]; set sy [expr {$sy + $y}]}
+    set cx [expr {$sx / [llength $its]}]; set cy [expr {$sy / [llength $its]}]
+    set best ""; set bd 0; set bfree ""; set bfd 0
+    dict for {nm tp} $ct_prp {
+      set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3])}]
+      if {$best eq "" || $d < $bd} {set best $nm; set bd $d}
+      if {($ct_cap <= 0 || [dict get $ct_prload $nm] + [llength $its] <= $ct_cap) && ($bfree eq "" || $d < $bfd)} {set bfree $nm; set bfd $d}
+    }
+    if {$bfree ne ""} {set best $bfree}
+    set net [lindex [dict get $ct_prp $best] 1]
+    foreach it $its {
+      if {[$it getNet] ne $net} {$it disconnect; $it connect $net; incr ct_prmv}
+    }
+    dict incr ct_prload $best [llength $its]
+  }
+  set ct_prout 0
+  foreach it $ct_prev {
+    set ci [$it getInst]; set loc [$ci getLocation]
+    if {![catch {[$ci getMaster] isBlock} b] && $b eq "1"} {set a [$it getAvgXY]; if {[lindex $a 0]} {set loc [lrange $a 1 2]}}
+    lassign $loc x y
+    set best ""; set bd 0
+    foreach tp $ct_pro {
+      set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3])}]
+      if {$best eq "" || $d < $bd} {set best $tp; set bd $d}
+    }
+    $it disconnect; $it connect [lindex $best 1]; incr ct_prout
+  }
+  puts "OT_PINREG_TAPS [dict size $ct_prp] pin-face taps, [dict size $ct_prg] register chunks (re '$ct_prre', chunk $ct_prch), $ct_prmv pin-register sinks moved, $ct_prout other sinks evicted; load: $ct_prload"
+}
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die
 # assembly (gen.py assembly, views/<type>/ot_clock_taps.json) leaves it unconnected, so the spine makes no dead drop.
