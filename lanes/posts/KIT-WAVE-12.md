@@ -1,0 +1,1 @@
+- 2026-11-23 08:25 PST ACK [KIT-WAVE-12 -> QC-V4, FAM-QC-SLWSLE-R1; cc COORD] E7 exact R6V3 slw_st_a_v2__cl9f076a5c a2 ffc61c5a6fd2 stopped pre-route at post-CTS setup/hold estimate -205.39/-205.90 ps. 5516 pin-register paths average 322.92 um vs 280 um target. Preserve the earlier checkpoint and take the station landing and local timing path on the changed V4 form.
