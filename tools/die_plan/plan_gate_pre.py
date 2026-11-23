@@ -86,6 +86,11 @@ TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with 
   type (k >= base + added), or to a misnamed added tap, is FAIL TAPNAME-RETAP: the reset tree / consumer sites still carry
   old tap indices; re-run the tap package (retap.py) on the solved base.
 
+ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
+  GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD) run on every check and add WARN ADV-<CHECK>
+  lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
+  --skip ADVISORY or OT_PLAN_ADVISORY=off leaves them out.
+
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -102,7 +107,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1531,9 +1536,25 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
+    if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
+        findings += advisory_lines(tree, plan, asbuilt)
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
+
+
+def advisory_lines(tree, plan, asbuilt=None):
+    """PRECHECK-R2: plan_advisory.run() lines, each forced to a WARN (an estimator never refuses); [] when the tree has no module."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
+    try:
+        import plan_advisory as PA
+    except ImportError:
+        return []
+    try:
+        lines = PA.run(_load(plan), plan, tree, asbuilt=asbuilt)
+    except Exception as e:  # noqa: BLE001
+        return [f"WARN ADV not run: {type(e).__name__}: {str(e)[:200]}"]
+    return [x if x.startswith("WARN ") else "WARN " + x for x in lines]
 
 
 def main(argv=None):
@@ -1597,14 +1618,19 @@ def main(argv=None):
     lst = [x for x in f if x.startswith("LIST ")]
     fails = [x for x in f if x.startswith("FAIL ")]
     warns = [x for x in f if x.startswith("WARN ")]
+    adv = [x for x in warns if x.startswith("WARN ADV")]
     if not a.quiet:
         for x in lst + fails + warns:
             print(x)
+    else:
+        for x in adv:                                    # PRECHECK-R2: advisories reach the plan lanes even from --quiet callers
+            print(x)
     unchecked = [x for x in fails if x.split()[1].endswith("-UNCHECKED")]
     print(f"PLAN-GATE-PRE {'UNCHECKED' if unchecked and len(unchecked) == len(fails) else 'FAIL' if fails else 'PASS'} tree={a.tree} plan={a.plan} findings={len(fails)}"
-          + (" classes=" + ",".join(sorted({x.split()[1].split('-')[0] for x in fails})) if fails else ""))
+          + (" classes=" + ",".join(sorted({x.split()[1].split('-')[0] for x in fails})) if fails else "")
+          + (f" advisories={len(adv)}" if adv else ""))
     if a.json:
-        Path(a.json).write_text(json.dumps({"tree": a.tree, "plan": a.plan, "findings": fails}, indent=1) + "\n")
+        Path(a.json).write_text(json.dumps({"tree": a.tree, "plan": a.plan, "findings": fails, "advisories": adv}, indent=1) + "\n")
     return 1 if fails else 0
 
 
