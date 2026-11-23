@@ -64,3 +64,5 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - S0 (off) spec ..._1122195744, work epyc9 .../col_h10_r1__t1__cld01bb4ae_1122195708 (CTS since 22:23)
 - Station-merge checker: epyc9 opus-fix-s81-colrom-r6/tmp/romhalf_stn2.py <1_2_yosys.v>.
 - Latch hold read at GRT on the 3 reps: u_lk_xd_* -> u_e*_u_[we] ROM pins, FF hold >= 0 (final 5_1_grt.odb).
+
+## 23:4x graft source -> epyc10 vis-s81-col/tmp/plan_v3_strip_e1e.json (ba87ca31a34b = plan_v3_strip + COL-H10R0-E1E-CHAN on col_h10_r0_p1, FAM-H10-R4 accepted); driver restarted 23:44 (rt f286a1db1217, prior logs j9r2.try1/.try2.log)
