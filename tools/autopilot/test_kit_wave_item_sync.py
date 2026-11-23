@@ -108,3 +108,21 @@ def test_item_sync_tries_shared_dependencies_once_per_host(tmp_path, monkeypatch
 
     KW.sync_item_inputs(AP(), c, run=fail)
     assert len(calls) == 2
+
+
+
+def test_item_input_probe_ignores_stale_tool_pin_but_keeps_actual_bind_input():
+    old_bind = "/srv/opentallas-scratch2/claude/s81/J7/bind"
+    current_bind = "/srv/opentallas-scratch2/claude/s81/J8/bind"
+    stale = {"event": "J7", "src_manifest_hash": "j7", "bind_out": old_bind}
+    active = {"event": "J8", "src_manifest_hash": "j8", "bind_out": current_bind}
+    die = {"event": "J8", "src_manifest_hash": "j8", "kit_rtl": {"bind_out": current_bind},
+           "item_inputs": {"t1": {"gen_tools_pin": stale},
+                           "t2": {"gen_tools_pin": stale, "kit_rtl": {"bind_out": old_bind}},
+                           "t3": {"gen_tools_pin": active}}}
+    assert KW.item_gen_tools_manifest(die, "t1") == ""
+    assert KW.item_gen_tools_manifest(die, "t3") == "j8"
+    inputs = KW.item_inputs({"dies": {"s81": die}}, "s81")
+    assert "t1" not in inputs
+    assert inputs["t2"] == [old_bind]
+    assert inputs["t3"] == [current_bind]
