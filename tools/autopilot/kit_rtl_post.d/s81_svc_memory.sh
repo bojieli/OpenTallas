@@ -22,7 +22,8 @@ esac
 # MEM v2 generated macros the plan places (T7 class port + idx fit, tools/die_plan/s81_svc_memory_closure.py).
 # SVC-R9 11-22 (COORD 18:0x): a bound without the full T7 helper set (narrow-pvq att variant: every J7/J8 svc bound)
 # closes per helper (stage + pmem structural cones, s81_svc_mem_cones.py); a witness difference fails the stage.
-python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT"
+# struct kits also retype the attention tr_x cores to the plan type's signed physical_master variants (--plan/--type).
+python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT" ${PLAN:+--plan "$PLAN" --type "$TYPE" --src-tree .}
 # The receipt must say APPLIED, or NOT_APPLICABLE (a bound without the native helper set, e.g. a later source-level
 # macro form). A closure that left a behavioural staging memory behind must not reach GEN.
 python3 -I - "$OUT" "$BM" <<'PY'

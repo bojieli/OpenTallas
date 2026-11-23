@@ -376,10 +376,19 @@ def _bound_at(lines, bound):
     return hits[0]
 
 
-def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
+def tr_rows(typ):
+    """plan hard_cores rows of the attention tr core that name a signed physical_master variant"""
+    import s81_svc_hi4_att_fit as R9
+    return [r for r in (typ or {}).get('hard_cores', []) if r.get('module') == R9.TR_LOGICAL
+            and r.get('physical_master') not in (None, R9.TR_LOGICAL)]
+
+
+def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None, typ=None, tree=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
-    memory_closure.json receipt. `closed` = a precomputed closed bound text (else computed here)."""
+    memory_closure.json receipt. `closed` = a precomputed closed bound text (else computed here).
+    typ (plan type dict) + tree (wave source): struct path also retypes the tr_x cores to the plan's signed
+    physical_master variants (FAM-S81-SVC-OWN 11-22; s81_svc_hi4_att_fit.typed_tr: LEF port ABI + clock contract)."""
     rtl = Path(rtl_dir).resolve(); kr = json.loads((rtl / 'kit_rtl.json').read_text())
     bound = rtl / (kr['bound_module'] + '.sv')
     if not bound.exists(): bound = rtl / ('s81p_%s_bound.sv' % kr['bound_type'])
@@ -390,8 +399,16 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     steps = list(CONES.STEPS)
     if kind == 'struct':
         if form != 'v2': raise ValueError('MEM struct: per-helper steps exist in form v2 only')
+        G = CONES.att_prefix(s)
         closed, steps, rep = CONES.close_struct(s)      # ConeError (ValueError) on any witness difference
         rep.update(before_sha256=sha(s), after_sha256=sha(closed), path='struct')
+        tr = tr_rows(typ)
+        if tr:
+            import s81_svc_hi4_att_fit as R9
+            closed, tr_bb = R9.typed_tr(closed, typ, Path(tree or ROOT), engine='u_' + G[2:] + 'u_eng_g_tr_', expect=len(tr))
+            rep.update(after_sha256=sha(closed), tr_typed=sorted(tr_bb))
+        else:
+            tr_bb = {}
     elif closed is None:
         box = {}
         def run(): box['r'] = close_type(s, ref_s or ref_text(), rm)
@@ -422,6 +439,11 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
             (rtl / c).write_bytes(b); kids.append(str(rtl / c))
         base = MACROS[form]
     for c, t in idx_kids.items(): (rtl / c).write_text(t); kids.append(str(rtl / c))
+    tr_files = []
+    if kind == 'struct':
+        for c, b in sorted(tr_bb.items()):
+            if (rtl / c).exists(): raise ValueError('MEM struct: ' + c + ' already in the kit RTL dir')
+            (rtl / c).write_bytes(b); tr_files.append(str(rtl / c))
     macros = {m: base.get(m, 0) + idx_macros.get(m, 0) for m in {**base, **idx_macros}}
     # macro views the closure instantiates and bind did not see (bind runs before this event): black box in
     # kit_rtl.f / files, behavioural model in kit_rtl_sim.f, lef + libs in hard_macros (same form as bind)
@@ -441,10 +463,10 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
         if not p.exists(): continue
         L = p.read_text().split('\n'); i = _bound_at(L, bound)
         for x in drop: i -= L.index(x) < i; L.remove(x)
-        L[i + 1:i + 1] = kids + (models if fl == 'kit_rtl_sim.f' else bbs); edits[p] = '\n'.join(L)
+        L[i + 1:i + 1] = kids + (models if fl == 'kit_rtl_sim.f' else bbs + tr_files); edits[p] = '\n'.join(L)
     for x in drop: kr['files'].remove(x)
     if 'sim_files' in kr: kr['sim_files'] = [x for x in kr['sim_files'] if x not in drop]
-    i = _bound_at(kr['files'], bound); kr['files'][i + 1:i + 1] = kids + bbs
+    i = _bound_at(kr['files'], bound); kr['files'][i + 1:i + 1] = kids + bbs + tr_files
     if 'sim_files' in kr and any(Path(x).name == bound.name for x in kr['sim_files']):
         i = _bound_at(kr['sim_files'], bound); kr['sim_files'][i + 1:i + 1] = kids + models
     edits[rtl / 'kit_rtl.json'] = json.dumps(kr, indent=1)
@@ -475,14 +497,19 @@ def main():
     ap.add_argument('--form', choices=('v1', 'v2'), default='v2', help='v2 (default) = right-sized children '
                     '(MEM v2 svc fit); v1 = the 12605dc2 class port with 256x256_m2 / 32x64 masters')
     ap.add_argument('--jobs', type=int, default=1)
+    ap.add_argument('--plan', help='plan json: struct kits retype tr_x cores to the --type row physical_master variants')
+    ap.add_argument('--type', dest='ptype', help='plan type of the --kit-rtl dir (with --plan)')
+    ap.add_argument('--src-tree', default='.', help='wave source tree holding the plan hard-core views (default cwd)')
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
+    typ = json.loads(Path(a.plan).read_text())['partition_types'][a.ptype] if a.plan and a.ptype else None
+    if typ is not None and a.kit_rtl and len(a.kit_rtl) != 1: sys.exit('--plan/--type name one --kit-rtl dir')
     if a.kit_rtl and not any(kit_closure_kind(d) == 'class' for d in a.kit_rtl):
         # SVC-R9 11-22: no class-port kit -> no T7 reference inputs needed; struct / no-helper kits close here
         # An already-native macro form needs no transform/reference data. Preserve apply_kit's
         # idempotent receipt behavior; actual native-helper kits still take the fail-closed path.
         for d in a.kit_rtl:
-            print(d, json.dumps({k: v for k, v in apply_kit(d, form=a.form).items()
+            print(d, json.dumps({k: v for k, v in apply_kit(d, form=a.form, typ=typ, tree=a.src_tree).items()
                                 if k in ('status', 'after_sha256')}), flush=True)
         return
     if a.kit_rtl:

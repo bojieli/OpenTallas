@@ -116,8 +116,10 @@ def replace_pmem(source):
     return seed
 
 
-def typed_tr(source, typ, tree):
-    """ot_hdc_v41x_attn_tr_x instances -> the signed physical_master variant of each plan hard core."""
+def typed_tr(source, typ, tree, engine='u_u_rsv_u_att_u_a_u_eng_g_tr_', expect=4):
+    """ot_hdc_v41x_attn_tr_x instances -> the signed physical_master variant of each plan hard core.
+    engine = flat instance prefix of the tr cores (u_<att unit>u_eng_g_tr_; default the J8 t4_att piece); expect =
+    number of retyped rows (s81_svc_memory_closure struct path passes the plan's count of physical_master rows)."""
     header = re.search(r'^module ' + TR_LOGICAL + r' #\(.*?^\);', (tree / 'rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv').read_text(),
                        re.M | re.S)
     if not header:
@@ -126,10 +128,10 @@ def typed_tr(source, typ, tree):
     assets = {}
     n = 0
     for row in typ.get('hard_cores', []):
-        if row.get('module') != TR_LOGICAL:
+        if row.get('module') != TR_LOGICAL or row.get('physical_master') in (None, TR_LOGICAL):
             continue
         xoff = int(row['params']['XOFF'])
-        current = f'u_u_rsv_u_att_u_a_u_eng_g_tr_{xoff // 8}_g_x_u_tr'
+        current = f'{engine}{xoff // 8}_g_x_u_tr'
         variant = row['physical_master']
         required = dict(TR_REQUIRED, XOFF=xoff)
         hard = [a for a in signed['entries'] if a.get('lib_contains', '').endswith('/' + variant + '/')]
@@ -165,8 +167,8 @@ def typed_tr(source, typ, tree):
             raise FitError(f'{variant}: clock contract not signed for this view lib')
         assets[variant + '_bb.v'] = ('(* blackbox *)\n' + typed + '\nendmodule\n').encode()
         n += 1
-    if n != 4:
-        raise FitError(f'expected 4 {TR_LOGICAL} hard cores in {ATT}, found {n}')
+    if n != expect:
+        raise FitError(f'expected {expect} {TR_LOGICAL} hard cores in the plan type, found {n}')
     return source, assets
 
 

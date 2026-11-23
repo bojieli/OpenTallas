@@ -161,3 +161,28 @@ def test_macroghost_flags_rows_the_bound_cannot_have(tmp_path):
     assert len(warns) == 1 and 'u_u_irg_03' in warns[0] and 'wq_mem' not in warns[0]
     assert PG.check_macroghost(str(plan), None) == [] and PG.check_macroghost(str(plan), str(tmp_path / 'none')) == []
     assert 'MACROGHOST' in PG.CLASSES
+
+
+def test_apply_kit_struct_retypes_tr_cores_of_the_plan_type(tmp_path, monkeypatch):
+    import s81_svc_hi4_att_fit as R9
+    bm = 's81p_svc_lo_dsdv_svc_rs__t3_bound'
+    b = tmp_path / (bm + '.sv')
+    b.write_text(bound_text(name=bm))
+    (tmp_path / 'kit_rtl.f').write_text(str(b) + '\n')
+    (tmp_path / 'kit_rtl_sim.f').write_text(str(b) + '\n')
+    (tmp_path / 'kit_rtl.json').write_text(json.dumps(dict(bound_module=bm, files=[str(b)])))
+    rows = [dict(module=R9.TR_LOGICAL, physical_master='ot_tr_x%d' % i, params=dict(XOFF=8 * i)) for i in range(4)]
+    typ = dict(hard_cores=rows + [dict(module=R9.TR_LOGICAL, params=dict(XOFF=0)), dict(module='other', physical_master='m')])
+    seen = {}
+    def fake(source, t, tree, engine, expect):
+        seen.update(engine=engine, expect=expect, tree=tree)
+        assert 'ot_t7_pmem_capture_v2' in source
+        return source + '// typed\n', {r['physical_master'] + '_bb.v': b'(* blackbox *)\n' for r in rows}
+    monkeypatch.setattr(R9, 'typed_tr', fake)
+    rep = MC.apply_kit(tmp_path, typ=typ, tree=tmp_path)
+    assert seen == dict(engine='u_u_rsv_06_u_u_att_u_eng_g_tr_', expect=4, tree=tmp_path)
+    assert rep['tr_typed'] == sorted('ot_tr_x%d_bb.v' % i for i in range(4)) and b.read_text().endswith('// typed\n')
+    names = lambda p: [x.rsplit('/', 1)[-1] for x in p.read_text().split()]
+    assert 'ot_tr_x0_bb.v' in names(tmp_path / 'kit_rtl.f') and 'ot_tr_x0_bb.v' not in names(tmp_path / 'kit_rtl_sim.f')
+    assert 'ot_tr_x3_bb.v' in [x.rsplit('/', 1)[-1] for x in json.loads((tmp_path / 'kit_rtl.json').read_text())['files']]
+    assert MC.tr_rows(dict(hard_cores=[dict(module=R9.TR_LOGICAL)])) == [] and MC.tr_rows(None) == []
