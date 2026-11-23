@@ -16633,7 +16633,7 @@ def design_digest(ip):
     return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
 
 
-def fail_signature(rec):
+def design_fail_signature(rec):
     """the failure of an attempt without what changes run to run (paths, shas, attempt numbers, times): stage + normalized reason"""
     q = rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL"
     why = str((rec.get("q_reason") if q else rec.get("reason")) or "")
@@ -16650,7 +16650,7 @@ def note_design_fail(rec):
     if (not so_failed(rec) or is_infra_fail(rec) or infra_retry_kind(rec) or str(rec.get("q_class") or rec.get("class") or "") == "INFRA"
             or INFRA_FAIL_RE.search(str(rec.get("q_reason") or "")) or infra_not_run_line(str(rec.get("q_reason") or ""))):
         return 0
-    dg, sig = design_digest(rec.get("input_parts")), fail_signature(rec)
+    dg, sig = design_digest(rec.get("input_parts")), design_fail_signature(rec)
     if not dg or not sig:
         return 0
     hist = rec.setdefault("design_fails", {})
@@ -16671,7 +16671,7 @@ def design_repeat_hold(cfg, die, r, rec):
     if not now or now != design_digest(rec.get("input_parts")):
         return ""
     return (f"DESIGN-REPEAT: the same failure reproduced on {n} attempts with unchanged plan / bind / env (design digest {now}): "
-            f"{fail_signature(rec)[:160]}; held until the plan, bind or env changes (a tools-only rt move does not release it), "
+            f"{design_fail_signature(rec)[:160]}; held until the plan, bind or env changes (a tools-only rt move does not release it), "
             f"or a lane sets retry {r.get('item')}@{rec.get('attempt')}")
 
 

@@ -62,4 +62,4 @@ def test_different_failure_or_infra_does_not_count(monkeypatch):
 
 def test_signature_ignores_paths_times_attempts():
     a, b = rec(1, ip()), rec(4, ip())
-    assert KW.fail_signature(a) == KW.fail_signature(b) and "-1154.54" in KW.fail_signature(a)
+    assert KW.design_fail_signature(a) == KW.design_fail_signature(b) and "-1154.54" in KW.design_fail_signature(a)
