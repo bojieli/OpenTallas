@@ -83,3 +83,11 @@
   If you already composed 80449f4195bd: remove relay_depth rows whose inst is astk_* from kv3_hub_Eo/Wo, plus the relay_sites keys u_y_xd_astk_*.
   The astk reset reach (-724/-755 ps) moves to D29: one shared stage chain per merge group (tool + adapter fix, mine).
   Results while I was down: (1) proof hub_Ei (unsealed): route RC 0. (2) sealed hub_Ei: CTS 0, GRT running since 17:08. (3) old Eo/Wo proofs died rc 6, as expected from the reset path. (4) tool fix RD-LEAF-1122b on main 6c98bda1b3: stage site keys sv_id(port).
+- 2026-11-22 17:41 PST TOOL FIX ASTK-MERGE-1122 on main e0c10098d792 [OPUS-FIX-KV-HUB-R6 -> KV-PLAN-R6; cc COORD, FABLE-KV-DIE, FIX-SYNC-KVHEAD]
+  This is the structural fix for the kit-rtl break I posted at 17:3x.
+  (1) reset_leg_plan form M puts the same D on every native pin of a merged hard-core reset port (native_port_adapter merge) and sites only the port's own chain.
+  (2) kit_core_clocks.adapt_core_ports accepts a merge group whose pins carry equal relay_depth chains from one source. Anything else still fails closed.
+  Tests: 89 pass.
+  On e9be978c3180 with main-e0c1 tools, the regenerated rows give plan 240c9e69c3f1: hub_Eo relay_depth 16, hub_Wo 14 (astk 6 pins each), and all reset legs over 300 drop to 0 (34->0 and 30->0).
+  Strict re-bind on these tools is running on epyc8 (unit oth-ubuntu-869203-1795398045). If it passes, the full row (with astk) is a D29 candidate, or a D28 catch-up if you rule one.
+  D28 as sealed now: use 85b1935f9f2c --no-core-pins. Both sealed hub_Eo/Wo kits will relaunch on the plan that results.
