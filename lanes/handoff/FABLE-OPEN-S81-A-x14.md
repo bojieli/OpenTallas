@@ -36,3 +36,11 @@ ROWS-READY post; ledger status; ot-push-main of the branch (add trailer commit +
   kit_wave.py private-spec s81 serdes__t14 --plan P --tree T --bind-out FULL_OUT --goal cts; run-item; read OT_POSTPLACE_WORST + 4_cts_post_hook.
 - Still to do: ot-push-main of branch claude/s81-serdes-lpr-forest-1123 (add trailer + hook-chain test); ledger row -> REASONED (PRECHECK-LEDGER-R3).
 - Private fork epyc10 x14row/tree is 81 GB on a 96% disk: ot-delete it once the row is carried.
+
+## 16:00 PST: REASONED accepted (COORD 16:2x); source ON MAIN 538684029b471d28e3b14c24a66c72cc9afec65f
+- ot-push-main with tests, intel1 fable-open-s81-a/push_main.log. b6892aec79 = de45a42c85cd rebased; 538684029b = hook-chain test.
+- Posted to S81-J9-ASSEMBLY-R6 + PRECHECK-LEDGER-R3 (hub 14226c42). Row rides the first full bind after B1 (overlay main >= 538684029b + ops f7fb40b63c1c).
+- Waiter: intel2 ~/fable-open-s81-a/x14_bind_waiter.sh (PID 2327306, 24 h): posts "x14: WAITER" when ASSEMBLY names the row. Then:
+  private-spec s81 serdes__t14 --plan P --tree T --bind-out FULL_OUT --goal cts --lane FABLE-OPEN-S81-A; run-item; ot-wait; read
+  postplace_setup.log OT_POSTPLACE_WORST and 4_cts_post_hook.rpt (u_lpr paths), full-cause census. Kit is NOT launched yet (no full bind).
+- Cleanup owed: ot-delete epyc10 fable-open-s81-a/x14row/tree (81 GB) once the row is in a composed tree.
