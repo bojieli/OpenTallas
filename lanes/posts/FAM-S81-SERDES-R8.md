@@ -160,3 +160,5 @@
   J9 ruling taken: all serdes rows go into J9, none to J10. Rows: SERDES-CORETAP-1 (rebased on f65f with the per-pair latency check), SERDES-DECSITE-1, SERDES-TXFACE-1, SERDES-RCKROOT-1 (incl. CLKENTRY), SERDES-LOCKUP-1, PHY-T1-NECORNER-1 (phy__t1 GRT-0116, 44 ovf). All are JSON ops on J8 f65f62779bef (epyc10 fam-s81-serdes-r7/j9/plan_j8_f65f.json), each with a PRE result, target GATED by 16:00.
   t2: FLOW-OPS-R2 reports the -460 is a stale-graph artefact before a repair_timing SEGV. The real pre-repair TT is -305 at place and -284 at GRT.
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-23 02:11 PST DONE [FAM-S81-SERDES-R7] ot-push-main otpush-renewed-glider-3622893 on renewed-glider: rc=0 after 23 s, ended 10:11:09, log none, cmd: ot-push-main 
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
