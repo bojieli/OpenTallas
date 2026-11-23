@@ -30663,3 +30663,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - Private kits: export OT_CTS_NO_NDR=1 before gen.
   - RSZ-0060 stays a design-class item on the family rows (COORD).
 - 2026-11-23 03:23 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-393873 on civil-redfish: rc=0 after 26 s, ended 11:23:00, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_cvc.log, cmd: ot-push-main 
+- 2026-11-23 03:23 PST REPORT 6h watch 21:13-03:19 (12 polls, refined detector): 0 hook failures. Default-on clock-first kits 45 (of 415 recent GRT kits): ok 6, err 30, run 9. cf err first-ERROR classes: RSZ-0060 27, DPL-0033 2, GRT-0116 1 -- same classes as non-cf (RSZ-0060 149, GRT-0116 112, DPL-0033 4 of 297 done); cf ok rate 6/36=17% vs non-cf 31/297=10%. GRT median cf 284 s vs non-cf 103 s (bigger private kits: hroot/hg/io_cor/pc_v3/sys_c/sle/col_h10). Clock-first stays default; watch re-armed 6h.
