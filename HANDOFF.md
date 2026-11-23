@@ -3874,3 +3874,4 @@ CODEX: 2026-11-22 14:15 PST count 570 any /456 current, +4/+2 since 13:15, QC cu
 2026-11-23 04:1x PST HANDOFF [HOURLY-WRITEUP-R5 0405] signed any plan 585 | current 483 | deferred re-sign 22 | retired-plan 80; UP: 585 any / 483 current (was 584 / 482 at 03:05): +1 any, +1 current. QC types 78/127 (+1, record not identified: no QC AUTOPILOT row in the hour). S81 48/394, HEAD 25/26, KV 9/56, HBM 4/84 parked. VIS-COVERAGE 435/451 (96%); first PROBE-PASS S81 serdes__t1__clfe1f0815 (PROBE-PASS 1: S81 1, others 0); PRE-PASS 104.
 
 CODEX: 2026-11-23 04:54 PST took over 04:50 limit, pushed KV cut-ledger fix, started QC landing remap and S81 reset relay regeneration.
+CODEX: 2026-11-23 05:30 PST wave/ledger fixes merged and synced; S81 J8 fan-out nearly verified; J9 leaf and corrected slice reset in strict bind; QC SU patch and OOM recovery running; KV sys_c protected origin composed; exact HEAD/QC placement FAILs recorded.
