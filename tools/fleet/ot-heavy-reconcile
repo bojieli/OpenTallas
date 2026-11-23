@@ -704,7 +704,7 @@ def main():
         hwm = sum(p["hwm"] for p in allp)
         cuse = sum(num(d + "/memory.current") for d in cdirs)
         if not DRY:
-            cpu_interval(s, NOW, cpu_usec(cg) + sum(cpu_usec(d) for d in cdirs))     # FLOW-FLEET-R2 F1: measured cores of this unit
+            cpu_interval(s, NOW, cpu_usec(cg) + sum(cpu_usec(d) for d in dict.fromkeys(cdirs)))     # FLOW-FLEET-R2 F1: measured cores of this unit
             s["meta_cls"] = meta_class(rd(f"{D}/meta.{unit}")) or s.get("meta_cls")      # the class the unit was ADMITTED under (meta.<unit>): the key admission looks its charge up by
         cgpeak = num(cg + "/memory.peak") + sum(num(d + "/memory.peak") for d in cdirs)
         if s.get("cls") in ("cd", "?"):
@@ -815,8 +815,8 @@ def main():
         s = st.pop(u)
         if s.get("cls") and s.get("age", 0) >= 240 and int(s.get("dock_miss", 0)) < 2:  # finished: one row of history
             open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
-            if len(s.get("cpu_iv") or []) >= 3:     # FLOW-FLEET-R2 F1: the class's measured cores (p90 of its intervals)
-                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s.get('meta_cls') or s['cls']}\t{pct_of(s['cpu_iv'], 0.9)}\t{max(s['cpu_iv'])}\t{int(s['age'])}\t{round(sum(s['cpu_iv']) / len(s['cpu_iv']), 2)}\n")
+            if len(s.get("cc_iv") or []) >= 3:     # FLOW-FLEET-R2 F1: the class's measured cores (p90 of its intervals)
+                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s.get('meta_cls') or s['cls']}\t{pct_of(s['cc_iv'], 0.9)}\t{max(s['cc_iv'])}\t{int(s['age'])}\t{round(sum(s['cc_iv']) / len(s['cc_iv']), 2)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -1539,15 +1539,15 @@ def cpu_usec(path):
 
 def cpu_interval(s, now, usec, min_dt=30.0):
     """FLOW-FLEET-R2 F1: cores a unit used since its last sample (scope + its containers, usage_usec delta over wall time); the intervals of a unit's life are kept in
-    s['cpu_iv'] (capped).  A counter that went down (a container ended) restarts the interval.  -> cores or None"""
-    prev = s.get("cpu_prev")
-    s["cpu_prev"] = [now, usec]
+    s['cc_iv'] (capped).  A counter that went down (a container ended) restarts the interval.  -> cores or None"""
+    prev = s.get("cc_prev")
+    s["cc_prev"] = [now, usec]
     if not prev or usec < prev[1] or now - prev[0] < min_dt:
         if prev and now - prev[0] < min_dt:
-            s["cpu_prev"] = prev
+            s["cc_prev"] = prev
         return None
     cores = (usec - prev[1]) / 1e6 / (now - prev[0])
-    iv = s.setdefault("cpu_iv", [])
+    iv = s.setdefault("cc_iv", [])
     iv.append(round(cores, 2))
     del iv[:-240]
     return cores
@@ -1558,7 +1558,7 @@ def pct_of(vals, pct):
     return v[min(len(v) - 1, int(pct * len(v)))] if v else 0.0
 
 
-CPU_PEAKS = f"{D}/cpu-peaks.tsv"
+CPU_PEAKS = f"{D}/cpu-cores.tsv"      # new file: cpu-peaks.tsv rows were measured with the container counted up to 3 times
 CPU_P90_TO_MEAN = 0.4        # measured 11-22: route p90 7.0 cores, 28 running units held ~76 cores of load = 2.7 cores each, so mean ~ 0.4 x p90
 
 
@@ -1586,21 +1586,34 @@ def expected_cores(cls, threads, hist, pct=0.9, min_n=3, fallback=0.5):
     return max(1.0, min(float(threads), v[min(len(v) - 1, int(pct * len(v)))]))
 
 
-def cpu_committed(units, hist, threads_of, pct, min_n, fallback, young=()):
-    """sum of the expected cores of the running units (class p90 or the fallback share of the declared threads) + the admits that have no scope yet"""
+def recent_cores(state, last=3):
+    """{unit: mean cores of its last LAST sampled intervals} from the reconcile state (units with no interval yet are absent)"""
+    out = {}
+    for u, s in (state or {}).items():
+        iv = (s or {}).get("cc_iv") or []
+        if iv:
+            out[u] = sum(iv[-last:]) / len(iv[-last:])
+    return out
+
+
+def cpu_committed(units, hist, threads_of, pct, min_n, fallback, young=(), recent=None):
+    """FLOW-FLEET-R2: what the host's units hold NOW = each running unit's recent MEASURED cores (last 3 samples of its scope + containers; the lifetime mean overstated a unit that
+    finished its busy phase: 28 route units' lifetime means summed 199 cores at a measured 69), expected cores (class mean / share of declared threads) only for a unit with no sample
+    yet, plus the admits that have no scope yet"""
+    recent = recent or {}
     tot = 0.0
     for u, _req, cls, _now in units:
-        tot += expected_cores(cls, threads_of(u), hist, pct, min_n, fallback)
+        tot += max(1.0, recent[u]) if u in recent else expected_cores(cls, threads_of(u), hist, pct, min_n, fallback)
     for cls, th in young:
         tot += expected_cores(cls, th, hist, pct, min_n, fallback)
     return tot
 
 
-def cpu_charge_check(cls, threads, units, hist, threads_of, nproc, load1, young=(), factor=1.0, pct=0.9, min_n=3, fallback=0.5, min_load=0.6):
+def cpu_charge_check(cls, threads, units, hist, threads_of, nproc, load1, young=(), factor=1.0, pct=0.9, min_n=3, fallback=0.5, min_load=0.6, recent=None):
     """FLOW-FLEET-R2 F1 (FABLE-FLOW-0800): CPU is charged the way memory is: the expected cores (p90 of the class's measured runs) of every running unit plus this job must stay
     under FACTOR x nproc.  Only while the host is really busy (load1 >= MIN_LOAD x nproc): a declared-only cap refused 31 admits at load 50/96.  -> (ok, why)"""
     need = expected_cores(cls, threads, hist, pct, min_n, fallback)
-    have = cpu_committed(units, hist, threads_of, pct, min_n, fallback, young)
+    have = cpu_committed(units, hist, threads_of, pct, min_n, fallback, young, recent)
     cap = factor * nproc
     if load1 < min_load * nproc:
         return True, f"CPU_CHARGE: load {load1:.0f} < {min_load:g} x {nproc} cores, not charged ({have:.0f} committed + {need:.0f})"
@@ -1763,7 +1776,8 @@ def gate_locked(mem, argv):
                                 _mm2 = rd(f"{D}/meta.{_u2}").split()
                                 _young_c.append((_mm2[1] if len(_mm2) > 1 else "?", int(num(f"{D}/cthr.{_u2}") or 8)))
                     _cok, _cwhy = cpu_charge_check(cls, job_threads(), _units, cpu_history(), lambda u: int(num(f"{D}/cthr.{u}") or 8), os.cpu_count() or 1,
-                                                   float(rd("/proc/loadavg").split()[0]), _young_c, conf("CPU_FACTOR"), conf("CPU_PCT"), conf("CPU_MIN_N"), conf("CPU_FALLBACK_SHARE"), conf("CPU_MIN_LOAD"))
+                                                   float(rd("/proc/loadavg").split()[0]), _young_c, conf("CPU_FACTOR"), conf("CPU_PCT"), conf("CPU_MIN_N"), conf("CPU_FALLBACK_SHARE"), conf("CPU_MIN_LOAD"),
+                                                   recent_cores(json.loads(rd(STATE) or "{}")))
                     _cpu_note = " | " + _cwhy
                     if not _cok:
                         print(f"NO {_need} {cls}{_cpu_note}")

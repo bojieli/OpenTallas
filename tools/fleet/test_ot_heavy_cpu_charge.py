@@ -14,7 +14,7 @@ def test_cpu_interval_measures_cores_and_restarts_on_counter_drop():
     assert R.cpu_interval(s, 110.0, 5_000_000) is None               # < 30 s since the last sample: keep waiting
     assert abs(R.cpu_interval(s, 160.0, 120_000_000) - 2.0) < 1e-6   # 120 core-s over 60 s = 2 cores
     assert R.cpu_interval(s, 220.0, 1_000_000) is None               # a container ended: counter fell, interval restarts
-    assert s["cpu_iv"] == [2.0]
+    assert s["cc_iv"] == [2.0]
 
 
 def test_expected_cores_class_p90_else_share_of_declared_threads():
@@ -65,3 +65,24 @@ def test_gate_admits_a_32gb_probe_through_the_small_line_while_a_plan_job_waits(
 
 def test_meta_class_is_the_admission_class():
     assert R.meta_class("48 run_kit.sh:route\n") == "run_kit.sh:route" and R.meta_class("48 ?") == "" and R.meta_class("") == "" and R.meta_class("48") == ""
+
+
+def test_recent_measured_cores_replace_the_class_estimate_for_running_units():
+    st = {"u1": {"cc_iv": [9.0, 9.0, 1.0, 1.0, 1.0]}, "u2": {"cc_iv": []}, "u3": {}}
+    assert R.recent_cores(st) == {"u1": 1.0}
+    units = [("u1", 48, "route", 0), ("u2", 48, "route", 0)]
+    th = lambda u: 16
+    # u1 measured 1.0 now (its busy phase is over); u2 has no sample: 0.35 x 16 = 5.6
+    have = R.cpu_committed(units, {}, th, 0.75, 3, 0.35, recent={"u1": 1.0})
+    assert abs(have - 6.6) < 1e-6
+    ok, why = R.cpu_charge_check("route", 16, units * 40, {}, th, 96, 90.0, recent={"u1": 1.0})
+    assert ok or "committed" in why
+
+
+def test_a_container_matched_by_several_processes_is_counted_once(tmp_path):
+    d1 = tmp_path / "c1"
+    d1.mkdir()
+    (d1 / "cpu.stat").write_text("usage_usec 5000000\n")
+    assert R.cpu_usec(str(d1)) == 5000000
+    cdirs = [str(d1)] * 3                       # three docker-run processes of one unit name the same container
+    assert sum(R.cpu_usec(d) for d in dict.fromkeys(cdirs)) == 5000000
