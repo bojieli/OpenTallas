@@ -1384,3 +1384,14 @@ def test_reset_inst_taps_are_dropped_per_piece():
     ts._reset()
     assert all("inst_taps" not in ts.T[i]["reset"] for i in range(2))
     assert ts.rep["reset_inst_taps_dropped"] == ["T", "Te"]
+
+
+def test_relay_split_follows_its_flop_instance():
+    """OPUS-FIX-KV-PV-SINKSPREAD-R2 11-23: reset relay_split rows (KV-C17 legs) follow the instance of their flop; a row
+    whose sinks sit in another piece is dropped and reported (re-derived on the pieces by the reset-leg solver)"""
+    s = _RK()
+    s.t = dict(relay_split=[dict(flop="u_g0_a.rst_q", clones=[dict(name="u_g0_a.rst_q__rs1", sinks=["u_g0_a.sv[1]"])]),
+                            dict(flop="u_g3_b.rst_q", clones=[dict(name="u_g3_b.rst_q__rs1", sinks=["u_g0_a.sv[2]"])])])
+    TS.TypeSplit._relay_keys(s)
+    assert [r["flop"] for r in s.T[0]["relay_split"]] == ["u_g0_a.rst_q"] and "relay_split" not in s.T[1]
+    assert s.rep["relay_keys"]["relay_split_dropped"] == ["u_g3_b.rst_q"]

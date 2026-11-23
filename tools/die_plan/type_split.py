@@ -595,7 +595,7 @@ class TypeSplit:
                    "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type",
                    "verilog_defines", "port_buf_at_pin", "face_layers", "dead_inputs", "ft_track_frac",
                    "relay_depth", "relay_polylines", "relay_sites", "reset_replicate", "strip_body", "nets", "sources",
-                   "id_straps", "private_reset_start_exports", "reset_start_raw_exports"}
+                   "id_straps", "private_reset_start_exports", "reset_start_raw_exports", "relay_split"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -1355,6 +1355,23 @@ class TypeSplit:
                 continue
             T[i].setdefault("relay_sites", {})[k] = cut.sh(v, i)
             rep["sites"][i] += 1
+        # relay_split (KV-C17 reset legs: {flop: <inst>.<reg>, clones: [{name, sinks}]}): the row follows the instance of its
+        # flop; a row whose flop or any sink lives in another piece (or in no known instance) is dropped and reported, and
+        # the reset-leg solver re-derives it on the pieces (OPUS-FIX-KV-PV-SINKSPREAD-R2 11-23)
+        rep.setdefault("relay_split", [0] * self.n); rep.setdefault("relay_split_dropped", [])
+        def _pc(name):
+            try:
+                return self._local_piece_of(name.split(".")[0])
+            except SplitError:
+                return None
+        for row in t.get("relay_split") or []:
+            i = _pc(row["flop"])
+            ps = {_pc(sk) for c in row.get("clones") or [] for sk in c.get("sinks") or [] if not sk.startswith(row["flop"])}
+            if i is None or ps - {i}:
+                rep["relay_split_dropped"].append(row["flop"])
+                continue
+            T[i].setdefault("relay_split", []).append(copy.deepcopy(row))
+            rep["relay_split"][i] += 1
         for row in t.get("reset_replicate") or []:
             for i in range(self.n):
                 if not T[i].get("hard_cores"):
