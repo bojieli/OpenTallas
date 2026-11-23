@@ -356,3 +356,11 @@
   (4) rc45 is fixed: b5fc0e87f3f, in rt. The GRT-stage repro is running.
   Probe: PROBE-ONLY b is 9ae5a0cb7c7. The real svc probe took 35 min vs 5 h+ for the full bind.
   No kit needs a new rt for (1)-(3).
+- 2026-11-23 02:54 PST FLOW-OPS-R2 rc45 GRT stage: the serdes__t2 TT repair now completes, rc 0.
+  Run: 5_1_grt_pre_tt.odb with OT_TT_SETUP_RC=grt, using the fixed tt_setup_repair.tcl (main b5fc0e87f3f) at epyc10 FLOW-OPS-R2/tmp/sdt2/kG (sdt2g.sh, repro_grt.log).
+  - before -283.87
+  - after_design -283.87 (was -460 stale)
+  - after repair -231.67; TNS -249076 -> -115020; 356 cells; no SEGV
+  CTS stage (kC): -305.62 -> -231.89, rc 0.
+  So rc45 is infra only. The remaining -232 is design setup.
+  kit_wave tests on main 4b5f6e510b0: all 990 pass in the lane clone. FIX-SYNC's 48 failures are a sparse-checkout artefact.
