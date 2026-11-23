@@ -96,3 +96,7 @@ SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline un
    Die stays 32970.24 x 25980.48. ygrow and die_grow commute.
    ADOPTED ORDER (tool owner): type rows (incl RANKSEAT, 3e) -> col_ygrow -> die_grow -> LEAF j9F -> WESTRIP -> ytrade -> edgestrip --tapfix -> reprice -> reset relays -> PRE -> TAP-GRID-R5 regen -> FIXCHK -> PRE -> G0 -> strict bind.
    CHECK: WESTRIP channels f2s4_refloor_* (col0|col1 seam x-gap) are disjoint from the svcband_* channels ygrow shrinks.
+   3g NOTES (VIS-S81-COL):
+     - ygrow.png is MISSING; re-render requested from VIS-DIE.
+     - COL probe conclusions are unchanged.
+     - NEW DRAFT ROW COL-H10R0P1-ECORR: the resnap puts col_h10_r0_p1 x_i0 on the E node column (unfixed EAST-CORRIDOR cause). Proposed die window swap: x_i0 -> y870-1130, ft0 -> old mouth. Owner VIS-DIE + COL. Asked to fold it into col_ygrow; deadline 12:30.
