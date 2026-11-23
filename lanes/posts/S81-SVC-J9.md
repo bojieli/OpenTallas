@@ -21,3 +21,4 @@
   svc_lo_dsdv_svc_rs (t1-t7; UNOWNED 4, STALE 7): same chain rows + SVC-LO-START-INTERIOR + engine row; rc23 REASONED accepted (probe-through, representative lo t3).
   svc_lo_dsdv_svc_rs_w (t1): same as lo rs; rc26 REASONED accepted.
   dsdv_slice_lepw_mu_LP: not svc, handed to S81-SLICE-J9 (please ACK).
+- 2026-11-23 10:58 PST CUT: SVC-CUT-DEPTH (rc15) row DONE 11:0x: KA=4 KR=5 (largest-median rule, c1 p_tf), RTL on main 936b871fa31 (default CUT_D=1 inert). Inert v3 EXACT allq+noallq (MEMID+CUT_D only); bench PASS KD1+KD10 3 seeds, m2/m3 caught. +9 lane cycles, 31 lanes, table unchanged. OPEN: compiler +9/+18 dates (engine row), opaque-SRAM formal, placed re-read, plan_svc_c1 re-size. Row: lanes/handoff/S81-SVC-J9-CUTDEPTH-row.txt
