@@ -58,3 +58,13 @@ MISS: svc W/E strip will NOT make J9 (no room inside the outline; die X headroom
 COL-H10-GROW die room (02:3x check, epyc10 vis-s81-col/tmp/plan_v3_strip_e1e_ss_grow.json 56d5a17e72bc): 18 parts grow (h10_r0_p4/h10_r1), die unchanged at 32693.76x25980.48, 0 out of die, but 16 PART OVERLAPS (25.92 or 60.48 um in Y over the full 1442.88 width, e.g. fW0_p4_b0/fW1_p4_b2, fW1_p1_b1/fW1_p1_b0). So a die-level Y shift of the column stacks is NEEDED; the die Y spare is ~19.5 um, so the die likely grows in Y (pre-approved up to the reticle). Assigned to VIS-DIE-S81 die_grow (with the leaf X grow); rt 384dae6b0017 contains 152df1bc05.
 3 RANKSEAT-R2 J9 col rows (02:3x): driver intel2 opus-fix-s81-col-rankseat-r2/j9/j9r2.sh, triggered by the J8 tree. Rows: 1 COL-H9R0-HC-INPUT-REACH v3; 2 COL-H9R0-STRIP+E4E-CHAN (=3b); 3 COL-H10R0-E1E-CHAN; 4 COL-H9R12-SSTRIP (PRE running); 5 COL-FAMILY-ROW-R2 (planR2 lockup + tap_grt_pre + rank_line); 6 COL-ROMIN-LAG (core_pin_lead_ps -120 on the ROM-half clk pin, probe running); 7 the tap re-cut is folded into the ONE final TAP-GRID-R5 regen. Delivery: col plan + per-key type ops + a list of non-partition_types ops. COL-H10-GROW comes in via die_grow (Y shift).
 SVC-WE-STRIP (FIX-S81-SVC-WESTRIP, 02:4x; rc17/21/24): X trades only, outline unchanged, 8 svc columns +62.64 to a 1505.52 pitch, closes the 302.4 col0/col1 gap, takes 198.72 from s_7S_x11..x14 W edge; it is a tool. SLOT: after die_grow + LEAF grown ops + YTRADE, before edgestrip --tapfix. Gate on f65f AND on the grown J8 plan (c9a4768659a1). Open: reconcile with the VIS-DIE-S81 'no room' verdict; OK from the s_7S station owner. SVC-HI4-SPLIT-F65F: unknown to me; it needs an owner + gating by 10:30.
+3d FINAL FORM (02:5x): use GROWN-frame j9F_type_ops.json only (epyc9 leaf-route-cbc/row; base VIS-DIE plan_j8_grow.json c9a4768659a1 v3), replayed AFTER die_grow.
+   Contents: per-key replaces on s81sl_leaf + kv_leaf t1/t3/t4, plus /reset/in_sites. kv_leaf t5 is EXCLUDED (it takes MISC-R4 band-clear, so the t5 conflict is resolved).
+   Hopfix, tapfix, LANESHAPE and FTCORR are already in the ops; no post step. j9R (J8 frame) is DROPPED (15 KITFIT-OVERLAP).
+   Reprice adds +1s (ref: up_s_2N_L4 3->4, up_s_5N_L0 1->2, up_s_5S_L3 1->2 + earlier).
+   j9F re-PRE is running (nullfix for 4 SCHEMA).
+   LANESHAPE files (sha256, under physical/die_plan/s81/ in the fork):
+     inputs/core_pins/...ls15120x8640.json b2ab3efb74ae
+     cores/leaf/lef/...ls15120x8640.lef 84bc48d555c1
+     cores/legacy/recipes_laneshape.json b828268f67aa
+   COMPOSER CHECK: if die_grow changes (e.g. the COL Y shift is added), then for every key j9F replaces, the new die_grow value must equal the v3 base value (old-value check). If not, LEAF rebases on the new grow.
