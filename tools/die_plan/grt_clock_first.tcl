@@ -85,6 +85,57 @@ namespace eval ot_gcf {
     if {$bad} { puts "OT_GRT_CLOCK_FIRST reserve: $bad runs refused by set_global_routing_region_adjustment" }
     return $n
   }
+  # Clock NDR loss in the clock-only phase (GRT-0273 "Disabled NDR (to reduce congestion)") means the clock lost its wide/spaced
+  # rule where no signal net competes: the capacity at its pins (PG / obstruction / pin-access edges) is short, so neither
+  # clock-first nor CTS-NDR scoping can fix it; it needs a legal pin / root-buffer escape (HEAD r18 t7/t32/t37: M7 pin-centre
+  # offsets).  One row per dropped net -> 5_1_grt.clock_ndr_loss.tsv (header only when none); no stop.  class root = net driven by
+  # a port or a clock-root buffer (clknet_0_*), tap = a deeper tree net.
+  proc ndr_loss {log out} {
+    set blk [ord::get_db_block]
+    set gc [$blk getGCellGrid]
+    set gx {}; set gy {}
+    if {$gc ne "NULL" && $gc ne ""} { catch { set gx [$gc getGridX]; set gy [$gc getGridY] } }
+    set names {}
+    foreach line [split $log "\n"] {
+      if {[regexp {GRT-0273\].*for net:\s*(\S+)} $line -> nm] && [lsearch -exact $names $nm] < 0} { lappend names $nm }
+    }
+    set f [open $out w]
+    puts $f [join {net class ndr driver driver_master pin_layer x_um y_um gcell_x gcell_y fanout bbox_w_um bbox_h_um} "\t"]
+    foreach nm $names {
+      set n [$blk findNet $nm]
+      if {$n eq "NULL" || $n eq ""} { puts $f [join [list $nm unknown - - - - - - - - - - -] "\t"]; continue }
+      set ndr [$n getNonDefaultRule]; set ndr [expr {$ndr eq "NULL" ? "-" : [$ndr getName]}]
+      set drv "-"; set mst "-"; set lay "-"; set x ""; set y ""; set cls tap
+      foreach bt [$n getBTerms] { if {[$bt getIoType] eq "INPUT"} { set drv [$bt getName]; set mst PORT; set cls root
+          catch { set lay [[[lindex [[lindex [$bt getBPins] 0] getBoxes] 0] getTechLayer] getName] }
+          catch { set bb [$bt getBBox]; set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}] } } }
+      foreach it [$n getITerms] {
+        if {![$it isOutputSignal]} continue
+        set drv "[[$it getInst] getName]/[[$it getMTerm] getName]"; set mst [[[$it getInst] getMaster] getName]
+        lassign [$it getAvgXY] ok x y
+        if {!$ok} { lassign [[$it getInst] getLocation] x y }
+      }
+      if {[string match "clknet_0_*" $nm]} { set cls root }
+      set ix -; set iy -
+      if {$x ne "" && [llength $gx] > 1} { set ix 0; foreach g $gx { if {$g <= $x} { set ix [lsearch -exact $gx $g] } } }
+      if {$y ne "" && [llength $gy] > 1} { set iy 0; foreach g $gy { if {$g <= $y} { set iy [lsearch -exact $gy $g] } } }
+      set fo 0; set x0 {}; set y0 {}; set x1 {}; set y1 {}
+      set pts {}
+      if {$x ne "" && $y ne ""} { lappend pts [list $x $y] }
+      foreach it [$n getITerms] { if {[$it isInputSignal]} { incr fo }; lassign [$it getAvgXY] ok px py; if {$ok} { lappend pts [list $px $py] } }
+      foreach pt $pts { lassign $pt px py
+        if {1} { if {$x0 eq "" || $px < $x0} { set x0 $px }; if {$x1 eq "" || $px > $x1} { set x1 $px }
+                   if {$y0 eq "" || $py < $y0} { set y0 $py }; if {$y1 eq "" || $py > $y1} { set y1 $py } } }
+      set bw [expr {$x0 eq "" ? "-" : [format %.1f [dbu_um [expr {$x1 - $x0}]]]}]
+      set bh [expr {$y0 eq "" ? "-" : [format %.1f [dbu_um [expr {$y1 - $y0}]]]}]
+      set xu [expr {$x eq "" ? "-" : [format %.3f [dbu_um $x]]}]; set yu [expr {$y eq "" ? "-" : [format %.3f [dbu_um $y]]}]
+      puts $f [join [list $nm $cls $ndr $drv $mst $lay $xu $yu $ix $iy $fo $bw $bh] "\t"]
+    }
+    close $f
+    puts [format "OT_GRT_CLOCK_FIRST clock NDR loss in clock-only phase: %d nets%s (%s)" [llength $names] \
+          [expr {[llength $names] ? " -> pin/root escape capacity, not signal congestion" : ""}] $out]
+    return [llength $names]
+  }
   proc route {args} {
     variable done
     set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : "."}]
@@ -100,7 +151,12 @@ namespace eval ot_gcf {
     set a1 $args
     set i [lsearch -exact $a1 -congestion_report_file]
     if {$i >= 0} { set a1 [lreplace $a1 [expr {$i + 1}] [expr {$i + 1}] "[file rootname [lindex $a1 [expr {$i + 1}]]]_clock_first.rpt"] }
-    uplevel 1 [list ::ot_gcf_gr_orig {*}$a1]
+    set cap [expr {[llength [info commands ::utl::teeStringBegin]] && [llength [info commands ::utl::teeStringEnd]]}]
+    if {$cap} { ::utl::teeStringBegin }
+    set rc1 [catch {uplevel 1 [list ::ot_gcf_gr_orig {*}$a1]} res1 opts1]
+    set log1 [expr {$cap ? [::utl::teeStringEnd] : ""}]
+    if {$rc1} { return -options $opts1 $res1 }
+    ndr_loss $log1 $dir/5_1_grt.clock_ndr_loss.tsv
     grt::write_segments $dir/5_1_grt.clock_first.seg
     grt::read_segments $dir/5_1_grt.clock_first.seg      ;# router reset (clears the nets-to-route list); clock guides stay in the db
     set t1 [clock seconds]

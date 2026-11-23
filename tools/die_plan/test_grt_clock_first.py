@@ -60,3 +60,14 @@ def test_tcl_wraps_first_full_route_only():
     tail = t[t.rindex("grt::read_segments $dir/5_1_grt.clock_first_all.seg"):]
     assert "::grt::set_allow_congestion 1" in tail
     assert re.search(r"OT_GRT_CLOCK_FIRST_RES_AWARE\) eq \"1\".*\n\s*lappend args -resistance_aware -res_aware_nets_percentage 0", t)
+
+
+def test_tcl_reports_clock_phase_ndr_loss():
+    # GRT-0273 in the clock-only phase = pin/root escape capacity (pc_v3 1122043653: 4 M7 clock tap ports): captured with
+    # utl::teeStringBegin/End around phase 1 only, written to 5_1_grt.clock_ndr_loss.tsv, never a stop
+    t = (HERE / "grt_clock_first.tcl").read_text()
+    ph1 = t[t.index("::utl::teeStringBegin }"):t.index("grt::write_segments $dir/5_1_grt.clock_first.seg")]
+    assert "::utl::teeStringEnd" in ph1 and "ndr_loss $log1 $dir/5_1_grt.clock_ndr_loss.tsv" in ph1
+    assert "return -options $opts1 $res1" in ph1
+    proc = t[t.index("proc ndr_loss"):t.index("proc route")]
+    assert "GRT-0273" in proc and "getNonDefaultRule" in proc and "utl::error" not in proc
