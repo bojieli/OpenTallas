@@ -63,3 +63,8 @@ Row files: script intel2 fam-s81-col-h10-r4/e15e_row.py; ops on J6 plan epyc9 fa
 - specL1f: COL-T0-CHAN row (t0chan_row.py 1754bdf4ea97; ops rows_COL-T0-CHAN_J7L1.json c2a1c6c2194f, 6 family types): u_r0.u_n6 1226.88,319.68 -> 1373.76,319.68 halo 0.27 (free pocket x1339-1442 y260-449), opens 71-um channel east of u_t0; no clock refs to u_n6, taps legal. Plan file srcJ7L1e7/physical/die_plan/s81/plan_h2_2249_t0chan.json + 50 iters. Kit ..._1122051847. Waiter on both run logs reaching place/fail.
 - J8 fold-in posted 05:2x (PUSHED 5c07bb50adc): row file intel2 fam-s81-col-h10-r4/rows_COL-E15E-CHAN_J7.json c88f0eb10156.
 - 07:2x PST push 2: 21 fixed LEFs staged epyc7 fam-s81-col-h10-r4/push2_stage (manifest dc5875600ff7), ROW posted 2850e6228c0 to J6-ASSEMBLY-R5 (provisional). Per-view probes xrt3/xrt1/cfg7_seq_bfp on intel1 vprobe2/ (units oth-ubuntu-1368708/1369198/1368692-1795360135); CLEAN by 14:00 -> J8 else J9. KV sweep: 139 LEFs, 3 FIX (posted). QC sweep epyc10 running. C1 place queued as service kwp-fb0be99d79f60e114675 (log intel2 specC1/place.live.log).
+
+## 17:5x-18:2x RESUMED
+- porous 3 rows live main 152df1bc05; abstract_pin_stub follow-up main 9c133d90aec; porous refresh_eol main 373d0e97716. Push 2 withdrawn (solid views already 0).
+- L1e/f/g GRT ovf 0, TT -166..-174 (pinreg 485-490 vs 450, taps balanced on placement RC). J9 row COL-H10R0P4-TAPGRT (rows_COL-H10R0P4-TAPGRT_J9.json 217b77b58c2c). Proof L1t epyc7 specL1t/runL1t.log (waiter: GRT TT gate).
+- A2/C1 real stop = DRT flat 1385 EOL from stale porous rows (RSZ-0060 = hold chunk cap). C2 = C1 porous off, epyc7 specC2/runC2.log (waiter: run end).
