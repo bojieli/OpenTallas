@@ -1,10 +1,8 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-rc138 E stripe x810 y650-660	hd_lep0N	DIE-FIX-LEDGER	FABLE-OPEN-HEAD-QC	11-23 06:29	ROW-DRAFT LEP-CLKWALL-1 06:19; gating alone on fork r18z2_clkwall (epyc7) 06:29	2	10:30 row / 11:00 gate	ROW-DRAFT	
-hd_ctl routed LEC NOT-EQ (318 g_seqf pts)	hd_ctl	HEAD-R18 plan (1)	HEAD-R18	11-23 06:27	classified LEC-SETUP, row LEC-FSM-SUPERSET-1 (lec.py FSM superset rule), ROW-DRAFT in ledger; fix ETA 08:00	4	08:00 fix / 11:00	ROW-DRAFT	
-West structural (spec 1123040001 FAIL)	hd_lep0N_w	geom review 05:21	HEAD-R18	11-23 06:27	ledger row LEP-WPLACE-1 OPEN (w1-w4 causes)	4	09:30 / 11:00	OPEN	
-Tree drift re-fork vs main + re-gate	HEAD die	HEAD-R18 plan	HEAD-R18	11-23 06:27	plan of record named (r18z2 23e33a44); re-fork follows, path at gate	4	09:30 / 11:00	OPEN	
-ep3 E probe (intel1) -> GRT census	hd_lep0N	probe pending	HEAD-R18	11-23 06:27	no new ep3 line since 05:54 GPL iter 80 (watch)	37	10:30 / 11:00	RUNNING	WATCH-NO-POST
-wp3 W probe (epyc7) -> hold read	hd_lep0N_w	probe pending	HEAD-R18	11-23 06:27	causes w1-w4 read from wp3 (06:27)	4	10:30 / 11:00	RUNNING	
-hg-HEAD-CLOCK-NDR-DROP (REASONED)	hd_lep0N_w	DIE-FIX-LEDGER	FLOW-OPS-R2 / HEAD-R18	11-23 04:03	closes on wp3 GRT read	150	11:00	REASONED-pending	OWNER-FIELD-STALE
-Stale intel1 kit 1532240 (FABLE-FIX-HEAD-LEP0N)	hd_lep0N	NOPROG-WATCHDOG 04:15	NONE	11-23 04:15	no reply to my 05:58 ask	~150	ASAP	OPEN	NO-OWNER (flagged 2 rounds, ESCALATE)
-rc137 pitch row / 8 W + 18 E wide-window ports	hd_lep0N	conditional	HEAD-R18	11-23 06:27	pending probes	4	10:30	CONDITIONAL	
+rc138 E stripe (LEP-CLKWALL-1)	hd_lep0N	DIE-FIX-LEDGER	FABLE-OPEN-HEAD-QC (+HEAD-R18)	11-23 07:17	ROWS-READY cw1 plan 9b79a291e87c: PRE0, bind0, cohort 27/27, LAT334; placement A/B inconclusive (GRT-0228), localized ovf 53->3; compose with LEP-LONGFCLK-1/W shelf	208	13:00	ROWS-READY	WATCH: lane silent since 07:17, composition into r18 plan pending
+hd_ctl routed LEC NOT-EQ (LEC-FSM-SUPERSET-1)	hd_ctl	HEAD-R18	HEAD-R18	11-23 06:27	row ROW-DRAFT; no later landing seen in Codex log or post	260	13:00	ROW-DRAFT	AT-RISK-CHECK: confirm lec.py fix landed + hd_ctl re-LEC
+West structural (LEP-WPLACE-1)	hd_lep0N_w	geom review	HEAD-R18/Codex	11-23 10:28	west halo-legal 5cbc5cda8aa0 (nested bind/cohort27/LAT334 PASS); native FF late clock-first route still open (t37 + c1 M5 edge); private replay staged; E7 strict unit1664805	16	13:00	IN-PROGRESS	
+E r18 cap10 plan 7085500b8b4d (G0/PRE0, LAT334, fresh place-only)	hd_lep0N	Codex log 09:54	HEAD-R18/Codex	11-23 10:28	E native CTS diag converges round9; ep3 watchdog stopped 10:30	16	13:00	RUNNING	
+wp3 W probe / NDR-DROP closure	hd_lep0N_w	REASONED	HEAD-R18	11-23 10:28	NDR drops t7/t32/t37 fixed by pin escapes in replay; phase2 zero GRT-0273 across 123156 nets; aggregate pending (E10 1553689)	16	13:00	RUNNING	
+Stale intel1 kit 1532240	hd_lep0N	NOPROG 04:15	none	11-23 04:15	ESCALATEd 06:32; ep3 watchdog stopped 10:30 per HEAD-R18 (verify unit ended)	-	-	VERIFY	
+FABLE-RC-ALL re-review of REASONED holds on composed r18 packet	HEAD die	Codex FOR-CLAUDE	FABLE-RC-ALL	11-23 10:36	pre-cut packet 5cbc5cda posted 10:28; no cut requested	-	13:00	PENDING-REVIEW	
