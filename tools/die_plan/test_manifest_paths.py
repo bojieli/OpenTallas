@@ -147,3 +147,31 @@ def test_bind_override_relative_map_validated_before_resolution(tmp_path, monkey
     manifest.write_text(json.dumps({"map_file": str(mapping)}))
     with pytest.raises(bind.BindError, match="map_file: absolute"):
         bind.load_plan(plan)
+
+
+def test_sealed_provenance_requires_exact_immutable_receipt(tmp_path, monkeypatch):
+    manifest = "2" * 64
+    sha = "a" * 40
+    receipt = dict(
+        schema="opentallas.src_manifest.cached_receipt.v1",
+        verdict="PASS",
+        source=str(tmp_path),
+        main_sha=sha,
+        manifest_hash=manifest,
+    )
+    monkeypatch.setenv("OT_KIT_SOURCE_MANIFEST_HASH", manifest)
+
+    def run(argv, **kw):
+        if argv[0] == "git":
+            return M.subprocess.CompletedProcess(argv, 128, "", "")
+        assert argv[-4:] == ["cached-receipt", str(tmp_path), "--expect", manifest]
+        return M.subprocess.CompletedProcess(argv, 0, json.dumps(receipt), "")
+
+    monkeypatch.setattr(M.subprocess, "run", run)
+    assert M.provenance(tmp_path) == dict(
+        commit=sha, dirty=False, source="verified source manifest", manifest_hash=manifest
+    )
+    receipt["manifest_hash"] = "3" * 64
+    assert M.provenance(tmp_path)["dirty"] is None
+    receipt.update(manifest_hash=manifest, verdict="MISS")
+    assert M.provenance(tmp_path)["commit"] is None

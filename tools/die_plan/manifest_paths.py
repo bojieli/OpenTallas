@@ -22,6 +22,7 @@ Library: check(ab, dir) (bind section), check_generic(obj, dir), check_file(path
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -144,9 +145,35 @@ def check_file(path, repo=REPO, kind="auto"):
     return check_generic(raw, path.parent, repo)
 
 
+def _sealed_provenance(repo, expected):
+    """Accept only a pinned manifest with a current immutable verification receipt."""
+    refused = dict(commit=None, dirty=None, source="unverified source manifest")
+    if not re.fullmatch(r"[0-9a-f]{64}", expected):
+        return refused
+    repo = repo.resolve()
+    verifier = repo / "tools/autopilot/src_manifest.py"
+    try:
+        result = subprocess.run(
+            [sys.executable, "-I", "-B", str(verifier), "cached-receipt", str(repo), "--expect", expected],
+            capture_output=True, text=True, timeout=180, check=True,
+        )
+        receipt = json.loads(result.stdout)
+        sha = receipt.get("main_sha")
+        if (receipt.get("schema") == "opentallas.src_manifest.cached_receipt.v1"
+                and receipt.get("verdict") == "PASS" and receipt.get("source") == str(repo)
+                and receipt.get("manifest_hash") == expected and re.fullmatch(r"[0-9a-f]{40}", sha or "")):
+            return dict(commit=sha, dirty=False, source="verified source manifest", manifest_hash=expected)
+    except (OSError, subprocess.SubprocessError, ValueError, AttributeError, TypeError):
+        pass
+    return refused
+
+
 def provenance(repo=REPO):
-    """{commit, dirty, repo} of the checkout the tools run from.  A staged cohort without .git names its commit in
-    cohort.json (source_commit) or SOURCE_COMMIT; otherwise commit is None and the result fails the evidence gate."""
+    """Source commit and cleanliness of a Git checkout or explicitly pinned immutable source tree.
+
+    A non-Git tree with OT_KIT_SOURCE_MANIFEST_HASH must have a verified immutable receipt for that exact manifest.
+    A staged cohort without this pin still names its commit in cohort.json or SOURCE_COMMIT with unknown cleanliness.
+    """
     repo = Path(repo)
     rec = dict(commit=None, dirty=None, source="none")
     try:
@@ -158,6 +185,9 @@ def provenance(repo=REPO):
                         source="git")
     except (OSError, subprocess.SubprocessError):
         pass
+    expected = os.environ.get("OT_KIT_SOURCE_MANIFEST_HASH")
+    if expected:
+        return _sealed_provenance(repo, expected)
     for f, key in ((repo / "cohort.json", "source_commit"), (repo / "SOURCE_COMMIT", None)):
         try:
             if key:
