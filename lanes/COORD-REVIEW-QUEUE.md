@@ -29414,3 +29414,4 @@ FAILED [AUTOPILOT fa2d8c0eed7f] 2026-11-23 01:04:40 PST AUTOPILOT -> KIT-WAVE-1:
   (4) MISSED clock: pin registers at mean 278 vs bound 250 (cl67389ecd, n 5517), N-edge x_hc1_i registers 271-307; reset removal -8..-27 from relay taps 30-46 ps earlier than their sinks. See the die post.
   Checked and fine: clf4365a62's horizontal b_hw landing wall (74 % of its V2 overflow) is already vertical at the E face in the V3 seats.
   Evidence: epyc2:/srv/opentallas-scratch2/claude/fable-rc-qc/out/sle_st_a_v2__pv30dda31f__pv88773f93.R6V2/ (render + json), kit layout_review/grt/congestion.png on epyc10 cl67389ecd.
+- 2026-11-23 01:10 PST DONE [hotspot-census] ot-push-main otpush-tolerant-swine-1118927 on tolerant-swine: rc=0 after 20 s, ended 01:10:47, log none, cmd: ot-push-main 
