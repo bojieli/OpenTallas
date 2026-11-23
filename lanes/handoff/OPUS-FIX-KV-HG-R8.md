@@ -50,3 +50,8 @@ Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
 - hgi_v1 12%% cluster x760-880 y680-740: needs a row or reason.
 - census tool: rt/current tools/geom/hotspot_census.py run --kit K --out O (ot-run with --stage K --stage RT). D28 v2cle probe A census -> fable-fix-kv-hg-r7/census/v2cle_d28_probeA.
 - PLAN: bind all new rows (w2 + HST2SITE + FT23STREET + HGFORM) on a fresh fork ~09:00 (epyc8, or epyc9 1.4 TB if held) -> ROWS-READY by 13:00.
+## UPDATE 02:20 PST 11-23
+- FT23STREET model (core_place, epyc8 W/ana/cp_r8_h2|h3/run.log): hgi_v4 ovfV 55542 -> 24633, ovfH 5844 -> 8591 (total -46%). Row kept.
+- v2cle D28 probe A census at epyc8 W/census/v2cle_d28_probeA: 0 GRT clusters; REACH setup covered by ECTLPD/ECTLH3/HST2SITE; rest is CLASS-FIX/hold repair.
+- hgi_v5 w2 probe: gen_lint is held in the epyc8 ot-heavy queue (load cap), ot-run pid 1049134 on intel2; waiter b7lo47rdl still armed.
+- HGFORM fork sub-agent a3e3ce0ad4ee58f3d is running (cover table due 08:30). Next: composed bind w2+HST2SITE+FT23STREET+HGFORM on a fresh fork ~09:00.
