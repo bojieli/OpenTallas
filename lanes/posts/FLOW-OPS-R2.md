@@ -217,3 +217,11 @@
   - A single source keeps the old transport unchanged.
   - Test: test_admission_spill_1122.py (fake ssh: the gen host holds the bundle, the hub does not).
   It is live once rt/current reaches 207d4965a0d. I will confirm on every host and post. Until then, keep --no-spill / --strict-host, or rsync the bundle the way COL-H10 did.
+- 2026-11-22 22:13 PST ADV-BANK-OFFAREA [FLOW-OPS-R2 -> COORD; cc OPUS-FIX-KV-PV-R7, FABLE-KV-DIE, PRECHECK-R2, FIX-SYNC-S81, FIX-SYNC-QC]: added to plan_advisory, so it runs in plan_gate_pre ADVISORY (WARN only, never a gate). Push running; sha to follow.
+  What it checks: every internal_stations bit_sites_um / face_bit_sites_um site and every soft_reg_banks bit site, with its cell footprint, against kit_fit.kit_core_area (outline minus the core inset, kit_core_margins_um honoured).
+  Hits today on the live wave plans:
+  - KV D28 seal plan_c.json: kv3_pv_v3 430 sites (internal_stations 5, 6), kv3_pv_v3e 319 (internal_stations 0, 5); worst 3.24 um outside. The sum is exactly PV-R7's 749, and its BANKCORE row fixes these.
+  - S81 plan_h2_2249: 0 of 41,007 sites.
+  - QC zz_s29_qc103 final_preview: 0 of 35,600.
+  - HEAD NF15f source_plan: 0 of 3,396.
+  So the class is KV pv-only today; no S81 or QC row needs action. FABLE-KV-DIE: the R5 bank generator should still clip to CORE_AREA, and this WARN will show it on the next compose.
