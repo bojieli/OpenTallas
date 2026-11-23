@@ -67,3 +67,30 @@
   (3) SVC-SEAM-STRIP is REASONED (93625031).
   ETA: GATED or REASONED by 16:45; anything not GATED at 17:00 goes REASONED to R6.
 - 2026-11-23 15:55 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-1167709-1795477678 on civil-redfish: rc=0 after 452 s, ended 23:55:28, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/f30.otrun.log, cmd: --mem 48 --threads 3 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash f30.sh
+- 2026-11-23 15:56 PST ROW-GATED SVC-WE-STRIP (+partner op, +SVC-SEAM-STRIP REASONED) [FIX-S81-SVC-WESTRIP -> S81-J9-ASSEMBLY-R6, COORD; cc VIS-DIE-S81, OPUS-FIX-S81-SVC-R9, FAM-S81-SLICE, FABLE-UNC-S81-SVC, FABLE-RC-S81] rc17/21/24
+  All paths are on epyc10 /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/. The recipe is final_gate.sh: westrip -> YTRADE -> ES1 -> VIS tapfix -> tap_offset_cover fill -> PRE (baseline f65f), then winclash and G0 (g0_cmp.sh).
+  Tools:
+  - svc_westrip_row.py daa069da6b16:
+  - N/S windows pack per face in clusters, keeping order and never newly overlapping (this fixes the 13fde xtier stack);
+  - soft-partner face room is held;
+  - --extra-dx t4_att +4.32 / t5_att +2.16 (FABLE-UNC agreed).
+  - grow_partner.py 24a87613fca6.
+  - final_gate.sh 1af89aa27f15.
+  (A) J8 frame, VIS 828de (plan_g2_20900.16):
+  - F30: ws_ops 4b3114e234f7, row plan p_ws0 04e6e1c6d5de, +chain p_ws_tf 82da4b49980a.
+  - winclash 0 new; G0 10->10, 0 introduced.
+  - PRE: 140 findings, all TAPOFF-MISSING on bk_sel__t2 / col_h9 / col_h10.
+  - Inherited: the tap_offset_cover census FAILs identically on 828de itself (diag29).
+  - 0 svc findings: the svc TAPOFF are filled by my chain.
+  - Needs the R6 tail step "tap window fill -> census 0" over all types.
+  (B) R9 rebase (189008), through VIS die_grow 93d12 --cut0 20900.16 (c27rb 3cc7fc83cbf5), then the partner op, then the row:
+  - F30rb: ws_ops 042a48ccff5b, p_ws0 05dc2fa4b436, p_ws_tf 67992d6a6722.
+  - winclash 0 new; G0 10->10, 0 introduced; PRE has the same 140 inherited TAPOFF only.
+  - PARTNER OP for FAM-S81-SLICE: s_2S_x00 (slice_station__t14, R0, single instance) grows +69.12 W into the 146.88 gap, leaving 77.76. Its interior keeps die x. Channel f2s4_refloor_c1182835e2c9 is narrowed. Ops c29rb/gp_ops.json ef35257f9965. VIS tapfix ran on t14 (rc 0).
+  - 16 partner re-snaps, both sides identical (strict bind). Format: port, part, bus, old type window -> new.
+  - s_0S_x13: rt_W0_out_1__6 ft9_i 561.6..578.66 -> 561.388..578.448; rt_W0_out_2__7 ft10_i 579.84..596.9 -> 613.44..630.5; vid_svc_1__seqhost__0 ft11_i 710.976..724.58 -> 740.872..754.476; idx__s_3S_C__iqf__6 ft0_o 598.272..708.644 -> 630.5..740.872.
+  - s_7S_x05: rt_E0_out_0__5 ft9_i 604.608..621.668 -> 604.588..621.648; rt_E0_out_1__6 ft10_i 622.848..639.908 -> 656.64..673.7; rt_E0_out_2__7 ft11_i 641.088..656.996 -> 673.7..689.608; unit__seqhost__eng__4 ft0_o 659.52..673.124 -> 689.608..703.212.
+  - s_2S_x00 (after the +69.12 frame shift): unit__seqhost__svc_5__1 ft2_o 242.304..312.924 -> 167.488..238.108; attn__svc_5__s_3S_C__0 ft5_i 75.264..195.036 -> 2.972..122.744; attn__s_3S_C__svc_5__4 ft1_o 129.408..239.78 -> 57.116..167.488; unit__svc_5__seqhost__0 ft6_i 314.112..326.564 -> 238.108..250.56.
+  - s_6S_L4 (ot_s81sl_leaf__t55): idx__svc_14__bk_sel__2 ft6_i 230.784..290.652 -> 191.352..251.22; xtier__eng__s_6N_C__3 ft7_i 414.336..473.252 -> 251.22..310.136; xtier__eng__s_6S_C__3 ft8_i 475.584..532.964 -> 310.136..367.516; xtier__s_6S_C__eng__3 ft5_o 536.832..592.676 -> 367.516..423.36.
+  - Non-svc types touched: slice_station__t14 and the types of s_0S_x13, s_7S_x05 and s_6S_L4 (ot_s81sl_leaf__t55).
+  (C) SVC-SEAM-STRIP = REASONED partial (hub 93625031): escape-demand strip 17.28. The t4_att/t5_att faces are now lifted to 17.28 via extra-dx.
