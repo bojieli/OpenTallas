@@ -43,3 +43,12 @@ Lane dir epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-taphold-r2 (R2)
 - GATE: J8 tree fork on epyc10 /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2/trees/j8_r2 (ot-tree-fork PID 3351675, log fork_j8.log there; 29 GB at 10:40 UTC of 62). Gate = PRE + G0 vs J8 (J8 baselines epyc10 s81-j6-r5/j8_cut_intake/gate/g0_j8) + elab + PROBE-ONLY strict bind (--types / OT_BIND_ONLY_TYPES) of touched types. J8 asbuilt a898b6a9c246, leaf netlist 50442231f8e5 (j8_cut_gate.sh restages it).
 - Cleanup owed via ot-delete: epyc7 R/trees/j8_r2.forking-4019146 (aborted cross-host fork, ~3 GB).
 - Hosts 10:4x UTC: epyc7/epyc10/epyc8/epyc2 over load cap; intel2 scratch2 under 150 GB floor; intel1 admits.
+
+## State 03:2x PST 11-23
+- k1 kit DIED rc6 09:49 UTC: FAIL_POSTCTS, GRT TT setup_est -218.5 < -150 (PLAN-TRIAGE), TT hold_est -86; final 5_1_grt.odb 09:40 (repaired). Census on final DB: epyc7 R/tt_k1f (th_tt2.sh, ot-run log R/tt_k1f.otrun.log). Raw census (pre-repair) was R/tt_k1/th_tt_taps.tsv.
+- ROW 1 rc8 RULED no duplicate: ledger row 5 = R10 J9-LEAF-RST-LAND (OT_RST_RELAY_LANDED 358d836ceea3 + OT_S81SL_CRR_PRE2 d90ed1b5ef). My t39 reset_leg_plan output = R10 supplement only (intel1 R/j9/t39.plan.json/.report.json; legs >300 um 11 -> 0, +4 reset cycles; seats-only form = 0 cycles). Posted hub b684ec6d424.
+- ROW 3 IST-LEAFUP-T39 (0 cycles): 3 new internal_stations rows on bus:leafup_o0 (vp driver_lo 257b site (880,218); vq xf 278b (650,205); vn_u_b 33b (760,180)) -> kit_istations auto bit groups (merged_violates True); check vs J8 bound t39 sv: owners 667/668, groups vn 220 / vp 392 / vq 390 / vs 400 um max hop; Y bit at merged (723.7,207.3). Script epyc10 R3/ist_row.py, ist_check.py.
+- ROW 2 SPARE-PAD-T39: ft3 hold_hb4_spare true. Tool d2182830c2 (rebased 5fc9cb3097) NOT on main after push 1 (log ended after pytest, no push line); push 2 running epyc7 PID 471413, log R/push2.log.
+- Composed plan: epyc10 R3/trees/j8_r2/physical/die_plan/s81/plan_j9_r2.json sha 526ee5b094ce (only t39 changed). R3 = /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2 (epyc10). Fork tree tools patched with spare.patch.
+- GATE running: ot-run unit oth-ubuntu-3945484-1795431538 epyc10, R3/gate_r2.sh (PRE vs J8, G0 j8 vs j9 same tree, elab, PROBE-ONLY strict bind t39, LATCHECK, SPARE_PADS grep), log R3/gate.otrun.log, outputs R3/gate/.
+- Cleanup owed: epyc7 R/trees/j8_r2.forking-4019146 (ot-delete).
