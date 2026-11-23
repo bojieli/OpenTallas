@@ -7654,7 +7654,8 @@ def _plan_gate_pre(a):
     """PLAN-GATE-PRE-1115 (COORD r213): before a die elab/bind, run tools/die_plan/plan_gate_pre.py on THIS tree (schema keys,
     as-built inputs, tool vintage; rows and station-in-core overlaps only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
     with a named reason.  OT_PLAN_GATE_PRE=off skips it, =warn prints and continues.  Result stamp out/plan_gate_pre.json lets
-    `bind` after `elab` of the same plan and tools skip the repeat.  Returns 0 or the exit code to refuse with."""
+    `bind` after `elab` of the same plan and tools skip the repeat. An explicit OT_PLAN_GATE_SKIP=RELAYSINK skips that
+    preflight class. It never changes strict bind or EMIT. Returns 0 or the exit code to refuse with."""
     mode = os.environ.get("OT_PLAN_GATE_PRE", "refuse")
     if mode == "off":
         return 0
@@ -7664,8 +7665,15 @@ def _plan_gate_pre(a):
         print("bind: plan_gate_pre.py not in this tree, pre-bind closure check skipped")
         return 0
     base = os.environ.get("OT_PLAN_GATE_BASELINE") or None
+    requested = set(re.split(r"[,\s]+", os.environ.get("OT_PLAN_GATE_SKIP", "").upper()))
+    skip = () if base else ("ROWS", "GEOM")
+    if "RELAYSINK" in requested:
+        skip += ("RELAYSINK",)
+        print("bind: plan_gate_pre explicit skip RELAYSINK")
     try:
         blob = Path(a.plan).read_bytes() + (Path(a.asbuilt).read_bytes() if a.asbuilt else b"") + str(base).encode()
+        if "RELAYSINK" in requested:
+            blob += b"\0skip=RELAYSINK"
         key = hashlib.sha256(blob).hexdigest()[:16]
     except OSError:
         key = None
@@ -7681,7 +7689,7 @@ def _plan_gate_pre(a):
         import inspect as _insp
         _new = "remap" in _insp.signature(G.check).parameters      # REMAP-BASE-1122: the checker resolves the LANDREMAP / ISTCYC base itself
         _kw = dict(remap=_prev_bind_plan(a)) if _new else {}
-        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"),
+        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=skip,
                      elab_dir=_pg_elab_dir(a), ref_tools=os.environ.get("OT_BIND_REF_TOOLS", "auto"),
                      toolstale_level="WARN", abspath_level="warn", **_kw)      # ABSPATH-1122: a bind warns, G0 / compose refuse
     except (OSError, ValueError) as e:
