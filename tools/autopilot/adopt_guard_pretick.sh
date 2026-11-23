@@ -1,7 +1,9 @@
 #!/bin/bash
 # KIT-OPS-6 11-14 (COORD r32 (4)): pre-tick ADOPT-GUARD plan_sha256 check for every die.  Never blocks the tick (exit 0); a mismatch writes
 # one ALERT line per die to the autopilot log and autopilot/ADOPT-GUARD-FAILED (removed when all dies pass), with the exact fix.
-AP=$HOME/coord/autopilot; G=$HOME/OpenTallas/tools/autopilot/adopt_guard.py
+AP=$HOME/coord/autopilot
+G=/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/adopt_guard.py
+[ -f "$G" ] || G=$HOME/OpenTallas/tools/autopilot/adopt_guard.py
 out=""; for d in qwen_kvsys s81 s81_head qwen_compute hbm; do
   o=$(timeout 90 python3 -I "$G" "$d" --plan-only 2>&1); rc=$?
   [ $rc -ne 0 ] && out="$out$o"$'\n'
