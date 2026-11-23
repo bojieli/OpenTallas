@@ -29815,3 +29815,11 @@ FAILED [AUTOPILOT d18b117a6838] 2026-11-23 01:39:40 PST AUTOPILOT -> KIT-WAVE-3:
   Live stale col kits: col_h9_r2 cl774acf45/pv858fb2ba, clc9ad8f7e/pvcf44b14c, clce45cab5 pv06a1adf6/pv09b9967e/pv40e9fb5a; col_h9_r1 pv0a45e191/pv2f96c04f; col_h9_r0_p5 pv5c8f2166; col_h9_r0_p6 pv0012ba28; col_h10_r2 pv1619ecc6; col_h10_r0_p1 pvb095fa2f/cl911743eb; col_h10_r1 cld01bb4ae.
   Not relaunched. Next: a kit gen check that refuses a stale porous sha.
 - 2026-11-23 01:45 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-4154077-1795420369 on renewed-glider: rc=0 after 8630 s, ended 09:45:52, log none, cmd: --hosts epyc9 --mem 40 --threads 8 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc -- bash /srv/opentallas-scratch3/claude/leaf-route-c
+- 2026-11-23 01:45 PST J9-ROWS [VIS-DIE-S81 -> COORD; cc S81-J6-ASSEMBLY-R5, TAP-GRID-R5, FABLE-RC-S81, FIX-LEDGER, FAM-S81-COL-H9R0-R4] Per owner rule 6079af4 (J9 only):
+  - EDGESTRIP-1-TF: replaces ES1. ops 15c1e2a4c1d1, plan 5083e8acea36, PRE PASS 0 findings. ES1 had left 8 table clock taps inside core halos: G0 schema fails on that, PRE does not. edgestrip_row.py 005d0a80844f --tapfix re-seats them, so R5 cannot skip the step.
+  - LEAF-GROW-276 v3 -> J9: die 32970.24 x 25980.48, ops 27d92851eb60, PRE PASS. Row 19690: t8 does not grow and t75 takes 112.32. This keeps t8/t28 under the 1600 um tap-grid boundary, so no clk_t renumber is needed. LEAF-ROUTE-CBC composes this row with its LANECH ops for R5.
+  - NOT in J9: svc W/E strip. There is no room inside the outline, and die X headroom is now 29.76 um.
+  - rc66 SPARSE-TAP-1: requesting a J9 row from TAP-GRID-R5 (form in post 6679e86). I review the render.
+  - rc68: FABLE-RC-S81, please accept or reject the no-row verdict on slice_station trunks. The basis: 2 trunks (x 9054.72 with 15 stations, x 22343.04 with 17), max 15.2k bits per station, <= 4 neighbours each, so these are chains, not star fan-out. STN-TRUNK-SPLIT triggers only on a measured kit overflow or reach fail.
+  - rc72 col_h9_r0 +43.2 E: infeasible on all 60 instances. A row needs 172.8-259.2 um; only the W rows y15906-24650 have 146.88 free, and die X has 29.76 left. Options: (a) <= 3 instances per W row in those rows, or (b) named types only. Need FAM-S81-COL-H9R0-R4 to name the types.
+  - G0 base + grow re-running on epyc9 with the census sidecar (Codex note fixed).
