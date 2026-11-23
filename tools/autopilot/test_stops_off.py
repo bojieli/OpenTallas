@@ -1106,6 +1106,27 @@ class GhostRows(unittest.TestCase):
             KW.fleet_probe, KW.close_queue_job, KW.attempt_root = orig_fp, orig_cq, orig_ar
 
 
+    def test_stale_running_cache_preserves_its_own_signed_queue_receipt(self):
+        from unittest.mock import patch
+
+        now = 1_000_000.0
+        for status in ("SIGNED", "SIGNED-UNVERSIONED", "ARCHIVED", "TRIAL-SIGNED"):
+            with self.subTest(status=status):
+                row = {"die": "s81", "item": "slice_station__t12", "attempt": 1,
+                       "status": "ENQUEUED", "q_status": "RUNNING", "q_id": "j1",
+                       "kit": "h:/w/attempt_1/gen/kit", "started": now - 7200}
+                jobs = {"j1": {"status": status, "unit": "ap-j1", "kit": row["kit"]}}
+                ap, _ = self.ap(jobs=jobs)
+                st = {"items": {"q": row}}
+                with patch.object(KW, "attempt_root", return_value="/w/attempt_1"), \
+                     patch.object(KW, "fleet_probe", return_value=(KW.FleetMap(), 0)) as probe, \
+                     patch.object(KW, "close_queue_job") as close:
+                    self.assertEqual(KW.reap_ghost_rows(ap, {"dies": {}}, st, {}, now=now, jobs=jobs), {})
+                self.assertEqual(row["status"], "ENQUEUED")
+                probe.assert_not_called()
+                close.assert_not_called()
+
+
 class CancelRowsNoStop(unittest.TestCase):
     def test_no_stop_cancels_without_a_struct_stop(self):
         import tempfile, json as _j
