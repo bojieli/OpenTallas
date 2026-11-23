@@ -45,3 +45,10 @@ Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-qc-coll-r2 (reused; h
 - Split LEC pid 616074 epyc10 still running; lecpost pid 2762677 armed (CHAIN_DONE in opus-fix-qc-coll-r3-split_lec.chain.log).
 - v2 pkit_core1 + v3 pkit_core3b both in GRT. Control LEC early_lec_ctl2 not done.
 - Next: on V4 kit CTS read 4_cts_final.rpt (expect no xe0_q path, OT_TAP_RESET_SPLIT line, removal fixed); offer R13 V4 rows (XEPRE define + tap_reset_split + xev_q/xe_q seats) once LEC EQUIVALENT.
+
+## 2026-11-22 17:5x PST RESUMED
+- coll_ftc SIGNED (pkit_ftc2, routed LEC EQUIVALENT 63739, PROVENANCE 05:32). DONE.
+- LEC 8 differs = u_fs core taps clk_c0..7 untied; fix main 14fb2c7873; re-run unit opus-qc-coll-r3-lecre3 (intel2 chain log opus-fix-qc-coll-r3-lecre.chain.log; outs epyc10 opus-fix-qc-coll-r3/split_lec_3b_r2, early_lec_ctl_r2). The chain auto-posts.
+- pkit_core1 cancelled by the watchdog (GRT -512); pkit_core3b cancelled by me (GRT TT -422 after repair). pkit_core4 runs on INTEL1 (ot-run moved it), CTS -255, now GRT.
+- coll_core worst classes: CTS v3 xe0_q (fixed by XEPRE); V4 CTS u_pring SRAM rd_out -> tag compare -> f_md (-255); GRT v3 g_sring[4].s_rd_q -> gq_q (-292 pre-repair).
+- Next: RTL pipeline of the SRAM-read compares (b_md tag reg) + a scan of the pr_rd/s_rd consumers; consider a coll_core reshape.
