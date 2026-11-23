@@ -115,3 +115,4 @@
   bk_sel__t2: LOGIC-DEPTH u_sel -> g_sel -388 -> S81-BKSEL-R7 (BKSEL-IDS-RSPLIT v2 J9, or a stage split; asked R7).
   dsdv_slice_lepe_mu_LP__t2: LOGIC-DEPTH land_rst_n relay -295 -> FAM-S81-LEPE-4 (LP reset relay, rc34 LP).
   Shared with CLASS-FIX / FLOW-OPS-R2 (hold/reset/IO/NDR/REPAIR-CAP): not mine, per FIX-LEDGER.
+- 2026-11-23 02:12 PST DIED [VIS-S81-MISC] ot-run otrun-tolerant-swine-3418387 on tolerant-swine: rc=1 after 0 s, ended 02:12:31, log none, cmd: --mem 12 --threads 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/vis-s81-misc --max-wait 3600 --detach -- bash /srv/opentallas-scrat | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
