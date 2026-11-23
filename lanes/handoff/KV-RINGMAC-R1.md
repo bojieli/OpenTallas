@@ -1,6 +1,10 @@
 # KV-RINGMAC-R1 handoff (Opus 5.5; COORD lane, started 2026-11-21 22:0x PST)
 GOAL: 9 NARROW cland ring masters for the kv3_hub_C cut (DONE: signed + exported) -> 44 hub_C ring rows (DONE: D28 row handed to KV-PLAN-R6 11-22 02:5x PST) -> private hub_C proof kit (running).
 
+## State 2026-11-23 15:5x PST (RESUMED after 11:40-15:40 limit)
+- hubc_rm3 sealed private kit ENDED, MEASURED UNSIGNABLE (no relaunch): GRT overflow 73,945 (M3 59,662), GRT pre-repair WNS -1381 / TNS -255k, chain rc 143 (2-h hang watchdog in GRT report_metrics, 22:45Z). Hotspots over ahub + kvs_ctl macros, not rings. AUTO-GEOM reach 3448 bits >405 um = D27d3 stations.
+- Ring rows are IN sealed D28. hub_C closure owner: FAM-KV-HUBC-SYSC-R2 (D29 stations) + KV-AHUB-RH1 (over-ahub porosity). Nothing running for this lane; re-site rows on request (generator L/ROWS_hubc_ringmac.py + L/tmp/freeze.py).
+
 ## State 2026-11-22 17:3x PST (RESUMED after weekly limit 11:1x)
 - Sealed hub_C kit (spec L/pk/spec_rm3, work L/pk/hubc_rm3, run-item --goal finish pid 1880591) kept running: synth 280,600 cells (< 400k cap; was 417k), floorplan 16:22Z, GP 22:23Z (19% util), resized 01:06Z, detailed place running 01:12Z+. Fallback watcher pid 2589087 (goal route on goal finish unsupported).
 - D28 seal 12:00 missed by the limit: rows are with KV-PLAN-R6 (it rules catch-up / D29).
