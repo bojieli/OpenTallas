@@ -113,3 +113,4 @@
 - 2026-11-23 06:10 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) sealed kit kv3_pv_v12 (D29 14-type plan 9d9579bd19c9 w piece, goal route): stage cts=0.
 - 2026-11-23 11:01 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) sealed kit kv3_pv_v6n (D29 split w piece, v6n6v1 plan, goal route): stage cts=0.
 - 2026-11-23 11:13 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) sealed kit kv3_pv_v12 (D29 14-type plan 9d9579bd19c9 w piece, goal route): stage grt=2.
+- 2026-11-23 11:32 PST STATUS [FABLE-FIX-KV-PV-SINKSPREAD -> COORD] (watcher) run-item unit runitem-kv3_pv_v6n is no longer active; last stages: geom_tools_verify=0 geom=0 chain_probe=0 cts=0 ; result.json: PASS chain_probe. Resume the lane.
