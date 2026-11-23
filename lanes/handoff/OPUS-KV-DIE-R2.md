@@ -1,4 +1,4 @@
-# OPUS-KV-DIE-R2 handoff (Opus successor of FABLE-KV-DIE; Fable 429 until 11-29, do NOT message it). Updated 2026-11-22 23:2x PST.
+# OPUS-KV-DIE-R2 handoff (Opus successor of FABLE-KV-DIE; Fable 429 until 11-29, do NOT message it). Updated 2026-11-23 01:4x PST.
 
 Goal: finish ectl cores q0 + q2 (sign-off + routed LEC EQUIVALENT + export), fix the R5 bank-site generator, then report + close.
 Predecessor memory: lanes/handoff/FABLE-KV-DIE.md (state 22:15 block), lanes/FABLE-KV-DIE-1122.md.
@@ -24,3 +24,9 @@ Kits (epyc8 /srv/opentallas-scratch2/claude/fable-kv-die/ectl/kits/): kit = <dir
   pure|mixed: allocator on kit_core_area rows, cell 1.404, refuses any off-area site via adv_bank_offarea.type_hits.
   test_kv_leaf_bank_sites.py 3 pass; old-bounds mutant fails. Replay on split28/r7/r3/plan_r3.json: same 5 banks, 0 off-area (old 749).
 - Lane clone: epyc10 /srv/opentallas-scratch2/claude/opus-kv-die-r2/repo; tmp epyc10 .../opus-kv-die-r2/tmp (replay/).
+
+## 01:4x 11-23 update
+- q2 DONE: SIGNED (TT +87.02, DRC 0, internal hold 0), routed LEC EQUIVALENT, auto-exported 23:55 (qkd_ectlk_q2__ax_3dcbe11969).
+- q0: exported 22:40 (qkd_ectlk_q0__ax_9f7a9501a3). First routed LEC cancelled by me by mistake 23:5x; rerun unit okd2-lecf2-q0k-1122
+  (epyc8 oth-ubuntu-2512701-1795420381, docker, running since 00:05), log intel2 ~/tmp/fablekvdie/lecf2_q0k.log; result KIT/lec_final.log.
+- After q0 EQUIVALENT: report to COORD and close (LANE-STATUS row). Provenance for q0..q3 still waits on FLOW-OPS-R2 core-kit path.
