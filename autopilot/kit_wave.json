@@ -11074,7 +11074,8 @@
     "col_h9_r1__*": {},
     "col_h9_r2__*": {},
     "col_h9_r0_*": {
-     "OT_KEEP_WIRES": "ot_dp_dly:r ot_s81_rly:rq"
+     "OT_KEEP_WIRES": "ot_dp_dly:r ot_s81_rly:rq",
+     "OT_CTS_NO_NDR": "1"
     },
     "col_h10_*": {},
     "col_h10_r0_p1__t1__cl574cc59d__pv*": {
@@ -11297,6 +11298,12 @@
     },
     "col_h*": {
      "OT_KEEP_WIRES": "ot_dp_dly:r"
+    },
+    "ot_s81sl_leaf__*": {
+     "OT_CTS_NO_NDR": "1"
+    },
+    "serdes__*": {
+     "OT_CTS_NO_NDR": "1"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -46093,6 +46100,12 @@
     "slw_st_b_v2__pva66d0f22__pv*": {
      "OT_GEN_M8_GRANT": "1",
      "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_st_a_*": {
+     "OT_CTS_NO_NDR": "1"
+    },
+    "slw_st_a_*": {
+     "OT_CTS_NO_NDR": "1"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
