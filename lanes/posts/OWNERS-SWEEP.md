@@ -378,3 +378,7 @@
   QC: 2 FAILED-NO-RELAUNCH (CLAND ring band, owner FAIL-ROUTE-1115), 1 DEAD-OWNER (sle_fw_v1__clf58b4dfb, VIS-QC-form_fefw), 27 HELD-EVENT.
   KV: 2 DEAD-OWNER (kv3_hub_Wi FABLE-FIX-KV-HG; kv3_hub_C KV-RINGMAC-R1), 26 HELD-EVENT incl 3 failed rows waiting D29 bind (kv3_pc_v1 cl4ea58a5c/cl23f6a148 FAM-KV-IOPC-R4, kv3_sys_c FAM-KV-HUBC-SYSC-R2).
   HEAD: 2 OK. FABLE-UNC-S81-* lanes not yet posting. Detail lanes/OWNERS-SWEEP.tsv
+- 2026-11-23 02:52 PST 02:5x sweep 446 rows: OK 127, HELD-EVENT 304 (S81 249, QC 27, KV 28; plan-event holds), FAILED-NO-RELAUNCH 11 (S81 9, QC 2), STALE>3h 2, UNOWNED 1 (S81 dsdv_slice_iq_C__t1 cancelled), DEAD-OWNER 0 (was 3).
+  New vs a6ef39f: FAILED-NO-RELAUNCH S81 col_h9_r0_p2__t1__cl0045af7b + dsdv_slice_c1x_C__t7 (FAM-S81-COL-H9R0-R4 / FAM-S81-SLICE-R6); STALE QC sle_su_l1__cl5ea486db, S81 dsdv_slice_c1x_C__t8; HELD-EVENT +2 KV +1 S81.
+  Still failed, not relaunched: S81 leaf t29/t71/t44f6 (OPUS-FIX-S81-LEAF-R10), col_h9_r0_p5 x2, col_h10_r1, lepe_nh_mus; QC slw_st_a_v1 + sle_st_a_v2 CLAND ring band (OWN-QC-1123).
+  Cleared since a6ef39f: all 3 DEAD-OWNER, 13 of 15 STALE.
