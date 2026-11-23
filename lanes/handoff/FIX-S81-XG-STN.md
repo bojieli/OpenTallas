@@ -14,3 +14,11 @@ Deadlines (FIX-LEDGER corr): rows GATED on J8 f65f to S81-J6-ASSEMBLY-R5 by 10:3
 ROW XG-RING-REACH-J9: reach_homes on the 14 types + reach_rules.py fix --rules 2 + reach_fix.sync_fixed_cycles, on 8d45ed26eb63;
 gates plan_gate_pre --baseline-plan f65f62779bef, strict bind, LATCHECK.
 Work dir: epyc8 /srv/opentallas-scratch2/claude/fix-s81-xg-stn/
+## 11-23 ~02:50 state
+- BASE changed (R6): 1b = fam-s81-slice-r6/xga/plan_f65f_xga2_xf_tl.json 6c1f82db89ab (epyc8+epyc9).
+- Work now on epyc9 /srv/opentallas-scratch2/claude/fix-s81-xg-stn/: repo (lane clone), trees/s81_j9xgrr (fork of R6 s81_j9xga, OK),
+  xgstn_ops.py (XG-RING-REACH-J9: 14 types reach_homes+place_regions+R-REACH-2 chains+sync_fixed_cycles),
+  xgstn_flt.py (XG-FLT-RELAY-J9: 18 relay_depth rows: gg/xr fault->u_flt, iq xr.bo, c3x/iq xr.bi sink), xgstn_run.sh, xgstn_gate.sh.
+- Dry run on 8d45: rr 1070ff2a2eb2, flt 981efeb77dce, 43 lanes +136 cycles, rule_broken 0.
+- Gate job (ot-run epyc9, log gate.otrun.log): run.sh on 6c1f -> bind strict all-gaps -> LATCHECK -> G0 -> PRE f65f -> adv_hop_gap, gate_flt/.
+- Owed: post GATED to FIX-LEDGER + S81-J6-ASSEMBLY-R5 + FABLE-UNC-S81-DIE (aa0cf9d7ecf0a898a, remaining hop rows) + R6 (ad9ab665a11ed23fe).
