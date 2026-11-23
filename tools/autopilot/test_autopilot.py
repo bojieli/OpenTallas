@@ -2509,7 +2509,8 @@ def test_current_worker_grt_no_convergence_stop_takes_precedence_over_shell_kill
         assert "grt_noconverge" not in ap.parse_client_log(text, unit=unit, started=started)
 
 
-def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, tmp_path):
+@pytest.mark.parametrize("strict", [False, True])
+def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, tmp_path, strict):
     import autopilot as ap
 
     monkeypatch.setattr(ap, "AP_DIR", tmp_path / "autopilot")
@@ -2518,8 +2519,12 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, t
     r["geom_ref"] = "AUTO-GEOM KIT-WAVE E /geom/auto_geom.json"
     die = ap.canonical_die(r["die"])
     rec = dict(die=die, event="E", item=r["type"], attempt=2, kit=r["kit"])
-    cfg = {"dies": {die: {"event": "E", "review_before_route":
-                        {"event": "E", "all_items": True, "required": True}}}}
+    cfg = {"dies": {die: {"event": "E"}}}
+    if strict:
+        monkeypatch.setenv("AP_REQUIRE_VIEWED_WAVE_ROUTE", "1")
+        rec.update(geom_verdict="PASS", geom_dir="/geom")
+    else:
+        cfg["dies"][die]["review_before_route"] = {"event": "E", "all_items": True, "required": True}
     monkeypatch.setattr(ap.KW, "read_config_text", lambda *_: json.dumps(cfg))
     monkeypatch.setattr(ap.KW, "load_state", lambda *_: {"items": {"r": rec}})
     monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: None)
@@ -2560,4 +2565,5 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, t
     with pytest.raises(ReadyToResume):
         ap.submit(state, j, "(automatic resubmit)")
     assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "E") is None
-    assert ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "older") is None
+    older_hold = ap.queued_wave_review_hold(ap.wave_review_snapshot(), r, "older")
+    assert older_hold.startswith("WAIT-VISUAL") if strict else older_hold is None

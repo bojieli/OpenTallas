@@ -3398,13 +3398,13 @@ def wave_review_snapshot():
         cfg = json.loads(KW.read_config_text(sys.modules[__name__]) or "{}")
     except (OSError, ValueError):
         return {}, {}
-    if not any((d.get("review_before_route") or {}).get("required") is True
-               for d in (cfg.get("dies") or {}).values()):
+    if not any(KW.strict_wave_route_review(die) or (d.get("review_before_route") or {}).get("required") is True
+               for die, d in (cfg.get("dies") or {}).items()):
         return cfg, {}
     kits = {}
     for rec in (KW.load_state(AP_DIR).get("items") or {}).values():
         if KW.required_route_review(cfg, rec):
-            key = (rec["die"], rec["item"], KW.review_kit_location(rec))
+            key = (rec["die"], rec["item"], rec.get("event"), KW.review_kit_location(rec))
             if key not in kits or rec.get("updated", 0) >= kits[key].get("updated", 0):
                 kits[key] = rec
     return cfg, kits
@@ -3444,7 +3444,7 @@ def queued_wave_review_hold(snapshot, row, event):
     identity = {"die": die, "item": item, "event": event}
     if not KW.required_route_review(cfg, identity):
         return None
-    rec = kits.get((die, item, kit))
+    rec = kits.get((die, item, event, kit))
     if rec is None:
         return f"WAIT-VISUAL: current wave attempt has no exact kit identity for {kit}"
     return KW.required_route_hold(cfg, rec)
