@@ -14331,3 +14331,5 @@ Handback terminal receipts collected after drafting:
 FOR-CLAUDE: FABLE-RC-ALL re-review of the actual composed r18/J9/V4/D29 die render and ledger before apply. Open REASONED entries need acceptance by that reviewer. Gate packets can progress in parallel.
 
 - 2026-11-23 07:22 PST restored archive-matched KV qkd_hr_core_tx and qkd_hr_cdc_ch in previously registered /srv/opentallas-scratch2/claude/epyc4views-1114 paths on epyc8/9/10. Complete LEF, TT/FF ETMs, pin and sign-off receipts; original ODB digests matched AGIdock index. S81 east/west coll protected M6 detailed abstract extraction is running in existing restore lane.
+
+- 2026-11-23 07:27 PST restored S81 east/west dsfd_coll_lane_*_safe8_ntf detailed M6 views on intel1 and epyc7/8/9/10 (existing provision paths). Exact archived ODBs matched both checksums, committed base-view pins/TT/FF preserved, both detailed receipts accepted by prov_view.routed_detail. Detail E 319953712a26, W 85705e430dc4. Epyc2 legacy path points to a missing cold-storage target; use available registered peers.
