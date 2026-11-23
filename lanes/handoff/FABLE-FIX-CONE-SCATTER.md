@@ -51,3 +51,5 @@ Lane dirs: intel2 /srv/opentallas-scratch2/claude/fable-fix-cone-scatter (clone/
 - Proof C (fence util .5 between rad 20) / D (soft, same): fork epyc8 trees/s81_j7_lcs2 (manifest 12af64d4f18d), plans plan_lcsC/D.json written.
   Private rebind on rt dabe421818ef: epyc8 lcs_bind.sh via ot-run (log lcs2_bind.otrun.log, queued 21:2x). After LCSB_DONE: private-spec --tree fork2 --plan plan_lcsC/D --rt dabe421818ef --goal route, then waiters.
 - 21:2x COORD: leaf wdo_q cone (t14/t74/t31/t45) -> lever form posted to LEAF-R10 (hub c5a7d1af8c). Census rule widened: path>=800, span<0.2*path, wns<=-150, st>=10; 72 h = 8 hits.
+- 17:5x COORD: A/B CANCELLED (ot-run --cancel pid 1020194 + B dir; B run-item 3699714 + A/B waiters killed by pid). Regex check (q/rxcheck.py on 1_synth_odb.v): lepw rows 140 members (b4 70), near = 1 SRAM each; leaf t14 lcs_wdo_b0/b1 240 each (112 src + 128 wdo_q). Hub 37bd2029fa.
+- Rebind queued since 17:50 PST; if not admitted by 18:50 -> chain spill (main 8bb9f7f78176) / epyc7 / epyc10.
