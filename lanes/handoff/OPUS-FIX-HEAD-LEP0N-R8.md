@@ -26,6 +26,13 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-23 06:0x PST ctl1 LEC_FAIL; count check
+- ctl1 hd_ctl: physical SIGNED (TT +4.35, DRC 0, internal FF 0) but routed LEC NOT EQUIVALENT, 727 differs in g_seqf.u_seq. Same class as HEAD-CTL-R1 kit4/kit5, so it does not count.
+  Waiting on the HEAD-CTL-R1 g_seqf fix, then rebuild on the plan of record.
+- Count: the counter's HEAD plan is l48uo/r17b (26 types). hd_host_n was already credited there; the only unsigned type is hd_lep0N.
+  hn3 export record 76c9b3183fe8 is in the rtx INDEX. Posted to HOURLY-WRITEUP-R5.
+- No R8 kits live. Open: the W kit on r18q (Fable to launch), E (Fable e1/e2), tap rows (TAP-GRID-R5 cross-check), HEAD marker after lep0N signs off.
+
 ## UPDATE 11-22 23:xx PST r18q (W rx start stages + sidecar re-bind) GATED
 - r18q = FABLE r18p + rows s12 + sidecar re-bind (tmp/fixrx.py, tmp/post10.sh, log M/post10.log). Plan d1f98516900cc0ba, sidecar 994b8a2892dd0768.
 - Tools = rt 345ac19b04b3 through the composed tree M/trees/rt_tools_launch/r18q_rx@345ac19b04b3 (COORD 22:4x: no tool patches).
