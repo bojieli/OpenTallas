@@ -37,3 +37,10 @@ STATUS: 02:2x gates launched on grow (c9a4) and f65f (--fit, gap 302.4 only -> p
  WE-STRIP tool d01dacafc1e5: external N/S windows take minimal moves with order-preserving packing per face.
   - 13fde stacked the 3 xtier windows; 98e3 group-delta was infeasible for the svc_5 face.
   - Gates F23 (81e1) / F23rb (rebase) running; then G0 on F23rb; then the re-snap list goes to FAM-S81-SLICE/station.
+16:1x STATE (after limits 06:4x-10:40 and 11:40-15:40):
+ ROW-GATED hub 8e3a5a43 (+correction) -> S81-J9-ASSEMBLY-R6 (R5 stood down).
+ Tools: svc_westrip_row daa069da6b16 (cluster window packing, soft-partner room, --extra-dx); grow_partner 24a87613fca6; final_gate 1af89aa27f15 (+tap_offset_cover fill, TAPFIX_EXTRA, TAPOFF_RE).
+ J8 frame 828de: F30/p_ws_tf 82da4b49980a. winclash 0, G0 0 introduced, PRE 140 TAPOFF inherited (census fails the same on 828de, diag29).
+ Rebase: c27rb (die_grow 93d12) -> c29rb partner op s_2S_x00 +69.12 W -> F30rb/p_ws_tf 67992d6a6722; winclash 0, G0 0 introduced, 16 partner re-snaps listed in the post.
+ SEAM-STRIP REASONED: 13/14 >= 17.28; t5_att 15.12 (above the 13.11 demand).
+ Open: none on my side. R6 owns the TAPOFF fill/census over the non-svc types in the compose tail.
