@@ -26,6 +26,12 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 23:xx PST r18q (W rx start stages + sidecar re-bind) GATED
+- r18q = FABLE r18p + rows s12 + sidecar re-bind (tmp/fixrx.py, tmp/post10.sh, log M/post10.log). Plan d1f98516900cc0ba, sidecar 994b8a2892dd0768.
+- Tools = rt 345ac19b04b3 through the composed tree M/trees/rt_tools_launch/r18q_rx@345ac19b04b3 (COORD 22:4x: no tool patches).
+- Fork M/trees/r18q_rx has the ev/q1 prep overlaid (6 files). All gates PASS; G0 shows the 6 face_budget_g2 errors only; no phantom.
+- W kit launch is Fable's (command posted). Proposed plan of record = r18q.
+
 ## UPDATE 11-22 20:1x PST hd_host_n SIGNED OFF
 - hn3 SIGNED: DRC 0, TT +80.39, internal FF 0/0, LEC EQUIVALENT, provenance private, sealed tree r18j. Port-start FF -110 is parent-owned (advisory).
   Kit epyc9 kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/OPUS-FIX-HEAD-LEP0N-R8/hd_host_n_1122090432/gen/hd_host_n
