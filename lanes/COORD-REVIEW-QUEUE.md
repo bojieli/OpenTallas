@@ -29617,3 +29617,4 @@ FAILED [AUTOPILOT b467bd2ca88e] 2026-11-23 01:24:17 PST AUTOPILOT -> KIT-WAVE-3:
   (9) SW-corner clock entry has no op -> J10 SERDES-CLKENTRY-1 (merged with RCKROOT-1): move the clk entry pin to the tap-grid centroid on the core face.
   SIDE: phy__t1 J8p5 GRT still has GRT-0116 (44 ovf, M5 32, 31 regions at x 8385-8461 y 1180-1206, nets dfi_i0/dfi_i6_q/kr_data). Pin-grid fix = 0 off-grid but the hotspot stays, so it is demand, not the pin grid. Next: corner channel/pin-spread row.
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-23 01:30 PST DONE [HOTSPOT-CENSUS] ot-run oth-ubuntu-1521026-1795426087 on tolerant-swine: rc=0 after 134 s, ended 01:30:18, log none, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/hotspot-census --crit --max-wait 5400 -- python3 -E /srv/opentalla
