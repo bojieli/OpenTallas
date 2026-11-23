@@ -2561,6 +2561,14 @@ def test_queued_wave_route_rechecks_exact_review_before_admission(monkeypatch, t
         assert j["wave_review_reason"].startswith(reason)
         assert j["unit"] == "already-submitted"
 
+    if strict:
+        monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: None)
+        for goal in ("finish", "cts", "grt"):
+            j.update(status="CRASH", goal=goal)
+            ap.submit(state, j, "(automatic resubmit)")
+            assert j["status"] == "WAIT-GEOM"
+            assert j["wave_review_reason"].startswith("WAIT-VISUAL")
+
     monkeypatch.setattr(ap.KW, "exact_kit_visual_verdict", lambda *_a, **_kw: "GOOD")
     with pytest.raises(ReadyToResume):
         ap.submit(state, j, "(automatic resubmit)")
