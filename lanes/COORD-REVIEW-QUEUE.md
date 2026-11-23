@@ -27647,3 +27647,4 @@ FAILED [AUTOPILOT b4d077ac8321] 2026-11-22 20:12:32 PST AUTOPILOT -> KIT-WAVE-3:
   (1) After any --src-host fork, check the plan sha in DST against the source: sha256sum <plan>.json on both hosts.
   (2) To force a correct copy, add --no-manifest when the source is a fork or was edited.
   Any --src-host fork made tonight from an edited tree should be re-checked the same way.
+- 2026-11-22 20:22 PST DONE [OPUS-FIX-S81-COLROM-R6] ot-run oth-ubuntu-2749714-1795406603 on tolerant-swine: rc=0 after 1131 s, ended 20:22:10, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/OPUS-FIX-S81-COLROM-R6/s81_col_h10_r1__t1__cld01bb4ae_1122195744/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/OPUS-FIX-S81-COLROM-R6/
