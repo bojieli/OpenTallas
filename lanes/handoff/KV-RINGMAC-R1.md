@@ -1,6 +1,10 @@
 # KV-RINGMAC-R1 handoff (Opus 5.5; COORD lane, started 2026-11-21 22:0x PST)
 GOAL: 9 NARROW cland ring masters for the kv3_hub_C cut (DONE: signed + exported) -> 44 hub_C ring rows (DONE: D28 row handed to KV-PLAN-R6 11-22 02:5x PST) -> private hub_C proof kit (running).
 
+## State 2026-11-22 17:3x PST (RESUMED after weekly limit 11:1x)
+- Sealed hub_C kit (spec L/pk/spec_rm3, work L/pk/hubc_rm3, run-item --goal finish pid 1880591) kept running: synth 280,600 cells (< 400k cap; was 417k), floorplan 16:22Z, GP 22:23Z (19% util), resized 01:06Z, detailed place running 01:12Z+. Fallback watcher pid 2589087 (goal route on goal finish unsupported).
+- D28 seal 12:00 missed by the limit: rows are with KV-PLAN-R6 (it rules catch-up / D29).
+
 ## State 2026-11-22 02:5x PST: D28 ROW READY (posted to KV-PLAN-R6, cc COORD/KV-AHUB-RH1/FAM-KV-HUBC-SYSC-R2)
 - ROWS: epyc8 L=/srv/opentallas-scratch2/claude/kv-ringmac-r1/rows/ROWS_kv_ringmac_d28.py sha 3a0f01f89763 (frozen delta d518e6f36e6a; copy staged as kv-plan-r6/d28/rows/ROWS_KV-RINGMAC-R1.py; KV-PLAN-R6 adds rows.json entry types=[kv3_hub_C]).
 - OVERLAY for the D28 tree: L/rows/overlay (171 files, sha-of-shas c72b316ac74b): kvringmac_views/<m>/ + plan_of_record/cores/kv_ring/<m>_pins.json.
