@@ -9621,10 +9621,24 @@ def chain_refusal(p, goal):
     return ""
 
 
-def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None):
-    """the autopilot.submit argv for this kit (ot-run on the hub, pinned to the kit host)"""
+def chain_hosts(sp, host, hub, avoid=()):
+    """FLOW-FLEET-R2 (COORD 11-22 17:5x, epyc8 197 cores committed on 96 and epyc9 81 waiters while epyc7 / epyc10 had headroom): the --hosts list of a PRIVATE kit's chain stage.
+    The chain was pinned to the kit's home host (`--hosts H`): a single-host pin switches ot-run's spill off, so a route / finish waiter of 48-72 GB sat 7-20 h on a full host.
+    A host LIST is a set of alternatives (MULTIHOST-SPILL-1630): ot-run keeps the kit's own host first and, when it does not admit the job, SPILLS the kit dir (--stage K) to a listed host
+    that admits it NOW (destination gate first, disk room + reserve checks, size caps), runs there and copies every written file back, so K stays home.  Alternatives = the spec's
+    own gen / place hosts minus draining ones.  Spec chain_spill false, or KW_CHAIN_PIN=1, keeps the single-host pin.  Wave kits are submitted by the autopilot, unpinned already."""
+    home = target_hosts([host], hub, allow_hub=True)
+    if not sp.get("private") or sp.get("chain_spill") is False or os.environ.get("KW_CHAIN_PIN") == "1":
+        return home
+    bad = set(avoid or ()) | {host, hub, "localhost"}
+    alts = [h for h in dict.fromkeys(sp.get("hosts") or []) if h and h not in bad]
+    return home + target_hosts(alts, hub, allow_hub=False)
+
+
+def chain_argv(sp, AP, kit, runner, goal, mem, thr, host, hub, bundle=None, avoid=()):
+    """the autopilot.submit argv for this kit (ot-run on the hub; the kit host first, spill alternatives after it: chain_hosts)"""
     argv = [sp.get("ot_run") or OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit,
-            "--hosts", ",".join(target_hosts([host], hub, allow_hub=True))] + list(AP.stage_disk_args())
+            "--hosts", ",".join(chain_hosts(sp, host, hub, avoid))] + list(AP.stage_disk_args())
     if not runner.startswith(kit.rstrip("/") + "/"):
         argv += ["--stage", runner]
     if goal in ("cts", "grt"):
@@ -9708,7 +9722,12 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
     rc, attempt, txt = 1, 0, ""
     while True:
         attempt += 1
-        argv = chain_argv(sp, AP, K, runner, g, mem, thr, kh, hub)
+        try:                                             # FLOW-FLEET-R2: hosts that drain now are not spill targets (best effort)
+            _ps = subprocess.run([sp.get("ot_run") or OT_RUN, "--status"], capture_output=True, text=True, timeout=120)
+            _avoid = draining_hosts(sp.get("host_caps") or {}, parse_otrun_status(_ps.stdout if _ps.returncode == 0 else ""), hub)
+        except Exception:
+            _avoid = set()
+        argv = chain_argv(sp, AP, K, runner, g, mem, thr, kh, hub, avoid=_avoid)
         live = out / f"chain_a{attempt}.live.log"
         res["stage"] = "chain"
         print(f"KW_STAGE chain {now_s()} :: goal {g} attempt {attempt} on {kh} :: {' '.join(shlex.quote(a) for a in argv[:14])} ...", flush=True)
