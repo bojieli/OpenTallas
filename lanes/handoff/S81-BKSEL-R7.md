@@ -129,3 +129,5 @@
   Formal inv_S (u_ids B vs split): base + induction SUCCESS (w/bksel_ids/inv_S.log); mutant inv_Sm queued (non-vacuity).
   Fork waiter bug: pgrep -f inside ssh bash -c matched its own command -> gate never submitted; gate submitted 23:4x (intel2 ~/s81-bksel-r7-logs/gate_j9.otrun.log).
   inv_Sm mutant (b1 group 2 never loads): FAIL as expected -> inv_S proof non-vacuous.
+- 00:1x J9 gate 1: SCHEMA 0, PRE PASS (0 findings, 84 advisories), ELAB yosys rc 137 (OOM: ot-run charged class p90 7 GB, epyc10 MemAvailable 54) -> bind/LAT not run.
+  Re-run as w/bksel_elabbind_j9.sh (new class, charged 110 GB), log intel2 ~/s81-bksel-r7-logs/gate_j9b.otrun.log, out w/gate_j9b.
