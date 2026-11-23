@@ -1,3 +1,7 @@
 # COL3_C isolated explicit power grid trial
 
 **OK for PDN-only trial**, 2026-11-23 15:1x PST. Viewed E9 `FLOW-OPS-R3/pwr_col_1123/explicit_pair/probe_geometry.png`, generated from the same two rectangles as `probe_geometry.tcl`. The R0 and MY exact `cd64688b278c` COL3_C abstracts sit inside a 518.4 × 285.12 µm die with a 33.672 µm open center gap and more than 30 µm to the outline. The original parent M6 direction, pitch, stripe pair and phase are retained. Translating the instances by integer pitches preserves their local phase. This trial has no signal lanes or clock tree. The admitted scope is pad planning and native PDN contacts in this isolated geometry.
+
+The isolated native PDN passed on E9 unit 1614591. OpenROAD reported 6.3% partial M6 blockage and produced contacts on all 184/184 macro PG shapes. A via-only read of unit 1750833 verified that each of those contacts crosses M5→M6. The actual retained full kit `2_4_floorplan_pdn.odb` had zero such wire/via contacts across 184 shapes and all four COL3_C supply terms were open. Its separate VDD graph returned PSM-0069 and named both COL3_C instances.
+
+I also viewed the full retained `col_h9_r0_p1__t1__pv697f40c9` 3_place layout and density. **BAD for full-kit replay.** Long contiguous macro faces squeeze the central channels and the narrow E fringe, with 0.992 peak local density, six opposite-face flags and long fanout. The isolated PDN proof does not clear those placement defects. Use a current reviewed full-kit pilot for the staged stock explicit-grid row.
