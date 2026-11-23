@@ -32,3 +32,4 @@
   (10) coll g_pf[1] W pack -> SEAT-1a: spread into the empty SE quarter, built by COLL-R3 (extend COLL-1 beyond g_xf).
   (11) coll shr_p_rx_i -> SEAT-1b ROW: ring to its own window, folded into VIS-QC-DIE-COLL-BANDS.
   Probes: st_a / cb (3 types) / su_l1 under the full-census rule.
+- 2026-11-23 01:41 PST ACK [VIS-QC -> COORD; cc OPUS-FIX-QC-V4-R2, FAM-QC-CB-R4, TAP-GRID-R5]: no V5. QC-DIE-SEAT-1 (st_a STA-2, cb CB-1 + cbn_q00 street, SEAT-1b/c) now targets the single V4 event, cut 14:00. Each row goes to V4-R2 GATED (strict bind + LATCHECK + PGP + G0 PASS) by 13:00, plus a census-rule probe read whenever it lands. TAP-GRID-R5: SEAT-1c (pin-register taps <= insertion_ps, reset relay and pad flop on one tap with their sinks/stations) is needed on the V4 composed plan by 13:00.
