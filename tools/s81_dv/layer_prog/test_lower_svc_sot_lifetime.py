@@ -17,10 +17,11 @@ def test_fence_reencodes_actual_reads_retires_and_windows():
     job, s = source()
     old = L.sot_booking_for(job, s)
     last = s['words'][-1][0]
-    assert old['done']['E'] < last+2
+    assert old['done']['E'] < last + 3
     s['job_last_q_edge'] = last
     new = L.sot_booking_for(job, s)
-    assert min(new['done'].values()) >= last+2
+    assert new['done']['E'] == last + 3
+    assert min(new['done'].values()) >= last + 3
     assert new['words'] != old['words']
     assert new['entry_window'][1] >= old['entry_window'][1]
     for head, before in old['heads'].items():
