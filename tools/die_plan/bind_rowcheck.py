@@ -219,7 +219,24 @@ def _bind_sv(s):
     return s if s and not s[0].isdigit() else "n" + s
 
 
-def check_relaysink(plan, ab, yjs):
+def _map_parts(ab, ab_path=None):
+    """asbuilt map parts exactly as bind.Binder merges them: map_file parts (relative to the asbuilt file) overridden by map."""
+    mp = dict((ab or {}).get("map") or {})
+    parts = {}
+    mf = (ab or {}).get("map_file")
+    if mf:
+        f = Path(mf)
+        if not f.is_absolute() and ab_path:
+            f = Path(ab_path).parent / f
+        try:
+            parts.update(json.loads(f.read_text()).get("parts", {}))
+        except (OSError, ValueError):
+            pass
+    parts.update(mp.get("parts", {}))
+    return {k: v for k, v in parts.items() if isinstance(v, (list, tuple)) and len(v) == 2}
+
+
+def check_relaysink(plan, ab, yjs, ab_path=None):
     """FAIL RELAYSINK lines: relay_depth rows whose leaf / port the elaborated die lacks (bind EMIT 'matched no internal sink')"""
     rows = [(tn, row) for tn, ty in ((plan or {}).get("partition_types") or {}).items() if isinstance(ty, dict)
             for row in (ty.get("relay_depth") or []) if isinstance(row, dict) and row.get("inst")]
@@ -229,6 +246,11 @@ def check_relaysink(plan, ab, yjs):
     sv = {}
     for path, (master, ports) in cells.items():
         sv.setdefault(_bind_sv(path), []).append((master, ports))
+    # RELAYSINK-MAP-1123 (KV-D29 K3: 360 false FAILs): the bind names a mapped leaf by its asbuilt map rel name
+    # (map / map_file parts {as-built path: [partition, rel]}, bind.rel_of -> self.local), not by its as-built path
+    for path, (part, rel_) in _map_parts(ab, ab_path).items():
+        if path in cells and rel_:
+            sv.setdefault(_bind_sv(rel_), []).append(cells[path])
     by_tail = {}                                         # last '_' token -> leaf keys (a key ending in '_' + s shares s's last token)
     for k in sv:
         by_tail.setdefault(k.rsplit("_", 1)[-1], []).append(k)
@@ -337,7 +359,7 @@ def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=
             yjs = json.loads((Path(elab_dir) / "asbuilt.json").read_text())
         if "RELAYSINK" not in skip:                     # B1 (FABLE-FLOW-0230): relay_depth rows vs the elaborated leaves
             try:
-                out += check_relaysink(plan_raw, ab, yjs)
+                out += check_relaysink(plan_raw, ab, yjs, ab_path)
             except (KeyError, TypeError, ValueError) as e:
                 out.append(f"WARN RELAYSINK not run: {type(e).__name__}: {str(e)[:160]}")
         if "ROWSINK" not in skip:
