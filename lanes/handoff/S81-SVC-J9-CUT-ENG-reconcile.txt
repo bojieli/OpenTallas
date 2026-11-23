@@ -1,0 +1,32 @@
+S81-SVC-J9 CUT x ENG reconciliation of the svc cut dates (rc15)  draft 11:5x PST 2026-11-23  [CUT fork + ENG fork ab01c3bfa47b08bf3 -> FABLE-RC-ALL]
+STATUS: MODEL AGREED by both; BENCH ROWS PENDING (CUT fills them in, then ENG signs).
+
+1. WHERE THE CUT IS (as built, J8 hi4 sources treeJ8g/s81_svc_r5_hi4_sources): only dsdv_svc_rs_fv_a44aa42442 = sid 9 (rsv_09, the E chain
+   root, q.k fold partner of rsv_07) instantiates dsdv_svc_rs_c_j7_hi4 (OT_SVC_ATTCUT, CUT_D = 1). The other 13 fv variants and both entries use
+   plain dsdv_svc_rs_c. FM per sid from tools/s81_dv/svc_rs/svc_rs_faces.masks. So "hi-only" = ONE slice per service system out of step.
+2. TIMING MODEL (read from dsdv_svc_att.sv / dsdv_svc_rs.sv; K = extra depth each way = KA + KR):
+   - PIO: no move. The rest side fires P on jcs == pio + 2pk; jcs, pio_o and the scores are out-lanes delayed together.
+   - PO: +2K (P_ARR + 2K). The P frame returns on the dn stream q (an in-lane): out K + in K in share time.
+   - P.V at the entry pv pins: +4K = PVO follows PO (+2K) and PV_LAT + 2K (GO in K + pv_o out K). KPV no move.
+   - SOT write window: +2K (SOT_W_LAT + 2K): operand rows q -> att -> sm_r* -> target.
+   ENG's earlier "+18 P.V" was the PV_LAT part only; totals agree (+36 at K 9). ENG put the first +2K on PIO; CUT's reading of the jcs trigger stands.
+3. COMPOSITION with the engine dates (ENG branch, engine only, no cut profiles): closing_allq_srx7_xs = PIO 297+10, KPV 78+9 (RT2 calendar on:
+   p feed on the next II=2 slot, n = 9 -> scores +9, p feed +10, P.V +19). SRX / ENG_XS sit inside ot_s81_svc_attn_s (inside u_att), the cut is
+   outside u_att: additive. Only SRX-dated value read on the rest side is the PIO trigger, against jcs (an att out-lane): both shift. The calendar
+   needs P arrival on an II=2 slot in share time; +2K is even, parity kept for any K. dv_layer_compile refuses ENG_XS without
+   OT_SVC_NATIVE_RT2_CALENDAR. The cut term = lower_svc --svc-cut-k N (P_ARR / PV_LAT / SOT_W_LAT + 2N) plus a define check, composing with any
+   profile (SRX0, srx7, srx7_xs); not a new profile name.
+4. LOCKSTEP RISK: a cut on sid 9 alone skews rsv_09 by 2K against rsv_07 (score-exchange fold) and against the ALLQ same-first-cycle P.V drain and
+   the SM operand fan-out. Global compiler dates cannot re-align one slice. Decided by the bench, not by dates.
+5. BENCH (tb_svc_lower, 16 real dsdv_svc_rs protect-lib slices, ALLQ+SMT closing hcores, compiled closing_allq L0 programme = bench of record
+   epyc7 allq_current1116_r4; relay model of the cut per sid via a cutk port; intel1 /srv/opentallas-scratch2/claude/s81-svc-j9-cut/dates):
+   rows (mask = sids with depth K; image = as-compiled / +2K dates):        verdict
+     0000 K0  as-compiled  (baseline, must PASS)                           PENDING
+     0200 K1  as-compiled  (= as built today: is J8 svc_hi wrong?)          PENDING
+     0200 K1  +2           (as built with priced dates)                     PENDING
+     0200 K10 as-compiled / +20                                             PENDING
+     ffff K10 as-compiled (no-cut image = mutant, must FAIL) / +20 (PASS?)  PENDING
+6. DECISION RULE (joint): (i) if 0200 K10 at +20 fails, KA4/KR5 needs matched depth on the 15 other slices -- not viable by 15:30 -> compose cut 0/0
+   per COORD fallback, svc_hi held. (ii) if 0200 K1 as-compiled fails, J8 svc_hi is functionally wrong today -> flagged to FABLE-RC separately.
+   (iii) SRX7+XS+BCAST+calendar + cut arm: REASONED (parity argument, point 3), not proven; second library build ~60 min if budget allows.
+SIGNED: CUT fork (S81-SVC-J9 fork) ______   ENG fork (ab01c3bfa47b08bf3) ______
