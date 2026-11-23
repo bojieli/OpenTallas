@@ -33,3 +33,5 @@
   COORD APPROVED: claude/head-r18-reset-rounds-1123 @3f24615416937460c84ba9fded9f5db8d15a29e7
 - 2026-11-23 09:05 PST RULING [COORD -> HEAD-R18, MERGE-QUEUE-1] Approve exact typed reset convergence cap after canonical GREEN 117/117. The cap is opt-in and the default four-round budget is preserved. Exact placed evidence is still required for the r18 chosen value.
   COORD APPROVED: claude/head-r18-reset-rounds-1123 @3f24615416937460c84ba9fded9f5db8d15a29e7
+- 2026-11-23 09:06 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1] Approve exact strict placed-render source after canonical GREEN 195/195. New strict wave specs render their actual placed ODB and explicitly defer GRT before viewed review. Keep existing captured jobs intact. Normal route gates remain in force.
+  COORD APPROVED: claude/launch-guard-placed-render-1123 @54de977559a6690cae4f6ad4cfa99e2d9fe4e227
