@@ -261,6 +261,33 @@ module ot_s81sl_vn_rf8 #(parameter integer W = 128) (
 `endif
 endmodule
 
+// Local registered RF output. An explicit one-hot selector avoids reconstructing
+// a binary read address on the cycle of a root broadcast.
+module ot_s81sl_vn_rf8_onehot #(parameter integer W = 32) (
+    input  wire          clk,
+    input  wire          we,
+    input  wire [6:0]    wa,
+    input  wire [W-1:0]  wd,
+    input  wire [7:0]    read_select,
+    output reg  [W-1:0]  q
+);
+    reg [W-1:0] mem [0:7];
+    reg [W-1:0] rd;
+    always @(posedge clk) begin
+        for (integer row = 0; row < 8; row = row + 1)
+            if (we && wa == row[6:0]) mem[row] <= wd;
+    end
+    always @* begin
+        rd = {W{1'b0}};
+        for (integer row = 0; row < 8; row = row + 1)
+            rd = rd | (mem[row] & {W{read_select[row]}});
+    end
+    always @(posedge clk) q <= rd;
+`ifndef SYNTHESIS
+    initial for (integer row = 0; row < 8; row = row + 1) mem[row] = {W{1'b0}};
+`endif
+endmodule
+
 // Four lanes of ot_hbm_norm_grp (G = 8, D = 64, N = 8): group pin flops, control (replicated per half), mix / square /
 // scale lanes, x / w stores.  The chunk chain lives in the core tops (vn_a: adders 1..3, vn_b: 4..7).
 module ot_s81sl_vn_ng4 #(
@@ -340,9 +367,11 @@ module ot_s81sl_vn_ng4 #(
     wire        sc_go = rbv || sc_run;
     wire [7:0]  sc_x  = rbv ? 8'd0 : sc_i;
     wire [7:0]  sc_nx = rbv ? 8'd1 : sc_run ? sc_i + 8'd1 : 8'd0;
+`ifndef OT_S81_VN_XRD_ONEHOT
     wire        sc_run_n = rbv ? (NV > 1) : (sc_run && sc_i != NV - 1);
     wire [7:0]  sc_i_n   = rbv ? 8'd1 : sc_run ? sc_i + 8'd1 : sc_i;
     wire [7:0]  sc_nn    = rb_v_c ? 8'd1 : sc_run_n ? sc_i_n + 8'd1 : 8'd0;
+`endif
     wire [DY:0] vy;
     ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rstn), .v(sc_go), .vd(vy));
     wire [7:0] yi_mm;
@@ -351,7 +380,28 @@ module ot_s81sl_vn_ng4 #(
     assign y_v = vy[DY];
 
     wire [127:0] xl_all, xmq, wmq;
+`ifdef OT_S81_VN_XRD_ONEHOT
+    wire sc_row2 = rbv && (NV > 1);
+    wire sc_next = !rbv && sc_run && (sc_i != NV - 1);
+    wire [7:0] row_without_rb;
+    for (genvar row = 0; row < 8; row = row + 1) begin : g_xrd_row
+        localparam [6:0] SC_PREDECESSOR = 7'(row - 2);
+        assign row_without_rb[row] = (sc_row2 && row == 2)
+                                 || (sc_next && sc_i[6:0] == SC_PREDECESSOR)
+                                 || (!sc_row2 && !sc_next && row == 0);
+    end
+    for (genvar lane = 0; lane < 4; lane = lane + 1) begin : g_xrd
+        wire rb_local;
+        ot_hdc_v41x_kreg #(.W(1), .R(0)) u_rb_local (
+            .clk(clk), .rst_n(rstn), .d(rb_v), .q(rb_local));
+        wire [7:0] sel = rb_local ? 8'b00000010 : row_without_rb;
+        ot_s81sl_vn_rf8_onehot #(.W(32)) u_x (
+            .clk(clk), .we(x_v), .wa(xi[6:0]), .wd(xl_all[32*lane +: 32]),
+            .read_select(sel), .q(xmq[32*lane +: 32]));
+    end
+`else
     ot_s81sl_vn_rf8 #(.W(128)) u_x (.clk(clk), .we(x_v), .wa(xi[6:0]), .wd(xl_all), .ra(sc_nn[6:0]), .q(xmq));
+`endif
     ot_s81sl_vn_rf8 #(.W(128)) u_w (.clk(clk), .we(wl_v_c), .wa({4'd0, wl_i_c}), .wd(wl_d_c), .ra(yi_mm[6:0]), .q(wmq));
     genvar l;
     generate for (l = 0; l < 4; l = l + 1) begin : g_lane
