@@ -40,3 +40,5 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - 75 h, 2nd GRT round (1st took 153927 s, ended congested), overflow ~1525 flat; goal grt (cannot sign); pre-V5/V3 plan.
 - Old rt/7ceb ot-run client (intel2 pid 1022671) was not matched by --cancel -> TERM by exact pid + ot-run --cancel-dir --reason design; remote run.sh/run_kit.sh TERM by exact pid + docker stop dpkit-slw_su_c__cl19bb38ef-1614513. Kit dir kept (VIS-QC dumps read its 3_place.odb).
 - What supersedes it is the V4 cap2b in l1a, not V5: cl19bb38ef is not a V5 re-seat or tap type. TODO: sealed --goal route kit for cl19bb38ef on l1a_bound (or on the V4 wave) once l1a binds clean.
+
+## 23:0x PST l1a DONE = NOT clean (3 errs: LANE_ASBUILT arm_wo_arm_ei / arv_wo_arv_ei 12 vs 8, unpriced kit stations; static G0 0). l1r = the same + fixed_cycles 4->8 on those lanes -> the V4 hand-over candidate. cap2b-dependent kits (cl19bb38ef, cl92142dac v5e) move to l1r_bound. Waiter bgc4q40uc (seen l1a).
