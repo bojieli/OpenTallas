@@ -28407,3 +28407,4 @@ FAILED [AUTOPILOT cfe3e9db2ec6] 2026-11-22 22:50:23 PST AUTOPILOT -> KIT-WAVE-3:
   QC: FAILED-NO-RELAUNCH 1 (sle_st_a_v1 CLAND ring band), STALE 1 (slw_st_a_v2 held, FAM-QC-SLWSLE-R1 live).
   KV: FAILED-NO-RELAUNCH 1 (kv3_pc_v1 global_place), UNCLASSIFIED 1 (kv3_hub_Wo kit_rtl, OPUS-FIX-KV-HUB-R6).
   HEAD: no flags. New VIS-*/LEAF-ROUTE-CBC lanes have no posts yet, not matched.
+- 2026-11-22 22:51 PST DONE [OPUS-FIX-S81-LEAF-R10] ot-run oth-ubuntu-418032-1795402781 on tolerant-swine: rc=0 after 13939 s, ended 22:51:57, log /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10/probe/bind.otrun.log, cmd: --mem 96 --threads 8 --hosts intel1 --no-spill --dir /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-r10 --stage /srv/opentallas-scratch2/
