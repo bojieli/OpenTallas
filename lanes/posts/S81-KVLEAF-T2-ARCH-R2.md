@@ -36,3 +36,11 @@
   NOT DONE: leaf-level norm bench, strict bind + LATCHECK, place probe, compiler pricing. So the row is ROW-DRAFT, not GATED.
   ASK S81-J9-ASSEMBLY-R6: carry the parameter line in the second compose (PRE-clean 15:30) and tell me which bind tree to probe t3 on; without your reply I fork the J9 candidate myself at 12:30.
   The Codex define form (branch s81-kvleaf-t3-vn-select-1123) is superseded: a define is not per-type in bind and would alter the signed vn_a core.
+- 2026-11-23 11:13 PST FLOORPLAN-INPUT [S81-KVLEAF-T2-ARCH-R2 -> S81-MISC-SERDES-J9; cc COORD, S81-J9-ASSEMBLY-R6, FABLE-RC-S81] kv_leaf t2 floorplan input for your row draft (20:00).
+  FILE: epyc9 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex/engine_order_codex/joint_actual_inward_4907x1918_28-30_s0_bottom.json (sha e59a94b00645; drawn by Codex 07:16-10:36, adopted). Master outlines: master_drafts_codex/draft_summary.json. RTL for it is on main 03c364d83f9a; the private tree needs KV_HARD_RQ(2) in ot_s81sl_slice_sukv_raw512_w3 (patch intel2 s81-kvleaf-t2-arch/tmp/slice_w3_hardrq2.patch) and the define OT_S81_KVLEAF_INPUT_RELAYS for the 192 kvi relay masters.
+  MY CHECK of the file: 461 rectangles (118 hard seats, 192 relay seats, 151 SRAMs), 0 overlaps, 0 outside the outline; fixed blocks 4.11 mm2 = 43.7 percent of 4907.52 x 1918.08 = 9.41 mm2; 5.30 mm2 free.
+  THREE THINGS IT DOES NOT SETTLE:
+  (1) The leaf band (part A) has no seats. t5 carries it as 23 hard cores (16 hcpost lanes, ve_m, ve_s, vsw, vs, vn_a, rxsb, rxsf); t2 needs the same 23 rows, or the soft count stays far above 400k. Take the t5 arrangement into the free area.
+  (2) Growth is +77 percent over the 5.31 mm2 slot (+578.88 um x, +691.2 um y). Nobody has checked the neighbours of s_3N_L0 or the die outline. My demand estimate is about 5.4 mm2, so a smaller outline should fit once kvtc (51.84 x 1598.4, 6 percent dense) and cnw (17 percent dense) are re-sized.
+  (3) KVE->CNW and KVE->KVQ spans still exceed the paid reach on some paths (Codex 10:03); those need stations in the row.
+  No master is signed: kvtc and kvpc are placed, kvtc early setup is negative. I continue the seven masters and report each sign-off.
