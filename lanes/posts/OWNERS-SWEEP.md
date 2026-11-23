@@ -347,3 +347,8 @@
   S81 STALE-only ~36 are held (plan event pending)/cancelled-superseded with live owners (COL-H9R0-R4, SERDES-R7, LEAF-R10, COLROM-R6); filtered from STALE.
   KV: kv3_hub_C FAILED kit_rtl UNCLASSIFIED + WAIT-BIND (KV-RINGMAC-R1); WAIT-BIND 3 more (kv3_sys_c, kv3_pc_v3). QC 55 clean, HEAD hd_lep0N running.
   Read-only; file lanes/OWNERS-SWEEP.tsv.
+- 2026-11-22 19:51 PST 19:50 sweep 451 unsigned rows (S81 348, QC 52, KV 48, HEAD 1; HBM skipped); 0 UNOWNED, 0 DEAD-OWNER.
+  S81 FAILED-NO-RELAUNCH 13 (was 22): LEAF-R10 11 (leaf t1/t8/t14-16/t24/t25/t37/t53/t54/t74, other flow error/congestion, 3-12h); COLROM-R6 col_h9_r2 pv6a2b031b (congestion 6.6h); S81-DIE-R5 lepe_nh_mus_LP t1 (NEW, 9h).
+  SVC-R9 svc rows, col_h10_r1, dsdv c1x_C/lepe_mu_C now held for plan event with live owner, so OK; held/cancelled/relaunched STALE filtered.
+  KV 0 flagged (was 4: kv3_hub_C kit_rtl cleared); QC sle_su_l1 place error 0.8h UNCLASSIFIED (PRECHECK-R2, new); HEAD hd_lep0N ok.
+  Read-only; lanes/OWNERS-SWEEP.tsv.
