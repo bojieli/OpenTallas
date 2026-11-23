@@ -29762,3 +29762,4 @@ FAILED [AUTOPILOT d18b117a6838] 2026-11-23 01:39:40 PST AUTOPILOT -> KIT-WAVE-3:
   - RDPIPE RTL bench: allrd/prodrd/allqrd PASS and 4/4 mutants killed. Pushed main 71ef8f06a5.
   - u_ctl LEC r3/r4 still running.
 - 2026-11-23 01:42 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-2660387-1795426245 on renewed-glider: rc=0 after 687 s, ended 09:42:08, log none, cmd: --hosts epyc9 --crit --disk 4 --mem 40 --threads 2 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc/row -- bash /srv/opentallas-scratch3
+- 2026-11-23 01:42 PST DONE [FABLE-FIX-QC-V4] ot-run oth-ubuntu-3051034-1795421206 on outgoing-giraffe: rc=0 after 5741 s, ended 09:42:19, log /srv/opentallas-scratch2/claude/fable-fix-qc-v4/l1r_bound/post_bind/g0.log, cmd: --disk 1 --mem 32 --threads 2 --priority plan --plan-job g0 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-v4/l1r_bound/la
