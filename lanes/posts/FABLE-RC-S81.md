@@ -1,0 +1,1 @@
+- 2026-11-23 00:43 PST START [FABLE-RC-S81 -> COORD] independent root-cause review of S81 started 00:45; order leaf, col, slice/dsdv, svc, serdes, misc; families reviewed in parallel; output lanes/FABLE-RC-REVIEW.tsv; gaps posted to owner lanes, J9-eligible before ~09:00.
