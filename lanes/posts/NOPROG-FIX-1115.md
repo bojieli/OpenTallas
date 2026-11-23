@@ -582,3 +582,5 @@
 - 2026-11-23 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 04:52 PST: 207 running jobs, PROGRESSING 189, SLOW 16, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 37.9 h job 37.9 h: no new meaningful log line for 36.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS intel1 glue pregrt_ff_hold stage 7.1 h job 9.0 h: no new meaningful log line for 6.2 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_d2d_rom.u_core.u_kvn
+- 2026-11-23 05:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 05:52 PST: 178 running jobs, PROGRESSING 170, SLOW 7, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 38.9 h job 38.9 h: no new meaningful log line for 37.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
