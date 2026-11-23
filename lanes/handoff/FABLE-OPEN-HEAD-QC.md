@@ -22,3 +22,20 @@ Lane dir: epyc7 /srv/opentallas-scratch2/claude/FABLE-OPEN-HEAD-QC (clkwall_rows
 - Tree drift: c3n_bound/launch has the fix; c3n_bound/tree and W/launch copies do not; kits also get it via place-stage flow refresh.
 - V2 reruns (FIX-QC-DPL-RERUN) were cancelled by the DESIGN-FAIL watchdog at GRT overflow; not to be rerun.
 - NEXT: ledger status change to GATED (or FABLE-RC-ALL REASONED accept); QC-V4 confirms drift 0 on c4; check first V4 st_a kit GRT log for OT_GRT_DPL_ARGS.
+
+## 06:5x live units (all mine, OT_LANE=FABLE-OPEN-HEAD-QC), logs intel2 ~/fable-open-head-qc/
+- Fork: ot-tree-fork r18w_ecol -> epyc7 FABLE-OPEN-HEAD-QC/trees/s81_head_r18z2_clkwall (fork7_clkwall.log; started 06:29).
+- Gate: gate_wait_clkwall.sh cw1 waits for TREE-FORK OK, then ot-run epyc7 tmp/chain_clkwall.sh cw1 (checks fork plan sha 23e33a4497865202, applies
+  rows, republish hd_lep0N + _w, PRE vs plan/plan_r18z2.json, strict bind, cohort, LATCHECK) -> chain7_clkwall_cw1.otrun.log, outputs D/plan/pre_cw1.*, D/bind_cw1.
+- What-if A/B GRT on the ep3 placed DB (3_place.odb, read-only): tmp/whatif_grt.sh A|B via ot-run epyc7 -> D/whatif/cong_A.rpt, cong_B.rpt,
+  whatif_{A,B}.log (B = M1/M2 obstruction of the 34 tall rects replaced by 80 cell windows). Plain settings, only the A/B delta counts.
+  Read: overflow in window x800-850 y640-705 and total, A vs B.
+- ep3 (HEAD-R18 unit r9-lep0n-ep3): place done 06:30 (smells: opposite_face_pins 13, fanout 879). CTS/GRT pending; kit epyc7
+  .../private/OPUS-FIX-HEAD-LEP0N-R9/hd_lep0N_1123035944/gen/hd_lep0N.
+- Shared cause W spec vs E (post d609da8d): far-tap fclk_out (W t45->fclk_out_coll_o1 912.8; E t44->fclk_out_coll_o3 923, t5->fclk_out_lepk_o0 940),
+  static strap_ca_k pins on far face (6 W, 10 E), unstationed broadcasts (W rstart_rx/run_in/rst_in; E rx[3]/rx[2] addr_nz 879 um after ECOL).
+- REPORT-1 posted bfdf0b77.
+## NEXT
+1. Gate cw1 result -> post ROWS-READY (HEAD-R18, PRECHECK-LEDGER-R3) with PRE/bind/LATCHECK + what-if delta + ep3 read.
+2. By 10:30: if no placed probe of the row itself -> REASONED packet to FABLE-RC-ALL for the probe part (row gated statically + what-if).
+3. x5: wait for ledger/QC-V4 answer; REPORT-2 when both are GATED or REASONED.
