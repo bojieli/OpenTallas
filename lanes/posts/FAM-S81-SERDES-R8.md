@@ -164,3 +164,5 @@
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
 - 2026-11-23 02:22 PST DIED [FAM-S81-SERDES-R7] ot-run oth-ubuntu-2831410-1795428911 on civil-redfish: rc=143 after 459 s, ended 10:22:47, log /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/place/pre_decsite.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/place --hosts epyc10 -- bash /srv/opentallas-scratch2/claude | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
   [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
+- 2026-11-23 02:32 PST DONE [FAM-S81-SERDES-R7] ot-run oth-ubuntu-110517-1795429310 on outgoing-giraffe: rc=0 after 911 s, ended 10:32:54, log none, cmd: --mem 24 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fam-s81-serdes-r7/j9/phy -- bash -c cd /srv/opentallas-scratch2/cla
+  [filed under] FAM-S81-SERDES-R8: FAM-S81-SERDES-R7 stood down (chain FAM-S81-SERDES-R7 > FAM-S81-SERDES-R8)
