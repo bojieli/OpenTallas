@@ -422,6 +422,10 @@ def fetched(spec, src):
     return spec
 
 
+COPY_RACE_RE = re.compile(r"file changed as we read it|File shrank by|file removed before we read it")
+COPYBACK_BACKOFF_S = (15, 30, 60)
+
+
 def copy_back(host, src, K, stage=None):
     """after a fetched job: the returned K on `host` goes back to K on `src` (where the wave and autopilot read it),
     as ot-run's spill copy-back does; the marker is never copied.  stage (HUB-FETCH): the job returned into this
@@ -439,10 +443,28 @@ def copy_back(host, src, K, stage=None):
     pull = on(host, f"tar -C {shlex.quote(os.path.dirname(got))} --exclude=.ot-run-spill-copy -cf - {shlex.quote(base)}",
               timeout_flag=False)
     push = on(src, f"tar -C {shlex.quote(par)} -xf -", n=False, timeout_flag=False)
-    a = subprocess.Popen(pull, stdout=subprocess.PIPE)
-    b = subprocess.run(push, stdin=a.stdout)
-    a.stdout.close()
-    rc = a.wait() or b.returncode
+    tries = max(1, int(os.environ.get("OT_COPYBACK_TRIES", "4") or 4))
+    for k in range(tries):
+        # COPYBACK-RACE-1122 (COORD 22:3x; QC sle_su_l1 cl5ea486db, S81 leaf t14, 3 hits tonight): a finished job's kit is still being
+        # written (layout render / async LEC) while it is copied back -> tar 'file changed as we read it' (rc 1), the wave filed
+        # KW_PLACE_RC=97 UNCLASSIFIED although the stage succeeded.  The COPY is retried (the receiving tar -x overwrites, so a
+        # repeat is idempotent), never the stage; any other failure is returned at once.
+        with tempfile.TemporaryFile() as ef:         # a file, not a pipe: a long warning list cannot block tar
+            a = subprocess.Popen(pull, stdout=subprocess.PIPE, stderr=ef)
+            b = subprocess.run(push, stdin=a.stdout)
+            a.stdout.close()
+            arc = a.wait()
+            ef.seek(0)
+            err = ef.read().decode(errors="replace")
+        rc = arc or b.returncode
+        if err:
+            sys.stderr.write(err[-2000:])
+        if not (arc == 1 and b.returncode == 0 and COPY_RACE_RE.search(err)) or k == tries - 1:
+            break
+        wait = COPYBACK_BACKOFF_S[min(k, len(COPYBACK_BACKOFF_S) - 1)]
+        print(f"ot-run-sealed: COPY-BACK RACE {host}:{got} -> {src}: tar 'file changed as we read it', copy retry {k + 2}/{tries} in {wait} s",
+              file=sys.stderr, flush=True)
+        time.sleep(wait)
     if not rc:      # K was absent on `host` before the job (fetch_ok), so this copy is ours alone
         subprocess.run(on(host, f"rm -rf --one-file-system -- {shlex.quote(os.path.dirname(got) if stage else K.rstrip('/'))}",
                           timeout_flag=False), timeout=1800)
