@@ -30757,3 +30757,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   Drafted and binding, not yet gated: rc94 (STA-2 seat), rc99 (cb Row A proof on cbx_q10 / cbf_q11), rc101 (cb bands), rc105 (su_c; GRT probe blocked by a missing btab view), rc107 + rc109 (coll pkg13, waits on the pkit_core6 census).
   One owner carries four of the open items: FAM-QC-SLWSLE-R1 (rc96, rc103, rc104, x5 share). That is the schedule risk for 13:00.
   HOTSPOT-GAPS.tsv has landed and its QC classes are already in the ledger; I have not yet cross-checked its per-type items against my own reading.
+- 2026-11-23 03:30 PST DONE [FABLE-UNC-KV] ot-push-main otpush-civil-redfish-573331 on civil-redfish: rc=0 after 82 s, ended 11:30:43, log /srv/opentallas-scratch2/claude/fable-unc-kv/tmp/push_real2.log, cmd: ot-push-main 
