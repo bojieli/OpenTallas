@@ -47,10 +47,106 @@ namespace eval ::ot_tap_rsplit {
   while {[$blk findInst $n] ne "NULL" || [$blk findNet $n] ne "NULL"} {incr k; set n ${base}_$k}
   return $n
  }
+ # QC-COLL RST-LAUNCH 11-23 (opt-in OT_TAP_RESET_SPLIT_LAUNCH=1 from clock.tap_reset_split_launch; COORD: hold gets a
+ # structural fix, a retimed launch).  coll_core pkit_core4 CTS: u_rx.u_wreset.reset_pipe[0] (source tap) ->
+ # sync_rst_n_rtap_clk_t68 hold -112.9 ps (skew 147): the affinity move / per-tap copy put the LAST stage on its sinks' tap
+ # but left the stage(s) before it on the old tap, i.e. a zero-logic tap-to-tap shift.  For every moved or copied last
+ # stage X on tap T: walk D back through INV/BUF/HB (depth <= 4) to the launching DFF L; when L is not on T, put L on T as
+ # well (a copy L_rtap_<T> with the same master, every non-clock input net of L, its INV/BUF chain copied), and repeat
+ # for the copy's own D up to OT_TAP_RESET_SPLIT_LAUNCH_DEPTH (default 3) stages, stopping at a DFF whose D is a TIE cell
+ # (the synchroniser's first stage).  A source X whose launcher drives only X has the launcher's own clock pin moved to T
+ # (no copy).  Same function: each stage is the same register on the same clock from another tap (async assert unchanged,
+ # deassert edge count unchanged).  LEC: <src>_rtap_<tap> duplicate registers (lec.py TAP_CLONE).
+ proc back {net depth} {
+  # driver of net -> {dff chain} with chain = INV/BUF insts from the dff output toward net (dff output first)
+  if {$net eq "NULL"} {return {}}
+  foreach it [$net getITerms] {
+   if {![$it isOutputSignal]} continue
+   set inst [$it getInst]; set mn [[$inst getMaster] getName]
+   if {[string match DFF* $mn]} {return [list $inst $it {}]}
+   if {$depth < 4 && ([string match INV* $mn] || [string match BUF* $mn] || [string match HB* $mn])} {
+    foreach i [$inst getITerms] {
+     if {[$i isInputSignal] && [$i getNet] ne "NULL" && ![[$i getNet] isSpecial]} {
+      set r [back [$i getNet] [expr {$depth+1}]]
+      if {$r eq {}} {return {}}
+      lassign $r d o ch
+      return [list $d $o [concat $ch [list $inst]]]
+     }
+    }
+   }
+   return {}
+  }
+  return {}
+ }
+ proc const_d {inst} {
+  set d [$inst findITerm D]
+  if {$d eq "NULL" || [$d getNet] eq "NULL"} {return 0}
+  foreach it [[$d getNet] getITerms] {
+   if {[$it isOutputSignal] && [string match TIE* [[[$it getInst] getMaster] getName]]} {return 1}
+  }
+  return 0
+ }
+ proc nloads {net} {
+  set n 0
+  foreach it [$net getITerms] {if {[$it isInputSignal]} {incr n}}
+  return [expr {$n + [llength [$net getBTerms]]}]
+ }
+ proc launch {blk x t depth maxd} {
+  variable lmemo; variable lstat
+  set dit [$x findITerm D]
+  if {$dit eq "NULL" || [$dit getNet] eq "NULL"} return
+  set r [back [$dit getNet] 0]
+  if {$r eq {}} return
+  lassign $r l lo chain
+  set lck [clkterm $l]
+  if {$lck eq {} || [$lck getNet] eq "NULL"} return
+  if {[[$lck getNet] getName] eq $t} return
+  set key "[$l getName]|$t"
+  if {[dict exists $lmemo $key]} {$dit disconnect; $dit connect [dict get $lmemo $key]; dict incr lstat reuse; return}
+  # launcher driving only X (single chain, single load each): move its clock pin, no copy
+  set solo [expr {[nloads [$lo getNet]] == 1}]
+  foreach ci $chain {if {[nloads [[outterm $ci] getNet]] != 1} {set solo 0}}
+  if {$solo} {
+   $lck disconnect; $lck connect [$blk findNet $t]; dict incr lstat moved
+   dict set lmemo $key [$dit getNet]
+   if {![const_d $l] && $depth < $maxd} {launch $blk $l $t [expr {$depth+1}] $maxd} elseif {![const_d $l]} {dict incr lstat unresolved}
+   return
+  }
+  set b [$x getBBox]; set cx [$b xMin]; set cy [$b yMin]
+  set cn [uniq $blk "[$l getName]_rtap_$t"]
+  set c [odb::dbInst_create $blk [$l getMaster] $cn]
+  foreach it [$l getITerms] {
+   set mt [[$it getMTerm] getName]
+   if {[$it isOutputSignal] || $mt in {CLK CLKN}} continue
+   if {[$it getNet] ne "NULL"} {[$c findITerm $mt] connect [$it getNet]}
+  }
+  [$c findITerm [[$lck getMTerm] getName]] connect [$blk findNet $t]
+  set drv [odb::dbNet_create $blk [uniq $blk "${cn}_q"]]
+  [$c findITerm [[$lo getMTerm] getName]] connect $drv
+  $c setLocation $cx $cy; $c setPlacementStatus PLACED
+  dict incr lstat copies
+  foreach ci $chain {
+   set nn [uniq $blk "[$ci getName]_rtap_$t"]
+   set cc [odb::dbInst_create $blk [$ci getMaster] $nn]
+   foreach it [$ci getITerms] {
+    if {[$it isInputSignal] && [$it getNet] ne "NULL" && ![[$it getNet] isSpecial]} {[$cc findITerm [[$it getMTerm] getName]] connect $drv}
+   }
+   set on [odb::dbNet_create $blk [uniq $blk "${nn}_y"]]
+   [$cc findITerm [[[outterm $ci] getMTerm] getName]] connect $on
+   $cc setLocation $cx $cy; $cc setPlacementStatus PLACED
+   set drv $on; dict incr lstat chain
+  }
+  $dit disconnect; $dit connect $drv
+  dict set lmemo $key $drv
+  if {![const_d $l] && $depth < $maxd} {launch $blk $c $t [expr {$depth+1}] $maxd} elseif {![const_d $l]} {dict incr lstat unresolved}
+ }
  proc run {} {
   global ct_taps
   set blk [ord::get_db_block]
   set minn [expr {[info exists ::env(OT_TAP_RESET_SPLIT_MIN)] ? $::env(OT_TAP_RESET_SPLIT_MIN) : 1}]
+  set ldo [expr {[info exists ::env(OT_TAP_RESET_SPLIT_LAUNCH)] && $::env(OT_TAP_RESET_SPLIT_LAUNCH) eq "1"}]
+  set maxd [expr {[info exists ::env(OT_TAP_RESET_SPLIT_LAUNCH_DEPTH)] ? $::env(OT_TAP_RESET_SPLIT_LAUNCH_DEPTH) : 3}]
+  variable lmemo {}; variable lstat {}; set nlsrc 0
   set tapnets {}
   foreach tp $ct_taps {dict set tapnets [[lindex $tp 1] getName] 1}
   # collect sources first (the edit below adds DFFs that must not be visited)
@@ -80,7 +176,11 @@ namespace eval ::ot_tap_rsplit {
     if {$t eq $stap || ![dict exists $tapnets $t]} continue
     dict lappend by $t $s
    }
-   if {[dict size $by] == 0} continue
+   set clones {}
+   if {[dict size $by] == 0} {
+    if {$ldo} {launch $blk $inst $stap 1 $maxd; incr nlsrc}
+    continue
+   }
    incr nsrc
    set so [outterm $inst]; set somt [[$so getMTerm] getName]
    dict for {t sinks} $by {
@@ -101,6 +201,7 @@ namespace eval ::ot_tap_rsplit {
     [$c findITerm $somt] connect $cnet
     $c setLocation $cx $cy; $c setPlacementStatus PLACED
     incr ncopy
+    lappend clones [list $c $t]
     # chain copies, memo by original chain inst name -> output net of its copy for this tap
     set memo {}
     foreach s $sinks {
@@ -122,8 +223,16 @@ namespace eval ::ot_tap_rsplit {
      $a disconnect; $a connect $drv; incr nsink
     }
    }
+   if {$ldo} {
+    foreach ct $clones {lassign $ct c t; launch $blk $c $t 1 $maxd}
+    launch $blk $inst $stap 1 $maxd; incr nlsrc
+   }
   }
   puts "OT_TAP_RESET_SPLIT sources $nsrc copies $ncopy chain_cells $nchain sinks_repointed $nsink min_sinks $minn"
+  if {$ldo} {
+   set g {}; foreach k {moved copies chain reuse unresolved} {lappend g $k [expr {[dict exists $lstat $k] ? [dict get $lstat $k] : 0}]}
+   puts "OT_TAP_RESET_SPLIT_LAUNCH stages $nlsrc [join $g { }] max_depth $maxd"
+  }
  }
 }
 ::ot_tap_rsplit::run

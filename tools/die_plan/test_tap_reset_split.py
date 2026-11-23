@@ -38,3 +38,27 @@ def test_split_copies_keep_polarity_and_inputs():
     assert "CLK CLKN" in t and "$a disconnect; $a connect $drv" in t
     assert "deleteInst" not in t and "swapMaster" not in t
     assert "puts \"OT_TAP_RESET_SPLIT sources" in t
+
+
+def test_launch_cotap_is_opt_in_schema_and_export():
+    # QC-COLL RST-LAUNCH 11-23: the launching synchroniser stage follows the moved/copied last stage onto its tap
+    p = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
+    assert p["tap_reset_split_launch"] == {"type": "boolean"}
+    disk = json.loads((HERE / "die_plan.schema.json").read_text())
+    q = disk["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
+    assert q["tap_reset_split_launch"] == {"type": "boolean"}
+    g = (HERE / "gen_phys.py").read_text()
+    assert re.search(r'get\("tap_reset_split_launch"\) is True', g) and "export OT_TAP_RESET_SPLIT_LAUNCH = 1" in g
+
+
+def test_launch_cotap_walks_back_to_tie_and_never_deletes():
+    t = (HERE / "tap_reset_split.tcl").read_text()
+    assert 'OT_TAP_RESET_SPLIT_LAUNCH) eq "1"' in t and "OT_TAP_RESET_SPLIT_LAUNCH_DEPTH" in t
+    assert "proc back" in t and "proc launch" in t and "string match TIE*" in t
+    # copies keep master and every non-clock input; a solo launcher only gets its clock pin moved
+    assert "dbInst_create $blk [$l getMaster]" in t and "$lck disconnect; $lck connect [$blk findNet $t]" in t
+    assert "deleteInst" not in t and "swapMaster" not in t
+    assert 'puts "OT_TAP_RESET_SPLIT_LAUNCH stages' in t
+    # the launch pass is gated: the default (no env) leaves the split byte-for-byte in behaviour
+    run = t[t.index("proc run {}"):]
+    assert run.count("if {$ldo}") == 3

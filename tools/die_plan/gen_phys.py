@@ -8023,6 +8023,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     if t.get("clock", {}).get("tap_reset_split") is True:           # QC-COLL RST-COTAP 11-22, opt-in: per-tap copy of the last reset stage
         cfg.append("export OT_TAP_RESET_SPLIT = 1")
+    if t.get("clock", {}).get("tap_reset_split_launch") is True:    # QC-COLL RST-LAUNCH 11-23, opt-in: launch stages co-tapped too
+        cfg.append("export OT_TAP_RESET_SPLIT_LAUNCH = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += pinreg_tap_exports(t)
