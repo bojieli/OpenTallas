@@ -139,3 +139,10 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - pc_v1 cl7f/cl4ea: relaunch on K3 after the strict bind.
 - 11:2x COORD ruling: D29 gates 13:30 with ALL pc types HELD at apply; rc118/119/121 REASONED-OPEN (FABLE-OPEN-KV evidence: PCSLIT/PCGUT blockage released before DPL, GRT 16,161; seam ~3.2k no row; pc__po_d3 no station). FABLE-OPEN-KV G1-G3 + pc_v3 probe = same-day D29 amendment. pc_v1 cl7f/cl4ea NOT relaunched until the amendment lands.
 - RHI proof: HGFORM kit config.mk has OT_TAP_RESET_AFFINITY/SPLIT + OT_TAP_PAIR_MACRO; IO class = no-op on KV (input_hold_min empty, no io_hold.tcl) -> IO-BOUNDARY stays REASONED (RING/CTL + CTLPORT).
+
+## 11:4x PST update
+- k3c/k3d 15 R8_STALE root cause = stale owner extra inputs/vport_w_pads_b5.json (bind applies by id); fixed by kvd29/k3e/vport_extra_rebind.py inside k3e_v3.
+- Gate of record candidate: k3e_v3 (intel2 unit kv-d29-k3e-v3-1123, log epyc8 d29/k3e.out; v1/v2 failed on script bugs: note key strip, read-only .orig).
+- After k3e passes: run kvd29/k3e_after.sh via ot-run (render + MERGE-RESET-DEPTH/RESET-NAME) -> d29/k3_post/k3e_after/.
+- HGFORM probe runitem-kv3_hg_v1p2-60288 in place (since 11:24); log intel2 ~/tmp/kvd29/kit_hg_v1p2_hgform.log.
+- Package lanes/handoff/KV-D29-PACKAGE.md; FABLE-RC pre-verdict 89a2ca96: pc/sys_c/hub_C held-at-apply accepted.
