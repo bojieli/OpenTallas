@@ -28,3 +28,9 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
   col774 (S81 col_h9_r2 p774): exporting 6_final.v from signed so_run ODB with ORFS write_verilog -remove_cells physical-only -> xk/col774 (epyc9).
 - hd_spn routed LEC EQUIVALENT (epyc7 kit lec_routed_relec1122).
 - TSV builder: scratchpad relec/build.py (inputs res.txt from collect.sh, meta.tsv, out_*.jsonl, l1/l2/fetched/otj_out).
+
+## 00:0x 11-23 update
+- RESUMED posted 130ce01a. Table pushed febb9399: 82 EQ, 4 NOT-EQ, 24 NO-NETLIST, 14 UNPROVEN, 44 PENDING.
+- S81 group done (bksel_q EQ). HEAD pending: hd_ctl (epyc8), hd_mesh (epyc9); waiter b5v6leq07.
+- Reruns at 96 GB: b10 slw_hc1 cle683a076 (OOM), b11 slw_hc2__cla3497502__cl16607c7a (epyc10, yosys -15; old out moved to lec_routed_relec1122_term32).
+- Next: HEAD+S81 report to COORD when hd_ctl/hd_mesh end; 2-h post ~01:20.
