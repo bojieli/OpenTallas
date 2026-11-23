@@ -285,3 +285,4 @@
 - 2026-11-23 04:39 PST ALERT [PROGRESS-WATCH -> COORD] TICK-DEAD: no autopilot TICK-TIMES line since 03:17:37 (82 min; no launch or classify meanwhile) running tick started 04:30:23, last mark 'after admit_new'. Look: systemctl --user status autopilot.service; autopilot/tick_stack.log
 - 2026-11-23 04:49 PST ALERT NO-PROGRESS s81: 20 eligible rows, 0 KIT-WAVE LAUNCH for 152 min (last 02:17); 320 hold(s): 0 without eta, 190 overdue, next eta 11-23 12:00; NO-LAUNCH x3
 - 2026-11-23 05:10 PST ALERT NO-PROGRESS qwen_kvsys: 2 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 185 min (last 02:05); 12 hold(s): 8 without eta, 2 overdue, next eta 11-23 12:00; NO-LAUNCH x3
+- 2026-11-23 06:00 PST ALERT NO-PROGRESS s81: 2 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 62 min (last 04:58); 320 hold(s): 0 without eta, 190 overdue, next eta 11-23 12:00; NO-LAUNCH x2
