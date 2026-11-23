@@ -51,6 +51,8 @@ module ot_s81sl_leaf #(
     parameter integer CS_HO_D = 0,   // lanes -> vp glue (vo, o, fault): per lane (u_vp.g_ln[l].u_cst_ho), then
     parameter integer CS_HO_GS = 0,  //   CS_HO_GS shared per group (u_vp.g_hog[g].u_cst)
     parameter integer CS_H_G = 4,    // lane group size of the h trees (divides 16)
+    parameter integer VN_XRD = 0,    // vn x store read select (ot_s81sl_vn_ng4 XRD): 0 unchanged, 1 same edge, 2 = +1
+                                     //   cycle on vn -> vq y_v / y_i / y; vp -> vq m_* then rides one more stage too
     parameter integer CS_VNI_D = 0,  // vp -> vn (u_a + u_b): hw_*, hr_*, n_go / n_pre, wl_*           (u_cst_vni)
     parameter integer CS_VNO_D = 0,  // vn -> vp: hq_v / hq_d                                         (u_cst_vno)
     parameter integer CS_Y_D = 0,    // vn -> vq: y_v / y_i / y; vp -> vq m_* rides CS_VNI_D + CS_Y_D  (u_cst_y, u_cst_m)
@@ -128,7 +130,7 @@ module ot_s81sl_leaf #(
         .q(hq_d), .qv(hq_v));
     ot_s81sl_cst #(.W(3 + 128), .V(1), .D(CS_Y_D)) u_cst_y (.clk(clk), .rst_n(rst_n), .d({y_i_n, y_n}), .dv(y_v_n),
         .q({y_i, y}), .qv(y_v));
-    ot_s81sl_cst #(.W(2 + 8), .V(1), .D(CS_VNI_D + CS_Y_D)) u_cst_m (.clk(clk), .rst_n(rst_n), .d({m_q_p, m_b_p, m_i_p}),
+    ot_s81sl_cst #(.W(2 + 8), .V(1), .D(CS_VNI_D + CS_Y_D + (VN_XRD == 2 ? 1 : 0))) u_cst_m (.clk(clk), .rst_n(rst_n), .d({m_q_p, m_b_p, m_i_p}),
         .dv(m_v_p), .q({m_q, m_b, m_i}), .qv(m_v));
 `ifndef OT_S81SL_CST_MUT_UV
     ot_s81sl_cst #(.W(3 + 256 + 2 + 8), .V(2), .D(CS_U_D)) u_cst_u (.clk(clk), .rst_n(rst_n),
@@ -183,7 +185,7 @@ module ot_s81sl_leaf #(
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
         .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v_p), .m_q(m_q_p), .m_b(m_b_p), .m_i(m_i_p),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(f_vp));
-    ot_s81sl_vn_sp u_vn (   // S81/RTLSPLIT: vn = u_a (ot_s81sl_vn_a) + u_b (ot_s81sl_vn_b), p +2 edges
+    ot_s81sl_vn_sp #(.XRD(VN_XRD)) u_vn (   // S81/RTLSPLIT: vn = u_a (ot_s81sl_vn_a) + u_b (ot_s81sl_vn_b), p +2 edges
    .clk(clk), .rst_n(rst_n), .hw_v(hw_v_n), .hw_j(hw_j_n), .hw_hf(hw_hf_n), .hw_d(hw_d_n),
         .hr_v(hr_v_n), .hr_j(hr_j_n), .hr_hf(hr_hf_n), .hq_v(hq_v_n), .hq_d(hq_d_n), .n_go(n_go_n), .n_pre(n_pre_n),
         .wl_v(wl_v_n), .wl_i(wl_i_n), .wl_d(wl_d_n), .rb_v(rb_v), .rb_d(rb_d),
@@ -249,6 +251,7 @@ module ot_s81sl_slice #(
     parameter [19:0] LF_CS_HO_D = 20'd0,
     parameter [19:0] LF_CS_HO_GS = 20'd0,
     parameter [19:0] LF_CS_H_G = {5{4'd4}},
+    parameter [19:0] LF_VN_XRD = 20'd0,     // per leaf k: VN_XRD
     parameter [19:0] LF_CS_VNI_D = 20'd0,
     parameter [19:0] LF_CS_VNO_D = 20'd0,
     parameter [19:0] LF_CS_Y_D = 20'd0,
@@ -299,7 +302,7 @@ module ot_s81sl_slice #(
         ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ),
             // PATH-S81 X2: this leaf's R3 station depths
             .CS_HI_D(LF_CS_HI_D[4 * k +: 4]), .CS_HI_GS(LF_CS_HI_GS[4 * k +: 4]), .CS_HO_D(LF_CS_HO_D[4 * k +: 4]), .CS_HO_GS(LF_CS_HO_GS[4 * k +: 4]), .CS_H_G(LF_CS_H_G[4 * k +: 4]),
-            .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]),
+            .VN_XRD(LF_VN_XRD[4 * k +: 4]), .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]),
             .CS_RA_D(LF_CS_RA_D[4 * k +: 4]), .CS_RAR_D(LF_CS_RAR_D[4 * k +: 4]), .CS_VE_D(LF_CS_VE_D[4 * k +: 4]), .CS_VER_D(LF_CS_VER_D[4 * k +: 4]), .CS_PVS_D(LF_CS_PVS_D[4 * k +: 4]), .CS_VSP_D(LF_CS_VSP_D[4 * k +: 4])) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),

@@ -261,6 +261,34 @@ module ot_s81sl_vn_rf8 #(parameter integer W = 128) (
 `endif
 endmodule
 
+// One lane of the x store with a one-hot read select (ot_s81sl_vn_ng4 XRD != 0): the same words and the same
+// registered output as ot_s81sl_vn_rf8; the select arrives decoded, so the bank needs no address of its own.
+module ot_s81sl_vn_rf8_onehot #(parameter integer W = 32) (
+    input  wire         clk,
+    input  wire         we,
+    input  wire [6:0]   wa,
+    input  wire [W-1:0] wd,
+    input  wire [7:0]   rs,
+    output reg  [W-1:0] q
+);
+    reg [W-1:0] m [0:7];
+    reg [W-1:0] rd;
+    integer r;
+    always @(posedge clk) begin : g_wr
+        integer rw;
+        for (rw = 0; rw < 8; rw = rw + 1) if (we && wa == rw[6:0]) m[rw] <= wd;
+    end
+    always @* begin : g_rd
+        integer rr;
+        rd = {W{1'b0}};
+        for (rr = 0; rr < 8; rr = rr + 1) rd = rd | (m[rr] & {W{rs[rr]}});
+    end
+    always @(posedge clk) q <= rd;
+`ifndef SYNTHESIS
+    initial for (r = 0; r < 8; r = r + 1) m[r] = {W{1'b0}};
+`endif
+endmodule
+
 // Four lanes of ot_hbm_norm_grp (G = 8, D = 64, N = 8): group pin flops, control (replicated per half), mix / square /
 // scale lanes, x / w stores.  The chunk chain lives in the core tops (vn_a: adders 1..3, vn_b: 4..7).
 module ot_s81sl_vn_ng4 #(
@@ -268,7 +296,15 @@ module ot_s81sl_vn_ng4 #(
     // DIE-S81-31/VEZ 10-29 (opt-in, default 0 = unchanged): the caller declares the low XO_ZERO_LOW bits of the x store
     // constant 0 (x = bf16(mix): low16 always 0).  Synthesis already folds them; masking the store output register
     // makes the RTL startup meaning explicit (the store words are unreset), so the gate is unchanged.
-    parameter integer XO_ZERO_LOW = 0
+    parameter integer XO_ZERO_LOW = 0,
+    // S81 kv_leaf t3 reach (11-23), x store read select.  0 = unchanged netlist.  The store's read address is decided
+    // on the cycle of the rb broadcast, from one pin flop, and then crosses the whole lane group (610 um, 20 cells).
+    //   1  same edge: each lane has its own 32-bit bank, its own copy of the rb pin flop and a one-hot select.  No
+    //      cycle changes; an exact register duplication + recode of the same address.
+    //   2  +1 cycle: the decoded select is registered at each lane's bank.  Everything the scale reads runs one edge
+    //      later (multiplier valid, rstd, gain address, both store write ports), so y, y_v and y_i are exactly the
+    //      XRD 0 values one edge later, for any stimulus.
+    parameter integer XRD = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -343,16 +379,69 @@ module ot_s81sl_vn_ng4 #(
     wire        sc_run_n = rbv ? (NV > 1) : (sc_run && sc_i != NV - 1);
     wire [7:0]  sc_i_n   = rbv ? 8'd1 : sc_run ? sc_i + 8'd1 : sc_i;
     wire [7:0]  sc_nn    = rb_v_c ? 8'd1 : sc_run_n ? sc_i_n + 8'd1 : 8'd0;
+    // scale control as the multipliers see it: XRD 2 runs it one edge later (the x word arrives one edge later)
+    wire sc_go_s; wire [7:0] sc_x_s, sc_nx_s; wire [31:0] rh_s;
+    wire xw_v; wire [6:0] xw_a; wire [127:0] xw_d;            // x store write port
+    wire ww_v; wire [6:0] ww_a; wire [127:0] ww_d;            // gain store write port
+    wire [127:0] xl_all;
+    generate if (XRD == 2) begin : g_scd
+        reg go_q, xv_q, wv_q; reg [7:0] x_q, nx_q; reg [31:0] rh_q; reg [6:0] xa_q, wa_q; reg [127:0] xd_q, wd_q;
+        always @(posedge clk or negedge rstn)
+            if (!rstn) begin go_q <= 1'b0; xv_q <= 1'b0; wv_q <= 1'b0; x_q <= 8'd0; nx_q <= 8'd0; end
+            else begin go_q <= sc_go; xv_q <= x_v; wv_q <= wl_v_c; x_q <= sc_x; nx_q <= sc_nx; end
+        always @(posedge clk) begin
+            rh_q <= rh; xa_q <= xi[6:0]; xd_q <= xl_all; wa_q <= {4'd0, wl_i_c}; wd_q <= wl_d_c;
+        end
+        assign sc_go_s = go_q; assign sc_x_s = x_q; assign sc_nx_s = nx_q; assign rh_s = rh_q;
+        assign xw_v = xv_q; assign xw_a = xa_q; assign xw_d = xd_q;
+        assign ww_v = wv_q; assign ww_a = wa_q; assign ww_d = wd_q;
+    end else begin : g_sc0
+        assign sc_go_s = sc_go; assign sc_x_s = sc_x; assign sc_nx_s = sc_nx; assign rh_s = rh;
+        assign xw_v = x_v; assign xw_a = xi[6:0]; assign xw_d = xl_all;
+        assign ww_v = wl_v_c; assign ww_a = {4'd0, wl_i_c}; assign ww_d = wl_d_c;
+    end endgenerate
     wire [DY:0] vy;
-    ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rstn), .v(sc_go), .vd(vy));
+    ot_hdc_vline #(.D(DY)) u_vy (.clk(clk), .rst_n(rstn), .v(sc_go_s), .vd(vy));
     wire [7:0] yi_mm;
-    ot_hdc_delay #(.W(8), .D(LMS > 1 ? LMS - 1 : 1)) u_yimm (.clk(clk), .rst_n(rstn), .d(sc_nx), .q(yi_mm));
-    ot_hdc_delay #(.W(8), .D(DY)) u_yio (.clk(clk), .rst_n(rstn), .d(sc_x), .q(y_i));
+    ot_hdc_delay #(.W(8), .D(LMS > 1 ? LMS - 1 : 1)) u_yimm (.clk(clk), .rst_n(rstn), .d(sc_nx_s), .q(yi_mm));
+    ot_hdc_delay #(.W(8), .D(DY)) u_yio (.clk(clk), .rst_n(rstn), .d(sc_x_s), .q(y_i));
     assign y_v = vy[DY];
 
-    wire [127:0] xl_all, xmq, wmq;
-    ot_s81sl_vn_rf8 #(.W(128)) u_x (.clk(clk), .we(x_v), .wa(xi[6:0]), .wd(xl_all), .ra(sc_nn[6:0]), .q(xmq));
-    ot_s81sl_vn_rf8 #(.W(128)) u_w (.clk(clk), .we(wl_v_c), .wa({4'd0, wl_i_c}), .wd(wl_d_c), .ra(yi_mm[6:0]), .q(wmq));
+    wire [127:0] xmq, wmq, xmq_l, xmq_x;
+    // the XRD 0 store keeps its instance name and netlist; with XRD != 0 nothing reads it and synthesis removes it
+    ot_s81sl_vn_rf8 #(.W(128)) u_x (.clk(clk), .we(x_v), .wa(xi[6:0]), .wd(xl_all), .ra(sc_nn[6:0]), .q(xmq_l));
+    generate if (XRD != 0) begin : g_xrd
+        // the address without the rb term (rows 2.. of a running scale, else row 0), decoded once
+        wire [7:0] row_run;
+        genvar xr;
+        for (xr = 0; xr < 8; xr = xr + 1) begin : g_row
+            assign row_run[xr] = (sc_run_n ? sc_i_n + 8'd1 : 8'd0) == xr;
+        end
+        genvar xl_i;
+        for (xl_i = 0; xl_i < 4; xl_i = xl_i + 1) begin : g_l
+            wire [7:0] rsel;
+            if (XRD == 2) begin : g_q
+                // +1 cycle: the full one-hot select, registered beside the bank
+                (* keep = "true", dont_touch = "true" *) reg [7:0] sq_r;
+                always @(posedge clk) sq_r <= rb_v_c ? 8'b00000010 : row_run;
+                assign rsel = sq_r;
+            end else begin : g_e
+                // same edge: this lane's own copy of the rb pin flop (same D as rb_v_c)
+                (* keep = "true", dont_touch = "true" *) reg rb_l;
+                always @(posedge clk) rb_l <= rb_v;
+                assign rsel = rb_l ? 8'b00000010 : row_run;
+            end
+            ot_s81sl_vn_rf8_onehot #(.W(32)) u_x (.clk(clk), .we(xw_v), .wa(xw_a), .wd(xw_d[32 * xl_i +: 32]),
+                .rs(rsel), .q(xmq_x[32 * xl_i +: 32]));
+        end
+    end else begin : g_xr0
+        assign xmq_x = 128'd0;
+    end endgenerate
+    assign xmq = (XRD != 0) ? xmq_x : xmq_l;
+`ifndef SYNTHESIS
+    initial if (XRD < 0 || XRD > 2) $fatal(1, "ot_s81sl_vn_ng4: XRD is 0, 1 or 2");
+`endif
+    ot_s81sl_vn_rf8 #(.W(128)) u_w (.clk(clk), .we(ww_v), .wa(ww_a), .wd(ww_d), .ra(yi_mm[6:0]), .q(wmq));
     genvar l;
     generate for (l = 0; l < 4; l = l + 1) begin : g_lane
         wire [31:0] xl;
@@ -365,7 +454,7 @@ module ot_s81sl_vn_ng4 #(
         always @(posedge clk) begin xo <= xmq[l * 32 +: 32] & XO_MASK; wo <= wmq[l * 32 +: 32]; end
         ot_hdc_qmul_lat #(LM) u_sq (clk, rs[1 + 2 * l], x_v, xl, xl, sq[l * 32 +: 32], f[1]);
         wire [31:0] p, q;
-        ot_hdc_qmul_lat #(LMS) u_xr (clk, rs[2 + 2 * l], sc_go, xo, rh, p, f[2]);
+        ot_hdc_qmul_lat #(LMS) u_xr (clk, rs[2 + 2 * l], sc_go_s, xo, rh_s, p, f[2]);
         ot_hdc_qmul_lat #(LMS) u_w  (clk, rs[2 + 2 * l], vy[LMS], wo, p, q, f[3]);
         reg [31:0] yr;
         always @(posedge clk) yr <= bf16(q);
@@ -505,7 +594,8 @@ module ot_s81sl_vn_b #(
     parameter integer LM = 5,
     parameter integer LA = 6,
     // F6 SRAM-side write stage; 0 external cycles via exact read forwarding.
-    parameter integer HW_STAGE = 0
+    parameter integer HW_STAGE = 0,
+    parameter integer XRD = 0          // ot_s81sl_vn_ng4 XRD (x store read select); 2 moves y_v / y_i / y one edge later
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -611,7 +701,7 @@ module ot_s81sl_vn_b #(
     end
 
     wire gq, x_v, gy_v; wire [7:0] xi, gy_i; wire [127:0] sq, gy; wire [3:0] lf;
-    ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA), .XO_ZERO_LOW(VN_XO_ZERO_LOW)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
+    ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA), .XO_ZERO_LOW(VN_XO_ZERO_LOW), .XRD(XRD)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
         .pre(pre_c), .wl_v(wl_v_c), .wl_i(wl_i_c), .wl_d(wl_d_c), .rb_v(rb_v_c), .rb_d(rb_d_c), .go_q(gq), .x_v(x_v),
         .xi(xi), .sq(sq), .y(gy), .y_v(gy_v), .y_i(gy_i), .lf(lf));
 
@@ -737,7 +827,10 @@ endmodule
 
 module ot_s81sl_vn_sp #(
     parameter integer LM = 5,
-    parameter integer LA = 6
+    parameter integer LA = 6,
+    // x store read select of the soft half u_b (ot_s81sl_vn_ng4 XRD).  u_a is a signed hard core and keeps XRD 0;
+    // with XRD 2 its y half takes one soft register so both halves leave on the same (one later) edge.
+    parameter integer XRD = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -768,13 +861,21 @@ module ot_s81sl_vn_sp #(
     ot_s81sl_vn_a #(.LM(LM), .LA(LA)) u_a (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hqv_a), .hq_d(hqd_a), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d[127:0]),
         .n_go(n_go), .n_pre(n_pre), .rb_v(rb_v), .rb_d(rb_d), .y(y_a), .c_v(c_v), .c_s(c_s), .fault(f_a));
-    ot_s81sl_vn_b #(.LM(LM), .LA(LA)) u_b (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+    ot_s81sl_vn_b #(.LM(LM), .LA(LA), .XRD(XRD)) u_b (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hqv_b), .hq_d(hqd_b), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d[255:128]),
         .n_go(n_go), .n_pre(n_pre), .rb_v(rb_v), .rb_d(rb_d), .c_v(c_v), .c_s(c_s), .p_v(p_v), .p_d(p_d),
         .y_v(y_v), .y_i(y_i), .y(y_b), .fault(f_b));
     assign hq_v = hqv_a | hqv_b;
     assign hq_d = hqd_a | hqd_b;
-    assign y = {y_b, y_a};
+    wire [63:0] y_a_s;
+    generate if (XRD == 2) begin : g_ya
+        reg [63:0] q;
+        always @(posedge clk) q <= y_a;
+        assign y_a_s = q;
+    end else begin : g_ya0
+        assign y_a_s = y_a;
+    end endgenerate
+    assign y = {y_b, y_a_s};
     assign fault = f_a | f_b;
 endmodule
 
