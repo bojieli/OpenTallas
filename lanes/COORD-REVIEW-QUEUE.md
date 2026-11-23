@@ -27838,3 +27838,4 @@ FAILED [AUTOPILOT f5fb942189cc] 2026-11-22 20:50:25 PST AUTOPILOT -> KIT-WAVE-3:
   - plan_gate_pre MACROGHOST in 540c4f7cdb;
   - plan rows: r9e plan_j8_hi4_r9e 4f5660f9763b (0 unresolved on every svc type).
   Next: the r9e bind (ot-build, b7f0a36c305c, now in bind) serves the hi types; lo needs a rebind on an rt containing 2a24a958. All 16 svc wave rows are HELD until then (last 3 held at 6b7aef6c3a). slice_station__t51 in this class is not svc; it belongs to the slice owner.
+- 2026-11-22 20:57 PST DONE [OPUS-FIX-KV-PV-R7] ot-run oth-ubuntu-1706333-1795407400 on tolerant-swine: rc=0 after 2480 s, ended 20:57:57, log /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r7/runs/rebind1.otrun.log, cmd: --mem 64 --threads 8 --disk 50 --priority plan --plan-job bind --hosts epyc10 --dir /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r7 -- bas
