@@ -82,3 +82,8 @@ Remaining queue: ot_build "pre" node beside elab (optional), canary narrowing (r
 - Next: read canary arms landing/rrelay/rstsync (intel2 flow-canary/runs/ab_flowops_r2), narrow replica_keep; then io_guard, lever 9, items 8/11/12, push-test triage.
 - Canary arms read (coord ff9a2b7d04): only the rrelay keep moves TT, 124.4 -> 105.94. That is placement noise on a MET half-cycle path (u_face q[568] -> u_wen, fclk_in_t_i), not a relay path. Kept the class keep. Recommended rebasing the canary baseline to 105.94 (FLOW-CANARY-R2). The canary item is closed.
 - Next: io_guard, lever 9, items 8/11/12, push-test triage (test_repeat_stop 2 FAILs seen in bfjxwrdt9: hd_serdes_post_cts_five_times / station_row_overlap blocked_at_third).
+
+## 11-22 17:5x PST: RESUMED + NATIVE-GLUE-LOCK
+- Glue lock 2ea3a30545d is on main as d8bcb5f08e1 (13:38). Codex's 3bccf4b00a6f = main merge of bind-worker-wait c99220d870a (bind_emit_par waitpid scoped to workers), not a second lock. rt/current 9c133d90aec1 on all 7 gen hosts carries both. Posted coord 097a2123ee (lanes not reachable via SendMessage).
+- Open: signoff.py copy_signoff_bundle nomcap guard checks destination/nomcap/MANIFEST.json but copies into nomcap_libs, so every repeat install re-copies over read-only libs (BKSEL 12:01). Fix: skip when destination nomcap_libs/MANIFEST.json equals the source one, else replace through a temp file. Also HEAD turn canary a087287d5 October golden FF -20.85 stale (12:44 WAITER-FAIL) -> FLOW-CANARY-R2 rebase like s81_head_cl.
+- Then: io_guard, lever 9, items 8/11/12, push-test triage.
