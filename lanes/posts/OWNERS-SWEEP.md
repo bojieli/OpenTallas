@@ -367,3 +367,8 @@
   QC: FAILED-NO-RELAUNCH 1 (sle_st_a_v1 CLAND ring band), STALE 1 (slw_st_a_v2 held, FAM-QC-SLWSLE-R1 live).
   KV: FAILED-NO-RELAUNCH 1 (kv3_pc_v1 global_place), UNCLASSIFIED 1 (kv3_hub_Wo kit_rtl, OPUS-FIX-KV-HUB-R6).
   HEAD: no flags. New VIS-*/LEAF-ROUTE-CBC lanes have no posts yet, not matched.
+- 2026-11-22 23:50 PST 23:55 sweep: 449 rows (S81/HEAD/QC/KV), 0 UNOWNED, 0 DEAD-OWNER (VIS/plan owners honored).
+  FAILED-NO-RELAUNCH 15: S81 7 (COL-H9R0-R4 2, LEAF-R10 2, COL-H10-R4, SLICE-R6, COLROM-R6), QC 3, KV 3 (+1 other flow error).
+  STALE 17 (S81 only, non-held: cancelled-superseded/failed): COLROM-R6 3, LEAF-R10 5, COL-H9R0-R4 3.
+  92 held-with-reason rows no longer STALE; 193 held for plan events.
+  Detail lanes/OWNERS-SWEEP.tsv
