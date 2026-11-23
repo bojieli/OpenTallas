@@ -27,3 +27,9 @@ Lane dir epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-leaf-taphold-r2 (R2)
 - k1 final 5_1_grt.odb 09:18 UTC (attempt 2, max-wire repair skipped): 0 overflow, 0 DRV, 0 antenna. Flow GRT hold repair: ws +17.4, 0 violators. Post-GRT repair stall-stop at kit corner setup -573.9 / TNS -17,918 / 96 ends; hold -62.3 / 6 ends (corner unconfirmed). Kit now in tt_setup_repair.tcl (inside container dpkit-ot_s81sl_leaf__t39-1181364).
 - Probes launched 09:3x UTC via ot-run epyc7, read-only: th_tt2 -> R2/tt_k1 (log R2/tt_k1.otrun.log, client PID 2797813); th_probe FF (TH_VCLK_MEAS 385.95) -> R2/probe_k1 (PID 2797814). Local background waiter armed.
 - PROBE-PASS now needs a full-cause census (hub fe8a2a5): every overflow cluster + every failing path class with a row. Apply this to the t39 read.
+
+## State 01:4x PST 11-23: GRT reads done (hub a7cbbbd GRT READ, next post HOLD READ)
+- FF hold final 5_1_grt.odb: 6 < 0 = 4 port-only (spare ft3_i[595]/[596] -62, arst_n -46, cland_tstart_in -32) + 2 internal -2.5/-1.2 (u_vn_u_a hq_d -> vp driver_hqd_c_q). Hold rows PROVEN. probe tcl crashes at line 99 report_checks on port ft1_o[555] (census TSV already written).
+- TT raw -892 / 250 ends = GRT attempt 2 skipped max-wire repair; kit tt_setup_repair_grt.log repair_design -> -283.8 / TNS -3,369, repair_timing running. Waiter bmrs735pl (local) on OT_TT_SETUP_REPAIR final line.
+- TT classes (raw): u_vp cst_hi src->src (clk_t30->t25 etc., data delay), native_memory ly/lr/cf -> cst_hi, cst_ho -> driver_hw_d, lpad leafdn_i0 q -> u_rr reset (-295, ~1,000 um: the open no-row reset class), driver_wl_d -> ist_leafup_o0.
+- Next: when TT repair ends, re-run th_tt2 on the newest ODB the kit writes; if TT > -42 fails -> rows: reset relay_split for lpad q -> u_rr, station for driver_wl_d -> ist_leafup (~450 um), guard lower only if hold cells sit on the failing paths.
