@@ -33,3 +33,8 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 ## 23:2x PAIRTAP gated; Row B gate 3 running
 - r18u (Row A + LEP-PAIRTAP-1 lead 170) GATE PASS: plan 1702f67e4cf0ba31, pre 0 findings vs r18r, bind PASS, cohort 27/27, LATCHECK 334/334. (gate 1 failed on my clock.note key; moved to the type note via chain_r9_pairtap2.sh.) READY: launch_kit_r9.sh u1 s81_head_r18u_pairtap hd_lep0N_w epyc10 seal (+ u1p probe) when w11 GRT confirms the hold.
 - Row B gate 2: remap OK (20 refs), but the raw START exports u_rrl_145 went stale and LANDREMAP flagged false positives (rst_rl_35 / rst_rl_17 moved with the shift, same name). Gate 3: L/tmp/chain_r9_bfix2.sh = wchan3_remap_exp.py (exports + pins) + baseline = r18q through the same wchan3 transform (F prep/base_r18q_wchan3.json). Log chain10_r9_r18s_fix2.otrun.log.
+
+## 23:2x ROW B GATED + 4 KITS
+- r18s gate 4 PASS (tag r18s3; gate 3 failed only on a stale bind_r18s dir): plan e73da6f2e025f68d, pre 0 findings vs base_r18q_wchan3, bind PASS (7712 inst), cohort 27/27, LATCHECK 334/334.
+- Kits (epyc10, rt 345ac19b04b3, goal route, sealed tree): units r9-lep0n-bw (W sealed, counts), -bwp (W probe), -bn (nst4 sealed), -bnp (nst4 probe); logs ~/fable-fix-head-lep0n-1122/runitem_r9_<tag>.log; specs ~/coord/autopilot/private_specs/OPUS-FIX-HEAD-LEP0N-R9/; durable waiters.
+- A+B on epyc7: after the fork, chain_bt.sh t fails the same way -> run wchan3_remap.py + wchan3_remap_exp.py there, xbase, then gate with a fresh tag (copy chain_r9_bfix2 + chain_r9_bgate to epyc7, F=r18t).
