@@ -1861,6 +1861,9 @@
          "type": "integer",
          "minimum": 0,
          "maximum": 8
+        },
+        "hold_hb4_spare": {
+         "type": "boolean"
         }
        }
       }

@@ -2333,6 +2333,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["f
 # ft4_i -> station 0 (ws -97 at the bound vclk), which the in-flow ECO repair pads at ~2 cells per 25 s iteration.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_slots"]["items"]["properties"]["hold_hb4"] = {
     "type": "integer", "minimum": 0, "maximum": 8}
+# OPUS-FIX-S81-LEAF-TAPHOLD-R2 11-23 (opt-in, absent / false = no change): the slot's spare plan bits (bound narrower than the plan
+# slot on both sides, bind kit-rtl spare station chain) get the same hold_hb4 pad in front of their first station.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["ft_slots"]["items"]["properties"]["hold_hb4_spare"] = {
+    "type": "boolean"}
 
 # DIE-S81-85 11-09 (class fix 1): clock.child_root_taps = a soft parent with 0 flip-flops whose explicit type taps land
 # on hard-child clock root pins (taps.child_root_tap_sites); each such tap carries lands_on.

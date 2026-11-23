@@ -650,6 +650,35 @@ def test_kit_rtl_spare_ft_bits_ride_stations(tmp_path):
     assert f"u_ft_spare_{n}_o_s0" in w and f"u_ft_spare_{n}_o_s1" in w and "'d0;  // spare plan bits" not in w
 
 
+
+def test_kit_rtl_spare_ft_bits_hold_pad_opt_in(tmp_path):
+    """OPUS-FIX-S81-LEAF-TAPHOLD-R2 11-23: ft_slots[].hold_hb4_spare pads the spare chain like the bound bits; absent = byte-same"""
+    plan = EX / "die_plan_lanes.json"
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind") == 0
+    texts = {}
+    for case in ("plain", "hb", "spare"):
+        P = json.loads(plan.read_text())
+        sl = P["partition_types"]["tf"]["ft_slots"][0]
+        sl["width"] += 2
+        sl["stations"] = 2
+        if case != "plain":
+            sl["hold_hb4"] = 3
+        if case == "spare":
+            sl["hold_hb4_spare"] = True
+        wide = tmp_path / f"{case}.json"
+        wide.write_text(json.dumps(P))
+        kd = tmp_path / f"kit_{case}"
+        assert bind.main(["kit-rtl", str(wide), "--out", str(out), "--type", "tf", "--kit", str(kd)]) == 0
+        texts[case] = ((kd / f"{P['partition_types']['tf']['module']}.sv").read_text(), json.loads((kd / "kit_rtl.json").read_text()))
+    n = P["partition_types"]["tf"]["ft_slots"][0]["name"]
+    w, man = texts["spare"]
+    assert f"ot_dp_hd #(.W(2), .N(3)) u_hdly_sp_{n}_i (.a({n}_i[" in w and f".d(sp_{n}_i_hd)" in w
+    assert man["spare_ft_passthrough"] == [dict(slot=n, bits=2, stations=2, hold_hb4=3)]
+    assert "u_hdly_sp_" not in texts["hb"][0] and texts["hb"][1]["spare_ft_passthrough"] == [dict(slot=n, bits=2, stations=2)]
+    assert "u_hdly_sp_" not in texts["plain"][0]
+
+
 def _widen_kit(tmp_path, edit):
     plan = EX / "die_plan_lanes.json"
     out = tmp_path / "o"

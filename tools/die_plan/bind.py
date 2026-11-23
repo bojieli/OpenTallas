@@ -7283,6 +7283,13 @@ def cmd_kit_rtl(a):
         i = body.index(old_a)
         chain = [f"    // spare ft bits {sl['name']} [{hi - 1}:{lo}]: {k} station(s) S_i -> S_o (registered at both faces)"]
         prev = f"{ni}[{hi - 1}:{lo}]"
+        # OPUS-FIX-S81-LEAF-TAPHOLD-R2 11-23 (opt-in slot key hold_hb4_spare, absent / false = byte-same): the spare bits get the
+        # slot's HOLDFORM-1 pad (hold_hb4 x HB4 per bit) in front of their first station, like the bound bits.  S81 leaf t39 k1
+        # final GRT DB: ft3_i[595] / [596] -> u_ft_spare_ft3_o_s0 were the 2 worst FF hold ends (-62 ps) after hold_hb4 3.
+        nsp = gen_rtl.ft_hold_hb4(t, sl["name"]) if sl.get("hold_hb4_spare") else 0
+        if nsp:
+            hd, hb, prev = gen_rtl.hold_pad(f"sp_{ni}", prev, wd, nsp)
+            chain += hd + hb
         lk = ft_hop_lockup(raw, tn)
         xt = set(ft_hop_xtap(raw, tn, sl["name"])) if lk else set()
         for j in range(k):
@@ -7303,7 +7310,7 @@ def cmd_kit_rtl(a):
                 prev = f"{q}_l"
         body[i:i + 1] = chain
         spare.remove(so)
-        spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
+        spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k, **(dict(hold_hb4=nsp) if nsp else {})))
     # DIE-S81-51/SPARE 11-03: the spare bits of a NARROW plan input (bound port narrower than the plan bus) that no
     # spare station chain reads are structurally unconnected in this wrapper: declared proven-dead (kit dead_inputs.json
     # via gen_phys, face_guard dead_declared = 0 loads + 0 drivers, any load still FAILs class dead).
