@@ -381,9 +381,9 @@ UNSIGNABLE_SETUP_PS = -300.0
 UNSIGNABLE_MIN_AGE_H = 3.0
 UNSIGNABLE_REPORT_ONLY_S = 3600       # legacy (pre FLOW-OPS-0900); the notice flow below replaced the report hour
 GATE_SETUP_PS = -42.0
-# FLOW-OPS-0900 (owner 11-21) gave the owning lane a 30 min NOTICE window; LAUNCH-GUARD 11-23 (COORD FIX 2: "on its first pass it cancels"): the cancel comes on the
-# first pass that lists the job, together with the post to the owner; a KEEP <unit> post made before still spares it.  NOPROG_UNSIGNABLE_GRACE_S=1800 restores the window.
-UNSIGNABLE_GRACE_S = int(os.environ.get("NOPROG_UNSIGNABLE_GRACE_S", "0"))
+# FLOW-OPS-0900 (owner 11-21): NOTICE to the owning lane, cancel 30 min later unless the lane posted KEEP <unit>.  COORD 11-23 02:3x: the owner's 30 min window is the
+# default (LAUNCH-GUARD had made it 0); NOPROG_UNSIGNABLE_GRACE_S=0 gives a first-pass cancel.  GRT-LABEL DESIGN-FAIL cancels (design_fail_pass) stay first-pass.
+UNSIGNABLE_GRACE_S = int(os.environ.get("NOPROG_UNSIGNABLE_GRACE_S", "1800"))
 UNSIGNABLE_FORGET_S = 6 * 3600        # a unit not seen for 6 h is forgotten; a short gap in the list keeps its first-listed time
 PRIVATE_RE = re.compile(r"/private/")
 HOLD_ONLY_RE = re.compile(r"(?i)(?:^|[/_\-.])hold(?:[_-]?only|[_-]?fix|[_-]?eco|[_-]?gate)?(?:$|[/_\-.0-9])")

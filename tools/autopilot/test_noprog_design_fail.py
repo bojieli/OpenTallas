@@ -127,8 +127,13 @@ def urow(unit="oth-ubuntu-1-2", kit="/srv/x/kit-wave/s81/E/private/FAM-S81-COL-H
             "container": "dpkit-col-1", "ident": "dpkit-col-1 " + kit, "prio": "", "kind": "grt"}
 
 
-def test_unsignable_first_pass_cancels_and_posts_evidence(tmp_path, monkeypatch):
+def test_owner_30_min_notice_window_is_the_default():
+    assert nw.UNSIGNABLE_GRACE_S == 1800 or os.environ.get("NOPROG_UNSIGNABLE_GRACE_S")
+
+
+def test_unsignable_first_pass_cancels_and_posts_evidence_with_grace_0(tmp_path, monkeypatch):
     coord(tmp_path, monkeypatch)
+    monkeypatch.setattr(nw, "UNSIGNABLE_GRACE_S", 0)
     calls, seen = [], {}
     mode, cand, done = nw.unsignable_pass([urow()], seen, NOW, cancel=lambda u: (calls.append(u), (0, "containers stopped"))[1])
     assert mode == "act" and calls == ["oth-ubuntu-1-2"] and "first-pass cancel" in done[0]["evidence"]

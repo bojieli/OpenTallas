@@ -9,7 +9,7 @@ NOW = 1_000_000_000.0
 
 @pytest.fixture(autouse=True)
 def _legacy_grace(monkeypatch):
-    """LAUNCH-GUARD 11-23: the default is a first-pass cancel (UNSIGNABLE_GRACE_S 0, test_noprog_design_fail.py); these tests keep the 30 min NOTICE window path"""
+    """the owner's 30 min NOTICE window (default UNSIGNABLE_GRACE_S 1800, COORD 11-23); pinned here so an env override never changes these tests"""
     monkeypatch.setattr(nw, "UNSIGNABLE_GRACE_S", 1800)
 
 
