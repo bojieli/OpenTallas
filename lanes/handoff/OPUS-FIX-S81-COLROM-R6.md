@@ -52,3 +52,7 @@ report their GRT. No separate col hand-off.
 - NOW: plan stnEH = stnE + planH 1212 seats (srcJ8G/physical/die_plan/s81/plan_h2_2249_stnEH.json), gate bindEH.pid/log (intel2 opus-fix-s81-colrom-r6).
   On PASS: kits S1 (OT_TT_SETUP_MARGIN=90) + S0 via kit_wave private-spec --bind-out <EH bind> --goal route, H env: E RE + OT_GRT_CONG_ITERS=50 (no STAGGER/keep-rq). Template specG5.sh (scratch).
 - KNOWN-OPEN J9: u_d1_11_Y hops (rows record known_open).
+
+## RETIRED 18:0x 11-22 (COORD sweep hub 98fd8f9f): not relaunched one by one -> FABLE-FIX-S81-COL-RANKSEAT single col family row
+- col_h9_r2__t1__cl774acf45__pvea45273b, col_h9_r2__t1__clb8d86cd5__pv6a2b031b, col_h10_r1__t1__cl95b37463__pv86f5e3b9 (COL-H10's): RETIRED-TO-RANKSEAT-FAMILY-ROW.
+- Evidence sent to RANKSEAT: stnEH plan + H seats + P/P2 whole-rank-seat GRT data (see post 18:1x).
