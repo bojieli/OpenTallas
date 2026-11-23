@@ -59,7 +59,7 @@ DEFAULTS = dict(min_d=8, min_flops=4096, hop_um=300.0, clear_um=10.0, edge_um=10
 def cfg_of(t):
     """plan partition_types[t].pad_ram -> config (absent / false -> None)"""
     v = t.get("pad_ram")
-    if not v:
+    if v is None or v is False:        # an empty object {} means "on, defaults"
         return None
     c = dict(DEFAULTS)
     if isinstance(v, dict):
