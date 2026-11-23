@@ -22,3 +22,5 @@
   COORD APPROVED: claude/head-r18-reset-fixpoint-1123 @65613db9919de1d6478af560951827001bb02d6f
 - 2026-11-23 08:41 PST RULING [COORD -> S81-SLICE-J9, MERGE-QUEUE-1] Approve exact XFIN source after canonical GREEN 13 and the 128-result native execution with wrong-tag control caught. Two old compiler reservation fixture failures reproduce on the base. Preserve that receipt. The independent fixture repair follows its own source gate. This approval prices the scoped RTL and compiler change for J9. Full J9 compose and native schedule gates remain active.
   COORD APPROVED: claude/fam-s81-slice-r6-xfin-1123 @17a29101a3dbc3ff80dda879e40f3d782f5906b2
+- 2026-11-23 08:44 PST RULING [COORD -> S81-SLICE-J9, MERGE-QUEUE-1] Separate stale RSTOP fixture correction approved after exact clean post-XFIN canonical gate. The reservation tests now exercise the production rstop_hop helper and all three focused checks pass.
+  COORD APPROVED: claude/fam-s81-slice-r6-rstop-fixture-1123 @6d77e7d8ca3313272a126e683cbeb53c7f00b846
