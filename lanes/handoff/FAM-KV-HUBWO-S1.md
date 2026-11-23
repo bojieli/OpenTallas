@@ -4,3 +4,4 @@
 - NEXT: ot-wait --durable; on sign-off + EQUIVALENT routed LEC run kit_wave.py private-provenance <spec dir> --lec <lec.json>. Hub_Ei sealed (HUB-R6) separate.
 - 22:2x: sealed Eo/Wo (1122215550/1122215611) FAILED kit_rtl rc2: relay_depth row astk_*.u_strip..zn_0_u_zn__rst_n has no connection (bound-chain regex used raw double-underscore port; bind names chains collapsed). Fixed on main 934ebc63141a (KIT-RD-DUNDER-1122, lane clone epyc8 FAM-KV-HUBWO-S1/clone). Posted to KV-PLAN-R6/FLOW-OPS-R2 for rt publish.
 - NEXT: when rt >= 934ebc63141a exists: strict rebind of plan 240c9e69c3f1 (tree_r fork, as rebind_r6c.sh), then private-spec --goal route sealed Eo/Wo with that --rt; then provenance + LEC.
+- 23:1x: rt 65f367a55943 rebind tree_s1 (epyc8 FAM-KV-HUBWO-S1/tree_s1) clean; sealed Eo 1122231141 / Wo 1122231157 --goal route running (kitS2_*.log). NEXT: ot-wait stages, provenance + LEC.
