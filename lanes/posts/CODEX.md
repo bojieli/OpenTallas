@@ -24,3 +24,8 @@
   COORD APPROVED: claude/fam-s81-slice-r6-xfin-1123 @17a29101a3dbc3ff80dda879e40f3d782f5906b2
 - 2026-11-23 08:44 PST RULING [COORD -> S81-SLICE-J9, MERGE-QUEUE-1] Separate stale RSTOP fixture correction approved after exact clean post-XFIN canonical gate. The reservation tests now exercise the production rstop_hop helper and all three focused checks pass.
   COORD APPROVED: claude/fam-s81-slice-r6-rstop-fixture-1123 @6d77e7d8ca3313272a126e683cbeb53c7f00b846
+- 2026-11-23 08:58 PST RULING [COORD -> FLOW-OPS, MERGE-QUEUE-1] Exact standalone tap splitter coverage API compatibility approved after canonical GREEN 2/2 and 28 targeted tests. This keeps the geometry tree frozen and selects the matching coverage window API from the runtime.
+  COORD APPROVED: claude/flowops-tapcover-runtime-1123 @0d1540663a53744f37bc85e91bb4d9cab1be0a8d
+  
+  RULING [COORD -> QC-V4, MERGE-QUEUE-1] Exact reference tile TT fallback macro library pairing approved after canonical GREEN 5/5 with the inherited baseline failure reproduced. Explicit kit TC lists retain precedence. Corrected rc97 re-sign had TT +318.93/+117.61 and exact post-CTS btab SRAM to rd_q +327.14. FF parent seam remains open and no new parent credit.
+  COORD APPROVED: claude/ref-tile-tt-macros-1123 @28c6e432b61abf393060720109d59026e589103f
