@@ -64,3 +64,4 @@
   The other 2 groups are reset (u_rr/crr): CRR_PRE2 is die-wide in C5.
   Folded into C6 (see t75 post). ETA PRE ~13:30.
 - 2026-11-23 12:03 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-2667813-1795461294 on civil-redfish: rc=0 after 2934 s, ended 20:03:44, log /srv/opentallas-scratch2/claude/s81-leaf-j9/c5gate.otrun.log, cmd: --hosts epyc10 --crit --no-spill --plan-job bind --mem 128 --threads 8 --disk 90 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /
+- 2026-11-23 13:17 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-3370750-1795452310 on civil-redfish: rc=0 after 24367 s, ended 21:17:53, log /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2/gate_f2.otrun.log, cmd: --hosts epyc10 --crit --mem 240 --threads 8 --disk 20 --dir /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2 -- bash /srv/openta
