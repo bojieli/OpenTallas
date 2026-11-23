@@ -264,3 +264,4 @@
 - 2026-11-22 23:12 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1969669 on civil-redfish: rc=0 after 22 s, ended 07:12:30, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_geo.log, cmd: ot-push-main 
 - 2026-11-22 23:16 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2056582 on civil-redfish: rc=0 after 77 s, ended 07:16:52, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_vl.log, cmd: ot-push-main 
 - 2026-11-22 23:21 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2222539 on civil-redfish: rc=0 after 28 s, ended 07:21:43, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_gpl.log, cmd: ot-push-main 
+- 2026-11-22 23:22 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2253136 on civil-redfish: rc=0 after 18 s, ended 07:22:35, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ls.log, cmd: ot-push-main 
