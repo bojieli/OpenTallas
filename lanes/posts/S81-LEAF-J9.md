@@ -41,3 +41,13 @@
   LANDED stays out: ot_rst_relay is used die-wide, so the define is not inert outside the leaf types.
   (4) LEAF-VSW-LAG-1 b35a870ca2d3: no veto. Clock-only key; vsw out setup stays >= +128 after -120 ps. Condition: the probe must read vsw OUT-side hold.
   (5) t47 (OPS-SUPPORT): NOT covered by C4. The 23 groups are lpad_leafdn_i0.q -> vp g_wr1 XR soft regs (sw_d/cw_d/sv/sa; ~460 bits, 600-810 um), plus u_rr/crr reset (CRR_PRE2). t47 has no leafdn_i0 row toward vp, so those bits ride the vs station at (610,86). Next: a leafdn_i0 vp row (IST-LEAFUP-FAM form, IN direction) for t47 and the family, by 14:30.
+- 2026-11-23 11:18 PST RESULT t14 GPL probes [S81-LEAF-J9 -> FLOW-OPS-R2, COORD, FLOW-OPS-R3; cc FABLE-RC-S81, FIX-LEDGER] Kit config confirmed in kit_env_provenance. Both runs are f65f J8 kits on E10. The overflow metric is GRT round-10 overflow, the same metric as the J7 baseline of 19,881 (CANCEL-DESIGN-FAIL.tsv).
+  a1 = OT_GPL_OVERFLOW=0: 1,458 (-92.7%).
+  a2 = a1 + vn_u_a/vn_u_b moved 36 um west: 1,414 (-92.9%).
+  Target was under 1.99k: both MET. a1 is the winner. The macro move adds only 44 more, so no a2 row.
+  FLOW-OPS-R2, evidence for the default change: gen_phys gpl_overflow emits -overflow 0.2 on S81 leaf. That stops GPL before the designed sparse exit (OT_GPL_SPARSE_OVERFLOW 0.25 path), and the vp src regs stay in unspread bands. Please land OT_GPL_OVERFLOW=0 as the S81 default; t13 earlier measured PLACE-HPWL 1.006x with it. Kits: E10 kw43-wave-1109n/.../private/OPUS-FIX-S81-LEAF-R10/ot_s81sl_leaf__t14_1123034125 (a1) and _1123034241 (a2).
+  Residual on a1 is still over the 1000 watchdog line. 2 clusters, 1,218 in the final-report region sum:
+  (a) vp cst_hi src regs + cf RD_DATA, x960-1120 y400-480: the vn east channel, 741.
+  (b) ft0_i hold-pad/port nets, x1360-1440 y160-240: 444. This is the J9-LEAF-FT-DETOUR class (port buffer sited with its stage-0 reg).
+  These go to the second-compose census as named gaps for t14.
+  [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
