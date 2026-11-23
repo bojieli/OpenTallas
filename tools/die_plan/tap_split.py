@@ -55,6 +55,10 @@ split from its own sinks: the k-medians centre nearest the neighbour pulls thous
 (cap * margin)) - fixed, at least 1, +3 tried) by constrained weighted k-medians (assign to all, move only the free
 ones), each legalised, all sinks re-assigned, kept when the excess drops.
 
+TAPOFF (TAP-GRID-R5 11-23, COORD class ruling): a type with a plan clock.tap_offset.per_port_ps row gets a row for every
+appended / fresh tap in the same step (tap_offset_fill.fill: the nearest listed tap's row): written into --out-plan and
+listed in the rows JSON as "tap_offset" {type: {port: row}} for row scripts that apply the taps themselves.
+
 FRESH (TAP-GRID-R5 11-23, rc66 SPARSE-TAP-1 serdes): --fresh TYPES rebuilds the WHOLE tap table of those types from their
 sinks instead of appending (serdes__t2: a uniform grid over 2886 x 1227 vs a sink median at (1550, 255), 8 taps over
 cap, 7 under 30 sinks, 37 % of sinks > 200 um from a tap).  k = ceil(load / (cap x margin)) weighted L1 k-medians,
@@ -976,6 +980,12 @@ def main(argv=None):
     out = dict(tool="tap_split.py", plan=str(a.plan), radius_um=a.radius_um, cap=a.cap or None,
                rows={tn: {"key": k, "rows": r} for tn, (k, r) in rows_by_type.items()}, report=reps)
     rc = 0
+    import tap_offset_fill as TF
+    if rows_by_type and ((raw.get("clock") or {}).get("tap_offset") or {}).get("per_port_ps"):
+        import copy
+        tr = copy.deepcopy(raw)
+        apply_rows(tr, rows_by_type)
+        out["tap_offset"] = TF.fill(tr, S.Plan(tr, a.plan), types=set(rows_by_type))
     if a.out_plan:
         orig = json.loads(Path(a.plan).read_text())
         apply_rows(raw, rows_by_type)
@@ -989,6 +999,16 @@ def main(argv=None):
                     r["status"], r["why"] = "REMAP_FAIL", why
             print(f"TAP_SPLIT {tn} REMAP_FAIL: rows dropped, type restored ({why[:200]})", flush=True)
         out["rows"] = {tn: {"key": k, "rows": r} for tn, (k, r) in rows_by_type.items()}
+        if out.get("tap_offset"):                   # TAPOFF: rows of the types that kept their taps, into the written plan
+            out["tap_offset"] = {tn: v for tn, v in out["tap_offset"].items() if tn in rows_by_type}
+            w = json.loads(Path(a.out_plan).read_text())
+            tab = w["clock"]["tap_offset"]["per_port_ps"]
+            for tn, v in out["tap_offset"].items():
+                for n, r in v.items():
+                    tab.setdefault(tn, {})[n] = {k: r[k] for k in ("TT", "FF", "tol")}
+            Path(a.out_plan).write_text(json.dumps(w, indent=1, sort_keys=False) + "\n")
+            print(f"TAP_SPLIT TAPOFF {sum(len(v) for v in out['tap_offset'].values())} tap_offset rows written "
+                  f"({len(out['tap_offset'])} types)", flush=True)
         out["remap"] = dict(mode=a.remap_resets, failed=failed, receipt=rec)
         print(f"TAP_SPLIT REMAP {a.remap_resets}: {len(rows_by_type)} types remapped clean, {len(failed)} REMAP_FAIL", flush=True)
         rc = 3 if failed else 0

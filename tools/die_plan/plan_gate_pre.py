@@ -79,6 +79,11 @@ R8STALE-1122 (FLOW-OPS-R2, COORD; FAM-KV-IOPC-R4 pc_v3: +5 stations on 32 pi bun
   strict bind stops at R8_FAIL_FAST and writes OUT/r8_derived.json; install it, or r8_refresh.py, then bind).  Base copy not found:
   WARN with the same recipe.
 
+TAPOFF-1123 (TAP-GRID-R5, COORD class ruling; KV x10): a type with a plan clock.tap_offset.per_port_ps row (R-CLOCK-7)
+  times every tap port at its row; a port with no row silently takes the window [-W, 0].  Every tap of such a type
+  (schema.tap_grid, core clk_c* ports aside) must have a row: FAIL TAPOFF-MISSING per type with the missing ports and the fix
+  (tools/die_plan/tap_offset_fill.py fill: the nearest listed tap's row; tap_split writes it in the same step as an append).
+
 TAPNAME-1122 (FLOW-OPS-R2, COORD): for every clock.tap_mode "density" type with clock.added_taps, the density base is solved
   exactly as the bind does (taps._density_base) and the added names must be clk_t<base>, clk_t<base+1>, ... in order (cbf_q00
   clk_t101 for t114, coll_core clk_t130 for t126: EMIT "density added tap names/order must be ..." after 30+ min of bind).
@@ -1105,6 +1110,22 @@ def _tap_clock(ck):
     return json.dumps({k: v for k, v in (ck or {}).items() if k not in TAPNAME_KIT_ONLY_KEYS}, sort_keys=True)
 
 
+def check_tapoff(plan, max_list=6):
+    """FAIL TAPOFF-MISSING per type whose clock.tap_offset row misses a tap port (see TAPOFF-1123)."""
+    raw = json.loads(Path(plan).read_text())
+    if not (((raw.get("clock") or {}).get("tap_offset") or {}).get("per_port_ps")):
+        return []
+    try:
+        import tap_offset_fill as TF
+        import schema as S
+        miss = TF.missing(raw, P=S.Plan(raw, plan))
+    except Exception as e:                                  # an unloadable plan is SCHEMA-LOAD's finding, not this one
+        return [f"WARN TAPOFF-UNCHECKED {type(e).__name__}: {str(e)[:200]}"]
+    return [f"FAIL TAPOFF-MISSING {tn}: {len(ps)} tap port(s) without a clock.tap_offset.per_port_ps row ({', '.join(ps[:max_list])}"
+            f"{' ...' if len(ps) > max_list else ''}): they time at the window [-W, 0]; fix: python3 -I tools/die_plan/tap_offset_fill.py "
+            f"fill {plan} OUT.json --types {tn}" for tn, ps in miss.items()]
+
+
 def check_tapname(plan, base_fn=None, max_list=6, tree=None, base=None, solve_all=False):
     """FAIL TAPNAME / TAPNAME-RETAP lines (see TAPNAME-1122).  base_fn(P, raw, type) -> density base tap count; injectable.
     TAPNAME-UNCHECKED-1122 (COORD, QC-PLAN-R13 / QC-SLE-R5: run from a bare rt dir the density base inputs were not found, a WARN was
@@ -1513,6 +1534,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         _base = rb if rb else remap_base(plan, remap, baseline)[0]
     if "TAPNAME" not in skip:                            # TAPNAME-1122: density added tap names, seconds before the bind
         findings += check_tapname(plan, tree=tree, base=_base, solve_all=os.environ.get("OT_TAPNAME_ALL") == "1")
+    if "TAPOFF" not in skip:                             # TAPOFF-1123: appended taps with no tap_offset row, seconds
+        findings += check_tapoff(plan)
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
