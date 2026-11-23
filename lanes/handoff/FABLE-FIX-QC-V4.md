@@ -41,3 +41,9 @@ Brief: scratchpad fable_fix_brief.txt + family_brief.txt + rules.txt. V3 = R13 (
 - SLWSLE launched slw_st_a_v2__cl9f076a5c proof kit on l0b_bound (src_manifest off). My sealed kits (step 4) still to launch from l0b_bound: --goal route (memory: finish dies on resume).
 - Dead dirs ot-delete in flight (tmp/del.log): l0_bound l1_bound l2_bound l0x_bound l0y_bound; keep l0b_bound; l1b/l2b until bisect ends.
 - Adopted sweep rows: cbn_q00 x2, cbf_q01_s2, cbf_q11 (release = V3 c5rt apply, rev5), slw_su_c cl19bb38ef (needs cap2b = l1a).
+
+## 22:3x PST 11-22: V4 scope frozen for 06:00 cut; V5 started (COORD)
+- V4: l0b clean (handed). l1a / l1r (epyc8) in 2nd R8 pass; SLWSLE l0su too. Waiters bh6n2earp (l1a), bvxzy3d3z (l1r). After l1r ends: re-read ADV-PORT-PIN strap_r8pad (rerun plan_gate_pre rt 312978162669 on l1r, Wadv/launch) and hand the clean layer to R13.
+- NEW binds/ADV runs go on epyc10 or intel1 (epyc8 disk). epyc10 work dir = same path fable-fix-qc-v4 (W/launch = launch over v1r6 snapshot; chain.sh HN=epyc10).
+- V5a = L0 + su station re-seat (su_resite.py: Hanan-grid route round cores, same station counts, 0 cycles) on the 3 UNSIGNED flagged types sle_su_l1__cl5ea486db, slw_su_l1__cla2a78701, slw_su_l1__clcc9d0155 (15 rows). Plan pre 9ae286e77835, report plans/v5a/su_resite_report.json (all 9 types, 73 rows; the 6 signed su_l0/su_l1 types NOT carried). Bind chain v5a on epyc10 (v5a.log).
+- TODO V5: when v5a binds clean -> private-spec slw_su_l1__clcc9d0155 on v5a_bound: one OT_PROBE_THROUGH=1 kit + one sealed --goal route kit (epyc10/intel1). Sink-bin taps (8 ADV-TAP-LOAD types): TAP-GRID-R5 is closed; size density taps on netlist flop counts (sink_bins_from_place.py) - not started.
