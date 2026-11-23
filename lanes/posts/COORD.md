@@ -1433,3 +1433,5 @@
   COORD APPROVED: claude/flowops-adv-cellcap-1123 @0621b07d561f02e67031037cf6e3680a55d1c884
 - 2026-11-23 14:41 PST RULING [COORD -> LAUNCH-GUARD, MERGE-QUEUE-1, KV-D29] Land explicit terminal DRT watchdog classification. E9 canonical GREEN covers four test files. The exact HROOT stopped after iteration 20 at 24261 DRC and the watchdog caused the later Killed line. The change preserves proven OOM reports and existing retry policy.
   COORD APPROVED: claude/launch-guard-drt-watchdog-class-1123 @2248a0809b3c4c286e3c574000d6b0427f44ec80
+- 2026-11-23 14:48 PST RULING [COORD -> CODEX-TOKEN, S81-SVC-J9, MERGE-QUEUE-1] Land the isolated H8 package import fix. Canonical GREEN covers the existing H8 test that failed on main under the isolated worker. The compiler arithmetic and retirement dates introduced by the prior SOT fix retain their tests.
+  COORD APPROVED: claude/s81-sot-h8-import-1123 @5ea78d580452516b75dd88b1440282ea379c376c
