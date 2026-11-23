@@ -58,8 +58,8 @@ def test_fmx_image(tmp_path):
     flip = {"R0": "MX", "MX": "R0", "MY": "R180", "R180": "MY"}
     for (x, y, o), (gx, gy, go) in zip(SITES["sites"]["ot_sram_1r1w_32x128_m1"], got):
         assert gx == pytest.approx(x) and gy == pytest.approx(190.08 - y - MH, abs=1e-4) and go == flip[o]
-    # the S-face pair (R0 y 4.35) moves to the N edge, the W stack to y 61.134 / 92.94
-    assert sorted({round(b[2], 3) for b in boxes}) == [26.43, 61.134, 92.94, 164.94]
+    # the S-face pair (R0 y 4.35) moves to the N edge, the W stack to y 61.134 / 92.958 (KV-KITS-10 a95f7b47cb4: lower W pair y 76.35 -> 76.332)
+    assert sorted({round(b[2], 3) for b in boxes}) == [26.43, 61.134, 92.958, 164.94]
 
 
 def test_fmx_fails_closed_on_unimaged_island(tmp_path):

@@ -80,6 +80,12 @@ def apply(sites_path, kd):
     cfg_p = kd / "config.mk"
     cfg = cfg_p.read_text()
     if "MACRO_PLACEMENT_TCL" in cfg:
+        # MACRO-SITES-GEN-1122: gen_core_kit_kv.py now applies the site file at generation (before the kit receipt); a later manual run
+        # of the same file is a no-op that leaves config.mk and the receipt untouched
+        mp = kd / "macro_place.tcl"
+        if LINE in cfg and mp.is_file() and mp.read_text().startswith(TCL.split("%s")[0] + Path(sites_path).name + "\n"):
+            print(f"{kd.name}: {Path(sites_path).name} already applied at generation (no change)", file=sys.stderr)
+            return []
         raise SystemExit(f"{kd.name}: config.mk already sets MACRO_PLACEMENT_TCL")
     lefs = {p.stem: p for p in (kd / "macros").glob("*.lef")} if (kd / "macros").is_dir() else {}
     sites = doc.get("sites") or {}

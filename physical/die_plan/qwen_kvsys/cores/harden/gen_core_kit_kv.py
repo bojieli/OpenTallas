@@ -972,6 +972,37 @@ def static_refresh_kit(rtl, kd):
         source="PATH-KV-PC4 15:19 observation; COORD rules adoption"), indent=1) + "\n")
 
 
+MACRO_SITES_DIR = REPO / "physical/die_plan/qwen_kvsys/cores/macro_sites"
+
+
+def static_sites_file(rec, mod, core, sites_dir=None):
+    """MACRO-SITES-GEN-1122: the static memory-macro site file of core `core` (= <module>__<w>x<h>, the view tag excluded: the R0-frame
+    sites are imaged for mirrored views by macro_sites.apply), else None.  Recipe key macro_sites: a repo-relative path, or false = none.
+    Default: <sites_dir>/<module>.json when its "core" names this outline (a site file of another outline is never applied)."""
+    v = rec.get("macro_sites")
+    if v is False:
+        return None
+    if v:
+        p = Path(v) if Path(v).is_absolute() else REPO / v
+        if not p.is_file():
+            raise SystemExit(f"{core}: recipe macro_sites {v} not found")
+        return p
+    p = Path(sites_dir or MACRO_SITES_DIR) / f"{mod}.json"
+    if not p.is_file():
+        return None
+    named = str(json.load(open(p)).get("core") or "").split()
+    return p if named and named[0] == core else None
+
+
+def kv_macro_sites():
+    """cores/macro_sites/macro_sites.py (not harden/macro_sites.py, the hard-child static_placement_tcl module of the same name)"""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("kv_macro_sites", MACRO_SITES_DIR / "macro_sites.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
@@ -2071,6 +2102,16 @@ def main():
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    # MACRO-SITES-GEN-1122 (COORD 19:xx, FABLE-KV-DIE): the static FIRM memory-macro sites (cores/macro_sites/<module>.json) are a
+    # generation step, applied here before kit_hash / freeze.json / PROVENANCE.json, so the receipt covers the final config.mk.
+    if lefs and not hard_children:
+        sites = static_sites_file(rec, mod, f"{mod}__{w:g}x{h:g}")
+        if sites is not None:
+            boxes = kv_macro_sites().apply(sites, kd)
+            print(f"KV_MACRO_SITES {sites.name} -> {kd.name}/macro_place.tcl ({len(boxes)} macro(s) FIRM, MACRO_PLACEMENT_TCL; before the kit receipt)")
+        else:
+            print(f"KV_MACRO_SITES NONE {mod}: {len(macros)} memory macro(s) ({', '.join(macros)}), no static site file "
+                  f"{MACRO_SITES_DIR.relative_to(REPO)}/{mod}.json for {mod}__{w:g}x{h:g} (recipe key macro_sites names one)")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
     # FLOW-KITFAIL-1 10-29: carry the KV die's PROVEN reset contract into the kit for contract-listed modules (before
     # kit_hash), so kit LEC uses the proven reset window instead of the 4-edge default.  Unlisted modules: kit unchanged.
