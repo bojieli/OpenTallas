@@ -77,3 +77,8 @@ Written 2026-11-21 ~20:3x PST. Posts lanes/posts/OPUS-FIX-KV-PV-R7.md. Client lo
 - 2026-11-22 21:0x PST: RUNNING (do not relaunch while units active): kv3_pv_v3 spec private_specs/OPUS-FIX-KV-PV-R7/qwen_kvsys_kv3_pv_v3_1122201220 (sealed D28 tree, rt 8e110789fbee), unit runitem-kv3_pv_v3; kv3_pv_v3e spec qwen_kvsys_kv3_pv_v3e_1122205941 (fork epyc10 /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r7/trees/d28_pv_v3fix, plan 3bdee3baf68a = D28 + D29 SPINE + PVCELL, own strict rebind rebind1 clean), unit runitem-kv3_pv_v3e. Logs /srv/opentallas-scratch2/claude/opus-fix-kv-pv-r7/runs/ on intel2. Superseded specs: v3 _1122174410, v3e _1122174435 and _1122183253. Cleanup pending: epyc8 trees/d28_v3e_spine (guard-protected by the old spec), split28 trial dirs.
 
 - 2026-11-22 23:1x PST: RUNNING (do not relaunch while units active): kv3_pv_v3 spec qwen_kvsys_kv3_pv_v3_1122231601, kv3_pv_v3e spec qwen_kvsys_kv3_pv_v3e_1122231648, both from fork epyc10 trees/d28_pv_v3fix plan 354768183cef (D28 + SPINE + PVCELL + BANKCORE), rebind2 clean; units runitem-kv3_pv_v3/_v3e on intel2. ROWS-READY BANKCORE posted (8a1cd594). All earlier v3/v3e specs superseded.
+
+## 11-23 01:5x D29 comprehensive (cut 14:00, rows 13:00)
+- ROWS-READY 78c282b8: SPINEFAM 1da95b140499 + BANKFAM af97ec64b5c9 at epyc8 opus-fix-kv-pv-r7/d29_rows_fam/ (run LAST after row B). rc129 = BANKCORE (in D29 work b07a614e4d04); asked FIX-LEDGER to mark GATED.
+- rc128 SINKSPREAD A/B/C rows owned by SINKSPREAD-R2 (row B post-compose 12:30); do not duplicate.
+- pv_v8 GRT-0228 rerun: epyc9 opus-fix-kv-pv-r7/pv8/{fstart,hifo} (probe.sh MODE; own run.tcl), ot-run clients intel2 runs/pv8_*.otrun.log. RC probe routed clk (220157 pins) as a signal pre-CTS. Verdict due 12:00.
