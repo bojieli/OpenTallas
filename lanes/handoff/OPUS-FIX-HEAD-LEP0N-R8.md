@@ -26,6 +26,13 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 18:2x PST DIRECT PLACE (COORD 17:5x/18:1x)
+- Plan of record r18m 3dd49f406010 confirmed. NEAR-CLOSE row hub 73aedae5cae.
+- Queued kwp place units were restarted under the same names with ot-run --direct, using M/tmp/direct_place.py <unit> <spec_dir> go (intel2).
+  All three were admitted on epyc9 at 18:1x and are placing: ctl1 oth-ubuntu-3383454, hn3 -3384162, w13 -3384113.
+- Pre-approved: any later stage (CTS, route, sign-off, LEC) that waits more than 30 min for admission goes --direct, one copy, and gets posted.
+- Waiter bs5hkpupl fires on a new KW_STAGE_RC line or when a unit ends.
+
 ## UPDATE 11-22 17:3x PST RESUMED (after weekly limit)
 - Nothing landed while down. w13, hn3 and ctl1 are all live but stuck at PLACE ADMISSION. INPUT HOLD pins them to epyc9, where CPU_CHARGE >96, the lock is busy and 81 waiters are queued. Waiter b8mhjl87l is armed.
 - hn2 ended NOT SIGNED, DRC 3 Rect Only only (as ruled, no more spend).
