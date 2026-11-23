@@ -37,3 +37,8 @@ Local scripts copy: rtx-pro scratchpad j8/ (compose.py, chain.sh, val1.sh, patch
 - RUNNING: epyc7 chain3.sh -> gateB3.out: LATCHECK on run-2 out (gateB/latcheck_run2.*), then strict bind with toolfix/bind_native_glue.py (= 2ea3a30545d; only diff vs rt 58ebc21a5072 is that commit) EMIT_J=8, then LATCHECK (gateB/latcheck.*) + PRE. Markers FX3_LAT_run2_RC FX3_BIND_RC FX3_BIND_ERRORS FX3_LAT_VS_LEAF_GATE_E FX3_PRE_RC FX3_GATE_DONE. ETA ~21:30 PST.
 - Someone (R5/Codex) left epyc7 j8cut_assembly_preview/ in my dir (tap replan of c1x_C t8 + leaf t39 on their base); not mine, leave.
 - On FX3 green: post GREEN to R5 + report COORD (<250 words). Else post error list + cause.
+
+## Status 18:4x PST
+- gateB3 (chain3) CANCELLED by me 17:40 (8 min into emit): it had the glue lock file but not worker-wait c99220d870a (COORD 18:3x: restart on rt/current). Its LATCHECK on the run-2 out could not run ("no *_bound_top.sv": the run-2 bind stopped before the top emit), so run 2 gives no LAT evidence.
+- GATE C RUNNING: epyc7 chain4.sh RTS=e0c10098d792 (rt/current on epyc7; contains 9c133d90aec1 = glue lock d8bcb5f08e1 + worker wait), log gateC.out, dir gateC/. Same tree + plan e9645569a711 (inputs sha re-checked); tree tools = fork of rt e0c10098d792 (old: tools.rt58ebc, tools.j7); partial bind out moved to native_bind/out.gateB_run3_partial; fresh elab + strict bind --all-gaps (EMIT_J=8) + LATCHECK + G0 pair (same tools) + PRE. Markers FX4_ELAB_RC FX4_BIND_RC FX4_BIND_ERRORS FX4_BIND_ERROR_ROW_TYPES FX4_LAT FX4_G0_NEW_ERRORS FX4_PRE_RC FX4_GATE_DONE. ETA ~23:15 PST.
+- Then: GREEN or error list to S81-J6-ASSEMBLY-R5 + COORD report.
