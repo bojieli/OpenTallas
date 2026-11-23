@@ -79,3 +79,4 @@
   Unrenamed u_rsv.u_att tr paths (2 rows): hi pvso_entry t2, hi rs t6.
   The kit-RTL fix is on main (540c4f7cdb closure, 94845431e6 tr retype), but a relaunch on the current plan would fail the same way: the plan rows still need the J9 realign (drop land/pvq ghost rows until the land cut, rename tr paths). plan_gate_pre MACROGHOST lists the rows.
   Not in the sweep: hi rs t3 and lo rs t4 FAILED at 18:23; I am checking their class next.
+- 2026-11-22 18:58 PST Addendum to the sweep: also HELD svc_hi rs t3 and svc_lo rs t4. Same PLAN-SRC-MACRO land_capture class, attempt 4 at 18:23, same reason and eta. The running svc_hi rs t1, svc_lo rs t1 and svc_lo rs t5 kits are untouched, but they carry the same plan rows, so they will hit this class at place.
