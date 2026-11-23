@@ -14,3 +14,4 @@
 - 2026-11-22 04:22 PST AUTO-BIND ENABLED s81 after atomic apply 18a2688b741 (J7 slot)
 - 2026-11-22 07:56 PST AUTO-BIND s81 first-cycle: KIT-WAVE AUTO-BIND s81: STARTED on epyc10: no stamp (never built here, or the last run did not finish); dependency pre is stale; dependency elab is stale; dependency bind is stale; dependency bind is stale
 - 2026-11-22 08:41 PST AUTO-BIND s81 first-cycle: KIT-WAVE AUTO-BIND s81: FAILED on epyc10: ot-build: bind stage tree /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work (sealed 12af64d4f18d) plan /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d8j7_1117_work/physical/die_plan/s81/plan_h2_2249.json rt d4f31de6bc6e host civil-redfish | ot-build: pre   
+- 2026-11-22 17:38 PST AUTO-BIND ENABLED qwen_compute after atomic apply s29q103S4Q9N46R6V3 (V3 slot)
