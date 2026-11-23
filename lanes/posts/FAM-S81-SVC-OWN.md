@@ -8,3 +8,4 @@
 - 2026-11-22 17:46 PST DONE [FAM-S81-SVC-OWN] ot-push-main otpush-tolerant-swine-905575 on tolerant-swine: rc=0 after 15 s, ended 17:46:23, log none, cmd: ot-push-main 
 - 2026-11-22 17:47 PST DONE [FAM-S81-SVC-OWN] ot-run oth-ubuntu-872293-1795398316 on tolerant-swine: rc=0 after 151 s, ended 17:47:44, log none, cmd: --mem 32 --threads 2 --hosts intel2 --dir /srv/opentallas-scratch2/claude/fam-s81-svc-own --stage /srv/opentallas-scratch2/claude/opus-fix-s
 - 2026-11-22 17:53 PST STATE: fit tool on main (e589d7c0e6), v2b plan gate PASS, lo t3 proof private-spec running (epyc7, rt e589d7c0e609, goal route) for cell count. Per COORD: no more per-type witness code; waiting for R9 per-helper closure, then re-run lo t3 and relaunch 5 types.
+- 2026-11-22 18:23 PST DONE [FAM-S81-SVC-OWN] ot-push-main otpush-tolerant-swine-2242884 on tolerant-swine: rc=0 after 15 s, ended 18:23:19, log none, cmd: ot-push-main 
