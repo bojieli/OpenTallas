@@ -24,3 +24,8 @@ Viewed exact floorplan and density images under each `review_1502` directory.
 - Intel1 `runs/qnh_grt_1450` SHA 74b995b3f34e has 624 pins, 0.493 fill, and 23.04% aggregate GRT demand with zero overflow. Some mid/upper local density is high but shows breaks and open edge space. PASS-COND for isolated detailed route and fresh corner checking.
 - Intel1 `runs/kvr_grt_1450` SHA 19895162232f has 261 pins, 0.530 fill, and 21.33% aggregate GRT demand with zero overflow. The northwest hot area is local and the south and southeast retain routing room. PASS-COND for isolated detailed route and fresh corner checking.
 - E9 `cts_codex/mm/kvtch_place_1437` SHA 5b981ab8f82f has 7,127 pins, 0.386 fill and 260 PG records. The approximate 702×25.92 µm strip preserves N/S separation and clear edge approaches, continuous PG, and a centre clock entry. PASS-COND for isolated global-route capacity measurement. Setup repair left endpoints to diagnose before adopting the master.
+
+## KVQ CTS and horizontal KVT GRT 15:27 PST
+
+- Intel1 `runs/kvq_mm_1514/review_1518` exact CTS SHA 74a42f927cb1, 2 SRAMs, 2,310 pins and fill 0.562. Center channel and outer sides remain open, with two concentrated bottom clusters and continuous PDN. The native FF repair scoped to internal paths is +10.01 ps. Boundary FF remains −240.56 ps, visible and held. PASS-COND for isolated GRT to measure routing capacity and the boundary independently.
+- E9 `reshape_r2/kvtch_grt_1510/review_1526` exact GRT SHA 0da87272a352, 7,127 pins, fill 0.386, with 18.78% aggregate demand and zero overflow. Pins remain in N/S bands, the spread cell strip is bounded on both lateral sides, and PDN access crosses the length. PASS-COND for isolated detailed route and extract, with TT/FF closure and LEC still owed.
