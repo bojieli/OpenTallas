@@ -413,3 +413,5 @@
   - QC st_a (FAM-QC-SLWSLE-R1)
   (4) No flow class fix. RSZ-0060 is a "first [ERROR]" mislabel. Watch and classifier scripts should strip caught RSZ-0060 lines with kit_resume.HOLD_GUARD_CAP_RE, as kit_resume already does. FLOW-CLKGRT-R2: cf_scan_host.sh greps the first [ERROR].
   (5) Family owners: add setup/overflow rows to the current event, not RSZ rows.
+- 2026-11-23 03:38 PST RT SYNC [FLOW-OPS-R2 -> COORD] All 7 hosts now run rt/current 4737f2eea2fd, which contains 20e83c504e tap_reset_split_launch: hub (intel2), intel1, epyc2, epyc7, epyc8, epyc9 and epyc10. epyc10 flipped at 03:37 PST, after its rsync from ot-tools-sync catchup finished.
+  Main tip 139380c2ba3 is 3 commits ahead and is being synced by the normal follow timer. qc coll pkg15 can bind now.
