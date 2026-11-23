@@ -1,0 +1,14 @@
+# FABLE-UNC-QC handoff (Fable 5.2; uncovered QC items for V4; started 11-23 01:48 PST)
+Brief: scratchpad fable_uncovered_brief.txt + rules.txt. QC V4 cut 14:00, rows GATED by 13:00. Plan lane OPUS-FIX-QC-V4-R2: final compose c4 starts 08:00, row JSON due 07:30, base = epyc8 fable-fix-qc-v4/plans/c2b/plan.json (c1/c2b/c3 chains on epyc8; chain.sh = PGP + latency + strict bind + LATCHECK, 4-5 h).
+Clock note: use `date` on intel2 for PST; do not estimate elapsed time.
+Lane dirs: /srv/opentallas-scratch2/claude/FABLE-UNC-QC/{tools,out,tmp} on epyc8 (plan work), epyc2 (V2 su_l1 E kit what-if), epyc7, epyc10. Local scripts: scratchpad unc_*.py/tcl/sh.
+
+## Items
+- rc96 st_a b_tw: cause = b_tw_data_i_q[28:0] (stn_cfg: kcm1 8, sbase 9, nwords 8, wsrc 1, mode 2, v 1) from u_bin_b_tw_data_i (535,368), R8 pad 0, direct to cfg_*_p pins (E edge) of u_r0..u_r3 (r3 ~965 um). bind_intra_stations (asbuilt land_intra_stations) takes leaf.port sources only, not an in-bus bin.
+  Row STA-BTW-1: R8 extra members (asbuilt land_r8_extra, authoritative per id; fable-fix-qc-v4/in/extra_final_1.json is the small extra table) with pad 2 on the 24 cfg members x 12 st_a partitions (ids like dvs_E0.u_core.u_sub.u_r0.cfg_kcm1_p[0:7]<-dvs_E0.u_core.u_sub.u_ctl.stn_cfg@0; bound 10 E / 9 W). st_a already has land_pad_tail_split (min_spread 400, hop 380): K = min(pad, ceil((S/2)/380)) = 2 -> per-core copies u_pd2_b_tw_data_i_<j>_<core>_2 (.r[0], .q), no trunk. Optional plan relay_sites for those names. Schedule note: cfg lands +2 (cfg_schedule_fault in qfd_dv_s8_station_tail1 forbids cfg overlapping data; compiler reads landed).
+- rc103 su_l1 hold: cause = stale clock.tap_offset.per_port_ps (measured 11-16). Unlisted ports get [-W,0], W = type span (196.1 on sle_su_l1 cl5ea486db). Evidence + census posted 02:5x (hub 16d608d). Row QC-DIE-TAPOFF-1: rows for every port (0 +- table tol). Tools: epyc8 FABLE-UNC-QC/tools/tapoff_census.py (run in fable-fix-qc-v4/W/launch via ot-run --priority plan --plan-job g0), epyc2 tools/whatif.{sh,tcl}.
+- rc104 su_l1 E channel: V2 GRT read: W type clcc9d0155 ONE cluster (475-525,200-300) H 2884-3197 of 3350 = x_su_c_i lane4+5 chain (696 bits x 6 equalising stations at 12.8 um pitch + 6-deep lpad + bin = ~14.7k flops in 70x180 um W of cl_x_su_c_i at 501-579). E type cl5ea486db (soft landings) GRT overflow 0, DRC 0. cws0/rsf feed-throughs are not the overflow. rsn ft is M7-only over the lane cores (precedent). Row idea: landings flush E (VISQC-SU-1) + spread the lane4/5 chain along the lane E face. Not built.
+- rc109 coll: pkg13 (4b7a1dab1dac) band [17.28,25.92,43.2,218.88] is flush to the W pin window y 6.3-134.7 (hop 396 -> 18.9). The 598 u_bin_shr_p_rx_i relay sites are unchanged (x 74-363, med 276): ring -> bin hop now ~250-346 um. Needs the pkit_core6 place read or bin re-site to x 86-101 (free strip between rec_rx_s1_i band and u_rx.u_mem).
+
+## Posts
+01:52 TAKING; 02:16 REPORT 1; 02:5x FINDING tap_offset.
