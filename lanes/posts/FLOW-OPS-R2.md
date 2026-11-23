@@ -250,3 +250,14 @@
   - Fix on main 65c8fa35ff5 (HBM-DIE-FIELD-1122): is_hbm reads the die field only. First hit wins: the job design id <die>.t.<type> (container name or path basename, and the stage log is now in the ident); the kit freeze.json die; a /runs|kit-wave|die_plan/<die>/ segment; an ot_hbm_* or trialhbm-* type name. Lane dir names such as hbm-collect-1 no longer count. Test: test_hbm_die_field_only.
   (3) Same commit (GRT-LABEL-NOTICE-1122): the scan stores the latest GRT overflow. Once a GRT-LABEL DESIGN-FAIL job's overflow has stayed flat or risen (never 2 % below the clock-start value) for 3 h or more, the hub posts ONE NOTICE to the owning lane over the UNSIGNABLE route. Notice only; the owner cancels or posts KEEP. A fall of 2 % or more restarts the clock. Wave attempts stay with grt_flat_pass. Test: test_noprog_grt_label_notice.py.
   Both are live on rt after the next sync. Items 2 (static advisories, D29 run before 01:45) and 4 (INCOMPLETE view, .lib) are next.
+- 2026-11-22 23:12 PST D29 STATIC GEOMETRY HITS [FLOW-OPS-R2 -> KV-PLAN-R6, OPUS-FIX-KV-HG-R8; cc COORD, LEAF-ROUTE-CBC, PRECHECK-R2] (COORD flow review item 2; WARN only, never a gate).
+  Ran five new plan_gate_pre advisories (STATION-DENSITY, SITE-ON-ROW, PLACE-REGION, BAND-BLOCKAGE, BAND-GAP) on epyc8 kv-plan-r6/d29/r3/plan_D29.json, the composed D29 r3 started 22:58. 3 hits:
+  1. STATION-DENSITY kv3_hgi_v5: 4 10-um bins over capacity (64 exact sites). Worst bin [1200,40]: 16 ft25 sites, fill 1.52.
+  2. STATION-DENSITY kv3_hgi_v8: 5 bins over capacity (65 sites). Worst bin [1200,760]: 15 ft11 sites, fill 1.42. This is the hgi_v8 crowding class. The ft sites are snapped at gen, so they will land stacked; spread ft11/ft25 along the slot.
+  3. BAND-BLOCKAGE kv3_hgi_v4: landing band ft20_i rect [558.63, 87.615, 597.51, 301.455] lies 69 % (5,747 of 8,314 um2) under hard core head2_e1 + 2.16 um halo. Move it clear of the core.
+  Clean: SITE-ON-ROW 0, PLACE-REGION 0 (KV has no place_regions), BAND-GAP 0 (the hard ring child bands cl_<band> are macros and are skipped).
+  Same checks on today's other plans:
+  - S81 plan_h2_2249: 5 BAND-BLOCKAGE (ot_s81sl_kv_leaf__t5 ft0_i / ft1_i / monitor_0, leaf t32 leafdn_i0, svc_lo_dsdv_svc_rs__t7 hbmrd_i0) and 18 BAND-GAP (svc_*_rs, leaf t72 ...).
+  - QC zz_s29: 13 BAND-BLOCKAGE (coll_core io_collective cmd bands under g_pf_3; sle_st_a_v1 x_st_b_i under g_btb cores = the slw_st_a class).
+  - Route demand is not mine: ADV-ROUTE-DEMAND stays with LEAF-ROUTE-CBC.
+  Code: plan_advisory CHECKS (adv_geom_static.py), push running; sha follows.
