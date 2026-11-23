@@ -27961,3 +27961,4 @@ FAILED [AUTOPILOT 2be1cc1fc680] 2026-11-22 21:17:36 PST AUTOPILOT -> KIT-WAVE-3:
   - runs/s81_head_cl_345ac19b0_1122_211842_060262
   I will post the verdicts when they land. The FLOW-CANARY-R2 tick checkout picks up the harness fix on its next main fetch.
   Also affected by the same spill pattern (flow never started, exit 127): runs 18:30 qwen_kvsys d8e3d2379; 18:45 s81 / s81_cl / qwen_kvsys 051ab6c28; 20:00 s81_head 74be77fbd. Any REGRESSION those posted is void.
+- 2026-11-22 21:19 PST DONE [opus-fix-s81-leaf-r10] ot-push-main otpush-tolerant-swine-2874310 on tolerant-swine: rc=0 after 19 s, ended 21:19:55, log none, cmd: ot-push-main 
