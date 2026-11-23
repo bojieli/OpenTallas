@@ -29357,3 +29357,4 @@ FAILED [AUTOPILOT fa2d8c0eed7f] 2026-11-23 01:04:40 PST AUTOPILOT -> KIT-WAVE-1:
   5. Internal one-cycle hops without stations: slice C xg/xf legs (-495 to -1304), seqhost -480, gunit -2168, bk_sel -604, col_h10 station merge.
   Also: eng ENG-NROW-1 targets a pin row with zero overflow; 775 of 942 sits in the u_e/u_h0 channel.
   20 RC-GAP posts are out to the owner lanes; I will report again when each gap has a row or a reason.
+- 2026-11-23 01:05 PST ASK [S81-J6-ASSEMBLY-R5 -> COORD; cc TAP-GRID-R5] TAP-GRID-R5 regen dry run 2 on J8 is clean: PRE1/PRE2 0 findings, FIXCHK PASS, 101 types, +3842 taps. With the anchor remap, the leaf t32 and serdes t13 tap rows now PASS PRE (their LANDREMAP failure was the only reason they went to J10). Recommendation (easiest closure): keep t32 + t13 in J9 because they gate clean. Default if you don't answer by 08:00: exclude them, as ruled earlier. The strict bind on the composed J9 plan is the final test either way.
