@@ -64,3 +64,15 @@ R9/t2s: census done; type_split patches in R9/clone (ts_patch.py, ts_patch2.py b
 - form (b) S81-VPW-SPR: tool L/tools/s81_vpw_spr_overlay.py (scratch copy, not on main yet) = per (bank, slice) 6 one-hot data selects pre-decoded from the raw pins and registered on the XR edge (same edge as sv_q/sa_q), wdo_q D = one AND-OR level; 0 cycles; opt-in define OT_S81SL_VP_SPR; apply after XRB. iverilog lock-step bench SPR0 vs SPR1 PASS (19,996 cycles, 0 mismatches), select mutant FAIL (6,068); XRB1+SPR1 vs plain PASS.
 - form (b) is folded into the queued XRB bind (L/t31fix/r10_t31xrb.sh, not started yet, epyc8 memory wait): after XRB it applies SPR and t14 verilog_defines += OT_S81SL_VP_SPR. One bind serves t31/t1 (XRB) and t14 (SPR); t14 spec after R10X_DONE.
 - t31 plain-fix kit (spec4): kit_topology 0 (soft-CS restamp works), now src_manifest -> place.
+
+## 11-22 22:5x COORD 22:4x (relaunch storm) + 21:1x (t15/t24/kv t3)
+- HELD 10 leaf rows (kit_wave fb8c23cb04 + 2ef3be216d), "await J9 leaf rows", owner me, eta 11-24 12:00; running kits untouched:
+  t14, t74 -> J9-LEAF-VPW-CONE; t37, t8, t16 -> J9-LEAF-SRE-SRC; t15 -> J9-LEAF-FT-DETOUR; t24__cl2456157b -> J9-LEAF-REACH;
+  t53__cl958451dd -> J9 leaf sweep (PLACE-SETUP-STOP, class read pending); t21, t36 -> J9-LEAF-GRTCONG (GRT noconverge twice since 08:00).
+- Probe (OT_PROBE_THROUGH=1 needs rt >= 0a84fc98a0ae; my forks' binds use da102e/d4aeaa = TOOLSKEW): chain intel2 L/probe/probe_chain.sh:
+  intel1 fork L/trees/s81_probe_j7 -> fresh bind rt 0a84fc98a0ae -> private --goal route t15 probe kit (intel1). Log L/probe/chain.log.
+- t15 ft-detour (3_detailed_place.rpt): ft0_i[16] input delay 480 ps (ft budget, vs 98.6 other inputs) + 450 latency = arrival 959 ps vs required 1060: ~100 ps left for pin -> u_ft_ft0_o_0 reg.
+  The path is pin -> 7 wire buffers (~0.9 mm) -> port buffer input465 -> 7 buffers back -> reg 5 um from the pin, so the PORT BUFFER sits ~0.9 mm off the pin. Stage sites exist for ft stages 1-3 (y 906/595/286) but not for the port buffer.
+  Row J9-LEAF-FT-DETOUR: site the port buffer of each ft*_i bit with its stage-0 reg (pin-slot site, FIRM), or skip buffer_ports on ft inputs. A DB trace (L/ft/ft_trace.tcl) is queued on epyc7 (load cap). Sweep: only t15 has the ft-port signature in every post-place marker since 11-19.
+- t24 (436 um span, line[38] -> hw_d_q[78]) and kv_leaf t3 (610 um, vn rb_v_c -> u_x.q[21]): reach above 405 -> J9-LEAF-REACH (station on the hop, CBC). kv_leaf t4 is in the same sweep.
+- SELREP bench: SR1 x3, dense x2 and SR0 x2 all PASS; off/mutant cases still running. SELREP bind on epyc7 is queued (fork L/trees/s81_sre_selrep).
