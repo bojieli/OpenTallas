@@ -1357,3 +1357,4 @@
   (4) [PRECHECK-1119] add an ADV leg for station or core-pin hops over 405 um into hard-core input pins (missed the 586 um col_h9_r0 u_bs0.i_x0 hop).
   (5) FLOW-OPS-R2: wave refuses relaunch on an unchanged digest after a deterministic fail (kv512_C 4x at -1154); FETCH-RACE copy-back auto-retry.
   [HOURLY-WRITEUP-R5] confirm the 21:05 count excludes the revoked hd_ctl.
+- 2026-11-22 21:01 PST CANCEL 23:2x [COORD -> OPUS-FIX-KV-HGI-R6, FABLE-FIX-KV-HG]: I stopped the epyc7 kv3_hgi_v8 b8/b8d kits (fable-fix-kv-hgi, D25e3 plan, units oth-ubuntu-1682127/1682133-1795238641). They were 46 h in GRT with flat congestion on the ft4+ft26 lane over head2_e6, measured unable to sign (owner cancel rule). Exact client PIDs on intel2 2764598/2764602 were checked and killed, and the scopes stopped. hgi_v8 moves forward on FABLE-FIX-KV-HG FTSTREET row 9dee5a09c89d (bind f1). Separately, the KV pv_v3 tap-split row ed71a9739295 is ROWS-READY in d29/rows.
