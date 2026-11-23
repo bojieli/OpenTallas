@@ -34,7 +34,7 @@ def test_queue_pending_and_retry(tmp_path):
 def test_cut_and_publish_commands():
     j = dict(node='s81.t.a', host='epyc9', odb='/srv/x/a b/6_final.odb', size=2_000_000_000, label='epyc9:/srv/x/a b/6_final.odb')
     run, pub, w, inc = AE.view_pack_cmds(j)
-    assert run[:4] == ['ot-run', '--hosts', 'epyc9', '--dir'] and run[run.index('--mem') + 1] == '48'
+    assert os.path.basename(run[0]) == 'ot-run' and run[1:4] == ['--hosts', 'epyc9', '--dir'] and run[run.index('--mem') + 1] == '48'
     assert run[-3:-1] == ['bash', '-c'] and 'design_export.py cut --node s81.t.a' in run[-1] and "'/srv/x/a b/6_final.odb'" in run[-1]
     assert '--drop-raw' in run[-1] and '--no-timing' in run[-1]
     assert 'design_export.py publish --node s81.t.a' in pub and '$LV_STORE' in pub and inc.endswith('/incoming/s81.t.a')
@@ -61,3 +61,12 @@ def test_worker_caps_cuts_per_host(tmp_path):
 
 def test_detached_worker_off_under_pytest():
     assert AE.start_view_packs() is None
+
+
+def test_hub_environment_failure_is_not_a_try(tmp_path):
+    st = str(tmp_path)
+    AE.queue_view_packs([unit('g', sha='9' * 64)], st)
+    with open(os.path.join(st, 'viewpack_done.jsonl'), 'a') as f:
+        for _ in range(3):
+            f.write(json.dumps(dict(node='s81.t.g', sha='9' * 64, ok=False, msg="FileNotFoundError: [Errno 2] No such file or directory: 'ot-run'")) + '\n')
+    assert [j['node'] for j in AE.view_pack_pending(st)] == ['s81.t.g']

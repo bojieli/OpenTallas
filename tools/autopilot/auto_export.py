@@ -35,7 +35,7 @@ Never modifies or deletes an existing archive file: new units only, <unit>.parti
   auto_export.py rtx-pull [--hub intel2]                                        (rtx-pro)
   auto_export.py view-packs                                                     (hub; started by finish(), one at a time)
 """
-import argparse, collections, fcntl, hashlib, json, os, re, shlex, socket, subprocess, sys, time
+import argparse, collections, fcntl, hashlib, json, os, re, shlex, shutil, socket, subprocess, sys, time
 
 HOME = os.path.expanduser('~')
 STATE = os.environ.get('OT_AUTO_EXPORT_STATE', os.path.join(HOME, '.local/state/ot-auto-export'))
@@ -567,6 +567,9 @@ VP_STORE_HOST = os.environ.get('OT_VIEWPACK_STORE_HOST', 'epyc8')
 VP_STORE_ENV = os.environ.get('OT_VIEWPACK_STORE_ENV', '/srv/opentallas-scratch2/claude/explorer-2-work/explorer2.env')   # LV_STORE, DESIGN_INDEX
 VP_STORE_PY = os.environ.get('OT_VIEWPACK_STORE_PY', '/srv/opentallas-scratch2/claude/explorer-2-work/rt/venv/bin/python3')
 VIEWPACK_PER_HOST = 2
+# the hub timer runs with the systemd user PATH (no ~/.local/bin): name ot-run by its path (11-23: every cut failed 'No such file: ot-run')
+OT_RUN = os.environ.get('OT_VIEWPACK_OT_RUN') or shutil.which('ot-run') or os.path.join(HOME, '.local/bin/ot-run')
+VP_ENV_FAIL = ("No such file or directory: 'ot-run'",)   # a hub environment failure, not the job's: never counted as a try
 VP_VARIANT = re.compile(r"__(a\d+_\d{4}|legalrows_\d+)$")
 
 
@@ -601,7 +604,7 @@ def view_pack_pending(state=None):
             k = (d.get('node'), d.get('sha') or d.get('label'))
             if d.get('ok'):
                 done.add(k)
-            else:
+            elif not any(x in str(d.get('msg') or '') for x in VP_ENV_FAIL):
                 tries[k] += 1
     q, qp = {}, os.path.join(state, 'viewpack_queue.jsonl')
     if os.path.isfile(qp):
@@ -628,7 +631,7 @@ def view_pack_cmds(j):
     pub = ('set -a; . {env}; set +a; cd {code} && nice -n 10 {py} -I design_export.py publish --node {n} --pack {inc}/{n}.lvp --index "$DESIGN_INDEX" '
            '--store "$LV_STORE" 2>&1 | tail -1; for f in {inc}/{n}.lvp {inc}/verify.json {inc}/cut.json; do rm -f "$f"; done').format(
         env=VP_STORE_ENV, code=VP_CODE, py=VP_STORE_PY, n=shlex.quote(j['node']), inc=shlex.quote(inc))
-    return (['ot-run', '--hosts', j['host'], '--dir', VP_ROOT, '--mem', str(mem), '--threads', '4', '--', 'bash', '-c', cut], pub, w, inc)
+    return ([OT_RUN, '--hosts', j['host'], '--dir', VP_ROOT, '--mem', str(mem), '--threads', '4', '--', 'bash', '-c', cut], pub, w, inc)
 
 
 def view_pack_one(j, state=None):
