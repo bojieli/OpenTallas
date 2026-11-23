@@ -10255,6 +10255,21 @@ def env_effect_refusal(sp, run, remote, K):
     return EE.describe(EE.mismatches(env, str(txt).split(ENV_EFFECT_MARK, 1)[1], plan_fields=sp.get("plan_fields")))
 
 
+def placed_geom_check(sp, odb, outline):
+    """Prepare an exact placed ODB render. Strict new wave specs defer the routing probe."""
+    item = sp["item"]
+    deferred = sp.get("geom_grt_deferred") is True
+    rules = ["--all-kits"]
+    if re.fullmatch(r"[\d.]+x[\d.]+", outline):
+        rules.extend(("--outline", outline))
+    rules.extend(("--title", f"{item} KIT-WAVE {sp['event']} 3_place"))
+    if deferred:
+        rules.append("--grt-deferred")
+    return {"id": f"kw-{item}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock",
+            "mem_gb": sp["geom_mem_gb"], "grt": not deferred, "grt_wall_s": int(sp.get("geom_grt_wall_s", 1800)),
+            "rules_args": rules}
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
@@ -10516,9 +10531,7 @@ def run_item(spec_path):
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
-        chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
-               "grt": True, "grt_wall_s": int(sp.get("geom_grt_wall_s", 1800)), "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
-               + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
+        chk = placed_geom_check(sp, odb, ol)
         gd = f"{W}/geom"
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
@@ -14879,6 +14892,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: {live} still owns {spec_path}")
             return None
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
+    if strict_wave_route_review(die):
+        sp["geom_grt_deferred"] = True
     if r.get("_resign"):
         sp["resign"] = True          # FLOW-NOADV-R3: a superseded-signed re-sign pick (PLACE-SETUP-STOP exempt); not an input of any hash
     if not arm:

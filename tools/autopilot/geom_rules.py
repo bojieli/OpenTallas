@@ -1603,7 +1603,8 @@ def judge(m, template=None, outline=None, all_kits=False):
     else:
         add("clock_entry", "NA", None, "clock root port", "METHODOLOGY 12.8a", "no clock entry found")
     if m.get("grt_overflow") is None:
-        add("grt", "NA", None, "0 overflow", "OWNER 10-26 GRT0 at >= 50 iterations", m.get("grt_note", ""))
+        status = "INFO" if m.get("grt_deferred") else "NA"
+        add("grt", status, None, "0 overflow", "OWNER 10-26 GRT0 at >= 50 iterations", m.get("grt_note", ""))
     else:
         lim("grt", "grt_overflow", 0, "OWNER 10-26 GRT0 at >= 50 iterations (hbm-overflow-core-ceiling-1026)",
             detail=f"{m.get('grt_iterations')} it, {m.get('grt_layers')}")
@@ -1778,7 +1779,9 @@ def main(argv=None):
     ap.add_argument("--title", default="")
     ap.add_argument("--odb", default="", help="checkpoint file name (stage: 3_place / 4_cts)")
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
-    ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
+    grt = ap.add_mutually_exclusive_group()
+    grt.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
+    grt.add_argument("--grt-deferred", action="store_true", help="report that native GRT follows exact placement review")
     ap.add_argument("--ft-interface", help="typed die-owned clock/reset interface model")
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
     ap.add_argument("--land-slots", help="kit land_slots.json: declared landing ring (with --face-guard PASS) = registered capture")
@@ -1794,6 +1797,8 @@ def main(argv=None):
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
                 a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed, a.spare_out,
                 tap_kit=dict(tap_cap=a.tap_max_sinks, tap_pitch_um=a.tap_pitch_um, tap_spill_um=a.tap_spill_um, tap_skip_macro=a.tap_skip_macro))
+    if a.grt_deferred:
+        m.update(grt_deferred=True, grt_note="GRT deferred until the exact placement image is reviewed")
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)
