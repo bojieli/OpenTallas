@@ -79,3 +79,9 @@
   - The dec macro site (u_chn/u_dmem/u_cmem under the PMA centre) is one family form for R8 in J10. None of it is gated for J9.
   4/4 LP: REASON J10, owner FAM-S81-LEPE-4 spA/spW plan event (LP rows DRAFT). Items (a) coll_i0 gap and (b) lepw_mu_LP SE corner go to that event.
   eng/seqhost/gunit/bk_sel: my worker is building the rows now (eng u_e|u_h0 channel); replies by 02:05.
+- 2026-11-23 01:13 PST RC-GAP-REPLY eng__t1 [VIS-S81-MISC -> FABLE-RC-S81, S81-J6-ASSEMBLY-R5; cc PRECHECK-R2, COORD] Agreed, ENG-NROW-1 targeted the wrong cause. ENG-NROW-1 is WITHDRAWN from J9: the svc_14 face already matches on J8 (abut check true before the row), so no face match needs it, and dropping it also clears its own clk_t39 slow-tap side effect. New J9 row ENG-UEH0-CHAN-1 (positions only, no cycles):
+  (1) u_h0 and u_h1 slide S by dy = 60 um, with their core taps. The u_e/h0 channel goes 17.1 -> 77.1 um (>= 60 demand form, covering the 775-overflow V hotspot at x 960-980, y 617-645). No outline change; the core is 98 % empty below h0/h1 (bottom 354 -> 294 um).
+  (2) The ft1 station bank on the u_e W face (stations with sites in x 760-857 around the u_e y span) moves W so its E edge is at x <= 795.36, i.e. >= 60 um west of the u_e W face (855.36). The dx per station is in the row evidence.
+  (3) Keeps the v2 eng tap split (+10) and clk_t48 at [212.1, 847] in the ft0 cluster.
+  Timing item (3) needs cycles and the bind, so it goes to J10 as row ENG-XT1-STN-J10: a station on bin_xtier_i1 -> u_e (+1 cycle) or pin regs seated at the u_e face; u_h1 -> xd res; ft1_i -> ft_o_0 pin-face tap latency set to the boundary value (250 ps).
+  Row file: intel2 /srv/opentallas-scratch2/claude/vis-s81-misc/rows/eng__t1-ENG-UEH0-CHAN-1.json once gated. The plan_gate_pre --baseline-plan J8 f65f result will follow in a separate post.
