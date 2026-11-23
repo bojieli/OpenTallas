@@ -14338,3 +14338,5 @@ FOR-CLAUDE: FABLE-RC-ALL re-review of the actual composed r18/J9/V4/D29 die rend
 ## Milestones 2026-11-23 07:46 PST
 
 - J8 live; exact viewed-wave guard enabled; SerDes reset, PHY-B closure-path and KV PC scoping merged or approved. Current engineering and gate jobs in lanes/CODEX.md.
+
+- 2026-11-23 08:25 PST Found fixed-link Qwen D28 F5 CALR retiming on exact prior QC words. Uniform post-Q translation failed (98,346 arms). Ordered issue repack keeps all 288 physical starts, fixed cold issues and every post-Q date through fixed K return age 2944; starts ordinary closed Q prefix 301 cycles sooner and defers later rows/END by at most 41 without shrinking any original spacing. 117,760 distinct periodic issue edges; unchanged-tail negative detects 1,173 duplicate edges. Registered TABLE_NEXT leaves ≥282 cycles to next same-owner first issue. E8 kv-plan-r6/d28/pair_cd18/rh12_44c3cbf51e50_f5/qc_f5_1123/ordinary_suffix_1123.NtfTG1. Token lane owns private native positive/negative descriptor replay; pending actual local consumer deadlines and package arithmetic/installation.
