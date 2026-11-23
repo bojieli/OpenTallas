@@ -114,3 +114,21 @@ def test_passive_capture_reuses_only_the_existing_native_graph():
     assert 'set P $::ot_ps_retained_pairs' in retained
     assert retained.index('OT_CHILD_CLOCK_WITNESS tt COMPLETE') < retained.index('set so_regs {}')
     assert 'CHILD_CLOCK_WITNESS_FAILED' in retained
+
+
+def test_nomcap_install_reuses_read_only_payload_and_repairs_partial_copy(tmp_path):
+    kit = tmp_path / "kit"
+    signoff.copy_signoff_bundle(kit)
+    libs = sorted((kit / "nomcap_libs").glob("*.lib.gz"))
+    kept, missing, stale = libs[:3]
+    kept.chmod(0o444)
+    original_inode = kept.stat().st_ino
+    missing.unlink()
+    stale.write_bytes(b"stale")
+    stale.chmod(0o444)
+
+    signoff.copy_signoff_bundle(kit)
+
+    assert kept.stat().st_ino == original_inode
+    for lib in (missing, stale):
+        assert lib.read_bytes() == (Path(signoff.__file__).parent / "nomcap_libs" / lib.name).read_bytes()
