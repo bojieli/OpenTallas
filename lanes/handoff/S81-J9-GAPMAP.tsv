@@ -1,0 +1,100 @@
+# S81-J9-ASSEMBLY-R6 11-23 06:1x: 75 HOTSPOT-GAPS(NONE) + 23 FAILED-NO-RELAUNCH S81 items (from FOLLOWUP-S81.tsv 06:03). Owner lane fills j9_row (row id + plan/ops sha12) or REASONED:<reason sent to FABLE-RC-ALL>. Hotspots by 10:00, relaunch decisions by 15:30. Edit only your own rows (coord-commit.sh).
+kind	item	family	owner_lane	deadline	j9_row_or_REASONED
+RELAUNCH	bk_sel__t2	bk_sel	S81-MISC-SERDES-J9	15:30	OPEN
+RELAUNCH	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	col_h10_r0_p1	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h10_r1__t1__cl95b37463__pv69c7e9a6	col_h10_r1	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h9_r0_p2__t1__cl0045af7b__pva2793873	col_h9_r0_p2	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	col_h9_r0_p4	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h9_r0_p5__t1__pv5c8f2166	col_h9_r0_p5	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h9_r0_p5__t1__pvbca8d846	col_h9_r0_p5	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h9_r0_p5__t1__pvc1b82625	col_h9_r0_p5	S81-COL-J9	15:30	OPEN
+RELAUNCH	col_h9_r1__t1__cl49d7a23e__pv2f96c04f	col_h9_r1	S81-COL-J9	15:30	OPEN
+RELAUNCH	dsdv_slice_c1x_C__t7	dsdv_slice_c1x_C	S81-SLICE-J9	15:30	OPEN
+RELAUNCH	dsdv_slice_c1x_C__t8	dsdv_slice_c1x_C	S81-SLICE-J9	15:30	OPEN
+RELAUNCH	dsdv_slice_lepe_nh_mus_C__t1	dsdv_slice_lepe_nh_mus_C	S81-SLICE-J9	15:30	OPEN
+RELAUNCH	gunit__t1	gunit	S81-MISC-SERDES-J9	15:30	OPEN
+RELAUNCH	s81sl_kv_leaf__t3	s81sl_kv_leaf	S81-KVLEAF-T2-ARCH-R2	15:30	OPEN
+RELAUNCH	s81sl_leaf__t29	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t32	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t33	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t36	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t44__clf6cf8492	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t45	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t7	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	s81sl_leaf__t71	s81sl_leaf	S81-LEAF-J9	15:30	OPEN
+RELAUNCH	seqhost__t1	seqhost	S81-MISC-SERDES-J9	15:30	OPEN
+HOTSPOT	bk_sel LOGIC-DEPTH x1 (max 5p worst -388.05 skew 269.4)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	bk_sel RESET-ASYNC x2 (max 5p worst -243.26 skew -175.3)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	bk_sel HOLD-SHORT-PATH x1 (max 5p worst -222.3 skew -305.7)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	bk_sel IO-BOUNDARY x3 (max 3p worst -12.65 skew 94.5)	bk_sel	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	col_h10_r0_p1 CLOCK-SKEW x3 (max 2p worst -57.05 skew -601.4)	col_h10	FABLE-OPEN-S81-B	10:00	OPEN
+HOTSPOT	col_h10_r0_p1 RESET-ASYNC x2 (max 5p worst -27.85 skew 73.3)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r0_p1 IO-BOUNDARY x2 (max 5p worst -12.88 skew 98.9)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r0_p1 CLOCK-NDR-DROP x1 (max 2x)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r0_p4 IO-BOUNDARY x1 (max 5p worst -67.77 skew 18.6)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r0_p4 RESET-ASYNC x2 (max 4p worst -14.09 skew 66.6)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r0_p4 REPAIR-CAP x1 (max 1x)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r1 HOLD-SKEW x2 (max 5p worst -72.92 skew 382.6)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r1 RESET-ASYNC x6 (max 5p worst -57.91 skew 106.3)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r1 IO-BOUNDARY x2 (max 5p worst -63.15 skew 13.5)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h10_r1 CLOCK-NDR-DROP x2 (max 8x)	col_h10	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p2 REACH x1 (max 1p worst -474.8 skew 182.6)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p2 IO-BOUNDARY x5 (max 5p worst -77.31 skew 30.6)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p2 CLOCK-NDR-DROP x3 (max 2x)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p2 REPAIR-CAP x3 (max 2x)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p2 RESET-ASYNC x5 (max 5p worst -415.2 skew -40.3)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p3 CLOCK-SKEW x2 (max 5p worst -90.81 skew -308.0)	col_h9_r0	FABLE-OPEN-S81-B	10:00	OPEN
+HOTSPOT	col_h9_r0_p3 IO-BOUNDARY x5 (max 5p worst -14.24 skew 93.8)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p3 REPAIR-CAP x2 (max 3x)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p3 HOLD-SKEW x3 (max 1p worst -69.82 skew 99.5)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p3 RESET-ASYNC x3 (max 5p worst -42.66 skew 75.2)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p4 RESET-ASYNC x2 (max 5p worst -331.47 skew -38.9)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p4 IO-BOUNDARY x1 (max 5p worst -74.72 skew 25.3)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p4 CLOCK-NDR-DROP x1 (max 2x)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p5 RESET-ASYNC x3 (max 5p worst -251.39 skew -23.6)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p5 CLOCK-SKEW x2 (max 4p worst -71.55 skew -587.4)	col_h9_r0	FABLE-OPEN-S81-B	10:00	OPEN
+HOTSPOT	col_h9_r0_p5 HOLD-SKEW x1 (max 5p worst -81.99 skew 100.3)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p5 CLOCK-NDR-DROP x1 (max 5x)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p6 RESET-ASYNC x3 (max 1p worst -78.14 skew 29.3)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p6 IO-BOUNDARY x1 (max 4p worst -67.5 skew 17.8)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r0_p6 CLOCK-NDR-DROP x1 (max 1x)	col_h9_r0	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r1 HOLD-SKEW x3 (max 5p worst -156.51 skew 472.2)	col_h9_r1	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r1 IO-BOUNDARY x1 (max 1p worst -81.57 skew 23.7)	col_h9_r1	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r1 RESET-ASYNC x7 (max 4p worst -29.64 skew 66.2)	col_h9_r1	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r1 CLOCK-NDR-DROP x1 (max 2x)	col_h9_r1	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r1 GLOBAL-DEMAND x1 (max 11.0 ovfl 5.8%)	col_h9_r1	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r2 GLOBAL-DEMAND x1 (max 265.0 ovfl 43.4%)	col_h9_r2	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r2 HOLD-SKEW x10 (max 4p worst -159.45 skew 485.7)	col_h9_r2	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r2 RESET-ASYNC x5 (max 5p worst -177.01 skew 227.2)	col_h9_r2	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r2 IO-BOUNDARY x1 (max 1p worst -10.03 skew 93.7)	col_h9_r2	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r2 CLOCK-NDR-DROP x2 (max 1x)	col_h9_r2	S81-COL-J9	10:00	OPEN
+HOTSPOT	col_h9_r2 REPAIR-CAP x1 (max 1x)	col_h9_r2	S81-COL-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_kv512_C RESET-ASYNC x3 (max 5p worst -6193.89 skew -7.3)	dsdv_slice_kv512_C	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_kv512_C REACH x1 (max 1p worst -1287.15 skew -125.3)	dsdv_slice_kv512_C	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_kv512_C CLOCK-NDR-DROP x1 (max 64x)	dsdv_slice_kv512_C	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_lepe_mu_LP RESET-ASYNC x3 (max 5p worst -377.59 skew -126.3)	dsdv_slice_lepe_mu_LP	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_lepe_mu_LP LOGIC-DEPTH x1 (max 3p worst -294.66 skew -14.4)	dsdv_slice_lepe_mu_LP	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_lepe_mu_LP CLOCK-NDR-DROP x1 (max 5x)	dsdv_slice_lepe_mu_LP	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_lepe_mu_LP REPAIR-CAP x1 (max 3x)	dsdv_slice_lepe_mu_LP	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_lepe_nh_mus_C REACH x2 (max 3p worst -633.32 skew -47.4)	dsdv_slice_lepe_nh_mus_C	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	dsdv_slice_lepe_nh_mus_C RESET-ASYNC x1 (max 5p worst -15.2 skew 48.9)	dsdv_slice_lepe_nh_mus_C	S81-SLICE-J9	10:00	OPEN
+HOTSPOT	eng OVER-MACRO x1 (max 173.0 ovfl 22.3%)	eng	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	eng STATION-CLUSTER x1 (max 122.0 ovfl 73.0%)	eng	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	eng MACRO-CHANNEL x1 (max 22.0 ovfl 13.2%)	eng	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	eng REACH x1 (max 1p worst -223.66 skew 196.8)	eng	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	eng RESET-ASYNC x1 (max 5p worst -22.1 skew 37.8)	eng	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	iqf IO-BOUNDARY x2 (max 1p worst -154.64 skew 83.0)	iqf	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	iqf HOLD-SKEW x1 (max 1p worst -18.31 skew 121.8)	iqf	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	s81sl_leaf REACH x10 (max 5p worst -214.9 skew -0.9)	leaf	S81-LEAF-J9	10:00	OPEN
+HOTSPOT	s81sl_leaf RESET-ASYNC x24 (max 5p worst -184.29 skew -39.1)	leaf	S81-LEAF-J9	10:00	OPEN
+HOTSPOT	s81sl_leaf CLOCK-SKEW x7 (max 5p worst -126.48 skew -344.3)	leaf	FABLE-OPEN-S81-B	10:00	OPEN
+HOTSPOT	s81sl_leaf HOLD-SKEW x13 (max 5p worst -80.25 skew 98.7)	leaf	S81-LEAF-J9	10:00	OPEN
+HOTSPOT	s81sl_leaf IO-BOUNDARY x7 (max 5p worst -3.96 skew 82.1)	leaf	S81-LEAF-J9	10:00	OPEN
+HOTSPOT	s81sl_leaf CLOCK-NDR-DROP x9 (max 32x)	leaf	S81-LEAF-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w CLOCK-TAP x2 (max 734.0 ovfl 76.7%)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w GLOBAL-DEMAND x1 (max 128.0 ovfl 13.4%)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w CLOCK-SKEW x2 (max 4p worst -77.27 skew -216.0)	hd_lep0N	FABLE-OPEN-S81-B	10:00	OPEN
+HOTSPOT	hd_lep0N_w HOLD-SHORT-PATH x1 (max 5p worst -245.82 skew -283.6)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w RESET-ASYNC x4 (max 2p worst -191.12 skew 222.1)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w IO-BOUNDARY x4 (max 5p worst -103.95 skew 203.5)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w CLOCK-NDR-DROP x1 (max 25x)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
