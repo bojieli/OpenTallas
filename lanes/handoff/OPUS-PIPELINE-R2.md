@@ -51,3 +51,9 @@ Lane clone (adopted): intel2 /srv/opentallas-scratch2/claude/FABLE-PIPELINE-R1/c
 - Fix main 7dc6aacdcc: AUTO_BIND_GRACE_S 3600 (rows must stay stale 1 h; WAITING state) + rebind on rt/<tools_sha[:12]>.
 - QC V3 / KV D28 not applied yet. Watcher restarted: intel2 pid 640025, ab_watch2.py (QC + KV only, 36 h), log ab_watch2.log.
 - HEAD auto_bind true (no-op, mode script).
+
+## 11-22 19:2x COORD 19:1x ruling: re-enable S81 after J8 apply
+- Notice posted to S81-J6-ASSEMBLY-R5 (hub c6ed395779), T0 in tmp/s81_ask_t0.
+- S81 watcher intel2 pid 787870 (tmp/ab_s81.py, log ab_s81.log): after 1 h checks S81-J6-ASSEMBLY commits for an auto_bind objection
+  (-> leaves OFF + posts); else enables s81 on the next "atomic apply s81" commit (J8 ~11-23 04:15), posts first cycle, backs out on loop.
+- QC/KV watcher pid 640025 still running.
