@@ -91,10 +91,10 @@ HOTSPOT	s81sl_leaf CLOCK-SKEW x7 (max 5p worst -126.48 skew -344.3)	leaf	FABLE-O
 HOTSPOT	s81sl_leaf HOLD-SKEW x13 (max 5p worst -80.25 skew 98.7)	leaf	S81-LEAF-J9	10:00	OPEN
 HOTSPOT	s81sl_leaf IO-BOUNDARY x7 (max 5p worst -3.96 skew 82.1)	leaf	S81-LEAF-J9	10:00	OPEN
 HOTSPOT	s81sl_leaf CLOCK-NDR-DROP x9 (max 32x)	leaf	S81-LEAF-J9	10:00	OPEN
-HOTSPOT	hd_lep0N_w CLOCK-TAP x2 (max 734.0 ovfl 76.7%)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	hd_lep0N_w GLOBAL-DEMAND x1 (max 128.0 ovfl 13.4%)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w CLOCK-TAP x2 (max 734.0 ovfl 76.7%)	hd_lep0N	S81-MISC-SERDES-J9	10:00	REROUTE:HEAD-R18+OPUS-FIX-HEAD-LEP0N-R9 (hd_lep0N_w is an s81_head die type, HEAD r18 event 11:00, census s81_head__hd_lep0N_w; not an S81 J9 row)
+HOTSPOT	hd_lep0N_w GLOBAL-DEMAND x1 (max 128.0 ovfl 13.4%)	hd_lep0N	S81-MISC-SERDES-J9	10:00	REROUTE:HEAD-R18+OPUS-FIX-HEAD-LEP0N-R9 (hd_lep0N_w is an s81_head die type, HEAD r18 event 11:00, census s81_head__hd_lep0N_w; not an S81 J9 row)
 HOTSPOT	hd_lep0N_w CLOCK-SKEW x2 (max 4p worst -77.27 skew -216.0)	hd_lep0N	FABLE-OPEN-S81-B	10:00	OPEN
-HOTSPOT	hd_lep0N_w HOLD-SHORT-PATH x1 (max 5p worst -245.82 skew -283.6)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	hd_lep0N_w RESET-ASYNC x4 (max 2p worst -191.12 skew 222.1)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	hd_lep0N_w IO-BOUNDARY x4 (max 5p worst -103.95 skew 203.5)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
-HOTSPOT	hd_lep0N_w CLOCK-NDR-DROP x1 (max 25x)	hd_lep0N	S81-MISC-SERDES-J9	10:00	OPEN
+HOTSPOT	hd_lep0N_w HOLD-SHORT-PATH x1 (max 5p worst -245.82 skew -283.6)	hd_lep0N	S81-MISC-SERDES-J9	10:00	REROUTE:HEAD-R18+OPUS-FIX-HEAD-LEP0N-R9 (hd_lep0N_w is an s81_head die type, HEAD r18 event 11:00, census s81_head__hd_lep0N_w; not an S81 J9 row)
+HOTSPOT	hd_lep0N_w RESET-ASYNC x4 (max 2p worst -191.12 skew 222.1)	hd_lep0N	S81-MISC-SERDES-J9	10:00	REROUTE:HEAD-R18+OPUS-FIX-HEAD-LEP0N-R9 (hd_lep0N_w is an s81_head die type, HEAD r18 event 11:00, census s81_head__hd_lep0N_w; not an S81 J9 row)
+HOTSPOT	hd_lep0N_w IO-BOUNDARY x4 (max 5p worst -103.95 skew 203.5)	hd_lep0N	S81-MISC-SERDES-J9	10:00	REROUTE:HEAD-R18+OPUS-FIX-HEAD-LEP0N-R9 (hd_lep0N_w is an s81_head die type, HEAD r18 event 11:00, census s81_head__hd_lep0N_w; not an S81 J9 row)
+HOTSPOT	hd_lep0N_w CLOCK-NDR-DROP x1 (max 25x)	hd_lep0N	S81-MISC-SERDES-J9	10:00	REROUTE:HEAD-R18+OPUS-FIX-HEAD-LEP0N-R9 (hd_lep0N_w is an s81_head die type, HEAD r18 event 11:00, census s81_head__hd_lep0N_w; not an S81 J9 row)
