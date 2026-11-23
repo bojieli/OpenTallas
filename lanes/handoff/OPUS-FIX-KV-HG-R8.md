@@ -15,3 +15,8 @@ Dirs: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hg-r7 (rows/, ana/, cha
 - kv3_hgi_v4 sealed on f1: preflight_route 22:34.
 - probes A/B hgi_v2__cle (D28 tree): CTS running epyc8.
 Hosts: epyc10 97% disk; epyc8 scratch2 also 97% (276 GB free).
+## UPDATE 22:58 PST
+- s1 bind CLEAN (BIND 0, LATCHECK 0, BPC PASS, R8 4 benign); bound RTL has u_y_xd_hst3_g_{ti_a,e_a}_0_{0,1}. ECTLH3 ROWS-READY posted; row copied to kv-plan-r6/d29/rows.
+- z = chain2.sh z s1 (REUSES trees/s1 in place; s1 bind_of_record kept at z/prev_bind_of_record_s1), launched with ot-run --plan-job bind (the plain launch waited on the load cap; the 48 GB fork waited on the disk-ETA rail). Unit oth-ubuntu-84827-1795416650, start 22:50, ETA ~23:45. Gate z/{g0,bind}/gate.out. Kits for z go on --tree trees/s1 --plan ana/plan_z.json.
+- hg_v3: systemd-run timed out at launch, leaving place_service.json "prepared" with no unit, so I renamed it to place_service.failed.json (the tool's own retry path). run-item --goal route was relaunched 22:41, log kit_kv3_hg_v3_route2.log.
+- hg_v1p2 probe: driver died; place service kwp-5d8f still active. Resume run-item --goal route after it ends.
