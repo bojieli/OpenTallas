@@ -30,3 +30,10 @@ Kits (epyc8 /srv/opentallas-scratch2/claude/fable-kv-die/ectl/kits/): kit = <dir
 - q0: exported 22:40 (qkd_ectlk_q0__ax_9f7a9501a3). First routed LEC cancelled by me by mistake 23:5x; rerun unit okd2-lecf2-q0k-1122
   (epyc8 oth-ubuntu-2512701-1795420381, docker, running since 00:05), log intel2 ~/tmp/fablekvdie/lecf2_q0k.log; result KIT/lec_final.log.
 - After q0 EQUIVALENT: report to COORD and close (LANE-STATUS row). Provenance for q0..q3 still waits on FLOW-OPS-R2 core-kit path.
+
+## 03:1x 11-23 GOAL DONE -- lane closed
+- q0 routed LEC EQUIVALENT (25,581 points, 11,432 s), KIT/lec_final/lec.json. All four ectl cores q0..q3 at 42/31: SIGNED + routed LEC
+  EQUIVALENT + exported (q0__ax_9f7a9501a3, q1__ax_797b1a2722, q2__ax_3dcbe11969, q3__ax_fc03f413cf).
+- Open for others: kit_wave private-provenance on q0..q3 once FLOW-OPS-R2 has a core-kit path (FABLE-KV-DIE ASK 21:10); view rows to hg types
+  only if the D29 37/26 ECTLRL row fails (views in each kit views/). Kit reclaim (dead dirs q0,q1,q2,q1b,q2b,q0fp,q1c,q2c,q3,q2k,q2m) via ot-delete
+  after the views are used. Reviewer of this work: COORD / KV-PLAN-R6.
