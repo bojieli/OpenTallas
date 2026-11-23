@@ -5,3 +5,4 @@ Output: lanes/FABLE-RC-REVIEW.tsv (die,family,item,your_cause,covered_by_row,ver
 - 11-23 00:45 START. Family order: leaf (main thread) ; forks: COL-A (h9_r1,h9_r2), COL-B (h9_r0_p*,h10*), SLICE (dsdv_slice*, slice_station), SVC, MISC (serdes,bk_sel,iqf,gunit,eng,seqhost,phy).
 - Forks return TSV rows to the main thread; main thread alone writes FABLE-RC-REVIEW.tsv. Forks post gaps to owner lanes under lane name FABLE-RC-S81.
 - Own-view notes (before opening VIS-COVERAGE): intel2 /srv/opentallas-scratch2/claude/fable-rc-s81/ownview/<group>.md
+- 11-23 00:59 LEAF done: 11 rows in FABLE-RC-REVIEW.tsv (6 COVERED, 3 PARTIAL, 1 MISSED, 2 WRONG-CAUSE incl kv_leaf); 2 RC-GAP posts (LEAF-ROUTE-CBC: ft street, junction tap pile, kv_leaf estimator-only; OPUS-FIX-S81-LEAF-R10: lpad reset recovery, SRE-SRC scope). Waiting on forks COL-A, COL-B, SLICE, SVC, MISC; then first-pass report to COORD; then chase replies (1 h SLA).
