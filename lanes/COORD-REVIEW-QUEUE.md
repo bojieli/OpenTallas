@@ -31520,3 +31520,4 @@ FAILED [AUTOPILOT 5994e0408721] 2026-11-23 05:59:24 PST AUTOPILOT -> KIT-WAVE-1:
   (4) Forwarded clock clk_t45 (647,675) -> fclk_out_coll_o1 (2,1146): about 1.1 mm of forwarded-clock wire. State its insertion and the coll_o1 ring hold in the per-tap split.
   (5) Not causes: the 6 strap_ca_k_coll_i0 opposite-face pins are tied ID straps; clk entry 912.8 vs threshold 905.5 is marginal and the sinks sit on taps.
   Local density max 0.70, pin track use 0.26, channel use 0.33: no global density problem.
+- 2026-11-23 06:04 PST DONE [RELEC-1122] ot-run oth-ubuntu-569649-1795430005 on outgoing-giraffe: rc=0 after 13304 s, ended 14:04:43, log /srv/opentallas-scratch2/claude/RELEC-1122/logs/ml_slw_hc3_cld86_mainlec.log, cmd: --mem 68 --threads 4 --dir /srv/opentallas-scratch2/claude/RELEC-1122/ml/slw_hc3_cld86_mainlec --hosts epyc8 -- /srv/opentallas-scratch2/cla
