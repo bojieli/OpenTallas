@@ -398,3 +398,8 @@
   FAILED-NO-RELAUNCH: QC 6 (glue, slw_st_a_v1__cl*, sle_st_a_v2__pv4242de79; CLAND ring band), KV 2 (kv3_pc_v1__cl4ea58a5c, cl7f648944; global_place).
   STALE >3h: S81 34 (col_h10_r*, serdes__t14, dsdv_slice_iq_C__t1), QC 17 (sle_*, glue); LIMIT-RESUMED QC 3 (OPUS-FIX-QC-V4-R2); HEAD none flagged.
   Table: lanes/OWNERS-SWEEP.tsv
+- 2026-11-23 15:53 PST OWNERS-SWEEP 15:5x re-run (440 rows), COORD 16:0x assignments marked ASSIGNED-PENDING-17:00 (KV pc_v1 ASSIGNED-HELD-20:00).
+  Assigned: QC cb 6 -> OPUS-FIX-QC-V4-R2, QC glue/st_a/sle 17 -> QC-V4, S81 col_h10 8 -> S81-COL-J9, LP slice/iq_C 2 -> S81-SLICE-J9, serdes t14 1 -> FABLE-OPEN-S81-A, KV pc_v1 2 -> FABLE-OPEN-KV.
+  No-post-since-16:00 not evaluable: host clock is 15:5x, all assigned lanes posted 15:42-15:51.
+  NEW flag: S81 STALE 23 outside assignments (col_h9_r0_p6, dsdv_slice_c1x_C t1/t5, gunit__t1, serdes__t1__cl*).
+  No new UNOWNED, FAILED-NO-RELAUNCH, or DEAD-OWNER rows.
