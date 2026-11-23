@@ -42,3 +42,13 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/opus-fix-s81-col-rankseat-r2 (ap
 - r2h10p4 waits on epyc7 load admission (load 124/96) at gen_lint; p3 in place.
 - Read-only subagent checks go-pin / bank_free-sh_free loop + schedule pricing (for planR3/J10).
 - Waiter: local background poll of intel2 opus-fix-s81-col-rankseat-r2/snap.sh.
+
+## 23:1x item 3 read (read-only subagent; for planR3 / J10)
+- Uniform +1: all 13 ports are the element only non-clock inputs (_gb.sv:175-178); go_pin is post g_ifn/g_go_boundary -> timeline shift.
+- ef = {bank_free, sh_free} gates only cfg load (ot_s81_cfg7_seq.sv:215-216 ld_ok, level-wait pend). GO GUARD GG=13 vs stale window
+  10 -> 11 with +1 (still covered); without RDX guard window 9->10 under phase spacing P>=125. No wait constant change; update the
+  "window 10" basis at cfg7_seq.sv:199 + xs_field_calendar.py:103. e_st (fault,busy) = status OR, not credit.
+- Pricing: frame_schedule_asb.py relay_depth_extra (:344) reads only int(D) -> must add lockup_cycles (bind_verify.py:41 counts latch 0);
+  re-qualify X age: check_native_go_split.py --dd incl old age+1 (defaults 0 2 16 17 26 27, :106); xs_field_calendar.colrom_record span_tail.
+- RISK: ot_dp_lk transparent-low (gen_rtl.py:98) vs IFN=1 negedge sampling -> latency +1 only if the latch->ROM hold check is met
+  (else +2 / race). The FF hold >= 0 gate on the reps decides it: READ hold on u_lk_xd_* -> u_e*_u_[we] pins at GRT/route.
