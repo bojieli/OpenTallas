@@ -2,7 +2,7 @@
 
   Only types the bind realises natively (as-built internal_stations_types, family prefix as clock_landings
   .expand_station_types; scope internal_stations_buses) refuse; on kit types per-core rows are merged (kit_istations) and
-  are only counted.  Without an as-built (plan_gate_pre --asbuilt / kw asbuilt) OUT conflicts are counted, not listed.
+  are only counted.  Without an as-built (plan_gate_pre --asbuilt / kw asbuilt) every OUT conflict is listed as "refuses if native".
   CONFLICT     a bus with >= 2 internal_stations rows (conn bus:<name>) of differing geometry (every key but note).  On an
                OUT bus native_istations.source_entries raises 'conflicting OUT station geometry <bus>' (VIS-S81-MISC gate 10:
                iqf idx_o0 carried two J8 rows, qr 149 bits and qr_v 1 bit, each with its own geometry).  On an IN bus the kit
@@ -76,6 +76,8 @@ def type_findings(tn, t, ab=None):
         valid = any(n == 1 for n in nb if n is not None) and any((n or 0) > 1 for n in nb) and len(set(counts)) > 1
         if d == "out" and nat is not None and (not nat or name in nat):
             why = f"native type: bind native_istations raises 'conflicting OUT station geometry {name}'"
+        elif d == "out" and ab is None:
+            why = f"no as-built given: if the type is native the bind raises 'conflicting OUT station geometry {name}'"
         elif len(set(counts)) > 1 and any(any(k in r for k in EXACT_KEYS) for r in rs):
             why = "exact-site rows with different counts: bind raises 'conflicting destination station counts'"
         else:

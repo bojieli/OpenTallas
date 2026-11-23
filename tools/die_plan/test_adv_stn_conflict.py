@@ -32,6 +32,10 @@ def test_one_row_clean_and_note_only_difference_clean():
     assert A.findings(raw, "p.json", asbuilt=AB) == []
 
 
+def test_no_asbuilt_lists_out_conflict():
+    assert any("iqf__t1: CONFLICT bus idx_o0" in x and "if the type is native" in x for x in A.findings(_iqf(), "p.json"))
+
+
 def test_kit_type_out_rows_counted_not_listed():
     out = A.findings(_iqf(), "p.json", asbuilt={"internal_stations_types": ["other"]})
     assert not any("iqf__t1:" in x for x in out)
