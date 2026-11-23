@@ -107,3 +107,13 @@ Base for the row: the J8 plan of ASSEMBLY (s81-j6-r5/tmp/j8cut/RESUME.md) once s
   fall back to lockup on the existing source rows (needs bind.py relay_depth_lockup for source rows) .
 - After bind: 3 reps --goal route --rt 73fdcdf7365e (or current if toolskew ok) on epyc7: col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898,
   col_h10_r0_p4__t1__pvcc166a6d, col_h9_r1__t1__cl49d7a23e__pv0a45e191 (spec2.sh in scratch: spec.sh with planR2 + --goal route + new --bind-out).
+
+## 19:3x planR2 v2 (sha 0fced563a60d) + bind relaunch
+- bindR2 try1 (oth-ubuntu-1293818) died at pre: SCHEMA-UNKNOWN-KEY rank_line_types / grt_cong_iters_types on rt 79f34e2ad42e (predates my push)
+  -> relaunched on rt 73fdcdf7365e (intel2 bindR2.log/.pid; try1 log bindR2.try1.log).
+- J7 ALREADY has the posedge ROM-input stage: 104 relay_depth sink rows per col type ("FAM-S81-COL lever 1", 8 ROM halves x 13 ports, D 1) =
+  the u_y_xd_<rom>_<port>_* stations that fail -85..-207. So planR2 v2 adds NO rows: it sets lockup: true on those 104 existing rows per type
+  (22,464 rows, all 216 col types, full coverage checked) -> bind emits ot_dp_lk after each stage (bind.py emit_lp, relay_depth_lockup).
+  COLROM-R6 warned: sink row + source-level pipe on same bit is refused (bind.py ~4936), stationed port with core_input_lockup refused (~4868);
+  not expected here since rows already bind in J7, only the lockup flag is new.
+- Cycle note: latch across the ROM negedge = +1 cycle at the ROM (declared? lockup is documented 0 cycles; LATCHECK / token lane must price it).
