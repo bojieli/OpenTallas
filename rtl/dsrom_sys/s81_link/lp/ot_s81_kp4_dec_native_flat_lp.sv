@@ -69,64 +69,147 @@ rck_reset_calendar
 rst_n
 `endif
 ), .q(lpr_root));
+`ifdef OT_S81_LPR_FOREST
+    // S81-LPR-FOREST (FABLE-OPEN-S81-A 11-23, ledger x14; lp.py landing_reset_forest form, CHUNK 24): ot_pdie_serdes_col drives
+    // ck_syn = ck_dly = ck_chn = ck_out from pma_rck, so the four N = 2 regional runs below are identical flops and synthesis
+    // merges them into ONE flop feeding every landing-chunk rq of the decoder (serdes__t14 post-hook CTS: u_lpr_syn.q ->
+    // u_lpl_6_w.g_ck[7].u_local/rq -311.83 ps, 14 buffer stages, 839 um span).  Here each regional run is a kept two-level
+    // forest of the SAME depth 2 (same reset age: 0 cycles), one leaf per landing chunk; leaf 0 = the scalar regional reset.
+    localparam integer LPR_LEAVES_syn = 40, LPR_LEAVES_dly = 47, LPR_LEAVES_chn = 44, LPR_LEAVES_out = 51;
+    wire [LPR_LEAVES_syn-1:0] lpr_syn_leaves;  wire lpr_syn = lpr_syn_leaves[0];
+    ot_pl_land_reset_forest #(.DEPTH(2), .LEAVES(LPR_LEAVES_syn), .ROOT_LOADS(8)) u_lpr_syn (.ck(ck_syn), .d(lpr_root), .q(lpr_syn_leaves));
+    wire [LPR_LEAVES_dly-1:0] lpr_dly_leaves;  wire lpr_dly = lpr_dly_leaves[0];
+    ot_pl_land_reset_forest #(.DEPTH(2), .LEAVES(LPR_LEAVES_dly), .ROOT_LOADS(8)) u_lpr_dly (.ck(ck_dly), .d(lpr_root), .q(lpr_dly_leaves));
+    wire [LPR_LEAVES_chn-1:0] lpr_chn_leaves;  wire lpr_chn = lpr_chn_leaves[0];
+    ot_pl_land_reset_forest #(.DEPTH(2), .LEAVES(LPR_LEAVES_chn), .ROOT_LOADS(8)) u_lpr_chn (.ck(ck_chn), .d(lpr_root), .q(lpr_chn_leaves));
+    wire [LPR_LEAVES_out-1:0] lpr_out_leaves;  wire lpr_out = lpr_out_leaves[0];
+    ot_pl_land_reset_forest #(.DEPTH(2), .LEAVES(LPR_LEAVES_out), .ROOT_LOADS(8)) u_lpr_out (.ck(ck_out), .d(lpr_root), .q(lpr_out_leaves));
+`else
     wire lpr_syn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_syn (.ck(ck_syn), .d(lpr_root), .q(lpr_syn));   // 0 hop(s) from syn
     wire lpr_dly;  ot_pl_pad #(.W(1), .N(2)) u_lpr_dly (.ck(ck_dly), .d(lpr_root), .q(lpr_dly));   // 1 hop(s) from syn
     wire lpr_chn;  ot_pl_pad #(.W(1), .N(2)) u_lpr_chn (.ck(ck_chn), .d(lpr_root), .q(lpr_chn));   // 1 hop(s) from syn
     wire lpr_out;  ot_pl_pad #(.W(1), .N(2)) u_lpr_out (.ck(ck_out), .d(lpr_root), .q(lpr_out));   // 2 hop(s) from syn
+`endif
     // ---- LANDING 0: x_q syn -> dly, 544 b (u_dly.w_d)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((543) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*23-1:0] lpl_0_vld;  wire [543:0] x_q__l_dly, lpl_0_o;
+    ot_pl_land_vector_reset_w #(.W(((543) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_syn), .rsi(lpr_syn_leaves[1 +: 23]), .i(x_q), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
+    ot_pl_land_vector_reset_r #(.W(((543) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(24)) u_lpl_0_r (.ck(ck_dly), .rsi(lpr_dly_leaves[1 +: 23]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+`else
     wire [4*((543) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [3:0] lpl_0_vld;  wire [543:0] x_q__l_dly, lpl_0_o;
     ot_pl_land_w #(.W(((543) - (0) + 1)), .D(4)) u_lpl_0_w (.ck(ck_syn), .rsi(lpr_syn), .i(x_q), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
     ot_pl_land_r #(.W(((543) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2)) u_lpl_0_r (.ck(ck_dly), .rsi(lpr_dly), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));
+`endif
     assign x_q__l_dly = (MUT == 1) ? x_q : lpl_0_o;
     // ---- LANDING 1: k_v syn -> chn, 4 b (u_chn.k_v)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((3) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*1-1:0] lpl_1_vld;  wire [3:0] k_v__l_chn, lpl_1_o;
+    ot_pl_land_vector_reset_w #(.W(((3) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_1_w (.ck(ck_syn), .rsi(lpr_syn_leaves[24 +: 1]), .i(k_v), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
+    ot_pl_land_vector_reset_r #(.W(((3) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_1_r (.ck(ck_chn), .rsi(lpr_chn_leaves[1 +: 1]), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+`else
     wire [4*((3) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [3:0] lpl_1_vld;  wire [3:0] k_v__l_chn, lpl_1_o;
     ot_pl_land_w #(.W(((3) - (0) + 1)), .D(4)) u_lpl_1_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_v), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
     ot_pl_land_r #(.W(((3) - (0) + 1)), .D(4), .K(2)) u_lpl_1_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
+`endif
     assign k_v__l_chn = lpl_1_o;
     // ---- LANDING 2: k_lo syn -> chn, 310 b (u_chn.k_lo)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((309) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*13-1:0] lpl_2_vld;  wire [309:0] k_lo__l_chn, lpl_2_o;
+    ot_pl_land_vector_reset_w #(.W(((309) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_2_w (.ck(ck_syn), .rsi(lpr_syn_leaves[25 +: 13]), .i(k_lo), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
+    ot_pl_land_vector_reset_r #(.W(((309) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_2_r (.ck(ck_chn), .rsi(lpr_chn_leaves[2 +: 13]), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+`else
     wire [4*((309) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [3:0] lpl_2_vld;  wire [309:0] k_lo__l_chn, lpl_2_o;
     ot_pl_land_w #(.W(((309) - (0) + 1)), .D(4)) u_lpl_2_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_lo), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
     ot_pl_land_r #(.W(((309) - (0) + 1)), .D(4), .K(2)) u_lpl_2_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
+`endif
     assign k_lo__l_chn = lpl_2_o;
     // ---- LANDING 3: k_L syn -> chn, 5 b (u_chn.k_L)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((4) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [4*1-1:0] lpl_3_vld;  wire [4:0] k_L__l_chn, lpl_3_o;
+    ot_pl_land_vector_reset_w #(.W(((4) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_3_w (.ck(ck_syn), .rsi(lpr_syn_leaves[38 +: 1]), .i(k_L), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
+    ot_pl_land_vector_reset_r #(.W(((4) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_3_r (.ck(ck_chn), .rsi(lpr_chn_leaves[15 +: 1]), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
+`else
     wire [4*((4) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [3:0] lpl_3_vld;  wire [4:0] k_L__l_chn, lpl_3_o;
     ot_pl_land_w #(.W(((4) - (0) + 1)), .D(4)) u_lpl_3_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_L), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
     ot_pl_land_r #(.W(((4) - (0) + 1)), .D(4), .K(2)) u_lpl_3_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
+`endif
     assign k_L__l_chn = lpl_3_o;
     // ---- LANDING 4: k_any syn -> chn, 1 b (u_chn.k_any)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*1-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [4*1-1:0] lpl_4_vld;  wire  k_any__l_chn, lpl_4_o;
+    ot_pl_land_vector_reset_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_4_w (.ck(ck_syn), .rsi(lpr_syn_leaves[39 +: 1]), .i(k_any), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
+    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_4_r (.ck(ck_chn), .rsi(lpr_chn_leaves[16 +: 1]), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
+`else
     wire [4*1-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [3:0] lpl_4_vld;  wire  k_any__l_chn, lpl_4_o;
     ot_pl_land_w #(.W(1), .D(4)) u_lpl_4_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_any), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_4_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
+`endif
     assign k_any__l_chn = lpl_4_o;
     // ---- LANDING 5: d_q dly -> out, 544 b (u_out.d_q)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((543) - (0) + 1)-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [4*23-1:0] lpl_5_vld;  wire [543:0] d_q__l_out, lpl_5_o;
+    ot_pl_land_vector_reset_w #(.W(((543) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_5_w (.ck(ck_dly), .rsi(lpr_dly_leaves[24 +: 23]), .i(d_q), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
+    ot_pl_land_vector_reset_r #(.W(((543) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_5_r (.ck(ck_out), .rsi(lpr_out_leaves[1 +: 23]), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld), .o(lpl_5_o));
+`else
     wire [4*((543) - (0) + 1)-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [3:0] lpl_5_vld;  wire [543:0] d_q__l_out, lpl_5_o;
     ot_pl_land_w #(.W(((543) - (0) + 1)), .D(4)) u_lpl_5_w (.ck(ck_dly), .rsi(lpr_dly), .i(d_q), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld));
     ot_pl_land_r #(.W(((543) - (0) + 1)), .D(4), .K(2)) u_lpl_5_r (.ck(ck_out), .rsi(lpr_out), .bank(lpl_5_bank), .epo(lpl_5_epo), .vld(lpl_5_vld), .o(lpl_5_o));
+`endif
     assign d_q__l_out = lpl_5_o;
     // ---- LANDING 6: cw chn -> out, 544 b (u_out.cw)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((543) - (0) + 1)-1:0] lpl_6_bank;  wire [11:0] lpl_6_epo;  wire [4*23-1:0] lpl_6_vld;  wire [543:0] cw__l_out, lpl_6_o;
+    ot_pl_land_vector_reset_w #(.W(((543) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_6_w (.ck(ck_chn), .rsi(lpr_chn_leaves[17 +: 23]), .i(cw), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld));
+    ot_pl_land_vector_reset_r #(.W(((543) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_6_r (.ck(ck_out), .rsi(lpr_out_leaves[24 +: 23]), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld), .o(lpl_6_o));
+`else
     wire [4*((543) - (0) + 1)-1:0] lpl_6_bank;  wire [11:0] lpl_6_epo;  wire [3:0] lpl_6_vld;  wire [543:0] cw__l_out, lpl_6_o;
     ot_pl_land_w #(.W(((543) - (0) + 1)), .D(4)) u_lpl_6_w (.ck(ck_chn), .rsi(lpr_chn), .i(cw), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld));
     ot_pl_land_r #(.W(((543) - (0) + 1)), .D(4), .K(2)) u_lpl_6_r (.ck(ck_out), .rsi(lpr_out), .bank(lpl_6_bank), .epo(lpl_6_epo), .vld(lpl_6_vld), .o(lpl_6_o));
+`endif
     assign cw__l_out = lpl_6_o;
     // ---- LANDING 7: apply chn -> out, 8 b (u_out.apply)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((7) - (0) + 1)-1:0] lpl_7_bank;  wire [11:0] lpl_7_epo;  wire [4*1-1:0] lpl_7_vld;  wire [7:0] apply__l_out, lpl_7_o;
+    ot_pl_land_vector_reset_w #(.W(((7) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_7_w (.ck(ck_chn), .rsi(lpr_chn_leaves[40 +: 1]), .i(apply), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
+    ot_pl_land_vector_reset_r #(.W(((7) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_7_r (.ck(ck_out), .rsi(lpr_out_leaves[47 +: 1]), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
+`else
     wire [4*((7) - (0) + 1)-1:0] lpl_7_bank;  wire [11:0] lpl_7_epo;  wire [3:0] lpl_7_vld;  wire [7:0] apply__l_out, lpl_7_o;
     ot_pl_land_w #(.W(((7) - (0) + 1)), .D(4)) u_lpl_7_w (.ck(ck_chn), .rsi(lpr_chn), .i(apply), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
     ot_pl_land_r #(.W(((7) - (0) + 1)), .D(4), .K(2)) u_lpl_7_r (.ck(ck_out), .rsi(lpr_out), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
+`endif
     assign apply__l_out = lpl_7_o;
     // ---- LANDING 8: o_unc chn -> out, 1 b (u_out.o_unc)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*1-1:0] lpl_8_bank;  wire [11:0] lpl_8_epo;  wire [4*1-1:0] lpl_8_vld;  wire  o_unc__l_out, lpl_8_o;
+    ot_pl_land_vector_reset_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_8_w (.ck(ck_chn), .rsi(lpr_chn_leaves[41 +: 1]), .i(o_unc), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
+    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_8_r (.ck(ck_out), .rsi(lpr_out_leaves[48 +: 1]), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
+`else
     wire [4*1-1:0] lpl_8_bank;  wire [11:0] lpl_8_epo;  wire [3:0] lpl_8_vld;  wire  o_unc__l_out, lpl_8_o;
     ot_pl_land_w #(.W(1), .D(4)) u_lpl_8_w (.ck(ck_chn), .rsi(lpr_chn), .i(o_unc), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_8_r (.ck(ck_out), .rsi(lpr_out), .bank(lpl_8_bank), .epo(lpl_8_epo), .vld(lpl_8_vld), .o(lpl_8_o));
+`endif
     assign o_unc__l_out = lpl_8_o;
     // ---- LANDING 9: o_ne chn -> out, 5 b (u_out.o_ne)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*((4) - (0) + 1)-1:0] lpl_9_bank;  wire [11:0] lpl_9_epo;  wire [4*1-1:0] lpl_9_vld;  wire [4:0] o_ne__l_out, lpl_9_o;
+    ot_pl_land_vector_reset_w #(.W(((4) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_9_w (.ck(ck_chn), .rsi(lpr_chn_leaves[42 +: 1]), .i(o_ne), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
+    ot_pl_land_vector_reset_r #(.W(((4) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_9_r (.ck(ck_out), .rsi(lpr_out_leaves[49 +: 1]), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld), .o(lpl_9_o));
+`else
     wire [4*((4) - (0) + 1)-1:0] lpl_9_bank;  wire [11:0] lpl_9_epo;  wire [3:0] lpl_9_vld;  wire [4:0] o_ne__l_out, lpl_9_o;
     ot_pl_land_w #(.W(((4) - (0) + 1)), .D(4)) u_lpl_9_w (.ck(ck_chn), .rsi(lpr_chn), .i(o_ne), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld));
     ot_pl_land_r #(.W(((4) - (0) + 1)), .D(4), .K(2)) u_lpl_9_r (.ck(ck_out), .rsi(lpr_out), .bank(lpl_9_bank), .epo(lpl_9_epo), .vld(lpl_9_vld), .o(lpl_9_o));
+`endif
     assign o_ne__l_out = lpl_9_o;
     // ---- LANDING 10: fs chn -> out, 1 b (u_out.fs)
+`ifdef OT_S81_LPR_FOREST
+    wire [4*1-1:0] lpl_10_bank;  wire [11:0] lpl_10_epo;  wire [4*1-1:0] lpl_10_vld;  wire  fs__l_out, lpl_10_o;
+    ot_pl_land_vector_reset_w #(.W(1), .D(4), .CHUNK_BITS(24)) u_lpl_10_w (.ck(ck_chn), .rsi(lpr_chn_leaves[43 +: 1]), .i(fs), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld));
+    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_10_r (.ck(ck_out), .rsi(lpr_out_leaves[50 +: 1]), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld), .o(lpl_10_o));
+`else
     wire [4*1-1:0] lpl_10_bank;  wire [11:0] lpl_10_epo;  wire [3:0] lpl_10_vld;  wire  fs__l_out, lpl_10_o;
     ot_pl_land_w #(.W(1), .D(4)) u_lpl_10_w (.ck(ck_chn), .rsi(lpr_chn), .i(fs), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_10_r (.ck(ck_out), .rsi(lpr_out), .bank(lpl_10_bank), .epo(lpl_10_epo), .vld(lpl_10_vld), .o(lpl_10_o));
+`endif
     assign fs__l_out = lpl_10_o;
     wire lpr_c_u_syn;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_syn (.ck(ck_syn), .d(lpr_syn), .q(lpr_c_u_syn));   // t(u_syn) = 0
     wire lpr_c_u_dly;  ot_pl_pad #(.W(1), .N(3)) u_lprc_u_dly (.ck(ck_dly), .d(lpr_dly), .q(lpr_c_u_dly));   // t(u_dly) = 3
