@@ -96,3 +96,37 @@ def test_cap_option_only_tightens(monkeypatch):
     src = inspect.getsource(TS.split_type)
     assert "min(cap, gen_phys._tap_cap(t))" in src
     assert "--cap" in inspect.getsource(TS.main)
+
+
+def test_placed_inventory_replaces_planned_only_model(monkeypatch, tmp_path):
+    """TAP-SOFTFLOP (TAP-GRID-R5 11-22, COORD; MISC-R4 kv_leaf t5): the planned sinks (face / ft only) are under the cap,
+    the placed register inventory is not -> split on the placed one; the .reg die origin is subtracted."""
+    tps = [("clk", 100.0, 400.0), ("clk_t1", 600.0, 400.0)]
+    P = _setup(monkeypatch, "grid+explicit", tps, _line(50, 90.0, 390.0, 110.0, 410.0))
+    rep, rows = TS.split_type(P, "t", 300.0, 50)
+    assert rep["status"] == "OK" and rep["sink_basis"] == "planned" and "SINK-MODEL-PLANNED-ONLY" in rep["why"]
+    reg = tmp_path / "t.reg"
+    reg.write_text("D 10.0 20.0 810.0 820.0\n" + "".join(f"R {x + 10.0:.3f} {y + 20.0:.3f}\n" for x, y, _ in _line(3000, 360.0, 280.0, 360.0, 520.0)))
+    pl = TS.load_placed(reg)
+    assert len(pl) == 3000 and abs(pl[0][0] - 360.0) < 1e-6 and abs(pl[0][1] - 280.0) < 1e-6
+    monkeypatch.setitem(TS.PLACED, "t", pl)
+    rep, rows = TS.split_type(P, "t", 300.0, 50)
+    assert rep["sink_basis"] == "placed" and rep["status"] == "SPLIT" and rep["before"]["max_load"] > 1000
+    assert rep["after"]["max_load"] <= 1000 and rows
+
+
+def test_require_placed_refuses_planned_only_type(monkeypatch):
+    P = _setup(monkeypatch, "grid+explicit", [("clk", 100.0, 100.0)], _line(50, 90.0, 90.0, 110.0, 110.0))
+    monkeypatch.setattr(TS, "PLACED", {})
+    rep, rows = TS.split_type(P, "t", 300.0, 50, require_placed=True)
+    assert rep["status"] == "NO_PLACED" and rows == []
+    P.types["t"]["clock"]["sink_bins_file"] = "x.json"           # a placed-netlist bins file is a full inventory
+    rep, rows = TS.split_type(P, "t", 300.0, 50, require_placed=True)
+    assert rep["sink_basis"] == "bins" and rep["status"] == "OK"
+
+
+def test_load_placed_formats(tmp_path):
+    (tmp_path / "b.json").write_text(json.dumps({"bin_um": 10.8, "bins": [[5.4, 5.4, 3]]}))
+    (tmp_path / "l.json").write_text(json.dumps([[1.0, 2.0], [3.0, 4.0]]))
+    assert TS.load_placed(tmp_path / "b.json") == [(5.4, 5.4, 3.0)]
+    assert TS.load_placed(tmp_path / "l.json") == [(1.0, 2.0, 1.0), (3.0, 4.0, 1.0)]

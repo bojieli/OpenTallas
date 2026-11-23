@@ -15,8 +15,15 @@ What it changes (append only, so no existing tap name, site, reset relay, landin
   tap_mode explicit                -> clock.taps (appended after the table; core entries are ignored by the name rule)
 Other modes (grid, grid+sinks, bare hard macros) are reported UNSUPPORTED and left alone.
 
-Inputs are exactly G0's: taps = schema.tap_grid(P, tn), sinks = taps.sink_sites(P, tn) (weighted bins / planned sinks
-+ control sinks).  Each new site is legalised by schema.tap_clear(strict) on the PG-safe clock axes (as the density
+Inputs are G0's: taps = schema.tap_grid(P, tn), sinks = taps.sink_sites(P, tn) (weighted bins / planned sinks
++ control sinks) -- except that a type given a PLACED register inventory (--sinks TYPE=FILE / --sinks-dir DIR) is split
+on that inventory instead.  TAP-SOFTFLOP (TAP-GRID-R5 11-22, COORD; FAM-S81-MISC-R4 kv_leaf t5): a type with no
+clock.sink_bins_file is modelled from its planned face / ft / core sinks only, so its soft-logic flops are not counted
+(t5: planned max load 1,099 vs 63,448 placed registers, clk_t24 ~8,000).  Every report row says its sink_basis
+(placed / bins / planned); a planned-only type is flagged SINK-MODEL-PLANNED-ONLY, and --require-placed turns it into
+status NO_PLACED (no rows) so a split never rests on the undercount.  A placed file is taps.py bins JSON ({"bins"}),
+an odb geometry dump ({"cells"}), a [[x, y(, n)], ...] list, or a .reg dump ("R x y" register centres, "D x0 y0 x1 y1"
+die box whose origin is subtracted).  Each new site is legalised by schema.tap_clear(strict) on the PG-safe clock axes (as the density
 taps are) and must pass the added-tap validator rules (outline, hard-core / placed macro / keepout halo, spacing to
 every tap and early core tap).
 
@@ -42,6 +49,43 @@ EPS = 1e-8
 def _np():
     import numpy as np
     return np
+
+
+PLACED = {}          # type -> [(x, y, w)] placed register inventory (TAP-SOFTFLOP); set by main / tests
+
+
+def load_placed(path):
+    """[(x, y, w)] type-frame clocked registers of a placed netlist from one of the formats in the module doc."""
+    path = Path(path)
+    txt = path.read_text()
+    if path.suffix == ".reg" or txt.startswith(("R ", "D ")):
+        ox = oy = 0.0
+        out = []
+        for ln in txt.splitlines():
+            f = ln.split()
+            if f and f[0] == "D":
+                ox, oy = float(f[1]), float(f[2])
+            elif f and f[0] == "R":
+                out.append((float(f[1]), float(f[2]), 1.0))
+        return [(x - ox, y - oy, w) for x, y, w in out]
+    d = json.loads(txt)
+    if isinstance(d, dict) and "cells" in d:
+        import taps as TP
+        d = TP.bins_from_dump(d)
+    if isinstance(d, dict):
+        d = d["bins"]
+    return [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in d]
+
+
+def sink_basis(P, tn):
+    if tn in PLACED:
+        return "placed"
+    return "bins" if (P.types[tn].get("clock") or {}).get("sink_bins_file") else "planned"
+
+
+def type_sinks(P, tn):
+    import taps as TP
+    return list(PLACED[tn]) if tn in PLACED else TP.sink_sites(P, tn)
 
 
 def nearest(TX, TY, X, Y):
@@ -132,7 +176,7 @@ class Site:
         return (x, y) if self.ok(x, y, taken) else None
 
 
-def split_type(P, tn, radius, max_add, cap=None):
+def split_type(P, tn, radius, max_add, cap=None, require_placed=False):
     import schema, taps as TP, gen_phys
     np = _np()
     t = P.types[tn]
@@ -143,7 +187,13 @@ def split_type(P, tn, radius, max_add, cap=None):
         rep["status"] = "UNSUPPORTED"      # no table to append to; not counted (grid+sinks taps cost minutes to solve)
         return rep, []
     tp = schema.tap_grid(P, tn)
-    sinks = TP.sink_sites(P, tn)
+    rep["sink_basis"] = basis = sink_basis(P, tn)
+    if basis == "planned":
+        rep["why"] = "SINK-MODEL-PLANNED-ONLY (no sink_bins_file, no --sinks): soft-logic flops not counted"
+        if require_placed:
+            rep["status"] = "NO_PLACED"
+            return rep, []
+    sinks = type_sinks(P, tn)
     cap = int(min(cap, gen_phys._tap_cap(t)) if cap else gen_phys._tap_cap(t))   # --cap only tightens the plan cap
     rep["cap"], rep["radius_um"], rep["taps_before"] = cap, radius, len(tp)
     if not sinks:
@@ -297,10 +347,10 @@ def recheck(P, types, radius, cap_max=None):
     out = {}
     for tn in types:
         tp = schema.tap_grid(P, tn)
-        loads = TP.tap_loads([(x, y) for _, x, y in tp], TP.sink_sites(P, tn))
+        loads = TP.tap_loads([(x, y) for _, x, y in tp], type_sinks(P, tn))
         cap = gen_phys._tap_cap(P.types[tn])
         cap = min(cap, cap_max) if cap_max else cap
-        out[tn] = dict(taps=len(tp), max_load=int(round(max(n for n, _ in loads))),
+        out[tn] = dict(taps=len(tp), sink_basis=sink_basis(P, tn), max_load=int(round(max(n for n, _ in loads))),
                        over_cap=sum(1 for n, _ in loads if round(n) > cap),
                        max_radius=round(max(f for _, f in loads), 3),
                        over_radius=sum(1 for _, f in loads if f > radius + 1e-6))
@@ -315,6 +365,11 @@ def main(argv=None):
     ap.add_argument("--radius-um", type=float, default=300.0)
     ap.add_argument("--max-add", type=int, default=200)
     ap.add_argument("--cap", type=int, default=0, help="split to min(plan cap, CAP) sinks/tap (Fable lever 8: 1650); default = plan cap")
+    ap.add_argument("--sinks", action="append", default=[], metavar="TYPE=FILE",
+                    help="placed register inventory of TYPE (TAP-SOFTFLOP): .reg / bins JSON / geometry dump / [[x,y]] list")
+    ap.add_argument("--sinks-dir", help="DIR/<type>.reg or DIR/<type>.json for every type that has one")
+    ap.add_argument("--require-placed", action="store_true",
+                    help="a type without sink_bins_file or placed sinks is NO_PLACED (no rows) instead of split on planned sinks")
     ap.add_argument("--rows", required=True)
     ap.add_argument("--out-plan")
     ap.add_argument("--tools", help="tools/die_plan of the tree to plan with (default: next to this file)")
@@ -328,17 +383,27 @@ def main(argv=None):
     TP.PLAN_DIR = str(Path(a.plan).resolve().parent)
     P = S.Plan(raw, a.plan)
     types = [x for x in a.types.split(",") if x] or sorted(P.types)
+    PLACED.clear()
+    for kv in a.sinks:
+        tn, f = kv.split("=", 1)
+        PLACED[tn] = load_placed(f)
+    if a.sinks_dir:
+        for tn in types:
+            for ext in (".reg", ".json"):
+                f = Path(a.sinks_dir) / f"{tn}{ext}"
+                if tn not in PLACED and f.is_file():
+                    PLACED[tn] = load_placed(f)
     reps, rows_by_type = [], {}
     for tn in types:
         try:
-            rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None)
+            rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed)
         except Exception as ex:
             rep, rows = dict(type=tn, status="ERROR", why=f"{type(ex).__name__}: {str(ex)[:200]}"), []
         if rows:
             rows_by_type[tn] = (rep["key"], rows)
         reps.append(rep)
         b, f = rep.get("before", {}), rep.get("after", {})
-        print(f"TAP_SPLIT {tn} {rep['status']}: taps {rep.get('taps_before')} +{len(rows)}; max load "
+        print(f"TAP_SPLIT {tn} {rep['status']} [{rep.get('sink_basis', '?')}]: taps {rep.get('taps_before')} +{len(rows)}; max load "
               f"{b.get('max_load')}->{f.get('max_load', b.get('max_load'))}/{rep.get('cap')}, over cap {b.get('over_cap')}->"
               f"{f.get('over_cap', b.get('over_cap'))}, max radius {b.get('max_radius')}->{f.get('max_radius', b.get('max_radius'))}"
               f"{' ' + rep['why'] if rep.get('why') else ''}", flush=True)
@@ -352,7 +417,7 @@ def main(argv=None):
         bad = {k: v for k, v in out["recheck"].items() if v["over_cap"] or v["over_radius"]}
         print(f"TAP_SPLIT RECHECK {len(out['recheck'])} types on {a.out_plan}: {len(bad)} still over cap/radius", flush=True)
     Path(a.rows).write_text(json.dumps(out, indent=1) + "\n")
-    tot = {s: sum(1 for r in reps if r.get("status") == s) for s in ("OK", "SPLIT", "PARTIAL", "BLOCKED", "UNSUPPORTED", "ERROR", "NO_SINKS")}
+    tot = {s: sum(1 for r in reps if r.get("status") == s) for s in ("OK", "SPLIT", "PARTIAL", "BLOCKED", "UNSUPPORTED", "ERROR", "NO_SINKS", "NO_PLACED")}
     print("TAP_SPLIT SUMMARY " + " ".join(f"{k}={v}" for k, v in tot.items()) +
           f"; taps added {sum(len(r) for _, r in rows_by_type.values())}", flush=True)
     return 0
