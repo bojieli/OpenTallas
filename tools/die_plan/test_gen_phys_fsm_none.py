@@ -24,3 +24,10 @@ def test_qc_glue_fsm_modules_get_st(tmp_path):
     assert gen_phys.fsm_none_wires(tmp_path) == ["st"]
     (tmp_path / "a.sv").write_text("module qfd_sys_face_lctx3_core (input wire ck);\nendmodule\n")
     assert gen_phys.fsm_none_wires(tmp_path) == ["st"]
+
+
+def test_mtp_seq_kits_pin_st_and_ek(tmp_path):
+    """HEAD-R18 11-23: kits defining ot_dsrom_mtp_seq / _fan (hd_ctl) keep st and ek binary (fsm_encoding none)."""
+    (tmp_path / "a.sv").write_text("module ot_dsrom_mtp_seq_fan #(parameter W=1) (input clk);\nendmodule\n")
+    assert gen_phys.fsm_none_wires(tmp_path) == ["st", "ek"]
+    assert gen_phys.fsm_none_wires(tmp_path, "st hunt") == ["st", "ek", "hunt"]

@@ -2268,8 +2268,22 @@ class Lec:
         superset_vec = os.environ.get("OT_LEC_SUPERSET_VEC") == "1"
         one_dim = lambda s: all(ix.count("[") == 1 for ix in s)
         self.superset_extra = []                  # [(gate bit, re-keyed gate key)]: the per-run list (lec.json)
+        # HEAD-R18 11-23 (hd_ctl routed LEC 318 differs in g_seqf.u_seq): a yosys FSM recode of a binary RTL state
+        # vector st[n-1:0] into one-hot gate flops st[0..nt-1] (fsm_recode keeps the base name) looks like a strict
+        # superset vector.  Keeping the common names paired gold binary st[i] with gate one-hot st[i] (wrong by
+        # construction) and left no gold bits free for fsm_proposals.  A dense gold vector [0..n-1] (n <= 4) whose
+        # gate is a dense [0..nt-1] with n < nt <= 2**n is the FSM shape: the whole gate vector is re-keyed (base#t)
+        # as without the flag, so the cube search pairs it.  Every pairing is still proved inductively.
+        def fsm_shape(b):
+            n, nt = len(gidx[b]), len(tidx[b])
+            return (1 < n <= 4 and n < nt <= (1 << n) and gidx[b] == {f"[{i}]" for i in range(n)}
+                    and tidx[b] == {f"[{i}]" for i in range(nt)})
+        self.superset_fsm = []                    # bases kept out of the superset rule as FSM recodes
         for b in self.relaid:
             sub = superset_vec and gidx[b] < tidx[b] and one_dim(tidx[b])
+            if sub and fsm_shape(b):
+                sub = False
+                self.superset_fsm.append(b)
             for ix in tidx[b]:
                 if sub and ix in gidx[b]:
                     continue

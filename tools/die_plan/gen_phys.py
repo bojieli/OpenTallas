@@ -6389,7 +6389,11 @@ def defines_landing_ring(rtl_dir):
 # QC-TYPES-11 11-08 (same class, QC glue a6 pre-route LEC NOT EQUIVALENT): yosys fsm re-encoded u_rec.st (3 -> 4 bits,
 # ot_qwen_d2d_recovery) and u_ot_pr_core.st (3 -> 5 bits, qfd_sys_face_lctx3_core); every listed differing cone had gold_only st.
 _FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M), ("hunt",)),
-                       (re.compile(r"^\s*module\s+(?:ot_qwen_d2d_recovery|qfd_sys_face_lctx3_core)\b", re.M), ("st",)),)
+                       (re.compile(r"^\s*module\s+(?:ot_qwen_d2d_recovery|qfd_sys_face_lctx3_core)\b", re.M), ("st",)),
+                       # HEAD-R18 11-23 (hd_ctl routed LEC 727 differs / 101 X-unproven, all in g_seqf.u_seq): yosys fsm
+                       # re-encoded ot_dsrom_mtp_seq(_fan) st[2:0] (7 states) to one-hot st[0..6] and the unreset ek[2:0];
+                       # the binary-encoded hd_ctl kit (st ek) placed and passed CTS TT +97.62 with the same function.
+                       (re.compile(r"^\s*module\s+ot_dsrom_mtp_seq\w*\b", re.M), ("st", "ek")),)
 
 
 def replica_keep_wires(rtl_dir, extra=None, stations=None):
