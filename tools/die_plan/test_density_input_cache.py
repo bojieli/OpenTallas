@@ -20,6 +20,7 @@ def plan():
 
 @pytest.fixture(autouse=True)
 def isolate(monkeypatch):
+    monkeypatch.setenv("OT_BIND_GATE_CACHE", "off")
     T._clear_density_cache()
     monkeypatch.setattr(T, 'planned_sinks', lambda *a, **kw: [])
     yield
