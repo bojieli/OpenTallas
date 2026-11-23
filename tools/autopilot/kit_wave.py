@@ -9604,6 +9604,23 @@ print("KW_CHAIN_RECEIPT " + json.dumps(out))
 '''
 
 
+# GOAL-MARK-1122 (COORD 18:4x/19:0x: six S81 slice kits, TAPHOLD, H9R0 died after place on 'FAIL_PREFLOOR stage resume: goal finish
+# unsupported' -- the pre-36d0a6df8f6 runner refused goal finish on a stage resume before any flow step ran).  That marker is not a
+# design or flow verdict, but chain_refusal refused every later resume of the same placed kit on it.  A FAIL_PREFLOOR whose every
+# non-empty line is that goal refusal is moved aside (FAIL_PREFLOOR.goal_unsupported.<epoch>, kept for the record); any other line keeps it.
+STALE_GOAL_MARK_RE = r"^FAIL_PREFLOOR stage resume: goal \S* ?unsupported$"
+
+
+def stale_goal_mark_cmd(K):
+    """the gen-host command that moves K/FAIL_PREFLOOR aside when it holds only stage-resume goal refusals; prints CLEARED or KEPT"""
+    code = ("import os,re,sys,time\nk=sys.argv[1]; f=os.path.join(k,'FAIL_PREFLOOR')\n"
+            "try:\n    ls=[x.strip() for x in open(f,errors='replace').read().splitlines() if x.strip()]\nexcept OSError:\n    ls=None\n"
+            f"if ls and all(re.match({STALE_GOAL_MARK_RE!r},x) for x in ls):\n"
+            "    os.replace(f,f+'.goal_unsupported.%d'%int(time.time())); print('KW_CHAIN_GOAL_MARK CLEARED')\n"
+            "else:\n    print('KW_CHAIN_GOAL_MARK KEPT')\n")
+    return f"python3 -I -c {shlex.quote(code)} {shlex.quote(K)}"
+
+
 def chain_refusal(p, goal):
     """the autopilot admit_new refusal for a kit probe (PROBE_KIT), '' when the kit may continue"""
     if not p.get("exists"):
@@ -9710,6 +9727,12 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
     if g2 != g:
         print(f"KW_CHAIN_GOAL {g} -> {g2} (runner signs off on {'/'.join(p.get('signoff_goals') or [])})", flush=True)
     g = g2
+    if p.get("fail_marks") == ["FAIL_PREFLOOR"]:
+        _, ctxt = run("chain_clear_goal_mark", remote(stale_goal_mark_cmd(K)), idempotent=True)
+        if "KW_CHAIN_GOAL_MARK CLEARED" in (ctxt or ""):
+            print("KW_CHAIN_GOAL_MARK CLEARED " + K + ": FAIL_PREFLOOR held only 'stage resume: goal X unsupported' (RESUME-GOAL-1122 "
+                  "pre-36d0a6df8f6 marker, no flow step failed); moved aside, the chain continues", flush=True)
+            p = dict(p, fail_marks=[], fail_text={})
     why = chain_refusal(p, g)
     if why:
         return fail("chain_admit", "KW_CHAIN refused (autopilot admission rules): " + why, f"{kh}:{K}")
@@ -10054,6 +10077,25 @@ def runitem_unit_argv(spec_path, sp, argv, env=None, cgroup=None, stdout_path=No
             if k != "KW_RUNITEM_UNIT":
                 cmd.append(f"--setenv={k}={env[k]}")
     return {"unit": unit, "log": log, "argv": cmd + list(argv)}
+
+
+def runitem_driver(spec_path, env=None):
+    """GOAL-MARK-1122 (COORD 19:0x: TAPHOLD ran `run-item --goal route` from its spec's pinned rt 255a1cf9cd3b, older than RESUME-STAGE-1122, so
+    the resumed kit stopped after AUTO-GEOM): the kit_wave.py that drives a PRIVATE spec is rt/current's (control_root), like the S1 control
+    scripts; result-shaping tools stay pinned through the spec's tools_rt.  A wave spec, OT_CONTROL_ROOT=0, KW_DRIVER_FROM (one hop) or no
+    rt/current keep this file."""
+    env = os.environ if env is None else env
+    own = Path(__file__).resolve()
+    if env.get("KW_DRIVER_FROM"):
+        return own
+    try:
+        sp = json.loads(Path(spec_path).read_bytes())
+    except (OSError, ValueError):
+        return own
+    if not sp.get("private"):
+        return own
+    root = control_root(env)
+    return (root / "kit_wave.py").resolve() if root else own
 
 
 def runitem_reexec(spec_path, argv):
@@ -20656,7 +20698,13 @@ def main(argv=None):
         try:
             global RUN_ITEM_GOAL
             RUN_ITEM_GOAL = a.goal
-            runitem_reexec(a.spec, ["python3", str(Path(__file__).resolve()), "run-item", a.spec] + (["--goal", a.goal] if a.goal else []))
+            drv = runitem_driver(a.spec)
+            argv = ["python3", str(drv), "run-item", a.spec] + (["--goal", a.goal] if a.goal else [])
+            runitem_reexec(a.spec, argv)
+            if drv != Path(__file__).resolve():
+                print(f"KW_DRIVER_REEXEC {Path(__file__).resolve()} -> {drv} (private run-item drives from rt/current; result tools stay pinned)", flush=True)
+                os.environ["KW_DRIVER_FROM"] = str(Path(__file__).resolve())
+                os.execvp(argv[0], argv)
             return run_item(a.spec)
         except Exception as e:                          # a crash of the pipeline itself is FLOW, recorded
             out = Path(a.spec).parent / "result.json"
