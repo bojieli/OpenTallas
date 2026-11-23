@@ -15,3 +15,10 @@ Deadline: ROWS-READY or REASONED to S81-J9-ASSEMBLY-R6 by 14:30 (PRE-clean 15:30
 - RSPLIT probe: epyc7 rc37/rsplit_probe.otrun.log (F2 kit copy, MAX_UM 300, cts from 3_place)
 ## Next
 Read each probe with sta_census2.sh on its 4_1_cts.odb; post ROWS-READY (PRE + probe) or REASONED; push c11817b827 via ot-push-main after the RSPLIT probe prints far_skipped.
+## Update 11-23 15:55 PST: REASONED packet posted (hub 08d58c7)
+- Row ready: lanes/handoff/FABLE-OPEN-S81-A-rc37-LP-PROFILE-1b-ops.json 631181597c49 (lepe_mu_LP t2 RIP3+ROS3 only). PRE PASS on 3-op superset; no bind/LATCHECK.
+- lepw ops withdrawn: probes epyc7 rc37/cen3_pA_lepwmus (-677.2, 1200 ends), cen3_pB_lepwmu (-265.2, 473 ends).
+- RSPLIT-REACH c11817b827 (intel1 clone_rc37) NOT pushed: partial (cen3_pC_rsplit 31 ends, root_r->group_r -179.3).
+- Codex lpc seating as built: reject (cen3_pD_lpc root_r->group_r -1121.8).
+- Open: RX registered read at the bank (lepw rid/ml_wd), ros_r rank seats for lepw, N2 TXQ3 measured on a tree whose portfix178 lep.sv has the selector, reset copy class with the RST-COTAP owner.
+- No live units.
