@@ -43,3 +43,4 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 ## 23:4x after the 23:3x limit blip: all 10 units active, waiters alive, nothing lost
 - A+B fix staged on epyc7: L/tmp/chain_r9_tfix.sh TAG (needs plan/applied_t from chain_bt.sh t): wchan3_remap + wchan3_remap_exp vs L/plan/base_r18q, then baseline = r18q + wchan2 + strip + wchan3 (xbase_r18q_ab; sidecar + sink bins fetched from epyc10, sha 994b8a2892dd0768 / f72b6bea54e4aed4), then gate with a fresh tag. Run via ot-run --priority plan --hosts epyc7 ... bash L/tmp/chain_r9_tfix.sh r18t2 once bt_epyc7.sh ends.
 - epyc7 fork 42/49 GB at 23:37.
+- 23:4x FLOW-OPS-R2 CRIT-DIRS-1122: wa/na/bw/bn work dirs listed in intel2 ~/.local/lib/kw42/crit_dirs.txt (OT_RUN_CRIT=1 = skip load cap only; memory/disk rails unchanged). When a kit signs off or stops, REMOVE its line from crit_dirs.txt (copy+mv) or ask FLOW-OPS-R2. kit_rtl of all 4 admitted, rc 0.
