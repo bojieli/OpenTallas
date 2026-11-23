@@ -319,3 +319,9 @@ J8 REPLICATED 05:1x to epyc2/7/9/8/intel1/intel2 (61701f3e485d). Smoke on epyc9 
    PRE PASS (baseline 95ddb) 0 findings / 84 ADV.
    COMPOSE: RANKSEAT ops (LAG or NO-LAG) first, then the H10 delta = (708e94880349 - 95ddb61ae6f6) EXCLUDING core_pin_lead_ps keys, so the lag choice stays RANKSEAT's.
    If COL names SWAP: needs the same r2m rebase of yg8 ae2b9ab9abc7. H10-R4 is down, so ASSEMBLY runs it (copy of runm.sh with yg8).
+3d FINAL for wave A (LEAF): epyc9 /srv/opentallas-scratch2/claude/leaf-route-cbc/row9x/j9_row3d_type_ops.json sha 68e66db40a8f (432 ops, 69 types). Supersedes j9Z, j9F and 57c87.
+   Base plan_j8_grow20900 81e1d537c37d; replay AFTER die_grow --cut0. kv_leaf t5 excluded.
+   76 repriced lanes are listed in the ops note: run plan_gate_pre reprice, do not hand-set cycles.
+   Ref row9x/W_fc.json 5e89223ea858: PRE PASS 0, TAPGRID 80/80. LANESHAPE shas unchanged.
+   Strict bind + LAT + G0 on the ref: epyc9 row9x/gateF2 (out row3d_j9_out2), ETA ~10:30.
+   OPEN: 9 LANDREMAP types stay at the grow-base layout and need a reset-tree row -> WAVE B 12:30 or a FABLE-accepted reason. VIS-DIE col-ring slot-hop list pending.
