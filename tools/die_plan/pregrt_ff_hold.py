@@ -236,12 +236,12 @@ set pg_np_scope [expr {![info exists ::env(OT_PREGRT_HOLD_PORTS)] || $::env(OT_P
 # slack >= kit slack + seam_ps - die tap skew).  Measured KV 11-23: 1-5 such ends per type at -33..-165 ps (kv3_hroot start_i -105, arst_n
 # -104.5; kv3_hgi_v2 ri_head2 -165; kv3_pc_v3 ri_kvpc0 -106), a handful of delay cells each, while the ring bulk (5-10k ends) stays excepted.
 # OT_PREGRT_HOLD_PORTS=ctl keeps ONLY the control entry ports of that set (reset / start tree and reset spines: arst_n, start_i,
-# cland_tstart_in*, cland_rstart_in*, ri_*): a few 1-bit ports per type, never a bus, so the 11-18 ruling (no bulk port pads) stands; the
+# cland_tstart_in*, cland_rstart_in*, ri_*; a one-bit vector port is named start_i[0]): a few 1-bit ports per type, never a bus, so the 11-18 ruling (no bulk port pads) stands; the
 # bulk vclk bins are the io_hold / pin-register tap rows.  Unset / any other value = byte-identical behaviour.
 set pg_np_in $pg_in
 if {[info exists ::env(OT_PREGRT_HOLD_PORTS)] && $::env(OT_PREGRT_HOLD_PORTS) in {vclk ctl}} {
   set pg_np_in {}
-  set pg_ctl_globs {arst_n start_i cland_tstart_in* cland_rstart_in* ri_*}
+  set pg_ctl_globs {arst_n {arst_n\[*\]} start_i {start_i\[*\]} cland_tstart_in* cland_rstart_in* ri_*}
   foreach pg_p $pg_in {
     set pg_pn [get_full_name $pg_p]
     set pg_keep [expr {!(([info exists hg_fwd_ports] && $pg_pn in $hg_fwd_ports) || ([info exists hg_native_ports] && $pg_pn in $hg_native_ports))}]
