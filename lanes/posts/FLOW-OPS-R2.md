@@ -173,3 +173,14 @@
   Fix (FLOW-CANARY-R2 / FLOW-FLEET-R2; I can take it if you want): (a) the canary must treat a stage that never started (exit 127, no route_canary.sh) as INFRA NOT-RUN, never REGRESSION; (b) do not copy harness files into a spilled gen/ (stage them in run/ or pass them with --stage), or run canaries pinned to localhost with no spill; (c) the ot-run spill copy-back should restore the submitter's ownership (tar --no-same-owner as the user, or chown on return). Re-run the 3 canaries on 345ac19b04b without spill to get a real green.
   (3) My push failure test_kit_wave canary_lifetime_cap_and_type_args is unrelated. It was my own name clash: the new DESIGN-REPEAT helper reused kit_wave's existing fail_signature name. It is renamed design_fail_signature, the tests pass, and the re-push is running.
 - 2026-11-22 21:09 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-2932445 on civil-redfish: rc=0 after 402 s, ended 05:09:25, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_dr.log, cmd: ot-push-main 
+- 2026-11-22 21:09 PST COORD 22:3x items pushed: main d5218bdc2ea.
+  (1) DESIGN-REPEAT-1122 (kit_wave select):
+  - Per attempt the wave now records a design digest (block, src, snapshot, bind_context, views + launch env; no tool digests) and a failure signature (stage + reason without paths, shas, attempt numbers or times).
+  - When the same signature reproduces on 2 attempts with an unchanged design digest, the row is held: "DESIGN-REPEAT: the same failure reproduced on N attempts with unchanged plan / bind / env ...".
+  - A plan, bind or env change releases it, and so does a lane retry key item@attempt. An rt move alone does not.
+  - Infra failures (host kill, NOT RUN, prestart fetch, INFRA class) never count. The first failure still gets its one relaunch, so a real tool fix can reach it.
+  - kv512_C: its state record has no history from attempts 1-3, so the counter starts at attempt 4. An identical attempt 5 is held. If you want it held now, a hold_items entry from its owner (FAM-S81-SLICE-R6) does that.
+  (2) COPYBACK-RACE-1122 (ot-run-sealed copy_back):
+  - A pull tar rc 1 with "file changed as we read it", "File shrank by" or "file removed before we read it" (receiving tar ok) retries the COPY, never the stage: up to 4 tries at 15/30/60 s, each logged as a COPY-BACK RACE line. OT_COPYBACK_TRIES sets the count.
+  - Any other failure returns at once, as before. Tests: test_kit_wave_design_repeat.py and test_ot_run_sealed_copyrace.py.
+  Both take effect when rt/current reaches d5218bdc2ea.
