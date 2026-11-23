@@ -80,3 +80,16 @@ def test_hub_container_lease_not_a_list_row_clean_aggr_r3(tmp_path):
     out = set()
     assert B.hub_lease_paths(out, g.canon, d=d) == 1
     assert out == {"/srv/opentallas-scratch2/claude/kw45/src_x_work"}
+
+
+def test_otrun_auto_lease_on_lane_root_keeps_only_root_and_leased_inputs_clean_aggr_r3(tmp_path):
+    d = str(tmp_path / "lr")
+    root = "/srv/opentallas-scratch2/claude/fable-fix-qc-v4"
+    L.take(root, "FABLE-FIX-QC-V4/ot-run-outgoing-giraffe-1", 2, d=d)
+    L.take(root + "/in", "FABLE-FIX-QC-V4/ot-run-outgoing-giraffe-1", 2, d=d)
+    ls = L.leases(d)
+    assert L.covering(root + "/l0b_bound", ls) is None
+    assert L.covering(root + "/in/x", ls)["path"] == root + "/in"
+    assert L.covering(root, ls) and L.covering("/srv/opentallas-scratch2/claude", ls)
+    L.take(root, "FABLE-FIX-QC-V4", 2, d=d)                       # the lane's own explicit lease keeps the whole tree
+    assert L.covering(root + "/l0b_bound", L.leases(d))["owner"] == "FABLE-FIX-QC-V4"

@@ -78,12 +78,23 @@ def leases(d=None, now=None, live_only=True):
 CONTAINER = re.compile(r"/srv/opentallas-scratch[0-9]*/claude(/(kw45(/snap_[^/]+)?|ot-jobs|rt|autopilot(/closed(/[^/]+)?)?|[^/]+/runs(/[^/]+(/kit-wave)?)?))?")
 
 
+# CLEAN-AGGR-R3 11-22 (COORD: 5 fable-fix-qc-v4 *_bound dirs, ~300 GB, unreachable): ot-run's automatic lease on a job's --dir that is a whole
+# LANE ROOT (claude/<lane>) protects the lane dir itself, not every sibling subtree; the job's real inputs carry their own auto-leases (in/, l1r/,
+# W/launch ...).  A lane's own explicit lease (owner without "/ot-run-") on its root still protects everything below it.
+LANE_ROOT = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[^/]+")
+
+
+def _container(r):
+    p = r["path"]
+    return bool(CONTAINER.fullmatch(p) or (LANE_ROOT.fullmatch(p) and "/ot-run-" in str(r.get("owner") or "")))
+
+
 def covering(target, lease_list):
     """the first live lease that protects target: target is the leased path, inside it, or contains it"""
     t = _norm(target)
     for r in lease_list:
         p = r["path"]
-        if p == t or p.startswith(t + "/") or (t.startswith(p + "/") and not CONTAINER.fullmatch(p)):
+        if p == t or p.startswith(t + "/") or (t.startswith(p + "/") and not _container(r)):
             return r
     return None
 

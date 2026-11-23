@@ -1893,7 +1893,9 @@ class Job:
                 return f"independent realpath: {self._indep[i]}"
             a = d
             while a not in ("", "/"):
-                if a in self._indep_set and a.count("/") > 4:
+                # CLEAN-AGGR-R3 11-22: a kit-wave work root row protects the root, not the attempts below it (same rule as the PathSet,
+                # d10a3cc3ca); as an ancestor it raised sticky ALERTs on epyc2 (11-21 23:40) and intel1 (11-22 19:47)
+                if a in self._indep_set and a.count("/") > 4 and not (a != d and WAVE_ROOT_RE.search(a)):
                     return f"independent realpath ancestor: {a}"
                 a = os.path.dirname(a)
         return None
@@ -3305,7 +3307,7 @@ class Driver:
         st, td = shlex.quote(self.rstate), shlex.quote(self.tools)
         cmd = (f"set -e; mkdir -p {st} {td}; T=$(mktemp -d {st}/.push.XXXXXX); tar -C $T -xf -; "
                f"if [ -f $T/guard/protected.txt ]; then mkdir -p ~/.local/state/ot-delete-guard; cp $T/guard/protected.txt ~/.local/state/ot-delete-guard/protected.txt; fi; "
-               f"cp $T/tools/* {td}/; rm -rf {st}/snapshot.old; if [ -d {st}/snapshot ]; then mv {st}/snapshot "
+               f"cp --remove-destination $T/tools/* {td}/; rm -rf {st}/snapshot.old; if [ -d {st}/snapshot ]; then mv {st}/snapshot "
                f"{st}/snapshot.old; fi; mv $T/snapshot {st}/snapshot; rm -rf $T {st}/snapshot.old")
         r = self.r.host(h, cmd, inp=data, binary=True)
         return r.returncode == 0, (r.stderr or b"").decode(errors="replace")[:200]

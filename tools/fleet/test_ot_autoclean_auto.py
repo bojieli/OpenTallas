@@ -1028,6 +1028,25 @@ class TestExpiry(Base):
         self.assertFalse(os.path.exists(sup), self.row(sup))
         self.assertTrue(os.path.isdir(wave_root))
 
+    def test_snapshot_wave_root_row_no_alert_on_attempt_below_clean_aggr_r3(self):
+        wave_root = os.path.join(self.root, "kw-z/runs/hbm/kit-wave")
+        sup = os.path.join(wave_root, "hbm/ev1/items/item_z/attempt_1")
+        touch(os.path.join(sup, "gen/x/run/results/asap7/d/base/3_place.odb"))
+        touch(os.path.join(sup, "geom/auto_geom.json"))
+        age_tree(sup)
+        self.prot.append((wave_root, "hub kit_wave work root"))
+        self.kw = {"attempts": {"hx:" + sup: {"active": False, "signed": False, "terminal": ["FAIL/None"]}},
+                   "latest": {"hx:" + os.path.dirname(sup): 3}, "keep": []}
+        rc = self.run_job("--classes", "a")
+        self.assertNotEqual(rc, 3, self.out[-2000:])
+        self.assertFalse(os.path.exists(os.path.join(self.state, "ALERT")))
+        self.assertFalse(os.path.exists(sup), self.row(sup))
+        self.assertTrue(os.path.isdir(wave_root))
+
+    def test_push_replaces_read_only_tool_files_clean_aggr_r3(self):
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ot-autoclean.py")).read()
+        self.assertIn("cp --remove-destination $T/tools/*", src)
+
     def test_wave_root_row_still_holds_itself(self):
         wave_root = os.path.join(self.root, "kw-x/runs/hbm/kit-wave")
         os.makedirs(wave_root)
