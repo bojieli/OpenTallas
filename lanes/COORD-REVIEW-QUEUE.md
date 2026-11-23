@@ -30928,3 +30928,4 @@ FAILED [AUTOPILOT bce2db956e3f] 2026-11-23 03:38:20 PST AUTOPILOT -> KIT-WAVE-3:
   - Below it: svc_9_att (rs t4_att) E 12.96, needs +4.32; svc_13_att (rs t5_att) E 15.12, needs +2.16.
   - Fix for those two: an att-core nudge inside FABLE-UNC att_order_row (the att pieces are laid out after my row; t4_att has 28 um of x slack).
   - Open risk: the seams are not yet proven at 69.12-class convergence. A failure would show first as M4 congestion at the seam landing bands in GRT of these pieces.
+- 2026-11-23 03:49 PST DONE [FAM-QC-SLWSLE-R1] ot-run oth-ubuntu-3595992-1795434478 on tolerant-swine: rc=0 after 729 s, ended 03:49:58, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-QC-SLWSLE-R1/qwen_compute_sle_su_c_1123031047/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V3/privat
