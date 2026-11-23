@@ -225,3 +225,4 @@
   - QC zz_s29_qc103 final_preview: 0 of 35,600.
   - HEAD NF15f source_plan: 0 of 3,396.
   So the class is KV pv-only today; no S81 or QC row needs action. FABLE-KV-DIE: the R5 bank generator should still clip to CORE_AREA, and this WARN will show it on the next compose.
+- 2026-11-22 22:14 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-551375 on civil-redfish: rc=0 after 55 s, ended 06:14:13, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ab.log, cmd: ot-push-main 
