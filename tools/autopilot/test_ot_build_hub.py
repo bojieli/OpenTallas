@@ -79,6 +79,7 @@ def fleet(tmp_path, monkeypatch):
     (tmp_path / "rt" / "current").symlink_to(rt)
     monkeypatch.setattr(H, "RT_ROOT", tmp_path / "rt")
     monkeypatch.setattr(H, "AP_DIR", tmp_path / "ap")
+    monkeypatch.setattr(H, "AUTO_BIND_GRACE_S", 0)
     monkeypatch.setenv("OT_BUILD_FORCE_SSH", "1")
     monkeypatch.setenv("OT_BUILD_HASH_CACHE", "off")
     monkeypatch.delenv("OT_LANE", raising=False)
@@ -238,6 +239,34 @@ def test_wave_rebind_one_at_a_time_per_die_and_alias_paths(fleet):
     fleet.eff_tree, fleet.eff_asbuilt = "/srv/s3/kw/src_kv", "/srv/s3/kw/src_kv/p/ab.json"
     r = H.wave_rebind(CFG, "kv", st2, now=40, run=fleet.run, popen=popen, alive=lambda pid: False)
     assert r["state"] == "FRESH" and r["asbuilt"] == SRC + "/p/ab.json"
+
+
+def test_wave_rebind_waits_the_grace_and_uses_the_die_tools_pin(fleet, tmp_path, monkeypatch):
+    monkeypatch.setattr(H, "AUTO_BIND_GRACE_S", 3600)
+    pin = tmp_path / "rt" / "404887a342b0"
+    (pin / "tools" / "die_plan").mkdir(parents=True)
+    (pin / "tools" / "die_plan" / "bind.py").write_text("")
+    cfg = json.loads(json.dumps(CFG))
+    cfg["dies"]["kv"]["tools_sha"] = "404887a342b0ffff"
+    st, started = {}, []
+
+    def popen(cmd, **kw):
+        started.append(cmd)
+        return P()
+    r = H.wave_rebind(cfg, "kv", st, now=1000, run=fleet.run, popen=popen, alive=lambda pid: True)
+    assert r["state"] == "WAITING" and not started and "plan lane" in r["why"]
+    n = len(fleet.calls)
+    assert H.wave_rebind(cfg, "kv", st, now=2000, run=fleet.run, popen=popen, alive=lambda pid: True)["state"] == "WAITING"
+    assert len(fleet.calls) == n                                           # no probe inside the grace
+    fleet.stale = False                                                    # the plan lane's own bind made it fresh meanwhile
+    assert H.wave_rebind(cfg, "kv", st, now=4700, run=fleet.run, popen=popen, alive=lambda pid: True)["state"] == "FRESH"
+    assert not started
+    st2 = {}
+    fleet.stale = True
+    H.wave_rebind(cfg, "kv", st2, now=1000, run=fleet.run, popen=popen, alive=lambda pid: True)
+    r = H.wave_rebind(cfg, "kv", st2, now=4700, run=fleet.run, popen=popen, alive=lambda pid: True)
+    assert r["state"] == "STARTED" and len(started) == 1 and "/rt/404887a342b0/" in " ".join(started[0])
+    assert H.die_rt(CFG, "kv") is None
 
 
 def test_wave_rebind_failure_is_reported_and_backs_off(fleet):

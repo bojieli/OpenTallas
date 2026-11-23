@@ -234,6 +234,16 @@ def run_bind_stage(r, host, rt_dir, out_root, a, types, run=sh, stream=None):
 # ---- wave rows (kit_wave.py) --------------------------------------------------------------------------------------------------------
 WAVE_STATUS_TTL_S = 600
 WAVE_FAIL_RETRY_S = 7200
+# S81 J7 11-22 (OPUS-PIPELINE-R2): the first auto rebind started 07:56 on a tree whose plan lane had adopted its own bind at 07:17,
+# on rt/current instead of the die's tools pin.  A die's rows must stay BIND-STALE this long before an auto rebind starts (the plan
+# lane's own post-apply bind wins), and the rebind runs on the die's tools_sha rt when that snapshot exists.
+AUTO_BIND_GRACE_S = int(os.environ.get("OT_AUTO_BIND_GRACE_S", "3600"))
+
+
+def die_rt(cfg, die):
+    """-> the rt snapshot name of the die's tools pin (dies.<die>.tools_sha) when it is on this host, else None (rt/current)"""
+    sha = str((cfg.get("dies", {}).get(die) or {}).get("tools_sha") or "")[:12]
+    return sha if sha and (RT_ROOT / sha / "tools" / "die_plan" / "bind.py").is_file() else None
 
 
 def _alive(pid):
@@ -297,13 +307,19 @@ def wave_rebind(cfg, die, st, lane="KIT-WAVE", now=None, run=sh, popen=None, ali
             return dict(rec)
         if rec.get("state") == "FAILED" and now - float(rec.get("t") or 0) < WAVE_FAIL_RETRY_S:
             return dict(rec)
-        rt_dir = Path(os.path.realpath(RT_ROOT / (rt or "current")))
+        if rec.get("state") == "WAITING" and now - float(rec.get("stale_since") or now) < AUTO_BIND_GRACE_S:
+            return dict(rec)
+        rt_dir = Path(os.path.realpath(RT_ROOT / (rt or die_rt(cfg, die) or "current")))
         files = [r["plan"]] + ([r["asbuilt"]] if r["asbuilt"] else []) + [str(rt_dir / "tools" / "autopilot" / "ot_build.py")]
         host, _ = pick_host(r["hosts"], r["tree"], files, run=run)
         out_root = f"{SCRATCH}/{lane}/ot-build/{die}/{Path(r['tree']).name}"
         rc, eff, text = bind_status(r, host, rt_dir, out_root, lane, emit_j, [], run=run)
         if rc == 0 and eff:
             rec.update(state="FRESH", out=eff["out"], asbuilt=_home(eff.get("asbuilt"), eff, r["tree"]), host=host, t=now)
+        elif rc == 3 and eff and now - float(rec.get("stale_since") or now) < AUTO_BIND_GRACE_S:
+            rec.setdefault("stale_since", now)
+            rec.update(state="WAITING", host=host, t=now, why=f"bind stale; the plan lane's own bind has until "
+                       f"{time.strftime('%H:%M', time.localtime(float(rec['stale_since']) + AUTO_BIND_GRACE_S))} before an auto rebind starts")
         elif rc == 3 and eff:
             cmd = bind_job(r, host, rt_dir, out_root, lane, emit_j, mem, [], run=run)
             lf = AP_DIR / "auto_bind" / f"{die}_{time.strftime('%m%d%H%M%S', time.localtime(now))}.log"
