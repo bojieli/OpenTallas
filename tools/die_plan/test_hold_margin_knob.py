@@ -29,3 +29,25 @@ def test_gen_phys_reads_the_grt_margin_knob():
     assert 'os.environ.get("OT_HOLD_FF_MARGIN_PS"' in src and "hold_ff_margin = float(_hm)" in src
     # the knob sits at the top of write_type_kit, before the kit config is built from hold_ff_margin
     assert src.index("OT_HOLD_FF_MARGIN_PS") < src.index("export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}")
+
+
+def test_pregrt_hold_ports_scope_vclk(monkeypatch):
+    """KV-CTLPORT 11-23: gen env OT_PREGRT_HOLD_PORTS_SCOPE=vclk writes the config line run_kit.sh passes to the build; the tcl then excepts
+    only forwarded ring / native pad inputs.  Unset = no line (byte-identical kit)."""
+    from pathlib import Path
+    import pytest
+    import pregrt_ff_hold as PG
+    t = {"clock": {"pregrt_ff_hold": True}}
+    monkeypatch.delenv("OT_PREGRT_HOLD_PORTS_SCOPE", raising=False)
+    assert not any("OT_PREGRT_HOLD_PORTS " in ln for ln in PG.config_lines(t))
+    monkeypatch.setenv("OT_PREGRT_HOLD_PORTS_SCOPE", "vclk")
+    assert "export OT_PREGRT_HOLD_PORTS = vclk" in PG.config_lines(t)
+    monkeypatch.setenv("OT_PREGRT_HOLD_PORTS_SCOPE", "all")
+    with pytest.raises(ValueError):
+        PG.config_lines(t)
+    src = Path(PG.__file__).read_text()
+    assert 'eq "vclk"' in src and "set pg_np_in $pg_in" in src
+    assert "set_false_path -hold -from $::pg_np_in" in src and "unset_path_exceptions -hold -from $::pg_np_in" in src
+    assert src.index("set pg_np_in $pg_in") < src.index("proc pg_np_apply") < src.index("foreach pg_tag {all rr xt}")
+    gp = Path(PG.__file__).with_name("gen_phys.py").read_text()
+    assert "OT_PREGRT_HOLD_PORTS=\\$(sed -n 's/^export OT_PREGRT_HOLD_PORTS = //p' /work/config.mk)" in gp

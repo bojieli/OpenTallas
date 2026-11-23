@@ -230,8 +230,23 @@ set pg_dg [expr {$pg_guard - $pg_pm}]
 # (4-12k cells on the sc family) only spends setup; R-MINIMAL gates internal FF hold and port-boundary hold is a die-level check.
 # OT_PREGRT_HOLD_PORTS=1 restores the old all-paths behaviour.
 set pg_np_scope [expr {![info exists ::env(OT_PREGRT_HOLD_PORTS)] || $::env(OT_PREGRT_HOLD_PORTS) ne "1"}]
-proc pg_np_apply {} { if {$::pg_np_scope && [llength $::pg_in]} { set_false_path -hold -from $::pg_in } }
-proc pg_np_end {} { if {$::pg_np_scope && ![info exists ::pg_scope_sdc] && [llength $::pg_in]} { unset_path_exceptions -hold -from $::pg_in } }
+# KV-CTLPORT 11-23 (FABLE-UNC-KV, DIE-FIX-LEDGER rc114/rc126): OT_PREGRT_HOLD_PORTS=vclk excepts ONLY the forwarded ring inputs (hold_gate
+# hg_fwd_ports: timed on their own fclk, a die eye check) and the native pad inputs.  Every other input is a vclk-timed seam input (start_i,
+# arst_n, cland_tstart_in, reset-spine ri_*, plain bins) whose seam contract the receiver has to BUILD (in_min is a receiver obligation: die
+# slack >= kit slack + seam_ps - die tap skew).  Measured KV 11-23: 1-5 such ends per type at -33..-165 ps (kv3_hroot start_i -105, arst_n
+# -104.5; kv3_hgi_v2 ri_head2 -165; kv3_pc_v3 ri_kvpc0 -106), a handful of delay cells each, while the ring bulk (5-10k ends) stays excepted.
+# Unset / any other value = byte-identical behaviour.
+set pg_np_in $pg_in
+if {[info exists ::env(OT_PREGRT_HOLD_PORTS)] && $::env(OT_PREGRT_HOLD_PORTS) eq "vclk"} {
+  set pg_np_in {}
+  foreach pg_p $pg_in {
+    set pg_pn [get_full_name $pg_p]
+    if {([info exists hg_fwd_ports] && $pg_pn in $hg_fwd_ports) || ([info exists hg_native_ports] && $pg_pn in $hg_native_ports)} { lappend pg_np_in $pg_p }
+  }
+  puts "OT_PREGRT_FF_HOLD port scope vclk: [expr {[llength $pg_in] - [llength $pg_np_in]}] vclk-timed inputs stay in the build, [llength $pg_np_in] forwarded ring / native pad inputs excepted"
+}
+proc pg_np_apply {} { if {$::pg_np_scope && [llength $::pg_np_in]} { set_false_path -hold -from $::pg_np_in } }
+proc pg_np_end {} { if {$::pg_np_scope && ![info exists ::pg_scope_sdc] && [llength $::pg_np_in]} { unset_path_exceptions -hold -from $::pg_np_in } }
 pg_np_apply
 # HOLD-MARGIN-FAMILY 11-17: extra REG-TO-REG pass to OT_PREGRT_HOLD_R2R_MARGIN (die family value, 0 = off); ports excepted, so the port seam
 # margin above is unchanged.  Same fail-safe as the rest of the build (TT setup is judged after the whole build, pg_verdict).
@@ -498,6 +513,13 @@ def config_lines(t):
     pm = os.environ.get("OT_PREGRT_HOLD_PORT_MARGIN_PS", "").strip()
     if pm:
         lines.append(f"export OT_PREGRT_HOLD_PORT_MARGIN = {float(pm):g}")
+    # KV-CTLPORT 11-23 (FABLE-UNC-KV): gen env OT_PREGRT_HOLD_PORTS_SCOPE=vclk (kit_wave die_gen_env / item_env) keeps the vclk-timed seam
+    # inputs inside the hold build of THIS kit (forwarded ring inputs stay excepted); unset or empty = no line, today's behaviour.
+    sc = os.environ.get("OT_PREGRT_HOLD_PORTS_SCOPE", "").strip()
+    if sc:
+        if sc != "vclk":
+            raise ValueError(f"OT_PREGRT_HOLD_PORTS_SCOPE: '{sc}' is not 'vclk'")
+        lines.append("export OT_PREGRT_HOLD_PORTS = vclk")
     return lines
 
 
