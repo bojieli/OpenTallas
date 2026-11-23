@@ -93,3 +93,10 @@ Work: epyc8 /srv/opentallas-scratch2/claude/fable-fix-kv-hub/r5 (tree_h3 private
 - sealed hub_Ei (spec qwen_kvsys_kv3_hub_Ei_1122025555): run-item from lane-staged scheduler intel2 /srv/opentallas-scratch2/claude/opus-fix-kv-hub-r6/rt_9959118207e3 --goal route, systemd unit runitem-kv3_hub_Ei, log intel2 ~/tmp/opusfixkvhub-r6/kit3i_*. Chain queued for CPU on epyc8 (kit lives there). Stale FAIL_PREFLOOR moved to epyc8 opus-fix-kv-hub-r6/aside_ei/.
 - sealed hub_Wo twin CANCELLED (proof CTS -723.92 = astk_WN reset reach); sealed hub_Eo cancelled earlier. NEXT: on clean re-bind, relaunch sealed hub_Eo/Wo from a tree with plan bf83bf83b70c + its bind (tree_r), src-manifest on, --goal route, scheduler rt >= 9959118207e3.
 - proof hub_Ei GRT (kv3_hub_Ei_1122003611): hold repair, setup WNS +36 ps TNS 0 at it 100.
+
+## 11-22 17:4x update (after weekly limit)
+- Sealed hub_Eo/Wo on bf83bf83b70c: kit_rtl rc 2. In kit_core_clocks, the astk merge group "is not one net", because only one of the 6 native reset pins was staged. Fix: ASTK-MERGE-1122, main e0c10098d792.
+- D28 row: ROWS_OPUS-FIX-KV-HUB-R6-RESET.py is now 85b1935f9f2c. Run it with --no-core-pins for D28; that drops the astk rows. Posted to KV-PLAN-R6.
+- Full row on the e0c1 tools: plan rr/plan_eowo3.json 240c9e69c3f1. Strict re-bind: epyc8 unit oth-ubuntu-869203-1795398045, out rr/bindgate4, log intel2 ~/tmp/opusfixkvhub-r6/rr_bind4.log. tree_r tools are now e0c1 (old ones in aside_r2).
+- hub_Ei proof: route RC 0. hub_Ei sealed (kit3i, runitem-kv3_hub_Ei): CTS 0, GRT since 17:08.
+- NEXT: after BIND_ERRORS 0, relaunch sealed Eo/Wo on the new bind with --goal route (tools e0c1). Then hub_Ei sealed: private-provenance + LEC.
