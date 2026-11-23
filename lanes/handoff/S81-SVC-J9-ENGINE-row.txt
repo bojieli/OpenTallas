@@ -1,0 +1,45 @@
+S81-SVC-J9 ENGINE ROW (SRX7 + ENG_XS + BCAST + RT2 calendar; SVC-CUT-DEPTH K4/5 dates)   2026-11-23 ENG fork (Opus 5.5)
+VERDICT: GO ENG_XS (not BAND).  Main sha: PENDING (COORD is pushing epyc10 s81-svc-j9-eng/repo_push, branch tip 861426ef82 pre-rebase).
+
+DEFINES (die-wide, asbuilt_run.json):
+  OT_SVC_SRX=7  OT_SVC_ENG_XS  OT_SVC_BCAST  OT_SVC_NATIVE_RT2_CALENDAR
+  NOT needed: OT_SVC_SRXT (a4 soft srxt arm PASS, but the profile does not use it), OT_SVC_NSTAGE (stays 2; ns3 lockstep PASS but no dates)
+  Cut: conditional (see below); apply_cutdepth.py --ka 4 --kr 5 only if the joint reconcile passes, else 0/0.
+COMPILER (lower_svc SERVICE_TIMING; dv_layer_compile picks it from OT_S81_SELECTED_DEFINES, env OT_SVC_NATIVE_RT2_CALENDAR=1):
+  closing_allq_srx7_xs        PIO 297+10, KPV 78+9   (n=9: scores +9, p feed on next II=2 calendar slot +10, P.V +19)
+  Cut K4/5 dates: NOT in this row.  SVC-CUT-DEPTH owns them as a separate lower_svc cut term (P_ARR +2K, PV_LAT +2K,
+  SOT_W_LAT +2K; P.V at entry +4K = +36), composed additively with closing_allq_srx7_xs (SRX/XS inside u_att, cut outside;
+  calendar parity kept since 2K is even).  Joint reconcile: intel2 ~/coord/lanes/handoff/S81-SVC-J9-CUT-ENG-reconcile.txt.
+  OPEN there: hi-only depth (lo pairs use plain dsdv_svc_rs_c) puts SX / ALLQ drain out of step by 2K unless lo is matched.
+  COORD fallback if not proven by 15:30: compose cut 0/0, svc_hi held.
+  dv_layer_compile refuses ENG_XS without OT_SVC_NATIVE_RT2_CALENDAR.
+SEGMENTS: SRX=7 = 7 relay stages + the end (capture) register = 8 segments: 2748 um -> 343.5 um, 2635 um -> 329.4 um (both < 400).
+RTL (main, branch claude/s81-svc-j9-engine-1123): ot_s81_svc_attn_s.sv fad26819fa51 (XS, BCAST, Codex tag align 65ee31d971 under
+  OT_S81C_TILE_REACH+H8 RT2 only), dsdv_svc_att.sv 5ff55a1f6123, dsdv_svc_rs.sv (BCAST), dsdv_svc_att_cut.sv = main 936b871fa31.
+J9 TREE OVERLAY (BCAST ported onto treeJ9s; intel1/epyc7 s81-svc-j9-eng/ovl/):
+  rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv 1c66d039610d   (tree 68e4642a8fbe)
+  rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv  c02cf2264cee   (tree aded49c3ee95)
+  s81_svc_r5_hi4_sources/dsdv_svc_att_j7_hi4.sv  a358dc6dd31f (tree ef973efef062)
+  s81_svc_r5_hi4_sources/dsdv_svc_rs_c_j7_hi4.sv 58807d66a1c5 (tree b0a34739e5ef); cut patch only per the reconcile
+  + main ot_s81_svc_attn_s.sv, dsdv_svc_sx_hrow.sv, dsdv_sm_so_target.sv, dsfd_svc_pc.sv, ot_s81_su_smq.sv, ot_s81_su_smh.sv
+  Verilator lint of the overlay: intel1 s81-svc-j9-eng/lint_ovl.otrun.log port_full/base_srx7 0 errors.
+PROOFS (host:/srv/opentallas-scratch2/claude/s81-svc-j9-eng/<log>):
+  a  soft srx7+XS+BCAST, mut1-3            PASS data_equal, mutants caught     epyc8 a_soft7_xs_bc.otrun.log
+  a3 soft srx7 ns3+XS+BCAST                PASS                                 epyc8 a3_soft7_ns3_xs_bc.otrun.log
+  a4 soft srx7+SRXT+XS+BCAST               PASS                                 intel2 a4_soft7_srxt_xs_bc.otrun.log
+  b  hcore+calendar srx7 ns3 XS BCAST      PASS (scores+9/pfeed+10/PV+19)       intel1 b_hc7_ns3_xs_bc_cal.otrun.log
+  b2 hcore+calendar srx7 ns2 XS BCAST      PASS                                 intel1 b2_hc7_ns2_xs_bc_cal.otrun.log
+  c1 hcore+calendar srx7 ns2               PASS                                 intel1 c1_hc7_ns2_cal.otrun.log
+  d1/d2 hcore NO calendar srx6 XS / srx8   FAIL data-unequal (even n too: not parity; reference also fails) epyc8 d1_*,d2_*
+  native programme+exact oracle (calendar built in), srx7+XS+BCAST: 1024 fields 0 errors   intel2 np_xs7_bc.otrun.log;
+     also np_srx0/np_srx7/np_band PASS; Codex intel1 native_xs_pair5_fix / tag7_program_codex PASS
+  cut lock-step (CUT fork) KD=10 vs as built, CUTMUT 2/3 caught            intel1 s81-svc-j9-cut/cutbench_v3.otrun.log
+  inert: 380/380 non-svc types INERT_BY_CLOSURE, 16/16 svc read the defines  epyc10 inert/closure.tsv
+  strict_lockstep False on every PASS arm = end cycle moves by the priced shift (expected), not a data difference.
+NOT PROVEN:
+  - cut K4/5 dates: CUT fork tb_svc_lower matrix (intel1 s81-svc-j9-cut/dates) in progress; conditional per FABLE-RC.
+  - the 16-slice rs bench: inherited SOT/target faults in both ref and BCAST (Codex trace_numeric: payloads identical, faults pre-existing).
+  - NSTAGE 3 native programme (did not run).
+ASSEMBLER: put the 4 defines die-wide; apply the overlay + apply_cutdepth K4/5; compile with OT_SVC_NATIVE_RT2_CALENDAR=1 and
+  OT_S81_SELECTED_DEFINES incl. OT_SVC_SRX=7,OT_SVC_ENG_XS,OT_SVC_BCAST,OT_SVC_NATIVE_RT2_CALENDAR -> profile closing_allq_srx7_xs
+  (+ the CUT term only if the reconcile passes); then the XS strict bind on intel1 treeJ9s.
