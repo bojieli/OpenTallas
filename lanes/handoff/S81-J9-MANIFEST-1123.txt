@@ -261,3 +261,11 @@ MERGED J9 COMPOSE ORDER (supersedes earlier lists):
      -175.6 = runaway GRT repair (RSZ-0060). PROBE-PASS needs an r0_p4 kit on the bound J9 tree with the wave env.
    --form swap alt (no ECORR): epyc10 fam-s81-col-h10-r4/j9/yg8/plan_final.json, running.
 FIX-LEDGER x13 (per-type verilog_defines dead for flattened logic/explicit params): static scan of J9 row ops is running. Classes: (a) kept leaf body, (b) move to a die-wide asbuilt define.
+1a RANKSEAT-R2 J9 (bind running): plan epyc10 opus-fix-s81-col-rankseat-r2/j9/treeJ8R2/.../plan_h2_2249.json 95ddb61ae6f6.
+   Base: sealed J8 plan 6833070df60b (tree 61701f3e485d) + _ss graft 3c285d644712 + R2 lockup (22464 rows) + tap_grt_pre (216 types) + LAG -120 (216 types). No-lag variant: j9/w/plan_r2_nolag.json 6251a023d393.
+   Ops (epyc10 opus-fix-s81-col-rankseat-r2/j9/w/ops/):
+     - ops_types.json 6b09a443490b: 888 per-key ops, col_* only, 216 types.
+     - ops_outside.json bfb15308ba10: 1 op, /budgets/rank_line_types {"^col_":{}}. Replay before die_grow.
+   Bind out: epyc10 OPUS-FIX-S81-COL-RANKSEAT-R2/ot-build/s81/treeJ8R2/b_822b131dc371.
+   CONFLICT RISK: COL 3e GROW + H10-R4 rows were built on _ss (56d5), NOT on R2. If they replace whole subtrees (/clock, /internal_stations, /buses) on the 18 h10 types, they can drop RANKSEAT's lockup/tap_grt_pre/LAG keys.
+     The composer applies RANKSEAT first, then old-value-checks every later col key. On a mismatch, H10-R4/COL rebase on 95ddb61ae6f6.
