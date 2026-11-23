@@ -46,3 +46,9 @@ Lane dir intel2 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0-r4 (logs). R3 l
 - Probe: OT_PROBE_THROUGH=1 sealed p2 pva4376595 with (b), rt 345ac19b04b3, epyc8, run-item pid 2055609 (intel2), log probe_*_runitem.log. Check: u_y_xd_u_r0_u_e1_u_w_* cells > 0 in geom.tsv; e1 u_w TT.
 - Open: t0 -> xa/xb_1_bs0_0 branch-copy legs 650-760 (p3/p6), p1 t2 503, p3/p6 xb_2->t2 448 (existing rows).
 - Waiter b7y6yb3gc: digest on 2641923 2669012 2711310 2740564 434285 455182 526975 2055609.
+
+## 11-22 21:2x PST COORD 23:0x actions
+- Rows v2 25172302ded3 (804 ops; bs0 chain FIRM seats + D=3, t2 p2) in j9/; PRE PASS 0 plan 8798460c88ee.
+- item_env col_h9_r0_* OT_KEEP_WIRES=ot_dp_dly:r (2dadd51b4aa9). Classes posted: S81-HC-INPUT-REACH, S81-DUPSTN-MERGE.
+- Private bind: epyc10 fam-s81-col-h9r0-r4/j9bind.sh -> j9tree (fork of s81-j6-r5/j8_cut_tree), out j9tree/physical/die_plan/s81/plan_of_record/native_bind/h9r0_j9_out, gate logs j9gate/. ot-run client 2381456 (intel2), log j9bind.otrun.log.
+- Chain tmp/j9_chain.sh (intel2) waits for 2381456, then runs tmp/j9_launch.sh p2 pva4376595 on epyc10 -> log j9_chain.log / j9_*_runitem.log. If BIND_NOT_DONE, read j9gate/*.log.
