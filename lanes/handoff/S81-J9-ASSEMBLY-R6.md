@@ -20,3 +20,9 @@ Work dirs: intel2 /srv/opentallas-scratch2/claude/s81-j9-r6 (j8_finish.sh, j8_ap
 ## CODEX notes 2026-11-23 07:46 PST
 
 - J8 891100ef774 applied on six replicas (source 61701f3e485d, bind 395/395, 552 files). E9 two same-byte foreign .fork.json inodes repaired. t18 FAIL on ft6 demand 5.767, held; J9 reviewed revision fcc21829441f demand 0.893, exact composed bind pending. c1x_C t5 and c3x remain held for XGA2. Two reviewed COL diagnostic pilots eligible; detached E8 preflight.
+
+## Codex 08:47 PST
+
+- Wave A pre-tap exact epyc10 `s81-j9-r6/compose/wavea_pretap_0838/ft_hops.json` 520b067a45c9. RANKSEAT NO-LAG, COL H10 reach and ECORR/NE/HOPGAP/UCF-MX, Slice CLAND/XGA2/RC31/34, LEPE RC37 and W2/F2/R1/RS1/N2 with retained depth9, SerDes clock + placements, 24-type SVC C7, MISC10c+BKSEL, FT 84/85. Remaining SVC low t1 DFI ft0 now scoped same-cycle 394f6e1c43aa, replay two fields after TAP. Flow E9 137 types / 8 shards under `tap-grid-r6/dr5kit/wave_a_1123`; its coverage helper revision is being corrected for the actual J9cmp tools.
+- Source successor epyc10 `s81-j9-r6/wave_a/tree`. Sealed J8 and original J9 untouched. `wave_a/j8_abi_source_ledger.json` carries 32 original J8 source files, including VP XR 11f382f00e21; N2 preferred c37011a52ce2 and BK preferred 9617ad7537cc. C7 sidecar 4ede387a3d9a; native asbuilt `physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run_wavea.json` 555d3793bb64 adds 56 exact SVC aliases and MISC station scope. E10 `wave_a/elab_0844.otrun.log` strict ELAB rehearsal and `compose/wavea_reset_0840/reset.otrun.log` die relay replan.
+- Visual d32246864528 reviewed over 406 partitions and six critical types, review `results/geom_review/s81_j9_wavea_d32246864528_1123.md`. This is plan geometry only. No route approval on the altered kit until its exact placement is reviewed.

@@ -12,3 +12,7 @@ Read the four predecessor handoffs for background. My dir: epyc9 /srv/opentallas
 - channel patch present in W_fc: t58 ve_m|vsw 51.84, t61 ve_s|vsw 69.12, kv junctions 34.56-41.04.
 - t22 ft1 column NOT covered (u_m|u_vsw 8.64 every variant); fix = FABLE-UNC ftclear.py (epyc9 /srv/opentallas-scratch3/claude/fable-unc-s81-leaf/ftclear.py) in the composed delta.
 - 8 FAILED-NO-RELAUNCH: t29 t32 t33 t36 t44f6 t7 t71 = GRT congestion -> row 3d + GRTCONG; t45 = PLACE-SETUP-STOP -663 hi_sw->wdo_q (VPW-CONE class, t14 proof a1/a2).
+
+## Codex 08:47 PST
+
+- C3 from R_final (LANDED + SELREP12 + same-depth geometry on 79 types) removes shadowed CRR_PRE2, 0 modeled legs >405. E10 input af7ddd448d45 PRE 0/324. Inherited blanket J9 RTL overlay removed native VP XR, so first strict ELAB refused. Private C3 restored exact R10 VP XR+SELREP 2a7dbb06ab12 and LANDED reset source 56f2c50c018c, with old bytes and source ledger kept under `inputs/leaf_c3_abi_0824`. W_fc (old row3d) bind also stopped on solved reset parent svc_8→svc_2. Replan retry fixed missing plan pin-table root; E10 `leaf_c3_replan_0833/run.otrun.log` rebuilds die reset then runs exact strict bind/LAT/G0 in private tree. C3 remains Wave B. Old t14 changed layout still stopped at 1458 overflow, keep held.

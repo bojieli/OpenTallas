@@ -22,3 +22,8 @@ Lane dirs: epyc10 + intel2 /srv/opentallas-scratch2/claude/s81-col-j9 (nehg/, tm
 
 ## Census (HOTSPOT-GAPS v2.4 col rows: 179; 105 covering_row NONE)
 - scratch col_gaps.tsv. NONE classes: RESET-ASYNC 38, HOLD-SKEW 19, IO-BOUNDARY 19 (CLASS-FIX-RHI), CLOCK-NDR-DROP 12 (FLOW-OPS REASON), REPAIR-CAP 7, CLOCK-SKEW 7, GLOBAL-DEMAND 2, REACH 1.
+
+## Codex 08:47 PST
+
+- Exact old H10 ECORR and SSTRIP diagnostic GENs failed on unmatched seam windows (+25.92 W0 and +60.48 E1). Latest J9 trial6 native GEN validation had zero errors, current composed ECORR precise dir in ASSEMBLY. Keep old forms held. ROM-in LAG exact placement reviewed for CTS diagnostic only. Inherited finish proceeded with OT_PROBE_THROUGH and automatic geometry measured 4,164 tap sinks / 645.73 µm r2r. Preserve diagnostic output, keep NO-LAG and require exact revised review for new finish.
+- J9 p5 12 FSTART release errors fixed with actual depth8 source seats, worst 232.54 µm, step 02 trial4 9a92e97732b1. J8 previously approved single R1/R2 pilots are active and handed to fleet for exact placed review.
