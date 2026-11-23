@@ -1,0 +1,46 @@
+{
+ "schema": "opentallas.s81.j6_donor_delta.v1",
+ "lane": "FABLE-OPEN-S81-A",
+ "row": "LP-PROFILE-1b",
+ "ledger": "rc37",
+ "event": "J9",
+ "for": "S81-J9-ASSEMBLY-R6",
+ "base_plan": "epyc10:/srv/opentallas-scratch2/claude/s81-j9-r6/wave_a/tree/physical/die_plan/s81/plan_wavea_4662b734580b.json",
+ "what": "dsdv_slice_lepe_mu_LP__t2 takes the lep relay profile RIP3 + ROS3 of its LEPE-4 proof kits (F2); the two lepw ops of LP-PROFILE-1 are WITHDRAWN (probe: not sufficient, lepw_mus WNS -347 -> -677)",
+ "types_changed": [
+  "dsdv_slice_lepe_mu_LP__t2"
+ ],
+ "cause": "one-cycle W<->E traverses of the 1442.88-um core (rop->roq 1575 um, status->ph_r 1264, rov_r->TX wdata 1390, RX SRAM->rid/ml_wd 1114, wrep n_r->count_r 836, odr->lo_d 1357-1444), launch/capture clocks within 45-110 ps; present on RIP1/ROS0 kits, absent on RIP3+ROS3 kits",
+ "evidence": {
+  "census_no_profile": [
+   "epyc10:/srv/opentallas-scratch2/claude/fable-open-s81-a/rc37/cen2_muR1 (lepe_mu_LP t2 RIP1: 438 ends, WNS -265.9)",
+   "epyc10:/srv/opentallas-scratch2/claude/fable-open-s81-a/rc37/cen2_lepwmus (lepw_mus_LP t2 RIP1: 973 ends, WNS -347.0)"
+  ],
+  "census_with_profile": [
+   "intel1:/srv/opentallas-scratch2/claude/fable-open-s81-a/rc37/cen2_nhmus (nh_mus_LP t1 RIP3+ROS3: only rop->ros_r[0] seat left, RS1)",
+   "epyc7:/srv/opentallas-scratch2/claude/fable-open-s81-a/rc37/cen2_muF2 (lepe_mu_LP t2 RIP3+ROS3: 54 ends, none of the traverse classes)"
+  ]
+ },
+ "K": "lepe_mu_LP t2 only: ri +2 cycles (RIP 1 -> 3), ro / t_host / t_kd / mu_c +3 input edges (ROS 0 -> 3). Not visible to bind/LATCHECK (lep_core is a bind stub; compiler GAP_XDIE).",
+ "ops": [
+  {
+   "op": "replace",
+   "path": "/partition_types/dsdv_slice_lepe_mu_LP__t2/verilog_defines",
+   "value": [
+    "OT_S81SL_LEP_CRP2",
+    "OT_S81SL_LEP_WREP5",
+    "OT_S81SL_LEP_RIP3",
+    "OT_S81SL_LEP_ROS3"
+   ]
+  }
+ ],
+ "gates": {
+  "PRE": "PASS findings=0 on the 3-op superset plan 26efb6f028ab (epyc10 rc37/pre_lp_profile1.log); the 1-op subset itself not re-run",
+  "probe": "F2 kit epyc7 (same defines): 54 setup ends < -42, 0 in the traverse classes; cen2_muF2",
+  "bind_latcheck": "not run"
+ },
+ "withdrawn_probe": {
+  "lepw_mus_LP__t2": "epyc7 rc37/cen3_pA_lepwmus: 1200 ends, WNS -677.2 (base 973 / -347.0)",
+  "lepw_mu_LP__t2": "epyc7 rc37/cen3_pB_lepwmu: 473 ends, WNS -265.2 (no baseline)"
+ }
+}
