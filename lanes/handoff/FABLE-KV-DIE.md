@@ -22,6 +22,22 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 18:15 PST -- CURRENT (supersedes the kit details of the 18:00 block)
+- COORD 18:0x: PRIMARY fix = KV-PLAN-R6 row ROWS_KV-PLAN-R6-ECTLRL in D29 (hg rq / krsp stations back to the D26 counts -> bind 37/26, old
+  signed ectlk views valid; apply about 06:00 11-23 with a boot-programme recompile). My 42/31 core rebuild is the RACE ARM until the D29 bind
+  proves that row. Then pre-stage hg kits (kv3_hg_v1p2, kv3_hg) on the D29 tree + bind and launch on apply. No hg launch before.
+- Core rebuild, what works: gen_core_kit_kv needs a CLEAN GIT checkout (manifest trees fail "kit provenance needs a clean, committed source
+  checkout"). So: epyc8 fable-kv-die/tree_c = ot-lane-clone of main 8bb9f7f7817, cone tools,rtl,physical/common_flow,
+  physical/die_plan/qwen_kvsys,physical/asap7_memory_macros_v2 (1.8 GB). Untracked additions only (git stays clean):
+  results/kv_host_regen_1/rtl/qkd_ectlk_q<k>/..._core.json (ectl/mk_corejson_c.py; files[] = closure from tree_c + kit-local columns RTL
+  fable-kv-die/ectl/columns_42_31.sv = D28-tree columns (HXK 15) with 42/31), plan_of_record/plan_ectl_noview.json, signed_view_sha_kv.json,
+  eW_sidecar.json (copied from tree_b). Main itself is NOT edited (its 37/26 guard stays).
+- Specs (intel2 ~/tmp/fablekvdie/ectl_specs_c.txt): qwen_kvsys_qkd_ectlk_q0_1122175510, q1_1122175520, q2_1122175529, q3_1122175540
+  (--kind core --tree tree_c --plan plan_ectl_noview.json --bind-out tree_a bind --allow-bind-stale --goal route). Runners: units
+  fkd-core-ectld-q0..q3-1122, logs core_ectld_q<k>.log. 18:05: q1 in gen_lint, q0/q2/q3 in gen. Earlier units fkd-core-ectl-* / ectlc-* are
+  dead launches (tree_b provenance fail; missing signed_view_sha_kv.json).
+- tree_b: only used as a file source now; reclaim with tree_d later (ot-delete). tree_a feeds the io_cor kit.
+
 ## State 18:00 PST: ECTL CORE REBUILD (COORD 18:0x: I own it) -- CURRENT
 - Cause of +5: D26 -> D27d3 re-spaced hg internal_stations bus:o_ectl_Q_N_rq 3 -> 5 regs and the four bus:i_slg_Q_N_krsp rows 5 -> 8 regs
   (bind rule RESPONSE_LAT = 8 + krq + krs: 26 -> 31; QK = RL + 11). Asked KV-PLAN-R6 18:0x whether D29 can restore the D26 counts (fallback:
