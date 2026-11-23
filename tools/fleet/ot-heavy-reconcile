@@ -705,6 +705,7 @@ def main():
         cuse = sum(num(d + "/memory.current") for d in cdirs)
         if not DRY:
             cpu_interval(s, NOW, cpu_usec(cg) + sum(cpu_usec(d) for d in cdirs))     # FLOW-FLEET-R2 F1: measured cores of this unit
+            s["meta_cls"] = meta_class(rd(f"{D}/meta.{unit}")) or s.get("meta_cls")      # the class the unit was ADMITTED under (meta.<unit>): the key admission looks its charge up by
         cgpeak = num(cg + "/memory.peak") + sum(num(d + "/memory.peak") for d in cdirs)
         if s.get("cls") in ("cd", "?"):
             s["cls"] = None
@@ -815,7 +816,7 @@ def main():
         if s.get("cls") and s.get("age", 0) >= 240 and int(s.get("dock_miss", 0)) < 2:  # finished: one row of history
             open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
             if len(s.get("cpu_iv") or []) >= 3:     # FLOW-FLEET-R2 F1: the class's measured cores (p90 of its intervals)
-                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{pct_of(s['cpu_iv'], 0.9)}\t{max(s['cpu_iv'])}\t{int(s['age'])}\t{round(sum(s['cpu_iv']) / len(s['cpu_iv']), 2)}\n")
+                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s.get('meta_cls') or s['cls']}\t{pct_of(s['cpu_iv'], 0.9)}\t{max(s['cpu_iv'])}\t{int(s['age'])}\t{round(sum(s['cpu_iv']) / len(s['cpu_iv']), 2)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -1517,6 +1518,12 @@ def probe_like(mem, threads=None):
 
 def small_like(mem, threads=None):
     return (conf("SMALL_JOB_GB") > 0 and mem <= conf("SMALL_JOB_GB")) or probe_like(mem, threads)
+
+
+def meta_class(text):
+    """class word of a meta.<unit> file ('<req GB> <class>'), '' when unknown"""
+    p = (text or "").split()
+    return p[1] if len(p) > 1 and p[1] not in ("?", "cd") else ""
 
 
 def cpu_usec(path):

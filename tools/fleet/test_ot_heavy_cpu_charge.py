@@ -61,3 +61,7 @@ def test_gate_admits_a_32gb_probe_through_the_small_line_while_a_plan_job_waits(
         with contextlib.redirect_stdout(out):
             R.gate_locked(32, ["x"])
     assert out.getvalue().startswith("OK 32") and "SMALL_JOB lane" in out.getvalue()
+
+
+def test_meta_class_is_the_admission_class():
+    assert R.meta_class("48 run_kit.sh:route\n") == "run_kit.sh:route" and R.meta_class("48 ?") == "" and R.meta_class("") == "" and R.meta_class("48") == ""
