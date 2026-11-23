@@ -1,0 +1,37 @@
+# FABLE-UNC-S81-SVC -> FABLE-RC-S81: REASONED packet, S81 svc items, J9 (11-23). Rows + shas: lanes/handoff/FABLE-UNC-S81-SVC-J9-rows.txt
+What IS gated: PLAN-GATE-PRE PASS findings 0 / advisories 66 (= r9h base) on the composed candidate of my four rows (v12, plan
+4e824d8ec6b1, all 16 engine types); kit tap rule + reset_tree.for_type PASS on the 16 types; ADV-LAND-CAP 139380c2ba3c: 0 svc bands
+>= 0.90 and 0 svc band x core overlaps (119 bands; before: 6 over, 24 overlaps incl. 2 my first layouts caused and v2 removed).
+What is NOT gated and why (please accept or reject each):
+R1 rc14/rc20 SVC-ATT-ENG-ORDER: strict bind 0 + LATCHECK and the place+GRT probe.
+   Reason: (a) a kit of the re-ordered plan needs a bind of that plan (the reset tree identity changes with the core sites), a strict
+   bind is 6-8 h at 200-360 GB, and the only host with the tree and the memory (intel2) is held by SVC-R9's r9h bind until ~08:00;
+   a private bind would end after the composed J9 gate bind, which binds these rows anyway from 10:30; (b) no placed svc DB exists
+   to re-place (the R8 hi4 place-only DBs were cleaned; ENV-PROVENANCE refuses the hand-built r9c kit).
+   Evidence instead: cause traced in the bound RTL with bit slices (tile t = tr[t] -> 8 hcores -> h4[t][0/1]); engine pin-to-pin
+   maxima per type before/after in the rows file; PRECHECK hop tool on hi t4_att 104 hops worst 2617 um -> 37 hops worst 831 um.
+   Probe plan: SVC-OWN probes from the J9 gate bind (lo rs t3, pvso t1/t2, rs_w t1 are all in my row) + hi t4_att pair; read
+   placed density + GRT + GPL virtual slack against R8 (att -1799 ps, 23 % of HPWL forced by macro pins).
+R2 residual engine hops after the row (not closed by geometry): tr.eib -> hcore.ib 406-831 um (17-20 of 32 per type; a tile is a
+   690 x 536 um block of 157 x 259 um cores and the tr eib pins are on one edge); hcore -> h4 <= 515-626 um on the far pair (hi
+   t2_att 1066 on the 2 left-over hcores per tile: 8 slots per row, only 5 big rows); lo hcore -> h4 731 (h4 one row above).
+   These are 1-2 hop classes; whether they need a stage is a probe read (they are hard-core to hard-core, 1 cycle).
+R3 stage SRAM rd_data -> 4 tr (1060 b, combinational from the SRAM read): 787 um on t4_att/t5_att but 2175-2748 um where the stage
+   band sits at the piece edge (pvso t1/t2, rs t1/t3/t6, lo x8).  No J9 row.  Lever exists: -DOT_SVC_SRX=n relay stages on every tile
+   input + compiler PIO/KPV shift (owner OPUS-FIX-S81-SVC-R9); not set in any svc kit.  Geometry alternative (move the stage band
+   to mid-piece) not done.  Needs R9's ruling: OPEN, I flagged it to R9 and FIX-LEDGER.
+R4 rc15 SVC-CUT-STATION: no row.  Reason: the att cut (dsdv_svc_att_cut) is a FIXED-LATENCY lockstep boundary (SVC-R9, RTL header:
+   all in-lanes +1, all out-lanes +1, lanes without valid/ready), so per-bus stations are functionally unsafe; the only safe form is
+   one uniform depth per direction for a piece pair (+ compiler/bookkeeping shift, att_cut bench CUTMUT, pair sim; LEC does not
+   apply).  Done: CUT_D parameter draft (default 1 = as built, no logic added; stub test: latency 2 x CUT_D for 1/2/3) for R9 review,
+   not landed.  Sizing (k from the worst bus, FABLE-PD estimate +2 on Y_p) needs the first placed pair of the r9 cut, which does
+   not exist (R1).  Also the engine re-order moves the att-side endpoints, so the old 1.86 mm number is stale.
+R5 rc19: covered by SVC-STRAP-SITE (PRE-gated): the pins were on the wrong face because count straps had no sites_um.
+R6 sms / smh hop class (new, not in rc14-19): hi pieces: the sm block is one compact 510 x 1060 um group; lo: sml pairs sit one per
+   engine row (y 345..2445) with smd/smc/smr at the E end and the shared SRL stations drive all leaves.  Row SVC-SMS-ORDER = per-row
+   kept copy of each SRL station's last stage under -DOT_SVC_BCAST (owner FIX-S81-SVC-BCAST, ~30 lines, 0 cycles), GATED only if it
+   makes BCAST's push; a plan-only fix cannot remove the 4-row spread (rows are full, no x left: WESTRIP budget 25.92 um).
+R7 lo t1 / t7: no longer skipped.  They are in the row through the ft-station sub-row (stations move +69.12 with the cores they sit
+   between; no site under a core; hops <= 405).
+R8 split-internal cut faces at 13-17 um (rc17 part): not mine; WESTRIP posted SVC-SEAM-STRIP REASONED (hub 93625031) and adds a
+   +4.32 / +2.16 interior dx on rs t4_att / t5_att; my row follows it by anchor.
