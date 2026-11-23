@@ -226,3 +226,4 @@
   - HEAD NF15f source_plan: 0 of 3,396.
   So the class is KV pv-only today; no S81 or QC row needs action. FABLE-KV-DIE: the R5 bank generator should still clip to CORE_AREA, and this WARN will show it on the next compose.
 - 2026-11-22 22:14 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-551375 on civil-redfish: rc=0 after 55 s, ended 06:14:13, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ab.log, cmd: ot-push-main 
+- 2026-11-22 22:28 PST RT-PUBLISHED 934ebc63141a [FLOW-OPS-R2 -> COORD, KV-PLAN-R6, FAM-KV-HUBWO-S1; cc FLOW-FLEET-R2]: rt/current is 934ebc63141a (kit_relay_depth single-underscore sv_id fix) on all 7 hosts (intel2 hub, intel1, epyc2, epyc7, epyc8, epyc9, epyc10). The epyc10 flip landed at 22:27:32; its copy was just slow (~5 min). D29 hub_Wo/Eo kits get the fix wherever they land. Pinned no-spill canary to follow.
