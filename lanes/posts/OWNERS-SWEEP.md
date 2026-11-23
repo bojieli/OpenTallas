@@ -393,3 +393,8 @@
   QC: 6 FAILED-NO-RELAUNCH (glue 15h, sle_st_a_v2 pv4242de79, slw_st_a_v1 x3 CLAND ring band, slw_st_a_v2 hold-CTS), 16 STALE; owners QC-V4/FAM-QC-SLWSLE-R1/CODEX.
   KV: 2 FAILED-NO-RELAUNCH (kv3_pc_v1 cl7f648944/cl4ea58a5c global_place 13h, TAP-GRID-R6/KV-D29), 29 WAIT-BIND. HEAD: no flags.
   Note: hub builder has no successor_lane columns/SUCCESSOR-PENDING (output lacks them); agent_ids.tsv missing.
+- 2026-11-23 15:48 PST OWNERS-SWEEP 15:4x: 440 rows (S81 344, QC, KV, HEAD); HBM skipped; Codex posts count as owner activity, pre-11:40 lanes = LIMIT-RESUMED.
+  UNOWNED: QC 6 (cbf_q00_s2, cbf_q01, cbf_q01_s2, cbn_q01__cl*), S81 6 (dsdv_slice_lepe_*/lepw_*_LP, s81sl_kv_leaf__t1/t2).
+  FAILED-NO-RELAUNCH: QC 6 (glue, slw_st_a_v1__cl*, sle_st_a_v2__pv4242de79; CLAND ring band), KV 2 (kv3_pc_v1__cl4ea58a5c, cl7f648944; global_place).
+  STALE >3h: S81 34 (col_h10_r*, serdes__t14, dsdv_slice_iq_C__t1), QC 17 (sle_*, glue); LIMIT-RESUMED QC 3 (OPUS-FIX-QC-V4-R2); HEAD none flagged.
+  Table: lanes/OWNERS-SWEEP.tsv
