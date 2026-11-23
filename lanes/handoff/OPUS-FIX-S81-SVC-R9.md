@@ -41,3 +41,10 @@ svc_hi_dsdv_svc_pvso_entry__t1 svc_hi_dsdv_svc_pvso_entry__t1_rs svc_hi_dsdv_svc
 - GATE GREEN unit 3600463: bind 0 / LATCHECK 947 PASS on plan 755235acaa02 + asbuilt f7b4bb9f (rt ae9a5815f02c; LEPE bout row dropped privately). Rows posted to R5 (post 008a8c37) incl Codex guarded ops 6d8e70c8 / 338a505c and ft3 rows.
 - svc 16 rows held to J8 by R5 (j7-svc-split-j8-1122).
 - hi4 kits: hi4_kits.sh (Codex prepare_hi4_r9.py source -> r9_fit_hi4_sources.py -> prepare kit) waiting for intel2 scratch >=153 GB (floor 150), log hi4_kits2.otrun.log, out kits/<TYPE>/gen/<TYPE>. Then normalize_r9_hi4_config.py <R8 reviewed config.mk> <kit>, copy to epyc7 opus-fix-s81-svc-r9/hi4_pair/{rest,att}/<TYPE>, run_kit place-only, review_exact.sh, read HPWL.
+
+## 11-22 17:3x (R9 after weekly limit)
+- main d14cac8bd2: kit_rtl_post.d/s81_svc_hi4_att_fit.sh + tools/die_plan/s81_svc_hi4_att_fit.py (t4_att only, exact witnesses, fail-closed); in rt b84fd457f5e7+. Witness PASS on R9 bind netlist.
+- treeJ8 (intel2) tools + physical/common_flow = rt b84 (old: R9/tools_ae9a_treeJ8, R9/common_flow_j7_treeJ8). Plans: plan_j8_hi4_r9_rest_paths.json (ebaec49a), _att_paths.json (4406e60f), combined plan_j8_hi4_r9c.json (0eb75a19).
+- r9c bind (b84, 8 thr) OOM 216 GiB after 12.5 h. RUNNING bind-only retry 4 thr/200 GB: intel2 unit oth-ubuntu-560289-1795397828, script R9/bind_r9d.sh, log R9/bind_r9d.otrun.log, out treeJ8/.../native_bind/out_r9c. On PASS: private-spec rest+att --tree treeJ8 --plan plan_j8_hi4_r9c.json --bind-out out_r9c --src-manifest seal --host intel2 --rt b84fd457f5e7 --goal route.
+- RUNNING att place-only (FABLE check) on Codex r9c att kit: epyc7 R9/hi4_pair_r9c_prior/att, GOAL=place, log place_r9c.otrun.log.
+- Codex hi4_face_e7 (private face plan 8beb74b5) gen refused: port geometry attn__svc_5__svc_11 / svc_11__svc_5 plan face != src type face -> clearance ops must move both ends.
