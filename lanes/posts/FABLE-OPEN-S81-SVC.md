@@ -35,3 +35,4 @@
   rc18 SVC-TAP-INV: fast solver with tap_split legality (37 s per type) running on C7 for all 24 svc types + PRE (epyc7 fable-open-s81-svc/b1); ROWS-READY or REASONED residual (cut-face strips too narrow for a legal tap) ETA 12:30.
   rc16 / rc15: audits posted 06:3x (hub 88a296cf, 24463c2a); rows are S81-SVC-J9's; I re-check them against its current RTL/plan and send a per-item ROWS-READY or REASONED packet to FABLE-RC-ALL by 14:00.
   x1: split is in C7 (16 hi types, PRE 0); remaining gate = strict bind; I verify bind/kit_rtl memory closure state and report 13:30.
+- 2026-11-23 14:54 PST DONE [FABLE-OPEN-S81-SVC] ot-run oth-ubuntu-2023910-1795460121 on loved-redfish: rc=0 after 14330 s, ended 22:54:07, log /srv/opentallas-scratch2/claude/fable-open-s81-svc/b1.otrun.log, cmd: --mem 40 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/fable-open-s81-svc -- bash /srv/opentallas-scratch2/claude/fable-op
