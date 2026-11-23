@@ -306,3 +306,41 @@ def test_global_pass_moves_added_taps_out_of_a_local_optimum():
     assert TS.excess(l2, b2, 1000) < e0 and l2.max() <= 1000, (l2, a2)
     a3, _, _ = TS.global_pass(_Site(), added, idx, dist, X, Y, W, TX, TY, 1000, 0.9, 400.0, 1, full, 50, {}, rounds=0)
     assert a3 == added
+
+
+def test_protect_rings_rejects_site_nearer_a_receive_window():
+    """PROTECT-RINGS (TAP-GRID-R5 11-23, rc117 kv3_sys_c): the W-face ring at y 400 copies its nearest tap's raw reset
+    (tap at (100, 400), d 100); a new tap at (50, 400) would take that ring -> illegal; (300, 400) stays legal."""
+    s = object.__new__(TS.Site)
+    s.t = {"buses": [{"name": "b_i", "face": "W", "window_um": [390.0, 410.0]}, {"name": "nogeom"}],
+           "ft_slots": [{"name": "f", "in_face": "N", "in_window_um": [700.0, 720.0]}]}
+    s.w, s.h, s.clear, s.boxes, s.core, s.protect = 800.0, 800.0, 1.0, [], [], []
+    s.fixed = [(100.0, 400.0), (710.0, 700.0)]
+    assert s.protect_rings() == 2 and s.protect[0] == (0.0, 400.0, 100.0) and s.protect[1] == (710.0, 800.0, 100.0)
+    assert not s.ok(50.0, 400.0, s.fixed)
+    assert not s.ok(710.0, 750.0, s.fixed)
+    assert s.ok(300.0, 400.0, s.fixed)
+    s.protect = []
+    assert s.ok(50.0, 400.0, s.fixed)
+
+
+def test_protect_rings_uses_landing_contract_fclk_pins():
+    s = object.__new__(TS.Site)
+    s.t = {"clock": {"landing_contract": {"pins": [
+        {"name": "fclk_in_ft1_i", "dir": "in", "kind": "clock", "xy_um": [2.0, 489.0]},
+        {"name": "cland_fstart_in_ft1_i", "dir": "in", "kind": "ctl", "xy_um": [2.0, 497.0]},
+        {"name": "fclk_out_x", "dir": "out", "kind": "clock", "xy_um": [798.0, 100.0]}]}}}
+    s.w, s.h, s.clear, s.boxes, s.core, s.protect = 800.0, 800.0, 1.0, [], [], []
+    s.fixed = [(150.0, 489.0)]
+    assert s.protect_rings() == 1 and s.protect[0] == (2.0, 489.0, 148.0)
+    assert not s.ok(100.0, 489.0, s.fixed) and s.ok(100.0, 300.0, s.fixed)
+
+
+def test_protect_rings_regex_limits_the_rings():
+    s = object.__new__(TS.Site)
+    s.t = {"clock": {"landing_contract": {"pins": [
+        {"name": "fclk_in_ft1_i", "dir": "in", "kind": "clock", "xy_um": [2.0, 489.0]},
+        {"name": "fclk_in_other", "dir": "in", "kind": "clock", "xy_um": [2.0, 100.0]}]}}}
+    s.w, s.h, s.clear, s.boxes, s.core, s.protect = 800.0, 800.0, 1.0, [], [], []
+    s.fixed = [(150.0, 489.0), (150.0, 100.0)]
+    assert s.protect_rings(r"fclk_in_ft1_i$") == 1 and s.ok(100.0, 100.0, s.fixed) and not s.ok(100.0, 489.0, s.fixed)

@@ -55,6 +55,15 @@ split from its own sinks: the k-medians centre nearest the neighbour pulls thous
 (cap * margin)) - fixed, at least 1, +3 tried) by constrained weighted k-medians (assign to all, move only the free
 ones), each legalised, all sinks re-assigned, kept when the excess drops.
 
+PROTECT-RINGS (TAP-GRID-R5 11-23, rc117 KV kv3_sys_c): a landing ring copies the raw reset of the tap NEAREST its
+receive window (clock_landings: bus face / window_um midpoint, ft_slot in_face / in_window_um, landing_contract pin
+fclk_in_<bus>) and the plan's
+landing_raw_branches name that original node; an added tap nearer a window renames it (sys_c D29: the bind took
+rst_n_t71, the plan names rst_n_t31 -> EMIT 'origin reset phase/equation differs').  --protect-rings: a new tap site
+is illegal when it is strictly nearer (L1) any receive window than that window's nearest existing tap.  An optional
+REGEX limits it to the named rings (sys_c: only fclk_in_ft1_i feeds the 'origin' raw-branch role; protecting all 23
+rings left 3 taps over cap).
+
 GLOBAL (TAP-GRID-R5 11-23, FABLE-RC-S81 rc32 / rc7): the greedy, MULTI-TAP and NEIGHBOURHOOD passes only add taps and
 never move an added tap once later taps exist, so a type can stall in a local optimum (dry run 3: 22 leaf + 3 slice C
 types over cap).  --global-rounds R (default 0 = off): after the relax step, every round takes the over-cap taps plus
@@ -179,6 +188,7 @@ class Site:
         self.boxes += [(a - c, b - c, cc + c, d + c) for a, b, cc, d in ck.get("keepouts_um", [])]
         self.core = [(x, y) for _, x, y, _ in schema.core_taps(P, tn)]
         self.fixed = list(fixed)
+        self.protect = []
         if ck.get("tap_model") == "frozen_anchor":
             self.pin_snap = self.axes = None
         else:
@@ -195,8 +205,37 @@ class Site:
                 return memo[k]
             self.pin_snap = pin_snap
 
+    def protect_rings(self, pat=".*"):
+        """PROTECT-RINGS: [(x, y, d)] receive-window points (bus / ft_slot / fclk_in_ pin name matching `pat`) and the L1
+        distance to their nearest existing tap."""
+        import re
+        rx = re.compile(pat)
+        pts = []
+        for b in self.t.get("buses", []) or []:
+            if "face" in b and "window_um" in b and rx.search(f"fclk_in_{b.get('name', '')}"):
+                pts.append((b["face"], sum(b["window_um"]) / 2))
+        for sl in self.t.get("ft_slots", []) or []:
+            if "in_face" in sl and "in_window_um" in sl and rx.search(f"fclk_in_{sl.get('name', '')}_i"):
+                pts.append((sl["in_face"], sum(sl["in_window_um"]) / 2))
+        ex = self.fixed + self.core
+        xy = [(0.0 if face == "W" else self.w, at) if face in "EW" else (at, 0.0 if face == "S" else self.h)
+              for face, at in pts]
+        # the ring receive pins themselves (clock.landing_contract.pins fclk_in_<bus>): KV buses carry no face /
+        # window, the bind takes them from the collector sidecar; the pin sits on that window
+        lc = (self.t.get("clock") or {}).get("landing_contract") or {}
+        xy += [tuple(map(float, q["xy_um"])) for q in lc.get("pins") or []
+               if q.get("dir") == "in" and q.get("kind") == "clock" and str(q.get("name", "")).startswith("fclk_in_")
+               and rx.search(str(q["name"]))
+               and isinstance(q.get("xy_um"), list) and len(q["xy_um"]) == 2]
+        for x, y in xy:
+            if ex:
+                self.protect.append((x, y, min(abs(x - a) + abs(y - b) for a, b in ex)))
+        return len(self.protect)
+
     def ok(self, x, y, taken):
         c, e = self.clear, EPS
+        if any(abs(x - px) + abs(y - py) < d - e for px, py, d in self.protect):
+            return False
         return (c - e <= x <= self.w - c + e and c - e <= y <= self.h - c + e
                 and not any(abs(x - a) < c - e and abs(y - b) < c - e for a, b in taken)
                 and not any(a + e < x < cc - e and b + e < y < d - e for a, b, cc, d in self.boxes))
@@ -464,7 +503,7 @@ def span_pass(site, added, idx, dist, X, Y, W, cap, radius, n0, span_um, max_add
 
 
 def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_margin=0.9, multi_nbhd=8, span_um=None,
-               global_rounds=0):
+               global_rounds=0, protect_rings=None):
     import schema, taps as TP, gen_phys
     np = _np()
     t = P.types[tn]
@@ -503,6 +542,8 @@ def split_type(P, tn, radius, max_add, cap=None, require_placed=False, multi_mar
         rep["status"] = "OK"
         return rep, []
     site = Site(P, tn, [(p[1], p[2]) for p in tp])
+    if protect_rings:
+        rep["protected_windows"] = site.protect_rings(protect_rings if isinstance(protect_rings, str) else ".*")
     added = []
     n0 = len(tp)
 
@@ -739,6 +780,9 @@ def main(argv=None):
                     help="a type without sink_bins_file or placed sinks is NO_PLACED (no rows) instead of split on planned sinks")
     ap.add_argument("--multi-margin", type=float, default=0.9,
                     help="MULTI-TAP: k = ceil(load / (cap * M)) taps at the k-medians of a dense cluster when no single tap helps; 0 = off")
+    ap.add_argument("--protect-rings", nargs="?", const=".*", default=None, metavar="REGEX",
+                    help="PROTECT-RINGS: no new tap nearer a landing receive window (fclk_in_<bus> name matching REGEX, "
+                         "default all) than its current nearest tap; e.g. only the ring feeding a raw-branch role")
     ap.add_argument("--global-rounds", type=int, default=0,
                     help="GLOBAL: rounds of over-cap region re-solve with added taps movable (0 = off)")
     ap.add_argument("--span-um", type=float, default=0.0,
@@ -775,7 +819,7 @@ def main(argv=None):
         try:
             rep, rows = split_type(P, tn, a.radius_um, a.max_add, cap=a.cap or None, require_placed=a.require_placed,
                                     multi_margin=a.multi_margin, multi_nbhd=a.multi_nbhd, span_um=a.span_um or None,
-                                    global_rounds=a.global_rounds)
+                                    global_rounds=a.global_rounds, protect_rings=a.protect_rings)
         except Exception as ex:
             rep, rows = dict(type=tn, status="ERROR", why=f"{type(ex).__name__}: {str(ex)[:200]}"), []
         if rows:
