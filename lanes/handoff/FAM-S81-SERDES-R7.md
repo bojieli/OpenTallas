@@ -39,3 +39,8 @@ Lane clone epyc9 /srv/opentallas-scratch2/claude/fam-s81-serdes-r7-core = main 5
 ## 06:1x
 - dec_r7k CLOSED: hold ECO broke TT (-89 on CMEM->bsrc); not exported; superseded by front3 decf3_r7a (R8 owns t4 front3 rows + export).
 - PHY/ENG rows READY in lanes/handoff/FAM-S81-SERDES-R7-j8-phy-eng (J8p3 gate clean). phy__t1 J8p3 kit: GRT ovf 42 (was 225), GRT-0116 NE corner. J8p4 = + macro x -0.012 (phy_macro_grid.json); kit run-item intel2 PID 1801800 (log ~/fam-s81-serdes-r7/phy_t1_j8p4_runitem.log, spec s81_phy__t1_1122061135). candJ8s tree plan = J8p4 now.
+
+## 17:3x RESUMED
+- Pin generator already exists on main (tools/s81_dv/phy_pin_track_form.py, 4103cdee09; LEF physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k_track1117). The plan never adopted it. phy_lef_track.json (1 op: phy__t1 contents/0/lef -> track1117, origin 77.76) is in lanes/handoff/FAM-S81-SERDES-R7-j8-phy-eng (R8 relayed it to R5). It supersedes phy_macro_grid.json.
+- J8p4 kit stopped (superseded). J8p5 gate: epyc9 copy = intel2 ot-run 589061 (gate_j8p5.log); epyc8/intel1 copy = ot-run 3741517 (dir .../fam-s81-serdes-r7/j8p5gate, gate_j8p5b.log). First to start wins, the other is killed.
+- Next: private-spec phy__t1 on J8p5 (tree = candJ8s on the winning host, --rt-floor-exempt as before), --goal route.
