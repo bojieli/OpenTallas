@@ -104,3 +104,17 @@ g_rx.wp -> qwa 615, u_rg3 g_txr -> credit_pin_r 986 (9 bits), u_land SRAM -> rd 
 clock.landing_reader_start.branches: coll_i0 stages xy [131.61,1380.0], [485.61,1380.0] (were y 1370.0, on the status relays / lrst k12:
 w10 place died "OT_CLAND no legal site u_cland_sin_coll_o1_coll_i0_0"); coll_i2 stage 1 xy [10.0,222.0] (was [20.54,220.51], inside the
 coll_i2 band). No origin_rect_um on the relay piece. Raw relay names re-keyed (L/tmp/rekey_resets.py). Check tool: L/tmp/sites.py PLAN TYPE.
+
+## 10. LEP-TXI-SITE-1 (hd_lep0N_w, site rows, 0 cycles) clock.landing_contract.native_stage_groups rect_um by tag
+stage:txi2_r0 [497.88,568.62,508.68,711.06] (was [732.24,599.4,743.04,741.84]); stage:txi2_s0 [230.04,562.14,294.04,574.14] (was
+[560.24,673.04,624.24,685.04]); stage:txi1_r0 [532.44,639.36,543.24,760.58] (was [710.64,610.74,721.44,731.96]); stage:txi1_s0
+[176.58,752.22,240.58,764.22] (was [580.24,660.62,644.24,672.62]). Measure (w11 placed): stage 1 x 560-643 -> g_safe_write wp_r x 23-544,
+up to 690 um, CTS post-hook -136. Three hops of about 300 um now (cut face -> stage 0 -> stage 1 -> write pointers).
+## 11. LEP-RINGCTL-1 (hd_lep0N_w) partition_types.hd_lep0N_w.place_regions += 3 x {name ringctl_<bus>, kind soft, cone between, radius_um 24,
+centre_um coll_i0 [740,1376] / coll_i1 [21,843] / coll_i2 [21,232], inst_re u_cland_<bus>/(u_ring\.(ctl_w|ctl_lap|g_oh|glo\d|ghi\d|tc)\b.*|lap_ok.*|rv\$.*)}
+Measure (w11): control regs within 10 um of rv / lap_ok on all rings; CTS -272 (coll_i1) / -185 (coll_i0) from the logic cone. Needs rt >= 2a24a958d719.
+## 12. LEP-RSTART-RX-1 (hd_lep0N_w; tool main 345ac19b04b3) landing_relay_rx_stages 3; relay_sites u_cland_rstart_rx_p0/q [552,754],
+_p1/q [300,754], _p2/q [10,812]; sidecar re-bind (count_aligned parts.lep0N_w stages 2 -> 5, K +3) by R8. NOT in r18p (needs the sidecar).
+Sections 10 + 11 + strip of the void section-8 rows = tree r18p (epyc9 .../trees/s81_head_r18p_w12), plan 0fc19ee36f705903: gated with rt
+2a24a958d719 via composed launch tree (no tool copy): plan_gate_pre vs base 5e1f38e1530b PASS 0 findings, bind PASS, cohort 27/27, LATCHECK
+334/334 (L/bind_r18p). Probe kit w12: spec s81_head_hd_lep0N_w_1122204549, OT_PROBE_THROUGH=1.

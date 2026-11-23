@@ -1,3 +1,10 @@
+## 20:5x (PST) w12 probe launched
+- r18p gate PASS (rt 2a24a958d719): plan_gate_pre vs 5e1f38e1530b 0 findings, bind PASS, cohort 27/27, LATCHECK 334/334.
+- w12 = W probe kit from r18p: unit fable-lep0n-w12 (intel2 pid 1880713), spec ~/coord/autopilot/private_specs/FABLE-FIX-HEAD-LEP0N/
+  s81_head_hd_lep0N_w_1122204549/spec.json, --ab OT_PROBE_THROUGH=1 + OT_GRT_ALLOW_CONGESTION=1, goal route (probe: never counts). Read its
+  PROBE.json + CTS post-hook: expect txi -136 and ring -272 gone; rstart_in -148 stays until the rx relay row (R8 sidecar re-bind).
+- LIVE: e1 (CTS on intel1), w11 (tap pre-GRT it 4/30 on epyc2, slow host), w12 (early stages). Rows file sections 10-12 written.
+
 ## 22:xx COORD 21:0x/21:2x work: three structural W rows (all approved)
 - Measured on w11 placed geom.tsv: (2) ring ctl regs are within 10 um of rv/lap_ok on all rings -> logic cone scatter, not sites; (3) txi stage 1
   (x 560-643) -> g_safe_write wp_r (x 23-544) up to 690 um; (1) cland_rstart_in pin (818,747) -> rx copies (5,1155) / (5,454) 1.1-1.2 mm.
