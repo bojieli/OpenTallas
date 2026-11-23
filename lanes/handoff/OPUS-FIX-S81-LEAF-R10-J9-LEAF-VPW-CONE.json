@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.s81_plan_row.v1",
+ "row": "J9-LEAF-VPW-CONE (t14, t74, t13; family form after proof)",
+ "owner": "OPUS-FIX-S81-LEAF-R10",
+ "approved": "COORD 11-22 21:2x (one leaf-family J9 row, forms a + b in parallel, cycle pre-approved; proof on sealed --goal route t14)",
+ "cause": "LOCAL-CONE-SCATTER on the vpw write-out cone, event 18a2688b741 post-place TT: t14 @2 -512 (g_slr.g_b[0].g_r[3].hi_sw -> wdo_q[0][55], span 65 um, path 1649 um, 23 stages), t74 @2 -301 (a_hs -> wdo_q[1][9], 37 um, 1190 um, 23), t31 @4 -503 (31 um, 1688 um, 22); t1 sw_a_q -> wmw_q -348 is the same port (XRB row).; t13 (GPL-fix probe, post-place, ideal clock) -500.8 g_slr.g_b[1].g_r[3].sa_q[0] -> wdo_q[1][53]: sa_q -> 7 buffers -> AO21/OR5 wdo mux -> 5 wire buffers (~450 ps of wire delay) -> wdo_q; same write-out cone",
+ "forms": {
+  "a_place_regions": {
+   "kit_only": true,
+   "plan_ops": [
+    {
+     "op": "type_set",
+     "type": "ot_s81sl_leaf__t14",
+     "key": "place_regions",
+     "value": [
+      {
+       "name": "lcs_wdo_b0",
+       "inst_re": "u_bound\\.u_u_lf1_u_vp_g_wr1_u_w\\.(wdo_q\\[0\\]|wmw_q\\[0\\]|g_slr\\.g_b\\[0\\]\\.)",
+       "near_re": "^u_bound\\.u_u_lf1_u_vp_u_b0$",
+       "util": 0.5
+      },
+      {
+       "name": "lcs_wdo_b1",
+       "inst_re": "u_bound\\.u_u_lf1_u_vp_g_wr1_u_w\\.(wdo_q\\[1\\]|wmw_q\\[1\\]|g_slr\\.g_b\\[1\\]\\.)",
+       "near_re": "^u_bound\\.u_u_lf1_u_vp_u_b1$",
+       "util": 0.5
+      }
+     ]
+    }
+   ],
+   "proof": "sealed private --goal route t14 on fork epyc8 L/trees/s81_t31_j7 (plan_t14A.json 52693b0a0cca, green fork bind, rt da102e4d499a)"
+  },
+  "b_spr": {
+   "tree_overlay": {
+    "tool": "tools/die_plan/s81_vpw_spr_overlay.py (main aa4dda6568c1)",
+    "args": [
+     "<event tree root>"
+    ],
+    "after": [
+     "s81_vp_xr_overlay.py",
+     "s81_vpw_slr_overlay.py",
+     "s81_vpw_xrb_overlay.py"
+    ],
+    "die_wide_effect": "none unless a type selects OT_S81SL_VP_SPR (SPR 0 = source logic)"
+   },
+   "plan_ops": [
+    {
+     "op": "type_list_add",
+     "type": "ot_s81sl_leaf__t14",
+     "key": "verilog_defines",
+     "value": "OT_S81SL_VP_SPR"
+    },
+    {
+     "op": "type_list_add",
+     "type": "ot_s81sl_leaf__t13",
+     "key": "verilog_defines",
+     "value": "OT_S81SL_VP_SPR"
+    }
+   ],
+   "cycles": 0,
+   "area": "+6 select flops per bank slice (96 per vpw); the SLR sv_q/sa_q copies stay",
+   "proof": "same epyc8 fork + bind as J9-LEAF-VPW-XRB (L/trees/s81_t31_xrb, r10_t31xrb.sh), sealed private --goal route t14",
+   "t14_probe": "t14 SPR sealed route kit on the epyc8 XRB/SPR fork passed place (no PLACE-SETUP-STOP < -300); route running"
+  }
+ },
+ "rebind": "form a: none (kit-only key); form b: t14 (verilog_defines)",
+ "family": "after the t14 read: the winning form to every leaf type with the vpw (t74 first, then the family, opt-in per type); +1 cycle on the select is the fallback if neither form closes"
+}
