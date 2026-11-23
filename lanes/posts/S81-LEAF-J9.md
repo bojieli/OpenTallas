@@ -17,3 +17,4 @@
   (c) LCBC row 3d W_fc 5e89223ea858: PRE PASS, bind running. It goes to the second compose as ruled.
   I ship (a) and (b) as GATED when their binds and LATCHECK are green, and post them.
   Second compose (by 12:00, all-type PRE): ONE composed leaf delta on W_fc. Steps: regenerate IST-LEAFUP rows on the moved cores (s81_ist_leafup_rows.py), add SPARE t39, SELREP/LAND/CRR ops, reaim + hopfix on all 75 types (the 513-gap census, not only the 9), then ONE reprice vs J8, ONE PRE and aim.py, then a single bind.
+- 2026-11-23 06:27 PST DIED [S81-LEAF-J9] ot-run oth-ubuntu-3919602-1795442290 on civil-redfish: rc=143 after 1766 s, ended 14:27:33, log /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2/gate_f2.otrun.log, cmd: --hosts epyc10 --crit --mem 112 --threads 8 --disk 20 --dir /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2 -- bash /srv/openta | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
