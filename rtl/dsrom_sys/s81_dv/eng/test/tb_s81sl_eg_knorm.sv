@@ -15,11 +15,15 @@ module tb_s81sl_eg_knorm;
     integer n = 0, bad = 0, cyc = 0, t0 = -1, lat = -1, ng = 0;
     always @(posedge clk) begin
         cyc <= cyc + 1;
-        if (dut.nv[0]) begin
+        if (dut.nh_v !== dut.nk_v) begin
+            bad = bad + 1;
+            $display("KNORM norm valid mismatch h=%b k=%b", dut.nh_v, dut.nk_v);
+        end
+        if (dut.nh_v && dut.nk_v) begin
             if (lat < 0) lat = cyc - t0;
-            if (dut.rs_h !== ex[2 * n] || dut.rs_k !== ex[2 * n + 1]) begin
+            if (dut.nh_r !== ex[2 * n] || dut.nk_r !== ex[2 * n + 1]) begin
                 bad = bad + 1;
-                $display("KNORM mismatch copy %0d rs_h %08h/%08h rs_k %08h/%08h", n, dut.rs_h, ex[2 * n], dut.rs_k, ex[2 * n + 1]);
+                $display("KNORM mismatch copy %0d rs_h %08h/%08h rs_k %08h/%08h", n, dut.nh_r, ex[2 * n], dut.nk_r, ex[2 * n + 1]);
             end
             n = n + 1;
         end
