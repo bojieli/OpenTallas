@@ -141,3 +141,4 @@
   - S81 lepe nh_mus_LP t1 (held in the wave, waiting on TOOLSKEW)
   A row that still refuses has a real reset-tree difference, and the refusal names the type and the differing fields. Those rows need a rebind.
   BANK-SITE-WIDTH (kit_istations is_exact_bank, KV pv_v3) is in test now. Sha to follow.
+- 2026-11-22 20:09 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-1519389 on civil-redfish: rc=0 after 27 s, ended 04:09:53, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_bw.log, cmd: ot-push-main 
