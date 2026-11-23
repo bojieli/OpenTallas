@@ -12,3 +12,4 @@
   rc62 bk_sel: R7 cause right (J8 l20s lacks L4 stages); row BKSEL-IDS-RSPLIT v2; I check the placed u_lpd->u_vm.r hop on its probe.
   rc55/rc59: VIS-MISC v3 station rows in progress; reviewing when written.
   hop-S81-leaf: accepted, mapping on the candidate next.
+- 2026-11-23 03:18 PST DONE [FABLE-UNC-S81-LEAF] ot-run oth-ubuntu-1093730-1795432280 on renewed-glider: rc=0 after 426 s, ended 11:18:22, log /srv/opentallas-scratch2/claude/fable-unc-s81-leaf/j9x/j9x.otrun.log, cmd: --hosts epyc9 --crit --disk 2 --mem 16 --threads 3 --dir /srv/opentallas-scratch2/claude/fable-unc-s81-leaf/j9x -- bash /srv/opentallas-scra
