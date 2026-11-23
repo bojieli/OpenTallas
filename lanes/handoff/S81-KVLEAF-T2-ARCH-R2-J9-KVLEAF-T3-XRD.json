@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.s81.j9_row.v1",
+ "row": "J9-KVLEAF-T3-XRD",
+ "lane": "S81-KVLEAF-T2-ARCH-R2",
+ "die": "s81",
+ "type": "ot_s81sl_kv_leaf__t3",
+ "instance": "s_3N_L1 (leaf lf[1] of ot_s81sl_slice_sukv_raw512_w3)",
+ "cause": "soft vn half (u_lf.u_vn.u_b.u_g): x store read address decided from one rb pin flop on the broadcast cycle, then crosses the lane group; witness -329 ps, 610.8 um, 20 cells (OPUS-FIX-S81-LEAF-R10 J9-LEAF-REACH)",
+ "rtl_on_main": "ba2b1d745d02 (parameters VN_XRD / LF_VN_XRD, every default 0)",
+ "apply": {
+  "file": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv",
+  "module": "ot_s81sl_slice_sukv_raw512_w3",
+  "parameter": "LF_VN_XRD",
+  "forms": {
+   "B_plus1_cycle": {"value": "20'h00020", "cycles": "+1 edge on vn -> vq y_v / y_i / y of leaf lf[1]; vp -> vq m_* one stage deeper (done in RTL)", "pricing": "identical at the vq boundary to CS_Y_D + 1 for this leaf, with no placed station: price it as class y depth + 1 for lf[1]; kit_istations must NOT expect a u_cst_y stage for it", "added_flops": "about 610 in vn_b (select 32, control and store write ports about 580) + 64 on y_a + 10 on m (estimate, not counted from a netlist)"},
+   "A_same_edge": {"value": "20'h00010", "cycles": "0", "pricing": "none", "added_flops": "4 rb copies; the 128-bit store becomes four 32-bit banks"}
+  },
+  "other_types": "unchanged netlist: XRD 0 proven equal to the previous vn_sp (yosys equiv 19764/19764)"
+ },
+ "evidence": {
+  "xrd0_equiv": "intel2 /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/xrd0/status.txt",
+  "miter": "intel2 .../xrd/rc.txt: XRD 1 PASS same edge, XRD 2 PASS one edge later, XRD 2 same-edge compare FAIL 13897 (negative control), XRD 0 PASS; 40000 random-schedule edges each"
+ },
+ "not_done": ["leaf-level bench with VN_XRD 2 or 1 on a norm program", "strict bind + LATCHECK on the J9 tree", "t3 place / GRT probe", "compiler pricing of the +1 edge (form B only)"],
+ "choice": "take whichever form gates first; form A needs no calendar change"
+}
