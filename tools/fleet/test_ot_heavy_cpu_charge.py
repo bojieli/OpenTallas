@@ -39,8 +39,8 @@ def test_cpu_charge_blocks_over_committed_busy_host_only():
 
 def test_cpu_history_reads_the_tsv(tmp_path):
     f = tmp_path / "cpu-peaks.tsv"
-    f.write_text("t\tu1\troute\t6.5\t9\t300\nt\tu2\troute\t3.5\t4\t300\nbad\n")
-    assert R.cpu_history(str(f)) == {"route": [3.5, 6.5]}
+    f.write_text("t\tu1\troute\t6.5\t9\t300\nt\tu2\troute\t3.5\t4\t300\t1.2\nbad\n")
+    assert R.cpu_history(str(f)) == {"route": [1.2, 2.6]}          # a 7-column row: its mean; an older 6-column row: 0.4 x its p90
 
 
 def test_probe_line_small_threads_and_gb():
@@ -55,7 +55,8 @@ def test_probe_line_small_threads_and_gb():
 def test_gate_admits_a_32gb_probe_through_the_small_line_while_a_plan_job_waits():
     env = {"SIMPLE_ADMIT": "1", "SMALL_JOB_GB": "8", "OT_HEAVY_THREADS": "4", "INV_HEADROOM_GB": "128", "PLAN_PRIO": "0"}
     with patch.dict(os.environ, env), patch.object(R, "classify", return_value="probe:db"), patch.object(R, "sizes", return_value={}), \
-            patch.object(R, "meminfo", return_value=(1000.0, 400.0)), patch.object(R, "running_units_light", return_value=[]):
+            patch.object(R, "meminfo", return_value=(1000.0, 400.0)), patch.object(R, "running_units_light", return_value=[]), \
+            patch.object(R.glob, "glob", return_value=[]):      # hermetic: no live res.* files of the host count as running small jobs
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             R.gate_locked(32, ["x"])

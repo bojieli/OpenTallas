@@ -815,7 +815,7 @@ def main():
         if s.get("cls") and s.get("age", 0) >= 240 and int(s.get("dock_miss", 0)) < 2:  # finished: one row of history
             open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
             if len(s.get("cpu_iv") or []) >= 3:     # FLOW-FLEET-R2 F1: the class's measured cores (p90 of its intervals)
-                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{pct_of(s['cpu_iv'], 0.9)}\t{max(s['cpu_iv'])}\t{int(s['age'])}\n")
+                open(CPU_PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{pct_of(s['cpu_iv'], 0.9)}\t{max(s['cpu_iv'])}\t{int(s['age'])}\t{round(sum(s['cpu_iv']) / len(s['cpu_iv']), 2)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -960,7 +960,7 @@ DEFAULTS = dict(THREAD_CAP_FACTOR=1.0, GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_A
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0, PEAK_GAP_FACTOR=0.0, PLAN_GAP_FACTOR=1.0, MEASURED_GAP_FACTOR=1.0, MEASURED_GAP_CAP=0.5,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
                 SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_PROBE_GB=40.0, SMALL_THREADS=4.0, SMALL_PROBE_MAX=8.0,
-                CPU_CHARGE=1.0, CPU_FACTOR=1.0, CPU_FALLBACK_SHARE=0.5, CPU_PCT=0.9, CPU_MIN_N=3.0, CPU_MIN_LOAD=0.6, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                CPU_CHARGE=1.0, CPU_FACTOR=1.0, CPU_FALLBACK_SHARE=0.35, CPU_PCT=0.75, CPU_MIN_N=3.0, CPU_MIN_LOAD=0.6, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1552,16 +1552,17 @@ def pct_of(vals, pct):
 
 
 CPU_PEAKS = f"{D}/cpu-peaks.tsv"
+CPU_P90_TO_MEAN = 0.4        # measured 11-22: route p90 7.0 cores, 28 running units held ~76 cores of load = 2.7 cores each, so mean ~ 0.4 x p90
 
 
 def cpu_history(path=None):
-    """class -> sorted p90 cores of this host's finished runs of the class (cpu-peaks.tsv: ts, unit, class, p90 cores, max cores, age s)"""
+    """class -> sorted MEAN cores of this host's finished runs of the class (cpu-peaks.tsv: ts, unit, class, p90 cores, max cores, age s, mean cores)"""
     h = {}
     for ln in rd(path or CPU_PEAKS).splitlines():
         f = ln.split("\t")
         if len(f) >= 6:
-            try:
-                h.setdefault(f[2], []).append(float(f[3]))
+            try:       # FLOW-FLEET-R2 18:1x: column 7 = the unit's MEAN cores (what it holds on the host over its life); rows written before that carry only the p90 of its intervals, scaled to a mean
+                h.setdefault(f[2], []).append(float(f[6]) if len(f) >= 7 else float(f[3]) * CPU_P90_TO_MEAN)
             except ValueError:
                 pass
     for v in h.values():
