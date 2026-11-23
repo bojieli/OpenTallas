@@ -1668,6 +1668,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 # S81-COLGEN-3 11-17 (S81-TYPES-R3 col relay chains over hard macros, hops > 405 um): per-type relay depth rows read by
 # bind.relay_depth_map: D (1..4) extra relay-named register stages (u_y_xd_*) after the named source leaf's output port, declared
 # in bind_core_input_pipe.json.  Written by relay_depth.py from the bound module + plan geometry.
+# FIX-KV-PV-MESOFIFO 11-23 (kit_dly_ram.py): landing-pad trunks of the type held in SRAM rings at GEN; absent = unchanged kits
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["pad_ram"] = {
+    "type": "object", "additionalProperties": False, "properties": {
+        "min_d": {"type": "integer", "minimum": 4}, "min_flops": {"type": "integer", "minimum": 1},
+        "hop_um": {"type": "number", "exclusiveMinimum": 0}, "clear_um": {"type": "number", "minimum": 0},
+        "edge_um": {"type": "number", "minimum": 0}, "grid_um": {"type": "number", "exclusiveMinimum": 0},
+        "max_macros": {"type": "integer", "minimum": 0}, "max_resid": {"type": "integer", "minimum": 0},
+        "keepout_um": {"type": "array", "items": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                  "items": {"type": "number"}}}}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_depth"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["inst", "D"],
         "properties": {"inst": {"type": "string", "minLength": 1}, "port": {"type": "string"},

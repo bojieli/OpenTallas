@@ -7321,6 +7321,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     w, h = t["outline_um"]
     macros = type_macros(P, tn, root)
     macros, pinband = pinband_macros(P, tn, macros, root, check_only=bool(bump_ports))
+    # FIX-KV-PV-MESOFIFO 11-23 (plan partition_types[t].pad_ram, kit_dly_ram.py; absent = nothing): landing-pad trunks held in
+    # SRAM rings (ot_dp_dly_ram, cycle-exact).  Planned on the bound source here so its RAM macros join the plan macros (staged,
+    # placed, track-snapped and PG'd like any content macro); applied to the staged copy below, before kit_dly_lockup.
+    import kit_dly_ram as _KDR
+    dram_plan = _KDR.plan_kit(rtl_files, t, type_pins(P, tn)) if _KDR.cfg_of(t) else {}
+    for _src, _chunks, _st, _cand in dram_plan.values():
+        macros = list(macros) + _KDR.macros_of(_chunks)
     # A physical abstract alone leaves macro paths untimed and prevents load-driven
     # buffering (S81 frame review, 2026-10-24). Reject before writing a partial kit.
     missing_libs = [f"{inst} ({mod})" for inst, mod, lef, lib, x, y, o in macros if not lib]
@@ -7421,6 +7428,18 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     rls_rec, rls_cells = _RLS.apply(kd / "rtl", tn, t)
     # XTAP-C 11-20 (FABLE-FIX-KV-PV, budgets.r_dly_lockup): pad delay lines split into segments + hop lockup latches, on the
     # staged bound RTL; the bound statement of a tail copy stays as a record line (tail_copies.tsv below).  Absent = nothing.
+    if dram_plan:
+        dram_rec = _KDR.apply_kit(kd / "rtl", dram_plan)
+        cells, bbs = _KDR.extra_sources()
+        _base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+        for f in cells + [_CR.resolve(q, _base) for q in bbs]:
+            if not Path(f).is_file():
+                raise FileNotFoundError(f"type {tn}: pad_ram source {f} missing")
+            shutil.copyfile(f, kd / "rtl" / Path(f).name)
+            append_new_src(srcs, f"/work/rtl/{Path(f).name}")
+        (kd / "dly_ram.json").write_text(json.dumps(dict(cfg=_KDR.cfg_of(t), files=dram_rec), indent=1) + "\n")
+        print(f"gen phys: type {tn}: OT_DLY_RAM " + json.dumps({k: {x: v[x] for x in ("chunks", "ram_flops", "lead_flops",
+                                                                                  "resid_flops")} for k, v in dram_rec.items()}))
     dlk_cfg = dly_lockup_cfg(P.budgets, tn)
     if dlk_cfg:
         import kit_dly_lockup as _DLK
