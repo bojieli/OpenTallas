@@ -50,3 +50,10 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - Kits (epyc7, goal route, sealed): r9-lep0n-tw (W sealed, counts), -twp (W probe), -tn (nst4 sealed), -tnp (nst4 probe). Logs runitem_r9_<tag>.log.
 - Live kit set: Row A wa/wap/na/nap (epyc10), Row B bw/bwp/bn/bnp (epyc10), A+B tw/twp/tn/tnp (epyc7), w11 (epyc2), e1 (intel1). PAIRTAP r18u gated, waits on w11.
 - 00:2x crit_dirs.txt now also lists tw (hd_lep0N_w_1123001257) and tn (hd_st_n4_1123001323), verified SEAL from the specs (probes 1310/1336 not listed). Remove lines on sign-off or stop: wa ..._1122222846, na ..._1122222914, bw ..._1122232443, bn ..._1122232506, tw, tn.
+
+## 01:0x COORD: E-piece floorplan row LEP-ECOL-1 (same event as HEAD-DCLK-SPLIT-1); E kits NOT relaunched until PROBE-PASS
+- VIS-HEAD cff3302: e1 + split rows still 45,948 ovfl: rx_mem row y638 (6.9k V), tx rows y518-591 (0.8k), lepk_i0 ring E street (1.7k), W-edge rx block (1.4k). PROBE-PASS (fe8a2a5): total < 10% of baseline + no cluster above threshold + census.
+- Row script epyc10/epyc7 L/tmp/ecol_rows.py TREE [--dry] [--split ROWS]: 30 macros into 3 columns x175/450/725 (rg3 tx bottom, rx_mem 3-wide middle, rg0 tx top), W band x<150 cleared (g_rx[1]/[2] moved into C1); colliding points/rects follow their macro or move off (+3 um halo); die clock rects under macros -> clksite_resite (+ stack_um shift by ledger index). dry: 0 macro overlaps, 22 dieclk rects to re-site.
+- NOT YET: lepk_i0 landing ring spread (cluster 2) - next sub-row after the first probe read.
+- Tree epyc7 trees/s81_head_r18w_ecol (fork of r18t, intel2 r9_forkW7.sh), chain L/tmp/chain_r9_ecol.sh (marker plan/applied_w; gate rt e1cd348d4842 which has the split schema), armed by gate_wait7_r9.sh -> chain7_r9_r18w.otrun.log.
+- Probe after gate: private-spec hd_lep0N --tree r18w --goal grt --rt e1cd348d4842 --ab OT_PROBE_THROUGH=1 --ab OT_GRT_ALLOW_CONGESTION=1, read GRT overflow + clusters myself.
