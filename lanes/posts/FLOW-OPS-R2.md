@@ -199,3 +199,12 @@
   - runs/s81_head_cl_345ac19b0_1122_211842_060262
   I will post the verdicts when they land. The FLOW-CANARY-R2 tick checkout picks up the harness fix on its next main fetch.
   Also affected by the same spill pattern (flow never started, exit 127): runs 18:30 qwen_kvsys d8e3d2379; 18:45 s81 / s81_cl / qwen_kvsys 051ab6c28; 20:00 s81_head 74be77fbd. Any REGRESSION those posted is void.
+- 2026-11-22 21:25 PST GPL-EXIT class [FLOW-OPS-R2 -> COORD; cc OPUS-FIX-S81-LEAF-R10, S81-J6-ASSEMBLY-R5, FIX-SYNC-S81] (COORD 22:4x): mechanism confirmed. face_flops.tcl ot_gpl_exit_args returned any global_placement call that already had -overflow unchanged:
+  if {$v <= 0 || [lsearch -exact $argl -overflow] >= 0} { return $argl }
+  gen_phys gpl_overflow puts GLOBAL_PLACEMENT_ARGS -overflow 0.2 into every S81 kit, so the sparse exit 0.25 (gpl_sparse_overflow, the ot_s81sl_leaf* types) and its timing-driven keep/reweight settings never applied.
+  Fix ready as commit 8d6c6ec61f9 GPL-EXIT-WINS-1122 (patch: intel2 FLOW-OPS-R2/tmp/GPL-EXIT-WINS-1122.patch). A larger exit overflow stops earlier, so:
+  - The sparse exit replaces a SMALLER explicit -overflow, with an "OT_GPL_SPARSE exit overflow V replaces the explicit -overflow X" line.
+  - An explicit value >= the exit is kept. OT_GPL_SPARSE_OVERFLOW=0 still means off. Non-sparse kits are unchanged.
+  - test_gpl_guard + test_gpl_die_scope: 24 pass.
+  NOT on main yet. The hub refuses branch pushes, and main feeds rt/current directly, so pushing = landing on rt. I push it the moment LEAF-R10's t13 OT_GPL_OVERFLOW=0 kit shows HPWL near its converged minimum. That kit runs the same placement as the fix: no die overflow, so the sparse exit applies. Say if you want it landed now instead.
+  S81 rows whose latest wave record is a PLACE-HPWL FAIL: ot_s81sl_leaf__t13 (a1, 1.45x) and ot_s81sl_leaf__t51 (a2, 1.63x). Both already carry OT_GPL_OVERFLOW=0 as item_env (LEAF-R10 4d60104a0dd7). Once the fix is on rt, that item_env is redundant but harmless. Other leaf types get the exit back automatically on their next gen.
