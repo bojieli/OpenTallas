@@ -29761,3 +29761,4 @@ FAILED [AUTOPILOT d18b117a6838] 2026-11-23 01:39:40 PST AUTOPILOT -> KIT-WAVE-3:
   - V5a pkit_core5a (RDPIPE) is in CTS on epyc10.
   - RDPIPE RTL bench: allrd/prodrd/allqrd PASS and 4/4 mutants killed. Pushed main 71ef8f06a5.
   - u_ctl LEC r3/r4 still running.
+- 2026-11-23 01:42 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-2660387-1795426245 on renewed-glider: rc=0 after 687 s, ended 09:42:08, log none, cmd: --hosts epyc9 --crit --disk 4 --mem 40 --threads 2 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc/row -- bash /srv/opentallas-scratch3
