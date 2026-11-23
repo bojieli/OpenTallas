@@ -1,0 +1,1 @@
+- 2026-11-22 22:58 PST DIED [LEAF-ROUTE-CBC] ot-run oth-ubuntu-2859551-1795417115 on tolerant-swine: rc=1 after 8 s, ended 22:58:37, log none, cmd: --hosts intel2 --mem 8 --threads 2 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc -- bash /srv/opentallas-scratch3/claude/leaf-route-c | class=SETUP cause=died after 8 s with no log: the command failed at start (rc 1)
