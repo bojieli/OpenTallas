@@ -1327,3 +1327,10 @@
   (4) SLWSLE owns the DPL-0033 st_a route-make-fail class before V4.
   (5) PRECHECK-R2 adds a PATH-SEAT check.
   Also: IOPC cancels one stuck twin kit.
+- 2026-11-22 18:53 PST 22:4x FABLE-REVIEW-2230 dispatched (5 fixes):
+  (1) LEAF-R10 holds the S81 leaf rows that keep failing until the J9 rows land, plus one probe kit.
+  (2) S81-J6-R5 verifies that col holds released in J8 do not need the RANKSEAT lockup rows; if they do, they stay held with 2 probes.
+  (3) KV-PLAN-R6 adds the PRECHECK-R2 hub_Wi pin, merge-depth and pv_v3 tap rows to D29.
+  (4) SLWSLE owns DPL-0033 st_a before V4.
+  (5) PRECHECK-R2 adds PATH-SEAT.
+  Also: IOPC cancels one stuck twin.
