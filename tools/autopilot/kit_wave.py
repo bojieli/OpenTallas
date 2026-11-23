@@ -10732,6 +10732,24 @@ def run_item(spec_path):
         _r = compose_rt()
         if _r is not None:
             return _r
+    if porous_wanted(sp):
+        # POROUS-FRESH-1123: the porous child views the kit gen reads (tools of tsrc) must be the newest rows this driver knows
+        _exp = porous_expected()
+        for _h in ([G] + [h for h in roamer.others if h != G]) if sp.get("tools_rt") else [G]:
+            _ra = (lambda c, _h=_h: remote_argv(_h, hub, c))
+            rc, txt = run(f"porous_check_{_h}", _ra(porous_check_cmd(tsrc, _exp)), idempotent=True)
+            if rc and "KW_POROUS_STALE" in txt and sp.get("tools_rt"):
+                # a composed launch tree (hardlinks into the older rt/<sha>): rsync writes new files and renames, the rt snapshot keeps its inodes
+                print(f"KW_POROUS_SYNC {_h}: " + txt.strip().splitlines()[-1][:400], flush=True)
+                rc, txt = run(f"porous_sync_{_h}", porous_sync_argv(tsrc, _h, hub), idempotent=True)
+                if rc == 0:
+                    rc, txt = run(f"porous_recheck_{_h}", _ra(porous_check_cmd(tsrc, _exp)), idempotent=True)
+            if rc and _h == G:
+                return fail("porous_stale", "KW_POROUS_STALE: the kit tools carry porous views that the driver map replaced (POROUS-FRESH-1123); "
+                            "update the die tree (ot-tree-fork from main) or the launch rt\n" + txt, f"{G}:{tsrc}")
+            if rc:
+                roamer.others = [h for h in roamer.others if h != _h]
+                print(f"KW_POROUS roam host {_h} dropped: porous views not fresh (rc {rc})", flush=True)
     plan0 = plan                                          # the die's plan of record (shared die bind prep, kit RTL)
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
@@ -13861,6 +13879,71 @@ def rt_mirror_cmds(sp, host, hub, tag=""):
            f"for o in $({olds} | tail -n +13); do chmod -R u+w \"$o\" && rm -rf \"$o\"; done; test -f {done}")
     return prep, rs, fin
 
+
+
+# POROUS-FRESH-1123 (FABLE-RC-S81 / COORD 11-23): porous child views (tools/die_plan/porous_views_data) are design DATA that the kit gen reads from the
+# tools it runs (the die tree, or the launch tree composed from the bind's rt/<sha> by bind_rt_follow).  The EOL-fixed col views of 152df1bc05
+# (payload536 c7d3c35336b4, ROM he bbc42691a185, hw 1b7a030446b6) never reached kits gen'd on older rts or trees: col_h9_r2 DRT stayed ~1390.
+# A kit with OT_POROUS_VIEWS set is checked before gen: a row of its tools map with the same base_sha256 as a row of this driver's map but another
+# sha256 is STALE.  A composed launch tree gets this driver's porous_views_data (rsync: new files + rename, no delete); a die tree is never
+# written, the kit FAILs porous_stale instead.
+POROUS_REL = "tools/die_plan/porous_views_data"
+
+
+def porous_wanted(sp):
+    return bool(str(((sp or {}).get("gen_env") or {}).get("OT_POROUS_VIEWS") or "").strip())
+
+
+def porous_driver_dir():
+    return Path(__file__).resolve().parents[1] / "die_plan" / "porous_views_data"
+
+
+def porous_expected(d=None):
+    """{lef name: [base_sha256, sha256]} of this driver's porous map ({} when it has none)"""
+    d = Path(d) if d else porous_driver_dir()
+    try:
+        m = json.loads((d / "map.json").read_text())
+    except (OSError, ValueError):
+        return {}
+    return {n: [r.get("base_sha256"), r.get("sha256")] for n, r in m.items() if isinstance(r, dict) and r.get("sha256")}
+
+
+POROUS_CHECK_PY = r"""
+import json, os, sys
+root, exp = sys.argv[1], json.loads(sys.argv[2])
+f = os.path.join(root, "tools", "die_plan", "porous_views_data", "map.json")
+try:
+    m = json.load(open(f))
+except (OSError, ValueError):
+    print("KW_POROUS_FRESH no porous map under %s" % root); sys.exit(0)
+bad = []
+for n, r in sorted(m.items()):
+    e = exp.get(n)
+    if not isinstance(r, dict) or not e:
+        continue
+    if r.get("base_sha256") == e[0] and r.get("sha256") != e[1]:
+        bad.append("%s %s->%s" % (n, str(r.get("sha256"))[:12], str(e[1])[:12]))
+    elif r.get("sha256") == e[1] and not os.path.isfile(os.path.join(os.path.dirname(f), str(r.get("file")))):
+        bad.append("%s %s file missing" % (n, str(r.get("sha256"))[:12]))
+if bad:
+    print("KW_POROUS_STALE %d row(s): %s" % (len(bad), "; ".join(bad))); sys.exit(3)
+print("KW_POROUS_FRESH %d rows" % len(m))
+"""
+
+
+def porous_check_cmd(root, exp):
+    """shell command (run on the gen host): exit 3 + KW_POROUS_STALE when root's porous map carries a row that exp replaced"""
+    q = shlex.quote
+    return f"python3 -I - {q(str(root))} {q(json.dumps(exp, sort_keys=True))} <<'KWPOROUS'\n{POROUS_CHECK_PY}\nKWPOROUS"
+
+
+def porous_sync_argv(root, host, hub, src=None):
+    """rsync argv (run on the hub) that puts this driver's porous_views_data into the launch tree on host.  rsync writes each changed file under a
+    temp name and renames it (-c: equal size + mtime is no proof here), so a hardlinked rt/<sha> file is never written; no --delete (a concurrent reader of the old map keeps its .gz)"""
+    s = str(src or porous_driver_dir()).rstrip("/") + "/"
+    d = f"{str(root).rstrip('/')}/{POROUS_REL}/"
+    dest = d if host in ("localhost", hub, None) else f"{host}:{d}"
+    return ["rsync", "-rltc", "--chmod=u+w", "-e", "ssh -o BatchMode=yes -o ControlPath=none", s, dest]
 
 
 TOOLS_LAG_CACHE = {"t": 0.0, "rows": {}}
