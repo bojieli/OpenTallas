@@ -2,7 +2,7 @@
 
 Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual_brief2.txt. Order: st_a, cb, su_l1/su_c, coll, hc/st_b. QC V4 cut ~06:00; V4 gaps due 05:00.
 
-## State (02:3x PST)
+## State (01:3x PST; first-pass posts went out about 01:20, not 02:30)
 - First pass done on all five families. Rows: lanes/FABLE-RC-REVIEW.tsv (20 QC rows). Counts: COVERED 8, PARTIAL 7, MISSED 4, WRONG-CAUSE 1.
 - Posts sent to VIS-QC, FAM-QC-SLWSLE-R1, FAM-QC-HCST-R3, FAM-QC-CB-R4, OPUS-FIX-QC-COLL-R3, OPUS-FIX-QC-V4-R2, QC-PLAN-R13 (see lanes/posts/FABLE-RC-QC.md). Replies due within 1 h.
 - Not reviewed: fe/fw, stm, ctl, glue, native59 (outside the given order).
@@ -22,3 +22,8 @@ Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual
 2. Read the epyc7/epyc10 renders when admitted (clf4365a62, pvd2ec7769, pv4242de79, cl67389ecd).
 3. Cross-check lanes/HOTSPOT-GAPS.tsv when HOTSPOT-CENSUS lands it.
 4. Second report to COORD when every gap has an owner row or a reason.
+
+## 01:3x update
+- epyc7/epyc10 renders done and READ (clf4365a62, pvd2ec7769, pv4242de79): they confirm the st_a clusters. pvd2/pv42: (420-480,235-245) at the u_r0 NE corner / g_btb slit and (450-545,445-490) on g_btb[1]. clf4: (300-600,50-110) under the horizontal b_hw landing, plus (400-440,400-425) and (430-445,270-280).
+- Reply FAM-QC-SLWSLE-R1 01:14: sle_hc1 pve230954c is SIGNED on its V2 attempt (no relaunch needed; my 'needs an owner' note is withdrawn). b_tw broadcast stations: SLWSLE takes them (asbuilt intra_stations). btab read stage is RTL in qfd_dv_s8x_btab plus a latency contract: NO OWNER yet. Pin registers measured TT mean 323 vs bound 280 (+43), FF 249 vs 227 (+22), n 5516. E-corridor seat check pending.
+- Still no reply from VIS-QC, FAM-QC-CB-R4, OPUS-FIX-QC-COLL-R3, QC-PLAN-R13 (due about 02:20).
