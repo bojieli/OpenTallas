@@ -128,3 +128,12 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - Cancels: v4n/v3n/v5n ended by themselves. v6n K2 + v12 1122220657: SIGTERM sent 10:5x to the intel2 ot-run clients 776947 + 174990, still alive after 1 min. UNCONFIRMED; re-check.
 - Proof run epyc7 sinkspread/w/gates/b5x_sysc_d28clk_e/gate.out (row B with D28 sys_c clock) ended 06:46, not read.
 - Owed cleanup (ot-delete): epyc7 sinkspread/w/kvd29e_rowb (136 MB), rows_in/E/tmp.
+
+## KV-D29 RESUMED 10:4x (after limit 06:4x-10:40). Deadlines now: tools 12:00, package 13:00, gate 13:30.
+- D29 compose of record = Codex K3 (ledger d29/kvd29/k3_ledger_pcslit, 38 rows + post steps; tree plan f75a71af72eb; rt 174935ee5e9c via aside/k3_rehearsal_runtime tools swap). Includes HGSTREET r2 bb8a5f3c1814, KRSPCORE 399f5d95fb70, T1SPLIT, RHI (69 types), SYSCTAP, C/D/E (= frozen HUBC set), PCV1BANK2, row B, V3FT, PADRAM, TAPOFF 56/56.
+- k3c: PRE 0, G0 0, strict 15 R8_STALE (vport ES_0/WS_0). Used OT_PLAN_GATE_SKIP=RELAYSINK -> not strict per COORD.
+- k3d: kvd29/k3d_fixpoint.sh (unit intel2 kv-d29-k3d-fixpoint-1123; log d29/k3d_fixpoint.out; diag dirs d29/k3d_diag_N; tables k3_post/pv_tables_k3d_N); final gate tag k3d with FINAL_SKIP=RELAYSINK (fallback). No-skip strict k3e after fork H.
+- Forks: F (sys_c -201 classes + hub_C 4 classes -> rows_in/F), G (LAND-CAP pv_v5n/v12 + rc118 seam 3284 -> rows_in/G), H (RELAYSINK false hits fix -> rows_in/H). A-E done/dead.
+- HGFORM probe kv3_hg_v1p2 (hk6, RHI keys in plan): run-item unit runitem-kv3_hg_v1p2-60288, log intel2 ~/tmp/kvd29/kit_hg_v1p2_hgform.log, kit intel1 .../KV-D28/private/KV-D29/kv3_hg_v1p2_1123105128. Gives row 29 config.mk proof + rc127 GRT.
+- b4_place config.mk: only OT_HOLD_IN_MIN -75 (no RHI) -> not RHI proof.
+- pc_v1 cl7f/cl4ea: relaunch on K3 after the strict bind.
