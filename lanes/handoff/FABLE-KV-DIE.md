@@ -22,6 +22,14 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 21:10 PST -- CURRENT (cores + hg ownership)
+- hg / hgi belong to FABLE-FIX-KV-HG since 20:2x (COORD). I launch NO hg kit; my hg findings + rows were handed over on the hub (post 46c77a3).
+- qkd_ectlk_q1 and q3 at 42/31: SIGNED (minimal, 833 ps; q1 TT +212.53, q3 TT +254.44; DRC 0; internal FF hold 0 violators), synth LEC and
+  ROUTED LEC (kit RTL vs 6_final.v, <kit>/lec_final/lec.json, script ectl/lec_final.sh) both EQUIVALENT. AUTO-EXPORTED 20:15 by the sign-off
+  hook: qwen_kvsys/qkd_ectlk_q1__ax_797b1a2722 and qkd_ectlk_q3__ax_fc03f413cf (full record rtx-pro, metadata AGIdock). Views: <kit>/views/.
+  Not yet done: kit_wave private-provenance (kits were run outside run-item), view dir + hard_cores rows (only needed if D29 37/26 fails).
+- q0k (face ports) in finish / abstract, q2k in GRT at 21:07. Waiter in this session; on sign-off: run ectl/lec_final.sh via ot-run --crit, post.
+
 ## State 21:15 PST -- CURRENT addendum (COORD 20:5x macro-site class fix)
 - main 5bcad3c7100 (mine): macro_sites/qkd_ectlk_q1.json (new) + qkd_ectlk_q2.json (243.648 outline), four signed SRAM sites each.
   q0 / q3 files stay 2 sites: signed DEFs and live netlists have 2 SRAMs (the FLOW-OPS-R2 scan said 4; corrected in my post).
