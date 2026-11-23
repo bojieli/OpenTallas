@@ -19,3 +19,15 @@
   (4) Forwarded clock clk_t45 (647,675) -> fclk_out_coll_o1 (2,1146): about 1.1 mm of forwarded-clock wire. State its insertion and the coll_o1 ring hold in the per-tap split.
   (5) Not causes: the 6 strap_ca_k_coll_i0 opposite-face pins are tied ID straps; clk entry 912.8 vs threshold 905.5 is marginal and the sinks sit on taps.
   Local density max 0.70, pin track use 0.26, channel use 0.33: no global density problem.
+- 2026-11-23 06:16 PST RC OWN-VIEW KV pre-review for D29 (1/2: renders I read) [FABLE-RC-ALL -> KV-D29, FABLE-OPEN-KV; cc COORD, FOLLOWUP-KV, PRECHECK-LEDGER-R3] Kits: hroot intel1 kv3_hroot_1123035126 (place); hgi_v2 epyc8 HG-R8 1123003036 (place); hg_v1p2 epyc8 1122211705 (place, pre-HGFORM); pc_v3 epyc10 1122043636 (D27d3, final GRT congestion.rpt binned by me). Each cause needs a D29 row id or a measured reason by 12:30.
+  HROOT (1901 x 838, no macros; all logic in the E half, W half empty):
+  h1 E-strip band still at ~100 % density: x 1875-1885, y 308-650 (bins 0.9 at (1879,389) and (1879,429)). RING moved ff_rect to x1760, but the placed kit still piles on the E face over the full D28 pin window y306-648. Show the D29 composed placement with this column < 0.7, or widen the band in x.
+  h2 ft2_i landing blob (1789, 89-119) density 1.0: no row.
+  h3 o_next ring along the S edge: read-pointer net fan-out 153 over x 1054-1670 (616 um) at y 17-20. A 616 um ring is against the <= 330 ps fclk tree rule (R2/R3). Fold the ring to <= 300 um, or state its measured tree.
+  h4 reset relay u_rrl_45 (1554,400): 21 sinks, bbox x 1083-1605 y 24-369, legs to ~850 um. Confirm the leaf-relay row (687-960 um) covers this relay by name.
+  h5 Not causes: 23 opposite-face pins are tied strap_ca_k straps; clk entry 1647 um is the pre-CTS port, sinks go to taps.
+  HGI_v2 (16 head cores 4 x 4):
+  g1 hst2_t1 u_reg ti_b[14xx-15xx] at (187,960): each bit drives 4 sinks over bbox x 7-578 y 283-950 (spread 1.2 mm, legs ~700-850 um). HST2SITE moves the bank; it does not shorten a 4-way fan-out over 4 cores. Row: one register copy per destination core (+1 stage, pre-approved) or measured setup >= -42.
+  g2 pile at (175,1235) between the ectl tN landing strip and the head2_e6 NW corner (16 um gap, red bin): no row names it.
+  g3 landing bars in both horizontal streets at x 50-120 and x 650-740 (60-80 %): read them in the hgi_v2 GRT now running.
+  HG_v1p2: centre column x 560-650 y 430-950 at 50-80 % with small SRAMs inside (rc127), plus a second cluster x 250-330 y 640-740 west of the u_ex row, and the N street y ~1250 x 300-900. This kit predates HGFORM: there is NO placed probe of HGFORM, so rc127 cannot be PROBE-PASS at 13:00 without one.
