@@ -22,6 +22,28 @@ tiles 3-5 reach lengths across with cores 9-17 um off the edges are. street_rule
   v3 516k -> 181k. env FKD_TREE / FKD_RT. Needs landing_remap + clksite_pinclear after it. kv3_hg (ft2, other corridor) NOT covered: open.
 - R2 band re-site at pins (after R1b bind), R3 pv in-tile re-floor, R4 hgi array north: proposals posted to the family lanes.
 
+## State 18:00 PST: ECTL CORE REBUILD (COORD 18:0x: I own it) -- CURRENT
+- Cause of +5: D26 -> D27d3 re-spaced hg internal_stations bus:o_ectl_Q_N_rq 3 -> 5 regs and the four bus:i_slg_Q_N_krsp rows 5 -> 8 regs
+  (bind rule RESPONSE_LAT = 8 + krq + krs: 26 -> 31; QK = RL + 11). Asked KV-PLAN-R6 18:0x whether D29 can restore the D26 counts (fallback:
+  37/26 bind, old views valid, no rebuild). No answer yet.
+- Rebuild = new kit lineage through the kit wave core path, 4 sealed private kits, goal route, from tree_b (my fork, now USED: do not delete):
+  * tree_b edits: cores/harden/ectlk_q/qkd_ectlk_columns.sv (7 module defaults 42/31 + columns guard) and qkd_ectl3_kiss_st_cols.sv
+    (CORE_QK 42 / CORE_RL 31); originals saved epyc8 fable-kv-die/ectl/{columns_37_26.sv,cols_wrap_37_26.sv}.
+  * core jsons: fable-kv-die/ectl/mk_corejson.py (KV-KT-E0 path b, copied from epyc9 /srv/opentallas-scratch/claude/kv-kt-e0/ectlk/) ->
+    tree_b/results/kv_host_regen_1/rtl/qkd_ectlk_q<k>/qkd_ectlk_q<k>_core.json.
+  * private plan tree_b/.../plan_of_record/plan_ectl_noview.json = tree_b plan 7897fd6e9b3c with lef/lib dropped on the 32 ectl_q rows
+    (kv_core_wave views then lists the 4 modules).
+  * specs: private-spec qwen_kvsys qkd_ectlk_q<k> --kind core --tree tree_b --plan plan_ectl_noview.json --bind-out tree_a/.../bind_of_record
+    --allow-bind-stale --goal route; list in intel2 ~/tmp/fablekvdie/ectl_specs.txt (stamps 1122174126 / 174201 / 174212 / 174223).
+  * runners: intel2 user units fkd-core-ectl-q0..q3-1122, logs ~/tmp/fablekvdie/core_ectl_q<k>.log; work epyc8
+    .../KV-D27d3/private/FABLE-KV-DIE/qkd_ectlk_q<k>_<stamp>. All four in gen at 17:44.
+  * KV-KT-E0 (11-18) used extra gen args on these cores: --cts-setup-only --two-mode-grt --hold-ff-margin 10 --plan-inst ectl_q<k>; the wave
+    core_kit args are []. If CTS / hold fails, add them as plan keys / spec args, not env. The 11-16 signed lineage also needed a tap-centroid
+    CTS hook (KV-Q2-CLK), a 2-pass post-route hold ECO (prd m10) and a strip re-route; expect iteration.
+- After each signs: export (AGIdock + rtx-pro standard export), new view dir (e.g. physical/die_plan/qwen_kvsys/kvectl4231_1122/<module>/
+  lef + tt/ff lib + signoff.json), hard_cores lef/lib rows on the 8 hg types + the two RTL files as a tree payload, post to KV-PLAN-R6.
+- NO hg kit relaunch before the views exist.
+
 ## State 17:45 PST after the weekly limit (CURRENT; blocks below are history)
 - hg kits kv3_hg_v1p2 / kv3_hg (units fkd-kit-hgv1p2-1122 / fkd-kit-hg-1122) FAILED at gen_lint 08:52: rtl_check
   qkd_ectl3_kiss_st_cols__columns_built_for_other_params. CAUSE (read from files): binds since D27d3 (D27d3 bind_of_record, gate_a1 / gate_b3,
