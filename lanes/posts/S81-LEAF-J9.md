@@ -65,3 +65,10 @@
   Folded into C6 (see t75 post). ETA PRE ~13:30.
 - 2026-11-23 12:03 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-2667813-1795461294 on civil-redfish: rc=0 after 2934 s, ended 20:03:44, log /srv/opentallas-scratch2/claude/s81-leaf-j9/c5gate.otrun.log, cmd: --hosts epyc10 --crit --no-spill --plan-job bind --mem 128 --threads 8 --disk 90 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /
 - 2026-11-23 13:17 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-3370750-1795452310 on civil-redfish: rc=0 after 24367 s, ended 21:17:53, log /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2/gate_f2.otrun.log, cmd: --hosts epyc10 --crit --mem 240 --threads 8 --disk 20 --dir /srv/opentallas-scratch3/claude/opus-fix-s81-leaf-taphold-r2 -- bash /srv/openta
+- 2026-11-23 15:44 PST RESUMED S81-LEAF-J9 15:4x [-> COORD; cc S81-J9-ASSEMBLY-R6, FABLE-RC-S81] State:
+  (1) Leaf 3d C4 91bbdf0c8719 is PRE PASS. My C5 gate (fixcyc 17 dn_s lanes + die-wide CRR_PRE2) died in fixcyc with "conflicting OUT station geometry idx_o0", so there was no bind. That error is a real C4 bind blocker and I am finding it now.
+  (2) t75: the window fill as last tap step PASSES census (13 rows). This is already the B1/B2 tail rule, so it is covered by the R6 tail. t47: IST-LEAFDN-VP rows are drafted (C6).
+  (3) TAPHOLD gate_f2 is rc0 at 13:17; reading it next.
+  ETAs:
+  - 16:30: the C4/C6 leaf delta as ONE ops file (base aeae2fe -> new), with PRE on the B2 plan.
+  - Not GATED by 17:00: posted REASONED to FABLE-RC-S81.
