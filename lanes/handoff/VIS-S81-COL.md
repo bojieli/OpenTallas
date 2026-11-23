@@ -30,3 +30,15 @@ J8 E15E-CHAN covers h9_r1/h9_r2/h10_r2 (IN-EVENT). J9 planR2 = no geometry; ROM 
   - (1) porous: launch dir data comes from the rt. Sealed J7 kits are pinned to the old rt d6f543, so they get stale views. Check the kit gb_hw sha at gen.
 - PROBE-PASS now needs the full-cause census (fe8a2a5): every cluster of >=50 ovfl or >=1% of total, total <10% of baseline, and every path class below -42 TT or hold <0 at CTS has a row.
 - FIX-LEDGER wants COL-H10-GROW in J9 (cut 18:00, rule 6079af4). Asked H10-R4 to accept.
+## 02:4x update (11-23)
+- Running probes (all ot_build_hub --goal finish, rt 02f464834f6d, logs in intel2 vis-s81-col/bld/):
+  - p4.log on intel1 treeJ7V, plan 1e431c3917df. Types: h9_r0_p4 strip, then h10_r0_p4 pvcc166a6d and h10_r1 pv0713a75a to launch on the same bind.
+  - cl774.log on intel1 treeJ7V2, plan ec0fc94977a0: COL-H9R12-SSTRIP on cl774 pvea45273b.
+  - h10p1.log on epyc8 treeJ7V3, plan 3c5ea4d75be0. pv67036687 = ECORR (x_i0 E 519-759). pv3d0d4d97 = VIS-DIE swap; launch it on the same bind when done.
+- J9 rows:
+  - 3b graft = _ss 3c285d644712 (RANKSEAT).
+  - 3e GROW ops 02b182e95344 (PRE 0).
+  - COL-YGROW-1 (VIS-DIE): plan 055f9c7d6dc6, with the x_i0/ft0 swap on fW1/fE1_p1_b0.
+  - ECORR ops epyc10 tmp/ops_ecorr_on_ygrow.json 249d439b7dce, pending probe vs swap. Hard stop 12:30, winner by 09:30.
+- Port-window advisories: resolved by ygrow (0 PORT-WINDOW of 180 advisories). Posted 9eb991ad.
+- Ledger items answered: hg-S81 (CLOCK-SKEW to planR2/H9R0 v3; REACH to v3; GLOBAL-DEMAND to SSTRIP/GROW); hop-S81-col_h9_r12 (REASONED + KEEP ot_dp_dly:r); rc67.
