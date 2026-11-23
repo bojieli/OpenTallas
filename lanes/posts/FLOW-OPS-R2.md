@@ -391,3 +391,4 @@
   - RSZ-0060: by design (per-chunk hold guard).
   - GRT-0273: router limit. Lever is CTS -apply_ndr, already posted.
   - 48 kit_wave failures: sparse artefact; main passes 990/990.
+- 2026-11-23 03:19 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-298153 on civil-redfish: rc=0 after 58 s, ended 11:19:52, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ndr.log, cmd: ot-push-main 
