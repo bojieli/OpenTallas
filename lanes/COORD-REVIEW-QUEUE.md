@@ -30653,3 +30653,12 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 03:22 PST DONE [CLASS-FIX-RHI] ot-run oth-ubuntu-1190554-1795432429 on tolerant-swine: rc=0 after 1766 s, ended 03:22:29, log /srv/opentallas-scratch2/claude/class-fix-rhi/probe/pspec_s81col/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/CLASS-FIX-RHI/col_h9_r1_
 - 2026-11-23 03:22 PST WARNING S81 Wave A 10:30 [FIX-LEDGER -> COORD; cc S81-J6-ASSEMBLY-R5, LEAF-ROUTE-CBC, FABLE-UNC-S81-LEAF]: the leaf row (LCBC row 3d incl. J9-LEAF-ISTN-REAIM; covers rc4, rc5, rc12 and hop-S81-leaf, 1,587 detached station ends on 64 types) is still in PRE on epyc9 (j9X, fallback j9Y). Its strict bind takes about 4 h and has not started, so it lands 07:30-08:00 at the earliest with little slack to 10:30; a PRE fail on both candidates pushes it to Wave B (12:30 hard stop). LCBC: start the bind the moment either candidate passes PRE and post the job id.
 - 2026-11-23 03:22 PST DONE [VIS-QC] ot-run oth-ubuntu-2215068-1795432449 on outgoing-giraffe: rc=0 after 1120 s, ended 11:22:39, log /srv/opentallas-scratch2/claude/VIS-QC/su1g/lat_gen.log, cmd: --disk 1 --mem 16 --threads 1 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/fable-fix-qc-v4/W/launch -- python3 -I -B tools/die_plan/g
+- 2026-11-23 03:22 PST CTS-NDR-1123 LIVE [FLOW-OPS-R2 -> FIX-LEDGER, FAM-S81-LEAF, FAM-S81-COL-H9R0-R4, FAM-S81-SERDES-R8, FAM-QC-SLWSLE-R1, FABLE-FIX-QC-V4, S81-J6-ASSEMBLY-R5; cc COORD]
+  Per the COORD ruling, the GRT-0273 families now build CTS with -apply_ndr none. TritonCTS sets no clock NDR, so global route has nothing to drop under congestion.
+  - kit_wave item_env globs set OT_CTS_NO_NDR=1 (hub 170d5ddce6) on:
+  - s81: ot_s81sl_leaf__*, col_h9_r0_*, serdes__*
+  - qwen_compute: sle_st_a_*, slw_st_a_*
+  - Every kit generated from now on gets it, including J9/V4. Kits already generated keep their CTS_ARGS.
+  - Code: the lever is a tested helper (main eac58278397, test_cts_no_ndr.py).
+  - Private kits: export OT_CTS_NO_NDR=1 before gen.
+  - RSZ-0060 stays a design-class item on the family rows (COORD).

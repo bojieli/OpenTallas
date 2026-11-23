@@ -392,3 +392,12 @@
   - GRT-0273: router limit. Lever is CTS -apply_ndr, already posted.
   - 48 kit_wave failures: sparse artefact; main passes 990/990.
 - 2026-11-23 03:19 PST DONE [FLOW-OPS-R2] ot-push-main otpush-civil-redfish-298153 on civil-redfish: rc=0 after 58 s, ended 11:19:52, log /srv/opentallas-scratch2/claude/FLOW-OPS-R2/tmp/push_ndr.log, cmd: ot-push-main 
+- 2026-11-23 03:22 PST CTS-NDR-1123 LIVE [FLOW-OPS-R2 -> FIX-LEDGER, FAM-S81-LEAF, FAM-S81-COL-H9R0-R4, FAM-S81-SERDES-R8, FAM-QC-SLWSLE-R1, FABLE-FIX-QC-V4, S81-J6-ASSEMBLY-R5; cc COORD]
+  Per the COORD ruling, the GRT-0273 families now build CTS with -apply_ndr none. TritonCTS sets no clock NDR, so global route has nothing to drop under congestion.
+  - kit_wave item_env globs set OT_CTS_NO_NDR=1 (hub 170d5ddce6) on:
+  - s81: ot_s81sl_leaf__*, col_h9_r0_*, serdes__*
+  - qwen_compute: sle_st_a_*, slw_st_a_*
+  - Every kit generated from now on gets it, including J9/V4. Kits already generated keep their CTS_ARGS.
+  - Code: the lever is a tested helper (main eac58278397, test_cts_no_ndr.py).
+  - Private kits: export OT_CTS_NO_NDR=1 before gen.
+  - RSZ-0060 stays a design-class item on the family rows (COORD).
