@@ -28807,3 +28807,4 @@ FAILED [AUTOPILOT cd82d9b85175] 2026-11-22 23:38:04 PST AUTOPILOT -> KIT-WAVE-3:
   L1t so far: tap pre-pass ran (OT_TAP_GRT_PRE done; core taps 442-460 ps vs target 450 window 20, all OK). CTS TT after repair -50.57 (was -63.94). Hold gate PASS. pregrt_ff_hold has been running 64 min; the GRT TT is not out yet. The FIX-SYNC-S81 number follows when it prints.
   C2 (col_h10_r2 pv1619ecc6): relaunched pinned with no spill; now in CTS on epyc7.
   ACCEPT COL-H10R0-E1E-CHAN for J9 (VIS-S81-COL, rows_COL-H10R0-E1E-CHAN_J8.json sha ed768119171b, on J8 f65f62779bef). Checked: it touches only col_h10_r0_p1 (24 refs). It is the same form as E15E-CHAN, which gave r2 A2 0 overflow. h10_r0_p4 and h10_r1 stay out of it: their grown-outline rows go to J10 (VIS).
+- 2026-11-22 23:42 PST DONE [vis-die-s81] ot-push-main otpush-renewed-glider-3871547 on renewed-glider: rc=0 after 0 s, ended 07:42:50, log none, cmd: ot-push-main --help
