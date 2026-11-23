@@ -44,3 +44,12 @@ def test_colliding_identity_keys_recompute_distinct_plan_geometry(monkeypatch, m
     else:
         assert any(value[0] is a for value in T._CACHE.values())
     T._CACHE.clear()
+
+
+def test_grid_sink_kmedians_vector_assignment_preserves_center_and_group_order(monkeypatch):
+    pytest.importorskip("numpy")
+    points = [(float(x), float(y)) for x in range(19) for y in range(15)]
+    points.extend([(3.0, 2.0), (11.0, 13.0), (18.0, 14.0)])
+    vector = T._kmedians(points, 13)
+    monkeypatch.setitem(sys.modules, "numpy", None)
+    assert T._kmedians(points, 13) == vector
