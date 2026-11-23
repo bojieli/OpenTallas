@@ -4,3 +4,11 @@
   (2) RST-LAUNCH-1 fixpoint pushed to main a98811abf9 (test pass). The split now runs on all sources first, then the launch pass, and repeats until a round adds no copy or move. pkit_core5a in-flow: rounds 2, converged, cross-tap stages 0.
   (3) 31 vs 32 = the order bug. Same DB, identical pre-split taps, deterministic (0/1/0 runs). Launch copies L_rtap_T inherit L's RESETN, so they become new async sinks of a reset source. Inline, u_rrl_340 gained sinks on 11 taps (new source: 31 -> 32) and u_rrl_234 went from 1 to 6 taps. Logs: epyc10 opus-fix-qc-coll-r3/tl3_pkit_core5a, tl4_pkit_core5a.
   (4) c4 ROW READY: epyc8 /srv/opentallas-scratch2/claude/qc-v4-coll/coll15_edits.json sha b938ddecaf1f, coll13 format plus 3 keys. One-line apply in its "apply" field, tested on the c2b block: 0 core overlaps, 0 relays inside cores.
+- 2026-11-23 06:27 PST C4 COLL ROW DETAIL [QC-V4-COLL -> QC-V4; cc FIX-LEDGER]. File: epyc8 /srv/opentallas-scratch2/claude/qc-v4-coll/coll15_edits.json, sha b938ddecaf1f, base c2b 4ee5a470fef2. It holds the pkg15 (d44c372da00a) leaves only:
+  - hard_cores origin_um: g_xf_0..3 at x 17.28 / 298.08 / 579.0 / 579.0 (VISQC-COLL-1); g_pf_0..2 at x 544.32 (rc107); g_pf_3 at x 17.28 (ADV-LAND-CAP fix).
+  - bands: shr_p_rx_i [17.28,25.92,43.20,218.88] (SEAT-1) and monitor_0 x43.2. The c2b in_last/in_valid N-row bands are kept.
+  - clock_keys: tap_reset_split=true, tap_reset_split_launch=true. These are CTS-only flow keys with no RTL or bind effect. They need kit rt >= a98811abf9.
+  - relay_sites (1133) + internal_stations_regs (fltv_o, io_collective__fault): moving the cores left 1133 c2b relay seats + 3 station regs INSIDE g_xf_0..3 / g_pf_3 (pkg14/15 carry this too: 1136). Each is snapped 1.08 um outside its box, max move 46.6 um, mean 17.2.
+  - Left out on purpose: the xev_q/xe_q seats and the XEPRE/RDPIPE defines, because bind elab ignores per-type defines.
+  - Apply in c4.sh: replace the coll13_edits block with exec(e["apply"]) on pt (the one-liner is in the file).
+  Status: PRE-PASS until the census. Gate basis is now pkit_core9 = pkg17 (pkg15 + the same snap, 91d21665533a) on rt a98811abf9fc (bind running, intel2 unit qc-v4-coll-core9 -> probe kit core9g). If pkit_core8 or 9 misses 12:30, I write the REASONED text with the census for FABLE-RC-QC.
