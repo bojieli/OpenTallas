@@ -104,3 +104,45 @@ def test_real_child_and_virtual_start_fanout_share_single_output_connection(monk
     assert 'assign rs_a = landing_real_child;' in v and 'output rs_a;' in v
     assert v.count('.fwd(landing_real_child)')==1 and '.fwd(rs_a)' not in v
     assert 'input rs_a;' not in v
+
+
+def test_monitor_route_uses_segments_and_exact_fixed_access_sites(monkeypatch):
+    import die_trial as DT
+    import sta_landing_top
+
+    sites = [
+        dict(id=f'rl_a_{index}', kind='fwd_clock_relay', xy_um=[x, 6.345])
+        for index, x in enumerate((40.0, 80.0), 1)
+    ]
+    edges = [
+        dict(id=f'cland_mon_{bus}__a', src=dict(part='a', bus=bus), dst=dict(part='b', bus=bus),
+             kind='clock' if bus == 'clk' else 'ctl', relay_group='cland_mon__a', relays=sites)
+        for bus in ('ready', 'fault', 'clk')
+    ]
+    plan = fixture(monkeypatch, edges)
+    for typ, direction in (('src', 'out'), ('dst', 'in')):
+        pins = plan.types[typ]['clock']['landing_contract']['pins']
+        pins.extend(dict(name=bus, dir=direction) for bus in ('ready', 'fault', 'clk'))
+
+    network = landing_route.network(plan)
+    relays = network['monitor_relays']
+    assert network['edges'] == 3
+    assert len(network['wires']) == 9
+    for bus in ('ready', 'fault', 'clk'):
+        assert network['bindings']['a'][bus] == relays['u_cland_rl1_a']['bindings'][f'{bus}_i']
+        assert relays['u_cland_rl1_a']['bindings'][f'{bus}_o'] == relays['u_cland_rl2_a']['bindings'][f'{bus}_i']
+        assert relays['u_cland_rl2_a']['bindings'][f'{bus}_o'] == network['bindings']['b'][bus]
+        assert network['bindings']['a'][bus] != network['bindings']['b'][bus]
+
+    plan.name = 'example'
+    plan.ports = {}
+    monkeypatch.setattr(DT, 'standin_module_names', lambda p: {tn: 'm_' + tn for tn in p.types})
+    routed, _ = DT.route_netlist(plan, {tn: {} for tn in plan.types}, landing_infra=True)
+    assert routed.count('ot_landing_monitor_fwd_route u_cland_rl') == 2
+    first = relays['u_cland_rl1_a']
+    assert landing_route.monitor_route_origin(first) == pytest.approx((37.84, 6.21))
+    lef = landing_route.monitor_route_lef({first['form']})
+    assert 'SIZE 4.3200 BY 0.2700' in lef
+    assert all(f'PIN {bus}_{suffix}' in lef for bus in ('ready', 'fault', 'clk') for suffix in ('i', 'o'))
+    with pytest.raises(ValueError, match='actual mapped and clocked relay cells'):
+        sta_landing_top.apply('', network, None)

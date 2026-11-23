@@ -3528,6 +3528,8 @@ class Landings:
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])
+        if getattr(self, "monitor_relay_sites", None):
+            result["monitor_relay_sites"] = self.monitor_relay_sites
         if getattr(self, "mixed", False):
             result["count_aligned_mixed"] = dict(
                 count_aligned=sum(1 for r in self.rows if r.get("landing_form") == "count_aligned"),

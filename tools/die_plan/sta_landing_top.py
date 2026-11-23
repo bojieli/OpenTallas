@@ -43,6 +43,8 @@ def module_ports(text, module):
 
 def apply(top, network, ports_of):
     """top text + landing network dict + ports_of(module) -> (new top text, report dict)"""
+    if network.get("monitor_relays"):
+        raise ValueError("STA landing monitor relays require the actual mapped and clocked relay cells")
     lines = top.splitlines()
     mi = next(i for i, l in enumerate(lines) if re.match(r"\s*module\s+\w+\s*\($", l))
     out, cur, start = [], None, 0
