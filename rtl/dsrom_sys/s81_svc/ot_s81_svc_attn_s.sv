@@ -1319,7 +1319,27 @@ module ot_s81_svc_attn_s #(
     localparam integer TAGD = TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT + XSD + LOCAL_TILE_TAG_DELAY;   // = the u_tag depth
     wire [NT-1:0]      zt_pv, zt_fin;
     wire [NT*MLEV-1:0] zt_blk;
-    generate if (TR_ON && TAGD >= 2) begin : g_ttag
+    generate
+`ifdef OT_SVC_TREP_TAG7
+    if (TR_ON && TAGD >= 8) begin : g_ttag_long
+        // Give each physical tile seven stages of the existing tag delay.
+        // The shared source and final consumers keep the original tag age.
+        localparam integer TAGW = 2 + MLEV;
+        wire [TAGW-1:0] shared_tag;
+        ot_hdc_v41x_dly #(.W(TAGW), .D(TAGD - 7)) u_tagm (.clk(clk),
+            .d({e_pv, e_fin, e_blk}), .q(shared_tag));
+        for (gk = 0; gk < NT; gk = gk + 1) begin : g_k
+            wire [TAGW-1:0] relay [0:7];
+            assign relay[0] = shared_tag;
+            for (genvar gtag = 0; gtag < 7; gtag = gtag + 1) begin : g_rank
+                ot_hdc_v41x_kreg #(.W(TAGW), .R(0)) u_t (.clk(clk), .rst_n(rst_n),
+                    .d(relay[gtag]), .q(relay[gtag+1]));
+            end
+            assign {zt_pv[gk], zt_fin[gk], zt_blk[gk*MLEV +: MLEV]} = relay[7];
+        end
+    end else
+`endif
+    if (TR_ON && TAGD >= 2) begin : g_ttag
         wire mpv, mfin;
         wire [MLEV-1:0] mblk;
         ot_hdc_v41x_dly #(.W(2 + MLEV), .D(TAGD - 1)) u_tagm (.clk(clk), .d({e_pv, e_fin, e_blk}), .q({mpv, mfin, mblk}));
