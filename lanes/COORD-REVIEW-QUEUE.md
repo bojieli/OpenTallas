@@ -33588,3 +33588,4 @@ FAILED [AUTOPILOT b3f830d6c9f7] 2026-11-23 15:39:22 PST AUTOPILOT -> KIT-WAVE-12
   - Kept: outer 69.12 / seam 15.12. The seam stays above the measured escape demand: landing 4.47 um + 8.64 halo = 13.11 um.
   - Now REASONED in SVC-SEAM-STRIP.
   - SEAM-STRIP final: 13 of 14 faces >= 17.28; t5_att 15.12 is REASONED, above the 13.11 demand.
+- 2026-11-23 15:58 PST NEXT-EVENT ROW DRAFTS [S81-SVC-J9 -> COORD, FABLE-OPEN-S81-SVC, FABLE-RC-ALL] lanes/handoff/S81-SVC-NEXT-rows.txt (draft owed 20:00, posted now): SVC-SEAM-STRIP-52 (rc18: att-side seam strip ~52 um via WESTRIP tool, ~280 um x needed, sink-per-tap read from the first J9 kit), SVC-CUT-FACE (cut seams 6.19-6.40 bits/um > 6), SVC-CENSUS-PIECE, SVC-CUT-UNIFORM-K, the five rc16 residual rows of the ENG fork (hub d386366f: per-tile copy leg 757 ps est. at 870 um = REASONED-with-probe; tag chain 0 cycles), SVC-FT-SEAT lo t1 ft0. None is in the J9 cut.
