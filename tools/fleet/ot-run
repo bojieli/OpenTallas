@@ -2363,6 +2363,35 @@ def unit_status(target, d=None, alive=_client_alive):
                   f"log={r.get('log') or 'none'}{more}")
 
 
+# FLOW-FLEET-R2 11-22 17:5x (COORD: 29 private chain waiters pinned 7-20 h on epyc8 / epyc9 while epyc7 / epyc10 admit): PINNED-HOST SPILL.  A single-host `--hosts H` pin switches spill off, but a request
+# that also names `--stage` paths declares its inputs COMPLETE and copyable.  Such a request that has not started after PIN_SPILL_AFTER_S (measured from its first submit: OT_RUN_T0 survives the
+# runtime re-exec, and the waiter re-execs from rt/current every PINNED_CYCLE_S) is widened to `H,<fleet>`: the existing multi-host spill then copies the --stage paths to a host that admits it NOW
+# (destination gate, spill room + reserves, size caps) and copies the outputs back.  `--strict-host`, OT_RUN_STRICT_HOST, OT_RUN_NO_PIN_SPILL=1 or --no-spill keep the pin; jobs without --stage
+# (sealed jobs, plain commands) are unchanged.  No host rail is touched.
+PIN_SPILL_AFTER_S = int(os.environ.get("OT_RUN_PIN_SPILL_AFTER_S", "1800"))
+
+
+def pin_spill_args(a, elapsed, fleet, env=None):
+    """-> argv `a` with a single --hosts pin widened to the pin + fleet when the request qualifies (see above), else `a` unchanged"""
+    env = os.environ if env is None else env
+    if env.get("OT_RUN_NO_PIN_SPILL") or env.get("OT_RUN_STRICT_HOST") or env.get("OT_RUN_HARD_PIN") or env.get("OT_RUN_NO_SPILL") or PIN_SPILL_AFTER_S < 0:
+        return a
+    sep = a.index("--") if "--" in a else len(a)
+    head = a[:sep]
+    if "--hosts" not in head or "--stage" not in head or "--strict-host" in head or "--no-spill" in head or "--job" in head or elapsed < PIN_SPILL_AFTER_S:
+        return a
+    i = head.index("--hosts")
+    hv = head[i + 1] if i + 1 < len(head) else ""
+    if not hv or "," in hv:
+        return a
+    rest = [h for h in fleet if h and h != hv]
+    if not rest:
+        return a
+    out = list(a)
+    out[i + 1] = ",".join([hv] + rest)
+    return out
+
+
 def main():
     a = sys.argv[1:]
     if a[:1] == ["--status"] and len(a) >= 2 and not a[1].startswith("-"):
@@ -2385,6 +2414,11 @@ def main():
     if a[:1] == ["--cancel-dir"] and len(a) >= 2:
         sys.exit(cancel_dir(a[1], a[a.index("--reason") + 1] if "--reason" in a[2:] and a.index("--reason") + 1 < len(a) else ""))
     _pin_only = False
+    _a0 = a
+    a = pin_spill_args(a, time.time() - T_START, drop_no_heavy(canon_hosts(HOSTS)))       # FLOW-FLEET-R2: pinned-host spill
+    if a is not _a0:
+        print(f"ot-run: PIN-SPILL: pinned {_a0[_a0.index('--hosts') + 1]} not admitted after {int(time.time() - T_START)} s and --stage names its inputs: other fleet hosts may take it (copy, run, copy back)", file=sys.stderr)
+        log_signal(f"ot-run PIN-SPILL widened --hosts {_a0[_a0.index('--hosts') + 1]} -> {a[a.index('--hosts') + 1]}")
     mem, d, disk, hosts, pick, max_wait, threads = None, None, None, HOSTS, False, None, THREADS
     job = None
     rt_exempt = ""
