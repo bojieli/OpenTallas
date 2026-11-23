@@ -1,3 +1,10 @@
+# HOLD-SAMELEAF-1 (S81 rc35, 11-23): a kit generated with OT_HOLD_SAME_LEAF = 1 carries hold_same_leaf.tcl; every GRT / route hold
+# repair above the base margin then keeps same-clock-leaf capture registers at the base margin (see that file).  Otherwise inert.
+if {[info exists ::env(OT_HOLD_SAME_LEAF)] && $::env(OT_HOLD_SAME_LEAF) eq "1" &&
+    [file exists [file join [file dirname [file normalize [info script]]] hold_same_leaf.tcl]]} {
+  source [file join [file dirname [file normalize [info script]]] hold_same_leaf.tcl]
+  if {[pg_sl_install]} { puts "OT_HOLD_SAME_LEAF installed (GRT / route hold repairs above the base margin)" }
+}
 # HOLD-GUARD-GRT (FLOW-23 2026-11-02): progress/time bound for the single-mode GRT hold repair.
 # CLASS [CHECKED 11-02 22:3x, docker scan of running kits on epyc2/intel1/intel2]: gen_phys type kits (dpkit-*) and the
 # other single-mode kit runners call ORFS repair_timing_helper with NO hold progress limit (the hold-stall guard in

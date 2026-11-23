@@ -456,6 +456,38 @@ def grt_text(text):
     return text
 
 
+SAME_LEAF_ENV = "OT_HOLD_SAME_LEAF"
+SAME_LEAF_TCL = "hold_same_leaf.tcl"
+
+
+def same_leaf_on(env=None):
+    """HOLD-SAMELEAF-1 (S81 rc35, 11-23): gen env OT_HOLD_SAME_LEAF=1 (kit_wave die_gen_env / item_env) keeps capture registers whose
+    whole launch cone sits on their own clock leaf net (self-loops, same-leaf zero-logic pairs) at the base hold margin in the
+    reg-to-reg family pass here and in the GRT / route hold repairs (hold_same_leaf.tcl).  Unset or 0 = byte-identical kit."""
+    v = str((os.environ if env is None else env).get(SAME_LEAF_ENV, "")).strip()
+    if v not in ("", "0", "1"):
+        raise ValueError(f"{SAME_LEAF_ENV}: '{v}' is not 0 or 1")
+    return v == "1"
+
+
+def same_leaf_text(text):
+    """the build with the same-leaf scope around its reg-to-reg family pass (the procs are inlined: the step runs one tcl)."""
+    def once(old, new):
+        nonlocal text
+        if text.count(old) != 1:
+            raise ValueError(f"pregrt_ff_hold same-leaf anchor not unique: {old!r}")
+        text = text.replace(old, new, 1)
+
+    procs = (Path(__file__).resolve().parent / SAME_LEAF_TCL).read_text()
+    once('if {[catch {\n  # (A)',
+         procs + 'if {[catch {\n  # (A)')
+    once('      set pg_mrg $pg_rm\n    }\n',
+         '      set pg_mrg $pg_rm\n      pg_sl_begin OT_PREGRT_FF_HOLD $pg_rm $pg_pm\n    }\n')
+    once('    if {$pg_tag eq "rr"} {\n      if {[llength $pg_in]} { unset_path_exceptions',
+         '    if {$pg_tag eq "rr"} {\n      pg_sl_end\n      if {[llength $pg_in]} { unset_path_exceptions')
+    return text
+
+
 DIE_CLOCK = {}      # the plan's DIE-level clock block (QC s29 form): a partition type's own clock value wins
 
 
@@ -529,6 +561,8 @@ def config_lines(t):
         if sc not in ("vclk", "ctl"):
             raise ValueError(f"OT_PREGRT_HOLD_PORTS_SCOPE: '{sc}' is not 'vclk' or 'ctl'")
         lines.append(f"export OT_PREGRT_HOLD_PORTS = {sc}")
+    if same_leaf_on():      # HOLD-SAMELEAF-1: evidence line, and the switch the GRT / route stage reads (hold_guard_grt.tcl)
+        lines.append(f"export {SAME_LEAF_ENV} = 1")
     return lines
 
 
@@ -539,6 +573,8 @@ def tcl_text(hold_gate_text, amin=-1, *, rc_basis="placement"):
     if head.count(READ) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl library / database read not found exactly once; fails closed")
     text = head.replace(READ, READ2) + TAIL.replace("@PG_AUTO_MIN@", str(int(amin)))
+    if same_leaf_on():
+        text = same_leaf_text(text)
     if rc_basis not in ("placement", "global_routing"):
         raise ValueError(f"unsupported hold RC basis {rc_basis!r}")
     return grt_text(text) if rc_basis == "global_routing" else text
@@ -550,6 +586,8 @@ def install(t, kd, *, rc_basis="placement"):
         return False
     kd = Path(kd)
     (kd / "pregrt_ff_hold.tcl").write_text(tcl_text((kd / "hold_gate.tcl").read_text(), auto_min() if _auto_on(t) else -1, rc_basis=rc_basis))
+    if same_leaf_on():      # the GRT / route stage sources the kit copy (hold_guard_grt.tcl)
+        (kd / SAME_LEAF_TCL).write_text((Path(__file__).resolve().parent / SAME_LEAF_TCL).read_text())
     return True
 
 
