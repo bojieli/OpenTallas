@@ -14,3 +14,9 @@ Work: local scratch /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-
 - 51/51 QC rows have verdicts (commits 1f91d83, 293937c). DRAFT 45, NONE-NEEDED 5, PRE-PASS 1 (glue).
 - cb family (17): VISQC-CB-1 form at lanes/handoff/VIS-QC-form_cb.md. Channel tap grid from placed sink bins (cap 900) plus margin landing re-site. GRT is not the blocker (overflow 707-4615); the over-cap taps line up with the pin-window hotspots at x~691. Owner: FAM-QC-CB-R4.
 - V4 gate is unchanged. The cb types are held until a CB-1 probe passes.
+
+## 11-23 00:1x CB-1 build (COORD: drive probes myself)
+- Work dir epyc2 /srv/opentallas-scratch2/claude/VIS-QC/cb1 (fork tree = ot-tree-fork of V3 qwen_compute_v3p7c5rt, launch = rt f01b2d631780).
+- Placed clock-sink dumps of 12 cb types (sink_bins_from_place dump, ot-run) -> cb1/bins/*.json; ODB copies cb1/odb (ot-delete after probes).
+- Compose (step_b.sh): fable1 3916798ffca5 (CB-R4) + Row D chain affinity 64/150 (tap_radius_um kept: changing it re-sizes the density base and breaks added-tap names) + cbx bc_i30 re-site (517 keys x3) + VISQC-DIE-COLL-BANDS + tap_split --sinks-dir bins cap 900 radius 150 -> plan_c; + 11 st_a types of l0b with STA-1 (merge_sta.py, relay sites out of new halos) -> plan_d (CB-1+STA-1); + CB-R3 street on cbn_q00 cl622f65d2 (street.py) -> plan_s.
+- Next: bind.sh cb1d plan_d (tree/launch) [+ second fork for plan_s], then probe kits (private-spec --goal grt --ab OT_PROBE_THROUGH=1) on cbn_q01__cldd6ea846, cbf_q01_s2, slw_st_a_v2__clf4365a62.
