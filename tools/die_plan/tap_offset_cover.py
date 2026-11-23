@@ -3,6 +3,7 @@
 
     tap_offset_cover.py census PLAN [--out TSV] [--types REGEX]                rc 0 = every listed type fully covered
     tap_offset_cover.py fill   PLAN OUT [--max-tol 40] [--report TSV] [--types REGEX]
+    both: [--tools TREE/tools/die_plan] when PLAN is not inside the die tree whose plan folder it uses (else types come out UNEVALUATED)
 
 Why: a type with a per_port_ps row times each tap port at its die arrival offset (R-CLOCK-7); a kit clock port MISSING from the row is charged
 the full span early -W / late 0 (gen_phys.tap_offset_lines).  Rows that append taps (tap_split, hand rows) do not extend the table, so every added
@@ -27,13 +28,21 @@ are in the plan) when it has at least 4 of them, added taps only.  Stale rows ar
 """
 import argparse
 import json
+import os
 import math
 import re
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE))
+# The tap grid of a type reads plan-folder inputs (sink_bins ...) relative to the repo root of the tools that are imported.  A composed plan
+# that lives outside its die tree therefore needs that tree's tools: --tools TREE/tools/die_plan (or OT_TAPOFF_TOOLS), read before the import.
+_T = os.environ.get("OT_TAPOFF_TOOLS")
+if "--tools" in sys.argv:
+    _i = sys.argv.index("--tools")
+    _T = sys.argv[_i + 1]
+    del sys.argv[_i:_i + 2]
+sys.path.insert(0, str(Path(_T).resolve() if _T else HERE))
 import schema as S  # noqa: E402
 
 
