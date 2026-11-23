@@ -372,3 +372,4 @@
   STALE 17 (S81 only, non-held: cancelled-superseded/failed): COLROM-R6 3, LEAF-R10 5, COL-H9R0-R4 3.
   92 held-with-reason rows no longer STALE; 193 held for plan events.
   Detail lanes/OWNERS-SWEEP.tsv
+- 2026-11-23 00:51 PST 00:55 rows 448 (HEAD 0 flagged; S81/QC/KV only). S81: 111 STALE, 1 UNOWNED (dsdv_slice_lepe_nh_mus_C__t1), 3 HELD-LBL. QC: 2 STALE, 1 HELD-LBL. KV: 3 HELD-LBL (kv3_sys_c, kv3_pc_v1 cl*), 2 DEAD-OWNER (kv3_hub_Wi, kv3_hub_C), 6 WAIT-BIND. FAILED-NO-RELAUNCH 0 outside LBL holds. Columns per spec; tool bin/owners_sweep.py + VIS-COVERAGE join.
