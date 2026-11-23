@@ -164,12 +164,13 @@ def test_status_bits_above_bus_width_keep_raw_key():
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_tail_group_read_selector_stays_on_last_payload_bit():
     # l48vd READ_CHUNK/WRITE_TAIL (opt-in tail_groups): a short last read chunk keeps its di selector at the last payload
-    # bit (slot range 999999970+) instead of falling back to the raw-name key; tail_groups=0 is unchanged.
+    # bit (slot range 999999970+) instead of falling back to the raw-name key.
     proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     nm = r"u/u_ring.dch\[8\].u_dsel/di\[0\]$_DFFE_PP_"
     body = proc + "puts [cland_ffkey {%s} 0 64 520 0 64 0]\nputs [cland_ffkey {%s} 0 64 520 0 64 1]\n" % (nm, nm)
     keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
-    assert keys == [nm, "u/u_ring.s_d|000000519|999999970|$_DFFE_PP_"]
+    # CLAND-FFKEY-CLAMP-1123: tail_groups=0 now clamps the same selector to bit 519 in the default di slot range
+    assert keys == ["u/u_ring.s_d|000000519|999999990|$_DFFE_PP_", "u/u_ring.s_d|000000519|999999970|$_DFFE_PP_"]
 
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")

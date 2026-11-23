@@ -580,6 +580,14 @@ set cland_cursor {}
 # WAVE-COPYBACK-1115 (FABLE-PD-PLACE-0830 class B): cland_ring_place / cland_column_select read $cland_col_cursor through `global`;
 # it was set only inside other procs, so a ring band that came first after the reader-start grow died with 'no such variable'
 set cland_col_cursor {}
+# CLAND-FFKEY-CLAMP-1123 (FABLE-OPEN-KV x15, KV kv3_hroot 468 um round trip): a chunk-centre key (read select di, writer
+# slot copy tcc, write enable u_wen, replicated select) of a chunk that holds real bus bits lies past the bus when the
+# chunk is the padded last one (ot_dp_clk_landing_ca pads W to RW = ceil(W/64)*64: W 145 -> chunk 2 centre 160).  It
+# then fell back to the raw-name key and packed that group at the band's low corner.  Clamp it to the last real bit
+# nbits-1 (when the group's first word bit < nbits) and record it in ::cland_ffkey_clamps for the OT_CLAND_FFKEY_CLAMP
+# line of cland_place_ff.  Groups wholly at or above nbits (status/tag tails) keep the raw-name key, as before.  With a
+# START pin, cland_ctl_rekey still moves every di select (slot 99999999x) to the START bit, unchanged.
+# Static census per plan: tools/die_plan/cland_ffkey_clamp.py.
 # DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
 # band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
 proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {wcw 0}} {
@@ -600,6 +608,7 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {
   }
   if {$kind eq "tcc"} {
    set bit [expr {$c*$wcw+$wcw/2}]
+   if {$nbits > 0 && $bit >= $nbits && $c*$wcw < $nbits} { lappend ::cland_ffkey_clamps [list $bit $nbits $nm]; set bit [expr {$nbits-1}] }
    if {$nbits <= 0 || $bit < $nbits} {
     if {$rev} { set bit [expr {999999999-$bit}] }
     return [format {%s|%09d|%09d|%s} "${b}s_d" $bit 999999960 $t]
@@ -619,6 +628,7 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {
    set bit [expr {$c*$wch+$i}]; set s 999999998
   } else {
    set bit [expr {$c*$wch+$wch/2}]; set s [expr {999999990+$i}]
+   if {$nbits > 0 && $bit >= $nbits && $c*$wch < $nbits} { lappend ::cland_ffkey_clamps [list $bit $nbits $nm]; set bit [expr {$nbits-1}] }
    # Optional bounded read chunks keep their selector at the payload group.
    # The last chunk may contain fewer data bits plus constant/status tails.
    if {$tail_groups && $rwc > 0} {
@@ -648,6 +658,7 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {
  # slot is below the legacy control-rekey range, so START packing cannot undo it.
  if {$wwc > 0 && [regexp {^(.*[/.])g_wreg\.sl\\?\[([0-9]+)\\?\]\.ch\\?\[([0-9]+)\\?\]\.u_wen/(.*)$} $nm -> b sl c tail]} {
   set bit [expr {$c*$wwc+$wwc/2}]
+  if {$nbits > 0 && $bit >= $nbits && $c*$wwc < $nbits} { lappend ::cland_ffkey_clamps [list $bit $nbits $nm]; set bit [expr {$nbits-1}] }
   if {$tail_groups && $nbits > 0 && $c*$wwc < $nbits} { set bit [expr {min($bit,$nbits-1)}] }
   if {$nbits <= 0 || $bit < $nbits} {
    if {$rev} { set bit [expr {999999999-$bit}] }
@@ -656,6 +667,7 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {
  }
  if {$rwc > 0 && $wch > 0 && [regexp {^(.*[/.])dch\\?\[([0-9]+)\\?\]\.u_dsel/g_srep\.sr\\?\[([0-9]+)\\?\]\.u_sel/di\\?\[([0-9]+)\\?\](.*)$} $nm -> b c r sl tail]} {
   set bit [expr {$c*$wch+$r*$rwc+$rwc/2}]
+  if {$nbits > 0 && $bit >= $nbits && $c*$wch+$r*$rwc < $nbits} { lappend ::cland_ffkey_clamps [list $bit $nbits $nm]; set bit [expr {$nbits-1}] }
   if {$nbits <= 0 || $bit < $nbits} {
    if {$rev} { set bit [expr {999999999-$bit}] }
    return [format {%s|%09d|%09d|%s} "${b}s_d" $bit [expr {999999970+$sl}] $tail]
@@ -1046,7 +1058,15 @@ proc cland_place_ff {prefix rect tag} {
  }
  set wcw [cland_wcc_w [lmap pr $ffs {lindex $pr 0}]]
  if {$wcw} { puts "OT_CLAND ring_place=ff $prefix: WCHKC writer storage keyed to its word bits (writer chunk $wcw)" }
+ set ::cland_ffkey_clamps {}
  set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups $wcw] [lindex $pr 1]}]
+ set clamp_n [dict create]
+ foreach cl $::cland_ffkey_clamps { lassign $cl ck cw cn; dict lappend clamp_n "$ck $cw" $cn }
+ dict for {kw cns} $clamp_n {
+  lassign $kw ck cw
+  puts "OT_CLAND_FFKEY_CLAMP $prefix key $ck >= width $cw -> [expr {$cw-1}] ([llength $cns] registers, e.g. [lindex $cns 0])"
+ }
+ set ::cland_ffkey_clamps {}
  # DIE-HEAD-43 c3 (FLOW-11 shared): ring CONTROL registers (raw-name key: counters/ctl/oh/rp/tmo/ready/fault) and
  # status/s_tag keys are keyed right after the bus bit whose pin is nearest the ring's START pin (cland_fstart_in_<bus>)
  # instead of packing first at the band's low corner (HEAD wshim_rx origin->arm_cnt r2r 488 -> 378).  Bands without a
