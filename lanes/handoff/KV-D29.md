@@ -115,3 +115,9 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - Residual hub_C NEED-STATION classes, from the rm3 placed scan: reset fanout u_rrl 210 1-bit groups; kvs_attn 512b chain 1.1 mm; seq->bout; d38 q fork N/S.
 - Draft seats in epyc8 kv-d29-c/e2_sites.json: ungated and not delivered.
 - Live Codex unit: sys_c RANKS 46f088d331af place-only (kv-d29-sysc-local-s3-place-1123).
+
+## A-HG (fork A, stood down 10:5x PST per COORD; K3 f75a71af72eb holds the rows)
+- HGSTREET r2 bb8a5f3c1814 fixes the hk3 G0 4 hop errors. hk5 5d49d8e9793f (epyc9 opus-fix-kv-hg-r8/hk5) and hk6 1e709b0765db (=hk5+RHI; intel1 kv-d29-a/hk6) both have PRE/G0/bind/LAT/BPC 0. R8 = D28 baseline + 4 benign. hgi_v4 LAND-CAP OVERLAP 0.
+- rows_in/A on epyc8: HGSTREET r2, KRSPCORE 399f5d95fb70 (output-only change vs 2cd742a118b1), T1SPLIT 9ee67918a951 (+ Codex T1SPLIT-V5, HGIV8-FT4).
+- Unused spec: private_specs/KV-D29/qwen_kvsys_kv3_hg_v1p2_1123105145 (hk6 HGFORM probe, goal grt). It was never run.
+- ot-delete owed: epyc9 opus-fix-kv-hg-r8/trees/{hk (partial),hk3,hk5}; intel1 kv-d29-a/trees/hk6; clone epyc9 kv-d29-a/repo.
