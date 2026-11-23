@@ -18121,7 +18121,7 @@ def visual_queue_publish(cfg, st):
     t0 = visual_gate_t0(cfg)
     for rec in (st.get("items") or {}).values():
         h = str(rec.get("route_hold") or "")
-        exact_policy = review_before_route(cfg, rec)
+        exact_policy = required_route_review(cfg, rec) or review_before_route(cfg, rec)
         if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL") and not exact_policy:
             why = stale_visual_why(cfg, rec, t0)
             if why and visual_advisory(rec):
@@ -18209,11 +18209,18 @@ def review_kit_location(rec):
     return f"{host}:{kit}" if host and kit.startswith("/") else ""
 
 
+def strict_wave_route_review(die):
+    """Enforce exact human review on new wave route dispatches during a takeover."""
+    return (os.environ.get("AP_REQUIRE_VIEWED_WAVE_ROUTE") == "1"
+            and die in ("s81", "s81_head", "qwen_compute", "qwen_kvsys"))
+
+
 def required_route_review(cfg, rec):
     """The die explicitly requires an exact placement verdict before dispatch."""
     d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
-    return ((d.get("review_before_route") or {}).get("required") is True
-            and review_before_route(cfg, rec))
+    return (strict_wave_route_review(rec.get("die"))
+            or ((d.get("review_before_route") or {}).get("required") is True
+                and review_before_route(cfg, rec)))
 
 
 def exact_kit_visual_verdict(rec, viewed_only=False):
@@ -18231,10 +18238,11 @@ def required_route_hold(cfg, rec):
         return None
     kit = review_kit_location(rec)
     verdict = exact_kit_visual_verdict(rec, viewed_only=True)
-    if verdict in VISUAL_REJECT and visual_reject_holds(rec, verdict):
+    strict = strict_wave_route_review(rec.get("die"))
+    if verdict in VISUAL_REJECT and (strict or visual_reject_holds(rec, verdict)):
         return f"WAIT-FORM: exact kit {kit} visual verdict {verdict}; rebuild on a changed form"
     if verdict not in VISUAL_ACCEPT:
-        if auto_geom_passed(rec):
+        if not strict and auto_geom_passed(rec):
             # VISUAL-NOBLOCK: a required review is queued, never a route hold, once AUTO-GEOM passed (16 hand-posted verdicts 11-21)
             rec["visual_pending"] = (f"WAIT-VISUAL (advisory): AUTO-GEOM PASS, routed; GEOM VERDICT pending for kit="
                                      f"{kit or '<host:/kit/path>'}" + (f" (now {verdict})" if verdict else ""))
