@@ -185,9 +185,16 @@ def test_sparse_exit_overflow_off_is_the_old_call():
 
 
 @needs_tcl
-def test_sparse_exit_overflow_keeps_an_explicit_overflow():
-    out = _run(SPARSE, env=OVF, call=ARGS + " -overflow 0.15")
-    assert f"CALL 1: {NOROUTE} -overflow 0.15\n" in out and "exit overflow 0.25" not in out, out
+def test_sparse_exit_overflow_replaces_a_smaller_explicit_overflow():
+    # GPL-EXIT-WINS-1122: the S81 die -overflow 0.2 must not disable the sparse early stop 0.25
+    out = _run(SPARSE, env=OVF, call=ARGS + " -overflow 0.2")
+    assert f"CALL 1: {NOROUTE_X}\n" in out and "replaces the explicit -overflow 0.2" in out, out
+    assert "-overflow 0.2 " not in out.split("CALL 1: ")[1].splitlines()[0] + " ", out
+
+
+def test_sparse_exit_overflow_keeps_a_larger_explicit_overflow():
+    out = _run(SPARSE, env=OVF, call=ARGS + " -overflow 0.3")
+    assert f"CALL 1: {NOROUTE} -overflow 0.3\n" in out and "replaces" not in out, out
 
 
 @needs_tcl

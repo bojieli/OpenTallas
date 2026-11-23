@@ -1098,8 +1098,20 @@ proc ot_gpl_sparse_overflow_value {} {
  if {![string is double -strict $v] || $v < 0 || $v >= 1} { error "OT_GPL_SPARSE_OVERFLOW must be 0 (off) or a number in (0, 1), got '$v'" }
  return $v
 }
+# GPL-EXIT-WINS-1122 (COORD 22:4x, OPUS-FIX-S81-LEAF-R10): the S81 die GLOBAL_PLACEMENT_ARGS -overflow 0.2 (gen_phys gpl_overflow) used to
+# DISABLE the sparse early stop (0.25): an explicit -overflow returned the call unchanged, so a sparse kit ran the late Nesterov phase it
+# exists to skip (t13 HPWL 9.98e6 -> 1.45e7, t51 1.63x).  A larger exit overflow stops earlier: the sparse exit now replaces a SMALLER
+# explicit -overflow (and gets its timing-driven keep / reweight); an explicit value >= the sparse exit already stops at least as early
+# and is kept.  OT_GPL_SPARSE_OVERFLOW=0 (off) still leaves the call alone.
 proc ot_gpl_exit_args {argl v} {
- if {$v <= 0 || [lsearch -exact $argl -overflow] >= 0} { return $argl }
+ if {$v <= 0} { return $argl }
+ set i [lsearch -exact $argl -overflow]
+ if {$i >= 0} {
+  set cur [lindex $argl [expr {$i+1}]]
+  if {[string is double -strict $cur] && $cur >= $v} { return $argl }
+  puts "OT_GPL_SPARSE exit overflow $v replaces the explicit -overflow $cur (a smaller exit runs the late phase the sparse exit skips)"
+  set argl [lreplace $argl $i [expr {$i+1}]]
+ }
  set out $argl
  if {[lsearch -exact $out -timing_driven] >= 0} {
   set keep [format %g [expr {$v + 0.10}]]
