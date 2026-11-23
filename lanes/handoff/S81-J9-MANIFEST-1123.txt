@@ -1,0 +1,13 @@
+# S81 J9 manifest (COORD 22:3x): cut 11-23 12:00 PST, or earlier once J8 applies. Every gate-clean row; anything not bind-clean by the cut -> J10.
+# compose order (owner rows win; each row needs its own green gate: strict bind 0, LATCHECK, PRE 0, G0 no new):
+1  FAM-S81-SLICE-R6 slice v10 (hub e44beaf15ef)                                 READY (bind 0, LAT 873, PRE 0, G0 = J7)
+2  FAM-S81-COL-R5 COL-RST-TAPSLIDE be87d01d774c                                  file/gate status: owner to post
+3  FABLE-FIX-S81-COL-RANKSEAT ROM-input lockup rows df536a44e6d (22,464 rows)    planR2 bind pending -> releases col_h9_r1/r2/h10 holds
+4  FAM-S81-LEPE-4 F2 row incl coll_i1 station move (dsdv_slice_lepe_mu_LP__t2)   owed
+5  FAM-S81-DSDV-R1 iq_C t1 stations outside hard cores                           owed
+6  FIX-SYNC-S81 SVC 2-port realign (rt_W0_out_1__6, rt_E0_out_0__5) + SVC primary/+42   owed (asked 1d10b642)
+7  TAP-GRID-R5 res59 tap rows, 59 types / 40 leaf (lanes/handoff/TAP-GRID-R5-S81-J10-res59.txt), pulled from J10; growth pre-approved
+8  FAM-S81-COL-H9R0-R4 col_h9_r0 stations (when ready) -> releases col_h9_r0 holds
+9  clock.tap_grt_pre=true for col_* (rebind cost, rides the J9 bind)
+10 13 col_h9_r2 'GEOM verdict owed' rows: release in J9 without GEOM (visual review never blocks)
+J10: MISC t5 band-clear unless gated by the cut, istation_respace (needs LF_CS_DEPTH RTL), LEPE XG-1 (RTL f67a57cea1), EOL packet, late rows.
