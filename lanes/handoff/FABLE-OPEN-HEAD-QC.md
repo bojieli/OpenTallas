@@ -39,3 +39,17 @@ Lane dir: epyc7 /srv/opentallas-scratch2/claude/FABLE-OPEN-HEAD-QC (clkwall_rows
 1. Gate cw1 result -> post ROWS-READY (HEAD-R18, PRECHECK-LEDGER-R3) with PRE/bind/LATCHECK + what-if delta + ep3 read.
 2. By 10:30: if no placed probe of the row itself -> REASONED packet to FABLE-RC-ALL for the probe part (row gated statically + what-if).
 3. x5: wait for ledger/QC-V4 answer; REPORT-2 when both are GATED or REASONED.
+
+## 11:0x after the 06:4x-10:40 limit (resume_1123c.txt)
+- cw1 gate PASS: plan 9b79a291e87cb006, PRE 0, strict bind PASS, cohort 27/27, LATCHECK 334/334 (intel2 ~/fable-open-head-qc/chain7_clkwall_cw1.otrun.log).
+- What-if A/B (epyc7 D/whatif): INVALID as a measure: both arms GRT-0228 (edge 796,2404 usage 65535), reports capped at 20k markers. Not evidence.
+- LEP-CLKWALL-1 is already in the current HEAD plans (epyc7 head-r18/trees/s81_head_r18e_recovery/.../prep_cap10 E 7085500b8b4d, prep_cap10_pinroot_legal
+  W 5cbc5cda8aa0, prep_cap10_native37c1 W 5f4c8fa1af13): W 106 rects = my row; E 303 rects, 0 tall merged (my 302 + t168 window split). Check: D/tmp/rec.py.
+- W pin offsets vs windows: t7 in-window (0.03 um from S edge); t32 0.675 um and t37 0.405 um ABOVE their stack windows. Independent of CLKWALL;
+  asked HEAD-R18 to confirm pin shape/die drop (post 76033c47, correction of my 6adaa084).
+- rc138 status asked: row GATED statically, PROBE part REASONED (post 6adaa084). Closing condition: E cap10 GRT census, window x800-850 y640-705 and the
+  34 former rect footprints each < 50; else clksite_resite those cells. ep3 died at CTS (-1073 reset inverter), no r18z2 E GRT exists.
+- x5: C4 launch tree (epyc8 fable-fix-qc-v4/c4_1123_0924_bound/launch) has the diamond wrapper; post 1989dcff. Closes on first C4 st_a kit GRT
+  (OT_GRT_DPL_ARGS + DPL-1101, 0 DPL-0033) or REASONED accept by FABLE-RC-ALL.
+- My fork epyc7 D/trees/s81_head_r18z2_clkwall (47.6 GB) is no longer needed once FABLE-RC-ALL answers: ot-delete it then.
+## NEXT: read FABLE-RC-ALL / HEAD-R18 / ledger answers before 12:15; REPORT-2 to COORD; read E cap10 GRT census when it lands.
