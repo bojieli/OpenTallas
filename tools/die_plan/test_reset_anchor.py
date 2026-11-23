@@ -181,3 +181,23 @@ def test_record_cli_anchors_every_good_type_and_lists_failures(tmp_path, monkeyp
     assert "FAILED BAD:" in text and "1 type(s) NOT anchored" in text and "BAD" in text.splitlines()[-1]
     rc_ok = RA.main(["reset_anchor.py", "record", str(plan), str(out), "--types", "A,C", "--root", str(HERE)])
     assert rc_ok == 0
+
+
+def test_record_repick_keeps_depth_after_names_disappear(tmp_path, monkeypatch):
+    import reset_tree as RT
+
+    base = _anchored("rst_rl_1", "rst_rl_3")
+    raw = {"partition_types": {"T": base, "BAD": copy.deepcopy(base)}}
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(raw))
+    out = tmp_path / "out.json"
+    moved = _tree([("rst_rl_5", 2, (100, 4)), ("rst_rl_6", 3, (100, 100))])
+    monkeypatch.setattr(schema, "Plan", lambda r, f: object())
+    monkeypatch.setattr(RT, "for_type", lambda P, tn: moved if tn == "T" else _tree([]))
+    monkeypatch.setattr(RT, "relay_um", lambda P: 50.0)
+    monkeypatch.setattr(RT, "rtl_lines", lambda tree: [])
+    rc = RA.main(["reset_anchor.py", "record", str(plan), str(out), "--source", "auto", "--repick"])
+    got = json.loads(out.read_text())["partition_types"]
+    assert rc == 1 and got["BAD"] == base
+    assert _names(got["T"]) == ["rst_rl_5", "rst_rl_6", "rst_rl_5"]
+    assert [a["depth"] for a in got["T"]["clock"][RA.KEY]["relays"].values()] == [2, 3]
