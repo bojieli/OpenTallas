@@ -146,3 +146,4 @@
   u_rst_relay_tx RRD, u_rst_relay_dsp RSD; main f93495530bc + earlier) while the plan defines OT_BKSEL_L4 and seats u_lpd/u_dsp/relays.
   Wave kit synth: 0 u_lpd cells. Fix folded into J9 SOURCE row: l20s v2 = MAIN l20s (L4 + u_ids-B) + b1 split, w/l20s_j9.sv 9617ad7537cc
   (v1 900bf2d5bdbe kept as l20s_j9_v1.sv). Same selids module (inv_S proof applies). BKSEL-VM-STN-J10 not needed (covered by J9 source row).
+- 02:3x FIX-LEDGER rc62 (lp_q->u_vm.r): answered COVERED by J9 source row v2 (L4 RTL restored), no station row. J9 = only S81 event, cut 18:00 (6079af4); rows to ASSEMBLY target 10:30, hard stop 17:00. Gate queued epyc7 (load cap), waiter armed.
