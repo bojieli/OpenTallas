@@ -107,3 +107,11 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - 10:5x B-HROOT STOOD DOWN (COORD): GEOM 0417ccdef813 + RINGFORM 97083c85fd86 are in K3 f75a71af72eb. Gated by r2/r4 (strict 0, LAT 2434/2434, BPC 0). Evidence README: epyc8 kv-plan-r6/d29/rows_in/B/README. Probe b4_place (intel1 d29geom/b4_place) is adopted by KV-D29. Nothing was launched after 10:45.
 - 10:5x D-PC STOOD DOWN (COORD: K3 f75a71af72eb / gate k3c holds the D rows). Gate result 07:27 (plan 5b9a55ae26b8 = D28 base + PCV1BANK2 8a715f0b1bc9 + AFFAULT b43b26a95edb): PRE 0, strict bind 0, LATCHECK 0, G0 0, R8 32/0/7 and BPC 1 = D28 baseline. Evidence: epyc8 kv-plan-r6/d29/rows_in/D/GATE.txt + README; epyc9 /srv/opentallas-scratch2/claude/kv-d29-d/gate/. Nothing launched after 10:45. The GRT-0273 split (pc_v3 1122043653 tap escape vs data seam) was NOT started; its only artifacts are geom/grt.log and 4_cts_pre_tt.odb in epyc9 KV-D27d3/private/FAM-KV-IOPC-R4/kv3_pc_v3_1122043653. Owed cleanup via ot-delete: epyc8/epyc9 /srv/opentallas-scratch2/claude/kv-d29-d/tmp (plan copies), epyc9 kv-d29-d/gate/bind_of_record.prev_aff.*.
 
+
+## C-HUBC-SYSC (fork C, stood down 10:5x PST per COORD; K3 f75a71af72eb holds the C rows)
+- sys_c C 08be3955c5c7 + D c296998f3e31 + RTL 23d08aceeda5: gated on D28 base (epyc2 fam-kv-hubc-sysc/c/gate_D2.out).
+- SYSCTAP: rows_in/C/ROWS_KV-D29-C-SYSCTAP.py + sysctap_in/sysc_rows.json; +50 taps from the placed C+D kit kv3_sys_c_1123041646 (tap_split --protect-rings ft1_i), max 1199/1200, origin stays on rst_n_t31. g1 (epyc2 kv-d29-c/g1.out) failed only on PRE TAPOFF (the chain fills it); Codex g3 a4077744e9f5 strict 0 / LAT 0 / BPC 0.
+- hub_C row E (3 dly chains, 15.6k seats): PRE/G0 0 (epyc2 fam-kv-hubc-sysc/c/post_E). Probe kit 1123041726 (E applied) still in GPL on epyc2.
+- Residual hub_C NEED-STATION classes, from the rm3 placed scan: reset fanout u_rrl 210 1-bit groups; kvs_attn 512b chain 1.1 mm; seq->bout; d38 q fork N/S.
+- Draft seats in epyc8 kv-d29-c/e2_sites.json: ungated and not delivered.
+- Live Codex unit: sys_c RANKS 46f088d331af place-only (kv-d29-sysc-local-s3-place-1123).
