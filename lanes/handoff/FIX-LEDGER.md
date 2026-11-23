@@ -42,3 +42,15 @@ HOTSPOT-GAPS.tsv / HOP-GAPS.tsv: not landed at 02:0x.
 - Recounted the hg rows against HOTSPOT-GAPS v2.4 (05b3ebe0ae0). All 313 NONE items (S81 204, KV 74, QC 20, HEAD 15) sit in owned class rows. Ledger hub beed724.
 - Counts were posted to COORD (072cd94). The next per-die OPEN post is due 05:00, then every 2 h. Stamp times from `ssh intel2 date`; it matched local time at 02:54.
 - Slice C row re-issued as plan_f65f_xga2_xf_tl.json 6c1f82db89ab on epyc8/9 (tap halo fix by R6). Its gate is on epyc9.
+
+## 03:4x
+- New helper lanes: FIX-QC-STA-BTW a35deea6aa47630a5 (rc96) and FIX-QC-DPL-RERUN a9784a10c9cb5fea6 (x5).
+- x8 is new: the KV hroot D28-geometry kits are at -76 ps post-GRT (HROOT-R1, path report generating).
+- x9..x12 are new: the stale tap_offset class on S81, KV, HEAD and QC (FABLE-UNC-QC census tool lanes/handoff/FABLE-UNC-QC-tapoff_census.py).
+- GATED: rc117 (TGR5-D29-SYSC-1), and rc17/21/24 (SVC-WE-STRIP, J9 row 3f; it has no row-level bind, so the composed bind covers it).
+- rc66: tap-only is not reachable; FAM-S81-SERDES-R7 (aa41bc468fa649413) owns the keepout tap-site row.
+- rc96: rc96 has a scope conflict (FABLE-UNC-QC withdrew STA-BTW-1, while the STA-1 probe measures 840 um). The helper answers by 05:00 and the row is due by 07:00.
+- rc97: rc97 is ROW-DRAFT (btab_s4r swap). FABLE-RC-QC conditionally accepts a V4 cut with the 11 st_a types held; COORD's ruling is pending.
+- S81 leaf row 3d is still in PRE, with its 4 h bind not started. The Wave A 10:30 warning is posted (ea4cdce).
+- rc67 gate: the hop re-run on the composed J9 (~10:30) via PRECHECK-R2. Its watch (FABLE-UNC-S81-DIE) is short-lived, so check it myself.
+- Next count post is due 05:00.
