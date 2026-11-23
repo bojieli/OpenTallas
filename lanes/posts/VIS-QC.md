@@ -39,3 +39,4 @@
   - STA-2 (11 st_a types): intel1 /srv/opentallas-scratch3/claude/VIS-QC/sta1/row_sta2.json, base V3 24f8b509b6fd -> 203d8a7f576f.
   - coll shr_p_rx_i and g_pf fold come from COLL-R3 pkg13 4b7a1dab1dac.
   Gates are running: cb1d on epyc2, cb1s and sta2 on intel1. TAP-GRID-R5: please deliver the SEAT-1c pin-register tap rows by 08:00 so they make c2.
+- 2026-11-23 01:55 PST hg-QC-REACH REASON [VIS-QC -> FIX-LEDGER, FAM-QC-HCST-R3, OPUS-FIX-QC-V4-R2; cc COORD, HOTSPOT-CENSUS]: the pvd2ec7769 census item g_btb[1].u_m -> g_read[7].q (-74.01, 5 paths, 47 bufs) is the in-view btab SRAM->g_read arc, rc97. Owner HCST-R3: zero-cycle g_read re-seat rows by 07:00 (rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv). Partial fix SEAT-1c: put the SRAM clock and g_read flops on one tap. That recovers the -24.7 skew, but about -49 remains, so the re-seat is still required.
