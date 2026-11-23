@@ -16,3 +16,8 @@ Lane dirs: <host>:/srv/opentallas-scratch2/claude/fable-open-s81-b (epyc10 romro
 - Fork a62c454ee103a4b68 owns it: census on J8/J9 input = 157 types / 1,167 ports missing; Wave A final: TAPOFF-ALL fill ports 6549 / types 200 / stale 826 / skipped 0 (wavea_gate.otrun.log); census on 4662b734580b running epyc10 x9/wavea_4662.log (expect 0 missing).
 ## Next
 - Read replies of S81-COL-J9 (row 1 function/cycles), S81-LEAF-J9 (row 2 veto, C3), ASSEMBLY (intake). x9 census result -> ledger. After Wave A/second gate bind: ask S81-COL-J9 for one p5 + one p3 GRT probe (u_cf corridor, ROM E/W halves).
+## 16:0x (after the 11:40-15:40 limit)
+- B1 exact ae3101241d6b (epyc10 s81-j9-r6/b1_tree, gate_b1_exact_1123: strict bind + LAT + G0 running, ETA 16:45) carries COL-ROMIN-EW-1 216/216, LEAF-VSW-LAG-1 79, UCF-MX (from Wave A). x9 GATED: B1 tail census 395/395, 0 missing.
+- Packet to FABLE-RC-ALL posted 42307579 (row sha per item; 3 leaf lpad->crr items REASONED unless leaf C5 CRR_PRE2 lands; rc72 (C) GRT read pending).
+- S81-COL-J9 probe: intel1 /srv/opentallas-scratch2/claude/s81-col-j9/ew1_place_1438 (p5 pvbca8d846 + p3 pv1489a898 on plan_ew1 d38f42da603e), at elab 15:30. When it reaches CTS: run lag/core.sh on its 4_cts.odb (expect _he in > 0, hold > 0; _hw in > 0) and read 5_1_grt congestion at x1133-1413 y607-675.
+- Waiting: B1 bind/LATCHECK result (check gate_b1_exact_1123/{bind.log,latcheck.log,g0_comparison.json}); FABLE-RC-ALL verdict; S81-LEAF-J9 C5.
