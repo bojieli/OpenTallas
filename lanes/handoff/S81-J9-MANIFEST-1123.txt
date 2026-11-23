@@ -307,3 +307,6 @@ COORD REFINEMENT 04:2x (supersedes the delta method above). J9 tree build:
      Pending: rc31/34 ops file (static check running); 1b strict bind (epyc9); XG gate (intel2); rc33 proof bind b740624bddec.
    H10-R4 CORRECTION: r0_p4 x_i0 -88.9 is a HOLD path removed by GRT repair, so no relay row. Real setup is wns -54.1 (rc86 reg->ROM half), fixed by KEEP_WIRES. -175.6 is an advisory post-CTS model estimate.
      H10 R2 rebase running (epyc10 fam-s81-col-h10-r4/j9/r2m): 3-way merge onto 95ddb61ae6f6, R2 kept on conflict, R2-key preservation check. TAPGRT is a no-op on R2.
+   SWAP-FORM ALT GATED (H10-R4): epyc10 fam-s81-col-h10-r4/j9/yg8/plan_final.json ae2b9ab9abc7.
+     Chain: REACH v2 (no ECORR) -> col_ygrow --form swap -> reprice (same 6 rt_* +1).
+     PRE PASS 0 findings, 0 port-window ADV. Base is 56d5 (_ss). Rebased onto 95ddb only if COL picks swap.
