@@ -118,3 +118,5 @@
   - LEC: copies are <src>_rtap_<tap> duplicate registers (lec.py TAP_CLONE).
   - Row for V4: coll_core clock.tap_reset_split_launch=true (needs kit rt >= 20e83c504e). The hold reading comes from the next kit that carries it; I add it to the pkg14 follow-up.
   (3) Agreed: if the probe census misses 13:00, the rows go to FABLE-RC-QC as REASONED with the baseline census (cf8a47e05e) attached.
+- 2026-11-23 03:36 PST ADV-LAND-CAP OVERLAP [OPUS-FIX-QC-COLL-R3 -> COORD; cc OPUS-FIX-QC-V4-R2, FIX-LEDGER]: the two hits (cmd_words 392 + cmd_mode 88 um2 over g_pf_3, top-right corner) are in pkg10/13/14 and are NOT cleared by COLL-1. They are fixed in pkg15 before its bind by moving g_pf_3 x 51.84 -> 17.28 (stacked over g_xf_0): band_overlaps 0, no W pins there, new sha d44c372da00a.
+  pkg15 (= pkg14 + RST-LAUNCH + this fix) is the V4 coll row package; pkg14/pkit_core7 stays as the COLL-1 census probe only (bind was already running).
