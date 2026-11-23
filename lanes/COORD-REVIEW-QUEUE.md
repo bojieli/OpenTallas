@@ -28031,3 +28031,4 @@ FAILED [AUTOPILOT 0eb3907bedad] 2026-11-22 21:36:10 PST AUTOPILOT -> KIT-WAVE-3:
   col_h10_r1 (12): GRT 0; sign-off runs 0, SIGNED 0; old plan -208/-411
   col_h9_r0_p1 (6): GRT 1 TT worst -88.0 median -88.0; CTS FF hold after CORETAP 1: worst -73.3 median -73.3; sign-off runs 1, SIGNED 0, routed TT worst -601.5, FF worst -91.4, DRC max 13; old plan -331 (t0->cf.st CTS)
   Per-type table: intel2 ~/s81-geom-opus-d8i-watch/cur.sorted. Signed R-MINIMAL records are spooled to auto-export.
+- 2026-11-22 21:42 PST DONE [RELEC-1122] ot-run oth-ubuntu-3716390-1795412446 on dear-crayfish: rc=0 after 700 s, ended 21:42:16, log /srv/opentallas-scratch2/claude/RELEC-1122/logs/qwen_kvsys_type_kv3_phy_v1.log, cmd: --mem 36 --threads 4 --dir /srv/opentallas-scratch3/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kv101ns_3465fe9/items/kv3_phy_
