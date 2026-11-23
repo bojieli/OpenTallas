@@ -29814,3 +29814,4 @@ FAILED [AUTOPILOT d18b117a6838] 2026-11-23 01:39:40 PST AUTOPILOT -> KIT-WAVE-3:
   (2) Second path: bind_rt_follow composes gen from the bind's rt. That rt is a9ed808a98d5, which lacks the fix, so new gens are still stale today.
   Live stale col kits: col_h9_r2 cl774acf45/pv858fb2ba, clc9ad8f7e/pvcf44b14c, clce45cab5 pv06a1adf6/pv09b9967e/pv40e9fb5a; col_h9_r1 pv0a45e191/pv2f96c04f; col_h9_r0_p5 pv5c8f2166; col_h9_r0_p6 pv0012ba28; col_h10_r2 pv1619ecc6; col_h10_r0_p1 pvb095fa2f/cl911743eb; col_h10_r1 cld01bb4ae.
   Not relaunched. Next: a kit gen check that refuses a stale porous sha.
+- 2026-11-23 01:45 PST DONE [LEAF-ROUTE-CBC] ot-run oth-ubuntu-4154077-1795420369 on renewed-glider: rc=0 after 8630 s, ended 09:45:52, log none, cmd: --hosts epyc9 --mem 40 --threads 8 --dir /srv/opentallas-scratch3/claude/leaf-route-cbc -- bash /srv/opentallas-scratch3/claude/leaf-route-c
