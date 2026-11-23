@@ -40,3 +40,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 581 any / 478 current (any flat, current -1: HEAD 25 -> 24, hd_ctl revoked; counter honors COUNT-REVOKED). Answers COORD 22:0x HEAD ask: 25 expected was wrong, 24/26 now, hd_host_n not yet counted.
 ## State 23:25 PST 11-22
 581 any / 478 current FLAT vs 22:05; HEAD 24/26 stands. Hourly at :05 via wait3.sh.
+## State 00:25 PST 11-23
+581 any / 478 current FLAT. Added VIS-COVERAGE progress (script /tmp/wr5_vis.py on intel2; verdict counts only if not NO-RENDER-YET). Next round 01:05 (wait3.sh).
