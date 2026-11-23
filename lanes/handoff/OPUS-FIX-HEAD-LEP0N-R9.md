@@ -22,3 +22,10 @@ L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122 (epyc10: r18q_rx bas
 - Ruling: use clock.core_tap_lead_ps = 170 on hd_lep0N_w (schema FABLE-FIX-S81-COLTAP key). It is the in-type form of the raise: the spine delivers the pair taps 273 ps early, and tap_balance pads them back to 450. The type insertion stays 450, so the die common latency and the 80 ps neighbour skew are not touched. A plain type insertion 610 would break both on every face.
 - Script epyc10 L/tmp/pairtap_rows.py TREE [LEAD]; chain L/tmp/chain_r9_pairtap.sh (marker plan/applied_u). Fork r18r_wchan2 -> trees/s81_head_r18u_pairtap on epyc10 (intel2 r9_forkU.sh pid 841395, logs fork10_r9_r18u.log, chain10_r9_r18u.otrun.log; base = r18r).
 - Build: kits ONLY if w11 GRT hold repair shows the cross-tap hold / channel buffers matter (launch_kit_r9.sh u.. s81_head_r18u_pairtap hd_lep0N_w epyc10 seal|probe). Same fix applies to the E piece hd_lep0N (581/635) = R8.
+
+## 23:1x Row B gate 1 FAIL -> reset-name remap; epyc7 old kits cancelled
+- Cancelled (COORD, reason design) epyc7 oth-ubuntu-2272548-1795218433 (tr1) + oth-ubuntu-3749621-1795200539 (r14 lep_hop300).
+- r18s fork on epyc10 OK (718 s). Gate 1 FAIL: LANDREMAP-NOREMAP (8 refs hd_lep0N_w, 1 nst4) + gen "reader START raw reset rst_rl_157 has no registered wavefront driver": the reset trees re-solve and renumber rst_rl_N after the shift.
+- Fix: epyc10 L/tmp/wchan3_remap.py TOOLS TREE BASE [DX] [--dry]: old relay xy through the Row B x-map -> unique same depth+kind NEW relay within 2 um, else the nearest same-depth relay within 370 um (COPY_REACH). Dry run: 20 refs, all placed (max 139 um).
+- Re-gate: chain L/tmp/chain_r9_bfix.sh (marker plan/applied_s_remap), intel2 log chain10_r9_r18s_fix.otrun.log.
+- A+B (r18t, epyc7) will hit the same failure: the remap is copied to epyc7 L/tmp; run it there next (base = r18q copy L/plan/base_r18q/source_plan.json).
