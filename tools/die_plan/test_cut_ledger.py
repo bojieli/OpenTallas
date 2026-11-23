@@ -89,3 +89,13 @@ json.dump(p, open(sys.argv[2], "w"))
     assert ledger[0]["status"] == "APPLIED"
     assert ledger[0]["types_changed"] == []
     assert plan["budgets"]["grt_cong_iters_types"] == {"^col_": 50}
+
+
+def test_landing_remap_zero_counts_do_not_mark_a_row_partial(tmp_path):
+    clean = ROW_OK + "print(json.dumps(dict(raw=26, kept=0, skipped=0, dropped=[])))\n"
+    partial = ROW_OK + "print(json.dumps(dict(raw=26, kept=0, skipped=1)))\n"
+    _, ledger = run(tmp_path, {"KRSPCORE": clean}, {"KRSPCORE"})
+    assert ledger["KRSPCORE"]["status"] == "APPLIED"
+    (tmp_path / "partial").mkdir()
+    _, ledger = run(tmp_path / "partial", {"KRSPCORE": partial}, {"KRSPCORE"})
+    assert ledger["KRSPCORE"]["status"] == "PARTIAL"

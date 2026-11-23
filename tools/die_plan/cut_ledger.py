@@ -72,6 +72,22 @@ def collect(manifest, rows_dir):
     return out
 
 
+def reports_lost_ops(line):
+    if not PARTIAL_RE.search(line):
+        return False
+    try:
+        receipt = json.loads(line)
+    except ValueError:
+        return True
+    if not isinstance(receipt, dict):
+        return True
+    # landing_remap receipts always include these keys, even with no lost ops.
+    for key in ("skipped", "dropped"):
+        if receipt.get(key) in (0, []):
+            receipt.pop(key)
+    return bool(PARTIAL_RE.search(json.dumps(receipt)))
+
+
 def compose(base, out, manifest, rows_dir=None):
     """Apply the rows; return (final_plan, ledger records)."""
     out = Path(out)
@@ -110,7 +126,7 @@ def compose(base, out, manifest, rows_dir=None):
             rec.update(status="REFUSED", reason=f"stable-key breach: unnamed types {stray[:10]} top keys {top[:10]}")
             continue
         cur = new
-        lost = [ln.strip() for ln in txt.splitlines() if PARTIAL_RE.search(ln)]
+        lost = [ln.strip() for ln in txt.splitlines() if reports_lost_ops(ln)]
         if lost:
             rec.update(status="PARTIAL", reason=f"{len(lost)} line(s) say ops were lost: {lost[0][:200]}")
         elif not changed and not top_changed:
