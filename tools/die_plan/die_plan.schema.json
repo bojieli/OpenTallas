@@ -4116,6 +4116,10 @@
        },
        "tap_reset_split_launch": {
         "type": "boolean"
+       },
+       "tap_reset_split_rounds": {
+        "type": "integer",
+        "minimum": 1
        }
       }
      },

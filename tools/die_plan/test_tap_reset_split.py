@@ -55,6 +55,17 @@ def test_launch_cotap_is_opt_in_schema_and_export():
     assert re.search(r'get\("tap_reset_split_launch"\) is True', g) and "export OT_TAP_RESET_SPLIT_LAUNCH = 1" in g
 
 
+def test_reset_split_round_cap_is_typed_and_only_exported_in_launch_mode():
+    expected = {"type": "integer", "minimum": 1}
+    for plan_schema in (schema.SCHEMA, json.loads((HERE / "die_plan.schema.json").read_text())):
+        clock = plan_schema["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]
+        assert clock["properties"]["tap_reset_split_rounds"] == expected
+    generator = (HERE / "gen_phys.py").read_text()
+    launch = generator.index('if t.get("clock", {}).get("tap_reset_split_launch") is True')
+    end = generator.index("    cfg += tap_post_merge_exports", launch)
+    assert 'cfg.append(f"export OT_TAP_RESET_SPLIT_ROUNDS = {reset_split_rounds}")' in generator[launch:end]
+
+
 def test_launch_cotap_walks_back_to_tie_and_never_deletes():
     t = (HERE / "tap_reset_split.tcl").read_text()
     assert 'OT_TAP_RESET_SPLIT_LAUNCH) eq "1"' in t and "OT_TAP_RESET_SPLIT_LAUNCH_DEPTH" in t

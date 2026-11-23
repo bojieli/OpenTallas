@@ -1854,6 +1854,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # QC-COLL RST-LAUNCH 11-23 (opt-in, with tap_reset_split): every moved/copied last reset stage also gets its launching
 # synchroniser stage(s) on its own tap (tap_reset_split.tcl, OT_TAP_RESET_SPLIT_LAUNCH): no zero-logic tap-to-tap shift.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_launch"] = {"type": "boolean"}
+# The async ownership tree can require more than four cotap passes. The setting applies only to launch mode.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_rounds"] = {
+    "type": "integer", "minimum": 1}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {
