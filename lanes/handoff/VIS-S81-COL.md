@@ -12,3 +12,8 @@ J8 E15E-CHAN covers h9_r1/h9_r2/h10_r2 (IN-EVENT). J9 planR2 = no geometry; ROM 
 - Strict bind + LATCHECK: needed by ASSEMBLY on ONE plan with planR2 (asked RANKSEAT j9r2 driver to bind the composed plan).
 ## Drafts for J10: h10_r1 outline +60.5 (die column shift); h10_r0_p1 ECORR; h10_r0_p4 strip shift (H10-R4 deciding after L1t).
 ## Attribution jobs (diagnostic, optional): ot-run attr_run.sh h9r0p4 epyc7 / h10r1 epyc9 / h9r2 epyc8 (load/disk holds).
+## 23:5x update
+- PRE PASS 0 on plan_v3_strip (ac3a5c74d618). h9_r0 rows PRE-PASS (2031e017).
+- COL-H10R0-E1E-CHAN (col_h10_r0_p1, 6 types) ACCEPTED by H10-R4 for J9; composed: epyc10 vis-s81-col/tmp/plan_v3_strip_e1e.json ba87ca31a34b = j9r2 graft source (RANKSEAT restarted 23:44). PRE on it: ot-run epyc10, log intel2 vis-s81-col/pre_e1e.otrun.log.
+- COL-H10-GROW (J10 die-level, growth pre-approved): grow_row.py; ops j9/rows_COL-H10-GROW_J8.json (18 types: h10_r0_p4 H+25.92 N strip->69; h10_r1 H+60.48, interior +34.56, S->86.4 N->69, e10e chan). Probes (J7 base, goal grt, epyc9): h10_r0_p4 pvcc166a6d run-item pid 2640926 (probe/runitem_colh10r0p.log); h10_r1 pv0713a75a pid 2666053 (probe/runitem_colh10r1.log).
+- p4 h9_r0 probe pid 1990740 (probe/runitem_p4b.log). Self-pass rule f95aac4: read congestion.rpt + PNG at GRT, set PROBE-PASS.
