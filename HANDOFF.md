@@ -3888,3 +3888,5 @@ CODEX: 2026-11-23 07:31 PST S81 J8 live (891100ef774, sealed source 61701f3e485d
 CODEX: 2026-11-23 08:25 PST Qwen F5 fixed-link CALR analytical repack clears exact issue contention, 117760/117760 distinct, +41 max ordinary tail/END with 282 cycles same-owner margin. Native media proof under token lane.
 
 CODEX: 2026-11-23 08:45 PST Shared Qwen CALR ROM passed native cold/warm on the same physical masks (1021 entries). The earlier TABLE_NEXT gives +260 cycles of modeled guarded row0 setup. Exact four-owner native frame replay queued; target6 and arithmetic remain.
+
+CODEX: 2026-11-23 09:28 PST F5 S8 true command media native replay passes all eight ranks, two frames ×240736 actions each. Compact DW2 and exact boot/tail addresses preserved. Physical C mask and arithmetic/execution timing still gated.
