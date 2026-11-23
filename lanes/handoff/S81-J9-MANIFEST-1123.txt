@@ -177,3 +177,11 @@ VIS-DIE SUMMARY (05:xx): all die rows PRE 0 vs J8. G0 on the grown plan is PENDI
    rc67 HOP-GAPS: waits on PRECHECK-R2 HOP-GAPS.tsv.
    rc68 slice_station trunks: VIS-DIE no-row verdict; needs FABLE-RC-S81 acceptance (FABLE-UNC-S81-DIE co-owns rc66-68).
    NOTE: on epyc9, ot-run sees scratch3 as root; new lane outputs go to scratch2.
+TAP-GRID-R5 UPDATE (05:xx):
+   rc66 SPARSE-TAP-1 = row TGR5-J9-SERDES-DENS-1. Fresh explicit tap tables (tap_split --fresh, main 0d65c8cee9) on all 11 serdes types, incl. t13.
+     Gate: FABLE-UNC census + R7 latency model <= 108 ps. Target: Wave B 12:30.
+     Compose: apply BEFORE the regen; the regen only appends (prefix rule).
+   J9_EXCLUDE is now EMPTY (leaf t32 and serdes t13 included) per the no-deferral ruling.
+     Tools v4, frozen 10:00: tap_split main 34c9f7257d + remap-isolation fix, j9_regen_v4.sh, j9_r12proxy.py (col_h9_r1/r2 span). FIXED = 5 VIS-MISC types.
+     Dry run 4 is on 56d5a17e72bc (epyc9). The real regen runs on the composed plan ~10:30.
+J8 SEAL: admitted 03:0x; GATE_OK g0 8->6, lat 873/873, BIND errors [], pack add 3699 delete 0. delta-apply/publish in progress.
