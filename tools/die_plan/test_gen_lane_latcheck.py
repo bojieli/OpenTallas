@@ -164,3 +164,26 @@ def test_fixed_in_core_with_observed_kit_stations():
     recs = [_rec(-1, 0, 1)]
     G.reclassify(plan, recs, [], False)           # not opt-in: still FAIL
     assert recs[0]["verdict"] == "FAIL"
+
+
+def test_realized_check_refuses_plan_only_cycles(tmp_path):
+    """LATCHECK-REALIZED-1122 (HEAD hd_lep0N L2/L4): a station row on a non-realize type + lane fixed_cycles +1 with no RTL change"""
+    base_d = rtl(tmp_path)
+    base = plan(cycles=5, fixed=1)
+    new = plan(cycles=6, fixed=2)
+    new["partition_types"]["A"]["internal_stations"] = [dict(conn="bus:o", launch="u_core.o", regs_um=[[1, 1]])]
+    d2 = tmp_path / "new"
+    d2.mkdir()
+    for f in base_d.iterdir():
+        (d2 / f.name).write_bytes(f.read_bytes())
+    recs, errs, _ = G.run(new, [d2], fixed_in_core=True)
+    assert errs == []                                                  # the old check passes it (the gap)
+    recs, errs, _ = G.run(new, [d2], fixed_in_core=True, base_plan=base, base_rtl=[base_d])
+    assert any(e.startswith("UNREALIZED_STATION_ROW A bus:o") for e in errs)
+    assert any(e.startswith("UNREALIZED_PLAN_CYCLES L:") for e in errs) and recs[0]["verdict"] == "FAIL"
+    # the same change with the stage really in the RTL (module text changed) is not refused by this check
+    (d2 / "m_a.sv").write_text((d2 / "m_a.sv").read_text().replace("endmodule", "    // core stage o +1\nendmodule"))
+    recs, errs, _ = G.run(new, [d2], fixed_in_core=True, base_plan=base, base_rtl=[base_d])
+    assert not any(e.startswith("UNREALIZED") for e in errs)
+    recs, errs, _ = G.run(base, [base_d], fixed_in_core=True, base_plan=base, base_rtl=[base_d])
+    assert errs == []                                                  # no change vs base: unchanged verdict

@@ -15,6 +15,8 @@
 #   env SRC   code tree (default the kw45 HEAD wave src); hardlinked into the run tree, never written
 #       TOOLS tools overlay root whose tools/die_plan + tools/s81_head files replace the tree's (default: this repo)
 #       RUN   run root (default /srv/opentallas-scratch2/claude/head-bind-1/run); the run dir is RUN/TAG (must not exist)
+#       BASE_PREP  LATCHECK-REALIZED-1122: the plan-of-record prepared dir (source_plan.json + published/); LATCHECK then
+#             refuses station rows / lane cycles that change no RTL (UNREALIZED_STATION_ROW / UNREALIZED_PLAN_CYCLES)
 # exit: 0 all PASS, 3 run dir exists, 4 cohort FAIL, 5 bind FAIL, 6 LATCHECK FAIL (lane latency), 7 LATCHECK incomplete
 set -u -o pipefail
 TAG=$1; PREP=$(readlink -f "$2")
@@ -44,7 +46,8 @@ test -s "$O/gen/s81_head_top.sv" || { echo "NO_GEN_TOP"; tail -5 "$R/bind.log"; 
 python3 -I -B tools/s81_head/head_gen_cohort.py "$PREP" "$O/gen" --json "$R/cohort.json" > "$R/cohort.log" 2>&1
 CRC=$?; echo "COHORT_RC=$CRC $(tail -1 "$R/cohort.log")"
 python3 -I -B tools/die_plan/gen_lane_latcheck.py "$PREP/source_plan.json" --rtl "$PREP/published" --rtl "$O/gen" \
-  --landings "$O/gen/gen_clock_landings.json" --fixed-in-core --tsv "$R/latcheck.tsv" --json "$R/latcheck.json" > "$R/latcheck.log" 2>&1
+  --landings "$O/gen/gen_clock_landings.json" --fixed-in-core \
+  ${BASE_PREP:+--base-plan "$BASE_PREP/source_plan.json" --base-rtl "$BASE_PREP/published"} --tsv "$R/latcheck.tsv" --json "$R/latcheck.json" > "$R/latcheck.log" 2>&1
 LRC=$?; echo "LATCHECK_RC=$LRC $(tail -1 "$R/latcheck.log" | cut -c1-300)"
 ln -sfn "$D/$O" "$R/out"
 echo "HEAD_BIND_DONE bind=$BRC cohort=$CRC latcheck=$LRC out=$R"

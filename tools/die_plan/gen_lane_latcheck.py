@@ -18,6 +18,17 @@ replaced:
 Failure classes added here (report only; the gate is delivered == table): PLAN_STATIONS_UNPRICED = the excess is
 exactly the u_ist_ stations already in the generated wrappers (plan internal_stations, kit_istations FIRM) that the
 plan latency table (schema.lane_natural: boundary + ft stations + fixed + landing) does not count.
+LATCHECK-REALIZED-1122 (COORD 19:2x, HEAD hd_lep0N LEP-H2R-STN-1): --fixed-in-core takes a lane's fixed_cycles on trust, so
+two internal_stations rows on a type WITHOUT realize_internal_stations (nothing emits them) raised lanes L2/L4 by +1 with no
+register behind them, and LATCHECK passed.  With --base-plan BASE.json --base-rtl DIR (the plan of record and its RTL) every
+cycle change is checked against the RTL it claims (both FAIL, exit 4):
+  UNREALIZED_STATION_ROW  a type without realize_internal_stations gains internal_stations regs (new conn or more regs_um)
+                          while its wrapper + every module it reaches in the RTL dirs is byte-identical to the base: the bind
+                          emits no register for the row (refused: realize it, or change the core RTL that holds the stage)
+  UNREALIZED_PLAN_CYCLES  a lane's table cycles changed vs the base while its RTL-observed stages (delivered minus plan-derived
+                          kit_ist) did not and both end
+                          types' RTL is byte-identical to the base: plan bookkeeping only
+Without --base-plan the run is unchanged and prints LATCHECK_BASE NONE (in-core cycle changes unchecked).
 Modules resolve from the RTL dirs in order (first hit wins: e.g. the wave-prepared published/ cohort, then the gen.py rtl
 output); a type with no wrapper is UNOBSERVED (listed, not a failure), as in lane_asbuilt_latency.
 
@@ -117,7 +128,87 @@ def reclassify(plan, recs, errs, fixed_in_core):
     return recs, out
 
 
-def run(plan, rtl_dirs, landings=None, fixed_in_core=False):
+MOD_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\(|[A-Za-z_\\]\w*\s*\()", re.M)
+
+
+def type_rtl_digest(plan, tn, rtl_dirs, cache=None):
+    """sha256 of the type's wrapper and every module it reaches (by <module>.sv in the RTL dirs, first hit wins); None = no wrapper"""
+    import hashlib
+    mod = plan["partition_types"].get(tn, {}).get("module")
+    if not mod:
+        return None
+
+    def find(m):
+        for d in rtl_dirs:
+            f = Path(d) / f"{m}.sv"
+            if f.is_file():
+                return f
+        return None
+    if find(mod) is None:
+        return None
+    seen, todo, h = set(), [mod], hashlib.sha256()
+    while todo:
+        m = todo.pop()
+        if m in seen:
+            continue
+        seen.add(m)
+        f = find(m)
+        if f is None:
+            continue
+        t = f.read_bytes()
+        h.update(m.encode() + b"\0" + t)
+        todo.extend(x for x in MOD_RE.findall(t.decode(errors="replace")) if x not in seen)
+    return h.hexdigest()
+
+
+def _regs_by_conn(t):
+    out = {}
+    for e in t.get("internal_stations", []) or []:
+        out[e.get("conn")] = out.get(e.get("conn"), 0) + len(e.get("regs_um") or [])
+    return out
+
+
+def realized_check(plan, recs, rtl_dirs, base_plan, base_recs, base_rtl):
+    """LATCHECK-REALIZED-1122: cycle changes vs the plan of record must be backed by RTL that changed -> error lines"""
+    errs = []
+    types, btypes = plan["partition_types"], base_plan.get("partition_types", {})
+    dig = {}
+
+    def same(tn):
+        if tn not in dig:
+            a = type_rtl_digest(plan, tn, rtl_dirs)
+            b = type_rtl_digest(base_plan, tn, base_rtl) if tn in btypes else None
+            dig[tn] = a is not None and a == b
+        return dig[tn]
+    for tn, t in sorted(types.items()):
+        if t.get("realize_internal_stations") or tn not in btypes:
+            continue
+        new, old = _regs_by_conn(t), _regs_by_conn(btypes[tn])
+        grown = {c: (old.get(c, 0), n) for c, n in new.items() if n > old.get(c, 0)}
+        if grown and same(tn):
+            for c, (o, n) in sorted(grown.items()):
+                errs.append(f"UNREALIZED_STATION_ROW {tn} {c}: internal_stations regs {o} -> {n} on a type without "
+                            f"realize_internal_stations and its RTL is byte-identical to the base: no register is emitted "
+                            f"(realize the row, or change the core RTL that holds the stage)")
+    base = {r["lane"]: r for r in base_recs}
+
+    def observed(r):
+        # delivered minus the plan-derived kit stations (kit_ist = the internal_stations rows the KIT is expected to insert):
+        # on a plan-generated die nothing inserts them on a type without realize_internal_stations, so they are bookkeeping
+        return (r.get("delivered") or 0) - sum(int((r.get(k) or {}).get("kit_ist", 0) or 0) for k in ("source", "receiver"))
+    for r in recs:
+        b = base.get(r["lane"])
+        if b is None or r.get("table") is None or b.get("table") is None or r["table"] == b["table"]:
+            continue
+        if observed(r) == observed(b) and same(r["src_type"]) and same(r["dst_type"]):
+            r["verdict"] = "FAIL"
+            r["class"] = list(r.get("class", [])) + ["UNREALIZED_PLAN_CYCLES"]
+            errs.append(f"UNREALIZED_PLAN_CYCLES {r['lane']}: table {b['table']} -> {r['table']} but RTL-observed stages "
+                        f"{observed(r)} unchanged and {r['src_type']} / {r['dst_type']} RTL byte-identical to the base")
+    return errs
+
+
+def run(plan, rtl_dirs, landings=None, fixed_in_core=False, base_plan=None, base_rtl=None, base_landings=None):
     parts = parts_of(plan)
     rows, bad = lane_rows(plan)
     land = {}
@@ -128,6 +219,9 @@ def run(plan, rtl_dirs, landings=None, fixed_in_core=False):
                            land.get)
     recs, errs = reclassify(plan, recs, errs, fixed_in_core)
     errs = [f"LANE_ROWS {b}" for b in bad] + errs
+    if base_plan is not None:
+        brecs, _, _ = run(base_plan, base_rtl, base_landings, fixed_in_core)
+        errs += realized_check(plan, recs, rtl_dirs, base_plan, brecs, base_rtl)
     return recs, errs, src
 
 
@@ -138,12 +232,20 @@ def main(argv=None):
     ap.add_argument("--landings", help="gen.py rtl --clock-landing output gen_clock_landings.json")
     ap.add_argument("--fixed-in-core", action="store_true",
                     help="lane fixed_cycles are core-internal registers (s81_head convention)")
+    ap.add_argument("--base-plan", help="LATCHECK-REALIZED-1122: plan of record the cycle changes are checked against")
+    ap.add_argument("--base-rtl", action="append", help="RTL dir(s) of --base-plan (repeatable)")
+    ap.add_argument("--base-landings", help="gen_clock_landings.json of --base-plan")
     ap.add_argument("--tsv")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
     landings = json.loads(Path(a.landings).read_text()) if a.landings else None
-    recs, errs, src = run(plan, a.rtl, landings, a.fixed_in_core)
+    base = json.loads(Path(a.base_plan).read_text()) if a.base_plan else None
+    if base is not None and not a.base_rtl:
+        ap.error("--base-plan needs --base-rtl")
+    print(f"LATCHECK_BASE {a.base_plan or 'NONE (in-core cycle changes unchecked)'}")
+    recs, errs, src = run(plan, a.rtl, landings, a.fixed_in_core, base, a.base_rtl,
+                          json.loads(Path(a.base_landings).read_text()) if a.base_landings else None)
     sm_fixed = sum(1 for r in recs if r.get("fixed_in_core"))
     sm = LAL.summary(recs)
     sm.update(plan=str(a.plan), rtl=a.rtl, landings=a.landings, modules=src, mode="gen", fixed_in_core=sm_fixed)
