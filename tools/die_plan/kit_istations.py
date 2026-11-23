@@ -1827,6 +1827,40 @@ def _tcl_chan():
 TCL_CHAN = _tcl_chan()
 
 
+TCL_CHAN_PACKED = r"""
+# Apply per-bit channel seating to the native packed delay's existing stages.
+proc is_chan_packed_bits {inst bus face W lx ly depth tag lo hi} {
+  global ff_blk ff_dbu is_n is_miss is_fh
+  set hit 0
+  foreach i [$ff_blk getInsts] {
+    set nm [string map {\\ {}} [$i getName]]
+    if {![string match "*${inst}\[./\]*" $nm]} continue
+    if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+    if {![regexp {[/.]r\[([0-9]+)\]\[([0-9]+)\]} $nm -> stage bit]} {
+      if {![regexp {[/.]q\[([0-9]+)\]} $nm -> bit]} {
+        lappend is_miss "$nm:unmapped-packed-channel-bit"; continue
+      }
+      set stage [expr {$depth - 1}]
+    }
+    if {$bit > $W || $stage >= $depth} {
+      lappend is_miss "$nm:packed-channel-bit-out-of-range"; continue
+    }
+    set pin [$ff_blk findBTerm "${bus}\[$bit\]"]
+    if {$pin eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
+    set box [$pin getBBox]
+    set px [expr {([$box xMin] + [$box xMax])/2.0/$ff_dbu}]
+    set py [expr {([$box yMin] + [$box yMax])/2.0/$ff_dbu}]
+    lassign [is_chan_site $px $py $lx $ly $face [expr {$stage+1}] [expr {$depth+1}] in $lo $hi $bit $W] x y
+    set got [ff_put_near $i [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}]]
+    if {$got eq ""} { lappend is_miss $nm; continue }
+    puts $is_fh "$nm\t$tag\t[expr {[lindex $got 0]/double($ff_dbu)}]\t[expr {[lindex $got 1]/double($ff_dbu)}]\t-"
+    incr is_n; incr hit
+  }
+  if {!$hit} { lappend is_miss $inst }
+}
+"""
+
+
 MACRO_TOL_UM = 0.5     # a station site / L-route leg may touch a hard-macro box, not enter it by more than this
 
 
@@ -2303,9 +2337,11 @@ def main(argv):
     tcl = [TCL_HEAD]
     rep = []
     rl_cfg, rl_calls, rl_rows = rank_line_cfg(raw.get("budgets"), tn), [], []      # RANK-SEAT auto lines (after every is_place)
-    bad = [e.get("conn") for e in t.get("internal_stations", []) if e.get("leg_order") == "channel" and not e.get("core")]
-    if bad:   # KIT-CHAN-1: the channel order is a core pin-face chain form only (bus chains have no leg order)
-        raise SystemExit(f"kit_istations: {tn}: leg_order channel on non-core chain(s) {bad[:4]}")
+    bad = [e.get("conn") for e in t.get("internal_stations", [])
+           if e.get("leg_order") == "channel" and not e.get("core")
+           and (not e.get("conn", "").startswith("bus:") or e.get("bit_route") != "per_bit")]
+    if bad:
+        raise SystemExit(f"kit_istations: {tn}: leg_order channel requires a per-bit bus chain: {bad[:4]}")
     if any(e.get("core") for e in t.get("internal_stations", [])) and any(
             p.get("type") == tn for p in raw.get("partitions", [])):   # SUL0-PINFACE-1 geometry gate (fail closed)
         import schema as _S
@@ -2342,6 +2378,19 @@ def main(argv):
                              "(no exact bank / bit_route / bit sites)")
         packed=packed_input_delay(tn,b,txt,W,len(regs))
         if packed:
+            channel = e.get("leg_order") == "channel"
+            if channel:
+                if "leaf_um" not in e or "face" not in b:
+                    raise SystemExit(f"kit_istations: {tn} {bus}: packed channel needs leaf_um and a bus face")
+                import istation_channel
+                lo, hi = istation_channel.entry_channel(e)
+                if TCL_CHAN not in tcl:
+                    tcl.insert(1, TCL_CHAN)
+                if TCL_CHAN_PACKED not in tcl:
+                    tcl.append(TCL_CHAN_PACKED)
+                lx, ly = e["leaf_um"]
+                tcl.append(f"is_chan_packed_bits {packed['instance']} {n} {b['face']} {W} {lx} {ly} "
+                           f"{packed['depth']} ist:{bus} {lo:.4f} {hi:.4f}")
             exact_meta = None
             if exact is not None:
                 call, exact_meta = packed_exact_geometry(tn, bus, txt, e, packed, W, exact)
@@ -2350,7 +2399,7 @@ def main(argv):
                 tcl.append(call)
             sites=packed_sites(regs,packed['depth'])
             for sj,(j,k) in enumerate(sites):
-                if floating or exact_meta is not None:
+                if floating or channel or exact_meta is not None:
                     break
                 x,y=regs[k]
                 # RANK-SEAT auto (budgets.rank_line_types): the packed pad rank of a wide bus on a line instead of a block
@@ -2374,10 +2423,12 @@ def main(argv):
                      plan_width=b['width'],bound_width=W)
             if exact_meta is not None:
                 row.update(exact_meta)
+            if channel:
+                row.update(channel_um=[lo, hi], channel_stages=packed["depth"])
             if floating:
                 row.update(sites="float")
                 print(f"kit_istations: {tn} {bus}: sites=float, {packed['depth']} packed stages left to placement")
-            if packed['depth']<len(regs):
+            if packed['depth']<len(regs) and not channel:
                 pts=[p for p in [e.get('from_um')]+[regs[k] for _,k in sites]+[e.get('to_um')] if p]
                 row.update(respread_sites=[k for _,k in sites],
                            respread_max_hop_um=round(max(abs(a[0]-c[0])+abs(a[1]-c[1]) for a,c in zip(pts,pts[1:])),3))
@@ -2500,8 +2551,17 @@ def main(argv):
             leaf = next((c for c in t.get("contents", []) if c["inst"] == b.get("leaf", "").split(".")[0]), {})
             box = leaf.get("outline_um", [0, 0])
             offset = max(0.0, min(15.0, box[0 if b["face"] in "EW" else 1] / 2.0 - 2.0))
-            for k, nm in enumerate(names):
-                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} ist:{bus} {offset:g}")
+            if e.get("leg_order") == "channel":
+                import istation_channel
+                lo, hi = istation_channel.entry_channel(e)
+                if TCL_CHAN not in tcl:
+                    tcl.insert(1, TCL_CHAN)
+                for k, nm in enumerate(names):
+                    tcl.append(f"is_chan_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} "
+                               f"ist:{bus} {lo:.4f} {hi:.4f} {offset:g}")
+            else:
+                for k, nm in enumerate(names):
+                    tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} ist:{bus} {offset:g}")
         elif bgrp is not None:
             if BG.BITS_TCL not in tcl:
                 tcl.append(BG.BITS_TCL)
