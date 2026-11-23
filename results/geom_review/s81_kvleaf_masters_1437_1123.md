@@ -42,3 +42,7 @@ Viewed intel1 QNH `runs/qnh_drt_1510/review_1531`, final ODB SHA af60d38afaaa. T
 ## Horizontal KVT final geometry 15:39 PST
 
 Viewed E9 `reshape_r2/kvtch_drt_1527/review_1538` final SHA 3999a6680ff9. Exact 7,127 pins and 260 PDN records, N/S pin bands and centre clock remain separated across the 702×25.92 µm strip. The interior bands are spread along the length, with no macro or new wall. Detailed route is DRC0. PASS for TT/FF and netlist LEC. Parent adoption and corner/LEC gates are pending.
+
+## IKR and IKW incremental route geometry 15:41 PST
+
+Viewed E9 `route_r2/{ikr,ikw}/hold_eco_1500/incremental/review_1540`, final IKR SHA 8d922045dbb1 and IKW SHA 93509b365df1. Both have DRC0 and preserve their port counts, continuous PG and open channels. IKR keeps concentrated logic to one side and clear lower-right space. IKW retains a narrow dense north pin band with an open lower interior. PASS for exact fresh extraction and TT/FF verification.
