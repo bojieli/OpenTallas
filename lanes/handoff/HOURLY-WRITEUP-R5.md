@@ -47,3 +47,5 @@ Method each hour (~:15 PST): ssh intel2, cd ~/coord; run `python3 -I tools/count
 ## State 02:25 PST 11-23
 582 any / 480 current (current +1: HEAD 25/26). Resumed after the 01:17 limit; no RC-GAP replies. VIS-COVERAGE steady 96## State 03:25 PST 11-23
 584 any / 482 current (+2/+2 vs 02:05). VIS-COVERAGE steady (435/451 verdict, PROBE-PASS 0, PRE-PASS 105). Avoid a percent sign inside printf format strings.
+## State 04:25 PST 11-23
+585 any / 483 current (+1/+1 vs 03:05, QC 78). First PROBE-PASS (S81 serdes t1 clfe1f0815). VIS-COVERAGE verdict count steady at 435 of 451.
