@@ -26,6 +26,12 @@ epyc10: tmp/). R7 lane dir L=/srv/opentallas-scratch2/claude/fable-fix-head-lep0
   (tmp/start_split.py: rows 3, 6 -> lep0N_w, others -> lep0N shifted -820.8; head_reset_exports.py fix picks nearest raw relay) +
   head_sideband_street_rows (status/reader/writer START rows, fixes the W status path) + bind/LATCHECK/G0.
 
+## UPDATE 11-22 20:1x PST hd_host_n SIGNED OFF
+- hn3 SIGNED: DRC 0, TT +80.39, internal FF 0/0, LEC EQUIVALENT, provenance private, sealed tree r18j. Port-start FF -110 is parent-owned (advisory).
+  Kit epyc9 kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/OPUS-FIX-HEAD-LEP0N-R8/hd_host_n_1122090432/gen/hd_host_n
+- Export: auto-export spool. Check rtx INDEX for s81_head/ot_s81hd_host_n.
+- Only live kit: ctl1. Waiter btz323529 (w6.sh).
+
 ## UPDATE 11-22 20:4x PST PRECHECK-R2 (phantom + taps)
 - r18m/r18n carry the phantom +1 on L2/L4 (3 cycles, 2 regs). Plan of record goes back to 5e1f38e1530b (clean, gated) until Fable posts a stripped plan that gates.
 - w13 retired: FAIL_PREFLOOR ring_ff needs ring_place=ff, which only r18k/r18m carry. W = Fable w10.
