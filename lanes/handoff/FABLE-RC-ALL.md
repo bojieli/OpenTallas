@@ -23,3 +23,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 11:0x S81 SVC + LEAF/KV_LEAF/GAPMAP verdicts posted. Open after my rulings (check 15:30/16:30): svc rc16 lockstep+calendar, rc15 compiler dates+bench, rc18 tap read, x1, land-cap bands 1.25/1.76, 6 START boundaries, 3 fW0_p1_b0->svc_3 landings; leaf t45/t14 no row, C3 probe reads t58/t61/t22/t44; kv_leaf t3 (+1 CBC cycle or LEC); eng hx_res -224 row; kv512_C row; eng RESET-ASYNC recovery vs removal.
 - HEAD packets already on hub: 08:46 r18wplace3 157a6b19..., 10:28 split packet 5cbc5cda8aa0 (W) / E cap10 7085500b8b4d; handoff lanes/handoff/HEAD-R18.md.
 - Waiter bug at 06:22 (empty lastline) fixed by writing lastline in a separate command first.
+- 10:55 ACCEPT: HEAD rc138 (probe REASONED; close on E cap10 GRT census <50 per footprint), QC x5 REASONED, S81 x6 covered by SEQHOST-VLG-STN-1 (bind liveness + LATCHECK open). QC C4 81fd3e6370c0 PRE PASS, strict running.
