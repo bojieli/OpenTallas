@@ -23,6 +23,7 @@ sys.setrecursionlimit(1000000); threading.stack_size(512 * 1024 * 1024)
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import s81_svc_idx_fit as IDX   # MEM idx fit (svc_lo dsdv_idx_rg3 -> dsdv_idx_rg3_fit), gate s81_svc_idx_fit_1103
+import s81_svc_mem_cones as CONES   # per-helper structural steps for bounds the T7 class port cannot map (SVC-R9 11-22)
 REF = {
     'pmem': ROOT / 'results/rtl/s81_T7_pmem_bound_cut_0900/transform.py',
     'pvq': ROOT / 'results/rtl/s81_T7_pvq_bound_cut_1040/transform.py',
@@ -325,6 +326,29 @@ def applies(bound_text):
     return all(re.search(r'^\s*' + m + r'\b', bound_text, re.M) for m in NATIVE)
 
 
+def closure_kind(bound_text):
+    """'class' = full T7 helper set (class port), 'struct' = a partial set the per-helper structural steps close
+    (OPUS-FIX-S81-SVC-R9 11-22: COORD 18:0x ruling), None = no svc native memory helper."""
+    if applies(bound_text):
+        return 'class'
+    return 'struct' if CONES.predict_steps(bound_text) else None
+
+
+# the structural path ships its v2 children beside the tools (rt snapshots carry no results/); byte-identical to results/
+STRUCT_ASSETS = Path(__file__).resolve().parent / 's81_svc_hi4_att_fit'
+
+
+def struct_child(name):
+    p, _ = CHILDREN_V2[name]
+    tool = STRUCT_ASSETS / name
+    if (ROOT / p).exists():
+        b = (ROOT / p).read_bytes()
+        if tool.exists() and tool.read_bytes() != b: raise ValueError('child %s differs from the shipped copy' % name)
+        return b
+    if not tool.exists(): raise ValueError('MEM struct: no child %s (results/ or %s)' % (name, STRUCT_ASSETS))
+    return tool.read_bytes()
+
+
 
 def kit_has_native_helpers(rtl_dir):
     """Classify a kit before requiring reference assets; no-helper kits are a true no-op."""
@@ -332,7 +356,15 @@ def kit_has_native_helpers(rtl_dir):
     kr = json.loads((rtl / 'kit_rtl.json').read_text())
     bound = rtl / (kr['bound_module'] + '.sv')
     if not bound.exists(): bound = rtl / ('s81p_%s_bound.sv' % kr['bound_type'])
-    return applies(bound.read_text())
+    return closure_kind(bound.read_text()) is not None
+
+
+def kit_closure_kind(rtl_dir):
+    rtl = Path(rtl_dir).resolve()
+    kr = json.loads((rtl / 'kit_rtl.json').read_text())
+    bound = rtl / (kr['bound_module'] + '.sv')
+    if not bound.exists(): bound = rtl / ('s81p_%s_bound.sv' % kr['bound_type'])
+    return closure_kind(bound.read_text())
 
 
 def _bound_at(lines, bound):
@@ -353,8 +385,14 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     if not bound.exists(): bound = rtl / ('s81p_%s_bound.sv' % kr['bound_type'])
     s = bound.read_text()
     if (rtl / 'memory_closure.json').exists(): return json.loads((rtl / 'memory_closure.json').read_text())
-    if not applies(s): return dict(status='NOT_APPLICABLE')
-    if closed is None:
+    kind = closure_kind(s)
+    if kind is None: return dict(status='NOT_APPLICABLE')
+    steps = list(CONES.STEPS)
+    if kind == 'struct':
+        if form != 'v2': raise ValueError('MEM struct: per-helper steps exist in form v2 only')
+        closed, steps, rep = CONES.close_struct(s)      # ConeError (ValueError) on any witness difference
+        rep.update(before_sha256=sha(s), after_sha256=sha(closed), path='struct')
+    elif closed is None:
         box = {}
         def run(): box['r'] = close_type(s, ref_s or ref_text(), rm)
         threading.stack_size(512 * 1024 * 1024); t = threading.Thread(target=run); t.start(); t.join()
@@ -362,7 +400,7 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
         closed, rep = box['r']
     else:
         rep = dict(before_sha256=sha(s), after_sha256=sha(closed))
-    if form == 'v2':
+    if form == 'v2' and kind == 'class':
         rep['v1_after_sha256'] = sha(closed); closed = fit_v2(closed); rep['after_sha256'] = sha(closed)
     idx_kids, idx_macros, drop = {}, {}, []
     if form == 'v2':
@@ -371,12 +409,20 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
             rep['v2_after_sha256'] = rep['after_sha256']; rep['after_sha256'] = sha(closed); rep['idx_fit'] = idx_rep
             drop = idx_rep['dropped']
     kids = []
-    for c, (p, h) in children(form).items():
-        b = (ROOT / p).read_bytes()
-        if h and hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
-        (rtl / c).write_bytes(b); kids.append(str(rtl / c))
+    if kind == 'struct':
+        for st in steps:
+            c = CONES.STEP_CHILD[st]; (rtl / c).write_bytes(struct_child(c)); kids.append(str(rtl / c))
+        base = {}
+        for st in steps:
+            for m, n in CONES.STEP_MACROS[st].items(): base[m] = base.get(m, 0) + n
+    else:
+        for c, (p, h) in children(form).items():
+            b = (ROOT / p).read_bytes()
+            if h and hashlib.sha256(b).hexdigest()[:8] != h: raise ValueError('child hash ' + c)
+            (rtl / c).write_bytes(b); kids.append(str(rtl / c))
+        base = MACROS[form]
     for c, t in idx_kids.items(): (rtl / c).write_text(t); kids.append(str(rtl / c))
-    macros = {m: MACROS[form].get(m, 0) + idx_macros.get(m, 0) for m in {**MACROS[form], **idx_macros}}
+    macros = {m: base.get(m, 0) + idx_macros.get(m, 0) for m in {**base, **idx_macros}}
     # macro views the closure instantiates and bind did not see (bind runs before this event): black box in
     # kit_rtl.f / files, behavioural model in kit_rtl_sim.f, lef + libs in hard_macros (same form as bind)
     hm = kr.setdefault('hard_macros', {}); bbs, models = [], []
@@ -405,7 +451,7 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     for p, t in edits.items(): p.write_text(t)
     bound.write_text(closed)
     rep.update(status='APPLIED', event='S81-066 svc memory closure (T7 12605dc2 class port)', bound=str(bound),
-               children=kids, form=form, macros_added=macros)
+               children=kids, form=form, macros_added=macros, kind=kind, steps=steps)
     (rtl / 'memory_closure.json').write_text(json.dumps(rep, indent=1) + '\n')
     return rep
 
@@ -431,7 +477,8 @@ def main():
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
-    if a.kit_rtl and not any(kit_has_native_helpers(d) for d in a.kit_rtl):
+    if a.kit_rtl and not any(kit_closure_kind(d) == 'class' for d in a.kit_rtl):
+        # SVC-R9 11-22: no class-port kit -> no T7 reference inputs needed; struct / no-helper kits close here
         # An already-native macro form needs no transform/reference data. Preserve apply_kit's
         # idempotent receipt behavior; actual native-helper kits still take the fail-closed path.
         for d in a.kit_rtl:

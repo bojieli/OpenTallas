@@ -102,7 +102,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1405,6 +1405,56 @@ def emit_name_fns(tree):
         return None
 
 
+def _bind_type_rtl(rtl, tn):
+    """the bind's per-type RTL file for type tn (<die>p_<tn>.sv, or <tn>_part.sv for a type_split piece)"""
+    hits = [p for p in (rtl / f"{tn}_part.sv",) if p.is_file()] or sorted(rtl.glob(f"*p_{tn}.sv"))
+    return hits[0] if len(hits) == 1 else None
+
+
+def check_macroghost(plan, bind_dir, max_list=4):
+    """MACROGHOST-1122 (OPUS-FIX-S81-SVC-R9, COORD 18:0x): placed macro rows (contents with a lef, path u_bound.<inst>...)
+    with no instance in the bound the kit will build.  Checked against the per-type RTL of the bind in BIND_DIR/rtl
+    (the --elab-dir bind), so the PLAN-SRC-MACRO class (a certain place_macro failure at kit place, kit_contract
+    macro_instances) is found before any kit.  The svc memory closure creates capture / staging-fit instances
+    after bind: those rows count as bound when the closure step of their group applies to that bound
+    (s81_svc_mem_cones.predict_steps: all four T7 helpers = class port, else the structural per-helper steps), else
+    FAIL (ghost: e.g. pvq_capture rows on a narrow-pvq bound).  Any other row whose first component is no instance of
+    the bound is a WARN (another kit-RTL step may create it).  No BIND_DIR/rtl = not run."""
+    if not bind_dir or not (Path(bind_dir) / "rtl").is_dir():
+        return []
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import s81_svc_mem_cones as CONES
+    rtl = Path(bind_dir) / "rtl"
+    raw = _load(plan) or {}
+    fails, warns = [], []
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):
+        rows = [r for r in t.get("contents") or [] if r.get("lef") is not None and str(r.get("inst", "")).startswith("u_bound.")]
+        if not rows:
+            continue
+        f = _bind_type_rtl(rtl, tn)
+        if f is None:
+            continue
+        text = f.read_text(errors="replace")
+        insts = set(re.findall(r"(\w+)\s+\(", text))
+        steps = CONES.predict_steps(text)
+        ghost, other = [], []
+        for r in rows:
+            g = CONES.plan_row_group(r["inst"])
+            first = re.sub(r"(\[[^\]]*\])+$", "", r["inst"].split(".")[1])
+            if g is not None:
+                if g not in steps:
+                    ghost.append(f"{r['inst']} ({g} not closed: bound steps {','.join(sorted(steps)) or 'none'})")
+            elif first not in insts:
+                other.append(r["inst"])
+        if ghost:
+            fails.append(f"FAIL MACROGHOST {tn}: {len(ghost)} placed macro row(s) with no bound instance after the svc "
+                         f"memory closure ({f.name}); drop them or close the cone: " + "; ".join(ghost[:max_list]))
+        if other:
+            warns.append(f"WARN MACROGHOST {tn}: {len(other)} placed macro row(s) whose first component is no instance "
+                         f"of {f.name}: " + "; ".join(other[:max_list]))
+    return fails + warns
+
+
 def check_emitname(tree, plan, asbuilt=None):
     """FAIL EMITNAME (FABLE-FLOW-0230 B1: FLOW-STRIPBODY-R2 1.9 h, then 'EMIT clock landing: expected exactly one bound instance'):
     with a clock landing table, the partition instance name the landing pass looks for must equal the one bind.emit_top writes,
@@ -1466,6 +1516,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_r8stale(tree, plan, rb, asbuilt)
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
+    if "MACROGHOST" not in skip:                         # MACROGHOST-1122: placed macros with no bound instance (needs --elab-dir bind rtl)
+        findings += check_macroghost(plan, elab_dir)
     if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
         findings += check_resetpub(tree, plan, base=_base,
                                    solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")

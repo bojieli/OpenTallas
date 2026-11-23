@@ -15,11 +15,13 @@ set -euo pipefail
 [ -f "$OUT/kit_rtl.json" ] || { echo "S81_KIT_RTL_POST: no $OUT/kit_rtl.json" >&2; exit 1; }
 BM=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1])).get("bound_module") or "")' "$OUT/kit_rtl.json")
 case "$BM" in
-    s81p_svc_*) ;;
+    s81p_svc_*|svc_*_part_bound) ;;                # + J8 type_split pieces (svc_hi_dsdv_svc_rs__tN_att_part_bound; SVC-R9 11-22)
     *) exit 0 ;;                                   # not an S81 svc kit: nothing to do, the kit stays byte-identical
 esac
 # COORD 11-04 07:34 (5), S81 svc plan event (delta_svc_band_1104): every svc type closes its native memories to the
 # MEM v2 generated macros the plan places (T7 class port + idx fit, tools/die_plan/s81_svc_memory_closure.py).
+# SVC-R9 11-22 (COORD 18:0x): a bound without the full T7 helper set (narrow-pvq att variant: every J7/J8 svc bound)
+# closes per helper (stage + pmem structural cones, s81_svc_mem_cones.py); a witness difference fails the stage.
 python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT"
 # The receipt must say APPLIED, or NOT_APPLICABLE (a bound without the native helper set, e.g. a later source-level
 # macro form). A closure that left a behavioural staging memory behind must not reach GEN.
