@@ -8,3 +8,7 @@ BAD. Keep this exact attempt at WAIT-FORM.
 - The already-running old diagnostic ran read-only GRT with reported zero overflow. This is a transport and pin capture hold. No route or CTS release for the attempt.
 
 Kit `epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/items/slice_station__t30__cl6a190133/gen/slice_station__t30__cl6a190133`.
+
+## Clock assignment follow-up
+
+The real west monitor capture issue keeps t30 held. The existing exact tap assignment, applied to a copy of the actual placed ODB on E8, preserves all 12,057 FF clock ancestries and moves the root ready register to clk_t2 at 20.708 µm. The preceding ready register uses clk_t16 at 140.538 µm. The near-409 µm leg originates from reset relay u_rrl_70, so handle it under reset reach and recovery. No extra clock group is required for the root. The private J9 geometry patch moves only west monitor_0 next to its physical ready, fault and forwarded clock pins, preserving its footprint dimensions and all logic.
