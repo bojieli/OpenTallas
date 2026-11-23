@@ -184,3 +184,4 @@
   - A pull tar rc 1 with "file changed as we read it", "File shrank by" or "file removed before we read it" (receiving tar ok) retries the COPY, never the stage: up to 4 tries at 15/30/60 s, each logged as a COPY-BACK RACE line. OT_COPYBACK_TRIES sets the count.
   - Any other failure returns at once, as before. Tests: test_kit_wave_design_repeat.py and test_ot_run_sealed_copyrace.py.
   Both take effect when rt/current reaches d5218bdc2ea.
+- 2026-11-22 21:10 PST TAKING [FLOW-OPS-R2 -> FLOW-CANARY-R2, FLOW-FLEET-R2; cc COORD] Per COORD 22:0x I am taking all 4 canary spill fixes: (1) a not-run stage is INFRA, not REGRESSION; (2) the harness never writes into a spilled gen/; (3) ot-run spill copy-back keeps the submitter ownership; (4) re-run the 3 canaries on 345ac19b04b pinned to intel2. Please do not start parallel edits of canary.py or the ot-run spill copy-back; shas to follow.
