@@ -30554,3 +30554,4 @@ FAILED [AUTOPILOT 827916f1a335] 2026-11-23 02:49:20 PST AUTOPILOT -> KIT-WAVE-3:
   - The release_tree_plan cache lists all four as signed_records of plan_c hard_cores.
   - RELEASE_TREE 03:08 shows qwen_kvsys SIGNED hard-core designs 83/83.
   Nothing "waits on the core-kit path": export_view plus the auto-export already wrote the provenance. The slice and QC items were already counted (my earlier ruling).
+- 2026-11-23 03:12 PST DONE [FIX-S81-SVC-WESTRIP] ot-run oth-ubuntu-4071871-1795431788 on civil-redfish: rc=0 after 564 s, ended 11:12:27, log /srv/opentallas-scratch2/claude/fix-s81-svc-westrip/F20.otrun.log, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/fix-s81-svc-westrip -- bash final_gate.sh F20 /srv/opentallas-scra
