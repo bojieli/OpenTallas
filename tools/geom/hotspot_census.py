@@ -115,6 +115,8 @@ def clusters(markers, min_ov=MIN_OV, min_frac=MIN_FRAC, gap=GAP):
             c["ov"] += m["ov"]; c["cap"] += m["cap"]; c["use"] += m["use"]
             if m["layer"]:
                 c["layers"][m["layer"]] += m["ov"]
+            for ln_, v_ in (m.get("layers") or {}).items():
+                c["layers"][ln_] += v_
             for n in m["nets"]:
                 c["nets"][n] += 1
         tot = sum(c["ov"] for c in cells.values())
@@ -428,12 +430,28 @@ def analyze(a):
     g = load_geom(a.geom) if a.geom and os.path.isfile(a.geom) else None
     if g:
         _geom_index(g)
-    markers = []
+    markers, rpt = [], []
     for p in a.cong or []:
         if os.path.isfile(p):
-            markers += parse_cong(p)
-    capped = len(markers) >= 20000
+            rpt += parse_cong(p)
+    capped = len(rpt) >= 20000
+    gsrc = None
+    if getattr(a, "gcells", None) and os.path.isfile(a.gcells):
+        markers, gsrc = load_gcells(a.gcells)
+        capped = False
+    else:
+        markers = rpt
     cl, totals = clusters(markers, a.min_ov, a.min_frac, a.gap)
+    if gsrc is not None:
+        for d in totals:
+            totals[d]["hot90_gcells"] = gsrc.get("hot90", {}).get(d)
+        for c in cl:              # net names come from the report markers inside the cluster
+            nets = collections.Counter()
+            b = c["bbox"]
+            for m in rpt:
+                if m["d"] == c["d"] and _in(b, (m["x0"] + m["x1"]) / 2, (m["y0"] + m["y1"]) / 2):
+                    nets.update(m["nets"])
+            c["top_hier"] = hier_counts(nets).most_common(4)
     for c in cl:
         c["ctx"] = context(c, g)
         c["cause"], c["also"] = cluster_cause(c, c["ctx"])
@@ -442,7 +460,8 @@ def analyze(a):
         if os.path.isfile(p):
             paths += parse_sta(p)
     tc = timing_classes(paths, a.top, a.bound_ps)
-    res = dict(name=a.name, cong=a.cong, sta=a.sta, geom=a.geom, totals=totals, markers=len(markers), capped=capped,
+    res = dict(name=a.name, cong=a.cong, sta=a.sta, geom=a.geom, gcells=getattr(a, "gcells", None), totals=totals,
+               markers=len(markers), capped=capped,
                die=(g["die"] if g else None), die_density=(g["_die_density"] if g else None),
                clusters=[{k: v for k, v in c.items() if k != "pts"} for c in cl], timing=tc,
                src=getattr(a, "src", None))
@@ -532,6 +551,185 @@ def render(a, g, cl, totals, tc, markers):
     plt.close(fig)
 
 
+# ----------------------------------------------------------------------------------------------- odb gcell map (v2)
+def extract_gcells(odb_path, out):
+    """Run under `openroad -python`: full GRT gcell map from the odb dbGCellGrid (no 20000-marker cap).
+    Writes OUT json: {die, gcell_um, totals{H,V}, hot90{H,V}, markers:[[d,x0,y0,x1,y1,cap,use,ov,{layer:over}]...]}."""
+    import array
+    import odb  # noqa: F401 - only inside OpenROAD
+    db = odb.dbDatabase.create()
+    odb.read_db(db, odb_path)
+    blk = db.getChip().getBlock()
+    g = blk.getGCellGrid()
+    res = dict(odb=odb_path, markers=[], totals={}, hot90={})
+    if g is None:
+        res["error"] = "no gcell grid in odb"
+        json.dump(res, open(out, "w"))
+        return res
+    u = float(blk.getDbUnitsPerMicron())
+    die = blk.getDieArea()
+    xs = list(g.getGridX()) + [die.xMax()]
+    ys = list(g.getGridY()) + [die.yMax()]
+    nx, ny = len(xs) - 1, len(ys) - 1
+    res["die"] = (die.xMin() / u, die.yMin() / u, die.xMax() / u, die.yMax() / u)
+    res["grid"] = (nx, ny)
+    acc = {d: (array.array("d", bytes(8 * nx * ny)), array.array("d", bytes(8 * nx * ny))) for d in "HV"}
+    lover = collections.defaultdict(dict)
+    for l in db.getTech().getLayers():
+        if l.getType() != "ROUTING" or l.getRoutingLevel() < 2:
+            continue
+        d = "H" if l.getDirection() == "HORIZONTAL" else "V"
+        cap_a, use_a = acc[d]
+        cf, uf, ln = g.getCapacity, g.getUsage, l.getName()
+        for ix in range(nx):
+            base = ix * ny
+            for iy in range(ny):
+                c = cf(l, ix, iy)
+                v = uf(l, ix, iy)
+                if c == 0 and v == 0:
+                    continue
+                cap_a[base + iy] += c
+                use_a[base + iy] += v
+                if v > c:
+                    lover[(d, ix, iy)][ln] = round(v - c, 2)
+    for d in "HV":
+        cap_a, use_a = acc[d]
+        tot = h90 = 0
+        for ix in range(nx):
+            base = ix * ny
+            for iy in range(ny):
+                c, v = cap_a[base + iy], use_a[base + iy]
+                if c > 0 and v >= 0.9 * c:
+                    h90 += 1
+                if v > c:
+                    tot += v - c
+                    res["markers"].append([d, xs[ix] / u, ys[iy] / u, xs[ix + 1] / u, ys[iy + 1] / u, round(c, 2),
+                                           round(v, 2), round(v - c, 2),
+                                           lover.get((d, ix, iy), {})])
+        res["totals"][d] = round(tot, 1)
+        res["hot90"][d] = h90
+    json.dump(res, open(out, "w"))
+    print(f"HOTSPOT_GCELLS {out} grid {nx}x{ny} H {res['totals']['H']} V {res['totals']['V']} markers {len(res['markers'])}")
+    return res
+
+
+def load_gcells(path):
+    j = json.load(open(path))
+    ms = [dict(d=m[0], x0=m[1], y0=m[2], x1=m[3], y1=m[4], cap=m[5], use=m[6], ov=m[7], layer=None, layers=m[8], nets=[])
+          for m in j.get("markers", [])]
+    return ms, j
+
+
+# ----------------------------------------------------------------------------------------------- gaps + PROBE-PASS check
+# cause -> keywords a covering structural row (VIS-COVERAGE cause_class + structural_row text) must name
+COVER = {
+    "MACRO-CHANNEL": r"CHAN|CHANNEL|JUNCTION|LANECH|GAP|XGA|ARRAY|MACRO|FLOOR|GROW|OUTLINE|SHAPE|SPREAD|CORRIDOR|STRIP|WALL|SLIT",
+    "OVER-MACRO": r"CHAN|JUNCTION|LANECH|MACRO|OBS|OVER-?CORE|FLOOR|GROW|OUTLINE|SHAPE|XGA|ARRAY|CORRIDOR|WALL|SLIT|M[6-9]",
+    "MACRO-PIN-FACE": r"PIN-?FACE|PINFACE|CHAN|MACRO|JUNCTION|LANECH|XGA|ARRAY|SLIT",
+    "BLOCKAGE-RESERVED": r"RESERV|BLOCKAGE|KEEPOUT|SITE|CLOCK-?SITE|STRIP|BAND|TAP",
+    "PIN-ROW": r"PIN|EDGE|STRIP|WINDOW|LANDING|FACE",
+    "STATION-CLUSTER": r"STATION|STN|SITE|RELAY|BANK|HST|SPREAD|PAD",
+    "CLOCK-TAP": r"TAP|CLOCK|CTS|SPINE|TRUNK|GRID",
+    "LOCAL-DENSITY": r"DENS|SPREAD|GROW|OUTLINE|SHAPE|JUNCTION|LANECH|CHAN|BLOB|STACK|FLOOR",
+    "THIN-ASPECT": r"ASPECT|SHAPE|GROW|OUTLINE",
+    "GLOBAL-DEMAND": r"GROW|OUTLINE|SHAPE|DENS|LAYER|SPLIT",
+    "CLOCK-SKEW": r"TAP|CLOCK|CTS|SKEW|SPINE|TRUNK|LATENCY|BALANCE",
+    "HOLD-SKEW": r"TAP|CLOCK|CTS|SKEW|HOLD|LOCKUP|SHARED|BALANCE",
+    "HOLD-SHORT-PATH": r"HOLD|LOCKUP|ECO|PAD",
+    "RESET-ASYNC": r"RESET|RST|RELAY",
+    "IO-BOUNDARY": r"PIN|IO|BOUNDARY|LAND|VCLK|PAD|FIFO|FACE",
+    "MACRO-IO": r"MACRO|VIEW|ETM|LATENCY|PIN",
+    "REACH": r"STATION|STN|REACH|RELAY|HOP|STAGE|PIPE|CYCLE",
+    "LOGIC-DEPTH": r"STAGE|PIPE|CYCLE|DEPTH|FOLD|RTL|RETIME",
+}
+
+
+def base_type(t):
+    t = t[3:] if t.startswith("ot_") else t
+    return re.sub(r"(__(cl|pv)[0-9a-f]{6,})+$", "", t)
+
+
+def census_items(res, setup_tns=-42.0):
+    """census.json -> items needing a row: every cluster; setup classes < -42; hold classes < 0 (COORD fe8a2a5 (1)-(3))."""
+    items = []
+    for c in res.get("clusters", []):
+        b = c["bbox"]
+        items.append(dict(item=f'C{c["id"]}-{c["d"]} x{b[0]:.0f}-{b[2]:.0f} y{b[1]:.0f}-{b[3]:.0f}',
+                          size=f'{c["ov"]} ovfl {100*c["frac"]:.1f}%', cause=c["cause"], also=c.get("also", [])))
+    for t in res.get("timing", []):
+        if (t["kind"] == "setup" and t["worst"] < setup_tns) or (t["kind"] == "hold" and t["worst"] < 0):
+            items.append(dict(item=f'{t["kind"]} {t["start_grp"]}->{t["end_grp"]} [{t["path_group"]}]',
+                              size=f'{t["count"]}p worst {t["worst"]} skew {t["skew"]}', cause=t["cause"], also=[]))
+    return items
+
+
+def load_coverage(path):
+    rows = {}
+    with open(path, errors="replace") as f:
+        for ln in f:
+            t = ln.rstrip("\n").split("\t")
+            if ln.startswith("#") or len(t) < 9 or t[0] == "die":
+                continue
+            rows[base_type(t[1])] = dict(die=t[0], type=t[1], family=t[2], vis_lane=t[3], cause_class=t[6],
+                                         row=t[7], status=t[8])
+    return rows
+
+
+def covering(item, cov):
+    if not cov or cov["row"] in ("", "-", "PENDING", "NONE") or cov["row"].startswith("NONE-NEEDED"):
+        return "NONE"
+    txt = (cov["cause_class"] + " " + cov["row"]).upper()
+    for cause in [item["cause"]] + list(item.get("also") or []):
+        if re.search(COVER.get(cause, r"$^"), txt):
+            return cov["row"].split()[0][:60]
+    return "NONE"
+
+
+def gaps(a):
+    cov = load_coverage(a.coverage)
+    owners = {}
+    if a.owners and os.path.isfile(a.owners):
+        for ln in open(a.owners, errors="replace"):
+            t = ln.rstrip("\n").split("\t")
+            if len(t) > 3 and t[0] in ("S81", "HEAD", "QC", "KV"):
+                owners[base_type(t[1])] = t[3].split()[0]
+    out = ["die\ttype\tfamily\titem\tsize\tcause\tcovering_row\towner_lane\tcensus"]
+    n = collections.Counter()
+    for cj in sorted(a.census):
+        try:
+            res = json.load(open(cj))
+        except (OSError, ValueError):
+            continue
+        die, _, typ = (res.get("name") or "").partition("__")
+        bt = base_type(typ)
+        cv = cov.get(bt)
+        fam = cv["family"] if cv else "?"
+        owner = (cv["vis_lane"] if cv else None) or owners.get(bt, "UNOWNED")
+        for it in census_items(res):
+            cr = covering(it, cv)
+            n["NONE" if cr == "NONE" else "covered"] += 1
+            out.append("\t".join([die, typ, fam, it["item"], it["size"], it["cause"], cr, owner, cj]))
+    with open(a.out, "w") as f:
+        f.write("\n".join(out) + "\n")
+    print(f"HOTSPOT_GAPS {a.out} items {sum(n.values())} covered {n['covered']} NONE {n['NONE']}")
+    return out
+
+
+def check(a):
+    """PROBE-PASS census gate: exit 0 only when a census for TYPE exists and every item has a covering row."""
+    rows = [ln.rstrip("\n").split("\t") for ln in open(a.gaps, errors="replace")][1:]
+    mine = [r for r in rows if len(r) > 7 and base_type(r[1]) == base_type(a.type)]
+    if not mine and not a.allow_clean:
+        print(f"HOTSPOT_CHECK {a.type} NO-CENSUS (no HOTSPOT-GAPS rows; a clean census writes none: pass --allow-clean "
+              f"with its census.json)")
+        return 2
+    none = [r for r in mine if r[6] == "NONE"]
+    for r in none:
+        print(f"HOTSPOT_CHECK {a.type} UNCOVERED {r[3]} {r[4]} {r[5]}")
+    print(f"HOTSPOT_CHECK {a.type} {'PASS' if not none else 'FAIL'} items {len(mine)} uncovered {len(none)}")
+    return 0 if not none else 1
+
+
 # ----------------------------------------------------------------------------------------------- kit discovery + run
 STAGE_ODBS = ("6_final.odb", "5_3_fillcell.odb", "5_2_route.odb", "5_1_grt.odb", "5_1_grt-failed.odb", "5_1_grt.prerepair.odb",
               "4_cts.odb", "4_1_cts.odb", "3_place.odb", "3_5_place_dp.odb", "3_4_place_resized.odb", "3_3_place_gp.odb",
@@ -570,10 +768,22 @@ def kit_sources(kit):
     return src
 
 
+def _docker(a, odb_dir, inner, extra=()):
+    dk = ["docker"] if subprocess.call(["docker", "ps"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0 \
+        else ["sudo", "docker"]
+    cmd = dk + ["run", "--rm", "--cpus", "2", "--memory", f"{a.mem}g", "--memory-swap", f"{a.mem}g",
+                "-v", f"{odb_dir}:/odb:ro", "-v", f"{os.path.abspath(a.out)}:/out", *extra,
+                "-e", "OT_GEOM_OUT=/out/geom.tsv", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}",
+                "-w", "/out", a.docker_image, "bash", "-lc",
+                f"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; {inner}; rc=$?; chown -R $HUID:$HGID /out; exit $rc"]
+    return subprocess.call(cmd)
+
+
 def run_kit(a):
     src = kit_sources(a.kit)
     os.makedirs(a.out, exist_ok=True)
     geom = a.geom
+    odb_dir = os.path.dirname(src["odb"]) if src["odb"] else None
     if not geom and src["odb"]:
         geom = os.path.join(a.out, "geom.tsv")
         if not os.path.isfile(geom) or os.path.getsize(geom) == 0:
@@ -583,19 +793,22 @@ def run_kit(a):
             shutil.copy(dump, os.path.join(a.out, "geom_dump.tcl"))
             with open(os.path.join(a.out, "dump.tcl"), "w") as f:
                 f.write(f"read_db /odb/{os.path.basename(src['odb'])}\nsource /out/geom_dump.tcl\n")
-            dk = ["docker"] if subprocess.call(["docker", "ps"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0 \
-                else ["sudo", "docker"]
-            cmd = dk + ["run", "--rm", "--cpus", "2", "--memory", f"{a.mem}g", "--memory-swap", f"{a.mem}g",
-                        "-v", f"{os.path.dirname(src['odb'])}:/odb:ro", "-v", f"{os.path.abspath(a.out)}:/out",
-                        "-e", "OT_GEOM_OUT=/out/geom.tsv", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}",
-                        "-w", "/out", a.docker_image, "bash", "-lc",
-                        "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /out/dump.tcl > /out/dump.log 2>&1;"
-                        " rc=$?; chown -R $HUID:$HGID /out; exit $rc"]
-            rc = subprocess.call(cmd)
+            rc = _docker(a, odb_dir, "openroad -exit /out/dump.tcl > /out/dump.log 2>&1")
             if rc != 0:
                 print(f"HOTSPOT_CENSUS geom dump failed rc {rc} ({src['odb']}); continuing without geometry", file=sys.stderr)
                 geom = None
-    a.geom, a.cong, a.sta = geom, (a.cong or src["cong"]), (a.sta or src["sta"])
+    gc = a.gcells
+    if not gc and not a.no_gcells and src["odb"] and re.match(r"(5_|6_)", src["stage"] or ""):
+        gc = os.path.join(a.out, "gcells.json")
+        if not os.path.isfile(gc) or os.path.getsize(gc) == 0:
+            tool = os.path.abspath(__file__)
+            rc = _docker(a, odb_dir, f"openroad -python -exit /tool/{os.path.basename(tool)} extract-gcells "
+                                     f"--odb /odb/{os.path.basename(src['odb'])} --out /out/gcells.json > /out/gcells.log 2>&1",
+                         extra=("-v", f"{os.path.dirname(tool)}:/tool:ro"))
+            if rc != 0 or not os.path.isfile(gc):
+                print(f"HOTSPOT_CENSUS gcell map failed rc {rc}; falling back to the congestion report", file=sys.stderr)
+                gc = None
+    a.geom, a.cong, a.sta, a.gcells = geom, (a.cong or src["cong"]), (a.sta or src["sta"]), gc
     a.bound_ps = a.bound_ps or src["bound_ps"]
     a.src = src
     return analyze(a)
@@ -616,14 +829,32 @@ def main(argv=None):
         s.add_argument("--min-frac", type=float, default=MIN_FRAC)
         s.add_argument("--gap", type=int, default=GAP)
         s.add_argument("--top", type=int, default=50)
+        s.add_argument("--gcells", help="extract-gcells json (full map; replaces the capped congestion report)")
         if n == "run":
+            s.add_argument("--no-gcells", action="store_true", help="skip the odb gcell map (report markers only)")
             s.add_argument("--kit", required=True)
             s.add_argument("--geom-dump")
             s.add_argument("--mem", type=int, default=24)
             s.add_argument("--docker-image", default="openroad/orfs:asap7lock")
+    s = sub.add_parser("extract-gcells", help="inside `openroad -python`: full gcell map of a GRT odb")
+    s.add_argument("--odb", required=True); s.add_argument("--out", required=True)
+    s = sub.add_parser("gaps", help="census.json files + VIS-COVERAGE.tsv -> HOTSPOT-GAPS.tsv")
+    s.add_argument("--coverage", required=True); s.add_argument("--owners"); s.add_argument("--out", required=True)
+    s.add_argument("census", nargs="+")
+    s = sub.add_parser("check", help="PROBE-PASS census gate for one type (exit 0 = every item covered)")
+    s.add_argument("--gaps", required=True); s.add_argument("--type", required=True)
+    s.add_argument("--allow-clean", action="store_true")
     a = ap.parse_args(argv)
+    if a.cmd == "extract-gcells":
+        return extract_gcells(a.odb, a.out)
+    if a.cmd == "gaps":
+        return gaps(a)
+    if a.cmd == "check":
+        return check(a)
     return run_kit(a) if a.cmd == "run" else analyze(a)
 
 
 if __name__ == "__main__":
-    main()
+    r = main()
+    if isinstance(r, int) and not isinstance(r, bool):
+        sys.exit(r)

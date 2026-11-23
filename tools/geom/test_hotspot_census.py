@@ -134,3 +134,34 @@ def test_kit_sources_picks_latest_nonempty(tmp_path):
     (tmp_path / "core_latency.json").write_text('{"target_ps": 250.0}')
     s = HC.kit_sources(str(tmp_path))
     assert s["stage"] == "4_cts.odb" and s["sta"][0].endswith("4_cts_post_hook.rpt") and s["bound_ps"] == 250.0
+
+
+def test_gaps_and_probe_pass_check(tmp_path):
+    cov = tmp_path / "VIS-COVERAGE.tsv"
+    cov.write_text("# hdr\ndie\ttype\tfamily\tvis_lane\trender_paths\tverdict\tcause_class\tstructural_row\trow_status\tupdated\n"
+                   "S81\ts81sl_leaf__t44\tleaf\tLEAF-ROUTE-CBC\t-\tv\tLANE-JUNCTION\tJ9-LEAF-LANECH+EDGESTRIP\tDRAFT\tx\n")
+    res = dict(name="s81__s81sl_leaf__t44__clf4ea6d4b",
+               clusters=[dict(id=1, d="V", ov=900, frac=0.9, bbox=(1, 2, 3, 4), cause="MACRO-CHANNEL", also=[])],
+               timing=[dict(kind="hold", start_grp="a", end_grp="b", path_group="clk", count=3, worst=-70.0, skew=100.0,
+                            cause="HOLD-SKEW"),
+                       dict(kind="setup", start_grp="a", end_grp="b", path_group="clk", count=1, worst=-20.0, skew=0.0,
+                            cause="REACH")])           # setup -20 is above -42: not an item
+    cj = tmp_path / "census.json"
+    cj.write_text(json.dumps(res))
+    gp = tmp_path / "GAPS.tsv"
+    out = HC.main(["gaps", "--coverage", str(cov), "--out", str(gp), str(cj)])
+    rows = [r.split("\t") for r in out[1:]]
+    assert len(rows) == 2
+    assert rows[0][6] == "J9-LEAF-LANECH+EDGESTRIP" and rows[0][7] == "LEAF-ROUTE-CBC"   # channel cluster covered
+    assert rows[1][6] == "NONE" and rows[1][5] == "HOLD-SKEW"                            # tap skew not covered
+    assert HC.main(["check", "--gaps", str(gp), "--type", "s81sl_leaf__t44"]) == 1
+    assert HC.main(["check", "--gaps", str(gp), "--type", "s81sl_leaf__t99"]) == 2
+
+
+def test_load_gcells_layer_mix(tmp_path):
+    g = tmp_path / "gcells.json"
+    g.write_text(json.dumps(dict(markers=[["H", 0, 0, 0.57, 0.57, 10, 70, 60, {"M4": 40, "M6": 20}]],
+                                 totals={"H": 60, "V": 0}, hot90={"H": 5, "V": 0})))
+    ms, _ = HC.load_gcells(str(g))
+    cl, tot = HC.clusters(ms)
+    assert tot["H"]["overflow"] == 60 and cl[0]["layers"] == {"M4": 40, "M6": 20}
