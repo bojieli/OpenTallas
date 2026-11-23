@@ -15,11 +15,9 @@ Client logs intel2 ~/tmp/ffkvpv/. Watchers post under the OLD lane name (FABLE-F
   watch_v12.sh. Spec .../qwen_kvsys_kv3_pv_v12_1122220711. DO NOT TOUCH tree2 while it runs.
 
 ## Started by me
-- K4 lever (parallel to K2): v6n + 128 census taps (w/v6ntaps/plan_kv3_pv_v6n_new.json, tap_split PARTIAL: worst 1,251, 5 over).
-  intel2 ~/tmp/ffkvpv/k4_launch.sh: ot-tree-fork tree -> tree4 (fork_tree4.log), then ot-run plan job w/k4_chain.sh v6n7t1
-  (landing_remap -> resite_rebind.sh tree4: G0 + strict bind + LATCHECK; gates w/gates/v6n7t1*). Log k4_launch.log.
-  On clean bind: private-spec qwen_kvsys kv3_pv_v6n --tree <L>/tree4 --plan <tree4 plan> --lane OPUS-FIX-KV-PV-SINKSPREAD-R2
-  --host epyc8 --goal route --rt 0890cc9405b7 ; run-item ; ot-wait --durable.
+- K4 lever WITHDRAWN 23:1x (COORD disk URGENT: epyc8 99 GB free). tree4 fork was 156 GB. Unit oth-ubuntu-602244-1795417489 cancelled.
+  ot-delete: clone (7) done, tree3 (50) running, tree4 (156) refused by the 07:00Z guard list (captured while chain live): retry loop
+  epyc8 <lane>/tmp/del4.sh (log tmp/del_tree4.log, DEL4_END line). Census taps (w/v6ntaps) fold into D30 row B. New forks: intel1/epyc7 only.
 
 ## Holding / owed
 - Row B (14-type split) = D30. When KV-PLAN-R6 posts the D29 SEAL tree: ot-tree-fork it, base as plan_of_record.base_d28 form,
@@ -32,3 +30,7 @@ Client logs intel2 ~/tmp/ffkvpv/. Watchers post under the OLD lane name (FABLE-F
 
 ## Log
 - 22:35 RESUMED posted. K4 launched.
+- 23:1x VIS-KV (agent a87a6c2a4a7f2997b) report on K2 geom: (A) astk_W pad delay line 87k flops = x510-545 column -> D30: move
+  i_astk_W_p_2 E window y560-790, fork (520,700), tails in channels; FIFO (ot_meso_fifo) form raised with KV-PLAN-R6. (B) cut legs
+  need stations o_pvw__u_TNQN_N_rN_b_d2_p +3, o_pvw__u_ctl_cmd_p +4 (regs_um in VIS-KV msg; scripts epyc8 vis-kv/tmp/pv/). (C) cut bus
+  widths from bind (4,028 dead/over-wide E pins). All three -> D30 row B. LOOK-BEFORE-LAUNCH: no pv relaunch w/o placed probe PROBE-PASS.
