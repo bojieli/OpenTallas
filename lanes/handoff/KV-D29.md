@@ -20,3 +20,10 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - CTS post-hook TT: setup -57.69 (cland_fstart_in_ft4_i port -> ft4 ring s_d; seq fstart -19, ft0 -5.7). Hold -106 = arst_n/start_i (CTL class, KV-CTLPORT wave key closes it). x15 slg dch[2] y[16] = +13.20 MET.
 - ROW intel1 fam-kv-hroot-r1/d29geom/ROWS_KV-D29-HROOT-GEOM.py sha12 4ca2bc6de1a3: (1) reset.leaf_clusters (11 groups, all 21 buses); (2) 4 E-ring strap groups -> E island x1896.48; (3) slg band re-centred (x15, offered to FABLE-OPEN-KV per COORD). Plan 810534ae4548 on 56e157569c57.
 - Gate: chain_geom (ot-run intel1, client intel2 ~/tmp/kvd29b/chain_geom.log): fork_d29g, launch_geom rt af3f7514266b, PRE, G0, strict bind, LATCHECK, outputs d29geom/{pre.log,g0gate,bindgate*}.
+
+## D-PC (fork D, 06:45 PST)
+- COORD 06:2x: rc118/119/121 belong to FABLE-OPEN-KV (my PCSLIT draft was handed over in post dec0fda); D keeps rc120 AFFAULT and rc122 PCV1BANK. Deliverables are in epyc8 kv-plan-r6/d29/rows_in/D (README, SHA256SUMS).
+- AFFAULT b43b26a95edb: adaptive column (960 -> 1028 -> W-76.8/W-8.8, K grows while hop > 300). On the base layout its stations equal the gated 0a3d731d29f4.
+- PCV1BANK2 8a715f0b1bc9 (POSTROW, replaces v1 0d4e9cf6034e) adds per-clone plan-derived windows: 22 moves; the check .check.py d53c7a6593ea gives 0.
+- Gate on epyc9 fable-unc-kv/fork_d28_aff (base 44c3 + both rows, plan 5b9a55ae26b8): PRE 0; strict bind/LAT/BPC/R8 then G0 running (ot-run unit oth-ubuntu-1202015-1795444510, client intel2 ~/tmp/kvd29d/chain_d.otrun.log, out epyc9 kv-d29-d/gate). ETA ~08:15.
+- Cleanup: partial fork epyc9 kv-d29-d/tree.forking-688235 DELETED (ot-delete). Scratch epyc8/epyc9 /srv/opentallas-scratch2/claude/kv-d29-d (tmp plans ~70 MB each).
