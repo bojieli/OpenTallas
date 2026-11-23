@@ -3894,3 +3894,5 @@ CODEX: 2026-11-23 09:28 PST F5 S8 true command media native replay passes all ei
 CODEX: 09:54 PST Shared C source landed c7f9f4bce39, native T→CALR all 240736 actions pass; identified real E/O61 cold scheduling and HBM join gates. HEAD west three-pin escape corrects isolated NDR, J9 exact stage retry and KV/QC active strict; details in CODEX-LOG.
 
 CODEX: 10:15 PST Native Qwen cold transport and K root +832 pass, fixed 288 link starts; explicit O61/RoPE source still missing sealed K. Expanded E native arithmetic and actual FE/FW binding recovered, exact capture holes and rebook testing. HEAD clock legal successor and J9 final exact tap packet moving. Details CODEX-LOG.
+
+CODEX: 10:36 PST J9 10:30 held, final exact hash4662b734580b gate live. Six SVC and three SerDes CLAND geometry remedies priced, three fW0 topology arcs remain. Qwen O61+205 exact, two later E timing options native through CALR/T/L and C/K slots; full source/owner binding still gates. Daily lane notes and CODEX-LOG current.
