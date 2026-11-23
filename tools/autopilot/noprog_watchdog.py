@@ -381,7 +381,9 @@ UNSIGNABLE_SETUP_PS = -300.0
 UNSIGNABLE_MIN_AGE_H = 3.0
 UNSIGNABLE_REPORT_ONLY_S = 3600       # legacy (pre FLOW-OPS-0900); the notice flow below replaced the report hour
 GATE_SETUP_PS = -42.0
-UNSIGNABLE_GRACE_S = 1800             # FLOW-OPS-0900 (owner 11-21): NOTICE to the owning lane, cancel 30 min later unless the lane posted KEEP <unit>
+# FLOW-OPS-0900 (owner 11-21) gave the owning lane a 30 min NOTICE window; LAUNCH-GUARD 11-23 (COORD FIX 2: "on its first pass it cancels"): the cancel comes on the
+# first pass that lists the job, together with the post to the owner; a KEEP <unit> post made before still spares it.  NOPROG_UNSIGNABLE_GRACE_S=1800 restores the window.
+UNSIGNABLE_GRACE_S = int(os.environ.get("NOPROG_UNSIGNABLE_GRACE_S", "0"))
 UNSIGNABLE_FORGET_S = 6 * 3600        # a unit not seen for 6 h is forgotten; a short gap in the list keeps its first-listed time
 PRIVATE_RE = re.compile(r"/private/")
 HOLD_ONLY_RE = re.compile(r"(?i)(?:^|[/_\-.])hold(?:[_-]?only|[_-]?fix|[_-]?eco|[_-]?gate)?(?:$|[/_\-.0-9])")
@@ -525,8 +527,10 @@ def unsignable_exempt(ident, prio, kind):
         return "LEC"
     if ECO_RE.search(ident):
         return "ECO"
-    if PROOF_RE.search(ident) or PRIVATE_RE.search(ident):
-        return "proof / private kit"
+    if PROOF_RE.search(ident):
+        return "proof"
+    # LAUNCH-GUARD 11-23 (COORD FIX 2): a private-spec kit is a lane's representative, not a proof: it is judged like any kit (hub post b556fc6:
+    # col_h9_r0_p3 private kit ran 72,008 s and died RSZ-0060; the old 'proof / private kit' exemption meant no private kit was ever cancelled)
     if HOLD_ONLY_RE.search(ident):
         return "hold-only job"
     if is_hbm(ident):
@@ -557,6 +561,62 @@ def grt_unsignable_evidence(row):
     if row.get("verdict") == GRT_LABEL and "2 consecutive rounds" in why:
         return f"GRT {why}; {row.get('detail') or ''}; job age {row['age_h']} h"
     return None
+
+
+# ---------------------------------------------------------------- ECO / repair FLAT (LAUNCH-GUARD 11-23, COORD FIX 2; owner rule 11-20 "flat repair")
+# Post 8f2ce5a: a late-ECO loop ran 80,509 s (3 iterations) with FF hold flat at -160 ps (-161.47 -> -160.51 -> -160.57); ECOs were exempt from every
+# judgement.  An ECO that no longer improves cannot sign: after >= 3 h, when its last two sign-off measurements gained less than ECO_MIN_GAIN (2 %) of the
+# deficit on every failing gate (TT setup < -42 ps, FF hold < 0 ps), it is UNSIGNABLE (class ECO-FLAT).  An ECO still gaining is never touched.
+ECO_SIGNOFF_RE = re.compile(r"TT setup (-?\d+(?:\.\d+)?)\s*\|\s*FF hold (-?\d+(?:\.\d+)?)")
+ECO_MIN_GAIN = 0.02
+ECO_LOG_GLOBS = ("ot-run.log", "eco/*.log", "eco_loop.log", "*.live.log")
+
+
+def eco_root(path):
+    """the ECO job dir of a kit / work path: the prefix before '/eco/' or an 'eco_*' dir component"""
+    p = str(path or "")
+    if "/eco/" in p:
+        return p.split("/eco/")[0]
+    m = re.search(r"^(.*?/eco_[^/]+)", p)
+    return m.group(1) if m else ""
+
+
+def eco_series(text):
+    """-> [(tt_setup, ff_hold)] of every SIGNOFF measurement line, in order"""
+    return [(float(a), float(b)) for a, b in ECO_SIGNOFF_RE.findall(text or "")]
+
+
+def eco_flat_evidence(series, age_h, min_gain=ECO_MIN_GAIN):
+    """-> evidence text when the last two measurements show no >= min_gain improvement of any failing gate's deficit, else None.  Pure."""
+    if age_h <= UNSIGNABLE_MIN_AGE_H or len(series) < 2:
+        return None
+    (t0, f0), (t1, f1) = series[-2], series[-1]
+    fails = []
+    if t1 < GATE_SETUP_PS:
+        fails.append(("TT setup", t0, t1, GATE_SETUP_PS))
+    if f1 < 0:
+        fails.append(("FF hold", f0, f1, 0.0))
+    if not fails:
+        return None                                    # passing gates: the ECO is about to sign
+    for name, a, b, gate in fails:
+        deficit = max(gate - a, 1e-9)
+        if (b - a) >= min_gain * deficit:
+            return None                                # still improving on this gate
+    return ("ECO-FLAT: " + "; ".join(f"{n} {a:.2f} -> {b:.2f} ps (gate {g:+.0f})" for n, a, b, g in fails)
+            + f" over the last 2 of {len(series)} sign-off measurements (< {int(min_gain * 100)} % of the deficit); job age {age_h} h > {UNSIGNABLE_MIN_AGE_H:g} h")
+
+
+def eco_measurements(kit, work):
+    root = eco_root(kit) or eco_root(work)
+    if not root:
+        return []
+    out = []
+    for g in ECO_LOG_GLOBS:
+        for p in sorted(glob.glob(os.path.join(root, g))):
+            out += eco_series(read_text(p))
+        if out:
+            break
+    return out
 
 
 # ---------------------------------------------------------------- GRT-STUCK (FLOW-FLEET-R1 11-22, FABLE-FLOW-2200 H3, owner rule 11-20)
@@ -1112,8 +1172,10 @@ def scan(now=None, act=False, probe_s=4):
                 row["setup_ps"] = ms[0]
             if not ev and lane and grt_flat_exempt(dict(row, ident=ident)).startswith("OT_LANE"):
                 ev = grt_unsignable_evidence(dict(row, ident=ident, prio=prio))      # wave kits: grt_flat_pass cancels them through cancel-rows
+            if not ev and ECO_RE.search(ident) and not PROOF_RE.search(ident) and not HOLD_ONLY_RE.search(ident) and prio not in ("plan", "proof") and not is_hbm(ident):
+                ev = eco_flat_evidence(eco_measurements(kit, work), row["age_h"])     # LAUNCH-GUARD 11-23: an ECO that stopped improving
             if ev and row["verdict"] not in BAD_VERDICTS:
-                row.update(verdict=UNSIGNABLE, why=ev, action="UNSIGNABLE (hub: NOTICE to the owning lane, cancel 30 min later unless KEEP)")
+                row.update(verdict=UNSIGNABLE, why=ev, action="UNSIGNABLE (hub: ot-run --cancel --reason design on the first pass unless KEEP)")
         rows.append(row)
     time.sleep(max(0.0, probe_s - (time.time() - t_probe)))
     t1 = time.time()
@@ -1299,9 +1361,12 @@ def hub(now=None, post=True):
     if udone:
         files.append("lanes/CANCEL-UNSIGNABLE-1120.tsv")
     gmode, gcand, gdone = grt_flat_pass(rows, seen, now, post=post)
+    ddone = design_fail_pass(rows, seen, now, post=post)
     grt_label_notice_pass(rows, seen, now, post=post)
     if gdone:
         files.append("lanes/CANCEL-GRT-FLAT.tsv")
+    if ddone:
+        files.append("lanes/CANCEL-DESIGN-FAIL.tsv")
     if qlines:
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
             f.write("\n".join(qlines) + "\n")
@@ -1323,7 +1388,7 @@ def hub(now=None, post=True):
         files.append(action_file)
     if post:
         result = subprocess.run(["bash", os.path.join(COORD, "bin/coord-commit.sh"),
-                                 f"NOPROG-WATCHDOG {stamp}: {len(flagged)} flagged, {len(new_actions)} cancelled", *files],
+                                 f"NOPROG-WATCHDOG {stamp}: {len(flagged)} flagged, {len(new_actions)} no-progress + {len(udone)} unsignable + {len(gdone)} grt-flat + {len(ddone)} design-fail cancelled", *files],
                                 capture_output=True, text=True, timeout=600)
         if action_rows:
             pushed = subprocess.run(["git", "show", f"origin/coord/state:{action_file}"], cwd=COORD,
@@ -1355,7 +1420,7 @@ def unsignable_mode(seen=None, now=None):
 def ot_run_cancel(unit, run=subprocess.run):
     """the only cancel path: ot-run --cancel <exact unit>.  -> (rc, last output line)"""
     exe = os.environ.get("OT_RUN_BIN") or os.path.expanduser("~/.local/bin/ot-run")
-    r = run([exe, "--cancel", unit], capture_output=True, text=True, timeout=900)
+    r = run([exe, "--cancel", unit, "--reason", "design"], capture_output=True, text=True, timeout=900)      # LAUNCH-GUARD 11-23: every watchdog cancel here is a design verdict
     lines = ((r.stdout or "") + (r.stderr or "")).strip().splitlines()
     return r.returncode, (lines[-1][:200] if lines else "no output")
 
@@ -1520,18 +1585,20 @@ def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
             continue
         if not e.get("notice"):
             if mode == "act" and post:
-                notices.setdefault(e["owner"], []).append(line)
+                if UNSIGNABLE_GRACE_S > 0:
+                    notices.setdefault(e["owner"], []).append(line)
                 e["notice"] = now
             elif not e.get("reported"):
                 notices.setdefault(e["owner"], []).append(line)
                 e["reported"] = now
-            continue
+            if mode != "act" or not post or UNSIGNABLE_GRACE_S > 0:
+                continue
         if mode != "act" or now - e["notice"] < UNSIGNABLE_GRACE_S:
             continue
         first = rs[0]
         write_cancel_marks([r.get("kit") for r in rs], "UNSIGNABLE watchdog", f"CANCEL-UNSIGNABLE: {first.get('why', '')}", now)
         rc, out = cancel(u)
-        rec = {"t": now, "unit": u, "host": h, "type": first["type"], "plan": plan_of(first.get("kit")), "evidence": f"{first['why']}; NOTICE to {e['owner']} {time.strftime('%H:%M', time.localtime(e['notice']))}, no KEEP in 30 min",
+        rec = {"t": now, "unit": u, "host": h, "type": first["type"], "plan": plan_of(first.get("kit")), "evidence": f"{first['why']}; " + (f"NOTICE to {e['owner']} {time.strftime('%H:%M', time.localtime(e['notice']))}, no KEEP in {UNSIGNABLE_GRACE_S // 60} min" if UNSIGNABLE_GRACE_S > 0 else "first-pass cancel (no KEEP post)"),
                "freed_gb": round(sum(r.get("gb", 0) for r in rs), 1), "class": "UNSIGNABLE-SETUP" if "setup" in first["why"] else "UNSIGNABLE", "cancel_method": f"ot-run --cancel {u} rc={rc}: {out}",
                "owner": e["owner"]}
         done.append(rec)
@@ -1552,7 +1619,7 @@ def unsignable_pass(rows, seen, now, post=True, cancel=ot_run_cancel):
         for d in done:
             by_owner.setdefault(d["owner"], []).append(d)
         for owner, ds in sorted(by_owner.items()):
-            _post(poster, f"CANCELLED [{poster} -> {owner}] UNSIGNABLE watchdog cancelled {len(ds)} job(s) after NOTICE + 30 min without KEEP: "
+            _post(poster, f"CANCELLED [{poster} -> {owner}] UNSIGNABLE watchdog cancelled {len(ds)} job(s) (>3 h, measured unable to sign; ot-run --cancel --reason design): "
                   + "; ".join(f"{d['host']} {d['unit']} {d['type']} ({d['evidence'][:120]}; {d['cancel_method'][-80:]})" for d in ds) + ". Evidence lanes/CANCEL-UNSIGNABLE-1120.tsv; kit dirs kept.")
     if done:
         path = os.path.join(COORD, "lanes/CANCEL-UNSIGNABLE-1120.tsv")
@@ -1701,6 +1768,108 @@ def grt_label_notice_pass(rows, seen, now, post=True):
                           f"rising for >= {GRT_LABEL_NOTICE_S // 3600} h: " + "; ".join(ls[:40])
                   + f". Notice only, the watchdog does not cancel: {owner} decides (ot-run --cancel <unit>) or posts 'KEEP <unit> <why>'.")
     return out
+
+
+# ---------------------------------------------------------------- DESIGN-FAIL cancel (LAUNCH-GUARD 11-23, COORD FIX 2, post 4cc1854: 20 GRT-LABEL DESIGN-FAIL containers, 0 cancelled)
+# A container whose GRT already carries the DESIGN-FAIL label holds cores and memory for a result that cannot sign.  Leak paths found 11-23 01:xx:
+#   (1) lane (OT_LANE) and private kits: grt_flat_pass takes wave attempts only, grt_label_notice_pass only posts a notice;
+#   (2) wave attempts whose cancel-rows call was recorded (gf_cancelled) but whose container kept running (old-event rows the wave no longer tracks): never retried.
+# Rule: GRT-LABEL DESIGN-FAIL and either the round-10+ overflow is above GRT_STOP_OVF (the label itself), or the overflow has not fallen 2 % for DF_FLAT_S (2 h).
+# Wave attempts not yet taken by grt_flat_pass go through it (cancel-rows keeps the wave record right); everything else: ot-run --cancel <unit> --reason design.
+# Never: proofs, ECOs, hold-only, LEC, re-sign, HBM, --priority plan/proof, NOPROG-KEEP rows (verdict KEEP), units with a KEEP <unit> post, decide-only lanes.
+DF_FLAT_S = 2 * 3600
+DF_OVF_RE = re.compile(r"overflow (\d+) at round (\d+) > (\d+)")
+
+
+def design_fail_exempt(r):
+    ident = " ".join(str(r.get(k) or "") for k in ("container", "type", "kit", "work", "ident"))
+    ex = unsignable_exempt(ident, r.get("prio", ""), r.get("kind", ""))
+    if ex:
+        return ex
+    if re.search(r"(?i)re-?sign", ident):
+        return "re-sign"
+    return ""
+
+
+def design_fail_evidence(r, track, now):
+    """-> evidence text or ''.  track: the per-unit {first, ov0} overflow clock (reset by a >= 2 % fall).  Pure apart from track."""
+    if r.get("verdict") != GRT_LABEL or not str(r.get("why") or "").startswith("DESIGN-FAIL") or design_fail_exempt(r):
+        return ""
+    why = str(r.get("why") or "")
+    m = DF_OVF_RE.search(why)
+    if m and int(m.group(2)) >= 10 and int(m.group(1)) > int(m.group(3)):
+        return f"GRT-LABEL {why}; {str(r.get('detail') or '')[:120]}"
+    ov = r.get("grt_ovf")
+    if ov is None:
+        return ""
+    ov = float(ov)
+    if track.get("ov0") is None or ov < float(track["ov0"]) * (1 - MIN_IMPROVE):
+        track.update(first=now, ov0=ov)
+    track.update(last=now, ov=ov)
+    if now - float(track["first"]) >= DF_FLAT_S:
+        return f"GRT-LABEL {why}; overflow {float(track['ov0']):.0f} -> {ov:.0f}, no 2 % fall in {(now - float(track['first'])) / 3600:.1f} h; {str(r.get('detail') or '')[:100]}"
+    return ""
+
+
+def design_fail_pass(rows, seen, now, post=True, cancel=ot_run_cancel, wave_cancel=wave_cancel_rows):
+    """HUB: cancel GRT-LABEL DESIGN-FAIL containers (see above).  -> cancelled [dict]"""
+    if os.environ.get("NOPROG_DESIGNFAIL_MODE") == "report" or os.path.exists(os.path.join(COORD, "lanes/DESIGNFAIL-WATCHDOG.off")):
+        return []
+    poster = os.environ.get("NOPROG_POST_LANE", "FLEET-WATCH-1015")
+    track = seen.setdefault("df_track", {})
+    gfc = seen.setdefault("gf_cancelled", {})
+    done_k = seen.setdefault("df_done", {})
+    keeps = keep_posts()
+    units = {}
+    for r in rows:
+        k = f"{r.get('host')}|{r.get('unit') or r.get('container')}"
+        units.setdefault(k, []).append(r)
+    done = []
+    for k, rs in sorted(units.items()):
+        evs = [design_fail_evidence(r, track.setdefault(f"{r.get('host')}|{r.get('container')}", {}), now) for r in rs]
+        if not rs[0].get("unit") or not all(evs) or k in done_k:
+            continue                                     # every container of the unit must have failed (a sibling stage still running keeps it)
+        r, ev = rs[0], evs[0]
+        u = r["unit"]
+        if u in keeps or decide_only(" ".join([r.get("container", ""), r.get("ident", ""), r.get("kit") or ""])):
+            continue
+        ident = wave_identity(r.get("kit"))
+        how = ""
+        if ident and "|".join(ident) in gfc and now - float(gfc["|".join(ident)]) < MIN_REPORT_AGE_S:
+            continue                                     # grt_flat_pass / this pass just cancelled it through the wave: give the stop a pass to land
+        if ident and "|".join(ident) not in gfc and not r.get("lane"):
+            rc, line = wave_cancel(ident, f"{GRT_FLAT_CLASS}: {ev}; die owner: plan fix, no unchanged retry")
+            gfc["|".join(ident)] = now                   # a later pass that still sees the container running uses ot-run --cancel (leak path 2)
+            how = f"kit_wave cancel-rows rc={rc}: {line}"
+        else:
+            write_cancel_marks([x.get("kit") for x in rs], "DESIGN-FAIL watchdog", f"CANCEL-DESIGN: {ev}", now)
+            rc, line = cancel(u)
+            how = f"ot-run --cancel {u} --reason design rc={rc}: {line}"
+            done_k[k] = now
+        done.append({"t": now, "unit": u, "host": r.get("host"), "type": r.get("type", ""), "plan": plan_of(r.get("kit")), "evidence": ev,
+                     "freed_gb": round(sum(x.get("gb", 0) for x in rs), 1), "class": "DESIGN-FAIL GRT-LABEL", "cancel_method": how, "owner": owner_of(rs),
+                     "age_h": r.get("age_h"), "stage": r.get("stage")})
+    for k in [k for k, t in done_k.items() if now - t > 3 * 86400]:
+        del done_k[k]
+    for k in [k for k, e in track.items() if now - float(e.get("last", now)) > UNSIGNABLE_FORGET_S]:
+        del track[k]
+    if done:
+        path = os.path.join(COORD, "lanes/CANCEL-DESIGN-FAIL.tsv")
+        new = not os.path.exists(path)
+        with open(path, "a") as f:
+            if new:
+                f.write("t\tunit\thost\ttype\tplan\tstage\tage_h\tevidence\tfreed_gb\tclass\tcancel_method\towner\n")
+            for d in done:
+                f.write("\t".join(str(d[k]).replace("\t", " ").replace("\n", " ") for k in ("t", "unit", "host", "type", "plan", "stage", "age_h", "evidence", "freed_gb", "class", "cancel_method", "owner")) + "\n")
+    if done and post:
+        by = {}
+        for d in done:
+            by.setdefault(d["owner"], []).append(d)
+        for owner, ds in sorted(by.items()):
+            _post(poster, f"CANCELLED [{poster} -> {owner}] DESIGN-FAIL watchdog (LAUNCH-GUARD 11-23): {len(ds)} container unit(s) whose GRT already failed "
+                  + "; ".join(f"{d['host']} {d['unit']} {d['type']} {d['stage']} {d['age_h']} h ({d['evidence'][:150]}; {d['freed_gb']} GB; {d['cancel_method'][-70:]})" for d in ds[:40])
+                  + ". Evidence lanes/CANCEL-DESIGN-FAIL.tsv; kit dirs kept; no unchanged retry.")
+    return done
 
 
 def main(argv=None):

@@ -2,8 +2,15 @@
 import json, os, sys, types
 sys.path.insert(0, os.path.dirname(__file__))
 import noprog_watchdog as nw
+import pytest
 
 NOW = 1_000_000_000.0
+
+
+@pytest.fixture(autouse=True)
+def _legacy_grace(monkeypatch):
+    """LAUNCH-GUARD 11-23: the default is a first-pass cancel (UNSIGNABLE_GRACE_S 0, test_noprog_design_fail.py); these tests keep the 30 min NOTICE window path"""
+    monkeypatch.setattr(nw, "UNSIGNABLE_GRACE_S", 1800)
 
 
 def cts(d, ws, mtime):
@@ -141,7 +148,8 @@ def test_flat_repair_below_gate_and_exemptions():
     assert "FLAT" in nw.unsignable_evidence("dpkit-t1-1", "", "grt", 4.0, (-120.0, "/k/5_1_grt.tmp.log", "flat"))
     assert nw.unsignable_evidence("dpkit-t1-1", "", "grt", 4.0, (-120.0, "/k/5_1_grt.log", "")) is None       # final, above -300: a lane may still fix it
     assert nw.unsignable_evidence("dpkit-t1-1", "", "grt", 4.0, (-30.0, "/k/5_1_grt.tmp.log", "flat")) is None  # inside the gate
-    for ident in ("/srv/x/kit-wave/s81/E/private/LANE/t1_1/gen", "dpkit-t1_hold_eco-1", "/srv/a/qc-hold-0030-kits/t1", "/srv/a/holdfix/t1"):
+    assert nw.unsignable_evidence("/srv/x/kit-wave/s81/E/private/LANE/t1_1/gen", "", "grt", 9.0, (-900.0, "/k/x"))     # LAUNCH-GUARD 11-23: a private kit is judged
+    for ident in ("dpkit-t1_hold_eco-1", "/srv/a/qc-hold-0030-kits/t1", "/srv/a/holdfix/t1"):
         assert nw.unsignable_evidence(ident, "", "grt", 9.0, (-900.0, "/k/x")) is None, ident
     assert nw.unsignable_evidence("dpkit-threshold-1", "", "grt", 9.0, (-900.0, "/k/x"))                      # 'hold' inside a word
 
@@ -158,7 +166,7 @@ def test_cancel_goes_through_ot_run_cancel_with_the_exact_unit():
     def run(argv, **k):
         seen.append(argv); return types.SimpleNamespace(returncode=0, stdout="ot-run --cancel: epyc9: containers stopped: x\n", stderr="")
     assert nw.ot_run_cancel("oth-ubuntu-1-2", run=run) == (0, "ot-run --cancel: epyc9: containers stopped: x")
-    assert seen[0][1:] == ["--cancel", "oth-ubuntu-1-2"] and seen[0][0].endswith("ot-run")
+    assert seen[0][1:] == ["--cancel", "oth-ubuntu-1-2", "--reason", "design"] and seen[0][0].endswith("ot-run")
 
 
 def test_unsignable_is_not_a_host_cancel_verdict():

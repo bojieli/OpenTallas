@@ -84,6 +84,7 @@ import wave_jobs as WJ
 import kit_wave_roam as ROAM
 import flow_guard as FG
 import repeat_stop as RS
+import lbl_gate as LBL
 OOM_KILL_FREE = 3                                # FABLE-FIX-S81-LEPE 11-19: free retries of an OOM kill on the same inputs before INFRA-REPEAT
 
 # A main merge can happen during a long tick. Never release a merged fix with
@@ -9603,6 +9604,9 @@ def private_spec_cmd(a):
         print(f"tree inputs: bind {ti.get('bind', '-')} ({ti.get('bind_from', '-')}); rt {ti.get('rt_from', '-')}; probed on {ti.get('probe_host', '-')}"
               + (f"; record {ti['source']}" if ti.get("source") else ""))
     stop = {"place": "stops at the placed checkpoint", "geom": "stops after AUTO-GEOM"}.get(sp["goal"])
+    _lw = private_lbl_refusal(sp, chain_goal_of(sp), hub, record=False)
+    if _lw:                                               # LAUNCH-GUARD 11-23: run-item refuses this spec until its VIS row passes (a probe goal place / geom / grt runs)
+        print(f"private-spec: LBL WARN {a.die}/{a.item}: run-item will refuse goal {sp['goal']}: {_lw}", file=sys.stderr)
     print(f"build: python3 -I {Path(__file__).resolve()} run-item {out / 'spec.json'}   (result.json next to the spec; run_kit.sh checks ENV-PROVENANCE before place; "
           + (f"{stop})" if stop else f"then the wave stage chain to goal {sp['goal']}: signoff_chain + routed LEC, ot-wait --kit per stage)"))
     return 0
@@ -10204,6 +10208,32 @@ def ended_unit_result(res):
     return res
 
 
+def private_lbl_refusal(sp, chain_goal, hub=None, record=True):
+    """LAUNCH-GUARD 11-23 FIX 1: '' or the LOOK-BEFORE-LAUNCH refusal of a private run-item that drives to sign-off (goal auto / route / finish).  Probe specs
+    (goal place / geom / cts / grt, or OT_PROBE_THROUGH=1 in the gen env) and wave specs (gated in launch()) are never refused; a spec with
+    private.lbl_exempt (a lane's written reason) is not refused either.  Logged to ~/.local/state/lbl/refusals.log."""
+    if not sp.get("private") or (sp.get("private") or {}).get("lbl_exempt") or os.environ.get("OT_LBL_GATE") == "0":
+        return ""
+    try:
+        refused, code, why = LBL.check(str(sp.get("item") or ""), die=sp.get("die"), env=sp.get("gen_env") or {}, goal=chain_goal, hub=hub)
+    except Exception as e:
+        print(f"KW_LBL check error {type(e).__name__}: {e} (not held)", flush=True)
+        return ""
+    print(f"KW_LBL {code}: {why}", flush=True)
+    if not refused:
+        return ""
+    try:
+        if not record:
+            raise OSError("warn only")
+        lp = os.path.join(os.path.dirname(LBL.CACHE), "refusals.log")
+        os.makedirs(os.path.dirname(lp), exist_ok=True)
+        with open(lp, "a") as f:
+            f.write(f"{now_s()}\t{sp.get('die')}\t{sp.get('item')}\t{code}\tprivate goal {chain_goal}\t{(sp.get('private') or {}).get('lane') or os.environ.get('OT_LANE', '')}\n")
+    except OSError:
+        pass
+    return f"{code}: {why}"
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
@@ -10221,6 +10251,12 @@ def run_item(spec_path):
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
+    _lbl = private_lbl_refusal(sp, chain_goal, hub)
+    if _lbl:                                             # LAUNCH-GUARD 11-23 FIX 1: a private sign-off launch of a DRAFT / PRE-PASS type waits for its VIS row
+        print(f"KW_STAGE lbl {now_s()} :: LAUNCH-REFUSED {sp['die']}/{T}: {_lbl}", flush=True)
+        res.update(stage="lbl", verdict="FAIL", cls="LBL", tail=f"LAUNCH-REFUSED (not built): {_lbl}")
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 1
 
     def roam_sh(host, cmd, timeout=600):                 # WAVE-BALANCE-1: (rc, text) of one command on a fleet host
         a = _ssh(host, hub)
@@ -14368,12 +14404,190 @@ def active_spec_controller(AP, unit_prefix, spec_path):
     return None
 
 
+# ------------------------------------------------------------------------------------------------ LAUNCH-GUARD 11-23 (COORD, Fable flow review)
+# FIX 1 LOOK-BEFORE-LAUNCH (OWNER 11-22 23:2x): hold posts set by hand leaked (hub b0383bc: leaf t30 @5, kv3_hgi_v3 @3, sle_su_c @27 launched on DRAFT rows; 5
+# HOLD-LEAK records inert on stops_off dies).  Every NEW wave launch now asks lbl_gate (lanes/VIS-COVERAGE.tsv, 5 min cache): DRAFT / PRE-PASS rows wait.
+# Probe kits (item env OT_PROBE_THROUGH=1) and GRT-ARM variants of a running row are never held; running kits are never touched (only launch() asks).
+def lbl_launch_refused(AP, cfg, st, die, r):
+    """-> True when LOOK-BEFORE-LAUNCH refuses this new launch (logged LBL-<status>, one line per item per hour; counted in st['lbl_refused'])"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if d.get("lbl_gate") is False or cfg.get("lbl_gate") is False:
+        return False
+    item = str(r.get("item") or "")
+    try:
+        env = dict(d.get("die_gen_env") or {})
+        env.update(item_env_entry(d, item))
+    except Exception:
+        env = {}
+    if not hasattr(AP, "read_coord"):
+        return False                                     # no coord view (unit tests, tools): nothing to judge against
+    reader = lambda: AP.read_coord(LBL.REL)
+    try:
+        refused, code, why = LBL.check(item, die=die, env=env, reader=reader, hub=getattr(AP, "HUB_NAME", None))
+    except Exception as e:                               # the gate never stops the pass
+        log_hourly(AP, st, f"LBL|err|{die}", f"KIT-WAVE LBL check error {die}/{item}: {type(e).__name__}: {e} (not held)")
+        return False
+    if code in ("LBL-NOROW", "LBL-NOTABLE"):
+        log_hourly(AP, st, f"LBL|{code}|{die}|{item}", f"KIT-WAVE LBL-PASS {die}/{item}: {code} {why}")
+    if not refused:
+        return False
+    led = st.setdefault("lbl_refused", {})
+    k = f"{die}|{item}"
+    e = led.get(k) or {}
+    e.update(code=code, n=int(e.get("n") or 0) + 1, last=time.time(), first=e.get("first") or time.time())
+    led[k] = e
+    log_hourly(AP, st, f"LBL|{die}|{item}|{code}", f"KIT-WAVE LAUNCH-REFUSED {die}/{item}: {code}: {why} [owner {die_owner(cfg, die)[0]}; refused {e['n']}x]")
+    return True
+
+
+# FIX 3 (COORD 11-23 01:0x, hub 398cc43ec9b): dsdv_slice_c1x_C__t10 @2/@3 (-733.30 ps twice) and kv512_C t1 @1-@4 (-1154.54 x4) relaunched on an unchanged
+# block / event / tools.  Cause: kit_wave_pending.tsv rows from 11-05/11-06 (c1x t10@3, kv512 t1@5, col_h10_r1 cld01bb4ae@11) named attempt numbers of an OLDER event;
+# attempt numbers restart per event, so each one was a permanent pre-release key that overrode the structural stop / REPEAT-STOP every time (RETRY-KEY-LAUNCH).
+# release_pending now adds a row only for the attempt it names when that attempt started before the row was seen (see pending_row_live), and this gate refuses a
+# relaunch whose previous attempt ended in a design class (PLAN / place-setup stop, ROUTING / GRT label, TIMING, RTL, an UNSIGNABLE / design cancel) while the
+# input digest (block, plan event, die src, tools sha, the item's configured env) is unchanged.  Deterministic infra failures (missing input / view) keep one free retry per digest + fingerprint
+# (a second identical one waits INFRA_REPEAT_WAIT_S, sle_su_c ran 28 INFRA-VIEW-MISSING attempts in 5 h).  Released by any digest change, an
+# `unblock <item> *` queue line, or a retry key added after the failure.
+DESIGN_CLASSES = ("PLAN", "ROUTING", "TIMING", "RTL", "STRUCTURAL", "DESIGN", "STRUCT-STOP", "CANCEL-UNSIGNABLE", "CANCEL-DESIGN")
+DESIGN_REASON_RE = re.compile(r"PLACE-SETUP-STOP|GRT-LABEL|DESIGN-FAIL|CANCEL-UNSIGNABLE|CANCEL-DESIGN|design:grt_flat|--reason design|cancel reason design", re.I)
+INFRA_REPEAT_WAIT_S = 2 * 3600
+# only a deterministic infra cause (a missing input / view the next attempt will miss the same way) repeats; host kills, OOM and guard kills keep their free retries
+INFRA_DETERMINISTIC_RE = re.compile(r"missing_input|INFRA-VIEW-MISSING|not on any host|No such file|missing /", re.I)
+
+
+def _rec_ended_failed(rec):
+    s, q = rec.get("status"), rec.get("q_status")
+    return s in ("FAIL", "CANCELLED", "RETRY-INFRA") or (s == "ENQUEUED" and q in ("FAIL", "CANCELLED")) or (s == "ROUTE-HELD" and q == "FAIL")
+
+
+def _rec_design_class(rec):
+    """-> the design class text of an ended attempt, '' when it is infra / flow / superseded / operator"""
+    if is_infra_fail(rec):
+        return ""
+    for c in (rec.get("q_class"), rec.get("class")):
+        c = str(c or "")
+        if c.upper() in DESIGN_CLASSES:
+            return c
+    t = " ".join(str(rec.get(k) or "") for k in ("q_reason", "reason"))
+    m = DESIGN_REASON_RE.search(t)
+    return m.group(0) if m else ""
+
+
+def _digest_now(cfg, die, item, r):
+    d = (cfg.get("dies") or {}).get(die) or {}
+    try:
+        tools = str(rt_tools_fields(cfg, die).get("tools_sha") or "")
+    except Exception:
+        tools = ""
+    try:
+        env = {k: str(v) for k, v in item_env_entry(d, item).items() if v is not None}
+    except Exception:
+        env = {}
+    return {"block": str(r.get("block_sha") or ""), "event": str(d.get("event") or ""), "src": str(d.get("src_sha") or ""), "tools": tools, "env": env}
+
+
+def _digest_of(st, die, item, rec):
+    """the failed attempt's digest: block / event from its record, src / tools from the REPEAT-STOP ledger row of that attempt, env from its input_parts"""
+    e = RS.lookup(st, die, item, rec.get("event")) or {}
+    att = [a for a in (e.get("att") or []) if str(a.get("n")) == str(rec.get("attempt"))]
+    inp = (att[-1].get("inputs") if att else None) or e.get("inputs") or {}
+    pc = (rec.get("input_parts") or {}).get("pc") or {}
+    return {"block": str(rec.get("block_sha") or ""), "event": str(rec.get("event") or ""), "src": str(inp.get("src") or pc.get("src") or ""),
+            "tools": str(inp.get("tools") or ""), "env": {k: str(v) for k, v in ((rec.get("input_parts") or {}).get("env") or {}).items()}}
+
+
+def digest_changed(old, now):
+    """-> the first input that differs, '' when the launch would rebuild the same thing.  An input unknown on either side is not a change; env compares only the keys
+    the die config sets for the item now (an automatic per-attempt env such as OT_GRT_TRANSITION_MODE is not a fix)"""
+    for k in ("block", "event", "src", "tools"):
+        if old.get(k) and now.get(k) and old[k] != now[k]:
+            return f"{k} {old[k][:12]} -> {now[k][:12]}"
+    for k, v in (now.get("env") or {}).items():
+        if (old.get("env") or {}).get(k) != v and old.get("env"):
+            return f"env {k}={v}"
+    return ""
+
+
+def _latest_rec(st, die, item):
+    recs = [x for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == item]
+    return max(recs, key=lambda x: (float(x.get("started") or 0), int(x.get("attempt") or 0))) if recs else None
+
+
+def fresh_retry_key(cfg, st, die, item, after):
+    """a retry key item@N in the die config that was first seen after `after` (a lane / COORD answered THIS failure), else ''"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    seen = st.get("retry_seen") or {}
+    for ia in d.get("retry") or []:
+        it, _, n = str(ia).rpartition("@")
+        if it != item:
+            continue
+        if ia in (d.get("_retry_auto") or ()):
+            continue                                     # pending / fix rows are judged by pending_row_live, never as a fresh answer
+        t = seen.get(retry_seen_key(die, d.get("event") or "", ia)) or seen.get(f"{die}|{ia}")
+        try:
+            if t is not None and float(t) > float(after):
+                return ia
+        except (TypeError, ValueError):
+            pass
+    return ""
+
+
+def same_input_repeat_refused(AP, cfg, st, die, r, now=None):
+    """-> True when this launch repeats a deterministic failure on unchanged inputs (FIX 3); logged once per item per hour"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if d.get("same_input_gate") is False or cfg.get("same_input_gate") is False or r.get("arm"):
+        return False
+    now = time.time() if now is None else now
+    item = str(r.get("item") or "")
+    prev = _latest_rec(st, die, item)
+    if not prev or not _rec_ended_failed(prev):
+        return False
+    old, cur = _digest_of(st, die, item, prev), _digest_now(cfg, die, item, r)
+    chg = digest_changed(old, cur)
+    if chg:
+        return False
+    if any(u[0] == item for u in (cfg.get("_unblocks") or ())):
+        return False
+    ended = float(prev.get("updated") or prev.get("q_updated") or prev.get("started") or 0)
+    if fresh_retry_key(cfg, st, die, item, ended):
+        return False
+    cls = _rec_design_class(prev)
+    if cls:
+        log_hourly(AP, st, f"DSI|{die}|{item}", f"KIT-WAVE LAUNCH-REFUSED {die}/{item}: DESIGN-SAME-INPUT: attempt {prev.get('attempt')} ended {cls} "
+                   f"({str(prev.get('q_reason') or prev.get('reason') or '')[:160]}) on block {old['block'][:12]} event {old['event']} src {old['src'][:12]} tools {old['tools'][:12]}; "
+                   f"no unchanged retry (released by a block / event / src / tools / item env change, `unblock {item} *`, or a retry key added after the failure) [owner {die_owner(cfg, die)[0]}]")
+        st.setdefault("dsi_refused", {})[f"{die}|{item}"] = {"t": now, "attempt": prev.get("attempt"), "cls": cls}
+        return True
+    if is_infra_fail(prev) and INFRA_DETERMINISTIC_RE.search(str(prev.get("reason") or "")) and not RS.is_oom(prev.get("class"), prev.get("reason")) \
+            and prev.get("kill_kind") != "guard":
+        fp = re.sub(r"\d+(?:\.\d+)?", "N", str(prev.get("reason") or ""))[:160]
+        dg = json.dumps([old.get(k) for k in ("block", "event", "src", "tools")])
+        led = st.setdefault("infra_repeat", {})
+        k = f"{die}|{item}"
+        e = led.get(k) or {}
+        if e.get("fp") == fp and e.get("dg") == dg:
+            if str(e.get("att")) != str(prev.get("attempt")):
+                e.update(n=int(e.get("n") or 1) + 1, att=prev.get("attempt"), t=ended)
+        else:
+            e = {"fp": fp, "dg": dg, "n": 1, "att": prev.get("attempt"), "t": ended}
+        led[k] = e
+        if e["n"] >= 2 and now - float(e.get("t") or 0) < INFRA_REPEAT_WAIT_S:
+            log_hourly(AP, st, f"ISI|{die}|{item}", f"KIT-WAVE LAUNCH-WAIT {die}/{item}: INFRA-SAME-INPUT: {e['n']} identical infra failures on unchanged inputs "
+                       f"({fp[:140]}); the one free retry is used, next try {INFRA_REPEAT_WAIT_S // 3600} h after the last failure unless an input changes [owner {die_owner(cfg, die)[0]}]")
+            return True
+    return False
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
     if hub_launch_held(cfg, die, r.get("item")):          # WAVE-FLOW-R 11-17: the hub floor holds hub writers only
         return None
     if event_pending_wait(AP, cfg, st, die):              # FLEET-WATCH-R5 (FABLE-FLOW-0800 class d)
+        return None
+    if lbl_launch_refused(AP, cfg, st, die, r):           # LAUNCH-GUARD 11-23 FIX 1: LOOK-BEFORE-LAUNCH from lanes/VIS-COVERAGE.tsv
+        return None
+    if same_input_repeat_refused(AP, cfg, st, die, r):    # LAUNCH-GUARD 11-23 FIX 3: no unchanged retry of a deterministic failure
         return None
     if tool_skew_refuse(AP, cfg, st, die):
         return None
@@ -20503,6 +20717,32 @@ def fixes_release(AP, cfg, st, notices, rt_sha=None, now=None):
     return n
 
 
+def _stamp_epoch(v):
+    """a now_s() display string ('2026-11-22 07:22 PST') or an epoch -> epoch, None when unreadable"""
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        pass
+    try:
+        return time.mktime(time.strptime(str(v)[:16], "%Y-%m-%d %H:%M"))
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def pending_row_live(st, die, ia, seen_at):
+    """LAUNCH-GUARD 11-23 FIX 3: a kit_wave_pending.tsv row item@N releases only the attempt it was written for: attempt N is the item's latest attempt, it has
+    ended failed, and it started before the row was first seen merged.  Attempt numbers restart per plan event, so an 11-05 row 'dsdv_slice_c1x_C__t10@3' named
+    an attempt of an older event; read as a pre-release key it overrode every structural / repeat stop of the new event's attempt 3 (and 4, 5 ...)."""
+    item, _, n = str(ia).rpartition("@")
+    last = _latest_rec(st, die, item)
+    t = _stamp_epoch(seen_at)
+    if not last:
+        return True                                      # no attempt of the item at all: nothing for the row to be stale against (first launch)
+    if str(last.get("attempt")) != str(n) or not _rec_ended_failed(last) or t is None:
+        return False
+    return float(last.get("started") or 0) < t
+
+
 def release_pending(cfg, st, rows, merged, notices):
     """merged(sha, scope, die) -> bool.  Adds each merged row's item@attempt to the die's in-memory retry set
     (kit_wave.json is never written); a first release posts one notice per die."""
@@ -20517,6 +20757,9 @@ def release_pending(cfg, st, rows, merged, notices):
                 continue
             seen[k] = now_s()
             notices.setdefault(r["die"], []).append(f"{r['retry']} retry released (fix {r['sha']} merged, {r['lane']})")
+        if not pending_row_live(st, r["die"], r["retry"], seen[k]):
+            continue                                     # LAUNCH-GUARD FIX 3: the row names an attempt of an older event (or one that does not exist yet): no key
+        d.setdefault("_retry_auto", {})[r["retry"]] = 1
         rt = d.setdefault("retry", [])
         d.setdefault("_retry_fix", {}).setdefault(r["retry"], r["sha"])          # FLOW-FIX-0100: a pending retry row names the merged fix sha
         if r["retry"] not in rt:

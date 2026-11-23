@@ -69,6 +69,7 @@ import signoff_profile as SP  # noqa: E402  (OWNER 11-13 R-MINIMAL; OT_SIGNOFF_P
 import wave_balance as WB  # noqa: E402
 import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
+import lbl_gate as LBL  # noqa: E402
 import under_use as UU  # noqa: E402  (FABLE-FLOW-0445 #2: one UNDER-USE log line per tick)
 import bind_doom as BD  # noqa: E402  (BIND-DOOM-1122, FABLE-FLOW-0350 B1: live binds vs rt/current plan_gate_pre)
 
@@ -142,7 +143,7 @@ def tag_covers(tag, die=None):
     return die is None or m.group(1) is None or DIE_FLOW_TAG.get(die) == m.group(1)
 FLOW_TAGS_CHECKED = 30                                   # newest release tags compared with a src commit
 # queue/job states that are re-judged every tick (never submitted yet)
-WAITS = (None, "WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", "REJECTED", "WITHDRAWN")
+WAITS = (None, "WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", "WAIT-LBL", "REJECTED", "WITHDRAWN")
 # closure order (owner 2026-10-25 18:45): release-tree die key -> path name in lanes/PATH-FREEZE.md
 DIE_PATH = {"s81": "S81", "s81_head": "S81", "cp1": "S81", "qwen_compute": "QC", "qwen_kvsys": "KV", "hbm": "HBM"}
 GATE_ITEMS = ("GRT0", "CLOCK-ROUTE", "PATH-STA")
@@ -3376,7 +3377,7 @@ def withdraw_unqueued(st, rows):
     if not rows:
         return
     for jid, j in st["jobs"].items():
-        if j.get("status") in ("WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA") and jid not in rows:
+        if j.get("status") in ("WAIT-GEOM", "WAIT-CANARY", "WAIT-PATH-GATE", "WAIT-PLAN-DELTA", "WAIT-LBL") and jid not in rows:
             log(f"WITHDRAWN {jid} {j.get('die')}/{j.get('type')}: queue row gone (commented out or removed); was "
                 f"{j.get('status')}")
             set_status(st, j, "WITHDRAWN", f"queue row gone (was {j.get('status')} at line {j.get('queue_line') or j.get('line')})")
@@ -3407,6 +3408,27 @@ def wave_review_snapshot():
             if key not in kits or rec.get("updated", 0) >= kits[key].get("updated", 0):
                 kits[key] = rec
     return cfg, kits
+
+
+def lbl_queue_hold(r, j=None):
+    """LAUNCH-GUARD 11-23 FIX 1 (LOOK-BEFORE-LAUNCH, OWNER 11-22): '' or the hold text for a NEW lane queue row (first submit) whose type's lanes/VIS-COVERAGE.tsv row
+    is DRAFT / PRE-PASS.  Never held: kit-wave rows (AUTO-GEOM KIT-WAVE geom_ref; their gen launch was gated in kit_wave.launch), adopt rows, rows already
+    submitted (a running or resumed kit), diagnostic goals cts / grt / place / geom, probe kits (probe in the kit path or OT_PROBE_THROUGH in the row), HBM."""
+    if os.environ.get("AP_LBL_GATE") == "0" or r.get("mode") == "adopt" or queued_wave_event(r):
+        return ""
+    if j and (j.get("attempts") or j.get("status") in ("RUNNING", "DONE", "SIGNED", "FAILED")):
+        return ""
+    if canonical_die(r.get("die") or "") == "hbm":
+        return ""
+    txt = " ".join(str(r.get(k) or "") for k in ("kit", "path", "line", "note"))
+    if re.search(r"(?i)probe|OT_PROBE_THROUGH", txt):
+        return ""
+    try:
+        refused, code, why = LBL.check(str(r.get("type") or ""), die=canonical_die(r.get("die") or ""), goal=r.get("goal"),
+                                       reader=lambda: read_coord(LBL.REL), hub=os.environ.get("OT_HUB_NAME"))
+    except Exception:
+        return ""
+    return f"{code}: {why}" if refused else ""
 
 
 def queued_wave_event(row):
@@ -3530,6 +3552,15 @@ def admit_new(st, rows, only_new=False, budget=None):
                 log(f"HOLD {rid} {r['die']}/{r['type']}: {hold_why}")
                 j["hold_why"] = hold_why
                 set_status(st, j, hold, hold_why)
+            continue
+        lbl_why = lbl_queue_hold(r, j)
+        if lbl_why:
+            j = st["jobs"].setdefault(rid, dict(r))
+            j.update(r)
+            if j.get("status") != "WAIT-LBL" or j.get("hold_why") != lbl_why:
+                log(f"HOLD {rid} {r['die']}/{r['type']}: {lbl_why}")
+                j["hold_why"] = lbl_why
+                set_status(st, j, "WAIT-LBL", lbl_why)
             continue
         allowed, canary_why = canary_wave_gate(r)
         if not allowed:
