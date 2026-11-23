@@ -54,6 +54,15 @@ ENV_CONFIG_FORMS = {
 GRT_CONG_ITERS = 10
 
 
+def cts_ndr_lines(env=None):
+    """KW-FIX-8 / CTS-NDR-1123 (COORD ruling 11-23, GRT-0273 class): OT_CTS_NO_NDR=1 (wave item_env, glob keys per family)
+    -> CTS_ARGS with -apply_ndr none, so TritonCTS sets no clock NDR that GRT would drop under congestion (GRT-0273,
+    one 30-iteration restart per dropped net).  Unset -> [] (ORFS default CTS_ARGS)."""
+    env = os.environ if env is None else env
+    return (["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -apply_ndr none"]
+            if env.get("OT_CTS_NO_NDR") == "1" else [])
+
+
 def _grt_cong_iters(budgets=None, tn=None):
     """FLOW-FIX-0100: GRT congestion iterations per round for generated kits (default 10; 0 or 30 = OpenROAD default, no flag).
     GRT-ITERS-PLAN (FABLE-FIX-S81-COL-RANKSEAT 11-22): in order GEN env OT_GRT_CONG_ITERS (an A/B), then the plan:
@@ -7701,8 +7710,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
            # net by net and restarts its 30 iterations each time.  CTS_ARGS replaces the ORFS argument list, so this is
            # the logged default list plus the flag.
-           *(["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -apply_ndr none"]
-             if os.environ.get("OT_CTS_NO_NDR") == "1" else []),
+           *cts_ndr_lines(),
            # Opt-in for new forms: suppress redundant ORFS summaries before CTS only.
            # Explicit synthesis/geometry/hold checks and stages 4+ reports are unchanged.
            *(["export OT_SKIP_PRECTS_METRICS = 1"]
