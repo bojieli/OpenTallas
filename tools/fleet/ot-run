@@ -3766,7 +3766,11 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None, 
     if ((now if now is not None else time.time()) - T_START) < AUTOSTAGE_AFTER_S:
         return plan[0], plan[1] + f" (--dir will be staged alone after {AUTOSTAGE_AFTER_S} s)", False
     STAGE.append(os.path.normpath(d))
-    plan2 = _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio)
+    AUTOSTAGED[0] = True
+    try:
+        plan2 = _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio)
+    finally:
+        AUTOSTAGED[0] = False
     if plan2[0]:
         say(f"ot-run: AUTOSTAGE: lane-root spill refused ({plan[1][:100]}); staging --dir {d} alone")
         log_signal(f"ot-run AUTOSTAGE moved dir {d} from {src} to {plan2[0][0]}: {plan[1][:120]}")
@@ -3774,6 +3778,48 @@ def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None, 
     STAGE.clear()
     log_signal(f"ot-run AUTOSTAGE refused dir {d} on {src}: {plan2[1][:160]}")
     return plan[0], f"{plan[1]}; staging --dir alone also refused: {plan2[1]}", plan[2]
+
+
+AUTOSTAGED = [False]   # STAGE-REFS-1124: True while spill_plan plans an AUTOSTAGE (--dir staged alone, the caller never said the inputs are complete)
+STAGE_REF_RE = re.compile(LANE_RE.pattern + r"(?:/[^\s'\";|&()<>:=,${}*?]+)*")
+STAGE_REF_ERE = LANE_RE.pattern + r"(/[^[:space:]'\";|&()<>:=,${}*?]+)*"   # the same for grep -E (no (?:), POSIX class)
+STAGE_REF_NAMES = ("Makefile*", "*.mk", "*.sh", "*.py", "*.f", "*.tcl", "*.json", "*.yaml", "*.cfg")
+
+
+def ref_state(host, paths, timeout=60):
+    """STAGE-REFS-1124: {path: n} on host; n = -1 missing, 0 empty directory, 1 a file or a directory with entries"""
+    if not paths:
+        return {}
+    r = ssh_sh(host, "for p in " + " ".join(shlex.quote(x) for x in paths) + '; do if [ -d "$p" ]; then n=$(ls -A "$p" 2>/dev/null | head -1 | wc -l); '
+                     'elif [ -e "$p" ]; then n=1; else n=-1; fi; echo "$n $p"; done', timeout=timeout)
+    out = {}
+    for line in r.stdout.splitlines():
+        n, _, q = line.partition(" ")
+        if q in paths and n.lstrip("-").isdigit():
+            out[q] = int(n)
+    if r.returncode != 0 or set(out) != set(paths):
+        raise RuntimeError(f"ref probe on {host} incomplete (rc {r.returncode})")
+    return out
+
+
+def stage_outside_refs(src, cmd):
+    """STAGE-REFS-1124 (COORD, RELEC-R2 R7 / R11 11:13: AUTOSTAGE staged --dir r/R7_reform_mapped alone, E7 -> epyc2; its run.sh mounts the lane's
+    k/ and m/ (docker -v), which were not copied, so docker made them empty on epyc2 and lec.py was missing, rc 2 in seconds): the scratch paths the
+    command or the staged scripts name OUTSIDE the --stage paths that exist on src.  -> {path: n} (ref_state on src)"""
+    qs = " ".join(shlex.quote(x) for x in STAGE)
+    names = " -o ".join(f"-name {shlex.quote(n)}" for n in STAGE_REF_NAMES)
+    r = ssh_sh(src, f"find {qs} -maxdepth 2 -size -2M -type f \\( {names} \\) -print0 2>/dev/null | timeout 90 xargs -0r grep -hoIs -E "
+                    f"{shlex.quote(STAGE_REF_ERE)} | sort -u | head -400; true", timeout=150)
+    refs = set(STAGE_REF_RE.findall(" ".join(command_srv_paths(cmd)))) | set(r.stdout.split())
+    keep = set()
+    for x in refs:
+        x = os.path.normpath(x)
+        m = SCRATCH_RE.match(x)
+        if not m or m.group(1).rsplit("/", 1)[-1] in SHARED_LANES or under(x, STAGE) or any(under(sp, [x]) for sp in STAGE):
+            continue
+        keep.add(x)
+    keep = sorted(keep)[:60]
+    return {p: n for p, n in ref_state(src, keep).items() if n >= 0}
 
 
 def _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):
@@ -3799,10 +3845,18 @@ def _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None)
                 return None, "its proof still runs on another host (hand-off)", False
         except subprocess.SubprocessError as e:
             return None, f"cannot check {src} for a proof hand-off: {str(e)[:80]}", False
+        try:
+            refs = stage_outside_refs(src, cmd)
+        except Exception as e:
+            return None, f"cannot check the paths the staged scripts name on {src}: {str(e)[:80]}", True
+        if refs and AUTOSTAGED[0]:
+            return None, (f"staged scripts name {len(refs)} path(s) outside --dir ({', '.join(sorted(refs)[:2])[:160]}); "
+                          f"staging --dir alone would run against a missing tree"), True
         other = sorted(x for x in lanes if not under(x, STAGE) and not any(under(r, [x]) for r in STAGE))
         if other:
             say(f"ot-run: STAGE: the staged scripts name other lane(s) {', '.join(other[:4])}; not copied (--stage says the inputs are complete)")
     else:
+        refs = {}
         root = spill_root(d)
         why, extra = spill_paths_ok(cmd, d, root)
         if why:
@@ -3849,6 +3903,15 @@ def _spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None)
     dst, queue = choose(drop_low_disk(ok, die, disk + size_gb), mem, threads, die)
     if not dst or queue:
         return None, ("no spill host has room: " + "; ".join(noroom)[:300]) if noroom and not ok else "no spill host admits it now", False
+    if refs:                     # STAGE-REFS-1124: never run a staged job against a tree that is missing or empty on the spill host
+        try:
+            there = ref_state(dst, sorted(refs))
+        except Exception as e:
+            return None, f"cannot check the paths outside --stage on {dst}: {str(e)[:80]}", False
+        lack = [p for p, n in sorted(refs.items()) if there.get(p, -1) < 0 or (n > 0 and there.get(p) == 0)]
+        if lack:
+            log_signal(f"ot-run STAGE-REFS refused spill {src} -> {dst}: lacks {', '.join(lack[:3])[:200]}")
+            return None, f"{dst} lacks {len(lack)} path(s) the staged job names outside --stage ({', '.join(lack[:2])[:160]})", False
     return (dst, sorted(roots), size_gb), "", False
 
 
