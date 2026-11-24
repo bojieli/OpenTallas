@@ -423,3 +423,8 @@
   KV FAILED-NO-RELAUNCH 3: kv3_hroot (KV-D29), kv3_pc_v1__cl4ea58a5c/cl7f648944 (KV-ALLFIX).
   Multi-family owners: QC-ALLFIX-COLL 4, FABLE-RC-QC 4, OPUS-FIX-QC-V4-R2 3, QC-V4 3, FLOW-OPS-R3 3, OPUS-FIX-S81-SVC-R9 2 (svc_hi+svc_lo), S81-ALLFIX-INT 2.
   Table: lanes/OWNERS-SWEEP.tsv
+- 2026-11-23 20:50 PST OWNERS-SWEEP 20:5x (127 rows, was 134); owners via ledger/ALLFIX tsv; KV-ASTK-TIED, KV-R8-LANELOSS excluded.
+  No UNOWNED, no DEAD-OWNER. S81 STALE 35 (col_h10_*, owner S81-COL-J9, no post since before 18:50); QC STALE 1 (tt_ctlm, QC-TTC-RETIME).
+  KV FAILED-NO-RELAUNCH 3: kv3_hroot (KV-D29), kv3_pc_v1__cl4ea58a5c/cl7f648944 (KV-ALLFIX).
+  Lanes with 3+ unrelated families: FABLE-RC-QC 6, KV-D29 5, OPUS-FIX-QC-V4-R2 3.
+  Table: lanes/OWNERS-SWEEP.tsv
