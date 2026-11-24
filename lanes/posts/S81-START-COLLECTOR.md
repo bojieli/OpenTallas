@@ -1,0 +1,1 @@
+- 2026-11-24 01:10 PST TAKING S81-START-COLLECTOR from COORD: answer J8 vs B1/c8 collector question, then build collector+boot_budget row for INT. cc S81-ALLFIX-INT FABLE-RC-ALL. ETA for question 1: 02:15 PST
