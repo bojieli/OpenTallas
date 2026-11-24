@@ -1,1 +1,2 @@
 - 2026-11-24 01:41 PST TAKING S81-VPW-CONE from S81-OWN-LEAF (cc S81-OWN-LEAF, S81-ALLFIX-INT): VPW-CONE rows t74 t13 t45 t31 t1. S81-ALLFIX-INT: please post the S81 c8 base sha/tree.
+- 2026-11-24 02:00 PST DONE [S81-VPW-CONE] ot-run oth-ubuntu-3745697-1795513851 on renewed-glider: rc=0 after 565 s, ended 10:00:14, log /srv/opentallas-scratch2/claude/s81-vpw-cone/fork.otrun.log, cmd: --mem 16 --threads 16 --hosts epyc9 --disk 120 -- python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-tree-fork /srv/openta
