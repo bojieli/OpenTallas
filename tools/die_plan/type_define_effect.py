@@ -316,8 +316,132 @@ def request_scope(plan):
     return hashlib.sha256(json.dumps(scope, sort_keys=True).encode()).hexdigest()
 
 
-def elab_pass(plan, ab, base, out, mem, part_of, elab_fn, load_fn, flatten_fn, roots=None):
-    """Report per-type requested defines and optionally adopt a checked define-on variant."""
+def _requested(rows):
+    requested = {}
+    for r in rows:
+        if r["verdict"] == "BIND_IGNORED":
+            requested.setdefault(r["define"], set()).add(r["type"])
+    return requested
+
+
+def variant_specs(requested, variant):
+    """[(defines, directory)] of every define-variant elab elab_pass runs, in its serial order: the combined variant,
+    then one without_<define> per define (only when there is more than one)."""
+    added = sorted(requested)
+    specs = [(added, Path(variant))]
+    for define in requested:
+        other = [d for d in added if d != define]
+        if other:
+            specs.append((other, Path(variant) / ("without_" + define)))
+    return specs
+
+
+def elab_jobs(n, mem_gb):
+    """BIND-ELAB-PAR: parallel define-variant elabs.  $OT_BIND_ELAB_JOBS (>= 1) wins; else min(n, idle cores,
+    (MemAvailable - 64 GB reserve) / per-job GB).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 24) (the S81 c7a
+    die elab peaked at 11.4 GB in Yosys)."""
+    env = os.environ.get("OT_BIND_ELAB_JOBS", "").strip()
+    if env:
+        try:
+            return max(1, min(n, int(env)))
+        except ValueError:
+            pass
+    cpus = os.cpu_count() or 1
+    try:
+        idle = int(cpus - os.getloadavg()[0])
+    except OSError:
+        idle = 1
+    avail = None
+    try:
+        for ln in Path("/proc/meminfo").read_text().splitlines():
+            if ln.startswith("MemAvailable:"):
+                avail = int(ln.split()[1]) / (1 << 20)
+    except OSError:
+        pass
+    try:
+        per = float(os.environ.get("OT_BIND_ELAB_JOB_GB") or min(float(mem_gb), 24.0))
+    except ValueError:
+        per = min(float(mem_gb), 24.0)
+    by_mem = int((avail - 64) // max(per, 1.0)) if avail is not None else 1
+    return max(1, min(n, idle, by_mem))
+
+
+class Prestart:
+    """BIND-ELAB-PAR 11-23: run elab_pass's define-variant elabs in a bounded process pool, started from the base
+    elab's source lists (bind_elab.elab on_sources) so they run alongside the base Yosys run.  Each variant is the very
+    elab_fn call elab_pass would make serially (same defines, same directory), so every emitted file is the same;
+    elab_pass only waits for it instead of calling it.  Anything unexpected -> no prestart (serial, as before)."""
+
+    def __init__(self, plan, ab, base, out, mem, elab_fn, roots=None):
+        self.plan, self.ab, self.base, self.out, self.mem, self.elab_fn = plan, ab, base, Path(out), mem, elab_fn
+        self.roots = roots
+        self.futures = {}
+        self.pool = None
+        self.jobs = 0
+        self.note = None
+
+    def on_sources(self, tops, full, lib):
+        try:
+            pref = [str(Path(self.base) / f) if not Path(f).is_absolute() else f for f in self.ab.get("prefer", [])]
+            rows = classify(self.plan, self.ab, dict(tops=tops, full=full, lib=lib),
+                            self.roots or [str(Path(self.base) / "rtl")], prefer=pref)
+            specs = variant_specs(_requested(rows), self.out / VARIANT_DIR)
+            if not _requested(rows):
+                return
+            self.jobs = elab_jobs(len(specs), self.mem)
+            if self.jobs <= 1:
+                self.note = "serial (1 job)"
+                return
+            # processes, not threads: each variant spends minutes in Python (module index, staging) before Yosys runs;
+            # forked here, before the base elab loads anything big
+            import multiprocessing as mp
+            from concurrent.futures import ProcessPoolExecutor
+            self.pool = ProcessPoolExecutor(self.jobs, mp_context=mp.get_context("fork"))
+            for defines, directory in specs:
+                extended = dict(self.ab, defines=list(self.ab.get("defines", [])) + list(defines))
+                self.futures[str(directory)] = (list(defines), self.pool.submit(
+                    self.elab_fn, extended, self.base, directory, self.mem))
+            print(f"   TYPE-DEFINES: {len(specs)} define-variant elab(s) started alongside the base elab "
+                  f"({self.jobs} parallel; OT_BIND_ELAB_JOBS)", flush=True)
+        except Exception as exc:          # fall back to the serial pass
+            self.note = f"prestart off: {type(exc).__name__}: {exc}"[:300]
+            self.close()
+
+    def take(self, defines, directory):
+        """True when the prestarted elab for exactly (defines, directory) is done (re-raises its error).  A prestarted
+        elab for another define set in that directory is waited out first, so the serial run does not race it."""
+        ent = self.futures.pop(str(directory), None)
+        if ent is None:
+            return False
+        if ent[0] != list(defines):
+            try:
+                ent[1].result()
+            except Exception:
+                pass
+            return False
+        ent[1].result()
+        return True
+
+    def close(self):
+        if self.pool is not None:
+            for _, f in self.futures.values():
+                f.cancel()
+            self.pool.shutdown(wait=True)
+            self.pool = None
+        self.futures = {}
+
+
+def elab_pass(plan, ab, base, out, mem, part_of, elab_fn, load_fn, flatten_fn, roots=None, prestart=None):
+    """Report per-type requested defines and optionally adopt a checked define-on variant.
+    prestart: a Prestart whose pool already runs (or ran) the variant elabs (BIND-ELAB-PAR)."""
+    try:
+        return _elab_pass(plan, ab, base, out, mem, part_of, elab_fn, load_fn, flatten_fn, roots, prestart)
+    finally:
+        if prestart is not None:
+            prestart.close()
+
+
+def _elab_pass(plan, ab, base, out, mem, part_of, elab_fn, load_fn, flatten_fn, roots, prestart):
     import shutil
 
     out = Path(out)
@@ -331,16 +455,15 @@ def elab_pass(plan, ab, base, out, mem, part_of, elab_fn, load_fn, flatten_fn, r
     rec = dict(schema="opentallas.type_define_effect.receipt.v1", mode=current_mode, summary=summary(rows), rows=rows,
                added=[], realized=[], verdict="NONE_NEEDED" if not ignored else "BIND_IGNORED")
     if ignored and current_mode == "on":
-        requested = {}
-        for r in ignored:
-            requested.setdefault(r["define"], set()).add(r["type"])
+        requested = _requested(ignored)
         added = sorted(requested)
         variant = out / VARIANT_DIR
         top, parents = ab["top"], ab.get("substitute_parent", [])
 
         def elaborate(defines, directory):
-            extended = dict(ab, defines=list(ab.get("defines", [])) + defines)
-            elab_fn(extended, base, directory, mem)
+            if prestart is None or not prestart.take(defines, directory):
+                extended = dict(ab, defines=list(ab.get("defines", [])) + defines)
+                elab_fn(extended, base, directory, mem)
             return signatures(flatten_fn(load_fn(directory), top, parents))
 
         try:

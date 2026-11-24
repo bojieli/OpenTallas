@@ -6064,14 +6064,24 @@ def cmd_elab(a):
         raise BindError(f"{a.plan}: {len(missing)} required preferred RTL file(s) missing before elaboration; "
                         "restore the declared source instead of falling back to an automatic stub:\n" + "\n".join(missing))
     _write_provenance(a, "elab")
-    rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem)
+    import type_define_effect as TDE
+    # BIND-ELAB-PAR 11-23: with OT_BIND_TYPE_DEFINES=on the define-variant elabs start in a bounded pool
+    # (OT_BIND_ELAB_JOBS) as soon as the base elab knows its sources, instead of one by one after it (S81 c7a: 2 h 21 m
+    # of serial ~31-min variant elabs).  Same elab calls, same directories, same files.
+    pre = (TDE.Prestart(raw, raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, E.elab)
+           if TDE.mode() == "on" and TDE.has_defines(raw) else None)
+    try:
+        rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, on_sources=pre.on_sources if pre else None)
+    except BaseException:
+        if pre is not None:
+            pre.close()
+        raise
     # TYPE-DEFINES-1123: a per-type verilog_defines entry read by a kept (top / dissolved) module is realized by one
     # define-on trial with checked scope when explicitly enabled. Default mode reports unapplied requests.
     # OUT/type_defines.json records the closure assessment used by bind.
-    import type_define_effect as TDE
     if TDE.mode() != "off" and TDE.has_defines(raw):
         td = TDE.elab_pass(raw, raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, Rules(raw["asbuilt"]).part_of,
-                           E.elab, load_asbuilt_netlist, E.flatten)
+                           E.elab, load_asbuilt_netlist, E.flatten, prestart=pre)
         rec["type_defines"] = {k: td[k] for k in ("verdict", "added", "realized", "no_change", "outside") if k in td}
     print(json.dumps({k: (v if k not in ("ambiguous", "undefined") else len(v)) for k, v in rec.items()}))
     return 0

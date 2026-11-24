@@ -614,10 +614,123 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
         cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g", "-u",
                f"{os.getuid()}:{os.getgid()}"] + vs + ["-w", str(Path(script_path).parent), YOSYS_IMAGE,
                                                         YOSYS_IN_IMAGE, "-q", "-l", str(log_path), "-s", str(script_path)]
+    cache = ElabCache.open(script_path, cmd)
+    if cache is not None and cache.fetch(log_path):
+        return
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode != 0:
         tail = (r.stderr or "")[-3000:] + (Path(log_path).read_text()[-3000:] if Path(log_path).exists() else "")
         raise ElabError(f"yosys failed (rc {r.returncode}):\n{tail}")
+    if cache is not None:
+        cache.store(log_path)
+
+
+INCLUDE_RE = re.compile(r'^[ \t]*`include\s+"([^"]+)"', re.M)
+
+
+class ElabCache:
+    """BIND-ELAB-PAR 11-23: opt-in content-hash cache of one Yosys elab ($OT_BIND_ELAB_CACHE = a directory).
+
+    Key = sha256 over the exact Yosys script text (it names every source and the output by absolute path, so a hit
+    needs the same paths), the Yosys identity (OT_BIND_YOSYS binary bytes, else the docker image id), and the bytes
+    of every file the script reads plus every `include it reaches (resolved like the frontend: the including
+    file's folder, then each -I folder in order).  An include that resolves nowhere disables the cache for that run.
+    A hit copies the cached write_json output (verified against its recorded sha256) into place; the run log is
+    copied too.  Unset (default) -> no cache, the plain Yosys run."""
+
+    def __init__(self, root, key, out_json):
+        self.dir = Path(root) / key[:2] / key
+        self.key = key
+        self.out_json = Path(out_json)
+
+    @staticmethod
+    def _sha(path):
+        import hashlib
+        h = hashlib.sha256()
+        with open(path, "rb") as f:
+            for blk in iter(lambda: f.read(1 << 22), b""):
+                h.update(blk)
+        return h.hexdigest()
+
+    @classmethod
+    def _yosys_id(cls, cmd):
+        exe = os.environ.get("OT_BIND_YOSYS")
+        if exe:
+            return "exe:" + cls._sha(shutil.which(exe) or exe)
+        r = subprocess.run(["docker", "image", "inspect", "--format", "{{.Id}}", YOSYS_IMAGE], capture_output=True,
+                           text=True)
+        if r.returncode != 0 or not r.stdout.strip():
+            return None
+        return "image:" + r.stdout.strip()
+
+    @classmethod
+    def open(cls, script_path, cmd):
+        root = os.environ.get("OT_BIND_ELAB_CACHE", "").strip()
+        if not root or root.lower() in ("0", "off", "no"):
+            return None
+        import hashlib
+        try:
+            text = Path(script_path).read_text()
+            outs = re.findall(r"^write_json\s+(\S+)\s*$", text, re.M)
+            yid = cls._yosys_id(cmd)
+            if len(outs) != 1 or yid is None:
+                return None
+            toks = set()
+            incs = []
+            for ln in text.splitlines():
+                for tok in ln.split():
+                    if tok.startswith("-I"):
+                        incs.append(tok[2:])
+                    elif tok.startswith("/") and Path(tok).is_file() and tok != outs[0]:
+                        toks.add(tok)
+            seen = {}
+            todo = sorted(toks)
+            while todo:
+                f = todo.pop()
+                if f in seen:
+                    continue
+                seen[f] = cls._sha(f)
+                for name in INCLUDE_RE.findall(Path(f).read_text(errors="replace")):
+                    cands = [Path(name)] if Path(name).is_absolute() else \
+                        [Path(f).parent / name] + [Path(d) / name for d in incs]
+                    hit = next((c for c in cands if c.is_file()), None)
+                    if hit is None:
+                        return None
+                    todo.append(str(hit))
+            h = hashlib.sha256()
+            h.update(b"bind-elab-cache-v1\0" + yid.encode() + b"\0" + text.encode())
+            for f in sorted(seen):
+                h.update(f"\0{f}\0{seen[f]}".encode())
+            return cls(root, h.hexdigest(), outs[0])
+        except OSError:
+            return None
+
+    def fetch(self, log_path):
+        meta = self.dir / "meta.json"
+        try:
+            m = json.loads(meta.read_text())
+            src = self.dir / "out.json"
+            if m.get("key") != self.key or self._sha(src) != m.get("sha256"):
+                return False
+            tmp = self.out_json.with_name(self.out_json.name + ".cache_tmp")
+            shutil.copyfile(src, tmp)
+            os.replace(tmp, self.out_json)
+            shutil.copyfile(self.dir / "yosys.log", log_path)
+            return True
+        except (OSError, ValueError):
+            return False
+
+    def store(self, log_path):
+        try:
+            self.dir.mkdir(parents=True, exist_ok=True)
+            tmp = self.dir / f"out.json.tmp{os.getpid()}"
+            shutil.copyfile(self.out_json, tmp)
+            os.replace(tmp, self.dir / "out.json")
+            shutil.copyfile(log_path, self.dir / "yosys.log")
+            (self.dir / "meta.json").write_text(json.dumps(dict(key=self.key, sha256=self._sha(self.dir / "out.json"),
+                                                                out_json=str(self.out_json))) + "\n")
+        except OSError:
+            pass
 
 
 def stage_keyer(base, out, pins=None):
@@ -728,7 +841,9 @@ def string_parameter_compat(files, out, key=str):
     return staged, record
 
 
-def elab(ab, base, out_dir, mem_gb=32, idx=None):
+def elab(ab, base, out_dir, mem_gb=32, idx=None, on_sources=None):
+    """on_sources(tops, full, lib): called once the recorded source lists are final, before Yosys runs (BIND-ELAB-PAR:
+    the per-type define variants start alongside this elab)."""
     out = Path(out_dir).resolve()
     out.mkdir(parents=True, exist_ok=True)
     ab = dict(ab)
@@ -800,6 +915,8 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
                       "".join(f"    {m} u_v{i} ();\n" for i, m in enumerate(pvar)) + "endmodule\n")
         tops = tops + [str(wt)]
         ab["_elab_top"] = "bind_elab_keep"
+    if on_sources is not None:
+        on_sources(list(tops), list(full), list(lib))
     js = out / "asbuilt.json"
     sc = out / "asbuilt.ys"
     ylib = lib
