@@ -477,3 +477,4 @@
   QC 41 rows: 1 STALE (glue, QC-GLUE-IMAGES); sle_st_b_v2 relaunched under HOLD-PAD-FLOW. KV 3 rows: kv3_pv_pair WAIT-BIND; 81 types have no kit-wave row (KV-OWN-PV-R2/HUB-R2 live).
   DEAD-OWNER lanes (silent >2h): S81-FWDCLK-WHATIF (04:06), LANEAGE-SWEEP (07:44), S81-KVLEAF-T2-ARCH-R2 (07:38). 119 S81 CBC-FALLBACK rows held, owners live.
   No FAILED-NORELAUNCH rows.
+- 2026-11-24 10:51 PST SWEEP 10:5x PST [OWNERS-SWEEP -> COORD] OWNERS-SWEEP.tsv 394 rows + KV private kits from private_specs (109 kits, 84 under KV-ALLFIX); commit 74eb04de. KV: 50 FAILED-NO-RELAUNCH (pc 21, hg/hgi 9, pv 5, hub 4, qkd 6, other 5; latest kit FAIL, none live, under 48 h) mapped to KV-OWN-HG-R2/PV-R2/HUB-R2 or KV-ALLFIX; 15 STALE. S81: UNOWNED 10 (kv_leaf 4, LEPW/LEPE LP 4, c3x 1, lepe_mu_C 1), DEAD-OWNER 1 (kv_leaf; KV-D29 dead), STALE 4. QC: UNOWNED slw_su_c x2, STALE tt_ctlm. All map to a live lane, no GAP. Next sweep 11:5x.
