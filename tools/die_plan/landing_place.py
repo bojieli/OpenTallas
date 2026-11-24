@@ -86,20 +86,42 @@ def _native_stage_groups(t, groups):
         init += ''.join('dict set ::cland_native_ff_only {' + p + '} 1\n' for p in ff_only)
         init += 'set ::cland_native_tag_density [dict create]\n'
         init += ''.join('dict set ::cland_native_tag_density {' + tag + '} ' + str(d) + '\n' for tag, d in density.items())
-        init += '''proc cland_native_leaf_match {i prefix} {
- if {![regexp [dict get $::cland_native_leaf_regex $prefix] [$i getName]]} {return 0}
- if {[dict exists $::cland_native_ff_only $prefix] && ![string match DFF* [[$i getMaster] getName]]} {return 0}
- return 1
+        init += '''unset -nocomplain cland_native_named_cells
+set cland_native_leaf_members {}
+proc cland_native_leaf_insts {prefix} {
+ global ff_blk cland_native_named_cells cland_native_leaf_members
+ if {[dict exists $cland_native_leaf_members $prefix]} {
+  return [dict get $cland_native_leaf_members $prefix]
+ }
+ # Native stages only move instances. Capture DB order and names once for this hook invocation.
+ if {![info exists cland_native_named_cells]} {
+  set cland_native_named_cells {}
+  foreach i [$ff_blk getInsts] {
+   lappend cland_native_named_cells [list $i [$i getName]]
+  }
+ }
+ set pattern [dict get $::cland_native_leaf_regex $prefix]
+ set ff_only [dict exists $::cland_native_ff_only $prefix]
+ set hit {}
+ foreach entry [lsearch -all -inline -regexp -index 1 $cland_native_named_cells $pattern] {
+  set i [lindex $entry 0]
+  if {$ff_only && ![string match DFF* [[$i getMaster] getName]]} continue
+  lappend hit $i
+ }
+ dict set cland_native_leaf_members $prefix $hit
+ return $hit
 }
 proc cland_native_sp {tag} {
  if {[dict exists $::cland_native_tag_density $tag]} {return [expr {0.4 / [dict get $::cland_native_tag_density $tag]}]}
  return 1.0
 }
 '''
-        check = check.replace(' set cland_native_found 0',
-            ' set cland_native_found 0\n')
-        check = check.replace('regexp [format {(^|[/.])%s[/.]} $cland_native_prefix] [$cland_native_i getName]',
-            'expr {[dict exists $::cland_native_leaf_regex $cland_native_prefix] ? [cland_native_leaf_match $cland_native_i $cland_native_prefix] : [regexp [format {(^|[/.])%s[/.]} $cland_native_prefix] [$cland_native_i getName]]}')
+        check = check.replace(
+            ' set cland_native_found 0',
+            ' if {[dict exists $::cland_native_leaf_regex $cland_native_prefix]} {\n'
+            '  if {![llength [cland_native_leaf_insts $cland_native_prefix]]} {\n'
+            '   error "OT_CLAND missing native stage group $cland_native_prefix"\n'
+            '  }\n  continue\n }\n set cland_native_found 0')
         check = init + check
     return groups + added, check
 
@@ -126,11 +148,7 @@ def _native_stage_placement_source(t, source):
     if source.count(marker) != 1:
         raise ValueError('native leaf matcher source marker missing')
     extra = ''' if {[dict exists $::cland_native_leaf_regex $prefix]} {
-  set hit {}
-  foreach i [$ff_blk getInsts] {
-   if {[cland_native_leaf_match $i $prefix]} {lappend hit $i}
-  }
-  return $hit
+  return [cland_native_leaf_insts $prefix]
  }
 '''
     source = source.replace(marker, marker + extra)
