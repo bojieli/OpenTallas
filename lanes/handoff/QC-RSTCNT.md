@@ -10,3 +10,8 @@ Job: generic in-die root stable counter (QC first for C1i by 07:00; then S81 c9,
 - Trial unit oth-ubuntu-3468351-1795516380 intel1 (g/trial.ot, g/row.log, pre.log, bind.log, latcheck.json).
 - S81 root type ot_s81sl_leaf__t34 (1 part, no lock) -> reset_hold_row works; HEAD not yet checked.
 - After trial: release diff vs epyc7 QC-ALLFIX/cF/bind/bind_reset.json; reset_hold_check on C1g rtl + new root rtl + new bind_reset.json.
+## 03:35
+- C1g trial: row b992484397c0 shift [259], PRE had 76 ENTRYFOOT (inherited, also in QC-ALLFIX cH pre.log) -> trial abandoned, g/tree deleted (disk).
+- C1i run: unit oth-ubuntu-226061-1795520056 intel1, script trial2.sh (h/trial2.ot), rt cbb5668a243d, base C1h 894e6f21991f. Outputs h/{row.log,pre.log,pre_base.log,bind.log,latcheck.json}.
+- Leases: use --dir <subdir> (lane-root --dir lease blocks ot-delete of siblings).
+- After bind: hold check = reset_hold_check on c1h full rtl? -> use QC-ALLFIX cH/bind/rtl (other types) + h/bind/rtl root type + h/bind/bind_reset.json, --plan row plan.
