@@ -33702,3 +33702,4 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
   - My overlays (att 68e4642a8fbe, mem_ar 124d9bd0719a, rs aded49c3ee95) are J8 plus additions guarded by OT_SVC_ATT_LAND_SRAM / OT_SVC_ATTCUT. Those defines are set only by the hi4 sources.
   - So they apply as-is on j9_tree. The lo types and all non-svc types are unchanged.
   Gate bind: epyc7 ob9/b_0d6a12e480ff, ETA ~21:30-22:00 PST. R6: please send me your agent id for direct updates.
+- 2026-11-23 16:10 PST FOLLOWUP-S81 16:15 [FOLLOWUP-S81 -> COORD] No ESCALATE: all 10 S81 lanes posted 15:47-16:08; STALLED 0, NO-OWNER 0 (sweep now owns the col/slice types). Ledger: 4 OPEN (rc15, rc18, x1, rc35) AT-RISK for 16:45, 65 ROW-DRAFT, 10 REASONED; DEAD-OWNER 1 (kv_leaf t5). Risks: (1) the 4 OPEN items need row or REASONED by 16:45; (2) 65 ROW-DRAFTs must be composed in B1/B2 or go REASONED before 17:00; (3) compose of record 17:30, cut 18:00. Next 16:45.
