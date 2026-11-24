@@ -11,3 +11,8 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - No nst4 (only for (b)). wch4b hd_lep0N_w_1123175934 keeps running as a spare (in pre-GRT hold at 20:32).
 - Unit head-west-wband-route (west-wband-route/run.sh): waits for the head-r18-west-wband-grt driver to end, then run-item same spec --goal route (sign-off+LEC), OT_LANE=HEAD-WEST.
 - Waiter head-west-waiter (waiter_west/) still posts the raw reads for both kits.
+## 20:4x PST
+- COORD accepted wband. Required before it counts: classify the 5_1_grt.json hold -132.6 / skew 598 on the final stage db after sign-off; internal FF hold must be >= 0, and anything negative must be forwarded ring inputs only, within -568. Post the endpoint split + send the route render to FABLE-RC-ALL.
+- waiter_west had an ls short-circuit bug (failed.odb* absent -> rc 2): fixed, now head-west-waiter2. Told HEAD-R18 its waiters carry the same line.
+- head-west-wband-signoff-wait (waiter_wband_signoff/) posts the raw sign-off read + hold lines + render paths when head-west-wband-route ends. The lane still has to classify.
+- Preview: pre-GRT FF OT_HOLD_GATE -86.4 (4205 ep, 1554 forwarded ring inputs, limit -568.4); post-repair FF hold guard +27.7, 0 violators; json -132.6 was read under TT vclk binding (likely IO/ring), unclassified.
