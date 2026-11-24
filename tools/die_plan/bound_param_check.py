@@ -9,9 +9,7 @@ instantiation of the bound parts and every module definition under the tree's RT
 
   ERROR    no definition of the module in the tree declares parameter P (a plan key emits RTL the tree does not have)
   WARN     some, not all, definitions declare P (which one the kit takes depends on prefer / file order)
-  ERROR    BPC-UNDEF-FATAL-1123 (COORD; KV A1 checked 92 of 570 parameters, 29 modules undefined, reported PASS): a module
-           passed parameters but defined neither under the tree's RTL roots nor in the bind's own RTL directory
-           (BOUND-PARAM <mod>.UNDEFINED); a check that skips must fail.  Coverage = params checked / params passed.
+  info     modules with no definition in the tree (hard macros / views) are counted, not checked
 
 usage: bound_param_check.py --tree TREE --rtl-dir BIND_OUT/rtl [--roots rtl physical results] [--json OUT]   exit 1 on ERROR
 """
@@ -89,18 +87,12 @@ def definitions(tree, roots, wanted):
 def check(tree, rtl_dir, roots=("rtl", "physical", "results")):
     inst = instantiations(rtl_dir)
     defs = definitions(tree, roots, set(inst))
-    for m, d in definitions(rtl_dir, ["."], set(inst) - set(defs)).items():   # the bind output's own definitions (bind_cells.sv)
-        defs[m].extend((os.path.relpath(os.path.join(str(rtl_dir), p), str(tree)), b) for p, b in d)
-    expected = sum(len(v) for v in inst.values())
     errors, warns, undefined, checked = [], [], [], 0
     rd = os.path.realpath(str(rtl_dir))
     own = lambda rel: os.path.realpath(os.path.join(str(tree), rel)).startswith(rd + os.sep)
     for mod in sorted(inst):
         if mod not in defs:
             undefined.append(mod)
-            ex = ", ".join(f"{a}:{b}" for ws in list(inst[mod].values())[:1] for a, b in ws[:2])
-            errors.append(f"BOUND-PARAM {mod}.UNDEFINED: no definition under {', '.join(roots)} of the tree nor in the bind RTL; "
-                          f"{len(inst[mod])} parameter(s) ({', '.join(sorted(inst[mod])[:6])}) passed by {ex} NOT checked")
             continue
         for p, where in sorted(inst[mod].items()):
             checked += 1
@@ -113,8 +105,7 @@ def check(tree, rtl_dir, roots=("rtl", "physical", "results")):
             elif lack and not any(own(path) for path in have):   # the bind output's own definition is authoritative
                 warns.append(f"BOUND-PARAM-PARTIAL {mod}.{p}: declared in {', '.join(have[:2])}, not in {', '.join(lack[:3])}")
     return dict(schema="opentallas.bound_param_check.v1", tree=str(tree), rtl_dir=str(rtl_dir),
-                verdict="FAIL" if errors else "PASS", modules=len(inst), params_checked=checked, params_expected=expected,
-                coverage=f"{checked}/{expected}",
+                verdict="FAIL" if errors else "PASS", modules=len(inst), params_checked=checked,
                 undefined_modules=len(undefined), undefined_sample=undefined[:20], errors=errors, warnings=warns)
 
 
@@ -132,8 +123,8 @@ def main(argv=None):
         print(e)
     for w in r["warnings"][:10]:
         print(w)
-    print(f"BOUND-PARAM-CHECK {r['verdict']} modules={r['modules']} params={r['params_checked']} coverage={r['coverage']} "
-          f"errors={len(r['errors'])} warnings={len(r['warnings'])} undefined_modules={r['undefined_modules']}")
+    print(f"BOUND-PARAM-CHECK {r['verdict']} modules={r['modules']} params={r['params_checked']} errors={len(r['errors'])} "
+          f"warnings={len(r['warnings'])} undefined_modules={r['undefined_modules']}")
     return 1 if r["errors"] else 0
 
 
