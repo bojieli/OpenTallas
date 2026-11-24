@@ -55,3 +55,11 @@ Table: lanes/ALLFIX-KV.tsv. Coordinate: FABLE-OPEN-KV (pc probe A on 121b8cb74ac
 - kit_wave edits: only_items 56->99 (a156e52f, 948930450); holds released pc cl254/cl5a95, hub_Wi/Wo/Eo; hold kv3_pc_v1__cl7f648944* (KV-OWN-RSTREACH 10:15); hg*/pv* holds re-owned to me, eta 11:00, lift when the event carries A5t4 rows (A5t5 includes them).
 - A5t5 (E9 run_a5t5.sh, list grow/a5t5.list = C2T2 + A5t4 rows + EF4 + SENDER merge) composing; A5t6 rows owed: pv_v4 stations KV-OWN-PV, pad fix pv_v3e/v7/v12 KV-PV-CAP, hub_Eo channel KV-OWN-HUB(-R2), headN_eN stations KV-OWN-HG.
 - Cancelled hgi + hgi_v2 cl2862 (census -870/-250). C2T2 full PASS. bgrepl E9 -> epyc7/epyc2/intel2 running.
+
+## 10:2x PST update (KV-ALLFIX)
+- A5t4 a2e6f8900b36 E9 gate rc 2: plan_gate_pre refused the bind on 21 RSTREACH findings, because the gate never exported OT_PLAN_GATE_PRE=warn. Fixed in E9 grow/gate_grow_a5t4_codex.sh. The A5t4 regate is skipped, since A5t5 is a superset of A5t4.
+- A5t5 669cbe6e39bd composed DONE. PRE has 21 RSTREACH findings and no other class. ZERO_SLACK L346/L353 are 95/95, UNCHANGED.
+- A5t5 gate moved off E9 (COORD). E10 kv-allfix/a5t5e10/grow is forking pub/kv_a5t3_tree (unit kv-a5t5e10-fork-1124). Next: bash grow/run_a5t5_gate.sh there through ot-run --hosts epyc10 with OT_PLAN_GATE_BASELINE=plan_c; it installs the pads a494038c27dc and pins rt 434f13368bb6.
+- HGI v7 kept-relays: intel2 unit kv-hgi-v7-kept-route-1124 runs to goal route, log ~/tmp/kvallfix/hgi-keep-1124/route.log. Post-place WNS is -136.5, so it keeps going. Send the routed per-leg setup to KV-OWN-HG-R2.
+- v12 dropped from the KV-PV-CAP pad row (VIS-REOWN withdrew it).
+- bgrepl: epyc7 and epyc2 RC 1, intel2 OK.
