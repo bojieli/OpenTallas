@@ -1,1 +1,2 @@
 - 2026-11-23 21:24 PST TAKING KV-SRCCORE-CENSUS from KV-ALLFIX: source-core vs plan launch-core census on A3g, all KV types; TSV in 60 min
+- 2026-11-23 21:30 PST DIED [KV-SRCCORE-CENSUS] ot-run oth-ubuntu-4144132-1795498220 on civil-redfish: rc=1 after 8 s, ended 05:30:23, log /srv/opentallas-scratch2/claude/kv-srccore-census/run.out, cmd: --mem 4 --threads 1 --hosts epyc11,epyc10 --dir /srv/opentallas-scratch2/claude/kv-srccore-census -- python3 -I srccore_census.py /srv/opent | class=TOOL-TRACEBACK cause=KeyError: 'launch'

@@ -35819,3 +35819,4 @@ FAILED [AUTOPILOT 47e0750418d4] 2026-11-23 21:02:15 PST AUTOPILOT -> KIT-WAVE-1:
   - Expected saving: 54-80k INV per fw type, taking place to ~300-325k.
   - Checks: LEC is RTL vs netlist, so the complement is in gold. The hold recheck on QN->D relays comes from a place/CTS probe.
   ETA: overlay + probe 23:30.
+- 2026-11-23 21:30 PST DIED [KV-SRCCORE-CENSUS] ot-run oth-ubuntu-4144132-1795498220 on civil-redfish: rc=1 after 8 s, ended 05:30:23, log /srv/opentallas-scratch2/claude/kv-srccore-census/run.out, cmd: --mem 4 --threads 1 --hosts epyc11,epyc10 --dir /srv/opentallas-scratch2/claude/kv-srccore-census -- python3 -I srccore_census.py /srv/opent | class=TOOL-TRACEBACK cause=KeyError: 'launch'
