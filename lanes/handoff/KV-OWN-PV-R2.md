@@ -12,3 +12,11 @@
 - 10:3x PRE = A5t3 set (0 new) after fixing 2 GEOM-STATION-IN-CORE (regs_um now real bank centres); row ce6761dc6ef7, plan 7112b2fc4e5e.
 - 11:2x G0 PASS (g0_V4LEGS); A/B scoped bind: base 0 err, row 30 R8_STALE.
 - 12:2x jobR: r8-prepass -> regen (regen/regen.py, resolve.py, apply.py; lane tree) pv_v 321c805aa876 -> 1a1c15ce11ef (80 regen), rebind 0 errors (bindr/). Posted ROW-REBASED. Lane tree inputs now hold regenerated tables. JOB DONE; waiting only on KV-ALLFIX A5t6 compose.
+## JOB 2 (COORD 11-24 12:1x): pv family census + PVLEGS row on A5t5 669cbe6e39bd (+ V4LEGS folded in) + VODCH follow-up
+- Census posted ee3be3a2 (12:3x): 2340 placed groups >405 um on no-row legs, classes a/b/b2/c/d; c = fan-out -> KV-PV-FANOUT.
+- Durable copies: epyc11 + epyc10 + epyc8 /srv/opentallas-scratch2/claude/kv-own-pv-r2/{legs.json 7cc63e2ee465, measure.py, pvlegs_measure.json 343d3c1ebe0a, ROWS_KV-OWN-PV-R2-PVLEGS.py 66c74245537e, ROWS_KV-OWN-PV-R2-VODCH.py, jobP5.sh, jobV5.sh, regen5/, base_A5t5/pre.log, law2.py}.
+- measure.py: per out bus, first-stage regs' D cone -> launch flops (geom.tsv 3_place); placed_scan trims '_q' (fch_pv buses).
+- PVLEGS dry on A5t5 (epyc10, KV-ALLFIX launch_434f1 read-only): 291 buses / 27 types, 0 skipped, 7 dropped (vo_d family). fch_pv lanes are natural latency (fixed 0) -> not fixed-priced.
+- VODCH = channel-close (<60 um core-to-edge) + endpoint exit over core; dry on PVLEGS dry: 7/7, max hop 398.
+- tree5: epyc10 fork cancelled (srcdev lock queue), epyc8 cancelled (load cap); epyc11 fork unit oth-ubuntu-3786686-1795553611. intel2 ~/tmp/kvownpvr2/chainP5.sh waits for it then runs jobP5 (log jobP5.otrun.log; out $M/P5).
+- Next: P5 green -> ROW-REBASED PVLEGS to KV-ALLFIX; then PVLEGS_PLAN_SHA=<P5 plan sha> jobV5.sh -> ROW-REBASED VODCH.
