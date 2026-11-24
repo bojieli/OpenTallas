@@ -1,0 +1,9 @@
+# QC-HC1-CLKENTRY handoff (lane memory)
+Job (COORD 20:4x): sle_ctl group 2 x_hc1_st_b_i -> u_cland_x_hc1_st_b_i (404 ends, -55.83 rcx) + cws2 (181, -40.35) same class; conditions 1,2,4 of FABLE-RC-QC 20:48 (3 = QC-LANDCORE-SWEEP). Report ROW-REBASED to QC-ALLFIX (agent a19642e09aa8ab59f).
+- Step 1: C1-noSU 12b66c0e4829 ctlclk row does NOT cover (moves hc-side fclk_in_b_hw_i only; sle_ctl byte-identical B1/C1-noSU/C1c).
+- Cause: half-cycle (fall) hard cland, in_max 245 (hc1 ft ring) / 195 (cws2) + 192 ps port->pin vs 416.5 + fclk - setup 84; clands ~300/225 um from pins.
+- Row SLECTL-CLKENTRY-SEAT: epyc7 /srv/opentallas-scratch2/claude/QC-HC1-CLKENTRY-epyc7/row_clkentry.py IN OUT PINS [rpsel.json]. hc1 origin -> (507.168,1257.12), cws2 -> (1114.344,1257.12); band/tap/rst group shifted; hop 228->35, 122->27. No overlaps, no plan sites in new rects.
+- Plans: plan_nosu_seat.json 3f9c963d4ff2 (row only on C1-noSU), plan_nosu_seat_rpsel.json b4a03a2e900f (+ SLECTL-RP-SEL 24 relay seats), plan_c1c_seat_rpsel.json 8052bdd95837 (on C1c 3b12251bfd6c; sle_ctl type identical in C1c, only latency table differs -> same delta).
+- Cond 1 (V2 4_1_cts, out/v2.qhop): q-side worst slack today +380 (hc1, to u_ft_x_hc1_st_b_o) / +551 (cws2, u_ft_cws2_o); first-consumer hop now ~70/110-143 um -> ~195-309 / 290-373 um from new seat (full cycle). fclk leg today 35.9 / 4.2 ps; fclk port pins at x551/x1159 N face sit directly above new seats.
+- epyc11 /srv/opentallas-scratch2/claude/QC-HC1-CLKENTRY: chain.sh (fork C4 -> cS/tree, copy cC deltas, ot-run bindS.sh = PRE + elab + strict --types sle_ctl). logs chain.log, bindS.ot, cS/{pre,elab,bind}.log.
+- Next: private probe (kit_wave private-spec sle_ctl from cS/bind, goal place->CTS) and census all 4 groups (QC-SLECTL-RESYN sta_sum_rcx.sh + census.py on epyc7).
