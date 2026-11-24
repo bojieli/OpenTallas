@@ -1,5 +1,6 @@
-# S81 c8/c8r PROBE-ONLY: TAPOFF-SITE / TAPKEY-SITE moved-tap types (c8 p6u_hops2 94eb2af6a4f5 vs B1; source epyc9 tapkey-site/out/s81_c8_vs_b1.txt). COORD 02:57 + FABLE-RC-ALL 39832dd1: CTS/hold reads are not evidence; no sign-off count on c8/c8r. Re-key by site = c9 compose-tail step before PRE.
+# S81 c8/c8r PROBE-ONLY moved-tap types: 62 (FABLE-RC-ALL 03:49, replaces the 59): every type tap_site.py rekey --baseline B1 changed on c8 p6u_hops2 (TAPKEY-SITE rekey/c8.out, main d0e1c01116). No sign-off count on c8/c8r; they count from the first kit generated on the re-keyed + filled plan (c9).
 ot_s81sl_kv_leaf__t1
+ot_s81sl_kv_leaf__t2
 ot_s81sl_kv_leaf__t3
 ot_s81sl_kv_leaf__t4
 ot_s81sl_kv_leaf__t5
@@ -8,6 +9,7 @@ ot_s81sl_leaf__t11
 ot_s81sl_leaf__t12
 ot_s81sl_leaf__t13
 ot_s81sl_leaf__t14
+ot_s81sl_leaf__t15
 ot_s81sl_leaf__t16
 ot_s81sl_leaf__t17
 ot_s81sl_leaf__t2
@@ -20,6 +22,7 @@ ot_s81sl_leaf__t26
 ot_s81sl_leaf__t27
 ot_s81sl_leaf__t28
 ot_s81sl_leaf__t31
+ot_s81sl_leaf__t32
 ot_s81sl_leaf__t33
 ot_s81sl_leaf__t34
 ot_s81sl_leaf__t35
