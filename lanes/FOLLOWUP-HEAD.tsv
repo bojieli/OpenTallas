@@ -1,6 +1,6 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-West GRT-0116 1034: winner wband (0 GRT overflow); West released only after mirror-corner + routed review	hd_lep0N_w	HEAD-WEST 20:40	HEAD-WEST	11-23 20:51	wband 0 overflow; head-west-wband-route resumes to goal route (sign-off+LEC); hold endpoint split + route renders to FABLE-RC-ALL; wch4b spare read ~21:15; waiter ls-guard bug fixed	6	route ETA ~3-4h; row 20:00 met	RUNNING	
-E epin_r4 census kit hd_lep0N_1123175731 (resume to GRT)	hd_lep0N E	HEAD-R18 20:55	HEAD-R18	11-23 20:55	alive; stale 19:35 place FAIL explained; waiter fixed; progress posts every 45 min (next 21:40)	2	23:00 (census 66ce ~22:30; r18g escape GRT 00:00-01:30)	RUNNING	WATCH: E waiters shared the same ls-guard bug (HEAD-WEST warning)
-rscap probe kit hd_lep0N_1123184332	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 20:55	running; gated	2	-	RUNNING	
+West: wband winner, routing to sign-off+LEC (started 20:51); wch4b spare also 0 GRT overflow (parked)	hd_lep0N_w	HEAD-WEST 21:18	HEAD-WEST	11-23 21:18	route running under head-west-wband-route; sign-off verdict + hold split + renders posted when it ends	8	next post 22:00	RUNNING	
+E epin_r4 (1123175731): CTS done, 4_2 tapbal GRT iter 1/30; r18g escape GRT iter 6/30; 66ce census iter 13/20	hd_lep0N E	HEAD-R18 21:13	HEAD-R18	11-23 21:13	all 4 units active	13	66ce 22:30-23:00; E GRT reads 00:00-01:30; next post 21:55	RUNNING	E GRT reads past 23:00 mark (known)
+rscap probe kit hd_lep0N_1123184332	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 20:55	in CTS (21:13)	2	-	RUNNING	
 s2 reseal dry gate	HEAD die	FLOW-OPS-R3	FLOW-OPS-R3	-	no result post seen	-	18:30 passed	OPEN	AT-RISK: no ETA
 hd_ctl route+LEC, rc138/WOPENREG REASONED	HEAD	earlier	HEAD-R18	-	pending census	-	23:00	REASONED/RUNNING	
