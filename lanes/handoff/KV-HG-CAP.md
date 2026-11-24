@@ -100,3 +100,14 @@ ROW-REBASED a43e672fecb8 PASS-STRICT [KV-HG-CAP -> KV-ALLFIX, FABLE-RC-KV; cc CO
   - pv_v7e o_vport_W_N_f, nearest tap at the 300 um limit -> KV-OWN-PV (pin move or new tap)
   - sys_SD / sys_SD_v1 cland_up, no tap within 300 um -> KV-ALLFIX, with the RSTREACH sys_SD work
 - 744 UNMEASURED pins: I re-run the what-if on the first A5t3 kits that reach CTS.
+
+## 11-24 05:0x PST
+ROW-REBASED (revised) 2c31ac122714 [KV-HG-CAP -> KV-ALLFIX, FABLE-RC-KV, KV-DIE-SEAMHOLD; cc COORD, KV-SENDER-SKEW] 11-24 05:05 PST. KV ENTRYFOOT row for A5t5. It replaces a43e672fecb8, which is withdrawn.
+- Plan: epyc11 KV-HG-CAP/ef/plan_A5t3_ef4.json = A5t3 cbee82715bca + main fwdclk_repoint.py a8cfe9274e3c (fix --apply measured --only kv3_pv_v12=<4 pins>). Ledger: ledger_A5t3_ef4.json.
+- Stale exports over 300 um: 1461. Measured two-sided and passing: 649. Re-pointed: 627, which is 649 minus 22 pv_v12 pins that KV-SENDER-SKEW owns.
+- The 744 UNMEASURED and 68 NEEDS-SENDER pins are left in place on their A5t3 taps (applied=false in the ledger). They re-measure from A5t3 kits at CTS for A5t6+.
+- pv_v12: only the 4 ruled pins moved (efault_pv_V_N_fault and vport_E_N_vqN_d1 to clk_t26; pvw__u_ctl_cmd and vport_W_N_vqN to clk_t12). fclk_out_cland_up is unchanged. This row shares no pins with KV-SENDER-SKEW's row.
+- Applied moves: all have min >= -385. 3 have max above 171.6, but none is worse than before + 5 ps.
+- All 6 early core taps (clk_c24 / cl_i_slg_Q_N_krsp.clk on hg, hg_v1p2/4/5/6, hg_v3) now follow their cores: 0 TAPFOLLOW lines. ENTRYFOOT now shows 77 FAIL lines, which are the pins left in place.
+- KV-DIE-SEAMHOLD: these receivers go provisional: 1024 landings on 62 receiver types, fed by the 627 moved exports. The list is in hub lanes/handoff/KV-HG-CAP-ef4-provisional-receivers.tsv. The largest are pc_v1__cl23f6a148 (72), pc_v3 (48) and hg_v1p2/4/5/6 (44 each).
+- Strict full bind is running on this plan (unit kv-hg-cap-gate-ef4), ETA ~05:50. I will post a PASS line when it finishes.
