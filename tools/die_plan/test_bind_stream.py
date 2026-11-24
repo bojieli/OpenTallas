@@ -175,3 +175,53 @@ def test_scoped_bind_without_top_kits_per_type(tmp_path, monkeypatch):
     assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", tn, "--instance", inst, "--kit", str(kd)]) == 0
     man = json.loads((kd / "kit_rtl.json").read_text())
     assert man["params"] == (rec["instance_params"][inst] or man["params"])
+
+
+# ---- BIND-TYPE-RECEIPT 11-24 (COORD ruling): errors attributed to their types; clean types get the receipt
+def test_attribute_errors_owner_rules():
+    import bind
+    known = {"svc_lo__t1", "iqf__t1", "seqhost__t1"}
+    pt = {"u_rsv_00.u.u_att": {"svc_lo__t1"}, "u_iq.x": {"iqf__t1"}}
+    tied = {("u_rsv_00.u.u_att", "iblk", "m"): [(1, "0", "literal")]}
+    errs = ["UNDRIVEN_OPEN u_rsv_00.u.u_att.d[1] (ot_hdc, type svc_lo__t1): 1 input bit(s) ...",
+            "TIED u_rsv_00.u.u_att.iblk[1] = 0 (literal)",
+            "TIED_TOTAL 486192 tied bits on 2288 leaf pins",
+            "EMIT iqf__t1: x_o writer START stage 6 needs finite xy_um"]
+    ref, un = bind.attribute_errors(errs, known, pt, {}, tied)
+    assert un == [] and set(ref) == {"svc_lo__t1", "iqf__t1"} and len(ref["svc_lo__t1"]) == 3
+    ref, un = bind.attribute_errors(errs + ["LANE_CYCLES L7: bound 3 != latency table 2"], known, pt, {}, tied)
+    assert un == ["LANE_CYCLES L7: bound 3 != latency table 2"]                   # names no type: blocks everything
+    ref, un = bind.attribute_errors(["TIED_TOTAL 9 tied bits"], known, pt, {}, {("u_nowhere", "p", "m"): [(0, "0", "x")]})
+    assert un and not ref                                                          # a tied pin no type owns: unattributed
+
+
+def test_partial_receipt_refuses_only_attributed_types(tmp_path):
+    raw, plan, ab, out, ctx = fixture(tmp_path)
+    K.write_bind_receipt(raw, out, str(ab), plan_path=plan, refused={"tb": ["TIED x"]})
+    (out / 'bind_report.json').write_text(json.dumps(dict(errors=["TIED x"], n_errors=1)))
+    assert K.bind_matches(raw, 'ta', out, str(ab), plan) and not K.bind_matches(raw, 'tb', out, str(ab), plan)
+    assert K.receipt_type_clean(out, 'ta', 'ta')[0] and not K.receipt_type_clean(out, 'tb', 'tb')[0]
+    assert BS.launch_check(out, 'ta', plan, str(ab))[0] == 0 and BS.launch_check(out, 'tb', plan, str(ab))[0] == 3
+    (out / 'native_topology.json').unlink()                                          # no receipt (unattributed): all refused
+    assert BS.launch_check(out, 'ta', plan, str(ab))[0] == 3
+
+
+@pytest.mark.skipif(not HAVE_YOSYS, reason="no Yosys (OT_BIND_YOSYS) and no docker")
+def test_tiny_bind_with_type_errors_receipts_clean_types(tmp_path):
+    import bind
+    p = json.loads((EX / "die_plan.json").read_text())
+    p["asbuilt"]["straps"] = []                                   # TIED on p0.u_b.id: errors owned by type ta only
+    p["asbuilt"]["base"] = str(EX)
+    plan = tmp_path / "die_plan.json"
+    plan.write_text(json.dumps(p))
+    out = tmp_path / "o"
+    assert bind.main(["elab", str(plan), "--out", str(out), "--mem", "4"]) == 0
+    bind.main(["bind", str(plan), "--out", str(out), "--mem", "4"])
+    rep = json.loads((out / "bind_report.json").read_text())
+    assert rep["n_errors"] and rep["type_receipt"]["n_unattributed"] == 0 and {t.split("__")[0] for t in rep["type_receipt"]["refused"]} == {"ta"}
+    rec = json.loads((out / "native_topology.json").read_text())
+    assert rec["partial"] and {t.split("__")[0] for t in rec["refused"]} == {"ta"}
+    raw = json.loads(plan.read_text())
+    assert K.bind_matches(raw, "ts", out, None, plan) and not K.bind_matches(raw, "ta", out, None, plan)
+    assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", "ts", "--kit", str(tmp_path / "k_ts")]) == 0
+    assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", "ta", "--instance", "A0", "--kit", str(tmp_path / "k_ta")]) != 0

@@ -99,10 +99,28 @@ def bind_receipt(raw,asbuilt=None,topology=None,plan_path=None):
     return receipt
 
 
-def write_bind_receipt(raw,out,asbuilt=None,topology=None,plan_path=None):
+def write_bind_receipt(raw,out,asbuilt=None,topology=None,plan_path=None,refused=None):
     receipt=bind_receipt(raw,asbuilt,topology,plan_path)
+    if refused:
+        # BIND-TYPE-RECEIPT 11-24: a bind whose every error is owned by named types; those types are refused, the rest clean
+        receipt['partial']=True;receipt['refused']=dict(refused)
     Path(out,'native_topology.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt
+
+
+def _refused(receipt,tn,key=None):
+    ref=receipt.get('refused') or {}
+    return any(k in ref for k in {tn,key} if k) or any(k.startswith(tn+'__') for k in ref)
+
+
+def receipt_type_clean(out,key,tn):
+    """BIND-TYPE-RECEIPT: (ok, why) for kit-rtl on a bind WITH errors: its partial receipt must exist and refuse neither key nor tn"""
+    path=Path(out)/'native_topology.json'
+    if not path.is_file():return False,'no native_topology.json receipt (an error is not attributed to a type)'
+    old=json.loads(path.read_text())
+    if not old.get('partial'):return False,'receipt is not a per-type receipt'
+    if _refused(old,tn,key):return False,f'type {key} is refused by the bind receipt: {(old["refused"].get(key) or old["refused"].get(tn) or ["variant refused"])[:1]}'
+    return True,f'bind errors are all attributed to other types ({len(old["refused"])} refused); {key} is clean in the receipt'
 
 
 def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
@@ -115,6 +133,7 @@ def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
         import bind_stream
         old=bind_stream.receipt(out,tn,plan_path)
         if old is None:return False
+    if _refused(old,tn):return False         # BIND-TYPE-RECEIPT: a type the bind's errors are attributed to
     new=native_contract(raw,asbuilt,plan_path)
     if asbuilt and old.get('asbuilt_sha256')!=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest():return False
     if old.get('transport') != new['transport'] or old.get('types',{}).get(tn) != new['types'][tn]:

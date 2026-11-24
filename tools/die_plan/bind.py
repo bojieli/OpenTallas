@@ -6360,6 +6360,42 @@ def probe_scope_split(errs, probe, known_types, module_types=None, path_types=No
     return keep, warn
 
 
+def attribute_errors(errs, known_types, path_types, module_types=None, tied_pins=None, define_outside=()):
+    """BIND-TYPE-RECEIPT 11-24 (COORD ruling, S81 iqf/seqhost refused BIND_STALE for svc_lo UNDRIVEN_OPEN/TIED): each bind error ->
+    the bound types it belongs to (the same owner rules as probe_scope_split: token-1 type, `type T` phrase, as-built instance
+    path at either end, LATCH_EXCEPT_MODULE module owners, TYPE_DEFINE_CONFLICT elab receipt; TIED_TOTAL = the owners of every tied
+    pin).  -> (refused {type: [errors]}, unattributed [errors]).  An error owned by no known type is unattributed and blocks all."""
+    known = set(known_types or ())
+    mt = module_types or {}
+    refused, unattributed = defaultdict(list), []
+    tie_owners = None
+    for e in errs:
+        toks = str(e).split()
+        code, tok = (toks + ["", ""])[0], (toks + ["", ""])[1].rstrip(":")
+        if code == "TIED_TOTAL":
+            if tie_owners is None:
+                tie_owners = set()
+                for (path, _port, _module) in (tied_pins or {}):
+                    o = set((path_types or {}).get(path, ()))
+                    if not o:
+                        tie_owners = None
+                        break
+                    tie_owners |= o
+            owners = set(tie_owners or ())
+        elif code == "LATCH_EXCEPT_MODULE" and "/" not in tok:
+            owners = set(mt.get(tok) or ())
+        elif code == "TYPE_DEFINE_CONFLICT":
+            owners = set(define_outside)
+        else:
+            owners = _error_owner_types(e, known, path_types)
+        if owners and owners <= known:
+            for t in sorted(owners):
+                refused[t].append(str(e))
+        else:
+            unattributed.append(str(e))
+    return dict(refused), unattributed
+
+
 def probe_tie_findings(tied_pins, emitted, known_types, path_types):
     """Reapply the tie cap after restricting a probe's exact per-pin records to its owners."""
     details = []
@@ -6914,9 +6950,25 @@ def cmd_bind(a):
         if rep["leaf_sources"].get("missing"):
             print(f"bind: WARN leaf modules without a source (report only, kit_rtl will refuse them): {rep['leaf_sources']['missing'][:10]}",
                   flush=True)
+    _refused, _unatt = {}, []
+    if B.errors:                             # BIND-TYPE-RECEIPT 11-24: attribute every error to its types (receipt per type below)
+        try:
+            _define_outside = ()
+            if (out / "type_defines.json").is_file() and any(e.startswith("TYPE_DEFINE_CONFLICT ") for e in B.errors):
+                _define_outside = json.loads((out / "type_defines.json").read_text()).get("outside") or ()
+            _refused, _unatt = attribute_errors(B.errors, set(B.by_type), _path_types(B), _module_types(B),
+                                                getattr(B, "tied_pins", {}), _define_outside)
+        except Exception as exc:             # cannot attribute -> every error blocks (the old rule)
+            _refused, _unatt = {}, list(B.errors)
+            print(f"bind: WARN TYPE_RECEIPT attribution failed ({type(exc).__name__}: {exc}); no receipt", flush=True)
+        rep["type_receipt"] = dict(refused={t: len(v) for t, v in sorted(_refused.items())}, n_unattributed=len(_unatt),
+                                   unattributed_examples=_unatt[:20],
+                                   verdict="NONE (unattributed errors block every type)" if _unatt else
+                                   f"PARTIAL ({len(_refused)} types refused, {len(set(B.by_type) - set(_refused))} clean)")
+        print(f"bind: TYPE_RECEIPT {rep['type_receipt']['verdict']}", flush=True)
     try:                                     # BIND-STREAM-LAUNCH: a streamed type that a bind error names is withdrawn (final false)
         import bind_stream
-        _wd = bind_stream.finish(getattr(B, "_stream", None), B.errors)
+        _wd = bind_stream.finish(getattr(B, "_stream", None), B.errors, refused=None if _unatt else set(_refused))
         if _wd:
             rep["stream_withdrawn"] = _wd
             print(f"bind: BIND_STREAM withdrew {len(_wd)} streamed types named by bind errors: {_wd[:20]}", flush=True)
@@ -6932,6 +6984,12 @@ def cmd_bind(a):
     if not B.errors:
         import kit_topology
         kit_topology.write_bind_receipt(raw,out,getattr(a, "asbuilt",None),input_topology)
+    elif not _unatt and _refused:
+        # BIND-TYPE-RECEIPT: every error is owned by named types -> the receipt is written, those types are refused in it
+        # (kit_topology.bind_matches, kit-rtl and the wave bind stage refuse them); every other type is clean and launches
+        import kit_topology
+        kit_topology.write_bind_receipt(raw,out,getattr(a, "asbuilt",None),input_topology,
+                                        refused={t: v[:5] for t, v in sorted(_refused.items())})
     _fresh_write_text(out / "bind_latency.json", json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
@@ -7936,7 +7994,11 @@ def cmd_kit_rtl(a):
         except ValueError as exc:
             raise BindError(str(exc)) from exc
     elif rep.get("n_errors", 0):
-        raise BindError("kit-rtl: failing global bind needs an explicit verified LOCAL component proof")
+        import kit_topology as _KT                 # BIND-TYPE-RECEIPT: a bind whose errors are all owned by OTHER types
+        _ok, _why = _KT.receipt_type_clean(out, a.variant or tn, tn)
+        if not _ok:
+            raise BindError(f"kit-rtl: failing global bind needs an explicit verified LOCAL component proof ({_why})")
+        print(f"kit-rtl {tn}: {_why}", flush=True)
     key = a.variant or tn
     _po = rep.get("probe_only") or {}
     if _po and key not in _po.get("emitted", []) and tn not in _po.get("emitted", []):

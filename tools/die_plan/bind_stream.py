@@ -84,10 +84,12 @@ def write_type(ctx, tn, module, instances, files, lib, extra_lib, cells, instanc
     return rec
 
 
-def finish(ctx, errors):
-    """bind end: withdraw every streamed type an error names (identifier match on the type or its split base) -> [withdrawn]"""
+def finish(ctx, errors, refused=None):
+    """bind end: withdraw every streamed type an error names (identifier match on the type or its split base) or that the
+    error attribution refused (bind.attribute_errors) -> [withdrawn]"""
     if not ctx:
         return []
+    refused = set(refused or ())
     d = Path(ctx["dir"])
     toks = {}
     for e in errors or []:
@@ -99,7 +101,7 @@ def finish(ctx, errors):
             continue
         rec = json.loads(Path(e.path).read_text())
         tn = rec.get("type", "")
-        hit = toks.get(tn) or toks.get(tn.split("__")[0])
+        hit = toks.get(tn) or toks.get(tn.split("__")[0]) or (["attributed by the bind error attribution"] if tn in refused else None)
         if hit and rec.get("final"):
             rec.update(final=False, withdrawn=hit[:5], n_withdrawing_errors=len(hit))
             _write(e.path, rec)
@@ -233,6 +235,13 @@ def launch_check(bind_out, tn, plan, asbuilt=None):
         except (OSError, ValueError) as exc:
             return 3, f"BIND unreadable: {type(exc).__name__} (no bind_report.json and no live stream)"
         n = len(e) if isinstance(e, list) else e
+        if n:
+            import sys as _sys
+            _sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import kit_topology
+            ok, why = kit_topology.receipt_type_clean(out, tn, tn.split("__")[0] if tn.split("__")[0] != tn else tn)
+            if ok:
+                return 0, f"BIND errors {n}, TYPE_RECEIPT: {why}"
         return (0 if n == 0 else 3), f"BIND errors {n}"
     why = []
     if not records(out, tn, why):
