@@ -19,3 +19,4 @@
   - Expected saving: 54-80k INV per fw type, taking place to ~300-325k.
   - Checks: LEC is RTL vs netlist, so the complement is in gold. The hold recheck on QN->D relays comes from a place/CTS probe.
   ETA: overlay + probe 23:30.
+- 2026-11-23 21:32 PST DIED [QC-FW-CAP] ot-run oth-ubuntu-1456045-1795498329 on viable-ram: rc=1 after 4 s, ended 05:32:11, log /srv/opentallas-scratch2/claude/QC-FW-CAP/census/pol_slw_fw_v3.log, cmd: --mem 24 --threads 1 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- docker run --rm --name fwpol_slw_fw_v3 -u 1000:1000 - | class=SETUP cause=FileNotFoundError: [Errno 2] No such file or directory: '/r/slw_fw_v3_bound.sv'
