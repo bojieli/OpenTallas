@@ -1256,19 +1256,23 @@ def check_istprice(tree, plan, asbuilt=None, max_list=10):
                           for t in types.values()) and bool(raw.get("lanes"))
     IP.MAX_LINES = 10 ** 6
     lines = IP.findings(raw, str(plan), tree, asbuilt=ab if isinstance(ab, dict) else None)
-    out = []
+    out, warn = [], []
     for ln in lines:
         if ln.startswith("WARN ADV-IST-PRICE not checked"):
-            out.append("FAIL ISTPRICE " + ln.split("ADV-IST-PRICE ", 1)[1])
+            # ISTPRICE-REPORT-1124 (COORD, r703: new checks stay report-only): a rule that could not run is a WARN, never a FAIL
+            warn.append("WARN ISTPRICE " + ln.split("ADV-IST-PRICE ", 1)[1])
         elif ("summary" not in ln) and (" lane " in ln or "OUT-LANES" in ln):
             out.append("FAIL ISTPRICE " + ln.split("ADV-IST-PRICE ", 1)[1])
     n = len(out)
     if n > max_list:
         out = out[:max_list] + [f"FAIL ISTPRICE ... {n - max_list} more lane(s)"]
     if not isinstance(ab, dict) and native_possible:
-        out.append("FAIL ISTPRICE no as-built found (--asbuilt, plan asbuilt section, plan_of_record/native_bind/asbuilt_run*.json): "
-                   "FIXED-SPLIT / OUT-LANES (native station rules) cannot be judged; pass the integrator's as-built")
-    if out:
+        # ISTPRICE-REPORT-1124: no as-built only means FIXED-SPLIT / OUT-LANES were not judged (HEAD W3/W6/r7, QC C1g PRE "fail only on
+        # ISTPRICE, no as-built" since 11d45bef39d): report-only WARN, said every run; flagged lanes stay FAIL
+        warn.append("WARN ISTPRICE no as-built found (--asbuilt, plan asbuilt section, plan_of_record/native_bind/asbuilt_run*.json): "
+                    "FIXED-SPLIT / OUT-LANES (native station rules) not judged (report-only); pass the integrator's as-built")
+    out += warn
+    if n:
         out.append(f"FAIL ISTPRICE {n} lane(s) over-cycle; fix: refresh the latency table / fixed_cycles = source + destination (ADV-IST-PRICE has the per-lane fix)")
     elif ab is not None:
         out.append(f"LIST ISTPRICE 0 lanes flagged (as-built: {how})")

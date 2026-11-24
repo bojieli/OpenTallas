@@ -18,7 +18,7 @@ def test_check_istprice_unreadable_plan_is_loud(tmp_path):
     p.write_text(json.dumps({"partition_types": {}, "lanes": []}))
     out = G.check_istprice(str(tmp_path), str(p))
     assert not any(x.startswith("FAIL ISTPRICE") and "lane" in x and "over-cycle" not in x for x in out) or True
-    assert all(x.startswith(("FAIL ISTPRICE", "LIST ISTPRICE")) for x in out)
+    assert all(x.startswith(("FAIL ISTPRICE", "LIST ISTPRICE", "WARN ISTPRICE")) for x in out)
 
 
 def test_no_asbuilt_with_native_rows_fails_loudly(tmp_path):
@@ -27,6 +27,7 @@ def test_no_asbuilt_with_native_rows_fails_loudly(tmp_path):
     p.write_text(json.dumps(raw))
     out = G.check_istprice(str(tmp_path), str(p))
     assert any("no as-built found" in x for x in out)
+    assert not any(x.startswith("FAIL") for x in out)            # ISTPRICE-REPORT-1124: report-only (r703), said every run
 
 
 def test_summary_line_is_not_a_fail_and_flagged_lane_is(tmp_path, monkeypatch):
