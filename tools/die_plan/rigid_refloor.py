@@ -317,7 +317,17 @@ def _pack(rows, P, gap, grid=0.0):
         by[(min(a, b), max(a, b), f)].append(r)
     for _key, lst in by.items():
         moving = [r for r in lst if r["status"] not in ("RIGID",) and not r["status"].startswith("KEEP-")]
-        fixed = sorted(tuple(r["new"]) for r in lst if r not in moving)     # windows that stay: obstacles
+        # windows that stay are obstacles; two KEEP windows kept in DIFFERENT frames (one end each) can land on each
+        # other: RIGID first, then KEEP in old order, and a KEEP window that clashes with one already kept slides
+        fixed = []
+        for r in sorted((r for r in lst if r not in moving), key=lambda r: (r["status"] != "RIGID", r["old"][0])):
+            a, b = r["new"]
+            if r["status"] != "RIGID" and any(a < t[1] + gap - 0.1 and b > t[0] - gap + 0.1 for t in fixed):
+                r["status"] = "SLIDE"
+                moving.append(r)
+            else:
+                fixed.append((a, b))
+        fixed.sort()
         if not moving:
             continue
         moving.sort(key=lambda r: (r["old"][0], r["new"][0]))     # keep the old order on the face
@@ -686,7 +696,16 @@ def tap_renames(old_types, new_types, raw, tn, offset):
         for i, a in enumerate(ck.get("added_taps") or []):
             m[a["name"]] = f"clk_t{len(ng) + i}"
     # "clk" (tap 0) is also the clock port / bus name everywhere: it keeps its name
-    return {k: v for k, v in m.items() if k != v and k != "clk"}
+    out = {k: v for k, v in m.items() if k != v and k != "clk"}
+    # a stored clock.taps list carries its own names (they are the keys the type is bound by): renaming it would give
+    # two taps one name when old grid taps share a nearest new one, so a type with a stored list keeps its names; and a
+    # map that is not one-to-one is never applied
+    stored = [q.get("name") for q in (ck.get("taps") or []) if isinstance(q, dict)]
+    if stored and ck.get("tap_mode") != "grid+explicit":
+        return {}
+    if len(set(m.values())) != len(m) or len({out.get(n, n) for n in stored}) != len(stored):
+        return {}
+    return out
 
 
 def rewindow(raw, table):
@@ -1006,6 +1025,15 @@ def apply(raw, spec, pin_gap=1.2):
                                      only=None if spec.get("path_respace") else set(over))
         # proof on the FINAL plan (after every station edit): a lane newly over the limit is blocking
         rep["hops_over_new"] = new_hop_overs(base_raw, raw, float(lim))
+        rep["stations_over_new"] = new_station_overs(base_raw, raw, float(lim))
+    lp = landing_pins(base_raw, raw, float(spec.get("respace_limit", 405.0) or 405.0))
+    rep["landing_pins"] = lp
+    # an edge that follows no port (cland_mon_* monitor bundles to the collector) is re-relayed by the tail
+    # (reach_relay_plan) and judged by G0 there: advisory here; a port-following edge still over the limit blocks
+    lim_l = float(spec.get("respace_limit", 405.0) or 405.0)
+    rep["landing_over"] = {k: v for k, v in lp.items() if (v[1] is None or v[1] > lim_l + 1e-6)
+                           and not str(v[2]).startswith("no port")}
+    rep["landing_relay_tail"] = sorted(k for k, v in lp.items() if str(v[2]).startswith("no port"))
     rep["content_outside"] = content_outside(raw, base_raw, sorted({parts[n]["type"] for n in reshaped}))
     rep["station_in_core_new"] = stations_in_core(raw, base_raw)
     return raw, rep
@@ -1035,9 +1063,110 @@ def new_hop_overs(base, raw, limit):
         if isinstance(v, str):
             if not isinstance(u, str):
                 out[lid] = [u, v]
-        elif v > limit + 1e-6 and (isinstance(u, str) or u is None or v > max(u, limit) + 0.5):
+        elif v > limit + 1e-6 and (isinstance(u, str) or u is None or u <= limit + 1e-6 or v > u + 0.5):
             out[lid] = [u if isinstance(u, (str, type(None))) else round(u, 1), round(v, 1)]
     return out
+
+
+def landing_pins(base, raw, limit):
+    """clock.landing_network edges (landing_contract scalar pins, one per end) whose end-to-end hop the re-floor
+    broke: an edge named cland_<x>__<port id> follows its port -- each end pin keeps its distance from its own face
+    (on the new face line of its part) and moves along the face by the port's window shift.  Only types used once
+    are re-pinned (a shared type's pin moves in every copy).  Returns rows {edge: [old hop, new hop, how]}."""
+    net = (raw.get("clock") or {}).get("landing_network") or {}
+    edges = net.get("edges") or []
+    if not edges:
+        return {}
+    Pb, Pn = S.Plan(copy.deepcopy(base)), S.Plan(copy.deepcopy(raw))
+    uses = defaultdict(int)
+    for q in raw["partitions"]:
+        uses[q["type"]] += 1
+    eb = {e["id"]: e for e in ((base.get("clock") or {}).get("landing_network") or {}).get("edges") or []}
+
+    def pin(P, types, part, name):
+        t = types[P.parts[part]["type"]]
+        return next((q for q in ((t.get("clock") or {}).get("landing_contract") or {}).get("pins") or []
+                     if q.get("name") == name), None)
+
+    def hop(P, types, e):
+        a = [P.to_die(e[s_]["part"], pin(P, types, e[s_]["part"], e[s_]["bus"])["xy_um"]) for s_ in ("src", "dst")]
+        pts = [a[0]] + [tuple(r_["xy_um"]) for r_ in e.get("relays") or []] + [a[1]]
+        return max(abs(u[0] - v[0]) + abs(u[1] - v[1]) for u, v in zip(pts, pts[1:]))
+
+    def faceline(rect, f):
+        return {"E": rect[2], "W": rect[0], "N": rect[3], "S": rect[1]}[f]
+    out = {}
+    for e in edges:
+        try:
+            h1 = hop(Pn, raw["partition_types"], e)
+            h0 = hop(Pb, base["partition_types"], eb[e["id"]]) if e["id"] in eb else None
+        except Exception as x:
+            out[e["id"]] = [None, None, f"unmeasured {type(x).__name__}"]
+            continue
+        if h1 <= limit + 1e-6 and (h0 is None or h1 <= h0 + 0.5):
+            continue
+        pid = e["id"].split("__", 1)[1] if "__" in e["id"] else None
+        if e.get("relays") or pid not in Pn.ports or pid not in Pb.ports:
+            out[e["id"]] = [h0 and round(h0, 1), round(h1, 1), "no port to follow" if not e.get("relays") else "relays"]
+            continue
+        f = Pn.ports[pid].get("face")
+        try:
+            c0, c1 = Pb.port_point(pid), Pn.port_point(pid)
+        except Exception as x:
+            out[e["id"]] = [h0 and round(h0, 1), round(h1, 1), f"port geometry {type(x).__name__}"]
+            continue
+        ax = 1 if f in "EW" else 0
+        moves, why = [], None
+        for side in ("src", "dst"):
+            part = e[side]["part"]
+            pf = f if Pn.ports[pid]["src"]["part"] == part else OPP[f]
+            tn = Pn.parts[part]["type"]
+            q = pin(Pn, raw["partition_types"], part, e[side]["bus"])
+            q0 = Pb.to_die(part, pin(Pb, base["partition_types"], part, e[side]["bus"])["xy_um"])
+            new = list(q0)
+            new[ax] = q0[ax] + (c1[ax] - c0[ax])
+            new[1 - ax] = faceline(Pn.rect(part), pf) + (q0[1 - ax] - faceline(Pb.rect(part), pf))
+            xy = Pn.to_type(part, new)
+            w, h = raw["partition_types"][tn]["outline_um"]
+            xy = [round(min(max(xy[0], 0.0), w), 6), round(min(max(xy[1], 0.0), h), 6)]
+            if any(abs(a - b) > 1e-6 for a, b in zip(xy, q["xy_um"])):
+                if uses[tn] > 1:
+                    why = f"shared type {tn}"
+                    break
+                moves.append((q, xy))
+        if why:
+            out[e["id"]] = [h0 and round(h0, 1), round(h1, 1), why]
+            continue
+        for q, xy in moves:
+            q["xy_um"] = xy
+        Pn = S.Plan(copy.deepcopy(raw)) if moves else Pn
+        out[e["id"]] = [h0 and round(h0, 1), round(hop(Pn, raw["partition_types"], e), 1), f"followed {pid}"]
+    return out
+
+
+def station_overs(raw, limit):
+    """{type.slot: route / stations} over `limit` (G0 R3 stations rule, non full-stage slots), whole die."""
+    import check as C
+    P = S.Plan(copy.deepcopy(raw))
+    out = {}
+    for lid in P.lanes:
+        try:
+            xs = C.lane_geometry(P, lid)[2]
+        except Exception:
+            continue
+        for x in xs:
+            tn = P.parts[x["part"]]["type"]
+            if P.types[tn].get("ft_full_stage_placement_file"):
+                continue
+            sp = float(x.get("len_um") or 0.0) / max(1, int(x["stations"]))
+            if sp > limit + 1e-6:
+                out[f"{tn}.{x['slot']}"] = round(sp, 1)
+    return out
+
+
+def new_station_overs(base, raw, limit):
+    a = station_overs(base, limit)
+    return {k: v for k, v in station_overs(raw, limit).items() if k not in a}
 
 
 def content_outside(raw, base, tns):
@@ -1164,8 +1293,10 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
                 e += 1
             # crossings at either end of the run whose own hops (entry, steps, exit) all hold keep their stations: a
             # slot with no declared sites has its first station at the port, which a refit would lose
+            def viol(i):        # G0 R3 stations rule: slot route / stations <= limit (non full-stage slots)
+                return float(info[i].get("len_um") or 0.0) / max(1, int(info[i]["stations"])) > limit + 1e-6
             ok_c = {i: max(hops[starts[i] - 1:starts[i] - 1 + int(info[i]["stations"])] or [0.0]) <= limit + 1e-6
-                    for i in range(c, e + 1)}
+                    and not viol(i) for i in range(c, e + 1)}
             e_run = e
             def man_d(u, v):
                 return abs(u[0] - v[0]) + abs(u[1] - v[1])
@@ -1181,7 +1312,7 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
                 e -= 1
             run = list(range(c, e + 1))
             nxt_i = starts[e] + int(info[e]["stations"])
-            if max(hops[starts[c] - 1:nxt_i] or [0.0]) <= limit + 1e-6:
+            if max(hops[starts[c] - 1:nxt_i] or [0.0]) <= limit + 1e-6 and not any(viol(i) for i in run):
                 c = e_run + 1
                 continue
             prev = regs[starts[c] - 1]
@@ -1207,7 +1338,7 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
                 part, slot = xs[i][0], xs[i][1]
                 tn = P.parts[part]["type"]
                 w, h = P.ptype(part)["outline_um"]
-                k0 = max(1, int(info[i]["stations"]))
+                k0 = max(1, int(info[i]["stations"]), math.ceil(float(info[i].get("len_um") or 0.0) / limit - 1e-9))
                 try:        # a normal slot's first station is its input face register (G0 / check.lane_geometry)
                     normal = DHS.normal_slot(P, tn, slot, full=FFS.load(P, tn))
                 except Exception:
@@ -1221,7 +1352,8 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
                         pts = []
                         for m in range(kj):
                             tx, ty = P.to_type(part, walk(routes[j], min(dl + L[j] * m / kj, L[j])))
-                            pts.append([round(min(max(tx, 1.0), w - 1.0), 3), round(min(max(ty, 1.0), h - 1.0), 3)])
+                            # 0.05 um inside the outline: a station at the face pin stays at the pin (B1 form)
+                            pts.append([round(min(max(tx, 0.05), w - 0.05), 3), round(min(max(ty, 0.05), h - 0.05), 3)])
                         pts = dodge_cores(raw["partition_types"][tn], pts)
                         dp = [P.to_die(part, q) for q in pts]
                         legs = [carry + d(ins[j], dp[0])] + [d(u, v) for u, v in zip(dp, dp[1:])]
@@ -1367,6 +1499,8 @@ def main(argv=None):
     bad = rep["layout_findings"] + [f"{r['status']} {r['id']}" for r in rep["port_rows"]
                                     if r["status"] in ("SEAM-LOST", "NO-ROOM", "NO-GEOM", "DIE-IO-MOVED")]
     bad += [f"HOP-OVER {k} {v[0]} -> {v[1]}" for k, v in sorted((rep.get("hops_over_new") or {}).items())]
+    bad += [f"LANDING-HOP {k} {v}" for k, v in sorted((rep.get("landing_over") or {}).items())]
+    bad += [f"STATION-SPACING {k} {v}" for k, v in sorted((rep.get("stations_over_new") or {}).items())]
     bad += [f"CONTENT-OUTSIDE {k} {len(v)}: {v[:3]}" for k, v in sorted((rep.get("content_outside") or {}).items())]
     bad += [f"STATION-IN-CORE {x}" for x in rep.get("station_in_core_new") or []]
     rep["blocking"] = bad

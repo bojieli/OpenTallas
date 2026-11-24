@@ -262,3 +262,28 @@ def test_dodge_cores_leaves_abutted_cores_on_one_axis():
 def test_relayer_refuses_follow_pin_layers():
     with pytest.raises(ValueError):
         RR.relayer(_lane_plan(), {"p0": ["M6", "M4", "M2"]})
+
+
+def test_two_kept_windows_from_different_frames_do_not_overlap():
+    raw = _lane_plan()
+    raw["ports"] += [
+        dict(id="pa", src=dict(part="SRC", bus="o0"), dst=dict(part="S1", bus="xa"), kind="data", width=8, face="E",
+             layers=["M6", "M4"], window_um=[600.0, 620.0]),
+        dict(id="pb", src=dict(part="SRC", bus="o0"), dst=dict(part="S1", bus="xb"), kind="data", width=8, face="E",
+             layers=["M6", "M4"], window_um=[621.2, 641.2])]
+    rows = [dict(id="pa", face="E", ends=["SRC", "S1"], old=[600.0, 620.0], new=[600.0, 620.0], status="KEEP-S1",
+                 lo=0.0, hi=864.0),
+            dict(id="pb", face="E", ends=["SRC", "S1"], old=[621.2, 641.2], new=[610.0, 630.0], status="KEEP-SRC",
+                 lo=0.0, hi=864.0)]
+    import schema as S
+    RR._pack(rows, S.Plan(raw), 1.2)
+    (a0, a1), (b0, b1) = sorted(r["new"] for r in rows)
+    assert b0 >= a1 + 1.1 and rows[1]["status"] == "SLIDE"
+
+
+def test_tap_renames_never_give_two_taps_one_name():
+    old = {"t": dict(outline_um=[1440.0, 1440.0], clock=dict(tap_mode="grid", taps=[
+        dict(name="clk", xy=[1.0, 1.0]), dict(name="clk_t1", xy=[2.0, 2.0])]))}
+    new = {"t": dict(outline_um=[400.0, 400.0], clock=dict(tap_mode="grid", taps=[
+        dict(name="clk", xy=[1.0, 1.0]), dict(name="clk_t1", xy=[2.0, 2.0])]))}
+    assert RR.tap_renames(old, new, dict(partition_types=new), "t", (0.0, 0.0)) == {}
