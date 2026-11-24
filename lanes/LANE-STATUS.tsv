@@ -177,3 +177,4 @@ WATCHDOG-SWEEP	stood-down	none	2026-11-24	01:48 PST | job done; cancels posted t
 S81-ROM-TEMPLATE	stood-down	none	2026-11-24	02:19 PST | jobs done: template count 0 creditable (branch claude/s81-rom-template 2aaa31a4f3); ROM DRC rerun posted 4210d57e (1018 GATE.S.1 seam markers, LUP/AUX clean); outputs epyc9 s81-rom-template/romdrc
 QC-SC-FARRST	stood-down	QC-ALLFIX	2026-11-24	02:00 PST | done: ROW-REBASED d1ed1cf24960 (sc far-raw row, strict 0 + LATCHECK PASS); no live units
 RESET-HOLD-SWEEP	stood-down	COORD	2026-11-24	02:01 PST | report-only sweep done: QC/S81/HEAD hold rows posted
+PRE-QC-GENCHECK	stood-down	none	2026-11-24	02:50 PST | scope done: ENTRYFOOT+STALE-EXPORT-TAP+GENDRY fixes on main 6490dc4988ae; die hits posted
