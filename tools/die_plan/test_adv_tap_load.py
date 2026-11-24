@@ -82,3 +82,13 @@ def test_never_raises():
     assert A.findings(None, "p")[0].startswith("WARN ADV-TAP-LOAD not checked")
     out = A.findings(plan(), "p", None, flops_cache={"flops": {}}, exact=False)
     assert out[-1].startswith("WARN ADV-TAP-LOAD summary")
+
+
+def test_no_taps_no_crash_and_loud():
+    """COORD 11-23 19:45: a sink_bins_file type with no static taps and no usable tree crashed with ZeroDivisionError;
+    now it reports a plain 'not checked' line."""
+    pl = plan()
+    pl["partition_types"][T5]["clock"] = {"sink_bins_file": "x.json", "tap_max_sinks": 1500}
+    out = A.findings(pl, "p", "/nonexistent-tree", flops_cache={"flops": {T5: {"flops": 5000}}})
+    assert out and not any("ZeroDivision" in x for x in out)
+    assert out[-1].startswith("WARN ADV-TAP-LOAD summary")

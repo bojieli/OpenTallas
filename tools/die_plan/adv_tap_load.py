@@ -357,7 +357,14 @@ def _findings(raw, plan_path, tree=None, flops_cache=None, ratio=RATIO, placed_m
                         (r["t"].get("clock") or {}).get("tap_max_sinks"), round(r["pmax"]) if r.get("pmax") else "",
                         round(r["placed_cur"]) if r.get("placed_cur") else "", r.get("placed_kit") or "")) + "\n")
     out = [m for _, m in hits[:int(_kw.get('max_lines') or MAX_LINES)]]
-    left = sorted((r["flops"] or 0) / len(r["taps"]) for r in rows if "planned" not in r)
+    if rows and ex is not None and not ex.ok:
+        out.insert(0, _w("not checked", f"EXACT PLANNED SINKS NOT AVAILABLE ({getattr(ex, 'why', '?')}): the per-tap rule did not run on "
+                                        f"{sum(1 for r in rows if 'planned' not in r)} type(s); pass --tree with tools/die_plan/taps.py and the FULL composed plan"))
+    left = sorted((r["flops"] or 0) / len(r["taps"]) for r in rows if "planned" not in r and r["taps"])
+    if not rows:
+        out.insert(0, _w("not checked", f"NO TAP DATA: 0 types had a kit netlist AND a tap table ({n_unmeas} without a kit netlist, "
+                                        f"{n_notap} without a static tap table); give the FULL composed plan and a --tree whose tools/die_plan "
+                                        f"carries taps.py, not a row/delta file"))
     out.append(_w("summary", f"{len(hits)} of {n_cmp} types with netlist data flagged (per-tap x{ratio}, taps x cap, placed "
                              f"tap > {placed_max} after the kit split; by rule {nr}); total-sink rule (netlist > {ratio} x planned) alone: "
                              f"{n_total} types (listed only where the plan model is a sink_bins_file inventory; otherwise it is boundary/station "
