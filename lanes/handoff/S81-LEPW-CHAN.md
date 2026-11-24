@@ -17,3 +17,7 @@ Job: dsdv_slice_lepw_mu_C__t1 CBC route-demand pinch; row on c9 048fa468f0a2; PR
 ## Kit
 - intel2 systemd unit s81lepwchan-kitwait runs ~/tmp/s81-lepw-chan/kit_after_c8s.sh: waits for INT C8S_DONE + c8s receipt for the type, then private-spec (c8seal_tree, plan c8, bind allfix_c8s_out, --overlay, rt 52c1a6417353, goal route) + INT specfix + run-item; posts KIT LAUNCHED. Logs ~/tmp/s81-lepw-chan/kit/. (Dry spec on allfix_c8_out refused BIND_STALE / rt mismatch, as INT found; c8s form is what INT uses.)
 - INT's own c8s stream will also launch the type with base positions: side-by-side A/B.
+## 13:5x COORD asks
+- Watchers (intel2 systemd --user): s81lepwchan-kitwait (launch at C8S_DONE) -> s81lepwchan-grtwatch (~/tmp/s81-lepw-chan/kit_grt_watch.sh, log grt_watch.log; posts GRT verdict or KIT ENDED) ; s81lepwchan-stemwatch (posts stem draft PRE/G0).
+- Stem draft LEPW-MUC-STEM: intel2 s81-lepw-chan/xrshift.py, ops 9a313610a780 (CAPXR + u_xr +86.4 + 15 sites). epyc9 row_stem.sh -> out_stem/. 180-um bank model (wide.py): stem 3.01 -> 1.51. Held; apply if kit GRT stem overflows. Needs type_overlay check before a kit (collector/reset-anchor keys may not be overlay-legal -> then plan row via INT).
+- Estimator gap posted to LEAF-ROUTE-CBC.
