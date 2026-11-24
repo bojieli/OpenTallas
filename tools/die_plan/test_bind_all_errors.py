@@ -197,3 +197,48 @@ def test_build_buses_has_no_bare_raise_left_for_the_three_inputs():
     src = bind.Path(bind.__file__).read_text()
     assert 'raise BindError(f"SPLIT_LANE_REFERENCE {exc}")' not in src
     assert src.count('self._head_err(') >= 3
+
+
+# ---------------------------------------------------------------- inside one type: every bus-loop refusal; the bound top
+def test_type_bus_loop_errors_all_listed():
+    p, t = strap_vehicle()
+    c = landings(p, t, True)
+    c.by_type['B']['inputs'] = list(c.by_type['B']['inputs']) + ['nope1', 'nope2']
+    r0 = next(iter(c.type_row['B'].values()))
+    c.type_row['B'].update(nope1=r0, nope2=r0)
+    with pytest.raises(LandingErrors) as ei:
+        c.type_rtl('B', B_BODY)
+    msgs = [e['error'] for e in ei.value.errors]
+    assert sum('actual bound input nope1 not found' in m for m in msgs) == 1
+    assert sum('actual bound input nope2 not found' in m for m in msgs) == 1
+    d = landings(p, t, False)
+    d.by_type['B']['inputs'] = list(d.by_type['B']['inputs']) + ['nope1', 'nope2']
+    r0 = next(iter(d.type_row['B'].values()))
+    d.type_row['B'].update(nope1=r0, nope2=r0)
+    with pytest.raises(LandingError, match='nope1') as e2:
+        d.type_rtl('B', B_BODY)
+    assert not isinstance(e2.value, LandingErrors)
+
+
+def test_type_wrapper_keeps_a_follow_on_crash_after_collected_errors(monkeypatch):
+    p, t = strap_vehicle(); writer(p, ['bad0'])
+    c = landings(p, t, True)
+    monkeypatch.setattr(c, '_ring_lite', lambda *a, **k: {}['x'])
+    with pytest.raises(LandingErrors) as ei:
+        c.type_rtl('A', A_BODY)
+    assert 'bad0' in ei.value.errors[0]['error'] and 'KeyError' in ei.value.errors[-1]['error']
+    c2 = landings(p, t, True)
+    p2, t2 = strap_vehicle()
+    c3 = landings(p2, t2, True)
+    monkeypatch.setattr(c3, '_ring_lite', lambda *a, **k: {}['x'])
+    with pytest.raises(KeyError):               # nothing collected: a tool bug surfaces unchanged
+        c3.type_rtl('A', A_BODY)
+
+
+def test_top_rtl_collect_off_is_unchanged_and_on_wraps():
+    p, t = strap_vehicle()
+    a, b = landings(p, t, False), landings(p, t, True)
+    for x in (a, b):
+        x.type_rtl('A', A_BODY); x.type_rtl('B', B_BODY)
+    from test_count_straps import TOP
+    assert a.top_rtl(TOP) == b.top_rtl(TOP) and b._type_errs is None

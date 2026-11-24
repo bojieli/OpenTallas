@@ -1917,7 +1917,11 @@ class Landings:
         self._type_errs = errs = []
         try:
             out = self._type_rtl(tn, text, base=base, inst=inst, depth=depth)
-        except ValueError as exc:      # also a non-landing plan error: never lose what was collected before it
+        except Exception as exc:       # also a non-landing plan error: never lose what was collected before it
+            if not errs and not isinstance(exc, ValueError):
+                raise              # a tool bug with nothing collected: unchanged
+            if not isinstance(exc, ValueError):
+                exc = ValueError(f"after {len(errs)} collected error(s), {type(exc).__name__}: {exc}")
             if isinstance(exc, LandingErrors):
                 errs.extend(exc.errors)
             else:
@@ -2080,7 +2084,8 @@ class Landings:
                     logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n({fstart_raw}), "
                                  f".d({fstart_d}), .q(cland_fstart_out_{b}));")
                 elif (self.types[key].get("clock", {}).get("landing_writer_start") or {}).get("branches", {}).get(b):
-                    raise LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)")
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 else:
                     logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
         lite = self._ring_lite(tn, key, head, cat, cmask, status_copy)
@@ -2090,10 +2095,12 @@ class Landings:
             # the complete width+1 bundle, just like the original station.
             input_decl = re.search(r"input\s+wire\s*\[(\d+):0\]\s+" + re.escape(b) + r"\b", head)
             if not input_decl:
-                raise LandingError(f"{tn}: actual bound input {b} not found (unused/stale physical hop)")
+                self._collect_err(tn, b, None, None, LandingError(f"{tn}: actual bound input {b} not found (unused/stale physical hop)"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             w = int(input_decl.group(1)) + 1
             if w > int(r["width"]) + 1:
-                raise LandingError(f"{tn}.{b}: bound width {w} exceeds planned bundle capacity")
+                self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: bound width {w} exceeds planned bundle capacity"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             # START must remain low while the rings train. Reusing the usual
             # START-gated rst_n would start training AFTER mission launch.
             # Copy the nearest tap's raw reset relay at the SAME parent/depth.
@@ -2108,7 +2115,8 @@ class Landings:
                 if slot:
                     geom = dict(face=slot["in_face"], window_um=slot["in_window_um"])
             if geom is None:
-                raise LandingError(f"{tn}.{b}: receiver face geometry not found")
+                self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: receiver face geometry not found"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             face = geom["face"]; at = sum(geom["window_um"]) / 2
             tw, th = t["outline_um"]
             x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
@@ -2126,7 +2134,8 @@ class Landings:
                 # soft wrapper at the received window, on the delivered reset
                 # that the wrapper's own boundary/ft stations already use.
                 if not re.search(r"\bwire rst_n = arst_n;", body):
-                    raise LandingError(f"{tn}.{b}: hard wrapper delivered reset rst_n not found")
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: hard wrapper delivered reset rst_n not found"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 # AUTOBUILD-PIPE-5 10-31 (KV kv3_phy hard wrapper): the delivered rst_n is the raw arst_n PORT; the
                 # ring / count origin take it through one local pin register on clk (the hard partition's reset depth
                 # HARD_DEPTH = 1, "its pin register only"; same form as the START-gated tap case below), so the origin
@@ -2144,7 +2153,8 @@ class Landings:
             relay = None if hard_tree else re.search(r"ot_dp_(?:r(gate|relay)|head_raw_export_pair)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)"
                                                      r"[^;]*?\.q\(" + reset + r"\)(?:,\s*\.export_q\(\w+\))?\);", body)
             if relay is None and not hard_tree:
-                raise LandingError(f"{tn}.{b}: timed local wavefront reset relay {reset} not found")
+                self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: timed local wavefront reset relay {reset} not found"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             if hard_tree:
                 pass
             elif relay.group(1) == "gate":
@@ -2221,7 +2231,8 @@ class Landings:
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
                 if dsrep is not None and not cat.get("straps"):
-                    raise LandingError(f"{tn}.{b}: landing_ring_dsrep needs the count-aligned strap form")
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: landing_ring_dsrep needs the count-aligned strap form"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 # Signed hard children own their replication hardware. Die-wide
                 # fanout knobs are stripped above, but the child's signed DSREP
                 # must not fall back to the soft WREG default of one copy.
@@ -2241,7 +2252,8 @@ class Landings:
                     wreg = dict(wreg, read_chunk=int(hard["READ_CHUNK"]))
                 # (CLAND-SLEW-1 copies below need no strap: ot_dp_clk_landing_ca carries DSREP too)
                 if wreg and dsrep is not None and dsrep != wreg["dsrep"]:
-                    raise LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg")
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 # CLAND-SLEW-1: reach-based read-select copies on every soft ring (a signed hard child keeps its params)
                 reach_ds = 1 if hard is not None else ring_reach_select_copies(
                     w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0))
@@ -2253,7 +2265,8 @@ class Landings:
                         dsrep = reach_ds
                 if wreg:
                     if not cat.get("straps"):
-                        raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
+                        self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form"))   # BIND-ALL-ERRORS: collect, next item
+                        continue
                     ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 or (hard is not None and "WRITE_CHUNK" in hard) else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") or (hard is not None and "READ_CHUNK" in hard) else "") + (", .FREG(1))" if wreg["freg"] else ")")
                     if wen_local and hard is None:   # a signed hard child keeps its own parameters
                         ring_mod = ring_mod[:-1] + ", .WEN_LOCAL(1))"
@@ -2284,8 +2297,9 @@ class Landings:
                                         r'(\(.*\.q\(' + re.escape(reader_start) + r'\))\);$')
                         hits = [i for i, ln in enumerate(logic) if rx.match(ln)]
                         if len(hits) != 1:
-                            raise LandingError(f"{tn}.{b}: RSTREP needs exactly one last reader START relay "
-                                               f"driving {reader_start}")
+                            self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: RSTREP needs exactly one last reader START relay "
+                                               f"driving {reader_start}"))   # BIND-ALL-ERRORS: collect, next item
+                            continue
                         m = rx.match(logic[hits[0]])
                         logic[hits[0]] = (f"{m.group(1)}ot_dp_landing_relay_rep #(.N({nrep})) {m.group(2)} "
                                           f"{m.group(3)}, .qx({reader_start}_x));")
@@ -2308,7 +2322,8 @@ class Landings:
                 # children retain their already-signed parameter set.
                 narrow_flag = t.get("clock", {}).get("landing_ring_narrow", False)
                 if not isinstance(narrow_flag, bool):
-                    raise LandingError(f"{tn}.{b}: landing_ring_narrow must be boolean")
+                    self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: landing_ring_narrow must be boolean"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 narrow = int((hard or {}).get("NARROW", 0)) if hard is not None else int(narrow_flag)
                 if narrow:
                     ring_mod = ring_mod[:-1] + ", .NARROW(1))"
@@ -2327,8 +2342,9 @@ class Landings:
                     want = ("ot_dp_clk_landing_cas" if cat.get("straps") else "ot_dp_clk_landing_ca") + " #(" + ", ".join(
                         f".{k}({int(v)})" for k, v in hard.items()) + ")"
                     if re.sub(r"\s", "", got) != re.sub(r"\s", "", want):
-                        raise LandingError(f"{tn}.{b}: bound ring {got} differs from its signed hard child param_wrap "
-                                           f"{want}: fix the plan param_wrap (re-sign the child) or the ring knobs")
+                        self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: bound ring {got} differs from its signed hard child param_wrap "
+                                           f"{want}: fix the plan param_wrap (re-sign the child) or the ring knobs"))   # BIND-ALL-ERRORS: collect, next item
+                        continue
                     self.reset_placements[tn][b].update(hard_child_params=dict(hard))
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
@@ -2369,7 +2385,8 @@ class Landings:
             # this wrapper's bus (gen_rtl wrappers bind leaves by name: `.lep_fault_i(lep_fault_i_q)`).
             body = re.sub(r"(?<![.\w])" + re.escape(b) + r"\b", landed, body)
             if self.dataflow and cat and f"{DORMANT_PREFIX}{b}" in (cat.get("straps") or {}):
-                raise LandingError(f"{tn}.{b}: DORMANT rings are built for the collector / plain monitor forms, not dataflow")
+                self._collect_err(tn, b, None, None, LandingError(f"{tn}.{b}: DORMANT rings are built for the collector / plain monitor forms, not dataflow"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             if self.dataflow:
                 # ring W+2: {fault, ready} of the sender's status ride the spare padded ring bits under the same
                 # forwarded write clock; no extra data cycle, no die-top status wire beside the bus.
@@ -3258,6 +3275,26 @@ class Landings:
         return body
 
     def top_rtl(self, text, emitted_modules=None):
+        """BIND-ALL-ERRORS 11-24: _top_rtl; with self.collect every partition / monitor edge error of the bound top is listed
+        (one LandingErrors) instead of the first one.  collect off: exactly _top_rtl."""
+        if not self.collect:
+            return self._top_rtl(text, emitted_modules)
+        self._type_errs = errs = []
+        try:
+            out = self._top_rtl(text, emitted_modules)
+        except Exception as exc:
+            if not errs and not isinstance(exc, ValueError):
+                raise
+            errs.extend(exc.errors if isinstance(exc, LandingErrors) else
+                        [dict(type="top", bus=None, side=None, stage=None, error=str(exc))])
+            out = None
+        finally:
+            self._type_errs = None
+        if errs:
+            raise LandingErrors(errs)
+        return out
+
+    def _top_rtl(self, text, emitted_modules=None):
         """Connect the new forwarded-clock pins and observed status at die top.
 
         Region clocks are explicit inputs. No die-top data register or clock
@@ -3377,7 +3414,8 @@ class Landings:
                     continue
                 is_fwd = rl["form"] == "fwd_clock_relay"
                 if is_fwd != bool(e["seam"]):
-                    raise LandingError(f"monitor relays of {e['src']}: {rl['form']} on a {'seam' if e['seam'] else 'same-region'} edge")
+                    self._collect_err("top", e.get("src"), None, None, LandingError(f"monitor relays of {e['src']}: {rl['form']} on a {'seam' if e['seam'] else 'same-region'} edge"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 child = ident(e["src"])
                 prev = (f"cland_ready_{child}", f"cland_fault_{child}", f"cland_clock_{child}" if is_fwd else None)
                 for i, r in enumerate(rl["relays"], 1):
@@ -3405,16 +3443,19 @@ class Landings:
                              r"(?: #\([^\n]*\))? " + re.escape(bind_inst_id(pn)) + r" \(\n)(.*?)(\n    \);)", re.S)
             matches = list(pat.finditer(text))
             if len(matches) != 1:
-                raise LandingError(f"clock landing: expected exactly one bound instance {pn}")
+                self._collect_err("top", pn, None, None, LandingError(f"clock landing: expected exactly one bound instance {pn}"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             m = matches[0]
             if ansi:
                 body, count = re.subn(r"\.(clk(?:_[tc]\d+)?)\(clk\)", lambda mm: f".{mm.group(1)}(clk_region_{ident(self.region[pn])})", m.group(2))
                 if not re.search(r"\.clk\(clk_region_", body):
-                    raise LandingError(f"clock landing: default clock connection not found on {pn}")
+                    self._collect_err("top", pn, None, None, LandingError(f"clock landing: default clock connection not found on {pn}"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
             else:
                 body, count = re.subn(r"\.clk\(clk_\w+\)", f".clk(clk_region_{ident(self.region[pn])})", m.group(2), count=1)
             if count < 1:
-                raise LandingError(f"clock landing: default clock connection not found on {pn}")
+                self._collect_err("top", pn, None, None, LandingError(f"clock landing: default clock connection not found on {pn}"))   # BIND-ALL-ERRORS: collect, next item
+                continue
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
             # Functional binding uses the region source, as existing grid/core
             # tap connections do. The physical kit keeps the distinct planned
@@ -3443,8 +3484,9 @@ class Landings:
                         # ROLE-STRAP relay copy: strap_ca_relay selects the rx flop, the origin's start pin is unread
                         conn.append(f"        .{START_PIN_IN}(1'b0)")
                     else:
-                        raise LandingError(f"clock landing {pn}: type {p['type']} has {START_PIN_IN} but no start "
-                                           "port lands on this copy")
+                        self._collect_err("top", pn, None, None, LandingError(f"clock landing {pn}: type {p['type']} has {START_PIN_IN} but no start "
+                                           "port lands on this copy"))   # BIND-ALL-ERRORS: collect, next item
+                        continue
             if pn in rpr and rpr[pn]["relay_tx"]:
                 conn.append(f"        .cland_rstart_out({rst[pn]})")
                 conn += [f"        .{pin}({rst[pn]}{sfx})" for pin, sfx in rtx_extra.get(pn, [])]
@@ -3452,8 +3494,9 @@ class Landings:
                 org = rpr[pn]["origin"]
                 txp = rtx_pin.get(pn, RELAY_TX_PIN)
                 if txp != RELAY_TX_PIN and txp not in [pin for pin, _sfx in rtx_extra.get(org, [])]:
-                    raise LandingError(f"clock landing {pn}: relay edge names tx pin {org}.{txp}, not a declared "
-                                       "start-relay tx pin of the origin type")
+                    self._collect_err("top", pn, None, None, LandingError(f"clock landing {pn}: relay edge names tx pin {org}.{txp}, not a declared "
+                                       "start-relay tx pin of the origin type"))   # BIND-ALL-ERRORS: collect, next item
+                    continue
                 conn.append(f"        .cland_rstart_in({rst[org]}{txp[len(RELAY_TX_PIN):]})")
             elif self.ca and self._role_strap(p["type"]) and \
                     (self.ca_type.get(p["type"]) or {}).get("role", ("",))[0] == "rolestrap":

@@ -4184,7 +4184,11 @@ class Binder:
             try:
                 top_text = self.clock_landings.top_rtl(top_text, {tn:t["module"] for tn,t in self.types.items()})
             except ValueError as exc:
-                raise BindError(str(exc)) from exc
+                if not (getattr(self, "collect_gaps", False) and getattr(exc, "errors", None)):
+                    raise BindError(str(exc)) from exc
+                for e in exc.errors:          # BIND-ALL-ERRORS: every bound-top landing error; no top from them
+                    self._gap(f"TOP {e[error]}")
+                return files
             (out.parent / "bind_clock_landings.json").write_text(
                 json.dumps(self.clock_landings.manifest(), indent=1) + "\n")
         f.write_text(top_text)
