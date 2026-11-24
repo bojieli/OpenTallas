@@ -179,3 +179,35 @@ def test_gen_phys_view_root_is_the_tree(tmp_path, monkeypatch):
     assert GP.view_root() == Path(GP.__file__).resolve().parents[2]
     monkeypatch.setenv("OT_REPO_ROOT", str(tmp_path))
     assert GP.view_root() == tmp_path.resolve()
+
+
+def test_pad_bound_only_in_bound_rtl_goes_through_kit_rtl(tmp_path):
+    """GENDRY-PADBIND-1124 (QC C1g glue): leaf-bound buses, but the bump pads are bound only by bind.py (contents[].bump_ports);
+    the plan wrapper fails 'pad ... must bind a leaf port: None', the wave kit builds glue from the bound RTL"""
+    glue = {"buses": [{"name": "h", "dir": "in", "width": 1, "leaf": "u_f.h"}],
+            "pads": [{"name": "bump_bump_fwd_epoch_pad_i", "dir": "in", "width": 1}],
+            "contents": [{"inst": "u_f", "module": "sys_face"},
+                         {"inst": "u_bump_fwd_epoch", "module": "qfd_sigbump_input",
+                          "bump_ports": [{"pin": "pad_i", "dir": "input", "width": 1}]}]}
+    padok = {"buses": [{"name": "h", "dir": "in", "width": 1, "leaf": "u_f.h"}],
+             "pads": [{"name": "p_i", "dir": "in", "width": 1}],
+             "contents": [{"inst": "u_f", "module": "sys_face", "bind": {"p": "pad:p_i"}}]}
+    raw = {"partition_types": {"glue": glue, "padok": padok}}
+    assert P.gendry_plan_unbound_pads(glue) == ["bump_bump_fwd_epoch_pad_i"] and P.gendry_plan_unbound_pads(padok) == []
+    assert P.gendry_kitrtl_types(raw, ["glue", "padok"]) == ["glue"]
+    pn, el = tmp_path / "plan.json", tmp_path / "bind"
+    pn.write_text(json.dumps(raw))
+    env = {"OT_PRE_GENDRY_TYPES": "glue,padok"}
+    cmds = []
+    run = lambda c, w, t: (cmds.append(c), (0, ""))[1]  # noqa: E731
+    out = P.check_gendry(tmp_path, pn, None, env=env, runner=run)        # no bind OUT: WARN, never FAIL, padok still runs
+    assert any(x.startswith("WARN GENDRY-KITRTL glue:") for x in out) and not any(x.startswith("FAIL") for x in out)
+    assert [c[c.index("--types") + 1] for c in cmds] == ["padok"] and "--kit-rtl" not in cmds[0]
+    el.mkdir()
+    (el / "bind_report.json").write_text(json.dumps({"errors": [], "n_errors": 0}))
+    cmds.clear()
+    P.check_gendry(tmp_path, pn, None, env=env, runner=run, elab_dir=el)
+    kr = [c for c in cmds if "kit-rtl" in c]
+    assert len(kr) == 1 and kr[0][kr[0].index("--type") + 1] == "glue"
+    g = [c for c in cmds if "--types" in c and c[c.index("--types") + 1] == "glue"]
+    assert len(g) == 1 and "--kit-rtl" in g[0]

@@ -140,6 +140,10 @@ GENDRY-1123 (COORD 17:25, FABLE flow review; HEAD E pin-move row cab67: every ga
   bind.py kit-rtl (this PRE's tools, --src-tree TREE, --asbuilt) into the temp dir, then the dry gen with --kit-rtl; a
   failure of either step is FAIL GENDRY.  Without a bind OUT (PRE runs before / beside the bind) such a type is not generated
   and is WARN GENDRY-KITRTL (classified, never FAIL); every type with any leaf binding is checked exactly as before.
+  GENDRY-PADBIND-1124 (QC C1g GENDRY: glue FAIL "pad bump_bump_fwd_epoch_pad_i must bind a leaf port: None"): a type with a
+  pad that no contents[].bind names is also KIT-RTL.  Such a pad is bound only in the bound RTL (QC glue: contents[].bump_ports
+  of u_bump_fwd_epoch / u_bump_fwd_lrst, bound by bind.py); the plan wrapper can never bind it, the wave kit (kit_rtl mode bind)
+  never builds it that way.
 
 SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,200 kv3_hg* o_ectl_Q_N_tN exact bank seats off
   the native lattice, found only at global_place): every exact bank site the kit places verbatim (internal_stations
@@ -1859,7 +1863,15 @@ def gendry_kitrtl_types(plan_raw, types):
         if (t.get("buses") and not any(b.get("leaf") for b in t["buses"])
                 and not any(c.get("bind") for c in t.get("contents", []))):
             out.append(tn)
+        elif gendry_plan_unbound_pads(t):                # GENDRY-PADBIND-1124: pads only the bound RTL binds
+            out.append(tn)
     return out
+
+
+def gendry_plan_unbound_pads(t):
+    """GENDRY-PADBIND-1124: the type's pads that no contents[].bind names (bound only in the bound RTL, e.g. bump_ports)"""
+    used = {k for c in t.get("contents") or [] for k in (c.get("bind") or {}).values()}
+    return [p["name"] for p in t.get("pads") or [] if isinstance(p, dict) and p.get("name") and f"pad:{p['name']}" not in used]
 
 
 def gendry_native_observer(plan_raw, sidecar):
@@ -1939,7 +1951,7 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     out = []
     if kitrtl and not bind_out:
         for tn in sorted(kitrtl):
-            out.append(f"WARN GENDRY-KITRTL {tn}: kit-RTL type (no bus.leaf / contents[].bind, or the landing observer is not a "
+            out.append(f"WARN GENDRY-KITRTL {tn}: kit-RTL type (no bus.leaf / contents[].bind, a pad no contents[].bind names, or the landing observer is not a "
                        f"plan leaf: the kit builds it from the bound RTL via bind.py kit-rtl); not generated dry without a finished error-free bind OUT (--elab-dir with bind_report.json)")
         run = [tn for tn in run if tn not in kitrtl]
 
