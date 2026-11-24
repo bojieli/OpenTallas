@@ -345,6 +345,9 @@ def _pack(rows, P, gap, grid=0.0):
         ok = place(0.0)
         if not ok:          # pushed past the top: retry the run from the bottom of the common range
             ok = place(lo - min(r["new"][0] for r in moving))
+        if not ok and grid:     # grid steps waste up to one step per window: pack tight (pin gap only) from the bottom
+            q = lambda d: d     # noqa: E731
+            ok = place(lo - min(r["new"][0] for r in moving))
         for r in moving:
             if ok:
                 r["new"] = r["_new"]
@@ -686,6 +689,41 @@ def tap_renames(old_types, new_types, raw, tn, offset):
     return {k: v for k, v in m.items() if k != v and k != "clk"}
 
 
+def rewindow(raw, table):
+    """spec "rewindow": {port id: window length um} -- a seam port between two type buses on a SHORTER window, same
+    layers and same pin count (denser pins; the G0 face budget still judges the density).  The low die coordinate
+    stays; the seam re-site then packs the shorter window.  Runs on the OLD layout, before any move."""
+    if not table:
+        return {}
+    import schema as S_
+    P = S_.Plan(raw)
+    parts = {q["name"]: q for q in raw["partitions"]}
+    per = float(P.budgets["face_pins_per_um"])
+    out = {}
+    for pid, length in sorted(table.items()):
+        pr = next(q for q in raw["ports"] if q["id"] == pid)
+        if not pr.get("window_um"):
+            raise ValueError(f"rewindow {pid}: windowless port")
+        w0, w1 = sorted(pr["window_um"])
+        length = float(length)
+        if not 0.0 < length < w1 - w0:
+            raise ValueError(f"rewindow {pid}: {length} is not shorter than {w1 - w0:.3f}")
+        if pr["width"] / length > per + 1e-6:
+            raise ValueError(f"rewindow {pid}: {pr['width'] / length:.2f} pins/um > the die budget {per:g}")
+        new = [round(w0, 6), round(w0 + length, 6)]
+        for side, face in (("src", pr["face"]), ("dst", OPP[pr["face"]])):
+            e = pr[side]
+            t = raw["partition_types"][parts[e["part"]]["type"]]
+            b = next((b for b in t.get("buses", []) if b["name"] == e["bus"]), None)
+            if b is None:
+                raise ValueError(f"rewindow {pid}: {e['part']}.{e['bus']} is not a type bus")
+            fw = to_frame(P.rect(e["part"]), parts[e["part"]].get("orient", "R0"), face, new)
+            b["window_um"] = [round(v, 6) for v in fw]
+        pr["window_um"] = list(new)
+        out[pid] = dict(old=[w0, w1], new=new, pins_per_um=round(pr["width"] / length, 3))
+    return out
+
+
 def relayer(raw, table):
     """spec "relayer": {port id: [layers]} -- a seam port re-pinned on more layers (owner-approved three-layer seam pins):
     the port and the bus of each end get the new layer list, and the window shrinks to len * n_old / n_new from its
@@ -704,6 +742,8 @@ def relayer(raw, table):
         n0, n1 = len(pr.get("layers") or []), len(layers)
         if not (n0 and n1 > n0):
             raise ValueError(f"relayer {pid}: {pr.get('layers')} -> {layers} is not a layer increase")
+        if set(layers) & {"M1", "M2"}:      # M1 / M2 carry the partition follow-pin rails (gen_phys pdn), no signal pins
+            raise ValueError(f"relayer {pid}: M1 / M2 are follow-pin layers, not pin layers")
         w0, w1 = sorted(pr["window_um"])
         new = [round(w0, 6), round(w0 + (w1 - w0) * n0 / n1, 6)]
         ends = []
@@ -725,10 +765,11 @@ def apply(raw, spec, pin_gap=1.2):
     base_raw = raw
     raw = copy.deepcopy(raw)
     relayered = relayer(raw, spec.get("relayer") or {})
+    rewin = rewindow(raw, spec.get("rewindow") or {})
     lay = new_layout(raw, spec)
     die_wh = tuple(spec.get("die_outline_um") or raw["die"]["outline_um"])
-    rep = dict(schema=SCHEMA, layout_findings=layout_findings(raw, lay, die_wh), relayered=relayered)
-    rows = site_ports(raw, lay, pin_gap, set(spec.get("keep_frame", [])), set(relayered) | set(spec.get("slide", [])))
+    rep = dict(schema=SCHEMA, layout_findings=layout_findings(raw, lay, die_wh), relayered=relayered, rewindowed=rewin)
+    rows = site_ports(raw, lay, pin_gap, set(spec.get("keep_frame", [])), set(relayered) | set(rewin) | set(spec.get("slide", [])))
     types = raw["partition_types"]
     parts = {p["name"]: p for p in raw["partitions"]}
     reshaped = {n for n, (a, b) in lay.items() if abs((a[2] - a[0]) - (b[2] - b[0])) > EPS

@@ -241,12 +241,12 @@ def test_relayer_shrinks_both_ends_and_refuses_a_slot_end():
     raw = _lane_plan()
     raw["ports"].append(dict(id="pb", src=dict(part="SRC", bus="o0"), dst=dict(part="DST", bus="i0"), kind="data",
                              width=8, face="E", layers=["M6", "M4"], window_um=[400.0, 420.0]))
-    rows = RR.relayer(raw, {"pb": ["M6", "M4", "M2"]})
+    rows = RR.relayer(raw, {"pb": ["M6", "M4", "M8"]})
     assert rows["pb"]["new"] == [400.0, round(400.0 + 20.0 * 2 / 3, 6)]
     b = raw["partition_types"]["tsrc"]["buses"][0]
-    assert b["layers"] == ["M6", "M4", "M2"] and abs(b["window_um"][1] - b["window_um"][0] - 40.0 / 3) < 1e-5
+    assert b["layers"] == ["M6", "M4", "M8"] and abs(b["window_um"][1] - b["window_um"][0] - 40.0 / 3) < 1e-5
     with pytest.raises(ValueError):
-        RR.relayer(_lane_plan(), {"p1": ["M6", "M4", "M2"]})        # ft slot ends
+        RR.relayer(_lane_plan(), {"p1": ["M6", "M4", "M8"]})        # ft slot ends
     with pytest.raises(ValueError):
         RR.relayer(_lane_plan(), {"p0": ["M6"]})                    # not an increase
 
@@ -257,3 +257,8 @@ def test_dodge_cores_leaves_abutted_cores_on_one_axis():
         dict(inst="b", origin_um=[100.0, 300.0], outline_um=[200.0, 200.0])])
     (x, y), = RR.dodge_cores(t, [[290.0, 310.0]])
     assert not (100.0 < x < 300.0 and 100.0 < y < 500.0) and (x == 290.0 or y == 310.0)
+
+
+def test_relayer_refuses_follow_pin_layers():
+    with pytest.raises(ValueError):
+        RR.relayer(_lane_plan(), {"p0": ["M6", "M4", "M2"]})
