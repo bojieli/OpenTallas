@@ -10453,6 +10453,14 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         import tap_resolve
         raw = copy.deepcopy(raw)
         tap_resolve.apply_density(raw, plan_path, types)
+    # TAPKEY-SITE 11-24: name-keyed tap tables (tap_offset / tap_window per_port_ps, tap_pin_heights_um, tap_group.fixed_taps)
+    # of a type with a site stamp (clock.tap_sites_um) follow their SITE onto the grid solved above, so a re-solve that renumbers
+    # clk_t<i> cannot point a row at another place; no stamp = unchanged
+    import tap_site as _TSITE
+    if _TSITE.needs_rekey(raw):
+        import copy
+        raw = copy.deepcopy(raw)
+        _TSITE.rekey_plan(raw, plan_path, types, P=S.Plan(raw, plan_path), log=lambda m: print(m, file=sys.stderr))
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
     # KV-KITS-23: hard PHY partitions may contain ordinary mapped boundary glue.
