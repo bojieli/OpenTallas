@@ -8088,6 +8088,10 @@
       "type": "integer",
       "minimum": 0
      },
+     "min_cycles": {
+      "type": "integer",
+      "minimum": 0
+     },
      "beats": {
       "type": "integer",
       "minimum": 2

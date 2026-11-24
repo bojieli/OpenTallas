@@ -1200,6 +1200,8 @@ SCHEMA = {
             "type": "object", "required": ["id", "ports"], "additionalProperties": False,
             "properties": {"id": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
                            "fixed_cycles": {"type": "integer", "minimum": 0},
+                           # Optional delivered age floor. Existing lane pads realise any difference.
+                           "min_cycles": {"type": "integer", "minimum": 0},
                            # DEC12 (S81 svc fold rung, 2026-10-24): a lane that carries a word of word_bits in `beats`
                            # consecutive beats (endpoint RTL serialises; port width = ceil(word_bits / beats) + the
                            # beat-index bits ceil(log2 beats), MSB).  cycles stay the lane's register stages (no bind
@@ -2966,11 +2968,11 @@ class Plan:
         return bad
 
     def lane_pads(self):
-        """R8: {lane: pad cycles} so every latency group arrives in one cycle (fixpoint over overlapping groups)."""
+        """Receiver pads for declared lane-age floors and R8 alignment across overlapping groups."""
         if getattr(self, "_pads", None) is not None:
             return self._pads
         nat = {lid: self.lane_natural(lid)["cycles"] for lid in self.lanes}
-        cyc = dict(nat)
+        cyc = {lid: max(cycles, self.lanes[lid].get("min_cycles", 0)) for lid, cycles in nat.items()}
         groups = [g for g in self.latency_groups() if all(l in self.lanes for l in g[2])]
         for _ in range(len(self.lanes) + 1):
             moved = False

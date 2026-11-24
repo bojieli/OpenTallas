@@ -527,6 +527,31 @@ def test_latency_groups_pad_to_slowest():
     assert schema.Plan(c).bus_pads()[1]
 
 
+
+def test_latency_floor_preserves_receiver_pad_and_updates_group():
+    import gen_rtl
+
+    plan = copy.deepcopy(EX1)
+    row = next(lane for lane in plan["lanes"] if lane["id"] == "cfg23")
+    row["min_cycles"] = 3
+    model = schema.Plan(plan)
+    assert model.lane_latency("cfg23")["natural"] == 2
+    assert model.lane_latency("cfg23")["cycles"] == 3
+    assert model.bus_pads() == ({("sink", "cfg_i"): 1}, [])
+    plan["latency"]["lanes"] = gen.latency_table(model)
+    report, _ = g0(lambda candidate: candidate.update(copy.deepcopy(plan)))
+    assert not [entry for entry in report.errors() if entry["check"] == "latency"]
+    rtl = gen_rtl.wrapper(model, "sink", gen_rtl.bus_epochs(model))
+    assert "u_bin_cfg_i_pad0" in rtl and "u_bin_cfg_i_pad1" not in rtl
+
+    row["min_cycles"] = 5
+    plan["latency_groups"] = [dict(name="xbus", kind="bus", lanes=["x", "cfg23"])]
+    grouped = schema.Plan(plan)
+    assert grouped.lane_latency("x")["cycles"] == grouped.lane_latency("cfg23")["cycles"] == 5
+    row["min_cycles"] = -1
+    assert any("min_cycles" in error for error in schema.validate(plan))
+
+
 def test_landed_group_one_depth_and_window():
     """COORD rule 10-23 (S81-P9-R8EQ): a latency group of kind `landed` (one forwarded-clock landing ring, one K)
     arrives at ONE group depth; its natural lane spread must stay under the landing window margin (window - 1)."""
