@@ -114,3 +114,12 @@
   - Logs: epyc7 .../prep/NF15f/prep_r18g_epin_legal/republish_hd_lep0N.log and prep_r18g_epin_r2/republish_hd_lep0N.log.
   - Cause: hd_lep0N clock.landing_writer_start.branches.coll_o0.stages[0].raw_reset = rst_rl_334 (stages 1-2: rst_rl_60, rst_rl_376) and the reader_start stages hard-name native u_rrl relays. Moving taps re-solves the native reset tree, and rst_rl_334 no longer exists as an ot_dp_rrelay q.
   - Needed: re-derive START stage raw_reset names on the re-solved tree (nearest relay, same wavefront depth, not a port driver; start_stage_raw_resite.py rule), in the bind/republish path or as a plan tool.
+- 2026-11-23 17:26 PST RESUMED HEAD-R18 17:2x [HEAD-R18 -> COORD; cc FABLE-RC-ALL, FLOW-OPS-R3]
+  State: r17b live; r18g staged. The s2 reseal bdf71c06 replica epyc10 is OK; epyc9 and intel2 failed (ssh timeout / rsync), retrying now, then the dry gate (driver2.log). The 66ce 20-iteration census on intel1 (1459759) is at extra iteration 6/20.
+  NEW: E census kit hd_lep0N_1123172531 (spec s81_head_hd_lep0N_1123172533, unit head-r18-east-escape-grt), r18g + OT_TAP_ESCAPE_CLEAR_UM=0.30 + OT_TT_SETUP_DESIGN=1, rt 70b6f0430ea9, goal grt; its GRT is the census.
+  ETAs:
+  - s2 dry gate: 18:30.
+  - E raw START parent row (pin-move GEN fix, clock_landings.py:1808 rst_rl_334): 19:00, mine.
+  - W phase-2 signal overflow 1034 structural row: first read 18:15, row 20:00.
+  - rscap row PRE: when rt/current carries 7f184148 (freeze lifts 18:30), about 19:00.
+  - E census (66ce stand-in and escape kit GRT): 23:00.
