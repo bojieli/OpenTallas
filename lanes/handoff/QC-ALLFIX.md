@@ -14,3 +14,11 @@ Work dir: epyc8 /srv/opentallas-scratch2/claude/QC-ALLFIX (OT_LANE=QC-ALLFIX). r
 - rc97: COORD reopened; HCST-R3 re-hardens sta_region_nb0 at BT_LAT=2 (ETA 23:30-02:00), I do parent row (param_wrap BT_LAT 2 on 20 region cores + btab s4r) for compose C.
 - COLL helper next: TTCTLM late-cone setup row, 6 in-core stations cbn_q00__cld7bf7197, coll_core probe on rt with 32027184aff.
 - SU helper: SUC-Q0 stage-0 legs row for C.
+
+## 11-24 08:35 PST state (fresh lane after 11-24 limit)
+- C1i 3e46ebd69a97 PASS (E9 cI, unit 3859502): 0 bind err, LATCHECK 1922/1922, G0 PASS, render+streets viewed (cI/g0_review_0632).
+- C1i kits (28 + glue probe-through) on E9: intel2 /srv/opentallas-scratch2/claude/QC-ALLFIX-c1i/launch_c1i.sh, lists grt.txt route.txt grt_coord.txt pt.txt, logs launch_*.log. Set = C1i-changed not in C1j + dead C1h kits not in C1j. Not launched: phy_serdes/phy_serdes_b/phy_ucie_kv (repeat gen FAIL).
+- C1h relaunch of 3 C1j-touched place NOT-RUN kits: intel2 QC-ALLFIX-c1h/relaunch_*.log.
+- COORD re-own of 7 QC-V4 holds: slw_fe_v2__clf110fab2 released (kit_wave 1f26cfdb); other 6 held (owner QC-ALLFIX), release on a C1i probe CTS >= -42.
+- C1j 7fbc73d3f7cf intel1 cJ unit 17244: PRE ROWS-NO-PROOF only -> elab + strict bind running. On PASS: native59 exact C1j pair next; native59 held until then.
+- Type diff tool: intel1 QC-ALLFIX/tmp/typediff.py (C1j vs C1i = 33 types + clock/reset/latency).
