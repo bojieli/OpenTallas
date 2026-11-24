@@ -85,6 +85,6 @@ SERDES-RING-ONEGROUP	family	877bf1f92e06	877bf1f92e06	yes	c6 8381109c93bf	PASS 0
 RHI-RST-REACH	family	v2 2e5928836573 (supersedes v1 12cd5a01764b)	2e5928836573	yes	c6 8381109c93bf	PASS 0 (MULTI)	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 LEAF-ALLFIX-1	family	8ce96cfc7c52	8ce96cfc7c52	yes	c6 8381109c93bf	PASS 0/285	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 KVLEAF-T2-HARD-1	S81-ALLFIX-SLICE	08bbfd521522 / slot +527x691	-	-	-	-	-	-	-	-	-	REASONED-pending (FABLE-RC-ALL 17:33 ACCEPT)
-COL-P5-FSTART1	S81-ALLFIX-COL	plan 77d6f4f47270	a2a6760fa5e1	yes	c7a (composing 19:0x)	12 ANCHORDRY REASONED (intended), else 0	-	-	-	-	-	STAGED c7a
+COL-P5-FSTART1	S81-ALLFIX-COL	plan 77d6f4f47270	a2a6760fa5e1	yes	c7a (composing 19:0x)	12 ANCHORDRY REASONED (intended), else 0	-	-	-	-	-	STAGED c7a; REASONED on proof (COORD 19:18/FABLE d016ece5): scoped strict EMIT 0 on 12 p5+serdes__t13 + START release>=reset + die max release before/after. NOTE: B1 ae3101241d6b binds these 12 at depth 7 BY DESIGN; ALLFIX differs (depth 8) by design
 SERDES-t13-FSTART0	S81-ALLFIX-SVC	t13 fstart_0 depth 10!=9 (inherited B1)	-	no	-	-	-	-	-	-	-	OPEN: SVC row due 20:00 -> c7b
 FSTART-DEPTH-CLASS	S81-ALLFIX-MULTI	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: MULTI due 20:15 -> c7b
