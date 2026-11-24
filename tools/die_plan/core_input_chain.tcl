@@ -22,6 +22,89 @@ set nc_xi {}; set nc_yi {}
 foreach m $nc_mac { lassign $m a b c d; lappend nc_xi [list $a $c]; lappend nc_yi [list $b $d] }
 set nc_xs [nc_lines [$nc_core xMin] [$nc_core xMax] $nc_xi]
 set nc_ys [nc_lines [$nc_core yMin] [$nc_core yMax] $nc_yi]
+# CB-CHAIN-LANE (QC-CB-SPREAD-R2 11-24, COORD 10:1x): nc_route bends every chain onto the street CENTRE line, so all 514
+# bits of a bus (pipe stages, r8b strap pads, pd pads and their hop buffers) stacked in one gcell column (cbn_q00 west
+# street x~52: pq_/lk_/lpad nets 2-2.5k GRT overflow each).  Each bit now takes its own lane across the street width:
+# lane = lo + m + (hi - lo - 2m) * (b + 0.5) / n (b = the bit index of the chain tail, n = its bus width, m = halo + 2 um),
+# applied to every route leg >= 20 um that runs along a street (centre line or the tail / head column; a moved first or
+# last leg gets a jog, head / tail stay), kept only when the laned route still clears every macro (nc_ok), else the old route.  OT_NK_CHAIN_LANE=0 restores the centre line.
+proc nc_gaps {lo hi ivals} {
+  set iv [lsort -integer -index 0 $ivals]; set out {}; set cur $lo
+  foreach v $iv { lassign $v a b; if {$a > $cur} { lappend out [list [expr {($cur + $a) / 2}] $cur $a] }; if {$b > $cur} { set cur $b } }
+  if {$hi > $cur} { lappend out [list [expr {($cur + $hi) / 2}] $cur $hi] }
+  return $out
+}
+proc nc_lane_pos {lo hi b n margin} {
+  set w [expr {$hi - $lo - 2 * $margin}]
+  if {$n < 2 || $w <= 0} { return [expr {($lo + $hi) / 2}] }
+  return [expr {int(round($lo + $margin + $w * ($b + 0.5) / double($n)))}]
+}
+# the street (lo hi) of the gap list {{mid lo hi} ...} that holds coordinate v, {} when v is not in a street
+proc nc_gap_of {gaps v} { foreach g $gaps { lassign $g m a c; if {$v >= $a && $v <= $c} { return [list $a $c] } }; return {} }
+# every route leg at least lmin long that runs ALONG a street (a vertical leg inside an x street, a horizontal leg inside a
+# y street) moves to the bit's lane of that street; a moved first / last leg gets a jog from the head / to the tail
+proc nc_route_lane {pts xgaps ygaps b n margin lmin} {
+  set N [expr {[llength $pts] - 1}]
+  if {$n < 2 || $N < 1} { return $pts }
+  set X {}; set Y {}; foreach p $pts { lappend X [lindex $p 0]; lappend Y [lindex $p 1] }
+  set hj {}; set tj {}
+  for {set i 0} {$i < $N} {incr i} {
+    set x0 [lindex $X $i]; set y0 [lindex $Y $i]; set x1 [lindex $X [expr {$i+1}]]; set y1 [lindex $Y [expr {$i+1}]]
+    if {$x0 == $x1 && abs($y1 - $y0) >= $lmin} {
+      set g [nc_gap_of $xgaps $x0]; if {![llength $g]} continue
+      set L [nc_lane_pos {*}$g $b $n $margin]
+      if {$i > 0} { lset X $i $L } else { set hj [list $L $y0] }
+      if {$i + 1 < $N} { lset X [expr {$i+1}] $L } else { set tj [list $L $y1] }
+    } elseif {$y0 == $y1 && abs($x1 - $x0) >= $lmin} {
+      set g [nc_gap_of $ygaps $y0]; if {![llength $g]} continue
+      set L [nc_lane_pos {*}$g $b $n $margin]
+      if {$i > 0} { lset Y $i $L } else { set hj [list $x0 $L] }
+      if {$i + 1 < $N} { lset Y [expr {$i+1}] $L } else { set tj [list $x1 $L] }
+    }
+  }
+  # a 2-point leg moved at both ends: head -> (L, hy) -> (L, ty) -> tail
+  if {$N == 1 && [llength $hj] && [llength $tj]} { return [list [lindex $pts 0] $hj $tj [lindex $pts end]] }
+  set out [list [lindex $pts 0]]
+  if {[llength $hj]} { lappend out $hj }
+  for {set k 1} {$k < $N} {incr k} { lappend out [list [lindex $X $k] [lindex $Y $k]] }
+  if {[llength $tj]} { lappend out $tj }
+  lappend out [lindex $pts end]
+  return $out
+}
+# bus key of a register name: the name without its LAST [bit] index -> {key bit}, {} when it has none
+proc nc_lane_key {nm} {
+  set nm [string map {\\ {}} $nm]
+  if {[regexp {^(.*)\[([0-9]+)\]([^\[\]]*)$} $nm -> pre bit post]} { return [list "$pre\[\]$post" $bit] }
+  return {}
+}
+set nc_xgap [nc_gaps [$nc_core xMin] [$nc_core xMax] $nc_xi]
+set nc_ygap [nc_gaps [$nc_core yMin] [$nc_core yMax] $nc_yi]
+set nc_lane_on [expr {![info exists ::env(OT_NK_CHAIN_LANE)] || $::env(OT_NK_CHAIN_LANE) ne "0"}]
+set nc_lane_m [expr {$nc_halo + round(2.0 * $nc_dbu)}]; set nc_lane_lmin [expr {round(20.0 * $nc_dbu)}]
+set nc_lane_w {}; set nc_lane_used 0; set nc_lane_fallback 0
+if {$nc_lane_on} {
+  foreach i [$nc_blk getInsts] {
+    set nm [$i getName]
+    if {![regexp {u_pc_nk_|u_r8b_strap_} $nm]} continue
+    set kb [nc_lane_key $nm]; if {![llength $kb]} continue
+    lassign $kb key bit
+    if {![dict exists $nc_lane_w $key] || [dict get $nc_lane_w $key] <= $bit} { dict set nc_lane_w $key [expr {$bit + 1}] }
+  }
+}
+# the route of one bit's chain: the centre route, laned across its street(s) when the tail register names a bit of a bus
+proc nc_route_bit {hx hy tx ty nm} {
+  global nc_lane_on nc_lane_w nc_xgap nc_ygap nc_lane_m nc_lane_lmin nc_lane_used nc_lane_fallback
+  set r [nc_route $hx $hy $tx $ty]
+  if {!$nc_lane_on} { return $r }
+  set kb [nc_lane_key $nm]; if {![llength $kb]} { return $r }
+  lassign $kb key bit
+  if {![dict exists $nc_lane_w $key]} { return $r }
+  set r2 [nc_route_lane $r $nc_xgap $nc_ygap $bit [dict get $nc_lane_w $key] $nc_lane_m $nc_lane_lmin]
+  if {$r2 eq $r} { return $r }
+  if {![nc_ok $r2]} { incr nc_lane_fallback; return $r }
+  incr nc_lane_used
+  return $r2
+}
 proc nc_hit {x1 y1 x2 y2} {
   global nc_mac
   set e 2000
@@ -284,7 +367,7 @@ proc nc_chain_one {pc {gate ""}} {
     if {![llength $seq]} return
   } else { lassign [nc_ctr [$head getInst]] hx hy }
   lassign [nc_ctr $pc] tx ty
-  set route [nc_route $hx $hy $tx $ty]
+  set route [nc_route_bit $hx $hy $tx $ty [$pc getName]]
   set hops [expr {[llength $seq] + 1}]
   # before: longest single hop (Manhattan) along head -> stages -> pc
   set prev [list $hx $hy]; set mx 0
@@ -935,7 +1018,7 @@ dict for {nm v} $rs_inst {
     foreach s_ [concat $seq [list $rs_F]] { lassign [nc_ctr $s_] x y; set mx [expr {max($mx, abs($x-[lindex $prev 0])+abs($y-[lindex $prev 1]))}]; set prev [list $x $y] }
     if {$mx <= $rs_hop_thr * $nc_dbu} continue
   } else { lassign [dict get $rs_tgt $nm] tx ty }
-  set route [nc_route $hx $hy $tx $ty]
+  set route [nc_route_bit $hx $hy $tx $ty [$rs_F getName]]
   if {![nc_ok $route]} { incr rs_noroute; continue }
   set n [llength $seq]; set hops [expr {$n + 1}]
   set hop [expr {[nc_len $route]/double($hops)/$nc_dbu}]
@@ -964,5 +1047,6 @@ puts [format "OT_R8_CORE_SEAT pins %d seated_pins %d roots %d shared_roots %d ga
   $rs_pins $rs_seated $rs_nroot $rs_shared $rs_ngate $rs_chains $rs_stages $rs_bufs $rs_noroute $rs_t0 $rs_t1 $rs_hop $rs_need $rs_kept]
 }
 }
+uplevel #0 { puts "OT_NK_CHAIN_LANE on $nc_lane_on buses [dict size $nc_lane_w] laned_routes $nc_lane_used fallback_centre $nc_lane_fallback" }
 # lever 7 (HOLD-FLOW-R 11-17): this kit's PRE_RESIZE hook is this file, not the gp_noconverge gate: run the post-place wire check here
 if {[file exists [file join [file dirname [file normalize [info script]]] place_wire_ratio.tcl]]} { source [file join [file dirname [file normalize [info script]]] place_wire_ratio.tcl] }
