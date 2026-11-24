@@ -12432,7 +12432,12 @@ try:
             continue
         try:
             if rep is None:
-                rep = json.loads((Path(a["bind_out"]) / "bind_report.json").read_text())
+                try:                                                     # BIND-STREAM-LAUNCH: a running bind's streamed type
+                    import bind_stream as _bs
+                    rep = _bs.report(a["bind_out"], t) if _bs.newer_than_context(a["bind_out"]) is not None else None
+                except ImportError:
+                    rep = None
+                rep = rep or json.loads((Path(a["bind_out"]) / "bind_report.json").read_text())
             ty = rep.get("types") or {}
             key = t if t in ty else next((k for k in sorted(ty) if k.startswith(t + "__")), None)
             if key is None:

@@ -3940,6 +3940,23 @@ class Binder:
         raise BindError(msg)
 
     def _emit_one(self, tn, ps, out, files):
+        """_emit_one_type + BIND-STREAM-LAUNCH 11-24: a type whose emit and per-type passes end with no gap of its own gets its
+        final stream record OUT/native_topology.d/<type>.json at once (bind_stream.py), so its kit can start before the bind ends.
+        Runs in the forked emit worker too (a file write only, no Binder state); a record failure never fails the bind."""
+        n0, g0 = len(files), len(getattr(self, "emit_gaps", None) or [])
+        r = self._emit_one_type(tn, ps, out, files)
+        ctx = getattr(self, "_stream", None)
+        if ctx and len(files) > n0 and len(getattr(self, "emit_gaps", None) or []) == g0:
+            try:
+                import bind_stream
+                bind_stream.write_type(ctx, tn, self.types[tn]["module"], len(ps), files[n0:], ctx.get("lib", []),
+                                       list(self.extra_lib), Path(out) / "rtl" / "bind_cells.sv",
+                                       instance_params=self.instance_params(tn, ps))
+            except Exception as exc:          # report only: the type then waits for the bind end as before
+                print(f"bind: WARN BIND_STREAM {tn}: no stream record ({type(exc).__name__}: {exc})", flush=True)
+        return r
+
+    def _emit_one_type(self, tn, ps, out, files):
         """_emit_type_files; BIND-ALL-ERRORS: with collect_gaps a refusal in ANY per-type pass (reset localization, port /
         bank / inst taps, groups, ...) is this type's gap and the other types go on; default: raised unchanged."""
         if not getattr(self, "collect_gaps", False):
@@ -5801,6 +5818,59 @@ class Binder:
         doms = sorted(self.clk_dom[p])
         return doms[0] if len(doms) == 1 else self.ab.get("default_clock", "core")
 
+    def _inst_overrides(self, p, record=True):
+        """-> (ov, parent_ids) of partition p as the bound top instantiates it: the parameter overrides (#(...)) and the
+        parent ID / R8 pad strap pins.  record=False (BIND-STREAM-LAUNCH: the per-type instance parameters of a type record,
+        before / without a bound top) computes the same values without recording them for the top manifests."""
+        tn = self.parts[p]["type"]
+        pn = self.pnames[tn]
+        ov = []
+        parent_ids = []
+        for k, (nm, w) in sorted(pn.items(), key=lambda kv: kv[1][0]):
+            if k[0] == "r8pad":
+                cnt = self.tvals[tn][p].get(k)
+                if type(cnt) is not int or not 0 <= cnt < (1 << w):
+                    raise BindError(f"R8 strap pad {p}.{nm}: count {cnt} is not a {w}-bit constant")
+                parent_ids.append((nm, f"{w}'b{cnt:0{w}b}"))
+                if record:
+                    self.__dict__.setdefault("r8pad_values", {}).setdefault(sv_id(p), {})[nm] = (w, cnt)
+                continue
+            if k[0] == "strap":
+                r, port = k[1], k[2]
+                ci = {self.rel_of(c): c for c in self.members[p]}[r]
+                width = len(self.F.cells[ci].ports[port])
+                v = ["0"] * width
+                for kk, val in self.tvals[tn][p].items():
+                    if kk[0] == "strap" and kk[1] == r and kk[2] == port:
+                        v[kk[3]] = val if val in "01" else "0"
+                if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
+                    actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
+                                   if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                    parameter_bits = {kk[3] for kk in self.tparams[tn]
+                                      if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                    if not parameter_bits or set(actual_bits) != parameter_bits or any(val not in "01" for val in actual_bits.values()):
+                        raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID parameter bits")
+                    literal = ''.join(reversed(v))
+                    value = int(literal, 2)
+                    if port == "sid" and self.parts[p].get("id_straps", {}).get(nm) != value:
+                        raise BindError(f"parent ID {p}.{r}.{port}: plan strap does not match bound value {value}")
+                    parent_ids.append((nm, f"{width}'b{literal}"))
+                    if record:
+                        self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width, value=value)
+                else:
+                    ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
+            else:
+                ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
+        return ov, parent_ids
+
+    def instance_params(self, tn, ps):
+        """{bound instance name: '#(...)' or ''} of type tn, exactly the strings bound_instance_params reads off the bound top"""
+        res = {}
+        for q in ps:
+            ov, _ = self._inst_overrides(q, record=False)
+            res[sv_id(q)] = ("#(" + ", ".join(ov) + ")") if ov else ""
+        return res
+
     def emit_top(self):
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
@@ -5849,42 +5919,7 @@ class Binder:
         for p in sorted(self.members):
             tn = self.parts[p]["type"]
             t = self.types[tn]
-            pn = self.pnames[tn]
-            ov = []
-            parent_ids = []
-            for k, (nm, w) in sorted(pn.items(), key=lambda kv: kv[1][0]):
-                if k[0] == "r8pad":
-                    cnt = self.tvals[tn][p].get(k)
-                    if type(cnt) is not int or not 0 <= cnt < (1 << w):
-                        raise BindError(f"R8 strap pad {p}.{nm}: count {cnt} is not a {w}-bit constant")
-                    parent_ids.append((nm, f"{w}'b{cnt:0{w}b}"))
-                    self.__dict__.setdefault("r8pad_values", {}).setdefault(sv_id(p), {})[nm] = (w, cnt)
-                    continue
-                if k[0] == "strap":
-                    r, port = k[1], k[2]
-                    ci = {self.rel_of(c): c for c in self.members[p]}[r]
-                    width = len(self.F.cells[ci].ports[port])
-                    v = ["0"] * width
-                    for kk, val in self.tvals[tn][p].items():
-                        if kk[0] == "strap" and kk[1] == r and kk[2] == port:
-                            v[kk[3]] = val if val in "01" else "0"
-                    if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
-                        actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
-                                       if kk[0] == "strap" and kk[1] == r and kk[2] == port}
-                        parameter_bits = {kk[3] for kk in self.tparams[tn]
-                                          if kk[0] == "strap" and kk[1] == r and kk[2] == port}
-                        if not parameter_bits or set(actual_bits) != parameter_bits or any(val not in "01" for val in actual_bits.values()):
-                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID parameter bits")
-                        literal = ''.join(reversed(v))
-                        value = int(literal, 2)
-                        if port == "sid" and self.parts[p].get("id_straps", {}).get(nm) != value:
-                            raise BindError(f"parent ID {p}.{r}.{port}: plan strap does not match bound value {value}")
-                        parent_ids.append((nm, f"{width}'b{literal}"))
-                        self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width, value=value)
-                    else:
-                        ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
-                else:
-                    ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
+            ov, parent_ids = self._inst_overrides(p)
             dd = self.default_domain(p)
             cs = [f"        .clk(clk_{sv_id(dd)})", f"        .arst_n({reset_in.get(p, 'rst_n')})"]
             cs += [f"        .{nm}({expr})" for nm, expr in parent_ids]
@@ -6590,6 +6625,16 @@ def cmd_bind(a):
     stop = r8_fail_fast(a, raw, out, B)
     if stop is not None:
         return stop
+    B._stream = None
+    try:                                     # BIND-STREAM-LAUNCH 11-24: per-type topology records while this bind runs (bind_stream.py)
+        import bind_stream
+        B._stream = bind_stream.start(out, kit_topology.bind_receipt(raw, getattr(a, "asbuilt", None), input_topology),
+                                      a.plan, getattr(a, "asbuilt", None))
+        _ss = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
+        B._stream["lib"] = [str(f) for f in rebase_lib_paths(_ss.get("lib", []), B.base)]
+    except Exception as exc:                 # report only: no stream = kits wait for the bind end as before
+        B._stream = None
+        print(f"bind: WARN BIND_STREAM off ({type(exc).__name__}: {exc})", flush=True)
     B.uniform_inner()
     B.regen_params()
     try:
@@ -6869,6 +6914,14 @@ def cmd_bind(a):
         if rep["leaf_sources"].get("missing"):
             print(f"bind: WARN leaf modules without a source (report only, kit_rtl will refuse them): {rep['leaf_sources']['missing'][:10]}",
                   flush=True)
+    try:                                     # BIND-STREAM-LAUNCH: a streamed type that a bind error names is withdrawn (final false)
+        import bind_stream
+        _wd = bind_stream.finish(getattr(B, "_stream", None), B.errors)
+        if _wd:
+            rep["stream_withdrawn"] = _wd
+            print(f"bind: BIND_STREAM withdrew {len(_wd)} streamed types named by bind errors: {_wd[:20]}", flush=True)
+    except Exception as exc:
+        print(f"bind: WARN BIND_STREAM finish: {type(exc).__name__}: {exc}", flush=True)
     _fresh_write_text(out / "bind_report.json", json.dumps(rep, indent=1))
     write_all_errors(out, B.errors, B.types)     # BIND-ALL-ERRORS: the full list (bind_report keeps the first 2000)
     try:                                     # BIND-GEN-TOOLSKEW (FLOW-FIX-0400): the tool sha + reset/relay generator hashes this bind ran with; kit prep compares them with the gen rt
@@ -7861,7 +7914,17 @@ def cmd_kit_rtl(a):
     if tn not in raw["partition_types"]:
         raise BindError(f"kit-rtl: no partition type {tn} in the plan")
     t = raw["partition_types"][tn]
-    rep = json.loads((out / "bind_report.json").read_text())
+    import bind_stream
+    stream_rep = None
+    if bind_stream.newer_than_context(out) is not None:
+        # BIND-STREAM-LAUNCH 11-24: the bind of this OUT is still running; a type with a final stream record is kit-ready now
+        stream_rep = bind_stream.report(out, a.variant or tn)
+        if stream_rep is None:
+            raise BindError(f"kit-rtl: the bind of {out} is still running and type {a.variant or tn} has no final stream record "
+                            f"(native_topology.d/); wait for its emit or the bind end")
+        rep = stream_rep
+    else:
+        rep = json.loads((out / "bind_report.json").read_text())
     component_report = None
     if getattr(a, "component_proof", None):
         import bind_component
@@ -8092,7 +8155,17 @@ def cmd_kit_rtl(a):
         # binding. Do not borrow another cohort's (possibly incomplete) top.
         pinst = {component_report["instance"]: ""}
     else:
-        pinst = bound_instance_params(out, raw["die"]["name"], bmod)
+        _topf = Path(out) / "rtl" / f"{sv_id(raw['die']['name'])}_bound_top.sv"
+        if _topf.is_file():
+            pinst = bound_instance_params(out, raw["die"]["name"], bmod)
+        else:
+            # BIND-STREAM-LAUNCH 11-24 (COORD: QC FWCPL2 / KV PCPACK R3 scoped binds emit no die top): the type's own final record
+            # of this bind run carries the per-instance parameters the top would pass (Binder.instance_params, same strings)
+            _why = []
+            pinst = bind_stream.instance_params(out, key, bmod, _why)
+            if pinst is None:
+                raise BindError(f"kit-rtl {tn}: no bound top {_topf.name} and no final type record with instance parameters "
+                                f"({'; '.join(_why)[:300]})")
     if a.instance:
         if a.instance not in pinst:
             raise BindError(f"kit-rtl {tn}: instance {a.instance} of {bmod} not in the bound top ({sorted(pinst)[:8]})")
@@ -8170,7 +8243,8 @@ def cmd_kit_rtl(a):
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
     prefer = [rebase(str(Path(base) / f) if not Path(f).is_absolute() else f) for f in ab0.get("prefer", [])] + \
-        [rebase(x) for x in rep.get("extra_lib", [])] + [rebase(x) for x in bindf_prefer(out, base)]
+        [rebase(x) for x in rep.get("extra_lib", [])] + [rebase(x) for x in (bindf_prefer(out, base) if stream_rep is None else
+                                                                               [f for f in stream_rep["bind_f"] if Path(f).is_file()])]
     E.validate_preferred_files(prefer)
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), [rebase(x) for x in ab0.get("files", [])] + [rebase(x) for x in rep.get("extra_lib", [])], base)
     # Generated bind cells are carried by the kit's bind_cells.sv, not by the
@@ -8310,7 +8384,11 @@ def cmd_kit_rtl(a):
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
     import bound_r8_straps as _BRS          # FLOW-PROC-A 11-21: kit-local bind sidecars (bind_out may exist on one host only)
-    man["bind_sidecars"] = _BRS.stage_asbuilt_leaf(a.asbuilt, kd, _BRS.stage_kit_sidecars(out, kd))
+    man["bind_sidecars"] = _BRS.stage_asbuilt_leaf(a.asbuilt, kd, _BRS.stage_kit_sidecars(
+        out, kd, newer_than=bind_stream.newer_than_context(out) if stream_rep is not None else None))
+    if stream_rep is not None:
+        man["bind_stream"] = dict(stream_rep["stream_records"], note="BIND-STREAM-LAUNCH: kit made from a final per-type stream "
+                                  "record while the die bind ran (bind_report.json / global audits not yet written)")
     if component_report is not None:
         man.update(component_proof=str(Path(a.component_proof).resolve()), component_report=component_report,
                    source_scope="LOCAL_COMPONENT", source_preparation_only=True,

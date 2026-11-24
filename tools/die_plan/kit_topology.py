@@ -93,17 +93,29 @@ def native_contract(raw,asbuilt=None,plan_path=None):
                 reset=digest(dict(global_reset=raw.get('reset'),types=reset_context)),transport=digest(transport))
 
 
-def write_bind_receipt(raw,out,asbuilt=None,topology=None,plan_path=None):
+def bind_receipt(raw,asbuilt=None,topology=None,plan_path=None):
     receipt=dict(topology or native_contract(raw,asbuilt,plan_path))
     receipt['asbuilt_sha256']=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest() if asbuilt else digest(raw.get('asbuilt'))
+    return receipt
+
+
+def write_bind_receipt(raw,out,asbuilt=None,topology=None,plan_path=None):
+    receipt=bind_receipt(raw,asbuilt,topology,plan_path)
     Path(out,'native_topology.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt
 
 
 def bind_matches(raw,tn,out,asbuilt=None,plan_path=None):
     path=Path(out)/'native_topology.json'
-    if not path.is_file():return False
-    old=json.loads(path.read_text());new=native_contract(raw,asbuilt,plan_path)
+    if path.is_file():
+        old=json.loads(path.read_text())
+    else:
+        # BIND-STREAM-LAUNCH 11-24: while the bind runs, type tn's own final stream record stands in for the end receipt (same
+        # receipt dict, written at bind start); it also needs the bind's plan sha256 on this context plan.  Same checks below.
+        import bind_stream
+        old=bind_stream.receipt(out,tn,plan_path)
+        if old is None:return False
+    new=native_contract(raw,asbuilt,plan_path)
     if asbuilt and old.get('asbuilt_sha256')!=hashlib.sha256(Path(asbuilt).read_bytes()).hexdigest():return False
     if old.get('transport') != new['transport'] or old.get('types',{}).get(tn) != new['types'][tn]:
         return False

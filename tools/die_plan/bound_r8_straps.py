@@ -15,13 +15,17 @@ KIT_BIND_SIDECARS = ("bind_parent_id_straps.json", "bind_r8pad_strap_audit.json"
                      "bind_report.json", "bind_tie_audit.json")
 
 
-def stage_kit_sidecars(bind_out, kd):
-    """copy the KIT_BIND_SIDECARS present in bind_out into kd/bind_sidecars (copy + rename) -> {dir, files {name: sha256}}"""
+def stage_kit_sidecars(bind_out, kd, newer_than=None):
+    """copy the KIT_BIND_SIDECARS present in bind_out into kd/bind_sidecars (copy + rename) -> {dir, files {name: sha256}}.
+    newer_than (BIND-STREAM-LAUNCH, a kit of a still-running bind): a sidecar older than it belongs to an earlier bind of this OUT
+    and is not staged."""
     dst = Path(kd) / KIT_BIND_DIR
     files = {}
     for name in KIT_BIND_SIDECARS:
         src = Path(bind_out) / name
         if not src.is_file():
+            continue
+        if newer_than is not None and src.stat().st_mtime < newer_than:
             continue
         data = src.read_bytes()
         dst.mkdir(parents=True, exist_ok=True)
