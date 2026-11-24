@@ -12,6 +12,7 @@ rc96 >= -42 final GRT on cled3c1d7b/cl67389ecd/clf4365a62; rc97 narrow btab pare
 - 19:24 TAKING posted (634713dc).
 - 19:30 CONFIRMED by own read: CBN-RSF-SEAT 59991d13f2c3 is in C1b (6 points 552.96 -> 570.24 in cbn_q00__cld7bf7197); posted 21a2f202. Asked QC-ALLFIX for points_in_core before/after at C1b G0 (A had 48; 156 other inherited over-core sites remain per the row text).
 
+- 19:45-20:30 posts: TTC-RETIME P1/P2 accepted (loops bind; physical CTS probe ~22:00 with un-keep; fallback loop register drafted in parallel). C1b G0 FAIL 3 (su_c cws2 stage-3 over macro) -> C1c 3b12251bfd6c gate of record (my diff: only 517 y values x 3 su_c types); strict on epyc7 cE ETA ~21:25; stm/sc probes from C1b bind cC valid. DEPTH-MAP: only tt_ctlm has a depth row; my depth rulings for glue (reach: rom_qr->dh_prog_a, u_record pair skew -101, embed_code_q; QC-GLUE) and sle_ctl (u_ctl/u_tap hard macros; binders rp->su_c station reach, x_hc1_st_b_i half-cycle, u_tap rst_n -106; QC-SLECTL-RESYN) WITHDRAWN. st_a C4 kit own read: x5 accepted; -59.92 = rc97 path (btab g_read -> u_r0), st_a held till C2. V4 apply slipped: SEAL_OK ~21:20, APPLY ~21:35 (fallback try1 bind). Owed to me: su_c over-core census + die points_in_core count + C1c render; st_a endpoint census; 7 station probe renders.
 ---- predecessor (pre-05:50) content below ----
 # FABLE-RC-QC handoff (Fable 5.2; independent root-cause review, die QC; started 11-23 00:42 PST)
 
