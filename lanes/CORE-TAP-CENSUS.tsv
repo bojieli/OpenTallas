@@ -1,0 +1,116 @@
+die	plan_sha12	type	placed	core_taps	path	owners	core_tap_rows	worst_err_TT_ps(ETM-tap)	worst_plan_minus_signed_TT_ps	signed_row_whatif	W_extra_ps(defectB)	fix
+s81_head	014661a6ea33	hd_host_e	yes	early	legacy	OTHER	1	-0.0	None		0.0	none needed now (ETM == tap); owner row optional
+s81_head	014661a6ea33	hd_lep0N	yes	early	legacy	NONE	2	58.65	-4.75	FAIL ContractError: /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/p	291.3	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+s81_head	014661a6ea33	hd_lep0N_w	yes	early	legacy	NONE	2	58.65	-4.75	OK	283.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply (all taps signed: OK)
+s81_head	014661a6ea33	hd_tile	yes	internal	signed_mean	SIGNED	5	None	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	cbf_q00__cl1b5a6458	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbf_q00__cl870de686	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbf_q00_s2	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbf_q01	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbf_q01_s2	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbf_q11	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbn_q00__cl622f65d2	yes	early	legacy	OTHER	9	-154.22	None		-102.7	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	cbn_q00__cld7bf7197	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbn_q00__cldbcda913	yes	early	legacy	OTHER	9	192.52	None		-99.8	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	cbn_q01__clab6e67f2	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbn_q01__cld9ff4c40	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbn_q01__cldd6ea846	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbn_q11__cl49ae4555	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbn_q11__cl5cc92dfe	yes	early	legacy	OTHER	4	0.0	None		0.0	none needed now (ETM == tap); owner row optional
+qwen_compute	81fd3e6370c0	cbx_q10__cl89936551	yes	early	legacy	OTHER	4	85.55	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	cbx_q10__cl89936551_h	yes	early	legacy	OTHER	4	85.55	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	cbx_q10__cl94a12200_h	yes	early	legacy	OTHER	4	85.55	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	coll_core	yes	early	legacy	OTHER	8	11.76	None		-31.4	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_ctl__cla4f6f12f	yes	early	legacy	OTHER	16	106.15	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_sc_v1__cl115da35f	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_sc_v1__cl7479a5ec	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_sc_v2	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_sc_v3	yes	early	legacy	OTHER	1	13.89	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_st_a_v1__cl67389ecd	yes	early	legacy	OTHER	11	59.35	-40.66		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_st_a_v1__cl989804f6__cl18eece69	yes	early	legacy	OTHER	11	29.41	-15.25		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_st_a_v1__cl989804f6__cled3c1d7b	yes	early	legacy	OTHER	11	29.41	-15.25		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_st_a_v2__pv30dda31f__pv88773f93	yes	early	legacy	OTHER	10	66.91	-51.68		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_st_a_v2__pv30dda31f__pvd2ec7769	yes	early	legacy	OTHER	10	41.16	-18.68		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_st_a_v2__pv4242de79	yes	early	legacy	OTHER	10	41.16	-18.68		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_su_c	yes	early	legacy	OTHER	9	21.91	5.68		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	sle_su_l0__cl086d85ba	yes	early	signed_mean	SIGNED	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	sle_su_l0__cl7a55c676	yes	early	parent_budget_mean	parent_budget	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	sle_su_l1__cl5ea486db	yes	early	parent_budget_mean	parent_budget	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	sle_su_l1__clc6d66f5b	yes	early	signed_mean	SIGNED	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	slw_sc_v1__cl63e5a7a2	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_sc_v1__cl64543eaf__cl4590432d	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_sc_v1__cl64543eaf__cl5e017c6f	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_sc_v2	yes	early	legacy	OTHER	1	12.63	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_sc_v3	yes	early	legacy	OTHER	1	17.62	None		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_st_a_v1__clb036e152	yes	early	legacy	OTHER	11	58.62	-43.33		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	yes	early	legacy	OTHER	11	30.76	-19.17		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_st_a_v1__clfc5867a6__pvf82a6c28	yes	early	legacy	OTHER	11	58.62	-43.33		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_st_a_v2__cl9f076a5c	yes	early	legacy	OTHER	10	37.42	-20.73		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_st_a_v2__clf4365a62	yes	early	legacy	OTHER	10	37.42	-20.73		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_su_c__cl19bb38ef	yes	early	legacy	OTHER	9	21.91	5.68		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_su_c__cl92142dac	yes	early	legacy	OTHER	9	21.91	5.68		0.0	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_su_l0__cl1a1c1f8f	yes	early	parent_budget_mean	parent_budget	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	slw_su_l0__cl1e5219ea	yes	early	signed_mean	SIGNED	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	slw_su_l0__cl76fb247e	yes	early	signed_mean	SIGNED	4	0.0	None		0.0	none (mean path)
+qwen_compute	81fd3e6370c0	slw_su_l1__cla2a78701	yes	early	legacy	OTHER,parent_budget	10	72.39	None		-68.7	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_compute	81fd3e6370c0	slw_su_l1__clcc9d0155	yes	early	legacy	OTHER,parent_budget	10	72.39	None		-65.7	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg	yes	early	legacy	OTHER,SIGNED	27	55.6	0.0		-28.8	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v1	yes	early	legacy	OTHER,SIGNED	30	55.6	0.0		-55.3	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v1p2	yes	early	legacy	OTHER,SIGNED	30	55.6	0.0		-36.7	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v1p3	yes	early	legacy	OTHER,SIGNED	30	55.6	0.0		-38.9	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v1p4	yes	early	legacy	OTHER,SIGNED	30	55.6	0.0		-31.4	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v1p5	yes	early	legacy	OTHER,SIGNED	30	55.6	0.0		-42.8	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v1p6	yes	early	legacy	OTHER,SIGNED	30	55.6	0.0		-25.4	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hg_v3	yes	early	legacy	OTHER,SIGNED	29	55.6	0.0		-38.4	GEN fixed on main 9bfb2254dc (pin = signed mean / tap); plan row: core_tap_retarget rows+apply
+qwen_kvsys	324af451f9be	kv3_hgi	yes	early	signed_mean	SIGNED	18	0.0	0.0		-7.3	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v1__cl141fc26e	yes	early	signed_mean	SIGNED	18	0.0	0.0		-10.9	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v1__cl42bc8b12	yes	early	signed_mean	SIGNED	18	0.0	0.0		-13.4	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v2__cl2862d491	yes	early	signed_mean	SIGNED	19	0.0	0.0		-10.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v2__cle0015330	yes	early	signed_mean	SIGNED	19	0.0	0.0		-15.6	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v3	yes	early	signed_mean	SIGNED	22	0.0	0.0		-10.4	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v4	yes	early	signed_mean	SIGNED	22	0.0	0.0		-12.7	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v5	yes	early	signed_mean	SIGNED	23	0.0	0.0		-5.5	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v6	yes	early	signed_mean	SIGNED	23	0.0	0.0		-11.1	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v7	yes	early	signed_mean	SIGNED	23	0.0	0.0		-11.7	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hgi_v8	yes	early	signed_mean	SIGNED	25	0.0	0.0		-12.2	none (mean path)
+qwen_kvsys	324af451f9be	kv3_hub_C	yes	internal	legacy	OTHER	69	None	None		0.0	none (internal estimate by design)
+qwen_kvsys	324af451f9be	kv3_hub_Eo	yes	internal	legacy	OTHER	2	None	None		0.0	none (internal estimate by design)
+qwen_kvsys	324af451f9be	kv3_hub_Wi	yes	internal	legacy	OTHER	21	None	None		0.0	none (internal estimate by design)
+qwen_kvsys	324af451f9be	kv3_hub_Wo	yes	internal	legacy	OTHER	2	None	None		0.0	none (internal estimate by design)
+qwen_kvsys	324af451f9be	kv3_pc__cl254f2e73	yes	early	signed_mean	SIGNED	8	0.0	0.0		-57.1	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pc__cl5a95b461	yes	early	signed_mean	SIGNED	8	0.0	0.0		-49.8	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pc_v1__cl23f6a148	yes	early	signed_mean	SIGNED	8	0.0	0.0		-35.3	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pc_v1__cl4ea58a5c	yes	early	signed_mean	SIGNED	8	0.0	0.0		-48.9	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pc_v1__cl7f648944	yes	early	signed_mean	SIGNED	8	0.0	0.0		-50.2	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pc_v3	yes	early	signed_mean	SIGNED	8	0.0	0.0		-40.2	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv	yes	early	signed_mean	SIGNED	13	0.0	0.0		-6.5	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v1	yes	early	signed_mean	SIGNED	20	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v12	yes	early	signed_mean	SIGNED	13	0.0	0.0		-22.4	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v12e	yes	early	signed_mean	SIGNED	16	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v1e	yes	early	signed_mean	SIGNED	16	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v1n	yes	early	signed_mean	SIGNED	36	0.0	0.0		-24.4	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v2	yes	early	signed_mean	SIGNED	14	0.0	0.0		-27.4	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v2e	yes	early	signed_mean	SIGNED	20	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v2n	yes	early	signed_mean	SIGNED	14	0.0	0.0		-6.1	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v2ne	yes	early	signed_mean	SIGNED	20	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v3	yes	early	signed_mean	SIGNED	15	0.0	0.0		-2.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v3e	yes	early	signed_mean	SIGNED	17	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v3n	yes	early	signed_mean	SIGNED	16	0.0	0.0		-20.1	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v3ne	yes	early	signed_mean	SIGNED	17	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v4	yes	early	signed_mean	SIGNED	17	0.0	0.0		-12.6	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v4e	yes	early	signed_mean	SIGNED	18	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v4n	yes	early	signed_mean	SIGNED	16	0.0	0.0		-16.3	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v4ne	yes	early	signed_mean	SIGNED	18	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v5	yes	early	signed_mean	SIGNED	18	0.0	0.0		-22.4	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v5e	yes	early	signed_mean	SIGNED	18	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v5n	yes	early	signed_mean	SIGNED	17	0.0	0.0		-31.1	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v5ne	yes	early	signed_mean	SIGNED	18	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v6	yes	early	signed_mean	SIGNED	15	0.0	0.0		-31.3	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v6e	yes	early	signed_mean	SIGNED	20	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v6n	yes	early	signed_mean	SIGNED	15	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v6ne	yes	early	signed_mean	SIGNED	19	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v7	yes	early	signed_mean	SIGNED	14	0.0	0.0		-18.1	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v7e	yes	early	signed_mean	SIGNED	15	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v8	yes	early	signed_mean	SIGNED	13	0.0	0.0		-35.5	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pv_v8e	yes	early	signed_mean	SIGNED	11	0.0	0.0		0.0	none (mean path)
+qwen_kvsys	324af451f9be	kv3_pve	yes	early	signed_mean	SIGNED	11	0.0	0.0		0.0	none (mean path)
