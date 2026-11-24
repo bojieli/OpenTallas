@@ -228,3 +228,7 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - WSEAT-1 stopped per COORD (West = HEAD-WEST w3); delta posted (u_ltree follow_re line + rt 51da RSTREACH 410 um).
 - FWDTAP: 3-type row be3d075e5ffe all gates PASS incl native release requal (rebind_head_native_release_fwd.py); awaiting next HEAD event.
 - Next: East->West arst_n/start_i seam measurement once East routes.
+
+## 11-24 05:5x HEAD-R18
+- Answered FABLE-RC-ALL: no token pass on station-less RTL; table right; realize stations (w4 form). COORD accepted.
+- LATPKG regen (epyc9 head-r18/latpkg_1124, script in/latdiff.py, tools launch tree trees/rt_tools_launch/s81_head_r18g_s2@b335c93437b7, OT_PLAN_ROOT=that tree): w3/r6/w4 = live 014661 (0 diff, 334 LAT_); vs a74be4f5: 85 changed. OPEN: run r7 when HEAD-EAST-REPLAN posts its sha (same command, out_r7).
