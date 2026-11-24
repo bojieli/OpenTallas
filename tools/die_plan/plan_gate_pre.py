@@ -1272,6 +1272,80 @@ def pre_mode(elab_dir, skip=()):
     return f"LIST PRE-MODE plan-only: {len(names)} bound checks downgraded ({', '.join(names)})"
 
 
+START_SETTLE_STRICT_FROM = "2026-11-25"   # START-SETTLE-1124 (COORD r703): WARN for c9, FAIL from c10 (c10 is not before this day)
+
+
+def start_settle_bound(sidecar_doc, max_release):
+    """collector boot model of reach_relay_plan.reprice_monitor_budget.ready_bound for a given raw release: cycles after
+    the raw reset release until the observer's registered ready (raw release + ring training + chain depths)."""
+    col = (sidecar_doc or {}).get("collector") or {}
+    bud = col.get("boot_budget") or {}
+    depths = bud.get("local_registered_depths")
+    if not depths or not col.get("root"):
+        return None
+    train = int(bud.get("ring_train_max_cycles", 21))
+    ch = {}
+    for e in col.get("edges", []):
+        ch.setdefault(e["dst"], []).append(e)
+    memo = {}
+
+    def deadline(part):
+        if part not in memo:
+            arr = [max_release + train]
+            for e in ch.get(part, ()):
+                t = e["boot_transport_extra_cycles"]
+                if e.get("seam"):
+                    t = train + e.get("monitor_relay_cycles", 0)
+                arr.append(deadline(e["src"]) + t)
+            memo[part] = max(arr) + depths[part]
+        return memo[part]
+    return deadline(col["root"])
+
+
+def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_release=None):
+    """START-SETTLE-1124: the die START is ot_dp_landing_root #(SETTLE = count_aligned.root_settle_cycles) and every child
+    origin leaves reset at its wavefront release, so SETTLE must be >= the collector ready bound at the plan's actual max
+    release (raw release + 21 ring training + chain depths), and the sidecar boot_budget must carry that release.
+    WARN before START_SETTLE_STRICT_FROM, FAIL from it.  No sidecar / no collector: WARN, not run."""
+    import time as _t
+    strict = (today or _t.strftime("%Y-%m-%d")) >= START_SETTLE_STRICT_FROM
+    lvl = "FAIL" if strict else "WARN"
+    sc = sidecar
+    if not sc and asbuilt:
+        ab = _load(asbuilt) or {}
+        t = ab.get("clock_landing_table")
+        if t:
+            sc = str(t if os.path.isabs(t) else Path(tree) / t)
+    if not sc or not Path(sc).is_file():
+        return ["WARN START-SETTLE check not run: no landing sidecar (--sidecar or as-built clock_landing_table)"]
+    try:
+        doc = json.loads(Path(sc).read_text())
+        if max_release is None:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import schema as _S
+            import reset_tree as _RT
+            P = _S.Plan(_load(plan))
+            if not _RT.wavefront(P):
+                return []
+            max_release = int(_RT.wf_plan(P)["max_release"])
+        need = start_settle_bound(doc, max_release)
+        have = int(((doc.get("count_aligned") or {}).get("root_settle_cycles")) or 64)
+        bud = ((doc.get("collector") or {}).get("boot_budget") or {})
+    except Exception as e:  # noqa: BLE001
+        return [f"WARN START-SETTLE check not run: {type(e).__name__}: {str(e)[:200]}"]
+    if need is None:
+        return [f"WARN START-SETTLE check not run: sidecar {sc} has no collector boot_budget local_registered_depths"]
+    out = []
+    if have < need:
+        out.append(f"{lvl} START-SETTLE root_settle_cycles {have} < ready bound {need} (max release {max_release} + ring train + chain "
+                   f"depths): START (ot_dp_landing_root SETTLE) can fire before the last partition leaves reset; set "
+                   f"count_aligned.root_settle_cycles >= {need} in {sc} (WARN before {START_SETTLE_STRICT_FROM}, FAIL from it)")
+    if int(bud.get("raw_reset_release_max_cycles", -1)) != max_release:
+        out.append(f"{lvl} START-SETTLE boot_budget raw_reset_release_max_cycles {bud.get('raw_reset_release_max_cycles')} != plan max "
+                   f"release {max_release} in {sc}")
+    return out
+
+
 def check_deadin(tree, plan, asbuilt):
     """FAIL DEADIN <bind error> when dead_inputs.ProvenDead refuses the as-built's dead-input proofs (see DEADIN-1122)"""
     ab = _load(asbuilt) if asbuilt else None
@@ -1944,6 +2018,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_tapname(plan, tree=tree, base=_base, solve_all=os.environ.get("OT_TAPNAME_ALL") == "1")
     if "TAPOFF" not in skip:                             # TAPOFF-1123: appended taps with no tap_offset row, seconds
         findings += check_tapoff(plan)
+    if "STARTSETTLE" not in skip:                        # START-SETTLE-1124: root settle >= collector ready bound
+        findings += check_startsettle(tree, plan, sidecar, asbuilt)
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds

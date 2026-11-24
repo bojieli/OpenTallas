@@ -374,3 +374,28 @@ def test_probe_timeout_scales_with_plan_and_load(tmp_path):
     assert G.probe_timeout(None, env={}, load=10, ncpu=96) == pytest.approx(180, abs=1)
     assert G.probe_timeout(str(big), env={"OT_PLAN_GATE_PRE_PROBE_S": "900"}, load=290, ncpu=96) == 900
     assert G.probe_timeout(str(small), env={"OT_PLAN_GATE_PRE_PROBE_S": "junk"}, load=0, ncpu=96) == pytest.approx(180, abs=1)
+
+def _ss_sidecar(settle, raw):
+    return {"count_aligned": {"root_settle_cycles": settle},
+            "collector": {"root": "r", "boot_budget": {"ring_train_max_cycles": 21, "raw_reset_release_max_cycles": raw,
+                                                        "local_registered_depths": {"r": 21, "a": 5}},
+                          "edges": [{"src": "a", "dst": "r", "seam": True, "boot_transport_extra_cycles": 3}]}}
+
+
+def test_start_settle_bound_matches_collector_model():
+    # a: raw + 21 + 5; root: max(raw + 21, a + (21 train over a seam)) + 21
+    assert G.start_settle_bound(_ss_sidecar(64, 331), 331) == 331 + 21 + 5 + 21 + 21
+    assert G.start_settle_bound({}, 331) is None
+
+
+def test_start_settle_warn_then_fail(tmp_path):
+    sc = tmp_path / "sc.json"
+    sc.write_text(json.dumps(_ss_sidecar(64, 331)))
+    warn = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-24", max_release=331)
+    assert warn and all(w.startswith("WARN START-SETTLE") for w in warn)
+    fail = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=331)
+    assert fail and all(w.startswith("FAIL START-SETTLE") for w in fail)
+    sc.write_text(json.dumps(_ss_sidecar(422, 354)))
+    assert G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=354) == []
+    stale = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=331)
+    assert any("raw_reset_release_max_cycles 354 != plan max release 331" in w for w in stale)
