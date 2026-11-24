@@ -27,3 +27,11 @@ def _no_bind_stamp_ssh(monkeypatch):
     """T1 (WAVE-OPS-R1): rt_tools_fields reads the bind's stamp over ssh; a test never does (tests inject BIND_STAMP_LOADER)"""
     import kit_wave as _KW
     monkeypatch.setattr(_KW, "BIND_STAMP_LOADER", lambda cfg, die, bind_out: None)
+
+
+@pytest.fixture(autouse=True)
+def _no_bind_landing_ssh(monkeypatch):
+    """KITWAVE-BINDOUT 11-24: private_spec reads the bind's as-built / clock landing on the gen host over ssh; a test never does
+    (test_kit_wave_bindout_landing.py injects BIND_LANDING_REMOTE)"""
+    import kit_wave as _KW
+    monkeypatch.setattr(_KW, "BIND_LANDING_REMOTE", lambda host, hub, bind_out, src: {})

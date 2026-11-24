@@ -9539,17 +9539,8 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
             sp["plan"] = u["plan"]
         if u.get("kit_rtl_record"):
             sp["kit_rtl"] = dict(u["kit_rtl_record"])
-        if u.get("bind_out"):
+        if u.get("bind_out"):                            # its as-built + clock landing: apply_bind_landing below (one rule for --tree and --bind-out)
             sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=u["bind_out"])
-            bab = bind_asbuilt(u["bind_out"], sp.get("src"))   # (not `ab`: that is the --ab A/B env list)
-            if bab:                                      # the as-built manifest THIS bind read, not the wave bind's
-                sp["kit_rtl"]["asbuilt"] = bab
-                ga = sp.get("gen_args") or []
-                clt = asbuilt_clock_landing(bab, sp.get("src"))
-                if clt and "--clock-landing" in ga and ga.index("--clock-landing") + 1 < len(ga):
-                    # ... and the clock-landing sidecar that manifest names (gen_phys refuses a sidecar of another plan: SIDECAR_STALE)
-                    sp["gen_args"] = list(ga)
-                    sp["gen_args"][ga.index("--clock-landing") + 1] = clt
         if "tools_rt" in u and u["tools_rt"] is None:        # the tree's own tools (gen_tools_pin / stamp = tree generators)
             sp.pop("tools_rt", None)
             sp.pop("tools_sha", None)
@@ -9569,6 +9560,12 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         sp["roam_hosts"] = [host]
     if bind_out:                                         # FLOW-PROC-A: --bind-out = the private strict bind (a plan-side input, like --plan)
         sp["kit_rtl"] = dict(sp.get("kit_rtl") or {}, bind_out=os.path.abspath(bind_out))
+    landing = None
+    if bind_out or ((ti or {}).get("update") or {}).get("bind_out"):
+        # KITWAVE-BINDOUT 11-24 (FABLE FLOW REVIEW #2; KV-ALLFIX hand-patched 65 A5t3 specs): the as-built manifest and clock-landing sidecar the
+        # chosen bind read (provenance_bind.json), read on the GEN host that holds the bind.  It ran on the --tree branch only and only on the
+        # spec host, so every private --bind-out kit of another plan kept the wave asbuilt / --clock-landing and died KIT_TOPOLOGY_BIND_STALE.
+        landing = apply_bind_landing(sp, sp["kit_rtl"]["bind_out"], host=sp.get("gen_host"), hub=PRIVATE_HUB)
     if src_manifest is None and other_tree and not sp.get("src_manifest_hash"):   # FLOW-FLEET-R1 11-22 (OWNER: private family-plan kits count directly): a private
         # tree (no adopted manifest hash: a fork, not a bound event tree) is sealed at gen; a bound tree keeps the wave verify (its OK line is the provenance)
         src_manifest = "seal"
@@ -9601,6 +9598,8 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
         sp["private"]["rt"] = rt_decl
     if ti:
         sp["private"]["tree_inputs"] = ti["record"]
+    if landing:
+        sp["private"]["bind_landing"] = landing
     pv = private_prov_views(cfg, die, item, hub, sp, kind, plan_view=plan_view)
     if pv:
         sp["prov_views"] = pv
@@ -9641,6 +9640,73 @@ def asbuilt_clock_landing(asbuilt, src):
         return None
     f = Path(t) if os.path.isabs(t) else Path(src) / t
     return str(f) if f.is_file() else None
+
+
+BIND_LANDING_REMOTE = None     # tests: loader(host, hub, bind_out, src) -> {"asbuilt", "clock_landing"} | {} (unreadable)
+
+
+def _bind_landing_probe_py():
+    """the remote probe = the exact bind_asbuilt / asbuilt_clock_landing code, run on the gen host"""
+    import inspect
+    return ("import json, os, sys\nfrom pathlib import Path\n" + inspect.getsource(bind_asbuilt) + "\n" + inspect.getsource(asbuilt_clock_landing)
+            + "\na = json.loads(sys.argv[1])\nab_ = bind_asbuilt(a['bind_out'], a.get('src') or None)\n"
+            "print('KW_BIND_LANDING ' + json.dumps({'asbuilt': ab_, 'clock_landing': asbuilt_clock_landing(ab_, a.get('src') or None) if ab_ else None}))\n")
+
+
+def bind_landing_remote(host, hub, bind_out, src, run=subprocess.run):
+    """KITWAVE-BINDOUT 11-24: bind_asbuilt + asbuilt_clock_landing on host over ssh -> {"asbuilt", "clock_landing"}, {} when unreadable"""
+    args = json.dumps({"bind_out": str(bind_out), "src": str(src or "")})
+    argv = _ssh(host, hub) + ["python3 -I -c " + shlex.quote(_bind_landing_probe_py()) + " " + shlex.quote(args)]
+    if not _ssh(host, hub):
+        argv = [sys.executable, "-I", "-c", _bind_landing_probe_py(), args]
+    try:
+        p = run(argv, capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError):
+        return {}
+    got = [ln[len("KW_BIND_LANDING "):] for ln in (p.stdout or "").splitlines() if ln.startswith("KW_BIND_LANDING ")]
+    try:
+        return json.loads(got[-1]) if got else {}
+    except ValueError:
+        return {}
+
+
+def bind_landing_inputs(bind_out, src, host=None, hub=PRIVATE_HUB):
+    """KITWAVE-BINDOUT 11-24: (asbuilt, clock_landing, read_on) of a bind: on the gen host first (the kit reads the bind there), else here."""
+    if host and host not in ("localhost", hub) and not host_retired_kw(host):
+        got = (BIND_LANDING_REMOTE or bind_landing_remote)(host, hub, str(bind_out), str(src or ""))
+        if isinstance(got, dict) and got.get("asbuilt"):
+            return got["asbuilt"], got.get("clock_landing"), host
+    bab = bind_asbuilt(bind_out, src)
+    if bab:
+        return bab, asbuilt_clock_landing(bab, src), "local"
+    return None, None, ""
+
+
+def host_retired_kw(host):
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import autopilot as AP
+        return bool(AP.host_retired(host))
+    except Exception:
+        return False
+
+
+def apply_bind_landing(sp, bind_out, host=None, hub=PRIVATE_HUB):
+    """set sp kit_rtl.asbuilt and the gen --clock-landing to what bind_out read (provenance_bind.json -> manifest -> clock_landing_table);
+    gen_phys refuses a sidecar of another plan (SIDECAR_STALE), kit_topology.bind_matches an as-built of another bind (BIND_STALE).  -> record"""
+    bab, clt, where = bind_landing_inputs(bind_out, sp.get("src"), host=host, hub=hub)
+    kr = sp.get("kit_rtl") or {}
+    rec = {"bind_out": str(bind_out), "read_on": where or f"unreadable (here and on {host or '-'}): wave asbuilt kept"}
+    if not bab:
+        return rec
+    rec["asbuilt"] = {"wave": kr.get("asbuilt") or "", "bind": bab}
+    sp["kit_rtl"] = dict(kr, asbuilt=bab)
+    ga = list(sp.get("gen_args") or [])
+    if clt and "--clock-landing" in ga and ga.index("--clock-landing") + 1 < len(ga):
+        rec["clock_landing"] = {"wave": ga[ga.index("--clock-landing") + 1], "bind": clt}
+        ga[ga.index("--clock-landing") + 1] = clt
+        sp["gen_args"] = ga
+    return rec
 
 
 def private_bind_stale(sp, item, rpy):
