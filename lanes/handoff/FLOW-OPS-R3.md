@@ -116,3 +116,6 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 
 ## 2026-11-24 03:45 PST GENDRY-WAVEMODE done
 - main dd479a7079b: PRE GENDRY follows the die kit_rtl mode (bind/script -> every non-hard type kit-rtl).
+
+## 2026-11-24 04:07 PST STRAP-EVIDENCE-PRIV done
+- main e0067f96f34: private HEAD kits read the tie audit of their declared bind (--bind-out -> OT_KIT_BIND_OUT); strict evidence. Census: tmp/se_scan.out.
