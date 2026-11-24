@@ -111,3 +111,18 @@
 - 2026-11-24 04:51 PST c9 ROW lk_ES0 AB (not c8) [S81-J9-ASSEMBLY-R6 -> S81-ALLFIX-INT, COORD; cc S81-OWN-MISC, S81-START-COLLECTOR] Missed 04:40, so this is a c9 row. Type serdes__t1__clb45db5be (lk_ES0). Plan ops (old-value checked, base c8 p6t b0cf0cfccbc9): epyc9 s81-j9-r6/lkes0/row_AB.ops.json 780053d62b25 = pins/6 source_clock_port clk_t15 -> clk_t31; collector_root_node rst_root_n -> rst_n_t30. Landing table ops (the asbuilt clock_landing_table file, not sidecar_new.json): collector.types[t].collector_root_node -> rst_n_t30, collector_root_xy [2876.64,460.576] -> [2746.44,1082.16], boot_budget.local_registered_depths.lk_ES0 14 -> 27 (lkes0/prep.py, result landed_sidecar_lkes0AB_3badadef97b7.json). Effect: R-REACH-4 848.8 -> 235.4 um, status legs 1017 -> 265.6/263.4 um, 0 data cycles, +13 boot status cycles, die ready_at_glue 1242 -> 1242. Proven: schema 0, landing contract 0 errors, collector_reach unchanged, PRE = base (26 ANCHORDRY). NOT proven: bind. My strict elab finished, but its own PRE refused on those 26 ANCHORDRY, because I set OT_PLAN_GATE_SKIP instead of your warn mode. My error. Next: bind only on the finished elab (epyc9, where the copy is), PRE warn as in c8, then RTL boot check. ETA 05:30.
 - 2026-11-24 04:51 PST DIED [S81-J9-ASSEMBLY-R6] ot-run oth-ubuntu-3287185-1795524706 on tolerant-swine: rc=1 after 3 s, ended 04:51:48, log /srv/opentallas-scratch2/claude/s81-j9-r6/lkes0/bind_only.otrun.log, cmd: --hosts epyc9 --mem 120 --threads 8 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-j9-r6/lkes0 -- bash /srv/opentallas-scratch2/claude/ | class=NO-PATTERN cause=ot-run: rt pinned for this unit: OT_TOOLSTALE_RT=/srv/opentallas-scratch2/claude/rt/de23411d9e49 (current; TOO
 - 2026-11-24 05:26 PST DIED [S81-J9-ASSEMBLY-R6] ot-run oth-ubuntu-3307143-1795524758 on tolerant-swine: rc=1 after 2038 s, ended 05:26:34, log /srv/opentallas-scratch2/claude/s81-j9-r6/lkes0/bind_only2.otrun.log, cmd: --hosts epyc9 --mem 120 --threads 8 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-j9-r6/lkes0 -- bash /srv/opentallas-scratch2/claude/ | class=BIND-FAIL cause=BIND_RC=1 13:26:33
+- 2026-11-24 05:33 PST 05:32 PST.
+  (1) epyc10 grep: it was mine, an orphaned search in s81-j9-r6/b1_tree. Killed exact pid 2192413, plus its follow-on grep 1291372 in the same bash -c (parent 2192405). Both gone now. I will not rerun it; any later search will use timeout 600 on a single file list.
+  (2) lk_ES0 AB scoped bind, unit 3307143 on epyc9: BIND_RC=1.
+  Cause: --strict refuses on 325 die-wide errors: TIED x200 + TIED_TOTAL (486192 bits), TYPE_DEFINE_NOEFFECT x123, TYPE_DEFINE_CONFLICT x1 (SELREP/ATTCUT/ATT_LAND_SRAM scope).
+  None of the 325 is on serdes__t1__clb45db5be or lk_ES0. PRE was in warn mode: 26 ANCHORDRY, same as c8.
+  Not yet checked: whether INT's c8 base bind carries the same 325.
+  RTL was emitted (probe, 1 of 403 types). Independent boot check on rtl/serdes__t1__clb45db5be.sv:
+  - collector chain depth 27 on both sources (dn_word/trained and landing_ready_ft1_i), root u_cland_collect_rst_n_t30
+  - fclk_out_cland_up = clk_t31
+  - root to up_ready 265.6 um, to up_fault 263.4 um
+  - table lk_ES0 depth 27, ready_at_glue 1242 (unchanged)
+  Logs: epyc9 s81-j9-r6/lkes0/gate/{bind.log,bootchk.log}, out c8_tree/.../native_bind/lkes0AB_out.
+  Status: c9 ROW content-ready for INT. ROW-REBASED holds only if INT confirms the 325 strict errors are base (non-strict gate). Ops: row_AB.ops.json 780053d62b25 + table ops in prep.py.
+  (3) Next: ot-delete of the 117 GB c8_tree on epyc9 now. I will copy the RTL + logs out first.
+  cc S81-ALLFIX-INT S81-OWN-MISC S81-START-COLLECTOR
