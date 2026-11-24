@@ -200,6 +200,62 @@ class CopySlot:
         return False
 
 
+# E11-IO-STALL-1124 (COORD hub 48a3b0f1: a 4-job fork beside 12 tar pipelines held epyc11's NVMe at 100 % util): a fork copies with at most
+# OT_TREE_FORK_MAX_JOBS (default 2) workers, also when --jobs asks for more, and one fork at a time reads a given source disk (st_dev):
+# srcdev-<dev>.lock in the copy lock dir, held for the copy, waited for like a copy slot.
+MAX_JOBS = 2
+
+
+def max_jobs():
+    try:
+        return max(1, int(os.environ.get("OT_TREE_FORK_MAX_JOBS", MAX_JOBS)))
+    except ValueError:
+        return MAX_JOBS
+
+
+def fork_jobs(jobs):
+    """--jobs N (0 = default) -> the worker count actually used"""
+    return min(jobs or max_jobs(), max_jobs())
+
+
+class SrcDiskLock:
+    """one fork per source disk on this host: flock srcdev-<st_dev>.lock; waits up to OT_TREE_COPY_WAIT_S like CopySlot"""
+    def __init__(self, src, lock_dir=None, wait_s=None, poll_s=15, out=print):
+        self.dev = os.stat(src).st_dev
+        self.dir = lock_dir or COPY_LOCK_DIR
+        self.wait_s = float(os.environ.get("OT_TREE_COPY_WAIT_S", "21600")) if wait_s is None else wait_s
+        self.poll_s, self.out, self.fd = poll_s, out, None
+
+    def __enter__(self):
+        os.makedirs(self.dir, exist_ok=True)
+        try:
+            os.chmod(self.dir, 0o1777)
+        except OSError:
+            pass
+        fd = os.open(os.path.join(self.dir, f"srcdev-{self.dev}.lock"), os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o666)
+        t0, said = time.time(), False
+        while True:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                self.fd = fd
+                return self
+            except OSError:
+                pass
+            if time.time() - t0 > self.wait_s:
+                os.close(fd)
+                raise Busy(f"another fork reads source disk {self.dev} on {socket.gethostname()} after {self.wait_s:.0f} s")
+            if not said:
+                self.out(f"TREE-FORK WAIT another fork reads source disk dev {self.dev} on {socket.gethostname()}; this fork waits (one per source disk)")
+                said = True
+            time.sleep(self.poll_s)
+
+    def __exit__(self, *exc):
+        if self.fd is not None:
+            os.close(self.fd)
+            self.fd = None
+        return False
+
+
 def hash_lock(h, lock_dir=None):
     """blocking per-manifest lock: two forks of the same remote tree fetch it once.  -> fd (close to release)"""
     d = lock_dir or COPY_LOCK_DIR
@@ -775,11 +831,19 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
     for rel, mode in P["dirs"]:
         if rel:
             os.makedirs(os.path.join(tmp, rel), exist_ok=True)
-    jobs = jobs or min(32, (os.cpu_count() or 4))
+    jobs = fork_jobs(jobs)
     methods = {"reflink": 0, "copy": 0}
+    srclock = SrcDiskLock(src, out=out) if P["files"] else None
+    if srclock:
+        srclock.__enter__()
     slot = CopySlot(out=out, what=f"plain copy of {gb:.1f} GB") if not use_reflink and P["bytes"] > 2**30 else None
-    if slot:
-        slot.__enter__()
+    try:
+        if slot:
+            slot.__enter__()
+    except BaseException:
+        if srclock:
+            srclock.__exit__()
+        raise
     try:
         with CF.ThreadPoolExecutor(max_workers=jobs) as ex:
             futs = [ex.submit(clone_or_copy, s, os.path.join(tmp, rel), mode, use_reflink) for s, rel, mode, _ in P["files"]]
@@ -788,6 +852,8 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
     finally:
         if slot:
             slot.__exit__()
+        if srclock:
+            srclock.__exit__()
     for rel, text in P["links"]:
         os.symlink(text, os.path.join(tmp, rel))
     for rel, mode in sorted(P["dirs"], key=lambda x: -len(x[0])):
@@ -839,7 +905,7 @@ def main(argv=None):
     ap.add_argument("dst", nargs="?")
     ap.add_argument("--host", default="", help="run the fork on this host (SRC and DST are paths there)")
     ap.add_argument("--src-host", default="", help="SRC lives on this host (DST on --host or here): reuse a same-manifest tree of the DST host, else fetch once")
-    ap.add_argument("--jobs", type=int, default=0, help="parallel copy workers (default min(32, ncpu))")
+    ap.add_argument("--jobs", type=int, default=0, help="parallel copy workers (default and ceiling 2, OT_TREE_FORK_MAX_JOBS; E11-IO-STALL-1124)")
     ap.add_argument("--materialize", action="store_true", help="copy the content of symlinks into event trees instead of refusing")
     ap.add_argument("--no-manifest", action="store_true", help="with --src-host: SRC is a private fork edited after its manifest: "
                     "fetch it straight into DST (no same-manifest reuse, no tree cache)")

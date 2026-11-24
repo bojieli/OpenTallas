@@ -75,6 +75,15 @@ LASTRES=""
 # admission classifier for both priority and hard protection.
 if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-protect-die --is-die -- "$@"; then export OT_HEAVY_PRIO=die;
 elif [ "${OT_HEAVY_PRIO:-}" != plan ] && /usr/local/bin/ot-heavy-reconcile --is-plan -- "$@"; then export OT_HEAVY_PRIO=plan; fi   # PLANBYPASS_1114
+# IOGATE_1124 (E11-IO-STALL-1124, COORD hub 48a3b0f1: epyc11's NVMe at 100 % util / 220 ms reads under 12 tar fork pipelines, a 4-job ot-tree-fork,
+# src_manifest builds and scratch scans; copies, sshd and rt sync stalled).  A NEW fork / copy / seal job (io_gate.py --is-bulk, or OT_HEAVY_IO=bulk)
+# waits while this host's /proc/pressure/io "some avg60" > IO_GATE_SOME (default 20; 0 disables, /etc/ot-heavy.conf or env), for at most
+# IO_GATE_MAX_WAIT_S (default 3600 s; then it is admitted, never starved).  Children of an admitted unit, running jobs and every other class are
+# untouched; memory / disk admission is unchanged.  A missing helper means no gate.
+_iobulk=0
+_IOG="${OT_IO_GATE_PY:-$(dirname "$(readlink -f "$0")")/io_gate.py}"
+if [ "${OT_HEAVY_IO:-}" = bulk ]; then _iobulk=1
+elif [ "${OT_HEAVY_IO:-}" != none ] && [ -f "$_IOG" ] && timeout 20 python3 -I "$_IOG" --is-bulk -- "$@" 2>/dev/null; then _iobulk=1; fi
 while :; do
   [ -f "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}" ] && . "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}"   # v5: every attempt, so a headroom change reaches queued waiters
   if ! ot_heavy_admit_lock; then
@@ -272,6 +281,19 @@ while :; do
       fi
     fi
   fi
+  if [ "$V" = OK ] && [ "$_iobulk" = 1 ] && [ "${IO_GATE_SOME:-20}" != 0 ] &&
+     ! { [ -n "${OT_HEAVY_PARENT_UNIT:-}" ] && [ -e "$D/res.${OT_HEAVY_PARENT_UNIT}" ]; }; then
+    _io=$(awk '/^some/{for(i=2;i<=NF;i++){split($i,a,"="); if(a[1]=="avg60") print a[2]}}' "${OT_IO_PSI:-/proc/pressure/io}" 2>/dev/null)
+    if [ -n "$_io" ] && awk -v x="$_io" -v c="${IO_GATE_SOME:-20}" 'BEGIN{exit !(x + 0 > c + 0)}'; then
+      if [ $(( $(date +%s) - T0 )) -lt "${IO_GATE_MAX_WAIT_S:-3600}" ]; then
+        [ "$_short" = 1 ] && { exec 9>&-; _short=0; }
+        [ "${OT_HEAVY_DIRECT:-}" = 1 ] && rm -f "$D/direct.$UNIT"
+        V=NO; WHY="io gate: /proc/pressure/io some avg60 ${_io} > IO_GATE_SOME ${IO_GATE_SOME:-20} on a fork/copy/seal job (waits up to ${IO_GATE_MAX_WAIT_S:-3600} s; running jobs untouched)"
+      elif [ -z "${_io_late:-}" ]; then
+        _io_late=1; echo "$(date -Is) $UNIT io gate: some avg60 ${_io} > ${IO_GATE_SOME:-20} after ${IO_GATE_MAX_WAIT_S:-3600} s: admitted anyway" >> "$D/admit.log"
+      fi
+    fi
+  fi
   [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G (${WHY##*; }); the cap stays ${MEM}G" >&2
   LASTRES=$RES
   if [ "$V" = OK ]; then
@@ -335,7 +357,7 @@ while :; do
     exec systemd-run --user --scope -q --expand-environment=no --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 "${_CW[@]}" -- "${_OTX[@]}" "$@"
   fi
   flock -u 8; exec 8>&-
-  case "$WHY" in "load cap:"*|"load gate:"*) _wf=load;; "short pool:"*) _wf=short-slot;; *) _wf=memory;; esac
+  case "$WHY" in "load cap:"*|"load gate:"*) _wf=load;; "short pool:"*) _wf=short-slot;; "io gate:"*) _wf=io;; *) _wf=memory;; esac
   # BLOCK-NOTE-1123 (COORD 11-23: LEAF-ROUTE-CBC J9 gates queued ~1 h with no visible reason): the first wait line, then every 10 min
   # the rail that still holds the job (memory / load / slot, with its numbers), so a long wait names its cause in the job's own log
   _wnow=$(date +%s)

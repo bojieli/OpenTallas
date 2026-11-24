@@ -6,6 +6,12 @@ usage: lane_quota.py scan [--root R] [--window-h 6] [--quota-gb 150]          (p
        lane_quota.py hub HOST... [--coord ~/coord]"""
 import argparse, json, os, subprocess, sys, time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import io_gate                 # E11-IO-STALL-1124: no scan on an IO-gated host
+except ImportError:                # an rt without it: scan as before
+    io_gate = None
+
 WINDOW_H, QUOTA_GB = 6.0, 150.0
 BURST_H, BURST_GB = 1.0, 30.0      # 11-17: a 39 GB lane clone (QC-TYPES-R3) never reached 150 GB / 6 h; a burst tier alerts at 30 GB / 1 h
 ROOTS = ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude")   # epyc2 lanes live on scratch3 too
@@ -91,6 +97,11 @@ def main(argv=None):
     ap.add_argument("--window-h", type=float, default=WINDOW_H); ap.add_argument("--quota-gb", type=float, default=QUOTA_GB); ap.add_argument("--coord", default=os.path.expanduser("~/coord"))
     a = ap.parse_args(argv)
     if a.cmd == "scan":
+        g = io_gate.gated() if io_gate else (False, None, 0)
+        if g[0]:
+            print(f"LANE-QUOTA IO-GATED {os.uname().nodename}: /proc/pressure/io some avg60 {g[1]} > {g[2]:g}; no scan this pass", file=sys.stderr)
+            print("{}")
+            return 0
         print(json.dumps(scan_all() if a.root == "/srv/opentallas-scratch2/claude" and a.window_h == WINDOW_H and a.quota_gb == QUOTA_GB else scan(a.root, a.window_h, a.quota_gb)))
     else:
         for l in hub(a.hosts, a.coord): print(l)
