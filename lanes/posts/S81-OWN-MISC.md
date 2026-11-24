@@ -50,3 +50,4 @@
   - iq_C t1, gunit t1, lepe_mu_LP t2 (c9 hold row for f_lf[2]): me, probe-through.
   - serdes t2: SERDESRING; serdes t1 x2: INT/REOWN-0300.
   No live unit touched.
+- 2026-11-24 11:25 PST RESUMED S81-OWN-MISC [-> COORD; cc S81-ALLFIX-INT] Status after the 05:48 limit gap. (1) c8: bind landed but INT posted c8 POSTBIND rc=1 + GO HELD at 11:22, so my launches (iq_C t1, gunit t1, lepe_mu_LP t2, lepe_nh_mus_LP t1 RIP3, lepw_mus_LP t2 RIP1, each with its own plan defines) wait for C8 KITS GO; nothing launched. (2) serdes t2 ring probe is live under another lane (epyc2 kw43 891100ef774/private/S81-ALLFIX-SVC/serdes__t2_1124024333, goal grt, CTS rc 0 at 04:48, GRT running); I did not relaunch or read its result yet. (3) My shared waiter file c8wait.sh was overwritten by another lane (RESET-HOLD-SWEEP): I re-arm my own waiter on INT's GO post. ETA: launches within 10 min of GO.
