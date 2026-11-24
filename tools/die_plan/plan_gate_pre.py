@@ -181,6 +181,10 @@ ISTPRICE (FABLE FLOW REVIEW 11-23 22:50, PRECHECK-LEDGER-R3): FAIL for every lan
 TREEPRE (PRE-SCHEMA-KEYS 11-24, S81-ALLFIX-INT / COORD): tree_precheck.py runs first: SCHEMA-KEYS (plan keys vs the bind tree AND the
   launch rt schema.py), TREE-SOURCES (as-built / bind.f paths and *_sources/ folders in the tree), TREE-FRESH (.fork.json vs the source's
   current seal).  WARN / LIST lines only (r703); bind.py runs it before its elab and sets OT_TREE_PRECHECK_RAN=1, which skips it here.
+PRE-INPUT-STOP-1124 (COORD; FAM-S81-COL-H9R0 3.5 h PRE then INPUT-MISSING): TREEPRE, SCHEMA and INPUT run first, in seconds; a missing
+  input (FAIL INPUT-MISSING / SCHEMA-UNKNOWN-KEY / SCHEMA-LOAD, a TREE-SOURCES path line) ends the check there with LIST PRE-INPUT-STOP
+  (FAIL PRE-INPUT-STOP when only a TREE-SOURCES line triggered it), before the slow classes ($OT_PRE_INPUT_STOP=0: run them anyway).  PRE-TIME-1124: LIST PRE-TIME names the seconds per class; a class
+  over $OT_PRE_TIME_TRACE_S (30) prints PRE-TIME to stderr when it ends.
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
   GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
@@ -192,6 +196,7 @@ import argparse
 import ast
 import hashlib
 import json
+import time
 import os
 import re
 import subprocess
@@ -2101,12 +2106,57 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     return out
 
 
+INPUT_STOP = ("FAIL INPUT-MISSING", "FAIL SCHEMA-UNKNOWN-KEY", "FAIL SCHEMA-LOAD")
+
+
+def input_stop(findings, env=None):
+    """PRE-INPUT-STOP-1124 (COORD; FAM-S81-COL-H9R0 epyc7: 3.5 h of PRE, then FAIL INPUT-MISSING x5 svc sources the fork never got):
+    -> a FAIL PRE-INPUT-STOP line when the seconds-scale presence checks (TREEPRE, SCHEMA, INPUT) found a missing input, so the slow
+    classes never start; None otherwise.  Triggers: FAIL INPUT-MISSING / SCHEMA-UNKNOWN-KEY / SCHEMA-LOAD and a TREE-SOURCES path
+    line (an as-built / .f / bind.f entry missing; the *_sources folder heuristic and TREE-FRESH stay WARN).  A missing input is a
+    real blocker: the bind would die on it.  $OT_PRE_INPUT_STOP=0 runs every class anyway."""
+    env = os.environ if env is None else env
+    if env.get("OT_PRE_INPUT_STOP", "1") == "0":
+        return None
+    hit = [x for x in findings if x.startswith(INPUT_STOP)
+           or (x.startswith("WARN TREE-SOURCES ") and " missing (base " in x)]
+    if not hit:
+        return None
+    lvl = "LIST" if any(x.startswith("FAIL") for x in hit) else "FAIL"     # the verdict is FAIL either way; one FAIL line per cause
+    return (f"{lvl} PRE-INPUT-STOP {len(hit)} missing-input finding(s) above; the slow classes were not run (fix the tree: re-fork "
+            f"or copy the missing files, then re-run; OT_PRE_INPUT_STOP=0 runs them anyway)")
+
+
+class PreTimer:
+    """PRE-TIME-1124: seconds per class of one check(); a class over $OT_PRE_TIME_TRACE_S (30) prints to stderr as it ends"""
+    def __init__(self):
+        self.t0 = self.t = time.time()
+        self.cur, self.T = None, {}
+
+    def mark(self, label):
+        now = time.time()
+        if self.cur:
+            dt = now - self.t
+            self.T[self.cur] = self.T.get(self.cur, 0.0) + dt
+            if dt >= float(os.environ.get("OT_PRE_TIME_TRACE_S") or 30):
+                print(f"PRE-TIME {self.cur} {dt:.0f} s (PRE at {now - self.t0:.0f} s)", file=sys.stderr, flush=True)
+        self.cur, self.t = label, now
+
+    def line(self):
+        self.mark(None)
+        top = sorted(self.T.items(), key=lambda kv: -kv[1])[:10]
+        return f"LIST PRE-TIME {time.time() - self.t0:.0f} s: " + ", ".join(f"{k} {v:.0f}s" for k, v in top)
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
           toolstale_level="FAIL", abspath_level=None, remap=None, gendry=False):
     findings = []
+    _pt = PreTimer()
+    _pt.mark("REMAPBASE")
     rb, rb_how = remap_base(plan, remap, baseline) if not {"LANDREMAP", "ISTCYC"} <= {s.upper() for s in skip} else (None, "")
     skip = {s.upper() for s in skip}
+    _pt.mark("TREEPRE")
     if "TREEPRE" not in skip and os.environ.get("OT_TREE_PRECHECK_RAN") != "1" and (os.environ.get("OT_TREE_PRECHECK") == "on" or "PYTEST_CURRENT_TEST" not in os.environ
                                   and os.environ.get("OT_TREE_PRECHECK") != "off"):   # PRE-SCHEMA-KEYS 11-24: SCHEMA-KEYS / TREE-SOURCES / TREE-FRESH first, report only (r703)
         sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -2116,35 +2166,53 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
                          for x in _TP.findings(tree, plan, asbuilt=asbuilt, out=elab_dir)]
         except Exception as e:  # noqa: BLE001 - a checker crash names itself
             findings.append(f"WARN TREEPRE not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("SCHEMA")
     if "SCHEMA" not in skip:
         findings += check_schema(tree, plan, compose_tree)
+    _pt.mark("INPUT")
     if "INPUT" not in skip:
         findings += check_inputs(tree, plan, sidecar, asbuilt, want_list, require_asbuilt)
+    _pt.mark(None)
+    _stop = input_stop(findings)                       # PRE-INPUT-STOP-1124: missing inputs stop PRE here, in seconds
+    if _stop:
+        return findings + [_stop, _pt.line()]
+    _pt.mark("TOOLS")
     if "TOOLS" not in skip:
         findings += check_tools(tree)
+    _pt.mark("TOOLROOT")
     if "TOOLROOT" not in skip:                           # TOOLROOT-1123: the tools this PRE runs from = the declared rt sha
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import tool_root as _TR
         findings += _TR.check(quiet_undeclared=True)
+    _pt.mark("ROWS")
     if "ROWS" not in skip:
         findings += check_rows(plan, baseline, proofs, rows_files)
+    _pt.mark("GEOM")
     if "GEOM" not in skip:
         findings += check_geom(plan, halo, strict_cores, baseline)
+    _pt.mark("LANDREMAP")
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, rb, tree=tree)
     _base = None
+    _pt.mark("RESETBASE")
     if {"TAPNAME", "RESETPUB"} - skip:
         _base = rb if rb else remap_base(plan, remap, baseline)[0]
+    _pt.mark("TAPNAME")
     if "TAPNAME" not in skip:                            # TAPNAME-1122: density added tap names, seconds before the bind
         findings += check_tapname(plan, tree=tree, base=_base, solve_all=os.environ.get("OT_TAPNAME_ALL") == "1")
+    _pt.mark("TAPOFF")
     if "TAPOFF" not in skip:                             # TAPOFF-1123: appended taps with no tap_offset row, seconds
         findings += check_tapoff(plan)
+    _pt.mark("STARTSETTLE")
     if "STARTSETTLE" not in skip:                        # START-SETTLE-1124: root settle >= collector ready bound
         findings += check_startsettle(tree, plan, sidecar, asbuilt)
+    _pt.mark("DEADIN")
     if "DEADIN" not in skip:                             # DEADIN-1122: bind dead-input proof checks, before the elab
         findings += check_deadin(tree, plan, asbuilt)
+    _pt.mark("ISTCYC")
     if "ISTCYC" not in skip:                             # ISTCYC-1122: touched lanes only, seconds
         findings += check_istcyc(plan, rb)
+    _pt.mark("ISTPRICE")
     if "ISTPRICE" in skip:
         findings.append("WARN ISTPRICE --skip ignored: ISTPRICE is not skippable (FABLE FLOW REVIEW 11-23 22:50)")
     try:                                                 # STN-REPRICE-1124: report-only count of lanes with station depth != priced fixed_cycles
@@ -2153,38 +2221,51 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     except Exception as _e:  # noqa: BLE001
         findings.append(f"LIST STNPRICE not counted: {type(_e).__name__}: {str(_e)[:120]}")
     findings += check_istprice(tree, plan, asbuilt)     # ISTPRICE-1123: every lane's stations vs its priced cycles, seconds, never skipped
+    _pt.mark("R8STALE")
     if "R8STALE" not in skip:                            # R8STALE-1122: R8 table not re-derived after a station change
         findings += check_r8stale(tree, plan, rb, asbuilt)
+    _pt.mark("EMITNAME")
     if "EMITNAME" not in skip:                           # B1 (FABLE-FLOW-0230): clock-landing EMIT instance names, seconds
         findings += check_emitname(tree, plan, asbuilt)
+    _pt.mark("MACROGHOST")
     if "MACROGHOST" not in skip:                         # MACROGHOST-1122: placed macros with no bound instance (needs --elab-dir bind rtl)
         findings += check_macroghost(plan, elab_dir)
+    _pt.mark("SEATMATCH")
     if "SEATMATCH" not in skip:                          # SEATMATCH-1124: relay_sites keys vs the bound RTL (needs --elab-dir bind)
         findings += check_seatmatch(plan, elab_dir, rb or baseline)
+    _pt.mark("RESETPUB")
     if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
         findings += check_resetpub(tree, plan, base=_base,
                                    solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")
+    _pt.mark("ANCHORDRY")
     if "ANCHORDRY" not in skip:                          # ANCHORDRY-1123: anchored reset depths vs the remap base, seconds
         _abase = _base if _base else (rb if rb else remap_base(plan, remap, baseline)[0])
         findings += check_anchordry(tree, plan, base=_abase, solve=os.environ.get("OT_ANCHORDRY_SOLVE") == "1")
+    _pt.mark("GENDRY")
     if gendry and "GENDRY" not in skip:                  # GENDRY-1123: changed types run the kit generator dry (CLI default)
         findings += check_gendry(tree, plan, baseline, sidecar, elab_dir=elab_dir, asbuilt=asbuilt)
+    _pt.mark("SITEGRID")
     if "SITEGRID" not in skip:                           # SITEGRID-1123: exact bank sites on the kit site/row lattice, seconds
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import site_grid as SG
         findings += SG.findings(_load(plan) or {})
+    _pt.mark("DEPTH")
     if "DEPTH" not in skip:                              # DEPTH-PRE-1123: generated constructor netlists within the logic-depth budget
         findings += check_depth(tree, plan, asbuilt)
+    _pt.mark("ABSPATH")
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
+    _pt.mark("KITFIT")
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
         sys.path.insert(0, str(Path(__file__).resolve().parent))          # -I drops the script dir
         import kit_fit as KF
         findings += ["FAIL " + m for m in KF.findings((_load(plan) or {}).get("partition_types") or {}, halo)]
+    _pt.mark("BIND_ROWCHECK")
     if not set(skip) >= {"FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "RELAYSINK"}:       # BIND-SPEED-1118: bind_rowcheck.py, seconds
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
+    _pt.mark("DERIVED_DROP")
     if {"RSTREACH", "DERIVEDNAME", "ENTRYFOOT"} - skip:              # DERIVED-DROP-1123: derived sections a re-floor / tap rewrite left stale
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import derived_drop as DD
@@ -2193,6 +2274,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
                                     bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
             findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("STNXREF")
     if "STNXREF" not in skip:                            # STATION-MOVE-HELPER 11-24: station-derived records, report only (r703)
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         try:
@@ -2201,6 +2283,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
             findings += SX.findings(_load(plan) or {}, _load(_sb) if _sb else None, plan)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself
             findings.append(f"WARN STNXREF not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("LATPKG")
     if "LATPKG" not in skip:                             # STATION-MOVE-HELPER 11-24: copied-forward latency packages, report only
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         try:
@@ -2208,13 +2291,18 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
             findings += LPK.findings(_load(plan) or {}, plan, tree)
         except Exception as e:  # noqa: BLE001
             findings.append(f"WARN LATPKG not checked: {type(e).__name__}: {str(e)[:200]}")
+    _pt.mark("RSTNAMES")
     if "RSTNAMES" not in skip:                           # RST-NAMES-1124: report only
         findings += rstnames_findings(tree, plan, rb or baseline)
+    _pt.mark("RSTPIN")
     if "RSTPIN" not in skip:                             # PIN-REACH-1124: report only, never a FAIL
         findings += rstpin_findings(tree, plan)
+    _pt.mark("ADVISORY")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
+    _pt.mark(None)
     findings.append(pre_mode(elab_dir, skip))                       # PRE-MODE-1124
+    findings.append(_pt.line())                         # PRE-TIME-1124: where the PRE time went
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
