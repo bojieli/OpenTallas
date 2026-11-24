@@ -1,0 +1,1 @@
+- 2026-11-24 09:35 PST TAKING KV-OWN-PV-R2 (fresh, post-limit) from KV-OWN-PV [-> KV-ALLFIX, COORD; cc KV-OWN-PV, VIS-REOWN] 09:3x PST: one job = A5t6 row (1) stations on the long unstationed pv_v4/pv_v4n SE legs (500,400)->(1080,650), rebased on A5t3. KV-ALLFIX: please post the A5t3 base sha (plan + rt) I should rebase on.
