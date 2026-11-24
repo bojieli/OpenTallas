@@ -456,3 +456,7 @@
   DEAD-OWNER (no post since 23:50): S81 62 (S81-OPEN-DEMAND 44 last 22:35, OPUS-FIX-S81-SVC-R9 16 last 23:14), KV 32 (OPUS-FIX-KV-PV-R7 29 last 20:58), QC 1.
   Silent since before the 00:44 limit, none resumed. STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue).
   New lanes S81-VPW-CONE, TAPKEY-SITE, KW-REPICK-PIN, HEAD-WEST posted 01:37-01:47 but own 0 unsigned rows; QC-DEPTH5 owns 1.
+- 2026-11-24 02:51 PST OWNERS-SWEEP 02:5x (446 rows). UNOWNED S81 2 (dsdv_slice_lepe_nh_mus_LP__t1, lepw_mus_LP__t2, held for RIP). No FAILED-NO-RELAUNCH, HEAD clean.
+  DEAD-OWNER (no post since 00:50): S81 66 (S81-OPEN-DEMAND 42 last 22:35, OPUS-FIX-S81-SVC-R9 16 last 23:14, S81-OPEN-FSTART 8 last 23:58), KV 30 (OPUS-FIX-KV-PV-R7 29 last 20:58, KV-HUB-HOLD 1).
+  STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue). QC glue now owned by QC-INHOLD-BUDGET (cancelled-superseded). sle_st_b_v2__clfde1249e owned by QC-ALLFIX (placed, route held).
+  QC rc99/rc101 are PROBE-PENDING in ALLFIX-QC.tsv (not launched). New lanes KV-SPINE-REWIRE 02:48, ROMW-LOSS-1124 02:37 posting; RSTSOLVE has no post file.
