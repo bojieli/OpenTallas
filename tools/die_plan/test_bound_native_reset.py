@@ -410,3 +410,14 @@ def test_embedded_export_pair_cell_equals_repo_cell():
     src = (Path(G.__file__).resolve().parent.parent.parent / 'rtl' / 'common' / 'ot_dp_clk_landing_ca.sv').read_text()
     repo = _re.search(r'module ot_dp_head_raw_export_pair\b.*?endmodule', src, _re.S).group(0)
     assert _re.sub(r'\s+', '', repo) == _re.sub(r'\s+', '', G.HEAD_RAW_EXPORT_PAIR_CELL)
+
+
+def test_export_pair_definition_absent_is_resolved_but_present_mutant_fails(tmp_path):
+    import re as _re
+    p, f = out_fixture(tmp_path)
+    s = f.read_text()
+    f.write_text(_re.sub(r'module ot_dp_head_raw_export_pair\b.*?endmodule', '', s, flags=_re.S))
+    G.install_bound_native_reset(p, 't', [f])
+    p, f = out_fixture(tmp_path, mutate=lambda s: s.replace('export_q <= d;', 'export_q <= q;'))
+    with pytest.raises(gen_rtl.GenError):
+        G.install_bound_native_reset(p, 't', [f])

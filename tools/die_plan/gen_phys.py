@@ -10233,6 +10233,10 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         nonlocal owner
         if module not in verified_cell_classes:
             actual_cell = canonical_cell(text, module)
+            if module == "ot_dp_head_raw_export_pair" and actual_cell is None:
+                # kit-rtl runs this check before the closure step adds the shared landing cell file: an absent definition is
+                # resolved to the repo cell there (undefined at synth otherwise); a PRESENT definition must still equal it.
+                actual_cell = canonical_cell(reset_cells, module)
             if actual_cell is None or actual_cell != canonical_cell(reset_cells, module):
                 raise gen_rtl.GenError(f"type {tn}: native reset cell {module} source differs from canonical stage/gate behavior")
             verified_cell_classes.add(module)
