@@ -44,3 +44,5 @@ ROWS-READY post; ledger status; ot-push-main of the branch (add trailer commit +
   private-spec s81 serdes__t14 --plan P --tree T --bind-out FULL_OUT --goal cts --lane FABLE-OPEN-S81-A; run-item; ot-wait; read
   postplace_setup.log OT_POSTPLACE_WORST and 4_cts_post_hook.rpt (u_lpr paths), full-cause census. Kit is NOT launched yet (no full bind).
 - Cleanup owed: ot-delete epyc10 fable-open-s81-a/x14row/tree (81 GB) once the row is in a composed tree.
+
+## 16:05 PST: epyc10 x14row/tree + rt_tools_launch ot-deleted (176.1 -> 262.0 GB free); receipts kept in x14row/receipts. Cleanup item closed.
