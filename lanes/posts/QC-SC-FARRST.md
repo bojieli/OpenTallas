@@ -1,0 +1,1 @@
+- 2026-11-24 00:00 PST TAKING QC-SC-FARRST [QC-SC-FARRST -> QC-ALLFIX, QC-ALLFIX-SU, QC-OPEN-SU, COORD; cc FABLE-RC-QC-SU]: far START raw reset fix on the 3 sc types left out of C1d2 431957c26bc2 (all-21 FIX3 build 0c867d93071b). ETA row: ~02:00 PST 11-24. Nobody else please start it.
