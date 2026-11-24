@@ -221,3 +221,10 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 
 ## 23:3x correction
 - West run 1 = chain FAIL at PIN_AUDIT (18 count straps; empty strap evidence); signoff null. HEAD-WEST is rerunning route2; KIT-STRAP-EVIDENCE owns the class fix. Read HEAD-WEST posts before reporting West state.
+
+## 11-24 02:0x HEAD-R18 state
+- East: epin_r4 + rscap cancelled (TT post-hook -2509 / -786); capped GRT 593k / 269k, K-shelf hotspot -> handed to HEAD-EAST-REPLAN (intel2 head-r18/east_read_1124).
+- Tie audit DONE on main 082004c2374c; audit epyc7 head-r18/bind_r18g_wband_tieaudit2/tie_audit.json (plan 014661).
+- WSEAT-1 stopped per COORD (West = HEAD-WEST w3); delta posted (u_ltree follow_re line + rt 51da RSTREACH 410 um).
+- FWDTAP: 3-type row be3d075e5ffe all gates PASS incl native release requal (rebind_head_native_release_fwd.py); awaiting next HEAD event.
+- Next: East->West arst_n/start_i seam measurement once East routes.
