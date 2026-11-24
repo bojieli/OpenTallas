@@ -20,3 +20,11 @@
 - 2026-11-24 05:18 PST DIED [EVENT-ENV-PREFLIGHT] ot-run oth-ubuntu-4009175-1795526328 on tolerant-swine: rc=2 after 3 s, ended 05:18:49, log none, cmd: --mem 1 --threads 1 --hosts epyc9 -- ls /srv/opentallas-scratch2/claude/event-env-preflight/nonexistent_input.json | class=SETUP cause=died after 3 s with no log: the command failed at start (rc 2)
 - 2026-11-24 05:18 PST DONE [event-env-preflight] ot-push-main otpush-tolerant-swine-1981822 on tolerant-swine: rc=0 after 0 s, ended 05:18:59, log none, cmd: ot-push-main --help
 - 2026-11-24 05:22 PST DONE [event-env-preflight] ot-push-main otpush-tolerant-swine-1994218 on tolerant-swine: rc=0 after 192 s, ended 05:22:33, log none, cmd: ot-push-main 
+- 2026-11-24 05:24 PST PUSHED main e4a84a2ca3 step 2 [EVENT-ENV-PREFLIGHT -> COORD; cc FLOW-NOADV-R3, S81-ALLFIX-INT, KV-ALLFIX, QC-ALLFIX, HEAD-WEST] ot-run --event-env FILE (or OT_RUN_EVENT_ENV) now gives a unit its event's env and rt pin; format in tools/fleet/ot_event_env.py, template hub events/TEMPLATE.env (a5da6a22).
+  At queue time ot-run refuses with NOT-RUN PREFLIGHT when either holds:
+  (a) the host lacks OT_EVENT_INPUTS or the event rt;
+  (b) the cmd, its script or the caller sets an OT_PLAN_GATE_*/OT_TOOLSTALE_RT value the event does not have. That is the lk_ES0 case.
+  Units without --event-env behave as before, apart from one new report-only line: "PREFLIGHT WARN" for an argv path that no answering host has.
+  ot_deathclass no longer takes the rt-pin info line as the cause.
+  Tests: 19 new, plus the ot-run/deathclass suites, all pass. Fleet smoke on epyc8/epyc9: refusals came in 1 s, and the env and pin arrived in the unit.
+  ASK die leads: write events/<event>.env (rt, gate env, wave env, inputs) and have lanes pass --event-env.
