@@ -142,6 +142,7 @@ def _owners(o, names, memo):
 # not compared (unknown, as before) until backfill re-probes its plan with this version.  v2: (1) an entry that NAMES this type is its input whole (a
 # per-port table such as clock.tap_offset.per_port_ps[<type>] with >= TABLE_MIN ports was emptied: QC V3->V4 106 of 107 changed rows were invisible),
 # (2) provenance free text (source / provenance / evidence ... strings with spaces) is not an input (QC V3->V4: tap_offset.source text moved die_ctx of all 127 types).
+# (3) a list of type names keeps only this type's membership (S81 d8j7->d8j8: reset.relay_resite_skip_types gained other types and moved every type's die_ctx).
 DIE_CTX_V = 2
 _NOTE_KEYS = ('note', 'notes')
 _PROV_KEYS = ('source', 'provenance', 'evidence', 'reason', 'why', 'basis', 'comment', 'comments', 'description', 'desc', 'origin_note')
@@ -184,7 +185,8 @@ def _scoped(o, name, names, memo, inside=False):
         return out
     if isinstance(o, list):
         if all(not isinstance(v, (dict, list)) for v in o):
-            return o
+            # a list of type names (reset.relay_resite_skip_types ...): this type's input is its own membership, not the other names
+            return [v for v in o if not (isinstance(v, str) and _owner_of(v, names) not in (None, name))]
         keep = []
         for v in o:
             if isinstance(v, (dict, list)):

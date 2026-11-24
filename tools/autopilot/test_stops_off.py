@@ -885,6 +885,16 @@ class DieContextSdcRows(unittest.TestCase):
         c = self.plan(); c["clock"]["tap_window"]["basis"] = "re-measured 11-24"
         self.assertEqual(BI.die_ctx(a, "t07"), BI.die_ctx(c, "t07"))
 
+    def test_a_type_name_list_counts_only_membership(self):
+        a, b = self.plan(), self.plan()
+        a["reset"] = {"relay_resite_skip_types": ["t01", "t02"], "mode": "sync"}
+        b["reset"] = {"relay_resite_skip_types": ["t01", "t02", "t03", "t04"], "mode": "sync"}
+        self.assertEqual(BI.die_ctx(a, "t01"), BI.die_ctx(b, "t01"))           # still listed, others joined
+        self.assertEqual(BI.die_ctx(a, "t09"), BI.die_ctx(b, "t09"))           # still not listed
+        self.assertNotEqual(BI.die_ctx(a, "t03"), BI.die_ctx(b, "t03"))        # joined the list
+        c = self.plan(); c["reset"] = {"relay_resite_skip_types": ["t01", "t02"], "mode": "async"}
+        self.assertNotEqual(BI.die_ctx(a, "t09"), BI.die_ctx(c, "t09"))        # a die-wide value still moves every type
+
     def test_a_named_source_value_stays_an_input(self):
         a, b = self.plan(), self.plan()
         b["clock"]["source"]["bus"] = "clk_rx2"
