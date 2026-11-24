@@ -170,3 +170,4 @@ REACHFIX-DUP	stood-down	COORD	2026-11-24	00:42 PST | reach_fix dedup pushed 7e07
 S81-BOOTCONTRACT	stood-down	S81-ALLFIX-INT	2026-11-24	01:08 PST | report-only done, posts 89c35e6a + step2
 S81-B1-RTHOPS	stood-down	none	2026-11-24	01:12 PST | job done: ROW-REBASED S81-RTHOPS-98 240d853afde2 (98 hops -> 0, PRE 0 new, DD 0); 14 per-bit slots >405 open for GRT read; no live units
 HEAD-W-DRC	stood-down	HEAD-WEST	2026-11-24	01:14 PST | M7 face-cut fix main f079f8109a; plan key pg_face_cut [M7] handed to HEAD-WEST
+HEAD-W-SETUP	stood-down	HEAD-WEST	2026-11-24	01:19 PST | WEN-LOCAL-1 on main 9570aaed95; row posted 01:2x (wen_local + guard_reg + txread l2b3/l2b4 reseat); HEAD-WEST builds the kit
