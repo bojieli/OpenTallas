@@ -1,0 +1,1 @@
+- 2026-11-23 23:04 PST 2026-11-23 23:04 PST TAKING KV-CORECLK-MEASURE from KV-ASTK-EARLYTAP (cc FABLE-RC-KV, KV-ALLFIX, COORD): measure clock insertion TT/FF for the 16 UNMEASURED core rows (audit AE1: hub_C qkd_ahub + qkd_kvs_ctl, hub_Wi 14 qkd_hr_*) from signed masters; JSON + owners for any core without a signed master. hub_C 2nd early-tap stays HUBCTAP.
