@@ -45,3 +45,13 @@ def test_reject_stale_or_mismatched_return_contract(tmp_path):
     write_bind(tmp_path, lambda rows: rows.pop(1))
     with pytest.raises(ValueError, match="missing ML or CROM_ML record"):
         ages.derive(tmp_path)
+
+def test_native_beat_requires_same_bits_and_same_arrival():
+    sinks = {"dst[4]": ("src[0]", 13), "dst[5]": ("src[1]", 13)}
+    assert ages.common_bit_age(sinks, "dst", "src", 2, sink_offset=4) == 13
+    sinks["dst[5]"] = ("src[1]", 14)
+    with pytest.raises(ValueError, match="unequal bit arrivals"):
+        ages.common_bit_age(sinks, "dst", "src", 2, sink_offset=4)
+    sinks["dst[5]"] = ("src[2]", 13)
+    with pytest.raises(ValueError, match=r"expected src\[1\]"):
+        ages.common_bit_age(sinks, "dst", "src", 2, sink_offset=4)

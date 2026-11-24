@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import mmap
 import re
 from pathlib import Path
 
@@ -61,12 +62,75 @@ def derive(bind):
                 d2d_seam_c=seam, su_mem_read_ages=rows)
 
 
+DR_WORD_BITS = 520
+DR_SLICES = [f"W{i}" for i in reversed(range(6))] + [f"E{i}" for i in range(6)]
+DR_PATH = r"dvs_[WE][0-5]\.u_core\.u_sub\."
+DR_PORT = r"(?:u_fdn\.ch_dn_i|u_fup\.chr_c|u_rp\.chd_q|u_suvm\.u_vm8q\.u_vw[abc]\.d)"
+DR_RECORD = re.compile(
+    (r'"(' + DR_PATH + DR_PORT + r'\[\d+\])":\s*\["pin",\s*"([^"]+)",\s*(\d+),\s*(?:true|false)\]').encode()
+)
+
+
+def common_bit_age(sinks, sink, source, width, sink_offset=0):
+    """Check bit identity and one age across a complete named logical bus."""
+    ages = set()
+    for bit in range(width):
+        sink_bit = f"{sink}[{sink_offset + bit}]"
+        source_bit, age = sinks.get(sink_bit, (None, None))
+        if source_bit != f"{source}[{bit}]":
+            raise ValueError(f"{sink_bit}: expected {source}[{bit}], got {source_bit}")
+        ages.add(age)
+    if len(ages) != 1:
+        raise ValueError(f"{sink}: unequal bit arrivals {sorted(ages)}")
+    return ages.pop()
+
+
+def trace_native59(bind):
+    """Read native59 DR from logical bind pins, regardless of physical bus names.
+
+    The S8 FDN contributes one register and FUP contributes a wire. The RP input
+    and last VM write relay D ages are reported so the caller can account for the
+    selected CTL and SRAM implementation separately.
+    """
+    with (bind / "bind_sinks.json").open("rb") as source, mmap.mmap(source.fileno(), 0, access=mmap.ACCESS_READ) as data:
+        sinks = {key.decode(): (driver.decode(), int(age)) for key, driver, age in DR_RECORD.findall(data)}
+    rows = {}
+    upstream = "native59.dr_o"
+    age = 0
+    for site in DR_SLICES:
+        prefix = f"dvs_{site}.u_core.u_sub"
+        ingress = common_bit_age(sinks, prefix + ".u_fdn.ch_dn_i", upstream, DR_WORD_BITS)
+        age += ingress + 1
+        fdn_out = prefix + ".u_fdn.chd_q"
+        ctl = common_bit_age(sinks, prefix + ".u_rp.chd_q", fdn_out, DR_WORD_BITS)
+        rows[site] = dict(ingress=ingress, fdn=age, rp_in=age + ctl)
+        if site != DR_SLICES[-1]:
+            fup = common_bit_age(sinks, prefix + ".u_fup.chr_c", fdn_out, DR_WORD_BITS)
+            rows[site]["fup_in"] = age + fup
+            age += fup
+            upstream = prefix + ".u_fup.ch_up_o"
+
+    # The E5 vwr input packs vm_we+addr+data above the contiguous w16 word.
+    e5 = "dvs_E5.u_core.u_sub."
+    write_ages = set()
+    for bank in "abc":
+        dst = e5 + f"u_suvm.u_vm8q.u_vw{bank}.d"
+        for port, offset, width in (("w16_data", 57, 512), ("w16_addr", 569, 24), ("w16_we", 593, 1)):
+            write_ages.add(common_bit_age(sinks, dst, e5 + "u_ctl." + port, width, offset))
+    if len(write_ages) != 1:
+        raise ValueError(f"E5 w16 data, address and enable are not aligned: {sorted(write_ages)}")
+    return dict(dr_from_native_core=rows, last_ctl_to_vm_relay_d=write_ages.pop())
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("bind", type=Path)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--native-dr", action="store_true", help="include bit-exact native59 return-chain transport")
     args = parser.parse_args()
     result = derive(args.bind)
+    if args.native_dr:
+        result["native59"] = trace_native59(args.bind)
     args.out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
 
 
