@@ -151,8 +151,9 @@ module ot_qfd_xs_leaf_fo32 #(
         wire       req = rp_v && (rp_t == gt);
         reg  [1:0] el;
         reg        sv;
-        reg  [3:0] hen;                                   // hp[27], hp[20], hp[13], hp[6] of the reference
-        always @(posedge clk) if (req) hen <= {rp_p[27], rp_p[20], rp_p[13], rp_p[6]};
+        // hp[27], hp[20], hp[13], hp[6] of the reference are held in the kept per-half copies hl / hh below; the
+        // leaf enable reads hh[3] directly (QC-HC3-LEC 11-24: a separate unkept hen had the same D and enable,
+        // synthesis merged it into hl[3] or hh[3] per tile and LEC paired the gold-only hen with the wrong survivor)
         wire       sv_n = req ? 1'b1 : (sv && el == 2'd3) ? 1'b0 : sv;
         wire [1:0] el_n = req ? 2'd0 : sv ? el + 1'b1 : el;
         assign tile_sv_next[gt] = sv_n;
@@ -207,7 +208,7 @@ module ot_qfd_xs_leaf_fo32 #(
         // (one shared position enable measured 36 pins: 16 bits x 2 pins + valid/enable)
         reg [23:0] adl, adh;                             // low / high bytes of elements 0 .. 2 (separate registers)
         reg [2:0]  av, ae;
-        (* keep *) reg [3:0] hl, hh;                     // per-half copies of hen (one shared hen[el] measured 54 pins)
+        (* keep *) reg [3:0] hl, hh;                     // per-half copies of the held enables (one shared copy measured 54 pins)
         always @(posedge clk) if (req) begin hl <= {rp_p[27], rp_p[20], rp_p[13], rp_p[6]}; hh <= {rp_p[27], rp_p[20], rp_p[13], rp_p[6]}; end
         (* keep *) reg       asv0, asv1;
         (* keep *) reg [1:0] ael0, ael1;
@@ -222,7 +223,7 @@ module ot_qfd_xs_leaf_fo32 #(
             if (asv1 && ael1 != 2'd3) adh[8*ael1 +: 8] <= hh[ael1] ? tr[gt][15:8] : 8'd0;
         wire [47:0] ad = {adh[23:16], adl[23:16], adh[15:8], adl[15:8], adh[7:0], adl[7:0]};
         assign asm_d[gt] = ad; assign asm_v[gt] = av; assign asm_e[gt] = ae;
-        assign l_en[gt] = hen[3];
+        assign l_en[gt] = hh[3];                        // = reference hp[27] (same capture as hen)
     end endgenerate
 
     // ---- answer: the tile select (reference: done[1]) from NQ kept copies of tile 1's sequencer state ----
