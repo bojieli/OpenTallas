@@ -40062,3 +40062,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   KV DEAD-OWNER 22: KV-OWN-PV 21 (kv3_pv_*, last post 02:34), KV-HUB-HOLD 1 (kv3_hub_Eo, 22:55).
   QC STALE 2: glue (QC-ALLFIX, superseded), tt_ctlm (FLOW-OPS-R3).
   Nothing else flagged.
+- 2026-11-24 04:54 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-835675-1795524671 on tolerant-swine: rc=0 after 194 s, ended 04:54:19, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pc_v1__cl7f648944__r8b2213035_1124042810/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-ALLFIX/kv3_pc
