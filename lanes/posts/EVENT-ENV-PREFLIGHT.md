@@ -13,3 +13,4 @@
   - names_qc/names_kv x5: rs_names iterations (logs overwritten; the RESULT at 04:21 passed).
   - S81-J9 lk_ES0 04:51: failed a bind_only.sh precondition after 3 s. It was rerun at 04:52.
   Preflight would catch: ROM x8, OPEN-STA x1, F16 x1 (10/14). Fix: the BOILER line in ot_deathclass. Next: --event-env + preflight.
+- 2026-11-24 05:16 PST DIED [EVENT-ENV-PREFLIGHT] ot-run otrun-tolerant-swine-1906643 on tolerant-swine: rc=78 after 1 s, ended 05:16:50, log none, cmd: --event-env /srv/opentallas-scratch2/claude/event-env-preflight/smoke.env --mem 1 --threads 1 --hosts epyc8 -- true | class=SSH-DROP cause=ssh/host unreachable (rc 78)
