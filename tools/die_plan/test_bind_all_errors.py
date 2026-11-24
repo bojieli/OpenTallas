@@ -242,3 +242,18 @@ def test_top_rtl_collect_off_is_unchanged_and_on_wraps():
         x.type_rtl('A', A_BODY); x.type_rtl('B', B_BODY)
     from test_count_straps import TOP
     assert a.top_rtl(TOP) == b.top_rtl(TOP) and b._type_errs is None
+
+
+# ---------------------------------------------------------------- type-level checks before the bus loops
+def test_type_level_config_errors_all_listed():
+    p, t = strap_vehicle()
+    p['partition_types']['A']['landing_status_reg'] = 'yes'
+    p['partition_types']['A']['landing_guard_reg'] = 'no'
+    with pytest.raises(LandingErrors) as ei:
+        landings(p, t, True).type_rtl('A', A_BODY)
+    msgs = [e['error'] for e in ei.value.errors]
+    assert any('landing_status_reg must be a boolean' in m for m in msgs)
+    assert any('landing_guard_reg must be a boolean' in m for m in msgs)
+    with pytest.raises(LandingError) as e1:
+        landings(p, t, False).type_rtl('A', A_BODY)
+    assert not isinstance(e1.value, LandingErrors) and 'must be a boolean' in str(e1.value)

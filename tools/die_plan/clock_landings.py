@@ -1962,20 +1962,20 @@ class Landings:
         reader_cfg = self.types[key].get("clock", {}).get("landing_reader_start")
         if reader_cfg is not None:
             if not self.ca:
-                raise LandingError(f"{tn}: landing_reader_start requires count-aligned rings")
+                self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_reader_start requires count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
             if set(reader_cfg.get("branches", {})) != set(cmask["inputs"]):
-                raise LandingError(f"{tn}: landing_reader_start branches must cover exactly every input ring")
+                self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_reader_start branches must cover exactly every input ring"))   # BIND-ALL-ERRORS: type-level, collect
         writer_cfg = self.types[key].get("clock", {}).get("landing_writer_start")
         if writer_cfg is not None:
             if not self.ca or not self.strap:
-                raise LandingError(f"{tn}: landing_writer_start requires strap-form count-aligned rings")
+                self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_writer_start requires strap-form count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
             if not writer_cfg.get("branches") or not set(writer_cfg["branches"]) <= set(cmask["outputs"]):
-                raise LandingError(f"{tn}: landing_writer_start branches must name output rings of the type")
+                self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_writer_start branches must name output rings of the type"))   # BIND-ALL-ERRORS: type-level, collect
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
         if not mask["inputs"] and not mask["outputs"] and not active_collector and key not in self.ca_type:
             if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None:
-                raise LandingError(f'{tn}: landing_origin_clock_port needs active dedicated START origin hardware')
+                self._collect_err(tn, None, None, None, LandingError(f'{tn}: landing_origin_clock_port needs active dedicated START origin hardware'))   # BIND-ALL-ERRORS: type-level, collect
             self.emitted_types.add(tn)
             return text
         marker = "\n);\n"
@@ -1986,33 +1986,33 @@ class Landings:
         cat = self.ca_type.get(key) if self.ca else None
         status_copy = self.types[key].get("landing_control_status_copy", False)
         if not isinstance(status_copy, bool):
-            raise LandingError(f"{tn}: landing_control_status_copy must be a boolean")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_control_status_copy must be a boolean"))   # BIND-ALL-ERRORS: type-level, collect
         if status_copy and not cat:
-            raise LandingError(f"{tn}: landing_control_status_copy needs count-aligned rings")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_control_status_copy needs count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
         # STATUS-REG-1 (KV-SLGLAND-2 11-07, opt-in): ring status crossings end at private per-slot flops; no data cycle
         status_reg = self.types[key].get("landing_status_reg", False)
         if not isinstance(status_reg, bool):
-            raise LandingError(f"{tn}: landing_status_reg must be a boolean")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_status_reg must be a boolean"))   # BIND-ALL-ERRORS: type-level, collect
         # DIE-QC-97 (c): die-wide STATUS_REG on every count-aligned ring (plan clock.landing_ring_status_reg)
         if cat and ring_status_reg_all(self.plan.get("clock")):
             status_reg = True
         # GUARD-REG-1 (CLAND-RING-NEGEDGE): guard compare off the half-cycle path; needs (and turns on) STATUS_REG
         guard_reg = self.types[key].get("landing_guard_reg", False)
         if not isinstance(guard_reg, bool):
-            raise LandingError(f"{tn}: landing_guard_reg must be a boolean")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_guard_reg must be a boolean"))   # BIND-ALL-ERRORS: type-level, collect
         if cat and ring_guard_reg_all(self.plan.get("clock")):
             guard_reg = True
         if guard_reg and not cat:
-            raise LandingError(f"{tn}: landing_guard_reg needs count-aligned rings")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_guard_reg needs count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
         status_reg = status_reg or guard_reg
         if status_reg and not cat:
-            raise LandingError(f"{tn}: landing_status_reg needs count-aligned rings")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_status_reg needs count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
         # WEN-LOCAL-1 (HEAD-W-SETUP 11-24, opt-in): each write chunk of a soft WREG ring rotates its own enables; no cycle, no flop
         wen_local = self.types[key].get("landing_wen_local", False)
         if not isinstance(wen_local, bool):
-            raise LandingError(f"{tn}: landing_wen_local must be a boolean")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_wen_local must be a boolean"))   # BIND-ALL-ERRORS: type-level, collect
         if wen_local and not cat:
-            raise LandingError(f"{tn}: landing_wen_local needs count-aligned rings")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_wen_local needs count-aligned rings"))   # BIND-ALL-ERRORS: type-level, collect
         if inst is not None:
             # MESO-STRAP-1 LEC reference: the parameter wrapper of ONE copy (ca_variants), ring DEPTH from `depth`
             # (the strap master's per-bus DEPTH) so the two forms differ only in parameters vs tied straps
@@ -2023,16 +2023,16 @@ class Landings:
             for b, d in (depth or {}).items():
                 cat["rings"][b]["depth"] = int(d)
         if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None and not cat:
-            raise LandingError(f'{tn}: landing_origin_clock_port needs count-aligned START origin hardware')
+            self._collect_err(tn, None, None, None, LandingError(f'{tn}: landing_origin_clock_port needs count-aligned START origin hardware'))   # BIND-ALL-ERRORS: type-level, collect
         # DIE-HEAD-10 FSTART out (strap form, every origin but an intra-region relay rx): each forwarded start pin
         # cland_fstart_out_<b> is the Q of its OWN face flop u_cland_fstart_<b> (ot_dp_landing_relay on the region
         # start's raw reset, d = the start's D-side), equal to cland_start every cycle (0 added cycles); internal
         # loads keep cland_start.  Parameter forms and relay rx partitions keep the shared start.
         relay_copy = self.types[key].get("landing_relay_start_copy", False)
         if not isinstance(relay_copy, bool):
-            raise LandingError(f"{tn}: landing_relay_start_copy must be a boolean")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_relay_start_copy must be a boolean"))   # BIND-ALL-ERRORS: type-level, collect
         if relay_copy and (not cat or not self.strap or cat["role"][0] != "relay"):
-            raise LandingError(f"{tn}: landing_relay_start_copy needs a strap-form relay origin")
+            self._collect_err(tn, None, None, None, LandingError(f"{tn}: landing_relay_start_copy needs a strap-form relay origin"))   # BIND-ALL-ERRORS: type-level, collect
         face_start = bool(cat) and bool(self.strap) and (cat["role"][0] != "relay" or relay_copy)
         raw_graph = None
         raw_cfg = self.types[key].get("clock", {}).get("landing_raw_branches")
@@ -2040,7 +2040,7 @@ class Landings:
             # DIE-KV-58 10-31: also a strap-form origin with FSTART face flops (face_start), whose START-TREE origin
             # and face flops take the same literal copies (consumers origin / fstart:<bus>)
             if not cat or not face_start:
-                raise LandingError(f"{tn}: literal START raw branches require a registered relay origin or a strap origin with FSTART face flops")
+                self._collect_err(tn, None, None, None, LandingError(f"{tn}: literal START raw branches require a registered relay origin or a strap origin with FSTART face flops"))   # BIND-ALL-ERRORS: type-level, collect
             from landing_raw_branches import RawBranches
             type_spec = self.types[key]
             hard_entry = type_spec.get("reset", {}).get("tap_um") if type_spec.get("hard") else None
@@ -2066,7 +2066,7 @@ class Landings:
             if s_ != "clk" and not re.search(r"\binput\s+(?:wire\s+)?" + re.escape(s_) + r"\b", head):
                 contract = self.types[key].get("clock", {}).get("landing_contract", {})
                 if contract.get("forwarded_clock_only_inputs") is not True:
-                    raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                    self._collect_err(tn, None, None, None, LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type"))   # BIND-ALL-ERRORS: type-level, collect
                 # The logical leaf may have one clock while its physical
                 # wrapper has several planned tap inputs. Expose ONLY a tap
                 # already in that physical interface, used by an actual clock
@@ -2076,7 +2076,7 @@ class Landings:
                     self._physical_clock_plan = schema.Plan(self.plan, getattr(self, "plan_path", None))
                 planned = {n for n, _x, _y in schema.tap_grid(self._physical_clock_plan, key)}
                 if s_ not in planned:
-                    raise LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input")
+                    self._collect_err(tn, None, None, None, LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input"))   # BIND-ALL-ERRORS: type-level, collect
                 needed = self.forwarded_clock_only_inputs.setdefault(tn, [])
                 if s_ not in needed:
                     needed.append(s_)
