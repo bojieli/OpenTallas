@@ -1,24 +1,24 @@
 item	owner	status	pre	strict	lat	g0	probe	last_mention	age_min	flag
-b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF 	COMPOSED-A gate-clean; GATED o	COMPOSED-A gate-clea	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	QC-ALLFIX	62	-
-x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	COMPOSED-A gate-clean; GATED o	COMPOSED-A gate-clea	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	85	-
-rc99 cb NK lockup (row A + HB4 rev5, in C4)	PROBE-PENDING	PROBE-PENDING	-	-	-	-	-	FABLE-RC-QC	85	-
-rc101 cb landing piles (CB-1 + STREET, in C4)	PROBE-PENDING	PROBE-PENDING	-	-	-	-	-	FABLE-RC-QC	27	-
-rc107/rc109 coll g_pf + shr_p_rx_i (pkg15; coll types byte-identical C4->A)	REASONED-probe	REASONED-probe	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	127	-
-coll_core 80 clock-open reset copies (tools row tap_reset_split uniq_seats)	ROW-REBASED; GRT probe on B	ROW-REBASED; GRT pro	base	-	-	-	205/0 open (was 80)	FABLE-RC-QC	1	-
-SLE CTL B_TW bank spread (4 per-bit banks x158-504, 9 stages kept, x284 empty; i	REASONED-probe (sle_ctl__cla4f	REASONED-probe (sle_	PASS 9edfed34	-	-	-	-	QC-ALLFIX	62	-
-SLE CTL clock entry (ctl edge taps = contract in C4) + NEW hc1/hc2 fclk_in_b_hw_	ROW-REBASING	ROW-REBASING	PRE running (epyc7)	-	-	-	-	FABLE-RC-QC	161	-
-rc105 su_c street + su_c re-floor (in SU2R; SUC-Q0 stage-0 legs pending)	COMPOSED-B2 / SUC-Q0 -> C	COMPOSED-B2 / SUC-Q0	-	-	-	-	-	QC-ALLFIX-SU	516	-
-SU-2 + su_c N/waist re-floor + retap (SU2R db537389cc92, 21 types, cws +1 on 24 	COMPOSED-B2	COMPOSED-B2	SU gate epyc7 running	-	-	-	-	QC-ALLFIX	488	-
-RED +2 (in-tree land_r8_extra, asbuilt overlay)	COMPOSED-B2	COMPOSED-B2	PRE 0 new	scoped sle_su_c 2 stages	-	-	-	QC-ALLFIX	397	-
-rc103 su_l1 tap affinity (RHI tap_reset_split + tap_pair_affinity in base)	REASONED-probe	REASONED-probe	PASS	0 err	1921/1921	-	running	QC-ALLFIX-SU	88	-
-hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (su_l1 in base; cbf_q00 RST = RHI 72b268847e	ROW-REBASED, in B2	ROW-REBASED, in B2	PRE 0 new	-	-	-	-	OPUS-FIX-QC-V4-R2	479	-
+b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF 	COMPOSED-A gate-clean; GATED o	COMPOSED-A gate-clea	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	11	-
+x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	COMPOSED-A gate-clean; GATED o	COMPOSED-A gate-clea	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	115	-
+rc99 cb NK lockup (row A + HB4 rev5, in C4)	PROBE-PENDING: OWNER QC-CB-PRO	PROBE-PENDING: OWNER	-	-	-	-	-	FABLE-RC-QC	14	-
+rc101 cb landing piles (CB-1 + STREET, in C4)	PROBE-PENDING: OWNER QC-CB-PRO	PROBE-PENDING: OWNER	-	-	-	-	-	FABLE-RC-QC	14	-
+rc107/rc109 coll g_pf + shr_p_rx_i (pkg15; coll types byte-identical C4->A)	REASONED-probe	REASONED-probe	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	157	-
+coll_core 80 clock-open reset copies (tools row tap_reset_split uniq_seats)	ROW-REBASED; GRT probe on B	ROW-REBASED; GRT pro	base	-	-	-	205/0 open (was 80)	FABLE-RC-QC	21	-
+SLE CTL B_TW bank spread (4 per-bit banks x158-504, 9 stages kept, x284 empty; i	REASONED-probe (sle_ctl__cla4f	REASONED-probe (sle_	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	11	-
+SLE CTL clock entry (ctl edge taps = contract in C4) + NEW hc1/hc2 fclk_in_b_hw_	ROW-REBASING	ROW-REBASING	PRE running (epyc7)	-	-	-	-	FABLE-RC-QC	191	-
+rc105 su_c street + su_c re-floor (in SU2R; SUC-Q0 stage-0 legs pending)	COMPOSED-B2 / SUC-Q0 -> C	COMPOSED-B2 / SUC-Q0	-	-	-	-	-	QC-ALLFIX-SU	546	-
+SU-2 + su_c N/waist re-floor + retap (SU2R db537389cc92, 21 types, cws +1 on 24 	COMPOSED-B2	COMPOSED-B2	SU gate epyc7 running	-	-	-	-	QC-ALLFIX	518	-
+RED +2 (in-tree land_r8_extra, asbuilt overlay)	COMPOSED-B2	COMPOSED-B2	PRE 0 new	scoped sle_su_c 2 stages	-	-	-	QC-ALLFIX	427	-
+rc103 su_l1 tap affinity (RHI tap_reset_split + tap_pair_affinity in base)	REASONED-probe	REASONED-probe	PASS	0 err	1921/1921	-	running	QC-ALLFIX-SU	118	-
+hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (su_l1 in base; cbf_q00 RST = RHI 72b268847e	ROW-REBASED, in B2	ROW-REBASED, in B2	PRE 0 new	-	-	-	-	OPUS-FIX-QC-V4-R2	509	-
 RSN FLT u_lpad_flt_su_c_i.q[0] -97.79	QC-V4 keeps: kit tools bug (1-	QC-V4 keeps: kit too	-	-	-	-	-	-	9999	-
-F16 auth transport + TTCTLM f5 constructor 6a5f53239424 + latency row (6 cyc) + 	COMPOSED-B1	COMPOSED-B1	PRE 0 new	B1 rebind running (R8 member added)	-	-	-	FABLE-RC-QC	34	-
-TTCTLM: TTC-NECK-1 (u_24526 +17.28/+17.28, congestion) in B. Setup: placement ro	OWNER QC-TTC-RETIME (dedicated	OWNER QC-TTC-RETIME 	PRE 0 new	-	-	-	-	FABLE-RC-QC	208	-
-rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	REASONED-pending: st_a regions	REASONED-pending: st	-	-	-	-	-	FABLE-RC-QC	65	-
-rc94 STA-1 seat / rc98 SEAT-1c pinreg (clk_t128) / hg-QC-IO-BOUNDARY (STA-2, STA	REASONED-probe	REASONED-probe	PASS 9edfed34	-	-	-	-	QC-ALLFIX	488	-
-x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	QC-V4 kit running	QC-V4 kit running	-	-	-	-	-	QC-ALLFIX-COLL	37	-
-CBN-RSF-SEAT (FABLE render finding: 6 rsf stations inside u_t00/u_t01 of cbn_q00	ROW-REBASED -> compose C	ROW-REBASED -> compo	PRE 0 new	-	-	-	-	QC-ALLFIX-COLL	37	-
+F16 auth transport + TTCTLM f5 constructor 6a5f53239424 + latency row (6 cyc) + 	COMPOSED-B1	COMPOSED-B1	PRE 0 new	B1 rebind running (R8 member added)	-	-	-	FABLE-RC-QC	8	-
+TTCTLM: TTC-NECK-1 (u_24526 +17.28/+17.28, congestion) in B. Setup: placement ro	OWNER QC-TTC-RETIME (dedicated	OWNER QC-TTC-RETIME 	PRE 0 new	-	-	-	-	FABLE-RC-QC	238	-
+rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	REASONED-pending: st_a regions	REASONED-pending: st	-	-	-	-	-	FABLE-RC-QC	95	-
+rc94 STA-1 seat / rc98 SEAT-1c pinreg (clk_t128) / hg-QC-IO-BOUNDARY (STA-2, STA	REASONED-probe	REASONED-probe	PASS 9edfed34	-	-	-	-	QC-ALLFIX	518	-
+x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	QC-V4 kit running	QC-V4 kit running	-	-	-	-	-	QC-ALLFIX	29	-
+CBN-RSF-SEAT (FABLE render finding: 6 rsf stations inside u_t00/u_t01 of cbn_q00	ROW-REBASED -> compose C	ROW-REBASED -> compo	PRE 0 new	-	-	-	-	QC-ALLFIX-COLL	67	-
 SUC-Q0 (su_c x_su_l0_o stage-0 legs q[150]/[103]/[105] 434 -> ~171 um)	ETA 19:30 -> compose C	ETA 19:30 -> compose	-	-	-	-	-	-	9999	-
 C1-noSU compose (B1 + RST + ctlclk + RSF-SEAT)	GATE-CLEAN	GATE-CLEAN	PRE inherited only	0 err	1922/1922	PASS 0/0 + render reviewed	running	-	9999	-
 SU2R-FIX3 (sle_su_c 207 START raw resets -> nearest consumer tap, B1 rule)	SUPERSEDED by FIX3v2 9c145188d	SUPERSEDED by FIX3v2	helper gate running	-	-	-	-	-	9999	-
@@ -27,8 +27,8 @@ C1d compose (C1c + FIX3 + SUL1-UNBURY), launch was rt 70b6, not c660	WITHDRAWN	W
 HC1-CLKENTRY (QC-HC1-CLKENTRY: SLECTL-CLKENTRY-SEAT + SLECTL-RP-SEL + tapfix, sl	ROW-REBASED -> C1e | OUT of C1	ROW-REBASED -> C1e |	PRE equal base	0 err (noSU)	1922/1922 (noSU)	-	running	-	9999	-
 C1e compose (C1d + HC1-CLKENTRY)	WITHDRAWN (sle_ctl out, ORGRP 	WITHDRAWN (sle_ctl o	cancelled	-	-	-	-	-	9999	-
 SU2R-FIX4 (x_su_l1_o bank sites onto row grid, 3 su_c, y only, max 0.11 um)	IN C1g, ungated	IN C1g, ungated	helper gate running, ETA 01:15	-	-	offline overlap 0 (relays/kit cells not covered)	-	-	9999	-
-ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	IN C1g, ungated on this base	IN C1g, ungated on t	C1b+row = base	-	-	adds 0 G0 errors on C1b	coll_core kit past kit_topology	FABLE-RC-QC	1	-
+ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	IN C1g, ungated on this base	IN C1g, ungated on t	C1b+row = base	-	-	adds 0 G0 errors on C1b	coll_core kit past kit_topology	FABLE-RC-QC	21	-
 C1d2 compose (C1c + FIX3v2 + SUL1-UNBURY)	SUPERSEDED by C1g	SUPERSEDED by C1g	FAIL SITEGRID 6903	not run	not run	cancelled	-	-	9999	-
 C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	STRICT PASS 01:12; GENDRY runn	STRICT PASS 01:12; G	PRE inherited only, SITEGRID 0	0 err (rt c660, pre BIND-UNDRIVEN-IN)	1922/1922	PASS 0/0	-	-	9999	-
 DEADIN-QC (declared dead-input proofs: sle_ctl rp1 w518_cp/w519_cp, fw fdn chu_a	OWNER helper QC-DEADIN-ROW, ET	OWNER helper QC-DEAD	-	-	-	-	-	-	9999	-
-sle_st_b_v2__clfde1249e (UNOWNED in sweep 01:09; plan unchanged vs C4, placed/ro	RIDE: iteration-1 full sign-of	RIDE: iteration-1 fu	-	-	-	-	-	QC-ALLFIX	67	STALLED
+sle_st_b_v2__clfde1249e (UNOWNED in sweep 01:09; plan unchanged vs C4, placed/ro	RIDE: iteration-1 full sign-of	RIDE: iteration-1 fu	-	-	-	-	-	QC-ALLFIX	97	STALLED
