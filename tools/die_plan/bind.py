@@ -4005,9 +4005,9 @@ class Binder:
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
         if P is not None:
-            # REPORT ONLY (KV-RSTREACH 11-24): bind_reset.json core_resets are planned from the plan alone; check each
-            # against the driver of that pin in the emitted type RTL (wavefront tap vs reset spine).  bind_reset.json
-            # is not changed; a report failure never fails the bind.
+            # KV-RSTREACH 11-24: bind_reset.json core_resets are planned from the plan alone; check each
+            # against the driver of that pin in the emitted type RTL (wavefront tap vs reset spine); a check
+            # failure never fails the bind and leaves bind_reset.json as planned.
             import bind_reset_core_class
             try:
                 texts = {}
@@ -4022,7 +4022,14 @@ class Binder:
                 R["not_emitted"] = sorted(k for k, v in W0.get("types", {}).items()
                                           if v.get("core_resets") and k not in texts)
                 (out.parent / "bind_reset_core_class.json").write_text(json.dumps(R, indent=1) + "\n")
-                print(f"BIND-RESET-CORE-CLASS report-only mismatches={R['mismatches']} by_class={R['by_class']}")
+                print(f"BIND-RESET-CORE-CLASS mismatches={R['mismatches']} by_class={R['by_class']}")
+                # COORD ruling 11-24: publish spine-driven core resets as spine consumers in bind_reset.json (what the
+                # RTL does).  OT_BIND_RESET_SPINE_CLASS=0 keeps the plan-only contract (report only).
+                if os.environ.get("OT_BIND_RESET_SPINE_CLASS", "1") != "0":
+                    moved = bind_reset_core_class.apply_spine(W0, R, texts)
+                    if moved:
+                        (out.parent / "bind_reset.json").write_text(json.dumps(W0, indent=1))
+                    print(f"BIND-RESET-CORE-CLASS published {moved} core reset(s) as spine consumers in bind_reset.json")
             except Exception as exc:  # noqa: BLE001 - report-only
                 print(f"BIND-RESET-CORE-CLASS report-only not written: {type(exc).__name__}: {exc}")
         if self._native_glue is not None:

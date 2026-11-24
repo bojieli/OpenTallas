@@ -82,6 +82,63 @@ def check(W, type_text):
                 note="bind_reset.json core_resets vs the pin driver in the emitted type RTL; bind_reset.json unchanged")
 
 
+def _stages(text, net):
+    """total reset stages of a spine landing from its driver line comment ('N stage(s) total'), else None."""
+    if not text or not net:
+        return None
+    base = re.sub(r"\[[^\]]*\]$", "", net.strip())
+    m = re.search(r"(?m)^.*\.q\(\s*" + re.escape(base) + r"(?:\[[^\]]*\])?\s*\)\s*\)\s*;.*?(\d+) stage\(s\) total", text)
+    if m:
+        return int(m.group(1))
+    # the pin takes the spine synchroniser output itself (no tail copy): its S parameter is the stage count
+    m = re.search(r"(?m)^\s*ot_dp_rsync\s*#\(([^;]*?)\)\s*\w+\s*\([^;]*\.q\(\s*" + re.escape(base) + r"\s*\)", text)
+    sm = re.search(r"\.S\((\d+)\)", m.group(1)) if m else None
+    return int(sm.group(1)) if sm else None
+
+
+def apply_spine(W, R, type_text):
+    """KV-RSTREACH 11-24 (COORD ruling): publish what the RTL does.  Every core reset that R classifies 'spine' is
+    re-published in W (bind_reset.json) as a spine-reset consumer: types[tn].core_resets[i] gets reset_class 'spine',
+    rtl_net, tap_used False, spine_stages; every partition of that type drops its wavefront core_release value for the
+    target (that number was never true) and lists it under spine_release (released by the reset spine, i.e. die
+    rst_n spine deassert + spine_stages own clocks; NOT on the wavefront).  Wavefront-driven cores are unchanged.
+    Returns the number of targets moved.  W is changed in place."""
+    moved = 0
+    by_type = {}
+    for tn, rows in R.get("types", {}).items():
+        for r in rows:
+            if r["rtl_class"] == "spine":
+                by_type.setdefault(tn, {})[(r["inst"], r["pin"])] = r
+    for tn, sp in by_type.items():
+        T = W.get("types", {}).get(tn)
+        if not T:
+            continue
+        for c in T.get("core_resets", []):
+            r = sp.get((c.get("inst"), c.get("pin")))
+            if r is None:
+                continue
+            c.update(reset_class="spine", rtl_net=r["rtl_net"], tap_used=False,
+                     spine_stages=_stages(type_text.get(tn), r["rtl_net"]))
+            moved += 1
+        for part in W.get("parts", {}).values():
+            if part.get("type") != tn:
+                continue
+            for (inst, pin), r in sp.items():
+                tgt = f"{inst}.{pin}"
+                cr = part.get("core_release", {})
+                if tgt in cr:
+                    cr.pop(tgt)
+                c = next((x for x in T.get("core_resets", []) if (x.get("inst"), x.get("pin")) == (inst, pin)), {})
+                part.setdefault("spine_release", {})[tgt] = dict(
+                    source="reset spine (asbuilt.reset_spines, die rst_n)", rtl_net=r["rtl_net"],
+                    spine_stages=c.get("spine_stages"), wavefront_release=None)
+    if moved:
+        W["core_reset_classes"] = dict(spine=moved, by_class=R.get("by_class", {}),
+                                       note="core resets driven by a reset spine in the bound RTL are published as "
+                                            "spine consumers (spine_release), not wavefront core_release")
+    return moved
+
+
 def main(argv):
     """bind_reset_core_class.py BIND_OUT [TYPE_MODULE_MAP.json]: reads BIND_OUT/bind_reset.json + BIND_OUT/rtl/*.sv."""
     out = Path(argv[1])

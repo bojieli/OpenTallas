@@ -9,6 +9,7 @@ TXT = """module kv3_t (input wire clk, input wire [0:0] ri_pv_u_g0_j_rst_n);
     (* keep = 1 *) wire rst_n_t7;
     (* keep = 1 *) wire rst_n_t8;
     wire [0:0] rs_ri_pv_u_g0_j_rst_n_r0;
+    ot_dp_rtail #(.D(4)) u_rs_ri_pv_u_g0_j_rst_n_r0 (.clk(clk), .a(1'b1), .d(q[0]), .q(rs_ri_pv_u_g0_j_rst_n_r0[0]));  // landing pad tail copy for core u_pv_u_g0_j: reset spine relay (1 load(s)); 6 stage(s) total; synchronous copy
     ot_qwen_tp8_pv_join_t #(.J_LAT(7), .MUT(0)) u_pv_u_g0_j (
         .clk(clk),
         .rst_n(rs_ri_pv_u_g0_j_rst_n_r0[0]),
@@ -68,3 +69,38 @@ def test_main_report_only_leaves_bind_reset_unchanged(tmp_path):
     assert (tmp_path / "bind_reset.json").read_bytes() == before
     R = json.loads((tmp_path / "bind_reset_core_class.json").read_text())
     assert R["mode"] == "report-only" and R["by_class"] == {"spine": 1}
+
+
+def _w2():
+    return {"types": {"kv3_t": {"core_resets": [
+                dict(inst="pv__u_g0_j", pin="rst_n", tap=7, physical_inst="u_bound.u_pv_u_g0_j"),
+                dict(inst="w", pin="rst_n", tap=8, physical_inst="u_bound.u_w")]}},
+            "parts": {"p0": {"type": "kv3_t", "release": 20, "core_release": {"pv__u_g0_j.rst_n": 21, "w.rst_n": 21}},
+                      "p1": {"type": "kv3_x", "release": 30, "core_release": {"pv__u_g0_j.rst_n": 31}}}}
+
+
+def test_apply_spine_publishes_spine_consumers_only():
+    W = _w2()
+    R = C.check(W, {"kv3_t": TXT})
+    assert C.apply_spine(W, R, {"kv3_t": TXT}) == 1
+    c0, c1 = W["types"]["kv3_t"]["core_resets"]
+    assert (c0["reset_class"], c0["tap_used"], c0["spine_stages"]) == ("spine", False, 6)
+    assert "reset_class" not in c1                                   # wavefront core unchanged
+    p0 = W["parts"]["p0"]
+    assert p0["core_release"] == {"w.rst_n": 21}                     # the untrue wavefront number is gone
+    assert p0["spine_release"]["pv__u_g0_j.rst_n"]["spine_stages"] == 6
+    assert W["parts"]["p1"]["core_release"] == {"pv__u_g0_j.rst_n": 31}   # other type untouched
+    assert W["core_reset_classes"]["spine"] == 1
+
+
+def test_apply_spine_noop_when_all_wavefront():
+    W = {"types": {"kv3_t": {"core_resets": [dict(inst="w", pin="rst_n", tap=8, physical_inst="u_bound.u_w")]}},
+         "parts": {"p0": {"type": "kv3_t", "core_release": {"w.rst_n": 21}}}}
+    before = json.dumps(W, sort_keys=True)
+    assert C.apply_spine(W, C.check(W, {"kv3_t": TXT}), {"kv3_t": TXT}) == 0
+    assert json.dumps(W, sort_keys=True) == before
+
+
+def test_stages_from_bare_synchroniser():
+    t = "    ot_dp_rsync #(.W(1), .S(2)) u_rs_ri_a_rst_n (.clk(clk), .a(ri_a_rst_n), .q(ri_a_rst_n_q));\n"
+    assert C._stages(t, "ri_a_rst_n_q[0]") == 2
