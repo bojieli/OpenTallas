@@ -316,33 +316,39 @@ def _pack(rows, P, gap, grid=0.0):
         by[(min(a, b), max(a, b), f)].append(r)
     for _key, lst in by.items():
         moving = [r for r in lst if r["status"] not in ("RIGID",) and not r["status"].startswith("KEEP-")]
-        if len(moving) < 2:
+        fixed = sorted(tuple(r["new"]) for r in lst if r not in moving)     # windows that stay: obstacles
+        if not moving:
             continue
         moving.sort(key=lambda r: (r["old"][0], r["new"][0]))     # keep the old order on the face
         lo = max(r["lo"] for r in moving)
         hi = min(r["hi"] for r in moving)
-        need = sum(r["new"][1] - r["new"][0] for r in moving) + gap * (len(moving) - 1)
-        if need > hi - lo + EPS:
-            for r in moving:
-                r["status"] = "NO-ROOM"
-            continue
         q = (lambda d: math.ceil(d / grid - 1e-9) * grid) if grid else (lambda d: d)
-        cur = None
+
+        def place(start_shift):
+            """first fit in old order from each window's own slid start (+ start_shift), stepping over the fixed
+            windows and the windows placed before it; returns False when the run leaves [lo, hi]."""
+            taken = list(fixed)
+            for r in moving:
+                L = r["new"][1] - r["new"][0]
+                st = max(r["new"][0] + start_shift, lo)
+                for _ in range(len(taken) + len(moving) + 2):
+                    clash = [t for t in taken if st < t[1] + gap - EPS and st + L > t[0] - gap + EPS]
+                    if not clash:
+                        break
+                    st = st + q(max(t[1] for t in clash) + gap - st)
+                r["_new"] = [round(st, 6), round(st + L, 6)]
+                taken.append(tuple(r["_new"]))
+            return all(r["_new"][0] >= lo - EPS and r["_new"][1] <= hi + EPS for r in moving)
+
+        ok = place(0.0)
+        if not ok:          # pushed past the top: retry the run from the bottom of the common range
+            ok = place(lo - min(r["new"][0] for r in moving))
         for r in moving:
-            L = r["new"][1] - r["new"][0]
-            st = r["new"][0]
-            if cur is not None and st < cur + gap:
-                st = st + q(cur + gap - st)
-            r["new"] = [round(st, 6), round(st + L, 6)]
-            cur = st + L
-        over = cur - hi
-        if over > EPS:      # pushed past the top: shift the packed run down as one block
-            over = q(over)
-            for r in moving:
-                r["new"] = [round(r["new"][0] - over, 6), round(r["new"][1] - over, 6)]
-        if any(r["new"][0] < r["lo"] - EPS or r["new"][1] > r["hi"] + EPS for r in moving):
-            for r in moving:
+            if ok:
+                r["new"] = r["_new"]
+            else:
                 r["status"] = "NO-ROOM"
+            r.pop("_new", None)
 
 
 def channel_rows(raw, lay):
@@ -371,6 +377,49 @@ def channel_rows(raw, lay):
         else:
             out["update"].append(dict(index=i, name=c.get("name"), rect_um=[round(v, 6) for v in rect],
                                       width_um=round(width, 6)))
+    return out
+
+
+def reset_depths(raw, tns):
+    """{type: built wavefront reset depth (reset_tree)} on the plan as given; {} entries 'error' when not buildable."""
+    if not tns:
+        return {}
+    try:
+        import reset_tree as RT
+        P = S.Plan(raw)
+    except Exception as e:
+        return {tn: f"error {type(e).__name__}" for tn in tns}
+    out = {}
+    for tn in tns:
+        try:
+            out[tn] = int(RT._wf_type_tree(P, tn)["depth"])
+        except Exception as e:
+            out[tn] = f"error {type(e).__name__}"
+    return out
+
+
+def dodge_cores(t, pts, margin=1.08):
+    """station points strictly inside a hard-core box of the type (plan_gate_pre.core_boxes, GEOM-STATION-IN-CORE)
+    move to the nearest point just outside that box (kept inside the outline); a few passes for abutted cores."""
+    try:
+        import plan_gate_pre as PGP
+        boxes = PGP.core_boxes(t)
+    except Exception:
+        return pts
+    if not boxes:
+        return pts
+    w, h = t["outline_um"]
+    out = []
+    for x, y in pts:
+        for _ in range(8):
+            hit = next(((x0, y0, x1, y1) for _i, x0, y0, x1, y1 in boxes if x0 < x < x1 and y0 < y < y1), None)
+            if hit is None:
+                break
+            x0, y0, x1, y1 = hit
+            cands = [(x0 - margin, y), (x1 + margin, y), (x, y0 - margin), (x, y1 + margin)]
+            cands = [(a, b) for a, b in cands if 0.5 <= a <= w - 0.5 and 0.5 <= b <= h - 0.5] or cands
+            x, y = min(cands, key=lambda q: abs(q[0] - x) + abs(q[1] - y))
+        out.append([round(x, 4), round(y, 4)])
     return out
 
 
@@ -643,6 +692,9 @@ def apply(raw, spec, pin_gap=1.2):
                 or abs((a[3] - a[1]) - (b[3] - b[1])) > EPS}
     remap = set(spec.get("remap_internal", []))
     old_types = {parts[n]["type"]: copy.deepcopy(types[parts[n]["type"]]) for n in reshaped}
+    # remapped types keep their published reset release depth (reset.wavefront_min_depth pads, never shortens): the
+    # landing START / local-reset anchors name relays by depth, and a shallower squeezed tree would orphan them
+    old_depth = reset_depths(raw, [parts[n]["type"] for n in sorted(reshaped) if n in remap])
     # 1. re-shaped types: internal frame offset (keep die positions) BEFORE windows are written
     for n in sorted(reshaped):
         t = types[parts[n]["type"]]
@@ -737,12 +789,33 @@ def apply(raw, spec, pin_gap=1.2):
                 if "in_face" in hd:
                     slot_changed[parts[n]["type"]].add(hd["name"])
     rep["windows_clamped"] = clamped
+    rep["reset_min_depth"] = {}
+    for tn, d in old_depth.items():
+        if isinstance(d, int):
+            rs = types[tn].setdefault("reset", {})
+            if int(rs.get("wavefront_min_depth") or 0) < d:
+                rs["wavefront_min_depth"] = d
+                rep["reset_min_depth"][tn] = d
     rep["taps_legalized"] = {parts[n]["type"]: legalize_taps(types[parts[n]["type"]],
                                                              float(raw["die"].get("grid_um", 8.64) or 8.64))
                              for n in sorted(reshaped)}
+    rep["added_taps_cleared"] = {}
+    for n in sorted(reshaped):          # grid re-centres / outline change: added taps the bind would refuse -> nearest legal
+        tn = parts[n]["type"]
+        if (types[tn].get("clock") or {}).get("added_taps"):
+            try:
+                import s81_hi_corridor as HC
+                mv = HC.clear_added_taps(types[tn], budgets=raw.get("budgets"))
+            except ImportError:
+                mv = []
+            if mv:
+                rep["added_taps_cleared"][tn] = mv
     rep["bands_moved"] = {parts[n]["type"]: _bands_follow_windows(types[parts[n]["type"]], old_types[parts[n]["type"]])
                           for n in sorted(reshaped) if n in remap}
-    # 4. ft slots with a changed window: rebuild regs, drop exact bit sites
+    # 4. ft slots with a changed window: re-shaped types rebuild regs (off hard cores); re-pinned-only types keep their
+    #    station sites (they were legal and core-free; a lane the slide breaks is refit by fit_free_slots); exact bit
+    #    sites are dropped either way
+    reshaped_types = {parts[n]["type"] for n in reshaped}
     for n in sorted(reshaped):
         t = types[parts[n]["type"]]
         for s_ in t.get("ft_slots", []):
@@ -751,8 +824,8 @@ def apply(raw, spec, pin_gap=1.2):
         t = types[tn]
         for s_ in t.get("ft_slots", []):
             if s_["name"] in names and "in_window_um" in s_ and "out_window_um" in s_:
-                if "regs_um" in s_:
-                    s_["regs_um"] = _route_regs(s_, t["outline_um"])
+                if "regs_um" in s_ and tn in reshaped_types:
+                    s_["regs_um"] = dodge_cores(t, _route_regs(s_, t["outline_um"]))
                 s_.pop("bit_sites_um", None)
                 s_.pop("bit_site_cell_um", None)
     # 5. channels
@@ -978,6 +1051,7 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
                     pts.append([round(min(max(tx, 1.0), w - 1.0), 3), round(min(max(ty, 1.0), h - 1.0), 3)])
                 tsl = next(s_ for s_ in raw["partition_types"][P.parts[part]["type"]]["ft_slots"] if s_["name"] == slot)
                 k0 = int(tsl.get("stations", 1))
+                pts = dodge_cores(raw["partition_types"][P.parts[part]["type"]], pts)
                 tsl["regs_um"] = pts
                 tsl["stations"] = len(pts)
                 tsl.pop("bit_sites_um", None)

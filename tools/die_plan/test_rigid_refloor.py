@@ -202,3 +202,18 @@ def test_stale_die_relays_dropped_when_wavefront_parent_changes(monkeypatch):
     monkeypatch.setattr(RT, "wf_solve", lambda P: dict(parent={"B": ("A", 3, 0.0), "D": ("B", 0, 0.0)}))
     out = RR.drop_stale_die_relays(raw)
     assert out == {"D": ["C", 1, "B", 0]} and list(raw["reset"]["die_relays"]) == ["B"]
+
+
+def test_pack_treats_kept_windows_as_obstacles():
+    class _P:
+        ports = {"k": dict(src=dict(part="A"), dst=dict(part="B")), "m": dict(src=dict(part="A"), dst=dict(part="B"))}
+    rows = [dict(id="k", ends=["A", "B"], face="E", status="KEEP-A", old=[0.0, 100.0], new=[10.0, 110.0],
+                 lo=0.0, hi=300.0),
+            dict(id="m", ends=["A", "B"], face="E", status="SLIDE", old=[120.0, 220.0], new=[20.0, 120.0],
+                 lo=0.0, hi=300.0)]
+    RR._pack(rows, _P(), 1.2)
+    assert rows[1]["status"] == "SLIDE" and rows[1]["new"][0] >= 111.2      # stepped over the kept window
+    rows[1].update(status="SLIDE", new=[20.0, 120.0], hi=200.0)
+    rows[0]["hi"] = 200.0
+    RR._pack(rows, _P(), 1.2)
+    assert rows[1]["status"] == "NO-ROOM"                                     # no room left beside it
