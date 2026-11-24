@@ -1730,7 +1730,22 @@ def tag_units(tag, d=None):
     return sorted({r["unit"] for r in _status_records(d) if r.get("name") == m.group(1) and re.fullmatch(r"oth-[A-Za-z0-9_-]+", str(r.get("unit") or ""))})
 
 
-def cancel_unit(sub, run=None, fleet=None):
+def unit_ended(run, fleet, unit):
+    """CANCEL-REPORT-1124: [(host, 'ActiveState/Result')] of the hosts whose systemd still knows UNIT as ended (inactive / failed): a scope that already
+    stopped (its client's SIGTERM, or a stop moments ago) before ot-heavy-stop looked"""
+    out = []
+    for h in fleet:
+        try:
+            r = _host_run(run, h, f"systemctl --user show -p LoadState -p ActiveState -p Result {shlex.quote(unit)} 2>/dev/null")
+        except (OSError, subprocess.SubprocessError):
+            continue
+        kv = dict(ln.split("=", 1) for ln in (r.stdout or "").splitlines() if "=" in ln)
+        if kv.get("LoadState") == "loaded" and kv.get("ActiveState") in ("inactive", "failed"):
+            out.append((h, f"{kv.get('ActiveState')}/{kv.get('Result') or '?'}"))
+    return out
+
+
+def cancel_unit(sub, run=None, fleet=None, after_client=None):
     run = run or subprocess.run
     """CANCEL-LABEL-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 4: 3 of 31 cancels had no ot-run client): a job with no local client is cancelled by its EXACT unit (oth-...) or client tag prefix
     (otrun-<host>-<pid>-): every fleet host runs `ot-heavy-stop --unit|--tag`, which stops the scope and every container labelled with it, re-checks it is gone and docker kills what is left.
@@ -1759,6 +1774,15 @@ def cancel_unit(sub, run=None, fleet=None):
         print(f"ot-run --cancel: STILL RUNNING after stop and kill on {bad}")
         return 3
     if not found:
+        # CANCEL-REPORT-1124 (COORD: epyc9 oth-ubuntu-3316149-1795553941 / -727906-1795557807 were cancelled, DIED with the signal in their logs, yet
+        # the cancel said "nothing found"): the scope had already ended (its client's SIGTERM came first) -> say what was stopped, rc 0
+        ended = unit_ended(run, fleet, sub) if flag == "--unit" else []
+        if after_client or ended:
+            how = f"after SIGTERM to its client(s) {after_client}" if after_client else "before ot-heavy-stop looked"
+            where = ", ".join(f"{h} ({st})" for h, st in ended) or "every fleet host (no scope left)"
+            print(f"ot-run --cancel: CANCELLED {sub}: its scope had already ended {how}; ended on {where}")
+            log_signal(f"--cancel {sub!r} by pid {os.getpid()} parent {sender(os.getppid())}: already ended on {where} ({how})")
+            return 0
         print(f"ot-run --cancel: nothing found for {sub!r} on any fleet host (already gone, or never started)")
         return 1
     log_signal(f"--cancel {sub!r} (no client) by pid {os.getpid()} parent {sender(os.getppid())}: stopped on {found}")
@@ -1990,7 +2014,7 @@ def cancel(sub, all_dirs, reason="manual"):
     # FLEET-WATCH-R5 11-21 (OPUS-FIX-HEAD-LEP0N-R4 BUG: --cancel <unit> reached only STALE clients, scope + dpkit containers kept running): an exact unit / client tag is also stopped by its own scope
     # on every fleet host (ot-heavy-stop --unit|--tag), and the cancel is non-zero while a scope is still active
     if re.fullmatch(r"oth-[A-Za-z0-9_-]+|otrun-[A-Za-z0-9_.-]+-\d+-(\d+)?", sub) and not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
-        if cancel_unit(sub) == 3:
+        if cancel_unit(sub, after_client=sorted(hit)) == 3:
             return 3
     return 0
 
