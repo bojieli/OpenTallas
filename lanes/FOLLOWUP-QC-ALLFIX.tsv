@@ -1,0 +1,20 @@
+item	owner	status	pre	strict	lat	g0	probe	last_mention	age_min	flag
+b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF 	COMPOSING	COMPOSING	pending	b25: err0	-	b25: PASS	-	QC-V4	3	-
+x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	COMPOSING	COMPOSING	census PASS	-	-	-	-	QC-ALLFIX	10	-
+rc99 cb NK lockup (row A + HB4 rev5, in C4)	PROBE-PENDING	PROBE-PENDING	-	-	-	-	-	QC-ALLFIX	10	-
+rc101 cb landing piles (CB-1 + STREET, in C4)	PROBE-PENDING	PROBE-PENDING	-	-	-	-	-	QC-ALLFIX	10	-
+rc107/rc109 coll g_pf + shr_p_rx_i (pkg15, in C4)	QC-ALLFIX-COLL	QC-ALLFIX-COLL	-	-	-	-	-	QC-ALLFIX	10	-
+coll_core 80 clock-open reset copies	QC-ALLFIX-COLL	QC-ALLFIX-COLL	-	-	-	-	-	QC-V4	3	-
+SLE CTL B_TW bank spread	QC-ALLFIX-COLL	QC-ALLFIX-COLL	-	-	-	-	-	QC-ALLFIX	10	-
+SLE CTL clock entry reconciliation	QC-ALLFIX-COLL	QC-ALLFIX-COLL	-	-	-	-	-	QC-ALLFIX	10	-
+rc105 su_c street + su_c re-floor	QC-ALLFIX-SU	QC-ALLFIX-SU	-	-	-	-	-	QC-ALLFIX	10	-
+SU-2 (6c198f9a7419)	QC-ALLFIX-SU	QC-ALLFIX-SU	-	-	-	-	-	QC-ALLFIX	10	-
+RED +2	QC-ALLFIX-SU	QC-ALLFIX-SU	-	-	-	-	-	QC-ALLFIX	10	-
+rc103 su_l1 tap affinity	QC-ALLFIX-SU	QC-ALLFIX-SU	-	-	-	-	-	QC-ALLFIX	10	-
+hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (RHI rows)	QC-ALLFIX-SU (+CLASS-FIX-RHI)	QC-ALLFIX-SU (+CLASS	-	-	-	-	-	-	1	-
+RSN FLT u_lpad_flt_su_c_i.q[0] -97.79	QC-V4 keeps: kit tools bug (1-	QC-V4 keeps: kit too	-	-	-	-	-	QC-V4	6	-
+F16 auth transport + TTCTLM f5 constructor	QC-ALLFIX building	QC-ALLFIX building	-	-	-	-	-	QC-V4	3	-
+TTCTLM placement (BAD, CTS -200.7)	QC-ALLFIX	QC-ALLFIX	-	-	-	-	-	QC-V4	3	-
+rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	QC-ALLFIX (+FAM-QC-HCST-R3)	QC-ALLFIX (+FAM-QC-H	-	-	-	-	-	QC-ALLFIX	10	-
+rc94 STA-1 seat / rc98 SEAT-1c pinreg / hg-QC-IO-BOUNDARY	QC-ALLFIX	QC-ALLFIX	-	-	-	-	-	QC-ALLFIX	10	-
+x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	QC-V4 kit running	QC-V4 kit running	-	-	-	-	-	QC-V4	6	-
