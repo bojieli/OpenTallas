@@ -27,3 +27,22 @@ def test_summary_counts_lanes_from_check_hops(monkeypatch, tmp_path):
     out = A.findings({}, str(tmp_path / "p.json"))
     assert out[-1].startswith("WARN ADV-G0-HOPS summary 2 lane(s) with a hop over reach (2 ERROR(s); worst +128 um) of 3 lanes")
     assert "L1" in out[0]
+
+
+def test_bit_lines_report_per_bit_over_reach(monkeypatch):
+    import types
+    import die_hop_scan as D
+    slot = dict(name="ft0", stations=2, bit_sites_um=[[[300.0, 0.0], [300.0, 500.0]]], bit_site_cell_um=[0.0, 0.0])
+    P = types.SimpleNamespace(types={"T": {"ft_slots": [slot]}}, reach=405.0)
+    pins = {"ft0_i": {0: (0.0, 0.0, "W"), 1: (0.0, 0.0, "W")}, "ft0_o": {0: (600.0, 0.0, "E"), 1: (600.0, 0.0, "E")}}
+    monkeypatch.setattr(D, "pin_table", lambda P, tn: pins)
+    monkeypatch.setattr(D, "normal_slot", lambda P, tn, sn: True)
+    monkeypatch.setattr(D, "input_site", lambda p: (p[0], p[1]))
+    out = A.bit_lines(P)
+    assert out[0].startswith("WARN ADV-G0-HOPS BIT type T slot ft0: bit 1 hop 0 is 800 um > reach 405")
+    assert "1 ft slot(s) with a per-bit hop over reach (worst 800 um) of 1 checked / 1 ft slots; report only" in out[-1]
+
+
+def test_bit_lines_off(monkeypatch):
+    monkeypatch.setenv("OT_ADV_G0_HOPS_BIT_S", "0")
+    assert A.bit_lines(None)[0] == "WARN ADV-G0-HOPS bit summary off (OT_ADV_G0_HOPS_BIT_S=0)"
