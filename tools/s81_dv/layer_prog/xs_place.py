@@ -249,7 +249,8 @@ def op_groups(fx, op):
         return out
     if op == 'ffn.down':
         out = []
-        for e in ['shared'] + [f'exp{e}' for e in exps]:
+        # a weights-only stage fixture of an expert-only stage (stage_fixtures.py: meta.shared False) holds no shared expert
+        for e in (['shared'] if m.get('shared', True) else []) + [f'exp{e}' for e in exps]:
             n2 = f'{e}.w2'
             rows = list(range(fx.w(n2).shape[0]))
             xop = 'ffn.shared.swiglu' if e == 'shared' else f'ffn.experts.{e[3:]}.route_w'
@@ -847,12 +848,22 @@ def load_die(a):
     return die
 
 
+def fixture_ops(fixd):
+    """The frame's op list of a golden layer fixture (the L0 default)."""
+    return XS_OPS['L0'] + BF_OPS['L0']
+
+
 def cmd_frame(a):
+    if json.loads((Path(a.fixtures) / 'meta.json').read_text()).get('weights_only'):
+        # ROM-WEIGHTS-1119: a weights-only STAGE fixture (stage_fixtures.py) compiles on the stage map of record: its
+        # ops / experts / DENSE2 half / release env come from stage_map.json (stage_images.frame_cli)
+        import stage_images as SI
+        return SI.frame_cli(a)
     import xs_capacity as XCAP   # S81-ROMOPT-B: the die compile refuses a stage map that overfills the ROM / cfg7
     if XCAP.enabled():
         XCAP.verdict(stage=os.environ.get("OT_XS_STAGE"))
     die = load_die(a)
-    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or XS_OPS['L0'] + BF_OPS['L0'], iters=a.iters,
+    rec, field = compile_frame(die, a.frame, a.fixtures, a.ops or fixture_ops(a.fixtures), iters=a.iters,
                                only=None if a.only is None else set(a.only))
     if getattr(a, 'bound_data', None):
         rec['die_source'] = die.die_source
