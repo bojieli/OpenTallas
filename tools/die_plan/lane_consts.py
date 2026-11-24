@@ -108,22 +108,23 @@ def select_lanes(lanes, c):
     return []
 
 
-def _from_param_regen(c, bind_dir):
+def _from_param_regen(c, bind_dir, param_regen):
     pr = c["param_regen"]
     r = dict(law=f"param_regen {pr['param']}" + (f" inst~{pr['inst_re']}" if pr.get("inst_re") else ""), why=c.get("why"))
-    p = Path(bind_dir) / "param_regen.json" if bind_dir else None
-    if not p or not p.is_file():
-        return dict(r, value=None, status="UNMEASURED", note="no --bind dir with param_regen.json")
-    d = json.loads(p.read_text())
+    if param_regen is None:
+        p = Path(bind_dir) / "param_regen.json" if bind_dir else None
+        if not p or not p.is_file():
+            return dict(r, value=None, status="UNMEASURED", note="no --bind dir with param_regen.json")
+        param_regen = json.loads(p.read_text())
     rx = re.compile(pr.get("inst_re", ".*"))
-    vals = sorted({int(x["bound"]) for x in d.get("changed", []) if x.get("param") == pr["param"] and rx.fullmatch(str(x.get("inst", "")))
+    vals = sorted({int(x["bound"]) for x in param_regen.get("changed", []) if x.get("param") == pr["param"] and rx.fullmatch(str(x.get("inst", "")))
                    and str(x.get("bound", "")).lstrip("-").isdigit()})
     if len(vals) == 1:
         return dict(r, value=vals[0], status="OK", lanes=[f"param_regen:{pr['param']}"])
     return dict(r, value=None, status="SPLIT" if vals else "UNMEASURED", delivered=vals or None)
 
 
-def derive(die, lanes, reg, latcheck=None, sha=None, bind_dir=None):
+def derive(die, lanes, reg, latcheck=None, sha=None, bind_dir=None, *, param_regen=None):
     die = die_name(die)
     out = {}
     rows = [c for c in reg.get("consts", []) if die_name(c["die"]) == die]
@@ -131,7 +132,7 @@ def derive(die, lanes, reg, latcheck=None, sha=None, bind_dir=None):
         if "expr" in c:
             continue
         if "param_regen" in c:                       # the bind hook's regenerated RTL value (BIND_DIR/param_regen.json)
-            out[c["name"]] = _from_param_regen(c, bind_dir)
+            out[c["name"]] = _from_param_regen(c, bind_dir, param_regen)
             continue
         hit = select_lanes(lanes, c)
         vals = sorted({x.get("delivered") for x in hit if x.get("delivered") is not None})
@@ -345,11 +346,11 @@ def fixed_census(plan, lanes):
     return rows
 
 
-def report_latency_packages(plan_path, packages):
-    """Compare a generated latency package header with its plan's generator digest."""
+def latency_packages(plan, packages):
+    """Read generated latency package headers using the generator's digest convention."""
     from gen import plan_digest
 
-    expected = plan_digest(json.loads(plan_path.read_text()))
+    expected = plan_digest(plan)
     for package in packages:
         try:
             if package.suffix == ".json":
@@ -359,10 +360,29 @@ def report_latency_packages(plan_path, packages):
                     header = source.readline()
                 match = re.search(r"\bplan digest ([0-9a-f]{16})\b", header)
                 observed = match[1] if match else None
-        except (OSError, ValueError):
+        except (OSError, ValueError, AttributeError):
             observed = None
         verdict = "LATPKG-MATCH" if observed == expected else "LATPKG-STALE"
-        print(f"{verdict} {package} plan={expected} package={observed or 'UNKNOWN'}")
+        yield dict(path=str(package), plan_digest=expected, package_digest=observed, verdict=verdict)
+
+
+def canonical_latency_packages(plan, tree):
+    die = plan["die"]["name"]
+    directory = Path(tree) / "physical" / "die_plan" / die
+    packages = [directory / name for name in (f"{die}_lat_pkg.sv", f"{die}_latency.json")]
+    return list(latency_packages(plan, (p for p in packages if p.is_file())))
+
+
+def format_latency_package(row):
+    return (f"{row['verdict']} {row['path']} plan={row['plan_digest']} "
+            f"package={row['package_digest'] or 'UNKNOWN'}")
+
+
+def report_latency_packages(plan_path, packages):
+    plan = json.loads(plan_path.read_text())
+    for row in latency_packages(plan, packages):
+        print(format_latency_package(row))
+
 
 
 def main(argv=None):

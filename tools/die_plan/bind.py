@@ -6769,8 +6769,20 @@ def cmd_bind(a):
         import lane_asbuilt_latency as LAL
         la_recs, la_errs = LAL.bind_check(B, out, lat)
         la_sum = LAL.summary(la_recs)
-        _fresh_write_text(out / "bind_lane_asbuilt.json", json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n")
+        receipt = out / "bind_lane_asbuilt.json"
+        receipt_text = json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n"
+        _fresh_write_text(receipt, receipt_text)
         rep["lane_asbuilt"] = la_sum
+        import lane_consts
+        measured = lane_consts.derive(raw["die"]["name"], la_recs, lane_consts.load_registry(), receipt,
+                                      hashlib.sha256(receipt_text.encode()).hexdigest(), param_regen=B.param_regen or {})
+        if measured["consts"]:
+            rep["lane_consts"] = measured
+        packages = lane_consts.canonical_latency_packages(raw, B.base)
+        if packages:
+            rep["latency_packages"] = packages
+            for package in packages:
+                print(lane_consts.format_latency_package(package))
         B.errors.extend(la_errs)
         ip_warn, ip_info = LAL.internal_pipe_check(raw, out)      # S81-COLGEN-3: relay_depth cycles: WARNING naming S81-DIE-R3
         if ip_info:

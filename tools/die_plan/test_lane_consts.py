@@ -169,3 +169,22 @@ def test_latency_package_report_uses_generator_digest(tmp_path, capsys):
     lines = capsys.readouterr().out.splitlines()
     assert lines[0].startswith(f"LATPKG-MATCH {package} plan={expected}")
     assert lines[1].startswith(f"LATPKG-STALE {old_package} plan={expected}")
+
+
+def test_bind_uses_current_param_regen_and_canonical_package_paths(tmp_path):
+    from gen import plan_digest
+
+    plan = {"die": {"name": "qwen_kvsys"}}
+    root = tmp_path / "physical" / "die_plan" / "qwen_kvsys"
+    root.mkdir(parents=True)
+    (root / "qwen_kvsys_lat_pkg.sv").write_text("// generated plan digest 0000000000000000.\n")
+    (root / "qwen_kvsys_latency.json").write_text(json.dumps({"plan_digest": plan_digest(plan)}))
+    assert [row["verdict"] for row in LC.canonical_latency_packages(plan, tmp_path)] == ["LATPKG-STALE", "LATPKG-MATCH"]
+    assert LC.canonical_latency_packages(plan, root) == []
+
+    (tmp_path / "param_regen.json").write_text(json.dumps({"changed": [{"param": "RESPONSE_LAT", "bound": 49}]}))
+    args = ("qwen_kvsys", [], LC.load_registry(), tmp_path / "bind_lane_asbuilt.json", "sha256", tmp_path)
+    current = {"changed": [{"param": "RESPONSE_LAT", "bound": 41}]}
+    assert LC.derive(*args)["consts"]["RESPONSE_LAT"]["value"] == 49
+    assert LC.derive(*args, param_regen=current)["consts"]["RESPONSE_LAT"]["value"] == 41
+    assert LC.derive(*args, param_regen={})["consts"]["RESPONSE_LAT"]["status"] == "UNMEASURED"
