@@ -18,3 +18,7 @@ GOAL: FABLE-RC-KV 331a59eb item 2: KV forwarded landing clock (fclk) <= 330 ps o
 - 4 sign-offs enqueued to AUTO-EXPORT spool on epyc11 (b21f134c, 85099792, 3a5b50de, fa3ffcdb).
 - Open offer to FABLE-RC-KV: w1560_ew (208.4, < 330 but audit 200 rule FAIL on 11 hgi rows) re-harden with same recipe on request.
 - Next: answer KV-ALLFIX compose questions; re-run row on A2h/newer base if asked (order-independent).
+## State 20:2x PST: v2 posted (hub c270adbf)
+- FABLE-RC-KV accepted FWDCLK (833b29ed). w1560_ew rebuild cancelled (COORD 20:1x: 200 ps fclk rule wrong, FLOW-OPS -> 330).
+- v2 = ROWS_KV-OPEN-FWDCLK-HUBCTAP.py 98de46da0ec2 (hub_C core_taps early, 61 rows re-measured, 8 unmeasured to type tree). On A2g+FWDCLK+HUBCTAP dac02dd8ae1f: PRE PASS 0, audit FAIL rows 11 (w1560 200-rule only).
+- Partial fork dir deleted (ot-delete). Lane done unless KV-ALLFIX asks for a re-run on a newer base.
