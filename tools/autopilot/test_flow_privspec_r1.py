@@ -286,6 +286,8 @@ def chain_fixture(tmp_path, monkeypatch, probe=None, receipt=None, proc_rcs=(0,)
             return 0, "AP_JSON " + json.dumps(p) + "\n"
         if stage == "chain_receipt":
             return 0, "KW_CHAIN_RECEIPT " + json.dumps(rc_rcpt) + "\n"
+        if stage == "chain_export":
+            return 0, 'AP_JSON {"queued": "/host/spool/record.json"}\n'
         return 0, ""
     rcs = list(proc_rcs)
 
@@ -322,6 +324,48 @@ def test_chain_signs_off_with_the_autopilot_submit_argv(tmp_path, monkeypatch):
     assert [w[w.index("--stage") + 1] for w in waits] == ["cts", "grt", "route"]
     assert all(w[w.index("--host") + 1] == "epyc9" and "--kit" in w for w in waits)
     assert completed["cts"] == completed["grt"] == completed["route"] == completed["chain"] == 0
+
+
+def test_private_chain_enqueues_on_the_permanent_kit_host(tmp_path, monkeypatch):
+    chain = {"verdict": "PASS", "path": "/srv/w/items/t/gen/t/autopilot_chain_1.json",
+             "signoff": "/srv/w/items/t/gen/t/signoff/signoff.json"}
+    sp, res, out, run, fail, popen, wait, calls, *_ = chain_fixture(tmp_path, monkeypatch, receipt={"chain": chain})
+    monkeypatch.setenv("OT_AUTO_EXPORT", "1")
+    assert KW.private_chain(sp, res, out, "route", run, fail, {}, popen=popen, wait=wait) == 0
+    assert res["stage"] == "signoff" and res["auto_export"]["queued"] == "/host/spool/record.json"
+    stage, argv = calls[-1]
+    assert stage == "chain_export" and "epyc9" in argv and chain["path"] in argv[-1]
+
+
+def test_host_spool_checks_returned_private_proof(tmp_path):
+    import autopilot as AP
+    kit = tmp_path / "kit"
+    base = kit / "run"
+    so = kit / "signoff" / "signoff.json"
+    proof = kit / "lec_routed_autopilot_1" / "lec.json"
+    for d in [base, so.parent, proof.parent]:
+        d.mkdir(parents=True)
+    for fn in ["6_final.v", "6_final.odb"]:
+        p = base / fn
+        p.touch()
+        os.utime(p, (10, 10))
+    so.write_text(json.dumps({"profile": "minimal", "verdict": "SIGNED", "inputs": {"base": str(base)}}))
+    proof.write_text(json.dumps({"verdict": "EQUIVALENT", "superset_vec": {"all_shown": True}}))
+    log = proof.with_name("lec.log")
+    log.touch()
+    receipt = kit / "autopilot_chain_1.json"
+    receipt.write_text(json.dumps({"started": 100, "goal": "route", "verdict": "PASS", "gates": {"routed_lec": "PASS"},
+                                  "lec_verdict": "EQUIVALENT", "lec_exit": 0, "lec_all_shown": True, "signoff": str(so),
+                                  "netlist": str(base / "6_final.v"), "lec": str(proof)}))
+
+    def probe(spool, launched=90):
+        args = {"chain": str(receipt), "kit": str(kit), "goal": "route", "launched": launched, "spool": str(spool)}
+        return json.loads(subprocess.check_output([sys.executable, "-I", "-c", AP.PROBE_AUTO_EXPORT, json.dumps(args)], text=True)[8:])
+
+    assert json.loads(Path(probe(tmp_path / "spool")["queued"]).read_text())["signoff"] == str(so)
+    assert "did not prove" in probe(tmp_path / "old", launched=101)["error"]
+    os.utime(log, (1, 1))
+    assert "stale" in probe(tmp_path / "stale")["error"] and not (tmp_path / "stale").exists()
 
 
 def test_chain_stage_fail_and_not_signed(tmp_path, monkeypatch):

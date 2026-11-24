@@ -1111,12 +1111,47 @@ done()
 
 PROBE_AUTO_EXPORT = r'''
 import hashlib, json, os, socket, sys, time
+from pathlib import Path
+
+def checked_private_signoff(a):
+    kit = Path(a["kit"]).resolve()
+    def contained(path):
+        p = Path(path).resolve()
+        if not p.is_relative_to(kit):
+            raise ValueError("private sign-off evidence is outside the returned kit")
+        return p
+    chain = json.loads(contained(a["chain"]).read_text())
+    if (chain.get("started", 0) < a["launched"] or chain.get("goal") != a["goal"] or
+            chain.get("verdict") != "PASS" or (chain.get("gates") or {}).get("routed_lec") != "PASS" or
+            chain.get("lec_exit") != 0 or chain.get("lec_verdict") != "EQUIVALENT" or
+            chain.get("lec_all_shown") is not True):
+        raise ValueError("returned chain did not prove this route")
+    so = contained(chain["signoff"])
+    raw = so.read_bytes()
+    physical = json.loads(raw)
+    base = contained(physical["inputs"]["base"])
+    netlist = contained(chain["netlist"])
+    if netlist != base / "6_final.v":
+        raise ValueError("returned proof names a different routed netlist")
+    lec = contained(chain["lec"])
+    proof = json.loads(lec.read_text())
+    if proof.get("verdict") != "EQUIVALENT" or (proof.get("superset_vec") or {}).get("all_shown") is not True:
+        raise ValueError("returned routed LEC did not pass")
+    latest_route = max(netlist.stat().st_mtime_ns, (base / "6_final.odb").stat().st_mtime_ns)
+    if min(lec.stat().st_mtime_ns, lec.with_name("lec.log").stat().st_mtime_ns) <= latest_route:
+        raise ValueError("returned routed LEC is stale")
+    return str(so), raw, physical
+
 a = json.loads(sys.argv[1]); out = {}
-so = a["signoff"] if os.path.isfile(a["signoff"]) else a.get("fallback")
 try:
-    raw = open(so, "rb").read(); rec = json.loads(raw)
+    if a.get("chain"):
+        so, raw, rec = checked_private_signoff(a)
+    else:
+        so = a["signoff"] if os.path.isfile(a["signoff"]) else a.get("fallback")
+        raw = open(so, "rb").read(); rec = json.loads(raw)
     if rec.get("profile") == "minimal" and rec.get("verdict") == "SIGNED":
-        sha = hashlib.sha256(raw).hexdigest(); sp = os.path.expanduser("~/.local/state/ot-auto-export/spool")
+        sha = hashlib.sha256(raw).hexdigest()
+        sp = a.get("spool") or os.path.expanduser("~/.local/state/ot-auto-export/spool")
         os.makedirs(sp, exist_ok=True)
         row = dict(schema="opentallas.auto_export.spool.v1", signoff=os.path.realpath(so), record=sha, host=socket.gethostname(),
                    name=rec.get("name"), generated=rec.get("generated"), queued=time.strftime("%Y-%m-%dT%H:%M:%S%z"),

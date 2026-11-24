@@ -10052,6 +10052,7 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
         res["stage"] = "chain"
         print(f"KW_STAGE chain {now_s()} :: goal {g} attempt {attempt} on {kh} :: {' '.join(shlex.quote(a) for a in argv[:14])} ...", flush=True)
         with open(live, "w") as lf:
+            launched = time.time()         # the returned chain receipt uses the execution host's clock
             proc = popen(argv, stdout=lf, stderr=subprocess.STDOUT, env=chain_env(lane))
         failed_stage = ""
         for st in stages:
@@ -10106,6 +10107,20 @@ def private_chain(sp, res, out, goal, run, fail, completed, popen=subprocess.Pop
         except Exception as e:                           # noqa: BLE001 - a provenance problem never turns a sign-off into a FAIL
             res["provenance"] = {"verdict": "ERROR", "why": f"{type(e).__name__}: {e}"[:300]}
             print(f"KW_PROVENANCE ERROR {res['provenance']['why']}", flush=True)
+        if chain.get("path") and chain.get("signoff") and os.environ.get("OT_AUTO_EXPORT", "1") != "0":
+            # The sealed runner's HOME is read-only. Queue on the permanent kit host only after
+            # the runner has returned and the exact physical sign-off and routed LEC are readable there.
+            args = {"kit": K, "chain": chain["path"], "goal": g, "launched": launched - 10,
+                    "die": sp["die"], "element": sp["item"], "spool": os.environ.get("OT_AUTO_EXPORT_SPOOL")}
+            try:
+                _, etxt = run("chain_export", remote(f"python3 -I - {shlex.quote(json.dumps(args))} <<'KWEXPORT'\n{AP.PROBE_AUTO_EXPORT}\nKWEXPORT"),
+                              timeout=120, idempotent=True)
+                rows = [line[8:] for line in (etxt or "").splitlines() if line.startswith("AP_JSON ")]
+                export = json.loads(rows[-1]) if rows else {"error": "build host returned no export receipt"}
+            except Exception as e:                         # upstream sign-off is still complete
+                export = {"error": f"{type(e).__name__}: {e}"[:200]}
+            res.update(stage="signoff", auto_export=export)
+            print("KW_AUTO_EXPORT " + (export.get("queued") or "not queued: " + str(export.get("error") or "?")), flush=True)
         (out / "result.json").write_text(json.dumps(res, indent=1))
         print(f"KW_CHAIN SIGNED {sp['die']}/{sp['item']} on {kh}:{K}", flush=True)
         return 0
