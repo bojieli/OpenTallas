@@ -115,3 +115,4 @@
   - KV A5t3 dry run (partial what-ifs): 1461 repoints (181 measured-ok, 37 NEEDS-SENDER, 1243 UNMEASURED), 6 core-tap follows.
   - What-ifs on all 31 KV CTS kits finish ~03:50. Then the final row, ENTRYFOOT check, PRE, and strict bind in my launch tree on A5t3. Target A5t5.
 - 2026-11-24 03:57 PST DONE [KV-HG-CAP] ot-run oth-ubuntu-3571705-1795521093 on viable-ram: rc=0 after 348 s, ended 11:57:19, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_hg
+- 2026-11-24 03:59 PST DONE [KV-HG-CAP] ot-push-main otpush-tolerant-swine-3591878 on tolerant-swine: rc=0 after 24 s, ended 03:59:44, log none, cmd: ot-push-main 
