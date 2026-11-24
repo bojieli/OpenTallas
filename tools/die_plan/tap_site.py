@@ -17,6 +17,7 @@ gen_phys applies rekey to its working copy before anything reads these tables; w
 
 CLI:  tap_site.py stamp PLAN --out OUT [--types a,b]   stamp each type's current grid (tables assumed to match it NOW)
       tap_site.py rekey PLAN --out OUT [--types a,b]   re-key stamped tables to the current grid and re-stamp
+                  [--baseline BASE]                  = stamp --baseline BASE (unstamped types) then rekey, in one pass
       tap_site.py check PLAN [--types a,b]             report only (exit 0)
       tap_site.py diff PLAN --baseline BASE [--types]  report only: per type, every tap name present in BOTH grids whose site moved
                                                       > TOL_UM, and the name-keyed tables of PLAN that reference it (gate-post line)
@@ -237,6 +238,25 @@ def diff_plans(raw, plan_path, braw, base_path, types=None, tol=TOL_UM):
     return rows, unev
 
 
+def stamp_from_baseline(raw, braw, base_path, types=None, force=False):
+    """stamp every type of raw that has name-keyed tables (and no stamp, unless force) with its tap sites in the BASELINE plan
+    (the grid its rows were written on) -> number of types stamped.  A type absent from / not evaluable in the baseline is left."""
+    PB = _plan(braw, base_path)
+    n = 0
+    for tn in sorted(raw.get("partition_types") or {}):
+        if (types and tn not in types) or not type_tables(raw, tn) or tn not in (braw.get("partition_types") or {}):
+            continue
+        if _stamped(raw, tn) is not None and not force:
+            continue
+        try:
+            _plandir(base_path)
+            stamp_type(raw, tn, current_sites(PB, braw, tn))
+            n += 1
+        except Exception as e:  # noqa: BLE001
+            print(f"TAPKEY-SITE baseline stamp {tn}: grid not evaluable ({type(e).__name__}), left unstamped", file=sys.stderr)
+    return n
+
+
 def needs_rekey(raw):
     return any(isinstance((t.get("clock") or {}).get(STAMP), dict) for t in (raw.get("partition_types") or {}).values())
 
@@ -271,6 +291,10 @@ def main(argv=None):
                   f"(worst {r['moved'][0][0]} {r['moved'][0][1]:.0f} um); {len(refd)} referenced by name-keyed tables, "
                   f"{r['carried']} of them with a row value carried unchanged from the baseline: "
                   + " ".join(f"{q}({','.join(sorted(set(t)))})" for q, _d, t in refd[:10]))
+        if types:
+            for r in rows:
+                print(f"TYPE\t{r['type']}\tcommon {r['common']}, moved {len(r['moved'])}, new {r['new']}, gone {r['gone']}, "
+                      + ", ".join(f"{k} {v} rows" for k, v in r["tables"].items()))
         for tn, why in unev:
             print(f"NOT-EVALUABLE\t{tn}\t{why}")
         print(f"SUMMARY\ttypes {len(rows)} evaluated, {len(unev)} not evaluable; {nm} types with moved tap names, "
@@ -293,9 +317,31 @@ def main(argv=None):
     if not a.out:
         ap.error("--out is required for stamp / rekey")
     out = copy.deepcopy(raw)
+    if a.baseline and a.mode in ("stamp", "rekey"):
+        # tables written on the BASELINE grid and never stamped: stamp each with the baseline sites of its type
+        n = stamp_from_baseline(out, json.loads(Path(a.baseline).read_text()), a.baseline, types, force=(a.mode == "stamp"))
+        print(f"TAPKEY-SITE stamp --baseline: {n} types stamped with {a.baseline} sites", file=sys.stderr)
+        if a.mode == "stamp":
+            Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
+            return 0
+        P = _plan(out, a.plan)
     if a.mode == "rekey":
-        rekey_plan(out, a.plan, types, P=P)
-    else:
+        _plandir(a.plan)
+        reps = rekey_plan(out, a.plan, types, P=P)
+        tot = {}
+        for r in reps:
+            for k, v in r["tables"].items():
+                t = tot.setdefault(k, [0, 0, 0])
+                t[0] += v["renamed"]
+                t[1] += v["dropped"]
+        kept = 0
+        for r in reps:
+            for label, box, key, form in type_tables(out, r["type"]):
+                kept += len(box[key])
+        print(f"TAPKEY-SITE rekey: {len(reps)} stamped types, {sum(r['renamed'] for r in reps)} stamped taps renamed, "
+              f"{sum(len(r['unsited']) for r in reps)} unsited; rows: " + "; ".join(f"{k} {v[0]} re-keyed / {v[1]} dropped" for k, v in sorted(tot.items()))
+              + f"; {kept} rows after", file=sys.stderr)
+    elif a.mode == "stamp":
         for tn in sorted(out.get("partition_types") or {}):
             if types and tn not in types:
                 continue

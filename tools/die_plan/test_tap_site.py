@@ -81,3 +81,23 @@ def test_rekey_plan_skips_unevaluable_grid():
 def test_adv_tapkey_site_never_raises():
     import adv_tapkey_site as A
     assert A.findings(None, "p")[0].startswith("WARN ADV-TAPKEY-SITE")
+
+
+def test_stamp_from_baseline_then_rekey_renumber(monkeypatch):
+    import types as _ty
+    grids = {"base": [("clk", 0.0, 0.0)] + [(n, x, y) for n, (x, y) in OLD.items()],
+             "cur": [("clk", 0.0, 0.0)] + [(n, x, y) for n, (x, y) in NEW.items()]}
+
+    class _P:
+        def __init__(self, raw, path):
+            self.tag = raw["tag"]
+    monkeypatch.setitem(sys.modules, "schema", _ty.SimpleNamespace(Plan=_P, tap_grid=lambda P, tn: grids[P.tag]))
+    raw = _plan()
+    del raw["partition_types"]["A"]["clock"]["tap_sites_um"]           # c8 case: rows never stamped
+    raw["tag"] = "cur"
+    base = {"tag": "base", "partition_types": {"A": {"clock": {}}}}
+    assert TS.stamp_from_baseline(raw, base, "b.json") == 1
+    assert raw["partition_types"]["A"]["clock"]["tap_sites_um"]["clk_t2"] == [900.0, 10.0]
+    reps = TS.rekey_plan(raw, "p.json", log=lambda m: None)
+    assert reps[0]["renamed"] == 2 and reps[0]["unsited"] == ["clk_t2"]
+    assert raw["clock"]["tap_offset"]["per_port_ps"]["A"] == {"clk_t1": {"TT": 1}, "clk_t2": {"TT": 2}, "clk_c0": {"TT": 9}}
