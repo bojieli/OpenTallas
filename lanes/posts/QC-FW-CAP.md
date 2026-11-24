@@ -66,3 +66,4 @@
   (2) Removing the inverters adds 3.5-6k buffers, because QN now drives the long hop directly. Net gain for plain-first is -22.2k at place.
   (3) The phase 1 + phase 2 run is at place on intel1, ETA ~02:15.
   I will rebase on C1g 96cce77c1e2f, per QC-ALLFIX. ROW-REBASED follows only when a measured place is <=360k.
+- 2026-11-24 01:49 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-1965743-1795513188 on viable-ram: rc=0 after 567 s, ended 09:49:14, log /srv/opentallas-scratch2/claude/QC-FW-CAP/cH/prebase.ot, cmd: --mem 32 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/tmp/pr
