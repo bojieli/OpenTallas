@@ -20,3 +20,9 @@
 - C1h verdict FAIL: XPF records margin 23 (program T=20) vs core XPF_TRANSPORT_EDGES=21 (needs 24) -> u_go xpf_schedule_fault at seal, cf 1078. RTL@T=20 PASS (tok/r3); repriced program -> witness digest fault (tok/r2). Needs core rebuild (T match or new program + digest); ruling asked of QC-ALLFIX.
 - Recovered old harness code: epyc7 QC-F16-PRODUCER/harness_src (from epyc10 delete-manifests/2026-11-24/071108 inputs tarball); data was not kept.
 - Lane clone epyc7 QC-F16-PRODUCER/clone (branch claude/qc-f16-tt-tokbench-1124, pushed).
+
+## 11-24 04:2x TT_CTLM-REBUILD (job 3, hub e702d0c2; ruling 5df0ac68: keep program be4977f1, core at XPF=20, ALLFIX pads lanes)
+- epyc10 /srv/opentallas-scratch2/claude/QC-F16-PRODUCER/regen: regen.sh OUTDIR T (recovered gi frontend + template.ys), bench.sh NET OUT XPF MODES, lec.sh GOLD_T GATE_T OUT.
+- Recipe fidelity: t21 staged == bound 6a5f5323 byte-identical (staging = genblk10 calrom rename + INSTANCE params on 3 f5_opseg ROMs; see tmp/*.staged.sv).
+- T=20 staged netlist 43059362f4bf, at regen/bench/qfd_tt_ctlm_dv_hp13_rrloc_native32_f5_cpub39_1_t20.sv. Bench out regen/bench/t20, LEC regen/lec/{pos,neg}.
+- Still to do: post bench + LEC verdict; hand off to QC-TTC-R2; post PASS/FAIL to QC-ALLFIX + FABLE-RC-QC.
