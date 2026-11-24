@@ -26,5 +26,13 @@ class NotRun(unittest.TestCase):
         self.assertNotRegex(SRC, r"say\(f?\"ot-run: NOT RUN[^\n]*\n\s+sys\.exit\(75\)")
 
 
+def test_snapshot_declarations_are_exact_read_only_inputs():
+    prefix = "/srv/opentallas-scratch2/kit-store/snaps/" + "a" * 40
+    assert m.snapshot_stage_path(prefix + "/root/srv/opentallas-scratch2/claude/head-west/bind")
+    assert not m.snapshot_stage_path(prefix)
+    assert not m.snapshot_stage_path(prefix + "/root/etc/passwd")
+    assert not m.snapshot_stage_path(prefix + "/root/srv/opentallas-scratch2/claude/head-west/../../secret")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -2718,6 +2718,8 @@ def main():
     job = None
     rt_exempt = ""
     spill = not os.environ.get("OT_RUN_NO_SPILL")
+    no_spill_requested = False
+    snapshot_stages = []
     if "--hosts" in a[:a.index("--") if "--" in a else len(a)]:
         spill = False                      # an explicit pin is honoured as before
         _hv = a[a.index("--hosts") + 1] if a.index("--hosts") + 1 < len(a) else ""
@@ -2746,7 +2748,9 @@ def main():
             load_event_env(a.pop(0) if a else "")
         elif o == "--needs": NEEDS.extend(x for x in a.pop(0).split(",") if x)      # NEEDS_1115: input paths the chosen host must have
         elif o == "--replicate": REPLICATE.extend(x for x in a.pop(0).split(",") if x)   # NEEDS_1115: small input dirs rsynced to a host that lacks them
-        elif o == "--no-spill": spill = False
+        elif o == "--no-spill":
+            spill = False
+            no_spill_requested = True
         elif o == "--job": job = a.pop(0)
         elif o == "--stage" and copy_job:
             a.pop(0)                       # checked by ot_copy_class; never a spill / staging input (STAGE stays empty)
@@ -2754,9 +2758,13 @@ def main():
             for x in a.pop(0).split(","):
                 if not x.startswith("/"):
                     sys.exit(f"ot-run: --stage takes absolute paths ({x!r})")
-                if os.path.normpath(x) in ("/", "/srv") or SCRATCH_RE.match(os.path.normpath(x)) is None and x.startswith("/srv/"):
+                path = os.path.normpath(x)
+                if snapshot_stage_path(x):
+                    snapshot_stages.append(x)
+                elif path in ("/", "/srv") or SCRATCH_RE.match(path) is None and x.startswith("/srv/"):
                     sys.exit(f"ot-run: --stage {x!r}: name a path inside a scratch lane (/srv/opentallas-scratch*/claude/<lane>/...)")
-                STAGE.append(os.path.normpath(x))
+                else:
+                    STAGE.append(path)
         elif o == "--max-wait": max_wait = int(a.pop(0))
         elif o == "--threads": threads = int(a.pop(0))
         elif o == "--crit": os.environ["OT_RUN_CRIT"] = "1"
@@ -2773,6 +2781,12 @@ def main():
         elif o == "--rt-floor-exempt":      # FLOW-FLEET-R2 T1: keep an rt below min_rt for this plan bind (sealed / pinned tree); logged
             rt_exempt = a.pop(0) if a else ""
         else: sys.exit(__doc__)
+    if snapshot_stages:
+        if not no_spill_requested:
+            not_run("SETUP: kit-store snapshot inputs require --no-spill")
+        # A snapshot is already materialized and verified by the wave. Require
+        # the exact path on the chosen host and keep it out of transfer staging.
+        NEEDS.extend(snapshot_stages)
     if not EVENT and os.environ.get("OT_RUN_EVENT_ENV"):
         load_event_env(os.environ["OT_RUN_EVENT_ENV"])
     if job and not os.environ.get("OT_RUN_PLAN_JOB") and spec_plan_job(job):     # the job spec names the plan kind: it implies --priority plan
@@ -2899,7 +2913,7 @@ def main():
         hosts = _kept
     if EVENT:
         hosts = event_preflight(EVENT[0], hosts, cmd, d)
-    if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0 and soft_pin():   # HARD-PIN-1122
+    if _pin_only and len(hosts) == 1 and STAGE and not job and not no_spill_requested and OVERLOAD_RATIO > 0 and soft_pin():   # HARD-PIN-1122
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
@@ -3279,6 +3293,12 @@ def spill_lands_on_root(host, roots):
         return True
 NO_AVX512 = {"epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "ot-epyc7", "ot-epyc9"}                         # Zen 3: a -march=native build from Zen 4/5 would SIGILL there
 SCRATCH_RE = re.compile(r"^(/srv/opentallas-scratch[^/]*/claude/[^/]+)(/|$)")
+
+
+def snapshot_stage_path(path):
+    """True for an exact lane input embedded in a content-addressed snapshot."""
+    prefix = re.match(r"^/srv/opentallas-scratch(?:2|3)?/kit-store/snaps/[0-9a-f]{40}/root", path)
+    return path == os.path.normpath(path) and bool(prefix and SCRATCH_RE.match(path[prefix.end():]))
 
 
 def load_spill_wanted(r, threads):
