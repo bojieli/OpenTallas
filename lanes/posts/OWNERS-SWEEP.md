@@ -447,3 +447,8 @@
   UNOWNED S81 89 (col_h10_r2 pv*, dsdv_slice_*_C). DEAD-OWNER KV 34 (OPUS-FIX-KV-PV-R7 29, KV-D29 3), S81 17 (FAM-S81-SLICE-R6 13), QC 8 (QC-ALLFIX-COLL).
   STALE S81 35, QC 2. S81-OPEN-DEMAND 22:35, FAM-S81-COL-H9R0-R4 22:53, OPUS-FIX-S81-SVC-R9 23:14 are inside 2 h at 00:02 so not DEAD yet.
   Row jump 153 to 447: S81 rows 52 to 344 (held by die owner), KV 34 to 60; stages file has no history.
+- 2026-11-24 01:11 PST OWNERS-SWEEP 01:1x (446 rows); limit gap 00:44-01:05 excused, DEAD-OWNER only if silent before 23:09 and no post since resume.
+  UNOWNED 21: S81 18 (dsdv_slice_c1x_C t1/t5, c3x_C t1 ...), QC 3 (cbf_q01, cbf_q01_s2, sle_st_b_v2__clfde1249e).
+  DEAD-OWNER S81 161 (S81-OPEN-DEMAND 99 last 22:35, FAM-S81-COL-H9R0-R4 60 last 22:53), KV 35 (OPUS-FIX-KV-PV-R7 29 last 20:58, KV-D29 4), QC 1.
+  STALE S81 35, QC 2. No FAILED-NO-RELAUNCH, HEAD clean.
+  Silent before the limit, so not a limit casualty.
