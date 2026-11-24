@@ -317,6 +317,77 @@ class RowsProof(unittest.TestCase):
         self.assertEqual(rec["rows_proofs"], ["plan_of_record/zz.rows_proof.json"])
 
 
+class RemapBaseAndNativeReceipt(unittest.TestCase):
+    """HEAD-S2-RESEAL 11-23: candidate.remap_base reaches PRE only (G0 --band-base keeps the live plan); candidate.native_reset_receipt
+    reaches G0 as --native-reset-receipt (s81_head r18g s2: G0 native release PENDING without it, PASS with the rebased receipt)."""
+    def setUp(self):
+        self.td = tempfile.mkdtemp(prefix="pgrb-")
+        self.tree, self.plan = mk_tree(self.td)
+        self.band = Path(self.td) / "live.json"; self.band.write_text("{}")
+        self.remap = Path(self.td) / "reviewed.json"; self.remap.write_text("{}")
+
+    def calls(self, **kw):
+        seen = []
+        orig = PG._sub
+        PG._sub = lambda argv, cwd, timeout=None: (seen.append(argv), (0, ""))[1]
+        try:
+            PG.run_static(self.tree, self.plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgrbw-"), **kw)
+        finally:
+            PG._sub = orig
+        pre = [a for a in seen if any(str(x).endswith("plan_gate_pre.py") for x in a)][0]
+        g0 = [a for a in seen if any(str(x).endswith("check.py") for x in a)][0]
+        return pre, g0
+
+    def test_remap_base_overrides_band_base_for_pre_only(self):
+        pre, g0 = self.calls(band_base=str(self.band), remap_base=str(self.remap))
+        self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.remap))
+        self.assertEqual(g0[g0.index("--band-base") + 1], str(self.band))
+
+    def test_without_remap_base_pre_keeps_band_base(self):
+        pre, _g0 = self.calls(band_base=str(self.band))
+        self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.band))
+
+    def test_missing_remap_base_file_falls_back_to_band_base(self):
+        pre, _g0 = self.calls(band_base=str(self.band), remap_base=str(Path(self.td) / "nope.json"))
+        self.assertEqual(pre[pre.index("--remap-base") + 1], str(self.band))
+
+    def test_native_reset_receipt_reaches_g0(self):
+        _pre, g0 = self.calls(native_reset_receipt="/r/native_release_receipt.json")
+        self.assertEqual(g0[g0.index("--native-reset-receipt") + 1], "/r/native_release_receipt.json")
+        _pre, g0 = self.calls()
+        self.assertNotIn("--native-reset-receipt", g0)
+
+    def test_static_remote_ships_both(self):
+        got = {}
+
+        class R:
+            stdout, stderr, returncode = "PG_STATIC {}", "", 0
+
+        def runner(argv, **kw):
+            got["cmd"] = argv[-1]
+            return R()
+        PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner, remap_base="/b/rev.json",
+                         native_reset_receipt="/r/rc.json")
+        self.assertIn("--remap-base /b/rev.json", got["cmd"]); self.assertIn("--native-reset-receipt /r/rc.json", got["cmd"])
+
+    def test_run_gate_takes_both_from_the_candidate(self):
+        c = mk_coord(self.td)
+        seen = {}
+        orig = PG.static_remote
+
+        def fake(host, work_dir, t, p, ab, ps, **kw):
+            seen.update(kw)
+            return {k: {"verdict": "FAIL", "why": "stub"} for k in ("schema", "pre_g0", "hashes", "contained")}
+        PG.static_remote = fake
+        try:
+            obj = dict(cand(self.tree, self.plan), remap_base="/b/rev.json", native_reset_receipt="/r/rc.json")
+            rec = PG.run_gate(c, obj, "/x/old", "E0", dry_fn=dry_must_not_run, TC=TC)
+        finally:
+            PG.static_remote = orig
+        self.assertEqual((seen.get("remap_base"), seen.get("native_reset_receipt")), ("/b/rev.json", "/r/rc.json"))
+        self.assertEqual((rec["remap_base"], rec["native_reset_receipt"]), ("/b/rev.json", "/r/rc.json"))
+
+
 class ForeignTree(unittest.TestCase):
     """FOREIGN-TREE (QC N1B 11-17, KV D22 11-18): kit_rtl.bind_out, asbuilt base / land_r8 or a named path outside the tree
     being published is an ADVISORY finding of the gate: reported, never part of the verdict (r693/r704)"""

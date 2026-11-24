@@ -350,7 +350,7 @@ def check_bound_params(tree, bind_out):
 
 
 def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None):
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
     tree, plan = str(tree), str(plan)
     work = work or tempfile.mkdtemp(prefix="pubgate-")
@@ -370,10 +370,13 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     for rp in proof_paths(tree, rows_proofs):
         pre += ["--rows-proof", rp]
     # REMAP-BASE-1122: LANDREMAP / ISTCYC compare with the die's live plan of record (band_base), when the tree's checker knows --remap-base
+    # HEAD-S2-RESEAL 11-23: candidate.remap_base (the reviewed parent the rows were remapped against) overrides it for PRE only;
+    # G0 --band-base keeps the live plan of record.
     band_base_ready = band_base and os.path.isfile(band_base)
+    pre_base = remap_base if remap_base and os.path.isfile(remap_base) else (band_base if band_base_ready else None)
     pre_tool = Path(dp, "plan_gate_pre.py")
-    if band_base_ready and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
-        pre += ["--remap-base", str(band_base)]
+    if pre_base and pre_tool.is_file() and "--remap-base" in pre_tool.read_text(errors="replace"):
+        pre += ["--remap-base", str(pre_base)]
     rc1, t1 = _sub(pre, tree)
     Path(work).mkdir(parents=True, exist_ok=True)
     g0_dir = tempfile.mkdtemp(prefix="g0-", dir=work)  # never accept a stale report after a crashed checker
@@ -383,6 +386,10 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     g0_tool = Path(dp, "check.py")
     if band_base_ready and g0_tool.is_file() and "--band-base" in g0_tool.read_text(errors="replace"):
         g0 += ["--band-base", band_base]
+    # HEAD-S2-RESEAL 11-23: the candidate's native reset release receipt (marker.native_reset_receipt) reaches G0, as the lane chains pass it;
+    # without it G0 leaves the HEAD native release PENDING (ERROR).  A missing or stale receipt is re-verified and refused by check.py itself.
+    if native_reset_receipt and g0_tool.is_file() and "--native-reset-receipt" in g0_tool.read_text(errors="replace"):
+        g0 += ["--native-reset-receipt", str(native_reset_receipt)]
     rc2, t2 = _sub(g0, tree)
     try:
         g0_report = json.loads(Path(g0_dir, "g0_report.json").read_text())
@@ -407,7 +414,7 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -418,7 +425,9 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or [])
            + "".join(f" --scan {q(str(x))}" for x in scan or []) + "".join(f" --scan-asbuilt {q(str(x))}" for x in scan_asbuilt or [])
            + (f" --bind-out {q(str(bind_out))}" if bind_out else "")
-           + (f" --band-base {q(str(band_base))}" if band_base else ""))
+           + (f" --band-base {q(str(band_base))}" if band_base else "")
+           + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
+           + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -536,6 +545,12 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             live = {}
         band_base = marker.get("band_base") or obj.get("band_base") or (live.get("plan") if live.get("plan") != plan else None)
         rec["band_base"] = band_base
+        remap_base = marker.get("remap_base") or obj.get("remap_base")
+        native_reset_receipt = marker.get("native_reset_receipt") or obj.get("native_reset_receipt")
+        if remap_base:
+            rec["remap_base"] = remap_base
+        if native_reset_receipt:
+            rec["native_reset_receipt"] = native_reset_receipt
         rows_proofs = list(marker.get("rows_proofs") or obj.get("rows_proofs") or [])
         rec["rows_proofs"] = rows_proofs
         # FOREIGN-TREE (advisory): what the candidate's kit RTL will read besides the plan and the marker asbuilt
@@ -563,7 +578,8 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             t0 = time.time()
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
-                                                                       bind_out=bind_out, band_base=band_base)))(
+                                                                       bind_out=bind_out, band_base=band_base, remap_base=remap_base,
+                                                                       native_reset_receipt=native_reset_receipt)))(
                 static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
             rec["checks"].update(st)
             rec["static_s"] = round(time.time() - t0, 1)
@@ -604,6 +620,8 @@ def main(argv=None):
     s.add_argument("--scan", action="append", default=[], help="extra input file scanned for paths in another published tree (sidecar, bind.f ...); advisory")
     s.add_argument("--scan-asbuilt", action="append", default=[], help="extra as-built manifest whose base / land_r8 must lie in the tree; advisory")
     s.add_argument("--bind-out", help="kit_rtl.bind_out of the candidate; outside the tree = advisory FOREIGN-TREE finding")
+    s.add_argument("--remap-base", help="reviewed parent plan for PRE LANDREMAP/ISTCYC (default: --band-base)")
+    s.add_argument("--native-reset-receipt", help="HEAD native reset release receipt for G0 (candidate.native_reset_receipt)")
     s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
@@ -615,7 +633,8 @@ def main(argv=None):
     if a.cmd == "static":
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
                                                    rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
-                                                   band_base=a.band_base)))
+                                                   band_base=a.band_base, remap_base=a.remap_base,
+                                                   native_reset_receipt=a.native_reset_receipt)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)
