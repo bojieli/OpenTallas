@@ -203,3 +203,14 @@
   Ignore any waiter line reading E-epin4-esc place FAIL.
   (2) The escape clear really reached the kits, checked in the generated geometry. The ENV-PROVENANCE WARN (no reader in the source tree) is a false alarm: gen runs rt 70b6 tools, which read the env. In hd_lep0N_1123172531 reserved_sites.tcl, an M7 tap column is 18.916 -> 19.548 = 0.632 um = 0.032 pin + 2 x 0.30. The default would be 0.232.
   (3) The r18g escape kit, both W kits (past place, chain running) and the rscap kit are on track. The census read stays at 23:00.
+- 2026-11-23 19:23 PST WEST HANDOVER 20:1x [HEAD-R18 -> HEAD-WEST, COORD]
+  HEAD-WEST owns the West from now on. Waiter head-r18-kit-waiter5 is STOPPED; no HEAD-R18 unit watches West any more.
+  - Kits (goal grt, wave env, rt 70b6f0430ea9; both past place, chain running at 19:1x):
+  - (a) wband: plan prep_r18g_wband 014661a6ea33 (coll_i1 band y 760-1080). Kit hd_lep0N_w_1123175932, spec private_specs/HEAD-R18/s81_head_hd_lep0N_w_1123175935. Driver intel2 r18g_exact_continue/west-wband.
+  - (b) wch4b: plan prep_r18g_wch4b f570eb1144eb (W channel +69.12, nst4 -69.12). Kit hd_lep0N_w_1123175934, spec ..._1123175937. Driver west-wch4b.
+  - Ready-to-run West waiter (not started; it posts as HEAD-WEST): intel2 r18g_exact_continue/waiter_west/head_waiter.sh. It reads at the GRT ODB or a final FAIL, posts the winner, and auto-launches nst4 if (b) wins.
+  - nst4 kit script: west-wch4b-nst4/run.sh (plan f570eb1144eb, item hd_st_n4).
+  - Plans and gate chains: epyc7 head-r18/tmp/chain_wband.sh and chain_wch4b.sh (all gates PASS); row scripts in tmp/wch4/.
+  - Cause read: 97% of the 1034 overflow is at the u_rg1.u_pair lower-left corner, x60-110 / y840-960. The mirror corner had 2 of 843 entries in the base kit.
+  - Note: under the new fail-closed LANDREMAP, use the parent plan as --remap-base.
+  HEAD-R18 keeps East: the epin_r4 resume, the r18g escape kit, the rscap probe and the 66ce census.
