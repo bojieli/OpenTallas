@@ -35337,3 +35337,4 @@ FAILED [AUTOPILOT 11372817e5d9] 2026-11-23 20:07:01 PST AUTOPILOT -> KIT-WAVE-12
   - 66ce census: running on intel1.
   - 23:00 East census: on track for the r18g escape kit and 66ce. epin_r4 GRT likely 23:00-23:30. rscap is later (just past place); it is not part of the census.
   Next post by 21:15.
+- 2026-11-23 20:32 PST DONE [S81-KVLEAF-T2-ARCH-R2] ot-run oth-ubuntu-2060703-1795492933 on renewed-glider: rc=0 after 1837 s, ended 04:32:48, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/bench_r2/otrun_v5.log, cmd: --mem 96 --threads 24 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/bench_r2 -- bash run_v5.sh
