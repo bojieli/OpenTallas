@@ -30,5 +30,13 @@ SU2R-FIX4 (x_su_l1_o bank sites onto row grid, 3 su_c, y only, max 0.11 um)	daf4
 ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	orgrp_row.py fd227b0b96f5	yes	C1g	C1b+row = base	-	-	adds 0 G0 errors on C1b	-	coll_core kit past kit_topology	IN C1g, ungated on this base
 C1d2 compose (C1c + FIX3v2 + SUL1-UNBURY)	431957c26bc2	yes	cF/c1d2_PRE_FAIL	FAIL SITEGRID 6903	not run	not run	cancelled	-	-	SUPERSEDED by C1g
 C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	96cce77c1e2f	yes	cF	PRE inherited only, SITEGRID 0	0 err (rt c660, pre BIND-UNDRIVEN-IN)	1922/1922	PASS 0/0	-	-	STRICT PASS 01:12; GENDRY running; DEADIN row pending
-DEADIN-QC (declared dead-input proofs: sle_ctl rp1 w518_cp/w519_cp, fw fdn chu_ar_sel/chu_dd_sel on 10 fw types; BIND-UNDRIVEN-IN main 85273876e25)	-	yes	C1h	-	-	-	-	-	-	OWNER helper QC-DEADIN-ROW, ETA ~03:00
+DEADIN-QC (declared dead-input proofs: sle_ctl rp1 w518_cp/w519_cp, fw fdn chu_ar_sel/chu_dd_sel on 10 fw types; BIND-UNDRIVEN-IN main 85273876e25)	-	yes	C1h	-	-	-	-	-	-	ROW-READY afdf30b9; IN C1h
 sle_st_b_v2__clfde1249e (UNOWNED in sweep 01:09; plan unchanged vs C4, placed/route held)	-	no row	C1g	-	-	-	-	-	-	RIDE: iteration-1 full sign-off launch on C1g
+F16 tie row (QC-F16-PRODUCER: tt_ctlm f16_obs/init_u0 ties + strap + proof)	2b85c4c2c3f4 on C1g	yes	C1h	-	-	-	-	bench 03:45	-	IN C1h
+C1h compose (C1g + F16 tie + DEADIN), rt f6d43b117443, PRE WARN for inherited DEPTH + new-check ENTRYFOOT (r703)	894e6f21991f	yes	cH	try1 stopped PRE ENTRYFOOT x75 (new check); try2 running	running	running	-	-	-	BINDING try2 unit 3602410, ETA ~04:45
+FWDCLK-REPOINT (reach_rules fix --rules 4, 74 STALE-EXPORT-TAP types)	building	yes	C1i	-	-	-	-	-	-	QC-ALLFIX building
+QC-SC-FARRST (sle_ctl far raw reset + 5 sc stages, on SEAT-MATCH-AUDIT re-key 0391dcd3b846)	1dfd9d3d7464	yes	C1i	ROWS only	0 err	1922/1922	-	-	-	ROW-REBASED -> C1i
+sle_ctl re-key	1d3b1fa2e6df	yes	C1i	-	-	-	-	-	-	-> C1i (0391 wins on overlap)
+sle_sc_v3 stations (QC-OPEN-SU, COORD option 1)	due 04:30	yes	C1i	-	-	-	-	-	-	pending
+QC-RSTCNT 256 root stable counter	-	yes	C1i	-	-	-	-	-	-	pending (structural: pad-mode source)
+FWCPL-2 (QC-FW-CAP, fw 409.5k -> 379.8k at place)	rebase on C1h	yes	C1i	-	-	-	-	-	-	pending rebase; 360k lever -> QC-FW-STN
