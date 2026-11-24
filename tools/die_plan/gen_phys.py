@@ -8842,7 +8842,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     _abc_install(P.budgets, tn, kd, Path(__file__).resolve().parents[2])   # KIT-SYNTH-TARGET-1119
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     from signoff import copy_signoff_bundle
-    copy_signoff_bundle(kd, extra=("kit_preflight.py", "legacy_gate.py", "core_clock_band.py"))
+    copy_signoff_bundle(kd, extra=("kit_preflight.py", "kit_define_parity.py", "legacy_gate.py", "core_clock_band.py"))
     # CRASH-TRIAGE 10-25: 6_report PDNSim IR is deferred out of the route container (partition_ir.py patch +
     # OT_DEFER_PARTITION_IR=1 in run_kit.sh).  10 autopilot CRASH rows (kv3_io_ft/_v1 x8, coll_ftm x2) were killed
     # at the memory cap (25/33/50 GB at --mem 24/32/48) inside analyze_power_grid AFTER 6_final.odb/.spef existed.

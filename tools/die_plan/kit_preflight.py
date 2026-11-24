@@ -668,7 +668,7 @@ def main(argv=None):
         import kit_define_parity
     except ImportError:
         kit_define_parity = None
-    for line in (kit_define_parity.lines(args.kit) if kit_define_parity else []):
+    for line in (kit_define_parity.lines(args.kit) if kit_define_parity else ['SKIP KITDEF-PARITY no-module']):
         print(line)
     for issue in record['issues'][:30]:
         print('  -', issue)
