@@ -15,3 +15,8 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - (2) D3 rebased directly on c9 in parallel: E9 s81-c9-rows/d3c9 (rec_D3_c9.json, d3c9_row.sh, out/, d3c9.otrun.log); tools rt d56b624b5029. Gate whichever of E9 d3c9 / E11 1734004 finishes first.
 ## 08:18 kit pointer (COORD: agree with INT)
 - kit_wave private kits (--tree, no pinned src_manifest_hash) re-seal the src tree AT GEN (logs/src_manifest.sealed.json.gz); they never read a seal file. Proposed to INT 08:18: (a) bk_sel__t* use --tree c9seal_tree --src-manifest seal, no pinned hash (or pin MY postseal hash), (b) launch only after my BKSEL SWAPPED post, (c) I verify each bk_sel__t* kit's logs seal lists the new lib shas. Awaiting INT ACK; then post AGREED pointer.
+## 09:20
+- Consumers posted (hub lanes/handoff/S81-C9-ROMHW-CONSUMERS.txt: 216 rom_elem_hw col_h9/h10 types + bk_sel__t2).
+- C9 SEALED 09:17 (46059fa2b359). Swap+re-seal running E11 s81-c9-rows/bksel (swap.otrun.log) -> then post SWAPPED + postseal hash.
+- D3 B1 run terminal: G0 56 = 52 legacy + 4 D3 (t2 ft2/3/5 regs in macros; cut @20750 s_4N_L1=t43 0.64).
+- D3 fix (E9 s81-c9-rows/d3fix): regseat_b1/ops.json (t2_regseat.py: stage regs moved 9-18 um, max hop 371.79) + cut_t43_frac.ops.json (t43 ft_track_frac 0.27). Validation fix_b1 (d3fix_g0.sh on B1 p4) running; reuse on c9 d3c9 p4 (rerun t2_regseat on that plan if ops old mismatch).
