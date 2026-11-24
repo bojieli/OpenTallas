@@ -501,3 +501,49 @@ def test_dly_spread_final_line_remeasures_on_final_sites():
         # the in-pass number keeps the bin's stale hop (heads still at x 2450: ~2,300 um); on the final sites every hop is ~235 um
         assert int(m.group(1)) > 2000, m.group(0)
         assert int(f.group(1)) <= 300 and f.group(2) == "0", f.group(0)
+
+
+def test_dly_spread_route_end_inside_macro_moves_out():
+    """ROUTE-END-OUT (KV-PV-FANOUT 11-24): a route end inside a hard macro (a macro pin, or the load centroid of tail copies that
+    ring a core group) moves to the nearest point of the macro's halo box, so the chain gets a route instead of NOROUTE;
+    OT_DLY_SPREAD_END_OUT=0 keeps the old behaviour (no route)."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    checks = r"""
+set ds_mac [list [list [expr {1000000 - $ds_halo}] [expr {100000 - $ds_halo}] [expr {1400000 + $ds_halo}] [expr {500000 + $ds_halo}]]]
+set ds_xi {}; set ds_yi {}
+foreach ds_m $ds_mac { lassign $ds_m a b c d; lappend ds_xi [list [expr {$a + $ds_halo}] [expr {$c - $ds_halo}]]; lappend ds_yi [list [expr {$b + $ds_halo}] [expr {$d - $ds_halo}]] }
+set ds_xs [ds_lines [$ds_core xMin] [$ds_core xMax] $ds_xi]
+set ds_ys [ds_lines [$ds_core yMin] [$ds_core yMax] $ds_yi]
+set ds_rcache {}
+puts "OUT_IN [ds_out {1100000 300000}]"
+puts "OUT_FREE [ds_out {200000 300000}]"
+puts "OUT_EDGE [ds_out {1001000 300000}]"
+set r [ds_route {200000 300000} {1100000 300000}]
+puts "ROUTE_N [llength $r] END [lindex $r end] OK [ds_pok $r]"
+set ds_endout 0; set ds_rcache {}
+puts "ROUTE_OFF [llength [ds_route {200000 300000} {1100000 300000}]]"
+"""
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "t.v").write_text(_netlist())
+        tcl = TCL.split("source /w/dly_spread.tcl")[0] + r"""
+set hook [open /w/dly_spread.tcl r]
+set script [read $hook]
+close $hook
+eval [string map [list "\nds_main\n" "\nsource /w/chk.tcl\n"] $script]
+"""
+        (Path(d) / "t.tcl").write_text(tcl)
+        (Path(d) / "chk.tcl").write_text(checks)
+        shutil.copy(HERE / "dly_spread.tcl", d)
+        cmd = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /w/t.tcl; chmod -R a+rwX /w"
+        r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/w",
+                            "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+        if r.returncode and "Unable to find image" in r.stderr:
+            pytest.skip("image missing")
+        out = r.stdout
+    halo = 9000
+    assert f"OUT_IN {1000000 - halo} 300000" in out, out[-2000:]
+    assert "OUT_FREE 200000 300000" in out and "OUT_EDGE 1001000 300000" in out, out[-2000:]
+    m = re.search(r"ROUTE_N (\d+) END (\S+ \S+) OK (\d)", out)
+    assert m and int(m.group(1)) >= 2 and m.group(2) == f"{1000000 - halo} 300000" and m.group(3) == "1", out[-2000:]
+    assert "ROUTE_OFF 0" in out, out[-2000:]

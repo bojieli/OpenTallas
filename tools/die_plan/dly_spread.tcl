@@ -166,8 +166,37 @@ proc ds_pok {pts} {
   for {set k 1} {$k < [llength $pts]} {incr k} { lassign [lindex $pts [expr {$k-1}]] a b; lassign [lindex $pts $k] c d; if {[ds_hit $a $b $c $d]} { return 0 } }
   return 1
 }
+# ROUTE-END-OUT (KV-PV-FANOUT 11-24): a route end inside a hard macro (a macro pin, or the load centroid of tail copies that ring
+# a core group) made every candidate route hit that macro, so the chain was counted NOROUTE and kept its GPL clump at the load
+# end (kv3_pv_v6 A5t3 probe: 359 of 424 NOROUTE chains; u_pd41_i_pvw_u_ctl_cmd_0_t_43, 41 stages, hop 679 um; the kit_dly_ram
+# lead u_pd3_ram_pdram_3_93, 3 stages at the RAM, 1157 um from its bin).  Such an end now moves to the nearest point of the halo
+# box of that macro (repeated while it lands in another macro, at most 4 times, inside the core area); the last hop still runs
+# from there to the real pin / loads, and an end that cannot be moved stays as before.  OT_DLY_SPREAD_END_OUT=0 = old behaviour.
+set ds_endout [expr {!([info exists ::env(OT_DLY_SPREAD_END_OUT)] && $::env(OT_DLY_SPREAD_END_OUT) eq "0")}]
+proc ds_out {p} {
+  global ds_mac ds_halo ds_core ds_endout
+  if {!$ds_endout} { return $p }
+  for {set it 0} {$it < 4} {incr it} {
+    lassign $p x y; set moved 0
+    foreach m $ds_mac {
+      lassign $m a b c d
+      if {$x > $a+$ds_halo+2000 && $x < $c-$ds_halo-2000 && $y > $b+$ds_halo+2000 && $y < $d-$ds_halo-2000} {
+        set cand {}
+        foreach q [lsort -real -index 0 [list [list [expr {$x-$a}] $a $y] [list [expr {$c-$x}] $c $y] [list [expr {$y-$b}] $x $b] [list [expr {$d-$y}] $x $d]]] {
+          lassign $q _ qx qy
+          if {$qx >= [$ds_core xMin] && $qx <= [$ds_core xMax] && $qy >= [$ds_core yMin] && $qy <= [$ds_core yMax]} { set cand [list $qx $qy]; break }
+        }
+        if {$cand eq {}} { return $p }
+        set p $cand; set moved 1; break
+      }
+    }
+    if {!$moved} { return $p }
+  }
+  return $p
+}
 proc ds_route {A B} {
   global ds_xs ds_ys ds_rcache
+  set A [ds_out $A]; set B [ds_out $B]
   set q [expr {20 * 1000}]
   lassign $A hx hy; lassign $B tx ty
   set key [list [expr {int($hx/$q)}] [expr {int($hy/$q)}] [expr {int($tx/$q)}] [expr {int($ty/$q)}]]
