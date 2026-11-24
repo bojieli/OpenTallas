@@ -28,3 +28,21 @@ Job: coll_core rows of lanes/ALLFIX-QC.tsv: (1) coll_core 80 CLK-open reset copi
 - C1g 96cce77c1e2f contains ORGRP-SYNC. GRT waiter = ot-wait PID 1838076 epyc8 (6 h).
 - CTS setup census: 9 fails; -201 warm[4]->g_xf[0].red_in, -124 g_xf[0].e_out->xe0_q (~420 um). Scripts epyc8 QC-OPEN-COLL/grtread/sta.sh <4_cts|5_1_grt>, sta_wp.sh. Candidate: move g_xf[0] or +1 stage each way; not built.
 - Seats: 4/49748 unmatched, 1 station missing unexplained.
+
+## 11-24 01:20 PST (resumed after limit)
+- Probe unit (spec qwen_compute_coll_core_1123200325, epyc8 a6fbadf5d121, openroad 3404293) is still in pregrt_ff_hold pass 2, using CPU. Not cancelled, per FABLE. The GRT waiter is ot-wait 1838076.
+- Tap census at CTS (epyc8 QC-OPEN-COLL/grtread/tapgeo.ot, tapsinks.ot): 17 raw taps are slower than 285 ps.
+  - Distance causes only t100 (205 far sinks at 762,1298), t99 (33 far at 692,1072) and t126 (26 far at 749,1522).
+  - The rest have every sink within 230 um but are slow from depth and sink count (900-1000 sinks).
+- Row TAP-SPLIT, ETA posted 01:20: draft + PRE 02:45, strict + LATCHECK 03:30, CTS replay 04:30. Build on C1g 96cce77c1e2f (strict passed).
+  - Order: (1) taps: add taps and lower tap_max_sinks; (2) red_in launch tap; (3) xe0_q seat; (4) macro shift.
+
+## 11-24 03:47 PST
+- PROBE GRT landed 03:25 (epyc8 kit coll_core_1123200311). Reset copies are closed at GRT: 0 open of 83,795. Flow GRT metrics: setup -127.04/-10370 (172 ep), hold -122.8 (3 port_in ep), design violations 0. Census posted 03:35. Reads are in epyc8 QC-OPEN-COLL/grtread: sta_g*, sta_d*, sta_e*, sta_f*, locs*.
+- Row 1 TAP-SPLIT = plan ee5985b3b659 (C1g + 117 added taps), in epyc2 /srv/opentallas-scratch3/claude/QC-OPEN-COLL/tapsplit/.
+  - PRE: inherited ROWS-NO-PROOF only.
+  - Strict bind is running: epyc2 cG/bindG.ot (unit oth-ubuntu-2428865-1795519500).
+  - Tree: epyc2 scratch3 QC-OPEN-COLL/cG/tree, forked from C1g. Helpers: QC-OPEN-COLL/helpers (bind_cG.sh, bindrun_allfix.sh, rr).
+- Rows 2-4: seats plan c22ba88a5fd4 (pf_q[374], xe0_q, warm[4]) in epyc2 rows/plan_tapsplit_seats.json. Strict runs after ee59.
+- Row A: s_rd_q[35]/[36] replication. Waiting on the FABLE form ruling (asked 03:47).
+- epyc7: ot-delete of the partial forks is running (pid 2192564).

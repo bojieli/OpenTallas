@@ -7,3 +7,5 @@ DONE on main:
 Receipts: results/token_pass/s81_kv_t2b_seam_1124, results/token_pass/s81_lep_rip_1124.
 OPEN (not assigned to me): LATCHECK ri lane K + lep_ri_rip(type) on the 4 LP types (BIND-ELAB-PAR / S81-ALLFIX-INT).
 No live units.
+
+- 2026-11-24 02:0x PST LEP-RIP-LATCHECK done: main f3fa519f642e (lane_asbuilt_latency lep_ri_cycles + LEP_RIP_UNDECLARED; lep_rip --kit-config). J8 lepw_mus_LP t2 kit REFUSED. Draft c8 ri rows results/token_pass/s81_lep_rip_1124/c8_ri_lane_row_draft.json. Posted d5359b69. No live units; nothing owed.
