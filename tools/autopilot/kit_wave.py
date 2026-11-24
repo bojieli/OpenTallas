@@ -11879,7 +11879,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 12   # 12 = die_ctx v2 (TYPE-CONTRACT-SPEC 11-24: owned per-port rows whole, provenance text out); DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 13   # 13 = die_ctx v3 (type-name lists: own membership only); 12 = die_ctx v2 (TYPE-CONTRACT-SPEC 11-24: owned per-port rows whole, provenance text out); DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''

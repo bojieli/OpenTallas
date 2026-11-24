@@ -143,7 +143,7 @@ def _owners(o, names, memo):
 # per-port table such as clock.tap_offset.per_port_ps[<type>] with >= TABLE_MIN ports was emptied: QC V3->V4 106 of 107 changed rows were invisible),
 # (2) provenance free text (source / provenance / evidence ... strings with spaces) is not an input (QC V3->V4: tap_offset.source text moved die_ctx of all 127 types).
 # (3) a list of type names keeps only this type's membership (S81 d8j7->d8j8: reset.relay_resite_skip_types gained other types and moved every type's die_ctx).
-DIE_CTX_V = 2
+DIE_CTX_V = 3            # 3: (3) below; v2 (d8b2bcc301) reached rt 11-24 ~02:3x PST, so its stored values are another spelling
 _NOTE_KEYS = ('note', 'notes')
 _PROV_KEYS = ('source', 'provenance', 'evidence', 'reason', 'why', 'basis', 'comment', 'comments', 'description', 'desc', 'origin_note')
 

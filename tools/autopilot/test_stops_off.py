@@ -842,7 +842,8 @@ class DieContextHash(unittest.TestCase):
     def test_probe_emits_die_ctx(self):
         self.assertIn("die_ctx(p, name)", KW.PROBE_PLAN)
         self.assertIn('"die_ctx_v": DIE_CTX_V', KW.PROBE_PLAN)
-        self.assertGreaterEqual(KW.PROBE_V, 12)
+        self.assertGreaterEqual(KW.PROBE_V, 13)
+        self.assertGreaterEqual(BI.DIE_CTX_V, 3)
 
     def test_current_die_ctx_ignores_a_probe_of_another_spelling(self):
         cfg = {"dies": {"qwen_compute": {"event": "E", "plan": "p", "gen_host": "h"}}}
