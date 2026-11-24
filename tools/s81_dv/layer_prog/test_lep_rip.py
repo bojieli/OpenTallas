@@ -61,3 +61,14 @@ def test_kit_config_defines_and_dash_d(tmp_path):
     assert L.lep_ri_rip(['-DOT_S81SL_LEP_RIP1']) == 1
     with pytest.raises(ValueError):
         L.check_kit(['OT_S81SL_LEP_CRP2', 'OT_S81SL_LEP_RIP1'], kd)      # J8 lepw_mus_LP t2: kit RIP 3, plan RIP 1
+
+
+def test_repo_root_env_selects_the_bound_tree(tmp_path):
+    import importlib, os, subprocess
+    r = tmp_path / 'rtl/dsrom_sys/s81_dv/slice'
+    r.mkdir(parents=True)
+    r.joinpath('ot_s81sl_slice_lep.sv').write_text(L.RTL.read_text())
+    out = subprocess.run([sys.executable, '-I', '-c', 'import sys; sys.path.insert(0, sys.argv[1]); '
+                          'from layer_prog import lep_rip; print(lep_rip.RTL)', str(Path(L.__file__).parents[1])],
+                         env=dict(os.environ, OT_REPO_ROOT=str(tmp_path)), capture_output=True, text=True, check=True)
+    assert out.stdout.strip() == str(r / 'ot_s81sl_slice_lep.sv')

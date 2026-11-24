@@ -13,10 +13,12 @@ config.mk is not seen by bind elab: pass the kit defines as well and refuse a mi
   lep_rip.py --plan PLAN.json [--rtl ot_s81sl_slice_lep.sv]               per-type table (types with a lep)
   lep_rip.py --trace-ref rit_rip0.txt --trace rit_X.txt --defines D,...   fails unless every beat is ref + RIP
 """
-import argparse, json, re, sys
+import argparse, json, os, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
+if os.path.isdir(os.environ.get('OT_REPO_ROOT') or ''):   # REPO-ROOT-1123 convention (bind_elab.REPO): the tree being bound
+    ROOT = Path(os.environ['OT_REPO_ROOT']).resolve()
 RTL = ROOT / 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv'
 
 

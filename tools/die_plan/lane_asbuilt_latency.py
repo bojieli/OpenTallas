@@ -208,6 +208,8 @@ def lep_ri_cycles(typ, bus):
         return None
     sys.path.insert(0, str(HERE.parent / "s81_dv"))
     from layer_prog import lep_rip  # noqa: E402  (the per-type table; the RTL selectors are its source)
+    if not lep_rip.RTL.is_file():
+        raise FileNotFoundError(f"LEP RIP: {lep_rip.RTL} missing (set OT_REPO_ROOT to the bound tree)")
     return lep_rip.lep_ri_rip(defs)
 
 
