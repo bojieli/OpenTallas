@@ -99,3 +99,4 @@
   ikw: the pins failing after the first hold pass were 7 NEW endpoints; second form seats 32 x 1 + 7 x 2 buffers.
   kvq is in detail route. ETA unchanged, 20:00.
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
+- 2026-11-23 16:16 PST DONE [S81-KVLEAF-T2-ARCH-R2] ot-run oth-ubuntu-2550725-1795478955 on renewed-glider: rc=0 after 420 s, ended 00:16:13, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex/lec_rstland_r2/kvtch.otrun.log, cmd: --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex --mem 44 --threads 4 -- env LEC_UNROLL=400000 bas
