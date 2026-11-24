@@ -1,0 +1,22 @@
+#!/bin/bash
+# ot-unit-hygiene [--min-age-s N] [--dry-run] -- UNIT-HYGIENE-1124 (COORD flow review: a 60 s `systemctl --user is-active kwp-*` timed out on intel2 with
+# 774 user units, 275 of them failed, and killed 8 KV-A5t5 items).  Resets (systemctl --user reset-failed UNIT) every FAILED user unit whose failure is
+# older than --min-age-s (default 3600 s), so a caller that reads a fresh failure's Result / ExecMainStatus still sees it.  Only units in state
+# 'failed' are touched; an active, activating or inactive unit never is.  Run hourly by ot-unit-hygiene.timer.  Prints one summary line.
+set -u
+MIN=3600; DRY=0
+while [ $# -gt 0 ]; do case $1 in --min-age-s) MIN=$2; shift 2;; --dry-run) DRY=1; shift;; *) echo "usage: ot-unit-hygiene [--min-age-s N] [--dry-run]" >&2; exit 2;; esac; done
+now=$(cut -d' ' -f1 /proc/uptime | cut -d. -f1)
+n=0; k=0; young=0
+while read -r u _; do
+  [ -n "$u" ] || continue
+  n=$((n+1))
+  sh=$(timeout 30 systemctl --user show -p ActiveState -p InactiveEnterTimestampMonotonic "$u" 2>/dev/null)
+  st=$(printf '%s\n' "$sh" | sed -n 's/^ActiveState=//p'); ts=$(printf '%s\n' "$sh" | sed -n 's/^InactiveEnterTimestampMonotonic=//p')
+  [ "$st" = failed ] || continue
+  age=$(( now - ${ts:-0} / 1000000 ))
+  if [ "${ts:-0}" -gt 0 ] && [ "$age" -lt "$MIN" ]; then young=$((young+1)); continue; fi
+  if [ $DRY = 1 ]; then k=$((k+1)); continue; fi
+  timeout 30 systemctl --user reset-failed "$u" 2>/dev/null && k=$((k+1))
+done < <(timeout 120 systemctl --user list-units --state=failed --no-legend --plain 2>/dev/null)
+echo "UNIT_HYGIENE $(hostname -s) $(date -Is): failed=$n reset=$k kept_young=$young min_age_s=$MIN dry_run=$DRY units_now=$(timeout 60 systemctl --user list-units --all --no-legend --plain 2>/dev/null | wc -l)"
