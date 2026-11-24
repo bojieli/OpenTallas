@@ -2281,7 +2281,9 @@ class Binder:
                 self.split_route_prefill = SBR.prefill(self, reference, allL, put, recv, holders, out_of, heapq)
                 print("SPLIT_REFERENCE_PREFILL " + json.dumps(self.split_route_prefill, sort_keys=True), flush=True)
             except (ValueError, OSError) as exc:
-                raise BindError(f"SPLIT_LANE_REFERENCE {exc}") from exc
+                # BIND-ALL-ERRORS head: collect mode records it and packs without the reference (later lane findings
+                # of this run may follow from that; the bind FAILs on this error either way)
+                self._head_err(f"SPLIT_LANE_REFERENCE {exc}", exc)
 
         # pass 1a: the pair's own lanes whose plan name / leaf matches the source pin (bits reserved for their bus)
         pend = []
@@ -2371,7 +2373,9 @@ class Binder:
                                                  or not isinstance(y.get("types"), list) or not y["types"]
                                                  or not isinstance(y.get("sync_stages"), int) or y["sync_stages"] < 2
                                                  for y in rows):
-                raise BindError("asbuilt.reset_spines[].sink_stages: expected [{types: [regex..], sync_stages: int >= 2}]")
+                self._head_err(f"RESET_SPINE_SINK_STAGES asbuilt.reset_spines[].sink_stages of pin {x.get('pin')!r}: "
+                               "expected [{types: [regex..], sync_stages: int >= 2}]")
+                rows = []           # collect mode: that spine keeps its sync_stages everywhere
             sink_st.append((re.compile(x["pin"]), [([re.compile(z) for z in y["types"]], y["sync_stages"]) for y in rows]))
 
         def spine_sink_stages(sci, spn, dp, ns):
@@ -2478,7 +2482,8 @@ class Binder:
             self.spare_ft = spare_ft.declared(self.plan)
             spare_ft.add_native_chains(self, self.spare_ft)
         except ValueError as exc:
-            raise BindError(str(exc)) from exc
+            self._head_err(f"SPARE_FT {exc}", exc)      # collect mode: no spare ft chains in this (failing) run
+            self.spare_ft = {}
         import reset_carriers
         try:
             reset_carriers.register(self)
@@ -3905,6 +3910,16 @@ class Binder:
             raise BindError(f"bump_ports: die-top port names collide {sorted(n for n in names if names.count(n) > 1)[:5]}")
         self._bumps = res
         return res
+
+    def _head_err(self, msg, exc=None):
+        """BIND-ALL-ERRORS head (build_buses): a die-level plan input error.  Default: raise BindError (first error,
+        unchanged).  Collect mode (strict / --all-gaps): record it as a bind error and let the head go on with the input
+        treated as absent, so one run also reaches emit; the bind FAILs on it either way."""
+        if not getattr(self, "collect_gaps", False):
+            if exc is not None:
+                raise BindError(msg) from exc
+            raise BindError(msg)
+        self.errors.append(msg)
 
     def _gap(self, msg):
         """An emission gap (plan/source mismatch).  Default: raise at the first one (unchanged).  With --all-gaps

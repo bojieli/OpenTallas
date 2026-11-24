@@ -179,3 +179,21 @@ def test_r8_all_lists_every_member_per_table(tmp_path):
 def test_r8_all_nothing_stale_writes_nothing(tmp_path):
     B = SimpleNamespace(errors=[], r8_bad=[])
     assert bind.write_r8_all(tmp_path, B) == [] and not B.errors and not (tmp_path / 'r8_stale_all.json').exists()
+
+
+
+# ---------------------------------------------------------------- bind head: build_buses input errors collect in strict
+def test_head_err_default_raises_collect_records():
+    f = SimpleNamespace(collect_gaps=False, errors=[])
+    with pytest.raises(bind.BindError, match='SPARE_FT bad'):
+        bind.Binder._head_err(f, 'SPARE_FT bad', ValueError('bad'))
+    f.collect_gaps = True
+    bind.Binder._head_err(f, 'SPARE_FT bad', ValueError('bad'))
+    bind.Binder._head_err(f, 'RESET_SPINE_SINK_STAGES x')
+    assert f.errors == ['SPARE_FT bad', 'RESET_SPINE_SINK_STAGES x']
+
+
+def test_build_buses_has_no_bare_raise_left_for_the_three_inputs():
+    src = bind.Path(bind.__file__).read_text()
+    assert 'raise BindError(f"SPLIT_LANE_REFERENCE {exc}")' not in src
+    assert src.count('self._head_err(') >= 3
