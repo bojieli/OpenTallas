@@ -5,3 +5,5 @@ Job: writer START side of tools/die_plan/clock_landings.py wraps a port-driving 
 - Probes: C1b epyc7 LANDING-WRAP-TOOL/c1b (private fork of QC-ALLFIX/cC/tree + plan_c1_fix1 62ce8aba0292, c1b.sh orig|wrap, --types sle_su_c);
   S81 epyc10 LANDING-WRAP-TOOL/s81 (j8_cut_tree, cmp.sh), KV epyc9 LANDING-WRAP-TOOL/kv (fable-unc-kv/fork_d28_aff, cmp.sh).
 - Next: push via ot-push-main, sha -> FLOW-OPS, report COORD.
+
+- 22:21 PST PUSHED main 9f95aa48604. Sha sent to FLOW-OPS (aa86b9b) and PRECHECK (a1433c0). C1b: the rr_t85 refusal is gone; next independent error is rr_t168 with no driver, handed to QC-ALLFIX-SU. S81/KV byte-identical. Lane job done; private dirs stay until ot-delete cleanup.
