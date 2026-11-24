@@ -43,3 +43,11 @@ OPEN:
 ## 19:5x 11-23 update
 - rt 8d19c5d78e6d live 19:50:09 (COPY-SLOTS-HOST-1123 on f2156): per-host /var/tmp/ot-tree-copy/SLOTS; epyc11 SLOTS=4 written. Waiters now flowops-rtflip-epyc8e / -epyc9c -> 8d19c5d78e6d. Lane notice posted.
 - Still next: DEPTH-HELD+BPC dry-runs on KV A2g / QC C1b / S81 c7a, then re-land; timers after epyc8+epyc9 flip; epyc11 gen_hosts after D29+V4.
+
+## 20:3x 11-23 update
+- rt 9b19260c1cde live 20:35 on all hosts except epyc8 (DEPTH-HELD/CAP-CONFIG/DEPTH-PRE/BPC, ADV-IST-PRICE, R8 zero-bit guard, R8 lane fix 356816a). Previous: 356816a53858 20:22.
+- epyc8 stays on 70b6 for D29 seal s3; rt 356816a53858 + 9b19260c1cde staged on epyc8 (rsync, sha-verified). Waiter flowops-rtflip-epyc8g (systemd user unit, linger on) flips epyc8 to 9b19260c1cde on KV-D29 APPLIED. epyc9 flipped 19:53.
+- After epyc8 flips: systemctl --user unset-environment MQ_SYNC_HOOK; start ot-tools-follow.timer ot-tools-catchup.timer; post.
+- Next cut: KV-RRL-EXPORT verifier fix once pushed. test_leaf_cs_depth bind-gate string test fails on plain main (stale literal), not ours.
+- epyc11: wrappers + .bashrc localbin done; SLOTS=4; gen_hosts after D29+V4 applies.
+- Dry-runs posted: QC C1c 1 HELD (s5_ctl_repair4), KV A2h/S81 c7a 0 reached; BPC PASS (C1b 133/133, S81 out 1218/1218).
