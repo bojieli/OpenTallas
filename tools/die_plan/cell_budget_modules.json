@@ -1,0 +1,12 @@
+{
+ "schema": "precheck-cellcap.modules.v1",
+ "note": "Measured mapped std-cell counts (yosys synth + abc, ASAP7 RVT; hard cores / engines black-boxed) used by adv_cell_budget.py as type CONTENT. 'types' = whole-type content keyed by base type with the slot terms (ft stations, clock landings, internal stations, relays) taken out; 'modules' = a soft module that sits as contents[] of a type. Add a row when a lane measures one (src = lane, run dir, recipe).",
+ "types": {
+  "ot_s81sl_kv_leaf__t2": {"cells": 385667, "defines": {"OT_S81_KVLEAF_EXIT_RELAYS": 244686},
+   "src": "S81-KVLEAF-T2-ARCH-R2 11-23 22:2x: part B 318,199 as handed (epyc11 s81-kvleaf-t2-arch/countb; 177,218 with 140 kvx + 244 kvi hard) + bound-shell glue 67,468 (whole3/stat_mapped3.txt 340,450 minus 19 landings 186,608 minus 111 ft stations 86,374: flat vq/vpw, bind and reset glue, 1002 rrelays)"}
+ },
+ "modules": {
+  "qkd_astk_ex_s": {"cells": 77471,
+   "src": "KV-HG-CAP 11-23 census, rc127 kit kv3_hg_v1p5_1123174917: g_ex_0 u_ex soft 77,471 (u_exp 72,843)"}
+ }
+}
