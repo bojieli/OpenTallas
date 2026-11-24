@@ -21,8 +21,12 @@ x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	-	-	-	-	-	-	-	-	-	QC-
 CBN-RSF-SEAT (FABLE render finding: 6 rsf stations inside u_t00/u_t01 of cbn_q00__cld7bf7197 -> x570.24 channel)	rsfseat_row 59991d13f2c3 (B1->e0d2191f6daf)	yes	C	PRE 0 new	-	-	-	-	-	ROW-REBASED -> compose C
 SUC-Q0 (su_c x_su_l0_o stage-0 legs q[150]/[103]/[105] 434 -> ~171 um)	-	building (QC-ALLFIX-SU)	C	-	-	-	-	-	-	ETA 19:30 -> compose C
 C1-noSU compose (B1 + RST + ctlclk + RSF-SEAT)	12b66c0e4829	yes	cC (FROZEN, probe inputs)	PRE inherited only	0 err	1922/1922	PASS 0/0 + render reviewed	cbn_q00__cld7bf7197 cbf_q00__cl1b5a6458 glue native59 slw_hc1__cl3449ea95 sle_hc2__clcc5e3e61 (+QC-OPEN-SU stm/sc)	running	GATE-CLEAN
-SU2R-FIX3 (sle_su_c 207 START raw resets -> nearest consumer tap, B1 rule)	plan_c1_fix3 4370d2b649fd	yes	C1d	helper gate running	-	-	-	-	-	ROW-REBASED -> C1d
-SUL1-UNBURY (4 su_l1 types, 42 die stations out of cores)	unbury_sul1.py 77cf42f8f4d9	yes	C1d	PRE inherited only	scoped 0 su_l1	-	PASS (42->0)	-	-	ROW-REBASED -> C1d
-C1d compose (C1c + FIX3 + SUL1-UNBURY), rt c66090747375 + ov_tools (main 826ca3a6739)	c2856018af83	yes	cE	running	running	-	-	-	-	BINDING, ETA 00:15
-HC1-CLKENTRY (QC-HC1-CLKENTRY: SLECTL-CLKENTRY-SEAT + SLECTL-RP-SEL + tapfix, sle_ctl; SLECTL-RESYN depth row DROPPED by FABLE-RC-QC 20:28)	C1c twin eea24acd048a / noSU 18d22fbde479 (strict 0, LAT 1922)	yes	C1e	PRE equal base	0 err (noSU)	1922/1922 (noSU)	-	sle_ctl private probe epyc11 (QC-HC1-CLKENTRY)	running	ROW-REBASED -> C1e
-C1e compose (C1d + HC1-CLKENTRY)	b6211ae9de47	yes	cF	running	running	-	-	-	-	BINDING, ETA ~00:10
+SU2R-FIX3 (sle_su_c 207 START raw resets -> nearest consumer tap, B1 rule)	plan_c1_fix3 4370d2b649fd	yes	C1d	helper gate running	-	-	-	-	-	SUPERSEDED by FIX3v2 9c145188d3b0 + FIX4 daf48c6a1d1f (C1g)
+SUL1-UNBURY (4 su_l1 types, 42 die stations out of cores)	unbury_sul1.py 77cf42f8f4d9	yes	C1g	PRE inherited only	scoped 0 su_l1	-	PASS (42->0)	-	-	ROW-REBASED -> C1g
+C1d compose (C1c + FIX3 + SUL1-UNBURY), launch was rt 70b6, not c660	c2856018af83	yes	cE	cancelled	FAIL 40 EMIT (cl19/cl92)	-	-	-	-	WITHDRAWN
+HC1-CLKENTRY (QC-HC1-CLKENTRY: SLECTL-CLKENTRY-SEAT + SLECTL-RP-SEL + tapfix, sle_ctl; SLECTL-RESYN depth row DROPPED by FABLE-RC-QC 20:28)	C1c twin eea24acd048a / noSU 18d22fbde479 (strict 0, LAT 1922)	yes	C1e	PRE equal base	0 err (noSU)	1922/1922 (noSU)	-	sle_ctl private probe epyc11 (QC-HC1-CLKENTRY)	running	ROW-REBASED -> C1e | OUT of C1g: lane tap audit PASS 11-24, t262 +4.3 um; CTS census 02:15-03:15; COORD hold not lifted
+C1e compose (C1d + HC1-CLKENTRY)	b6211ae9de47	yes	cF	cancelled	-	-	-	-	-	WITHDRAWN (sle_ctl out, ORGRP missing)
+SU2R-FIX4 (x_su_l1_o bank sites onto row grid, 3 su_c, y only, max 0.11 um)	daf48c6a1d1f	yes	C1g	helper gate running, ETA 01:15	-	-	offline overlap 0 (relays/kit cells not covered)	-	-	IN C1g, ungated
+ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	orgrp_row.py fd227b0b96f5	yes	C1g	C1b+row = base	-	-	adds 0 G0 errors on C1b	-	coll_core kit past kit_topology	IN C1g, ungated on this base
+C1d2 compose (C1c + FIX3v2 + SUL1-UNBURY)	431957c26bc2	yes	cF/c1d2_PRE_FAIL	FAIL SITEGRID 6903	not run	not run	cancelled	-	-	SUPERSEDED by C1g
+C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	96cce77c1e2f	yes	cF	running	running	running	running	-	-	BINDING, ETA ~01:20, GENDRY ~02:00
