@@ -1,0 +1,13 @@
+{"schema": "kv-hubwi.parent_stations_spec.v1",
+ "note": "KV-HR-DEEPCLK 11-24, COORD ruling 03:1x (pre-approved cycles): +1 station per bundle on hr core boundary paths under the 150 ps wire+margin budget (per-path census bnd.py on signed hr libs, early-tap credit); lockup latches on the ingest / order inputs with a setup arc <= 227 ps (residual clock skew fallback). Ready / reset ports are never stationed (ingest d_rdy, prompt host_rst_n excluded).",
+ "stations": [
+  {"inst": "host__qkd_hr_core_guard", "prefixes": ["u_native__request_", "u_native__result_cr", "u_native__cancel_released"], "stages": 1},
+  {"inst": "host__qkd_hr_core_peer", "prefixes": ["u_peer_codec__cancel_release_", "u_coordinator__dispatch", "u_coordinator__token_grant_", "u_coordinator__allocated_", "u_coordinator__fault", "u_coordinator__identity_fault"], "stages": 1},
+  {"inst": "host__qkd_hr_core_queue", "prefixes": ["u_marker_consumer__certificate_", "u_bootbarrier__out_"], "stages": 1},
+  {"inst": "host__qkd_hr_cdc_pc", "prefixes": ["u_rx__o_"], "stages": 1},
+  {"inst": "host__qkd_hr_core_tx", "prefixes": ["u_ctrl__cancel_valid", "u_ctrl__cancel_tag", "u_ctrl__cancel_generation"], "stages": 1}
+ ],
+ "latches": [
+  {"inst": "host__qkd_hr_ingest_eng", "ports": ["d_data", "d_v", "in_v"]},
+  {"inst": "host__qkd_hr_core_order", "ports": ["u_dispatch__hb_cr", "u_dispatch__ing"]}
+ ]}

@@ -10469,8 +10469,8 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_rx__i_d(\g_mu.u_rank.g_mu.u_phy.pad_d ),
     .u_rx__i_v(\g_mu.u_rank.g_mu.u_phy.pad_v ),
     .u_rx__o_cr(\g_mu.u_rank.g_mu.raw_rx_cr ),
-    .u_rx__o_d(\g_mu.u_rank.g_mu.raw_rx_d ),
-    .u_rx__o_v(\g_mu.u_rank.g_mu.raw_rx_v ),
+    .u_rx__o_d(kvhw_st_qkd_hr_cdc_pc__u_rx__o_d),
+    .u_rx__o_v(kvhw_st_qkd_hr_cdc_pc__u_rx__o_v),
     .u_rx__r_fault(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.flt [17]),
     .u_rx__rrst_n(host_rst_n),
     .u_rx__w_fault(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.flt [16]),
@@ -10516,7 +10516,7 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_native__cancel_release_gen(\g_mu.cancel_release_gen ),
     .u_native__cancel_release_tag(\g_mu.cancel_release_tag ),
     .u_native__cancel_release_v(\g_mu.cancel_release_v ),
-    .u_native__cancel_released(\g_mu.cancel_released ),
+    .u_native__cancel_released(kvhw_st_qkd_hr_core_guard__u_native__cancel_released),
     .u_native__collective_busy(native_collective_busy),
     .u_native__collective_drained(native_collective_drained),
     .u_native__context_owned(\g_mu.native_context_owned ),
@@ -10531,14 +10531,14 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_native__protocol_fault(\g_mu.u_rank.g_mu.native_protocol_fault ),
     .u_native__recovery_clear(host_recovery_clear),
     .u_native__request_cr(\g_mu.native_request_cr ),
-    .u_native__request_gen(\g_mu.native_request_gen ),
-    .u_native__request_pos(\g_mu.native_request_pos ),
-    .u_native__request_tag(\g_mu.native_request_tag ),
-    .u_native__request_token(\g_mu.native_request_token ),
-    .u_native__request_trace(\g_mu.native_request_trace ),
-    .u_native__request_v(\g_mu.native_request_v ),
+    .u_native__request_gen(kvhw_st_qkd_hr_core_guard__u_native__request_gen),
+    .u_native__request_pos(kvhw_st_qkd_hr_core_guard__u_native__request_pos),
+    .u_native__request_tag(kvhw_st_qkd_hr_core_guard__u_native__request_tag),
+    .u_native__request_token(kvhw_st_qkd_hr_core_guard__u_native__request_token),
+    .u_native__request_trace(kvhw_st_qkd_hr_core_guard__u_native__request_trace),
+    .u_native__request_v(kvhw_st_qkd_hr_core_guard__u_native__request_v),
     .u_native__result_cause(\g_mu.native_result_cause ),
-    .u_native__result_cr(\g_mu.native_result_cr ),
+    .u_native__result_cr(kvhw_st_qkd_hr_core_guard__u_native__result_cr),
     .u_native__result_cycles(\g_mu.native_result_cycles ),
     .u_native__result_done(\g_mu.native_result_done ),
     .u_native__result_fault(\g_mu.native_result_fault ),
@@ -10571,9 +10571,9 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_dispatch__dispatch_quiet(host_upstream_quiet[4]),
     .u_dispatch__fault(\g_mu.u_rank.g_mu.dispatch_fault ),
     .u_dispatch__hb(hb),
-    .u_dispatch__hb_cr(hb_cr),
+    .u_dispatch__hb_cr(kvhw_lk_qkd_hr_core_order__u_dispatch__hb_cr),
     .u_dispatch__image_check(\g_mu.u_rank.g_mu.image_check ),
-    .u_dispatch__ing({ \g_mu.u_rank.g_mu.u_qm.o_d , \g_mu.u_rank.g_mu.u_qm.o_addr , \g_mu.u_rank.g_mu.u_qm.o_we , \g_mu.u_rank.g_mu.u_qm.o_v  }),
+    .u_dispatch__ing(kvhw_lk_qkd_hr_core_order__u_dispatch__ing),
     .u_dispatch__ing_cr(\g_mu.u_rank.g_mu.ocr ),
     .u_dispatch__issued(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [710:679]),
     .u_dispatch__landed(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [742:711]),
@@ -10584,12 +10584,12 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
   qkd_hr_core_peer host__qkd_hr_core_peer (
     .ck(ck_coordinator_codec),
     .u_coordinator__accepted_ranks(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [786:779]),
-    .u_coordinator__allocated_delivered(\g_mu.allocated_delivered ),
-    .u_coordinator__allocated_valid(\g_mu.allocated_valid ),
+    .u_coordinator__allocated_delivered(kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_delivered),
+    .u_coordinator__allocated_valid(kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_valid),
     .u_coordinator__cohort_gen(cohort_gen),
     .u_coordinator__cohort_tag(cohort_tag),
-    .u_coordinator__dispatch_valid(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [777]),
-    .u_coordinator__dispatched(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [778]),
+    .u_coordinator__dispatch_valid(kvhw_st_qkd_hr_core_peer__u_coordinator__dispatch_valid),
+    .u_coordinator__dispatched(kvhw_st_qkd_hr_core_peer__u_coordinator__dispatched),
     .u_coordinator__engine_admit_ready(native_admit_ready),
     .u_coordinator__engine_result_cause(engine_result_cause),
     .u_coordinator__engine_result_cr(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [1331]),
@@ -10601,21 +10601,21 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_coordinator__engine_result_token(engine_result_token),
     .u_coordinator__engine_result_v(engine_result_v),
     .u_coordinator__engine_result_value(engine_result_value),
-    .u_coordinator__fault(coordinator_fault),
-    .u_coordinator__identity_fault(\g_mu.token_allocator_fault ),
+    .u_coordinator__fault(kvhw_st_qkd_hr_core_peer__u_coordinator__fault),
+    .u_coordinator__identity_fault(kvhw_st_qkd_hr_core_peer__u_coordinator__identity_fault),
     .u_coordinator__participant_pos(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [1330:1187]),
     .u_coordinator__participant_token(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [1186:1043]),
     .u_coordinator__participant_trace(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [1042:787]),
     .u_coordinator__por_n(por_n),
     .u_coordinator__program_consensus(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [1332]),
     .u_coordinator__recovery_complete(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [1334]),
-    .u_coordinator__token_grant_epoch(\g_mu.allocated_epoch ),
-    .u_coordinator__token_grant_gen(\g_mu.allocated_generation ),
-    .u_coordinator__token_grant_position(\g_mu.allocated_position ),
+    .u_coordinator__token_grant_epoch(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_epoch),
+    .u_coordinator__token_grant_gen(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_gen),
+    .u_coordinator__token_grant_position(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_position),
     .u_coordinator__token_grant_ready(\g_mu.token_grant_ready ),
-    .u_coordinator__token_grant_tag(\g_mu.token_grant_tag ),
-    .u_coordinator__token_grant_token(\g_mu.allocated_token ),
-    .u_coordinator__token_grant_valid(\g_mu.token_grant_valid ),
+    .u_coordinator__token_grant_tag(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_tag),
+    .u_coordinator__token_grant_token(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_token),
+    .u_coordinator__token_grant_valid(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_valid),
     .u_coordinator__token_request_gen(\g_mu.token_request_generation ),
     .u_coordinator__token_request_position(\g_mu.token_request_position ),
     .u_coordinator__token_request_ready(\g_mu.token_request_ready ),
@@ -10640,9 +10640,9 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_peer_codec__cancel_drained(\g_mu.cancel_drained ),
     .u_peer_codec__cancel_fault(\g_mu.cancel_fault ),
     .u_peer_codec__cancel_gen(\g_mu.cancel_generation ),
-    .u_peer_codec__cancel_release_gen(\g_mu.cancel_release_gen ),
-    .u_peer_codec__cancel_release_tag(\g_mu.cancel_release_tag ),
-    .u_peer_codec__cancel_release_v(\g_mu.cancel_release_v ),
+    .u_peer_codec__cancel_release_gen(kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_gen),
+    .u_peer_codec__cancel_release_tag(kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_tag),
+    .u_peer_codec__cancel_release_v(kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_v),
     .u_peer_codec__cancel_released(\g_mu.cancel_released ),
     .u_peer_codec__cancel_tag(\g_mu.cancel_tag ),
     .u_peer_codec__cancel_valid(\g_mu.cancel_valid ),
@@ -10863,13 +10863,13 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_bootbarrier__in_cr(\g_mu.u_rank.g_mu.local_marker_cr ),
     .u_bootbarrier__in_d(\g_mu.u_rank.g_mu.local_marker ),
     .u_bootbarrier__in_v(\g_mu.u_rank.g_mu.local_marker_v ),
-    .u_bootbarrier__out_d(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [678:613]),
-    .u_bootbarrier__out_v(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [612]),
+    .u_bootbarrier__out_d(kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_d),
+    .u_bootbarrier__out_v(kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_v),
     .u_bootbarrier__require_fresh(\g_mu.u_rank.g_mu.image_check ),
     .u_bootbarrier__rst_n(host_rst_n),
     .u_marker_consumer__certificate(\g_mu.certificate ),
-    .u_marker_consumer__certificate_prefix(\g_mu.certificate_prefix ),
-    .u_marker_consumer__certificate_v(\g_mu.certificate_v ),
+    .u_marker_consumer__certificate_prefix(kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_prefix),
+    .u_marker_consumer__certificate_v(kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_v),
     .u_marker_consumer__est(est),
     .u_marker_consumer__fault(\g_mu.u_rank.g_mu.marker_consumer_fault ),
     .u_marker_consumer__issued(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [710:679]),
@@ -10973,9 +10973,9 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
     .u_ctrl__cancel_done(\g_mu.cancel_done ),
     .u_ctrl__cancel_drained(\g_mu.cancel_drained ),
     .u_ctrl__cancel_fault(\g_mu.cancel_fault ),
-    .u_ctrl__cancel_generation(\g_mu.cancel_generation ),
-    .u_ctrl__cancel_tag(\g_mu.cancel_tag ),
-    .u_ctrl__cancel_valid(\g_mu.cancel_valid ),
+    .u_ctrl__cancel_generation(kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_generation),
+    .u_ctrl__cancel_tag(kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_tag),
+    .u_ctrl__cancel_valid(kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_valid),
     .u_ctrl__cmd_cr(\g_mu.u_rank.g_mu.u_control.g_mu.cmd_cr ),
     .u_ctrl__cmd_hc(\g_mu.u_rank.g_mu.u_control.g_mu.u_hc.cmd_hc ),
     .u_ctrl__cmd_v(\g_mu.u_rank.g_mu.u_control.g_mu.u_hc.cmd_v ),
@@ -11040,14 +11040,14 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
   qkd_hr_ingest_eng host__qkd_hr_ingest_eng (
     .busy(\g_mu.u_rank.g_mu.u_qm.e_busy ),
     .ck(ck_qm_bank[0]),
-    .d_data({ \g_mu.u_rank.g_mu.u_qm.pay [255:220], \g_mu.u_rank.g_mu.u_qm.hdesc [219:216], \g_mu.u_rank.g_mu.u_qm.pay [215:172], \g_mu.u_rank.g_mu.u_qm.hdesc [171:168], \g_mu.u_rank.g_mu.u_qm.pay [167:144], \g_mu.u_rank.g_mu.u_qm.hdesc [143:16], \g_mu.u_rank.g_mu.u_qm.pay [15:8], \g_mu.u_rank.g_mu.u_qm.hx_head [7], \g_mu.u_rank.g_mu.u_qm.hdesc [6], \g_mu.u_rank.g_mu.u_qm.hx_head [5:4], \g_mu.u_rank.g_mu.u_qm.hdesc [3:0] }),
+    .d_data(kvhw_lk_qkd_hr_ingest_eng__d_data),
     .d_rdy(\g_mu.u_rank.g_mu.u_qm.e_drdy ),
-    .d_v(\g_mu.u_rank.g_mu.u_qm.take_d ),
+    .d_v(kvhw_lk_qkd_hr_ingest_eng__d_v),
     .done_tag(\g_mu.u_rank.g_mu.u_qm.e_tag ),
     .done_v(\g_mu.u_rank.g_mu.u_qm.e_done ),
     .in_data({ \g_mu.u_rank.g_mu.u_qm.pay [511:220], \g_mu.u_rank.g_mu.u_qm.hdesc [219:216], \g_mu.u_rank.g_mu.u_qm.pay [215:172], \g_mu.u_rank.g_mu.u_qm.hdesc [171:168], \g_mu.u_rank.g_mu.u_qm.pay [167:144], \g_mu.u_rank.g_mu.u_qm.hdesc [143:16], \g_mu.u_rank.g_mu.u_qm.pay [15:8], \g_mu.u_rank.g_mu.u_qm.hx_head [7], \g_mu.u_rank.g_mu.u_qm.hdesc [6], \g_mu.u_rank.g_mu.u_qm.hx_head [5:4], \g_mu.u_rank.g_mu.u_qm.hdesc [3:0] }),
     .in_rdy(\g_mu.u_rank.g_mu.u_qm.e_inrdy ),
-    .in_v(\g_mu.u_rank.g_mu.u_qm.take_p ),
+    .in_v(kvhw_lk_qkd_hr_ingest_eng__in_v),
     .n_sectors(\g_mu.u_rank.g_mu.u_qm.e_nsec ),
     .r_addr(\g_mu.u_rank.g_mu.u_qm.e_raddr ),
     .r_v(\g_mu.u_rank.g_mu.u_qm.e_rv ),
@@ -11943,4 +11943,94 @@ module qkd_host_root_admission_obsx_bo1_c45 #(
   assign \g_mu.coordinator_identity_fault  = \g_mu.token_allocator_fault ;
   assign \u_fdi_pace.rst_n  = link_rst_n;
   assign \u_fdi_pace.clk  = ck_pad;
+// KV-HR-DEEPCLK parent_stations: 37 ports (32 stationed, 5 latched)
+  wire [0:0] kvhw_st_qkd_hr_core_guard__u_native__cancel_released;
+  wire [1:0] kvhw_st_qkd_hr_core_guard__u_native__request_gen;
+  wire [17:0] kvhw_st_qkd_hr_core_guard__u_native__request_pos;
+  wire [58:0] kvhw_st_qkd_hr_core_guard__u_native__request_tag;
+  wire [17:0] kvhw_st_qkd_hr_core_guard__u_native__request_token;
+  wire [31:0] kvhw_st_qkd_hr_core_guard__u_native__request_trace;
+  wire [0:0] kvhw_st_qkd_hr_core_guard__u_native__request_v;
+  wire [0:0] kvhw_st_qkd_hr_core_guard__u_native__result_cr;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_delivered;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_valid;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__dispatch_valid;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__dispatched;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__fault;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__identity_fault;
+  wire [15:0] kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_epoch;
+  wire [1:0] kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_gen;
+  wire [17:0] kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_position;
+  wire [58:0] kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_tag;
+  wire [17:0] kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_token;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_valid;
+  wire [1:0] kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_gen;
+  wire [58:0] kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_tag;
+  wire [0:0] kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_v;
+  wire [65:0] kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_d;
+  wire [0:0] kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_v;
+  wire [31:0] kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_prefix;
+  wire [0:0] kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_v;
+  wire [527:0] kvhw_st_qkd_hr_cdc_pc__u_rx__o_d;
+  wire [0:0] kvhw_st_qkd_hr_cdc_pc__u_rx__o_v;
+  wire [1:0] kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_generation;
+  wire [58:0] kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_tag;
+  wire [0:0] kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_valid;
+  wire [255:0] kvhw_lk_qkd_hr_ingest_eng__d_data;
+  wire [0:0] kvhw_lk_qkd_hr_ingest_eng__d_v;
+  wire [0:0] kvhw_lk_qkd_hr_ingest_eng__in_v;
+  wire [0:0] kvhw_lk_qkd_hr_core_order__u_dispatch__hb_cr;
+  wire [289:0] kvhw_lk_qkd_hr_core_order__u_dispatch__ing;
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__cancel_released (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__cancel_released), .q(\g_mu.cancel_released ));
+  kvhw_dly #(.W(2), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__request_gen (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__request_gen), .q(\g_mu.native_request_gen ));
+  kvhw_dly #(.W(18), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__request_pos (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__request_pos), .q(\g_mu.native_request_pos ));
+  kvhw_dly #(.W(59), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__request_tag (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__request_tag), .q(\g_mu.native_request_tag ));
+  kvhw_dly #(.W(18), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__request_token (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__request_token), .q(\g_mu.native_request_token ));
+  kvhw_dly #(.W(32), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__request_trace (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__request_trace), .q(\g_mu.native_request_trace ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__request_v (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__request_v), .q(\g_mu.native_request_v ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_guard__u_native__result_cr (.clk(ck_guard), .d(kvhw_st_qkd_hr_core_guard__u_native__result_cr), .q(\g_mu.native_result_cr ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_delivered (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_delivered), .q(\g_mu.allocated_delivered ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_valid (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_valid), .q(\g_mu.allocated_valid ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__dispatch_valid (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__dispatch_valid), .q(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [777] ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__dispatched (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__dispatched), .q(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [778] ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__fault (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__fault), .q(coordinator_fault ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__identity_fault (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__identity_fault), .q(\g_mu.token_allocator_fault ));
+  kvhw_dly #(.W(16), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_epoch (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_epoch), .q(\g_mu.allocated_epoch ));
+  kvhw_dly #(.W(2), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_gen (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_gen), .q(\g_mu.allocated_generation ));
+  kvhw_dly #(.W(18), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_position (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_position), .q(\g_mu.allocated_position ));
+  kvhw_dly #(.W(59), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_tag (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_tag), .q(\g_mu.token_grant_tag ));
+  kvhw_dly #(.W(18), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_token (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_token), .q(\g_mu.allocated_token ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_valid (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_valid), .q(\g_mu.token_grant_valid ));
+  kvhw_dly #(.W(2), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_gen (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_gen), .q(\g_mu.cancel_release_gen ));
+  kvhw_dly #(.W(59), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_tag (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_tag), .q(\g_mu.cancel_release_tag ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_v (.clk(ck_coordinator_codec), .d(kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_v), .q(\g_mu.cancel_release_v ));
+  kvhw_dly #(.W(66), .D(1)) u_kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_d (.clk(ck_bootbarrier), .d(kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_d), .q(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [678:613] ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_v (.clk(ck_bootbarrier), .d(kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_v), .q(\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [612] ));
+  kvhw_dly #(.W(32), .D(1)) u_kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_prefix (.clk(ck_bootbarrier), .d(kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_prefix), .q(\g_mu.certificate_prefix ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_v (.clk(ck_bootbarrier), .d(kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_v), .q(\g_mu.certificate_v ));
+  kvhw_dly #(.W(528), .D(1)) u_kvhw_st_qkd_hr_cdc_pc__u_rx__o_d (.clk(ck_phy_rx_r), .d(kvhw_st_qkd_hr_cdc_pc__u_rx__o_d), .q(\g_mu.u_rank.g_mu.raw_rx_d ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_cdc_pc__u_rx__o_v (.clk(ck_phy_rx_r), .d(kvhw_st_qkd_hr_cdc_pc__u_rx__o_v), .q(\g_mu.u_rank.g_mu.raw_rx_v ));
+  kvhw_dly #(.W(2), .D(1)) u_kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_generation (.clk(ck_axi), .d(kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_generation), .q(\g_mu.cancel_generation ));
+  kvhw_dly #(.W(59), .D(1)) u_kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_tag (.clk(ck_axi), .d(kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_tag), .q(\g_mu.cancel_tag ));
+  kvhw_dly #(.W(1), .D(1)) u_kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_valid (.clk(ck_axi), .d(kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_valid), .q(\g_mu.cancel_valid ));
+  kvhw_lk #(.W(256)) u_kvhw_lk_qkd_hr_ingest_eng__d_data (.clk(ck_qm_bank[0]), .d({ \g_mu.u_rank.g_mu.u_qm.pay [255:220], \g_mu.u_rank.g_mu.u_qm.hdesc [219:216], \g_mu.u_rank.g_mu.u_qm.pay [215:172], \g_mu.u_rank.g_mu.u_qm.hdesc [171:168], \g_mu.u_rank.g_mu.u_qm.pay [167:144], \g_mu.u_rank.g_mu.u_qm.hdesc [143:16], \g_mu.u_rank.g_mu.u_qm.pay [15:8], \g_mu.u_rank.g_mu.u_qm.hx_head [7], \g_mu.u_rank.g_mu.u_qm.hdesc [6], \g_mu.u_rank.g_mu.u_qm.hx_head [5:4], \g_mu.u_rank.g_mu.u_qm.hdesc [3:0] } ), .q(kvhw_lk_qkd_hr_ingest_eng__d_data));
+  kvhw_lk #(.W(1)) u_kvhw_lk_qkd_hr_ingest_eng__d_v (.clk(ck_qm_bank[0]), .d(\g_mu.u_rank.g_mu.u_qm.take_d ), .q(kvhw_lk_qkd_hr_ingest_eng__d_v));
+  kvhw_lk #(.W(1)) u_kvhw_lk_qkd_hr_ingest_eng__in_v (.clk(ck_qm_bank[0]), .d(\g_mu.u_rank.g_mu.u_qm.take_p ), .q(kvhw_lk_qkd_hr_ingest_eng__in_v));
+  kvhw_lk #(.W(1)) u_kvhw_lk_qkd_hr_core_order__u_dispatch__hb_cr (.clk(ck_dispatch), .d(hb_cr ), .q(kvhw_lk_qkd_hr_core_order__u_dispatch__hb_cr));
+  kvhw_lk #(.W(290)) u_kvhw_lk_qkd_hr_core_order__u_dispatch__ing (.clk(ck_dispatch), .d({ \g_mu.u_rank.g_mu.u_qm.o_d , \g_mu.u_rank.g_mu.u_qm.o_addr , \g_mu.u_rank.g_mu.u_qm.o_we , \g_mu.u_rank.g_mu.u_qm.o_v  } ), .q(kvhw_lk_qkd_hr_core_order__u_dispatch__ing));
+endmodule
+
+// KV-HR-DEEPCLK: D reset-less register stages (boundary station, +D cycles declared in parent_stations.json)
+module kvhw_dly #(parameter integer W = 1, parameter integer D = 1) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+  (* keep *) reg [W-1:0] r [0:D-1];
+  integer k;
+  always @(posedge clk) begin
+    r[0] <= d;
+    for (k = 1; k < D; k = k + 1) r[k] <= r[k-1];
+  end
+  assign q = r[D-1];
+endmodule
+// KV-HR-DEEPCLK: negative-level lockup latch (transparent while clk is low; 0 cycles)
+module kvhw_lk #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+  always @* if (!clk) q = d;
 endmodule

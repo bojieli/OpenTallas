@@ -1,7 +1,8 @@
 #!/bin/bash
 # KV-MU7 10-20: full multi-user HOST root mechanism bench (tb_mu_hroot_full.sv), Verilator 5.050 (the closure daemon's).
 # usage: run_hroot_full.sh ROOT OUT CASE
-#   PASS : n32  (PROMPT leaf = the closing native32 netlist qkd_hr_core_prompt_mu4p3_n32 + functional ASAP7 cells)
+#   PASS : n32_st / ps3_st (n32 / ps3 + the kv3_hub_Wi parent stations, KV-HR-DEEPCLK 11-24)
+#          n32  (PROMPT leaf = the closing native32 netlist qkd_hr_core_prompt_mu4p3_n32 + functional ASAP7 cells)
 #          ps3  (PROMPT leaf = its RTL source qkd_hr_core_prompt_mu4_ps3)
 #          cells (the 40 combinational functional cell models == the official ASAP7 models, exhaustive, if present)
 #   mutants (must FAIL; n32 leaf unless noted):
@@ -56,6 +57,8 @@ case "$CASE" in
  ts2_rr) sub $TS 'h[245:232]>pe_last[h[231:230]]' 'h[245:230]>peer_last_epoch';;
  n32) ;;
  ps3) LEAF=ps3;;
+ n32_st) KST=1;;    # KV-HR-DEEPCLK 11-24: + the kv3_hub_Wi parent boundary stations (+1 cycle, tb KVHW_ST)
+ ps3_st) LEAF=ps3; KST=1;;
  cells) ;;
  uid0) sub $TB '.POST_UID_SLOT(1)) co(' '.POST_UID_SLOT(0)) co(';;
  pr1) sub $PC "pr<=pr+1'b1;release_seen<=0;" "pr<=pr+1'b1;";;
@@ -111,6 +114,7 @@ Y=""; for d in $M $M/host_cluster_mu rtl/qwen_sys/host_integrated_20261014 rtl/q
 [ $PRR = 1 ] && Y="-y $NP $Y" && for d in $HH/host_cluster_20261017/peer_rr $HH/host_cluster_20261017/peer_pd $HH/host_integrated_20261014; do Y="$Y -y $d"; done
 if [ $LEAF = n32 ]; then LF="rtl/qwen_sys/host_prompt_mu4p3_n32_1020/qkd_hr_core_prompt_mu4p3_n32.sv $H/asap7_func_cells.v"; DEF=""
 else LF="$HC/prompt_safe3/qkd_hr_core_prompt_mu4_ps3.v rtl/physical/ot_qwen_host_ctl.sv rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv"; DEF="+define+PROMPT_PS3"; fi
+[ "${KST:-0}" = 1 ] && DEF="$DEF +define+KVHW_ST"
 "$V" --binary --timing -O2 --x-assign 0 --x-initial 0 -Wno-fatal -Wno-lint -Wno-style -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-WIDTH \
   -Wno-PINMISSING $DEF --top-module tb_mu_hroot_full -Mdir obj -j ${VJ:-8} -o sim $Y +libext+.sv+.v \
   $TB $LF $M/qkd_kv_mu_rowoff.sv > "$OUT/$CASE.build" 2>&1 \

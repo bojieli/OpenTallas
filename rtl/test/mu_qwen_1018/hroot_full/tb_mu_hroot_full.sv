@@ -53,6 +53,15 @@ module tb_mu_hroot_full;
  wire a_v,a_d;
  wire[7:0]owned;
  wire[7:0]rq_v;wire[471:0]rq_tag;wire[15:0]rq_gen;wire[143:0]rq_tok,rq_pos;
+`ifdef KVHW_ST
+ `define KVHW_C(n, w) reg [w-1:0] n``_c = 0; always @(posedge ck) n``_c <= n;
+`else
+ `define KVHW_C(n, w) wire [w-1:0] n``_c = n;
+`endif
+ // KV-HR-DEEPCLK 11-24: +define+KVHW_ST = the kv3_hub_Wi parent boundary stations (bind/kv_host_wi/parent_stations.json):
+ // every load of a stationed hr core output sees it one cycle later (guard native request / result_cr / cancel_released,
+ // peer cancel_release + coordinator token_grant / allocated / identity_fault, tx cancel valid / tag / gen).  Default: wires.
+ `KVHW_C(rq_v, 8) `KVHW_C(rq_tag, 472) `KVHW_C(rq_gen, 16) `KVHW_C(rq_tok, 144) `KVHW_C(rq_pos, 144) `KVHW_C(a_v, 1) `KVHW_C(a_d, 1)
 `ifdef PROMPT_PS3
  qkd_hr_core_prompt_mu4_ps3 pr(
 `else
@@ -67,13 +76,13 @@ module tb_mu_hroot_full;
   .program_expected_pw(),.program_expected_dw(),.program_auth_epoch(),.program_auth_digest(),.hc(pr_hc),.irq(pr_irq),
   .host_rst_n(host_rst_n),.link_rst_n(link_rst_n),.hbm_rst_n(hbm_rst_n),.boot_go(boot_go),.die_rst_n(die_rst_n),
   .sys_ready(sys_ready),.fault_src(fault_src),.source_cr(source_cr),.available(available),.service_faults(service_faults),
-  .host_link_reset_req(1'b0),.host_interface_idle(host_interface_idle),.allocated_valid(a_v),
+  .host_link_reset_req(1'b0),.host_interface_idle(host_interface_idle),.allocated_valid(a_v_c),
   .native_context_owned(owned[0]),.u_rank__u_control__por_n(por_n),.u_rank__u_control__service_ready(1'b1),
   .u_rank__program_fault(program_fault),.u_rank__ingress_fault(ingress_fault),.u_rank__commit_fault(commit_fault),
   .host_observer_fault(host_observer_fault),.u_rank__source_fault(source_fault),
   .cq_client_tag(cq_client_tag),.cq_commit_v(cq_commit_v),.cq_pos(cq_pos),.cq_slot(cq_slot),.cq_token(cq_token),
-  .native_request_gen(rq_gen[1:0]),.native_request_pos(rq_pos[17:0]),.native_request_tag(rq_tag[58:0]),
-  .native_request_token(rq_tok[17:0]),.native_request_v(rq_v[0]),
+  .native_request_gen(rq_gen_c[1:0]),.native_request_pos(rq_pos_c[17:0]),.native_request_tag(rq_tag_c[58:0]),
+  .native_request_token(rq_tok_c[17:0]),.native_request_v(rq_v_c[0]),
   .step_client_tag(step_client_tag),.step_issue_v(step_issue_v),.step_pos(step_pos),
   .step_retire_client_tag(step_retire_client_tag),.step_retire_cq(step_retire_cq),.step_retire_pos(step_retire_pos),
   .step_retire_slot(step_retire_slot),.step_retire_token(step_retire_token),.step_retire_v(step_retire_v),.step_slot(step_slot),
@@ -101,6 +110,14 @@ module tb_mu_hroot_full;
  wire[7:0]rs_v,rs_done,rs_fault,rs_cr,crel,rel_v,ep_fault,rc_fault,c_acc,rq_cr;
  wire[471:0]rs_tag,rel_tag;wire[15:0]rs_gen,rel_gen;wire[255:0]rq_trace,rs_val,rs_cyc;wire[143:0]rs_tok;wire[31:0]rs_cause;
  wire[743:0]ltk;
+ `KVHW_C(rq_trace, 256) `KVHW_C(crel, 8) `KVHW_C(rs_cr, 8) `KVHW_C(rel_v, 8) `KVHW_C(rel_tag, 472) `KVHW_C(rel_gen, 16)
+ `KVHW_C(t_gv, 1) `KVHW_C(t_gep, 16) `KVHW_C(t_gtok, 18) `KVHW_C(t_gpos, 18) `KVHW_C(t_ggen, 2) `KVHW_C(t_gtag, 59) `KVHW_C(co_idf, 1)
+ wire ts_cv_c[0:7];wire[58:0]ts_ct_c[0:7];wire[1:0]ts_cg_c[0:7];
+ for(genvar d=0;d<8;d=d+1)begin:g_kvhw_cx
+  wire cv=ts_cv[d];wire[58:0]ct=ts_ct[d];wire[1:0]cg=ts_cg[d];
+  `KVHW_C(cv, 1) `KVHW_C(ct, 59) `KVHW_C(cg, 2)
+  assign ts_cv_c[d]=cv_c;assign ts_ct_c[d]=ct_c;assign ts_cg_c[d]=cg_c;
+ end
  for(genvar d=0;d<8;d=d+1)begin:g_ts
   qkd_host_ctrl_token_service_packet_collected_mu #(.STRAPPED(1),.ENABLE_SERVICE(1),.ENABLE_TOKEN(1),.MU(1))ts(
    .ck(ck),.rst_n(rst_n),.die_id(3'(d)),.rx_v(ts_rx_v[d]),.rx_d(ts_rx_d[d]),.rx_cr(),.tx_v(ts_tx_v[d]),.tx_d(ts_tx_d[d]),.tx_cr(ts_tx_cr[d]),
@@ -110,13 +127,13 @@ module tb_mu_hroot_full;
    .service_begin_epoch(),.pending_advertised(),.pending_epoch(),.service_ready8(),.pending_ack8(),.service_epoch8(),
    .ingest_permission(),.por_n(por_n),.token_wrap_fence_valid(d==0?co_rc:1'b0),.token_wrap_drained(d==0?co_rc:1'b0),
    .token_wrap_link_reset_seen(d==0?co_rc:1'b0),.token_wrap_retraining_done(d==0?co_rc:1'b0),
-   .token_allocator_fault(d==0?co_idf:1'b0),.package_abort(d==0?package_abort:1'b0),.abort_drained(d==0?{4{drn}}:4'd0),
+   .token_allocator_fault(d==0?co_idf_c:1'b0),.package_abort(d==0?package_abort:1'b0),.abort_drained(d==0?{4{drn}}:4'd0),
    .token_request_valid(ts_trv[d]),.token_request_ready(d==0?t_req_r:1'b0),.token_request_token(ts_trt[d]),.token_request_position(ts_trp[d]),
-   .token_request_generation(ts_trg[d]),.token_grant_valid(d==0?t_gv:1'b0),.token_grant_ready(ts_tgr[d]),
-   .token_grant_epoch(d==0?t_gep:16'd0),.token_grant_token(d==0?t_gtok:18'd0),.token_grant_position(d==0?t_gpos:18'd0),
-   .token_grant_generation(d==0?t_ggen:2'd0),.token_grant_tag(d==0?t_gtag:59'd0),.allocated_valid(d==0?a_v:1'b0),
-   .allocated_delivered(d==0?a_d:1'b0),.allocated_epoch(d==0?t_gep:16'd0),.allocated_token(d==0?t_gtok:18'd0),
-   .allocated_position(d==0?t_gpos:18'd0),.allocated_generation(d==0?t_ggen:2'd0),.token_epoch_valid(ts_tev[d]),
+   .token_request_generation(ts_trg[d]),.token_grant_valid(d==0?t_gv_c:1'b0),.token_grant_ready(ts_tgr[d]),
+   .token_grant_epoch(d==0?t_gep_c:16'd0),.token_grant_token(d==0?t_gtok_c:18'd0),.token_grant_position(d==0?t_gpos_c:18'd0),
+   .token_grant_generation(d==0?t_ggen_c:2'd0),.token_grant_tag(d==0?t_gtag_c:59'd0),.allocated_valid(d==0?a_v_c:1'b0),
+   .allocated_delivered(d==0?a_d_c:1'b0),.allocated_epoch(d==0?t_gep_c:16'd0),.allocated_token(d==0?t_gtok_c:18'd0),
+   .allocated_position(d==0?t_gpos_c:18'd0),.allocated_generation(d==0?t_ggen_c:2'd0),.token_epoch_valid(ts_tev[d]),
    .token_epoch(ts_te[d]),.cancel_valid(ts_cv[d]),.cancel_tag(ts_ct[d]),.cancel_generation(ts_cg[d]),.cancel_done(ts_cd[d]),
    .cancel_fault(ts_cf[d]),.cancel_drained(ts_cdr[d]),.terminal_accepted(c_acc[d]));
  end
@@ -157,10 +174,10 @@ module tb_mu_hroot_full;
   wire[511:0]rc_rxd=(d==0)?lo_rx_data:rc_rx_data[d];
   wire[181:0]ep_hc=(d==0)?{pr_hc,ts_hc[0][38:0]}:ts_hc[d];
   qkd_host_peer_rank_codec #(.RANK(d))rc(.ck(ck),.por_n(por_n),.tx_valid(rc_tx_valid[d]),.tx_data(rc_tx_data[d*512+:512]),.tx_ready(rc_txr),.rx_valid(rc_rxv),.rx_data(rc_rxd),.rx_ready(rc_rx_ready[d]),
-   .request_v(rq_v[d]),.request_tag(rq_tag[d*59+:59]),.request_gen(rq_gen[d*2+:2]),.request_trace(rq_trace[d*32+:32]),.request_token(rq_tok[d*18+:18]),.request_pos(rq_pos[d*18+:18]),.request_cr(rq_cr[d]),.request_aborted(),
-   .cancel_valid(ts_cv[d]),.cancel_tag(ts_ct[d]),.cancel_gen(ts_cg[d]),.cancel_done(ts_cd[d]),.cancel_fault(ts_cf[d]),.cancel_drained(ts_cdr[d]),.cancel_accepted(c_acc[d]),
-   .cancel_release_v(rel_v[d]),.cancel_release_tag(rel_tag[d*59+:59]),.cancel_release_gen(rel_gen[d*2+:2]),.cancel_released(crel[d]),
-   .result_v(rs_v[d]),.result_tag(rs_tag[d*59+:59]),.result_gen(rs_gen[d*2+:2]),.result_done(rs_done[d]),.result_fault(rs_fault[d]),.result_cause(rs_cause[d*4+:4]),.result_token(rs_tok[d*18+:18]),.result_value(rs_val[d*32+:32]),.result_cycles(rs_cyc[d*32+:32]),.result_cr(rs_cr[d]),
+   .request_v(rq_v_c[d]),.request_tag(rq_tag_c[d*59+:59]),.request_gen(rq_gen_c[d*2+:2]),.request_trace(rq_trace_c[d*32+:32]),.request_token(rq_tok_c[d*18+:18]),.request_pos(rq_pos_c[d*18+:18]),.request_cr(rq_cr[d]),.request_aborted(),
+   .cancel_valid(ts_cv_c[d]),.cancel_tag(ts_ct_c[d]),.cancel_gen(ts_cg_c[d]),.cancel_done(ts_cd[d]),.cancel_fault(ts_cf[d]),.cancel_drained(ts_cdr[d]),.cancel_accepted(c_acc[d]),
+   .cancel_release_v(rel_v[d]),.cancel_release_tag(rel_tag[d*59+:59]),.cancel_release_gen(rel_gen[d*2+:2]),.cancel_released(crel_c[d]),
+   .result_v(rs_v[d]),.result_tag(rs_tag[d*59+:59]),.result_gen(rs_gen[d*2+:2]),.result_done(rs_done[d]),.result_fault(rs_fault[d]),.result_cause(rs_cause[d*4+:4]),.result_token(rs_tok[d*18+:18]),.result_value(rs_val[d*32+:32]),.result_cycles(rs_cyc[d*32+:32]),.result_cr(rs_cr_c[d]),
    .service_ready(1'b1),.native_ready(1'b1),.service_epoch(16'd3),.drained({4{drn}}),.context_owned(owned[d]),.links_drained(1'b1),.link_reset_seen(1'b0),.retrained(1'b0),.program_ready(1'b1),.program_epoch(16'd7),.program_digest(64'h123456789abcdef),
    .step_issue_v(d==0&&step_issue_v),.step_client_tag(step_client_tag),.step_slot(step_slot),.step_pos(step_pos),.step_retire_v(d==0&&step_retire_v),.step_retire_cq(step_retire_cq),.step_retire_client_tag(step_retire_client_tag),.step_retire_slot(step_retire_slot),.step_retire_pos(step_retire_pos),.step_retire_token(step_retire_token),
    .cq_commit_v(d==0&&cq_commit_v),.cq_client_tag(cq_client_tag),.cq_slot(cq_slot),.cq_pos(cq_pos),.cq_token(cq_token),.certificate_v(cert_v),.certificate(66'h1234),.certificate_prefix(32'd0),
@@ -170,7 +187,7 @@ module tb_mu_hroot_full;
    .request_v(rq_v[d]),.request_tag(rq_tag[d*59+:59]),.request_trace(rq_trace[d*32+:32]),.request_gen(rq_gen[d*2+:2]),.request_token(rq_tok[d*18+:18]),.request_pos(rq_pos[d*18+:18]),.request_cr(rq_cr[d]),.native_pr(),
    .result_v(rs_v[d]),.result_tag(rs_tag[d*59+:59]),.result_gen(rs_gen[d*2+:2]),.result_done(rs_done[d]),.result_fault(rs_fault[d]),.result_cause(rs_cause[d*4+:4]),.result_token(rs_tok[d*18+:18]),.result_value(rs_val[d*32+:32]),.result_cycles(rs_cyc[d*32+:32]),.result_cr(rs_cr[d]),
    .kv_drained(drn),.vm_drained(drn),.collective_drained(drn),.host_drained(drn),.collective_busy(1'b0),.kv_flush(1'b0),.recovery_clear(1'b0),
-   .cancel_release_v(rel_v[d]),.cancel_release_tag(rel_tag[d*59+:59]),.cancel_release_gen(rel_gen[d*2+:2]),.context_owned(owned[d]),.cancel_released(crel[d]),.local_tk(ltk[d*93+:93]),.protocol_fault(ep_fault[d]));
+   .cancel_release_v(rel_v_c[d]),.cancel_release_tag(rel_tag_c[d*59+:59]),.cancel_release_gen(rel_gen_c[d*2+:2]),.context_owned(owned[d]),.cancel_released(crel[d]),.local_tk(ltk[d*93+:93]),.protocol_fault(ep_fault[d]));
  end
 
  // ======================= KV layer programme _mu + KV row (die model) =======================

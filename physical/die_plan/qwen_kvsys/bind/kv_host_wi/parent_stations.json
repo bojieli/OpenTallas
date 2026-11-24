@@ -1,0 +1,553 @@
+{
+ "schema": "kv-hubwi.parent_stations.v1",
+ "spec": {
+  "schema": "kv-hubwi.parent_stations_spec.v1",
+  "note": "KV-HR-DEEPCLK 11-24, COORD ruling 03:1x (pre-approved cycles): +1 station per bundle on hr core boundary paths under the 150 ps wire+margin budget (per-path census bnd.py on signed hr libs, early-tap credit); lockup latches on the ingest / order inputs with a setup arc <= 227 ps (residual clock skew fallback). Ready / reset ports are never stationed (ingest d_rdy, prompt host_rst_n excluded).",
+  "stations": [
+   {
+    "inst": "host__qkd_hr_core_guard",
+    "prefixes": [
+     "u_native__request_",
+     "u_native__result_cr",
+     "u_native__cancel_released"
+    ],
+    "stages": 1
+   },
+   {
+    "inst": "host__qkd_hr_core_peer",
+    "prefixes": [
+     "u_peer_codec__cancel_release_",
+     "u_coordinator__dispatch",
+     "u_coordinator__token_grant_",
+     "u_coordinator__allocated_",
+     "u_coordinator__fault",
+     "u_coordinator__identity_fault"
+    ],
+    "stages": 1
+   },
+   {
+    "inst": "host__qkd_hr_core_queue",
+    "prefixes": [
+     "u_marker_consumer__certificate_",
+     "u_bootbarrier__out_"
+    ],
+    "stages": 1
+   },
+   {
+    "inst": "host__qkd_hr_cdc_pc",
+    "prefixes": [
+     "u_rx__o_"
+    ],
+    "stages": 1
+   },
+   {
+    "inst": "host__qkd_hr_core_tx",
+    "prefixes": [
+     "u_ctrl__cancel_valid",
+     "u_ctrl__cancel_tag",
+     "u_ctrl__cancel_generation"
+    ],
+    "stages": 1
+   }
+  ],
+  "latches": [
+   {
+    "inst": "host__qkd_hr_ingest_eng",
+    "ports": [
+     "d_data",
+     "d_v",
+     "in_v"
+    ]
+   },
+   {
+    "inst": "host__qkd_hr_core_order",
+    "ports": [
+     "u_dispatch__hb_cr",
+     "u_dispatch__ing"
+    ]
+   }
+  ]
+ },
+ "source_sha256": "3b1b89ee3a90cd5856cefb33c1de4aa72c42ca3f7bfd67bdf74acfa5073e633a",
+ "parent_sha256": "f85496ee4e54ec02c702113fe9d6595448e273d166587a949ce57bed245e6b44",
+ "rows": [
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__cancel_released",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.cancel_released",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__cancel_released"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__request_gen",
+   "dir": "output",
+   "width": 2,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_request_gen",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__request_gen"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__request_pos",
+   "dir": "output",
+   "width": 18,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_request_pos",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__request_pos"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__request_tag",
+   "dir": "output",
+   "width": 59,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_request_tag",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__request_tag"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__request_token",
+   "dir": "output",
+   "width": 18,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_request_token",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__request_token"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__request_trace",
+   "dir": "output",
+   "width": 32,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_request_trace",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__request_trace"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__request_v",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_request_v",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__request_v"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "port": "u_native__result_cr",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_guard",
+   "net": "\\g_mu.native_result_cr",
+   "cell": "u_kvhw_st_qkd_hr_core_guard__u_native__result_cr"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__allocated_delivered",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.allocated_delivered",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_delivered"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__allocated_valid",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.allocated_valid",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__allocated_valid"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__dispatch_valid",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [777]",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__dispatch_valid"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__dispatched",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [778]",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__dispatched"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__fault",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "coordinator_fault",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__fault"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__identity_fault",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.token_allocator_fault",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__identity_fault"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__token_grant_epoch",
+   "dir": "output",
+   "width": 16,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.allocated_epoch",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_epoch"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__token_grant_gen",
+   "dir": "output",
+   "width": 2,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.allocated_generation",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_gen"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__token_grant_position",
+   "dir": "output",
+   "width": 18,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.allocated_position",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_position"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__token_grant_tag",
+   "dir": "output",
+   "width": 59,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.token_grant_tag",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_tag"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__token_grant_token",
+   "dir": "output",
+   "width": 18,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.allocated_token",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_token"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_coordinator__token_grant_valid",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.token_grant_valid",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_coordinator__token_grant_valid"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_peer_codec__cancel_release_gen",
+   "dir": "output",
+   "width": 2,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.cancel_release_gen",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_gen"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_peer_codec__cancel_release_tag",
+   "dir": "output",
+   "width": 59,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.cancel_release_tag",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_tag"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "port": "u_peer_codec__cancel_release_v",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_coordinator_codec",
+   "net": "\\g_mu.cancel_release_v",
+   "cell": "u_kvhw_st_qkd_hr_core_peer__u_peer_codec__cancel_release_v"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "port": "u_bootbarrier__out_d",
+   "dir": "output",
+   "width": 66,
+   "cycles": 1,
+   "clk": "ck_bootbarrier",
+   "net": "\\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [678:613]",
+   "cell": "u_kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_d"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "port": "u_bootbarrier__out_v",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_bootbarrier",
+   "net": "\\g_mu.u_rank.g_mu.u_control.g_mu.u_obs.obs [612]",
+   "cell": "u_kvhw_st_qkd_hr_core_queue__u_bootbarrier__out_v"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "port": "u_marker_consumer__certificate_prefix",
+   "dir": "output",
+   "width": 32,
+   "cycles": 1,
+   "clk": "ck_bootbarrier",
+   "net": "\\g_mu.certificate_prefix",
+   "cell": "u_kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_prefix"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "port": "u_marker_consumer__certificate_v",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_bootbarrier",
+   "net": "\\g_mu.certificate_v",
+   "cell": "u_kvhw_st_qkd_hr_core_queue__u_marker_consumer__certificate_v"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_cdc_pc",
+   "module": "qkd_hr_cdc_pc",
+   "port": "u_rx__o_d",
+   "dir": "output",
+   "width": 528,
+   "cycles": 1,
+   "clk": "ck_phy_rx_r",
+   "net": "\\g_mu.u_rank.g_mu.raw_rx_d",
+   "cell": "u_kvhw_st_qkd_hr_cdc_pc__u_rx__o_d"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_cdc_pc",
+   "module": "qkd_hr_cdc_pc",
+   "port": "u_rx__o_v",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_phy_rx_r",
+   "net": "\\g_mu.u_rank.g_mu.raw_rx_v",
+   "cell": "u_kvhw_st_qkd_hr_cdc_pc__u_rx__o_v"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_tx",
+   "module": "qkd_hr_core_tx",
+   "port": "u_ctrl__cancel_generation",
+   "dir": "output",
+   "width": 2,
+   "cycles": 1,
+   "clk": "ck_axi",
+   "net": "\\g_mu.cancel_generation",
+   "cell": "u_kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_generation"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_tx",
+   "module": "qkd_hr_core_tx",
+   "port": "u_ctrl__cancel_tag",
+   "dir": "output",
+   "width": 59,
+   "cycles": 1,
+   "clk": "ck_axi",
+   "net": "\\g_mu.cancel_tag",
+   "cell": "u_kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_tag"
+  },
+  {
+   "kind": "station",
+   "inst": "host__qkd_hr_core_tx",
+   "module": "qkd_hr_core_tx",
+   "port": "u_ctrl__cancel_valid",
+   "dir": "output",
+   "width": 1,
+   "cycles": 1,
+   "clk": "ck_axi",
+   "net": "\\g_mu.cancel_valid",
+   "cell": "u_kvhw_st_qkd_hr_core_tx__u_ctrl__cancel_valid"
+  },
+  {
+   "kind": "latch",
+   "inst": "host__qkd_hr_ingest_eng",
+   "module": "qkd_hr_ingest_eng",
+   "port": "d_data",
+   "dir": "input",
+   "width": 256,
+   "cycles": 0,
+   "clk": "ck_qm_bank[0]",
+   "net": "{ \\g_mu.u_rank.g_mu.u_qm.pay [255:220], \\g_mu.u_rank.g_mu.u_qm.hdesc [219:216], \\g_mu.u_rank.g_mu.u_qm.pay [215:172], \\g_mu.u_rank.g_mu.u_qm.hdesc [171:168], \\g_mu.u_rank.g_mu.u_qm.pay [167:144], \\g_mu.u_rank.g_mu.u_qm.hdesc [143:16], \\g_mu.u_rank.g_mu.u_qm.pay [15:8], \\g_mu.u_rank.g_mu.u_qm.hx_head [7], \\g_mu.u_rank.g_mu.u_qm.hdesc [6], \\g_mu.u_rank.g_mu.u_qm.hx_head [5:4], \\g_mu.u_rank.g_mu.u_qm.hdesc [3:0] }",
+   "cell": "u_kvhw_lk_qkd_hr_ingest_eng__d_data"
+  },
+  {
+   "kind": "latch",
+   "inst": "host__qkd_hr_ingest_eng",
+   "module": "qkd_hr_ingest_eng",
+   "port": "d_v",
+   "dir": "input",
+   "width": 1,
+   "cycles": 0,
+   "clk": "ck_qm_bank[0]",
+   "net": "\\g_mu.u_rank.g_mu.u_qm.take_d",
+   "cell": "u_kvhw_lk_qkd_hr_ingest_eng__d_v"
+  },
+  {
+   "kind": "latch",
+   "inst": "host__qkd_hr_ingest_eng",
+   "module": "qkd_hr_ingest_eng",
+   "port": "in_v",
+   "dir": "input",
+   "width": 1,
+   "cycles": 0,
+   "clk": "ck_qm_bank[0]",
+   "net": "\\g_mu.u_rank.g_mu.u_qm.take_p",
+   "cell": "u_kvhw_lk_qkd_hr_ingest_eng__in_v"
+  },
+  {
+   "kind": "latch",
+   "inst": "host__qkd_hr_core_order",
+   "module": "qkd_hr_core_order",
+   "port": "u_dispatch__hb_cr",
+   "dir": "input",
+   "width": 1,
+   "cycles": 0,
+   "clk": "ck_dispatch",
+   "net": "hb_cr",
+   "cell": "u_kvhw_lk_qkd_hr_core_order__u_dispatch__hb_cr"
+  },
+  {
+   "kind": "latch",
+   "inst": "host__qkd_hr_core_order",
+   "module": "qkd_hr_core_order",
+   "port": "u_dispatch__ing",
+   "dir": "input",
+   "width": 290,
+   "cycles": 0,
+   "clk": "ck_dispatch",
+   "net": "{ \\g_mu.u_rank.g_mu.u_qm.o_d , \\g_mu.u_rank.g_mu.u_qm.o_addr , \\g_mu.u_rank.g_mu.u_qm.o_we , \\g_mu.u_rank.g_mu.u_qm.o_v  }",
+   "cell": "u_kvhw_lk_qkd_hr_core_order__u_dispatch__ing"
+  }
+ ],
+ "declared_cycles": {
+  "host__qkd_hr_core_guard.u_native__cancel_released": 1,
+  "host__qkd_hr_core_guard.u_native__request_gen": 1,
+  "host__qkd_hr_core_guard.u_native__request_pos": 1,
+  "host__qkd_hr_core_guard.u_native__request_tag": 1,
+  "host__qkd_hr_core_guard.u_native__request_token": 1,
+  "host__qkd_hr_core_guard.u_native__request_trace": 1,
+  "host__qkd_hr_core_guard.u_native__request_v": 1,
+  "host__qkd_hr_core_guard.u_native__result_cr": 1,
+  "host__qkd_hr_core_peer.u_coordinator__allocated_delivered": 1,
+  "host__qkd_hr_core_peer.u_coordinator__allocated_valid": 1,
+  "host__qkd_hr_core_peer.u_coordinator__dispatch_valid": 1,
+  "host__qkd_hr_core_peer.u_coordinator__dispatched": 1,
+  "host__qkd_hr_core_peer.u_coordinator__fault": 1,
+  "host__qkd_hr_core_peer.u_coordinator__identity_fault": 1,
+  "host__qkd_hr_core_peer.u_coordinator__token_grant_epoch": 1,
+  "host__qkd_hr_core_peer.u_coordinator__token_grant_gen": 1,
+  "host__qkd_hr_core_peer.u_coordinator__token_grant_position": 1,
+  "host__qkd_hr_core_peer.u_coordinator__token_grant_tag": 1,
+  "host__qkd_hr_core_peer.u_coordinator__token_grant_token": 1,
+  "host__qkd_hr_core_peer.u_coordinator__token_grant_valid": 1,
+  "host__qkd_hr_core_peer.u_peer_codec__cancel_release_gen": 1,
+  "host__qkd_hr_core_peer.u_peer_codec__cancel_release_tag": 1,
+  "host__qkd_hr_core_peer.u_peer_codec__cancel_release_v": 1,
+  "host__qkd_hr_core_queue.u_bootbarrier__out_d": 1,
+  "host__qkd_hr_core_queue.u_bootbarrier__out_v": 1,
+  "host__qkd_hr_core_queue.u_marker_consumer__certificate_prefix": 1,
+  "host__qkd_hr_core_queue.u_marker_consumer__certificate_v": 1,
+  "host__qkd_hr_cdc_pc.u_rx__o_d": 1,
+  "host__qkd_hr_cdc_pc.u_rx__o_v": 1,
+  "host__qkd_hr_core_tx.u_ctrl__cancel_generation": 1,
+  "host__qkd_hr_core_tx.u_ctrl__cancel_tag": 1,
+  "host__qkd_hr_core_tx.u_ctrl__cancel_valid": 1
+ }
+}
