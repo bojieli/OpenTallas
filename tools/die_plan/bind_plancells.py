@@ -28,19 +28,45 @@ import bind_efault_stage as ES
 import bind_elab as E
 
 
+# plan-type keys naming the type a clone was copied from (most specific first).  Both clone forms are exact copies of
+# their base type plus landing pins (clock_landing_plan.compose, landing_base_type, <base>__cl<hash>) or with other
+# bound LOGIC parameter values (param_class_split / R8 split, param_base_type, <base>__pv|__r8<hash>): the plan cells
+# are plan-added hardware the parameters do not touch, so a clone carries its base type's plan cells unchanged.
+CLONE_BASE_KEYS = ("param_base_type", "landing_base_type")
+
+
+def plan_cell_types(doc_types, pts):
+    """plan_cells.json types -> {plan type: its plan-cell row} for the bound plan's partition_types pts.
+
+    A plan type keeps its own row; a clone without one inherits the row of the nearest ancestor that has one,
+    following CLONE_BASE_KEYS through the plan (an R8 clone of a landing cohort: __r8 -> __cl -> base; the base may no
+    longer be a plan type once every instance moved to clones).  KV-R8-LANELOSS 11-23: the R8 split clones
+    (param_base_type only) were not aliased, so their partitions silently lost every plan cell (efault, fault chain OR,
+    ID counters) and the plan lanes those cells drive stayed empty (A2g pc_EN_7 L495 o_efault_pc_Q_N_fault)."""
+    out = {}
+    for tn in pts:
+        if tn in doc_types:
+            continue
+        seen, cur = {tn}, tn
+        while cur is not None:
+            row = pts.get(cur) or {}
+            bases = [row[k] for k in CLONE_BASE_KEYS if row.get(k) and row[k] not in seen]
+            hit = next((b for b in bases if b in doc_types), None)
+            if hit is not None:
+                out[tn] = doc_types[hit]
+                break
+            cur = next((b for b in bases if b in pts), None)     # walk on through a base that is still a plan type
+            seen.update(bases)
+    if not out:
+        return doc_types        # no clone: the file as written (byte-identical to before)
+    return {**{tn: t for tn, t in doc_types.items() if tn in pts}, **out}
+
+
 class PlanCells:
     def __init__(self, B, path, base):
         self.B = B
         self.doc = json.loads(Path(path).read_text())
-        self.T = self.doc["types"]
-        # Clock-landing cohort types (clock_landing_plan.compose, landing_base_type) are exact copies of their base
-        # plan type plus landing pins: they carry the base type's plan cells unchanged.  A base fully replaced by
-        # its cohorts is no longer a plan type.
-        pts = B.plan["partition_types"]
-        alias = {tn: t["landing_base_type"] for tn, t in pts.items()
-                 if tn not in self.T and t.get("landing_base_type") in self.T}
-        if alias:
-            self.T = {**{tn: t for tn, t in self.T.items() if tn in pts}, **{tn: self.T[b] for tn, b in alias.items()}}
+        self.T = plan_cell_types(self.doc["types"], B.plan["partition_types"])
         self.ptype0 = {p["name"]: p["type"] for p in B.plan["partitions"]}       # plan type before any split
         self.bus_dir = {tn: {b["name"]: b["dir"] for b in t.get("buses", [])} for tn, t in B.plan["partition_types"].items()}
         self.bus_w = {tn: {b["name"]: int(b["width"]) for b in t.get("buses", [])} for tn, t in B.plan["partition_types"].items()}
