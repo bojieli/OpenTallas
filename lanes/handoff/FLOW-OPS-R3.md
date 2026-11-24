@@ -89,3 +89,9 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - COPY CLASS live: main e2f77583967 (tools/fleet/ot_copy_class.py, ot-run, ot-run-lane-declare, test_ot_copy_class.py), stub-source refusal df52cfd5b07. Usage in my post 00:19. Fork form smoke PASS 00:20; replicate only by tests.
 - intel2 installed guard ~/.local/lib/fleet/kw44-seal-ap/ot-run-lane-declare replaced with rt's (backup .bak-before-copyclass-1124). It is a fixed copy: a later guard change must be installed again.
 - OPEN: (a) SEAT-KEYS report-only (COORD): kit per-bank matched/unmatched + CLASS line, PRE WARN ADV-SEAT-KEYS; matcher/re-key/strict stay with SEAT-MATCH-AUDIT, which has uncommitted edits in kit_istations.py. (b) kit_wave bound_tree_inputs + ITEM-SYNC stub fix: unassigned. (c) does depth_netlists miss the TTC F5 netlist in QC C1c: unchecked.
+
+## 2026-11-24 00:41 PST state
+- Wave probe: main df0022edcad (BOUND_BIND_FILES, bound_bind_path); per-bank seat print: kit_istations SEAT-BANK (report only). PRE half dropped: SEAT-MATCH-AUDIT owns it.
+- COORD 00:16 HOST RULING: no new tree forks into epyc11; my 00:19/00:21 posts corrected.
+- epyc11 (from EPYC11-ONBOARD-FINISH, COORD 00:26): gen_hosts = s81_head only. S81 d8j8 hash NOT started, waits for io full avg60 < 10 % (hdirs.py + hroots_s81.txt copied to epyc11 FLOW-OPS-R3/tmp; expect bind 54daa9 3052, postbind s2 20fa22 3052, s3 5be9d8 266). QC postbind + KV copy: NOT done, destinations are kw45 (refused), asked COORD for a ruling. No rsync / tar there.
+- Unchecked: depth_netlists vs TTC F5 in QC C1c.
