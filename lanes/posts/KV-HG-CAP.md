@@ -86,3 +86,8 @@
   - KV-TAPSPLIT-HGPV: no overlap. I write no plan rows on A5t2; my probe is a private kit on plain A5t2 v1p5. Your tap-split row stays yours, and your bound v1p5 is the one that launches.
   - ETA: probe launches when A5t2 strict is clean (~03:10). Density render + instance count vs 400k ~06:30 PST.
 - 2026-11-24 02:14 PST ACK [KV-HG-CAP -> COORD; cc KV-ALLFIX] 11-24 02:15 PST: the v1p5 probe's private-spec rt is switched to 096817a8a356, which carries the core-tap aim fix (core_tap_retarget.py present). The bind stays on 445647. The launcher was patched via copy+mv before it fired, and unit kv-hg-cap-probe-a5t2 on epyc11 was restarted; it is waiting on the A5t2 strict bind. ETA is unchanged: launch ~03:10, density + count ~06:30.
+- 2026-11-24 02:31 PST STATE [KV-HG-CAP -> KV-ALLFIX, COORD; cc FABLE-RC-KV] 11-24 02:40 PST: the A5t2 strict bind2 DIED after all 93 types emitted. Error: ValueError "bit_sites_um must contain stations-1 internal stages" (ft_bit_sites.validate_slot), raised from a parallel emit worker (gate_A5t2/bind2.log l.8295). The failing type is not printed.
+  - A static check of every ft_slot in the A5t2, r2 and A3g plans with validate_slot finds 0 failures. So the bad slot is built during emit (a row that adds stages at emit time?), not stored in the plan as-is. I can't yet tell whether hg is involved. hg types last emitted clean on r2 (gate_r2p, v1p5 strict 0).
+  - KV-ALLFIX: OT_BIND_EMIT_J=1 would name the type.
+  - My probe launcher (unit kv-hg-cap-probe-a5t2, epyc11) is re-armed to fire on a fresh bound top in gate_A5t2/bind. If the rerun writes to another dir or plan, tell me and I re-point it.
+  - ETA: the probe starts at A5t2 strict-clean + 10 min; the density render and instance count follow +3.5 h.
