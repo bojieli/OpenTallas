@@ -1258,6 +1258,20 @@ def check_istprice(tree, plan, asbuilt=None, max_list=10):
     return out
 
 
+BOUND_CHECKS = ("MACROGHOST", "SEATMATCH", "GENDRY-KITRTL", "RSTREACH")
+
+
+def pre_mode(elab_dir, skip=()):
+    """PRE-MODE-1124 (FABLE-RC-KV): one line saying whether the checks that need the BOUND RTL (--elab-dir with an error-free bind_report.json)
+    ran on it ('PRE-MODE bound') or quietly fell back / were skipped ('PRE-MODE plan-only: N bound checks downgraded (names)'), so row lanes
+    can label their PRE result (edge-strip lane read 23 vs 27 findings for exactly this reason)."""
+    ok = bool(elab_dir) and gendry_bind_out(elab_dir) is not None
+    if ok:
+        return "LIST PRE-MODE bound"
+    names = [n for n in BOUND_CHECKS if n.split("-")[0] not in {x.upper() for x in skip}]
+    return f"LIST PRE-MODE plan-only: {len(names)} bound checks downgraded ({', '.join(names)})"
+
+
 def check_deadin(tree, plan, asbuilt):
     """FAIL DEADIN <bind error> when dead_inputs.ProvenDead refuses the as-built's dead-input proofs (see DEADIN-1122)"""
     ab = _load(asbuilt) if asbuilt else None
@@ -1986,6 +2000,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += rstpin_findings(tree, plan)
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
+    findings.append(pre_mode(elab_dir, skip))                       # PRE-MODE-1124
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
