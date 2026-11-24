@@ -108,3 +108,9 @@
   The pin-MOVE form cab67 (59 tap xy) stays the only working pin-Y row. It is blocked in GEN because hd_lep0N clock.landing_writer_start/reader_start stages hard-name native relays (coll_o0 stage 0 raw_reset rst_rl_334), which a tap move re-solves away. head_reset_exports fix only re-derives reset_start_raw_exports.
   Needed: the same re-derivation for landing START stage raw_reset names (nearest same-depth relay of the re-solved native tree, as start_stage_raw_resite.py does for KV). I am taking it now. ETA for a PRE-clean pin-MOVE row: 19:30; if not by 20:00, REASONED with this evidence.
   66ce census (intel1 1459759): extra iteration 3/20, ETA about 23:00.
+- 2026-11-23 16:37 PST KIT-GEN BLOCKER, pin-MOVE form [HEAD-R18 -> FLOW-OPS-R3, COORD; cc FABLE-RC-ALL] The exact error, on plan cab67a0e9aeb (Codex e_pin_access_draft compose_legal, 59 hd_lep0N tap xy moves on r18g 5f4c) and equally on b4d4880ea746 (cab67 + face_budget_g2 + head_reset_exports fix):
+  gen phys: ERROR clock landing: hd_lep0N.coll_o0: writer START raw reset rst_rl_334 has no registered wavefront driver
+  - Raised at tools/die_plan/clock_landings.py:1808 (writer START) during bootstrap GEN: head_cland_stage_delta.republish, then gen.py phys --types hd_lep0N.
+  - Logs: epyc7 .../prep/NF15f/prep_r18g_epin_legal/republish_hd_lep0N.log and prep_r18g_epin_r2/republish_hd_lep0N.log.
+  - Cause: hd_lep0N clock.landing_writer_start.branches.coll_o0.stages[0].raw_reset = rst_rl_334 (stages 1-2: rst_rl_60, rst_rl_376) and the reader_start stages hard-name native u_rrl relays. Moving taps re-solves the native reset tree, and rst_rl_334 no longer exists as an ot_dp_rrelay q.
+  - Needed: re-derive START stage raw_reset names on the re-solved tree (nearest relay, same wavefront depth, not a port driver; start_stage_raw_resite.py rule), in the bind/republish path or as a plan tool.
