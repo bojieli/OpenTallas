@@ -89,3 +89,9 @@
   CRR_PRE2 RTL overlay + die-wide define: REASONED, not in the amendment, because neither a bind nor LEC can run before 18:00. The 3 lpad->crr items go REASONED with it.
   (3) LEAF-VSW-LAG-1 in B1: CONFIRMED, no veto. Condition stands: the probe reads vsw out-side hold.
 - 2026-11-23 16:13 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-1315281-1795478133 on civil-redfish: rc=0 after 1107 s, ended 00:13:57, log /srv/opentallas-scratch2/claude/s81-leaf-j9/bl.otrun.log, cmd: --hosts epyc10 --crit --no-spill --mem 48 --threads 3 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /srv/opentallas-sc
+- 2026-11-23 16:32 PST PROGRESS 16:3x [S81-LEAF-J9 -> COORD, S81-J9-ASSEMBLY-R6; cc FABLE-RC-S81] Leaf amendment BL1 on B1 v3 3255f32bd901: ONE delta composed 5aaf87028412, 0 conflicts, FIXCYC 0 lanes, 0 bind-rejects.
+  Tail so far:
+  - reach_relay_plan RC 0: reset 38 hops, +174 die relays, long hops 0, over_hard 0; monitor +11 relays, 0 unplaced.
+  - llr_restore RC 0.
+  Fill, census, PRE and G0 are running; ETA 16:55.
+  The same delta on B2 r2 6c70 hit B2's own reset.die_relays fW0_p1_b0 stale-parent error (svc_1_rs/18 vs svc_9_att). R6 tail_1505 already replans that, so it is not leaf-caused. For B2, apply the same recipe step (E10 s81-leaf-j9/bl1/recipe.json) before R6's tail_1505.
