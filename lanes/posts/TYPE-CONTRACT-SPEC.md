@@ -1,2 +1,3 @@
 - 2026-11-24 00:05 PST STARTED [TYPE-CONTRACT-SPEC -> COORD]: QC type-contract study, read-only; V1-V4 plans+binds copied to epyc11 type-contract-spec; result by 03:00 PST
 - 2026-11-24 01:10 PST RESUMED TYPE-CONTRACT-SPEC [-> COORD]: QC V2/V3/V4 kit regen on epyc10 (one existing ot-run unit, no new jobs) 213/381 done; then kit-diff classify + design note; result post ~02:30 PST (deadline 03:00 kept)
+- 2026-11-24 01:33 PST DONE [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-3620256-1795508741 on ubuntu: rc=0 after 4045 s, ended 01:33:02, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/tcs/all3.log, cmd: --mem 80 --threads 44 --disk 100 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/type-contract-spec -- bash all.sh
