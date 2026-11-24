@@ -540,6 +540,7 @@ SCHEMA = {
                     "landing_relay_tx_stages": {"type": "integer", "minimum": 0, "maximum": 8},
                     # RELAY-RX-STAGES (FABLE-FIX-HEAD-LEP0N 11-22): extra start-relay stages before the rx flop of a relay type
                     "landing_relay_rx_stages": {"type": "integer", "minimum": 0, "maximum": 8},
+                    "landing_relay_rx_pin_plain": {"type": "boolean"},   # RX-PIN-PLAIN: rx pin stage p0 is a bare flop
                     "private_reset_start_exports": {"type": "boolean"},
                     # HEAD SOURCE7: actual existing registered raw reset Q exports.
                     # head_start_reset_aliases verifies each source instance/net in emitted RTL.
@@ -905,6 +906,10 @@ SCHEMA = {
                                            # must already deliver it); rck_early.txt, measured at the post-CTS gate (report only)
                                            "min_early_ps": _nonneg,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
+                                           # CORE-SCHED (HEAD-WEST 11-24): kind core: intended clock schedule of the core pin, ps LATER
+                                           # than the balanced aim (useful skew; tap_balance OT_CORE_SCHED).  insertion_ps stays the
+                                           # signed mean; STA propagates the real tree.  Absent = 0 = unchanged kits.
+                                           "schedule_ps": {"type": "number", "minimum": -150, "maximum": 150},
                                            "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
                     # PG-CORECONN-1 10-28 (opt-in): pdngen macro grids land every placed non-PHY macro's LEF PG pins

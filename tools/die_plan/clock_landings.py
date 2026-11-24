@@ -2675,8 +2675,23 @@ class Landings:
             # RELAY-RX-STAGES: n kept same-clock relay stages between the pin and the rx flop; each takes the raw copy nearest its
             # plan site (relay_sites u_cland_rstart_rx_p<i>/q), as the tx stages do; no site = the rx raw
             rx_d, T_ = "cland_rstart_in", (getattr(self, "types", {}).get(type_key or tn) or {})
+            # RX-PIN-PLAIN (HEAD-WEST 11-24, opt-in landing_relay_rx_pin_plain): the first rx stage u_cland_rstart_rx_p0 is the
+            # pin register of cland_rstart_in.  As ot_dp_landing_relay its synchronous raw reset is an AND in front of the D, so
+            # the port loads logic (face_guard 'unregistered', hd_lep0N_w run-1).  Plain, it is a bare flop like the arst_n /
+            # start_i pin registers: same stage count (0 cycles, same count frame); the sender's rstart_out is a reset flop, so the
+            # stage holds 0 through reset and every later stage keeps its raw reset.  Needs >= 1 rx stage.
+            plain0 = T_.get("landing_relay_rx_pin_plain", False)
+            if not isinstance(plain0, bool):
+                raise LandingError(f"{tn}: landing_relay_rx_pin_plain must be a boolean")
+            if plain0 and _relay_rx_extra_stages(T_) < 1:
+                raise LandingError(f"{tn}: landing_relay_rx_pin_plain needs landing_relay_rx_stages >= 1")
             for i in range(_relay_rx_extra_stages(T_)):
                 site = (T_.get("relay_sites") or {}).get(f"u_cland_rstart_rx_p{i}/q")
+                if plain0 and i == 0:
+                    raw_logic += ["    wire cland_rstart_rx_p0;",
+                                  f'    (* keep = "true" *) ot_dp_rrelay u_cland_rstart_rx_p0 (.clk(clk), .d({rx_d}), .q(cland_rstart_rx_p0));']
+                    rx_d = "cland_rstart_rx_p0"
+                    continue
                 rawp = raw if site is None else self._tx_raw(tn, type_key or tn, raw, ca_raw, raw_logic, sfx=f"_rxp{i}", at=site,
                                                              limit=LOCAL_RESET_REACH_UM)
                 raw_logic += [f"    wire cland_rstart_rx_p{i};",

@@ -6371,13 +6371,48 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
         (kd / "core_latency_ff.txt").write_text(
             "# inst pin mean_pin_register_insertion_ps tap (FF; corner/source basis in JSON)\n" +
             "".join(f"{r['inst']} {r['pin']} {r['corners']['ff']['mean_ps']:g} {r['tap']}\n" for r in rows))
+    sched = core_tap_schedule(P, tn)
+    if sched:
+        (kd / "core_sched.txt").write_text("# inst pin schedule_ps   (GENERATED; plan clock.taps[kind core].schedule_ps, CORE-SCHED)\n" +
+                                           "".join(f"{i} {p} {v:g}\n" for i, p, v in sched))
     if taps:
         (kd / "core_taps.txt").write_text("# port inst pin|* early_ps insertion_ps   (GENERATED; CP2 early core taps)\n" +
                                           "".join(f"{n} {i} {p} {e:g} {ins:g}" +
                                                   (" exact" if any(p in tp.get("merged_clock_ports", []) and
                                                    (tp["name"] == i or tp["name"].startswith(i + ".")) for tp in P.types[tn].get("clock", {}).get("taps", [])) else "") + "\n"
                                                   for n, i, p, e, ins in taps))
-    return dict(rows=rows, taps=taps)
+    return dict(rows=rows, taps=taps, sched=sched)
+
+
+def core_tap_schedule(P, tn):
+    """CORE-SCHED (HEAD-WEST 11-24, opt-in): [(core inst, clock pin, ps)] of the early core taps that declare
+    schedule_ps != 0: the balancer aims that core pin schedule_ps LATER than the common target (a declared useful-skew
+    schedule; the signed insertion and the spine early shift are unchanged).  Whole-core (`<inst>`) and one-pin
+    (`<inst>.<pin>`) taps only; a core_group / merged tap with schedule_ps is refused."""
+    t = P.types[tn]
+    insts = [c["inst"] for c in t.get("hard_cores", []) or []]
+    physical = {c["inst"]: content_physical_identity(c)[0] for c in t.get("hard_cores", []) or []
+                if "physical_inst" in c or "physical_master" in c}
+    out = []
+    for _n, _x, _y, tp in S.core_taps(P, tn):
+        v = float(tp.get("schedule_ps", 0) or 0)
+        if not v:
+            continue
+        if "core_group" in tp or tp.get("merged_clock_ports"):
+            raise ValueError(f"type {tn}: core tap {tp.get('name')}: schedule_ps needs a whole-core or one-pin tap")
+        nm = tp["name"]
+        hit = None
+        for i in sorted(insts, key=len, reverse=True):
+            if nm == i:
+                hit = (i, "*")
+            elif nm.startswith(i + "."):
+                hit = (i, nm[len(i) + 1:])
+            if hit:
+                break
+        if not hit:
+            raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
+        out.append((physical.get(hit[0], hit[0]), hit[1], v))
+    return out
 
 
 def reg_spine_spec(P, tn):
@@ -8119,6 +8154,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # arrival, and the early core taps (core_taps.txt) clock_taps.tcl hangs the core clock pins on
            *(["export OT_CORE_LAT = /work/core_latency.txt"] if clat["rows"] else []),
            *(["export OT_CORE_TAPS = /work/core_taps.txt"] if clat["taps"] else []),
+           *(["export OT_CORE_SCHED = /work/core_sched.txt"] if clat.get("sched") else []),
            # signoff setup corner (TT); ORFS asap7 defaults to BC = FF libs, i.e. kit synth / CTS / repair at FF
            "export CORNER = TC",
            # NOMCAP-1118 (OWNER r708, default ON; OT_NOMCAP=0 at generation = stock libraries): nominal input-pin load

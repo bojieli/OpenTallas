@@ -858,6 +858,29 @@ def test_relay_tx_stage_reset_is_local_to_its_plan_site():
     assert r2 == "cland_reset_tx_p1" and any("u_cland_rst_tx_p1 (.clk(clk), .d(raw_a)" in x for x in rl)
 
 
+def test_relay_rx_pin_plain_makes_the_first_rx_stage_a_bare_pin_flop():
+    """RX-PIN-PLAIN (HEAD-WEST 11-24): landing_relay_rx_pin_plain turns u_cland_rstart_rx_p0 into ot_dp_rrelay (no raw reset,
+    so cland_rstart_in loads one flop D only); later stages and the rx flop keep their raw resets; stage count unchanged."""
+    p, t = ca_relay_vehicle()
+    p["partition_types"]["C"]["landing_relay_rx_stages"] = 2
+    t["count_aligned"]["parts"]["c"]["stages"] = 4
+    ref = Landings(p, t).type_rtl("C", C_BODY)
+    p["partition_types"]["C"]["landing_relay_rx_pin_plain"] = True
+    cc = Landings(p, t).type_rtl("C", C_BODY)
+    assert "ot_dp_rrelay u_cland_rstart_rx_p0 (.clk(clk), .d(cland_rstart_in), .q(cland_rstart_rx_p0));" in cc
+    assert "ot_dp_landing_relay u_cland_rstart_rx_p0" not in cc and "ot_dp_landing_relay u_cland_rstart_rx_p0" in ref
+    assert ".d(cland_rstart_rx_p0), .q(cland_rstart_rx_p1));" in cc and ".d(cland_rstart_rx_p1), .q(cland_start));" in cc
+    assert cc.count("cland_rstart_in") == ref.count("cland_rstart_in")
+    p["partition_types"]["C"]["landing_relay_rx_pin_plain"] = "yes"
+    with pytest.raises(LandingError, match="must be a boolean"):
+        Landings(p, t).type_rtl("C", C_BODY)
+    p["partition_types"]["C"]["landing_relay_rx_pin_plain"] = True
+    p["partition_types"]["C"]["landing_relay_rx_stages"] = 0
+    t["count_aligned"]["parts"]["c"]["stages"] = 2
+    with pytest.raises(LandingError, match="needs landing_relay_rx_stages"):
+        Landings(p, t).type_rtl("C", C_BODY)
+
+
 def test_bind_inst_id_matches_the_bind_instance_name():
     # FLOW-STRIPBODY-R2 11-22: the landing pass must find split pieces (s_7N_C__strip_S) under the name bind.emit_top writes
     import bind

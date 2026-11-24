@@ -107,6 +107,26 @@ if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
   }
   close $fh
 }
+# CORE-SCHED (HEAD-WEST 11-24, opt-in OT_CORE_SCHED: gen_phys core_sched.txt `inst pin|* ps` from plan clock.taps[kind core]
+# .schedule_ps): a declared useful-skew schedule.  The balancer aims that core pin ps LATER than the target by reading its
+# internal latency ps lower (pin = target - (L - ps)); core_latency.txt keeps the signed mean; STA propagates the real tree.
+if {[info exists ::env(OT_CORE_SCHED)] && [file exists $::env(OT_CORE_SCHED)]} {
+  set fh [open $::env(OT_CORE_SCHED)]
+  foreach l [split [read $fh] "\n"] {
+    if {[string match "#*" $l] || [llength $l] < 3} continue
+    lassign $l si sp sv
+    set hit 0
+    foreach k [dict keys $tb_clat] {
+      set plain [string map {"\\" ""} $k]
+      if {($sp eq "*" && [string match "$si/*" $plain]) || $plain eq "$si/$sp"} {
+        dict set tb_clat $k [expr {[dict get $tb_clat $k] - $sv}]; incr hit
+      }
+    }
+    puts "OT_TAP_CORE_SCHED $si/$sp schedule +$sv ps ($hit latency keys)"
+    if {!$hit} { error "OT_CORE_SCHED: $si/$sp has no core_latency.txt row" }
+  }
+  close $fh
+}
 set tb_cores {}
 # QC-A0 10-24: the family follows OT_TAP_PORT (A0 hard cores: ck / ck_t<i>)
 set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}
