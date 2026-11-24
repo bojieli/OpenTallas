@@ -7,3 +7,11 @@ Base B1 ae3101241d6b = epyc10 s81-j9-r6/b1_tree/physical/die_plan/s81/plan_j9_b1
 - CHOSEN (c) C2: stack cols2-4 (C,L1,L3,L4) +699.84; t46/47/48 -> 527.04 tall (top kept); col1 L0+C (s_1N_L0,s_1N_C) -155.52; t2 rect [13452.48,17236.8,18135.36,19163.52] = 4682.88x1926.72. 13 types repinned, 44 ports. Full 4700.16 (spec_C) = +6 types incl lepw C/LP.
 ## Next
 - tool: grid-quantize slides; test; push. apply C2 -> tail (row.sh copy) -> PRE + G0 -> scoped strict on touched types.
+## 19:4x
+- My E10 probe bind DIED rc143 (E10 kills binds; MULTI too). Not relaunched: INT gate_c7a (E9, amd1_tree, gate_allfix.sh) runs scoped strict on 12 p5 + serdes t13 after elab (~21:00), sc_out = <amd1_tree>/physical/die_plan/s81/plan_of_record/native_bind/allfix_c7a_out_scope.
+- Waiter E9 tmp/w2.sh (task brrq5dw3k). On p5 EMIT 0: launch E9 `ot-run --mem 8 --hosts epyc9 -- bash /srv/opentallas-scratch2/claude/s81-allfix-col/tmp/kits.sh <amd1_tree> <S>/j9tail_c7a/p5_deadin.json <sc_out or full bind_out> epyc9` (kits.sh on E9; capture json copied).
+## 19:29 COORD APPROVED C2. 20:0x state
+- Tool pushed main 834707c717e (later fixes pending push: landing relays drop/translate, tap renames for grid types, remap = scale + bands follow windows + explicit tap legalize).
+- Row: rec_C2.json = B1 + tool step (spec_C2.json); row.sh (copy of slice row.sh) C2 g0 -> rows/C2, log rows_C2.otrun.log. try1-4 failed in reach_relay_plan (monitor relays, t2 added taps, station tap names/spacing) -> fixed in tool.
+- Private tree fork of b1_tree -> s81-t2-refloor/tree (fork.otrun.log) for scoped strict (bind.py bind --strict --all-gaps --types ...).
+- ARCH answered: t2 frame origin (13452.48,17236.8), +302.4 x vs B1.
