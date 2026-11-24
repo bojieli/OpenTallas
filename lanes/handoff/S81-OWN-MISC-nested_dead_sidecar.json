@@ -1,0 +1,144 @@
+{
+ "schema": "opentallas.nested_open_dead_sidecar.v1",
+ "report_only": true,
+ "plan": "S81 B1 main 8a8a785b45a; c8 p6u_hops2 94eb2af6a4f5",
+ "method": "source read, no yosys",
+ "declared_in_plan_dead_inputs": 0,
+ "entries": [
+  {
+   "leaf": "ot_v41_rom_elem_q_qxpq_w10_gb_he",
+   "inst": "u_h.u_e",
+   "port": "xs_sv_pin",
+   "child": "ot_v41_rom_elem_qx_pq_w10",
+   "n_types": 216,
+   "class_": "DEAD_NO_READER",
+   "evidence": "xs_sv_pin->xs_sv->xs_sv_e, xs_sv_e has no consumer in rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv (only xb_sv_e is read, line 1175)"
+  },
+  {
+   "leaf": "ot_v41_rom_elem_q_qxpq_w10_gb_hw",
+   "inst": "u_h.u_e",
+   "port": "xs_sv_pin",
+   "child": "ot_v41_rom_elem_qx_pq_w10",
+   "n_types": 216,
+   "class_": "DEAD_NO_READER",
+   "evidence": "xs_sv_pin->xs_sv->xs_sv_e, xs_sv_e has no consumer in rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv (only xb_sv_e is read, line 1175)"
+  },
+  {
+   "leaf": "ot_s81_su_smc",
+   "inst": "u_a",
+   "port": "clk",
+   "child": "ot_dsrom_su_softmax_add",
+   "n_types": 16,
+   "class_": "SCAN_FALSE_HIT_POSITIONAL",
+   "evidence": "instance connected by positional list `u_a (clk, rst_n, ...)` in rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv; named-port text scan cannot see it"
+  },
+  {
+   "leaf": "ot_s81_su_smc",
+   "inst": "u_a",
+   "port": "rst_n",
+   "child": "ot_dsrom_su_softmax_add",
+   "n_types": 16,
+   "class_": "SCAN_FALSE_HIT_POSITIONAL",
+   "evidence": "instance connected by positional list `u_a (clk, rst_n, ...)` in rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv; named-port text scan cannot see it"
+  },
+  {
+   "leaf": "ot_s81_su_smc",
+   "inst": "u_a",
+   "port": "v",
+   "child": "ot_dsrom_su_softmax_add",
+   "n_types": 16,
+   "class_": "SCAN_FALSE_HIT_POSITIONAL",
+   "evidence": "instance connected by positional list `u_a (clk, rst_n, ...)` in rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv; named-port text scan cannot see it"
+  },
+  {
+   "leaf": "ot_s81_su_smc",
+   "inst": "u_a",
+   "port": "a",
+   "child": "ot_dsrom_su_softmax_add",
+   "n_types": 16,
+   "class_": "SCAN_FALSE_HIT_POSITIONAL",
+   "evidence": "instance connected by positional list `u_a (clk, rst_n, ...)` in rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv; named-port text scan cannot see it"
+  },
+  {
+   "leaf": "ot_s81_su_smc",
+   "inst": "u_a",
+   "port": "b",
+   "child": "ot_dsrom_su_softmax_add",
+   "n_types": 16,
+   "class_": "SCAN_FALSE_HIT_POSITIONAL",
+   "evidence": "instance connected by positional list `u_a (clk, rst_n, ...)` in rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv; named-port text scan cannot see it"
+  },
+  {
+   "leaf": "ot_s81sl_lep_mu_ab_tpr",
+   "inst": "u",
+   "port": "tm",
+   "child": "ot_s81sl_lep_core",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "tm read only under IDX_MRG!=0 (QEN=IDX_EN&&IDX_Q for qc); wrapper leaves IDX_MRG=0 (physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv)"
+  },
+  {
+   "leaf": "ot_s81sl_lep_mu_ab_tpr",
+   "inst": "u",
+   "port": "qc",
+   "child": "ot_s81sl_lep_core",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "qc read only under IDX_Q!=0 (QEN=IDX_EN&&IDX_Q for qc); wrapper leaves IDX_Q=0 (physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv)"
+  },
+  {
+   "leaf": "ot_s81sl_lep_mu_hab_tp",
+   "inst": "u",
+   "port": "tm",
+   "child": "ot_s81sl_lep_core",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "tm read only under IDX_MRG!=0 (QEN=IDX_EN&&IDX_Q for qc); wrapper leaves IDX_MRG=0 (physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv)"
+  },
+  {
+   "leaf": "ot_s81sl_lep_mu_hab_tp",
+   "inst": "u",
+   "port": "qc",
+   "child": "ot_s81sl_lep_core",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "qc read only under IDX_Q!=0 (QEN=IDX_EN&&IDX_Q for qc); wrapper leaves IDX_Q=0 (physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv)"
+  },
+  {
+   "leaf": "ot_s81sl_lep_mu_a_tpt",
+   "inst": "u",
+   "port": "tm",
+   "child": "ot_s81sl_lep_core",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "tm read only under IDX_MRG!=0 (QEN=IDX_EN&&IDX_Q for qc); wrapper leaves IDX_MRG=0 (physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv)"
+  },
+  {
+   "leaf": "ot_s81sl_lep_mu_a_tpt",
+   "inst": "u",
+   "port": "qc",
+   "child": "ot_s81sl_lep_core",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "qc read only under IDX_Q!=0 (QEN=IDX_EN&&IDX_Q for qc); wrapper leaves IDX_Q=0 (physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_lep.sv)"
+  },
+  {
+   "leaf": "dsdv_gunit_l2",
+   "inst": "u_vs",
+   "port": "bk_uid",
+   "child": "ot_dsdv_vstop",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "bk_uid read only in bk_n/bk_s gated by BK_DRAIN_SINK!=0; default 0, instance does not set it"
+  },
+  {
+   "leaf": "dsdv_seq_host_mux",
+   "inst": "u.u_u.u_l2.u_vs",
+   "port": "bk_uid",
+   "child": "ot_dsdv_vstop",
+   "n_types": 1,
+   "class_": "DEAD_PARAM_GATED",
+   "evidence": "same: BK_DRAIN_SINK default 0 (via gunit_l2 u_vs)"
+  }
+ ]
+}
