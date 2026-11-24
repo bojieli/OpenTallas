@@ -33,9 +33,8 @@ def bcfg():
         {"src": "/srv/opentallas-scratch2/claude/kw45/ev", "plan": "", "kit_rtl": {"mode": "bind", "bind_out": B, "asbuilt": ""}}]}}}
 
 
-def test_stub_bind_is_not_a_holder_and_is_never_healed_by_file():
-    """STUB-BIND 11-24: a lone bind_report.json on the host that would serve the bound tree is refused; a whole bind is accepted; ITEM-SYNC copies
-    no single file into the bind dir but still heals other inputs of the same pseudo item"""
+def test_incomplete_bound_tree_is_probed_without_partial_replication():
+    """Only complete replicas can serve bound-tree fallback, while ordinary item inputs still self-heal."""
     c = bcfg()
     ps = KW.bound_tree_inputs(c["dies"]["s81"])["__bound__0"]
     assert [p for p in ps if p.startswith(B)] == [f"{B}/bind_report.json", f"{B}/bind.f", f"{B}/native_topology.json"]
@@ -49,9 +48,14 @@ def test_stub_bind_is_not_a_holder_and_is_never_healed_by_file():
     c["_item_incomplete"]["epyc2"] = {}
     ap = AP()
     assert KW.sync_item_inputs(ap, c) == [] and ap.cmds == []
-    c["_item_incomplete"]["epyc7"] = {"s81": {"__bound__0": f"{B}/bind_report.json missing; {P} missing", "t62": f"{B}/x.json missing"}}
-    assert sorted(p for _, p, _ in KW.sync_item_inputs(AP(), c)) == sorted([P, f"{B}/x.json"])
-    assert not KW.bound_bind_path(c["dies"]["s81"], "__bound__0", B + "2/bind.f") and not KW.bound_bind_path({}, "__bound__9", B)
+    src = c["dies"]["s81"]["bound_trees"][0]["src"]
+    c["_item_incomplete"]["epyc7"] = {"s81": {
+        "__bound__0": f"{B}/bind_report.json missing; {src}/tools/die_plan/bind.py missing",
+        "t62": f"{P} missing",
+    }}
+    assert KW.sync_item_inputs(ap, c) == [("epyc7", P, "epyc2")]
+    assert len(ap.cmds) == 1
+    assert KW.bound_holders(c, "s81", 0) == ["epyc2"]
 
 
 def test_nothing_when_no_holder_or_off_or_unsafe():

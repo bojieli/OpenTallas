@@ -6026,16 +6026,6 @@ BOUND_KEY = "__bound__"
 BOUND_BIND_FILES = ("bind_report.json", "bind.f", "native_topology.json")
 
 
-def bound_bind_path(d, item, p):
-    """True when p lies in the bind dir of the bound-tree pseudo item: ITEM-SYNC never heals a bind file by file (that is how the stubs were made)"""
-    if not str(item).startswith(BOUND_KEY):
-        return False
-    bt = ((d.get("bound_trees") or []) if isinstance(d, dict) else [])
-    i = str(item)[len(BOUND_KEY):]
-    bo = str(((bt[int(i)].get("kit_rtl") or {}) if i.isdigit() and int(i) < len(bt) else {}).get("bind_out") or "").rstrip("/")
-    return bool(bo) and (p == bo or p.startswith(bo + "/"))
-
-
 def bound_tree_inputs(d):
     """{"__bound__<i>": [paths]} for the die's usable bound_trees entries (a bind, not env_unknown): the tree's required files, its plan dir, its bind report and as-built"""
     out = {}
@@ -6411,8 +6401,9 @@ def sync_item_inputs(AP, cfg, run=None):
     listed in cfg _item_incomplete, gens fell back to such a host (resume / all-incomplete `or hs`) and failed with
     FileNotFoundError.  Self-heal: each missing absolute path under /srv/opentallas-scratch*/claude that a probed gen host of
     the same die holds is copied (tar over ssh through the hub, existing files kept, <= ITEM_SYNC_MAX_MB, no delete) to
-    the hosts missing it; the next probe then lists the host whole.  Option item_sync: false turns it off.  Returns the
-    [(host, path, src_host)] copied."""
+    the hosts missing it; the next probe then lists the host whole. Historical bound-tree probes are read-only: they
+    select verified holders, and any new replica is installed through the snapshot publisher. Option item_sync: false
+    turns it off. Returns the [(host, path, src_host)] attempted."""
     if cfg.get("item_sync") is False:
         return []
     inc = cfg.get("_item_incomplete") or {}
@@ -6428,6 +6419,8 @@ def sync_item_inputs(AP, cfg, run=None):
     for h in sorted(inc):
         for die, items in sorted(inc[h].items()):
             for item, why in sorted(items.items()):
+                if item.startswith(BOUND_KEY):
+                    continue
                 for part in str(why).split("; "):
                     p = part.split(": ")[0].replace(" missing", "").strip()
                     if not _ITEM_SYNC_OK.match(p) or ".." in p or len(done) >= ITEM_SYNC_MAX_PER_TICK:
@@ -6440,8 +6433,6 @@ def sync_item_inputs(AP, cfg, run=None):
                         dep = part.split(": ", 1)[1].replace(" missing", "").strip()
                         if _ITEM_SYNC_OK.match(dep) and ".." not in dep:
                             sp = dep
-                    if bound_bind_path(cfg["dies"].get(die), item, sp):
-                        continue
                     bk = "itembo|%s|%s" % (h, sp)               # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 E): back off by cause, per (host, path), not per item
                     live.update((bk, bk + "#n"))
                     if (h, sp) in attempted or float(tries.get(bk) or 0) > time.time():
