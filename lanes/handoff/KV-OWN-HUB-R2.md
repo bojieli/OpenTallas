@@ -16,3 +16,6 @@ Row ROWS_KV-OWN-HUB-R2-PINS.py cdb6c7d0bb6e (epyc11 kv-own-hub-r2) refuses: hub_
 ## 11-24 13:27 PINS big-move draft (hub d34e85a7)
 COORD ruling: gate on E9 kv3_hub_Wo_1124080816 ROUTED final db (seam box overflow + seq TT>=-42 -> IN-BASE), draft big move meanwhile (overlap+PRE only).
 Draft row 0a4d6c3ed07c: DY=+1036.8 (seam gap free on both faces y1037-1184). Overlap/start re-site OK; blocked at hub_Wi ft re-site (path_respace: needs_add L1429,L2034; exact_bank_blocked 5; unresolved L2036). Next: route 9 hub_Wi ft slots via street y1166-1192 -> PRE (job_pins2.sh RS=<sha>). Kit at 4_1_cts (21:27Z log).
+
+## 11-24 14:12 (hub post above)
+E9 kit FAILED CTS (missing tap_landing_seam.tcl in kit) -> no routed verdict. PINS row 9f5237a75a63 + reach_rules fix -> plan 538cfce625a2; PRE 2 new RSTREACH (landing_raw_branches hub_Wo/hub_Wi), fix = kv_start_corridor_event.py raw after a strict bind. job_pins3.sh. Awaiting COORD on bind.
