@@ -445,12 +445,34 @@ def signed_unexported_refusal(t, exported=None, host=None):
     return None
 
 
+def keep_refusal(target):
+    """ROMW-LOSS-1124 (COORD 11-24): a .keep file at or above the target keeps it.  Until now only ot-autoclean honoured .keep, so ot-delete of
+    romw-1119/ckpt, head, logs, venv, wt ... (lane dir held a .keep) removed 323 GB of checkpoints on 11-23.  No list, allow_exact entry or flag
+    bypasses this; only removing the .keep file does."""
+    t = os.path.abspath(target)
+    d = t
+    while True:
+        k = os.path.join(d, ".keep")
+        try:
+            os.lstat(k)
+            return ".keep file keeps it (%s; remove the .keep file to delete)" % k
+        except OSError:
+            pass
+        nd = os.path.dirname(d)
+        if nd == d:
+            return None
+        d = nd
+
+
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
     if os.path.islink(target) or os.path.realpath(target) != os.path.abspath(target):
         if canon(os.path.realpath(target)) != t:
             return "symlink or realpath differs"
+    kr = keep_refusal(target)
+    if kr:
+        return kr
     rr = routed_unsigned_refusal(t)
     if rr:
         return rr

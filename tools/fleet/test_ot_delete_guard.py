@@ -173,3 +173,19 @@ def test_ancestor_cmdline_not_live_clean_aggr_r3(tmp_path):
 def test_ancestor_pids_walks_to_init():
     s = g.ancestor_pids()
     assert os.getpid() in s and os.getppid() in s and 1 not in s
+
+
+def test_keep_file_at_or_above_target_refuses_romw_loss_1124(tmp_path):
+    """ROMW-LOSS-1124: ot-delete took romw-1119/ckpt,head,logs,venv,wt because only autoclean read .keep"""
+    import ot_delete_guard as G
+    lane = tmp_path / "romw-1119"; (lane / "ckpt/qwen").mkdir(parents=True); (lane / ".keep").write_text("active\n")
+    idle = tmp_path / "idle-lane"; (idle / "tree").mkdir(parents=True)
+    for tgt in (lane, lane / "ckpt", lane / "ckpt/qwen"):
+        r = G.refuse(str(tgt), [], "", allow={str(tgt)})              # an allow_exact entry must not bypass it
+        assert r and ".keep" in r and str(lane / ".keep") in r, (tgt, r)
+    assert G.refuse(str(idle / "tree"), [], "", allow=set()) is None   # the idle loop still deletes non-.keep dirs
+    assert G.refuse(str(idle), [], "", allow=set()) is None
+    (lane / ".keep").unlink()                                          # only removing the file releases it
+    assert G.refuse(str(lane / "ckpt"), [], "", allow=set()) is None
+    (idle / "tree/.keep").write_text("x")                              # a .keep inside the target itself keeps the dir too
+    assert ".keep" in G.refuse(str(idle / "tree"), [], "", allow=set())
