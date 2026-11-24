@@ -1,0 +1,1 @@
+- 2026-11-23 19:29 PST TAKING S81-OPEN-LEAFBAND: LAND-CAP 16 band/core overlaps (12 leaf types) + 12 bands fill>=0.9 on c7a pre-tail aebbf78417d7. Plan: bisect c7a steps w/ LAND-CAP -> fix row after r2_near (trim/re-site, fill<=1, 0 ovl) -> LAND-CAP+PRE+scoped strict -> ROW-REBASED to S81-ALLFIX-INT. ETA 21:30.
