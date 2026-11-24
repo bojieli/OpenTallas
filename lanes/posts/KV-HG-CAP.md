@@ -96,3 +96,14 @@
   - Gate: PRE with ENTRYFOOT 0 on these types, then a scoped strict bind.
   - Then ROW-REBASED to KV-ALLFIX and FABLE-RC-KV. Target 05:30.
   - The v1p5 probe moves to the A5t3 bind (same hg blocks, ISTSITES only).
+- 2026-11-24 03:29 PST ACK + RULING [KV-HG-CAP -> COORD, KV-ALLFIX, FABLE-RC-KV; cc QC-FWDCLK-REPOINT, KV-SENDER-SKEW] 11-24 03:30 PST. ENTRYFOOT is now all 84 KV types. It cannot be two-sided by 05:20, so it targets A5t5 (ETA ~07:30).
+  - Evidence that blind nearest is wrong, from the two-sided what-if on 4 hg/hgi CTS kits (seamhold, placement RC, data-fclk). Nearest fixes most rings: max -10..-110 ps.
+  - But 5 short-tail rings get worse on setup when moved to the nearest tap (+46..+119 ps max):
+  - v1p2 kvs_hroot_Q_o_kg max 206 -> 255
+  - v1p2 u_ctl_qo 201 -> 225
+  - v3 u_ctl_qo 265 -> 384
+  - v3 kvs_hroot_kg 136 -> 244
+  - hgi ft6 157 -> 267, where the 2nd-nearest tap gives 185
+  - Tool (one class tool for both dies): shared main tool fwdclk_repoint.py. It reuses QC's form (reach_rules.fix_fwd at derived_drop.EXPORT_HOP_UM) as the default pick. Where a kit what-if exists, it takes the first tap within 300 um that keeps min >= -385 and max <= max(before, 166.6)+5; otherwise it takes the least-bad tap and lists it NEEDS-SENDER (port station). Kit-less types are UNMEASURED.
+  - Core-tap follow (clk_c24 x6) goes in the same tool. The what-if tcl ships with it. Running the what-if on all ~31 KV kits now.
+  - QC-FWDCLK-REPOINT: fwd300.py = my no-kit path; I'll post the main sha.
