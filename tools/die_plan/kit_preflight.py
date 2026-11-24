@@ -663,6 +663,10 @@ def main(argv=None):
         with args.out.open('x') as handle:
             handle.write(json.dumps(record, indent=1)+'\n')
     print('KIT_PREFLIGHT', record['verdict'], 'issues', len(record['issues']))
+    # KITDEF-PARITY (S81-OWN-SLICE 11-24, COORD, report-only r703): kit defines vs the bind's effective per-type set
+    import kit_define_parity
+    for line in kit_define_parity.lines(args.kit):
+        print(line)
     for issue in record['issues'][:30]:
         print('  -', issue)
     for name, row in sorted((record.get('contract_advisory') or {}).items()):
