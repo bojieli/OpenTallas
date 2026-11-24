@@ -1,0 +1,13 @@
+# S81-IQF-RELAY handoff (Opus 5.5; started 11-24 08:2x PST). Narrow lane: row IQF-SEQH-RELAYSITE (iqf__t1, seqhost__t1) -> S81-ALLFIX-INT.
+Brief: localhost scratchpad resume_1124b.txt + s81_open_brief.txt (+ rules/split/allfix briefs). Lane dir E9 /srv/opentallas-scratch2/claude/s81-iqf-relay.
+## Findings (J8 18a2688b741 placed geoms, c9 048fa468f0a2 plan)
+- iqf J8 relay_collapse 240 = ring-fed u_bin_idx_i0 q dragged 390 um into core (1029,701). c9 already has relay_sites u_bin_idx_i0/ql_i0 (1028 keys), 5 internal station chains (worst hop 332, no macros), landing_writer_start flt_o0/idx_o0 chains (fixes J8 cland_origin->fstart_flt_o0 1384 um / -110 REACH). -> iqf IN-BASE (c8 == c9 for iqf).
+- seqhost J8 relay_collapse 19 = core l3->l4->u_bout_xtier_o1 (c9 xtier_o1 stations cover it). Ring-fed u_bin_unit_i2 q[*] at x 700-773, u_bin_vid_i0/q at x 685 (eq at face). c9 internal_stations: 3 seats INSIDE hard macros (unit_i2[2] in u_mem0, xtier_o0[3] + unit_o7[2] in u_m).
+## Row IQF-SEQH-RELAYSITE (seqhost__t1 only, 0 cycles, counts unchanged)
+- ops E9 s81-iqf-relay/row_ops.json (sha 3fd787f180a8; builder build_row.py, report row_report.json): 4 chains re-seated off macros (halo 8.64 + 5), worst hop 291.5; relay_sites add u_bin_unit_i2 (14 keys) + u_bin_vid_i0 (2 keys, 1-bit key ".../q") at ring band centre.
+- plan c9+row E9 s81-iqf-relay/plan_c9_relaysite.json afa2391634ad. c8 seqhost/iqf == c9 (ops apply to c8 too).
+- render: E9 s81-iqf-relay/seqhost_row.png
+- gate: E9 s81-iqf-relay/gate_row.sh (unit oth-ubuntu-771484-1795538396): PRE base vs row + scoped strict bind iqf,seqhost (amd1_tree, rt 69de849b3da1, c8 elab reused, asbuilt_run_allfix2). Logs gate/.
+## Next
+- On gate result: post ROW-REBASED to S81-ALLFIX-INT.
+- Kits: c8 GO (INT, after c8 strict ~11:00) launches iqf/seqhost on c8 form = current-form probes; adopt (iqf = IN-BASE representative). seqhost private rep with row: c8seal_tree + plan c8+row + c8 bind (try without --allow-bind-stale; fallback type_overlay regs_um only).
