@@ -7,7 +7,7 @@ TF = importlib.util.module_from_spec(importlib.util.spec_from_loader("ot_tree_fo
 
 def test_streams_for_far_source_and_explicit_override(monkeypatch):
     monkeypatch.delenv("OT_TREE_FORK_STREAMS", raising=False)
-    assert TF.streams_for("far", rtt=lambda h: 120.0) == max(TF.STREAMS, TF.STREAMS_FAR) == 12
+    assert TF.streams_for("far", rtt=lambda h: 120.0) == max(TF.STREAMS, TF.STREAMS_FAR) == 2
     assert TF.streams_for("near", rtt=lambda h: 0.4) == TF.STREAMS
     assert TF.streams_for("unknown", rtt=lambda h: None) == TF.STREAMS
     monkeypatch.setenv("OT_TREE_FORK_STREAMS", "2")
@@ -29,3 +29,16 @@ def test_fetch_parallel_starts_every_stream_before_the_first_one_reads(tmp_path,
     took = time.time() - t0
     assert sorted(os.listdir(dst)) == sorted(os.listdir(src))
     assert took < 3.5, took      # four serial 1 s start-ups would take >= 4 s
+
+
+def test_defaults_are_two_streams_and_settings_reach_a_remote_fork(monkeypatch):
+    """E11-IO-STALL-1124 (FAM-S81-COL-H9R0): ot-tree-fork --host ran the remote side with its own 12-stream default"""
+    assert (TF.STREAMS, TF.STREAMS_FAR) == (2, 2) or "OT_TREE_FORK_STREAMS" in __import__("os").environ
+    cmd = TF.remote_cmd(["/a", "/b", "--jobs", "2"], {"OT_TREE_FORK_STREAMS": "2", "OT_TREE_FORK_MAX_JOBS": "2", "OT_LANE": "L X", "HOME": "/h"})
+    assert cmd == "OT_LANE='L X' OT_TREE_FORK_STREAMS=2 OT_TREE_FORK_MAX_JOBS=2 python3 -I - /a /b --jobs 2"
+    assert TF.remote_cmd(["/a", "/b"], {}) == "python3 -I - /a /b"
+    seen = {}
+    monkeypatch.setattr(TF.subprocess, "run", lambda args, **k: seen.setdefault("args", args) and type("R", (), {"returncode": 0})())
+    monkeypatch.setenv("OT_TREE_FORK_STREAMS", "1")
+    assert TF.main(["/a", "/b", "--host", "hostq", "--jobs", "1"]) == 0
+    assert seen["args"][-2] == "hostq" and seen["args"][-1].startswith("OT_TREE_FORK_STREAMS=1 ") and seen["args"][-1].endswith("/a /b --jobs 1")

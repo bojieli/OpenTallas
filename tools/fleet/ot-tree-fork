@@ -64,10 +64,11 @@ TREE_INDEX = os.path.expanduser(os.environ.get("OT_TREE_INDEX", "~/.local/state/
 # FLOW-FLEET-R2 11-22 (FABLE-FLOW-0800): the HROOT fork fetched epyc8 -> epyc7 at about 1.6 GB/h: ONE tar stream over a default-cipher ssh.  Now (1) a host that already holds a
 # same-manifest tree is asked first (HOLDER_HOSTS, their trees.jsonl index), and (2) the fetch runs STREAMS parallel tar streams over a fast cipher, files balanced by size.
 SSH = os.environ.get("OT_TREE_FORK_SSH", "ssh -o BatchMode=yes -o ControlPath=none -o Compression=no -c aes128-gcm@openssh.com").split()
-STREAMS = int(os.environ.get("OT_TREE_FORK_STREAMS", "4"))
+# E11-IO-STALL-1124 (COORD; FAM-S81-COL-H9R0 bug): 12 far streams per fetch were the E11 read storm.  Default 2 streams, near or far.
+STREAMS = int(os.environ.get("OT_TREE_FORK_STREAMS", "2"))
 # OPS-SUPPORT-R1 11-23: a single ssh/TCP stream is window-limited to about 15-20 MB/s at 100-150 ms RTT (epyc11), so a far source gets
 # STREAMS_FAR parallel streams (4 streams measured 67 MB/s).  An explicit OT_TREE_FORK_STREAMS always wins.
-STREAMS_FAR = int(os.environ.get("OT_TREE_FORK_STREAMS_FAR", "12"))
+STREAMS_FAR = int(os.environ.get("OT_TREE_FORK_STREAMS_FAR", "2"))
 FAR_RTT_MS = float(os.environ.get("OT_TREE_FORK_FAR_RTT_MS", "50"))
 HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11").split(",") if h]
 VERSION = 1
@@ -888,12 +889,21 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
     return rec
 
 
+# E11-IO-STALL-1124 (FAM-S81-COL-H9R0: a --host fork ran with the remote's own 12-stream default whatever the caller set): these settings travel
+# to the remote side with the script; --jobs already travels in argv.
+REMOTE_ENV = ("OT_LANE", "OT_TREE_FORK_STREAMS", "OT_TREE_FORK_STREAMS_FAR", "OT_TREE_FORK_FAR_RTT_MS", "OT_TREE_FORK_MAX_JOBS",
+              "OT_TREE_COPY_SLOTS", "OT_TREE_COPY_WAIT_S", "OT_TREE_FORK_FLOOR_GB")
+
+
+def remote_cmd(argv, environ=None):
+    environ = os.environ if environ is None else environ
+    env = " ".join(f"{k}={shlex.quote(environ[k])}" for k in REMOTE_ENV if environ.get(k))
+    return (env + " " if env else "") + "python3 -I - " + " ".join(shlex.quote(a) for a in argv)     # --src-host travels in argv: the fetch runs on HOST
+
+
 def remote(host, argv):
     script = open(os.path.realpath(__file__)).read()
-    cmd = "python3 -I - " + " ".join(shlex.quote(a) for a in argv)     # --src-host travels in argv: the fetch runs on HOST
-    env = os.environ.get("OT_LANE", "")
-    if env:
-        cmd = f"OT_LANE={shlex.quote(env)} " + cmd
+    cmd = remote_cmd(argv)
     p = subprocess.run(["timeout", "86400", "ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", host, cmd], input=script, text=True)
     return p.returncode
 
