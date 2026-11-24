@@ -21,3 +21,5 @@ Private probe: plan 30c963888225 = cA + row. Trees: epyc8 + epyc11 /srv/opentall
 21:27 bind rp: strict 0 errors, LATCHECK PASS 1921/1921; copied to epyc11 rp/bind. PROBE LAUNCHED spec hub autopilot/private_specs/QC-SLECTL-RESYN/qwen_compute_sle_ctl__cla4f6f12f_1123212710 (gen epyc11, goal grt).
 Baseline compose-A probe: place done 20:58 (detailed place WS -241.23), in geom; 16442 relay_sites unmatched there (warning mode) -> check my 24 keys are NOT in my probe's ot_relay_sites_unmatched.txt.
 At CTS of each: sta_sum_rcx.sh KIT run/results/asap7/dp_sle_ctl__cla4f6f12f/base/4_1_cts.odb .../4_cts.sdc OUT TAG ; census.py ; locs.sh (edit locs.tcl patterns for f-bank).
+21:3x COORD: x_hc1 owner = QC-HC1-CLKENTRY (combined RP-SEL + landing seat = plan 18d22fbde479 on C1-noSU). Keep relay-only probe as A/B; post CTS comparison to FABLE-RC-QC + QC-HC1-CLKENTRY (ACK posted e2711e72).
+Baseline CTS runs in kit dir epyc8 .../private/QC-ALLFIX/sle_ctl__cla4f6f12f_1123180924/gen/sle_ctl__cla4f6f12f (run_grt.log, OT_CTS_POST_TIMING; 4_1_cts.odb in run/results/asap7/dp_sle_ctl__cla4f6f12f/base).
