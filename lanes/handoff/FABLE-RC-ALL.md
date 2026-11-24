@@ -114,3 +114,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 04:22 11-24 t2B cause withdrawn (two flat trees ~60 deep = span, not padding). LANEAGE sweep: HEAD coll_WN0_u fixed 1 w/o register (table 6 delivered 5) -> hd_lep0N_w/w3 no count until real register or fixed 0; lat pkg regen diff asked; S81 ku_s_7S/kd_s_7S 2 vs 5 asked owner types
 - 04:26 11-24 t2: hard-master row never applied to any plan (c8 t2 still flat); order (a)-(e) accepted, t2 = c9+; asked INT for applied-plan-sha column + NONE list in ALLFIX-S81.tsv; void commute passes noted
 - 04:34 11-24 HEAD w4 603e6985b000 accepted as counting plan (station + realize flag); class: priced stations not built w/o realize flag (hd_lep0N East 5 cycles) -> East r6 must add; asked LANEAGE-SWEEP priced-vs-u_ist_ check all dies
+- 04:47 11-24 ROW-APPLIED S81: 20 FULL, 5 NONE (1 expected c9), 2 PARTIAL; asked INT to name them; 02b182e95344 41 ops at third value = possible row conflict
