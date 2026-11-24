@@ -7,3 +7,7 @@ Dirs: E9 /srv/opentallas-scratch2/claude/s81-open-clock (dumps d_{j8,b1,c6}, rev
 - ROW TGR5-LEAF-REGEN-1: E10 leaf_regen.sh (TGR5 v4 s1+s2, read-only tools) on c7a pre-tail aebbf78417d7. Run 1 (70 types) shard 7 died on t32 pre-existing anchor error -> run regen_c7a_b (69 types, no t32).
 - Next: my_tail.sh (E9) = INT compose.py + tail on c7a + regen delta + t16 ops (serdes t16 R7 suggested clk_t53) -> PRE; then scoped strict bind on changed types; post ROW-REBASED to INT.
 - My partial fork E11 s81-open-clock/tree.forking-149703 (stopped, 4K): ot-delete later.
+## 19:5x
+- regen_c7a_b DONE: E10 regen_c7a_b/plan_s2.json 093fb7633726 (copy E9 plan_tgr5_leaf_c7a.json), 62 types +2712 taps, FIXCHK PASS. ROW BUILT posted.
+- rc66 ops E9 ops_t16_dens1.json 4c61a4e8438a.
+- E9 unit oth-ubuntu-1681604-1795491483: my_tail.sh recipe_oc1.json oc1 scope_types.txt -> tail_oc1/ (compose ff7ee10ae698 OK, then relay/LLR/fill/deadin/anchor/census/PRE allfix2/scoped strict 70 types). On finish: post ROW-REBASED to INT with PRE + scope bind result; if ANCHOR/PRE flags leaf types, compare vs INT j9tail_c7a.
