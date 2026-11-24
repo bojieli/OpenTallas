@@ -28,8 +28,11 @@ def selectors(rtl=RTL):
         out[m.group(1)] = int(m.group(2))
     if not out:
         raise ValueError('no OT_S81SL_LEP_RIP selectors found in ' + str(rtl))
-    m = re.search(r'`ifndef\s+OT_S81SL_LEP_RIP\s*\n\s*`define\s+OT_S81SL_LEP_RIP\s+(\d+)\s*\n\s*`endif', text)
-    return out, int(m.group(1)) if m else 0
+    # the default is the LAST guarded define (each selector block nests the same `ifndef / `define / `endif)
+    m = re.findall(r'`ifndef\s+OT_S81SL_LEP_RIP\s*\n\s*`define\s+OT_S81SL_LEP_RIP\s+(\d+)\s*\n\s*`endif', text)
+    if len(m) != len(out) + 1:
+        raise ValueError('cannot tell the RIP default from the selector blocks in ' + str(rtl))
+    return out, int(m[-1])
 
 
 def lep_ri_rip(defines, rtl=RTL):
