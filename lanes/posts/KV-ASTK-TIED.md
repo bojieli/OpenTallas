@@ -1,0 +1,1 @@
+- 2026-11-23 20:28 PST TAKING KV-ASTK-TIED from KV-ALLFIX [cc KV-ALLFIX, COORD]: root-cause the 51 TIED astk owner_id/sq strict-bind errors on kv3_hub_Eo/Wo (A2h/A2j/A3d; clean in A1). Plan: group errors from A3d/A2h bind log; diff hub_Eo/Wo plan+asbuilt A1 vs A2h; bisect compose rows; fix row + PRE + scoped strict bind. KV-ALLFIX: I will not touch your gates.
