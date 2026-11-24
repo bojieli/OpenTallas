@@ -156,6 +156,13 @@ try:
 except ImportError:
     _OTS = None
 
+# CLIENT KILL = JOB STOP (OTRUN-ORPHAN 11-23, QC-V4: publish_apply's BIND-NO-PROGRESS watchdog `kill`ed the local client, the epyc8 unit ran
+# on and finished clean, and the next chain step ran at once on missing output, ~2 h lost): a SIGTERM / SIGINT to a
+# client whose job is ADMITTED now stops that unit on its host (ot-heavy-stop --unit + --tag, then re-checked
+# inactive) and exits 128+sig.  When the stop is not confirmed, on SIGHUP (a lost agent shell; the job keeps running
+# as before) and with OT_RUN_DETACH_ON_SIGNAL=1 the client exits REMOTE_RUNNING_EXIT (79) with "REMOTE-RUNNING
+# <host> <unit>" on stderr: a chain must wait for that unit (ot-wait <unit>), never treat 79 as a failed run.
+REMOTE_RUNNING_EXIT = 79   # OTRUN-ORPHAN 11-23: the client ended but its admitted unit may still run
 NOTRUN_EXIT = 78   # FLOW-1700: every refusal before the unit starts ends with "NOT-RUN <reason>" on stderr and this status
 
 
@@ -1494,6 +1501,16 @@ def drain_hosts(hosts, d, job, held=None, fallback=None):
 
 
 SIGS = (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)
+
+
+def block_sigs():
+    """OTRUN-ORPHAN 11-23: every long-lived helper thread (lease renewer, spill hand-off watcher) blocks SIGS.  A thread that leaves them
+    unblocked receives the kill instead of run()'s sigtimedwait watcher, and SIGTERM's default action ends the whole client silently: no
+    signals.log line, no remote stop, the unit runs on (measured: an admitted client with a --dir lease died on `kill` with no message)."""
+    try:
+        signal.pthread_sigmask(signal.SIG_BLOCK, SIGS)
+    except (AttributeError, ValueError, OSError):
+        pass
 SIGNAL_LOG = os.path.expanduser("~/.local/state/ot-run/signals.log")
 
 
@@ -1523,6 +1540,16 @@ def log_signal(line):
         pass
 
 
+# OTRUN-ORPHAN 11-23 (S81-MISC-SERDES-J9: "ot-run --cancel matched no client (sealed --job spec)"): a client is any ot-run entry point a lane or the
+# wave starts -- ot-run, the wave's ot-run-sealed / ot-run-ap wrappers, and sha- or date-suffixed copies (ot-run.bak-..., ot-run.1123) -- never the
+# ot-run-lane-declare helper or other ot-run-* tools.
+CLIENT_EXE_RE = re.compile(r"ot-run(?:-sealed|-ap)?(?:\.[\w.-]+)?")
+
+
+def is_client_exe(path):
+    return bool(CLIENT_EXE_RE.fullmatch(os.path.basename(path)))
+
+
 def clients():
     """local ot-run job clients: pid -> (args after ot-run, --dir or None)"""
     out = {}
@@ -1530,7 +1557,7 @@ def clients():
         if not p.isdigit() or int(p) == os.getpid():
             continue
         a = proc_args(p)
-        i = next((k for k, x in enumerate(a[:3]) if os.path.basename(x) == "ot-run"), None)
+        i = next((k for k, x in enumerate(a[:3]) if is_client_exe(x)), None)
         if i is None or "--" not in a or "--cancel" in a[i + 1:i + 2]:
             continue
         rest = a[i + 1:]
@@ -1621,6 +1648,15 @@ def stop_by_path(paths, run=None, fleet=()):
     return out
 
 
+def tag_units(tag, d=None):
+    """ot-heavy units recorded by the client a tag otrun-<node>-<pid>-[ms] names (status name otrun-<node>-<pid>)"""
+    m = re.fullmatch(r"(otrun-[A-Za-z0-9_.-]+-\d+)-(\d+)?", tag)
+    if not m:
+        return []
+    d = d or (_OTS.status_dir() if _OTS else os.path.expanduser("~/.local/state/ot-status"))
+    return sorted({r["unit"] for r in _status_records(d) if r.get("name") == m.group(1) and re.fullmatch(r"oth-[A-Za-z0-9_-]+", str(r.get("unit") or ""))})
+
+
 def cancel_unit(sub, run=None, fleet=None):
     run = run or subprocess.run
     """CANCEL-LABEL-1120 (FLEET-WATCH-1015, FABLE-FLOW-1000 class 4: 3 of 31 cancels had no ot-run client): a job with no local client is cancelled by its EXACT unit (oth-...) or client tag prefix
@@ -1635,8 +1671,11 @@ def cancel_unit(sub, run=None, fleet=None):
         print(f"ot-run --cancel: no local ot-run client matches {sub!r} (and it is not an exact unit oth-... or tag otrun-<host>-<pid>-)")
         return 1
     found, bad = [], []
-    for h in fleet:
-        r = _host_run(run, h, f"ot-heavy-stop {flag} {shlex.quote(sub)}")
+    sels = [f"{flag} {shlex.quote(sub)}"]
+    if flag == "--tag":                      # OTRUN-ORPHAN 11-23: the admitted unit of that client, from its status record on this host
+        sels += [f"--unit {shlex.quote(u)}" for u in tag_units(sub)]
+    for h, sel in [(h, sel) for h in fleet for sel in sels]:
+        r = _host_run(run, h, f"ot-heavy-stop {sel}")
         out = (r.stdout or "") + (r.stderr or "")
         print(f"ot-run --cancel: {h}: " + (out.strip().splitlines() or ["no output"])[-1][:200])
         if "STILL RUNNING" in out:
@@ -1661,7 +1700,68 @@ def client_matches(sub, pid, rest, d):
         return True
     if d and sub.startswith("/") and os.path.normpath(sub) == os.path.normpath(d):
         return True
-    return sub in rest
+    if sub in rest:
+        return True
+    # OTRUN-ORPHAN 11-23: the client's own tag (otrun-<node>-<pid>-[ms]) or its status name (otrun-<node>-<pid>), whatever ot-run copy started it
+    for node in {os.uname().nodename, socket.gethostname().split(".")[0]}:
+        own = f"otrun-{node}-{pid}"
+        if sub in (own, own + "-") or re.fullmatch(re.escape(own) + r"-\d+", sub):
+            return True
+    # a sealed job client (--job SPEC --dir <shared ot-jobs root>): the exact kit dir the spec works in / returns to
+    if sub.startswith("/"):
+        opts = rest[:rest.index("--")] if "--" in rest else rest
+        if "--job" in opts[:-1] and os.path.normpath(sub) in job_spec_paths(opts[opts.index("--job") + 1]):
+            return True
+    return False
+
+
+def job_spec_paths(spec):
+    """normalised absolute paths an ot-job spec names (work.at, return.to, inputs, seeds); empty when unreadable"""
+    out = set()
+    try:
+        obj = json.load(open(spec))
+    except (OSError, ValueError):
+        return out
+
+    def walk(x):
+        if isinstance(x, dict):
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+        elif isinstance(x, str) and x.startswith("/srv/"):
+            out.add(os.path.normpath(x))
+    walk(obj)
+    if isinstance(obj, dict) and isinstance(obj.get("root"), str):
+        out.discard(os.path.normpath(obj["root"]))      # the shared ot-jobs root names every sealed job
+    return out
+
+
+def unit_clients(unit, d=None, alive=None):
+    """OTRUN-ORPHAN 11-23: live local client pids whose ot-status record names this admitted ot-heavy unit (oth-...)"""
+    alive = alive or _client_alive
+    d = d or (_OTS.status_dir() if _OTS else os.path.expanduser("~/.local/state/ot-status"))
+    return sorted({int(r["pid"]) for r in _status_records(d) if r.get("unit") == unit and r.get("pid") and alive(r)})
+
+
+def descendant_clients(pids, cl):
+    """client pids (of cl) below any of pids in the process tree: the ot-run a wrapper (ot-run-sealed, ot-run-ap) started carries the remote tag"""
+    def ppid(p):
+        try:
+            return int(open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[1])
+        except (OSError, ValueError, IndexError):
+            return 0
+    out = {}
+    for c in cl:
+        q, seen = ppid(c), set()
+        while q > 1 and q not in seen:
+            if q in pids and c not in pids:
+                out[c] = cl[c]
+                break
+            seen.add(q)
+            q = ppid(q)
+    return out
 
 
 # FLOW-FLEET-R1 11-22 (FABLE-FLOW-0000 F2): `ot-run --cancel SUBSTR --reason hang|design|infra` records why.  The cancelled client prints
@@ -1769,7 +1869,10 @@ def cancel_ledger(sub, all_dirs=False, ledger=None, run=None, fleet=None):
 
 
 def cancel(sub, all_dirs, reason="manual"):
-    hit = {p: v for p, v in clients().items() if client_matches(sub, p, v[0], v[1])}
+    cl = clients()
+    hit = {p: v for p, v in cl.items() if client_matches(sub, p, v[0], v[1])}
+    if not hit and re.fullmatch(r"oth-[A-Za-z0-9_-]+", sub):      # OTRUN-ORPHAN 11-23: an admitted unit -> the client whose status record names it
+        hit = {p: cl[p] for p in unit_clients(sub) if p in cl}
     if not hit and sub.startswith(("oth-", "otrun-")):
         return cancel_unit(sub)
     if not hit and sub.startswith("/srv/"):             # no client left (died / stale): the exact kit dir still names the container it mounts
@@ -1801,10 +1904,12 @@ def cancel(sub, all_dirs, reason="manual"):
             os.kill(p, signal.SIGTERM)
         except OSError:
             pass
-    print(f"ot-run --cancel: SIGTERM sent to {len(hit)} client(s) (reason {reason}); waiters are cancelled on their hosts")
+    below = descendant_clients(set(hit), cl)     # a wrapper's inner ot-run: its tag is the one on the remote scope (it is signalled by the wrapper)
+    print(f"ot-run --cancel: SIGTERM sent to {len(hit)} client(s) (reason {reason}); waiters are cancelled on their hosts"
+          + (f"; inner client(s) {sorted(below)} are stopped by their wrapper" if below else ""))
     if not os.environ.get("OT_RUN_CANCEL_KEEP_STARTED"):
         try:
-            stop_started(stop_targets(hit, sub, [h for h in HOSTS if h != "localhost"]), path=sub if sub.startswith("/srv/") else None, fleet=list(HOSTS))
+            stop_started(stop_targets({**hit, **below}, sub, [h for h in HOSTS if h != "localhost"]), path=sub if sub.startswith("/srv/") else None, fleet=list(HOSTS))
             stop_by_path([sub] if sub.startswith("/srv/") else [d for d in dirs if d.startswith("/srv/")], fleet=list(HOSTS))   # FLEET-WATCH-R4: the client's own --dir names the container too
         except Exception as e:                 # the cancel itself already happened
             print(f"ot-run --cancel: stopping started jobs failed: {type(e).__name__}: {e}")
@@ -2185,6 +2290,26 @@ def rt_pin_line(ln, tag):
     return None
 
 
+def stop_remote_unit(host, unit, tag, run=subprocess.run):
+    """OTRUN-ORPHAN 11-23: stop an admitted job whose client is being killed: ot-heavy-stop --unit (scope + its containers) and --tag (labelled
+    containers) on its host, then re-check the scope is no longer active.  -> (stopped and confirmed, one line)"""
+    if not re.fullmatch(r"oth-[A-Za-z0-9_-]+", unit or ""):
+        return False, f"unit {unit!r} unknown, nothing stopped"
+    tp = re.sub(r"-\d+$", "-", tag)
+    sh = (f"ot-heavy-stop --unit {shlex.quote(unit)}; ot-heavy-stop --tag {shlex.quote(tp)} >/dev/null 2>&1; "
+          f"export XDG_RUNTIME_DIR=${{XDG_RUNTIME_DIR:-/run/user/$(id -u)}}; "
+          f"if systemctl --user is-active --quiet {shlex.quote(unit + '.scope')}; then echo OT_RUN_UNIT_ACTIVE; else echo OT_RUN_UNIT_GONE; fi")
+    try:
+        r = _host_run(run, host, sh, timeout=150)
+    except Exception as e:                       # never lose the exit path of a killed client
+        return False, f"stop failed: {type(e).__name__}: {e}"
+    out = (r.stdout or "") + (r.stderr or "")
+    first = ([l for l in out.splitlines() if l.startswith("ot-heavy-stop")] or ["no ot-heavy-stop output"])[-1][:160]
+    if "OT_RUN_UNIT_GONE" in out and "OT_RUN_UNIT_ACTIVE" not in out and "STILL RUNNING" not in out:
+        return True, first
+    return False, f"stop not confirmed: {first}"
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
@@ -2220,7 +2345,17 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
         log_signal(f"signal {sig} from {who} -> ot-run pid {os.getpid()} host {host} tag {tag} "
                    f"{'STARTED unit ' + state['unit'] if state['started'] else 'WAITING'} dir {d}: {' '.join(cmd)[:200]}")
         if state["started"]:
-            say(f"ot-run: interrupted (signal {sig} from {who}); the command is STILL RUNNING on {host} (unit {state['unit']}): NOT COMPLETED")
+            detach = sig == signal.SIGHUP or os.environ.get("OT_RUN_DETACH_ON_SIGNAL", "") not in ("", "0")
+            ok, line = (False, "detached (SIGHUP or OT_RUN_DETACH_ON_SIGNAL)") if detach else \
+                stop_remote_unit(host, state["unit"], tag, run=lambda a, **k: subprocess.run(a, preexec_fn=unblock, **k))
+            log_signal(f"client-kill {tag} unit {state['unit']} on {host}: {'STOPPED' if ok else 'REMOTE-RUNNING'} ({line[:160]})")
+            if ok:
+                say(f"ot-run: interrupted (signal {sig} from {who}); the admitted unit {state['unit']} on {host} was STOPPED with its client ({line}): NOT COMPLETED")
+            else:
+                say(f"ot-run: interrupted (signal {sig} from {who}); the command is STILL RUNNING on {host} (unit {state['unit']}; {line}): NOT COMPLETED")
+                say(f"REMOTE-RUNNING {host} {state['unit']} (exit {REMOTE_RUNNING_EXIT}: wait for the unit, e.g. ot-wait {state['unit']}; do not run the next step on its output yet)")
+                p.kill()
+                os._exit(REMOTE_RUNNING_EXIT)
         else:      # cancel the waiter, or it would start the command later with nobody listening
             subprocess.run(["ssh", "-o", "ControlPath=none", "-o", "ConnectTimeout=10", "-o", "BatchMode=yes", host,
                             f"pkill -TERM -f -- '[-]-tag {tag} '"], capture_output=True, timeout=40, preexec_fn=unblock)
@@ -3143,6 +3278,7 @@ def start_leases(paths, owner, take=None, release=None, ttl_h=None):
                 pass
 
     def loop():
+        block_sigs()
         while not done.wait(max(60.0, ttl * 3600 / 3)):
             renew()
 
@@ -3999,6 +4135,7 @@ def spill_handoff(src, dst, roots, kit, stamp, rec, say, snapshot=False):
 
 def handoff_watch(src, dst, roots, kit, goal, stamp, rec, stop, say):
     """client thread beside run(): at most HANDOFF_TRIES hand-off attempts; any doubt leaves the full back-copy at client end"""
+    block_sigs()
     tries = 0
     while not stop.wait(HANDOFF_POLL_S):
         try:
