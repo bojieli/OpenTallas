@@ -9,3 +9,8 @@ Updated 2026-11-24 13:58 PST.
 - RTL: delete hen, l_en[gt]=hh[3]. Clone epyc10 /srv/opentallas-scratch2/claude/QC-HC3-LEC/clone (uncommitted until NG4 bench). Bench (ot-run E10 oth-ubuntu-3715096-1795556968): NG3 PASS, MUT2 FAIL as required, NG4 pending.
 ## Rebuild
 - Tree fork intel1 QC-ALLFIX/cJ/tree -> epyc10 QC-HC3-LEC/trees/c1j_hc3/tree (unit oth-ubuntu-3861061-1795557355). Bind refsha epyc10 QC-HC3-LEC/tmp/cJ_bind_refsha.json. Next: bind fork --bind-tree, overlay RTL, private-spec slw_hc3__clccfc3e6b__pvcca9ff41 goal route on E10, rt c66a01ee7285 (C1j spec rt).
+## Update 14:55 PST
+- Fix pushed main 17ecbe830ee (bench NG3/NG4 PASS, MUT2 FAIL). C1k overlay row: epyc7 /srv/opentallas-scratch2/claude/QC-HC3-LEC/rows_c1k/rtl/qwen_sys/dvm_20261014/ot_qfd_xs_leaf_fo32.sv (b0d30123daf5). Posted FIX 14:00.
+- E10 fork cancelled (slot queue). Tree on E11: QC-HC3-LEC/trees/c1j_hc3/tree (+ tree_bind via BIND-FORK). RTL overlaid (7b15b78e -> b0d30123).
+- Kit: spec E11 /home/ubuntu/coord/autopilot/private_specs/QC-HC3-LEC/qwen_compute_slw_hc3__clccfc3e6b__pvcca9ff41_1124225256 (run_item.launch.out, result.json next to spec), run-item pid 1517870, work E11 kw43-wave-1109n/.../s29q103S4Q9N46R6V4/private/QC-HC3-LEC/slw_hc3__clccfc3e6b__pvcca9ff41_1124225225. Launcher E11 QC-HC3-LEC/launch_hc3.sh [ITEM].
+- Next: wait for sign-off + routed LEC; if EQUIVALENT, post RESULT; siblings (cld86 pvfd488b8f etc.) can launch with launch_hc3.sh ITEM.
