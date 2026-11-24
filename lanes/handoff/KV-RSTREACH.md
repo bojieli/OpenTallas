@@ -17,3 +17,4 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
 - RULING FABLE 6605dfb7 (COORD adopts, replaces 404.6): hub_Wi <=390 else one added relay (not expressible in literal copies: report). No >300 on other types.
 - v8 ROWS_KV-RSTREACH_v8.py 886fafd8f1be. epyc11 kv-rstreach/a5row3.sh (base RTL from a5row.sh a5/base; old unit oth-ubuntu-4018735-1795506526 cancelled after RC_BASE_BIND). Base A5r 41044638cda3, rt d97edba9f3a3, tree5. hops.py = independent leg audit. LATCHECK needs FULL bind (+r8_refresh in tree5). Forks only under ot-run; refusal -> post text.
 - TODO: read hub_Wi probe reset recovery; A6 re-site tree <=300 if it misses.
+- 00:0x COORD: START <=390 accepted, LATCHECK on full strict. v9 17cfe81b9955 (START >300 -> nearest same-depth tap; supersedes v8), a5row3.sh 6a1f006f69b8 = row, PRE, scoped strict, dd, FULL strict + r8_refresh, LATCHECK. GENDRY 77 lines diff 0 vs A4b base.
