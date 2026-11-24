@@ -192,3 +192,4 @@
 - 2026-11-24 08:49 PST WAIT S81-R001 epyc2 oth-ubuntu-3615489-1795534730: DONE rc=0 unit=oth-ubuntu-3615489-1795534730 host=dear-crayfish end=08:49:49 log=/srv/opentallas-scratch3/claude/romw-1119-s81/logs/R001_r0_cached_r2.otrun.log
 - 2026-11-24 08:50 PST WAIT S81-R001 epyc2 oth-ubuntu-3615497-1795534730: DONE rc=0 unit=oth-ubuntu-3615497-1795534730 host=dear-crayfish end=08:50:01 log=/srv/opentallas-scratch3/claude/romw-1119-s81/logs/R001_r2_cached_r2.otrun.log
 - 2026-11-24 08:50 PST WAIT S81-R001 epyc2 oth-ubuntu-3615490-1795534730: DONE rc=0 unit=oth-ubuntu-3615490-1795534730 host=dear-crayfish end=08:50:49 log=/srv/opentallas-scratch3/claude/romw-1119-s81/logs/R001_r3_cached_r2.otrun.log
+- 2026-11-24 08:52 PST WAIT S81-R001 epyc2 oth-ubuntu-3615483-1795534729: DONE rc=0 unit=oth-ubuntu-3615483-1795534729 host=dear-crayfish end=08:52:45 log=/srv/opentallas-scratch3/claude/romw-1119-s81/logs/R001_r1_cached_r2.otrun.log
