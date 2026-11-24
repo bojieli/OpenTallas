@@ -145,11 +145,24 @@ class Busy(Exception):
     code = 6
 
 
+def host_slots(lock_dir=None):
+    """COPY-SLOTS-HOST-1123: tree-copy slot count of THIS host = $OT_TREE_COPY_SLOTS when set, else the host override file
+    <lock dir>/SLOTS (one integer, e.g. 4 on the 96T/1 TB epyc11), else 2.  src_manifest.slot_sh reads the same file on the target."""
+    try:
+        return max(1, int(os.environ["OT_TREE_COPY_SLOTS"]))
+    except (KeyError, ValueError):
+        pass
+    try:
+        return max(1, int(open(os.path.join(lock_dir or COPY_LOCK_DIR, "SLOTS")).read().split()[0]))
+    except (OSError, ValueError, IndexError):
+        return 2
+
+
 class CopySlot:
     """hold one of n flock slots (slot-<i>.lock in the lock dir) for a tree copy on this host; the shell side (src_manifest.slot_sh) takes the same files"""
     def __init__(self, n=None, lock_dir=None, wait_s=None, poll_s=15, out=print, what="copy"):
-        self.n = n or max(1, int(os.environ.get("OT_TREE_COPY_SLOTS", "2") or 2))
         self.dir = lock_dir or COPY_LOCK_DIR
+        self.n = n or host_slots(self.dir)
         self.wait_s = float(os.environ.get("OT_TREE_COPY_WAIT_S", "21600")) if wait_s is None else wait_s
         self.poll_s, self.out, self.what, self.fd, self.slot = poll_s, out, what, None, None
 

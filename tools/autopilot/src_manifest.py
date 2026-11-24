@@ -1309,18 +1309,27 @@ COPY_LOCK_DIR = os.environ.get("OT_TREE_COPY_LOCK_DIR", "/var/tmp/ot-tree-copy")
 TREE_INDEX = os.path.expanduser(os.environ.get("OT_TREE_INDEX", "~/.local/state/ot-tree-copy/trees.jsonl"))
 
 
-def copy_slots():
+def copy_slots(lock_dir=None):
+    """slots of THIS host: $OT_TREE_COPY_SLOTS, else the host override file <lock dir>/SLOTS (COPY-SLOTS-HOST-1123), else 2"""
     try:
-        return max(1, int(os.environ.get("OT_TREE_COPY_SLOTS", "2")))
-    except ValueError:
+        return max(1, int(os.environ["OT_TREE_COPY_SLOTS"]))
+    except (KeyError, ValueError):
+        pass
+    try:
+        return max(1, int(open(os.path.join(lock_dir or COPY_LOCK_DIR, "SLOTS")).read().split()[0]))
+    except (OSError, ValueError, IndexError):
         return 2
 
 
 def slot_sh(n=None, lock_dir=None):
-    """a POSIX sh prefix that waits for one of n flock slots and holds it on fd 9 for the command that follows it"""
-    n = n or copy_slots()
+    """a POSIX sh prefix that waits for one of n flock slots and holds it on fd 9 for the command that follows it.  Without n and without
+    $OT_TREE_COPY_SLOTS the count is read ON THE TARGET from its <lock dir>/SLOTS override file (default 2), so epyc11 can run 4."""
     d = shlex.quote(lock_dir or COPY_LOCK_DIR)
-    return (f"mkdir -p {d} 2>/dev/null; chmod 1777 {d} 2>/dev/null; while :; do for i in $(seq 0 {n - 1}); do exec 9>>{d}/slot-$i.lock; "
+    if not n and os.environ.get("OT_TREE_COPY_SLOTS", "").strip().isdigit():
+        n = copy_slots()
+    cnt = (f"n={int(n)}; " if n else
+           f"n=$(head -c 16 {d}/SLOTS 2>/dev/null | tr -cd 0-9); case \"$n\" in ''|0) n=2;; esac; ")
+    return (f"mkdir -p {d} 2>/dev/null; chmod 1777 {d} 2>/dev/null; {cnt}while :; do for i in $(seq 0 $((n - 1))); do exec 9>>{d}/slot-$i.lock; "
             f"flock -n 9 && break 2; done; sleep 15; done; ")
 
 
