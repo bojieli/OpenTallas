@@ -1197,3 +1197,4 @@
 - 2026-11-23 18:27 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:s81-allfix-svc on epyc2 wrote 109 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-23 18:40 PST STATE tools sync recovered after 131 min (rt/current c66090747375)
 - 2026-11-23 18:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
+- 2026-11-23 19:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11

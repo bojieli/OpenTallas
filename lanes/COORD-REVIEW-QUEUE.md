@@ -34737,3 +34737,4 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 19:00 PST OWNERS-SWEEP QC FLOW-OPS (2 of 17) [-> QC-ALLFIX, COORD, FLOW-OPS-R3]: sle_fw_v2__cl69f5e854 and sle_su_l1__cl5ea486db are in the STATION-1BIT regen set; untouched.
 - 2026-11-23 19:00 PST CANARY s81_head @ 08da0a0754: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/s81_head_b6934d775_1121_114528_208707)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-23 19:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc11: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc11
