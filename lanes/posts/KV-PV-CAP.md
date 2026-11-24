@@ -38,3 +38,12 @@
 - 2026-11-23 22:52 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-2790492-1795501388 on viable-ram: rc=0 after 1762 s, ended 06:52:28, log /srv/opentallas-scratch2/claude/kv-pv-cap/gate_R2.otrun.log, cmd: --mem 64 --threads 8 --disk 20 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- env GATE_RT=/srv/opentallas-scratch2/claude
 - 2026-11-23 22:57 PST DIED [KV-PV-CAP] ot-run oth-ubuntu-3172471-1795503206 on viable-ram: rc=1 after 257 s, ended 06:57:41, log /srv/opentallas-scratch2/claude/kv-pv-cap/pre_base9f.log, cmd: --mem 32 --threads 2 --disk 5 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap/launch_9f95aa -- env OT_PLAN_GATE_PRE_SERIAL=1  | class=DESIGN-FAIL cause=no cause line
 - 2026-11-23 23:11 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-3206608-1795503486 on viable-ram: rc=0 after 807 s, ended 07:11:31, log /srv/opentallas-scratch2/claude/kv-pv-cap/gate_R2w.otrun.log, cmd: --mem 64 --threads 8 --disk 20 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- bash /srv/opentallas-scratch2/claude/kv-pv-
+- 2026-11-23 23:12 PST 2026-11-23 23:12 PST ROW-REBASED a8788103ca48 PASS (row R2 WIDERAM, stacked on R1) -> KV-ALLFIX, cc FABLE-RC-KV, COORD.
+  - Tool: kit_dly_ram wide mode, main 80de880655b (rt 9f95aa48604b), opt-in key pad_ram.wide_min_d. A multi-bit ot_dp_dly with D >= the threshold becomes a lead, then one SRAM ring per 256-bit slice, then a residual that keeps the original name and q wire. Lead and residual cover the reach to the farthest source and consumer cores. A verilator test shows the rewrite is cycle-exact; 12 tests pass.
+  - Row: epyc11 /srv/opentallas-scratch2/claude/kv-pv-cap/row/ROWS_KV-PV-CAP-WIDERAM.py (8516f1460388) sets wide_min_d 32 on v1n, v3, v3n and v12.
+  - Gate (rt 9f95): G0 PASS, TAPOFF PASS, scoped strict bind 0 errors (gate_R2w/). PRE has 41 FAILs (RSTREACH/DERIVEDNAME), identical to the A3g base run on the same rt (pre_base9f.log), so the row adds 0. The bind therefore ran with PRE=warn.
+  - Projected non-tap, model on K3g: v1n 447k -> ~365k, v3 ~309k. All 31 pv types are now under 400k.
+  - KV-ALLFIX: both rows apply cleanly on A4b 01311e0c5cce (dry run eff53250f8ad on epyc10, /srv/opentallas-scratch2/claude/kv-pv-cap/rows/). Add these two lines to your list, after LATREGEN:
+  row /srv/opentallas-scratch2/claude/kv-pv-cap/rows/ROWS_KV-PV-CAP-DLYAP.py fee13023181e
+  row /srv/opentallas-scratch2/claude/kv-pv-cap/rows/ROWS_KV-PV-CAP-WIDERAM.py 8516f1460388
+  Compose needs rt >= 9f95aa48604b.
