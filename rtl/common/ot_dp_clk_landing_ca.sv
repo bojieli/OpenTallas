@@ -52,6 +52,7 @@ module ot_dp_clk_landing_ca #(
     // Default 0 = identical logic.
     parameter bit STATUS_REG = 0,
     parameter bit WFALL = 0, // DIE-HEAD-48 ring-write hold: writer on the falling edge of fclk (see wclk)
+    parameter bit SELLK = 0, // SELLK-1: read-select launch-side lockup (ot_meso_dsel SELLK); 0 = identical logic
     parameter bit GUARD_REG = 0, // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG); default 0 = identical logic
     // CLAND-QREG-1 (COORD 11-11, KV hub_Ei ring readout -> boundary flop TT -159.5): QREG = 1 adds ONE rclk register
     // stage on q (ot_meso_q_ff, kept, no reset: data only) between the ring readout flop and the receiver's boundary
@@ -147,7 +148,7 @@ module ot_dp_clk_landing_ca #(
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG), .GUARD_REG(GUARD_REG),
-                      .DSREP(DSREP), .LITE(LITE)) u_ring (
+                      .DSREP(DSREP), .SELLK(SELLK), .LITE(LITE)) u_ring (
         .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -187,6 +188,7 @@ module ot_dp_clk_landing_cas #(
     parameter integer TIMEOUT  = (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 2 * DEPTH + 8,
     parameter bit CONTROL_STATUS_COPY = 0, // appended to preserve positional parameters
     parameter bit WFALL = 0, // as ot_dp_clk_landing_ca
+    parameter bit SELLK = 0, // as ot_dp_clk_landing_ca
     // WREG-1 (DIE-HEAD-58 TURNB, 11-03): 1 = the writer START t_rst_n is registered at the receiver face (one wclk edge,
     // == landing_writer_start W=1: K_new = K_old + 1 at bind, count_align_bind.strap_ties) and every (slot, 64-bit chunk)
     // write enable is its own register (fanout <= 64 per enable flop) instead of t_rst_n & slot-decode broadcast to W x
@@ -336,7 +338,7 @@ module ot_dp_clk_landing_cas #(
     wire [W-1:0] d_r = d_w;
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP), .LITE(LITE), .WEN_LOCAL(WEN_LOCAL)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .SELLK(SELLK), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP), .LITE(LITE), .WEN_LOCAL(WEN_LOCAL)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -371,6 +373,7 @@ module ot_meso_ring_ca #(
     parameter bit WREG = 0,         // WREG-1: registered writer start + registered per-(slot, chunk) write enables
     parameter bit WEN_NEG = 0,      // WREG with WFALL: write-enable flops on the falling edge of wen_clk (raw fclk)
     parameter int DSREP = 1,        // DSREP-1: read-select register copies per chunk (ot_meso_dsel SREP)
+    parameter bit SELLK = 0,        // SELLK-1: read-select launch-side lockup (ot_meso_dsel SELLK)
     // STATUS-REG-1: every status read of the write domain ends at a private rclk flop per slot, with nothing but the slot
     // flop before it; the select/compare then sits between rclk flops (a full period), not on the fclk -> clk crossing
     // (io_ft_v1, io_cor_v1: written/lap_q -> lap_ok 480 ps TT vs 416.5 max_delay). The flops sample at the edge the old
@@ -619,7 +622,7 @@ module ot_meso_ring_ca #(
             assign pl_c = RP0[AW-1:0];
 `endif
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP), .NR(RH)) u_dsel (.clk(rclk),
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP), .NR(RH), .SELLK(SELLK)) u_dsel (.clk(rclk),
             .align(~r_rst_cv), .on(r_rst_cv), .place(pl_c), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;

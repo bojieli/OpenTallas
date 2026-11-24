@@ -651,7 +651,14 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
                       // !on[h] == the ring's reader-START copy h); select copy r takes control copy r*NR/SREP, so each
                       // control copy drives SREP/NR select copies (contiguous bit groups).  NR must divide SREP.
                       // 1 = identical logic (one align/on pair, as before).
-                      parameter int NR = 1) (
+                      parameter int NR = 1,
+                      // SELLK-1 (S81-ALLFIX-SVC SERDES-RING 11-24): 1 = every one-hot read select (di, or each SREP copy)
+                      // reaches the AND-OR through a kept falling-edge copy (ot_meso_dsel_lk), a launch-side lockup.  The
+                      // copy takes di(k) at the fall after edge k and holds it across edge k+1, so the y flop samples the
+                      // same select as before (0 cycles; q/ready/fault identical) while a select flop on another clock tap
+                      // gets T/2 of hold margin against the y capture (serdes t2: sr on clk_t33 -> y on clk_t7, +313 ps
+                      // skew over 6 um, hold -237).  The select -> y path becomes a T/2 setup path.  0 = identical logic.
+                      parameter bit SELLK = 0) (
     input  logic                    clk,
     input  logic [NR-1:0]           align,
     input  logic [NR-1:0]           on,
@@ -665,20 +672,32 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
         if (align[0]) di <= DEPTH'(1) << place;
         else if (on[0]) di <= {di[DEPTH-2:0], di[DEPTH-1]};
     end
+    logic [DEPTH-1:0] diu;
+    if (SELLK && SREP == 1) begin : g_lk1
+        (* keep = "true" *) ot_meso_dsel_lk #(.N(DEPTH)) u_lk (.clk(clk), .d(di), .q(diu));
+    end else begin : g_nolk1
+        assign diu = di;
+    end
     logic [W-1:0] y_c;
     if (SREP > 1) begin : g_srep
         localparam int SW = W / SREP;
         if (SW * SREP != W) begin : g_bad $error("ot_meso_dsel: W %% SREP != 0"); end
         wire [DEPTH-1:0] dr [SREP];
+        wire [DEPTH-1:0] dp [SREP];
         for (genvar r = 0; r < SREP; r++) begin : sr
             localparam int H = (r * NR) / SREP;
+            if (SELLK) begin : g_lk
+                (* keep = "true" *) ot_meso_dsel_lk #(.N(DEPTH)) u_lk (.clk(clk), .d(dp[r]), .q(dr[r]));
+            end else begin : g_nolk
+                assign dr[r] = dp[r];
+            end
 `ifdef OT_MESO_CA_MUTANT_RSTH
             // MUTANT: the last control copy's select copies never re-align (place not loaded at reset)
             (* keep = "true" *) ot_meso_dsel_sel #(.DEPTH(DEPTH)) u_sel (.clk(clk),
-                .align((NR > 1 && H == NR - 1) ? 1'b0 : align[H]), .on(on[H]), .place(place), .di(dr[r]));
+                .align((NR > 1 && H == NR - 1) ? 1'b0 : align[H]), .on(on[H]), .place(place), .di(dp[r]));
 `else
             (* keep = "true" *) ot_meso_dsel_sel #(.DEPTH(DEPTH)) u_sel (.clk(clk), .align(align[H]), .on(on[H]), .place(place),
-                                                                   .di(dr[r]));
+                                                                   .di(dp[r]));
 `endif
         end
         always_comb begin
@@ -690,7 +709,7 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
     end else begin : g_s1
         always_comb begin
             y_c = '0;
-            for (int i = 0; i < DEPTH; i++) y_c = y_c | (sd[i*W +: W] & {W{di[i]}});
+            for (int i = 0; i < DEPTH; i++) y_c = y_c | (sd[i*W +: W] & {W{diu[i]}});
         end
     end
     if (REG && SPLIT) begin : g_split
@@ -700,8 +719,8 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
         logic [W-1:0] ya_c, yb_c, ya_q, yb_q;
         always_comb begin
             ya_c = '0; yb_c = '0;
-            for (int i = 0; i < DEPTH / 2; i++) ya_c = ya_c | (sd[i*W +: W] & {W{di[i]}});
-            for (int i = DEPTH / 2; i < DEPTH; i++) yb_c = yb_c | (sd[i*W +: W] & {W{di[i]}});
+            for (int i = 0; i < DEPTH / 2; i++) ya_c = ya_c | (sd[i*W +: W] & {W{diu[i]}});
+            for (int i = DEPTH / 2; i < DEPTH; i++) yb_c = yb_c | (sd[i*W +: W] & {W{diu[i]}});
         end
         always_ff @(posedge clk) begin ya_q <= ya_c; yb_q <= yb_c; end
 `ifdef OT_MESO_MUTANT_RSPLIT
@@ -775,6 +794,18 @@ endmodule
 
 // DSREP-1 select copy of ot_meso_dsel (same state machine as its di register); kept so the copies are not merged.
 (* keep_hierarchy, keep *)
+// SELLK-1: kept falling-edge copy of one read select (see ot_meso_dsel SELLK); a kept module so synthesis cannot merge it
+module ot_meso_dsel_lk #(parameter int N = 4) (
+    input  logic         clk,
+    input  logic [N-1:0] d,
+    (* keep *) output logic [N-1:0] q
+);
+`ifdef OT_MESO_MUTANT_SELLK_POS
+    always_ff @(posedge clk) q <= d;    // MUTANT: rising-edge copy (one cycle late)
+`else
+    always_ff @(negedge clk) q <= d;
+`endif
+endmodule
 module ot_meso_dsel_sel #(parameter int DEPTH = 4) (
     input  logic                     clk,
     input  logic                     align,

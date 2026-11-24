@@ -30,6 +30,20 @@ def ring_write_fall(plan, tn=None):
     only = rh.get("write_fall_types")
     return tn is None or only is None or tn in only or tn.split("__")[0] in only
 
+def ring_read_lockup(plan, tn=None):
+    """SELLK-1 (S81-ALLFIX-SVC SERDES-RING 11-24, COORD 05:0x R1): True when the plan opts into the read-select
+    launch-side lockup of the count-aligned landing rings (clock.ring_hold.read_lockup true): every one-hot read select
+    reaches the AND-OR through a kept falling-edge copy (ot_meso_dsel SELLK=1), so a select flop and its y flop on
+    different clock taps get T/2 of hold margin whatever the insertion (serdes t2 multi-tap census: 473 failing hold
+    endpoints, all sr (clk_t32/33) -> y (clk_t7), 6 um, +313 ps skew).  0 cycles: q / ready / fault identical
+    (rtl/test/meso/sellk/run.sh).  The optional ring_hold.read_lockup_types list scopes it to those receiver types (a
+    split copy "<base>__<suffix>" matches its base); absent = every type.  With tn None: the die-level flag only."""
+    rh = (plan.get("clock") or {}).get("ring_hold") or {}
+    if rh.get("read_lockup") is not True:
+        return False
+    only = rh.get("read_lockup_types")
+    return tn is None or only is None or tn in only or tn.split("__")[0] in only
+
 RING_FANOUT_CHOICES = (0, 1, 2, 4, 8, 16, 32, 64)
 
 
@@ -2219,6 +2233,10 @@ class Landings:
                 # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
                 if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
                     ring_mod = ring_mod[:-1] + ", .WFALL(1))"
+                # SELLK-1: read-select launch-side lockup (0 added cycles)
+                if ring_read_lockup(self.plan, key) or ring_read_lockup(self.plan, tn):
+                    ring_mod = ring_mod[:-1] + ", .SELLK(1))"
+                    self.reset_placements[tn][b].update(read_lockup=True, read_lockup_added_cycles=0)
                 # WREG-1 (DIE-HEAD-58 TURNB): registered writer start + per-(slot, chunk) write-enable flops; strap form
                 # only (the strap K carries the +1, count_align_bind.strap_ties)
                 # a hard child's ring is built without the die-wide fanout knobs (DSREP / WRITE_CHUNK raise)
@@ -2356,6 +2374,10 @@ class Landings:
                         rp.setdefault("WNEG", 1)
                     elif r["module"] in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
                         rp.setdefault("WFALL", 1)   # HEAD-RINGHOLD-1: per-row count-aligned ring, same writer edge
+                # SELLK-1: the same read-select lockup on a per-row count-aligned ring
+                if (ring_read_lockup(self.plan, key) or ring_read_lockup(self.plan, tn)) and \
+                        r["module"] in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
+                    rp.setdefault("SELLK", 1)
                 # CLAND-SLEW-1: the same reach-based read-select copies on a per-row ring (never lowered)
                 if r["module"] in RING_SELECT_MODULES and not rp.get("READ_CHUNK"):
                     reach_ds = ring_reach_select_copies(w + 2 if self.dataflow else w)

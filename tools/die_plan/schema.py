@@ -1307,6 +1307,10 @@ SCHEMA = {
                                          # min overriding sender_ps (landing_contract.ring_sender_ps); absent = die-wide
                                          "sender_ps_types": {"type": "object", "additionalProperties": {"type": "number"}},
                                          "write_fall_types": {"type": "array", "items": {"type": "string"}},
+                                         # SELLK-1 (S81 SERDES-RING 11-24): read-select launch-side lockup on the
+                                         # count-aligned rings (ot_meso_dsel SELLK, 0 cycles); _types scopes it
+                                         "read_lockup": {"type": "boolean"},
+                                         "read_lockup_types": {"type": "array", "items": {"type": "string"}},
                                          # DIE-QC-67/STM: sender data-vs-fclk max (ps) replacing the ft-hop -max on ft ring
                                          # inputs of falling-edge writer types only: a (1-share) T budget cannot be captured
                                          # at T/2 (landing_contract.ring_input_sdc); the real arrival is priced in die STA
