@@ -1,0 +1,1 @@
+- 2026-11-24 00:34 PST TAKING HUB-POST-SPEED (COORD 00:3x): split post wait into lock 9 / lock 8 / push / gc; gc config on the hub repo if it is the cause; before/after over 10 posts. EPYC11-ONBOARD-FINISH closed.
