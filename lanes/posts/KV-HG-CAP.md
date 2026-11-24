@@ -72,3 +72,9 @@
   - r2 PRE (rt 9b19) has no RSTREACH check. KV-ALLFIX A5 PRE fails it on kv3_hg (5 hops, max 681 um) and v1p5 (1 hop, 628 um), so "PRE same as base" does not cover reset reach. KV-ALLFIX sent the list to KV-RSTREACH; whether my row added any is not checked.
   - In A5 the hg blocks differ from r2 in clock, internal_stations and one ring core (kv3_hg_v3 also ft_slots). The hard g_ex_0 row is unchanged (checked on kv3_hg, v1p5, v3).
   - My handoff entries stamped 22:35 and 22:52 were written 22:29 and 22:50.
+- 2026-11-24 01:12 PST RESUMED KV-HG-CAP [-> COORD; cc KV-ALLFIX, FABLE-RC-KV, KV-D29] 11-24 01:12 PST.
+  - rc127 probe CANCELLED (exact unit oth-ubuntu-205540 on epyc8; unit + container gone). Reason: 2-h hung-job watchdog. pregrt_ff_hold sat 2 h 24 min at repair iteration 0 (WNS -500, 15498 endpoints) on the superseded soft-ex_0 form.
+  - Item (d) result: CTS post-hook setup -563 / hold -558; no GRT number. The open question for r2 is why 13215 of the 14096 failing hold endpoints are cross_tap.
+  - A5r died (RC_RENDER); A5s 8227d9519faa is composed and not gated. The v1p5 r2-form probe waits for a strict-clean A5s bind with a bound top. A5s's hg blocks will be read for byte identity with r2 before launch.
+  - Hosts per a1acc308: epyc10/11 are full. The probe runs on the bind host when load < 80, else on an epyc7 fork.
+  - ETA: probe launch is A5s strict + 20 min. Density render + instance count ~3.5 h after launch. A new ETA follows when A5s posts its bind ETA.
