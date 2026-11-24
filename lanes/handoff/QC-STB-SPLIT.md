@@ -9,3 +9,8 @@
 ## Next
 - Tree fork cJ -> epyc10 QC-STB-SPLIT/tree (unit oth-ubuntu-2681975-1795554482, fork.ot) -> install plan + pins -> PRE + scoped strict bind (--types st_b) 
 - Rebase on C1k when QC-ALLFIX gives sha. Then child views (lef/lib) into rows -> parent kits.
+## 13:51 update
+- Child kits ran on epyc2 (paths same dir): 5/6 SIGNED TT +139..148 (w259/457/517/537/653); w1575 routing (waiter on epyc10 launch_*.ot). Views: kit/views/<m>_{tt,ff}.lib + run/results/asap7/kq_<m>_synth0/base/<m>.lef
+- intel1 cJ fork too slow (2 MB/s), cancelled; partial dirs to ot-delete: epyc2 QC-STB-SPLIT/tree.forking-3515291, epyc10 QC-STB-SPLIT/tree.forking-2682303
+- Fork now: E7 cK (C1k, plan 7fbc73d3f7cf) -> epyc2 QC-STB-SPLIT/tree, unit oth-ubuntu-3859112-1795556126, log fork2.ot. Then bind_stb.sh (epyc2 QC-STB-SPLIT/bind_stb.sh PLAN PINSDIR).
+- delta has --views-rel for the lef/lib rows once the 6 views are installed in the tree.
