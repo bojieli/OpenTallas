@@ -21,3 +21,16 @@ Job: core taps without budget owner -> legacy kit path (ETM max pin target). (1)
 - t2 re-read was not done: there is no routed bk_sel__t2 DB (R7 kits are on epyc10, which is full).
 - Class scan: tmp/etm_class_scan.py; out/etm_scan_a.{log,json} (intel2: head, kvsys, s81) and out/etm_scan_b.* (epyc9: QC, c8).
   - 24 unique views flagged; 8 are material (posted).
+
+## 11-24 03:45 FF-lib census (COORD) DONE
+- Bundle of 320 views (TT+FF libs) in .../CORE-TAP-BUDGET/ffc on intel2 and epyc10.
+  - Scripts: ff_census.py (arc compare), ff_outl.py, ff_report.py.
+  - Outputs: ff_census.json, ff_report.log, ff_suspect.json.
+- The COORD literal rule (FF within 2% of TT or slower) hits 0 views. The defect signature is a clk->out FF-TT median near -57 ps (HEAD -38); good libs are -120..-200.
+- 55 suspect FF libs: S81 33, QC 20, HEAD 2, KV 0. Published as lanes/FF-LIB-CENSUS.tsv.
+- 5 SIGNED consumer types need an FF hold re-check:
+  - s81 col_h9_r2 x2
+  - hd_tile
+  - hd_serdes
+  - qc slw_sc_v3
+- Proven only on dsdv_bksel_q (regen). A second regen sample would confirm the class.
