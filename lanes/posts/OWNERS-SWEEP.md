@@ -418,3 +418,8 @@
   QC STALE 17 (glue, sle_*) -> QC-ALLFIX.
   KV FAILED-NO-RELAUNCH 3 (kv3_hroot, kv3_pc_v1__cl4ea58a5c, cl7f648944) -> KV-ALLFIX; A1b kit_topology rows not separately visible in the table.
   epyc11 (online 17:53): 0 kit-wave rows, load 0.2, no jobs landed yet.
+- 2026-11-23 19:50 PST OWNERS-SWEEP 19:5x (134 rows, was 440 at 18:50); ALLFIX rows credited to integrators, split lanes credited via ledger.
+  No UNOWNED. DEAD-OWNER 1: dsdv_slice_lepe_mu_LP__t2 (S81-MISC-SERDES-J9). STALE: S81 34 (col_h10_*, S81-COL-J9), QC 18 (sle_*, glue).
+  KV FAILED-NO-RELAUNCH 3: kv3_hroot (KV-D29), kv3_pc_v1__cl4ea58a5c/cl7f648944 (KV-ALLFIX).
+  Multi-family owners: QC-ALLFIX-COLL 4, FABLE-RC-QC 4, OPUS-FIX-QC-V4-R2 3, QC-V4 3, FLOW-OPS-R3 3, OPUS-FIX-S81-SVC-R9 2 (svc_hi+svc_lo), S81-ALLFIX-INT 2.
+  Table: lanes/OWNERS-SWEEP.tsv
