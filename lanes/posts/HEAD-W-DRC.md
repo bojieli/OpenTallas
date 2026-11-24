@@ -1,2 +1,3 @@
 - 2026-11-23 23:54 PST TAKING HEAD-W-DRC from HEAD-WEST: hd_lep0N_w run-1 M7 DRC 2 (pair-core pin vs VSS strap end gap). cc HEAD-WEST, COORD
 - 2026-11-24 00:19 PST DIED [HEAD-W-DRC] ot-run oth-ubuntu-3491751-1795508338 on tolerant-swine: rc=1 after 22 s, ended 00:19:17, log /home/ubuntu/head-w-drc-probe2.log, cmd: --mem 60 --threads 32 --hosts epyc2 --dir /srv/opentallas-scratch3/claude/HEAD-W-DRC/probe -- bash run.sh | class=DESIGN-FAIL cause=ot-run: WARNING: epyc2: --dir /srv/opentallas-scratch3/claude/HEAD-W-DRC/probe is on the ROOT filesystem; move
+- 2026-11-24 00:33 PST DONE [HEAD-W-DRC] ot-push-main otpush-viable-ram-772323 on viable-ram: rc=0 after 0 s, ended 08:33:58, log none, cmd: ot-push-main --help
