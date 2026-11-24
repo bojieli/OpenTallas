@@ -1,0 +1,6 @@
+# KVLEAF-MASTERS handoff (split from S81-KVLEAF-T2-ARCH-R2, 11-23 19:2x PST)
+Job: sign off kv_leaf t2 masters kvq / ikw / ikr (DRC 0, TT >= -42, internal FF hold >= 0, routed LEC EQUIVALENT, export). 8/11 already signed by parent.
+## State 19:3x
+- kvq: kvq_oct (intel1) DIED 19:20 at 3_3 global place: kit PRE_GLOBAL_PLACE_TCL was relative (physical/s81su_physical/s81su_qnq_spx_ref.tcl). Patched kit.env + spec.json to /src/physical/... (copy+mv; backups *.pre_masters_1925) in intel1 master_r2/kitrepo/physical/ref_tile/s81su_kvleaf_kvq_r2. LIVE kvq_oct2: unit oth-ubuntu-191082-1795490738, intel1 master_r2/runs/kvq_oct2 (STATUS, status_r2, flow.log), log runs/kvq_oct2.otrun.log. full_r2.sh runs ref_route then lec_here.sh. Then export (ref_tile.py export) if hold >= 0.
+- ikr: LIVE hint LEC epyc9 master_drafts_codex/lec_rstland_r2/ikr_p1h (unit oth-ubuntu-1270667-1795490068, OT_LANE was ARCH-R2). Then export.
+- ikw: hold PASS (route_r2/ikw/hold_eco_m5c TT +166.46 FF +0.01 DRC 0). LEC NEQ 887 (no-reset consts in ot_hgi_fp4qdq, do not edit). Waiting LEC-AUTOFILL lec.py push; then rerun eco_m5c_r2.sh lines 36-49 (lec.py on logic_final_m5.v -> lec_m5c, export_m5c) with the new lec.py copied into E9 kitrepo.
