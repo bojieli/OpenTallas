@@ -160,3 +160,4 @@
   - Instances: 410,904. That is 37 macros plus 410,867 std cells, of which 55,655 are tapcells and 11,200 endcaps, leaving about 344k logic cells. rc127 was 496,651, so this is -17%. The total is 2.7% over 400k, but only because of taps/endcaps: logic is about 56k under. GPL finished, 900 s.
   - After place: 5570 setup and 2392 hold DRV counts (pre-CTS). The kit continues to GRT/route. Kit: epyc11 kw43-wave-1109/.../KV-D29/private/KV-HG-CAP/kv3_hg_v1p5_1124114911.
   - Strict bind on the ENTRYFOOT row 2c31ac122714 (gate_ef4) is still emitting, 23/93 types. PASS line ETA ~05:50.
+- 2026-11-24 05:26 PST DONE [KV-HG-CAP] ot-run oth-ubuntu-1734757-1795525990 on viable-ram: rc=0 after 770 s, ended 13:25:58, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_h
