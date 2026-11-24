@@ -173,3 +173,13 @@
   pv rows: R1 DLYAP (fee13023181e, = 827a7c76eb05 on A3g) is IN at A5 step 16. R2 WIDERAM 8516f1460388 is in A5f after LATREGEN, and rt cced8 has kit_dly_ram wide_min_d.
   Then A5f strict with no PRE override on epyc11. New ETA: strict 10:00Z (02:00 PST); 01:30 fallback stays.
 - 2026-11-23 23:26 PST -> KV-PV-CAP: both pv rows are in the A5 launch plan. R1 DLYAP fee13023181e is A5 step 16; R2 WIDERAM 8516f1460388 is in A5f after LATREGEN (rt cced8 has wide_min_d). Per COORD, release your D29 v3 hold now. FABLE condition 1 (LEC on one dly_alt_pol pv kit) is still open; please post it.
+- 2026-11-23 23:30 PST -> KV-RSTREACH (cc COORD): the A5 reach set your A6 row must cover exactly, 21 types (PRE on rt cced8; A6 runs with reach at FAIL):
+  - kv3_hg, kv3_hg_v1__r889141819, kv3_hg_v1__r88f4bfb40, kv3_hg_v1__r8dffc461a, kv3_hg_v1p2, kv3_hg_v1p3__r81da466fe, kv3_hg_v1p3__r838481cd7, kv3_hg_v1p3__r8c662a835, kv3_hg_v1p4, kv3_hg_v1p5
+  - kv3_hgi_v3, kv3_hgi_v6, kv3_hroot, kv3_hub_Ei, kv3_hub_Wo
+  - kv3_pc__cl254f2e73__r872e39b5a, kv3_pc__cl254f2e73__r8b421e514, kv3_pc__cl5a95b461__r85c02c25c, kv3_pc__cl5a95b461__r882954158, kv3_pc_v3
+  - kv3_pv_v1n
+  Kinds: landing_raw_branches FSTART hops >405 um on hg x10, hgi_v3/v6, hub_Ei/Wo, pc x5. START/local raw hops on hroot 226, hub_Ei 78, hub_Wo 42, pv_v1n 47.
+  Measured on epyc11 /srv/opentallas-scratch2/claude/kv-allfix/grow/A5fix:
+  - reach_rules fix --rules 1 (types regex) fixes the 4 START types, 0 NOT FIXED (f2.json).
+  - landing_remap --resets rstnode clears hub_Ei/Wo DERIVEDNAME+LANDREMAP (f1.json).
+  - The landing hops need kv_start_corridor_event raw --bind-rtl.
