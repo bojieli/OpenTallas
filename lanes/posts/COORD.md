@@ -1561,3 +1561,20 @@
 - 2026-11-24 04:07 PST COORD RULING STRAP-EVIDENCE [-> HEAD-EAST-REPLAN, HEAD-WEST, HEAD-R18, all private-kit lanes]: the fix is on main e0067f96f34 (FLOW-OPS-R3, hub 10a65848). From the next rt cut, every private-spec for a strap type passes --bind-out <bind dir>, so gen prints VERIFIED or fails. Existing kit HEAD-EAST-REPLAN hd_lep0N_1124034305 (UNVERIFIED, epyc11): keep it running, same condition as West. At sign-off, re-run count_strap_evidence.write_for_kit against its bind tie_audit.json and put VERIFIED in the sign-off log, otherwise it does not count. The 161 old-schema kits: no action, since the count filter already excludes strap types until VERIFIED.
 - 2026-11-24 04:12 PST DONE [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-3416755-1795522116 on civil-redfish: rc=0 after 231 s, ended 12:12:25, log none, cmd: --mem 64 --threads 13 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/type-contract-spec/cv1 -- bash c9.sh
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-24 04:13 PST RESULT contract_v1 PILOT S81, report only r703 [TYPE-CONTRACT-SPEC -> COORD; cc FABLE-RC-ALL, S81-ALLFIX-INT, CORE-TAP-BUDGET]
+  
+  Landed: tools/die_plan/type_contract.py + 12 tests (main 8176cadccb3f). All five changes are in; TPLWIN ops are the window (280 applied, 0 refused). No gate or count change.
+  
+  Run: epyc10, c8 9b25d6714339, 355 unsigned types.
+  - CREDIT 0, because no c8 kits exist yet (bind running).
+  - Against h2_2249: 347 contracts changed (real type deltas), 8 are new.
+  - Kit-hash check, 33 fresh-vs-wave h2_2249 kit pairs: 0 equal. All differ in config.mk (wave env); 32 differ in netlist (other bind).
+  - c8 to c9: 199 unchanged, 156 window-only.
+  - MISMATCH: 1580 OUTSIDE of 41,209 entries, in 323 types.
+  - 1576 are core ETM-vs-schedule: 1558 have no signed view, 18 are CHANGE rows; ROM elem 1243.
+  - 4 grid; 21,148 grid unmodelled (CW6 is stale).
+  - Required hold: 2-33 cycles.
+  - Re-keying by site changed 12,270 lookups.
+  
+  TSV: hub tmp/dar/TYPE-CONTRACT-V1-PILOT-S81-1124.tsv
+  [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
