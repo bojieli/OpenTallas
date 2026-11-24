@@ -4004,6 +4004,27 @@ class Binder:
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
+        if P is not None:
+            # REPORT ONLY (KV-RSTREACH 11-24): bind_reset.json core_resets are planned from the plan alone; check each
+            # against the driver of that pin in the emitted type RTL (wavefront tap vs reset spine).  bind_reset.json
+            # is not changed; a report failure never fails the bind.
+            import bind_reset_core_class
+            try:
+                texts = {}
+                for tn in self.by_type:
+                    tf = out / f"{self.types[tn]['module']}.sv"
+                    if tf.is_file():
+                        texts[tn] = tf.read_text(errors="replace")
+                W0 = json.loads((out.parent / "bind_reset.json").read_text())
+                # scoped / probe-only binds emit a subset: judge only the emitted types, name the rest
+                R = bind_reset_core_class.check(dict(W0, types={k: v for k, v in W0.get("types", {}).items()
+                                                                if k in texts}), texts)
+                R["not_emitted"] = sorted(k for k, v in W0.get("types", {}).items()
+                                          if v.get("core_resets") and k not in texts)
+                (out.parent / "bind_reset_core_class.json").write_text(json.dumps(R, indent=1) + "\n")
+                print(f"BIND-RESET-CORE-CLASS report-only mismatches={R['mismatches']} by_class={R['by_class']}")
+            except Exception as exc:  # noqa: BLE001 - report-only
+                print(f"BIND-RESET-CORE-CLASS report-only not written: {type(exc).__name__}: {exc}")
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
         if getattr(self, "emit_gaps", None):
