@@ -16,3 +16,5 @@ Pending: compose-A probe CTS (epyc8 ot-job ...place-outgoing-giraffe-2746461...)
 20:35 RESULT 3: C1c vs V2 diff (cmp_types.py): only u_tap rst_n covered (reset inst_tap 121). Groups (1),(2) uncovered.
 20:40 ROW SLECTL-RP-SEL drafted: hub lanes/handoff/QC-SLECTL-RESYN-row-rpsel.json (24 relay_sites, bits 518/519 of strap bank chd_q_1 + f bank). Asked QC-ALLFIX: compose or private probe.
 Waiters: compose-A CTS (epyc8 job dir OT_CTS_POST_TIMING).
+20:41 FABLE-RC-QC: do BOTH (private probe epyc11 + QC-ALLFIX compose). Probe checks: (a) f-bank hops + landing leg + bank tap/hold; (b) other r[3]/r[4] consumers; (c) family = only sle_ctl type (done, posted).
+Private probe: plan 30c963888225 = cA + row. Trees: epyc8 + epyc11 /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/rp/tree. Bind: running on epyc8 rp/bind_rp.sh -> rp/bind (log rp/bind_rp.ot, rp/bind.log). Then copy rp/bind to epyc11 and run intel2 /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN-probe.sh /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/rp grt sle_ctl__cla4f6f12f
