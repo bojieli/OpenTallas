@@ -3904,3 +3904,4 @@ OPS-SUPPORT-R1: 2026-11-23 16:05 PST hourly: 589 any / 485 current flat vs 15:44
 
 CODEX: 2026-11-23 17:18 PST taking over all active ROM release, ALLFIX family, token and fleet lanes. Native monitor combined placement-only and exact release gates in flight. HBM stays parked.
 OPS-SUPPORT-R1: 2026-11-23 18:06 PST hourly: 589 any / 485 current flat; VIS-COVERAGE 435/451 (96%), PROBE-PASS 1.
+OPS-SUPPORT-R1: 2026-11-23 19:06 PST hourly: 589 any / 485 current flat; ot-tree-fork stream fix on main 3e1a2180ccb.
