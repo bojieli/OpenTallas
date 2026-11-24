@@ -1,0 +1,1 @@
+- 2026-11-23 20:48 PST TAKING QC-LANDCORE-SWEEP (new narrow lane, 20:49 PST): sweep landing-core distance vs data allowance for all QC types in C1-noSU 12b66c0e4829 and V4 81fd3e6370c0; TSV + PRE check proposal to PRECHECK. cc FABLE-RC-QC QC-ALLFIX QC-HC1-CLKENTRY. Not touching sle_ctl.
