@@ -433,3 +433,8 @@
   STALE: S81 35 (col_h10_*, S81-COL-J9, ALLFIX-COL last post 20:34), QC 1 (tt_ctlm, QC-TTC-RETIME).
   Multi-family lanes: PRECHECK-1119 6 (kv3_pc, sle_st, kv3, kv3_hgi, cbn, slw), KV-D29 4, KV-HG-CAP 3, OPUS-FIX-QC-V4-R2 3 (cbn, cbf, sle_st).
   Also 2-family: S81-OPEN-DEMAND (col, dsdv_slice), S81-J9-ASSEMBLY-R6 (serdes, gunit), QC-ALLFIX-COLL.
+- 2026-11-23 22:51 PST OWNERS-SWEEP 22:5x (155 rows). UNOWNED 1: HEAD s81hd_lep_pair. No DEAD-OWNER, no KV FAILED-NO-RELAUNCH.
+  STALE: S81 35 (col_h10_*, S81-COL-J9, ALLFIX-COL posted 22:40), QC 1 (tt_ctlm, QC-TTC-RETIME).
+  KV-OPEN-INCORE: last post 20:20 (DONE i2), 2.5 h silent, owns 0 unsigned rows; handoff exists, treat as finished unless COORD wants more.
+  Multi-job lanes: QC-V4 7, PRECHECK-1119 6, PRECHECK-CELLCAP 4, FABLE-RC-ALL 4, KV-HG-CAP 3, KV-D29 3, FLEET-WATCH-1015 3, OPUS-FIX-QC-V4-R2 3.
+  EPYC7-DISK has no post file yet.

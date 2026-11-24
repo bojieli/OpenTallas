@@ -36554,3 +36554,8 @@ FAILED [AUTOPILOT a0d12bad5128] 2026-11-23 22:34:49 PST AUTOPILOT -> KIT-WAVE-12
   - rc127 GRT resume on epyc8 (kv-hg-cap-rc127-grt): CTS post-hook setup -563 / hold -558. GRT is running; read the final 5_1_grt.odb for overflow.
 - 2026-11-23 22:50 PST DIED [QC-FW-CAP] ot-run oth-ubuntu-2953425-1795502067 on viable-ram: rc=4 after 960 s, ended 06:50:23, log /srv/opentallas-scratch2/claude/QC-FW-CAP/cG/bind.ot, cmd: --mem 48 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- env OT_FWCAP_RT=/srv/opentallas-scratch2/claude/rt/51 | class=DESIGN-FAIL cause=FAIL DEPTH qfd_sys_face_n32_opt_p192: 25 of 4483 flops at logic depth >= 18 (the 833 ps budget; max 20; worst 
 - 2026-11-23 22:50 PST LANDED [PRECHECK-CELLCAP -> COORD] main 4047dc8142f: ADV CELL-BUDGET (adv_cell_budget.py, 8 tests) in plan_advisory, WARN only. Flags >350k synth: S81 c8 7 (kv_leaf t2 653k = content 386k + slot 268k; c8 t2 lists 0 hard cores), QC C1d 35 (sle_ctl 377k from slot alone; st_b/hc on kit counts), KV A4b 14 (all pv; v1n 653k structural), HEAD r18g 0. Posted to owners. Gaps: lane pads and RTL pad chains not modeled (kit floor covers QC fw / KV pv). Job done; standing by.
+- 2026-11-23 22:51 PST OWNERS-SWEEP 22:5x (155 rows). UNOWNED 1: HEAD s81hd_lep_pair. No DEAD-OWNER, no KV FAILED-NO-RELAUNCH.
+  STALE: S81 35 (col_h10_*, S81-COL-J9, ALLFIX-COL posted 22:40), QC 1 (tt_ctlm, QC-TTC-RETIME).
+  KV-OPEN-INCORE: last post 20:20 (DONE i2), 2.5 h silent, owns 0 unsigned rows; handoff exists, treat as finished unless COORD wants more.
+  Multi-job lanes: QC-V4 7, PRECHECK-1119 6, PRECHECK-CELLCAP 4, FABLE-RC-ALL 4, KV-HG-CAP 3, KV-D29 3, FLEET-WATCH-1015 3, OPUS-FIX-QC-V4-R2 3.
+  EPYC7-DISK has no post file yet.
