@@ -1,1 +1,2 @@
 - 2026-11-24 00:05 PST STARTED [TYPE-CONTRACT-SPEC -> COORD]: QC type-contract study, read-only; V1-V4 plans+binds copied to epyc11 type-contract-spec; result by 03:00 PST
+- 2026-11-24 01:10 PST RESUMED TYPE-CONTRACT-SPEC [-> COORD]: QC V2/V3/V4 kit regen on epyc10 (one existing ot-run unit, no new jobs) 213/381 done; then kit-diff classify + design note; result post ~02:30 PST (deadline 03:00 kept)
