@@ -11,3 +11,4 @@
 - 2026-11-24 03:09 PST DONE [s81-start-collector] ot-push-main otpush-renewed-glider-1343939 on renewed-glider: rc=0 after 0 s, ended 11:09:39, log none, cmd: ot-push-main --help
 - 2026-11-24 03:09 PST DIED [s81-start-collector] ot-push-main otpush-renewed-glider-1347234 on renewed-glider: rc=3 after 7 s, ended 11:09:51, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 7 s, no log
 - 2026-11-24 03:11 PST DONE [s81-start-collector] ot-push-main otpush-renewed-glider-1372671 on renewed-glider: rc=0 after 81 s, ended 11:11:42, log none, cmd: ot-push-main 
+- 2026-11-24 03:21 PST DONE [s81-start-collector] ot-push-main otpush-renewed-glider-1565771 on renewed-glider: rc=0 after 79 s, ended 11:21:02, log none, cmd: ot-push-main 
