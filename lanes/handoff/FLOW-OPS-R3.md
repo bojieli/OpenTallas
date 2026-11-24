@@ -122,3 +122,9 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 
 ## 2026-11-24 04:14 PST RT CUT
 - rt/current c0b6e2d03408 on all 8 hosts, per-file hash check 0 mismatch; contains e0067f96f34 0549174ed9c 18bd6c196c6c 57addab573c0.
+
+## 11-24 04:34 DROPIN-REMOVE-1124
+- Removed intel2 autopilot.service.d/zzzzzz-codex-takeover-viewed-route.conf (ot-delete; copy FLOW-OPS-R3/tmp/*.removed-1124), daemon-reload; unit env AP_REQUIRE_VIEWED_WAVE_ROUTE count 0. autopilot is a timer oneshot, so no restart: next tick reads new env.
+- Handback checklist added to CODEX-ROLE.md (hub d9ae58aa).
+- 13 S81 + 3 HEAD no-verdict kits posted to owners, verdict due 05:05 (hub 37ef1269).
+- NEXT: confirm the 44 QC auto-ACCEPT kits route on the first post-removal tick (waiter running), post count; recheck the 16 at 05:05.
