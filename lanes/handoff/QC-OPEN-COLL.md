@@ -46,3 +46,11 @@ Job: coll_core rows of lanes/ALLFIX-QC.tsv: (1) coll_core 80 CLK-open reset copi
 - Rows 2-4: seats plan c22ba88a5fd4 (pf_q[374], xe0_q, warm[4]) in epyc2 rows/plan_tapsplit_seats.json. Strict runs after ee59.
 - Row A: s_rd_q[35]/[36] replication. Waiting on the FABLE form ruling (asked 03:47).
 - epyc7: ot-delete of the partial forks is running (pid 2192564).
+
+## 11-24 05:25 PST
+- ROW-READY posted for C1i. Plan 2007f2313324 = C1g + TAP-SPLIT + seats + TDREP replicas. RTL overlay is in epyc2 scratch3 QC-OPEN-COLL/rowA/overlay (ot_coll_tp8_static.sv 3065906f35b8).
+  - Gates: strict 0 errors, LATCHECK 1922/1922 (cG2).
+  - LEC pos 52859/52859 and neg failing on 2 bits, both on epyc10 scratch2 QC-OPEN-COLL/rowA_lec.
+- TAP-SPLIT alone (ee5985b3b659) also passed strict (cG).
+- Open: push the RTL to main, or have QC-ALLFIX carry it as an overlay (asked). Next: probe on 2007f2313324 and the 9-endpoint list at CTS/GRT.
+- The epyc2 tree cG/tree now holds the row-A RTL plus plan 2007f2313324; cG2/tree is a symlink to it.
