@@ -9,3 +9,6 @@
 - ot-run needs --stage for every path outside --dir named in the command.
 ## Log
 - 09:55 row rc0: L2720 0->2, L2721 0->1, L2730 0->2, L2731 0->1; max hop 326. Posted CAUSE+ROW DRAFT.
+- 10:3x PRE = A5t3 set (0 new) after fixing 2 GEOM-STATION-IN-CORE (regs_um now real bank centres); row ce6761dc6ef7, plan 7112b2fc4e5e.
+- 11:2x G0 PASS (g0_V4LEGS); A/B scoped bind: base 0 err, row 30 R8_STALE.
+- 12:2x jobR: r8-prepass -> regen (regen/regen.py, resolve.py, apply.py; lane tree) pv_v 321c805aa876 -> 1a1c15ce11ef (80 regen), rebind 0 errors (bindr/). Posted ROW-REBASED. Lane tree inputs now hold regenerated tables. JOB DONE; waiting only on KV-ALLFIX A5t6 compose.
