@@ -13,3 +13,6 @@ State 07:55 PST: waiting on C1j bind (PRE).
 08:52 TAKING cbf_q01 + cbf_q01_s2; 08:59 TAKING cbf_q00_s2 (COORD sweep). Adopted live C1h QC-ALLFIX probes (goal grt): private_specs/QC-ALLFIX/qwen_compute_cbf_q01_1124052457 (cH8, chain_a1), qwen_compute_cbf_q01_s2_1124051730 (cH, geom->chain_a1), qwen_compute_cbf_q00_s2_1124051640 (cH, place). Route attempts were LBL-DRAFT refused -> need VIS-QC probe-pass after GRT.
 09:2x cbf_q01_s2 AUTO-GEOM advisory FAIL: r2r max 563 um (serdes_tx_tx_flit cland->ft_o_0, 184/597 bits), over_cycle 0 everywhere (est 698 ps), channel_v 2.07 at x1150 y1160, col_v 2.08 x550. Judge at GRT.
 Waiter script: scratchpad w.sh (WMAX=secs) watches bind + 3 probes.
+09:4x COORD ruling (VIS-REOWN 8 cb ISSUES) -> cancelled: C1h probes cbf_q01, cbf_q01_s2 (unit 2095636 stopped at cts), cbf_q11, cbn_q00 cld7bf7197, cbn_q01 clab6e67f2 (QC-ALLFIX+QC-CB-PROBE), cbn_q00 cl622f65d2 (QC-CB-PROBE), cbx cl89936551, cbx cl89936551_h. All 8 types have no live build now.
+CORRECTION posted 09:5x: VISQC-CB-1 tap grid IS in C1h and C1j (added_taps xy == CB-1 plan_s on 17/17; ref intel1 /srv/opentallas-scratch3/claude/VIS-QC/cb1s/plan_s.json vs plan_v3.json). Proposed relaunch cbf_q01/_s2/cbf_q11 from C1i, 13 cb from C1j. Awaiting COORD.
+Still live (mine): cbf_q00_s2 C1h probe qwen_compute_cbf_q00_s2_1124051640.
