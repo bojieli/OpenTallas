@@ -1157,3 +1157,53 @@ def test_reset_resel_tree_relay_after_non_tree_stage_fails_closed(monkeypatch, t
     P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
     rec = SR.reset_resel(P, {"tag": "new", "partition_types": {"x": t}}, ["x"], tmp_path / "plan.json")["x"]
     assert "tree relay after a non-tree stage" in rec.get("error", "")
+
+
+def _fork_trees():
+    """kv3_hgi_v1__cl42bc8b12 shape (KV-TAPSPLIT-HGPV e2fc2be7): one old chain 113 -> 114 -> 115; the re-solved tree
+    forks after its first relay into two sibling subtrees 197/198 and 201/202 of the same depth."""
+    R = lambda q, d, depth, xy: dict(name="u_" + q, q=q, d=d, depth=depth, xy=xy)  # noqa: E731
+    return {"base": dict(relays=[R("rst_rl_113", "rst_rl_1", 2, [100.0, 100.0]), R("rst_rl_114", "rst_rl_113", 3, [200.0, 100.0]),
+                                 R("rst_rl_115", "rst_rl_114", 4, [300.0, 100.0])]),
+            "new": dict(relays=[R("rst_rl_196", "rst_rl_1", 2, [100.0, 100.0]),
+                                R("rst_rl_197", "rst_rl_196", 3, [200.0, 150.0]), R("rst_rl_198", "rst_rl_197", 4, [300.0, 150.0]),
+                                R("rst_rl_201", "rst_rl_196", 3, [200.0, 50.0]), R("rst_rl_202", "rst_rl_201", 4, [300.0, 50.0])])}
+
+
+def _fork_type(second_stages=None):
+    def st(rows):
+        return [dict(original=q, xy_um=xy) for q, xy in rows]
+    s0 = st((("rst_rl_114", [200.0, 150.0]), ("rst_rl_115", [300.0, 150.0]), ("cland_reset_ft0_i", [350.0, 100.0])))
+    s1 = st(second_stages or (("rst_rl_114", [200.0, 50.0]), ("rst_rl_115", [300.0, 50.0]),
+                              ("cland_reset_ft0_i", [350.0, 100.0])))
+    return {"clock": {"landing_raw_branches": [dict(name="fs_ft2_o", base="rst_rl_113", stages=s0, consumers=["a"]),
+                                               dict(name="fs_ft0_o", base="rst_rl_113", stages=s1, consumers=["b"])]}}
+
+
+def _fork_run(monkeypatch, tmp_path, t):
+    import types as _t
+    import schema
+    import reset_tree
+    trees = _fork_trees()
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
+    return SR.reset_resel(P, {"tag": "new", "partition_types": {"x": t}}, ["x"], tmp_path / "plan.json")["x"]
+
+
+def test_reset_resel_shared_chain_one_landing_group_stays_one_chain(monkeypatch, tmp_path):
+    """two branches of ONE old chain ending on ONE landing relay: the geometric walk used to send the second down the
+    sibling subtree (201/202), so cland_reset_ft0_i got two predecessors (strict bind EMIT D != literal predecessor)."""
+    t = _fork_type()
+    rec = _fork_run(monkeypatch, tmp_path, t)
+    assert "error" not in rec, rec
+    a, b = t["clock"]["landing_raw_branches"]
+    assert [s["original"] for s in a["stages"]] == ["rst_rl_197", "rst_rl_198", "cland_reset_ft0_i"]
+    assert (b["base"], [s["original"] for s in b["stages"]]) == (a["base"], [s["original"] for s in a["stages"]])
+
+
+def test_reset_resel_shared_landing_group_refuses_missing_edge(monkeypatch, tmp_path):
+    """the group mapping must be followed along real edges of the re-solved tree; if it cannot, refuse (no guess)."""
+    t = _fork_type(second_stages=(("rst_rl_115", [300.0, 50.0]), ("cland_reset_ft0_i", [350.0, 100.0])))
+    rec = _fork_run(monkeypatch, tmp_path, t)
+    assert "no such edge" in rec.get("error", ""), rec

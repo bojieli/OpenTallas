@@ -2197,6 +2197,20 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
             old_q = set(ra_q) | {r["q"] for r in ta.get("relays", [])}
             old_branches = {b.get("name"): b for b in
                             (P["partition_types"][tn].get("clock") or {}).get("landing_raw_branches", [])}
+            # KV-RSTREACH 11-24 (KV-TAPSPLIT-HGPV e2fc2be7, kv3_hgi_v1__cl42bc8b12 rst_rl_199 vs 203): branches that
+            # share one OLD chain ending on one landing relay are one chain.  Walking each branch alone by geometry
+            # could send them down sibling subtrees, so the kept landing relay had two predecessors.  Per landing
+            # group (the first kept non-tree stage, else the old terminal) every old relay name maps to ONE new name;
+            # a branch that cannot follow that mapping along real tree edges is refused (rec["error"]), never guessed.
+            group_map = {}
+
+            def _bind_names(g, pairs, bi):
+                m = group_map.setdefault(g, {})
+                for old, new in pairs:
+                    if old in m and m[old] != new:
+                        raise ValueError("landing_raw_branches.%d: landing group %s maps old relay %s to both %s and "
+                                         "%s (sibling split of one shared chain)" % (bi, g, old, m[old], new))
+                    m[old] = new
             for bi, br in enumerate(ck.get("landing_raw_branches") or []):
                 stages = br.get("stages") or []
                 prior = old_branches.get(br.get("name"), br).get("stages") or []
@@ -2217,6 +2231,8 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     if q is None:
                         raise ValueError("raw reset terminal %s: chain ends at its base" % terminal)
                     chain = list(reversed(tail))
+                    _bind_names(terminal, [(br.get("base"), q)] + [(st.get("original"), row["q"])
+                                                                   for st, row in zip(stages, chain)], bi)
                     if br.get("base") != q or [st.get("original") for st in stages] != [r["q"] for r in chain]:
                         rec["raw"].append(["landing_raw_branches.%d.terminal" % bi, br.get("base"), q])
                     br["base"] = q
@@ -2247,6 +2263,13 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     continue
                 b0 = base_by_name.get(br.get("name")) or (base_br[bi] if bi < len(base_br) else br)
                 goal = ((b0.get("stages") or [{}])[-1] or {}).get("original") if b0.get("stages") else None
+                group = stages[ntree].get("original") if kept else goal
+                gm = group_map.get(group, {})
+                if br.get("base") in gm and gm[br["base"]] != nb["q"]:
+                    nb = plain_q.get(gm[br["base"]]) or rb_q.get(gm[br["base"]])
+                    if nb is None:
+                        raise ValueError("landing_raw_branches.%d: landing group %s base %s -> %s is not a relay of "
+                                         "the re-solved tree" % (bi, group, br.get("base"), gm[br["base"]]))
                 path = _tree_path(kids, nb["q"], goal, len(walk)) if goal and not kept else None
                 chain, prev, ok = path or [], nb, True
                 for st in walk if path is None else ():
@@ -2254,13 +2277,22 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     if not c:
                         ok = False
                         break
-                    keep = [r for r in c if r["q"] == st.get("original")]
-                    nxt = keep[0] if keep else min(c, key=lambda r: math.dist(r["xy"], st.get("xy_um") or r["xy"]))
+                    if st.get("original") in gm:
+                        nxt = next((r for r in c if r["q"] == gm[st["original"]]), None)
+                        if nxt is None:
+                            raise ValueError("landing_raw_branches.%d: landing group %s needs %s -> %s after %s, but "
+                                             "the re-solved tree has no such edge" %
+                                             (bi, group, st["original"], gm[st["original"]], prev["q"]))
+                    else:
+                        keep = [r for r in c if r["q"] == st.get("original")]
+                        nxt = keep[0] if keep else min(c, key=lambda r: math.dist(r["xy"], st.get("xy_um") or r["xy"]))
                     chain.append(nxt)
                     prev = nxt
                 if not ok:
                     rec["skipped"].append("landing_raw_branches.%d (%s): chain ends" % (bi, br.get("name")))
                     continue
+                _bind_names(group, [(br.get("base"), nb["q"])] + [(st.get("original"), r["q"])
+                                                                  for st, r in zip(walk, chain)], bi)
                 if br.get("base") != nb["q"] or [st.get("original") for st in walk] != [r["q"] for r in chain]:
                     rec["raw"].append(["landing_raw_branches.%d" % bi, br.get("base"), nb["q"]])
                 br["base"] = nb["q"]
