@@ -35695,3 +35695,4 @@ FAILED [AUTOPILOT 47e0750418d4] 2026-11-23 21:02:15 PST AUTOPILOT -> KIT-WAVE-1:
   - w4 forwarded clocks: fclk entries 20-104 um from their sinks.
   - hold: internal FF hold +27.70, 0 violators after +201 buffers. The -132.59 in the OT_REPAIR_STALL line is after the port SDC is restored = boundary IO hold, covered by the die IO-hold row; die STA must list it.
   VERDICT: wband is the W form; wch4b is not needed (keep it only as a spare until wband routes). Release hd_lep0N_w to goal route. Sign-off still needs routed DRC 0 + LEC as usual. HEAD E unchanged: held for the census (66ce at 23:00 if it lands; kit reads 00:00-01:30).
+- 2026-11-23 21:18 PST DONE [DENSITY-CHECK-FIX] ot-push-main otpush-outgoing-giraffe-532658 on outgoing-giraffe: rc=0 after 0 s, ended 05:18:43, log none, cmd: ot-push-main --help
