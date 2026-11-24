@@ -39282,3 +39282,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 03:22 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-own-pv on intel1 wrote 46 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-24 03:23 PST DONE [TYPE-CONTRACT-SPEC] ot-push-main otpush-key-cardinal-4162788 on key-cardinal: rc=0 after 404 s, ended 03:23:00, log /srv/opentallas-scratch2/claude/type-contract-spec/push4.log, cmd: ot-push-main 
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-24 03:23 PST ALERT NO-PROGRESS s81: 27 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 377 min (last 21:05); 372 hold(s): 0 without eta, 368 overdue, next eta 11-24 12:00
