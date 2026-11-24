@@ -38,3 +38,8 @@ Next: class (b) fix (fanout split / dup of u_11072,u_2367 cones + cluster), LEC 
 - All on intel1 /srv/opentallas-scratch2/claude/QC-TTC-R2 (template copy ep11/, tool1/after.sh + after_grt.sh waiters write census_<p>.done / grt_<p>.done): p_rep11, p_rl10, p_rl11, p_rlr10 at CTS; p_rep10 GRT running. epyc11 full at times (ruling a1acc308: no jobs at load >= 80).
 - Registered read (3): u_16867 Q feeds addr/ce of the 3 ROMs (loop) + 84 flops: needs RTL/sequencer change + token bench; fallback only.
 - tap_relay_cohort landed main e74113c83a93.
+
+## 11-24 03:37 PST TT-XPF transport (COORD top priority)
+- Measured C1g cF/latcheck.json: tt_ctlm.hr->sl_W5_fw.hr_wi = 10 -> XPF 11 (1+R_HR). Program T=20 from lane_ages_dv2f14bi R_HR 19; core 21 from HR_SOURCE_CONTRACT (never measured). All 4 program lane ages stale: C1g cmd 14 / hr 10 / ss 10 / ag 13 / st 10 (program 19/19/17/17). Posted 34faf14b: recompile with --lane-ages, core at 11 + new digest. Core regen owner pending COORD (F16-PRODUCER or CODEX-TOKEN).
+- Then: re-run scripted row set on new core names + comb LEC, CTS, GRT. All tt_ctlm timing rows on 6a5f53239424 non-final. Early-tap probes HELD (p_rep11/p_rl10/p_rl11/p_rlr10/p_rep10 GRT left running <3 h). rep12 (tool/portrep.py, native_cmd port replica) build timed out, not launched.
+- Caveat to verify: LATCHECK delivered vs ctlm_image lane-age convention (old compiled_L1 relay table says hr 26 stages vs lane_ages 19).
