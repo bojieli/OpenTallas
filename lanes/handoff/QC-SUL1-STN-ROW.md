@@ -4,4 +4,4 @@ Job: move 42 su_l1 in-core RSN die lane stations to the street. Base C1c 3b12251
 - Output C1c+row: plan_c1c_sul1stn.json 6e5430030349 (epyc7 + epyc11 lane dir); report row_sul1stn.json
 - 14 type sites (4 types) moved; worst hop 389.5; 0 cycles; only rsn regs_um+note differ.
 - Validation: epyc11 lane dir: fork.ot (tree fork of cE/tree from epyc7), chain.sh -> val.sh (PRE, G0, elab, bind --strict --types 4 su_l1), logs val.ot pre.log g0/ elab.log bind.log, summary chain.log.
-- TODO: when done, post ROW-REBASED <sha> <result> to QC-ALLFIX cc FABLE-RC-QC-SU, FABLE-RC-QC; report to COORD.
+- DONE 21:4x: ROW-REBASED 6e5430030349 PASS posted (G0 42->0, PRE inherited only, scoped bind 0 su_l1 errors; 18 LATCH_EXCEPT probe-scope artefacts). Lane idle unless QC-ALLFIX asks for C1d re-apply help.
