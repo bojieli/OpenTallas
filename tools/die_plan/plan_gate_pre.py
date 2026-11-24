@@ -138,6 +138,11 @@ SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,20
   origins (origin + track_offset) off the manufacturing grid are WARN SITEGRID-MACRO; off the site column / row and plan cell
   hints the kit legalises are counted in WARN SITEGRID-SUMMARY only (adopted kits place with them).  Seconds.
 
+SEATMATCH-1124 (SEAT-MATCH-AUDIT): with a finished bind OUT of this plan (--elab-dir), every relay_sites key is judged against the bound
+  RTL text (seat_match.py: instance present, stage / bit inside the primitive's W, D / DMAX, no '/' vs '.' twin at another site).  A key that
+  seats nothing leaves its live register in free placement (QC sle_ctl 16,442 of 70,623 keys).  WARN only (REPORT-ONLY until the re-keys
+  land, COORD / FABLE-RC-QC 11-24): group counts, the strap bank the rows moved to, and how many are NEW against the baseline.  Seconds.
+
 ISTPRICE (FABLE FLOW REVIEW 11-23 22:50, PRECHECK-LEDGER-R3): FAIL for every lane whose stored latency row is short of the live counts
   (PRICE-SHORT: cycles < 2 + ft stations + landing + source stations; STALE-TABLE: stored ft stations / landing != live) and, with an
   as-built, every native-source lane whose fixed_cycles != source + destination stations (FIXED-SPLIT) or whose native source bus has
@@ -166,7 +171,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ISTPRICE", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ISTPRICE", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1610,6 +1615,36 @@ def _bind_type_rtl(rtl, tn):
     return hits[0] if len(hits) == 1 else None
 
 
+def seat_bind_is_of_plan(plan, bind_dir):
+    """True when the finished bind in bind_dir was made from this plan file (sha256 in bind_report / provenance, else the same path)"""
+    sha = hashlib.sha256(Path(plan).read_bytes()).hexdigest()
+    for n in ("provenance_bind.json", "plan_gate_pre.json", "bind_report.json"):
+        d = _load(Path(bind_dir) / n)
+        if not isinstance(d, dict):
+            continue
+        txt = json.dumps({k: v for k, v in d.items() if k in ("provenance", "plan", "plan_sha256", "sha256", "plan_sha")})
+        if sha in txt:
+            return True
+        pp = (d.get("provenance") or {}).get("plan") if isinstance(d.get("provenance"), dict) else None
+        if pp and Path(pp).is_file() and hashlib.sha256(Path(pp).read_bytes()).hexdigest() == sha:
+            return True
+    return False
+
+
+def check_seatmatch(plan, bind_dir, baseline=None):
+    """SEATMATCH-1124 lines (see the doc); no finished bind RTL = not run"""
+    out = gendry_bind_out(bind_dir)
+    if not out or not (Path(out) / "rtl").is_dir():
+        return []
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import seat_match as SM
+    try:
+        base = json.loads(Path(baseline).read_text()) if baseline else None
+        return SM.findings(_load(plan) or {}, Path(out) / "rtl", base, seat_bind_is_of_plan(plan, out))
+    except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
+        return [f"WARN SEATMATCH not checked: {type(e).__name__}: {str(e)[:200]}"]
+
+
 def check_macroghost(plan, bind_dir, max_list=4):
     """MACROGHOST-1122 (OPUS-FIX-S81-SVC-R9, COORD 18:0x): placed macro rows (contents with a lef, path u_bound.<inst>...)
     with no instance in the bound the kit will build.  Checked against the per-type RTL of the bind in BIND_DIR/rtl
@@ -1871,6 +1906,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_emitname(tree, plan, asbuilt)
     if "MACROGHOST" not in skip:                         # MACROGHOST-1122: placed macros with no bound instance (needs --elab-dir bind rtl)
         findings += check_macroghost(plan, elab_dir)
+    if "SEATMATCH" not in skip:                          # SEATMATCH-1124: relay_sites keys vs the bound RTL (needs --elab-dir bind)
+        findings += check_seatmatch(plan, elab_dir, rb or baseline)
     if "RESETPUB" not in skip:                           # RESETPUB-1122: published reset tree vs the tree the bind emits
         findings += check_resetpub(tree, plan, base=_base,
                                    solve=os.environ.get("OT_RESETPUB_SOLVE") == "1")

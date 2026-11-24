@@ -417,6 +417,88 @@ proc rs_place_all {sites} {
       dict set hit $k 1; dict set hit_i $k $i; dict set used $i 1; incr n; incr al; set more 1
     }
   }
+  # SEAT-MATCH (SEAT-MATCH-AUDIT 11-24: 10 QC cb types 276 keys, sle_ctl su_l0 444): keys that still found no register, post-pass.
+  #   RELAY-SEG  a station re-written as generate segments (qfd_c_stn ot_qfd_xcst_rep): P.cap[n] -> P.g_seg[n/S].cap[n%S] when the key
+  #              family reaches past one segment (slices); P.cnt[m] / P.run held once per segment -> every copy at the key's site.
+  #   RELAY-CNT  X.q[b] of a dly line the R8 strap pass turned into ot_dp_dly_cnt (kept registers r[j][b], a mux for q): the last stage
+  #              r[max j][b].  Only when X has no q register at all (a single missing q bit of a live line is pruned, not renamed).
+  set todo [dict create]
+  dict for {k v} $sites { if {![dict exists $hit $k]} { set a [string map {/ .} $k]; if {[dict get $sep $a] ne ""} { dict set todo $a $k } } }
+  set ng 0; set ngk 0; set nc 0
+  if {[dict size $todo]} {
+    set tb [dict create]; set cb [dict create]
+    dict for {a k} $todo {
+      if {[regexp {^(.*)\\[([0-9]+)\\]$} $a -> b ix]} { dict set tb $b 1; if {[regexp {^(.*)[.]q$} $b -> x]} { dict set cb $x 1 } } else { dict set tb $a 1 }
+    }
+    set nmax [dict create]
+    dict for {k v} $sites {
+      if {[regexp {^(.*)\\[([0-9]+)\\]$} [string map {/ .} $k] -> b ix] && [dict exists $tb $b]} {
+        if {![dict exists $nmax $b] || $ix > [dict get $nmax $b]} { dict set nmax $b $ix }
+      }
+    }
+    set segs [dict create]; set cnts [dict create]; set hasq [dict create]
+    foreach i [$ff_blk getInsts] {
+      if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+      regsub {\\$_[A-Za-z0-9_]*$} [string map {\\\\ {} / .} [$i getName]] {} k0
+      foreach c [lsort -unique [list $k0 [regsub {^[^.]*[.]} $k0 {}]]] {
+        if {[regexp {^(.*)[.]q\\[[0-9]+\\]$} $c -> x] && [dict exists $cb $x]} { dict set hasq $x 1 }
+        if {[regexp {^(.*)[.]r\\[([0-9]+)\\]\\[([0-9]+)\\]$} $c -> x j b] && [dict exists $cb $x]} {
+          if {![dict exists $cnts $x $b] || $j > [lindex [dict get $cnts $x $b] 0]} { dict set cnts $x $b [list $j $i] }
+        }
+        if {[regexp {^(.*)[.]g_[A-Za-z0-9_]*\\[([0-9]+)\\][.]([^.\\[]+)(\\[([0-9]+)\\])?$} $c -> pre g nm - m]} {
+          set b "$pre.$nm"; if {$m eq ""} { set m s }
+          if {[dict exists $tb $b] && ![dict exists $used $i]} { dict set segs $b $g $m $i }
+        }
+      }
+    }
+    dict for {a k} $todo {
+      if {[regexp {^(.*)\\[([0-9]+)\\]$} $a -> b ix]} {} else { set b $a; set ix s }
+      set pick {}; set kind ""
+      if {[dict exists $segs $b]} {
+        set gl [lsort -integer [dict keys [dict get $segs $b]]]
+        if {$ix eq "s"} {
+          foreach g $gl { if {[dict exists $segs $b $g s]} { lappend pick [dict get $segs $b $g s] } }; set kind seg
+        } else {
+          # segments contiguous from 0, every segment the same bits 0..S-1: else the form is not understood (left a miss)
+          set S -1; set okf 1
+          foreach g $gl {
+            set ms [lsort -integer [lsearch -all -inline -not -exact [dict keys [dict get $segs $b $g]] s]]
+            if {$S < 0} { set S [llength $ms] }
+            if {[llength $ms] != $S || $S == 0 || [lindex $ms end] != $S - 1} { set okf 0; break }
+          }
+          if {$okf && [lindex $gl end] == [llength $gl] - 1} {
+            if {[dict get $nmax $b] >= $S} {
+              if {[dict get $nmax $b] < $S * [llength $gl]} { set pick [list [dict get $segs $b [expr {$ix / $S}] [expr {$ix % $S}]]]; set kind seg }
+            } elseif {$ix < $S} { foreach g $gl { lappend pick [dict get $segs $b $g $ix] }; set kind seg }
+          }
+        }
+      } elseif {[regexp {^(.*)[.]q$} $b -> x] && ![dict exists $hasq $x] && [dict exists $cnts $x $ix]} {
+        set pick [list [lindex [dict get $cnts $x $ix] 1]]; set kind cnt
+      }
+      set got_k 0
+      foreach i $pick {
+        if {[dict exists $used $i]} continue
+        lassign [dict get $sites $k] x y
+        set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+        if {$got eq ""} { lappend is_miss [$i getName]; continue }
+        puts $is_fh "[$i getName]\\trelay\\t[expr {[lindex $got 0] / double($ff_dbu)}]\\t[expr {[lindex $got 1] / double($ff_dbu)}]\\t-"
+        dict set used $i 1; incr n; incr got_k
+        if {$kind eq "seg"} { incr ng } else { incr nc }
+      }
+      if {$got_k} { dict set hit $k 1; if {$kind eq "seg"} { incr ngk } }
+    }
+  }
+  # a key written twice (P/q and P.q) names ONE register: the same-site twin of a seated key is not a miss (QC st_a: 128 of 308)
+  set nt 0
+  set hsep [dict create]
+  dict for {k v} $hit { dict set hsep [string map {/ .} $k] [dict get $sites $k] }
+  dict for {k v} $sites {
+    set a [string map {/ .} $k]
+    if {![dict exists $hit $k] && [dict exists $hsep $a] && [dict get $hsep $a] eq $v} { dict set hit $k 1; incr nt }
+  }
+  if {$ng} { puts "OT_RELAY_SITES RELAY-SEG: $ng segment registers of $ngk keys sited (generate-segment station)" }
+  if {$nc} { puts "OT_RELAY_SITES RELAY-CNT: $nc keys X.q\\[b\\] sited on the last kept stage of a strap-count delay bank" }
+  if {$nt} { puts "OT_RELAY_SITES TWIN: $nt keys are the / or . spelling of a key already seated at the same site" }
   if {$nn} { puts "OT_RELAY_SITES RELAY-NORM: $nn keys matched on the normalised flop name (leaf lf prefix / generate scope)" }
   if {$ni} { puts "OT_RELAY_SITES RELAY-INST: $ni flops of [dict size $inst_k] instance keys sited as clusters at their plan sites" }
   if {$al} { puts "OT_RELAY_SITES RELAY-IDX: $al keys NAME\\[k\\] sited on the shift-stage successor of NAME\\[k-1\\]" }

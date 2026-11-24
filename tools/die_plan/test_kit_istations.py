@@ -766,7 +766,7 @@ def _relay_tcl(tmp_path, mock, call, **env):
 def test_relay_sites_normalised_names_leaf_prefix_and_generate_scope(tmp_path):
     """RELAY-NORM (FABLE-FIX-S81-COLROM-R5 11-21): S81 ot_s81sl_leaf keys u_u_crr_rxsb/q against flops u_u_lf0_u_crr_rxsb/q (25 of 25 keys
     unmatched on 20 placed kits); QC cb keys u_st.run against u_st.g_seg[0].run.  A normalised name shared by two flops (g_seg[0].cap[0] and
-    g_seg[1].cap[0] against the key u_st.cap[0]) seats neither: that key stays a miss."""
+    g_seg[1].cap[0] against the key u_st.cap[0]) is no RELAY-NORM match; RELAY-SEG seats both copies at the key's site."""
     import shutil
     if shutil.which("tclsh") is None:
         pytest.skip("tclsh")
@@ -778,9 +778,62 @@ def test_relay_sites_normalised_names_leaf_prefix_and_generate_scope(tmp_path):
     assert got[r"u_bound.u_u_lf0_u_vp_u_rr.rst_n\[10\]$_DFF_PN0_"] == (3.0, 4.0)
     assert got[r"u_bound.u_u_fab_u_x_2_2.u_st.g_seg\[0\].run$_DFF_P_"] == (5.0, 6.0)
     assert got[r"u_bound.u_u_plain.q$_DFF_P_"] == (9.0, 9.0)
-    assert not any("cap" in k for k in got)                                             # ambiguous: not seated
-    assert "RELAY-NORM: 3 keys" in r.stdout and "plan keys unmatched: 1 of 5" in r.stdout
-    assert "SEAT-MISS WARNING 1 of 5 plan seat keys match no register (stop off): u_u_fab_u_x_2_2.u_st.cap[0]" in r.stdout
+    assert sum("cap" in k for k in got) == 2 and "RELAY-SEG: 2 segment registers of 1 keys" in r.stdout
+    assert "RELAY-NORM: 3 keys" in r.stdout and "plan keys unmatched: 0 of 5" in r.stdout and "SEAT-MISS" not in r.stdout
+
+
+def _seat_mock(names):
+    body = " ".join("{" + n.replace("[", "\\[").replace("]", "\\]") + "$_DFF_P_}" for n in names)
+    return RELAY_NORM_MOCK.replace(RELAY_NORM_MOCK[RELAY_NORM_MOCK.index("foreach nm {") + 12:RELAY_NORM_MOCK.index("} {\n  set c")], body)
+
+
+def _seats(r):
+    return {x[0].replace("\\", "").split("$")[0]: (float(x[2]), float(x[3]))
+            for x in (ln.split("\t") for ln in r.stdout.splitlines()) if len(x) > 3 and x[1] == "relay"}
+
+
+def test_relay_seg_slices_and_copies_of_a_segmented_station(tmp_path):
+    """SEAT-MATCH-AUDIT 11-24: QC cb stations became ot_qfd_xcst_rep (4 g_seg): cap[0..7] of 4 x 2-bit segments = slices, cnt / run = one
+    copy per segment at the key's site (10 types, 276 keys each matched nothing)."""
+    import shutil
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    names = [f"u_bound.u_x.u_st.g_seg[{g}].{r}" for g in range(4) for r in ("cap[0]", "cap[1]", "cnt[0]", "cnt[1]", "run", "tag[0]")]
+    rows = " ".join([f"{{u_x.u_st.cap[{i}]}} {{{i} 1}}" for i in range(8)] + ["{u_x.u_st.cnt[0]} {50 2}", "{u_x.u_st.cnt[1]} {51 2}",
+                                                                              "{u_x.u_st.run} {60 3}"])
+    r = _relay_tcl(tmp_path, _seat_mock(names), f"rs_place_all [dict create {rows}]")
+    assert r.returncode == 0, r.stderr
+    got = _seats(r)
+    assert all(got[f"u_bound.u_x.u_st.g_seg[{i // 2}].cap[{i % 2}]"] == (i, 1) for i in range(8))
+    assert all(got[f"u_bound.u_x.u_st.g_seg[{g}].cnt[1]"] == (51, 2) and got[f"u_bound.u_x.u_st.g_seg[{g}].run"] == (60, 3) for g in range(4))
+    assert not any("tag" in k for k in got) and "plan keys unmatched: 0 of 11" in r.stdout
+    # key family wider than the segments hold: not understood, stays a miss
+    r = _relay_tcl(tmp_path, _seat_mock(names), "rs_place_all [dict create {u_x.u_st.cap[0]} {0 1} {u_x.u_st.cap[8]} {8 1}]")
+    assert "plan keys unmatched: 2 of 2" in r.stdout and not _seats(r)
+
+
+def test_relay_cnt_last_stage_and_pruned_bit(tmp_path):
+    """SEAT-MATCH-AUDIT 11-24: sle_ctl u_lpad_x_su_l0_i became ot_dp_dly_cnt (r[0..5], no q register): q[b] seats r[5][b].  A live line
+    whose one q bit synthesis pruned keeps its miss."""
+    import shutil
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    names = [f"u_bound.u_lpad_c/r[{j}][{b}]" for j in range(6) for b in (3, 4)] + ["u_bound.u_lpad_d.q[0]", "u_bound.u_lpad_d.r[0][1]"]
+    r = _relay_tcl(tmp_path, _seat_mock(names), "rs_place_all [dict create {u_lpad_c.q[3]} {1 2} {u_lpad_c.q[4]} {3 4} {u_lpad_d.q[0]} {5 6} {u_lpad_d.q[3]} {7 8}]")
+    assert r.returncode == 0, r.stderr
+    got = _seats(r)
+    assert got == {"u_bound.u_lpad_c/r[5][3]": (1, 2), "u_bound.u_lpad_c/r[5][4]": (3, 4), "u_bound.u_lpad_d.q[0]": (5, 6)}
+    assert "RELAY-CNT: 2 keys" in r.stdout and "SEAT-MISS WARNING 1 of 4 plan seat keys match no register (stop off): u_lpad_d.q[3]" in r.stdout
+
+
+def test_relay_twin_spelling_is_not_a_miss(tmp_path):
+    """SEAT-MATCH-AUDIT 11-24: QC st_a plans carry P/q AND P.q for the same 128 registers: one seat, no miss."""
+    import shutil
+    if shutil.which("tclsh") is None:
+        pytest.skip("tclsh")
+    r = _relay_tcl(tmp_path, _seat_mock(["u_bound.u_lob.q"]), "rs_place_all [dict create {u_lob/q} {1 2} {u_lob.q} {1 2}]")
+    assert r.returncode == 0, r.stderr
+    assert len(_seats(r)) == 1 and "plan keys unmatched: 0 of 2" in r.stdout and "SEAT-MISS" not in r.stdout
 
 
 def test_relay_sites_unmatched_key_warns_by_default_and_stops_only_on_request(tmp_path):
