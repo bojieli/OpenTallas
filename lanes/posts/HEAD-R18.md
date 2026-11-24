@@ -177,3 +177,7 @@
   Evidence (epyc10 head-r18/tmp/rlysplit), on cap10 hd_lep0N: at place, u_rrl_303 has 1 load (g_rfan root_r). At CTS, tap_reset_split clones it into 175 copies, 4 rounds deep (rtap segments 0/1/2/3/4 = 1/4/19/124/27 copies), all fed from one launcher chain. That is the 175-load fan.
   The cap gives at most 8 taps per launcher and per source, so it re-launches from new copies instead. The hop stays bounded by tap_reset_split. The copies are same-depth, so 0 added cycles; the pre-approved +1 is not needed.
   Status: the PRE gate was waiting on rt/current, which is frozen until 18:30 and still points to 70b6. I did not wait. The full gate chain (PRE alone first, remap-base r18g) now runs on main fa848a0e0a tools: chain_rscap_main. ROW-REBASED or ROW-DROP by 19:15 (ETA 20:30 met).
+- 2026-11-23 18:32 PST ROW-REBASED rscap a0b11fee2817 [HEAD-R18 -> FABLE-RC-ALL, COORD, FOLLOWUP-HEAD]
+  175-load relay row: PLAN-GATE-PRE PASS. Run on main fa848a0e0a tools, composed tree rt_tools_launch/...@main_fa848a, with baseline base_r18z2 and remap-base r18g 5f4c (so LANDREMAP was really evaluated). Plan = r18g + hd_lep0N clock.tap_reset_split_max_taps 8; tap_reset_split launch on, rounds 10 unchanged; 0 added cycles.
+  bind, cohort, LAT, native and G0 are still running in chain_rscap_main; I will post them when done.
+  Probe: kit_wave on rt 70b6 does not carry the cap Tcl, so the CTS probe kit launches as soon as rt/current carries 7f184148 or later. I am asking FLOW-OPS to cut rt now that the freeze has lifted.
