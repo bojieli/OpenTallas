@@ -134,7 +134,8 @@ def main():
     clock_ports = declared_clock_ports(os.environ["PINS"])
     cs_evidence = load_count_strap_evidence(os.environ["PINS"])
     tied_straps = accepted_count_strap_bits(cs_evidence)
-    warn_straps = accepted_count_strap_bits(cs_evidence, unverified=True) - tied_straps   # UNVERIFIED: report-only
+    warn_straps = (accepted_count_strap_bits(cs_evidence, unverified=True) - tied_straps) | (        # UNVERIFIED: report-only
+        set(cs_evidence.get("unverified_bits") or []) if isinstance(cs_evidence, dict) and cs_evidence.get("verification") == "UNVERIFIED" else set())
     res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[], count_straps_accepted=[], count_straps_unverified=[])
     seen = set()
     aliases = scalar_aliases(want, [bt.getName() for bt in block.getBTerms()])

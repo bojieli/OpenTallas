@@ -10411,7 +10411,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             import count_strap_evidence
             count_strap_evidence.write_for_kit(
                 kits[-1], P.types[tn], Path(kit_rtl[tn]).with_name("kit_rtl.json"),
-                parts=[(n, p) for n, p in P.parts.items() if p["type"] == tn])
+                parts=[(n, p) for n, p in P.parts.items() if p["type"] == tn], plan_path=plan_path)
             # GENBUG (COORD r107): the kit records the source tree it was generated from and the kit-rtl filelist, so
             # kit_gen_lint can reject a source path outside that tree (a stale B6gsl/src beside the kit's own src_rel2 copy)
             Path(kits[-1]).mkdir(parents=True, exist_ok=True)       # trial mode has not created the kit dir yet

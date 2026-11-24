@@ -208,3 +208,38 @@ def test_pin_audit_unverified_bits_warn_not_fail(tmp_path, monkeypatch):
     ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path, None), parts=[("lep0N_w", dict(type="t", id_straps={"strap_ca_k_coll_i0": 12}))])
     rc, res = run_audit(tmp_path, monkeypatch, [f"strap_ca_k_coll_i0[{b}]" for b in range(6)], ev)
     assert (rc, res["extra_n"], res["count_straps_unverified_n"]) == (0, 0, 6)
+
+
+def test_no_audit_no_plan_literal_listed_unverified_and_pin_audit_warns(tmp_path, monkeypatch, capsys):
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path, None), parts=HEAD_PARTS)      # K strap not in id_straps
+    assert ev["verification"] == "UNVERIFIED" and ev["unverified_bits"] == sorted(BITS6)
+    assert "NO PASS bind tie audit" in capsys.readouterr().out
+    rc, res = run_audit(tmp_path, monkeypatch, sorted(BITS6), ev)
+    assert (rc, res["extra_n"], res["count_straps_unverified_n"]) == (0, 0, 6)
+
+
+def test_no_parts_missing_ties_not_verified_and_strict_raises(tmp_path):
+    kr = tmp_path / "kit_rtl.json"
+    kr.write_text(json.dumps(KIT_RTL))
+    ev = CSE.write_for_kit(tmp_path, TYPE, kr, strict=False)
+    assert ev["verification"] == "UNVERIFIED"
+    with pytest.raises(ValueError, match="UNVERIFIED"):
+        CSE.write_for_kit(tmp_path, TYPE, kr, strict=True)
+
+
+def test_mismatch_raises_only_in_strict(tmp_path, monkeypatch):
+    parts = [("lep0N_w", dict(type="t", id_straps={"strap_ca_k_coll_i0": 13}))]
+    assert CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=parts)["verification"] == "VERIFIED"
+    monkeypatch.setenv("OT_STRAP_EVIDENCE_STRICT", "1")
+    with pytest.raises(ValueError, match="differ"):
+        CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=parts)
+
+
+def test_bind_plan_sha_recorded_and_warned(tmp_path, capsys):
+    (tmp_path / "bplan.json").write_text("{}")
+    (tmp_path / "kplan.json").write_text("{\"x\": 1}")
+    (tmp_path / "pre.json").write_text(json.dumps(dict(plan=str(tmp_path / "bplan.json"))))
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=HEAD_PARTS, plan_path=tmp_path / "kplan.json")
+    ta = ev["tie_audit"]
+    assert ta["bind_plan_sha256"] and ta["kit_plan_sha256"] and ta["bind_plan_sha256"] != ta["kit_plan_sha256"]
+    assert "differs from the kit plan sha" in capsys.readouterr().out

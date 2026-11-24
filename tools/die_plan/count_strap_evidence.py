@@ -103,12 +103,27 @@ def missing_bits(type_plan, evidence):
     return out
 
 
-def write_for_kit(kit, type_plan, kit_rtl_json, parts=None, strict=None):
+def bind_plan_of(audit_file):
+    """-> (plan path, sha256 or None) the bind dir of the audit records (pre.json / module_check.json 'plan'); (None, None) if unknown"""
+    for name in ("pre.json", "module_check.json"):
+        try:
+            plan = json.loads((Path(audit_file).parent / name).read_text()).get("plan")
+        except (OSError, ValueError, AttributeError):
+            continue
+        if plan:
+            try:
+                return plan, hashlib.sha256(Path(plan).read_bytes()).hexdigest()
+            except OSError:
+                return plan, None
+    return None, None
+
+
+def write_for_kit(kit, type_plan, kit_rtl_json, parts=None, strict=None, plan_path=None):
     """write kit/FILE when the type declares count straps; -> the evidence, or None (no file: pin_audit stays strict).
-    Ties come from the bound plan's PASS tie audit (sha recorded).  kit_rtl without instances/bound_only_pins (HEAD wave) takes
-    the instances and pins from the plan (parts); a type the audit does not cover falls back to the plan literals, labelled
-    verification UNVERIFIED (pin_audit warns, does not fail).  Report-only (COUNT_STRAP_EVIDENCE_WARN) unless strict or
-    OT_STRAP_EVIDENCE_STRICT=1, then a declared strap with no VERIFIED tie raises."""
+    Ties come from the bound plan's PASS tie audit (sha256 + the bind plan's sha recorded; WARN when that plan differs from the
+    kit's plan_path).  A declared strap bit without an audit literal makes the evidence UNVERIFIED: bits with a plan literal use
+    it, the rest are listed in unverified_bits; pin_audit warns for all of them (never accepts, never fails).  Report-only
+    (COUNT_STRAP_EVIDENCE_WARN) unless strict / OT_STRAP_EVIDENCE_STRICT=1: then UNVERIFIED and any plan-vs-audit literal mismatch raise."""
     if strict is None:
         strict = os.environ.get("OT_STRAP_EVIDENCE_STRICT") == "1"
     if not type_plan.get("count_straps"):
@@ -120,36 +135,44 @@ def write_for_kit(kit, type_plan, kit_rtl_json, parts=None, strict=None):
     audit_file = find_audit(kit_rtl_json, kit_rtl)
     audit = json.loads(audit_file.read_text()) if audit_file else {}
     lits = audit_literals(audit)
+    audit_rows = [[i, p, l] for (i, p), l in lits.items()]
     if kit_rtl.get("instances") and kit_rtl.get("bound_only_pins"):
-        evidence = build(type_plan, kit_rtl, dict(verdict="PASS" if lits else "FAIL", rows=[[i, p, l] for (i, p), l in lits.items()]))
+        evidence = build(type_plan, kit_rtl, dict(verdict="PASS" if lits else "FAIL", rows=audit_rows))
     else:
-        parts = parts or []
-        straps = type_plan["count_straps"]
-        shell = dict(instances=sorted(sv_id(i) for i, _ in parts), bound_type=kit_rtl.get("bound_type") or kit_rtl.get("plan_type"),
-                     bound_only_pins=[dict(port=r["name"], dir="input", width=int(r["width"])) for r in straps])
-        evidence = build(type_plan, shell, dict(verdict="PASS" if lits else "FAIL", rows=[[i, p, l] for (i, p), l in lits.items()]))
-    evidence["verification"] = "VERIFIED"
+        shell = dict(instances=sorted(sv_id(i) for i, _ in parts or []), bound_type=kit_rtl.get("bound_type") or kit_rtl.get("plan_type"),
+                     bound_only_pins=[dict(port=r["name"], dir="input", width=int(r["width"])) for r in type_plan["count_straps"]])
+        evidence = build(type_plan, shell, dict(verdict="PASS" if lits else "FAIL", rows=audit_rows))
+    bplan, bsha = bind_plan_of(audit_file) if audit_file else (None, None)
+    kit_sha = hashlib.sha256(Path(plan_path).read_bytes()).hexdigest() if plan_path and Path(plan_path).is_file() else None
     evidence["tie_audit"] = dict(path=str(audit_file) if audit_file else None, verdict=audit.get("verdict"),
-                                 sha256=hashlib.sha256(audit_file.read_bytes()).hexdigest() if audit_file else None)
+                                 sha256=hashlib.sha256(audit_file.read_bytes()).hexdigest() if audit_file else None,
+                                 bind_plan=bplan, bind_plan_sha256=bsha, kit_plan_sha256=kit_sha)
+    warns = []
+    if bsha and kit_sha and bsha != kit_sha:
+        warns.append(f"bind plan sha {bsha[:12]} differs from the kit plan sha {kit_sha[:12]} (audit {audit_file})")
     plan_lits = plan_literals(type_plan, parts or [])
-    if parts and missing_bits(type_plan, evidence):
-        evidence["verification"] = "UNVERIFIED"
-        evidence["unverified_parent_ties"] = {}
+    gaps = missing_bits(type_plan, evidence)
+    evidence["verification"] = "UNVERIFIED" if gaps else "VERIFIED"
+    if gaps:
+        unv = {}
         for (inst, port), lit in plan_lits.items():
-            evidence["unverified_parent_ties"].setdefault(port, {})[inst] = lit
-        evidence["parent_ties"] = evidence["unverified_parent_ties"]
+            unv.setdefault(port, {})[inst] = lit
+        evidence["unverified_parent_ties"] = unv
+        evidence["parent_ties"] = unv
         evidence["parent_ties_source"] = "plan partitions[].id_straps (no PASS bind tie audit literal)"
+        evidence["unverified_bits"] = gaps
+        why = "NO PASS bind tie audit found (set OT_BIND_TIE_AUDIT=<abs path of the bound plan tie_audit.json>)" if not lits else \
+            "the bind tie audit has no literal for them"
+        warns.append(f"{len(gaps)} declared count-strap bit(s) UNVERIFIED, {why}: {gaps[:6]}")
     compared, mism = cross_check(plan_lits, lits)
-    bad = missing_bits(type_plan, evidence) if evidence["verification"] == "VERIFIED" else sorted(
-        f"{r['name']}[{b}]" for r in type_plan["count_straps"] if not r.get("sites_um") for b in range(int(r["width"])))
-    print(f"COUNT_STRAP_EVIDENCE_CHECK {evidence['verification']} audit={evidence['tie_audit']['verdict']} "
-          f"audit_rows={len(lits)} plan_literals={len(plan_lits)} compared={compared} mismatch={mism} unverified_bits={len(bad) if evidence['verification'] != 'VERIFIED' else 0}")
-    if mism or bad:
-        msg = (f"count_strap_evidence {evidence['verification']}: {len(bad)} declared count-strap bit(s) without a PASS bind tie-audit "
-               f"literal, plan/audit literal mismatches {mism}: {bad[:6]}")
-        if strict and evidence["verification"] != "VERIFIED":
-            raise ValueError(msg)
-        print("COUNT_STRAP_EVIDENCE_WARN " + msg)
+    if mism:
+        warns.append(f"{mism} of {compared} plan literals differ from the bind tie audit")
+    print(f"COUNT_STRAP_EVIDENCE_CHECK {evidence['verification']} audit={evidence['tie_audit']['verdict']} audit_rows={len(lits)} "
+          f"plan_literals={len(plan_lits)} compared={compared} mismatch={mism} unverified_bits={len(gaps)}")
+    for w in warns:
+        print("COUNT_STRAP_EVIDENCE_WARN " + w)
+    if strict and (gaps or mism):
+        raise ValueError("count_strap_evidence: " + "; ".join(warns))
     (Path(kit) / FILE).parent.mkdir(parents=True, exist_ok=True)
     (Path(kit) / FILE).write_text(json.dumps(evidence, indent=1) + "\n")
     return evidence
