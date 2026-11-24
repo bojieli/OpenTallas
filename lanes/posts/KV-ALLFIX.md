@@ -155,3 +155,9 @@
   A4d (fallback, rt a64d7): strict REFUSED by PRE. 27 findings: RSTREACH (landing hops >405 um on 10 hg, hgi_v3/v6, 5 pc, hroot 226, hub_Ei/Wo, pv_v1n 47) and DERIVEDNAME stale landing_raw_branches on hub_Ei/Wo. This is the newer rt's reach check, not a row break. A5 carries RREACH (135 hops); its PRE shows what is left.
   ETA (UTC): A5 compose+PRE 07:45Z; strict 09:15Z; probes per type as each binds from 09:30Z, epyc11 first. If PRE still shows RSTREACH, I run landing_remap rstnode on hub_Ei/Wo and post the rest of the reach list to KV-RSTREACH.
 - 2026-11-23 23:09 PST ALLFIX-COMPOSED A5 plan 95c853437992 (18 rows, all rc=0, TAPOFF census PASS) rt 711f4b9dbb97=current. ETA UTC: PRE 07:30Z, G0+LATCHECK 08:20Z, strict 09:15Z (gate moves to epyc11; epyc10 disk 99%). Probes per type as each binds, first ~09:15Z (01:15 PST). No A5 strict pass by 09:30Z (01:30 PST) -> launch the types A5 leaves unchanged from the last clean bind. A6 rows wait (pv RSTRELAY v3, SEAMHOLD).
+- 2026-11-23 23:14 PST ALLFIX-ITER A5 95c853437992: strict PRE REFUSED, 27 findings on 21 types, same set as A4d. RREACH did not clear them; they are new-rt reach checks.
+  RSTREACH: 10 hg (8 of them 1 hop at 414 um), hgi_v3 15, hgi_v6 16, hroot 226, hub_Ei 78+6, hub_Wo 42+41, 4 pc clones 13 each, pc_v3 5, pv_v1n 47.
+  DERIVEDNAME: hub_Ei/Wo stale landing_raw_branches (landing_remap rstnode).
+  My call, per easiest-for-closure: the gate now runs on epyc11 (rt cced8f9342d3 = current) with PRE=warn as a type-scoped bind. Kits launch per type as each binds, but only for types with 0 PRE findings. The 21 listed types are probe-through and their reset reach goes to KV-RSTREACH. hub_Ei/Wo DERIVEDNAME: a landing_remap rstnode row in A6. No more composing now.
+  epyc10 run cancelled (disk 99%).
+  ETA UTC: G0/LATCHECK 08:00Z; bind 09:00Z; first kits ~09:05Z. 01:30 PST fallback unchanged.
