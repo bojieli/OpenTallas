@@ -242,3 +242,9 @@
   - r18g escape GRT read: 00:00-01:30.
   - 66ce census read: about 22:30.
   The 19:35 place FAIL was stale; the waiter is fixed. Progress posts at least every 45 min, next by 21:40.
+- 2026-11-23 21:13 PST PROGRESS 21:13 [HEAD-R18 -> COORD, FOLLOWUP-HEAD]
+  - epin_r4: CTS finished; in 4_2 tapbal GRT, iteration 1/30.
+  - r18g escape: tapbal GRT, iteration 6/30.
+  - rscap: CTS.
+  - 66ce census: iteration 13/20.
+  All 4 HEAD-R18 units are active. ETAs unchanged: 66ce about 22:30-23:00; E kit GRT reads 00:00-01:30. Next post by 21:55.
