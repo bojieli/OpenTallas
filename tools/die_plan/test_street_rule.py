@@ -1207,3 +1207,32 @@ def test_reset_resel_shared_landing_group_refuses_missing_edge(monkeypatch, tmp_
     t = _fork_type(second_stages=(("rst_rl_115", [300.0, 50.0]), ("cland_reset_ft0_i", [350.0, 100.0])))
     rec = _fork_run(monkeypatch, tmp_path, t)
     assert "no such edge" in rec.get("error", ""), rec
+
+
+def test_reset_resel_keeps_cland_copy_chain_pctap_1124(monkeypatch, tmp_path):
+    """PCTAP-CX-1124 (KV pc_v1 cl23f / pc_v3 on A5t2): the republished collector_tree keeps the plan-inserted cland_copy
+    chain (rst_cx_*) that collector_children name, when its base relay is unchanged; a moved base refuses the type."""
+    import types as _t
+    import schema
+    import reset_tree
+    base = [dict(name="u_t72", q="rst_n_t72", d="root", depth=10, kind="tap", xy=[447.12, 1283.04])]
+    cx = [dict(name="u_rst_cx_0", q="rst_cx_0", d="rst_n_t72", depth=11, kind="cland_copy", base_node="rst_n_t72", xy=[172.32, 1215.5]),
+          dict(name="u_rst_cx_1", q="rst_cx_1", d="rst_cx_0", depth=12, kind="cland_copy", base_node="rst_n_t72", xy=[172.32, 873.2])]
+    new = base + [dict(name="u_t200", q="rst_n_t200", d="root", depth=3, kind="tap", xy=[10.0, 10.0])]
+    trees = {"base": dict(relays=base + cx), "new": dict(relays=new)}
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: json.loads(json.dumps(trees[PP.tag])))
+    def run(tr):
+        trees["new"] = tr
+        t = {"clock": {"landing_contract": {"collector_tree": json.loads(json.dumps(trees["base"])),
+                                            "collector_children": [dict(part="pc_EN_0", node="rst_cx_1", index=1)]}}}
+        P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
+        Q = {"tag": "new", "partition_types": {"x": t}}
+        return t, SR.reset_resel(P, Q, ["x"], tmp_path / "plan.json")["x"]
+    t, rec = run(dict(relays=new))
+    assert "error" not in rec, rec
+    qs = [r["q"] for r in t["clock"]["landing_contract"]["collector_tree"]["relays"]]
+    assert "rst_n_t200" in qs and qs[-2:] == ["rst_cx_0", "rst_cx_1"] and rec["cland_copy_kept"] == ["rst_cx_0", "rst_cx_1"]
+    moved = [dict(base[0], xy=[500.0, 1283.04])]
+    t2, rec2 = run(dict(relays=moved))
+    assert "error" in rec2 and "moved" in str(rec2["error"]), rec2

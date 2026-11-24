@@ -2090,6 +2090,39 @@ def _q_roles(tr):
     return out
 
 
+def _carry_cland_copies(old_tree, new_tree):
+    """PCTAP-CX-1124: plan-inserted collector relays (kind cland_copy, ROWS_KV-RCOLL-REBASE-RINS: X1.d = N, Xi+1.d = Xi)
+    are not part of the solved reset tree, so a republished collector_tree dropped them while collector_children /
+    local_sources still named them (KV pc_v1 rst_cx_3, pc_v3 rst_cx_2).  Carry each chain into new_tree verbatim when its
+    predecessor is unchanged there (same q, xy and depth, or a carried copy); a chain whose base moved or is gone raises,
+    so the type is restored instead of left with a dangling reference."""
+    old = old_tree.get("relays") or []
+    todo = [r for r in old if r.get("kind") == "cland_copy"]
+    have = {r.get("q"): r for r in new_tree.get("relays") or []}
+    oldq = {r.get("q"): r for r in old}
+    kept = []
+    while todo:
+        nxt = []
+        for r in todo:
+            if r.get("q") in have:
+                continue
+            p = have.get(r.get("d"))
+            if p is None:
+                nxt.append(r)
+                continue
+            o = oldq.get(r.get("d")) or {}
+            if p.get("kind") != "cland_copy" and (p.get("xy") != o.get("xy") or p.get("depth") != o.get("depth")):
+                raise ValueError("cland_copy %s: predecessor %s moved in the re-solved tree" % (r.get("q"), r.get("d")))
+            c = json.loads(json.dumps(r))
+            new_tree.setdefault("relays", []).append(c)
+            have[c["q"]] = c
+            kept.append(c["q"])
+        if nxt and len(nxt) == len(todo):
+            raise ValueError("cland_copy %s: predecessor %s gone from the re-solved tree" % (nxt[0].get("q"), nxt[0].get("d")))
+        todo = nxt
+    return kept
+
+
 def reset_resel(P, Q, names, plan_path, near_um=25.0):
     """re-select the raw reset references of legalized types on their re-solved reset tree (COORD 11-12, HEAD-94
     hd_lep0N "raw reset source is not the recorded registered relay"; rule = HEAD mesh_resel.py / compose.py RAWSEL):
@@ -2127,6 +2160,9 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 # the published collector_tree = the tree the bind re-solves (added_tap_recentre.republish rule); the
                 # collector sources / children are re-attached after this (collector_reattach.reattach_plan)
                 new = json.loads(json.dumps(tb))
+                cx = _carry_cland_copies(lc["collector_tree"], new)
+                if cx:
+                    rec["cland_copy_kept"] = cx
                 if json.dumps(new, sort_keys=True) != json.dumps(lc["collector_tree"], sort_keys=True):
                     rec["tree_republished"] = [len(lc["collector_tree"].get("relays") or []), len(new.get("relays") or [])]
                     lc["collector_tree"] = new
