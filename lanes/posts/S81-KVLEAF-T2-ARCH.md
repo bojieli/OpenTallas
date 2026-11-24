@@ -15,3 +15,4 @@
 - 2026-11-23 10:50 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-tolerant-swine-80476 on tolerant-swine: rc=0 after 20 s, ended 10:50:01, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/tmp/push_1045.log, cmd: ot-push-main 
 - 2026-11-23 11:11 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-tolerant-swine-637822 on tolerant-swine: rc=0 after 26 s, ended 11:11:38, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/tmp/push_xrd.log, cmd: ot-push-main 
 - 2026-11-23 21:30 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-renewed-glider-3627027 on renewed-glider: rc=0 after 16 s, ended 05:30:52, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/bench_r2/push_wt4.log, cmd: ot-push-main 
+- 2026-11-23 21:33 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-renewed-glider-3680651 on renewed-glider: rc=0 after 12 s, ended 05:33:43, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/bench_r2/push_wt4b.log, cmd: ot-push-main 
