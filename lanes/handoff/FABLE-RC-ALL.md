@@ -52,3 +52,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 18:40 KV-ALLFIX took all 7 census items: c RREACH + d RCOLL built -> A2d; a TAPSPLIT + f FTLOCKUP ETA 20:30 -> A2d (strict 21:00); b EARLYTAP + g FACERULE A3 23:00; e L341 re-site 22:30; BPC rerun PASS 570/0, gate now fails on undefined>0. HEAD rscap a0b11fee2817 chain all pass.
 - 18:44 KV-ALLFIX CORRECTION: A1b 59 kits never reached place (KIT_TOPOLOGY_BIND_STALE); relaunch all types on A2c (strict ~19:55) or A2d (~20:15); probes before 21:30. KV review round is on A2c/A2d kits, not A1b.
 - 18:53 TTCTLM: placement route + output-stage overlay both dropped; cause = logic depth in generated Native32 constructor (CODEX-TOKEN depth cap + retime); my output-stage suggestion withdrawn. tt_ctlm held.
+- 19:20 COORD accepted COL-P5-FSTART1 12 ANCHORDRY lines REASONED (depth 7->8); I added: show START stages still release at/after reset + die max release before/after.
