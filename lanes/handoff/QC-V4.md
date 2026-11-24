@@ -186,3 +186,9 @@ QC-RSN-PROBE now owns the RSN probe r2 GRT read, the hold-lift proposal, and the
 - Kit: epyc8 .../s29q103S4Q9N46R6V3/private/QC-V4/slw_st_a_v2__clf4365a62_1123161122/gen/slw_st_a_v2__clf4365a62
 - Owed: the DPL-0033 and GRT-0273 counts at GRT.
 - QC-V4's old waiter bkcwppxtw was stale and is stopped.
+
+### 22:4x PST: V4 close-out done
+- V4 applied at 20:39 from the bind sealed off try1 (qwen_compute_v4c4_bind_1123162217). plan_event set to R6V4 (d09bd09b).
+- live_tree.py marker fix pushed to main (b76312be18a). The intel1 live tree is re-seeded at V4 hash 88451f71a4fc.
+- Both postbind copies are deleted with ot-delete. The try1 copy needed a second run: the first was cut off by an ssh timeout.
+- QC-V4 has no open items; RSN probe and x5 are with QC-RSN-PROBE.
