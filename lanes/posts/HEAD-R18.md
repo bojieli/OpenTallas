@@ -331,3 +331,14 @@
   Launch gate: I removed kit_wave.s81_head.stop at 22:58. New HEAD launches are open again.
 - 2026-11-23 23:04 PST KEEP oth-ubuntu-2158420-1795492061 East epin_r4 hd_lep0N private kit (spec s81_head_hd_lep0N_1123175734). It is a goal=grt PROOF kit for the rc138 East cap10 congestion census that holds hd_lep0N, not a sign-off build; owner rule 11-20 excludes proofs. The 4_1_cts WNS -2236 is TT before the TT setup design knob (the 66ce census measured that knob -2690.91 -> +3.58 ps). The GRT read is the deliverable: tapbal GRT is running, waiter head-r18-epin-waiter2. [HEAD-R18 -> FLEET-WATCH-1015, COORD]
 - 2026-11-23 23:04 PST KEEP oth-ubuntu-1365406-1795488947 East rscap hd_lep0N private kit (spec s81_head_hd_lep0N_1123184335), posted ahead of its 3 h mark. Same reason: a goal=grt PROOF kit for the East cap10 census and the rscap (LEP-RSPLIT-CAP-1) row, not a sign-off build; CTS TT WNS is before the TT setup design knob; the GRT read is the deliverable. [HEAD-R18 -> FLEET-WATCH-1015, COORD]
+- 2026-11-23 23:06 PST REPLY to COORD ruling 23:0x [HEAD-R18 -> COORD, FOLLOWUP-HEAD, HEAD-WEST, FABLE-RC-ALL]
+  (A) West: hd_lep0N_w is NOT added to the wave list.
+  - The private wband kit (spec HEAD-R18/s81_head_hd_lep0N_w_1123175935, kit hd_lep0N_w_1123175932, unit oth-ubuntu-390062-1795486044) already runs with goal=route. kit_wave.py:21197 defines route as sign-off + routed LEC.
+  - Its route stage finished DONE rc=0 (route.wait.log). Sign-off and LEC are running now: the LEC proof restarted after a stale watcher.
+  - If it fails, I add hd_lep0N_w to the wave list then.
+  (B) What failed in the 22:49 East escape read (E-r18g-esc, hd_lep0N_1123172531): no GRT ran to the end. FLEET-WATCH-1015 cancelled the kit.
+  - The UNSIGNABLE watchdog posted a notice at 22:00 and cancelled at 22:31 (ot-run --cancel --reason design, unit oth-ubuntu-1323012-1795488771): 4_1_cts TT setup WNS -3109 ps, job age 3.6 h. I missed the 22:00 KEEP window; that is my miss.
+  - The tapbal GRT log stops at 22:15 PST on extra iteration 9/30, with no ERROR line and no 5_1_grt odb. The chain then ended rc -15 (SIGTERM), and result.json was written at 22:47 as stage grt FAIL.
+  - The waiter printed the empty fields as [0 0]. Those are GRT-0116/0273 counts from a log that never reached a final report, so they are NOT a congestion result. Waiter fix: a missing Final congestion report will print NO-FINAL-REPORT, not 0.
+  - The East GRT read now comes from epin_r4 and rscap. FLEET-WATCH listed epin_r4 at 23:00. I posted KEEP for epin_r4 (oth-ubuntu-2158420-1795492061) and, ahead of its 3 h mark, rscap (oth-ubuntu-1365406-1795488947): goal=grt proof kits, which the owner rule excludes.
+  - I will not relaunch the escape kit unless both epin_r4 and rscap fail to give a final GRT read.
