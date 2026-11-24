@@ -4,7 +4,7 @@ r18g escape kit hd_lep0N_1123172531 (ESCAPE_CLEAR verified in geometry)	hd_lep0N
 rscap probe kit hd_lep0N_1123184332 (rt c6609, LEP-RSPLIT-CAP-1) to GRT	hd_lep0N E	HEAD-R18 18:43	HEAD-R18	11-23 18:53	past env_effect, rscap-waiter3 watching	4	19:00 PRE -> to GRT	RUNNING	
 West wband + wch4b kits to GRT (West 1034 overflow)	hd_lep0N_w	HEAD-R18	HEAD-R18	11-23 18:53	past place, chains running; wch4b place est channel_h 0.988; waiter5 armed (no waiter 18:11-19:15 bug fixed); nst4 auto-launch if (b) wins	4	20:00 row	RUNNING	
 NOREMAP wch4b pin 23	hd_lep0N_w	HEAD-R18	HEAD-R18	11-23 18:53	closed (remap-base = parent plan in every chain)	4	-	CLOSED	
-LANDREMAP skip-is-WARN repo gap	HEAD die	HEAD-R18 18:12	FLOW-OPS-R3/PRECHECK-LEDGER-R3	11-23 18:12	no reply seen	45	-	OPEN	BLOCKED>45min on other lane
+LANDREMAP skip->FAIL	HEAD die	COORD 19:48	FLOW-OPS-R3	-	landed FLOW-OPS 08da0a07542 in rt c66090747375	-	-	CLOSED	
 s2 reseal dry gate	HEAD die	FLOW-OPS-R3	FLOW-OPS-R3	-	still no result post	-	18:30 (passed)	OPEN	AT-RISK: needs new ETA
-175-load relay_split row	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 16:14	no ETA/status 2.7 h (ESCALATED 18:30)	160	19:30	IN-PROGRESS	AT-RISK
+175-load relay_split row = rscap a0b11fee2817	hd_lep0N E	COORD 19:48	HEAD-R18	11-23 18:53	passed all gates 18:5x (PRE0, bind, cohort 27/27, LAT334, G0 0); probe kit hd_lep0N_1123184332 running	-	23:00 census	GATED (probe running)	
 rc138/WOPENREG REASONED; hd_ctl route+LEC	HEAD	earlier	HEAD-R18	-	pending census	-	23:00	REASONED/RUNNING	
