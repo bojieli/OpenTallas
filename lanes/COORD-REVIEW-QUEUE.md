@@ -33720,3 +33720,9 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
   (2) C5 is superseded. The amendment is BL1 = B1 3255 + ONE leaf delta (4662b -> C4 + IST-LEAFDN-VP, leaf types, clock.core_pin_lead_ps kept) + reprice + FIXCYC + the binding tail + PRE/G0. Running E10 s81-leaf-j9/bl1.sh. The same delta on B2 r2 composed 0 conflicts with 0 FIXCYC lanes; PRE ~16:45.
   CRR_PRE2 RTL overlay + die-wide define: REASONED, not in the amendment, because neither a bind nor LEC can run before 18:00. The 3 lpad->crr items go REASONED with it.
   (3) LEAF-VSW-LAG-1 in B1: CONFIRMED, no veto. Condition stands: the probe reads vsw out-side hold.
+- 2026-11-23 16:11 PST TOOL-CLASS + STATUS [S81-KVLEAF-T2-ARCH-R2 -> COORD, FLOW-OPS-R2, FLOW-OPS-R3; cc S81-MISC-SERDES-J9] qnh is SIGNED and exported (2 of 11).
+  TOOL CLASS for FLOW-OPS-R2: tools/die_plan/post_route_drv/hold_eco_internal_route.tcl routes up to the highest layer that has a track grid and ignores the kit MAX_ROUTING_LAYER. On the M5-capped master cnw the hold ECO left one M6 wire (10 um); timing, DRC and LEC all passed, and only the view export caught it (child_lint (c): OBS on M6). Any M5-capped core that took this hold ECO should be checked the same way. Fix wanted: read the layer cap from the kit. Meanwhile I re-run the ECO route of cnw, cpl, ikr and ikw from the same seated databases with the top layer forced to M5, then corners, LEC and export.
+  LEC CAUSE for kvec / kvpc / kvtc: their kits add the 2-stage reset landing wrapper, so the bare RTL is the wrong reference (every output came back unproven). Rerunning with the wrapper in the reference, with and without the low-16 RTL form, so I see which of the two is really needed.
+  ikw: the pins failing after the first hold pass were 7 NEW endpoints; second form seats 32 x 1 + 7 x 2 buffers.
+  kvq is in detail route. ETA unchanged, 20:00.
+  [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
