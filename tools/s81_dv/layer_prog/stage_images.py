@@ -41,7 +41,7 @@ for p in ('tools', 'tools/s81_dv', 'tools/s81_dv/layer_prog', 'tools/s81_static_
 SCHEMA = 'opentallas.s81_dv.stage_images.v1'
 NSEG, CW = 8, 25
 SENT = 0x8000
-# the 72-frame inventory of the map of record (241_c*.exact.log SVCPLAN_INVENTORY)
+# the 72-frame inventory of the map of record (241_c*.exact.log SVCPLAN_INVENTORY; s81_map72_1021/run72.sh + capacity72.py)
 INV72 = dict(OT_SVCPLAN_COLS='8', OT_SVCPLAN_DROPFC='1R,3R,4L,6L', OT_SVCPLAN_ROW0='1')
 
 
@@ -51,7 +51,8 @@ def sha(b):
 
 # ------------------------------------------------------------------------------------------------ die
 def die72(cache):
-    """the column-reduced 72-frame die model (capacity_cols.cols, same keep rule); returns (die, inventory sha)"""
+    """the column-reduced 72-frame die model the map was qualified on: s81_dense2_1020/capacity_cols.cols (f84 filter)
+    + s81_map72_1021/capacity72.py (also drop the north h10, row 11, of every kept column); returns (die, inv, sha)"""
     import dv_layer_compile as C
     import xs_topo as TP
     nc = int(INV72['OT_SVCPLAN_COLS'])
@@ -60,7 +61,7 @@ def die72(cache):
     def keep(n):
         m = re.fullmatch(r'f_(\d)([LR])(\d)(\d)', n)
         c, t, r = int(m.group(1)), int(m.group(3)), int(m.group(4))
-        return c < nc and (c, m.group(2)) not in drop and not (t == 0 and r == 0)
+        return c < nc and (c, m.group(2)) not in drop and not (t == 0 and r == 0) and not n.endswith('11')
     die = C.Die(C.die_tree(C.DIE_REF, None, cache=cache))
     gone = {b['name'] for b in die.plan['blocks'] if (b['kind'] == 'frame' and not keep(b['name']))
             or (b['kind'] == 'slice' and int(b['name'][2]) >= nc)}
@@ -114,14 +115,16 @@ def compile_stage_frame(die, frame, fixd, meta, out):
 
     def ap(field, mats, *a, **k):
         ph = orig[2](field, mats, *a, **k)
-        prov.append([dict(name=m.name, fmt=m.fmt, K=int(m.K), off=int(mi['off']), src=[int(r) for _, r in m.src])
-                     for m, mi in zip(mats, ph['matrices'])])
+        # frame_programme also places a_proj on a scratch field: keep only the returned field's phases
+        prov.append((field, [dict(name=m.name, fmt=m.fmt, K=int(m.K), off=int(mi['off']), src=[int(r) for _, r in m.src])
+                             for m, mi in zip(mats, ph['matrices'])]))
         return ph
     XP.op_groups, LX.placement, I.add_phase = og, pl, ap
     try:
         rec, field = XP.compile_frame(die, frame, fixd, list(meta['xs_ops']) + list(meta['bf_ops']))
     finally:
         XP.op_groups, LX.placement, I.add_phase = orig
+    prov = [v for f, v in prov if f is field]
     assert len(prov) == len([p for p in field.phases if not p.get('idle_no_issue')]), ('provenance', len(prov))
     pidx = [i for i, p in enumerate(field.phases) if not p.get('idle_no_issue')]
     img = Path(out) / 'images'
