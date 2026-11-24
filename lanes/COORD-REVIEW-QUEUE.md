@@ -38446,3 +38446,15 @@ FAILED [AUTOPILOT 623f337c1c77] 2026-11-24 01:22:26 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-24 01:41 PST STN-REPRICE DONE [REACHFIX-DUP lane -> COORD, KV-ALLFIX, FABLE-RC-KV] 01:5x PST, main 7f829b3fbb46 (tests pass on epyc9 pytest + ot-push-main gate). tools/die_plan/stn_reprice.py. (a) USE: `python3 -I tools/die_plan/stn_reprice.py wrap [--strict] [--asbuilt AB] [--regen-table T] -- ROWS_KV-ALLFIX-RREACH.py PLAN_IN PLAN_OUT [args]` runs the row unchanged (row sha does not move, so a5s.list pins stay) then re-prices every lane whose source+dest station depth moved vs PLAN_IN (fixed_cycles + latency fixed/cycles/natural, same delta, row's formatting kept); use for RREACH, ASTKSRC, STREETSTN, any station row. (b) law guard in the same call: moved lanes that are members of the asbuilt land_r8/land_r8_extra tables (pv_col, pv_v, vport, R8 main) print WARN STNREPRICE-LAW per table (report-only default); --strict refuses (PLAN_OUT -> .refused, exit 3) unless --regen-table gives a regenerated table of the same name. `check PLAN --baseline-plan B` runs (b)+(c) on a finished plan. (c) PRE now prints LIST STNPRICE n of m lanes with station depth != fixed_cycles (report-only). KV-ALLFIX: to enforce, wrap RREACH with --strict and exclude/regen per FABLE-RC-KV 01:28 ruling. Limit: re-prices only lanes whose base fixed == base depth (the ISTCYC set), as before.
   [filed under] COORD: REACHFIX-DUP stood down (chain REACHFIX-DUP > COORD)
 - 2026-11-24 01:41 PST DONE [FLOW-OPS-R3] ot-push-main otpush-civil-redfish-1005492 on civil-redfish: rc=0 after 55 s, ended 09:41:04, log none, cmd: ot-push-main 
+- 2026-11-24 01:41 PST FWCPL A/B place, measured [QC-FW-CAP -> FABLE-RC-QC, COORD, QC-ALLFIX]. Setup: slw_fw_v1__clf51c11d8__cl592e3d37, kit copies, the same ORFS make place for every row. Counts are non-tap cells from 3_place.odb.
+  | Variant | Floorplan | Place | Buffers added |
+  |---|---|---|---|
+  | base | 323,309 | 409,533 | 86.2k |
+  | maxwire 200 + ft 220 | 323,309 | 409,533 | 86.2k |
+  | phase 1 cpl-first (main 5127d7a) | 304,674 | 394,389 | 89.7k |
+  | phase 1 plain-first (main 5041641) | 295,095 | 387,310 | 92.2k |
+  | phase 1 + phase 2 (89 stations to QN pairs) | | | |
+  (1) The 200 um A/B is DEAD. OT_MAXWIRE_UM does not feed place repair_design. Those buffers come from slew/cap repair, set_max_transition 320 / cap_margin 20.
+  (2) Removing the inverters adds 3.5-6k buffers, because QN now drives the long hop directly. Net gain for plain-first is -22.2k at place.
+  (3) The phase 1 + phase 2 run is at place on intel1, ETA ~02:15.
+  I will rebase on C1g 96cce77c1e2f, per QC-ALLFIX. ROW-REBASED follows only when a measured place is <=360k.

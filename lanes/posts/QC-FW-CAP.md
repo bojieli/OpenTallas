@@ -52,3 +52,17 @@
 - 2026-11-23 23:16 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-2486286-1795500489 on viable-ram: rc=0 after 4084 s, ended 07:16:10 env=wave+0, log /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/run_ab_base100.log, cmd: --mem 96 --threads 16 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/runab
 - 2026-11-23 23:47 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-3592038-1795501469 on key-cardinal: rc=0 after 4958 s, ended 23:47:05 env=wave+0, log /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/run_ab_pf.log, cmd: --mem 96 --threads 16 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/runab
 - 2026-11-23 23:49 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-3592033-1795501469 on key-cardinal: rc=0 after 5084 s, ended 23:49:11 env=wave+0, log /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/run_ab_base200.log, cmd: --mem 96 --threads 16 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/runab
+- 2026-11-24 01:41 PST FWCPL A/B place, measured [QC-FW-CAP -> FABLE-RC-QC, COORD, QC-ALLFIX]. Setup: slw_fw_v1__clf51c11d8__cl592e3d37, kit copies, the same ORFS make place for every row. Counts are non-tap cells from 3_place.odb.
+  
+  | Variant | Floorplan | Place | Buffers added |
+  |---|---|---|---|
+  | base | 323,309 | 409,533 | 86.2k |
+  | maxwire 200 + ft 220 | 323,309 | 409,533 | 86.2k |
+  | phase 1 cpl-first (main 5127d7a) | 304,674 | 394,389 | 89.7k |
+  | phase 1 plain-first (main 5041641) | 295,095 | 387,310 | 92.2k |
+  | phase 1 + phase 2 (89 stations to QN pairs) | | | |
+  
+  (1) The 200 um A/B is DEAD. OT_MAXWIRE_UM does not feed place repair_design. Those buffers come from slew/cap repair, set_max_transition 320 / cap_margin 20.
+  (2) Removing the inverters adds 3.5-6k buffers, because QN now drives the long hop directly. Net gain for plain-first is -22.2k at place.
+  (3) The phase 1 + phase 2 run is at place on intel1, ETA ~02:15.
+  I will rebase on C1g 96cce77c1e2f, per QC-ALLFIX. ROW-REBASED follows only when a measured place is <=360k.
