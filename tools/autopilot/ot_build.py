@@ -128,6 +128,22 @@ def tree_id(src):
 
 
 # ---- plan helpers -----------------------------------------------------------------------------------------------------------------
+def bind_report_fresh():
+    """BIND-REPORT-STALE-1123: tools/die_plan/bind_report_fresh.py of this tools tree (loaded by file: die_plan stays off sys.path)"""
+    from importlib.machinery import SourceFileLoader
+    return SourceFileLoader("bind_report_fresh", str(HERE.parent / "die_plan" / "bind_report_fresh.py")).load_module()
+
+
+def load_bind_report(out, t0):
+    """OUT/bind_report.json of the bind run started at t0; a missing or older report is BuildError BIND-REPORT-STALE"""
+    BRF = bind_report_fresh()
+    try:
+        BRF.check_fresh(out, t0)
+    except BRF.StaleBindReport as e:
+        raise G.BuildError(str(e)) from None
+    return load_json(Path(out) / "bind_report.json")
+
+
 def load_json(p):
     try:
         return json.loads(Path(p).read_text())
@@ -511,9 +527,11 @@ class BindStage:
 
     def run_bind(self, node):
         j = str(self.a.emit_j)
+        t0 = time.time()
+        bind_report_fresh().set_aside(self.out)          # BIND-REPORT-STALE-1123: also under a launched bind.py that predates it
         self._tool("bind.py", ["bind", self.plan, "--out", self.out, "--mem", self.a.mem, "--strict", "--all-gaps"] + self._ab_args(True),
                    "bind.log", extra_env={"OT_BIND_EMIT_J": j})
-        rep = load_json(self.out / "bind_report.json")
+        rep = load_bind_report(self.out, t0)
         if rep.get("n_errors") != 0:
             raise G.BuildError(f"strict bind reports {rep.get('n_errors')} error(s): {json.dumps(rep.get('errors', [])[:5])[:600]}")
         node.extra = dict(emit_j=j)
@@ -585,10 +603,15 @@ class BindStage:
         self._probe_seed(probe)
         log(f"OT-BUILD PROBE-OUT {probe} types {a.only_types}")
         t0 = time.time()
+        bind_report_fresh().set_aside(probe)             # BIND-REPORT-STALE-1123
         rc, _ = self._tool("bind.py", ["bind", self.plan, "--out", probe, "--mem", a.mem, "--strict", "--all-gaps"] + self._ab_args(True),
                            f"probe_{h}.log", extra_env={"OT_BIND_EMIT_J": str(a.emit_j), "OT_BIND_ONLY_TYPES": a.only_types},
                            ok=(0, 1, 2))
-        rep = load_json(probe / "bind_report.json") if (probe / "bind_report.json").is_file() else {}
+        try:
+            rep = load_bind_report(probe, t0)
+        except G.BuildError as e:
+            log(f"ot-build: {e}")
+            rep = {}
         n = rep.get("n_errors")
         log(f"ot-build: probe bind rc={rc} n_errors={n} in {time.time() - t0:.0f} s; errors {json.dumps(rep.get('errors', [])[:5])[:600]}")
         return 0 if rc == 0 and n == 0 else 1

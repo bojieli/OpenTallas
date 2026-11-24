@@ -7908,6 +7908,11 @@ def _main(argv=None):
         os.environ["OT_BIND_ONLY_TYPES"] = a.types
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
+    if a.cmd in ("bind", "all") and getattr(a, "out", None):
+        # BIND-REPORT-STALE-1123 (COORD, KV K3e): the previous run's report goes aside (OUT/bind_report.json.prev) at run start,
+        # so a bind that ends before writing its own report leaves none, never an old one a driver reads as this run's result
+        import bind_report_fresh
+        bind_report_fresh.set_aside(a.out)
     if a.cmd == "bind":            # PRE-ORDER-1123: elab / all start the gate after their own elab (below)
         rc = _pg_run(a)
         if rc:

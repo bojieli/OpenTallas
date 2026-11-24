@@ -32,6 +32,8 @@ elif cmd == "bind":
     errs += ["EMIT gap"] if P.get("bad") else []
     (out / "rtl").mkdir(exist_ok=True)
     (out / "rtl" / "t.sv").write_text("// depth %d\n" % P["depth"])
+    if os.environ.get("STUB_NOREPORT"):
+        sys.exit(0)
     (out / "bind_report.json").write_text(json.dumps({"n_errors": len(errs), "errors": errs}))
     sys.exit(1 if errs else 0)
 '''
@@ -288,3 +290,32 @@ def test_bpc_hits():
     assert OB.bpc_hits("BOUND-PARAM kv3_io_cor_v1_part.W: passed by top.sv:u0; no definition", mods)
     assert OB.bpc_hits("BOUND-PARAM ring.LITE: passed by kv3_io_cor_v1_part.sv:u_r, x.sv:y; no definition", mods)
     assert not OB.bpc_hits("BOUND-PARAM kv3_pc.S: passed by top.sv:pc; no definition in the tree declares it (r/kv3_io_cor_v1_part.sv)", mods)
+
+
+
+def test_bind_without_new_report_is_stale_not_the_old_result(env, capsys, monkeypatch):
+    """BIND-REPORT-STALE-1123 (KV K3e): the bind of the same OUT ends without writing OUT/bind_report.json; the clean report of
+    the previous run is put aside at run start and never read as this run's result"""
+    assert run(env) == 0
+    out = next(env["root"].glob("b_*"))
+    assert json.loads((out / "bind_report.json").read_text())["n_errors"] == 0
+    calls(env)
+    capsys.readouterr()
+    monkeypatch.setenv("STUB_NOREPORT", "1")
+    assert run(env, extra=["--force", "bind"]) == 1
+    assert calls(env)[-1] == "bind.py bind J=4"
+    o = capsys.readouterr().out
+    assert "BIND-REPORT-STALE" in o and "no report from this bind run" in o
+    assert [out] == list(env["root"].glob("b_*"))
+    assert not (out / "bind_report.json").exists() and (out / "bind_report.json.prev").exists()
+
+
+def test_probe_without_new_report_is_stale(env, capsys, monkeypatch):
+    assert run(env, extra=["--only-types", "t"]) == 0
+    probe = next(env["root"].glob("b_*/probe_*"))
+    assert json.loads((probe / "bind_report.json").read_text())["n_errors"] == 0
+    capsys.readouterr()
+    monkeypatch.setenv("STUB_NOREPORT", "1")
+    assert run(env, extra=["--only-types", "t"]) == 1
+    assert "BIND-REPORT-STALE" in capsys.readouterr().out
+    assert [probe] == list(env["root"].glob("b_*/probe_*")) and (probe / "bind_report.json.prev").exists()
