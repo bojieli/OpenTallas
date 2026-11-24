@@ -212,3 +212,9 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - Cancelled wave row hd_lep0N_w@1 on r18g at 22:27.
 - Post-apply checks: chain_s3w_postbind.sh, all PASS (bind_r18g_s3w_postbind). The stop file is removed.
 - Census grt.logs are live: KEEP posted.
+
+## 23:10 PST 11-23
+- COORD: do not add hd_lep0N_w to the wave list. The private wband kit (HEAD-R18/s81_head_hd_lep0N_w_1123175935, goal=route = sign-off + LEC) finished route rc 0 and is now in sign-off/LEC. If it fails, add hd_lep0N_w to only_items.
+- The escape kit hd_lep0N_1123172531 was cancelled by the FLEET-WATCH UNSIGNABLE watchdog at 22:31 (I missed the KEEP notice). It is not a GRT result. Relaunch only if both epin_r4 and rscap fail to give a final GRT read.
+- KEEP posted for epin_r4 oth-ubuntu-2158420-1795492061 and rscap oth-ubuntu-1365406-1795488947. Watch FLEET-WATCH NOTICEs and answer within 30 min.
+- Waiters replaced: head-r18-epin-waiter3 (waiter_epin3) and head-r18-rscap-waiter5 (waiter_rscap3). A missing final report now prints NO-FINAL-REPORT.
