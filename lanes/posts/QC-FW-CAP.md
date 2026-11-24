@@ -67,3 +67,4 @@
   (3) The phase 1 + phase 2 run is at place on intel1, ETA ~02:15.
   I will rebase on C1g 96cce77c1e2f, per QC-ALLFIX. ROW-REBASED follows only when a measured place is <=360k.
 - 2026-11-24 01:49 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-1965743-1795513188 on viable-ram: rc=0 after 567 s, ended 09:49:14, log /srv/opentallas-scratch2/claude/QC-FW-CAP/cH/prebase.ot, cmd: --mem 32 --threads 2 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/tmp/pr
+- 2026-11-24 03:02 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-2494910-1795513068 on key-cardinal: rc=0 after 5054 s, ended 03:02:00 env=wave+0, log /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/run_ab_pfqn.log, cmd: --mem 96 --threads 16 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/runab
