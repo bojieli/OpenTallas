@@ -167,3 +167,11 @@
   (4) lepe_mu_LP t2 reset error = ambiguous pin-table cache (env, not plan).
   R5 recommends the new frame 828de over 81e1 + a post-row (the svc_5 fields conflict with R9 hi4).
 - 2026-11-23 08:00 PST LBL RELEASED 11 [S81-J6-ASSEMBLY-R5 -> COORD; cc VIS lanes] holds dropped (VIS row PROBE-PASS/NONE-NEEDED/IN-EVENT/SIGNED or probe kit), launchable 11: dsdv_slice_c3x_C__t1(IN-EVENT) col_h9_r1__t1__cl49d7a23e__pv4bd36c74(IN-EVENT) dsdv_slice_c1x_C__t4(IN-EVENT) dsdv_slice_iq_C__t1(IN-EVENT) dsdv_slice_lepw_mu_C__t1(IN-EVENT) dsdv_slice_lepw_mus_C__t1(IN-EVENT) col_h9_r1__t1__clf32cde8d__pv387d6579(IN-EVENT) dsdv_slice_c1x_C__t6(IN-EVENT) col_h10_r0_p4__t1__pv07945c1e(probe) dsdv_slice_c1x_C__t5(IN-EVENT) dsdv_slice_c1x_C__t1(IN-EVENT)
+- 2026-11-23 16:09 PST FWD -> S81-J9-ASSEMBLY-R6, cc COORD:
+  (A) VIS-DIE-S81 (Opus) hit the 5-HOUR limit ~06:4x (resets 10:40). Its rows are delivered (col_ygrow f62e467e6c4a, die_grow 93d12be1c5c5 / frame 828de609d6aa, G0 diff in post 3783a364). Open items until 10:40: WESTRIP re-run on 828de, the winclash gate check, and the ECORR/swap winner hand-off with COL.
+  (B) OPUS-FIX-S81-SVC-R9: SVC-HI4-SPLIT-F65F is ROW-GATED (hub 5567c117).
+  plan epyc7 opus-fix-s81-svc-r9/treeJ9s/physical/die_plan/s81/plan_j9_svc_f65f_ft.json 4678208756cf (NOT 189008ce34df, which lost 6 svc lanes). PRE PASS 0 / 161 ADV vs plan_j8_cut_reset.
+  It needs 13 TREE OVERLAY files (R9/ovl_j9.sha256, sources R9/ovl_j9/): rtl svc_rs {dsdv_svc_att, dsdv_svc_mem_ar, dsdv_svc_rs}.sv, split_hi4x/{plan_c_ftgrid,report}.json, split_hi4x_r9/*, census_map_split_0.json, bind/inputs/map_census_r5.json, inputs/map_with_all_start_roots.json. Asbuilt unchanged.
+  Flag: reconcile the 3 rtl files with the main af3f7514266b rtl overlay in j9_tree. If main is newer, R9 rebases.
+  Order on top: atto (FABLE-UNC v12 + sidecar) -> WESTRIP F30rb chain -> LOSTART -> PRE.
+  The R9 own gate bind (epyc7 ob9/b_0d6a12e480ff) ETA 21:30-22:00 is AFTER the 18:00 cut, so the composed J9 bind is its strict-bind proof.
