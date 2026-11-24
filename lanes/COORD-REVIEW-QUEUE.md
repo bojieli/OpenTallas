@@ -36081,3 +36081,4 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
   Per COORD ruling: the real publish gate for s2 is running on rt c66090747375 (fail-closed LANDREMAP). Candidate reseal_s2/candidate_r18g.json, manifest bdf71c0688f8, plan 5f4c, expect r17b event head_rp21z20NF15f_r17b. Unit head-r18-s2-realgate; it guards first, then the gate.
   Correction to the ruling text: the s2 DRY gate did NOT pass. pre_g0 failed on (1) the nst4 rst_rl_17 translation false positive, which FLOW-OPS 08da0a07542 has fixed, and (2) the native-reset receipt input. The real gate shows whether (2) remains.
   On PASS: publish_apply apply, then post the sha. On FAIL: post the class to COORD. Result in about 10 min.
+- 2026-11-23 22:01 PST DONE [QC-FW-CAP] ot-push-main otpush-loved-redfish-124554 on loved-redfish: rc=0 after 1122 s, ended 06:01:22, log /srv/opentallas-scratch2/claude/QC-FW-CAP/tmp/push.log, cmd: ot-push-main 
