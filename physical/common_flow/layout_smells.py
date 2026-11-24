@@ -9,7 +9,9 @@ Six checks (OWNER 11-06 22:0x smell list), each {value, threshold, flag, computa
   channel_tracks      macro-macro and macro-edge channels: nets through the channel / tracks of the channel
   clock               entry to sink centroid, unshared clock path of related flop pairs, clock guides over foreign macros
   fanout_spread       one logical driver (traced through buffers) whose sinks spread over > 100 um
-  local_density       standard-cell area / free area in 10-um bins
+  local_density       standard-cell area / free area in 10-um bins (interior full bins only); a connected lump of bins above
+                      lump_density with >= lump_min_um2 also flags (DENSITY-CHECK-FIX 11-23: edge strips gave false peaks, a
+                      108k-instance interior lump of kv3_hg_v1p5 was missed)
 
 Stdlib only, Python >= 3.6 (ORFS container).  ADVISORY: thresholds flag, nothing here gates a build.  Where the ODB cannot give
 an answer, a check says computable: false with the reason, and never guesses.  A pin / macro-free block: value null, no flag.
@@ -25,7 +27,8 @@ from collections import defaultdict
 SCHEMA = "opentallas.layout_smells.v1"
 TH = {"opposite_face_ratio": 0.6, "pin_track_use": 0.5, "pin_window_um": 20.0, "channel_use": 1.0, "channel_max_gap_um": 60.0,
       "clock_entry_ratio": 0.4, "clock_unshared_um": 200.0, "clock_over_macro_um": 50.0, "fanout_spread_um": 100.0,
-      "local_density": 0.7, "density_bin_um": 10.0, "density_min_free": 0.25}
+      "local_density": 0.7, "density_bin_um": 10.0, "density_min_free": 0.5, "density_min_bin": 0.5,
+      "lump_density": 0.3, "lump_min_um2": 10000.0}
 TOP = 20
 MAX_CHANNELS = 200
 MAX_FLIGHT_CHANNELS = 40       # place stage: no guides, nets x channels in pure Python
@@ -33,7 +36,7 @@ RELATED_FANIN_CAP = 32         # cells walked per launch flop when looking for r
 REPEATER_RE = re.compile(r"^(BUF|INV|HB\d|CKINV)", re.I)
 SEQ_RE = re.compile(r"^(DFF|DHL|DLL|SDF|ASYNC_DFF|ICG)", re.I)
 ICG_RE = re.compile(r"^ICG", re.I)
-SKIP_DENS_RE = re.compile(r"^(FILLER|DECAP)", re.I)
+SKIP_DENS_RE = re.compile(r"^(FILLER|DECAP|TAPCELL|TAP_)", re.I)
 CLK_PIN_RE = re.compile(r"^(clk|clock|ck|clka|clkb|.*_clk|clk_.*|gclk)$", re.I)
 TIE_RE = re.compile(r"^TIE", re.I)
 
@@ -659,7 +662,7 @@ def check_density(d):
     if c[2] <= c[0] or c[3] <= c[1]:
         return not_computable("empty core area", th)
     nx, ny = max(1, int(math.ceil((c[2] - c[0]) / bin_um))), max(1, int(math.ceil((c[3] - c[1]) / bin_um)))
-    used = defaultdict(float)
+    used, cnt = defaultdict(float), defaultdict(int)
     for i in d.insts.values():
         if i["block"] or SKIP_DENS_RE.match(i["master"]):
             continue
@@ -667,25 +670,56 @@ def check_density(d):
         ix, iy = int((i["x"] - c[0]) // bin_um), int((i["y"] - c[1]) // bin_um)
         if 0 <= ix < nx and 0 <= iy < ny:
             used[(ix, iy)] += (b[2] - b[0]) * (b[3] - b[1])
-    rows = []
+            cnt[(ix, iy)] += 1
+    rows, dens = [], {}
     blocked = [m["box"] for m in d.macros] + d.blockages
     for (ix, iy), a in used.items():
         x0, y0 = c[0] + ix * bin_um, c[1] + iy * bin_um
         x1, y1 = min(c[2], x0 + bin_um), min(c[3], y0 + bin_um)
         area = (x1 - x0) * (y1 - y0)
+        if area < TH["density_min_bin"] * bin_um * bin_um:
+            continue                      # outline strip narrower than half a bin: a few cells over a sliver is no density
         fr = area
         for b in blocked:
             w, h = min(x1, b[2]) - max(x0, b[0]), min(y1, b[3]) - max(y0, b[1])
             if w > 0 and h > 0:
                 fr -= w * h
-        if fr < TH["density_min_free"] * area:
-            continue
+        if fr < TH["density_min_free"] * bin_um * bin_um:
+            continue                      # mostly macro / blockage: normalised by a sliver of free area
+        dens[(ix, iy)] = a / fr
         rows.append(dict(x=rnd((x0 + x1) / 2, 1), y=rnd((y0 + y1) / 2, 1), density=rnd(a / fr)))
     rows.sort(key=lambda r: -r["density"])
     v = rows[0]["density"] if rows else 0.0
     over = sum(1 for r in rows if r["density"] > th)
-    return result(v, th, v > th, "cell area by cell centre / free core area (macros + hard blockages off) in %g-um bins; fillers and decaps excluded; bins under %d%% free skipped" % (bin_um, int(TH["density_min_free"] * 100)),
-                  unit="fraction", bins_over=over, bins=len(rows), offenders=rows)
+    # lumps: 8-connected components of bins above lump_density (a soft block packed 5-10x tighter than the die median)
+    lth, seen, lumps = TH["lump_density"], set(), []
+    for k0 in dens:
+        if dens[k0] <= lth or k0 in seen:
+            continue
+        seen.add(k0)
+        stack, comp = [k0], []
+        while stack:
+            q = stack.pop()
+            comp.append(q)
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    r = (q[0] + dx, q[1] + dy)
+                    if r in dens and dens[r] > lth and r not in seen:
+                        seen.add(r)
+                        stack.append(r)
+        if len(comp) * bin_um * bin_um >= TH["lump_min_um2"]:
+            xs, ys = [q[0] for q in comp], [q[1] for q in comp]
+            lumps.append(dict(x=rnd(c[0] + (sum(xs) / len(xs) + 0.5) * bin_um, 1), y=rnd(c[1] + (sum(ys) / len(ys) + 0.5) * bin_um, 1),
+                              kind="lump", bins=len(comp), area_um2=rnd(len(comp) * bin_um * bin_um, 0),
+                              density=rnd(sum(dens[q] for q in comp) / len(comp)), instances=sum(cnt[q] for q in comp),
+                              bbox_um=[rnd(c[0] + min(xs) * bin_um, 1), rnd(c[1] + min(ys) * bin_um, 1),
+                                       rnd(c[0] + (max(xs) + 1) * bin_um, 1), rnd(c[1] + (max(ys) + 1) * bin_um, 1)]))
+    lumps.sort(key=lambda r: -r["area_um2"])
+    flag = v > th or bool(lumps)
+    return result(v, th, flag, "cell area by cell centre / free core area (macros + hard blockages off) in %g-um bins; fillers, decaps and tap cells excluded; "
+                  "bins under %d%% of a full bin (outline slivers) or %d%% free skipped; lump = connected bins above %g with >= %d um2 (offenders list lumps first)"
+                  % (bin_um, int(TH["density_min_bin"] * 100), int(TH["density_min_free"] * 100), lth, int(TH["lump_min_um2"])),
+                  unit="fraction", bins_over=over, bins=len(rows), lumps=lumps[:10], lump_count=len(lumps), offenders=lumps[:5] + rows)
 
 
 def congestion_summary(path, macros=(), source="routing"):
@@ -752,7 +786,11 @@ def one_line(doc):
     for k, c in doc["checks"].items():
         if c.get("flag"):
             v = c.get("value")
-            fl.append("%s=%s" % (k, v if v is not None else "?"))
+            t = "%s=%s" % (k, v if v is not None else "?")
+            if k == "local_density" and c.get("lumps"):
+                lp = c["lumps"][0]
+                t += " lump(%d, %d bins %d um2 at %.0f,%.0f mean %.2f %d insts)" % (c["lump_count"], lp["bins"], lp["area_um2"], lp["x"], lp["y"], lp["density"], lp["instances"])
+            fl.append(t)
     un = [k for k, c in doc["checks"].items() if not c.get("computable", True)]
     s = "%s %d/6 flagged%s" % (doc["stage"], len(fl), ": " + " ".join(fl) if fl else "")
     if un:

@@ -154,6 +154,50 @@ def test_local_density(tmp_path):
     assert c["offenders"][1]["density"] == pytest.approx(0.1)       # the filler is not counted
 
 
+def test_density_edge_sliver_and_taps_are_not_peaks(tmp_path):
+    # DENSITY-CHECK-FIX 11-23: core 0..104 -> last bin column is a 4-um sliver (under half a bin); tap cells on it, and a dense sliver, are no density
+    die = (0, 0, 104, 100)
+    cells = [inst(i, "TAPCELL_ASAP7_75t_R", 100 + (i % 4), 20 + 10 * (i // 4), 1, 10) for i in range(16)]
+    cells += [inst(100 + i, "AND2x2_ASAP7_75t_R", 102.5, 50 + i, 1, 1) for i in range(5)]          # 5 um2 on a 4 x 10 um2 sliver
+    cells += [inst(200, "AND2x2_ASAP7_75t_R", 20, 20, 1, 2)]
+    c = LS.compute(dump(tmp_path, cells, die=die))["checks"]["local_density"]
+    assert not c["flag"] and c["value"] == pytest.approx(0.02) and c["bins"] == 1 and not c["lumps"]
+
+
+def test_density_lump_is_flagged_even_when_each_bin_is_under_threshold(tmp_path):
+    # 12 x 10 bins at 0.4 (> lump_density 0.3, < local_density 0.7) = 12000 um2 connected: a soft block packed tight
+    die = (0, 0, 200, 200)
+    cells = [inst(i, "AND2x2_ASAP7_75t_R", 20 + 10 * (i % 12), 30 + 10 * (i // 12), 1, 40) for i in range(120)]
+    c = LS.compute(dump(tmp_path, cells, die=die))["checks"]["local_density"]
+    assert c["flag"] and c["value"] == pytest.approx(0.4) and c["bins_over"] == 0
+    assert c["lump_count"] == 1 and c["lumps"][0]["bins"] == 120 and c["lumps"][0]["area_um2"] == 12000
+    assert c["offenders"][0]["kind"] == "lump" and c["offenders"][0]["instances"] == 120
+    one = LS.one_line(dict(stage="place", checks={"local_density": c}))
+    assert "lump(1, 120 bins" in one
+
+
+def _fixture_density(name, tmp_path):
+    import gzip
+    p = tmp_path / (name + ".tsv")
+    p.write_bytes(gzip.open(HERE / "testdata/layout_density" / (name + "_place.tsv.gz")).read())
+    return LS.compute(str(p))["checks"]["local_density"]
+
+
+def test_kv3_hg_v1p5_place_interior_lump_flagged_not_edge(tmp_path):
+    # real KV hg place (FABLE-RC-KV 11-23): g_ex_0 packed ~10x the die median in the centre channel; the 1.385 peaks were outline strips
+    c = _fixture_density("kv3_hg_v1p5", tmp_path)
+    assert c["flag"] and c["lump_count"] == 1
+    lp = c["lumps"][0]
+    assert lp["bins"] > 200 and lp["area_um2"] > 20000 and 0.4 < lp["density"] < 0.7
+    assert 540 < lp["x"] < 680 and 700 < lp["y"] < 800 and lp["bbox_um"][0] < 570 and lp["bbox_um"][2] > 700
+    assert c["value"] < 1.2 and all(r["x"] < 1270 for r in c["offenders"])
+
+
+def test_kv3_sys_SD_v1_place_clean_density_not_flagged(tmp_path):
+    c = _fixture_density("kv3_sys_SD_v1", tmp_path)
+    assert not c["flag"] and c["lump_count"] == 0 and c["value"] < 0.7
+
+
 def test_big_db_says_not_computable(tmp_path):
     p = dump(tmp_path, [pin("a", "a", 0, 1), inst(1, "AND2x2_ASAP7_75t_R", 5, 5), inst(2, "ram", 50, 20, 100, 60, block=1, top=4)])
     r = LS.compute(p)["checks"]
