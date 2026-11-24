@@ -124,10 +124,12 @@ GATE_SCRIPT = "/srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote"
 GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", f"ot-run --mem 48 --threads 16 --disk 60 --hosts epyc2,epyc9 --needs {GATE_SCRIPT} --dir "
                              f"/srv/opentallas-scratch2/claude/mq-gate -- bash {GATE_SCRIPT} "
                              "{key} 16")                       # '' = gate on the hub
+REDWATCH_LAUNCHER = shlex.quote(str(Path(__file__).resolve().with_name("ot-run")))
+REDWATCH_THREADS = max(1, min(XDIST, 4))
 REDWATCH_REMOTE = os.environ.get("MQ_REDWATCH_REMOTE",
-    f"ot-run --mem 48 --threads 16 --disk 60 --hosts epyc7,epyc9 --strict-host --needs {GATE_SCRIPT} "
-    f"--dir /srv/opentallas-scratch2/claude/mq-gate --max-wait 45 -- bash {GATE_SCRIPT} "
-    "--redwatch {sha} {parent} 16" if GATE_REMOTE else "")
+    f"{REDWATCH_LAUNCHER} --mem 48 --threads {REDWATCH_THREADS} --disk 60 --hosts epyc2,epyc7,epyc9 "
+    f"--strict-host --needs {GATE_SCRIPT} --dir /srv/opentallas-scratch2/claude/mq-gate --max-wait 45 "
+    f"-- bash {GATE_SCRIPT} --redwatch {{sha}} {{parent}} {REDWATCH_THREADS}" if GATE_REMOTE else "")
 GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "1500"))   # 11-17: was 10800; ot-run re-placed one gate for 45 min
 ITEM_SECS = int(os.environ.get("MQ_ITEM_SECS", "1200"))          # an approval whose prepare/gate runs longer is set aside (INFRA, retried next tick)
 STALL_SECS = int(os.environ.get("MQ_STALL_SECS", "2700"))        # nothing merged for this long with approvals pending -> ALERT
