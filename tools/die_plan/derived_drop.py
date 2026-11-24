@@ -32,7 +32,7 @@ DERIVEDNAME (FAIL; generic): every derived name resolves in the current floorpla
      an existing FSTART pin / START stage / band;
   d. internal_stations launch / capture 'core:<inst>' and 'leaf <inst>' name an instance of the type's hard_cores / contents.
 
-ENTRYFOOT (FAIL; generic, PRE-QC-GENCHECK 11-23): an early core tap naming a hard core's clock_entry_access pin emits exactly the
+ENTRYFOOT (WARN, report-only per COORD r703 11-24 -- ENTRYFOOT_LEVEL; generic, PRE-QC-GENCHECK 11-23): an early core tap naming a hard core's clock_entry_access pin emits exactly the
   access footprint (top partition layer, 1e-6 um, on track) -- QC CB-R3 moved u_t00/u_t01 + footprints, not taps clk_c0/clk_c2:
   kit GEN died; with a baseline, every early core tap follows its moved hard core by the same delta; STALE-EXPORT-TAP: every
   forwarded-clock output's source_clock_port tap lies within 300 um of its pin (KV A5: 1457 of 2769 over).  See above CLASSES.
@@ -668,6 +668,8 @@ def exporttap_findings(raw, S, only=None, limit=EXPORT_HOP_UM, budget=None):
 
 
 CLASSES = ("RSTREACH", "DERIVEDNAME", "ENTRYFOOT")
+ENTRYFOOT_LEVEL = "WARN"   # ENTRYFOOT-WARN-1124 (COORD r703: new checks report-only; it refused QC-CB-PROBE rebind3 + KV-ALLFIX
+                          # launch): every ENTRYFOOT / STALE-EXPORT-TAP FAIL prints at this level; COORD promotes by editing it
 
 
 def die_relay_findings(raw, S):
@@ -731,9 +733,10 @@ def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=N
     if "DERIVEDNAME" in want and not only:
         out += die_relay_findings(raw, S)
     if "ENTRYFOOT" in want:
-        out += entryfoot_findings(raw, S, base_raw, only)
+        ef = entryfoot_findings(raw, S, base_raw, only)
         if hasattr(S, "grid"):
-            out += exporttap_findings(raw, S, only, budget=budget)
+            ef += exporttap_findings(raw, S, only, budget=budget)
+        out += [ENTRYFOOT_LEVEL + l[4:] if l.startswith("FAIL ENTRYFOOT") else l for l in ef]
     for tn, t in todo:
         if time.time() - t0 > budget:
             break

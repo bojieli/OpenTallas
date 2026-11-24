@@ -217,7 +217,7 @@ def _row(x, foot=(289.488, 647.628, 289.52, 648.396), on_track=True):
 def test_entryfoot_tap_left_behind_fails():
     raw = {"partition_types": {"cbn": _ef_type()}}
     out = D.findings(raw, "/x/p.json", solver=EF({"cbn": [_row(332.704)]}), classes=["ENTRYFOOT"])
-    assert len(out) == 1 and out[0].startswith("FAIL ENTRYFOOT cbn: clk_c0 (u_t00.ck)") and "d +43.2,+0" in out[0]
+    assert len(out) == 1 and out[0].startswith("WARN ENTRYFOOT cbn: clk_c0 (u_t00.ck)") and "d +43.2,+0" in out[0]
     assert "[289.504,648.012]" in out[0]
 
 
@@ -291,10 +291,10 @@ def test_stale_export_tap_fails_and_nearest_passes():
     g = {"clk": (500.0, 500.0), "clk_t1": (20.0, 20.0), "clk_t9": (900.0, 10.0)}
     raw = {"partition_types": {"pv": _fx("clk_t9")}, "partitions": [{"name": "a", "type": "pv"}, {"name": "b", "type": "pv"}]}
     out = D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])
-    assert out[0].startswith("FAIL ENTRYFOOT pv: STALE-EXPORT-TAP 1 of 1") and "clk_t9 890 um (nearest clk_t1 20 um)" in out[0]
+    assert out[0].startswith("WARN ENTRYFOOT pv: STALE-EXPORT-TAP 1 of 1") and "clk_t9 890 um (nearest clk_t1 20 um)" in out[0]
     assert out[-1].startswith("LIST ENTRYFOOT STALE-EXPORT-TAP die: 1 of 1") and "2 of 2 placed" in out[-1]
     raw["partition_types"]["pv"] = _fx("clk")         # far root: stale too
-    assert D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])[0].startswith("FAIL")
+    assert D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])[0].startswith("WARN ENTRYFOOT")
     raw["partition_types"]["pv"] = _fx("clk_t1")
     out = D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])
     assert [x for x in out if not x.startswith("LIST")] == []
@@ -315,3 +315,19 @@ def test_stale_export_tap_budget_never_silent():
     raw = {"partition_types": {"pv": _fx("clk_t9")}}
     out = D.exporttap_findings(raw, GF({"clk_t9": (900.0, 10.0)}), budget=-1)
     assert len(out) == 1 and out[0].startswith("WARN ENTRYFOOT STALE-EXPORT-TAP: 1 type(s) not checked") and "pv" in out[0]
+
+
+# ENTRYFOOT-WARN-1124 (COORD r703): ENTRYFOOT / STALE-EXPORT-TAP are report-only on every die; other classes keep FAIL
+def test_entryfoot_is_warn_only_and_other_classes_keep_fail(monkeypatch):
+    assert D.ENTRYFOOT_LEVEL == "WARN"
+    monkeypatch.setattr(D, "entryfoot_findings", lambda *a, **k: ["FAIL ENTRYFOOT t: tap off footprint"])
+    monkeypatch.setattr(D, "exporttap_findings", lambda *a, **k: ["FAIL ENTRYFOOT t: STALE-EXPORT-TAP 1 of 1", "LIST ENTRYFOOT x"])
+    monkeypatch.setattr(D, "die_relay_findings", lambda *a, **k: ["FAIL DERIVEDNAME die: 1 of 1 reset.die_relays"])
+
+    class S:
+        grid = None
+    raw = {"partition_types": {}}
+    out = D.findings(raw, "/x/p.json", solver=S(), classes=["ENTRYFOOT", "DERIVEDNAME"])
+    assert out == ["FAIL DERIVEDNAME die: 1 of 1 reset.die_relays", "WARN ENTRYFOOT t: tap off footprint",
+                   "WARN ENTRYFOOT t: STALE-EXPORT-TAP 1 of 1", "LIST ENTRYFOOT x"]
+    assert not any(l.startswith("FAIL ENTRYFOOT") for l in out)
