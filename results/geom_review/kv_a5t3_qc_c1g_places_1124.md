@@ -10,3 +10,7 @@ Each image is an exact `3_place` view. KV images were reconstructed from the ori
 | QC `sle_sc_v3_1124044548`, epyc9 | [FAIL](kv_a5t3_qc_c1g_places_1124/sle_sc_v3.png). Repeated N and W landing groups and the east-central long macro load a narrow V aperture, estimated demand/use ratio 1.419. Auto-GRT reaches zero in its diagnostic. A separate x_su_l1_i local register hop remains at 431 µm. | Review the SC3-MONLEG reset-monitor replacement on its own bound placement and move the one residual reach seat. Check the aperture and pin order again on the exact changed form. |
 
 The first three kit paths start at `/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-ALLFIX/`. The QC path starts at `/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private/QC-OPEN-SU/`. These four scopes remain held for new route or STA admission.
+
+## QC SC3 identity correction
+
+The QC spec `qwen_compute_sle_sc_v3_1124044558` and kit stamp `1124044548` bind the SC3-MONLEG successor `bae02a9c26cb`, with the monitor reset move t69→t73 already included. The exact viewed 431 µm x_su_l1_i hop and central-east vertical aperture are therefore remaining SC3 work. The geometry and route verdict above still apply.
