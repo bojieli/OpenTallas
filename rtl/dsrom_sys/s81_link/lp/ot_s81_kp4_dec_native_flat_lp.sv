@@ -111,7 +111,17 @@ rst_n
     ot_pl_land_w #(.W(((3) - (0) + 1)), .D(4)) u_lpl_1_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_v), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));
     ot_pl_land_r #(.W(((3) - (0) + 1)), .D(4), .K(2)) u_lpl_1_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));
 `endif
+`ifdef OT_S81_DCHN_KLOCK
+    (* keep *) reg [3:0] k_v__l_chn__lk;
+`ifdef KLOCK_MUT_POS
+    always @(posedge ck_chn) k_v__l_chn__lk <= lpl_1_o;
+`else
+    always @(negedge ck_chn) k_v__l_chn__lk <= lpl_1_o;   // lockup: same cycle at the u_chn rising edge
+`endif
+    assign k_v__l_chn = k_v__l_chn__lk;
+`else
     assign k_v__l_chn = lpl_1_o;
+`endif
     // ---- LANDING 2: k_lo syn -> chn, 310 b (u_chn.k_lo)
 `ifdef OT_S81_LPR_FOREST
     wire [4*((309) - (0) + 1)-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*13-1:0] lpl_2_vld;  wire [309:0] k_lo__l_chn, lpl_2_o;
@@ -122,7 +132,17 @@ rst_n
     ot_pl_land_w #(.W(((309) - (0) + 1)), .D(4)) u_lpl_2_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_lo), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));
     ot_pl_land_r #(.W(((309) - (0) + 1)), .D(4), .K(2)) u_lpl_2_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));
 `endif
+`ifdef OT_S81_DCHN_KLOCK
+    (* keep *) reg [309:0] k_lo__l_chn__lk;
+`ifdef KLOCK_MUT_POS
+    always @(posedge ck_chn) k_lo__l_chn__lk <= lpl_2_o;
+`else
+    always @(negedge ck_chn) k_lo__l_chn__lk <= lpl_2_o;   // lockup: same cycle at the u_chn rising edge
+`endif
+    assign k_lo__l_chn = k_lo__l_chn__lk;
+`else
     assign k_lo__l_chn = lpl_2_o;
+`endif
     // ---- LANDING 3: k_L syn -> chn, 5 b (u_chn.k_L)
 `ifdef OT_S81_LPR_FOREST
     wire [4*((4) - (0) + 1)-1:0] lpl_3_bank;  wire [11:0] lpl_3_epo;  wire [4*1-1:0] lpl_3_vld;  wire [4:0] k_L__l_chn, lpl_3_o;
@@ -133,7 +153,17 @@ rst_n
     ot_pl_land_w #(.W(((4) - (0) + 1)), .D(4)) u_lpl_3_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_L), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld));
     ot_pl_land_r #(.W(((4) - (0) + 1)), .D(4), .K(2)) u_lpl_3_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_3_bank), .epo(lpl_3_epo), .vld(lpl_3_vld), .o(lpl_3_o));
 `endif
+`ifdef OT_S81_DCHN_KLOCK
+    (* keep *) reg [4:0] k_L__l_chn__lk;
+`ifdef KLOCK_MUT_POS
+    always @(posedge ck_chn) k_L__l_chn__lk <= lpl_3_o;
+`else
+    always @(negedge ck_chn) k_L__l_chn__lk <= lpl_3_o;   // lockup: same cycle at the u_chn rising edge
+`endif
+    assign k_L__l_chn = k_L__l_chn__lk;
+`else
     assign k_L__l_chn = lpl_3_o;
+`endif
     // ---- LANDING 4: k_any syn -> chn, 1 b (u_chn.k_any)
 `ifdef OT_S81_LPR_FOREST
     wire [4*1-1:0] lpl_4_bank;  wire [11:0] lpl_4_epo;  wire [4*1-1:0] lpl_4_vld;  wire  k_any__l_chn, lpl_4_o;
@@ -144,7 +174,17 @@ rst_n
     ot_pl_land_w #(.W(1), .D(4)) u_lpl_4_w (.ck(ck_syn), .rsi(lpr_syn), .i(k_any), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld));
     ot_pl_land_r #(.W(1), .D(4), .K(2)) u_lpl_4_r (.ck(ck_chn), .rsi(lpr_chn), .bank(lpl_4_bank), .epo(lpl_4_epo), .vld(lpl_4_vld), .o(lpl_4_o));
 `endif
+`ifdef OT_S81_DCHN_KLOCK
+    (* keep *) reg k_any__l_chn__lk;
+`ifdef KLOCK_MUT_POS
+    always @(posedge ck_chn) k_any__l_chn__lk <= lpl_4_o;
+`else
+    always @(negedge ck_chn) k_any__l_chn__lk <= lpl_4_o;   // lockup: same cycle at the u_chn rising edge
+`endif
+    assign k_any__l_chn = k_any__l_chn__lk;
+`else
     assign k_any__l_chn = lpl_4_o;
+`endif
     // ---- LANDING 5: d_q dly -> out, 544 b (u_out.d_q)
 `ifdef OT_S81_LPR_FOREST
     wire [4*((543) - (0) + 1)-1:0] lpl_5_bank;  wire [11:0] lpl_5_epo;  wire [4*23-1:0] lpl_5_vld;  wire [543:0] d_q__l_out, lpl_5_o;

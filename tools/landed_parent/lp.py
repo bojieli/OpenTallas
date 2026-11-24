@@ -1881,7 +1881,8 @@ def gen(S: dict, mut_unland=False, rtl_out=None):
         # Preserve the default-off source option without changing its calendar.
         sys.path.insert(0, str(ROOT / "tools" / "s81_link"))
         from s81_rck_am import add_face3_option, add_transport4_option
-        rtl = add_transport4_option(add_face3_option(rtl))
+        from s81_dchn_klock import add_klock_option  # SERDES-DCHN-KLOCK-J9: opt-in u_chn face lockup, default off
+        rtl = add_klock_option(add_transport4_option(add_face3_option(rtl)))
     out = ROOT / S["out_dir"]
     out.mkdir(parents=True, exist_ok=True)
     if rtl_out:
