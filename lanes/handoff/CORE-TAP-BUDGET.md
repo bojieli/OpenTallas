@@ -9,3 +9,7 @@ Job: core taps without budget owner -> legacy kit path (ETM max pin target). (1)
 - Main: 9bfb2254dc (gen legacy_core_tap_targets, retarget KEEP owner, SRAM spec fallback, precheck CORE-TAP-OWNER, census), 8041649984 (signed view mean preferred), 096817a8a3 (census W_raw/W_tool/W_res).
 - Census: lanes/CORE-TAP-CENSUS.tsv, 450 types; legacy with error: S81 301, QC 32, KV 8, HEAD 2. S81 census takes 42 min (ROM libs).
 - Open: plan rows belong to die lanes (core_tap_retarget rows+apply). Possible COORD/S81 veto of default-on gen change (col ROM pins move ~88 ps in new kits) -> would make it plan-keyed.
+## 03:2x PST: c8 census done (COORD 02:4x job)
+- COORD ruled the GEN fix stays default-on. c8 p6u_hops2 94eb2af6a4f5: lanes/CORE-TAP-CENSUS-S81-c8.tsv. 301 of 302 legacy types move (col 216, leaf 75, kv_leaf 4, LP 4, gunit 1, bk_sel 1). Census column etm_TT/etm_err_TT on main 5ba73cdc86.
+- bk_sel: bksel_eco3_1117 lib ETM 512.40 stale vs signed mean 750.69. LP: ln0..3 unowned, plan 405/340 vs signed 424.6/336.26 (row for the S81 lanes).
+- Note: for declared_lead rows (core_pin_lead_ps), etm_TT is pre-lead, so pin_target - etm_TT includes the lead.
