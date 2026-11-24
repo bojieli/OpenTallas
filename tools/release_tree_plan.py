@@ -196,12 +196,31 @@ def resolve_plans(plans, wave, index, prev=None):
 # be a PLAN DRIFT note and the die was counted against its last main plan (QC 31/31 against plan_qc99_s28 while the wave builds s29 with 65 cores).
 # The plan file (sha256 == kit_wave.json plan_sha256) is now read from the host that holds it, with the pins tables it names, into the tmp tree and
 # counted; the pinned main plan remains the fallback when no host has it.  OT_COUNT_NO_HOST_PLAN=1 turns this off.
+# COUNT-PLAN-TREE-1116 (COORD): a published marker tree (kw45/src_<die>_pin_*) carries the die plan in-tree and sits on the gen hosts the marker
+# lists (epyc8/9/10 are not scan hosts), so the plan search also asks every host a tree_switch marker names, not only the scan HOSTS.
+PLAN_EXTRA_HOSTS = ['epyc10', 'epyc9', 'epyc8']
+
+
+def plan_hosts(handoff=None):
+    out = list(HOSTS)
+    h = pathlib.Path(handoff) if handoff else pathlib.Path(os.path.expanduser('~/coord/lanes/handoff'))
+    extra = list(PLAN_EXTRA_HOSTS)
+    try:
+        for f in sorted(h.glob('tree_switch_*.json')):
+            extra += [x for x in (json.loads(f.read_text()).get('hosts') or []) if isinstance(x, str)]
+    except (OSError, ValueError):
+        pass
+    for x in extra:
+        if x not in out: out.append(x)
+    return out
+
+
 def stage_host_plan(tmp, pdir, w, log=lambda *a: None):
     """-> (rel path under tmp, info dict) or None.  w = wave_plan_shas entry (sha, path)"""
     import base64
     path, sha = (w or {}).get('path'), (w or {}).get('sha')
     if os.environ.get('OT_COUNT_NO_HOST_PLAN') or not path or not sha: return None
-    for h in HOSTS:
+    for h in plan_hosts():
         cmd = ['bash', '-c', 'cat %s' % shlex_quote(path)] if h == 'local' else \
             ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'cat %s' % shlex_quote(path)]
         try:
@@ -775,7 +794,10 @@ def prov(p, d, load):
             if n == 'PROVENANCE.json' and x.get('kind') == 'resign':
                 return resign(f, x, load)
             if x.get('src_commit') and x.get('flow_tag'):
-                return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f)
+                # FLOW-FLEET-R1 11-22: a private family-plan kit (kit_wave run-item / private-provenance, kind private) names its private plan
+                pv = x.get('private') if x.get('kind') == 'private' and isinstance(x.get('private'), dict) else {}
+                return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f,
+                            **({'private_plan_sha': pv.get('plan_sha256') or '', 'private_plan': pv.get('plan') or '', 'src_manifest_hash': pv.get('src_manifest_hash') or ''} if pv else {}))
             return {}
         nq = os.path.dirname(q)
         if nq == q: break
@@ -1050,19 +1072,6 @@ def direct_records(log=lambda *a: None):
     return out
 
 
-def new_direct(recs, log=lambda *a: None, reader=None):
-    """INGEST-FIX 11-17: ONE discovery of host-direct records for the counter and the signed-store ingest.  The ingest saw only the capped
-    find walk and missed records the counter counts straight from their kit paths (kit_wave_state q_signoff, COUNT-DIRECT, AUTO-RESIGN,
-    autopilot state): 5 QC R-MINIMAL records sat uncounted by the store for hours.  -> direct records whose (scan_host, path) is not in recs."""
-    have = {(x.get('scan_host'), x.get('path')) for x in recs}
-    seen, out = set(), []
-    for x in (reader or direct_records)(log):
-        k = (x.get('scan_host'), x.get('path'))
-        if k in have or k in seen: continue
-        seen.add(k); out.append(x)
-    return out
-
-
 def known_paths(old, h):
     """record paths of host h in the last cache: its records, and the refs of a credit carried while the host was down"""
     ps = {r_['path'] for r_ in (old or {}).get('signed_records') or [] if r_.get('scan_host') == h and r_.get('path')}
@@ -1078,6 +1087,19 @@ def known_paths(old, h):
 def shlex_quote(s):
     import shlex
     return shlex.quote(s)
+
+
+def new_direct(recs, log=lambda *a: None, reader=None):
+    """INGEST-FIX 11-17: ONE discovery of host-direct records for the counter and the signed-store ingest.  The ingest saw only the capped
+    find walk and missed records the counter counts straight from their kit paths (kit_wave_state q_signoff, COUNT-DIRECT, AUTO-RESIGN,
+    autopilot state): 5 QC R-MINIMAL records sat uncounted by the store for hours.  -> direct records whose (scan_host, path) is not in recs."""
+    have = {(x.get('scan_host'), x.get('path')) for x in recs}
+    seen, out = set(), []
+    for x in (reader or direct_records)(log):
+        k = (x.get('scan_host'), x.get('path'))
+        if k in have or k in seen: continue
+        seen.add(k); out.append(x)
+    return out
 
 
 def first_flow_tag_ts():

@@ -106,8 +106,9 @@ def test_scan_timeout_is_not_retried_and_counts_as_down(monkeypatch):
     def boom(cmd, timeout, **kw):
         calls.append(timeout); raise subprocess.TimeoutExpired(cmd, timeout)
     monkeypatch.setattr(R, 'sh', boom)
+    monkeypatch.setattr(R, 'SIGNED_SOURCE', 'hosts')     # COUNTER-DRIFT 11-24: the store-mode default refuses any ssh before the timeout is reached
     try:
-        R.scan_host('epyc4')
+        R.scan_host('epyc7')
         assert False
     except subprocess.TimeoutExpired:
         pass

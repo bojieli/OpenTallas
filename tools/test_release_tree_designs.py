@@ -238,9 +238,11 @@ def test_real_s81_dsfd_node_same_pin_other_convention(m, tmp_path):
     got = R.main_view_pins(d)
     plan = json.loads(show('physical/die_plan/s81/inputs/core_pins/dsfd_node_%s.json' % m))
     c0 = R.pin_compare(got['rows'], R.canon_pin_rows(plan))
-    assert c0['moved'] and not (c0['extra'] or c0['missing'])                 # the centre compare alone fails (old drop)
+    # COUNTER-DRIFT 11-24: the LL* views on main now carry the plan's pin centres, so the centre compare alone may pass; what matters is
+    # that nothing is extra / missing and the shape compare is equivalent with no moved pin, either way
+    assert not (c0['extra'] or c0['missing'])
     c = R.pin_compare(got['rows'], R.canon_pin_rows(plan), got.get('shapes'), R.repo_lef_shapes(plan['lef'], plan['module']))
-    assert R.pins_equiv(c) and not c['moved'] and c['convention'], c
+    assert R.pins_equiv(c) and not c['moved'], c
     assert set(c['convention']) <= {'fi[0]', 'fo[0]', 'rst_n[0]'}
 
 

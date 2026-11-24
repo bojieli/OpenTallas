@@ -261,7 +261,7 @@ def netlist_of(rec, shas):
     return c[0][1] if len(c) == 1 else None
 
 
-def ingest(host, shas, archive_base, runner=None, store=None, rtp=None, aliases=None):
+def ingest(host, shas, archive_base, runner=None, store=None, rtp=None, aliases=None, kind="auto-archive"):
     """called by the auto-archive after a verified copy (shas = {abs path: [size, sha256]} of the archived unit).  One store entry per
     SIGNED record in the unit, using the counter's own scan and pin code on the host.  Unsigned records and known ids are skipped."""
     rtp = rtp or _rtp()
@@ -298,7 +298,7 @@ def ingest(host, shas, archive_base, runner=None, store=None, rtp=None, aliases=
                      files=[[f.lstrip("/"), v[0], v[1]] for f, v in sorted(shas.items())], bytes=sum(v[0] for v in shas.values()),
                      netlist_sha=netlist_of(x, shas), pins=dict(p, shapes={k: [list(q) for q in v] for k, v in p["shapes"].items()}) if p and p.get("shapes") else p,
                      signoff_json=blob(d), provenance_json=blob(json.loads(t["prov"])) if t.get("prov") else None, prov_file=t.get("prov_file"),
-                     ingest=dict(kind="auto-archive", time=time.strftime("%F %T %Z")))
+                     ingest=dict(kind=kind, source="archive" if str(kind).startswith("archive") else "host", time=time.strftime("%F %T %Z")))
             if write_entry(e, store):
                 done.append(e["id"])
     return done
