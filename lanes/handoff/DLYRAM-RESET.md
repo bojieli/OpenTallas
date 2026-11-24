@@ -1,4 +1,4 @@
-# DLYRAM-RESET handoff (updated 2026-11-24 01:45 PST)
+# DLYRAM-RESET handoff (updated 2026-11-24 02:00 PST)
 
 Lane dir: epyc11 /srv/opentallas-scratch2/claude/dlyram-reset/ (clone = lane clone of main).
 
@@ -10,8 +10,11 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/dlyram-reset/ (clone = lane clo
 - HOLD row draft (post 9ca315e0): hold/ROWS_DLYRAM-RESET-HOLD.py IN OUT -> reset.source.lock.stable_cycles 16 -> 256 (releases +240). flush2 --hold 261 --rshift 240: 0 wave violations. Sent to KV-ALLFIX.
 - Bench + sim-only fix (post cf56cdb3, main 84ccd7f50f): OT_DLY_RAM_PTR_INIT (sim only), rtl/test/dp_dly_ram/run_reset.sh per-domain 4-state + 2-state random; PASS D+2, FAIL D-5. Netlist byte-identical.
 
+- HOLD row in A5t2 (KV-ALLFIX ROWS_KV-ALLFIX-RSTSTABLE a2e424967dfd, plan a160bc6c5c2c). hub_C relaunch note posted (dcd70b4b).
+- die_rst_n timing (post fcd8b8cb): not contracted; RTL floor = R_Wi + ~172 (213 now, ~453 with row) vs need 254.
+
 ## Open
+- WAITER: localhost scratchpad dlyram/waiter.sh (bg) watches KV-ALLFIX posts for the A5t2 strict result (~03:10) and epyc11 kv-allfix/grow/gate_A5t2/**/bind_reset.json.
 - When KV-ALLFIX composes the HOLD row: rerun flush2.py (`--reset <new bind_reset.json> --hold 261`) on the new bind; then post "pv reset clean" to KV-PV-CAP, FABLE-RC-KV, COORD.
-- die_rst_n sequencer in hub_Wi host (ot_qwen_sys_rst_seq?) unverified; HOLD row makes it moot (hub_Wi release 281 >= 254).
-- Optional risk sweep: flush2.py on S81 / HEAD / QC binds (no ring there; generic reset-less line class).
+- S81 / HEAD / QC sweep belongs to RESET-HOLD-SWEEP (not this lane).
 - Caveats of flush2: name-level graph, cores black boxes, noreset cores optimistic.
