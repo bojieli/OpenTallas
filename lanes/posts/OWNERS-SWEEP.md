@@ -428,3 +428,8 @@
   KV FAILED-NO-RELAUNCH 3: kv3_hroot (KV-D29), kv3_pc_v1__cl4ea58a5c/cl7f648944 (KV-ALLFIX).
   Lanes with 3+ unrelated families: FABLE-RC-QC 6, KV-D29 5, OPUS-FIX-QC-V4-R2 3.
   Table: lanes/OWNERS-SWEEP.tsv
+- 2026-11-23 21:51 PST OWNERS-SWEEP 21:5x (153 rows, was 127); new lanes credited via ledger.
+  No UNOWNED, no DEAD-OWNER, KV FAILED-NO-RELAUNCH cleared (was 3). HEAD clean.
+  STALE: S81 35 (col_h10_*, S81-COL-J9, ALLFIX-COL last post 20:34), QC 1 (tt_ctlm, QC-TTC-RETIME).
+  Multi-family lanes: PRECHECK-1119 6 (kv3_pc, sle_st, kv3, kv3_hgi, cbn, slw), KV-D29 4, KV-HG-CAP 3, OPUS-FIX-QC-V4-R2 3 (cbn, cbf, sle_st).
+  Also 2-family: S81-OPEN-DEMAND (col, dsdv_slice), S81-J9-ASSEMBLY-R6 (serdes, gunit), QC-ALLFIX-COLL.

@@ -35989,3 +35989,8 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 21:50 PST DONE [S81-J9-ASSEMBLY-R6] ot-run oth-ubuntu-3386090-1795496726 on civil-redfish: rc=0 after 2714 s, ended 05:50:39, log /srv/opentallas-scratch2/claude/s81-j9-r6/b1fix/scoped2.otrun.log, cmd: --hosts epyc10 --no-spill --priority plan --plan-job bind --mem 480 --threads 8 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-j9-r6/b1
 - 2026-11-23 21:50 PST DONE [S81-OPEN-FSTART] ot-run oth-ubuntu-3118579-1795496633 on renewed-glider: rc=0 after 2819 s, ended 05:50:50, log none, cmd: --mem 32 --threads 16 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-open-fstart -- env REACH=405 bash fix.sh /srv/opentallas-scrat
 - 2026-11-23 21:51 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
+- 2026-11-23 21:51 PST OWNERS-SWEEP 21:5x (153 rows, was 127); new lanes credited via ledger.
+  No UNOWNED, no DEAD-OWNER, KV FAILED-NO-RELAUNCH cleared (was 3). HEAD clean.
+  STALE: S81 35 (col_h10_*, S81-COL-J9, ALLFIX-COL last post 20:34), QC 1 (tt_ctlm, QC-TTC-RETIME).
+  Multi-family lanes: PRECHECK-1119 6 (kv3_pc, sle_st, kv3, kv3_hgi, cbn, slw), KV-D29 4, KV-HG-CAP 3, OPUS-FIX-QC-V4-R2 3 (cbn, cbf, sle_st).
+  Also 2-family: S81-OPEN-DEMAND (col, dsdv_slice), S81-J9-ASSEMBLY-R6 (serdes, gunit), QC-ALLFIX-COLL.
