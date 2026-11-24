@@ -261,3 +261,8 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - SPN kit: event env events/head-w6-spn.env; spec autopilot/private_specs/HEAD-R18/s81_head_hd_spn_1124083016 (goal place, rt c0b6e2d03408); intel2 driver unit head-r18-spn-w6-place. Review place images before any route.
 - LEC 2070186 waiter: intel2 unit head-r18-lec2070186-waiter (posts DONE/DIED). Count binary CTL? NO: r17b binary variant is excluded (TT -44.22); the LEC result only adopts LEC evidence.
 - Next: CTL 9cf9 place review when gen+place done; witness waits for COORD ruling (collector lep0N_w + START emit on W6 bind).
+## 11-24 09:2x PST HEAD-R18
+- START_Q row + settle row drafted: epyc11 head-r18/rows/head_ctl_startq_settle_row_1124.json (7 ctl tx lanes fixed +1; count_aligned_bind settle 64->88). Not applied: next HEAD row.
+- W6 START tree: epyc11 head-r18/start_w6_1124/provider_w6 (recipe start/ in results). Bundle E11 start_w6_1124/bundle_w6c, E9 head-r18/witness_w6_1124/bundle_w6c.
+- Witness re-pinned main 6c3f3be1e2ff (results/token_pass/head_w6_compiler_1124). Re-pin if HEAD-WEST final sidecar != ba968452 or SPN 5fb8ca47 adopted (root reset hd_spn u_rrl_208 renumbered there).
+- Live: CTL 9cf9 kit in place (E11); SPN kit at kit_rtl (unit head-r18-spn-w6-place); LEC 2070186 waiter unit head-r18-lec2070186-waiter.
