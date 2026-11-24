@@ -1489,6 +1489,9 @@
       "minimum": 0,
       "maximum": 8
      },
+     "landing_relay_rx_pin_plain": {
+      "type": "boolean"
+     },
      "private_reset_start_exports": {
       "type": "boolean"
      },
@@ -3009,6 +3012,11 @@
           },
           "budget_owner": {
            "type": "string"
+          },
+          "schedule_ps": {
+           "type": "number",
+           "minimum": -150,
+           "maximum": 150
           },
           "merged_clock_ports": {
            "type": "array",
