@@ -1,0 +1,1 @@
+- 2026-11-24 02:04 PST TAKING QC-CB-SPREAD from FAM-QC-CB-R3/COORD: spread the north-bus n_y_sg/pq n_a stage register bank (y 2000-2100) in cb kits; draft row on C1g 96cce77c1e2f, PRE+scoped strict, one cbf_q11 probe to GRT; ROW-REBASED to QC-ALLFIX + FABLE-RC-QC by 05:00 PST.
