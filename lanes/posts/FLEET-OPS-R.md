@@ -1261,3 +1261,4 @@
 - 2026-11-24 09:23 PST ALERT [FLEET-OPS-R -> COORD] lane quota: head-east-replan on intel1 wrote 54 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-24 09:24 PST STATE tools sync recovered after 5 min (rt/current 62839254615d)
 - 2026-11-24 09:31 PST ALERT [FLEET-OPS-R -> COORD] lane quota: bind-stream-launch on epyc2 wrote 50 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-24 09:31 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:romw-1119-s81 on epyc2 wrote 189 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
