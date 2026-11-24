@@ -73,6 +73,8 @@ def test_one_end_moves_keeps_costlier_frame_and_reports_repin():
 
 def test_reshape_slides_on_grid_packs_and_rebuilds_slots():
     raw = _plan()
+    raw["partition_types"]["ts"]["clock"] = dict(tap_mode="explicit", taps=[dict(name="clk", xy=[432.0, 800.0])],
+                                                 band_fixed_um=dict(ft0_o=dict(rect_um=[820.0, 500.0, 860.0, 560.0])))
     y0 = 1728.0 + 8.64 * 75             # both stations lose their bottom 648 um: chain at 500-660 must re-site
     new, rep = RR.apply(raw, _spec({"S1": {"rect_um": [0.0, y0, 864.0, 2592.0]},
                                     "S2": {"rect_um": [864.0, y0, 1728.0, 2592.0]}},
@@ -91,6 +93,9 @@ def test_reshape_slides_on_grid_packs_and_rebuilds_slots():
     assert ft0["out_window_um"] == [round(a[0] - y0, 6), round(a[1] - y0, 6)]
     assert 0 <= ft0["in_window_um"][0] and ft0["in_window_um"][1] <= 216.0      # portless end clamped onto its face
     assert "ts.ft0.in_window_um" in rep["windows_clamped"]
+    assert s["clock"]["band_fixed_um"]["ft0_o"]["rect_um"] == [820.0, ft0["out_window_um"][0], 860.0,
+                                                             ft0["out_window_um"][1]]
+    assert s["clock"]["taps"][0] == dict(name="clk", xy=[432.0, 200.0])          # explicit taps: scaled, not renamed
     # both stations hold the same frame window for the shared seam
     assert new["partition_types"]["tt"]["ft_slots"][0]["in_window_um"] == ft0["out_window_um"]
 
@@ -128,3 +133,60 @@ def test_frame_conversions_are_inverse_for_all_orients():
         for f in "NSEW":
             w = [300.0, 340.0]
             assert RR.from_frame(r, o, f, RR.to_frame(r, o, f, copy.copy(w))) == w
+
+
+def test_grid_explicit_added_taps_renumbered_after_regrid():
+    raw = _plan()
+    raw["budgets"] = dict(tap_pitch_um=432.0)
+    t = raw["partition_types"]["tc"]
+    t["clock"] = dict(tap_mode="grid+explicit", added_taps=[dict(name="clk_t4", xy=[10.0, 10.0])],
+                      landing=dict(src="clk_t4", other="clk_t3"))
+    raw["clock"] = dict(tap_window=dict(per_port_ps=dict(tc={"clk": 10, "clk_t3": 20, "clk_t4": 30})))
+    new, rep = RR.apply(raw, _spec({"C": {"rect_um": [864.0, 864.0, 864.0 + 1296.0, 1728.0]}}))
+    c = new["partition_types"]["tc"]["clock"]
+    assert c["added_taps"][0]["name"] == "clk_t6" and c["landing"]["src"] == "clk_t6"   # grid 2x2 -> 3x2
+    assert c["landing"]["other"] in ("clk_t4", "clk_t5")                               # nearest new grid tap
+    assert new["clock"]["tap_window"]["per_port_ps"]["tc"]["clk_t6"] == 30
+
+
+def _lane_plan():
+    """SRC | S1 | channel 172.8 | S2 | DST in one row; one lane SRC.o0 -> S1.ft0 -> S2.ft0 -> DST.i0 at y 400-420."""
+    ft = lambda: [dict(name="ft0", in_face="W", out_face="E", in_window_um=[400.0, 420.0],  # noqa: E731
+                       out_window_um=[400.0, 420.0], width=8, layers=["M6", "M4"], stations=4,
+                       regs_um=[[0.0, 410.0], [216.0, 410.0], [432.0, 410.0], [648.0, 410.0]])]
+    types = {"tsrc": dict(outline_um=[864.0, 864.0], buses=[dict(name="o0", dir="out", face="E", width=8,
+                                                                 layers=["M6", "M4"], window_um=[400.0, 420.0])]),
+             "tdst": dict(outline_um=[864.0, 864.0], buses=[dict(name="i0", dir="in", face="W", width=8,
+                                                                 layers=["M6", "M4"], window_um=[400.0, 420.0])]),
+             "t1": dict(outline_um=[864.0, 864.0], buses=[], ft_slots=ft()),
+             "t2": dict(outline_um=[864.0, 864.0], buses=[], ft_slots=ft())}
+    parts = [dict(name="SRC", type="tsrc", origin_um=[0.0, 0.0]), dict(name="S1", type="t1", origin_um=[864.0, 0.0]),
+             dict(name="S2", type="t2", origin_um=[1900.8, 0.0]), dict(name="DST", type="tdst", origin_um=[2764.8, 0.0])]
+    port = lambda i, s, sb, d, db: dict(id=i, src=dict(part=s, bus=sb), dst=dict(part=d, bus=db), kind="data",  # noqa
+                                        width=8, face="E", layers=["M6", "M4"], window_um=[400.0, 420.0])
+    ports = [port("p0", "SRC", "o0", "S1", "ft0_i"), port("p1", "S1", "ft0_o", "S2", "ft0_i"),
+             port("p2", "S2", "ft0_o", "DST", "i0")]
+    die = dict(name="t", outline_um=[8640.0, 4320.0], reach_um=405.0, grid_um=8.64,
+               channels=[dict(between=["S1", "S2"], name="ch12", ports=["p1"], layers=["M6", "M4"],
+                              rect_um=[1728.0, 0.0, 1900.8, 864.0], width_um=172.8)])
+    return dict(die=die, partition_types=types, partitions=parts, ports=ports,
+                lanes=[dict(id="ln", ports=["p0", "p1", "p2"])])
+
+
+def test_reshape_refits_broken_lane_and_only_adds_stations():
+    import check as C
+    import schema as S
+    raw = _lane_plan()
+    P0 = S.Plan(raw)
+    assert max(C.lane_pin_hops(P0, "ln", C.lane_geometry(P0, "ln")[1])) <= 405.0
+    grow = 8.64 * 150                                  # S1 grows 1296 um east; S2 and DST ride along
+    new, rep = RR.apply(raw, _spec({"S1": {"rect_um": [864.0, 0.0, 1728.0 + grow, 864.0]},
+                                    "S2": {"delta_um": [grow, 0.0]}, "DST": {"delta_um": [grow, 0.0]}},
+                                   keep_internal=["S1"]))
+    P1 = S.Plan(new)
+    hops = C.lane_pin_hops(P1, "ln", C.lane_geometry(P1, "ln")[1])
+    assert max(hops) <= 405.0
+    fit = rep["free_slots_fit"]
+    assert fit["stations"]["t1.ft0"][0] == 4 and fit["stations"]["t1.ft0"][1] > 4 and not fit["unfixable_leads"]
+    s1 = new["partition_types"]["t1"]["ft_slots"][0]
+    assert s1["stations"] == len(s1["regs_um"]) and all(0 < p[0] < 864.0 + grow for p in s1["regs_um"])

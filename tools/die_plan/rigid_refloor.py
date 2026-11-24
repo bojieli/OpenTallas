@@ -13,7 +13,14 @@ SPEC (opentallas.rigid_refloor.v1):
      "keep_internal": ["<partition>"]    optional: re-shaped partitions whose type-frame contents keep their DIE
                                          position (contents / cores / clock+reset records translated by the frame
                                          offset); default for every re-shaped partition.  "remap_internal": [...] instead
-                                         clamps them into the new outline (pass-through stations).
+                                         scales them into the new outline (pass-through stations), and moves each
+                                         clock landing band with the window of its bus / ft-slot end.
+                                         Grid-mode clock taps of a re-shaped type are renamed to the new grid
+                                         (nearest die position; grid+explicit added taps renumbered after it).
+     "respace_limit": 405                optional (default 405; 0 = off): lane repair (fit_free_slots) on the slots of
+                                         re-shaped / re-pinned types: stations re-spaced, added only where a hop
+                                         exceeds it (+1 cycle each, latency.lanes re-derived and reported)
+     "path_respace": false               optional: also run path_respace on the touched lanes afterwards
      "keep_frame": ["<partition>"]       optional: partitions whose pins must not change when a seam is re-sited
                                          (default order: re-shaped end re-pins first, then the cheaper type by hard
                                          cores + contents, then the end that moved)
@@ -42,6 +49,7 @@ import copy
 import hashlib
 import json
 import math
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -388,10 +396,11 @@ def _route_regs(slot, outline):
         pts = [p0, knee, p1]
     segs = list(zip(pts, pts[1:]))
     total = sum(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in segs)
-    n = max(int(slot.get("stations", 2)), 2)
+    n = max(int(slot.get("stations", 1)), 1)
     out = []
     for k in range(n):
-        t = total * k / (n - 1)
+        t = total * k / n       # face register at the in window, then one station per 1/n of the route (the seam
+        # leg to the next partition's in-face station is the n-th step), like the generated slots
         for a, b in segs:
             L = abs(a[0] - b[0]) + abs(a[1] - b[1])
             if t <= L + 1e-9 or (a, b) == segs[-1]:
@@ -456,12 +465,157 @@ def _clamp_frame(o, w, h, depth=0):
             _clamp_frame(v, w, h, depth + 1)
 
 
+def _scale_frame(o, sx, sy, w, h, depth=0):
+    """remapped pass-through types: type-frame points scaled into the new outline (order and spacing kept); rects keep
+    their size, their centre is scaled, and they are clamped inside."""
+    if depth > 12:
+        return
+    pt = lambda v: [round(min(max(v[0] * sx, 0.0), w), 6), round(min(max(v[1] * sy, 0.0), h), 6)] + list(v[2:])  # noqa
+    isnum = lambda v, n: isinstance(v, list) and len(v) >= n and all(isinstance(x, (int, float)) for x in v[:n])  # noqa
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if k in _POINT_KEYS and isnum(v, 2) and len(v) == 2:
+                o[k] = pt(v)
+            elif k in _RECT_KEYS and isnum(v, 4) and len(v) == 4:
+                x0, y0, x1, y1 = v
+                bw, bh = min(x1 - x0, w), min(y1 - y0, h)
+                cx, cy = (x0 + x1) / 2 * sx, (y0 + y1) / 2 * sy
+                nx0, ny0 = min(max(cx - bw / 2, 0.0), w - bw), min(max(cy - bh / 2, 0.0), h - bh)
+                o[k] = [round(nx0, 6), round(ny0, 6), round(nx0 + bw, 6), round(ny0 + bh, 6)]
+            elif k in ("regs_um", "sink_sites_um", "local_taps_um", "sites_um") and isinstance(v, list):
+                o[k] = [pt(q) if isnum(q, 2) else q for q in v]
+            else:
+                _scale_frame(v, sx, sy, w, h, depth + 1)
+    elif isinstance(o, list):
+        for v in o:
+            _scale_frame(v, sx, sy, w, h, depth + 1)
+
+
+def _bands_follow_windows(t, old_t):
+    """remapped types: a clock landing band named after a bus / ft-slot end keeps its place next to that end's window:
+    moved along the face by the window shift, and with the face when the outline shrank on that side."""
+    ow, oh = old_t["outline_um"]
+    nw, nh = t["outline_um"]
+    wins, owins = {}, {}
+    for src, dst in ((old_t, owins), (t, wins)):
+        for b in src.get("buses", []):
+            if "window_um" in b and b.get("face"):
+                dst[b["name"]] = (b["face"], b["window_um"])
+        for s_ in src.get("ft_slots", []):
+            for sfx, fk, wk in (("_i", "in_face", "in_window_um"), ("_o", "out_face", "out_window_um")):
+                if wk in s_:
+                    dst[s_["name"] + sfx] = (s_[fk], s_[wk])
+    ck, ock = t.get("clock") or {}, old_t.get("clock") or {}
+    moved = []
+    for path in (("band_fixed_um",), ("landing_contract", "bands")):
+        cur, old = ck, ock
+        for k in path:
+            cur, old = (cur or {}).get(k), (old or {}).get(k)
+        if not isinstance(cur, dict) or not isinstance(old, dict):
+            continue
+        for name, band in cur.items():
+            ob = old.get(name)
+            if name not in wins or name not in owins or not isinstance(ob, dict) or "rect_um" not in ob:
+                continue
+            f, nwin = wins[name]
+            _, owin = owins[name]
+            x0, y0, x1, y1 = ob["rect_um"]
+            d = min(nwin) - min(owin)
+            if f in "EW":
+                y0, y1 = y0 + d, y1 + d
+                if f == "E":
+                    x0, x1 = x0 + (nw - ow), x1 + (nw - ow)
+            else:
+                x0, x1 = x0 + d, x1 + d
+                if f == "N":
+                    y0, y1 = y0 + (nh - oh), y1 + (nh - oh)
+            band["rect_um"] = [round(x0, 6), round(y0, 6), round(x1, 6), round(y1, 6)]
+            moved.append(name)
+    return sorted(set(moved))
+
+
+def legalize_taps(t, grid=8.64):
+    """remapped types with an explicit clock tap table: every tap inside the outline minus the tap clearance and at
+    least one clearance from the earlier taps (taps.explicit_tap_sites rule), nudged in grid steps; returns the moved
+    tap names."""
+    ck = t.get("clock") or {}
+    table = [p for p in ck.get("taps", []) if p.get("kind") != "core" and isinstance(p.get("xy"), list)]
+    if not table:
+        return []
+    clear = float(S.type_tap_clear(t))
+    w, h = t["outline_um"]
+    lo_x, hi_x, lo_y, hi_y = clear, w - clear, clear, h - clear
+    taken, moved = [], []
+    for p in table:
+        x0 = min(max(float(p["xy"][0]), lo_x), hi_x)
+        y0 = min(max(float(p["xy"][1]), lo_y), hi_y)
+        free = lambda x, y: not any(abs(x - a) < clear - 1e-8 and abs(y - b) < clear - 1e-8 for a, b in taken)  # noqa
+        x, y = x0, y0
+        if not free(x, y):
+            for k in range(1, 400):
+                cands = [(x0, y0 + k * grid), (x0, y0 - k * grid), (x0 + k * grid, y0), (x0 - k * grid, y0)]
+                ok = [(a, b) for a, b in cands if lo_x <= a <= hi_x and lo_y <= b <= hi_y and free(a, b)]
+                if ok:
+                    x, y = ok[0]
+                    break
+        if [round(x, 6), round(y, 6)] != [round(float(v), 6) for v in p["xy"]]:
+            moved.append(p["name"])
+        p["xy"] = [round(x, 6), round(y, 6)]
+        taken.append((x, y))
+    return moved
+
+
 def frame_offset(old_rect, new_rect, orient):
     """type-frame translation that keeps a die point fixed when a partition re-shapes from old_rect to new_rect."""
     (ox0, oy0, ox1, oy1), (nx0, ny0, nx1, ny1) = old_rect, new_rect
     dxd = (ox0 - nx0) if orient in ("R0", "MX") else (nx1 - ox1)
     dyd = (oy0 - ny0) if orient in ("R0", "MY") else (ny1 - oy1)
     return dxd, dyd
+
+
+TAP_REF_RE = re.compile(r"\bclk_t\d+\b")
+
+
+class _TapView:
+    """the two attributes schema._grid_taps / tap_pitch read (types, budgets), without building a whole Plan."""
+
+    def __init__(self, raw, types=None):
+        self.types = types if types is not None else raw["partition_types"]
+        self.budgets = dict(S.DEFAULT_BUDGETS, **raw.get("budgets", {})) if hasattr(S, "DEFAULT_BUDGETS") \
+            else dict(raw.get("budgets", {}))
+
+
+def _rename(o, fn, depth=0):
+    if depth > 14:
+        return o
+    if isinstance(o, dict):
+        return {fn(k) if isinstance(k, str) else k: _rename(v, fn, depth + 1) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_rename(v, fn, depth + 1) for v in o]
+    if isinstance(o, str):
+        return fn(o)
+    return o
+
+
+def tap_renames(old_types, new_types, raw, tn, offset):
+    """{old clock tap name: new name} of a re-shaped type: a grid tap goes to the new grid tap nearest its die position
+    (frame offset applied), grid+explicit added taps are renumbered after the new grid (schema rule clk_t<len(grid)+i>)."""
+    try:
+        og = S._grid_taps(_TapView(raw, old_types), tn)
+        ng = S._grid_taps(_TapView(raw, new_types), tn)
+    except Exception:   # a tap mode that needs inputs not in the plan: leave the names alone (reported by PRE)
+        return {}
+    dx, dy = offset
+    m = {}
+    for name, x, y in og:
+        best = min(ng, key=lambda t: abs(t[1] - (x + dx)) + abs(t[2] - (y + dy)))
+        m[name] = best[0]
+    ck = new_types[tn].get("clock", {})
+    if ck.get("tap_mode") == "grid+explicit":
+        for i, a in enumerate(ck.get("added_taps") or []):
+            m[a["name"]] = f"clk_t{len(ng) + i}"
+    # "clk" (tap 0) is also the clock port / bus name everywhere: it keeps its name
+    return {k: v for k, v in m.items() if k != v and k != "clk"}
 
 
 def apply(raw, spec, pin_gap=1.2):
@@ -475,16 +629,21 @@ def apply(raw, spec, pin_gap=1.2):
     reshaped = {n for n, (a, b) in lay.items() if abs((a[2] - a[0]) - (b[2] - b[0])) > EPS
                 or abs((a[3] - a[1]) - (b[3] - b[1])) > EPS}
     remap = set(spec.get("remap_internal", []))
+    old_types = {parts[n]["type"]: copy.deepcopy(types[parts[n]["type"]]) for n in reshaped}
     # 1. re-shaped types: internal frame offset (keep die positions) BEFORE windows are written
     for n in sorted(reshaped):
         t = types[parts[n]["type"]]
         o = parts[n].get("orient", "R0")
         dx, dy = frame_offset(lay[n][0], lay[n][1], o)
         nw, nh = lay[n][1][2] - lay[n][1][0], lay[n][1][3] - lay[n][1][1]
+        ow, oh = t["outline_um"]
         for k in ("contents", "hard_cores", "internal_stations", "relay_sites", "clock", "reset", "count_straps",
                   "ft_slots"):
             if k in t:
-                _shift_frame(t[k], dx, dy)
+                if n in remap and k != "ft_slots":
+                    _scale_frame(t[k], nw / ow, nh / oh, nw, nh)
+                else:
+                    _shift_frame(t[k], dx, dy)
         # bus / ft windows: shift along their own face axis
         for b in t.get("buses", []):
             if "window_um" in b and b.get("face"):
@@ -496,16 +655,25 @@ def apply(raw, spec, pin_gap=1.2):
                     d = dy if s_[fk] in "EW" else dx
                     s_[wk] = [round(s_[wk][0] + d, 6), round(s_[wk][1] + d, 6)]
         t["outline_um"] = [round(nw, 6), round(nh, 6)]
-        if n in remap:
-            for k in ("contents", "hard_cores", "internal_stations", "relay_sites", "clock", "reset", "count_straps"):
-                if k in t:
-                    _clamp_frame(t[k], nw, nh)
         ins = (raw.get("reset", {}).get("in_sites") or {}).get(parts[n]["type"])
         if isinstance(ins, list) and len(ins) == 2:
             raw["reset"]["in_sites"][parts[n]["type"]] = [round(min(max(ins[0] + dx, 0.0), nw), 6),
                                                          round(min(max(ins[1] + dy, 0.0), nh), 6)]
-        rep.setdefault("reshaped", []).append(dict(part=n, type=parts[n]["type"], frame_offset_um=[dx, dy],
-                                                   outline_um=[nw, nh], remap=n in remap))
+        tn = parts[n]["type"]
+        ren = {} if (t.get("clock") or {}).get("tap_mode", "grid") not in ("grid", "grid+sinks", "grid+explicit") \
+            else tap_renames({**types, tn: old_types[tn]}, types, raw, tn, (dx, dy))
+        if ren:
+            fn = lambda x, ren=ren: TAP_REF_RE.sub(lambda mm: ren.get(mm.group(0), mm.group(0)), x)  # noqa: E731
+            types[tn] = t = _rename(t, fn)
+            ppp = ((raw.get("clock") or {}).get("tap_window") or {}).get("per_port_ps") or {}
+            if isinstance(ppp.get(tn), dict):
+                merged = {}
+                for k, v in ppp[tn].items():
+                    k2 = fn(k)
+                    merged[k2] = max(merged.get(k2, v), v)
+                ppp[tn] = merged
+        rep.setdefault("reshaped", []).append(dict(part=n, type=tn, frame_offset_um=[dx, dy],
+                                                   outline_um=[nw, nh], remap=n in remap, tap_renames=ren))
     # 2. partitions
     for n, (a, b) in lay.items():
         if a != b:
@@ -556,6 +724,11 @@ def apply(raw, spec, pin_gap=1.2):
                 if "in_face" in hd:
                     slot_changed[parts[n]["type"]].add(hd["name"])
     rep["windows_clamped"] = clamped
+    rep["taps_legalized"] = {parts[n]["type"]: legalize_taps(types[parts[n]["type"]],
+                                                             float(raw["die"].get("grid_um", 8.64) or 8.64))
+                             for n in sorted(reshaped) if n in remap}
+    rep["bands_moved"] = {parts[n]["type"]: _bands_follow_windows(types[parts[n]["type"]], old_types[parts[n]["type"]])
+                          for n in sorted(reshaped) if n in remap}
     # 4. ft slots with a changed window: rebuild regs, drop exact bit sites
     for n in sorted(reshaped):
         t = types[parts[n]["type"]]
@@ -644,7 +817,209 @@ def apply(raw, spec, pin_gap=1.2):
     rep["repin_types"] = {tn: {f: sorted(set(v)) for f, v in fs.items()} for tn, fs in sorted(repin.items())}
     rep["ft_slots_rebuilt"] = {tn: sorted(v) for tn, v in sorted(slot_changed.items())}
     rep["port_rows"] = rows
+    lim = spec.get("respace_limit", 405.0)
+    if lim:
+        free = set(reshaped) | {n for n in parts if parts[n]["type"] in slot_changed}
+        if free:
+            P0, ch, unfix = fit_free_slots(raw, free, float(lim))
+            rep["free_slots_fit"] = dict(stations=ch, lane_cycles=relatency(raw, P0) if ch else {},
+                                         unfixable_leads=unfix)
+        if spec.get("path_respace"):
+            rep["respace"] = respace(raw, rows, slot_changed, float(lim), bool(spec.get("respace_add", True)))
     return raw, rep
+
+
+def fit_free_slots(raw, parts_free, limit, margin=10.0):
+    """ft slots whose geometry this re-floor changed (re-shaped types and types with a re-sited slot window): repair
+    the lanes the move broke.  For every lane, the FF-to-FF hops (check.lane_pin_hops, through the seam pins) are
+    measured on the moved plan; a run of consecutive crossings through such partitions is refit only if a hop inside
+    it (or its two boundary legs) exceeds `limit`.  A refit puts each crossing's stations evenly along its own route
+    from the in pin (face register at the pin, then one per 1/k of the crossing), starting at the old count, and adds
+    one station at a time to the crossing with the longest step until every step is <= limit - margin.  A lane only
+    gains cycles.  Returns the pre-change Plan (latency baseline), {type.slot: [old, new]} and the legs a refit
+    cannot fix (fixed station to the run's first pin already over the limit)."""
+    import check as C
+    import die_hop_scan as DHS
+    import ft_full_stage as FFS
+    P = S.Plan(copy.deepcopy(raw))      # the pre-change view (also the latency baseline)
+    eff = limit - margin
+    changes, seen, unfixable = {}, set(), {}
+    uses = {}
+    for pt in P.parts.values():
+        uses[pt["type"]] = uses.get(pt["type"], 0) + 1
+
+    def man(u, v):
+        m = (v[0], u[1])
+        return [(u, m), (m, v)]
+
+    def walk(segs, t):
+        for u, v in segs:
+            L = abs(u[0] - v[0]) + abs(u[1] - v[1])
+            if t <= L + 1e-9:
+                f = 0.0 if L == 0 else t / L
+                return (u[0] + (v[0] - u[0]) * f, u[1] + (v[1] - u[1]) * f)
+            t -= L
+        return segs[-1][1]
+
+    for lid in P.lanes:
+        try:
+            xs = P.lane_crossings(lid)
+        except Exception:
+            continue
+        if not any(part in parts_free and slot for part, slot, _a, _b in xs):
+            continue
+        _pts, regs, info = C.lane_geometry(P, lid)
+        hops = C.lane_pin_hops(P, lid, regs)
+        starts, idx = [], 1
+        for x in info:
+            starts.append(idx)
+            idx += int(x["stations"])
+        c = 0
+        while c < len(xs):
+            if not (xs[c][0] in parts_free and xs[c][1]) or (xs[c][0], xs[c][1]) in seen \
+                    or uses[P.parts[xs[c][0]]["type"]] > 1:
+                c += 1
+                continue
+            e = c
+            while e + 1 < len(xs) and xs[e + 1][0] in parts_free and xs[e + 1][1] \
+                    and (xs[e + 1][0], xs[e + 1][1]) not in seen and uses[P.parts[xs[e + 1][0]]["type"]] == 1:
+                e += 1
+            run = list(range(c, e + 1))
+            nxt_i = starts[e] + int(info[e]["stations"])
+            if max(hops[starts[c] - 1:nxt_i] or [0.0]) <= limit + 1e-6:
+                c = e + 1
+                continue
+            prev = regs[starts[c] - 1]
+            nxt = regs[nxt_i] if nxt_i < len(regs) else regs[-1]
+            d = lambda u, v: abs(u[0] - v[0]) + abs(u[1] - v[1])      # noqa: E731
+
+            def onto(part, q):      # a port point (src face) seen from the dst partition: its own facing face
+                x0, y0, x1, y1 = P.rect(part)
+                return (min(max(q[0], x0), x1), min(max(q[1], y0), y1))
+            ins = [onto(xs[i][0], P.port_point(xs[i][2])) for i in run]
+            outs = [P.port_point(xs[i][3]) for i in run]
+            routes = [man(ins[j], outs[j]) for j in range(len(run))]
+            L = [sum(abs(u[0] - v[0]) + abs(u[1] - v[1]) for u, v in r) for r in routes]
+            # after crossing j: out pin -> (seam / channel) -> next crossing's in face, or the next fixed station
+            gap = [d(outs[j], P.port_point(xs[run[j + 1]][2])) + d(P.port_point(xs[run[j + 1]][2]), ins[j + 1])
+                   for j in range(len(run) - 1)] + [d(outs[-1], nxt)]
+            carry = d(prev, P.port_point(xs[run[0]][2])) + d(P.port_point(xs[run[0]][2]), ins[0])
+            k, off = [], []
+            # sequential carry: k stations at spacing L/k starting delta into the crossing; delta as large as the
+            # entry leg allows (carry + delta <= eff) so the exit leg (L/k - delta + gap) is as short as possible
+            for j, i in enumerate(run):
+                kj = max(1, int(info[i]["stations"]))
+                tn = P.parts[xs[i][0]]["type"]
+                try:        # a normal slot's first station is its input face register (G0 / check.lane_geometry)
+                    normal = DHS.normal_slot(P, tn, xs[i][1], full=FFS.load(P, tn))
+                except Exception:
+                    normal = False
+                if carry > eff:
+                    unfixable[f"{lid}:{xs[i][0]}.{xs[i][1]}:entry"] = round(carry, 1)
+                while True:
+                    sp = L[j] / kj
+                    delta = 0.0 if normal else max(0.0, min(eff - carry, sp))
+                    out = sp - delta + gap[j]
+                    if (sp <= eff and out <= eff) or kj >= int(info[i]["stations"]) + math.ceil(L[j] / eff) + 2:
+                        break
+                    kj += 1
+                if out > eff:
+                    unfixable[f"{lid}:{xs[i][0]}.{xs[i][1]}:exit"] = round(out, 1)
+                k.append(kj)
+                off.append(delta)
+                carry = out
+            for j, i in enumerate(run):
+                part, slot = xs[i][0], xs[i][1]
+                w, h = P.ptype(part)["outline_um"]
+                pts = []
+                for m in range(k[j]):
+                    tx, ty = P.to_type(part, walk(routes[j], min(off[j] + L[j] * m / k[j], L[j])))
+                    pts.append([round(min(max(tx, 1.0), w - 1.0), 3), round(min(max(ty, 1.0), h - 1.0), 3)])
+                tsl = next(s_ for s_ in raw["partition_types"][P.parts[part]["type"]]["ft_slots"] if s_["name"] == slot)
+                k0 = int(tsl.get("stations", 1))
+                tsl["regs_um"] = pts
+                tsl["stations"] = len(pts)
+                tsl.pop("bit_sites_um", None)
+                tsl.pop("bit_site_cell_um", None)
+                seen.add((part, slot))
+                if len(pts) != k0:
+                    changes[f"{P.parts[part]['type']}.{slot}"] = [k0, len(pts)]
+            c = e + 1
+    return P, changes, unfixable
+
+
+def relatency(raw, P0):
+    """latency.lanes re-derived after station-count changes (path_respace rule: add the gen.latency_table delta)."""
+    import gen
+    P2 = S.Plan(raw)
+    lat0 = raw.get("latency", {}).get("lanes", {})
+    c0, c1 = gen.latency_table(P0), gen.latency_table(P2)
+    cycles = {}
+    for lid in c1:
+        if c0.get(lid) == c1[lid] or lid not in lat0:
+            continue
+        row = dict(lat0[lid])
+        for k, v in c1[lid].items():
+            if c0[lid].get(k) != v:
+                row[k] = (row.get(k, 0) + v - c0[lid].get(k, 0)) if isinstance(v, (int, float)) \
+                    and not isinstance(v, bool) else v
+        cycles[lid] = [lat0[lid].get("cycles"), row.get("cycles")]
+        raw["latency"]["lanes"][lid] = row
+    return cycles
+
+
+def respace(raw, rows, slot_changed, limit, allow_add=True):
+    """path_respace on the lanes that cross a re-sited port or a changed slot only (the rest of the die is not touched):
+    re-space the stations first (0 cycles); with allow_add one station at a time is added to the binding slot (+1 cycle
+    on every lane through it) and latency.lanes is re-derived the path_respace way (gen.latency_table delta).  Returns
+    per-lane status, max hop before -> after, and the priced cycle changes."""
+    import path_respace as PR
+    P = S.Plan(copy.deepcopy(raw))      # the pre-change view (also the latency baseline)
+    ports = {r["id"] for r in rows if r.get("frames") and any(f["changed"] for f in r["frames"])}
+    slots = {(tn, sl) for tn, v in slot_changed.items() for sl in v}
+    lanes = []
+    for lid, ln in P.lanes.items():
+        hit = bool(ports & set(ln.get("ports", [])))
+        if not hit:
+            try:
+                hit = any((P.parts[part]["type"], slot) in slots for part, slot, _a, _b in P.lane_crossings(lid))
+            except Exception:
+                hit = False
+        if hit:
+            lanes.append(lid)
+    decided, out = {}, {}
+    for lid in sorted(lanes):
+        try:
+            lane = PR.Lane(P, lid)
+            res = PR.plan_lane(P, lane, limit, allow_add, decided)
+        except Exception as e:      # a lane form path_respace does not model: reported, left as is
+            out[lid] = dict(status="error", why=f"{type(e).__name__}: {e}"[:200])
+            continue
+        out[lid] = {k: (round(v, 1) if isinstance(v, float) else v) for k, v in res.items() if k not in ("new", "old")}
+        if res["status"] != "fixed" or res.get("exact"):
+            continue
+        tp = {}
+        for c, pts in res["new"].items():
+            cr = lane.cross[c]
+            key = (cr["tn"], cr["slot"])
+            tp[key] = [[round(x, 3) for x in P.to_type(cr["part"], q)] for q in pts]
+            if key in decided and decided[key] != tp[key]:
+                out[lid]["status"] = "replica_conflict"
+                break
+        else:
+            decided.update(tp)
+    added = {}
+    for (tn, slot), pts in decided.items():
+        sl = next(s_ for s_ in raw["partition_types"][tn]["ft_slots"] if s_["name"] == slot)
+        if len(pts) != int(sl.get("stations", 1)):
+            added[f"{tn}.{slot}"] = [int(sl.get("stations", 1)), len(pts)]
+        sl["regs_um"] = pts
+        sl["stations"] = len(pts)
+        sl.pop("bit_sites_um", None)
+        sl.pop("bit_site_cell_um", None)
+    cycles = relatency(raw, P) if added else {}
+    return dict(lanes=out, slots_respaced=sorted(f"{a}.{b}" for a, b in decided), stations_added=added,
+                lane_cycles=cycles)
 
 
 def summarize(rows):
