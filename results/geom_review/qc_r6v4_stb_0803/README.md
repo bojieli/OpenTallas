@@ -1,0 +1,5 @@
+# QC R6V4 S_TB E10 checkpoint recovery
+
+I viewed the exact original placement image for `sle_st_b_v2__cl14c98df5__pvcd986c42`. The two largest register detours are downstream of the S_TA and HC1 landing pads, at 448.5 and 424 µm. Vertical demand peaks at 0.818, with no macro obstructions or unregistered pins recorded. The east side has spare capacity beside the dense center and west landings. Accept this exact placement for timing and routing. Track both pad detours in the successor placement.
+
+The old route attempt `dff1e9a2ad86` stopped after CTS exhausted E10 scratch. Its original kit is epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/items/sle_st_b_v2__cl14c98df5__pvcd986c42/gen/sle_st_b_v2__cl14c98df5__pvcd986c42. The E2 replica matches configuration SHA `e393709d6080190ad9630ca8a9fdc97d3b7d9d402fe8b17a7c1ab3969dc012b0` and placed ODB SHA `0fbf9d83eac8f88629bacbe5d9e01eb0872904e715b02a2a1c595b79917ff54c`. Only the placement checkpoint was accepted. CTS, timing, routing and routed LEC are fresh.
