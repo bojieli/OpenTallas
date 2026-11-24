@@ -62,3 +62,18 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - Cause classes posted 3eb1993b. No revocations: no type fails after its LEC fix while its base passes.
 - slw_hc3 (6 records): the failing leaf set changes with the LEC run on the same netlist, so this is LEC-SETUP. Points sit at the mux_rep16 last level, fed by kept select replicas g_c[].f, plus the merged-proposal re-choice. Posted aef0b3ec to FAM-QC-HCST-R3/FLOW-LECGATE-R2 with a suggested lec fix. Re-run all 6 once a fix lands; restore only on EQUIVALENT.
 - Open: attn_tr_x (502, gold-only tr regs), rxsb (968; gate 546 inputs vs gold 99), col774 78 _NC tag inputs (REAL candidate, S81 owner).
+
+## 16:0x 11-23
+- hd_mesh REAL candidate posted to HEAD-R18 as a row item (1e8b71cc).
+- Reviewed and OK'd the HCST-R3 combined lec.py set, intel1 FAM-QC-HCST-R3/pushwt:
+  - 6b6f005aee: alias max 1:1 matching.
+  - d9c258639b: next same-support candidate (max 4) tried after a refuted pick.
+  - Push condition: from a host where test_lec actually runs (no test skip). HCST-R3 sends me the main sha, then I rerun the 6 records and restore EQUIVALENT ones only.
+- attn_tr_x cause found, LEC-SETUP candidate:
+  - The gate keeps tr bits 8..15 for every row. For the 10 bits shared across the 8 gx copies of a row group (low byte, mode bit 16, pad bit 17; elem() gives the same value for every x<16), opt_merge keeps ONE copy per group. Gate 4736 = 4096 + 640; gold-only = 4480 no-reset twins.
+  - Every failing g_c[].e / col point is bits 0-7, 16 or 17. Bits 8..15 all prove.
+  - merged_proposals found "0 of 4096", and 4096 is its cap, so the tr twins were truncated away.
+  - Test run: epyc7 RELEC-1122/m3/lec.py (cap=20000), out trx3/, runner tmp/trx3.sh, via ot-run.
+- rxsb: synthesis uses slang, while LEC gold uses read_verilog -sv by design. Failing points are FP datapath (a_sp, g_h[*].u_h.y/s2_prod/s3_pf).
+  - Test run: --gold-frontend slang (epyc9 ml/rxsb_goldslang, tmp/mlechx.sh with EXTRA).
+  - If it comes back EQ, the two frontends disagree and I find which one is right. If slang is wrong, that is REAL silicon.
