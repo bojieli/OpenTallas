@@ -45,3 +45,9 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
   ot-run --hosts epyc11 --mem 48 --threads 8 --disk 60 --dir $L -- bash $L/a5s.sh $G/A5t3/plan.json <A5t3 sha12> asbuilt_allfix_A5t3.json e348b919dd39 $L/tree_a5s $L/ctl_e34.txt
   Then post ROW-REBASED -> KV-ALLFIX, cc FABLE-RC-KV.
 - 03:09 STALE posted (b4eed90d): the bind uses START raw_reset literally. On A5t3, hub_Ei rst_n_t97 is 1.6 mm off at depth 8 and pv_v1n rst_n_t151 is 1.1 mm off at depth 13 (D29: 12). Tool scratchpad/startref.py on epyc11 kv-rstreach. A5t4 re-key by D29 site+depth (ALLFIX row).
+
+## STATE 11-24 04:14 PST
+- REKEY row ROW-REBASED (95a5a14e): ROWS_KV-RSTREACH-REKEY 20cb17782ffb on A5t3 cbee82715bca -> a27871f963a1, epyc11 kv-rstreach/rekey. 350 START refs re-keyed (hroot 216, hub_Ei 85, pv_v1n 49). PRE: no new class. Scoped strict on 3 types: 0 errors. Gate script gate_rk.sh PLAN TYPES TAG.
+- ref_site reindex is NOT adoptable on A5t3: it breaks hg* (names not in the reset tree) + leaves hroot raw_branches stale. Posted 81760703.
+- Uniform depth shifts on A5t3: pv_v1n 12->13, hroot 9->10, pc_v1__cl23f6a148 9->10.
+- Remaining for my RSTREACH row on A5t4: hroot 11 START hops 412-494 um, hub_Ei 27 raw-branch legs, sys_SD/_v1 FSTART legs. Replay a5s.sh on A5t4 with ctl on its rt.
