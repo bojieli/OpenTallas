@@ -1,0 +1,1 @@
+- 2026-11-24 12:52 PST TAKING QC-STB-SPLIT (fresh, from QC-GEOM-UNITS 12:50 RESULT, cc QC-ALLFIX): split/re-shape row for QC STB sle_st_b_v2 (430k CTS non-tap > 400k cap) on the current QC plan; PRE + scoped strict bind; ROW-REBASED to QC-ALLFIX.

@@ -42493,3 +42493,4 @@ FAILED [AUTOPILOT 8a78e54da90b] 2026-11-24 12:48:17 PST AUTOPILOT -> KIT-WAVE-1:
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 24.6 h job 24.6 h: no new meaningful log line for 9.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 20.8 h job 20.8 h: no new meaningful log line for 9.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
   NO-PROGRESS intel1 probe_v8 flow3 stage 7.7 h job 7.7 h: no new meaningful log line for 6.9 h; last: [INFO GRT-0102] Start extra iteration 1/2
+- 2026-11-24 12:52 PST TAKING QC-STB-SPLIT (fresh, from QC-GEOM-UNITS 12:50 RESULT, cc QC-ALLFIX): split/re-shape row for QC STB sle_st_b_v2 (430k CTS non-tap > 400k cap) on the current QC plan; PRE + scoped strict bind; ROW-REBASED to QC-ALLFIX.
