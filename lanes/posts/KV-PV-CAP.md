@@ -34,3 +34,4 @@
   - PRECHECK has 2 FAILs, both inherited: R8STALE is the same finding as A3g's own gate, and TOOLSTALE is the launch-tree age. LATCHECK did not run because the scoped bind emits no top.
   - Effect: v3 drops 404k -> 348k non-tap and every other type goes under the cap except v1n (447k).
   - v1n fix is row R2: wide PADRAM (main 80de880655b), plan a8788103ca48. Gate R2 is queued on epyc11; on the K3g probe v1n comes to about 365k.
+- 2026-11-23 22:31 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-2832171-1795501514 on viable-ram: rc=0 after 406 s, ended 06:31:58, log /srv/opentallas-scratch2/claude/kv-pv-cap/a3g.otrun.log, cmd: --mem 32 --threads 8 --disk 10 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- python3 -I /srv/opentallas-scratch2/claude/
