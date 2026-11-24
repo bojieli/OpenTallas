@@ -1,0 +1,1 @@
+- 2026-11-24 09:21 PST TAKING GEN-FRESH-FIX (fresh, post-limit): rerun gen_rtl_fresh on full main, fix 10 STALE + 12 GEN-FAIL generators (hd_lep0N = HEAD-EAST-REPLAN). cc PRECHECK-R3
