@@ -28,6 +28,8 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # python3 -I drops the script folder: tap_site / schema / retap live here
+
 TOL_UM = 9.0
 STAMP = "tap_sites_um"
 

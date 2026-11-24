@@ -29,7 +29,8 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-import tap_site as TS
+sys.path.insert(0, str(Path(__file__).resolve().parent))   # python3 -I drops the script folder: tap_site / schema / retap live here
+import tap_site as TS  # noqa: E402
 
 TOL_UM = TS.TOL_UM
 REACH_UM = 405.0

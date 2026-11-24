@@ -117,3 +117,12 @@ def test_qc_c1g_sle_sc_v3_stale_seam_index_is_reach_and_reindexes(monkeypatch):
     old = [g for g in grid if RS.tap_index(g[0]) is None or RS.tap_index(g[0]) < 69]
     RS.reindex_type(t, old, grid)
     assert [c["node"] for c in t["clock"]["landing_contract"]["collector_children"]] == ["rst_n_t73", "rst_n_t73"]
+
+
+def test_cli_runs_under_isolated_mode():
+    """python3 -I drops the script folder from sys.path (KV-ALLFIX 25a62dbff7): both CLIs must still import their siblings."""
+    import subprocess
+    here = os.path.dirname(os.path.abspath(__file__))
+    for script, args in (("ref_site.py", ["reindex", "--help"]), ("ref_site.py", ["--help"]), ("tap_site.py", ["--help"])):
+        r = subprocess.run([sys.executable, "-I", os.path.join(here, script)] + args, cwd="/", capture_output=True, text=True, timeout=120)
+        assert r.returncode == 0, (script, r.stderr[-400:])
