@@ -20,3 +20,11 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - C9 SEALED 09:17 (46059fa2b359). Swap+re-seal running E11 s81-c9-rows/bksel (swap.otrun.log) -> then post SWAPPED + postseal hash.
 - D3 B1 run terminal: G0 56 = 52 legacy + 4 D3 (t2 ft2/3/5 regs in macros; cut @20750 s_4N_L1=t43 0.64).
 - D3 fix (E9 s81-c9-rows/d3fix): regseat_b1/ops.json (t2_regseat.py: stage regs moved 9-18 um, max hop 371.79) + cut_t43_frac.ops.json (t43 ft_track_frac 0.27). Validation fix_b1 (d3fix_g0.sh on B1 p4) running; reuse on c9 d3c9 p4 (rerun t2_regseat on that plan if ops old mismatch).
+
+## 2026-11-24 15:25 PST update
+- c9s D3/T43 row = i027e (E9 s81-c9-rows/c9s_i027e/p8_row.json 23f7e1c701d5): G0 PASS, 20750 s_4N_L1 0.596, 21000 s_3N_L1 0.582; ROW-REBASED posted. PRE pending; scoped strict bind (24 types) E11 sbind_c9s_i027e (--mem 240).
+- PARKED i027f2 (c9s_i027f2/p10_row.json cae84d513500, G0 PASS, 21000 0.564): geometric kv_leaf__t3 form (CUT-WALL @21000 + unbury + clear_added_taps) = C10 structural replacement of the t3 0.28 budget row.
+- C10 t43 structural row: d3w_row.sh w60p (DX 60.48, die +60.48 E, svc_10/11 rigid, depth pad, path_respace, SID-STATION s_5S_C ft2 +1 cycle, post_shift_die io/PG/channel layers, static gate). w60s G0: 20750 0.595 pass; left 21000 t3 (stack i027e/f2 t3 row) + die io/PG/channel (fixed in w60p).
+- Re-seal: e55d1bef9124 VOID (fired on cancelled c9s gate). Waiter re-armed on 3822590 -> bksel/postseal_c9s_gate2_1124.json.gz.
+- VPW WREG: gate 2118116 OOM 192 GiB; rerun s81-c9-rows/vpw gate_wreg_sitegrid2 --mem 320 E9.
+- Main 897ca0ea96: rigid_refloor holds reset depth for every re-shaped type (RESHAPE-RESET-DEPTH-1124).
