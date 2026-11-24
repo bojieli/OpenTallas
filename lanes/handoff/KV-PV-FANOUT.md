@@ -12,3 +12,11 @@
 - seg-8 trunks (budgets.r_dly_lockup.kv3_pv.seg=8): after spread v8e sg-hops >672 um 3->67 (max 793, via lockup latch). Lower seg = plan row.
 - 39 core-reader cases (u_pv_u_T*Q* regs, 17 >833 ps) and 1 short pad: need BIN-COPY / +1 cycle; not touched.
 - Lane clone: epyc10 /srv/opentallas-scratch2/claude/kv-pv-fanout/wt
+## Round 2 (COORD follow-up, 11-24 evening) -- DONE
+- MAZE fallback in ds_route pushed main 247bec6f231 (test 15/15); v4e replay >672 um 59 -> 0.
+- ROW-REBASED c8dbec67218c on A5t5 669cbe6e39bd (epyc10 /srv/opentallas-scratch2/claude/kv-pv-fanout):
+  row 2 SEGST = budgets.r_dly_lockup.kv3_pv.pad_min_stations 8; row 3 RELSITE = relay_sites minimax for pv relay-leaf regs
+  (relay_rows.json e95d1393fe77, from epyc11 dbg/relsite.py on the A5t3 probes; probe-measured >672 um 8,000+ -> 47, kv3_pv max 691).
+  Gate gateF/: PRE 25 RSTREACH = A5t5 set (0 new), G0 PASS, scoped strict bind 23 types 0 errors. 0 cycles.
+- The short pad (kv3_pv pd2_ram_pdram_4_108) was cleared by the tool fix (2 stages = 3 hops of about 272 um).
+- Residual: kv3_pv 47 relay regs 672-691 um after re-site (fixed endpoints too far apart; needs a relay_depth +1 cycle if they fail).
