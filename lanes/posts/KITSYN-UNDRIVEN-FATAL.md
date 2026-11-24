@@ -1,0 +1,1 @@
+- 2026-11-23 22:45 PST 22:45 PST TAKING KITSYN-UNDRIVEN-FATAL from QC-TTC-R2/FABLE-RC-QC: kit synth must hard-FAIL on no-driver nets (tied/dead exceptions recorded). Worktree epyc11 /srv/opentallas-scratch/claude/KITSYN-UNDRIVEN-FATAL/wt. [cc COORD, QC-TTC-R2]
