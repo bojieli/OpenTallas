@@ -80,3 +80,7 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - bindG (epyc7 QC-OPEN-STA/bindG, rt c660): bind errors 0, LATCHECK 1922/1922, G0 PASS, PRE row-only 0.
 - 11 probes (8 DEAD-OWNER + cled3c1d7b/cl9f076a5c/clf4365a62): intel2 systemd units runitem-<type>.service, specs ~/coord/autopilot/private_specs/QC-OPEN-STA/*_11240{40959,41026,41052,41121,41150,41222,41251,41317,41629,41718,41807}. Launcher: intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probeG.sh HOST ITEM. 6 duplicate copies stopped.
 - Next: full-cause census at GRT; st_b clfde1249e row (ETA 06:30).
+
+## 11-24 04:26 st_b clfde1249e released
+- Viewed ISSUES-ACCEPT (lanes/GEOM-REVIEW.md f7523d6b) released the C4 kit route (state ENQUEUED 04:26). The 03:15 BAD is corrected (root GEOM-REVIEW.md). Takeover strict mode ignores AUTO-VISUAL verdicts; a viewed line with the exact kit= is needed.
+- Still mine: the improvement row (x_st_a_i stations toward r6/r7, empty taps t110/t127) for C1i, ETA ~06:30. Watch the route/sign-off (~09:00).
