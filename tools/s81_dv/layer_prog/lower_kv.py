@@ -9,17 +9,17 @@ latency is treated as a global availability date.
 import json
 from pathlib import Path
 
-from layer_prog.kv_bank_contract import dispatch, pool_dispatch, sukv_contract
+from layer_prog.kv_bank_contract import ADAPTER_DONE, dispatch, pool_dispatch, program_timing, sukv_contract
 from layer_prog.lower_vs import ctl_payload, row_write, _dvc
 
 OPS = [r'^(?:mtp\.)?attn\.(?:kv_norm\..*|kv_rope_qdq|cmp\.(?:k_norm\..*|norm\..*|k_rope_qdq|row_qdq|pool))$']
 UNIT = 'ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)'
 BENCH = 'results/rtl/s81_rtlgap_codex_2000/SUKV/run2'
 KINDS = dict(KV=1, GK=7, CN=12, IK=13, CP=14)
-# Measured at the adapter's VLAT4 command boundary, NOT the issuer boundary.
-ADAPTER_DONE = dict(KV=1130, GK=1025, CN=1218, IK=1058, CP=390)
+# Done ages are measured at the adapter command boundary, NOT the issuer boundary: kv_bank_contract.kv_timing, selected
+# by the programme's kv_seam (the t2 A|B cut).  ADAPTER_DONE = the uncut leaf.
 # Bench reports count the first pin capture edge: pin-to-done subtracts one.
-# ctl_path includes RSTOP2; XRT pin->c_v5 plus DL and VP/KV3 gives +DL+6.
+# ctl_path includes RSTOP2; XRT pin->c_v5 plus DL and VP/KV3 gives +DL+6 (+1 with the vp SRAM register, VP_SR).
 
 
 def _integer(v, label, lo=0, hi=None):
@@ -43,6 +43,13 @@ def validate(program, sched):
     """
     if program.get('schema') != 'opentallas.s81.kv_program.v1':
         raise ValueError('unsupported KV programme receipt schema')
+    timing = program_timing(program)
+    seam = program.get('kv_seam') or dict(vp_sr=0)
+    bound = program.get('source_binding', {}).get('parameters', {})
+    for key, field in (('KV_SEAM_IN', 'in'), ('KV_SEAM_OUT', 'out')):
+        if bound.get(key, 0) != seam.get(field, 0):
+            raise ValueError('programme kv_seam differs from the bound kv_leaf '+key)
+    commit, readable = timing['native_write_commit_after_done'], timing['native_read_ready_after_done']
     ops = {o['id']: o for o in sched['ops']}
     seen, intervals, records, reads = {}, [], {}, []
     for job in program['jobs']:
@@ -66,9 +73,9 @@ def validate(program, sched):
         issue = _integer(job['issue'], 'issue', 0, 2**24-1)
         context = _integer(job['context'], 'context', 0, 3)
         capture = issue + _integer(job['capture_offset'], 'actual CTL/VP capture offset', 1)
-        if job['done_age'] != ADAPTER_DONE[kind]:
-            raise ValueError('selected VLAT4 source needs its exact measured pin-to-done age')
-        done = capture + _integer(job['done_age'], 'measured command-to-done', ADAPTER_DONE[kind])
+        if job['done_age'] != timing['done'][kind]:
+            raise ValueError('selected source needs its exact measured pin-to-done age for this kv_seam')
+        done = capture + _integer(job['done_age'], 'measured command-to-done', timing['done'][kind])
         release = _integer(job['release_edge'], 'final consumer release', done)
         if not job.get('source_receipt'):
             raise ValueError('source-bound command timing receipt required')
@@ -78,10 +85,10 @@ def validate(program, sched):
         intervals.append((capture, done + 1, identifier))
         outputs = set()
         if kind != 'GK':
-            ready = _integer(job['output_ready_edge'], 'native read availability', done + 2)
+            ready = _integer(job['output_ready_edge'], 'native read availability', done + readable)
             _integer(release, 'output lifetime end', ready)
-            first_write = _integer(job['first_output_write_edge'], 'first native output write', capture, done + 1)
-            expected_first_write = done - 251 if kind == 'CP' else capture + 1030
+            first_write = _integer(job['first_output_write_edge'], 'first native output write', capture, done + commit)
+            expected_first_write = capture + timing['first_native_write'][kind]
             if first_write != expected_first_write:
                 raise ValueError('first native output commit differs from selected source phase schedule')
             outputs = (_range(job['output_base'], job['output_base']+127) if kind == 'CP' else
@@ -161,7 +168,7 @@ def validate(program, sched):
         for identifier, record in records.items():
             if identifier in (read['job'], producer):
                 continue
-            if read['rows'] & record['outputs'] and max(read['ready'], record['first_write']) < min(read['end'], record['done']+2):
+            if read['rows'] & record['outputs'] and max(read['ready'], record['first_write']) < min(read['end'], record['done']+readable):
                 raise ValueError('another physical job overwrites live native input rows')
         for record in records.values():
             for wr in record['job'].get('writes', []):
@@ -189,7 +196,10 @@ def lower(die, op, ctx):
         return result
     C = _dvc()
     cp = C.ctl_path(die, 'u_s_3N')
-    if job['capture_offset'] != cp['edges'] + _integer(job['leaf_downrelay'], 'source leaf DL') + 6:
+    vp_sr = getattr(C, 'VP_SR', 0)
+    if program_timing(program)['vp_sr'] != vp_sr:
+        raise ValueError('programme kv_seam vp_sr differs from the selected vp SRAM-register form')
+    if job['capture_offset'] != cp['edges'] + _integer(job['leaf_downrelay'], 'source leaf DL') + 6 + vp_sr:
         raise ValueError('capture offset differs from actual CTL/XRT/DL/VP/KV source path')
     sid = die.slices()['u_s_3N']['sid']
     result.update(atomic=True, lifetime_qualified=False,
@@ -206,7 +216,7 @@ def lower(die, op, ctx):
         result['rows'].append(dict(eng=C.ENG['VN'], issue=issue, arg=(ix & 127) | (command['context'] << 7), template_index=ix, what=what))
     owned = [j for j in program['jobs'] if j['owner'] == op['id']]
     for command in owned:
-        if command['capture_offset'] != cp['edges'] + _integer(command['leaf_downrelay'], 'source leaf DL') + 6:
+        if command['capture_offset'] != cp['edges'] + _integer(command['leaf_downrelay'], 'source leaf DL') + 6 + vp_sr:
             raise ValueError('prerequisite capture offset differs from selected source path')
         for wr in command.get('writes', []):
             emit(wr['issue'], 5, row_write(wr['row'], wr['mask'], int(wr['word128'], 16)),

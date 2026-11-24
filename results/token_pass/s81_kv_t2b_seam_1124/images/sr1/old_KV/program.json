@@ -1,0 +1,427 @@
+{
+ "schema": "opentallas.s81.kv_program.v1",
+ "die_v_sha256": "TEST_ONLY_ROUTE",
+ "source_binding": {
+  "clock_epoch_identity": "TEST_ONLY",
+  "native_command_epoch_seq_edge": 0,
+  "die_v_sha256": "TEST_ONLY_ROUTE",
+  "parameters": {
+   "KV_SEAM_IN": 2,
+   "KV_SEAM_OUT": 2
+  }
+ },
+ "source_timing_derivation": {
+  "capture_offset": 20,
+  "leaf_downrelay": 4,
+  "adapter_done": {
+   "KV": 1130,
+   "GK": 1029,
+   "CN": 1222,
+   "IK": 1062,
+   "CP": 399
+  },
+  "seam_in": 2,
+  "seam_out": 2,
+  "vp_sr": 1,
+  "first_native_write": {
+   "KV": 1031,
+   "CN": 1035,
+   "IK": 1035,
+   "CP": 149
+  },
+  "last_read_completion_bound": {
+   "KV": 85,
+   "CN": 85,
+   "IK": 85,
+   "GK": 77,
+   "CP": 383
+  },
+  "native_write_commit_after_done": 2,
+  "native_read_ready_after_done": 3
+ },
+ "jobs": [
+  {
+   "id": "L14.attn.cmp.pool::CP",
+   "kind": "CP",
+   "covers": [
+    "L14.attn.cmp.pool"
+   ],
+   "owner": "L14.attn.cmp.pool",
+   "issue": 181,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 399,
+   "release_edge": 603,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 0,
+     "hi": 511,
+     "ready_edge": 200,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_main.mem",
+     "last_read_edge": 584
+    }
+   ],
+   "gain_set": 0,
+   "jid": 0,
+   "drain_age": 1024,
+   "slot0_base": 0,
+   "slot1_base": 256,
+   "output_base": 692,
+   "writes": [],
+   "output_ready_edge": 603,
+   "first_output_write_edge": 350
+  },
+  {
+   "id": "L14.attn.cmp.row_qdq::GK",
+   "kind": "GK",
+   "covers": [],
+   "owner": "L14.attn.cmp.row_qdq",
+   "issue": 581,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 1029,
+   "release_edge": 1633,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 528,
+     "hi": 531,
+     "ready_edge": 200,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_gk3.mem",
+     "last_read_edge": 678
+    },
+    {
+     "lo": 896,
+     "hi": 1023,
+     "ready_edge": 200,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_gk3.mem",
+     "last_read_edge": 678
+    }
+   ],
+   "gain_set": 3,
+   "jid": 1,
+   "drain_age": 1024,
+   "parameter_base": 528,
+   "operand_base": 896,
+   "writes": []
+  },
+  {
+   "id": "L14.attn.cmp.row_qdq::CN",
+   "kind": "CN",
+   "covers": [
+    "L14.attn.cmp.row_qdq"
+   ],
+   "owner": "L14.attn.cmp.row_qdq",
+   "issue": 1611,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 1222,
+   "release_edge": 2856,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 692,
+     "hi": 819,
+     "ready_edge": 603,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY_POOL",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": null,
+     "producer_job": "L14.attn.cmp.pool::CP",
+     "last_read_edge": 1716
+    },
+    {
+     "lo": 672,
+     "hi": 691,
+     "ready_edge": 200,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_main.mem",
+     "last_read_edge": 1716
+    }
+   ],
+   "gain_set": 3,
+   "jid": 1,
+   "drain_age": 1024,
+   "parameter_base": 672,
+   "operand_base": 692,
+   "gain_residency": {
+    "gain_set": 3,
+    "ready_edge": 1630,
+    "release_edge": 1000000,
+    "source_receipt": "TEST_ONLY"
+   },
+   "writes": [],
+   "output_ready_edge": 2856,
+   "first_output_write_edge": 2666
+  },
+  {
+   "id": "L14.attn.cmp.k_rope_qdq::GK",
+   "kind": "GK",
+   "covers": [],
+   "owner": "L14.attn.cmp.k_rope_qdq",
+   "issue": 2838,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 1029,
+   "release_edge": 3890,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 528,
+     "hi": 531,
+     "ready_edge": 2857,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_gk0.mem",
+     "last_read_edge": 2935
+    },
+    {
+     "lo": 896,
+     "hi": 1023,
+     "ready_edge": 2857,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_gk0.mem",
+     "last_read_edge": 2935
+    }
+   ],
+   "gain_set": 0,
+   "jid": 2,
+   "drain_age": 1024,
+   "parameter_base": 528,
+   "operand_base": 896,
+   "writes": []
+  },
+  {
+   "id": "L14.attn.cmp.k_rope_qdq::IK",
+   "kind": "IK",
+   "covers": [
+    "L14.attn.cmp.k_rope_qdq"
+   ],
+   "owner": "L14.attn.cmp.k_rope_qdq",
+   "issue": 3868,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 1062,
+   "release_edge": 4953,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 692,
+     "hi": 787,
+     "ready_edge": 2857,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32_zero_prefix384",
+     "file": "img_ik.mem",
+     "last_read_edge": 3973
+    },
+    {
+     "lo": 788,
+     "hi": 819,
+     "ready_edge": 2857,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_ik.mem",
+     "last_read_edge": 3973
+    },
+    {
+     "lo": 672,
+     "hi": 691,
+     "ready_edge": 2857,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_ik.mem",
+     "last_read_edge": 3973
+    }
+   ],
+   "gain_set": 0,
+   "jid": 2,
+   "drain_age": 1024,
+   "parameter_base": 672,
+   "operand_base": 692,
+   "gain_residency": {
+    "gain_set": 0,
+    "ready_edge": 3887,
+    "release_edge": 1000000,
+    "source_receipt": "TEST_ONLY"
+   },
+   "writes": [],
+   "output_ready_edge": 4953,
+   "first_output_write_edge": 4923
+  },
+  {
+   "id": "L14.attn.kv_rope_qdq::GK",
+   "kind": "GK",
+   "covers": [],
+   "owner": "L14.attn.kv_rope_qdq",
+   "issue": 4935,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 1029,
+   "release_edge": 5987,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 528,
+     "hi": 531,
+     "ready_edge": 4954,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_kvg.mem",
+     "last_read_edge": 5032
+    },
+    {
+     "lo": 896,
+     "hi": 1023,
+     "ready_edge": 4954,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_kvg.mem",
+     "last_read_edge": 5032
+    }
+   ],
+   "gain_set": 0,
+   "jid": 3,
+   "drain_age": 1024,
+   "parameter_base": 528,
+   "operand_base": 896,
+   "writes": []
+  },
+  {
+   "id": "L14.attn.kv_rope_qdq::KV",
+   "kind": "KV",
+   "covers": [
+    "L14.attn.kv_rope_qdq"
+   ],
+   "owner": "L14.attn.kv_rope_qdq",
+   "issue": 5965,
+   "context": 0,
+   "capture_offset": 20,
+   "leaf_downrelay": 4,
+   "done_age": 1130,
+   "release_edge": 7118,
+   "source_receipt": "TEST_ONLY",
+   "residency": [
+    {
+     "lo": 692,
+     "hi": 819,
+     "ready_edge": 4954,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_kv.mem",
+     "last_read_edge": 6070
+    },
+    {
+     "lo": 672,
+     "hi": 691,
+     "ready_edge": 4954,
+     "release_edge": 1000000,
+     "producer": "TEST_ONLY",
+     "source_receipt": "TEST_ONLY",
+     "format": "fp32",
+     "file": "img_kv.mem",
+     "last_read_edge": 6070
+    }
+   ],
+   "gain_set": 0,
+   "jid": 3,
+   "drain_age": 1024,
+   "parameter_base": 672,
+   "operand_base": 692,
+   "gain_residency": {
+    "gain_set": 0,
+    "ready_edge": 5984,
+    "release_edge": 1000000,
+    "source_receipt": "TEST_ONLY"
+   },
+   "writes": [],
+   "output_ready_edge": 7118,
+   "first_output_write_edge": 7016
+  }
+ ],
+ "edge_convention": "native_command_epoch_relative_sampled_edges",
+ "native_command_epoch_seq_edge": 0,
+ "missing": [],
+ "selected_model_operations": [
+  {
+   "kind": "CP",
+   "owner": "L14.attn.cmp.pool",
+   "covers": [
+    "L14.attn.cmp.pool"
+   ],
+   "earliest_model_issue": 0
+  },
+  {
+   "kind": "CN",
+   "owner": "L14.attn.cmp.row_qdq",
+   "covers": [
+    "L14.attn.cmp.row_qdq"
+   ],
+   "earliest_model_issue": 10
+  },
+  {
+   "kind": "IK",
+   "owner": "L14.attn.cmp.k_rope_qdq",
+   "covers": [
+    "L14.attn.cmp.k_rope_qdq"
+   ],
+   "earliest_model_issue": 20
+  },
+  {
+   "kind": "KV",
+   "owner": "L14.attn.kv_rope_qdq",
+   "covers": [
+    "L14.attn.kv_rope_qdq"
+   ],
+   "earliest_model_issue": 30
+  }
+ ],
+ "status": "SOURCE_PROGRAMME",
+ "calendar_qualified": false,
+ "production_enabled": false,
+ "next": "Bind actual native CAP/carriage row receipts and current source clock/landing dates; run emitted native jobs",
+ "kv_seam": {
+  "in": 2,
+  "out": 2,
+  "vp_sr": 1
+ }
+}

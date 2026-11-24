@@ -12,6 +12,46 @@ ENGINE_OUTPUT_BASE = 168
 SLICE = 'u_s_3N'
 LEAF = 0
 
+# ---- SUKV command timing, seen from the A side (the kv_leaf t2 A pins), in sampled edges from the command capture.
+# Base: rtlgap_sukv_1021 bench, seam 0, VLAT 4 (finish_edges - 1).
+ADAPTER_DONE = dict(KV=1130, GK=1025, CN=1218, IK=1058, CP=390)
+FIRST_NATIVE_WRITE = dict(KV=1030, CN=1030, IK=1030, CP=139)
+LAST_READ_BOUND = dict(KV=80, CN=80, IK=80, GK=72, CP=378)
+# (seam_in, seam_out) of the t2 A|B cut that a bench measured (S81-KVLEAF-T2-ARCH-R2 bench_xq3 / xq4, RTL d97edba9f3a3).
+# Only these may be priced: another depth needs its own bench run.
+MEASURED_SEAMS = ((0, 0), (2, 2), (3, 3))
+
+
+def kv_timing(seam_in=0, seam_out=0, vp_sr=0):
+    """Done / first-write / last-read dates of the five SUKV jobs for a t2 seam and vp SRAM-register form.
+
+    d = seam_in + seam_out.  GK / CN / IK / KV finish on the fixed drain age, so done moves by d (the command crosses the
+    seam in, the done level crosses it out).  The compressor pool finishes on its last VM read return, which crosses the
+    seam a second time: CP moves by 2 d.  Writes leave through the same output stages as done, so write-to-done is
+    unchanged.  vp_sr (OT_S81SL_VP_SRAMREG: registered leaf-store pins) adds one edge to the VM read loop (CP done) and one
+    edge to every store commit and store read; the fixed-drain done dates do not move.
+    """
+    if (seam_in, seam_out) not in MEASURED_SEAMS:
+        raise ValueError(f'kv_leaf t2 seam {seam_in}+{seam_out} has no measured timing; run the seam bench first')
+    if vp_sr not in (0, 1):
+        raise ValueError('vp SRAM-register form must be 0 or 1')
+    d = seam_in + seam_out
+    done = {k: v + (2 * d + vp_sr if k == 'CP' else d) for k, v in ADAPTER_DONE.items()}
+    first = {k: v + (2 * d + 2 * vp_sr if k == 'CP' else d + vp_sr) for k, v in FIRST_NATIVE_WRITE.items()}
+    return dict(seam_in=seam_in, seam_out=seam_out, vp_sr=vp_sr, done=done, first_native_write=first,
+                last_read_completion_bound={k: v + d + vp_sr for k, v in LAST_READ_BOUND.items()},
+                native_write_commit_after_done=1 + vp_sr, native_read_ready_after_done=2 + vp_sr)
+
+
+def program_timing(program):
+    """The timing a programme was compiled for: kv_seam {in, out, vp_sr}; absent = the uncut leaf at vp SR 0."""
+    seam = program.get('kv_seam')
+    if seam is None:
+        return kv_timing()
+    if set(seam) != {'in', 'out', 'vp_sr'} or any(type(v) is not int for v in seam.values()):
+        raise ValueError('kv_seam needs exactly the integers in, out and vp_sr')
+    return kv_timing(seam['in'], seam['out'], seam['vp_sr'])
+
 
 def dispatch(kind, gain_set, job_id, drain_age, parameter_base=PARAM_BASE, operand_base=None):
     """Encode the source adapter opcode; drain_age must be measured, never guessed.

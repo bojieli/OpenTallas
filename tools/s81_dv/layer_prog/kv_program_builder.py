@@ -27,15 +27,22 @@ from copy import deepcopy
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 from dv_layer_compile import Die, ctl_path, VP_SR
+from layer_prog.kv_bank_contract import kv_timing
 
-DONE=dict(KV=1130,GK=1025,CN=1218,IK=1058,CP=390)
+# t2B row of record (S81-KVLEAF-T2-ARCH-R2 row_t2B.json v5d, RTL main d97edba9f3a3).
+T2B_V5D=dict(KV_XD="48'h131230006620",KV_KST="64'h2668123621154115",KV_XST="64'h7444441144115532",
+    KV_XMRG=1,KV_YBASE=1,KV_CPQ=4,OT_S81_KVLEAF_INPUT_RELAYS=1,OT_S81_KVLEAF_EXIT_RELAYS=1)
+# Unit receipt sha -> what that bench run measured.  parameters = exact values the binding must carry.
 UNIT_RECEIPTS={
-    '0576658123f753e2dace8e3549bca06ccd11a6155a9d11ca49c44abcd3eff3aa':0,
-    '4d169bcd4bc1edb34574ef4a2cd41c14927eae4bfc865438b3567d1bf9513aee':1,
+    '0576658123f753e2dace8e3549bca06ccd11a6155a9d11ca49c44abcd3eff3aa':dict(hard_rq=0,seam=(0,0)),
+    '4d169bcd4bc1edb34574ef4a2cd41c14927eae4bfc865438b3567d1bf9513aee':dict(hard_rq=1,seam=(0,0)),
+    # t2B v5d at seam 2+2, VLAT 5 (OT_S81SL_VP_SRAMREG), results/token_pass/s81_kv_t2b_seam_1124/unit_vlat5_seam22.json
+    'f6e09fa91356742079e552e9ff74e056b8e8f0d43e5f97691629b64e515f707d':dict(hard_rq=2,seam=(2,2),vlat=5,parameters=T2B_V5D),
 }
 NATIVE_COMMIT_SOURCE={
     'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv':'d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15',
@@ -64,6 +71,41 @@ def selected_groups(schedule):
     return sorted(result,key=lambda x:(x['earliest_model_issue'],x['kind']))
 
 
+def check_unit_profile(selected,parameters):
+    """The bound leaf must be the form the receipt measured: a t2 A|B seam cannot use the uncut dates, nor the reverse."""
+    if (parameters.get('KV_SEAM_IN',0),parameters.get('KV_SEAM_OUT',0))!=tuple(selected['seam']):
+        raise ValueError('bound kv_leaf seam differs from the measured source profile')
+    for key,value in selected.get('parameters',{}).items():
+        if parameters.get(key)!=value:
+            raise ValueError('bound kv_leaf parameter differs from the measured source profile '+key)
+
+
+def unit_timing(selected,unit,vp_sr):
+    """Dates of the selected receipt; a seam receipt's own finish_edges must equal them (done = finish_edges - 1)."""
+    timing=kv_timing(*selected['seam'],vp_sr=vp_sr)
+    if tuple(selected['seam'])!=(0,0):
+        if selected['vlat']!=4+vp_sr:
+            raise ValueError('seam receipt VLAT differs from the selected vp SRAM-register form')
+        # The receipt itself must state the form it ran (two forms can give byte-identical results).
+        ran={k.removeprefix('D:'):str(v) for k,v in unit['params'].items()}
+        want={k:str(v) for k,v in selected.get('parameters',{}).items()}
+        want.update(VLAT=str(selected['vlat']),HARD_RQ=str(selected['hard_rq']),
+                    SEAM_IN=str(selected['seam'][0]),SEAM_OUT=str(selected['seam'][1]))
+        if any(ran.get(k)!=v for k,v in want.items()):
+            raise ValueError('seam receipt ran another kv_leaf form')
+        kinds={'1':'KV','7':'GK','12':'CN','13':'IK','14':'CP'};seen=set()
+        for case in unit['results'].values():
+            for line in case['lines']:
+                m=re.match(r'SUKV_JOB \S+ kind=(\d+) finish_edges=(\d+) ',line)
+                if m:
+                    kind=kinds[m.group(1)];seen.add(kind)
+                    if int(m.group(2))-1!=timing['done'][kind]:
+                        raise ValueError('measured finish edge differs from the compiled date '+line)
+        if seen!=set(timing['done']):
+            raise ValueError('seam receipt did not measure every SUKV job kind')
+    return timing
+
+
 def derive_profile(die,binding,transport_receipt,unit_receipt):
     if binding['die_v_sha256']!=die.die_sha:
         raise ValueError('native producer binding differs from actual die.v')
@@ -71,7 +113,8 @@ def derive_profile(die,binding,transport_receipt,unit_receipt):
         raise ValueError('actual selected KV slice binding PASS required')
     if sha(transport_receipt)!=TRANSPORT_RECEIPT_SHA or sha(unit_receipt) not in UNIT_RECEIPTS:
         raise ValueError('selected XRT/SUKV timing receipts differ; use a measured source profile')
-    hard_rq=UNIT_RECEIPTS[sha(unit_receipt)]
+    selected=UNIT_RECEIPTS[sha(unit_receipt)];hard_rq=selected['hard_rq']
+    check_unit_profile(selected,binding['parameters'])
     if binding['parameters'].get('HARD_RQ',0)!=hard_rq:
         raise ValueError('selected HARD_RQ differs from exact measured source profile')
     source=Path(binding['source_root'])
@@ -99,23 +142,26 @@ def derive_profile(die,binding,transport_receipt,unit_receipt):
     # then DL relay, VP pin sample1, SU forward1, KV pin sample1.
     # J6: vp SR (OT_S81SL_VP_SRAMREG) moves the SU forward one edge (xtier_land.vp_sr_edges)
     offset=cp['edges']-2+transport['component_edges']['CTL_pin_to_c_v']+dl+3+VP_SR
+    timing=unit_timing(selected,unit,VP_SR)
     return dict(capture_offset=offset,leaf_downrelay=dl,ctl_path=cp,hard_rq=hard_rq,
         source_receipt=str(unit_receipt),source_receipt_sha256=sha(unit_receipt),
         native_commit_source_sha256=NATIVE_COMMIT_SOURCE,
-        transport_receipt_sha256=sha(transport_receipt),adapter_done=DONE,
-        first_native_write=dict(KV=1030,CN=1030,IK=1030,CP=139),
-        last_read_completion_bound=dict(KV=80,CN=80,IK=80,GK=72,CP=378),
-        native_write_commit_after_done=1,native_read_ready_after_done=2,
+        transport_receipt_sha256=sha(transport_receipt),adapter_done=timing['done'],
+        seam_in=timing['seam_in'],seam_out=timing['seam_out'],vp_sr=timing['vp_sr'],
+        **{k:timing[k] for k in ('first_native_write','last_read_completion_bound',
+                                 'native_write_commit_after_done','native_read_ready_after_done')},
         convention='sampled posedges; finish_edges in SUKV bench counts first capture, so done_age=finish_edges-1',
         derivation=['capture_offset=ctl_path.edges-RSTOP2+XRT5+DL+VP/KV3+VP_SR',
           'norm drain1024: first x_wv after capture+1028, VP captures+1029, SRAM commits+1030',
           'CP64 outputs at period4: first x_wv=done-1-4*63; native commit adds2',
           'last x_wv=done-1; VP captures at done; read-before-write SRAM commits done+1, new read at done+2',
-          'last input receipt bounds: reads74/66 or issue-calendar372, plus selected VLAT4 and2 registered edges'])
+          'last input receipt bounds: reads74/66 or issue-calendar372, plus selected VLAT4 and2 registered edges',
+          't2 A|B seam: kv_bank_contract.kv_timing (fixed-drain jobs + in + out, CP + 2 (in + out)); A pins are the boundary'])
 
 
 def build(die,schedule,binding,ledger,transport_receipt,unit_receipt):
     profile=derive_profile(die,binding,transport_receipt,unit_receipt)
+    DONE=profile['adapter_done'];readable=profile['native_read_ready_after_done']
     groups=selected_groups(schedule)
     if ledger.get('die_v_sha256')!=die.die_sha or ledger.get('clock_epoch_identity')!=binding['clock_epoch_identity']:
         raise ValueError('producer row dates belong to a different die or clock epoch')
@@ -171,11 +217,11 @@ def build(die,schedule,binding,ledger,transport_receipt,unit_receipt):
                     raise ValueError('actual input write has not committed before capture '+owner)
             job=dict(id=owner+'::'+k,kind=k,covers=covers,owner=owner,issue=issue,
                 context=ledger['context'],capture_offset=capture_offset,leaf_downrelay=profile['leaf_downrelay'],
-                done_age=DONE[k],release_edge=done+2,source_receipt=str(unit_receipt),
+                done_age=DONE[k],release_edge=done+readable,source_receipt=str(unit_receipt),
                 residency=rows,gain_set=gain_set,jid=ledger['job_ids'][owner],drain_age=1024,**extra)
             if k!='GK':
-                job.update(output_ready_edge=done+2,
-                    first_output_write_edge=done-251 if k=='CP' else capture+1030)
+                job.update(output_ready_edge=done+readable,
+                    first_output_write_edge=capture+profile['first_native_write'][k])
             port_free=done+1;jobs.append(job);return job
         gain=None
         if kind!='CP':
@@ -206,6 +252,8 @@ def build(die,schedule,binding,ledger,transport_receipt,unit_receipt):
         status='SOURCE_PROGRAMME' if not missing else 'PARTIAL',
         calendar_qualified=False,production_enabled=False,
         next='Bind actual native CAP/carriage row receipts and current source clock/landing dates; run emitted native jobs')
+    if (profile['seam_in'],profile['seam_out'],profile['vp_sr'])!=(0,0,0):
+        program['kv_seam']={'in':profile['seam_in'],'out':profile['seam_out'],'vp_sr':profile['vp_sr']}
     if jobs:
         from layer_prog.lower_kv import validate
         validate(program,schedule)
