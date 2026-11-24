@@ -4,7 +4,7 @@ QC tt_ctlm: a core compiled for a 21-edge transport while the plan / program pri
   * the program's lane ages R_CMD / R_HR / R_SS / R_AG (/ R_ST) -- ctlm_image.py --lane-ages input, recorded as relay.R_* in
     ctlm_metadata_source.json (tree results/**/*ctlm_metadata_source.json) -- with the BOUND LATCHECK delivered cycles of the matching lanes
     (bind_out/bind_lane_asbuilt.json). The shared lane registry names the outbound CMD/HR/ST lanes and the W5 return SS/AG lanes.
-    The corresponding W5 core and tt_ctlm sink ages include relative landing pads from bind_out/bus_groups.json;
+    Report the corresponding W5 core and tt_ctlm sink ages with relative pads from bind_out/bus_groups.json. Programs price the raw lane age and model the relative pads on the slice side;
   * the core's compiled XPF_TRANSPORT_EDGES (results/arch/*/HR_SOURCE_CONTRACT.json compiled_XPF_TRANSPORT_EDGES, any master) with the rule
     xpf = 1 + R_HR (die_params), and with the program's own xpf_transport_edges.
 C1g positive: program 19/19/17/17 against delivered 14/10/(10)/(13); contract XPF 21 vs 1 + 19 = 20.
@@ -118,20 +118,17 @@ def _findings(raw, plan_path, tree=None, **kw):
         if not relay:
             continue
         nprog += 1
-        landed = [f"{key} program {relay[key]} vs {ENDPOINTS[key][0]}.{ENDPOINTS[key][1]} landed {age} "
-                  f"(lane {deliv[key]})" for key, age in endpoints.items()
-                  if key in relay and age != deliv[key] and age != relay[key]]
         res = judge(relay, d.get("xpf_transport_edges"), xpfs, deliv)
-        if landed:
-            out.append(_w(f"{Path(m).name[:60]}: " + "; ".join(landed)))
-        if landed or res:
-            nbad += 1
         if res:
+            nbad += 1
             out.append(_w(f"{Path(m).name[:60]}: program ages " + "/".join(str(relay.get(k, '-')) for k in ("R_CMD", "R_HR", "R_SS", "R_AG")) +
                           " vs delivered " + "/".join(str(deliv.get(k, '-')) for k in ("R_CMD", "R_HR", "R_SS", "R_AG")) +
                           ": " + "; ".join(t for _, t in res)[:420] + "; the compiled program does not match the bound lanes: recompile with the bound ages "
                           "(ctlm_image.py --lane-ages) or fix the lane cycles"))
-    out.append(_w("summary", f"{nbad} of {nprog} compiled ctlm program(s) disagree with the bound lane or endpoint cycles / XPF rule; {len(xpfs)} core master(s) with compiled XPF"
+    if landed := [f"{key} lane {deliv[key]} -> {ENDPOINTS[key][0]}.{ENDPOINTS[key][1]} landed {age}"
+                  for key, age in endpoints.items() if age != deliv[key]]:
+        out.append(_w("relative landing pads (outside program lane ages): " + "; ".join(landed)))
+    out.append(_w("summary", f"{nbad} of {nprog} compiled ctlm program(s) disagree with the bound lane cycles / XPF rule; {len(xpfs)} core master(s) with compiled XPF"
                              + (f"; {note}" if note else "")))
     return out
 

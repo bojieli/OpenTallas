@@ -51,7 +51,7 @@ def test_delivered_uses_observed_w5_return_lanes(tmp_path):
     assert "R_AG" not in A._delivered(tmp_path)
 
 
-def test_endpoint_age_adds_only_the_relative_landing_pad(tmp_path):
+def test_endpoint_age_adds_only_the_relative_landing_pad(tmp_path, monkeypatch):
     measured = {"R_CMD": 19, "R_HR": 19, "R_ST": 19, "R_SS": 17, "R_AG": 17}
     groups = [
         dict(sink_part="sl_W5_fw", members=[
@@ -68,6 +68,15 @@ def test_endpoint_age_adds_only_the_relative_landing_pad(tmp_path):
     path = tmp_path / "bus_groups.json"
     path.write_text(json.dumps({"landing": groups}))
     assert A._endpoint_delivered(tmp_path, measured) == measured | {"R_CMD": 23, "R_HR": 23}
+
+    metadata = tmp_path / "program.json"
+    metadata.write_text(json.dumps({"relay": measured, "xpf_transport_edges": 20}))
+    monkeypatch.setattr(A.glob, "glob", lambda pattern, **_: [str(metadata)] if "ctlm_metadata_source" in pattern else [])
+    monkeypatch.setattr(A, "_delivered", lambda _: measured)
+    (tmp_path / "bind_lane_asbuilt.json").touch()
+    findings = A.findings({}, "p", tmp_path, bind_out=tmp_path)
+    assert any("outside program lane ages" in row and "hr_i landed 23" in row for row in findings)
+    assert any("0 of 1 compiled ctlm" in row for row in findings)
 
     groups[0]["members"][2]["landed_stages"] = 24
     groups[1]["members"][1]["sink_bits"] = [[0, 8]]
