@@ -20,3 +20,11 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - Private tree: epyc7 /srv/opentallas-scratch2/claude/QC-OPEN-STA/tree + launch; A bind copy epyc7 and epyc11 QC-OPEN-STA/bindA/bind. Probe launcher intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probe.sh HOST ITEM.
 - Leftovers to ot-delete: epyc8 QC-OPEN-STA/tree.forking-813798; epyc11 QC-OPEN-STA (bindA only, forks killed).
 - rc97 parent draft: scratch rc97_parent.py (needs BT_LAT=2 views from FAM-QC-HCST-R3); only the 5 st_a_v2 types (20 u_r cores) carry BT_LAT.
+
+## 23:08 PST
+- ROW-REBASED final = plan_sta_r8 10630f5bd60c (epyc7 QC-OPEN-STA/rows/): r7 3a1e8e11bae0 + 161 slw_st_a_v2 x_fw_ctl ft sites cleared out of cl_b_hw_ctl_hc0_i (sta_floor clear no longer exempts ft/istation points inside cland bodies).
+  PRE = base (1 ROWS), G0 FAIL 3 = base (su_c cws2), LAND-CAP OK. Posted 22:5x.
+- Bind: bindR7 (my own r8_refresh) BAD: glue lane glue__mufl renamed -> bank_taps EMIT error; discarded. My refreshed table saved bindR7/r8_myrefresh.json.
+  Tree runtime r8 table now = cA r8_final d5cb60490ce8. bindr8.sh -> bindR8/bind (log epyc8 QC-OPEN-STA/bindr8.ot).
+- Next: on BIND_RC 0 run intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probe.sh (edit --bind-out to $D/bindR8/bind) epyc7 sle_st_a_v1__cl989804f6__cled3c1d7b; census at GRT (tap span, trees <=315, placed_scan, relay_collapse, channels).
+- Deleted epyc8 tree.forking-813798 (ot-delete).
