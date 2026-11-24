@@ -115,3 +115,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 04:26 11-24 t2: hard-master row never applied to any plan (c8 t2 still flat); order (a)-(e) accepted, t2 = c9+; asked INT for applied-plan-sha column + NONE list in ALLFIX-S81.tsv; void commute passes noted
 - 04:34 11-24 HEAD w4 603e6985b000 accepted as counting plan (station + realize flag); class: priced stations not built w/o realize flag (hd_lep0N East 5 cycles) -> East r6 must add; asked LANEAGE-SWEEP priced-vs-u_ist_ check all dies
 - 04:47 11-24 ROW-APPLIED S81: 20 FULL, 5 NONE (1 expected c9), 2 PARTIAL; asked INT to name them; 02b182e95344 41 ops at third value = possible row conflict
+- 04:55 11-24 HEAD: hd_serdes coll_i0 2 FIRM stations priced not built (24 lane-cycles) -> realize before FF-lib re-sign; asked HEAD-R18 whether token pass ran on RTL w/o stations (then table wrong, drop stations = easier). S81 ROW-APPLIED closed, only T2-HARD-1 unapplied.
