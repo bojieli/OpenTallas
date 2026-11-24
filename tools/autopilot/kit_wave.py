@@ -1739,6 +1739,12 @@ def item_key(die, event, item, block=None):
 
 
 PLAN_BLOCK = {
+    # CELLCAP-HOLD (COORD FABLE FLOW REVIEW 11-23 22:50 item 1; supersedes r703 for this one stop): a soft type whose CELL-BUDGET
+    # projection (tools/die_plan/adv_cell_budget.py: measured content + plan slot overhead, floored by a < 72 h kit synth count)
+    # is over the 400k OpenROAD cap is not launched, stops_off or not, unless the plan type carries type_split / cell_cap_exception
+    # or the die config cell_cap_exceptions names it (type or glob -> ruling).  Running kits are never touched (launch check only).
+    "cellcap": "CELLCAP-HOLD: projected synth cells over the 400k OpenROAD cap (CELL-BUDGET, adv_cell_budget.py); split the type "
+               "(type_split row) or record an exception (die cell_cap_exceptions / plan type cell_cap_exception)",
     "split": "SPLIT-NEEDED: estimated flat std cells over the one 400k type limit (die_plan/cell_cap.py): split the type; never launched",
     "hard": "plan entry: hard type (gen skips it unless die cfg hard_wrappers names it)",
     "contract": "plan entry fails kit preflight: clock.core_taps internal with parent_budget core taps (gen ContractError)",
@@ -1894,11 +1900,37 @@ def cell_cap_report_step(AP, cfg, st, now=None):
     return n
 
 
+def cell_cap_exception(d, item):
+    """CELLCAP-HOLD: the recorded exception (ruling / reason) of a type in die cell_cap_exceptions (exact name, base type, or glob); '' = none"""
+    tab = d.get("cell_cap_exceptions") or {}
+    if not isinstance(tab, dict):
+        return ""
+    for k in (item, piece_base(item)):
+        if tab.get(k):
+            return str(tab[k])
+    for k, v in sorted(tab.items(), key=lambda kv: -len(str(kv[0]))):
+        if v and re.search(r"[*?\[]", str(k)) and fnmatch.fnmatchcase(str(item), str(k)):
+            return str(v)
+    return ""
+
+
+def cell_cap_block(d, item):
+    """CELLCAP-HOLD launch refusal text for a type flagged 'cellcap' by the plan probe, or None (exception recorded)"""
+    if cell_cap_exception(d, item):
+        return None
+    cb = (d.get("_cell_budget") or {}).get(item) or {}
+    if not isinstance(cb, dict) or not cb.get("est"):
+        return PLAN_BLOCK["cellcap"]
+    return f"{PLAN_BLOCK['cellcap']}; projected {int(cb['est']):,} synth from {str(cb.get('basis') or '')[:200]}"
+
+
 def plan_entry_block(d, item, kind=None):
     """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
     if item in (d.get("_identity_holds") or {}):
         return "plan block identity held: " + d["_identity_holds"][item]
     f = (d.get("_plan_flags") or {}).get(item)
+    if f == "cellcap":
+        return cell_cap_block(d, item)
     # DIE-HBM-89-TGEN 11-07 (HBM q_b000/q_b001 + __physical_v1 FAIL @gen 19:0x): a type kit without kit_rtl is the
     # plan wrapper, which binds a bus only via buses[].leaf / contents[].bind.  A type with unbound buses fails gen
     # with certainty, so it is not launched (no FAIL row, no gen slot) until the die config gives it bound RTL
@@ -5525,6 +5557,7 @@ def prov_census(AP, cfg, st):
             out[die] = {"error": f"probe {pn['error'][:80]} "}
             continue
         d["_plan_flags"] = pn.get("flags") or {}
+        d["_cell_budget"] = pn.get("cell_budget") or {}
         d["_templates"] = pn.get("templates") or {}
         pdeps = pn.get("prov_deps") or {}
         types = sorted(t for t in d["_plan_flags"] if prov_item(d, t))
@@ -11924,6 +11957,23 @@ try:
             flags[t] = "contract"
     for t in split:
         flags.setdefault(t, "split")
+    # CELLCAP-HOLD (COORD 11-23 22:50): CELL-BUDGET projection over the cap -> flag 'cellcap' (wins over the stops_off 'split' note)
+    cell_budget = {}
+    if a.get("cells_dir") and cmax:
+        try:
+            sys.path.insert(0, a["cells_dir"])
+            import adv_cell_budget as _CB
+            for r in _CB.rows(p):
+                if r["est"] > cmax:
+                    cell_budget[r["type"]] = {"est": r["est"], "basis": str(r["basis"])[:240], "slot": r["slot"]}
+        except Exception as e:
+            cell_budget = {"_error": f"{type(e).__name__}: {e}"[:200]}
+    for t, cb in cell_budget.items():
+        v = pt.get(t)
+        if t.startswith("_") or not isinstance(v, dict) or v.get("hard") or v.get("type_split") or v.get("cell_cap_exception"):
+            continue
+        if flags.get(t) in (None, "split"):
+            flags[t] = "cellcap"
     # TYPE-TEMPLATE (OWNER 11-19): plan types marked type_template true that are the same kit (plan layout key + bound RTL key,
     # tools/fleet/type_template.py) -> {member: representative}.  An error = no template (every type builds on its own).
     templates, templates_error = {}, ""
@@ -11937,7 +11987,7 @@ try:
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "norm_blocks": norm_blocks, "die_ctx": die_ctxs, "deps": deps, "lint": lint, "probe_v": PROBE_V,
            "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
-           "unbound": unbound, "templates": templates, "templates_error": templates_error}
+           "unbound": unbound, "templates": templates, "templates_error": templates_error, "cell_budget": cell_budget}
     if a.get("core_views"):
         # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
         cv = {}
@@ -12073,7 +12123,7 @@ def plan_names(AP, st, d):
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
     c = (st.get("plans") or {}).get(key)
     mode = d.get("block_identity", "raw")
-    if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
+    if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and "cell_budget" in c and time.time() - c.get("t", 0) < 6 * 3600:
         return c
     args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": SPLIT_CELLS, "cells_dir": str(Path(__file__).resolve().parents[1] / "die_plan"),
             "block_ignore": d.get("block_ignore"), "tt_dir": str(Path(__file__).resolve().parents[1] / "fleet"),
@@ -12084,6 +12134,7 @@ def plan_names(AP, st, d):
     if p.get("error"):
         return {"error": p["error"]}
     p["t"] = time.time()
+    p.setdefault("cell_budget", {})              # CELLCAP-HOLD: a probe cached before the hold existed lacks the key and is re-run once
     if mode == "raw":
         st.setdefault("plans", {})[key] = p
     return p
@@ -12728,6 +12779,7 @@ def ensure_plan_view(AP, st, d):
         return False
     d["_plan_sha"] = pn.get("plan_sha")
     d["_plan_flags"] = pn.get("flags") or {}
+    d["_cell_budget"] = pn.get("cell_budget") or {}
     d["_templates"] = pn.get("templates") or {}
     d["_plan_unbound"] = pn.get("unbound") or {}
     d["_plan_deps"] = pn.get("deps") or {}
@@ -12826,6 +12878,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     d["_plan_part_types"] = set(pn.get("types") or [])
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
+                    d["_cell_budget"] = pn.get("cell_budget") or {}
                     d["_templates"] = pn.get("templates") or {}
                     d["_plan_unbound"] = pn.get("unbound") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
