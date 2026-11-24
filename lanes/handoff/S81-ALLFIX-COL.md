@@ -17,3 +17,6 @@ Base B1 ae3101241d6b = epyc10 s81-j9-r6/b1_tree/physical/die_plan/s81/plan_j9_b1
 - COORD ruled (reply to ASK 146f37ce): epyc11 probe bind ONLY may use OT_PLAN_GATE_PRE=warn iff fresh PRE = exactly the 12 p5 ANCHORDRY; label PROBE, counts nowhere, gates nothing; 13th finding = stop + post. 60 col_h9_r0 stay HELD until gate_c8 (probe cannot release them).
 - E9 probe outputs were mis-matched (allfix2 as-built on B1 plan): invalid, deleted via ot-delete. E11 s81-allfix-col/tmp/{stage_e11,probe_e11}.sh: B1 as-built wavea 555d3793bb64, baseline ae3101241d6b, plan 77d6f4f47270, elab bcd82ea338fc; OUT fs1/probe_out; logs fs1/pre_fresh.log, fs1/probe_bind.log, tmp/probe_e11.out.
 - Then kits on epyc11 only (kits.sh; --why text says c7a, edit a COPY before use).
+
+## 03:5x 11-24 S81-COL-H9R0-R5
+Alias of this lane for the 60 FAM-S81-COL-H9R0-R4 rows (TAKING 80da15d5). All 60 ride c8/c8r, HELD for gate_c8 (INT). Live: epyc8 p2 pva4376595 ECO i2t (i1 NOT SIGNED setup -225, DRC 5); never relaunch. Next: on gate_c8 EMIT launch p5/p3 route on epyc10 (load<80) else epyc9, read rc72 corridor.
