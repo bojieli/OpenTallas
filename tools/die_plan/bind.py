@@ -1219,6 +1219,7 @@ class Binder:
             raise BindError(f"RESET_BOOT_CONTRACT {exc}") from exc
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
+        self._leaf_master0 = {c.path: c.module for c in self.F.cells if c.kind == "leaf"}
         # HBM-HUB-RTL-1 11-11 (rd1): the elaborated parameters of the as-built TOP instances (type defaults + instance
         # overrides), so a param_regen hook can check a parameter that lives above a netlist cut (e.g. hb_coll_q VM_RT
         # inside the hb_coll_q.__cut_* cores).  Read only; nothing in the bind uses it.
@@ -1265,6 +1266,12 @@ class Binder:
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
+        # BIND-UNDRIVEN-IN 11-23: every leaf with its connected widths BEFORE split / compose / bridge replace it: the
+        # generated leaf has no interface of record, so its source leaves are judged in its place
+        self._leaf_before = {c.path: E.Cell(c.path, c.module, dict(c.params), {pn: list(b) for pn, b in c.ports.items()
+                                            if c.dirs.get(pn) == "input"}, {}, "leaf", c.ytype)
+                             for c in self.F.cells if c.kind == "leaf"} \
+            if any(self.ab.get(k) for k in ("core_splits", "compose", "structural_bridges")) else {}
         if self.ab.get("core_splits"):
             # DIE-KV-66 RF-KV3 (opt-in): one as-built hard leaf -> two hard leaves, before composition and drivers/loads
             import bind_core_split
@@ -1715,6 +1722,7 @@ class Binder:
         self.reset_age = defaultdict(list)                   # part -> as-built release stages of replaced resets
         cnt = defaultdict(int)
         plan_rw = self.pc.rewired_keys() if self.pc else set()
+        self.open_input_audit(cnt, plan_rw)
         for ci, c in enumerate(F.cells):
             if ci not in self.cpart:
                 continue
@@ -1732,6 +1740,146 @@ class Binder:
         self.counts = dict(cnt)
         if self.pc:
             self.pc.apply_sinks()
+
+    def _leaf_input_widths(self, c):
+        """{input port: width or None} of leaf cell c's master at THIS instance's parameters, or None (no interface).
+        An unspecialized blackbox stub carries default-parameter widths only: an instance with overrides (and a variant /
+        split / compose leaf the elaborated netlist does not hold) is evaluated from the selected RTL header."""
+        memo = self.__dict__.setdefault("_liw", {})
+        key = (c.ytype, c.module, json.dumps(c.params, sort_keys=True, default=str))
+        if key in memo:
+            return memo[key]
+        rec = self.F.leaf_inputs.get(c.ytype)
+        same = rec is not None and c.module == self._leaf_master0.get(c.path, c.module)
+        dfl = self.param_defaults.get((c.ytype, c.module), {})
+        over = {k: v for k, v in c.params.items() if k not in dfl or str(dfl[k]) != str(v)}
+        if same and (rec[1] or not over):
+            res = dict(rec[0])
+        else:
+            res = None
+            sys.path.insert(0, str(HERE.parent))
+            import die_port_bind as D
+            if not hasattr(self, "_liw_idx"):
+                self._liw_mods, self._liw_pick = {}, {}
+                self._liw_idx = E.module_index(self.ab.get("rtl_roots", ["rtl"]), self.ab.get("files", []), self.base)
+                self._liw_pref = [f if Path(f).is_absolute() else str(Path(self.base) / f) for f in self.ab.get("prefer", [])]
+            if c.module not in self._liw_pick:
+                self._liw_pick[c.module] = E.pick(self._liw_idx, c.module, self._liw_pref)[0]
+            f = self._liw_pick[c.module]
+            m = None
+            if f is not None:
+                try:
+                    if f not in self._liw_mods:
+                        self._liw_mods[f] = {x.name: x for x in D.parse_modules(Path(f).read_text(errors="replace"), f)}
+                    m = self._liw_mods[f].get(c.module)
+                except (ValueError, KeyError, IndexError, OSError):
+                    m = None
+            if m is not None:
+                env = m.env({k: (int(v) if re.fullmatch(r"-?\d+", str(v)) else v) for k, v in c.params.items() if k in m.params})
+                res = {pn: m.width(pn, env) for pn in m.ports if m.ports[pn][0] == "input"}
+            elif same:
+                # header not parseable: presence is still judged, widths are not
+                res = {pn: None for pn in rec[0]}
+        memo[key] = res
+        return res
+
+    def open_input_audit(self, cnt, plan_rw=frozenset()):
+        """BIND-UNDRIVEN-IN 11-23 (FABLE-RC-QC ruling (2)): every input bit of every bound leaf instance has a driver.
+        The per-load-bit audit walks only the CONNECTED ports of a leaf; a port the as-built instance leaves out (QC
+        C1-noSU tt_ctlm f16_obs[37:0] + init_u0: strict 0 undriven with 39 floating core inputs) has no net there.  Each
+        such bit is UNDRIVEN unless the plan declares it: proven dead (dead_input_proofs), a package bump (contents /
+        hard_cores bump_ports: the binder connects it to a die port), a plan cell / rewire, or declared_ties covering the
+        whole port, which is then CONNECTED here as that constant (a tie that is only declared would still float).
+        Scope: leaf pins of the bound die.  Instances inside a leaf body are blackboxed here (kit synth gate)."""
+        self.open_inputs, self.open_inputs_unjudged = [], []
+        G, F = self.G, self.F
+        if not getattr(F, "leaf_inputs", None):
+            return
+        try:
+            bumps = {(b["ci"], b["pin"]) for bs in self.bump_pins().values() for b in bs if b["dir"] == "input"}
+        except BindError:
+            bumps = set()       # a bad declaration excuses nothing here; emit raises and reports it as before
+        rules = getattr(self.declared_ties, "rows", [])
+        for ci in sorted(self.cpart):
+            c = F.cells[ci]
+            if G.kind[ci] != "leaf":
+                continue
+            want = self._leaf_input_widths(c)
+            tn = self.parts[self.cpart[ci]]["type"]
+            if want is None:
+                if c.ytype not in F.leaf_inputs and self._leaf_before:
+                    cnt["open_input_derived"] += 1      # split / composed leaf: its source leaves are judged below
+                else:
+                    self.open_inputs_unjudged.append(dict(type=tn, path=c.path, module=c.module, port=None,
+                                                          why="no elaborated or parseable interface"))
+                continue
+            for pn, w in sorted(want.items()):
+                have = len(c.ports.get(pn) or [])
+                if (ci, pn) in bumps:
+                    cnt["open_input_bump"] += (w or 1) if not have else 0
+                    continue
+                if w is None:
+                    if have:
+                        self.open_inputs_unjudged.append(dict(type=tn, path=c.path, module=c.module, port=pn,
+                                                              why="width not evaluable (port is connected)"))
+                        continue
+                    w = 1       # absent port of unknown width: at least one floating bit
+                bits = [i for i in range(have, w) if (ci, pn, i) not in plan_rw and (ci, pn, i) not in self.rewire]
+                if not bits:
+                    continue
+                dfl = self.param_defaults.get((c.ytype, c.module), {})
+                live = [i for i in bits if not self.proven_dead.allows(tn, c, pn, i, dfl)]
+                cnt["open_input_dead"] += len(bits) - len(live)
+                if not live:
+                    continue
+                if not have and len(live) == w:
+                    vals = [next((v for v in "01" if self.declared_ties.allows(tn, c.module, pn, i, v, c.path)), None)
+                            for i in range(w)] if rules else [None]
+                    if None not in vals:
+                        # connect the declared constant: analyse classifies it as declared_tie and emit writes it
+                        c.ports[pn] = vals
+                        c.dirs[pn] = "input"
+                        G.dirs[ci][pn] = "input"
+                        cnt["open_input_tied"] += w
+                        continue
+                cnt["undriven"] += len(live)
+                cnt["open_input"] += len(live)
+                self.open_inputs.append(dict(type=tn, partition=self.cpart[ci], path=c.path, module=c.module, port=pn,
+                                             bits=live, n=len(live), absent=not have))
+                rng = f"[{live[-1]}:{live[0]}]" if len(live) > 1 and live[-1] - live[0] + 1 == len(live) else \
+                    f"[{','.join(map(str, live[:16]))}{',...' if len(live) > 16 else ''}]"
+                self.errors.append(
+                    f"UNDRIVEN_OPEN {c.path}.{pn}{rng} ({c.module}, type {tn}): {len(live)} input bit(s) the as-built "
+                    f"instance leaves unconnected: drive them, or declare them in the plan (proven dead, declared tie, bump)")
+        now = {c.path: c.module for c in F.cells}
+        for path, c in sorted(self._leaf_before.items()):
+            if now.get(path) == c.module:
+                continue
+            part = self.R.part_of(path)
+            tn = self.parts[part]["type"] if part in self.parts else None
+            if tn is None:
+                continue        # transport / rule cell or an unmapped leaf (reported as UNMAPPED)
+            want = self._leaf_input_widths(c)
+            cnt["open_input_source_leaf"] += 1
+            for pn, w in sorted((want or {None: None}).items(), key=str):
+                have = len(c.ports.get(pn) or [])
+                if pn is None or (w is None and have):
+                    self.open_inputs_unjudged.append(dict(type=tn, path=path, module=c.module, port=pn, why="source leaf"))
+                    continue
+                live = [i for i in range(have, w or 1) if not self.proven_dead.allows(
+                    tn, c, pn, i, self.param_defaults.get((c.ytype, c.module), {}))]
+                if not live:
+                    continue
+                cnt["undriven"] += len(live)
+                cnt["open_input"] += len(live)
+                self.open_inputs.append(dict(type=tn, partition=part, path=path, module=c.module, port=pn, bits=live,
+                                             n=len(live), absent=not have, source_leaf=True))
+                self.errors.append(f"UNDRIVEN_OPEN {path}.{pn} ({c.module}, type {tn}; source leaf of a split / composed "
+                                   f"core): {len(live)} input bit(s) the as-built instance leaves unconnected")
+        n = len(self.open_inputs_unjudged)
+        if n:
+            self.warns.append(f"OPEN_INPUT_UNJUDGED {n} leaf pin(s)/instance(s) with no evaluable interface "
+                              f"(bind_open_inputs.json unjudged)")
 
     def _src_desc(self, p, s, cnt, ci, pn, i):
         """a non-OR logical source as seen from partition p"""
@@ -6129,6 +6277,11 @@ def cmd_bind(a):
                            port=n + "_i", scope="parent_spare_ft", bits=list(range(sl["width"] + 1)),
                            n=sl["width"] + 1, value=0)
                       for p, slots in sorted(getattr(B, "spare_ft", {}).items()) for n, sl in sorted(slots.items())]
+    _fresh_write_text(out / "bind_open_inputs.json", json.dumps(
+        dict(schema="opentallas.bind_open_inputs.v1", undriven=getattr(B, "open_inputs", []),
+             unjudged=getattr(B, "open_inputs_unjudged", [])[:5000],
+             n_undriven=sum(r["n"] for r in getattr(B, "open_inputs", [])),
+             **{k: B.counts.get("open_input_" + k, 0) for k in ("dead", "bump", "tied")}), indent=1) + "\n")
     _fresh_write_text(out / "bind_declared_ties.json", json.dumps(
         [dict(type=k[0], module=k[1], port=k[2], bits=sorted(set(v)), n=len(v)) for k, v in sorted(B.declared_tied.items())] + parent_ft_ties,
         indent=0) + "\n")

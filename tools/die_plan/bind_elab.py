@@ -901,6 +901,10 @@ class Flat:
         self.top_ports = {}          # name -> (dir, [net])
         self.const_drivers = {}      # net -> (const, where): a constant assigned inside a dissolved module
         self.dissolved = {}          # path -> module
+        # BIND-UNDRIVEN-IN 11-23: leaf ytype -> ({input port: declared width}, exact).  Yosys omits an unconnected port
+        # from a cell's connections, so the port list of the MASTER is the only record of it; exact = False when the
+        # master is an unspecialized blackbox stub (widths at default parameters, an instance override may differ)
+        self.leaf_inputs = {}
 
     def new(self, n):
         b = len(self.parent)
@@ -1052,6 +1056,9 @@ def flatten(yjs, top, parent_variants=(), retain_hierarchy_ports=False):
                 params = {k: _pval(v)[0] for k, v in sub.get("parameter_default_values", {}).items()} \
                     if ct.startswith("$paramod") else {k: _pval(v)[0] for k, v in c.get("parameters", {}).items()}
                 F.cells.append(Cell(cpath, orig(ct), params, conns, dict(c.get("port_directions", {})), "leaf", ct))
+                if ct not in F.leaf_inputs:
+                    F.leaf_inputs[ct] = ({pn: len(p["bits"]) for pn, p in (sub.get("ports") or {}).items()
+                                          if p.get("direction") == "input"}, ct.startswith("$paramod"))
             else:
                 params = {k: _pval(v)[0] for k, v in c.get("parameters", {}).items()}
                 F.cells.append(Cell(cpath, ct, params, conns, {}, "unknown", ct))
