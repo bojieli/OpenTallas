@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "b06737eb11e43fc3f224efc789b3f66c872a754ac2a4100c92ebc3229a46eb9b",
+ "signed": true,
+ "signoff_source": "results/head_lep_pair_views_vE28s_1122/source_signoff.json",
+ "signoff_verdict": "SIGNED",
+ "pins": {
+  "clk": {
+   "tt": {
+    "mean_ps": 558.17,
+    "n": 3812,
+    "basis": "pin_register_mean",
+    "source": "results/head_lep_pair_views_vE28s_1122/source_signoff.json:clk:tt:insertion_pinflops"
+   },
+   "ff": {
+    "mean_ps": 451.18,
+    "n": 3812,
+    "basis": "pin_register_mean",
+    "source": "results/head_lep_pair_views_vE28s_1122/source_signoff.json:clk:ff:insertion_pinflops"
+   }
+  }
+ }
+}

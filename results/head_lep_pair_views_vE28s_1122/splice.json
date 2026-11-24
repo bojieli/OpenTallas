@@ -1,0 +1,28 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/pair/views/views/ot_s81hd_lep_pair.lef",
+ "base_sha256": "bd4d040f10acd666d24807aef67b112b05b37a94b94e50405b33b6468e55f756",
+ "detail": "/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/pair/views/detail/detail_b1.lef",
+ "out": "/srv/opentallas-scratch2/claude/fable-fix-head-lep0n-1122/pair/views/view/ot_s81hd_lep_pair.lef",
+ "out_sha256": "a18a0f164d454448f20737f6bdddce0c7a6f0d19434f80ac69a33c72a2d9ee89",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 26808,
+  "M7": 7936
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": []
+}
