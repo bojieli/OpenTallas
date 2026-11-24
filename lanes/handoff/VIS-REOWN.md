@@ -14,3 +14,5 @@ Next: PROBE-PASS only on a clean probe census (hotspot_census check --probe); wa
 - Reviewed renders: kv3_pv A5t3 OK, cbf_q01 ISSUES (central tap pile), slw_st_a_v2 cl9f076 OK.
 - 09:31 main 70d2e22a95c1 deployed (feed live next wave pass). census_sweep fixed: ot-run needs --stage rt/tools + out dir. 4 censuses admitted on E7.
 - 09:3x place review of 50 probe renders (contact sheets intel2 vis-reown/tmp/sheet0-4.png, built by scratch sheet.py) written to 46 VIS rows; OK 28 / ISSUES 18. Next: watch census/sweep.log, re-sheet new place kits every 30 min, NO-GRT kits get a census when GRT lands.
+- 09:35 COORD: I own the 30-min review loop (no stand-down). Waiter on localhost: wakes on 30 min or >=5 new WAIT-VISUAL-PROBE rows vs intel2 vis-reown/tmp/reviewed.txt (die|type|attempt). Each pass: rebuild pvq.tsv, run sheet.py for the new rows, review, post ISSUES to the owners (QC cb -> QC-CB-SPREAD-R2; KV pv/hub -> KV-ALLFIX; hd_lep0N -> HEAD-EAST-REPLAN; QC su -> QC-ALLFIX; S81 -> S81-ALLFIX-INT), append the keys to reviewed.txt. Hourly summary <80 words to COORD.
+- 09:33 infra relaunch list (12 units, E8/E10 excluded) posted to FLOW-OPS-R3.
