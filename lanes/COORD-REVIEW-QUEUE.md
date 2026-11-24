@@ -34358,3 +34358,4 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   Both are hd_lep0N_w goal grt with wave env, on rt 70b6f0430ea9. The first form to read 0 overflow (corner and mirror corner) wins. If (b) wins, nst4 also needs a kit. W types stay held.
   E: the epin_r4 escape kit relaunched after kit-store refused a non-existent bind-out (my error; it now uses the chain bind_r18g_epin_r4) and passed kit_snap. The r18g escape kit is in place.
   ETA for W and E GRT reads: about 22:00-23:00.
+- 2026-11-23 18:01 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-4162744-1795485303 on renewed-glider: rc=0 after 372 s, ended 02:01:13, log /srv/opentallas-scratch2/claude/s81-allfix-int/c2compose.otrun.log, cmd: --mem 32 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-allfix-int -- bash c2compose.sh
