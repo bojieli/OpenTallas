@@ -654,3 +654,4 @@
   NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 10.8 h job 10.8 h: no new meaningful log line for 10.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
   NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 10.8 h job 14.6 h: no new meaningful log line for 10.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
   NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 10.8 h job 15.3 h: no new meaningful log line for 10.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+- 2026-11-24 03:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 03:52 PST: 78 running jobs, PROGRESSING 74, SLOW 4, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
