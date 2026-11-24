@@ -2884,6 +2884,26 @@ def replacement_blocked(st, die, item):
     return item in set(((st or {}).get("bind_stale_items") or {}).get(die) or ())
 
 
+def resign_since(cfg, die, item):
+    """COORD 11-24 (TYPE-CONTRACT-SPEC SDC audit): die option resign_items {item: {"since": unix time, "why": text}} names types whose kept kit SDC
+    differs from a fresh generation on the current plan.  A row of such an item started before `since` keeps its sign-off on its own plan (any-plan
+    count unchanged) but is not the current plan's answer: it is not "inputs unchanged", not counted on the current block, and the item gets a
+    current-plan re-sign at superseded-signed (DEFER-RESIGN, spare capacity) priority.  -> since (float) or None"""
+    e = ((((cfg or {}).get("dies") or {}).get(die) or {}).get("resign_items") or {}).get(item)
+    if e is None:
+        return None
+    try:
+        return float((e or {}).get("since") or 0) if isinstance(e, dict) else 0.0
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def resign_carry_off(cfg, die, r):
+    """the row is one resign_items took off the current plan (started before the entry)"""
+    since = resign_since(cfg, die, (r or {}).get("item"))
+    return since is not None and (not since or float((r or {}).get("started") or 0) < since)
+
+
 def ctx_changed(cur_ctx, die, r):
     """COORD 11-18 (QC N4.2): the row was built on another resolved die-level contract than the current plan gives its item (both known and different)"""
     cc = (cur_ctx or {}).get(die, {}).get(r.get("item"))
@@ -2934,6 +2954,8 @@ def row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm=None, cur_ctx=N
         same = bool(cn) and r.get("norm_block") == cn
     if not same:
         return False
+    if resign_carry_off(cfg, die, r):
+        return False                                   # COORD 11-24: its kit SDC differs from a fresh generation on the current plan (resign_items)
     if ctx_changed(cur_ctx, die, r):
         return False                                   # a die-level value this type consumes changed (seam_hold, tap window, reset ...): the kit was built on the old contract
     try:
@@ -3722,6 +3744,10 @@ def select(rows, cfg, die, state, plan_types=None):
             skip.setdefault(TYPE_TEMPLATE_MEMBER, []).append(r["item"])
             continue
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
+        _rs = resign_since(cfg, die, r["item"])
+        if _rs is not None and (rec is None or resign_carry_off(cfg, die, rec)):
+            rec = None                                 # COORD 11-24 resign_items: the kept row is not this plan block's answer; one fresh current-plan attempt
+            r = dict(r, state=next(iter(states)) if states else r["state"], _resign_item=True)
         bw = blocked_why(cfg, state, die, r["item"], blk(r["item"]))
         if bw:
             skip.setdefault(bw.split(":", 1)[0] + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(r["item"])
@@ -3899,7 +3925,7 @@ def select(rows, cfg, die, state, plan_types=None):
     if not d.get("plan_frozen"):                                  # OWNER r711: a type signed on an older plan block whose current block differs goes last; plan_frozen: normal priority, one batch
         _sidx = signed_block_index(state, die)
         for r in picked:
-            if is_superseded_signed(_sidx, r["item"], r.get("block_sha")):
+            if is_superseded_signed(_sidx, r["item"], r.get("block_sha")) or r.get("_resign_item"):
                 r["_resign"] = True
     picked.sort(key=lambda r: (1 if r.get("_resign") else 0, -unlocks.get(core_module(r["item"]), 0), 0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
     if not FG.stops_off_die(cfg, die):                           # OWNER 11-18: no pilot gating (hbm excluded)
@@ -7064,6 +7090,10 @@ def counted_now(cfg, st, die, item, block=None):
         return False
     if item in ((cfg.get("dies") or {}).get(die) or {}).get("rebuild_counted", ()):
         return False
+    since = resign_since(cfg, die, item)
+    if since is not None and not any(r.get("die") == die and r.get("item") == item and str(r.get("q_status") or "").upper() in SIGNED_Q
+                                     and float(r.get("started") or 0) >= (since or float("inf")) for r in (st.get("items") or {}).values()):
+        return False                                   # COORD 11-24 resign_items: counted on its own plan only until a current-plan re-sign signs off
     if not block:
         return True
     return st.setdefault("counted_blocks", {}).setdefault(f"{die}|{item}", block) == block

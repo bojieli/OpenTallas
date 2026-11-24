@@ -950,6 +950,29 @@ class DieContextTypeScoped(unittest.TestCase):
         self.assertNotEqual(BI.die_ctx(base, "A"), BI.die_ctx(q, "A"))
 
 
+class ResignItems(unittest.TestCase):
+    """COORD 11-24 (SDC audit): resign_items takes a kept row off the current plan (own-plan sign-off stays) and re-signs at defer priority"""
+
+    def cfg(self):
+        return {"_counter_signed": {"s81": {"t"}}, "dies": {"s81": {"resign_items": {"t": {"since": 1000.0, "why": "SDC differs"}}}}}
+
+    def test_old_row_is_carried_off_new_row_is_not(self):
+        c = self.cfg()
+        self.assertTrue(KW.resign_carry_off(c, "s81", {"item": "t", "started": 999}))
+        self.assertFalse(KW.resign_carry_off(c, "s81", {"item": "t", "started": 1001}))
+        self.assertFalse(KW.resign_carry_off(c, "s81", {"item": "u", "started": 1}))
+        self.assertFalse(KW.row_inputs_unchanged(c, "s81", {"item": "t", "block_sha": "B", "started": 999}, "t", {"s81": {"t": "B"}}))
+
+    def test_not_counted_on_the_current_plan_until_a_fresh_sign_off(self):
+        c = self.cfg()
+        self.assertFalse(KW.counted_now(c, {"items": {}}, "s81", "t"))
+        old = {"items": {"k": {"die": "s81", "item": "t", "q_status": "SIGNED", "started": 999}}}
+        self.assertFalse(KW.counted_now(c, old, "s81", "t"))
+        new = {"items": {"k": {"die": "s81", "item": "t", "q_status": "SIGNED", "started": 1001}}}
+        self.assertTrue(KW.counted_now(c, new, "s81", "t"))
+        self.assertTrue(KW.counted_now({"_counter_signed": {"s81": {"t"}}, "dies": {"s81": {}}}, {"items": {}}, "s81", "t"))
+
+
 class CtxOnlySupersedeGuard(unittest.TestCase):
     """COORD 11-18: a die_ctx-only change retires ENQUEUED-not-started and gen/place rows; rows past place finish"""
 
