@@ -95,3 +95,9 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - COORD 00:16 HOST RULING: no new tree forks into epyc11; my 00:19/00:21 posts corrected.
 - epyc11 (from EPYC11-ONBOARD-FINISH, COORD 00:26): gen_hosts = s81_head only. S81 d8j8 hash NOT started, waits for io full avg60 < 10 % (hdirs.py + hroots_s81.txt copied to epyc11 FLOW-OPS-R3/tmp; expect bind 54daa9 3052, postbind s2 20fa22 3052, s3 5be9d8 266). QC postbind + KV copy: NOT done, destinations are kw45 (refused), asked COORD for a ruling. No rsync / tar there.
 - Unchecked: depth_netlists vs TTC F5 in QC C1c.
+
+## 2026-11-24 01:30 PST
+- COORD rulings: no QC/KV on epyc11 until a plan event publishes there; S81 re-added (hub 95965852, verified hashes); QC-OPEN-SU probes on epyc7.
+- STRAP-EVIDENCE-COUNT: main 445647cc300 + hub tools/release_tree_plan.py, signed_store_ingest.py (backups .bak-strapcount-1124); table lanes/COUNT-STRAP-EVIDENCE.tsv seeded 301 rows NO-VERDICT. Hub tool copies diverge from main (5 hub tests fail before and after the patch: designs LL*, retire s81 legacy, scan timeout).
+- Breach: one git stash in the lane clone (popped clean).
+- Open: depth_netlists vs TTC F5 (QC C1c) unchecked; epyc11 load check after the S81 add.
