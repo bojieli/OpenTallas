@@ -217,3 +217,43 @@ def test_pack_treats_kept_windows_as_obstacles():
     rows[0]["hi"] = 200.0
     RR._pack(rows, _P(), 1.2)
     assert rows[1]["status"] == "NO-ROOM"                                     # no room left beside it
+
+
+def test_move_and_grow_keeps_internals_inside_only_with_ride_internal():
+    raw = _plan()
+    raw["partition_types"]["tc"]["hard_cores"] = [dict(inst="h", origin_um=[700.0, 10.0], outline_um=[160.0, 100.0])]
+    sp = {"C": {"rect_um": [864.0 - 172.8, 864.0, 1728.0 - 172.8, 1900.8]}}
+    _, bad = RR.apply(raw, _spec(sp))
+    assert "tc" in bad["content_outside"]                           # die position kept: the core leaves the outline
+    new, ok = RR.apply(raw, _spec(sp, ride_internal=["C"]))
+    assert ok["content_outside"] == {} and new["partition_types"]["tc"]["hard_cores"][0]["origin_um"] == [700.0, 10.0]
+
+
+def test_new_hop_over_limit_is_reported():
+    raw = _lane_plan()
+    worse = copy.deepcopy(raw)
+    worse["partition_types"]["t1"]["ft_slots"][0]["regs_um"] = [[0.0, 410.0]]
+    worse["partition_types"]["t1"]["ft_slots"][0]["stations"] = 1
+    assert RR.new_hop_overs(raw, raw, 405.0) == {} and "ln" in RR.new_hop_overs(raw, worse, 405.0)
+
+
+def test_relayer_shrinks_both_ends_and_refuses_a_slot_end():
+    raw = _lane_plan()
+    raw["ports"].append(dict(id="pb", src=dict(part="SRC", bus="o0"), dst=dict(part="DST", bus="i0"), kind="data",
+                             width=8, face="E", layers=["M6", "M4"], window_um=[400.0, 420.0]))
+    rows = RR.relayer(raw, {"pb": ["M6", "M4", "M2"]})
+    assert rows["pb"]["new"] == [400.0, round(400.0 + 20.0 * 2 / 3, 6)]
+    b = raw["partition_types"]["tsrc"]["buses"][0]
+    assert b["layers"] == ["M6", "M4", "M2"] and abs(b["window_um"][1] - b["window_um"][0] - 40.0 / 3) < 1e-5
+    with pytest.raises(ValueError):
+        RR.relayer(_lane_plan(), {"p1": ["M6", "M4", "M2"]})        # ft slot ends
+    with pytest.raises(ValueError):
+        RR.relayer(_lane_plan(), {"p0": ["M6"]})                    # not an increase
+
+
+def test_dodge_cores_leaves_abutted_cores_on_one_axis():
+    t = dict(outline_um=[864.0, 864.0], hard_cores=[
+        dict(inst="a", origin_um=[100.0, 100.0], outline_um=[200.0, 200.0]),
+        dict(inst="b", origin_um=[100.0, 300.0], outline_um=[200.0, 200.0])])
+    (x, y), = RR.dodge_cores(t, [[290.0, 310.0]])
+    assert not (100.0 < x < 300.0 and 100.0 < y < 500.0) and (x == 290.0 or y == 310.0)

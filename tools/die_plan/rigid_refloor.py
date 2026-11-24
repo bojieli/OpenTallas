@@ -20,6 +20,7 @@ SPEC (opentallas.rigid_refloor.v1):
      "respace_limit": 405                optional (default 405; 0 = off): lane repair (fit_free_slots) on the slots of
                                          re-shaped / re-pinned types: stations re-spaced, added only where a hop
                                          exceeds it (+1 cycle each, latency.lanes re-derived and reported)
+     "ride_internal": ["<partition>"]    optional: a part that moves AND grows; its internals ride with the SW corner
      "path_respace": false               optional: also run path_respace on the touched lanes afterwards
      "keep_frame": ["<partition>"]       optional: partitions whose pins must not change when a seam is re-sited
                                          (default order: re-shaped end re-pins first, then the cheaper type by hard
@@ -210,7 +211,7 @@ def _qdelta(a, b, lo, hi, grid):
     return 0.0
 
 
-def site_ports(raw, lay, pin_gap=1.2, keep_frame=()):
+def site_ports(raw, lay, pin_gap=1.2, keep_frame=(), slide=()):
     """per port: dict(id, face, old die window, new die window, ends=[(part, old frame win, new frame win)], status)."""
     P = S.Plan(raw)
     grid = float(raw["die"].get("grid_um", 0) or 0)
@@ -267,7 +268,7 @@ def site_ports(raw, lay, pin_gap=1.2, keep_frame=()):
         # end that did not move
         order = sorted([(s, ds), (d, dd)], key=lambda e: (e[0] in reshaped, -cost(e[0]), abs(e[1]) > EPS))
         for n, dv in order:
-            if n in reshaped:
+            if n in reshaped or pid in slide:       # a re-layered port re-pins both ends anyway: pack it
                 continue
             cands.append(("KEEP-" + n, [a + dv, b + dv]))
         cands.append(("SLIDE", [a, b]))
@@ -332,7 +333,8 @@ def _pack(rows, P, gap, grid=0.0):
                 L = r["new"][1] - r["new"][0]
                 st = max(r["new"][0] + start_shift, lo)
                 for _ in range(len(taken) + len(moving) + 2):
-                    clash = [t for t in taken if st < t[1] + gap - EPS and st + L > t[0] - gap + EPS]
+                    # 0.1 um slack: B1 packs windows 1.15-1.19 apart (track-snapped pin_gap); that spacing is legal
+                    clash = [t for t in taken if st < t[1] + gap - 0.1 and st + L > t[0] - gap + 0.1]
                     if not clash:
                         break
                     st = st + q(max(t[1] for t in clash) + gap - st)
@@ -409,16 +411,20 @@ def dodge_cores(t, pts, margin=1.08):
     if not boxes:
         return pts
     w, h = t["outline_um"]
+
+    def free(q):
+        return 0.5 <= q[0] <= w - 0.5 and 0.5 <= q[1] <= h - 0.5 and \
+            not any(x0 < q[0] < x1 and y0 < q[1] < y1 for _i, x0, y0, x1, y1 in boxes)
     out = []
     for x, y in pts:
-        for _ in range(8):
-            hit = next(((x0, y0, x1, y1) for _i, x0, y0, x1, y1 in boxes if x0 < x < x1 and y0 < y < y1), None)
-            if hit is None:
-                break
-            x0, y0, x1, y1 = hit
-            cands = [(x0 - margin, y), (x1 + margin, y), (x, y0 - margin), (x, y1 + margin)]
-            cands = [(a, b) for a, b in cands if 0.5 <= a <= w - 0.5 and 0.5 <= b <= h - 0.5] or cands
-            x, y = min(cands, key=lambda q: abs(q[0] - x) + abs(q[1] - y))
+        if any(x0 < x < x1 and y0 < y < y1 for _i, x0, y0, x1, y1 in boxes):
+            xs = [e for _i, x0, _y0, x1, _y1 in boxes for e in (x0 - margin, x1 + margin)]
+            ys = [e for _i, _x0, y0, _x1, y1 in boxes for e in (y0 - margin, y1 + margin)]
+            cands = [q for q in [(e, y) for e in xs] + [(x, e) for e in ys] if free(q)]
+            if not cands:       # no single-axis escape: nearest corner
+                cands = [q for q in ((a, b) for a in xs for b in ys) if free(q)]
+            if cands:
+                x, y = min(cands, key=lambda q: abs(q[0] - x) + abs(q[1] - y))
         out.append([round(x, 4), round(y, 4)])
     return out
 
@@ -680,12 +686,49 @@ def tap_renames(old_types, new_types, raw, tn, offset):
     return {k: v for k, v in m.items() if k != v and k != "clk"}
 
 
+def relayer(raw, table):
+    """spec "relayer": {port id: [layers]} -- a seam port re-pinned on more layers (owner-approved three-layer seam pins):
+    the port and the bus of each end get the new layer list, and the window shrinks to len * n_old / n_new from its
+    low die coordinate (same pin count, denser stack).  Both ends must be type buses (ft slots carry one layer list
+    for both faces).  Runs on the OLD layout, before any move, so the seam re-site sees the shorter window."""
+    if not table:
+        return {}
+    import schema as S_
+    P = S_.Plan(raw)
+    parts = {q["name"]: q for q in raw["partitions"]}
+    out = {}
+    for pid, layers in sorted(table.items()):
+        pr = next(q for q in raw["ports"] if q["id"] == pid)
+        if not pr.get("window_um"):
+            raise ValueError(f"relayer {pid}: windowless port")
+        n0, n1 = len(pr.get("layers") or []), len(layers)
+        if not (n0 and n1 > n0):
+            raise ValueError(f"relayer {pid}: {pr.get('layers')} -> {layers} is not a layer increase")
+        w0, w1 = sorted(pr["window_um"])
+        new = [round(w0, 6), round(w0 + (w1 - w0) * n0 / n1, 6)]
+        ends = []
+        for side, face in (("src", pr["face"]), ("dst", OPP[pr["face"]])):
+            e = pr[side]
+            t = raw["partition_types"][parts[e["part"]]["type"]]
+            b = next((b for b in t.get("buses", []) if b["name"] == e["bus"]), None)
+            if b is None:
+                raise ValueError(f"relayer {pid}: {e['part']}.{e['bus']} is not a type bus")
+            fw = to_frame(P.rect(e["part"]), parts[e["part"]].get("orient", "R0"), face, new)
+            b["layers"], b["window_um"] = list(layers), [round(v, 6) for v in fw]
+            ends.append(f"{t and parts[e['part']]['type']}.{e['bus']}")
+        pr["layers"], pr["window_um"] = list(layers), new
+        out[pid] = dict(layers=list(layers), old=[w0, w1], new=new, ends=ends)
+    return out
+
+
 def apply(raw, spec, pin_gap=1.2):
+    base_raw = raw
     raw = copy.deepcopy(raw)
+    relayered = relayer(raw, spec.get("relayer") or {})
     lay = new_layout(raw, spec)
     die_wh = tuple(spec.get("die_outline_um") or raw["die"]["outline_um"])
-    rep = dict(schema=SCHEMA, layout_findings=layout_findings(raw, lay, die_wh))
-    rows = site_ports(raw, lay, pin_gap, set(spec.get("keep_frame", [])))
+    rep = dict(schema=SCHEMA, layout_findings=layout_findings(raw, lay, die_wh), relayered=relayered)
+    rows = site_ports(raw, lay, pin_gap, set(spec.get("keep_frame", [])), set(relayered) | set(spec.get("slide", [])))
     types = raw["partition_types"]
     parts = {p["name"]: p for p in raw["partitions"]}
     reshaped = {n for n, (a, b) in lay.items() if abs((a[2] - a[0]) - (b[2] - b[0])) > EPS
@@ -699,7 +742,11 @@ def apply(raw, spec, pin_gap=1.2):
     for n in sorted(reshaped):
         t = types[parts[n]["type"]]
         o = parts[n].get("orient", "R0")
-        dx, dy = frame_offset(lay[n][0], lay[n][1], o)
+        old_rect = lay[n][0]
+        if n in set(spec.get("ride_internal", [])):     # the part moves and grows: internals ride with its SW corner
+            mx, my = lay[n][1][0] - old_rect[0], lay[n][1][1] - old_rect[1]
+            old_rect = (old_rect[0] + mx, old_rect[1] + my, old_rect[2] + mx, old_rect[3] + my)
+        dx, dy = frame_offset(old_rect, lay[n][1], o)
         nw, nh = lay[n][1][2] - lay[n][1][0], lay[n][1][3] - lay[n][1][1]
         ow, oh = t["outline_um"]
         for k in ("contents", "hard_cores", "internal_stations", "relay_sites", "clock", "reset", "count_straps",
@@ -911,9 +958,85 @@ def apply(raw, spec, pin_gap=1.2):
             P0, ch, unfix = fit_free_slots(raw, free, float(lim))
             rep["free_slots_fit"] = dict(stations=ch, lane_cycles=relatency(raw, P0) if ch else {},
                                          unfixable_leads=unfix)
-        if spec.get("path_respace"):
-            rep["respace"] = respace(raw, rows, slot_changed, float(lim), bool(spec.get("respace_add", True)))
+        over = new_hop_overs(base_raw, raw, float(lim))
+        rep["hops_after_fit"] = over
+        if spec.get("path_respace") or over:
+            rep["respace"] = respace(raw, rows, slot_changed, float(lim), bool(spec.get("respace_add", True)),
+                                     only=None if spec.get("path_respace") else set(over))
+        # proof on the FINAL plan (after every station edit): a lane newly over the limit is blocking
+        rep["hops_over_new"] = new_hop_overs(base_raw, raw, float(lim))
+    rep["content_outside"] = content_outside(raw, base_raw, sorted({parts[n]["type"] for n in reshaped}))
+    rep["station_in_core_new"] = stations_in_core(raw, base_raw)
     return raw, rep
+
+
+def lane_max_hops(raw):
+    import check as C
+    P = S.Plan(copy.deepcopy(raw))
+    out = {}
+    for lid in P.lanes:
+        try:
+            h = C.lane_pin_hops(P, lid, C.lane_geometry(P, lid)[1])
+        except Exception as e:
+            out[lid] = f"{type(e).__name__}"
+            continue
+        out[lid] = max(h) if h else 0.0
+    return out
+
+
+def new_hop_overs(base, raw, limit):
+    """{lane: [base max hop, new max hop]}: lanes over `limit` now that were not (or are worse), and lanes that newly
+    fail to evaluate; same model as G0 hops (check.lane_pin_hops), whole die."""
+    a, b = lane_max_hops(base), lane_max_hops(raw)
+    out = {}
+    for lid, v in b.items():
+        u = a.get(lid)
+        if isinstance(v, str):
+            if not isinstance(u, str):
+                out[lid] = [u, v]
+        elif v > limit + 1e-6 and (isinstance(u, str) or u is None or v > max(u, limit) + 0.5):
+            out[lid] = [u if isinstance(u, (str, type(None))) else round(u, 1), round(v, 1)]
+    return out
+
+
+def content_outside(raw, base, tns):
+    """hard cores / clock + reset taps of re-shaped types that lie outside the type outline (and did not before)."""
+    def bad(t):
+        w, h = t["outline_um"]
+        out = set()
+        for c in t.get("hard_cores") or []:
+            try:
+                (x, y), (cw, ch) = c["origin_um"], c["outline_um"]
+            except (KeyError, TypeError, ValueError):
+                continue
+            if x < -1e-3 or y < -1e-3 or x + cw > w + 1e-3 or y + ch > h + 1e-3:
+                out.add(f"core {c.get('inst')}")
+        ck = t.get("clock") or {}
+        pts = [(p.get("name"), p.get("xy")) for k in ("taps", "added_taps") for p in (ck.get(k) or []) if isinstance(p, dict)]
+        pts += [(f"reset_local_{j}", xy) for j, xy in enumerate((t.get("reset") or {}).get("local_taps_um") or [])]
+        for s_ in t.get("ft_slots") or []:
+            pts += [(f"{s_['name']}.regs[{j}]", q) for j, q in enumerate(s_.get("regs_um") or [])]
+        for name, q in pts:
+            if isinstance(q, (list, tuple)) and len(q) >= 2 and not (-1e-3 <= q[0] <= w + 1e-3 and -1e-3 <= q[1] <= h + 1e-3):
+                out.add(f"site {name}")
+        return out
+    res = {}
+    for tn in tns:
+        d = bad(raw["partition_types"][tn]) - bad(base["partition_types"][tn])
+        if d:
+            res[tn] = sorted(d)[:40]
+    return res
+
+
+def stations_in_core(raw, base):
+    """plan_gate_pre GEOM-STATION-IN-CORE sites the re-floor introduced."""
+    try:
+        import plan_gate_pre as PGP
+        key = lambda r: (r[0], r[1], r[2], r[3])      # noqa: E731
+        old = {key(r) for r in PGP.geom_overlaps(base)}
+        return sorted(f"{r[0]} {r[1]} in {r[3]}" for r in PGP.geom_overlaps(raw) if key(r) not in old)[:60]
+    except Exception as e:
+        return [f"UNCHECKED {type(e).__name__}: {e}"[:160]]
 
 
 def drop_stale_die_relays(raw):
@@ -998,10 +1121,27 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
             while e + 1 < len(xs) and xs[e + 1][0] in parts_free and xs[e + 1][1] \
                     and (xs[e + 1][0], xs[e + 1][1]) not in seen and uses[P.parts[xs[e + 1][0]]["type"]] == 1:
                 e += 1
+            # crossings at either end of the run whose own hops (entry, steps, exit) all hold keep their stations: a
+            # slot with no declared sites has its first station at the port, which a refit would lose
+            ok_c = {i: max(hops[starts[i] - 1:starts[i] - 1 + int(info[i]["stations"])] or [0.0]) <= limit + 1e-6
+                    for i in range(c, e + 1)}
+            e_run = e
+            def man_d(u, v):
+                return abs(u[0] - v[0]) + abs(u[1] - v[1])
+
+            def exit_leg(i):        # last station of crossing i -> seam port (src face) -> the next partition's own face
+                q = P.port_point(xs[i + 1][2])
+                x0, y0, x1, y1 = P.rect(xs[i + 1][0])
+                f = (min(max(q[0], x0), x1), min(max(q[1], y0), y1))
+                return man_d(regs[starts[i + 1] - 1], q) + man_d(q, f)
+            while c < e and ok_c[c] and exit_leg(c) <= limit + 1e-6:
+                c += 1
+            while e > c and ok_c[e] and max(hops[starts[e] - 1:starts[e] + int(info[e]["stations"])] or [0.0]) <= limit + 1e-6:
+                e -= 1
             run = list(range(c, e + 1))
             nxt_i = starts[e] + int(info[e]["stations"])
             if max(hops[starts[c] - 1:nxt_i] or [0.0]) <= limit + 1e-6:
-                c = e + 1
+                c = e_run + 1
                 continue
             prev = regs[starts[c] - 1]
             nxt = regs[nxt_i] if nxt_i < len(regs) else regs[-1]
@@ -1018,40 +1158,48 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
             gap = [d(outs[j], P.port_point(xs[run[j + 1]][2])) + d(P.port_point(xs[run[j + 1]][2]), ins[j + 1])
                    for j in range(len(run) - 1)] + [d(outs[-1], nxt)]
             carry = d(prev, P.port_point(xs[run[0]][2])) + d(P.port_point(xs[run[0]][2]), ins[0])
-            k, off = [], []
-            # sequential carry: k stations at spacing L/k starting delta into the crossing; delta as large as the
-            # entry leg allows (carry + delta <= eff) so the exit leg (L/k - delta + gap) is as short as possible
-            for j, i in enumerate(run):
-                kj = max(1, int(info[i]["stations"]))
-                tn = P.parts[xs[i][0]]["type"]
-                try:        # a normal slot's first station is its input face register (G0 / check.lane_geometry)
-                    normal = DHS.normal_slot(P, tn, xs[i][1], full=FFS.load(P, tn))
-                except Exception:
-                    normal = False
-                if carry > eff:
-                    unfixable[f"{lid}:{xs[i][0]}.{xs[i][1]}:entry"] = round(carry, 1)
-                while True:
-                    sp = L[j] / kj
-                    delta = 0.0 if normal else max(0.0, min(eff - carry, sp))
-                    out = sp - delta + gap[j]
-                    if (sp <= eff and out <= eff) or kj >= int(info[i]["stations"]) + math.ceil(L[j] / eff) + 2:
-                        break
-                    kj += 1
-                if out > eff:
-                    unfixable[f"{lid}:{xs[i][0]}.{xs[i][1]}:exit"] = round(out, 1)
-                k.append(kj)
-                off.append(delta)
-                carry = out
+            # each crossing in turn: the fewest stations (from the old count) whose DODGED points (hard-core boxes are
+            # part of the search, not applied after it) keep entry leg, every step and exit leg under the limit;
+            # candidates = uniform spacing L/k at several entry offsets; ties by the smallest worst step
+            fitted = []
             for j, i in enumerate(run):
                 part, slot = xs[i][0], xs[i][1]
+                tn = P.parts[part]["type"]
                 w, h = P.ptype(part)["outline_um"]
-                pts = []
-                for m in range(k[j]):
-                    tx, ty = P.to_type(part, walk(routes[j], min(off[j] + L[j] * m / k[j], L[j])))
-                    pts.append([round(min(max(tx, 1.0), w - 1.0), 3), round(min(max(ty, 1.0), h - 1.0), 3)])
+                k0 = max(1, int(info[i]["stations"]))
+                try:        # a normal slot's first station is its input face register (G0 / check.lane_geometry)
+                    normal = DHS.normal_slot(P, tn, slot, full=FFS.load(P, tn))
+                except Exception:
+                    normal = False
+                best = None
+                for kj in range(k0, k0 + math.ceil(L[j] / eff) + 3):
+                    sp = L[j] / kj
+                    top = max(0.0, min(eff - carry, sp))
+                    for f in ((0.0,) if normal else (1.0, 0.85, 0.7, 0.5, 0.3, 0.15, 0.0)):
+                        dl = top * f
+                        pts = []
+                        for m in range(kj):
+                            tx, ty = P.to_type(part, walk(routes[j], min(dl + L[j] * m / kj, L[j])))
+                            pts.append([round(min(max(tx, 1.0), w - 1.0), 3), round(min(max(ty, 1.0), h - 1.0), 3)])
+                        pts = dodge_cores(raw["partition_types"][tn], pts)
+                        dp = [P.to_die(part, q) for q in pts]
+                        legs = [carry + d(ins[j], dp[0])] + [d(u, v) for u, v in zip(dp, dp[1:])]
+                        ex = d(dp[-1], outs[j]) + gap[j]
+                        # a carry already over the limit is not this slot's to repair: judged as if it fitted
+                        worst = max([ex] + legs[1:] + [legs[0] if carry <= eff else d(ins[j], dp[0]) + eff])
+                        if best is None or worst < best[0] - 1e-9:
+                            best = (worst, pts, ex, legs[0])
+                    if best[0] <= limit - 2.0:
+                        break
+                if best[0] > limit:
+                    unfixable[f"{lid}:{part}.{slot}"] = round(best[0], 1)
+                fitted.append(best[1])
+                carry = best[2]
+            for j, i in enumerate(run):
+                part, slot = xs[i][0], xs[i][1]
+                pts = fitted[j]
                 tsl = next(s_ for s_ in raw["partition_types"][P.parts[part]["type"]]["ft_slots"] if s_["name"] == slot)
                 k0 = int(tsl.get("stations", 1))
-                pts = dodge_cores(raw["partition_types"][P.parts[part]["type"]], pts)
                 tsl["regs_um"] = pts
                 tsl["stations"] = len(pts)
                 tsl.pop("bit_sites_um", None)
@@ -1059,7 +1207,7 @@ def fit_free_slots(raw, parts_free, limit, margin=10.0):
                 seen.add((part, slot))
                 if len(pts) != k0:
                     changes[f"{P.parts[part]['type']}.{slot}"] = [k0, len(pts)]
-            c = e + 1
+            c = e_run + 1
     return P, changes, unfixable
 
 
@@ -1083,7 +1231,7 @@ def relatency(raw, P0):
     return cycles
 
 
-def respace(raw, rows, slot_changed, limit, allow_add=True):
+def respace(raw, rows, slot_changed, limit, allow_add=True, only=None):
     """path_respace on the lanes that cross a re-sited port or a changed slot only (the rest of the die is not touched):
     re-space the stations first (0 cycles); with allow_add one station at a time is added to the binding slot (+1 cycle
     on every lane through it) and latency.lanes is re-derived the path_respace way (gen.latency_table delta).  Returns
@@ -1102,6 +1250,8 @@ def respace(raw, rows, slot_changed, limit, allow_add=True):
                 hit = False
         if hit:
             lanes.append(lid)
+    if only is not None:
+        lanes = [lid for lid in P.lanes if lid in only]
     decided, out = {}, {}
     for lid in sorted(lanes):
         try:
@@ -1175,6 +1325,9 @@ def main(argv=None):
     rep["spec"] = dict(path=str(args.spec), sha12=sha12(args.spec))
     bad = rep["layout_findings"] + [f"{r['status']} {r['id']}" for r in rep["port_rows"]
                                     if r["status"] in ("SEAM-LOST", "NO-ROOM", "NO-GEOM", "DIE-IO-MOVED")]
+    bad += [f"HOP-OVER {k} {v[0]} -> {v[1]}" for k, v in sorted((rep.get("hops_over_new") or {}).items())]
+    bad += [f"CONTENT-OUTSIDE {k} {len(v)}: {v[:3]}" for k, v in sorted((rep.get("content_outside") or {}).items())]
+    bad += [f"STATION-IN-CORE {x}" for x in rep.get("station_in_core_new") or []]
     rep["blocking"] = bad
     print(f"RIGID-REFLOOR parts moved {sum(1 for p in spec['parts'])} reshaped {len(rep.get('reshaped', []))} "
           f"ports {rep['ports']['ports_touched']} repinned {rep['ports']['ports_repinned']} "
