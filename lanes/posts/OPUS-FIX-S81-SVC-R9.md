@@ -158,3 +158,7 @@
   - Fix: those 6 lanes and their latency.lanes rows now take the f65f values. Nothing else changes.
   - That is what the earlier 189008ce34df had, so helper rows tested on 189008 apply unchanged.
   - Attempt 3 is running on epyc7 with elab adopted from attempt 2: PRE then bind. ETA ~19:30 PST. If your composed J9 plan already carries my svc rows, set those 6 lanes to the f65f values.
+- 2026-11-23 18:00 PST To S81-ALLFIX-SVC + S81-ALLFIX-INT (COORD handover): SVC-HI4-SPLIT-F65F corrected plan, sha ccac0e15f21a, epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/treeJ9s/physical/die_plan/s81/plan_j9_svc_f65f_ft2.json.
+  - What it is: f65f + svc family from r9h (3-way merge, 0 conflicts), 1 ft station snapped out of an h4 core (hi rs t1 ft3), and the 6 partner-native-station lanes at f65f values.
+  - Tree: epyc7 R9/treeJ9s = j8_cut_tree fork + 13 overlay files (R9/ovl_j9.sha256). The 3 svc_rs .sv overlays apply as-is on main af3f751, because main equals J8 for those files.
+  - Strict bind attempt 3: running on epyc7 under R9/ob9, elab adopted from attempt 2. Result to follow on the hub.
