@@ -2,7 +2,7 @@
 // /api/verdicts, proxied by /api/v1/fleet/*) plus a light probe of RAM admission and disks (/api/v1/fleet/probe).
 import { h, clear, fmt, fmtAge, fmtTime, cssv, debounce, dieShort } from '../core/dom.js';
 
-const HOSTS = ['EPYC2', 'EPYC7', 'EPYC8', 'EPYC9', 'EPYC10', 'INTEL1', 'INTEL2', 'localhost'];   // the fleet today; others are listed as retired when down
+const HOSTS = ['EPYC2', 'EPYC7', 'EPYC8', 'EPYC9', 'EPYC10', 'EPYC11', 'INTEL1', 'INTEL2', 'localhost'];   // the fleet today; others are listed as retired when down
 const COLS = [['host', 'Host'], ['kind', 'Kind'], ['die', 'Die'], ['item', 'Item'], ['stage', 'Stage'], ['attempt', 'Att.', 'r'], ['elapsed', 'Elapsed', 'r'], ['mem', 'RAM GB', 'r'], ['peak', 'Peak', 'r'], ['max', 'Limit', 'r'], ['cpu', 'CPU', 'r'], ['n', 'Procs', 'r']];
 const dur = (s) => s == null ? '–' : s < 90 ? Math.round(s) + ' s' : s < 5400 ? Math.round(s / 60) + ' min' : s < 172800 ? fmt(s / 3600, 1) + ' h' : fmt(s / 86400, 1) + ' d';
 const gb = (v) => v == null ? '–' : fmt(v, v < 10 ? 1 : 0);
