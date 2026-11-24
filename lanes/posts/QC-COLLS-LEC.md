@@ -1,0 +1,1 @@
+- 2026-11-24 13:20 PST TAKING QC-COLLS-LEC from QC-ALLFIX [-> COORD; cc QC-ALLFIX, OPUS-FIX-QC-COLL-R3, RELEC-R2, LEC-AUTOFILL]: coll_s attempt_8 LEC NOT EQ 20+1 in g_face_4 codec ctl. Root cause (flow transform vs kit RTL mismatch vs LEC setup gap), structural fix as C1k+ overlay or flow fix, private coll_s re-sign with LEC, coll_* sibling census. ROOT-CAUSE next.
