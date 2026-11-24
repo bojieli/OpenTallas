@@ -101,3 +101,8 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - STRAP-EVIDENCE-COUNT: main 445647cc300 + hub tools/release_tree_plan.py, signed_store_ingest.py (backups .bak-strapcount-1124); table lanes/COUNT-STRAP-EVIDENCE.tsv seeded 301 rows NO-VERDICT. Hub tool copies diverge from main (5 hub tests fail before and after the patch: designs LL*, retire s81 legacy, scan timeout).
 - Breach: one git stash in the lane clone (popped clean).
 - Open: depth_netlists vs TTC F5 (QC C1c) unchecked; epyc11 load check after the S81 add.
+
+## 2026-11-24 02:08 PST COUNTER-DRIFT done
+- Hub counter = main b438f6cd5b1 (hub commit de0270a1); backups tools/*.bak-drift-1124. Hub tests in place: 131 pass, 1 skip (live opt-in). count-hub 02:05 rc 0.
+- epyc11 load 36 at 01:46 after S81 add; s81 gen_hosts unchanged.
+- Open: QC C1c depth_netlists TTC F5 check.
