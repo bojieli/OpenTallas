@@ -5948,6 +5948,9 @@
    "hold_release_on": {
     "kv3_hg*": "event_adopt:KV-D28",
     "kv3_pv*": "event_adopt:KV-D28"
+   },
+   "cell_cap_exceptions": {
+    "*": "r703"
    }
   },
   "s81": {
@@ -39000,7 +39003,10 @@
     ]
    },
    "note_gen_tools_pin_j7": "S81-J6-ASSEMBLY-R5 11-21 (COORD toolskew risk): every J7 row gens from the sealed tree tools (== rt 404887a342b0) via item_inputs gen_tools_pin; flow refresh still from rt/current. Remove only with a strict rebind of J7 on the newer rt.",
-   "auto_bind": true
+   "auto_bind": true,
+   "cell_cap_exceptions": {
+    "*": "r703"
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -41302,7 +41308,10 @@
     "*"
    ],
    "gen_host_min_free_gb": {},
-   "auto_bind": true
+   "auto_bind": true,
+   "cell_cap_exceptions": {
+    "*": "r703"
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -52394,7 +52403,10 @@
    "auto_bind": true,
    "bind_copy_of_record": [
     "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v3p7c5rt_postbind_1122173805"
-   ]
+   ],
+   "cell_cap_exceptions": {
+    "*": "r703"
+   }
   },
   "hbm": {
    "enabled": true,
@@ -69498,6 +69510,9 @@
     "owner": "COORD",
     "since": "2026-11-22",
     "reason": "HBM parked: separate release target (owner 11-12); no new HBM work until COORD unparks"
+   },
+   "cell_cap_exceptions": {
+    "*": "r703"
    }
   }
  },
