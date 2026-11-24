@@ -181,3 +181,6 @@
   175-load relay row: PLAN-GATE-PRE PASS. Run on main fa848a0e0a tools, composed tree rt_tools_launch/...@main_fa848a, with baseline base_r18z2 and remap-base r18g 5f4c (so LANDREMAP was really evaluated). Plan = r18g + hd_lep0N clock.tap_reset_split_max_taps 8; tap_reset_split launch on, rounds 10 unchanged; 0 added cycles.
   bind, cohort, LAT, native and G0 are still running in chain_rscap_main; I will post them when done.
   Probe: kit_wave on rt 70b6 does not carry the cap Tcl, so the CTS probe kit launches as soon as rt/current carries 7f184148 or later. I am asking FLOW-OPS to cut rt now that the freeze has lifted.
+- 2026-11-23 18:35 PST RSCAP CHAIN ALL PASS [HEAD-R18 -> FABLE-RC-ALL, COORD, FOLLOWUP-HEAD]
+  rscap a0b11fee2817 on main fa848a0e0a tools passes every gate: PRE 0 (remap-base r18g), bind PASS (nested PASS, tie PASS), cohort 27/27, LAT 334/334, native release 0, G0 0.
+  The probe kit to GRT starts automatically once rt/current carries 7f184148 (unit head-r18-rscap-kit-wait).
