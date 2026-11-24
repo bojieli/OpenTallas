@@ -299,3 +299,32 @@ def test_tap_renames_never_give_two_taps_one_name():
     new = {"t": dict(outline_um=[400.0, 400.0], clock=dict(tap_mode="grid", taps=[
         dict(name="clk", xy=[1.0, 1.0]), dict(name="clk_t1", xy=[2.0, 2.0])]))}
     assert RR.tap_renames(old, new, dict(partition_types=new), "t", (0.0, 0.0)) == {}
+
+
+def _plan_no_s2():
+    raw = _plan()
+    raw["partitions"] = [p for p in raw["partitions"] if p["name"] != "S2"]
+    raw["ports"] = [p for p in raw["ports"] if p["id"] not in ("p_s0", "p_s1")]
+    return raw
+
+
+def test_reshape_holds_built_reset_depth_for_keep_internal_and_remap(monkeypatch):
+    """RESHAPE-RESET-DEPTH-1124: every re-shaped type keeps its built reset release depth (pad only, never shortens),
+    not only remap_internal ones; types that are only moved are left alone."""
+    seen = []
+
+    def depths(raw, tns):
+        seen.append(sorted(tns))
+        return {tn: 7 for tn in tns}
+    monkeypatch.setattr(RR, "reset_depths", depths)
+    sp = {"S1": {"rect_um": [0.0, 1728.0, 864.0 + 86.4, 2592.0]}, "A": {"delta_um": [0, 0]}}
+    for extra in ({}, {"remap_internal": ["S1"]}):
+        new, rep = RR.apply(_plan_no_s2(), _spec(sp, **extra))
+        assert seen[-1] == ["ts"]
+        assert new["partition_types"]["ts"]["reset"]["wavefront_min_depth"] == 7
+        assert rep["reset_min_depth"] == {"ts": 7}
+        assert "reset" not in new["partition_types"]["ta"]
+    raw = _plan_no_s2()
+    raw["partition_types"]["ts"]["reset"] = dict(wavefront_min_depth=9)
+    new, rep = RR.apply(raw, _spec(sp))
+    assert new["partition_types"]["ts"]["reset"]["wavefront_min_depth"] == 9 and rep["reset_min_depth"] == {}

@@ -807,9 +807,12 @@ def apply(raw, spec, pin_gap=1.2):
                 or abs((a[3] - a[1]) - (b[3] - b[1])) > EPS}
     remap = set(spec.get("remap_internal", []))
     old_types = {parts[n]["type"]: copy.deepcopy(types[parts[n]["type"]]) for n in reshaped}
-    # remapped types keep their published reset release depth (reset.wavefront_min_depth pads, never shortens): the
-    # landing START / local-reset anchors name relays by depth, and a shallower squeezed tree would orphan them
-    old_depth = reset_depths(raw, [parts[n]["type"] for n in sorted(reshaped) if n in remap])
+    # every re-shaped type keeps its built reset release depth (reset.wavefront_min_depth pads, never shortens): the
+    # landing START / local-reset anchors name relays by depth, and a shallower re-grown tree would orphan them.
+    # RESHAPE-RESET-DEPTH-1124 (S81-C9-ROWS t43 +69.12 east, keep_internal): this held for remap_internal types only, so
+    # the keep_internal re-shape re-grew t43 shallower and landing_remap refused all 4 depth-14 local-reset anchors
+    # ('no same-depth relay') in resel, anchor and identity mode alike.
+    old_depth = reset_depths(raw, [parts[n]["type"] for n in sorted(reshaped)])
     # 1. re-shaped types: internal frame offset (keep die positions) BEFORE windows are written
     for n in sorted(reshaped):
         t = types[parts[n]["type"]]
