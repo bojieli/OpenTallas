@@ -366,3 +366,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 10:00 PST CANARY s81 @ 67a9d659af: PASS (REGRESSION signoff ins_tt 254.35 -> 226.28 |ins-bound| 4.35 -> 23.72 (tol 5); signoff ins_ff 202.31 -> 183.34 |ins-bound| 0.19 -> 19.16 (tol 5))
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 10:15 PST CANARY qwen_kvsys @ 67a9d659af: PASS (REGRESSION grt hold_ff_ep 1597.0 -> 1914.0 1914 vs 1597 (tol +5 %); signoff setup_tt_wns 405.22 -> 385.07 -20.15 ps (tol -10); signoff hold_ff_ep 1282.0 -> 155)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
