@@ -183,3 +183,10 @@
   - reach_rules fix --rules 1 (types regex) fixes the 4 START types, 0 NOT FIXED (f2.json).
   - landing_remap --resets rstnode clears hub_Ei/Wo DERIVEDNAME+LANDREMAP (f1.json).
   - The landing hops need kv_start_corridor_event raw --bind-rtl.
+- 2026-11-23 23:30 PST ALLFIX-ITER A5, per the 23:3x ruling: binding now with reach at WARN only.
+  - A5 95c853437992 has 2 non-reach PRE classes, DERIVEDNAME and LANDREMAP, both only on hub_Ei/Wo (stale landing branches after the HUB-HOLD/EARLYTAP taps). Running A5 at plain warn would let them through.
+  - So the launch plan is A5r 41044638cda3 = A5 + landing_remap rstnode on hub_Ei/Wo + WIDERAM. PRE there has classes=RSTREACH only (23 findings, the same 21 types).
+  - run_a5r on epyc11 re-asserts that class guard, then binds. rt is d97edba9f3a3 = current; rt moved 4 times since 06:55, so I bind whatever is current at start.
+  - The 21 reach types are probe-only; every other A5 type counts. The list has gone to KV-RSTREACH for A6.
+  - G0: A4d did NOT die at G0. A4d G0 = PASS rc 0 (0 errors, 5255 warns), TAPOFF 0, render OK. A4d died at the strict elab: PRE refused on the same reach and DERIVEDNAME set. A5 G0 is running; no G0 cause is known.
+  ETA UTC: A5r guard 07:45Z, G0+LATCHECK 08:20Z, strict bind 09:00Z. Kits launch per type from 09:05Z (01:05 PST), epyc11 first. The A5 warn bind already in flight is kept as a spare for G0/LAT/render.
