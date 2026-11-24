@@ -37,6 +37,28 @@ set ::stb::blk_sinks [expr {[info exists ::env(OT_STB_BLOCK_SINKS)] ? $::env(OT_
 # later process (tapbal_grt.tcl after the POST_CTS pass of cts_post.tcl) never re-creates an existing name.  Unset: unchanged.
 set ::stb::tag [expr {[info exists ::env(OT_STB_TAG)] ? $::env(OT_STB_TAG) : ""}]
 if {![info exists ::stb::n]} { set ::stb::n 0 }
+# STB-BOUND 11-24 (QC-CBX-CLOCK, COORD): the target of a tree is its latest sink, but never above the post-CTS tree bound:
+# T = min(latest sink, OT_STB_TARGET_MAX_PS).  QC cbn_q01 clab6e67f2 clk_t66 (sinks 443 um apart, raw 374..753 ps) was padded
+# to its 753 ps far sink: 19 delaybuf_otstb in series in front of sinks at ~280, tap at 811 ps vs ~290 beside it, hold -338 /
+# setup -405 on the pairs between taps.  Default: the tap balance bound of the kit, OT_TAP_TARGET_PS (or OT_TAP_SLOWEST_MAX_PS
+# when OT_TAP_BALANCE_TO=slowest, never below the target) + OT_TAP_WINDOW_PS (default 40); unset when the kit sets no
+# OT_TAP_TARGET_PS (core kits: unchanged).  On GRT RC (tapbal_grt.tcl) the routed tree sits later than the placement estimate
+# (S81 eng_rr_e median +65 ps), so the default cap there is that bound + OT_STB_GRT_MARGIN_PS (default 65).
+# OT_STB_TARGET_MAX_PS=0 = no cap (the old rule).
+proc stb::target_cap {} {
+  if {[info exists ::env(OT_STB_TARGET_MAX_PS)] && $::env(OT_STB_TARGET_MAX_PS) ne ""} {
+    set v [expr {double($::env(OT_STB_TARGET_MAX_PS))}]
+    return [expr {$v > 0 ? $v : ""}]
+  }
+  if {![info exists ::env(OT_TAP_TARGET_PS)] || $::env(OT_TAP_TARGET_PS) eq ""} { return "" }
+  set b [expr {double($::env(OT_TAP_TARGET_PS))}]
+  if {[info exists ::env(OT_TAP_BALANCE_TO)] && $::env(OT_TAP_BALANCE_TO) eq "slowest" && [info exists ::env(OT_TAP_SLOWEST_MAX_PS)]} {
+    set b [expr {max($b, double($::env(OT_TAP_SLOWEST_MAX_PS)))}]
+  }
+  set w [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? double($::env(OT_TAP_WINDOW_PS)) : 40.0}]
+  set g [expr {$::stb::est eq "grt" ? ([info exists ::env(OT_STB_GRT_MARGIN_PS)] ? double($::env(OT_STB_GRT_MARGIN_PS)) : 65.0) : 0.0}]
+  return [expr {$b + $w + $g}]
+}
 
 # OpenSTA pin arrival properties use command time units, including values
 # below one unit. Convert by the declared scale before budgeting in ps.
@@ -172,14 +194,20 @@ proc stb::balance {} {
   stb::protected
   set ports [stb::ports]
   set T {}; set tot 0
+  set cap [stb::target_cap]
   stb::rc
   foreach p $ports {
     lassign [stb::build $p] nn ns
     if {$ns < 2} continue
     set m [stb::measure $p]
     if {$m eq ""} continue
-    dict set T $p [lindex $m 4]
-    puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target [format %.1f [lindex $m 4]] (latest sink, fixed)"
+    if {$cap ne "" && [lindex $m 4] > $cap} {
+      dict set T $p $cap
+      puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target [format %.1f $cap] (latest sink [format %.1f [lindex $m 4]] over the bound: capped)"
+    } else {
+      dict set T $p [lindex $m 4]
+      puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target [format %.1f [lindex $m 4]] (latest sink, fixed)"
+    }
   }
   if {$::stb::mode eq "report"} { return }
   set n0 $::stb::n

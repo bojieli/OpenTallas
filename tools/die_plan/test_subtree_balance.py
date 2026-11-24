@@ -275,3 +275,28 @@ def test_sentinel_arrival_is_unmeasured_not_a_target():
     # f3 unmeasured -> clk target = f1/f2 (20): nothing padded, no 1e11 target
     assert "target 20.0" in out and "OT_STB done: 0 delay buffers" in out, out
     assert arr["f1"] == 20 and arr["f2"] == 20, (arr, out)
+
+
+def test_target_capped_at_the_tap_bound_far_sink():
+    """STB-BOUND 11-24 (QC-CBX-CLOCK): cbn_q01 clab6e67f2 clk_t66 padded its ~280 ps sinks to a 753 ps far sink (19 otstb in
+    series, tap 811 ps).  The target is min(latest sink, bound); bound = OT_TAP_TARGET_PS + OT_TAP_WINDOW_PS on placement RC.
+    Mock: clk f1/f2 at 20, far f3 at 80; bound 30 + 20 = 50 -> f1/f2 padded only up to <= 50, f3 left as built."""
+    env = ("set ::env(OT_STB_EST) placement\nset ::env(OT_STB_PORTS) clk\n"
+           "set ::env(OT_TAP_TARGET_PS) 30\nset ::env(OT_TAP_WINDOW_PS) 20\n")
+    out, arr = _run(env)
+    assert "OT_STB ERROR" not in out, out
+    assert "target 50.0 (latest sink 80.0 over the bound: capped)" in out, out
+    assert 50 - 8 - 20 < arr["f1"] <= 50 and arr["f1"] == arr["f2"] and arr["f3"] == 80, (arr, out)
+    # slowest mode lifts the base to OT_TAP_SLOWEST_MAX_PS; explicit 0 = the old latest-sink rule
+    out2, arr2 = _run(env + "set ::env(OT_TAP_BALANCE_TO) slowest\nset ::env(OT_TAP_SLOWEST_MAX_PS) 70\n")
+    assert "OT_STB before clk" in out2 and "latest sink, fixed" in out2 and arr2["f1"] > 50, (arr2, out2)
+    out3, arr3 = _run(env + "set ::env(OT_STB_TARGET_MAX_PS) 0\n")
+    assert 80 - 8 - 20 < arr3["f1"] <= 80, (arr3, out3)
+
+
+def test_grt_cap_adds_routed_margin_and_core_kits_are_uncapped():
+    env = "set ::env(OT_STB_EST) grt\nset ::env(OT_STB_PORTS) clk\nset ::env(OT_TAP_TARGET_PS) 10\nset ::env(OT_TAP_WINDOW_PS) 0\n"
+    out, arr = _run(env + "set ::env(OT_STB_GRT_MARGIN_PS) 40\n")
+    assert "target 50.0 (latest sink 80.0 over the bound: capped)" in out, out
+    out2, arr2 = _run("set ::env(OT_STB_EST) grt\nset ::env(OT_STB_PORTS) clk\n")      # no OT_TAP_TARGET_PS: old rule
+    assert "target 80.0 (latest sink, fixed)" in out2 and 80 - 8 - 20 < arr2["f1"] <= 80, (arr2, out2)

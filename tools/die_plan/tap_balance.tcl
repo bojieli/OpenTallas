@@ -476,10 +476,54 @@ proc tb_seed_side {bt tree x y} {
   puts "OT_TAP_SEED_SIDE [$bt getName] port in M1 strip ($ox0,$oy0)-($ox1,$oy1): chain seed [expr {$rt ? {east} : {west}}] at x $nx (sink centroid x [format %.0f $cx], $ns sinks)"
   return [list [expr {int($nx)}] [expr {int(max($oy0, min($oy1, $y)))}]]
 }
+# TAPBAL-BOUND 11-24 (QC-CBX-CLOCK, COORD): a tap is never padded above the post-CTS tree bound (tb_bnd + window).  The pad
+# count is priced at ~18 ps a BUFx4 stage, but the last stage drives the whole tree root: QC slw_hc1 cl3449ea95 clk_t101 (7319
+# sinks) took +41 ps for ONE stage (251 -> 292, max 263 -> 304), clk_t10 +61 for two; 54 of 132 taps ended over 285 ps with
+# every raw tree under it (sle_ctl 69/265, sle_fw 46/107).  After each pass a tap whose slowest sink is now over the bound loses
+# the chain just added (tree back on the port net, cells and nets removed) and may be padded again with one stage fewer
+# (0 = frozen as built).  OT_TAP_BOUND_GUARD=0 turns it off (the old loop byte for byte).
+set tb_guard [expr {![info exists ::env(OT_TAP_BOUND_GUARD)] || $::env(OT_TAP_BOUND_GUARD) ne "0"}]
+set tb_last {}; set tb_ncap {}; set tb_undone 0
+proc tb_undo {n c} {
+  global tb_blk tb_added
+  lassign $c root tree insts nets
+  set mine {}
+  foreach i $insts { set ii [$tb_blk findInst $i]; if {$ii ne "NULL"} { lappend mine $ii } }
+  foreach t [$tree getITerms] {
+    if {[lsearch -exact $mine [$t getInst]] >= 0} continue
+    $t disconnect; $t connect $root
+  }
+  foreach ii $mine { odb::dbInst_destroy $ii; incr tb_added -1 }
+  foreach nn [concat $nets [list [$tree getName]]] { set x [$tb_blk findNet $nn]; if {$x ne "NULL"} { odb::dbNet_destroy $x } }
+}
+# m = a fresh tb_measure; returns 1 when a chain was removed (the caller re-measures)
+proc tb_bound_guard {m} {
+  global tb_guard tb_last tb_ncap tb_win tb_undone
+  if {!$tb_guard || ![dict size $tb_last]} { set tb_last {}; return 0 }
+  set lim [expr {$::tb_bnd + $tb_win}]
+  set undo {}
+  dict for {n c} $tb_last {
+    if {![dict exists $m $n]} continue
+    if {[lindex [dict get $m $n] 2] > $lim} { lappend undo $n }
+  }
+  if {![llength $undo]} { set tb_last {}; return 0 }
+  tb_begin
+  foreach n $undo {
+    set c [dict get $tb_last $n]
+    tb_undo $n $c
+    dict set tb_ncap $n [expr {[llength [lindex $c 2]] - 1}]
+    incr tb_undone
+    puts "OT_TAP_BOUND $n max [format %.0f [lindex [dict get $m $n] 2]] > bound [format %.0f $lim] ps after [llength [lindex $c 2]] stage(s): chain removed, next pad <= [dict get $tb_ncap $n]"
+  }
+  tb_end 0
+  set tb_last {}
+  return 1
+}
 proc tb_tap_pass {it} {
   global tb_blk tb_master tb_target tb_win tb_tol tb_tag tb_grt tb_added tgt tb_conv tb_cwin tb_raise tb_price tb_prev tb_coreonly
-  global tb_cdirect tb_cdmax tb_slowest tb_slow_max
+  global tb_cdirect tb_cdmax tb_slowest tb_slow_max tb_ncap tb_last
   set m [tb_measure]
+  if {[llength [info procs tb_bound_guard]] && [tb_bound_guard $m]} { set m [tb_measure] }
   set longest 0.0
   set slow_tap ""
   dict for {n v} $m { if {[lindex $v 0] > $longest} { set longest [lindex $v 0]; set slow_tap $n } }
@@ -542,6 +586,10 @@ proc tb_tap_pass {it} {
     } else {
       set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
     }
+    if {[info exists tb_ncap] && [dict exists $tb_ncap $n]} {
+      if {[dict get $tb_ncap $n] < 1} continue
+      set nb [expr {min($nb, [dict get $tb_ncap $n])}]
+    }
     if {$tb_conv} { dict set tb_prev $n [list [lindex $v 0] $nb] }
     set bt [lindex $v 4]
     set root [$bt getNet]
@@ -553,8 +601,10 @@ proc tb_tap_pass {it} {
     foreach t [$root getITerms] { $t disconnect; $t connect $tree }
     lassign [tb_seed_side $bt $tree $x $y] x y
     set prev $root
+    set tb_ci {}; set tb_cn {}
     for {set b 0} {$b < $nb} {incr b} {
       set inst [odb::dbInst_create $tb_blk $tb_master "${n}_tb${tb_tag}${it}_d$b"]
+      lappend tb_ci "${n}_tb${tb_tag}${it}_d$b"; if {$b < $nb - 1} { lappend tb_cn "${n}_tb${tb_tag}${it}_n$b" }
       set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${n}_tb${tb_tag}${it}_n$b"]}]
       if {$nxt ne $tree} { $nxt setSigType CLOCK }
       foreach t [$inst getITerms] {
@@ -567,6 +617,7 @@ proc tb_tap_pass {it} {
       set prev $nxt
       incr tb_added
     }
+    dict set tb_last $n [list $root $tree $tb_ci $tb_cn]
   }
   tb_end $todo
   return $todo
@@ -574,6 +625,7 @@ proc tb_tap_pass {it} {
 for {set it 0} {$it < $tb_iters} {incr it} {
   if {![tb_tap_pass $it]} break
 }
+tb_bound_guard [tb_measure]
 # CP2 core pass: every hard-core clock pin on a GRID tap whose effective arrival (pin + internal latency) misses the
 # target by > tol is re-hung: too late -> its own delay chain straight from the tap port (the earliest point of that
 # tap) sized for pin arrival = target - internal latency; too early -> delay cells in front of the pin.  Core pins on
@@ -735,6 +787,7 @@ if {[llength $tb_cores]} {
   set cw [tb_core_report $tgt]
   puts "OT_TAP_CORE [llength $tb_cores] core clock pins, $cw outside target +/- [format %.0f $tb_win] ps"
 }
+if {$tb_undone} { puts "OT_TAP_BOUND $tb_undone chain(s) removed over the tree bound [format %.0f [expr {$::tb_bnd + $tb_win}]] ps" }
 puts "OT_TAP_BALANCE done: $tb_added delay cells; tap mean insertion [format %.0f $lo]..[format %.0f $hi] ps (spread [format %.0f [expr {$hi - $lo}]], target [format %.0f $tgt]); empty taps [llength $tb_empty] $tb_empty"
 if {[llength $fail]} {
   # insertion ~ grows with the tree span; shrink the pitch by the overshoot ratio
