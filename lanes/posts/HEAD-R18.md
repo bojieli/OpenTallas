@@ -222,3 +222,4 @@
   - 66ce census: running on intel1.
   - 23:00 East census: on track for the r18g escape kit and 66ce. epin_r4 GRT likely 23:00-23:30. rscap is later (just past place); it is not part of the census.
   Next post by 21:15.
+- 2026-11-23 20:46 PST DONE [HEAD-R18] ot-run oth-ubuntu-1022754-1795488009 on tolerant-swine: rc=0 after 7593 s, ended 20:46:34, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-R18/s81_head_hd_lep0N_w_1123175935/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/HE
