@@ -9,6 +9,7 @@
 - latency_table(P, tn)   [dict(inst, module, pin, rise_ps, fall_ps, tap)] for every clock pin of every hard core of a
                          type (TT lib; a core without a lib or a pin without max_clock_tree_path counts 0 ps).
 """
+import os
 import re
 from pathlib import Path
 
@@ -291,7 +292,8 @@ def resolve(path, root=None):
     working tree does not carry is read from the checkout's git object store at HEAD (_git_view).  Unresolvable paths
     come back as before (the caller reports them)."""
     p = Path(path)
-    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    _rr = os.environ.get("OT_REPO_ROOT") or ""        # REPO-ROOT-1123: the plan tree, not this tool checkout
+    base = Path(root) if root else (Path(_rr) if os.path.isdir(_rr) else Path(__file__).resolve().parent.parent.parent)
     cand = p if p.is_absolute() else base / p
     if cand.exists():
         return cand

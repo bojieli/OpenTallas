@@ -51,10 +51,42 @@ def test_remapped_or_unmoved_passes(tmp_path):
     assert G.check_landremap(n, None) == []
 
 
-def test_tree_error_is_warn_only(tmp_path):
+def test_tree_error_is_fail(tmp_path):
+    """LANDREMAP-TREE-FAIL-1123 (COORD, HEAD-R18): rt 936b's WARN-and-skip let the HEAD pin-move error through to kit gen"""
     n, b = plans(tmp_path, typ(cy=700.0))
     f = G.check_landremap(n, b, tree_fn=lambda *a: (_ for _ in ()).throw(ValueError("boom")))
-    assert len(f) == 1 and f[0].startswith("WARN LANDREMAP hgi: reset tree not built")
+    assert len(f) == 1 and f[0].startswith("FAIL LANDREMAP-UNCHECKED hgi: reset tree not built") and "boom" in f[0]
+
+
+def _shift_case(tmp_path, dx, dy, relay_dx):
+    """the row translates the core by (dx, dy); the reset tree keeps the reference's name on the relay moved by relay_dx"""
+    t = typ(cy=500.0 + dy)
+    t["hard_cores"][0]["origin_um"][0] += dx
+    n, b = plans(tmp_path, t)
+    old = {"rst_rl_5": (3, (10.0, 20.0), "wire")}
+    new = {"rst_rl_5": (3, (round(10.0 + relay_dx, 2), round(20.0 + dy, 2)), "wire")}
+    return G.check_landremap(n, b, tree_fn=lambda raw, path, tn: old if "base" in path else new)
+
+
+def test_planned_shift_is_not_stale(tmp_path):
+    """LANDREMAP-SHIFT-1123: HEAD s2 nst4 rst_rl_17 (E-face taps -34.56) and wch4b hd_lep0N_w rst_rl_35 (+69.12) are the same
+    relays carried by the row's planned translation, not NOREMAP"""
+    for dx in (-34.56, 69.12):
+        f = _shift_case(tmp_path, dx, 0.0, dx)
+        assert [x for x in f if x.startswith("FAIL")] == [], f
+        assert any(x.startswith("WARN LANDREMAP-SHIFT hgi: 2 landing reset") and f"({dx:+g}, +0)" in x for x in f), f
+    f = _shift_case(tmp_path, 69.12, 0.0, 34.56)                           # moved by an amount the row did not plan: still stale
+    assert any(x.startswith("FAIL LANDREMAP") for x in f), f
+
+
+def test_planned_shifts_from_taps_and_cores():
+    b = typ(); b["clock"]["taps"] = [{"name": "clk", "xy": [10, 10]}, {"name": "clk_t6", "xy": [978.31, 300]}]
+    t = copy.deepcopy(b); t["clock"]["taps"][1]["xy"] = [943.75, 300]
+    assert G.planned_shifts(t, b) == {(-34.56, 0.0)}
+    t["hard_cores"][0]["origin_um"] = [169.12, 500.0]
+    assert G.planned_shifts(t, b) == {(-34.56, 0.0), (69.12, 0.0)}
+    t["hard_cores"][0]["outline_um"] = [60.0, 40.0]                       # reshaped core: no translation
+    assert G.planned_shifts(t, b) == {(-34.56, 0.0)}
 
 
 def test_tap_table_change_counts_as_move():

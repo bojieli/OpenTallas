@@ -66,6 +66,7 @@ usage (any form takes --release wavefront|pipelined to price a plan that has not
        reset_tree.py render PLAN.json TYPE [--png F] [--release pipelined]   -> review picture of the type's tree"""
 import heapq
 import json
+import os
 import math
 import re
 import sys
@@ -2030,7 +2031,8 @@ def pin_table_dir(P, tn, c):
         if pd is None:
             # Views may live outside their plan (physical/ref_tile); resolve the plan-relative pin table by
             # its declared module, and refuse differing candidates instead of silently choosing another die.
-            base = HERE.parents[1] / "physical" / "die_plan"
+            _rr = os.environ.get("OT_REPO_ROOT") or ""      # REPO-ROOT-1123: the plan's tree, not this tool checkout
+            base = (Path(_rr) if os.path.isdir(_rr) else HERE.parents[1]) / "physical" / "die_plan"
             paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
             tabs = [(p, json.loads(p.read_text())) for p in paths]
             keyed = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) == c.get("module")]

@@ -396,7 +396,8 @@ def check_all(tree, plan_path, plan_raw, asbuilt=None, elab_dir=None, ref_tools=
             try:
                 out += check_relaysink(plan_raw, ab, yjs, ab_path)
             except (KeyError, TypeError, ValueError) as e:
-                out.append(f"WARN RELAYSINK not run: {type(e).__name__}: {str(e)[:160]}")
+                out.append(f"FAIL RELAYSINK-UNCHECKED relay_depth rows NOT checked ({type(e).__name__}: {str(e)[:160]}); "
+                           f"fix the as-built / elab input or --skip RELAYSINK (LANDREMAP-TREE-FAIL-1123: never a silent skip)")
         if "ROWSINK" not in skip:
             out += check_rowsink(plan_path, plan_raw, ab, ab_path, elab_dir, yjs)
         if "MODULES" not in skip:

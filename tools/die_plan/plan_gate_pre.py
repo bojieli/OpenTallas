@@ -750,11 +750,54 @@ def moved_types(raw, base_raw):
     return out
 
 
-def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None):
+SHIFT_TOL_UM = 0.011
+
+
+def planned_shifts(t, b):
+    """LANDREMAP-SHIFT-1123 (COORD, HEAD-R18 s2 nst4 rst_rl_17 -34.56 / wch4b hd_lep0N_w rst_rl_35 +69.12): the non-zero
+    translations (dx, dy) the row applied to this type, read from the row itself: hard-core origin deltas (same inst, same outline)
+    and clock tap xy deltas (same tap name) vs the baseline type"""
+    out = set()
+    cb = {c[0]: c[1:] for c in core_boxes(b)}
+    for c in core_boxes(t):
+        o = cb.get(c[0])
+        if o and abs((c[3] - c[1]) - (o[2] - o[0])) < SHIFT_TOL_UM and abs((c[4] - c[2]) - (o[3] - o[1])) < SHIFT_TOL_UM:
+            out.add((round(c[1] - o[0], 2), round(c[2] - o[1], 2)))
+    def taps(x):
+        r = {}
+        for k in ("taps", "added_taps"):
+            for a in (x.get("clock") or {}).get(k) or []:
+                try:
+                    r[a["name"]] = (float(a["xy"][0]), float(a["xy"][1]))
+                except (KeyError, TypeError, ValueError, IndexError):
+                    continue
+        return r
+    bt = taps(b)
+    for n_, xy in taps(t).items():
+        if n_ in bt:
+            out.add((round(xy[0] - bt[n_][0], 2), round(xy[1] - bt[n_][1], 2)))
+    out.discard((0.0, 0.0))
+    out.discard((-0.0, 0.0)); out.discard((0.0, -0.0)); out.discard((-0.0, -0.0))
+    return out
+
+
+def _shifted(old, new, shifts):
+    """the planned shift (dx, dy) that carries relay identity old (depth, xy, kind) onto new, else None"""
+    if not old or not new or not shifts or old[0] != new[0] or old[2] != new[2] or len(old[1]) != 2 or len(new[1]) != 2:
+        return None
+    for dx, dy in sorted(shifts):
+        if abs(new[1][0] - old[1][0] - dx) < SHIFT_TOL_UM and abs(new[1][1] - old[1][1] - dy) < SHIFT_TOL_UM:
+            return (dx, dy)
+    return None
+
+
+def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None, tree=None):
     """FAIL LANDREMAP per moved type whose landing reset references were not remapped (see LANDREMAP-1122 in the doc).
     tree_fn(raw, plan_path, type) -> {relay name: identity}; injectable for tests.
     GATE-AGREE-R1: a stale reference the bind re-picks itself (reset_anchor.repicked_paths, the bind's own predicate) is only
     WARN LANDREMAP-ADVISORY; one the bind would not repair stays FAIL, and an anchor the bind would refuse is named (FAIL LANDREMAP-BIND).
+    A reset tree that cannot be built is FAIL LANDREMAP-UNCHECKED (LANDREMAP-TREE-FAIL-1123); a reference whose relay moved by a planned
+    shift of the row (planned_shifts) is the same relay: WARN LANDREMAP-SHIFT, not stale (LANDREMAP-SHIFT-1123).
     repick_fn(raw, plan_path, type) -> (paths, error); injectable (default none when tree_fn is injected)."""
     if not baseline:
         return []
@@ -776,13 +819,14 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None):
                 plans[id(r)] = schema.Plan(r, Path(pp).parent / "die_plan.json")
             return RT.for_type(plans[id(r)], tn)
 
-        def tree_fn(r, pp, tn):
-            return {x["q"]: (x.get("depth"), tuple(round(float(c), 2) for c in x.get("xy") or ()), x.get("kind"))
-                    for x in _tree(r, pp, tn)["relays"]}
+        def tree_fn(r, pp, tn):                         # plan inputs (sink_bins_file ...) read from --tree (LANDREMAP-TREE-FAIL-1123)
+            return _in_tree(tree, lambda: {x["q"]: (x.get("depth"), tuple(round(float(c), 2) for c in x.get("xy") or ()), x.get("kind"))
+                                           for x in _tree(r, pp, tn)["relays"]})
 
         if repick_fn is None:
             def repick_fn(r, pp, tn):
-                return RA.repicked_paths(tn, r["partition_types"][tn], _tree(r, pp, tn), Path(__file__).resolve().parents[2])
+                root = Path(tree).resolve() if tree and Path(tree).is_dir() else Path(__file__).resolve().parents[2]
+                return _in_tree(tree, lambda: RA.repicked_paths(tn, r["partition_types"][tn], _tree(r, pp, tn), root))
     out, bad = [], []
     for tn in sorted(mv):
         rn = landing_reset_refs(raw["partition_types"][tn])
@@ -792,10 +836,20 @@ def check_landremap(plan, baseline, tree_fn=None, max_list=4, repick_fn=None):
             continue
         try:
             tb, tw = tree_fn(braw, baseline, tn), tree_fn(raw, plan, tn)
-        except Exception as e:  # noqa: BLE001 - the bind reports the tree error itself
-            out.append(f"WARN LANDREMAP {tn}: reset tree not built ({type(e).__name__}: {str(e)[:160]}); remap check skipped")
+        except Exception as e:  # noqa: BLE001 - LANDREMAP-TREE-FAIL-1123: an unbuilt tree is a FAIL, never a skip
+            out.append(f"FAIL LANDREMAP-UNCHECKED {tn}: reset tree not built ({type(e).__name__}: {str(e)[:160]}); landing reset "
+                       f"references NOT checked -- the bind / kit gen builds the same tree and stops there; re-run with --tree "
+                       f"<tree holding the plan inputs> or fix the tree inputs")
             continue
         stale = sorted((p, v) for p, v in same.items() if tb.get(v) != tw.get(v))
+        shifts = planned_shifts(raw["partition_types"][tn], braw["partition_types"][tn])
+        moved = [x for x in stale if _shifted(tb.get(x[1]), tw.get(x[1]), shifts)]
+        if moved:                                        # LANDREMAP-SHIFT-1123: the same relay, carried by the row's planned shift
+            ds = sorted({_shifted(tb.get(v), tw.get(v), shifts) for _, v in moved})
+            out.append(f"WARN LANDREMAP-SHIFT {tn}: {len(moved)} landing reset reference(s) name the same relay translated by the "
+                       f"planned shift {', '.join(f'({dx:+g}, {dy:+g})' for dx, dy in ds)} um of the type's moved cores / taps "
+                       f"({', '.join(f'{v} {tb.get(v)[1]}->{tw.get(v)[1]}' for _, v in moved[:max_list])}): not stale")
+            stale = [x for x in stale if x not in moved]
         if not stale:
             continue
         rp, rerr = set(), None
@@ -1271,15 +1325,20 @@ def _in_tree(tree, fn):
     """run fn() with the plan's repo-relative inputs read from --tree (taps._root + cwd), not from this checker's tool tree"""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import taps as TP
-    here, root0 = os.getcwd(), TP._root
+    here, root0, env0 = os.getcwd(), TP._root, os.environ.get("OT_REPO_ROOT")
     try:
         if tree and Path(tree).is_dir():
             os.chdir(tree)
             TP._root = lambda: Path(tree).resolve()
+            os.environ["OT_REPO_ROOT"] = str(Path(tree).resolve())     # REPO-ROOT-1123 readers (reset_tree pin tables, bind_elab)
         return fn()
     finally:
         os.chdir(here)
         TP._root = root0
+        if env0 is None:
+            os.environ.pop("OT_REPO_ROOT", None)
+        else:
+            os.environ["OT_REPO_ROOT"] = env0
 
 
 def _reset_lineage(tree, net):
@@ -1668,7 +1727,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "GEOM" not in skip:
         findings += check_geom(plan, halo, strict_cores, baseline)
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
-        findings += check_landremap(plan, rb)
+        findings += check_landremap(plan, rb, tree=tree)
     _base = None
     if {"TAPNAME", "RESETPUB"} - skip:
         _base = rb if rb else remap_base(plan, remap, baseline)[0]
