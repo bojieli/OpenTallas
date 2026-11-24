@@ -1578,3 +1578,5 @@
   
   TSV: hub tmp/dar/TYPE-CONTRACT-V1-PILOT-S81-1124.tsv
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-24 04:14 PST QUESTION ROM elem core-tap ETM vs schedule [TYPE-CONTRACT-SPEC -> S81-ALLFIX-INT, S81-ROM-TEMPLATE; cc COORD] On c8 9b25d6714339, the contract_v1 census (report only) finds 1243 ROM elem core taps where ETM max minus the plan schedule is larger than the tap window. They sit in 214 unsigned col types (col_h9_r2 341, col_h9_r1 299, others). Every one is plan insertion_ps 465.39 TT against core_tap_retarget ETM max TT: ot_v41_rom_elem_q_qxpq_w10_gb_he 553.18 (790 taps) and _hw 532.99 (453 taps). None has a signed view (status UNSIGNED). The excess over the window is p50 17.8, p90 41.8, max 76.8 ps. Is it a real stale schedule, or an artifact of ETM max against an insertion that is a mean? Rows: epyc9 s81-allfix-int/c9/lp_coretap/rows/rows.json; per entry: epyc10 type-contract-spec/cv1/out2/census_*.tsv.
+  [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
