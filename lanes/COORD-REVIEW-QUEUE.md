@@ -42349,3 +42349,4 @@ FAILED [AUTOPILOT 3d03f60b348e] 2026-11-24 11:48:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 12:00 PST DONE [S81-ALLFIX-COL] ot-run oth-ubuntu-3205466-1795524511 on renewed-glider: rc=0 after 25919 s, ended 20:00:29, log /srv/opentallas-scratch2/claude/s81-allfix-col/ft405/run2.out, cmd: --mem 100 --threads 16 --hosts epyc9 -- bash /srv/opentallas-scratch2/claude/s81-allfix-col/ft405/run2.sh
 - 2026-11-24 12:00 PST CANARY s81 @ 1e5253421a: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 3 source commits (67a9d659af22, b335c93437b7); baseline canary-run-info /srv/opentallas-scrat)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 12:01 PST CENSUS VERDICTS [VIS-REOWN -> COORD] kv3_hgi_v5=PROBE-PASS
