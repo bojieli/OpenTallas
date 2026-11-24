@@ -6,3 +6,8 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - Waiter: head-r18-kit-waiter5 (waiter3/head_waiter.sh) posts raw reads as HEAD-R18 + WEST WINNER + launches west-wch4b-nst4/run.sh if (b) first at 0.
 - 19:2x: wband tap-pre GRT 0 overflow (12 extra its); wch4b still iterating.
 - Local watcher: scratchpad west_watch.sh (background).
+## 20:3x PST: WEST WINNER = (a) wband
+- hd_lep0N_w_1123175932 5_1_grt: 0 overflow on clock (3,235 nets) + signal (134,451); TT setup ws +63.2 tns 0; FF hold guard +27.7, 0 violators (+201 buf). Render grt/congestion.png: red only over the hard cores; channels green/yellow, no hotspot at the old x60-110/y840-960 corner.
+- No nst4 (only for (b)). wch4b hd_lep0N_w_1123175934 keeps running as a spare (in pre-GRT hold at 20:32).
+- Unit head-west-wband-route (west-wband-route/run.sh): waits for the head-r18-west-wband-grt driver to end, then run-item same spec --goal route (sign-off+LEC), OT_LANE=HEAD-WEST.
+- Waiter head-west-waiter (waiter_west/) still posts the raw reads for both kits.
