@@ -402,6 +402,34 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual(json.loads(state.read_text())["seen"], tip)
         self.assertEqual(q.read_text().count("KNOWN-RED"), 1)
 
+    def test_redwatch_remote_requires_the_exact_main_gate_receipt(self):
+        q = self._auto_setup()
+        self._redwatch_pick(175)
+        state = self.d / "mq/redwatch.json"
+        self.assertEqual(self._omq("redwatch").returncode, 0)
+        parent = json.loads(state.read_text())["seen"]
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 0\n")
+        sh(*self.g, "commit", "-qam", "[LANE-BREAK] remote regression", cwd=self.dev)
+        commit = sh("git", "rev-parse", "HEAD", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+
+        self.env["MQ_REDWATCH_REMOTE"] = "echo ALREADY"
+        r = self._omq("redwatch")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(json.loads(state.read_text()), {"seen": parent, "deferred": [commit]})
+
+        self.env["MQ_REDWATCH_REMOTE"] = f"MQ_WT={self.d / 'remote-wt'} {sys.executable} -I {P} redwatch-gate {{sha}} {{parent}}"
+        r = self._omq("redwatch")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("RED: remote:", r.stdout)
+        self.assertEqual(json.loads(state.read_text())["seen"], commit)
+        self.assertFalse((self.d / "wt" / f"rw-{commit[:10]}").exists())
+        self.assertIn("KNOWN-RED [MERGE-QUEUE -> LANE-BREAK]", q.read_text())
+        r = self._omq("redwatch-gate", commit, self.shas["good"])
+        self.assertEqual(r.returncode, 2)
+        self.assertIn("commit or first parent unavailable", r.stdout)
+
     def test_redwatch_posts_known_red_for_a_commit_that_breaks_tests_and_blocks_nobody(self):
         q = self._auto_setup()
         self._redwatch_pick(300)

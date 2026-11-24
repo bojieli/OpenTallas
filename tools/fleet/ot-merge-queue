@@ -124,6 +124,10 @@ GATE_SCRIPT = "/srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote"
 GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", f"ot-run --mem 48 --threads 16 --disk 60 --hosts epyc2,epyc9 --needs {GATE_SCRIPT} --dir "
                              f"/srv/opentallas-scratch2/claude/mq-gate -- bash {GATE_SCRIPT} "
                              "{key} 16")                       # '' = gate on the hub
+REDWATCH_REMOTE = os.environ.get("MQ_REDWATCH_REMOTE",
+    f"ot-run --mem 48 --threads 16 --disk 60 --hosts epyc7,epyc9 --strict-host --needs {GATE_SCRIPT} "
+    f"--dir /srv/opentallas-scratch2/claude/mq-gate --max-wait 45 -- bash {GATE_SCRIPT} "
+    "--redwatch {sha} {parent} 16" if GATE_REMOTE else "")
 GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "1500"))   # 11-17: was 10800; ot-run re-placed one gate for 45 min
 ITEM_SECS = int(os.environ.get("MQ_ITEM_SECS", "1200"))          # an approval whose prepare/gate runs longer is set aside (INFRA, retried next tick)
 STALL_SECS = int(os.environ.get("MQ_STALL_SECS", "2700"))        # nothing merged for this long with approvals pending -> ALERT
@@ -1674,6 +1678,49 @@ def redwatch_staging_refusal():
     return (admitted.stderr or admitted.stdout).strip()[-500:] or f"admission exit {admitted.returncode}"
 
 
+def redwatch_gate(commit, parent):
+    """Run the canonical gate at the exact landed commit and its first parent."""
+    it = {"id": f"rw-{commit[:10]}", "key": f"main@{commit[:11]}"}
+    try:
+        it["extra"] = changed_checkout_entries(changed_files(REPO, parent, commit))
+        return gate(it, wt_make(it["id"], commit, it["extra"]), parent)
+    except Exception as e:
+        return "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
+    finally:
+        wt_drop(it["id"])
+
+
+def redwatch_gate_cmd(commit, parent):
+    if (not all(re.fullmatch(r"[0-9a-f]{40}", sha) for sha in (commit, parent))
+            or not is_ancestor(commit, fetch_main()) or rev(f"{commit}^1") != parent):
+        print("REDWATCH_GATE: commit or first parent unavailable on mirror", flush=True)
+        return 2
+    status, note = redwatch_gate(commit, parent)
+    print("REDWATCH_GATE " + json.dumps({"sha": commit, "parent": parent, "status": status, "note": note}), flush=True)
+    return {"GREEN": 0, "RED": 1}.get(status, 2)
+
+
+def redwatch_gate_remote(commit, parent):
+    cmd = REDWATCH_REMOTE.format(sha=commit, parent=parent)
+    try:
+        result = run_group(cmd, GATE_REMOTE_TIMEOUT)
+    except (OSError, S.TimeoutExpired) as e:
+        return "INFRA", f"remote gate: {type(e).__name__}"
+    for line in reversed((result.stdout or "").splitlines()):
+        if not line.startswith("REDWATCH_GATE "):
+            continue
+        try:
+            receipt = json.loads(line.removeprefix("REDWATCH_GATE "))
+        except ValueError:
+            break
+        status = receipt.get("status")
+        if receipt.get("sha") == commit and receipt.get("parent") == parent and (
+                (status, result.returncode) in (("GREEN", 0), ("RED", 1))):
+            return status, "remote: " + str(receipt.get("note") or "")[:1500]
+        return "INFRA", "remote exact gate did not complete: " + str(receipt.get("note") or "")[:400]
+    return "INFRA", ((result.stderr or result.stdout or "").strip()[-400:] or f"remote gate exit {result.returncode}")
+
+
 def redwatch():
     """OWNER 11-18: the queue is no gate any more.  Alarm only: for each NEW commit on main (first-parent, newest MQ_REDWATCH_MAX), run the
     tests its touched files select (the same gate() run, against the commit's first parent, so a failure main already had is baseline); a
@@ -1708,6 +1755,7 @@ def redwatch():
         log(f"redwatch: {len(commits)} new commits, checking {cap} ({len(first)} deferred first)")
         commits = [c for c in commits if c in selected]
     st = {"posts": []}
+    remote_used = False
     for index, c in enumerate(commits):
         par = rev(f"{c}^1")
         if not par:
@@ -1715,18 +1763,19 @@ def redwatch():
             deferred.discard(c)
             continue
         if reason := redwatch_staging_refusal():
-            log(f"redwatch {c[:11]}: source staging deferred: {reason}")
+            if not REDWATCH_REMOTE or remote_used or DRY:
+                log(f"redwatch {c[:11]}: source staging deferred: {reason}")
+                deferred.update(commits[index:])
+                break
+            remote_used = True                                    # one existing gate budget per timer tick
+            log(f"redwatch {c[:11]}: local staging unavailable; dispatch exact gate vs {par[:11]}")
+            res, note = redwatch_gate_remote(c, par)
+        else:
+            res, note = redwatch_gate(c, par)
+        log(f"redwatch {c[:11]}: {res}: {note[:300]}")
+        if res not in ("GREEN", "RED"):
             deferred.update(commits[index:])
             break
-        it = {"id": f"rw-{c[:10]}", "key": f"main@{c[:11]}"}
-        try:
-            wt_make(it["id"], c)
-            res, note = gate(it, wt_make(it["id"], c, it.get("extra", ())), par)
-        except Exception as e:                                # noqa: BLE001 - an alarm never fails the timer
-            res, note = "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
-        finally:
-            wt_drop(it["id"])
-        log(f"redwatch {c[:11]}: {res}: {note[:300]}")
         if res == "RED":
             lane = commit_lane(c)
             subj = git("log", "-1", "--format=%s", c).stdout.strip()[:100]
@@ -1804,7 +1853,7 @@ def status():
 def main():
     global DRY
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red", "auto-list", "merge-now", "redwatch"])
+    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red", "auto-list", "merge-now", "redwatch", "redwatch-gate"])
     ap.add_argument("target", nargs="?", default="", help="gate: <branch>[@<sha>]")
     ap.add_argument("sha", nargs="?", default="", help="merge-now: the full sha")
     ap.add_argument("--dry-run", action="store_true", help="test only: no push, no tag, no post, no state write")
@@ -1816,6 +1865,8 @@ def main():
         return status()
     if a.cmd == "known-red":
         return known_red_cmd()
+    if a.cmd == "redwatch-gate":
+        return redwatch_gate_cmd(a.target, a.sha)
     if a.cmd == "redwatch":
         try:
             return redwatch()

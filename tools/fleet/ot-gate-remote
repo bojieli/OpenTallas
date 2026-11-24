@@ -2,28 +2,41 @@
 # ot-gate-remote (MERGE-QUEUE-1, COORD 11-15 15:1x): the queue's own gate (`ot-merge-queue gate`, main's rt/current code) on a
 # BUILD host, in its own blobless clone of the lane mirror, so gates run in parallel instead of one at a time on the hub.
 # usage (on the build host, normally via ot-run): ot-gate-remote [--merge] claude/<branch>@<sha> [threads]
+# --redwatch SHA FIRST_PARENT [threads] checks a landed main commit exactly and writes no approval gate record.
 # --merge needs the FULL sha, the branch pushed to the mirror, and a GREEN gate; exit = the merge-now result (0 = MERGED/ALREADY)
 # Prints the gate output; GREEN ends with `GATE main=<sha> pass=N/N`.  Clone slots: /srv/opentallas-scratch2/claude/mq-gate/slot<i>.
 set -u
 cd /
 # --merge (MERGE-AUTO-1118, OWNER 11-18: nobody waits for approval): after a GREEN gate, land the SAME sha at once with `ot-merge-queue merge-now` on the hub
 MERGE=0
-if [ "${1:-}" = --merge ]; then MERGE=1; shift; fi
+REDWATCH=0
+case "${1:-}" in
+  --merge) MERGE=1; shift;;
+  --redwatch) REDWATCH=1; shift;;
+esac
 # FABLE-FLOW-1900 (E): a gate runs on a BUILD host only.  `ot-gate-remote --help` once started a real gate on the hub and a second hub gate ran at 17:43.
-usage() { echo "usage: ot-gate-remote [--merge] claude/<branch>@<sha> [threads]   (build host only, normally via ot-run; refuses on the hub intel2 and on localhost)" >&2; exit 2; }
+usage() { echo "usage: ot-gate-remote [--merge] claude/<branch>@<sha> [threads] | --redwatch SHA FIRST_PARENT [threads]   (build host only, normally via ot-run; refuses on the hub intel2 and on localhost)" >&2; exit 2; }
 HN=${OT_GATE_HOSTNAME:-$(hostname -s)}
 case "$HN" in
   tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "ot-gate-remote: REFUSED on $HN: gates run on build hosts (epyc2, epyc7..epyc10, intel1) through ot-run, never on the hub or localhost" >&2; exit 64;;
 esac
-[ $# -ge 1 ] && [ $# -le 2 ] || usage
-printf '%s' "$1" | grep -Eq '^claude/[A-Za-z0-9._/-]+@[0-9a-f]{7,40}$' || { echo "ot-gate-remote: bad branch@sha: '$1'" >&2; usage; }
-[ $# -lt 2 ] || printf '%s' "$2" | grep -Eq '^[0-9]{1,3}$' || { echo "ot-gate-remote: bad thread count: '$2'" >&2; usage; }
+if [ "$REDWATCH" = 1 ]; then
+  [ $# -ge 2 ] && [ $# -le 3 ] || usage
+  [[ "$1" =~ ^[0-9a-f]{40}$ && "$2" =~ ^[0-9a-f]{40}$ ]] || usage
+  GATE_ARGV=(redwatch-gate "$1" "$2")
+  T=${3:-16}
+else
+  [ $# -ge 1 ] && [ $# -le 2 ] || usage
+  printf '%s' "$1" | grep -Eq '^claude/[A-Za-z0-9._/-]+@[0-9a-f]{7,40}$' || { echo "ot-gate-remote: bad branch@sha: '$1'" >&2; usage; }
+  GATE_ARGV=(gate "$1")
+  T=${2:-16}
+fi
+printf '%s' "$T" | grep -Eq '^[0-9]{1,3}$' || { echo "ot-gate-remote: bad thread count: '$T'" >&2; usage; }
 [ "${OT_GATE_CHECK_ONLY:-}" = 1 ] && exit 0
 B=/srv/opentallas-scratch2/claude/mq-gate
 # the mirror is reached by the hub's IP (fleet hosts and localhost do not resolve the alias "intel2": the clone failed there, exit 3)
 M=ubuntu@185.8.106.226:/srv/opentallas-scratch2/git/OpenTallas.git
 [ "$(hostname -s)" = tolerant-swine ] && M=/srv/opentallas-scratch2/git/OpenTallas.git
-T=${2:-16}
 mkdir -p $B
 if [ ! -x $B/venv/bin/python ]; then
   ( flock 9; [ -x $B/venv/bin/python ] || { python3 -m venv --system-site-packages $B/venv && $B/venv/bin/python -m pip -q install pytest pytest-xdist; } ) 9>$B/venv.lock
@@ -72,10 +85,10 @@ git -C $S/repo config extensions.worktreeConfig true
 F=${OT_GATE_CODE:-/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-merge-queue}
 echo "ot-gate-remote: $(hostname -s) slot ${S##*/} code $(readlink -f /srv/opentallas-scratch2/claude/rt/current | sed 's#.*/##')"
 MQ_HOME=$S/mq MQ_REPO=$S/repo MQ_WT=$S/wt MQ_COORD=$S/coord MQ_PYTHON=$B/venv/bin/python MQ_FALLBACK_REMOTE= MQ_XDIST=$T \
-  MQ_GATE_PAR=1 MQ_GATE_REMOTE= /usr/bin/python3 -I "$F" gate "$1" </dev/null   # stdin closed: tools waiting on stdin (yosys) never idle
+  MQ_GATE_PAR=1 MQ_GATE_REMOTE= /usr/bin/python3 -I "$F" "${GATE_ARGV[@]}" </dev/null   # stdin closed: tools waiting on stdin (yosys) never idle
 rc=$?
 # GREEN: hand the record to the hub queue (~/merge-queue/gates/<sha>.json), so the tick lands it without a second test run
-if [ $rc -eq 0 ]; then
+if [ $rc -eq 0 ] && [ "$REDWATCH" = 0 ]; then
   r=$(ls -t $S/mq/gates/*.json 2>/dev/null | head -1)
   if [ -n "$r" ]; then
     python3 -I - "$r" "$(hostname -s)" <<'PY' > $r.tmp && mv $r.tmp $r
