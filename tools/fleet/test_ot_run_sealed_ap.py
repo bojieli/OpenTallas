@@ -146,6 +146,22 @@ def test_cross_host_fetch_when_no_holder_admits(tmp_path, monkeypatch):
     assert s["return"] == {"to": K, "paths": ["."]}
 
 
+def test_place_uses_sealed_backend_disk_admission_before_fetch(tmp_path, monkeypatch):
+    legacy = ("ot-run status: localhost admits 729 GB load 15/112 scratch 113 GB"
+              " | epyc7 admits 180 GB load 85/96 scratch 290 GB")
+    sealed = ("ot-run status: localhost REFUSED (scratch disk /srv/opentallas-scratch2 has 113 GB free < floor 150 GB)"
+              " | epyc7 admits 180 GB load 85/96 scratch 290 GB"
+              " | epyc10 REFUSED (scratch disk has 0 GB free < floor 50 GB) DRAINING (0 of 90 GB)")
+    monkeypatch.setattr(M.subprocess, "run", lambda a, **kw: type("Result", (), {
+        "stdout": sealed if a == ["/sb/ot-run", "--status"] else legacy})())
+    c = conf(spec_dir=str(tmp_path), hosts=["intel2"], place_fetch=True, ap_fetch_hosts=["epyc7"])
+    argv = ["--mem", "48", "--threads", "8", "--dir", K, "--", "bash", "-c", f"bash {R} {K} place 48 8"]
+    out, why = M.decide(argv, c, check=lambda *a: (True, []), fetch=lambda *a: (True, []))
+    assert out[out.index("--hosts") + 1] == "epyc7"
+    assert "inputs fetched from intel2" in why
+    assert M.status_rows("/sb/ot-run")["epyc10"]["draining"]
+
+
 def test_drained_host_only_donates_inputs(tmp_path, monkeypatch):
     status = ("ot-run status: epyc10 admits 251 GB load 48/96 scratch 93 GB "
               "DRAINING (93 of 9999 GB, new job dirs refused) | "

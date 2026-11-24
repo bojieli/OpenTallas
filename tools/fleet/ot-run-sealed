@@ -494,7 +494,8 @@ def status_rows(backend):
             continue
         h = f[0]
         if len(f) > 1 and f[1] in ("HELD", "REFUSED", "unreachable"):
-            out[h] = dict(admit=0, waiting_gb=0.0, load=0.0, ncpu=1, capped=False, held=True)
+            out[h] = dict(admit=0, waiting_gb=0.0, load=0.0, ncpu=1, capped=False, held=True,
+                          draining=" DRAINING (" in seg)
             continue
         m = re.match(r"\S+ admits (-?\d+) GB", seg)
         if not m:
@@ -717,8 +718,7 @@ def decide_gen(o, flags, cmd, gc, conf, passthru, check=None, exclude=()):
     oks = {h: v for h, (okh, v) in res.items() if okh}
     if not oks:
         return passthru, f"gen: W/src/ot-job/bwrap not ready on {','.join(cands)}"
-    backend = backend_of(conf)
-    rows = status_rows(backend)
+    rows = status_rows(conf["sealed_backend"])
     if rows is not None:
         free = {h: v for h, v in oks.items() if not rows.get(otrun_host(h), {}).get("draining")}
         if not free:
@@ -801,7 +801,9 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
     else:
         host = next(iter(srcs))
         kids = srcs[host]
-    rows, src = status_rows(backend), None
+    # The legacy passthrough can have different disk floors than the backend that admits a sealed job.
+    sealed_backend = conf["sealed_backend"]
+    rows, src = status_rows(sealed_backend), None
     fetch = fetch or fetch_ok
     if (ac or pc and conf.get("place_fetch")) and conf.get("ap_fetch_hosts"):
         # KW-FIX-44 (COORD 13:0x): when no holder of K admits the job now, run it sealed on a ready host that does,
@@ -826,7 +828,7 @@ def decide(argv, conf, check=remote_ok, fetch=None, exclude=(), source=None):
             if best is None:
                 return passthru, f"capacity: none of {','.join(oks)} admits {o['mem']} GB now (spill unsealed)"
             host, kids = best, oks[best]
-    if not src and conf.get("capacity_passthru", True) and rows is None and not admits(backend, host, o["mem"]):
+    if not src and conf.get("capacity_passthru", True) and rows is None and not admits(sealed_backend, host, o["mem"]):
         # COORD 08:1x capacity: a sealed job cannot SPILL; when K's host cannot admit it now, run it unsealed so
         # ot-run can spill it to a host that admits (epyc4).  Logged as PASS capacity; it is not an ISOLATE gap.
         return passthru, f"capacity: {host} does not admit {o['mem']} GB now (spill unsealed)"
