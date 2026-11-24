@@ -1,16 +1,16 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s1",
- "manifest_hash": "168411d6207dd311ff2c5a52f178477018be989a0b98c2489c556668c4c85584",
- "src_manifest_sha": "168411d6207dd311ff2c5a52f178477018be989a0b98c2489c556668c4c85584",
- "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2",
+ "manifest_hash": "2ad30df65cabe19f6d2f58bd2d0ab9ac21d2b262d8b38fbf2f73c5fc45af3330",
+ "src_manifest_sha": "2ad30df65cabe19f6d2f58bd2d0ab9ac21d2b262d8b38fbf2f73c5fc45af3330",
+ "tools_sha": "dce92f0c92a9fed7552455d84b76a4d90dbf256e",
  "hosts": [
   "epyc7",
   "epyc11"
  ],
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_plan.json",
  "plan_sha256": "b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_sidecar.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_sidecar.json",
  "sidecar_sha256": "3aec87183d5c5d318e85177f6156f9062a9a458df3f47277adc7c4b4760688c8",
  "native_reset_receipt": "epyc9:/srv/opentallas-scratch2/claude/head-west/bind_r18w6/native_release/native_release_receipt.json",
  "frozen_kit_tree": "",
@@ -19,8 +19,8 @@
  "smoke": "PASS",
  "smoke_detail": "W6 b3507e628de6 = w5 1e8ebd1417ab + r7 c9ead4cccd9a, gate on E9 head-west/bind_r18w6: strict bind PASS (27 masters, 359 inst), nested PASS, tie 2029/0, cohort 27/27, LATCHECK 334/334 --fixed-in-core (322/334 without; 12 lanes = declared in-core cycles, same as live 014661), native release QUALIFIED_CONDITIONAL 12, G0 0 err/0 pending. PRE: only ISTPRICE baseline as-built absent. Sidecar ba968452ea5a = W6 3aec87183d5c + collector lep0N_w part (5 dup W edges dropped); E9 bind_r18w6c: RTL byte-identical, same gates PASS.",
  "config": {
-  "event": "head_rp21z20NF15f_r18w6",
-  "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
+  "event": "head_rp21z20NF15f_r18w6p",
+  "tools_sha": "dce92f0c92a9fed7552455d84b76a4d90dbf256e",
   "gen_host": "epyc7",
   "gen_hosts": [
    "epyc7",
@@ -28,25 +28,26 @@
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s1/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18w6/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ],
   "review_before_route": {
-   "event": "head_rp21z20NF15f_r18w6",
+   "event": "head_rp21z20NF15f_r18w6p",
    "all_items": true,
    "required": true
   },
   "auto_visual_review_skip": [
    "*"
-  ]
+  ],
+  "tools_from_rt": true
  },
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s1/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18w6_s2/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
  },
  "records": {},
  "status": "ADOPTED reviewed tuple",
