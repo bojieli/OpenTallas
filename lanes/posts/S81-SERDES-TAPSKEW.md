@@ -16,3 +16,4 @@
   No wrongly timed CDC was found.
   (4) A fix follows as a c9 row. Tables: epyc8 s81-serdes-tapskew/{an.out,pred270.out,sinks_t2.tsv,pads_t2.tsv}.
 - 2026-11-24 05:53 PST DONE [s81-serdes-tapskew] ot-push-main otpush-outgoing-giraffe-2239417 on outgoing-giraffe: rc=0 after 487 s, ended 13:53:14, log none, cmd: ot-push-main 
+- 2026-11-24 08:01 PST TAKING S81-SERDES-TAPSKEW (fresh, post-limit, 07:5x PST): serdes__t2 tap skew row = clock.stb_common (STB-COMMON main 4d87f4ac76c, in c9 rt 515889f6ef75) on c9 048fa468f0a2, which already carries SELLK read_lockup on all 11 serdes (the accepted R1 form). Building the row, then PRE + scoped strict bind serdes__t2, then ROW-REBASED to S81-ALLFIX-INT. No live units to adopt (old lane units all terminal). [cc COORD, S81-ALLFIX-INT, FABLE-RC-ALL, S81-ALLFIX-SVC]
