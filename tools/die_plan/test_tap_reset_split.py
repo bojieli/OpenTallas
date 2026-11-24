@@ -125,3 +125,14 @@ def test_reset_split_max_taps_cap_is_opt_in_typed_and_exported():
     # launcher cap counts the launcher's own tap plus its copies; source cap counts own tap + other taps
     assert "[llength [dict get $ltaps $ln]] >= $maxt" in t and "[dict size $by] + 1 > $maxt" in t
     assert "dict incr lstat capped" in t and "incr ncapped" in t
+
+
+def test_copies_get_unique_seats_before_cts():
+    # QC-ALLFIX-COLL CTS-SEAT 11-23: native CTS keeps one sink per location of a clock net; on coll_core pkg15 all 80
+    # CLK-open copies were same-tap same-(x,y) pairs. Every *_rtap_* instance gets a unique origin before CTS.
+    t = (HERE / "tap_reset_split.tcl").read_text()
+    assert "proc uniq_seats {blk}" in t
+    call = 'puts "OT_TAP_RESET_SPLIT_UNIQ seats_uniquified [uniq_seats $blk]"'
+    assert t.count(call) == 1 and t.index('puts "OT_TAP_RESET_SPLIT sources') < t.index(call)
+    assert t.index(call) < t.index("::ot_tap_rsplit::run") and 'OT_TAP_RESET_SPLIT_UNIQ) eq "0"' in t
+    assert "while {[dict exists $taken" in t

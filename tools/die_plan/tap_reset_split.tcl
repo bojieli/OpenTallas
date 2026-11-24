@@ -152,6 +152,34 @@ namespace eval ::ot_tap_rsplit {
   dict set lmemo $key $drv
   if {![const_d $l] && $depth < $maxd} {launch $blk $c $t [expr {$depth+1}] $maxd} elseif {![const_d $l]} {dict incr lstat unresolved}
  }
+ # QC-ALLFIX-COLL CTS-SEAT 11-23 (coll_core functional stop: 80 of 205 reset copies CLK-open after native CTS).  A copy goes
+ # to its sinks' centroid and a launch copy to the bbox of the stage it feeds, so two copies on one tap can share an exact
+ # origin with each other or with an existing sink.  Native CTS keeps ONE sink per location of a clock net: on pkg15
+ # 3_place e0a45c22c7b3 all 80 opens were exactly the 81 same-tap same-(x,y) pairs (0 opens elsewhere).  Fix: give every
+ # *_rtap_* instance a unique origin by whole-site steps along its row before CTS (post-CTS detailed_placement legalizes
+ # as before).  OT_TAP_RESET_SPLIT_UNIQ=0 restores the old behaviour.
+ proc uniq_seats {blk} {
+  if {[info exists ::env(OT_TAP_RESET_SPLIT_UNIQ)] && $::env(OT_TAP_RESET_SPLIT_UNIQ) eq "0"} {return 0}
+  set rows [$blk getRows]
+  set sw 54
+  if {[llength $rows]} {set sw [[[lindex $rows 0] getSite] getWidth]}
+  set taken {}; set mine {}
+  foreach inst [$blk getInsts] {
+   if {[[$inst getMaster] isBlock]} continue
+   if {[string match {*_rtap_*} [$inst getName]]} {lappend mine $inst; continue}
+   lassign [$inst getLocation] x y
+   dict set taken "$x,$y" 1
+  }
+  set moved 0
+  foreach inst [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $mine] {
+   lassign [$inst getLocation] x y
+   set x0 $x
+   while {[dict exists $taken "$x,$y"]} {incr x $sw}
+   if {$x != $x0} {$inst setLocation $x $y; $inst setPlacementStatus PLACED; incr moved}
+   dict set taken "$x,$y" 1
+  }
+  return $moved
+ }
  proc run {} {
   global ct_taps
   set blk [ord::get_db_block]
@@ -261,6 +289,7 @@ namespace eval ::ot_tap_rsplit {
   if {$k1 == $k0 && $ncopy == $copies_at_start} {set converged 1; break}
   }
   puts "OT_TAP_RESET_SPLIT sources $nsrc copies $ncopy chain_cells $nchain sinks_repointed $nsink min_sinks $minn[expr {$maxt > 0 ? " max_taps $maxt capped_sources $ncapped" : ""}]"
+  puts "OT_TAP_RESET_SPLIT_UNIQ seats_uniquified [uniq_seats $blk]"
   if {$ldo} {
    set g {}; foreach k [expr {$maxt > 0 ? {moved copies chain reuse unresolved capped} : {moved copies chain reuse unresolved}}] {lappend g $k [expr {[dict exists $lstat $k] ? [dict get $lstat $k] : 0}]}
    puts "OT_TAP_RESET_SPLIT_LAUNCH stages $nlsrc [join $g { }] max_depth $maxd rounds $nround converged $converged"
