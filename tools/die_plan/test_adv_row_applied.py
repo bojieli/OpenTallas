@@ -31,3 +31,16 @@ def test_findings_not_run_and_file(tmp_path):
     out = A.findings(PLAN, "p", None, rows=[str(f)])
     assert "NONE 0/1" in out[0] and "NOT applied" in out[0] and "1 NONE" in out[-1]
     assert A.findings(None, "p", None, rows=["/nonexistent"])[0].startswith("WARN ADV-ROW-APPLIED not checked")
+
+
+def test_inferred_base_never_none_and_noops(tmp_path):
+    ops = [{"op": "replace", "path": "/partition_types/t1/outline_um", "value": [1, 1]}]
+    assert A.status(0, 0) == "NOOPS" and A.status(1, 0, True) == "INFERRED-BASE" and A.status(2, 1, True) == "INFERRED-BASE" and A.status(2, 2, True) == "FULL"
+    assert A.is_inferred({"derived": True, "ops": ops}) and not A.is_inferred({"derived": True, "base": "C1b", "ops": ops}) and not A.is_inferred({"ops": ops})
+    f, g = tmp_path / "d.json", tmp_path / "s.json"
+    f.write_text(json.dumps({"derived": True, "ops": ops}))
+    g.write_text(json.dumps({"derived": True, "base": "C1b", "ops": ops}))
+    out = A.findings(PLAN, "p", None, rows=[str(f), str(g)], noops=["rowX"])
+    txt = "\n".join(out)
+    assert "d.json: INFERRED-BASE 0/1" in txt and "s.json: NONE 0/1" in txt and "rowX: NOOPS" in txt
+    assert "1 NONE, 1 INFERRED-BASE, 1 NOOPS" in out[-1]

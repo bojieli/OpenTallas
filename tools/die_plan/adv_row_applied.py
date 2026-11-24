@@ -3,7 +3,7 @@
 A row accepted 'by reference' (IN-BASE / ROW-REBASED / REASONED) whose ops were never applied to any plan (S81 KVLEAF-T2-HARD-1: 0 of 5 ops in c8).
 Checks BY OP CONTENT, never by label: for each ops file given (kw rows=[paths] / env OT_ADV_ROWS=colon-separated), every op {op: replace|add|add_or_replace|remove,
 path (JSON pointer or dotted), value, old} must have its value at its path in THIS plan.  FULL / PARTIAL / NONE per row; ops still at their old value are counted.
-Ops file format: {"ops": [...]} or a bare op list.  Without rows= it prints NOT-RUN with how to give them (the composing lane lists its rows' ops files).
+Ops file format: {"ops": [...]} or a bare op list; {"derived": true} without "base" = diffed against an inferred base -> INFERRED-BASE, never NONE; rows with no ops file: kw noops=[names] -> NOOPS.  Without rows= it prints NOT-RUN with how to give them (the composing lane lists its rows' ops files).
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.
 """
 import json
@@ -74,27 +74,49 @@ def applied(ops, plan):
     return n, a, old, miss
 
 
-def status(n, a):
-    return "NONOPS" if n == 0 else ("FULL" if a == n else ("NONE" if a == 0 else "PARTIAL"))
+def status(n, a, inferred=False):
+    """FULL / PARTIAL / NONE; NOOPS = nothing checkable.  Ops derived by diffing against a guessed base (file key derived/base_inferred true, or no 'base'
+    label on a derived file) can only prove presence: a non-FULL result is INFERRED-BASE, never NONE or PARTIAL (ask the owner for the stated base)."""
+    if n == 0:
+        return "NOOPS"
+    if a == n:
+        return "FULL"
+    if inferred:
+        return "INFERRED-BASE"
+    return "NONE" if a == 0 else "PARTIAL"
+
+
+def is_inferred(d):
+    """ops file dict from a whole-plan diff without the row's stated base"""
+    return isinstance(d, dict) and bool(d.get("derived") or d.get("base_inferred")) and not d.get("base")
 
 
 def _findings(raw, plan_path, tree=None, **kw):
     rows = kw.get("rows") or [x for x in os.environ.get("OT_ADV_ROWS", "").split(":") if x]
-    if not rows:
-        return [_w("NOT-RUN: no rows given (kw rows=[ops files] / OT_ADV_ROWS=a.json:b.json): list the ops file of every row this compose claims")]
-    out, cnt = [], {"FULL": 0, "PARTIAL": 0, "NONE": 0, "NONOPS": 0}
+    noops = list(kw.get("noops") or [x for x in os.environ.get("OT_ADV_NOOPS", "").split(":") if x])
+    if not rows and not noops:
+        return [_w("NOT-RUN: no rows given (kw rows=[ops files] / OT_ADV_ROWS=a.json:b.json; rows accepted without an ops file: kw noops=[names] / OT_ADV_NOOPS): "
+                   "list the ops file of every row this compose claims")]
+    out, cnt = [], {"FULL": 0, "PARTIAL": 0, "NONE": 0, "INFERRED-BASE": 0, "NOOPS": 0}
+    for nm in noops:
+        cnt["NOOPS"] += 1
+        out.append(_w(f"{nm}: NOOPS row accepted with no ops file: nothing to check, the owner must supply its ops"))
     for p in rows:
-        ops = ops_of(json.loads(Path(p).read_text()))
+        d = json.loads(Path(p).read_text())
+        ops = ops_of(d)
         if ops is None:
             out.append(_w(f"{Path(p).name}: not an ops file (no ops list)"))
             continue
         n, a, old, miss = applied(ops, raw)
-        s = status(n, a)
+        inf = is_inferred(d)
+        s = status(n, a, inf)
         cnt[s] += 1
         if s != "FULL":
-            out.append(_w(f"{Path(p).name}: {s} {a}/{n} ops present in this plan ({old} still at the old value, {miss} path(s) missing)"
-                          f"{'; the row is NOT applied: compose it or drop it with a reason' if s == 'NONE' else ''}"))
-    out.append(_w("summary", f"{len(rows)} row(s): {cnt['FULL']} FULL, {cnt['PARTIAL']} PARTIAL, {cnt['NONE']} NONE, {cnt['NONOPS']} without checkable ops"))
+            tail = {"NONE": "; the row is NOT applied: compose it or drop it with a reason",
+                    "INFERRED-BASE": "; ops derived against an inferred base: not a NONE, ask the row owner for the stated base"}.get(s, "")
+            out.append(_w(f"{Path(p).name}: {s} {a}/{n} ops present in this plan ({old} still at the old value, {miss} path(s) missing){tail}"))
+    out.append(_w("summary", f"{len(rows) + len(noops)} row(s): {cnt['FULL']} FULL, {cnt['PARTIAL']} PARTIAL, {cnt['NONE']} NONE, "
+                  f"{cnt['INFERRED-BASE']} INFERRED-BASE, {cnt['NOOPS']} NOOPS"))
     return out
 
 
