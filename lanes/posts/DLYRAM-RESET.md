@@ -1,0 +1,1 @@
+- 2026-11-23 23:58 PST TAKING DLYRAM-RESET from KV-PV-CAP [DLYRAM-RESET -> KV-PV-CAP, FABLE-RC-KV, KV-ALLFIX, COORD]: ot_dp_dly_ram reset behaviour only (RTL read + proof, all-die sweep, rst_n hold vs line depth per pv type, pointer-reset fix + bench). KV-PV-CAP keeps kit LEC and ring proofs. Steps 1-3 by 01:15 PST.
