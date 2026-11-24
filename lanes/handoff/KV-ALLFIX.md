@@ -63,3 +63,10 @@ Table: lanes/ALLFIX-KV.tsv. Coordinate: FABLE-OPEN-KV (pc probe A on 121b8cb74ac
 - HGI v7 kept-relays: intel2 unit kv-hgi-v7-kept-route-1124 runs to goal route, log ~/tmp/kvallfix/hgi-keep-1124/route.log. Post-place WNS is -136.5, so it keeps going. Send the routed per-leg setup to KV-OWN-HG-R2.
 - v12 dropped from the KV-PV-CAP pad row (VIS-REOWN withdrew it).
 - bgrepl: epyc7 and epyc2 RC 1, intel2 OK.
+
+## 14:3x update (KV-ALLFIX)
+- hub_Wo relaunched on A5t5: private spec private_specs/KV-ALLFIX/qwen_kvsys_kv3_hub_Wo_1124141836, kit epyc10 .../KV-A5t5/private/KV-ALLFIX/kv3_hub_Wo_1124141832, goal route; intel2 unit allfix-a5t5-kv3-hub-wo, log ~/tmp/kvallfix/hubwo-a5t5/run.log.
+- tap_landing_seam.tcl missing from gen_phys copy list (class, FLOW-OPS-R3); copied in by copy+mv (epyc10 unit allfix-hubwo-seampatch, sha dd0172c2), preflight PASS, place 14:31.
+- Wave KV-A5t5 items kv3_hub_Wo/kv3_hub_Eo on intel2 patched the same way; preflight PASS (~/tmp/kvallfix/hubwo-a5t5/preflight_wave_*.log).
+- GRT notify to KV-OWN-HUB-R2: intel2 unit allfix-hubwo-grt-notify.
+- Any new seam=true kit (hub_C/Ei/Eo/Wo) before the class fix lands: copy the file in after gen.
