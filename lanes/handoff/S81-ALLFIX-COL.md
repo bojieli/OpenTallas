@@ -9,3 +9,7 @@ Base B1 ae3101241d6b = E10 s81-j9-r6/b1_tree/physical/die_plan/s81/plan_j9_b1_ex
 - col774 52aebeb23d: RTL only, carried by overlay + re-ELAB.
 ## Open
 - rc72 probe: intel1 s81-col-j9/ew1_place_1438 (S81-COL-J9/Codex; bind b_f9a1db3e37dd at 17:23 still in bind) -> p5 GRT read ~20:00 -> post to INT + PRECHECK-LEDGER-R3.
+## 17:5x
+- HOPFIX PRE main tools vs base B1: PASS 0 adv 197 (hf/pre_main_vsB1.log). Posted ROW-REBASED ae218970. 12 p5 ANCHORDRY = J8-baseline artifact of B1 depth-8 reseat; B1 strict bind re-picks rst_rl_22->24 depth 7.
+- pre_main_B1_vsJ8 (confirm inherited) still running E10 unit oth-ubuntu-3225270 -> hf/pre_main_B1_vsJ8.log.
+- NEXT: read ew1_place_1438 p5 GRT (~20:00): final 5_1_grt overflow at x1133-1413 y607-675 + census; post to S81-ALLFIX-INT/PRECHECK-LEDGER-R3 (rc72 GATED if 0 stuck shorts/overflow there).
