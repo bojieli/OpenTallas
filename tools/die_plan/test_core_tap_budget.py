@@ -119,3 +119,17 @@ def test_native_sram_head_new_shape_spec_from_sheet(tmp_path):
     (d / "ot_sram_1r1w_32x128_m1_r0c0.json").write_text(json.dumps(sheet))
     with pytest.raises(CC.ContractError, match="identity/verification missing"):
         CC.native_memory_clock_model(c)
+
+
+def test_legacy_tapped_pin_prefers_signed_view_mean(tmp_path, monkeypatch):
+    c = core(tmp_path)
+    signed(tmp_path)                             # view SIGNED mean 245.9; the plan tap is stale (240) and unowned
+    p = plan(c)
+    p.types["tile"]["clock"]["taps"][0]["insertion_ps"] = 240.0
+    monkeypatch.setattr(G, "core_tap_rows", lambda *_a, **_k: [("clk_c0", "u_node", "clk", 0., 240.0)])
+    out = tmp_path / "kit2"
+    out.mkdir()
+    G.core_latency_files(p, "tile", out, **G.core_mean_contract_options(p, "tile"))
+    assert "u_node clk 245.9 clk_c0" in (out / "core_latency.txt").read_text()
+    row = json.loads((out / "core_latency.json").read_text())["rows"][0]
+    assert row["basis"] == "signed_view_mean" and row["etm_max_bound_ps"] == 267.63 and row["signed"] is False

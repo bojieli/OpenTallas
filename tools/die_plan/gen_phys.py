@@ -6254,27 +6254,56 @@ def apply_core_pin_lead(P, tn, rows):
     return out
 
 
-def legacy_core_tap_targets(tn, rows, taps):
+def legacy_core_tap_targets(tn, rows, taps, means=None):
     """CORE-TAP-BUDGET 11-24 (FABLE-RC-ALL 701c4a59, HEAD-WEST 00:41; class, default-on): on the legacy path (core taps
-    without a SIGNED / parent_budget owner) the core rows carry the liberty ETM max_clock_tree_path, while the early core
-    tap of the same pin (core_taps.txt, the kit SDC source latency) carries the plan insertion_ps.  tap_balance.tcl aims
-    the core pin at target - row, so the two disagreed by ETM - insertion (HEAD hd_lep0N / _w: 612.07 vs 553.42 =
-    58.65 ps early on the pair cores; QC legacy types 12-106 ps).  A pin that HAS an early core tap now takes that tap's
-    insertion as its pin target, the same number the SDC delivers (the mean-contract path enforces this equality; the
-    parent_budget path takes the plan budget).  Untapped (grid) pins keep the ETM bound.  The row keeps the ETM value
-    as etm_max_bound_ps; rows stay signed=False / release_qualified=False.  Mutates `rows`; returns the changed rows."""
+    without a SIGNED / parent_budget owner) the core rows carried the liberty ETM max_clock_tree_path (an extremum, not
+    a pin-register mean) as the pin target tap_balance.tcl aims the core clock pin at (target - row).  HEAD hd_lep0N /
+    _w: ETM 612.07 vs tap 553.42 vs signed mean 558.17 -> the pair-core pin hung ~54-59 ps early (56-79 ps measured).
+    A pin that HAS an early core tap now takes, in this order: the selected view's SIGNED TT mean (means
+    {(inst, pin): ps}, core_clock_contract.load require_signed), else the tap's plan insertion (the budget the SDC
+    delivers).  Untapped (grid) pins keep the ETM bound.  The row keeps etm_max_bound_ps; rows stay signed=False /
+    release_qualified=False (the type is not on the mean path until its taps carry SIGNED owners: plan row via
+    core_tap_retarget.py apply).  Mutates rows; returns the changed rows."""
     ins = {}
     for _n, inst, pin, _e, insertion in taps:
         ins.setdefault((inst, pin), float(insertion))
+    means = means or {}
     out = []
     for r in rows:
-        v = ins.get((r["inst"], r["pin"]), ins.get((r["inst"], "*")))
-        if v is None or abs(float(r["rise_ps"]) - v) <= .005:
+        key = (r["inst"], r["pin"])
+        v = ins.get(key, ins.get((r["inst"], "*")))
+        if v is None:
             continue
-        r.update(etm_max_bound_ps=r["rise_ps"], rise_ps=round(v, 2), fall_ps=round(v, 2), basis="plan_core_tap_insertion")
+        basis = "plan_core_tap_insertion"
+        if key in means:
+            v, basis = float(means[key]), "signed_view_mean"
+        if abs(float(r["rise_ps"]) - v) <= .005:
+            continue
+        r.update(etm_max_bound_ps=r["rise_ps"], rise_ps=round(v, 2), fall_ps=round(v, 2), basis=basis)
         print(f"OT_CORE_TAP_LEGACY {tn} {r['inst']}/{r['pin']} {r['tap']}: pin target ETM {r['etm_max_bound_ps']:g} -> "
-              f"tap insertion {v:g} (no SIGNED/parent_budget budget_owner; CORE-TAP-BUDGET)")
+              f"{basis} {v:g} (tap insertion {ins.get(key, ins.get((r['inst'], '*'))):g}; no SIGNED/parent_budget "
+              f"budget_owner; CORE-TAP-BUDGET)")
         out.append(r)
+    return out
+
+
+def legacy_signed_means(P, tn, root, taps):
+    """{(physical inst, pin): SIGNED TT mean} of the hard cores that carry an early core tap and whose selected view has a
+    SIGNED contract (core_clock_contract.load, require_signed); cores without one are skipped (plan insertion is used)."""
+    import core_clock_contract as CC
+    tapped = {inst for _n, inst, _p, _e, _i in taps}
+    out = {}
+    for c in P.types[tn].get("hard_cores", []) or []:
+        phys = content_physical_identity(c)[0] if ("physical_inst" in c or "physical_master" in c) else c["inst"]
+        if phys not in tapped or "lib" not in c:
+            continue
+        try:
+            con = CC.load(c, root, require_signed=True, plan_type=P.types[tn])
+        except Exception:  # noqa: BLE001 -- ContractError / missing view: no signed mean, plan insertion stays
+            continue
+        for pin, v in con.items():
+            if v.get("signed"):
+                out[(phys, pin)] = v["corners"]["tt"]["mean_ps"]
     return out
 
 
@@ -6323,7 +6352,7 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
         for r in rows:
             if r.get("tap") == "grid" and (r["inst"], r["pin"]) in by_pin:
                 r["tap"] = by_pin[(r["inst"], r["pin"])]
-        legacy_core_tap_targets(tn, rows, taps)
+        legacy_core_tap_targets(tn, rows, taps, legacy_signed_means(P, tn, root, taps) if taps else None)
     if mean_contract:
         for _port, inst, pin, _early, insertion in taps:
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
