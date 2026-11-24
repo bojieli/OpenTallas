@@ -8,3 +8,7 @@ Brief: scratchpad allfix_brief.txt + resume_1123e.txt. Base B1 post-tail ae31012
 - rc8 CRR_PRE2 + rc9 SELREP: RTL carry rows posted to INT (vp.sv 2a7dbb06ab12, slice.sv 36236edd9c48 from s81-leaf-j9/tree_c5; die define OT_S81SL_CRR_PRE2).
 - kv_leaf t2: ROW-DROP posted (die fit + view-pending masters + stage RTL); owner MISC-SERDES-J9.
 - COORD: leaf kits OT_GPL_OVERFLOW=0; iqf__t1 excluded (BL1 regex leaf only).
+## 19:1x
+- Batch 1 ROW-REBASED PRE 0: tpcap 2d5e21b9501f, pt1 40b567b4c4a0, lepw eb3efa2c89c3, vnb 5dea7d173b54 (post 521ebc1a). Leaf r2_near 8ce96cfc7c52 PRE 0 but G0 schema-stops on 5 t55/svc_13 seam ports (C4 t55 in old frame). Fix: in/ops_t55revert.json 81ecc8dfed2c (t55 -> B1); check rows/leaf2 (rows_leaf2.otrun.log) running tail+PRE+G0. INT told (bc6ce7c3). t55 handed back to LEAF-J9.
+- INT c4 (E9 s81-allfix-int/c4) already composed my rows.
+- KVLEAF-T2-SLOT (COORD 19:00 4700.16x1918.08): ROW-DROP posted 1e439ed5 - die re-floor (station E-W chain tl/ca/cb at die y 23911-24093 blocks station shrink; width needs east-half shift + die +25.92). Proposed ASSEMBLY/INT die event 11-24.
