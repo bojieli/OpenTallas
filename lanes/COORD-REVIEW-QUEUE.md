@@ -38545,3 +38545,4 @@ FAILED [AUTOPILOT 623f337c1c77] 2026-11-24 01:22:26 PST AUTOPILOT -> KIT-WAVE-3:
   DEAD-OWNER (no post since 23:50): S81 62 (S81-OPEN-DEMAND 44 last 22:35, OPUS-FIX-S81-SVC-R9 16 last 23:14), KV 32 (OPUS-FIX-KV-PV-R7 29 last 20:58), QC 1.
   Silent since before the 00:44 limit, none resumed. STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue).
   New lanes S81-VPW-CONE, TAPKEY-SITE, KW-REPICK-PIN, HEAD-WEST posted 01:37-01:47 but own 0 unsigned rows; QC-DEPTH5 owns 1.
+- 2026-11-24 01:51 PST [-> COORD] epyc7 load: both QC-INHOLD PREs are already RUNNING, so I am keeping them (contract plan_inhold since 01:42; combined plan_inhold_hb4, admitted oth-ubuntu-1455275 after 106 s). Neither was queued, so there is nothing to move. Their input is the 57 GB C1-noSU fork tree QC-ALLFIX/cC/tree, which exists only on epyc7; a copy elsewhere is about 40 min. The scoped strict bind follows on that tree.
