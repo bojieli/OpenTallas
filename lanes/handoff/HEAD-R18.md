@@ -266,3 +266,4 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - W6 START tree: epyc11 head-r18/start_w6_1124/provider_w6 (recipe start/ in results). Bundle E11 start_w6_1124/bundle_w6c, E9 head-r18/witness_w6_1124/bundle_w6c.
 - Witness re-pinned main 6c3f3be1e2ff (results/token_pass/head_w6_compiler_1124). Re-pin if HEAD-WEST final sidecar != ba968452 or SPN 5fb8ca47 adopted (root reset hd_spn u_rrl_208 renumbered there).
 - Live: CTL 9cf9 kit in place (E11); SPN kit at kit_rtl (unit head-r18-spn-w6-place); LEC 2070186 waiter unit head-r18-lec2070186-waiter.
+- 11-24 09:3x: start_q + settle row SUBMITTED to HEAD-WEST for W7 (COORD ruling; W6 unchanged, no rebind). Open for me: regenerate LATPKG + schedule on the W7 sha; re-pin witness on HEAD-WEST gated sidecar / W7 / SPN adoption.
