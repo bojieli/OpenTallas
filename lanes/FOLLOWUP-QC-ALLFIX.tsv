@@ -1,40 +1,40 @@
 item	owner	status	pre	strict	lat	g0	probe	last_mention	age_min	flag
-b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF 	COMPOSED-A gate-clean; GATED o	COMPOSED-A gate-clea	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	45	-
-x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	QC-ALLFIX	named in post 03:44	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	149	-
-rc99 cb NK lockup (row A + HB4 rev5, in C4)	QC-CB-PROBE	named in post 02:57	-	-	-	-	-	FABLE-RC-QC	48	-
-rc101 cb landing piles (CB-1 + STREET, in C4)	QC-ALLFIX	named in post 03:44	-	-	-	-	-	FABLE-RC-QC	48	-
-rc107/rc109 coll g_pf + shr_p_rx_i (pkg15; coll types byte-identical C4->A)	QC-OPEN-COLL	named in post 03:35	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	6	-
-coll_core 80 clock-open reset copies (tools row tap_reset_split uniq_seats)	QC-OPEN-COLL	named in post 03:35	base	-	-	-	205/0 open (was 80)	FABLE-RC-QC	6	-
-SLE CTL B_TW bank spread (4 per-bit banks x158-504, 9 stages kept, x284 empty; i	QC-ALLFIX-COLL	named in handoff 03:44	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	45	-
-SLE CTL clock entry (ctl edge taps = contract in C4) + NEW hc1/hc2 fclk_in_b_hw_	ROW-REBASING	ROW-REBASING	PRE running (epyc7)	-	-	-	-	FABLE-RC-QC	225	-
-rc105 su_c street + su_c re-floor (in SU2R; SUC-Q0 stage-0 legs pending)	OPUS-FIX-QC-V4-R2	named in handoff 03:44	-	-	-	-	-	QC-ALLFIX-SU	580	-
-SU-2 + su_c N/waist re-floor + retap (SU2R db537389cc92, 21 types, cws +1 on 24 	COMPOSED-B2	COMPOSED-B2	SU gate epyc7 running	-	-	-	-	QC-ALLFIX	552	-
-RED +2 (in-tree land_r8_extra, asbuilt overlay)	COMPOSED-B2	COMPOSED-B2	PRE 0 new	scoped sle_su_c 2 stages	-	-	-	QC-ALLFIX	461	-
-rc103 su_l1 tap affinity (RHI tap_reset_split + tap_pair_affinity in base)	QC-ALLFIX-SU	named in post 01:12	PASS	0 err	1921/1921	-	running	QC-ALLFIX-SU	152	-
-hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (su_l1 in base; cbf_q00 RST = RHI 72b268847e	QC-CB-PROBE	named in post 03:43	PRE 0 new	-	-	-	-	OPUS-FIX-QC-V4-R2	543	-
+b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF 	COMPOSED-A gate-clean; GATED o	COMPOSED-A gate-clea	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	2	-
+x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	QC-ALLFIX	named in post 03:44	PASS 9edfed34	0 err	1921/1921	PASS 0/0	running	FABLE-RC-QC	172	-
+rc99 cb NK lockup (row A + HB4 rev5, in C4)	QC-CB-PROBE	named in post 02:57	-	-	-	-	-	FABLE-RC-QC	71	-
+rc101 cb landing piles (CB-1 + STREET, in C4)	QC-ALLFIX	named in post 03:44	-	-	-	-	-	FABLE-RC-QC	71	-
+rc107/rc109 coll g_pf + shr_p_rx_i (pkg15; coll types byte-identical C4->A)	QC-OPEN-COLL	named in post 03:35	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	29	-
+coll_core 80 clock-open reset copies (tools row tap_reset_split uniq_seats)	QC-OPEN-COLL	named in post 04:02	base	-	-	-	205/0 open (was 80)	FABLE-RC-QC	2	-
+SLE CTL B_TW bank spread (4 per-bit banks x158-504, 9 stages kept, x284 empty; i	QC-SLECTL-RESYN	named in post 04:03	PASS 9edfed34	-	-	-	-	FABLE-RC-QC	2	-
+SLE CTL clock entry (ctl edge taps = contract in C4) + NEW hc1/hc2 fclk_in_b_hw_	ROW-REBASING	ROW-REBASING	PRE running (epyc7)	-	-	-	-	FABLE-RC-QC	2	-
+rc105 su_c street + su_c re-floor (in SU2R; SUC-Q0 stage-0 legs pending)	OPUS-FIX-QC-V4-R2	named in handoff 04:07	-	-	-	-	-	QC-ALLFIX-SU	603	-
+SU-2 + su_c N/waist re-floor + retap (SU2R db537389cc92, 21 types, cws +1 on 24 	COMPOSED-B2	COMPOSED-B2	SU gate epyc7 running	-	-	-	-	QC-ALLFIX	575	-
+RED +2 (in-tree land_r8_extra, asbuilt overlay)	COMPOSED-B2	COMPOSED-B2	PRE 0 new	scoped sle_su_c 2 stages	-	-	-	QC-ALLFIX	484	-
+rc103 su_l1 tap affinity (RHI tap_reset_split + tap_pair_affinity in base)	QC-ALLFIX-SU	named in post 01:12	PASS	0 err	1921/1921	-	running	QC-ALLFIX-SU	175	-
+hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (su_l1 in base; cbf_q00 RST = RHI 72b268847e	QC-CB-PROBE	named in post 03:43	PRE 0 new	-	-	-	-	OPUS-FIX-QC-V4-R2	566	-
 RSN FLT u_lpad_flt_su_c_i.q[0] -97.79	QC-V4 keeps: kit tools bug (1-	QC-V4 keeps: kit too	-	-	-	-	-	-	9999	-
-F16 auth transport + TTCTLM f5 constructor 6a5f53239424 + latency row (6 cyc) + 	QC-ALLFIX-COLL	named in handoff 03:44	PRE 0 new	B1 rebind running (R8 member added)	-	-	-	QC-ALLFIX	0	-
-TTCTLM: TTC-NECK-1 (u_24526 +17.28/+17.28, congestion) in B. Setup: placement ro	QC-ALLFIX	named in post 03:44	PRE 0 new	-	-	-	-	FABLE-RC-QC	272	-
-rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	OPUS-FIX-QC-V4-R2	named in handoff 03:44	-	-	-	-	-	FABLE-RC-QC	129	-
-rc94 STA-1 seat / rc98 SEAT-1c pinreg (clk_t128) / hg-QC-IO-BOUNDARY (STA-2, STA	OPUS-FIX-QC-V4-R2	named in handoff 03:44	PASS 9edfed34	-	-	-	-	QC-ALLFIX	552	-
-x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	QC-RSN-PROBE	named in post 01:16	-	-	-	-	-	QC-ALLFIX	63	-
-CBN-RSF-SEAT (FABLE render finding: 6 rsf stations inside u_t00/u_t01 of cbn_q00	QC-ALLFIX	named in post 03:44	PRE 0 new	-	-	-	-	QC-ALLFIX-COLL	101	-
-SUC-Q0 (su_c x_su_l0_o stage-0 legs q[150]/[103]/[105] 434 -> ~171 um)	QC-ALLFIX	named in handoff 03:44	-	-	-	-	-	-	9999	-
+F16 auth transport + TTCTLM f5 constructor 6a5f53239424 + latency row (6 cyc) + 	QC-ALLFIX-COLL	named in handoff 04:07	PRE 0 new	B1 rebind running (R8 member added)	-	-	-	FABLE-RC-QC	2	-
+TTCTLM: TTC-NECK-1 (u_24526 +17.28/+17.28, congestion) in B. Setup: placement ro	QC-INHOLD-BUDGET	named in post 04:07	PRE 0 new	-	-	-	-	FABLE-RC-QC	2	-
+rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	OPUS-FIX-QC-V4-R2	named in handoff 04:07	-	-	-	-	-	FABLE-RC-QC	152	-
+rc94 STA-1 seat / rc98 SEAT-1c pinreg (clk_t128) / hg-QC-IO-BOUNDARY (STA-2, STA	OPUS-FIX-QC-V4-R2	named in handoff 04:07	PASS 9edfed34	-	-	-	-	QC-ALLFIX	575	-
+x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	QC-RSN-PROBE	named in post 01:16	-	-	-	-	-	QC-ALLFIX	86	-
+CBN-RSF-SEAT (FABLE render finding: 6 rsf stations inside u_t00/u_t01 of cbn_q00	QC-INHOLD-BUDGET	named in post 04:07	PRE 0 new	-	-	-	-	QC-ALLFIX-COLL	124	-
+SUC-Q0 (su_c x_su_l0_o stage-0 legs q[150]/[103]/[105] 434 -> ~171 um)	QC-ALLFIX	named in handoff 04:07	-	-	-	-	-	-	9999	-
 C1-noSU compose (B1 + RST + ctlclk + RSF-SEAT)	QC-ALLFIX-COLL	named in post 02:03	PRE inherited only	0 err	1922/1922	PASS 0/0 + render reviewed	running	-	9999	-
-SU2R-FIX3 (sle_su_c 207 START raw resets -> nearest consumer tap, B1 rule)	QC-OPEN-SU	named in post 03:40	helper gate running	-	-	-	-	-	9999	-
+SU2R-FIX3 (sle_su_c 207 START raw resets -> nearest consumer tap, B1 rule)	TAPKEY-SITE	named in post 03:53	helper gate running	-	-	-	-	-	9999	-
 SUL1-UNBURY (4 su_l1 types, 42 die stations out of cores)	QC-SUL1-STN-ROW	DONE: ROW-REBASED into C1g (carrier); su_l1 signed-record gap (GENDRY-TRIAGE class D) owned by QC-OPEN-SU	PRE inherited only	scoped 0 su_l1	-	PASS (42->0)	-	-	9999	-
-HC1-CLKENTRY (QC-HC1-CLKENTRY: SLECTL-CLKENTRY-SEAT + SLECTL-RP-SEL + tapfix, sl	QC-ALLFIX	named in post 03:44	PRE equal base	0 err (noSU)	1922/1922 (noSU)	-	running	-	9999	-
-C1e compose (C1d + HC1-CLKENTRY)	SEAT-MATCH-AUDIT	named in post 01:54	cancelled	-	-	-	-	-	9999	-
+HC1-CLKENTRY (QC-HC1-CLKENTRY: SLECTL-CLKENTRY-SEAT + SLECTL-RP-SEL + tapfix, sl	QC-SLECTL-RESYN	named in post 04:03	PRE equal base	0 err (noSU)	1922/1922 (noSU)	-	running	-	9999	-
+C1e compose (C1d + HC1-CLKENTRY)	SEAT-MATCH-AUDIT	named in post 03:59	cancelled	-	-	-	-	-	9999	-
 SU2R-FIX4 (x_su_l1_o bank sites onto row grid, 3 su_c, y only, max 0.11 um)	QC-ALLFIX-SU	named in post 01:12	helper gate running, ETA 01:15	-	-	offline overlap 0 (relays/kit cells not covered)	-	-	9999	-
-ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	QC-OPEN-COLL	named in post 03:40	C1b+row = base	-	-	adds 0 G0 errors on C1b	coll_core kit past kit_topology	FABLE-RC-QC	6	-
-C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	QC-OPEN-COLL	named in handoff 03:44	PRE inherited only, SITEGRID 0	0 err (rt c660, pre BIND-UNDRIVEN-IN)	1922/1922	PASS 0/0	-	-	9999	-
-DEADIN-QC (declared dead-input proofs: sle_ctl rp1 w518_cp/w519_cp, fw fdn chu_a	QC-ALLFIX	named in post 03:44	-	-	-	-	-	-	9999	-
-sle_st_b_v2__clfde1249e (UNOWNED in sweep 01:09; plan unchanged vs C4, placed/ro	QC-OPEN-STA	named in post 03:14	-	-	-	-	-	QC-ALLFIX	131	-
-F16 tie row (QC-F16-PRODUCER: tt_ctlm f16_obs/init_u0 ties + strap + proof)	QC-ALLFIX	named in post 03:44	-	-	-	-	-	QC-ALLFIX	0	-
-C1h compose (C1g + F16 tie + DEADIN), rt f6d43b117443, PRE WARN for inherited DE	QC-ALLFIX	named in post 03:44	try1 stopped PRE ENTRYFOOT x75 (new check); try2 running	running	running	-	-	QC-ALLFIX	0	-
+ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	QC-OPEN-COLL	named in post 04:02	C1b+row = base	-	-	adds 0 G0 errors on C1b	coll_core kit past kit_topology	FABLE-RC-QC	2	-
+C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	QC-OPEN-COLL	named in handoff 04:07	PRE inherited only, SITEGRID 0	0 err (rt c660, pre BIND-UNDRIVEN-IN)	1922/1922	PASS 0/0	-	-	9999	-
+DEADIN-QC (declared dead-input proofs: sle_ctl rp1 w518_cp/w519_cp, fw fdn chu_a	QC-SLECTL-RESYN	named in post 04:03	-	-	-	-	-	-	9999	-
+sle_st_b_v2__clfde1249e (UNOWNED in sweep 01:09; plan unchanged vs C4, placed/ro	QC-OPEN-STA	named in post 03:14	-	-	-	-	-	QC-ALLFIX	154	-
+F16 tie row (QC-F16-PRODUCER: tt_ctlm f16_obs/init_u0 ties + strap + proof)	QC-F16-PRODUCER	named in post 04:01	-	-	-	-	-	FABLE-RC-QC	5	-
+C1h compose (C1g + F16 tie + DEADIN), rt f6d43b117443, PRE WARN for inherited DE	QC-ALLFIX	named in post 03:44	try1 stopped PRE ENTRYFOOT x75 (new check); try2 running	running	running	-	-	FABLE-RC-QC	5	-
 FWDCLK-REPOINT (reach_rules fix --rules 4, 74 STALE-EXPORT-TAP types)	QC-RSTCNT	named in post 03:35	-	-	-	-	-	-	9999	-
-QC-SC-FARRST (sle_ctl far raw reset + 5 sc stages, on SEAT-MATCH-AUDIT re-key 03	QC-ALLFIX	named in post 03:44	ROWS only	0 err	1922/1922	-	-	-	9999	-
-sle_ctl re-key	QC-ALLFIX	named in post 03:44	-	-	-	-	-	QC-ALLFIX	0	-
-sle_sc_v3 stations (QC-OPEN-SU, COORD option 1)	QC-ALLFIX	named in post 03:44	-	-	-	-	-	-	9999	-
-QC-RSTCNT 256 root stable counter	QC-RSTCNT	named in post 03:36	-	-	-	-	-	-	9999	-
-FWCPL-2 (QC-FW-CAP, fw 409.5k -> 379.8k at place)	QC-ALLFIX	named in post 03:44	-	-	-	-	-	-	9999	-
+QC-SC-FARRST (sle_ctl far raw reset + 5 sc stages, on SEAT-MATCH-AUDIT re-key 03	QC-SLECTL-RESYN	named in post 04:03	ROWS only	0 err	1922/1922	-	-	-	9999	-
+sle_ctl re-key	QC-SLECTL-RESYN	named in post 04:03	-	-	-	-	-	FABLE-RC-QC	19	-
+sle_sc_v3 stations (QC-OPEN-SU, COORD option 1)	QC-INHOLD-BUDGET	named in post 04:07	-	-	-	-	-	-	9999	-
+QC-RSTCNT 256 root stable counter	QC-RSTCNT	named in post 04:01	-	-	-	-	-	-	9999	-
+FWCPL-2 (QC-FW-CAP, fw 409.5k -> 379.8k at place)	QC-INHOLD-BUDGET	named in post 04:04	-	-	-	-	-	-	9999	-
