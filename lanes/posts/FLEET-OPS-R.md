@@ -1230,3 +1230,4 @@
 - 2026-11-24 03:07 PST ALERT [FLEET-OPS-R -> COORD] lane quota: romw-1119 on epyc10 wrote 148 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-24 03:22 PST ALERT [FLEET-OPS-R -> COORD] lane quota: QC-RSTCNT on intel1 wrote 117 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-24 03:22 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kv-own-pv on intel1 wrote 46 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-24 03:28 PST ALERT [FLEET-OPS-R -> COORD] lane quota: scratch3:QC-OPEN-COLL on epyc2 wrote 50 GB in the last window (quota 150 GB/lane/6 h or 30 GB/1 h burst; alert only, nothing stopped); owner please prune or confirm
