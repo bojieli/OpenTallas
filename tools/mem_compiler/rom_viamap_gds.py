@@ -150,6 +150,11 @@ class ViaGrid:
         self.base_gds_sha256 = grid.get("base_gds_sha256")
         if self.base_gds_sha256 is not None and not re.fullmatch(r"[0-9a-f]{64}", self.base_gds_sha256):
             raise ValueError(f"{path}: invalid base GDS SHA-256")
+        # A grid may name the base macro's array cell: program-macro then refuses a base whose array
+        # gates still end short of a neighbouring cell's poly (rom_seam_gate; HEAD GATE.S.1 band 11-24).
+        self.seam_array_cell = grid.get("seam_array_cell")
+        if self.seam_array_cell is not None and (not isinstance(self.seam_array_cell, str) or not self.seam_array_cell):
+            raise ValueError(f"{path}: seam_array_cell must be a cell name")
         if grid["schema"] != "opentallas.rom-via-grid.v1" or grid["lef_sha256"] != lef_sha:
             raise ValueError(f"{path}: VIA1 grid schema or LEF SHA-256 differs")
         self.dbu = grid["dbu_per_um"]
@@ -601,6 +606,14 @@ def program_macro(base: Path, top: str, m: Macro, viamap: Path, out: Path) -> di
             digest.update(block)
     if digest.hexdigest() != m.grid.base_gds_sha256:
         raise ValueError(f"{base}: SHA-256 differs from the VIA1 grid's unprogrammed GDS")
+    seam = None
+    if getattr(m.grid, "seam_array_cell", None):
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import rom_seam_gate
+        seam = rom_seam_gate.residual(base, m.grid.seam_array_cell, top=top)
+        if seam["short_seams"]:
+            raise ValueError(f"{base}: {seam['short_seams']} gate seam(s) of {m.grid.seam_array_cell} under 100 nm; "
+                             "run rom_seam_gate.py fix on the base and bind the grid to the fixed base")
     overlay_prefix = m.name + "__VIA1_"
     for name, _, _, refs in iter_structures(base, lambda n: n.startswith(overlay_prefix), top):
         if name != top or any(ref[0].startswith(overlay_prefix) for ref in refs):
@@ -615,7 +628,7 @@ def program_macro(base: Path, top: str, m: Macro, viamap: Path, out: Path) -> di
         if verify["verdict"] != "PASS":
             raise ValueError(f"programmed macro readback failed: {verify['failures']}")
         gds.replace(out)
-    return dict(info, structure=overlay_name(m, rows), top=top, readback="PASS",
+    return dict(info, structure=overlay_name(m, rows), top=top, readback="PASS", seam_check=seam,
                 base_gds_sha256=m.grid.base_gds_sha256, programmed_vias=sum(row.bit_count() for row in rows))
 
 

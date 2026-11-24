@@ -23,6 +23,10 @@ run changes nothing.
 
   rom_seam_gate.py fix --in in.gds --out out.gds --array-cell head_274_array_center \
       [--report report.json]
+  rom_seam_gate.py check --in base.gds --array-cell head_274_array_center
+
+A VIA1 grid JSON that names "seam_array_cell" makes rom_viamap_gds
+program-macro refuse a base GDS that still has short seams.
 """
 from __future__ import annotations
 
@@ -321,6 +325,18 @@ def sha(p: Path) -> str:
     return h.hexdigest()
 
 
+def residual(path: Path, array_cell: str, min_end_space_nm: float = 100.0, top: str | None = None) -> dict:
+    """Short array/neighbour gate seams left in a stream (0 on a seam-clean macro); used by program_macro."""
+    dbu_um, cells = parse(Path(path))
+    tops = set(cells) - {r["sname"] for d in cells.values() for r in d["refs"]}
+    top = top or (sorted(tops)[0] if len(tops) == 1 else None)
+    if top is None:
+        raise ValueError(f"several top cells {sorted(tops)}")
+    edits, refused, _, _ = plan(cells, top, array_cell, int(round(min_end_space_nm * 1e-3 / dbu_um)))
+    return {"top": top, "array_cell": array_cell, "short_seams": len(edits) + len(refused),
+            "uncut_junctions": len(refused)}
+
+
 def fix(args) -> int:
     src, dst = Path(args.inp), Path(args.out)
     dbu_um, cells = parse(src)
@@ -367,7 +383,16 @@ def main() -> int:
     f.add_argument("--top")
     f.add_argument("--min-end-space-nm", type=float, default=100.0)
     f.add_argument("--report")
+    c = sp.add_parser("check", help="count short seams left (exit 1 if any)")
+    c.add_argument("--in", dest="inp", required=True)
+    c.add_argument("--array-cell", required=True)
+    c.add_argument("--top")
+    c.add_argument("--min-end-space-nm", type=float, default=100.0)
     a = ap.parse_args()
+    if a.cmd == "check":
+        r = residual(Path(a.inp), a.array_cell, a.min_end_space_nm, a.top)
+        print(json.dumps(r))
+        return 1 if r["short_seams"] else 0
     return fix(a)
 
 

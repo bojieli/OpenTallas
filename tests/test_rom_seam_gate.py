@@ -93,3 +93,11 @@ def test_wide_gap_untouched(tmp_path):
     rc, out, rep = _run(tmp_path, src)
     assert rc == 0 and rep["extended_gates"] == 0
     assert out.read_bytes() == src.read_bytes()
+
+
+def test_residual_before_and_after(tmp_path):
+    src = tmp_path / "in.gds"
+    _gds(src)
+    assert sg.residual(src, "arr")["short_seams"] == 1
+    _, out, _ = _run(tmp_path, src)
+    assert sg.residual(out, "arr")["short_seams"] == 0
