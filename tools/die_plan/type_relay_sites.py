@@ -14,7 +14,13 @@ A site that falls inside a hard macro (grown by --macro-halo) moves to the macro
 worst hop (relay_site_clear.py, TYPE-SAFE-5 11-10: leaf__t35 p3 legalised such a site 68 um off, 15 bits over 405).
 
   type_relay_sites.py SRC GEOM BASE_PLAN TYPE OUT_PLAN REPORT_JSON [--reach 380] [--firm FACE_FLOPS] [--extra BUS=N]
-                      [--macro-halo 6 (negative: off)]
+                      [--macro-halo 6 (negative: off)] [--pipes [--pipe-re RE]]
+
+PIPE-SEATS (SEAT-MATCH-AUDIT 11-24, FABLE-RC-QC ccc83b1c): --pipes also takes the bind's own ot_dp_dly / _keep delay pipes
+(u_d<D>_<core>_<pin>, registers r[j][b] and q[b]; --pipe-re widens the instance pattern) as relay chains.  They had no planner, so a
+514 x 10 pipe (QC cbf_q11 u_d10_*) sat in free placement and clumped.  Per bit the chain is r[0][b] .. q[b]: stage k sits at k+1 / D+1
+of that bit's own line from what feeds r[0][b] to what q[b] drives (each bit its own line), the same even-hop rule as every other chain
+here; one row per stage and bit, seated by the kit like any relay_sites key (exact r[j][b] / q[b] names).
 """
 import argparse, collections, json, math, re, sys
 from pathlib import Path
@@ -25,6 +31,8 @@ for a in "src geom base type out report".split():
 ap.add_argument("--reach", type=float, default=380.0)
 ap.add_argument("--firm", help="ot_face_flops.txt of the placed kit: with it, u_bin_ flops not listed there (ring-fed buses) are movable too")
 ap.add_argument("--extra", action="append", default=[], metavar="BUS=N", help="station bus BUS gets N more u_ist_ stages (pin cycles planned elsewhere); their bits are sited here")
+ap.add_argument("--pipes", action="store_true", help="also site the bind's ot_dp_dly delay pipes (u_d<D>_*), see PIPE-SEATS")
+ap.add_argument("--pipe-re", default=r"u_d\d+_\w+", help="instance pattern of the pipes --pipes sites (default u_d<D>_*)")
 ap.add_argument("--macro-halo", type=float, default=6.0, help="sites inside a macro grown by this many um move to its boundary; negative = off")
 A = ap.parse_args()
 sys.path.insert(0, A.src + "/tools/autopilot")
@@ -36,6 +44,8 @@ RELAY = re.compile(r"^(?:u_bound\.)?((?P<lpad>u_lpad_\w+?)\.(?:q\[\d+\]|r\[\d+\]
                    r"|(?P<pd>u_pd\d+_\w+?_\d+)\.(?:r\[\d+\]|q)"
                    r"|(?P<ist>u_ist_\w+?_\d+)[./](?:q\[\d+\]|eq)"
                    r"|(?P<bin>u_bin_\w+?)[./](?:q\[\d+\]|eq))\$")
+PIPE = (re.compile(r"^(?:u_bound\.)?(?P<pipe>" + A.pipe_re + r")[./](?:r\[\d+\]\[\d+\]|q\[\d+\])\$")
+        if A.pipes else None)
 RESET = re.compile(r"u_rrl_|u_cland_(?:rst|reset|collect)|rst_rl_|rst_n_t\d")
 EXTRA = {k: int(v) for k, v in (x.split("=") for x in A.extra)}
 L1 = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -52,6 +62,8 @@ for c, nm in name.items():
             k = next(k for k in ("lpad", "pd", "ist", "bin") if m.group(k))
             if k != "bin" or (firm is not None and nm not in firm):
                 relay[c] = k
+        elif PIPE is not None and PIPE.match(nm):
+            relay[c] = "pipe"
 
 
 def key(c):
