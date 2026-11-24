@@ -30,3 +30,8 @@ Work dir: intel1 /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES (copy intel2 sam
   Script kv/kv_seam.sh (kst.py). Rerun on the A5t5 bind when it lands.
 - (3) ROM image posted to ROM-WEIGHTS-1119 (sys_face_cfg c26271b28f26, cal m0 6618afda4d1d, m1 bccdb47c722d).
 - Waiter wait_c1j.sh (intel1) uses the new build.sh (queue form).
+
+## 2026-11-24 10:31 PST probe-through (COORD 09:55)
+- glue + native59 private probe-through kits (OT_PROBE_THROUGH=1, goal route) launched 10:30 as runitem-glue-45011 and runitem-native59 (intel2 user units). Specs: autopilot/private_specs/QC-GLUE-IMAGES/qwen_compute_glue_1124102850 and qwen_compute_native59_1124102958; progress in launch.nohup.
+- Tree: epyc7 /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES/trees/c1h_ov, an ot-tree-fork of C1h QC-ALLFIX/cH/tree plus the rows/c1h overlay (copy in ov_c1h/). Bind: cH/bind; rt f6d43b117443.
+- Next: when the C1j bind lands, wait_c1j.sh posts C1J-DERIVE. Then re-spec both kits on C1j or C1k with the overlay, and lift the glue and native59 holds once they sign off.
