@@ -464,9 +464,26 @@ def keep_refusal(target):
         d = nd
 
 
+# JOBROOT-KEEP-1124 (COORD: CLEAN-DISK ot-delete removed epyc9 ot-jobs/.return and ot-jobs/.ot-isolated.json): the ot-run job root's own
+# entries are infrastructure, never cleanup targets.  .ot-isolated.json marks the root as ot-run-owned (ot-lifecycle / autoclean skip it);
+# .return holds HUB-FETCH return stages that a pending copy-back still reads.  Both are re-made on demand, but deleting them races live jobs.
+# Per-job dirs and single .return/<pid>-<t> stages keep their ordinary rules.
+JOBROOT_KEEP = (".ot-isolated.json", ".return")
+
+
+def jobroot_refusal(t):
+    parent, base = os.path.split(t.rstrip("/"))
+    if base in JOBROOT_KEEP and os.path.basename(parent) == "ot-jobs":
+        return f"ot-run job root entry {base} (never deleted: JOBROOT-KEEP-1124)"
+    return ""
+
+
 def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
+    jr = jobroot_refusal(os.path.abspath(target))
+    if jr:
+        return jr
     if os.path.islink(target) or os.path.realpath(target) != os.path.abspath(target):
         if canon(os.path.realpath(target)) != t:
             return "symlink or realpath differs"
