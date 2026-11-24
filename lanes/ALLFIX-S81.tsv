@@ -89,4 +89,4 @@ COL-P5-FSTART1	S81-ALLFIX-COL	plan 77d6f4f47270	a2a6760fa5e1	yes	c7a aebbf78417d
 SERDES-t13-FSTART0	S81-ALLFIX-SVC	t13 fstart_0 depth 10!=9 (inherited B1)	-	no	-	-	-	-	-	-	-	OPEN: SVC row due 20:00 -> c7b
 FSTART-DEPTH-CLASS	S81-OPEN-FSTART	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-FSTART live 19:38, due 21:30 -> last tail step c8 (input c7a)
 DEADIN-BASE-PROOF	S81-ALLFIX-INT	reprove43_allfix_int_1123 (46 defines) + asbuilt_run_allfix2 8ab87acd12d7 + deadin_repoint.py	6c6e236be36a	yes	c7a p5_deadin (post-tail)	ProvenDead OK (c1 repointed)	-	-	-	-	-	IN-GATE c7a
-LEAF-LANDCAP-C7A	S81-ALLFIX-SLICE	PRECHECK-LEDGER-R3 19:28: 16 band x hard-core overlaps in 12 leaf types + 12 bands fill>=0.9 (B1 0)	-	no	-	-	-	-	-	-	-	OPEN: SLICE fix row by 21:30 -> c8
+LEAF-LANDCAP-C7A	S81-OPEN-LEAFBAND	PRECHECK-LEDGER-R3 19:28: 16 band x hard-core overlaps in 12 leaf types + 12 bands fill>=0.9 (B1 0)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-LEAFBAND (taken 19:29) fix row by 21:30 -> c8
