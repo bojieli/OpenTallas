@@ -1,4 +1,4 @@
-# DLYRAM-RESET handoff (updated 2026-11-24 02:33 PST)
+# DLYRAM-RESET handoff (updated 2026-11-24 02:40 PST)
 
 Lane dir: epyc11 /srv/opentallas-scratch2/claude/dlyram-reset/ (clone = lane clone of main).
 
@@ -17,7 +17,7 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/dlyram-reset/ (clone = lane clo
 
 ## Open
 - flush3 on the A5t2 bind too (`flush3.py RTL OUT --reset bind_reset.json --lanearr lanearr.json`; first run with --write-lanearr).
-- WAITER: localhost scratchpad dlyram/waiter.sh (bg) watches KV-ALLFIX posts for the A5t2 strict result (~03:10) and epyc11 kv-allfix/grow/gate_A5t2/**/bind_reset.json.
+- A5t2 strict died in emit (KV-ALLFIX 02:31, bit_sites_um); partial bind_reset.json confirms the row (hub_C entry 261, max 385). WAITER: localhost scratchpad dlyram/waiter2.sh (bg, 4 h) fires when gate_A5t*/A5u*/bind/rtl/qwen_kvsys_bound_top.sv appears -> run flush2 (--hold 261) + flush3, post.
 - When KV-ALLFIX composes the HOLD row: rerun flush2.py (`--reset <new bind_reset.json> --hold 261`, no --rshift: the bind already has +240) on the new bind; then post "pv reset clean" to KV-PV-CAP, FABLE-RC-KV, COORD.
 - S81 / HEAD / QC sweep belongs to RESET-HOLD-SWEEP (not this lane).
 - Caveats of flush2: name-level graph, cores black boxes, noreset cores optimistic.
