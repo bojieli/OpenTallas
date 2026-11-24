@@ -24,6 +24,19 @@ when ALL of these hold as well (each refusal is named in credit_blockers):
   content  every image has its via map(s), listed with the same sha256 in a PASS weight record (rom_gen.py weights + verify-weights,
            schema opentallas.rom-weights-*), and the member's image set differs from the representative's and from every other member's
 
+WINDOW CONTAINMENT (COORD 11-24 02:20 ruling; rule="contain", die option type_template_rule "contain"): the strict rule with the plan
+clock.tap_window of the member allowed to differ from the representative's when the representative's signed window dominates it.
+  windows  every kit clock port p: member D_p <= representative D_p (a port missing from a per_port_ps table takes the type's W_t; W_t
+           itself too), and the two IO shifts of gen_phys (input max by the largest window, output min by the smallest) leave the
+           representative's kit at least as tight: D_p - Wmax and D_p - Wmin of the member <= the representative's, for every port, with
+           and without the unlisted-port W_t in the max / min.  A clock.tap_offset row on either type must be identical (offset form:
+           no containment).  The window of the representative is its plan's, which is the signed one: the wave credits only a sign-off on
+           the representative's current plan block, and the block identity holds the tap window (plan_block_identity).
+  kit      the member's kit generated from the rep-window plan (winplan: every member's window rows set to its representative's)
+           equals the representative's kit (kit_files), so the window rows are the only plan input in which the two kits differ.
+The sign-off of the representative then covers the member: a cross-port pair is timed with the representative's wider window
+(hold: launch early -D_i; setup: capture early -D_j), and every IO check of the member's kit is no tighter than the representative's.
+
   groups  PLAN --bind-rtl DIR [--all GLOB ...]          template groups (representative, members); --all = treat the globbed types as marked
   check   PLAN --bind-rtl DIR --repo SRC [--all GLOB ...] [--rom-dir DIR] [--out JSON]
                                                         per position: layout key, rtl key, outline, hard-core LEF/lib sha (files of SRC), differing
@@ -37,6 +50,10 @@ when ALL of these hold as well (each refusal is named in credit_blockers):
                                                         bound RTL, via map file + sha) with the core rectangle in the die frame; checks that every
                                                         ROM core has the same module, LEF file sha, origin and orient as in the representative; exit 1
                                                         on any mismatch
+  windows PLAN --bind-rtl DIR [--all GLOB ...] [--out JSON]
+                                                        window containment of every member against its representative; exit 1 when any fails
+  winplan PLAN OUT --bind-rtl DIR [--all GLOB ...]       the rep-window plan (each member's tap window rows = its representative's) to
+                                                        generate the members' comparison kits from (never a plan of record)
   kitcmp  PLAN --rep TYPE --rep-kit DIR --member TYPE --member-kit DIR [--out JSON]
                                                         generated-kit equality of one pair (files that differ after normalisation); exit 1
   view    --rep TYPE --member TYPE --lef F --lib F --out DIR
@@ -344,14 +361,83 @@ def kit_blockers(kit_rep, kit_mem, plan, rep, member, bind_rtl=None):
     return why, CI.jsha(sorted(b.items()))[:16], len(b)
 
 
+WINDOW_RULES = ("contain",)
+
+
+def type_windows(plan, name):
+    """(W_t, {port: D_p}, tap_offset row) of a type: plan clock.tap_window window_ps / per_type_ps / per_port_ps and clock.tap_offset
+    (as gen_phys.tap_window_ps / tap_window_port_table / tap_offset_table read them)"""
+    ck = plan.get("clock") or {}
+    tw = ck.get("tap_window") or {}
+    w = float((tw.get("per_type_ps") or {}).get(name, tw.get("window_ps", 0.0))) if tw else 0.0
+    tab = {str(k): float(v) for k, v in (((tw.get("per_port_ps") or {}).get(name) or {}) if tw else {}).items()}
+    return w, tab, ((ck.get("tap_offset") or {}).get("per_port_ps") or {}).get(name) or {}
+
+
+def window_blockers(plan, rep, member):
+    """-> (blockers, summary) of the window containment of member in rep (module docstring)"""
+    wr, tr, orr = type_windows(plan, rep)
+    wm, tm, om = type_windows(plan, member)
+    why = []
+    if (orr or om) and orr != om:
+        why.append("clock.tap_offset rows differ (offset form has no containment rule)")
+    ports = sorted(set(tr) | set(tm))
+    d = lambda tab, w, p: w if p == "*" else tab.get(p, w)
+    over = [p for p in ports + ["*"] if d(tm, wm, p) > d(tr, wr, p)]
+    if over:
+        why.append("%d window port(s) wider than the representative's: %s" % (len(over), ",".join(
+            "%s %g>%g" % ("W_t" if p == "*" else p, d(tm, wm, p), d(tr, wr, p)) for p in over[:6])))
+    io = []
+    for ps in ([ports, ports + ["*"]] if ports else [["*"]]):
+        mx = lambda tab, w: max(d(tab, w, p) for p in ps)
+        mn = lambda tab, w: min(d(tab, w, p) for p in ps)
+        for p in ps:
+            for what, fm, fr in (("input max shift", mx(tm, wm), mx(tr, wr)), ("output min shift", mn(tm, wm), mn(tr, wr))):
+                if d(tm, wm, p) - fm > d(tr, wr, p) - fr + 1e-9 and (what, p) not in [x[:2] for x in io]:
+                    io.append((what, p, round(d(tm, wm, p) - fm, 3), round(d(tr, wr, p) - fr, 3)))
+    if io:
+        why.append("%d IO check(s) tighter in the member's kit: %s" % (len(io), ",".join("%s@%s %g>%g" % x for x in io[:4])))
+    return why, dict(ports=len(ports), over=len(over), max_excess_ps=max([d(tm, wm, p) - d(tr, wr, p) for p in ports + ["*"]]),
+                     io_tighter=len(io))
+
+
+def rep_window_plan(plan, bind_rtl, globs=()):
+    """-> (plan copy whose members carry their representative's window rows, members changed).  Only for generating comparison kits."""
+    out = json.loads(json.dumps(plan))
+    ck = out.setdefault("clock", {})
+    n = 0
+    for g in groups(plan, bind_rtl, globs, strict=True):
+        for m in g["members"]:
+            before = type_windows(out, m)
+            for sec, key in (("tap_window", "per_port_ps"), ("tap_window", "per_type_ps"), ("tap_offset", "per_port_ps")):
+                tab = (ck.get(sec) or {}).get(key)
+                if tab is None:
+                    continue
+                if g["representative"] in tab:
+                    tab[m] = json.loads(json.dumps(tab[g["representative"]]))
+                else:
+                    tab.pop(m, None)
+            n += type_windows(out, m) != before
+    return out, n
+
+
+def window_report(plan, bind_rtl, globs=()):
+    rows = []
+    for g in groups(plan, bind_rtl, globs, strict=True):
+        for m in g["members"]:
+            why, sm = window_blockers(plan, g["representative"], m)
+            rows.append(dict(member=m, representative=g["representative"], contained=not why, reasons=why, **sm))
+    return dict(schema=SCHEMA, rule="contain", members=len(rows), contained=sum(r["contained"] for r in rows), rows=rows)
+
+
 def records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs=(), lec_policy="advisory", via_policy="advisory", judge=CI.judge_signoff,
             rule="", kits=None, weights=None):
     """col_inherit records (dicts, nothing written) for every member of rep's template group.  The bound RTL text identity (rtl key)
     is the logic proof, so a record carries lec EQUIVALENT by construction with the rtl key.
     rule "strict" (module docstring): kits = {type: generated kit dir}, weights = paths of weights.manifest.json."""
-    if rule not in ("", "strict"):
+    if rule not in ("", "strict") + WINDOW_RULES:
         raise ValueError("type_template rule %r" % rule)
-    strict = rule == "strict"
+    strict = rule in ("strict",) + WINDOW_RULES
     g = next((x for x in groups(plan, bind_rtl, globs, strict=strict) if x["representative"] == rep), None)
     if g is None:
         raise KeyError("%s is not the representative of a template group" % rep)
@@ -374,11 +460,18 @@ def records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs=(), lec_policy="a
         if strict:
             why = ["representative: " + w for w in own_rep] + image_blockers(plan, bind_rtl, rep, m, owners)
             kw, key, nf = kit_blockers((kits or {}).get(rep), (kits or {}).get(m), plan, rep, m, bind_rtl)
+            ww, wsum = (window_blockers(plan, rep, m) if rule in WINDOW_RULES else ([], None))
+            kr, km = (kits or {}).get(rep), (kits or {}).get(m)
+            if rule in WINDOW_RULES and kr and km and os.path.realpath(kr) == os.path.realpath(km):
+                ww = ww + ["member kit is the representative's kit directory"]
+            kw = kw + ww
             cw, cs = content_blockers(member_images(bind_rtl, m, rom_dir), wmap, sets)
             sets.add(cs)
             rec["credit_blockers"] = rec["credit_blockers"] + why + kw + werr + cw
             rec["credit"] = not rec["credit_blockers"]
-            rec.update(rule="strict", kit_key=key, kit_files_compared=nf, image_check=not why, content_check=not (werr + cw),
+            if wsum is not None:
+                rec.update(window_check=not ww, windows=wsum)
+            rec.update(rule=rule, kit_key=key, kit_files_compared=nf, image_check=not why, content_check=not (werr + cw),
                        images=len(bound_images(_rtl(bind_rtl, m) or "")), plan_sha256=CI.jsha(plan))
         out.append(rec)
     return out
@@ -537,11 +630,15 @@ def main(argv=None):
             s.add_argument("--rep", required=True); s.add_argument("--signoff", required=True); s.add_argument("--out", required=True)
             s.add_argument("--members-tsv"); s.add_argument("--lec-policy", default="advisory", choices=("require", "advisory"))
             s.add_argument("--via-policy", default="advisory", choices=("require", "advisory"))
-            s.add_argument("--rule", default="", choices=("", "strict")); s.add_argument("--kits", help="JSON {type: generated kit dir}")
+            s.add_argument("--rule", default="", choices=("", "strict") + WINDOW_RULES); s.add_argument("--kits", help="JSON {type: generated kit dir}")
             s.add_argument("--weights", nargs="*", default=[])
     k = sub.add_parser("kitcmp"); k.add_argument("plan"); k.add_argument("--bind-rtl"); k.add_argument("--out")
     for x in ("rep", "rep-kit", "member", "member-kit"):
         k.add_argument("--" + x, required=True)
+    w = sub.add_parser("windows"); w.add_argument("plan"); w.add_argument("--bind-rtl", required=True); w.add_argument("--all", nargs="*", default=[])
+    w.add_argument("--out")
+    w = sub.add_parser("winplan"); w.add_argument("plan"); w.add_argument("out"); w.add_argument("--bind-rtl", required=True)
+    w.add_argument("--all", nargs="*", default=[])
     f = sub.add_parser("flag"); f.add_argument("plan"); f.add_argument("out"); f.add_argument("globs", nargs="+")
     v = sub.add_parser("view")
     for k in ("rep", "member", "lef", "lib", "out"):
@@ -558,6 +655,24 @@ def main(argv=None):
             with open(a.out, "w") as fo:
                 json.dump(dict(rep=a.rep, member=a.member, equal=not why, reasons=why, kit_key=key, files=nf), fo, indent=1)
         return 1 if why else 0
+    if a.cmd == "windows":
+        r = window_report(plan, a.bind_rtl, a.all)
+        if a.out:
+            with open(a.out, "w") as fo:
+                json.dump(r, fo, indent=1)
+        print("TYPE_TEMPLATE windows: %d member(s), %d contained" % (r["members"], r["contained"]))
+        for row in r["rows"][:20]:
+            if not row["contained"]:
+                print("  NOT-CONTAINED %s in %s: %s" % (row["member"], row["representative"], "; ".join(row["reasons"])))
+        return 0 if r["contained"] == r["members"] else 1
+    if a.cmd == "winplan":
+        out, n = rep_window_plan(plan, a.bind_rtl, a.all)
+        with open(a.out + ".tmp", "w") as fo:
+            json.dump(out, fo, indent=1)
+            fo.write("\n")
+        os.replace(a.out + ".tmp", a.out)
+        print("TYPE_TEMPLATE winplan: %d member(s) given their representative's window rows" % n)
+        return 0
     if a.cmd == "flag":
         done = flag(plan, a.globs)
         with open(a.out + ".tmp", "w") as fo:

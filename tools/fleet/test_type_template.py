@@ -298,3 +298,69 @@ def test_kit_norm_keeps_numbers():
     assert n('"tree_sha256": "a"') == n('"tree_sha256": "b"') and n('"pins": 3') != n('"pins": 4')
     assert n("fW0_p1_b11") == "fW0_p1_b11" and n("fW0_p1_b1") == "@P" and n("// c", True) == ""
     assert n('"P": "\\"f0.c0\\""') == n('"P": "\\"@I\\""') and n("f0.c0x") != n("@Ix") and n('"note": "a \\" b"') == n('"note": "c"')
+
+
+# ---------------------------------------------------------------- COORD 11-24 window containment rule + negative controls
+@pytest.fixture
+def contain(strict):
+    plan, tmp, kits, rom, man, _run = strict
+    plan["clock"] = dict(tap_window=dict(window_ps=180.0, per_type_ps={A: 60.0, B: 40.0},
+                                         per_port_ps={A: {"clk": 50.0, "clk_t1": 60.0}, B: {"clk": 40.0, "clk_t1": 50.0}}))
+    win = tmp / "kits_win" / B                         # the member's kit generated from the rep-window plan: equal to A's
+    import shutil
+    shutil.copytree(kits[B], win)
+    wk = dict(kits, **{B: str(win)})
+
+    def run(**over):
+        a = dict(rom_dir=str(rom), kits=wk, weights=[str(man)])
+        a.update(over)
+        return TT.records(plan, str(tmp / "rtl"), str(tmp / "src"), a.pop("rom_dir"), A, "x", judge=SIGNED, rule="contain", **a)[0]
+    return plan, tmp, wk, run
+
+
+def test_contain_credits_a_member_inside_the_representative_window(contain):
+    _plan, _tmp, _kits, run = contain
+    r = run()
+    assert r["credit"] is True and r["rule"] == "contain" and r["window_check"] is True and r["windows"]["over"] == 0, r["credit_blockers"]
+
+
+def test_window_report_and_self_containment(contain):
+    plan, tmp, _kits, _run = contain
+    assert TT.window_blockers(plan, A, A)[0] == []
+    assert TT.window_report(plan, str(tmp / "rtl"))["contained"] == 1
+
+
+@pytest.mark.parametrize("what", ["port_wider", "wt_wider", "unlisted_port", "io_tighter", "offset", "same_kit_dir", "kit_not_rewindowed"])
+def test_contain_negative_controls(contain, what):
+    plan, tmp, kits, run = contain
+    tw = plan["clock"]["tap_window"]
+    over = {}
+    if what == "port_wider":                                    # one port 1 ps wider than the representative signed
+        tw["per_port_ps"][B]["clk_t1"] = 61.0
+    elif what == "wt_wider":                                    # the fallback window of unlisted ports
+        tw["per_type_ps"][B] = 61.0
+    elif what == "unlisted_port":                               # a port only the member lists, wider than the rep's W_t
+        tw["per_port_ps"][B]["clk_t9"] = 70.0
+    elif what == "io_tighter":                                  # narrower port: the output min shift (smallest window) drops 40 ps
+        tw["per_port_ps"][B] = {"clk": 10.0, "clk_t1": 60.0}
+        tw["per_type_ps"][B] = 10.0
+    elif what == "offset":
+        plan["clock"]["tap_offset"] = dict(per_port_ps={B: {"clk": {"TT": 1, "FF": 1, "tol": 0}}})
+    elif what == "same_kit_dir":
+        over = dict(kits=dict(kits, **{B: kits[A]}))
+    elif what == "kit_not_rewindowed":                          # the member's own-window kit: its SDC differs
+        (tmp / "kits_win" / B / "constraint.sdc").write_text("set_clock_latency -source -early -clock clk -0.040 [get_ports clk]\n")
+        (tmp / "kits" / A / "constraint.sdc").write_text("set_clock_latency -source -early -clock clk -0.050 [get_ports clk]\n")
+    r = run(**over)
+    assert r["credit"] is False, what
+    word = dict(port_wider="wider than the representative", wt_wider="W_t 61>60", unlisted_port="clk_t9 70>60", io_tighter="output min shift",
+                offset="tap_offset", same_kit_dir="representative's kit directory", kit_not_rewindowed="kit file(s) differ")[what]
+    assert any(word in b for b in r["credit_blockers"]), (what, r["credit_blockers"])
+
+
+def test_rep_window_plan_copies_rows_and_leaves_the_plan(contain):
+    plan, tmp, _kits, _run = contain
+    before = json.dumps(plan, sort_keys=True)
+    out, n = TT.rep_window_plan(plan, str(tmp / "rtl"))
+    assert n == 1 and json.dumps(plan, sort_keys=True) == before
+    assert TT.type_windows(out, B) == TT.type_windows(out, A) == TT.type_windows(plan, A)
