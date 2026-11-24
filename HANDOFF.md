@@ -3907,3 +3907,4 @@ OPS-SUPPORT-R1: 2026-11-23 18:06 PST hourly: 589 any / 485 current flat; VIS-COV
 OPS-SUPPORT-R1: 2026-11-23 19:06 PST hourly: 589 any / 485 current flat; ot-tree-fork stream fix on main 3e1a2180ccb.
 OPS-WRITEUP: 2026-11-23 20:08 PST 20:08 hourly: 589 any / 485 current (+0 / +0 vs 19:06). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1
 OPS-WRITEUP: 2026-11-23 21:08 PST 21:08 hourly: 589 any / 485 current (+0 / +0 vs 20:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1
+OPS-WRITEUP: 2026-11-23 22:09 PST 22:09 hourly: 589 any / 485 current (+0 / +0 vs 21:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1
