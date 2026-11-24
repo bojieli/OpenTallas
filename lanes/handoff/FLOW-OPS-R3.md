@@ -110,3 +110,6 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 ## 2026-11-24 02:25 PST DEPTH-NETLIST done
 - main fa8b2360de3: PRE DEPTH follows the as-built die netlist (C1g TTC F5 was missing); depth_cover counts netlist modules. C1g dry run 0 FAIL, F5 HELD.
 - Old local commit 1386e61111b (truncated msg) left unpushed on branch flowops-depth-ttc-1124; pushed f15b91ad832 tree-equal.
+
+## 2026-11-24 03:01 PST KIT-STAGE-IMPORT done
+- main 66331205584: ot-push-main exit 6 on new kit-staged import of an unstaged die_plan sibling (tools/fleet/kit_stage_imports.py, delta vs main). Canary-FAIL rule pending a canary record from FLOW-CANARY-R2.
