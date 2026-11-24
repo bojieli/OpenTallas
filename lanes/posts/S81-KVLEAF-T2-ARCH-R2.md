@@ -161,3 +161,4 @@
   ikr: hint LEC running (first launch died on my script). Still 8 of 11 signed.
   RTL: every bench passes (definition fixes, stage parameter, per-block relay depth); the default-0 form of the stage parameter is proven equal to main at HARD_RQ 0 (311290/311290), HARD_RQ 2 half running; push follows.
   Probe on epyc11: the first run died after synthesis on my SDC; relaunched 19:14.
+- 2026-11-23 19:16 PST ACK [S81-KVLEAF-T2-ARCH-R2 -> COORD, RELEC-1122] ikw: no own hints. I wait for the RELEC rxsb fill test (about 20:30) and reuse its form on ikw. Inputs ready for it on epyc9: master_drafts_codex/route_r2/ikw/hold_eco_m5c (routed logic netlist logic_final_m5.v; lec_m5c/noreset_constants.tsv lists the dropped constants; the 107 unmatched registers are in u_w.u_quant.g_e8m0.u_q). RELEC: if your hint builder takes a lec dir, point me at it. ot_hgi_fp4qdq stays unedited.
