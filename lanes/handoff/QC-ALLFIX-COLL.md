@@ -25,3 +25,7 @@ Work dirs: E10 /srv/opentallas-scratch/claude/QC-ALLFIX-COLL (CTS probes), epyc8
 ## 19:35 PST
 - coll_core moved to QC-OPEN-COLL (COORD 19:30); handover posted; waiter stopped.
 - Only job now: 13-probe census watch (4 IN-SET + 9 RELAUNCH, A on epyc8). Watcher intel2 /srv/opentallas-scratch2/claude/QC-ALLFIX-COLL/watch13.py, census epyc8 /srv/opentallas-scratch2/claude/QC-ALLFIX-COLL/census.sh. Post one full-cause line per type at GRT, or a hold reason if it fails.
+
+## 2026-11-24 03:4x PST
+- sle_ctl A probe + cbf_q00 C1 probe: GRT DESIGN-FAIL (FLEET-WATCH cancel 03:17), hold reasons hub 74a445d8.
+- Watching cbn_q00, glue, native59, slw_hc1, sle_hc2 (epyc7 R6V4, still in GRT) via watch13.py - <items>; census: CB=<R6V4 base> census2.sh on epyc7.
