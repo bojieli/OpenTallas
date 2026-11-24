@@ -3923,3 +3923,5 @@ CODEX: 2026-11-24 06:19 PST takeover active S81, HEAD, QC, KV, token/ROM, fleet/
 CODEX: 2026-11-24 06:24 PST S81 east ROM exact FF lib main 666e4921a9da. West and HEAD elemA/B await exact original parasitics or source DB.
 
 CODEX: 2026-11-24 06:43 PST S81 two reset pin collisions cleared and four lane prices reconciled without new cycles; main 95c263d17e45.
+
+CODEX: 2026-11-24 06:51 PST HEAD w6 exact bind/cohort/LAT/G0 passed, Fable scope queued. S81 t12 exact rerun archived. KV A5t3 strict active release prep, QC functional calendar repair.
