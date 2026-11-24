@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.s81.row_handover.v1",
+ "row": "KVLEAF-T2-HARD-1 (RTL half)",
+ "from": "S81-KVLEAF-T2-ARCH-R2", "to": "S81-ALLFIX-INT", "for": "c9",
+ "type": "ot_s81sl_kv_leaf__t2", "instance": "s_3N_L0",
+ "rtl_on_main": "c149c0966d7c (bank parameters fbcbcd14cf4c + slice plumbing)",
+ "parameters_on": "ot_s81sl_slice_sukv_raw512_w3",
+ "parameters": {"KV_HARD_RQ": 2, "KV_XD": "48'h140240006610", "KV_KST": "64'h6237511651166227", "KV_XMRG": 1, "KV_YBASE": 1},
+ "define_die_wide": "OT_S81_KVLEAF_INPUT_RELAYS",
+ "define_condition": "at the first bind carrying this row: netlist hash of every non-t2 type byte-identical with and without the define (COORD condition b); only t2 instantiates ot_s81sl_kv_bank",
+ "slot_um": [4682.88, 1926.72],
+ "seating": "lanes/handoff/S81-KVLEAF-T2-ARCH-R2-partb_seats_v4.json (118 hard seats, 244 kvi relay seats, 144 store SRAM seats; norm engines are u_bank.g_kve[k].genblk2.g_npc.u_kve; leaf band reserve x < 1460, y < 1245 assumed)",
+ "hard_cores_part_b": {"signed_views": ["kvi", "qnh", "cnw", "kvec", "kvpc", "kvr", "kvtc", "cpl"], "not_signed": ["kvq", "ikw", "ikr"], "owner_of_unsigned": "KVLEAF-MASTERS"},
+ "soft_cells_part_b_measured": 322980,
+ "latency": {"die_lanes": "0 (job finish edges unchanged: CN 1219, IK 1059, KV 1131, GK 1026, CP 391; bench L2/L14/L20)",
+             "inside_the_job": "store write events arrive later: CN +24/+22 edges (first/last), IK +18/+18, KV +22/+24; all inside the programmed drain age"},
+ "evidence": {"default_0_equals_previous_main": "yosys equiv 311290/311290 at HARD_RQ 0 and 2 (epyc9 bench_r2/xd_eq4)",
+              "bench": "epyc9 bench_r2/bench_v5: hrq2m, hrq0m (these parameters) and hrq2d PASS",
+              "commute_xmrg": "RUNNING epyc11 s81-kvleaf-t2-arch/commute (rc.txt)",
+              "probe": "epyc11 probe_v5: synth 322,980 cells; place + GRT running"},
+ "blocks_gated": ["kvq / ikw / ikr views unsigned", "no bind / LATCHECK / PRE of this row yet", "probe place + GRT not read", "slice-level change checked by elaboration only"]
+}
