@@ -1,0 +1,1 @@
+- 2026-11-24 10:57 PST TAKING RELEC-R2: re-run 26 RECHECK LEC records on fixed lec.py (PYTHONHASHSEED pinned)
