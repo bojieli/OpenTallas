@@ -59,3 +59,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 21:55 B1-FIX v2 6c09e8b293af scoped strict PASS on the 23 types (BIND_RC 0); full strict E11 ETA ~00:15; cond 3/4 checks ~22:00; seal gated on my 4 conditions.
 - 22:00 B1-FIX cond 3+4 accepted (receipts opened: dropped_bits 0 on 6c09, max_release 351). Left: full strict + LAT + G0 subset ~00:15, apply ~01:15.
 - 22:05 seqhost__t1 reset check answered statically by ASSEMBLY (accepted; settles on B1-FIX full strict EMIT + LAT). kv_leaf t2: COORD ruled no A|B cut, exit relays -> hard kvx masters (140 seats, ~76k flops out); whole-type count ~23:00, kvx signed ~01:30, seats v5 ~02:30.
+- 22:20 COORD: HEAD East slip (HEAD-R18 21:53): 66ce census stuck at it 13/20 -> ~02:00-03:00; E kit GRT reads not before 02:00 (GRT iterations 30-40 min). HEAD wait re-armed toward 02:00. S81 times stand (B1-FIX full strict ~00:15, apply ~01:15).
