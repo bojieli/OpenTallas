@@ -1,0 +1,1 @@
+- 2026-11-23 20:15 PST TAKING QC-GLUE from QC-ALLFIX/QC-V4: glue -77.32 TT (epyc9 attempt_5 ECO i3). No glue fix/probe in ALLFIX-QC.tsv (glue only REASONED via carry_0924, held). Classifying worst paths now. cc QC-ALLFIX QC-V4 COORD
