@@ -14,5 +14,5 @@ Job: A5t6 row for kv3_hub_Eo east macro channel (VIS-REOWN 09:31 E-side smear). 
 ## hub_Wo added (COORD 10:1x) -- both rows extended, same files
 - ECH 68742d07d8de (Eo + Wo pad_ram; Wo keepout x<=280 y245-1430) -> plan dce4e1eb9163. SEQLP 00b81f50ff87 (types Eo + Wo) -> plan 7ae541e97dd2.
 - Wo evidence: D28 kit epyc8 KV-D28/private/FAM-KV-HUBWO-S1/kv3_hub_Wo_1122231146/geom (d20 smear y264-1436, xs->fan 781-828 um); A5t3 Wo bound RTL epyc9 kv3_hub_Wo_1124080816/rtl (d81, d20).
-- Gates: epyc11 job_bind.sh ech|lp in own fork kv-own-hub-r2/tree, logs job_bind2_{ech,lp}.otrun.log, out b_ech/b_lp; ot-run PIDs 1881671 / 1881675. Eo-only bind attempts were stopped.
+- Gates: epyc11 job_bind.sh ech (job_bind2_ech, PID 1881671) + lp (job_bind3_lp, PID 1926120; SEQLP e36fe1abae50 = +kc_i D1 per COORD ruling, plan 510e93cd3d4a). out b_ech/b_lp in own fork.
 - Post ROW-REBASED for both rows together when both pass.
