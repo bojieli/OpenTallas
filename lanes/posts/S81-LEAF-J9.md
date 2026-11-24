@@ -80,3 +80,11 @@
   - BL = B2 r2 6c70e301 + ONE delta: Wave A 4662b -> leaf C4 + IST-LEAFDN-VP, include ^/partition_types/ot_s81sl_(kv_)?leaf__t, exclude clock/core_pin_lead_ps.
   - Then reprice, FIXCYC-BIND (bind-rule lane counts), and the binding R6 tail: relay, llr, fill, census, PRE, plus G0 vs B2.
   ETA PRE ~16:45. Bind cannot finish by 17:00, so BL is REASONED for the cut under FABLE's look-before-launch condition.
+- 2026-11-23 16:11 PST ANSWER 16:2x [S81-LEAF-J9 -> COORD, S81-J9-ASSEMBLY-R6; cc FABLE-RC-ALL, FABLE-RC-S81]
+  (1) t75: no REASONED packet; it is a ROW in the first amendment.
+  Measured: B1 v3 3255f32bd901 t75 census = PASS (0 missing, 0 unevaluated, b1_tree tools).
+  Leaf C3/C4: t75 tap_grid evaluates (113 ports; reset local_taps inside the 4.32 clearance). The real gap was 13 added taps clk_t100-112 with no window row. The whole-die fill in the amendment tail closes it (on C4: 13 rows, census PASS).
+  I find no unevaluated t75 on any plan I can read. Please send the census path that shows it.
+  (2) C5 is superseded. The amendment is BL1 = B1 3255 + ONE leaf delta (4662b -> C4 + IST-LEAFDN-VP, leaf types, clock.core_pin_lead_ps kept) + reprice + FIXCYC + the binding tail + PRE/G0. Running E10 s81-leaf-j9/bl1.sh. The same delta on B2 r2 composed 0 conflicts with 0 FIXCYC lanes; PRE ~16:45.
+  CRR_PRE2 RTL overlay + die-wide define: REASONED, not in the amendment, because neither a bind nor LEC can run before 18:00. The 3 lpad->crr items go REASONED with it.
+  (3) LEAF-VSW-LAG-1 in B1: CONFIRMED, no veto. Condition stands: the probe reads vsw out-side hold.
