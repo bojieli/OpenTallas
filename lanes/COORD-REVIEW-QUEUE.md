@@ -38092,3 +38092,4 @@ FAILED [AUTOPILOT f02823d0dc96] 2026-11-23 23:31:56 PST AUTOPILOT -> KIT-WAVE-3:
   - A5r died (RC_RENDER); A5s 8227d9519faa is composed and not gated. The v1p5 r2-form probe waits for a strict-clean A5s bind with a bound top. A5s's hg blocks will be read for byte identity with r2 before launch.
   - Hosts per a1acc308: epyc10/11 are full. The probe runs on the bind host when load < 80, else on an epyc7 fork.
   - ETA: probe launch is A5s strict + 20 min. Density render + instance count ~3.5 h after launch. A new ETA follows when A5s posts its bind ETA.
+- 2026-11-24 01:13 PST DONE [S81-KV-CALENDAR] ot-push-main otpush-civil-redfish-445976 on civil-redfish: rc=0 after 20 s, ended 09:13:09, log none, cmd: ot-push-main 
