@@ -1178,6 +1178,51 @@ def plan_cmd_ok(words):
     return os.environ.get("OT_RUN_PLAN_OK") == "1" or bool(PLAN_CMD_RE.search(" ".join(words)))
 
 
+# BIND-EMIT-MEM 11-23 (FABLE FLOW REVIEW; S81-J9-ASSEMBLY-R6 B1-FIX scoped bind OOM-killed after 23 min at --mem 160 with OT_BIND_EMIT_J=8 workers
+# of ~50 GB each, hub 5e86be30a6e): a bind (--plan-job bind, or a command that sets OT_BIND_EMIT_J) with an EXPLICIT worker count needs about
+# EMIT_GB_PER_WORKER GB per worker inside the unit's MemoryMax.  Such a request below workers x EMIT_GB_PER_WORKER is NOT RUN at once (exit 78) with the
+# --mem to ask for, instead of dying of OOM later.  OT_BIND_EMIT_J=auto (the bind default) sizes the workers to the memory limit itself and is never
+# refused; OT_RUN_EMIT_MEM_OK=1 overrides; OT_RUN_EMIT_GB_PER_WORKER changes the per-worker figure.
+EMIT_GB_PER_WORKER = 50
+
+
+def emit_workers(words, env=None):
+    """explicit OT_BIND_EMIT_J worker count named in the command words (env assignments) or the environment; None for auto / unset / unparsable"""
+    env = os.environ if env is None else env
+    v = None
+    for w in words:
+        if isinstance(w, str) and "OT_BIND_EMIT_J=" in w:            # bash -c "OT_BIND_EMIT_J=8 bash bind.sh"
+            m = re.search(r"(?:^|[\s;&|(])OT_BIND_EMIT_J=['\"]?(\w+)", w)
+            v = m.group(1) if m else v
+    if v is None:
+        v = env.get("OT_BIND_EMIT_J")
+    try:
+        n = int(str(v).strip())
+    except (TypeError, ValueError):
+        return None
+    return n if n > 1 else None
+
+
+def emit_mem_refusal(kind, words, mem, env=None):
+    """-> the NOT-RUN reason when an explicit emit worker count does not fit --mem, else ''"""
+    env = os.environ if env is None else env
+    if env.get("OT_RUN_EMIT_MEM_OK", "") not in ("", "0"):
+        return ""
+    n = emit_workers(words, env)
+    if not n or (kind != "bind" and not any(isinstance(w, str) and "OT_BIND_EMIT_J=" in w for w in words)):
+        return ""
+    try:
+        per = float(env.get("OT_RUN_EMIT_GB_PER_WORKER") or EMIT_GB_PER_WORKER)
+    except ValueError:
+        per = EMIT_GB_PER_WORKER
+    need = int(n * per + 0.999)
+    if mem >= need:
+        return ""
+    fit = max(1, int(mem // per))
+    return (f"BIND-EMIT-MEM: OT_BIND_EMIT_J={n} emit workers need about {n} x {per:g} GB = {need} GB but --mem is {mem:g} GB (the S81 B1-FIX bind was "
+            f"OOM-killed this way); suggested --mem {need}, or OT_BIND_EMIT_J={fit} (fits {mem:g} GB), or OT_BIND_EMIT_J=auto; OT_RUN_EMIT_MEM_OK=1 overrides")
+
+
 def plan_job_rt_floor(kind, words, exempt="", real=None, rt_root=None, cfg=None):
     """FLOW-FLEET-R2 T1 (FABLE-FLOW-0350): `ot-run --plan-job bind` obeys the same runtime floor as private-spec / ot-build (kit_wave.json min_rt, $OT_MIN_RT,
     rt/MIN_RT; tools/autopilot/rt_floor.py): a bind whose rt/<sha12> is below it is refused unless the job passes --rt-floor-exempt WHY (logged).  The rt is the
@@ -2717,6 +2762,9 @@ def main():
     os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
+    _ew = emit_mem_refusal(os.environ.get("OT_RUN_PLAN_JOB", ""), a[1:], mem)
+    if _ew:
+        not_run(_ew)
     if hosts is HOSTS:
         HOSTS[:] = canon_hosts(HOSTS)          # DEATHCLASS-1122 SSH-DROP: this machine named the way ssh resolves it (identity of HOSTS kept)
     else:
