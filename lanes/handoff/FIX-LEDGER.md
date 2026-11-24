@@ -54,3 +54,9 @@ HOTSPOT-GAPS.tsv / HOP-GAPS.tsv: not landed at 02:0x.
 - S81 leaf row 3d is still in PRE, with its 4 h bind not started. The Wave A 10:30 warning is posted (ea4cdce).
 - rc67 gate: the hop re-run on the composed J9 (~10:30) via PRECHECK-R2. Its watch (FABLE-UNC-S81-DIE) is short-lived, so check it myself.
 - Next count post is due 05:00.
+
+## 16:1x STAND-DOWN (replaced by PRECHECK-LEDGER-R3 05:52)
+- Session paused about 04:18-16:10. On resume, u93 overwrote the hub ledger with a stale copy; reverted at 16:13 (edd7703 = R3 15192edde99). Post dc170d36.
+- This lane makes no more ledger writes. PRECHECK-LEDGER-R3 owns lanes/DIE-FIX-LEDGER.tsv.
+- The items handed to R3 are in the post.
+- Lesson: always re-pull the hub ledger before any push. Never push a local master after a gap.
