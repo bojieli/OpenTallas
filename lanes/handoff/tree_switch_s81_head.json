@@ -1,27 +1,28 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0",
- "manifest_hash": "67d8b0903f202fdb22389e7477054e3f5c04c5362862ebe3fd26256eefcc782d",
- "src_manifest_sha": "67d8b0903f202fdb22389e7477054e3f5c04c5362862ebe3fd26256eefcc782d",
- "tools_sha": "30b1f11ad5f7caa74e9d35ac813550a941bea492",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2",
+ "manifest_hash": "bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3",
+ "src_manifest_sha": "bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3",
+ "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
  "hosts": [
-  "epyc10",
   "epyc7",
-  "intel2",
-  "epyc9"
+  "epyc10",
+  "epyc9",
+  "intel2"
  ],
- "smoke": "PASS",
- "smoke_detail": "HEAD event r17b = contained r17a v2 561a1f11cf15 + e1b START (HEAD-START-R18): plan 18f3c0c7c0c1, sidecar facc71b93198 (count-aligned K / START re-bound on the die clock, 5 lanes +1, K changed 125), receipt, provider_e1br. Gates by R18 on prep_e1b: schema 0, strict bind PASS, cohort 26/26, LATCHECK 329/329, G0 0 errors; transport bench 329/329, mutants fail. Tools pin 30b1f11ad5f7 (after 650916ebb262).",
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
- "plan_sha256": "18f3c0c7c0c12b14df18fe59784e0ce91622e313a8184b6424a8a87bf364f0ed",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
- "sidecar_sha256": "facc71b931981fa72f9ed7e33dca488dc19bd2825d0fc5e9f250a33a3daab3e2",
- "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
+ "plan_sha256": "5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
+ "sidecar_sha256": "3aec87183d5c5d318e85177f6156f9062a9a458df3f47277adc7c4b4760688c8",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/native_release_receipt.json",
+ "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/source_clock_graph.json",
  "physical_qualified": false,
- "preserve_holds": "all inherited s81_head hold_records kept; one plan event (e1b START + contained tree + tools pin)",
+ "most_recent_fable_verdict": "2026-11-23 11:33 PST exact r18g plan gate. W diagnostic accepted. East hd_lep0N held for cap10 census.",
+ "smoke": "PASS",
+ "smoke_detail": "Exact candidate PRE/G0 zero, strict bind and nested portbind PASS, cohort 27/27, active-baseline LATCHECK 334/334, native reset conditional 12 targets. W item A supported by reviewed TT/FF stand-in and zero-overflow, zero NDR-loss FF native diagnostic. Candidate publish gate tracked separately.",
  "config": {
-  "event": "head_rp21z20NF15f_r17b",
-  "tools_sha": "30b1f11ad5f7caa74e9d35ac813550a941bea492",
+  "event": "head_rp21z20NF15f_r18g",
+  "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
   "gen_host": "epyc10",
   "gen_hosts": [
    "epyc7",
@@ -30,34 +31,40 @@
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ],
   "review_before_route": {
-   "event": "head_rp21z20NF15f_r17b",
-   "all_items": true
+   "event": "head_rp21z20NF15f_r18g",
+   "all_items": true,
+   "required": true
   },
   "auto_visual_review_skip": [
    "*"
   ]
  },
- "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/results/head_native_release_nf15f_e1b/native_release_receipt.json",
- "status": "ADOPTED reviewed tuple",
- "written_by": "root-authorized lane atomic apply",
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
  },
- "live_tree": {
-  "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r17b_s0",
-  "made": "2026-11-22T06:5xZ",
-  "tool": "src_manifest.py delta-apply --link from s81_head_r17b_e1b_s0 (pack2: native release receipt with in-tree relative paths)"
+ "records": {
+  "cohort.json": "04a837e9fbe14bd10250301c634efd2b54f0a69de3f23fdfe6fc9731bfa3967b",
+  "g0_report.json": "80585cf5bc52859577dafbd54b248b1d344f17d62cd2c04ee1979fca909ea157",
+  "head_r18e_route_phase_diagnostic.json": "1a5eaabb9c2f1d67f3e2b343a0e71530a071d86ec21ee127d6f09f082729ca07",
+  "head_r18g_w_clock_landings.json": "150b827ce3f8927efd750f625f21dcbf9d2b6a678904e27050b3e42153cc07ef",
+  "latcheck_r17b.json": "fec0c5790217c4f754e56e84bdbf3c9f44377b0c35b9c4277e2ee2d09dd7b765",
+  "native_release_receipt.json": "2b04b933ae4371e569d16bf424c67a95ec5c1b204cd7657ca2c076597cad4d0c",
+  "nested_portbind.json": "0d706bc41e6c368681ab86a21fe91b33b9be52d85de0f8621da942018f7232f7",
+  "port_bind_strict.json": "76f091c9391bb8dbb729cf01cacd37d8170a349b1503f9e19b99bbe8738e436d",
+  "pre.json": "3f5d338bb967b1e81fb51cc7f753e5bc61b9abaa8e5cfdfaf1453fd8ff763f65",
+  "source_clock_graph.json": "c93aacaefa51498f29eb1b5bc81331d2209cd56e5649b2555e57c98768f212e2",
+  "tie_audit.json": "25856728e3906053c1f05582544709bfc246139e9ec9bf41d19cc873bf410c8e",
+  "die_plan.png": "967a9a2ab92cc344cbb3edd5ce805d59d81b8f0972edd22fe0dcef783d7601e2"
  },
- "optimistic": true,
- "keep_gen_hosts": true,
- "_path": "cand_r17b.json"
+ "status": "ADOPTED reviewed tuple",
+ "written_by": "root-authorized lane atomic apply"
 }
