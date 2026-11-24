@@ -30,3 +30,5 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 - Row v2 ROWS_KV-SENDER-SKEW-PV12-v2.py 32157b360983 (epyc11 /srv/opentallas-scratch2/claude/kv-sender-skew/) targets A5t5 (COORD), not A5t4. ROW-REBASED posted b9a250f44e1a.
 - A5t3 evidence in kv-sender-skew/a5t3/: row_plan 0cfe7c6c6897, pv_col take a494038c27dc (pvcol_take.py, take.log), law2 identical, PRE no new pair (ENTRYFOOT pv_v12 58->5), scoped strict bind 0 errors / 0 R8 stale, seamhold_rings.tsv (53 rings).
 - Open: LATCHECK on the A5t5 full bind (L1961/L2009/L2015 first); 5 pv_v12 exports outside census still stale (probe two-sided); SEAMHOLD -335.1 re-derive; after A5t5 binds: pv_v12 kit rebuild + TT/FF d_min/d_max via sender_margin_probe.sh.
+
+- 2026-11-24 04:51 PST FABLE-RC-KV CONFIRMED (04:49) the A5t5 split: ENTRYFOOT row excludes my 53 pv_v12 exports (ss_exports.txt), keeps its 4 measured moves; cland_up stays. Waiting for A5t5 compose/full bind -> LATCHECK, then pv_v12 kit + TT/FF margins.
