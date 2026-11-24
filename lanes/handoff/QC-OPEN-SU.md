@@ -13,3 +13,7 @@ No units launched or adopted. Next if asked: su_c/stm/sc probes on C1b after its
 - Reads: place, CTS post-hook, final 5_1_grt.odb, full-cause census -> post to QC-ALLFIX + FABLE-RC-QC.
 - 23:48 CORRECTION e37bd8b9: 23:04-23:31 place posts mixed min (hold) paths into setup; x_ctl_o q[85] test case WITHDRAWN. ALWAYS read by Path Type (scratchpad qcopensu/rpt.py). Rpts show worst per group only.
 - C1b/C1c/C1d/C1e strict failed or cancelled; epyc11 c1d/tree holds cancelled plan c2856018af83 (refresh before use).
+- 00:41 11-24 STATE: 6/6 C1-noSU probes past CTS (final reads posted 885bad56, 00:34, c0e3d3b3); all in GRT. c0e3d3b3 also CORRECTS 885bad56/776be839: tapsrc difference mixes early/late source latency (~22 ps on one tap) with tap offset. NEXT: GRT (5_1_grt.odb) full-cause census per probe.
+- C1g 96cce77c1e2f strict: epyc7 QC-ALLFIX/cF, log bindC1g.ot, in R8 re-bind loop 00:41. Only on strict 0 + LATCHECK PASS launch 9 probes (3 su_c + 6 stm/sc), label PROBE; check cF/bind/bind_tool.json vs rt c66090747375 first. FAIL -> launch nothing, report.
+- HOST: no COORD answer yet. epyc11 is out (COORD 1502, 00:16). Default epyc7 from cF, no copy, ot-run admission decides; fallback epyc2 via copy class AFTER the pass. No copies outside ot-run; obey refusals.
+- epyc11 QC-OPEN-SU/c1d (57 GB) stale, do not use. sc far-reset = QC-SC-FARRST.
