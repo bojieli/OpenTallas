@@ -10,7 +10,7 @@
  "params": {
   "KV_HARD_RQ": 2,
   "KV_XD": "48'h131230006620",
-  "KV_KST": "64'h2568123621154115",
+  "KV_KST": "64'h2668123621154115",
   "KV_XST": "64'h7444441144115532",
   "KV_XMRG": 1,
   "KV_YBASE": 1,
@@ -18,9 +18,9 @@
  },
  "frame_um": [
   3214.08,
-  2160.0
+  2134.08
  ],
- "seats": "lanes/handoff/S81-KVLEAF-T2-ARCH-R2-partb_seats_v5c_B.json",
+ "seats": "lanes/handoff/S81-KVLEAF-T2-ARCH-R2-partb_seats_v5d_B.json",
  "seam_pins": "lanes/handoff/S81-KVLEAF-T2-ARCH-R2-t2_ab_seam_pins.json",
  "seam": {
   "stages_in": 2,
@@ -38,16 +38,17 @@
   "drain_age": 1024
  },
  "cells": {
-  "B_soft_yosys": 180544,
+  "B_soft_yosys": 180666,
   "masters": 118,
-  "kvi": 212,
+  "kvi": 216,
   "kvx": 73,
   "store_sram": 144,
-  "note": "count taken with the v5 row (212 kvi, 70 kvx); v5c differs by 3 kvx"
+  "note": "180,666 measured with the v5c values (212 kvi, 73 kvx); v5d has 216 kvi (block 14 input relays 6 deep)"
  },
  "masters_signed": {
   "kvx": "epyc9 master_drafts_codex/route_r2/kvx51r/views (51.84 sq)",
   "note": "11 of 11 nested masters: see KVLEAF-MASTERS for ikr"
  },
- "status": "ROW-DRAFT: exact-value bench bench_xq3 running; probe_v7 place + GRT running; ft station ranks and seam landing reserved in the seats"
+ "status": "ROW-DRAFT: exact-value bench bench_xq4 running (v5d); probe to be re-taken on v5d; compiler calendar (+4 / +8) open with TOKEN",
+ "slot": "C8b 4682.88 x 2134.08"
 }
