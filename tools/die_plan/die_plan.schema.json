@@ -9492,6 +9492,12 @@
      "type": "string",
      "minLength": 1
     },
+    "attach_order": {
+     "enum": [
+      "alphabetical",
+      "nearest"
+     ]
+    },
     "parent_pins": {
      "type": "object",
      "additionalProperties": {
