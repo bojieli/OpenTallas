@@ -97,7 +97,7 @@ def _findings(raw, plan_path, tree=None, **kw):
             bt = (json.loads(Path(base).read_text()).get("partition_types") or {}) if not isinstance(base, dict) else (base.get("partition_types") or {})
         except (OSError, ValueError):
             bt = {}
-    hits, nt, nflag = [], 0, 0
+    hits, nt, nflag, nweak = [], 0, 0, 0
     for tn, t in sorted(types.items()):
         if not isinstance(t, dict) or t.get("hard") is True or (used and tn not in used):
             continue
@@ -117,9 +117,11 @@ def _findings(raw, plan_path, tree=None, **kw):
             k, n, b = r["moved"][0]
             msg.append(f"MOVED {len(r['moved'])} keepout(s) overlap a current band without matching it (e.g. {k} vs band {n}, IoU {b:.2f})")
         if msg:
-            nflag += 1
-            hits.append(_w(f"{tn}: stale keepout suspects ({r['exact']} of {len(ko)} keepouts match a current band): " + "; ".join(msg) +
-                           "; they block tap sites; fix: regenerate clock.keepouts_um from the current bands"))
+            strong = bool(r["stale"] or r["all_displaced"])
+            nflag += strong
+            nweak += not strong
+            hits.append((0 if strong else 1, _w(f"{tn}: {'stale keepouts' if strong else 'INFO weak signal (MOVED only; unconfirmed vs KV-PV-EDGESTRIP, 2 true / 2 clean types known)'} ({r['exact']} of {len(ko)} keepouts match a current band): " + "; ".join(msg) +
+                           "; they block tap sites; fix: regenerate clock.keepouts_um from the current bands")))
     nb = 0
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -148,8 +150,11 @@ def _findings(raw, plan_path, tree=None, **kw):
                 nb += 1
                 hits.append(_w(f"{tn}: BINS sink bins count {n_bins:,} vs latest placed {placed:,} ({how}) = {d * 100:.0f}% off (> {BINS_PCT * 100:.0f}%): "
                                f"density taps are sized on the wrong inventory; fix: re-derive {Path(f).name} from the placed kit (taps.py sink bins)"))
+    hits = [h if isinstance(h, str) else h for h in hits]
+    hits.sort(key=lambda h: h[0] if isinstance(h, tuple) else 2)
+    hits = [h[1] if isinstance(h, tuple) else h for h in hits]
     out = hits[:MAX_LINES]
-    out.append(_w("summary", f"{nflag} of {nt} types with band-derived keepouts flagged; {nb} types with sink bins >{BINS_PCT * 100:.0f}% off the placed count"
+    out.append(_w("summary", f"{nflag} of {nt} types with band-derived keepouts flagged strong (ALL-DISPLACED / STALE), {nweak} MOVED-only INFO; {nb} types with sink bins >{BINS_PCT * 100:.0f}% off the placed count"
                              f"{'' if base else ' (no baseline given: STALE-vs-baseline not run)'}"))
     return out
 
