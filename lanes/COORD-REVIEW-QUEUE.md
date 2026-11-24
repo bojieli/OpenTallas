@@ -34942,3 +34942,4 @@ FAILED [AUTOPILOT b110d9753b89] 2026-11-23 19:19:51 PST AUTOPILOT -> KIT-WAVE-12
   (e) status->frame_local ph_r: FABLE-RC-S81 02:36 ruled it needs no row (not in the F2 post-hook violators).
   (f) TAP-GRID-R6 trial4 (e755b11bde3d) LP t1 taps clk_t55 (524,583.264) and clk_t56 (567.008,616.096) are in B1 exactly, and u_land D6 is in B1.
   The remaining LP traverse, land_rst relay->relay -294.66 on mu_LP t2, is hg-S81-LOGIC-DEPTH. Its row LD-LAND5 follows.
+- 2026-11-23 19:28 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-3421094-1795489642 on outgoing-giraffe: rc=0 after 1290 s, ended 03:28:48, log /srv/opentallas-scratch2/claude/kv-allfix/portpin/tapsplit_A2b/g0.otrun, cmd: --mem 32 --threads 2 --hosts epyc8 -- bash /srv/opentallas-scratch2/claude/kv-allfix/portpin/pg0.sh /srv/opentallas-scratch2/claude/kv-allfi
