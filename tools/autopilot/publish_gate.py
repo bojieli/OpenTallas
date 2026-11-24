@@ -349,12 +349,53 @@ def check_bound_params(tree, bind_out):
     return list(r["errors"])
 
 
-def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
-               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None):
-    """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
+def rt_root():
+    """-> the rt checkout this file runs from (<rt>/tools/autopilot/publish_gate.py), else None (a copy elsewhere, or an inline -c run)."""
+    f = globals().get("__file__")
+    if not f:
+        return None
+    try:
+        p = Path(f).resolve()
+        if p.parent.name == "autopilot" and p.parents[1].name == "tools":
+            return str(p.parents[2])
+    except (OSError, IndexError):
+        pass
+    return None
+
+
+def pick_die_plan(tree, tool_root=None):
+    """-> (die_plan dir, 'rt'|'tree').  The rt checkout's PRE/G0 when it has both and the host can read it; else the tree's frozen copy."""
+    if tool_root:
+        d = os.path.join(str(tool_root), "tools", "die_plan")
+        if os.path.isfile(os.path.join(d, "plan_gate_pre.py")) and os.path.isfile(os.path.join(d, "check.py")):
+            return d, "rt"
+    return os.path.join(str(tree), "tools", "die_plan"), "tree"
+
+
+def run_static(tree, plan, *args, tool_root=None, **kw):
+    """PRE/G0/schema of the candidate (see _run_static).  With the rt tools (tool_root), repository-relative plan inputs (sink_bins, core views)
+    still resolve in the candidate TREE, not in the rt checkout: $OT_REPO_ROOT = tree for the checkers (taps._root), restored afterwards."""
+    _d, src = pick_die_plan(tree, tool_root)
+    old = os.environ.get("OT_REPO_ROOT")
+    if src == "rt":
+        os.environ["OT_REPO_ROOT"] = str(tree)
+    try:
+        return _run_static(tree, plan, *args, tool_root=tool_root, **kw)
+    finally:
+        if src == "rt":
+            if old is None:
+                os.environ.pop("OT_REPO_ROOT", None)
+            else:
+                os.environ["OT_REPO_ROOT"] = old
+
+
+def _run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None, scan_asbuilt=None,
+               bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None):
+    """-> {schema, pre_g0, hashes: {verdict, ...}}.  PRE/G0/schema run the rt tools (tool_root = the executing rt checkout, PUBGATE-PREG0 11-23) when
+    it has them, else the TREE's own copy; python3 -I.  The tree copy is frozen at its cut, so rt fixes (FLOW-OPS fail-closed LANDREMAP) never reached it."""
     tree, plan = str(tree), str(plan)
     work = work or tempfile.mkdtemp(prefix="pubgate-")
-    dp = os.path.join(tree, "tools", "die_plan")
+    dp, tools_src = pick_die_plan(tree, tool_root)
     py = sys.executable
     res = {}
     if not os.path.isfile(plan):
@@ -390,13 +431,15 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     # without it G0 leaves the HEAD native release PENDING (ERROR).  A missing or stale receipt is re-verified and refused by check.py itself.
     if native_reset_receipt and g0_tool.is_file() and "--native-reset-receipt" in g0_tool.read_text(errors="replace"):
         g0 += ["--native-reset-receipt", str(native_reset_receipt)]
+    if tools_src == "rt" and g0_tool.is_file() and "--repo-root" in g0_tool.read_text(errors="replace"):
+        g0 += ["--repo-root", tree]
     rc2, t2 = _sub(g0, tree)
     try:
         g0_report = json.loads(Path(g0_dir, "g0_report.json").read_text())
     except (OSError, ValueError):
         g0_report = None
     allowance = g0_baseline_check(plan, g0_report, g0_baseline, rc2)
-    res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and allowance["verdict"] == "PASS" else "FAIL",
+    res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and allowance["verdict"] == "PASS" else "FAIL", "tools": tools_src, "tools_dir": dp,
                      "pre_rc": rc1, "g0_rc": rc2, "g0_report": str(Path(g0_dir, "g0_report.json")),
                      "baseline": allowance, "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
     finds, n = check_hashes(tree, plan, plan_sha256)
@@ -414,7 +457,7 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None):
+                  rows_proofs=None, scan=None, scan_asbuilt=None, bind_out=None, band_base=None, remap_base=None, native_reset_receipt=None, tool_root=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -427,7 +470,8 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            + (f" --bind-out {q(str(bind_out))}" if bind_out else "")
            + (f" --band-base {q(str(band_base))}" if band_base else "")
            + (f" --remap-base {q(str(remap_base))}" if remap_base else "")
-           + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else ""))
+           + (f" --native-reset-receipt {q(str(native_reset_receipt))}" if native_reset_receipt else "")
+           + (f" --tool-root {q(str(tool_root))}" if tool_root else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -579,7 +623,7 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
                                                                        rows_proofs=rows_proofs, scan=scan, scan_asbuilt=scan_ab,
                                                                        bind_out=bind_out, band_base=band_base, remap_base=remap_base,
-                                                                       native_reset_receipt=native_reset_receipt)))(
+                                                                       native_reset_receipt=native_reset_receipt, tool_root=rt_root())))(
                 static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
             rec["checks"].update(st)
             rec["static_s"] = round(time.time() - t0, 1)
@@ -622,6 +666,7 @@ def main(argv=None):
     s.add_argument("--bind-out", help="kit_rtl.bind_out of the candidate; outside the tree = advisory FOREIGN-TREE finding")
     s.add_argument("--remap-base", help="reviewed parent plan for PRE LANDREMAP/ISTCYC (default: --band-base)")
     s.add_argument("--native-reset-receipt", help="HEAD native reset release receipt for G0 (candidate.native_reset_receipt)")
+    s.add_argument("--tool-root", help="rt checkout whose tools/die_plan runs PRE/G0 (default: the tree's own copy); ignored when it lacks them")
     s.add_argument("--band-base", help="base plan of record for G0 landing_band_core (inherited overlaps WARN, new ERROR)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
@@ -634,7 +679,7 @@ def main(argv=None):
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
                                                    rows_proofs=a.rows_proof, scan=a.scan, scan_asbuilt=a.scan_asbuilt, bind_out=a.bind_out,
                                                    band_base=a.band_base, remap_base=a.remap_base,
-                                                   native_reset_receipt=a.native_reset_receipt)))
+                                                   native_reset_receipt=a.native_reset_receipt, tool_root=a.tool_root)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)

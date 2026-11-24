@@ -1,6 +1,6 @@
 """PUBLISH-GATE-1116: a tree switch is applied only with a matching PASS record of the pre-apply gate.
 Runs the tree's real schema / plan_gate_pre / check.py (tools/die_plan) on tools/die_plan/examples/tiny_plan.json."""
-import copy, hashlib, json, os, tempfile, unittest
+import copy, hashlib, json, os, tempfile, types, unittest
 from pathlib import Path
 import apply_reviewed_tree_marker as A
 import publish_gate as PG
@@ -226,6 +226,71 @@ class Concurrent(unittest.TestCase):
         rec = PG.run_gate(c, cand(tree, plan), "/x/old", "E0", static_fn=static, dry_fn=dry, TC=TC)   # serial calls would break the barrier
         self.assertEqual(rec["verdict"], "PASS"); self.assertEqual(rec["advisory"], [])
         self.assertIn("gate_s", rec)
+
+
+class RtToolsForPreG0(unittest.TestCase):
+    """PUBGATE-PREG0 11-23: PRE/G0 run the rt checkout's tools (tool_root), not the candidate tree's frozen copy, so rt fixes reach a published tree."""
+    def setUp(self):
+        self.td = tempfile.mkdtemp(prefix="pgrt-")
+        self.tree, self.plan = mk_tree(self.td)
+        self.rt = Path(self.td) / "rt"
+        d = self.rt / "tools" / "die_plan"
+        d.mkdir(parents=True)
+        (d / "plan_gate_pre.py").write_text("# rt")
+        (d / "check.py").write_text("# rt")
+
+    def run_calls(self, **kw):
+        seen = []
+        orig = PG._sub
+        PG._sub = lambda argv, cwd, timeout=None: (seen.append(argv), (0, ""))[1]
+        try:
+            res = PG.run_static(self.tree, self.plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgrtw-"), **kw)
+        finally:
+            PG._sub = orig
+        pre = [a for a in seen if any(str(x).endswith("plan_gate_pre.py") for x in a)][0]
+        g0 = [a for a in seen if any(str(x).endswith("check.py") for x in a)][0]
+        return res, pre, g0
+
+    def test_rt_tools_used_when_present(self):
+        res, pre, g0 = self.run_calls(tool_root=str(self.rt))
+        self.assertIn(str(self.rt / "tools/die_plan/plan_gate_pre.py"), pre)
+        self.assertIn(str(self.rt / "tools/die_plan/check.py"), g0)
+        self.assertIn("--tree", pre); self.assertEqual(pre[pre.index("--tree") + 1], str(self.tree))
+        self.assertEqual(res["pre_g0"]["tools"], "rt")
+
+    def test_tree_tools_without_tool_root_or_incomplete_rt(self):
+        res, pre, _ = self.run_calls()
+        self.assertTrue(pre[2].startswith(str(self.tree)))
+        self.assertEqual(res["pre_g0"]["tools"], "tree")
+        (self.rt / "tools/die_plan/check.py").unlink()
+        res, pre, _ = self.run_calls(tool_root=str(self.rt))
+        self.assertEqual(res["pre_g0"]["tools"], "tree")
+
+    def test_rt_tools_resolve_repo_inputs_in_the_tree(self):
+        seen = {}
+        orig = PG._sub
+        PG._sub = lambda argv, cwd, timeout=None: (seen.setdefault("env", []).append(os.environ.get("OT_REPO_ROOT")), (0, ""))[1]
+        os.environ.pop("OT_REPO_ROOT", None)
+        try:
+            PG.run_static(self.tree, self.plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgrte-"), tool_root=str(self.rt))
+            self.assertEqual(set(seen["env"]), {str(self.tree)})
+            self.assertNotIn("OT_REPO_ROOT", os.environ)           # restored
+            seen["env"] = []
+            PG.run_static(self.tree, self.plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgrte-"))
+            self.assertEqual(set(seen["env"]), {None})              # tree tools: untouched
+        finally:
+            PG._sub = orig
+
+    def test_static_remote_ships_tool_root(self):
+        got = []
+        def runner(argv, **k):
+            got.append(argv[-1]); return types.SimpleNamespace(stdout="PG_STATIC {}", stderr="", returncode=0)
+        PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner, tool_root="/rt/abc")
+        self.assertIn("--tool-root /rt/abc", got[0])
+
+    def test_rt_root_from_file_layout(self):
+        r = PG.rt_root()
+        self.assertTrue(r is None or Path(r, "tools", "autopilot", "publish_gate.py").is_file())
 
 
 if __name__ == "__main__":
