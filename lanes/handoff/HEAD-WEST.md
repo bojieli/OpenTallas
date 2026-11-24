@@ -46,3 +46,10 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - W5 hd_serdes re-sign (corrected dchn FF 8bc587a4f5b9): intel2 service head-west-w5-place-r3 (west-w3/run_w5_place_r3.sh, run-item --goal place), kit hd_serdes_1124070219 on E9, spec 1124070221; place stage started 07:50.
 - Next: after each PLACE, visual review, then run-item <spec> --goal route (sign-off+LEC). W6 b3507e628de6 adopted only after HEAD-W6-ACCEPT verdict.
 - Local waiter: scratchpad hw_wait.sh (polls both services).
+
+## 11-24 11:5x PST W6 live + forms in flight
+- W6 LIVE: event head_rp21z20NF15f_r18w6, tree kw45/snap_s81_head/s81_head_r18w6_s1 (168411d6207d), plan b3507e628de6, sidecar ba968452ea5a (collector lep0N_w fix; gated E9 head-west/bind_r18w6c, RTL identical). Receipt lanes/handoff/s81_head_atomic_apply_1795550296041696253.json. Scripts: E9 head-west/w6_live/{make_w6_snap.sh,make_w6_s1.sh,fix_coll.py,chain_w6c.sh}; candidate intel2 ~/fable-fix-head-lep0n-1122/r18g_event_candidate/w6/.
+- Leftover partial: epyc11 kw45/snap_s81_head/s81_head_r18w6_s0.part (ot-delete later).
+- W4b: intel2 unit head-west-w4b-route (west-w3/run_w4b_route.sh, log kit_w4b_route.log); GRT TT +74.0 / internal hold +18.23; DRT from 11:02 on E7.
+- W5 hd_serdes: intel2 unit head-west-w5-route (west-w3/run_w5_route.sh, log kit_w5_route.log); resumed 11:16 from place.
+- W7 pending: W6 + HEAD-R18 start_q row (+1 fixed on host_tx,m0S_tx,m7S_tx,m7N_tx,kd,lepf,unit_lep) + root settle 64->88 + KLOCK 25b59295d4 (hd_serdes variant) + CTL write factor d890c8202b (hd_ctl/host_e/host_w). Ruling posted 09:2x.
