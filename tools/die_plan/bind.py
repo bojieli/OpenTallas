@@ -120,11 +120,24 @@ module ot_dp_dly #(parameter integer W = 1, parameter integer D = 1) (
 );
     reg [W-1:0] r [0:D-1];
     integer i;
+`ifdef OT_DLY_CPL
+    // QC-FW-CAP 11-23 store-complement relays (per-type plan verilog_defines OT_DLY_CPL; inert without it): stage k holds
+    // the transported bit inverted when k is even, so on a QN-only flop library (ASAP7 DFFHQN/DFFLQN) each stage-to-stage
+    // hop is QN -> D with no inverter (the plain chain needs one INV per stage: 54-80k INV per QC fw type).  q is d delayed
+    // D cycles exactly as before (same ports, stages and register names r[k]); one parity inverter is left at the input
+    // and/or output and folds into a neighbouring register's QN inverter.
+    always @(posedge clk) begin
+        r[0] <= ~d;
+        for (i = 1; i < D; i = i + 1) r[i] <= ~r[i-1];
+    end
+    assign q = (D % 2 == 1) ? ~r[D-1] : r[D-1];
+`else
     always @(posedge clk) begin
         r[0] <= d;
         for (i = 1; i < D; i = i + 1) r[i] <= r[i-1];
     end
     assign q = r[D-1];
+`endif
 endmodule
 `default_nettype wire
 """
