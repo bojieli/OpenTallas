@@ -13,3 +13,7 @@ Work dir E9 /srv/opentallas-scratch2/claude/s81-open-demand (wt = main lane clon
 - LD-LAND5 ROW-REBASED posted (PRE FAIL set identical to B1: 12 p5 ANCHORDRY + DEADIN). Scoped strict blocked: ELAB fails dsdv_svc_land_mem unknown (hi4:668), with and without OT_BIND_TYPE_DEFINES; ALERT + CORRECTION posted to INT.
 - rc67 ROW-REBASED by worker: RC67-HOPSITE-1 ops cf14e170d0df (E9 rc67/), PRE 0, scoped strict rc0 (epyc10). Leaf c6 regression handed to SLICE. Temp file intel2 ~/coord/tmp/s81-open-demand-rc67-post.txt -> ot-delete.
 - REPORT to COORD posted. Next: re-run LD scoped strict once INT fixes ELAB; c8 probe read on mu_LP t2 / cl774 pvea45273b.
+## 22:4x
+- COORD: elab fixed (c7a 0 errors); FABLE-RC-S81 retired -> FABLE-RC-ALL. rc67 temp file ot-deleted.
+- REPAIR-CAP CLOSED by measurement (post c07d126c): 8/9 S81 census kits hold >= 0 final; only mu_LP t2 open (u_u_lep.u.f_lf[2]/D -11.86, unbufferable, NEEDS_RTL) -> row item REPAIR-CAP-LEPFLF to INT, gate = c8 mu_LP t2 probe. Setup list mapped (leaf -> S81-LEAF-J9, lepw -> c6, col_h10 -> B1).
+- STANDBY: c8 probe reads col_h9_r2 cl774 pvea45273b (GLOBAL-DEMAND: S-strip y11-14 ovfl) and mu_LP t2 (land_rst leg, f_lf[2] hold, RSZ caught).
