@@ -6,3 +6,4 @@
 - 2026-11-23 23:31 PST EPYC11 GEN_HOSTS qwen_compute REFUSED [-> COORD] HOST-ADD still refused after copy; see /srv/opentallas-scratch2/claude/EPYC11-ONBOARD-FINISH/tmp/e11_cur_qwen_compute.log; following up.
 - 2026-11-23 23:33 PST EPYC11 GEN_HOSTS qwen_compute [-> COORD, cc FLOW-OPS-R3] epyc11 added to qwen_compute gen_hosts (current src+bind replicated; kit_wave_edit HOST-ADD probe passed). Load check in 30 min.
 - 2026-11-23 23:46 PST EPYC11 GEN_HOSTS s81 [-> COORD, cc FLOW-OPS-R3] epyc11 added to s81 gen_hosts (current src+bind replicated; kit_wave_edit HOST-ADD probe passed). Load check in 30 min.
+- 2026-11-23 23:52 PST DONE [EPYC11-ONBOARD-FINISH] ot-push-main otpush-viable-ram-4089780 on viable-ram: rc=0 after 18 s, ended 07:52:12, log none, cmd: ot-push-main 
