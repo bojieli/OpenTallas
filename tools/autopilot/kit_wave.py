@@ -5990,6 +5990,21 @@ def deep_inputs(cfg, die):
 BOUND_KEY = "__bound__"
 
 
+# STUB-BIND 11-24 (COORD; EPYC11-ONBOARD-FINISH: 8 of 12 bound_trees binds hold only bind_report.json on most gen hosts, and the probe asked for nothing
+# else): a host holds a bound tree's bind only when all of these are there.  Every complete bind has them, no stub has any but the report.
+BOUND_BIND_FILES = ("bind_report.json", "bind.f", "native_topology.json")
+
+
+def bound_bind_path(d, item, p):
+    """True when p lies in the bind dir of the bound-tree pseudo item: ITEM-SYNC never heals a bind file by file (that is how the stubs were made)"""
+    if not str(item).startswith(BOUND_KEY):
+        return False
+    bt = ((d.get("bound_trees") or []) if isinstance(d, dict) else [])
+    i = str(item)[len(BOUND_KEY):]
+    bo = str(((bt[int(i)].get("kit_rtl") or {}) if i.isdigit() and int(i) < len(bt) else {}).get("bind_out") or "").rstrip("/")
+    return bool(bo) and (p == bo or p.startswith(bo + "/"))
+
+
 def bound_tree_inputs(d):
     """{"__bound__<i>": [paths]} for the die's usable bound_trees entries (a bind, not env_unknown): the tree's required files, its plan dir, its bind report and as-built"""
     out = {}
@@ -6000,7 +6015,7 @@ def bound_tree_inputs(d):
         ps = [os.path.join(bt["src"], r) for r in SRC_REQUIRED + SRC_ITEM_REQUIRED]
         if str(bt.get("plan") or "").startswith("/"):
             ps.append(os.path.dirname(bt["plan"]))
-        ps.append(os.path.join(kr["bind_out"], "bind_report.json"))
+        ps += [os.path.join(kr["bind_out"], x) for x in BOUND_BIND_FILES]
         if str(kr.get("asbuilt") or "").startswith("/"):
             ps.append(kr["asbuilt"])
         out[f"{BOUND_KEY}{i}"] = list(dict.fromkeys(ps))
@@ -6394,6 +6409,8 @@ def sync_item_inputs(AP, cfg, run=None):
                         dep = part.split(": ", 1)[1].replace(" missing", "").strip()
                         if _ITEM_SYNC_OK.match(dep) and ".." not in dep:
                             sp = dep
+                    if bound_bind_path(cfg["dies"].get(die), item, sp):
+                        continue
                     bk = "itembo|%s|%s" % (h, sp)               # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 E): back off by cause, per (host, path), not per item
                     live.update((bk, bk + "#n"))
                     if (h, sp) in attempted or float(tries.get(bk) or 0) > time.time():
