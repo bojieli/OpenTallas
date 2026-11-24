@@ -6467,7 +6467,7 @@ def merged_proposals(L, log, cap=4096):
         if not c.startswith("ff:") or c not in L.gc:
             continue
         s_c = support(L.gc[c])
-        for k in [x for x in s_c if x in gset]:
+        for k in sorted(x for x in s_c if x in gset):          # LEC-DETERMINISM-1: stable order
             if ("gold", k) in L.hyp or c in cands.get(k, ()):
                 continue
             if _same_reading_self(s_c, support(L.gc[k]), k, c):
@@ -6476,7 +6476,8 @@ def merged_proposals(L, log, cap=4096):
         if ("gold", k) in L.hyp:
             continue
         s_k = support(L.gc[k])
-        for c in [x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc]:
+        # LEC-DETERMINISM-1: s_k is a frozenset; its order picked cands[k][0] (the first proposal) per process
+        for c in sorted(x for x in s_k if isinstance(x, str) and x in L.matched and x.startswith("ff:") and x in L.gc):
             if c in cands.get(k, ()):
                 continue
             if _same_reading_self(s_k, support(L.gc[c]), k, c):
@@ -8713,6 +8714,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                                    basis=f"not shown: verdict {rec.get('verdict')} before the miter was proved")
     rec["t_total_s"] = round(time.time() - t0, 1)
     rec["provenance"] = _provenance(kit)
+    # LEC-DETERMINISM-1: the str hash seed the discovery order ran under ("0" = pinned, reproducible)
+    rec["hash_seed"] = os.environ.get("PYTHONHASHSEED") if not sys.flags.hash_randomization else "random"
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
     (out / "lec.log").write_text("\n".join(log))
     return rec
@@ -8986,5 +8989,32 @@ def main(argv=None):
     return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "LINT FAIL": 1, "KEEP FAIL": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
 
 
+def _pin_hash_seed():
+    """LEC-DETERMINISM-1 (COORD 11-24, QC hc3 pvfd488b8f): two runs of one lec.py on one netlist failed different
+    point sets (17 points in u_xl3_5, then 85 in u_xl3_1, then 290 in u_xh3 b_emin).  Candidate discovery iterates
+    many sets / frozensets of register-name strings (merged_proposals' support sets, cohort and class grouping), and
+    `python3 -I` randomises str hashing per process, so the first-picked candidate of a class, and with it which
+    pairs the induction refutes and drops, changed per run.  Every proof stays sound either way; only the proposal
+    order moved.  Pin the order: re-exec once with PYTHONHASHSEED=0.  -I ignores PYTHON* variables, so the re-exec
+    gets the same isolation from -s (no user site), a scrubbed environment (no other PYTHON* variable) and, where the
+    interpreter has it, -P (no script dir on sys.path).  OT_LEC_HASHSEED_EXEC marks the child (never loops)."""
+    if os.environ.get("PYTHONHASHSEED") == "0" and not sys.flags.hash_randomization:
+        return
+    if os.environ.get("OT_LEC_HASHSEED_EXEC"):
+        return                                   # the interpreter refused the seed: run anyway, never loop
+    env = {k: v for k, v in os.environ.items() if not k.startswith("PYTHON")}
+    env.update(PYTHONHASHSEED="0", OT_LEC_HASHSEED_EXEC="1")
+    flags = ["-s"] + (["-P"] if sys.version_info >= (3, 11) else []) + (["-B"] if sys.flags.dont_write_bytecode else [])
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os.execve(sys.executable, [sys.executable] + flags + [os.path.abspath(sys.argv[0])] + sys.argv[1:], env)
+
+
 if __name__ == "__main__":
+    _pin_hash_seed()
+    if os.environ.get("OT_LEC_HASHSEED_PROBE"):
+        print(json.dumps({"hash": hash("ot-lec-hashseed-probe"), "seed": os.environ.get("PYTHONHASHSEED"),
+                          "randomized": bool(sys.flags.hash_randomization), "no_user_site": bool(sys.flags.no_user_site),
+                          "python_env": sorted(k for k in os.environ if k.startswith("PYTHON") and k != "PYTHONHASHSEED")}))
+        sys.exit(0)
     sys.exit(main())
