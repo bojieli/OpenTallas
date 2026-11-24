@@ -71095,7 +71095,9 @@
  "stops_off_exclude": [
   "hbm"
  ],
- "host_drain": {},
+ "host_drain": {
+  "epyc10": 300
+ },
  "min_rt": "6d2e187f0d65",
  "note_epyc11_fill": "EPYC11-FILL 11-23 FLOW-OPS-R3 (COORD 18:50): epyc11 (96 thr, 1 TB) added to hosts + first in place_prefer of s81/s81_head/qwen_compute/qwen_kvsys (place only: the wave copies kits). gen_hosts NOT yet: the die src snapshots are not on epyc11 and publish_apply verifies the tree on every gen host, so epyc11 joins gen_hosts after the in-flight KV D29 / QC V4 applies land and the snapshot is replicated. hbm parked."
 }
