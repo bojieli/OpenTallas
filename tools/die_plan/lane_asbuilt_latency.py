@@ -195,6 +195,22 @@ def side_stages(ix, typ, bus, side, reg_hard, lpad_override=None):
     return face + len(pads) + len(ist) + (bound_core or kit_core) + lp + kit_bus + lob, det, prob
 
 
+LEP_RIP_SEL = "OT_S81SL_LEP_RIP"
+
+
+def lep_ri_cycles(typ, bus):
+    """LEP-RIP-LATCHECK (COORD 11-24, FABLE): RIP relay stages of ot_s81sl_slice_lep on the ring-out ri, selected by the
+    type's plan verilog_defines (OT_S81SL_LEP_RIP1 / RIP3 / OT_S81SL_LEP_RIP=<n>).  They are soft registers the bound RTL
+    does not show (the bind reads the lep file as a library), so a type that selects RIP n has n cycles on every path to
+    its lep ring-out bus (lepk_o*).  -> RIP, or None when the bus is not a lep ring-out of a RIP-selecting type."""
+    defs = (typ or {}).get("verilog_defines") or []
+    if not bus.startswith("lepk_o") or not any(str(d).startswith(LEP_RIP_SEL) for d in defs):
+        return None
+    sys.path.insert(0, str(HERE.parent / "s81_dv"))
+    from layer_prog import lep_rip  # noqa: E402  (the per-type table; the RTL selectors are its source)
+    return lep_rip.lep_ri_rip(defs)
+
+
 def plan_hops(plan):
     """lane id -> [(ft partition, out bus)] from the plan's port chain"""
     ports = {x["id"]: x for x in plan.get("ports", [])}
@@ -278,6 +294,13 @@ def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), prici
             continue
         probs = []
         sn, sdet, p1 = side_stages(ms, types.get(st), r["bus_out"], "out", "src" in reg)
+        rip = lep_ri_cycles(types.get(st), r["bus_out"])
+        if rip is not None:
+            declared = CL.out_cycles(types.get(st), r["bus_out"])
+            sdet.update(lep_rip=rip, lep_rip_declared=declared)
+            sn += rip - declared                     # the RTL's RIP stages, whatever the plan declared
+            if rip != declared:
+                p1.append(f"lep RIP {rip} on {r['bus_out']} but soft_latency declares {declared}")
         ft = 0
         for part, ob in hops.get(lane, []):
             mf = module_of(part)
@@ -316,6 +339,8 @@ def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), prici
             trow = table.get(lane)
             if trow is not None and int(trow.get("fixed", 0) or 0) != fixed.get(lane, 0):
                 cls.append("STALE_TABLE")
+            if sdet.get("lep_rip") is not None and sdet["lep_rip"] != sdet["lep_rip_declared"]:
+                cls.append("LEP_RIP_UNDECLARED")         # kit/plan RIP stages the table and soft_latency never priced
             if not cls and 0 < rec["delta"] <= sdet["kit_ist"] + ddet["kit_ist"]:
                 cls.append("UNPRICED_KIT_STATIONS")      # kit stations the table (lane fixed_cycles) never priced
             rec["class"] = cls or ["OTHER"]

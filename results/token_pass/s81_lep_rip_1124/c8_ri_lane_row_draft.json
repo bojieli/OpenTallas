@@ -1,0 +1,92 @@
+{
+ "plan": "j9tail_c8/p6_fstart.json",
+ "plan_sha": "d11e3b6c50ee",
+ "types": {
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "soft_latency": {
+    "out": {
+     "lepk_o0": 1
+    },
+    "inst": "u_lep (ot_s81sl_slice_lep g_rip rd_r/rv_r)",
+    "note": "LEP RIP relay on ri only"
+   }
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "soft_latency": {
+    "out": {
+     "lepk_o0": 1
+    },
+    "inst": "u_lep (ot_s81sl_slice_lep g_rip rd_r/rv_r)",
+    "note": "LEP RIP relay on ri only"
+   }
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "soft_latency": {
+    "out": {
+     "lepk_o0": 3
+    },
+    "inst": "u_lep (ot_s81sl_slice_lep g_rip rd_r/rv_r)",
+    "note": "LEP RIP relay on ri only"
+   }
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "soft_latency": {
+    "out": {
+     "lepk_o0": 3
+    },
+    "inst": "u_lep (ot_s81sl_slice_lep g_rip rd_r/rv_r)",
+    "note": "LEP RIP relay on ri only"
+   }
+  }
+ },
+ "lanes": {
+  "ku_s_0S": {
+   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "rip": 1,
+   "fixed_cycles": {
+    "old": 0,
+    "new": 1
+   },
+   "cycles": {
+    "old": 2,
+    "new": 3
+   }
+  },
+  "ku_s_0N": {
+   "type": "dsdv_slice_lepw_mu_LP__t2",
+   "rip": 1,
+   "fixed_cycles": {
+    "old": 0,
+    "new": 1
+   },
+   "cycles": {
+    "old": 2,
+    "new": 3
+   }
+  },
+  "ku_s_7S": {
+   "type": "dsdv_slice_lepe_nh_mus_LP__t1",
+   "rip": 3,
+   "fixed_cycles": {
+    "old": 0,
+    "new": 3
+   },
+   "cycles": {
+    "old": 2,
+    "new": 5
+   }
+  },
+  "ku_s_7N": {
+   "type": "dsdv_slice_lepe_mu_LP__t2",
+   "rip": 3,
+   "fixed_cycles": {
+    "old": 0,
+    "new": 3
+   },
+   "cycles": {
+    "old": 2,
+    "new": 5
+   }
+  }
+ }
+}

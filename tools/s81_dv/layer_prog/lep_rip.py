@@ -40,7 +40,7 @@ def lep_ri_rip(defines, rtl=RTL):
     sel, default = selectors(rtl)
     names = {}
     for d in defines:
-        k, _, v = d.partition('=')
+        k, _, v = (d[2:] if d.startswith('-D') else d).partition('=')
         names[k] = v
     if 'OT_S81SL_LEP_RIP' in names:
         return int(names['OT_S81SL_LEP_RIP'])
@@ -76,12 +76,33 @@ def check_trace(ref, trace, defines, rtl=RTL):
     return rip
 
 
+def kit_config_defines(config_mk):
+    """the -D names of a kit config.mk 'export VERILOG_DEFINES = ...' line (the defines synthesis really sees)"""
+    for line in Path(config_mk).read_text().splitlines():
+        m = re.match(r'\s*(?:export\s+)?VERILOG_DEFINES\s*[:+]?=\s*(.*)', line)
+        if m:
+            return [t[2:] for t in m.group(1).split() if t.startswith('-D')]
+    raise ValueError(f'{config_mk}: no VERILOG_DEFINES line')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--plan', type=Path); p.add_argument('--rtl', type=Path, default=RTL)
     p.add_argument('--trace-ref', type=Path); p.add_argument('--trace', type=Path); p.add_argument('--defines', default='')
+    p.add_argument('--kit-config', type=Path, help='kit config.mk; with --plan and --type: refuse a kit RIP != plan RIP')
+    p.add_argument('--type')
     a = p.parse_args()
-    if a.plan:
+    if a.kit_config:
+        plan = json.loads(a.plan.read_text())
+        pd = plan['partition_types'][a.type].get('verilog_defines') or []
+        try:
+            rip = check_kit(pd, kit_config_defines(a.kit_config), a.rtl)
+        except ValueError as e:
+            print(f'REFUSE {a.type}: {e}')
+            return 3
+        print(f'PASS {a.type}: kit RIP {rip} == plan RIP {rip}')
+        return 0
+    if a.plan and not a.kit_config:
         print(json.dumps(table(json.loads(a.plan.read_text()), a.rtl), indent=1))
     if a.trace:
         rd = lambda f: [int(x) for x in f.read_text().split()]

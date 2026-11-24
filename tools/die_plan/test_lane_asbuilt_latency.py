@@ -239,3 +239,45 @@ def test_standalone_finds_split_pieces_by_their_bound_instance_name():
         assert module_of("s_7N_C__strip_S") is not None
         assert ptype_of("s_7N_C__strip_S") == "X"
         assert LAL.inst_id("9a__b") == "n9a_b"
+
+
+# ---- LEP-RIP-LATCHECK (COORD 11-24): the lep ring-out RIP stages are priced from the type's verilog_defines
+def rip_plan(defines, declared=None, table=2, fixed=0):
+    P = plan(table=table, fixed=fixed, src_regs=0)
+    S = P["partition_types"]["S"]
+    S["buses"] = [dict(name="lepk_o0", dir="out", width=1104)]
+    S["verilog_defines"] = list(defines)
+    if declared is not None:
+        S["soft_latency"] = dict(out=dict(lepk_o0=declared), inst="u_lep", note="RIP")
+    return P
+
+
+def rip_run(P):
+    mods = {"p": LAL.ModuleIndex(st("u_bout_lepk_o0")), "q": LAL.ModuleIndex(st("u_bin_i"))}
+    rows = [dict(lane="L0", src="p", dst="q", bus_out="lepk_o0", bus_in="i", plan_cycles=P["latency"]["lanes"]["L0"]["cycles"])]
+    pt = {p["name"]: p["type"] for p in P["partitions"]}
+    return LAL.check(P, rows, mods.get, pt.get, P["partition_types"], {"L0": 0}.get)
+
+
+def test_lep_rip_unpriced_fails_on_the_ri_lane():
+    for sel, rip in (("OT_S81SL_LEP_RIP1", 1), ("OT_S81SL_LEP_RIP3", 3)):
+        recs, errs = rip_run(rip_plan(["OT_S81SL_LEP_CRP2", sel]))
+        r = recs[0]
+        assert r["verdict"] == "FAIL" and r["delta"] == rip and "LEP_RIP_UNDECLARED" in r["class"], r
+        assert r["source"]["lep_rip"] == rip and errs
+
+
+def test_lep_rip_declared_and_priced_passes():
+    for sel, rip in (("OT_S81SL_LEP_RIP1", 1), ("OT_S81SL_LEP_RIP3", 3)):
+        recs, errs = rip_run(rip_plan([sel], declared=rip, table=2 + rip, fixed=rip))
+        assert recs[0]["verdict"] == "PASS" and not errs, recs[0]
+
+
+def test_lep_rip_declared_but_wrong_value_fails():
+    recs, _ = rip_run(rip_plan(["OT_S81SL_LEP_RIP1"], declared=3, table=5, fixed=3))   # plan says 3, RTL selects 1
+    assert recs[0]["verdict"] == "FAIL" and "LEP_RIP_UNDECLARED" in recs[0]["class"]
+
+
+def test_no_rip_selector_is_unchanged():
+    recs, errs = rip_run(rip_plan(["OT_S81SL_LEP_CRP2", "OT_S81SL_LEP_WREP5"]))
+    assert recs[0]["verdict"] == "PASS" and "lep_rip" not in recs[0]["source"]

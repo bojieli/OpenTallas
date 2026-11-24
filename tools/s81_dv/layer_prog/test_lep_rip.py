@@ -51,3 +51,13 @@ def test_measured_traces_match_table(name, defines, rip):
 def test_wrong_rip_fails(name, wrong):
     with pytest.raises(ValueError):
         L.check_trace(rd('rip0'), rd(name), wrong)
+
+
+def test_kit_config_defines_and_dash_d(tmp_path):
+    mk = tmp_path / 'config.mk'
+    mk.write_text('export DESIGN_NAME = x\nexport VERILOG_DEFINES = -DSYNTHESIS -DOT_S81SL_LEP_CRP2 -DOT_S81SL_LEP_RIP3\n')
+    kd = L.kit_config_defines(mk)
+    assert kd == ['SYNTHESIS', 'OT_S81SL_LEP_CRP2', 'OT_S81SL_LEP_RIP3']
+    assert L.lep_ri_rip(['-DOT_S81SL_LEP_RIP1']) == 1
+    with pytest.raises(ValueError):
+        L.check_kit(['OT_S81SL_LEP_CRP2', 'OT_S81SL_LEP_RIP1'], kd)      # J8 lepw_mus_LP t2: kit RIP 3, plan RIP 1
