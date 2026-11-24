@@ -222,6 +222,14 @@ def rstreach_type(tn, t, S, bind_rtl=None, reach=REACH_UM):
     bad_hops = [h for h in hops if h[2] == "missing" or (h[3] is not None and h[3] > h[4] + EPS)]
     rp = _repaired(S, tn) if bad_hops else set()
     soft = [h for h in bad_hops if hop_path(h[0], t) in rp]
+    # rr_t<i> (MISSION-role raw wavefront copies): reach_rules resolves them on reset_tree.start_relays, which does not hold
+    # every copy the bind emits (QC C1b slw_su_c: 13 'missing' rr_t names, strict bind clean) -> estimator only
+    rrt = [h for h in bad_hops if h not in soft and str(h[1]).startswith("rr_t")]
+    if rrt:
+        w = max(rrt, key=lambda h: h[3] or 0)
+        out.append(f"WARN RSTREACH {tn}: {len(rrt)} START raw rr_t reference(s) missing / over reach on the start_relays model "
+                   f"(e.g. {w[0]} <- {w[1]}{'' if w[3] is None else f' {w[3]:.0f} um'}); rr_t copies are judged by the strict bind")
+        soft = soft + rrt
     if soft:
         out.append(f"WARN RSTREACH {tn}: {len(soft)} START / local reset raw reference(s) missing or over reach that the bind "
                    f"re-picks itself (e.g. {soft[0][0]} <- {soft[0][1]}); re-derive to keep kits byte-stable")
@@ -362,11 +370,13 @@ def derivedname_type(tn, t, S, base_raw=None, BS=None):
             bad.append((p, v))
     if bad:
         rp = _repaired(S, tn)
-        soft = [(p, v) for p, v in bad if p in rp]
-        bad = [(p, v) for p, v in bad if p not in rp]
+        # collector_children / collector_local_sources nodes are re-solved by the bind's collector pass (QC C1b sle_su_c,
+        # slw_su_c bound with such names): reported, not FAIL
+        soft = [(p, v) for p, v in bad if p in rp or "/landing_contract/collector_" in p]
+        bad = [x for x in bad if x not in soft]
         if soft:
-            out.append(f"WARN DERIVEDNAME {tn}: {len(soft)} referenced relay name(s) gone from the tree that the bind re-picks "
-                       f"itself (e.g. {soft[0][0]} = {soft[0][1]})")
+            out.append(f"WARN DERIVEDNAME {tn}: {len(soft)} referenced relay name(s) gone from the tree that the bind re-picks / "
+                       f"re-solves itself (e.g. {soft[0][0]} = {soft[0][1]})")
     if bad:
         ex = "; ".join(f"{p} = {v}" for p, v in bad[:MAX_LIST])
         out.append(f"FAIL DERIVEDNAME {tn}: {len(bad)} of {len(refs)} referenced relay / tap name(s) not emitted by the "
