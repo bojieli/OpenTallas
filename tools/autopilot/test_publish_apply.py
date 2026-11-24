@@ -66,7 +66,7 @@ def test_apply_is_optimistic_commits_starts_the_advisory_gate_and_posts(tmp_path
     def run(argv, **k):
         calls.append(argv)
         return types.SimpleNamespace(returncode=0, stdout="", stderr="")
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3", pilot_item=None, no_gate=False, skip_out_check=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3", pilot_item=None, no_gate=False, skip_out_check=True)
     assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
     assert seen["optimistic"] is True and seen["obj"]["optimistic"] is True
     gate = [x for x in calls if x[0] == "systemd-run"][0]
@@ -101,7 +101,7 @@ def test_apply_starts_background_precheck_on_first_gen_host(tmp_path):
         def run(argv, **k):
             calls.append(argv)
             return types.SimpleNamespace(returncode=0, stdout="", stderr="")
-        a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3",
+        a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="QC-PLAN-R3",
                                   pilot_item=None, no_gate=True, no_precheck=off, skip_bind_check=True)
         assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
         assert bool([x for x in calls if x[0] == "timeout" and "precheck_hook.py" in " ".join(x)]) is (not off)
@@ -211,7 +211,7 @@ def test_apply_starts_the_post_apply_bind_in_a_copy_and_names_it(tmp_path):
         rcpt = Path(C) / "lanes/handoff/s81_atomic_apply_1.json"
         rcpt.write_text("{}")
         return {"applied": "s81", "event": "D8f", "source": str(t), "receipt": str(rcpt), "warnings": [], "gen_hosts": ["epyc8"]}
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None,
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None,
                               no_gate=True, skip_bind_check=True, skip_out_check=True)
     orig = PA.start_postbind
     PA.start_postbind = lambda C, obj, lane, die, run=None: orig(C, obj, lane, die, run=run, stamp="1118", log_dir=str(tmp_path / "pb"))
@@ -362,7 +362,7 @@ def _bf_setup(tmp_path):
 def test_bind_first_switches_tree_with_the_new_bind_and_bind_fails_only_the_stale_types(tmp_path):
     c, cand, seen, apply_fn = _bf_setup(tmp_path)
     calls, order = [], []
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
     checks = iter([(False, "bind /x/oldbind does not match", ["t1", "t2"]), (False, "new bind: 1 type differs", ["t7"])])
     a.bind_check_fn = lambda o, run=None: next(checks)
     a.bind_first_fn = lambda C, o, lane, die, run=None, **k: (order.append("bind") or ("/x/new_bind_0101", "bind-first ok", []))
@@ -385,7 +385,7 @@ def test_bind_first_switches_tree_with_the_new_bind_and_bind_fails_only_the_stal
 
 def test_bind_first_without_bind_output_refuses_and_leaves_the_old_tree(tmp_path):
     c, cand, seen, apply_fn = _bf_setup(tmp_path)
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
     a.bind_check_fn = lambda o, run=None: (False, "stale", ["t1"])
     a.bind_first_fn = lambda C, o, lane, die, run=None, **k: ("", "bind-first: no bind output", ["svc_a"])
     assert PA.cmd_apply(a, run=lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr=""), apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 4
@@ -395,10 +395,10 @@ def test_bind_first_without_bind_output_refuses_and_leaves_the_old_tree(tmp_path
 def test_no_bind_first_keeps_the_old_refusal_and_a_matching_bind_applies_directly(tmp_path):
     c, cand, seen, apply_fn = _bf_setup(tmp_path)
     run = lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr="")
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, no_bind_first=True, skip_out_check=True)
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, no_bind_first=True, skip_out_check=True)
     a.bind_check_fn = lambda o, run=None: (False, "stale", ["t1"])
     assert PA.cmd_apply(a, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 4
-    b = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
+    b = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True, no_precheck=True, skip_out_check=True)
     b.bind_check_fn = lambda o, run=None: (True, "matches", [])
     b.bind_first_fn = lambda *x, **k: (_ for _ in ()).throw(AssertionError("bind-first must not run when the bind matches"))
     assert PA.cmd_apply(b, run=run, apply_fn=apply_fn, commit_fn=lambda C, r: "ok") == 0
@@ -516,7 +516,7 @@ def test_apply_refuses_the_event_commit_when_the_out_cannot_be_synced(tmp_path, 
     cand = tmp_path / "cand.json"
     cand.write_text(json.dumps(bind_candidate(t)))
     committed = []
-    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True,
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), allow_no_post_bind='t', expect_source="/x/old", expect_event="E0", lane="S81-DIE-R3", pilot_item=None, no_gate=True, no_precheck=True,
                               skip_bind_check=True, out_sync_fn=lambda o, run=None: (False, ["epyc8: differs sealed=397 out=397 differing files=343"]))
     rc = PA.cmd_apply(a, run=_local_ssh(), apply_fn=lambda *x, **k: committed.append("apply") or {}, commit_fn=lambda *x: committed.append("commit"))
     out = capsys.readouterr().out
@@ -545,3 +545,34 @@ def test_apply_checks_bind_digests_on_the_final_retained_hosts(tmp_path, monkeyp
                                  pilot_item=None, skip_bind_check=True)
     assert PA.cmd_apply(args, commit_fn=lambda *x: pytest.fail("event committed with divergent bind")) == 5
     assert calls == [None, ["epyc9", "epyc7"]]
+
+
+def test_apply_refuses_without_a_post_apply_bind_candidate(tmp_path):
+    """POSTBIND-FAILCLOSED 11-23: a script-mode candidate (post_bind null, HEAD s2) and --no-post-bind are refused before the switch (rc 6)"""
+    c = tmp_path / "coord"; (c / "autopilot").mkdir(parents=True); (c / "lanes/handoff").mkdir(parents=True)
+    cand = tmp_path / "cand.json"
+    cand.write_text(json.dumps({"die": "qc", "tree": "/t", "config": {"kit_rtl": {"mode": "script", "script": "/t/k.sh"}}}))
+    called = []
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True,
+                              no_precheck=True, skip_out_check=True, skip_bind_check=True)
+    rc = PA.cmd_apply(a, run=lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr=""), apply_fn=lambda *x, **k: called.append(1), commit_fn=lambda C, r: "ok")
+    assert rc == 6 and not called
+    cand.write_text(json.dumps({"die": "qc", "tree": "/t", "config": {"kit_rtl": {"mode": "bind", "bind_out": "/b"}}}))
+    a.no_post_bind = True
+    assert PA.cmd_apply(a, run=lambda *x, **k: types.SimpleNamespace(returncode=0, stdout="", stderr=""), apply_fn=lambda *x, **k: called.append(1), commit_fn=lambda C, r: "ok") == 6
+    assert not called
+
+
+def test_postbind_required_problem_and_post_bind_that_does_not_start_is_rc6(tmp_path):
+    assert PA.postbind_required_problem({"config": {"kit_rtl": {"mode": "bind", "bind_out": "/b"}}}) == ""
+    assert "not bind mode" in PA.postbind_required_problem({"config": {"kit_rtl": {"mode": "script"}}})
+    c = tmp_path / "coord"; (c / "autopilot").mkdir(parents=True); (c / "lanes/handoff").mkdir(parents=True)
+    cand = tmp_path / "cand.json"
+    cand.write_text(json.dumps({"die": "qc", "tree": "/t", "config": {"kit_rtl": {"mode": "bind", "bind_out": "/b"}}}))
+    posts = []
+    a = types.SimpleNamespace(coord=str(c), candidate=str(cand), expect_source="/x/old", expect_event="E0", lane="L", pilot_item=None, no_gate=True,
+                              no_precheck=True, skip_out_check=True, skip_bind_check=True, postbind_fn=lambda *x, **k: (None, "ssh failed"))
+    def run(argv, **k):
+        posts.append(argv); return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    rc = PA.cmd_apply(a, run=run, apply_fn=lambda *x, **k: {"applied": "qc", "receipt": str(tmp_path / "r.json"), "event": "E1"}, commit_fn=lambda C, r: "ok")
+    assert rc == 6 and any("POSTBIND-MISSING" in " ".join(map(str, p)) for p in posts)

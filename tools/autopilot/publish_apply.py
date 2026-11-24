@@ -568,12 +568,30 @@ class SelectedBindVerificationError(Exception):
     pass
 
 
+def postbind_required_problem(obj, no_post_bind=False):
+    """-> text when the candidate cannot get a post-apply strict bind + LATCHECK (fail closed), else ''"""
+    if no_post_bind:
+        return "--no-post-bind: the apply would run no post-apply strict bind + LATCHECK"
+    kr = A.marker_kit_rtl(obj.get("marker", obj))
+    if kr.get("mode") != "bind" or not kr.get("bind_out"):
+        return f"the candidate's kit_rtl is not bind mode (mode {kr.get('mode')!r}): no post-apply strict bind + LATCHECK can run"
+    return ""
+
+
 def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
     C = Path(a.coord)
     obj = json.loads(Path(a.candidate).read_text())
     obj["optimistic"] = True
     obj["_path"] = a.candidate
     bound_dest, stale_types = "", []
+    # POSTBIND-FAILCLOSED 11-23 (COORD FABLE-FLOW-REVIEW item 4): HEAD s2 was applied with post_bind null (script-mode kit_rtl, no bind probe): no strict bind, no LATCHECK.
+    # An apply without a post-apply strict bind + LATCHECK is refused (rc 6) unless --allow-no-post-bind names why; a post-bind that cannot start fails the apply AFTER the commit (rc 6, held).
+    allow_nopb = getattr(a, "allow_no_post_bind", "") or ""
+    if not allow_nopb:
+        why_ = postbind_required_problem(obj, getattr(a, "no_post_bind", False))
+        if why_:
+            print(f"APPLY REFUSED: {why_} (pass --allow-no-post-bind 'reason' to apply without it; the wave is then NOT bind-verified)")
+            return 6
     if not getattr(a, "skip_bind_check", False):
         chk = getattr(a, "bind_check_fn", None)
 
@@ -661,6 +679,12 @@ def cmd_apply(a, run=subprocess.run, apply_fn=None, commit_fn=None):
                     f"{len(w)} advisory warning(s){': ' + ' | '.join(w)[:900] if w else ''}. Strict bind + LATCHECK stay blocking: {pb}; on a failure run "
                     f"publish_apply.py bind-fail (holds only the named types).", run=run)
     print(json.dumps(res))
+    nopb_ok = bool(getattr(a, "allow_no_post_bind", "")) or bool(bound_dest)
+    if not res.get("post_bind") and not nopb_ok:
+        post(C, a.lane, f"POSTBIND-MISSING [{a.lane} -> COORD, FLOW-OPS-R3] {res['applied']}: applied but the post-apply strict bind + LATCHECK did NOT start ({pb}); NOT bind-verified. "
+                        f"Run publish_apply.py post-bind --candidate {a.candidate} --lane {a.lane}; treat the wave as not ready until POST-APPLY-BIND is GREEN.", run=run)
+        print("APPLY RESULT: post_bind missing: wave NOT bind-verified (rc 6)")
+        return 6
     return 0
 
 
@@ -817,6 +841,7 @@ def main(argv=None):
     p.add_argument("--skip-out-check", action="store_true", help="apply without comparing the selected bind output on the publish hosts")
     p.add_argument("--no-bind-first", action="store_true", help="do not run the strict bind before the apply when the candidate bind does not match (refuse instead, as before)")
     p.add_argument("--die", default="", help="die name (default: from the candidate)")
+    p.add_argument("--allow-no-post-bind", default="", metavar="REASON", help="apply without a post-apply strict bind + LATCHECK (default: refused, rc 6, POSTBIND-FAILCLOSED 11-23)")
     p.add_argument("--no-post-bind", action="store_true", help="do not start the post-apply strict bind + LATCHECK (hardlink copy of the published tree)")
     pb = sp.add_parser("post-bind", help="post-apply strict bind + LATCHECK in a hardlink copy of the candidate's published tree (apply starts it itself)")
     pb.add_argument("--candidate", required=True)
