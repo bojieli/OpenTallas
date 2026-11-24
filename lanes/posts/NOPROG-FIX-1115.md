@@ -616,3 +616,7 @@
 - 2026-11-23 15:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 15:52 PST: 94 running jobs, PROGRESSING 84, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 48.9 h job 48.9 h: no new meaningful log line for 47.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
   NO-PROGRESS epyc9 kv3_pc_v3 pregrt_ff_hold stage 13.7 h job 15.8 h: no new meaningful log line for 10.5 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.001 |   0.000 | u_bound.u_slg.dl[5][27]$_DFF_P
+- 2026-11-23 16:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 16:52 PST: 97 running jobs, PROGRESSING 88, SLOW 6, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 49.9 h job 49.9 h: no new meaningful log line for 48.3 h; last: "notch" in: asap7_tiled_diagnostic.lydrc:185
+  NO-PROGRESS epyc8 kv3_hg_v1p2 pregrt_ff_hold stage 11.6 h job 13.4 h: no new meaningful log line for 7.0 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_astk_u_strip_u_strip
+  NO-PROGRESS epyc10 kv3_pv_v3 pregrt_ff_hold stage 10.4 h job 13.1 h: no new meaningful log line for 6.3 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd16_i_astk_E_u_stri
