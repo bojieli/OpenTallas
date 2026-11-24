@@ -7,3 +7,4 @@
 - 2026-11-24 10:03 PST DONE [GEN-FRESH-FIX] ot-run oth-ubuntu-3995593-1795542912 on key-cardinal: rc=0 after 474 s, ended 10:03:03, log /srv/opentallas-scratch2/claude/GEN-FRESH-FIX/tmp/gf3.log, cmd: --mem 16 --threads 4 --hosts intel1 --dir /srv/opentallas-scratch2/claude/GEN-FRESH-FIX/wt -- python3 -I tools/fleet/gen_rtl_fresh.py --repo
 - 2026-11-24 10:03 PST DIED [GEN-FRESH-FIX] ot-push-main otpush-key-cardinal-4179055 on key-cardinal: rc=4 after 8 s, ended 10:03:29, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 8 s, no log
 - 2026-11-24 10:03 PST DIED [GEN-FRESH-FIX] ot-push-main otpush-key-cardinal-4189080 on key-cardinal: rc=4 after 4 s, ended 10:03:44, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 4 s, no log
+- 2026-11-24 10:04 PST DONE [GEN-FRESH-FIX] ot-push-main otpush-key-cardinal-5170 on key-cardinal: rc=0 after 21 s, ended 10:04:21, log none, cmd: ot-push-main 
