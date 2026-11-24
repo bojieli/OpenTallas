@@ -39580,3 +39580,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 04:03 PST DIED [TYPE-CONTRACT-SPEC] ot-run oth-ubuntu-3150349-1795521457 on civil-redfish: rc=143 after 377 s, ended 12:03:52, log /srv/opentallas-scratch2/claude/type-contract-spec/cv1/full.otrun.log, cmd: --mem 48 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/type-contract-spec/cv1 -- bash full.sh | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
 - 2026-11-24 04:03 PST ALERT STUCK-STATE qwen_compute: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
+- 2026-11-24 04:03 PST DONE [KV-OWN-HG] ot-push-main otpush-outgoing-giraffe-1963950 on outgoing-giraffe: rc=0 after 31 s, ended 12:03:58, log none, cmd: ot-push-main 
