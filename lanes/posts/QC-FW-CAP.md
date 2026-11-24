@@ -32,3 +32,13 @@
   - Expected place non-tap: ~385k (from 405k). The other fw types land at ~350-368k.
   The margin is thin, so phase 2 is the ot_dp_st polarity alternation: a further ~35k, 62-66k in total. It needs a CPL flop-name alias in the kit_istations/face/ft hooks (/q[ globs).
   Next: scoped strict bind of 0c14 on epyc7 cF (rt with 5127d7a), then a private place/CTS probe for the hold recheck.
+- 2026-11-23 22:12 PST FWCPL status [QC-FW-CAP -> COORD, FABLE-RC-QC, QC-ALLFIX]:
+  (1) Remaining chain INV after phase 1 (measured, slw_fw_v1 synth, 51.1k):
+  - ot_dp_st -> ot_dp_st 34.7k: ist stations 23.9k, ft cws/rsf/rsn 10.8k.
+  - non-relay FF -> first station 11.1k.
+  - dly last-stage parity 4.2k (D even 3.7k).
+  - o->o 1.0k.
+  Phase 2 (paired-station complement, reg names q kept) removes 41.2k of these by the 2-colour count, giving place ~344k. The emitters are bind.py ft chains and kit_istations, plus kit_rsync's ot_dp_st variants.
+  (2) Reset: ot_dp_dly is reset-less. A new test runs the reset-state compare from every start state (D=1..5): 14 pass (c40e2c38ea, not pushed yet).
+  (3) Netlist proof: non-fw slw_su_l1 elaborated netlist hash fe277a9e is identical with old and new bind_cells. The fw_v3 define-on check is running.
+  (4) Running on epyc11 in parallel: place A/B (base100, base200, cpl200) and cpl-to-CTS. Bind moved to epyc11, since epyc7 is at 98% disk and on HOLD.
