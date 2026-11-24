@@ -1,0 +1,117 @@
+{
+ "schema": "QC-SLECTL-RESYN.row.v1",
+ "id": "SLECTL-RP-SEL",
+ "lane": "QC-SLECTL-RESYN",
+ "for": "QC-ALLFIX next compose (base C1c 3b12251bfd6c)",
+ "type": "sle_ctl__cla4f6f12f",
+ "kind": "relay_sites (FIRM seats for existing RTL flops; 0 cycles, no RTL change)",
+ "cause": "V2+lockup 4_1_cts.odb (rcx, WS -93.27): 320 setup ends (worst -93.27, 11 < -42) start at TWO flops, u_r8b_strap_r8pad_u_rp_chd_q_1/r[4][519] (62 ends) and r[3][518] (258 ends): x_fw_i bits 518/519 (u_rp wgrp select) leave the R8 strap-count bank (6:1 strap mux, 5 cells) placed N of u_ctl (x486-670 y593-626), cross ~400 um (9 buffers) to the u_rp wgrp decode (x691-1043 y315-466) and fan out to ist_x_su_c_p1/p2 stations (x889-1055 y312-436). Plan models these stations as launch u_ctl; the real launch is the strap bank.",
+ "fix": "seat the strap-count bank r[0..5] + the f-bank last stage (f.q) of bits 518/519 at the decode (T=(880,400), east of u_ctl), and spread the f-bank r[0..4] at equal hops (~176 um) from the cl_x_fw_i landing east face along y=640 (north of u_ctl) to T. The strap mux and the decode then sit together; the long wire moves into reg->reg hops.",
+ "estimate": "arrival ~281 clk + 53 clk->q + ~150 mux + ~150 fanout tree + ~170 decode = ~800 vs required 1041 -> ~+200 ps on the 320 ends (estimate; verify at probe CTS post-hook)",
+ "keys_match": "keys follow the yosys flop names in the V2 and compose-A netlists (u_r8b_strap_r8pad_u_rp_chd_q_1/r[k][b] keep-reg bank; _f bank r[0..4] + aliased q); istations RELAY-SEP makes / and . equivalent",
+ "risk": "SEAT-MISS if the bank is renamed; ot_dp_dly_cnt W=536 DMAX=6 and ot_dp_dly D=6 checked in compose-A bound.sv line 5047-5048",
+ "delta": {
+  "partition_types": {
+   "sle_ctl__cla4f6f12f": {
+    "relay_sites_add": {
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[0][518]": [
+      242.5,
+      640.0
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[1][518]": [
+      418.0,
+      640.0
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[2][518]": [
+      593.5,
+      640.0
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[3][518]": [
+      769.0,
+      640.0
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[4][518]": [
+      880.0,
+      575.5
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.q[518]": [
+      880.0,
+      400.0
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[0][518]": [
+      882.16,
+      401.08
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[1][518]": [
+      882.16,
+      402.16
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[2][518]": [
+      882.16,
+      403.24
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[3][518]": [
+      882.16,
+      404.32
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[4][518]": [
+      882.16,
+      405.4
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[5][518]": [
+      882.16,
+      406.48
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[0][519]": [
+      244.66,
+      642.16
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[1][519]": [
+      420.16,
+      642.16
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[2][519]": [
+      595.66,
+      642.16
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[3][519]": [
+      771.16,
+      642.16
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.r[4][519]": [
+      882.16,
+      575.5
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1_f.q[519]": [
+      882.16,
+      400.0
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[0][519]": [
+      884.32,
+      401.08
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[1][519]": [
+      884.32,
+      402.16
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[2][519]": [
+      884.32,
+      403.24
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[3][519]": [
+      884.32,
+      404.32
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[4][519]": [
+      884.32,
+      405.4
+     ],
+     "u_r8b_strap_r8pad_u_rp_chd_q_1/r[5][519]": [
+      884.32,
+      406.48
+     ]
+    }
+   }
+  }
+ }
+}
