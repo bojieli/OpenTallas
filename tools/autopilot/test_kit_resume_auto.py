@@ -85,3 +85,34 @@ def test_run_kit_calls_it_first_and_honours_the_opt_out():
     i = t.index("AUTO-RESUME block")
     assert i < t.index("RESYNTH-GUARD block") and "OT_RESUME:-1}\" != 0" in t[i:i + 900] and ".no_auto_resume" in t[i:i + 900] and 'kit_resume.py" auto "$K" "$GOAL"' in t[i:i + 900]
     assert 'shutil.copyfile(Path(__file__).resolve().parents[1] / "autopilot" / "kit_resume.py", kd / "kit_resume.py")' in (Path(gen_phys.__file__)).read_text()
+
+
+def test_hooks_that_name_config_mk_stay_at_their_own_step(tmp_path):
+    """FLOW-OPS-R3 11-24 (QC STB dff1e9a2ad86): a CTS hook that mentions config.mk made config.mk a synth producer, and
+    config.mk's text then made every CTS/GRT hook synth: six hooks rewritten after place forced a full rerun"""
+    k = kit(tmp_path, "place")
+    put(k / "cts_post.tcl", T0 + 900, "# cts hook\nset f [open $::env(WORK)/config.mk]\nsource $::env(WORK)/tap_balance.tcl\n")
+    put(k / "tap_balance.tcl", T0 + 900, "proc tb {} {}\n")
+    put(k / "grt_pre.tcl", T0 + 900, "source hold_guard_grt.tcl\n"); put(k / "hold_guard_grt.tcl", T0 + 900, "proc g {} {}\n")
+    r = KR.auto_plan(str(k), "route")
+    assert r and r["start"] == "cts" and r["reused_steps"] == ["synth", "floorplan", "place"]
+    os.utime(k / "config.mk", (T0 + 900, T0 + 900))                # config.mk itself is still a synth input
+    assert KR.auto_plan(str(k), "route") is None
+
+
+def test_hdl_identifiers_are_not_reads_but_includes_are(tmp_path):
+    k = kit(tmp_path, "place")
+    with open(k / "config.mk", "a") as f:
+        f.write("export VERILOG_FILES = /work/rtl/top.sv\n")
+    put(k / "rtl" / "top.sv", T0, "`include \"defs.svh\"\n// clock_taps drive this\nwire tap_reset_split;\nmodule top; endmodule\n")
+    put(k / "rtl" / "defs.svh", T0, "`define X 1\n")
+    put(k / "pre_cts.tcl", T0 + 900, "source clock_taps.tcl\n"); put(k / "clock_taps.tcl", T0 + 900, "proc t {} {}\n")
+    put(k / "tap_reset_split.tcl", T0 + 900, "proc s {} {}\n")
+    with open(k / "config.mk", "a") as f:
+        f.write("export PRE_CTS_TCL = /work/pre_cts.tcl\n")
+    os.utime(k / "config.mk", (T0, T0))
+    put(k / "cts_post.tcl", T0, "source tap_reset_split.tcl\n")
+    r = KR.auto_plan(str(k), "route")
+    assert r and r["start"] == "cts", r
+    os.utime(k / "rtl" / "defs.svh", (T0 + 900, T0 + 900))         # the included header is a synth input
+    assert KR.auto_plan(str(k), "route") is None

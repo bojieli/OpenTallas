@@ -287,6 +287,11 @@ def classify(texts, files, config):
         # They are not reads. Keep executable lines, inline comments and unknown files conservative.
         if src.endswith(".tcl"):
             txt = "\n".join(line for line in txt.splitlines() if not line.lstrip().startswith("#"))
+        # FLOW-OPS-R3 11-24 (QC STB dff1e9a2ad86): HDL text reads other files only through string literals
+        # (`include "x.svh", $readmemh("x.hex")).  Identifiers and comments that happen to equal a hook stem
+        # (clock_taps, tap_reset_split) are not reads, and classing those hooks synth forced full reruns.
+        elif src.endswith(HDL_EXT):
+            txt = "\n".join(HDL_STR_RE.findall(txt))
         if txt and big is not None:
             named[src] = set().union(*[by_name[n] for n in set(big.findall(txt))]) if txt else set()
     gate_named = set()
@@ -317,6 +322,10 @@ def classify(texts, files, config):
     for rel in files:
         stage.setdefault(rel, "synth")
     return stage
+
+
+HDL_EXT = (".v", ".sv", ".svh", ".vh")
+HDL_STR_RE = re.compile(r'"([^"\n]*)"')
 
 
 def is_gate_root(rel):
@@ -585,7 +594,14 @@ def auto_plan(K, goal="route", now=None):
         config = parse_config(open(os.path.join(K, "config.mk")).read())
     except OSError:
         return None
+    # FLOW-OPS-R3 11-24 (QC STB dff1e9a2ad86, unit 3561932): config.mk is a root (parse_config), never a producer.
+    # Its text names every hook, and once a hook names "config.mk" the propagation made config.mk synth and then every
+    # CTS/GRT hook synth, so a hook edited after place forced a full rerun.  manifest() already leaves it out.
+    # The file itself stays synth: an in-place restart cannot tell which variable changed.
+    texts.pop("config.mk", None)
     stage = classify(texts, files, config)
+    if "config.mk" in stage:
+        stage["config.mk"] = "synth"
     mt = {}
     for rel in files:
         try:
