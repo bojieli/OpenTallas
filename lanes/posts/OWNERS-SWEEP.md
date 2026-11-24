@@ -452,3 +452,7 @@
   DEAD-OWNER S81 161 (S81-OPEN-DEMAND 99 last 22:35, FAM-S81-COL-H9R0-R4 60 last 22:53), KV 35 (OPUS-FIX-KV-PV-R7 29 last 20:58, KV-D29 4), QC 1.
   STALE S81 35, QC 2. No FAILED-NO-RELAUNCH, HEAD clean.
   Silent before the limit, so not a limit casualty.
+- 2026-11-24 01:51 PST OWNERS-SWEEP 01:5x (446 rows). UNOWNED S81 9 (dsdv_slice_c3x_C t1, lepe_nh_mus_C t1, lepw_mus_C t1 ...). No FAILED-NO-RELAUNCH, HEAD clean.
+  DEAD-OWNER (no post since 23:50): S81 62 (S81-OPEN-DEMAND 44 last 22:35, OPUS-FIX-S81-SVC-R9 16 last 23:14), KV 32 (OPUS-FIX-KV-PV-R7 29 last 20:58), QC 1.
+  Silent since before the 00:44 limit, none resumed. STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue).
+  New lanes S81-VPW-CONE, TAPKEY-SITE, KW-REPICK-PIN, HEAD-WEST posted 01:37-01:47 but own 0 unsigned rows; QC-DEPTH5 owns 1.
