@@ -106,7 +106,7 @@ def test_error_records_and_report(tmp_path, capsys):
 def test_strict_bind_collects_by_default():
     src = (bind.Path(bind.__file__)).read_text()
     assert 'B.collect_gaps = bool(getattr(a, "all_gaps", False) or getattr(a, "strict", False))' in src
-    assert 'B.clock_landings.collect = B.collect_gaps' in src
+    assert 'collect=B.collect_gaps)' in src
 
 
 def test_stage_number_survives_to_the_record():
@@ -257,3 +257,27 @@ def test_type_level_config_errors_all_listed():
     with pytest.raises(LandingError) as e1:
         landings(p, t, False).type_rtl('A', A_BODY)
     assert not isinstance(e1.value, LandingErrors) and 'must be a boolean' in str(e1.value)
+
+
+# ---------------------------------------------------------------- Landings constructor: every table row error
+def test_constructor_lists_every_bad_table_row():
+    import copy
+    p, t = strap_vehicle()
+    t = copy.deepcopy(t)
+    rows = t['ports']
+    assert len(rows) >= 2
+    rows.append(dict(rows[0], port='ghost_1'))
+    rows.append(dict(rows[0], port='ghost_2'))
+    with pytest.raises(LandingError) as e1:
+        Landings(p, t)
+    assert not isinstance(e1.value, LandingErrors)
+    with pytest.raises(LandingErrors) as ei:
+        Landings(p, t, collect=True)
+    msgs = [e['error'] for e in ei.value.errors]
+    assert sum('ghost_1' in m for m in msgs) >= 1 and sum('ghost_2' in m for m in msgs) >= 1
+
+
+def test_constructor_collect_clean_table_is_identical():
+    p, t = strap_vehicle()
+    a, b = Landings(p, t), Landings(p, t, collect=True)
+    assert a.type_rtl('A', A_BODY) == b.type_rtl('A', A_BODY) and b._type_errs is None

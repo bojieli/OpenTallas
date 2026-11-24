@@ -1169,7 +1169,27 @@ def _cam(obj, tn):
 
 
 class Landings:
-    def __init__(self, plan, table, *, require_geometry=True, ca_variants=False, plan_path=None):
+    def __init__(self, plan, table, *, require_geometry=True, ca_variants=False, plan_path=None, collect=False):
+        """BIND-ALL-ERRORS 11-24: _init; collect=True (strict / --all-gaps bind) lists every per-port / per-partition /
+        per-type table error (one LandingErrors) instead of the first.  collect False: exactly _init."""
+        self.collect = bool(collect)
+        if not self.collect:
+            return self._init(plan, table, require_geometry=require_geometry, ca_variants=ca_variants, plan_path=plan_path)
+        self._type_errs = errs = []
+        try:
+            self._init(plan, table, require_geometry=require_geometry, ca_variants=ca_variants, plan_path=plan_path)
+        except Exception as exc:
+            if not errs and not isinstance(exc, ValueError):
+                raise
+            errs.extend(exc.errors if isinstance(exc, LandingErrors) else [dict(
+                type=None, bus=None, side=None, stage=None,
+                error=str(exc) if isinstance(exc, ValueError) else f"after {len(errs)} collected error(s), {type(exc).__name__}: {exc}")])
+        finally:
+            self._type_errs = None
+        if errs:
+            raise LandingErrors(errs)
+
+    def _init(self, plan, table, *, require_geometry=True, ca_variants=False, plan_path=None):
         """ca_variants (MESO-STRAP-1, LEC only): count-aligned PARAMETER form without the TYPE_SPLIT stop, so
         type_rtl(..., inst=<partition>) can emit one copy's parameter wrapper (the LEC reference of a strap master)."""
         self.plan = plan
@@ -1214,7 +1234,8 @@ class Landings:
         for pn, p in self.parts.items():
             if declared is not None:
                 if pn not in declared:
-                    raise LandingError(f"clock landing {pn}: not in the table part_region declaration")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {pn}: not in the table part_region declaration"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 self.region[pn] = declared[pn]
                 continue
             w, h = self.types[p["type"]]["outline_um"]
@@ -1223,7 +1244,8 @@ class Landings:
                           if r["box_um"][0] <= x < r["box_um"][2]
                           and r["box_um"][1] <= y < r["box_um"][3]]
             if len(candidates) != 1:
-                raise LandingError(f"clock landing {pn}: expected one whole-partition region")
+                self._collect_err(None, None, None, None, LandingError(f"clock landing {pn}: expected one whole-partition region"))   # BIND-ALL-ERRORS: table, collect
+                continue
             self.region[pn] = candidates[0]
         self.ins = defaultdict(dict)
         self.outs = defaultdict(set)
@@ -1255,49 +1277,63 @@ class Landings:
         for r in table["ports"]:
             pid = r["port"]
             if pid in seen:
-                raise LandingError(f"duplicate clock landing port {pid}")
+                self._collect_err(None, None, None, None, LandingError(f"duplicate clock landing port {pid}"))   # BIND-ALL-ERRORS: table, collect
+                continue
             seen.add(pid)
             if pid not in ports:
-                raise LandingError(f"clock landing has no physical plan port {pid}")
+                self._collect_err(None, None, None, None, LandingError(f"clock landing has no physical plan port {pid}"))   # BIND-ALL-ERRORS: table, collect
+                continue
             p = ports[pid]
             if p.get("kind", "data") not in ("data", "ctl"):
-                raise LandingError(f"clock landing {pid}: reset/clock needs its own contract")
+                self._collect_err(None, None, None, None, LandingError(f"clock landing {pid}: reset/clock needs its own contract"))   # BIND-ALL-ERRORS: table, collect
+                continue
             sp, sb = p["src"]["part"], p["src"]["bus"]
             dp, db = p["dst"]["part"], p["dst"]["bus"]
             if (sp, dp, int(p["width"])) != (r["src"], r["dst"], int(r["width"])):
-                raise LandingError(f"stale clock landing endpoints/width on {pid}")
+                self._collect_err(None, None, None, None, LandingError(f"stale clock landing endpoints/width on {pid}"))   # BIND-ALL-ERRORS: table, collect
+                continue
             if r["src_region"] == r["dst_region"]:
-                raise LandingError(f"clock landing {pid} stays in one region")
+                self._collect_err(None, None, None, None, LandingError(f"clock landing {pid} stays in one region"))   # BIND-ALL-ERRORS: table, collect
+                continue
             for part, region in ((sp, r["src_region"]), (dp, r["dst_region"])):
                 if part not in self.parts:
-                    raise LandingError(f"clock landing {pid}: non-partition endpoint {part}")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {pid}: non-partition endpoint {part}"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 if part in self.region and self.region[part] != region:
-                    raise LandingError(f"clock landing region conflict for {part}")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing region conflict for {part}"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 self.region[part] = region
             if db in self.ins[dp]:
-                raise LandingError(f"two clock landings drive {dp}.{db}")
+                self._collect_err(None, None, None, None, LandingError(f"two clock landings drive {dp}.{db}"))   # BIND-ALL-ERRORS: table, collect
+                continue
             # The ring form is a per-row choice (MESO-COUNT-1 may swap in a count-aligned variant): a sidecar row may name
             # ring_module + ring_params (+ ring_ports for extra receiver pins); the default is today's ring.
             rmod = r.get("ring_module", "ot_dp_clk_landing")
             if not re.fullmatch(r"ot_dp_clk_landing\w*", rmod):
-                raise LandingError(f"clock landing {pid}: ring_module {rmod} is not an ot_dp_clk_landing variant")
+                self._collect_err(None, None, None, None, LandingError(f"clock landing {pid}: ring_module {rmod} is not an ot_dp_clk_landing variant"))   # BIND-ALL-ERRORS: table, collect
+                continue
             rpar, rports = dict(r.get("ring_params", {})), dict(r.get("ring_ports", {}))
             for k, v in list(rpar.items()) + list(rports.items()):
                 if not re.fullmatch(r"[A-Za-z_]\w*", str(k)) or not re.fullmatch(r"[\w'\[\]:]+", str(v)):
-                    raise LandingError(f"clock landing {pid}: bad ring_params/ring_ports entry {k}={v}")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {pid}: bad ring_params/ring_ports entry {k}={v}"))   # BIND-ALL-ERRORS: table, collect
+                    continue
             if {"W", "fclk", "clk", "rst_n", "d", "q", "ready", "fault"} & (set(rpar) | set(rports)):
-                raise LandingError(f"clock landing {pid}: ring_params/ring_ports may not override the bound ring pins or W")
+                self._collect_err(None, None, None, None, LandingError(f"clock landing {pid}: ring_params/ring_ports may not override the bound ring pins or W"))   # BIND-ALL-ERRORS: table, collect
+                continue
             rca = ca_port(self.ca, pid)     # CA-MIXED-1: per-landing form (whole network without count_aligned.mixed)
             capture = legacy_input_freg(plan, self.parts[dp]["type"], db)
             if capture and (rca or rmod != "ot_dp_clk_landing"):
-                raise LandingError(f"{pid}: input FREG requires the legacy ring, not a count-aligned variant")
+                self._collect_err(None, None, None, None, LandingError(f"{pid}: input FREG requires the legacy ring, not a count-aligned variant"))   # BIND-ALL-ERRORS: table, collect
+                continue
             if rmod == "ot_dp_clk_landing" and "FREG" in rpar and int(rpar["FREG"]) != int(capture):
-                raise LandingError(f"{pid}: legacy FREG parameter must match its explicit plan selection")
+                self._collect_err(None, None, None, None, LandingError(f"{pid}: legacy FREG parameter must match its explicit plan selection"))   # BIND-ALL-ERRORS: table, collect
+                continue
             if capture:
                 rpar["FREG"] = 1
             qreg = output_qreg(plan, self.parts[dp]["type"], db)   # CLAND-QREG-1: +1 data cycle on q
             if "QREG" in rpar and int(rpar["QREG"]) != int(qreg):
-                raise LandingError(f"{pid}: ring QREG parameter must match its explicit plan selection")
+                self._collect_err(None, None, None, None, LandingError(f"{pid}: ring QREG parameter must match its explicit plan selection"))   # BIND-ALL-ERRORS: table, collect
+                continue
             if qreg and not rca:
                 rpar["QREG"] = 1
             cycles = (ring_cycles(self.ca, pid) if self.ca and not rca else 3) + int(capture) + int(qreg)
@@ -1305,7 +1341,8 @@ class Landings:
             # landing is priced by its sidecar sched_lat below (QC N46R fall-aware re-plan: QREG port at sched_lat 3 was
             # refused as must be 4 although the CA branch then sets added_cycles = sched_lat).
             if not rca and (capture or qreg) and int(r.get("added_cycles", cycles)) != cycles:
-                raise LandingError(f"{pid}: legacy landing added_cycles must be {cycles}")
+                self._collect_err(None, None, None, None, LandingError(f"{pid}: legacy landing added_cycles must be {cycles}"))   # BIND-ALL-ERRORS: table, collect
+                continue
             row = dict(r, src_bus=sb, dst_bus=db, added_cycles=cycles,
                        module=rmod, ring_params=rpar, ring_ports=rports,
                        ring_depth=int(rpar.get("DEPTH", 4)), ring_offset=int(rpar.get("K", 2)),
@@ -1314,27 +1351,32 @@ class Landings:
                 row["landing_form"] = "count_aligned" if rca else "ring"
             if rca:
                 if "ring_module" in r or "ring_params" in r or "ring_ports" in r:
-                    raise LandingError(f"clock landing {pid}: per-row ring_module/params/ports and the table "
-                                       "count_aligned form are exclusive")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {pid}: per-row ring_module/params/ports and the table "
+                                       "count_aligned form are exclusive"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 c = self.ca["ports"].get(pid)
                 if c is None:
-                    raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
+                    self._collect_err(None, None, None, None, LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 if int(c["depth"]) not in (4, 8, 16):
-                    raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16")
+                    self._collect_err(None, None, None, None, LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 import count_align_bind as CAB
                 reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"], strap=self.strap)
                 writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
                 check_ca_freg_declared(plan, self.parts[dp]["type"], db, c, pid)   # FREG-DECL-1
                 if bool(qreg) != bool(c.get("output_qreg")):
-                    raise LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
-                                       "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)")
+                    self._collect_err(None, None, None, None, LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
+                                       "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 # HEAD-CROSSING-1119: only a QREG row's price is checked (it replaces the legacy 3+QREG check above).
                 # Other count-aligned rows keep the earlier rule: sched_lat is the price and overrides a stale sidecar
                 # ports[].added_cycles (s81_head NF15: 81 of 427 CA rows differ; the unguarded check failed every HEAD
                 # kit_rtl bootstrap GEN from 11-19 on chE0_o0__0).
                 if qreg and "added_cycles" in r and int(r["added_cycles"]) != int(c["sched_lat"]):
-                    raise LandingError(f"count-aligned landing {pid}: row added_cycles {r['added_cycles']} != bind sidecar "
-                                       f"sched_lat {c['sched_lat']}")
+                    self._collect_err(None, None, None, None, LandingError(f"count-aligned landing {pid}: row added_cycles {r['added_cycles']} != bind sidecar "
+                                       f"sched_lat {c['sched_lat']}"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
                            ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth - int(qreg),
@@ -1410,9 +1452,11 @@ class Landings:
                     cs = {x["name"]: int(x["width"]) for x in self.types[tn].get("count_straps", [])}
                     for sp, w in cat["straps"].items():
                         if cs.get(sp) != int(w):
-                            raise LandingError(f"clock landing {tn}: declare count strap {sp}[{w}] in types[].count_straps")
+                            self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}: declare count strap {sp}[{w}] in types[].count_straps"))   # BIND-ALL-ERRORS: table, collect
+                            continue
                         if sp in declared:
-                            raise LandingError(f"clock landing {tn}.{sp}: a count strap is not a plan bus (types[].count_straps)")
+                            self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}.{sp}: a count strap is not a plan bus (types[].count_straps)"))   # BIND-ALL-ERRORS: table, collect
+                            continue
             for b in mask[0]:
                 required.update({f"fclk_in_{b}": "in"})
                 if not self.collector:
@@ -1422,7 +1466,8 @@ class Landings:
                 # pin is named by its DATA bus, so all instances of a type expose identical ports.
                 info=self.collector["types"][tn]
                 if sorted(info["mask"]["inputs"])!=sorted(mask[0]) or sorted(info["mask"]["outputs"])!=sorted(mask[1]):
-                    raise LandingError(f"clock landing {tn}: dataflow monitor mask differs from the landed buses")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}: dataflow monitor mask differs from the landed buses"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 for b in mask[1]:
                     required.update({f"cland_up_ready_{b}":"out",f"cland_up_fault_{b}":"out"})
                 for b in mask[0]:
@@ -1435,9 +1480,11 @@ class Landings:
                     for b in io:required.update({f"cland_up_ready_{b}":"out",f"cland_up_fault_{b}":"out"})
                     tree_outs|=set(io)
                 if (tb is None)!=bool(info["mask"].get("observer")) or (tb is not None and tb not in tree_outs):
-                    raise LandingError(f"clock landing {tn}: dataflow tree bus {tb} is not one of its landed outputs")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}: dataflow tree bus {tb} is not one of its landed outputs"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 if not mask[0] and not self.region_monitor:
-                    raise LandingError(f"clock landing {tn}: dataflow monitor needs a landed input (ring reset)")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}: dataflow monitor needs a landed input (ring reset)"))   # BIND-ALL-ERRORS: table, collect
+                    continue
             elif self.collector:
                 info=self.collector["types"][tn]
                 if info["mask"]["active"]:
@@ -1452,16 +1499,20 @@ class Landings:
                         if c["seam"]:required[f"fclk_in_cland_dn_{c['index']}"]="in"
                         if c["index"] in use_ports:
                             if not c["seam"]:
-                                raise LandingError(f"{tn}: use strap on non-seam monitor child {c['index']}")
+                                self._collect_err(None, None, None, None, LandingError(f"{tn}: use strap on non-seam monitor child {c['index']}"))   # BIND-ALL-ERRORS: table, collect
+                                continue
                             required[use_ports[c["index"]]] = "in"
                     if use_ports.keys() - {c["index"] for c in info["children"]}:
-                        raise LandingError(f"{tn}: use strap without a collector child")
+                        self._collect_err(None, None, None, None, LandingError(f"{tn}: use strap without a collector child"))   # BIND-ALL-ERRORS: table, collect
+                        continue
             for name, direction in required.items():
                 b = declared.get(name)
                 if not b or b.get("dir") != direction or int(b.get("width", 0)) != 1:
-                    raise LandingError(f"clock landing {tn}: declare placed scalar {direction} pin {name}")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}: declare placed scalar {direction} pin {name}"))   # BIND-ALL-ERRORS: table, collect
+                    continue
                 if not all(k in b for k in ("face", "window_um", "layers")):
-                    raise LandingError(f"clock landing {tn}.{name}: missing physical pin geometry")
+                    self._collect_err(None, None, None, None, LandingError(f"clock landing {tn}.{name}: missing physical pin geometry"))   # BIND-ALL-ERRORS: table, collect
+                    continue
 
     def _dormant_fill(self):
         """UNIFY-TOOLS-R3 DORMANT: per copy, the landed buses of its type it leaves SPARE (partitions[].spare_ends) in
