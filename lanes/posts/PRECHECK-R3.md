@@ -1,0 +1,1 @@
+- 2026-11-24 07:50 PST TAKING PRECHECK-R3 (fresh, post-limit): finish report-only PRE checks ADV-UNSET-DEFINE (RTL ifdef switches on main that sit unset in bound plans/kits, e.g. OT_TP8S_RDPIPE/XEPRE) and ADV-TREE-DRIFT (bind-tree RTL lagging main); land on main, run on c9/C1j/A5t5/W6, post to die integrators. cc COORD, PRECHECK-LEDGER-R3
