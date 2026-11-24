@@ -216,3 +216,6 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - ROUTING (COORD one-job-per-lane, 20:5x): hg family incl. rc127 kit GRT probe resume -> KV-HG-CAP (supersedes "KV-ALLFIX hg row" above; kit kw43-wave-1109/.../KV-D29/kv3_hg_v1p5_1123174917, spec ~/coord/autopilot/private_specs/KV-D29/qwen_kvsys_kv3_hg_v1p5_1123174930, fork tree kv-d29/trees/qwen_kvsys_k3g_hgplace_1123 on epyc8);
   hgi_v1 u_rrl holds -> KV-RRL-EXPORT; kv3_hroot + pc_v1 clones -> KV-FAILED-3 / KV-ALLFIX; R8 type-split debt -> KV-ALLFIX. Lifting a hold: kit_wave.py struct-lift on the item (owner was KV-D29).
 - STOPPED 11-23 ~20:55 PST. KV-D29 job (D29 apply) complete; no live KV-D29 units (apply driver, rc127 place both ended).
+- 21:3x POSTBIND-9B19: strict bind + LATCHECK of D29 tree with rt 9b19260c1cde tools PASS (71/71, tied 0, LAT 2752/2752; post 4f81fd8); bind_out -> d29/apply/selected_candidate_bind_1123212910 (942bda3); FLOW-OPS KV-RT-CHECK OK 9b19. kv3_* blanket hold (89c19b8) lifted 9ee0842 (6 launchable).
+- Extra holds set tonight: kv3_hg_v1/v1p2/v1p3/v1p4 (owner KV-HG-CAP) + kv3_pc__cl254f2e73/cl5a95b461 (owner KV-ALLFIX, release_on removed) in 76ee4c2; kv3_pv_v3 (owner KV-PREGRT-STALL, pregrt rr-pass stall) in eb9e50a. A3f: none launched at lift; KV-ALLFIX skips wave-started types.
+- KV-D29 STOPPED (final).
