@@ -88,3 +88,4 @@
   (2) C5 is superseded. The amendment is BL1 = B1 3255 + ONE leaf delta (4662b -> C4 + IST-LEAFDN-VP, leaf types, clock.core_pin_lead_ps kept) + reprice + FIXCYC + the binding tail + PRE/G0. Running E10 s81-leaf-j9/bl1.sh. The same delta on B2 r2 composed 0 conflicts with 0 FIXCYC lanes; PRE ~16:45.
   CRR_PRE2 RTL overlay + die-wide define: REASONED, not in the amendment, because neither a bind nor LEC can run before 18:00. The 3 lpad->crr items go REASONED with it.
   (3) LEAF-VSW-LAG-1 in B1: CONFIRMED, no veto. Condition stands: the probe reads vsw out-side hold.
+- 2026-11-23 16:13 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-1315281-1795478133 on civil-redfish: rc=0 after 1107 s, ended 00:13:57, log /srv/opentallas-scratch2/claude/s81-leaf-j9/bl.otrun.log, cmd: --hosts epyc10 --crit --no-spill --mem 48 --threads 3 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /srv/opentallas-sc
