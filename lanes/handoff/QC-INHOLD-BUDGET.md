@@ -21,3 +21,7 @@ Row A v1 (out_hold_check_ps 0/9.4) WITHDRAWN: FF vclk is 250 in kits (not 202.5)
 Final plan v2_abc.json a471e0ccfff2 (row/ROWS_QC-INHOLD-BUDGET.py v2 + HB4 + CBF). PRE row/pre_v2.sh; full strict bind bindG (rt 70b6, no --types: probe-only binds lack bound_top so kit_rtl fails; scoped binds also hit LATCH_EXCEPT unless cb types included).
 Then: kit_wave.py private-spec qwen_compute <type> --plan bindG/mirror/qwen_compute/plan_of_record/v2_abc.json --tree QC-ALLFIX/cC/tree --bind-out bindG/bind --host epyc7 --goal cts --rt 70b6f0430ea9; run-item (rt/8a8a.. printed). Types slw_stm_v2__cl1ca9c415, cbf_q11.
 Budget table post 52ca44df; class row for C1i pending C1i path from QC-ALLFIX.
+## 04:0x
+v2 full strict bind PASS (bindG). Probes: stm2 spec qwen_compute_slw_stm_v2__cl1ca9c415_1124120225 running (log QC-INHOLD-BUDGET/log/*.runitem.log, goal cts); cbf_q11 blocked: rt 70b6 bind_cells lacks ot_dp_rrelay_delay (fixed in rt c720c36e4904) -> probe row C on C1h/C1i lineage.
+Answered COORD repair question (8feed655): GRT FF repair false_paths all inputs (OT_GRT_NONPORT_HOLD=1 default, SKIP_CTS_REPAIR_TIMING=1); opt-in OT_GRT_PORT_HOLD_INCLUDE+PORTS; SDC -85 makes 122.5 of the 139.
+Pending: stm2 CTS read (port hold at +37.5 + HB4, internal hold, setup); C1i path from QC-ALLFIX -> re-apply rows A v2/B/C by script.
