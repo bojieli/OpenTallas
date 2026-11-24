@@ -25,3 +25,14 @@
   - Bind: only the 2 A3g-base EMIT errors (kv3_hroot, kv3_io_ft_v1), so LATCHECK and BPC had no bound top.
 - Probe: private-spec refused with KIT_TOPOLOGY_BIND_STALE because gate_r2/bind has no native_topology.json (the bind errored). The fix is scoped gate r2p (HG_TYPES=kv3_hg_v1p5, unit kv-hg-cap-gate-r2p on epyc11). After it, run private-spec with --plan tree/.../plan_hgcap_r2p.json and --bind-out gate_r2p/bind.
 - rc127 GRT resume (epyc8 kv-hg-cap-rc127-grt): still in 4_1_cts at 22:30.
+
+## 11-23 22:52 PST: v1p5 probe path
+- My r2 probe on epyc11 (spec qwen_kvsys_kv3_hg_v1p5_1124064406) FAILED at kit_rtl because there is no <die>_bound_top.sv.
+  - The full r2 bind stops on the 2 A3g-base EMIT errors.
+  - The scoped bind (gate_r2p, 0 errors) emits no top by design.
+- The fix is to probe v1p5 on KV-ALLFIX's A4d (rt a64d7d7813de). A4d carries the RSTNAME remap, which fixes both EMIT errors, and its v1p5 block is identical to r2's.
+  - Plan: epyc10 grow/tree/.../plan_allfix_A4d.json; bind: epyc10 grow/gate_A4d/bind.
+  - KV-ALLFIX expects A4d strict-clean ~00:45 and will message me then.
+- Then: ot-tree-fork grow/tree (with the FWDCLK kvfwd_views_1123 and astk_views) into epyc10 /srv/opentallas-scratch2/claude/KV-HG-CAP/treeA4d. Run private-spec ON epyc10, --host epyc10 --goal grt --rt a64d7d7813de, then run-item.
+  - Deliver the density render (no bin >0.7 outside halos) and the instance count vs 400k to FABLE-RC-KV.
+- rc127 GRT resume on epyc8 (kv-hg-cap-rc127-grt): CTS post-hook setup -563 / hold -558. GRT is running; read the final 5_1_grt.odb for overflow.
