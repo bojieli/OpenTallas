@@ -20,3 +20,4 @@
   xs GFLOCAL: lockstep PASS 100000 cyc mism 0; mut1 FAIL 57694, mut2 FAIL 87149. Covered, no cycle change.
   LEP RIP3: gate PASS base and RIP3, mutants FAIL; but STATS identical: this bench top does not carry the RIP 3 profile, so the +3 is NOT measured (only the lepe_mu_LP t2 proof9/10 profile has it). Owner LEPFLF: use the lepe_mu_LP t2 bench. CRP2/WREP5/ROS3 not run.
   Still open: idx (SVC) and bk (BKSEL): no answer yet; I take both at 01:30. Per-type c8 request not yet done (c8 bind receipt absent); die side stays from plan 25_strip_die_relays.json.
+- 2026-11-24 02:14 PST DONE [S81-OWN-MISC] ot-run oth-ubuntu-1447630-1795514719 on ubuntu: rc=0 after 539 s, ended 02:14:15, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/bk.otrun.log, cmd: --hosts epyc10 --mem 30 --threads 16 --dir /srv/opentallas-scratch2/claude/s81-own-misc -- bash /srv/opentallas-scratch2/claude/s81-own-misc
