@@ -1,0 +1,1 @@
+- 2026-11-23 21:15 PST TAKING KV-RCOLL-PHASE from COORD (cc KV-ALLFIX, FABLE-RC-KV): audit RCOLL 215 reset re-attachments vs phase+predecessor (kv3_hroot phase / kv3_io_ft_v1 pred errors in A3f strict). Plan: (1) locate RCOLL row+recipe (2) census all 215 vs reset contract (3) row fix + PRE + scoped strict on A3g if mismatches. Mismatch count by 22:00 PST.
