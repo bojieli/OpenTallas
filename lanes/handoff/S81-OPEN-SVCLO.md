@@ -10,3 +10,8 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-open-svclo (tool/svc_lo_start_i
 - scoped strict bind on p0: E9 oth-ubuntu-1427451 (scope_p0_*/)
 ## Next
 - measure tail output (tap_offset_cover fill may re-touch taps); scoped strict on tail plan; post ROW-REBASED + recipe step to INT. Frame v3 (f3/f4a) changes 0 svc_lo types (diff on E10).
+## State 21:45 PST
+- Posted the invocation (21:0x) + ROW-REBASED PRE (21:1x) + scoped strict status (21:4x) to S81-ALLFIX-INT.
+- Private tail on p0: p4_fill a39888d9ebe1; TAPOFF census 395/395; PRE FAIL 148 (ANCHORDRY 19, DEADIN 1, GEOM-STATION-IN-CORE 128) = INT c7a tail 90698b2ec067 (148), 0 svc_lo findings. The lo types after the tail: START/edge findings 0, raw over 0.
+- Scoped strict (scope_tail_a39888d9ebe1): refused only by the compose-level DEADIN (stale defines vs the B1 elab). Asked INT to put the 8 lo types in SCOPE_TYPES of the c8 gate (fresh elab).
+- Open: read the c8 gate scope_bind.log for the lo types when INT runs it. If it refuses on svc_lo, fix it here.
