@@ -179,3 +179,10 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - PRE PASS on main fa848a tools (chain_rscap_main, epyc7 tmp); ROW-REBASED posted. Rest of the chain is running.
 - Probe: intel2 unit head-r18-rscap-kit-wait waits for rt/current with 7f184148+ and escape support, then launches the kit to GRT (east-rscap/).
 - Old waiter head-r18-rscap-wait2 stopped (superseded).
+## 2026-11-23 19:3x PST
+- FLOW-OPS made LANDREMAP fail-closed (rt c66090747375). Every HEAD chain must now pass the parent plan in its tree as --remap-base; no loose base files. The NOREMAP chase is closed.
+- rscap probe kit hd_lep0N_1123184332 runs on rt c660; its waiter is head-r18-rscap-waiter3 (waiter_rscap2/).
+- Waiters: head-r18-kit-waiter5 (waiter3/) covers the 2 E + 2 W kits. It reads only at the GRT ODB or a final FAIL; posts the West winner; auto-launches nst4 if form (b) wins.
+  - waiter2/ and waiter/ reads are invalid (a PASS checkpoint and an empty script).
+- epin kit hd_lep0N_1123175731: KW_PLACE_LOST, but place ot-job pid 374245 still runs. head-r18-epin-resume (east-epin-escape/resume.sh) resumes it to GRT after the job ends and starts waiter_epin.
+- Escape 0.30 verified in the generated geometry (0.632 um M7 tap column).
