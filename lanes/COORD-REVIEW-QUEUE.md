@@ -42120,3 +42120,4 @@ FAILED [AUTOPILOT d890788dfaaa] 2026-11-24 10:46:54 PST AUTOPILOT -> KIT-WAVE-12
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 18.8 h job 18.8 h: no new meaningful log line for 7.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
   NO-PROGRESS epyc2 cbn_q01__cldd6ea846 tt_setup_repair_grt stage 9.4 h job 16.7 h: no new meaningful log line for 8.3 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net285887. The following pin
   NO-PROGRESS epyc8 cbn_q01__cld9ff4c40 tt_setup_repair_grt stage 8.9 h job 16.4 h: no new meaningful log line for 8.0 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net268202. The following pin
+- 2026-11-24 10:52 PST DONE [SEAT-MATCH-AUDIT] ot-push-main otpush-viable-ram-1688687 on viable-ram: rc=0 after 37 s, ended 18:52:29, log none, cmd: ot-push-main 
