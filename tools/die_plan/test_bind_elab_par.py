@@ -21,7 +21,7 @@ needs_yosys = pytest.mark.skipif(not HAVE_YOSYS, reason="no Yosys (OT_BIND_YOSYS
 VOLATILE = {"asbuilt.yosys.log", "provenance_elab.json"}
 
 
-def _tree(tmp_path):
+def _tree(tmp_path, defines=("OT_TDX", "OT_TDY")):
     src = tmp_path / "src"
     shutil.copytree(EX, src)
     par = (src / "par.sv").read_text()
@@ -33,7 +33,7 @@ def _tree(tmp_path):
     (src / "par.sv").write_text(par.replace(old, new, 1))
     p = json.loads((src / "die_plan.json").read_text())
     p["asbuilt"]["base"] = str(src)
-    p["partition_types"]["ta"]["verilog_defines"] = ["OT_TDX", "OT_TDY"]
+    p["partition_types"]["ta"]["verilog_defines"] = list(defines)
     f = src / "die_plan_td.json"
     f.write_text(json.dumps(p))
     return f
@@ -59,11 +59,12 @@ def test_variant_specs_follow_the_serial_order(tmp_path):
 
 def test_jobs_knob(monkeypatch):
     monkeypatch.setenv("OT_BIND_ELAB_JOBS", "3")
-    assert TDE.elab_jobs(5, 96) == 3 and TDE.elab_jobs(2, 96) == 2
-    monkeypatch.setenv("OT_BIND_ELAB_JOBS", "0")
-    assert TDE.elab_jobs(5, 96) == 1
+    assert TDE.elab_jobs(5, 96) == 2 and TDE.elab_jobs(2, 96) == 2 and TDE.elab_jobs(1, 96) == 1
+    for serial in ("1", "0"):
+        monkeypatch.setenv("OT_BIND_ELAB_JOBS", serial)
+        assert TDE.elab_jobs(5, 96) == 0
     monkeypatch.delenv("OT_BIND_ELAB_JOBS")
-    assert 1 <= TDE.elab_jobs(5, 4) <= 5
+    assert 0 <= TDE.elab_jobs(5, 4) <= 5
 
 
 def test_unit_cap_bounds_the_jobs(tmp_path, monkeypatch):
@@ -81,14 +82,15 @@ def test_unit_cap_bounds_the_jobs(tmp_path, monkeypatch):
     monkeypatch.setattr(TDE.os, "cpu_count", lambda: 512)
     monkeypatch.setattr(TDE.os, "getloadavg", lambda: (0.0, 0.0, 0.0))
     monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 64.0)
-    assert TDE.elab_jobs(5, 96) == 1
+    assert TDE.elab_jobs(5, 96) == 0            # no room for a second Yosys: serial
     monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 128.0)
     monkeypatch.setattr(TDE.os, "cpu_count", lambda: 96)
     monkeypatch.setattr(TDE.os, "getloadavg", lambda: (112.0, 0.0, 0.0))
     real = Path.read_text
     monkeypatch.setattr(Path, "read_text", lambda self, *a, **k: "MemAvailable: 524288000 kB\n"
                         if str(self) == "/proc/meminfo" else real(self, *a, **k))
-    assert TDE.elab_jobs(6, 96) == 4            # a loaded host still runs the four S81 variants, inside the 128 GB unit
+    assert TDE.elab_jobs(6, 96) == 3            # loaded host: base + 3 variants inside the 128 GB unit
+    assert TDE.elab_jobs(1, 96) == 1            # S81 c8: the one variant still runs beside the base
 
 
 @needs_yosys
@@ -104,7 +106,7 @@ def test_parallel_variants_and_cache_are_byte_identical(tmp_path, monkeypatch, c
     assert rec["verdict"] == "REALIZED" and rec["added"] == ["OT_TDX", "OT_TDY"]
     assert (out / TDE.VARIANT_DIR / "without_OT_TDX" / "asbuilt.json").is_file()
     shutil.move(out, tmp_path / "o_serial")
-    monkeypatch.setenv("OT_BIND_ELAB_JOBS", "4")
+    monkeypatch.setenv("OT_BIND_ELAB_JOBS", "5")
     capsys.readouterr()
     assert _elab(plan, out) == 0
     assert "3 define-variant elab(s) started alongside" in capsys.readouterr().out
@@ -196,3 +198,23 @@ def test_cache_misses_or_stays_off_when_unsafe(cache_env):
     _fill(c, a, "good")
     (c.dir / "out.json").write_text("bad!")                                            # corrupt entry
     assert not c.fetch(a / "y.log") and (a / "asbuilt.json").read_text() == "good"
+
+
+@needs_yosys
+def test_single_variant_runs_beside_the_base(tmp_path, monkeypatch, capsys):
+    """S81 c8 (only ATTCUT left): one variant elab must still start beside the base, not after it"""
+    monkeypatch.setenv("OT_BIND_TYPE_DEFINES", "on")
+    monkeypatch.delenv("OT_BIND_ELAB_CACHE", raising=False)
+    plan = _tree(tmp_path, ("OT_TDX",))
+    out = tmp_path / "o"
+    monkeypatch.setenv("OT_BIND_ELAB_JOBS", "1")
+    assert _elab(plan, out) == 0
+    assert "run after the base elab" in capsys.readouterr().out
+    serial = _digest(out)
+    shutil.move(out, tmp_path / "o_serial")
+    monkeypatch.delenv("OT_BIND_ELAB_JOBS")
+    import type_define_effect as T
+    monkeypatch.setattr(T, "unit_mem_gb", lambda: None)
+    assert _elab(plan, out) == 0
+    assert "1 define-variant elab(s) started alongside" in capsys.readouterr().out
+    assert _digest(out) == serial

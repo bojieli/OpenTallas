@@ -356,16 +356,17 @@ def unit_mem_gb(proc_cgroup="/proc/self/cgroup", root="/sys/fs/cgroup"):
 
 
 def elab_jobs(n, mem_gb):
-    """BIND-ELAB-PAR: parallel define-variant elabs.  $OT_BIND_ELAB_JOBS (>= 1) wins; else min(n, max(4, idle cores),
-    (min(MemAvailable, the unit's cgroup cap) - 64 GB) / per-job GB).  The Yosys containers run outside the ot-run
-    unit's cgroup, so the unit's own cap is applied here: the gate stays inside the memory it was admitted for.  Each
-    variant is one Yosys thread and the fleet admits on memory, never on load (OWNER 10-18), so a busy host still gets 4.
-    The 64 GB is the bind process itself (S81 c7a: 52 GB peak).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14)
-    (S81 c7a Yosys peak 11.4 GB)."""
+    """BIND-ELAB-PAR: how many define-variant elabs run in the pool BESIDE the base elab (0 = the serial pass).
+    $OT_BIND_ELAB_JOBS = N Yosys elabs at once, the base included (1 = serial); else min(n, max(4, idle cores),
+    (min(MemAvailable, the unit's cgroup cap) - 64 GB) / per-job GB - 1).  The Yosys containers run outside the ot-run
+    unit's cgroup, so the unit's own cap is applied here; the 64 GB is the bind process itself (S81 c7a: 52 GB peak), the
+    -1 the base elab's own Yosys.  Each variant is one Yosys thread and the fleet admits on memory, never on load
+    (OWNER 10-18), so a busy host still gets 4.  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14) (S81 c7a Yosys
+    peak 11.4 GB).  One variant still runs beside the base (S81 c8: only ATTCUT left, 1 variant, was serial)."""
     env = os.environ.get("OT_BIND_ELAB_JOBS", "").strip()
     if env:
         try:
-            return max(1, min(n, int(env)))
+            return max(0, min(n, int(env) - 1))
         except ValueError:
             pass
     try:
@@ -380,14 +381,14 @@ def elab_jobs(n, mem_gb):
     except OSError:
         pass
     if avail is None:
-        return 1
+        return 0
     cap = unit_mem_gb()
     per = min(float(mem_gb), 14.0)
     try:
         per = float(os.environ.get("OT_BIND_ELAB_JOB_GB") or per)
     except ValueError:
         pass
-    return max(1, min(n, max(4, idle), int((min(avail, cap if cap is not None else avail) - 64) // max(per, 1.0))))
+    return max(0, min(n, max(4, idle), int((min(avail, cap if cap is not None else avail) - 64) // max(per, 1.0)) - 1))
 
 
 class Prestart:
@@ -413,8 +414,10 @@ class Prestart:
             if not _requested(rows):
                 return
             self.jobs = elab_jobs(len(specs), self.mem)
-            if self.jobs <= 1:
-                self.note = "serial (1 job)"
+            if self.jobs < 1:
+                self.note = "serial (OT_BIND_ELAB_JOBS=1 or no memory for a second Yosys)"
+                print(f"   TYPE-DEFINES: {len(specs)} define-variant elab(s) run after the base elab: {self.note}",
+                      flush=True)
                 return
             # processes, not threads: each variant spends minutes in Python (module index, staging) before Yosys runs;
             # forked here, before the base elab loads anything big
@@ -429,6 +432,7 @@ class Prestart:
                   f"({self.jobs} parallel; OT_BIND_ELAB_JOBS)", flush=True)
         except Exception as exc:          # fall back to the serial pass
             self.note = f"prestart off: {type(exc).__name__}: {exc}"[:300]
+            print(f"   TYPE-DEFINES: {self.note} (serial pass)", flush=True)
             self.close()
 
     def take(self, defines, directory):
