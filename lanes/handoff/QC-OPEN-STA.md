@@ -64,3 +64,8 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - C1g strict PASS (QC-ALLFIX 01:15). r10 0104b4703368 = r9 + tap_offset rows re-keyed by site (rows/tapoff_rekey.py) + fill; composed on C1g = plan_c1g_sta10.json 3c17478ed804 (epyc7+epyc8 rows/).
 - bindG.sh on epyc7 (log epyc8 QC-OPEN-STA/bindG.ot, out epyc7 QC-OPEN-STA/bindG/): sync tree to QC-ALLFIX/cF/tree by sha, PRE+G0 via launch7 (rt 7514), elab+strict+LATCHECK via launchG (rt c660).
 - Then probes: the 8 DEAD-OWNER rows (+ cled3c1d7b, cl9f076a5c, clf4365a62) on epyc7 (tree there), goal grt, rt c66090747375 (bind rt), --bind-out QC-OPEN-STA/bindG/bind, --ab OT_TAP_ESCAPE_CLEAR_UM=0.30. Not epyc10.
+
+## 11-24 03:08 PST
+- Row plan_c1g_sta10 3c17478ed804 (r10 st_a on C1g 96cce77c1e2f). PRE rt 7514: row-only findings 0 (DEPTH x1 is base/QC-ALLFIX). G0 PASS 0/858.
+- bindG.sh on epyc7 (log epyc8 QC-OPEN-STA/bindG.ot, out epyc7 QC-OPEN-STA/bindG/): strict bind + LATCHECK on rt c660 is running.
+- Next: on BINDG_DONE clean, run probes of the 8 DEAD-OWNER rows + cled3c1d7b/cl9f076a5c/clf4365a62 on epyc7 at goal grt via intel2 QC-OPEN-STA-probe.sh (--bind-out bindG/bind, --rt c66090747375, OT_TAP_ESCAPE_CLEAR_UM=0.30).
