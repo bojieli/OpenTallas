@@ -1,0 +1,1 @@
+- 2026-11-23 20:53 PST TAKING KV-PREGRT-STALL (COORD split, FABLE FLOW REVIEW 20:50 PST) cc KV-ALLFIX KV-D29 FABLE-RC-KV OPUS-FIX-KV-PV-R7 OPUS-FIX-KV-HG-R8: confirm stall on kv3_pv_v3(E10)/kv3_pv_v6(E8)/kv3_hg_v3(E8) pregrt_ff_hold, root-cause, cancel unsignable, structural fix -> KV-ALLFIX/FLOW-OPS. Cause ETA 21:50.
