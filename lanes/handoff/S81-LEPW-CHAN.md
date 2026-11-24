@@ -21,3 +21,7 @@ Job: dsdv_slice_lepw_mu_C__t1 CBC route-demand pinch; row on c9 048fa468f0a2; PR
 - Watchers (intel2 systemd --user): s81lepwchan-kitwait (launch at C8S_DONE) -> s81lepwchan-grtwatch (~/tmp/s81-lepw-chan/kit_grt_watch.sh, log grt_watch.log; posts GRT verdict or KIT ENDED) ; s81lepwchan-stemwatch (posts stem draft PRE/G0).
 - Stem draft LEPW-MUC-STEM: intel2 s81-lepw-chan/xrshift.py, ops 9a313610a780 (CAPXR + u_xr +86.4 + 15 sites). epyc9 row_stem.sh -> out_stem/. 180-um bank model (wide.py): stem 3.01 -> 1.51. Held; apply if kit GRT stem overflows. Needs type_overlay check before a kit (collector/reset-anchor keys may not be overlay-legal -> then plan row via INT).
 - Estimator gap posted to LEAF-ROUTE-CBC.
+## 14:0x COORD STEM-forward
+- epyc9 stem_c8_chain.sh (out_stem_c8, scope_stem_c8, row/LEPW-MUC-STEM.overlay.json); row_stem.sh (out_stem, c9).
+- intel2 units: stemrebased (auto ROW-REBASED), kitstemwait -> kit_stem_body.sh (kit #2, ~/tmp/s81-lepw-chan/kit_stem), grtwatchstem; control kit units kitwait/grtwatch; stemwatch (draft result post).
+- If kit #2 overlay refused: build from composed plan tree (ot-tree-fork c8seal_tree + scoped bind out scope_stem_c8 as --bind-out).
