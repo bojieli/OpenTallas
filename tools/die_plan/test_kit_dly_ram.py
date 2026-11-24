@@ -297,3 +297,24 @@ def test_wide_rewrite_is_cycle_exact(tmp_path):
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
     s = subprocess.run([str(o / "tb")], capture_output=True, text=True)
     assert "KDR_SIM bad=0" in s.stdout, s.stdout[-2000:]
+
+
+def test_wide_dead_slice_gets_no_macro(tmp_path):
+    """KV-PV-CAP 11-24: pv_v3 u_d72_vport_W_out_v_lo_t bits 0..255 are never read; their ring was planned as a macro but synthesis
+    deletes it.  A slice with no read bit stays a flop line (no macro, no site); the live slice keeps its ring"""
+    txt = wide_text().replace("core #(.N(300)) u_ca (.clk(clk), .a(d60_s), .y(y_a));",
+                              "core #(.N(44)) u_ca (.clk(clk), .a(d60_s[299:256]), .y(y_a[43:0]));")
+    txt = txt.replace("ot_dp_dly #(.W(300), .D(4)) u_pc_lp_b (.clk(clk), .d(d60_s), .q(lp_b));",
+                      "ot_dp_dly #(.W(44), .D(4)) u_pc_lp_b (.clk(clk), .d(d60_s[299:256]), .q(lp_b[43:0]));")
+    chunks, st, cand = kr.plan(txt, WTYPE, (), kr.cfg_of(WTYPE))
+    w = [c for c in chunks if c.get("kind") == "wide"]
+    assert [(c["slice"], bool(c.get("dead"))) for c in w] == [([0, 256], True), ([256, 300], False)]
+    assert len(kr.macros_of(chunks)) == 1 and st["wide_dead_slices"] == 1 and st["chunks"] == 1
+    new = kr.rewrite(txt, chunks, cand)
+    assert new.count("ot_dp_dly_ram #(") == 1 and "never read: flop line, no macro" in new
+
+
+def test_read_bits_forms():
+    t = "wire [9:0] q;\n x u (.a(q[3]), .b(q[8:6]));\n"
+    assert kr.read_bits(t, "q", 10, (0, 0)) == {3, 6, 7, 8}
+    assert kr.read_bits(t + " y v (.a(q));\n", "q", 10, (0, 0)) == set(range(10))

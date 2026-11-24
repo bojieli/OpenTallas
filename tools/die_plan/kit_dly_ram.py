@@ -146,6 +146,23 @@ def scan(txt):
     return cand, readers
 
 
+def read_bits(txt, q, W, own_span):
+    """bits of wire q (width W) that anything reads: every use of q outside its declaration and its own driver statement;
+    q[i] / q[a:b] count those bits, any other use (whole bus, computed index) counts all W"""
+    live = set()
+    for m in re.finditer(r"(?<![\w$.])%s(?![\w$])(\s*\[\s*(\d+)\s*(?::\s*(\d+)\s*)?\])?" % re.escape(q), txt):
+        if own_span[0] <= m.start() < own_span[1]:
+            continue
+        ls = txt.rfind("\n", 0, m.start()) + 1
+        if re.match(r"\s*(wire|reg|logic)\b", txt[ls:m.start()]):
+            continue
+        if m.group(2) is None:
+            return set(range(W))
+        a, b = int(m.group(2)), int(m.group(3) if m.group(3) is not None else m.group(2))
+        live.update(range(min(a, b), max(a, b) + 1))
+    return live
+
+
 def wide_ends(wide, core_conn, dpin):
     """{line: (source core insts, consumer core insts)}: cores on the d idents / on the q ident, one ot_dp_* stage deep"""
     by_id = {}
@@ -336,7 +353,15 @@ def plan(txt, t, pins=(), c=None, tag="", *, clock_sites=()):
             src, dst = (cen(e) for e in ends[n])
             a, b = src or dst or (W / 2, H / 2), dst or src or (W / 2, H / 2)
             target = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
-            nsl = (x["W"] + WM - 1) // WM
+            nsl_all = (x["W"] + WM - 1) // WM
+            # a 256-bit slice none of whose q bits is read gets NO macro (synthesis would delete the ring and GEN would place a RAM
+            # the netlist does not have): it stays a plain flop line of the same depth (unread, removed by synthesis)
+            live = read_bits(txt, x["q"], x["W"], x["span"])
+            dead = [j for j in range(nsl_all) if not live & set(range(j * WM, min(x["W"], (j + 1) * WM)))]
+            nsl = nsl_all - len(dead)
+            if nsl == 0:
+                wskip.append(dict(line=n, W=x["W"], D=x["D"], why="no read bit"))
+                continue
             rec = dict(line=n, W=x["W"], D=x["D"], src=ends[n][0], dst=ends[n][1], target=[round(target[0], 2), round(target[1], 2)])
             if len(chunks) + len(wchunks) + nsl > c["max_macros"]:
                 wskip.append(dict(rec, why="max_macros"))
@@ -366,19 +391,27 @@ def plan(txt, t, pins=(), c=None, tag="", *, clock_sites=()):
                 wskip.append(dict(rec, why=f"ram depth {r} x {x['W']} below min_flops / {DMIN_RAM}"))
                 continue
             placed[:] = tmp
-            for j, org in enumerate(orgs):
+            it = iter(orgs)
+            for j in range(nsl_all):
                 lo, hi = j * WM, min(x["W"], (j + 1) * WM)
+                if j in dead:
+                    wchunks.append(dict(rec, kind="wide", dead=True, inst=f"u_pdramw_{tag}{k}_dead", slice=[lo, hi], bits=hi - lo,
+                                        lead=lead, trail=trail, ram_d=r, resid=x["D"] - lead - r))
+                    k += 1
+                    continue
+                org = next(it)
                 inst = f"u_pdramw_{tag}{k}"
                 wchunks.append(dict(rec, kind="wide", inst=inst, slice=[lo, hi], bits=hi - lo, lead=lead, trail=trail, ram_d=r,
                                     resid=x["D"] - lead - r, origin_um=[org[0], org[1]], physical_inst=f"u_bound.{inst}.g_b[0].u_m"))
                 k += 1
     chunks = chunks + wchunks
     skipped = skipped + wskip
-    stats = dict(candidates=len(cand), candidate_flops=sum(x["D"] for x in cand.values()), chunks=len(chunks),
-                 ram_flops=sum(x["bits"] * x["ram_d"] for x in chunks),
+    stats = dict(candidates=len(cand), candidate_flops=sum(x["D"] for x in cand.values()),
+                 chunks=sum(1 for x in chunks if not x.get("dead")), wide_dead_slices=sum(1 for x in chunks if x.get("dead")),
+                 ram_flops=sum(x["bits"] * x["ram_d"] for x in chunks if not x.get("dead")),
                  lead_flops=sum(x["bits"] * (x["lead"] + x["trail"]) for x in chunks if x.get("kind") != "wide"),
                  resid_flops=sum(x["resid"] for x in chunks if x.get("kind") != "wide"), skipped=skipped,
-                 wide_lines=len({x["line"] for x in wchunks}), wide_ram_flops=sum(x["bits"] * x["ram_d"] for x in wchunks),
+                 wide_lines=len({x["line"] for x in wchunks}), wide_ram_flops=sum(x["bits"] * x["ram_d"] for x in wchunks if not x.get("dead")),
                  wide_lead_flops=sum(x["bits"] * x["lead"] for x in wchunks),
                  wide_resid_flops=sum(x["bits"] * x["resid"] for x in wchunks))
     return chunks, stats, cand
@@ -459,6 +492,10 @@ def rewrite(txt, chunks, cand):
         decl.append(f"    wire [{W - 1}:0] {rq};")
         for ch in chs:
             lo, hi = ch["slice"]
+            if ch.get("dead"):
+                rams.append(f"    ot_dp_dly #(.W({hi - lo}), .D({R})) {fresh(ch['inst'])} (.clk({x['clk']}), .d({src}[{hi - 1}:{lo}]), "
+                            f".q({rq}[{hi - 1}:{lo}]));  // kit_dly_ram wide: {n} bits {lo}..{hi - 1} never read: flop line, no macro")
+                continue
             rams.append(f"    ot_dp_dly_ram #(.W({hi - lo}), .D({R})) {fresh(ch['inst'])} (.clk({x['clk']}), .d({src}[{hi - 1}:{lo}]), "
                         f".q({rq}[{hi - 1}:{lo}]));  // kit_dly_ram wide: {n} bits {lo}..{hi - 1} = lead {L} + ram {R} + residual {res}")
         if res:
@@ -485,7 +522,7 @@ def rewrite(txt, chunks, cand):
 def macros_of(chunks):
     """gen_phys type_macros rows for the RAM macros: (inst, module, lef, lib, x, y, orient)"""
     return [(ch["physical_inst"], MACRO, f"{MACRO_DIR}/{MACRO}.lef", f"{MACRO_DIR}/{MACRO}_tt.lib",
-             ch["origin_um"][0], ch["origin_um"][1], "R0") for ch in chunks]
+             ch["origin_um"][0], ch["origin_um"][1], "R0") for ch in chunks if not ch.get("dead")]
 
 
 def extra_sources():
