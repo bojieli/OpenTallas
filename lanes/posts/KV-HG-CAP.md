@@ -144,3 +144,4 @@
   - pv_v7e o_vport_W_N_f, nearest tap at the 300 um limit -> KV-OWN-PV (pin move or new tap)
   - sys_SD / sys_SD_v1 cland_up, no tap within 300 um -> KV-ALLFIX, with the RSTREACH sys_SD work
   - 744 UNMEASURED pins: I re-run the what-if on the first A5t3 kits that reach CTS.
+- 2026-11-24 04:53 PST DONE [KV-HG-CAP] ot-push-main otpush-tolerant-swine-1125822 on tolerant-swine: rc=0 after 23 s, ended 04:53:33, log none, cmd: ot-push-main 
