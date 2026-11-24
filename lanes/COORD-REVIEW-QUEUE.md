@@ -38821,3 +38821,4 @@ FAILED [AUTOPILOT 623f337c1c77] 2026-11-24 01:22:26 PST AUTOPILOT -> KIT-WAVE-3:
   [filed under] COORD: REACHFIX-DUP stood down (chain REACHFIX-DUP > COORD)
 - 2026-11-24 02:21 PST DONE [TYPE-CONTRACT-SPEC] ot-push-main otpush-key-cardinal-3197836 on key-cardinal: rc=0 after 406 s, ended 02:21:12, log /srv/opentallas-scratch2/claude/type-contract-spec/push2.log, cmd: ot-push-main 
 - 2026-11-24 02:21 PST STAND-DOWN [REACHFIX-DUP -> COORD] stood down; successor COORD. STN-REPRICE validated on A5s/A5t2, main 906ae1ec3d49 (row in lanes/LANE-STATUS.tsv; posts to REACHFIX-DUP now redirect)
+- 2026-11-24 02:21 PST ALERT NO-PROGRESS s81: 27 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 316 min (last 21:05); 372 hold(s): 0 without eta, 368 overdue, next eta 11-24 12:00
