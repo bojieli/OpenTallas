@@ -87,6 +87,16 @@ DEADIN-1122 (FLOW-OPS-R2, COORD): with an as-built that names dead_input_proofs,
   validation (repository-relative paths, PASS verdict, defines / re-proofs, dependency module hashes, selected source) runs here,
   before the elab: OPUS-FIX-S81-COLROM-R6 kit G lost 28 min of elab to "dead-input proof must be repository-relative".
 
+STNXREF (STATION-MOVE-HELPER 11-24, report-only WARN per r703, no date switch): every station / relay the plan references
+  must match across the records derived from it: reset.bank_taps sinks (BANKSINK: removed / renumbered station; BANKFOLLOW: moved
+  station on its BASE tap), ft bit_sites_um (BITCOUNT / BITFOLLOW), clock.landing_network edges (LANDPIN; LANDHOP: endpoint moved,
+  relays not re-derived; LANDFOLLOW: station 0 vs landing in-pin), latency stage counts (STAGECNT) and name-keyed tap records
+  (TAPKEY).  KV C2T io_cor_v1 bank_taps (bind EMIT), S81 D2 60 landing edges (G0).  station_xref.py (doc there); the repair for
+  every form is station_move.py move / remove / reseat.  BASE = the remap base.  --skip STNXREF.
+LATPKG (STATION-MOVE-HELPER 11-24, COORD / FABLE-RC-ALL 46fa8c69, report-only WARN): every latency package next to the plan
+  (<die>_latency.json / <pkg>_lat_pkg.sv in the plan dir, its lat/ r8/ subdirs and the die's lat/ r8/) carries the plan digest it
+  was generated from; a digest != gen.plan_digest(bound plan) is WARN LATPKG with the stale value count and the types / tools that
+  read it (HEAD w3 prep_r18w3c/lat: a74be4f5, 85 values behind).  The bind runs it through this PRE.  latpkg_check.py; --skip LATPKG.
 STNPRICE (STN-REPRICE 11-24, report-only): one LIST line counting lanes whose source OUT + destination IN station depth != fixed_cycles.  Rows that add
   stations are re-priced in the same op set by `stn_reprice.py wrap -- ROW.py PLAN_IN PLAN_OUT` (law-table guard: WARN, --strict refuses unless a regenerated
   table is supplied).
@@ -186,7 +196,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -2127,6 +2137,21 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
                                     bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
             findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
+    if "STNXREF" not in skip:                            # STATION-MOVE-HELPER 11-24: station-derived records, report only (r703)
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import station_xref as SX
+            _sb = rb or baseline
+            findings += SX.findings(_load(plan) or {}, _load(_sb) if _sb else None, plan)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself
+            findings.append(f"WARN STNXREF not checked: {type(e).__name__}: {str(e)[:200]}")
+    if "LATPKG" not in skip:                             # STATION-MOVE-HELPER 11-24: copied-forward latency packages, report only
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import latpkg_check as LPK
+            findings += LPK.findings(_load(plan) or {}, plan, tree)
+        except Exception as e:  # noqa: BLE001
+            findings.append(f"WARN LATPKG not checked: {type(e).__name__}: {str(e)[:200]}")
     if "RSTNAMES" not in skip:                           # RST-NAMES-1124: report only
         findings += rstnames_findings(tree, plan, rb or baseline)
     if "RSTPIN" not in skip:                             # PIN-REACH-1124: report only, never a FAIL
