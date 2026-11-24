@@ -248,3 +248,4 @@
   - rscap: CTS.
   - 66ce census: iteration 13/20.
   All 4 HEAD-R18 units are active. ETAs unchanged: 66ce about 22:30-23:00; E kit GRT reads 00:00-01:30. Next post by 21:55.
+- 2026-11-23 21:15 PST DONE [HEAD-R18] ot-run oth-ubuntu-1242497-1795488565 on tolerant-swine: rc=0 after 8746 s, ended 21:15:04, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-R18/s81_head_hd_lep0N_w_1123175937/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/HE
