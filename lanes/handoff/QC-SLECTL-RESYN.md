@@ -23,3 +23,6 @@ Baseline compose-A probe: place done 20:58 (detailed place WS -241.23), in geom;
 At CTS of each: sta_sum_rcx.sh KIT run/results/asap7/dp_sle_ctl__cla4f6f12f/base/4_1_cts.odb .../4_cts.sdc OUT TAG ; census.py ; locs.sh (edit locs.tcl patterns for f-bank).
 21:3x COORD: x_hc1 owner = QC-HC1-CLKENTRY (combined RP-SEL + landing seat = plan 18d22fbde479 on C1-noSU). Keep relay-only probe as A/B; post CTS comparison to FABLE-RC-QC + QC-HC1-CLKENTRY (ACK posted e2711e72).
 Baseline CTS runs in kit dir epyc8 .../private/QC-ALLFIX/sle_ctl__cla4f6f12f_1123180924/gen/sle_ctl__cla4f6f12f (run_grt.log, OT_CTS_POST_TIMING; 4_1_cts.odb in run/results/asap7/dp_sle_ctl__cla4f6f12f/base).
+21:40 epyc11 gen died (child signed views only on epyc8) -> relaunched gen on epyc8: spec hub autopilot/private_specs/QC-SLECTL-RESYN/qwen_compute_sle_ctl__cla4f6f12f_1123214009 (old _1123212710 dead). epyc11 rp/tree copy unused (ot-delete later).
+21:5x baseline CTS in tap balance (it1); V2 CTS took ~4.5 h, so expect baseline 4_1_cts ~01:00, mine later.
+Next on resume: baseline CTS -> sta_sum_rcx.sh (epyc8 path: copy sta_sum_rcx.sh/sta_sum.tcl/census.py from epyc7 QC-SLECTL-RESYN) -> census; same for mine; post A/B to FABLE-RC-QC + QC-HC1-CLKENTRY; check my 24 keys absent from ot_relay_sites_unmatched.txt; hops f-bank (locs.tcl).
