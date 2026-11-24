@@ -1,20 +1,20 @@
 item	row_sha	rebased	in_compose_sha	PRE	strict	LAT	G0	probe_unit	probe_result	status
-b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF reseat)	b25b1cf7c404	yes(base)	cA f418c1b290f3	PASS 9edfed34	running	-	-	-	-	COMPOSED-A
-x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	f418c1b290f3	yes	cA f418c1b290f3	PASS 9edfed34	running	-	-	-	-	COMPOSED-A
+b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF reseat)	b25b1cf7c404	yes(base)	cA f418c1b290f3	PASS 9edfed34	0 err	1921/1921	running	A probes: cbf_q11 cbn_q00__cl622f65d2 cbx_q10 x3 sle_ctl__cla4f6f12f slw_fe_v2__clf110fab2	running	COMPOSED-A strict+LAT clean
+x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	f418c1b290f3	yes	cA f418c1b290f3	PASS 9edfed34	0 err	1921/1921	running	cbn_q00__cl622f65d2 probe	running	COMPOSED-A strict+LAT clean
 rc99 cb NK lockup (row A + HB4 rev5, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING
 rc101 cb landing piles (CB-1 + STREET, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING
 rc107/rc109 coll g_pf + shr_p_rx_i (pkg15; coll types byte-identical C4->A)	C4	in base	cA	PASS 9edfed34	-	-	-	-	-	REASONED-probe
 coll_core 80 clock-open reset copies (tools row tap_reset_split uniq_seats)	main 32027184aff	yes(tools)	kits need rt>=32027184aff	base	-	-	-	E10 ctsopen_fix_1730 CTS-only	205/0 open (was 80)	ROW-REBASED; GRT probe on B
 SLE CTL B_TW bank spread (4 per-bit banks x158-504, 9 stages kept, x284 empty; in C4/b25)	C4/b25	in base	cA	PASS 9edfed34	-	-	-	-	-	REASONED-probe (sle_ctl__cla4f6f12f probe on B)
 SLE CTL clock entry (ctl edge taps = contract in C4) + NEW hc1/hc2 fclk_in_b_hw_i tap 140.192 -> contract 206.624/251.936 (14 types)	ctlclk_row 123a8da159af -> cA b96b49014c35	yes	cB2 pending	PRE running (epyc7)	-	-	-	-	-	ROW-REBASING
-rc105 su_c street + su_c re-floor	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
-SU-2 (6c198f9a7419)	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
-RED +2	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
-rc103 su_l1 tap affinity (RHI tap_reset_split + tap_pair_affinity in base)	C4	in base	cA	-	-	-	-	-	-	REASONED-probe
-hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (su_l1 in base; cbf_q00 RST row by OPUS-FIX-QC-V4-R2)	plan_cA_rst_cl1b 4f883c119199	yes	cB2 pending	PRE running	-	-	-	-	-	ROW-REBASING
+rc105 su_c street + su_c re-floor (in SU2R; SUC-Q0 stage-0 legs pending)	db537389cc92 (+SUC-Q0 pending)	partial	B2	-	-	-	-	-	-	COMPOSED-B2 / SUC-Q0 -> C
+SU-2 + su_c N/waist re-floor + retap (SU2R db537389cc92, 21 types, cws +1 on 24 lanes)	db537389cc92	yes	B2 9ecb9b695705	SU gate epyc7 running	-	-	-	-	-	COMPOSED-B2
+RED +2 (in-tree land_r8_extra, asbuilt overlay)	row_red2 4f7bc6a20d45 / 3daaf93866cb	yes	B2	PRE 0 new	scoped sle_su_c 2 stages	-	-	-	-	COMPOSED-B2
+rc103 su_l1 tap affinity (RHI tap_reset_split + tap_pair_affinity in base)	C4	in base	cA	PASS	0 err	1921/1921	-	slw_su_l1__cla2a78701 A probe	running	REASONED-probe
+hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (su_l1 in base; cbf_q00 RST = RHI 72b268847ec4)	4f883c119199 (on cA)	yes	B2 9ecb9b695705	PRE 0 new	-	-	-	-	-	ROW-REBASED, in B2
 RSN FLT u_lpad_flt_su_c_i.q[0] -97.79	-	-	-	-	-	-	-	-	-	QC-V4 keeps: kit tools bug (1-bit istations unsited, rt<c84f); fixed by kit regen on rt>=c84f, no dup needed
-F16 auth transport + TTCTLM f5 constructor 6a5f53239424 + latency row (6 cyc)	077005248bfd	yes	cB1 99ab093a8b8f	queued	-	-	-	-	-	COMPOSING-B1
-TTCTLM placement TTC-NECK-1 (u_24526 +17.28/+17.28)	99ab093a8b8f	yes	cB1 99ab093a8b8f	queued	-	-	-	-	-	COMPOSING-B1 (setup -200 CTS still open: needs late-cone stage)
+F16 auth transport + TTCTLM f5 constructor 6a5f53239424 + latency row (6 cyc) + R8 member f16_auth[0:82]	077005248bfd	yes	B1 99ab093a8b8f / B2	PRE 0 new	B1 rebind running (R8 member added)	-	-	-	-	COMPOSED-B1
+TTCTLM placement TTC-NECK-1 (u_24526 +17.28/+17.28)	99ab093a8b8f	yes	B1 / B2	PRE 0 new	B1 rebind running	-	-	-	-	COMPOSED-B1 (CTS -200 setup open: late-cone stage = next row)
 rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	-	ROW-DROP 17:55 (HCST-R3)	-	-	-	-	-	-	-	REASONED-pending: st_a regions are sta_region_nb0_h17_n7_s8, so BT_LAT=2 needs that view re-hardened + pins; not by 20:00
 rc94 STA-1 seat / rc98 SEAT-1c pinreg (clk_t128) / hg-QC-IO-BOUNDARY (STA-2, STA-BTW-0, RHI in C4)	C4	in base	cA	PASS 9edfed34	-	-	-	QC-V4 sta_btw_c4_1508 place probes	-	REASONED-probe
 x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	-	-	-	-	-	-	-	-	-	QC-V4 kit running
