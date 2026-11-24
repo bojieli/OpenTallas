@@ -85,6 +85,21 @@ class StreamSnap(unittest.TestCase):
         with self.assertRaisesRegex(KS.StoreError, "changed after the type's record"):
             KS.stream_files(self.o, "ta")
 
+    def test_stream_takes_the_native_glue_the_type_instantiates(self):
+        m, other = "ot_bind_native_" + "a" * 24, "ot_bind_native_" + "b" * 24
+        put(self.f, f"module s81p_ta; {m} g_0 (); endmodule")
+        self.rec("ta")
+        with self.assertRaisesRegex(KS.StoreError, "native glue .* missing"):
+            KS.stream_files(self.o, "ta")
+        put(os.path.join(self.o, f"rtl/native_glue/{other}.sv"), f"module {other}; endmodule")
+        put(os.path.join(self.o, f"rtl/native_glue/{m}.sv"), f"module {m}(")      # being written
+        with self.assertRaisesRegex(KS.StoreError, "not a whole module"):
+            KS.stream_files(self.o, "ta")
+        put(os.path.join(self.o, f"rtl/native_glue/{m}.sv"), f"module {m}; endmodule")   # rewritten later than the record: fine
+        rel = sorted(os.path.relpath(p, self.o) for p in KS.stream_files(self.o, "ta").values())
+        self.assertIn(f"rtl/native_glue/{m}.sv", rel)
+        self.assertNotIn(f"rtl/native_glue/{other}.sv", rel)
+
     def test_ended_or_plain_out_is_taken_whole(self):
         put(os.path.join(self.o, "bind_report.json"), "{}")                    # the bind ended
         self.assertIsNone(KS.stream_files(self.o, "ta"))

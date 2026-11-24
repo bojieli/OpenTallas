@@ -231,6 +231,7 @@ def dir_files(d, cap=DIR_MAX_FILES, recursive=True, subdirs=()):
 
 
 STREAM_DIR, STREAM_CTX = "native_topology.d", "_context.json"
+NATIVE_GLUE_INST = re.compile(r"\b(ot_bind_native_[0-9a-f]{24})\b")   # = bind.NATIVE_GLUE_INST
 
 
 def stream_files(d, tn):
@@ -294,6 +295,25 @@ def stream_files(d, tn):
             if os.stat(fp).st_mtime > rt_ + 1:
                 raise StoreError(f"KIT-SNAP BIND_STREAM {n}: {fp} changed after the type's record")
             out.setdefault(os.path.relpath(fp, d), fp)
+        # BIND-STREAM-SNAP-3 11-24 (S81 c8s dsdv_slice_c1x_C__t10: 'native glue ot_bind_native_<h> is instantiated but ... missing'):
+        # the ot_bind_native_<sha24> helpers the type's bound files instantiate.  They are shared by types and re-written with the
+        # same bytes by later emit workers (name = sha of the cell signature), so no mtime rule; a helper that is absent or not
+        # a whole module -> refused (the snapshot's dry/build sha compare catches a rewrite in flight)
+        need = set()
+        for fp in (r.get("files") or {}):
+            if fp.endswith((".sv", ".v")) and os.path.isfile(fp):
+                with open(fp, errors="ignore") as fh:
+                    need.update(NATIVE_GLUE_INST.findall(fh.read()))
+        for m in sorted(need):
+            gp = next((g for g in (os.path.join(d, "rtl", "native_glue", m + ".sv"), os.path.join(d, "native_glue", m + ".sv"))
+                       if os.path.isfile(g)), None)
+            if gp is None:
+                raise StoreError(f"KIT-SNAP BIND_STREAM {n}: native glue {m} is instantiated but rtl/native_glue/{m}.sv is missing")
+            with open(gp, errors="ignore") as fh:
+                gt = fh.read()
+            if f"module {m}" not in gt or "endmodule" not in gt:
+                raise StoreError(f"KIT-SNAP BIND_STREAM {n}: native glue {gp} is not a whole module (being written): relaunch")
+            out.setdefault(os.path.relpath(gp, d), gp)
     return out
 
 
