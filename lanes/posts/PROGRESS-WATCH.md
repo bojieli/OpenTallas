@@ -396,3 +396,4 @@
 - 2026-11-24 10:21 PST ALERT STUCK-STATE s81: 26 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. col_h10_r1__t1__cl95b37463__pv0713a75a, 2026-11-23 07:34)
 - 2026-11-24 10:41 PST ALERT NO-ADVANCE qwen_compute: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (slw_fe_v2__clf110fab2 x2@kit_topology)
 - 2026-11-24 10:51 PST ALERT NO-PROGRESS s81: 38 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 67 min (last 09:44); 372 hold(s): 0 without eta, 27 overdue, next eta 11-24 12:30; NO-LAUNCH x6
+- 2026-11-24 11:02 PST ALERT NO-PROGRESS s81_head: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 378 min (last 04:44); 1 hold(s): 0 without eta, 1 overdue
