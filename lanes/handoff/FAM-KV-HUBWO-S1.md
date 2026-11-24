@@ -7,3 +7,4 @@
 - 23:1x: rt 65f367a55943 rebind tree_s1 (epyc8 FAM-KV-HUBWO-S1/tree_s1) clean; sealed Eo 1122231141 / Wo 1122231157 --goal route running (kitS2_*.log). NEXT: ot-wait stages, provenance + LEC.
 - 15:4x resumed: Eo CTS done/GRT, Wo CTS running; waiters ot-wait --durable grt (Eo), cts (Wo).
 - 20:5x: Wo GRT triage stop (est -251.6 < -150), worst = astk_WN->ist_o_astk_WS 1500 um single hop (-170 post-CTS). Eo past GRT, in route (waiter needed). NEXT: station row for astk_WN->WS lanes, relaunch sealed Wo; Eo route/LEC/provenance.
+- 20:5x: FINDING posted: astk station chains sited at one core while bound packed buses mix WN/WS sources (plan-vs-bind mismatch); no standalone station row; waiting KV-ASTK-TIED to confirm mapping, then I build per-source chain geometry on A3e. Eo route waiter b8iky02e2 armed.
