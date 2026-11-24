@@ -220,3 +220,50 @@ def newer_than_context(out):
     """mtime of the live stream context (sidecars older than it belong to an earlier bind of this OUT), or None"""
     c = Path(out) / DIR / CTX
     return c.stat().st_mtime if _live(out) is not None else None
+
+
+def launch_check(bind_out, tn, plan, asbuilt=None):
+    """BIND-STREAM-LAUNCH wave gate (kit_wave option bind_stream_launch) -> (rc, line).  A finished bind: its bind_report.json must
+    report 0 errors (unchanged).  A running bind: type tn needs its own final, intact record of this run AND
+    kit_topology.bind_matches on the item plan / as-built (the exact check the kit_topology stage makes later)."""
+    out = Path(bind_out)
+    if _live(out) is None:
+        try:
+            e = json.loads((out / "bind_report.json").read_text()).get("errors")
+        except (OSError, ValueError) as exc:
+            return 3, f"BIND unreadable: {type(exc).__name__} (no bind_report.json and no live stream)"
+        n = len(e) if isinstance(e, list) else e
+        return (0 if n == 0 else 3), f"BIND errors {n}"
+    why = []
+    if not records(out, tn, why):
+        return 3, f"BIND_STREAM {tn}: no usable record ({'; '.join(why)[:300]})"
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import kit_topology
+    raw = json.loads(Path(plan).read_text())
+    base = tn if tn in raw.get("partition_types", {}) else tn.split("__")[0]
+    if base not in raw.get("partition_types", {}):
+        return 3, f"BIND_STREAM {tn}: type not in plan {plan}"
+    if not kit_topology.bind_matches(raw, base, out, asbuilt, plan):
+        why = []
+        receipt(out, base, plan, why)
+        return 3, f"BIND_STREAM {tn}: KIT_TOPOLOGY_BIND_STALE vs plan {plan} ({'; '.join(why)[:200] or 'receipt fields differ'})"
+    return 0, f"BIND_STREAM {tn}: final record of the running bind, kit_topology match (BIND errors 0 for this type)"
+
+
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser(description="bind_stream check --bind-out B --type T --plan P [--asbuilt A]")
+    ap.add_argument("cmd", choices=["check"])
+    ap.add_argument("--bind-out", required=True)
+    ap.add_argument("--type", required=True)
+    ap.add_argument("--plan", required=True)
+    ap.add_argument("--asbuilt")
+    a = ap.parse_args(argv)
+    rc, line = launch_check(a.bind_out, a.type, a.plan, a.asbuilt)
+    print(line)
+    return rc
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

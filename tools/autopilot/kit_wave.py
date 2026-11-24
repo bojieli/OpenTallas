@@ -1211,6 +1211,17 @@ def apply_hold_release_on(cfg, is_merged=None):
     return out
 
 
+# BIND-STREAM-LAUNCH 11-24 (COORD): wave kits of a die launch per type while its strict bind of record still runs (a final
+# OUT/native_topology.d/<type>.json + kit_topology match stands in for bind_report.json errors 0).  Option bind_stream_launch
+# (die > global); unset = ON for these dies.
+BIND_STREAM_DIES = ("s81", "qwen_compute", "qwen_kvsys")
+
+
+def bind_stream_on(cfg, die):
+    v = opt(cfg, die, "bind_stream_launch")
+    return die in BIND_STREAM_DIES if v is None else bool(v)
+
+
 def opt(cfg, die, key):
     """die value > global value > default"""
     d = (cfg.get("dies") or {}).get(die) or {}
@@ -5290,7 +5301,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
         | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
         | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
-        | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {})  # PLAN-GEN-RULES-1 rule C (advisory)
+        | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {}) \
+        | ({"bind_stream_launch": True} if bind_stream_on(cfg, die) else {})  # cell_check: PLAN-GEN-RULES-1 rule C (advisory)
 
 
 # ------------------------------------------------------------------------------------------------ KW-PROV-1 provisional views
@@ -5894,7 +5906,9 @@ def src_inputs(cfg, die):
         files += bind_named_sources(str(kr["bind_out"]), d.get("gen_hosts") or [])
         # KW-FIX-45 11-12 (COORD fail class KIT_NOT_SELF_CONTAINED at the bind stage): the bind step reads bind_out/bind_report.json
         # itself; a gen host without the bind dir (S81 s87bind/out_r11p2 on epyc4) must not be chosen
-        files.append(os.path.join(str(kr["bind_out"]), "bind_report.json"))
+        # BIND-STREAM-LAUNCH: with bind_stream_launch a RUNNING bind has no bind_report.json yet; the host must hold the bind dir
+        # (provenance_bind.json is written at bind start); the per-type record is checked at the item's bind stage
+        files.append(os.path.join(str(kr["bind_out"]), "provenance_bind.json" if bind_stream_on(cfg, die) else "bind_report.json"))
         # KV-R3 11-17 (COORD loop-gap, 6 KV kits KIT_NOT_SELF_CONTAINED .../d16gate/bind/provenance_bind.json): the
         # kit snapshot takes bind_out as ONE required directory, but this list required only bind_report.json + the
         # bind.f sources, so intel1 / epyc8 passed the probe with a 2-entry partial bind dir and kit_snap froze it.
@@ -11120,6 +11134,12 @@ def run_item(spec_path):
             rcf, tf = run("bind_fetch", remote(_fetch + "true"), idempotent=True)
             chk = (f"python3 -c \"import json,sys;r=json.load(open('{bind}/bind_report.json'));e=r.get('errors');"
                    f"n=len(e) if isinstance(e,list) else e;print('BIND errors', n);sys.exit(0 if n == 0 else 3)\"")
+            if sp.get("bind_stream_launch"):
+                # BIND-STREAM-LAUNCH: same bind_report check for a finished bind; a running bind passes per type on its own final
+                # record + kit_topology match (tools/die_plan/bind_stream.py check); an rt without the checker keeps the old check
+                _bsc = f"{tsrc}/tools/die_plan/bind_stream.py"
+                chk = (f"if [ -f {q(_bsc)} ]; then python3 -I {q(_bsc)} check --bind-out {q(bind)} --type {q(T)} --plan {q(plan)}"
+                       + (f" --asbuilt {q(a)}" if a else "") + f"; else {chk}; fi")
             rc, txt = run("bind", remote(chk))
             if rc:
                 return fail("bind", "bind of record not clean / unreadable (plan not fully bound)\n" + txt, f"{G}:{bind}")
