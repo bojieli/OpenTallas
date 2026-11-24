@@ -1,2 +1,3 @@
 - 2026-11-23 16:49 PST DIED [ONBOARD-EPYC11] ot-push-main otpush-tolerant-swine-3356849 on tolerant-swine: rc=4 after 1255 s, ended 16:49:19, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1255 s, no log
 - 2026-11-23 17:34 PST DIED [ONBOARD-EPYC11] ot-push-main otpush-tolerant-swine-278912 on tolerant-swine: rc=4 after 613 s, ended 17:34:51, log /tmp/e11push.log, cmd: ot-push-main  | class=TEST-FAIL cause=FAILED tools/fleet/test_ot_tools_sync.py::Guard::test_prune_keeps_newest_current_protected_and_named
+- 2026-11-23 17:52 PST DONE [ONBOARD-EPYC11] ot-push-main otpush-tolerant-swine-1094935 on tolerant-swine: rc=0 after 17 s, ended 17:52:54, log none, cmd: ot-push-main --no-test
