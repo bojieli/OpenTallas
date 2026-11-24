@@ -18,3 +18,4 @@ Job: -721 reset relay path u_rrl_54 -> u_cland_fstart_* (pv_v3 D28 kit) as its o
 - Follow-on row ROWS_KV-PV-RSTRELAY_v3.py (env RSTRELAY_TOOLS = fixed tools dir) on 15093a518bfc -> B/plan.json 8f760516f9ba: kv3_pv 17 br/38, v8 18 br/38, max hop 295.6. gate_B.sh (PRE + scoped strict kv3_pv*) running, log scratchpad gateB.log.
 - 22:44 tool fix PUSHED main 247a5fbba1a (test_kv_start_raw_rstfan.py).
 - 22:59 ROW-REBASED 8f760516f9ba PASS posted (row v3 db0bb152ee0a, report B/rstrelay_report.json e30b186a1963): PRE = base, scoped strict bind kv3_pv* 0 errors (bind_B), v8 39 copies. pv family 15/15. ALLFIX to splice kv3_pv + v8 blocks from B/plan.json. Job done; remaining: answer KV-RSTREACH questions; rerun only if an ALLFIX bind shows EMIT on a pv relay net. Lane tree (51 GB) + bind dirs ot-delete after ALLFIX folds B.
+- 23:0x ALLFIX: 8f760516f9ba QUEUED-A6 (A5 closed with 15093a518bfc). B/plan.json made read-only; keep until A6 splices.
