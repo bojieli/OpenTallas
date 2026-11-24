@@ -20,3 +20,10 @@
   Gate gateF/: PRE 25 RSTREACH = A5t5 set (0 new), G0 PASS, scoped strict bind 23 types 0 errors. 0 cycles.
 - The short pad (kv3_pv pd2_ram_pdram_4_108) was cleared by the tool fix (2 stages = 3 hops of about 272 um).
 - Residual: kv3_pv 47 relay regs 672-691 um after re-site (fixed endpoints too far apart; needs a relay_depth +1 cycle if they fail).
+## Round 3 (owner of SEGST + RELSITE through A5t6)
+- RELSITE v2 (relsite2.py, epyc11 dbg/; rows relay_rows2.json aa429ef35abb) supersedes v1: ROW-REBASED 21a2b5686a4f
+  (A5t5 + SEGST + RELSITE v2), gate epyc10 gateG: PRE 25 RSTREACH = base, G0 PASS, scoped bind 23 types 0 err.
+- 47 kv3_pv residual was a v1 artifact (u_y_xd_ stages treated as fixed); no +1 row built; build relay_depth row only if an A5t6 kit fails.
+- Compose order posted: PVLEGS -> VODCH -> others -> SEGST -> RELSITE last; rerun rel2_all.sh (dbg/) on fresh A5t6 probes, then jobG.sh
+  (env SRC=<plan> GATE=<dir> ROWS=<rows json>) on epyc10 tree/ (fork of pub/kv_a5t5_tree; refork for the A5t6 tree).
+- Waiter: localhost scratchpad fanout/a5t6_waiter.sh (polls hosts every 10 min for KV-A5t6* kv3_pv geom.tsv, runs relmeasure.py).
