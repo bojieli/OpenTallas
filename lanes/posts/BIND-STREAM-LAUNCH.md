@@ -1,0 +1,1 @@
+- 2026-11-24 09:01 PST TAKING BIND-STREAM-LAUNCH (fresh, post-limit): streaming per-type native topology records so kits launch as a strict bind emits each type (kit_topology BIND_STALE fix)
