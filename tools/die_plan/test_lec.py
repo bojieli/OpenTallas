@@ -1603,3 +1603,13 @@ def test_fill_proposals_skip_self_holding_register(tmp_path):
     t, tm = _seq(tmp_path, "gateh", ["d", "e"], ["o"], lambda m, l: {"o": m.XOR(l["d"], 0)})
     L = lec.Lec(g, gm, t, tm)
     assert lec.fill_proposals(L, [], cands={"ff:u_dut.k": 0}) == []      # loaded class, not a pipeline stage
+
+
+def test_fill_proposals_kept_fill_is_predecessor_of_newly_dropped(tmp_path):
+    """LEC-FILL-AUTO pass 2 (rxsb 11-23): a constant dropped by a later refinement round is proposed with the fill
+    kept by the earlier pass as its predecessor, and the kept fill is re-proposed."""
+    L = _fill_chain_design(tmp_path, "k", lambda m, l: 0)
+    L.hyp[("gold", "ff:u_dut.s1")] = ("fill", 0, None)
+    L.noreset_dropped = {("gold", "ff:u_dut.s2"): 0}
+    h = lec.fill_proposals(L, [])
+    assert h == [["gold", "ff:u_dut.s1", ["fill", 0, None]], ["gold", "ff:u_dut.s2", ["fill", 0, "ff:u_dut.s1"]]]

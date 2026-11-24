@@ -7312,9 +7312,12 @@ def fill_proposals(L, log, cands=None, cap=20000):
         gonly = set(L.gonly)
         cands = {k: c for (sd, k), c in getattr(L, "noreset_dropped", {}).items()
                  if sd == "gold" and k in gonly}
+        # fills kept by an earlier auto_fill pass stay candidates (re-proposed, and usable as a predecessor)
+        cands.update({k: h[1] for (sd, k), h in L.hyp.items() if sd == "gold" and h and h[0] == "fill"})
+    isfill = lambda k: (L.hyp.get(("gold", k)) or ("",))[0] == "fill"
     cands = {k: c for k, c in cands.items() if k.startswith("ff:") and "__" not in k and k in gp and k in gc
              and c in (0, 1) and gc[k] != gp[k] and k not in getattr(L, "unwritten", ())
-             and ("gold", k) not in L.hyp}
+             and (("gold", k) not in L.hyp or isfill(k))}
     if not cands:
         return []
     I, Lc = d["I"], d["L"]
@@ -7363,22 +7366,38 @@ def fill_proposals(L, log, cands=None, cap=20000):
 
 
 def auto_fill(L, rec, work, conflicts, log):
-    """Default-on (OT_LEC_AUTO_FILL=0 disables): fill_proposals -> apply_hints.  The hypothesis set before is restored
-    when the refinement does not converge.  -> rec['auto_fill'] = dict(proposed, kept, dropped, refused, first)."""
-    auto = fill_proposals(L, log)
-    if not auto:
-        rec["auto_fill"] = dict(proposed=0)
-        return
-    keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
-    r = apply_hints(L, auto, work, conflicts, log) or {}
+    """Default-on (OT_LEC_AUTO_FILL=0 disables): fill_proposals -> apply_hints, repeated to a fixed point (at most
+    OT_LEC_AUTO_FILL_ITERS, default 4).  Each refinement round re-runs noreset_filter, which can drop further constant
+    hypotheses (rxsb 11-23: 29 more, d_u.line[319] / rad_st[10][*], after the first proposal); the chains they fed then
+    fail as false roots.  The next pass proposes those newly dropped constants too, with the fills kept so far as
+    predecessors.  The hypothesis set of the last converged pass is restored when a pass does not converge.
+    -> rec['auto_fill'] = dict(proposed, kept, dropped, refused, passes, first)."""
+    iters = max(1, int(os.environ.get("OT_LEC_AUTO_FILL_ITERS", "4") or 4))
+    out = dict(proposed=0, kept=0, dropped=0, refused=0, passes=0, first=[])
+    seen = None
+    for it in range(iters):
+        auto = fill_proposals(L, log)
+        sig = sorted((h[1], h[2][2] or "") for h in auto)
+        cur = sorted((k, h[2] or "") for (sd, k), h in L.hyp.items() if sd == "gold" and h[0] == "fill")
+        if not auto or sig == seen or sig == cur:         # nothing new to propose: fixed point
+            break
+        seen = sig
+        keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
+        r = apply_hints(L, auto, work, conflicts, log) or {}
+        out["passes"] = it + 1
+        out["proposed"] = max(out["proposed"], len(auto))
+        out["dropped"] += len(r.get("dropped") or [])
+        out["refused"] += len(r.get("fill_refused") or [])
+        if not r.get("kept"):
+            L.hyp.clear(); L.hyp.update(keep_hyp)
+            L.cons[:] = keep_cons
+            log.append(f"auto pipeline-fill pass {it + 1}: refinement did not converge; hypotheses restored")
+            break
+        kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "fill")
+        log.append(f"auto pipeline-fill pass {it + 1}: {len(kept)} of {len(auto)} fills kept")
     kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "fill")
-    if not r.get("kept"):
-        L.hyp.clear(); L.hyp.update(keep_hyp)
-        L.cons[:] = keep_cons
-        kept = []
-        log.append("auto pipeline-fill: refinement did not converge; hypotheses restored")
-    rec["auto_fill"] = dict(proposed=len(auto), kept=len(kept), dropped=len(r.get("dropped") or []),
-                            refused=len(r.get("fill_refused") or []), first=kept[:20])
+    out["kept"], out["first"] = len(kept), kept[:20]
+    rec["auto_fill"] = out
 
 
 def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108, exclude=()):
