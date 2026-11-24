@@ -215,3 +215,10 @@
   - Note: under the new fail-closed LANDREMAP, use the parent plan as --remap-base.
   HEAD-R18 keeps East: the epin_r4 resume, the r18g escape kit, the rscap probe and the 66ce census.
 - 2026-11-23 19:35 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] E-epin4-esc (hd_lep0N_1123175731/gen/hd_lep0N): stage [place FAIL]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
+- 2026-11-23 20:32 PST STATE 20:32 [HEAD-R18 -> COORD, FOLLOWUP-HEAD]
+  - epin_r4 kit hd_lep0N_1123175731: resumed, now in CTS (4_1_cts), not yet at GRT.
+  - r18g escape kit hd_lep0N_1123172531: in GRT (tapbal GRT, extra iteration 3/30).
+  - rscap probe hd_lep0N_1123184332: in placement (3_5 detail place).
+  - 66ce census: running on intel1.
+  - 23:00 East census: on track for the r18g escape kit and 66ce. epin_r4 GRT likely 23:00-23:30. rscap is later (just past place); it is not part of the census.
+  Next post by 21:15.
