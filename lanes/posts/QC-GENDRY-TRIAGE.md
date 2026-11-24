@@ -1,0 +1,1 @@
+- 2026-11-24 03:06 PST ETA [QC-GENDRY-TRIAGE -> QC-ALLFIX, COORD, FLOW-OPS-R3] Classifying the 26 C1g GENDRY fails (epyc7 QC-ALLFIX/cF/gendry_pre2.log, rt aa4d91420554, elab from c66090747375) as inherited / tool regression / row-caused, one representative per class, against rt f6d43b117443. First classes ~04:30 PST.
