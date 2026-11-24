@@ -8,3 +8,7 @@ Job: S81 probe-through kits on types c8 leaves the same, from a strict-clean bin
 - Specs: intel2 ~/coord/autopilot/private_specs/S81-PROBE-LAUNCH/<die_type_stamp>/ (result.json there). Run logs: intel2 /srv/opentallas-scratch2/claude/s81-probe-launch/logs/<type>.log
 - The other unlaunched specs in that dir are inert (types already signed). The t17 probe was stopped at gen as a duplicate.
 - Next: when each probe reaches place / CTS (read the post-hook report) / final 5_1_grt.odb, read it and send renders to FABLE-RC-ALL. When c8 strict lands (~23:30), re-probe its geometry types: INT posts the bind path.
+## 23:55 PST CORRECTION (overrides the above)
+- Only t24__cl64811a5d + t40__cl1ea9de02 match the two-setting c8 rule; the other 5 also change taps or band_fixed_um/landing_contract vs J8. The diff is c8dry pre-tail. lepw_mu_LP t2 was grt_flat_overflow, "no unchanged retry": COORD keep/cancel pending.
+- t30 x2 and t7: ended, PROBE.json GRT overflow 0; signoff.json NOT SIGNED (probe_through). result.json SIGNED is wrong: never count.
+- Owed: routed records, post-hook CTS, 5_1_grt.odb reads, renders to FABLE-RC-ALL. Cancel only via ot-run --cancel (I used systemctl stop on t17: do not repeat).
