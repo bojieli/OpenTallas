@@ -1543,3 +1543,36 @@ def test_json_q_alias_skips_partly_known_slang_array(tmp_path):
     L = SimpleNamespace(hyp={}, gp={'ff:u.x[0]': 2}, tp={'ff:u.y': 2}, tc={},
                         gonly=['ff:u.x[0]'], tonly=['ff:u.y'])
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+
+
+def _x_twin_design(tmp_path, tag, k_enable):
+    """LEC-MERGEPAIR-FIX (s81 attn_tr_x 11-23): each gold copy's next state also reads its OWN unnamed $anyseq (X)
+    input, here as e ? (d & (x | e)) : q, so the exact support fingerprints of the dropped copy k and the kept copy c1
+    differ by one free input.  Inputs x1 / x2 have no map name (free X inputs)."""
+    hold = lambda m, e, d, q: m.AND(m.AND(e, d) ^ 1, m.AND(e ^ 1, q) ^ 1) ^ 1           # e ? d : q
+    xd = lambda m, d, x, e: m.AND(d, m.AND(x ^ 1, e ^ 1) ^ 1)                            # d & (x | e)
+    def gold_fn(m, l):
+        ke = l[k_enable]
+        return {"c1": hold(m, l["e"], xd(m, l["d"], l["x1"], l["e"]), l["c1"]),
+                "k": hold(m, ke, xd(m, l["d"], l["x2"], ke), l["k"]), "o": m.XOR(l["k"], l["d"])}
+    g, gm = _seq(tmp_path, "gold" + tag, ["d", "e", "f", "x1", "x2"], ["c1", "k", "o"], gold_fn)
+    t, tm = _seq(tmp_path, "gate" + tag, ["d", "e", "f", "x1"], ["c1", "o"],
+                 lambda m, l: {"c1": hold(m, l["e"], xd(m, l["d"], l["x1"], l["e"]), l["c1"]),
+                               "o": m.XOR(l["c1"], l["d"])})
+    for mp, xs in ((gm, (3, 4)), (tm, (3,))):
+        for i in xs:
+            del mp["input"][i]
+    return lec.Lec(g, gm, t, tm)
+
+
+def test_merged_copy_with_private_x_input_is_proposed(tmp_path):
+    L = _x_twin_design(tmp_path, "a", "e")
+    assert L.gonly == ["ff:u_dut.k"]
+    log = []
+    lec.merged_proposals(L, log)
+    assert L.hyp.get(("gold", "ff:u_dut.k")) == ("eq", "gold", "ff:u_dut.c1", 0), log
+    assert "X-normalised support" in log[-1]
+    # a copy with a different load enable is no twin: nothing proposed
+    L2 = _x_twin_design(tmp_path, "b", "f")
+    lec.merged_proposals(L2, [])
+    assert ("gold", "ff:u_dut.k") not in L2.hyp

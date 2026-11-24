@@ -6481,6 +6481,33 @@ def merged_proposals(L, log, cap=4096):
                 continue
             if _same_reading_self(s_k, support(L.gc[c]), k, c):
                 cands[k].append(c)
+    # LEC-MERGEPAIR-FIX (RELEC-1122 11-23, s81 attn_tr_x: 502 points differ, "merged proposal: 0 of 5216"): synthesis
+    # merged the 8 copies tr[gr*8+gx][b] of a row group for the bits elem() makes identical (low byte, mode, pad) and
+    # kept one; every gold copy's next state also reads its OWN unnamed $anyseq (X, don't-care) input, so the exact
+    # support fingerprints never agreed and 4480 dropped copies stayed free.  A gold-only register with no exact
+    # candidate is fingerprinted again with every free X input read as one token 'X' (structural D-cone match: same
+    # named support = same load condition / data / row group, SELF for its own state); like every other proposal the
+    # pair is proved by the simultaneous induction and dropped if refuted, never assumed.
+    xin = {("x", lit >> 1) for lit in getattr(L, "gx", ())}
+    n_x = 0
+    if xin:
+        xnorm = lambda s_, me: frozenset("SELF" if x == me else ("X" if x in xin else x) for x in s_)
+        fpx = {}
+        for k in L.gonly:
+            if not k.startswith("ff:") or k in cands or ("gold", k) in L.hyp or k not in L.gc:
+                continue
+            s_ = support(L.gc[k])
+            if s_ & xin:
+                fpx.setdefault(xnorm(s_, k), []).append(k)
+        if fpx:
+            for c in L.matched:
+                if not c.startswith("ff:") or c not in L.gc:
+                    continue
+                s_ = support(L.gc[c])
+                for k in fpx.get(xnorm(s_, c), ()):
+                    if ("gold", k) not in L.hyp and c not in cands.get(k, ()):
+                        cands[k].append(c)
+                        n_x += 1
     choice = {k: cs[0] for k, cs in cands.items()}
     pending = {k: list(cs) for k, cs in cands.items() if len(cs) > 1}
     rounds = 0
@@ -6546,7 +6573,8 @@ def merged_proposals(L, log, cap=4096):
     n_sib = sum(1 for c2 in sib if ("both", c2) in L.hyp)
     log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support"
                + (f" ({n_dis} re-chosen among same-support candidates by bound-state simulation)" if n_dis else "")
-               + (f"; {n_sib} same-support sibling copies proposed equal to the chosen copy" if n_sib else ""))
+               + (f"; {n_sib} same-support sibling copies proposed equal to the chosen copy" if n_sib else "")
+               + (f"; {n_x} candidates by X-normalised support (free X inputs as one token)" if n_x else ""))
 
 def early_whole_compare(L, work, conflicts, log, rnd):
     """Opt-in proof ordering only: a fully proved whole miter can stop alias discovery.
