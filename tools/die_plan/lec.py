@@ -3498,6 +3498,33 @@ def trace_proposals(L, T, tried, log):
             pool_m[c].append((k, p))
     rep = {}                       # canonical trace -> (gold key whose value carries it, its polarity)
     n = 0
+    # LEC-TRACE-NEAREST (QC-COLLS-LEC 11-24, QC coll_s attempt_8: NOT EQUIVALENT 20 + 1 in g_face_4 u_ctl): one
+    # trace class can hold several gold-only registers and several gate-only flops.  The faces' codec controllers
+    # each keep e1[0] (epoch tied 8'h01) plus a gold-only duplicate re[0] that synthesis merged into e1[0]; gate
+    # e1[0] of both faces is re-keyed e1#t[0].  Taking gate flops greedily in gold-name order let face_3 re[0] (sorted
+    # before face_4) take gate face_4 e1#t[0], so gold face_4 e1[0] / re[0] (and, through them, e2[0] / e3[0]) stayed
+    # free and epoch_abort / fault_cause / rx_v 'differed'.  A gate flop is now reserved for the eligible gold-only
+    # register of its class nearest by name (ties keep the old first-come order); every pair is still proved.
+    elig = []
+    for k in L.gonly:
+        t = T.get(("gold", k))
+        if t and k.startswith("ff:") and ("gold", k) not in L.hyp and k not in partnered:
+            elig.append((k,) + canon(t))
+    owner = {}                     # gate flop -> the eligible gold-only register of its class nearest by name
+    by_c = collections.defaultdict(list)
+    for k, c, _ in elig:
+        if pool_t.get(c):
+            by_c[c].append(k)
+    for c, ks in by_c.items():
+        gs = pool_t[c]
+        if len(ks) < 2 or len(ks) * len(gs) > 65536:
+            continue
+        used_k, used_g = set(), set()
+        for _, k, g in sorted((name_dist(k, g), k, g) for k in ks for g, _ in gs if tried[("tr", "gate", g, k)] < 2):
+            if k not in used_k and g not in used_g:
+                owner[g] = k
+                used_k.add(k)
+                used_g.add(g)
     for k in L.gonly:
         t = T.get(("gold", k))
         if not t or not k.startswith("ff:") or ("gold", k) in L.hyp or k in partnered:
@@ -3505,6 +3532,8 @@ def trace_proposals(L, T, tried, log):
         c, p = canon(t)
         hit = None
         for g, q in sorted(pool_t.get(c, []), key=lambda e: name_dist(k, e[0])):
+            if owner.get(g, k) != k:
+                continue                   # reserved for a nearer-named gold-only register of the same trace
             if tried[("tr", "gate", g, k)] < 2:
                 hit = ("gate", g, ("eq", "gold", k, p ^ q))
                 pool_t[c].remove((g, q))

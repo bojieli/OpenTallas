@@ -788,6 +788,28 @@ def test_sequential_traces_pair_cross_instance_relaid_line(tmp_path, monkeypatch
     assert set(_sim_prove(m).values()) == {"proved"}
 
 
+def test_trace_proposals_reserve_gate_flop_for_nearest_name(tmp_path, monkeypatch):
+    """QC coll_s attempt_8 (QC-COLLS-LEC 11-24): faces A and B each keep e1[0] plus a gold-only duplicate re[0] that
+    synthesis merged into e1[0]; the gate re-keys both faces' e1[0] as e1#t[0], and all four gold flops share one
+    trace.  Greedy gold-name order let A.re[0] take gate B.e1#t[0], leaving gold B.e1[0] free (20 + 1 differs).  Each
+    gate flop must go to the gold flop of its own name; the duplicates fall back to a gold representative."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    names = lambda ks: {i: [(f"u_dut.{k}$_DFF_P_.lecq", 0)] for i, k in enumerate(ks)}
+    g = tmp_path / "gold.aig"
+    g.write_bytes(_aig_bytes(1, [2, 2, 2, 2, 4, 8], []))       # A.e1, A.re, B.e1, B.re <= d; oA <= A.e1, oB <= B.e1
+    t = tmp_path / "gate.aig"
+    t.write_bytes(_aig_bytes(1, [2, 2, 4, 6], []))             # A.e1#t, B.e1#t <= d; oA <= A.e1#t, oB <= B.e1#t
+    gm = {"input": {0: [("d", 0)]}, "latch": names(["A.e1[0]", "A.re[0]", "B.e1[0]", "B.re[0]", "oA", "oB"]),
+          "output": {}}
+    tm = {"input": {0: [("d", 0)]}, "latch": names(["A.e1#t[0]", "B.e1#t[0]", "oA", "oB"]), "output": {}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    T = lec.seq_traces(L, [])
+    lec.trace_proposals(L, T, lec.collections.Counter(), [])
+    assert L.hyp[("gate", "ff:u_dut.A.e1#t[0]")][:3] == ("eq", "gold", "ff:u_dut.A.e1[0]")
+    assert L.hyp[("gate", "ff:u_dut.B.e1#t[0]")][:3] == ("eq", "gold", "ff:u_dut.B.e1[0]")
+    assert ("gold", "ff:u_dut.B.e1[0]") not in L.hyp
+
+
 def test_sequential_traces_line_one_stage_short_differs(tmp_path, monkeypatch):
     """negative control: the gate outputs load stage 1 (one cycle early) -> oA / oB differ."""
     monkeypatch.setattr(lec, "prove", _sim_prove)
