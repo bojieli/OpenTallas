@@ -1,0 +1,586 @@
+{
+ "verdict": "PASS_W6_WITNESS_AND_SCHEDULE",
+ "witness": {
+  "schema": "opentallas.head.root88_compiler_boot.v1",
+  "status": "SOURCE_WITNESS_ONLY",
+  "plan_event": "w6",
+  "n4_link_added_cycles": {
+   "coll_WN1_u__1": 4,
+   "coll_WN2_u__3": 4,
+   "coll_WN1_d__0": 2,
+   "coll_WN2_d__0": 2
+  },
+  "n4_link_sched_lat": {
+   "coll_WN1_u__1": 4,
+   "coll_WN2_u__3": 4,
+   "coll_WN1_d__0": 4,
+   "coll_WN2_d__0": 4
+  },
+  "n4_data_cycles_added_per_link": 1,
+  "source_plan_sha256": "b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381",
+  "source_witness_sha256": {
+   "source_plan.json": "b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381",
+   "source_sidecar.json": "ba968452ea5ae279da4ba59efbfbf026d7abac9a80729c30770f3119547411ac",
+   "start_stages.json": "b0970ff4a93ecc1a7aa92302e17dd06b89acfb7560def25cc14c982956aae649",
+   "start_stages.sv": "8ac30434ad222d125771e4f5891376064f5bf0a5a5c72acca9bcac1178923b5f",
+   "root88_report.json": "ab60927a80ad8e2974bfa5b76f109a05844ab2872861722af93fff52d03f756d",
+   "boot88_account.json": "332d8fcadaf6faa04b7a0c75b1567381c6f620927a021e4c788aa6d3b3fc23a2"
+  },
+  "root": {
+   "id": "b0",
+   "region": "st:h",
+   "module": "ot_dp_landing_root",
+   "settle": 88,
+   "clock_port": "t_st_b0__clk",
+   "reset_port": "wrst_sp3__rst_start_raw_22"
+  },
+  "root_settle_cycles": 88,
+  "previous_settle_cycles": 64,
+  "delta_boot_cycles": 24,
+  "delta_from_original64_boot_cycles": 24,
+  "added_steady_cycles": 0,
+  "source_bounds": {
+   "root_start_upper_cycle": 113,
+   "part_start_max_cycle": 365,
+   "control_ready_or_fault_upper_cycle": 5851
+  },
+  "bounds_scope": "conditional generated START/CA/status network READY_OR_FAULT; native PMA/PHY/external HOST/mission excluded",
+  "physical_START_qualified": false,
+  "actual_physical_START_cycle": null,
+  "admission": "actual registered root ready && !actual sticky fault && actual host boot_done",
+  "global_booking_qualified": false
+ },
+ "production_gaps": [
+  {
+   "cause": "HEAD_physical_START_HOST_PMA_authority_missing",
+   "actual_physical_START_cycle": null,
+   "root_ready_or_fault_bound_is_not_mission": true
+  }
+ ],
+ "controls_caught": {
+  "missing_witness": "rejected",
+  "10_30_plan_selected": "rejected",
+  "l48uo_plan_selected": "rejected",
+  "l48uo_bundle": "rejected: current HEAD coherent source manifest differs",
+  "caller_START_date": "still blocked; no physical event inferred",
+  "sidecar_without_n4": "rejected: current HEAD ROOT88 source identity differs: source_sidecar.json",
+  "stale_settle_74": "rejected: current HEAD ROOT88 source identity differs: source_sidecar.json",
+  "collector_without_lep0N_w": "rejected: current HEAD ROOT88 source identity differs: source_sidecar.json",
+  "start_tree_e1br": "rejected: current HEAD ROOT88 source identity differs: start_stages.json"
+ },
+ "selected_source": {
+  "schema": "opentallas.head.root88_source_selection.v1",
+  "bundle": "make_bundle.py output"
+ },
+ "schedule": {
+  "plan_only_transport": 402,
+  "n4_links_only_transport": 402,
+  "sidecar_rows_below_sched_lat": [
+   {
+    "port": "chE0_o0__0",
+    "lane": "chE0_o0",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "chE0_t__0",
+    "lane": "chE0_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chE0_t__1",
+    "lane": "chE0_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE0_b1__0",
+    "lane": "chE0_b1",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE0_b4__0",
+    "lane": "chE0_b4",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE0_b6__0",
+    "lane": "chE0_b6",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE0_b9__0",
+    "lane": "chE0_b9",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chW0_t__0",
+    "lane": "chW0_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chW0_t__1",
+    "lane": "chW0_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE1_t__0",
+    "lane": "chE1_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chE1_t__1",
+    "lane": "chE1_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE1_b2__0",
+    "lane": "chE1_b2",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE1_b5__0",
+    "lane": "chE1_b5",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE1_b9__0",
+    "lane": "chE1_b9",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE1_r__0",
+    "lane": "chE1_r",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "chW1_t__1",
+    "lane": "chW1_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chW1_r__0",
+    "lane": "chW1_r",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "chE2_t__0",
+    "lane": "chE2_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chE2_t__1",
+    "lane": "chE2_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE2_b1__0",
+    "lane": "chE2_b1",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE2_b3__0",
+    "lane": "chE2_b3",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE2_b5__0",
+    "lane": "chE2_b5",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE2_r__0",
+    "lane": "chE2_r",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chW2_t__0",
+    "lane": "chW2_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chW2_t__1",
+    "lane": "chW2_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE3_t__0",
+    "lane": "chE3_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chE3_t__1",
+    "lane": "chE3_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE3_b6__0",
+    "lane": "chE3_b6",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE3_b8__0",
+    "lane": "chE3_b8",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE3_r__0",
+    "lane": "chE3_r",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chW3_t__0",
+    "lane": "chW3_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chW3_t__1",
+    "lane": "chW3_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE4_t__0",
+    "lane": "chE4_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chE4_t__1",
+    "lane": "chE4_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE4_b2__0",
+    "lane": "chE4_b2",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE4_b9__0",
+    "lane": "chE4_b9",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chW4_t__1",
+    "lane": "chW4_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE5_t__0",
+    "lane": "chE5_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chE5_t__1",
+    "lane": "chE5_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "chE5_b8__0",
+    "lane": "chE5_b8",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "chW5_t__0",
+    "lane": "chW5_t",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "chW5_t__1",
+    "lane": "chW5_t",
+    "added_cycles": 2,
+    "sched_lat": 3
+   },
+   {
+    "port": "sp_x2__0",
+    "lane": "sp_x2",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "sp_b2__0",
+    "lane": "sp_b2",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "sp_b3__0",
+    "lane": "sp_b3",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "sp_x4__0",
+    "lane": "sp_x4",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "sp_b4__0",
+    "lane": "sp_b4",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "sp_x5__0",
+    "lane": "sp_x5",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "host_tx__2",
+    "lane": "host_tx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "host_tx__4",
+    "lane": "host_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "host_tx__5",
+    "lane": "host_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "host_rx__2",
+    "lane": "host_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "host_rx__3",
+    "lane": "host_rx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "host_rx__4",
+    "lane": "host_rx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m0S_tx__2",
+    "lane": "m0S_tx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m0S_tx__4",
+    "lane": "m0S_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m0S_tx__5",
+    "lane": "m0S_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m0S_tx__9",
+    "lane": "m0S_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m0S_rx__0",
+    "lane": "m0S_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m0S_rx__5",
+    "lane": "m0S_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m0S_rx__6",
+    "lane": "m0S_rx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m0S_rx__7",
+    "lane": "m0S_rx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m7S_tx__2",
+    "lane": "m7S_tx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m7S_tx__4",
+    "lane": "m7S_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m7S_tx__5",
+    "lane": "m7S_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m7S_tx__8",
+    "lane": "m7S_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m7S_rx__4",
+    "lane": "m7S_rx",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "m7S_rx__5",
+    "lane": "m7S_rx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m7S_rx__6",
+    "lane": "m7S_rx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "m7N_tx__1",
+    "lane": "m7N_tx",
+    "added_cycles": 2,
+    "sched_lat": 1
+   },
+   {
+    "port": "kd__0",
+    "lane": "kd",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "lepf__0",
+    "lane": "lepf",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "unit_lep__0",
+    "lane": "unit_lep",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "coll_WN0_u__0",
+    "lane": "coll_WN0_u",
+    "added_cycles": 4,
+    "sched_lat": 3
+   },
+   {
+    "port": "coll_WN1_d__0",
+    "lane": "coll_WN1_d",
+    "added_cycles": 2,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_WN2_u__0",
+    "lane": "coll_WN2_u",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_WN2_d__0",
+    "lane": "coll_WN2_d",
+    "added_cycles": 2,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_WN3_u__1",
+    "lane": "coll_WN3_u",
+    "added_cycles": 3,
+    "sched_lat": 2
+   },
+   {
+    "port": "coll_WS1_u__0",
+    "lane": "coll_WS1_u",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_ES1_u__0",
+    "lane": "coll_ES1_u",
+    "added_cycles": 3,
+    "sched_lat": 4
+   },
+   {
+    "port": "coll_HOST0_u__0",
+    "lane": "coll_HOST0_u",
+    "added_cycles": 3,
+    "sched_lat": 4
+   }
+  ],
+  "with_sidecar_transport": 402,
+  "spine": 240,
+  "spine_slice": 5,
+  "spine_side": "W",
+  "gather_worst": {
+   "lane": "m0S_rx",
+   "cycles": 81
+  },
+  "formula": "longest_spine_round_trip + 2 * worst_gather_leg",
+  "landed_sidecar_extra": {},
+  "delta": {
+   "lanes": {},
+   "lanes_changed": 0,
+   "aggregate_lane_cycles": 0,
+   "transport_delta": 0,
+   "raw_transport_delta": 0
+  }
+ },
+ "physical_START_qualified": false,
+ "full_token": false
+}

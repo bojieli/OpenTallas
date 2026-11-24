@@ -2,19 +2,25 @@
 import hashlib,json,re
 from pathlib import Path
 
-# HEAD l48uo coherent source bundle, built by
-# results/token_pass/head_l48uo_compiler_1107/make_bundle.py from plan_of_record/l48uo.
+# HEAD W6 coherent source bundle (HEAD-R18, COORD ruling 11-24), built by
+# results/token_pass/head_w6_compiler_1124/make_bundle.py from the live W6 plan b3507e628de6, the W6 sidecar with the
+# lep0N_w status-network fix and the START tree re-sited on the W6 type raw exports.  Was l48uo f140216c (11-07).
 # A later event needs its own reviewed source selection; this bundle is not physically admitted.
 PINS={
- 'source_plan.json':'f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6',
- 'source_sidecar.json':'90d006a48f17adc6795bbf55e3077ff308bb6b417604167248051501cda25d77',
- 'start_stages.json':'255b2b4e27a2c8b1bb202038cb89d021b4a7ff82a5afac3e52b45e84bbacb5eb',
- 'start_stages.sv':'e9ed25cdd21dab157624adf049b27889d2774dfa530f0331c1595bdfa30c4002',
- 'root88_report.json':'0aebf3ae714564846871c845cc64a9a39e623dfc43e68426b45e75af2922f21f',
- 'boot88_account.json':'02acbd5e1065093b15c42ba437f25395f5b314a457da8186cc331bf40c3cc477'}
-MANIFEST_SHA256='911ed1aea33fdf03e58c395603870647f62c0fd070849470006eb80dc1902347'
-# The l48ui n4 event: +1 data cycle on these links, in the sidecar and not in plan latency.lanes.
+ 'source_plan.json':'b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381',
+ 'source_sidecar.json':'ba968452ea5ae279da4ba59efbfbf026d7abac9a80729c30770f3119547411ac',
+ 'start_stages.json':'b0970ff4a93ecc1a7aa92302e17dd06b89acfb7560def25cc14c982956aae649',
+ 'start_stages.sv':'8ac30434ad222d125771e4f5891376064f5bf0a5a5c72acca9bcac1178923b5f',
+ 'root88_report.json':'ab60927a80ad8e2974bfa5b76f109a05844ab2872861722af93fff52d03f756d',
+ 'boot88_account.json':'332d8fcadaf6faa04b7a0c75b1567381c6f620927a021e4c788aa6d3b3fc23a2'}
+MANIFEST_SHA256='793d69f1300dbc46525e200b6a6474bf72f3db76fa782dd8260aa37f3d14231d'
+# The l48ui n4 links as the W6 sidecar carries them: (added_cycles, count-aligned sched_lat).  Since l48uo the plan
+# latency equals sidecar sched_lat; the d links carry +2 added and sched_lat 4.
 N4_LINK_ADDED_CYCLES={'coll_WN1_u__1':4,'coll_WN2_u__3':4,'coll_WN1_d__0':2,'coll_WN2_d__0':2}
+N4_LINK_SCHED_LAT={'coll_WN1_u__1':4,'coll_WN2_u__3':4,'coll_WN1_d__0':4,'coll_WN2_d__0':4}
+# Recomputed W6 boot account (make_bundle.py, 10-30 accountant arithmetic).  The sidecar boot_budget still states the
+# l48uo values 110/382/5861; the witness uses the recomputed bounds.
+SOURCE_BOUNDS=dict(root_start_upper_cycle=113,part_start_max_cycle=365,control_ready_or_fault_upper_cycle=5851)
 
 
 def read_witness(selection,root):
@@ -24,7 +30,7 @@ def read_witness(selection,root):
     if hashlib.sha256(manifest_path.read_bytes()).hexdigest()!=MANIFEST_SHA256:
         raise ValueError('current HEAD coherent source manifest differs')
     manifest=json.loads(manifest_path.read_text())
-    if manifest.get('schema')!='opentallas.head_current_source.l48uo.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
+    if manifest.get('schema')!='opentallas.head_current_source.w6.v1' or manifest.get('frozen')is not False or manifest.get('physical_admission')is not False:
         raise ValueError('actual HEAD bundle source-only qualification differs')
     for key,wanted in PINS.items():
         data=(bundle/key).read_bytes()
@@ -42,15 +48,15 @@ def read_witness(selection,root):
     if {k:actual.get(k)for k in expected}!=expected or stages['root_settle']!=88:raise ValueError('actual ROOT88 stage/clock/reset identity differs')
     if not re.search(r'ot_dp_landing_root\s+#\(\.SETTLE\(88\)\)\s+u_st_b0\s*\(\.clk\(t_st_b0__clk\),\s*\.rst_raw_n\(wrst_sp3__rst_start_raw_22\)',raw['start_stages.sv']):
         raise ValueError('actual emitted root SETTLE88/clock/reset differs')
-    for obj,values in [(report,dict(root_settle_cycles=88,raw_relative_span=84,guard_cycles=4,delta_boot_cycles=14,added_steady_cycles=0)),
-        (account,dict(root_settle_cycles=88,previous_settle_cycles=74,delta_boot_cycles=14,added_steady_cycles=0,root_raw_release_cycle=21,root_start_upper_cycle=110,part_start_max_cycle=382))]:
+    for obj,values in [(report,dict(root_settle_cycles=88,raw_relative_span=72,guard_cycles=4,delta_boot_cycles=24,added_steady_cycles=0)),
+        (account,dict(root_settle_cycles=88,previous_settle_cycles=64,delta_boot_cycles=24,added_steady_cycles=0,root_raw_release_cycle=24,root_start_upper_cycle=113,part_start_max_cycle=365,status_ready_or_fault_at_glue_upper_cycle=5851))]:
         if any(type(obj.get(k))is not int or obj[k]!=v for k,v in values.items()):raise ValueError('ROOT88 actual boot cycle accounting differs')
     for port,cycles in N4_LINK_ADDED_CYCLES.items():
         row=next((p for p in side['ports'] if p['port']==port),None)
-        if row is None or row['added_cycles']!=cycles or side['count_aligned']['ports'][port]['sched_lat']!=cycles:
+        if row is None or row['added_cycles']!=cycles or side['count_aligned']['ports'][port]['sched_lat']!=N4_LINK_SCHED_LAT[port]:
             raise ValueError('HEAD sidecar lacks the n4 +1 data cycle: '+port)
     budget=side['collector']['boot_budget']
-    if budget['root_settle_cycles']!=88 or budget['delta_boot_cycles']!=14 or budget['data_cycles_added']!=0:
+    if budget['root_settle_cycles']!=88 or budget['data_cycles_added']!=0:
         raise ValueError('enriched HEAD metadata boot cost differs')
     # These are source bounds under stated clocks and CA windows. They never
     # establish a success event or provide an external producer/mission date.
@@ -58,12 +64,12 @@ def read_witness(selection,root):
         raise ValueError('source-only HEAD bound unexpectedly advertises a physical date')
     if account['physical_clock_phase_qualified']is not False or account['actual_external_host_event_cycle']is not None or account['actual_physical_full_array_boot_receipt']is not None:
         raise ValueError('source-only HEAD accounting is not a global physical witness')
-    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='l48uo',
-        n4_link_added_cycles=dict(N4_LINK_ADDED_CYCLES),n4_data_cycles_added_per_link=1,
+    return dict(schema='opentallas.head.root88_compiler_boot.v1',status='SOURCE_WITNESS_ONLY',plan_event='w6',
+        n4_link_added_cycles=dict(N4_LINK_ADDED_CYCLES),n4_link_sched_lat=dict(N4_LINK_SCHED_LAT),n4_data_cycles_added_per_link=1,
         source_plan_sha256=PINS['source_plan.json'],source_witness_sha256=dict(PINS),
-        root=expected,root_settle_cycles=88,previous_settle_cycles=74,delta_boot_cycles=14,
+        root=expected,root_settle_cycles=88,previous_settle_cycles=64,delta_boot_cycles=24,
         delta_from_original64_boot_cycles=24,added_steady_cycles=0,
-        source_bounds=dict(root_start_upper_cycle=110,part_start_max_cycle=382,control_ready_or_fault_upper_cycle=5861),
+        source_bounds=dict(SOURCE_BOUNDS),
         bounds_scope='conditional generated START/CA/status network READY_OR_FAULT; native PMA/PHY/external HOST/mission excluded',
         physical_START_qualified=False,actual_physical_START_cycle=None,
         admission='actual registered root ready && !actual sticky fault && actual host boot_done',

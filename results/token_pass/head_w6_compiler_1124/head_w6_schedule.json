@@ -1,0 +1,1023 @@
+{
+ "schema": "opentallas.s81_head.schedule_constants.v1",
+ "status": "PLAN_DERIVED_SOURCE_SCHEDULE",
+ "lanes": {
+  "coll_EN0_d": {
+   "raw_cycles": 7,
+   "ca_cycles": 0,
+   "cycles": 7,
+   "raw_components": {
+    "cycles": 7,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 3,
+    "clock_landing": 2,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  "coll_EN0_u": {
+   "raw_cycles": 5,
+   "ca_cycles": 0,
+   "cycles": 5,
+   "raw_components": {
+    "cycles": 5,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 3,
+    "natural": 5,
+    "pad": 0
+   }
+  },
+  "coll_EN1_d": {
+   "raw_cycles": 22,
+   "ca_cycles": 0,
+   "cycles": 22,
+   "raw_components": {
+    "cycles": 22,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 3,
+    "clock_landing": 7,
+    "natural": 22,
+    "pad": 0
+   }
+  },
+  "coll_EN1_u": {
+   "raw_cycles": 23,
+   "ca_cycles": 0,
+   "cycles": 23,
+   "raw_components": {
+    "cycles": 23,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 10,
+    "natural": 23,
+    "pad": 0
+   }
+  },
+  "coll_ES0_d": {
+   "raw_cycles": 7,
+   "ca_cycles": 0,
+   "cycles": 7,
+   "raw_components": {
+    "cycles": 7,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 3,
+    "clock_landing": 2,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  "coll_ES0_u": {
+   "raw_cycles": 5,
+   "ca_cycles": 0,
+   "cycles": 5,
+   "raw_components": {
+    "cycles": 5,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 3,
+    "natural": 5,
+    "pad": 0
+   }
+  },
+  "coll_ES1_d": {
+   "raw_cycles": 22,
+   "ca_cycles": 0,
+   "cycles": 22,
+   "raw_components": {
+    "cycles": 22,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 3,
+    "clock_landing": 7,
+    "natural": 22,
+    "pad": 0
+   }
+  },
+  "coll_ES1_u": {
+   "raw_cycles": 23,
+   "ca_cycles": 0,
+   "cycles": 23,
+   "raw_components": {
+    "cycles": 23,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 10,
+    "natural": 23,
+    "pad": 0
+   }
+  },
+  "coll_HOST0_d": {
+   "raw_cycles": 13,
+   "ca_cycles": 0,
+   "cycles": 13,
+   "raw_components": {
+    "cycles": 13,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 2,
+    "clock_landing": 5,
+    "natural": 13,
+    "pad": 0
+   }
+  },
+  "coll_HOST0_u": {
+   "raw_cycles": 14,
+   "ca_cycles": 0,
+   "cycles": 14,
+   "raw_components": {
+    "cycles": 14,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 1,
+    "clock_landing": 7,
+    "natural": 14,
+    "pad": 0
+   }
+  },
+  "coll_HOST1_d": {
+   "raw_cycles": 8,
+   "ca_cycles": 0,
+   "cycles": 8,
+   "raw_components": {
+    "cycles": 8,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 4,
+    "clock_landing": 2,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  "coll_HOST1_u": {
+   "raw_cycles": 5,
+   "ca_cycles": 0,
+   "cycles": 5,
+   "raw_components": {
+    "cycles": 5,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 3,
+    "natural": 5,
+    "pad": 0
+   }
+  },
+  "coll_WN0_d": {
+   "raw_cycles": 8,
+   "ca_cycles": 0,
+   "cycles": 8,
+   "raw_components": {
+    "cycles": 8,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 3,
+    "clock_landing": 3,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  "coll_WN0_u": {
+   "raw_cycles": 6,
+   "ca_cycles": 0,
+   "cycles": 6,
+   "raw_components": {
+    "cycles": 6,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 1,
+    "clock_landing": 3,
+    "natural": 6,
+    "pad": 0
+   }
+  },
+  "coll_WN1_d": {
+   "raw_cycles": 20,
+   "ca_cycles": 0,
+   "cycles": 20,
+   "raw_components": {
+    "cycles": 20,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 2,
+    "clock_landing": 8,
+    "natural": 20,
+    "pad": 0
+   }
+  },
+  "coll_WN1_u": {
+   "raw_cycles": 22,
+   "ca_cycles": 0,
+   "cycles": 22,
+   "raw_components": {
+    "cycles": 22,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 10,
+    "natural": 22,
+    "pad": 0
+   }
+  },
+  "coll_WN2_d": {
+   "raw_cycles": 36,
+   "ca_cycles": 0,
+   "cycles": 36,
+   "raw_components": {
+    "cycles": 36,
+    "stations": 18,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 3,
+    "clock_landing": 13,
+    "natural": 36,
+    "pad": 0
+   }
+  },
+  "coll_WN2_u": {
+   "raw_cycles": 38,
+   "ca_cycles": 0,
+   "cycles": 38,
+   "raw_components": {
+    "cycles": 38,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "clock_landing": 17,
+    "natural": 38,
+    "pad": 0
+   }
+  },
+  "coll_WN3_d": {
+   "raw_cycles": 19,
+   "ca_cycles": 0,
+   "cycles": 19,
+   "raw_components": {
+    "cycles": 19,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 4,
+    "clock_landing": 7,
+    "natural": 19,
+    "pad": 0
+   }
+  },
+  "coll_WN3_u": {
+   "raw_cycles": 16,
+   "ca_cycles": 0,
+   "cycles": 16,
+   "raw_components": {
+    "cycles": 16,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 2,
+    "clock_landing": 6,
+    "natural": 16,
+    "pad": 0
+   }
+  },
+  "coll_WS0_d": {
+   "raw_cycles": 7,
+   "ca_cycles": 0,
+   "cycles": 7,
+   "raw_components": {
+    "cycles": 7,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 3,
+    "clock_landing": 2,
+    "natural": 7,
+    "pad": 0
+   }
+  },
+  "coll_WS0_u": {
+   "raw_cycles": 5,
+   "ca_cycles": 0,
+   "cycles": 5,
+   "raw_components": {
+    "cycles": 5,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "clock_landing": 3,
+    "natural": 5,
+    "pad": 0
+   }
+  },
+  "coll_WS1_d": {
+   "raw_cycles": 22,
+   "ca_cycles": 0,
+   "cycles": 22,
+   "raw_components": {
+    "cycles": 22,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 3,
+    "clock_landing": 7,
+    "natural": 22,
+    "pad": 0
+   }
+  },
+  "coll_WS1_u": {
+   "raw_cycles": 23,
+   "ca_cycles": 0,
+   "cycles": 23,
+   "raw_components": {
+    "cycles": 23,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "clock_landing": 10,
+    "natural": 23,
+    "pad": 0
+   }
+  }
+ },
+ "ca_ports": [],
+ "ca_applied": false,
+ "raw_transport": {
+  "spine": {
+   "cycles": 240,
+   "slice": 5,
+   "side": "W",
+   "lanes": [
+    "sp_x0",
+    "sp_b0",
+    "sp_x1",
+    "sp_b1",
+    "sp_x2",
+    "sp_b2",
+    "sp_x3",
+    "sp_b3",
+    "sp_x4",
+    "sp_b4",
+    "sp_x5",
+    "sp_b5",
+    "chW5_b0",
+    "chW5_b1",
+    "chW5_b2",
+    "chW5_b3",
+    "chW5_b4",
+    "chW5_b5",
+    "chW5_b6",
+    "chW5_b7",
+    "chW5_b8",
+    "chW5_b9",
+    "chW5_h",
+    "chW5_o0",
+    "chW5_o1",
+    "chW5_o2",
+    "chW5_o3",
+    "chW5_o4",
+    "chW5_o5",
+    "chW5_o6",
+    "chW5_o7",
+    "chW5_o8",
+    "chW5_o9",
+    "chW5_r",
+    "chW5_t"
+   ]
+  },
+  "gather_worst": {
+   "lane": "m0S_rx",
+   "cycles": 81
+  },
+  "total_cycles": 402,
+  "formula": "longest_spine_round_trip + 2 * worst_gather_leg"
+ },
+ "transport": {
+  "spine": {
+   "cycles": 240,
+   "slice": 5,
+   "side": "W",
+   "lanes": [
+    "sp_x0",
+    "sp_b0",
+    "sp_x1",
+    "sp_b1",
+    "sp_x2",
+    "sp_b2",
+    "sp_x3",
+    "sp_b3",
+    "sp_x4",
+    "sp_b4",
+    "sp_x5",
+    "sp_b5",
+    "chW5_b0",
+    "chW5_b1",
+    "chW5_b2",
+    "chW5_b3",
+    "chW5_b4",
+    "chW5_b5",
+    "chW5_b6",
+    "chW5_b7",
+    "chW5_b8",
+    "chW5_b9",
+    "chW5_h",
+    "chW5_o0",
+    "chW5_o1",
+    "chW5_o2",
+    "chW5_o3",
+    "chW5_o4",
+    "chW5_o5",
+    "chW5_o6",
+    "chW5_o7",
+    "chW5_o8",
+    "chW5_o9",
+    "chW5_r",
+    "chW5_t"
+   ]
+  },
+  "gather_worst": {
+   "lane": "m0S_rx",
+   "cycles": 81
+  },
+  "total_cycles": 402,
+  "formula": "longest_spine_round_trip + 2 * worst_gather_leg"
+ },
+ "separate_legs": {
+  "head_lep_fault_return": {
+   "raw_cycles": 8,
+   "ca_cycles": 0,
+   "cycles": 8,
+   "raw_components": {
+    "cycles": 8,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 4,
+    "natural": 8,
+    "pad": 0
+   }
+  },
+  "head_lep_landing": {
+   "raw_cycles": 9,
+   "ca_cycles": 0,
+   "cycles": 9,
+   "raw_components": {
+    "cycles": 9,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "clock_landing": 4,
+    "natural": 9,
+    "pad": 0
+   }
+  },
+  "host_rx": {
+   "raw_cycles": 58,
+   "ca_cycles": 0,
+   "cycles": 58,
+   "raw_components": {
+    "cycles": 58,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 2,
+    "clock_landing": 16,
+    "natural": 58,
+    "pad": 0
+   }
+  },
+  "host_tx": {
+   "raw_cycles": 58,
+   "ca_cycles": 0,
+   "cycles": 58,
+   "raw_components": {
+    "cycles": 58,
+    "stations": 38,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 1,
+    "clock_landing": 17,
+    "natural": 58,
+    "pad": 0
+   }
+  }
+ },
+ "start_dates": null,
+ "token_rate": null,
+ "physical_qualified": false,
+ "programme_installable": false,
+ "landed_sidecar_extra": {},
+ "sidecar_rows_below_sched_lat": [
+  {
+   "port": "chE0_o0__0",
+   "lane": "chE0_o0",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "chE0_t__0",
+   "lane": "chE0_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chE0_t__1",
+   "lane": "chE0_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE0_b1__0",
+   "lane": "chE0_b1",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE0_b4__0",
+   "lane": "chE0_b4",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE0_b6__0",
+   "lane": "chE0_b6",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE0_b9__0",
+   "lane": "chE0_b9",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chW0_t__0",
+   "lane": "chW0_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chW0_t__1",
+   "lane": "chW0_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE1_t__0",
+   "lane": "chE1_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chE1_t__1",
+   "lane": "chE1_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE1_b2__0",
+   "lane": "chE1_b2",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE1_b5__0",
+   "lane": "chE1_b5",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE1_b9__0",
+   "lane": "chE1_b9",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE1_r__0",
+   "lane": "chE1_r",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "chW1_t__1",
+   "lane": "chW1_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chW1_r__0",
+   "lane": "chW1_r",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "chE2_t__0",
+   "lane": "chE2_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chE2_t__1",
+   "lane": "chE2_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE2_b1__0",
+   "lane": "chE2_b1",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE2_b3__0",
+   "lane": "chE2_b3",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE2_b5__0",
+   "lane": "chE2_b5",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE2_r__0",
+   "lane": "chE2_r",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chW2_t__0",
+   "lane": "chW2_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chW2_t__1",
+   "lane": "chW2_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE3_t__0",
+   "lane": "chE3_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chE3_t__1",
+   "lane": "chE3_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE3_b6__0",
+   "lane": "chE3_b6",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE3_b8__0",
+   "lane": "chE3_b8",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE3_r__0",
+   "lane": "chE3_r",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chW3_t__0",
+   "lane": "chW3_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chW3_t__1",
+   "lane": "chW3_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE4_t__0",
+   "lane": "chE4_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chE4_t__1",
+   "lane": "chE4_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE4_b2__0",
+   "lane": "chE4_b2",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE4_b9__0",
+   "lane": "chE4_b9",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chW4_t__1",
+   "lane": "chW4_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE5_t__0",
+   "lane": "chE5_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chE5_t__1",
+   "lane": "chE5_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "chE5_b8__0",
+   "lane": "chE5_b8",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "chW5_t__0",
+   "lane": "chW5_t",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "chW5_t__1",
+   "lane": "chW5_t",
+   "added_cycles": 2,
+   "sched_lat": 3
+  },
+  {
+   "port": "sp_x2__0",
+   "lane": "sp_x2",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "sp_b2__0",
+   "lane": "sp_b2",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "sp_b3__0",
+   "lane": "sp_b3",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "sp_x4__0",
+   "lane": "sp_x4",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "sp_b4__0",
+   "lane": "sp_b4",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "sp_x5__0",
+   "lane": "sp_x5",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "host_tx__2",
+   "lane": "host_tx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "host_tx__4",
+   "lane": "host_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "host_tx__5",
+   "lane": "host_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "host_rx__2",
+   "lane": "host_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "host_rx__3",
+   "lane": "host_rx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "host_rx__4",
+   "lane": "host_rx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m0S_tx__2",
+   "lane": "m0S_tx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m0S_tx__4",
+   "lane": "m0S_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m0S_tx__5",
+   "lane": "m0S_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m0S_tx__9",
+   "lane": "m0S_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m0S_rx__0",
+   "lane": "m0S_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m0S_rx__5",
+   "lane": "m0S_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m0S_rx__6",
+   "lane": "m0S_rx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m0S_rx__7",
+   "lane": "m0S_rx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m7S_tx__2",
+   "lane": "m7S_tx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m7S_tx__4",
+   "lane": "m7S_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m7S_tx__5",
+   "lane": "m7S_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m7S_tx__8",
+   "lane": "m7S_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m7S_rx__4",
+   "lane": "m7S_rx",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "m7S_rx__5",
+   "lane": "m7S_rx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m7S_rx__6",
+   "lane": "m7S_rx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "m7N_tx__1",
+   "lane": "m7N_tx",
+   "added_cycles": 2,
+   "sched_lat": 1
+  },
+  {
+   "port": "kd__0",
+   "lane": "kd",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "lepf__0",
+   "lane": "lepf",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "unit_lep__0",
+   "lane": "unit_lep",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "coll_WN0_u__0",
+   "lane": "coll_WN0_u",
+   "added_cycles": 4,
+   "sched_lat": 3
+  },
+  {
+   "port": "coll_WN1_d__0",
+   "lane": "coll_WN1_d",
+   "added_cycles": 2,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_WN2_u__0",
+   "lane": "coll_WN2_u",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_WN2_d__0",
+   "lane": "coll_WN2_d",
+   "added_cycles": 2,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_WN3_u__1",
+   "lane": "coll_WN3_u",
+   "added_cycles": 3,
+   "sched_lat": 2
+  },
+  {
+   "port": "coll_WS1_u__0",
+   "lane": "coll_WS1_u",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_ES1_u__0",
+   "lane": "coll_ES1_u",
+   "added_cycles": 3,
+   "sched_lat": 4
+  },
+  {
+   "port": "coll_HOST0_u__0",
+   "lane": "coll_HOST0_u",
+   "added_cycles": 3,
+   "sched_lat": 4
+  }
+ ]
+}

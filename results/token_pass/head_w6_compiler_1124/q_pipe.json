@@ -1,0 +1,69 @@
+{
+ "verdict": "PASS_TWO_JOB_PIPELINE_W6_WITNESS",
+ "scope": "TEST date books on retained native A/B images",
+ "emitted": 2,
+ "status": "PARTIAL",
+ "HEAD_boot": {
+  "schema": "opentallas.head.root88_compiler_boot.v1",
+  "status": "SOURCE_WITNESS_ONLY",
+  "plan_event": "w6",
+  "n4_link_added_cycles": {
+   "coll_WN1_u__1": 4,
+   "coll_WN2_u__3": 4,
+   "coll_WN1_d__0": 2,
+   "coll_WN2_d__0": 2
+  },
+  "n4_link_sched_lat": {
+   "coll_WN1_u__1": 4,
+   "coll_WN2_u__3": 4,
+   "coll_WN1_d__0": 4,
+   "coll_WN2_d__0": 4
+  },
+  "n4_data_cycles_added_per_link": 1,
+  "source_plan_sha256": "b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381",
+  "source_witness_sha256": {
+   "source_plan.json": "b3507e628de66025925b5e381ad18d6efd5bde9e5a98b826a7d52815a5840381",
+   "source_sidecar.json": "ba968452ea5ae279da4ba59efbfbf026d7abac9a80729c30770f3119547411ac",
+   "start_stages.json": "b0970ff4a93ecc1a7aa92302e17dd06b89acfb7560def25cc14c982956aae649",
+   "start_stages.sv": "8ac30434ad222d125771e4f5891376064f5bf0a5a5c72acca9bcac1178923b5f",
+   "root88_report.json": "ab60927a80ad8e2974bfa5b76f109a05844ab2872861722af93fff52d03f756d",
+   "boot88_account.json": "332d8fcadaf6faa04b7a0c75b1567381c6f620927a021e4c788aa6d3b3fc23a2"
+  },
+  "root": {
+   "id": "b0",
+   "region": "st:h",
+   "module": "ot_dp_landing_root",
+   "settle": 88,
+   "clock_port": "t_st_b0__clk",
+   "reset_port": "wrst_sp3__rst_start_raw_22"
+  },
+  "root_settle_cycles": 88,
+  "previous_settle_cycles": 64,
+  "delta_boot_cycles": 24,
+  "delta_from_original64_boot_cycles": 24,
+  "added_steady_cycles": 0,
+  "source_bounds": {
+   "root_start_upper_cycle": 113,
+   "part_start_max_cycle": 365,
+   "control_ready_or_fault_upper_cycle": 5851
+  },
+  "bounds_scope": "conditional generated START/CA/status network READY_OR_FAULT; native PMA/PHY/external HOST/mission excluded",
+  "physical_START_qualified": false,
+  "actual_physical_START_cycle": null,
+  "admission": "actual registered root ready && !actual sticky fault && actual host boot_done",
+  "global_booking_qualified": false
+ },
+ "gap_causes": [
+  "HBC_context_load_commit_lifecycle_not_bound",
+  "HEAD_physical_START_HOST_PMA_authority_missing",
+  "full_stage_native_lowerings_incomplete",
+  "native_commands_or_END_outside_pipeline_window",
+  "native_compiler_row_lifetimes_held",
+  "published_local_reset_BOOT_contract_missing",
+  "receiver_capability_not_source_bound",
+  "receiver_host_word_count_mismatch",
+  "selected_native_MU_return_calendar_missing"
+ ],
+ "stale_selection_caught": true,
+ "full_token": false
+}
