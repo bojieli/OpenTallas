@@ -11,6 +11,8 @@ tree/directory without re-binding.  Shared tool for every die (was private reloc
     relocate_bind.py self OLD_BIND RAW OUT
         pass 2: OUT (= the tree-relocated copy) names its source bind dir OLD_BIND; rewrite OLD_BIND/ -> OUT/.  Every named path
         must exist in RAW (byte copy of the source bind) and OUT.  Files are replaced by write+rename (never through a hard link).
+    relocate_bind.py fork-sidecars OLD_TREE NEW_TREE OLD_BIND NEW_BIND STAGED_BIND [--refsha REF.json]
+        ot-tree-fork hook for a staged bind copy. Only live path sidecars are rewritten; RTL and reset receipts are byte-exact.
     relocate_bind.py check-receipts BIND_OUT                    0 = every rtl/*.reset_tree.json receipt matches its bound RTL
 
 HDL bytes (QC-TYPES-R3 11-18: 17/130 receipts broke on N3 -> kit-rtl "captured reset identity differs"): bound RTL is hashed by
@@ -225,6 +227,77 @@ def cmd_self(a):
           f"{len(checked)} paths checked, reset receipts 0 mismatch")
 
 
+FORK_PATH_SIDECARS = ("bind.f", "asbuilt.ys", "bind_report.json", "provenance_bind.json",
+                      "provenance_elab.json", "asbuilt_sources.json", "type_defines.json")
+
+
+def cmd_fork_sidecars(a):
+    """Rebase path consumers in a new inode-private bind before ot-tree-fork publishes it."""
+    stage = Path(a.staged_bind)
+    old_tree, new_tree = a.old_tree.rstrip("/"), a.new_tree.rstrip("/")
+    old_bind, new_bind = a.old_bind.rstrip("/"), a.new_bind.rstrip("/")
+    if not all(os.path.isabs(x) for x in (old_tree, new_tree, old_bind, new_bind)):
+        raise ValueError("fork-sidecars needs absolute paths")
+    if stage.parent.resolve() != Path(new_bind).parent.resolve() or not stage.name.startswith(Path(new_bind).name + ".forking-"):
+        raise ValueError("fork-sidecars needs the private staged bind created by ot-tree-fork")
+    if not (stage / "bind.f").is_file() or not Path(new_tree).is_dir():
+        raise ValueError("staged bind.f and the destination tree must exist")
+    bad = receipt_errors(stage)
+    if bad:
+        raise ValueError(f"reset receipts do not match source RTL: {bad[:5]}")
+    for meta in (stage / "rtl").glob("*.reset_tree.json"):
+        rtl = meta.with_name(meta.name.removesuffix(".reset_tree.json") + ".sv")
+        text = rtl.read_text()
+        if ((old_tree != new_tree and not comment_only(text, old_tree + "/")) or
+                (old_bind != new_bind and not comment_only(text, old_bind + "/"))):
+            raise ValueError(f"captured RTL has an active absolute path; rebind for the new tree: {rtl.name}")
+    refs = None
+    if a.refsha:
+        ref = json.loads(Path(a.refsha).read_text())
+        if ref["old"] != old_tree:
+            raise ValueError("source reference does not match the old tree")
+        refs = ref["paths"]
+    checked = set()
+
+    def replace(text, old, new, actual):
+        pattern = re.compile(re.escape(old) + r"(/[A-Za-z0-9_.+@=/-]*)?(?=$|[\s\x22\x27:,])")
+        def path(m):
+            rel = (m.group(1) or "").strip("/")
+            key = (old, rel)
+            if key not in checked:
+                src, dst = Path(old, rel), Path(actual, rel)
+                if old == old_bind:
+                    ok = dst.exists()
+                else:
+                    expected = refs.get(rel, "MISSING") if refs is not None else (
+                        sha(src) if src.is_file() else "DIR" if src.is_dir() else "MISSING")
+                    ok = dst.is_dir() if expected == "DIR" else dst.is_file() and sha(dst) == expected
+                if not ok:
+                    raise ValueError(f"bind path missing or changed at destination: {src}")
+                checked.add(key)
+            return new + (m.group(1) or "")
+        return pattern.sub(path, text)
+
+    rewrites = []
+    for name in FORK_PATH_SIDECARS:
+        file = stage / name
+        if not file.is_file():
+            continue
+        if file.is_symlink():
+            raise ValueError(f"bind path sidecar is a symlink: {file}")
+        text = file.read_text()
+        moved = replace(replace(text, old_tree, new_tree, new_tree), old_bind, new_bind, stage)
+        if moved != text:
+            rewrites.append((file, moved))
+    for file, moved in rewrites:
+        tmp = file.with_name(file.name + ".relocating")
+        with tmp.open("x") as f:
+            f.write(moved)
+        os.chmod(tmp, file.stat().st_mode & 0o777)
+        os.replace(tmp, file)
+    print(f"BIND-FORK {len(rewrites)} sidecars relocated, {len(checked)} paths checked, reset receipts match")
+
+
 def cmd_check(a):
     n = len(list(Path(a.bind_out, "rtl").glob("*.reset_tree.json"))); bad = receipt_errors(a.bind_out)
     for b in bad:
@@ -242,8 +315,20 @@ def main(argv=None):
     p.add_argument("--also", action="append", default=[], help="another local old-tree prefix (e.g. the realpath spelling) rewritten to NEW_TREE")
     p.set_defaults(f=cmd_tree)
     p = sp.add_parser("self"); p.add_argument("old_bind"); p.add_argument("raw"); p.add_argument("out"); p.set_defaults(f=cmd_self)
+    p = sp.add_parser("fork-sidecars")
+    for name in ("old_tree", "new_tree", "old_bind", "new_bind", "staged_bind"):
+        p.add_argument(name)
+    p.add_argument("--refsha")
+    p.set_defaults(f=cmd_fork_sidecars)
     p = sp.add_parser("check-receipts"); p.add_argument("bind_out"); p.set_defaults(f=cmd_check)
-    a = ap.parse_args(argv); a.f(a)
+    a = ap.parse_args(argv)
+    if a.cmd == "fork-sidecars":
+        try:
+            a.f(a)
+        except (OSError, ValueError, KeyError) as error:
+            ap.exit(3, f"BIND-FORK REFUSED: {error}\n")
+    else:
+        a.f(a)
 
 
 if __name__ == "__main__":

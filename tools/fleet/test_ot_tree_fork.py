@@ -1,6 +1,7 @@
 """FLOW-TREEFORK-R1 (FABLE-FLOW-2000 A4/A5): ot-tree-fork makes a private nlink-1 copy, never follows a link into an event tree,
 records provenance; src_manifest verify names the writer of a broken seal; kit_wave private-spec refuses a --tree that links into an
 event tree and --fork makes the tree with the fork tool."""
+import hashlib
 import json
 import os
 import stat
@@ -66,6 +67,38 @@ def test_fork_is_nlink1_copy_with_provenance(tmp_path):
     assert not list(tmp_path.glob("lane/fork.forking-*"))
     assert json.loads(open(TF.LOG).read().splitlines()[-1])["dst"] == str(dst)
     assert rec["method"] in ("copy", "reflink", "mixed")
+
+
+def test_bind_fork_rebases_filelists_and_preserves_captured_identity(tmp_path):
+    old_tree, new_tree = tmp_path / "old/tree", tmp_path / "new/tree"
+    old_bind, new_bind = tmp_path / "old/bind", tmp_path / "new/bind"
+    for root in (old_tree, new_tree):
+        mk(root / "leaf.sv", "module leaf; endmodule\n")
+    rtl = mk(old_bind / "rtl/top.sv", f"module top; endmodule // {old_tree}/leaf.sv:1.1\n")
+    captured = {"root": "u_reset_root"}
+    digest = hashlib.sha256(json.dumps(captured, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    receipt = mk(old_bind / "rtl/top.reset_tree.json", json.dumps({
+        "bound_module": "top", "tree": captured, "tree_sha256": digest,
+        "bound_rtl_sha256": hashlib.sha256(rtl.read_bytes()).hexdigest(),
+        "provenance": {"tree": str(old_tree)},
+    }))
+    mk(old_bind / "bind.f", f"{old_tree}/leaf.sv\n{rtl}\n")
+    mk(old_bind / "bind_report.json", json.dumps({"files": [str(rtl)]}))
+    mk(old_bind / "asbuilt.json", json.dumps({"creator": str(old_tree)}))
+    args = [str(old_bind), str(new_bind), "--bind-tree", str(old_tree), str(new_tree)]
+    assert TF.main(args) == 0
+    assert (new_bind / "bind.f").read_text().splitlines() == [str(new_tree / "leaf.sv"), str(new_bind / "rtl/top.sv")]
+    assert json.loads((new_bind / "bind_report.json").read_text())["files"] == [str(new_bind / "rtl/top.sv")]
+    assert (new_bind / "asbuilt.json").read_bytes() == (old_bind / "asbuilt.json").read_bytes()
+    assert (new_bind / "rtl/top.sv").read_bytes() == rtl.read_bytes()
+    assert (new_bind / "rtl/top.reset_tree.json").read_bytes() == receipt.read_bytes()
+    assert (new_bind / "rtl/top.sv").stat().st_ino != rtl.stat().st_ino
+
+    untrusted = tmp_path / "new/untrusted"
+    args[1] = str(untrusted)
+    rtl.write_text(rtl.read_text().replace(str(old_tree), str(new_tree)))
+    assert TF.main(args) == 4
+    assert not untrusted.exists()
 
 
 def test_fork_refuses_symlink_into_event_tree(tmp_path):

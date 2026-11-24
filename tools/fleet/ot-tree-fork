@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ot-tree-fork SRC DST [--host H] [--jobs N] [--materialize] [--dry]      (FLOW-TREEFORK-R1, FABLE-FLOW-2000 A4/A5)
 ot-tree-fork --verify DST [--src SRC]
+ot-tree-fork SRC_BIND DST_BIND --bind-tree SRC_TREE DST_TREE [--bind-refsha REF.json]
 
 The one way to get a PRIVATE WRITABLE copy of a die / event tree.  Lanes copied trees by hand (cp -al, cp -a, rsync); on 11-21 a `cp -al` of a
 path that had become a symlink to the KV D27d3 event tree made the lane's "private" tree a link into the event tree, its compose wrote
@@ -32,6 +33,9 @@ What a fork is:
   * PLAN LINKS (FLOW-FLEET-R1 11-22, COORD class fix: a launch-tree copy had physical/die_plan as a symlink into the shared famqc tree,
     its bind's R8 refresh rewrote the shared table): a symlink at physical, physical/die_plan or physical/die_plan/<die> (or below) whose
     target lies outside SRC is refused like an event link, event tree or not; --materialize copies its content in (a real private plan).
+  * BIND SIDECARS: --bind-tree takes an already-forked destination tree, checks the paths in live bind sidecars,
+    and publishes the relocated bind only with a matching reset receipt for every digest-pinned RTL file. Cross-host
+    use requires --bind-refsha from relocate_bind.py refsha on the source. Generated bound RTL and reset records are copied verbatim.
 A failed fork leaves DST.forking-<pid> (printed); delete it with ot-delete.  Exit: 0 ok, 2 usage, 3 refused (event link / bad DST),
 4 check failed, 5 no room.  Stdlib only.
 """
@@ -482,7 +486,7 @@ def remote_src_identity(src_host, src, h):
     return "" if v[-1] == "OT_VERIFY ok" else "writable SRC differs from its manifest (" + v[-1][len("OT_VERIFY "):] + ")"
 
 
-def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=print, no_manifest=False):
+def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=print, no_manifest=False, bind_args=()):
     """SRC on src_host -> DST here: reuse a same-manifest tree of this host, else fetch once into the tree cache, then a local fork"""
     why = check_dst("/nonexistent-src-of-a-remote-fork", dst)
     if why:
@@ -568,6 +572,8 @@ def fork_remote(src_host, src, dst, jobs=0, materialize=False, dry=False, out=pr
     errs = verify(tmp)
     if errs:
         raise SystemExit(f"TREE-FORK CHECK FAILED {tmp}: " + "; ".join(errs[:10]) + f" (partial copy kept: delete it with ot-delete {tmp})")
+    if bind_args:
+        relocate_bind_sidecars(tmp, src, bind_args)
     rec = {"version": VERSION, "src": f"{src_host}:{src}", "src_real": src_real, "src_host": src_host, "dst": dst, "lane": os.environ.get("OT_LANE", ""),
            "time_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "time_epoch": int(time.time()), "method": "fetch", "bytes": n,
            "check": {"shared_inodes": 0, "event_links": 0}, "seconds": round(time.time() - t0, 1), "src_manifest_hash": "", "reuse": "fetched (no manifest)"}
@@ -724,7 +730,19 @@ def free_gb(path):
     return s.f_bavail * s.f_frsize / 2**30
 
 
-def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="", reuse=""):
+def relocate_bind_sidecars(tmp, src, bind_args):
+    local = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "die_plan", "relocate_bind.py")
+    rt = os.environ.get("OT_TOOLSTALE_RT") or "/srv/opentallas-scratch2/claude/rt/current"
+    tool = local if os.path.isfile(local) else os.path.join(rt, "tools", "die_plan", "relocate_bind.py")
+    old_tree, new_tree, dst, refsha = bind_args
+    cmd = [sys.executable, "-I", tool, "fork-sidecars", old_tree, new_tree, src, dst, tmp]
+    if refsha:
+        cmd += ["--refsha", refsha]
+    if subprocess.run(cmd).returncode:
+        raise SystemExit(f"TREE-FORK BIND CHECK FAILED {tmp}: bind sidecar relocation refused; staged copy kept")
+
+
+def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="", reuse="", bind_args=()):
     t0 = time.time()
     src_given = src
     if not os.path.isdir(src):
@@ -784,6 +802,8 @@ def fork(src, dst, jobs=0, materialize=False, dry=False, out=print, remote_src="
            "external_links": P["external"][:50], "external_links_n": len(P["external"]),
            "materialized": [f"{r} <- {t}" for r, t in P["materialized"]][:50], "specials_skipped": P["specials"][:50],
            "check": {"shared_inodes": 0, "event_links": 0}, "seconds": round(time.time() - t0, 1)}
+    if bind_args:
+        relocate_bind_sidecars(tmp, src_given, bind_args)
     rec.update(src_identity(src))
     if remote_src:
         rec.update(src_remote=remote_src, reuse=reuse)
@@ -823,6 +843,9 @@ def main(argv=None):
     ap.add_argument("--materialize", action="store_true", help="copy the content of symlinks into event trees instead of refusing")
     ap.add_argument("--no-manifest", action="store_true", help="with --src-host: SRC is a private fork edited after its manifest: "
                     "fetch it straight into DST (no same-manifest reuse, no tree cache)")
+    ap.add_argument("--bind-tree", nargs=2, metavar=("SRC_TREE", "DST_TREE"),
+                    help="fork a bind directory, rebasing only its path sidecars to the existing destination tree")
+    ap.add_argument("--bind-refsha", help="source path SHA receipt from relocate_bind.py refsha (required with --src-host)")
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--verify", metavar="DST", help="only check an existing tree: no nlink>1 file, no symlink into an event tree")
     ap.add_argument("--src-of-verify", dest="vsrc", default="", help=argparse.SUPPRESS)
@@ -843,10 +866,20 @@ def main(argv=None):
         return 2
     try:
         here = socket.gethostname().split(".")[0]
-        if a.src_host and a.src_host not in (here, "localhost"):
-            fork_remote(a.src_host, a.src, a.dst, a.jobs, a.materialize, a.dry, no_manifest=a.no_manifest)
+        fetch_remote = a.src_host and a.src_host not in (here, "localhost")
+        if a.bind_refsha and not a.bind_tree:
+            raise Refused("--bind-refsha requires --bind-tree")
+        bind = {}
+        if a.bind_tree:
+            if not all(os.path.isabs(p) and p.rstrip("/") for p in [a.src, a.dst, *a.bind_tree]):
+                raise Refused("--bind-tree requires absolute source and destination paths")
+            if fetch_remote and not a.bind_refsha:
+                raise Refused("--bind-tree with --src-host requires --bind-refsha from the source")
+            bind = {"bind_args": (*a.bind_tree, os.path.abspath(a.dst), a.bind_refsha)}
+        if fetch_remote:
+            fork_remote(a.src_host, a.src, a.dst, a.jobs, a.materialize, a.dry, no_manifest=a.no_manifest or bool(bind), **bind)
         else:
-            fork(a.src, a.dst, a.jobs, a.materialize, a.dry)
+            fork(a.src, a.dst, a.jobs, a.materialize, a.dry, **bind)
     except (Refused, NoRoom, Busy) as e:
         print(f"TREE-FORK REFUSED: {e}", file=sys.stderr)
         return e.code
