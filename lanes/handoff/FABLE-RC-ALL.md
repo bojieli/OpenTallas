@@ -110,3 +110,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 03:22 11-24 c8 core-tap census read: LP SIGNED row accept; bk_sel ETM stale (512.40 vs 750.69) -> asked ETM regen + class check ETM<signed mean; col what-if still owed
 - 03:48 11-24 STALE-EXPORT-TAP ruled: WARN in PRE; S81 svc 16 types row in svc frame work (repoint + receiver recompute), serdes t1/t16 c9 row, 3 WARN; HEAD hd_host_w FWDTAP row; class fix = re-pick export source in compose tail. bk_sel: TT lib fine, FF lib regen c9 row.
 - 03:52 11-24 TAPKEY rekey accepted for c9 (436 rekey / 3860 drop); probe-only list now 62 types (56 leaf, 5 kv_leaf, 1 station) until kit on rekeyed+filled plan
+- 04:15 11-24 kv_leaf t2 B raw probe: flat tree fails (CTS pads flops to core insertion) -> early core taps first line of clock row; 10.8% place overflow separate, GRT map owed; commute proof stop agreed, replaced by benches on current RTL + per-block proof
