@@ -8916,10 +8916,63 @@ def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None, control=None
     return target
 
 
-def repick_stage_hosts(sp, cfg_path=None):
+def pinned_tree_state(host, hub, src, run=subprocess.run, timeout=20):
+    """KW-REPICK-PIN 11-24: does HOST hold the private tree SRC?  True / False, or None when the host does not answer (down, ssh failure, timeout)"""
+    if not src:
+        return False
+    cmd = f"if [ -d {shlex.quote(str(src))} ]; then echo KW_TREE_YES; else echo KW_TREE_NO; fi"
+    try:
+        r = run(remote_argv(host, hub, cmd), capture_output=True, text=True, timeout=timeout)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    out = str(getattr(r, "stdout", "") or "")
+    if "KW_TREE_YES" in out:
+        return True
+    if "KW_TREE_NO" in out:
+        return False
+    return None
+
+
+def repick_stage_hosts(sp, cfg_path=None, tree_state=None):
     """COORD 11-18 (resumed stages landed on the hub: KW_RT_TOOLS FAIL die tree missing on tolerant-swine): a spec is frozen when the attempt starts, but a stage may run much later (resume, restage).
     A frozen host that is no longer in the die's CURRENT gen_hosts (live kit_wave.json) is dropped from hosts / place_prefer / roam_hosts and the current gen hosts take its place, exactly as a new
-    attempt would pick.  Unreadable config or an empty result leaves the spec unchanged."""
+    attempt would pick.  Unreadable config or an empty result leaves the spec unchanged.
+    KW-REPICK-PIN 11-24 (QC-CB-PROBE place rc=97 x4: a private spec pinned to epyc11, which holds its tree, was moved to qwen_compute gen_hosts without it): a PRIVATE spec keeps every
+    pinned host that holds its src tree (tree_state(host, hub, src) True); a pinned host is re-picked only when it lacks the tree (False) or does not answer (None), and the reason is logged."""
+    if sp.get("private"):
+        try:
+            p = Path(cfg_path) if cfg_path else Path(os.path.expanduser("~/coord")) / CFG_REL
+            cur = [h for h in ((json.loads(p.read_text()).get("dies") or {}).get(sp.get("die")) or {}).get("gen_hosts") or [] if h]
+        except (OSError, ValueError):
+            return sp
+        stale = [h for h in sp.get("hosts") or [] if h not in cur]
+        if not stale:
+            return sp
+        probe = tree_state or (lambda h, hub, src: pinned_tree_state(h, hub, src))
+        why = {}
+        for h in stale:
+            if h in ("localhost", sp.get("hub")):         # the hub is never kept as a pinned stage host (COORD 11-18, unchanged)
+                why[h] = "hub"
+                continue
+            st = probe(h, sp.get("hub"), sp.get("src"))
+            why[h] = "has tree" if st is True else ("tree missing" if st is False else "host down / no answer")
+        keep = [h for h in stale if why[h] == "has tree"]
+        drop = [h for h in stale if h not in keep]
+        if keep:
+            print(f"KW_HOSTS pin kept: private spec host(s) {','.join(keep)} hold the tree {sp.get('src')} (not in the die's gen_hosts, kept)"
+                  + (f"; dropped {','.join(f'{h} ({why[h]})' for h in drop)}" if drop else ""), flush=True)
+        if not drop:
+            return sp
+        if not cur:
+            return sp
+        sp = dict(sp)
+        sp["hosts"] = [h for h in sp.get("hosts") or [] if h not in drop] + [h for h in cur if h not in (sp.get("hosts") or [])]
+        sp["place_prefer"] = [h for h in sp.get("place_prefer") or [] if h not in drop]
+        sp["roam_hosts"] = [h for h in sp.get("roam_hosts") or [] if h not in drop]
+        if sp.get("gen_host") in drop and keep:
+            sp["gen_host"] = keep[0]
+        print(f"KW_HOSTS re-picked: pinned host(s) {', '.join(f'{h} ({why[h]})' for h in drop)}; stage hosts now {','.join(sp['hosts'])}", flush=True)
+        return sp
     try:
         p = Path(cfg_path) if cfg_path else Path(os.path.expanduser("~/coord")) / CFG_REL
         cur = [h for h in ((json.loads(p.read_text()).get("dies") or {}).get(sp.get("die")) or {}).get("gen_hosts") or [] if h]
