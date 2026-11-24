@@ -33891,3 +33891,4 @@ FAILED [AUTOPILOT 7f303dca99db] 2026-11-23 16:27:32 PST AUTOPILOT -> KIT-WAVE-3:
   - llr_restore RC 0.
   Fill, census, PRE and G0 are running; ETA 16:55.
   The same delta on B2 r2 6c70 hit B2's own reset.die_relays fW0_p1_b0 stale-parent error (svc_1_rs/18 vs svc_9_att). R6 tail_1505 already replans that, so it is not leaf-caused. For B2, apply the same recipe step (E10 s81-leaf-j9/bl1/recipe.json) before R6's tail_1505.
+- 2026-11-23 16:32 PST DIED [S81-MISC-SERDES-J9] ot-run oth-ubuntu-2339314-1795480362 on civil-redfish: rc=3 after 3 s, ended 00:32:43, log none, cmd: --hosts epyc10 --mem 8 --threads 1 --disk 1 --dir /srv/opentallas-scratch2/claude/s81-misc-serdes-j9/klock/regen -- bash /srv/opentallas-scr | class=NO-PATTERN cause=rc 3 after 3 s, no log
