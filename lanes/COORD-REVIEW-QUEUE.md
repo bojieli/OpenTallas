@@ -39377,3 +39377,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   [filed under] KV-ALLFIX: KV-HR-DEEPCLK stood down (chain KV-HR-DEEPCLK > KV-ALLFIX)
 - 2026-11-24 03:34 PST TAKING TYPE-CONTRACT-SPEC: contract_v1 pilot (FABLE-RC-ALL 51358d36, 5 changes), S81 unsigned types only, report-only r703, run on c8 plan, epyc10; target 08:00.
   [filed under] COORD: TYPE-CONTRACT-SPEC stood down (chain TYPE-CONTRACT-SPEC > COORD)
+- 2026-11-24 03:34 PST DONE [CORE-TAP-BUDGET] ot-run oth-ubuntu-2678931-1795519897 on tolerant-swine: rc=0 after 170 s, ended 03:34:24, log none, cmd: --mem 16 --threads 1 --hosts intel2 --dir /srv/opentallas-scratch2/claude/CORE-TAP-BUDGET --stage /srv/opentallas-scratch2/claude/CORE-TAP-B
