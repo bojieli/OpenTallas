@@ -2157,6 +2157,34 @@ def admission_unit(line, tag):
  return m.group(1) if m else None
 
 
+# TOOLSTALE-GATE-RT-1123 (COORD 16:3x, KV D29 k3h2 killed at 16:16): TOOLSTALE / plan_gate_pre --ref-tools auto compared a gate tree against
+# rt/current as it was at CHECK time, so an hours-long unit failed when the rt moved under it.  Every unit now starts with
+# OT_TOOLSTALE_RT = realpath(<scratch>/claude/rt/current) resolved on the job host just before ot-heavy (the caller's own OT_TOOLSTALE_RT wins and
+# is passed through), so the whole unit and its children compare against the rt it started on (bind_rowcheck.find_ref_tools).  A dedicated
+# variable, never the global OT_RT_CURRENT: that one also names the tool root of a run (TOOLROOT / rt_pin), and setting it for every unit broke the
+# normal source-tree PRE runs (Codex 11-23 17:19).  The pin is echoed as OT_RUN_RTPIN <tag> <path>; the client logs it and records it as rt_pinned
+# in its ot-status record.
+RT_PIN_ROOTS = tuple(f"/srv/opentallas-scratch{n}/claude/rt" for n in ("2", "", "3"))
+
+
+def rt_pin_sh(tag, caller=None):
+    """the remote shell fragment that exports OT_TOOLSTALE_RT for the unit (never fails the job; no rt found -> left unset)"""
+    caller = os.environ.get("OT_TOOLSTALE_RT", "") if caller is None else caller
+    if caller:
+        return f"export OT_TOOLSTALE_RT={shlex.quote(caller)}; echo \"OT_RUN_RTPIN {tag} $OT_TOOLSTALE_RT caller\" >&2; "
+    return ("unset OT_TOOLSTALE_RT; for _r in " + " ".join(f"{r}/current" for r in RT_PIN_ROOTS) + "; do "
+            "if [ -d \"$_r/tools\" ]; then export OT_TOOLSTALE_RT=\"$(readlink -f \"$_r\")\"; break; fi; done; "
+            f"[ -n \"${{OT_TOOLSTALE_RT:-}}\" ] && echo \"OT_RUN_RTPIN {tag} $OT_TOOLSTALE_RT current\" >&2; ")
+
+
+def rt_pin_line(ln, tag):
+    """-> (path, source) of an OT_RUN_RTPIN line of this tag, else None"""
+    w = ln.split()
+    if len(w) >= 3 and w[0] == "OT_RUN_RTPIN" and w[1] == tag:
+        return w[2], (w[3] if len(w) > 3 else "")
+    return None
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
@@ -2178,7 +2206,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     workdir_guard = (f"test -d {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "")
     remote = scratch_env(host) + workdir_guard + scratch_place_sh(d, cmd, tag=tag, host=host) \
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
-        + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
+        + rt_pin_sh(tag) + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
     state = dict(started=False, rc=None, nocd=False, unit="?", refused=None, connfail=False)
     LAST_RUN["connfail"] = False
@@ -2221,6 +2249,12 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
             continue
         if "OT_RUN_NOCD" in ln and tag in ln:
             state["nocd"] = True
+            continue
+        if (_pin := rt_pin_line(ln, tag)) is not None:
+            state["rt_pinned"] = _pin[0]
+            if _OTS:
+                _OTS.update(getattr(_OTS, "CURRENT", None), rt_pinned=_pin[0])
+            say(f"ot-run: rt pinned for this unit: OT_TOOLSTALE_RT={_pin[0]} ({_pin[1] or '?'}; TOOLSTALE reference for the whole run)")
             continue
         if tag in ln and ("OT_RUN_ROOTFULL" in ln or "OT_RUN_ROOTDIR" in ln or "OT_RUN_SCRATCHLOW" in ln):     # v13 DISK GUARD on the host
             state["refused"] = ("actual working/output directory is on the ROOT filesystem without an exception" if "ROOTDIR" in ln else "root fs above %d%% (DISK GUARD)" % ROOTFS_MAX_PCT if "ROOTFULL" in ln

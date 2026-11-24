@@ -73,17 +73,51 @@ def check_fixedcyc(plan):
 
 
 # ---------------------------------------------------------------- tools
-def find_ref_tools(explicit=None):
-    """explicit path, or "auto" = $OT_RT_CURRENT / <scratch>/claude/rt/current; None or "" = no reference (TOOLSTALE not run)"""
+RT_ROOTS = tuple(f"/srv/opentallas-scratch{n}/claude/rt" for n in ("2", "", "3"))
+REF_WARN = []     # TOOLSTALE-GATE-RT-1123: why the last find_ref_tools gave no reference (the pinned rt was pruned)
+
+
+def _pinned_ref(pinned, roots):
+    """the pinned rt dir, or its rt/<sha> under another scratch root when that dir was pruned; None = gone"""
+    if (Path(pinned) / "tools" / "die_plan").is_dir():
+        return Path(os.path.realpath(pinned))
+    name = Path(pinned).name
+    if name and name != "current":
+        for r in roots:
+            if (Path(r) / name / "tools" / "die_plan").is_dir():
+                return Path(os.path.realpath(Path(r) / name))
+    return None
+
+
+def find_ref_tools(explicit=None, rt_roots=None):
+    """explicit path, or "auto" = $OT_TOOLSTALE_RT / $OT_RT_CURRENT / <scratch>/claude/rt/current; None or "" = no reference (TOOLSTALE not run).
+    TOOLSTALE-GATE-RT-1123: $OT_TOOLSTALE_RT is the rt ot-run pinned when the unit started (a TOOLSTALE-only variable; $OT_RT_CURRENT stays the
+    gate's own rt_pin).  A set pin is the reference for the whole run; when that rt dir was pruned its sha is looked up under the other scratch
+    roots, else None + a REF_WARN line -- never a later rt/current"""
+    del REF_WARN[:]
     if not explicit:
         return None
-    cands = [None if explicit == "auto" else explicit, os.environ.get("OT_RT_CURRENT")] + [f"/srv/opentallas-scratch{n}/claude/rt/current" for n in ("2", "", "3")]
-    for c in cands:
-        if c and (Path(c) / "tools" / "die_plan").is_dir():
+    roots = RT_ROOTS if rt_roots is None else tuple(rt_roots)
+    if explicit != "auto" and (Path(explicit) / "tools" / "die_plan").is_dir():
+        real = Path(os.path.realpath(explicit))
+        if Path(explicit).name == "current":
+            os.environ.setdefault("OT_RT_CURRENT", str(real))
+        return real
+    for var in ("OT_TOOLSTALE_RT", "OT_RT_CURRENT"):
+        pinned = os.environ.get(var)
+        if not pinned:
+            continue
+        real = _pinned_ref(pinned, roots)
+        if real is None:
+            REF_WARN.append(f"pinned ${var}={pinned} (the rt this run started on) is gone from every scratch root; "
+                            "TOOLSTALE not compared (never against a later rt/current)")
+            return None
+        return real
+    for c in (f"{r}/current" for r in roots):
+        if (Path(c) / "tools" / "die_plan").is_dir():
             # FLOW-NOADV-R3 11-20: rt/current moves during a long gate; the first resolution is the sha directory, pinned in $OT_RT_CURRENT
             real = Path(os.path.realpath(c))
-            if explicit == "auto" or c == os.environ.get("OT_RT_CURRENT") or Path(c).name == "current":
-                os.environ.setdefault("OT_RT_CURRENT", str(real))
+            os.environ.setdefault("OT_RT_CURRENT", str(real))
             return real
     return None
 
@@ -91,7 +125,7 @@ def find_ref_tools(explicit=None):
 def check_toolstale(tree, ref=None, level="FAIL"):
     ref = find_ref_tools(ref)
     if ref is None:
-        return []
+        return [f"WARN TOOLSTALE {w}" for w in REF_WARN]
     mine, theirs = Path(tree) / "tools" / "die_plan", ref / "tools" / "die_plan"
     try:
         if mine.resolve() == theirs.resolve():
@@ -108,10 +142,11 @@ def check_toolstale(tree, ref=None, level="FAIL"):
         elif g.stat().st_size != f.stat().st_size or g.read_bytes() != f.read_bytes():
             if f.stat().st_mtime > g.stat().st_mtime + 1:
                 stale.append(f.name)
+    src = next((f"pinned ${v}" for v in ("OT_TOOLSTALE_RT", "OT_RT_CURRENT") if os.environ.get(v) and _pinned_ref(os.environ[v], ()) == ref), "given")
     out = []
     if stale:
         out.append(f"{level} TOOLSTALE {len(stale)} tools/die_plan file(s) of {tree} are older than {ref}: {', '.join(stale[:8])}"
-                   + (" ..." if len(stale) > 8 else "") + " (take tools from the live tree, or --skip TOOLSTALE)")
+                   + (" ..." if len(stale) > 8 else "") + f" (ref rt {ref.name}, {src}; take tools from the live tree, or --skip TOOLSTALE)")
     if missing:
         out.append(f"WARN TOOLSTALE {len(missing)} tools/die_plan file(s) of {ref} absent in the tree: {', '.join(missing[:6])}")
     return out
