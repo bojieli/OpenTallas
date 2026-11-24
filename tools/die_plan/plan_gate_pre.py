@@ -1790,31 +1790,37 @@ def depth_netlists(tree, plan, asbuilt=None):
     if not isinstance(ab, dict) or not root:
         base = Path(root or ".") / "rtl"
         files = sorted(str(p) for p in base.rglob("*.sv") if LD.is_generated(p)) if base.is_dir() else []
-        return files, f"every generated netlist under {base}"
+        return files, f"every generated netlist under {base}", {}
     import bind_elab as E
     import bind_rowcheck as RC
     b = RC._base(plan, ab, asbuilt) or str(root)
     idx = E.module_index(ab.get("rtl_roots", ["rtl"]), list(ab.get("files", [])) + list(ab.get("prefer", [])), b)
-    todo = []
-    for t in (raw.get("partition_types") or {}).values():
-        if isinstance(t, dict):
-            todo += [t.get("module")] + [c.get("module") for c in t.get("hard_cores") or [] if isinstance(c, dict)]
-    seen, files = set(), set()
-    while todo:
-        m = todo.pop()
-        if not m or m in seen or m not in idx:
-            continue
-        seen.add(m)
-        for p in idx[m]:
-            if p in files:
-                continue
-            files.add(p)
+    seen, reach, kids = set(), {}, {}
+
+    def children(p):
+        if p not in kids:
             try:
                 txt = Path(p).read_text(errors="replace")
             except OSError:
+                txt = ""
+            kids[p] = [x for x in set(INST_NAME.findall(txt)) if x in idx]
+        return kids[p]
+    for tn, t in sorted((raw.get("partition_types") or {}).items()):        # per type: which generated netlists it reaches (DEPTH-HELD)
+        if not isinstance(t, dict):
+            continue
+        todo = [t.get("module")] + [c.get("module") for c in t.get("hard_cores") or [] if isinstance(c, dict)]
+        mine = set()
+        while todo:
+            m = todo.pop()
+            if not m or m in mine or m not in idx:
                 continue
-            todo += [x for x in set(INST_NAME.findall(txt)) if x in idx and x not in seen]
-    return sorted(p for p in files if LD.is_generated(p)), f"{len(seen)} module(s) reached from the plan's types"
+            mine.add(m)
+            for p in idx[m]:
+                reach.setdefault(p, set()).add(tn)
+                todo += [x for x in children(p) if x not in mine]
+        seen |= mine
+    files = sorted(p for p in reach if LD.is_generated(p))
+    return files, f"{len(seen)} module(s) reached from the plan's types", {p: reach[p] for p in files}
 
 
 def check_depth(tree, plan, asbuilt=None, max_list=12):
@@ -1822,23 +1828,33 @@ def check_depth(tree, plan, asbuilt=None, max_list=12):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import logic_depth as LD
     try:
-        files, how = depth_netlists(tree, plan, asbuilt)
+        files, how, reach = depth_netlists(tree, plan, asbuilt)
+        raw = _load(plan) or {}
+        held = LD.held_rules(raw)
+        die = (raw.get("die") or {}).get("name") if isinstance(raw.get("die"), dict) else None
+        budget = LD.levels(die)
     except Exception as e:  # noqa: BLE001 - a check that cannot run must fail (BPC-UNDEF / LANDREMAP class)
         return [f"FAIL DEPTH-UNCHECKED generated netlists not resolved ({type(e).__name__}: {str(e)[:200]})"]
-    out, n_deep = [], 0
+    out, warn, n_deep, n_held = [], [], 0, 0
     for p in files:
         try:
-            r = LD.census(p)
+            r = LD.census(p, budget)
         except Exception as e:  # noqa: BLE001
             out.append(f"FAIL DEPTH-UNCHECKED {p}: {type(e).__name__}: {str(e)[:160]}")
             continue
         x = LD.finding(r)
-        if x:
+        if not x:
+            continue
+        why = LD.held_why(held, r["module"], reach.get(p) or set())
+        if why:                                          # DEPTH-HELD-1123 (COORD 19:40): a known, held cause reports, never refuses
+            n_held += r["deep"]
+            warn.append("WARN DEPTH-HELD" + x[len("FAIL DEPTH"):] + f" [HELD: {why}]")
+        else:
             n_deep += r["deep"]
             out.append(x)
     head = out[:max_list] + ([f"FAIL DEPTH ... {len(out) - max_list} more netlist(s)"] if len(out) > max_list else [])
-    return head + [f"WARN DEPTH-SUMMARY {len(files)} generated netlist(s) ({how}); {len(out)} over budget, {n_deep} deep flop(s), "
-                   f"budget {LD.levels()} levels ($OT_PRE_DEPTH_LEVELS)"] if files or out else head
+    return head + warn[:max_list] + [f"WARN DEPTH-SUMMARY {len(files)} generated netlist(s) ({how}); {len(out)} over budget, {n_deep} deep "
+                                     f"flop(s); {len(warn)} HELD ({n_held} flops); budget {budget} levels (depth_config.json / $OT_PRE_DEPTH_LEVELS)"]
 
 
 def advisory_lines(tree, plan, asbuilt=None, baseline=None):

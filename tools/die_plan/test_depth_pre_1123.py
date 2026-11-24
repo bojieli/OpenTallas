@@ -65,3 +65,44 @@ def test_cli_exit(tmp_path):
     p = tmp_path / "g.sv"; p.write_text(chain(18))
     assert LD.main([str(p)]) == 1 and LD.main([str(p), "--levels", "19"]) == 0
     assert "DEPTH" in G.CLASSES
+
+
+def test_held_constructor_reports_held_not_fail(tmp_path, monkeypatch):
+    """DEPTH-HELD-1123 (COORD 19:40): the held TTC constructor (accepted list) and types on the typed hold list are HELD; others FAIL"""
+    monkeypatch.delenv("OT_PRE_DEPTH_HELD", raising=False)
+    monkeypatch.setenv("OT_KIT_WAVE_JSON", str(tmp_path / "none.json"))
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "ttc.sv").write_text(chain(30, "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1"))
+    (tmp_path / "rtl" / "deep.sv").write_text(chain(25, "qfd_deep"))
+    (tmp_path / "rtl" / "top.sv").write_text("module ttop(input wire clk);\n  qfd_deep u_d (.a(1'b0), .clk(clk), .y());\nendmodule\n")
+    ab = tmp_path / "ab.json"; ab.write_text(json.dumps({"base": ".", "rtl_roots": ["rtl"]}))
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"die": {"name": "qwen_compute"}, "partition_types": {
+        "t": {"module": "ttop"}, "tt_ctlm_x": {"module": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1"}}}))
+    f = G.check_depth(str(tmp_path), str(plan), str(ab))
+    assert [x for x in f if x.startswith("FAIL")] == [x for x in f if x.startswith("FAIL DEPTH qfd_deep:")] and len([x for x in f if x.startswith("FAIL")]) == 1, f
+    assert any(x.startswith("WARN DEPTH-HELD qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1:") and "QC-TTC-RETIME" in x for x in f), f
+    kw = tmp_path / "kw.json"; kw.write_text(json.dumps({"dies": {"qwen_compute": {"hold_items": {"t": "held by COORD"}}}}))
+    monkeypatch.setenv("OT_KIT_WAVE_JSON", str(kw))                        # the typed hold list holds type t -> its netlist is HELD too
+    f = G.check_depth(str(tmp_path), str(plan), str(ab))
+    assert not [x for x in f if x.startswith("FAIL")] and any(x.startswith("WARN DEPTH-HELD qfd_deep:") for x in f), f
+    assert "2 HELD" in f[-1]
+
+
+def test_depth_cap_from_config(tmp_path, monkeypatch):
+    """DEPTH-CAP-CONFIG-1123 (FABLE-RC-QC): the cap is a config value, per die; the env still wins"""
+    monkeypatch.delenv("OT_PRE_DEPTH_LEVELS", raising=False)
+    cfg = tmp_path / "c.json"; cfg.write_text(json.dumps({"depth_levels": 20, "depth_levels_by_die": {"qwen_compute": 14}, "accepted": []}))
+    monkeypatch.setenv("OT_PRE_DEPTH_CONFIG", str(cfg))
+    assert LD.levels() == 20 and LD.levels("qwen_compute") == 14 and LD.levels("s81") == 20
+    monkeypatch.setenv("OT_PRE_DEPTH_LEVELS", "16")
+    assert LD.levels("qwen_compute") == 16
+    monkeypatch.delenv("OT_PRE_DEPTH_LEVELS")
+    monkeypatch.setenv("OT_KIT_WAVE_JSON", str(tmp_path / "none.json"))
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "d.sv").write_text(chain(16, "qfd_mid"))
+    plan = tmp_path / "plan.json"
+    for die, nfail in (("qwen_compute", 1), ("s81", 0)):
+        plan.write_text(json.dumps({"die": {"name": die}, "partition_types": {}}))
+        f = G.check_depth(str(tmp_path), str(plan), None)
+        assert len([x for x in f if x.startswith("FAIL DEPTH qfd_mid")]) == nfail, (die, f)

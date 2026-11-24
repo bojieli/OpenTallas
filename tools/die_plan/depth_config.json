@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.depth_config.v1",
+ "note": "DEPTH-CAP-CONFIG-1123: logic-depth budget of plan_gate_pre DEPTH (bmath levels per 833 ps cycle) and the COORD-accepted held constructors. depth_levels is the default; depth_levels_by_die overrides it per die (FABLE-RC-QC: QC's cap comes from the QC-TTC-RETIME probe result). $OT_PRE_DEPTH_LEVELS overrides both. accepted: known, held causes with an owner -> WARN DEPTH-HELD, not FAIL; remove an entry when its fix lands.",
+ "depth_levels": 18,
+ "depth_levels_by_die": {},
+ "accepted": [
+  {
+   "modules": [
+    "qfd_tt_ctlm_*"
+   ],
+   "types": [
+    "*tt_ctlm*"
+   ],
+   "why": "COORD 19:40 11-23: QC TTC constructor (TTC-STAGE, 3304/25172 flops >= 18 in F5) held; QC-TTC-RETIME owns the retime fix"
+  }
+ ]
+}
