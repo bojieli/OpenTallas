@@ -186,7 +186,7 @@ def test_rr_t_and_collector_nodes_are_warn():
     """QC C1b slw_su_c: rr_t names absent from start_relays and collector_children nodes, strict bind clean"""
     t = {"clock": {"landing_contract": {"collector_children": [{"node": "rst_n_t88"}]},
                    "landing_reader_start": {"branches": {"x_i": {"stages": [{"xy_um": [0, 0], "raw_reset": "rr_t137"}]}}}}}
-    S = Fake({"su": {"rst_rl_1": (None, (0, 0)), "rst_n_t137": ("rst_rl_1", (0, 0))}},
+    S = Fake({"su": {"rst_rl_1": (None, (0, 0))}},
              hops={"su": [("reader_start:x_i:0", "rr_t137", "missing", None, 0.0)]})
     out = D.findings({"partition_types": {"su": t}}, "/x/p.json", solver=S)
     assert out and all(x.startswith("WARN") for x in out)

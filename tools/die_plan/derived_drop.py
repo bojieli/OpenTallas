@@ -372,7 +372,7 @@ def derivedname_type(tn, t, S, base_raw=None, BS=None):
         rp = _repaired(S, tn)
         # collector_children / collector_local_sources nodes are re-solved by the bind's collector pass (QC C1b sle_su_c,
         # slw_su_c bound with such names): reported, not FAIL
-        soft = [(p, v) for p, v in bad if p in rp or "/landing_contract/collector_" in p]
+        soft = [(p, v) for p, v in bad if p in rp or "/landing_contract/collector_" in p or v.startswith("rr_t")]
         bad = [x for x in bad if x not in soft]
         if soft:
             out.append(f"WARN DERIVEDNAME {tn}: {len(soft)} referenced relay name(s) gone from the tree that the bind re-picks / "
