@@ -297,3 +297,4 @@ def test_kit_norm_keeps_numbers():
     assert n("set x 1.0  # // keep") != n("set x 1.1  # // keep")
     assert n('"tree_sha256": "a"') == n('"tree_sha256": "b"') and n('"pins": 3') != n('"pins": 4')
     assert n("fW0_p1_b11") == "fW0_p1_b11" and n("fW0_p1_b1") == "@P" and n("// c", True) == ""
+    assert n('"P": "\\"f0.c0\\""') == n('"P": "\\"@I\\""') and n("f0.c0x") != n("@Ix") and n('"note": "a \\" b"') == n('"note": "c"')

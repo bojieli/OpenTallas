@@ -301,8 +301,9 @@ def kit_norm(text, name, parts, images, code):
     this type, the type's own image strings, scratch paths, provenance hashes.  Nothing numeric is touched."""
     if code:
         text = _CMT.sub("", text)
-    for i in sorted(images, key=lambda x: -len(x)):
-        text = text.replace('"%s"' % i, '"@I"')
+    for i in sorted(images, key=lambda x: -len(x)):         # any quoting (".." in RTL, \".\" in a JSON copy of the plan, bare in notes)
+        text = re.sub(r"(?<![A-Za-z0-9_.])%s(?![A-Za-z0-9_])" % re.escape(i), "@I", text)
+    text = re.sub(r'"note"\s*:\s*"(?:[^"\\]|\\.)*"', '"note": "@N"', text)
     text = text.replace(name, "@T")
     for p in parts:
         text = re.sub(r"(?<![A-Za-z0-9_])%s(?![A-Za-z0-9_])" % re.escape(p), "@P", text)
