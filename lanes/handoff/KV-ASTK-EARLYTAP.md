@@ -1,0 +1,5 @@
+# KV-ASTK-EARLYTAP handoff (Opus 5.5, COORD split 11-23 21:58 PST)
+Job: astk hard-core ck early taps on hub_Eo/Wo (FABLE-RC-KV 21:54 cond 2 of KV-HUB-HOLD). One job only.
+## (a) DONE 22:0x: kv3_astk = one SIGNED master (signoff epyc2 ss29/resign/astk_k b0763746): ck[0] TT mean 241.97 / FF 193.32 (n 7850). Record epyc10 /srv/opentallas-scratch2/claude/kv-astk-earlytap/astk_ck_insertion.json
+## (b) DONE 22:2x: tap census epyc8 /srv/opentallas-scratch2/claude/kv-astk-earlytap/probe/probe_{Eo,Wo,Ei}.sum (24 mixed taps; hub_C = HUBCTAP)
+## (c) row: epyc11 /srv/opentallas-scratch2/claude/kv-astk-earlytap/rows/ROWS_KV-ASTK-EARLYTAP.py (+ install_astk_view.sh TREE; view pkg view_pkg/kv3_astk). Base A3g b258e3e34f22 (base/A3g_plan.json). Tree fork epyc11 kv-astk-earlytap/tree (from ALLFIX grow/tree). Gate script gate.sh (copy of KV-HUB-HOLD gate). Compose test with KV-HUB-HOLD row epyc11 kv-hub-hold/rows/ROWS_KV-HUB-HOLD.py da657da969c2.
