@@ -64,3 +64,16 @@ OPEN:
 - Hub disk freed (OPS-SUPPORT); follow timer auto-cutting main to ALL 8 hosts (epyc8 incl). rt/current = c149c0966d7c (has ADV-PAD-LAUNCH, OTRUN-ORPHAN, BIND-EMIT-MEM, GENDRY-KITRTL, KV-PREGRT-STALL c40acd9).
 - KV bind_out -> selected_candidate_bind_1123212910 at 21:33; flowops-kv-rtcheck2 (from rt/current) resolved KV wave rt = c149 (R8 fix + pregrt cap). KV-D29 told kv3_* may lift. KV-PREGRT-STALL closed (earliest rt c40acd92e639 21:07).
 - Pending: KV-RRL-EXPORT verifier fix (auto via follow when pushed); epyc11 gen_hosts after QC V4 apply; QC wave tree needs kit_istations/reg_leaf_split (QC apply owner).
+
+## 23:0x 11-23 HANDOFF -> EPYC11-ONBOARD-FINISH (COORD one-job-per-lane)
+epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; do NOT kill them. Each is a systemd user unit on intel2 and survives sessions.
+- flowops-e11-s81_head, flowops-e11-qwen_kvsys, flowops-e11-qwen_compute, flowops-e11-s81: run /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp/e11_repl_die.sh <die>.
+  Per die: compute the wave input closure (kit_wave.src_inputs + deep_inputs + item_inputs, collapsed to root trees). Copy each root to epyc11: manifest trees with `src_manifest.py replicate --hosts epyc11 --tar` from a host that holds them; bind/postbind dirs with adopt-bind-style rsync to the same path. Then `kit_wave_edit` adds epyc11 to dies.<die>.gen_hosts; its HOST-ADD closure probe is the proof. Skipped when epyc11 is already listed. Each add posts "EPYC11 GEN_HOSTS" on FLOW-OPS-R3.
+  Logs: FLOW-OPS-R3/tmp/e11_repl_<die>.log (lines DONE/FAIL/NOSRC/ADDED/ADD-REFUSED). The old serial driver log e11_repl.log is finished.
+- Known issues:
+  (1) NOSRC: some item_inputs trees exist on NO host, e.g. kw45/snap_qwen_compute/qwen_compute_v1r6 and kw45/src_s81_pin_3c913dbdfb23_d8j6_1117_work, maybe more. Expect ADD-REFUSED for those dies. The stale item_inputs refs then need cleaning (kit_wave_edit), or the host-add needs a COORD ruling.
+  (2) s81_head src moved r17b_s0 -> r18g_s2 during the run. The serial driver copied r17b (48 GB, now unused); the die unit copies r18g_s2.
+  (3) Copy speed is ~20 MB/s per stream; ~1 TB total -> hours. epyc11 SLOTS=4 (/var/tmp/ot-tree-copy/SLOTS).
+  (4) hbm is excluded (parked).
+- Still to do: check epyc11 load ~30 min after each add; add epyc11 to the monitor host lists.
+- Kept by FLOW-OPS-R3: the KV LBL probes (runitem-flowops-qwen_kvsys_kv3_hroot_1123225427 / _kv3_hgi_v4_1123225432) stay with VIS-KV for the PROBE-PASS read.
