@@ -43240,3 +43240,4 @@ FAILED [AUTOPILOT de97c1d6956b] 2026-11-24 15:31:12 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 15:57 PST WAIT HEAD-overlay epyc11 oth-ubuntu-560513-1795531502: ot-wait: timeout after 28800.0 s, otrun-viable-ram-558426 still running
 - 2026-11-24 15:57 PST WAIT HEAD-overlay epyc11 oth-ubuntu-761591-1795531837: ot-wait: timeout after 28800.0 s, otrun-viable-ram-760025 still running
 - 2026-11-24 15:57 PST WAIT HEAD-overlay epyc11 oth-ubuntu-496724-1795531391: ot-wait: timeout after 28800.0 s, otrun-viable-ram-493581 still running
+- 2026-11-24 15:58 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 9752a75802 qwen_kvsys/place/FLOW tool / Tcl error @place: Error: global_place.tcl, N exact pa: 2 item(s), no RESULT/ACK from KV-ALLFIX in 40 min: kv3_pc_v1__cl4ea58a5c__r84d0332e1, kv3_pc_v1__cl4ea58a5c__r884969661. COORD: start or assign a lane for this class; this relay does not repeat (class 9752a75802).
