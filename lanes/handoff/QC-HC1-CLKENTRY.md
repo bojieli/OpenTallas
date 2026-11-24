@@ -13,3 +13,8 @@ Job (COORD 20:4x): sle_ctl group 2 x_hc1_st_b_i -> u_cland_x_hc1_st_b_i (404 end
 - Full strict bind running: epyc11 bindFull.sh cS -> bindFull.ot / cS/bindfull.log. Then private-spec (cmd in QC-ALLFIX-probe.sh form, --host epyc11 --goal grt --rt 70b6f0430ea9 --ab OT_TAP_ESCAPE_CLEAR_UM=0.30) + run-item; census via epyc7 QC-SLECTL-RESYN/sta_sum_rcx.sh + census.py.
 ## 22:42 PST ROW-REBASED 18d22fbde479 (full strict 0, LAT 1922/1922) posted + sent to QC-ALLFIX. C1c twin eea24acd048a.
 - Probe: epyc11 ~/coord/autopilot/private_specs/QC-HC1-CLKENTRY/qwen_compute_sle_ctl__cla4f6f12f_1124064122 (run_item.launch.out). At CTS: census tools epyc11 QC-HC1-CLKENTRY/census (sta_sum_rcx.sh KIT ODB SDC OUTDIR TAG; copy sta_sum.tcl into OUTDIR first; census.py SUM). Read 4 groups vs V2 baseline (-93.27/-55.83/-40.35/-61.40).
+## 23:56 PST
+- Tap check PASS (false alarm withdrawn): reset solves on frozen reset.consumer_sites_um, NOT the clock tap_grid. Compare EMITTED bind/rtl/<type>.reset_tree.json (tree.relays). proof.py on epyc11. Clock side changed 332->325 taps, 3 fclk exports re-pointed.
+- C1c twin eea24acd048a: sle_ctl byte-identical, PRE/bind not run on twin. QC-ALLFIX holds the row out until it decides.
+- Probe live (runitem-sle_ctl__cla4f6f12f on epyc11, place). Census ETA 02:15-03:15: census/census_run.sh TAG on epyc11; 5 groups, chd_q_1 bits 518/519 split from bank data. KIT find in that script is untested.
+- Row v2 (bank region) = QC-SLECTL-RESYN; I compose one sle_ctl delta SEAT+RP-SEL+v2+tapfix after C1e. No foreground sleeps; run tools via ot-run.
