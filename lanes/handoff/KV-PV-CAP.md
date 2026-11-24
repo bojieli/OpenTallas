@@ -27,3 +27,11 @@ KV-ALLFIX: A3f failed G0; A3g (A3d b258e3e34f22 minus HUBA1 + IUSPLIT) gating on
 - Both rows dry-apply clean on KV-ALLFIX A4b 01311e0c5cce -> eff53250f8ad (epyc10 /srv/opentallas-scratch2/claude/kv-pv-cap/rows/). Asked KV-ALLFIX to add both row lines after LATREGEN (needs rt >= 9f95aa48604b).
 - All 31 pv projected < 400k nontap (v1n ~365k, v3 ~309-348k). Real proof = first GEN/place of v1n + v3 on the composed plan.
 - Open: release D29 kv3_pv_v3 hold (kit_wave eb9e50a) once KV-ALLFIX composes the rows; recheck hold on first placed v3 (r2r_margin 20).
+## 23:51 state (pv kits PROBE-ONLY on R1+R2: no functional proof yet; see CORRECTION post 30a2dad6)
+- COORD proof list: (1) kit post-synth LEC pv_v3 + neg control, (2) reset/mid-tap/init list, (3) ring power-up + reset release, (4) RAM macros per type.
+- epyc11 lec2/: kit3.sh ok|n1|n2|n3 (verdict only PROVED/CEX/NO_VERDICT; "ABC rc=0" in old lec_kit.sh logs is NOT a pass); log k3_ok.log; run n1/n2/n3 after ok. AIGER ignores clocks: compare clock pins per flop separately before claiming.
+- ring_all.log = full-width L-RAM (huge SAT), ring_bit.log = W1 BITS1 per depth + seeded lag bug each (needs a bit-independence argument; sram_formal.v vs macro .v cross-check not done).
+- (3) OPEN: kit pv_S reset spine says "released after 6 clocks"; lines are 37..121 deep, so consumers can leave reset before lines flush (gold too). Need a bench with a real reset consumer and valid/control lines. Find what fills the lines (POR hold length on KV). wp/rp no reset: 4-state X forever.
+- epyc8 clone: test_kit_dly_ram.py power-up test UNCOMMITTED (bound 67 set after a fail at 62; no reset consumer).
+- (4) K3g only: r2new/place4.out epyc8; redo on A5.
+- Unproven: r2r_margin 20; R2 PRECHECK inheritance; TAPOFF vacuous; D29 pv_v3 hold still held (do NOT release before proofs).
