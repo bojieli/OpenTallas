@@ -1,0 +1,1 @@
+- 2026-11-23 16:49 PST DIED [ONBOARD-EPYC11] ot-push-main otpush-tolerant-swine-3356849 on tolerant-swine: rc=4 after 1255 s, ended 16:49:19, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 1255 s, no log
