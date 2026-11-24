@@ -29,4 +29,6 @@ C1e compose (C1d + HC1-CLKENTRY)	b6211ae9de47	yes	cF	cancelled	-	-	-	-	-	WITHDRA
 SU2R-FIX4 (x_su_l1_o bank sites onto row grid, 3 su_c, y only, max 0.11 um)	daf48c6a1d1f	yes	C1g	helper gate running, ETA 01:15	-	-	offline overlap 0 (relays/kit cells not covered)	-	-	IN C1g, ungated
 ORGRP-SYNC (QC-OPEN-COLL, coll_core or_groups = regs)	orgrp_row.py fd227b0b96f5	yes	C1g	C1b+row = base	-	-	adds 0 G0 errors on C1b	-	coll_core kit past kit_topology	IN C1g, ungated on this base
 C1d2 compose (C1c + FIX3v2 + SUL1-UNBURY)	431957c26bc2	yes	cF/c1d2_PRE_FAIL	FAIL SITEGRID 6903	not run	not run	cancelled	-	-	SUPERSEDED by C1g
-C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	96cce77c1e2f	yes	cF	running	running	running	running	-	-	BINDING, ETA ~01:20, GENDRY ~02:00
+C1g compose (C1d2 + FIX4 + ORGRP-SYNC), rt c66090747375 + ov_tools	96cce77c1e2f	yes	cF	PRE inherited only, SITEGRID 0	0 err (rt c660, pre BIND-UNDRIVEN-IN)	1922/1922	PASS 0/0	-	-	STRICT PASS 01:12; GENDRY running; DEADIN row pending
+DEADIN-QC (declared dead-input proofs: sle_ctl rp1 w518_cp/w519_cp, fw fdn chu_ar_sel/chu_dd_sel on 10 fw types; BIND-UNDRIVEN-IN main 85273876e25)	-	yes	C1h	-	-	-	-	-	-	OWNER helper QC-DEADIN-ROW, ETA ~03:00
+sle_st_b_v2__clfde1249e (UNOWNED in sweep 01:09; plan unchanged vs C4, placed/route held)	-	no row	C1g	-	-	-	-	-	-	RIDE: iteration-1 full sign-off launch on C1g
