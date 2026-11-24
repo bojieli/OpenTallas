@@ -17,3 +17,6 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - INT c8 kits refused at kit bind (hand-written receipt); BIND-STREAM-LAUNCH partial receipt work_1124_195348: 287 clean/116 refused, ALL 75 leaf refused.
 - Leaf causes: (1) TYPE_DEFINE_CONFLICT OT_SVC_ATTCUT (dsdv_svc_rs.sv:264 read in leaf u_vp; BIND_IGNORED on svc) -> drop request (INT/FAM-SVC). (2) LF_CS_DEPTH 27 leaf -> my ROW-READY LEAF-LFCS-RESTAGE-C9: netlist E9 s81-own-leaf/lfcs/die_j6_h8_gp1076_c9lfcs_b.v 26efcbda541d (0 mismatches on c9). No other leaf-attributed errors.
 - No leaf kit live except t26 J7 (epyc2). Next: leaf sign-off kits at c9 KITS GO (rt>=515889f6ef75); INT launches via its list -> I adopt/readout.
+14:0x PST:
+- INT folded both leaf fixes into c9s (plan 99f7d3042489: 0 ATTCUT requests; netlist 26efcbda541d in c9seal_tree bind/inputs); c9s gate relaunched ~12:5x. c8s refuses all 75 leaf (expected) -> leaf goes on c9s only.
+- NEXT on resume: when c9s per-type receipts stream, check leaf types clean in its type_receipt; INT's stream launcher carries the leaf list -> adopt the kits (no duplicates), read GRT/timing, group failures by class, rows to INT/S81-C9-ROWS. kv_leaf__t3 belongs to S81-C9-ROWS (i027d/i027f); none of my rows touch it.
