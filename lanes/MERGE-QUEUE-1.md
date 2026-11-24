@@ -1773,3 +1773,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 - 2026-11-24 08:27 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc11: rt/current d56b624b5029 != hub 2307e6b63e67
 - 2026-11-24 08:42 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc11: rt/current 8baa9dd05208 != hub 67a9d659af22. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-24 08:42 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc11: rt/current 8baa9dd05208 != hub 4c29a21f8f22
+- 2026-11-24 08:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc11: manifest check failed ; epyc11: rt/current 8baa9dd05208 != hub 67a9d659af22
