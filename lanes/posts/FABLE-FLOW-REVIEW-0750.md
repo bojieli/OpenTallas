@@ -1,0 +1,1 @@
+- 2026-11-24 07:48 PST TAKING FABLE-FLOW-REVIEW-0750 (fresh, post-limit): read-only review of closure flow on S81/HEAD/QC/KV, top-5 structural fixes for COORD. No builds.
