@@ -47,6 +47,7 @@ import socket
 import stat
 import subprocess
 import sys
+import threading
 import time
 
 FICLONE = 0x40049409
@@ -60,6 +61,10 @@ TREE_INDEX = os.path.expanduser(os.environ.get("OT_TREE_INDEX", "~/.local/state/
 # same-manifest tree is asked first (HOLDER_HOSTS, their trees.jsonl index), and (2) the fetch runs STREAMS parallel tar streams over a fast cipher, files balanced by size.
 SSH = os.environ.get("OT_TREE_FORK_SSH", "ssh -o BatchMode=yes -o ControlPath=none -o Compression=no -c aes128-gcm@openssh.com").split()
 STREAMS = int(os.environ.get("OT_TREE_FORK_STREAMS", "4"))
+# OPS-SUPPORT-R1 11-23: a single ssh/TCP stream is window-limited to about 15-20 MB/s at 100-150 ms RTT (epyc11), so a far source gets
+# STREAMS_FAR parallel streams (4 streams measured 67 MB/s).  An explicit OT_TREE_FORK_STREAMS always wins.
+STREAMS_FAR = int(os.environ.get("OT_TREE_FORK_STREAMS_FAR", "12"))
+FAR_RTT_MS = float(os.environ.get("OT_TREE_FORK_FAR_RTT_MS", "50"))
 HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11").split(",") if h]
 VERSION = 1
 
@@ -332,6 +337,32 @@ def list_remote(src_host, src):
     return dirs, files
 
 
+def rtt_ms(host, tries=3):
+    """TCP connect time to the ssh port of HOST in ms (min of TRIES), None when it cannot be measured"""
+    try:
+        r = subprocess.run(["ssh", "-G", host], capture_output=True, text=True, timeout=10)
+        cfg = dict(ln.split(" ", 1) for ln in r.stdout.splitlines() if " " in ln)
+        addr, port = cfg.get("hostname", host), int(cfg.get("port", 22))
+        best = None
+        for _ in range(tries):
+            t0 = time.time()
+            with socket.create_connection((addr, port), timeout=5):
+                pass
+            dt = (time.time() - t0) * 1000
+            best = dt if best is None else min(best, dt)
+        return best
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return None
+
+
+def streams_for(host, rtt=rtt_ms):
+    """parallel tar streams for a fetch from HOST: OT_TREE_FORK_STREAMS if set, else STREAMS_FAR above FAR_RTT_MS, else STREAMS"""
+    if "OT_TREE_FORK_STREAMS" in os.environ:
+        return STREAMS
+    ms = rtt(host)
+    return max(STREAMS, STREAMS_FAR) if ms is not None and ms > FAR_RTT_MS else STREAMS
+
+
 def fetch_parallel(src_host, src, into, streams, out=print):
     """directories first (one small stream), then STREAMS tar streams of size-balanced file lists; any failing stream fails the fetch"""
     dirs, files = list_remote(src_host, src)
@@ -341,11 +372,15 @@ def fetch_parallel(src_host, src, into, streams, out=print):
         remote = f"tar -C {q(src)} --no-recursion {mode} -cf - -T -"
         command = f"set -o pipefail; {base} {q(remote)} | tar -C {q(into)} -xpf -"
         p = subprocess.Popen(["bash", "-c", command], stdin=subprocess.PIPE, text=True)
-        try:
-            with p.stdin:
-                p.stdin.write("\n".join(paths) + "\n")
-        except BrokenPipeError:
-            pass  # The process exit status carries the transfer error.
+        # The list is written from a thread: tar -T - consumes it only as it streams, so a blocking write here held every later stream
+        # back until the previous one had almost finished (one stream at a time; OPS-SUPPORT-R1 11-23, epyc11 forks at 20 MB/s).
+        def feed():
+            try:
+                with p.stdin:
+                    p.stdin.write("\n".join(paths) + "\n")
+            except (BrokenPipeError, ValueError):
+                pass  # The process exit status carries the transfer error.
+        threading.Thread(target=feed, daemon=True).start()
         return p
 
     failed = f"TREE-FORK FETCH FAILED {src_host}:{src} -> {into}"
@@ -370,9 +405,10 @@ def fetch_parallel(src_host, src, into, streams, out=print):
 def fetch(src_host, src, into, out=print):
     """tar SRC from src_host into the fresh dir INTO under a copy slot of this host.  -> bytes fetched (du of INTO)"""
     os.makedirs(into)
-    if STREAMS > 1:
+    streams = streams_for(src_host)
+    if streams > 1:
         with CopySlot(out=out, what=f"fetch {src_host}:{src}"):
-            fetch_parallel(src_host, src, into, STREAMS, out)
+            fetch_parallel(src_host, src, into, streams, out)
         return sum(os.lstat(os.path.join(dp, f)).st_size for dp, _dn, fn in os.walk(into) for f in fn)
     with CopySlot(out=out, what=f"fetch {src_host}:{src}"):
         remote = f"tar -C {shlex.quote(src)} --exclude=./{FORK_JSON} -cf - ."
