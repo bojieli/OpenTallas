@@ -35,7 +35,7 @@ HEAD-BIND-1 (11-14): --clock-landing SIDECAR passes the landed plan's sidecar to
    the kit cohort: rings, collectors, landing relays); without it the die top is the unlanded composition (as before).
    The nested check reads the landing closure too (its cells are the landed wrappers' masters).
 Exit 0 iff module check 0 missing AND die_port_bind PASS AND tie audit PASS AND nested check PASS."""
-import argparse, json, re, subprocess, sys
+import argparse, hashlib, json, re, subprocess, sys
 from pathlib import Path
 
 ap = argparse.ArgumentParser(description=__doc__)
@@ -82,7 +82,10 @@ modof = {tn: ty['module'] for tn, ty in plan0['partition_types'].items()}
 (out / 'straps.json').write_text(json.dumps(dict(straps=sorted([modof[tn], pn] for tn, ps in pman['types'].items()
                                                                 for pn in ps)), indent=1) + '\n')
 aud = STR.audit_top_ties(t2, pman, {m: tn for tn, m in modof.items()})
-(out / 'tie_audit.json').write_text(json.dumps(dict(aud, rows=len(aud['rows'])), indent=1) + '\n')
+# the plan and die top this audit is of (kit count-strap evidence accepts it only for a kit of the same plan: head_wave_kit_rtl)
+(out / 'tie_audit.json').write_text(json.dumps(dict(aud, rows=len(aud['rows']), plan=str(Path(a.plan).resolve()),
+                                                    plan_sha256=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(),
+                                                    top_sha256=hashlib.sha256(t2.encode()).hexdigest()), indent=1) + '\n')
 print('TIE_AUDIT %s accepted=%d rejected=%d' % (aud['verdict'], len(aud['accepted']), len(aud['rejected'])))
 (out / 'pads.json').write_text(json.dumps({'pads': {}, 'instances': pads}, indent=1) + '\n')
 plan = json.loads(Path(a.plan).read_text())

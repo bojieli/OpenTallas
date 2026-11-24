@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -108,6 +109,31 @@ def census_path(path, prepared):
                 return r / rel
     raise ValueError('missing exact native sink census: ' + str(path))
 
+def tie_audit_record(plan_path, out):
+    """-> kit_rtl.json keys naming the bound plan's die-top tie audit (count_strap_evidence.find_audit reads kit_rtl.tie_audit), or {}.
+
+    Candidates: env OT_BIND_TIE_AUDIT, else <plan dir>/bind_of_record/tie_audit.json.  The audit must be PASS and record the
+    sha256 of THIS plan (head_die_portbind writes plan_sha256); an audit of another plan is refused.  One without a recorded plan
+    sha, or no audit at all, is not named: the kit evidence stays as before.  The file is copied into the kit."""
+    env = os.environ.get('OT_BIND_TIE_AUDIT')
+    src = Path(env) if env else plan_path.parent / 'bind_of_record' / 'tie_audit.json'
+    if not src.is_file():
+        if env:
+            raise ValueError('OT_BIND_TIE_AUDIT does not exist: ' + env)
+        print('HEAD_KIT_TIE_AUDIT NONE'); return {}
+    data = src.read_bytes(); doc = json.loads(data)
+    want = digest(plan_path); got = doc.get('plan_sha256')
+    if not got:
+        print('HEAD_KIT_TIE_AUDIT WARN no plan_sha256 recorded, not named:', src); return {}
+    if got != want:
+        raise ValueError('tie audit %s is of plan %s, the kit plan is %s' % (src, got[:12], want[:12]))
+    if doc.get('verdict') != 'PASS':
+        raise ValueError('tie audit is not PASS: ' + str(src))
+    kept = Path(out) / 'tie_audit.json'; kept.write_bytes(data)
+    print('HEAD_KIT_TIE_AUDIT PASS plan', want[:12], src)
+    return dict(tie_audit=str(kept), tie_audit_source=str(src), tie_audit_sha256=hashlib.sha256(data).hexdigest(),
+                tie_audit_plan_sha256=got)
+
 def export(args):
     plan_path, out = args.plan.resolve(), args.out.resolve()
     prepared = plan_path.parent
@@ -185,7 +211,7 @@ def export(args):
     write(out / 'kit_rtl.json', dict(schema='opentallas.head_wave_kit_rtl.v1', plan_type=args.type,
           defines=value('VERILOG_DEFINES'), added_cycles=0, private_raw=private,
           published_wrapper_sha256=digest(published), source_sha256={str(p): digest(p) for p in files},
-          release=False, route_qualified=False, gen_cmd=cmd))
+          release=False, route_qualified=False, gen_cmd=cmd, **tie_audit_record(plan_path, out)))
     print('HEAD_WAVE_KIT_RTL_PASS_DISABLED', args.type, len(files))
 
 if __name__ == '__main__':
