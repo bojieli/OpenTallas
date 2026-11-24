@@ -1,8 +1,8 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-West: wband winner, routing to sign-off+LEC (started 20:51); wch4b spare also 0 GRT overflow (parked)	hd_lep0N_w	HEAD-WEST 21:18	HEAD-WEST	11-23 21:18	route running under head-west-wband-route; sign-off verdict + hold split + renders posted when it ends	8	next post 22:00	RUNNING	
+West wband detailed route (kit hd_lep0N_w_1123175932): GRT TT +63.2 / FF hold +27.7; DRT iter0 84,406 -> 74,854 at 10%	hd_lep0N_w	HEAD-WEST 21:57	HEAD-WEST	11-23 21:57	route ETA 01:00-02:00; sign-off+LEC verdict ~03:00; next post 22:45	28	~03:00	RUNNING	
 E epin_r4 tapbal GRT 2/30; r18g escape 7/30; rscap tapbal 2/30; 66ce census 13/20 (flat since 21:13)	hd_lep0N E	HEAD-R18 21:54	HEAD-R18	11-23 21:54	GRT iterations 30-40 min each; 23:00 census MISSED, revised	2	66ce 02:00-03:00; kit reads not before 02:00; next post 22:35	RUNNING	AT-RISK: 23:00 deadline slipped (self-reported)
 rscap probe kit hd_lep0N_1123184332	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 20:55	in CTS (21:13)	2	-	RUNNING	
 s2 reseal dry gate: PASS ~21:25 no advisories (HEAD-S2-RESEAL, gate fix main 33a30fe8e0c in rt)	HEAD die	COORD correction	HEAD-S2-RESEAL	11-23 21:25	CLOSED	-	-	CLOSED	
 hd_ctl route+LEC, rc138/WOPENREG REASONED	HEAD	earlier	HEAD-R18	-	pending census	-	23:00	REASONED/RUNNING	
 
-HEAD-R18 decision to publish s2	HEAD die	COORD correction	HEAD-R18	-	only remaining step; no decision posted yet	-	ASAP	OPEN	TRACK
+HEAD-R18 publish s2: PUBLISHED 22:20 (event head_rp21z20NF15f_r18g, APPLY_RC 0, optimistic, replaces r17b)	HEAD die	HEAD-R18 22:20	HEAD-R18	11-23 22:21	applied; no post-apply strict bind/LATCHECK (not kit_rtl bind-mode); advisory pre_g0 FAIL in publish_gate record bdf71c06; bind evidence = chain bind epyc7 head-r18/bind_r18g	4	-	DONE-WITH-CAVEAT	QUESTION: advisory pre_g0 FAIL vs HEAD-S2-RESEAL PASS; post-apply bind absent
