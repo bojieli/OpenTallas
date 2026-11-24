@@ -31,3 +31,41 @@ hub_C H4 d38 kvs_attn_pvst N/S fork (31b, 38 stages)	D38BR c9e24b57df87 (relay_b
 PCFTGRID (pc FT stages half a row off grid; blocks pc_v3/pc_v1 kit gen)	1394aa5f6594	yes	A1b cf1eadc2cb91 (positions only; A1 bind valid)	PASS 0	A1 bind (positions only)	2752/2752	PASS 0	ITER1 pc_v1 kits	-	IN A1b; probe running
 PCGROWDIE (rc118 G2 seam, whole-die re-floor +224.64 um)	84141a5187ca	FABLE-OPEN-KV draft	iteration 2 (A3): KV-ALLFIX owns die clock mesh re-solve, 28 window remap, R8 refresh	-	-	-	-	-	-	ROW-DRAFT -> A3
 ADV-PORT-PIN unplanned wrapper ports (6 hg strap ectl_cfg, hub_Wi 14 reset spine pins, 3 pc strap_r8pad, sys_c bump_ucie_rom)	-	building (helper KV-ALLFIX-PORTPIN)	-	-	-	-	-	-	-	ROW-BUILDING; these 10 types held from ITER1
+== A4d RECONCILIATION 2026-11-23 22:5x PST (recipe source of truth from here; A4d = epyc10 grow/a4d.list, rt a64d7d7813de)	-	-	-	-	-	-	-	-	-	-
+TAPGRID pv_v3e + pv_v1n splits	53fa112e543f / 1a910f00e69b	yes (TAP-GRID-R6)	A1 base plan_pv2 dccab51441bf	PASS	0 (A1)	PASS(A1)	PASS(A1)	-	-	IN A4d step #1 (A3g lineage: A1 base)
+PCGUTKEEP / PCPO3	b79196b9e7f1 / af31ff23f995	yes	A1	PASS	0 (A1)	PASS	PASS	-	-	IN A4d step #1 (A3g lineage: A1)
+PCFTGRID	1394aa5f6594	yes	A1b cf1eadc2cb91	PASS	-	-	-	-	-	IN A4d step #1 (A3g lineage: A1b)
+hub_C E2 / RSTCL / SEQE / PVNFENCE / KVCTLWRAP	c95f773d3e97 / c759208d0dc5 / fc0c1ec110af / 9aab91eb34cd / 96c827900c35	yes	A3pre2 steps 2-6	PASS	-	-	-	-	-	IN A4d step #1 (A3g lineage: A3pre2; relay_sites values later moved by PCGROWDIE/GROW, not lost)
+SYSC-D2DOUT+RANKS / S3SERDES	bcf5825fcffb (wrap bfe9db37d029) / 97ae93a74024	yes	A3pre2 steps 7-8	PASS	-	-	-	-	-	IN A4d step #1 (A3g lineage: A3pre2; 8/10 + 1/1 touched values equal in A4b, rest grow-shifted)
+hub_C D38BR	c9e24b57df87	yes	A3pre2 step 9	PASS	-	-	-	-	-	IN A4d step #1 (A3g lineage; 3/3 values equal)
+PCGROWDIE + GROWTAPS + POST_KV-ALLFIX-GROW_v2	84141a5187ca / d86bbc8d0073 / ce1a3b2e6e51	yes	A3pre2 steps 10-12	PASS	-	-	-	-	-	IN A4d step #1 (A3g lineage)
+FACERULE	8e63523de24b	yes	A3pre3 13992637b35c	PASS	-	-	-	-	-	IN A4d step #1 (A3g lineage: A3pre3)
+GROWHOPS	9e2bd587ca20	yes	A3pre4_try d82e8b3572f8 (pc_v3/sys_SD/sys_SD_v1/hroot)	-	-	-	-	-	-	IN A4d step #1 (A3g lineage: A3pre4; inferred from changed types, row log not kept)
+R8SPLIT (GROW2, pc_v3 unsplit) / R8SIDE / COUNTSYNC	f85f54a70817 / bbfaaba62321 / a1c982b4bd2d	yes	A3d steps 2-4	PASS	0 (A3dn, rt 356816)	-	PASS	-	-	IN A4d step #1 (A3d chain; COUNTSYNC 10/10 equal)
+IUSPLIT (asbuilt inner_uniform)	1713262cd060	yes	asbuilt_allfix_A3f e9d82a711970	-	-	-	-	-	-	IN A4d (asbuilt base for RINS RC_AB_IN)
+RSTNAME-REMAP (KV-RSTNAME-REMAP)	a84045c95c5c -> e186567f8dd6	yes (A3g)	A4d	PASS(GENDRY only)	0 scoped	-	-	-	-	IN A4d step #2 (SPLICE-R1: hroot, io_ft_v1)
+KV-HG-CAP r1g (10 hg types)	c6ab5cea074e / 5966f2d34e53	yes (A3g)	A4d	PASS(GENDRY only)	0 (hg scoped)	-	PASS	-	-	IN A4d step #3 (SPLICE-HG)
+KV-HG-CAP r2 (kv3_hg, kv3_hg_v3 delta)	9f603b3ec3a1	yes (A3g)	-	PASS(GENDRY only)	base-only 2 EMIT	-	PASS	-	-	OUT: arrived after A4b compose; 10 r1c blocks identical -> splice kv3_hg,kv3_hg_v3 only -> A5
+KV-PV-RSTRELAY (13 pv)	f56e81c0bb0e -> 15093a518bfc	yes (A3g)	A4d	PASS(GENDRY only)	0 scoped pv	-	-	-	-	IN A4d step #4 (SPLICE-PV, 31 pv blocks verified = 15093a518bfc)
+ASTKSRC (FAM-KV-HUBWO-S1)	4ebe911966d7	yes (A3g)	A4d	PASS(GENDRY only)	0 scoped	in A4d gate	PASS	-	-	IN A4d step #5
+RCOLL (reattach)	46d9f4601f00	A2 chain only	-	-	-	-	-	-	-	OUT: superseded by RINS 4627b2f8dc04 (A4d step #6)
+RINS (KV-RCOLL-REBASE)	4627b2f8dc04	yes (R1)	A4d	PASS	0 scoped 38 types	-	PASS	-	-	IN A4d step #6 (asbuilt/sidecar A4d from A3f)
+FWDCLK (KV-OPEN-FWDCLK)	562aebc897e6 + overlay 462b2b2b604e	yes (A2g)	A4d	PASS 0	-	-	-	-	-	IN A4d step #7 (was LOST A3g..A4b; overlay installed grow/tree)
+KV-ASTK-EARLYTAP AE1	e06290feabeb (+install_astk_view 7215a0ef2fa5)	yes (A3g)	A4d	PASS 0	0 scoped	-	-	-	-	IN A4d step #8 (replaces EARLYTAP 47ae300bd215 / ASTKTAP 51aeb8575d6d)
+KV-HUB-HOLD tap split / tap_landing_seam	ab3ae6c0b667 (split_1100b)	yes (A3g)	A4d	-	AEH 4 hubs 0	-	-	-	-	IN A4d step #9 (HUBHOLD-WRAP 60e437d26472)
+EARLYTAP / ASTKTAP (KV-ALLFIX)	47ae300bd215 / 51aeb8575d6d	A2 chain	-	-	-	-	-	-	-	OUT: superseded by KV-ASTK-EARLYTAP AE1 (step #8)
+ISTPRICE / LATREGEN	cc8bb959f92e / c85705673bcc	recompute	A4d	-	-	-	-	-	-	IN A4d steps #10-11 (recomputed on A4d; A2j's 55 repriced lanes not carried by design)
+PORTPIN-HUBWI (hub_Wi +14 reset_spine_pins)	d628d562a06d	yes (A1/A1b/A2b)	A2j only	PASS 0	-	-	-	-	-	OUT LOST: in A2 chain only, never in A3 GROW lineage; A4b hub_Wi.reset_spine_pins = pre-row value -> A5 (rerun row on A4d; ADV-PORT-PIN hub_Wi)
+TAPSPLIT (hg+pv tap load)	874a8f84c7ee + data 96aba11c0bb1	yes (A2b)	never composed (A2i REFUSED; not in A2j)	PASS	-	-	-	-	-	OUT LOST: never composed anywhere; A4b has 27/59 pre-row values, 32 moved by later rows -> A5 needs re-derive on A4d (row refuses on changed keys)
+FTLOCKUP (ft hop lockup)	ab49a5a7df98	yes (A2b)	never composed (not in A2j steps)	PASS	-	-	-	-	-	OUT LOST: never composed; clock.ft_hop_lockup in A4b differs, latency.lanes = pre-row -> A5 rerun on A4d
+RREACH v2 (station reach)	e28ef6cafd32	yes (A2)	A2j step 13 only	PASS	-	-	-	-	-	OUT LOST: A2 chain only; A4b has 30/50 pre-row values, 20 grow-moved -> A5 rerun on A4d
+STREETSTN (in-core stations to street)	ae8fb066997c	yes (A2)	A2j step 15 only	PASS	-	-	-	-	-	OUT LOST: A2 chain only; 17/18 pre-row values in A4b -> A5 rerun on A4d (then KV-OPEN-INCORE remainder)
+HUBCTAP (hub_C core taps early)	98de46da0ec2	yes (A2g)	-	PASS 0	-	-	-	-	-	OUT: hub_C held tonight; re-check vs AE1/HUB-HOLD hub_C taps -> A5 with hub_C release
+DLYAP R1 (pv dly alt polarity, GEN keys)	827a7c76eb05	yes	-	PASS 0	0 scoped 31 pv	n/a	PASS	-	-	OUT LOST: RC-ACCEPTED 22:27 (FABLE) but not in A4d -> A5 (needs rt with kit_dly_ap.py; a64d7 check)
+KV-RSTREACH (RSTREACH PRE leftovers: hub_C/Wi/Wo, sys_SD, hroot START, pv_v1n, first legs)	-	in progress	-	-	-	-	-	-	-	OUT: no ROW-REBASED yet -> A5
+KV-PV pv + pv_v8 follow-on (RING-RSTFAN)	-	in progress	-	-	-	-	-	-	-	OUT: no ROW-REBASED yet -> A5
+KV-OPEN-INCORE (23 in-core stations)	-	in progress	-	-	-	-	-	-	-	OUT: no ROW-REBASED found -> A5
+KV-DIE-SEAMHOLD (dch ring port->FF hold)	-	census running	-	-	-	-	-	-	-	OUT: no row yet -> A5
+KV-HUB-EPZO	NONE	-	-	-	-	-	-	-	-	OUT: ROW-REBASED NONE (hold class, owned by KV-HUB-HOLD)
+HUBA1 (hub revert)	47a16ce89bad	-	A3f only	-	-	-	FAIL 293	-	-	OUT: pulled (G0 overlap), superseded by new rt
+STRIPRAW	a08fcfef9c14	-	never	-	-	-	-	-	-	OUT: dropped per COORD, replaced by RSTNAME-REMAP
