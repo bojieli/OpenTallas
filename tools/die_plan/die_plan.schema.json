@@ -6581,6 +6581,10 @@
         "type": "integer",
         "minimum": 0
        },
+       "wide_min_d": {
+        "type": "integer",
+        "minimum": 0
+       },
        "keepout_um": {
         "type": "array",
         "items": {

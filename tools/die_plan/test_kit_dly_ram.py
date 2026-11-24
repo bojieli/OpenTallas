@@ -215,3 +215,85 @@ def test_rewrite_is_cycle_exact_and_lockup_composes(tmp_path):
         assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
         s = subprocess.run([str(o / "tb")], capture_output=True, text=True)
         assert "KDR_SIM bad=0" in s.stdout, (name, s.stdout[-2000:])
+
+
+WIDE_TB = """
+module tb;
+    reg clk = 0;
+    reg [31:0] cyc = 0;
+    reg [299:0] v;
+    wire [299:0] a0, a1;
+    wire [7:0] e0, e1;
+    integer k, bad = 0;
+    always #1 clk = ~clk;
+    always @(posedge clk) begin
+        cyc <= cyc + 1;
+        for (k = 0; k < 300; k = k + 1) v[k] <= $urandom;
+    end
+    wide_bound g (.clk(clk), .i_v(v), .y_a(a0), .y_e(e0));
+    wide_bound_ram r (.clk(clk), .i_v(v), .y_a(a1), .y_e(e1));
+    always @(negedge clk) if (cyc > 80 && {a0, e0} !== {a1, e1}) bad = bad + 1;
+    initial begin
+        #2000;
+        $display("KDR_SIM bad=%0d", bad);
+        $finish;
+    end
+endmodule
+"""
+
+
+def wide_text():
+    """a source core drives a W 300 D 60 bus delay line read by two cores (one through a core-link pipe); a shallow W 8 line"""
+    return ("module wide_bound (\n    input wire clk,\n    input wire [299:0] i_v,\n    output wire [299:0] y_a,\n    output wire [7:0] y_e\n);\n"
+            "    wire [299:0] w_s;\n    wire [299:0] d60_s;\n    wire [299:0] lp_b;\n    wire [7:0] d9_s;\n    wire [299:0] y_b;\n"
+            "    core #(.N(300)) u_cs (.clk(clk), .a(i_v), .y(w_s));\n"
+            "    ot_dp_dly #(.W(300), .D(60)) u_d60_s (.clk(clk), .d(w_s), .q(d60_s));\n"
+            "    ot_dp_dly #(.W(8), .D(9)) u_d9_s (.clk(clk), .d(w_s[7:0]), .q(d9_s));\n"
+            "    ot_dp_dly #(.W(300), .D(4)) u_pc_lp_b (.clk(clk), .d(d60_s), .q(lp_b));  // core_link_pipe: +4 DECLARED\n"
+            "    core #(.N(300)) u_ca (.clk(clk), .a(d60_s), .y(y_a));\n"
+            "    core #(.N(300)) u_cb (.clk(clk), .a(lp_b), .y(y_b));\n"
+            "    core #(.N(8)) u_ce (.clk(clk), .a(d9_s ^ y_b[7:0]), .y(y_e));\n"
+            "endmodule\n")
+
+
+WTYPE = {"outline_um": [1200.0, 900.0], "pad_ram": {"min_flops": 1024, "wide_min_d": 32},
+         "hard_cores": [{"inst": "cs", "origin_um": [20.0, 20.0], "outline_um": [300.0, 200.0]},
+                        {"inst": "ca", "origin_um": [880.0, 680.0], "outline_um": [300.0, 200.0]},
+                        {"inst": "cb", "origin_um": [880.0, 20.0], "outline_um": [300.0, 200.0]}]}
+
+
+def test_wide_plan_off_by_default():
+    txt = wide_text()
+    t = dict(WTYPE, pad_ram={"min_flops": 1024})
+    chunks, st, _c = kr.plan(txt, t, (), kr.cfg_of(t))
+    assert chunks == [] and st["wide_lines"] == 0
+
+
+def test_wide_plan_slices_and_reach():
+    chunks, st, _c = kr.plan(wide_text(), WTYPE, (), kr.cfg_of(WTYPE))
+    w = [c for c in chunks if c.get("kind") == "wide"]
+    assert [c["slice"] for c in w] == [[0, 256], [256, 300]] and st["wide_lines"] == 1
+    assert {c["line"] for c in w} == {"u_d60_s"}
+    c = w[0]
+    assert c["src"] == ["u_cs"] and c["dst"] == ["u_ca", "u_cb"]
+    assert c["lead"] + c["ram_d"] + c["resid"] == 60 and c["lead"] >= 1 and c["resid"] >= 1
+
+
+@pytest.mark.skipif(_verilator() is None, reason="no verilator")
+def test_wide_rewrite_is_cycle_exact(tmp_path):
+    txt = wide_text()
+    chunks, _st, cand = kr.plan(txt, WTYPE, (), kr.cfg_of(WTYPE))
+    new = kr.rewrite(txt, chunks, cand)
+    assert new.count("ot_dp_dly_ram #(") == 2 and "u_d60_s (" in new and "u_d9_s (" in new
+    rtl = tmp_path / "w.sv"
+    rtl.write_text(CELLS + txt + new.replace("module wide_bound (", "module wide_bound_ram (", 1))
+    tb = tmp_path / "tb.sv"
+    tb.write_text(WIDE_TB)
+    o = tmp_path / "o"
+    r = subprocess.run([_verilator(), "--binary", "--timing", "-Wno-fatal", "-Wno-lint", "-Wno-style", "--top-module", "tb",
+                        str(HERE / "ot_dp_dly_ram.sv"),
+                        str(ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"),
+                        str(rtl), str(tb), "-Mdir", str(o), "-o", "tb"], capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
+    s = subprocess.run([str(o / "tb")], capture_output=True, text=True)
+    assert "KDR_SIM bad=0" in s.stdout, s.stdout[-2000:]

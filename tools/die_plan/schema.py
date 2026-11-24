@@ -1679,6 +1679,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
         "hop_um": {"type": "number", "exclusiveMinimum": 0}, "clear_um": {"type": "number", "minimum": 0},
         "edge_um": {"type": "number", "minimum": 0}, "grid_um": {"type": "number", "exclusiveMinimum": 0},
         "max_macros": {"type": "integer", "minimum": 0}, "max_resid": {"type": "integer", "minimum": 0},
+        "wide_min_d": {"type": "integer", "minimum": 0},  # KV-PV-CAP 11-23: multi-bit delay lines D >= this too (0 = off)
         "keepout_um": {"type": "array", "items": {"type": "array", "minItems": 4, "maxItems": 4,
                                                   "items": {"type": "number"}}}}}
 # KV-PV-CAP 11-23 (kit_dly_ap.py): ot_dp_dly delay lines of the type stored at alternating polarity at GEN (no inverter between

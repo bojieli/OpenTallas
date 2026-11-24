@@ -53,7 +53,13 @@ MACRO_DIR = "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
 MACRO_UM = (94.824, 41.04)
 WM, DMAX, DMIN_RAM = 256, 130, 4
 DEFAULTS = dict(min_d=8, min_flops=4096, hop_um=300.0, clear_um=10.0, edge_um=10.0, grid_um=4.32, max_macros=16, max_resid=8,
-                keepout_um=())
+                keepout_um=(), wide_min_d=0)
+# KV-PV-CAP 11-23 (wide_min_d > 0): WIDE delay lines too -- a plain multi-bit ot_dp_dly (W > 1, D >= wide_min_d, not a tail copy, not
+# a kept line) is the latency padding of a whole bus (kv3_pv_v1n u_d73_vport_E_out_v_lo W 512 D 73 + u_d68_vport_W_out_v_lo: 72k
+# flops of the type).  Per line: one lead line (W x L), one ot_dp_dly_ram per 256-bit slice (D R, each its own macro site), and the
+# residual (W x D-L-R) under the ORIGINAL instance name and q wire, so the line's consumers, names and cycles stay as bound.
+# L / the residual cover the hops source cores -> RAM -> farthest consumer core (hop_um; an end with no placed core counts from the
+# farthest outline corner); the RAM sits at the midpoint of the source and consumer centroids.
 
 
 def cfg_of(t):
@@ -95,11 +101,18 @@ def scan(txt):
     insts = instances(body)
     cand, qmap, tails = {}, {}, []
     core_conn = []
+    wide, dpin = {}, []
     for mt, params, name, s, e, lp in insts:
         cs = conns(body, lp, e)
         end = body.index(";", e) + 1
         eol = body.find("\n", end)
         rest = body[end:eol if eol >= 0 else len(body)]
+        if mt in DLY and "d" in cs:
+            dpin.append((name, cs["d"][0], cs.get("q", ("",))[0].strip()))
+        if mt == "ot_dp_dly" and _param(params, "W") > 1 and "d" in cs and "q" in cs and IDENT.fullmatch(cs["q"][0].strip()) \
+                and TAIL_MARK not in rest:
+            wide[name] = dict(mt=mt, W=_param(params, "W"), D=_param(params, "D"), d=cs["d"][0].strip(), q=cs["q"][0].strip(),
+                              span=(hdr + s, hdr + end), rest=rest.rstrip(), clk=cs.get("clk", ("clk",))[0].strip())
         if mt in DLY:
             if TAIL_MARK in rest:
                 m = re.search(TAIL_MARK + r"\s+([A-Za-z_]\w*)", rest)
@@ -129,7 +142,29 @@ def scan(txt):
             for w in set(IDENT.findall(ex)):
                 if w in qmap:
                     readers.setdefault(w, set()).add(name)
+    scan.wide = (wide, core_conn, dpin)
     return cand, readers
+
+
+def wide_ends(wide, core_conn, dpin):
+    """{line: (source core insts, consumer core insts)}: cores on the d idents / on the q ident, one ot_dp_* stage deep"""
+    by_id = {}
+    for name, exprs in core_conn:
+        for ex in exprs:
+            for w in set(IDENT.findall(ex)):
+                by_id.setdefault(w, set()).add(name)
+    rd = {}
+    for name, dex, q in dpin:
+        for w in set(IDENT.findall(dex)):
+            rd.setdefault(w, []).append(q)
+    out = {}
+    for n, x in wide.items():
+        src = set().union(*[by_id.get(w, set()) for w in IDENT.findall(x["d"])] or [set()])
+        dst = set(by_id.get(x["q"], set()))
+        for q2 in rd.get(x["q"], ()):
+            dst |= by_id.get(q2, set())
+        out[n] = (sorted(src), sorted(dst))
+    return out
 
 
 def _seat_points(entries):
@@ -288,10 +323,64 @@ def plan(txt, t, pins=(), c=None, tag="", *, clock_sites=()):
                                physical_inst=f"u_bound.{inst}.g_b[0].u_m",
                                resid=sum(cand[n]["D"] - lead - trail - r for n in ch)))
             k += 1
+    wchunks, wskip = [], []
+    if c.get("wide_min_d"):
+        wide, core_conn, dpin = scan.wide
+        ends = wide_ends(wide, core_conn, dpin)
+
+        def cen(insts):
+            pts = [geom["centre"][_norm(i)] for i in insts if _norm(i) in geom["centre"]]
+            return (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)) if pts else None
+        for n in sorted((n for n, x in wide.items() if x["D"] >= c["wide_min_d"]), key=lambda n: -wide[n]["W"] * wide[n]["D"]):
+            x = wide[n]
+            src, dst = (cen(e) for e in ends[n])
+            a, b = src or dst or (W / 2, H / 2), dst or src or (W / 2, H / 2)
+            target = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+            nsl = (x["W"] + WM - 1) // WM
+            rec = dict(line=n, W=x["W"], D=x["D"], src=ends[n][0], dst=ends[n][1], target=[round(target[0], 2), round(target[1], 2)])
+            if len(chunks) + len(wchunks) + nsl > c["max_macros"]:
+                wskip.append(dict(rec, why="max_macros"))
+                continue
+            orgs, tmp = [], list(placed)
+            for _ in range(nsl):
+                org = site(geom, target, tmp, c)
+                if org is None:
+                    break
+                orgs.append(org)
+                tmp.append((org[0], org[1], org[0] + MACRO_UM[0], org[1] + MACRO_UM[1]))
+            if len(orgs) < nsl:
+                wskip.append(dict(rec, why="no free site"))
+                continue
+            # reach (never fewer stages than the hops): lead = RAM -> farthest source core, trail = RAM -> farthest consumer core;
+            # an end with no placed core (soft source, port) counts from the farthest outline corner
+            def far(cx, cy, insts):
+                pts = [geom["centre"][_norm(i)] for i in insts if _norm(i) in geom["centre"]] or [(0, 0), (W, 0), (0, H), (W, H)]
+                return max(abs(px - cx) + abs(py - cy) for px, py in pts)
+            lead = trail = 0
+            for org in orgs:
+                cx, cy = org[0] + MACRO_UM[0] / 2, org[1] + MACRO_UM[1] / 2
+                lead = max(lead, max(0, math.ceil(far(cx, cy, ends[n][0]) / c["hop_um"]) - 1))
+                trail = max(trail, max(0, math.ceil(far(cx, cy, ends[n][1]) / c["hop_um"]) - 1))
+            r = min(x["D"] - lead - trail, DMAX)
+            if r < DMIN_RAM or x["W"] * r < c["min_flops"]:
+                wskip.append(dict(rec, why=f"ram depth {r} x {x['W']} below min_flops / {DMIN_RAM}"))
+                continue
+            placed[:] = tmp
+            for j, org in enumerate(orgs):
+                lo, hi = j * WM, min(x["W"], (j + 1) * WM)
+                inst = f"u_pdramw_{tag}{k}"
+                wchunks.append(dict(rec, kind="wide", inst=inst, slice=[lo, hi], bits=hi - lo, lead=lead, trail=trail, ram_d=r,
+                                    resid=x["D"] - lead - r, origin_um=[org[0], org[1]], physical_inst=f"u_bound.{inst}.g_b[0].u_m"))
+                k += 1
+    chunks = chunks + wchunks
+    skipped = skipped + wskip
     stats = dict(candidates=len(cand), candidate_flops=sum(x["D"] for x in cand.values()), chunks=len(chunks),
                  ram_flops=sum(x["bits"] * x["ram_d"] for x in chunks),
-                 lead_flops=sum(x["bits"] * (x["lead"] + x["trail"]) for x in chunks),
-                 resid_flops=sum(x["resid"] for x in chunks), skipped=skipped)
+                 lead_flops=sum(x["bits"] * (x["lead"] + x["trail"]) for x in chunks if x.get("kind") != "wide"),
+                 resid_flops=sum(x["resid"] for x in chunks if x.get("kind") != "wide"), skipped=skipped,
+                 wide_lines=len({x["line"] for x in wchunks}), wide_ram_flops=sum(x["bits"] * x["ram_d"] for x in wchunks),
+                 wide_lead_flops=sum(x["bits"] * x["lead"] for x in wchunks),
+                 wide_resid_flops=sum(x["bits"] * x["resid"] for x in wchunks))
     return chunks, stats, cand
 
 
@@ -301,6 +390,11 @@ def rewrite(txt, chunks, cand):
         return txt
     edits, decl, rams = [], [], []
     used = set(re.findall(r"\b[A-Za-z_]\w*\b", txt))
+    wide = [ch for ch in chunks if ch.get("kind") == "wide"]
+    chunks = [ch for ch in chunks if ch.get("kind") != "wide"]
+    if wide:
+        scan(txt)
+    wl = scan.wide[0] if wide else {}
 
     def fresh(n):
         if n in used:
@@ -344,12 +438,42 @@ def rewrite(txt, chunks, cand):
         rams.append(f"    ot_dp_dly_ram #(.W({ch['bits']}), .D({ch['ram_d']})) {fresh(ch['inst'])} (.clk({cand[ch['names'][0]]['clk']}), "
                     f".d({{{', '.join(reversed(ins))}}}), .q({{{', '.join(reversed(outs))}}}));  "
                     f"// kit_dly_ram: {ch['bus']} {ch['bits']} b, pad base {ch['base']} = lead {ch['lead']} + ram {ch['ram_d']} + trail {ch['trail']}")
+    lines = {}
+    for ch in wide:
+        lines.setdefault(ch["line"], []).append(ch)
+    for n, chs in lines.items():
+        x = wl.get(n)
+        if x is None:
+            raise LkError(f"kit_dly_ram wide: line {n} not found")
+        L, R, W = chs[0]["lead"], chs[0]["ram_d"], x["W"]
+        res = x["D"] - L - R
+        ind = re.match(r"[ \t]*", txt[x["span"][0]:]).group(0)
+        src = x["d"]
+        if L:
+            lw = fresh(f"{n[2:] if n.startswith('u_') else n}_ramld")
+            decl.append(f"    wire [{W - 1}:0] {lw};")
+            rams.append(f"    ot_dp_dly #(.W({W}), .D({L})) {fresh('u_' + lw)} (.clk({x['clk']}), .d({src}), .q({lw}));"
+                        f"  // kit_dly_ram wide: lead {L} of {n}")
+            src = lw
+        rq = fresh(f"{n[2:] if n.startswith('u_') else n}_ramq")
+        decl.append(f"    wire [{W - 1}:0] {rq};")
+        for ch in chs:
+            lo, hi = ch["slice"]
+            rams.append(f"    ot_dp_dly_ram #(.W({hi - lo}), .D({R})) {fresh(ch['inst'])} (.clk({x['clk']}), .d({src}[{hi - 1}:{lo}]), "
+                        f".q({rq}[{hi - 1}:{lo}]));  // kit_dly_ram wide: {n} bits {lo}..{hi - 1} = lead {L} + ram {R} + residual {res}")
+        if res:
+            new = (f"{ind}{x['mt']} #(.W({W}), .D({res})) {n} (.clk({x['clk']}), .d({rq}), .q({x['q']}));{x['rest']}"
+                   f"  // kit_dly_ram wide: residual {res} of D {x['D']}")
+        else:
+            new = f"{ind}assign {x['q']} = {rq};  // kit_dly_ram wide: {n} D {x['D']} = lead {L} + ram {R}"
+        edits.append((x["span"][0], x["span"][1] + len(x["rest"]), new))
     for a, b, new in sorted(edits, reverse=True):
         eol = txt.find("\n", a)
         if eol < 0 or eol < b:
             eol = b
         txt = txt[:a] + new + txt[eol:]
-    head = [f"    // kit_dly_ram (FIX-KV-PV-MESOFIFO 11-23): {len(chunks)} landing-pad SRAM rings ot_dp_dly_ram"] + decl
+    head = [f"    // kit_dly_ram (FIX-KV-PV-MESOFIFO 11-23): {len(chunks)} landing-pad SRAM rings ot_dp_dly_ram"
+            + (f", {len(wide)} wide-line rings (KV-PV-CAP)" if wide else "")] + decl
     hdr = _body(txt)
     txt = txt[:hdr] + "\n" + "\n".join(head) + txt[hdr:]
     txt, n = re.subn(r"(\n\s*endmodule\b)", lambda m: "\n" + "\n".join(rams) + m.group(1), txt, count=1)
