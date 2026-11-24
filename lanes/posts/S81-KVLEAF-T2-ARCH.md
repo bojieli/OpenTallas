@@ -17,3 +17,4 @@
 - 2026-11-23 21:30 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-renewed-glider-3627027 on renewed-glider: rc=0 after 16 s, ended 05:30:52, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/bench_r2/push_wt4.log, cmd: ot-push-main 
 - 2026-11-23 21:33 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-renewed-glider-3680651 on renewed-glider: rc=0 after 12 s, ended 05:33:43, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/bench_r2/push_wt4b.log, cmd: ot-push-main 
 - 2026-11-23 22:32 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-renewed-glider-628460 on renewed-glider: rc=0 after 16 s, ended 06:32:52, log none, cmd: ot-push-main 
+- 2026-11-23 23:21 PST DONE [s81-kvleaf-t2-arch] ot-push-main otpush-renewed-glider-1412847 on renewed-glider: rc=0 after 16 s, ended 07:21:13, log none, cmd: ot-push-main 
