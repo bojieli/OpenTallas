@@ -1884,44 +1884,64 @@ def _wf_solve_once(P):
     obj, rel, par, unr = best
     # partitions still unreachable within hop: attach to the nearest reached rst_o site (flagged: G0 error, the
     # owner of the plan moves the reset pin -- hard types: partition_types[T].reset.tap_um on a face)
-    # RST-NEAREST-1124 (S81-RSTSOLVE, COORD/FABLE-RC-ALL): attach NEAREST-FIRST, not alphabetically.  The old alphabetical order
+    # RST-NEAREST-1124 (S81-RSTSOLVE, COORD/FABLE-RC-ALL): attach NEAREST-FIRST, not alphabetically, ONLY when reset.attach_order == "nearest"
+    # (opt-in knob; default "alphabetical" = the pre-1124 order, so every bound plan, relay name and raw branch stays as signed).  The old alphabetical order
     # let a part whose name sorts early (c8: fW0_p1_b0 before svc_*) attach to whatever was already reached, 7.7 mm away, when a
     # nearer unreachable part (svc_1_rs, 1.7 mm) would have been reached a step later.  Each round attaches the unreachable
     # part with the smallest distance to ANY reached non-hard site (tie: part name, then site), then offers its own sites to
     # the rest.  Candidate sites, the in-site skip, rel and the tie order inside one part are unchanged.
-    _sd = {}
+    if P.reset.get("attach_order", "alphabetical") == "nearest":
+        _sd = {}
 
-    def _sites_die(q):
-        if q not in _sd:
-            _sd[q] = [(j, P.to_die(q, s_["xy"])) for j, s_ in enumerate(face_sites(P, P.parts[q]["type"]))
-                      if not _is_in_site(P, q, j, choice)]
-        return _sd[q]
-    _pxy = {p: (part_reset_pin(P, p) if p in hard else P.to_die(p, choice[P.parts[p]["type"]])) for p in unr}
-    _best = {}
+        def _sites_die(q):
+            if q not in _sd:
+                _sd[q] = [(j, P.to_die(q, s_["xy"])) for j, s_ in enumerate(face_sites(P, P.parts[q]["type"]))
+                          if not _is_in_site(P, q, j, choice)]
+            return _sd[q]
+        _pxy = {p: (part_reset_pin(P, p) if p in hard else P.to_die(p, choice[P.parts[p]["type"]])) for p in unr}
+        _best = {}
 
-    def _offer(p, q):
-        if q in hard:
-            return
-        for j, c in _sites_die(q):
-            d = _man(c, _pxy[p])
-            if p not in _best or (d, q, j) < _best[p]:
-                _best[p] = (d, q, j)
-    _todo = sorted(unr)
-    for q in sorted(rel):
-        for p in _todo:
-            _offer(p, q)
-    while _todo:
-        cand = [p for p in _todo if p in _best]
-        if not cand:
-            break
-        p = min(cand, key=lambda x: (_best[x][0], x))
-        b = _best[p]
-        q = b[1]
-        par[p] = (q, b[2], round(b[0], 1))
-        rel[p] = rel[q] + (hdep[p] if p in hard else entry(p) + est[(P.parts[p]["type"], choice[P.parts[p]["type"]])])
-        _todo.remove(p)
-        for r in _todo:
-            _offer(r, p)
+        def _offer(p, q):
+            if q in hard:
+                return
+            for j, c in _sites_die(q):
+                d = _man(c, _pxy[p])
+                if p not in _best or (d, q, j) < _best[p]:
+                    _best[p] = (d, q, j)
+        _todo = sorted(unr)
+        for q in sorted(rel):
+            for p in _todo:
+                _offer(p, q)
+        while _todo:
+            cand = [p for p in _todo if p in _best]
+            if not cand:
+                break
+            p = min(cand, key=lambda x: (_best[x][0], x))
+            b = _best[p]
+            q = b[1]
+            par[p] = (q, b[2], round(b[0], 1))
+            rel[p] = rel[q] + (hdep[p] if p in hard else entry(p) + est[(P.parts[p]["type"], choice[P.parts[p]["type"]])])
+            _todo.remove(p)
+            for r in _todo:
+                _offer(r, p)
+    else:
+        for p in sorted(unr):
+            xy = part_reset_pin(P, p) if p in hard else P.to_die(p, choice[P.parts[p]["type"]])
+            b = None
+            for q in sorted(rel):
+                if q in hard:
+                    continue
+                for j, s_ in enumerate(face_sites(P, P.parts[q]["type"])):
+                    if _is_in_site(P, q, j, choice):
+                        continue
+                    d = _man(P.to_die(q, s_["xy"]), xy)
+                    if b is None or d < b[0]:
+                        b = (d, q, j)
+            if b is not None:
+                q = b[1]
+                par[p] = (q, b[2], round(b[0], 1))
+                rel[p] = rel[q] + (hdep[p] if p in hard else entry(p) + est[(P.parts[p]["type"],
+                                                                              choice[P.parts[p]["type"]])])
     outs = {tn: set() for tn in stypes}
     for p, pr in par.items():
         if pr is not None:

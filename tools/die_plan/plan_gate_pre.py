@@ -182,7 +182,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1996,6 +1996,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
                                     bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
             findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
+    if "RSTNAMES" not in skip:                           # RST-NAMES-1124: report only
+        findings += rstnames_findings(tree, plan, rb or baseline)
     if "RSTPIN" not in skip:                             # PIN-REACH-1124: report only, never a FAIL
         findings += rstpin_findings(tree, plan)
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
@@ -2219,6 +2221,45 @@ def check_depth(tree, plan, asbuilt=None, max_list=12):
     head = out[:max_list] + ([f"FAIL DEPTH ... {len(out) - max_list} more netlist(s)"] if len(out) > max_list else [])
     return head + warn[:max_list] + [f"WARN DEPTH-SUMMARY {len(files)} generated netlist(s) ({how}); {len(out)} over budget, {n_deep} deep "
                                      f"flop(s); {len(warn)} HELD ({n_held} flops); budget {budget} levels (depth_config.json / $OT_PRE_DEPTH_LEVELS)"]
+
+
+def rstnames_findings(tree, plan, base):
+    """RST-NAMES-1124: WARN RSTNAMES when the wavefront reset solve of PLAN differs from BASE (the bound / baseline plan): every
+    part whose solved parent changed and every type whose rst_o site set changed renames reset relays / raw branches in the
+    bound tree (HEAD-WEST hd_spn_end 11-24: 15 of 576 relay names not emitted, 13 raws gone after the nearest-first attach
+    change).  Report only, wavefront plans with a readable BASE only; --skip RSTNAMES or OT_RSTNAMES=off."""
+    if os.environ.get("OT_RSTNAMES") == "off" or not base:
+        return []
+    raw = _load(plan) or {}
+    if (raw.get("reset") or {}).get("release") != "wavefront":
+        return []
+    try:
+        braw = _load(base)
+    except (OSError, ValueError):
+        return []
+    if not braw or (braw.get("reset") or {}).get("release") != "wavefront":
+        return []
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import reset_tree as RT
+        import schema
+
+        def solve(r, p):
+            P = _shared_plan(p, r) if p == plan else schema.Plan(json.loads(json.dumps(r)), Path(p).absolute())
+            return _in_tree(tree, lambda: RT.wf_solve(P))
+        a, b = solve(raw, plan), solve(braw, base)
+    except Exception as e:  # noqa: BLE001 - a checker crash names itself
+        return [f"WARN RSTNAMES not checked: {type(e).__name__}: {str(e)[:200]}"]
+    pa, pb = a["parent"], b["parent"]
+    moved = sorted(p for p in set(pa) & set(pb) if (pa[p] or (None,))[:1] != (pb[p] or (None,))[:1]
+                   or (pa[p] or (None, None))[1:2] != (pb[p] or (None, None))[1:2])
+    types = sorted(t for t in set(a["outs"]) & set(b["outs"]) if a["outs"][t] != b["outs"][t])
+    if not moved and not types:
+        return []
+    return [f"WARN RSTNAMES {len(moved)} part(s) solve a different reset parent / site than {Path(base).name} "
+            f"({', '.join(moved[:6])}{' ...' if len(moved) > 6 else ''}); {len(types)} type(s) change their rst_o site set "
+            f"({', '.join(types[:6])}{' ...' if len(types) > 6 else ''}): their relay names / landing_raw_branches in the bound tree "
+            f"are renamed (re-bind / landing_remap) -- a plan edit that only meant to move one part must not do this"]
 
 
 def rstpin_findings(tree, plan):

@@ -1404,6 +1404,7 @@ SCHEMA = {
             # RESET-SLEW: "slew_safe" = die relay reach default reset_tree.SLEW_SAFE_RELAY_UM (measured slew-safe hop)
             "relay_rule": {"enum": ["slew_safe"]},
             "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
+            "attach_order": {"enum": ["alphabetical", "nearest"]},
             "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
             "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},
             # R-REACH-1 die reset relays (S81-DIE-R4 11-20; reset_tree.plan_die_relays / reach_relay_plan.py): per child

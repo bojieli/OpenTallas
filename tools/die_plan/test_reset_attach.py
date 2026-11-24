@@ -13,9 +13,9 @@ import plan_gate_pre as G  # noqa: E402
 TINY = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
 
 
-def plan(pins):
+def plan(pins, order="nearest"):
     raw = copy.deepcopy(TINY)
-    raw.setdefault("reset", {}).update(release="wavefront", parent_pins=pins)
+    raw.setdefault("reset", {}).update(release="wavefront", parent_pins=pins, attach_order=order)
     return schema.Plan(raw)
 
 
@@ -54,3 +54,30 @@ def test_pre_line_is_warn_only(tmp_path):
     p.write_text(json.dumps(raw))
     assert G.rstpin_findings(str(tmp_path), str(p)) == []
     assert "RSTPIN" in G.CLASSES
+
+
+def test_default_attach_order_is_the_old_alphabetical_one():
+    # knob absent / "alphabetical": pa (sorts first) attaches to the nearest part reached BEFORE it, not to pm1
+    for order in ("alphabetical", None):
+        raw = copy.deepcopy(TINY)
+        raw.setdefault("reset", {}).update(release="wavefront", parent_pins={"pa": "pb", "pm1": "pb"})
+        if order:
+            raw["reset"]["attach_order"] = order
+        s = RT.wf_solve(schema.Plan(raw))
+        assert s["unreachable"] == ["pa", "pm1"] and s["parent"]["pa"][0] != "pm1"
+    assert RT.wf_solve(plan({"pa": "pb", "pm1": "pb"}))["parent"]["pa"][0] == "pm1"
+
+
+def test_rstnames_reports_a_parent_change_against_the_base(tmp_path):
+    base = copy.deepcopy(TINY)
+    base.setdefault("reset", {}).update(release="wavefront")
+    new = copy.deepcopy(TINY)
+    new.setdefault("reset", {}).update(release="wavefront", parent_pins={"pa": "pb", "pm1": "pb"}, attach_order="nearest")
+    pb, pn = tmp_path / "base.json", tmp_path / "die_plan.json"
+    pb.write_text(json.dumps(base))
+    pn.write_text(json.dumps(new))
+    out = G.rstnames_findings(str(tmp_path), str(pn), str(pb))
+    assert len(out) == 1 and out[0].startswith("WARN RSTNAMES") and "pa" in out[0]
+    assert G.rstnames_findings(str(tmp_path), str(pb), str(pb)) == []
+    assert G.rstnames_findings(str(tmp_path), str(pn), None) == []
+    assert "RSTNAMES" in G.CLASSES
