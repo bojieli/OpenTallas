@@ -31,7 +31,8 @@ def _w(*p):
 
 
 def lane_rows(P, LA, schema, types):
-    """yield (lane, stored, live_stations, live_landing, src_depth) for every lane with ports"""
+    """yield (lane, stored, live_stations, live_landing, src_depth, boundary) for every lane with ports; boundary = the lane's live boundary
+    flops (schema.lane_natural: 2 between partitions, 1 for a die-IO end, which has no partition flop)"""
     lat = (P.raw.get("latency") or {}).get("lanes") or {}
     for lid, ln in sorted(P.lanes.items()):
         ports = [P.ports[q] for q in ln.get("ports", []) if q in P.ports]
@@ -43,19 +44,21 @@ def lane_rows(P, LA, schema, types):
         if a["part"] != schema.DIE_PART and a["part"] in P.parts:
             bus, core = LA.kit_depth(types.get(P.parts[a["part"]]["type"]), a["bus"])
             depth = bus + core
-        yield lid, lat.get(lid), int(nat.get("stations", 0)), int(nat.get("clock_landing", 0)), depth
+        yield lid, lat.get(lid), int(nat.get("stations", 0)), int(nat.get("clock_landing", 0)), depth, int(nat.get("boundary", 2))
 
 
-def judge(row, st, land, depth):
-    """reasons a lane's STORED latency row (dict stations/clock_landing/cycles) is short of the live counts"""
+def judge(row, st, land, depth, boundary=2):
+    """reasons a lane's STORED latency row (dict stations/clock_landing/cycles) is short of the live counts.
+    ISTPRICE-IO-1124: the base is the lane's boundary flops, not a fixed 2: a die-IO lane (din / dout of tiny_plan, boundary 1, cycles 1)
+    was PRICE-SHORT '1 < 2' since 11d45bef39d made ISTPRICE a FAIL class (test_publish_gate's 2 failures)."""
     why = []
     if int(row.get("stations", st)) != st:
         why.append(f"STALE-TABLE stations table {row.get('stations')} != live ft stations {st}")
     if int(row.get("clock_landing", 0)) != land:
         why.append(f"STALE-TABLE clock_landing table {row.get('clock_landing', 0)} != live {land}")
-    need = 2 + st + land + depth
+    need = boundary + st + land + depth
     if int(row.get("cycles", 0)) < need:
-        why.append(f"PRICE-SHORT priced cycles {row.get('cycles')} < 2 + ft {st} + landing {land} + source stations {depth} = {need}")
+        why.append(f"PRICE-SHORT priced cycles {row.get('cycles')} < {boundary} + ft {st} + landing {land} + source stations {depth} = {need}")
     return why
 
 
@@ -120,12 +123,12 @@ def _findings(raw, plan_path, tree=None, **_kw):
     P = schema.Plan(raw, plan_path)
     types = raw.get("partition_types") or {}
     hits, n, stale, short, notab = [], 0, 0, 0, 0
-    for lid, row, st, land, depth in lane_rows(P, LA, schema, types):
+    for lid, row, st, land, depth, bnd in lane_rows(P, LA, schema, types):
         n += 1
         if not row:
             notab += 1
             continue
-        why = judge(row, st, land, depth)
+        why = judge(row, st, land, depth, bnd)
         if why:
             stale += any(x.startswith("STALE") for x in why)
             short += any(x.startswith("PRICE") for x in why)

@@ -74,3 +74,10 @@ def test_not_run_headline_without_asbuilt():
     src = open(A.__file__).read()
     assert "NOT-RUN: FIXED-SPLIT and OUT-LANES" in src
     assert 'nr = "" if isinstance(ab, dict)' in src
+
+
+def test_die_io_lane_has_one_boundary_flop():
+    """ISTPRICE-IO-1124: a die-IO lane (one partition flop) priced 1 cycle is not PRICE-SHORT; a partition-to-partition lane still needs 2"""
+    assert A.judge({"stations": 0, "clock_landing": 0, "cycles": 1}, 0, 0, 0, 1) == []
+    assert any("PRICE-SHORT" in w for w in A.judge({"stations": 0, "clock_landing": 0, "cycles": 1}, 0, 0, 0, 2))
+    assert any("PRICE-SHORT" in w for w in A.judge({"stations": 0, "clock_landing": 0, "cycles": 1}, 0, 0, 0))
