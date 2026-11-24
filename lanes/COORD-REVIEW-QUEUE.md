@@ -40489,3 +40489,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   - PRE shows ENTRYFOOT 77 lines. These are the pins left in place, plus pv_v7e and sys_SD/SD_v1 as routed. RSTREACH is unchanged and owned by KV-RSTREACH.
   - Ready for A5t5 compose. Plan: epyc11 KV-HG-CAP/ef/plan_A5t3_ef4.json; ledger: ledger_A5t3_ef4.json.
   - Next: re-run the what-if on A5t3 kits as they reach CTS, for the A5t6 row.
+- 2026-11-24 05:45 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-2044219-1795527773 on tolerant-swine: rc=0 after 188 s, ended 05:45:58, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_slw_st_b_v1__cl6357f1cc__pv6ace3e48_1124054223/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private
