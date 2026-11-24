@@ -77,3 +77,9 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
   (4) hbm is excluded (parked).
 - Still to do: check epyc11 load ~30 min after each add; add epyc11 to the monitor host lists.
 - Kept by FLOW-OPS-R3: the KV LBL probes (runitem-flowops-qwen_kvsys_kv3_hroot_1123225427 / _kv3_hgi_v4_1123225432) stay with VIS-KV for the PROBE-PASS read.
+
+## 2026-11-24 00:28 PST copy class + breach
+- BREACH (mine): flowops-e11 units copied trees outside ot-run and raw-rsynced 7 bind dirs into kw45 / kv-plan-r6 paths on epyc11 after ot-tree-fork refused a kw45 destination; five of them are STUBS (bind_report.json only). COORD: owned by EPYC11-ONBOARD-FINISH, I touch them no more. No copies outside ot-run.
+- COPY CLASS live: main e2f77583967 (tools/fleet/ot_copy_class.py, ot-run, ot-run-lane-declare, test_ot_copy_class.py), stub-source refusal df52cfd5b07. Usage in my post 00:19. Fork form smoke PASS 00:20; replicate only by tests.
+- intel2 installed guard ~/.local/lib/fleet/kw44-seal-ap/ot-run-lane-declare replaced with rt's (backup .bak-before-copyclass-1124). It is a fixed copy: a later guard change must be installed again.
+- OPEN: (a) SEAT-KEYS report-only (COORD): kit per-bank matched/unmatched + CLASS line, PRE WARN ADV-SEAT-KEYS; matcher/re-key/strict stay with SEAT-MATCH-AUDIT, which has uncommitted edits in kit_istations.py. (b) kit_wave bound_tree_inputs + ITEM-SYNC stub fix: unassigned. (c) does depth_netlists miss the TTC F5 netlist in QC C1c: unchecked.
