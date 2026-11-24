@@ -10,3 +10,4 @@
 - 2026-11-24 03:09 PST DONE [S81-START-COLLECTOR] ot-run oth-ubuntu-902530-1795517366 on renewed-glider: rc=0 after 1191 s, ended 11:09:15, log none, cmd: --mem 40 --threads 1 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-start-collector -- bash -c cd /srv/opentallas-scratch2/claude/s
 - 2026-11-24 03:09 PST DONE [s81-start-collector] ot-push-main otpush-renewed-glider-1343939 on renewed-glider: rc=0 after 0 s, ended 11:09:39, log none, cmd: ot-push-main --help
 - 2026-11-24 03:09 PST DIED [s81-start-collector] ot-push-main otpush-renewed-glider-1347234 on renewed-glider: rc=3 after 7 s, ended 11:09:51, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 3 after 7 s, no log
+- 2026-11-24 03:11 PST DONE [s81-start-collector] ot-push-main otpush-renewed-glider-1372671 on renewed-glider: rc=0 after 81 s, ended 11:11:42, log none, cmd: ot-push-main 
