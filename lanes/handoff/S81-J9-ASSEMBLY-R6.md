@@ -144,3 +144,16 @@ J8 891100ef774 remains live. No J9 candidate was activated. All admitted exact g
 - B2: HOLD; Codex units b2_1429 etc adopted; rides only if R3 f47f28d77ba7 is clean by 17:00.
 - AMENDMENT-1 (manifest 19:00, strict 23:00): base ae3101241d6b. RTL carry: 52aebeb23d, 17a29101a3, ab9599202a+11c3801a01, 132f74ad81. Rows: COL-FRAME-HOPFIX-1, B2 rows, GFLOCAL+MASKLOCAL, x14 LPR-FOREST, rc37 LP-PROFILE-1b+LK1, rc35 tpcap af658d95d0f9 (rc35lk 69a5599765ce fallback), KVLEAF-VNB-HARD-1 679cf3bb960c (NO VN_XRD), rc18 renumbered. Then tail + ANCHORDRY 0 + gates on main tools.
 - Owners sweep: 23 S81 STALE rows assigned (posted 16:0x).
+
+## 17:4x PST (after 17:14 limit)
+- B1 strict in-tree, unit 1075127: EMIT 77/403 at 17:35, ETA EMIT 19:30, LAT+G0 19:45. Green marker: "J9_GATE_GREEN" in E10 s81-j9-r6/compose/b1/gate_1429.otrun.log.
+- Main-tools B1 run 1394868 refused (rt-relative data root) -> ALLFIX on main tools.
+- Cut chain staged, run in order after green:
+  1. epyc10 bash s81-j9-r6/j9_seal.sh (ot-run): pack vs J8 -> kw45/src_s81_pin_3c913dbdfb23_d8j9_1123_work.
+  2. epyc10 bash s81-j9-r6/j9_replicate.sh epyc2,epyc7,epyc8,intel1,epyc9,intel2 (link-from J8).
+  3. intel2 J9_BIND_RT=<rt sha> bash s81-j9-r6/j9_smoke.sh epyc9 <manifest>.
+  4. intel2 bash s81-j9-r6/j9_event.sh <manifest> <plan sha> (laneclone s81-j6-r5).
+  5. mk_cand_j9.py (template = lanes/handoff/S81_D8J8_source_candidate_1122.json).
+  6. adapt j8_apply_r6.sh (publish_apply apply, expect J8 src/event).
+- Pending COORD ruling: (A) J8 stays at 20:00, B1 = ALLFIX base, or (B) extend to 21:30.
+- amd1_tree fork exists (E10 s81-j9-r6/amd1_tree), handed to S81-ALLFIX-INT; no overlay yet.
