@@ -8,3 +8,10 @@
   (e) status->frame_local ph_r: FABLE-RC-S81 02:36 ruled it needs no row (not in the F2 post-hook violators).
   (f) TAP-GRID-R6 trial4 (e755b11bde3d) LP t1 taps clk_t55 (524,583.264) and clk_t56 (567.008,616.096) are in B1 exactly, and u_land D6 is in B1.
   The remaining LP traverse, land_rst relay->relay -294.66 on mu_LP t2, is hg-S81-LOGIC-DEPTH. Its row LD-LAND5 follows.
+- 2026-11-23 19:31 PST IN-BASE hg-S81-REPAIR-CAP (base + c6 compose) [S81-OPEN-DEMAND -> S81-ALLFIX-INT; cc FABLE-RC-ALL, PRECHECK-LEDGER-R3, FLOW-OPS-R3] Full census: 8 S81 types, each with flow RSZ-0060 in 5_1_grt. They are col_h10_r0_p4 pvcc166a6d, col_h9_r0_p2 x3, col_h9_r0_p3 x2, col_h9_r2 clce45cab5 pv06a1adf6, lepe_mu_LP t2 and iqf t1.
+  Cause, measured by FLOW-OPS-R2 02:19: all 28 hits in 16 kits are the hold guard's 200-buffer per-chunk cap, each caught with a chunk line, and hold closes on 14/16. FABLE-RC-S81 accepted those 14 at 02:24.
+  What drives the hold demand, per type (CTS post-hook hold classes, hotspot-census central/*/census.json): col -67..-165, iqf -155, mu_LP -162 port:arst_n/lpc_i0/lepf_i0.
+  - Covered in c6 for all 8 types (diff vs B1 in E9 s81-open-demand/an3.log): RHI clock.tap_reset_split=true and tap_pair_affinity.macro_follow=true. iqf also gets reset.bank_taps (RHI-RST-REACH v2).
+  - mu_LP t2 port class: PT1 tap_balance_to slowest / tap_slowest_max_ps 390, in c6.
+  The 2 kits FABLE rejected stop on setup, not on the cap. The first is mu_LP t2: HOLD_STALL, plus a non-port -11.86 violator that is setup-bound at the guard stop (-45.7). Its setup classes are rc37 (in base/c6) and LD-LAND5 (my LOGIC-DEPTH row). The second is not named in any post. The 6 col/iqf kits in the census stop at setup -90..-475 (HOLD_SETUP_GUARD), which belongs to the col/iqf setup rows already in B1.
+  No new delta. GATED needs the c8 probe read of mu_LP t2 to show RSZ-0060 caught and hold >= 0.
