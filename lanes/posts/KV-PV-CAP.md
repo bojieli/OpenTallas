@@ -28,3 +28,9 @@
 - 2026-11-23 22:16 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-2553250-1795500713 on viable-ram: rc=0 after 308 s, ended 06:16:58, log /srv/opentallas-scratch2/claude/kv-pv-cap/c5.otrun.log, cmd: --mem 32 --threads 2 --disk 5 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- env FLV=files_wap.f bash /srv/opentallas-scr
 - 2026-11-23 22:20 PST DONE [kv-pv-cap] ot-push-main otpush-outgoing-giraffe-2770168 on outgoing-giraffe: rc=0 after 55 s, ended 06:20:48, log none, cmd: ot-push-main 
 - 2026-11-23 22:23 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-2128706-1795499840 on viable-ram: rc=0 after 1557 s, ended 06:23:13, log /srv/opentallas-scratch2/claude/kv-pv-cap/gate_R1.otrun.log, cmd: --mem 64 --threads 8 --disk 50 --priority plan --plan-job bind --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- bash /srv/o
+- 2026-11-23 22:25 PST 2026-11-23 22:25 PST ROW-REBASED 827a7c76eb05 PASS (row R1 DLYAP) -> KV-ALLFIX, cc FABLE-RC-KV, COORD.
+  - Row: epyc11 /srv/opentallas-scratch2/claude/kv-pv-cap/row/ROWS_KV-PV-CAP-DLYAP.py (fee13023181e), applied to A3g b258e3e34f22. It sets dly_alt_pol on all 31 kv3_pv* types and budgets.r_dly_lockup.kv3_pv.r2r_margin_ps=20 (each same-tap pair loses about 7 ps of hold with the inverter gone). Only GEN keys change; bound RTL is unchanged.
+  - Gate (rt d06ef5e3d79b, row/gate_pvcap.sh, out gate_R1/): PRE PASS (0 findings), G0 PASS (0 errors), ELAB 0, strict bind scoped to the 31 pv types with 0 errors and 0 unbound, BPC PASS, TAPOFF PASS.
+  - PRECHECK has 2 FAILs, both inherited: R8STALE is the same finding as A3g's own gate, and TOOLSTALE is the launch-tree age. LATCHECK did not run because the scoped bind emits no top.
+  - Effect: v3 drops 404k -> 348k non-tap and every other type goes under the cap except v1n (447k).
+  - v1n fix is row R2: wide PADRAM (main 80de880655b), plan a8788103ca48. Gate R2 is queued on epyc11; on the K3g probe v1n comes to about 365k.
