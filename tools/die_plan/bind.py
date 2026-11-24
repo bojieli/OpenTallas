@@ -6183,13 +6183,52 @@ def _module_types(B):
     return mt
 
 
-def probe_scope_split(errs, probe, known_types, module_types=None):
+def _path_types(B):
+    """SCOPED-BIND-OOS 11-24: as-built cell path -> set of the types owning it (partition members of every type, emitted or not)"""
+    pt = defaultdict(set)
+    for tn, ps in B.by_type.items():
+        for p in ps:
+            for ci in B.members[p]:
+                pt[B.F.cells[ci].path].add(tn)
+    return pt
+
+
+_TYPE_WORD = re.compile(r"\btypes? ([A-Za-z_][\w$]*)")
+
+
+def _error_owner_types(e, known, path_types):
+    """SCOPED-BIND-OOS 11-24: the bound types an error names -> set (empty = cannot tell).  Token 1 as TYPE or TYPE/..., else every
+    `type T` phrase naming a known type (UNDRIVEN_OPEN path.port (module, type T): ...), else token 1 as an as-built instance path
+    (longest owned prefix of path.port[..])."""
+    toks = str(e).split()
+    tok = (toks + ["", ""])[1].rstrip(":,")
+    tn = tok.split("/", 1)[0]
+    if tn in known:
+        return {tn}
+    named = {m for m in _TYPE_WORD.findall(str(e)) if m in known}
+    if named:
+        return named
+    if path_types and tok:
+        q = re.sub(r"\[[^\]]*\]$", "", tok)
+        while q:
+            if q in path_types:
+                return set(path_types[q])
+            if "." not in q:
+                break
+            q = q.rsplit(".", 1)[0]
+    return set()
+
+
+def probe_scope_split(errs, probe, known_types, module_types=None, path_types=None):
     """SCOPED-BIND-NONEMIT 11-23: on a probe-only OUT (OT_BIND_ONLY_TYPES / --types) an error that names a bound type the probe did NOT
     emit is out of scope: it becomes a WARN-OUT-OF-SCOPE warning and never blocks the in-scope outputs (native_topology.json, receipt).
     An untyped LATCH_EXCEPT_MODULE key is mapped through module_types (bound module -> owning types, from the bind's partition members):
     out of scope only when it maps to types and none of them is emitted; it stays an error when any owner is emitted or the module
     cannot be mapped (COORD).  Errors that name an emitted type, or no type at all, stay errors.  A full bind (probe None) keeps
-    every error.  -> (errors, warnings)"""
+    every error.  -> (errors, warnings)
+    SCOPED-BIND-OOS 11-24 (FABLE-RC-QC e066364e: 4 lanes lost an 80-min full-die bind each): the owning types also come from a
+    `type T` phrase (UNDRIVEN_OPEN ... (module, type T)) or an as-built instance path in token 1 (path_types); out of scope only
+    when every owner is a known non-emitted type.  The full-die bind stays the gate of record."""
     if not probe:
         return list(errs), []
     keep_t = set(probe.get("emitted") or [])
@@ -6204,7 +6243,8 @@ def probe_scope_split(errs, probe, known_types, module_types=None):
             owners = set(mt.get(tok) or ())
             out = bool(owners) and not (owners & keep_t)
         else:
-            out = tn in known and tn not in keep_t
+            owners = _error_owner_types(e, known, path_types)
+            out = bool(owners) and owners <= known and not (owners & keep_t)
         (warn if out else keep).append(f"WARN-OUT-OF-SCOPE {e}" if out else e)
     return keep, warn
 
@@ -6674,7 +6714,7 @@ def cmd_bind(a):
     except Exception as exc:                # advisory: a failure is recorded, never raised
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
     if getattr(B, "probe_only", None):           # SCOPED-BIND-NONEMIT 11-23: non-emitted types' findings are warnings on a probe OUT
-        B.errors[:], _oos = probe_scope_split(B.errors, B.probe_only, B.by_type, _module_types(B))
+        B.errors[:], _oos = probe_scope_split(B.errors, B.probe_only, B.by_type, _module_types(B), _path_types(B))
         B.warns.extend(_oos)
         rep["warnings"] = B.warns[:500]
         rep["probe_only"]["out_of_scope_warnings"] = len(_oos)

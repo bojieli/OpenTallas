@@ -64,3 +64,36 @@ def test_untyped_latch_key_owned_by_emitted_type_or_unmapped_still_fails():
     keep, warn = bind.probe_scope_split([e_own, e_emit, e_unk, e_out], probe, known, mt)
     assert keep == [e_own, e_emit, e_unk]
     assert warn == ["WARN-OUT-OF-SCOPE " + e_out]
+
+
+# ---- SCOPED-BIND-OOS 11-24 (FABLE-RC-QC e066364e): UNDRIVEN_OPEN and path-named errors on out-of-scope types
+def test_undriven_open_on_out_of_scope_type_is_a_warning():
+    probe = {"emitted": ["cbx_q10__a"]}
+    known = ["cbx_q10__a", "sle_ctl__b", "sle_fw_v1__c"]
+    e_out = ("UNDRIVEN_OPEN dvs_E0.u_core.u_rp.w518_cp[88:0] (qfd_dv_s8_rp1, type sle_ctl__b): 89 input bit(s) the as-built "
+             "instance leaves unconnected")
+    e_in = "UNDRIVEN_OPEN cbx0.u_core.x[3:0] (m, type cbx_q10__a): 4 input bit(s)"
+    e_src = "UNDRIVEN_OPEN cbx0.u.y (m, type cbx_q10__a; source leaf of a split / composed type): 1 bit"
+    keep, warn = bind.probe_scope_split([e_out, e_in, e_src], probe, known)
+    assert keep == [e_in, e_src]
+    assert warn == ["WARN-OUT-OF-SCOPE " + e_out]
+
+
+def test_path_named_error_maps_through_owned_cells():
+    probe = {"emitted": ["cbx_q10__a"]}
+    known = ["cbx_q10__a", "sle_ctl__b"]
+    pt = {"dvs_E0.u_core": {"sle_ctl__b"}, "cbx0": {"cbx_q10__a"}, "shared0": {"sle_ctl__b", "cbx_q10__a"}}
+    e_out = "TIED dvs_E0.u_core.u_rp.d[3]: input reads z"
+    e_in = "TIED cbx0.d[0]: input reads z"
+    e_both = "TIED shared0.d: input reads z"
+    e_none = "TIED nowhere.d: input reads z"
+    keep, warn = bind.probe_scope_split([e_out, e_in, e_both, e_none], probe, known, None, pt)
+    assert keep == [e_in, e_both, e_none]          # in scope, shared with an emitted type, or unmapped: still errors
+    assert warn == ["WARN-OUT-OF-SCOPE " + e_out]
+
+
+def test_error_naming_an_emitted_and_an_out_of_scope_type_still_fails():
+    probe = {"emitted": ["cbx_q10__a"]}
+    e = "CROSS x.y (type sle_ctl__b -> type cbx_q10__a): width"
+    keep, warn = bind.probe_scope_split([e], probe, ["cbx_q10__a", "sle_ctl__b"])
+    assert keep == [e] and warn == []
