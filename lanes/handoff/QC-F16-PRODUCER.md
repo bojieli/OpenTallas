@@ -26,3 +26,4 @@
 - Recipe fidelity: t21 staged == bound 6a5f5323 byte-identical (staging = genblk10 calrom rename + INSTANCE params on 3 f5_opseg ROMs; see tmp/*.staged.sv).
 - T=20 staged netlist 43059362f4bf, at regen/bench/qfd_tt_ctlm_dv_hp13_rrloc_native32_f5_cpub39_1_t20.sv. Bench out regen/bench/t20, LEC regen/lec/{pos,neg}.
 - Still to do: post bench + LEC verdict; hand off to QC-TTC-R2; post PASS/FAIL to QC-ALLFIX + FABLE-RC-QC.
+- 05:29 RESULT posted (85bcf62a): BENCH PASS on T=20 netlist 43059362 (5 negatives fail as required; cmdhash = RTL@T=20). LEC not proven by yosys name-matched equiv (anonymous dup flops); ruled sign-off route LEC = LEC of record. Handed to QC-TTC-R2. Open: COORD overrule watch; LEC with register matching if COORD asks.
