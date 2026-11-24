@@ -29,3 +29,12 @@ Next: class (b) fix (fanout split / dup of u_11072,u_2367 cones + cluster), LEC 
 - p_rep5 CTS: -121.23/-12.4k, sibling u_11071 now worst (258 ep). Group forms rep7 1c26b8af0f76 (k6 L6), rep8 53f6f842dc78 (k8 L4), rep9 42183e9af233 (k4 L8): LEC UNSAT all three; probes epyc11 p_rep7/8/9 (template tmpl_r2 = tmplf5 + relay cohort). FABLE: read rep7 first, no more launches before.
 - p_rep5 GRT: tool/grt.sh needs OT_VCLK_CORNER=ff CORNER=BC (fixed), relaunched p_rep5_grt2.ot.
 - u_hr hold at CTS: 768 w_mask_in pins of one SRAM (48 mask flops) worst -52, pre-repair.
+
+## 11-24 03:02 PST update
+- rep10 4ae91bf1084d (whole word k6 L6 + group B k3) = class (b) CLOSED at CTS (-85.44 only ROM->u_16867; native_cmd -39.53). rep11 bc7159c2b399 = rep10 + depth resynth of u_16867 exclusive cone (tool/conesyn.py). All LEC UNSAT.
+- GRT: rep5 hold +2.21, rep9 hold +4.56 (0 viol). rep9 GRT setup -87.49: native_cmd -66.33 (u_90571, 580 um wire to west pins), group B -38, ROM -87.
+- ROM lead form: tmpl_rl (core_latency.txt rows u_rom/u_rom1/u_rom2 = 150 ps). Slack into ROMs +193..214, out hold +484..525 at CTS (rep10).
+- native_cmd region: tmpl_rlr = tmpl_rl + place_regions_data.tcl (116 source flops, list intel1 ncmd_src.txt, near u_bout_native_cmd).
+- All on intel1 /srv/opentallas-scratch2/claude/QC-TTC-R2 (template copy ep11/, tool1/after.sh + after_grt.sh waiters write census_<p>.done / grt_<p>.done): p_rep11, p_rl10, p_rl11, p_rlr10 at CTS; p_rep10 GRT running. epyc11 full at times (ruling a1acc308: no jobs at load >= 80).
+- Registered read (3): u_16867 Q feeds addr/ce of the 3 ROMs (loop) + 84 flops: needs RTL/sequencer change + token bench; fallback only.
+- tap_relay_cohort landed main e74113c83a93.
