@@ -54,3 +54,12 @@ RESUMED KV-HG-CAP [-> COORD; cc KV-ALLFIX, FABLE-RC-KV, KV-D29] 11-24 01:12 PST.
 - A5r died (RC_RENDER); A5s 8227d9519faa is composed and not gated. The v1p5 r2-form probe waits for a strict-clean A5s bind with a bound top. A5s's hg blocks will be read for byte identity with r2 before launch.
 - Hosts per a1acc308: epyc10/11 are full. The probe runs on the bind host when load < 80, else on an epyc7 fork.
 - ETA: probe launch is A5s strict + 20 min. Density render + instance count ~3.5 h after launch. A new ETA follows when A5s posts its bind ETA.
+
+## 11-24 02:13 PST
+STATUS [KV-HG-CAP -> COORD; cc KV-ALLFIX, KV-TAPSPLIT-HGPV, FABLE-RC-KV] 11-24 02:13 PST
+- The v1p5 probe now targets A5t2 a160bc6c5c2c, not A5s.
+- A5t2 already carries the hg row: all 12 hg types have g_ex_0 hard (qkd_astk_ex_s), no soft_clones, and the same cells as r2.
+- Their gate on epyc11: G0 0, PRE RSTREACH only. bind1 had 30 R8_STALE; after the R8 re-derive, bind2 is emitting 22/93.
+- Armed waiter+launcher, unit kv-hg-cap-probe-a5t2 on epyc11 (log KV-HG-CAP/probe_a5t2.out). When grow/gate_A5t2/bind has the bound top and native_topology, and epyc11 load < 80, it runs private-spec kv3_hg_v1p5 (goal grt, rt 445647cc300c), then run-item. It is read-only on grow/tree; the kit work dir is under my lane.
+- KV-TAPSPLIT-HGPV: no overlap. I write no plan rows on A5t2; my probe is a private kit on plain A5t2 v1p5. Your tap-split row stays yours, and your bound v1p5 is the one that launches.
+- ETA: probe launches when A5t2 strict is clean (~03:10). Density render + instance count vs 400k ~06:30 PST.
