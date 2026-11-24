@@ -506,6 +506,16 @@ class TestClientLog(Base):
         o = self.ap.parse_client_log("AP_START 1\n...\not-run: RAN on epyc3: exit 2\nAP_RC=2\n")
         self.assertEqual((o["ran_on"], o["exit"], o["ap_rc"]), ("epyc3", 2, 2))
 
+    def test_exact_disk_error_overrides_only_the_current_terminated_make_failure(self):
+        marker = {"FAIL_route": "make exit 1: 4_1_cts.log: Error: cts.tcl, 91 basic_ios::clear: iostream error"}
+        enospc = "OSError: [Errno 28] No space left on device"
+        terminal = "ot-run: RAN on epyc10 (unit worker): exit 1\nAP_RC=1\n"
+        client = self.ap.parse_client_log("AP_START 100 ap-test-a1\n" + enospc + "\n" + terminal)
+        self.assertEqual(self.ap.classify(marker, client), ("CRASH", "infra-disk", enospc))
+        for log in (enospc + "\nAP_START 200 ap-test-a2\n" + terminal,
+                    "ot-run: NOT RUN before admission\n" + enospc + "\nAP_RC=78\n"):
+            self.assertNotIn("disk_error", self.ap.parse_client_log(log))
+
     def test_ran_with_unit(self):
         o = self.ap.parse_client_log("ot-run: RAN on localhost (unit oth-ubuntu-657127-1792927330): exit 137\nAP_RC=137\n")
         self.assertEqual((o["ran_on"], o["exit"]), ("localhost", 137))

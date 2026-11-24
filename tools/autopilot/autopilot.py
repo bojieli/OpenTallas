@@ -1386,6 +1386,9 @@ def minimal_near_miss(c, so, jm=None):
     return int(drc) > 0 or tt < -SP.setup_tolerance_ps(jm.get("die")) or (ffi is not None and ffi < 0)
 
 
+DISK_FULL_RE = re.compile(r"No space left on device|ENOSPC|disk quota exceeded", re.I)
+
+
 def classify(c, client):
     if client.get("cancelled"):
         # an explicit ot-run --cancel (exit 143 = SIGTERM): an operator decision, never an infra crash or a resubmit
@@ -1449,6 +1452,9 @@ def classify(c, client):
         if re.search(r"out of memory|std::bad_alloc|OOMKilled|\] Error 247\b", c.get("oom") or "", re.I):
             return "CRASH", "infra-oom", c["oom"]
         return "STRUCTURAL", "grt-noconverge", client["grt_noconverge"]
+    # A generic Make/iostream failure may precede an exact ENOSPC traceback from the same run.
+    if client.get("disk_error"):
+        return "CRASH", "infra-disk", client["disk_error"]
     if c.get("FAIL_route"):
         fr = c["FAIL_route"]
         if c.get("grt_caught_dpl"):
@@ -1523,8 +1529,8 @@ def classify(c, client):
         return "CRASH", "infra-oom", c["oom"]
     # FABLE-FLOW-1000 (1): 30 stage jobs died with ENOSPC in one hour and were filed CRASH -> structural.tsv; a full disk is the HOST's failure, the job resubmits (ot-run places it on a host with room)
     _txt = " ".join(str(x) for x in (c.get("orfs_error"), c.get("runlog_tail"), client.get("msg")) if x)
-    if re.search(r"No space left on device|ENOSPC|disk quota exceeded", _txt, re.I):
-        return "CRASH", "infra-disk", "no space left on device: " + (re.search(r".{0,120}(?:No space left on device|ENOSPC|disk quota exceeded).{0,60}", _txt, re.I).group(0).strip())
+    if disk := DISK_FULL_RE.search(_txt):
+        return "CRASH", "infra-disk", "no space left on device: " + _txt[max(0, disk.start()-120):disk.end()+60].strip()
     if client.get("exit") in (137, 143) and client.get("watchdog"):
         w = client["watchdog"]
         why = w.split(" why ", 1)[1] if " why " in w else "reason not logged (WATCHDOG.txt of that tick)"
@@ -1594,6 +1600,12 @@ def parse_client_log(text, *, unit=None, started=0):
         o["ap_rc"] = int(m[-1])
         o.setdefault("exit", o["ap_rc"])
     rc = o.get("ap_rc")
+    if o.get("ran_on") and rc and rc == o.get("exit"):
+        # Each AP client log is for one attempt. Ignore a prior AP_START block if the caller supplied a combined log.
+        blocks = re.split(r"(?m)^AP_START [^\n]*\n", text)
+        disk_lines = [line for line in blocks[-1].splitlines() if DISK_FULL_RE.search(line)]
+        if disk_lines:
+            o["disk_error"] = disk_lines[-1].strip()[:400]
     # The placement frontend can refuse before starting the backend. Only
     # its explicit terminal capacity receipt identifies a payload that never ran.
     if rc == 78 and "ran_on" not in o and "ot-heavy: admitted on" not in text:
@@ -4012,7 +4024,11 @@ def finish(st, j, c, client):
             after_class(st, j)
             released_cleanup()
             return
-        if not notrun and kind != "infra-oom" and not j.get("infra_retry"):
+        # The takeover can require an exact wave review before a retry. A manual queue
+        # row without a wave identity has no review record the automatic retry can match.
+        disk_without_review_identity = (kind == "infra-disk" and KW.strict_wave_route_review(canonical_die(j.get("die") or ""))
+                                        and not queued_wave_event(j))
+        if not notrun and kind != "infra-oom" and not j.get("infra_retry") and not disk_without_review_identity:
             j["infra_retry"] = True
             submit(st, j, f"(resubmit once after {kind}; resumes the run dir; --mem {j['mem_gb']})")
             return
