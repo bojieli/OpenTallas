@@ -31,7 +31,7 @@ def put(master, slot, x, y, path):
                       elaborated_path=path, module=MOD.get(master, master)))
     return (x + w / 2, y + h / 2)
 C = {}
-kve_path = lambda ke: f"u_bank.g_kve[{ke}].g_rpc.u_kve" if ke >= 56 else f"u_bank.g_kve[{ke}].genblk1.g_npc.u_kve"
+kve_path = lambda ke: f"u_bank.g_kve[{ke}].g_rpc.u_kve" if ke >= 56 else f"u_bank.g_kve[{ke}].genblk2.g_npc.u_kve"
 GAP = 12.96
 def cluster(kb, x0, y0, mirror, ik):
     eng = "kvpc" if kb >= 14 else "kvec"; ew, eh = SZ[eng]
