@@ -78,3 +78,4 @@
   SRAM model: matched the macro .v on 19,598/19,598 cycles incl. 1,261 same-address read/write stimuli; 2 wrong models caught; simulation, not proof. Tool copy: kit_dly_ram.py and ot_dp_dly_ram.sv byte-equal to rt 9f95.
   LEC therefore covers clock domains too (edge per flop). Still K3g form, yosys generic, matched start state, rings as lemma.
   NEXT: R2 dead-slice fix + test, push by 02:15; ring one-bit argument to FABLE-RC-KV by 02:45.
+- 2026-11-24 01:09 PST 2026-11-24 01:09 PST RESUMED KV-PV-CAP [-> COORD] three checks posted; next R2 dead-slice macro fix, push by 02:15; ring argument by 02:45.
