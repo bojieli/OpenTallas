@@ -630,3 +630,9 @@
   NO-PROGRESS epyc10 kv3_pv_v3 pregrt_ff_hold stage 14.4 h job 17.1 h: no new meaningful log line for 10.3 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd16_i_astk_E_u_stri
   NO-PROGRESS epyc8 kv3_hg_v3 pregrt_ff_hold stage 11.4 h job 13.7 h: no new meaningful log line for 6.5 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_astk_u_strip_u_strip
 - 2026-11-23 21:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 21:52 PST: 117 running jobs, PROGRESSING 107, SLOW 10, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
+- 2026-11-23 22:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 22:52 PST: 102 running jobs, PROGRESSING 92, SLOW 5, NO-PROGRESS 5 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 slw_su_l1__clcc9d0155 5_2_route stage 24.2 h job 27.9 h: drt_violations best 46606 last 144890 rows 18 window-gain 1.5%; stagnant 6.7 h; last event 0.2 h ago, log write 0.2 h ago (1344 lines)
+  NO-PROGRESS epyc9 col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898 5_2_route stage 17.7 h job 26.8 h: drt_violations best 15 last 15 rows 60 window-gain 0.0%; stagnant 6.5 h; last event 2.5 h ago, log write 2.5 h ago (3680 lines)
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 6.8 h job 6.8 h: no new meaningful log line for 6.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 6.8 h job 10.6 h: no new meaningful log line for 6.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 6.8 h job 11.3 h: no new meaningful log line for 6.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
