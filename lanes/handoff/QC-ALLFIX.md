@@ -5,3 +5,8 @@ Work dir: epyc8 /srv/opentallas-scratch2/claude/QC-ALLFIX (OT_LANE=QC-ALLFIX). r
 - cA/tree = ot-tree-fork of kw45/snap_qwen_compute/qwen_compute_v4c4 (C4).
 - Helpers: QC-ALLFIX-SU (su_c re-floor, SU-2, RED+2, rc103, RHI su_l1), QC-ALLFIX-COLL (coll_core reset clock-open, coll rows, SLE CTL B_TW + clock entry).
 - QC-V4 keeps RSN FLT (tools bug, kit regen on c84f) + seal/apply. Adopted from QC-V4: b25 strict, RED+2, F16 (f16_physical_1536 + combined_abi_1554: PRE FIXEDCYC lane glue__f16_auth_f16_auth missing latency row), SU-C next form, rc97 narrow parent.
+
+### Codex third takeover handback
+
+- Exact cA f418c1b290f3 is installed on its private existing tree. E8 qc-allfix-cA-strict-1721 performs PRE, strict, LAT using rt 70b6f0430ea9 and equivalent original elaboration seed. Log QC-ALLFIX/cA/bindA_1721.ot. Reuse this result. No second strict launch.
+- F16 is carried as exact private follow-up atop cA after adding the new lane latency record. Token's later stage37 HEAD calendar/SC path is separate and held. QC-V4 original source seal and six-host recovery are recorded in QC-V4.md. Other QC-ALLFIX-SU/COLL admitted probes remain running.
