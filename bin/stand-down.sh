@@ -39,7 +39,7 @@ me=$(hostname | cut -d. -f1)
 # hosts = the deployed fleet: every host `ot-run --status` lists (override: STAND_HOSTS="a b"); a host that does not answer is recorded as UNCHECKED in the row note.
 if [ -n "${STAND_HOSTS:-}" ]; then hosts=$STAND_HOSTS
 else hosts=$(timeout 60 ot-run --status 2>/dev/null | grep -oE '[a-z0-9]+ admits' | cut -d' ' -f1 | grep -v '^localhost$' | tr '\n' ' ') || hosts=""
-  [ -n "$hosts" ] || hosts="intel1 intel2 epyc2 epyc7 epyc8 epyc9 epyc10"; fi
+  [ -n "$hosts" ] || hosts="intel1 intel2 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11"; fi
 unchecked=""
 hf="$C/lanes/handoff/$lane.md"; refuse=""
 for h in $me $hosts; do

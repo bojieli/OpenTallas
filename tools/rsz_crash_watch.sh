@@ -6,7 +6,7 @@ ST=$HOME/.local/state/rsz_crash_seen.txt; mkdir -p "$(dirname "$ST")"; touch "$S
 END=$(( $(date +%s) + ${RSZ_WATCH_SECS:-43200} ))
 scan='nice -n 19 ionice -c3 find /srv/opentallas-scratch /srv/opentallas-scratch2 /srv/opentallas-scratch3 -xdev -name tt_setup_repair_fallback.log -mmin -45 -size +0 2>/dev/null | while read f; do d=$(dirname "$f"); grep -qs "tt_setup_repair_fallback\|step failed" "$f" || continue; grep -qs "RSZ-0074" "$d/tt_setup_repair_grt.log" "$d/tt_setup_repair.log" || continue; echo "$(hostname) $d $(stat -c %Y "$f")"; done'
 while [ "$(date +%s)" -lt "$END" ]; do
-  for h in intel1 epyc2 epyc7 epyc8 epyc9 epyc10; do
+  for h in intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11; do
     timeout 600 ssh -o ControlPath=none -o ConnectTimeout=20 $h "$scan" < /dev/null 2>/dev/null | while read host dir t; do
       key="$host:$dir:$t"; grep -qxF "$key" "$ST" && continue; echo "$key" >> "$ST"
       bash $HOME/coord/bin/post.sh RSZ-CRASH-WATCH "INFRA[rsz_crash] $host:$dir: repair_timing crashed with RSZ-0074 and the kit kept the UNREPAIRED DB; not a timing failure, relaunch/refresh with main tt_setup_repair.tcl (504fcadebf6)"

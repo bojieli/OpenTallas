@@ -44,7 +44,7 @@ def host_cmd(h, remote):
 
 AGI_KEY = os.path.expanduser('~/.ssh/agidock_ot')
 AGI = SSH + ['-i', AGI_KEY, 'ubuntu@155.103.253.53']
-LIVE = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10')   # FLOW-CANARY-R2 11-21 (COORD): live gen hosts only
+LIVE = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10', 'epyc11')   # FLOW-CANARY-R2 11-21 (COORD): live gen hosts only
 ORDER = tuple(h for h in ('intel1', 'intel2', 'epyc2') if h in rtp.HOSTS and h in LIVE) + tuple(h for h in rtp.HOSTS if h in LIVE and h not in ('intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
