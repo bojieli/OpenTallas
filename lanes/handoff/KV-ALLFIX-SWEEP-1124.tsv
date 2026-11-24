@@ -1,0 +1,66 @@
+# KV-ALLFIX 11-24 10:5x reowned_to for OWNERS-SWEEP 74eb04de KV flags: a=waits on named row/event, b=relaunch now (wave rt 434f), c=superseded/retire, r=running (sweep false flag)
+kv3_hg	a	A5t5 (RSTREACH/TAPSPLIT rows; hg hold lifts on A5t5 apply)
+kv3_hg_v1p2	a	A5t5
+kv3_hg_v1p2_hgtn_place	c	retire: KV-D29 place probe, superseded by A5t5
+kv3_hg_v1p4	a	A5t5
+kv3_hg_v1p5	c	retire: KV-D29 stale probe; type relaunches from A5t5
+kv3_hgi_v1__cl141fc26e	a	A5t5
+kv3_hgi_v1__cl42bc8b12	a	A5t5
+kv3_hgi_v3	a	A5t5
+kv3_hgi_v6	a	A5t5
+kv3_hgi_v4_hk6_geom	c	retire: D29 probe; hgi_v4 A5t3 kit running
+kv3_hgi_v4_hk6_place	c	retire: D29 probe; hgi_v4 A5t3 kit running
+kv3_hgi_v7	c	superseded by kv3_hgi_v7_kept_r3_1124 route probe (running)
+kv3_hroot	a	A5t5 (REKEY rows)
+kv3_hroot_b4_place	c	retire: D29 probe
+kv3_hub_C	r	FALSE FLAG: A5t3 kit running (unit allfix-A5t3u-kv3-hub-C)
+kv3_hub_Wi	r	FALSE FLAG: A5t3 kit running
+kv3_hub_Wo	r	FALSE FLAG: A5t3 kit running
+kv3_hub_Ei	a	A5t5
+kv3_io_cor_v1	a	A5t6 c3 row f85fccc81a99 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl23f6a148	a	A5t5 (PC-TAP row)
+kv3_pc_v1__cl23f6a148_bank2_geom	c	retire: D29 FAM probe
+kv3_pc_v1__cl23f6a148_bank2_place	c	retire: D29 FAM probe
+kv3_pc_v1__cl4ea58a5c	c	superseded by the 7 r8 clones
+kv3_pc_v1__cl4ea58a5c__r828e1c2a5	b	wave relaunch on rt 434f (gen_hosts E11/E9/intel1/E10/E8)
+kv3_pc_v1__cl4ea58a5c__r84d0332e1	b	wave relaunch on rt 434f
+kv3_pc_v1__cl4ea58a5c__r877307f5d	b	wave relaunch on rt 434f
+kv3_pc_v1__cl4ea58a5c__r884969661	b	wave relaunch on rt 434f
+kv3_pc_v1__cl4ea58a5c__r8afe1e027	b	wave relaunch on rt 434f
+kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	b	wave relaunch on rt 434f
+kv3_pc_v1__cl4ea58a5c__r8ef700d7c	b	wave relaunch on rt 434f (family rep)
+kv3_pc_v1__cl7f648944	c	superseded by the r8 clones
+kv3_pc_v1__cl7f648944__r817e6c402	a	PCPACK R3 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r825eb3cd0	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r87bd89c1f	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8898d69cf	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8b2213035	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8c6505067	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8d9b5d53e	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8e08b358d	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8e7d31598	a	PCPACK R3
+kv3_pc_v1__cl7f648944__r8f64f1de3	a	PCPACK R3
+kv3_pc_v3	a	A5t5 (PC-TAP row)
+kv3_phy_v1	b	wave relaunch on rt 434f (kit_topology fix 3f926e2068)
+kv3_pv_v12	a	A5t5
+kv3_pv_v12e	r	FALSE FLAG: A5t3 kit running past chain_probe
+kv3_pv_v1n	a	A5t5
+kv3_pv_v3	a	A5t5
+kv3_pv_v3n	a	A5t5
+kv3_pv_v3ne	r	FALSE FLAG: A5t3 kit running past chain_probe
+kv3_pv_v5n_rowb_r7_place	c	retire: D29 probe
+kv3_pv_v5ne	r	FALSE FLAG: A5t3 kit running past chain_probe
+kv3_pv_v5ne_rowb_r7_place	c	retire: D29 probe
+kv3_pv_v8	r	FALSE FLAG: A5t3 kit running past chain_probe
+kv3_pv_v8e	r	FALSE FLAG: A5t3 kit running past chain_probe
+kv3_sys_c_46f088d331af_place	c	retire: KV-D29 probe; kv3_sys_c A5t3 kit running
+kv3_sys_c_46f088d331af_s3_place	c	retire: KV-D29 probe
+kv3_sys_c_a4077744e9f5_place	c	retire: KV-D29 probe
+sys_c	c	retire: KV-D29 11-23 kit; kv3_sys_c A5t3 kit running
+pcpack_r3_geom_1124	c	superseded by KV-OWN-RSTREACH PCPACK R3 full bind (cl7f r8422a4b86 running)
+qkd_ectlk_q0	c	superseded: plan binds signed view kvhg1_views_1116 (KV die core)
+qkd_ectlk_q1	c	superseded: plan binds signed qkd_ectlk view (KV die core)
+qkd_ectlk_q2	c	superseded: plan binds signed qkd_ectlk view (KV die core)
+qkd_ectlk_q3	c	superseded: plan binds signed qkd_ectlk view (KV die core)
+qkd_hr_core_prompt	c	superseded: plan binds qkd_hr_core_prompt pins r26q5 view (KV die core)
+qkd_hr_core_prompt_d29_place	c	retire: D29 place probe
