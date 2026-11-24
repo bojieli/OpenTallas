@@ -1717,7 +1717,7 @@ def flow_files_refresh_cmd(kit, work=None, files=None):
     return cmd
 
 
-def pregrt_refresh_cmd(kit):
+def pregrt_refresh_cmd(kit, pad=None):
     """HOLD-PAD-FLOW 11-24: ONE shell command that regenerates the kit's existing pregrt_ff_hold.tcl with rt/current's
     pregrt_ff_hold.py (planned hold pad; pregrt_ff_hold.refresh: the kit's own hold_gate.tcl head and AUTO / same-leaf / RC
     basis are kept, any doubt leaves the file).  The module travels gzip+base64 in the command into a mktemp dir."""
@@ -1731,7 +1731,10 @@ def pregrt_refresh_cmd(kit):
     for n in _PG.REFRESH_FILES:
         b64 = base64.b64encode(gzip.compress((dd / n).read_bytes(), 9, mtime=0)).decode()
         parts.append(f"echo {b64} | base64 -d | gzip -dc > \"$d\"/{n}")
-    parts.append(f'python3 -I "$d"/pregrt_ff_hold.py refresh {shlex.quote(str(kit))}; r=$?')
+    if pad is not None and str(pad) not in _PG.PAD_MODES:
+        raise ValueError(f"pregrt_refresh_pad {pad!r} is not one of {_PG.PAD_MODES}")
+    env = f"{_PG.PAD_ENV}={shlex.quote(str(pad))} " if pad is not None else ""
+    parts.append(f'{env}python3 -I "$d"/pregrt_ff_hold.py refresh {shlex.quote(str(kit))}; r=$?')
     parts.append("rm -f " + " ".join(f'"$d"/{n}' for n in _PG.REFRESH_FILES) + '; rmdir "$d"; exit $r')
     cmd = "; ".join(parts)
     if len(cmd) > FLOW_REFRESH_CMD_MAX:
@@ -11415,7 +11418,7 @@ def run_item(spec_path):
     # HOLD-PAD-FLOW 11-24: spec pregrt_refresh (die option pregrt_refresh): the kit's pre-GRT hold build from rt/current (planned
     # hold pad) instead of the pinned snapshot's form.  Advisory: a failure leaves the gen-time file; before the inputs are fingerprinted.
     if sp.get("pregrt_refresh") and not core:
-        run("pregrt_refresh", remote(pregrt_refresh_cmd(K)), idempotent=True)
+        run("pregrt_refresh", remote(pregrt_refresh_cmd(K, sp.get("pregrt_refresh_pad"))), idempotent=True)
     # KW-RESUME-1: record the kit's gen-time inputs (K/.kw_inputs.json) before any gate writes into K; a later
     # relaunch fingerprints against this record.  Advisory: a failure only means the next relaunch uses the mtime rule.
     run("resume_inputs", remote(kr_cmd(f"inputs {q(K)}")), idempotent=True)
@@ -15362,6 +15365,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     sp["start_delay_s"] = round(float(delay_s), 1)
     if pregrt_refresh_on(cfg, die, r["item"]):     # HOLD-PAD-FLOW 11-24
         sp["pregrt_refresh"] = True
+        if opt(cfg, die, "pregrt_refresh_pad") is not None:     # rr | all | 0 (E10 proof 11-24: all = 349 s for the whole build)
+            sp["pregrt_refresh_pad"] = str(opt(cfg, die, "pregrt_refresh_pad"))
     if arm:                                        # KW-FIX-44 GRTARM_1111: the halving-off arm of this row
         if arm.get("gen_host"):
             sp["gen_host"] = arm["gen_host"]

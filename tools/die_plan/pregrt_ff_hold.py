@@ -300,8 +300,11 @@ set pg_rr_guard [expr {[info exists ::env(OT_HOLD_SETUP_GUARD_PS)] && [string is
 @PG_HOLD_PAD_PROCS@
 set pg_pad_mode [expr {[info exists ::env(OT_PREGRT_HOLD_PAD)] && $::env(OT_PREGRT_HOLD_PAD) in {0 rr all} ? $::env(OT_PREGRT_HOLD_PAD) : "@PG_HOLD_PAD@"}]
 proc pg_pad_on {tag} { expr {$::pg_pad_mode eq "all" || ($::pg_pad_mode eq "rr" && $tag eq "rr")} }
+set pg_pad_last -1
 proc pg_pad_pass {tag ps margin insts} {
-  if {[catch {ot_hold_pad ${tag}$ps $margin 0 [file dirname [file normalize [info script]]]} n]} {
+  set ::pg_pad_last -1
+  if {[catch {set ::pg_pad_last [ot_hold_pad ${tag}$ps $margin 0 [file dirname [file normalize [info script]]]]} n]} {
+    set ::pg_pad_last -1
     puts "OT_PREGRT_FF_HOLD pad $tag $ps tool error ([lindex [split $n "\n"] 0]): repair_timing for this pass"
     return [pg_repair_hold $tag $margin $insts]
   }
@@ -351,8 +354,11 @@ if {[catch {
         break
       }
       puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_mrg[expr {$pg_tag eq {xt} ? " + cross-tap $pg_dg" : {}}] wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
-      # lever 3: a pass that still removes >= 5 % of the violating endpoints is progress, whatever the worst endpoint does
-      if {$pg_wq >= $pg_mrg || ($pg_wq - $pg_wp < 1.0 && [sta::endpoint_violation_count min] > 0.95 * $pg_np)} break
+      # lever 3: a pass that still removes >= 5 % of the violating endpoints is progress, whatever the worst endpoint does.
+      # HOLD-PAD-FLOW: a pad pass progresses while it inserts cells (its targets sit between 0 and the margin, so the violator
+      # count and the worst endpoint -- often a skipped macro pin -- do not move: E10 proof 11-24, rr pass 60k ends, budget 26k)
+      if {$pg_wq >= $pg_mrg || ([pg_pad_on $pg_tag] && $::pg_pad_last >= 0 ? $::pg_pad_last == 0
+                                 : ($pg_wq - $pg_wp < 1.0 && [sta::endpoint_violation_count min] > 0.95 * $pg_np))} break
     }
     if {$pg_pad_mode eq "rr" && $pg_tag ne "rr" && [pg_hold] < $pg_mrg} {
       puts "OT_PREGRT_FF_HOLD pass $pg_tag stopped at [pg_hold] < margin $pg_mrg: planned pad on the residual"

@@ -41,5 +41,19 @@ def test_option_is_off_by_default_and_takes_true_or_patterns():
 
 def test_run_item_refreshes_before_the_inputs_are_fingerprinted():
     src = (HERE / "kit_wave.py").read_text()
-    i = src.index('run("pregrt_refresh", remote(pregrt_refresh_cmd(K)), idempotent=True)')
+    i = src.index('run("pregrt_refresh", remote(pregrt_refresh_cmd(K, sp.get("pregrt_refresh_pad"))), idempotent=True)')
     assert src.index("flow_files_refresh_cmd(K, None if core else W, [_ent])") < i < src.index('run("resume_inputs"')
+
+
+def test_refresh_pad_mode_travels_to_the_kit(tmp_path):
+    kd = tmp_path / "k"
+    kd.mkdir()
+    hg = (HERE.parent / "die_plan" / "hold_gate.tcl").read_text()
+    (kd / "hold_gate.tcl").write_text(hg)
+    (kd / "pregrt_ff_hold.tcl").write_text(hg.split(PG.MARK)[0] + "set pg_auto -1\n")
+    r = subprocess.run(["bash", "-c", KW.pregrt_refresh_cmd(kd, "all")], capture_output=True, text=True)
+    assert "pad all" in r.stdout, r.stdout + r.stderr
+    assert '$::env(OT_PREGRT_HOLD_PAD) : "all"' in (kd / "pregrt_ff_hold.tcl").read_text()
+    import pytest
+    with pytest.raises(ValueError):
+        KW.pregrt_refresh_cmd(kd, "maybe")

@@ -106,6 +106,7 @@ def test_rr_pass_pads_and_other_passes_pad_only_the_stalled_residual(monkeypatch
     t = PG.tail_text(-1)
     assert "[pg_pad_on $pg_tag] ? [pg_pad_pass $pg_tag $pg_ps $pg_mrg $pg_inst_before] : [pg_repair_hold" in t
     assert 'if {$pg_pad_mode eq "rr" && $pg_tag ne "rr" && [pg_hold] < $pg_mrg}' in t
+    assert "[pg_pad_on $pg_tag] && $::pg_pad_last >= 0 ? $::pg_pad_last == 0" in t      # a pad pass continues while it inserts
     # the pad never adds an RC refresh of its own (the GRT form rewrites exactly two)
     assert "estimate_parasitics" not in (HERE / "hold_pad.tcl").read_text()
 
@@ -134,6 +135,7 @@ puts "ret [pg_pad_pass rr 2 40 100]"
     assert r.returncode == 0, r.stderr
     assert lines[:9] == ["rr all 0", "rr rr 1", "rr xt 0", "all all 1", "all rr 1", "all xt 1", "0 all 0", "0 rr 0", "0 xt 0"]
     assert lines[9].startswith("PAD rr1 40 0 ") and lines[10] == "ret 0"
+    # pg_pad_last carries the cell count of the pass (-1 after a fallback)
     assert "tool error (boom): repair_timing for this pass" in lines[11] and lines[12:] == ["RT rr", "ret 7"]
 
 
