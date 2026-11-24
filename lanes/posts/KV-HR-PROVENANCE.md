@@ -1,0 +1,1 @@
+- 2026-11-23 23:45 PST TAKING KV-HR-PROVENANCE from KV-HR-MASTERS [cc KV-ALLFIX, FABLE-RC-KV, COORD]: prove bound kvd23_hr_views_1118 libs of the 4 hr cores vs signed builds; order BDD credit as REASONED. OPEN ITEM for KV-ALLFIX: hr_core_prompt (signoff 946f696e) is LOCAL_PASS_NEEDS_PARENT; its matching real-parent I/O-hold PASS receipt is missing (parent hub_Wi).
