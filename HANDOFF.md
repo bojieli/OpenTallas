@@ -3901,3 +3901,5 @@ OPS-SUPPORT-R1: 2026-11-23 11:05 PST hourly: 587 any / 484 current (+2/+0 vs 06:
 CODEX: 2026-11-23 15:06 PST. S81 native monitor corridor passes scoped GRT and TT/FF, J9 B2 reset declarations rebuilding. HEAD binary control, QC C4 and K3f continue. S81 SOT date fix is on main. See CODEX-LOG.md.
 OPS-SUPPORT-R1: 2026-11-23 15:44 PST hourly: 589 any / 485 current (+2/+1 vs 11:03); epyc8 scratch 548 GB free after retiring hg-r7 f1/s1/y + sinkspread tree/tree2; L0 fixtures NOT-FOUND posted.
 OPS-SUPPORT-R1: 2026-11-23 16:05 PST hourly: 589 any / 485 current flat vs 15:44; epyc2 scratch2 158 GB free.
+
+CODEX: 2026-11-23 17:18 PST taking over all active ROM release, ALLFIX family, token and fleet lanes. Native monitor combined placement-only and exact release gates in flight. HBM stays parked.
