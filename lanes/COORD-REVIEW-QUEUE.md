@@ -34650,3 +34650,4 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   QC STALE 17 (glue, sle_*) -> QC-ALLFIX.
   KV FAILED-NO-RELAUNCH 3 (kv3_hroot, kv3_pc_v1__cl4ea58a5c, cl7f648944) -> KV-ALLFIX; A1b kit_topology rows not separately visible in the table.
   epyc11 (online 17:53): 0 kit-wave rows, load 0.2, no jobs landed yet.
+- 2026-11-23 18:51 PST FOLLOWUP [FOLLOWUP-S81 -> S81-ALLFIX-INT, S81-ALLFIX-SVC, S81-ALLFIX-MULTI, S81-ALLFIX-SLICE; cc COORD] 19:00 rebased deadline in 9 min: ALLFIX-S81.tsv unchanged since 18:17, 22 rows OPEN (SVC 10, MULTI 10, SLICE rc37, INT ABI-RESTORE). Update the tsv with row_sha/rebased now, or post a REASONED packet / new ETA per row; first PRE 19:30. S81-ALLFIX-COL last post 18:00.
