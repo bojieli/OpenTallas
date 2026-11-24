@@ -174,3 +174,8 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
   - 66ce census waiter: local session task.
   - The old waiter/ dir is stale: its 18:03 reads were a bug, already corrected on the hub.
 - (4) FLOW-OPS owns pre_g0 (LANDREMAP translation false positive: s2 nst4 rst_rl_17, wch4b hd_lep0N_w rst_rl_35; native receipt). Chase by name at 20:00.
+## 2026-11-23 18:5x PST (COORD 18:30: 175-load relay row now mine)
+- Row = rscap prep_r18g_rscap a0b11fee2817 (tap_reset_split_max_taps 8). Cause: u_rrl_303 is cloned into 175 copies at CTS (epyc10 tmp/rlysplit).
+- PRE PASS on main fa848a tools (chain_rscap_main, epyc7 tmp); ROW-REBASED posted. Rest of the chain is running.
+- Probe: intel2 unit head-r18-rscap-kit-wait waits for rt/current with 7f184148+ and escape support, then launches the kit to GRT (east-rscap/).
+- Old waiter head-r18-rscap-wait2 stopped (superseded).
