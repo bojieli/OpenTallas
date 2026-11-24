@@ -5,30 +5,67 @@
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-24 08:08 PST)
-count_hourly: signed any plan 590 | current plan 485 | deferred re-sign 21 (hbm 1, head 10, qc 7, s81 3) | retired-plan 84 (head 1, kv 13, qc 41, s81 29)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-24 09:08 PST)
+count_hourly: signed any plan 591 | current plan 486 | deferred re-sign 21 (hbm 1, head 10, qc 7, s81 3) | retired-plan 84 (head 1, kv 13, qc 41, s81 29)
 - [ ] FAIL.S81.CORES 72/72 signed · open: none
 - [ ] FAIL.S81.TYPES 48/394 signed · kit rows: held by die owner (plan event pending) 296 (bk_sel__t2, +295) · cancelled (superseded) 48 (col_h10_r0_p1__t1__cl911743eb, +47)
 - [ ] FAIL.HEAD.CORES 5/5 signed · open: none
 - [ ] FAIL.HEAD.TYPES 25/27 signed · kit rows: held by die owner (plan event pending) 1 (hd_lep0N) · running (lint advisory) 1 (hd_lep0N_w)
 - [ ] FAIL.QC.CORES 69/69 signed · open: none
-- [ ] FAIL.QC.TYPES 80/127 signed · kit rows: held by die owner (plan event pending) 36 (cbf_q00__cl1b5a6458, +35) · running 3 · cancelled (superseded) 1 (glue)
-- [ ] FAIL.KV.CORES 83/83 signed · open: none
-- [ ] FAIL.KV.TYPES 9/71 signed · kit rows: held by die owner (plan event pending) 55 (kv3_hg, +54) · running (lint advisory) 5 (kv3_hub_C, +4)
+- [ ] FAIL.QC.TYPES 80/127 signed · kit rows: held by die owner (plan event pending) 36 (cbf_q00__cl1b5a6458, +35) · running 3 · cancelled (superseded) 1 (glue) · other flow error 1 (slw_fe_v2__clf110fab2)
+- [ ] FAIL.KV.CORES 84/85 signed · open: no kit-wave row 1 (kv3_pv_pair)
+- [ ] FAIL.KV.TYPES 9/93 signed · kit rows: none
 - [ ] FAIL.HBM.CORES 90/119 signed · open: no kit-wave row 19 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group0, +12) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
 - [ ] FAIL.HBM.TYPES 4/81 signed · kit rows: none
-### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 0 current-event (+1 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
+### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 28 current-event (+9 on a superseded plan block, not counted) (live check: ps/systemd/docker on all hosts; wave state: hub; full list lanes/STALE.tsv)
 - [ ] STALE.S81 1 (cores 0, types 1) · by owner: FAIL-S81-1 1
-  - type iqf__t1 · CANCELLED  STRUCT-STOP @ 2026-11-22 08:57 (47.2h) · owner FAIL-S81-1
+  - type iqf__t1 · CANCELLED  STRUCT-STOP @ 2026-11-22 08:57 (48.2h) · owner FAIL-S81-1
+- [ ] STALE.KV 36 (cores 0, types 36) · by owner: KV-WAITBIND-R1 19, OPUS-FIX-KV-HGI-R6 11, OPUS-FIX-KV-PV-R7 4, unowned 1, FAM-KV-IOPC-R4 1
+  - type kv3_hg_v1__r889141819 · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hg_v1__r88f4bfb40 · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hg_v1__r8dffc461a · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hg_v1p3__r81da466fe · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hg_v1p3__r838481cd7 · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hg_v1p3__r8c662a835 · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hg_v1p4 · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hgi_v6 · no kit-wave row · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_pc__cl254f2e73__r8b421e514 · no kit-wave row · owner unowned
+  - type kv3_pc_v1__cl4ea58a5c__r828e1c2a5 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl4ea58a5c__r84d0332e1 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl4ea58a5c__r877307f5d · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl4ea58a5c__r884969661 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl4ea58a5c__r8afe1e027 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl4ea58a5c__r8c9cba7ae · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl4ea58a5c__r8ef700d7c · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r817e6c402 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r825eb3cd0 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8422a4b86 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r87bd89c1f · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8898d69cf · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8b2213035 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8c6505067 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8d9b5d53e · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8e08b358d · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8e7d31598 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pc_v1__cl7f648944__r8f64f1de3 · no kit-wave row · owner KV-WAITBIND-R1
+  - type kv3_pv_v1n · no kit-wave row · owner OPUS-FIX-KV-PV-R7
+  - type kv3_hgi_v1__cl42bc8b12 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 02:11 (31h) · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hgi_v1__cl141fc26e · CANCELLED geom QUEUE-CANCELLED @ 2026-11-23 07:07 (26h) · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_hgi_v3 · CANCELLED geom PLAN @ 2026-11-23 07:30 (25.6h) · owner OPUS-FIX-KV-HGI-R6
+  - type kv3_pc_v1__cl23f6a148 · CANCELLED place SUPERSEDED @ 2026-11-23 20:57 (12.2h) · owner KV-WAITBIND-R1
+  - type kv3_pc_v3 · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (12.2h) · owner FAM-KV-IOPC-R4
+  - type kv3_pv_v3 · CANCELLED place SUPERSEDED @ 2026-11-23 20:57 (12.2h) · owner OPUS-FIX-KV-PV-R7
+  - type kv3_pv_v3n · CANCELLED geom SUPERSEDED @ 2026-11-23 20:57 (12.2h) · owner OPUS-FIX-KV-PV-R7
+  - type kv3_pv_v12 · CANCELLED geom SUPERSEDED @ 2026-11-23 21:42 (11.4h) · owner OPUS-FIX-KV-PV-R7
 ### TOOLS-LAG · die tool fixes missing from the pinned trees
-- TOOLS-LAG qwen_compute 384 commits / missing r708
-- TOOLS-LAG qwen_kvsys 144 commits / missing r708
-- TOOLS-LAG s81 0 commits / missing none
-- TOOLS-LAG s81_head 327 commits / missing r708
+- TOOLS-LAG qwen_compute 396 commits / missing r708
+- TOOLS-LAG qwen_kvsys 120 commits / missing r708
+- TOOLS-LAG s81 6 commits / missing none
+- TOOLS-LAG s81_head 339 commits / missing r708
 ### TAP-INSERTION · measured per-tap insertion after CTS (advisory)
-- TAP-INSERTION qwen_compute: 3441 taps in 31 types, 126 over 1650 sinks; insertion max 696 ps (p50 267, p90 285), skew max 107 ps; oversized taps: ins max 340 ps, skew max 90 ps
+- TAP-INSERTION qwen_compute: 3707 taps in 34 types, 133 over 1650 sinks; insertion max 696 ps (p50 268, p90 285), skew max 107 ps; oversized taps: ins max 340 ps, skew max 90 ps
 - TAP-INSERTION qwen_kvsys: 265 taps in 3 types, 10 over 1650 sinks; insertion max 512 ps (p50 272, p90 307), skew max 94 ps; oversized taps: ins max 370 ps, skew max 64 ps
-- TAP-INSERTION s81: 5422 taps in 84 types, 259 over 1650 sinks; insertion max 1000 ps (p50 468, p90 498), skew max 313 ps; oversized taps: ins max 838 ps, skew max 175 ps
+- TAP-INSERTION s81: 5210 taps in 81 types, 246 over 1650 sinks; insertion max 1000 ps (p50 467, p90 498), skew max 313 ps; oversized taps: ins max 838 ps, skew max 175 ps
 - TAP-INSERTION s81_head: 199 taps in 6 types, 6 over 1650 sinks; insertion max 501 ps (p50 462, p90 476), skew max 74 ps; oversized taps: ins max 499 ps, skew max 65 ps
 <!-- BREAKDOWN END -->
 
