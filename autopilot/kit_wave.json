@@ -5986,7 +5986,16 @@
     "required": true
    },
    "gen_host_min_free_gb": {},
-   "retry": [],
+   "retry": [
+    "kv3_pc_v1__cl4ea58a5c__r8ef700d7c@1:fix=9fb459974f68",
+    "kv3_pc_v1__cl4ea58a5c__r8c9cba7ae@1:fix=9fb459974f68",
+    "kv3_pc_v1__cl4ea58a5c__r8afe1e027@1:fix=9fb459974f68",
+    "kv3_pc_v1__cl4ea58a5c__r877307f5d@1:fix=9fb459974f68",
+    "kv3_pc_v1__cl4ea58a5c__r828e1c2a5@1:fix=9fb459974f68",
+    "kv3_hub_Eo@1:fix=b987bc73993",
+    "kv3_hgi_v6@1:fix=9fb459974f68",
+    "kv3_hg_v1p4@1:fix=9fb459974f68"
+   ],
    "hold_release_on": {
     "kv3_hg*": "event_adopt:KV-D28",
     "kv3_pv*": "event_adopt:KV-D28"
