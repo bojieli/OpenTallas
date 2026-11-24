@@ -18,7 +18,7 @@ rc32	S81-ALLFIX-SLICE	TGR5-J9-TAPS-v4 (--global-rounds main 37dc7af0ed)	Wave A r
 rc33	S81-ALLFIX-SLICE	SLICE-R6 C pin-face tap (J9) + LEPE-4 PT1 (LP, by 08:00)	PT1 b9a2fab893de + lepw eb3efa2c89c3	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 rc34	S81-ALLFIX-SLICE	tap_reset_split C (SLICE-R6) + LEPE R1 LP	lepw eb3efa2c89c3 (+C in base)	yes	c6 8381109c93bf	PASS 0/177	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 rc36	S81-ALLFIX-SLICE	LEPE-SP (lepe_mu_LP t2 field spread A/W2) + XGARRAY-1 LP	SP-W2+XGARRAY-1 LP	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
-rc37	S81-OPEN-DEMAND	LEPE F2/N1/N2/S1	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
+rc37	S81-OPEN-DEMAND	LEPE F2/N1/N2/S1	-	no	-	-	-	-	-	-	-	IN-BASE (OPEN-DEMAND 19:28: no remainder after LP-PROFILE-1b)
 rc39	S81-ALLFIX-MULTI	SERDES-CORETAP-1 v2 + CLKENTRY-1 (J9)	in base + SERDES-RING-ONEGROUP 877bf1f92e06	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 rc41	S81-ALLFIX-MULTI	SERDES-TXFACE-1 (J9)	TXFACE-1 v2	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc42	S81-ALLFIX-MULTI	SERDES-RCKROOT-1 (J9)	RCKROOT-1 11/11	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
@@ -31,7 +31,7 @@ rc53	S81-ALLFIX-MULTI	ENG-XT1-STN (J9 v3)	ENG-XT1-STN-1	yes	c4 f347fb918fab	B1 0
 rc55	S81-ALLFIX-MULTI	SEQHOST-VLG-REP (J9 v3)	SEQHOST-VLG-STN-1	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc59	S81-ALLFIX-MULTI	GUNIT-L1-REACH (J9 v3)	GUNIT-L1-REACH-1	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc62	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT v2 (l20s_j9.sv 9617ad7537cc) + u_sel.u_g ->	BKSEL-IDS-RSPLIT v2	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
-rc66	S81-OPEN-CLOCK	TGR5-J9-SERDES-DENS-1 (SPARSE-TAP-1 for serdes)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+rc66	S81-OPEN-CLOCK	TGR5-J9-SERDES-DENS-1 (SPARSE-TAP-1 for serdes)	-	no	-	-	-	-	-	-	-	IN-BASE (OPEN-CLOCK: TGR5-J9-SERDES-DENS-1 204->703 taps; t16 +1 tap tested as ops row)
 rc67	S81-OPEN-DEMAND	S81-J9-HOPCLASS-1 + hop re-run on composed J9 plan (~10:30, 	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 rc72	S81-ALLFIX-COL	COL-H9R0-UCF-MX	a820825accbe	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc78	S81-ALLFIX-COL	COL-H10-GROW 56d5a17e72bc (base of plan_final 30dd3d6e03cc) 	02b182e95344	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
@@ -44,16 +44,16 @@ rc87	S81-ALLFIX-COL	J9 tree porous_views_data >=152df1bc05 (ASSEMBLY)	porous 11e
 rc88	S81-ALLFIX-COL	COL-H9R12-SSTRIP 3c285d644712 (supersedes LPAD-SPREAD)	8b09943f6df5	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc89	S81-ALLFIX-COL	TGR5-J9-TAPS-v4 s3 (proxy register sinks on all 120 types)	TGR5 s3 (count)	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 x1	S81-ALLFIX-SVC	SVC-HI4-SPLIT-F65F	-	no	-	-	-	-	-	-	-	INT-RULING 18:2x: B1 hi4 split kept, six-lane check = keep B1 values, strict decides
-hg-S81-CLOCK-SKEW	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+hg-S81-CLOCK-SKEW	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	changed-type probes, read >= -42 ps	-	14 items: 9 IN-BASE/IN-COMPOSE (OPEN-CLOCK 19:27); leaf t23/t67 vp->vp ride TGR5-LEAF-REGEN-1 -> c8
 hg-S81-CLOCK-TAP	S81-OPEN-CLOCK	TAP-GRID-R5 J9 regen + LANECH channels + XGARRAY-2 strip mov	-	no	-	-	-	-	-	-	-	OPEN-CLOCK FINDING: r2_near reverts 2863 TGR5 leaf taps to J8; row TGR5 regen v4 leaf-only append, LAST step before tail, ETA 21:00 -> c8
-hg-S81-GLOBAL-DEMAND	S81-OPEN-DEMAND	SLICEC-XGARRAY-2 8d45ed26eb63 (kv512_C/lepe_nh_mus_C) + COL-	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
+hg-S81-GLOBAL-DEMAND	S81-OPEN-DEMAND	SLICEC-XGARRAY-2 8d45ed26eb63 (kv512_C/lepe_nh_mus_C) + COL-	-	no	-	-	-	-	-	col_h9_r2 cl774acf45 pvea45273b probe (c8)	-	IN-BASE (OPEN-DEMAND 19:28: COL-H9R12-SSTRIP + XGARRAY-2 in B1; c6 unchanged)
 hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-LOGIC-DEPTH	S81-OPEN-DEMAND	BKSEL-IDS-RSPLIT (bk_sel, wire not depth) + LEPE-4 SP (u_lan	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 hg-S81-MACRO-CHANNEL	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	yes	c6 8381109c93bf	-	-	-	-	eng__t1 place/GRT probe (epyc11, full-cause census)	-	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4
 hg-S81-OVER-MACRO	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	yes	c6 8381109c93bf	-	-	-	-	eng__t1 place/GRT probe (epyc11, full-cause census)	-	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4
-hg-S81-REACH	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+hg-S81-REACH	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	changed-type probes, read >= -42 ps (vp/crr hold >= 0)	-	15 items IN-BASE/IN-COMPOSE (OPEN-CLOCK 19:28); vp tap half = TGR5-LEAF-REGEN-1 -> c8
 hg-S81-REPAIR-CAP	S81-OPEN-DEMAND	PT1 eecfc535 (port class) + violator row TBD	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6+2e5928836573	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-STATION-CLUSTER	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1 (ft1 bank W to x<=795.36)	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	yes	c6 8381109c93bf	-	-	-	-	eng__t1 place/GRT probe (epyc11, full-cause census)	-	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4
@@ -89,3 +89,4 @@ COL-P5-FSTART1	S81-ALLFIX-COL	plan 77d6f4f47270	a2a6760fa5e1	yes	c7a aebbf78417d
 SERDES-t13-FSTART0	S81-ALLFIX-SVC	t13 fstart_0 depth 10!=9 (inherited B1)	-	no	-	-	-	-	-	-	-	OPEN: SVC row due 20:00 -> c7b
 FSTART-DEPTH-CLASS	S81-OPEN-FSTART	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-FSTART live 19:38, due 21:30 -> last tail step c8 (input c7a)
 DEADIN-BASE-PROOF	S81-ALLFIX-INT	reprove43_allfix_int_1123 (46 defines) + asbuilt_run_allfix2 8ab87acd12d7 + deadin_repoint.py	6c6e236be36a	yes	c7a p5_deadin (post-tail)	ProvenDead OK (c1 repointed)	-	-	-	-	-	IN-GATE c7a
+LEAF-LANDCAP-C7A	S81-ALLFIX-SLICE	PRECHECK-LEDGER-R3 19:28: 16 band x hard-core overlaps in 12 leaf types + 12 bands fill>=0.9 (B1 0)	-	no	-	-	-	-	-	-	-	OPEN: SLICE fix row by 21:30 -> c8
