@@ -13,3 +13,8 @@ GOAL: FABLE-RC-KV 331a59eb item 2: KV forwarded landing clock (fclk) <= 330 ps o
 - Row: epyc8 L/ROWS_KV-OPEN-FWDCLK.py sha 562aebc897e6 (frozen from L/mkrow.py + template); on A2g 3857747ea992 -> L/tmp/a2g_fwd.json 73acf583a2ee (28 cores on 16 types, 28 clk taps).
 - Probe: epyc8 L/probe.sh TAG PLAN (PRE + plan_timing_audit on kv-allfix/launch_70b6f, view paths pointed at L/views); probe_base / probe_fwd; table L/table.py -> L/before_after.tsv.
 - Killed my queued ot-tree-fork (epyc11 copy slots busy); epyc11 L/tree.forking-301399 (216 MB partial) needs ot-delete.
+## State 20:1x PST: ROW-REBASED posted (hub f3220652)
+- PRE PASS 0 on A2g+row (73acf583a2ee); audit over-330 rows 19 -> 0, failing types 22 -> 12, worst over 387.7 -> 25.0. Table lanes/handoff/KV-OPEN-FWDCLK-before_after.tsv.
+- 4 sign-offs enqueued to AUTO-EXPORT spool on epyc11 (b21f134c, 85099792, 3a5b50de, fa3ffcdb).
+- Open offer to FABLE-RC-KV: w1560_ew (208.4, < 330 but audit 200 rule FAIL on 11 hgi rows) re-harden with same recipe on request.
+- Next: answer KV-ALLFIX compose questions; re-run row on A2h/newer base if asked (order-independent).
