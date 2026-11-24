@@ -40,3 +40,9 @@ Job: core taps without budget owner -> legacy kit path (ETM max pin target). (1)
 - Inherited E10 job 1202585-1795526932 completed both split ROM view extractions. East TT clk-to-out 68/68 exact, FF delta median -128.09 ps. Pins and arc keys unchanged. Published normalized-name FF view on main 666e4921a9da, new sha256 925bfb49c6d700481c72cc580cc5c7b419012ec38b23349a7de6060dfc8ee59c.
 - West regenerated all 68 arcs, but TT delta range -1.70..+1.24 ps exceeded the matched-view check. It still needs the original SPEF or an exact alternate extraction. No west publish.
 - Archives for elemA/B_cv contained the later Nov 15 kit DBs, whereas counted hd_tile uses the original October 27 clock-freeze views. Original run provenance points to removed intel1 and epyc2 scratch paths. The exact FF pair remains open.
+
+## 11-24 08:1x PST fresh lane (post-limit) DONE
+- West rom_elem_hw: B5 exact pair (TT+FF) published main 2307e6b63e (romq_split_1106). Basis intel1 .../CORE-TAP-BUDGET/regen/exact_hw_1124. Raw skew is INFO, not a gate.
+- Off-main QC 8: OLD in all QC trees. Apply tool main 4c29a21f results/ff_lib_regen_1124/apply_off_main.py. Handed to QC-ALLFIX. kw45 trees are read-only and left untouched.
+- Still not exact: elemA/B_cv (hd_tile ruling: GO on estimates + 20 ps hold margin), rxsb (DS85 intake), norm_finish (RF1 intake): both are owned by S81-INTAKE-NORM-RXSB.
+- hd_tile headroom: epyc2 /srv/opentallas-scratch3/claude/CORE-TAP-BUDGET/hd_tile_headroom_1124/out/headroom_summary.json. 329 viol, worst -72.3, every one has TT slack >= 660.
