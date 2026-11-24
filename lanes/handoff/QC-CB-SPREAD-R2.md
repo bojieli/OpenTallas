@@ -10,3 +10,6 @@ State 07:55 PST: waiting on C1j bind (PRE).
 - Unseated in plan: strap_u_r8b 110k, u_pc_nk 75k, pad_u_pd 16k. Kit hook core_input_chain.tcl (rt tools/die_plan) places u_d/u_lpad/u_r8b_strap/u_pd non-FIRM stages ON street centre lines (nc_route via nc_xs/nc_ys midpoints, no per-bit offset) -> all bits of a 514-bit chain share one x. Candidate flow fix: per-bit lateral offset across street width.
 - C1h GRT cld7bf7197 top nets: pq_/lk_u_t_0_0_n_a = u_pc_nk out / lockup into u_t00 n_a pins (pin face), lpad_na (seated, in strip).
 - Candidate plan fix: move na lpad seats + station row to central channel + street like nb (no growth). Decide on C1j GRT congestion by location/net.
+08:52 TAKING cbf_q01 + cbf_q01_s2; 08:59 TAKING cbf_q00_s2 (COORD sweep). Adopted live C1h QC-ALLFIX probes (goal grt): private_specs/QC-ALLFIX/qwen_compute_cbf_q01_1124052457 (cH8, chain_a1), qwen_compute_cbf_q01_s2_1124051730 (cH, geom->chain_a1), qwen_compute_cbf_q00_s2_1124051640 (cH, place). Route attempts were LBL-DRAFT refused -> need VIS-QC probe-pass after GRT.
+09:2x cbf_q01_s2 AUTO-GEOM advisory FAIL: r2r max 563 um (serdes_tx_tx_flit cland->ft_o_0, 184/597 bits), over_cycle 0 everywhere (est 698 ps), channel_v 2.07 at x1150 y1160, col_v 2.08 x550. Judge at GRT.
+Waiter script: scratchpad w.sh (WMAX=secs) watches bind + 3 probes.
