@@ -157,3 +157,11 @@ J8 891100ef774 remains live. No J9 candidate was activated. All admitted exact g
   6. adapt j8_apply_r6.sh (publish_apply apply, expect J8 src/event).
 - Pending COORD ruling: (A) J8 stays at 20:00, B1 = ALLFIX base, or (B) extend to 21:30.
 - amd1_tree fork exists (E10 s81-j9-r6/amd1_tree), handed to S81-ALLFIX-INT; no overlay yet.
+
+## 18:0x PST
+- COORD 17:53: window to 21:15. B1 applies with the 52 reviewed G0 findings + FABLE holds; owed (2) reconciliation = 0 dropped (S81-ALLFIX-SVC 17:22).
+- The cut chain is ARMED on intel2: setsid bash s81-j9-r6/j9_cut_chain.sh (PID 1440989), log s81-j9-r6/j9_stage_hub/chain.out.
+  - Steps: wait for LATCHECK_RC=0 + g0_comparison -> seal (E10 ot-run) -> replicate -> smoke epyc9 (rt 25b4205f5f85) -> j9_event.sh -> mk_cand_j9 -> j9_apply.sh.
+  - Any stop posts STOP and leaves J8 live. The chain checks 21:15 before each step.
+- The gate exits 12 by design: its G0 compare is against J8 and lists the 46 svc-frame findings as introduced. The seal checks G0 sha 2d59b0194697 / 52 errors instead.
+- Pack excludes the other native_bind proof dirs (s81-j9-r6/j9_pack_skip.txt, make_pack_j9.py).
