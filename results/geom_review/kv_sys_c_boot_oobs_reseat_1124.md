@@ -13,3 +13,5 @@ The attention TX valid path remains a broader D2D region problem. The max exact 
 - [Original placed evidence](kv_a5t3_pv_v3ne_sys_c_1124.md)
 
 The E11 trial waited on CPU admission and started no payload. Its queue entry was stopped and checked for an active scope. Intel1 unit `oth-ubuntu-4161057-1795533417` is the active placement-only trial under `/srv/opentallas-scratch3/claude/ot-jobs/kv-sys-c-boot-oobs-1124`; the copied source plan and synth ODB hashes match, and initial kit preflight passed.
+
+Device-level check showed Intel1 scratch3 shared the root filesystem. Its floorplan-only unit was stopped and the interrupted log preserved. The current retry is epyc2 service `kv-sys-c-boot-oobs-place-e2-1124` at `/srv/opentallas-scratch2/claude/ot-jobs/kv-sys-c-boot-oobs-1124`. This destination is on device 66304 and the root is on 66307. It uses the same verified original plan and synthesis checkpoint.
