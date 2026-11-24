@@ -11,3 +11,7 @@ Brief: localhost scratchpad resume_1124b.txt + s81_open_brief.txt (+ rules/split
 ## Next
 - On gate result: post ROW-REBASED to S81-ALLFIX-INT.
 - Kits: c8 GO (INT, after c8 strict ~11:00) launches iqf/seqhost on c8 form = current-form probes; adopt (iqf = IN-BASE representative). seqhost private rep with row: c8seal_tree + plan c8+row + c8 bind (try without --allow-bind-stale; fallback type_overlay regs_um only).
+## 11:1x PST result
+- Gate unit oth-ubuntu-771484-1795538396 done. PRE c9 base vs c9+row: both FAIL findings=52 (ANCHORDRY/GENDRY/SCHEMA), identical sets; none name iqf/seqhost. Scoped strict EMIT 2/2, 0 errors on both types (1049 die-wide crossing errors = c8 svc class). Logs E9 s81-iqf-relay/gate/.
+- ROW-REBASED posted to S81-ALLFIX-INT (11:1x).
+- OPEN: (a) c8 GO kits for iqf__t1/seqhost__t1 (INT, after c8 bind ends) = adopted current-form probes; read their place/GRT/route. (b) private seqhost rep: run intel2 ~/tmp/s81-iqf-relay/launch_seqhost_row.sh once c8seal_tree has the sealed c8 bind (INT post "c8 SEALED"/GO); if BIND_STALE, fall back to type_overlay regs_um only (relay_sites not overlay-able) or wait for the c9 suffix bind with the row.
