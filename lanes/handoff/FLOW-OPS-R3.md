@@ -32,3 +32,10 @@ OPEN:
 - After all three hosts flip, restart the timers on intel2: `systemctl --user unset-environment MQ_SYNC_HOOK; systemctl --user start ot-tools-follow.timer ot-tools-catchup.timer` (BPC 9ede7df then goes live).
 - EPYC11: it is on the place hosts now (hub 4bbf75ad). Add it to gen_hosts after the KV D29 and QC V4 applies land and the die src snapshots are replicated to it.
 - STATION-1BIT-SWEEP was posted; the TSV is intel2 FLOW-OPS-R3/tmp/station1bit_sweep.tsv. COORD to rule on the 6 running R6V3 route jobs.
+
+## 19:4x 11-23 update
+- rt f2156bb449c5 live 19:40:45 on intel2/intel1/epyc2/epyc7/epyc10/epyc11 (3e1a fork-stream fix; DEPTH-PRE+BPC-UNDEF reverted on main f2156). 3e1a2180ccb3 was live 19:27-19:29 and was rolled back to c660 (COORD 19:40).
+- epyc8/epyc9 on 70b6, held. Waiters: flowops-rtflip-epyc8d (KV-D29 APPLIED post), flowops-rtflip-epyc9b (c4 tail pid 316706 on epyc9 gone) -> f2156. After both flip: unset MQ_SYNC_HOOK + start ot-tools-follow/catchup timers, post.
+- DEPTH-HELD drafted locally: epyc10 lane clone branch flowops-depth-held-1123 commit ef287ff3ec0 (on top of pre-revert main; rebase = re-apply e8e1621+9ede7df+HELD). depth_accepted.json = qfd_tt_ctlm_* / *tt_ctlm* (QC-TTC-RETIME); typed hold list = kit_wave dies.<die>.hold_items. Next: dry-run DEPTH+BPC on KV A2g (epyc8 kv-allfix), QC C1b (epyc7 QC-ALLFIX/rows_c/plan_c1_fix1.json), S81 c7a (epyc9 s81-allfix-int/c7a), post, then re-land.
+- Copy slots: OT_TREE_COPY_SLOTS is caller env only (default 2); epyc11=4 needs per-host override file -> planned for DEPTH/BPC cut.
+- epyc11 gen_hosts after D29+V4 applies land.
