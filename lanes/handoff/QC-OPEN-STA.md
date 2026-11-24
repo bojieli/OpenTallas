@@ -75,3 +75,8 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - C1g plan gate (rt 7514): SITEGRID 0, overlap 0, relays per point 1, reach findings 0. The plan gate does not catch the defect.
 - Cause: internal_stations x_fe_o(257 bits, 3 regs), x_st_a_i(653, 4), x_hc1_i(517, 8) have NO bit_sites_um (exact sites). The placer collapses them (relay_collapse 11, r2r 492). x_st_a_i targets the r4/r5 cluster (326,444), but the worst capture is u_r7 (y~840).
 - Row plan: give the 3 stations exact bank sites (kit_istations.py, as for st_a), split x_st_a_i toward r6/r7, re-check the 2 empty taps (t110, t127), legal.py + r9gate, into C1i. ETA row ~06:30.
+
+## 11-24 04:19 strict clean, probes running
+- bindG (epyc7 QC-OPEN-STA/bindG, rt c660): bind errors 0, LATCHECK 1922/1922, G0 PASS, PRE row-only 0.
+- 11 probes (8 DEAD-OWNER + cled3c1d7b/cl9f076a5c/clf4365a62): intel2 systemd units runitem-<type>.service, specs ~/coord/autopilot/private_specs/QC-OPEN-STA/*_11240{40959,41026,41052,41121,41150,41222,41251,41317,41629,41718,41807}. Launcher: intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probeG.sh HOST ITEM. 6 duplicate copies stopped.
+- Next: full-cause census at GRT; st_b clfde1249e row (ETA 06:30).
