@@ -39,3 +39,7 @@ OPEN:
 - DEPTH-HELD drafted locally: epyc10 lane clone branch flowops-depth-held-1123 commit ef287ff3ec0 (on top of pre-revert main; rebase = re-apply e8e1621+9ede7df+HELD). depth_accepted.json = qfd_tt_ctlm_* / *tt_ctlm* (QC-TTC-RETIME); typed hold list = kit_wave dies.<die>.hold_items. Next: dry-run DEPTH+BPC on KV A2g (epyc8 kv-allfix), QC C1b (epyc7 QC-ALLFIX/rows_c/plan_c1_fix1.json), S81 c7a (epyc9 s81-allfix-int/c7a), post, then re-land.
 - Copy slots: OT_TREE_COPY_SLOTS is caller env only (default 2); epyc11=4 needs per-host override file -> planned for DEPTH/BPC cut.
 - epyc11 gen_hosts after D29+V4 applies land.
+
+## 19:5x 11-23 update
+- rt 8d19c5d78e6d live 19:50:09 (COPY-SLOTS-HOST-1123 on f2156): per-host /var/tmp/ot-tree-copy/SLOTS; epyc11 SLOTS=4 written. Waiters now flowops-rtflip-epyc8e / -epyc9c -> 8d19c5d78e6d. Lane notice posted.
+- Still next: DEPTH-HELD+BPC dry-runs on KV A2g / QC C1b / S81 c7a, then re-land; timers after epyc8+epyc9 flip; epyc11 gen_hosts after D29+V4.
