@@ -6254,6 +6254,30 @@ def apply_core_pin_lead(P, tn, rows):
     return out
 
 
+def legacy_core_tap_targets(tn, rows, taps):
+    """CORE-TAP-BUDGET 11-24 (FABLE-RC-ALL 701c4a59, HEAD-WEST 00:41; class, default-on): on the legacy path (core taps
+    without a SIGNED / parent_budget owner) the core rows carry the liberty ETM max_clock_tree_path, while the early core
+    tap of the same pin (core_taps.txt, the kit SDC source latency) carries the plan insertion_ps.  tap_balance.tcl aims
+    the core pin at target - row, so the two disagreed by ETM - insertion (HEAD hd_lep0N / _w: 612.07 vs 553.42 =
+    58.65 ps early on the pair cores; QC legacy types 12-106 ps).  A pin that HAS an early core tap now takes that tap's
+    insertion as its pin target, the same number the SDC delivers (the mean-contract path enforces this equality; the
+    parent_budget path takes the plan budget).  Untapped (grid) pins keep the ETM bound.  The row keeps the ETM value
+    as etm_max_bound_ps; rows stay signed=False / release_qualified=False.  Mutates `rows`; returns the changed rows."""
+    ins = {}
+    for _n, inst, pin, _e, insertion in taps:
+        ins.setdefault((inst, pin), float(insertion))
+    out = []
+    for r in rows:
+        v = ins.get((r["inst"], r["pin"]), ins.get((r["inst"], "*")))
+        if v is None or abs(float(r["rise_ps"]) - v) <= .005:
+            continue
+        r.update(etm_max_bound_ps=r["rise_ps"], rise_ps=round(v, 2), fall_ps=round(v, 2), basis="plan_core_tap_insertion")
+        print(f"OT_CORE_TAP_LEGACY {tn} {r['inst']}/{r['pin']} {r['tap']}: pin target ETM {r['etm_max_bound_ps']:g} -> "
+              f"tap insertion {v:g} (no SIGNED/parent_budget budget_owner; CORE-TAP-BUDGET)")
+        out.append(r)
+    return out
+
+
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
     """Write authoritative TT/FF boundary-register mean contracts for hard cores.
 
@@ -6299,6 +6323,7 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
         for r in rows:
             if r.get("tap") == "grid" and (r["inst"], r["pin"]) in by_pin:
                 r["tap"] = by_pin[(r["inst"], r["pin"])]
+        legacy_core_tap_targets(tn, rows, taps)
     if mean_contract:
         for _port, inst, pin, _early, insertion in taps:
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
@@ -6310,7 +6335,8 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
                                                               rows=rows), indent=1) + "\n")
         (kd / "core_latency.txt").write_text(
             ("# inst pin mean_pin_register_insertion_ps tap (TT; corner/source basis in JSON)\n" if mean_contract else
-             "# inst pin ETM_MAX_BOUND_ps tap (legacy diagnostic, NOT a mean/SIGNED contract)\n") +
+             "# inst pin ETM_MAX_BOUND_ps tap (legacy diagnostic, NOT a mean/SIGNED contract; early-core-tapped pins carry "
+             "the plan tap insertion, CORE-TAP-BUDGET)\n") +
             "".join(f"{r['inst']} {r['pin']} {r['rise_ps']:g} {r['tap']}\n" for r in rows))
     if rows and mean_contract:
         (kd / "core_latency_ff.txt").write_text(

@@ -261,10 +261,16 @@ def native_memory_clock_model(core, root=None):
     meta = lib.parent / (module + '.json')
     if not meta.is_file():
         return None
-    aligned = json.loads(meta.read_text()).get('alignment_v2', {})
+    sheet = json.loads(meta.read_text())
+    aligned = sheet.get('alignment_v2', {})
     if aligned.get('kind') != 'sram':
         return None
     spec = aligned.get('spec', {})
+    if not spec and aligned.get('head_new_shape') and 'aligned-v2' in str(sheet.get('generator', '')):
+        # CORE-TAP-BUDGET 11-24: head_lep_nr_sources.py --build-macro (HEAD new-shape SRAMs 128x256 / 32x128 m1) wrote the
+        # alignment block without its spec; the sheet's own sram_gen spec (same producer, generator '+aligned-v2') is it.
+        # Identity (name == module), verification pass and the TT/FF interface-arc checks below stay in force.
+        spec = sheet.get('spec') or {}
     if spec.get('name') != module or aligned.get('verification', {}).get('pass') is not True:
         raise ContractError(f'{meta}: native SRAM identity/verification missing')
     references = {}

@@ -261,7 +261,7 @@ if __name__=='__main__':
    spec=sram_gen.SramSpec(name=f'ot_sram_1r1w_{words}x{bits}_m1_r0c0',words=words,bits=bits,mux=1,banks=1,ports='1r1w',spare_rows=0,spare_cols=0)
    with A.patched(sram_gen,macro_outline=A.aligned_outline,write_lef=A.aligned_write_lef,GENERATOR_VERSION=f"{sram_gen.GENERATOR_VERSION}+{A.ALIGN_VERSION}"):
     sheet=sram_gen.compile_macro(spec,out)
-   area=sheet['area'];A.finish(out,spec.name,None,(area['macro_width_um'],area['macro_height_um']),{'kind':'sram','head_new_shape':True})
+   area=sheet['area'];A.finish(out,spec.name,None,(area['macro_width_um'],area['macro_height_um']),{'kind':'sram','spec':{k:getattr(spec,k) for k in ('name','words','bits','mux','banks','ports','spare_rows','spare_cols')},'head_new_shape':True})
  text,record=derive(ROOT)
  if a.check:
   if a.out.read_text()!=text:raise SystemExit('STALE head LEP derived source')

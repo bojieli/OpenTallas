@@ -29,6 +29,13 @@ seen on 11-18:
               cbc_rules.MONITOR_PIN_REACH_UM (300) from one of its cland_dn_ready / cland_dn_fault / fclk_in_cland_dn pins
               (S81 J5: slice_station t36 2,057 um, iqf t1 2,337 um -> -766 / -1,040 ps at place).
   BOUNDARY-REG (CBC r713) a port bit with no planned register (taps.planned_sinks) within 50 um of its pin.
+  CORE-TAP-OWNER (CORE-TAP-BUDGET 11-24, FABLE-RC-ALL 701c4a59) an early core tap (clock.taps kind core) whose type does not
+              take the mean-contract path (gen_phys.core_mean_contract_options): some core tap has no budget_owner starting
+              SIGNED / parent_budget (or no insertion_ff_ps).  The kit then labels its core rows legacy ETM bounds and never
+              checks the tap against the view's signed mean (HEAD hd_lep0N / _w: no owner, ETM 612.07 vs tap 553.42 vs signed
+              558.17).  value = core taps without a recognised owner; detail = owners, ETM - tap and plan - signed contract
+              where the view resolves.  The fix is a plan row (core_tap_retarget.py rows/apply: budget_owner SIGNED:<source>
+              + the contract TT/FF means).  Report only.
   Thresholds come from tools/die_plan/cbc_rules.py (owner r713 close-by-construction), shared with the CBC generator:
   reach 405 um per placed hop, tap <= 1,000 sinks, reset leaf <= 32, boundary register <= 50 um, aim >= 10 % of the bus bits,
   depth <= 13 levels (precheck_synth).
@@ -66,7 +73,7 @@ FF_RETENTION_UM = 27.0   # ff_put_near: |dx| + |dy| <= 27 um around the request
 FF_NEAR_FACE_UM = 10.0   # a request within 10 um of the N/S face takes the face-bank search
 FF_DEPTH_ROWS = 120
 CHECKS = ("REACH", "MISAIM", "TAP-CAP", "TAP-COVER", "TAP-EDGE", "STALE-BINS", "BOUNDARY-REG", "FACE-BANK", "RESET-FANOUT", "LOW-UTIL",
-          "MONITOR-PIN")
+          "MONITOR-PIN", "CORE-TAP-OWNER")
 CELL_AREA_UM2 = 0.14    # mean ASAP7 std-cell area: QC tt_ctlm 204k cells = 27.4k um2 (0.134); glue 164,563 cells at 2.2 % (0.149)
 LOW_UTIL = 0.15         # COORD 11-19: glue (2.2 %) and tt_ctlm (~10 %) fail by one cone scattering over an empty partition
 # NOT PREDICTIVE on the 11-19 plans: at < 15 % it flags 572 of 610 types incl. every signed S81 / QC type and 22 of 26
@@ -511,6 +518,59 @@ def monitor_pin_findings(lc, reach=None):
     return out
 
 
+def core_tap_owner_class(tp):
+    """SIGNED / parent_budget (the owners gen_phys.core_mean_contract_options accepts, with insertion_ff_ps) or None."""
+    o = str(tp.get("budget_owner", "") or "")
+    for k in ("SIGNED", "parent_budget"):
+        if o.startswith(k) and "insertion_ff_ps" in tp:
+            return k
+    return None
+
+
+def core_tap_owner_findings(P, tn, tools=None):
+    """[(n unowned core taps, detail)] of an early-core-tap type on the legacy path; [] otherwise."""
+    t = P.types[tn]
+    ck = t.get("clock") or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    if ck.get("core_taps") != "early" or not taps:
+        return []
+    try:
+        import gen_phys as GP
+        if GP.core_mean_contract_options(P, tn)["mean_contract"]:
+            return []
+    except ImportError:
+        GP = None
+        if all(core_tap_owner_class(tp) == "SIGNED" for tp in taps) or (
+                all(core_tap_owner_class(tp) for tp in taps) and any(core_tap_owner_class(tp) == "parent_budget" for tp in taps)):
+            return []
+    except Exception as e:  # noqa: BLE001 -- an estimator reports, never stops
+        return [(len(taps), f"core_mean_contract_options refused: {type(e).__name__}: {str(e)[:160]}")]
+    bad = [tp for tp in taps if not core_tap_owner_class(tp)]
+    owners = sorted({str(tp.get("budget_owner") or "NONE")[:40] for tp in bad})
+    gaps = []
+    if GP is not None:
+        try:
+            import cores as C
+            import core_clock_contract as CC
+            with contextlib.redirect_stdout(io.StringIO()):
+                etm = {(r["inst"], r["pin"]): r["rise_ps"] for r in C.latency_table(P, tn)}
+                hc = {h["inst"]: h for h in t.get("hard_cores", []) or []}
+                for _n, inst, pin, _e, ins in GP.core_tap_rows(P, tn):
+                    e = etm.get((inst, pin)) if pin != "*" else max((v for (i, _p), v in etm.items() if i == inst), default=None)
+                    g = f"{inst}.{pin} tap {ins:g}" + (f" ETM-tap {e - ins:+.2f}" if e is not None else "")
+                    try:
+                        con = CC.load(hc[inst], require_signed=True)
+                        m = con.get(pin) or next(iter(con.values()))
+                        g += f" plan-signed {ins - m['corners']['tt']['mean_ps']:+.2f}"
+                    except Exception:  # noqa: BLE001
+                        pass
+                    gaps.append(g)
+        except Exception as e:  # noqa: BLE001
+            gaps.append(f"(no view read: {type(e).__name__})")
+    return [(len(bad), f"{len(bad)} of {len(taps)} early core taps without a SIGNED/parent_budget budget_owner (owners: "
+                       f"{', '.join(owners)}) -> legacy path; " + "; ".join(gaps[:6]))]
+
+
 def type_findings(ctx, tn, checks, opts):
     P = ctx.P
     t = P.types[tn]
@@ -571,6 +631,9 @@ def type_findings(ctx, tn, checks, opts):
     if "MONITOR-PIN" in checks:
         for v, d in monitor_pin_findings(ck.get("landing_contract")):
             add("MONITOR-PIN", v, CBC.MONITOR_PIN_REACH_UM, d)
+    if "CORE-TAP-OWNER" in checks:
+        for v, d in core_tap_owner_findings(P, tn):
+            add("CORE-TAP-OWNER", v, 0, d)
     if "BOUNDARY-REG" in checks and not t.get("hard"):
         for v, d in boundary_findings(ctx, tn, opts.boundary_um):
             add("BOUNDARY-REG", v, opts.boundary_um, d)

@@ -284,7 +284,7 @@ def apply_rows(raw, rows, tag="DIE-CORETAP-1119"):
     types = _types(raw)
     done = 0
     for r in rows:
-        if r["status"] != "CHANGE":
+        if r["status"] not in ("CHANGE", "KEEP"):
             continue
         t = types[r["type"]]
         hit = [tp for tp in (t.get("clock") or {}).get("taps", []) or []
@@ -292,6 +292,13 @@ def apply_rows(raw, rows, tag="DIE-CORETAP-1119"):
         if len(hit) != 1:
             raise SystemExit(f"type {r['type']}: core tap {r['tap']} matches {len(hit)} plan taps")
         tp = hit[0]
+        if r["status"] == "KEEP":
+            # CORE-TAP-BUDGET 11-24: a tap already within TOL_PS of its SIGNED mean but with no SIGNED owner (HEAD
+            # hd_lep0N had none) still sent its type to the legacy kit path (ETM pin target); stamp the owner and the
+            # exact signed means (gen_phys checks tap == selected mean to 0.01 ps).  A SIGNED-owned tap stays untouched.
+            if r["basis"] != "mean" or r.get("signed_mean_TT") is None or \
+                    (str(tp.get("budget_owner", "")).startswith("SIGNED") and "insertion_ff_ps" in tp):
+                continue
         old = (tp.get("insertion_ps"), tp.get("insertion_ff_ps"))
         tp["insertion_ps"], tp["insertion_ff_ps"] = r["new_ins_TT"], r["new_ins_FF"]
         tp["budget_owner"] = f"SIGNED:{r['source']}" if r["basis"] == "mean" else f"ETM:{r['source']}"
