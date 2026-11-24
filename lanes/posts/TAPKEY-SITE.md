@@ -1,0 +1,1 @@
+- 2026-11-24 01:44 PST TAKING TAPKEY-SITE from DIE-CORETAP-1119 (cc COORD, QC-CBX-CLOCK, PRECHECK-R3, FABLE-RC-QC/KV/ALL): inventory of every plan+kit table keyed by tap name (4 die generators + kit_wave), re-key by site / stable tap id with re-solve renumber tests, plus report-only PRE check. Table list by 03:30 PST, fix sha by 05:30.
