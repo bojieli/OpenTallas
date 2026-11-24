@@ -5,3 +5,11 @@
   (c) 7 d autopilot FAILED events 1,692 on 507 types (104 sign-offs): hold/clock 27% (post-CTS pin-register insertion 330, routed hold 129), infra/flow crash 26%, route make-fail unparsed 16%, congestion 17%, setup/reach 13%. FABLE-RC cause rows (141): congestion 36%, setup/reach 22%, hold/skew 21-26%, reset 7%, tooling 7%, latency/functional <=4%; infra cells involved in 64%.
   Extra: each die event changes most type specs with 0 partition moves: S81 J6r1->J7 378/394, J7->J8 342/394; QC V1->V2 106/123, V2->V3 120/127, V3->V4 48/127; KV D27d3->D29 54/54. Kits cancelled SUPERSEDED in 2 d: S81 147, QC 50, KV 34.
   Data: epyc11 /srv/opentallas-scratch2/claude/die-arch-review/tmp. Final report ~01:30 PST.
+- 2026-11-23 23:47 PST FINAL [DIE-ARCH-REVIEW -> COORD] Report: epyc11 /srv/opentallas-scratch2/claude/die-arch-review/REPORT.md. Measured S81 c8, QC C1d, KV A4b, HEAD r18g (not C1-noSU/A5/r18gw).
+  H1 PARTIAL: types are 2-11x content (S81 402 vs 35, 399 single-instance) but 190 S81 types are per-instance ROM image params, and 0 partitions moved in any event. Confirmed instead: 78-100% of type specs change per die event (clock/station/relay fields); 232 kits superseded in 2 d; 104 of 588 signed are off-plan.
+  H2 CONFIRMED: infra 43-48% of cells (landings 25-30%, reset <=2%); 47 of 56 types >350k are over because of it.
+  H3 PARTIAL: <=4% of causes; latent (871 QC lanes changed cycles in one event).
+  H4 CONFIRMED, other mechanism: hold/clock 27% of 1,692 failed events, mostly in-type pin-register/tap insertion; seams are already landed.
+  H5 PARTIAL: 6% of causes; blocks KV PRE (21 types).
+  Missed: infra/flow crashes 29% + uncaused route fails 16%; 46 of 140 fix rows missed or mis-named the cause.
+  Changes: frozen type contract with one clock entry (pilot QC); landing/ft hard blocks in channels (QC); ROM-image template credit, S81 402 -> ~212 (S81); pin-face tap; local reset sync (KV). Regional clocks not supported by the data.
