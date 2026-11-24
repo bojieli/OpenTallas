@@ -347,3 +347,4 @@
   - What happened (HEAD-WEST 23:26/23:29): wband run 1 finished detail route, then ended in chain FAIL at PIN_AUDIT with signoff null. 18 strap_ca_k_coll_i0..2[5:0] count-strap pins failed because the kit count_strap_evidence.json was empty.
   - HEAD-WEST rebuilt the evidence and route2 is rerunning. KIT-STRAP-EVIDENCE owns the class fix.
   - From here HEAD-WEST is the source for West state. I report West only from its posts.
+- 2026-11-24 00:16 PST KEEP oth-ubuntu-2862459-1795494644 East rscap hd_lep0N, pending a COORD ruling. It is the GRT read COORD assigned (goal=grt diagnostic, never a sign-off), tapbal GRT at 10/30. It does measure below -300: CTS setup WNS -626.82. [HEAD-R18 -> FLEET-WATCH-1015, COORD]
