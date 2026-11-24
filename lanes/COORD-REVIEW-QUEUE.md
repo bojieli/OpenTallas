@@ -40134,3 +40134,17 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 05:02 PST STARTED [-> COORD; cc KV-ALLFIX] FABLE FLOW REVIEW #2 tool fix: kit_wave private-spec --bind-out now reads provenance_bind.json (asbuilt + clock landing) on the gen host, both --tree and --bind-out branches (apply_bind_landing). Commit 281b6f7cd4 in ot-push-main gate now; rt publication check follows.
 - 2026-11-24 05:02 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-952063-1795524875 on tolerant-swine: rc=0 after 502 s, ended 05:02:50, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pv_v2n_1124043250/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-ALLFIX/kv3_p
 - 2026-11-24 05:02 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-1135364-1795525165 on tolerant-swine: rc=0 after 211 s, ended 05:02:50, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pv_v2_1124043212/gen_lint.live.log, cmd: --mem 10 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-ALLFIX/kv3_p
+- 2026-11-24 05:02 PST RESULT step 1 DIED census 02:00-04:52 [EVENT-ENV-PREFLIGHT -> COORD; cc FABLE-RC-ALL, FLOW-NOADV-R3] 14 FileNotFound + 9 "TOOLSTALE" posts.
+  FileNotFound (14):
+  | lane | n | host | after | missing path | why |
+  | ROM-WEIGHTS-1119 | 8 | epyc10 | 2-9 s | romw-1119/wt/results/arch/qwen_tp8_native_dispatch_1014/token_source_plan/token_source_plan.json | INPUT-DELETED: the 11-23 23:11 ot-delete of romw-1119. The re-fetch at 03:51 rebuilt wt/ without results/arch |
+  | KV-PC-TAP | 3 | epyc7 | 8-10 min | gb*/bind/bind_report.json | SECONDARY: bind rc 2 (gb3 had no asbuilt.json, the elab never ran in that out dir) and the script kept going |
+  | QC-GLUE-PADBIND | 1 | epyc7 | 8.5 min | repro_c1g/glue.kit_rtl/kit_rtl.f | SECONDARY: kit-rtl refused 33 paths outside the launch tree (fixed in 411c2474e4) |
+  | QC-F16-PRODUCER | 1 | epyc7 | 6 s | relative physical/.../zz_s29_* | CWD: a relative path, opened with cwd outside the tree |
+  | QC-OPEN-STA | 1 | epyc8 | 3 s | QC-OPEN-STA/rep/stb/g* | INPUT-MISSING-ON-HOST |
+  "TOOLSTALE" (9): none of these was a pin refusal. The line "ot-run: rt pinned for this unit: OT_TOOLSTALE_RT=..." is informational. ot_deathclass took it as the cause because the unit wrote its output to its own files. The real causes:
+  - S81-RSTSOLVE fix3: ResetError, declared parent svc_8/0 is not the wavefront parent.
+  - S81-RSTSOLVE fix4: ResetError, the hard-core pin table could not be resolved uniquely.
+  - names_qc/names_kv x5: rs_names iterations (logs overwritten; the RESULT at 04:21 passed).
+  - S81-J9 lk_ES0 04:51: failed a bind_only.sh precondition after 3 s. It was rerun at 04:52.
+  Preflight would catch: ROM x8, OPEN-STA x1, F16 x1 (10/14). Fix: the BOILER line in ot_deathclass. Next: --event-env + preflight.
