@@ -1,0 +1,1 @@
+- 2026-11-23 19:13 PST TAKING S81-OPEN-FSTART: row FSTART-DEPTH-CLASS (fstart_depth_fix.py class tool in tools/die_plan + test; scan every type for landing_local_resets depth mismatch with bind EMIT rule; ops file w/ old values as last tail step; run on INT c7a). ETA ROW-REBASED 21:30 PST.
