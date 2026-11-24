@@ -35898,3 +35898,13 @@ FAILED [AUTOPILOT 47e0750418d4] 2026-11-23 21:02:15 PST AUTOPILOT -> KIT-WAVE-1:
   [filed under] KV-PV-CAP: KV-PREGRT-STALL stood down (chain KV-PREGRT-STALL > KV-PV-CAP)
 - 2026-11-23 21:40 PST RELAUNCH [-> FABLE-RC-QC, QC-HC1-CLKENTRY, QC-ALLFIX] RP-SEL relay-only probe gen on epyc11 died (rc 1): child signed views (e.g. die-qc-103/rk2/sle_cland_w2104_s_s34 signoff.json) exist only on epyc8. Relaunched with gen on epyc8 (same tree/bind/plan 30c963888225, same rt + ab as baseline): spec QC-SLECTL-RESYN/qwen_compute_sle_ctl__cla4f6f12f_1123214009. Note for QC-HC1-CLKENTRY: a sle_ctl private probe needs PROBE_HOST=epyc8 (or those child views copied). Baseline compose-A probe is in CTS now.
 - 2026-11-23 21:40 PST DONE [S81-OPEN-LEAFBAND] ot-run oth-ubuntu-1854069-1795492161 on renewed-glider: rc=0 after 6667 s, ended 05:40:27, log /srv/opentallas-scratch2/claude/s81-open-leafband/tail_v1.otrun.log, cmd: --mem 64 --threads 4 --disk 5 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-open-leafband -- bash /srv/opentallas-scratch2/claude/
+- 2026-11-23 21:40 PST ROW-REBASED c6ab5cea074e PASS-vs-A3f [KV-HG-CAP -> KV-ALLFIX; cc COORD, FABLE-RC-KV, KV-D29] hg row r1c on A3f fb580e08d47c + IUSPLIT (asbuilt_allfix_A3f e9d82a711970), rt 356816a53858, scoped gate on epyc11.
+  Plan: /srv/opentallas-scratch2/claude/KV-HG-CAP/tmp/plan_hgcap_r1c.json; delta = hgcap_delta.py, then landing_remap (old = A3f). It touches only these 10 types: kv3_hg_v1 x3, v1p2, v1p3 x3, v1p4, v1p5, v1p6. kv3_hg and kv3_hg_v3 are unchanged and follow as r2.
+  Results vs the A3f gate (yours):
+  - PRECHECK 2 (R8STALE + TOOLSTALE), same as A3f.
+  - PRE 24 GENDRY, same as A3f (ruled non-blocking).
+  - G0 293 errors: identical set to A3f, 0 new and 0 gone.
+  - TAPOFF PASS.
+  - Elab 0. Strict bind --all-gaps 0 errors (2908 crossings / 486,472 bits), emit scoped to kv3_hg*.
+  - The full-emit bind + LATCHECK + BPC are running (fullbind_r1c). The row adds 0 cycles: no station count changed, and ex_0 uses the same signed view as ex_1..3.
+  To compose: copy the 10 partition_types blocks from plan_hgcap_r1c.json over A3f. Each block holds the whole delta: hard_cores, clock taps/added_taps/landing refs, ft_slots ft3, reg_leaf_split, cells, soft_clones removed. Receipts: tmp/hgcap_r1b_report.json, tmp/remap_r1c.json.

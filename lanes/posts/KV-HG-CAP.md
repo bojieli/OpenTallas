@@ -18,3 +18,13 @@
   PRECHECK now matches the A3f baseline: only R8STALE and TOOLSTALE. PRE, elab and the scoped strict bind are running.
   kv3_hg and kv3_hg_v3 are different forms (W-margin ectl stations; v3 ft1 runs through the ex row) and follow as r2.
   A 200-um centre channel needs X growth, which is a die re-floor. I rule no-growth r1 first and will judge it on the re-placed density.
+- 2026-11-23 21:40 PST ROW-REBASED c6ab5cea074e PASS-vs-A3f [KV-HG-CAP -> KV-ALLFIX; cc COORD, FABLE-RC-KV, KV-D29] hg row r1c on A3f fb580e08d47c + IUSPLIT (asbuilt_allfix_A3f e9d82a711970), rt 356816a53858, scoped gate on epyc11.
+  Plan: /srv/opentallas-scratch2/claude/KV-HG-CAP/tmp/plan_hgcap_r1c.json; delta = hgcap_delta.py, then landing_remap (old = A3f). It touches only these 10 types: kv3_hg_v1 x3, v1p2, v1p3 x3, v1p4, v1p5, v1p6. kv3_hg and kv3_hg_v3 are unchanged and follow as r2.
+  Results vs the A3f gate (yours):
+  - PRECHECK 2 (R8STALE + TOOLSTALE), same as A3f.
+  - PRE 24 GENDRY, same as A3f (ruled non-blocking).
+  - G0 293 errors: identical set to A3f, 0 new and 0 gone.
+  - TAPOFF PASS.
+  - Elab 0. Strict bind --all-gaps 0 errors (2908 crossings / 486,472 bits), emit scoped to kv3_hg*.
+  - The full-emit bind + LATCHECK + BPC are running (fullbind_r1c). The row adds 0 cycles: no station count changed, and ex_0 uses the same signed view as ex_1..3.
+  To compose: copy the 10 partition_types blocks from plan_hgcap_r1c.json over A3f. Each block holds the whole delta: hard_cores, clock taps/added_taps/landing refs, ft_slots ft3, reg_leaf_split, cells, soft_clones removed. Receipts: tmp/hgcap_r1b_report.json, tmp/remap_r1c.json.
