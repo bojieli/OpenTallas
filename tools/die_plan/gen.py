@@ -115,7 +115,7 @@ def write_latency(raw, out_dir, inplace_path=None, r8_fold=None):
     (out_dir / f"{P.name}_latency.json").write_text(json.dumps(js, indent=1) + "\n")
     if inplace_path:
         raw = dict(raw)
-        raw["latency"] = {"lanes": base_tab}
+        raw["latency"] = {**(raw.get("latency") or {}), "lanes": base_tab}   # keeps align_groups / internal_pipe_ack
         Path(inplace_path).write_text(json.dumps(raw, indent=1) + "\n")
     return tab, out_dir / f"{pkg}.sv", out_dir / f"{P.name}_latency.json"
 

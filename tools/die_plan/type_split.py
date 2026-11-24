@@ -57,6 +57,9 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       cut costs no cycle.  native_stage_groups params follow the content row
   native_stage_drop {type: [regex]}   native_stage_groups rows (fullmatch on the prefix) that no longer exist after
                                       content_params (the stages the boundary pair replaced)
+  align_groups {name: {..}}           BIND-EQDEPTH: equal-depth groups written to plan latency.align_groups (align_groups.py
+                                      form: type, sources / sinks "<inst>.<port>[hi:lo]", max_total, max_total_with);
+                                      the bind refuses any group whose bits carry different stage counts
   drop_clock_keys [key, ..]           clock keys derived from the whole type (HEAD START / status / reset-tree keys:
                                       landing_reader_start, landing_writer_start, landing_status_anchors,
                                       landing_status_input_stages, reset_tree_anchor) dropped for re-derivation per piece
@@ -3739,6 +3742,9 @@ class Event:
                     {k: v for k, v in ent.items() if k != "param"}:
                 changed[lid] = dict(old=old.get("cycles"), new=ent["cycles"])
             lat[lid] = ent
+        if self.spec.get("align_groups"):        # BIND-EQDEPTH 11-23: the split row declares its equal-depth groups
+            raw["latency"]["align_groups"] = {**(raw["latency"].get("align_groups") or {}), **self.spec["align_groups"]}
+            self.rep["align_groups"] = sorted(self.spec["align_groups"])
         touched = set(self.rep["lanes_changed"]) | set(self.rep["lanes_added"])
         bad = {l: v for l, v in changed.items() if l not in touched}
         self.rep["latency_changed"] = changed

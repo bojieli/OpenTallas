@@ -1446,7 +1446,15 @@ SCHEMA = {
             # S81-COLGEN-3 11-17: acknowledgement that the token sim / compiler consumed the internal pipe cycles declared in
             # bind_core_input_pipe.json (relay_depth stages); digest = lane_asbuilt_latency.internal_pipe_digest of that record
             "internal_pipe_ack": {"type": "object", "additionalProperties": False, "required": ["digest"],
-                                  "properties": {"digest": {"type": "string", "minLength": 8}, "note": {"type": "string"}}}}},
+                                  "properties": {"digest": {"type": "string", "minLength": 8}, "note": {"type": "string"}}},
+            # BIND-EQDEPTH 11-23: equal-depth align groups (align_groups.py): bits that must keep cycle alignment across a
+            # seam / split / relay lanes carry ONE stage count per partition; optional in+out budget.  Hard bind error.
+            "align_groups": {"type": "object", "additionalProperties": {
+                "type": "object", "additionalProperties": False, "properties": {
+                    "type": _name, "sources": {"type": "array", "items": _name},
+                    "sinks": {"type": "array", "items": _name},
+                    "max_total": {"type": "integer", "minimum": 0}, "max_total_with": _name,
+                    "note": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
         # METHODOLOGY 12.7c (OWNER 10-26): the die master plan the kits consume, set at the plan freeze through COORD;

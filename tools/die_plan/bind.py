@@ -6217,6 +6217,14 @@ def cmd_bind(a):
         if la_errs:
             B.errors.append(f"LANE_ASBUILT_TOTAL {len(la_errs)} of {la_sum['lanes']} lanes deliver off the latency table "
                             f"(classes {la_sum['classes']}; full list bind_lane_asbuilt.json)")
+    # BIND-EQDEPTH 11-23: equal-depth align groups (plan latency.align_groups): every bit of a group carries ONE stage
+    # count per partition (bound landed depth + the lane's LATCHECK as-built delta), optional in+out budget.  Hard error.
+    import align_groups as AG
+    ag_rep, ag_errs = AG.bind_check(B, raw, la_recs if files and any((out / "rtl").glob("*_bound_top.sv")) else None)
+    if ag_rep is not None:
+        _fresh_write_text(out / "bind_align_groups.json", json.dumps(ag_rep, indent=1) + "\n")
+        rep["align_groups"] = ag_rep["summary"]
+        B.errors.extend(ag_errs)
     # LF-CS-GATE (S81-LEAF-FLOOR-2 11-12, COORD): plan leaf station depth == bound depth per (type, class); strict
     if B.ab.get("leaf_cs_depth_gate"):
         import leaf_cs_depth as LCD

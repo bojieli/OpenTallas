@@ -346,6 +346,30 @@ def test_bus_groups(tmp_path):
     assert g["aligned_landed"] and bg["summary"]["landing_groups"] >= 2
 
 
+def test_align_groups_equal_depth(tmp_path):
+    """BIND-EQDEPTH 11-23: plan latency.align_groups is a hard bind gate.  A0.u_b.o reaches A1 on a0y (3 cycles) and S
+    on a0s (2): one output lane a stage short of the others = ALIGN_GROUP; A1 (2 + 2) passes; S's d0/d1 pass; the
+    in+out budget refuses an overrun; a stale member is a declaration error."""
+    def edit(p):
+        p["latency"]["align_groups"] = {
+            "o": {"type": "ta", "sources": ["u_b.o"]},
+            "d": {"type": "ts", "sinks": ["snk.d0", "snk.d1[7:0]"], "max_total": 3, "max_total_with": "o"},
+            "stale": {"type": "ta", "sinks": ["u_b.gone"]}}
+    out = tmp_path / "o"
+    assert run(plan_copy(tmp_path, "die_plan_lanes.json", edit), out, "elab", "bind") == 0
+    errs = report(out)["errors"]
+    ag = json.loads((out / "bind_align_groups.json").read_text())
+    rec = {(g["group"], g["partition"]): g for g in ag["groups"]}
+    assert rec[("o", "A0")]["verdict"] == "FAIL" and rec[("o", "A0")]["depths"] == {"2": 8, "3": 8}
+    assert rec[("o", "A1")]["verdict"] == "PASS" and rec[("o", "A1")]["depth"] == 2
+    assert rec[("d", "S")]["depth"] == 2 and rec[("d", "S")]["budget"]["total"] == 5
+    assert any(e.startswith("ALIGN_GROUP ta/o: partition A0") and "lane a0y" in e for e in errs)
+    assert not any(e.startswith("ALIGN_GROUP ta/o: partition A1") for e in errs)
+    assert "ALIGN_BUDGET ts/d: partition S: depth 2 + o 3 = 5 > max_total 3" in errs
+    assert any(e.startswith("ALIGN_GROUP_DECL ta/stale") for e in errs)
+    assert ag["summary"]["verdict"] == "FAIL"
+
+
 def test_param_regen_and_land_exclude(tmp_path):
     """asbuilt.param_regen: a die hook re-derives a leaf parameter from the bound lane depth (ctx.depth) before the
     types form, recorded in param_regen.json; land_align_exclude keeps the excluded sink unpadded"""

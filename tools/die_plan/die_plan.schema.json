@@ -9667,6 +9667,44 @@
        "type": "string"
       }
      }
+    },
+    "align_groups": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "type": {
+        "type": "string",
+        "minLength": 1
+       },
+       "sources": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "sinks": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "max_total": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "max_total_with": {
+        "type": "string",
+        "minLength": 1
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
     }
    }
   },
