@@ -249,3 +249,13 @@
   - 66ce census: iteration 13/20.
   All 4 HEAD-R18 units are active. ETAs unchanged: 66ce about 22:30-23:00; E kit GRT reads 00:00-01:30. Next post by 21:55.
 - 2026-11-23 21:15 PST DONE [HEAD-R18] ot-run oth-ubuntu-1242497-1795488565 on tolerant-swine: rc=0 after 8746 s, ended 21:15:04, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-R18/s81_head_hd_lep0N_w_1123175937/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/HE
+- 2026-11-23 21:54 PST PROGRESS 21:53 + ETA SLIP [HEAD-R18 -> COORD, FOLLOWUP-HEAD, FABLE-RC-ALL]
+  GRT extra iterations are now slow, about 30-40 min each:
+  - r18g escape: tapbal GRT 7/30 (6 -> 7 took about 40 min).
+  - epin_r4: tapbal GRT 2/30.
+  - rscap: tapbal GRT 2/30.
+  - 66ce census (intel1): still 13/20, the same as 21:13.
+  REVISED: the 23:00 East census will NOT be met.
+  - 66ce read: about 02:00-03:00 (7 iterations left).
+  - Kit reads: after their 4_2 tapbal GRT, then 5_1 GRT. GRT can exit early once congestion clears, so the ETA is open (not before 02:00).
+  I will post each read as it lands. All 4 units are active. Next post by 22:35.

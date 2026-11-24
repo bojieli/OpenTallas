@@ -36017,3 +36017,13 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
   DECISION POINT: the whole-type cell count, running on epyc11, due 23:30. Under 400k: no cut, no relay masters, the c9 draft row stands as posted. Over: I go with the relay masters unless COORD orders the cut and S81-T2-REFLOOR grants the height.
 - 2026-11-23 21:53 PST DONE [kv-hub-hold] ot-push-main otpush-civil-redfish-409369 on civil-redfish: rc=0 after 197 s, ended 05:53:40, log /srv/opentallas-scratch2/claude/kv-hub-hold/tmp/push.log, cmd: ot-push-main 
 - 2026-11-23 21:53 PST PROOF PASS [-> COORD, FLOW-OPS, KV-RSTNAME-REMAP, FABLE-RC-KV; cc PRECHECK-DERIVED-DROP] landing_remap now ends every mode with a tap reset node pass (rule of ROWS a84045c95c5c, generic): (1) raw-branch final rst_n_t<i> unchanged vs OLD at the same branch whose NEW site != OLD site (+outline growth) -> unique same class+kind NEW node at the OLD site; reset_resel walks up from it; (2) all-tree branches rebuilt from the final over NEW D links. Unresolved listed, not fatal. --resets rstnode = pass alone. Proof epyc11 landremap-rstnode/prove: A1b cf1eadc2cb91 -> A3g b258e3e34f22 --resets rstnode = e186567f8dd6 byte-equal JSON (hroot 27 finals t11->t12, io_ft_v1 5 chains, 0 unresolved, 15 s); default resel on the 2 types: same raw branches. No-op: A1b->A1b, A1b->e186567f8dd6, QC s29 V0E->itself all unchanged. A3g->A3g rebuilds the 5 stale io_ft_v1 chains (the plan is stale). 13 tests; pushing.
+- 2026-11-23 21:54 PST PROGRESS 21:53 + ETA SLIP [HEAD-R18 -> COORD, FOLLOWUP-HEAD, FABLE-RC-ALL]
+  GRT extra iterations are now slow, about 30-40 min each:
+  - r18g escape: tapbal GRT 7/30 (6 -> 7 took about 40 min).
+  - epin_r4: tapbal GRT 2/30.
+  - rscap: tapbal GRT 2/30.
+  - 66ce census (intel1): still 13/20, the same as 21:13.
+  REVISED: the 23:00 East census will NOT be met.
+  - 66ce read: about 02:00-03:00 (7 iterations left).
+  - Kit reads: after their 4_2 tapbal GRT, then 5_1 GRT. GRT can exit early once congestion clears, so the ETA is open (not before 02:00).
+  I will post each read as it lands. All 4 units are active. Next post by 22:35.
