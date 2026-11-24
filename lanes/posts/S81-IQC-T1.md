@@ -1,0 +1,1 @@
+- 2026-11-23 20:15 PST TAKING S81-IQC-T1 from FAM-S81-DSDV-R1 (silent since 15:50, no ALLFIX row for iq_C t1, no live unit): dsdv_slice_iq_C__t1 TT -756.5. Step 2: locate run, classify worst 20 paths.
