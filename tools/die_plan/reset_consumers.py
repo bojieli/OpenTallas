@@ -10,7 +10,7 @@ class ResetConsumerError(ValueError):
     pass
 
 _ID = re.compile(r'^[A-Za-z_][A-Za-z_0-9]*$')
-_CALL = re.compile(r'(?m)^[ \t]*([A-Za-z_$][\w$]*)(?:[ \t]+#\([^\n]*\))?[ \t]+([A-Za-z_][\w]*)[ \t]*\(')
+_CALL = re.compile(r'(?m)^[ \t]*(?P<module>[A-Za-z_$][\w$]*)(?:[ \t]+#\((?P<params>[^\n]*)\))?[ \t]+(?P<instance>[A-Za-z_][\w]*)[ \t]*\(')
 
 def _close(text, start):
     depth = 1
@@ -26,17 +26,18 @@ def _close(text, start):
 def _calls(text):
     out = {}
     for m in _CALL.finditer(text):
+        name = m['instance']
         end = _close(text, m.end() - 1)
         ports = {}
         for p in re.finditer(r'\.([A-Za-z_]\w*)\s*\(', text[m.end():end]):
             lo = m.end() + p.end()
             hi = _close(text, lo - 1)
             if p[1] in ports:
-                raise ResetConsumerError(f'duplicate port {m[2]}.{p[1]}')
+                raise ResetConsumerError(f'duplicate port {name}.{p[1]}')
             ports[p[1]] = (text[lo:hi].strip(), lo, hi)
-        if m[2] in out:
-            raise ResetConsumerError(f'duplicate instance {m[2]}')
-        out[m[2]] = dict(module=m[1], ports=ports)
+        if name in out:
+            raise ResetConsumerError(f'duplicate instance {name}')
+        out[name] = dict(module=m['module'], ports=ports, params=m['params'])
     return out
 
 def localize(text, declarations, tree, native_roles=None):
@@ -115,21 +116,39 @@ def localize(text, declarations, tree, native_roles=None):
             # the canonical two-flop root synchronizer, rather than u_rst_in.
             # Both relocated branches still trace to this ONE actual same-clock
             # root. Keep the ordinary relayed-root contract unchanged.
+            def driver_is(output, name):
+                drivers = [n for n, v in calls.items()
+                           if any(v['ports'].get(p, (None,))[0] == output for p in ('q', 'sync_rst_n'))]
+                return output not in aliases and drivers == [name]
+
             def canonical_sync_root(name, source, output):
                 c = calls.get(name)
                 if not c or c['module'] != 'ot_dp_rsync_s2':
                     return False
-                ps = c['ports']
-                if set(ps) != {'clk', 'async_rst_n', 'sync_rst_n'}:
-                    return False
-                if (ps['clk'][0], ps['async_rst_n'][0], ps['sync_rst_n'][0]) != (clock, source, output):
-                    return False
-                drivers = [n for n, v in calls.items()
-                           if any(v['ports'].get(p, (None,))[0] == output for p in ('q', 'sync_rst_n'))]
-                return drivers == [name]
+                ps = {k: v[0] for k, v in c['ports'].items()}
+                return (ps == {'clk': clock, 'async_rst_n': source, 'sync_rst_n': output}
+                        and driver_is(output, name))
 
+            def canonical_tied_hold(lock):
+                from reset_tree import HOLD_TIED, LOCKQ_EXTRA
+                stable = lock.get('stable')
+                if (type(stable) is not int or stable < 1
+                        or lock.get('stages') != stable + LOCKQ_EXTRA):
+                    return False
+                c = calls.get('u_rst_lockq')
+                if not c or c['module'] != 'ot_dp_lockq':
+                    return False
+                ps = {k: v[0] for k, v in c['ports'].items()}
+                param = re.fullmatch(r'\s*\.STABLE\s*\(\s*([0-9]+)\s*\)\s*', c['params'] or '')
+                return (ps == {'clk': clock, 'd': 'rst_por_n', 'locked': HOLD_TIED, 'q': 'rst_root_n'}
+                        and param is not None and int(param[1]) == stable
+                        and driver_is('rst_root_n', 'u_rst_lockq')
+                        and canonical_sync_root('u_rst_root', 'arst_n', 'rst_por_n'))
+
+            lock = tree.get('lock') or {}
             sync_root = (tree.get('entry') == 'sync' and tree.get('sync_stages') == 2
-                         and canonical_sync_root('u_rst_root', 'arst_n', 'rst_root_n'))
+                         and (canonical_tied_hold(lock) if lock.get('tied') is True
+                              else canonical_sync_root('u_rst_root', 'arst_n', 'rst_root_n')))
             if sync_root and tree.get('start'):
                 sync_root = canonical_sync_root('u_run_root', 'start_i', 'run_root')
             if not sync_root:
