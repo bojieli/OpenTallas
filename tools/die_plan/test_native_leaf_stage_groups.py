@@ -23,7 +23,8 @@ def script(t):
     s = L._native_stage_placement_source(t, L._placement_source(False))
     a, b = s.index('proc cland_group_insts {prefix}'), s.index('proc cland_occupy {')
     setup = r'''
-proc blk {args} {return {i0 i1 i2}}
+set lookup_scans 0
+proc blk {args} {incr ::lookup_scans;return {i0 i1 i2}}
 proc i0 {args} {return {u_core.u.u_lep.u.rid\[1\]$_DFF_P_}}
 proc i1 {args} {return {u_core.u.u_lep.u.rid\[1103\]$_DFF_P_}}
 proc i2 {args} {return {u_core.u.u_lep.u.rid\[1\]$_DFF_P_.child}}
@@ -33,9 +34,11 @@ set ff_blk blk
 
 
 def test_leaf_selector_uses_actual_placement_matcher_and_excludes_descendants():
-    r = subprocess.run(['tclsh'], input=script(typ()), text=True, capture_output=True)
+    replay = r'puts "MEMBERS [cland_group_insts {' + RID + '}]"'
+    tcl = script(typ()) + replay + '\nputs "SCANS $lookup_scans"\n'
+    r = subprocess.run(['tclsh'], input=tcl, text=True, capture_output=True)
     assert r.returncode == 0 and not r.stderr, r.stdout + r.stderr
-    assert 'COUNT 2' in r.stdout
+    assert r.stdout.splitlines() == ['COUNT 2', 'MEMBERS i0 i1', 'SCANS 1']
 
 
 def test_old_hierarchy_match_is_a_negative_control():
