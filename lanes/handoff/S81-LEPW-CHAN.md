@@ -9,3 +9,11 @@ Job: dsdv_slice_lepw_mu_C__t1 CBC route-demand pinch; row on c9 048fa468f0a2; PR
 - epyc9 s81-lepw-chan/row.sh (compose -> relay/LLR/fill tail -> anchor/PRE/PRE-base/G0/census, rt 515889f6ef75), log row.otrun.log, out/ ; was load-capped waiting at 08:5x.
 ## Next
 - PRE pass -> ROW-REBASED to INT. Scoped strict: no c9 elab yet; plan = c8 elab allfix_c8_out (7.4G copy into my dir after c8 strict ends ~11:00) + c8+row plan, bind --strict --all-gaps --types dsdv_slice_lepw_mu_C__t1; same bind out feeds the private kit (kit_wave private-spec --bind-out, goal route).
+## 13:5x ROW-REBASED posted (ed0bd02d)
+- c9 row plan epyc9 s81-lepw-chan/out/p4_fill.json eeac27d5fc2e (= composed; tail no-op). PRE 36 findings = c9 base set exactly (0 new, none on type). G0 PASS 0 err; type warns = INT c9 G0.
+- c8 variant out_c8/p4_fill.json 42e7cf18c581 (tail no-op). Its PRE (row_c8.otrun.log) was still running at 13:5x; supplementary only.
+- Scoped strict (scope_c8.sh, copy of c8 elab in scope_c8/): rc1, 212 errors all base svc class (TIED 200, TYPE_DEFINE 11, TIED_TOTAL 1), 0 on the type; emitted .sv identical to allfix_c8_out; only istations.tcl sites moved.
+- Overlay row/LEPW-MUC-CAPXR.overlay.json ca9597fd9d7d (base c8 canonical 28bd36bf), type_overlay check OK (rtl_projection EQ).
+## Kit
+- intel2 systemd unit s81lepwchan-kitwait runs ~/tmp/s81-lepw-chan/kit_after_c8s.sh: waits for INT C8S_DONE + c8s receipt for the type, then private-spec (c8seal_tree, plan c8, bind allfix_c8s_out, --overlay, rt 52c1a6417353, goal route) + INT specfix + run-item; posts KIT LAUNCHED. Logs ~/tmp/s81-lepw-chan/kit/. (Dry spec on allfix_c8_out refused BIND_STALE / rt mismatch, as INT found; c8s form is what INT uses.)
+- INT's own c8s stream will also launch the type with base positions: side-by-side A/B.
