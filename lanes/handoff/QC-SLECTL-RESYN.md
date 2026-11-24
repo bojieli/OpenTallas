@@ -13,3 +13,6 @@ Next: compose-A probe CTS -> run sta_ep.sh + classify on its 4_1_cts.odb (waiter
 RESULT 2 posted 20:32 (b05a7814): census on kit rcx (sta_sum_rcx.sh KIT ODB SDC OUTDIR TAG -> TAG.rcx.sum/.hold; census.py SUM [TH]); locs.sh KIT ODB OUTDIR (locs.tcl instance bboxes).
 Groups: rp chd_q pad -> ist_x_su_c_p1 (58, -93) / p2 (262, -46); x_hc1_st_b_i->cland (404, -56); cws2_i->cland (181, -40); rrl_254->u_tap rst_n (-61).
 Pending: compose-A probe CTS (epyc8 ot-job ...place-outgoing-giraffe-2746461...), run sta_sum_rcx + census + locs on its 4_1_cts.odb (results dir name dp_sle_ctl__cla4f6f12f?).
+20:35 RESULT 3: C1c vs V2 diff (cmp_types.py): only u_tap rst_n covered (reset inst_tap 121). Groups (1),(2) uncovered.
+20:40 ROW SLECTL-RP-SEL drafted: hub lanes/handoff/QC-SLECTL-RESYN-row-rpsel.json (24 relay_sites, bits 518/519 of strap bank chd_q_1 + f bank). Asked QC-ALLFIX: compose or private probe.
+Waiters: compose-A CTS (epyc8 job dir OT_CTS_POST_TIMING).
