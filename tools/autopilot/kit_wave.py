@@ -11117,7 +11117,10 @@ def run_item(spec_path):
             res["kit_store_fl"] = (txt.strip().splitlines() or [""])[-1][:400]
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
     elif kr.get("mode") == "script":
-        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(tsrc)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
+        # STRAP-EVIDENCE-PRIV-1124 (HEAD-WEST 86b4806b): a declared bind (private-spec --bind-out) reaches the script as OT_KIT_BIND_OUT, so the
+        # kit-rtl export names its tie audit and gen's COUNT_STRAP_EVIDENCE_CHECK reads it (was UNVERIFIED, tie_audit None, on every private HEAD kit)
+        kbo = f"OT_KIT_BIND_OUT={q(kr['bind_out'])} " if kr.get("bind_out") else ""
+        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(tsrc)} && {kbo}TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
                                        + kit_rtl_closure_cmd(W, src), gh, roam=False))
         if rc:
             return fail("kit_rtl", txt)

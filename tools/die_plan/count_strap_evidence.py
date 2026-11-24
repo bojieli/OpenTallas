@@ -132,6 +132,7 @@ def write_for_kit(kit, type_plan, kit_rtl_json, parts=None, strict=None, plan_pa
     if not have and not parts:
         return None
     kit_rtl = json.loads(Path(kit_rtl_json).read_text()) if have else {}
+    strict = strict or bool(kit_rtl.get("strap_evidence_strict"))   # STRAP-EVIDENCE-PRIV-1124: the kit declared its bind tie audit
     audit_file = find_audit(kit_rtl_json, kit_rtl)
     audit = json.loads(audit_file.read_text()) if audit_file else {}
     lits = audit_literals(audit)
