@@ -39,6 +39,11 @@ HOSTS = os.environ.get("OT_RT_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epy
 # FABLE-FLOW-0600 class D (17 of 32 kit failures: rt incomplete on gen hosts): every host gets what a kit launch tree needs (rt_launch_tree.sh
 # hardlinks tools/ and physical/common_flow), not only tools/fleet, and the flip waits for a smoke of that copy on one gen host.
 HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools physical/common_flow").split()
+# RT-HOST-DATA-1124 (COORD: epyc10 rt follow took 509-641 s per cut on its saturated scratch NVMe, always one cut behind): OT_RT_HOST_DATA="host=/dir ..."
+# puts a host's NEW version dirs on another disk.  The copy lands in <dir>/<sha12>; RT/<sha12> on the host is a read-only symlink to it, so
+# RT/current, RT/<sha12> and RT/<sha12>.manifest.json resolve for every caller unchanged.  Older versions stay where they are; prune removes a
+# symlinked version together with its target.
+HOST_DATA = dict(x.split("=", 1) for x in os.environ.get("OT_RT_HOST_DATA", "").split() if "=" in x)
 GEN_SMOKE_HOSTS = os.environ.get("OT_RT_GEN_SMOKE_HOSTS", "epyc9 epyc10 epyc8 epyc2").split()   # tried in order: the first one reached judges
 SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 SMOKE_TESTS = os.environ.get("OT_RT_SMOKE_TESTS", "tools/autopilot/test_kit_wave.py").split()
@@ -181,7 +186,7 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
     if keep <= 0:
         return []
     root = Path(root)
-    if not any(re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink() for d in root.iterdir()):
+    if not any(re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and (not d.is_symlink() or _data_target(d)) for d in root.iterdir()):
         return []
     import fcntl
 
@@ -194,8 +199,19 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
         return _prune_snapshots_locked(root, max(keep, MIN_KEEP), protect, text, rm)
 
 
+def _data_target(d):
+    """RT-HOST-DATA-1124: the data dir of a symlinked version RT/<sha12> -> <data>/<sha12> (same name, a real dir), else None"""
+    try:
+        if not os.path.islink(d):
+            return None
+        t = Path(os.path.realpath(d))
+        return t if t.name == Path(d).name and t.is_dir() and not t.is_symlink() else None
+    except OSError:
+        return None
+
+
 def _prune_snapshots_locked(root, keep, protect, text, rm):
-    snaps = sorted((d for d in root.iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
+    snaps = sorted((d for d in root.iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and (not d.is_symlink() or _data_target(d))),
                    key=lambda d: d.stat().st_mtime, reverse=True)
     cur = current(root)
     stay = {d.name for d in snaps[:keep]} | {cur, *protect}
@@ -209,9 +225,13 @@ def _prune_snapshots_locked(root, keep, protect, text, rm):
         try:
             if rm: rm(d)
             else:
+                tgt = _data_target(d)                                       # RT-HOST-DATA-1124: a symlinked version: drop the link, then its data dir
+                if tgt:
+                    d.unlink()
+                    d = tgt
                 run(["find", str(d), "-type", "d", "-exec", "chmod", "u+w", "{}", "+"])
                 run(["rm", "-rf", "--one-file-system", "--", str(d)])
-                (Path(root) / f"{d.name}.manifest.json").unlink(missing_ok=True)
+                (Path(root) / f"{tgt.name if tgt else d.name}.manifest.json").unlink(missing_ok=True)
             gone.append(d.name)
         except Exception as e:
             log(f"prune {d.name} failed: {e}")
@@ -285,6 +305,7 @@ def sha12(s):
 
 def in_use(path):
     """pids whose cmdline / cwd / open files name the dir (resolved)"""
+    alias = str(path).rstrip("/")                          # RT-HOST-DATA-1124: a symlinked version is named by its RT path or its data path
     path = os.path.realpath(path)
     pids = []
     for d in os.listdir("/proc"):
@@ -295,7 +316,7 @@ def in_use(path):
             cwd = os.path.realpath(f"/proc/{d}/cwd")
         except OSError:
             continue
-        if path in cmd or cwd == path or cwd.startswith(path + "/"):
+        if path in cmd or alias in cmd or cwd == path or cwd.startswith(path + "/"):
             pids.append(int(d))
     return pids
 
@@ -588,7 +609,8 @@ def host_sync(host, name, prev, do_flip=True, smoke_here=False, lock_dir=None, _
 def _host_sync_unlocked(host, name, prev, do_flip=True, smoke_here=False):
     """copy RT/<name> (HOST_PATHS) to host, check it there (manifest + parse; with smoke_here also gen_smoke), flip host RT/current -> (ok, note).
     A note starting 'RED ' means the content is wrong (not the host)."""
-    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || df -BG --output=avail {RT}/.. | tail -n1"], input="")
+    D = HOST_DATA.get(host) or str(RT)                    # RT-HOST-DATA-1124: where this host's version dirs are written
+    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || {{ mkdir -p {D} && df -BG --output=avail {D}/.. | tail -n1; }}"], input="")
     if r.returncode == 0 and "HAVE" not in r.stdout:
         try:
             hf = float(r.stdout.strip().split()[-1].rstrip("G"))
@@ -596,21 +618,21 @@ def _host_sync_unlocked(host, name, prev, do_flip=True, smoke_here=False):
             hf = None
         if hf is not None and hf < HOST_MIN_FREE_GB:
             return False, f"SKIP {hf:.0f} GB free < {HOST_MIN_FREE_GB:g} GB (OT_RT_HOST_MIN_FREE_GB); not copied"      # SKIP = a low-disk host is a warning, not a failed sync (11-18)
-        r = run(SSH + [host, f"mkdir -p {RT}/.{name}.partial"], input="")
+        r = run(SSH + [host, f"mkdir -p {D}/.{name}.partial"], input="")
     if r.returncode:
         return False, f"ssh: {(r.stderr or r.stdout).strip()[:160]}"
     if "HAVE" not in r.stdout:
-        link = ["--link-dest", f"{RT}/{prev}/"] if prev else []
+        link = ["--link-dest", f"{D}/{prev}/"] if prev else []          # a prev that is not on D: rsync warns and copies (first cut on a new D)
         args = ["rsync", "-a", "--relative", "--exclude=__pycache__", *link,
                 "-e", "ssh -o ControlPath=none -o BatchMode=yes", *[f"{RT}/{name}/./{p}" for p in HOST_PATHS],
-                f"{host}:{RT}/.{name}.partial/"]
+                f"{host}:{D}/.{name}.partial/"]
         r = run(args, timeout=1800)
         if r.returncode:
             return False, f"rsync rc={r.returncode}: {(r.stderr or '').strip()[:200]}"
         man = json.loads((RT / f"{name}.manifest.json").read_text())
         sub = {k: v for k, v in man["files"].items() if any(k.startswith(p.rstrip("/") + "/") for p in HOST_PATHS)}
         check = MANIFEST_PY + f'''
-root = {str(RT / ('.' + name + '.partial'))!r}
+root = {str(Path(D) / ('.' + name + '.partial'))!r}
 want = json.loads(sys.stdin.read())
 d = diff(manifest(root), want)
 bad = d["changed"] + d["missing"] + d["extra"]
@@ -636,11 +658,12 @@ print(json.dumps(bad[:20]))
         if bad:
             return False, f"RED remote copy differs: {bad[:5]}"
         if smoke_here:
-            v, note = gen_smoke(host, RT / f".{name}.partial")
+            v, note = gen_smoke(host, Path(D) / f".{name}.partial")
             if v != "ok":
                 return False, ("RED gen smoke: " if v == "red" else "gen smoke not run: ") + note
         m = json.dumps({"sha": man["sha"], "made": man["made"], "files": sub})
-        r = run(SSH + [host, f"chmod -R a-w {RT}/.{name}.partial/* && mv -T {RT}/.{name}.partial {RT}/{name} && "
+        lnk = (f" && ln -sfn {D}/{name} {RT}/.{name}.lnk && mv -T {RT}/.{name}.lnk {RT}/{name}" if D != str(RT) else "")
+        r = run(SSH + [host, f"chmod -R a-w {D}/.{name}.partial/* && mv -T {D}/.{name}.partial {D}/{name}{lnk} && "
                              f"cat > {RT}/.{name}.m.tmp && mv {RT}/.{name}.m.tmp {RT}/{name}.manifest.json"], input=m)
         if r.returncode:
             return False, f"install: {(r.stderr or r.stdout).strip()[:200]}"

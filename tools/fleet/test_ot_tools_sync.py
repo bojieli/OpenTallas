@@ -129,6 +129,7 @@ class Guard(unittest.TestCase):
 
     def test_prune_keeps_newest_current_protected_and_named(self):
         m = self.load(); names = ["%012x" % i for i in range(1, 9)]
+        m.live_reference_text = lambda *a, **k: ""      # RT-HOST-DATA-1124: isolate from the test host's live refs (6.800000000000001 in a job json names "%012x" % 1)
         d = self.mk(names)
         gone = m.prune_snapshots(d, keep=3, protect=(names[1],), text="x " + names[2] + " y")
         self.assertEqual(sorted(gone), sorted([names[0], names[3], names[4]]))   # newest 3 = 6,7,8; protect 2; named 3
@@ -162,6 +163,7 @@ class Guard(unittest.TestCase):
     def test_prune_skips_while_the_same_root_is_locked(self):
         import fcntl
         m = self.load()
+        m.live_reference_text = lambda *a, **k: ""      # RT-HOST-DATA-1124: isolate from the test host's live refs (6.800000000000001 in a job json names "%012x" % 1)
         names = ["%012x" % i for i in range(1, 6)]
         d = self.mk(names)
         with (d / ".prune.lock").open("a") as held:
