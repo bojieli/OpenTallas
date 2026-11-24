@@ -8927,12 +8927,15 @@ def type_verilog_defines(t, kit_defines=None):
     """One declared source profile for synthesis, RTL lint and the LEC gold reader.  kit_defines (--kit-rtl,
     kit_rtl_defines): the as-built defines the bind elaborated the bound partition with, after the plan's own."""
     values = t.get("verilog_defines", [])
-    if isinstance(values, list) and kit_defines:
-        values = values + list(kit_defines)
     if not isinstance(values, list) or any(not isinstance(v, str) or
             not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
         raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
-    return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
+    # S81-OWN-SLICE 11-24 (COORD): the as-built die defines the bind applies may carry a value (OT_SVC_GP=1076,
+    # OT_SVC_SRX=7); the kit must get -DNAME=VALUE, or the RTL default (SRX 0) builds a different design than the bind.
+    kd = list(kit_defines or [])
+    if any(not isinstance(v, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(=[A-Za-z0-9_.]+)?", v) for v in kd):
+        raise ValueError("kit defines must be NAME or NAME=VALUE (VALUE a plain token)")
+    return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values + kd]))
 
 
 RESET_CHAIN_SPREAD_HOOK = "\n# FABLE-FIX-S81-COLTAP 11-16: reset_replicate copy_depth chains on the line common flop -> region copy\nsource /work/reset_chain_spread.tcl\n"
@@ -10657,7 +10660,7 @@ def kit_rtl_defines(kit_rtl_filelist, files):
         if Path(f).suffix in (".sv", ".v", ".svh", ".vh") and Path(f).is_file():
             for a, b in _DEFINE_USE.findall(Path(f).read_text(errors="ignore")):
                 used.add(a or b)
-    return [d for d in dict.fromkeys(defs) if d in used]
+    return [d for d in dict.fromkeys(defs) if d.split("=", 1)[0] in used]   # NAME=VALUE matches on NAME (S81-OWN-SLICE 11-24)
 
 
 LANDING_RTL = ("rtl/common/ot_dp_clk_landing.sv", "rtl/common/ot_dp_clk_landing_ca.sv")

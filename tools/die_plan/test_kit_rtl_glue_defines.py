@@ -67,3 +67,16 @@ def test_kit_rtl_defines_unused_or_absent_keep_old_defines(tmp_path):
     assert GP.kit_rtl_defines(f, files) == []
     assert GP.kit_rtl_defines(tmp_path / "none" / "kit_rtl.f", files) == []
     assert GP.type_verilog_defines({"verilog_defines": ["A"]}, []) == GP.type_verilog_defines({"verilog_defines": ["A"]})
+
+
+def test_valued_die_defines_reach_the_kit_with_their_value(tmp_path):
+    # S81-OWN-SLICE 11-24: OT_SVC_GP=1076 / OT_SVC_SRX=7 were matched as "NAME=VALUE" against used names and dropped
+    f, files = _kit(tmp_path, ["OT_SVC_GP=1076", "OT_SVC_SRX=7", "OT_SVC_SRXT=9", "OT_COLL_NATIVE32"],
+                    "module m;\n`ifdef OT_SVC_SRX\n localparam integer E = `OT_SVC_SRX;\n`endif\n`ifdef OT_SVC_GP\n`endif\nendmodule\n")
+    kd = GP.kit_rtl_defines(f, files)
+    assert kd == ["OT_SVC_GP=1076", "OT_SVC_SRX=7"]
+    assert GP.type_verilog_defines({"verilog_defines": ["A"]}, kd) == ["-DSYNTHESIS", "-DA", "-DOT_SVC_GP=1076", "-DOT_SVC_SRX=7"]
+    with pytest.raises(ValueError):
+        GP.type_verilog_defines({"verilog_defines": ["A=1"]}, [])
+    with pytest.raises(ValueError):
+        GP.type_verilog_defines({"verilog_defines": []}, ["X=1 -DY"])
