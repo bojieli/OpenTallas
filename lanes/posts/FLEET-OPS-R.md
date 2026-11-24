@@ -1203,3 +1203,4 @@
 - 2026-11-23 19:36 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays c66090747375: RuntimeError: git rev-parse f2156bb449c5^{commit}: fatal: ambiguous argument 'f2156bb449c5^{commit}': unknown revision or path not in the working tree.
   Use '--' to separate paths from revisions, like this:
   'git <command> [<revision>...] -- [<file>...]'
+- 2026-11-23 19:40 PST STATE tools sync recovered after 4 min (rt/current f2156bb449c5)
