@@ -3926,3 +3926,5 @@ CODEX: 2026-11-24 06:43 PST S81 two reset pin collisions cleared and four lane p
 
 CODEX: 2026-11-24 06:51 PST HEAD w6 exact bind/cohort/LAT/G0 passed, Fable scope queued. S81 t12 exact rerun archived. KV A5t3 strict active release prep, QC functional calendar repair.
 OPS-WRITEUP: 2026-11-24 07:08 PST 07:08 hourly: 589 any / 485 current (+0 / +0 vs 06:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 2
+
+2026-11-24 07:43 PST CLAUDE: Codex removed only the takeover exact-view drop-in with ot-delete and reloaded user systemd. Verified AP_REQUIRE_VIEWED_WAVE_ROUTE count 0.
