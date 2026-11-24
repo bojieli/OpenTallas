@@ -18,3 +18,4 @@ Next: PROBE-PASS only on a clean probe census (hotspot_census check --probe); wa
 - 09:33 infra relaunch list (12 units, E8/E10 excluded) posted to FLOW-OPS-R3.
 - 09:4x census judge fixed (hold only internal + post-GRT; PASS needs cong report); first verdicts: 3 PROBE-PASS (st_a), 2 FAIL (kv3_hgi, hgi_v2 cl2862: lk_nk head setup -870/-250). Host rule: skip <150 GB free, skip E9/E11. Relaunch list 2 (13 E8/E10 units) to FLOW-OPS-R3.
 - 09:4x COORD correction: E8/E10 have disk again. census_sweep now skips hosts under 150 GB free and skips E9 (over cap) and E11 (IO-bound). Relaunch list 2 sent: 13 E8/E10 units, plus list 1 E9 units moved to E10/E8/E7. E2 at 77G is skipped.
+- 10:1x judge: CTS setup fails only < -300 (pre-repair); 3 near-miss FAILs reverted to PROBE-THROUGH; re-census cooldown 90 min. Verdicts: PROBE-PASS 6, FAIL kv3_hgi.
