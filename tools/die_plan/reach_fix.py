@@ -198,6 +198,26 @@ def _rect_far(p, r):
     return max(abs(p[0] - x) + abs(p[1] - y) for x in (x0, x1) for y in (y0, y1))
 
 
+def _add_reach_sinks(ck, add):
+    """append sink rows to clock.sink_sites_um / clock.reach_fix_sinks, idempotent (REACHFIX-DUP 11-24): a round re-measures
+    sinks it already added while they stay out of reach, and the old code appended them again every round (7x on KV pv_v12e /
+    pv_v7e, which inflated every census that reads clock.reach_fix_sinks).  Only the rows in excess of what reach_fix_sinks
+    already holds (multiset by x, y, w) are added.  Returns the rows added."""
+    have = defaultdict(int)
+    for r in ck.get("reach_fix_sinks") or []:
+        have[(round(float(r[0]), 4), round(float(r[1]), 4), round(float(r[2]), 3))] += 1
+    new = []
+    for r in add:
+        k = (round(float(r[0]), 4), round(float(r[1]), 4), round(float(r[2]), 3))
+        if have.get(k):
+            have[k] -= 1
+            continue
+        new.append(r)
+    ck.setdefault("sink_sites_um", []).extend(new)
+    ck.setdefault("reach_fix_sinks", []).extend(new)
+    return new
+
+
 # ------------------------------------------------------------------------------------------------------- measure
 def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
     """classes 1 + 2 on the kit split: (row dict, assignment detail)."""
@@ -620,8 +640,7 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                     continue
                 break
             add = [[round(x, 4), round(y, 4), max(1.0, round(w, 3))] for x, y, w in far]
-            ck.setdefault("sink_sites_um", []).extend(add)
-            ck.setdefault("reach_fix_sinks", []).extend(add)
+            add = _add_reach_sinks(ck, add)
             rec["changes"].append(["sink_sites_um+", rnd, len(add)])
         return rec
     if mode in ("grid", "grid+sinks", "sinks"):
@@ -722,8 +741,7 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
         farx = [s for s, d, k in zip(sinks, dist, A["kinds"]) if d > radius + 1e-6 and k != "plan"]
         if farx:
             add = [[round(x, 4), round(y, 4), max(1.0, round(w, 3))] for x, y, w in farx]
-            ck.setdefault("sink_sites_um", []).extend(add)
-            ck.setdefault("reach_fix_sinks", []).extend(add)
+            add = _add_reach_sinks(ck, add)
             rec["changes"].append(["sink_sites_um+", rnd, len(add)])
         _freeze_reset_consumers(P, tn, t, rec, rnd)
         if mode == "explicit":
@@ -761,8 +779,7 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                 x_, y_ = fin.get((float(q[0]), float(q[1])), (float(q[0]), float(q[1])))
                 keep_s.append([round(x_, 4), round(y_, 4), 1.0])
             if keep_s:
-                ck.setdefault("sink_sites_um", []).extend(keep_s)
-                ck.setdefault("reach_fix_sinks", []).extend(keep_s)
+                keep_s = _add_reach_sinks(ck, keep_s)
                 rec["changes"].append(["tap_anchor_sinks+", rnd, len(keep_s)])
         for _k in range(len(new) + len(mv)):
             err = _export_ok(Q, P.path, tn)

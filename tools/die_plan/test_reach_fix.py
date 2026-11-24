@@ -538,3 +538,17 @@ def test_changed_type_gets_its_reset_anchor_recorded_again(monkeypatch):
     rec3 = {}
     RF.rerecord_reset_anchor(Q, "t", "plan.json", rec3, plan_fn=lambda q, p: object())
     assert "AnchorError" in rec3["reset_anchor_error"] and Q["partition_types"]["t"]["clock"]["reset_tree_anchor"] == old
+
+
+def test_add_reach_sinks_idempotent_and_dedups():
+    """REACHFIX-DUP 11-24: re-adding the rows a round already added must not multiply clock.reach_fix_sinks."""
+    ck = {}
+    a = [[1.0, 2.0, 1.0], [3.0, 4.0, 2.0]]
+    assert RF._add_reach_sinks(ck, a) == a
+    for _ in range(7):
+        assert RF._add_reach_sinks(ck, [list(r) for r in a]) == []
+    assert ck["reach_fix_sinks"] == a and ck["sink_sites_um"] == a
+    # a genuinely new row, and a second coincident register (multiset), still land
+    assert RF._add_reach_sinks(ck, a + [[5.0, 6.0, 1.0]]) == [[5.0, 6.0, 1.0]]
+    assert RF._add_reach_sinks(ck, [a[0], a[0]]) == [a[0]]
+    assert len(ck["reach_fix_sinks"]) == 4 and ck["sink_sites_um"] == ck["reach_fix_sinks"]
