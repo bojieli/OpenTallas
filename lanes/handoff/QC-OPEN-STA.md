@@ -50,3 +50,7 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - COORD: r9 = four numbers per type (SITEGRID 0, exact overlap 0, relays/point <=66, reset reach after re-pick) on 11 types with newest rt, BEFORE bind; compose on C1g only after its strict+LATCHECK (~01:20); probes on epyc10/epyc8, not epyc7/11.
 - r8 re-pick measured on 4+ types: raw hops 0 after re-pick (stale names, same as C1b); rule 1 START fan on clfc not yet confirmed.
 - Running: chain9.sh (local, scratch qcsta): r9a (epyc7 r9.ot) -> r9b.sh tapfix (launch7, rt 751410253108) -> plan_sta_r9 -> epyc10 gate9.sh (r9gate.py; log epyc8 QC-OPEN-STA/gate9.ot). Fork of kw45 snap to epyc10 QC-OPEN-STA/tree: unit oth-ubuntu-3569413-1795508582, log epyc8 fork10.ot. After C1g: copy cF overlay files to it.
+
+## 11-24 00:33 PST
+- r8 after re-pick, all 11 types: raw hops 0 on 9; clfc5867a6 x2 REAL regression (START fan 569, raw 550): sta_floor translate_with dragged START stages with the SRAM. r9a (809c36930236) has it too: superseded.
+- r9u 13410b5bbd9e = undrag.py on r9a (START stages + >25 um collector_tree relays back to base; reset_tree_anchor fully restored on clfc x2 and clf4365a62; clf4365a62 26 tree relays nudged <=39 um). chain9.sh relaunched: r9u -> r9b.sh tapfix -> plan_sta_r9 -> epyc10 gate9.sh (r9, then C1b base). Logs epyc8 r9b.ot, gate9.ot.
