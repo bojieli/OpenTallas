@@ -1,0 +1,1 @@
+- 2026-11-24 05:42 PST TAKING QC baked-constant triage (7 items) for QC-ALLFIX, per-item verdict or new ETA by 05:55
