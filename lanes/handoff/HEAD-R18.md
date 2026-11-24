@@ -232,3 +232,4 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 ## 11-24 05:5x HEAD-R18
 - Answered FABLE-RC-ALL: no token pass on station-less RTL; table right; realize stations (w4 form). COORD accepted.
 - LATPKG regen (epyc9 head-r18/latpkg_1124, script in/latdiff.py, tools launch tree trees/rt_tools_launch/s81_head_r18g_s2@b335c93437b7, OT_PLAN_ROOT=that tree): w3/r6/w4 = live 014661 (0 diff, 334 LAT_); vs a74be4f5: 85 changed. OPEN: run r7 when HEAD-EAST-REPLAN posts its sha (same command, out_r7).
+- 11-24 06:xx LATPKG on main 013981d855cb (s81_head/lat = live 014661 digest f2f3f42c16d9 + PROVENANCE.json); w4b/w5 0 diff; a74be4f5 has no consumers. OPEN: r7 run when sha posted (epyc9 latpkg_1124, in/latdiff.py, out_r7); regen HEAD schedule receipt on counting plan (owner TBD by COORD).
