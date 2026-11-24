@@ -6,3 +6,9 @@ Evidence of the chase (epyc10 s81-misc-serdes-j9): pair_cts ring->bin -173 clear
 - Tool epyc10 /srv/opentallas-scratch2/claude/s81-allfix-svc/frame/ring_onegroup_row.py; ops serdes_ring/SERDES-RING-ONEGROUP-ops.json 877bf1f92e06 (22 ops); plan serdes_ring/plan_ring_onegroup.json 68a0ac2ec157 (= B1 ae3101241d6b + row).
 - Group size t2 coll_i0: ring + bin 512 + lpad 3584 (r 3072 + q 512) -> one tap above OT_TAP_MAX_SINKS 1700 (cap is pinned-over by design; TAP-LIMIT is info in G0). Watch: new boundary lpad q -> u_core.
 - PRE: running (frame/ring_pre.otrun.log, serdes_ring/pre.log). Scoped strict bind serdes__t2 + serdes__t13: running (serdes_ring/scope_bind.otrun.log, out scope_bind_68a0ac2ec157). Probes next (private-spec --goal grt, wave env) on t2 + t13, read post-hook hold + launch/capture insertion per stage.
+
+## 20:46 update
+- RING bind t2+t12 (probe-only) on 68a0ac2ec157: BIND_RC=0 (epyc2 bind_ring_t2t12). Probe kits t2/t12 FAILED kit_rtl: probe-only bind has no s81_bound_top.sv -> need full die bind.
+- t13 FSTART (COORD 19:15): inherited B1 refusal; all 3 landing_local_resets raws depth 8 vs consumer depth 10. Row T13-FSTART-RESEAT a5758c3b7b83 (674->675, 554->49, 554->555, anchor rewritten); PRE PASS 0/178; strict t13-only bind RC=0. Posted INT/ASSEMBLY/OPEN-FSTART (8c98a5c5). Class (22 other types) = S81-OPEN-FSTART, not extended here.
+- Compose 72e95bb2eba7 = RING + T13 row; full strict bind running epyc2 (bind_full_ring_t13, private serdes probe bind) since 19:57. Expect refusal at other FSTART types -> then probe from c7 / OPEN-FSTART bind.
+- Tools: epyc2 /srv/opentallas-scratch3/claude/s81-allfix-svc/{t13_fstart_row.py,diag_llr.py,sbind.sh,fbind.sh}
