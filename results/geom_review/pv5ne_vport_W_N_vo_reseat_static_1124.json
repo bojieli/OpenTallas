@@ -1,0 +1,82 @@
+{
+  "input_counts": {
+    "u_bound.u_bin_i_vport_W_N_vo_p": 159,
+    "u_bound.u_vport_E.out_v_hi": 128
+  },
+  "local_reset": {
+    "u_bound.u_rrl_490": 1
+  },
+  "observed": [
+    [
+      577.989,
+      351.945
+    ],
+    [
+      578.367,
+      741.42
+    ],
+    [
+      578.043,
+      1131.03
+    ]
+  ],
+  "data_seats_um": [
+    [
+      51.84,
+      1006.5600000000001
+    ],
+    [
+      311.04,
+      1088.64
+    ],
+    [
+      453.6,
+      1308.96
+    ]
+  ],
+  "predicted_max_data_hop_um": 365.607,
+  "predicted_old_reset_hop_um": 1194.318,
+  "notes": [
+    "Projected unchanged mapped data graph and bank spreads; original reset held fixed.",
+    "Use an equivalent same-depth local raw reset before treating these seats as a release candidate."
+  ],
+  "same_role_depth11_reset_candidates": [
+    {
+      "tap": "rst_n_t110",
+      "physical_xy": [
+        25.44,
+        1009.824
+      ],
+      "from_stage_center_um": 29.664,
+      "root": "rst_root_n",
+      "role": "bootstrap"
+    },
+    {
+      "tap": "rst_n_t145",
+      "physical_xy": [
+        437.408,
+        1085.408
+      ],
+      "from_stage_center_um": 129.6,
+      "root": "rst_root_n",
+      "role": "bootstrap"
+    },
+    {
+      "tap": "rst_n_t130",
+      "physical_xy": [
+        437.408,
+        1301.408
+      ],
+      "from_stage_center_um": 23.744,
+      "root": "rst_root_n",
+      "role": "bootstrap"
+    }
+  ],
+  "represented_corridor_legs_worst_um": [
+    365.607,
+    344.088,
+    376.23,
+    361.395
+  ],
+  "represented_corridor_note": "Coordinate-only Manhattan via 4.32\u00b5m halo around W/S bank corridors, not congestion/routing capacity."
+}
