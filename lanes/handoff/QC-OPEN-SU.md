@@ -11,3 +11,5 @@ No units launched or adopted. Next if asked: su_c/stm/sc probes on C1b after its
 - 21:50 launched 6 stm/sc reps on C1-noSU 12b66c0e4829 (strict 0, LAT 1922): epyc7 QC-ALLFIX/cC/{tree,bind}, rt 70b6f0430ea9 + OT_TOOLSTALE_RT (9b19260 refused: reset gen differs from bind), gen epyc7 (epyc11 lacks plan). Units intel2 systemd runitem-<item>; specs ~/coord/autopilot/private_specs/QC-OPEN-SU/. Script intel2 /srv/opentallas-scratch2/claude/QC-OPEN-SU/probe.sh (env RT, PROBE_HOST).
 - Pre-SU2R stm/sc form. TODO: su_c x3 + stm/sc rerun on C1c+FIX3 bind (cE) when QC-ALLFIX posts strict PASS.
 - Reads: place, CTS post-hook, final 5_1_grt.odb, full-cause census -> post to QC-ALLFIX + FABLE-RC-QC.
+- 23:48 CORRECTION e37bd8b9: 23:04-23:31 place posts mixed min (hold) paths into setup; x_ctl_o q[85] test case WITHDRAWN. ALWAYS read by Path Type (scratchpad qcopensu/rpt.py). Rpts show worst per group only.
+- C1b/C1c/C1d/C1e strict failed or cancelled; epyc11 c1d/tree holds cancelled plan c2856018af83 (refresh before use).
