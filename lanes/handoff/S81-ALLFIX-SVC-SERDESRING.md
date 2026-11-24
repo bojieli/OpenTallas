@@ -16,3 +16,10 @@ Evidence of the chase (epyc10 s81-misc-serdes-j9): pair_cts ring->bin -173 clear
 ## 04:50 11-24 RESULT
 - Full strict bind 10a4edbf516b (RING on FSTART-DEPTH-B1) RC=0. Tool bug found: bind_cells.sv lacks ot_dp_rrelay_fn (ENTRY_FALL_CELLS) for pin_entry_fall serdes -> kit_rtl fails all B1 serdes kits (posted INT c7edf6f5). Private workaround: bind_full_ring_fsd_ef.
 - t2 CTS post-hook hold -644.97 (was -226): ungrouped reader_start (L198) -> grouped ring (C914). t12 hold -283 port->bin q (250/482). ONE-GROUP FAILS; next form = insertion matching, not grouping.
+
+## 11-24 05:4x R1 SELLK (job: next serdes ring form, COORD 05:0x)
+- Census posted 83f286c8: 473/473 failing ring hold eps = dsel sr (clk_t32/33) -> y (clk_t7), cross-tap; 0 same-tap.
+- RTL+gen SELLK-1 pushed main 07359c423f (8c20aed38f + schema json): clock.ring_hold.read_lockup(_types); bench rtl/test/meso/sellk 11/11 + mutant caught.
+- c9 row: epyc9 /srv/opentallas-scratch2/claude/s81-allfix-svc/c9_sellk.ops.json 1109984697f5, plan c9sellk_tree/physical/die_plan/s81/j9tail_c9sellk/p6w_sg_sellk.json ae1d2a21f59a (base c8 p6w_sg 9b25d6714339).
+- private tree c9sellk_tree (ot-tree-fork of INT amd1_tree + SELLK RTL), tools rt_sellk = rt 69de849b3da1 + SELLK (3 files).
+- PRE log s81-allfix-svc/pre_c9sellk.log; gate c9sellk_gate.sh -> gate_c9sellk/ (elab + scoped strict 11 serdes), unit oth-ubuntu-483920-1795527839.
