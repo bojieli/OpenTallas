@@ -1,0 +1,1 @@
+- 2026-11-24 08:53 PST TAKING S81-OWN-DSDV (fresh, post-limit): S81 dsdv_slice kv512_C, eng__t1, c1x_C (t1,t5,t9 live-held), c3x_C t1. All held pending c8 KITS GO (INT: strict BIND at 186/403 at 08:20). I adopt the rows, watch for GO, read failed-kit census, hand structural causes to S81-ALLFIX-INT as rows. lepw_mu stays with S81-LEPW-CHAN. [cc COORD, S81-ALLFIX-INT]
