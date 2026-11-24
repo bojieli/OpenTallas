@@ -23,3 +23,14 @@ pv running long-place kits (pv_v3n 8.2h,v4n 8.7h,v5n 7.1h,v7 9.8h,v12 4.1h)	pv	O
 kv3_sys_c private kit	sys_c	OWNERS-SWEEP	KV-D29 fork C	05:32	relaunched 05:32 FAM-KV-HUBC-SYSC-R2 kit; FAIL place PLAN before	0	gate 17:30 (fresh 0-R8 run + strict bind no skip + whole-die render)	RUNNING	-
 kv3_hub_Wi never placed (spine reset pin)	hub	LEDGER	KV-D29	05:54	GATED in D29 plan; placement probe still needed	0	gate 17:30 (fresh 0-R8 run + strict bind no skip + whole-die render)	GATED-PENDING-PROBE	WATCH
 K3g/k3e compose (Codex E8 + KV-D29)	die	CODEX-LOG 10:39	Codex + KV-D29	16:12	Codex r2 on K3g 324af451f9be no-skip: strict 0, PRE 0, G0 0, TAPOFF 0, LAT 2752/2752, BPC 0, R8=baseline; only PRECHECK TOOLSTALE. Record run k3h launch DIED 16:12 (cp cannot create file in k3h_gate_rt; wrong host log); queued behind Codex r2	10	gate 17:30 (fresh 0-R8 run + strict bind no skip + whole-die render)	RUNNING/RECORD-RUN-DIED	AT-RISK(k3h record run not live, gate 17:30)
+ALLFIX rc116/S1 SYSC-D2DOUT+S1b/S2/S3	sys_c	ALLFIX-KV.tsv	KV-ALLFIX helper KV-ALLFIX-SYSC	16:30	draft 9c5254471085 ROW-REBASING	10	first PRE 19:00	ROW-REBASING	WATCH
+ALLFIX G1 PCGUTKEEP b79196b9e7f1	pc	ALLFIX-KV.tsv	KV-ALLFIX (A1 compose)	16:30	rebased by FABLE-OPEN-KV, COMPOSING A1	10	first PRE 19:00	COMPOSING	WATCH
+ALLFIX G3 PCPO3 af31ff23f995	pc	ALLFIX-KV.tsv	KV-ALLFIX (A1 compose)	16:30	rebased, COMPOSING A1	10	first PRE 19:00	COMPOSING	WATCH
+ALLFIX rc118 G2 pcc seam (PCGROW)	pc	ALLFIX-KV.tsv	KV-ALLFIX + FABLE-OPEN-KV	16:30	REASONED-OPEN pending probe A seam read	10	probes 21:30	REASONED-OPEN	WATCH
+ALLFIX x10 TAPOFF	die	ALLFIX-KV.tsv	KV-ALLFIX	16:30	recomputed per compose; COMPOSING A1	10	first PRE 19:00	COMPOSING	WATCH
+ALLFIX TAPGRID pv_v3e split 53fa112e543f	pv	ALLFIX-KV.tsv	KV-ALLFIX + TAP-GRID	16:30	PRE 0 (TAP-GRID), COMPOSING A1	10	first PRE 19:00	COMPOSING	-
+ALLFIX TAPGRID pv_v1n split 1a910f00e69b	pv	ALLFIX-KV.tsv	KV-ALLFIX + TAP-GRID	16:30	SCHEMA x3 findings, PARTIAL 2 over; COMPOSING A1	10	first PRE 19:00	COMPOSING	AT-RISK(schema findings)
+ALLFIX hub_C HUBC-E2 c95f773d3e97	hub	ALLFIX-KV.tsv	KV-ALLFIX helper	16:30	ROW-REBASING	10	first PRE 19:00	ROW-REBASING	WATCH
+ALLFIX hub_C H2/H3/H4 (reset leaf_clusters, seq->bout E station)	hub	ALLFIX-KV.tsv	KV-ALLFIX helper	16:30	ROW-BUILDING, no sha	10	first PRE 19:00	ROW-BUILDING	AT-RISK(no sha)
+ALLFIX 18 other rows (rc118-128, x8, x15, hg-*)	multi	ALLFIX-KV.tsv	KV-ALLFIX	16:39	IN-BASE K3g 324af451f9be (PRE/strict0/LAT/G0 PASS)	0	gate 17:30 (k3h3)	IN-BASE	-
+D29 k3h3 gate (unit kv-d29-k3h3-1123, plan K3g)	die	KV-D29 16:25/16:31	KV-D29	16:31	k3h3 on rt 70b6f0430ea9 running (start 16:24); rt/current moved to 7f184148a02e so TOOLSTALE 4 files; KV-D29 rules keep running (veto-able)	15	gate 17:30	RUNNING	AT-RISK(TOOLSTALE residual)
