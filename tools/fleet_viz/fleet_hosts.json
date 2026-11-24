@@ -1,5 +1,5 @@
 {
-  "_comment": "ssh alias -> internal name (default view) and share-safe label (?safe=1). 'ssh': null means the coordinator itself. Regions inferred 2026-10-08 from RTT (EPYC1/2 twins 0.15 ms apart, 247 ms from EPYC3). Edit lat/lon here if a site moves. Updated 2026-10-24: fleet rebuilt; aliases epyc1(tender-ray, new) epyc2=ot-epyc9 epyc3=ot-epyc7 intel1=ot-gold1 intel2=ot-gold2. 2026-10-25: AGIdock ot-exp128 VM deleted (owner), PVE1 VM stopped/host to be freed -- both removed. | WEBVIEW-1 2026-11-03: live fleet = intel1 (key-cardinal), intel2 (tolerant-swine, hub), epyc2 (dear-crayfish), epyc4 (aware-parakeet, EPYC 9754 256T/755G, region inferred from 160 ms RTT vs 53 ms Chicago); epyc1 (retired 10-27) and epyc3/ot-epyc7 (retired 10-25) removed. ids = the names kit-wave / ot-run use. MONITOR-FIX 2026-11-06: added epyc5 (devoted-wren, Stockholm) + epyc6 (eager-sunfish, Siauliai); hosts in the ot-run HOSTS list but not here now appear by themselves (fleet_discover.py, <state>/fleet_hosts_auto.json).",
+  "_comment": "ssh alias -> internal name (default view) and share-safe label (?safe=1). 'ssh': null means the coordinator itself. Regions inferred 2026-10-08 from RTT (EPYC1/2 twins 0.15 ms apart, 247 ms from EPYC3). Edit lat/lon here if a site moves. Updated 2026-10-24: fleet rebuilt; aliases epyc1(tender-ray, new) epyc2=ot-epyc9 epyc3=ot-epyc7 intel1=ot-gold1 intel2=ot-gold2. 2026-10-25: AGIdock ot-exp128 VM deleted (owner), PVE1 VM stopped/host to be freed -- both removed. | WEBVIEW-1 2026-11-03: live fleet = intel1 (key-cardinal), intel2 (tolerant-swine, hub), epyc2 (dear-crayfish), epyc4 (aware-parakeet, EPYC 9754 256T/755G, region inferred from 160 ms RTT vs 53 ms Chicago); epyc1 (retired 10-27) and epyc3/ot-epyc7 (retired 10-25) removed. ids = the names kit-wave / ot-run use. MONITOR-FIX 2026-11-06: added epyc5 (devoted-wren, Stockholm) + epyc6 (eager-sunfish, Siauliai); hosts in the ot-run HOSTS list but not here now appear by themselves (fleet_discover.py, <state>/fleet_hosts_auto.json). | EPYC11-ONBOARD-FINISH 2026-11-23: removed terminated epyc4/epyc5/epyc6 (never ssh to terminated hosts); epyc11 joins via ot-run HOSTS discovery.",
   "regions": {
     "onprem": {
       "label": "On-prem",
@@ -63,36 +63,12 @@
       "region": "chicago"
     },
     {
-      "id": "epyc5",
-      "name": "EPYC5",
-      "ssh": "epyc5",
-      "label": "EPYC-STO-5",
-      "kind": "1x EPYC 9554P (128T, 755 GB)",
-      "region": "stockholm"
-    },
-    {
-      "id": "epyc6",
-      "name": "EPYC6",
-      "ssh": "epyc6",
-      "label": "EPYC-LT-6",
-      "kind": "1x EPYC 9554P (128T, 755 GB)",
-      "region": "siauliai"
-    },
-    {
       "id": "localhost",
       "name": "localhost",
       "ssh": null,
       "label": "COORDINATOR",
       "kind": "Coordinator + RTX PRO GPU",
       "region": "onprem"
-    },
-    {
-      "id": "epyc4",
-      "name": "EPYC4",
-      "ssh": "epyc4",
-      "label": "EPYC-EU-4",
-      "kind": "1x EPYC 9754 (256T, 755 GB, 7 TB scratch)",
-      "region": "europe"
     }
   ]
 }

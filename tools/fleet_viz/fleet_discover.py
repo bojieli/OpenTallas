@@ -14,7 +14,10 @@ STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.lo
 AUTO = STATE / 'fleet_hosts_auto.json'
 SSH = ['ssh', '-n', '-T', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', '-o', 'ControlPath=none']
 # ~/.local/bin/ot-run is a wrapper that execs the released script (or, in older installs, the script itself)
+# EPYC11-ONBOARD-FINISH 11-23: the 11-22 wrapper execs "$(readlink -f <rt>/tools/fleet/ot-run)" "$@"; the old sed missed it, so
+# discovery read no HOSTS line and new hosts (epyc11) never joined the monitor.  Fallback: the first absolute */ot-run path on the exec line.
 READ_HOSTS = (r'''f=$HOME/.local/bin/ot-run; g=$(sed -n 's/^exec .*python3 \(.*ot-run\) .*/\1/p' "$f"); '''
+              r'''[ -n "$g" ] || g=$(grep '^exec ' "$f" | grep -o '/[^ "()$]*/ot-run' | head -1); '''
               r'''grep -m1 '^HOSTS = ' "${g:-$f}"''')
 PROBE = "lscpu | sed -n 's/^Model name: *//p' | head -1; lscpu | sed -n 's/^Socket(s): *//p'; nproc; sed -n 's/^MemTotal: *\\([0-9]*\\).*/\\1/p' /proc/meminfo"
 

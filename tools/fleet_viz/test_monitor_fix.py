@@ -28,6 +28,15 @@ class Hosts(unittest.TestCase):
             out = __import__('subprocess').run(['sh', '-c', F.READ_HOSTS], env=dict(os.environ, HOME=d), capture_output=True, text=True).stdout
             self.assertEqual(F.parse_hosts_line(out), ['a', 'localhost'])
 
+    def test_read_command_follows_readlink_wrapper(self):
+        # EPYC11-ONBOARD-FINISH 11-23: wrapper form exec /usr/bin/python3 "$(readlink -f <rt>/tools/fleet/ot-run)" "$@"
+        with tempfile.TemporaryDirectory() as d:
+            b = pathlib.Path(d, '.local/bin'); b.mkdir(parents=True); rel = pathlib.Path(d, 'rt/tools/fleet/ot-run'); rel.parent.mkdir(parents=True)
+            rel.write_text('HOSTS = ["epyc10", "epyc11"]\n')
+            b.joinpath('ot-run').write_text('#!/bin/sh\n# HOSTS here is a comment\nexec /usr/bin/python3 "$(readlink -f %s)" "$@"\n' % rel)
+            out = __import__('subprocess').run(['sh', '-c', F.READ_HOSTS], env=dict(os.environ, HOME=d), capture_output=True, text=True).stdout
+            self.assertEqual(F.parse_hosts_line(out), ['epyc10', 'epyc11'])
+
     def test_missing_matches_id_or_alias(self):
         cfg = [dict(id='a', ssh='a'), dict(id='hub', ssh='ot-hub'), dict(id='localhost', ssh=None)]
         self.assertEqual(F.missing_hosts(cfg, ['a', 'ot-hub', 'new']), ['new'])
