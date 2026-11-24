@@ -13,7 +13,13 @@ module ot_s81hd_host276_tx #(parameter integer MUT_HIGH=0,parameter integer IDLE
  output wire[275:0] lane,output wire fault
 );
  wire[552:0] body=frame ^ (MUT_HIGH ? (553'd1<<552) : 553'd0);
- ot_s81hd_beat_tx #(.W(553),.N(3),.P(273),.IDLE_ZERO(IDLE_ZERO),.HOLD_REAL(HOLD_REAL),.HOLD_RST(HOLD_RST)) u_tx(
+`ifdef OT_S81HD_CTL_HOLD_WRITE_FACTOR
+ localparam integer HOLD_WRITE_FACTOR = 1;
+`else
+ localparam integer HOLD_WRITE_FACTOR = 0;
+`endif
+ ot_s81hd_beat_tx #(.W(553),.N(3),.P(273),.IDLE_ZERO(IDLE_ZERO),.HOLD_REAL(HOLD_REAL),.HOLD_RST(HOLD_RST),
+                   .HOLD_WRITE_FACTOR(HOLD_WRITE_FACTOR)) u_tx(
   .ck(ck),.rn(rn),.v(v),.d(body),.o(lane),.fault(fault));
 endmodule
 module ot_s81hd_host276_rx(

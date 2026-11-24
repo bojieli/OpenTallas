@@ -48,7 +48,10 @@ module ot_s81hd_beat_tx #(
     // and a start loads it, so every word, beat, latency and fault is identical; only the power-up X of hold is gone.
     // Hold bits whose data is a structural constant of the caller (host276 frame pad / constant fields) then hold that
     // constant from reset instead of X until the first word, so synthesis and a register-mapped LEC agree on them.
-    parameter integer HOLD_RST = 0
+    parameter integer HOLD_RST = 0,
+    // Opt-in for a wide serializer. Factor the held-data enable from its load/shift select
+    // so the high-fanout hold bank does not depend on both the start and owe decodes.
+    parameter integer HOLD_WRITE_FACTOR = 0
 ) (
     input  wire                 ck,
     input  wire                 rn,          // control-only reset, active low
@@ -82,14 +85,21 @@ module ot_s81hd_beat_tx #(
         always @(*) begin swp = wp; swp[P-1:0] = b1; swp[2*P-1:P] = b0; end
         wire [NP-P-1:0] hold_ld = (MUT == 1) ? swp[NP-1:P] : wp[NP-1:P];
         wire [NP-P-1:0] hold_sh = hold_x >> P;
+        wire hold_busy = owe != 0;
+        wire hold_write = hold_busy || v;
+        wire [HW-1:0] hold_data = hold_busy ? hold_sh[HW-1:0] : hold_ld[HW-1:0];
         if (HOLD_RST != 0) begin : g_hr
             always @(posedge ck or negedge rn)
                 if (!rn) hold <= {HW{1'b0}};
-                else if (start) hold <= hold_ld[HW-1:0];
+                else if (HOLD_WRITE_FACTOR != 0 && MUT != 3) begin
+                    if (hold_write) hold <= hold_data;
+                end else if (start) hold <= hold_ld[HW-1:0];
                 else if (owe != 0) hold <= hold_sh[HW-1:0];
         end else begin : g_hn
             always @(posedge ck)
-                if (start) hold <= hold_ld[HW-1:0];
+                if (HOLD_WRITE_FACTOR != 0 && MUT != 3) begin
+                    if (hold_write) hold <= hold_data;
+                end else if (start) hold <= hold_ld[HW-1:0];
                 else if (owe != 0) hold <= hold_sh[HW-1:0];
         end
         always @(posedge ck) begin
