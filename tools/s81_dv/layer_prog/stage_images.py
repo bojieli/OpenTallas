@@ -62,7 +62,11 @@ def die72(cache):
         m = re.fullmatch(r'f_(\d)([LR])(\d)(\d)', n)
         c, t, r = int(m.group(1)), int(m.group(3)), int(m.group(4))
         return c < nc and (c, m.group(2)) not in drop and not (t == 0 and r == 0) and not n.endswith('11')
-    die = C.Die(C.die_tree(C.DIE_REF, None, cache=cache))
+    # ONE die ref per build: resolved once (or OT_S81_DIE_SHA), inherited by every worker; main moves under a run
+    if not os.environ.get('OT_S81_DIE_SHA'):
+        import subprocess
+        os.environ['OT_S81_DIE_SHA'] = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', C.DIE_REF], text=True).strip()
+    die = C.Die(C.die_tree(os.environ['OT_S81_DIE_SHA'], None, cache=cache))
     gone = {b['name'] for b in die.plan['blocks'] if (b['kind'] == 'frame' and not keep(b['name']))
             or (b['kind'] == 'slice' and int(b['name'][2]) >= nc)}
     die.plan['blocks'] = [b for b in die.plan['blocks'] if b['name'] not in gone]
@@ -173,7 +177,7 @@ def cmd_build(a):
     man = dict(schema=SCHEMA, stage=meta['stage'], rank=meta['rank'], spec=meta['spec'], fixture=str(fixd),
                fixture_manifest_sha256=sha((fixd / 'manifest.sha256').read_bytes()), stage_map=meta['stage_map'],
                env={k: os.environ.get(k) for k in sorted(mapdoc['verdict']['env']) + ['OT_XS_DENSE_SPLIT2', 'OT_XS_DENSE_SPLIT2_ROWS']},
-               inventory_sha256=h, x_policy=meta['x_policy'], frames={r['frame']: r for r in recs},
+               die_sha=os.environ['OT_S81_DIE_SHA'], inventory_sha256=h, x_policy=meta['x_policy'], frames={r['frame']: r for r in recs},
                images=sum(len(r['images']) for r in recs), faults=sum(r['faults'] for r in recs),
                max_fill=max(r['max_fill'] for r in recs), sources={f: sha((ROOT / f).read_bytes()) for f in (
                    'tools/s81_dv/layer_prog/stage_images.py', 'tools/s81_dv/layer_prog/stage_fixtures.py',
