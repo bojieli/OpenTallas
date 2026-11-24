@@ -1,0 +1,5 @@
+# HEAD spine r18gw attempt 2, November 24
+
+**BAD for new route.** Viewed the exact epyc10 attempt_2 placement. The exploratory route reaches zero overflow and the vertical demand estimate falls to 0.512. Dense landing banks remain at both ends and primary clock taps t37 and t34 carry 2,501 and 2,190 sinks. The separate station-only scan is blind to two internal status paths. The BW face-ready/fault pair travels inward to u_cland_agg_1 over 548.83/550.07 µm. [Exact placement](hd_spn_r18gw_a2_place_1124.png)
+
+Move u_cland_agg_1 from (394.111, 1027.215) µm to (302.4, 941.76) µm. This coordinate balances both face inputs and the next aggregation point. Simply shifting west overloads the BE path. The chosen rectangle clears existing emitted groups. All 34,161 captures were re-evaluated on the same mapped graph and projected layout, giving 0 over 405 µm with a worst hop of 381.73 µm. Boot cycles, mission cycles and reset sources stay fixed. Read exact placement again after the private test. [Viewed draft](hd_spn_status_reseat_1124.png) · [Guarded coordinate operation](row_hd_spn_status_reseat_1124.json)

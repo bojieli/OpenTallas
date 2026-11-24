@@ -1,0 +1,68 @@
+{
+  "status": "geometry draft, projected on retained exact netlist; requires fresh placement",
+  "plan_sha256": "014661a6ea33e7a63f6c78097a5d861b5d4a8d40d75040c34eceb02674879e33",
+  "operations": [
+    {
+      "path": "partition_types.hd_spn.clock.landing_status_anchors.u_cland_agg_1",
+      "old": [
+        394.111,
+        1027.215
+      ],
+      "new": [
+        302.4,
+        941.76
+      ]
+    }
+  ],
+  "cycles": {
+    "mission": 0,
+    "boot_added_by_row": 0
+  },
+  "shifted_placed_instances": 27,
+  "baseline_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 550.07,
+    "r2r_captures_gt405": 2,
+    "r2r_captures": 34161,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_cland_face_fault_bw_i/q$_DFF_P_ -> u_cland_agg_1/fault_o$_SDFF_PN0_"
+  },
+  "baseline_fails": [
+    {
+      "distance_um": 548.829,
+      "launch": "u_cland_face_ready_bw_i/q$_DFF_P_",
+      "capture": "u_cland_agg_1/ready_o$_SDFF_PN0_",
+      "launch_xy": [
+        6.237,
+        863.595
+      ],
+      "capture_xy": [
+        392.52599999999995,
+        1026.135
+      ]
+    },
+    {
+      "distance_um": 550.071,
+      "launch": "u_cland_face_fault_bw_i/q$_DFF_P_",
+      "capture": "u_cland_agg_1/fault_o$_SDFF_PN0_",
+      "launch_xy": [
+        6.075,
+        864.9449999999999
+      ],
+      "capture_xy": [
+        395.226,
+        1025.865
+      ]
+    }
+  ],
+  "projected_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 381.73,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 34161,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_rst_in/q$_DFF_P_ -> u_rrl_218/q$_DFF_P_"
+  }
+}
