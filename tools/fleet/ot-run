@@ -283,9 +283,15 @@ PIN_FALLBACK = [False]
 # HARD-PIN-1122 (COORD 11-22 23:4x, two rc-127 deaths in one night): a job that names --hosts depends on what is on those hosts (its kit dir,
 # its script, its tree).  SLWSLE sle_su_l1 geom (--hosts epyc8, epyc8 scratch 99 < 100 GB floor) PIN-FALLBACK'ed to epyc2, which has no kit dir:
 # geom_check.sh rc 127.  QC-COLL-R3 LEC r4 (--hosts epyc10 --stage ...) was PIN-SPILL widened after 30 min and ran on epyc2: rc 127.  Rule: --hosts
-# is a hard pin.  No PIN-FALLBACK, no PIN-SPILL, no OVERLOAD pinned spill; a pinned job the pinned hosts refuse now (disk floor, unreachable probe,
+# is a hard pin [11-24: except the disk-ETA ETA-STAGE move, see the docstring; OT_RUN_NO_SPILL=1 / --no-spill = hard].  No PIN-FALLBACK, no PIN-SPILL, no OVERLOAD pinned spill; a pinned job the pinned hosts refuse now (disk floor, unreachable probe,
 # memory) WAITS and re-places on them (PIN-WAIT), it never runs elsewhere and never files NOT RUN for a transient refusal.  A host list
 # (--hosts a,b,c) stays a set of alternatives (MULTIHOST-SPILL inside the list).  OT_RUN_SOFT_PIN=1 = the old fallback / pin-spill behaviour.
+#
+# PIN-DOC-1124 (COORD 11-24 ruling; the help text above is hash-pinned by test_ot_run_shell_guard, so this note lives here):
+# --hosts IS A PLACEMENT PREFERENCE, NOT A HARD PIN.  A job held on its --hosts host by a disk-ETA hold is staged to another
+# host after OT_RUN_ETA_STAGE_AFTER_S (ETA-STAGE: its --dir / --stage paths copied, outputs copied back); STAGE-REFS-1124
+# refuses such a move when a path the job names outside the copied paths is missing or empty there.  A job that must run
+# only on its --hosts sets OT_RUN_NO_SPILL=1 (or passes --no-spill): then nothing moves it (eta_stage_allowed).
 PIN_WAITED = [False]
 
 
@@ -2978,7 +2984,7 @@ def main():
             # FLOW-OPS-1000 (FABLE-FLOW-1000 d: 4 lanes waited 20-60 min behind epyc10's disk-ETA hold while epyc7 had 429-529 GB free): after
             # ETA_STAGE_AFTER_S the job's --dir (or its --stage paths) is staged to a host that admits it now, through the existing spill /
             # AUTOSTAGE path (same path there, marked copy, outputs copied back).  The hold itself is unchanged: nothing is written to the full disk.
-            if d and not pick and ETA_STAGE_AFTER_S >= 0 and _el >= ETA_STAGE_AFTER_S and not eta_stage_tried:
+            if d and not pick and eta_stage_allowed(no_spill_requested) and _el >= ETA_STAGE_AFTER_S and not eta_stage_tried:
                 eta_stage_tried = True
                 src = next((h for h in eta_held if h in raw), next(iter(eta_held)))
                 plan, why, permanent = spill_plan(src, d, cmd, mem, threads, die, disk, held, say, now=T_START + max(AUTOSTAGE_AFTER_S, 0) + _el)
@@ -3744,6 +3750,12 @@ def spill_dest_rows(h, roots, bases):
         got = [r for r in (probe(h, l, spill_ok=True)[1] for l in lanes if l.startswith(b + "/")) if r and not r.get("error")]
         rows += got or [probe(h, b)[1]]
     return rows
+
+
+def eta_stage_allowed(no_spill_requested, env=None):
+    """PIN-DOC-1124 (COORD ruling): ETA-STAGE may move a --hosts job off a disk-ETA held host; OT_RUN_NO_SPILL=1 or --no-spill makes the pin hard"""
+    env = os.environ if env is None else env
+    return ETA_STAGE_AFTER_S >= 0 and not no_spill_requested and not env.get("OT_RUN_NO_SPILL")
 
 
 ETA_STAGE_AFTER_S = int(os.environ.get("OT_RUN_ETA_STAGE_AFTER_S", "600"))   # FLOW-OPS-1000: a disk-ETA held --dir job is staged elsewhere after this wait (-1 off)
