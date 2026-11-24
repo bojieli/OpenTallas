@@ -11,3 +11,5 @@ The attention TX valid path remains a broader D2D region problem. The max exact 
 - [Viewed draft seat sketch](kv_sys_c_reseat_1124.png)
 - [Exact moved instance list and predicted graph bounds](kv_sys_c_perbit_reseat_1124.json)
 - [Original placed evidence](kv_a5t3_pv_v3ne_sys_c_1124.md)
+
+The E11 trial waited on CPU admission and started no payload. Its queue entry was stopped and checked for an active scope. Intel1 unit `oth-ubuntu-4161057-1795533417` is the active placement-only trial under `/srv/opentallas-scratch3/claude/ot-jobs/kv-sys-c-boot-oobs-1124`; the copied source plan and synth ODB hashes match, and initial kit preflight passed.
