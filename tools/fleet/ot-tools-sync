@@ -779,14 +779,19 @@ def sync(sha, hosts=True, tests=True):
         with open(RT / "history.log", "a") as f:
             f.write(f"{now().isoformat(timespec='seconds')} hub current {prev or '-'} -> {name} ({full})\n")
     notes = []
+    updated_hosts = []
     if hosts:
         def _rec(h, ok, skipped, note):
+            if ok:
+                updated_hosts.append(h)
             with open(RT / "history.log", "a") as f:
                 f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else ('SKIPPED (low disk) ' + note[5:] if skipped else 'FAILED ' + note)}\n")
         notes = sync_hosts(name, prev if prev and prev != name else "", record=_rec)
     try:
         man_now = json.loads((RT / f"{name}.manifest.json").read_text()).get("files", {})
-        diffs = installed_diffs(man_now) if hosts else []
+        # A deliberately skipped host keeps its previous runtime. Compare only
+        # the hub and hosts that were expected to adopt this snapshot.
+        diffs = installed_diffs(man_now, hosts=updated_hosts) if hosts else []
     except Exception as e:
         diffs = [f"installed-tools check failed: {type(e).__name__}: {e}"]
     if diffs:

@@ -311,12 +311,33 @@ class PruneRefs(unittest.TestCase):
         self.assertIn(names[0], gone)
 
 
-class LowDiskHostIsAWarning(unittest.TestCase):
-    def test_low_disk_note_is_a_skip_and_the_sync_still_exits_0(self):
-        src = open(P).read()
-        self.assertIn('return False, f"SKIP {hf:.0f} GB free', src)
-        self.assertIn('":SKIP " in n', src)
-        self.assertIn("WARNING {h} skipped", src)
+def test_sync_checks_updated_hosts_but_not_deliberate_low_disk_skips(tmp_path):
+    m = Guard.load(Guard())
+    full = "a" * 40
+    name = full[:12]
+    m.RT = tmp_path
+    m.log = lambda message: None
+    m.git = lambda *args, **kwargs: full
+    m.current = lambda: name
+    m.materialize = lambda sha: tmp_path / name
+    (tmp_path / f"{name}.manifest.json").write_text('{"files": {}}')
+
+    def sync_hosts(name, previous, record):
+        record("epyc8", False, True, "SKIP 46 GB free")
+        record("epyc9", True, False, "ok")
+        return ["epyc8:SKIP 46 GB free", "epyc9:ok"]
+
+    def no_drift(files, hosts):
+        assert hosts == ["epyc9"]
+        return []
+
+    m.sync_hosts = sync_hosts
+    m.installed_diffs = no_drift
+    assert m.sync(full) == 0
+    assert "epyc8 SKIPPED (low disk) 46 GB free" in (tmp_path / "history.log").read_text()
+
+    m.installed_diffs = lambda files, hosts: ["epyc9: installed ot-run differs"]
+    assert m.sync(full) == 4
 
 
 def test_hosts_are_pushed_in_parallel_with_one_result_line_each():
