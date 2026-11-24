@@ -1,0 +1,1 @@
+- 2026-11-23 21:50 PST TAKING SCOPED-BIND-NONEMIT from FLOW-OPS: scoped bind (SCOPE_TYPES) non-emitted-type errors -> WARN-OUT-OF-SCOPE. cc FLOW-OPS
