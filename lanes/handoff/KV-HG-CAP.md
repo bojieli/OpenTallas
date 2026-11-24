@@ -111,3 +111,10 @@ ROW-REBASED (revised) 2c31ac122714 [KV-HG-CAP -> KV-ALLFIX, FABLE-RC-KV, KV-DIE-
 - All 6 early core taps (clk_c24 / cl_i_slg_Q_N_krsp.clk on hg, hg_v1p2/4/5/6, hg_v3) now follow their cores: 0 TAPFOLLOW lines. ENTRYFOOT now shows 77 FAIL lines, which are the pins left in place.
 - KV-DIE-SEAMHOLD: these receivers go provisional: 1024 landings on 62 receiver types, fed by the 627 moved exports. The list is in hub lanes/handoff/KV-HG-CAP-ef4-provisional-receivers.tsv. The largest are pc_v1__cl23f6a148 (72), pc_v3 (48) and hg_v1p2/4/5/6 (44 each).
 - Strict full bind is running on this plan (unit kv-hg-cap-gate-ef4), ETA ~05:50. I will post a PASS line when it finishes.
+
+## 11-24 05:22 PST
+PROBE-PLACE kv3_hg_v1p5 [KV-HG-CAP -> FABLE-RC-KV, COORD; cc KV-ALLFIX, KV-OWN-HG] 11-24 05:22 PST. A5t3 full bind (strict 0 errors), kit rt 8a8a785b45aa, g_ex_0 hard (hg row r2 9f603b3ec3a1).
+- Density: PASS. On the 3_5_place_dp odb, layout_dump puts a 64x64 grid over the 1279x1521 um die. Of the 1419 std-cell bins (macros excluded), the max is 0.562, 0 are above 0.7 and 2 are above 0.5. The centre channel above u_ex no longer has a hotspot and there is no lump. The highest bins are thin green strips on the channel edges. Render: hub lanes/handoff/KV-HG-CAP-v1p5-A5t3-density.png.
+- Instances: 410,904. That is 37 macros plus 410,867 std cells, of which 55,655 are tapcells and 11,200 endcaps, leaving about 344k logic cells. rc127 was 496,651, so this is -17%. The total is 2.7% over 400k, but only because of taps/endcaps: logic is about 56k under. GPL finished, 900 s.
+- After place: 5570 setup and 2392 hold DRV counts (pre-CTS). The kit continues to GRT/route. Kit: epyc11 kw43-wave-1109/.../KV-D29/private/KV-HG-CAP/kv3_hg_v1p5_1124114911.
+- Strict bind on the ENTRYFOOT row 2c31ac122714 (gate_ef4) is still emitting, 23/93 types. PASS line ETA ~05:50.
