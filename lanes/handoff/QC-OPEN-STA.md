@@ -39,3 +39,9 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - PRE/G0 r3..r8 ran on the bare kw45 tree: RERUN on the overlaid tree (now sha256-equal to cC in rtl/tools/runtime/bind). gate.sh installs its PLAN into tree: never run it while bindS is live.
 - r6->r7 tapfix: dropped 6 added taps (cl67389ecd 1, cl18eece69 1, cled 1, clb036 1, clfc x2 1 each), tap_offset st_a rows 207 removed, 0 filled.
 - Live: bindS unit oth-ubuntu-2693179-1795505578 (epyc7). tapfix.sh rm -f'd own zz_opensta_* temp plans in launch plan_of_record and tmp_r8.json in lane root (own files, but outside the tmp dir: use ot-delete there next time).
+
+## 11-24 00:25 PST  (supersedes everything above on r8)
+- COORD 00:1x: QC-OPEN-STA owns 8 DEAD-OWNER st_a rows (table posted). Order: re-floor row clears -> bind on C1g 96cce77c1e2f (epyc7 QC-ALLFIX/rows_c/c1g.json, strict running cF) -> probe the 8 on rt c660+ at goal grt.
+- r1-r8 RETRACTED: SITEGRID FAIL 11/11 types, overlapping exact sites, relay_sites up to 149 flops on one point; raw reset hops up (post-re-pick result pending rep/rr_*.txt, unit oth-ubuntu-3593135-1795507956). bindS cancelled.
+- r9: rows/legal.py on plan_sta_r6 -> plan_sta_r9a (log epyc8 QC-OPEN-STA/r9.ot) -> tapfix.sh -> r9 -> reset anchor/reach -> compose_probe.py onto C1g -> PRE c660 + G0 -> strict bind. Tapped-out checks: sitecheck.py, dups.py, site_grid.py, rreach.py.
+- TAP_OFFSET: tapfix removes 207 st_a rows, fills 0: still open.
