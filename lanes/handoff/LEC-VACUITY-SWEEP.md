@@ -8,8 +8,9 @@ Job: find every LEC/equivalence pass claimed since 11-22 that used a vacuous met
 - => no shared script on main is vacuous; step 4 (fix on main) not needed.
 - KVLEAF t2 masters (11): all lec.py. Negative controls (seeded inverted PO bit, same scripts/mounts, my dirs):
   - ikw (epyc9 neg/lec/ikw_neg): NOT EQUIVALENT, differs 1 = po:o_d[137] (the seeded bit), 43124 proved. PASS.
-  - kvq (intel1 neg/lec/kvq_neg, seeded e_o_e[0]): running
-  - ikr (epyc9 neg/lec/ikr_neg, seeded r_d[0], hints + overlays as ikr_p1h4): running
+  - kvq (intel1 neg/lec/kvq_neg): NOT EQUIVALENT, differs 1 = po:e_o_e[0], 15509 proved. PASS.
+  - ikr (epyc9 neg/lec/ikr_neg, hints + overlays as ikr_p1h4, inputs identical but netlist): NOT EQUIVALENT, differs 1 = po:r_d[0], 30153 proved. PASS.
+
 - Side finding: ikw 6_final.v and logic_final_m5.v have 527 of 544 outputs both cell-driven (net named as the port) and `assign port = \port..NNNN` (output buffer chain) = writer name collision; LEC sees the INV driver and bypasses the output-buffer/hold chain.
 ## Files
 - mutator: epyc9+intel1 /srv/opentallas-scratch2/claude/LEC-VACUITY-SWEEP/mutate_po.py
