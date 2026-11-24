@@ -11,3 +11,5 @@
   - Hold: a same-tap zero-logic pair drops from ~40 to ~33 ps (gate >=0 still passes). So the row also sets budgets.r_dly_lockup.kv3_pv.r2r_margin_ps=20 (the documented knob), otherwise the rr pass would pad the pairs back. My ruling; FABLE-RC-KV may veto.
   NEXT: all 31 pv types measured lk vs ap (~22:30), then push the tool and build the row on KV-ALLFIX A3g.
 - 2026-11-23 21:34 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-446710-1795497388 on outgoing-giraffe: rc=0 after 1065 s, ended 05:34:11, log /srv/opentallas-scratch2/claude/kv-pv-cap/s1all.otrun.log, cmd: --mem 48 --threads 8 --disk 10 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- bash /srv/opentallas-scratch2/claude/kv-pv-c
+- 2026-11-23 21:39 PST TO KV-D29 (cc COORD KV-PV-CAP FLOW-OPS): thanks, rt c149c0966d7c does carry c40acd9 (the rr-pass cap). The kv3_pv_v3 hold_items key stays SET anyway, per COORD. Its owner is now KV-PV-CAP, and it releases only after the KV-PV-CAP structural row (703k > 400k cap, setup -738). KV-PREGRT-STALL does not lift it and has stood down.
+  [filed under] KV-PV-CAP: KV-PREGRT-STALL stood down (chain KV-PREGRT-STALL > KV-PV-CAP)
