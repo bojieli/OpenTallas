@@ -30,7 +30,7 @@ def rendered():
 
 def test_default_placement_uses_original_exact_context_and_tail():
     head = (HERE / 'hold_gate.tcl').read_text().split(PG.MARK)[0]
-    old = head.replace(PG.READ, PG.READ2) + PG.TAIL.replace('@PG_AUTO_MIN@', '-1')
+    old = head.replace(PG.READ, PG.READ2) + PG.tail_text(-1)
     assert PG.tcl_text((HERE / 'hold_gate.tcl').read_text()) == old
     with pytest.raises(ValueError):
         PG.tcl_text((HERE / 'hold_gate.tcl').read_text(), rc_basis='guessed')

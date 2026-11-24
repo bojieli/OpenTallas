@@ -289,6 +289,24 @@ proc pg_repair_hold {tag margin insts} {
   return 0
 }
 set pg_rr_guard [expr {[info exists ::env(OT_HOLD_SETUP_GUARD_PS)] && [string is double -strict $::env(OT_HOLD_SETUP_GUARD_PS)] ? $::env(OT_HOLD_SETUP_GUARD_PS) : -42.0}]
+# HOLD-PAD-FLOW 11-24: PLANNED HOLD PAD (hold_pad.tcl, inlined below).  Mode (baked at gen from OT_PREGRT_HOLD_PAD, run-time env wins):
+#   rr  (default) the reg-to-reg family-margin pass pads instead of searching (it is the pass that stalled: QC 8 kits 2.5 h at iteration 0),
+#       and an all / cross-tap pass whose repair_timing stopped short of its margin gets one planned pad on the residual;
+#   all every pass pads, repair_timing -hold is not called;
+#   0   repair_timing -hold only (the form before this rule).
+# A pad tool error falls back to repair_timing for that pass.  The TT setup headroom check is per endpoint (ot_hold_pad), the
+# whole-build accept test (pg_verdict) and the rr setup guard stay as they are.
+@PG_HOLD_PAD_PROCS@
+set pg_pad_mode [expr {[info exists ::env(OT_PREGRT_HOLD_PAD)] && $::env(OT_PREGRT_HOLD_PAD) in {0 rr all} ? $::env(OT_PREGRT_HOLD_PAD) : "@PG_HOLD_PAD@"}]
+proc pg_pad_on {tag} { expr {$::pg_pad_mode eq "all" || ($::pg_pad_mode eq "rr" && $tag eq "rr")} }
+proc pg_pad_pass {tag ps margin insts} {
+  if {[catch {ot_hold_pad ${tag}$ps $margin 0 [file dirname [file normalize [info script]]]} n]} {
+    puts "OT_PREGRT_FF_HOLD pad $tag $ps tool error ([lindex [split $n "\n"] 0]): repair_timing for this pass"
+    return [pg_repair_hold $tag $margin $insts]
+  }
+  return 0
+}
+puts "OT_PREGRT_FF_HOLD pad mode $pg_pad_mode"
 if {[catch {
   # (A) every hold path, ports included, to the base margin (OT_PREGRT_HOLD_PORT_MARGIN, 5): the seam contract
   #     (in_min / out_min) and same-tap pairs are padded as the GRT repair would pad them, with no route guard: port
@@ -320,7 +338,7 @@ if {[catch {
       set pg_wp [pg_hold]; set pg_np [sta::endpoint_violation_count min]
       if {$pg_wp >= $pg_mrg} break
       set pg_inst_before [llength [$pg_blk getInsts]]
-      set pg_capped [pg_repair_hold $pg_tag $pg_mrg $pg_inst_before]
+      set pg_capped [expr {[pg_pad_on $pg_tag] ? [pg_pad_pass $pg_tag $pg_ps $pg_mrg $pg_inst_before] : [pg_repair_hold $pg_tag $pg_mrg $pg_inst_before]}]
       set pg_wq [pg_hold]
       if {$pg_capped} {
         set pg_added [expr {[llength [$pg_blk getInsts]] - $pg_inst_before}]
@@ -334,6 +352,11 @@ if {[catch {
       puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_mrg[expr {$pg_tag eq {xt} ? " + cross-tap $pg_dg" : {}}] wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
       # lever 3: a pass that still removes >= 5 % of the violating endpoints is progress, whatever the worst endpoint does
       if {$pg_wq >= $pg_mrg || ($pg_wq - $pg_wp < 1.0 && [sta::endpoint_violation_count min] > 0.95 * $pg_np)} break
+    }
+    if {$pg_pad_mode eq "rr" && $pg_tag ne "rr" && [pg_hold] < $pg_mrg} {
+      puts "OT_PREGRT_FF_HOLD pass $pg_tag stopped at [pg_hold] < margin $pg_mrg: planned pad on the residual"
+      pg_pad_pass ${pg_tag}_res "" $pg_mrg [llength [$pg_blk getInsts]]
+      puts "OT_PREGRT_FF_HOLD pass ${pg_tag}_res margin $pg_mrg wns [pg_hold] endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
     }
     if {$pg_tag eq "rr"} {
       if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }; if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
@@ -473,6 +496,19 @@ def grt_text(text):
     return text
 
 
+PAD_ENV = "OT_PREGRT_HOLD_PAD"
+PAD_TCL = "hold_pad.tcl"
+PAD_MODES = ("0", "rr", "all")
+
+
+def pad_mode(env=None):
+    """HOLD-PAD-FLOW 11-24: gen env OT_PREGRT_HOLD_PAD = rr (default) | all | 0 (repair_timing only, the form before the rule)."""
+    v = str((os.environ if env is None else env).get(PAD_ENV, "")).strip() or "rr"
+    if v not in PAD_MODES:
+        raise ValueError(f"{PAD_ENV}: '{v}' is not one of {', '.join(PAD_MODES)}")
+    return v
+
+
 SAME_LEAF_ENV = "OT_HOLD_SAME_LEAF"
 SAME_LEAF_TCL = "hold_same_leaf.tcl"
 
@@ -583,13 +619,19 @@ def config_lines(t):
     return lines
 
 
+def tail_text(amin=-1):
+    """TAIL with the AUTO threshold and the planned hold pad (hold_pad.tcl + the gen-time mode) filled in."""
+    pad = (Path(__file__).resolve().parent / PAD_TCL).read_text().rstrip("\n")
+    return TAIL.replace("@PG_AUTO_MIN@", str(int(amin))).replace("@PG_HOLD_PAD_PROCS@", pad).replace("@PG_HOLD_PAD@", pad_mode())
+
+
 def tcl_text(hold_gate_text, amin=-1, *, rc_basis="placement"):
     if hold_gate_text.count(MARK) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl context marker not found exactly once; fails closed")
     head = hold_gate_text.split(MARK)[0]
     if head.count(READ) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl library / database read not found exactly once; fails closed")
-    text = head.replace(READ, READ2) + TAIL.replace("@PG_AUTO_MIN@", str(int(amin)))
+    text = head.replace(READ, READ2) + tail_text(amin)
     if same_leaf_on():
         text = same_leaf_text(text)
     if rc_basis not in ("placement", "global_routing"):
