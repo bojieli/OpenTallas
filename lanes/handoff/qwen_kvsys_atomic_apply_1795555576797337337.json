@@ -1,0 +1,347 @@
+{
+ "die": "qwen_kvsys",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree",
+  "event": "KV-A5t3",
+  "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t3.json",
+  "plan_sha256": "cbee82715bcaee1b37c25b2748e47965828e6b9ee81fcc8ce8291439549028fe",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_bind",
+   "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
+  }
+ },
+ "marker": {
+  "die": "qwen_kvsys",
+  "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree",
+  "manifest_hash": "2c74bbdfe2ddfce9bb611eab2383772f835caaf8a1482e4d8e4496fe9f4d795f",
+  "src_manifest_sha": "2c74bbdfe2ddfce9bb611eab2383772f835caaf8a1482e4d8e4496fe9f4d795f",
+  "hosts": [
+   "epyc10",
+   "epyc11",
+   "epyc9",
+   "intel1",
+   "epyc8"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "A5t5 gate (rt 434f13368bb6, epyc10 /srv/opentallas-scratch2/claude/kv-allfix/a5t5e10/grow/gate_A5t5): strict bind PASS 175 partitions/93 types/errors 0 (after R8 main-table derive, 18 members), LATCHECK 2752/2752 PASS, BPC 668/668 PASS, R8BASE PASS new 0; published tree = ot-tree-fork of the gate tree, sealed over A5t3 manifest ecb39546a806 -> 2c74bbdfe2dd (+2 changed: pv_col_pads a494038c27dc, r8 table 49701a02f47c; +1 added plan_allfix_A5t5.json)",
+  "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t5.json",
+  "plan_sha256": "669cbe6e39bd222e839674293c50c6b13329ed5b86f98a259ef035ec3b6152d4",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+  "asbuilt_sha256": "43d1bd9691bc44eef7b4cdb619317b3f0d6719d93e68ed508a4cfdb7ade8034a",
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_bind",
+  "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json",
+  "sidecar_sha256": "668fe4614b79b1ce8b83b67ad8f7c10605bfaa44a76e44141b24a57efdb8f4cb",
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_KV_HEAD_KST": "2",
+   "OT_PLACE_MAX_TRANSITION": "320",
+   "OT_LAND_RESERVE": "1",
+   "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
+  },
+  "config": {
+   "event": "KV-A5t5",
+   "plan_sha256": "669cbe6e39bd222e839674293c50c6b13329ed5b86f98a259ef035ec3b6152d4",
+   "gen_hosts": [
+    "epyc10",
+    "epyc11",
+    "epyc9",
+    "intel1",
+    "epyc8"
+   ],
+   "gen_host": "epyc10",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_bind"
+   },
+   "gate": {
+    "g0c": "PASS",
+    "bind": "PASS (A5t5 gate strict 0 / LAT 2752/2752 / BPC / R8BASE)",
+    "clock": "PASS",
+    "evidence": "A5t5 gate (rt 434f13368bb6, epyc10 /srv/opentallas-scratch2/claude/kv-allfix/a5t5e10/grow/gate_A5t5): strict bind PASS 175 partitions/93 types/errors 0 (after R8 main-table derive, 18 members), LATCHECK 2752/2752 PASS, BPC 668/668 PASS, R8BASE PASS new 0; published tree = ot-tree-fork of the gate tree, sealed over A5t3 manifest ecb39546a806 -> 2c74bbdfe2dd (+2 changed: pv_col_pads a494038c27dc, r8 table 49701a02f47c; +1 added plan_allfix_A5t5.json)"
+   },
+   "planned_events": [
+    "KV-7uh",
+    "KV-7y",
+    "KV-HG1",
+    "KV-PCDELTA",
+    "KV-PCV3-R8",
+    "KV-PVSPLIT",
+    "kvgeom7yhr",
+    "KV-HG3",
+    "KV-HG5",
+    "KV-D22",
+    "KV-D23",
+    "KV-D23H",
+    "KV-D24",
+    "KV-D25e3",
+    "KV-D26",
+    "KV-D27d3",
+    "KV-D28",
+    "KV-D29",
+    "KV-A5t3"
+   ],
+   "gen_env_outside_allow": [],
+   "die_gen_env": {
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0",
+    "OT_PREGRT_FF_HOLD_AUTO": "-1",
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0",
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_GRT_ALLOW_CONGESTION": "1",
+    "OT_CLAND_STRIP_DENS": "1.0",
+    "OT_TT_SETUP_REPAIR": "both",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PGCAP": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "1",
+    "OT_KV_HEAD_KST": "2",
+    "OT_PLACE_MAX_TRANSITION": "320",
+    "OT_LAND_RESERVE": "1",
+    "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
+   },
+   "type_args": {
+    "kv3_hub_Ei": [
+     "--gpl-plain",
+     "kv3_hub_Ei"
+    ],
+    "kv3_io_cor": [
+     "--gpl-plain",
+     "kv3_io_cor",
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_io_ft": [
+     "--gpl-plain",
+     "kv3_io_ft"
+    ],
+    "kv3_io_ft_v1": [
+     "--gpl-plain",
+     "kv3_io_ft_v1",
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_hroot": [
+     "--gpl-plain",
+     "kv3_hroot",
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_io_cor_v1": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_phy": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_phy_v1": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v1": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v12": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v1n": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v2": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v2n": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v3": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v3n": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v4": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v4n": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v5": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v5n": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v6": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v6n": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v7": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_pv_v8": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_sys_SD": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "kv3_sys_SD_v1": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ]
+   },
+   "review_before_route": {
+    "event": "KV-A5t5",
+    "all_items": true,
+    "required": true
+   },
+   "tools_sha": "434f13368bb6"
+  },
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/7093aa79372a44b72ce5f7e0c97dcbe58b048ada14f573cf737fd587686683b0/result.json",
+ "candidate": "/home/ubuntu/tmp/kvallfix/cand_a5t5_apply_1124.json",
+ "optimistic": true,
+ "warnings": [
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/qwen_kvsys/2c74bbdfe2ddfce9bb611eab2383772f835caaf8a1482e4d8e4496fe9f4d795f.json (run tools/autopilot/publish_gate.py run on this candidate first)",
+  "ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}"
+ ]
+}

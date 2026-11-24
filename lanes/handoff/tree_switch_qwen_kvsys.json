@@ -1,23 +1,26 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree",
- "manifest_hash": "ecb39546a80626df2ca8be4840a7de5ef0156f3e54ef1da1ff6fd44a17c14aff",
- "src_manifest_sha": "ecb39546a80626df2ca8be4840a7de5ef0156f3e54ef1da1ff6fd44a17c14aff",
+ "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree",
+ "manifest_hash": "2c74bbdfe2ddfce9bb611eab2383772f835caaf8a1482e4d8e4496fe9f4d795f",
+ "src_manifest_sha": "2c74bbdfe2ddfce9bb611eab2383772f835caaf8a1482e4d8e4496fe9f4d795f",
  "hosts": [
+  "epyc10",
   "epyc11",
-  "epyc9"
+  "epyc9",
+  "intel1",
+  "epyc8"
  ],
  "smoke": "PASS",
- "smoke_detail": "A5t3 gate (rt e348b919dd39, epyc11 /srv/opentallas-scratch2/claude/kv-allfix/grow/gate_A5t3): strict bind PASS 175 partitions/93 types/errors 0, LATCHECK 2752/2752 PASS, BPC PASS, R8BASE PASS; published tree = ot-tree-fork of grow/tree (byte-equal plan cbee82715bca / asbuilt 43d1bd9691bc / sidecar 668fe4614b79), sealed over D29 manifest 19484d29d13f -> ecb39546a806",
- "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t3.json",
- "plan_sha256": "cbee82715bcaee1b37c25b2748e47965828e6b9ee81fcc8ce8291439549028fe",
- "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+ "smoke_detail": "A5t5 gate (rt 434f13368bb6, epyc10 /srv/opentallas-scratch2/claude/kv-allfix/a5t5e10/grow/gate_A5t5): strict bind PASS 175 partitions/93 types/errors 0 (after R8 main-table derive, 18 members), LATCHECK 2752/2752 PASS, BPC 668/668 PASS, R8BASE PASS new 0; published tree = ot-tree-fork of the gate tree, sealed over A5t3 manifest ecb39546a806 -> 2c74bbdfe2dd (+2 changed: pv_col_pads a494038c27dc, r8 table 49701a02f47c; +1 added plan_allfix_A5t5.json)",
+ "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t5.json",
+ "plan_sha256": "669cbe6e39bd222e839674293c50c6b13329ed5b86f98a259ef035ec3b6152d4",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
  "asbuilt_sha256": "43d1bd9691bc44eef7b4cdb619317b3f0d6719d93e68ed508a4cfdb7ade8034a",
- "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_bind2",
- "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json",
+ "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_bind",
+ "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json",
  "sidecar_sha256": "668fe4614b79b1ce8b83b67ad8f7c10605bfaa44a76e44141b24a57efdb8f4cb",
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
   "OT_GRT_NONPORT_HOLD": "1",
   "OT_CORE_TAP_REACH_UM": "0",
   "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -37,29 +40,32 @@
   "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
  },
  "config": {
-  "event": "KV-A5t3",
-  "plan_sha256": "cbee82715bcaee1b37c25b2748e47965828e6b9ee81fcc8ce8291439549028fe",
+  "event": "KV-A5t5",
+  "plan_sha256": "669cbe6e39bd222e839674293c50c6b13329ed5b86f98a259ef035ec3b6152d4",
   "gen_hosts": [
+   "epyc10",
    "epyc11",
-   "epyc9"
+   "epyc9",
+   "intel1",
+   "epyc8"
   ],
-  "gen_host": "epyc11",
+  "gen_host": "epyc10",
   "gen_args": [
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json"
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_bind2"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_bind"
   },
   "gate": {
    "g0c": "PASS",
-   "bind": "PASS (A5t3 gate strict 0 / LAT 2752/2752 / BPC / R8BASE)",
+   "bind": "PASS (A5t5 gate strict 0 / LAT 2752/2752 / BPC / R8BASE)",
    "clock": "PASS",
-   "evidence": "A5t3 gate (rt e348b919dd39, epyc11 /srv/opentallas-scratch2/claude/kv-allfix/grow/gate_A5t3): strict bind PASS 175 partitions/93 types/errors 0, LATCHECK 2752/2752 PASS, BPC PASS, R8BASE PASS; published tree = ot-tree-fork of grow/tree (byte-equal plan cbee82715bca / asbuilt 43d1bd9691bc / sidecar 668fe4614b79), sealed over D29 manifest 19484d29d13f -> ecb39546a806"
+   "evidence": "A5t5 gate (rt 434f13368bb6, epyc10 /srv/opentallas-scratch2/claude/kv-allfix/a5t5e10/grow/gate_A5t5): strict bind PASS 175 partitions/93 types/errors 0 (after R8 main-table derive, 18 members), LATCHECK 2752/2752 PASS, BPC 668/668 PASS, R8BASE PASS new 0; published tree = ot-tree-fork of the gate tree, sealed over A5t3 manifest ecb39546a806 -> 2c74bbdfe2dd (+2 changed: pv_col_pads a494038c27dc, r8 table 49701a02f47c; +1 added plan_allfix_A5t5.json)"
   },
   "planned_events": [
    "KV-7uh",
@@ -79,11 +85,12 @@
    "KV-D26",
    "KV-D27d3",
    "KV-D28",
-   "KV-D29"
+   "KV-D29",
+   "KV-A5t3"
   ],
   "gen_env_outside_allow": [],
   "die_gen_env": {
-   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t5_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
    "OT_GRT_NONPORT_HOLD": "1",
    "OT_CORE_TAP_REACH_UM": "0",
    "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -303,11 +310,11 @@
    ]
   },
   "review_before_route": {
-   "event": "KV-A5t3",
+   "event": "KV-A5t5",
    "all_items": true,
    "required": true
   },
-  "tools_sha": "e348b919dd39"
+  "tools_sha": "434f13368bb6"
  },
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
