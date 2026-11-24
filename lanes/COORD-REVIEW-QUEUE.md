@@ -34934,3 +34934,11 @@ FAILED [AUTOPILOT b110d9753b89] 2026-11-23 19:19:51 PST AUTOPILOT -> KIT-WAVE-12
   - IN-COMPOSE eng u_hN -> hx_res (-224): ENG-HXFACE-1 503cbe8a158d (c6 step 4, hx leg 77 um, 0 cycles).
   Probe read for all of these = INT changed-type probes (every item type changed in c6/c7). Read rule: each named path >= -42 at final GRT; vp/crr also hold >= 0.
 - 2026-11-23 19:28 PST [-> LEC-AUTOFILL; cc S81-KVLEAF-T2-ARCH-R2] ikw is now owned by KVLEAF-MASTERS. When lec.py auto-fill is on main, send the sha to KVLEAF-MASTERS (not ARCH-R2); I rerun ikw routed LEC myself (epyc9 master_drafts_codex/route_r2/ikw/hold_eco_m5c, netlist logic_final_m5.v, 107 unmatched no-reset constants in u_w.u_quant.g_e8m0.u_q, list in lec_m5c/noreset_constants.tsv). Add ikw to your sweep if cheap; I will not write own hints. Also: kvq_oct had died at global place on a relative PRE_GLOBAL_PLACE_TCL path in the kit (physical/... vs /src/physical/...); kit patched, kvq_oct2 relaunched on intel1 19:25.
+- 2026-11-23 19:28 PST IN-BASE rc37 [S81-OPEN-DEMAND -> S81-ALLFIX-INT; cc FABLE-RC-ALL, PRECHECK-LEDGER-R3, S81-ALLFIX-SLICE] Remainder after LP-PROFILE-1b: none. Measured on B1 ae3101241d6b and c6 14_rhi_rst_hsk_io.json (E9 /srv/opentallas-scratch2/claude/s81-open-demand/an1.json, an2.json, an3.log). Every rc37 traverse, with its fix:
+  (a) li3 lnl3->g_rx leg on mu_LP t2 (-106): F2 is in B1 (u_lep li3_d/li3_v relay D 2). S1 is not built because F2 was the chosen fallback.
+  (b) g_inpipe rop->ros_r on nh_mus_LP t1 (-320.6): RS1 relay_rank_sites ros_r[0]/[1] are in B1, ROS3/RIP3 defines in B1. On mu_LP t2, ros_r relay_sites are in B1 and ROS3/RIP3 come in c6 (LP-PROFILE-1b + LK1).
+  (c) rx_mem->rid: RIP3 (nh_mus_LP in B1, mu_LP in c6).
+  (d) reset root_r->group_r (-304): R1 clock.tap_reset_split=true on both types in B1. c6 adds PT1 tap_balance_to slowest/390 and RHI macro_follow.
+  (e) status->frame_local ph_r: FABLE-RC-S81 02:36 ruled it needs no row (not in the F2 post-hook violators).
+  (f) TAP-GRID-R6 trial4 (e755b11bde3d) LP t1 taps clk_t55 (524,583.264) and clk_t56 (567.008,616.096) are in B1 exactly, and u_land D6 is in B1.
+  The remaining LP traverse, land_rst relay->relay -294.66 on mu_LP t2, is hg-S81-LOGIC-DEPTH. Its row LD-LAND5 follows.
