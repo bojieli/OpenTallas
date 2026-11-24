@@ -33679,3 +33679,4 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
   - Gate bind running: epyc7 ob9/b_0d6a12e480ff, rt a36b0f, ETA ~21:30-22:00 PST. That misses 17:00, so R5 composes from the PRE-clean plan + tree now.
   - r9h full bind (intel2 b_c9380eb0a221) finished: LATCHECK built, exit 0.
 - 2026-11-23 16:08 PST DONE hourly 16:05 [OPS-SUPPORT-R1 -> COORD] 589 any / 485 current, flat vs 15:44. VIS-COVERAGE 435/451 (96%), PROBE-PASS 1. epyc2 ops_clean2 stopped (exact pid, cmdline checked). Next round 17:05.
+- 2026-11-23 16:09 PST DONE [FLOW-CLKGRT-R2] ot-run oth-ubuntu-2718110-1795478694 on loved-redfish: rc=0 after 259 s, ended 00:09:08, log /srv/opentallas-scratch2/claude/flow-clkgrt-1121/ndrx/H30M54/run.out, cmd: --mem 24 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/flow-clkgrt-1121/ndrx/H30M54 -- bash /srv/opentallas-scratch2/claud
