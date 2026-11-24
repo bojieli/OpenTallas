@@ -1989,6 +1989,12 @@ class Landings:
         status_reg = status_reg or guard_reg
         if status_reg and not cat:
             raise LandingError(f"{tn}: landing_status_reg needs count-aligned rings")
+        # WEN-LOCAL-1 (HEAD-W-SETUP 11-24, opt-in): each write chunk of a soft WREG ring rotates its own enables; no cycle, no flop
+        wen_local = self.types[key].get("landing_wen_local", False)
+        if not isinstance(wen_local, bool):
+            raise LandingError(f"{tn}: landing_wen_local must be a boolean")
+        if wen_local and not cat:
+            raise LandingError(f"{tn}: landing_wen_local needs count-aligned rings")
         if inst is not None:
             # MESO-STRAP-1 LEC reference: the parameter wrapper of ONE copy (ca_variants), ring DEPTH from `depth`
             # (the strap master's per-bus DEPTH) so the two forms differ only in parameters vs tied straps
@@ -2249,6 +2255,9 @@ class Landings:
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
                     ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 or (hard is not None and "WRITE_CHUNK" in hard) else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") or (hard is not None and "READ_CHUNK" in hard) else "") + (", .FREG(1))" if wreg["freg"] else ")")
+                    if wen_local and hard is None:   # a signed hard child keeps its own parameters
+                        ring_mod = ring_mod[:-1] + ", .WEN_LOCAL(1))"
+                        self.reset_placements[tn][b].update(ring_wen_local=1, ring_wen_local_added_cycles=0)
                     self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
                                                         strap_k_delta=wreg["depth"])
                     if wreg.get("write_chunk", 64) != 64:

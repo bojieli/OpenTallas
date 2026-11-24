@@ -245,7 +245,9 @@ module ot_dp_clk_landing_cas #(
     // The generator (clock_landings.py, type key clock.landing_ring_lite) gives this form only to narrow rings that
     // share source partition and K with a FULL ring of the same type, which keeps the monitor for that group.
     // Implies the NARROW ring width at W <= 64.  Not with CONTROL_STATUS_COPY.  Default 0 = identical logic.
-    parameter bit LITE = 0
+    parameter bit LITE = 0,
+    // WEN-LOCAL-1 (needs WREG, see ot_meso_ring_ca WEN_LOCAL): per-chunk write-enable rotation; 0 added cycles.
+    parameter bit WEN_LOCAL = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -334,7 +336,7 @@ module ot_dp_clk_landing_cas #(
     wire [W-1:0] d_r = d_w;
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP), .LITE(LITE)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP), .LITE(LITE), .WEN_LOCAL(WEN_LOCAL)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -344,6 +346,7 @@ module ot_dp_clk_landing_cas #(
 `ifndef SYNTHESIS
     initial begin
         if (W < 1) $fatal(1, "count-aligned landing requires a nonempty bundle");
+        if (WEN_LOCAL && !WREG) $fatal(1, "WEN_LOCAL needs WREG");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
         if (LITE && CONTROL_STATUS_COPY) $fatal(1, "LITE ring has no status flags: CONTROL_STATUS_COPY must be 0");
@@ -402,7 +405,15 @@ module ot_meso_ring_ca #(
     // register below is then never assigned (constant-false guard on its process: no flop is built, names unchanged
     // at LITE 0) and r_v / r_lap_ok / r_glo_ok / r_ghi_ok are not driven with meaning (the wrapper ignores them).
     // Built: tc (only its slot bits have loads), s_d, the WREG enables, and the dch read select + readout.
-    parameter bit LITE = 0
+    parameter bit LITE = 0,
+    // WEN-LOCAL-1 (HEAD-W-SETUP 11-24, hd_lep0N_w u_cland_coll_i1: one fs_q / tc decode reaching 132 write-enable flops over
+    // a 165 um strip, TT -56.3 routed; needs WREG): each chunk computes its own next write enable from its OWN enable flops
+    // and t_rst_n, so fs_q and tc have no write-enable load.  The WREG enables satisfy wen[i] == t_go && tc[slot] == i after
+    // any edge, so the next enable is (t_rst_n && none of slots 0..DEPTH-2 enabled) for slot 0 and (t_rst_n && only slot i-1
+    // enabled) for slot i: the same word-for-word enables, 0 added cycles, no added register.  The full decode keeps the Ds
+    // at-most-one-hot for every state (face_guard _registered_atmost_one); an upset state returns to the start slot and stays
+    // until the next START (the WREG ring self-corrects in one edge; both are outside the fault-free academic claim).
+    parameter bit WEN_LOCAL = 0
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -456,7 +467,22 @@ module ot_meso_ring_ca #(
             for (genvar c = 0; c < WNC; c++) begin : ch
                 // WLIVE-1: a padding-only chunk's enable flop keeps its name/site but takes D = 0 (no start load)
                 localparam bit LIVE = (c * WWC) < WLIVE;
-                wire wen_d = LIVE ? (t_rst_n && (slot_nx == AW'(i))) : 1'b0;
+                wire wen_d;
+                if (WEN_LOCAL) begin : g_loc
+                    wire [DEPTH-1:0] own;                // WEN-LOCAL-1: this chunk's enables (slot order)
+                    for (genvar j = 0; j < DEPTH; j++) begin : o
+                        assign own[j] = wen[j * WNC + c];
+                    end
+`ifdef OT_MESO_CA_MUTANT_WENLOC
+                    // MUTANT: slot 1 follows the wrong predecessor
+                    wire nx = i == 0 ? ~(|own[DEPTH-2:0]) : (own[DEPTH-2:0] == (DEPTH-1)'(1) << (i == 1 ? 1 : i - 1));
+`else
+                    wire nx = i == 0 ? ~(|own[DEPTH-2:0]) : (own[DEPTH-2:0] == (DEPTH-1)'(1) << (i > 0 ? i - 1 : 0));
+`endif
+                    assign wen_d = LIVE ? (t_rst_n && nx) : 1'b0;
+                end else begin : g_dec
+                    assign wen_d = LIVE ? (t_rst_n && (slot_nx == AW'(i))) : 1'b0;
+                end
                 (* keep = "true" *) ot_meso_wen_ff #(.NEG(WEN_NEG)) u_wen (.clk(wen_clk), .d(wen_d), .q(wen[i * WNC + c]));
             end
         end
