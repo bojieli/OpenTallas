@@ -1,8 +1,8 @@
 item	row_sha	rebased	in_compose_sha	PRE	strict	LAT	G0	probe_unit	probe_result	status
 b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF reseat)	b25b1cf7c404	yes(base)	cA f418c1b290f3	PASS 9edfed34	0 err	1921/1921	PASS 0/0	A probes: cbf_q11 cbn_q00__cl622f65d2 cbx_q10 x3 sle_ctl__cla4f6f12f slw_fe_v2__clf110fab2	running	COMPOSED-A gate-clean; GATED on probe
 x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	f418c1b290f3	yes	cA f418c1b290f3	PASS 9edfed34	0 err	1921/1921	PASS 0/0	cbn_q00__cl622f65d2 probe	running	COMPOSED-A gate-clean; GATED on probe
-rc99 cb NK lockup (row A + HB4 rev5, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING
-rc101 cb landing piles (CB-1 + STREET, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING
+rc99 cb NK lockup (row A + HB4 rev5, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING: OWNER QC-CB-PROBE (cb probes; rc=97 host re-pick cause 01:45; relaunch on epyc11 now in gen_hosts), deadline 03:30
+rc101 cb landing piles (CB-1 + STREET, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING: OWNER QC-CB-PROBE (cb probes; relaunch on epyc11), deadline 03:30
 rc107/rc109 coll g_pf + shr_p_rx_i (pkg15; coll types byte-identical C4->A)	C4	in base	cA	PASS 9edfed34	-	-	-	-	-	REASONED-probe
 coll_core 80 clock-open reset copies (tools row tap_reset_split uniq_seats)	main 32027184aff	yes(tools)	kits need rt>=32027184aff	base	-	-	-	E10 ctsopen_fix_1730 CTS-only	205/0 open (was 80)	ROW-REBASED; GRT probe on B
 SLE CTL B_TW bank spread (4 per-bit banks x158-504, 9 stages kept, x284 empty; in C4/b25)	C4/b25	in base	cA	PASS 9edfed34	-	-	-	-	-	REASONED-probe (sle_ctl__cla4f6f12f probe on B)
