@@ -4,3 +4,8 @@
 - Every 2 h: counts per die (status col) + OPEN past deadline to COORD. Next ~08:15. Sweep lanes/posts for status changes first (status was last swept 05:00 by FIX-LEDGER).
 - Deadlines PST: HEAD gate 11:00; S81 rows 10:00, assembly 10:30, 2nd compose <17:00, cut 18:00; KV tools 11:30 pkg 12:30 gate 13:00; QC gate 13:00.
 - 19:5x ledger sync from ALLFIX-*.tsv every round (sync.py in scratchpad): IN-COMPOSE/IN-BASE evidence; S81 LAND-CAP rerun on c7a post-tail + c8 when posted (OPEN-LEAFBAND owns the fix).
+
+## 11-24 04:xx state (PRECHECK-LEDGER-R3)
+- 30-min loop: sleep waiter + ledger sync (scratchpad sync.py) + sweep ALLFIX-COMPOSED; counts to COORD every ~2 h (last 01:50, next due).
+- Checks on main (all report-only, in plan_advisory): IST-PRICE (+ plan_gate_pre FAIL class ISTPRICE 11d45bef39), RAW-RESET-TO-PORT, STALE-KEEPOUT, G0-HOPS, TAPOFF-SITE (needs bound-tree tap inputs; baseline), LAT-DEFINE (as-built defines = profile until S81-KV-CALENDAR answers), BITSITE-SEAT (+NOSITE), CTLM-AGES, COLSYNC (needs sidecar path per die: only QC known), SEATLINE (NOT predictive, ranking only), PRE-MODE line.
+- OWED: (1) STALE-EXPORT-TAP for HEAD West w3 dd9de3e044dd and S81 c8r (paths missing). (2) SEATLINE recalibration when A5t3 (65 kits) and c8 kits reach GRT, 4-8 h out (~08:00-12:00): truth = each kit's final 5_global_route DB overflow read at the final stage; compare flag per tier; post precision/recall; only then any candidate list. (3) cbf_q11 seat question awaits FABLE-RC-QC. (4) COLSYNC sidecar for c8/A5t3/HEAD. (5) ctlm SS/AG lane names.
