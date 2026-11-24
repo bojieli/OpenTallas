@@ -6,3 +6,12 @@ Work dir epyc10 /srv/opentallas-scratch2/claude/kv-tapsplit-hgpv (cen.sh census,
   r2 on A5 s11 829a7f50c579 -> r2/plan.json e61cad5d8daf: hg 5 SPLIT +55, hgi 7 SPLIT +134, pv_v1n SPLIT +8; PARTIAL hg_v3 1368 (cap 1800), hgi_v8 1351 (cap 3000).
   BLOCKED pv_v12e/v7e/v2ne/v6n/v5ne: face-register strips in a channel core<->die edge, no legal tap site -> geometry row needed.
 - A5ts = r2 + a5.list lines 12-18 + reprice + fill + PRE (comp.sh). Then sb.sh scoped strict on 16 changed types (plan copied to kv-allfix/grow/tree plan_of_record/plan_tshgpv_<tag>.json; epyc10 scratch2 99% so no tree fork).
+
+## 11-23 23:5x CORRECTION (supersedes the 23:38 ROW-REBASED, RETRACTED in a3c84c05)
+- sbA5ts bind = R8_FAIL_FAST, rc 1, nothing emitted: NOT a pass. Row f2bd37c2e6f9 is ROW-DRAFT only.
+- Cost: RINS ready_at_glue 504 -> 510 (+6). Row docstring "0 cycles" is wrong (fix the text on next cut, sha changes).
+- Live: epyc10 oth-ubuntu-2758368-1795506452 (sb2.sh): private fork kv-tapsplit-hgpv/tree, r8_refresh on the fork only, strict rebind -> sb2/, log sb2.otrun. Adopt, do not relaunch.
+- Pass = RC_BIND 0, BIND_ERRORS 0, 15 types emitted, SHARED_R8 unchanged.
+- My extra file in KV-ALLFIX grow/tree: plan_of_record/plan_tshgpv_sbA5ts.json (removal = ot-delete if KV-ALLFIX asks).
+- Edge strips (pv_v12e v7e v2ne v6n v5ne v1n) owner = KV-PV-EDGESTRIP; cause in my posts is inferred, not read from obstacle boxes.
+- hg_v3 1368 / hgi_v8 1351: FABLE accepted as PARTIAL (23:21); the brief's "0 taps over 1200" is NOT met.
