@@ -100,3 +100,4 @@
   kvq is in detail route. ETA unchanged, 20:00.
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
 - 2026-11-23 16:16 PST DONE [S81-KVLEAF-T2-ARCH-R2] ot-run oth-ubuntu-2550725-1795478955 on renewed-glider: rc=0 after 420 s, ended 00:16:13, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex/lec_rstland_r2/kvtch.otrun.log, cmd: --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_drafts_codex --mem 44 --threads 4 -- env LEC_UNROLL=400000 bas
+- 2026-11-23 16:21 PST DONE [S81-KVLEAF-T2-ARCH-R2] ot-run oth-ubuntu-1336449-1795478148 on key-cardinal: rc=0 after 1567 s, ended 16:21:52, log /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_r2/runs/kvq_drt_r2.otrun.log, cmd: --hosts intel1 --dir /srv/opentallas-scratch2/claude/s81-kvleaf-t2-arch/master_r2 --mem 46 --threads 8 -- bash kvq_drt_r2.sh
