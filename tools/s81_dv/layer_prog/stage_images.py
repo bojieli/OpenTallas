@@ -101,33 +101,29 @@ def stage_env(meta, mapdoc):
 def compile_stage_frame(die, frame, fixd, meta, out):
     """xs_place.compile_frame of a stage frame (xs_capacity.frame_alloc's stage rules, legalised) + images +
     per-phase matrix provenance"""
-    import lower_xs as LX
     import v41_die_images_w17w10 as I
     import xs_place as XP
     spec = meta['spec']
     shared = meta['shared']
-    orig = (XP.op_groups, LX.placement, I.add_phase)
+    orig = (XP.op_groups, I.add_phase)
     prov = []
 
     def og(fx, op):
         g = orig[0](fx, op)
         return g if shared or op != 'ffn.down' else [x for x in g if x.get('expert') != 'shared']
 
-    def pl(die_, sl, fx=None, *, selected_frame=None):
-        g, p = orig[1](die_, sl, fx, selected_frame=selected_frame)
-        return g, ([dict(r, rows=[]) for r in p] if spec.get('dense_layer') is None else p)
-
     def ap(field, mats, *a, **k):
-        ph = orig[2](field, mats, *a, **k)
+        ph = orig[1](field, mats, *a, **k)
         # frame_programme also places a_proj on a scratch field: keep only the returned field's phases
         prov.append((field, [dict(name=m.name, fmt=m.fmt, K=int(m.K), off=int(mi['off']), src=[int(r) for _, r in m.src])
                              for m, mi in zip(mats, ph['matrices'])]))
         return ph
-    XP.op_groups, LX.placement, I.add_phase = og, pl, ap
+    XP.op_groups, I.add_phase = og, ap
     try:
-        rec, field = XP.compile_frame(die, frame, fixd, list(meta['xs_ops']) + list(meta['bf_ops']))
+        ops = list(meta['xs_ops']) + list(meta['bf_ops'])
+        rec, field = XP.compile_frame(die, frame, fixd, ops, include_aproj=spec.get('dense_layer') is not None)
     finally:
-        XP.op_groups, LX.placement, I.add_phase = orig
+        XP.op_groups, I.add_phase = orig
     prov = [v for f, v in prov if f is field]
     assert len(prov) == len([p for p in field.phases if not p.get('idle_no_issue')]), ('provenance', len(prov))
     pidx = [i for i, p in enumerate(field.phases) if not p.get('idle_no_issue')]

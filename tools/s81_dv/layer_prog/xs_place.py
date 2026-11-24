@@ -548,22 +548,26 @@ def reserve_idle_aproj(field):
                 calendar='idle_no_issue', idle_no_issue=True)
 
 
-def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
+def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None, *, include_aproj=True):
     """the frame's multi-phase field: phase 0 = a_proj (lower_xs), then every op chunk of phase_list.  only = a set of
     field phase indices to legalise (others are placed with the identity assignment: images exact, calendar not
-    legalised) -- the full legalise of a frame is ~1-3 s per phase."""
+    legalised) -- the full legalise of a frame is ~1-3 s per phase. Expert-only stages reserve the
+    idle phase-0 slot and do not read any a_proj operands."""
     import frame_bench as B
     import v41_die_images_w17w10 as I
     sl, g, j = frame_slot(die, frame)
     master, lk = die.inst[frame]['master'], LX.frame_lk(die, frame)
     q, bf = B.frame_pairs(LX.base_master(master))
-    fxa = LX.load_fixture(fixd)
     fx = Fix(fixd)
-    _, (p0,) = LX.placement(die, sl, fxa, selected_frame=frame)
+    aproj_rows = []
+    if include_aproj:
+        fxa = LX.load_fixture(fixd)
+        _, (p0,) = LX.placement(die, sl, fxa, selected_frame=frame)
+        aproj_rows = p0['rows']
     phases = []
-    if p0['rows']:
-        mats, gidx = LX.frame_mats(fxa, p0['rows'])
-        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'], rank_rows=p0['rows'],
+    if aproj_rows:
+        mats, gidx = LX.frame_mats(fxa, aproj_rows)
+        _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'], rank_rows=aproj_rows,
                                 cap_cfg=LX.aproj_capture_contract(die, sl, fxa, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None, frame_instance=frame)
     else:
         qa = q[:NPAIRS]
@@ -578,7 +582,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     field.bf[:] = False
     field.bf[len(qa):len(qa) + nbf] = True                  # field slots len(qa).. = the frame's BF pairs (bf order)
     field.bf_desc = {}                                      # field phase -> {field slot: 82-bit BF programme descriptor}
-    if p0['rows']:
+    if aproj_rows:
         ph = add_planned(field, dict(plan0, assign_slots=plan0['assign_slots'],
                                      stream=_f.stream[_ph['sbase']:_ph['sbase'] + _ph['nbeat']]), mats[0], LX.NSEG)
         phases.append(dict(phase=0, op='attn.a_proj', mat=mats[0].name, rows=len(gidx), out_index=gidx, nseg=LX.NSEG,
@@ -648,8 +652,8 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa),
                              frame=XB.frame_variant(master), frame_instance=frame)
     if LX.aproj_topology_enabled():
-        field.aproj_rank_rows = list(p0['rows'])
-        phases[0]['row_index'] = list(p0['rows'])
+        field.aproj_rank_rows = list(aproj_rows)
+        phases[0]['row_index'] = list(aproj_rows)
         phases[0]['ownership'] = 'physical-frame contiguous tensor rows; CAP/gather unadmitted'
     fill = [int(v) for v in field.fill]
     return dict(frame=frame, master=master, lk=lk, slice=sl, slice_index=g, frame_index=j, pairs=qa, q_pairs=q,

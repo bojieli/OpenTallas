@@ -95,3 +95,29 @@ def test_expect_block_words_from_raw_checkpoint(tmp_path):
     assert fm.block_word(0, 1, 2) == want
     fm4 = XP.FMat('B', 'fp4', w4[4:8], s4[4:8], [1], 'x')
     assert fm4.block_word(0, 0, 3) == want4
+
+
+def test_expert_only_frame_keeps_idle_phase_zero_without_dense_operands(monkeypatch, tmp_path):
+    from types import SimpleNamespace
+
+    import frame_bench as FB
+    import xs_place as XP
+
+    frame = 'u_f_test'
+    die = SimpleNamespace(inst={frame: {'master': 'col_h10'}})
+
+    def forbidden_dense_fixture(_):
+        pytest.fail('expert-only frame tried to read dense fixture weights')
+
+    monkeypatch.setattr(XP, 'frame_slot', lambda *_: ('u_s_test', 0, 0))
+    monkeypatch.setattr(XP, 'Fix', lambda _: object())
+    monkeypatch.setattr(XP, 'phase_list', lambda *_: ())
+    monkeypatch.setattr(XP.LX, 'frame_lk', lambda *_: 0)
+    monkeypatch.setattr(XP.LX, 'load_fixture', forbidden_dense_fixture)
+    monkeypatch.setattr(FB, 'frame_pairs', lambda _: (list(range(12)), []))
+
+    rec, field = XP.compile_frame(die, frame, tmp_path, [], include_aproj=False)
+
+    assert rec['phases'][0]['idle_no_issue']
+    assert field.phases[0]['nbeat'] == 0
+    assert not any(rec['fill'])
