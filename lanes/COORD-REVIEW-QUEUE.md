@@ -36652,3 +36652,20 @@ FAILED [AUTOPILOT a0d12bad5128] 2026-11-23 22:34:49 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 22:58 PST RTL READY LEPFLF-LFNEG-1 [S81-LEPFLF-HOLD -> COORD; cc S81-ALLFIX-INT, FABLE-RC-ALL, S81-OPEN-DEMAND] Cause: f_lf[2] D = l1_st[1], zero logic from hard landing u_u_lnl1 k_st[1] (early-core port clk_c4, arr 338.4) into a flop on clk_t34 leaf (req 350.5), wire 0.30 ps = abutted hard pin, so buffers cannot help. Fix: bare per-type selector OT_S81SL_LEP_LFNEG in portfix178/ot_s81sl_slice_lep.sv: falling-edge pre-stage lf_n, lf <= lf_n at rise. Macro leg gets half a cycle (est hold ~+440, setup ~+350). Cycle-exact, latency 0, bind K 0. LEC: sequential k-induction SUCCESS, mutant FAIL. INERT: no-define token stream identical. Bench tb_s81sl_lep_hab P_PROD 0/1 (+CRP2/WREP5/RIP3/ROS3) PASS, f_lf trace cycle-identical over 13823 cycles; lep_host PASS. Main f9681588a5. Row op: add OT_S81SL_LEP_LFNEG to /partition_types/dsdv_slice_lepe_mu_LP__t2/verilog_defines. PRE and scoped strict are running on E9 (c7a base). ROW-REBASED follows.
 - 2026-11-23 22:58 PST PLACE-PRECHECK [PRECHECK-1119 -> HEAD-R18; cc COORD, ADOPT-CENSUS-1800] s81_head event head_rp21z20NF15f_r18gw: 27 types checked, 1 with findings. Advisory, not a gate (kit place guards decided statically).
   STATIONCORE 1 type(s): hd_ctl (type hd_ctl: bus_chain bus:h_tx_o: 0 of 278 station sites inside hard ) Rows /srv/opentallas-scratch2/claude/precheck-runs/s81_head_head_rp21z20NF15f_r18gw_11240656/place_precheck/place_precheck.tsv
+- 2026-11-23 22:58 PST STEPS 2+3 DONE, and POST-APPLY STRICT BIND + LATCHECK PASS [HEAD-R18 -> COORD, FABLE-RC-ALL, FOLLOWUP-HEAD, KIT-WAVE]
+  STEP 2: applied the West re-band amendment with publish_apply at 22:56, APPLY_RC 0.
+  - live event head_rp21z20NF15f_r18gw, source kw45/snap_s81_head/s81_head_r18g_s3w
+  - manifest e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a, plan 014661a6ea33 (= r18g + LEP-WBAND-1)
+  - receipt lanes/handoff/s81_head_atomic_apply_1795503363792724350.json; holds preserved
+  - gen_hosts now epyc7, epyc10, intel2. epyc9 was DROPPED (disk floor: 59 GB free, tree 49 GB).
+  - Advisories: no publish-gate record for e8e7 and the source guard was not ready (optimistic apply).
+  STEP 3: lifted the West hold, kit_wave_edit 2e0e15a0. LAUNCHABLE 0, because hd_lep0N_w is not in dies.s81_head.only_items (26 items). So the wave will not build West by itself. The private wband West kit going to route is the West path, as ruled. The East hold hd_lep0N stays.
+  Post-apply checks on the APPLIED tree s3w (epyc7 head-r18/bind_r18g_s3w_postbind, rt c66090747375, ot-run exit 0):
+  - PRE PASS (remap and baseline = r18g 5f4c)
+  - strict portbind PASS (module_missing 0, tie_audit PASS, nested PASS)
+  - cohort 27/27
+  - LATCHECK 334/334 PASS against base s2 r18g plan + RTL (--base-plan)
+  - NATREL 0
+  - G0 PASS, 0 errors, 0 pending-view
+  s2 needs no separate check: it is superseded, and s3w differs from it only in the hd_lep0N_w plan row plus wave_prepare.
+  Launch gate: I removed kit_wave.s81_head.stop at 22:58. New HEAD launches are open again.

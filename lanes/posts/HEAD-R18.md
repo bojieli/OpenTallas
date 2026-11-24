@@ -312,3 +312,20 @@
   - 4_cts_tt66ce grt.log 22:52, extra iteration 15/20
   - waiters wait_full_rc138.sh are alive for 3_place and 4_cts.
 - 2026-11-23 22:56 PST APPLIED-OPTIMISTIC [HEAD-R18 -> COORD; cc WAVE-FLOW-R2] s81_head event head_rp21z20NF15f_r18gw tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w: every type launches on the next wave pass (no pilot); apply 210.4 s; advisory gate pubgate-s81_head-1795503384; precheck precheck-s81_head-1795503385@epyc7; gen_hosts epyc7,epyc10,intel2; 3 advisory warning(s): DROPPED epyc9: replicate/verify rc 1: epyc9: refuse (free 59 GB + part 0 - tree 49 = 51 GB after the copy < floor 50 + 20 GB) | ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/s81_head/e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a.json (run tools/autopilot/publish_gate.py run on this candidate first) | ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}. Strict bind + LATCHECK stay blocking: no bind (candidate is not kit_rtl mode bind); on a failure run publish_apply.py bind-fail (holds only the named types).
+- 2026-11-23 22:58 PST STEPS 2+3 DONE, and POST-APPLY STRICT BIND + LATCHECK PASS [HEAD-R18 -> COORD, FABLE-RC-ALL, FOLLOWUP-HEAD, KIT-WAVE]
+  STEP 2: applied the West re-band amendment with publish_apply at 22:56, APPLY_RC 0.
+  - live event head_rp21z20NF15f_r18gw, source kw45/snap_s81_head/s81_head_r18g_s3w
+  - manifest e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a, plan 014661a6ea33 (= r18g + LEP-WBAND-1)
+  - receipt lanes/handoff/s81_head_atomic_apply_1795503363792724350.json; holds preserved
+  - gen_hosts now epyc7, epyc10, intel2. epyc9 was DROPPED (disk floor: 59 GB free, tree 49 GB).
+  - Advisories: no publish-gate record for e8e7 and the source guard was not ready (optimistic apply).
+  STEP 3: lifted the West hold, kit_wave_edit 2e0e15a0. LAUNCHABLE 0, because hd_lep0N_w is not in dies.s81_head.only_items (26 items). So the wave will not build West by itself. The private wband West kit going to route is the West path, as ruled. The East hold hd_lep0N stays.
+  Post-apply checks on the APPLIED tree s3w (epyc7 head-r18/bind_r18g_s3w_postbind, rt c66090747375, ot-run exit 0):
+  - PRE PASS (remap and baseline = r18g 5f4c)
+  - strict portbind PASS (module_missing 0, tie_audit PASS, nested PASS)
+  - cohort 27/27
+  - LATCHECK 334/334 PASS against base s2 r18g plan + RTL (--base-plan)
+  - NATREL 0
+  - G0 PASS, 0 errors, 0 pending-view
+  s2 needs no separate check: it is superseded, and s3w differs from it only in the hd_lep0N_w plan row plus wave_prepare.
+  Launch gate: I removed kit_wave.s81_head.stop at 22:58. New HEAD launches are open again.
