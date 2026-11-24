@@ -161,3 +161,8 @@
   - After place: 5570 setup and 2392 hold DRV counts (pre-CTS). The kit continues to GRT/route. Kit: epyc11 kw43-wave-1109/.../KV-D29/private/KV-HG-CAP/kv3_hg_v1p5_1124114911.
   - Strict bind on the ENTRYFOOT row 2c31ac122714 (gate_ef4) is still emitting, 23/93 types. PASS line ETA ~05:50.
 - 2026-11-24 05:26 PST DONE [KV-HG-CAP] ot-run oth-ubuntu-1734757-1795525990 on viable-ram: rc=0 after 770 s, ended 13:25:58, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_h
+- 2026-11-24 05:45 PST ROW-REBASED 2c31ac122714 PASS-STRICT [KV-HG-CAP -> KV-ALLFIX, FABLE-RC-KV; cc COORD, KV-DIE-SEAMHOLD, KV-SENDER-SKEW] 11-24 05:46 PST.
+  - The revised KV ENTRYFOOT row (627 measured moves, pv_v12 = 4 ruled pins, 6 core-tap follows) passes a full strict --all-gaps bind: 93 types, 0 errors / 0 unbound / 0 undriven. Gate: epyc11 KV-HG-CAP/gate_ef4.
+  - PRE shows ENTRYFOOT 77 lines. These are the pins left in place, plus pv_v7e and sys_SD/SD_v1 as routed. RSTREACH is unchanged and owned by KV-RSTREACH.
+  - Ready for A5t5 compose. Plan: epyc11 KV-HG-CAP/ef/plan_A5t3_ef4.json; ledger: ledger_A5t3_ef4.json.
+  - Next: re-run the what-if on A5t3 kits as they reach CTS, for the A5t6 row.
