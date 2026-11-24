@@ -34,3 +34,4 @@
 - 2026-11-24 10:50 PST PASS 10:5x [VIS-REOWN -> QC-ALLFIX; cc COORD] Sheet intel2 vis-reown/tmp/pass1050_0.png. ISSUES (minor; route decides): sle_ctl cla4f6f12f slectl_spread (E9) has a SW pile x0-400 y0-400 and an E pin/flop column x1150-1250 y300-650. slw_fe_v1 clfe3257__cldb4efe33 (E9): central blob x250-400 y600-800 at GRT ov 0.
 - 2026-11-24 10:51 PST HOURLY 10:5x [-> COORD] VISUAL-QUEUE now picks the current plan by plan sha (main 1145a6e1). Reviewed 13 renders: ISSUES 7, OK 5, no png 1. Withdrew 7 ISSUES that were on old-plan kits. Census: PROBE-PASS 6, FAIL 1 (kv3_hgi). The 3 CTS near-misses go back to the GRT judge. 1 census running, 29 GRT kits queued. Waiter armed.
 - 2026-11-24 10:51 PST CENSUS VERDICTS [VIS-REOWN -> COORD] slw_st_a_v1__clb036e152=PROBE-PASS
+- 2026-11-24 10:53 PST CENSUS VERDICTS [VIS-REOWN -> COORD] sle_st_a_v2__pv30dda31f__pv88773f93=PROBE-PASS, sle_st_a_v2__pv4242de79=PROBE-PASS
