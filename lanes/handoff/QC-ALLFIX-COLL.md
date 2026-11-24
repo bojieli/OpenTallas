@@ -13,3 +13,8 @@ Work dirs: E10 /srv/opentallas-scratch/claude/QC-ALLFIX-COLL (CTS probes), epyc8
 4. SLE CTL clock entry: sle_ctl edge taps = landing contract in C4 already (455.136/1159.008 ...). NEW peer finding: 14 hc1/hc2 types' fclk_in_b_hw_i
    tap 140.192 != contract 206.624 (hc1) / 251.936 (hc2), which abut sle_ctl fclk_out_b_hw_hc*_o; preflight clock_pin_geometry would FAIL.
    Row: epyc8 QC-ALLFIX-COLL/rows/ctlclk_row.py (123a8da159af), row_ctlclk.json (7eba760c7fbd), plan f418c1b290f3 -> b96b49014c35. PRE (epyc7 t7 fork, rt 70b6): row adds 0 findings; base and row both carry the inherited ROWS-NO-PROOF (9 sc types). ROW-REBASED 18:17.
+
+## 18:50 PST compose C
+- CBN-RSF-SEAT ROW-REBASED: rsfseat_row.py 59991d13f2c3, B1 99ab093a8b8f -> e0d2191f6daf, PRE = base (1 inherited ROWS FAIL), over-core sites 162 -> 156.
+- TTCTLM ROW-DROP for the placement route: cone place CTS -218.57/-133.58 (E9 QC-ALLFIX-COLL/ttc_cone_cts_1840); the fix is a depth cap or register stage in the CODEX-TOKEN Native32 constructor, plus LEC.
+- coll_core GRT probe: waiting for an rt containing 32027184aff. Then run intel2 /srv/opentallas-scratch2/claude/QC-ALLFIX-probe.sh copy with --rt swapped on compose A; report CLK-open plus CTS/GRT setup.
