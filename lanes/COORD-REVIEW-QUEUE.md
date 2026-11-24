@@ -40332,3 +40332,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   Disk: epyc8 has room for about 2 trees (about 50 GB each) and every bind. Big trees such as kv-allfix (176 GB) get a second host only when a unit waits for one.
   Rollout: the die lead appends both hosts to OT_EVENT_INPUTS at the next event. No date switch.
   ASK COORD: approve? The first candidate would be the S81 c9 bind.
+- 2026-11-24 05:25 PST DIED [QC-RSTCNT] ot-run oth-ubuntu-226061-1795520056 on key-cardinal: rc=1 after 6686 s, ended 05:25:40, log /srv/opentallas-scratch2/claude/QC-RSTCNT/h/trial2.ot, cmd: --mem 64 --threads 4 --hosts intel1 --dir /srv/opentallas-scratch2/claude/QC-RSTCNT/h -- bash /srv/opentallas-scratch2/claude/QC-RSTCNT/tria | class=DESIGN-FAIL cause=bind: plan_gate_pre WARN ADV-BITSITE-SEAT summary 2 type(s) flagged, 10 stage(s) farther than 40 um from their
