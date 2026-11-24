@@ -204,3 +204,11 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - Advisory pre_g0 FAIL explained in the hub post (LEP-WCHAN-3 rst_rl_17 shift; native release receipt not an input to the gate). Evidence in epyc7 head-r18/tmp/s2_preg0/.
 - No post-apply bind: the candidate is not bind-mode, so post_bind is null.
 - Still open: East kits in 4_2 tapbal GRT (escape, epin_r4, rscap) with waiters on intel2; 66ce census on intel1 with a session waiter.
+
+## 22:58 PST 11-23: West re-band amendment LIVE (r18gw)
+- Live event head_rp21z20NF15f_r18gw: tree kw45/snap_s81_head/s81_head_r18g_s3w, manifest e8e72862..., plan 014661a6ea33. Receipt s81_head_atomic_apply_1795503363792724350.json.
+- How it was built: delta pack epyc7 head-r18/tmp/pack_s3w + make_s3w.sh. Candidate on intel2: r18g_event_candidate/amend_s3w/candidate_r18gw.json (keep_gen_hosts false; epyc9 dropped for disk).
+- Holds: hold_items hd_lep0N (East) mirrors the no-op East hold record and lifts on R18G_E_CAP10_ACCEPTED. The hd_lep0N_w hold was lifted. hd_lep0N_w is not in only_items, so the West goes through the private wband kit.
+- Cancelled wave row hd_lep0N_w@1 on r18g at 22:27.
+- Post-apply checks: chain_s3w_postbind.sh, all PASS (bind_r18g_s3w_postbind). The stop file is removed.
+- Census grt.logs are live: KEEP posted.
