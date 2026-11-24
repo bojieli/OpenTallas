@@ -213,11 +213,15 @@ def main(argv=None):
             if not la or not caps:
                 rep["skipped"][site + (":no_launch" if not la else ":no_capture")] += 1
                 continue
+            # a hard-macro capture counts at its edge point nearest the other captures (else nearest the launch): the bank's
+            # count stages sit with the register sinks, and the macro input is reached from that side
             here = xy(ch[0])
-            a0 = minimax([point(x, here) for x in caps])
+            regs = [point(x, here) for x in caps if not (x[0] == "i" and kind.get(x[1]) == "M")]
+            here_b = minimax(regs) if regs else here
+            a0 = minimax([point(x, here_b) for x in caps])
             pa = [point(x, a0) for x in la]
             a = minimax(pa)
-            pb = [point(x, a) for x in caps]
+            pb = [point(x, here_b if regs else a) for x in caps]
             bb = minimax(pb)
             h = A.macro_halo + b % A.lanes                   # one lane per bit beside a macro edge
             grown = [(q[0] - h, q[1] - h, q[2] + h, q[3] + h) for q in rects]
@@ -234,6 +238,8 @@ def main(argv=None):
             r["f_stages"], r["cnt_stages"] = max(r["f_stages"], nf), max(r["cnt_stages"], nc)
             r["hop_um"], r["placed_hop_um"] = max(r["hop_um"], hop), max(r["placed_hop_um"], ph)
             r["seats"] += len(ks)
+            if hop > A.reach:
+                r.setdefault("over_bits", []).append([b, round(hop, 1), len(pb), [round(v, 1) for v in a], [round(v, 1) for v in bb]])
             for k, s in zip(ks, path):
                 sites[k] = [s[0], s[1]]
         r["hop_um"], r["placed_hop_um"] = round(r["hop_um"], 1), round(r["placed_hop_um"], 1)
