@@ -16,3 +16,4 @@
   - BIND_IGNORED: SELREP (10 types), ATTCUT (16), ATT_LAND_SRAM (16).
   - DEAD: OT_RST_RELAY_LANDED on all 59 types. amd1_tree rtl/lib/ot_rst_relay.sv 0071a3d067e7 has no ifdef, so the overlay was never applied. No netlist shows any effect.
   (2) SELREP alone explains 86 of the 96 outside types. Its 10 requesters all change, and so do the other 70 leaf/kv_leaf types: 119-151 cells each in u_vp, which confirms OWN-SLICE's elab-wide read. The 16 svc types it also touches, and ATTCUT's 1-cell u_vp change on leaf types, look like comparison cross-talk; not verified. ATT_LAND_SRAM changes nothing. ATTCUT changes 10 of its 16 requesters.
+- 2026-11-24 01:42 PST DIED [bind-elab-par] ot-push-main otpush-key-cardinal-2533266 on key-cardinal: rc=4 after 215 s, ended 01:42:38, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 215 s, no log
