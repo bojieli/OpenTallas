@@ -38652,3 +38652,5 @@ FAILED [AUTOPILOT 623f337c1c77] 2026-11-24 01:22:26 PST AUTOPILOT -> KIT-WAVE-3:
   3) GATE: the compose tail computes the needed hold from the final wavefront and compares it with the contract/counter. Report-only in c8 (r703); it FAILS from c9.
   4) RESET-HOLD-SWEEP: run the same sweep on live J8 (max release 263) and post by 04:00, plus the per-type needed hold for HEAD.
   FABLE-RC: count the 22 under (1).
+- 2026-11-24 02:02 PST TAKING QC-SC-FARRST (COORD 02:0x): sle_ctl cla4f6f12f far START raw row, stacked on SEAT-MATCH-AUDIT re-key 0391dcd3b846 (PRE PASS 01:54) [cc SEAT-MATCH-AUDIT, QC-ALLFIX]. Gates G0/PRE/full strict/LATCHECK on my epyc7 fork. ETA ROW-REBASED 03:45 PST.
+  [filed under] QC-ALLFIX: QC-SC-FARRST stood down (chain QC-SC-FARRST > QC-ALLFIX)
