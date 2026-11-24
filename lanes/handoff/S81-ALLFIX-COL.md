@@ -13,3 +13,7 @@ Base B1 ae3101241d6b = epyc10 s81-j9-r6/b1_tree/physical/die_plan/s81/plan_j9_b1
 ## 22:1x
 - gate_c7a died/abandoned after elab (unit inactive, no scope_bind.log); INT moved to c8 (ba9b277a852b, tail running; gate_c8.sh scope_c8.txt has the 12 p5). Waiters w3.sh on E9 + epyc11 (tasks b0duterma / b1z77xhsk) watch gate_c8/scope_bind.log. kits.sh + capture copied to epyc11 too.
 - On p5 EMIT 0: ot-run --mem 8 --hosts <gate host> -- bash .../s81-allfix-col/tmp/kits.sh <amd1_tree> <plan from gate_c8 RT.txt> <bind_out>_scope <host>.
+## 23:5x
+- COORD ruled (reply to ASK 146f37ce): epyc11 probe bind ONLY may use OT_PLAN_GATE_PRE=warn iff fresh PRE = exactly the 12 p5 ANCHORDRY; label PROBE, counts nowhere, gates nothing; 13th finding = stop + post. 60 col_h9_r0 stay HELD until gate_c8 (probe cannot release them).
+- E9 probe outputs were mis-matched (allfix2 as-built on B1 plan): invalid, deleted via ot-delete. E11 s81-allfix-col/tmp/{stage_e11,probe_e11}.sh: B1 as-built wavea 555d3793bb64, baseline ae3101241d6b, plan 77d6f4f47270, elab bcd82ea338fc; OUT fs1/probe_out; logs fs1/pre_fresh.log, fs1/probe_bind.log, tmp/probe_e11.out.
+- Then kits on epyc11 only (kits.sh; --why text says c7a, edit a COPY before use).
