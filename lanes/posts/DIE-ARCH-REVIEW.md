@@ -1,0 +1,1 @@
+- 2026-11-23 23:13 PST TAKING DIE-ARCH-REVIEW (new lane, no parent): measure H1-H5 for S81/HEAD/QC/KV from current plans, kit results, 7-day hub history. Read-only; heavy scripts via ot-run on epyc11. Interim (a)-(c) ~01:30 PST, final REPORT.md ~03:30 PST.
