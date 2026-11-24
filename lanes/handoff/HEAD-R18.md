@@ -218,3 +218,6 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - The escape kit hd_lep0N_1123172531 was cancelled by the FLEET-WATCH UNSIGNABLE watchdog at 22:31 (I missed the KEEP notice). It is not a GRT result. Relaunch only if both epin_r4 and rscap fail to give a final GRT read.
 - KEEP posted for epin_r4 oth-ubuntu-2158420-1795492061 and rscap oth-ubuntu-1365406-1795488947. Watch FLEET-WATCH NOTICEs and answer within 30 min.
 - Waiters replaced: head-r18-epin-waiter3 (waiter_epin3) and head-r18-rscap-waiter5 (waiter_rscap3). A missing final report now prints NO-FINAL-REPORT.
+
+## 23:3x correction
+- West run 1 = chain FAIL at PIN_AUDIT (18 count straps; empty strap evidence); signoff null. HEAD-WEST is rerunning route2; KIT-STRAP-EVIDENCE owns the class fix. Read HEAD-WEST posts before reporting West state.
