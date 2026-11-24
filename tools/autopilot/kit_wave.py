@@ -12141,7 +12141,7 @@ try:
     sys.path.insert(0, a["tt_dir"])
     import type_template as TT
     recs = TT.records(json.load(open(a["plan"])), a.get("bind_rtl"), a["src"], a.get("rom_dir"), a["rep"], a["signoff"],
-                      judge=lambda path, repo=None: a["judged"])
+                      judge=lambda path, repo=None: a["judged"], rule=a.get("rule") or "", kits=a.get("kits"), weights=a.get("weights"))
     out = {"records": recs}
 except Exception as e:
     out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
@@ -12156,7 +12156,11 @@ def template_credit_step(AP, cfg, st, notices, ap_dir, rpy=None):
     the equivalence record of every member (tools/fleet/type_template.records on the die gen host, where the plan, the bind and the
     tree are) under <ap_dir>/inherit_records/ and append <ap_dir>/inherit_members.tsv, which the sign-off counter reads
     (release_tree_plan.inherit_credit).  Once per (die, representative, block); a record that says no credit is logged and not listed.
-    The sign-off verdict is the autopilot job's (already judged): no second gate.  -> number of members credited"""
+    The sign-off verdict is the autopilot job's (already judged): no second gate.  -> number of members credited
+    S81-ROM-TEMPLATE 11-23 (off unless the die sets it): die option type_template_rule "strict" = type_template's strict rule (bound-RTL
+    logic key on hard cores only, image instance / permutation / sharing, generated-kit equality, ROM content in a PASS weight record);
+    its inputs are type_template_kits {type: generated kit dir on the gen host}, type_template_rom_dir and type_template_weights
+    [weights.manifest.json].  A rule-less die is unchanged."""
     items = st.get("items") or {}
     try:
         jobs = json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}
@@ -12189,7 +12193,9 @@ def template_credit_step(AP, cfg, st, notices, ap_dir, rpy=None):
                 continue
             p = rpy(d.get("gen_host"), PROBE_TT_CREDIT, dict(
                 tt_dir=str(Path(__file__).resolve().parents[1] / "fleet"), plan=d.get("plan"), bind_rtl=template_bind_rtl(d),
-                src=d.get("src"), rom_dir=d.get("type_template_rom_dir"), rep=rep, signoff=judged["path"], judged=judged), timeout=900)
+                src=d.get("src"), rom_dir=d.get("type_template_rom_dir"), rep=rep, signoff=judged["path"], judged=judged,
+                **({"rule": d["type_template_rule"], "kits": d.get("type_template_kits") or {}, "weights": d.get("type_template_weights") or []}
+                   if d.get("type_template_rule") else {})), timeout=900)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("records"), list):
                 AP.log(f"KIT-WAVE TYPE-TEMPLATE credit {die}/{rep}: records not built ({(p or {}).get('error') if isinstance(p, dict) else p}); retried next tick"[:400])
                 continue
@@ -12214,7 +12220,15 @@ def template_credit_step(AP, cfg, st, notices, ap_dir, rpy=None):
                     with open(tsv, "a") as fo:
                         fo.write("\t".join([die, m, rep, str(f), hashlib.sha256(f.read_bytes()).hexdigest()]) + "\n")
                 ok.append(m)
-            done[key] = {"t": time.time(), "job": rec.get("q_id"), "credited": len(ok), "refused": len(no)}
+            if no and d.get("type_template_rule"):
+                # strict: a member whose kit or ROM content is not there yet is refused now and retried (the credited ones are listed once)
+                sig = [len(ok), len(no), hashlib.sha256("\n".join(sorted(no)).encode()).hexdigest()[:12]]
+                seen = st.setdefault("template_credit_open", {})
+                if seen.get(key) == sig:
+                    continue
+                seen[key] = sig
+            else:
+                done[key] = {"t": time.time(), "job": rec.get("q_id"), "credited": len(ok), "refused": len(no)}
             n += len(ok)
             AP.log(f"KIT-WAVE TYPE-TEMPLATE CREDIT {die}/{rep} job {rec.get('q_id')}: {len(ok)} member(s) credited, {len(no)} refused"
                    + (f" ({no[0]})" if no else ""))

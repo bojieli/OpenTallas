@@ -180,3 +180,120 @@ def test_records_do_not_write(world):
     judge = lambda path, repo=None: dict(path=str(path), sha256="s", verdict="SIGNED", gates={}, reasons=[], drc=0, tt_wns_ps=-1.0, ff_hold_wns_ps=1.0)
     recs = TT.records(plan, bind, repo, None, A, "x", judge=judge)
     assert [r["sibling"] for r in recs] == [B] and recs[0]["credit"] is True and not (tmp / "rec").exists()
+
+
+# ---------------------------------------------------------------- S81-ROM-TEMPLATE strict rule + negative controls
+SIGNED = lambda path, repo=None: dict(path=str(path), sha256="s", verdict="SIGNED", gates={}, reasons=[], drc=0, tt_wns_ps=-1.0, ff_hold_wns_ps=1.0)
+
+
+@pytest.fixture
+def strict(world):
+    """two positions, two ROMs each, one kit dir each, real-content images with a PASS weight record"""
+    plan, bind, repo, tmp = world
+    pt = plan["partition_types"]
+    for n in (C, D):
+        del pt[n]
+    plan["partitions"] = [dict(name="fW0_p1_b1", type=A), dict(name="fE0_p1_b1", type=B)]
+    for n, f in ((A, "f0"), (B, "f1")):
+        pt[n]["hard_cores"].append(dict(pt[n]["hard_cores"][0], inst="u_c1", origin_um=[50, 20]))
+        pt[n]["param_set"] = {"P_u_c%d_INSTANCE" % i: '"%s.u.c%d"' % (f, i) for i in (0, 1)}
+        (tmp / "rtl" / (n + ".sv")).write_text("module %s (input wire clk);\n" % n + "".join(
+            '  ot_rom_4096x72_m8 #(.INSTANCE("%s.u.c%d"), .VIAMAP("")) u_u_c%d (.clk(clk));\n' % (f, i, i) for i in (0, 1)) + "endmodule\n")
+    rom = tmp / "rom"
+    rom.mkdir()
+    recs = []
+    for f in ("f0", "f1"):
+        for i in (0, 1):
+            p = rom / ("%s.u.c%d.viamap.hex" % (f, i))
+            p.write_text("%s%d\n" % (f, i))
+            recs.append(dict(instance="%s.u.c%d" % (f, i), viamap=p.name, viamap_sha256=CI.sha256_file(str(p))))
+    man = rom / "weights.manifest.json"
+    man.write_text(json.dumps(dict(schema="x", checkpoint=dict(index_sha256_seen="ab"), instances=recs)))
+    (rom / "weights.verify.json").write_text(json.dumps(dict(verdict="PASS", manifest_sha256=CI.sha256_file(str(man)))))
+    kits = {}
+    for n, part, f in ((A, "fW0_p1_b1", "f0"), (B, "fE0_p1_b1", "f1")):
+        k = tmp / "kits" / n
+        (k / "rtl").mkdir(parents=True)
+        (k / "config.mk").write_text("export DESIGN_NAME = %s\nexport X = /srv/a/%s/b\n" % (n, n))
+        (k / "reset_tree.tcl").write_text("place u_rrl_1 100.5 20.0\n")
+        (k / "kit_rtl.json").write_text(json.dumps(dict(parts=[part], tree_sha256=n, pins=3)))
+        (k / "rtl" / (n + "_bound.sv")).write_text('// lane of %s\nmodule %s; rom #(.INSTANCE("%s.u.c0")) u();\nendmodule\n' % (part, n, f))
+        kits[n] = str(k)
+
+    def run(**over):
+        a = dict(rom_dir=str(rom), kits=kits, weights=[str(man)])
+        a.update(over)
+        return TT.records(plan, bind, repo, a.pop("rom_dir"), A, "x", judge=SIGNED, rule="strict", **a)[0]
+    return plan, tmp, kits, rom, man, run
+
+
+def test_strict_credits_an_image_only_variant(strict):
+    _plan, _tmp, _kits, _rom, _man, run = strict
+    r = run()
+    assert r["credit"] is True and r["credit_blockers"] == [] and r["rule"] == "strict" and r["images"] == 2 and r["kit_files_compared"] == 4
+
+
+@pytest.mark.parametrize("what", ["kit_number", "kit_missing", "kit_extra", "image_swap", "image_shared", "two_frames", "no_image", "bit_flip", "same_content",
+                                  "no_record", "verify_fail", "verify_other_manifest", "no_checkpoint"])
+def test_strict_negative_controls(strict, what):
+    plan, tmp, kits, rom, man, run = strict
+    sv = tmp / "rtl" / (B + ".sv")
+    over = {}
+    if what == "kit_number":                                                  # one reset relay 0.1 um away in the generated kit
+        (tmp / "kits" / B / "reset_tree.tcl").write_text("place u_rrl_1 100.6 20.0\n")
+    elif what == "kit_missing":
+        over = dict(kits={A: kits[A]})
+    elif what == "kit_extra":
+        (tmp / "kits" / B / "extra_hook.tcl").write_text("\n")
+    elif what == "image_swap":                                                # c0 carries c1's weights and the reverse: same rtl key
+        sv.write_text(sv.read_text().replace("f1.u.c0", "@").replace("f1.u.c1", "f1.u.c0").replace("@", "f1.u.c1"))
+    elif what == "image_shared":
+        sv.write_text(sv.read_text().replace("f1.u.c1", "f0.u.c1"))
+    elif what == "two_frames":
+        sv.write_text(sv.read_text().replace("f1.u.c1", "f2.u.c1"))
+    elif what == "no_image":
+        (rom / "f1.u.c1.viamap.hex").unlink()
+    elif what == "bit_flip":
+        (rom / "f1.u.c1.viamap.hex").write_text("f10\n")
+    elif what == "same_content":                                              # a member with the representative's weights is not another image
+        m = json.loads(man.read_text())
+        for i in (0, 1):
+            (rom / ("f1.u.c%d.viamap.hex" % i)).write_text("f0%d\n" % i)
+            m["instances"][2 + i]["viamap_sha256"] = m["instances"][i]["viamap_sha256"]
+        man.write_text(json.dumps(m))
+        (rom / "weights.verify.json").write_text(json.dumps(dict(verdict="PASS", manifest_sha256=CI.sha256_file(str(man)))))
+    elif what == "no_record":
+        over = dict(weights=[])
+    elif what == "verify_fail":
+        (rom / "weights.verify.json").write_text(json.dumps(dict(verdict="FAIL", manifest_sha256=CI.sha256_file(str(man)))))
+    elif what == "verify_other_manifest":
+        man.write_text(man.read_text() + "\n")
+    elif what == "no_checkpoint":
+        m = json.loads(man.read_text())
+        m["checkpoint"] = {}
+        man.write_text(json.dumps(m))
+        (rom / "weights.verify.json").write_text(json.dumps(dict(verdict="PASS", manifest_sha256=CI.sha256_file(str(man)))))
+    r = run(**over)
+    assert r["credit"] is False, what
+    word = dict(kit_number="kit file(s) differ", kit_missing="no generated kit", kit_extra="kit file(s) differ", image_swap="permuted",
+                image_shared="named by another", two_frames="more than one frame", no_image="no via map", bit_flip="not in a PASS weight record",
+                same_content="not a different image", no_record="not in a PASS", verify_fail="not PASS", verify_other_manifest="not PASS",
+                no_checkpoint="no checkpoint")[what]
+    assert any(word in b for b in r["credit_blockers"]), (what, r["credit_blockers"])
+
+
+def test_strict_image_string_on_soft_logic_is_not_masked():
+    """negative control of the by-construction LEC: an image string that reaches a module which is not a placed hard core is logic"""
+    a = 'module X (input wire clk);\n  soft_mod #(.INSTANCE("f0.c0")) u_s (.clk(clk));\nendmodule\n'
+    assert TT.rtl_key(a, "X") == TT.rtl_key(a.replace("f0", "f1"), "X")                                       # the 11-19 key is blind to it
+    assert TT.rtl_key(a, "X", {"ot_rom"}) != TT.rtl_key(a.replace("f0", "f1"), "X", {"ot_rom"})
+    r = a.replace("soft_mod", "ot_rom")
+    assert TT.rtl_key(r, "X", {"ot_rom"}) == TT.rtl_key(r.replace("f0", "f1"), "X", {"ot_rom"})
+    assert TT.rtl_key(r, "X", {"ot_rom"}) != TT.rtl_key(r.replace("(clk)", "(clk2)"), "X", {"ot_rom"})
+
+
+def test_kit_norm_keeps_numbers():
+    n = lambda s, code=False: TT.kit_norm(s, A, ["fW0_p1_b1"], {"f0.c0"}, code)
+    assert n("set x 1.0  # // keep") != n("set x 1.1  # // keep")
+    assert n('"tree_sha256": "a"') == n('"tree_sha256": "b"') and n('"pins": 3') != n('"pins": 4')
+    assert n("fW0_p1_b11") == "fW0_p1_b11" and n("fW0_p1_b1") == "@P" and n("// c", True) == ""

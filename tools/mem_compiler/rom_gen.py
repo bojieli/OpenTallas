@@ -703,7 +703,7 @@ def weights_verify(manifest_path: Path, snapshot: Path, samples: int = 64, macro
             bad.append(f"{rec['instance']}: BIST signature differs")
     return {"verdict": "FAIL" if bad else "PASS", "macro": man["macro"], "instances": len(man["instances"]),
             "words_checked": checked, "lanes_per_word": lanes, "content_signature": die_signature(man["instances"]),
-            "errors": bad[:20]}
+            "manifest_sha256": asap7.sha256_file(manifest_path), "errors": bad[:20]}
 
 
 def main() -> int:
