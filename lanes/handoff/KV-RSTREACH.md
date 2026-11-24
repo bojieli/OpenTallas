@@ -51,3 +51,13 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
 - ref_site reindex is NOT adoptable on A5t3: it breaks hg* (names not in the reset tree) + leaves hroot raw_branches stale. Posted 81760703.
 - Uniform depth shifts on A5t3: pv_v1n 12->13, hroot 9->10, pc_v1__cl23f6a148 9->10.
 - Remaining for my RSTREACH row on A5t4: hroot 11 START hops 412-494 um, hub_Ei 27 raw-branch legs, sys_SD/_v1 FSTART legs. Replay a5s.sh on A5t4 with ctl on its rt.
+
+## STATE 11-24 04:50 PST (A5t4 RSTREACH row, epyc10)
+- 04:17 post b97cd3c2: REKEY into A5t4 + uniform +1 depth (pv_v1n, hroot, pc_v1 cl23f) for DLYRAM-RESET and the LATCHECK owner (KV-ALLFIX POSTBIND).
+- Work dir: epyc10 /srv/opentallas-scratch2/claude/kv-rstreach/a5t. Base = rekey/plan.json a27871f963a1 (A5t3+REKEY).
+- Row = ROWS_KV-RSTREACH-ETAP.py, then genchain, then ROWS_KV-RSTREACH_v10.py (v9 + START leaves limited to clock taps; START types hroot, hub_Ei, hub_Wo, pv_v1n).
+  - ETAP: sys_SD gets an added density tap clk_t11 (1547.4, 26.4); cland_up goes clk_t2 -> t11, 149 um. sys_SD_v1 cland_up pins move +14.3 um; die hop 300.
+  - row1/ (row only, launch_ro tree): ROW_PLAN 285d3aa6def3. START max 299.7; raw max 367.5 (hub_Wi exception).
+- Gate: after_fork.sh waits for tree_a5t (ot-tree-fork from grow10/tree), then runs a5t.sh under ot-run. Log: gate1.log. Out: run/.
+- Report-only finding (post 01df4487; its stamp 04:52 was 8 min fast, real time 04:44): 43/91 collector_tree snapshots are stale vs the solved tree; 83/91 sidecar trees differ from the plan. ctall.out.
+- Next: on PRE + scoped green -> ROW-REBASED -> KV-ALLFIX, cc FABLE-RC-KV, KV-HG-CAP; full strict + LATCHECK in the same run.
