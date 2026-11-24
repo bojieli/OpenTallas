@@ -30,3 +30,10 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
 - The first HASH_STOP was my own guard's path bug (pv_col lives in inputs/). Fixed in a5s.sh pads().
 - NEW ITEM (COORD 01:4x): bind_reset.json core taps vs RTL. Report-only checker on main f6d43b117443 (tools/die_plan/bind_reset_core_class.py, hooked into bind.emit -> OUT/bind_reset_core_class.json). D29 applied bind: 91/91 core resets on 40 types are spine-driven, 0 on their tap. NEXT if FABLE agrees: publish reset_class=spine + spine release in bind_reset.json (ETA 04:00).
 - My worktree: /home/ubuntu/wt/kv-rstreach-coreclass-1124 (shallow clone; before a push, fetch --depth origin main; cherry-pick, never rebase).
+
+## STATE 11-24 02:28 PST
+- COORD ruling done: spine-class tool on main 93a6a4f0e841. bind_reset.json now publishes spine-driven core resets as reset_class=spine with spine_release, and drops the false core_release. D29 replay: 91/91 moved. Opt-out: OT_BIND_RESET_SPINE_CLASS=0. Posted to ALLFIX/FABLE/DLYRAM-RESET.
+- A5sp is VOID. The base is A5t2 a160bc6c5c2c (epyc11 kv-allfix/grow/A5t2/plan.json, asbuilt_allfix_A5t2.json 9dbc172d52d7, rt 445647cc300c). At 02:25 its gate bind2 crashed (bit_sites_um ValueError, ALLFIX's to fix).
+- REPLAY when A5t2 bind2 is green. First copy into tree_a5s plan_of_record: asbuilt_allfix_A5t2.json and r8_k3f_vport_semantic_trial_r2_1123.json (f41eecdfdcf8, or newer from the green gate). Check sidecar = 668fe and pv_col = 1976e. Then:
+  ot-run --hosts epyc11 --mem 48 --threads 8 --disk 60 --dir $L -- bash $L/a5s.sh $G/A5t2/plan.json a160bc6c5c2c asbuilt_allfix_A5t2.json 445647cc300c $L/tree_a5s $L/ctl_445.txt
+  (ctl_445.txt = 23/23 SAME; a5s.sh writes into $L/a5s and launch_a5s_44564). Then post ROW-REBASED.
