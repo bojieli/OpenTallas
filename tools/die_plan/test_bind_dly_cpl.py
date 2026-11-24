@@ -25,7 +25,7 @@ def test_default_branch_is_the_plain_chain():
     plain = t.split("`else", 1)[1].split("`endif", 1)[0]
     assert "r[0] <= d;" in plain and "r[i] <= r[i-1];" in plain and "assign q = r[D-1];" in plain
     cpl = t.split("`ifdef OT_DLY_CPL", 1)[1].split("`else", 1)[0]
-    assert "r[0] <= ~d;" in cpl and "r[i] <= ~r[i-1];" in cpl and "(D % 2 == 1) ? ~r[D-1] : r[D-1]" in cpl
+    assert "r[0] <= d;" in cpl and "r[i] <= ~r[i-1];" in cpl and "(D % 2 == 0) ? ~r[D-1] : r[D-1]" in cpl
 
 
 def _python_model(depth, seq, cpl):
@@ -33,10 +33,10 @@ def _python_model(depth, seq, cpl):
     r = [0] * depth
     out = []
     for x in seq:
-        nr = [(1 - x) if cpl else x] + [((1 - r[i - 1]) if cpl else r[i - 1]) for i in range(1, depth)]
+        nr = [x] + [((1 - r[i - 1]) if cpl else r[i - 1]) for i in range(1, depth)]
         r = nr
         last = r[depth - 1]
-        out.append((1 - last) if (cpl and depth % 2 == 1) else last)
+        out.append((1 - last) if (cpl and depth % 2 == 0) else last)
     return out[depth:]
 
 
@@ -89,17 +89,17 @@ def _run_from(depth, init, seq, cpl):
     out = []
     for x in seq:
         last = r[depth - 1]
-        out.append((1 - last) if (cpl and depth % 2 == 1) else last)   # q before this clock edge
-        r = [(1 - x) if cpl else x] + [((1 - r[i - 1]) if cpl else r[i - 1]) for i in range(1, depth)]
+        out.append((1 - last) if (cpl and depth % 2 == 0) else last)   # q before this clock edge
+        r = [x] + [((1 - r[i - 1]) if cpl else r[i - 1]) for i in range(1, depth)]
     return out
 
 
 @pytest.mark.parametrize("depth", [1, 2, 3, 4, 5])
 def test_reset_state_compare(depth):
     """From EVERY start state of the plain chain, the complement chain started in the corresponding state (stage k
-    inverted when k is even) gives the same q on every cycle from cycle 0, not only after the pipe has flushed."""
+    inverted when k is odd) gives the same q on every cycle from cycle 0, not only after the pipe has flushed."""
     seq = [(i * 5 + i // 2) % 2 for i in range(3 * depth + 4)]
     for s in range(1 << depth):
         init = [(s >> k) & 1 for k in range(depth)]
-        mapped = [(1 - b) if k % 2 == 0 else b for k, b in enumerate(init)]
+        mapped = [(1 - b) if k % 2 == 1 else b for k, b in enumerate(init)]
         assert _run_from(depth, mapped, seq, True) == _run_from(depth, init, seq, False), (depth, init)

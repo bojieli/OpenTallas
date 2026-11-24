@@ -7127,6 +7127,28 @@ def serdes_boot_stage_param(rtl_dir, defines):
     return changed
 
 
+def qn_alternate_stations(rtl_dir, defines):
+    """QC-FW-CAP 11-23 phase 2 (FABLE-RC-QC FWCPL-1): the type define OT_ST_QNALT turns the ot_dp_st chains of the staged kit
+    bound RTL into QN-polarity pairs (qn_alternate.py, HBM-PLAN-1 pilot form with its yosys chain proof qn_chain_proof.py):
+    a chain of k stations whose internal wires have no other reader becomes ot_dp_stn x (k - k%2) + one plain ot_dp_st, so
+    every chain output keeps polarity, depth, epoch bit and the station register names (inst/q[b]); only the internal chain
+    wires carry the complement, driven by the QN pins (no restoring INV: 34.7k of the 51k relay INV left on slw_fw_v1 after
+    OT_DLY_CPL).  Absent define = the kit is byte-identical.  Returns the files changed."""
+    names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
+    if "OT_ST_QNALT" not in names:
+        return []
+    import qn_alternate as _QNA
+    changed = []
+    for f in sorted(Path(rtl_dir).glob("*_bound.sv")):
+        if "module ot_dp_stn" in f.read_text():
+            continue
+        tmp = f.with_suffix(".qnalt.tmp")
+        _QNA.main(str(f), str(tmp), str(Path(rtl_dir).parent / f"qn_alternate_{f.stem}.json"))
+        tmp.replace(f)
+        changed.append(f.name)
+    return changed
+
+
 def serdes_h_post_gpl(kd, names, post_gpl):
     """S81-SERDES-GEN 11-17 (H17 lineage, FABLE-FIX-S81-SERDES2): BOOT_RELEASE3 types run the anchor-aware boot-release placement
     after the transport/RM hooks (the hand kit's post_global_boot3.tcl).  Returns the POST_GLOBAL_PLACE script name."""
@@ -7466,6 +7488,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
     serdes_boot_stage_param(kd / "rtl", P.types[tn].get("verilog_defines") or [])
+    qn_alternate_stations(kd / "rtl", P.types[tn].get("verilog_defines") or [])
     # REG-LEAF-SPLIT 11-19 (FABLE-FIX-KV-HG K, KV-D23-COMPOSE D25e2): plan reg_leaf_split = kept copies of a pure 1-stage
     # registered leaf, one per consumer pin group, sited FIRM below (istations.tcl); absent = nothing changes
     import reg_leaf_split as _RLS
