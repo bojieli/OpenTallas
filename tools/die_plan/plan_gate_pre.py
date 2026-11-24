@@ -40,6 +40,11 @@ BIND-SPEED-1118 adds four classes (bind_rowcheck.py; run inside `bind` after the
   the elaborated die (names compared in u_r0_u_x instance form too; --elab-dir OUT); MODULES modules named by asbuilt.substitute_inst /
   substitute / sub_core_leaf that exist nowhere; TOOLSTALE tools/die_plan files older than the live tree (--ref-tools, $OT_RT_CURRENT).
 
+TOOLROOT-1123 (COORD 16:1x, FABLE flow review): when an rt sha is declared ($OT_TOOLS_SHA, else the rt/<sha> $OT_RT_CURRENT
+  names after rt_pin.py --export), the repo root this PRE runs from must BE that sha (rt/<sha> dir or git HEAD) and hash equal to
+  its rt manifest on tools/die_plan + physical/common_flow; else FAIL TOOLROOT (fail closed).  Nothing declared: not checked.
+  Gate scripts run the same check standalone: python3 -I <tools>/die_plan/tool_root.py --expect <sha>.
+
 LANDREMAP-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every type whose hard core (landing cl_*, ectl, any) or clock tap
   table moved against BASE re-solves its reset tree and renumbers rst_rl_<k>.  A landing reset reference (landing_reader_start /
   landing_writer_start / landing_local_resets / landing_raw_branches; collector_tree excluded) that still names, at the same
@@ -123,7 +128,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1567,6 +1572,10 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_inputs(tree, plan, sidecar, asbuilt, want_list, require_asbuilt)
     if "TOOLS" not in skip:
         findings += check_tools(tree)
+    if "TOOLROOT" not in skip:                           # TOOLROOT-1123: the tools this PRE runs from = the declared rt sha
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import tool_root as _TR
+        findings += _TR.check(quiet_undeclared=True)
     if "ROWS" not in skip:
         findings += check_rows(plan, baseline, proofs, rows_files)
     if "GEOM" not in skip:
