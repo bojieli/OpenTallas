@@ -10,3 +10,4 @@
   HELD: lepe_nh_mus_LP t1, lepw_mus_LP t2 (FABLE + S81-KV-CALENDAR RIP; not touched).
   IQC-T1: row closed as RIDES-C8; iq_C t1 probe waits on c8 bind OUT.
   ROUTE-HELD kits on superseded plan (event 891100ef774), left, not proofs: lepe_nh_mus_C t1 b55cf2d3ded95 (epyc10), lepw_mus_C t1 b766651e3cd80 (epyc10), lepw_mu_C t1 bc51f84eb379d (intel1), c1x_C t7 bc4739f09402c (intel1).
+- 2026-11-24 02:05 PST DONE [S81-SLICE-C-OWN] ot-run oth-ubuntu-4000380-1795514615 on renewed-glider: rc=0 after 125 s, ended 10:05:38, log /srv/opentallas-scratch2/claude/s81-slice-c-own/ts_run.log, cmd: --mem 40 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-slice-c-own -- bash ts1.sh
