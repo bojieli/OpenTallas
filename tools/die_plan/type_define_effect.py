@@ -356,10 +356,11 @@ def unit_mem_gb(proc_cgroup="/proc/self/cgroup", root="/sys/fs/cgroup"):
 
 
 def elab_jobs(n, mem_gb):
-    """BIND-ELAB-PAR: parallel define-variant elabs.  $OT_BIND_ELAB_JOBS (>= 1) wins; else min(n, idle cores,
+    """BIND-ELAB-PAR: parallel define-variant elabs.  $OT_BIND_ELAB_JOBS (>= 1) wins; else min(n, max(4, idle cores),
     (min(MemAvailable, the unit's cgroup cap) - 64 GB) / per-job GB).  The Yosys containers run outside the ot-run
-    unit's cgroup, so the unit's own cap is applied here: the gate stays inside the memory it was admitted for.  The
-    64 GB is the bind process itself (S81 c7a: 52 GB peak).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14)
+    unit's cgroup, so the unit's own cap is applied here: the gate stays inside the memory it was admitted for.  Each
+    variant is one Yosys thread and the fleet admits on memory, never on load (OWNER 10-18), so a busy host still gets 4.
+    The 64 GB is the bind process itself (S81 c7a: 52 GB peak).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14)
     (S81 c7a Yosys peak 11.4 GB)."""
     env = os.environ.get("OT_BIND_ELAB_JOBS", "").strip()
     if env:
@@ -370,7 +371,7 @@ def elab_jobs(n, mem_gb):
     try:
         idle = int((os.cpu_count() or 1) - os.getloadavg()[0])
     except OSError:
-        idle = 1
+        idle = 0
     avail = None
     try:
         for ln in Path("/proc/meminfo").read_text().splitlines():
@@ -386,7 +387,7 @@ def elab_jobs(n, mem_gb):
         per = float(os.environ.get("OT_BIND_ELAB_JOB_GB") or per)
     except ValueError:
         pass
-    return max(1, min(n, idle, int((min(avail, cap if cap is not None else avail) - 64) // max(per, 1.0))))
+    return max(1, min(n, max(4, idle), int((min(avail, cap if cap is not None else avail) - 64) // max(per, 1.0))))
 
 
 class Prestart:

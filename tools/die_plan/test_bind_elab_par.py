@@ -82,6 +82,13 @@ def test_unit_cap_bounds_the_jobs(tmp_path, monkeypatch):
     monkeypatch.setattr(TDE.os, "getloadavg", lambda: (0.0, 0.0, 0.0))
     monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 64.0)
     assert TDE.elab_jobs(5, 96) == 1
+    monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 128.0)
+    monkeypatch.setattr(TDE.os, "cpu_count", lambda: 96)
+    monkeypatch.setattr(TDE.os, "getloadavg", lambda: (112.0, 0.0, 0.0))
+    real = Path.read_text
+    monkeypatch.setattr(Path, "read_text", lambda self, *a, **k: "MemAvailable: 524288000 kB\n"
+                        if str(self) == "/proc/meminfo" else real(self, *a, **k))
+    assert TDE.elab_jobs(6, 96) == 4            # a loaded host still runs the four S81 variants, inside the 128 GB unit
 
 
 @needs_yosys
