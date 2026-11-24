@@ -378,3 +378,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 12:15 PST CANARY qwen_kvsys @ 1e5253421a: PASS (STALE-BASELINE STALE-BASELINE: identical 3 regressed metric(s) at 3 source commits (3cba4dba0571, 67a9d659af22); baseline canary-run-info /srv/opentallas-scrat)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 13:30 PST CANARY s81_head @ 9cd3574dfd: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 5 source commits (1e5253421a13, 3cba4dba0571, 67a9d659af22, c233580e8a92); baseline canary-ru); CANARY s81 @ 52c1a64173: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 4 source commits (1e5253421a13, 67a9d659af22, b335c93437b7); baseline canary-run-info /srv/op)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
