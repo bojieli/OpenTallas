@@ -172,3 +172,10 @@ J8 891100ef774 remains live. No J9 candidate was activated. All admitted exact g
 - Chain v4 (intel2 j9fix4_cut_chain.sh) KILLED 23:58; nothing sealed. j9fix_seal.sh now exits 9 without a SEAL_CLEARED file. mk_cand/apply/event scripts still never run. Event clone s81-j9-r6/laneclone_event.
 - Pull-back: unit oth-ubuntu-2858155-1795506812 epyc10 (bind out 6.3 GB, slow tail). Gate not relaunched.
 - seqhost bk_uid tie: main 7514102531086 (for c9).
+
+## 2026-11-24 05:3x PST state (lk_ES0 AB; supersedes the lk_ES0 line above)
+- lk_ES0 AB = c9 row (missed the c8 gate). Ops: epyc9 s81-j9-r6/lkes0/row_AB.ops.json 780053d62b25 (pin6 source_clock_port clk_t15->clk_t31; collector_root_node rst_root_n->rst_n_t30) + table ops in lkes0/prep.py (asbuilt landed_sidecar: root node + xy [2746.44,1082.16], lk_ES0 depth 14->27).
+- Scoped strict bind (unit 3307143, epyc9): BIND_RC=1. The refusal is die-wide strict errors (325: TIED, TYPE_DEFINE_NOEFFECT x123, TYPE_DEFINE_CONFLICT x1); 0 on serdes__t1__clb45db5be. PRE warn: 26 ANCHORDRY = c8.
+- bootchk (lkes0/gate/bootchk.log): chain depth 27 from both sources, root rst_n_t30, fclk clk_t31, root->up_ready 265.6 / up_fault 263.4 um, ready_at_glue 1242 unchanged.
+- Open: INT must confirm the 325 strict errors are base. Then ROW-REBASED for c9. Evidence kept at lkes0/evidence_AB (rtl, report, plan, table, asbuilt_run). c8_tree removed with ot-delete.
+- epyc10 orphan greps in b1_tree (pids 2192413, 1291372) killed 05:3x at COORD's request.
