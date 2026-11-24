@@ -1,0 +1,1 @@
+- 2026-11-23 23:54 PST TAKING HEAD-W-DRC from HEAD-WEST: hd_lep0N_w run-1 M7 DRC 2 (pair-core pin vs VSS strap end gap). cc HEAD-WEST, COORD
