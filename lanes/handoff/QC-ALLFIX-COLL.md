@@ -1,0 +1,15 @@
+# QC-ALLFIX-COLL handoff (FAMILY helper of QC-ALLFIX; updated 11-23 17:50 PST)
+
+Integrator: QC-ALLFIX (agent a19642e09aa8ab59f). Base compose A f418c1b290f3 = epyc8 /srv/opentallas-scratch2/claude/QC-ALLFIX/cA/rows/plan_b25_tapoff.json.
+Work dirs: E10 /srv/opentallas-scratch/claude/QC-ALLFIX-COLL (CTS probes), epyc8 /srv/opentallas-scratch2/claude/QC-ALLFIX-COLL (clone, rows).
+
+1. coll_core 80 CLK-open (functional stop): ROOT CAUSE = native CTS keeps one sink per location of a clock net; tap_reset_split
+   seated copies at sink centroids / launch copies at their stage bbox, which gave 81 same-tap same-(x,y) pairs, and 80 opens.
+   FIX = tools row main 32027184aff (commit 79e81c90823): tap_reset_split.tcl uniq_seats + test. Proof E10 ctsopen_fix_1730
+   (CTS-only, pkg15 3_place e0a45c22c7b3): 205 copies, 0 open. Diag: ctsopen_diag_1640 (before/after.tsv). ROW-REBASED sent 17:39.
+   Open: u_rrl_26 AND D-net to 23 copies is -521 pre-repair at CTS (SKIP_CTS_REPAIR_TIMING=1); the GRT probe decides; fallback clock.tap_reset_split_max_taps.
+2. rc107/rc109: coll types are byte-identical C4 -> compose A (pkg15 carried). Probe after an rt with 32027184aff.
+3. SLE CTL B_TW bank spread: ALREADY in C4/b25 (4 per-bit banks x158-504, 9 stages kept; QC-V4 ctl_1123/station_row.json, btw_station_and_clock_model.png). Needs only the sle_ctl__cla4f6f12f place/GRT probe.
+4. SLE CTL clock entry: sle_ctl edge taps = landing contract in C4 already (455.136/1159.008 ...). NEW peer finding: 14 hc1/hc2 types' fclk_in_b_hw_i
+   tap 140.192 != contract 206.624 (hc1) / 251.936 (hc2), which abut sle_ctl fclk_out_b_hw_hc*_o; preflight clock_pin_geometry would FAIL.
+   Row: epyc8 QC-ALLFIX-COLL/rows/ctlclk_row.py (123a8da159af), row_ctlclk.json (7eba760c7fbd), plan f418c1b290f3 -> b96b49014c35. PRE: rows/pre_ctlclk.log.
