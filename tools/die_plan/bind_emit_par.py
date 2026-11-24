@@ -588,15 +588,15 @@ def weight(B, tn, ps):
         return 0
 
 
-def run(B, out, files, j, rec_path=None):
+def run(B, out, files, j, rec_path=None, beat=None):
     t0 = time.time()
     try:
-        return _run(B, out, files, j, rec_path)
+        return _run(B, out, files, j, rec_path, beat)
     except ParUnsafe as e:
         raise ParUnsafe(f"{e} (parallel attempt cost {time.time() - t0:.0f} s)") from e
 
 
-def _run(B, out, files, j, rec_path=None):
+def _run(B, out, files, j, rec_path=None, beat=None):
     """Emit every type of B.by_type with j forked workers; on return B and `files` are as after the serial loop.
     Raises ParUnsafe (B untouched, files untouched; type files on disk are rewritten by the serial rerun) or the first type's
     own exception in sorted type order, like the serial loop."""
@@ -632,6 +632,9 @@ def _run(B, out, files, j, rec_path=None):
                 live[pid] = (tn, rp, lp)
             # The bind also owns a concurrent plan-gate child. Collect only
             # workers so the gate's caller can still join its own status.
+            if beat is not None:                 # EMIT-HEARTBEAT-1123: progress line from the poll loop (no thread across fork)
+                beat.done, beat.phase = len(done), f"types j={j}, running {','.join(sorted(v[0] for v in live.values()))[:160]}"
+                beat.beat()
             for pid in live:
                 ready, st = os.waitpid(pid, os.WNOHANG)
                 if ready:

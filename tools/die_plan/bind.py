@@ -139,6 +139,51 @@ endmodule
 _AUTO_CELL = re.compile(r"^(.*)\.\$(\w+)\$(\d+)$")
 
 
+
+class EmitBeat:
+    """EMIT-HEARTBEAT-1123 (COORD: the no-progress watchdog killed the QC V4 seal bind, exit 143, after ~2.3 h of silent emit):
+    one "EMIT n/N types (phase, t s)" line every $OT_BIND_EMIT_BEAT_S (60) s while emit() runs, so watchdogs and humans see it
+    alive.  A daemon thread beats only while no worker is being forked (serial loop, bound top); the parallel emit beats from
+    its own poll loop (bind_emit_par.run(beat=...)).  Never stored on the Binder (the forked workers snapshot its __dict__)."""
+
+    def __init__(self, total, every=None, out=None):
+        try:
+            self.every = float(every if every is not None else os.environ.get("OT_BIND_EMIT_BEAT_S") or 60)
+        except ValueError:
+            self.every = 60.0
+        import time as _t
+        self._t = _t
+        self.total, self.done, self.phase, self.out = total, 0, "types", out
+        self.t0 = self.last = _t.time()
+        self._stop, self._th = None, None
+
+    def line(self):
+        return f"EMIT {self.done}/{self.total} types ({self.phase}, {int(self._t.time() - self.t0)} s)"
+
+    def beat(self, force=False):
+        now = self._t.time()
+        if force or (self.every > 0 and now - self.last >= self.every):
+            self.last = now
+            print(self.line(), file=self.out or sys.stdout, flush=True)
+
+    def start(self):
+        import threading
+        if self._th is not None or self.every <= 0:
+            return
+        self._stop = threading.Event()
+
+        def loop():
+            while not self._stop.wait(min(self.every, 5.0)):
+                self.beat()
+        self._th = threading.Thread(target=loop, name="emit-beat", daemon=True)
+        self._th.start()
+
+    def stop(self):
+        if self._th is not None:
+            self._stop.set()
+            self._th.join()
+            self._th = None
+
 class R8Renumber:
     def __init__(self, cells, canon):
         self.cells, self.canon = cells, canon
@@ -3678,6 +3723,18 @@ class Binder:
         files.append(f)
 
     def emit(self, out):
+        """EMIT-HEARTBEAT-1123: _emit_body with a progress heartbeat (EmitBeat); the beat thread always stops"""
+        sel = only_types_select(self.by_type, self.types)
+        beat = EmitBeat(len(sel) if sel is not None else len(self.by_type))
+        beat.beat(force=True)
+        try:
+            return self._emit_body(out, beat)
+        finally:
+            beat.stop()
+            beat.phase = "done"
+            beat.beat(force=True)
+
+    def _emit_body(self, out, beat):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
             shutil.rmtree(out)
@@ -3751,13 +3808,20 @@ class Binder:
             self.__dict__.setdefault("emit_gaps", [])  # Workers append to a shared baseline in type order.
         if bind_emit_par.jobs() > 1 and len(emit_set) > 1:
             try:
-                bind_emit_par.run(self, out, files, bind_emit_par.jobs())
+                bind_emit_par.run(self, out, files, bind_emit_par.jobs(), beat=beat)
                 _par = True
             except bind_emit_par.ParUnsafe as exc:
                 print(f"bind: emit parallel fell back to serial: {exc}", flush=True)
         if not _par:
+            beat.done = 0
+            beat.phase = "types serial"
+            beat.start()
             for tn, ps in sorted(emit_set.items()):
+                beat.phase = f"types serial, {tn}"
                 self._emit_one(tn, ps, out, files)
+                beat.done += 1
+        beat.done, beat.phase = len(emit_set), "bound top"
+        beat.start()
         if getattr(self, "_bound_core_resets", None):
             (out.parent / "bind_core_resets.json").write_text(
                 json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets), indent=1) + "\n")
