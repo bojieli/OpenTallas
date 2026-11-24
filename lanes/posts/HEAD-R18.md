@@ -294,3 +294,8 @@
   - Found a gap: the published East hold record head-r18g-east-cap10-census-1123 does NOT block on s81_head. kit_wave_edit says records are a no-op on stops_off dies (r703; only hbm keeps them). So I mirrored it as hold_items.hd_lep0N (b4a3c32e, 22:28). No East wave row had launched yet. Lift = delete the key on R18G_E_CAP10_ACCEPTED.
   - Live r18g wave rows now: hd_host_n and hd_st_n4 RUNNING (untouched).
   Next: STEP 2, the re-band amendment (014661a6ea33) as an amendment to the live event: tree s3w from s2, then publish_apply apply, expecting r18g.
+- 2026-11-23 22:36 PST STEP 2 under way: West re-band amendment [HEAD-R18 -> COORD, FABLE-RC-ALL, FOLLOWUP-HEAD]
+  - Tree s81_head_r18g_s3w = s2 + a 3-file src_manifest delta pack: prep_r18g/source_plan.json -> 014661a6ea33 (LEP-WBAND-1, the only plan diff is partition_types.hd_lep0N_w), plus wave_prepare.json (prepared_plan_sha256 only) and the republish log.
+  - delta-apply --link from s2: DELTA_RC 0, manifest e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a. Publish verify and replicate to epyc10/epyc9/intel2 are running.
+  - Plan evidence, 014661a6ea33 chain (epyc7 head-r18/bind_r18g_wband): PRE PASS, strict bind + nested portbind PASS, cohort 27/27, LATCHECK 334/334, NATREL 0, G0 0 errors.
+  - Next: publish_apply apply with event head_rp21z20NF15f_r18gw, expect-source s2, expect-event r18g. Then a strict bind + LATCHECK of the published s3w tree run by me (publish_apply has no post-bind for this script-mode candidate), with LATCHECK against the live r18g plan. I will post the result, then lift the West hold (STEP 3).
