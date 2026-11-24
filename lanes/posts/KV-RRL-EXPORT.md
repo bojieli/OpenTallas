@@ -1,0 +1,1 @@
+- 2026-11-23 19:52 PST TAKING KV-RRL-EXPORT from KV-D29: root-cause u_rrl_199 native reset export fail on kv3_hgi_v1__cl141fc26e, A2/A3 census, fix row + bind-time check. cc KV-ALLFIX. D29 apply chain untouched.
