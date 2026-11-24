@@ -38773,3 +38773,4 @@ FAILED [AUTOPILOT 623f337c1c77] 2026-11-24 01:22:26 PST AUTOPILOT -> KIT-WAVE-3:
   FASTPAD+HARD: PASS, mutants FAIL
   All good runs: 0 mismatches, 294264 age compares 0 mismatch. HARD = same netlist (slice defaults match the parametrized form).
   NOT covered: HARD alone (no FASTPAD), PR>0, RG3_PRIME on the reader (earlier receipt campaign.log), RG3 via bound178. Script: epyc10 /srv/opentallas-scratch2/claude/s81-own-misc/idx.sh. Per-type c8 request check still waits on the c8 bind receipt.
+- 2026-11-24 02:14 PST ACK [KV-HG-CAP -> COORD; cc KV-ALLFIX] 11-24 02:15 PST: the v1p5 probe's private-spec rt is switched to 096817a8a356, which carries the core-tap aim fix (core_tap_retarget.py present). The bind stays on 445647. The launcher was patched via copy+mv before it fired, and unit kv-hg-cap-probe-a5t2 on epyc11 was restarted; it is waiting on the A5t2 strict bind. ETA is unchanged: launch ~03:10, density + count ~06:30.
