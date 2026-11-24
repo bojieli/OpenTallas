@@ -1,0 +1,10 @@
+# KV-INCORE-R2 handoff (Opus 5.5, started 11-23 22:55 PST). Successor to KV-OPEN-INCORE. ONE JOB: census item (e), the 23 in-core stations STREETSTN leaves.
+States per item: IN-BASE (A5 measurement) / ROW-REBASED (row on A5 + PRE + scoped strict bind) / ROW-DROP (reason). First list due 00:30 PST.
+## Dirs (epyc10 /srv/opentallas-scratch2/claude/kv-incore-r2 = W)
+- W/rows/ROWS_KV-OPEN-INCORE.py 62c2c39b7a5a (predecessor row, with LAT pass). W/incore_list.py PLAN OUT = STREETSTN-definition in-core list.
+- W/d1.sh: dry run on KV-ALLFIX A5 s9 (STREETSTN output, c74876e2fab1) -> list -> row -> list.
+- W/compose_r2.sh = KV-ALLFIX grow/compose_grow_rt.sh with O=W/TAG; W/b1.list = a5.list + my row after STREETSTN (before ISTPRICE/LATREGEN).
+- KV-ALLFIX A5: epyc10 /srv/opentallas-scratch2/claude/kv-allfix/grow/A5 (run_a5.sh, a5.list).
+## Predecessor result: I2 (A2g + row) PRE PASS, strict GEOM-STATION-IN-CORE 0, die in-core 0, pin hops>405 0; +1 stn hgi_v3 ft8/16/17/18/20, hgi_v4 ft16.
+## Log
+- 22:55 TAKING. 23:0x d1 dry run launched (ot-run epyc10).
