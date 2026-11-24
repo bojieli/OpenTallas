@@ -15,3 +15,4 @@
   E rm t20->t21 (21): -10.
   No wrongly timed CDC was found.
   (4) A fix follows as a c9 row. Tables: epyc8 s81-serdes-tapskew/{an.out,pred270.out,sinks_t2.tsv,pads_t2.tsv}.
+- 2026-11-24 05:53 PST DONE [s81-serdes-tapskew] ot-push-main otpush-outgoing-giraffe-2239417 on outgoing-giraffe: rc=0 after 487 s, ended 13:53:14, log none, cmd: ot-push-main 

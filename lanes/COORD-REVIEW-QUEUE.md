@@ -40529,3 +40529,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 05:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 05:52 PST: 179 running jobs, PROGRESSING 167, SLOW 12, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
 - 2026-11-24 05:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc10: rt/current 655f4cb33f9b != hub 2b5bc1d02707. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-24 05:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current a8cfe9274e3c != hub b335c93437b7
+- 2026-11-24 05:53 PST DONE [s81-serdes-tapskew] ot-push-main otpush-outgoing-giraffe-2239417 on outgoing-giraffe: rc=0 after 487 s, ended 13:53:14, log none, cmd: ot-push-main 
