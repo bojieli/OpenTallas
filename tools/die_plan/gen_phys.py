@@ -4570,10 +4570,21 @@ def stb_common_exports(t):
         return []
     if spec is True:
         spec = {}
-    if not isinstance(spec, dict) or set(spec) - {"outlier_ps", "rehome_um", "max_ps"}:
-        raise ValueError("clock.stb_common must be true or a dict of outlier_ps / rehome_um / max_ps")
-    out = ["# STB-COMMON: one subtree-balance target across the taps, outliers re-homed (subtree_balance.tcl)",
-           "export OT_STB_COMMON = 1"]
+    if not isinstance(spec, dict) or set(spec) - {"outlier_ps", "rehome_um", "max_ps", "scope", "offset_ps"}:
+        raise ValueError("clock.stb_common must be true or a dict of outlier_ps / rehome_um / max_ps / scope / offset_ps")
+    # STB-PERTAP 11-24: scope "tap" = outliers re-homed but each tap keeps its own target; offset_ps {port: ps} adds a
+    # declared-arrival offset to that tap target (either scope).
+    scope = spec.get("scope", "type")
+    if scope not in ("type", "tap"):
+        raise ValueError("clock.stb_common.scope must be type or tap")
+    out = ["# STB-COMMON: subtree-balance target across the taps (scope %s), outliers re-homed (subtree_balance.tcl)" % scope,
+           "export OT_STB_COMMON = %s" % ("tap" if scope == "tap" else "1")]
+    offs = spec.get("offset_ps") or {}
+    if not isinstance(offs, dict) or any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(k)) or isinstance(v, bool)
+                                         or not isinstance(v, (int, float)) or not -300 <= float(v) <= 300 for k, v in offs.items()):
+        raise ValueError("clock.stb_common.offset_ps must map port names to numbers in [-300, 300]")
+    if offs:
+        out.append("export OT_STB_PORT_OFFSETS = " + " ".join(f"{k}={float(v):g}" for k, v in sorted(offs.items())))
     for k, env, lo, hi in (("outlier_ps", "OT_STB_OUTLIER_PS", 0, 400), ("rehome_um", "OT_STB_REHOME_UM", 0, 600),
                            ("max_ps", "OT_STB_COMMON_MAX_PS", 50, 2000)):
         if k in spec:

@@ -24,3 +24,17 @@ def test_true_and_dict():
 def test_bad_spec_refused(bad):
     with pytest.raises(ValueError):
         G.stb_common_exports({"clock": {"stb_common": bad}})
+
+
+def test_tap_scope_and_offsets():
+    e = G.stb_common_exports({"clock": {"stb_common": {"scope": "tap", "offset_ps": {"clk_t31": 85, "clk_t2": -5}}}})
+    assert e[1] == "export OT_STB_COMMON = tap"
+    assert "export OT_STB_PORT_OFFSETS = clk_t2=-5 clk_t31=85" in e
+    assert G.stb_common_exports({"clock": {"stb_common": {"scope": "type"}}})[1] == "export OT_STB_COMMON = 1"
+
+
+@pytest.mark.parametrize("bad", [{"scope": "die"}, {"offset_ps": {"clk t": 1}}, {"offset_ps": {"clk": 400}},
+                                 {"offset_ps": [1]}])
+def test_bad_tap_spec_refused(bad):
+    with pytest.raises(ValueError):
+        G.stb_common_exports({"clock": {"stb_common": bad}})

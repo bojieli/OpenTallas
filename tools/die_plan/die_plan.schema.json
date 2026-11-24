@@ -2363,6 +2363,20 @@
             "type": "number",
             "minimum": 50,
             "maximum": 2000
+           },
+           "scope": {
+            "enum": [
+             "type",
+             "tap"
+            ]
+           },
+           "offset_ps": {
+            "type": "object",
+            "additionalProperties": {
+             "type": "number",
+             "minimum": -300,
+             "maximum": 300
+            }
            }
           }
          }

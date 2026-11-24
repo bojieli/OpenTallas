@@ -755,7 +755,10 @@ SCHEMA = {
                             {"type": "object", "additionalProperties": False,
                              "properties": {"outlier_ps": {"type": "number", "minimum": 0, "maximum": 400},
                                             "rehome_um": {"type": "number", "minimum": 0, "maximum": 600},
-                                            "max_ps": {"type": "number", "minimum": 50, "maximum": 2000}}}]},
+                                            "max_ps": {"type": "number", "minimum": 50, "maximum": 2000},
+                                            "scope": {"enum": ["type", "tap"]},
+                                            "offset_ps": {"type": "object", "additionalProperties": {
+                                                "type": "number", "minimum": -300, "maximum": 300}}}}]},
                         # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
                         "tap_pair_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,

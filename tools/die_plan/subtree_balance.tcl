@@ -208,7 +208,18 @@ proc stb::insert {sink x y} {
 # all tap-family ports (OT_STB_COMMON_MAX_PS bounds it; the STB-BOUND cap is not applied in this mode, it would leave the taps
 # unequal).  Other clock ports (io_pma_rck, fclk_in_*) keep their own latest-sink target.  Same clock, flops and logic: only
 # clock pins re-connected inside one clock's tap trees, plus the usual delay buffers.
-set ::stb::common [expr {[info exists ::env(OT_STB_COMMON)] && $::env(OT_STB_COMMON) eq "1"}]
+# STB-PERTAP 11-24 (S81-SERDES-TAPSKEW, COORD): OT_STB_COMMON=tap keeps the outlier rule and the re-homing but gives each tap port
+# its OWN target (its latest sink at most OT_STB_OUTLIER_PS above its p99) instead of one common target: no tap is raised to the
+# slowest tap, so paths from non-tap clocks (fclk_in_*) into a fast tap keep their margin.  OT_STB_PORT_OFFSETS "port=ps ..."
+# adds an offset to that port target in either mode (a tap with a larger die-declared early latency gets the insertion back:
+# FABLE-RC-ALL 27044af5 (a), arrival = declared early + insertion made equal).
+set ::stb::common [expr {[info exists ::env(OT_STB_COMMON)] && $::env(OT_STB_COMMON) in {1 tap}}]
+set ::stb::pertap [expr {$::stb::common && $::env(OT_STB_COMMON) eq "tap"}]
+set ::stb::offs [dict create]
+if {[info exists ::env(OT_STB_PORT_OFFSETS)]} {
+  foreach kv $::env(OT_STB_PORT_OFFSETS) { lassign [split $kv =] k v; if {$k ne "" && [string is double -strict $v]} { dict set ::stb::offs $k [expr {double($v)}] } }
+}
+proc stb::off {p} { return [expr {[dict exists $::stb::offs $p] ? [dict get $::stb::offs $p] : 0.0}] }
 set ::stb::outlier [expr {[info exists ::env(OT_STB_OUTLIER_PS)] ? double($::env(OT_STB_OUTLIER_PS)) : 40.0}]
 set ::stb::rehome_um [expr {[info exists ::env(OT_STB_REHOME_UM)] ? double($::env(OT_STB_REHOME_UM)) : 150.0}]
 proc stb::sink_arrs {p} {
@@ -220,14 +231,17 @@ proc stb::sink_arrs {p} {
 proc stb::common_target {ports} {
   set blk [ord::get_db_block]
   set dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
-  set fam {}; set lim {}; set tc ""
+  set fam {}; set lim {}; set tc ""; set tp {}
   foreach p $ports {
     if {![stb::capped_port $p] || ![info exists ::stb::kids($p,PORT)]} continue
     set v [stb::sink_arrs $p]; if {[llength $v] < 2} continue
     set a [lsort -real [lmap x $v {lindex $x 1}]]; set c [llength $a]
     set l [expr {[lindex $a [expr {$c - 1 - $c / 100}]] + $::stb::outlier}]
     dict set lim $p $l; lappend fam $p
-    foreach x $a { if {$x <= $l && ($tc eq "" || $x > $tc)} { set tc $x } }
+    set m ""
+    foreach x $a { if {$x <= $l && ($m eq "" || $x > $m)} { set m $x } }
+    dict set tp $p $m
+    if {$m ne "" && ($tc eq "" || $m > $tc)} { set tc $m }
   }
   if {$tc eq ""} { return "" }
   if {[info exists ::env(OT_STB_COMMON_MAX_PS)] && $::env(OT_STB_COMMON_MAX_PS) ne "" && $tc > double($::env(OT_STB_COMMON_MAX_PS))} {
@@ -238,7 +252,8 @@ proc stb::common_target {ports} {
   foreach p $fam {
     foreach k [array names ::stb::sinks "$p,*"] {
       set n [lindex [split $k ,] 1]
-      if {$n eq "PORT" || ![llength $::stb::sinks($k)] || $::stb::hi($p,$n) > $tc} continue
+      set lt [expr {$::stb::pertap ? [dict get $tp $p] : $tc}]
+      if {$n eq "PORT" || ![llength $::stb::sinks($k)] || $lt eq "" || $::stb::hi($p,$n) > $lt} continue
       set i [$blk findInst $n]; if {$i eq "NULL" || [$i isDoNotTouch]} continue
       set on [stb::out_net $i]; if {$on eq "" || [$on isDoNotTouch]} continue
       set s0 [lindex $::stb::sinks($k) 0]
@@ -275,8 +290,19 @@ proc stb::common_target {ports} {
     }
   }
   if {$moved} { sta::arrivals_invalid; stb::rc; foreach p $fam { stb::build $p; stb::measure $p } }
-  puts [format "OT_STB_COMMON target %.1f over %d tap ports; outliers re-homed %d, kept %d" $tc [llength $fam] $moved $kept]
-  return $tc
+  set out {}
+  foreach p $fam {
+    set b [expr {$::stb::pertap ? [dict get $tp $p] : $tc}]
+    if {$b eq ""} continue
+    dict set out $p [expr {$b + [stb::off $p]}]
+  }
+  if {$::stb::pertap} {
+    puts [format "OT_STB_COMMON per-tap targets over %d tap ports (max %.1f); outliers re-homed %d, kept %d" [llength $fam] $tc $moved $kept]
+    dict for {p t} $out { puts [format "OT_STB_COMMON tap %s target %.1f (offset %.1f)" $p $t [stb::off $p]] }
+  } else {
+    puts [format "OT_STB_COMMON target %.1f over %d tap ports; outliers re-homed %d, kept %d" $tc [llength $fam] $moved $kept]
+  }
+  return $out
 }
 proc stb::rc {} { if {$::stb::est eq "grt"} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
 proc stb::balance {} {
@@ -306,7 +332,7 @@ proc stb::balance {} {
   if {$::stb::common && [llength [dict keys [dict filter $T value COMMON]]]} {
     if {$::stb::mode eq "report"} { set ::stb::rehome_um -1 }
     set tc [stb::common_target $ports]
-    dict for {p Tp} $T { if {$Tp eq "COMMON"} { if {$tc eq ""} { dict unset T $p } else { dict set T $p $tc } } }
+    dict for {p Tp} $T { if {$Tp eq "COMMON"} { if {![dict exists $tc $p]} { dict unset T $p } else { dict set T $p [dict get $tc $p] } } }
   }
   if {$::stb::mode eq "report"} { return }
   set n0 $::stb::n

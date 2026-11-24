@@ -389,3 +389,27 @@ def test_common_outlier_without_leaf_in_reach_is_kept():
                            "rename objcall _objcall\nproc objcall {o op args} { if {$op eq \"getLocation\"} { return [expr {$o eq \"fo\" ? {5000 0} : {0 0}}] }; _objcall $o $op {*}$args }\n")
     assert "OT_STB_REHOME keep clk fo/CLK" in out and "no leaf within 0 um" in out, out
     assert arr["fo"] == 70, (arr, out)
+
+
+def test_pertap_scope_keeps_each_tap_target_and_rehomes_outlier():
+    """STB-PERTAP 11-24 (S81-SERDES-TAPSKEW, COORD): OT_STB_COMMON=tap re-homes the clk outlier fo but clk keeps its own
+    target (10, its p99 sinks), clk_t1 keeps 40: no tap is raised to the slowest one.  ck2 (not a tap port) unchanged."""
+    out, arr = _run_common("set ::env(OT_STB_COMMON) tap\n")
+    assert "OT_STB ERROR" not in out, out
+    assert "OT_STB_REHOME move clk fo/CLK" in out and "-> clk leaf b1" in out, out
+    assert "OT_STB_COMMON per-tap targets over 2 tap ports (max 40.0); outliers re-homed 1, kept 0" in out, out
+    assert "OT_STB_COMMON tap clk target 10.0 (offset 0.0)" in out, out
+    assert arr["h0"] == 10 and arr["h119"] == 10 and arr["fo"] <= 10, (arr, out)
+    assert arr["g1"] == 40 and arr["g2"] == 40, (arr, out)
+    assert "target 65.0 (latest sink, fixed)" in out, out
+
+
+def test_port_offset_raises_only_that_tap():
+    out, arr = _run_common("set ::env(OT_STB_COMMON) tap\nset ::env(OT_STB_PORT_OFFSETS) {clk=30 bogus=x}\n")
+    assert "OT_STB_COMMON tap clk target 40.0 (offset 30.0)" in out, out
+    for f in ("h0", "h119"):
+        assert 40 - 8 - 20 < arr[f] <= 40, (f, arr, out)
+    assert arr["g1"] == 40, (arr, out)
+    out2, arr2 = _run_common("set ::env(OT_STB_COMMON) 1\nset ::env(OT_STB_PORT_OFFSETS) clk_t1=20\n")
+    assert "OT_STB_COMMON target 40.0 over 2 tap ports" in out2, out2
+    assert 60 - 8 - 20 < arr2["g1"] <= 60 and 40 - 8 - 20 < arr2["h0"] <= 40, (arr2, out2)
