@@ -1,0 +1,94 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2",
+  "event": "head_rp21z20NF15f_r18g",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
+  "plan_sha256": "5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w",
+  "manifest_hash": "e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a",
+  "src_manifest_sha": "e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a",
+  "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
+  "hosts": [
+   "epyc7",
+   "epyc10",
+   "intel2"
+  ],
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
+  "plan_sha256": "014661a6ea33e7a63f6c78097a5d861b5d4a8d40d75040c34eceb02674879e33",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
+  "sidecar_sha256": "3aec87183d5c5d318e85177f6156f9062a9a458df3f47277adc7c4b4760688c8",
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/native_release_receipt.json",
+  "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/source_clock_graph.json",
+  "physical_qualified": false,
+  "most_recent_fable_verdict": "2026-11-23 11:33 PST exact r18g plan gate. W diagnostic accepted. East hd_lep0N held for cap10 census.",
+  "smoke": "PASS",
+  "smoke_detail": "West re-band plan 014661a6ea33 chain (epyc7 head-r18/bind_r18g_wband): PRE PASS, strict bind + nested portbind PASS, cohort 27/27, LATCHECK 334/334, NATREL 0, G0 0 err. Rest identical to r18g s2. Exact candidate PRE/G0 zero, strict bind and nested portbind PASS, cohort 27/27, active-baseline LATCHECK 334/334, native reset conditional 12 targets. W item A supported by reviewed TT/FF stand-in and zero-overflow, zero NDR-loss FF native diagnostic. Candidate publish gate tracked separately.",
+  "config": {
+   "event": "head_rp21z20NF15f_r18gw",
+   "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
+   "gen_host": "epyc10",
+   "gen_hosts": [
+    "epyc7",
+    "epyc10"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ],
+   "review_before_route": {
+    "event": "head_rp21z20NF15f_r18gw",
+    "all_items": true,
+    "required": true
+   },
+   "auto_visual_review_skip": [
+    "*"
+   ]
+  },
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  },
+  "records": {
+   "cohort.json": "04a837e9fbe14bd10250301c634efd2b54f0a69de3f23fdfe6fc9731bfa3967b",
+   "g0_report.json": "80585cf5bc52859577dafbd54b248b1d344f17d62cd2c04ee1979fca909ea157",
+   "head_r18e_route_phase_diagnostic.json": "1a5eaabb9c2f1d67f3e2b343a0e71530a071d86ec21ee127d6f09f082729ca07",
+   "head_r18g_w_clock_landings.json": "150b827ce3f8927efd750f625f21dcbf9d2b6a678904e27050b3e42153cc07ef",
+   "latcheck_r17b.json": "fec0c5790217c4f754e56e84bdbf3c9f44377b0c35b9c4277e2ee2d09dd7b765",
+   "native_release_receipt.json": "2b04b933ae4371e569d16bf424c67a95ec5c1b204cd7657ca2c076597cad4d0c",
+   "nested_portbind.json": "0d706bc41e6c368681ab86a21fe91b33b9be52d85de0f8621da942018f7232f7",
+   "port_bind_strict.json": "76f091c9391bb8dbb729cf01cacd37d8170a349b1503f9e19b99bbe8738e436d",
+   "pre.json": "3f5d338bb967b1e81fb51cc7f753e5bc61b9abaa8e5cfdfaf1453fd8ff763f65",
+   "source_clock_graph.json": "c93aacaefa51498f29eb1b5bc81331d2209cd56e5649b2555e57c98768f212e2",
+   "tie_audit.json": "25856728e3906053c1f05582544709bfc246139e9ec9bf41d19cc873bf410c8e",
+   "die_plan.png": "967a9a2ab92cc344cbb3edd5ce805d59d81b8f0972edd22fe0dcef783d7601e2"
+  },
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/62d2f90e415daa9a53d0d437723960abb7ecc7806132b5838088dfbd30752108/result.json",
+ "candidate": "/home/ubuntu/fable-fix-head-lep0n-1122/r18g_event_candidate/amend_s3w/candidate_r18gw.json",
+ "optimistic": true,
+ "warnings": [
+  "DROPPED epyc9: replicate/verify rc 1: epyc9: refuse (free 59 GB + part 0 - tree 49 = 51 GB after the copy < floor 50 + 20 GB)",
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/s81_head/e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a.json (run tools/autopilot/publish_gate.py run on this candidate first)",
+  "ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}"
+ ]
+}

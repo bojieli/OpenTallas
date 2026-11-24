@@ -1,46 +1,44 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2",
- "manifest_hash": "bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3",
- "src_manifest_sha": "bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w",
+ "manifest_hash": "e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a",
+ "src_manifest_sha": "e8e728627eeb52d3136cbd6722a6a822e16dd1bd1030c9d22d8a3257a25b239a",
  "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
  "hosts": [
   "epyc7",
   "epyc10",
-  "epyc9",
   "intel2"
  ],
- "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
- "plan_sha256": "5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
+ "plan_sha256": "014661a6ea33e7a63f6c78097a5d861b5d4a8d40d75040c34eceb02674879e33",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
  "sidecar_sha256": "3aec87183d5c5d318e85177f6156f9062a9a458df3f47277adc7c4b4760688c8",
- "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/native_release_receipt.json",
- "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/source_clock_graph.json",
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/native_release_receipt.json",
+ "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/r18g_gate/source_clock_graph.json",
  "physical_qualified": false,
  "most_recent_fable_verdict": "2026-11-23 11:33 PST exact r18g plan gate. W diagnostic accepted. East hd_lep0N held for cap10 census.",
  "smoke": "PASS",
- "smoke_detail": "Exact candidate PRE/G0 zero, strict bind and nested portbind PASS, cohort 27/27, active-baseline LATCHECK 334/334, native reset conditional 12 targets. W item A supported by reviewed TT/FF stand-in and zero-overflow, zero NDR-loss FF native diagnostic. Candidate publish gate tracked separately.",
+ "smoke_detail": "West re-band plan 014661a6ea33 chain (epyc7 head-r18/bind_r18g_wband): PRE PASS, strict bind + nested portbind PASS, cohort 27/27, LATCHECK 334/334, NATREL 0, G0 0 err. Rest identical to r18g s2. Exact candidate PRE/G0 zero, strict bind and nested portbind PASS, cohort 27/27, active-baseline LATCHECK 334/334, native reset conditional 12 targets. W item A supported by reviewed TT/FF stand-in and zero-overflow, zero NDR-loss FF native diagnostic. Candidate publish gate tracked separately.",
  "config": {
-  "event": "head_rp21z20NF15f_r18g",
+  "event": "head_rp21z20NF15f_r18gw",
   "tools_sha": "936b871fa31fc469a0e0a0106f8160ddf383d163",
   "gen_host": "epyc10",
   "gen_hosts": [
    "epyc7",
-   "epyc10",
-   "epyc9"
+   "epyc10"
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ],
   "review_before_route": {
-   "event": "head_rp21z20NF15f_r18g",
+   "event": "head_rp21z20NF15f_r18gw",
    "all_items": true,
    "required": true
   },
@@ -49,7 +47,7 @@
   ]
  },
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s3w/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
  },
  "records": {
   "cohort.json": "04a837e9fbe14bd10250301c634efd2b54f0a69de3f23fdfe6fc9731bfa3967b",
