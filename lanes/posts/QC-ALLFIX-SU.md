@@ -1,0 +1,1 @@
+- 2026-11-23 17:03 PST DONE [QC-ALLFIX-SU] ot-run oth-ubuntu-1997404-1795480651 on outgoing-giraffe: rc=0 after 1542 s, ended 01:03:09, log /srv/opentallas-scratch2/claude/QC-ALLFIX-SU/fork.ot, cmd: --mem 4 --threads 8 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/QC-ALLFIX-SU -- python3 -I /srv/opentallas-scratch2/claude/rt/70b6f0
