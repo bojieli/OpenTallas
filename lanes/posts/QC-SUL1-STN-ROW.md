@@ -1,0 +1,1 @@
+- 2026-11-23 20:53 PST TAKING QC-SUL1-STN-ROW (COORD split, FABLE-RC-QC eadf2a98): die row moving 42 su_l1 in-core RSN stations to street; base C1c 3b12251bfd6c(+SU2R-FIX3); validate G0 42->0 + PRE + scoped strict bind. cc QC-ALLFIX FABLE-RC-QC-SU FABLE-RC-QC
