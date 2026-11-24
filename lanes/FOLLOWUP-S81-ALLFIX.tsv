@@ -1,91 +1,93 @@
-# FOLLOWUP-S81 ALLFIX tracker 11-23 19:08 PST (age = min since row fields last changed since my first snapshot; lane_post_age = min since owner lane file mtime)
+# FOLLOWUP-S81 ALLFIX tracker 11-23 19:31 PST (age = min since row fields last changed since my first snapshot; lane_post_age = min since owner lane file mtime)
 item	family_lane	row_sha	next_stage	stage_deadline	status	age_since_change_min	lane_post_age_min	flag
-rc4	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc5	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc7	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 + TGR5 in base	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc8	S81-ALLFIX-SLICE	slice.sv 36236edd9c48 + CRR_PRE2 asbuilt	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc9	S81-ALLFIX-SLICE	vp.sv 2a7dbb06ab12 + LEAF-ALLFIX-1 defines	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc12	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 + VNB	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc14	S81-ALLFIX-SVC	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	full_PRE	20:30	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)	0	16	
-rc16	S81-ALLFIX-SVC	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	full_PRE	20:30	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)	0	16	
-rc18	S81-ALLFIX-SVC	912e846dd5c8	full_PRE	20:30	STAGED c7a	0	16	
-rc20	S81-ALLFIX-SVC	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	full_PRE	20:30	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)	0	16	
-rc25	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (SVC; no row posted)	0	16	MISSED-rebased
-rc28	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-rc29	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-rc30	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-rc31	S81-ALLFIX-SLICE	B+	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-rc32	S81-ALLFIX-SLICE	Wave A retap	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-rc33	S81-ALLFIX-SLICE	PT1 b9a2fab893de + lepw eb3efa2c89c3	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc34	S81-ALLFIX-SLICE	lepw eb3efa2c89c3 (+C in base)	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc36	S81-ALLFIX-SLICE	SP-W2+XGARRAY-1 LP	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-rc37	S81-ALLFIX-SLICE	-	first_PRE	19:30	IN-COMPOSE c6	147	12	AT-RISK
-rc39	S81-ALLFIX-MULTI	in base + SERDES-RING-ONEGROUP 877bf1f92e06	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-rc41	S81-ALLFIX-MULTI	TXFACE-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc42	S81-ALLFIX-MULTI	RCKROOT-1 11/11	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc43	S81-ALLFIX-MULTI	DECSITE-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc44	S81-ALLFIX-MULTI	in base + SERDES-RING-ONEGROUP	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-rc48	S81-ALLFIX-MULTI	CORETAP-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc50	S81-ALLFIX-MULTI	ENG gate10c 0e32aea4d155	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc51	S81-ALLFIX-MULTI	ENG gate10c 0e32aea4d155	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc53	S81-ALLFIX-MULTI	ENG-XT1-STN-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc55	S81-ALLFIX-MULTI	SEQHOST-VLG-STN-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc59	S81-ALLFIX-MULTI	GUNIT-L1-REACH-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc62	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-rc66	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-rc67	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-rc72	S81-ALLFIX-COL	a820825accbe	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc78	S81-ALLFIX-COL	02b182e95344	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc79	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc80	S81-ALLFIX-COL	5dbaeeb50fbd	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc82	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc84	S81-ALLFIX-COL	0c8530ca4c1c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc85	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc87	S81-ALLFIX-COL	porous 11e80a73410f	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc88	S81-ALLFIX-COL	8b09943f6df5	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-rc89	S81-ALLFIX-COL	TGR5 s3 (count)	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-x1	S81-ALLFIX-SVC	-	rebased	19:00	INT-RULING 18:2x: B1 hi4 split kept, six-lane check = keep B1 values, strict decides	0	16	MISSED-rebased
-hg-S81-CLOCK-SKEW	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-CLOCK-TAP	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-GLOBAL-DEMAND	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-hg-S81-LOGIC-DEPTH	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-MACRO-CHANNEL	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-OVER-MACRO	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-REACH	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-REPAIR-CAP	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	8c512474bcf6+2e5928836573	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-hg-S81-STATION-CLUSTER	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN	147	29	AT-RISK
-hop-S81-svc	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 + ENGINE row in c6	0	16	MISSED-rebased
-hop-S81-leaf	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-hop-S81-col_h9_r12	S81-ALLFIX-COL	wave env+REASON	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-hop-S81-col_h10	S81-ALLFIX-COL	5f8b2104a625+wave env	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	5	
-hop-S81-gunit	S81-ALLFIX-MULTI	GUNIT-L1-REACH-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-hop-S81-eng	S81-ALLFIX-MULTI	gate10c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	29	
-hop-S81-sliceC	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	46	12	
-x13	S81-ALLFIX-MULTI	env OT_BIND_TYPE_DEFINES=on	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-x14	S81-ALLFIX-MULTI	cfe7c49d2194	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	29	
-col774-RTL-52aebeb23d	S81-ALLFIX-COL	rtl 52aebeb23d	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	5	
-COL-FRAME-HOPFIX-1	S81-ALLFIX-COL	c71de97d3e91	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	5	
-GFLOCAL-v2	S81-ALLFIX-SLICE	b7a570942fc1	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-B2-R3	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 for c7b	0	16	MISSED-rebased
-rc37-LP-PROFILE-1b	S81-ALLFIX-SLICE	301aa03b2751 / LK1 b13345f8a10e	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-rc35-tpcap	S81-ALLFIX-SLICE	af658d95d0f9 -> 2d5e21b9501f	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-KVLEAF-VNB-HARD-1	S81-ALLFIX-SLICE	d8156e224c7e	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	12	
-B1-G0-SVCFRAME-46	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 for c7b	0	16	MISSED-rebased
-B1-G0-J8HOPS-6	S81-ALLFIX-SVC	c71de97d3e91	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	16	
-SVC-CUT-FACE	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 for c7b	0	16	MISSED-rebased
-ENG-HXFACE-1	S81-ALLFIX-SVC	503cbe8a158d	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	16	
-SERDES-t2-RTL3	S81-ALLFIX-SVC	ENC/MIDVLD/KLOCK B1 ops	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	16	
-ABI-RESTORE	S81-ALLFIX-INT	abi_restore.json	first_PRE	19:30	INT-RULING	75	0	AT-RISK
-SVC-ENGINE-ROW	family	asbuilt 1230a5252b30 + ovl	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	-1	
-SVC3-BOOT-PRICE	family	sidecar 0a330b0244c6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	-1	
-SERDES-RING-ONEGROUP	family	877bf1f92e06	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	-1	
-RHI-RST-REACH	family	2e5928836573	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	-1	
-LEAF-ALLFIX-1	family	8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	0	-1	
-KVLEAF-T2-HARD-1	S81-ALLFIX-SLICE	-	first_PRE	19:30	REASONED-pending (FABLE-RC-ALL 17:33 ACCEPT)	46	12	AT-RISK
-COL-P5-FSTART1	S81-ALLFIX-COL	a2a6760fa5e1	full_PRE	20:30	STAGED c7a	0	5	
-SERDES-t13-FSTART0	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC row due 20:00 -> c7b	0	16	MISSED-rebased
-FSTART-DEPTH-CLASS	S81-ALLFIX-MULTI	-	first_PRE	19:30	OPEN: MULTI due 20:15 -> c7b	0	29	AT-RISK
+rc4	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc5	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc7	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 + TGR5 in base	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc8	S81-ALLFIX-SLICE	slice.sv 36236edd9c48 + CRR_PRE2 asbuilt	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc9	S81-ALLFIX-SLICE	vp.sv 2a7dbb06ab12 + LEAF-ALLFIX-1 defines	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc12	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 + VNB	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc14	S81-ALLFIX-SVC	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	full_PRE	20:30	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)	23	0	AT-RISK
+rc16	S81-ALLFIX-SVC	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	full_PRE	20:30	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)	23	0	AT-RISK
+rc18	S81-ALLFIX-SVC	912e846dd5c8	full_PRE	20:30	IN-COMPOSE c7a	0	0	AT-RISK
+rc20	S81-ALLFIX-SVC	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	full_PRE	20:30	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)	23	0	AT-RISK
+rc25	S81-OPEN-SVCLO	-	rebased	19:00	ROW pending: LOSTART tool b77f35d5f692 after svc_tap_inv (fixes c7a step-14 regression 8/8; ops cf6cccdfd3ef) -> c8	0	11	MISSED-rebased
+rc28	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+rc29	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+rc30	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+rc31	S81-ALLFIX-SLICE	B+	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+rc32	S81-ALLFIX-SLICE	Wave A retap	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+rc33	S81-ALLFIX-SLICE	PT1 b9a2fab893de + lepw eb3efa2c89c3	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc34	S81-ALLFIX-SLICE	lepw eb3efa2c89c3 (+C in base)	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc36	S81-ALLFIX-SLICE	SP-W2+XGARRAY-1 LP	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+rc37	S81-OPEN-DEMAND	-	first_PRE	19:30	IN-COMPOSE c6	0	0	MISSED-first_PRE
+rc39	S81-ALLFIX-MULTI	in base + SERDES-RING-ONEGROUP 877bf1f92e06	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+rc41	S81-ALLFIX-MULTI	TXFACE-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc42	S81-ALLFIX-MULTI	RCKROOT-1 11/11	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc43	S81-ALLFIX-MULTI	DECSITE-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc44	S81-ALLFIX-MULTI	in base + SERDES-RING-ONEGROUP	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+rc48	S81-ALLFIX-MULTI	CORETAP-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc50	S81-ALLFIX-MULTI	ENG gate10c 0e32aea4d155	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc51	S81-ALLFIX-MULTI	ENG gate10c 0e32aea4d155	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc53	S81-ALLFIX-MULTI	ENG-XT1-STN-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc55	S81-ALLFIX-MULTI	SEQHOST-VLG-STN-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc59	S81-ALLFIX-MULTI	GUNIT-L1-REACH-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc62	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+rc66	S81-OPEN-CLOCK	-	rebased	19:00	IN-BASE (OPEN-CLOCK: TGR5-J9-SERDES-DENS-1 204->703 taps; t16 +1 tap tested as ops row)	0	3	MISSED-rebased
+rc67	S81-OPEN-DEMAND	-	rebased	19:00	OPEN: S81-OPEN-DEMAND by 22:00 -> c8	0	0	MISSED-rebased
+rc72	S81-ALLFIX-COL	a820825accbe	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc78	S81-ALLFIX-COL	02b182e95344	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc79	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc80	S81-ALLFIX-COL	5dbaeeb50fbd	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc82	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc84	S81-ALLFIX-COL	0c8530ca4c1c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc85	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc87	S81-ALLFIX-COL	porous 11e80a73410f	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc88	S81-ALLFIX-COL	8b09943f6df5	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+rc89	S81-ALLFIX-COL	TGR5 s3 (count)	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+x1	S81-ALLFIX-SVC	-	rebased	19:00	INT-RULING 18:2x: B1 hi4 split kept, six-lane check = keep B1 values, strict decides	23	0	MISSED-rebased
+hg-S81-CLOCK-SKEW	S81-OPEN-CLOCK	-	rebased	19:00	14 items: 9 IN-BASE/IN-COMPOSE (OPEN-CLOCK 19:27); leaf t23/t67 vp->vp ride TGR5-LEAF-REGEN-1 -> c8	0	3	MISSED-rebased
+hg-S81-CLOCK-TAP	S81-OPEN-CLOCK	-	rebased	19:00	OPEN-CLOCK FINDING: r2_near reverts 2863 TGR5 leaf taps to J8; row TGR5 regen v4 leaf-only append, LAST step before tail, ETA 21:00 -> c8	0	3	MISSED-rebased
+hg-S81-GLOBAL-DEMAND	S81-OPEN-DEMAND	-	rebased	19:00	IN-BASE (OPEN-DEMAND 19:28: COL-H9R12-SSTRIP + XGARRAY-2 in B1; c6 unchanged)	0	0	MISSED-rebased
+hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+hg-S81-LOGIC-DEPTH	S81-OPEN-DEMAND	-	rebased	19:00	OPEN: S81-OPEN-DEMAND by 22:00 -> c8	0	0	MISSED-rebased
+hg-S81-MACRO-CHANNEL	S81-OPEN-ENGCHAN	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	first_PRE	19:30	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4	0	16	MISSED-first_PRE
+hg-S81-OVER-MACRO	S81-OPEN-ENGCHAN	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	first_PRE	19:30	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4	0	16	MISSED-first_PRE
+hg-S81-REACH	S81-OPEN-CLOCK	-	rebased	19:00	15 items IN-BASE/IN-COMPOSE (OPEN-CLOCK 19:28); vp tap half = TGR5-LEAF-REGEN-1 -> c8	0	3	MISSED-rebased
+hg-S81-REPAIR-CAP	S81-OPEN-DEMAND	-	rebased	19:00	OPEN: S81-OPEN-DEMAND by 22:00 -> c8	0	0	MISSED-rebased
+hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	8c512474bcf6+2e5928836573	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+hg-S81-STATION-CLUSTER	S81-OPEN-ENGCHAN	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	first_PRE	19:30	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4	0	16	MISSED-first_PRE
+hop-S81-svc	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 + ENGINE row in c6	23	0	MISSED-rebased
+hop-S81-leaf	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+hop-S81-col_h9_r12	S81-ALLFIX-COL	wave env+REASON	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+hop-S81-col_h10	S81-ALLFIX-COL	5f8b2104a625+wave env	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	2	AT-RISK
+hop-S81-gunit	S81-ALLFIX-MULTI	GUNIT-L1-REACH-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+hop-S81-eng	S81-ALLFIX-MULTI	gate10c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	52	AT-RISK
+hop-S81-sliceC	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	70	5	AT-RISK
+x13	S81-ALLFIX-MULTI	env OT_BIND_TYPE_DEFINES=on	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+x14	S81-ALLFIX-MULTI	cfe7c49d2194	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	52	AT-RISK
+col774-RTL-52aebeb23d	S81-ALLFIX-COL	rtl 52aebeb23d	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	2	AT-RISK
+COL-FRAME-HOPFIX-1	S81-ALLFIX-COL	c71de97d3e91	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	2	AT-RISK
+GFLOCAL-v2	S81-ALLFIX-SLICE	b7a570942fc1	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+B2-R3	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 for c7b	23	0	MISSED-rebased
+rc37-LP-PROFILE-1b	S81-ALLFIX-SLICE	301aa03b2751 / LK1 b13345f8a10e	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+rc35-tpcap	S81-ALLFIX-SLICE	af658d95d0f9 -> 2d5e21b9501f	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+KVLEAF-VNB-HARD-1	S81-ALLFIX-SLICE	d8156e224c7e	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	5	AT-RISK
+B1-G0-SVCFRAME-46	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 for c7b	23	0	MISSED-rebased
+B1-G0-J8HOPS-6	S81-ALLFIX-SVC	c71de97d3e91	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	0	AT-RISK
+SVC-CUT-FACE	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC-FRAME-G0 v3 for c7b	23	0	MISSED-rebased
+ENG-HXFACE-1	S81-ALLFIX-SVC	503cbe8a158d	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	0	AT-RISK
+SERDES-t2-RTL3	S81-ALLFIX-SVC	ENC/MIDVLD/KLOCK B1 ops	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	0	AT-RISK
+ABI-RESTORE	S81-ALLFIX-INT	abi_restore.json	first_PRE	19:30	INT-RULING	98	4	MISSED-first_PRE
+SVC-ENGINE-ROW	family	asbuilt 1230a5252b30 + ovl	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	-1	AT-RISK
+SVC3-BOOT-PRICE	family	sidecar 0a330b0244c6	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	-1	AT-RISK
+SERDES-RING-ONEGROUP	family	877bf1f92e06	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	-1	AT-RISK
+RHI-RST-REACH	family	2e5928836573	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	-1	AT-RISK
+LEAF-ALLFIX-1	family	8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c6 (tail 19:0x; c7a composing)	23	-1	AT-RISK
+KVLEAF-T2-HARD-1	S81-ALLFIX-SLICE	-	first_PRE	19:30	REASONED-pending (FABLE-RC-ALL 17:33 ACCEPT)	70	5	MISSED-first_PRE
+COL-P5-FSTART1	S81-ALLFIX-COL	a2a6760fa5e1	full_PRE	20:30	IN-COMPOSE c7a; REASONED on proof (COORD 19:18/FABLE d016ece5): scoped strict EMIT 0 on 12 p5+serdes__t13 + START release>=reset + die max release before/after. NOTE: B1 ae3101241d6b binds these 12 at depth 7 BY DESIGN; ALLFIX differs (depth 8) by design	0	2	AT-RISK
+SERDES-t13-FSTART0	S81-ALLFIX-SVC	-	rebased	19:00	OPEN: SVC row due 20:00 -> c7b	23	0	MISSED-rebased
+FSTART-DEPTH-CLASS	S81-OPEN-FSTART	-	rebased	19:00	OPEN: S81-OPEN-FSTART live 19:38, due 21:30 -> last tail step c8 (input c7a)	0	18	MISSED-rebased
+DEADIN-BASE-PROOF	S81-ALLFIX-INT	6c6e236be36a	full_PRE	20:30	IN-GATE c7a	0	4	AT-RISK
+LEAF-LANDCAP-C7A	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN: SLICE fix row by 21:30 -> c8	0	5	MISSED-rebased
