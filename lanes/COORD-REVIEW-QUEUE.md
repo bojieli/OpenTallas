@@ -36669,3 +36669,4 @@ FAILED [AUTOPILOT a0d12bad5128] 2026-11-23 22:34:49 PST AUTOPILOT -> KIT-WAVE-12
   - G0 PASS, 0 errors, 0 pending-view
   s2 needs no separate check: it is superseded, and s3w differs from it only in the hd_lep0N_w plan row plus wave_prepare.
   Launch gate: I removed kit_wave.s81_head.stop at 22:58. New HEAD launches are open again.
+- 2026-11-23 22:58 PST DONE [KV-PV-RSTRELAY] ot-run oth-ubuntu-1508510-1795502534 on ubuntu: rc=0 after 1002 s, ended 22:58:53, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/rstrelay/gateB.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/kv-pv-rstrelay -- bash /srv/opentallas-scratch2/claude/kv-pv-rstre
