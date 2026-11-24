@@ -33,6 +33,19 @@ Cancel = `ot-heavy-stop --match <kit dir>` (exact `--unit` when the match would 
 import argparse, glob, json, os, re, shlex, socket, subprocess, sys, time
 
 WINDOW_S = 6 * 3600
+# PREGRT-HOLD-WATCHDOG-1123 (COORD 17:25, FABLE flow review; owner 12.22 2-h hung-job watchdog): kit steps that are bounded
+# repairs get a 2 h no-progress window, and a metric that reached 0 counts as progress only while the step still writes
+# (five KV kits sat in pregrt_ff_hold 11-13 h after repair_TNS reached 0: "reached 0" kept them PROGRESS forever).
+STEP_WINDOW_S = {"pregrt_ff_hold": 2 * 3600}
+
+
+def step_window(log):
+    """(window_s, zero_needs_growth) for the running step's log"""
+    n = os.path.basename(log or "")
+    for k, w in STEP_WINDOW_S.items():
+        if n.startswith(k):
+            return w, True
+    return WINDOW_S, False
 MIN_IMPROVE = 0.02
 HUB = os.environ.get("OT_HUB_NAME", "intel2")
 HOSTS = ["intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
@@ -229,7 +242,7 @@ def interp_time(idx, anchors):
 EST_MARGIN = 1.25      # line times that are interpolated (no own samples over a full window yet) get a 25 % longer window
 
 
-def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False):
+def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False, zero_needs_growth=False):
     """-> (verdict, why, detail).  verdict: PROGRESS | NO-PROGRESS | YOUNG | NO-DATA.
     metric series: improved if the best value inside the last `window` is <= best_before_window * (1 - improve), or 0.
     no metric (or no row yet): the last meaningful line must be newer than `window`.
@@ -247,7 +260,11 @@ def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False):
         best_all = min(v for _, v in pts)
         detail = f"{res['name']} best {best_all:g} last {pts[-1][1]:g} rows {len(pts)}"
         if recent and min(recent) == 0:
-            return "PROGRESS", f"{res['name']} reached 0", detail
+            gi = res["growth_idx"]
+            if not zero_needs_growth or (gi >= 0 and now - interp_time(gi, anchors) < window) or span < window:
+                return "PROGRESS", f"{res['name']} reached 0", detail
+            return "NO-PROGRESS", (f"{res['name']} reached 0 but the step wrote nothing for "
+                                   f"{(now - interp_time(gi, anchors)) / 3600:.1f} h (>= {window / 3600:g} h)"), detail
         if span < YOUNG_S:
             return "YOUNG", f"stage {span / 3600:.1f} h < {YOUNG_S / 3600:g} h", detail
         if span < window:
@@ -1122,8 +1139,10 @@ def scan(now=None, act=False, probe_s=4):
                 if s[0] > anchors[-1][0] and s[1] <= res["n"] and s[1] >= anchors[-1][1]:
                     anchors.append((s[0], s[1]))
             anchors.append((max(mt, anchors[-1][0] + 1), res["n"]))
-            exact = len(st["samples"]) > 0 and now - st["samples"][0][0] >= WINDOW_S
-            v, why, detail = judge_activity(mt, started, now, "LEC") if kind == "lec" else judge(res, anchors, now, exact=exact)
+            sw, z0 = step_window(log)
+            exact = len(st["samples"]) > 0 and now - st["samples"][0][0] >= sw
+            v, why, detail = (judge_activity(mt, started, now, "LEC") if kind == "lec"
+                              else judge(res, anchors, now, window=sw, exact=exact, zero_needs_growth=z0))
             special = None
             if kind == "grt" and log:
                 rdir = os.path.dirname(log).replace("/logs/", "/reports/")
