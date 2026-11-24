@@ -1,0 +1,46 @@
+# KV-ALLFIX 11-24 12:0x OWNERS-SWEEP ca3f8201: 45 KV private kits FAILED-NO-RELAUNCH; all 45 specs retired in kit_wave private_retired_specs_kvallfix_1124; class a=superseded, c=type relaunches from wave (A5t5/A5t6)
+kv3_hg	qwen_kvsys_kv3_hg_1122211659	a	superseded by A5t5 wave row
+kv3_hg_v1p2	qwen_kvsys_kv3_hg_v1p2_1122211718	a	superseded by A5t5 wave row
+kv3_hg_v1p4	qwen_kvsys_kv3_hg_v1p4_1123182302	a	superseded by A5t5 wave row
+kv3_hg_v1p5	qwen_kvsys_kv3_hg_v1p5_1123182313	a	superseded by A5t5 wave row
+kv3_hgi_v1__cl141fc26e	qwen_kvsys_kv3_hgi_v1__cl141fc26e_1123182336	a	superseded by A5t5 wave row
+kv3_hgi_v1__cl42bc8b12	qwen_kvsys_kv3_hgi_v1__cl42bc8b12_1123182347	a	superseded by A5t5 wave row
+kv3_hgi_v3	qwen_kvsys_kv3_hgi_v3_1123182421	a	superseded by A5t5 wave row
+kv3_hgi_v6	qwen_kvsys_kv3_hgi_v6_1123182456	a	superseded by A5t5 wave row
+kv3_hroot	qwen_kvsys_kv3_hroot_1123225427	a	superseded by A5t5 wave row
+kv3_hub_Ei	qwen_kvsys_kv3_hub_Ei_1123182531	a	superseded by A5t5 wave row
+kv3_io_cor_v1	qwen_kvsys_kv3_io_cor_v1_1124042258	c	relaunch from A5t6 (c3 row f85fccc81a99)
+kv3_pc__cl254f2e73__r872e39b5a	qwen_kvsys_kv3_pc__cl254f2e73__r872e39b5a_1124080856	c	relaunch from A5t5 wave rows after apply
+kv3_pc__cl254f2e73__r8b421e514	qwen_kvsys_kv3_pc__cl254f2e73__r8b421e514_1124080919	c	relaunch from A5t5 wave rows after apply
+kv3_pc__cl5a95b461__r85c02c25c	qwen_kvsys_kv3_pc__cl5a95b461__r85c02c25c_1124080941	c	relaunch from A5t5 wave rows after apply
+kv3_pc__cl5a95b461__r882954158	qwen_kvsys_kv3_pc__cl5a95b461__r882954158_1124081002	c	relaunch from A5t5 wave rows after apply
+kv3_pc_v1__cl23f6a148	qwen_kvsys_kv3_pc_v1__cl23f6a148_1124042356	a	superseded by A5t5 wave row
+kv3_pc_v1__cl4ea58a5c__r828e1c2a5	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r828e1c2a5_1124042412	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl4ea58a5c__r84d0332e1	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r84d0332e1_1124042429	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl4ea58a5c__r877307f5d	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r877307f5d_1124042448	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl4ea58a5c__r884969661	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r884969661_1124042508	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl4ea58a5c__r8afe1e027	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r8afe1e027_1124042528	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl4ea58a5c__r8c9cba7ae	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r8c9cba7ae_1124042549	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl4ea58a5c__r8ef700d7c	qwen_kvsys_kv3_pc_v1__cl4ea58a5c__r8ef700d7c_1124042607	c	wave rows on rt 434f (rep r8ef700d7c eligible; siblings SIBLING-WAIT)
+kv3_pc_v1__cl7f648944	qwen_kvsys_kv3_pc_v1__cl7f648944_1122230617	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r817e6c402	qwen_kvsys_kv3_pc_v1__cl7f648944__r817e6c402_1124042628	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r825eb3cd0	qwen_kvsys_kv3_pc_v1__cl7f648944__r825eb3cd0_1124042649	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r87bd89c1f	qwen_kvsys_kv3_pc_v1__cl7f648944__r87bd89c1f_1124042733	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8898d69cf	qwen_kvsys_kv3_pc_v1__cl7f648944__r8898d69cf_1124042750	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8b2213035	qwen_kvsys_kv3_pc_v1__cl7f648944__r8b2213035_1124042810	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8c6505067	qwen_kvsys_kv3_pc_v1__cl7f648944__r8c6505067_1124042831	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8d9b5d53e	qwen_kvsys_kv3_pc_v1__cl7f648944__r8d9b5d53e_1124042850	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8e08b358d	qwen_kvsys_kv3_pc_v1__cl7f648944__r8e08b358d_1124042913	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8e7d31598	qwen_kvsys_kv3_pc_v1__cl7f648944__r8e7d31598_1124042929	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_pc_v1__cl7f648944__r8f64f1de3	qwen_kvsys_kv3_pc_v1__cl7f648944__r8f64f1de3_1124042951	a	superseded by PCPACK R4 (KV-OWN-RSTREACH)
+kv3_phy_v1	qwen_kvsys_kv3_phy_v1_1124043032	a	superseded: type already counted (SIGNED-NO-TAG, counter 10:38)
+kv3_pv_v1e	qwen_kvsys_kv3_pv_v1e_1124043154	c	A5t3 kit GRT FAIL; relaunch from A5t5 wave row after apply
+kv3_pv_v1n	qwen_kvsys_kv3_pv_v1n_1123182227	a	superseded by A5t5 wave row
+kv3_pv_v3	qwen_kvsys_kv3_pv_v3_1122231601	a	superseded by A5t5 wave row
+kv3_pv_v3n	qwen_kvsys_kv3_pv_v3n_1123182916	a	superseded by A5t5 wave row
+kv3_sys_c	qwen_kvsys_kv3_sys_c_1124044024	c	A5t3 kit GRT FAIL; relaunch from A5t5 wave row after apply
+qkd_ectlk_q0	qwen_kvsys_qkd_ectlk_q0_1122174126	a	superseded: plan binds signed qkd views
+qkd_ectlk_q1	qwen_kvsys_qkd_ectlk_q1_1122174201	a	superseded: plan binds signed qkd views
+qkd_ectlk_q2	qwen_kvsys_qkd_ectlk_q2_1122174212	a	superseded: plan binds signed qkd views
+qkd_ectlk_q3	qwen_kvsys_qkd_ectlk_q3_1122174223	a	superseded: plan binds signed qkd views
+qkd_hr_core_prompt	qwen_kvsys_qkd_hr_core_prompt_1122232549	a	superseded: plan binds signed qkd views
