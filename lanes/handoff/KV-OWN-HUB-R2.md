@@ -9,3 +9,6 @@ Next: answer KV-ALLFIX questions only.
 
 ## 11-24 13:0x addendum (hub a34ce324)
 VIS piles: Eo east smear + Wo SW blob = d75/d81 delay-line flops -> fixed by ECH. Wo SE pin-face cluster = xs regs + landing cells of ~10 buses on one face; not fixed by either row; COORD to assign (pin spread / xs place_region).
+
+## 11-24 13:20 PINS row (hub a580ba596)
+Row ROWS_KV-OWN-HUB-R2-PINS.py cdb6c7d0bb6e (epyc11 kv-own-hub-r2) refuses: hub_Wi W face y121-635 host PHY macro wall + packed bands block a +112 um seam shift. xs region alone breaks xs->q_e reach. Big move (seq group + prg core to seam y884-1184, START trunk re-site, bands both frames, path_respace) proposed; awaiting COORD ruling. Base on epyc11: a5t6_base_7926.json (7926cbd1af90). Gate script job_pins.sh (RS=row sha). hub_Eo: no mirror pile.
