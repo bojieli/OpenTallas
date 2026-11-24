@@ -218,6 +218,30 @@ def _report_census(rows, out):
     return census_rc(rows)
 
 
+def fwdclk_repick(raw, plan_path, types=None, whatif=()):
+    """FWDCLK-REPICK (FABLE-RC-ALL class fix 11-24, r703 report-only): a fill runs after every tap change of a compose, so it lists
+    every forwarded-clock export whose source tap is now over derived_drop.EXPORT_HOP_UM with the two-sided pick of
+    fwdclk_repoint (exports otherwise keep the tap of their first tree cut).  Never changes the plan or the rc;
+    OT_FWDCLK_REPICK=0 turns it off."""
+    if os.environ.get("OT_FWDCLK_REPICK", "1") == "0":
+        return []
+    try:
+        import fwdclk_repoint as FR
+        W = {}
+        for w in whatif or ():
+            W.update(json.loads(Path(w).read_text()))
+        tl = None
+        if types:
+            rx = re.compile(types)
+            tl = {tn for tn in raw.get("partition_types") or {} if rx.search(tn)}
+        lines = FR.repick_lines(FR.repick_report(raw, S.Plan(raw, plan_path), tl, W))
+    except Exception as e:  # noqa: BLE001 - report-only: never a fill failure, never a silent pass
+        lines = [f"WARN FWDCLK-REPICK not checked ({type(e).__name__}: {str(e)[:160]})"]
+    for x in lines:
+        print(x)
+    return lines
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -234,6 +258,8 @@ def main(argv=None):
     f.add_argument("--census-out", help="also run the completed plan census and write its TSV")
     f.add_argument("--types")
     f.add_argument("--form", choices=("all", "offset", "window"), default="all")
+    f.add_argument("--fwdclk-whatif", action="append", default=[],
+                   help="fwdclk_repoint agg json(s): the FWDCLK-REPICK report is two-sided where it covers a ring")
     a = ap.parse_args(argv)
     raw = json.load(open(a.plan))
     if a.cmd == "census":
@@ -249,6 +275,7 @@ def main(argv=None):
     skipped = [r for r in rep if r["status"].startswith("SKIP")]
     print(f"TAPOFF-ALL fill: ports {sum(r['added'] for r in rep)} types {sum(1 for r in rep if r['added'])} stale_removed {sum(r['stale_removed'] for r in rep)} "
           f"skipped {len(skipped)} -> {'FAIL' if skipped else 'OK'}")
+    fwdclk_repick(raw, a.out, a.types, a.fwdclk_whatif)
     census_status = 0
     if a.census_out:
         rows = census(raw, a.out, a.types, a.form, port_results)

@@ -19,7 +19,7 @@ Pick for a stale export (source hop > EXPORT_HOP_UM, a tap within EXPORT_HOP_UM 
     ledger UNMEASURED.
 Core-tap follow (with --baseline): each early core tap whose hard core moved since BASE (same orient and outline) is
 shifted by exactly its core's delta (derived_drop ENTRYFOOT b, same EPS). No other plan field changes."""
-import argparse, csv, glob, json, math, os, sys
+import argparse, csv, fnmatch, glob, json, math, os, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -84,8 +84,8 @@ def set_source(lc, q, new):
         lc["forwarded_clock_only_inputs"] = True
 
 
-def repoint_type(tn, t, grid, whatif=None, lim=LIM):
-    """-> ledger rows; t is changed in place"""
+def repoint_type(tn, t, grid, whatif=None, lim=LIM, kit=None):
+    """-> ledger rows; t is changed in place; kit = the what-if source type (own kit or --family representative)"""
     lc = (t.get("clock") or {}).get("landing_contract") or {}
     rows = []
     tp = taps_of(grid)
@@ -98,7 +98,7 @@ def repoint_type(tn, t, grid, whatif=None, lim=LIM):
         new = None
         if c is not None:
             new, err = map_tap(grid, xy, c, lim)
-            r.update(basis="measured" if ok else "NEEDS-SENDER", kit_pass=c["k"], kit_tap=c["tap"], map_err_um=err,
+            r.update(basis="measured" if ok else "NEEDS-SENDER", kit=kit, kit_pass=c["k"], kit_tap=c["tap"], map_err_um=err,
                      min_b=round(w["min_b"], 1), max_b=round(w["max_b"], 1), min_a=round(c["min"], 1),
                      max_a=round(c["max"], 1))
         if new is None:
@@ -134,6 +134,36 @@ def follow_type(tn, t, bt, eps=DD.FOLLOW_EPS):
         tp["xy"] = [round(float(b) + d, 6) for b, d in zip(btp["xy"], dc)]
         rows.append(dict(type=tn, port=port, tap=tp.get("name"), core=i, core_delta=dc, old=old, new=tp["xy"]))
     return rows
+
+
+def repick_report(raw, P, types=None, whatif=None, family=None, grid_of=None):
+    """FWDCLK-REPICK (FABLE-RC-ALL class fix, r703 report-only): after any tap change (tap fill / compose), the pick this tool
+    would make for every export whose source tap is over EXPORT_HOP_UM, two-sided when a what-if covers the ring.  raw is
+    NOT changed (each type is evaluated on a copy).  -> ledger rows as repoint_type."""
+    import copy
+    if grid_of is None:
+        import reach_rules as RR
+        grid_of = lambda tn: RR._grid(P, tn)
+    W, fam, rows = whatif or {}, family or {}, []
+    for tn, t in sorted(((raw or {}).get("partition_types") or {}).items()):
+        if not isinstance(t, dict) or (types is not None and tn not in types) or not DD.export_pins(t):
+            continue
+        g = grid_of(tn)
+        if not stale_pins(t, g):
+            continue
+        kit = tn if tn in W else (fam.get(tn) if fam.get(tn) in W else None)
+        rows += repoint_type(tn, copy.deepcopy(t), g, (W.get(kit) or {}) if kit else {}, kit=kit)
+    return rows
+
+
+def repick_lines(rows):
+    out = [f"WARN FWDCLK-REPICK {r['type']}: {r['pin']} <- {r['old']} {r['old_um']} um -> {r['new']} {r['new_um']} um ({r['basis']}"
+           + (f", min {r['min_b']}->{r['min_a']} max {r['max_b']}->{r['max_a']} ps" if 'max_a' in r else
+              ", needs a two-sided what-if before apply") + ")" for r in rows]
+    from collections import Counter
+    out.append(f"FWDCLK-REPICK report-only: {len(rows)} export(s) over {LIM:g} um after the tap change "
+               f"{dict(Counter(r['basis'] for r in rows))}; apply: fwdclk_repoint.py fix")
+    return out
 
 
 def agg(wdir):
@@ -181,7 +211,11 @@ def main(argv=None):
     W = {}
     for w in a.whatif:
         W.update(json.loads(Path(w).read_text()))
-    fam = dict(x.split("=", 1) for x in a.family)
+    fam = {}
+    for x in a.family:                      # TYPE=KIT, or a glob: kv3_pc_v1__*=kv3_pc_v1__cl7f648944 (own kit wins)
+        k, v = x.split("=", 1)
+        for tn in fnmatch.filter(raw["partition_types"], k) if any(ch in k for ch in "*?[") else [k]:
+            fam.setdefault(tn, v)
     base = json.loads(Path(a.baseline).read_text()).get("partition_types", {}) if a.baseline else {}
     types = sorted(raw["partition_types"]) if a.types == "ALL" else [x for x in a.types.split(",") if x]
     led = dict(tool="fwdclk_repoint", plan_in=a.plan_in, limit_um=LIM, min_ps=MIN_PS, max_ps=MAX_PS, tol_ps=TOL_PS,
@@ -193,7 +227,8 @@ def main(argv=None):
         if isinstance(base.get(tn), dict):
             led["follow"] += follow_type(tn, t, base[tn])
         if DD.export_pins(t):
-            led["repoints"] += repoint_type(tn, t, RR._grid(P, tn), W.get(tn) or W.get(fam.get(tn, "")) or {})
+            kit = tn if tn in W else (fam.get(tn) if fam.get(tn) in W else None)
+            led["repoints"] += repoint_type(tn, t, RR._grid(P, tn), W.get(kit) or {} if kit else {}, kit=kit)
     Path(a.plan_out).write_text(json.dumps(raw, indent=1) + "\n")
     if a.ledger:
         Path(a.ledger).write_text(json.dumps(led, indent=1) + "\n")

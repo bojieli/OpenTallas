@@ -80,3 +80,24 @@ def test_follow_shifts_by_core_delta():
     rows = FR.follow_type("T", t, b)
     assert rows and t["clock"]["taps"][0]["xy"] == [5.0, 109.0]
     assert FR.follow_type("T", t, b) == []
+
+
+def test_repick_report_is_report_only():
+    grid = {"clk": (0, 0), "far": (400, 0), "near": (20, 0)}
+    raw = {"partition_types": {"T": _type("far"), "U": {"clock": {}}}}
+    rows = FR.repick_report(raw, None, grid_of=lambda tn: grid)
+    assert [r["new"] for r in rows] == ["near"] and rows[0]["basis"] == "UNMEASURED"
+    assert raw["partition_types"]["T"]["clock"]["landing_contract"]["pins"][0]["source_clock_port"] == "far"
+    lines = FR.repick_lines(rows)
+    assert lines[0].startswith("WARN FWDCLK-REPICK T:") and "two-sided what-if" in lines[0]
+    assert lines[-1].startswith("FWDCLK-REPICK report-only: 1 export")
+
+
+def test_repick_report_two_sided_with_whatif():
+    grid = {"clk": (0, 0), "far": (400, 0), "near": (20, 0), "mid": (60, 0)}
+    raw = {"partition_types": {"T": _type("far")}}
+    W = {"T": {"fclk_out_x": {"min_b": 100, "max_b": 200, "cand": {
+        "0": dict(tap="k0", hop=20, xy=[20, 0], pin=[0, 0], min=150, max=260),
+        "1": dict(tap="k1", hop=60, xy=[60, 0], pin=[0, 0], min=40, max=180)}}}}
+    rows = FR.repick_report(raw, None, whatif=W, grid_of=lambda tn: grid)
+    assert rows[0]["new"] == "mid" and rows[0]["kit"] == "T" and "max 200->180" in FR.repick_lines(rows)[0]
