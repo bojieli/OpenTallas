@@ -811,6 +811,26 @@ def _source_node(s):
     return f"rst_n_t{s['tap']}"
 
 
+class LandingSourceUnmodeled(RuntimeError):
+    """LANDING-SOURCE-UNMODELED: a landing local source whose node is no relay of the collector tree this kit holds"""
+
+
+def _source_relay(tn, tree, s, c):
+    """GENDRY-STOPITER-1124 (KV-OWN-HUB-R2, COORD: kv3_hub_Eo / kv3_hub_Wo PRE GENDRY died on a bare StopIteration here, A5t3 too): the
+    relay of tree that drives local source s.  Without the bind's clock-landing sidecar (gen --clock-landing = as-built
+    clock_landing_table, what the wave passes) no collector_event is installed and the contract's collector_tree is the native
+    captured reset solve (u_rrl_*), which has no collector source nodes.  That is a modelling gap of the run, named here."""
+    want = _source_node(s)
+    for r in (tree or {}).get('relays') or []:
+        if r.get('q') == want:
+            return r
+    how = "sidecar collector_event" if c.get('collector_event') else "contract collector_tree (no collector_event installed: no --clock-landing sidecar for this type?)"
+    raise LandingSourceUnmodeled(
+        f"LANDING-SOURCE-UNMODELED type {tn}: local source {s.get('name')} node {want} is no relay of the {how} "
+        f"({len((tree or {}).get('relays') or [])} relays); pass the bind's clock-landing sidecar (as-built clock_landing_table) "
+        f"as gen --clock-landing, as the kit wave does")
+
+
 def collector_event(c):
     """The collector identity of a landing contract: the sidecar event the collector RTL was emitted from
     (contract collector_event, set by gen_phys.install_collector_event), else the contract's own published fields.
@@ -928,7 +948,7 @@ def tcl(P,tn,macro_moves=None):
     for s in ev.get('local_sources',[]):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
-        groups.append(('u_cland_rst_'+s['name'],near(tree['relays'][next(i for i,r in enumerate(tree['relays']) if r['q']==_source_node(s))]['xy'],_source_node(s)),'raw-copy-optional'))
+        groups.append(('u_cland_rst_'+s['name'],near(_source_relay(tn,tree,s,c)['xy'],_source_node(s)),'raw-copy-optional'))
     stale={}
     if root:
         active,xy=collector_nodes(ev)

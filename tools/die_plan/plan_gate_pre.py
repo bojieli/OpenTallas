@@ -154,6 +154,9 @@ GENDRY-1123 (COORD 17:25, FABLE flow review; HEAD E pin-move row cab67: every ga
   pad that no contents[].bind names is also KIT-RTL.  Such a pad is bound only in the bound RTL (QC glue: contents[].bump_ports
   of u_bump_fwd_epoch / u_bump_fwd_lrst, bound by bind.py); the plan wrapper can never bind it, the wave kit (kit_rtl mode bind)
   never builds it that way.
+  GENDRY-STOPITER-1124 (KV-OWN-HUB-R2): the dry gen takes --clock-landing like the wave: --sidecar, else the as-built's
+  clock_landing_table, else <plan dir>/source_sidecar.json.  A generator stop LANDING-SOURCE-UNMODELED (landing_place: a local
+  source with no relay in the collector tree the run holds) is WARN GENDRY-UNMODELED, never FAIL.
 
 SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,200 kv3_hg* o_ectl_Q_N_tN exact bank seats off
   the native lattice, found only at global_place): every exact bank site the kit places verbatim (internal_stations
@@ -1982,6 +1985,39 @@ def gendry_cmd(tree, plan, tn, out, sidecar=None, kit_rtl=None):
     return cmd
 
 
+def gendry_sidecar(tree, plan, sidecar=None, asbuilt=None, raw=None):
+    """GENDRY-STOPITER-1124 (KV-OWN-HUB-R2, COORD): -> (clock-landing sidecar for the dry gen, how chosen).  The wave passes gen
+    --clock-landing = the bind as-built's clock_landing_table (kit_wave.apply_bind_landing / asbuilt_clock_landing); PRE passed only
+    <plan dir>/source_sidecar.json, which a KV plan dir does not hold, so the dry gen ran with no collector event and
+    landing_place met the captured reset solve (kv3_hub_Eo / Wo StopIteration, A5t3 unchanged).  Order: --sidecar; the as-built
+    (--asbuilt, else the plan's own section) clock_landing_table, absolute or under the source tree / TREE / the as-built base;
+    <plan dir>/source_sidecar.json; else None."""
+    if sidecar:
+        return str(sidecar), "--sidecar"
+    ab, mdir = None, Path(plan).absolute().parent
+    if asbuilt:
+        try:
+            ab = _load(asbuilt)
+        except (OSError, ValueError):
+            ab = None
+        mdir = Path(asbuilt).absolute().parent
+    elif isinstance((raw or {}).get("asbuilt"), dict):
+        ab = raw["asbuilt"]
+    t = ab.get("clock_landing_table") if isinstance(ab, dict) else None
+    if isinstance(t, str) and t:
+        cands = [Path(t)] if os.path.isabs(t) else [Path(gendry_src_tree(tree)) / t, Path(tree).absolute() / t]
+        if not os.path.isabs(t) and ab.get("base") is not None:
+            b = Path(ab["base"])
+            cands.append((b if b.is_absolute() else mdir / b) / t)
+        for f in cands:
+            if f.is_file():
+                return str(f), "as-built clock_landing_table (as the wave)"
+    sc = Path(plan).absolute().parent / "source_sidecar.json"
+    if sc.is_file():
+        return str(sc), "<plan dir>/source_sidecar.json"
+    return None, "none"
+
+
 def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None, elab_dir=None, asbuilt=None):
     """GENDRY-1123 lines (see the doc).  runner(cmd, cwd, timeout) -> (rc, text): injectable for tests."""
     import tempfile
@@ -2000,8 +2036,9 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     tmo = int(env.get("OT_PRE_GENDRY_TIMEOUT_S") or 1800)
     run, rest = types[:cap], types[cap:]
     kitrtl = set(gendry_kitrtl_types(raw, run))      # GENDRY-KITRTL-1123
-    sc = sidecar or (Path(plan).absolute().parent / "source_sidecar.json")       # the sidecar gendry_cmd passes
-    if Path(sc).is_file() and not gendry_native_observer(raw, sc):               # GENDRY-OBSERVER-1123: kit-rtl like the wave
+    sc, sc_how = gendry_sidecar(tree, plan, sidecar, asbuilt, raw)                 # the sidecar gendry_cmd passes (GENDRY-STOPITER-1124)
+    sidecar = sc
+    if sc and Path(sc).is_file() and not gendry_native_observer(raw, sc):               # GENDRY-OBSERVER-1123: kit-rtl like the wave
         kitrtl = {tn for tn in run if not (raw["partition_types"].get(tn) or {}).get("hard")}
     wmode, whow = gendry_wave_mode(raw, env)
     if wmode in ("bind", "script"):                      # GENDRY-WAVEMODE-1124: a kit_rtl die builds every non-core type from bound RTL
@@ -2048,8 +2085,11 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
             continue
         lines = [x for x in (text or "").splitlines() if x.strip()]
         err = next((x for x in reversed(lines) if "ERROR" in x or "Error" in x), lines[-1] if lines else "")
+        unm = next((x for x in lines if "LANDING-SOURCE-UNMODELED" in x), None)
         if rc is None:
             out.append(f"WARN GENDRY-UNCHECKED {tn}: kit generator {err}")
+        elif unm:                                        # GENDRY-STOPITER-1124: a modelling gap of the dry run, report only
+            out.append(f"WARN GENDRY-UNMODELED {tn}: {unm.strip()[unm.strip().find('LANDING-SOURCE-UNMODELED'):][:400]}")
         else:
             out.append(f"FAIL GENDRY {tn}: kit generator rc={rc}: {err.strip()[:400]}")
     if rest:
@@ -2057,7 +2097,7 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     nk = len(kitrtl) if not bind_out else 0
     out.append(f"WARN GENDRY-SUMMARY {len(run)} changed type(s) generated dry ({len(kitrtl) - nk} kit-RTL from the bound RTL), "
                f"{nk} kit-RTL classified not generated, {sum(1 for x in out if x.startswith('FAIL'))} failed; "
-               f"wave kit_rtl mode {wmode or 'per-type'} ({whow})")
+               f"wave kit_rtl mode {wmode or 'per-type'} ({whow}); clock-landing {sc or '-'} ({sc_how})")
     return out
 
 
