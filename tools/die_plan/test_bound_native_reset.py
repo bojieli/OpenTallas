@@ -403,3 +403,10 @@ def test_pair_on_consumer_tap_relay_is_rejected(tmp_path):
         'ot_dp_rgate u_rrl_0 (', 'ot_dp_head_raw_export_pair u_rrl_0 (').replace('.run(rn_rst_root_n), ', '', 1))
     with pytest.raises(gen_rtl.GenError):
         G.install_bound_native_reset(p, 't', [f])
+
+
+def test_embedded_export_pair_cell_equals_repo_cell():
+    import re as _re
+    src = (Path(G.__file__).resolve().parent.parent.parent / 'rtl' / 'common' / 'ot_dp_clk_landing_ca.sv').read_text()
+    repo = _re.search(r'module ot_dp_head_raw_export_pair\b.*?endmodule', src, _re.S).group(0)
+    assert _re.sub(r'\s+', '', repo) == _re.sub(r'\s+', '', G.HEAD_RAW_EXPORT_PAIR_CELL)

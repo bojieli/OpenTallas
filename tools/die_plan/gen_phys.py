@@ -10081,6 +10081,23 @@ def install_collector_event(P, tn, lands, rtl_files, plan_tree=None):
     print(f"gen phys: type {tn}: collector placement from {src}, {len(expected)} collectors = bound RTL", flush=True)
 
 
+HEAD_RAW_EXPORT_PAIR_CELL = """module ot_dp_head_raw_export_pair (
+    input wire clk, d,
+    (* keep *) output reg q,
+    (* keep *) output reg export_q
+);
+    always @(posedge clk) begin
+        q <= d;
+`ifdef OT_HEAD_RAW_EXPORT_MUTANT_LATE
+        export_q <= q;
+`else
+        export_q <= d;
+`endif
+    end
+endmodule
+"""
+
+
 def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope=None):
     """Opt-in bound reset authority: verify the explicit tree against the ONE native hierarchy.
 
@@ -10203,9 +10220,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     # KV-OWN-HG: FLOW-6 private reader-START copy.  The raw relay of a wavefront OUT tap may be the exact canonical
     # ot_dp_head_raw_export_pair (same clk/D/Q, export_q <= D); its canonical body is the repo cell, never the bound text.
     PAIR = "ot_dp_head_raw_export_pair"
-    _pair_src = Path(__file__).resolve().parent.parent.parent / "rtl" / "common" / "ot_dp_clk_landing_ca.sv"
-    if _pair_src.is_file():
-        reset_cells += "\n" + _pair_src.read_text()
+    reset_cells += "\n" + HEAD_RAW_EXPORT_PAIR_CELL      # embedded: an rt tools tree has no rtl/ (test pins it to the repo cell)
     _nck = RT.consumer_count(tree)
     out_raw = {f"rr_t{_nck + k}" for k in range(len(tree.get("outs") or []))} if tree.get("start") else set()
 
