@@ -353,3 +353,5 @@
   (2) The owner rule 11-20 exempts hold-only / proofs / ECO. I called these GRT kits proofs to fit it. That was my reading, not a ruling; they are diagnostic builds.
   (3) The rscap KEEP named the old unit 1365406-1795488947; the live one is 2862459-1795494644.
   COORD please rule: keep both for the congestion read (epin_r4 6/30, rscap 10/30, ~30 min per iteration), or let the watchdog cancel them. If you say cancel, or if you want the rule applied as written, I withdraw both KEEPs.
+- 2026-11-24 00:27 PST DONE [head-r18] ot-push-main otpush-renewed-glider-2364790 on renewed-glider: rc=0 after 0 s, ended 08:27:02, log none, cmd: ot-push-main -h
+- 2026-11-24 00:27 PST DIED [HEAD-R18] ot-run otrun-loved-redfish-3937859 on loved-redfish: rc=1 after 0 s, ended 08:27:11, log none, cmd: --hosts epyc7 --no-spill --mem 16 --threads 4 --priority plan --dir /srv/opentallas-scratch2/claude/head-r18/tmp/tieaudit -- bash /srv/opent | class=SETUP cause=died after 0 s with no log: the command failed at start (rc 1)
