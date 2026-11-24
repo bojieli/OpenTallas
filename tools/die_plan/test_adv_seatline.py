@@ -36,3 +36,14 @@ def test_findings_strong_tier_and_never_raises():
     out = A.findings(raw, "p")
     assert "sle_ctl_x" in out[0] and "36 um side" in out[0]
     assert A.findings(None, "p")[0].startswith("WARN ADV-SEATLINE not checked")
+
+
+def test_per_bit_seats_override_station_window():
+    import adv_seatline as S
+    rs = {f"u_ist_b_x_0.q[{i}]": [100.0 + (i % 40) * 6.0, 100.0 + (i // 40) * 6.0] for i in range(1600)}
+    t = {"internal_stations": [{"conn": "bus:b_x", "regs_um": [[200.0, 200.0]], "bits": 1600}], "relay_sites": rs}
+    n_pt = S.judge(S.seats({"internal_stations": t["internal_stations"]}))[0]
+    n_bit = S.judge(S.seats(t))[0]
+    assert len(n_pt) == 1 and not n_bit                       # point seat flags; real per-bit spread (234 x 234 um) meets the need
+    assert S.seats(t)[0][4] > 200
+    assert S.seats({"internal_stations": t["internal_stations"], "relay_sites": {}})[0][4] == 0.0   # fallback when per-bit seats are missing

@@ -15,6 +15,7 @@ The two thresholds MIN_SIDE_UM / BIN_MIN_UTIL are mine (the order only says 2x m
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.
 """
 import math
+import re
 import statistics
 import sys
 from collections import defaultdict
@@ -47,9 +48,24 @@ def window_side(stage):
     return min(max(xs) - min(xs), max(ys) - min(ys)) if len(stage) > 1 else 0.0
 
 
+_RS = re.compile(r"^u_ist_(.+)_(\d+)[./]q\[\d+\]$")
+
+
+def bit_seats(t):
+    """per-bit seats of a type: {(conn tail, stage j): [(x, y)]} from relay_sites u_ist_<conn>_<j>.q[bit] (the seat the placer is told, one per bit)"""
+    out = defaultdict(list)
+    for k, v in (t.get("relay_sites") or {}).items():
+        m = _RS.match(k)
+        if m and isinstance(v, (list, tuple)) and len(v) >= 2:
+            out[(m.group(1), int(m.group(2)))].append((v[0], v[1]))
+    return out
+
+
 def seats(t):
-    """-> [(name, stage j, (x, y), bits, window_side)] stage seats of one type"""
+    """-> [(name, stage j, (x, y), bits, window_side)] stage seats of one type.  window_side comes from the PER-BIT seats (relay_sites) when the station has them
+    (COORD 11-24: the station field bit_sites_um alone gave false strong flags), else from bit_sites_um, else 0 (a point seat)."""
     out = []
+    bseat = bit_seats(t)
     for s in t.get("ft_slots") or []:
         if not isinstance(s, dict):
             continue
@@ -65,7 +81,8 @@ def seats(t):
         off = 0 if bs and len(bs) == len(regs) else 1
         for j, p in enumerate(regs):
             st = bs[j - (1 - off if off == 1 else 0) if False else (j if off == 0 else j - 1)] if bs and 0 <= (j if off == 0 else j - 1) < len(bs) else None
-            out.append((str(e.get("conn")), j, (p[0], p[1]), b, window_side(st) if st else 0.0))
+            pb = bseat.get((str(e.get("conn")).split(":")[-1], j))
+            out.append((str(e.get("conn")), j, (p[0], p[1]), b, window_side(pb) if pb and len(pb) > 1 else (window_side(st) if st else 0.0)))
     return out
 
 
