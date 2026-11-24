@@ -28,3 +28,11 @@ Forks (background agents of this lane, post as "[serdes fork]" / "[misc fork]" /
 - Wave A raw plan 63bafd10e3c5 (epyc10 s81-j9-r6/wave_a/tap_delivery_wave_a_taps_63bafd10e3c5/plan.json): kv_leaf t1/t2/t4 split (cap 1000), t3/t5 NOT split. My rows: epyc10 kvtaps/wa35 (splitwa.sh: sinkshift + tap_split_e08b frozen, cap 1000 r300): t3 +78 (8497->1000), t5 +70 (8903->999); PRE vs Wave A running (pre35.sh -> wa35/pre.log).
 - Serdes fork resumed (SendMessage). Codex window posted t4/t14 DECSITE compose row 0594ed9e28c3 READY; t2 falling-entry reset fix; PHY t1 CTS +62/-190.
 - gate 10c (intel2 client 2237640) + bk_sel gate (2054031) still binding on epyc7; my waiters bn3sf5foc/batdogfvw.
+
+## State 16:1x PST 11-23 (after 11:40-15:40 limit)
+- ENG-HXFACE-1 (u_e MX->R0; tool epyc10 s81-misc-serdes-j9/eng/eng_hxface.py) + KVLEAF-VNB-HARD-1 (kvtaps/vnb_row.py, FF-home nudge added): B1 ae3101241d6b ops comb_b1/ ENG 503cbe8a158d, VNB 8882974550bc, plan f1d60b3db89d PRE 0. B2 twin comb_b2/ (43e27e7a81a7 / fa96e9f59d07, PRE 0 vs 373706c71388). Wave A versions superseded.
+- LIVE: scoped strict bind of f1d60b3db89d on eng__t1 + kv_leaf t1/t3/t4/t5 (epyc10, scope1.sh, out comb_b1/scope_bind_f1d60b3db89d); next = private kit + place/GRT probe + census eng__t1 and kv_leaf t5.
+- Serdes fork: DECSITE t4/t14 0594ed9e28c3, FACETAP-1 f025d8f6cb26, PHY-T1-NECORNER-1 PROBE-PASS 7bc0dd5f7087; t2 held (ENC-PW16 946786cc9466 bench PASS, LPLC-MIDVLD b96518167517 BMC40, DCHN-KLOCK not built, P13 moved to bin->lpad -146). Rebasing on B1 for tonight amendment.
+- Misc fork: bk_sel/gunit/seqhost/iqf rows already in B1 byte-identical; 10c cancel 16:30 if silent; seqhost probe on B1 bind out.
+- T2 fork: kv_leaf t2 row draft due 20:00 (seat 23 band cores, die fit, KVE spans stations) -> s81-misc-serdes-j9/t2row/.
+- XGARRAY-2 reply posted 11:29; TAP-GRID-R6 owns kv_leaf over-cap taps (my wa35 t3/t5 split is obsolete).
