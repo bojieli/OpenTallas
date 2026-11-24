@@ -58,6 +58,18 @@ def test_default_conf_passes_autopilot_through_unchanged(tmp_path, monkeypatch):
     assert out == ["/ap/kw10/ot-run"] + ap_argv()
 
 
+def test_opted_in_event_uses_preflight_backend_without_bypassing_sealing(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_RUN_EVENT_ENV", "/coord/events/c9.env")
+    monkeypatch.setenv("OT_RUN_SEALED_BACKEND", "/ap/kw10/ot-run")
+
+    out, _ = M.decide(ap_argv(), conf(spec_dir=str(tmp_path)), check=ok)
+    assert out == [str(Path.home() / ".local/bin/ot-run")] + ap_argv()
+
+    out, why = M.decide(ap_argv(), conf(spec_dir=str(tmp_path), ap_goals=["route"]), check=ok)
+    assert out[0] == "/sb/ot-run" and "--job" in out
+    assert why == f"SEALED on epyc2: {K}"
+
+
 def test_route_is_sealed_with_declared_inputs(tmp_path, monkeypatch):
     monkeypatch.setenv("OT_RUN_SEALED_BACKEND", "/ap/kw10/ot-run")
     out, why = M.decide(ap_argv(extra=["--priority", "die", "--crit"]),

@@ -10894,9 +10894,11 @@ def run_item(spec_path):
                "started": time.time(), "log": str(out / "place.live.log"), "launch": "prepared"}
         save_svc(svc)
         inner = " ".join(shlex.quote(a) for a in argv)
+        event_env = os.environ.get("OT_RUN_EVENT_ENV")
         cmd = ["systemd-run", "--user", "--quiet", "--collect", f"--unit={unit}",
                f"--setenv=PATH={HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin", f"--setenv=HOME={HOME}",
-               "--setenv=OT_RUN_SPILL_HANDOFF=place", "--property=TimeoutStopSec=120", "/bin/bash", "-c",
+               "--setenv=OT_RUN_SPILL_HANDOFF=place", "--property=TimeoutStopSec=120",
+               *([f"--setenv=OT_RUN_EVENT_ENV={event_env}"] if event_env else []), "/bin/bash", "-c",
                f"exec >> {shlex.quote(svc['log'])} 2>&1; echo KW_PLACE_START $(date +%s) {unit}; "
                + place_retry_sh(inner, svc["log"]) + "; echo KW_PLACE_RC=$rc"]
         p = subprocess.run(cmd, capture_output=True, text=True, timeout=60)

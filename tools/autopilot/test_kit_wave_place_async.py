@@ -97,6 +97,16 @@ class PlaceAsync(unittest.TestCase):
             # GEOM ran after the receipt, on the gen host copy
             self.assertTrue(any("geom_check.sh" in c for c in f.calls))
 
+    def test_event_env_reaches_detached_place(self):
+        with tempfile.TemporaryDirectory() as d, patch.dict("os.environ", {"OT_RUN_EVENT_ENV": "/coord/events/c9.env"}):
+            f = Fake(d)
+            rc, _ = self.go(d, f)
+
+        self.assertEqual(rc, 0)
+        run = [c for c in f.calls if c.startswith("systemd-run")]
+        self.assertEqual(len(run), 1)
+        self.assertIn("--setenv=OT_RUN_EVENT_ENV=/coord/events/c9.env", run[0])
+
     def test_private_place_stops_before_geometry_probe(self):
         with tempfile.TemporaryDirectory() as d:
             f = Fake(d)

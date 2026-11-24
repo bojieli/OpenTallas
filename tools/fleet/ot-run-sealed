@@ -45,7 +45,9 @@ DEFAULT_BACKEND = "/home/ubuntu/.local/lib/kw23/ot-run"
 
 
 def backend_of(conf):
-    """the passthrough ot-run: $OT_RUN_SEALED_BACKEND (autopilot's own), else conf "backend" (the wave's)"""
+    """Use the fleet entry point for event jobs so legacy passthroughs enforce preflight."""
+    if os.environ.get("OT_RUN_EVENT_ENV"):
+        return os.path.expanduser("~/.local/bin/ot-run")
     return os.environ.get("OT_RUN_SEALED_BACKEND") or conf.get("backend") or DEFAULT_BACKEND
 CONF = os.environ.get("OT_RUN_SEALED_CONF", os.path.expanduser("~/.local/lib/fleet/isolate-1/sealed.json"))
 
