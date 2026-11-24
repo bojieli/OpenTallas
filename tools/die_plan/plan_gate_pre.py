@@ -145,7 +145,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1757,6 +1757,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import site_grid as SG
         findings += SG.findings(_load(plan) or {})
+    if "DEPTH" not in skip:                              # DEPTH-PRE-1123: generated constructor netlists within the logic-depth budget
+        findings += check_depth(tree, plan, asbuilt)
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
@@ -1772,6 +1774,71 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if rb:
         findings.append(f"LIST REMAP-BASE {rb} ({rb_how})")      # which base LANDREMAP / ISTCYC used (REMAP-BASE-1122)
     return findings
+
+
+INST_NAME = re.compile(r"^\s*(?:\(\*[^*]*\*\)\s*)?([A-Za-z_]\w*)\s*(?:#|[A-Za-z_\\][\w$]*\s*[\(\[])", re.M)
+
+
+def depth_netlists(tree, plan, asbuilt=None):
+    """-> (generated netlist files the plan's RTL reaches, how).  With an as-built (rtl_roots / files / prefer): the modules of the plan's
+    types and hard cores, closed over instantiation through bind_elab.module_index; without one: every generated file under <tree>/rtl."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import logic_depth as LD
+    raw = _load(plan) or {}
+    ab = _load(asbuilt) if asbuilt else raw.get("asbuilt")
+    root = Path(tree) if tree else plan_tree_root(plan)
+    if not isinstance(ab, dict) or not root:
+        base = Path(root or ".") / "rtl"
+        files = sorted(str(p) for p in base.rglob("*.sv") if LD.is_generated(p)) if base.is_dir() else []
+        return files, f"every generated netlist under {base}"
+    import bind_elab as E
+    import bind_rowcheck as RC
+    b = RC._base(plan, ab, asbuilt) or str(root)
+    idx = E.module_index(ab.get("rtl_roots", ["rtl"]), list(ab.get("files", [])) + list(ab.get("prefer", [])), b)
+    todo = []
+    for t in (raw.get("partition_types") or {}).values():
+        if isinstance(t, dict):
+            todo += [t.get("module")] + [c.get("module") for c in t.get("hard_cores") or [] if isinstance(c, dict)]
+    seen, files = set(), set()
+    while todo:
+        m = todo.pop()
+        if not m or m in seen or m not in idx:
+            continue
+        seen.add(m)
+        for p in idx[m]:
+            if p in files:
+                continue
+            files.add(p)
+            try:
+                txt = Path(p).read_text(errors="replace")
+            except OSError:
+                continue
+            todo += [x for x in set(INST_NAME.findall(txt)) if x in idx and x not in seen]
+    return sorted(p for p in files if LD.is_generated(p)), f"{len(seen)} module(s) reached from the plan's types"
+
+
+def check_depth(tree, plan, asbuilt=None, max_list=12):
+    """FAIL DEPTH per generated constructor netlist with flops at logic depth >= the 833 ps budget (DEPTH-PRE-1123, logic_depth.py)"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import logic_depth as LD
+    try:
+        files, how = depth_netlists(tree, plan, asbuilt)
+    except Exception as e:  # noqa: BLE001 - a check that cannot run must fail (BPC-UNDEF / LANDREMAP class)
+        return [f"FAIL DEPTH-UNCHECKED generated netlists not resolved ({type(e).__name__}: {str(e)[:200]})"]
+    out, n_deep = [], 0
+    for p in files:
+        try:
+            r = LD.census(p)
+        except Exception as e:  # noqa: BLE001
+            out.append(f"FAIL DEPTH-UNCHECKED {p}: {type(e).__name__}: {str(e)[:160]}")
+            continue
+        x = LD.finding(r)
+        if x:
+            n_deep += r["deep"]
+            out.append(x)
+    head = out[:max_list] + ([f"FAIL DEPTH ... {len(out) - max_list} more netlist(s)"] if len(out) > max_list else [])
+    return head + [f"WARN DEPTH-SUMMARY {len(files)} generated netlist(s) ({how}); {len(out)} over budget, {n_deep} deep flop(s), "
+                   f"budget {LD.levels()} levels ($OT_PRE_DEPTH_LEVELS)"] if files or out else head
 
 
 def advisory_lines(tree, plan, asbuilt=None, baseline=None):
