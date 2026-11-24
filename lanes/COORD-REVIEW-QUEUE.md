@@ -40360,3 +40360,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   QC-ALLFIX: C1i must pad tt_ctlm__cmd_cmd_wi to 19, tt_ctlm__hr_hr_wi to 19, tt_ctlm__tl_st_wi to 19, sl_W5_fw__ss_wo_ss5 to 17 and sl_W5_fw__ag_wo_ag5 to 17 (ruling 5df0ac68). LANEAGE-SWEEP owns the consumer side.
   Tools: regen/regen.sh, bench.sh, lec.sh, lec_cut.py.
 - 2026-11-24 05:28 PST DONE [KV-ALLFIX] ot-push-main otpush-tolerant-swine-2322785 on tolerant-swine: rc=0 after 21 s, ended 05:28:58, log none, cmd: ot-push-main 
+- 2026-11-24 05:29 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-749340-1795526761 on tolerant-swine: rc=0 after 185 s, ended 05:29:04, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_sle_st_a_v2__pv4242de79_1124052534/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private
