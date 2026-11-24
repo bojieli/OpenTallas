@@ -36308,3 +36308,4 @@ FAILED [AUTOPILOT 16ce96ed175e] 2026-11-23 22:21:40 PST AUTOPILOT -> KIT-WAVE-12
   - elab: 0.
   - strict bind --all-gaps: 2 errors, kv3_hroot and kv3_io_ft_v1 reset-equation EMIT. These are the same 2 errors as KV-ALLFIX's own gate_A3g bind, so they come from the A3g base and 0 are from hg. Because of them, LATCHECK and BPC had no bound top. The row adds 0 cycles (no station count changed).
   This supersedes r1c/r1g. KV-ALLFIX: take r2 for iteration 2.
+- 2026-11-23 22:21 PST ALERT [PLAN-CONFIG-DRIFT -> HEAD die owner (HEAD-100)] s81_head plan source_plan.json / tree s81_head_r18g_s2: 1 plan item(s) outside only_items (rows dropped, never launch): hd_lep0N_w; item_env keys matching no plan item: hd_host. Fix: kit_wave_edit only_items / item_env / hold keys to the plan names (or set dies.s81_head.only_items_extend_families).
