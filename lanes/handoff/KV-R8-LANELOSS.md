@@ -6,3 +6,6 @@ A2g affected: kv3_pc_v3 x4 clones, kv3_hg_v1 x3, kv3_hg_v1p3 x3 (13 partitions).
 FIX: commit 70be023f9e2 in epyc10 /srv/opentallas-scratch2/claude/kv-r8-laneloss/wt (plan_cell_types + tests).
 Repro: epyc8 /srv/opentallas-scratch2/claude/kv-r8-laneloss/repro/{base,fix} (repro.sh, wrap.py dumps lanes_unused).
 Next: confirm fix bind passes native_istations; ot-push-main; tell FLOW-OPS + KV-ALLFIX.
+## 20:16 PST DONE
+Pushed main 356816a538. Repro: fix passes native_istations; 20 lanes recovered (efault pc_*_7, o_fch_hg + o_idhg hg_*_1/3), 0 lost; 30 R8_STALE left (gate r8_refresh path).
+Told FLOW-OPS (rt cut) and KV-ALLFIX (pc_v3 back into R8 split in A3). Lane job complete.
