@@ -214,3 +214,4 @@
   - Cause read: 97% of the 1034 overflow is at the u_rg1.u_pair lower-left corner, x60-110 / y840-960. The mirror corner had 2 of 843 entries in the base kit.
   - Note: under the new fail-closed LANDREMAP, use the parent plan as --remap-base.
   HEAD-R18 keeps East: the epin_r4 resume, the r18g escape kit, the rscap probe and the 66ce census.
+- 2026-11-23 19:35 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] E-epin4-esc (hd_lep0N_1123175731/gen/hd_lep0N): stage [place FAIL]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
