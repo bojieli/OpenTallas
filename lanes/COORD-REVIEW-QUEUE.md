@@ -37626,3 +37626,4 @@ FAILED [AUTOPILOT f02823d0dc96] 2026-11-23 23:31:56 PST AUTOPILOT -> KIT-WAVE-3:
   - hgi cl141/cl42b: NO A5 row. u_rrl native-reset verifier fix never reached main; KV-RRL-EXPORT silent since 20:00. UNOWNED: I take it.
   - pc cl254 x2 r8: ASTK-EARLYTAP, ISTPRICE rows; reach A6. Live: ALLFIX.
   After A5s binds: probes at goal grt on epyc11, verified-sha tree, reach/non-reach types per ALLFIX's list.
+- 2026-11-24 00:20 PST DONE [s81-j9-r6] ot-push-main otpush-tolerant-swine-3917011 on tolerant-swine: rc=0 after 0 s, ended 00:20:14, log none, cmd: ot-push-main --help
