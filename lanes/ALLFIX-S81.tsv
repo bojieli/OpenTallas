@@ -87,4 +87,4 @@ LEAF-ALLFIX-1	family	8ce96cfc7c52	8ce96cfc7c52	yes	c6 8381109c93bf	PASS 0/285	-	
 KVLEAF-T2-HARD-1	S81-ALLFIX-SLICE	08bbfd521522 / slot +527x691	-	-	-	-	-	-	-	-	-	REASONED-pending (FABLE-RC-ALL 17:33 ACCEPT)
 COL-P5-FSTART1	S81-ALLFIX-COL	plan 77d6f4f47270	a2a6760fa5e1	yes	c7a (composing 19:0x)	12 ANCHORDRY REASONED (intended), else 0	-	-	-	-	-	STAGED c7a; REASONED on proof (COORD 19:18/FABLE d016ece5): scoped strict EMIT 0 on 12 p5+serdes__t13 + START release>=reset + die max release before/after. NOTE: B1 ae3101241d6b binds these 12 at depth 7 BY DESIGN; ALLFIX differs (depth 8) by design
 SERDES-t13-FSTART0	S81-ALLFIX-SVC	t13 fstart_0 depth 10!=9 (inherited B1)	-	no	-	-	-	-	-	-	-	OPEN: SVC row due 20:00 -> c7b
-FSTART-DEPTH-CLASS	S81-OPEN-FSTART (requested 19:3x)	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: lane requested; c7b/c8 last tail step
+FSTART-DEPTH-CLASS	S81-OPEN-FSTART	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-FSTART live 19:38, due 21:30 -> last tail step c8 (input c7a)
