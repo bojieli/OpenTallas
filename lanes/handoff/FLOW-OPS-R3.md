@@ -159,3 +159,12 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - rt 8baa9dd05208 on all 8 hosts; ot-heavy-reconcile = 46b4c8df2a (e9197cd9). epyc10 rt -> scratch3/claude/rt-data. The 07:38 follow timed out on epyc11 after 15 min (slow epyc11 I/O); the 08:06 cut reached it in 81 s. At 07:54 epyc10 install failed ENOSPC because the manifest and link still write scratch2.
 - intel2 autopilot drop-ins: 9, no codex takeover file, AP_REQUIRE_VIEWED_WAVE_ROUTE count 0. ROUTE-HELD 7, all owned (QC tt_ctlm, HEAD hd_spn WAIT-FORM; S81 serdes t3/13/14/16 and dsdv_C t5 SKIP-HELD).
 - E10 drain: kit_wave host_drain epyc10=300 (hub 0f3b7502). It lifts itself at 300 GB free; to lift it sooner, run kit_wave_edit --unset /host_drain/epyc10.
+
+## 2026-11-24 09:1x PST follow-ups (Claude)
+- RT-HOST-DATA-MAN main 67a9d659af2: host-data hosts write the manifest on the data disk, and RT holds only symlinks. Verified on epyc10 (3188c49689a1.manifest.json -> scratch3 rt-data).
+- JOBROOT-KEEP main 3188c49689a: the delete guard refuses ot-jobs/.ot-isolated.json and ot-jobs/.return. Recreated both on epyc9. Both are re-made on demand anyway.
+- E11-IO-STALL main fe4a70c0552: ot-heavy IOGATE (bulk fork/copy/seal jobs wait while io some avg60 > 20, at most 3600 s), ot-tree-fork max 2 workers plus a srcdev lock, lane_quota skips a gated host. On all 8 rt (434f13368bb6).
+- FORK-REMOTE-STREAMS main 98e9ca7edd7: --host forwards REMOTE_ENV; default 2 streams near or far.
+- TAG-CANCEL main 34e493c4ab7: a unit stop also stops containers carrying its tag.
+- The follow times out (15 min) on epyc11 while its IO is stormy; the other hosts flip anyway.
+- Open: KV-ALLFIX may ask for a CAS publish host-subset option (COORD: that is mine). No request seen yet.
