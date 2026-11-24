@@ -11,3 +11,8 @@ Data: epyc10 /srv/opentallas-scratch2/claude/QC-INHOLD-BUDGET/{kits,io2,tools}; 
 epyc7 /srv/opentallas-scratch2/claude/QC-INHOLD-BUDGET/row/ROWS_QC-INHOLD-BUDGET.py + guarantee.json: measured sender out_hold_check_ps = max(0, FF min(out arrival - vclk) - 20) (fw 0, stm 9.4/9.6); receivers with all fw/stm senders measured -> clock.io_hold sender_min (4 types). plan_inhold.json on C1-noSU base. PRE queued (row/pre.sh, ot-run epyc7).
 Pin-face tap (b) rejected: PINFACE-TAP 00:28 measured pin flops at bound worsen internal crossings (stm CORE->PIN 109->618).
 Residual FF -21 real -> receiver port-path hold ECO under the measured contract (needs FABLE-RC-QC accept; OT_GRT_NONPORT_HOLD excludes port paths today).
+## 02:1x update
+Row A (contract): row/ROWS_QC-INHOLD-BUDGET.py -> plan_inhold.json 13cedebaf33c.
+Row B (COORD ruling, structural, no kit port repair): ROWS_QC-INHOLD-HB4.py: hold_hb4=2 on x_fw_i/x_fw_p1_i of all 9 *_stm_* -> plan_inhold_hb4.json 20f6859d4f4e. What-if: die FF worst -21.2 -> +38.4 at 29.8 ps/HB4; die TT setup 673 -> ~575. Lockup/early-tap rejected (posted).
+Row C (COORD cbf_q11 item): ROWS_QC-INHOLD-CBF.py: cbf_q11 reset.pin_entry_delay 10+10 BUFx4 -> plan_inhold_abc.json 5da137fdf245 (FINAL combined). cbf kit re-read epyc8 io2/cbf11 (hold -104.80 TT/-48.5 FF, setup +771 TT).
+Gates running epyc7: PRE row/pre*.sh (logs row/pre*.log); scoped strict bind bindS (4 fw/stm types, plan hb4; mirror dir of plan_of_record because relative refs) and bindC (cbf_q11, plan abc). Next: private-spec --plan abc --tree QC-ALLFIX/cC/tree --bind-out bindS/bind or bindC/bind --goal cts --rt 70b6f0430ea9, run-item; read HB4/BUFx4 delays + internal hold.
