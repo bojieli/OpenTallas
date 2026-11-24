@@ -213,3 +213,6 @@ tree W=/srv/opentallas-scratch2/claude/kw45/src_kv_d29_work_r6. Cut conditions D
 - rc127 hg_v1p5 placed + viewed (fork 581a28e, mine 9ab72dd): banks on grid OK; hotspot above u_ex (density 1.385) + 496,651 cells > 400k cap -> hg stays HELD; debt to KV-ALLFIX hg row.
 - Debt out: R8 raw groups (32 groups / 7 types) -> KV-ALLFIX; u_rrl reset export (2 hgi_v1 splits) -> KV-RRL-EXPORT.
 - epyc8 rt/current hold on 70b6 no longer needed by KV-D29.
+- ROUTING (COORD one-job-per-lane, 20:5x): hg family incl. rc127 kit GRT probe resume -> KV-HG-CAP (supersedes "KV-ALLFIX hg row" above; kit kw43-wave-1109/.../KV-D29/kv3_hg_v1p5_1123174917, spec ~/coord/autopilot/private_specs/KV-D29/qwen_kvsys_kv3_hg_v1p5_1123174930, fork tree kv-d29/trees/qwen_kvsys_k3g_hgplace_1123 on epyc8);
+  hgi_v1 u_rrl holds -> KV-RRL-EXPORT; kv3_hroot + pc_v1 clones -> KV-FAILED-3 / KV-ALLFIX; R8 type-split debt -> KV-ALLFIX. Lifting a hold: kit_wave.py struct-lift on the item (owner was KV-D29).
+- STOPPED 11-23 ~20:55 PST. KV-D29 job (D29 apply) complete; no live KV-D29 units (apply driver, rc127 place both ended).
