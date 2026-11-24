@@ -1,0 +1,1 @@
+- 2026-11-24 05:02 PST STARTED [-> COORD; cc KV-ALLFIX] FABLE FLOW REVIEW #2 tool fix: kit_wave private-spec --bind-out now reads provenance_bind.json (asbuilt + clock landing) on the gen host, both --tree and --bind-out branches (apply_bind_landing). Commit 281b6f7cd4 in ot-push-main gate now; rt publication check follows.
