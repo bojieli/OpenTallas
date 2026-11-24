@@ -1,0 +1,111 @@
+die	type	seated	unmatched	keys	log_time	host	owner	cause
+HEAD	hd_lep0N_w	3	44	47	11-23 18:37	epyc7	HEAD-R18	reset fan-out tree re-built (g_rfan -> u_rg1/u_rg2): stale rows
+HEAD	hd_lep0N	79	10	89	11-23 20:02	epyc7	HEAD-R18	reset fan-out tree re-built (g_rfan -> u_rg1/u_rg2): stale rows
+KV	kv3_hub_C	13214	2369	15583	11-23 12:49	epyc2	KV-ALLFIX	u_d51 unused bits pruned in synth (no register)
+KV	kv3_pv_v5n	1069	529	1598	11-23 12:10	epyc7	KV-OWN-PV	rows of registers the variant does not have (u_pv_u_T0Q1_21 etc.) + vq/rst split names
+KV	kv3_pv_v3e	3991	273	4264	11-23 01:58	intel1	KV-OWN-PV	rows of registers the variant does not have (u_pv_u_T0Q1_21 etc.) + vq/rst split names
+KV	kv3_hgi_v1__cl141fc26e	1906	128	2034	11-23 07:00	intel1	KV-OWN-HG	u_pd4_i_ectl_Q_N_eN chains not in bound (dead rows)
+KV	kv3_hgi_v1__cl42bc8b12	1906	128	2034	11-23 02:08	epyc9	KV-OWN-HG	u_pd4_i_ectl_Q_N_eN chains not in bound (dead rows)
+KV	kv3_pv_v3	3699	14	3713	11-23 01:59	epyc10	KV-OWN-PV	rows of registers the variant does not have (u_pv_u_T0Q1_21 etc.) + vq/rst split names
+KV	kv3_hg	1904	12	1916	11-22 23:39	epyc8	KV-OWN-HG	reset relays moved inside hard child qkd_ectlk_q* (not addressable)
+KV	kv3_hg_v1p5	1904	12	1916	11-23 20:17	epyc8	KV-OWN-HG	reset relays moved inside hard child qkd_ectlk_q* (not addressable)
+KV	kv3_hg_v1p2	1904	12	1916	11-22 23:58	epyc8	KV-OWN-HG	reset relays moved inside hard child qkd_ectlk_q* (not addressable)
+KV	kv3_hg_v1p6	1904	12	1916	11-23 01:22	epyc8	KV-OWN-HG	reset relays moved inside hard child qkd_ectlk_q* (not addressable)
+KV	kv3_hg_v3	1904	12	1916	11-23 06:12	epyc8	KV-OWN-HG	reset relays moved inside hard child qkd_ectlk_q* (not addressable)
+KV	kv3_hub_Eo	20	5	25	11-23 01:51	epyc8	KV-ALLFIX	per-consumer u_y_xd reset copies folded by opt_merge
+KV	kv3_hub_Wo	13	3	16	11-23 02:04	epyc10	KV-ALLFIX	per-consumer u_y_xd reset copies folded by opt_merge
+KV	kv3_pc__cl254f2e73	6	2	8	11-22 01:17	intel1	KV-ALLFIX	1-2 keys of pruned or renamed bits
+KV	kv3_pc__cl5a95b461	6	2	8	11-21 23:07	intel1	KV-ALLFIX	1-2 keys of pruned or renamed bits
+KV	kv3_hroot	5079	1	5080	11-23 23:31	epyc8	KV-ALLFIX	1-2 keys of pruned or renamed bits
+QC	sle_ctl__cla4f6f12f	54181	16442	70623	11-23 22:58	epyc8	QC-ALLFIX/QC-SLECTL-RESYN	R8 strap pass replaced u_pd<D> chains by u_r8b banks (15996 dead rows); su_l0 444 = cnt bank q renamed (matcher fix); 2 pruned bits
+QC	cbf_q00_s2	3612	516	4128	11-23 17:21	epyc8	QC-ALLFIX	u_d6 stage r[5] past bound depth 6 (dead rows)
+QC	sle_st_a_v1__cl989804f6__cled3c1d7b	1363	308	1671	11-23 19:09	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	sle_st_a_v1__cl989804f6__cl18eece69	1363	308	1671	11-23 19:33	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	1379	308	1687	11-23 19:35	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	sle_st_a_v1__cl67389ecd	1363	308	1671	11-23 19:33	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	slw_st_a_v1__clb036e152	1379	308	1687	11-23 19:34	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	slw_st_a_v1__clfc5867a6__pvf82a6c28	1350	308	1658	11-23 21:45	epyc2	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	cbf_q11	10290	294	10584	11-23 19:51	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbf_q01	10290	294	10584	11-23 17:18	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbf_q01_s2	10290	294	10584	11-23 17:11	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	slw_st_a_v2__clf4365a62	1363	292	1655	11-23 19:34	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	sle_st_a_v2__pv30dda31f__pvd2ec7769	2414	292	2706	11-23 19:33	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	sle_st_a_v2__pv4242de79	2414	292	2706	11-23 19:31	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	cbx_q10__cl94a12200_h	11066	276	11342	11-23 19:38	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbn_q00__cldbcda913	11066	276	11342	11-22 01:57	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbn_q00__cld7bf7197	11066	276	11342	11-23 23:15	epyc7	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbx_q10__cl89936551_h	11066	276	11342	11-23 19:37	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbx_q10__cl89936551	11066	276	11342	11-23 19:35	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbn_q00__cl622f65d2	11066	276	11342	11-22 01:12	epyc9	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbn_q11__cl5cc92dfe	11066	276	11342	11-23 18:06	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	cbn_q11__cl49ae4555	11066	276	11342	11-23 17:16	epyc8	QC-ALLFIX	u_st became ot_qfd_xcst_rep (4 g_seg): cap slices / cnt,run copies (matcher fix RELAY-SEG); 18 b_d pruned
+QC	slw_st_a_v2__cl9f076a5c	1363	260	1623	11-23 19:12	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	sle_st_a_v2__pv30dda31f__pv88773f93	2414	176	2590	11-23 19:32	epyc8	QC-OPEN-STA	128 = P/q and P.q rows with DIFFERENT sites (conflict); rest u_pd/rs tail rows of chains no longer bound
+QC	coll_core	49744	4	49748	11-23 21:22	epyc8	QC-OPEN-COLL	pruned payload bits (no register)
+S81	bk_sel__t2	45380	594	45974	11-23 10:47	epyc10	S81-OWN-MISC	lp_d / u_lpd / rst relay bits absorbed or renamed (594)
+S81	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	0	160	160	11-23 05:11	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r2__t1__cl99efd374__pv1619ecc6	520	140	660	11-23 06:34	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cld01bb4ae	26	140	166	11-23 02:19	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clc9ad8f7e__pvf079625b	4	140	144	11-22 17:28	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pv7c30fd4e	4	140	144	11-22 12:18	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0	520	140	660	11-22 18:32	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pv40e9fb5a	5	140	145	11-22 18:29	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	836	140	976	11-23 03:33	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r2__t1__clac068e56	520	140	660	11-22 17:41	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p5__t1__pvc1b82625	836	140	976	11-23 00:55	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pv14626557	4	140	144	11-22 20:32	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r2__t1__cl1f5d6c2a__pv0c1de895	520	140	660	11-23 13:10	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r2__t1__cl1f5d6c2a__pvec003743	520	140	660	11-23 04:48	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r0_p4__t1__pv5b623e07	0	140	140	11-22 10:19	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	4	140	144	11-22 20:13	epyc9	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pv09b9967e	4	140	144	11-23 05:52	epyc8	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p5__t1__pv5c8f2166	836	140	976	11-23 04:45	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__cl774acf45__pvea45273b	5	140	145	11-22 18:26	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cl95b37463__pv69c7e9a6	26	140	166	11-23 01:10	epyc8	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r0_p1__t1__cl911743eb	0	140	140	11-23 02:44	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p5__t1__pvc6e5797f	836	140	976	11-22 20:53	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	836	140	976	11-22 23:32	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cl95b37463__pv1a6ec9c2	26	140	166	11-23 03:58	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p5__t1__pvbca8d846	836	140	976	11-23 00:55	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv2744f675	0	140	140	11-22 15:42	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__cl774acf45__pv858fb2ba	4	140	144	11-23 09:09	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cl95b37463__pv86f5e3b9	26	140	166	11-22 06:13	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r2__t1__cl8b686b3e	520	140	660	11-22 15:48	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p1__t1__pv697f40c9	0	140	140	11-22 04:08	intel1	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p5__t1__pveda1ecc9	836	140	976	11-22 20:33	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p1__t1__pvf9acce4c	0	140	140	11-22 08:23	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p6__t1__pv0012ba28	836	140	976	11-22 08:19	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clb8d86cd5__pv8d57997d	4	140	144	11-22 14:23	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	5	140	145	11-22 12:55	epyc9	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47	832	140	972	11-22 17:45	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5	832	140	972	11-22 06:50	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	836	140	976	11-22 12:52	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	4	140	144	11-22 13:16	epyc9	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cl95b37463__pvce76611c	26	140	166	11-22 22:33	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pv7a260fc0	4	140	144	11-22 08:06	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r0_p1__t1__cl574cc59d__pv67036687	0	140	140	11-22 23:22	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97	0	140	140	11-23 06:33	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cl95b37463__pva3a8bfd1	26	140	166	11-22 11:02	epyc8	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r1__t1__cl95b37463__pv6a7ae122	26	140	166	11-22 23:03	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p1__t1__pvb49c16c8	0	140	140	11-22 07:46	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p2__t1__cl0045af7b__pv622a6f97	0	140	140	11-22 07:32	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r1__t1__cl49d7a23e__pv36da905c	335	140	475	11-22 06:01	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p1__t1__pva2e3974f	0	140	140	11-22 07:58	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67	0	140	140	11-22 06:41	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	335	140	475	11-22 14:34	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__cl774acf45__pv11b6518d	4	140	144	11-22 06:38	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r1__t1__clf32cde8d__pvd9381c1d	335	140	475	11-22 05:27	epyc10	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pvb6ec679e	4	140	144	11-22 05:56	intel2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p2__t1__cl0045af7b__pva2793873	0	140	140	11-23 01:14	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	832	140	972	11-22 04:15	epyc9	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r2__t1__clce45cab5__pv4754d912	5	140	145	11-22 17:14	epyc8	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p5__t1__pv35382794	836	140	976	11-22 23:24	epyc9	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p3__t1__cl31d0dc4b	832	140	972	11-22 03:56	epyc8	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	836	140	976	11-22 06:37	epyc8	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h9_r0_p1__t1__pv8c197f8e	0	140	140	11-22 08:22	epyc2	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	col_h10_r0_p4__t1__pvcc166a6d	4264	52	140	11-22 23:56	epyc7	S81-ALLFIX-COL	W-half u_y_xd relay copies folded into E copies by opt_merge (52); 140 = gen predates RELAY-INST
+S81	ot_s81sl_leaf__t15	0	25	25	11-23 03:04	epyc9	S81-OWN-LEAF	kit generated with a pre-RELAY-NORM istations.tcl (lf<n>_ prefix, fixed 11-21)
+S81	ot_s81sl_leaf__t40__cl86ea32b3__sid5S	0	25	25	11-22 15:38	epyc9	S81-OWN-LEAF	kit generated with a pre-RELAY-NORM istations.tcl (lf<n>_ prefix, fixed 11-21)
+S81	ot_s81sl_leaf__t74	0	25	25	11-22 21:52	epyc9	S81-OWN-LEAF	kit generated with a pre-RELAY-NORM istations.tcl (lf<n>_ prefix, fixed 11-21)
+S81	coll_core	49747	4	49751	11-23 07:20	epyc10	QC-OPEN-COLL	pruned payload bits (no register)
+S81	dsdv_slice_lepe_mu_LP__t2	9456	2	9458	11-23 10:41	epyc7	S81-OWN-SLICE	relay copies folded (2)
