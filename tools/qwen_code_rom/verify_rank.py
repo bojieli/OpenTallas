@@ -12,6 +12,8 @@ Three independent legs, each a hard FAIL on any mismatch:
   B. checkpoint: for the selected layers the stage image is re-derived from
      the pinned Qwen3-8B safetensors rows (hdc_qwen_layer0_rom_w12.verify_sample,
      TP8 / 3,072 groups) and compared code by code, plus row scales.
+  D. (--head-scratch) the HEAD stage (lm_head, 1,600 words) re-emitted from
+     the checkpoint reproduces the built image byte for byte.
   C. identity: revision, checkpoint lock, rank, tile/bank coverage.
 
   verify_rank.py --snapshot <ckpt>/<rev> --banks <banks> --masks <masks_rN> --rank N \
@@ -105,6 +107,24 @@ def leg_checkpoint(snapshot: Path, banks: Path, rank: int, layers: list[int], ro
     return out
 
 
+def leg_head(snapshot: Path, banks: Path, rank: int, scratch: Path) -> dict:
+    """Re-emit the HEAD stage image from the checkpoint (fresh lm_head read + W8 quantize) and compare byte for byte."""
+    os.environ['QWEN_O4_TP'] = '8'
+    os.environ['QWEN_O4_GROUPS'] = '3072'
+    import qwen_o4_head_rom_w12 as head
+    built = banks / f'head_images/rank{rank}'
+    ref = json.loads((built / 'head_rom.json').read_text())
+    fresh = head.emit(snapshot, scratch, rank)
+    for k in ('die', 'rows', 'row0', 'code_words', 'scale_words', 'checkpoint_revision', 'checkpoint_lock_sha256'):
+        if fresh[k] != ref[k]:
+            raise ValueError(f'head identity differs: {k}')
+    for name in ('matrix_int8.hex', 'matrix_scale_bf16.hex'):
+        if sha(built / name) != ref['image_sha256'][name] or sha(scratch / name) != ref['image_sha256'][name]:
+            raise ValueError(f'head stage {name} not reproduced from the checkpoint')
+    return {'rows': fresh['rows'], 'row0': fresh['row0'], 'code_words': fresh['code_words'],
+            'scale_words': fresh['scale_words'], 'image_sha256': ref['image_sha256']}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--snapshot', type=Path, required=True)
@@ -114,6 +134,7 @@ def main() -> int:
     ap.add_argument('--layers', default='0,17,35')
     ap.add_argument('--rows', type=int, default=4)
     ap.add_argument('--skip-masks', action='store_true', help='checkpoint leg only')
+    ap.add_argument('--head-scratch', type=Path, help='also re-emit the HEAD stage here and compare (leg D)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     import build
@@ -123,6 +144,8 @@ def main() -> int:
             res['masks'] = leg_masks(a.masks, a.rank, build)
         res['checkpoint'] = leg_checkpoint(a.snapshot, a.banks, a.rank,
                                            [int(x) for x in a.layers.split(',') if x != ''], a.rows)
+        if a.head_scratch:
+            res['head'] = leg_head(a.snapshot, a.banks, a.rank, a.head_scratch)
         res['codes_checked'] = sum(x['codes_checked'] for x in res['checkpoint'])
         res['verdict'] = 'PASS'
     except Exception as e:  # noqa: BLE001 -- any mismatch is the verdict
