@@ -1,0 +1,1 @@
+- 2026-11-24 01:54 PST TAKING S81-SLICE-C-OWN: dsdv_slice_c3x_C t1, iq_C t1, lepe_mu_C t1, lepe_nh_mus_C t1, lepw_mus_C t1, c1x_C t7, lepw_mu_C t1, s81sl_kv_leaf t3/t4/t5, IQC-T1. LP types lepe_nh_mus_LP t1 / lepw_mus_LP t2 HELD (FABLE + S81-KV-CALENDAR RIP), listed only.
