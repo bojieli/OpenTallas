@@ -166,3 +166,11 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - E kits: east-escape hd_lep0N_1123172531, east-epin-escape hd_lep0N_1123175731 (bind_r18g_epin_r4).
 - s2 dry gate: only pre_g0 fails. (1) LANDREMAP nst4 rst_rl_17 is a false positive: the same relay, shifted -34.56 by WCHAN-3, vs the r17b remap base. (2) G0 native receipt is not an input of publish_gate. Both asked of FLOW-OPS-R3. No publish; r17b live.
 - prep_r18h (exports fix vs r17b) is UNUSED and withdrawn; delete it via ot-delete when convenient.
+## 2026-11-23 18:3x PST (COORD items 1-4)
+- (1) No new repo tool. landing_remap.py on main already does it, and main PRE LANDREMAP catches the case. Chains must use current-main PRE with --remap-base = parent plan, and run landing_remap after any tap move. epin_r4 is clean on main LANDREMAP.
+- (2) ot-delete refused prep_r18h (protected tree); it stays withdrawn and unused.
+- (3) Waiters:
+  - intel2 head-r18-kit-waiter3b (script waiter2/head_waiter.sh): E/W GRT reads, West winner post, nst4 auto-launch if form (b) wins (west-wch4b-nst4/run.sh).
+  - 66ce census waiter: local session task.
+  - The old waiter/ dir is stale: its 18:03 reads were a bug, already corrected on the hub.
+- (4) FLOW-OPS owns pre_g0 (LANDREMAP translation false positive: s2 nst4 rst_rl_17, wch4b hd_lep0N_w rst_rl_35; native receipt). Chase by name at 20:00.
