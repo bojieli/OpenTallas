@@ -89,3 +89,9 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
   - Sweep list (dropped no-reset constants): hd_ctl 0ce42cbd (epyc8 ak/.../lec_routed_relec1122, 10728); hd_ctl counted (epyc9 ml/hdctl_counted_fsmhint, 10809); hd_mesh 22dcfc2f (epyc9 ak/..., 8606); slw_hc3 cld86 (epyc8 ml/slw_hc3_cld86_mainlec, 38081); slw_hc3 clccfc (epyc9 ml/slw_hc3_clccfc_mainlec, 153); t40 c01b49be73a8 (epyc8 ml/mp_c01b49be73a8, 63); coll_s (epyc9 ml/coll_s_eco_mainlec, 52); col774 (REAL RTL bug, 12). Also S81 kv_leaf ikw (ARCH-R2, 887 points / 107 regs in ot_hgi_fp4qdq).
   - Runner: <host>:RELEC-1122/tmp/mlech.sh TAG KIT NETREL MEM LECDIR HOST (docker via ot-run).
 - RELEC continues: hc3 reruns on main 2ebb7b8e: r6_d5fde81d + r6_afda1e9d (epyc8), r6_00112d4e (epyc9). Restore only EQUIVALENT ones. 822d3873e2eb / 827de5708c20 have no kit or netlist anywhere and stay revoked.
+
+## 00:4x 11-24: hc3 reruns done; corrections a0b89e11 supersede earlier sections
+- r6_* on main 2ebb7b8e: d5fde81d 51, afda1e9d 68, 00112d4e 68 differs, all NOT EQUIVALENT (kept missing 0, alias_unassigned 33). 0 restored. Leaf cause UNPROVEN.
+- 827de5708c20: NOT gone (earlier line wrong). Autopilot id, not store id; store record 58a694414806. Kit restored from AGIdock signed-1106/epyc9 (347/347 sha OK) to epyc9 ak/qwen_compute_type_slw_hc3_pvcca9ff41_827de5708c20/kit; run ml/r6_22ee41ca, lec 096df89d.
+- 822d3873e2eb: store record c7902930b0a3, netlist + config but no RTL in the record; archive kit dir has no rtl/. Blocked.
+- hd_mesh "all FIFO" wrong (500 of 9377 listed: 320 g_fifo_safe, 180 g_rb_safe); MERGEPAIR census partial; rxsb wrong-RTL not ruled out; auto_fill restore guard in my patch was wrong (LEC-AUTOFILL owns the fix).
