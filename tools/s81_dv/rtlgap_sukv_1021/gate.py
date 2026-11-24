@@ -196,7 +196,7 @@ TBK = 'rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_eg_knorm.sv'
 def build(out, tag, top, srcs, gparams):
     obj = out / f'obj_{tag}'
     cmd = [H.VERILATOR, '--binary', '--timing', '-O1', '-fno-dfg', '--unroll-count', '4', '-Wno-fatal', '-Wno-WIDTH',
-           '--top-module', top, '-Mdir', str(obj), '-j', '8'] + [f'-G{k}={v}' for k, v in gparams.items()] + \
+           '--top-module', top, '-Mdir', str(obj), '-j', '8'] + [(f'-D{k[2:]}' if k.startswith('D:') else f'-G{k}={v}') for k, v in gparams.items()] + \
           [str(ROOT / s) for s in srcs] + ['-CFLAGS', '-O1']
     b = subprocess.run(cmd, capture_output=True, text=True)
     (out / f'build_{tag}.log').write_text(' '.join(cmd) + '\n' + b.stdout + b.stderr)

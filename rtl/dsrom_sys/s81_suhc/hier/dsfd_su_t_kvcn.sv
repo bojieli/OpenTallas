@@ -83,3 +83,15 @@ module dsfd_su_t_kvi (
     ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_iv (.clk(ck), .rst_n(rst), .d(i_v), .q(o_v));
     ot_hdc_delay #(.W(256), .D(1)) u_id (.clk(ck), .rst_n(rst), .d(i_d), .q(o_d));
 endmodule
+
+
+// One implemented exit relay stage (quant / CN / IK exit -> KV stop): a valid and the 542 exit bits
+// {address 14, mask 16, data 512}.  Used only under OT_S81_KVLEAF_EXIT_RELAYS (ot_s81sl_kv_bank).
+module dsfd_su_t_kvx (
+    input wire ck, rst,
+    input wire i_v, input wire [541:0] i_d,
+    output wire o_v, output wire [541:0] o_d
+);
+    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_iv (.clk(ck), .rst_n(rst), .d(i_v), .q(o_v));
+    ot_hdc_delay #(.W(542), .D(1)) u_id (.clk(ck), .rst_n(rst), .d(i_d), .q(o_d));
+endmodule

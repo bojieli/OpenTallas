@@ -286,8 +286,19 @@ module ot_s81sl_kv_bank #(
             ot_hdc_delay #(.W(14 + 16 + 512), .D((XMRG != 0) ? 0 : ERL + XO)) u_xc (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? 542'd0 : {ca, cm, cd}),
                 .q({cwr_a[14 * kb +: 14], cwr_m[16 * kb +: 16], cwr_d[512 * kb +: 512]}));
             if (kb >= NKQ - 4) begin : g_ikr
+`ifdef OT_S81_KVLEAF_EXIT_RELAYS
+                // the IK exit data rides ERL + XO hard relay stages (dsfd_su_t_kvx); its valid stays in u_xv
+                wire [541:0] xi_d [0:ERL + XO];
+                assign xi_d[0] = {ia, im, id};
+                for (genvar xs = 0; xs < ERL + XO; xs++) begin : g_ik_relay
+                    dsfd_su_t_kvx u_relay (
+                        .ck(sk), .rst(rst[0]), .i_v(1'b0), .i_d(xi_d[xs]), .o_v(), .o_d(xi_d[xs+1]));
+                end
+                assign {ikr_a[14 * (kb - 12) +: 14], ikr_m[16 * (kb - 12) +: 16], ikr_d[512 * (kb - 12) +: 512]} = xi_d[ERL + XO];
+`else
                 ot_hdc_delay #(.W(14 + 16 + 512), .D(ERL + XO)) u_xi (.clk(sk), .rst_n(rst[0]), .d({ia, im, id}),
                     .q({ikr_a[14 * (kb - 12) +: 14], ikr_m[16 * (kb - 12) +: 16], ikr_d[512 * (kb - 12) +: 512]}));
+`endif
             end
         end else begin : g_ncn
             assign kv_on = 1'b1;
@@ -316,10 +327,27 @@ module ot_s81sl_kv_bank #(
         wire [15:0]  mg_m = ({16{ov}} & om) | {16{x_nv}} | ({16{x_cv}} & x_cm);
         wire [511:0] mg_d = ({512{ov}} & od) | ({512{x_nv}} & x_nd) | ({512{x_cv}} & x_cd);
         ot_hdc_delay #(.W(1), .D((XMRG != 0) ? PH : 0), .RESET(1)) u_oc (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? mg_c : 1'b0), .q(kq_mc[kb]));
+`ifdef OT_S81_KVLEAF_EXIT_RELAYS
+        // the exit valid and its 542 data bits ride PH hard relay stages (dsfd_su_t_kvx, one stage a master, seated
+        // along the exit route); the four status bits keep their soft relay.  Same depth, same reset: same function.
+        wire [PH:0]  xr_v;
+        wire [541:0] xr_d [0:PH];
+        assign xr_v[0] = (XMRG != 0) ? mg_v : ov;
+        assign xr_d[0] = (XMRG != 0) ? {mg_a, mg_m, mg_d} : {oa, om, od};
+        for (genvar xs = 0; xs < PH; xs++) begin : g_exit_relay
+            dsfd_su_t_kvx u_relay (
+                .ck(sk), .rst(rst[0]), .i_v(xr_v[xs]), .i_d(xr_d[xs]), .o_v(xr_v[xs+1]), .o_d(xr_d[xs+1]));
+        end
+        assign kq_v[kb] = xr_v[PH];
+        assign {kq_a[14 * kb +: 14], kq_m[16 * kb +: 16], kq_d[512 * kb +: 512]} = xr_d[PH];
+        ot_hdc_delay #(.W(4), .D(PH), .RESET(1)) u_ov (.clk(sk), .rst_n(rst[0]), .d({ofu, ofo, oal, ode}),
+            .q({kq_fu[kb], kq_fo[kb], kq_al[kb], kq_de[kb]}));
+`else
         ot_hdc_delay #(.W(5), .D(PH), .RESET(1)) u_ov (.clk(sk), .rst_n(rst[0]), .d({(XMRG != 0) ? mg_v : ov, ofu, ofo, oal, ode}),
             .q({kq_v[kb], kq_fu[kb], kq_fo[kb], kq_al[kb], kq_de[kb]}));
         ot_hdc_delay #(.W(14 + 16 + 512), .D(PH)) u_od (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? {mg_a, mg_m, mg_d} : {oa, om, od}),
             .q({kq_a[14 * kb +: 14], kq_m[16 * kb +: 16], kq_d[512 * kb +: 512]}));
+`endif
     end endgenerate
 
             // four data quarters, identical control; quarter 0 carries the job fields, the status and the faults
