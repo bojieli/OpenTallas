@@ -19,3 +19,7 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/head-east-replan (clone/, tmp/,
 1. CTS post-hook: reset classes >= -42 (E1 u_srl_302->u_rrl_303, E2 u_rstr root->group RESETN); E3 hold rg3 pair-in (predicted ~-41 with L row).
 2. Final 5_1_grt.odb: overflow < 50 per cluster (K-shelf x340-380 y620-680; E4b x980-1000 y360-400).
 3. If row 667 stripe still hot: re-site landing stage bands near x 375-410 y 650-665, then re-space row 667.
+
+## CODEX notes 11-24 06:3x PST
+- The accepted r7 c9ead4cccd9a source and r7 tie audit 345049b521c7 are present on epyc11 and intel1. The epyc8 copy failed at the temporary destination and that host is draining. The first intel1 copy hit an SSH transport reset and the second completed. E11 r7 is running placement only as head-east-r7-place. Spec autopilot/private_specs/HEAD-EAST-REPLAN/s81_head_hd_lep0N_1124062218/spec.json, work r18gw/private/HEAD-EAST-REPLAN/hd_lep0N_1124062216. The r6 epyc11 exploratory run remains for CTS/GRT diagnosis, with exact viewed geometry showing tight central K-shelf channels. Any r7 route needs the r7 placed render and verdict.
+- East r7 gate PASS for strict bind, cohort, 334/334 LATCHECK, native release, G0 and corrected observed-input LEC. Four controls failed as expected. No direct adoption. East block is in combined HEAD w6 b3507e628de6.
