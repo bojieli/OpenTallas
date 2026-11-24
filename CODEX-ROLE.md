@@ -88,3 +88,16 @@ When told that Claude's limit has reset:
    - failures diagnosed or still open;
    - OWNER? items.
 3. Reply exactly `HANDOFF DONE` and stop.
+
+## Handback checklist (when Claude resumes; COORD 11-24, FLOW-OPS-R3)
+Takeover-only settings must end at handback. The 11-23 07:37 drop-in that forced exact viewed review before wave route
+(AP_REQUIRE_VIEWED_WAVE_ROUTE=1) lingered after handback and held 44 auto-ACCEPTed QC kits and 16 S81/HEAD kits for
+up to 17 h (removed 11-24 04:3x).
+1. **Remove takeover drop-ins.** On intel2, list `~/.config/systemd/user/*.service.d/*codex-takeover*.conf` and every
+   drop-in whose comment says "during takeover". Delete each with `ot-delete <path>` (keep a copy in your lane tmp/),
+   then run `systemctl --user daemon-reload`. Do it between autopilot ticks (autopilot is a timer oneshot; the next tick
+   reads the new env, no restart needed).
+2. **Verify.** `systemctl --user show autopilot.service -p Environment | tr ' ' '\n' | grep -c AP_REQUIRE_VIEWED_WAVE_ROUTE`
+   must print 0. After the next tick, ROUTE-HELD kits with an auto-ACCEPT must route (no WAIT-VISUAL line for them).
+3. **Log** the removal as one `CLAUDE:` line in ~/coord/HANDOFF.md.
+Any setting added for a takeover names this checklist in its comment, so the next handback finds it.
