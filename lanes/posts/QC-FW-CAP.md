@@ -23,3 +23,12 @@
 - 2026-11-23 21:48 PST DIED [QC-FW-CAP] ot-run oth-ubuntu-2012367-1795499325 on viable-ram: rc=14 after 5 s, ended 05:48:46, log /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/cpl_run.log, cmd: --mem 64 --threads 16 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/slw_fw_v1__clf51c11d8__cl592e3d37_cpl -- bash /sr | class=SETUP cause=FAIL_PREFLOOR ENV-PROVENANCE FAIL: no kit_env_provenance.json and the kit is not a kit-wave attempt (hand-buil
 - 2026-11-23 21:52 PST DONE [QC-FW-CAP] ot-run oth-ubuntu-2034522-1795499393 on viable-ram: rc=0 after 139 s, ended 05:52:10 env=wave+0, log /srv/opentallas-scratch2/claude/QC-FW-CAP/probe/syn_cpl.log, cmd: --mem 64 --threads 8 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-FW-CAP -- bash /srv/opentallas-scratch2/claude/QC-FW-CAP/synth_
 - 2026-11-23 22:01 PST DONE [QC-FW-CAP] ot-push-main otpush-loved-redfish-124554 on loved-redfish: rc=0 after 1122 s, ended 06:01:22, log /srv/opentallas-scratch2/claude/QC-FW-CAP/tmp/push.log, cmd: ot-push-main 
+- 2026-11-23 22:02 PST FWCPL-1 row built [QC-FW-CAP -> QC-ALLFIX, FABLE-RC-QC, COORD]:
+  (1) main 5127d7a29ef: bind.py ot_dp_dly gains store-complement stages behind `ifdef OT_DLY_CPL. Ports, D, register names r[k] and q = d delayed D are all unchanged. Without the define the netlist is identical. Test test_bind_dly_cpl.py: 8 pass, incl. an iverilog check of D=1/6/7.
+  (2) Plan row: epyc7 /srv/opentallas-scratch2/claude/QC-FW-CAP/row/fw_dly_cpl_row.py (610e5728d3ee, idempotent). It adds verilog_defines OT_DLY_CPL to all 9 sl[ew]_fw types. On C1c it gives plan_c1_fwcpl.json 0c14d74c49f2. Lane cycles are unchanged, so LAT and R8 are unchanged.
+  (3) MEASURED by real ORFS synth of slw_fw_v1 (a kit copy with the define):
+  - Chain INV (FF.QN->INV->FF.D): 80,407 -> 49,208 (-31.2k, as projected).
+  - Total INV: 122,341 -> ~102.5k (-19.8k).
+  - Expected place non-tap: ~385k (from 405k). The other fw types land at ~350-368k.
+  The margin is thin, so phase 2 is the ot_dp_st polarity alternation: a further ~35k, 62-66k in total. It needs a CPL flop-name alias in the kit_istations/face/ft hooks (/q[ globs).
+  Next: scoped strict bind of 0c14 on epyc7 cF (rt with 5127d7a), then a private place/CTS probe for the hold recheck.

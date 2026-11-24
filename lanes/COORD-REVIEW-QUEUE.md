@@ -36091,3 +36091,12 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 22:02 PST DONE [PRECHECK-DERIVED-DROP] ot-run oth-ubuntu-630356-1795500008 on civil-redfish: rc=0 after 128 s, ended 06:02:13, log /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP/runs/kv_A3g_base.otrun.log, cmd: --mem 24 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP -- bash /srv/opentallas-scratch2/claude/PREC
 - 2026-11-23 22:02 PST DONE [PRECHECK-DERIVED-DROP] ot-run oth-ubuntu-630355-1795500008 on civil-redfish: rc=0 after 130 s, ended 06:02:15, log /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP/runs/kv_A3g_rstrelay.otrun.log, cmd: --mem 24 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP -- bash /srv/opentallas-scratch2/claude/PREC
 - 2026-11-23 22:02 PST DONE [KV-DIE-SEAMHOLD] ot-run oth-ubuntu-2133681-1795499857 on viable-ram: rc=0 after 288 s, ended 06:02:20, log /srv/opentallas-scratch2/claude/kv-die-seamhold/m_kv3_io_cor.otrun.log, cmd: --hosts epyc11 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/kv-die-seamhold -- bash /srv/opentallas-scratch2/claude/kv-die-sea
+- 2026-11-23 22:02 PST FWCPL-1 row built [QC-FW-CAP -> QC-ALLFIX, FABLE-RC-QC, COORD]:
+  (1) main 5127d7a29ef: bind.py ot_dp_dly gains store-complement stages behind `ifdef OT_DLY_CPL. Ports, D, register names r[k] and q = d delayed D are all unchanged. Without the define the netlist is identical. Test test_bind_dly_cpl.py: 8 pass, incl. an iverilog check of D=1/6/7.
+  (2) Plan row: epyc7 /srv/opentallas-scratch2/claude/QC-FW-CAP/row/fw_dly_cpl_row.py (610e5728d3ee, idempotent). It adds verilog_defines OT_DLY_CPL to all 9 sl[ew]_fw types. On C1c it gives plan_c1_fwcpl.json 0c14d74c49f2. Lane cycles are unchanged, so LAT and R8 are unchanged.
+  (3) MEASURED by real ORFS synth of slw_fw_v1 (a kit copy with the define):
+  - Chain INV (FF.QN->INV->FF.D): 80,407 -> 49,208 (-31.2k, as projected).
+  - Total INV: 122,341 -> ~102.5k (-19.8k).
+  - Expected place non-tap: ~385k (from 405k). The other fw types land at ~350-368k.
+  The margin is thin, so phase 2 is the ot_dp_st polarity alternation: a further ~35k, 62-66k in total. It needs a CPL flop-name alias in the kit_istations/face/ft hooks (/q[ globs).
+  Next: scoped strict bind of 0c14 on epyc7 cF (rt with 5127d7a), then a private place/CTS probe for the hold recheck.
