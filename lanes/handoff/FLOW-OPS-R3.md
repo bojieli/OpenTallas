@@ -168,3 +168,10 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - TAG-CANCEL main 34e493c4ab7: a unit stop also stops containers carrying its tag.
 - The follow times out (15 min) on epyc11 while its IO is stormy; the other hosts flip anyway.
 - Open: KV-ALLFIX may ask for a CAS publish host-subset option (COORD: that is mine). No request seen yet.
+
+## 10:05 PST
+- Pushed c0dc6f1e465 (OLDPLAN-NOREAP) and 9527569dc31 (HEADSTOP-1124: --cancel ships the head ot-heavy-stop inline; also fixes SealedPick test broken by 0510e12).
+- kv3_hroot relaunch DIED rc=6 PLACE-SETUP-STOP -610 (design), not relaunched.
+- E11: rt 19bee1bf8c2f (all 8 hosts); NOPROG launcher reinstalled (copy of intel1 c3cc7481).
+- QC cbn_q00 cl622 / cbn_q01 clab6 deaths = QC-CB-SPREAD-R2 manual cancel loop (signals.log 09:41-09:48).
+- RESULT posted hub d17bb9a6.
