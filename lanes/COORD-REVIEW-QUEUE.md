@@ -37627,3 +37627,4 @@ FAILED [AUTOPILOT f02823d0dc96] 2026-11-23 23:31:56 PST AUTOPILOT -> KIT-WAVE-3:
   - pc cl254 x2 r8: ASTK-EARLYTAP, ISTPRICE rows; reach A6. Live: ALLFIX.
   After A5s binds: probes at goal grt on epyc11, verified-sha tree, reach/non-reach types per ALLFIX's list.
 - 2026-11-24 00:20 PST DONE [s81-j9-r6] ot-push-main otpush-tolerant-swine-3917011 on tolerant-swine: rc=0 after 0 s, ended 00:20:14, log none, cmd: ot-push-main --help
+- 2026-11-24 00:20 PST DONE [QC-SLECTL-RESYN] ot-run oth-ubuntu-481084-1795508306 on tolerant-swine: rc=0 after 734 s, ended 00:20:24, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-SLECTL-RESYN/qwen_compute_sle_ctl__cla4f6f12f_1123235320/preflight_route.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/private
