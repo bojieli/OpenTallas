@@ -44,3 +44,4 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
 - REPLAY when A5t3 strict is green. Copy into tree_a5s plan_of_record: asbuilt_allfix_A5t3.json and the green gate's main R8 table r8_k3f_vport_semantic_trial_r2_1123.json. Check sidecar = 668fe and pv_col = 1976e. Then:
   ot-run --hosts epyc11 --mem 48 --threads 8 --disk 60 --dir $L -- bash $L/a5s.sh $G/A5t3/plan.json <A5t3 sha12> asbuilt_allfix_A5t3.json e348b919dd39 $L/tree_a5s $L/ctl_e34.txt
   Then post ROW-REBASED -> KV-ALLFIX, cc FABLE-RC-KV.
+- 03:09 STALE posted (b4eed90d): the bind uses START raw_reset literally. On A5t3, hub_Ei rst_n_t97 is 1.6 mm off at depth 8 and pv_v1n rst_n_t151 is 1.1 mm off at depth 13 (D29: 12). Tool scratchpad/startref.py on epyc11 kv-rstreach. A5t4 re-key by D29 site+depth (ALLFIX row).
