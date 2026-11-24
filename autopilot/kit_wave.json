@@ -39006,6 +39006,56 @@
    "auto_bind": true,
    "cell_cap_exceptions": {
     "*": "r703"
+   },
+   "resign_items": {
+    "ot_s81sl_leaf__t40__clf8bbdae1": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@1 LIVE"
+    },
+    "serdes__t3": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 LIVE"
+    },
+    "slice_station__t24__cl66b71008": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@23 COUNTED"
+    },
+    "slice_station__t27": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@12 COUNTED"
+    },
+    "slice_station__t29__cl2e5c855a": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@11 COUNTED"
+    },
+    "slice_station__t30__cl1653104c": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@42 COUNTED"
+    },
+    "slice_station__t31": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@17 COUNTED"
+    },
+    "slice_station__t40__cl1ea9de02": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@23 COUNTED"
+    },
+    "slice_station__t42__cl4bd1432c": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@33 COUNTED"
+    },
+    "slice_station__t43": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@11 COUNTED"
+    },
+    "slice_station__t49": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@10 COUNTED"
+    },
+    "slice_station__t7__cl362204c4": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@12 COUNTED"
+    }
    }
   },
   "s81_head": {
@@ -41312,6 +41362,12 @@
    "auto_bind": true,
    "cell_cap_exceptions": {
     "*": "r703"
+   },
+   "resign_items": {
+    "hd_spn": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@5 COUNTED"
+    }
    }
   },
   "qwen_compute": {
@@ -52409,6 +52465,84 @@
    ],
    "cell_cap_exceptions": {
     "*": "r703"
+   },
+   "resign_items": {
+    "sle_fe_v1__cl8210183c": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@6 COUNTED"
+    },
+    "sle_fw_v1__cl9d029624": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 LIVE"
+    },
+    "sle_hc2__cl9c4c4509__clf60c5152__pv0d63d22b": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 COUNTED"
+    },
+    "sle_hc2__cl9c4c4509__clf60c5152__pvcf529cc9": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@3 COUNTED"
+    },
+    "sle_st_b_v1__pv0e7b1dcc": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "sle_st_b_v2__cl14c98df5__pv41c959f3": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "sle_st_b_v2__cl14c98df5__pvcd986c42": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "sle_stm_v1__cl27746664": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@3 COUNTED"
+    },
+    "slw_fw_v2__cl8537f156": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "slw_fw_v2__cl8f84514c": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "slw_hc1__cl68f9248e__cl144ee7b3": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 COUNTED"
+    },
+    "slw_hc2__cla3497502__cl16607c7a": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@3 COUNTED"
+    },
+    "slw_hc3__clccfc3e6b__pv39aac7a1": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "slw_hc3__cld86a7ad4__pvfd488b8f": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@5 COUNTED"
+    },
+    "slw_sc_v1__cl63e5a7a2": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@6 COUNTED"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 COUNTED"
+    },
+    "slw_st_b_v1__cl6357f1cc__pv6ace3e48": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): UNMEASURED@2 COUNTED"
+    },
+    "slw_su_l1__cla2a78701": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 LIVE"
+    },
+    "slw_su_l1__clcc9d0155": {
+     "since": 1795519396.0,
+     "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 LIVE"
+    }
    }
   },
   "hbm": {
