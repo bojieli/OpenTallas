@@ -675,3 +675,6 @@
   NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 18.8 h job 18.8 h: no new meaningful log line for 7.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
   NO-PROGRESS epyc2 cbn_q01__cldd6ea846 tt_setup_repair_grt stage 9.4 h job 16.7 h: no new meaningful log line for 8.3 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net285887. The following pin
   NO-PROGRESS epyc8 cbn_q01__cld9ff4c40 tt_setup_repair_grt stage 8.9 h job 16.4 h: no new meaningful log line for 8.0 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net268202. The following pin
+- 2026-11-24 11:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 11:52 PST: 236 running jobs, PROGRESSING 228, SLOW 6, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 23.6 h job 23.6 h: no new meaningful log line for 8.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
+  NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 19.8 h job 19.8 h: no new meaningful log line for 8.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
