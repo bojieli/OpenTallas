@@ -1,4 +1,4 @@
-type	fclk_out	m_seamhold_ps	kit_min_slack_ps	fwd_src_tap_A5	src_to_port_um	fwd_wire_repeaters	fclk_out_arr_ps	launch_tap(=nearest)	nearest_tap_um	data_arr_ps	kit_sdc_tap_window_ps	cause	fix
+type	fclk_out	m_seamhold_ps	kit_min_slack_ps	fwd_src_tap_A5	src_to_port_um	fwd_wire_repeaters	fclk_out_arr_ps	worst_endpoint_launch_tap_ONLY(often cland_fstart; data bits differ)	nearest_tap_um	data_arr_ps	kit_sdc_tap_window_ps	cause	fix
 kv3_pv_v12	fclk_out_ft0_o	-623.8	-623.8	clk_t83	1942	12	964	clk_t184	108	364	20.2	LATE_FWD_TAP: export buffer sits on a far tap (stale source_clock_port), repeated wire to the port	repoint clk_t83->clk_t184
 kv3_pv_v12	fclk_out_ft10_o	-481.4	-481.4	clk_t89	1369	8	820	clk_t189	34	363	20.2	LATE_FWD_TAP: export buffer sits on a far tap (stale source_clock_port), repeated wire to the port	repoint clk_t89->clk_t189
 kv3_pv_v12	fclk_out_ft11_o	-460.5	-460.5	clk_t89	1359	8	807	clk_t189	25	370	20.2	LATE_FWD_TAP: export buffer sits on a far tap (stale source_clock_port), repeated wire to the port	repoint clk_t89->clk_t189
