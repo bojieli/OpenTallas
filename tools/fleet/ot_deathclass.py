@@ -80,6 +80,9 @@ def _c(cls, cause):
 def classify(rc, cmd="", log_tail="", secs=0):
     t = _INFO_LINES.sub("", _DRAIN_ADVISORY.sub("", log_tail or ""))
     cmd = cmd or ""
+    preflight = _last_line(t, r"^NOT-RUN PREFLIGHT\b")
+    if rc and preflight:
+        return _c("NOT-RUN", preflight)
     if rc != 0 and re.search(r"AUTO-GEOM FAIL\b", t):
         return _c("GEOM-FAIL", _last_line(t, r"AUTO-GEOM FAIL"))
     if re.search(r"NOT-RUN no host qualifies \((?!.*resolve)[^)]*\b(mem|admi)|exceeds physical RAM|memory admission (refus|wait)", t):
@@ -87,8 +90,8 @@ def classify(rc, cmd="", log_tail="", secs=0):
     if re.search(r"DRAIN(ING)?:|NOT-RUN no host qualifies \((?!.*resolve)[^)]*(scratch|disk|free)|scratch disk", t):
         return _c("RAIL-KILL", _last_line(t, r"DRAIN|NOT-RUN|scratch disk") or "host rail refused the job")
     # FABLE-FLOW-0230 D1: an ot-run NOT-RUN / REFUSED with a reason that is not ssh is that reason, not SSH-DROP (3 disk-ETA holds were labelled SSH-DROP)
-    m = re.search(r"ot-run: (NOT[- ]RUN|REFUSED)\b[^\n]*", t)
-    if m and not re.search(r"resolve hostname|Connection (reset|closed|timed out|refused)|SSH probe|ssh", m.group(0), re.I):
+    m = re.search(r"^(?:ot-run: )?(?:NOT[- ]RUN|REFUSED)\b[^\n]*", t.lstrip(), re.M)
+    if m and not re.search(r"resolve hostname|Connection (reset|closed|timed out|refused)|SSH probe|ssh|unreachable", m.group(0), re.I):
         return _c("NOT-RUN", re.sub(r"\s+", " ", m.group(0))[:110])
     if re.search(r"^\s*(EMIT\b|EMIT_ERROR|BIND_RC=[1-9])|compare FAIL|mismatched\b", t, re.M):
         return _c("BIND-FAIL", _last_line(t, r"EMIT|compare FAIL|mismatch|BIND_RC"))
@@ -128,10 +131,11 @@ def classify(rc, cmd="", log_tail="", secs=0):
     return _c("NO-PATTERN", _last_line(t) or ("rc %s after %s s, no log" % (rc, secs)))
 
 
-def label(rc, cmd="", log=None, secs=0):
+def label(rc, cmd="", log=None, secs=0, refusal=None):
     """' | class=X cause=...' suffix for a DIED post; never raises"""
     try:
-        cls, cause = classify(rc, cmd, read_tails(log), secs)
+        tail = f"NOT-RUN {refusal}" if refusal else read_tails(log)
+        cls, cause = classify(rc, cmd, tail, secs)
         return " | class=%s cause=%s" % (cls, cause)
     except Exception as e:      # a classifier bug must not lose the DIED post
         return " | class=NO-PATTERN cause=classifier error %s" % type(e).__name__

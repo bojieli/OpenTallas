@@ -152,7 +152,7 @@ def post_text(rec):
     if died:
         try:
             import ot_deathclass      # FLOW-DEATHCLASS-R1: class + one-line cause on every DIED post
-            tail = ot_deathclass.label(rec.get("rc"), rec.get("cmd", ""), rec.get("log"), secs)
+            tail = ot_deathclass.label(rec.get("rc"), rec.get("cmd", ""), rec.get("log"), secs, refusal=rec.get("refusal"))
         except Exception:
             tail = " | class=NO-PATTERN cause=classifier unavailable"
     return (f"{head} {what} {rec['unit'] or rec['name']} on {rec['host']}: rc={rec['rc']} after {secs} s, ended "
@@ -269,6 +269,12 @@ def run_recorded(kind, fn, cmd="", lane=None):
 
 
 CURRENT = None
+
+
+def set_refusal(reason):
+    """Retain a queue-time refusal even when stdout and stderr have no logfile."""
+    if CURRENT is not None:
+        CURRENT["refusal"] = str(reason)
 
 
 def set_unit(unit):

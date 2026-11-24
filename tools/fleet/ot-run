@@ -168,6 +168,8 @@ NOTRUN_EXIT = 78   # FLOW-1700: every refusal before the unit starts ends with "
 
 def not_run(reason, code=NOTRUN_EXIT):
     """one loud, greppable last line for a request that never started; ot_wait and lane scripts key on it"""
+    if _OTS is not None and hasattr(_OTS, "set_refusal"):
+        _OTS.set_refusal(reason)
     print(f"NOT-RUN {reason}", file=sys.stderr, flush=True)
     sys.exit(code)
 

@@ -68,3 +68,13 @@ def test_post_text_died_has_class_done_does_not():
     assert " | class=CANCEL cause=" in ot_status.post_text(rec)
     rec["rc"] = 0
     assert "class=" not in ot_status.post_text(rec)
+
+
+def test_recorded_preflight_refusal_survives_without_a_log():
+    rec = {
+        "kind": "run", "lane": "EVENT-ENV-PREFLIGHT", "unit": "", "name": "test-run",
+        "host": "test-host", "cmd": "--event-env c9.env -- true", "rc": 78,
+        "t_start": 10, "t_end": 11, "refusal": "PREFLIGHT (event c9): missing bind input",
+    }
+    assert "| class=NOT-RUN cause=NOT-RUN PREFLIGHT (event c9): missing bind input" in ot_status.post_text(rec)
+    assert cls(78, "NOT-RUN no host qualifies (epyc9 unreachable)") == "SSH-DROP"
