@@ -12,3 +12,7 @@ VIS piles: Eo east smear + Wo SW blob = d75/d81 delay-line flops -> fixed by ECH
 
 ## 11-24 13:20 PINS row (hub a580ba596)
 Row ROWS_KV-OWN-HUB-R2-PINS.py cdb6c7d0bb6e (epyc11 kv-own-hub-r2) refuses: hub_Wi W face y121-635 host PHY macro wall + packed bands block a +112 um seam shift. xs region alone breaks xs->q_e reach. Big move (seq group + prg core to seam y884-1184, START trunk re-site, bands both frames, path_respace) proposed; awaiting COORD ruling. Base on epyc11: a5t6_base_7926.json (7926cbd1af90). Gate script job_pins.sh (RS=row sha). hub_Eo: no mirror pile.
+
+## 11-24 13:27 PINS big-move draft (hub d34e85a7)
+COORD ruling: gate on E9 kv3_hub_Wo_1124080816 ROUTED final db (seam box overflow + seq TT>=-42 -> IN-BASE), draft big move meanwhile (overlap+PRE only).
+Draft row 0a4d6c3ed07c: DY=+1036.8 (seam gap free on both faces y1037-1184). Overlap/start re-site OK; blocked at hub_Wi ft re-site (path_respace: needs_add L1429,L2034; exact_bank_blocked 5; unresolved L2036). Next: route 9 hub_Wi ft slots via street y1166-1192 -> PRE (job_pins2.sh RS=<sha>). Kit at 4_1_cts (21:27Z log).
