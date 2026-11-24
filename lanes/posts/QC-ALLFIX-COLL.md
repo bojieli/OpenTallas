@@ -1,0 +1,1 @@
+- 2026-11-23 16:47 PST DONE [QC-ALLFIX-COLL] ot-run oth-ubuntu-2546510-1795480918 on civil-redfish: rc=0 after 243 s, ended 00:45:58 env=wave+1, log /srv/opentallas-scratch2/claude/QC-ALLFIX-COLL/ctsopen_diag_1640/run.ot, cmd: --mem 28 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch/claude/QC-ALLFIX-COLL/ctsopen_diag_1640 -- bash /srv/opentallas-scratch/cl
