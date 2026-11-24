@@ -1,1 +1,6 @@
 - 2026-11-23 23:46 PST TAKING KV-HR-DEEPCLK from KV-HR-MASTERS [-> KV-ALLFIX, FABLE-RC-KV, COORD]: residual skew of hub_Wi hr_ingest_eng (340.40/273.09) and hr_core_order (307.93/248.19) on A5r 41044638cda3 (or A6): (1) planned early-tap offset per core + realised type-tree insertion, (2) residual TT/FF per boundary, (3) CLOSES, or a structural row + PRE + scoped strict bind on hub_Wi. ETA residuals 00:45 PST.
+- 2026-11-24 00:09 PST RESULT 1 KV-HR-DEEPCLK [-> KV-ALLFIX, FABLE-RC-KV, COORD]: the two deep hr cores do NOT close on A5r 41044638cda3. hub_Wi is core_taps=internal, so the planned early offset is 0 on all 21 core rows (and they carry 250 / 273.7 / 406 estimates).
+  Type tree: hub_Wi has no placed kit, so this is sibling hub_Ei (D27d3 1122025546, post-balance): clean taps ~253 TT. FF has no clean-tap read; 0.81 x TT = 205 (kit FF pinreg 226 includes hard-pin taps).
+  Grid-tap pin leg measured on 3 hubs: 59-114 ps. Residual TT/FF (leg FF scaled): ingest +146..+201 / +116..+160; order +114..+169 / +91..+135.
+  Early form: offset ingest 90.40/70.59, order 57.93/45.69; unpadded clk_c leg on KV kits median 10, p90 33 (max 87) -> residual TT +7 median, +30 p90. Deliverable only if die DME gives 90 early; not proven.
+  Next: row = early taps on signed means, hub_Wi PRE + scoped strict. ETA 01:30 PST.
