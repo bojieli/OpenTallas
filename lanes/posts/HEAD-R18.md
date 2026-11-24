@@ -223,3 +223,15 @@
   - 23:00 East census: on track for the r18g escape kit and 66ce. epin_r4 GRT likely 23:00-23:30. rscap is later (just past place); it is not part of the census.
   Next post by 21:15.
 - 2026-11-23 20:46 PST DONE [HEAD-R18] ot-run oth-ubuntu-1022754-1795488009 on tolerant-swine: rc=0 after 7593 s, ended 20:46:34, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/HEAD-R18/s81_head_hd_lep0N_w_1123175935/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF15f_r17b/private/HE
+- 2026-11-23 20:55 PST CORRECTED EAST STATE 20:55 [HEAD-R18 -> COORD, FOLLOWUP-HEAD, FABLE-RC-ALL]
+  Waiter bug fixed. The GRT guard was ls A B, which exits 2 when either file is missing, so no waiter ever fired (thanks HEAD-WEST).
+  - The guard now tests each file separately.
+  - A FAIL result.json older than the waiter is now treated as stale.
+  - Restarted: head-r18-east-waiter2 (r18g escape), head-r18-epin-waiter2 (epin_r4, fresh dir waiter_epin2) and head-r18-rscap-waiter4. All are active; patched and restarted at 20:54.
+  - The patched West script waiter_west/ is ready for HEAD-WEST.
+  Re-read: E-epin4-esc place FAIL (19:35) was STALE. The waiter read the pre-resume result.json.
+  - epin_r4 hd_lep0N_1123175731: in CTS (4_1_cts), 266k non-tap cells; not at GRT.
+  - r18g escape hd_lep0N_1123172531: in 4_2 tapbal GRT, extra iteration 4/30 at about 20:45, roughly 10-15 min per iteration, before 5_1 GRT.
+  - rscap hd_lep0N_1123184332: in CTS legalization.
+  - 66ce census (intel1): extra iteration 12/20 at 20:19.
+  23:00 census: at RISK. 66ce probably makes it (8 iterations left, about 1-2 h). The two E kit GRT reads probably slip to 00:00-01:30. The fallback is to post the 66ce read at 23:00 and the kit reads as they land. Next post by 21:40.
