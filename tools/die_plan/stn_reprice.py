@@ -80,7 +80,27 @@ def reprice_raw(raw, braw):
     return done
 
 
-def law_hits(plan, baseline, asbuilt=None, tree=None, regen=()):
+def _upstream(raw, seeds, members, hops):
+    """member lanes with a moved / re-priced lane within `hops` lanes upstream (a lane is fed by the lanes entering its source partition)"""
+    ports = {p.get("id"): p for p in raw.get("ports") or []}
+    src, by_dst = {}, {}
+    for L in raw.get("lanes") or []:
+        ps = [ports.get(x) for x in L.get("ports") or []]
+        if ps and ps[0] and ps[-1]:
+            src[L["id"]] = ps[0]["src"]["part"]
+            by_dst.setdefault(ps[-1]["dst"]["part"], set()).add(L["id"])
+    out = set()
+    for l in members:
+        cur = fr = {l}
+        for _ in range(hops):
+            fr = {u for x in fr for u in by_dst.get(src.get(x), ())} - cur
+            cur = cur | fr
+        if cur & seeds:
+            out.add(l)
+    return out
+
+
+def law_hits(plan, baseline, asbuilt=None, tree=None, regen=(), upstream=0):
     """(b) {table path: [lanes whose station depth moved vs baseline and that are members of the table]}, minus supplied regenerations"""
     raw, braw = G._load(plan), G._load(baseline)
     if not raw or not braw:
@@ -88,6 +108,9 @@ def law_hits(plan, baseline, asbuilt=None, tree=None, regen=()):
     moved = G.depth_changed_lanes(raw, braw)
     if not moved:
         return {}
+    seeds = set(moved)
+    bl = {L.get("id"): L for L in braw.get("lanes") or []}
+    seeds |= {L["id"] for L in raw.get("lanes") or [] if L.get("id") in bl and L.get("fixed_cycles") != bl[L["id"]].get("fixed_cycles")}
     ab, mdir = None, Path(plan).parent
     if asbuilt:
         ab, mdir = G._load(asbuilt), Path(asbuilt).parent
@@ -105,7 +128,8 @@ def law_hits(plan, baseline, asbuilt=None, tree=None, regen=()):
             members = (json.loads(tp.read_text()) or {}).get("members") or []
         except (OSError, ValueError):
             continue
-        hit = sorted({str(m.get("lane")) for m in members if m.get("lane") in moved})
+        ml = {str(m.get("lane")) for m in members}
+        hit = sorted((ml & seeds) | (_upstream(raw, seeds, ml, upstream) if upstream else set()))
         if not hit:
             continue
         if any(r.name == tp.name and r.is_file() and r.read_bytes() != tp.read_bytes() for r in regen):
@@ -139,7 +163,7 @@ def wrap(argv, a):
         except Exception:  # noqa: BLE001
             plan_out.write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n")
     print(f"STNREPRICE row rc {rc}: {len(done)} lane(s) re-priced" + "".join(f"\n  {k}: fixed_cycles {o} -> {n}" for k, (o, n) in sorted(done.items())[:20]))
-    hits = law_hits(plan_out, plan_in, a.asbuilt, a.tree, a.regen_table)
+    hits = law_hits(plan_out, plan_in, a.asbuilt, a.tree, a.regen_table, a.upstream)
     for ln in _law_lines(hits, a.strict):
         print(ln)
     if hits and a.strict:
@@ -160,6 +184,7 @@ def main(argv=None):
         p.add_argument("--tree")
         p.add_argument("--regen-table", action="append", default=[])
         p.add_argument("--strict", action="store_true")
+        p.add_argument("--upstream", type=int, default=0, help="also flag members with a moved lane N lanes upstream (1 = the bind put() reach seen on KV A5s; 2+ floods)")
     c.add_argument("plan")
     c.add_argument("--baseline-plan")
     if argv and argv[0] == "wrap" and "--" in argv:
@@ -170,7 +195,7 @@ def main(argv=None):
     if a.cmd == "wrap":
         ap.error("wrap needs `-- ROW.py PLAN_IN PLAN_OUT`")
     out = check_stnprice(a.plan)
-    hits = law_hits(a.plan, a.baseline_plan, a.asbuilt, a.tree, a.regen_table) if a.baseline_plan else {}
+    hits = law_hits(a.plan, a.baseline_plan, a.asbuilt, a.tree, a.regen_table, a.upstream) if a.baseline_plan else {}
     out += _law_lines(hits, a.strict)
     print("\n".join(out))
     return 3 if (hits and a.strict) else 0

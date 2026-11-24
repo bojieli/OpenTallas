@@ -90,3 +90,19 @@ def test_pre_line_is_report_only(tmp_path):
     p.write_text(json.dumps(_plan(fixed=9)))
     out = SR.check_stnprice(str(p))
     assert len(out) == 1 and out[0].startswith("LIST STNPRICE 1 of 1")
+
+
+def test_upstream_reach_flags_member_fed_by_moved_lane(tmp_path):
+    base = _plan()
+    new = _plan(fixed=3, regs_a=2)
+    for d in (base, new):
+        d["partitions"].append({"name": "pc", "type": "c"})
+        d["ports"].append({"id": "p2", "src": {"part": "pb", "bus": "o2"}, "dst": {"part": "pc", "bus": "i2"}})
+        d["lanes"].append({"id": "L2", "ports": ["p2"], "fixed_cycles": 0})
+        d["partition_types"]["c"] = {}
+    new["asbuilt"] = {"land_r8": "t.json"}
+    (tmp_path / "t.json").write_text(json.dumps({"members": [{"lane": "L2"}]}))
+    (tmp_path / "base.json").write_text(json.dumps(base))
+    (tmp_path / "new.json").write_text(json.dumps(new))
+    assert SR.law_hits(tmp_path / "new.json", tmp_path / "base.json") == {}
+    assert list(SR.law_hits(tmp_path / "new.json", tmp_path / "base.json", upstream=1).values()) == [["L2"]]
