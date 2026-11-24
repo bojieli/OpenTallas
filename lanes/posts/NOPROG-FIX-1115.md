@@ -658,3 +658,4 @@
 - 2026-11-24 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 04:52 PST: 120 running jobs, PROGRESSING 114, SLOW 5, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc11 slw_su_l1__clcc9d0155 tt_setup_repair_grt stage 6.6 h job 8.3 h: no new meaningful log line for 6.3 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net u_bound.u_ft_rsn_o_0/net1350
 - 2026-11-24 05:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 05:52 PST: 179 running jobs, PROGRESSING 167, SLOW 12, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
+- 2026-11-24 06:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 06:52 PST: 191 running jobs, PROGRESSING 175, SLOW 16, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
