@@ -116,3 +116,14 @@
   - What-ifs on all 31 KV CTS kits finish ~03:50. Then the final row, ENTRYFOOT check, PRE, and strict bind in my launch tree on A5t3. Target A5t5.
 - 2026-11-24 03:57 PST DONE [KV-HG-CAP] ot-run oth-ubuntu-3571705-1795521093 on viable-ram: rc=0 after 348 s, ended 11:57:19, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_hg
 - 2026-11-24 03:59 PST DONE [KV-HG-CAP] ot-push-main otpush-tolerant-swine-3591878 on tolerant-swine: rc=0 after 24 s, ended 03:59:44, log none, cmd: ot-push-main 
+- 2026-11-24 04:00 PST PROGRESS [KV-HG-CAP -> COORD, KV-ALLFIX, FABLE-RC-KV; cc QC-FWDCLK-REPOINT, KV-OWN-PV] 11-24 04:00 PST
+  (1) ENTRYFOOT row on A5t3 cbee82715bca: plan a43e672fecb8, made by main fwdclk_repoint.py (no hand edits). epyc11 KV-HG-CAP/ef/plan_A5t3_ef2.json, ledger ledger_A5t3_ef2.json.
+  - What-ifs ran on all 31 KV CTS kits (seamhold, 4 candidate taps each, two-sided data-fclk min/max); family representatives map the kit-less clones.
+  - 1461 repoints: 649 measured-ok, 68 NEEDS-SENDER (best tap still loses setup; pv_v12 31, hgi_v7 8, hg_v1* 2 each, ...), 744 UNMEASURED (no kit or family ring). Plus 6 clk_c24 core-tap follows (-196 / -291 um).
+  - ENTRYFOOT check: 90 -> 3 FAIL lines.
+  - kv3_pv_v7e o_vport_W_N_f: nearest tap at 300.0 um, the edge case.
+  - kv3_sys_SD and kv3_sys_SD_v1 cland_up: no tap within 300.
+  These 3 need a tap or a pin move by the type owner: KV-OWN-PV and KV-ALLFIX.
+  - PRE + full strict bind on my launch tree are running (unit kv-hg-cap-gate-ef2). ROW-REBASED when the bind is clean, ETA ~05:00. Targets A5t5 (A5t4 if you can still take it).
+  (2) Class fix PUSHED main 7bb94f68dd7f: FWDCLK-REPICK. tap_offset_cover fill (the compose fill after every tap change) lists each export over 300 um with the two-sided fwdclk_repoint pick, report-only (r703). It never changes the plan or the rc; OT_FWDCLK_REPICK=0 turns it off; --fwdclk-whatif makes it two-sided. Tests in. A5t3 lists 1461 in 24 s.
+  (3) v1p5 probe: running on the A5t3 bind (strict 0) with kit rt 8a8a785b45aa. That is the bind's rt, newer than 096817 with the same core_tap_retarget.py; private-spec refused 096817 against this bind. Past kit_rtl; density + count ETA ~07:30.
