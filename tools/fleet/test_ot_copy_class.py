@@ -116,6 +116,21 @@ def test_host_checks_fail_closed():
             C.check_hosts(j, lambda h, c, a: dict(good, **bad)[h])
 
 
+def test_source_probe_refuses_a_stub_bind(tmp_path):
+    """EPYC11-ONBOARD-FINISH 11-24: bind dirs holding only bind_report.json (ITEM-SYNC fragments) were copied as if they were binds"""
+    def ask(p):
+        return subprocess.run([sys.executable, "-I", "-c", C.SRC_PY, str(p)], capture_output=True, text=True).stdout.strip()
+    b = tmp_path / "b"; b.mkdir()
+    assert ask(b) == "OK " + str(b) and "not a directory" in ask(tmp_path / "x")     # an ordinary tree needs no bind files
+    (b / "bind_report.json").write_text("{}")
+    assert "STUB bind" in ask(b) and "native_topology.json" in ask(b)
+    for x in ("bind.f", "native_topology.json", "asbuilt.json"):
+        (b / x).write_text("")
+    assert ask(b).startswith("NO ") and ask(b).split("without ")[1].startswith("rtl)")
+    (b / "rtl").mkdir()
+    assert ask(b) == "OK " + str(b)
+
+
 def dst_probe(d, dst, roots=""):
     r = subprocess.run([sys.executable, "-I", "-c", C.DST_PY, str(H / "ot-tree-fork"), str(d), str(dst)], capture_output=True, text=True,
                        env=dict(os.environ, OT_EVENT_TREE_ROOTS=str(roots)))

@@ -149,7 +149,14 @@ def parse(argv, env=None):
 SRC_PY = r"""
 import os, sys
 p = sys.argv[1]
-print("OK " + os.path.realpath(p) if os.path.isdir(p) else "NO " + p + " is not a directory here")
+need = ("bind.f", "native_topology.json", "asbuilt.json", "rtl")
+miss = [x for x in need if not os.path.exists(os.path.join(p, x))] if os.path.lexists(os.path.join(p, "bind_report.json")) else []
+if not os.path.isdir(p):
+    print("NO " + p + " is not a directory here")
+elif miss:
+    print("NO " + p + " is a STUB bind (bind_report.json without " + ", ".join(miss) + "): name a host that holds the whole bind")
+else:
+    print("OK " + os.path.realpath(p))
 """
 
 # the destination rules of the rt ot-tree-fork itself (check_dst / event_root), run on the destination host; no bytecode into rt
