@@ -21,6 +21,14 @@ set -eE
 trap 'rc=$?; echo "FAILED unexpected command failure (exit $rc) at line $LINENO: $BASH_COMMAND" | tee /dev/stderr; exit 1' ERR
 C=${COORD_DIR:-/home/ubuntu/coord}; B=${COORD_BRANCH:-coord/state}
 cd "$C"
+# HUB-POST-SPEED 11-24 (COORD): a `git maintenance/gc --auto` that a git command here detached inherited fds 8 and 9 and held the push lock after
+# this script had ended (00:33:15-00:34:51 no post finished; total p50 188 s).  Every git here runs with auto gc/maintenance off (this process and
+# its children only, nothing written to any repository config) and without the lock fds; python children get them closed too.
+export GIT_CONFIG_COUNT=$(( ${GIT_CONFIG_COUNT:-0} + 2 ))
+export "GIT_CONFIG_KEY_$((GIT_CONFIG_COUNT-2))=gc.auto" "GIT_CONFIG_VALUE_$((GIT_CONFIG_COUNT-2))=0"
+export "GIT_CONFIG_KEY_$((GIT_CONFIG_COUNT-1))=maintenance.auto" "GIT_CONFIG_VALUE_$((GIT_CONFIG_COUNT-1))=false"
+git() { command git "$@" 8>&- 9>&-; }
+python3() { command python3 "$@" 8>&- 9>&-; }
 # COORD-GUARD 11-19 (incident: a `checkout -f -B` in this worktree replaced the coord files with main): never commit, merge or push from a worktree that
 # is not on $B, and say so.  tools/fleet/coord-branch-guard puts a mistaken checkout back; this stops anything that slipped through.
 cur=$(git symbolic-ref -q --short HEAD 2>/dev/null || true)
@@ -60,7 +68,7 @@ if git diff --cached --quiet -- "$@"; then
 fi
 for a in "$@"; do case "$a" in lanes/posts/*.md)
   if [ -f "$C/tools/queue_view.py" ] && [ "$*" != "lanes/COORD-REVIEW-QUEUE.md" ]; then
-    COORD_DIR="$C" timeout 120 python3 -I "$C/tools/queue_view.py" --coord "$C" --apply >/dev/null 2>&1 || true
+    COORD_DIR="$C" timeout 120 python3 -I "$C/tools/queue_view.py" --coord "$C" --apply >/dev/null 2>&1 8>&- 9>&- || true
     git diff --quiet -- lanes/COORD-REVIEW-QUEUE.md || { set -- "$@" lanes/COORD-REVIEW-QUEUE.md; git add -- lanes/COORD-REVIEW-QUEUE.md; }
   fi; break;; esac; done
 own_before=$(git rev-parse HEAD)
