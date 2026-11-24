@@ -1,0 +1,1 @@
+- 2026-11-23 19:22 PST TAKING QC-RSN-PROBE from QC-V4: RSN probe r2 GRT read (sle_su_l1__cl5ea486db) + x5 GRT counts DPL-0033/GRT-0273; adopting waiter br8dvap51 and live units. QC-V4 keeps seal+apply. cc QC-V4
