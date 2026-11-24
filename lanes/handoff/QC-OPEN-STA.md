@@ -28,3 +28,8 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
   Tree runtime r8 table now = cA r8_final d5cb60490ce8. bindr8.sh -> bindR8/bind (log epyc8 QC-OPEN-STA/bindr8.ot).
 - Next: on BIND_RC 0 run intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probe.sh (edit --bind-out to $D/bindR8/bind) epyc7 sle_st_a_v1__cl989804f6__cled3c1d7b; census at GRT (tap span, trees <=315, placed_scan, relay_collapse, channels).
 - Deleted epyc8 tree.forking-813798 (ot-delete).
+
+## 23:35 PST
+- bindR7/bindR8 both BAD (tree lacked cC overlays). Tree now = cC overlays (bindS.sh installed 9 files from QC-ALLFIX/cC/tree); plan in tree = plan_probe_nosu 7e25fd64b4e4 (C1-noSU + st_a row, rows/compose_probe.py).
+- bindS.sh -> bindS/bind (fresh elab + strict R8 loop + LATCHECK), log epyc8 QC-OPEN-STA/bindS.ot.
+- Probe launcher intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probe.sh: set --bind-out $D/bindS/bind before running (rt 70b6).
