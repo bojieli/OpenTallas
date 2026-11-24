@@ -258,16 +258,38 @@ def active_units():
         return None
 
 
+RETIRED = set()
+
+
+def retired_specs():
+    """COORD 11-24 (KV-ALLFIX retire 2f951d64): spec dir names listed under every kit_wave.json dies/*/private_retired_specs_* key are
+    retired (superseded) private specs: never counted as live, failed or stale."""
+    out = set()
+    try:
+        j = json.load(open(os.path.join(COORD, 'autopilot/kit_wave.json')))
+        for dv in (j.get('dies') or {}).values():
+            if isinstance(dv, dict):
+                for k, v in dv.items():
+                    if k.startswith('private_retired_specs') and isinstance(v, list):
+                        out.update(str(x) for x in v)
+    except (OSError, ValueError, AttributeError):
+        pass
+    return out
+
+
 def load_private_live(now, units=None, root=PRIVATE):
     """PRIV-LIVE-1122 (COORD: kv3_hub_Wo flagged FAILED-NO-RELAUNCH while its private sealed kit qwen_kvsys_kv3_hub_Wo_1122025530 was in
     place): (die, item) -> (start time, 'lane/spec', why) of a LIVE private kit (kit_wave private-spec run-item).  Live = result.json verdict
     RUNNING, or its place_service.json unit / a runitem-*<item>* unit is an active systemd --user service on the hub, or (units unreadable)
     a *.live.log written in the last 30 min."""
     out = {}
+    RETIRED.update(retired_specs())
     if units is None:
         units = active_units()
     for sj in glob.glob(os.path.join(root, '*', '*', 'spec.json')):
         d = os.path.dirname(sj)
+        if os.path.basename(d) in RETIRED:
+            continue
         try:
             sp = json.load(open(sj))
             die, item = sp.get('die'), str(sp.get('item') or '').split('#')[0]
