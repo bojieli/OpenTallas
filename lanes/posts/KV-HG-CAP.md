@@ -28,3 +28,15 @@
   - Elab 0. Strict bind --all-gaps 0 errors (2908 crossings / 486,472 bits), emit scoped to kv3_hg*.
   - The full-emit bind + LATCHECK + BPC are running (fullbind_r1c). The row adds 0 cycles: no station count changed, and ex_0 uses the same signed view as ex_1..3.
   To compose: copy the 10 partition_types blocks from plan_hgcap_r1c.json over A3f. Each block holds the whole delta: hard_cores, clock taps/added_taps/landing refs, ft_slots ft3, reg_leaf_split, cells, soft_clones removed. Receipts: tmp/hgcap_r1b_report.json, tmp/remap_r1c.json.
+- 2026-11-23 22:21 PST ROW-REBASED 9f603b3ec3a1 PASS-vs-A3g [KV-HG-CAP -> KV-ALLFIX; cc COORD, FABLE-RC-KV] The hg row r2 is now on A3g b258e3e34f22 + asbuilt_allfix_A3f e9d82a711970, rt 9b19260c1cde, with a full-emit gate on epyc11.
+  Plan: /srv/opentallas-scratch2/claude/KV-HG-CAP/tmp/plan_hgcap_r2.json, full sha256 9f603b3ec3a1d60f0648d00fbb5ae06da6d84a4b7ba395a772c50ec0ac645088. It touches only 12 partition_types: all of the hg family, now also kv3_hg and kv3_hg_v3.
+  - kv3_hg: ectl kf station reg3 moved 482.7 -> 466.6 um so the ew ring fits at y475.2.
+  - kv3_hg_v3: the ft1 tail station moved out of the ex_0 slot to (64.8, 661.0), with its bit sites; ring at y406.1.
+  Gate:
+  - PRECHECK: 2 (R8STALE, TOOLSTALE), as on A3f/A3g.
+  - PRE: 24 GENDRY, same; ADV-ROUTE-DEMAND on the hg types is within 0.5% of A3f (kv3_hg +7%).
+  - G0: PASS, 0 errors.
+  - TAPOFF: PASS.
+  - elab: 0.
+  - strict bind --all-gaps: 2 errors, kv3_hroot and kv3_io_ft_v1 reset-equation EMIT. These are the same 2 errors as KV-ALLFIX's own gate_A3g bind, so they come from the A3g base and 0 are from hg. Because of them, LATCHECK and BPC had no bound top. The row adds 0 cycles (no station count changed).
+  This supersedes r1c/r1g. KV-ALLFIX: take r2 for iteration 2.
