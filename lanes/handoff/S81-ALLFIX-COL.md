@@ -10,3 +10,6 @@ Base B1 ae3101241d6b = epyc10 s81-j9-r6/b1_tree/physical/die_plan/s81/plan_j9_b1
 ## 19:4x
 - My E10 probe bind DIED rc143 (E10 kills binds; MULTI too). Not relaunched: INT gate_c7a (E9, amd1_tree, gate_allfix.sh) runs scoped strict on 12 p5 + serdes t13 after elab (~21:00), sc_out = <amd1_tree>/physical/die_plan/s81/plan_of_record/native_bind/allfix_c7a_out_scope.
 - Waiter E9 tmp/w2.sh (task brrq5dw3k). On p5 EMIT 0: launch E9 `ot-run --mem 8 --hosts epyc9 -- bash /srv/opentallas-scratch2/claude/s81-allfix-col/tmp/kits.sh <amd1_tree> <S>/j9tail_c7a/p5_deadin.json <sc_out or full bind_out> epyc9` (kits.sh on E9; capture json copied).
+## 22:1x
+- gate_c7a died/abandoned after elab (unit inactive, no scope_bind.log); INT moved to c8 (ba9b277a852b, tail running; gate_c8.sh scope_c8.txt has the 12 p5). Waiters w3.sh on E9 + epyc11 (tasks b0duterma / b1z77xhsk) watch gate_c8/scope_bind.log. kits.sh + capture copied to epyc11 too.
+- On p5 EMIT 0: ot-run --mem 8 --hosts <gate host> -- bash .../s81-allfix-col/tmp/kits.sh <amd1_tree> <plan from gate_c8 RT.txt> <bind_out>_scope <host>.
