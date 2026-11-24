@@ -10,3 +10,6 @@ c9 plan = epyc9 s81-allfix-int/c9/p6w_c9_geom_model_t3_tap_1124.json 048fa468f0a
 - SELLK scope gate E9 oth-ubuntu-483920-1795527839 (s81-allfix-svc/gate_c9sellk), in PRE at 07:48.
 - VPW WREG scope gate E9 oth-ubuntu-2118116-1795531627 (s81-vpw-cone/gate_wreg_sitegrid, c8 base, 6 scope types); define-append 80/80 appendable on c9; outside exact c9 gate.
 - D3 E11 oth-ubuntu-1734004-1795534036 (s81-t2-refloor/rows/D3tapfix_e11_recovery_1124), FILL then ANCHOR/PRE/G0/CENSUS; base = B1 b1_tree -> needs rebase onto c9 after.
+## 08:15 COORD orders
+- (1) BKSEL swap is MINE after the c9 seal: E11 s81-c9-rows/bksel/bksel_swap.sh (copy+mv both libs, re-seal -> bksel/postseal_bksel_1124.json.gz). Posted to INT 08:13 (reply HOLD to wait). Run via ot-run --hosts epyc11 once materialize_1124 RAN rc0 + prebind_src_1124.json.gz exists; check INT posts for HOLD first.
+- (2) D3 rebased directly on c9 in parallel: E9 s81-c9-rows/d3c9 (rec_D3_c9.json, d3c9_row.sh, out/, d3c9.otrun.log); tools rt d56b624b5029. Gate whichever of E9 d3c9 / E11 1734004 finishes first.
