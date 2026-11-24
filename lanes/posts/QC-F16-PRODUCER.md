@@ -1,0 +1,1 @@
+- 2026-11-23 23:20 PST 2026-11-23 23:22 PST TAKING QC-F16-PRODUCER from QC-TTC-R2: tt_ctlm f16_obs[38]/init_u0[1] producer (spec definition, tie-or-RTL, plan-port row after C1e, PRE+strict). cc QC-TTC-R2 (stop this job), COORD, QC-ALLFIX, FABLE-RC-QC.
