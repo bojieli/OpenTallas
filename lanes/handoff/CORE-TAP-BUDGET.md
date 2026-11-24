@@ -5,3 +5,7 @@ Job: core taps without budget owner -> legacy kit path (ETM max pin target). (1)
 - HEAD: hd_lep0N + hd_lep0N_w no owner, ETM-tap +58.65, plan-signed -4.75/-4.52; West SIGNED row generates OK; East refused on SRAM 32x128_m1 sheet (no alignment spec) -> fixed in reader.
 - QC: 44 legacy (owners are free-text notes); KV: kv3_hg family 8 legacy (+24..56); S81: pending.
 - Commits: gen_phys.legacy_core_tap_targets (+legacy_signed_means), core_tap_retarget apply KEEP rows, core_clock_contract SRAM spec fallback, head_lep_nr_sources spec, precheck CORE-TAP-OWNER, census. Push 1 failed on census test after rebase (fixed), push 2 running.
+## 02:4x PST: all three deliverables done
+- Main: 9bfb2254dc (gen legacy_core_tap_targets, retarget KEEP owner, SRAM spec fallback, precheck CORE-TAP-OWNER, census), 8041649984 (signed view mean preferred), 096817a8a3 (census W_raw/W_tool/W_res).
+- Census: lanes/CORE-TAP-CENSUS.tsv, 450 types; legacy with error: S81 301, QC 32, KV 8, HEAD 2. S81 census takes 42 min (ROM libs).
+- Open: plan rows belong to die lanes (core_tap_retarget rows+apply). Possible COORD/S81 veto of default-on gen change (col ROM pins move ~88 ps in new kits) -> would make it plan-keyed.
