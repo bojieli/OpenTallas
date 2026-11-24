@@ -11,3 +11,8 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - GEN-FRESH main: STALE 10, GEN-FAIL 12 (some may be sparse-clone NEEDS-FILES), TSV epyc2 runs/genfresh_main.tsv. lep_nr/split fix HANDED to HEAD-EAST-REPLAN.
 - TIED-BITS: c9 must bind with asbuilt_run_allfix2_svctied.json (allfix2 predicts ot_hdc_v41x_kreg). QC/KV native frontend = N/A; HEAD portbind N/A.
 - Open: rerun the checks on c9seal_tree (E11) once forked; C1j QC as-built is qc_start_1106/runtime/asbuilt_n46r4_final_preview.json (pass --asbuilt).
+
+## 11-24 11:25 PST PRE-SCHEMA-KEYS landed
+- main 60b6b24750: tools/die_plan/tree_precheck.py (SCHEMA-KEYS / TREE-SOURCES / TREE-FRESH), report only; bind.py runs it before elab, plan_gate_pre class TREEPRE (skipped when OT_TREE_PRECHECK_RAN=1). Tests tools/die_plan/test_tree_precheck.py.
+- c9 run (epyc9 runs/tp.otrun.log): 6 unknown keys vs tree 4484ee80a819 and rt 69de849b3da1; amd1_tree fork source epyc10 gone; c8seal_tree fresh.
+- Open: rerun on c9seal_tree (E11) once forked.
