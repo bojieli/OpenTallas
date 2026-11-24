@@ -159,3 +159,4 @@
   E: the epin_r4 escape kit relaunched after kit-store refused a non-existent bind-out (my error; it now uses the chain bind_r18g_epin_r4) and passed kit_snap. The r18g escape kit is in place.
   ETA for W and E GRT reads: about 22:00-23:00.
 - 2026-11-23 18:03 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] W-b-wch4b (hd_lep0N_w_1123175934/gen/hd_lep0N_w): stage [src_manifest RUNNING]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
+- 2026-11-23 18:03 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] W-a-wband (hd_lep0N_w_1123175932/gen/hd_lep0N_w): stage [src_manifest RUNNING]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
