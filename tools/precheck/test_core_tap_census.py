@@ -27,9 +27,10 @@ def test_offset_span_core_rows_on_residual():
                         clock={"insertion_ps": 250.0, "insertion_ff_ps": 202.5, "seam_hold": {"x": 1},
                                "tap_offset": {"per_port_ps": {"T": {"clk_c0": {"TT": -450.0, "FF": -364.5, "tol": 15.0},
                                                                     "clk_t0": {"TT": 20.0, "FF": 16.0, "tol": 25.0}}}}})
-    n, w_raw, w_res, err = CT.offset_spans(GP, S, P, "T")
+    n, w_raw, w_tool, w_res, err = CT.offset_spans(GP, S, P, "T")
     assert err == "" and n == 1
-    assert w_raw == 510.0                    # (20 + 25) - (-450 - 15): the window the tool applies today
+    assert w_raw == 510.0                    # (20 + 25) - (-450 - 15): the window the pre-467604377ee tool applied
+    assert w_tool == w_res                   # main (QC-CBX-CLOCK fix) spans the residual
     assert w_res == 60.0                     # residual 0 +/- 15 with 20 +/- 25: 45 - (-15)
 
 

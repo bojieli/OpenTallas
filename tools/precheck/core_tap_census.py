@@ -16,10 +16,11 @@ Two defects, one row per (type, core tap port, core pin):
     is listed beside it when the view carries one, with plan - contract.
 
 (B) TAP-OFFSET SPAN.  clock.tap_offset.per_port_ps rows on CORE tap ports carry the tap's declared early delivery in the
-    raw offset; gen_phys.tap_offset_span_ps takes W = max(o+u) - min(o-u) over RAW rows (QC cbx_q10__cl89936551:
-    -449.95 -> W 510.2) and applies -W to every port without a row.  W_res = the same span with core-tap rows taken
-    on their residual (o + insertion - common + lead, the R-CLOCK-7 basis tap_offset_table checks).  W_raw - W_res is
-    the window the tool adds; reported per type (QC-CBX-CLOCK owns the tool fix).
+    raw offset; gen_phys.tap_offset_span_ps took W = max(o+u) - min(o-u) over RAW rows (QC cbx_q10__cl89936551:
+    -449.95 -> W 510.2) and applied -W to every port without a row (fixed on main 467604377ee, QC-CBX-CLOCK).  W_raw =
+    the raw-row span, W_tool = the span the tools in use apply, W_res = the span with core-tap rows on their residual
+    (o + insertion - common + lead, the R-CLOCK-7 basis tap_offset_table checks).  W_extra = W_tool - W_res is the
+    window a kit generated with those tools adds; W_raw - W_res is what a kit generated before the fix carries.
 """
 import argparse
 import contextlib
@@ -36,7 +37,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 FIELDS = ["die", "plan_sha12", "type", "placed", "core_taps", "path", "owner_class", "port", "tap", "inst", "module", "pin",
           "tap_ins_TT", "tap_ins_FF", "pin_target_TT", "pin_basis", "err_TT", "contract_TT", "contract_FF",
-          "plan_minus_contract_TT", "plan_minus_contract_FF", "contract_source", "offset_core_rows", "W_raw", "W_res",
+          "plan_minus_contract_TT", "plan_minus_contract_FF", "contract_source", "offset_core_rows", "W_raw", "W_tool", "W_res",
           "W_extra", "signed_whatif", "note"]
 
 
@@ -67,28 +68,34 @@ def tree_root(plan):
     return None
 
 
+def _span(vals):
+    return math.ceil((max(h for _l, h in vals) - min(lo for lo, _h in vals)) * 10 - 1e-9) / 10.0
+
+
 def offset_spans(GP, S, P, tn):
-    """(n core-tap offset rows, W_raw, W_res) of a type; (0, 0, 0) without clock.tap_offset rows."""
+    """(n core-tap offset rows, W_raw, W_tool, W_res, err) of a type; zeros without clock.tap_offset rows.  W_raw = span
+    over RAW rows (the pre-467604377ee tool basis), W_tool = gen_phys.tap_offset_span_ps of the tools in use (what the
+    kit SDC applies to ports without a row), W_res = span with core-tap rows on their residual."""
     try:
         tab = GP.tap_offset_table(P, tn)
     except Exception as e:  # noqa: BLE001 -- report, never stop
-        return None, None, None, f"tap_offset_table {type(e).__name__}: {str(e)[:120]}"
+        return None, None, None, None, f"tap_offset_table {type(e).__name__}: {str(e)[:120]}"
     if not tab:
-        return 0, 0.0, 0.0, ""
-    w_raw = GP.tap_offset_span_ps(P, tn)
+        return 0, 0.0, 0.0, 0.0, ""
+    w_tool = GP.tap_offset_span_ps(P, tn)
     t = P.types[tn]
     core = {cn: ctp for cn, _x, _y, ctp in S.core_taps(P, tn)}
-    span = 0.0
+    w_raw = w_res = 0.0
     for c in ("TT", "FF"):
-        vals = []
+        raw, res = [], []
         for n, r in tab.items():
             o = r[c]
+            raw.append((o - r["tol"], o + r["tol"]))
             if n in core:
                 o += S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, t) + S.core_tap_lead_ps(t, c)
-            vals.append((o - r["tol"], o + r["tol"]))
-        span = max(span, max(h for _l, h in vals) - min(lo for lo, _h in vals))
-    w_res = math.ceil(span * 10 - 1e-9) / 10.0
-    return sum(n in core for n in tab), w_raw, w_res, ""
+            res.append((o - r["tol"], o + r["tol"]))
+        w_raw, w_res = max(w_raw, _span(raw)), max(w_res, _span(res))
+    return sum(n in core for n in tab), w_raw, w_tool, w_res, ""
 
 
 def contract_means(CC, core, root):
@@ -138,9 +145,9 @@ def type_rows(die, sha, P, tn, root, GP, S, CC, placed):
         perr = ""
     except Exception as e:  # noqa: BLE001
         opts, path, perr = None, "ERROR", f"{type(e).__name__}: {str(e)[:160]}"
-    n_off, w_raw, w_res, oerr = offset_spans(GP, S, P, tn)
-    base.update(offset_core_rows=n_off, W_raw=w_raw, W_res=w_res,
-                W_extra=round(w_raw - w_res, 1) if w_raw is not None else None)
+    n_off, w_raw, w_tool, w_res, oerr = offset_spans(GP, S, P, tn)
+    base.update(offset_core_rows=n_off, W_raw=w_raw, W_tool=w_tool, W_res=w_res,
+                W_extra=round(w_tool - w_res, 1) if w_tool is not None else None)
     rows_lat, taps_k, gerr = [], [], ""
     if opts is not None:
         with tempfile.TemporaryDirectory() as td, contextlib.redirect_stdout(io.StringIO()):
