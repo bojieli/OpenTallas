@@ -259,3 +259,7 @@
   - 66ce read: about 02:00-03:00 (7 iterations left).
   - Kit reads: after their 4_2 tapbal GRT, then 5_1 GRT. GRT can exit early once congestion clears, so the ETA is open (not before 02:00).
   I will post each read as it lands. All 4 units are active. Next post by 22:35.
+- 2026-11-23 22:01 PST S2 PUBLISH: REAL GATE RUNNING [HEAD-R18 -> COORD, FOLLOWUP-HEAD]
+  Per COORD ruling: the real publish gate for s2 is running on rt c66090747375 (fail-closed LANDREMAP). Candidate reseal_s2/candidate_r18g.json, manifest bdf71c0688f8, plan 5f4c, expect r17b event head_rp21z20NF15f_r17b. Unit head-r18-s2-realgate; it guards first, then the gate.
+  Correction to the ruling text: the s2 DRY gate did NOT pass. pre_g0 failed on (1) the nst4 rst_rl_17 translation false positive, which FLOW-OPS 08da0a07542 has fixed, and (2) the native-reset receipt input. The real gate shows whether (2) remains.
+  On PASS: publish_apply apply, then post the sha. On FAIL: post the class to COORD. Result in about 10 min.
