@@ -53,3 +53,7 @@ Goal: clock nets keep near-CTS routes through congestion GRT. Work dir epyc8 /sr
 - Watch 04:49-16:23: 9 default-on kits through GRT, 0 hook failures (S81 serdes/slice_station/col x3, KV io_cor_v1, tt_ctlm). Watch re-armed (scratchpad cf_poll.sh + cf_scan_host.sh on rtx-pro).
 - Watch 17:29-21:09: 22 cf kits, bk_sel__t2 GRT-0116 flag = congestion (kit lacks -allow_congestion), not hook. Detector refined.
 - Watch 21:13-03:19 (11-23): 45 cf kits, ok 6 err 30 run 9, 0 hook failures; err classes RSZ-0060/DPL-0033/GRT-0116 same as non-cf. Re-armed 03:2x.
+- 11-23 GRT-0273 class (Codex 07:27): clock-only-phase NDR drops = tap PORTS in reserved die_clock_tree sites (M7 escape column 0.232 um at TAP_ESCAPE_CLEAR_UM 0.10). main 111c6e12a6: hook writes 5_1_grt.clock_ndr_loss.tsv. main cac07b1330: opt-in gen env OT_TAP_ESCAPE_CLEAR_UM (HEAD R9 clock-only: 0.10 -> 4 drops, 0.30 -> 1; residual clk = separate zero-cap V edge 190.95-191.52/7.41-7.98, usage 300, M7-independent).
+- Diagnostic copies (not kits): epyc7 /srv/opentallas-scratch2/claude/flow-clkgrt-1121/ndrx/H0,H30,H60,H100,H30M54,H30M108 (HEAD R9); epyc10 .../ndrx/B (pc_v3, Codex: BAD form, no replay). Setup: ndrx_setup.sh + ndrx_widen.tcl/ndrx_exit.tcl there.
+- NEXT: default OT_TAP_ESCAPE_CLEAR_UM=0.30 after one REVIEWED kit with tap drops shows 0 tap drops through DRT and no new M7 DRC (owning lanes run private-spec with the key).
+- Watch: scratchpad cf_poll.sh/cf_scan_host.sh, column 8 = clock-phase GRT-0273 count. Re-arm every 6 h.
