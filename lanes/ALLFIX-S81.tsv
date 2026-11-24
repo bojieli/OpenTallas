@@ -51,12 +51,12 @@ hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-
 hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-LOGIC-DEPTH	S81-OPEN-DEMAND	BKSEL-IDS-RSPLIT (bk_sel, wire not depth) + LEPE-4 SP (u_lan	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
-hg-S81-MACRO-CHANNEL	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-ENGCHAN by 22:00 -> c8
-hg-S81-OVER-MACRO	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-ENGCHAN by 22:00 -> c8
+hg-S81-MACRO-CHANNEL	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	yes	c6 8381109c93bf	-	-	-	-	eng__t1 place/GRT probe (epyc11, full-cause census)	-	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4
+hg-S81-OVER-MACRO	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	yes	c6 8381109c93bf	-	-	-	-	eng__t1 place/GRT probe (epyc11, full-cause census)	-	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4
 hg-S81-REACH	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
 hg-S81-REPAIR-CAP	S81-OPEN-DEMAND	PT1 eecfc535 (port class) + violator row TBD	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6+2e5928836573	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
-hg-S81-STATION-CLUSTER	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1 (ft1 bank W to x<=795.36)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-ENGCHAN by 22:00 -> c8
+hg-S81-STATION-CLUSTER	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1 (ft1 bank W to x<=795.36)	B1 ae3101241d6b + ENG-HXFACE-1 503cbe8a158d	yes	c6 8381109c93bf	-	-	-	-	eng__t1 place/GRT probe (epyc11, full-cause census)	-	IN-BASE (S81-OPEN-ENGCHAN f95d79d3: chan 77.28um vs J8 17.3; ft1 bank x<=795.36; hx relay 483.9->176.6um); probe confirms C1-C4
 hop-S81-svc	S81-ALLFIX-SVC	SVC-ATT-ENG-ORDER + SVC-CUT-STATION + SVC-BCAST-STAGE + SVC-	-	no	-	-	-	-	-	-	-	OPEN: SVC-FRAME-G0 v3 + ENGINE row in c6
 hop-S81-leaf	S81-ALLFIX-SLICE	J9-LEAF-ISTN-REAIM (pass inside LCBC row 3d)	LEAF-ALLFIX-1 8ce96cfc7c52	yes	c6 8381109c93bf	PASS 0/285	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hop-S81-col_h9_r12	S81-ALLFIX-COL	KEEPDLY wave env ot_dp_dly:r (480 DUPSTN) + REASON (120 core	wave env+REASON	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
