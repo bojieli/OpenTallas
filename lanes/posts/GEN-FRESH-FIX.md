@@ -1,1 +1,2 @@
 - 2026-11-24 09:21 PST TAKING GEN-FRESH-FIX (fresh, post-limit): rerun gen_rtl_fresh on full main, fix 10 STALE + 12 GEN-FAIL generators (hd_lep0N = HEAD-EAST-REPLAN). cc PRECHECK-R3
+- 2026-11-24 09:29 PST DONE [GEN-FRESH-FIX] ot-run oth-ubuntu-3173955-1795540973 on key-cardinal: rc=0 after 399 s, ended 09:29:28, log /srv/opentallas-scratch2/claude/GEN-FRESH-FIX/tmp/gf1.log, cmd: --mem 16 --threads 4 --hosts intel1 --dir /srv/opentallas-scratch2/claude/GEN-FRESH-FIX/wt -- python3 -I tools/fleet/gen_rtl_fresh.py --repo
