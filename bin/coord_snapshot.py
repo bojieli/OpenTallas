@@ -56,7 +56,8 @@ def posts(lines):
         m = POST_RE.match(ln)
         if m:
             date, hhmm, kind, head = m.groups()
-            lane = head.split("->")[0].strip().split()[0] if head.strip() else "?"
+            toks = head.split("->")[0].strip().split()
+            lane = toks[0] if toks else "?"
             out.append({"date": date, "hhmm": hhmm, "kind": kind, "lane": lane, "line": ln})
     return out
 
@@ -130,7 +131,59 @@ def main():
             continue
         lane = f.stem
         age_min = int((time.time() - f.stat().st_mtime) / 60)
+        if age_min > 1440:
+            continue  # only handoffs touched in the last 24 h
         o.append(f"- {lane}: handoff {age_min} min old; last post {last.get(lane, 'none in recent queue')}")
+    o.append("")
+
+    o.append("## Live lanes (queue posts + LANE-STATUS + agent_ids)")
+    try:
+        ids = dict(l.rstrip("\n").split("\t")[:2] for l in (COORD / "lanes/agent_ids.tsv").read_text().splitlines() if "\t" in l)
+        rows = [l.split("\t") for l in (COORD / "lanes/LANE-STATUS.tsv").read_text().splitlines()[1:]]
+        stat = {}
+        for r in rows:
+            stat[r[0]] = r  # last row per lane wins
+        nowm = time.strftime("%Y-%m-%d"); hh, mm = map(int, time.strftime("%H:%M").split(":")); cur = hh * 60 + mm
+        act = {}
+        for p_ in ps:
+            if p_["date"] == nowm and p_["lane"] not in ("COORD", "?"):
+                try:
+                    h2, m2 = map(int, p_["hhmm"].split(":"))
+                except ValueError:
+                    continue
+                act[p_["lane"]] = (h2 * 60 + m2, p_["kind"])
+        live = [(k, v) for k, v in act.items() if cur - v[0] <= 180 and stat.get(k, [k, ""])[1] not in ("stood-down", "done")]
+        o.append(f"- LANE-STATUS rows {len(stat)}; agent_ids.tsv {len(ids)} (lists many old lanes, so liveness here = posted in the last 3 h and not stood-down): {len(live)} live")
+        for k, v in sorted(live, key=lambda x: -x[1][0]):
+            o.append(f"- {k} agent {ids.get(k, '?')} last post {nowm} {v[0] // 60:02d}:{v[0] % 60:02d} {v[1]}")
+    except Exception as e:
+        o.append(f"(unavailable: {e})")
+    o.append("")
+
+    o.append("## Per-die plan shas and gate states (RELEASE_TREE.md die clock / plan rows)")
+    try:
+        for l in (COORD / "RELEASE_TREE.md").read_text().splitlines():
+            if re.search(r"\bplan [0-9a-f]{8,}", l) and l.startswith("- ["):
+                o.append(f"- {l[2:260]}")
+    except Exception as e:
+        o.append(f"(unavailable: {e})")
+    o.append("")
+
+    o.append("## Failure breakdown (tools/failure_breakdown.py)")
+    fb = run(["/usr/bin/python3", "-I", str(COORD / "tools/failure_breakdown.py")], 180)
+    for l in fb.splitlines():
+        if l.strip() and not l.startswith("<!--"):
+            o.append(l[:300])
+    o.append("")
+
+    o.append("## Host load and disk (latest HOST-REPORT, this host df/uptime)")
+    try:
+        hr = [l for l in (Path.home() / ".local/state/host-report.log").read_text().splitlines() if l.startswith("HOST-REPORT")]
+        o.append(f"    {hr[-1][:900]}" if hr else "    (no HOST-REPORT)")
+    except Exception as e:
+        o.append(f"    (unavailable: {e})")
+    for cmd in (["df", "-h", "/"], ["uptime"]):
+        o.append("    " + run(cmd, 20).strip().replace("\n", " | ")[:200])
     o.append("")
 
     o.append("## ot-run status")
