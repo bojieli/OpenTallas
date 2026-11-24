@@ -23,3 +23,9 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - Row 2 (-56.3): fs_q -> INVx1 (12 loads, slew 206) -> AND3x1 (slew 185) -> AND2x2 -> 3 buffers -> sl[2].ch[0].u_wen, total 762 ps after launch. Small gates with bad slews plus the 320 um band, not just fs_q fanout. GRT read +63. No plan knob found for fs_q copies (fs_q only in rtl/common/ot_dp_clk_landing_ca.sv:452-463, shared by all dies; would be a default-off parameter + LEC). Not yet inspected: -54.2 lap_ok, -47.6 tx SRAM odr.
 - Row 3 (-15.8): u_rg1.u_pair -> u_rg1.g_rxf.g_s[0].u_st.q[117], 1 end. tap_pair_affinity {macro_follow: true} is ALREADY in this plan, so that knob did not cover it. core_taps early, core_tap_lead_ps 210. Cause not found.
 - Units live: only head-west-wband-progress2 (exits by itself, posts nothing). No West build is running.
+## 11-24 00:1x: sign-off STA on run 1 (analysis only, epyc7 head-west/sta_run1): NOT SIGNED
+- TT setup -56.35 (u_rg2.u_pair/k_lo_v = group 4, told HEAD-W-SETUP), FF internal hold -34.87 (39 ends: 36 u_rg1 pair outputs, 35 on clk_t52; 3 u_rg2 TX slice), DRC 2, face_guard 3, drv slew. LEC not run.
+- Port hold 3643 negative, worst arst_n -93.51 / start_i -92.96: NOT only ring inputs; none below -568.4.
+- Row 3 choice pending: c0 ~40 ps later vs launch-side lockup (TT room +348.9). Do NOT move capture to the pair tap (~690 ps apart). Need FF c0/c1/t52 arrivals + positive pair-input hold margin.
+- Straps: bound top = tie audit for lep0N_w (001100/010000/010000). ba24d0117180 misses 18/18; KIT-STRAP redo ~01:15 from the bind tie audit, else fallback in plan at 02:30 checked against the NEW bind.
+- Deltas awaited: HEAD-W-DRC, HEAD-W-SETUP. Launch ETA re-post due 02:30. Nothing launched.
