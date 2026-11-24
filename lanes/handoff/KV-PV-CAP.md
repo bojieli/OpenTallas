@@ -16,3 +16,9 @@ KV-ALLFIX: A3f failed G0; A3g (A3d b258e3e34f22 minus HUBA1 + IUSPLIT) gating on
 - v1n is 2160 wide unsplit (row B split blocked: cut face full, 129 pins short). If ap2 v1n still > 357k -> needs a cut/re-shape.
 - Row script: scratchpad pvcap/ROWS_KV-PV-CAP-DLYAP.py (dly_alt_pol all kv3_pv*, budgets.r_dly_lockup.kv3_pv.r2r_margin_ps=20).
 - Rebase base A3g b258e3e34f22 (epyc10 kv-allfix/grow/A3g/plan.json); tree fork -> epyc11 /srv/opentallas-scratch2/claude/kv-pv-cap/tree (fork.otrun.log). Gate copy: epyc10 kv-allfix/grow/gate_grow_n.sh (use OT_BIND_ONLY_TYPES for scoped bind) with rt >= d06ef5e3d79.
+## 22:4x state
+- Census ap2 (K3g, model -> nontap): v1n 447k (OVER), v3 348k, v3n 281k, v12 262k, rest <=230k. Posted hub 816aed01.
+- Gate R1 (epyc11 row/plan_pvcap.json 827a7c76eb05 = A3g + ROWS_KV-PV-CAP-DLYAP.py fee13023181e, rt d06ef5e3d79b, gate row/gate_pvcap.sh): PRE PASS 0 findings, ELAB 0, scoped strict BIND 0 errors. PRECHECK 2 FAIL both inherited (R8STALE same as A3g gate; TOOLSTALE launch-tree age). LATCHECK/BPC/G0 pending -> gate_R1.otrun.log, gate_R1/g0.status.
+- v1n lever: kit_dly_ram wide mode PUSHED main 80de880655b (pad_ram.wide_min_d; W>1 ot_dp_dly D>=thr -> lead + RAM per 256b slice + residual under original name; verilator cycle-exact test). Probe on K3g: v1n 326k model (~365k nontap, UNDER), v3 276k (~309k).
+- Row R2 = R1 + ROWS_KV-PV-CAP-WIDERAM.py (8516f1460388, wide_min_d 32 on v1n/v3/v3n/v12) -> row/plan_pvcap_R2.json a8788103ca48. Gate R2: row/gate_pvcap2.sh (GATE_RT=rt 9f95aa48604b), log gate_R2.otrun.log. A3g kit_rtl+PADRAM probe: a3g/ (a3g.otrun.log).
+- D29 kv3_pv_v3 hold (kit_wave eb9e50a) still mine: release after R2 rows land with KV-ALLFIX.
