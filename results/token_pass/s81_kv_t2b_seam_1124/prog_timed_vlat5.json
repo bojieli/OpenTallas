@@ -18,11 +18,11 @@
     "old",
     "old_CN",
     "old_CP",
+    "old_GK",
     "old_IK",
     "old_KV"
   ],
   "missed": [],
-  "old_gk_tolerated": true,
   "source_sha256": {
     "rtl/hdc/ot_hdc_fastfp.sv": "d275d61a0f0cf5f45cdc6a89793bf8b858dad2d538f9368e2c75a189efee1db1",
     "rtl/hdc/ot_hdc_fp32_f12.sv": "076d6ac311d801ec9e2e9fa88b758c9a8764715f1e688f6eaac8442e7da6f414",
@@ -87,12 +87,12 @@
     "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "42525bda6a091a32d042c592128ca68fdbb2a706a09613849b56884aa47c8c5d",
     "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "58752b6b0760b3bc672f08e71ccff9e3e3a80597f61986807a2a8df200262e14",
     "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kvcn.sv": "edb428e83a27eed46c65ad95331e51b0d67949e32a871ac266f6a9abb78353fb",
-    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_kv_prog_timed.sv": "33e6859a40c572c5ef92a7741c3ac81111c725b4980484b4dd9c07af8b69b2b2"
+    "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_kv_prog_timed.sv": "cace30ec893628691490a1289a35dd89b69111a9488d37e620e748313cf460a1"
   },
   "results": {
     "new": {
       "passed": true,
-      "image_sha256": "4171d4276a22531e52d828ce4d7f9bf952f44c8363203a64f524f6921dd74dbb",
+      "image_sha256": "45b9be7bb37f596bf62f5ee4c9bf37d6e774cfe433ab38ba531581fdb0c787dd",
       "lines": [
         "KVPROG READ CP edge=603 base=692 words=512 mismatches=0",
         "KVPROG READ CNQ edge=2856 base=672 words=256 mismatches=0",
@@ -107,42 +107,51 @@
     },
     "old": {
       "passed": false,
-      "image_sha256": "b7634b4947cf914264f90cb5a711c4c1197c87a740e73ffadba48dc6738707aa",
+      "image_sha256": "3bea5a5d6028fae32d893362724073186b731ff077ed058fe97f417daeb89d0b",
       "lines": [
         "KVPROG DATE first write job 0 compiled=342 measured=-1",
+        "KVPROG DATE port free job 0 compiled=593 busy=1",
         "KVPROG READ CP edge=595 base=692 words=512 mismatches=16",
+        "KVPROG DATE port free job 1 compiled=1619 busy=1",
         "KVPROG DATE first write job 2 compiled=2650 measured=-1",
+        "KVPROG DATE port free job 2 compiled=2838 busy=1",
         "KVPROG READ CNQ edge=2840 base=672 words=256 mismatches=0",
         "KVPROG READ CNR edge=2840 base=736 words=256 mismatches=16",
         "KVPROG READ CNN edge=2840 base=800 words=256 mismatches=0",
+        "KVPROG DATE port free job 3 compiled=3868 busy=1",
         "KVPROG DATE first write job 4 compiled=4899 measured=-1",
+        "KVPROG DATE port free job 4 compiled=4927 busy=1",
         "KVPROG READ IKQ edge=4929 base=672 words=64 mismatches=63",
         "KVPROG READ IKR edge=4929 base=688 words=64 mismatches=18",
+        "KVPROG DATE port free job 5 compiled=5957 busy=1",
         "KVPROG DATE first write job 6 compiled=6988 measured=-1",
+        "KVPROG DATE port free job 6 compiled=7088 busy=1",
         "KVPROG READ KV edge=7090 base=672 words=400 mismatches=392",
-        "KVPROG commands=7 reads=7 mismatches=505 dates_off=4 fault=1"
+        "KVPROG commands=7 reads=7 mismatches=505 dates_off=11 fault=1"
       ]
     },
     "old_CN": {
       "passed": false,
-      "image_sha256": "8b2eb2ac9b52ee83f5adcfc14840385ddcfbc33bc0f25b52d549978c519a8c3e",
+      "image_sha256": "b0829396191e921432326d2dfce7d9df0711f087179b8a95df04ca2b4a948e95",
       "lines": [
         "KVPROG READ CP edge=603 base=692 words=512 mismatches=0",
         "KVPROG DATE first write job 2 compiled=2662 measured=-1",
+        "KVPROG DATE port free job 2 compiled=2850 busy=1",
         "KVPROG READ CNQ edge=2852 base=672 words=256 mismatches=0",
         "KVPROG READ CNR edge=2852 base=736 words=256 mismatches=16",
         "KVPROG READ CNN edge=2852 base=800 words=256 mismatches=0",
         "KVPROG READ IKQ edge=4949 base=672 words=64 mismatches=63",
         "KVPROG READ IKR edge=4949 base=688 words=64 mismatches=18",
         "KVPROG READ KV edge=7118 base=672 words=400 mismatches=0",
-        "KVPROG commands=7 reads=7 mismatches=97 dates_off=1 fault=1"
+        "KVPROG commands=7 reads=7 mismatches=97 dates_off=2 fault=1"
       ]
     },
     "old_CP": {
       "passed": false,
-      "image_sha256": "6c13077443dcb9ecda53d3d03a9e9163e1680aeed1c7162d07eca67fc04fda28",
+      "image_sha256": "b5dc37a16916d8a3537836880e650bd1d3a818276e6c09977a18a4a44d71ceb9",
       "lines": [
         "KVPROG DATE first write job 0 compiled=342 measured=-1",
+        "KVPROG DATE port free job 0 compiled=593 busy=1",
         "KVPROG READ CP edge=595 base=692 words=512 mismatches=16",
         "KVPROG READ CNQ edge=2848 base=672 words=256 mismatches=0",
         "KVPROG READ CNR edge=2848 base=736 words=256 mismatches=0",
@@ -150,42 +159,45 @@
         "KVPROG READ IKQ edge=4945 base=672 words=64 mismatches=0",
         "KVPROG READ IKR edge=4945 base=688 words=64 mismatches=0",
         "KVPROG READ KV edge=7114 base=672 words=400 mismatches=0",
-        "KVPROG commands=7 reads=7 mismatches=16 dates_off=1 fault=1"
+        "KVPROG commands=7 reads=7 mismatches=16 dates_off=2 fault=1"
       ]
     },
     "old_GK": {
-      "passed": true,
-      "image_sha256": "a1fb234d359700a74b8cedc20b82bfed74c0f3b5def582924c47ee18a6ee5fdc",
+      "passed": false,
+      "image_sha256": "b49813f032a443906752d209afbcc779151dd3c7ad2a88a0d7f10d35d4be4438",
       "lines": [
         "KVPROG READ CP edge=603 base=692 words=512 mismatches=0",
+        "KVPROG DATE port free job 1 compiled=1627 busy=1",
         "KVPROG READ CNQ edge=2852 base=672 words=256 mismatches=0",
         "KVPROG READ CNR edge=2852 base=736 words=256 mismatches=0",
         "KVPROG READ CNN edge=2852 base=800 words=256 mismatches=0",
+        "KVPROG DATE port free job 3 compiled=3880 busy=1",
         "KVPROG READ IKQ edge=4945 base=672 words=64 mismatches=0",
         "KVPROG READ IKR edge=4945 base=688 words=64 mismatches=0",
+        "KVPROG DATE port free job 5 compiled=5973 busy=1",
         "KVPROG READ KV edge=7110 base=672 words=400 mismatches=0",
-        "KVPROG commands=7 reads=7 mismatches=0 dates_off=0 fault=0",
-        "KVPROG PASS"
+        "KVPROG commands=7 reads=7 mismatches=0 dates_off=3 fault=0"
       ]
     },
     "old_IK": {
       "passed": false,
-      "image_sha256": "f15ab4c84b1dad3d93d1ee3760d0e826769b7be38581bd9166138db6391f74ca",
+      "image_sha256": "617c99c2164ebc366486dd78e74f90d41cd31ed8716037538bd1513c7cd26163",
       "lines": [
         "KVPROG READ CP edge=603 base=692 words=512 mismatches=0",
         "KVPROG READ CNQ edge=2856 base=672 words=256 mismatches=0",
         "KVPROG READ CNR edge=2856 base=736 words=256 mismatches=0",
         "KVPROG READ CNN edge=2856 base=800 words=256 mismatches=0",
         "KVPROG DATE first write job 4 compiled=4919 measured=-1",
+        "KVPROG DATE port free job 4 compiled=4947 busy=1",
         "KVPROG READ IKQ edge=4949 base=672 words=64 mismatches=0",
         "KVPROG READ IKR edge=4949 base=688 words=64 mismatches=5",
         "KVPROG READ KV edge=7118 base=672 words=400 mismatches=392",
-        "KVPROG commands=7 reads=7 mismatches=397 dates_off=1 fault=0"
+        "KVPROG commands=7 reads=7 mismatches=397 dates_off=2 fault=0"
       ]
     },
     "old_KV": {
       "passed": false,
-      "image_sha256": "7294e4b7e7de1bf365cba19fcd4af7af4635b29630bb19bdcd9aa7a7d71ee04a",
+      "image_sha256": "e328167bc362cd5224f085d962784934838489f117d6ea0a6537f1713c2049ad",
       "lines": [
         "KVPROG READ CP edge=603 base=692 words=512 mismatches=0",
         "KVPROG READ CNQ edge=2856 base=672 words=256 mismatches=0",
@@ -194,8 +206,9 @@
         "KVPROG READ IKQ edge=4953 base=672 words=64 mismatches=0",
         "KVPROG READ IKR edge=4953 base=688 words=64 mismatches=0",
         "KVPROG DATE first write job 6 compiled=7016 measured=-1",
+        "KVPROG DATE port free job 6 compiled=7116 busy=1",
         "KVPROG READ KV edge=7118 base=672 words=400 mismatches=4",
-        "KVPROG commands=7 reads=7 mismatches=4 dates_off=1 fault=0"
+        "KVPROG commands=7 reads=7 mismatches=4 dates_off=2 fault=0"
       ]
     }
   }

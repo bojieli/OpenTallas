@@ -63,6 +63,8 @@ module tb_s81sl_kv_prog_timed #(parameter integer VLAT = 4, HARD_RQ = 0, paramet
    end
    if(op[k]=="W" && firstwr[a0[k]]!=edge_n)begin late=late+1;$display("KVPROG DATE first write job %0d compiled=%0d measured=%0d",a0[k],edge_n,firstwr[a0[k]]);end
    if(op[k]=="E" && lastrd>edge_n)begin late=late+1;end
+   // port free: the slice muxes the leaf port on busy, so the A-side busy must be low on the compiled free edge
+   if(op[k]=="F" && busy)begin late=late+1;$display("KVPROG DATE port free job %0d compiled=%0d busy=1",a0[k],edge_n);end
   end
  end
  // a job's last store read must not come after its compiled last-read bound (checked when the next command is captured)
@@ -85,6 +87,7 @@ module tb_s81sl_kv_prog_timed #(parameter integer VLAT = 4, HARD_RQ = 0, paramet
    op[nev]=t;
    if(t=="L")rc=$fscanf(fd,"%d %s %d %d",ev[nev],file[nev],a0[nev],a1[nev]);
    else if(t=="C")rc=$fscanf(fd,"%d %h",ev[nev],cmd[nev]);
+   else if(t=="F")rc=$fscanf(fd,"%d %d",ev[nev],a0[nev]);
    else if(t=="E")begin rc=$fscanf(fd,"%d %d",ev[nev],a0[nev]);ebound[a0[nev]]=ev[nev];end
    else rc=$fscanf(fd,"%d %d %s",ev[nev],a0[nev],kd[nev]);
    if(ev[nev]>last_edge)last_edge=ev[nev];

@@ -8,7 +8,9 @@ dates.  They are the compiler dates of a component programme, not a token calend
 
   kv_seam_image.py --seam 2 2 --vp-sr 0 --out DIR          image.txt + program.json per variant in DIR/<variant>/
 Variants: new; old (every kind at the uncut dates); old_<KIND> (that kind alone).
-image.txt lines:  L edge file lo hi | C edge c_d_hex | W edge job kind | E edge job | R edge job kind
+image.txt lines:  L edge file lo hi | C edge c_d_hex | W edge job kind | E edge job | R edge job kind | F edge job
+F = the compiled port-free edge (capture + done_age + 1): the A-side busy level must be low there, so every job's
+done date (GK included) is checked against the RTL, not only the dates whose outputs are read.
 """
 import argparse, json, sys
 from pathlib import Path
@@ -109,6 +111,8 @@ def image(program, sched, vp_sr):
         edge, body = commands[j['id']]
         ev.append((edge, f'C {edge} {body:040x}'))
         ev.append((j['residency'][0]['last_read_edge'], f"E {j['residency'][0]['last_read_edge']} {n}"))
+        free = edge + j['done_age'] + 1                                       # the compiler frees the leaf port here
+        ev.append((free, f"F {free} {n}"))
         if j['kind'] != 'GK':
             ev.append((j['first_output_write_edge'], f"W {j['first_output_write_edge']} {n} {j['kind']}"))
             ev.append((j['output_ready_edge'], f"R {j['output_ready_edge']} {n} {j['kind']}"))

@@ -23,13 +23,13 @@ for variant in sorted(p.name for p in imgs.iterdir() if (p/'image.txt').exists()
  results[variant]=dict(passed=rc==0 and 'KVPROG PASS' in s,image_sha256=hashlib.sha256((d/'image.txt').read_bytes()).hexdigest(),
   lines=[l for l in s.splitlines() if l.startswith('KVPROG') and 'CMD' not in l])
 assert pins=={p:hashlib.sha256((G.ROOT/p).read_bytes()).hexdigest() for p in pins},'source changed'
-# old_GK alone is the one date error that the RTL tolerates: command and drain cross the same seam, so a GK back-to-back
-# successor still reaches B after B is done.  It is reported, not required to fail.
-must=[v for v in results if v not in ('new','old_GK')]
+# Every old-date mutant must fail, old_GK included: its successor is serial inside B, but the port-free check (A-side busy
+# low on the compiled free edge) catches the early free date that would hand the slice port to vs while busy holds it.
+must=[v for v in results if v!='new']
 ok=results['new']['passed'] and all(not results[v]['passed'] for v in must)
 r=dict(status='PASS' if ok else 'FAIL',params=params,caught=[v for v in must if not results[v]['passed']],
-       missed=[v for v in must if results[v]['passed']],old_gk_tolerated=results.get('old_GK',{}).get('passed'),source_sha256=pins,results=results)
+       missed=[v for v in must if results[v]['passed']],source_sha256=pins,results=results)
 (out/'result.json').write_text(json.dumps(r,indent=2)+'\n')
-print(r['status'],'caught',r['caught'],'missed',r['missed'],'old_GK passes',r['old_gk_tolerated'])
+print(r['status'],'caught',r['caught'],'missed',r['missed'])
 for v,x in results.items():print('==',v,x['passed']);print('\n'.join(x['lines']))
 sys.exit(0 if ok else 1)
