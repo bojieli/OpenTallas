@@ -131,8 +131,8 @@ def test_any_plan_extra_classifies_by_plan_name():
     c["plans"]["a"].update(plan_types={"t_signed": "m1", "t_open": "m2"}, signed_types={"t_signed": ["r"]})
     rows = [("s81", "t_signed", "type"), ("s81", "t_open__a1_0101", "type"), ("s81", "m2", "type"), ("s81", "old_svc_x", "type"), ("qwen_compute", "gone", "type")]
     r = CH.any_plan_extra(c, rows, by_die=True)
-    assert r == {"defer": {"s81": 2}, "retired": {"s81": 1, "qc": 1}}      # t_open (variant-stripped) and its module name m2 are separate units
-    assert CH.any_plan_extra(c, rows) == 4
+    assert r == {"defer": {"s81": 1}, "retired": {"s81": 1, "qc": 1}}      # COUNT-PRIVATE-1124: module name m2 IS type t_open, counted once
+    assert CH.any_plan_extra(c, rows) == 3
 
 
 def test_repeat_run_in_the_hour_still_prints_the_summary(env, capsys):
@@ -154,3 +154,42 @@ def test_archive_element_alias_maps_misnamed_export(tmp_path):
     p.write_text("die\tarchived_element\telement\treason\nqc\tx_bad\tx\tr\nshort\n")
     assert CH.load_element_alias(str(p)) == {("qc", "x_bad"): "x"}
     assert CH.load_element_alias(str(tmp_path / "missing.tsv")) == {}
+
+
+def test_module_named_export_of_a_signed_type_is_not_deferred():
+    # COUNT-PRIVATE-1124: ot_s81hd_ctl / qfd_qc_slw_sc / s81p_slice_station__t36 are the plan modules of signed types (18 double counts 11-24)
+    c = {"plans": {"h": {"die": "s81_head", "plan_types": {"hd_ctl": "ot_s81hd_ctl"}, "signed_types": {"hd_ctl": ["r"]}}}}
+    assert CH.any_plan_extra(c, [("s81_head", "ot_s81hd_ctl", "t"), ("s81_head", "ot_s81hd_ctl__a1_1117", "t")]) == 0
+
+
+def _priv_cache():
+    return {"plans": {"q": {"die": "qwen_compute", "plan_types": {"slw_fe_v1__clfe325744__cl08d14f0d": "qfd_fe_a", "sle_x__clfde1249e": "qfd_x",
+                                                                  "coll_bare": "qfd_coll", "sle_y__pv41c959f3": "qfd_y"},
+                            "signed_types": {"sle_y__pv41c959f3": ["r"]}, "signed_designs": {}}}}
+
+
+def _u(el, odb="o1", src="AUTO-EXPORT-1118 intel1:/p/private/k/signoff/signoff.json"):
+    return dict(die="qwen_compute", element=el, kind="t", odb_sha=odb, src=src)
+
+
+def test_archived_private_signoff_counts_on_current_plan_once():
+    c = _priv_cache()
+    units = [_u("slw_fe_v1__clfe325744__cl08d14f0d"), _u("qfd_fe_a", "o2"), _u("sle_y__pv41c959f3", "o3")]
+    c2, cr = CH.credit_archived(c, units, {}, [], [], alias={})
+    assert [(d, t) for d, t, _ in cr] == [("qwen_compute", "slw_fe_v1__clfe325744__cl08d14f0d")]   # its module export is the same type; pv41 already signed
+    assert "slw_fe_v1__clfe325744__cl08d14f0d" in c2["plans"]["q"]["signed_types"] and "slw_fe_v1__clfe325744__cl08d14f0d" not in c["plans"]["q"]["signed_types"]
+    assert CH.rate_row(c2, "2026-11-24 12:05").startswith("2026-11-24 12:05 2 ")
+    assert CH.any_plan_extra(c2, [(u["die"], u["element"], "t") for u in units]) == 0
+
+
+def test_archived_credit_respects_revoked_hold_and_bare_names():
+    c = _priv_cache()
+    led = {"o1": ("intel1", "/p/private/k/signoff/signoff.json", "v1"), "o4": ("intel1", "/held/k/signoff/signoff.json", "v4")}
+    units = [_u("sle_x__clfde1249e", "o1"), _u("coll_bare", "o5"), _u("slw_fe_v1__clfe325744__cl08d14f0d", "o4")]
+    rev = [("sle_x__clfde1249e", "sha256:v1")]
+    _, cr = CH.credit_archived(c, units, led, rev, ["intel1:/held/k"], alias={})
+    assert cr == []                                      # PENDING-LEC by netlist sha; HOLD dir; a bare name is not proof of the current block
+    _, cr = CH.credit_archived(c, [_u("sle_x__clfde1249e", "o9")], {}, rev, [], alias={})
+    assert cr == []                                      # no ledger entry: netlist unknown, a revoked type stays out
+    _, cr = CH.credit_archived(c, [_u("sle_x__clfde1249e", "o1")], led, [("sle_x__clfde1249e", "sha256:other")], [], alias={})
+    assert len(cr) == 1                                  # another netlist of that type was revoked, this one counts

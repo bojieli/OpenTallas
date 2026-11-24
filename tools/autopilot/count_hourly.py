@@ -26,6 +26,7 @@ COUNTER = os.environ.get("COUNT_TOOL", str(COORD / "tools" / "release_tree_plan.
 COMMIT = os.environ.get("COUNT_COMMIT", str(COORD / "bin" / "coord-commit.sh"))
 STATE = Path(os.environ.get("COUNT_STATE", str(HOME / ".local/state/fleet-viz")))
 RATE = "lanes/SIGN-RATE.tsv"
+LEDGER = Path(os.environ.get("COUNT_LEDGER", str(HOME / ".local/state/ot-auto-export/ledger.json")))
 FRESH_S = 30 * 60
 SCAN_TIMEOUT_S = 25 * 60
 DIES = (("s81", "s81"), ("s81_head", "head"), ("qwen_compute", "qc"), ("qwen_kvsys", "kv"), ("hbm", "hbm"))
@@ -67,17 +68,125 @@ def index_rows(index_json):
     return rows
 
 
+def index_units(index_json):
+    """-> [dict(die, element, kind, odb_sha, src)] of the ARCHIVED / RTX-FULL rows of the mirrored AGIdock INDEX.tsv (same filter as index_rows)"""
+    try:
+        a = json.loads(Path(index_json).read_text())
+    except (OSError, ValueError):
+        return []
+    out = []
+    for ln in (a.get("agidock_index_tsv") or "").splitlines()[1:]:
+        f = ln.split("\t")
+        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
+            out.append(dict(die=f[0], element=f[1], kind=f[2], odb_sha=f[7], src=f[11] if len(f) > 11 else ""))
+    return out
+
+
+def ledger_by_odb(path):
+    """AUTO-EXPORT ledger (~/.local/state/ot-auto-export/ledger.json) -> {odb sha256: (scan host, signoff.json path, 6_final.v sha256)}"""
+    try:
+        units = json.loads(Path(path).read_text()).get("units") or {}
+    except (OSError, ValueError, AttributeError):
+        return {}
+    out = {}
+    for key, u in units.items():
+        if not isinstance(u, dict) or u.get("state") != "done" or not u.get("odb_sha"):
+            continue
+        out[u["odb_sha"]] = (u.get("host") or key.partition(":")[0], u.get("signoff") or "", (u.get("shas") or {}).get("6_final.v") or "")
+    return out
+
+
+def stop_rows(coord):
+    """COUNT-REVOKED rows (name, key) and COUNT-DO-NOT-COUNT HOLD dirs, read like release_tree_plan.revoked_rows / split_dnc"""
+    rev, hold = [], []
+    try:
+        for ln in (Path(coord) / "lanes" / "COUNT-REVOKED.tsv").read_text().splitlines():
+            f = [x.strip() for x in ln.split("\t")]
+            if ln.strip() and not ln.startswith("#") and len(f) >= 3 and f[1] and f[2]:
+                rev.append((f[1], f[2]))
+    except OSError:
+        pass
+    try:
+        for ln in (Path(coord) / "lanes" / "COUNT-DO-NOT-COUNT.tsv").read_text().splitlines():
+            f = ln.split("\t")
+            if not ln.startswith("#") and len(f) >= 2 and f[1].strip() == "HOLD":
+                hold.append(f[0].strip())
+    except OSError:
+        pass
+    return rev, hold
+
+
+DIGEST_NAME = re.compile(r"__(?:cl|pv)[0-9a-f]{8,10}$")   # the type name carries its plan block digest, so the name IS the current block
+
+
+def credit_archived(cache, units, ledger, rev, hold, alias=None):
+    """COUNT-PRIVATE-1124 (flow review #3): a sign-off from a private kit or lane dir reaches the count only through the AGIdock INDEX
+    (AUTO-EXPORT ledger), never through the wave scan, so even an EQUIVALENT one stayed 'deferred' until someone wrote a COUNT-CREDIT row
+    (sle_st_b_v2 pv41c959f3, slw_fe_v1 cl08d14f0d).  An archived unit whose name (alias, VARIANT, module -> type) is a current-plan TYPE
+    whose name carries its block digest, not yet signed there, and not stopped by COUNT-REVOKED (name + 6_final.v sha or host:dir) or a
+    COUNT-DO-NOT-COUNT HOLD dir, is credited as a signed type of that plan, once per type.  A unit with no ledger entry is credited only
+    when no COUNT-REVOKED row names its type (its netlist is unknown).  -> (cache copy, [(die, type, src)])"""
+    alias = load_element_alias() if alias is None else alias
+    cache = json.loads(json.dumps(cache))
+    owner = {}
+    for e in (cache.get("plans") or {}).values():
+        signed = set(e.get("signed_types") or {}) | set(e.get("signed_cores") or {}) | set(e.get("signed_designs") or {})
+        for t, m in (e.get("plan_types") or {}).items():
+            owner[(e.get("die"), t)] = (e, signed)
+            if m and m != t:
+                owner.setdefault((e.get("die"), "\0mod\0" + m), (e, t))
+    credited = []
+    for u in units:
+        die, el = u["die"], alias.get((u["die"], u["element"]), u["element"])
+        base = VARIANT.sub("", el)
+        for cand in (el, base):
+            m = owner.get((die, "\0mod\0" + cand))
+            if m:
+                base = m[1]
+                break
+        else:
+            base = el if (die, el) in owner else base
+        hit = owner.get((die, base))
+        if not hit or not DIGEST_NAME.search(base) or base in hit[1]:
+            continue
+        host, signoff, vsha = ledger.get(u.get("odb_sha") or "", ("", "", ""))
+        names = {el, base, u["element"]}
+        stop = False
+        for name, key in rev:
+            if name not in names:
+                continue
+            if not vsha:
+                stop = True
+            elif key.startswith("sha256:"):
+                stop = stop or key[7:] == vsha
+            else:
+                h, _, d = key.partition(":")
+                stop = stop or (h == host and signoff.startswith(d.rstrip("/") + "/"))
+        for k in hold:
+            h, _, d = k.partition(":")
+            stop = stop or (bool(signoff) and h == host and signoff.startswith(d.rstrip("/") + "/"))
+        if stop:
+            continue
+        e, signed = hit
+        e.setdefault("signed_types", {})[base] = ["INDEX-CREDIT " + (u.get("src") or "")[:300]]
+        signed.add(base)
+        credited.append((die, base, u.get("src") or ""))
+    return cache, credited
+
+
 def any_plan_extra(cache, rows, by_die=False):
     """archived (AGIdock INDEX) units that the current plan's signed set does not hold, split (COORD r711 correction 11-18):
     deferred = name or VARIANT-stripped name is a type / type module / hard core of that die's current plan that is NOT signed there (the re-sign backlog);
     retired  = no current-plan name at all (old-plan units: QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that will never be re-signed.
     Units already signed on the current plan are in neither.  -> total int, or with by_die {"defer": {short: n}, "retired": {short: n}}"""
-    plan_k, signed_k = {}, {}
+    plan_k, signed_k, mod_t = {}, {}, {}
     for e in (cache.get("plans") or {}).values():
         k = plan_k.setdefault(e.get("die"), set())
         sk = signed_k.setdefault(e.get("die"), set())
         for t, m in (e.get("plan_types") or {}).items():
             k.add(t); k.add(m)
+            if m and m != t:
+                mod_t[(e.get("die"), m)] = t
         for x in (e.get("hard_cores") or []):
             k.add(x)
         for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}) + list(e.get("signed_designs") or {}):
@@ -87,6 +196,9 @@ def any_plan_extra(cache, rows, by_die=False):
     for die, el, kind in rows:
         el = alias.get((die, el), el)
         base = VARIANT.sub("", el)
+        # COUNT-PRIVATE-1124: a unit archived under its plan MODULE name (ot_s81hd_ctl, qfd_qc_slw_sc, s81p_slice_station__t36) is that
+        # type, counted once: it used to count again as 'deferred' while the type was signed (18 units on the 11-24 hub data)
+        el, base = mod_t.get((die, el), el), mod_t.get((die, base), base)
         sk, pk = signed_k.get(die, set()), plan_k.get(die, set())
         if el in sk or base in sk:
             continue
@@ -200,7 +312,12 @@ def run(now=None, scan=None, commit=None, force=None):
     if now - float(cache.get("generated") or 0) >= FRESH_S:
         print("count_hourly: cache still %d min old after the scan, no row" % ((now - float(cache.get("generated") or 0)) / 60), file=sys.stderr)
         return 1
-    row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)), any_plan_extra(cache, index_rows(CACHE.with_name("agidock_archive_index.json")), by_die=True))
+    idx = CACHE.with_name("agidock_archive_index.json")
+    rev, hold = stop_rows(COORD)
+    cache, credited = credit_archived(cache, index_units(idx), ledger_by_odb(LEDGER), rev, hold)
+    for die, t, src in credited:
+        print("count_hourly: INDEX-CREDIT %s/%s (%s)" % (die, t, src[:160]))
+    row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)), any_plan_extra(cache, index_rows(idx), by_die=True))
     p = COORD / RATE
     last = last_total(p.read_text() if p.exists() else "")
     total = int(row.split(" ")[2])
