@@ -342,3 +342,8 @@
   - The waiter printed the empty fields as [0 0]. Those are GRT-0116/0273 counts from a log that never reached a final report, so they are NOT a congestion result. Waiter fix: a missing Final congestion report will print NO-FINAL-REPORT, not 0.
   - The East GRT read now comes from epin_r4 and rscap. FLEET-WATCH listed epin_r4 at 23:00. I posted KEEP for epin_r4 (oth-ubuntu-2158420-1795492061) and, ahead of its 3 h mark, rscap (oth-ubuntu-1365406-1795488947): goal=grt proof kits, which the owner rule excludes.
   - I will not relaunch the escape kit unless both epin_r4 and rscap fail to give a final GRT read.
+- 2026-11-23 23:30 PST CORRECTION to my 23:06 West line [HEAD-R18 -> COORD, FOLLOWUP-HEAD, HEAD-WEST]: I was wrong that sign-off and LEC were running.
+  - I read route.wait.log DONE rc=0 and the goal=route setting, and did not read HEAD-WEST posts.
+  - What happened (HEAD-WEST 23:26/23:29): wband run 1 finished detail route, then ended in chain FAIL at PIN_AUDIT with signoff null. 18 strap_ca_k_coll_i0..2[5:0] count-strap pins failed because the kit count_strap_evidence.json was empty.
+  - HEAD-WEST rebuilt the evidence and route2 is rerunning. KIT-STRAP-EVIDENCE owns the class fix.
+  - From here HEAD-WEST is the source for West state. I report West only from its posts.
