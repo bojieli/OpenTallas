@@ -45,17 +45,17 @@ def test_cfg_of():
 
 def test_apply_selects_d2_plain_only():
     out, st = ka.apply(bound())
-    assert st["selected"] == 5 and st["kept_d1"] == 1 and st["keep_cells"] == 1
+    assert st["selected"] == 5 and st["keep_selected"] == 1 and st["kept_d1"] == 1
     assert re.search(r"^\s*ot_dp_dly #\(\.W\(3\), \.D\(1\)\) u_l1\b", out, re.M)
-    assert re.search(r"^\s*ot_dp_dly_keep #\(\.W\(3\), \.D\(4\)\) u_k\b", out, re.M)
+    assert re.search(r"^\s*ot_dp_dly_keep_ap #\(\.W\(3\), \.D\(4\)\) u_k\b", out, re.M)
     for n in (2, 3, 4, 5, 8):
         assert re.search(rf"^\s*ot_dp_dly_ap #\(\.W\(3\), \.D\({n}\)\) u_l{n} \(", out, re.M)
-    assert out.count("module ot_dp_dly_ap") == 1
-    assert st["inv_removed_est"] == 3 * (2 + 2 + 4 + 4 + 8)
+    assert out.count("module ot_dp_dly_ap") == 1 and out.count("module ot_dp_dly_keep_ap") == 1
+    assert st["inv_removed_est"] == 3 * (2 + 2 + 4 + 4 + 8 + 4)
     with pytest.raises(ValueError):
         ka.apply(out)
     _, st4 = ka.apply(bound(), min_d=4)
-    assert st4["selected"] == 3
+    assert st4["selected"] == 3 and st4["keep_selected"] == 1
 
 
 def test_apply_kit_in_place(tmp_path):

@@ -10,8 +10,9 @@ inverters (D even) or 1 inverter (D odd).  Measured with the ASAP7 SEQ lib (dffl
 Same cycles, same function: ot_dp_dly_ap #(.W, .D) is cycle-exact to ot_dp_dly #(.W, .D) (q(t) = d(t - D)), reset-less like it,
 so bind, bind_latency, LATCHECK and the R8 table are untouched (the pass runs on the kit's staged bound RTL).  LEC is kit RTL vs
 netlist, both after this pass.  Instance and register names are unchanged (u_<x>.r[i]), so siting passes keep working.
-Selected: every `ot_dp_dly` instance of the staged *_bound.sv files with D >= min_d (default 2).  ot_dp_dly_keep (tail copies,
-kept registers: their kept wire keeps the inverter) and D = 1 lines (no inner hop) are left as bound.
+Selected: every `ot_dp_dly` / `ot_dp_dly_keep` instance of the staged *_bound.sv files with D >= min_d (default 2) -> ot_dp_dly_ap /
+ot_dp_dly_keep_ap (keep on the stage flops instead of the stage wires, so tail copies stay separate and lose the inverter too).
+D = 1 lines (no inner hop) are left as bound.
 Hold: the inverter gave a same-tap zero-logic pair about 7 ps of FF hold (35 + 7 - 2 = 40 ps, gen_phys.dly_lockup_r2r_margin);
 without it about 33 ps, still >= 0 at the hold gate.  A type that uses this keeps its r2r repair target below that
 (budgets.r_dly_lockup.<base>.r2r_margin_ps), or the pre-route rr pass would pad every pair back.
@@ -41,6 +42,24 @@ module ot_dp_dly_ap #(parameter integer W = 1, parameter integer D = 1) (
     assign q = (D % 2 == 0) ? ~r[D-1] : r[D-1];
 endmodule
 """
+AP_KEEP_MODULE = """
+// KV-PV-CAP kit_dly_ap.py: ot_dp_dly_keep at alternating polarity.  The keep sits on the stage flops (the process), not on the
+// stage wires: a kept wire is a flop Q, which a QN-only library can only make with an inverter; kept flops still stop Yosys
+// from folding two tail copies of one trunk (measured: 2 x 16 x 8 copies stay 256 flops, 0 inverters).
+module ot_dp_dly_keep_ap #(parameter integer W = 1, parameter integer D = 1) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    reg [W-1:0] r [0:D-1];
+    integer i;
+    (* keep *) always @(posedge clk) begin
+        r[0] <= d;
+        for (i = 1; i < D; i = i + 1) r[i] <= ~r[i-1];
+    end
+    assign q = (D % 2 == 0) ? ~r[D-1] : r[D-1];
+endmodule
+"""
 DEFAULTS = dict(min_d=2)
 
 
@@ -59,32 +78,29 @@ def _param(params, key, default=1):
 
 def apply(txt, min_d=2):
     """-> (new text, stats).  Renames selected ot_dp_dly instances to ot_dp_dly_ap and appends the cell once."""
-    if "module ot_dp_dly_ap" in txt:
+    if "module ot_dp_dly_ap" in txt or "module ot_dp_dly_keep_ap" in txt:
         raise ValueError("kit_dly_ap: file already carries ot_dp_dly_ap (pass applied twice)")
-    edits, st = [], dict(selected=0, bits=0, stages=0, inv_removed_est=0, kept_d1=0, keep_cells=0)
+    edits, st = [], dict(selected=0, keep_selected=0, bits=0, stages=0, inv_removed_est=0, kept_d1=0)
     for mt, params, name, s, e, lp in instances(txt):
-        if mt == "ot_dp_dly_keep":
-            st["keep_cells"] += 1
-            continue
-        if mt != "ot_dp_dly":
+        if mt not in ("ot_dp_dly", "ot_dp_dly_keep"):
             continue
         w, d = _param(params, "W"), _param(params, "D")
         if d < max(2, min_d):
             st["kept_d1"] += 1
             continue
         k = txt.find(mt, s, lp)
-        if k < 0 or not re.fullmatch(r"\s*", txt[s:k]) or not re.match(r"ot_dp_dly\s*#", txt[k:]):
+        if k < 0 or not re.fullmatch(r"\s*", txt[s:k]) or not re.match(mt + r"\s*#", txt[k:]):
             raise ValueError(f"kit_dly_ap: unexpected instance text at {name}")
-        edits.append(k)
-        st["selected"] += 1
+        edits.append((k, mt))
+        st["selected" if mt == "ot_dp_dly" else "keep_selected"] += 1
         st["bits"] += w
         st["stages"] += w * d
         st["inv_removed_est"] += w * (d if d % 2 == 0 else d - 1)
     out = txt
-    for s in sorted(edits, reverse=True):
-        out = out[:s] + "ot_dp_dly_ap" + out[s + len("ot_dp_dly"):]
+    for k, mt in sorted(edits, reverse=True):
+        out = out[:k] + mt + "_ap" + out[k + len(mt):]
     if edits:
-        out = out.rstrip("\n") + "\n" + AP_MODULE
+        out = out.rstrip("\n") + "\n" + AP_MODULE + AP_KEEP_MODULE
     return out, st
 
 
