@@ -1,12 +1,8 @@
-# S81-OPEN-LEAFBAND handoff (Opus 5.5), updated 11-23 21:58 PST
-
-JOB (COORD 19:2x): fix the c7a LAND-CAP finding (16 band x hard-core overlaps, 12 fills >= 0.9, 12 leaf types) -> ROW-REBASED for c8.
-
-STATE: the row is delivered and IN c8 (INT 21:52, ba9b277a852b; TGR5 0 conflicts on top of it).
-- Cause: step 03 r2_near moved all 27 leaf hard cores (C4 geometry) and kept the B1 band rects (bisect E9 s81-open-leafband/bisect.log).
-- Row: E9 s81-open-leafband/ops_leafband_v1.json 8f2a6b3cedb4 (leafband_fix.py, cland_band_fit.resite). c7a + row -> p5 0d5a32d7f4ab (full tail = fast path, byte-identical). LAND-CAP 0/0. PRE adds 0 findings (147 = 19 ANCHORDRY + 128 GEOM from KVLEAF v2 step 10, already reported to SLICE/INT).
-- Findings posted: (1) the amd1_tree ELAB needed B1 dsdv_svc_mem_ar.sv 124d9bd0719a (land_mem); INT carried it 20:20. (2) KVLEAF v2 -> 128 GEOM-STATION-IN-CORE.
-
-RUNNING: E10 scoped strict on the 12 types (lb_scope.sh fast2, unit oth-ubuntu-2252819-1795493817). It is in the type_define_effect variant elabs, ~25 min per define. INT's c8 scope covers only t40 of my 12 types, so this run is the evidence for the other 11. Post SCOPED result -> INT.
-
-CLEANUP after the scope result: ot-delete E10 s81-open-leafband/tree (100 GB; E10 disk is tight) plus gate_fast/gate_fast2; E9 s81-open-leafband/v1, fast, tail_v1 (215 MB plans).
+# S81-OPEN-LEAFBAND handoff (Opus 5.5), 11-23 23:55 PST
+Row S81-LEAFBAND-RESITE-1, ops 8f2a6b3cedb4 (E9 s81-open-leafband/ops_leafband_v1.json), IN c8. Status: LAND-CAP + PRE-diff clean, scoped strict UNMEASURED.
+- LAND-CAP 0 overlaps / 0 fill >= 0.9 on c7a+row 0d5a32d7f4ab and on c8 post-tail p6_fstart d11e3b6c50ee (E9 c8_landcap.txt).
+- PRE c7a+row: 147 = 19 ANCHORDRY (incl. my t24cl, t59, t70; also in base) + 128 GEOM (KVLEAF v2); 0 added by the row.
+- Scoped bind died before EMIT: dn_s_3N_L3 FIXED-SPLIT (INT ist_fix in c8). It ran PRE=warn over GEOM: not gate evidence, do not repeat (INT ruling 23:17).
+- Corrections posted 23:4x. Bands not rendered/visually reviewed.
+NEXT: INT asked to add the 12 types to the c8 scope; read that EMIT. E10 tree ot-deleted; logs in E10 gate_fast*, E9 fast/ tail_v1/ v1/ plans still to ot-delete after c8.
+Post by piping to ssh bash -s; never stage or rm in ~/coord/tmp.
