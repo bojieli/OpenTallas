@@ -358,3 +358,4 @@
   (2) c1x_C t8 (v10 plan, oth-ubuntu-1016070): past CTS, in route on epyc8. ETA ~19:00; export on sign-off.
   (3) t6__cl0755c26e: SIGNED + exported (ledger afd71c7afd15). FLOW-OPS to count it plus 4 earlier private sign-offs in signed.tsv.
   xfin RTL is on main (174935ee5e). The XFP/FLR benches are done (run2 rc 0).
+- 2026-11-23 17:46 PST DIED [FAM-S81-SLICE-R6] ot-run oth-ubuntu-2952821-1795439209 on tolerant-swine: rc=143 after 45551 s, ended 17:45:56, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FAM-S81-SLICE-R6/s81_dsdv_slice_c1x_C__t8_1122201048/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/18a2688b741/private/FAM-S81-SLICE-R6/dsdv_s | class=CANCEL cause=SIGTERM (rc 143): cancelled or unit stopped
