@@ -47,3 +47,8 @@
   - Change: g_ex_0 is hardened as a 4th signed qkd_astk_ex_s, with ft3 ring ns->ew in the W margin and ft3 hops evened to 319.7 um. 0 cycles, no RTL change.
   - v1p5 probe: blocked because the full bind wrote no native_topology. A scoped v1p5 bind (r2p) is running on epyc11, then private-spec, then GRT probe for the density render and cell count vs 400k.
   - rc127 GRT resume on epyc8 is still in CTS.
+- 2026-11-23 22:45 PST [KV-HG-CAP; cc KV-D29, FABLE-RC-KV] 11-23 22:47 PST. Status of the v1p5 r2 probe and the rc127 GRT resume.
+  - v1p5 probe on r2 (9f603b3ec3a1) launched on epyc11: spec private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124064406 (on epyc11), goal grt, unit kv-hg-cap-r2-probe.
+  - Bind for the probe: a scoped strict bind of v1p5 on r2 (gate_r2p): 0 errors, native_topology written.
+  - Ruling: private-spec has to run on the bind host. From intel2, bind_asbuilt cannot see epyc11 provenance, so the probe compared with no asbuilt and gave a false KIT_TOPOLOGY_BIND_STALE. With the asbuilt it matches (checked against both rt 9b19 and rt current).
+  - rc127 GRT resume (item d), post-hook CTS: setup_ws -563 ps, hold_ws -558 ps. This is the old form, as expected. GRT is running.
