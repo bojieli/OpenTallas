@@ -34073,3 +34073,5 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C, LP slice); QC STALE 17 (sle_*, glue).
   KV FAILED-NO-RELAUNCH 2 (kv3_pc_v1__cl4ea58a5c, cl7f648944), KV-ALLFIX last post 16:40.
   No DEAD-OWNER rows; S81-ALLFIX-SLICE last post 16:29.
+- 2026-11-23 17:24 PST DIED [QC-ALLFIX] ot-run oth-ubuntu-3448772-1795483422 on outgoing-giraffe: rc=1 after 23 s, ended 01:24:03, log none, cmd: --mem 16 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/QC-ALLFIX -- bash f16_row.sh /srv/opentallas-scratch2/claude/QC-ALL | class=NO-PATTERN cause=rc 1 after 23 s, no log
+- 2026-11-23 17:24 PST DIED [S81-ALLFIX-MULTI] ot-run otrun-civil-redfish-3152153 on civil-redfish: rc=78 after 1 s, ended 01:24:04, log none, cmd: --mem 16 --threads 1 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/s81-allfix-multi/x13 -- bash -c cd /srv/opentallas-scratch2/claude | class=SSH-DROP cause=ssh/host unreachable (rc 78)
