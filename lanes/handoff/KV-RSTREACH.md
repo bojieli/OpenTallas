@@ -37,3 +37,10 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
 - REPLAY when A5t2 bind2 is green. First copy into tree_a5s plan_of_record: asbuilt_allfix_A5t2.json and r8_k3f_vport_semantic_trial_r2_1123.json (f41eecdfdcf8, or newer from the green gate). Check sidecar = 668fe and pv_col = 1976e. Then:
   ot-run --hosts epyc11 --mem 48 --threads 8 --disk 60 --dir $L -- bash $L/a5s.sh $G/A5t2/plan.json a160bc6c5c2c asbuilt_allfix_A5t2.json 445647cc300c $L/tree_a5s $L/ctl_445.txt
   (ctl_445.txt = 23/23 SAME; a5s.sh writes into $L/a5s and launch_a5s_44564). Then post ROW-REBASED.
+
+## STATE 11-24 02:52 PST
+- RESEL tool fix on main 657da2e1753c (via ot-push-main). street_rule.reset_resel now keeps one old->new relay map per landing group and refuses on a conflict or a missing edge. Tests are in test_street_rule.py (2 new). Posted to ALLFIX/TAPSPLIT/FABLE.
+- The base is now A5t3 = A5t2 + ISTSITES (ALLFIX, epyc11, rt e348b919dd39; strict ETA ~04:00). That rt has apply_spine (93a6a4f0) but not the resel fix 657da2e1. Chain control on e348b: ctl_e34.txt 23/23 SAME; launch dir launch_e348b.
+- REPLAY when A5t3 strict is green. Copy into tree_a5s plan_of_record: asbuilt_allfix_A5t3.json and the green gate's main R8 table r8_k3f_vport_semantic_trial_r2_1123.json. Check sidecar = 668fe and pv_col = 1976e. Then:
+  ot-run --hosts epyc11 --mem 48 --threads 8 --disk 60 --dir $L -- bash $L/a5s.sh $G/A5t3/plan.json <A5t3 sha12> asbuilt_allfix_A5t3.json e348b919dd39 $L/tree_a5s $L/ctl_e34.txt
+  Then post ROW-REBASED -> KV-ALLFIX, cc FABLE-RC-KV.
