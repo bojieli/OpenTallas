@@ -16,3 +16,11 @@ Base: KV-ALLFIX A3g = plan b258e3e34f22 + asbuilt A3f e9d82a711970, rt 9b19260c1
 - localhost scratchpad seamhold/: census.py, pick.py (newest 4_cts per sender, proxy = strip __suffix), stage_<host>.sh, mkvalues.py (values.json, coverage.tsv, sender-obligation.json), ROWS_KV-DIE-SEAMHOLD.py (PLAN_IN PLAN_OUT, env SEAMHOLD_VALUES).
 - First results FF/TT: hg_v3 -14.7/+15.9 (ft3_o, astk ep_zo -0.8 FF); hub_Ei -13.4/-0.8 (ft73_o).
 - Inventory: 30 sender types with an 11-12+ CTS DB, 11 by proxy, 52 none (pv family, hg_v1 family, pc split copies, hub_Wi); older (10-31..11-12) inventory running.
+## 22:5x state
+- 31 sender kits measured on epyc11 (m/<type>/{ff,tt,both}.tsv + dp/duty.tsv). 51 sender types have no post-CTS view anywhere (inventory 10-31..now, 8 hosts).
+- Duty: fclk_out is exported from the sender's LOCAL clk tap (OT_CLAND_EXPORT_REUSE fclk_out_ft3_o <- clk_t7), so per-port late-fall shift (15-27 ps) is subtracted, not chain-summed.
+- Values: A strict (exact + split copy) 11 receivers / 290 rings; B (+family proxy, defect kits m<-100 excluded as proxies) 89/93 receivers, 2241 rings. Measured value below -385 = sender defect, kit keeps the default (hgi_v8, hub_C <- pv_v12).
+- KVHEAD -50 entries contradicted: io_cor_v1 -> -157.7 (io_ft_v1 ft3_o), sys_SD_v1 -> -260.8 (io_ft_v1 ft0_o); row takes min(old,new).
+- LATE-EXPORT defects (fam-late-export.tsv): pv_v12 (D28 SINKSPREAD kit 11-23 14:29) fclk_out insertion ~960 vs data 315 -> m -650 on 53 ring outs; io_ft_v1 ft0_o -211; phy_v1 ft0_o -157; hgi_v7 ft* -118..-129; pv_v6n 3. Sender-side structural fix needed (export tap = launch-flop leaf).
+- Gates on epyc10 (sh_gate.sh): gate_strict4 / gate_fam4 (PRE vs A3g base delta + scoped strict bind hub_Eo/Wo + SDC min delta). Earlier strict/fam/2/3 runs killed (schema key in row, values updated).
+- Hub files: lanes/handoff/KV-DIE-SEAMHOLD-{fam,strict}-*.
