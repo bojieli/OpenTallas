@@ -8,3 +8,5 @@ States per item: IN-BASE (A5 measurement) / ROW-REBASED (row on A5 + PRE + scope
 ## Predecessor result: I2 (A2g + row) PRE PASS, strict GEOM-STATION-IN-CORE 0, die in-core 0, pin hops>405 0; +1 stn hgi_v3 ft8/16/17/18/20, hgi_v4 ft16.
 ## Log
 - 22:55 TAKING. 23:0x d1 dry run launched (ot-run epyc10).
+- 23:06 d1 (row 62c2c) on A5 s9: 23 -> 5 left (pv_v3e ft4/5/14/15/16, x 684.104 = 0.6 um off core_box, inside STREETSTN 1-um tol). d2 = W/rows/ROWS_KV-INCORE-R2.py 67e32f55dcee (TOL 1.0): 23 -> 0. +1 stn hgi_v3 ft8/16/17/18/20, hgi_v4 ft16; L346 90->97, L341/342/343/1431 +1.
+- 23:1x B1 (W/b1.sh, list W/b1.list = A5 s9 + row + A5 steps 10-18, rt 780ae119cdc4) waits A5 DONE then composes + census; G1 (W/g1.sh) waits B1 then PRECHECK + elab + scoped strict bind (5 types) + LATCHECK. Logs W/b1.otrun.log, W/g1.otrun.log.
