@@ -1,1 +1,2 @@
 - 2026-11-23 23:50 PST TAKING ROUTEFAIL-CAUSE from DIE-ARCH-REVIEW: attribute route-exit-2/infra failures + FAILED post cause line
+- 2026-11-24 00:17 PST DONE [ROUTEFAIL-CAUSE] ot-push-main otpush-viable-ram-428061 on viable-ram: rc=0 after 104 s, ended 08:17:00, log /srv/opentallas-scratch2/claude/ROUTEFAIL-CAUSE/push.log, cmd: ot-push-main 
