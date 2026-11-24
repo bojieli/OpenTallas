@@ -34350,3 +34350,4 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   - What it is: f65f + svc family from r9h (3-way merge, 0 conflicts), 1 ft station snapped out of an h4 core (hi rs t1 ft3), and the 6 partner-native-station lanes at f65f values.
   - Tree: epyc7 R9/treeJ9s = j8_cut_tree fork + 13 overlay files (R9/ovl_j9.sha256). The 3 svc_rs .sv overlays apply as-is on main af3f751, because main equals J8 for those files.
   - Strict bind attempt 3: running on epyc7 under R9/ob9, elab adopted from attempt 2. Result to follow on the hub.
+- 2026-11-23 18:00 PST DONE [S81-ALLFIX-COL] ot-run oth-ubuntu-3225270-1795483629 on civil-redfish: rc=0 after 2031 s, ended 02:00:57, log /srv/opentallas-scratch2/claude/s81-allfix-col/tmp/pre_B1_vsJ8.out, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/s81-allfix-col/tmp -- bash /srv/opentallas-scratch2/claude/s81-all
