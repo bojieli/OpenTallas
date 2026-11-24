@@ -27,7 +27,8 @@ never held in memory):
            macro's die-frame lower-left corner, orientation and the position's own image; merge-map stamps that image's
            overlay there, verify-map reads every one back.  Without --die-gds the output is an overlay-only stream (TOP holds
            only the SREFs) for a later stream merge.  Rows of another macro (element cores) are counted, not stamped: their
-           ROMs sit inside the core layout.
+           ROMs sit inside the core layout. A .gds.gz output is compressed as it is written and can be read by verify-map.
+           Use a fresh output path for each attempt. merge-map reserves that path and publishes only the complete stream.
 
 Pass --via-grid to use explicit, signed-LEF-bound drain coordinates from the
 base layout. The "opentallas.rom-via-grid.v1" JSON contains "lef_sha256",
@@ -50,13 +51,16 @@ cell is the cell centre, not the drawn drain position.
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import math
+import os
 import re
 import struct
 import sys
 import tempfile
+from contextlib import ExitStack, nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, BinaryIO, Callable, Iterator
@@ -330,7 +334,7 @@ def iter_structures(path: Path, collect_rects: Callable[[str], bool], top: str |
     rects = []
     refs = []
     element = None
-    with path.open("rb") as f:
+    with open_gds(path) as f:
         for rt, _dt, payload in read_records(f):
             if rt == UNITS:
                 dbu = 1.0 / real8_dec(payload[:8])
@@ -514,19 +518,40 @@ def empty_stream(out: Path, top: str, dbu_per_um: float = 1000.0) -> None:
                     + rec(ENDSTR, 0) + rec(ENDLIB, 0))
 
 
+def open_gds(path: Path) -> BinaryIO:
+    return gzip.open(path, "rb") if path.suffix == ".gz" else path.open("rb")
+
+
 def merge_map(die: Path | None, top: str, rommap: Path, m: Macro, viamap_dir: Path, out: Path, parts: list[str] | None = None,
               allow_missing: bool = False, dbu_per_um: float | None = None) -> dict[str, Any]:
-    imgs, placed, info = map_inputs(rommap, viamap_dir, m, parts, allow_missing)
-    dbu_per_um = m.grid_dbu(dbu_per_um)
-    src = die
-    if src is None:
-        src = out.with_suffix(out.suffix + ".empty")
-        empty_stream(src, top, dbu_per_um)
+    lock = out.with_name(out.name + ".writer")
+    partial = out.with_name(out.name + ".part")
     try:
-        res = merge_placed(src, top, m, imgs, placed, out)
+        lock.mkdir()
+    except FileExistsError as exc:
+        raise FileExistsError(f"{out}: writer reservation exists at {lock}") from exc
+    try:
+        for path in (out, partial):
+            if os.path.lexists(path):
+                raise FileExistsError(f"{out}: refusing to overwrite {path}")
+        imgs, placed, info = map_inputs(rommap, viamap_dir, m, parts, allow_missing)
+        dbu_per_um = m.grid_dbu(dbu_per_um)
+        with ExitStack() as stack:
+            src = die
+            if src is None:
+                tmp = Path(stack.enter_context(tempfile.TemporaryDirectory(dir=out.parent)))
+                src = tmp / "empty.gds"
+                empty_stream(src, top, dbu_per_um)
+            raw = stack.enter_context(partial.open("xb"))
+            stream = raw
+            if out.suffix == ".gz":
+                stream = stack.enter_context(gzip.GzipFile(filename="", fileobj=raw, mode="wb", compresslevel=1, mtime=0))
+            res = merge_placed(src, top, m, imgs, placed, stream)
+        # Publish without replacing a file created by a process outside this reservation.
+        os.link(partial, out)
+        partial.unlink()
     finally:
-        if die is None:
-            src.unlink()
+        lock.rmdir()
     return dict(res, **info, overlay_only=die is None)
 
 
@@ -543,7 +568,7 @@ def merge(die: Path, top: str, def_path: Path, m: Macro, manifest: Path, viamap_
 
 
 def merge_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], placed: dict[str, tuple[float, float, str]],
-                 out: Path) -> dict[str, Any]:
+                 out: Path | BinaryIO) -> dict[str, Any]:
     """one overlay structure per unique image appended to the stream, one SREF per placed instance inside ``top``"""
     missing = sorted(set(placed) - set(imgs))
     if missing:
@@ -556,14 +581,14 @@ def merge_placed(die: Path, top: str, m: Macro, imgs: dict[str, list[int]], plac
     cur = None
     top_seen = False
     if m.grid is not None:
-        with die.open("rb") as src:
+        with open_gds(die) as src:
             for rt, _, payload in read_records(src):
                 if rt == UNITS:
                     m.grid_dbu(1.0 / real8_dec(payload[:8]))
                     break
             else:
                 raise ValueError(f"{die}: no GDS UNITS record")
-    with die.open("rb") as f, out.open("wb") as o:
+    with open_gds(die) as f, (out.open("wb") if isinstance(out, Path) else nullcontext(out)) as o:
         for rt, dt, p in read_records(f):
             if rt == UNITS:
                 dbu = m.grid_dbu(1.0 / real8_dec(p[:8]))
@@ -721,7 +746,7 @@ def main() -> int:
             s.add_argument("--parts", nargs="*", default=None, help="die positions (default: all of the map)")
             s.add_argument("--allow-missing", action="store_true", help="skip (and count) ROMs with no via map file")
         if n == "merge-map":
-            s.add_argument("--out", type=Path, required=True)
+            s.add_argument("--out", type=Path, required=True, help="fresh output path ending in .gds or .gds.gz")
             s.add_argument("--dbu-per-um", type=float)
     a = ap.parse_args()
     m = Macro(a.macro, tuple(a.array_origin_um) if a.array_origin_um else None, a.via_grid)
