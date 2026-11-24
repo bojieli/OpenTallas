@@ -70,3 +70,4 @@ KV-HUB-EPZO	NONE	-	-	-	-	-	-	-	-	OUT: ROW-REBASED NONE (hold class, owned by KV-
 HUBA1 (hub revert)	47a16ce89bad	-	A3f only	-	-	-	FAIL 293	-	-	OUT: pulled (G0 overlap), superseded by new rt
 STRIPRAW	a08fcfef9c14	-	never	-	-	-	-	-	-	OUT: dropped per COORD, replaced by RSTNAME-REMAP
 2026-11-24T07:00Z	KV-PV-RSTRELAY-v3	8f760516f9ba	QUEUED-A6	pv+pv_v8 blocks from epyc10 kv-pv-rstrelay/B/plan.json; after A5 last-intake
+2026-11-24T07:02Z	KV-DIE-SEAMHOLD	dddecdff1714	QUEUED-A6	values B fam4 d8732f711777 (89 recv) or A strict4 66369a6055dc per FABLE-RC-KV family-proxy ruling; ring_hold.sender_ps_types only
