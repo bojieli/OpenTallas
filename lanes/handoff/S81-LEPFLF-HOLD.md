@@ -16,3 +16,7 @@ Re-run scoped strict once INT fixes dn_s_3N_L3; read c8 mu_LP t2 probe (if f_lf[
 ## 01:29 RIP table job (COORD)
 Posted LEP RIP TABLE: kit RIP lepe_LP 3, lepw_LP 1, _C 0; bench ri delta = RIP exactly (RIP1 +1, RIP3 +3, CRP2/WREP5/ROS3 +0).
 Bench E9 scratch3 bench/rip.sh. OPEN: read c8 bound RTL RIP (gate not emitted at 01:28); dn_s_3N_L3 rebind waits on c8.
+## 01:41 LP RIP answer (COORD, for FABLE-RC-ALL e78094d6 hold)
+0 signed records for the 4 LP types (signed-store 1821 scanned; 49 live kit dirs, none final). Live J8 891100ef774: lepw_mu_LP t2 RIP1,
+lepw_mus_LP t2 RIP3 (plan RIP1, mismatch). No J8 lepe LP kits. Table hub lanes/handoff/S81-LEPFLF-HOLD-lp_kits_rip.tsv.
+WAITING on c8: bound RTL RIP read, dn_s_3N_L3 rebind, c8 mu_LP t2 probe f_lf[2].
