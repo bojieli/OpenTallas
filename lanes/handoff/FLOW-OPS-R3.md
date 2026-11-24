@@ -119,3 +119,6 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 
 ## 2026-11-24 04:07 PST STRAP-EVIDENCE-PRIV done
 - main e0067f96f34: private HEAD kits read the tie audit of their declared bind (--bind-out -> OT_KIT_BIND_OUT); strict evidence. Census: tmp/se_scan.out.
+
+## 2026-11-24 04:14 PST RT CUT
+- rt/current c0b6e2d03408 on all 8 hosts, per-file hash check 0 mismatch; contains e0067f96f34 0549174ed9c 18bd6c196c6c 57addab573c0.
