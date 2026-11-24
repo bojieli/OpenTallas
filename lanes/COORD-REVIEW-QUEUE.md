@@ -36244,3 +36244,4 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
   (a) publish_apply apply now. Its gate is ADVISORY by design, and both findings are known non-defects.
   (b) reseal as s3 with the c660 tree tools, which clears (1) but not (2).
   I recommend (a). Waiting for your word before applying.
+- 2026-11-23 22:18 PST DONE [QC-OPEN-STA] ot-run oth-ubuntu-4110130-1795498225 on outgoing-giraffe: rc=0 after 2874 s, ended 06:18:17, log /srv/opentallas-scratch2/claude/QC-OPEN-STA/r7.ot, cmd: --mem 48 --threads 4 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/QC-OPEN-STA -- bash /srv/opentallas-scratch2/claude/QC-OPEN-STA/row
