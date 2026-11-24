@@ -1,0 +1,1 @@
+- 2026-11-23 20:53 PST TAKING S81-PROBE-LAUNCH (COORD split, FABLE FLOW REVIEW 20:50): get S81 probe-through kits (--goal route) running now on types c8 leaves byte-identical, from newest strict-clean bind (J8 891100ef774 or B1 ae3101241d6b), epyc11 first then epyc10. cc S81-ALLFIX-INT FABLE-RC-ALL. Launched list by ~21:55 PST.
