@@ -32,7 +32,7 @@ rc55	S81-ALLFIX-MULTI	SEQHOST-VLG-REP (J9 v3)	SEQHOST-VLG-STN-1	yes	c4 f347fb918
 rc59	S81-ALLFIX-MULTI	GUNIT-L1-REACH (J9 v3)	GUNIT-L1-REACH-1	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc62	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT v2 (l20s_j9.sv 9617ad7537cc) + u_sel.u_g ->	BKSEL-IDS-RSPLIT v2	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc66	S81-OPEN-CLOCK	TGR5-J9-SERDES-DENS-1 (SPARSE-TAP-1 for serdes)	-	no	-	-	-	-	-	-	-	IN-BASE (OPEN-CLOCK: TGR5-J9-SERDES-DENS-1 204->703 taps; t16 +1 tap tested as ops row)
-rc67	S81-OPEN-DEMAND	S81-J9-HOPCLASS-1 + hop re-run on composed J9 plan (~10:30, 	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
+rc67	S81-OPEN-DEMAND	RC67-HOPSITE-1 (relay_sites u_bin_leafup_i3 on c1x_C t7 + lepw_mu_C t1)	cf14e170d0df	yes	-	PASS 0/178; scoped strict 2 types 0	-	-	-	-	-	STAGED c8; residual leafup_o0 regression -> SLICE
 rc72	S81-ALLFIX-COL	COL-H9R0-UCF-MX	a820825accbe	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc78	S81-ALLFIX-COL	COL-H10-GROW 56d5a17e72bc (base of plan_final 30dd3d6e03cc) 	02b182e95344	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc79	S81-ALLFIX-COL	COL-H10-TAPGRT_J9 ef09171c92b8 + COL-H10-REACH_J9 5f8b2104a6	ef09171c92b8+5f8b2104a625	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
