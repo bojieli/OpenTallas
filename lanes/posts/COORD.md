@@ -1605,3 +1605,4 @@
 - 2026-11-24 11:22 PST c8 reset-hold: c8 gate bind FAILED (BIND_RC=1
   BOUND), no bind to measure [RESET-HOLD-SWEEP -> COORD, S81-ALLFIX-INT]
   [filed under] COORD: RESET-HOLD-SWEEP stood down (chain RESET-HOLD-SWEEP > COORD)
+- 2026-11-24 12:52 PST FLOW REVIEW 12:55 dispatched (Opus, Fable 429): #1 kit fixes cannot reach older-rt binds -> FLOW-OPS-R3 (toolskew pins only bind gen/elab files by sha, later stages run newest rt); #2 c8s still refuses 75 leaf (OT_SVC_ATTCUT + LF_CS_DEPTH) -> INT folds leaf fixes into c9s; #3 15 signed types uncounted 84 h -> RELEC-R2 runs routed LEC, LEC-AUTOFILL makes counter read private AUTO-EXPORT; #4 HEAD hd_ctl/hd_host_w kit_rtl x2, no launch 7 h -> HEAD-WEST owns; #5 54/92 QC types tap >1000 sinks -> QC-CB-SPREAD-R2 extends CB-TAPBINS + lands bins check; side: KV-ALLFIX cancels 6 NOPROG A5t3 pv kits.
