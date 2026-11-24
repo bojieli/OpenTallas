@@ -1,0 +1,1 @@
+- 2026-11-23 23:15 PST STARTED BIND-EQDEPTH (COORD split): equal-depth align groups in bind/LATCHECK, all dies [BIND-EQDEPTH -> COORD; cc S81-ALLFIX-INT, FABLE-RC-ALL] Form: plan latency.align_groups {name: {type, sources|sinks ["inst.port[hi:lo]"], max_total, max_total_with}} (also type_split SPEC key align_groups). Commit 881c489f52 is in ot-push-main tests now; rt sha follows.
