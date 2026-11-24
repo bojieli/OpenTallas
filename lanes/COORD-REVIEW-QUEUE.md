@@ -39252,3 +39252,4 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
   - Gate: PRE with ENTRYFOOT 0 on these types, then a scoped strict bind.
   - Then ROW-REBASED to KV-ALLFIX and FABLE-RC-KV. Target 05:30.
   - The v1p5 probe moves to the A5t3 bind (same hg blocks, ISTSITES only).
+- 2026-11-24 03:19 PST DONE [HEAD-EAST-REPLAN] ot-run oth-ubuntu-3063139-1795518663 on viable-ram: rc=0 after 492 s, ended 11:19:12, log /srv/opentallas-scratch2/claude/head-east-replan/tmp/chain_east_r4.otrun.log, cmd: --hosts epyc11 --no-spill --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/head-east-replan/tmp -- bash /srv/opentallas-scratch2/c
