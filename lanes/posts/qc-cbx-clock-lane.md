@@ -1,0 +1,1 @@
+- 2026-11-24 01:40 PST DIED [qc-cbx-clock-lane] ot-push-main otpush-tolerant-swine-2595674 on tolerant-swine: rc=4 after 28 s, ended 01:40:47, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 28 s, no log
