@@ -368,3 +368,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 10:15 PST CANARY qwen_kvsys @ 67a9d659af: PASS (REGRESSION grt hold_ff_ep 1597.0 -> 1914.0 1914 vs 1597 (tol +5 %); signoff setup_tt_wns 405.22 -> 385.07 -20.15 ps (tol -10); signoff hold_ff_ep 1282.0 -> 155)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 11:00 PST CANARY s81_head @ 1e5253421a: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 3 source commits (3cba4dba0571, 67a9d659af22); baseline canary-run-info /srv/opentallas-scrat)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
