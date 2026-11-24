@@ -35,3 +35,10 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/head-east-replan (clone/, tmp/,
 - rne_addr->prev_q: RTL identical r6->r7 (ot_s81hd_lep_nr.sv rne_addr[2]->u_ptr advance->hit5->prev_q); check r7 post-CTS/GRT timing.
 - goal route refused by LBL (VIS-COVERAGE hd_lep0N DRAFT). Now intel2 service head-east-r7-grt (launch_east_r7_route.sh GOAL=grt, log ~/head-east-replan/r7-grt.log).
 - Next: read r7 post-hook CTS + final 5_1_grt.odb (overflow, TT worst, rne_addr path) -> VIS row PROBE-PASS -> systemd-run head-east-r7-route (GOAL default route).
+
+## 11-24 08:4x PST r8 RNE-PAIR-COPY (COORD request)
+- Fix: lane-local duplicates addr_pz/meta_pz of partner nonempty (D rnex[t^1], partner reset) for RX SRAM + meta read pointers; 0 cycles (a +1 stage would desync SRAM ptr from rp).
+- Patch script intel1 head-east-replan/stage/rne_pair_copy.py; LEC stage/lec.sh (ot-run intel1); PROOF_1 78866/0, SELF_1 78866/0; NEG_1 + core 2 pending (cores.txt lines 2/4 are junk names, ignore).
+- Branch claude/head-east-rne-stage@952935da46 (generator hook, unmerged).
+- r8 tree intel1 trees/s81_head_east_r8 (patched split 0844883f78d0, lep_nr cda6cc323813); plan prep_east_r8 45a10ff0ef6b; bind_east_r8 all PASS (PRE baseline-only).
+- r8 kit: intel2 head-east-r8-place (launch_east_r8.sh, GOAL env), spec 1124084159, host intel1. Next: review place, then GOAL=route.
