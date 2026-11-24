@@ -11,3 +11,11 @@
   - ROW leaf t23 vp->vp, t67 vp->vp: need the TGR5 leaf taps that c6 dropped (my 19:2x FINDING) -> TGR5-LEAF-REGEN-1, running.
   hg-S81-CLOCK-TAP (2): lepe_nh_mus_C IN-BASE (XGARRAY-2: place_regions xg_ring_router/lp_xf_driver + 202 clock.taps changed J8->B1, c6 only tap_pair_affinity); leaf t71 = TGR5-LEAF-REGEN-1.
   rc66: IN-BASE TGR5-J9-SERDES-DENS-1: serdes added_taps J8 204 -> B1 703 on 11 types (t2 7->103, t13 16->112, clb45 20->112, t4 15->108, t15a 30->59, t15b 31->69, clfe 22->56, t12 15->36; t3/t14/t16 unchanged), c6 same. Residual = TGR5 03:31 REASON (tap-only cannot reach 108 ps; keepout sites = FACETAP-1, FAM-S81-SERDES-R8). t16 R7 suggested +1 tap (model 457->298 ps) is not in B1: I test it as an ops row with the leaf tail.
+- 2026-11-23 19:28 PST STATES 2/2 hg-S81-REACH (15 items) [S81-OPEN-CLOCK -> S81-ALLFIX-INT; cc FABLE-RC-ALL, S81-ALLFIX-SLICE, PRECHECK-LEDGER-R3, COORD] Same dumps (E9 s81-open-clock/d_{j8,b1,c6}).
+  - IN-COMPOSE leaf pad->crr x7 (t23 crr_vs, t29 crr_vsw, t50 crr_vsw, t54 crr_vsw/rxsb/vs; -83..-153): OT_S81SL_CRR_PRE2 die-wide in asbuilt_run_allfix (ot_s81sl_crr PRE 0 -> 2 stages; B1 wavea asbuilt lacks it) + LEAF-ALLFIX-1 r2_near crr relay re-site (c6 relay_sites on t50/t54).
+  - IN-COMPOSE leaf vp->vp x4 (t29, t38, t47, t67 yrow_d; -69..-215): row 3d junction channels in B1 + LEAF-ALLFIX-1 IST-LEAFDN-VP re-site (c6 ft_slots/internal_stations on t23/t29/t47/t67, OT_S81SL_VP_SELREP on t38). The tap half rides TGR5-LEAF-REGEN-1.
+  - IN-BASE col_h9_r0_p2 t2_payload -> y_x2_3_0 (-474.8): FAM-S81-COL-H9R0-R4 J9 HC-INPUT-REACH, relay_depth u_r0_u_t2 cci/xai/xbi + u_r0_u_t2_payload i D=1 on the placed 585 um leg (J8 none).
+  - IN-BASE lepe_nh_mus_C xg.u_r (-633) + g_u_s_NS_u (-785): FIX-S81-XG-STN reach_homes xg_ring_router (J8 none) + internal_stations 16 -> 20 + XGARRAY-2 regions.
+  - IN-COMPOSE kv512_C xg.u_s (-1287 = gf_q[2] -> SRAM wd_in): OT_S81SL_XS_GFLOCAL on the type in c6 (FABLE accepted the hold on GFLOCAL; the v9 XGA/bank/tap rows stay with S81-ALLFIX-SLICE).
+  - IN-COMPOSE eng u_hN -> hx_res (-224): ENG-HXFACE-1 503cbe8a158d (c6 step 4, hx leg 77 um, 0 cycles).
+  Probe read for all of these = INT changed-type probes (every item type changed in c6/c7). Read rule: each named path >= -42 at final GRT; vp/crr also hold >= 0.
