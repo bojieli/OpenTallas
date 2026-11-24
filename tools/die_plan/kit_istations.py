@@ -437,6 +437,21 @@ proc rs_place_all {sites} {
     }
     set stop [expr {[info exists ::env(OT_RELAY_SITES_UNMATCHED_STOP)] && $::env(OT_RELAY_SITES_UNMATCHED_STOP) eq "1"}]
     puts "OT_RELAY_SITES SEAT-MISS WARNING $miss of [dict size $sites] plan seat keys match no register (stop [expr {$stop ? "on, limit $lim" : "off"}]): [join [lrange $un 0 5] { }][expr {$miss > 6 ? { ...} : {}}]"
+    # SEAT-BANK (COORD 11-24, r703: report only, no stop): matched / unmatched per bank (key without bit index; u_pd<D>_<bus>_<bit> chains
+    # fold to the bus), banks with a miss, most missed first, and one CLASS line
+    set bh [dict create]; set bm [dict create]; set whole 0
+    dict for {k v} $sites {
+      set b [string map {/ .} $k]
+      while {[regsub {\\[[0-9]+\\]$} $b {} b]} {}
+      regsub {^(u_pd[0-9]+_.*)_[0-9]+([.][A-Za-z_]+)$} $b {\\1\\2} b
+      if {[dict exists $hit $k]} { dict incr bh $b } else { dict incr bm $b }
+    }
+    set rows {}
+    dict for {b u} $bm { set m 0; if {[dict exists $bh $b]} { set m [dict get $bh $b] } else { incr whole }; lappend rows [list $b $m $u] }
+    set rows [lsort -integer -decreasing -index 2 [lsort -index 0 $rows]]
+    foreach r [lrange $rows 0 39] { puts "OT_RELAY_SITES BANK [lindex $r 0] matched [lindex $r 1] unmatched [lindex $r 2]" }
+    if {[llength $rows] > 40} { puts "OT_RELAY_SITES BANK ... [expr {[llength $rows] - 40}] more banks with unmatched keys" }
+    puts "OT_RELAY_SITES CLASS SEAT-MISS: $miss of [dict size $sites] plan seats ([format %.1f [expr {100.0 * $miss / [dict size $sites]}]] %) seat NOTHING, [llength $rows] banks, $whole wholly unseated; worst [join [lindex $rows 0] { }] (bank matched unmatched); REPORT ONLY, the registers of these banks are in free placement"
     if {$stop && $miss > $lim} {
       error "OT_RELAY_SITES SEAT-MISS: $miss of [dict size $sites] plan relay_sites keys match no register (first: [lindex $un 0]); fix the plan key or the matcher, or raise OT_RELAY_SITES_UNMATCHED_MAX to $miss (ot_relay_sites_unmatched.txt lists them)"
     }

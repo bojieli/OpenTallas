@@ -796,6 +796,12 @@ def test_relay_sites_unmatched_key_warns_by_default_and_stops_only_on_request(tm
     assert r.returncode == 0, r.stderr                                                   # default: warning, the kit continues
     assert "SEAT-MISS WARNING 2 of 3 plan seat keys match no register (stop off): u_gone.q u_gone2.q" in r.stdout
     assert (res / "ot_relay_sites_unmatched.txt").read_text().split() == ["u_gone.q", "u_gone2.q"]
+    assert "OT_RELAY_SITES BANK u_gone.q matched 0 unmatched 1" in r.stdout
+    assert "CLASS SEAT-MISS: 2 of 3 plan seats (66.7 %) seat NOTHING, 2 banks, 2 wholly unseated" in r.stdout
+    b = _relay_tcl(tmp_path, RELAY_NORM_MOCK, "rs_place_all [dict create {u_u_plain.q} {9 9} {u_pd11_x_fw_i_236.r[3]} {1 1} {u_pd11_x_fw_i_7.r[0]} {1 1} {u_k/q[4]} {2 2}]")
+    assert b.returncode == 0, b.stderr                                                  # report only
+    assert "BANK u_pd11_x_fw_i.r matched 0 unmatched 2" in b.stdout and "BANK u_k.q matched 0 unmatched 1" in b.stdout
+    assert "CLASS SEAT-MISS: 3 of 4 plan seats (75.0 %) seat NOTHING, 2 banks, 2 wholly unseated; worst u_pd11_x_fw_i.r 0 2" in b.stdout
     import signoff as SO
     kit = tmp_path / "kit"; (kit / "run/results/asap7/d/base").mkdir(parents=True)
     assert SO.relay_sites_unmatched(kit) is None
@@ -808,4 +814,4 @@ def test_relay_sites_unmatched_key_warns_by_default_and_stops_only_on_request(tm
     r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, call, OT_RELAY_SITES_UNMATCHED_STOP="1", OT_RELAY_SITES_UNMATCHED_MAX="2")
     assert r.returncode == 0 and "SEAT-MISS WARNING 2 of 3" in r.stdout and "stop on, limit 2" in r.stdout
     r = _relay_tcl(tmp_path, RELAY_NORM_MOCK, "rs_place_all [dict create {u_u_plain.q} {9 9}]", OT_RELAY_SITES_UNMATCHED_STOP="1")
-    assert r.returncode == 0 and "SEAT-MISS" not in r.stdout
+    assert r.returncode == 0 and "SEAT-MISS" not in r.stdout and "OT_RELAY_SITES BANK" not in r.stdout
