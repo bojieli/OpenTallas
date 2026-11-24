@@ -1,4 +1,4 @@
-# DLYRAM-RESET handoff (updated 2026-11-24 02:00 PST)
+# DLYRAM-RESET handoff (updated 2026-11-24 02:33 PST)
 
 Lane dir: epyc11 /srv/opentallas-scratch2/claude/dlyram-reset/ (clone = lane clone of main).
 
@@ -12,9 +12,12 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/dlyram-reset/ (clone = lane clo
 
 - HOLD row in A5t2 (KV-ALLFIX ROWS_KV-ALLFIX-RSTSTABLE a2e424967dfd, plan a160bc6c5c2c). hub_C relaunch note posted (dcd70b4b).
 - die_rst_n timing (post fcd8b8cb): not contracted; RTL floor = R_Wi + ~172 (213 now, ~453 with row) vs need 254.
+- A5t2 offsets measured (dlyram-reset/a5t2/off*.json): +240 on all 175 parts, max_release 145 -> 385.
+- Classes + release order (posts 62a80495, d48d3714): flush3.py = earliest first-valid per source class vs consumer release. pv_v3 SAFE (spine->spine +1), hg SAFE (+9 / +6); START is a level, start_t taps unused. UNSAFE class: 17 cores reset by die_rst_n on a DATA lane (hroot u_kvs_hroot x4, hub_Eo/Wo u_astk, u_seq fan/xs, u_hp_fault) release T_D+8..41, fed by spine producers from T_D+10 (29 pins, worst -32 hroot_EN.i_g). Proposed fix: put those 17 on the spine. Also flagged: A5t2 ready_at_glue 504 is stale (computed before the +240 row).
 
 ## Open
+- flush3 on the A5t2 bind too (`flush3.py RTL OUT --reset bind_reset.json --lanearr lanearr.json`; first run with --write-lanearr).
 - WAITER: localhost scratchpad dlyram/waiter.sh (bg) watches KV-ALLFIX posts for the A5t2 strict result (~03:10) and epyc11 kv-allfix/grow/gate_A5t2/**/bind_reset.json.
-- When KV-ALLFIX composes the HOLD row: rerun flush2.py (`--reset <new bind_reset.json> --hold 261`) on the new bind; then post "pv reset clean" to KV-PV-CAP, FABLE-RC-KV, COORD.
+- When KV-ALLFIX composes the HOLD row: rerun flush2.py (`--reset <new bind_reset.json> --hold 261`, no --rshift: the bind already has +240) on the new bind; then post "pv reset clean" to KV-PV-CAP, FABLE-RC-KV, COORD.
 - S81 / HEAD / QC sweep belongs to RESET-HOLD-SWEEP (not this lane).
 - Caveats of flush2: name-level graph, cores black boxes, noreset cores optimistic.
