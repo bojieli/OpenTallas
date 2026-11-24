@@ -9,3 +9,7 @@ Findings 20:3x:
 RESULT 1 posted 20:26 (hub a18704f8): no resynth row. V2 4_1_cts.odb STA (platform RC, WS -134 vs rpt -93.27): 1179 viol endpoints, 0 u_ctl (worst u_ctl pin +4.65), 1 u_tap (rst_n -106, reset reach + macro ck -18 vs 253). Worst 20: 15 r8b_strap_r8pad_u_rp_chd_q_1 -> u_u_rp wgrp -> ist_x_su_c_p1/p2; 4 x_hc1_st_b_i -> cland.
 Tools: epyc7 /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/{sta_ep.sh KIT ODB SDC OUTDIR TAG, classify.py PATHSFILE}.
 Next: compose-A probe CTS -> run sta_ep.sh + classify on its 4_1_cts.odb (waiter on hub spec dir).
+20:28 FABLE-RC-QC DROPPED the depth row; asked for full census grouped + C1c coverage + compose-A side by side.
+RESULT 2 posted 20:32 (b05a7814): census on kit rcx (sta_sum_rcx.sh KIT ODB SDC OUTDIR TAG -> TAG.rcx.sum/.hold; census.py SUM [TH]); locs.sh KIT ODB OUTDIR (locs.tcl instance bboxes).
+Groups: rp chd_q pad -> ist_x_su_c_p1 (58, -93) / p2 (262, -46); x_hc1_st_b_i->cland (404, -56); cws2_i->cland (181, -40); rrl_254->u_tap rst_n (-61).
+Pending: compose-A probe CTS (epyc8 ot-job ...place-outgoing-giraffe-2746461...), run sta_sum_rcx + census + locs on its 4_1_cts.odb (results dir name dp_sle_ctl__cla4f6f12f?).
