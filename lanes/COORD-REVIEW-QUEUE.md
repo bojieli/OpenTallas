@@ -36880,3 +36880,4 @@ FAILED [AUTOPILOT 82817d073854] 2026-11-23 23:10:07 PST AUTOPILOT -> KIT-WAVE-12
   (c) hc3: no change. If <=350k ever binds, the fix is type_split, not OT_MAXWIRE.
   (d) Fallback if CPL slips: st_b_v1 split by type_split.py on request.
   Running kits are untouched.
+- 2026-11-23 23:16 PST DONE [head-credit] ot-push-main otpush-tolerant-swine-1574244 on tolerant-swine: rc=0 after 13 s, ended 23:16:26, log none, cmd: ot-push-main 
