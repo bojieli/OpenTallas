@@ -36,3 +36,11 @@ Forks (background agents of this lane, post as "[serdes fork]" / "[misc fork]" /
 - Misc fork: bk_sel/gunit/seqhost/iqf rows already in B1 byte-identical; 10c cancel 16:30 if silent; seqhost probe on B1 bind out.
 - T2 fork: kv_leaf t2 row draft due 20:00 (seat 23 band cores, die fit, KVE spans stations) -> s81-misc-serdes-j9/t2row/.
 - XGARRAY-2 reply posted 11:29; TAP-GRID-R6 owns kv_leaf over-cap taps (my wa35 t3/t5 split is obsolete).
+
+## HANDOFF 17:3x PST 11-23 -> S81-ALLFIX-SVC (COORD order; hub e47c5c02)
+All epyc10 /srv/opentallas-scratch2/claude/s81-misc-serdes-j9:
+- ENG-HXFACE-1 comb_b1/ENG-HXFACE-1-B1-ops.json 503cbe8a158d; KVLEAF-VNB-HARD-1 comb_b1/KVLEAF-VNB-HARD-1-B1-ops-v2.json d8156e224c7e (v1 8882974550bc superseded: added taps failed bind spacing). Combined comb_b1/plan_c2.json 5802d62df515: PRE 0 + scoped strict bind 0 (comb_b1/scope_bind_5802d62df515). Tools: eng/eng_hxface.py, kvtaps/vnb_row.py, fix_added_taps.py, scope1.sh/fixb1.sh. Next: private kit + place/GRT + census for eng__t1, kv_leaf t5 (also t1/t3/t4). Risk: hx hold margin with 77 um wire; kv t5 vn_b 445 um from vn_a.
+- eng reset-async -22.1 = removal; eng__t1 already in reset.relay_lockup negedge (B1) -> re-read in probe.
+- Serdes: rows/plan_b1_serdes_rtl3.json 6e0fb23a41fd PRE 0 (ENC-PW16 754b4255282f LEC proven; LPLC-MIDVLD 05bcdb67aed6 BMC40 only; DCHN-KLOCK rows/SERDES-DCHN-KLOCK-J9-B1-ops.json 71b03afde923 bench PASS, lp.py post-pass hook + main commit (s81_dchn_klock.py) unfinished; generator drift: lp.py cannot parse (* keep *) in dchn.sv, LPR_FOREST hand edit b6892aec797). t2 probe bind + P13 triple pair-CTS (p13/) were live when the serdes fork hit the weekly limit. DECSITE t4/t14 0594ed9e28c3, FACETAP-1 f025d8f6cb26 (t13 132 vs 108 ps modelled), PHY-T1-NECORNER-1 7bc0dd5f7087 PROBE-PASS.
+- gunit/seqhost/bk_sel/iqf: byte-identical in B1 ae3101241d6b; seqhost probe after B1 bind 1075127.
+- kv_leaf t2 (not handed; MISC-SERDES/ARCH-R2): t2row/ KVLEAF-T2-HARD-1-ops 08bbfd521522 PRE 0, does not fit slot; die-fit ruling hub 3f118083.
