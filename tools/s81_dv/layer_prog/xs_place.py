@@ -454,7 +454,8 @@ def frame_slot(die, frame):
     raise KeyError(frame)
 
 
-def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None, ret_score=None, frame_instance=None):
+def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None,
+               stretch=None, ret_score=None, frame_instance=None, layout_cache=None):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
@@ -465,6 +466,7 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=Non
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
                         frame_schedule=LX.source_frame_schedule(die_frame_master, frame_instance),
                         seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch, ret_score=ret_score,
+                        layout_cache=layout_cache,
                         slot_extra=_prov_slot(kslot) if kx is None else {int(n): v for n, v in kx['slot_extra'].items()})
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
     units = {S.unit_range(mat.fmt, a0, el)[1] - S.unit_range(mat.fmt, a0, el)[0] for a0, el in S.segments(mat.K, nseg)}
@@ -548,7 +550,7 @@ def reserve_idle_aproj(field):
                 calendar='idle_no_issue', idle_no_issue=True)
 
 
-def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None, *, include_aproj=True):
+def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None, *, include_aproj=True, reuse_layouts=False):
     """the frame's multi-phase field: phase 0 = a_proj (lower_xs), then every op chunk of phase_list.  only = a set of
     field phase indices to legalise (others are placed with the identity assignment: images exact, calendar not
     legalised) -- the full legalise of a frame is ~1-3 s per phase. Expert-only stages reserve the
@@ -591,6 +593,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None, *, include_a
     else:
         phases.append(reserve_idle_aproj(field))
     groups = {op: op_groups(fx, op) for op in ops if op not in XB.BF_OPS}
+    layout_cache = {} if reuse_layouts else None
     for op, gi, c, nseg, R in phase_list(fx, [o for o in ops if o not in XB.BF_OPS]):
         grp = groups[op][gi]
         sel_all = grp['groups'][g][j]
@@ -628,7 +631,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None, *, include_a
             capture = FF.capture(fx.meta['rank'], g, FF.expert_slot(grp['mat'][:-3], fx.meta['experts']), spans=spans)
             cap_score = down_cap_scorer([grp['rows'][i] for i in sel], capture)
         plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0, kslot=ks, nsr=nsr_k,
-                          stretch=st_k, ret_score=cap_score, frame_instance=frame)
+                          stretch=st_k, ret_score=cap_score, frame_instance=frame, layout_cache=layout_cache)
         if cap_score is not None:
             plan['single_frame_cap_score'] = cap_score(plan['ret'])
             plan['single_frame_cap_scope'] = 'logical FIN only; physical input ages and simultaneous frames unadmitted'

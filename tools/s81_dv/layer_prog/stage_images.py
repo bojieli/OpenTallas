@@ -121,7 +121,8 @@ def compile_stage_frame(die, frame, fixd, meta, out):
     XP.op_groups, I.add_phase = og, ap
     try:
         ops = list(meta['xs_ops']) + list(meta['bf_ops'])
-        rec, field = XP.compile_frame(die, frame, fixd, ops, include_aproj=spec.get('dense_layer') is not None)
+        rec, field = XP.compile_frame(die, frame, fixd, ops, include_aproj=spec.get('dense_layer') is not None,
+                                      reuse_layouts=True)
     finally:
         XP.op_groups, I.add_phase = orig
     prov = [v for f, v in prov if f is field]

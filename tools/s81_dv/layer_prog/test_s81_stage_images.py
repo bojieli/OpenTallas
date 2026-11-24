@@ -121,3 +121,36 @@ def test_expert_only_frame_keeps_idle_phase_zero_without_dense_operands(monkeypa
     assert rec['phases'][0]['idle_no_issue']
     assert field.phases[0]['nbeat'] == 0
     assert not any(rec['fill'])
+
+
+def test_same_timing_layout_can_reuse_legaliser_search_with_different_values(monkeypatch):
+    import frame_return_plan as planner
+
+    topology = {
+        'root': 'n0', 'root_link': 3, 'cf': 1,
+        'nodes': {'n0': {'a': 'e0.r0', 'b': 'e1.r0', 'link_a': 1, 'link_b': 2}},
+    }
+    rows = {0: [0x3f800000, 0xbf800000]}
+    other = {0: [0x7f800000, 0xff800000]}
+
+    def arrival(pair, seg):
+        return 35 + 2 * pair + seg
+
+    opts = (topology, [0, 1], 1, 2, arrival)
+    expect = planner.legalise(*opts, other, 1, 16)
+    cache = {}
+    planner.legalise(*opts, rows, 1, 16, layout_cache=cache)
+    score = planner.score
+    calls = []
+
+    def count_score(*args, **kwargs):
+        calls.append(1)
+        return score(*args, **kwargs)
+
+    monkeypatch.setattr(planner, 'score', count_score)
+    assert planner.legalise(*opts, other, 1, 16, layout_cache=cache) == expect
+    assert len(calls) == 1
+
+    moved = (topology, [0, 1], 1, 2, lambda pair, seg: arrival(pair, seg) + 1)
+    planner.legalise(*moved, other, 1, 16, layout_cache=cache)
+    assert len(calls) > 2
