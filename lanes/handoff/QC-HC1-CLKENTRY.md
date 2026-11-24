@@ -18,3 +18,9 @@ Job (COORD 20:4x): sle_ctl group 2 x_hc1_st_b_i -> u_cland_x_hc1_st_b_i (404 end
 - C1c twin eea24acd048a: sle_ctl byte-identical, PRE/bind not run on twin. QC-ALLFIX holds the row out until it decides.
 - Probe live (runitem-sle_ctl__cla4f6f12f on epyc11, place). Census ETA 02:15-03:15: census/census_run.sh TAG on epyc11; 5 groups, chd_q_1 bits 518/519 split from bank data. KIT find in that script is untested.
 - Row v2 (bank region) = QC-SLECTL-RESYN; I compose one sle_ctl delta SEAT+RP-SEL+v2+tapfix after C1e. No foreground sleeps; run tools via ot-run.
+## 03:55 PST STOOD DOWN (successor SEAT-MATCH-AUDIT for the bank residual)
+- CENSUS posted 03:51: plan 18d22fbde479, 4_1_cts.odb post-hook sha bee8eefa46c8 on epyc2 (CTS spilled there; same kit path), RC kit setRC_rcx.tcl. WS -276.21 TNS -3634.5, 57 viol eps ALL chd_q_1 bank data (select 518/519 = 0). hc1->cland 0, cws2->cland 0, u_tap rst_n 0, others 0. Hold pre-repair -121.46 / 2765 eps. Census tools: epyc2 /srv/opentallas-scratch2/claude/QC-HC1-CLKENTRY/census (run_cts.sh, cts/cts.rcx.sum, .hold).
+- Row NOT adopted (COORD). Probe GRT left running as baseline (autopilot run-item, not a lane ot-run).
+- ot-status otrun-viable-ram-965608 (epyc11, unit oth-ubuntu-966896-1795496270, bindS.sh) shows "running" but pid 965608 is dead: stale record, nothing live.
+- For later ot-delete (not done): epyc11 /srv/opentallas-scratch2/claude/QC-HC1-CLKENTRY (cS tree + bind), epyc11 die-qc-103/rk2 copy, epyc2 .../QC-HC1-CLKENTRY/census, epyc7 .../QC-HC1-CLKENTRY-epyc7, intel1 census/.
+- Probe chain ot-run otrun-viable-ram-1095518 (epyc11 unit oth-ubuntu-4119065-1795510602, log chain_a1.live.log; work spilled to epyc2) = GRT baseline, handed to SEAT-MATCH-AUDIT; cancel via ot-run --cancel if not wanted.
