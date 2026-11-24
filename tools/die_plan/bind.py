@@ -2147,6 +2147,8 @@ class Binder:
                         self.unplanned_bits.append(dict(src_part=sp, dst_part=dp, driver=f"{F.cells[sci].path}.{spn}[{b}]",
                                                         sink_ports=[f"{r}.{q}" for r, q in sk]))
         self.lanes_unused = sorted(L["id"] for L in allL if not L["items"] and not L.get("plan"))
+        if self.pc:      # KV-R8-LANELOSS guard: a plan-cell-driven lane with 0 bits is a strict bind ERROR
+            self.errors += self.pc.empty_lane_errors([L for L in allL if not L["items"] and not L.get("plan")])
         for L in sorted(allL, key=lambda L: L["id"]):
             if L.get("plan"):
                 L.update(width=L["cap"], lane=L["id"], stages=[0])

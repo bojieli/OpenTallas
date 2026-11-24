@@ -73,3 +73,44 @@ def test_plan_cell_types_cycle_terminates():
     pts = {"x": {"param_base_type": "y"}, "y": {"param_base_type": "x"}}
     doc = {"z": {}}
     assert plan_cell_types(doc, pts) is doc
+
+
+def _guard_cells(T):
+    """a PlanCells over a two-partition plan: pc_a (base pc_v3), pc_b (R8 clone of pc_v3, param_base_type only)"""
+    doc = {"pc_v3": {"cells": {"u_efault": {"module": "ot_dp_efault",
+                                            "conns": {"fault": [{"bus": "o_efault"}], "eq": [{"bus": "i_x"}]}}},
+                     "bus_drivers": [{"bus": "o_id", "drivers": [{"net": "clk"}]}]}}
+    buses = [{"name": "o_efault", "dir": "out", "width": 1}, {"name": "o_id", "dir": "out", "width": 1},
+             {"name": "o_data", "dir": "out", "width": 8}, {"name": "i_x", "dir": "in", "width": 1}]
+    pts = {"pc_v3": {"buses": buses}, "pc_v3__r8aaaaaaaa": {"buses": buses, "param_base_type": "pc_v3"}}
+    binder = SimpleNamespace(plan={"partition_types": pts, "partitions": [{"name": "pc_a", "type": "pc_v3"},
+                                                                          {"name": "pc_b", "type": "pc_v3__r8aaaaaaaa"}]},
+                             parts={"pc_a": {"type": "pc_v3"}, "pc_b": {"type": "pc_v3__r8aaaaaaaa"}}, errors=[])
+    cells = PlanCells.__new__(PlanCells)
+    cells.B, cells.doc = binder, {"types": doc}
+    cells.T = T(doc, pts)
+    cells.ptype0 = {p["name"]: p["type"] for p in binder.plan["partitions"]}
+    cells.bus_dir = {tn: {b["name"]: b["dir"] for b in t["buses"]} for tn, t in pts.items()}
+    cells.iface = {"ot_dp_efault": SimpleNamespace(ports={"fault": ("output", None), "eq": ("input", None)})}
+    cells.busdrv = {tn: {b: {0: None} for b in ("o_efault", "o_id")} for tn in cells.T}
+    return cells
+
+
+def test_r8_clone_plan_cell_buses_are_reserved():
+    """fails on the pre-fix bind (KV-R8-LANELOSS): the clone partition pc_b had no plan cells, its buses unreserved"""
+    from bind_plancells import plan_cell_types
+    cells = _guard_cells(plan_cell_types)
+    assert {("pc_b", "o_efault"), ("pc_b", "o_id"), ("pc_a", "o_efault")} <= cells.reserved_buses()
+
+
+def test_plan_cell_lane_with_zero_bits_is_a_bind_error():
+    """the guard: a lane whose source bus plan cells drive (via the clone lineage) and that got 0 bits is an ERROR,
+    whatever lost the cells; a lane on an as-built bus or an IN-port reference is not flagged"""
+    prefix = lambda doc, pts: {tn: r for tn, r in doc.items() if tn in pts}      # the pre-fix alias (no R8 clones)
+    cells = _guard_cells(prefix)
+    unused = [{"id": "L495", "src": "pc_b", "oname": "o_efault"}, {"id": "L496", "src": "pc_b", "oname": "o_id"},
+              {"id": "L9", "src": "pc_b", "oname": "o_data"}, {"id": "L8", "src": "pc_a", "oname": "o_data"}]
+    errs = cells.empty_lane_errors(unused)
+    assert [e.split()[1] for e in errs] == ["L495:", "L496:"]
+    assert all(e.startswith("PLAN_CELL_LANE_EMPTY") and "pc_v3" in e for e in errs)
+    assert cells.empty_lane_errors([{"id": "L7", "src": "pc_a", "oname": "i_x"}]) == []

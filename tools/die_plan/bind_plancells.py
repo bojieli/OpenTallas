@@ -193,6 +193,52 @@ class PlanCells:
                     r.add((p, b))
         return r
 
+    def empty_lane_errors(self, unused):
+        """KV-R8-LANELOSS guard (FABLE-RC-KV 11-23): a plan lane whose source bus a plan_cells.json row drives must
+        carry the plan cell payload.  unused = the lanes that got no bit and no plan reservation (bind lanes_unused,
+        as dicts with src/oname/id).  The source partition's plan type and every type it was cloned from
+        (param_base_type / landing_base_type chain, and the <base>__<suffix> name base) are looked up in the FILE as
+        written; a driven bus whose lane is still empty means the clone lost its plan cells -> one error per lane."""
+        doc = self.doc["types"]
+        pts = self.B.plan["partition_types"]
+        driven = {}
+
+        def drives(tn):
+            if tn not in driven:
+                row, out = doc.get(tn) or {}, set()
+                for c in row.get("cells", {}).values():
+                    mod = self.iface.get(c.get("module"))
+                    for port, ents in c.get("conns", {}).items():
+                        if mod is not None and port in mod.ports and mod.ports[port][0] != "output":
+                            continue
+                        out.update(e["bus"] for e in ents if isinstance(e, dict) and "bus" in e)
+                out.update(bd["bus"] for bd in row.get("bus_drivers", []))
+                driven[tn] = out
+            return driven[tn]
+
+        def lineage(tn):
+            seen, todo = [], [tn]
+            while todo:
+                t = todo.pop()
+                if t in seen:
+                    continue
+                seen.append(t)
+                row = pts.get(t) or {}
+                todo += [row[k] for k in CLONE_BASE_KEYS if row.get(k)] + [t.split("__")[0]]
+            return seen
+
+        errs = []
+        for L in unused:
+            tn = self.ptype(L["src"])
+            if tn is None or self.bus_dir.get(tn, {}).get(L["oname"]) != "out":
+                continue
+            src = next((t for t in lineage(tn) if L["oname"] in drives(t)), None)
+            if src is not None:
+                errs.append(f"PLAN_CELL_LANE_EMPTY {L['id']}: {L['src']}.{L['oname']} is driven by plan cells of {src} "
+                            f"but the lane carries 0 bits (type {tn} has "
+                            f"{'no' if tn not in self.T else 'a different'} plan_cells row: clone lost its plan cells?)")
+        return errs
+
     def rewired_keys(self):
         """(ci, port, bit) of the leaf inputs a plan rewired[] entry re-points: their as-built source is not a crossing
         of the bound die (the binder must not route it), the plan bus drives them"""
