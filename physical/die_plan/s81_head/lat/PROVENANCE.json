@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81_head.lat_provenance.v1",
+ "generated_by": "tools/die_plan/gen.py latency (rt b335c93437b7, launch tree s81_head_r18g_s2@b335c93437b7, OT_PLAN_ROOT = that tree)",
+ "plan": "live HEAD event head_rp21z20NF15f_r18gw: kw45/snap_s81_head/s81_head_r18g_s3w physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
+ "plan_sha256": "014661a6ea33e7a63f6c78097a5d861b5d4a8d40d75040c34eceb02674879e33",
+ "plan_digest": "f2f3f42c16d9dcf5",
+ "lat_params": 334,
+ "lat_pkg_sha256": "3a7aca44f379b1d6cd78cd8428f18dd364c175d21ddc7f56c66eb94678026799",
+ "latency_json_sha256": "b188fda325b163fd1cd9fb605c9d6f4dc3c29411f30e84f94d3b469e6ddd33ec",
+ "same_lat_values_as": {
+  "w3": {
+   "plan_digest": "2a817504e7466754",
+   "lat_values_equal": true
+  },
+  "r6": {
+   "plan_digest": "f441c869d6011d52",
+   "lat_values_equal": true
+  },
+  "w4b": {
+   "plan_digest": "fa0d374dec88d8b2",
+   "lat_values_equal": true
+  },
+  "w5": {
+   "plan_digest": "bca0546e248c0f2f",
+   "lat_values_equal": true
+  }
+ },
+ "supersedes": {
+  "a74be4f5d6dd3be0": "11-17 snapshot package (329 values; 85 differ: 5 new lanes, 51 fixed+ = 11-19 station rows, 48 clock-landing)",
+  "a2eb7166e0b1fbc9": "10-25 package previously at this path (328 values)"
+ },
+ "note": "HEAD-R18 LATPKG 11-24 (COORD): consumers recompute lanes from the plan (Plan.lane_latency); this file is the reference copy, regenerate on every HEAD plan event."
+}
