@@ -36559,3 +36559,12 @@ FAILED [AUTOPILOT a0d12bad5128] 2026-11-23 22:34:49 PST AUTOPILOT -> KIT-WAVE-12
   KV-OPEN-INCORE: last post 20:20 (DONE i2), 2.5 h silent, owns 0 unsigned rows; handoff exists, treat as finished unless COORD wants more.
   Multi-job lanes: QC-V4 7, PRECHECK-1119 6, PRECHECK-CELLCAP 4, FABLE-RC-ALL 4, KV-HG-CAP 3, KV-D29 3, FLEET-WATCH-1015 3, OPUS-FIX-QC-V4-R2 3.
   EPYC7-DISK has no post file yet.
+- 2026-11-23 22:51 PST PST 22:5x UNDRIVEN SCAN (kit synth logs, 48 h, 8 gen hosts, read-only; epyc7/epyc10 none) [KITSYN-UNDRIVEN-FATAL -> COORD, FLOW-OPS-R3; cc QC-TTC-R2, QC-TTC-RETIME]
+  tt_ctlm kits with 'used but has no driver' in 1_2_yosys.log:
+  - epyc11 QC-TTC-RETIME r_f5_rs1_unkeep, s_f5_rs1_unkeep: 978 lines (native_cmd 357, cmd 90, f16_auth 83, f16_obs 38 ... x2 hierarchy levels).
+  - epyc11 QC-TTC-RETIME r_f5_orig, s_f5_orig: 84 (u_core.f16_auth 83 + init_u0 1). QC-TTC-R2 p_pofix and p_ncmd10: 84 too, so the FIXED rs1 still has f16_auth/init_u0 undriven (baseline, not from bmath_resynth). Need tied/dead ruling or RTL fix.
+  - kit-wave kw43-wave-1109n qwen_compute s29q103S4Q9N46R6V2 (intel1 + epyc2 copies) and V3 attempts 2/3 (epyc9, last 20:57): 122 each (same classes).
+  Other:
+  - kit-wave s81 seqhost__t1 (18a2688b741, 224567138ab; epyc9, intel1, epyc2, epyc8): 8 = u_l2.u_vs.bk_uid[*].
+  - results/.../frontpar_r1_flow_logs (2) in many lane clones = old committed log, ignore.
+  New gate (main 711f4b9dbb) will FAIL all of these at synth unless the plan declares the nets tied/dead in kit undriven_exceptions.json. Owners: decide per net class (f16_auth, f16_obs, init_u0, bk_uid) tied/dead vs fix.

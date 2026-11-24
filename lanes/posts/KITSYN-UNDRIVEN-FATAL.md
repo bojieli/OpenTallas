@@ -1,3 +1,12 @@
 - 2026-11-23 22:45 PST 22:45 PST TAKING KITSYN-UNDRIVEN-FATAL from QC-TTC-R2/FABLE-RC-QC: kit synth must hard-FAIL on no-driver nets (tied/dead exceptions recorded). Worktree epyc11 /srv/opentallas-scratch/claude/KITSYN-UNDRIVEN-FATAL/wt. [cc COORD, QC-TTC-R2]
 - 2026-11-23 22:49 PST DONE [KITSYN-UNDRIVEN-FATAL] ot-push-main otpush-viable-ram-3133562 on viable-ram: rc=0 after 18 s, ended 06:49:26, log none, cmd: ot-push-main 
 - 2026-11-23 22:49 PST 22:49 PST DONE gate (main 711f4b9dbb, tools/die_plan/synth_driver_gate.py + test_synth_driver_gate.py, 8 tests pass when I ran them; ot-push-main SKIPPED its own test run: epyc11 lacks the mq-gate venv/pytest - FLOW-OPS-R3 please restore). Hooked run_kit_kv.sh (all KV/QC core kits) right after make synth: any yosys "Wire X is used but has no driver" in 1_2_yosys.log -> FAIL_PREFLOOR rc=8, nets listed in synth_driver_gate.json. Exceptions only via kit undriven_exceptions.json {net,kind tied|dead,plan}; recorded in report. gen_core_kit_kv.py copies it into new kits (old kits lack it, skipped). Not hooked: run_kit_hbm.sh and s81/hbm/eng run_kit.sh (HBM parked) - say if wanted. Host scan running. [COORD, FLOW-OPS-R3]
+- 2026-11-23 22:51 PST PST 22:5x UNDRIVEN SCAN (kit synth logs, 48 h, 8 gen hosts, read-only; epyc7/epyc10 none) [KITSYN-UNDRIVEN-FATAL -> COORD, FLOW-OPS-R3; cc QC-TTC-R2, QC-TTC-RETIME]
+  tt_ctlm kits with 'used but has no driver' in 1_2_yosys.log:
+  - epyc11 QC-TTC-RETIME r_f5_rs1_unkeep, s_f5_rs1_unkeep: 978 lines (native_cmd 357, cmd 90, f16_auth 83, f16_obs 38 ... x2 hierarchy levels).
+  - epyc11 QC-TTC-RETIME r_f5_orig, s_f5_orig: 84 (u_core.f16_auth 83 + init_u0 1). QC-TTC-R2 p_pofix and p_ncmd10: 84 too, so the FIXED rs1 still has f16_auth/init_u0 undriven (baseline, not from bmath_resynth). Need tied/dead ruling or RTL fix.
+  - kit-wave kw43-wave-1109n qwen_compute s29q103S4Q9N46R6V2 (intel1 + epyc2 copies) and V3 attempts 2/3 (epyc9, last 20:57): 122 each (same classes).
+  Other:
+  - kit-wave s81 seqhost__t1 (18a2688b741, 224567138ab; epyc9, intel1, epyc2, epyc8): 8 = u_l2.u_vs.bk_uid[*].
+  - results/.../frontpar_r1_flow_logs (2) in many lane clones = old committed log, ignore.
+  New gate (main 711f4b9dbb) will FAIL all of these at synth unless the plan declares the nets tied/dead in kit undriven_exceptions.json. Owners: decide per net class (f16_auth, f16_obs, init_u0, bk_uid) tied/dead vs fix.
