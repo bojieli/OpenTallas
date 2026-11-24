@@ -1,0 +1,4 @@
+# PRE-QC-GENCHECK handoff (11-24 00:2x PST)
+Clone epyc9 /srv/opentallas-scratch2/claude/PRE-QC-GENCHECK/wt (uncommitted diff until pushed): derived_drop.py ENTRYFOOT (a tap==footprint, b tap follows moved core, c STALE-EXPORT-TAP >300 um FAIL), gen_rtl.py Landings plan_path, plan_gate_pre.py GENDRY observer -> kit-rtl + OT_REPO_ROOT=tree; tests in test_derived_drop.py, test_pre_gendry_1123.py (34 pass).
+Proofs: QC 12b66c0e4829 FAIL cl622f65d2 clk_c0/clk_c2 only, cecdcb2a3b4b PASS. KV A5 95c853437992 1463/2601 (set-identical to KV-SENDER-SKEW tsv). HEAD r18gw 014661a6ea33 3/67. S81 c8 p6_fstart d11e3b6c50ee and B1 exact p4_fill 48/1244 (20 types); p6s_ist f6b657b60cef rescan epyc9 tmp/s81_p6s.log. QC GENDRY 14 types: epyc7 tmp/gd4_direct.log unit oth-ubuntu-3718064-1795508290.
+Left: GENDRY verdict, ot-push-main, rt sha to QC-ALLFIX / ALLFIX integrators / PRECHECK.
