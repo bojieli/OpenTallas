@@ -6,3 +6,4 @@
 - NEXT: when rt >= 934ebc63141a exists: strict rebind of plan 240c9e69c3f1 (tree_r fork, as rebind_r6c.sh), then private-spec --goal route sealed Eo/Wo with that --rt; then provenance + LEC.
 - 23:1x: rt 65f367a55943 rebind tree_s1 (epyc8 FAM-KV-HUBWO-S1/tree_s1) clean; sealed Eo 1122231141 / Wo 1122231157 --goal route running (kitS2_*.log). NEXT: ot-wait stages, provenance + LEC.
 - 15:4x resumed: Eo CTS done/GRT, Wo CTS running; waiters ot-wait --durable grt (Eo), cts (Wo).
+- 20:5x: Wo GRT triage stop (est -251.6 < -150), worst = astk_WN->ist_o_astk_WS 1500 um single hop (-170 post-CTS). Eo past GRT, in route (waiter needed). NEXT: station row for astk_WN->WS lanes, relaunch sealed Wo; Eo route/LEC/provenance.
