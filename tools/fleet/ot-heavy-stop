@@ -59,6 +59,33 @@ def stop_labelled(unit=None, tag=None, dry=False):
     return found, running(found)
 
 
+def env_tag(pid):
+    """OT_HEAVY_TAG of a process (the ot-run tag every container of its job is labelled with), '' when unreadable"""
+    try:
+        for kv in open(f"/proc/{pid}/environ", "rb").read().split(b"\0"):
+            if kv.startswith(b"OT_HEAVY_TAG="):
+                return kv.split(b"=", 1)[1].decode(errors="replace")
+    except OSError:
+        pass
+    return ""
+
+
+def unit_tags(unit, pids, rows, envtag=env_tag):
+    """TAG-CANCEL-1124 (KV-PV-CAP: `ot-run --cancel oth-ubuntu-3730999-...` on E11 stopped the batch script, and 2 yosys containers of its xargs -P fan-out ran on
+    until ot-heavy-stop --tag): the ot-run tags of a unit = the ot.tag labels of the containers labelled with the unit, plus OT_HEAVY_TAG of the scope's processes.
+    Containers of nested ot-heavy calls carry a child unit but the parent's tag, so the tag finds them."""
+    tags = set()
+    for r in rows:
+        n, u, t = (r.split("|") + ["", ""])[:3]
+        if n and u == unit and t:
+            tags.add(t)
+    for p in pids:
+        t = envtag(p)
+        if t:
+            tags.add(t)
+    return sorted(tags)
+
+
 def scope_pids(unit):
     out = []
     for base in ("/sys/fs/cgroup/user.slice",):
@@ -108,6 +135,7 @@ def main(argv=None):
     if not os.environ.get("XDG_RUNTIME_DIR"):
         os.environ["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
     names = sh("docker", "ps", "--format", "{{.Names}}").split()
+    rows0 = sh("docker", "ps", "--format", LABEL_FMT).splitlines()      # TAG-CANCEL-1124: label snapshot before anything is stopped
     hit = 0
     own = own_pids()
     if a.unit or a.tag:       # CANCEL-LABEL-1120: containers found by their label, whatever started them
@@ -127,12 +155,23 @@ def main(argv=None):
             continue
         hit += 1
         cs = select_containers(names, pids)
-        print(f"ot-heavy-stop: {u}: {len(pids)} processes, containers {cs or '-'}" + (" (dry run)" if a.dry_run else ""))
+        if cs and (a.unit or a.tag) and not a.dry_run:
+            cs = running(cs)                 # the labelled pass above may have stopped them already
+        tags = unit_tags(u, pids, rows0)
+        print(f"ot-heavy-stop: {u}: {len(pids)} processes, containers {cs or '-'}, tags {' '.join(tags) or '-'}" + (" (dry run)" if a.dry_run else ""))
         if a.dry_run:
             continue
         for c in cs:
             subprocess.run(["docker", "stop", "-t", "20", c], capture_output=True)
         subprocess.run(["systemctl", "--user", "stop", u + ".scope"], capture_output=True)
+        # TAG-CANCEL-1124: after the scope is gone (no process left to start another), every container still labelled with the unit or one of its tags
+        for t in tags:
+            found, left = stop_labelled(None, t)
+            if found:
+                print(f"ot-heavy-stop: {u}: containers of tag {t} stopped: {' '.join(found)}")
+            if left:
+                print(f"ot-heavy-stop: STILL RUNNING after docker stop and kill: {' '.join(left)}")
+                return 3
     print(f"ot-heavy-stop: {hit} scope(s) {'matched' if a.dry_run else 'stopped'}")
     return 0 if hit else 1
 
