@@ -10,8 +10,6 @@ Table: lanes/ALLFIX-KV.tsv. Coordinate: FABLE-OPEN-KV (pc probe A on 121b8cb74ac
 - pv_v1n SCHEMA-UNKNOWN-KEY x3 = PRE ran 16:15 while KV-D29 k3h2 had swapped old tools into W/tools (schema.py lacks pad_ram/leaf_clusters/keep_types); rerun on rt 70b6f in A1.
 ## Log
 - 16:30 TAKING posted. 16:32 fork started. 16:4x helpers spawned.
-
-## 17:18 PST Codex handback
-
-- A1 source fork completed. The initial compose run used a relative a1.list across a working-directory change. It failed to read the file and was stopped at exact own E8 scope 3215648 to prevent an uncomposed false result.
-- Corrected A1 is running as intel2 `kv-allfix-a1-compose-r2-1717`, E8 `oth-ubuntu-3235488-1795483029`, output `A/A1r2/compose.out`. Both PV tap grids and both PC rows applied. Reprice adjusted L1316/L1378 by +2. Current candidate `A/A1r2/plan.json @0c9c828a2857`; TAPOFF all 56/56 with zero missing/unevaluated/stale. PRE in flight. Preserve the job. Next intake still includes SYSC-D2DOUT mandatory L343 hop fix and pending hub_C H2–H4 with E2. No CAD route or STA started.
+- 17:14-17:2x usage limit; Codex ran compose: A1r2 = K3g + pv2b + PCGUTKEEP + PCPO3, reprice L1316/L1378 0->2, TAPOFF census 56/56, PRE PASS 0 (pv_v1n schema gone) -> A1 plan 0c9c828a2857 (A/A1r2/plan.json). (A/A1 = an empty first try.)
+- 17:23 gate_A1 launched: intel2 ~/tmp/kvallfix/gate_A1.otrun.log, unit oth-ubuntu-3435869-1795483403 epyc8, out A/gate_A1 (tree plan plan_allfix_A1.json). Helpers resumed via SendMessage.
+- Next: A2 = A1 + HUBC + SYSC rows (helpers by 19:00), gate by 21:00, probes 21:30; then ITERATION LOOP (bind event, launch all types, FABLE round).

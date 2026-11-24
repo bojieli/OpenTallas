@@ -2,12 +2,12 @@ item	row_sha	rebased	in_compose_sha	PRE	strict	LAT	G0	probe_unit	probe_result	st
 rc116 sys_c dcal (rows C/D + RTL 23d08aceeda5)	08be3955c5c7+c296998f3e31	in-base K3g	324af451f9be	PASS(K3g)	0(K3g Codex r2)	PASS(K3g)	PASS(K3g)	-	-	IN-BASE; residual S1/S1b/S3 -> SYSC-D2DOUT
 rc116/S1 SYSC-D2DOUT (att_tx 10b reach) + RANKS S1b/S2 + S3 seats	draft 9c5254471085 (plan_c base)	REBASING (helper KV-ALLFIX-SYSC)	-	-	-	-	-	-	-	ROW-REBASING
 rc118 pc slit (PCSLIT 32447daeb2e6 + PCGUT 823a4142c484)	32447daeb2e6	in-base K3g	324af451f9be	PASS(K3g)	0	PASS	PASS	-	-	IN-BASE
-rc118 G1 PCGUTKEEP	b79196b9e7f1	yes (FABLE-OPEN-KV, K3g)	A1 pending	-	-	-	-	FABLE-OPEN-KV probe A pc_v3 (121b8cb74ac2)	-	COMPOSING A1
+rc118 G1 PCGUTKEEP	b79196b9e7f1	yes (FABLE-OPEN-KV, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	FABLE-OPEN-KV probe A pc_v3 (121b8cb74ac2)	-	IN-COMPOSE A1
 rc118 G2 pcc seam (PCGROW cc020e443a39 needs die growth)	-	no	-	-	-	-	-	probe A full GRT	-	REASONED-OPEN pending probe A seam read
 rc119 pc taps (SOFTFLOP + PCTAPEGRESS 203007454084)	203007454084	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
 rc120 AFFAULT	5b9a55ae26b8	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
 rc121 PCST 08089043fd2a + PCKEEP 6c5310129741	08089043fd2a	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
-rc121 G3 PCPO3 (+2 cyc po_d3)	af31ff23f995	yes (FABLE-OPEN-KV, K3g)	A1 pending	-	-	-	-	probe A	-	COMPOSING A1
+rc121 G3 PCPO3 (+2 cyc po_d3)	af31ff23f995	yes (FABLE-OPEN-KV, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	probe A	-	IN-COMPOSE A1
 rc122 pc_v1 bank PCV1BANK2	8a715f0b1bc9	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
 rc123 hgi_v4 FT23STREET + FT20BAND	c862d73fe64b+45892e81daaf	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
 rc124 hgi_v1 HST2SITE + T1SPLIT	cddc1dd754e2	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
@@ -19,9 +19,9 @@ hg-KV-IO-BOUNDARY (RHI IO)	72b268847ec4	in-base K3g	324af451f9be	PASS	0	PASS	PAS
 hg-KV-PIN-ROW KRSPWIN + KRSPCORE	399f5d95fb70	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
 hg-KV-RESET-ASYNC (RHI RST)	72b268847ec4	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
 x8 hroot BAND 43a1ac7be69f + RING 60bd6e0b813a + RINGFORM 97083c85fd86	97083c85fd86	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
-x10 tap offsets (TAPOFF last)	tap_offset_cover rt 70b6f	recomputed per compose	A1 pending	-	-	-	-	-	-	COMPOSING A1
+x10 tap offsets (TAPOFF last)	tap_offset_cover rt 70b6f	recomputed per compose	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
 x15 hroot GEOM block 3	4ca2bc6de1a3	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE
-TAPGRID pv_v3e split (+146 taps)	53fa112e543f (plan 42c02451ea4f)	yes (TAP-GRID-R6, K3g)	A1 pending	PASS 0 (TAP-GRID)	-	-	-	-	-	COMPOSING A1
-TAPGRID pv_v1n split (+168 taps, resel, PARTIAL 2 over)	1a910f00e69b (plan dccab51441bf)	yes (TAP-GRID-R6, K3g)	A1 pending	SCHEMA x3 = tools swap; rerun rt 70b6f	-	-	-	-	-	COMPOSING A1
+TAPGRID pv_v3e split (+146 taps)	53fa112e543f (plan 42c02451ea4f)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
+TAPGRID pv_v1n split (+168 taps, resel, PARTIAL 2 over)	1a910f00e69b (plan dccab51441bf)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
 hub_C HUBC-E2 relay seats	c95f773d3e97	REBASING (helper KV-ALLFIX-HUBC)	-	-	-	-	-	-	-	ROW-REBASING
 hub_C H2 reset leaf_clusters / H3 seq->bout E station / H4 d38 N/S split / ahub-kvs_ctl congestion split	-	BUILDING (helper KV-ALLFIX-HUBC)	-	-	-	-	-	-	-	ROW-BUILDING
