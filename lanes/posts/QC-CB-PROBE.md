@@ -1,0 +1,1 @@
+- 2026-11-23 23:00 PST DIED [QC-CB-PROBE] ot-run oth-ubuntu-1952105-1795503618 on tolerant-swine: rc=1 after 11 s, ended 23:00:22, log none, cmd: --mem 24 --threads 2 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/QC-CB-PROBE --stage /srv/opentallas-scratch2/claude/QC-ALLFIX/cC/tr | class=NO-PATTERN cause=rc 1 after 11 s, no log
