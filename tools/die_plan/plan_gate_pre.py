@@ -61,6 +61,10 @@ ABSPATH-1122 (FLOW-OPS-R2, COORD): an absolute path in the plan json (or its --s
   Keys provenance / source* / note* / comment* / receipt* / evidence* / proof* / report* / history / *_log are records.  Fix: `plan_gate_pre.py localize --plan P --out P2` copies each present outside
   file into <plan dir>/inputs/ and rewrites the reference tree-relative (composers run it before G0).
 
+PIN-REACH-1124 (S81-RSTSOLVE, FABLE-RC-ALL): WARN RSTPIN (report only) per reset.parent_pins entry whose pinned parent is farther than the
+  hop (275 um) from the part's reset input.  wf_solve leaves such a part unreachable and attaches it (now nearest-first) to the
+  nearest reached part, so one widened box can move a whole chain (c8 step 03: s_2S_x00, 11 parts, fW0_p1_b0 at 7.7 mm).  --skip RSTPIN.
+
 DERIVED-DROP-1123 (PRECHECK-DERIVED-DROP, COORD 21:36 / FABLE-RC-KV): a re-floor, grow or tap rewrite that leaves a DERIVED section
   pointing at the old tree.  RSTREACH: START / local reset raw hops over the edge reach (S81 c7a svc_tap_inv: 2233 um), FSTART
   face flops beyond 405 um of their raw reset (stripped landing_raw_branches, KV pv_v3 -721 ps; branch base relays moved by the KV
@@ -178,7 +182,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1978,6 +1982,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
                                     bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline)
         except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
             findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
+    if "RSTPIN" not in skip:                             # PIN-REACH-1124: report only, never a FAIL
+        findings += rstpin_findings(tree, plan)
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
     if rb:
@@ -2064,6 +2070,27 @@ def check_depth(tree, plan, asbuilt=None, max_list=12):
     head = out[:max_list] + ([f"FAIL DEPTH ... {len(out) - max_list} more netlist(s)"] if len(out) > max_list else [])
     return head + warn[:max_list] + [f"WARN DEPTH-SUMMARY {len(files)} generated netlist(s) ({how}); {len(out)} over budget, {n_deep} deep "
                                      f"flop(s); {len(warn)} HELD ({n_held} flops); budget {budget} levels (depth_config.json / $OT_PRE_DEPTH_LEVELS)"]
+
+
+def rstpin_findings(tree, plan):
+    """PIN-REACH-1124: WARN RSTPIN per reset.parent_pins entry whose pinned parent has no rst_o site within the hop of the
+    part's reset input (the part is unreachable and the solver then attaches it to the nearest reached part; c8: s_2S_x00 ->
+    s_3S_L2 at 283 um > 275 um took 11 parts with it, fW0_p1_b0 hung 7.7 mm away).  Report only; [] unless a wavefront plan has pins."""
+    raw = _load(plan) or {}
+    rs = raw.get("reset") or {}
+    if rs.get("release") != "wavefront" or not rs.get("parent_pins"):
+        return []
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import reset_tree as RT
+        rows = _in_tree(tree, lambda: RT.pinned_out_of_reach(_shared_plan(plan, raw)))
+    except Exception as e:  # noqa: BLE001 - a checker crash names itself
+        return [f"WARN RSTPIN not checked: {type(e).__name__}: {str(e)[:200]}"]
+    out = [f"WARN RSTPIN {p}: pinned parent {q} is {d} um from its reset input, over the hop; the part is unreachable and attaches to "
+           f"the nearest reached part instead (fix: re-pin to a part within the hop or drop the pin)" for p, q, d in rows]
+    if len(out) > 40:
+        out = out[:40] + [f"WARN RSTPIN ... {len(rows) - 40} more"]
+    return out
 
 
 def advisory_lines(tree, plan, asbuilt=None, baseline=None):

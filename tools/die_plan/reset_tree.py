@@ -1838,23 +1838,44 @@ def _wf_solve_once(P):
     obj, rel, par, unr = best
     # partitions still unreachable within hop: attach to the nearest reached rst_o site (flagged: G0 error, the
     # owner of the plan moves the reset pin -- hard types: partition_types[T].reset.tap_um on a face)
-    for p in sorted(unr):
-        xy = part_reset_pin(P, p) if p in hard else P.to_die(p, choice[P.parts[p]["type"]])
-        b = None
-        for q in sorted(rel):
-            if q in hard:
-                continue
-            for j, s_ in enumerate(face_sites(P, P.parts[q]["type"])):
-                if _is_in_site(P, q, j, choice):
-                    continue
-                d = _man(P.to_die(q, s_["xy"]), xy)
-                if b is None or d < b[0]:
-                    b = (d, q, j)
-        if b is not None:
-            q = b[1]
-            par[p] = (q, b[2], round(b[0], 1))
-            rel[p] = rel[q] + (hdep[p] if p in hard else entry(p) + est[(P.parts[p]["type"],
-                                                                          choice[P.parts[p]["type"]])])
+    # RST-NEAREST-1124 (S81-RSTSOLVE, COORD/FABLE-RC-ALL): attach NEAREST-FIRST, not alphabetically.  The old alphabetical order
+    # let a part whose name sorts early (c8: fW0_p1_b0 before svc_*) attach to whatever was already reached, 7.7 mm away, when a
+    # nearer unreachable part (svc_1_rs, 1.7 mm) would have been reached a step later.  Each round attaches the unreachable
+    # part with the smallest distance to ANY reached non-hard site (tie: part name, then site), then offers its own sites to
+    # the rest.  Candidate sites, the in-site skip, rel and the tie order inside one part are unchanged.
+    _sd = {}
+
+    def _sites_die(q):
+        if q not in _sd:
+            _sd[q] = [(j, P.to_die(q, s_["xy"])) for j, s_ in enumerate(face_sites(P, P.parts[q]["type"]))
+                      if not _is_in_site(P, q, j, choice)]
+        return _sd[q]
+    _pxy = {p: (part_reset_pin(P, p) if p in hard else P.to_die(p, choice[P.parts[p]["type"]])) for p in unr}
+    _best = {}
+
+    def _offer(p, q):
+        if q in hard:
+            return
+        for j, c in _sites_die(q):
+            d = _man(c, _pxy[p])
+            if p not in _best or (d, q, j) < _best[p]:
+                _best[p] = (d, q, j)
+    _todo = sorted(unr)
+    for q in sorted(rel):
+        for p in _todo:
+            _offer(p, q)
+    while _todo:
+        cand = [p for p in _todo if p in _best]
+        if not cand:
+            break
+        p = min(cand, key=lambda x: (_best[x][0], x))
+        b = _best[p]
+        q = b[1]
+        par[p] = (q, b[2], round(b[0], 1))
+        rel[p] = rel[q] + (hdep[p] if p in hard else entry(p) + est[(P.parts[p]["type"], choice[P.parts[p]["type"]])])
+        _todo.remove(p)
+        for r in _todo:
+            _offer(r, p)
     outs = {tn: set() for tn in stypes}
     for p, pr in par.items():
         if pr is not None:
@@ -1865,6 +1886,27 @@ def _wf_solve_once(P):
                outs={tn: sorted(v) for tn, v in outs.items()}, hard=sorted(hard), hard_depth=hdep)
     cache["wf_solve"] = res
     return res
+
+
+def pinned_out_of_reach(P):
+    """[(part, pinned parent, nearest distance um)] of every reset.parent_pins entry whose pinned parent has no rst_o site within
+    the hop of the part's reset input (PIN-REACH-1124, report only).  Such a part is unreachable (wf_solve contract) and is
+    then attached to whatever is nearest -- c8: s_2S_x00 pinned to s_3S_L2 at 283 um > 275 um took 11 parts and fW0_p1_b0 with it."""
+    sol = wf_solve(P)
+    hp = hop_um(P) - MARGIN_UM
+    out = []
+    for p, pin in sorted((P.reset.get("parent_pins") or {}).items()):
+        if p not in P.parts or p not in sol["unreachable"]:
+            continue
+        q, site = (pin, None) if isinstance(pin, str) else (pin[0], pin[1])
+        if q not in P.parts or q in sol["hard"]:
+            continue
+        xy = part_reset_pin(P, p) if p in sol["hard"] else P.to_die(p, sol["choice"][P.parts[p]["type"]])
+        ds = [_man(P.to_die(q, s_["xy"]), xy) for j, s_ in enumerate(face_sites(P, P.parts[q]["type"]))
+              if site is None or j == site]
+        if not ds or min(ds) > hp + 1e-6:
+            out.append((p, q, round(min(ds), 1) if ds else None))
+    return out
 
 
 def in_pin(P, tn):
