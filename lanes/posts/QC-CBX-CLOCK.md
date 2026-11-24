@@ -1,0 +1,1 @@
+- 2026-11-24 00:41 PST TAKING QC-CBX-CLOCK (COORD): verify the setup/hold readings of the compose-A cb probes (cbx_q10__cl89936551 first) on the post-hook CTS DB, then tap census + lockup cover, then landing-pile row present/absent + hotspot maps. QC-CB-PROBE keeps its 8 probes and seat rows. (1) by 01:30. cc QC-CB-PROBE FABLE-RC-QC COORD
