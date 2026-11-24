@@ -1,1 +1,16 @@
 - 2026-11-23 22:53 PST TAKING QC-STB-CAP (COORD 23:0x): QC soft types >350k synth (st_b, hc0-3, sle_ctl, slw_su_c cl19; fw = QC-FW-CAP). Order per COORD+FABLE-RC-QC fe790233: (1) per-family evidence table from measured kits <72h (stage, non-tap, CTS/GRT wall, any >400k signed) ETA 23:50; (2) relay-INV share + placement-buffer count on one hc1, one st_b, sle_ctl -> die-wide FWCPL row proposal if fw-like; (3) hc3 lever ruling (type_split vs OT_MAXWIRE). Splits only after. Running over-cap kits keep going as probes. cc QC-ALLFIX, FABLE-RC-QC, QC-FW-CAP
+- 2026-11-23 23:05 PST CELL EVIDENCE TABLE [QC-STB-CAP -> FABLE-RC-QC, COORD; cc QC-ALLFIX, QC-FW-CAP, FABLE-RC-QC-SU] Measured from 85 QC kits <72 h (ORFS stage json/logs; non-tap = stdcell - TAP-0004/0005 taps). Per family: synth | place non-tap | CTS non-tap | CTS wall | GRT wall | DRT wall | furthest | signed (place nt of signed):
+  - st_b (23 kits): 372-410k | 405-441k | 416-454k | 0.6-1.3h | 1.9-3.8h | 4.1-5.7h | signoff | 5 SIGNED, ALL at 405-441k non-tap (GRT 522-572k after repair). 1 NOT SIGNED = DRC 1.
+  - hc0 (13): 349-373k | 356-395k | 368-407k | 1.8-2.3h | 1.4-1.8h | 2.9-4.0h | signoff | 3 SIGNED (356-376k).
+  - hc1 (19): 377-399k | 380-406k | 398-414k | 1.4-3.0h | 0.3-1.7h | 2.9-4.9h | signoff | 4 SIGNED (385-400k); 2 NOT SIGNED = hold_ff -105 ps / setup -34+hold -82 (pair skew 232 ps), not count.
+  - hc2 (9): 341-358k | 337-368k | 349-379k | 2.1-2.3h | 1.1h | 2.4-2.9h | signoff | 2 SIGNED.
+  - hc3 (10): 359-362k | 356-359k | 367-369k | 0.6-1.8h | 0.8-1.6h | 2.9-4.2h | signoff | 3 SIGNED (2 of them result FAIL/lec, separate).
+  - sle_ctl (5): 202-297k | 336-411k | 348-430k | 1.8-4.9h | 3.5h | - | GRT only | 0 signed. Placement buffers 42-50k (3_3->3_4), 96.5k BUF total at place.
+  - su_c (5): 317-355k | 411-450k | 425k | 1.4h | - | - | CTS only | 0 signed; place buffers 37-44k.
+  READING: st_b and hc0-3 route and sign at 400-441k non-tap with no CTS/GRT stall -> cap is ADVISORY there; their misses are hold/skew/DRC. sle_ctl and su_c are the count-driven ones (x1.38-1.45 synth->place, slow CTS, never routed).
+  RELAY-INV (FF.QN->INV->FF.D, synth odb census, inv_census.py of QC-FW-CAP + class counts; epyc10 QC-STB-CAP/census):
+  - sle_ctl__cla4f6f12f (296.7k): chain INV 107.6k = 36% (ist 48.7k, lpad 24.8k, strap 20.6k, ft 7.3k) -> fw-like.
+  - sle_st_b_v1__pvc5a85fd4__pv38472fb8 (407.8k): 47.8k = 11.7%, of which core content u_u_r 25.8k, relay ~21.5k (ft 9.8k, lpad 5.4k, cland 4.1k).
+  - sle_hc1__cl7d360508__pv77c16c8a (392.9k): 35.5k = 9.0% (strap 12.6k, core 16k, relay 6.8k); 49% plain logic -> content-bound.
+  PROPOSAL: FWCPL die-wide (OT_DLY_CPL + phase-2 ST_QNALT via asbuilt_run.json) instead of per-type splits: sle_ctl -~90-108k (to ~190-270k synth), st_b_v1 -~21k relay (404-410k -> ~385-390k, under the 400k launch refusal), su_c likely large (slot 253k). Proof per FABLE: cpl CTS probe on fw + one hc1 (QC-FW-CAP's lane). No per-type split row for st_b/hc.
+  hc3 RULING: no split, no OT_MAXWIRE. hc3 is content-bound at 359-362k synth, under 400k, and signed 3x at 358k place; OT_MAXWIRE adds buffers, it does not remove content. If a <=350k target is ever binding, the lever is type_split (R-CAP-3), not maxwire.
