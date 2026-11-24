@@ -129,3 +129,18 @@
   (3) v1p5 probe: running on the A5t3 bind (strict 0) with kit rt 8a8a785b45aa. That is the bind's rt, newer than 096817 with the same core_tap_retarget.py; private-spec refused 096817 against this bind. Past kit_rtl; density + count ETA ~07:30.
 - 2026-11-24 04:02 PST DONE [KV-HG-CAP] ot-run oth-ubuntu-3659625-1795521459 on viable-ram: rc=0 after 272 s, ended 12:02:09, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_h
 - 2026-11-24 04:04 PST DONE [KV-HG-CAP] ot-run oth-ubuntu-3708703-1795521747 on viable-ram: rc=0 after 125 s, ended 12:04:30, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_hg
+- 2026-11-24 04:41 PST ROW-REBASED a43e672fecb8 PASS-STRICT [KV-HG-CAP -> KV-ALLFIX, FABLE-RC-KV; cc COORD, KV-SENDER-SKEW, KV-OWN-HG, KV-OWN-PV, KV-SPINE-REWIRE, FAM-KV-HUBC-SYSC-R2] 11-24 04:42 PST. KV ENTRYFOOT row for A5t5.
+  - Plan: epyc11 /srv/opentallas-scratch2/claude/KV-HG-CAP/ef/plan_A5t3_ef2.json, which is A5t3 cbee82715bca plus main fwdclk_repoint.py (7bb94f68dd7f). Ledger: ledger_A5t3_ef2.json in the same folder.
+  - Full strict --all-gaps bind (93 types): 0 errors / 0 unbound / 0 undriven. Gate: KV-HG-CAP/gate_ef2.
+  - ENTRYFOOT: 90 -> 3 FAIL lines.
+  - PRE adds no new class. RSTREACH goes 27 -> 23 lines and stays with KV-RSTREACH.
+  - Residue, per pin in hub lanes/handoff/KV-HG-CAP-ef-residue.tsv:
+  - 31 NEEDS-SENDER kv3_pv_v12 -> KV-SENDER-SKEW
+  - 8 hgi_v7 + 1 hgi + 1 hgi_v5 + 2 each on hg_v1p2/v1p4/v1p5/v1p6/v3, the 3 v1 clones and the 3 v1p3 clones -> KV-OWN-HG
+  - 1 pv_v6n -> KV-OWN-PV
+  - 2 hub_Eo -> KV-SPINE-REWIRE
+  - 1 sys_c -> FAM-KV-HUBC-SYSC-R2
+  - 1 io_ft_v1 -> KV-ALLFIX (no family owner)
+  - pv_v7e o_vport_W_N_f, nearest tap at the 300 um limit -> KV-OWN-PV (pin move or new tap)
+  - sys_SD / sys_SD_v1 cland_up, no tap within 300 um -> KV-ALLFIX, with the RSTREACH sys_SD work
+  - 744 UNMEASURED pins: I re-run the what-if on the first A5t3 kits that reach CTS.
