@@ -9,6 +9,8 @@ tests of the touched files (touched test_*.py, plus test_<stem>*.py next to a to
 Non-fast-forward (someone pushed first): fetch, rebase, retry (up to --max, default 8); the tests rerun only when the new upstream
 commits touched files this push touches.  A rebase conflict aborts the rebase (clone unchanged) and exits 3: resolve by hand,
 `git rebase origin/main`, then run again.  Failing tests exit 4 and push nothing.  Exit 0 = main contains your commits.
+KIT-STAGE-IMPORT-1124: a push that makes a kit-staged tools/die_plan module import a sibling kit staging does not copy exits 6
+(static, delta vs main, also with --no-test; tools/fleet/kit_stage_imports.py).
 PUSH-FIX-2300: (1) a lane clone is a sparse worktree, so before testing the clone's cone is auto-widened (git sparse-checkout add, never
 a full checkout) to the repo paths the selected tests name, and again for any tracked path a failing run reports missing, then the run
 repeats (max 4 rounds); (2) after a rebase onto a moved main only the tests whose touched file (or the test file itself) overlaps the
@@ -208,6 +210,24 @@ def affected_tests(tests, files, moved):
     return [t for t in tests if t in hot]
 
 
+def kit_stage_refusal(files, base):
+    """KIT-STAGE-IMPORT-1124 (COORD, FLOW-CANARY-R2): refuse (exit 6, nothing pushed, also with --no-test) a push that makes a module kit
+    staging copies import a tools/die_plan sibling staging does not copy (da4562fcf7 -> every kit died at preflight until b1462d16b4).
+    Delta vs main only; static, seconds; runs when a touched file is a tools/die_plan .py.  -> refusal text or ''."""
+    if not any(f.startswith("tools/die_plan/") and f.endswith(".py") for f in files):
+        return ""
+    try:
+        import kit_stage_imports as KSI
+        new = KSI.new_pairs(".", base, "HEAD")
+    except Exception as e:  # noqa: BLE001 - the checker itself failing never blocks a push; it says so
+        print(f"ot-push-main: WARN kit staging import check not run: {type(e).__name__}: {str(e)[:200]}")
+        return ""
+    if not new:
+        return ""
+    return ("ot-push-main: REFUSED KIT-STAGE-IMPORT: a module staged into kits would import a sibling the kit does not have; "
+            "nothing pushed\n  " + "\n  ".join(new))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-test", action="store_true")
@@ -245,6 +265,9 @@ def main():
         files = touched(base)
         if not files:
             print("ot-push-main: no file differs from main; nothing to push"); return 0
+        stage = kit_stage_refusal(files, base)
+        if stage:
+            print(stage); return 6
         moved = set(out("diff", "--name-only", f"{old_base}..{base}").split()) if old_base != base else set()
         first = tested_files is None
         if not a.no_test:
