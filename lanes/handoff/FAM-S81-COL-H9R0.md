@@ -11,3 +11,9 @@ Job: close S81 col_h9. (1) i2 structural cause + fix; (2) t12 count check; (3) c
 ## Next
 1. Watch INT for C8 KITS GO; verify the 2 r2 kits launch first; read their sign-off.
 2. Get SRCSTAGE into an intake; verify next col_h9_r0 kit log "OT_RELAY_SITES ... unmatched" has 0 src keys missing, and that the t0.c0 TT is >= -42.
+## 08:4x PST (COORD: gate the row myself)
+- Done: old i3t cancelled (unit oth-ubuntu-3352969-1795233997, AP_RC 143); stray INT tmp/h9r0_insp.py ot-deleted.
+- Fork c8seal_tree -> epyc11 /srv/opentallas-scratch2/claude/fam-s81-col-h9r0/c8_tree: ot-tree-fork pid 2707180 on intel2 (log ~/fam-s81-col-h9r0/fork_c8.log; ot-run refused ISOLATION so run direct per rules).
+- Then: ot-run --hosts epyc11 --dir <lane dir> bash gate_src.sh (apply rows -> PRE baseline c8 -> elab strict -> scoped strict 60 col_h9_r0). Log gate_src/.
+- Then rep kit p2 col_h9_r0_p2__t1__cl9f71e63d__pva4376595 via kit_wave private-spec (template intel2 fam-s81-col-h9r0-r4/tmp/sealed_launch.sh; --tree c8_tree --bind-out .../native_bind/srcstage_out --goal route --src-manifest seal).
+- Then post ROW-REBASED to INT (flag p3/p6 names from placed_scan).
