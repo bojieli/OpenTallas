@@ -116,11 +116,13 @@ class SealedPick(unittest.TestCase):
     def pick(self, status, have):
         R = os.path.dirname(self.K) + "/run_kit.sh"
         argv = ["--mem", "48", "--threads", "8", "--dir", self.K, "--", "bash", "-c", f"bash {R} {self.K} place 48 8"]
+        # 0510e129500 reads host status from the SEALED backend, so it is the one that reports the status here
+        sb = fake_backend("ot-run status: " + status)
         conf = dict(enabled=True, dirs=["/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/"],
                     hosts=["epyc7", "epyc2", "epyc4"], backend=fake_backend("ot-run status: " + status),
-                    sealed_backend="/bin/true", spec_dir=tempfile.mkdtemp())
+                    sealed_backend=sb, spec_dir=tempfile.mkdtemp())
         out, why = self.m.decide(argv, conf, check=lambda h, r, k: (h in have, []))
-        return out[out.index("--hosts") + 1] if out[0] == "/bin/true" else "UNSEALED"
+        return out[out.index("--hosts") + 1] if out[0] == sb else "UNSEALED"
 
     def test_pick(self):
         st = " | ".join([E2, E4, E7CAP])

@@ -149,7 +149,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
                          exit 2) when the matches span more than one --dir, so a flag pattern such as '--mem 24' cannot
                          take other lanes' jobs; --all-dirs overrides after reading the list.  Never `pkill -f` ot-run.
 """
-import concurrent.futures as cf, json, os, re, shlex, signal, socket, subprocess, sys, threading, time
+import base64, concurrent.futures as cf, json, os, re, shlex, signal, socket, subprocess, sys, threading, time
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 try:
     import ot_status as _OTS       # WAITER-STD-1600: exit-status file per client + DONE/DIED post; a host without it just runs unrecorded
@@ -1640,8 +1640,28 @@ def container_stop_cmd(tag, path=None):
             "if [ -n \"$left\" ]; then echo \"STILL RUNNING after docker stop:$left\"; else echo \"containers stopped: ${names:-none}\"; fi")
 
 
+HEAD_STOP = os.path.join(os.path.dirname(os.path.realpath(__file__)), "ot-heavy-stop")
+_STOP_RE = re.compile(r"(^|;\s*|&&\s*|\|\|\s*)ot-heavy-stop(?= )")
+
+
+def head_stop_cmd(cmd, path=None):
+    """HEADSTOP-1124 (COORD, KV-ALLFIX 09:47: `ot-run --cancel` left oth-ubuntu-93220 / -4061443 and their dpkit containers running on epyc11, whose rt
+    sync timed out under IO load, so its ot-heavy-stop predated TAG-CANCEL and the stop said nothing): every `ot-heavy-stop` call in a cancel command
+    runs THIS head's copy, shipped inline (base64, python3 -I -c), not the host's rt/current one.  A stale or half-synced host rt therefore never
+    weakens a cancel.  If the head copy is unreadable the command is left as it was (the host's copy)."""
+    if not _STOP_RE.search(cmd):
+        return cmd
+    try:
+        b = base64.b64encode(open(path or HEAD_STOP, "rb").read()).decode()
+    except OSError:
+        return cmd
+    fn = 'ot_heavy_stop_head() { python3 -I -c "$(printf %s ' + b + ' | base64 -d)" "$@"; }; '
+    return fn + _STOP_RE.sub(lambda m: m.group(1) + "ot_heavy_stop_head", cmd)
+
+
 def _host_run(run, h, cmd, timeout=180):
-    """run cmd on host h over ssh; on the local host (localhost / this node) directly"""
+    """run cmd on host h over ssh; on the local host (localhost / this node) directly.  ot-heavy-stop runs the head's own copy (head_stop_cmd)."""
+    cmd = head_stop_cmd(cmd)
     if h == "localhost" or h == socket.gethostname().split(".")[0]:
         return run(["bash", "-c", cmd], capture_output=True, text=True, timeout=timeout)
     return run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", h, cmd], capture_output=True, text=True, timeout=timeout)

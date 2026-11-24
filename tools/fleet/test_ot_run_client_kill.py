@@ -5,6 +5,7 @@ import importlib.machinery, importlib.util, json, os, pathlib, signal, subproces
 H = pathlib.Path(__file__).parent
 l = importlib.machinery.SourceFileLoader("ot_run_client_kill", str(H / "ot-run"))
 RUN = importlib.util.module_from_spec(importlib.util.spec_from_loader("ot_run_client_kill", l)); l.exec_module(RUN)
+RUN.HEAD_STOP = "/nonexistent/ot-heavy-stop"   # HEADSTOP-1124: these tests pin the host-side command text; test_ot_run_head_stop.py covers the inline head copy
 
 
 def fake(stdout):
