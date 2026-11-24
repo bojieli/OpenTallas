@@ -403,3 +403,8 @@
   No-post-since-16:00 not evaluable: host clock is 15:5x, all assigned lanes posted 15:42-15:51.
   NEW flag: S81 STALE 23 outside assignments (col_h9_r0_p6, dsdv_slice_c1x_C t1/t5, gunit__t1, serdes__t1__cl*).
   No new UNOWNED, FAILED-NO-RELAUNCH, or DEAD-OWNER rows.
+- 2026-11-23 17:24 PST OWNERS-SWEEP 17:2x (440 rows); DEAD-OWNER judged on posts after 17:25.
+  S81 UNOWNED 87 (col_h10_r2__t1__cl1f5d6c2a__pv*) -> S81-ALLFIX-COL (last post 17:00, stale).
+  S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C, LP slice); QC STALE 17 (sle_*, glue).
+  KV FAILED-NO-RELAUNCH 2 (kv3_pc_v1__cl4ea58a5c, cl7f648944), KV-ALLFIX last post 16:40.
+  No DEAD-OWNER rows; S81-ALLFIX-SLICE last post 16:29.

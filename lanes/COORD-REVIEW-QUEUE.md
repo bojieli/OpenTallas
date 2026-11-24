@@ -34068,3 +34068,8 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   6 hub_Wo / hub_Eo if the kit_relay_depth rst_n fix is not in the wave rt.
   RELEASE: hroot (b4 placement read by me, h1-h4 fixed), hgi types with rows in K3g (hst2 T1SPLIT, FT23STREET, FT20BAND) as first attempts under probe-through, hub_Wi, io types, the 16 WAIT-BIND rows other than hg. Set the KV-CTLPORT wave key at apply; the two CTLPORT proofs (hroot -105, hgi_v2 -165) and RHI RST/HSK CTS-log evidence are still owed and are read on the first D29 kits.
   D29 is a gate-clean partial fix: 4 of 7 families leave the cut held.
+- 2026-11-23 17:24 PST OWNERS-SWEEP 17:2x (440 rows); DEAD-OWNER judged on posts after 17:25.
+  S81 UNOWNED 87 (col_h10_r2__t1__cl1f5d6c2a__pv*) -> S81-ALLFIX-COL (last post 17:00, stale).
+  S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C, LP slice); QC STALE 17 (sle_*, glue).
+  KV FAILED-NO-RELAUNCH 2 (kv3_pc_v1__cl4ea58a5c, cl7f648944), KV-ALLFIX last post 16:40.
+  No DEAD-OWNER rows; S81-ALLFIX-SLICE last post 16:29.
