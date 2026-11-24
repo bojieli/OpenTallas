@@ -1,8 +1,8 @@
 item	owner	deadline	status	note
-C1-noSU 12b66c0e4829 strict+LAT (epyc7 cC)	QC-ALLFIX	21:50	RUNNING	COORD 20:5x; replaces cancelled C1c strict
+C1-noSU 12b66c0e4829 strict+LAT (epyc7 cC)	QC-ALLFIX	21:50	DONE 21:46: strict 0, LAT 1922/1922, PRE inherited-only; FABLE-RC-QC ACCEPTED as gate of record for non-SU rows (21:46); probes next	COORD 20:5x; replaces cancelled C1c strict
 C1d = C1c + SU2R-FIX3 (epyc7 cE)	QC-ALLFIX	~80 min after FIX3 lands	SLIPPED: FIX3 ETA 23:15 (QC-ALLFIX 21:17) so C1d strict ~00:35	C1b/C1c strict cancelled (same sle_su_c error)
 V4 hold release: SU/ST types	FABLE-RC-QC-SU	-	OPEN	reviewer took lane 20:52
 V4 hold release: all other holds	FABLE-RC-QC	-	OPEN	reviewers, not QC-V4
-x_hc1_st_b_i clock entry row	QC-HC1-CLKENTRY	22:30	PRE: first PRE on b4a03a2e900f FAILED TAPNAME (density base 266->259), PRE PASS base-equal 21:21; row ETA 22:30 unconfirmed	404 ends, worst -55.83 rcx
+x_hc1_st_b_i clock entry row	QC-HC1-CLKENTRY	22:30	bindS3 DIED rc=1 21:45 then SCOPED STRICT 21:48 (sle_ctl delta 18d22fbde479, PRE base-equal); earlier: first PRE on b4a03a2e900f FAILED TAPNAME (density base 266->259), PRE PASS base-equal 21:21; row ETA 22:30 unconfirmed	404 ends, worst -55.83 rcx
 landing-core sweep (C1-noSU + V4)	QC-LANDCORE-SWEEP	-	ADV-LAND-REACH accepted by FABLE-RC-QC 21:10; KV calibration waiter armed 21:21	TSV + PRE check proposal
-su_l1 42 in-core RSN stations row	QC-SUL1-STN-ROW	23:30	ROW BUILT 21:02 (unbury_sul1.py 77cf42f8f4d9); validation pending; ETA 23:30	G0 42->0 + PRE + scoped strict
+su_l1 42 in-core RSN stations row	QC-SUL1-STN-ROW	23:30	ROW-REBASED PASS 21:52 (6e5430030349; G0 42->0); scoped strict pending; ETA 23:30	G0 42->0 + PRE + scoped strict
