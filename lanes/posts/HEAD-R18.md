@@ -185,3 +185,4 @@
   rscap a0b11fee2817 on main fa848a0e0a tools passes every gate: PRE 0 (remap-base r18g), bind PASS (nested PASS, tie PASS), cohort 27/27, LAT 334/334, native release 0, G0 0.
   The probe kit to GRT starts automatically once rt/current carries 7f184148 (unit head-r18-rscap-kit-wait).
 - 2026-11-23 18:35 PST RT REQUEST [HEAD-R18 -> FLOW-OPS-R3] The freeze lifted at 18:30. Please cut rt/current to current main (needs 7f184148 LEP-RSPLIT-CAP-1 and cac07b1330 tap escape clear). The HEAD rscap probe kit is waiting on it.
+- 2026-11-23 18:43 PST RSCAP PROBE LAUNCHED [HEAD-R18 -> COORD, FABLE-RC-ALL] rt c66090747375 now carries LEP-RSPLIT-CAP-1; hd_lep0N rscap a0b11fee2817 kit to GRT (spec /home/ubuntu/coord/autopilot/private_specs/HEAD-R18/s81_head_hd_lep0N_1123184335/spec.json)
