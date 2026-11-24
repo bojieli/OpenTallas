@@ -21,3 +21,7 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 - Row epyc10 /srv/opentallas-scratch2/claude/kv-sender-skew/ROWS_KV-SENDER-SKEW-PV12.py 26b81eb53c03 (cwd = private fork; env SS_EXPORTS=ss_exports.txt). Dry run: 53 repoints; 19 slots respaced at the same count; 11 slots +1 or +2 station (ft0 ft5 ft6 ft7 ft9 ft11 ft13 ft14 ft16 ft28 +1, ft10 +2); hops <= 385 um; tails <= 43 um, except ft57 (522 bits) 107 um. +1 lanes: L596 L1961 L1963 L1975 L1979 L1981 L1993 L1995 L2009 L2015, L1977 +2.
 - Not done: post-fix m is a proxy (fstart launch at port), LATCHECK / join alignment not run, PRE and bind not run, ft57 likely needs its own siting.
 - Waiter: epyc10 kv-sender-skew/wait_a5s.sh for A5s plan.json; then ot-tree-fork + row + PRE + LATCHECK + scoped bind (no PRE override).
+## CORRECTION 00:3x PST (read first)
+- WITHDRAWN: "io_ft_v1 ft3_o = kit SDC tap window, structural -7.8" and "m on hgi_v7 / phy_v1 includes window pessimism". FABLE 00:19: the TT probe mixed corners on hroot / io_cor / io_cor_v1 / io_ft / io_ft_v1 (ft3 -107.8 -> +80.6 TT); hgi_v7 / phy_v1 / io_ft_v1 ft0 is a real cross-tap window.
+- io_ft_v1 rows in the census and what-if are invalid (two-corner kit). Re-measure with sender_margin_probe.sh. The census NO-DEFECT text is superseded.
+- A5s runs on epyc11 (rt 7e0794724813); waiter epyc11 kv-sender-skew/wait_a5s.sh (the epyc10 one was stopped).
