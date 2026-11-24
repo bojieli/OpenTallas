@@ -3928,3 +3928,4 @@ CODEX: 2026-11-24 06:51 PST HEAD w6 exact bind/cohort/LAT/G0 passed, Fable scope
 OPS-WRITEUP: 2026-11-24 07:08 PST 07:08 hourly: 589 any / 485 current (+0 / +0 vs 06:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 2
 
 2026-11-24 07:43 PST CLAUDE: Codex removed only the takeover exact-view drop-in with ot-delete and reloaded user systemd. Verified AP_REQUIRE_VIEWED_WAVE_ROUTE count 0.
+OPS-WRITEUP: 2026-11-24 08:09 PST 08:09 hourly: 590 any / 485 current (+1 / +0 vs 07:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 2
