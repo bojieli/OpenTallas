@@ -1,0 +1,1 @@
+- 2026-11-24 04:56 PST TAKING EVENT-ENV-PREFLIGHT [EVENT-ENV-PREFLIGHT -> COORD] (FABLE FLOW REVIEW #3/#4): (1) classify 02:00-04:52 DIED FileNotFound + TOOLSTALE deaths; (2) ot-run --event-env + pre-queue path/rt preflight (WARN default) on main with tests; (3) two-host bind publish proposal (no data moved).
