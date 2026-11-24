@@ -12,3 +12,7 @@ Evidence of the chase (epyc10 s81-misc-serdes-j9): pair_cts ring->bin -173 clear
 - t13 FSTART (COORD 19:15): inherited B1 refusal; all 3 landing_local_resets raws depth 8 vs consumer depth 10. Row T13-FSTART-RESEAT a5758c3b7b83 (674->675, 554->49, 554->555, anchor rewritten); PRE PASS 0/178; strict t13-only bind RC=0. Posted INT/ASSEMBLY/OPEN-FSTART (8c98a5c5). Class (22 other types) = S81-OPEN-FSTART, not extended here.
 - Compose 72e95bb2eba7 = RING + T13 row; full strict bind running epyc2 (bind_full_ring_t13, private serdes probe bind) since 19:57. Expect refusal at other FSTART types -> then probe from c7 / OPEN-FSTART bind.
 - Tools: epyc2 /srv/opentallas-scratch3/claude/s81-allfix-svc/{t13_fstart_row.py,diag_llr.py,sbind.sh,fbind.sh}
+
+## 04:50 11-24 RESULT
+- Full strict bind 10a4edbf516b (RING on FSTART-DEPTH-B1) RC=0. Tool bug found: bind_cells.sv lacks ot_dp_rrelay_fn (ENTRY_FALL_CELLS) for pin_entry_fall serdes -> kit_rtl fails all B1 serdes kits (posted INT c7edf6f5). Private workaround: bind_full_ring_fsd_ef.
+- t2 CTS post-hook hold -644.97 (was -226): ungrouped reader_start (L198) -> grouped ring (C914). t12 hold -283 port->bin q (250/482). ONE-GROUP FAILS; next form = insertion matching, not grouping.
