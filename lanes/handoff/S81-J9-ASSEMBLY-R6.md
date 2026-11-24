@@ -165,3 +165,10 @@ J8 891100ef774 remains live. No J9 candidate was activated. All admitted exact g
   - Any stop posts STOP and leaves J8 live. The chain checks 21:15 before each step.
 - The gate exits 12 by design: its G0 compare is against J8 and lists the 46 svc-frame findings as introduced. The seal checks G0 sha 2d59b0194697 / 52 errors instead.
 - Pack excludes the other native_bind proof dirs (s81-j9-r6/j9_pack_skip.txt, make_pack_j9.py).
+
+## 2026-11-24 00:2x PST state (supersedes earlier state lines)
+- Live S81 = J8 891100ef774. B1 refused (23 types). B1-FIX 6c09e8b293af: BIND_RC=0 23:49:04, LATCHECK_RC=0 (epyc10 b1fix/full_b2.otrun.log; gate dir gate_b1fix2_full on epyc11 + pulled back to epyc10), G0 52 = the reviewed 52. NOT sealed: FABLE-RC-ALL hold cfda2a55. Cond 4 accepted 23:57 on startchk_b1fix.log (not on my seal test, which is by construction).
+- Open before seal: rt_W1/E1 hops (S81-B1-RTHOPS); lk_ES0 clk_t15 source 848.8 um (R-REACH-4 WARN) row or hold; relay seating inside partitions unproven; COORD/FABLE clearance.
+- Chain v4 (intel2 j9fix4_cut_chain.sh) KILLED 23:58; nothing sealed. j9fix_seal.sh now exits 9 without a SEAL_CLEARED file. mk_cand/apply/event scripts still never run. Event clone s81-j9-r6/laneclone_event.
+- Pull-back: unit oth-ubuntu-2858155-1795506812 epyc10 (bind out 6.3 GB, slow tail). Gate not relaunched.
+- seqhost bk_uid tie: main 7514102531086 (for c9).
