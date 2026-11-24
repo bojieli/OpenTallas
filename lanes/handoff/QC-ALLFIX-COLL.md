@@ -18,3 +18,6 @@ Work dirs: E10 /srv/opentallas-scratch/claude/QC-ALLFIX-COLL (CTS probes), epyc8
 - CBN-RSF-SEAT ROW-REBASED: rsfseat_row.py 59991d13f2c3, B1 99ab093a8b8f -> e0d2191f6daf, PRE = base (1 inherited ROWS FAIL), over-core sites 162 -> 156.
 - TTCTLM ROW-DROP for the placement route: cone place CTS -218.57/-133.58 (E9 QC-ALLFIX-COLL/ttc_cone_cts_1840); the fix is a depth cap or register stage in the CODEX-TOKEN Native32 constructor, plus LEC.
 - coll_core GRT probe: waiting for an rt containing 32027184aff. Then run intel2 /srv/opentallas-scratch2/claude/QC-ALLFIX-probe.sh copy with --rt swapped on compose A; report CLK-open plus CTS/GRT setup.
+
+## 18:51 TTC-STAGE (COORD 19:02) -> ROW-DROP
+- Depth census: CTS-read cpub39_1 has 1047 flops >=18 levels; B1 F5 source has 3304 >=18 (max 38/71). Worst endpoints are internal hold-enable flops; 1208-flop strongly connected loops exist. Needs a constructor depth cap/retime by CODEX-TOKEN plus token bench and sequential LEC. Scripts: E9 QC-ALLFIX-COLL/depth.py, scc.py. Hub bef6a0da.
