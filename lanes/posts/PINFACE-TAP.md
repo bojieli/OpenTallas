@@ -1,0 +1,1 @@
+- 2026-11-23 23:50 PST TAKING PINFACE-TAP: pin-face clock tap pilot (DIE-ARCH-REVIEW (f)4) on QC st_a, su_l1, S81 dsdv_slice; measuring current plans + lane overlap first. cc COORD QC-ALLFIX S81-ALLFIX-INT
