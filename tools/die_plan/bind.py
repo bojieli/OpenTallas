@@ -6239,7 +6239,7 @@ def _error_owner_types(e, known, path_types):
     return set()
 
 
-def probe_scope_split(errs, probe, known_types, module_types=None, path_types=None):
+def probe_scope_split(errs, probe, known_types, module_types=None, path_types=None, *, define_outside=()):
     """SCOPED-BIND-NONEMIT 11-23: on a probe-only OUT (OT_BIND_ONLY_TYPES / --types) an error that names a bound type the probe did NOT
     emit is out of scope: it becomes a WARN-OUT-OF-SCOPE warning and never blocks the in-scope outputs (native_topology.json, receipt).
     An untyped LATCH_EXCEPT_MODULE key is mapped through module_types (bound module -> owning types, from the bind's partition members):
@@ -6261,12 +6261,33 @@ def probe_scope_split(errs, probe, known_types, module_types=None, path_types=No
         tn = tok.split("/", 1)[0]
         if code == "LATCH_EXCEPT_MODULE" and "/" not in tok:
             owners = set(mt.get(tok) or ())
-            out = bool(owners) and not (owners & keep_t)
+        elif code == "TYPE_DEFINE_CONFLICT":
+            # The human-readable error truncates the affected-type map. Use the complete elab receipt.
+            owners = set(define_outside)
         else:
             owners = _error_owner_types(e, known, path_types)
-            out = bool(owners) and owners <= known and not (owners & keep_t)
+        out = bool(owners) and owners <= known and not (owners & keep_t)
         (warn if out else keep).append(f"WARN-OUT-OF-SCOPE {e}" if out else e)
     return keep, warn
+
+
+def probe_tie_findings(tied_pins, emitted, known_types, path_types):
+    """Reapply the tie cap after restricting a probe's exact per-pin records to its owners."""
+    details = []
+    scoped_bits = scoped_pins = outside_bits = 0
+    for (path, port, _module), bits in sorted(tied_pins.items()):
+        owners = path_types.get(path, set())
+        if owners and owners <= known_types and not (owners & emitted):
+            outside_bits += len(bits)
+            continue
+        scoped_bits += len(bits)
+        scoped_pins += 1
+        for bit, value, driver in bits[:max(0, 200 - len(details))]:
+            details.append(f"TIED {path}.{port}[{bit}] = {value} ({driver})")
+    if scoped_bits > 200:
+        details.append(f"TIED_TOTAL {scoped_bits} probe-scope tied bits on {scoped_pins} leaf pins "
+                       "(TIED lines capped at 200; full list bind_tied.json)")
+    return details, outside_bits
 
 
 def cmd_elab(a):
@@ -6735,7 +6756,24 @@ def cmd_bind(a):
     except Exception as exc:                # advisory: a failure is recorded, never raised
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
     if getattr(B, "probe_only", None):           # SCOPED-BIND-NONEMIT 11-23: non-emitted types' findings are warnings on a probe OUT
-        B.errors[:], _oos = probe_scope_split(B.errors, B.probe_only, B.by_type, _module_types(B), _path_types(B))
+        path_types = _path_types(B)
+        known_types = set(B.by_type)
+        emitted_types = set(B.probe_only["emitted"])
+        define_receipt = out / "type_defines.json"
+        define_outside = ()
+        if define_receipt.is_file() and any(e.startswith("TYPE_DEFINE_CONFLICT ") for e in B.errors):
+            try:
+                define_outside = json.loads(define_receipt.read_text()).get("outside") or ()
+            except (OSError, ValueError):
+                pass  # keep the global error when the exact affected types cannot be established
+        remaining = [e for e in B.errors if not e.startswith(("TIED ", "TIED_TOTAL "))]
+        B.errors[:], _oos = probe_scope_split(remaining, B.probe_only, known_types, _module_types(B), path_types,
+                                             define_outside=define_outside)
+        ties, outside_bits = probe_tie_findings(B.tied_pins, emitted_types, known_types, path_types)
+        B.errors.extend(ties)
+        if outside_bits:
+            _oos.append(f"WARN-OUT-OF-SCOPE TIED_TOTAL {outside_bits} tied bits on non-emitted types "
+                        "(full list bind_tied.json)")
         B.warns.extend(_oos)
         rep["warnings"] = B.warns[:500]
         rep["probe_only"]["out_of_scope_warnings"] = len(_oos)

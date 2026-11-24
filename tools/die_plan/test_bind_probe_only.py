@@ -97,3 +97,27 @@ def test_error_naming_an_emitted_and_an_out_of_scope_type_still_fails():
     e = "CROSS x.y (type sle_ctl__b -> type cbx_q10__a): width"
     keep, warn = bind.probe_scope_split([e], probe, ["cbx_q10__a", "sle_ctl__b"])
     assert keep == [e] and warn == []
+
+
+def test_define_conflict_uses_complete_receipt_and_keeps_target_no_effect():
+    probe = {"emitted": ["one"]}
+    conflict = "TYPE_DEFINE_CONFLICT added ['A'] changes types outside at least one requesting scope"
+    no_effect = "TYPE_DEFINE_NOEFFECT one: enabling A changed no cell of this type"
+    errs = [conflict, no_effect]
+    assert bind.probe_scope_split(errs, probe, {"one", "two"}, define_outside={"two"}) == (
+        [no_effect], ["WARN-OUT-OF-SCOPE " + conflict])
+    for outside in ({"one", "two"}, {"unknown"}, set()):
+        assert bind.probe_scope_split(errs, probe, {"one", "two"}, define_outside=outside) == (errs, [])
+    assert bind.probe_scope_split(errs, None, {"one", "two"}, define_outside={"two"}) == (errs, [])
+
+
+def test_probe_tie_cap_keeps_target_after_two_hundred_outside_bits():
+    tied = {
+        ("a_out", "i", "m"): [(i, 0, "constant") for i in range(201)],
+        ("z_in", "j", "m"): [(2, 1, "constant")],
+        ("unmapped", "k", "m"): [(3, 0, "constant")],
+    }
+    errors, outside = bind.probe_tie_findings(
+        tied, {"one"}, {"one", "two"}, {"a_out": {"two"}, "z_in": {"one"}})
+    assert outside == 201
+    assert errors == ["TIED unmapped.k[3] = 0 (constant)", "TIED z_in.j[2] = 1 (constant)"]
