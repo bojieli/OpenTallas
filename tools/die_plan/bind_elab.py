@@ -614,7 +614,7 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
         cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g", "-u",
                f"{os.getuid()}:{os.getgid()}"] + vs + ["-w", str(Path(script_path).parent), YOSYS_IMAGE,
                                                         YOSYS_IN_IMAGE, "-q", "-l", str(log_path), "-s", str(script_path)]
-    cache = ElabCache.open(script_path, cmd)
+    cache = ElabCache.open(script_path)
     if cache is not None and cache.fetch(log_path):
         return
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -625,23 +625,28 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
         cache.store(log_path)
 
 
-INCLUDE_RE = re.compile(r'^[ \t]*`include\s+"([^"]+)"', re.M)
+INCLUDE_RE = re.compile(r'`include\b[ \t]*(?:"([^"\n]+)"|<([^>\n]+)>)?')
 
 
 class ElabCache:
     """BIND-ELAB-PAR 11-23: opt-in content-hash cache of one Yosys elab ($OT_BIND_ELAB_CACHE = a directory).
 
-    Key = sha256 over the exact Yosys script text (it names every source and the output by absolute path, so a hit
-    needs the same paths), the Yosys identity (OT_BIND_YOSYS binary bytes, else the docker image id), and the bytes
-    of every file the script reads plus every `include it reaches (resolved like the frontend: the including
-    file's folder, then each -I folder in order).  An include that resolves nowhere disables the cache for that run.
-    A hit copies the cached write_json output (verified against its recorded sha256) into place; the run log is
-    copied too.  Unset (default) -> no cache, the plain Yosys run."""
+    Key = sha256 over the Yosys script with the elab out dir written as @OUT@, the Yosys identity (OT_BIND_YOSYS bytes,
+    else the docker image id), and for every file the script reads or `includes: its place (@OUT@/..., else its absolute
+    path and its path relative to the out dir, which slang writes into src attributes) and bytes.  So a later compose
+    in a sibling out dir hits when no RTL, netlist or define changed.  One changed source misses: the elab is one
+    die-wide Yosys run, there is no per-type result to reuse.  An output that names its out dir (native frontend src
+    attributes) only hits in the same out dir.
+    Not cached (plain Yosys run): an `include that is a macro or resolves nowhere, a source that loads data files
+    ($readmem*, $fopen), sources that change while Yosys runs, a store past $OT_BIND_ELAB_CACHE_GB (default 100) or
+    leaving under 200 GB free.  Nothing here deletes a cache entry.  A hit is verified against its recorded sha256."""
+    MIN_FREE_GB = 200
 
-    def __init__(self, root, key, out_json):
-        self.dir = Path(root) / key[:2] / key
-        self.key = key
-        self.out_json = Path(out_json)
+    def __init__(self, root, script_path, out_json, yid):
+        self.root = Path(root)
+        self.script, self.out_json, self.yid = Path(script_path), Path(out_json), yid
+        self.key = self._key()
+        self.dir = self.root / self.key[:2] / self.key if self.key else None
 
     @staticmethod
     def _sha(path):
@@ -653,83 +658,104 @@ class ElabCache:
         return h.hexdigest()
 
     @classmethod
-    def _yosys_id(cls, cmd):
-        exe = os.environ.get("OT_BIND_YOSYS")
-        if exe:
-            return "exe:" + cls._sha(shutil.which(exe) or exe)
-        r = subprocess.run(["docker", "image", "inspect", "--format", "{{.Id}}", YOSYS_IMAGE], capture_output=True,
-                           text=True)
-        if r.returncode != 0 or not r.stdout.strip():
-            return None
-        return "image:" + r.stdout.strip()
-
-    @classmethod
-    def open(cls, script_path, cmd):
+    def open(cls, script_path):
         root = os.environ.get("OT_BIND_ELAB_CACHE", "").strip()
         if not root or root.lower() in ("0", "off", "no"):
             return None
-        import hashlib
         try:
-            text = Path(script_path).read_text()
-            outs = re.findall(r"^write_json\s+(\S+)\s*$", text, re.M)
-            yid = cls._yosys_id(cmd)
+            outs = re.findall(r"^write_json\s+(\S+)\s*$", Path(script_path).read_text(), re.M)
+            exe = os.environ.get("OT_BIND_YOSYS")
+            if exe:
+                yid = "exe:" + cls._sha(shutil.which(exe) or exe)
+            else:
+                r = subprocess.run(["docker", "image", "inspect", "--format", "{{.Id}}", YOSYS_IMAGE],
+                                   capture_output=True, text=True)
+                yid = "image:" + r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else None
             if len(outs) != 1 or yid is None:
                 return None
-            toks = set()
-            incs = []
-            for ln in text.splitlines():
-                for tok in ln.split():
-                    if tok.startswith("-I"):
-                        incs.append(tok[2:])
-                    elif tok.startswith("/") and Path(tok).is_file() and tok != outs[0]:
-                        toks.add(tok)
-            seen = {}
-            todo = sorted(toks)
-            while todo:
-                f = todo.pop()
-                if f in seen:
-                    continue
-                seen[f] = cls._sha(f)
-                for name in INCLUDE_RE.findall(Path(f).read_text(errors="replace")):
-                    cands = [Path(name)] if Path(name).is_absolute() else \
-                        [Path(f).parent / name] + [Path(d) / name for d in incs]
-                    hit = next((c for c in cands if c.is_file()), None)
-                    if hit is None:
-                        return None
-                    todo.append(str(hit))
-            h = hashlib.sha256()
-            h.update(b"bind-elab-cache-v1\0" + yid.encode() + b"\0" + text.encode())
-            for f in sorted(seen):
-                h.update(f"\0{f}\0{seen[f]}".encode())
-            return cls(root, h.hexdigest(), outs[0])
+            c = cls(root, script_path, outs[0], yid)
+            return c if c.key else None
         except OSError:
             return None
 
+    def _key(self):
+        import hashlib
+        out = str(self.out_json.parent)
+        text = self.script.read_text()
+        incs = [tok[2:] for tok in text.split() if tok.startswith("-I")]
+        todo = [tok for tok in text.split() if tok.startswith("/") and tok != str(self.out_json) and Path(tok).is_file()]
+        seen = {}
+        while todo:
+            f = todo.pop()
+            if f in seen:
+                continue
+            body = Path(f).read_text(errors="replace")
+            if "$readmem" in body or "$fopen" in body:
+                return None
+            seen[f] = self._sha(f)
+            for m in INCLUDE_RE.finditer(body):
+                name = m.group(1) or m.group(2)
+                cands = [] if not name else ([Path(name)] if Path(name).is_absolute() else
+                                             [Path(f).parent / name] + [Path(d) / name for d in incs])
+                hit = next((c for c in cands if c.is_file()), None)
+                if hit is None:
+                    return None
+                todo.append(str(hit))
+
+        def place(x):
+            x = str(x)
+            return "@OUT@" + x[len(out):] if x == out or x.startswith(out + "/") else f"{x}|{os.path.relpath(x, out)}"
+        norm = re.sub(re.escape(out) + r"(?=[/\s]|$)", "@OUT@", text)
+        rec = [f"{place(d)}" for d in incs] + sorted(f"{place(f)}|{s}" for f, s in seen.items())
+        return hashlib.sha256("\0".join(["bind-elab-cache-v2", self.yid, norm, *rec]).encode()).hexdigest()
+
     def fetch(self, log_path):
-        meta = self.dir / "meta.json"
+        tmp = self.out_json.with_name(self.out_json.name + ".cache_tmp")
         try:
-            m = json.loads(meta.read_text())
-            src = self.dir / "out.json"
-            if m.get("key") != self.key or self._sha(src) != m.get("sha256"):
+            m = json.loads((self.dir / "meta.json").read_text())
+            if m["key"] != self.key or (not m["relocatable"] and m["out_json"] != str(self.out_json)):
                 return False
-            tmp = self.out_json.with_name(self.out_json.name + ".cache_tmp")
-            shutil.copyfile(src, tmp)
+            shutil.copyfile(self.dir / "out.json", tmp)
+            if self._sha(tmp) != m["sha256"]:
+                return False
             os.replace(tmp, self.out_json)
             shutil.copyfile(self.dir / "yosys.log", log_path)
             return True
-        except (OSError, ValueError):
+        except (OSError, ValueError, KeyError):
             return False
+        finally:
+            tmp.unlink(missing_ok=True)
+
+    def _names_out(self):
+        needle, tail = str(self.out_json.parent).encode(), b""
+        with open(self.out_json, "rb") as f:
+            for blk in iter(lambda: f.read(1 << 22), b""):
+                if needle in tail + blk:
+                    return True
+                tail = blk[-len(needle):]
+        return False
 
     def store(self, log_path):
         try:
+            if self._key() != self.key:             # a source changed while Yosys ran
+                return
+            limit = float(os.environ.get("OT_BIND_ELAB_CACHE_GB") or 100)
+            self.root.mkdir(parents=True, exist_ok=True)
+            size = self.out_json.stat().st_size
+            used = sum(f.stat().st_size for f in self.root.rglob("*") if f.is_file())
+            if used + size > limit * (1 << 30) or \
+                    shutil.disk_usage(self.root).free - size < self.MIN_FREE_GB * (1 << 30):
+                return
             self.dir.mkdir(parents=True, exist_ok=True)
-            tmp = self.dir / f"out.json.tmp{os.getpid()}"
-            shutil.copyfile(self.out_json, tmp)
-            os.replace(tmp, self.dir / "out.json")
-            shutil.copyfile(log_path, self.dir / "yosys.log")
-            (self.dir / "meta.json").write_text(json.dumps(dict(key=self.key, sha256=self._sha(self.dir / "out.json"),
-                                                                out_json=str(self.out_json))) + "\n")
-        except OSError:
+            for src, name in ((self.out_json, "out.json"), (log_path, "yosys.log")):
+                tmp = self.dir / f"{name}.tmp{os.getpid()}"
+                shutil.copyfile(src, tmp)
+                os.replace(tmp, self.dir / name)
+            tmp = self.dir / f"meta.json.tmp{os.getpid()}"
+            tmp.write_text(json.dumps(dict(key=self.key, sha256=self._sha(self.dir / "out.json"),
+                                           relocatable=not self._names_out(), out_json=str(self.out_json))) + "\n")
+            os.replace(tmp, self.dir / "meta.json")
+        except (OSError, ValueError):
             pass
 
 

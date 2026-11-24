@@ -104,6 +104,8 @@ def test_parallel_variants_and_cache_are_byte_identical(tmp_path, monkeypatch, c
     assert _digest(out) == serial
     shutil.move(out, tmp_path / "o_par")
     monkeypatch.setenv("OT_BIND_ELAB_CACHE", str(tmp_path / "cache"))
+    import bind_elab as E
+    monkeypatch.setattr(E.ElabCache, "MIN_FREE_GB", 0)
     assert _elab(plan, out) == 0                       # fills the cache
     assert _digest(out) == serial
     assert len(list((tmp_path / "cache").rglob("meta.json"))) == 4
@@ -118,3 +120,72 @@ def test_parallel_variants_and_cache_are_byte_identical(tmp_path, monkeypatch, c
     lf.write_text(lf.read_text() + "\n// edit\n")
     assert _elab(plan, out) == 0
     assert len(list((tmp_path / "cache").rglob("meta.json"))) == 8
+
+
+def _entry(tmp_path, out, body="module m; endmodule\n", src=None):
+    """a hand-made elab step: OUT/a.ys reading one staged and one tree source; no Yosys needed"""
+    import bind_elab as E
+    src = src or tmp_path / "rtl" / "m.sv"
+    src.parent.mkdir(exist_ok=True)
+    src.write_text(body)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "s.sv").write_text("module s; endmodule\n")
+    (out / "a.ys").write_text(f"read_slang -I{src.parent} {out}/s.sv {src}\nwrite_json {out}/asbuilt.json\n")
+    return E.ElabCache.open(out / "a.ys")
+
+
+@pytest.fixture
+def cache_env(tmp_path, monkeypatch):
+    import bind_elab as E
+    exe = tmp_path / "yosys"
+    exe.write_text("v1")
+    monkeypatch.setenv("OT_BIND_YOSYS", str(exe))
+    monkeypatch.setenv("OT_BIND_ELAB_CACHE", str(tmp_path / "cache"))
+    monkeypatch.setattr(E.ElabCache, "MIN_FREE_GB", 0)
+    return tmp_path
+
+
+def _fill(c, out, content):
+    (out / "asbuilt.json").write_text(content)
+    (out / "y.log").write_text("log")
+    c.store(out / "y.log")
+
+
+def test_cache_hits_in_a_sibling_out_dir_only_when_relocatable(cache_env):
+    t = cache_env
+    a, b, deep = t / "c8_out", t / "compose9_out", t / "x" / "c9_out"
+    _fill(_entry(t, a), a, "relative only")
+    c = _entry(t, b)
+    assert c.fetch(b / "y.log") and (b / "asbuilt.json").read_text() == "relative only"
+    assert not _entry(t, deep).fetch(deep / "y.log")            # other depth: slang relative src text differs
+    n = t / "d_out"
+    body = "module m; wire w; endmodule\n"
+    _fill(_entry(t, n, body), n, f"names {n}/s.sv")
+    e = t / "e_out"
+    assert not _entry(t, e, body).fetch(e / "y.log")             # output names its out dir
+    assert _entry(t, n, body).fetch(n / "y.log")
+
+
+def test_cache_misses_or_stays_off_when_unsafe(cache_env):
+    t = cache_env
+    a = t / "a_out"
+    _fill(_entry(t, a), a, "x")
+    assert not _entry(t, a, "module m; wire q; endmodule\n").fetch(a / "y.log")        # source edit
+    for body in ('`include "gone.svh"\n', "`include `HDR\n", "`include <gone.svh>\n",
+                 'module m; initial $readmemh("a.hex", r); endmodule\n'):
+        assert _entry(t, a, body) is None
+    inc = t / "rtl" / "h.svh"
+    inc.write_text("// 1\n")
+    k1 = _entry(t, a, '`include "h.svh"\n').key
+    inc.write_text("// 2\n")
+    assert _entry(t, a, '`include "h.svh"\n').key != k1                                # include edit
+    (t / "yosys").write_text("v2")
+    assert not _entry(t, a).fetch(a / "y.log")                                         # another Yosys
+    c = _entry(t, a, "module m; wire r; endmodule\n")
+    (t / "rtl" / "m.sv").write_text("module m; wire changed; endmodule\n")
+    _fill(c, a, "y")                                                                   # edited while Yosys ran
+    assert not c.dir.exists()
+    c = _entry(t, a, "module m; wire z; endmodule\n")
+    _fill(c, a, "good")
+    (c.dir / "out.json").write_text("bad!")                                            # corrupt entry
+    assert not c.fetch(a / "y.log") and (a / "asbuilt.json").read_text() == "good"
