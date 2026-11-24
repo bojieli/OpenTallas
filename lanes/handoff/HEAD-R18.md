@@ -193,3 +193,7 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
   - rscap probe: head-r18-rscap-waiter3.
   - 66ce census: local session waiter.
 - head-r18-kit-waiter5 stopped. The West waiter script waiter_west/ is for HEAD-WEST; not started by me.
+## 2026-11-23 20:5x PST
+- Waiter guard bug fixed (ls A B exited 2). East waiters restarted: head-r18-east-waiter2 (waiter_east/), head-r18-epin-waiter2 (waiter_epin2/), head-r18-rscap-waiter4 (waiter_rscap2/). A FAIL result older than the waiter is ignored as stale.
+- State: epin_r4 in CTS; r18g escape in 4_2 tapbal GRT, iteration 4/30; rscap in CTS; 66ce census at iteration 12/20.
+- 23:00 census at risk: post the 66ce read at 23:00, kit GRT reads 00:00-01:30. Hub progress every <=45 min.
