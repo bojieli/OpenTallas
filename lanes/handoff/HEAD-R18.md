@@ -256,3 +256,8 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - E9 routed LEC oth-ubuntu-2070186-1795531528 running; out epyc9 head-r18/lec_ctl_binary_preplace/lec_routed_codex; local ot-wait waiter.
 - SPN: 95099a6cad5f = 014661 + hd_spn 8 taps; rebased on W6 (hd_spn identical). r1 E11 gate_w6_spn.sh FAIL republish rst_rl_88 renumbered (prep_r18w6_spn, bind_r18w6_spn kept as evidence). r2 gate_w6_spn2.sh (+landing_remap hd_spn) -> prep_r18w6_spn2 / bind_r18w6_spn2, queued E11. Next: private kit goal place on the r2 plan if gates green.
 - Witness: l48un qualify is stale on purpose (pinned l48uo). Boot account on W6 + provider_e1br: 113/365/5851 vs sidecar 110/382/5861. Blockers: collector has no lep0N_w part (dup edges), provider_e1br is not the W6 bind START tree, plan count_aligned_bind settle 64. Asked COORD for OK on: HEAD-WEST collector fix + START emit on W6 bind + re-pin.
+## 11-24 08:4x PST HEAD-R18
+- SPN r2 GREEN: plan 5fb8ca47357d (W6 + hd_spn 8 taps + landing_remap), E11 prep_r18w6_spn2 / bind_r18w6_spn2; strict+nested PASS, cohort 27/27, LAT 334/334, NATREL 12, G0 0 err.
+- SPN kit: event env events/head-w6-spn.env; spec autopilot/private_specs/HEAD-R18/s81_head_hd_spn_1124083016 (goal place, rt c0b6e2d03408); intel2 driver unit head-r18-spn-w6-place. Review place images before any route.
+- LEC 2070186 waiter: intel2 unit head-r18-lec2070186-waiter (posts DONE/DIED). Count binary CTL? NO: r17b binary variant is excluded (TT -44.22); the LEC result only adopts LEC evidence.
+- Next: CTL 9cf9 place review when gen+place done; witness waits for COORD ruling (collector lep0N_w + START emit on W6 bind).
