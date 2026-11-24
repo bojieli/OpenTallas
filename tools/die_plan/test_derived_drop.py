@@ -151,3 +151,32 @@ def test_classes_registered_in_pre():
 def test_solver_tree_method_not_shadowed():
     S = D.Solver({"partition_types": {}}, "/x/p.json", "/some/tree")
     assert callable(S.tree) and S.root == "/some/tree"
+
+
+def test_references_the_bind_repicks_are_warn():
+    """LOCAL-RESET-RAW-1: the bind re-picks a gone / far landing_local_resets raw (S81 leaf, bk_sel): WARN, not FAIL"""
+    t = {"clock": {"landing_local_resets": [{"name": "fstart_2", "raw": "rst_rl_27", "xy_um": [0, 0]}]}}
+
+    class Rp(Fake):
+        def repaired(self, tn):
+            return {"clock/landing_local_resets/0/raw"}
+    S = Rp({"bk_sel": {"rst_rl_1": (None, (0, 0))}}, hops={"bk_sel": [("local_reset:fstart_2", "rst_rl_27", "missing", None, 0.0)]})
+    out = D.findings({"partition_types": {"bk_sel": t}}, "/x/p.json", solver=S)
+    assert out and all(x.startswith("WARN") for x in out)
+    out = D.findings({"partition_types": {"bk_sel": t}}, "/x/p.json",
+                     solver=Fake({"bk_sel": {"rst_rl_1": (None, (0, 0))}}, hops=S.h))
+    assert sum(x.startswith("FAIL") for x in out) == 2
+    assert D.hop_path("reader_start:ft0_i:3", {}) == "clock/landing_reader_start/branches/ft0_i/stages/3/raw_reset"
+
+
+def test_stale_die_relay_parent_fails():
+    """S81 c8 24_tgr5: reset.die_relays fW0_p1_b0 parent svc_1_rs/18, solve svc_9_att/5"""
+    class W(Fake):
+        def wf_parent(self):
+            return {"fW0_p1_b0": ("svc_9_att", 5), "fE0": ("svc_1_rs", 2)}
+    raw = {"reset": {"die_relays": {"fW0_p1_b0": {"parent": "svc_1_rs", "site": 18}, "fE0": {"parent": "svc_1_rs", "site": 2}}},
+           "partition_types": {}}
+    out = D.findings(raw, "/x/p.json", solver=W())
+    assert len(out) == 1 and out[0].startswith("FAIL DERIVEDNAME die: 1 of 2") and "solve svc_9_att/5" in out[0]
+    raw["reset"]["die_relays"]["fW0_p1_b0"] = {"parent": "svc_9_att", "site": 5}
+    assert D.findings(raw, "/x/p.json", solver=W()) == []

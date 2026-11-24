@@ -144,6 +144,25 @@ class Solver:
                 self._c["bc"] = None
         return self._c["bc"]
 
+    def repaired(self, tn):
+        """plan paths ('clock/<section>/...') the bind re-picks itself (reset_anchor.repicked_paths, the predicate LANDREMAP and
+        the bind share: every landing_local_resets raw; every START / local rst_rl_<k> of a type with reset_tree_anchor)"""
+        if ("p", tn) not in self._c:
+            import reset_anchor as RA
+            root = Path(self.root).resolve() if self.root and Path(self.root).is_dir() else HERE.parents[1]
+            try:
+                paths, _err = self._run(lambda: RA.repicked_paths(tn, self.raw["partition_types"][tn], self.tree(tn), root))
+            except Exception:  # noqa: BLE001 - nothing known to be repaired: judge every reference
+                paths = set()
+            self._c[("p", tn)] = set(paths or ())
+        return self._c[("p", tn)]
+
+    def wf_parent(self):
+        """{partition: (parent partition, parent rst_o site)} of the current die reset wavefront solve (reset_tree.wf_solve)"""
+        import reset_tree as RT
+        sol = self._run(lambda: RT.wf_solve(self._plan()))
+        return {p: (None if pr is None else (pr[0], pr[1])) for p, pr in sol["parent"].items()}
+
     def raw_hops(self, tn):
         """reach_rules.raw_hops: [(where, raw, 'same'|'half'|'missing', hop um|None, limit um)]"""
         import reach_rules as R
@@ -178,10 +197,35 @@ def bound_start_raw(bind_rtl, tn):
     return None
 
 
+def hop_path(where, t):
+    """reach_rules.raw_hops 'where' -> the plan path spelling of reset_anchor.ref_paths"""
+    kind, _, rest = where.partition(":")
+    if kind == "local_reset":
+        for i, lr in enumerate(((t.get("clock") or {}).get("landing_local_resets")) or []):
+            if isinstance(lr, dict) and str(lr.get("name")) == rest:
+                return f"clock/landing_local_resets/{i}/raw"
+        return None
+    bus, _, i = rest.rpartition(":")
+    return f"clock/landing_{kind}/branches/{bus}/stages/{i}/raw_reset"
+
+
+def _repaired(S, tn):
+    f = getattr(S, "repaired", None)
+    return f(tn) if f else set()
+
+
 def rstreach_type(tn, t, S, bind_rtl=None, reach=REACH_UM):
     out = []
-    # a. START / local raw reset hops (R-REACH-5 measure)
+    # a. START / local raw reset hops (R-REACH-5 measure); a reference the bind re-picks itself (GATE-AGREE-R1 predicate,
+    #    e.g. every landing_local_resets raw: LOCAL-RESET-RAW-1) is WARN, as in LANDREMAP-ADVISORY
     hops = S.raw_hops(tn)
+    bad_hops = [h for h in hops if h[2] == "missing" or (h[3] is not None and h[3] > h[4] + EPS)]
+    rp = _repaired(S, tn) if bad_hops else set()
+    soft = [h for h in bad_hops if hop_path(h[0], t) in rp]
+    if soft:
+        out.append(f"WARN RSTREACH {tn}: {len(soft)} START / local reset raw reference(s) missing or over reach that the bind "
+                   f"re-picks itself (e.g. {soft[0][0]} <- {soft[0][1]}); re-derive to keep kits byte-stable")
+    hops = [h for h in hops if h not in soft]
     miss = [h for h in hops if h[2] == "missing"]
     over = sorted((h for h in hops if h[3] is not None and h[3] > h[4] + EPS), key=lambda h: -h[3])
     if miss:
@@ -307,7 +351,7 @@ def derivedname_type(tn, t, S, base_raw=None, BS=None):
         rel = S.relays(tn)
     if any(TAP.match(v) for v in refs.values()):
         taps = S.taps(tn)
-    bad = []
+    bad, rp = [], None
     for p, v in sorted(refs.items()):
         m = RELAY.match(v)
         if m:
@@ -316,6 +360,13 @@ def derivedname_type(tn, t, S, base_raw=None, BS=None):
             ok = v in taps
         if not ok:
             bad.append((p, v))
+    if bad:
+        rp = _repaired(S, tn)
+        soft = [(p, v) for p, v in bad if p in rp]
+        bad = [(p, v) for p, v in bad if p not in rp]
+        if soft:
+            out.append(f"WARN DERIVEDNAME {tn}: {len(soft)} referenced relay name(s) gone from the tree that the bind re-picks "
+                       f"itself (e.g. {soft[0][0]} = {soft[0][1]})")
     if bad:
         ex = "; ".join(f"{p} = {v}" for p, v in bad[:MAX_LIST])
         out.append(f"FAIL DERIVEDNAME {tn}: {len(bad)} of {len(refs)} referenced relay / tap name(s) not emitted by the "
@@ -376,6 +427,29 @@ def derivedname_type(tn, t, S, base_raw=None, BS=None):
 CLASSES = ("RSTREACH", "DERIVEDNAME")
 
 
+def die_relay_findings(raw, S):
+    """DERIVEDNAME die level (S81 c8 24_tgr5 ba9b277a852b: 38 reset.die_relays carried from B1, parents no longer the solved
+    wavefront parents, reach_relay_plan raised in the tail): every reset.die_relays row's parent / site = the current
+    wavefront solve (the check reset_tree._die_relay_rows makes when the tree is built)"""
+    drl = ((raw or {}).get("reset") or {}).get("die_relays") or {}
+    if not drl or not hasattr(S, "wf_parent"):
+        return []
+    try:
+        par = S.wf_parent()
+    except Exception as e:  # noqa: BLE001
+        return [f"WARN DERIVEDNAME die: reset.die_relays not checked (wavefront solve: {type(e).__name__}: {str(e)[:160]})"]
+    bad = []
+    for p, d in sorted(drl.items()):
+        pr = par.get(p)
+        if pr is None or [pr[0], pr[1]] != [d.get("parent"), d.get("site")]:
+            bad.append(f"{p}: declared {d.get('parent')}/{d.get('site')}, solve {None if pr is None else f'{pr[0]}/{pr[1]}'}")
+    if not bad:
+        return []
+    return [f"FAIL DERIVEDNAME die: {len(bad)} of {len(drl)} reset.die_relays name a parent that is not the current wavefront "
+            f"solve's ({'; '.join(bad[:MAX_LIST])}); the bind / reach_relay_plan refuse them -- re-plan: reach_relay_plan.py "
+            f"(or drop reset.die_relays before the tail rebuilds them)"]
+
+
 def default_bind_rtl(plan_path, elab_dir=None):
     """bound RTL dir used to tell FSTART face flops and the bound cland_start_raw site: --elab-dir, $OT_DERIVED_BIND_RTL,
     else <plan dir>/bind_of_record (the tree's last bind; the face-flop role does not change with a re-floor)"""
@@ -411,6 +485,8 @@ def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=N
     sys.path.insert(0, str(HERE))
     budget = float(budget_s if budget_s is not None else os.environ.get("OT_DERIVED_BUDGET_S", "900"))
     t0, out, done, errs = time.time(), [], 0, 0
+    if "DERIVEDNAME" in want and not only:
+        out += die_relay_findings(raw, S)
     for tn, t in todo:
         if time.time() - t0 > budget:
             break
