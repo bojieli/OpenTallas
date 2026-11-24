@@ -833,14 +833,65 @@ class DieContextHash(unittest.TestCase):
 
     def test_row_kept_only_when_die_ctx_matches(self):
         cur = {"qwen_compute": {"t": "NEW"}}
-        self.assertTrue(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "OLD"}))
-        self.assertFalse(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "NEW"}))
+        self.assertTrue(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "OLD", "die_ctx_v": BI.DIE_CTX_V}))
+        self.assertFalse(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "NEW", "die_ctx_v": BI.DIE_CTX_V}))
+        self.assertFalse(KW.ctx_changed(cur, "qwen_compute", {"item": "t", "die_ctx": "OLD"}))   # TYPE-CONTRACT-SPEC 11-24: a v1 die_ctx is unknown until re-probed
         self.assertFalse(KW.ctx_changed(cur, "qwen_compute", {"item": "t"}))               # unknown stays as before
         self.assertFalse(KW.ctx_changed({}, "qwen_compute", {"item": "t", "die_ctx": "OLD"}))
 
     def test_probe_emits_die_ctx(self):
         self.assertIn("die_ctx(p, name)", KW.PROBE_PLAN)
-        self.assertGreaterEqual(KW.PROBE_V, 10)
+        self.assertIn('"die_ctx_v": DIE_CTX_V', KW.PROBE_PLAN)
+        self.assertGreaterEqual(KW.PROBE_V, 12)
+
+    def test_current_die_ctx_ignores_a_probe_of_another_spelling(self):
+        cfg = {"dies": {"qwen_compute": {"event": "E", "plan": "p", "gen_host": "h"}}}
+        self.assertEqual(KW.current_die_ctx(cfg, {"plans": {"h:p|E": {"die_ctx": {"t": "X"}}}}), {})
+        self.assertEqual(KW.current_die_ctx(cfg, {"plans": {"h:p|E": {"die_ctx": {"t": "X"}, "die_ctx_v": BI.DIE_CTX_V}}}), {"qwen_compute": {"t": "X"}})
+
+
+class DieContextSdcRows(unittest.TestCase):
+    """TYPE-CONTRACT-SPEC 11-24 (QC V3->V4: 106 of 107 changed clock.tap_offset.per_port_ps rows were invisible to die_ctx, and the tap_offset.source text moved die_ctx of all
+    127 types): every per-port row a type's SDC reads is in its die_ctx whole; provenance text is not"""
+
+    def plan(self, n=20, port_ps=10, source="FABLE 11-16: derived from /srv/x routed runs", other_ps=10):
+        names = [f"t{i:02d}" for i in range(n)]
+        ports = lambda v: {f"clk_p{j}": {"early": v, "late": v + 5} for j in range(16)}      # >= TABLE_MIN ports named by no type
+        pp = {t: ports(other_ps) for t in names}
+        pp["t00"] = ports(port_ps)
+        return {"partition_types": {t: {"x": 1} for t in names},
+                "clock": {"source": {"part": "coll_core", "bus": "clk_rx"}, "insertion_ps": 100,
+                          "tap_offset": {"source": source, "per_port_ps": pp},
+                          "tap_window": {"window_ps": 20, "per_type_ps": {t: 30 for t in names}, "per_port_ps": {t: ports(4) for t in names}, "basis": "measured on routed kits 11-20"}},
+                "reset": {}, "die": {}, "latency": {}}
+
+    def test_per_port_tap_offset_row_of_the_type_moves_its_die_ctx_only(self):
+        a, b = self.plan(), self.plan(port_ps=37)
+        self.assertNotEqual(BI.die_ctx(a, "t00"), BI.die_ctx(b, "t00"))
+        self.assertEqual(BI.die_ctx(a, "t01"), BI.die_ctx(b, "t01"))
+
+    def test_one_port_of_a_large_row_counts(self):
+        a, b = self.plan(), self.plan()
+        b["clock"]["tap_offset"]["per_port_ps"]["t05"]["clk_p9"]["late"] = 99
+        self.assertNotEqual(BI.die_ctx(a, "t05"), BI.die_ctx(b, "t05"))
+        b2 = self.plan(); b2["clock"]["tap_window"]["per_port_ps"]["t05"]["clk_p3"]["early"] = 1
+        self.assertNotEqual(BI.die_ctx(a, "t05"), BI.die_ctx(b2, "t05"))
+        self.assertEqual(BI.die_ctx(a, "t06"), BI.die_ctx(b2, "t06"))
+
+    def test_provenance_text_is_not_an_input(self):
+        a, b = self.plan(), self.plan(source="FABLE-DIE-QC-R 11-23 V4 rebuild from another run dir")
+        for t in ("t00", "t07"):
+            self.assertEqual(BI.die_ctx(a, t), BI.die_ctx(b, t))
+        c = self.plan(); c["clock"]["tap_window"]["basis"] = "re-measured 11-24"
+        self.assertEqual(BI.die_ctx(a, "t07"), BI.die_ctx(c, "t07"))
+
+    def test_a_named_source_value_stays_an_input(self):
+        a, b = self.plan(), self.plan()
+        b["clock"]["source"]["bus"] = "clk_rx2"
+        self.assertNotEqual(BI.die_ctx(a, "t07"), BI.die_ctx(b, "t07"))
+        c = self.plan(source="pll_a")                                                    # a one-word value is a name, not text
+        self.assertNotEqual(BI.die_ctx(a, "t07"), BI.die_ctx(c, "t07"))
+
 
 
 class DieContextTypeScoped(unittest.TestCase):
@@ -896,8 +947,8 @@ class CtxOnlySupersedeGuard(unittest.TestCase):
                "dies": {"qwen_compute": {"event": "E", "enabled": True, "plan": "p", "gen_host": "h"}}}
         blk = "BLK"
         st = {"items": {"qwen_compute|E|t|bBLK": {"die": "qwen_compute", "item": "t", "event": "E", "block_sha": blk if block_same else "OLDBLK", "status": status, "q_status": qstatus,
-                                                  "q_id": "j1", "attempt": 1, "dir": "/nonexistent", "die_ctx": ctx_old}},
-              "plans": {"h:p|E": {"blocks": {"t": blk}, "norm_blocks": {"t": "N"}, "die_ctx": {"t": "NEW"}}}}
+                                                  "q_id": "j1", "attempt": 1, "dir": "/nonexistent", "die_ctx": ctx_old, "die_ctx_v": BI.DIE_CTX_V}},
+              "plans": {"h:p|E": {"blocks": {"t": blk}, "norm_blocks": {"t": "N"}, "die_ctx": {"t": "NEW"}, "die_ctx_v": BI.DIE_CTX_V}}}
         import tempfile, json as _j
         logs = []
         ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "log": staticmethod(logs.append), "sh": staticmethod(lambda *a, **k: (0, "", ""))})()

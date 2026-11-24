@@ -2847,7 +2847,10 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
     probes = 0
     for r in (st.get("items") or {}).values():
         signed = str(r.get("q_status") or "").upper() in ("SIGNED", "SIGNED-LINKED")
-        if r.get("die") != die or (r.get("norm_block") and r.get("norm_v") == PROBE_V and r.get("die_ctx")) or not r.get("block_sha") or not (signed or (r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("event") != d.get("event"))):
+        live = r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")
+        stale_ctx = r.get("die_ctx_v") != BI.DIE_CTX_V                  # TYPE-CONTRACT-SPEC 11-24: a v1 die_ctx is not compared; re-probe the row's own plan (live rows of the current event too)
+        if r.get("die") != die or (r.get("norm_block") and r.get("norm_v") == PROBE_V and r.get("die_ctx") and not stale_ctx) or not r.get("block_sha") \
+                or not (signed or (live and (r.get("event") != d.get("event") or stale_ctx))):
             continue
         try:
             plan = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("plan")
@@ -2864,7 +2867,7 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
                 p = AP.rpy(d["gen_host"], PROBE_PLAN, {"plan": plan, "core_views": bool(d.get("core_kit")), "cells_max": 0, "block_ignore": d.get("block_ignore")}, timeout=600)
             except Exception:
                 p = {}
-            cache[key] = ({"blocks": p.get("blocks") or {}, "norm": p.get("norm_blocks") or {}, "ctx": p.get("die_ctx") or {}} if not p.get("error")
+            cache[key] = ({"blocks": p.get("blocks") or {}, "norm": p.get("norm_blocks") or {}, "ctx": (p.get("die_ctx") if p.get("die_ctx_v") == BI.DIE_CTX_V else None) or {}} if not p.get("error")
                           else {"blocks": {}, "norm": {}, "ctx": {}})
         c = cache[key]
         if c["blocks"].get(r.get("item")) == r.get("block_sha") and c["norm"].get(r.get("item")):
@@ -2872,6 +2875,7 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
             r["norm_v"] = PROBE_V
             if (c.get("ctx") or {}).get(r["item"]):
                 r["die_ctx"] = c["ctx"][r["item"]]
+                r["die_ctx_v"] = BI.DIE_CTX_V
 
 
 def replacement_blocked(st, die, item):
@@ -2883,7 +2887,8 @@ def replacement_blocked(st, die, item):
 def ctx_changed(cur_ctx, die, r):
     """COORD 11-18 (QC N4.2): the row was built on another resolved die-level contract than the current plan gives its item (both known and different)"""
     cc = (cur_ctx or {}).get(die, {}).get(r.get("item"))
-    return bool(cc) and bool(r.get("die_ctx")) and r["die_ctx"] != cc
+    # TYPE-CONTRACT-SPEC 11-24: a row's die_ctx of another spelling (v1: blind to per-port tap rows, moved by provenance text) is unknown, not changed, until backfill re-probes it
+    return bool(cc) and bool(r.get("die_ctx")) and r.get("die_ctx_v") == BI.DIE_CTX_V and r["die_ctx"] != cc
 
 
 POST_SYNTH_STAGES = ("place", "cts", "grt", "route", "sta", "signoff", "geom")
@@ -11874,7 +11879,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 11   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 12   # 12 = die_ctx v2 (TYPE-CONTRACT-SPEC 11-24: owned per-port rows whole, provenance text out); DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -12032,7 +12037,7 @@ try:
         except Exception as e:
             templates, templates_error = {}, f"{type(e).__name__}: {e}"[:300]
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "norm_blocks": norm_blocks, "die_ctx": die_ctxs, "deps": deps, "lint": lint, "probe_v": PROBE_V,
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "norm_blocks": norm_blocks, "die_ctx": die_ctxs, "die_ctx_v": DIE_CTX_V, "deps": deps, "lint": lint, "probe_v": PROBE_V,
            "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
            "unbound": unbound, "templates": templates, "templates_error": templates_error, "cell_budget": cell_budget}
     if a.get("core_views"):
@@ -15125,6 +15130,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     _dc = current_die_ctx(cfg, st).get(die, {}).get(r["item"])
     if _dc:
         rec["die_ctx"] = _dc
+        rec["die_ctx_v"] = BI.DIE_CTX_V
     _old = st["items"].get(key)
     st["items"][key] = rec
     _jdir = cfg.get("_ap_dir") or getattr(AP, "AP_DIR", None)
@@ -20279,7 +20285,7 @@ def current_die_ctx(cfg, st):
         if not isinstance(d, dict) or not d.get("plan") or not d.get("event"):
             continue
         p = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d['plan']}|{d['event']}")
-        if p and p.get("die_ctx"):
+        if p and p.get("die_ctx") and p.get("die_ctx_v") == BI.DIE_CTX_V:     # TYPE-CONTRACT-SPEC 11-24: a probe of another die_ctx spelling is not the current contract
             out[die] = dict(core_view_names(dict(p["die_ctx"]), p.get("core_views")))
     return out
 

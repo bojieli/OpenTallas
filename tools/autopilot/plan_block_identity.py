@@ -138,33 +138,60 @@ def _owners(o, names, memo):
     return got[1]
 
 
-def _scoped(o, name, names, memo):
+# DIE_CTX_V (TYPE-CONTRACT-SPEC 11-24): version of the die_ctx() spelling.  Rows store it beside die_ctx; a row stored under another version is
+# not compared (unknown, as before) until backfill re-probes its plan with this version.  v2: (1) an entry that NAMES this type is its input whole (a
+# per-port table such as clock.tap_offset.per_port_ps[<type>] with >= TABLE_MIN ports was emptied: QC V3->V4 106 of 107 changed rows were invisible),
+# (2) provenance free text (source / provenance / evidence ... strings with spaces) is not an input (QC V3->V4: tap_offset.source text moved die_ctx of all 127 types).
+DIE_CTX_V = 2
+_NOTE_KEYS = ('note', 'notes')
+_PROV_KEYS = ('source', 'provenance', 'evidence', 'reason', 'why', 'basis', 'comment', 'comments', 'description', 'desc', 'origin_note')
+
+
+def _is_text(k, v):
+    """a free-text note / provenance field: never a die-level input"""
+    k = str(k)
+    if k in _NOTE_KEYS or k.endswith('_note') or k.endswith('_notes'):
+        return True
+    if isinstance(v, str) and (k in _PROV_KEYS or k.endswith('_basis') or k.endswith('_source') or k.endswith('_provenance')):
+        return bool(re.search(r'\s', v))          # 'coll_core' (a name) stays; 'FABLE-DIE-QC-R 11-16 S4q9m: /srv/...' (text) goes
+    return False
+
+
+def _scoped(o, name, names, memo, inside=False):
     """the part of a plan section that concerns `name`: die-wide scalars (numbers, strings, bools, lists of them) and nested die-wide dicts as they are; of every per-entry table or list of
-    rows only the entries that name this type or one of its instances (an entry naming only OTHER types or nothing typed is not this type's input); free-text notes dropped"""
+    rows only the entries that name this type or one of its instances (an entry naming only OTHER types or nothing typed is not this type's input); free text dropped.
+    inside = within an entry that names this type (a key owned by it, a table entry or list row mentioning it): there an entry naming no type at all (a port clk_t7 of
+    clock.tap_offset.per_port_ps[<type>], a pin, a lane) is part of the type's row and kept; entries owned by OTHER types are still dropped"""
     if isinstance(o, dict):
         table = len(o) >= TABLE_MIN
         out = {}
         for k, v in o.items():
-            if k == 'note' or k == 'notes' or str(k).endswith('_note'):
+            if _is_text(k, v):
                 continue
             kown = _owner_of(str(k), names)
             if kown is not None:
                 if kown == name:
-                    out[k] = _scoped(v, name, names, memo)
+                    out[k] = _scoped(v, name, names, memo, True)
                 continue
             if table:
-                if name in _owners(v, names, memo) or name in _owners(k, names, memo):
-                    out[k] = _scoped(v, name, names, memo)
+                own = _owners(v, names, memo) | _owners(k, names, memo)
+                if name in own or (inside and not own):
+                    out[k] = _scoped(v, name, names, memo, inside or name in own)
                 continue
-            r = _scoped(v, name, names, memo)
+            r = _scoped(v, name, names, memo, inside)
             if r not in ({}, [], None) or not isinstance(v, (dict, list)):
                 out[k] = r
         return out
     if isinstance(o, list):
         if all(not isinstance(v, (dict, list)) for v in o):
             return o
-        return [_scoped(v, name, names, memo) for v in o if isinstance(v, (dict, list)) and name in _owners(v, names, memo)] + \
-               [v for v in o if not isinstance(v, (dict, list))]
+        keep = []
+        for v in o:
+            if isinstance(v, (dict, list)):
+                own = _owners(v, names, memo)
+                if name in own or (inside and not own):
+                    keep.append(_scoped(v, name, names, memo, inside or name in own))
+        return keep + [v for v in o if not isinstance(v, (dict, list))]
     return o
 
 
