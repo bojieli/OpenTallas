@@ -438,3 +438,8 @@
   KV-OPEN-INCORE: last post 20:20 (DONE i2), 2.5 h silent, owns 0 unsigned rows; handoff exists, treat as finished unless COORD wants more.
   Multi-job lanes: QC-V4 7, PRECHECK-1119 6, PRECHECK-CELLCAP 4, FABLE-RC-ALL 4, KV-HG-CAP 3, KV-D29 3, FLEET-WATCH-1015 3, OPUS-FIX-QC-V4-R2 3.
   EPYC7-DISK has no post file yet.
+- 2026-11-23 23:52 PST OWNERS-SWEEP 23:5x (447 rows, 74 live lanes). No UNOWNED, no FAILED-NO-RELAUNCH, HEAD and KV clean.
+  DEAD-OWNER 1: S81 eng__t1 (S81-OPEN-ENGCHAN, last post 19:15, silent before the 23:41 limit).
+  STALE: S81 36 (31 cancelled-superseded, 5 held for plan event: dsdv_slice_c1x_C t1/t5, c3x_C t1, serdes__t14), QC 2 (glue superseded, tt_ctlm held for plan event).
+  No flagged row is without a plan or lane; superseded rows need no action.
+  Multi-job lanes: COORD-SNAPSHOT 7, FABLE-RC-ALL 6, PRECHECK-1119 4, QC-CB-PROBE 3, PRECHECK-CELLCAP 3, S81-ALLFIX-SLICE 3.
