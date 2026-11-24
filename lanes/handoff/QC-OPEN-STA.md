@@ -54,3 +54,8 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 ## 11-24 00:33 PST
 - r8 after re-pick, all 11 types: raw hops 0 on 9; clfc5867a6 x2 REAL regression (START fan 569, raw 550): sta_floor translate_with dragged START stages with the SRAM. r9a (809c36930236) has it too: superseded.
 - r9u 13410b5bbd9e = undrag.py on r9a (START stages + >25 um collector_tree relays back to base; reset_tree_anchor fully restored on clfc x2 and clf4365a62; clf4365a62 26 tree relays nudged <=39 um). chain9.sh relaunched: r9u -> r9b.sh tapfix -> plan_sta_r9 -> epyc10 gate9.sh (r9, then C1b base). Logs epyc8 r9b.ot, gate9.ot.
+
+## 11-24 01:12 PST
+- r9 ffc276f9a6f9 GATE = base on all four (posted 01:1x): SITEGRID 0, overlap 0, relay/pt 66, reach after re-pick only fwd_source (= base; clfc +8 um). epyc8 rows/plan_sta_r9.json, rep/g9_r9 + g9_base.
+- Composed on C1g 96cce77c1e2f: epyc8 rows/plan_c1g_sta.json a3043b36660b. NOT bound: waiting C1g strict + LATCHECK (QC-ALLFIX cF). Then: overlay epyc8 tree from cF/tree overlays (bindF.sh list: rows_f16/auth, rows_f16/comb, rows_b2/ov_red2, rows_b2/ov_r8, rows_c/ov_tools, + cF runtime r8) -> PRE (rt 7514) + G0 -> strict bind -> 8 probes at goal grt on epyc8/epyc10, rt >= c660.
+- epyc8 tree = fresh kw45 snap fork (bare, no overlays yet); launch = rt 751410253108.
