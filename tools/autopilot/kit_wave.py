@@ -18678,7 +18678,7 @@ def visual_queue_publish(cfg, st):
                 except Exception:
                     return item
             listed = {tuple(r.split("\t", 2)[:2]) for r in rows}
-            rows += ["\t".join(r) for r in PV.rows_for_queue(str(Path.home() / "coord"), st.get("items") or {}, review_kit_location, _fam, listed)]
+            rows += ["\t".join(r) for r in PV.rows_for_queue(str(Path.home() / "coord"), st.get("items") or {}, review_kit_location, _fam, listed, die_cur=PV.die_current(cfg))]
         except Exception as e:                           # the feed never stops the publish
             print(f"KIT-WAVE VISUAL-QUEUE probe feed error: {type(e).__name__}: {e}", file=sys.stderr)
     body = "die\ttype\tfamily\tattempt\tstate\trender_dir\tauto_geom\thost\n" + "\n".join(rows) + ("\n" if rows else "")
