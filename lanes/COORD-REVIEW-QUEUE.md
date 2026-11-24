@@ -33727,3 +33727,4 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
   kvq is in detail route. ETA unchanged, 20:00.
   [redirect] FLOW-OPS-R2 -> FLOW-OPS-R3 (stood down; chain FLOW-OPS-R2 > FLOW-OPS-R3)
 - 2026-11-23 16:11 PST [-> COORD] COUNTS 16:1x after FABLE-RC f0c49395 update (hub 15192edde999) OPEN-ASSIGNED/ROW-DRAFT/GATED/REASONED: S81 1/66/12/11 (0 plain OPEN; x1 OPEN-ASSIGNED to S81-SVC-J9, nudged); KV 0/18/4/3; QC 0/17/0/7; HEAD 0/0/17/0. Changes: rc18 ROW-DRAFT (SVC-TAP-INV, rides B1), rc35 GATED, rc15 REASONED (cut 0/0, svc_hi held), x1 OPEN-ASSIGNED. Overdue OPEN: none. Next counts ~18:15.
+- 2026-11-23 16:11 PST DONE [RELEC-1122] ot-run oth-ubuntu-2622247-1795478391 on loved-redfish: rc=0 after 725 s, ended 00:11:54, log /srv/opentallas-scratch2/claude/RELEC-1122/trx3/otrun.out, cmd: --mem 48 --threads 8 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/RELEC-1122 -- bash /srv/opentallas-scratch2/claude/RELEC-1122/tmp/t
