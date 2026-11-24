@@ -135,3 +135,25 @@ class T(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TapEscapeClearEnv(unittest.TestCase):
+    """FLOW-CLKGRT-R2: OT_TAP_ESCAPE_CLEAR_UM widens the tap escape column (unset = 0.10, same pieces as before)"""
+    def test_env_widens_and_validates(self):
+        import os
+        site, pin = (0, 0, 4, 2), (1.0, 0.5, 1.032, 1.2)
+        old = os.environ.pop("OT_TAP_ESCAPE_CLEAR_UM", None)
+        try:
+            p0, _ = gen_phys.tap_escape_pieces(site, [pin])
+            self.assertAlmostEqual(p0[0][2], 0.9); self.assertAlmostEqual(p0[1][0], 1.132)
+            os.environ["OT_TAP_ESCAPE_CLEAR_UM"] = "0.30"
+            p1, k = gen_phys.tap_escape_pieces(site, [pin])
+            self.assertEqual(k, 1); self.assertAlmostEqual(p1[0][2], 0.7); self.assertAlmostEqual(p1[1][0], 1.332)
+            for bad in ("x", "0.01", "3"):
+                os.environ["OT_TAP_ESCAPE_CLEAR_UM"] = bad
+                with self.assertRaises(SystemExit):
+                    gen_phys.tap_escape_pieces(site, [pin])
+        finally:
+            os.environ.pop("OT_TAP_ESCAPE_CLEAR_UM", None)
+            if old is not None:
+                os.environ["OT_TAP_ESCAPE_CLEAR_UM"] = old

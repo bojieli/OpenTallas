@@ -5155,6 +5155,24 @@ def route_layer_names(spec):
 # Both proven on the sd9f ECO DB (column carve 0.10 + 3-site pad: DRT 0 violations).  Per-site opt-outs: "tap_escape": false,
 # "edge_pad_sites": 0.  A site without route_layers or without a tap pin on an obstructed layer emits the same bytes as before.
 TAP_ESCAPE_CLEAR_UM = 0.10
+# FLOW-CLKGRT-R2 11-23 (CODEX GRT-0273 07:27): 0.10 leaves a 0.232 um M7 column; GRT (0.57 um gcells) has no capacity for the
+# tap's NDR stub there, so the clock-only route phase drops CTS_NDR_0 on the tap port net (HEAD lep0N_w R9 clk_t1/t7/t37, KV
+# pc_v3 clk_t18/24/29/32, pc_v1 18 ports).  HEAD R9 4_cts.odb clock-only phase: clear 0.10 -> 4 drops, 0.30 -> 1 (clk: a
+# zero-capacity V edge below the site, separate), 0.60 / 1.00 -> 1.  Gen env OT_TAP_ESCAPE_CLEAR_UM=<um> (0.05..2) opts in;
+# unset = 0.10, same bytes as before.
+def tap_escape_clear_um():
+    v = os.environ.get("OT_TAP_ESCAPE_CLEAR_UM", "").strip()
+    if not v:
+        return TAP_ESCAPE_CLEAR_UM
+    try:
+        f = float(v)
+    except ValueError:
+        raise SystemExit(f"OT_TAP_ESCAPE_CLEAR_UM={v!r}: a number in um (0.05..2)")
+    if not 0.05 <= f <= 2.0:
+        raise SystemExit(f"OT_TAP_ESCAPE_CLEAR_UM={v!r}: outside 0.05..2 um")
+    return f
+
+
 SITE_EDGE_PAD_SITES = 3
 PLACE_SITE_W_UM = 0.054
 
@@ -5168,7 +5186,8 @@ def tap_escape_pieces(rect, pins):
     """rect (x0,y0,x1,y1) minus the full-height escape columns of pins [(xlo, ylo, xhi, yhi)] that overlap it ->
     (pieces, n_columns).  No overlapping pin -> ([rect], 0)."""
     x0, y0, x1, y1 = rect
-    cols = sorted((max(x0, a - TAP_ESCAPE_CLEAR_UM), min(x1, c + TAP_ESCAPE_CLEAR_UM))
+    clr = tap_escape_clear_um()
+    cols = sorted((max(x0, a - clr), min(x1, c + clr))
                   for a, b, c, d in pins if a < x1 and x0 < c and b < y1 and y0 < d)
     if not cols:
         return [rect], 0
@@ -5260,7 +5279,7 @@ def route_obstruction_lines(items, pins_by_layer=None, snap=False):
     if items:
         out.append(f'puts "OT_RESERVED_SITES route_obstructions={n}"')
     if ncol:
-        out.append(f'puts "OT_RESERVED_SITES tap_escape_columns={ncol} clear_um={TAP_ESCAPE_CLEAR_UM:g}"')
+        out.append(f'puts "OT_RESERVED_SITES tap_escape_columns={ncol} clear_um={tap_escape_clear_um():g}"')
     return out
 
 
