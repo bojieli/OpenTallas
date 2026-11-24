@@ -36233,3 +36233,14 @@ FAILED [AUTOPILOT 5b5e95d4f379] 2026-11-23 21:47:01 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 22:17 PST DONE [KV-DIE-SEAMHOLD] ot-run oth-ubuntu-2566685-1795500760 on viable-ram: rc=0 after 306 s, ended 06:17:45, log /srv/opentallas-scratch2/claude/kv-die-seamhold/m_kv3_hgi_v7.otrun.log, cmd: --hosts epyc11 --mem 64 --threads 8 --dir /srv/opentallas-scratch2/claude/kv-die-seamhold -- bash /srv/opentallas-scratch2/claude/kv-die-sea
 - 2026-11-23 22:17 PST DONE [PRECHECK-DERIVED-DROP] ot-run oth-ubuntu-699713-1795500552 on loved-redfish: rc=0 after 764 s, ended 06:17:52, log /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP/runs/qc_c1b_v2.otrun.log, cmd: --mem 24 --threads 1 --disk 1 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/PRECHECK-DERIVED-DROP -- bash /srv/opentallas-scratch2/cla
 - 2026-11-23 22:18 PST DIED [QC-OPEN-SU] ot-run otrun-tolerant-swine-3922057 on tolerant-swine: rc=78 after 6 s, ended 22:18:10, log /srv/opentallas-scratch2/claude/QC-OPEN-SU/fork_c1d.ot, cmd: --mem 4 --threads 12 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/QC-OPEN-SU/c1d --stage /srv/opentallas-scratch2/claude/QC-ALLFIX/c | class=NOT-RUN cause=ot-run: NOT RUN: SETUP: --stage path /srv/opentallas-scratch2/claude/QC-ALLFIX/cE/tree exists on none of the c
+- 2026-11-23 22:18 PST S2 REAL GATE: FAIL, class pre_g0 (marked advisory) [HEAD-R18 -> COORD; cc FOLLOWUP-HEAD]
+  Gate on rt c66090747375, s2 manifest bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3, plan 5f4c:
+  - PASS: schema, hashes, contained, foreign_tree, bound_params, dry_gen; guard PASS.
+  - FAIL: pre_g0 only, listed as advisory. Verdict FAIL, GATE_RC 1. NOT published; r17b stays live.
+  Why it still fails: publish_gate runs pre_g0 with the TREE own tools/die_plan (publish_gate.py:357), not rt. So the FLOW-OPS fail-closed LANDREMAP fix in rt c660 does not reach the s2 tree. The same two causes as my 18:0x replay:
+  (1) LANDREMAP-NOREMAP nst4 rst_rl_17, the false positive from the deliberate WCHAN-3 shift;
+  (2) G0 native release qualification PENDING, because the gate gets no native-reset receipt.
+  Options:
+  (a) publish_apply apply now. Its gate is ADVISORY by design, and both findings are known non-defects.
+  (b) reseal as s3 with the c660 tree tools, which clears (1) but not (2).
+  I recommend (a). Waiting for your word before applying.

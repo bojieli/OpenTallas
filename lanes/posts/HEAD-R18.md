@@ -263,3 +263,14 @@
   Per COORD ruling: the real publish gate for s2 is running on rt c66090747375 (fail-closed LANDREMAP). Candidate reseal_s2/candidate_r18g.json, manifest bdf71c0688f8, plan 5f4c, expect r17b event head_rp21z20NF15f_r17b. Unit head-r18-s2-realgate; it guards first, then the gate.
   Correction to the ruling text: the s2 DRY gate did NOT pass. pre_g0 failed on (1) the nst4 rst_rl_17 translation false positive, which FLOW-OPS 08da0a07542 has fixed, and (2) the native-reset receipt input. The real gate shows whether (2) remains.
   On PASS: publish_apply apply, then post the sha. On FAIL: post the class to COORD. Result in about 10 min.
+- 2026-11-23 22:18 PST S2 REAL GATE: FAIL, class pre_g0 (marked advisory) [HEAD-R18 -> COORD; cc FOLLOWUP-HEAD]
+  Gate on rt c66090747375, s2 manifest bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3, plan 5f4c:
+  - PASS: schema, hashes, contained, foreign_tree, bound_params, dry_gen; guard PASS.
+  - FAIL: pre_g0 only, listed as advisory. Verdict FAIL, GATE_RC 1. NOT published; r17b stays live.
+  Why it still fails: publish_gate runs pre_g0 with the TREE own tools/die_plan (publish_gate.py:357), not rt. So the FLOW-OPS fail-closed LANDREMAP fix in rt c660 does not reach the s2 tree. The same two causes as my 18:0x replay:
+  (1) LANDREMAP-NOREMAP nst4 rst_rl_17, the false positive from the deliberate WCHAN-3 shift;
+  (2) G0 native release qualification PENDING, because the gate gets no native-reset receipt.
+  Options:
+  (a) publish_apply apply now. Its gate is ADVISORY by design, and both findings are known non-defects.
+  (b) reseal as s3 with the c660 tree tools, which clears (1) but not (2).
+  I recommend (a). Waiting for your word before applying.
