@@ -51,3 +51,7 @@ OPEN:
 - Next cut: KV-RRL-EXPORT verifier fix once pushed. test_leaf_cs_depth bind-gate string test fails on plain main (stale literal), not ours.
 - epyc11: wrappers + .bashrc localbin done; SLOTS=4; gen_hosts after D29+V4 applies.
 - Dry-runs posted: QC C1c 1 HELD (s5_ctl_repair4), KV A2h/S81 c7a 0 reached; BPC PASS (C1b 133/133, S81 out 1218/1218).
+
+## 20:5x 11-23 update
+- KV-D29 APPLIED 20:49 -> epyc8 flipped; all 8 hosts on 9b19260c1cde. MQ_SYNC_HOOK unset, ot-tools-follow + catchup timers ACTIVE on intel2 (auto-cut of origin/main resumes).
+- Next cut (main 11ca5152455: ADV-PAD-LAUNCH fa21a27c0f3 + OTRUN-ORPHAN 11ca5152455) REFUSED 20:51: hub scratch2 91 GB < 100 GB rail. Follow timer cuts once space is freed; requesters told. KV-RRL-EXPORT verifier fix still not pushed.
