@@ -42,3 +42,11 @@ Table: lanes/ALLFIX-KV.tsv. Coordinate: FABLE-OPEN-KV (pc probe A on 121b8cb74ac
 - SPINE R6 E2 oth-ubuntu-3199258-1795533737 PASS, receipt d15606f582c217bda5. Explicit source proof of 92 ordinary and 4 head hard controllers and paired fronts on both baseline/R6. Both seven-stage hard split paths carry CORE_CLOCK=1 and match 833 timing table. Older regen aggregate assumes unsplit hierarchy and cannot report this. Separate BPC PASS 668/668 stands.
 - HR-DEEPCLK prior rc0 wrapper hid SPLIT_LANE_REFERENCE check on changed generated parent body. E11 kv-hr-hubwi-a5t3st-source-reauth-1124 verifies exact approved generator output and updates one body receipt in a private sidecar, preserving all 2441 payload and source graph/rule identities. Re-run scoped strict before joint +1 price and LAT. No current release change.
 - E10 RSTREACH interim plan 285d3aa6def3 scoped strict0, PRE 89 ENTRYFOOT and one missing TAPOFF clk_t11 for sys_SD. Scoped official fill of the one new tap is E2 oth-ubuntu-3264099-1795533872. E10 full gate still active near disk exhaustion. Flow take small report copy done.
+
+## Fresh lane 11-24 07:46 PST (Opus 5.5, post-limit; job = KV combined plan)
+- A5t3 CAS: intel2 systemd unit kv-a5t3-apply-cas-1124 (PID 871630, apply_A5t3_verified.sh epyc9). BIND-CHECK 93/93, OUT-SYNC E11/E9 ok; now replicating to epyc7 (rsync sender epyc11 in D state, ~0.6 MB/s); then epyc2/epyc10/epyc8 (each DROPPED if it fails). Leave it running.
+- A5t4: E11 waiter 1408521 killed by exact PID (never started); E9 oth-ubuntu-3873478-1795536098 (run_a5t4_codex.sh, OT_PLAN_GATE_BASELINE = d28 rh12 plan_c), log E9 grow/logs/a5t4_e9.otrun.log, out E9 grow/A5t4 + gate_A5t4.
+- A5t5: E9 grow/run_a5t5.sh = merge3(A5t3, seed 4e59670e4baa, A5t4 plan) + pad a494038c27dc + same gate as A5t4. Launch after A5t4 PASS.
+- COORD ruling 08:0x: launched 9 A5t3 types untouched by A5t4 on E9 (units allfix-A5t3u-*, specs ~/tmp/kvallfix/launch_A5t3u/specs.tsv). A5t3 launched 72 total.
+- C2T2 2fb2dab1e7db: final strict BIND1 rc0 93 types 0 errors, LAT 2752/2752 (88/93 was a progress line); BPC/R8 still running at 08:05.
+- Next: after A5t4 bind, relaunch pc_v1 cl4ea x7 + phy_v1 from the A5t4 bind on rt >= 3f926e2068.
