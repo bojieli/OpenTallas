@@ -664,3 +664,8 @@
   NO-PROGRESS epyc7 slw_su_l1__cla2a78701 5_2_route stage 35.3 h job 38.5 h: drt_violations best 48746 last 76207 rows 19 window-gain 0.0%; stagnant 9.7 h; last event 0.3 h ago, log write 0.5 h ago (1405 lines)
   NO-PROGRESS epyc2 cbn_q01__cldd6ea846 tt_setup_repair_grt stage 7.4 h job 14.7 h: no new meaningful log line for 6.3 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net285887. The following pin
   NO-PROGRESS epyc8 cbn_q01__cld9ff4c40 tt_setup_repair_grt stage 6.9 h job 14.4 h: no new meaningful log line for 6.0 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net268202. The following pin
+- 2026-11-24 09:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-24 09:52 PST: 259 running jobs, PROGRESSING 246, SLOW 9, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 21.6 h job 21.6 h: no new meaningful log line for 6.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
+  NO-PROGRESS intel1 census_e_cap10 census_3_place.otrun stage 17.8 h job 17.8 h: no new meaningful log line for 6.9 h; last: ot-run: RAN on intel1 (unit oth-ubuntu-1367906-1795462599): exit 0
+  NO-PROGRESS epyc2 cbn_q01__cldd6ea846 tt_setup_repair_grt stage 8.4 h job 15.7 h: no new meaningful log line for 7.3 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net285887. The following pin
+  NO-PROGRESS epyc8 cbn_q01__cld9ff4c40 tt_setup_repair_grt stage 7.9 h job 15.4 h: no new meaningful log line for 7.0 h; last: [WARNING GRT-0304] Fail to restore routing segments from guides for net net268202. The following pin
