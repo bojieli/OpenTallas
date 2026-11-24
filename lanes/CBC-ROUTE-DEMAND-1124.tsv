@@ -1,0 +1,121 @@
+# CBC-ROUTE-DEMAND 2026-11-24 08:1x PST (CBC-RULES-1119 adopted by KITROW-GAPS): adv_route_demand.py RUDY on plan_h2_2249 (event 891100ef774, plan 6833070d), stations bits via route_supply.station_bits (plan stations carry no bits). ADVISORY estimator, never a gate; peak util >=0.8 = demand pinch; kv_leaf family measured 2.6-3.6, failing s81sl_leaf 9.9-18.8
+type	family	outline_um	n_stations	n_ft	peak_util	hot_gcells	hot_um2	worst_box	on_core	narrow_channel	top_load	verdict
+col_h9_r1__t1__cl49d7a23e__pv047ea3b3	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv0a45e191	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv0bab1162	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv11c696bc	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv11dcdcd2	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv152ea348	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv15cef3f7	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv1c15776f	col_h9_r1	1442.88x1226.88	8	0	1.90	196	19600	x1030-1170 y1060-1160	100%	8.64um u_r1.u_e8e.u_view.u_ha|u_r1.u_e8e.u_view.u_hb;17.28um u_r1.u_e8e.u_view.u_ha|u_r1.u_n19	u_r1.u_n19.o>face flop,face flop>u_r1.u_n22.a	HOT
+col_h9_r1__t1__cl49d7a23e__pv2cabd9a9	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv2f96c04f	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv36da905c	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv4108910d	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv4593e8e5	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv461b5256	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv47efee8f	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv49636389	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv49f0ba38	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv4bd36c74	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv4ef1b59c	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv534ef85e	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv58f6356d	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv62bca836	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv637e5d47	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv6c1e320a	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv70f04488	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv7466df46	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv87d52780	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv88891f20	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv8aaf8508	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv8ea75ee5	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv9a5bd576	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pv9c5966b7	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pva2370bfd	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pva7e46565	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvac06e607	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvadb6c679	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvadbd1880	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvafa6f454	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvb2dac3cf	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvbb600efe	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvc22584f3	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvc25aad1b	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvc382fb14	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvcb813ee7	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pve273b259	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pve3f8a86c	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvebe696ff	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__cl49d7a23e__pvfed9fee6	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__clf32cde8d__pv387d6579	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__clf32cde8d__pv3b9ba75c	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__clf32cde8d__pv48cfde67	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__clf32cde8d__pv63f488e9	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__clf32cde8d__pvd9381c1d	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r1__t1__clf32cde8d__pvee46d7b8	col_h9_r1	1442.88x1226.88	8	0	2.56	371	37100	x1040-1070 y180-400	100%		u_r1.u_n12.fo>face flop	HOT
+col_h9_r2__t1__cl774acf45__pv858fb2ba	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__cl774acf45__pve3ab90e7	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__cl774acf45__pvea45273b	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__cl774acf45__pvf8d9f9e5	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__cl87f3ff59	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clb8d86cd5__pv6a2b031b	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clb8d86cd5__pv8d57997d	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clb8d86cd5__pv982ec12c	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clb8d86cd5__pvf0595d0f	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clb8d86cd5__pvf1445dce	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clc9ad8f7e__pv45d0c698	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clc9ad8f7e__pvcf44b14c	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clc9ad8f7e__pvf079625b	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clc9ad8f7e__pvfef7c177	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv06a1adf6	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv09b9967e	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv14626557	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv1aac64f0	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv22267ca0	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv2833ee2b	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv2f87774f	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv31e47bd5	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv37074264	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv40e9fb5a	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv467913cc	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv4754d912	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv4937edd4	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv6827937d	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv7b8853b5	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv7c30fd4e	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv843b0fff	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv8b5a5980	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv9a22736e	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv9cc104a8	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pv9e92407b	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pva119e808	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pva8c07948	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvaa9a1324	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvb11188eb	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvb3258867	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvb3f647ea	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvb6ec679e	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvb7e88dd2	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvc6132d1e	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvcd1d9f5f	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvd2454d1a	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvd60e699f	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvdc7d4221	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pve0486b40	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pve0bffaf8	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pve171243a	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvf390b1f5	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvf57acd2b	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvf9c773d5	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvfb42a1ad	col_h9_r2	1442.88x1226.88	2	0	1.56	61	6100	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+col_h9_r2__t1__clce45cab5__pvfd79e8b6	col_h9_r2	1442.88x1226.88	2	0	2.09	59	5900	x290-720 y0-30	0%		face flop>u_r2.u_bn10.rs,u_r2.u_n23.fo>face flop	HOT
+dsdv_slice_lepw_mu_C__t1	dsdv_slice_lepw_mu_C	1442.88x1226.88	13	0	12.80	980	98000	x360-420 y30-1180	8%	17.28um u_c.u_cap|u_c.u_xr	face flop>u_c.u_xr.e_c,u_c.u_cap.cw_n_a>face flop,face flop>u_c.u_cap.rt_e	HOT
