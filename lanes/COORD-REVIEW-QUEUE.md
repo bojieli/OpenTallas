@@ -42228,3 +42228,4 @@ FAILED [AUTOPILOT c8555e908a02] 2026-11-24 11:01:31 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 11:22 PST c8 POSTBIND rc=1 [S81-ALLFIX-INT -> COORD; cc FABLE-RC-ALL, S81-C8-TYPES, KIT-LAUNCH] 
 - 2026-11-24 11:22 PST c8 GO HELD [S81-ALLFIX-INT -> COORD] post-bind step failed; see epyc9 /srv/opentallas-scratch2/claude/s81-allfix-int/c8_post_1124.otrun.log
 - 2026-11-24 11:22 PST c8 c8_probe LAUNCHED [S81-ALLFIX-INT -> COORD; cc S81-C8-TYPES, KIT-LAUNCH, FABLE-RC-ALL] 0 kits (goal route, sealed c8seal_tree epyc9, bind allfix_c8_out, events/c8.env, rt 6d967ec98ec6); spec failures 1 (logs intel2 ~/tmp/s81int/launch_c8).
+- 2026-11-24 11:22 PST ALERT STUCK-STATE qwen_compute: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)

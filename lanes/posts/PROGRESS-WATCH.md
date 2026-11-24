@@ -398,3 +398,4 @@
 - 2026-11-24 10:51 PST ALERT NO-PROGRESS s81: 38 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 67 min (last 09:44); 372 hold(s): 0 without eta, 27 overdue, next eta 11-24 12:30; NO-LAUNCH x6
 - 2026-11-24 11:02 PST ALERT NO-PROGRESS s81_head: 1 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 378 min (last 04:44); 1 hold(s): 0 without eta, 1 overdue
 - 2026-11-24 11:02 PST ALERT STUCK-STATE s81_head: 1 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. hd_ctl, 2026-11-23 22:24)
+- 2026-11-24 11:22 PST ALERT STUCK-STATE qwen_compute: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
