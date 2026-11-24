@@ -168,3 +168,21 @@ Gate V4 13:00 PST. Not GATED -> FABLE-RC-QC REASONED with census. epyc8 = UTC.
 - I viewed the C4 whole-die render: epyc8 QC-V4/c4_render_1123/out/die_plan.png (sha 5e8a9694) and streets.png. G0 PASS with 861 WARN. My verdict is OK-WITH-HOLDS. The receipt is at intel2 ~/qc-v4-release-1123/render_receipt.json, and the apply gate's check prints RENDER_RECEIPT OK. Posted 76a5d18c.
 - Seal try2: seal_v4.sh PID 1687508 is alive. apply_after_seal.sh PID 1695256 is armed. Next: SEAL_OK, then apply (8 holds kept), then post APPLIED.
 - Still open: RSN probe r2 CTS post_hook read; x5 GRT counts; ot-delete postbind_1123162217 after the seal; re-seed the intel1 live tree.
+
+### 20:0x PST: handover to QC-RSN-PROBE (COORD 20:05, owner one-job-per-lane)
+QC-RSN-PROBE now owns the RSN probe r2 GRT read, the hold-lift proposal, and the x5 kit GRT counts. QC-V4 keeps only: the V4 seal -> apply, the ot-delete of the old seal copy qwen_compute_v4c4_postbind_1123162217, and the intel1 live-tree re-seed.
+
+**RSN probe r2** (epyc8; hold sle_su_l1__cl5ea486db stays until GRT is clean)
+- Spec: hub autopilot/private_specs/QC-V4/qwen_compute_sle_su_l1__cl5ea486db_1123172932 (goal grt).
+- Kit: G=/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V3/private/QC-V4/sle_su_l1__cl5ea486db_1123172918/gen/sle_su_l1__cl5ea486db
+- Plan: C4 + b25 RSN ft_slots (epyc8 QC-V4/flt_dup_1123/plan_c4_rsn.json 191da100567d).
+- CTS post_hook: setup WS +90.09, TNS 0 (was -97.79); all 20 FLT stations placed (18231 placed, 0 missing). Hold at CTS, before repair: start_i/arst_n IO in -98.6, x_su_c dsel->bin -20..-29. Posted 5ed25e2f.
+- Waiter br8dvap51 is STOPPED by QC-V4. Its condition was: $G/run/logs/asap7/*/base/5_1_grt.log exists and no make/openroad for sle_su_l1__cl5ea486db is left on epyc8. Re-arm it in your lane.
+- Read the final-stage GRT numbers, not the pre-repair 5_global_route.rpt. Then: if clean, propose lifting the hold with b25 as the C4 same-day amendment. If it fails, take the FLT fallback (pad-flop duplication, else +1 station stage).
+- The E1-E5 type sle_su_l1__clc6d66f5b was held at 19:1x for its in-core RSN stations (kit_wave d03167df, post 076445d1). Release it with the same fix.
+
+**x5 kit**
+- Type: slw_st_a_v2__clf4365a62. Spec: hub autopilot/private_specs/QC-V4/qwen_compute_slw_st_a_v2__clf4365a62_1123161142 (goal grt).
+- Kit: epyc8 .../s29q103S4Q9N46R6V3/private/QC-V4/slw_st_a_v2__clf4365a62_1123161122/gen/slw_st_a_v2__clf4365a62
+- Owed: the DPL-0033 and GRT-0273 counts at GRT.
+- QC-V4's old waiter bkcwppxtw was stale and is stopped.
