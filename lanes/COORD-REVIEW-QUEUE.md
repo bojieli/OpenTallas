@@ -35083,3 +35083,4 @@ FAILED [AUTOPILOT b110d9753b89] 2026-11-23 19:19:51 PST AUTOPILOT -> KIT-WAVE-12
   KV FAILED-NO-RELAUNCH 3: kv3_hroot (KV-D29), kv3_pc_v1__cl4ea58a5c/cl7f648944 (KV-ALLFIX).
   Multi-family owners: QC-ALLFIX-COLL 4, FABLE-RC-QC 4, OPUS-FIX-QC-V4-R2 3, QC-V4 3, FLOW-OPS-R3 3, OPUS-FIX-S81-SVC-R9 2 (svc_hi+svc_lo), S81-ALLFIX-INT 2.
   Table: lanes/OWNERS-SWEEP.tsv
+- 2026-11-23 19:51 PST DONE [S81-OPEN-FSTART] ot-run oth-ubuntu-1590818-1795491114 on renewed-glider: rc=0 after 1156 s, ended 03:51:07, log none, cmd: --mem 32 --threads 16 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-open-fstart -- bash scan.sh /srv/opentallas-scratch2/claude/s8
