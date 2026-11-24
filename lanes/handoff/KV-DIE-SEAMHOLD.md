@@ -24,3 +24,9 @@ Base: KV-ALLFIX A3g = plan b258e3e34f22 + asbuilt A3f e9d82a711970, rt 9b19260c1
 - LATE-EXPORT defects (fam-late-export.tsv): pv_v12 (D28 SINKSPREAD kit 11-23 14:29) fclk_out insertion ~960 vs data 315 -> m -650 on 53 ring outs; io_ft_v1 ft0_o -211; phy_v1 ft0_o -157; hgi_v7 ft* -118..-129; pv_v6n 3. Sender-side structural fix needed (export tap = launch-flop leaf).
 - Gates on epyc10 (sh_gate.sh): gate_strict4 / gate_fam4 (PRE vs A3g base delta + scoped strict bind hub_Eo/Wo + SDC min delta). Earlier strict/fam/2/3 runs killed (schema key in row, values updated).
 - Hub files: lanes/handoff/KV-DIE-SEAMHOLD-{fam,strict}-*.
+## ROW-REBASED (hub f2faaa57), 23:0x
+- Row dddecdff1714 (epyc10 kv-die-seamhold); values B fam4 d8732f711777 (plan_out 682a08e431b9), A strict4 66369a6055dc (30c03505267f).
+- PRE = base (24 GENDRY, delta 0); scoped strict bind hub_Eo/Wo = 30 R8_STALE identical to base control gate_base (diff 0).
+- hub_Eo/Wo ring -min -385 -> -99.3; ft16_i GRT -160 -> +125.7 kit, die eye +231.8.
+- Open: FABLE-RC-KV ruling A vs B (family proxy); late-export sender defect class (pv_v12, io_ft_v1, phy_v1, hgi_v7) needs an owner; re-measure when A3 kits reach CTS.
+- No live units. Kits staged on epyc11 kits/ (~25 GB) can be ot-delete'd once the row is composed.
