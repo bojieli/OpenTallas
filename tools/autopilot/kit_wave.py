@@ -7147,7 +7147,7 @@ INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", 
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
-              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha"}
+              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha", "gen_pins"}
 
 
 def input_hash(sp, prov_key=None):
@@ -9179,12 +9179,11 @@ def private_rt_fields(sha, root=None, rt_root=None):
     sha = str(sha or "").strip().lower()
     if not re.fullmatch(r"[0-9a-f]{12,40}", sha):
         raise ValueError(f"--rt {sha!r}: a main commit sha (12-40 hex)")
-    if rt_root is None:
-        rt, _ = scheduler_rt(root)
-        rt_root = os.path.dirname(rt) if rt else os.path.dirname(os.path.realpath(RT_CURRENT))
-    d = os.path.join(str(rt_root), sha[:12])
+    roots = rt_roots(rt_root, root)
+    d = next((x for x in (os.path.join(str(r), sha[:12]) for r in roots) if os.path.isfile(os.path.join(x, "tools", "autopilot", "rt_launch_tree.sh"))),
+             os.path.join(str(roots[0]), sha[:12]))
     if not os.path.isfile(os.path.join(d, "tools", "autopilot", "rt_launch_tree.sh")):
-        raise ValueError(f"--rt {sha}: no rt snapshot {d} on this host (ot-tools-sync materialize it first)")
+        raise ValueError(f"--rt {sha}: no rt snapshot {sha[:12]} under {', '.join(map(str, roots))} on this host (ot-tools-sync materialize it first)")
     _, full = scheduler_rt(d)
     if not str(full or "").lower().startswith(sha):
         raise ValueError(f"--rt {sha}: snapshot {d} is commit {full}")
@@ -9353,20 +9352,68 @@ def stamp_diff(stamp, gens):
     return sorted(n for n in set(old) | set(gens or {}) if old.get(n) != (gens or {}).get(n))
 
 
+def bind_pins(stamp, new_rt, bind_rt, bind_sha=""):
+    """BIND-PIN-1124 (COORD flow review 12:55 #1: kit tool fixes never reached kits whose bind ran on an older rt; KV cl4ea, QC C1j, S81 c8 rt
+    69de / 52c1, KV-PV-FANOUT dly_spread): the kit runs the NEWEST rt, with only the generator files the bind stamped (bind_tool.json, the
+    toolskew set) pinned at the bind's content.  -> {"rt": bind rt dir, "sha", "files": {name: sha256}} for the generators whose hash differs
+    from new_rt and that bind_rt holds at exactly the stamped hash; None when nothing differs, the bind rt lacks a stamped file, or
+    OT_BIND_PIN=0 (the old rule: the whole kit runs the bind's rt)."""
+    if os.environ.get("OT_BIND_PIN", "1") == "0" or not new_rt or not bind_rt:
+        return None
+    old = (stamp or {}).get("generators") or {}
+    want = [n for n in stamp_diff(stamp, rt_generator_hashes(new_rt)) if n in old]
+    if not want:
+        return None
+    have = rt_generator_hashes(bind_rt)
+    if any(have.get(n) != old[n] for n in want):
+        return None
+    return {"rt": str(bind_rt).rstrip("/"), "sha": str(bind_sha or os.path.basename(str(bind_rt).rstrip("/"))), "files": {n: old[n] for n in sorted(want)}}
+
+
+def pins_tag(pins):
+    """BIND-PIN-1124: '' or '+pin<sha12 of the pinned name=sha set>' (a launch tree name carries the exact overlay)"""
+    files = (pins or {}).get("files") or {}
+    if not files:
+        return ""
+    return "+pin" + hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()[:12]
+
+
+def sp_launch_path(sp):
+    """the launch tree of a spec: its die tree x tools_rt (+ the BIND-PIN overlay)"""
+    return rt_launch_path(sp["src"], sp["tools_rt"], sp.get("gen_pins"))
+
+
+def rt_roots(rt_root=None, root=None):
+    """BIND-COPY-1124 (COORD, KV-PV-CAP: the bind rt e348b919dd39 lives in the old /srv/opentallas-scratch2/claude/rt on epyc10 while
+    rt/current resolves into the host-data dir scratch3/claude/rt-data, so --rt / the stamp match saw no such rt): every rt dir of this host,
+    the scheduler's own first, then rt/current's link dir, its resolved dir and $OT_RT_ROOTS (':'-separated).  An explicit rt_root is used alone."""
+    if rt_root is not None:
+        return [str(rt_root)]
+    rt, _ = scheduler_rt(root)
+    cands = [os.path.dirname(rt) if rt else None, os.path.dirname(RT_CURRENT), os.path.dirname(os.path.realpath(RT_CURRENT))]
+    cands += [x for x in os.environ.get("OT_RT_ROOTS", "").split(":") if x]
+    out, seen = [], set()
+    for c in cands:
+        if c and os.path.isdir(c) and os.path.realpath(c) not in seen:
+            seen.add(os.path.realpath(c))
+            out.append(c)
+    return out or [os.path.dirname(RT_CURRENT)]
+
+
 def rt_snapshots(rt_root=None):
-    """[(sha12 dir, full sha)] of the rt/<sha12> snapshots on this host, the scheduler's own first, then newest first"""
-    if rt_root is None:
-        rt, _ = scheduler_rt()
-        rt_root = os.path.dirname(rt) if rt else os.path.dirname(os.path.realpath(RT_CURRENT))
+    """[(sha12 dir, full sha)] of the rt/<sha12> snapshots on this host (every rt dir, rt_roots), the scheduler's own first, then newest first"""
     cur, _ = scheduler_rt()
     out = []
-    try:
-        names = [n for n in os.listdir(rt_root) if RT_NAME_RE.fullmatch(n) and os.path.isfile(os.path.join(rt_root, n, "tools", "autopilot", "rt_launch_tree.sh"))]
-    except OSError:
-        return []
-    names.sort(key=lambda n: os.path.getmtime(os.path.join(rt_root, n)), reverse=True)
-    for n in names:
-        d = os.path.join(str(rt_root), n)
+    names = {}
+    for r in rt_roots(rt_root):
+        try:
+            for n in os.listdir(r):
+                if n not in names and RT_NAME_RE.fullmatch(n) and os.path.isfile(os.path.join(r, n, "tools", "autopilot", "rt_launch_tree.sh")):
+                    names[n] = os.path.join(str(r), n)
+        except OSError:
+            continue
+    for n in sorted(names, key=lambda n: os.path.getmtime(names[n]), reverse=True):
+        d = names[n]
         _, full = scheduler_rt(d)
         out.append((d, full or n))
     if cur:
@@ -9458,6 +9505,7 @@ def resolve_tree_inputs(cfg, die, item, sp, tree, host=None, bind_out=None, rt=N
             raise ValueError(f"private-spec --tree {new}: the plan {p} does not exist in the tree; pass --plan <this tree's plan of record>")
     rec["bind"] = chosen
     # 3. rt.  gen_tools_pin of this item for exactly this bind = the tree's own tools (no rt)
+    upd["gen_pins"] = None                               # BIND-PIN-1124: set below only when the bind's generators are pinned on the newest rt
     pin = ((d.get("item_inputs") or {}).get(item) or {}).get("gen_tools_pin")
     stamp = (binds.get(chosen) or {}).get("stamp")
     if isinstance(pin, dict) and pin.get("bind_out") == chosen and pin.get("src_manifest_hash"):
@@ -9483,6 +9531,12 @@ def resolve_tree_inputs(cfg, die, item, sp, tree, host=None, bind_out=None, rt=N
         rec["rt_from"] = f"wave rt {str(sp.get('tools_sha') or '')[:12]} (fits the bind stamp)"
         return {"update": upd, "record": rec}
     hit = rt_for_stamp(stamp, rt_root)
+    pins = bind_pins(stamp, sp["tools_rt"], hit[0], hit[1]) if hit else None
+    if pins:                                             # BIND-PIN-1124: newest rt + the bind's own generator files
+        upd["gen_pins"] = pins
+        rec["rt_from"] = (f"wave rt {str(sp.get('tools_sha') or '')[:12]} + {len(pins['files'])} generator(s) pinned from the bind's rt "
+                          f"{os.path.basename(hit[0])} ({', '.join(list(pins['files'])[:6])})")
+        return {"update": upd, "record": rec}
     if hit:
         upd["_rt_sha"] = hit[1]
         rec["rt_from"] = f"rt {os.path.basename(hit[0])} (the bind's generators; wave rt {str(sp.get('tools_sha') or '')[:12]} differs)"
@@ -9585,6 +9639,13 @@ def private_spec(cfg, die, item, hub, plan=None, tree=None, overlays=(), ab=(), 
             sp.pop("tools_sha", None)
         if u.get("gen_tools_manifest_sha"):
             sp["gen_tools_manifest_sha"] = u["gen_tools_manifest_sha"]
+        if "gen_pins" in u:                              # BIND-PIN-1124: this tree's bind decides the pins (the wave bind's never carry over)
+            if u["gen_pins"] and sp.get("tools_rt") and not rt_pick:
+                sp["gen_pins"] = u["gen_pins"]
+            else:
+                sp.pop("gen_pins", None)
+    if rt_pick:
+        sp.pop("gen_pins", None)                         # an explicit --rt / the bind's whole rt: no overlay
     if plan:
         sp["plan"] = os.path.abspath(plan)
     ov = [o for o in (overlays or []) if o]
@@ -9664,7 +9725,44 @@ def bind_asbuilt(bind_out, src):
     if not os.path.isabs(m) and not src:
         return None
     f = Path(m) if os.path.isabs(m) else Path(src) / m
-    return str(f) if f.is_file() else None
+    if f.is_file():
+        return str(f)
+    # BIND-COPY-1124 (COORD, KV-PV-CAP lost ~7 h: a bind copied epyc11 -> epyc10 records the as-built at its ORIGIN tree path): the same file
+    # in this tree, by the tree's .fork.json (origin -> this tree) or the physical/... suffix, accepted when its sha256 equals the bind's
+    # native_topology.json asbuilt_sha256; a bind without that sha takes only the exact .fork.json mapping
+    import hashlib
+    try:
+        want = json.loads((Path(bind_out) / "native_topology.json").read_text()).get("asbuilt_sha256")
+    except (OSError, ValueError, AttributeError):
+        want = None
+    for c, exact in _tree_map(m, src):
+        if c.is_file():
+            if want and hashlib.sha256(c.read_bytes()).hexdigest() == want:
+                return str(c)
+            if not want and exact:
+                return str(c)
+    return None
+
+
+def _tree_map(path, src):
+    """BIND-COPY-1124: [(Path in src, exact)] for an absolute path of another tree: via src/.fork.json (src_real / src -> this tree, exact)
+    then via its physical/... suffix (not exact)"""
+    out = []
+    if not src or not os.path.isabs(str(path)):
+        return out
+    path = str(path)
+    try:
+        fk = json.loads((Path(src) / ".fork.json").read_text())
+        for k in ("src_real", "src"):
+            o = str(fk.get(k) or "").split(":", 1)[-1].rstrip("/")
+            if o and path.startswith(o + "/"):
+                out.append((Path(src) / path[len(o) + 1:], True))
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+    i = path.find("/physical/")
+    if i >= 0:
+        out.append((Path(src) / path[i + 1:], False))
+    return out
 
 
 def bind_manifest_named(bind_out):
@@ -9687,7 +9785,12 @@ def asbuilt_clock_landing(asbuilt, src):
     if not t or not isinstance(t, str) or (not os.path.isabs(t) and not src):
         return None
     f = Path(t) if os.path.isabs(t) else Path(src) / t
-    return str(f) if f.is_file() else None
+    if f.is_file():
+        return str(f)
+    for c, _exact in _tree_map(t, src):                 # BIND-COPY-1124: the sidecar of a copied / forked tree (gen_phys checks its plan sha)
+        if c.is_file():
+            return str(c)
+    return None
 
 
 BIND_LANDING_REMOTE = None     # tests: loader(host, hub, bind_out, src) -> {"asbuilt", "clock_landing"} | {} (unreadable)
@@ -9696,7 +9799,7 @@ BIND_LANDING_REMOTE = None     # tests: loader(host, hub, bind_out, src) -> {"as
 def _bind_landing_probe_py():
     """the remote probe = the exact bind_asbuilt / asbuilt_clock_landing code, run on the gen host"""
     import inspect
-    return ("import json, os, sys\nfrom pathlib import Path\n" + inspect.getsource(bind_asbuilt) + "\n" + inspect.getsource(asbuilt_clock_landing) + "\n" + inspect.getsource(bind_manifest_named)
+    return ("import json, os, sys\nfrom pathlib import Path\n" + inspect.getsource(bind_asbuilt) + "\n" + inspect.getsource(_tree_map) + "\n" + inspect.getsource(asbuilt_clock_landing) + "\n" + inspect.getsource(bind_manifest_named)
             + "\na = json.loads(sys.argv[1])\nab_ = bind_asbuilt(a['bind_out'], a.get('src') or None)\n"
             "print('KW_BIND_LANDING ' + json.dumps({'asbuilt': ab_, 'clock_landing': asbuilt_clock_landing(ab_, a.get('src') or None) if ab_ else None, "
             "'named': bind_manifest_named(a['bind_out'])}))\n")
@@ -10626,7 +10729,7 @@ def event_wave_stages(sp, directory, command, extra_inputs=()):
     """Declare the driver inputs named by an opted-in wave stage."""
     src = sp["src"]
     runtime = sp.get("tools_rt")
-    runtime_inputs = [runtime, rt_mirror_path(src, runtime), rt_launch_path(src, runtime)] if runtime else []
+    runtime_inputs = [runtime, rt_mirror_path(src, runtime), sp_launch_path(sp)] if runtime else []
     kit_rtl = {key: value for key, value in (sp.get("kit_rtl") or {}).items() if not key.startswith("note")}
     paths = abs_paths([src, os.path.dirname(sp.get("plan") or ""), sp.get("root"), runtime_inputs,
                        kit_rtl, sp.get("gen_args"), sp.get("gen_env"), sp.get("preflight_args"), extra_inputs])
@@ -11075,7 +11178,7 @@ def run_item(spec_path):
     src, plan = sp["src"], sp["plan"]
     # TOOLS-DECOUPLE-1118: tsrc = where the tools run (cwd + tool paths): the composed rt launch tree when the spec carries tools_rt, else the
     # die tree.  Design roots (--rtl-root, --src-tree, the kit-RTL closure source, the manifest) stay on the die tree src.
-    tsrc = rt_launch_path(src, sp["tools_rt"]) if sp.get("tools_rt") else src
+    tsrc = sp_launch_path(sp) if sp.get("tools_rt") else src
     gh = [G]
     if sp.get("future_lec"):                             # KW-FIX-44 11-10: before any queue wait, not at lec_tools_copy
         why = ensure_future_lec(out, sp["future_lec"])
@@ -11134,13 +11237,19 @@ def run_item(spec_path):
         """the hub pushes its rt/<sha> tools to the gen host (and each roam host) and composes the launch tree there; -> fail result or None"""
         for _h in [G] + [h for h in roamer.others if h != G]:
             _ra = (lambda c, _h=_h: remote_argv(_h, hub, c))
-            _pp, _rs, _fin = rt_mirror_cmds(sp, _h, hub)
-            rc, txt = run(f"rt_mirror_{_h}", _ra(_pp), idempotent=True)
-            if rc == 0 and "KW_RT_MIRROR_HAVE" not in txt:
-                _pv = (re.findall(r"KW_RT_MIRROR_PREV (\S*)", txt) or [""])[-1]
-                rc, txt = run(f"rt_mirror_copy_{_h}", _rs(_pv), idempotent=True)
-                if rc == 0:
-                    rc, txt = run(f"rt_mirror_fin_{_h}", _ra(_fin), idempotent=True)
+            rc = 0
+            _msp = [sp] + ([dict(sp, tools_rt=sp["gen_pins"]["rt"])] if (sp.get("gen_pins") or {}).get("files") else [])   # BIND-PIN-1124: the pin rt too
+            for _k, _m in enumerate(_msp):
+                if rc:
+                    break
+                _sfx = "" if _k == 0 else "_pin"
+                _pp, _rs, _fin = rt_mirror_cmds(_m, _h, hub)
+                rc, txt = run(f"rt_mirror{_sfx}_{_h}", _ra(_pp), idempotent=True)
+                if rc == 0 and "KW_RT_MIRROR_HAVE" not in txt:
+                    _pv = (re.findall(r"KW_RT_MIRROR_PREV (\S*)", txt) or [""])[-1]
+                    rc, txt = run(f"rt_mirror{_sfx}_copy_{_h}", _rs(_pv), idempotent=True)
+                    if rc == 0:
+                        rc, txt = run(f"rt_mirror{_sfx}_fin_{_h}", _ra(_fin), idempotent=True)
             if rc == 0:
                 rc, txt = run(f"rt_tools_{_h}" if _h != G else "rt_tools", _ra(rt_tree_cmd(sp) + f"cat {q(tsrc)}/.rt_launch_ok"), idempotent=True)
             if rc and _h == G:
@@ -11280,10 +11389,27 @@ def run_item(spec_path):
                 # this attempt's tools rt; the launch tree is composed again on it.  None fits -> the old FAIL.
                 rc2, txt2 = run("bind_rt", remote(bind_rt_cmd(bind, os.path.dirname(str(sp["tools_rt"]).rstrip("/")))), idempotent=True)
                 hit = re.findall(r"^KW_BIND_RT (\S+) (\S+)$", txt2 or "", re.M)
-                if rc2 == 0 and hit:
+                _pins = None
+                if rc2 == 0 and hit:                     # BIND-PIN-1124: newest rt + the generators of the rt that fits the bind (that rt's own files)
+                    try:
+                        _pins = bind_pins({"generators": rt_generator_hashes(hit[-1][0])}, sp["tools_rt"], hit[-1][0], hit[-1][1])
+                    except Exception:
+                        _pins = None
+                if _pins:
+                    sp["gen_pins"] = _pins
+                    tsrc = sp_launch_path(sp)
+                    print(f"KW_BIND_PIN gen runs rt {sp.get('tools_sha')} with {len(_pins['files'])} generator(s) of the bind's rt {_pins['sha']} pinned: "
+                          f"{', '.join(_pins['files'])}", flush=True)
+                    res.update(gen_pins=_pins)
+                    _r = compose_rt()
+                    if _r is not None:
+                        return _r
+                    rc, txt = run("bind_toolskew_pin", remote(f"python3 -I {q(tsrc)}/tools/die_plan/bind_tool_stamp.py check --bind-out {q(bind)} --tools {q(tsrc)}"), idempotent=True)
+                elif rc2 == 0 and hit:
                     old_sha = sp.get("tools_sha")
                     sp["tools_rt"], sp["tools_sha"] = hit[-1]
-                    tsrc = rt_launch_path(src, sp["tools_rt"])
+                    sp.pop("gen_pins", None)
+                    tsrc = sp_launch_path(sp)
                     print(f"KW_BIND_RT gen runs on the bind's rt {sp['tools_sha']} (was {old_sha}): {txt.strip().splitlines()[-1][:300] if txt.strip() else ''}", flush=True)
                     res.update(tools_rt=sp["tools_rt"], tools_sha=sp["tools_sha"], tools_rt_from=f"bind stamp (wave rt {old_sha})")
                     _r = compose_rt()
@@ -14340,15 +14466,18 @@ def bind_rt_follow(cfg, die, f):
         if key not in BIND_RT_FIT:
             BIND_RT_FIT[key] = rt_fit_for_stamp(stamp, os.path.dirname(f["tools_rt"].rstrip("/")), f["tools_rt"])
         hit = BIND_RT_FIT[key]
+        pins = bind_pins(stamp, f["tools_rt"], hit[0], hit[1]) if hit else None
     except Exception:                                  # a lookup never stops a launch
         return f
+    if pins:                                           # BIND-PIN-1124: the newest rt, the bind's generator files pinned
+        return dict(f, gen_pins=pins)
     return {"tools_rt": hit[0], "tools_sha": hit[1]} if hit else f
 
 
-def rt_launch_path(src, rt):
-    """the composed launch tree of (die tree, rt snapshot) on a host: same path on every host"""
+def rt_launch_path(src, rt, pins=None):
+    """the composed launch tree of (die tree, rt snapshot [, BIND-PIN overlay]) on a host: same path on every host"""
     s = str(src).rstrip("/")
-    return f"{os.path.dirname(s)}/rt_tools_launch/{os.path.basename(s)}@{os.path.basename(str(rt).rstrip('/'))}"
+    return f"{os.path.dirname(s)}/rt_tools_launch/{os.path.basename(s)}@{os.path.basename(str(rt).rstrip('/'))}{pins_tag(pins)}"
 
 
 def rt_mirror_path(src, rt):
@@ -14405,12 +14534,21 @@ def rt_tree_cmd(sp):
     q = shlex.quote
     rt = str(sp["tools_rt"]).rstrip("/")
     M = rt_mirror_path(sp["src"], rt)
-    L = rt_launch_path(sp["src"], rt)
+    L = sp_launch_path(sp)
     sh = "tools/autopilot/rt_launch_tree.sh"
+    pins = (sp.get("gen_pins") or {}).get("files") or {}
+    pin_sh = ""
+    if pins:                                             # BIND-PIN-1124: overlay the bind's generator files (sha-checked by rt_launch_tree.sh)
+        prt = str(sp["gen_pins"]["rt"]).rstrip("/")
+        pin_sh = (f" \"$P\" {q(','.join(f'{n}={h}' for n, h in sorted(pins.items())))}")
+        pre = (f"P={q(prt)}; [ -d \"$P\"/tools/die_plan ] || P={q(rt_mirror_path(sp['src'], prt))}; "
+               f"[ -d \"$P\"/tools/die_plan ] || {{ echo \"KW_RT_TOOLS FAIL: no pin rt {prt} or mirror on $(hostname -s)\" >&2; exit 97; }}; ")
+    else:
+        pre = ""
     # a made tree needs nothing from rt any more (hardlinks): a later stage still runs after rt/<sha> or the mirror was pruned
     return (f"[ -f {q(L + '/.rt_launch_ok')} ] || {{ R={q(rt)}; [ -f \"$R\"/{sh} ] || R={q(M)}; "
-            f"[ -f \"$R\"/{sh} ] || {{ echo \"KW_RT_TOOLS FAIL: no rt tools {rt} or mirror on $(hostname -s)\" >&2; exit 97; }}; "
-            f"bash \"$R\"/{sh} {q(str(sp['src']).rstrip('/'))} \"$R\" {q(L)} || exit 97; }}; ")
+            f"[ -f \"$R\"/{sh} ] || {{ echo \"KW_RT_TOOLS FAIL: no rt tools {rt} or mirror on $(hostname -s)\" >&2; exit 97; }}; {pre}"
+            f"bash \"$R\"/{sh} {q(str(sp['src']).rstrip('/'))} \"$R\" {q(L)}{pin_sh} || exit 97; }}; ")
 
 
 def rt_mirror_cmds(sp, host, hub, tag=""):

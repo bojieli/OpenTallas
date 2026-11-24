@@ -127,3 +127,41 @@ def test_spec_host_copy_is_the_fallback(private_plan, monkeypatch):
     monkeypatch.setattr(KW, "BIND_LANDING_REMOTE", lambda *a: {})
     sp = KW.private_spec(cfg_with_landing(), D, I, "intel2", plan=private_plan["plan"], bind_out=private_plan["bind"], host="epyc11")
     assert sp["kit_rtl"]["asbuilt"] == private_plan["ab"] and sp["private"]["bind_landing"]["read_on"] == "local"
+
+
+def test_copied_bind_finds_the_same_asbuilt_in_this_tree_by_sha(tmp_path):
+    """BIND-COPY-1124 (KV-PV-CAP): provenance names the as-built at the epyc11 origin path; the forked tree holds the same bytes"""
+    origin = "/srv/opentallas-scratch2/claude/kv-allfix/grow/tree"
+    rel = "physical/die_plan/qwen_kvsys/plan_of_record"
+    src = tmp_path / "a5t3" / "tree"
+    (src / rel).mkdir(parents=True)
+    side = src / rel / "eW_sidecar_A5t3.json"
+    side.write_text("{}")
+    ab = src / rel / "asbuilt_allfix_A5t3.json"
+    ab.write_text(json.dumps({"clock_landing_table": f"{origin}/{rel}/eW_sidecar_A5t3.json"}))
+    (src / ".fork.json").write_text(json.dumps({"src": f"epyc11:{origin}", "src_real": origin}))
+    bo = tmp_path / "a5t3" / "bind"
+    bo.mkdir()
+    (bo / "provenance_bind.json").write_text(json.dumps({"provenance": {"manifest": f"{origin}/{rel}/asbuilt_allfix_A5t3.json"}}))
+    (bo / "native_topology.json").write_text(json.dumps({"asbuilt_sha256": hashlib.sha256(ab.read_bytes()).hexdigest()}))
+    assert KW.bind_asbuilt(bo, str(src)) == str(ab)
+    assert KW.asbuilt_clock_landing(str(ab), str(src)) == str(side)
+    ab.write_text(ab.read_text() + " ")                                   # other bytes: refused (verified by sha, not by path)
+    assert KW.bind_asbuilt(bo, str(src)) is None
+    (bo / "native_topology.json").unlink()                                # no sha recorded: the exact .fork.json mapping only
+    assert KW.bind_asbuilt(bo, str(src)) == str(ab)
+    (src / ".fork.json").unlink()
+    assert KW.bind_asbuilt(bo, str(src)) is None
+
+
+def test_bind_rt_in_an_old_rt_dir_is_found(tmp_path, monkeypatch):
+    """BIND-COPY-1124 (KV-PV-CAP): rt/current resolves into the host-data dir; the bind rt lives only in the old rt dir"""
+    old, new = tmp_path / "scratch2_rt", tmp_path / "rt_data"
+    for d, n in ((old, "e348b919dd39"), (new, "22b94b4a4895")):
+        (d / n / "tools" / "autopilot").mkdir(parents=True)
+        (d / n / "tools" / "autopilot" / "rt_launch_tree.sh").write_text("")
+    (old / "current").symlink_to(new / "22b94b4a4895")
+    monkeypatch.setattr(KW, "RT_CURRENT", str(old / "current"))
+    monkeypatch.setattr(KW, "scheduler_rt", lambda root=None: (str(root), Path(str(root)).name) if root else (str(new / "22b94b4a4895"), "22b94b4a4895"))
+    assert KW.private_rt_fields("e348b919dd39")["tools_rt"] == str(old / "e348b919dd39")
+    assert {Path(d).name for d, _ in KW.rt_snapshots()} == {"e348b919dd39", "22b94b4a4895"}

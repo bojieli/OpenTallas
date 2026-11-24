@@ -138,13 +138,24 @@ def test_rt_defaults_to_the_bind_rt_and_explicit_rt_must_fit(rts):
     inb = T + "/physical/die_plan/qwen_kvsys/plan_of_record/native_bind/out"
     pr = probe_of(T, {inb: {"tools_sha": "", "generators": rts["B"][2]}})
     sp = KW.private_spec(wave_cfg(), D, I, "intel2", tree=T, probe=pr, rt_root=rts["root"])
-    assert sp["tools_rt"] == rts["B"][0] and sp["tools_sha"] == rts["B"][1]
-    assert sp["private"]["rt"]["from"].startswith("bind stamp") and sp["private"]["rt"]["wave_tools_sha"] == rts["A"][1]
+    # BIND-PIN-1124: the newest (wave) rt A runs every stage; the bind's differing generators are pinned from B by content sha
+    assert sp["tools_sha"] == rts["A"][1] and sp["gen_pins"]["rt"] == rts["B"][0]
+    assert sp["gen_pins"]["files"] == {n: rts["B"][2][n] for n in KW.stamp_diff({"generators": rts["B"][2]}, rts["A"][2])}
+    assert "pinned from the bind's rt" in sp["private"]["tree_inputs"]["rt_from"]
+    import os as _os
+    _os.environ["OT_BIND_PIN"] = "0"                      # the old rule: the whole bind rt
+    try:
+        sp0 = KW.private_spec(wave_cfg(), D, I, "intel2", tree=T, probe=pr, rt_root=rts["root"])
+    finally:
+        del _os.environ["OT_BIND_PIN"]
+    assert sp0["tools_rt"] == rts["B"][0] and sp0["tools_sha"] == rts["B"][1] and "gen_pins" not in sp0
+    assert sp0["private"]["rt"]["from"].startswith("bind stamp") and sp0["private"]["rt"]["wave_tools_sha"] == rts["A"][1]
     with pytest.raises(ValueError) as e:                 # --rt of the wave rt does not fit this bind
         KW.private_spec(wave_cfg(), D, I, "intel2", tree=T, probe=pr, rt=rts["A"][1][:12], rt_root=rts["root"])
     assert "drop --rt" in str(e.value) and "reset_replicate.py" in str(e.value)
     sp = KW.private_spec(wave_cfg(), D, I, "intel2", tree=T, probe=pr, rt=rts["B"][1][:12], rt_root=rts["root"])
     assert sp["tools_sha"] == rts["B"][1] and sp["private"]["rt"]["from"] == "--rt"
+    assert "gen_pins" not in sp                           # an explicit --rt: no overlay
 
 
 def test_stamp_matching_no_rt_uses_tree_tools_or_refuses(rts):

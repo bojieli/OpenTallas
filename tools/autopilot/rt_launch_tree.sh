@@ -51,6 +51,20 @@ fill() {
 }
 { fill tools; fill physical/common_flow; } > "$T/.rt_launch_filled"
 n=$(wc -l < "$T/.rt_launch_filled")
-printf '{"rt": "%s", "src": "%s", "tree_only_tool_files": %d, "made": "%s", "host": "%s"}\n' "$RT" "$S" "$n" "$(date -Is)" "$H" > "$T/.rt_launch_ok"
+# BIND-PIN-1124: rt_launch_tree.sh SRC RT L [PINRT NAME=SHA256,...] -- the named tools/die_plan generators come from PINRT (the bind's rt), each
+# checked against the sha256 the bind stamped; any mismatch or missing file = exit 97 (never a launch tree with other generators than the bind's)
+PINS=""
+if [ $# -ge 5 ] && [ -n "$5" ]; then
+  PR=${4%/}
+  for kv in ${5//,/ }; do
+    f=${kv%%=*}; want=${kv#*=}
+    case $f in */*|..*|"") echo "KW_RT_TOOLS FAIL: bad pin $kv" >&2; exit 97;; esac
+    got=$(sha256sum "$PR/tools/die_plan/$f" 2>/dev/null | cut -d' ' -f1)
+    [ "$got" = "$want" ] || { echo "KW_RT_TOOLS FAIL: pin $f of $PR is ${got:-missing}, the bind stamped $want" >&2; exit 97; }
+    rm -f "$T/tools/die_plan/$f" && cp -p "$PR/tools/die_plan/$f" "$T/tools/die_plan/$f" || exit 97
+    PINS="$PINS${PINS:+, }\"$f\": \"$want\""
+  done
+fi
+printf '{"rt": "%s", "src": "%s", "tree_only_tool_files": %d, "made": "%s", "host": "%s", "pin_rt": "%s", "pins": {%s}}\n' "$RT" "$S" "$n" "$(date -Is)" "$H" "${PR:-}" "$PINS" > "$T/.rt_launch_ok"
 mv -T "$T" "$L" || exit 97
-echo "KW_RT_TOOLS composed $L (rt $RT; $n tool files only the die tree has kept)"
+echo "KW_RT_TOOLS composed $L (rt $RT; $n tool files only the die tree has kept${PINS:+; pinned from $PR: $PINS})"
