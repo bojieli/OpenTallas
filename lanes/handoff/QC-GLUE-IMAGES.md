@@ -20,3 +20,13 @@ Work dir: intel1 /srv/opentallas-scratch2/claude/QC-GLUE-IMAGES (copy intel2 sam
 - Holds: V4 wave native59 (owner QC-GLUE) + glue (QC-V4) stay: V4 images are wrong. Release = event kit with this overlay signs (glue, native59).
 - KV dependency: pair image K half from KV D29 selected candidate; if KV A5t3/A5t4 changes KS_* or TXDP K, recompile pair (compile_pair.sh on epyc9 rows_j/pair_0635) and rerun build.
 - ROM GDS: sys_face_cfg + calendar_m0/m1 viamap from rows/<event>/rom_N go to ROM-WEIGHTS-1119 for the QC control-ROM content.
+
+## 09:06 PST (COORD rulings 1-3 done)
+- (1) native59 QUEUE form = primary: gi/n59_queue.sv appended to helpers (pipe module renamed qfd_native59_dr_landing_pipe32,
+  selector qfd_native59_dr_landing_local32: queue when LAND>32, OT_N59_LAND_PIPE define -> pipe fallback). 2659 cells / 729 FF vs 36323.
+  Proof gi/n59q.sh: lockstep vs pipe 532 (400 ep, 0 diff), LOCAL32 1, LAND 40; mutants +-1 caught; fence 532 pass / early caught.
+  Overlay rows/c1h now 3 files (helpers 49294586c7c6). Pipe fallback = rows/c1h_pipe_fallback (gi/build_pipe.sh).
+- (2) KV A5t3 bind2 + C2T2 gate bind: KST 95,95,93,93,93,77,77 HRT 158 EMBRT 152 TXDP K 039ba2ae ZB 97 = pair inputs -> no recompile.
+  Script kv/kv_seam.sh (kst.py). Rerun on the A5t5 bind when it lands.
+- (3) ROM image posted to ROM-WEIGHTS-1119 (sys_face_cfg c26271b28f26, cal m0 6618afda4d1d, m1 bccdb47c722d).
+- Waiter wait_c1j.sh (intel1) uses the new build.sh (queue form).
