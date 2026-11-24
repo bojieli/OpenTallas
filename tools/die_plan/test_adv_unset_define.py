@@ -12,8 +12,8 @@ def test_added_and_plan_switches():
     log = "@@C abc1234 2026-11-23 add\n+++ b/rtl/x/m.sv\n+`ifdef OT_NEW_A\n+ foo\n@@C def5678 2026-11-20 older\n+++ b/rtl/x/m.sv\n+`ifndef OT_NEW_A\n+`elsif OT_NEW_B\n"
     a = U.added_switches(log)
     assert a["OT_NEW_A"][0] == "def5678" and a["OT_NEW_B"][2] == "rtl/x/m.sv"
-    raw = {"partition_types": {"t1": {"module": "m", "verilog_defines": ["OT_NEW_B=1"]}}, "note": "uses OT_OTHER"}
-    assert set(U.plan_switches(raw)) == {"OT_NEW_B", "OT_OTHER"}
+    raw = {"partition_types": {"t1": {"module": "m", "verilog_defines": ["OT_NEW_B=1"]}}, "note": "uses OT_OTHER", "defines": ["OT_DIE_WIDE"]}
+    assert set(U.plan_switches(raw)) == {"OT_NEW_B", "OT_DIE_WIDE"}      # free text is not a setting
 
 
 def _git(d, *a):

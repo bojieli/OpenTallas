@@ -3,7 +3,7 @@
 A switch (`ifdef / `ifndef / `elsif / defined(OT_*)) ADDED on main in the last DAYS days (default 7) that this plan never sets: no type lists it in
 partition_types.<t>.verilog_defines (name before '=') and no other top-level plan key names it.  Such a switch is dead code for this die until a row sets it
 (OT_TP8S_RDPIPE / OT_TP8S_XEPRE sat unapplied for a day).  Per switch: first commit that added a use, file, the modules the file defines, and the plan types
-that instantiate one of them (type.module == module) = the types it targets.  kw days / main_repo / main_ref (as ADV-TREE-DRIFT).
+whose module / contents name one of them = the types it targets.  kw days / main_repo / main_ref (as ADV-TREE-DRIFT).
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.
 """
 import json
@@ -31,9 +31,10 @@ def plan_switches(raw):
         if isinstance(t, dict):
             for d in t.get("verilog_defines") or []:
                 out.setdefault(str(d).split("=")[0].strip().lstrip("`+"), []).append(tn)
-    rest = {k: v for k, v in raw.items() if k != "partition_types"}
-    for m in re.findall(r"OT_[A-Z0-9_]+", json.dumps(rest)):
-        out.setdefault(m, [])
+    for k in ("verilog_defines", "defines", "asbuilt_defines", "as_built_defines"):   # die-wide define lists (not free text: notes name signals / switches)
+        v = raw.get(k)
+        for d in (v if isinstance(v, list) else list(v) if isinstance(v, dict) else []):
+            out.setdefault(str(d).split("=")[0].strip().lstrip("`+"), [])
     return out
 
 
@@ -71,8 +72,10 @@ def _findings(raw, plan_path, tree=None, **kw):
     types = raw.get("partition_types") or {}
     bymod = {}
     for tn, t in types.items():
-        if isinstance(t, dict) and t.get("module"):
-            bymod.setdefault(t["module"], []).append(tn)
+        if isinstance(t, dict):
+            small = {k: v for k, v in t.items() if k in ("module", "contents", "cells", "note")}
+            for m in set(re.findall(r"[A-Za-z_]\w+", json.dumps(small))):
+                bymod.setdefault(m, []).append(tn)
     rows = []
     for sw, (c, d, f) in sorted(added.items()):
         if sw in have:
