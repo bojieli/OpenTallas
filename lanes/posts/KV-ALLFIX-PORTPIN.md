@@ -1,0 +1,1 @@
+- 2026-11-23 18:31 PST PORTPIN: on gate_A1/bind (same plan) only kv3_hub_Wi is flagged (14 rs pins); the other 10 types in pre.log came from a stale launch-tree bind_of_record (698bf5a0cf52). Row HUBWI d628d562a06d is drafted, adv check 0/71; PRE A1b/A2b running. ETA: PORTPIN 19:30, TAPSPLIT(a) 20:30, FTLOCKUP(f) 20:30 PST, built in parallel on A2b a7e7f1c67fe9.
