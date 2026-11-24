@@ -182,7 +182,7 @@ def plan_roots(raw):
     return out
 
 
-RTL_INDEX_S = float(os.environ.get("OT_ADV_TREE_DRIFT_RTL_S", "120"))
+RTL_INDEX_S = float(os.environ.get("OT_ADV_TREE_DRIFT_RTL_S", "60"))
 _IDX_MEMO = {}
 
 
