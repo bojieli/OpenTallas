@@ -66,8 +66,26 @@ def test_jobs_knob(monkeypatch):
     assert 1 <= TDE.elab_jobs(5, 4) <= 5
 
 
+def test_unit_cap_bounds_the_jobs(tmp_path, monkeypatch):
+    cg = tmp_path / "cg"
+    (cg / "a.slice" / "u.scope").mkdir(parents=True)
+    (cg / "a.slice" / "memory.max").write_text("max\n")
+    (cg / "a.slice" / "u.scope" / "memory.max").write_text(f"{128 << 30}\n")
+    pc = tmp_path / "proc_cgroup"
+    pc.write_text("0::/a.slice/u.scope\n")
+    assert TDE.unit_mem_gb(str(pc), str(cg)) == 128
+    (cg / "a.slice" / "u.scope" / "memory.max").write_text("max\n")
+    assert TDE.unit_mem_gb(str(pc), str(cg)) is None
+    monkeypatch.delenv("OT_BIND_ELAB_JOBS", raising=False)
+    monkeypatch.delenv("OT_BIND_ELAB_JOB_GB", raising=False)
+    monkeypatch.setattr(TDE.os, "cpu_count", lambda: 512)
+    monkeypatch.setattr(TDE.os, "getloadavg", lambda: (0.0, 0.0, 0.0))
+    monkeypatch.setattr(TDE, "unit_mem_gb", lambda: 64.0)
+    assert TDE.elab_jobs(5, 96) == 1
+
+
 @needs_yosys
-def test_parallel_variants_and_cache_are_byte_identical(tmp_path, monkeypatch):
+def test_parallel_variants_and_cache_are_byte_identical(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("OT_BIND_TYPE_DEFINES", "on")
     monkeypatch.delenv("OT_BIND_ELAB_CACHE", raising=False)
     plan = _tree(tmp_path)
@@ -80,7 +98,9 @@ def test_parallel_variants_and_cache_are_byte_identical(tmp_path, monkeypatch):
     assert (out / TDE.VARIANT_DIR / "without_OT_TDX" / "asbuilt.json").is_file()
     shutil.move(out, tmp_path / "o_serial")
     monkeypatch.setenv("OT_BIND_ELAB_JOBS", "4")
+    capsys.readouterr()
     assert _elab(plan, out) == 0
+    assert "3 define-variant elab(s) started alongside" in capsys.readouterr().out
     assert _digest(out) == serial
     shutil.move(out, tmp_path / "o_par")
     monkeypatch.setenv("OT_BIND_ELAB_CACHE", str(tmp_path / "cache"))

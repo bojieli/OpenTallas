@@ -336,19 +336,39 @@ def variant_specs(requested, variant):
     return specs
 
 
+def unit_mem_gb(proc_cgroup="/proc/self/cgroup", root="/sys/fs/cgroup"):
+    """the smallest memory.max (GB) on this process's cgroup path (the ot-run unit's cap), None when uncapped."""
+    try:
+        rel = next(ln.split(":", 2)[2].strip() for ln in Path(proc_cgroup).read_text().splitlines()
+                   if ln.startswith("0::"))
+    except (OSError, StopIteration, IndexError):
+        return None
+    caps, d = [], Path(root + rel)
+    while d != Path(root) and d != d.parent:
+        try:
+            v = (d / "memory.max").read_text().strip()
+            if v != "max":
+                caps.append(int(v) / (1 << 30))
+        except (OSError, ValueError):
+            pass
+        d = d.parent
+    return min(caps) if caps else None
+
+
 def elab_jobs(n, mem_gb):
     """BIND-ELAB-PAR: parallel define-variant elabs.  $OT_BIND_ELAB_JOBS (>= 1) wins; else min(n, idle cores,
-    (MemAvailable - 64 GB reserve) / per-job GB).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 24) (the S81 c7a
-    die elab peaked at 11.4 GB in Yosys)."""
+    (min(MemAvailable, the unit's cgroup cap) - 64 GB) / per-job GB).  The Yosys containers run outside the ot-run
+    unit's cgroup, so the unit's own cap is applied here: the gate stays inside the memory it was admitted for.  The
+    64 GB is the bind process itself (S81 c7a: 52 GB peak).  Per-job GB = $OT_BIND_ELAB_JOB_GB, else min(--mem, 14)
+    (S81 c7a Yosys peak 11.4 GB)."""
     env = os.environ.get("OT_BIND_ELAB_JOBS", "").strip()
     if env:
         try:
             return max(1, min(n, int(env)))
         except ValueError:
             pass
-    cpus = os.cpu_count() or 1
     try:
-        idle = int(cpus - os.getloadavg()[0])
+        idle = int((os.cpu_count() or 1) - os.getloadavg()[0])
     except OSError:
         idle = 1
     avail = None
@@ -358,12 +378,15 @@ def elab_jobs(n, mem_gb):
                 avail = int(ln.split()[1]) / (1 << 20)
     except OSError:
         pass
+    if avail is None:
+        return 1
+    cap = unit_mem_gb()
+    per = min(float(mem_gb), 14.0)
     try:
-        per = float(os.environ.get("OT_BIND_ELAB_JOB_GB") or min(float(mem_gb), 24.0))
+        per = float(os.environ.get("OT_BIND_ELAB_JOB_GB") or per)
     except ValueError:
-        per = min(float(mem_gb), 24.0)
-    by_mem = int((avail - 64) // max(per, 1.0)) if avail is not None else 1
-    return max(1, min(n, idle, by_mem))
+        pass
+    return max(1, min(n, idle, int((min(avail, cap if cap is not None else avail) - 64) // max(per, 1.0))))
 
 
 class Prestart:
