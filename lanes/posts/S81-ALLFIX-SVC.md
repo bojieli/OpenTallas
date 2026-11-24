@@ -101,3 +101,4 @@
 - 2026-11-24 05:13 PST DIED [S81-ALLFIX-SVC] ot-run oth-ubuntu-453398-1795526030 on dear-crayfish: rc=4 after 4 s, ended 05:13:52, log none, cmd: --hosts epyc2 --mem 8 --threads 4 --dir /srv/opentallas-scratch3/claude/s81-allfix-svc/clone_r1/tools/die_plan -- python3 -m pytest -q -x -p | class=NO-PATTERN cause=rc 4 after 4 s, no log
 - 2026-11-24 05:16 PST DONE [s81-allfix-svc] ot-push-main otpush-dear-crayfish-528885 on dear-crayfish: rc=0 after 0 s, ended 05:16:51, log none, cmd: ot-push-main --help
 - 2026-11-24 05:19 PST DIED [s81-allfix-svc] ot-push-main otpush-dear-crayfish-537502 on dear-crayfish: rc=4 after 114 s, ended 05:19:09, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 114 s, no log
+- 2026-11-24 05:19 PST DONE [s81-allfix-svc] ot-push-main otpush-dear-crayfish-579865 on dear-crayfish: rc=0 after 25 s, ended 05:19:58, log none, cmd: ot-push-main 
