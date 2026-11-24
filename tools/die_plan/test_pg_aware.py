@@ -212,6 +212,14 @@ def test_face_cut_windows_stop_parent_stripes_before_pin_faces(tmp_path, monkeyp
     tcl = gen_phys.pg_face_cut_tcl(cuts)
     assert "pgf_window M6 421.8600 325.8160 423.3600 326.3520" in tcl and "OT_PG_FACE_CUT windows=2" in tcl
     assert tcl.count("{") == tcl.count("}")
+    assert "getBPins" in tcl and "dbBox_destroy" in tcl                               # published strap pins are trimmed too
+    P.types["hd"]["pg_face_cut"] = ["M7"]                                             # HEAD-W-DRC: one layer only
+    c7 = gen_phys.pg_face_cuts(P, "hd")                                               # inward too, only at the pins
+    assert c7 == [("u_epc", "M7", "N", (433.288, 341.844, 433.496, 344.844), ((433.288, 433.496),))]
+    assert "344.8440 {{433.2880 433.4960}}   ;# u_epc N face" in gen_phys.pg_face_cut_tcl(c7)
+    P.types["hd"]["pg_face_cut"] = ["M9"]
+    with pytest.raises(ValueError):
+        gen_phys.pg_face_cuts(P, "hd")
 
 
 def test_pin_rule_skips_signed_types_and_plan_can_force(monkeypatch):

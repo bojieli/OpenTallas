@@ -2852,6 +2852,23 @@ def macro_pin_pad_type(t):
     return any(p.get("macro_pin") for p in t.get("pads", []) or [])
 
 
+def pg_face_cut_layers(t):
+    """Strap layers the face cut stops.  Plan pg_face_cut: true = every FACE_CUT_LAYERS layer, false = none, a list of layer
+    names = only those.  HEAD-W-DRC 11-24 (hd_lep0N_w): pdngen ends a parent M7 strap 0.104 um (0.072 wide-metal spacing +
+    0.032) from a core's M7 face pin, so an escape via at the pin mouth lands 0.045 um from the strap (M7 DRC).  ["M7"] drops
+    only the strap stub past its last M6 crossing: no M5 rail stack and no M6-M7 via goes, unlike the all-layer cut.  The list
+    form also cuts FACE_CUT_UM inward: a strap that resumes over the core starts 0.104 um behind the pin."""
+    if not pg_face_cut_on(t):
+        return ()
+    v = t.get("pg_face_cut")
+    if isinstance(v, (list, tuple)):
+        bad = sorted(set(v) - set(FACE_CUT_LAYERS))
+        if bad:
+            raise ValueError(f"pg_face_cut layers {bad}: only {sorted(FACE_CUT_LAYERS)}")
+        return tuple(ln for ln in FACE_CUT_LAYERS if ln in v)
+    return tuple(FACE_CUT_LAYERS)
+
+
 def pg_face_cut_on(t):
     if "pg_face_cut" in t:
         return bool(t["pg_face_cut"])
@@ -2890,16 +2907,20 @@ def lef_face_pins(path, layers=tuple(FACE_CUT_LAYERS), tol=FACE_PIN_TOL_UM):
 
 def pg_face_cuts(P, tn, root=None):
     """[(inst, layer, face, (x0, y0, x1, y1))] type-frame windows: for every placed macro face with pins on a layer whose
-    partition stripes run into that face, the FACE_CUT_UM strip outside the face over the pin span (+ M6 spacing)."""
+    partition stripes run into that face, the FACE_CUT_UM strip outside the face over the pin span (+ M6 spacing).  The
+    list form (pg_face_cut_layers) adds a fifth item, the merged pin intervals along the face: only a stripe within spacing
+    of a pin is stopped, the stripes between the pins stay whole."""
     t = P.types[tn]
-    if not pg_face_cut_on(t):
+    layers = pg_face_cut_layers(t)
+    if not layers:
         return []
     import cores as C
     sp = PG_CUT_SPACE_UM
+    inw = FACE_CUT_UM if isinstance(t.get("pg_face_cut"), (list, tuple)) else 0.0
     cuts = []
     for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn, root):
-        pins, (w, h) = lef_face_pins(C.resolve(lef, root))
-        faces = {}
+        pins, (w, h) = lef_face_pins(C.resolve(lef, root), layers)
+        faces, spans = {}, {}
         for ln, r in pins:
             x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
             for face, hit in (("W", x0 < FACE_PIN_TOL_UM), ("E", x1 > w - FACE_PIN_TOL_UM),
@@ -2908,16 +2929,28 @@ def pg_face_cuts(P, tn, root=None):
                     lo, hi = (y0, y1) if face in "WE" else (x0, x1)
                     a = faces.setdefault((ln, face), [lo, hi])
                     a[0], a[1] = min(a[0], lo), max(a[1], hi)
+                    spans.setdefault((ln, face), set()).add((lo, hi))
         for (ln, face), (lo, hi) in sorted(faces.items()):
             if face == "W":
-                r = (ox - FACE_CUT_UM, oy + lo - sp, ox, oy + hi + sp)
+                r = (ox - FACE_CUT_UM, oy + lo - sp, ox + inw, oy + hi + sp)
             elif face == "E":
-                r = (ox + w, oy + lo - sp, ox + w + FACE_CUT_UM, oy + hi + sp)
+                r = (ox + w - inw, oy + lo - sp, ox + w + FACE_CUT_UM, oy + hi + sp)
             elif face == "S":
-                r = (ox + lo - sp, oy - FACE_CUT_UM, ox + hi + sp, oy)
+                r = (ox + lo - sp, oy - FACE_CUT_UM, ox + hi + sp, oy + inw)
             else:
-                r = (ox + lo - sp, oy + h, ox + hi + sp, oy + h + FACE_CUT_UM)
-            cuts.append((inst, ln, face, tuple(round(v, 4) for v in r)))
+                r = (ox + lo - sp, oy + h - inw, ox + hi + sp, oy + h + FACE_CUT_UM)
+            c = (inst, ln, face, tuple(round(v, 4) for v in r))
+            if inw:
+                base = oy if face in "WE" else ox
+                iv = []
+                for p0, p1 in sorted(spans[ln, face]):
+                    p0, p1 = round(base + p0 - sp, 4), round(base + p1 + sp, 4)
+                    if iv and p0 <= iv[-1][1]:
+                        iv[-1] = (iv[-1][0], max(iv[-1][1], p1))
+                    else:
+                        iv.append((p0, p1))
+                c += (tuple(iv),)
+            cuts.append(c)
     return cuts
 
 
@@ -2928,17 +2961,18 @@ def pg_face_cut_tcl(cuts):
          "# (gen_phys.pg_face_cuts).  Runs after pdngen (POST_PDN_TCL).",
          "uplevel #0 {",
          "set pgf_b [ord::get_db_block]", "set pgf_u [$pgf_b getDbUnitsPerMicron]",
-         "set pgf_cuts {}; set pgf_via 0",
+         "set pgf_cuts {}; set pgf_via 0; set pgf_wins {}",
          "proc pgf_layers {s} {",
          "  foreach v [list [$s getTechVia] [$s getBlockVia]] {",
          '    if {$v ne "NULL" && $v ne ""} { return [list [[$v getTopLayer] getName] [[$v getBottomLayer] getName]] }',
          "  }",
          "  return {}",
          "}",
-         "proc pgf_window {ln wx0 wy0 wx1 wy1} {",
-         "  global pgf_b pgf_u pgf_cuts",
+         "proc pgf_window {ln wx0 wy0 wx1 wy1 {ivs {}}} {",
+         "  global pgf_b pgf_u pgf_cuts pgf_wins",
          "  set X0 [expr {round($wx0*$pgf_u)}]; set Y0 [expr {round($wy0*$pgf_u)}]",
          "  set X1 [expr {round($wx1*$pgf_u)}]; set Y1 [expr {round($wy1*$pgf_u)}]",
+         "  lappend pgf_wins [list $X0 $Y0 $X1 $Y1]",
          '  set horiz [expr {$ln eq "M6"}]',
          "  foreach net {VDD VSS} {",
          "    set n [$pgf_b findNet $net]",
@@ -2948,6 +2982,12 @@ def pg_face_cut_tcl(cuts):
          "        if {[$s isVia]} continue",
          "        if {[[$s getTechLayer] getName] ne $ln} continue",
          "        if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+         "        if {[llength $ivs]} {",
+         "          if {$horiz} { set lo [$s yMin]; set hi [$s yMax] } else { set lo [$s xMin]; set hi [$s xMax] }",
+         "          set hit 0",
+         "          foreach iv $ivs { if {$hi > [lindex $iv 0]*$pgf_u && $lo < [lindex $iv 1]*$pgf_u} { set hit 1; break } }",
+         "          if {!$hit} continue",
+         "        }",
          "        set lay [$s getTechLayer]; set st [$s getWireShapeType]",
          "        set a [$s xMin]; set b [$s yMin]; set c [$s xMax]; set d [$s yMax]",
          "        odb::dbSBox_destroy $s",
@@ -2964,19 +3004,51 @@ def pg_face_cut_tcl(cuts):
          "    }",
          "  }",
          "}"]
-    for inst, ln, face, (x0, y0, x1, y1) in cuts:
-        L.append(f"pgf_window {ln} {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}   ;# {inst} {face} face")
-    L += ["foreach cut $pgf_cuts {",
+    for inst, ln, face, (x0, y0, x1, y1), *ivs in cuts:
+        iv = " {" + " ".join(f"{{{a:.4f} {c:.4f}}}" for a, c in ivs[0]) + "}" if ivs else ""
+        L.append(f"pgf_window {ln} {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}{iv}   ;# {inst} {face} face")
+    # pdngen publishes a strap as a BPin too (-pins M7): trim the published shape with the strap, or the router and the
+    # abstract keep the cut metal
+    L += ["set pgf_pin 0", "foreach cut $pgf_cuts {",
           "  lassign $cut net ln X0 Y0 X1 Y1",
-          "  foreach sw [[$pgf_b findNet $net] getSWires] {",
+          "  set bt [$pgf_b findBTerm $net]",
+          '  if {$bt eq "NULL" || $bt eq ""} continue',
+          "  foreach bp [$bt getBPins] { foreach x [$bp getBoxes] {",
+          "    if {[[$x getTechLayer] getName] ne $ln} continue",
+          "    set a [$x xMin]; set b [$x yMin]; set c [$x xMax]; set d [$x yMax]",
+          "    if {$c <= $X0 || $a >= $X1 || $d <= $Y0 || $b >= $Y1} continue",
+          "    set lay [$x getTechLayer]",
+          "    odb::dbBox_destroy $x; incr pgf_pin",
+          '    if {$ln eq "M6"} {',
+          "      if {$a < $X0} { odb::dbBox_create $bp $lay $a $b $X0 $d }",
+          "      if {$c > $X1} { odb::dbBox_create $bp $lay $X1 $b $c $d }",
+          "    } else {",
+          "      if {$b < $Y0} { odb::dbBox_create $bp $lay $a $b $c $Y0 }",
+          "      if {$d > $Y1} { odb::dbBox_create $bp $lay $a $Y1 $c $d }",
+          "    }",
+          "  } }",
+          "}"]
+    # one pass over the vias, the few windows as the first filter (cuts x vias took > 5 min on hd_lep0N_w: 145k vias)
+    L += ["foreach net {VDD VSS} {",
+          "  set n [$pgf_b findNet $net]",
+          '  if {$n eq "NULL" || $n eq ""} continue',
+          "  foreach sw [$n getSWires] {",
           "    foreach s [$sw getWires] {",
           "      if {![$s isVia]} continue",
-          "      if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
-          "      if {$ln in [pgf_layers $s]} { odb::dbSBox_destroy $s; incr pgf_via }",
+          "      set a [$s xMin]; set b [$s yMin]; set c [$s xMax]; set d [$s yMax]; set hit 0",
+          "      foreach w $pgf_wins { lassign $w X0 Y0 X1 Y1",
+          "        if {$c > $X0 && $a < $X1 && $d > $Y0 && $b < $Y1} { set hit 1; break } }",
+          "      if {!$hit} continue",
+          "      set vl [pgf_layers $s]",
+          "      foreach cut $pgf_cuts {",
+          "        lassign $cut cn ln X0 Y0 X1 Y1",
+          "        if {$cn ne $net || $c <= $X0 || $a >= $X1 || $d <= $Y0 || $b >= $Y1 || $ln ni $vl} continue",
+          "        odb::dbSBox_destroy $s; incr pgf_via; break",
+          "      }",
           "    }",
           "  }",
           "}",
-          'puts "OT_PG_FACE_CUT windows=%d strap_cuts=[llength $pgf_cuts] vias_removed=$pgf_via"' % len(cuts), "}"]
+          'puts "OT_PG_FACE_CUT windows=%d strap_cuts=[llength $pgf_cuts] vias_removed=$pgf_via pin_boxes_trimmed=$pgf_pin"' % len(cuts), "}"]
     return "\n".join(L) + "\n"
 
 

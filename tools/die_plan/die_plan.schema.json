@@ -1406,6 +1406,19 @@
      "pg_pin_rule": {
       "type": "boolean"
      },
+     "pg_face_cut": {
+      "type": [
+       "boolean",
+       "array"
+      ],
+      "items": {
+       "enum": [
+        "M5",
+        "M6",
+        "M7"
+       ]
+      }
+     },
      "reg_spine": {
       "type": "object",
       "required": [
