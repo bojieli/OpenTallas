@@ -1,13 +1,13 @@
 item	row_sha	rebased	in_compose_sha	PRE	strict	LAT	G0	probe_unit	probe_result	status
 rc116 sys_c dcal (rows C/D + RTL 23d08aceeda5)	08be3955c5c7+c296998f3e31	in-base K3g	324af451f9be	PASS(K3g)	0(K3g Codex r2)	PASS(K3g)	PASS(K3g)	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read); residual S1/S1b/S3 -> SYSC-D2DOUT
-rc116/S1 SYSC-D2DOUT (att_tx 10b reach) + RANKS S1b/S2 + S3 seats	draft 9c5254471085 (plan_c base)	REBASING (helper KV-ALLFIX-SYSC)	-	-	-	-	-	-	-	ROW-REBASING
+rc116/S1 SYSC-D2DOUT (att_tx 10b reach) + RANKS S1b/S2 + S3 seats	D2DOUT bcf5825fcffb (+RANKS d4fed0b47ae2) / S3SERDES 97ae93a74024 (+3 cyc L2046)	yes (A1)	A2/A2b compose (PRE running)	PASS 0, G0 0 (helper)	-	-	-	-	-	ROW-REBASED; 4 S3 bits REASONED-pending (re-measure on sys_c probe)
 rc118 pc slit (PCSLIT 32447daeb2e6 + PCGUT 823a4142c484)	32447daeb2e6	in-base K3g	324af451f9be	PASS(K3g)	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
-rc118 G1 PCGUTKEEP	b79196b9e7f1	yes (FABLE-OPEN-KV, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	FABLE-OPEN-KV probe A pc_v3 (121b8cb74ac2)	-	IN-COMPOSE A1
+rc118 G1 PCGUTKEEP	b79196b9e7f1	yes (FABLE-OPEN-KV, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	0 (gate_A1, R8 refresh pass 2)	2752/2752	PASS 0	ITER1 kits A1b goal grt (allfix-A1b-*)	-	STRICT+LAT+G0 CLEAN; probe running
 rc118 G2 pcc seam (PCGROW cc020e443a39 needs die growth)	-	no	-	-	-	-	-	probe A full GRT	-	REASONED-OPEN pending probe A seam read
 rc119 pc taps (SOFTFLOP + PCTAPEGRESS 203007454084)	203007454084	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 rc120 AFFAULT	5b9a55ae26b8	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 rc121 PCST 08089043fd2a + PCKEEP 6c5310129741	08089043fd2a	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
-rc121 G3 PCPO3 (+2 cyc po_d3)	af31ff23f995	yes (FABLE-OPEN-KV, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	probe A	-	IN-COMPOSE A1
+rc121 G3 PCPO3 (+2 cyc po_d3)	af31ff23f995	yes (FABLE-OPEN-KV, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	0 (gate_A1, R8 refresh pass 2)	2752/2752	PASS 0	ITER1 kits A1b goal grt (allfix-A1b-*)	-	STRICT+LAT+G0 CLEAN; probe running
 rc122 pc_v1 bank PCV1BANK2	8a715f0b1bc9	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 rc123 hgi_v4 FT23STREET + FT20BAND	c862d73fe64b+45892e81daaf	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 rc124 hgi_v1 HST2SITE + T1SPLIT	cddc1dd754e2	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
@@ -19,14 +19,15 @@ hg-KV-IO-BOUNDARY (RHI IO)	72b268847ec4	in-base K3g	324af451f9be	PASS	0	PASS	PAS
 hg-KV-PIN-ROW KRSPWIN + KRSPCORE	399f5d95fb70	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 hg-KV-RESET-ASYNC (RHI RST)	72b268847ec4	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 x8 hroot BAND 43a1ac7be69f + RING 60bd6e0b813a + RINGFORM 97083c85fd86	97083c85fd86	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
-x10 tap offsets (TAPOFF last)	tap_offset_cover rt 70b6f	recomputed per compose	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
+x10 tap offsets (TAPOFF last)	tap_offset_cover rt 70b6f	recomputed per compose	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	0 (gate_A1, R8 refresh pass 2)	2752/2752	PASS 0	ITER1 kits A1b goal grt (allfix-A1b-*)	-	STRICT+LAT+G0 CLEAN; probe running
 x15 hroot GEOM block 3	4ca2bc6de1a3	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
-TAPGRID pv_v3e split (+146 taps)	53fa112e543f (plan 42c02451ea4f)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
-TAPGRID pv_v1n split (+168 taps, resel, PARTIAL 2 over)	1a910f00e69b (plan dccab51441bf)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
-hub_C HUBC-E2 relay seats	c95f773d3e97	yes (on A1 + K3g)	A2 pending (hA1 69d116afe578)	PASS 0	-	-	-	-	-	ROW-REBASED
-hub_C H2 RSTCL / H3 SEQE (+3 cyc L2035/L2037) / PVNFENCE / KVCTLWRAP (ahub+kvs_ctl overflow 57 of ~101 nets)	c759208d0dc5 / fc0c1ec110af / 9aab91eb34cd / 96c827900c35	yes	A2 pending (hA1 69d116afe578)	PASS 0	-	-	-	-	-	ROW-REBASED
-R8 type split: 7 conflicting types (hg_v1, hg_v1p3, pc cl254f/cl5a95, pc_v1 cl4ea/cl7f, pc_v3) -> 32 clones by per-instance landing-pad vector (replaces strap_r8pad banks with no planned pin)	97b616f9451f (plan_t 4d16efb7c25d on A1r2, asbuilt 72f6b1feebc3)	yes (A1r2)	A2 pending	running	-	-	-	-	-	ROW-BUILT, PRE running
+TAPGRID pv_v3e split (+146 taps)	53fa112e543f (plan 42c02451ea4f)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	0 (gate_A1, R8 refresh pass 2)	2752/2752	PASS 0	ITER1 kits A1b goal grt (allfix-A1b-*)	-	STRICT+LAT+G0 CLEAN; probe running
+TAPGRID pv_v1n split (+168 taps, resel, PARTIAL 2 over)	1a910f00e69b (plan dccab51441bf)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	0 (gate_A1, R8 refresh pass 2)	2752/2752	PASS 0	ITER1 kits A1b goal grt (allfix-A1b-*)	-	STRICT+LAT+G0 CLEAN; probe running
+hub_C HUBC-E2 relay seats	c95f773d3e97	yes (on A1 + K3g)	A2/A2b compose (PRE running)	PASS 0	-	-	-	-	-	ROW-REBASED
+hub_C H2 RSTCL / H3 SEQE (+3 cyc L2035/L2037) / PVNFENCE / KVCTLWRAP (ahub+kvs_ctl overflow 57 of ~101 nets)	c759208d0dc5 / fc0c1ec110af / 9aab91eb34cd / 96c827900c35	yes	A2/A2b compose (PRE running)	PASS 0	-	-	-	-	-	ROW-REBASED
+R8 type split: 7 conflicting types (hg_v1, hg_v1p3, pc cl254f/cl5a95, pc_v1 cl4ea/cl7f, pc_v3) -> 32 clones by per-instance landing-pad vector (replaces strap_r8pad banks with no planned pin)	97b616f9451f (plan_t 4d16efb7c25d on A1r2, asbuilt 72f6b1feebc3)	yes (A1r2)	A2/A2b (last row, bus_groups of gate_A1)	PASS 0 on A1r2	-	-	-	-	-	ROW-BUILT, PRE running
 PCGROW + die port shift (rc118 G2 seam), FABLE-OPEN-KV building on A1r2	-	FABLE-OPEN-KV	-	-	-	-	-	-	-	ACCEPTED into A2/A3 compose (COORD 17:3x)
-hub_C H4 d38 kvs_attn_pvst N/S fork (31b, 38 stages)	-	no	-	-	-	-	-	-	-	ROW-DROP tonight: needs per-sink chain split in bind or RTL copy -> REASONED-pending (FABLE-RC-ALL)
-PCFTGRID (pc FT stages half a row off grid; blocks pc_v3/pc_v1 kit gen)	1394aa5f6594	yes	A1b cf1eadc2cb91 (positions only; A1 bind valid)	PASS 0	-	-	-	-	-	IN-COMPOSE A1b
+hub_C H4 d38 kvs_attn_pvst N/S fork (31b, 38 stages)	D38BR c9e24b57df87 (relay_branch copy, LEC 1460/1460)	yes (A1b)	A2b compose	PASS 0 (hA1b d106a82a143e)	-	-	-	-	-	ROW-REBASED (COORD: RTL copy form)
+PCFTGRID (pc FT stages half a row off grid; blocks pc_v3/pc_v1 kit gen)	1394aa5f6594	yes	A1b cf1eadc2cb91 (positions only; A1 bind valid)	PASS 0	A1 bind (positions only)	2752/2752	PASS 0	ITER1 pc_v1 kits	-	IN A1b; probe running
 PCGROWDIE (rc118 G2 seam, whole-die re-floor +224.64 um)	84141a5187ca	FABLE-OPEN-KV draft	iteration 2 (A3): KV-ALLFIX owns die clock mesh re-solve, 28 window remap, R8 refresh	-	-	-	-	-	-	ROW-DRAFT -> A3
+ADV-PORT-PIN unplanned wrapper ports (6 hg strap ectl_cfg, hub_Wi 14 reset spine pins, 3 pc strap_r8pad, sys_c bump_ucie_rom)	-	building (helper KV-ALLFIX-PORTPIN)	-	-	-	-	-	-	-	ROW-BUILDING; these 10 types held from ITER1
