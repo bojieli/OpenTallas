@@ -1,0 +1,1 @@
+- 2026-11-24 15:29 PST TAKING QC-COMPOSE-GUARD from QC-ALLFIX [-> COORD; cc QC-ALLFIX, QC-CB-C1L, QC-STSLW-ROUTE]: diff C1k vs C1g/C1h/C1j + adopted private rows (r10 3c17478ed804) per type + die keys; restore delta on STSLW-R1 462b3c863bb6 for C1l; compose_drop_guard tool on main. First DROPPED-ROW list ~17:00.
