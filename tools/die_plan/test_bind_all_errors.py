@@ -141,3 +141,41 @@ def test_post_landing_refusal_is_one_gap_per_type(collect):
     for tn in ('T1', 'T2'):
         bind.Binder._emit_one(f, tn, ['p'], None, [])
     assert f.emit_gaps == [f'control reset localization {tn}: nope' for tn in ('T1', 'T2')]
+
+
+# ---------------------------------------------------------------- R8-ALL-MEMBERS 11-24: every stale R8 member, not the first 30
+def _r8b(n_main=40, n_extra=3):
+    B = SimpleNamespace(errors=[], pad_stats=dict(table_sha="abc"), r8_bad=[])
+    B._r8_origin = {}
+    for i in range(n_main):
+        m = dict(id=f"m{i}", lane=f"L{i}", source="s.q", asbuilt=5, bound=10, pad=2)
+        B._r8_origin[m["id"]] = "main.json"
+        for bit in range(2):
+            bind.Binder._r8_bad(B, "mismatch", m, bit, "s.q", 5, 12)
+    for i in range(n_extra):
+        m = dict(id=f"x{i}", lane="Lx", source="t.q", asbuilt=3, bound=7, pad=0)
+        B._r8_origin[m["id"]] = "pv_col.json"
+        bind.Binder._r8_bad(B, "no_sink", m, None)
+    return B
+
+
+def test_r8_all_lists_every_member_per_table(tmp_path):
+    B = _r8b()
+    rows = bind.write_r8_all(tmp_path, B)
+    assert len(rows) == 43
+    j = json.loads((tmp_path / 'r8_stale_all.json').read_text())
+    assert j['members'] == 43 and j['bits'] == 83 and j['by_table'] == {'main.json': 40, 'pv_col.json': 3}
+    r = j['rows'][0]
+    assert (r['table'], r['id'], r['lane'], r['rec_bound'], r['bind_bound'], r['delta'], r['bits'], r['bit_list']) == \
+        ('main.json', 'm0', 'L0', 10, 12, 2, 2, [0, 1])
+    tsv = (tmp_path / 'r8_stale_all.tsv').read_text().splitlines()
+    assert len(tsv) == 44 and tsv[0].startswith('table\tkind\tid\tlane')
+    assert B.errors == [e for e in B.errors if e.startswith(bind.R8_FAIL_FAST_PREFIXES)]
+    assert B.errors[-1].startswith('R8_STALE_TOTAL 43 member(s) / 83 bit(s): main.json 40, pv_col.json 3')
+    bind.write_r8_all(tmp_path, B)
+    assert sum(e.startswith('R8_STALE_TOTAL') for e in B.errors) == 1
+
+
+def test_r8_all_nothing_stale_writes_nothing(tmp_path):
+    B = SimpleNamespace(errors=[], r8_bad=[])
+    assert bind.write_r8_all(tmp_path, B) == [] and not B.errors and not (tmp_path / 'r8_stale_all.json').exists()

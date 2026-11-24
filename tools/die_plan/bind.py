@@ -2590,6 +2590,7 @@ class Binder:
             ci, sci = cidx.get(m["sink"]), cidx.get(m["source"])
             if ci is None or sci is None:
                 st["stale"] += 1
+                self._r8_bad("inner_no_leaf", m, None)
                 self.errors.append(f"R8_STALE {m['id']}: no such sink / source leaf in this bind")
                 continue
             want[(ci, m["sink_port"], sci, int(m["asbuilt"]))] = (int(m["landed"]), m)
@@ -2616,6 +2617,9 @@ class Binder:
                 self.__dict__.setdefault('_inner_original', {}).setdefault(k, d)
                 self.sinks[k] = nd
         miss = [w[1]["id"] for k, w in want.items() if k not in hit]
+        for k, w in want.items():
+            if k not in hit:
+                self._r8_bad("inner_no_edge", w[1], None)
         for i in miss[:30]:
             self.errors.append(f"R8_STALE {i}: no intra-partition sink bit of this edge at that as-built depth")
         st["stale"] += len(miss)
@@ -2761,11 +2765,15 @@ class Binder:
         # AUTHORITATIVE for the ids it lists (replaces the r8 member of the same id; new ids are added); INNER:<part>:
         # members re-size the intra-partition ot_dp_dly of one (sink leaf.port <- source leaf @ as-built stages) edge
         inner, extra_info = [], []
+        # R8-ALL-MEMBERS 11-24: which table each member came from (an extra table owns the ids it lists)
+        origin = {m["id"]: Path(f).name for m in js["members"]}
+        self.r8_bad = []
         for xf in self.ab.get("land_r8_extra", []):
             xf = Path(xf) if Path(xf).is_absolute() else Path(self.base) / xf
             xj = json.loads(xf.read_text())
             xm = {m["id"]: m for m in xj["members"] if not m["id"].startswith("INNER:")}
             inner += [m for m in xj["members"] if m["id"].startswith("INNER:")]
+            origin.update({m["id"]: xf.name for m in xj["members"]})
             ids = {m["id"] for m in js["members"]}
             js["members"] = [xm.get(m["id"], m) for m in js["members"]] + [m for i, m in xm.items() if i not in ids]
             extra_info.append(dict(table=str(xf), sha=hashlib.sha256(xf.read_bytes()).hexdigest()[:16],
@@ -2780,6 +2788,7 @@ class Binder:
         excl = [re.compile(x) for x in self.ab.get("land_align_exclude", [])]
         cidx = self.cell_index()
         st = self.pad_stats
+        self._r8_origin = origin
         st.update(mode="r8", table=str(f), table_sha=hashlib.sha256(Path(f).read_bytes()).hexdigest()[:16],
                   table_summary=js.get("summary", {}), members=0, stale=0, uncovered=0, excluded_bits=0,
                   r8_excluded=[], async_bits=0, table_exempt=js.get("exempt", []), table_bus=js.get("bus"),
@@ -2824,6 +2833,7 @@ class Binder:
                     st["gone_pad0"].append(m["id"])
                     continue
                 st["stale"] += 1
+                self._r8_bad("no_sink", m, None)
                 if st["stale"] <= 30:
                     self.errors.append(f"R8_STALE {m['id']}: no such sink leaf/port in this bind")
                 continue
@@ -2843,6 +2853,9 @@ class Binder:
                     st["async_bits"] += 1
                     continue
                 st["uncovered"] += 1
+                self.r8_bad.append(dict(table=None, kind="uncovered", id=f"{path}.{pn}", lane=lane, bit=i, rec_source=None,
+                                        rec_asbuilt=None, rec_bound=None, bind_source=src, bind_asbuilt=d[5],
+                                        bind_bound=self.bitcyc.get((d[1], d[6], d[2], d[3], d[4])), pad=None))
                 if st["uncovered"] <= 30:
                     self.errors.append(f"R8_UNCOVERED {path}.{pn}[{i}] <- {src}[{d[4]}]: crossing bit not in the r8 table")
                 continue
@@ -2851,6 +2864,7 @@ class Binder:
             src = f"{self.F.cells[d[2]].path}.{d[3]}"
             if not same_source(src, m["source"]) or d[5] != m["asbuilt"] or b0 != m["bound"]:
                 st["stale"] += 1
+                self._r8_bad("mismatch", m, i, src, d[5], b0)
                 if st["stale"] <= 30:
                     self.errors.append(f"R8_STALE {m['id']} bit {i}: bind has {src} as-built {d[5]} bound {b0}, table "
                                        f"{m['source']} as-built {m['asbuilt']} bound {m['bound']}")
@@ -2880,6 +2894,7 @@ class Binder:
         for k in miss:
             m = want[k]
             st["stale"] += 1
+            self._r8_bad("not_crossing", m, k[2])
             if st["stale"] <= 30:
                 self.errors.append(f"R8_STALE {m['id']} bit {k[2]}: bit is not a crossing in this bind")
         if extra_info:
@@ -2895,6 +2910,15 @@ class Binder:
                 if k not in seen_f:
                     seen_f.add(k)
                     st["pad_flops"] += d[7]
+
+    def _r8_bad(self, kind, m, bit, src=None, asb=None, bound=None):
+        """R8-ALL-MEMBERS 11-24: one stale R8 member bit (every one; the R8_STALE error lines stay capped at 30)"""
+        if not hasattr(self, "r8_bad"):
+            self.r8_bad = []
+        self.r8_bad.append(dict(table=getattr(self, "_r8_origin", {}).get(m.get("id")), kind=kind, id=m.get("id"),
+                                lane=m.get("lane"), bit=bit, rec_source=m.get("source"), rec_asbuilt=m.get("asbuilt"),
+                                rec_bound=m.get("bound"), bind_source=src, bind_asbuilt=asb, bind_bound=bound,
+                                pad=m.get("pad")))
 
     def pad_trees(self):
         """asbuilt.land_pad_tree = true (QC-TOK 10-24, opt-in): realise the R8 landing pads as DELAY TREES instead of one
@@ -6199,6 +6223,52 @@ def _bind_through_landings(a):
 
 R8_FAIL_FAST_PREFIXES = ("R8_STALE", "R8_UNCOVERED", "R8_TABLE")
 
+
+def write_r8_all(out, B):
+    """R8-ALL-MEMBERS 11-24 (COORD, KV A5r: 538 stale members, the bind printed 30): every stale / uncovered R8 member, one
+    row per (table, kind, member) with its bit count, lane, recorded vs this bind's source / as-built / bound and the
+    pad -> OUT/r8_stale_all.json + OUT/r8_stale_all.tsv, plus one R8_STALE_TOTAL error (verdict unchanged: any row
+    FAILs).  -> the rows (none: no file, no error)."""
+    bad = getattr(B, "r8_bad", None) or []
+    if not bad:
+        return []
+    rows, at = [], {}
+    for r in bad:
+        k = (r["table"], r["kind"], r["id"])
+        if k not in at:
+            at[k] = dict(r, bits=0, bit_list=[], bind_bounds=[])
+            rows.append(at[k])
+        g = at[k]
+        g["bits"] += 1
+        if r["bit"] is not None:
+            g["bit_list"].append(r["bit"])
+        if r["bind_bound"] not in g["bind_bounds"]:
+            g["bind_bounds"].append(r["bind_bound"])
+    for g in rows:
+        g.pop("bit")
+        g["bind_bound"] = g["bind_bounds"][0] if len(g["bind_bounds"]) == 1 else None
+        g["delta"] = (g["bind_bound"] - g["rec_bound"]) if isinstance(g["bind_bound"], int) and \
+            isinstance(g["rec_bound"], int) else None
+    by_table, by_kind = {}, {}
+    for g in rows:
+        by_table[str(g["table"])] = by_table.get(str(g["table"]), 0) + 1
+        by_kind[g["kind"]] = by_kind.get(g["kind"], 0) + 1
+    out = Path(out)
+    _fresh_write_text(out / "r8_stale_all.json", json.dumps(dict(
+        schema="opentallas.r8_stale_all.v1", members=len(rows), bits=len(bad), by_table=by_table, by_kind=by_kind,
+        table_sha=(getattr(B, "pad_stats", {}) or {}).get("table_sha"),
+        extra_tables=(getattr(B, "pad_stats", {}) or {}).get("extra_tables"), rows=rows), indent=1) + "\n")
+    cols = ("table", "kind", "id", "lane", "rec_asbuilt", "rec_bound", "bind_bound", "delta", "pad", "bits", "rec_source",
+            "bind_source", "bind_asbuilt")
+    _fresh_write_text(out / "r8_stale_all.tsv", "\t".join(cols) + "\n" + "".join(
+        "\t".join("" if g.get(c) is None else str(g.get(c)) for c in cols) + "\n" for g in rows))
+    msg = (f"R8_STALE_TOTAL {len(rows)} member(s) / {len(bad)} bit(s): "
+           + ", ".join(f"{k} {v}" for k, v in sorted(by_table.items())) + f"; full list {out / 'r8_stale_all.tsv'}")
+    if msg not in B.errors:
+        B.errors.append(msg)
+    print(msg, flush=True)
+    return rows
+
 _ERR_STAGE = re.compile(r"\b(writer|reader) START (?:raw reset (\w+)|stage (\d+))")
 _ERR_TAG = re.compile(r"\[stage (\d+)\]$")
 
@@ -6255,6 +6325,8 @@ def r8_fail_fast(a, raw, out, B):
     r8err = [e for e in B.errors if e.startswith(R8_FAIL_FAST_PREFIXES)]
     if not r8err:
         return None
+    write_r8_all(out, B)                       # R8-ALL-MEMBERS: every stale member, not the first 30
+    r8err = [e for e in B.errors if e.startswith(R8_FAIL_FAST_PREFIXES)]
     bg = B.bus_groups()
     _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
     st = getattr(B, "pad_stats", {}) or {}
@@ -6506,6 +6578,7 @@ def cmd_bind(a):
         rep["probe_only"]["out_of_scope_warnings"] = len(_oos)
         if _oos:
             print(f"bind: {len(_oos)} WARN-OUT-OF-SCOPE finding(s) on types the probe did not emit (not errors)", flush=True)
+    write_r8_all(out, B)                         # R8-ALL-MEMBERS (--r8-keep-going / non-strict): the full list too
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
     # LOCAL-RESET-RAW-1: landing_local_resets raw names re-picked on this bind's relay set (clock_landings._local_resets); the plan
@@ -6563,6 +6636,7 @@ def cmd_r8_prepass(a):
     d = DR.diff(old, new)
     target = Path(a.r8_out) if getattr(a, "r8_out", None) else out / "r8_derived.json"
     DR.write_atomic(target, text)
+    write_r8_all(out, B)                       # R8-ALL-MEMBERS: the full stale list beside the derived table
     r8err = [e for e in B.errors if e.startswith(("R8_STALE", "R8_UNCOVERED", "R8_TABLE"))]
     other = [e for e in B.errors if e not in r8err]
     print(json.dumps(dict(r8_table=str(like), derived=str(target), members_old=d["members_old"], members_new=d["members_new"],
