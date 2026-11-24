@@ -1,2 +1,3 @@
 - 2026-11-23 19:23 PST TAKING OPS-WRITEUP from OPS-SUPPORT-R1 (cc ops-support-r1, stop the hourly writeup): hourly :05 PST counts+VIS+PROBE-PASS+RELEASE_TREE l3+HANDOFF+post with delta, via count_hourly+failure_breakdown+wr5_vis. First round 20:05.
 - 2026-11-23 20:08 PST DONE 20:08 hourly: 589 any / 485 current (+0 / +0 vs 19:06). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
+- 2026-11-23 21:08 PST DONE 21:08 hourly: 589 any / 485 current (+0 / +0 vs 20:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1 [-> COORD] commit rc=0. cur/any delta shown vs previous hour.
