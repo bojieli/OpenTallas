@@ -1,0 +1,92 @@
+"""adv_ist_price.py -- PRECHECK ADV-IST-PRICE (COORD 11-23 20:3x): every lane's native + ft + source station count against its priced cycles.
+
+KV A3c passed PRE, then the strict bind stopped on 'native stations exceed priced lane depth' (native_istations.annotate:
+L['cycles'] < 2 + sum(ft stations) + clock_landing + source stations): GROWHOPS had added ft stations the latency table did
+not price.  A2g died the same way (lane L415).  The bind reads the STORED latency table (plan latency.lanes) for the priced
+cycles but recounts ft stations / landing live from the slots, so a table not refreshed after a plan edit shows up only
+2-4 h later.  This check does the same comparison for ALL lanes (native-source or not), from the plan alone:
+
+  STALE-TABLE   stored latency stations / clock_landing differ from the live count (schema.lane_natural): bind LANE_LATENCY /
+                LANE_LANDING_LATENCY errors
+  PRICE-SHORT   stored cycles < 2 + live ft stations + live landing + source station depth of the lane's OUT bus
+                (kit_istations depth + hard-core cycles, LANE_ASBUILT UNPRICED_KIT_STATIONS; native: 'native stations exceed
+                priced lane depth')
+Fix: refresh the latency table (the compose's latency step / reprice) or fixed_cycles += delta (pre-approved).
+findings(raw, plan_path, tree=None, **kw) -> WARN lines (advisory in plan_advisory, never raises).
+"""
+import sys
+from pathlib import Path
+
+CHECK = "ADV-IST-PRICE"
+MAX_LINES = 20
+
+
+def _w(*p):
+    return " ".join(["WARN", CHECK] + [str(x) for x in p])
+
+
+def lane_rows(P, LA, schema, types):
+    """yield (lane, stored, live_stations, live_landing, src_depth) for every lane with ports"""
+    lat = (P.raw.get("latency") or {}).get("lanes") or {}
+    for lid, ln in sorted(P.lanes.items()):
+        ports = [P.ports[q] for q in ln.get("ports", []) if q in P.ports]
+        if not ports:
+            continue
+        nat = P.lane_natural(lid)
+        a = ports[0]["src"]
+        depth = 0
+        if a["part"] != schema.DIE_PART and a["part"] in P.parts:
+            bus, core = LA.kit_depth(types.get(P.parts[a["part"]]["type"]), a["bus"])
+            depth = bus + core
+        yield lid, lat.get(lid), int(nat.get("stations", 0)), int(nat.get("clock_landing", 0)), depth
+
+
+def judge(row, st, land, depth):
+    """reasons a lane's STORED latency row (dict stations/clock_landing/cycles) is short of the live counts"""
+    why = []
+    if int(row.get("stations", st)) != st:
+        why.append(f"STALE-TABLE stations table {row.get('stations')} != live ft stations {st}")
+    if int(row.get("clock_landing", 0)) != land:
+        why.append(f"STALE-TABLE clock_landing table {row.get('clock_landing', 0)} != live {land}")
+    need = 2 + st + land + depth
+    if int(row.get("cycles", 0)) < need:
+        why.append(f"PRICE-SHORT priced cycles {row.get('cycles')} < 2 + ft {st} + landing {land} + source stations {depth} = {need}")
+    return why
+
+
+def _findings(raw, plan_path, tree=None, **_kw):
+    sys.path.insert(0, str(Path(tree) / "tools" / "die_plan") if tree and (Path(tree) / "tools" / "die_plan" / "schema.py").is_file()
+                    else str(Path(__file__).resolve().parent))
+    import schema
+    import lane_asbuilt_latency as LA
+    P = schema.Plan(raw, plan_path)
+    types = raw.get("partition_types") or {}
+    hits, n, stale, short, notab = [], 0, 0, 0, 0
+    for lid, row, st, land, depth in lane_rows(P, LA, schema, types):
+        n += 1
+        if not row:
+            notab += 1
+            continue
+        why = judge(row, st, land, depth)
+        if why:
+            stale += any(x.startswith("STALE") for x in why)
+            short += any(x.startswith("PRICE") for x in why)
+            hits.append((-max(2 + st + land + depth - int(row.get("cycles", 0)), 0), _w(f"lane {lid}:", "; ".join(why),
+                         "(bind: native stations exceed priced lane depth / LANE_LATENCY); fix: refresh the latency table or fixed_cycles +delta")))
+    hits.sort(key=lambda h: h[0])
+    out = [m for _, m in hits[:MAX_LINES]]
+    out.append(_w("summary", f"{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE); {notab} lanes without a latency row"))
+    return out
+
+
+def findings(raw, plan_path, tree=None, **kw):
+    try:
+        return _findings(raw, plan_path, tree, **kw)
+    except Exception as e:  # noqa: BLE001
+        return [_w("not checked", f"{type(e).__name__}: {str(e)[:200]}")]
+
+
+if __name__ == "__main__":
+    import json
+    for ln in findings(json.load(open(sys.argv[1])), sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None):
+        print(ln)
