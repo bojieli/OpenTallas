@@ -107,6 +107,20 @@ class BoundR8(unittest.TestCase):
         self.m['instances']['a']['strap_r8pad_x']['width'] = 7; self.save()
         with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 6)
 
+    def test_lane_count_strap_takes_the_plan_width(self):
+        # KV-ALLFIX 11-24 (A5t3 kv3_pc_v1__cl4ea58a5c__r8*): bind.lane_count_width keeps the plan count_straps width of a
+        # strap_r8pad_lane_* strap (span 1 -> width 1); gen accepted only 4..type max and refused every such kit
+        n = 'strap_r8pad_lane_i_x'
+        self.kr['bound_only_pins'] = [dict(port=n, dir='input', width=1)]
+        self.m['types']['T'] = {n: dict(width=1, kind='r8pad_strap')}
+        self.m['instances']['a'] = {n: dict(width=1, value=1, kind='r8pad_strap')}
+        self.audit = dict(verdict='PASS', checked_bits=1, errors=[]); self.save()
+        self.assertEqual(declared(self.d/'kit_rtl.json', 4, {n: 1}), [dict(name=n, width=1)])
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json')            # no plan width: R8 site rule (>= 4)
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 4, {n: 2})  # plan width differs from the bind
+        self.m['instances']['a'][n]['value'] = 2; self.save()
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 4, {n: 1})  # value over the 1-bit width
+
     def test_strap_free_legacy_without_manifest(self):
         self.kr['bound_only_pins'] = []; self.save()
         (self.d/'bind_parent_id_straps.json').unlink()

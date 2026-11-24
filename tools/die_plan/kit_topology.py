@@ -167,10 +167,22 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
     typ=raw['partition_types'][tn];required=[];problems=[]
     drivers=RawBranches.driver_index(text)
     actual_raw={inst:pins for hits in drivers.values() for inst,pins in hits
-                if re.fullmatch(r'u_cland_raw_\w+_\d+',inst)}
+                if re.fullmatch(r'u_cland_(?:hard_)?raw_\w+_\d+',inst)}
     expected_raw=set()
     for branch in typ.get('clock',{}).get('landing_raw_branches',[]):
         previous=branch['base']
+        # KV-ALLFIX 11-24: hard_boot_prefix_um (4e46a7ec46c, landing_raw_branches.RawBranches) emits
+        # u_cland_hard_raw_<name>_<i> rrelays from the base before stage 0; census the same literal chain.
+        for index,_ in enumerate(branch.get('hard_boot_prefix_um') or []):
+            inst=f"u_cland_hard_raw_{branch['name']}_{index}";net=inst[2:]
+            expected_raw.add(inst)
+            expected={'clk':'clk','d':previous,'q':net}
+            if len(_instance_type_spans(text,'ot_dp_rrelay',inst))!=1:
+                problems.append(f'{inst}: expected one emitted ot_dp_rrelay')
+            if actual_raw.get(inst)!=expected:
+                problems.append(f'{inst}: emitted {actual_raw.get(inst)}, expected {expected}')
+            required.append(dict(inst=inst,master='ot_dp_rrelay',kind='hard_wrapper_boot_raw_prefix'))
+            previous=net
         for stage,_ in enumerate(branch['stages']):
             inst=f"u_cland_raw_{branch['name']}_{stage}";net=inst[2:]
             expected_raw.add(inst)

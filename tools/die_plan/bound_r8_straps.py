@@ -109,7 +109,7 @@ def read_bind_json(kit_rtl_json, kr, name):
     return json.loads(p.read_text())
 
 
-def declared(kit_rtl_json, width=4):
+def declared(kit_rtl_json, width=4, lane_widths=None):
     # KV-102 11-14: width = R8.strap_pad_width(type) (r8_strap_pad_max 26 -> 5 bits), was a hard 4 (kv3_pc_v3 hsl3_fi)
     kr = json.loads(Path(kit_rtl_json).read_text())
     ports = {r['port']: (r['dir'], r['width']) for r in kr.get('bound_only_pins', [])}
@@ -135,7 +135,12 @@ def declared(kit_rtl_json, width=4):
         # FAM-KV-IOPC-R3 11-21: bind.r8_pad_width gives max(4, span.bit_length()) per site, so any width 4..type maximum is
         # the bind's own (D27d2 kv3_pc_v3, r8_strap_pad_max 63 -> type width 6: hsl3_fi 5, slg_x_tep 6, others 4; gen refused 5).
         w = row.get('width')
-        if type(w) is not int or not 4 <= w <= max(4, width) or not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or ports.get(name) != ('input', w):
+        # KV-ALLFIX 11-24: a lane-count strap (strap_r8pad_lane_*, bind.lane_count_width / bind_lane_counts) takes the
+        # plan count_straps width verbatim (A5t3 kv3_pc_v1__cl4ea58a5c__r8*: i_hsl_Q_N_fo span 1 -> width 1, CW=1 bank);
+        # only R8 pad sites use max(4, span.bit_length()).
+        lane_w = (lane_widths or {}).get(name)
+        legal = (w == lane_w and w >= 1) if lane_w is not None else (type(w) is int and 4 <= w <= max(4, width))
+        if type(w) is not int or not legal or not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or ports.get(name) != ('input', w):
             raise ValueError(f'invalid bound R8 count declaration: {name}')
         audit = read_bind_json(kit_rtl_json, kr, 'bind_r8pad_strap_audit.json')
         if audit.get('verdict') != 'PASS' or audit.get('errors') or audit.get('checked_bits', 0) < w:
@@ -166,7 +171,9 @@ def project(raw, kit_rtl):
             _w = _R8.strap_pad_width(raw.get('partition_types', {}).get(tn, {}))
         except ImportError:
             _w = 4
-        additions = declared(kit_json, _w)
+        _lw = {r['name']: r['width'] for r in raw.get('partition_types', {}).get(tn, {}).get('count_straps', ())
+               if str(r.get('name', '')).startswith('strap_r8pad_lane_') and type(r.get('width')) is int}
+        additions = declared(kit_json, _w, _lw)
         if not additions:
             continue
         kr = json.loads(kit_json.read_text())
