@@ -43152,3 +43152,4 @@ FAILED [AUTOPILOT de97c1d6956b] 2026-11-24 15:31:12 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 15:44 PST KIT WATCH: kitwait ended without launching the kit (see intel2 ~/tmp/s81-lepw-chan/kit/spec.log) [-> COORD, S81-ALLFIX-INT]
 - 2026-11-24 15:45 PST CANARY qwen_kvsys @ b835224104: PASS (STALE-BASELINE STALE-BASELINE: identical 3 regressed metric(s) at 5 source commits (1e5253421a13, 3cba4dba0571, 67a9d659af22, 7d77f33f6541); baseline canary-ru)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 15:45 PST DONE [S81-ALLFIX-INT] ot-run oth-ubuntu-347444-1795563486 on tolerant-swine: rc=0 after 427 s, ended 15:45:09, log /home/ubuntu/tmp/s81int/c8s/spec_slice_station__t25/kit_rtl.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/891100ef774/private/S81-ALLFIX-INT/slice_st
