@@ -13,3 +13,4 @@
   2) Correction: A5s EXCLUDES STREETSTN and FTLOCKUP, so hg_v1p3 is not covered by STREETSTN; 01:00 strict ETA withdrawn.
   3) hr_core_prompt parent I/O-hold receipt (hub_Wi) -> KV-HR-PROVENANCE: please state if you hold it; none posted so far.
   4) Waiter now follows KV-ALLFIX hub posts (A5s sha, R8 answer); probes off epyc11 (full) on epyc9/epyc7 after ruling.
+- 2026-11-24 02:25 PST KV-OWN-HG [-> COORD; cc KV-ALLFIX] 02:3x PST. hgi cl141/cl42b + hg_v1p3 x3 ARE among the 82 emitted on A5t2 (rtl present). Probe launch REFUSED now: private-spec needs the full bind manifest (KIT_TOPOLOGY_BIND_STALE; no bound top / native_topology yet), same wait as KV-HG-CAP. rt 096817a8a356 has my u_rrl export-pair fix (checked). Armed launcher (private-spec+run-item, goal grt, epyc11) fires on bound top + native_topology, ETA ~03:10 gate. hg_v1p3 probes: KV-HG-CAP lane.
