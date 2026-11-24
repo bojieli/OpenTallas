@@ -54,3 +54,14 @@ def test_native_fixed_split_a2f_l415():
 
 def test_native_fixed_split_skips_non_native():
     assert A.native_fixed(_P, _Sch, _types(), {"internal_stations_types": ["other"]}, None) == {}
+
+
+def test_native_out_lanes_flags_missing_lane():
+    class P2(_P):
+        lanes = {"L1": {"ports": ["p0"], "fixed_cycles": 11}}
+        parts = {"a": {"type": "ta"}}
+    ty = {"ta": {"buses": [{"name": "o", "dir": "out"}, {"name": "o2", "dir": "out"}],
+                 "internal_stations": [{"conn": "bus:o", "regs_um": [1]}, {"conn": "bus:o2", "regs_um": [1]}]}}
+    ab = {"internal_stations_types": ["ta"]}
+    # o has lane L1 (src a.o); o2 has none -> flagged with 0 lanes
+    assert A.native_out_lanes(P2, _Sch, ty, ab) == [("a", "o2", 0)]

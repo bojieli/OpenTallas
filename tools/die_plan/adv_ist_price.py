@@ -14,6 +14,8 @@ cycles but recounts ft stations / landing live from the slots, so a table not re
   FIXED-SPLIT   (needs the as-built: kw asbuilt= / plan_advisory --asbuilt) native-source lane whose fixed_cycles != source
                 station regs + max destination regs (bind: 'native stations L415: fixed_cycles must equal source 6 + destination 5');
                 the A2f strict refusal that PRICE-SHORT cannot see, since it is about the table's fixed split, not the ft count
+  OUT-LANES     (needs the as-built) native source bus of a partition with 0 or >1 outgoing lanes (bind: 'native stations <part>.<bus>:
+                expected one outgoing lane', KV A2g pc_EN_7.o_efault_pc_Q_N_fault: an R8 clone lost its lane)
 Fix: refresh the latency table (the compose's latency step / reprice) or fixed_cycles += delta (pre-approved).
 findings(raw, plan_path, tree=None, **kw) -> WARN lines (advisory in plan_advisory, never raises).
 """
@@ -84,6 +86,32 @@ def native_fixed(P, schema, types, ab, tree_dir):
     return bad
 
 
+def native_out_lanes(P, schema, types, ab):
+    """-> [(part, bus, n lanes)] native source buses (as-built scope) whose partition has != 1 outgoing lane on that bus"""
+    import adv_stn_conflict as S
+    cnt = {}
+    for lid, ln in P.lanes.items():
+        ports = [P.ports[q] for q in ln.get("ports", []) if q in P.ports]
+        if ports:
+            a = ports[0]["src"]
+            cnt[(a["part"], a["bus"])] = cnt.get((a["part"], a["bus"]), 0) + 1
+    bad = []
+    for part, pr in sorted(P.parts.items()):
+        tn = pr["type"]
+        scope = S.native_scope(ab, tn)
+        t = types.get(tn) or {}
+        if scope is None:
+            continue
+        outs = {b.get("name") for b in t.get("buses") or [] if isinstance(b, dict) and b.get("dir") == "out"}
+        rows = {str(e.get("conn", ""))[4:] for e in t.get("internal_stations") or []
+                if isinstance(e, dict) and str(e.get("conn", "")).startswith("bus:")}
+        for bus in sorted((outs & rows) if not scope else (outs & rows & scope)):
+            n = cnt.get((part, bus), 0)
+            if n != 1:
+                bad.append((part, bus, n))
+    return bad
+
+
 def _findings(raw, plan_path, tree=None, **_kw):
     sys.path.insert(0, str(Path(tree) / "tools" / "die_plan") if tree and (Path(tree) / "tools" / "die_plan" / "schema.py").is_file()
                     else str(Path(__file__).resolve().parent))
@@ -116,11 +144,15 @@ def _findings(raw, plan_path, tree=None, **_kw):
                 fixed_bad += 1
                 hits.append((-1000, _w(f"lane {lid}: FIXED-SPLIT fixed_cycles {fx} != native source stations {src} + destination {dst} "
                                        f"(bind: native stations {lid}: fixed_cycles must equal source {src} + destination {dst}); fix: fixed_cycles = {src + dst}")))
+            for part, bus, nl in native_out_lanes(P, schema, types, ab):
+                fixed_bad += 1
+                hits.append((-999, _w(f"{part}.{bus}: OUT-LANES native source bus has {nl} outgoing lane(s) (bind: native stations {part}.{bus}: "
+                                      f"expected one outgoing lane); an R8/param clone or split lost its lane, or the lane is not planned")))
         except ImportError as e:
             hits.append((-1, _w(f"FIXED-SPLIT not checked: {e}")))
     hits.sort(key=lambda h: h[0])
     out = [m for _, m in hits[:MAX_LINES]]
-    out.append(_w("summary", f"{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE, {fixed_bad} FIXED-SPLIT{'' if isinstance(ab, dict) else ' (no as-built: FIXED-SPLIT not run)'}); {notab} lanes without a latency row"))
+    out.append(_w("summary", f"{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE, {fixed_bad} FIXED-SPLIT/OUT-LANES{'' if isinstance(ab, dict) else ' (no as-built: FIXED-SPLIT not run)'}); {notab} lanes without a latency row"))
     return out
 
 
