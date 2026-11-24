@@ -1,6 +1,6 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
 West: wband winner, routing to sign-off+LEC (started 20:51); wch4b spare also 0 GRT overflow (parked)	hd_lep0N_w	HEAD-WEST 21:18	HEAD-WEST	11-23 21:18	route running under head-west-wband-route; sign-off verdict + hold split + renders posted when it ends	8	next post 22:00	RUNNING	
-E epin_r4 (1123175731): CTS done, 4_2 tapbal GRT iter 1/30; r18g escape GRT iter 6/30; 66ce census iter 13/20	hd_lep0N E	HEAD-R18 21:13	HEAD-R18	11-23 21:13	all 4 units active	13	66ce 22:30-23:00; E GRT reads 00:00-01:30; next post 21:55	RUNNING	E GRT reads past 23:00 mark (known)
+E epin_r4 tapbal GRT 2/30; r18g escape 7/30; rscap tapbal 2/30; 66ce census 13/20 (flat since 21:13)	hd_lep0N E	HEAD-R18 21:54	HEAD-R18	11-23 21:54	GRT iterations 30-40 min each; 23:00 census MISSED, revised	2	66ce 02:00-03:00; kit reads not before 02:00; next post 22:35	RUNNING	AT-RISK: 23:00 deadline slipped (self-reported)
 rscap probe kit hd_lep0N_1123184332	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 20:55	in CTS (21:13)	2	-	RUNNING	
 s2 reseal dry gate: PASS ~21:25 no advisories (HEAD-S2-RESEAL, gate fix main 33a30fe8e0c in rt)	HEAD die	COORD correction	HEAD-S2-RESEAL	11-23 21:25	CLOSED	-	-	CLOSED	
 hd_ctl route+LEC, rc138/WOPENREG REASONED	HEAD	earlier	HEAD-R18	-	pending census	-	23:00	REASONED/RUNNING	
