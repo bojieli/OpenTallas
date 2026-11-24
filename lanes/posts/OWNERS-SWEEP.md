@@ -413,3 +413,8 @@
   S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C) -> ALLFIX-COL/INT/SLICE; many are cancelled/superseded.
   QC STALE 17 (glue, sle_*) -> QC-ALLFIX; KV FAILED-NO-RELAUNCH 3 (kv3_hroot, kv3_pc_v1__cl4ea58a5c, cl7f648944) -> KV-ALLFIX.
   No DEAD-OWNER rows; HEAD clean.
+- 2026-11-23 18:51 PST OWNERS-SWEEP 18:5x (440 rows); ALLFIX lanes counted as owners; all 7 posted 18:00-18:50 (COL oldest 18:00); no DEAD-OWNER, no UNOWNED.
+  S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C, LP slice) -> ALLFIX-COL/INT/SLICE; many cancelled or superseded.
+  QC STALE 17 (glue, sle_*) -> QC-ALLFIX.
+  KV FAILED-NO-RELAUNCH 3 (kv3_hroot, kv3_pc_v1__cl4ea58a5c, cl7f648944) -> KV-ALLFIX; A1b kit_topology rows not separately visible in the table.
+  epyc11 (online 17:53): 0 kit-wave rows, load 0.2, no jobs landed yet.
