@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Plan-of-record sources of release_tree_plan.py (FLOW-12, COORD ruling 2026-10-30 20:13 (3)). Run: python3 -m pytest -q"""
+import pytest
 import gzip, json, pathlib, subprocess, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import release_tree_plan as R
@@ -39,11 +40,15 @@ def test_plain_plan_in_place_and_no_clobber(tmp_path):
 
 def test_plans_are_plan_of_record_files_on_main():
     """every PLANS source exists on origin/main and parses (the 5 dies, each once)"""
-    repo = R.REPO
+    # COUNTER-DRIFT 11-24: R.REPO is the hub owner checkout; elsewhere read the clone that holds this test, at origin/main or else HEAD
+    repo = R.REPO if R.REPO.is_dir() else pathlib.Path(__file__).resolve().parents[2]
+    ref = next((x for x in ('origin/main', 'HEAD') if subprocess.run(['git', '-C', str(repo), 'rev-parse', '-q', '--verify', x], capture_output=True).returncode == 0), None)
+    if ref is None:
+        pytest.skip('no git repo with origin/main or HEAD')
     assert sorted(k for k, _, _, _ in R.PLANS) == sorted(['s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm'])
     for _, pdir, src, ovl in R.PLANS:
         assert not src.endswith('/die_plan.json') or 'plan_of_record' in src, src
-        b = subprocess.run(['git', '-C', str(repo), 'show', 'origin/main:' + src], capture_output=True).stdout
+        b = subprocess.run(['git', '-C', str(repo), 'show', ref + ':' + src], capture_output=True).stdout
         P = json.loads(gzip.decompress(b) if src.endswith('.gz') else b)
         assert P.get('partition_types'), src
 

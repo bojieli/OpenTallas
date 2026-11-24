@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Retire-by-name / copy rules of release_tree_plan.py (FLOW-11, COORD ruling 2026-10-30 14:40). Run: python3 -m pytest -q"""
+import pytest
 import pathlib, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import release_tree_plan as R
@@ -105,3 +106,13 @@ def test_unreadable_netlist_stays_counted_no_rows_no_calls(tmp_path):
     assert R.split_revoked([r], R.revoked_rows(f)[:1], sha=lambda r: None) == ([r], [])
     assert R.split_revoked([r], [], sha=lambda r: 1 / 0) == ([r], [])
     assert R.revoked_rows(tmp_path / 'none.tsv') == []
+
+
+def test_repo_tsv_retires_s81_legacy_stations():
+    if not R.RETIRED.is_file():                      # COUNTER-DRIFT 11-24: the hub's RETIRED_SIGNOFFS.tsv (coord data, not in the repo)
+        pytest.skip('no RETIRED_SIGNOFFS.tsv beside the tools (hub data)')
+    names = R.retired_names()
+    for t in ('t12', 't17', 't20', 't21'):
+        assert ('s81', 'slice_station__' + t) in names
+        r = dict(OLD, name='dp_slice_station__' + t, top='s81p_slice_station__' + t)
+        assert R.name_retired(r, 's81', names, ('slice_station__' + t, 's81p_slice_station__' + t))

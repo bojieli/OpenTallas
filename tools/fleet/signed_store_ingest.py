@@ -30,6 +30,8 @@ def relto(path):
     the real path while the store paths name ~/coord; relative_to raised after the first host's entries were written and aborted the commit)"""
     return os.path.relpath(os.path.realpath(str(path)), os.path.realpath(str(COORD)))
 WINDOW_H = float(os.environ.get('OT_INGEST_WINDOW_H', 96))
+CHUNK_BYTES = float(os.environ.get('OT_INGEST_CHUNK_GB', 3)) * 1e9     # FLOW-CANARY-1121: new bytes per archive pass
+DEADLINE_S = float(os.environ.get('OT_INGEST_DEADLINE_S', 2600))        # stop starting passes before the 3000 s unit cap
 RATE = float(os.environ.get('OT_INGEST_MBPS', 40)) * 1e6
 HOST_TOOL = '~/.local/share/ot-autoclean-auto/ot-autoclean.py'
 LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
@@ -42,7 +44,8 @@ def host_cmd(h, remote):
 
 AGI_KEY = os.path.expanduser('~/.ssh/agidock_ot')
 AGI = SSH + ['-i', AGI_KEY, 'ubuntu@155.103.253.53']
-ORDER = tuple(h for h in ('intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
+LIVE = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10', 'epyc11')   # FLOW-CANARY-R2 11-21 (COORD): live gen hosts only
+ORDER = tuple(h for h in ('intel1', 'intel2', 'epyc2') if h in rtp.HOSTS and h in LIVE) + tuple(h for h in rtp.HOSTS if h in LIVE and h not in ('intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
 import importlib.util, json, os, sys
@@ -170,10 +173,12 @@ def marker_sweep(fails, cache=None):
     known = {'%s:%s' % (r['host'], r['dir'].rstrip('/')) for r in rtp.dnc_rows()}
     add = []
     for h, ds in sorted(need.items()):
+        if h not in LIVE:                                   # retired hosts (epyc1/3/4/5/6): never ssh them (epyc4 has a changed host key)
+            continue
         try:
             r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
             if r.returncode != 0 or not r.stdout.strip():          # a terminated / unreachable host has no markers to read
-                say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-80:].strip()); continue
+                say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-160:].strip().replace(chr(10), ' | ')); continue
             found = json.loads(r.stdout)
         except Exception as e:
             fails.append([h, '*', 'marker sweep', str(e)[:200]]); continue
@@ -189,20 +194,38 @@ def marker_sweep(fails, cache=None):
     return add
 
 
+T_START = time.time()
+HARD_S = float(os.environ.get("OT_INGEST_HARD_S", 2850))   # FLOW-CANARY-R2 11-21: one epyc2 chunk (35k files) hung 17 min past DEADLINE_S, the unit hit its 3000 s cap and last.json was never written: every step now stops at HARD_S
+
+
 def run(cmd, inp=None, timeout=3600):
-    return subprocess.run(cmd, input=inp, capture_output=True, text=True, timeout=timeout)
+    return subprocess.run(cmd, input=inp, capture_output=True, text=True, timeout=min(timeout, max(30.0, T_START + HARD_S - time.time())))
 
 
-def stream(host, base, todo):
+def stream(host, base, todo, overwrite=False):
     """tar on the host, zstd through localhost, untar on the archive with --skip-old-files.  -> True when both ends exit 0"""
     p1 = subprocess.Popen(host_cmd(host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'),
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    p1.stdin.write(('\0'.join(todo) + '\0').encode()); p1.stdin.close()
+    import threading   # FLOW-CANARY-R2 11-21: the name list went in BEFORE the output was read; > 64 KB of paths (850+ files) deadlocked tar/zstd against this process (the epyc2 35k-file hang)
+
+    def _feed(data=('\0'.join(todo) + '\0').encode()):
+        try:
+            p1.stdin.write(data)
+        except OSError:
+            pass
+        finally:
+            try:
+                p1.stdin.close()
+            except OSError:
+                pass
+    threading.Thread(target=_feed, daemon=True).start()
     q = shlex.quote(base)
-    p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s --skip-old-files -xf -' % (q, q)],
+    p2 = subprocess.Popen(AGI + ['set -o pipefail; mkdir -p %s && zstd -q -d -c | tar -C %s %s -xf -' % (q, q, '--unlink-first' if overwrite else '--skip-old-files')],
                           stdin=subprocess.PIPE)
     t0, sent = time.time(), 0
     while True:
+        if time.time() > T_START + HARD_S:
+            p1.kill(); p2.kill(); p1.wait(); p2.wait(); return False
         b = p1.stdout.read(1 << 20)
         if not b: break
         p2.stdin.write(b); sent += len(b)
@@ -241,7 +264,7 @@ def metadata_only(files):
     return [f for f in files if not DB_FILE.search(f[0])]
 
 
-def archive_host(h, cands, fails):
+def archive_host(h, cands, fails, max_bytes=None):
     """-> {path: {file: sha}} for the records whose every file is on the archive and equal to the host copy"""
     try:
         tool = host_tool(h)
@@ -253,21 +276,54 @@ def archive_host(h, cands, fails):
         o = json.loads(ln)
         if 'files' in o: o['files'] = metadata_only(o['files'])
         P[o['path']] = o
-    files = {}
+    files, recfiles = {}, {}
     for c in cands:
         o = P.get(c[0]['path'])
         if not o or 'files' not in o:
             fails.append([h, c[0]['path'], 'probe', (o or {}).get('err', 'no answer')]); continue
-        files.update({f[0]: f[1] for f in o['files']})
+        recfiles[c[0]['path']] = {f[0]: f[1] for f in o['files']}
+        files.update(recfiles[c[0]['path']])
     if not files: return {}, P
     base = ss.ARCHIVE_ROOT + '/' + h
     lst = '\n'.join(sorted(files)) + '\n'
     hash_ = 'nice -n 10 python3 -I %s hash --base %s' % (HOST_TOOL, shlex.quote(base))
     a0 = json.loads(run(AGI + [hash_], lst, 3600).stdout)
+    if max_bytes and len(recfiles) > 1:
+        # FLOW-CANARY-1121 (COORD): one epyc2 pass of 84 records / 23 GB outlived the 3000 s unit cap every hour from 11-20 05:51, so no record of
+        # any later host (epyc7/8/9/10) entered the store for 27 h.  Take the records smallest-first up to max_bytes of NEW bytes (at least
+        # one); the rest stay unselected and the caller loops / the next run takes them.
+        need = {p: sum(s for f, s in fs.items() if a0.get(f) is None) for p, fs in recfiles.items()}
+        keep, tot = {}, 0
+        for p in sorted(recfiles, key=lambda p: (need[p], p)):
+            if keep and tot + need[p] > max_bytes: break
+            keep[p] = recfiles[p]; tot += need[p]
+        if len(keep) < len(recfiles):
+            say(h, 'chunk: %d of %d records, %.2f GB new of %.2f GB' % (len(keep), len(recfiles), tot / 1e9, sum(need.values()) / 1e9))
+        recfiles = keep
+        files = {f: s for fs in keep.values() for f, s in fs.items()}
+        P = {p: o for p, o in P.items() if p in keep or p not in need}
+        lst = '\n'.join(sorted(files)) + '\n'
     todo = [p for p in sorted(files) if a0.get(p) is None]
     say(h, 'files', len(files), '%.2f GB' % (sum(files.values()) / 1e9), 'to send', len(todo))
     if todo and not stream(h, base, todo):
         fails.append([h, '*', 'stream failed']); return {}, P
+    # FLOW-CANARY-R2 11-21 (COORD item e): a kit re-signed or rewritten in place after its first archive (same absolute path, new content: .kw_inputs.json,
+    # signoff.json, logs ...) leaves a STALE archive copy; --skip-old-files never replaced it, so every file of the record stayed "unverified" (intel1 4, intel2 75
+    # files) and 57 records never entered the store.  A stale copy is replaced only when NO store entry of this archive lists that path with the archive's sha
+    # (an entry that counts it keeps its bytes); then the host copy overwrites it and the verify below hashes both again.
+    have_ = [p for p in sorted(files) if a0.get(p) is not None]
+    if have_:
+        H0 = json.loads(run(host_cmd(h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool), '\n'.join(have_) + '\n', 7200).stdout)
+        diff_ = [p for p in have_ if H0.get(p) is not None and H0.get(p) != a0.get(p)]
+        if diff_:
+            ref = set()
+            for e in ss.read_manifest():
+                if e.get('archive') == ss.ARCHIVE_ROOT + '/' + h:
+                    ref.update((f[0], f[2]) for f in e.get('files', []) if len(f) > 2)
+            free = [p for p in diff_ if (p.lstrip('/'), a0[p][1]) not in ref and (p, a0[p][1]) not in ref]
+            say(h, 'stale archive copies', len(diff_), 'replaceable', len(free))
+            if free and not stream(h, base, free, overwrite=True):
+                fails.append([h, '*', 'stale-copy overwrite failed']); return {}, P
     A = json.loads(run(AGI + [hash_], lst, 7200).stdout)
     H = json.loads(run(host_cmd(h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool), lst, 7200).stdout)
     good = {p: A[p] for p in files if A.get(p) is not None and A.get(p) == H.get(p)}
@@ -369,6 +425,52 @@ def host_pins(h, r):
         rtp.HOSTS = hosts0
 
 
+def pins_backfill(manifest, pinf=None, setter=None, limit=int(os.environ.get("OT_PINS_BACKFILL_LIMIT", 40)), live=None, tried=None, now=None, retry_s=6 * 3600):
+    """FLOW-FLEET-R2 X1 (FABLE-FLOW-0600): a store entry ingested BEFORE its run dir could give pins (10 signed S81 prov_1119 cores: no PROVENANCE.json routed_db yet)
+    keeps pins None for ever -- the counter reads the store, so it said 'pins not readable' after FAM-S81-NOWAVE-R1 wrote PROVENANCE.json.  Only 'late provenance' ever filled
+    a pin table.  Now: every entry with pins None whose origin is a live host copy is asked again (host_pins: routed DEF of PROVENANCE routed_db first), at most LIMIT per run
+    and once per RETRY_S per entry (TRIED {id: time}); a table that comes back is stored with set_pins (an existing one is never replaced).  -> [ids set]"""
+    pinf, setter = pinf or host_pins, setter or ss.set_pins
+    live = live or LIVE
+    tried = {} if tried is None else tried
+    now = time.time() if now is None else now
+    out, n = [], 0
+    for e in manifest:
+        if e.get('pins') is not None: continue
+        h, _, path = str(e.get('origin') or '').partition(':')
+        if h not in live or not path.startswith('/'): continue
+        if now - tried.get(e['id'], 0) < retry_s: continue
+        if n >= limit: break
+        n += 1; tried[e['id']] = now
+        r = dict((e.get('scan') or {}), path=path, scan_host=h, direct=True)
+        if not r.get('pins_path'): continue
+        pins = pinf(h, r)
+        if pins and setter(e['id'], pins):
+            out.append(e['id']); say('PINS BACKFILL', e['id'][:12], h, path)
+    return out
+
+
+PINS_TRIED = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_pins_tried.json'
+
+
+def backfill_cli(dry=False):
+    try: tried = json.loads(PINS_TRIED.read_text())
+    except (OSError, ValueError): tried = {}
+    manifest = ss.read_manifest()
+    todo = [e for e in manifest if e.get('pins') is None and str(e.get('origin') or '').partition(':')[0] in LIVE]
+    say('pins backfill: entries without pins on live hosts', len(todo))
+    if dry: return 0
+    done = pins_backfill(manifest, tried=tried)
+    try: PINS_TRIED.write_text(json.dumps(tried))
+    except OSError: pass
+    if done:
+        c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: pins backfill on %d entries' % len(done)] + [relto(ss.entry_path(i)) for i in done], None, 280)
+        say('pins backfill committed', len(done), 'rc', c.returncode)
+        return c.returncode
+    say('pins backfill: nothing set')
+    return 0
+
+
 def late_pass(late, fails, archive=None, collect=None, pinf=None):
     """archive + verify the unit again (new files only are sent), require every stored file unchanged, then late_provenance"""
     archive = archive or archive_host
@@ -413,6 +515,8 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
         say('another ingest is running'); return 0
+    if '--backfill-pins' in sys.argv:
+        return backfill_cli('--dry' in sys.argv)
     if '--sweep-only' in sys.argv:
         fails = []
         add = marker_sweep(fails)
@@ -459,10 +563,10 @@ def main():
     for v in sel.values():
         byh[v[0]['scan_host']].append(v)
     if not dry:
-        for h in ORDER:
-            if not byh.get(h): continue
+        for h in ORDER * 8:                              # one pass per chunk; a host with more than CHUNK_BYTES comes round again
+            if not byh.get(h) or time.time() - t0 > DEADLINE_S: continue
             try:
-                sha, P = archive_host(h, byh[h], fails)
+                sha, P = archive_host(h, byh[h], fails, CHUNK_BYTES)
             except Exception as e:                      # one host's archive step never aborts the other hosts' records
                 fails.append([h, '*', 'archive step: %s: %s' % (type(e).__name__, str(e)[:160])]); say(h, 'ARCHIVE STEP FAILED', type(e).__name__, str(e)[:160]); continue
             for v in byh[h]:
@@ -476,6 +580,7 @@ def main():
                                      aliases={r['path']: ['%s:%s' % (x['scan_host'], x['path']) for x in v]})
                 except Exception as e:
                     fails.append([h, r['path'], 'ingest', str(e)[:200]])
+            byh[h] = [v for v in byh[h] if not (P.get(v[0]['path']) or {}).get('files')]   # processed (ingested or failed) this pass
             # COUNT-ARCHIVE-2 11-09: commit after every host, so a pass stopped at its time cap keeps what it ingested
             # (the 01:23 pass was killed at 40 min with 84 entries written and none committed)
             fresh = new[committed:]
@@ -495,6 +600,9 @@ def main():
             rel = [relto(ss.entry_path(i)) for i in lated]
             c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: late provenance on %d entries' % len(rel)] + rel, None, 280)
             if c.returncode: fails.append(['coord', '*', 'late commit rc %d' % c.returncode])
+    if not dry:                                          # FLOW-FLEET-R2 X1: pins of entries ingested before their provenance could give them
+        try: backfill_cli()
+        except Exception as x: fails.append(['*', '*', 'pins backfill: %s: %s' % (type(x).__name__, str(x)[:160])])
     holds = [] if dry else marker_sweep(fails)
     if not dry:
         try: strap_sweep(fails)
@@ -503,7 +611,8 @@ def main():
                unreachable=unreachable, commit_rc=commit, dry=dry)
     LAST.write_text(json.dumps(res, indent=1))
     say('DONE new', len(new), 'fails', len(fails), 'unreachable', unreachable, 'commit rc', commit, '%d s' % res['secs'])
-    return 1 if fails or unreachable else 0
+    # per-record fails stay listed in last.json; the unit fails only for infrastructure (store commit / a live host unreachable)
+    return 1 if commit or [u for u in unreachable if u in LIVE] else 0
 
 
 if __name__ == '__main__':

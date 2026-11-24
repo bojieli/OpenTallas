@@ -1089,6 +1089,19 @@ def shlex_quote(s):
     return shlex.quote(s)
 
 
+def new_direct(recs, log=lambda *a: None, reader=None):
+    """INGEST-FIX 11-17: ONE discovery of host-direct records for the counter and the signed-store ingest.  The ingest saw only the capped
+    find walk and missed records the counter counts straight from their kit paths (kit_wave_state q_signoff, COUNT-DIRECT, AUTO-RESIGN,
+    autopilot state): 5 QC R-MINIMAL records sat uncounted by the store for hours.  -> direct records whose (scan_host, path) is not in recs."""
+    have = {(x.get('scan_host'), x.get('path')) for x in recs}
+    seen, out = set(), []
+    for x in (reader or direct_records)(log):
+        k = (x.get('scan_host'), x.get('path'))
+        if k in have or k in seen: continue
+        seen.add(k); out.append(x)
+    return out
+
+
 def first_flow_tag_ts():
     """unix time of the oldest flow-* tag on origin, or None when no flow release exists yet (GRANDFATHER cutoff)."""
     if TAGS_FILE: return json.load(open(TAGS_FILE))['first_ts']
@@ -2055,8 +2068,7 @@ def refresh(log=lambda *a: None, old=None):
                 recs += srecs; scanned.append('signed-store')
                 log('signed-store: %d records, %d pin tables' % (len(srecs), len(pins)))
             try:
-                have_ = {(x.get('scan_host'), x.get('path')) for x in recs}
-                dr = [x for x in direct_records(log) if (x.get('scan_host'), x.get('path')) not in have_]
+                dr = new_direct(recs, log)
                 recs += dr; scanned.append('direct:%d' % len(dr)); log('direct reads: %d records not in the store' % len(dr))
             except Exception as e:
                 errs.append('DIRECT read: %s' % e)
