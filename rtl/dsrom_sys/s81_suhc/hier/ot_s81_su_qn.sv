@@ -470,7 +470,10 @@ endmodule
 // Two halves (engines 0..NE-1, NE..2NE-1) feed the reduce (NE 2), whose single level is the golden tree's top add.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_qnh #(
-    parameter integer NE = 16, LA = 4
+    parameter integer NE = 16, LA = 4,
+    // S81-KVLEAF-T2-ARCH-R2 11-23: 1 = the caller ties p_p to 0 (ot_s81_su_ik_reduce): entry 1 is never written, so the
+    // tree reads a defined value instead of the unwritten e1 while ptr is 1 (no sum is valid there).  0 = unchanged.
+    parameter integer P0 = 0
 ) (
     input  wire            clk,
     input  wire            rst_in,
@@ -523,7 +526,7 @@ module ot_s81_su_qnh #(
     end
 `endif
     // the chunk tree
-    wire [NE*32-1:0] lv = ptr ? e1 : e0;
+    wire [NE*32-1:0] lv = (P0 == 1) ? e0 : (P0 == 2) ? (ptr ? {NE*32{1'b0}} : e0) : (ptr ? e1 : e0);
     wire [31:0] tv [0:LT][0:NE-1];
     wire [LT:0] tf;
     wire [LA*LT:0] fv;

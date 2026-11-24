@@ -7,7 +7,7 @@ out=Path(sys.argv[1]).resolve();images=Path(sys.argv[2]).resolve();out.mkdir(par
 lvl=int(sys.argv[3]) if len(sys.argv)>3 else 1  # 1: closed reduce/quant wrappers; 2: every engine and pool lane is its wrapper master
 src=list(dict.fromkeys(G.H.FP['rtl']+G.S.RTL+G.S.HIER+G.SRC_COMMON+['rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv','rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv','rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kvcn.sv',G.TB]))
 pins={p:hashlib.sha256((G.ROOT/p).read_bytes()).hexdigest() for p in src}
-exe=G.build(out,f'hard_rq{lvl}','tb_s81sl_kv_leaf_sukv',src,dict(VLAT=4,HARD_RQ=lvl))
+exe=G.build(out,f'hard_rq{lvl}','tb_s81sl_kv_leaf_sukv',src,dict(VLAT=4,HARD_RQ=lvl,**({'KV_XD':sys.argv[4]} if len(sys.argv)>4 else {}),**({'KV_KST':sys.argv[5]} if len(sys.argv)>5 else {}),**dict(a.split('=',1) for a in sys.argv[6:])))
 results={}
 for name in ('L2','L14','L20'):
  d=out/name;d.mkdir(exist_ok=True)

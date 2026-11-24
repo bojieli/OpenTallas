@@ -285,7 +285,14 @@ module ot_s81sl_cmp_pool_lane #(
     ot_dsrom_qadd #(.LAT(LA)) u_fin (clk, rn, m_item1, m0h, my, yy, yf);
     wire [LA:0] yvd;
     ot_hdc_vline #(.D(LA)) u_yvd (.clk(clk), .rst_n(rn), .v(m_item1), .vd(yvd));
-    always @(posedge clk) if (yvd[LA]) begin o_y <= (MUT == 3) ? {yy[31:16], 16'd0} : bf16(yy); o_y32 <= yy; end
+    // the low half of the BF16 result is padding: written 0 on every edge (a defined constant from the first clock;
+    // as a load-enabled, unreset 0 it was folded by synthesis and failed the routed LEC)
+    always @(posedge clk) begin : yob
+        reg [31:0] t;
+        t = (MUT == 3) ? {yy[31:16], 16'd0} : bf16(yy);
+        o_y[15:0] <= 16'd0;
+        if (yvd[LA]) begin o_y[31:16] <= t[31:16]; o_y32 <= yy; end
+    end
     // ---------------------------------------------------------------- valid / fault
     always @(posedge clk or negedge rn) begin
         if (!rn) begin o_v <= 1'b0; fault <= 1'b0; p0f <= 1'b0; p1f <= 1'b0; end

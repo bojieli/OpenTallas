@@ -126,7 +126,7 @@ module ot_s81_su_ik_reduce(
     wire [1:0] hv,hp,hf;wire [63:0] hd;wire rf;
     genvar h;
     generate for(h=0;h<2;h=h+1)begin:g_half
-        ot_s81_su_qnh #(.NE(8)) u_half(.clk(ck_half[h]),.rst_in(rs_half[h]),.i_go(go),
+        ot_s81_su_qnh #(.NE(8),.P0(1)) u_half(.clk(ck_half[h]),.rst_in(rs_half[h]),.i_go(go),
             .p_v(p_v[8*h+:8]),.p_p(8'd0),.p_d(p_d[256*h+:256]),
             .s_v(hv[h]),.s_p(hp[h]),.s_d(hd[32*h+:32]),.o_f(hf[h]));
     end endgenerate

@@ -251,9 +251,15 @@ module ot_s81_su_kve #(
     // y: RP 0 = bf16(w * p); RP 1 = bf16(qadd(y cos, y_pair (-+ sin))) of y = bf16(w * p)
     wire ff;
     generate if (RP == 0) begin : g_y
-        always @(posedge clk) if (kwp[LM]) begin : yo
-            integer q;
-            for (q = 0; q < 8; q = q + 1) y[32 * q +: 32] <= bf16(ym[32 * q +: 32]);
+        // The low half of every BF16 lane is padding: it is written 0 on every edge, so it is a defined constant
+        // from the first clock (as a load-enabled, unreset 0 it was removed by synthesis and failed the routed LEC).
+        always @(posedge clk) begin : yo
+            integer q; reg [31:0] t;
+            for (q = 0; q < 8; q = q + 1) begin
+                t = bf16(ym[32 * q +: 32]);
+                y[32 * q +: 16] <= 16'd0;
+                if (kwp[LM]) y[32 * q + 16 +: 16] <= t[31:16];
+            end
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else y_v <= kwp[LM];
         assign ff = 1'b0;
@@ -263,16 +269,25 @@ module ot_s81_su_kve #(
         wire [7:0] af;
         always @(posedge clk) begin : yrb
             integer q;
-            if (kwp[LM]) for (q = 0; q < 8; q = q + 1) yr[32 * q +: 32] <= bf16(ym[32 * q +: 32]);
+            reg [31:0] t;
+            for (q = 0; q < 8; q = q + 1) begin
+                t = bf16(ym[32 * q +: 32]);
+                yr[32 * q +: 16] <= 16'd0;
+                if (kwp[LM]) yr[32 * q + 16 +: 16] <= t[31:16];
+            end
             if (kr[1 + LM]) pp <= ym;
         end
         genvar q;
         for (q = 0; q < 8; q = q + 1) begin : g_ra
             ot_dsrom_qadd #(.LAT(LAR)) u_a (clk, rst_n, kr[2 + LM], pp[32 * q +: 32], ym[32 * q +: 32], rs[32 * q +: 32], af[q]);
         end
-        always @(posedge clk) if (kr[DR]) begin : yo
-            integer k;
-            for (k = 0; k < 8; k = k + 1) y[32 * k +: 32] <= bf16(rs[32 * k +: 32]);
+        always @(posedge clk) begin : yo
+            integer k; reg [31:0] t;
+            for (k = 0; k < 8; k = k + 1) begin
+                t = bf16(rs[32 * k +: 32]);
+                y[32 * k +: 16] <= 16'd0;
+                if (kr[DR]) y[32 * k + 16 +: 16] <= t[31:16];
+            end
         end
         always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else y_v <= kr[DR];
         assign ff = |af;
