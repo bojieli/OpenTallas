@@ -12,3 +12,5 @@ Next: PROBE-PASS only on a clean probe census (hotspot_census check --probe); wa
 - Code: tools/autopilot/probe_visual.py + kit_wave.visual_queue_publish hook + test_probe_visual.py (clone intel2 /srv/opentallas-scratch2/claude/vis-reown/clone, commit 8264bd2adb; push log vis-reown/tmp/push2.log).
 - Census: intel2 cron */10 runs /srv/opentallas-scratch2/claude/vis-reown/census_sweep.py scan launch judge promote (state census/state.json, log census/sweep.log). It launches only kits from 11-24 or later; skips E8/E10; promote sets VIS-COVERAGE PROBE-PASS/FAIL and posts.
 - Reviewed renders: kv3_pv A5t3 OK, cbf_q01 ISSUES (central tap pile), slw_st_a_v2 cl9f076 OK.
+- 09:31 main 70d2e22a95c1 deployed (feed live next wave pass). census_sweep fixed: ot-run needs --stage rt/tools + out dir. 4 censuses admitted on E7.
+- 09:3x place review of 50 probe renders (contact sheets intel2 vis-reown/tmp/sheet0-4.png, built by scratch sheet.py) written to 46 VIS rows; OK 28 / ISSUES 18. Next: watch census/sweep.log, re-sheet new place kits every 30 min, NO-GRT kits get a census when GRT lands.
