@@ -160,3 +160,4 @@ KV-PREGRT-STALL	stood-down	KV-PV-CAP	2026-11-23	21:06 PST
 KV-HUB-EPZO	stood-down	none	2026-11-23	21:29 PST | job done: ep_zo class is hold not setup, ROW-REBASED NONE; FABLE-RC-KV and FAM-KV-HUBWO-S1 read the census/hold follow-up
 LANDREMAP-RSTNODE	stood-down	none	2026-11-23	21:56 PST | job done: landing_remap tap reset node pass landed main 29d2fff35ccd; proof + handoff lanes/handoff/LANDREMAP-RSTNODE.md
 KVLEAF-MASTERS	stood-down	none	2026-11-23	22:45 PST | job done: kv_leaf t2 masters kvq/ikw/ikr signed off (11/11); main 00221d9277 + ca915a50222a + c3ea0d5e30fa; ARCH-R2 reruns the kv bench + default identity on c3ea0d5e30fa
+HEAD-LEPPAIR	stood-down	HEAD-R18	2026-11-23	23:07 PST | lep_pair has SIGNED vE28s view bound in r18g; remaining = count-credit gap after s3w publish
