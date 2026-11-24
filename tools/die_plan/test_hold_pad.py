@@ -135,3 +135,41 @@ puts "ret [pg_pad_pass rr 2 40 100]"
     assert lines[:9] == ["rr all 0", "rr rr 1", "rr xt 0", "all all 1", "all rr 1", "all xt 1", "0 all 0", "0 rr 0", "0 xt 0"]
     assert lines[9].startswith("PAD rr1 40 0 ") and lines[10] == "ret 0"
     assert "tool error (boom): repair_timing for this pass" in lines[11] and lines[12:] == ["RT rr", "ret 7"]
+
+
+def _old_kit(tmp_path, auto=-1, same_leaf=False):
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    hg = (HERE / "hold_gate.tcl").read_text()
+    (kd / "hold_gate.tcl").write_text(hg)
+    old = hg.split(PG.MARK)[0] + f"# an older pinned-snapshot build\nset pg_auto {auto}\nrepair_timing -hold -hold_margin 40 -max_buffer_percent 100\n"
+    if same_leaf:
+        old += "pg_sl_begin OT_PREGRT_FF_HOLD $pg_rm $pg_pm\n"
+    (kd / "pregrt_ff_hold.tcl").write_text(old)
+    (kd / "pregrt_ff_hold.tcl").chmod(0o640)
+    return kd
+
+
+def test_refresh_regenerates_an_old_kit_build_and_keeps_its_settings(tmp_path, monkeypatch):
+    monkeypatch.delenv(PG.PAD_ENV, raising=False)
+    monkeypatch.delenv(PG.SAME_LEAF_ENV, raising=False)
+    kd = _old_kit(tmp_path, auto=100, same_leaf=True)
+    ino = (kd / "pregrt_ff_hold.tcl").stat().st_ino
+    s = PG.refresh(kd)
+    assert s.startswith("refreshed (auto 100, basis placement, same_leaf 1, pad rr)"), s
+    new = (kd / "pregrt_ff_hold.tcl").read_text()
+    assert "set pg_auto 100" in new and "proc ot_hold_pad" in new and "pg_sl_begin OT_PREGRT_FF_HOLD" in new
+    assert (kd / "pregrt_ff_hold.tcl").stat().st_ino != ino and (kd / "pregrt_ff_hold.tcl").stat().st_mode & 0o777 == 0o640
+    assert PG.refresh(kd) == "same"
+    assert PG.SAME_LEAF_ENV not in __import__("os").environ      # the process env is restored
+
+
+def test_refresh_is_fail_safe(tmp_path):
+    kd = tmp_path / "k"
+    kd.mkdir()
+    assert PG.refresh(kd).startswith("absent")
+    (kd / "hold_gate.tcl").write_text("no marker\n")
+    (kd / "pregrt_ff_hold.tcl").write_text("set pg_auto -1\n")
+    assert PG.refresh(kd).startswith("left:") and (kd / "pregrt_ff_hold.tcl").read_text() == "set pg_auto -1\n"
+    (kd / "pregrt_ff_hold.tcl").write_text("no auto line\n")
+    assert PG.refresh(kd).startswith("left: no 'set pg_auto'")

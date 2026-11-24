@@ -37,6 +37,7 @@ What changed against the 11-03 opt-in form:
 The in-flow GRT FF repair stays and takes the residual; sign-off FF hold >= 0 stays the only gate.  Timing context =
 hold_gate.tcl verbatim (same contract, same overlay), so the kit carries the head of its own hold_gate.tcl."""
 import os
+import re
 from pathlib import Path
 
 MARK = "# A separate FF-only process: do not impersonate the shared multi-mode context.\n"
@@ -650,8 +651,58 @@ def install(t, kd, *, rc_basis="placement"):
     return True
 
 
+REFRESH_FILES = ("pregrt_ff_hold.py", PAD_TCL, SAME_LEAF_TCL)      # what a host needs to run refresh() without a checkout
+
+
+def refresh(kit, env=None):
+    """HOLD-PAD-FLOW 11-24: regenerate a kit's EXISTING pregrt_ff_hold.tcl with this module (the wave gen copies the die's PINNED
+    snapshot, older than the planned pad: QC s29 R6V4 kits ran the unbounded rr pass and sat 2.5 h at iteration 0).  The kit's
+    own hold_gate.tcl head is kept; the AUTO threshold, the same-leaf scope, the RC basis and a baked pad mode are read back
+    from the old file.  New inode (copy + rename).  Fail-safe: any doubt leaves the file as it is.  -> status text."""
+    kd = Path(kit)
+    f, hg = kd / "pregrt_ff_hold.tcl", kd / "hold_gate.tcl"
+    if not f.is_file() or not hg.is_file():
+        return "absent: no pregrt_ff_hold.tcl / hold_gate.tcl (kit without the build)"
+    old = f.read_text()
+    m = re.search(r"^set pg_auto (-?\d+)\s*$", old, re.M)
+    if not m:
+        return "left: no 'set pg_auto' line in the kit tcl"
+    env = dict(os.environ if env is None else env)
+    pm = re.search(r'\$::env\(OT_PREGRT_HOLD_PAD\) : "(0|rr|all)"\}\]', old)
+    if pm and PAD_ENV not in env:
+        env[PAD_ENV] = pm.group(1)
+    env[SAME_LEAF_ENV] = "1" if "pg_sl_begin OT_PREGRT_FF_HOLD" in old else "0"
+    basis = "global_routing" if "OT_PREGRT_GRT_HOLD" in old else "placement"
+    keep = {k: os.environ.get(k) for k in (PAD_ENV, SAME_LEAF_ENV)}
+    try:
+        for k in keep:
+            if env.get(k) is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = env[k]
+        new = tcl_text(hg.read_text(), int(m.group(1)), rc_basis=basis)
+    except (ValueError, OSError) as e:
+        return f"left: {e}"
+    finally:
+        for k, v in keep.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+    if new == old:
+        return "same"
+    tmp = f.with_name(f.name + ".refresh")
+    tmp.write_text(new)
+    os.chmod(tmp, f.stat().st_mode & 0o7777)
+    os.replace(tmp, f)
+    return f"refreshed (auto {m.group(1)}, basis {basis}, same_leaf {env[SAME_LEAF_ENV]}, pad {pad_mode(env)})"
+
+
 if __name__ == "__main__":      # pregrt_ff_hold.py KIT [GUARD]: stage the build into an existing kit (private proofs)
     import sys
+    if len(sys.argv) == 3 and sys.argv[1] == "refresh":      # pregrt_ff_hold.py refresh KIT (kit_wave pregrt_refresh)
+        print("OT_PREGRT_REFRESH " + refresh(sys.argv[2]))
+        sys.exit(0)
     kit = Path(sys.argv[1])
     g = float(sys.argv[2]) if len(sys.argv) > 2 else GUARD_PS
     install({"clock": {"pregrt_ff_hold": True}}, kit)
