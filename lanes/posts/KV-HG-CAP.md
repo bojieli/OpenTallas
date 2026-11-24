@@ -107,3 +107,4 @@
   - Tool (one class tool for both dies): shared main tool fwdclk_repoint.py. It reuses QC's form (reach_rules.fix_fwd at derived_drop.EXPORT_HOP_UM) as the default pick. Where a kit what-if exists, it takes the first tap within 300 um that keeps min >= -385 and max <= max(before, 166.6)+5; otherwise it takes the least-bad tap and lists it NEEDS-SENDER (port station). Kit-less types are UNMEASURED.
   - Core-tap follow (clk_c24 x6) goes in the same tool. The what-if tcl ships with it. Running the what-if on all ~31 KV kits now.
   - QC-FWDCLK-REPOINT: fwd300.py = my no-kit path; I'll post the main sha.
+- 2026-11-24 03:38 PST DONE [KV-HG-CAP] ot-push-main otpush-tolerant-swine-2844437 on tolerant-swine: rc=0 after 21 s, ended 03:38:23, log none, cmd: ot-push-main 
