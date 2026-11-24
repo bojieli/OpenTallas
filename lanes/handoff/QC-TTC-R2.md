@@ -16,3 +16,10 @@ Update 23:18:
 - COORD 23:0x UNDRIVEN task: f16_auth is a plan bus in C1d (template kit lacks it); f16_obs[38]/init_u0[1] have no producer anywhere (die_r56, sys_face). Spec: f16_obs = F16WTN obs {16x{v,user2,slice4,pc9}, stage6, epoch16}; init_u0 = static admission INIT selector aligned to DH stage0 (dh comes from sys_face seq_dh). Needs a sys_face producer + plan buses (QC-ALLFIX after C1e).
 - Fork for scoped bind: epyc11 /srv/opentallas-scratch2/claude/QC-TTC-R2/cB/tree (from QC-ALLFIX cE, C1d); scripts bind_r2.sh/bindrun_r2.sh + allfix_in/ (c1d.json, ov_tools, rr). tool/stage.sh reproduces 6a5f53 staging.
 Next: class (b) fix (fanout split / dup of u_11072,u_2367 cones + cluster), LEC CEX, rebuild probe template from C1d kit_rtl (f16_auth bound), undriven producer.
+
+## 11-24 00:28 PST update
+- LEC CLOSED: differing output was d__u_12820 (X arm of mux u_76013); X arm refined to 0 -> UNSAT for pofix3 22cab1f23f17 and rep5 34d8867fe0b2 vs F5 1166f7d9630f; neg control SAT. Tools intel1 /srv/opentallas-scratch2/claude/QC-TTC-R2/tool: lec_comb.sh, lec_comb_model.py, cexo.sh+cexaig.py (name differing ports), evalout.py (strict), fix_dd.py, replicate.py. The positional ABC cec is invalid (PI order differs).
+- Combined form = rep/core_rep5.sv (intel1), cores/core_rep5.sv (epyc11). p_rep was built from a broken replica (withdrawn).
+- Hold: u_rrl_78->79 / u_srl_141->142 = same-site relays on two taps (cap pass). tap_relay_cohort.tcl (opt-in clock.tap_relay_cohort), lane clone epyc11 /srv/opentallas-scratch2/claude/QC-TTC-R2/wt commit 7431b0710c (NOT pushed; push after p_rep5 census confirms). Armed in p_rep5/kit (6 clock pins moved).
+- RUNNING: p_rep5 CTS on epyc11 -> tool/census.sh -> tool/grt.sh p_rep5 -> census2.sh.
+- f16_obs/init_u0 producer: QC-F16-PRODUCER (findings posted).
