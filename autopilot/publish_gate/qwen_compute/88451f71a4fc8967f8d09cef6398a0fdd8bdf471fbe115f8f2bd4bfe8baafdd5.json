@@ -1,0 +1,98 @@
+{
+ "advisory": [
+  "foreign_tree"
+ ],
+ "band_base": null,
+ "checks": {
+  "bound_params": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_compute/88451f71a4fc/sle_st_a_v2__pv4242de79",
+   "gen_host": "epyc2",
+   "item": "sle_st_a_v2__pv4242de79",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_compute/88451f71a4fc/sle_st_a_v2__pv4242de79/published_gen_origin.json",
+   "origin_sha256": "173aa6ba6478c9c530fb9752a2c4b759dc328abbfbbb8cde1d278357ec70a576",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "dca9d7389aafc5a8142124c910a8f5c5230232d43f9ac76985a275f8aa5d064c",
+   "spec_sha256": "573d688daaa10e5577697d2ed1a74cd4afa462a2d608e4e8f1d6facd3bd78025",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4",
+   "stage": "preflight",
+   "unit_log_sha256": "cf7d895247ab274c989bea4e8853029056e4a642da16b54d9b4fdd188df81a2c",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [
+    "FOREIGN-TREE kit_rtl.bind_out /srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4_bind_1123162217 is outside the candidate tree /srv/opentallas-scratch3/claude/kw45/snap_qwen_compute/qwen_compute_v4c4"
+   ],
+   "n": 1,
+   "verdict": "ADVISORY"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 37
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-4y1tior9/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: 2c1ff36__pve289215f/rs_n0 0.89, slw_hc0__cl1bc59e1c/x_hc1_st_a_i 0.89; 6.7 s\nPLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4 plan=/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json findings=0 advisories=88\nTAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t131 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n\nG0: xplicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO cbn_q00__cl622f65d2: explicit tap clk_t131 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t5 load=533/1000, radius=204.375/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO coll_ft__cla4a25d77: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_compute",
+ "foreign_tree_scan": {
+  "asbuilts": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4_bind_1123162217/asbuilt_manifest_injected.json"
+  ],
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4_bind_1123162217",
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_n46r4_final_preview.json",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4_bind_1123162217/bind.f",
+   "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4_bind_1123162217/asbuilt_manifest_injected.json"
+  ]
+ },
+ "gate_s": 7878.6,
+ "hosts": [
+  "epyc2",
+  "intel1",
+  "epyc10",
+  "epyc8",
+  "epyc7",
+  "epyc9"
+ ],
+ "item": "sle_st_a_v2__pv4242de79",
+ "manifest_hash": "88451f71a4fc8967f8d09cef6398a0fdd8bdf471fbe115f8f2bd4bfe8baafdd5",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n46r4_final_preview.json",
+ "plan_sha256": "81fd3e6370c03ae5dfdb072fefd884449988b9841a93476d7ac40f7691570a0e",
+ "rows_proofs": [
+  "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+ ],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 7878.6,
+ "t": 1795495056.86549,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_qwen_compute/qwen_compute_v4c4",
+ "verdict": "PASS"
+}
