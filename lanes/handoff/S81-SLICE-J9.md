@@ -29,3 +29,8 @@ Gate tree: epyc9 fam-s81-slice-r6/trees/s81_j9cmp (J8 cut fork + main 25064b2fc2
 - Plan ops epyc10 s81-slice-j9/ops_gflocal_b1.json (11 types, base ae3101241d6b). Gate on the amendment tree (needs main xs.sv); waiting for its path from ASSEMBLY.
 - kv512_C place probe: epyc7 s81-slice-j9/kv512_gfl_1620 (premask + GFLOCAL, v9 kit copy), log intel2 s81-slice-j9-kvgfl.otrun.log, ETA ~21:30.
 - intel1 wave_a/tree copy: leave (COORD ruling).
+
+## 23:1x (after the 17:14 limit)
+- GFLOCAL on main = c72b212af8 (local 26042b7e1b was rebased; never on main). Ops ops_gflocal_b1.json re-hashed 6b975b8070c9.
+- kv512_C GFLOCAL probe (v9 kit, premask + GFLOCAL): gf_q gone; TNS -14.6M -> -5.9M (DP), -5.7M -> -2.0M (resizer); WNS -1760/-1598, new worst = xfin src -> u_x wo_d (full cycle, ~2.4 ns of wire). Re-measure on the AMENDMENT-1 kit (main xfin) before a src-copy row.
+- AMENDMENT-1 gate of GFLOCAL plan row: needs the amendment tree from ASSEMBLY (rtl >= c72b212af8).
