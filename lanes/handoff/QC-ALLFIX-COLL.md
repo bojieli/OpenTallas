@@ -12,4 +12,4 @@ Work dirs: E10 /srv/opentallas-scratch/claude/QC-ALLFIX-COLL (CTS probes), epyc8
 3. SLE CTL B_TW bank spread: ALREADY in C4/b25 (4 per-bit banks x158-504, 9 stages kept; QC-V4 ctl_1123/station_row.json, btw_station_and_clock_model.png). Needs only the sle_ctl__cla4f6f12f place/GRT probe.
 4. SLE CTL clock entry: sle_ctl edge taps = landing contract in C4 already (455.136/1159.008 ...). NEW peer finding: 14 hc1/hc2 types' fclk_in_b_hw_i
    tap 140.192 != contract 206.624 (hc1) / 251.936 (hc2), which abut sle_ctl fclk_out_b_hw_hc*_o; preflight clock_pin_geometry would FAIL.
-   Row: epyc8 QC-ALLFIX-COLL/rows/ctlclk_row.py (123a8da159af), row_ctlclk.json (7eba760c7fbd), plan f418c1b290f3 -> b96b49014c35. PRE: rows/pre_ctlclk.log.
+   Row: epyc8 QC-ALLFIX-COLL/rows/ctlclk_row.py (123a8da159af), row_ctlclk.json (7eba760c7fbd), plan f418c1b290f3 -> b96b49014c35. PRE (epyc7 t7 fork, rt 70b6): row adds 0 findings; base and row both carry the inherited ROWS-NO-PROOF (9 sc types). ROW-REBASED 18:17.
