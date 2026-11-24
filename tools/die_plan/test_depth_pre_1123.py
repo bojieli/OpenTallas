@@ -106,3 +106,25 @@ def test_depth_cap_from_config(tmp_path, monkeypatch):
         plan.write_text(json.dumps({"die": {"name": die}, "partition_types": {}}))
         f = G.check_depth(str(tmp_path), str(plan), None)
         assert len([x for x in f if x.startswith("FAIL DEPTH qfd_mid")]) == nfail, (die, f)
+
+
+def test_depth_covered_signed_hard_core_and_not_in_plan_warn(tmp_path, monkeypatch):
+    """QC-DEPTH5 11-24 (COORD): a deep module reached only through a plan module bound to a signed view (lef), or not reachable from the plan at all,
+    is WARN DEPTH-COVERED with the reason; a deep module the plan reaches without a signed macro stays FAIL"""
+    monkeypatch.delenv("OT_PRE_DEPTH_HELD", raising=False)
+    monkeypatch.setenv("OT_KIT_WAVE_JSON", str(tmp_path / "none.json"))
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "inner.sv").write_text(chain(25, "qfd_inner_deep"))          # inside the signed core
+    (tmp_path / "rtl" / "orphan.sv").write_text(chain(25, "qfd_orphan_deep"))        # nothing instantiates it
+    (tmp_path / "rtl" / "open.sv").write_text(chain(25, "qfd_open_deep"))            # reached by the soft top
+    (tmp_path / "rtl" / "leaf.sv").write_text("module qfd_hard_leaf(input wire clk);\n  qfd_inner_deep u_i (.a(1'b0), .clk(clk), .y());\nendmodule\n")
+    (tmp_path / "rtl" / "top.sv").write_text("module ttop(input wire clk);\n  qfd_hard_leaf u_c (.clk(clk));\n  qfd_open_deep u_o (.a(1'b0), .clk(clk), .y());\nendmodule\n")
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps({"die": {"name": "qwen_compute"}, "partition_types": {"t": {"module": "ttop", "hard_cores": [
+        {"inst": "u_c", "module": "qfd_hard_leaf", "lef": "views/qfd_hard_leaf.lef", "lib": "views/qfd_hard_leaf_tt.lib"}]}}}))
+    f = G.check_depth(str(tmp_path), str(plan), None)
+    fails = [x for x in f if x.startswith("FAIL")]
+    assert len(fails) == 1 and fails[0].startswith("FAIL DEPTH qfd_open_deep:"), f
+    cov = {x.split()[2].rstrip(":"): x for x in f if x.startswith("WARN DEPTH-COVERED")}
+    assert "signed hard core" in cov["qfd_inner_deep"] and "not reachable from the plan" in cov["qfd_orphan_deep"], f
+    assert "1 over budget" in f[-1], f

@@ -2038,6 +2038,73 @@ def depth_netlists(tree, plan, asbuilt=None):
     return files, f"{len(seen)} module(s) reached from the plan's types", {p: reach[p] for p in files}
 
 
+def _plan_modules(node, hard, soft):
+    """every plan dict that names a "module": hard = those with a bound (signed) view (lef), soft = the rest"""
+    if isinstance(node, dict):
+        m = node.get("module")
+        if isinstance(m, str) and m:
+            (hard if node.get("lef") else soft).add(m)
+        for v in node.values():
+            _plan_modules(v, hard, soft)
+    elif isinstance(node, list):
+        for v in node:
+            _plan_modules(v, hard, soft)
+
+
+def depth_cover(tree, plan, asbuilt, modules):
+    """QC-DEPTH5 11-24 (COORD): {module: reason} for the flagged modules that cannot bind a depth miss.
+    'signed hard core' = every path from the plan's soft modules to it goes through a plan module bound to a signed view (lef): its depth is met
+    inside that macro.  'not reachable from the plan' = no plan module reaches it at all (e.g. qfd_sys_face_n32_*).  Anything else: not covered."""
+    import bind_elab as E
+    raw = _load(plan) or {}
+    ab = _load(asbuilt) if asbuilt else raw.get("asbuilt")
+    root = Path(tree) if tree else plan_tree_root(plan)
+    if not root:
+        return {}
+    roots = (ab or {}).get("rtl_roots", ["rtl"]) if isinstance(ab, dict) else ["rtl"]
+    extra = (list(ab.get("files", [])) + list(ab.get("prefer", []))) if isinstance(ab, dict) else []
+    idx = E.module_index(roots, extra, str(root))
+    kids = {}
+
+    def children(m):
+        if m not in kids:
+            out = set()
+            for pth in idx.get(m, []):
+                try:
+                    out |= {x for x in INST_NAME.findall(Path(pth).read_text(errors="replace")) if x in idx}
+                except OSError:
+                    pass
+            kids[m] = out
+        return kids[m]
+    hard, soft = set(), set()
+    _plan_modules(raw, hard, soft)
+    if not (hard or soft):                                  # a plan that names no module: reachability is unknowable, keep the FAIL
+        return {}
+
+    def closure(starts, stop_at_hard):
+        seen, todo = set(), [m for m in starts if m in idx]
+        while todo:
+            m = todo.pop()
+            if m in seen:
+                continue
+            seen.add(m)
+            if stop_at_hard and m in hard and m not in starts:
+                continue
+            todo += list(children(m))
+        return seen
+    soft_only = closure(soft - hard, True)                  # reached without entering a signed macro
+    everything = closure(soft | hard, False)
+    out = {}
+    for m in modules:
+        if m in soft_only:
+            continue
+        if m in everything:
+            out[m] = "signed hard core: reached only through a plan module bound to a signed view (lef/lib), its depth is closed inside that macro"
+        else:
+            out[m] = "not reachable from the plan: no plan type, core or glue module instantiates it"
+    return out
+
+
 def check_depth(tree, plan, asbuilt=None, max_list=12):
     """FAIL DEPTH per generated constructor netlist with flops at logic depth >= the 833 ps budget (DEPTH-PRE-1123, logic_depth.py)"""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -2050,7 +2117,7 @@ def check_depth(tree, plan, asbuilt=None, max_list=12):
         budget = LD.levels(die)
     except Exception as e:  # noqa: BLE001 - a check that cannot run must fail (BPC-UNDEF / LANDREMAP class)
         return [f"FAIL DEPTH-UNCHECKED generated netlists not resolved ({type(e).__name__}: {str(e)[:200]})"]
-    out, warn, n_deep, n_held = [], [], 0, 0
+    out, warn, n_deep, n_held, pend = [], [], 0, 0, []
     for p in files:
         try:
             r = LD.census(p, budget)
@@ -2067,6 +2134,23 @@ def check_depth(tree, plan, asbuilt=None, max_list=12):
         else:
             n_deep += r["deep"]
             out.append(x)
+            pend.append((len(out) - 1, r))
+    if out:                                                  # QC-DEPTH5: signed-hard-core / not-in-plan findings are WARN with the reason
+        try:
+            cov = depth_cover(tree, plan, asbuilt, {r["module"] for _, r in pend})
+        except Exception as e:  # noqa: BLE001 - cannot decide -> keep the FAIL
+            cov = {}
+            print(f"depth_cover unavailable: {type(e).__name__}: {str(e)[:120]}", file=sys.stderr)
+        keep = []
+        for i, x in enumerate(out):
+            r = next((r for j, r in pend if j == i), None)
+            why = cov.get(r["module"]) if r else None
+            if why:
+                n_deep -= r["deep"]
+                warn.append("WARN DEPTH-COVERED" + x[len("FAIL DEPTH"):] + f" [{why}]")
+            else:
+                keep.append(x)
+        out = keep
     head = out[:max_list] + ([f"FAIL DEPTH ... {len(out) - max_list} more netlist(s)"] if len(out) > max_list else [])
     return head + warn[:max_list] + [f"WARN DEPTH-SUMMARY {len(files)} generated netlist(s) ({how}); {len(out)} over budget, {n_deep} deep "
                                      f"flop(s); {len(warn)} HELD ({n_held} flops); budget {budget} levels (depth_config.json / $OT_PRE_DEPTH_LEVELS)"]
