@@ -14496,3 +14496,7 @@ Parked at owner instruction. Existing admitted jobs keep running. No new release
 ### OWNER?
 
 No new owner-level decision arose. Exact Fable scope reviews remain with Claude and the named release lanes.
+
+## Takeover 2026-11-24 06:19 PST
+
+Live lanes resumed with existing worker paths and run IDs. Latest archive census 589 any / 485 current at 06:05. HBM parked. Exact review precedes new routes.

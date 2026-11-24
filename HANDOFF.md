@@ -3917,3 +3917,5 @@ OPS-WRITEUP: 2026-11-24 04:09 PST 04:09 hourly: 589 any / 485 current (+0 / +0 v
 2026-11-24 04:32 PST CLAUDE: FLOW-OPS-R3 removed takeover drop-in autopilot.service.d/zzzzzz-codex-takeover-viewed-route.conf (ot-delete, copy in FLOW-OPS-R3/tmp), daemon-reload; handback checklist added to CODEX-ROLE.md
 OPS-WRITEUP: 2026-11-24 05:08 PST 05:08 hourly: 589 any / 485 current (+0 / +0 vs 04:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1
 OPS-WRITEUP: 2026-11-24 06:08 PST 06:08 hourly: 589 any / 485 current (+0 / +0 vs 05:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1
+
+CODEX: 2026-11-24 06:19 PST takeover active S81, HEAD, QC, KV, token/ROM, fleet/flow, geometry, and shared qualification. Existing admitted jobs continue.

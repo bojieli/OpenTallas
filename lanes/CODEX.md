@@ -10600,3 +10600,17 @@ Current owners and cut conditions come from the 11-23 queue and live handoffs. H
 - KV: D28 still live. Exact K3h3 E8 unit1493921 strict BIND0 PRE0 G0 0/0 TAPOFF 0/0 LAT2752/2752 BPC0 R8-v2 baseline PASS with zero new/resolved/4 prior exact inversions. Raw precheck advisory TOOLSTALE four files against newer 7f184. Exact whole-die render, reset advisory replay, rc127 placed and viewed, and Fable scope acceptance due. Preparation of one full guarded D29 marker with typed holds authorized, live still gated. KV-ALLFIX A1 active E8, SYSC zero-cycle L343 408→within405 fix underway.
 - Token: exact HEAD masked r18g (E7 unit1977878) 334 lanes/65231 checks zero errors in 350 s. Stage37 actual arithmetic and ≤432-edge forward/core budget continues. KLayout old physical job CPU-active. Keep HBM parked.
 - Fleet and flow: Canonical direct SSH unavailable but normal intel1 jump works, E10 inside existing directories only at74–75 GB scratch. J8 exact 9 signed, 5 viewed authorized routes, 32 route-held, 2 upstream retry, selector no candidates from current typed conditions. Two newly viewed I1 forms BAD. Flow watchdog 706670f863 is paired negative control, ACK c3ee9f90f81. HROOT A/B identical ODB with true clamp improvement and residual nested-control 618 µm. Preserve admitted runs and current route gates.
+
+## Live takeover coverage — 2026-11-24 06:19 PST
+
+| Scope | Current result or job | Next action |
+|---|---|---|
+| S81 J9, c8/c9, families | c8 E9 c8seal_tree / p6w_sg 9b25d6714339; 45 replaced route holds cancelled by flow before takeover | Collect C8 strict/reset/ENTRY-FALL/reseal; diagnose SVC, KVLEAF and T2 children; preserve Fable holds |
+| HEAD East, West, native types | r7 c9ead4cccd9a BIND/G0/LEC and scoped LAT 334/334; Fable accepts exact East scope; West w4b and w5 separated | Release exact reviewed scope only; acquire w5 and current schedule witness |
+| QC V4 / ALLFIX / families | V4 applied; C1i/C1j and fresh exact gen stages in progress | Baked calendar and SU age fixes, typed native59 stop, coll and sle_ctl proofs |
+| KV D29 / A5t5 / families | D29 K3g 324af451f9be applied with 42 holds; hub_Eo and pc_v1 gen/lint/preflight complete and placement admitted on E11 | Collect A5 family integration and placement reviews, progress current eligible jobs |
+| Token / model / ROM content | HEAD held-mask component and stage37 path still scoped; ROM R000 rank2 successors complete | Collect exact ROM artifacts and continue stage37 budget work |
+| Flow / event env / wave / fleet | E8 drain, E7 load; review service override taking effect; existing runs retained | Diagnose new failures, close event-env and successor gaps |
+| Cross-die geometry / acceptance | Exact visual reviews and Fable scopes remain binding | Collect viewed receipts, flag failed layouts and Fable-only scopes |
+| LANEAGE / bind tooling / shared qualification | LANEAGE recovery, CORE-TAP-BUDGET FF lib regens, LEC failures | Resume next concrete proof and merge green SHAs |
+| HBM | Owner parked | Retain state |
