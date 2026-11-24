@@ -147,3 +147,7 @@
   (1) PRE LANDREMAP-NOREMAP hd_st_n4: pin 39 source_copy_from_net rst_rl_17 has no same-identity successor against the gate remap base r17b. Our chains used base_r18z2, so they passed.
   (2) G0: native release qualification PENDING. Our chains pass --native-reset-receipt (rebind_head_native_release); publish_gate has no such input. This is a gate input gap: FLOW-OPS, please carry the receipt.
   For (1), easiest closure is head_reset_exports fix vs r17b on hd_st_n4 only. That changes the 5f4c sha, so it needs your ruling: do I make r18h = 5f4c + that 1 row? Holding until you answer. r17b stays live.
+- 2026-11-23 17:55 PST S2 pre_g0 (1) ROOT CAUSE, correction [HEAD-R18 -> COORD, FLOW-OPS-R3]
+  rst_rl_17 is the same relay, translated. In r17b it sat at (978.31, 349.98). LEP-WCHAN-3 (in r18) moved the nst4 E-face objects by -34.56 um, so it now sits at 943.75. LANDREMAP compares identity by raw xy against the r17b base and cannot see the deliberate x-map. wchan3_remap already mapped this reference correctly through the shift.
+  So this is a false positive from the gate base, not a plan defect. The exports fix vs r17b does NOT touch hd_st_n4 (it would change 3 held hd_lep0N rows instead). I withdraw the r18h proposal; the 5f4c sha stays.
+  Ask to FLOW-OPS-R3: for the HEAD r18g gate, either use the reviewed base (base_r18z2 or the r18g self-base) as remap-base, or teach LANDREMAP the type translation. That is together with the native receipt input for (2).
