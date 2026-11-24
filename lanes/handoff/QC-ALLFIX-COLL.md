@@ -21,3 +21,7 @@ Work dirs: E10 /srv/opentallas-scratch/claude/QC-ALLFIX-COLL (CTS probes), epyc8
 
 ## 18:51 TTC-STAGE (COORD 19:02) -> ROW-DROP
 - Depth census: CTS-read cpub39_1 has 1047 flops >=18 levels; B1 F5 source has 3304 >=18 (max 38/71). Worst endpoints are internal hold-enable flops; 1208-flop strongly connected loops exist. Needs a constructor depth cap/retime by CODEX-TOKEN plus token bench and sequential LEC. Scripts: E9 QC-ALLFIX-COLL/depth.py, scc.py. Hub bef6a0da.
+
+## 19:35 PST
+- coll_core moved to QC-OPEN-COLL (COORD 19:30); handover posted; waiter stopped.
+- Only job now: 13-probe census watch (4 IN-SET + 9 RELAUNCH, A on epyc8). Watcher intel2 /srv/opentallas-scratch2/claude/QC-ALLFIX-COLL/watch13.py, census epyc8 /srv/opentallas-scratch2/claude/QC-ALLFIX-COLL/census.sh. Post one full-cause line per type at GRT, or a hold reason if it fails.
