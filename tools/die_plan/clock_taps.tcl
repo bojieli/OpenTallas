@@ -863,6 +863,11 @@ if {[info exists ::env(OT_TAP_RESET_AFFINITY)] && $::env(OT_TAP_RESET_AFFINITY) 
 if {[info exists ::env(OT_TAP_RESET_SPLIT)] && $::env(OT_TAP_RESET_SPLIT) eq "1"} {
  source [file join [file dirname [info script]] tap_reset_split.tcl]
 }
+# KV-HUB-HOLD 11-23 (default off, OT_TAP_LANDING_SEAM=1 from clock.tap_landing_seam): each landing's local-clock ring sinks and
+# its u_bin capture share ONE tap with no hard clock pin (tap_landing_seam.tcl), after macro follow has placed the hard pins.
+if {[info exists ::env(OT_TAP_LANDING_SEAM)] && $::env(OT_TAP_LANDING_SEAM) eq "1"} {
+ source [file join [file dirname [info script]] tap_landing_seam.tcl]
+}
 # QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"; ring bonding took clk_t84 from 116
 # sinks to 1): OT_TAP_POST_MIN_SINKS (opt-in, plan clock.tap_post_merge_min_sinks) re-runs the small-tap
 # merge AFTER the affinity passes.  A tap left with 0 < n < min sinks moves ALL its clock pins to the nearest tap that

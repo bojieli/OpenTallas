@@ -721,6 +721,9 @@ SCHEMA = {
                             "properties": {"ports": {"type": "array", "minItems": 1, "items": _name},
                                            "chunk": {"type": "integer", "minimum": 1, "maximum": 4096},
                                            "re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
+                        # Default-off (KV-HUB-HOLD 11-23, gen_phys -> OT_TAP_LANDING_SEAM, tap_landing_seam.tcl): every landing's
+                        # local-clock ring sinks + u_bin capture on one tap that carries no hard clock pin.
+                        "tap_landing_seam": {"type": "boolean"},
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
                             "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
                                 "follow_re": {"type": "string"},

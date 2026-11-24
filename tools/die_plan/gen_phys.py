@@ -8105,6 +8105,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append(f"export OT_TAP_RESET_SPLIT_MAX_TAPS = {reset_split_max_taps}")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
+    if (t.get("clock") or {}).get("tap_landing_seam") is True:   # KV-HUB-HOLD 11-23, opt-in: landing ring + u_bin on one hard-free tap
+        cfg.append("export OT_TAP_LANDING_SEAM = 1")
     cfg += pinreg_tap_exports(t)
     cfg += ft_stage0_exports(t)
     cfg += ft_keep_firm_exports(t)

@@ -2260,6 +2260,9 @@
          }
         }
        },
+       "tap_landing_seam": {
+        "type": "boolean"
+       },
        "tap_group": {
         "type": "object",
         "additionalProperties": false,
