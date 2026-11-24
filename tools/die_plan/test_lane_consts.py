@@ -21,10 +21,10 @@ REG = dict(consts=[dict(die="qwen_compute", name="R_CMD", lane="tt_ctlm__cmd_cmd
                    dict(die="qwen_compute", name="GONE", lane="nope"),
                    dict(die="qwen_compute", name="DEP", expr="max(GONE, 3)"),
                    dict(die="qwen_compute", name="OFS", lane="a__x_y", offset=2)],
-           consumers=[dict(die="qc", consumer="prog", const="R_HR", reader=dict(kind="json", glob="results/**/*meta.json", key="relay.R_HR")),
-                      dict(die="qc", consumer="prog", const="R_CMD", reader=dict(kind="json", glob="results/**/*meta.json", key="relay.R_CMD")),
+           consumers=[dict(die="qc", consumer="prog", const="R_HR", reader=dict(kind="json", glob="consumer_outputs/**/*meta.json", key="relay.R_HR")),
+                      dict(die="qc", consumer="prog", const="R_CMD", reader=dict(kind="json", glob="consumer_outputs/**/*meta.json", key="relay.R_CMD")),
                       dict(die="qc", consumer="contract", const="XPF_TRANSPORT_EDGES",
-                           reader=dict(kind="json", glob="results/C.json", key="compiled_XPF_TRANSPORT_EDGES", each="master")),
+                           reader=dict(kind="json", glob="consumer_outputs/C.json", key="compiled_XPF_TRANSPORT_EDGES", each="master")),
                       dict(die="qc", consumer="sv", const="XPF_TRANSPORT_EDGES", reader=dict(kind="sv_param", glob="rtl/*.sv", param="XPF_TRANSPORT_EDGES")),
                       dict(die="qc", consumer="inst", const="XPF_TRANSPORT_EDGES",
                            reader=dict(kind="inst_param", module_re=r"qfd_tt_ctlm\w*", param="XPF_TRANSPORT_EDGES")),
@@ -36,9 +36,9 @@ REG = dict(consts=[dict(die="qwen_compute", name="R_CMD", lane="tt_ctlm__cmd_cmd
 
 def _tree(tmp_path):
     t = tmp_path / "tree"
-    (t / "results" / "a").mkdir(parents=True)
-    (t / "results" / "a" / "p_meta.json").write_text(json.dumps(dict(relay=dict(R_CMD=19, R_HR=10))))
-    (t / "results" / "C.json").write_text(json.dumps([dict(master="m1", compiled_XPF_TRANSPORT_EDGES=21), dict(master="m2", other=1)]))
+    (t / "consumer_outputs" / "a").mkdir(parents=True)
+    (t / "consumer_outputs" / "a" / "p_meta.json").write_text(json.dumps(dict(relay=dict(R_CMD=19, R_HR=10))))
+    (t / "consumer_outputs" / "C.json").write_text(json.dumps([dict(master="m1", compiled_XPF_TRANSPORT_EDGES=21), dict(master="m2", other=1)]))
     (t / "rtl").mkdir()
     (t / "rtl" / "c.sv").write_text("module c #(parameter integer XPF_TRANSPORT_EDGES = 11 // was 21\n) ();\nendmodule\n")
     (t / "tools").mkdir()
@@ -149,3 +149,23 @@ def test_fixed_census_classes():
     assert r["b"]["cls"] == "BACKED+KIT-PREDICTED" and "u_lob_o" in r["b"]["register"]
     assert r["c"]["cls"] == "FIXED-IN-CORE" and r["d"]["cls"] == "NONE" and r["d"]["register"] == "NONE"
     assert r["f"]["cls"] == "NOT-IN-LATCHECK"
+
+
+
+def test_latency_package_report_uses_generator_digest(tmp_path, capsys):
+    from gen import plan_digest
+
+    plan = {"die": {"name": "s81_head"}, "latency": {"lanes": {}}}
+    expected = plan_digest(plan)
+    plan["latency"]["lanes"]["L"] = {"cycles": 7}
+    plan_path = tmp_path / "event.json"
+    plan_path.write_text(json.dumps(plan))
+    package = tmp_path / "fresh.json"
+    package.write_text(json.dumps({"plan_digest": expected}))
+    old_package = tmp_path / "stale.sv"
+    old_package.write_text("// GENERATED die_plan s81_head (plan digest 0000000000000000).\n")
+    args = ["latpkg", "--plan", str(plan_path), "--latpkg", str(package), "--latpkg", str(old_package)]
+    assert LC.main(args) == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0].startswith(f"LATPKG-MATCH {package} plan={expected}")
+    assert lines[1].startswith(f"LATPKG-STALE {old_package} plan={expected}")

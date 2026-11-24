@@ -48,6 +48,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 REGISTRY = HERE / "lane_consts_registry.json"
 SCHEMA = "opentallas.die_plan.lane_consts.v1"
 LANE_AGES_SCHEMA = "opentallas.qwen.ctlm-lane-ages.v1"
@@ -344,12 +345,33 @@ def fixed_census(plan, lanes):
     return rows
 
 
+def report_latency_packages(plan_path, packages):
+    """Compare a generated latency package header with its plan's generator digest."""
+    from gen import plan_digest
+
+    expected = plan_digest(json.loads(plan_path.read_text()))
+    for package in packages:
+        try:
+            if package.suffix == ".json":
+                observed = json.loads(package.read_text()).get("plan_digest")
+            else:
+                with package.open() as source:
+                    header = source.readline()
+                match = re.search(r"\bplan digest ([0-9a-f]{16})\b", header)
+                observed = match[1] if match else None
+        except (OSError, ValueError):
+            observed = None
+        verdict = "LATPKG-MATCH" if observed == expected else "LATPKG-STALE"
+        print(f"{verdict} {package} plan={expected} package={observed or 'UNKNOWN'}")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=["derive", "compare", "lane-ages", "fixed-census"])
-    ap.add_argument("--plan", type=Path, help="fixed-census: the plan the LATCHECK was run on")
-    ap.add_argument("--die", required=True)
-    ap.add_argument("--latcheck", required=True, type=Path)
+    ap.add_argument("cmd", choices=["derive", "compare", "lane-ages", "fixed-census", "latpkg"])
+    ap.add_argument("--plan", type=Path, help="fixed-census or latpkg: the bound plan")
+    ap.add_argument("--die")
+    ap.add_argument("--latcheck", type=Path)
+    ap.add_argument("--latpkg", type=Path, action="append", help="generated latency JSON or SV package; repeatable")
     ap.add_argument("--registry", type=Path, default=REGISTRY)
     ap.add_argument("--tree", type=Path, help="compare: the bound kit tree (tools/ rtl/ results/ physical/)")
     ap.add_argument("--bind-rtl", type=Path, help="compare: the bind output rtl dir (inst_param readers)")
@@ -359,6 +381,13 @@ def main(argv=None):
     ap.add_argument("--json", type=Path)
     ap.add_argument("--strict", action="store_true", help="exit 4 on any MISMATCH (not used by any gate yet: r703 report only)")
     a = ap.parse_args(argv)
+    if a.cmd == "latpkg":
+        if not a.plan or not a.latpkg:
+            ap.error("latpkg requires --plan and --latpkg")
+        report_latency_packages(a.plan, a.latpkg)
+        return 0
+    if not a.die or not a.latcheck:
+        ap.error(f"{a.cmd} requires --die and --latcheck")
     lanes, sha = load_latcheck(a.latcheck)
     if a.cmd == "fixed-census":
         rows = fixed_census(json.loads(a.plan.read_text()), lanes)
