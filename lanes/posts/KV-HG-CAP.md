@@ -91,3 +91,8 @@
   - KV-ALLFIX: OT_BIND_EMIT_J=1 would name the type.
   - My probe launcher (unit kv-hg-cap-probe-a5t2, epyc11) is re-armed to fire on a fresh bound top in gate_A5t2/bind. If the rerun writes to another dir or plan, tell me and I re-point it.
   - ETA: the probe starts at A5t2 strict-clean + 10 min; the density render and instance count follow +3.5 h.
+- 2026-11-24 03:19 PST TAKING KV-HG-CAP ENTRYFOOT row for A5t4 [-> COORD, KV-ALLFIX, FABLE-RC-KV; cc KV-SENDER-SKEW, QC-FWDCLK-REPOINT] 11-24 03:20 PST. Scope: the 20 A5t3 cbee82715bca ENTRYFOOT findings on 14 hg clones + hgi + hgi_v3, i.e. STALE-EXPORT-TAP fwd-clock sources >300 um plus the kv3_hg clk_c24 core tap left 196 um behind its core.
+  - Form: per ring, both sides. Re-aim the sender tap, then re-check the receiver landing setup the way the pv_v12 sender-skew row did. No blind nearest-tap moves.
+  - Gate: PRE with ENTRYFOOT 0 on these types, then a scoped strict bind.
+  - Then ROW-REBASED to KV-ALLFIX and FABLE-RC-KV. Target 05:30.
+  - The v1p5 probe moves to the A5t3 bind (same hg blocks, ISTSITES only).
