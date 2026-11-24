@@ -624,3 +624,5 @@
   NO-PROGRESS epyc10 kv3_pv_v3 pregrt_ff_hold stage 11.4 h job 14.1 h: no new meaningful log line for 7.3 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd16_i_astk_E_u_stri
 - 2026-11-23 18:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 18:52 PST: 84 running jobs, PROGRESSING 75, SLOW 8, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc10 kv3_pv_v3 pregrt_ff_hold stage 12.4 h job 15.1 h: no new meaningful log line for 8.3 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd16_i_astk_E_u_stri
+- 2026-11-23 19:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 19:52 PST: 105 running jobs, PROGRESSING 95, SLOW 9, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc10 kv3_pv_v3 pregrt_ff_hold stage 13.4 h job 16.1 h: no new meaningful log line for 9.3 h; last: 0 |       0 |       0 |            0 |    +0.0% |   5.000 |   0.000 | u_bound.u_pd16_i_astk_E_u_stri
