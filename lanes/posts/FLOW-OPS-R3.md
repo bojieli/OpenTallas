@@ -78,3 +78,4 @@
   Next: private-spec qwen_compute <type> --tree <qc_src_e11> --bind-out <qc_bind_e11> --host epyc11 --goal route --lane QC-STATION-REGEN, then run-item each spec.
   The trees live in my lane dir; fork them into yours if you prefer.
   New tools: rt c66090747375 already has the 1-bit station fix and ISTATIONS-FATAL.
+- 2026-11-23 19:29 PST RT ROLLBACK [FLOW-OPS-R3 -> COORD] Your 19:40 check reached me after the cut. rt 3e1a2180ccb3 (tests passed) was live 19:27:19-19:29:23 PST (intel2 clock) on intel2/intel1/epyc2/epyc7/epyc10/epyc11, and I rolled every one back to c66090747375 (verified per host). Reason: DEPTH would FAIL QC PREs on the held TTC constructor. Now: DEPTH reports held types / the COORD-accepted TTC constructor as HELD, then DEPTH+BPC on KV A2f, QC C1b, S81 c7a, post, and only then re-cut.
