@@ -65,7 +65,13 @@ def _git(gd, args, timeout=240):
 def is_control(sw, f):
     """mutation / negative-control switches and test-bench files: never meant for a plan row"""
     b = f.rsplit("/", 1)[-1]
-    return bool(re.search(r"(^|_)MUT(ANT)?(_|$)", sw[3:])) or b.startswith(("tb_", "test_")) or "/test/" in f or "/tb/" in f
+    return (bool(re.search(r"(^|_)MUT(ANT)?(_|$)", sw[3:])) or b.startswith(("tb_", "test_")) or "/test/" in f or "/tb/" in f
+            or f.startswith("results/"))          # archived reference copies (results/rtl/.../ref_old_src) are not build RTL
+
+
+def family(sw):
+    """OT_BKSEL_RC -> OT_BKSEL, OT_S81_KVLEAF_EXIT_RELAYS -> OT_S81_KVLEAF_EXIT (the name without its last token)"""
+    return sw.rsplit("_", 1)[0] if sw.count("_") >= 2 else sw
 
 
 def _findings(raw, plan_path, tree=None, **kw):
@@ -106,9 +112,9 @@ def _findings(raw, plan_path, tree=None, **kw):
         inclo = f in closure
         if inclo:
             tg |= set(T.closure_types(raw, rtlix, [f]).get(f, []))
-        fam = "_".join(sw.split("_")[:2])
-        sib = {t for h, ts in have.items() if h != sw and "_".join(h.split("_")[:2]) == fam for t in ts}
-        if sib and (inclo or not closure):     # a sibling switch of the same family is set here and the file is live code
+        fam = family(sw)
+        sib = {t for h, ts in have.items() if h != sw and family(h) == fam for t in ts}
+        if sib and not inclo:     # a sibling switch of the same family is set here (in the closure the reaching types are exact)
             tg |= sib
         tg = sorted(tg)
         if not tg and not inclo:
