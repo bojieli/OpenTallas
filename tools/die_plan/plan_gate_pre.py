@@ -115,6 +115,13 @@ GENDRY-1123 (COORD 17:25, FABLE flow review; HEAD E pin-move row cab67: every ga
   (24) types, $OT_PRE_GENDRY_J (8) in parallel, $OT_PRE_GENDRY_TIMEOUT_S (1800) each; the rest are WARN GENDRY-UNCHECKED.
   No baseline and no list: not run.  The plan_gate_pre CLI runs it by default ($OT_PRE_GENDRY=0 or --skip GENDRY: off);
   library callers pass gendry=True.  Minutes.
+  GENDRY-KITRTL-1123 (KV-ALLFIX A3e/A3d: 24/24 kv3_hg*/hgi*/hroot FAIL GENDRY "bus o_ectl_Q_N_eN is not bound to any leaf
+  port"): a KIT-RTL type = a type with buses none of which carries a bus.leaf and no contents[].bind (a bind-mode plan, all
+  KV types).  The generated plan wrapper can never build it; the real kit builds it from the bound RTL (kit_wave: bind.py
+  kit-rtl -> gen.py phys --kit-rtl T=kit_rtl.f).  PRE does the same when --elab-dir names a finished bind OUT (bind_report.json, no errors):
+  bind.py kit-rtl (this PRE's tools, --src-tree TREE, --asbuilt) into the temp dir, then the dry gen with --kit-rtl; a
+  failure of either step is FAIL GENDRY.  Without a bind OUT (PRE runs before / beside the bind) such a type is not generated
+  and is WARN GENDRY-KITRTL (classified, never FAIL); every type with any leaf binding is checked exactly as before.
 
 SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,200 kv3_hg* o_ectl_Q_N_tN exact bank seats off
   the native lattice, found only at global_place): every exact bank site the kit places verbatim (internal_stations
@@ -1648,17 +1655,52 @@ def gendry_types(plan_raw, base_raw, env=None):
     return sorted(t for t, v in pt.items() if json.dumps(v, sort_keys=True) != json.dumps(bt.get(t), sort_keys=True))
 
 
-def gendry_cmd(tree, plan, tn, out, sidecar=None):
+def gendry_kitrtl_types(plan_raw, types):
+    """GENDRY-KITRTL-1123: the given types that only the bound RTL can build (buses, but no bus.leaf and no contents[].bind)"""
+    pt = plan_raw.get("partition_types", {})
+    out = []
+    for tn in types:
+        t = pt.get(tn) or {}
+        if (t.get("buses") and not any(b.get("leaf") for b in t["buses"])
+                and not any(c.get("bind") for c in t.get("contents", []))):
+            out.append(tn)
+    return out
+
+
+def gendry_bind_out(elab_dir):
+    """the finished, error-free bind OUT dir (bind_report.json with no errors) the kit-rtl step reads, else None"""
+    f = Path(elab_dir) / "bind_report.json" if elab_dir else None
+    if not f or not f.is_file():
+        return None
+    try:
+        r = json.loads(f.read_text())
+    except (OSError, ValueError):
+        return None
+    return str(Path(elab_dir).absolute()) if not r.get("errors") and not r.get("n_errors") else None
+
+
+def gendry_kitrtl_cmd(tree, plan, tn, kit, bind_out, asbuilt=None):
+    bind = Path(__file__).resolve().parent / "bind.py"
+    cmd = [sys.executable, "-I", "-B", str(bind), "kit-rtl", str(Path(plan).absolute()), "--out", str(bind_out), "--type", tn,
+           "--kit", str(kit), "--src-tree", str(Path(tree).absolute())]
+    if asbuilt:
+        cmd += ["--asbuilt", str(Path(asbuilt).absolute())]
+    return cmd
+
+
+def gendry_cmd(tree, plan, tn, out, sidecar=None, kit_rtl=None):
     gen = Path(__file__).resolve().parent / "gen.py"
     cmd = [sys.executable, "-I", "-B", str(gen), "phys", str(Path(plan).absolute()), "--types", tn, "--out", str(out),
            "--rtl-root", str(Path(tree).absolute()), "--trial"]
+    if kit_rtl:
+        cmd += ["--kit-rtl", f"{tn}={kit_rtl}"]
     sc = sidecar or (Path(plan).absolute().parent / "source_sidecar.json")
     if sc and Path(sc).is_file():
         cmd += ["--clock-landing", str(Path(sc).absolute())]
     return cmd
 
 
-def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None):
+def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None, elab_dir=None, asbuilt=None):
     """GENDRY-1123 lines (see the doc).  runner(cmd, cwd, timeout) -> (rc, text): injectable for tests."""
     import tempfile
     from concurrent.futures import ThreadPoolExecutor
@@ -1675,6 +1717,14 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None)
     jobs = max(1, int(env.get("OT_PRE_GENDRY_J") or 8))
     tmo = int(env.get("OT_PRE_GENDRY_TIMEOUT_S") or 1800)
     run, rest = types[:cap], types[cap:]
+    kitrtl = set(gendry_kitrtl_types(raw, run))      # GENDRY-KITRTL-1123
+    bind_out = gendry_bind_out(elab_dir) if kitrtl else None
+    out = []
+    if kitrtl and not bind_out:
+        for tn in sorted(kitrtl):
+            out.append(f"WARN GENDRY-KITRTL {tn}: kit-RTL type (no bus.leaf / contents[].bind: the kit builds it from the bound "
+                       f"RTL via bind.py kit-rtl); not generated dry without a finished error-free bind OUT (--elab-dir with bind_report.json)")
+        run = [tn for tn in run if tn not in kitrtl]
 
     def _run(cmd, cwd, timeout):
         try:
@@ -1683,12 +1733,20 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None)
         except subprocess.TimeoutExpired:
             return None, f"timeout after {timeout} s"
     runner = runner or _run
-    out = []
     with tempfile.TemporaryDirectory(prefix="pre_gendry_") as td:
         def one(tn):
             o = Path(td) / tn
             o.mkdir()
-            return tn, runner(gendry_cmd(tree, plan, tn, o, sidecar), str(Path(tree).absolute()), tmo)
+            kf = None
+            if tn in kitrtl:
+                k = Path(td) / f"{tn}.kit_rtl"
+                rc, text = runner(gendry_kitrtl_cmd(tree, plan, tn, k, bind_out, asbuilt), str(Path(tree).absolute()), tmo)
+                if rc != 0:
+                    ln = [x for x in (text or "").splitlines() if x.strip()]
+                    e = next((x for x in reversed(ln) if "ERROR" in x or "Error" in x), ln[-1] if ln else "")
+                    return tn, (rc, text if rc is None else f"bind kit-rtl ERROR: {e.strip()}")
+                kf = k / "kit_rtl.f"
+            return tn, runner(gendry_cmd(tree, plan, tn, o, sidecar, kf), str(Path(tree).absolute()), tmo)
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             res = list(ex.map(one, run))
     for tn, (rc, text) in res:
@@ -1702,7 +1760,9 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None)
             out.append(f"FAIL GENDRY {tn}: kit generator rc={rc}: {err.strip()[:400]}")
     if rest:
         out.append(f"WARN GENDRY-UNCHECKED {len(rest)} changed type(s) over the cap {cap} ($OT_PRE_GENDRY_MAX): {', '.join(rest[:12])}")
-    out.append(f"WARN GENDRY-SUMMARY {len(run)} changed type(s) generated dry, {sum(1 for x in out if x.startswith('FAIL'))} failed")
+    nk = len(kitrtl) if not bind_out else 0
+    out.append(f"WARN GENDRY-SUMMARY {len(run)} changed type(s) generated dry ({len(kitrtl) - nk} kit-RTL from the bound RTL), "
+               f"{nk} kit-RTL classified not generated, {sum(1 for x in out if x.startswith('FAIL'))} failed")
     return out
 
 
@@ -1752,7 +1812,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         _abase = _base if _base else (rb if rb else remap_base(plan, remap, baseline)[0])
         findings += check_anchordry(tree, plan, base=_abase, solve=os.environ.get("OT_ANCHORDRY_SOLVE") == "1")
     if gendry and "GENDRY" not in skip:                  # GENDRY-1123: changed types run the kit generator dry (CLI default)
-        findings += check_gendry(tree, plan, baseline, sidecar)
+        findings += check_gendry(tree, plan, baseline, sidecar, elab_dir=elab_dir, asbuilt=asbuilt)
     if "SITEGRID" not in skip:                           # SITEGRID-1123: exact bank sites on the kit site/row lattice, seconds
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import site_grid as SG
