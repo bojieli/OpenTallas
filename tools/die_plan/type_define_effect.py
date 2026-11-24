@@ -515,8 +515,10 @@ def _elab_pass(plan, ab, base, out, mem, part_of, elab_fn, load_fn, flatten_fn, 
                 if name not in allowed_all:
                     outside.setdefault(name, []).append(path)
             rec.update(added=added, variant=str(variant), changed_cells=len(all_changed),
-                       changed_by_type=dict(Counter(all_changed.values())),
-                       outside={t: sorted(set(paths))[:5] for t, paths in outside.items()},
+                       # sorted: set order follows the per-process string hash, so unsorted receipts of one
+                       # elab differed run to run (BIND-ELAB-PAR c7a proof: same content, other key order)
+                       changed_by_type=dict(sorted(Counter(all_changed.values()).items())),
+                       outside={t: sorted(set(paths))[:5] for t, paths in sorted(outside.items())},
                        no_change=no_change)
             if outside or no_change:
                 rec["verdict"] = "CONFLICT" if outside else "NO_EFFECT"
