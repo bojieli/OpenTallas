@@ -414,3 +414,4 @@ time	die	class	state	posted	text
 2026-11-24 12:44:55	qwen_kvsys	NO-ADVANCE	alert	yes	NO-ADVANCE qwen_kvsys: 1 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (kv3_pc_v1__cl4ea58a5c__r8ef700d7c x2@gen)
 2026-11-24 12:44:55	s81_head	NO-ADVANCE	alert	yes	NO-ADVANCE s81_head: 2 item(s) with 2+ attempts in 6 h ending on the same failing stage with an unchanged input digest (hd_ctl x2@kit_rtl, hd_host_w x2@kit_rtl)
 2026-11-24 12:55:21	s81	NO-PROGRESS	alert	yes	NO-PROGRESS s81: 39 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 191 min (last 09:44); 372 hold(s): 0 without eta, 147 overdue, next eta 11-24 14:00; NO-LAUNCH x22
+2026-11-24 13:25:45	qwen_compute	STUCK-STATE	alert	yes	STUCK-STATE qwen_compute: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
