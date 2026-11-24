@@ -1,0 +1,24 @@
+{
+ "advisory": [
+  "gate"
+ ],
+ "checks": {
+  "gate": {
+   "verdict": "FAIL",
+   "why": "AssertionError: duplicate approved hold id"
+  }
+ },
+ "die": "s81_head",
+ "hosts": [
+  "epyc7",
+  "epyc10",
+  "epyc9"
+ ],
+ "manifest_hash": "bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2/physical/die_plan/s81_head/prep/NF15f/prep_r18g/source_plan.json",
+ "plan_sha256": "5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1795501173.2367737,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2",
+ "verdict": "FAIL"
+}
