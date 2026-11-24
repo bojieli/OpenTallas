@@ -78,7 +78,7 @@ B1-G0-J8HOPS-6	S81-ALLFIX-SVC	rt_W1/E1_out_0..2 452-508 um	c71de97d3e91	yes	c6 8
 SVC-CUT-FACE	S81-ALLFIX-SVC	hi4 cut seams 6.19-6.40 bits/um: grow faces | SVC-FRAME-G0 v2 4be6aa5ac524 (G0 52->4); v3 pending	SVC-FRAME-G0 v3 row 928680a590ee (plan b4b7f30a43ae) + census_map_split_1 ae285f51ae77	yes	-	PASS 0/178	-	-	-	-	-	STAGED c8 (dry compose c8dry running for conflicts); SVC full G0 ETA 20:45
 ENG-HXFACE-1	S81-ALLFIX-SVC	503cbe8a158d ops; plan ff0626d19bcb	503cbe8a158d	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 SERDES-t2-RTL3	S81-ALLFIX-SVC	ENC-PW16+LPLC-MIDVLD+DCHN-KLOCK plan 6e0fb23a41fd	ENC/MIDVLD/KLOCK B1 ops	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
-ABI-RESTORE	S81-ALLFIX-INT	30 J8-ABI rtl files kept at B1 bytes in amd1_tree (xs.sv, kp4_bm.sv from main 70b6)	abi_restore.json	yes	-	-	-	-	-	-	-	INT-RULING
+ABI-RESTORE	S81-ALLFIX-INT	30 J8-ABI rtl files kept at B1 bytes in amd1_tree (xs.sv, kp4_bm.sv from main 70b6); + B1 svc_rs/dsdv_svc_mem_ar.sv 124d9bd0719a (dsdv_svc_land_mem for ENGINE ovl; LEAFBAND/DEMAND 20:14-17) E9+E11	abi_restore.json	yes	-	-	-	-	-	-	-	INT-RULING
 SVC-ENGINE-ROW	family	asbuilt 1230a5252b30 + ovl	asbuilt 1230a5252b30 + ovl	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 SVC3-BOOT-PRICE	family	sidecar 0a330b0244c6	sidecar 0a330b0244c6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 SERDES-RING-ONEGROUP	family	877bf1f92e06	877bf1f92e06	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
