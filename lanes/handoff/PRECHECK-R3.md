@@ -16,3 +16,6 @@ Job: report-only PRE checks ADV-UNSET-DEFINE + ADV-TREE-DRIFT (bind-tree RTL lag
 - main 60b6b24750: tools/die_plan/tree_precheck.py (SCHEMA-KEYS / TREE-SOURCES / TREE-FRESH), report only; bind.py runs it before elab, plan_gate_pre class TREEPRE (skipped when OT_TREE_PRECHECK_RAN=1). Tests tools/die_plan/test_tree_precheck.py.
 - c9 run (epyc9 runs/tp.otrun.log): 6 unknown keys vs tree 4484ee80a819 and rt 69de849b3da1; amd1_tree fork source epyc10 gone; c8seal_tree fresh.
 - Open: rerun on c9seal_tree (E11) once forked.
+
+## 11-24 13:06 PST GENDRY-STOPITER landed main 1fc2d02b43
+- PRE GENDRY sidecar = as-built clock_landing_table (gendry_sidecar); landing_place LandingSourceUnmodeled -> WARN GENDRY-UNMODELED. Repro epyc11 PRECHECK-R3/gdry_sc.sh rc 0 both hubs.
