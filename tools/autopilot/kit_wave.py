@@ -313,6 +313,15 @@ NOT_RUN_FREE_MAX = 8
 # FLOW-OPS-1300 item 9: ot-run's own NOT-RUN lines (disk-ETA hold, no host with --dir has N GB, KW_PLACE_RC=78 = ot-run EX_CONFIG refusal) and a restaged unstarted waiter
 INFRA_RETRY_RE = re.compile(r"(?m)^NOT-RUN\b[^\n]*|ot-run: NOT RUN: no host with --dir has[^\n]*|NOT-RUN disk-ETA hold[^\n]*|^KW_PLACE_RC=78\b|restaged: unstarted ot-run waiter[^\n]*")
 INFRA_RETRY_BACKOFF_S = (900, 1800, 3600)
+# PROBE-TIMEOUT-1124 (COORD flow review: 14:29:44 a 60 s `systemctl --user is-active kwp-*` TimeoutExpired killed 8 KV-A5t5 items, filed
+# FLOW[design:pipeline] with a fail_key; intel2 had 774 user units, 275 failed): a subprocess TimeoutExpired of a systemctl / ssh probe is the
+# host's, never the design's -> INFRA, requeued uncharged with backoff (infra_retry_sweep kind 'probe-timeout'), no fail_key
+PROBE_TIMEOUT_RE = re.compile(r"TimeoutExpired: Command '\[?'(?:systemctl|ssh|timeout'?, '\d+'?, '?ssh)\b[^\n]*")
+
+
+def probe_timeout_line(s):
+    m = PROBE_TIMEOUT_RE.search(s or "")
+    return m.group(0)[:300] if m else None
 
 
 # FETCH-RACE (COORD 11-22): ot-job refused before its command started (an input fetch failed, an input not in the store) under a wrapper that
@@ -343,6 +352,8 @@ def infra_retry_kind(rec):
     ms = list(INFRA_RETRY_RE.finditer(txt))
     if ms and "ot-run: RAN on" not in txt[ms[-1].end():]:
         return "not-run"
+    if probe_timeout_line(str(rec.get("reason") or "")):
+        return "probe-timeout"                # PROBE-TIMEOUT-1124: a systemctl / ssh probe timed out in the driver
     mj = list(OTJOB_PRESTART_RE.finditer(txt))
     if mj and not re.search(r"KW_PLACE_RC=0\b|ot-job: (?:RAN|DONE)\b", txt[mj[-1].end():]):
         return "not-run"
@@ -372,6 +383,19 @@ def infra_retry_sweep(AP, cfg, st, now=None, write=True):
                      reason=f"INFRA-RETRY ({kind}: the command never started; requeued in {back // 60} min, not an attempt): {str(r.get('reason') or '')[:200]}")
             AP.log(f"KIT-WAVE INFRA-RETRY {r.get('die')}/{r.get('item')}@{r.get('attempt')} ({kind}): requeued, backoff {back // 60} min, free requeue {n + 1}/{NOT_RUN_FREE_MAX}")
     return out
+
+
+def unit_probe(unit, timeouts=(60, 120, 240), pause_s=15):
+    """PROBE-TIMEOUT-1124: `systemctl --user is-active UNIT` -> its state word, retried with growing timeouts and a pause between tries
+    (a host with hundreds of user units answers slowly); None when every try timed out (unknown: the caller keeps waiting)"""
+    for k, t in enumerate(timeouts):
+        try:
+            return (subprocess.run(["systemctl", "--user", "is-active", unit], capture_output=True, text=True, timeout=t).stdout or "").strip()
+        except subprocess.TimeoutExpired:
+            print(f"KW_PROBE_TIMEOUT systemctl is-active {unit} after {t} s (try {k + 1}/{len(timeouts)})", flush=True)
+            if k + 1 < len(timeouts):
+                time.sleep(pause_s * (k + 1))
+    return None
 
 
 def tool_not_run(text):
@@ -4200,6 +4224,7 @@ HOST_ENV_RE = re.compile(r"No such image|Unable to find image|image not found|pu
                          r"(?:PDK|platform) \S+ (?:is )?(?:missing|not found) on", re.I)
 
 RULES = [
+    ("INFRA", None, probe_timeout_line, "INFRA-RETRY (probe timeout: a systemctl / ssh call of the wave driver timed out; requeued with backoff, not an attempt)"),
     ("INFRA", None, lambda s: (HOST_ENV_RE.search(s).group(0) if HOST_ENV_RE.search(s) else None), "host environment (image / PDK / docker tool missing, disk full): retry on another host"),
     # FLOW-OPS-1300 item 9 (COORD, QC slw_fw_v3 KW_PLACE_RC=78 'NOT-RUN disk-ETA hold', slw_stm_v2__cl9beb65e6 'no host with --dir has 60 GB'): ot-run refused to START the
     # command (no ot-run: RAN on line): INFRA-RETRY, requeued with backoff and not counted (free_not_run / infra_retry_sweep)
@@ -11080,15 +11105,14 @@ def run_item(spec_path):
         logs.append("place")
         logf = Path(svc["log"])
         while True:
-            act = subprocess.run(["systemctl", "--user", "is-active", svc["unit"]], capture_output=True, text=True,
-                                 timeout=60)
+            act = unit_probe(svc["unit"])       # PROBE-TIMEOUT-1124: retried with backoff; None = still unknown, keep waiting
             txt = logf.read_text(errors="replace") if logf.exists() else ""
             rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", txt)
             if rcs:
                 (out / "place.log").write_text(txt)
                 print(f"KW_STAGE_RC place {rcs[-1]} (client ended)", flush=True)
                 return int(rcs[-1]), txt, None
-            if (act.stdout or "").strip() not in ("active", "activating", "reloading"):
+            if act is not None and act not in ("active", "activating", "reloading"):
                 txt += ("\nKW_PLACE_LOST: the PLACE service unit ended without a terminal rc; its kit and any proof "
                         "owner are kept, no duplicate PLACE/proof is launched\n")
                 (out / "place.log").write_text(txt)
