@@ -34218,3 +34218,4 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   - The macro coll_i (514 M4) and coll_o (512 M6) pins span the whole W edge, y 849-1311.
   - So about 1000 nets funnel through that corner of the 65 um W channel.
   Row (by 20:00): re-band coll_i1 along the macro W pin span (bands.coll_i1 rects_um/fill_axis y, midway between pin and macro, every hop under 405 um). If that is insufficient, widen the W channel.
+- 2026-11-23 17:42 PST DONE [FLOW-OPS-R3] ot-run oth-ubuntu-4055397-1795484425 on loved-redfish: rc=0 after 153 s, ended 01:42:55, log none, cmd: --hosts epyc7 --mem 24 --threads 2 --disk 4 --dir /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp -- bash /srv/opentallas-scratch2/claude/FL

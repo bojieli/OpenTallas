@@ -40,3 +40,4 @@
 - 2026-11-23 17:31 PST DONE [FLOW-OPS-R3] ot-push-main otpush-civil-redfish-3314631 on civil-redfish: rc=0 after 50 s, ended 01:31:15, log /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp/push.out, cmd: ot-push-main 
 - 2026-11-23 17:36 PST DONE [FLOW-OPS-R3] ot-run oth-ubuntu-3964502-1795484074 on loved-redfish: rc=0 after 142 s, ended 01:36:53, log none, cmd: --hosts epyc7 --mem 24 --threads 2 --disk 4 --dir /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp -- bash /srv/opentallas-scratch2/claude/FL
 - 2026-11-23 17:42 PST DONE [FLOW-OPS-R3] ot-push-main otpush-civil-redfish-3498535 on civil-redfish: rc=0 after 244 s, ended 01:42:12, log none, cmd: ot-push-main 
+- 2026-11-23 17:42 PST DONE [FLOW-OPS-R3] ot-run oth-ubuntu-4055397-1795484425 on loved-redfish: rc=0 after 153 s, ended 01:42:55, log none, cmd: --hosts epyc7 --mem 24 --threads 2 --disk 4 --dir /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp -- bash /srv/opentallas-scratch2/claude/FL
