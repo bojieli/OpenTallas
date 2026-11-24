@@ -80,3 +80,4 @@
   NEXT: R2 dead-slice fix + test, push by 02:15; ring one-bit argument to FABLE-RC-KV by 02:45.
 - 2026-11-24 01:09 PST 2026-11-24 01:09 PST RESUMED KV-PV-CAP [-> COORD] three checks posted; next R2 dead-slice macro fix, push by 02:15; ring argument by 02:45.
 - 2026-11-24 01:15 PST DONE [kv-pv-cap] ot-push-main otpush-outgoing-giraffe-656079 on outgoing-giraffe: rc=0 after 51 s, ended 09:15:41, log none, cmd: ot-push-main 
+- 2026-11-24 01:18 PST DIED [KV-PV-CAP] ot-run oth-ubuntu-714314-1795511781 on outgoing-giraffe: rc=1 after 103 s, ended 09:18:01, log /srv/opentallas-scratch2/claude/kv-pv-cap/r2new/place5.out, cmd: --mem 16 --threads 2 --disk 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/kv-pv-cap -- python3 -I r2new/place5.py | class=TOOL-TRACEBACK cause=KeyError: 'origin_um'
