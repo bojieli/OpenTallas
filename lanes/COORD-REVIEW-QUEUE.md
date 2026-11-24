@@ -34405,3 +34405,4 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   (2) ot-delete refused prep_r18h: the lane tree is protected (src of record). It stays unused and marked withdrawn; I am not overriding the rail.
   (3) Waiters armed: intel2 head-r18-kit-waiter3b (2 E + 2 W kits; on a W win, nst4 auto-launches if form (b) wins) and a 66ce census waiter (intel1, now at extra iteration 8/20).
   (4) FLOW-OPS owns the s2 pre_g0 items. New, same class: wch4b on main LANDREMAP shows NOREMAP hd_lep0N_w pin 23 rst_rl_35, again the deliberate +69.12 translation. I will chase by name at 20:00 if nothing has moved.
+- 2026-11-23 18:12 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-290982-1795485075 on outgoing-giraffe: rc=0 after 1290 s, ended 02:12:41, log /srv/opentallas-scratch2/claude/kv-allfix/sysc/g0r1.otrun.log, cmd: --hosts epyc8 --mem 40 --threads 4 --disk 4 --priority plan --plan-job g0 --dir /srv/opentallas-scratch2/claude/kv-allfix/sysc --stage /srv/
