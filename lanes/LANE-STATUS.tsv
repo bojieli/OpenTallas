@@ -180,3 +180,4 @@ RESET-HOLD-SWEEP	stood-down	COORD	2026-11-24	02:01 PST | report-only sweep done:
 PRE-QC-GENCHECK	stood-down	none	2026-11-24	02:50 PST | scope done: ENTRYFOOT+STALE-EXPORT-TAP+GENDRY fixes on main 6490dc4988ae; die hits posted
 QC-GLUE-PADBIND	stood-down	QC-ALLFIX	2026-11-24	03:32 PST | done: TOOL-FIX 5fb98c7e56 + 411c2474e4 (GENDRY pad classifier + launch-tree src)
 QC-HC1-CLKENTRY	stood-down	SEAT-MATCH-AUDIT	2026-11-24	03:54 PST | census posted 03:51; row not adopted per COORD; bank residual = SEAT-MATCH-AUDIT re-key
+QC-RSN-PROBE	stood-down	QC-ALLFIX	2026-11-24	05:06 PST | RSN probe done: lift per COORD (a); r5 GRT dead, no live units; QC-ALLFIX launches RSN from C1h
