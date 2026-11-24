@@ -493,6 +493,7 @@ class Graph:
                 if not isinstance(b, str) and d == "input":
                     self.top_in[b] = (pn, i)
         self._src = {}
+        self.open_rule_inputs = set()     # (path, module, port): absent rule input read by a load
 
     def _rule_dirs(self, c, k, sp, d):
         if k == "transport":
@@ -595,7 +596,12 @@ class Graph:
                 if ip is None:
                     res = ("dropped", self.pin(ci, pn))
                 else:
-                    ib = c.ports[ip]
+                    ib = c.ports.get(ip)
+                    if ib is None:
+                        # BIND-UNDRIVEN-IN 11-24: the rule's input port is absent on the as-built instance (was a
+                        # KeyError crash); its bits read as open, like bits beyond a narrow connection
+                        self.open_rule_inputs.add((c.path, c.module, ip))
+                        ib = []
                     if sp.get("replicate") and ib:
                         bit = bit % len(ib)     # q = {N{d}} (station fan-out copies / landing ring slots)
                     up = self.source(ib[bit] if bit < len(ib) else "z", depth + 1)
@@ -1737,6 +1743,7 @@ class Binder:
                         continue
                     s = self.rewire.get((ci, pn, i)) or G.source(b)
                     self.sinks[(ci, pn, i)] = self._classify(p, ci, pn, i, s, cnt)
+        self.open_input_report()
         self.counts = dict(cnt)
         if self.pc:
             self.pc.apply_sinks()
@@ -1782,6 +1789,65 @@ class Binder:
                 res = {pn: None for pn in rec[0]}
         memo[key] = res
         return res
+
+    def open_input_report(self):
+        """BIND-UNDRIVEN-IN 11-24 (report-only per r703): absent input ports of transport / reducer / source rule cells
+        (a relay ck as well as a data input: a data port the rule reads was a KeyError crash, its bits now read open)
+        and inputs left open inside leaf bodies.  Warnings and bind_open_inputs.json only; no error, no count."""
+        G, F = self.G, self.F
+        self.open_inputs_rule = []
+        for ci, c in enumerate(F.cells):
+            if G.kind[ci] not in ("transport", "reducer", "source"):
+                continue
+            want = set(self._leaf_input_widths(c) or {})
+            sp = G.spec[ci] or {}
+            # no RTL interface (an undefined master): the rule's own declared inputs are the expectation
+            want |= set(sp.get("drop_in", []))
+            if G.kind[ci] == "transport":
+                want |= {_tmap(sp, pn) for pn in c.ports if _tmap(sp, pn)}
+            absent = sorted(pn for pn in want if pn not in c.ports)
+            if absent:
+                self.open_inputs_rule.append(dict(path=c.path, module=c.module, kind=G.kind[ci], ports=absent))
+        for path, mod, pn in sorted(getattr(G, "open_rule_inputs", ())):
+            if not any(r["path"] == path and pn in r["ports"] for r in self.open_inputs_rule):
+                self.open_inputs_rule.append(dict(path=path, module=mod, kind="transport", ports=[pn]))
+        if self.open_inputs_rule:
+            ex = "; ".join(f"{r['path']}.{','.join(r['ports'][:3])} ({r['module']})" for r in self.open_inputs_rule[:3])
+            self.warns.append(f"OPEN_RULE_INPUT {len(self.open_inputs_rule)} transport/reducer/source cell(s) with an "
+                              f"absent input port (report-only, bind_open_inputs.json rule_cells): {ex}")
+        self.open_inputs_nested = []
+        if os.environ.get("OT_BIND_NESTED_OPEN", "1") != "0":
+            try:
+                self._nested_open_inputs()
+            except Exception as exc:        # report-only: never stops a bind
+                self.warns.append(f"OPEN_INPUT_NESTED not checked: {type(exc).__name__}: {str(exc)[:200]}")
+
+    def _nested_open_inputs(self):
+        """BIND-UNDRIVEN-IN 11-24 (report-only per r703): instance inputs left open INSIDE leaf bodies, by a text scan
+        of the selected sources (leaf_body_open_inputs.py).  Per bound type, deduplicated by leaf master."""
+        import leaf_body_open_inputs as LB
+        if not hasattr(self, "_liw_idx"):
+            self._leaf_input_widths(E.Cell("", "", {}, {}, {}, "leaf", ""))
+        pick = lambda m: (self._liw_pick.setdefault(m, E.pick(self._liw_idx, m, self._liw_pref)[0])
+                          if m not in self._liw_pick else self._liw_pick[m])
+        sc = LB.Scanner(pick, self.ab.get("defines", []))
+        seen = set()
+        for ci in sorted(self.cpart):
+            c = self.F.cells[ci]
+            if self.G.kind[ci] != "leaf":
+                continue
+            tn = self.parts[self.cpart[ci]]["type"]
+            if (tn, c.module) in seen:
+                continue
+            seen.add((tn, c.module))
+            for rel, child, pn in sc.hits(c.module):
+                self.open_inputs_nested.append(dict(type=tn, leaf=c.module, example=c.path, inst=rel, module=child,
+                                                    port=pn))
+        self.open_inputs_nested_unjudged = sorted(set(sc.unjudged))[:2000]
+        if self.open_inputs_nested:
+            ex = "; ".join(f"{r['type']} {r['leaf']}.{r['inst']}.{r['port']}" for r in self.open_inputs_nested[:3])
+            self.warns.append(f"OPEN_INPUT_NESTED {len(self.open_inputs_nested)} input port(s) left open inside leaf "
+                              f"bodies (report-only, presence only, bind_open_inputs.json nested): {ex}")
 
     def open_input_audit(self, cnt, plan_rw=frozenset()):
         """BIND-UNDRIVEN-IN 11-23 (FABLE-RC-QC ruling (2)): every input bit of every bound leaf instance has a driver.
@@ -6392,6 +6458,8 @@ def cmd_bind(a):
     _fresh_write_text(out / "bind_open_inputs.json", json.dumps(
         dict(schema="opentallas.bind_open_inputs.v1", undriven=getattr(B, "open_inputs", []),
              unjudged=getattr(B, "open_inputs_unjudged", [])[:5000],
+             rule_cells=getattr(B, "open_inputs_rule", []), nested=getattr(B, "open_inputs_nested", []),
+             nested_unjudged=getattr(B, "open_inputs_nested_unjudged", []),
              n_undriven=sum(r["n"] for r in getattr(B, "open_inputs", [])),
              **{k: B.counts.get("open_input_" + k, 0) for k in ("dead", "bump", "tied")}), indent=1) + "\n")
     _fresh_write_text(out / "bind_declared_ties.json", json.dumps(

@@ -150,3 +150,66 @@ def test_declared_tie_on_an_omitted_input_is_emitted(tmp_path):
     body = (out / "rtl" / "bt_ta.sv").read_text()
     i = body.index("lf_b u_u_b")
     assert ".id(" in body[i:i + 600], body[i:i + 600]
+
+
+# ---- BIND-UNDRIVEN-IN 11-24: report-only coverage (rule cells, leaf bodies)
+import leaf_body_open_inputs as LB  # noqa: E402
+
+PARENT = """module child (input wire clk, input wire [7:0] uid, input wire en, output wire q);
+ assign q = en;
+endmodule
+module mid (input wire clk, output wire q);
+`ifdef WITH_UID
+ child u_c (.clk(clk), .uid(8'd0), .en(1'b1), .q(q));
+`else
+ child u_c (.clk(clk), .en(), .q(q));
+`endif
+endmodule
+module top_leaf (input wire clk, output wire q, output wire r);
+ mid u_m (.clk(clk), .q(q));
+ child u_p (clk, 8'd0, 1'b1, r);
+endmodule
+"""
+
+
+def scanner(tmp_path, defines=()):
+    f = tmp_path / "p.sv"
+    f.write_text(PARENT)
+    return LB.Scanner(lambda m: str(f) if m in ("child", "mid", "top_leaf") else None, defines)
+
+
+def test_nested_open_inputs_found_through_hierarchy(tmp_path):
+    sc = scanner(tmp_path)
+    assert sorted(sc.hits("top_leaf")) == [("u_m.u_c", "child", "en"), ("u_m.u_c", "child", "uid")]
+    assert sc.unjudged == ["top_leaf.u_p (child)"]          # positional: not judged
+
+
+def test_nested_follows_the_manifest_defines(tmp_path):
+    assert scanner(tmp_path, ["WITH_UID"]).hits("top_leaf") == []
+
+
+def tiny_graph(tmp_path, drop):
+    """the tiny example elaborated, one as-built connection removed, bound up to analyse"""
+    p = json.loads((EX / "die_plan.json").read_text())
+    p["asbuilt"]["base"] = str(EX)
+    plan = tmp_path / "die_plan.json"
+    plan.write_text(json.dumps(p))
+    out = tmp_path / "e"
+    out.mkdir()
+    E.elab(p["asbuilt"], str(EX), str(out), 4)
+    y = json.loads((out / "asbuilt.json").read_text())
+    inst, port = drop
+    y["modules"][p["asbuilt"]["top"]]["cells"][inst]["connections"].pop(port)
+    B = bind.Binder(bind.load_plan(str(plan)), y, plan.parent, str(EX))
+    B.map_cells()
+    B.analyse()
+    return B
+
+
+@pytest.mark.skipif(not HAVE_YOSYS, reason="no Yosys")
+@pytest.mark.parametrize("drop", [("rly0", "ck"), ("rly0", "a"), ("rst_rep0", "d")])
+def test_rule_cell_absent_input_is_reported_not_crashing(tmp_path, drop):
+    B = tiny_graph(tmp_path, drop)
+    assert [r["ports"] for r in B.open_inputs_rule if r["path"] == drop[0]] == [[drop[1]]]
+    assert any(w.startswith("OPEN_RULE_INPUT 1 ") for w in B.warns)
+    assert not any("UNDRIVEN_OPEN" in e for e in B.errors)

@@ -25,8 +25,10 @@ def scan(plan_path, bind_dir, asbuilt=None):
     plan_rw = B.pc.rewired_keys() if B.pc else set()
     cnt = defaultdict(int)
     B.open_input_audit(cnt, plan_rw)
+    B.open_input_report()
     return dict(schema="opentallas.bind_open_inputs.v1", plan=str(plan_path), bind_dir=str(bind_dir),
-                undriven=B.open_inputs, unjudged=B.open_inputs_unjudged,
+                undriven=B.open_inputs, unjudged=B.open_inputs_unjudged, rule_cells=B.open_inputs_rule,
+                nested=B.open_inputs_nested, nested_unjudged=getattr(B, "open_inputs_nested_unjudged", []),
                 n_undriven=cnt.get("open_input", 0), n_leaf=sum(1 for c in B.cpart if B.G.kind[c] == "leaf"),
                 n_input_bits=sum(w or 0 for c in B.cpart if B.G.kind[c] == "leaf"
                                  for w in (B._leaf_input_widths(B.F.cells[c]) or {}).values()),
@@ -49,6 +51,11 @@ def main(argv=None):
         print(e)
     print(f"leaves {r['n_leaf']} input bits examined {r['n_input_bits']}; undriven {r['n_undriven']} on {len(r['undriven'])} "
           f"pins; dead {r['dead']} bump {r['bump']} tied {r['tied']} derived {r['derived']} source_leaf {r['source_leaf']}; unjudged {len(r['unjudged'])}")
+    for c in r["rule_cells"]:
+        print(f"RULE_CELL {c['path']} ({c['module']}, {c['kind']}): absent inputs {c['ports'][:8]}  [report-only]")
+    for x in r["nested"]:
+        print(f"NESTED {x['type']} {x['leaf']}.{x['inst']} ({x['module']}).{x['port']} open  [report-only]")
+    print(f"report-only: rule cells {len(r['rule_cells'])}, nested {len(r['nested'])} (unjudged {len(r['nested_unjudged'])})")
     return 1 if r["n_undriven"] else 0
 
 
