@@ -1,0 +1,1 @@
+- 2026-11-23 21:11 PST TAKING INV-PER-FLOP (advisory, 21:11 PST): why ~40% of kv3_pv netlist is one inverter per flop; count on S81/QC/HEAD/KV from existing netlists; propose fix. cc FABLE-RC-KV FLOW-OPS-R3. ETA 22:20 PST.
