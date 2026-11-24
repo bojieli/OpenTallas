@@ -190,6 +190,11 @@ ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): pl
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
   --skip ADVISORY or OT_PLAN_ADVISORY=off leaves them out.
 
+COMPOSEDROP (COMPOSE-GUARD-1124, QC-COMPOSE-GUARD / COORD 11-24; QC C1k lost the QC-OPEN-STA r10 st_a row): with --baseline-plan
+  (the previous event's plan), every plan path the baseline carries and this plan lacks or holds null (dict keys; list elements with a
+  unique name / conn / inst / id) is listed by group: compose_drop_guard.py.  WARN only (r703 report-only); OT_COMPOSE_DROP=fail makes
+  it a FAIL; $OT_COMPOSE_DROP_LIST names the intended drops (fnmatch patterns over the dotted path).  Reverts to an older plan and lost
+  private rows need the full tool: compose_drop_guard.py PREV NEW --history OLDER... --row NAME=BASE:ROW --drop-list FILE (rc 1).
 Exit 0 = clean, 1 = at least one FAIL, 2 = usage / unreadable input.  Library: check(...) returns (findings, info).
 """
 import argparse
@@ -207,7 +212,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY", "COMPOSEDROP")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -2190,6 +2195,15 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     _pt.mark("GEOM")
     if "GEOM" not in skip:
         findings += check_geom(plan, halo, strict_cores, baseline)
+    _pt.mark("COMPOSEDROP")
+    if "COMPOSEDROP" not in skip and baseline:          # COMPOSE-GUARD-1124: baseline rows the plan silently lost (WARN, r703)
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import compose_drop_guard as CDG
+            findings += CDG.findings_for_pre(_load(baseline), _load(plan), os.environ.get("OT_COMPOSE_DROP_LIST") or None,
+                                             "FAIL" if os.environ.get("OT_COMPOSE_DROP") == "fail" else "WARN")
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself
+            findings.append(f"WARN COMPOSEDROP not checked: {type(e).__name__}: {str(e)[:200]}")
     _pt.mark("LANDREMAP")
     if "LANDREMAP" not in skip:                          # LANDREMAP-1122: seconds, before any bind
         findings += check_landremap(plan, rb, tree=tree)
