@@ -27,3 +27,9 @@ Job: lec.py LEC-FILL-AUTO (fill_proposals/auto_fill, OT_LEC_AUTO_FILL default on
 - Adopted live: E9 hc3 1813762 (k/hc3_pvfd488b8f_targeted), E9 c790 1938754 (k/hc3_c790_exact = counted c7902930b0a3), E9 rxsb 2467459 (k/rxsb_rc64_codex), intel1 pvcca 3818294 (k/hc3_pvcca_827_exact), intel1 coll_s 3851120 (k/colls_epoch_guard); E11 hd_mesh_relay_alias_rev client pid 1840609 (CPU-charge queue). Clients all on epyc11 (ot-wait <unit> there).
 - Terminal: CALR 2770392 rc0 (LANEAGE-SWEEP witness, not LEC count). IKW export done 07:45 RTX-FULL; signed-store ingest 08:35, count 09:05 picks it up.
 - Promotion = remove PENDING-LEC row in lanes/COUNT-REVOKED.tsv + EQUIVALENT row in lanes/RELEC-1122.tsv (pattern b963c0b0236). Keep t40 c01b49be73a8 revoked.
+
+## 11-24 10:4x
+- PROMOTED pvcca9ff41 (22ee41) + pvfd488b8f (291c25) hub d4cb8f8. NOT-EQ kept: hc3 5fe05a rebuild (6 b_emin), RXSB rc64 65 pts u_sq, coll_s 20+1.
+- COORD LEC-DETERMINISM: pushed main 3b9462e9eba (lec.py re-execs with PYTHONHASHSEED=0, sorted merged_proposals frozenset loops, lec.json hash_seed; test_lec_hash_seed.py). 3 identical-netlist runs on E9: r/det_hc3_run{1,2,3} (client pids 4192109/15/23, tools tmp/det = commit 6c74664dec). Compare failing sets when done.
+- Paired-sibling census scan: scratchpad ps_scan.sh per host (lec.log since 11-20 with nonzero paired sibling closure).
+- hd_mesh relaunched E11 client pid 1258058, hints_in.json, log otrun2.log.
