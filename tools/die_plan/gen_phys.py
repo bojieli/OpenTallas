@@ -7505,6 +7505,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             zlp_rec = _ZLK.apply_ports_kit(kd / "rtl", t["module"], zlk_spec["ports"], zlk_spec.get("clk", "clk"))
             (kd / "zl_ports.json").write_text(json.dumps(zlp_rec, indent=1) + "\n")
             print(f"gen phys: type {tn}: OT_ZL_PORTS {json.dumps(zlp_rec)}")
+    # KV-PV-CAP 11-23 (plan partition_types[t].dly_alt_pol, kit_dly_ap.py; absent = nothing): ot_dp_dly lines (D >= 2) of the
+    # staged bound RTL stored at alternating polarity, so the QN-only ASAP7 flops need no inverter between stages (cycle-exact,
+    # same instance/register names; LEC kit RTL vs netlist).  After every pass that parses or splits the delay lines.
+    import kit_dly_ap as _KDA
+    if _KDA.cfg_of(t):
+        dap_rec = _KDA.apply_kit(kd / "rtl", _KDA.cfg_of(t))
+        (kd / "dly_ap.json").write_text(json.dumps(dict(cfg=_KDA.cfg_of(t), files=dap_rec), indent=1) + "\n")
+        print(f"gen phys: type {tn}: OT_DLY_AP " + json.dumps(dap_rec))
     if rls_cells is not None:
         append_new_src(srcs, f"/work/rtl/{rls_cells.name}")
     # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N

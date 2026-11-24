@@ -1678,6 +1678,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
         "max_macros": {"type": "integer", "minimum": 0}, "max_resid": {"type": "integer", "minimum": 0},
         "keepout_um": {"type": "array", "items": {"type": "array", "minItems": 4, "maxItems": 4,
                                                   "items": {"type": "number"}}}}}
+# KV-PV-CAP 11-23 (kit_dly_ap.py): ot_dp_dly delay lines of the type stored at alternating polarity at GEN (no inverter between
+# stages on QN-only flops); true = defaults (min_d 2); absent = unchanged kits
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["dly_alt_pol"] = {
+    "oneOf": [{"type": "boolean"}, {"type": "object", "additionalProperties": False,
+                                     "properties": {"min_d": {"type": "integer", "minimum": 2}}}]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_depth"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["inst", "D"],
         "properties": {"inst": {"type": "string", "minLength": 1}, "port": {"type": "string"},

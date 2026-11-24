@@ -6591,6 +6591,23 @@
        }
       }
      },
+     "dly_alt_pol": {
+      "oneOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "min_d": {
+          "type": "integer",
+          "minimum": 2
+         }
+        }
+       }
+      ]
+     },
      "relay_depth": {
       "type": "array",
       "items": {
