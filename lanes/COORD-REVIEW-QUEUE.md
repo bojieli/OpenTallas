@@ -35582,3 +35582,4 @@ FAILED [AUTOPILOT d3713b2dce04] 2026-11-23 20:43:00 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 21:00 PST CANARY qwen_compute @ 08da0a0754: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-23 21:00 PST DONE [PRECHECK-LEDGER-R3] ot-push-main otpush-tolerant-swine-1936829 on tolerant-swine: rc=0 after 16 s, ended 21:00:12, log none, cmd: ot-push-main 
+- 2026-11-23 21:00 PST ALERT NO-PROGRESS s81: 27 candidate rows before launch checks, 0 KIT-WAVE LAUNCH for 611 min (last 10:49); 372 hold(s): 0 without eta, 368 overdue, next eta 11-24 12:00; NO-LAUNCH x99
