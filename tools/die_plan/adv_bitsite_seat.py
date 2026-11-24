@@ -73,6 +73,23 @@ def check_row(e, tol):
     return ("SEAT", bad, len(bs)) if bad else None
 
 
+NOSITE_RE = os.environ.get('OT_ADV_BITSITE_NOSITE_RE', 'st_b_v2')    # types whose NOSITE line is printed (census confirmed 41-61 types share the pattern, only these are known bad)
+NOSITE_BITS = 1000    # a type whose internal station rows WITHOUT exact sites total >= this is listed (QC sle_st_b_v2 C1g: 3 rows / 1427 bits)
+
+
+def nosite_bits(t):
+    """(unsited bits, unsited rows, rows) of one type's internal_stations: rows with regs_um but no bit_sites_um / face_bit_sites_um"""
+    bits = n = rows = 0
+    for e in t.get("internal_stations") or []:
+        if not isinstance(e, dict) or not e.get("regs_um"):
+            continue
+        rows += 1
+        if not (e.get("bit_sites_um") or e.get("face_bit_sites_um")):
+            n += 1
+            bits += int(e.get("bits") or 1)
+    return bits, n, rows
+
+
 def seated_map(raw, tol):
     """{(type, key): {stage j: dist}} for every ft slot / row with exact sites (baseline: which stages WERE seated)"""
     m = {}
@@ -134,10 +151,26 @@ def _findings(raw, plan_path, tree=None, **kw):
         out.append((worst + 1000 * len(cnt), _w(f"{tn}: {len(seat)} slot/row(s) with stations off their bit sites ({sum(len(x[1][1]) for x in seat)} stages, worst {worst:.0f} um at "
                     f"{w[0] if w else '-'} stage {max(w[1][1], key=lambda z: z[1])[0] if w else '-'}), {len(cnt)} with a wrong stage count"
                     f"{' (' + cnt[0][0] + ': ' + cnt[0][1][1][:90] + ')' if cnt else ''}; the station moved and its exact sites stayed; fix: re-seat bit_sites_um on regs_um")))
+    nobit = float(kw.get("nosite_bits") or os.environ.get("OT_ADV_BITSITE_NOSITE_BITS") or NOSITE_BITS)
+    nos = []
+    for tn, t in sorted(types.items()):
+        if not isinstance(t, dict) or (used and tn not in used):
+            continue
+        b, n, rows = nosite_bits(t)
+        has_exact = any(isinstance(x, dict) and x.get("bit_sites_um") for x in t.get("ft_slots") or []) or \
+            any(isinstance(x, dict) and (x.get("bit_sites_um") or x.get("face_bit_sites_um")) for x in t.get("internal_stations") or [])
+        if b >= nobit and has_exact:                          # MIXED: the type pins some stations by exact sites and leaves 1000+ bits to the placer
+            nos.append((b, tn, n, rows))
+    nos.sort(reverse=True)
+    import re as _re
+    rx = _re.compile(str(kw.get('nosite_re') or NOSITE_RE))
+    for b, tn, n, rows in [x for x in nos if rx.search(x[1])][:MAX_LINES]:
+        out.append((-1, _w(f"{tn}: NOSITE {n} of {rows} internal station row(s) have no exact bit sites ({b:,} bits, bit_route per_bit) while the type's other stations DO have exact sites: the placer picks these and can fold the relay chains "
+                            f"(QC sle_st_b_v2 C1g: 28 paths > 405 um, empty taps); the same mixed form is in {len(nos)} types, so only types matching /{rx.pattern}/ (the known bad ones) are printed; a type with NO exact sites anywhere is normal and not counted")))
     out.sort(key=lambda x: -x[0])
-    lines = [m for _, m in out[:MAX_LINES]]
+    lines = [m for _, m in out[:MAX_LINES * 2]]
     lines.append(_w("summary", f"{ntypes} type(s) flagged, {nbad} stage(s) farther than {strong_um:g} um from their station (+{nweak} between {tol:g} and {strong_um:g} um, counted only), "
-                               f"{ncount} stage-count error(s) (thresholds are my pick, not a plan rule){'; MOVED-SINCE-BASELINE only (stages seated in the baseline, off now)' if bmap is not None else '; no baseline: includes stages that were already off'}"))
+                               f"{ncount} stage-count error(s), {len(nos)} type(s) with >= {nobit:g} unsited station bits (NOSITE, printed only for /{rx.pattern}/) (thresholds are my pick, not a plan rule){'; MOVED-SINCE-BASELINE only (stages seated in the baseline, off now)' if bmap is not None else '; no baseline: includes stages that were already off'}"))
     return lines
 
 

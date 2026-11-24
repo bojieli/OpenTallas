@@ -32,3 +32,15 @@ def test_incore_row_stage_count_and_seat():
 
 def test_never_raises():
     assert A.findings(None, "p")[0].startswith("WARN ADV-BITSITE-SEAT not checked")
+
+
+def test_nosite_counts_unsited_rows_and_needs_mixed_form():
+    t = {"internal_stations": [{"conn": "bus:a", "regs_um": [[1, 1]], "bits": 257, "bit_route": "per_bit"},
+                               {"conn": "bus:b", "regs_um": [[1, 1]], "bits": 653, "bit_route": "per_bit"},
+                               {"conn": "bus:c", "regs_um": [[1, 1]], "bits": 517, "bit_route": "per_bit"}]}
+    assert A.nosite_bits(t) == (1427, 3, 3)                       # QC sle_st_b_v2 on C1g
+    raw = {"partition_types": {"sle_st_b_v2__x": dict(t, ft_slots=[{"name": "s", "bit_sites_um": [[[0, 0]]]}]),
+                               "other_all_unsited": dict(t)}}
+    out = A.findings(raw, "p")
+    assert any("sle_st_b_v2__x: NOSITE 3 of 3" in x for x in out)
+    assert not any("other_all_unsited" in x for x in out)         # no exact sites anywhere = normal form
