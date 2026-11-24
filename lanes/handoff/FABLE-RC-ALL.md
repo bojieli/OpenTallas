@@ -53,3 +53,4 @@ Die lanes for rejections / no-row gaps: S81-J9-ASSEMBLY-R6, S81-LEAF-J9, S81-SLI
 - 18:44 KV-ALLFIX CORRECTION: A1b 59 kits never reached place (KIT_TOPOLOGY_BIND_STALE); relaunch all types on A2c (strict ~19:55) or A2d (~20:15); probes before 21:30. KV review round is on A2c/A2d kits, not A1b.
 - 18:53 TTCTLM: placement route + output-stage overlay both dropped; cause = logic depth in generated Native32 constructor (CODEX-TOKEN depth cap + retime); my output-stage suggestion withdrawn. tt_ctlm held.
 - 19:20 COORD accepted COL-P5-FSTART1 12 ANCHORDRY lines REASONED (depth 7->8); I added: show START stages still release at/after reset + die max release before/after.
+- 20:10 OWNER ORDER: KV + QC review moved to FABLE-RC-KV / FABLE-RC-QC. Handover file lanes/handoff/FABLE-RC-ALL-KV-QC-HANDOVER.md. I KEEP: S81 (B1 / B1-FIX cut read by 21:15, ALLFIX c7/c8, S81 round) and HEAD (E census ~23:00, W wband/wch4b GRT, rscap kit).
