@@ -39125,7 +39125,9 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
-   "hold_items": {},
+   "hold_items": {
+    "hd_lep0N_w": "HEAD-R18 11-23 22:4x COORD: r18g 5f4c8fa1af13 lacks the West coll_i1 re-band (014661a6ea33); the West kit failed GRT on 5f4c with 1034 overflow. No wave West kit from the live event. owner=HEAD-R18 eta=2026-11-24 02:00. Lift = delete this key once the re-band amendment event is applied."
+   },
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_host_w@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
