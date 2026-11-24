@@ -1,0 +1,1 @@
+- 2026-11-24 11:54 PST TAKING QC-SLECTL-PILE (fresh, COORD split): structural cause of sle_ctl cla4f6f12f placement piles (SW x0-500 y0-400, E column x1150-1250 y300-650; kit E9 1124081414 sha 3e46eb) -> plan row on current QC plan. cc QC-ALLFIX: please post current plan sha (C1k) for the row base.
