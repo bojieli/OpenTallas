@@ -1,28 +1,23 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate",
- "manifest_hash": "19484d29d13f29aa25d9c256bf88e0dc7e3d1d6509c1fe63698a0772369fd74f",
- "src_manifest_sha": "19484d29d13f29aa25d9c256bf88e0dc7e3d1d6509c1fe63698a0772369fd74f",
- "tools_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
+ "tree": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree",
+ "manifest_hash": "ecb39546a80626df2ca8be4840a7de5ef0156f3e54ef1da1ff6fd44a17c14aff",
+ "src_manifest_sha": "ecb39546a80626df2ca8be4840a7de5ef0156f3e54ef1da1ff6fd44a17c14aff",
  "hosts": [
-  "epyc8",
-  "epyc7",
-  "intel1",
-  "epyc2",
-  "epyc9",
-  "epyc10"
+  "epyc11",
+  "epyc9"
  ],
  "smoke": "PASS",
- "smoke_detail": "RC_G0 0 G0 PASS: 0 errors, 0 pending-view, 3883 warnings; 71 types / 175 partitions (9 in near-duplicate groups); worst cut {'ratio': 0.1629, 'at': 'vertical@6750'}, worst partition segment ; isolated-tree strict bind 0 / LAT 2752/2752 / BPC 0 / R8-v2 baseline PASS in /srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/gate (epyc8), record run k3h3 (kv-plan-r6/d29/k3h3_gate_rt_70b6f), pinned TOOLSTALE 0 on rt 70b6f0430ea9; seal gate /srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/seal_gate",
- "plan": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
- "plan_sha256": "324af451f9becc18c592039bd7f2f61e6c1a9b7ae737520216792e445e398f4d",
- "asbuilt": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_k3f_vport_semantic_trial_r2_1123.json",
- "asbuilt_sha256": "93d84f11ab7c516cc5c7851397aa42f54685cdbd76d26c89b2b4a54b69784a12",
- "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/portable_bind",
- "sidecar": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
- "sidecar_sha256": "3e2378eaf4612e3974bd7252975402f461dddd6674ad7b21907229eba0020764",
+ "smoke_detail": "A5t3 gate (rt e348b919dd39, epyc11 /srv/opentallas-scratch2/claude/kv-allfix/grow/gate_A5t3): strict bind PASS 175 partitions/93 types/errors 0, LATCHECK 2752/2752 PASS, BPC PASS, R8BASE PASS; published tree = ot-tree-fork of grow/tree (byte-equal plan cbee82715bca / asbuilt 43d1bd9691bc / sidecar 668fe4614b79), sealed over D29 manifest 19484d29d13f -> ecb39546a806",
+ "plan": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_allfix_A5t3.json",
+ "plan_sha256": "cbee82715bcaee1b37c25b2748e47965828e6b9ee81fcc8ce8291439549028fe",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+ "asbuilt_sha256": "43d1bd9691bc44eef7b4cdb619317b3f0d6719d93e68ed508a4cfdb7ade8034a",
+ "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_bind2",
+ "sidecar": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json",
+ "sidecar_sha256": "668fe4614b79b1ce8b83b67ad8f7c10605bfaa44a76e44141b24a57efdb8f4cb",
  "die_gen_env": {
-  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+  "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
   "OT_GRT_NONPORT_HOLD": "1",
   "OT_CORE_TAP_REACH_UM": "0",
   "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -38,39 +33,33 @@
   "OT_PG_PIN_CHECK": "1",
   "OT_KV_HEAD_KST": "2",
   "OT_PLACE_MAX_TRANSITION": "320",
+  "OT_LAND_RESERVE": "1",
   "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
  },
  "config": {
-  "event": "KV-D29",
-  "src_sha": "315cc722d686026c31eeee5ed3d77f24c8b6cb94",
-  "tools_sha": "70b6f0430ea92f26a96529595ebefe90de4a038a",
-  "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
-  "plan_sha256": "324af451f9becc18c592039bd7f2f61e6c1a9b7ae737520216792e445e398f4d",
+  "event": "KV-A5t3",
+  "plan_sha256": "cbee82715bcaee1b37c25b2748e47965828e6b9ee81fcc8ce8291439549028fe",
   "gen_hosts": [
-   "epyc8",
-   "epyc7",
-   "intel1",
-   "epyc2",
-   "epyc9",
-   "epyc10"
+   "epyc11",
+   "epyc9"
   ],
-  "gen_host": "epyc8",
+  "gen_host": "epyc11",
   "gen_args": [
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar_A5t3.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_k3f_vport_semantic_trial_r2_1123.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/portable_bind"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_allfix_A5t3.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_bind2"
   },
   "gate": {
    "g0c": "PASS",
-   "bind": "PASS (isolated D29 tree strict/LAT/BPC, R8-v2 baseline)",
+   "bind": "PASS (A5t3 gate strict 0 / LAT 2752/2752 / BPC / R8BASE)",
    "clock": "PASS",
-   "evidence": "RC_G0 0 G0 PASS: 0 errors, 0 pending-view, 3883 warnings; 71 types / 175 partitions (9 in near-duplicate groups); worst cut {'ratio': 0.1629, 'at': 'vertical@6750'}, worst partition segment ; isolated-tree strict bind 0 / LAT 2752/2752 / BPC 0 / R8-v2 baseline PASS in /srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/gate (epyc8), record run k3h3 (kv-plan-r6/d29/k3h3_gate_rt_70b6f), pinned TOOLSTALE 0 on rt 70b6f0430ea9; seal gate /srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/seal_gate"
+   "evidence": "A5t3 gate (rt e348b919dd39, epyc11 /srv/opentallas-scratch2/claude/kv-allfix/grow/gate_A5t3): strict bind PASS 175 partitions/93 types/errors 0, LATCHECK 2752/2752 PASS, BPC PASS, R8BASE PASS; published tree = ot-tree-fork of grow/tree (byte-equal plan cbee82715bca / asbuilt 43d1bd9691bc / sidecar 668fe4614b79), sealed over D29 manifest 19484d29d13f -> ecb39546a806"
   },
   "planned_events": [
    "KV-7uh",
@@ -89,11 +78,12 @@
    "KV-D25e3",
    "KV-D26",
    "KV-D27d3",
-   "KV-D28"
+   "KV-D28",
+   "KV-D29"
   ],
   "gen_env_outside_allow": [],
   "die_gen_env": {
-   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-plan-r6/d29/apply/selected_candidate/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kv-allfix/pub/kv_a5t3_tree/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
    "OT_GRT_NONPORT_HOLD": "1",
    "OT_CORE_TAP_REACH_UM": "0",
    "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -109,17 +99,216 @@
    "OT_PG_PIN_CHECK": "1",
    "OT_KV_HEAD_KST": "2",
    "OT_PLACE_MAX_TRANSITION": "320",
+   "OT_LAND_RESERVE": "1",
    "OT_PREGRT_HOLD_PORTS_SCOPE": "ctl"
   },
+  "type_args": {
+   "kv3_hub_Ei": [
+    "--gpl-plain",
+    "kv3_hub_Ei"
+   ],
+   "kv3_io_cor": [
+    "--gpl-plain",
+    "kv3_io_cor",
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_io_ft": [
+    "--gpl-plain",
+    "kv3_io_ft"
+   ],
+   "kv3_io_ft_v1": [
+    "--gpl-plain",
+    "kv3_io_ft_v1",
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_hroot": [
+    "--gpl-plain",
+    "kv3_hroot",
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_io_cor_v1": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_phy": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_phy_v1": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v1": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v12": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v1n": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v2": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v2n": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v3": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v3n": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v4": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v4n": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v5": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v5n": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v6": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v6n": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v7": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_pv_v8": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_sys_SD": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ],
+   "kv3_sys_SD_v1": [
+    "--slew-margin",
+    "50",
+    "--cap-margin",
+    "20",
+    "--max-wire-um",
+    "120"
+   ]
+  },
   "review_before_route": {
-   "event": "KV-D29",
+   "event": "KV-A5t3",
    "all_items": true,
    "required": true
   },
-  "auto_visual_review_skip": [
-   "*"
-  ]
+  "tools_sha": "e348b919dd39"
  },
- "written_by": "root-authorized lane atomic apply",
- "status": "ADOPTED reviewed tuple"
+ "status": "ADOPTED reviewed tuple",
+ "written_by": "root-authorized lane atomic apply"
 }
