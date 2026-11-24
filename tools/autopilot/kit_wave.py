@@ -2752,7 +2752,8 @@ def retire_superseded_rows(AP, cfg, st, now=None):
     for r in items.values():                             # FABLE-FLOW-0010 H: a ROUTE-HELD row the wave itself parked on an old plan (SKIP-OLDPLAN) is history on the next tick
         d = (cfg.get("dies") or {}).get(r.get("die")) or {}
         if r.get("status") == "ROUTE-HELD" and d.get("enabled") and d.get("event") and r.get("event") and r["event"] != d["event"] \
-                and str(r.get("route_hold") or "").startswith("SKIP-OLDPLAN") and _plan_current(cfg, st, r) is False:
+                and str(r.get("route_hold") or "").startswith("SKIP-OLDPLAN") and _plan_current(cfg, st, r) is False \
+                and not FG.stops_off_die(cfg, r.get("die")):          # OLDPLAN-NOREAP-1124: a past-synthesis old-plan row is never cancelled; the next enqueue pass routes it
             r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="oldplan-route-hold", updated=now,
                      reason=f"SUPERSEDED: ROUTE-HELD on event {r.get('event')} (die is on {d['event']}); was: " + str(r.get("route_hold"))[:160])
             stale += 1
@@ -18801,6 +18802,11 @@ def enqueue_skip_reason(cfg, rec, st=None):
             return None      # COORD 11-15 (FABLE-PD-KV-0800): the row key is its plan block sha; an unchanged block of an older event is current
         if pc is None:
             return None      # COORD 11-19 (QC slw_fe_v1 cldb4efe33 a5, 2 h 18 min lost): no cached probe of the NEW event yet (the die had just moved to N43G) is "unknown", not "old"; unknown routes (r703)
+        if FG.stops_off_die(cfg, rec.get("die")):
+            # OLDPLAN-NOREAP-1124 (COORD, KV-ALLFIX hub b27c53f1: KV D29 kv3_hroot@1, launched 08:25 and past synthesis, was held here at 09:32 and reaped at 09:33): a row at the
+            # route enqueue has finished gen / place, so it is past synthesis.  OWNER 11-19: an old-plan kit that can still sign is never stopped; any-plan sign-off counts, both
+            # run.  Only an unstarted old-plan row is skipped (at launch, not here).  Not HBM (parked, stops_off_exclude keeps the old rule).
+            return None
         return "SKIP-OLDPLAN", f"attempt of plan event {ev}, the die's current plan event is {cur}"
     return None
 
