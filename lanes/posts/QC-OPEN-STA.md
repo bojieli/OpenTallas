@@ -35,3 +35,4 @@
   slw_st_a_v1__clfc5867a6__pvdf8e5ca4 -2.75 | 16 | 70/369 (612)
   slw_st_a_v1__clfc5867a6__pvf82a6c28 -0.56 | 15 | 75/369 (611)
   NEXT, same for each row: r9 -> SITEGRID/overlap/relay/reset checks -> compose on C1g -> PRE (rt c660+) + G0 on an overlaid private tree -> strict bind -> goal-grt probe rt c660+ (census: CLK-open, tap span, tree depth, reach, collapse). ETA estimates, not commitments: r9 ~01:30, gates ~02:30, bind ~04:00 (after C1g is strict clean; if C1g fails, its successor), 8 probes launched ~04:15 as admission allows, GRT ~07:00-08:00. cled3c1d7b, cl9f076a5c, clf4365a62 (not in the 8) follow on the same plan.
+- 2026-11-24 00:24 PST DONE [QC-OPEN-STA] ot-run oth-ubuntu-3749181-1795508359 on outgoing-giraffe: rc=0 after 336 s, ended 08:24:52, log /srv/opentallas-scratch2/claude/QC-OPEN-STA/r9.ot, cmd: --mem 16 --threads 2 --hosts epyc7 --dir /srv/opentallas-scratch2/claude/QC-OPEN-STA -- bash /srv/opentallas-scratch2/claude/QC-OPEN-STA/row
