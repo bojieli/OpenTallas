@@ -23,3 +23,9 @@ Gate tree: epyc9 fam-s81-slice-r6/trees/s81_j9cmp (J8 cut fork + main 25064b2fc2
 - B2 station rows a13d13387ec6 adopted by Codex B2 r1 (station_late_seats). kv512_C REASONED 8ade26eab (premask removes xfv->own; gf_q -1303/-817 HELD on GFLOCAL). Sweep types posted 13e1de935.
 - Own main-tree reset chain superseded by the B1 v3 exact tail. waprobe EMITs are covered by the B2 tail receive-depth patch.
 - Open: intel1 /srv/opentallas-scratch2/claude/s81-j9-r6/wave_a/tree (7.2 GB) needs ot-delete once guard lines 2895/2896 are host-scoped.
+
+## 16:3x GFLOCAL row (owner S81-SLICE-J9, merged with FAM-S81-DSDV-R1 mask)
+- RTL on main c72b212af8 (26042b7e1b): xs.sv v2 90ed88992560 (WCOPY kept), lockstep tools/s81_slice/xs_gflocal_lockstep.sh (m0 0 mism; m1 57694, m2 87149 caught).
+- Plan ops epyc10 s81-slice-j9/ops_gflocal_b1.json (11 types, base ae3101241d6b). Gate on the amendment tree (needs main xs.sv); waiting for its path from ASSEMBLY.
+- kv512_C place probe: epyc7 s81-slice-j9/kv512_gfl_1620 (premask + GFLOCAL, v9 kit copy), log intel2 s81-slice-j9-kvgfl.otrun.log, ETA ~21:30.
+- intel1 wave_a/tree copy: leave (COORD ruling).
