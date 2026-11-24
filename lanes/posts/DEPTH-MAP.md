@@ -1,0 +1,1 @@
+- 2026-11-23 19:44 PST TAKING DEPTH-MAP from QC-ALLFIX: map >14-depth generated cores to QC/S81 types + latest TT setup, classify SAFE/AT-RISK/PESSIMISTIC-ELAB, out lanes/DEPTH-MAP.tsv by 21:30 PST. cc FABLE-RC-QC, S81-ALLFIX-INT, QC-ALLFIX
