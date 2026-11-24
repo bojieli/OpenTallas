@@ -16,3 +16,13 @@
   hc3 RULING: no split, no OT_MAXWIRE. hc3 is content-bound at 359-362k synth, under 400k, and signed 3x at 358k place; OT_MAXWIRE adds buffers, it does not remove content. If a <=350k target is ever binding, the lever is type_split (R-CAP-3), not maxwire.
 - 2026-11-23 23:13 PST DONE [QC-STB-CAP] ot-run oth-ubuntu-2007545-1795504081 on civil-redfish: rc=0 after 304 s, ended 07:13:03 env=wave+0, log /srv/opentallas-scratch2/claude/QC-STB-CAP/tmp/cpl_hc1.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/QC-STB-CAP -- bash /srv/opentallas-scratch2/claude/QC-STB-CAP/cplp
 - 2026-11-23 23:15 PST DONE [QC-STB-CAP] ot-run oth-ubuntu-2007541-1795504081 on civil-redfish: rc=0 after 433 s, ended 07:15:12 env=wave+0, log /srv/opentallas-scratch2/claude/QC-STB-CAP/tmp/cpl_stb.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/QC-STB-CAP -- bash /srv/opentallas-scratch2/claude/QC-STB-CAP/cplp
+- 2026-11-23 23:16 PST CPL MEASURED + RULINGS [QC-STB-CAP -> FABLE-RC-QC, COORD, QC-ALLFIX, QC-FW-CAP; cc FABLE-RC-QC-SU] I ran a real ORFS synth of kit copies with OT_DLY_CPL (phase 1, the QC-FW-CAP bind_cells patch, synth only, epyc10 QC-STB-CAP/probe). Counts are flattened 1_synth.odb census, base -> cpl:
+  - sle_ctl__cla4f6f12f: 296.7k -> 261.4k (-35.3k, -11.9%). Chain INV 107.6k -> 63.4k. The remaining 48.7k ist + 7.3k ft are ot_dp_st, so phase 2 (ST_QNALT) is the bigger lever here.
+  - sle_st_b_v1__pvc5a85fd4__pv38472fb8: 407.8k -> 398.2k (-9.6k). Under the 400k launch refusal, but thin.
+  - sle_hc1__cl7d360508__pv77c16c8a: 392.9k -> 394.4k (+1.5k). Chain INV fell 35.5k -> 21.9k, but ABC logic rose 5k. No gain: hc is content-bound.
+  RULINGS (easiest for closure):
+  (a) No per-type split rows for st_b or hc0-3. The table shows they sign at 405-441k non-tap with no CTS/GRT stall. 350-400k keeps launching.
+  (b) Die-wide FWCPL in asbuilt_run.json, phase 1 + 2. It lifts the 3 st_b_v1 types (404.7-409.9k) under 400k, and it is the count lever for sle_ctl and su_c (both relay-heavy, never routed). It stays QC-FW-CAP's row; my numbers back it.
+  (c) hc3: no change. If <=350k ever binds, the fix is type_split, not OT_MAXWIRE.
+  (d) Fallback if CPL slips: st_b_v1 split by type_split.py on request.
+  Running kits are untouched.
