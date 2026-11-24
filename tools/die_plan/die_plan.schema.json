@@ -3554,6 +3554,10 @@
         "type": "integer",
         "minimum": 1
        },
+       "tap_reset_split_max_taps": {
+        "type": "integer",
+        "minimum": 2
+       },
        "pregrt_hold_guard_ps": {
         "type": "number",
         "minimum": 0,

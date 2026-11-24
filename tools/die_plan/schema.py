@@ -1857,6 +1857,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # The async ownership tree can require more than four cotap passes. The setting applies only to launch mode.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_rounds"] = {
     "type": "integer", "minimum": 1}
+# LEP-RSPLIT-CAP-1 (HEAD-R18 11-23, opt-in, with tap_reset_split): a reset source / launcher is put on at most this many taps
+# (its own + per-tap copies); beyond it the source is left as the affinity pass placed it (tap_reset_split.tcl
+# OT_TAP_RESET_SPLIT_MAX_TAPS).  Absent = no cap (unchanged).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_max_taps"] = {
+    "type": "integer", "minimum": 2}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {

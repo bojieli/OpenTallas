@@ -103,6 +103,18 @@ namespace eval ::ot_tap_rsplit {
   if {[[$lck getNet] getName] eq $t} return
   set key "[$l getName]|$t"
   if {[dict exists $lmemo $key]} {$dit disconnect; $dit connect [dict get $lmemo $key]; dict incr lstat reuse; return}
+  # LEP-RSPLIT-CAP-1 (HEAD-R18 11-23, opt-in OT_TAP_RESET_SPLIT_MAX_TAPS from clock.tap_reset_split_max_taps; unset/0 = no
+  # cap, byte-identical): a launcher already present on MAX_TAPS taps (its own + copies) gets no further copy.  HEAD E cap10:
+  # uncapped launch copied the ot_rst_fan root (root_r) onto every tap of its leaves, so the relay feeding it (u_rrl_303)
+  # was split onto 175 taps and its AND-gated D net drove 175 loads (TT -2690.91 ps, 2541 ps wire).  Capped, the fan tree
+  # keeps its own registered hops (2/4/6 branches) and the tap-to-tap stage stays at this boundary (counted capped).
+  variable maxt; variable ltaps
+  if {$maxt > 0} {
+   set ln [$l getName]
+   if {![dict exists $ltaps $ln]} {dict set ltaps $ln [list [[$lck getNet] getName]]}
+   if {[llength [dict get $ltaps $ln]] >= $maxt} {dict incr lstat capped; return}
+   dict lappend ltaps $ln $t
+  }
   # launcher driving only X (single chain, single load each): move its clock pin, no copy
   set solo [expr {[nloads [$lo getNet]] == 1}]
   foreach ci $chain {if {[nloads [[outterm $ci] getNet]] != 1} {set solo 0}}
@@ -147,6 +159,8 @@ namespace eval ::ot_tap_rsplit {
   set ldo [expr {[info exists ::env(OT_TAP_RESET_SPLIT_LAUNCH)] && $::env(OT_TAP_RESET_SPLIT_LAUNCH) eq "1"}]
   set maxd [expr {[info exists ::env(OT_TAP_RESET_SPLIT_LAUNCH_DEPTH)] ? $::env(OT_TAP_RESET_SPLIT_LAUNCH_DEPTH) : 3}]
   variable lmemo {}; variable lstat {}; set nlsrc 0
+  variable maxt [expr {[info exists ::env(OT_TAP_RESET_SPLIT_MAX_TAPS)] ? $::env(OT_TAP_RESET_SPLIT_MAX_TAPS) : 0}]
+  variable ltaps {}; set ncapped 0
   set tapnets {}
   foreach tp $ct_taps {dict set tapnets [[lindex $tp 1] getName] 1}
   # RST-LAUNCH rounds (COORD 11-23 04:xx: pkit_core5a launch=0 31 split sources, launch=1 32): a launch copy / moved launcher is a
@@ -186,6 +200,9 @@ namespace eval ::ot_tap_rsplit {
     dict lappend by $t $s
    }
    set clones {}
+   # LEP-RSPLIT-CAP-1: same cap on the per-tap source split (own tap + copies <= MAX_TAPS); a capped source is left as is
+   # (treated exactly as a source with no other-tap sinks: no copy, its own launch stage still walked in launch mode)
+   if {$maxt > 0 && [dict size $by] + 1 > $maxt} {incr ncapped; set by {}}
    if {[dict size $by] == 0} {
     if {$ldo} {lappend pend [list $inst $stap]}
     continue
@@ -243,9 +260,9 @@ namespace eval ::ot_tap_rsplit {
   set k1 [expr {([dict exists $lstat copies] ? [dict get $lstat copies] : 0) + ([dict exists $lstat moved] ? [dict get $lstat moved] : 0)}]
   if {$k1 == $k0 && $ncopy == $copies_at_start} {set converged 1; break}
   }
-  puts "OT_TAP_RESET_SPLIT sources $nsrc copies $ncopy chain_cells $nchain sinks_repointed $nsink min_sinks $minn"
+  puts "OT_TAP_RESET_SPLIT sources $nsrc copies $ncopy chain_cells $nchain sinks_repointed $nsink min_sinks $minn[expr {$maxt > 0 ? " max_taps $maxt capped_sources $ncapped" : ""}]"
   if {$ldo} {
-   set g {}; foreach k {moved copies chain reuse unresolved} {lappend g $k [expr {[dict exists $lstat $k] ? [dict get $lstat $k] : 0}]}
+   set g {}; foreach k [expr {$maxt > 0 ? {moved copies chain reuse unresolved capped} : {moved copies chain reuse unresolved}}] {lappend g $k [expr {[dict exists $lstat $k] ? [dict get $lstat $k] : 0}]}
    puts "OT_TAP_RESET_SPLIT_LAUNCH stages $nlsrc [join $g { }] max_depth $maxd rounds $nround converged $converged"
   }
  }

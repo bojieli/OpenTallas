@@ -106,3 +106,22 @@ def test_split_only_change_revisits_upstream_async_driver(tmp_path):
     )
     result = subprocess.run(["tclsh", str(script)], check=True, capture_output=True, text=True)
     assert result.stdout.strip() == "3 2 1"
+
+
+def test_reset_split_max_taps_cap_is_opt_in_typed_and_exported():
+    # LEP-RSPLIT-CAP-1 (HEAD-R18 11-23): HEAD E cap10 uncapped launch put u_rrl_303 on 175 taps (one AND-gated D net, 175 loads)
+    expected = {"type": "integer", "minimum": 2}
+    for plan_schema in (schema.SCHEMA, json.loads((HERE / "die_plan.schema.json").read_text())):
+        clock = plan_schema["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]
+        assert clock["properties"]["tap_reset_split_max_taps"] == expected
+    g = (HERE / "gen_phys.py").read_text()
+    assert 'cfg.append(f"export OT_TAP_RESET_SPLIT_MAX_TAPS = {reset_split_max_taps}")' in g
+    i = g.index("reset_split_max_taps = t.get")
+    assert 'get("tap_reset_split") is True and reset_split_max_taps is not None' in g[i:i + 400]
+    t = (HERE / "tap_reset_split.tcl").read_text()
+    # unset / 0 = no cap: every cap branch is guarded by maxt > 0, and the default is 0
+    assert "OT_TAP_RESET_SPLIT_MAX_TAPS)] ? $::env(OT_TAP_RESET_SPLIT_MAX_TAPS) : 0" in t
+    assert t.count("$maxt > 0") >= 4
+    # launcher cap counts the launcher's own tap plus its copies; source cap counts own tap + other taps
+    assert "[llength [dict get $ltaps $ln]] >= $maxt" in t and "[dict size $by] + 1 > $maxt" in t
+    assert "dict incr lstat capped" in t and "incr ncapped" in t
