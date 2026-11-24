@@ -225,3 +225,35 @@ def test_tiny_bind_with_type_errors_receipts_clean_types(tmp_path):
     assert K.bind_matches(raw, "ts", out, None, plan) and not K.bind_matches(raw, "ta", out, None, plan)
     assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", "ts", "--kit", str(tmp_path / "k_ts")]) == 0
     assert bind.main(["kit-rtl", str(plan), "--out", str(out), "--type", "ta", "--instance", "A0", "--kit", str(tmp_path / "k_ta")]) != 0
+
+
+def test_attribute_lane_define_and_tied_classes():
+    """BIND-ATTR-CLASSES 11-24: LANE_ASBUILT -> lane endpoint types; LANE_ASBUILT_TOTAL -> all off-table lane owners;
+    TYPE_DEFINE_CONFLICT -> outside + requesters; TIED_TOTAL owners by path prefix; NOEFFECT / LF_CS_DEPTH by token-1 type."""
+    import bind
+    known = {"lf__t1", "c__t1", "svc__t1", "kv__t1", "other"}
+    pt = {"u_rsv_00.u.u_h4": {"svc__t1"}}
+    errs = ["LANE_ASBUILT up_s_0S_L1: delivered 8 != latency table 5 (+3; src s_0S_L1.leafup_o0 ...)",
+            "LANE_ASBUILT_TOTAL 1 of 947 lanes deliver off the latency table",
+            "TYPE_DEFINE_CONFLICT added ['OT_X'] changes types outside at least one requesting scope: {\"kv__t1\": [\"u.v\"], ...",
+            "TYPE_DEFINE_NOEFFECT svc__t1: OT_X BIND_IGNORED",
+            "LF_CS_DEPTH lf__t1 pvs: plan 2 stage(s) (deepest row), bound RTL 1",
+            "TIED u_rsv_00.u.u_h4.iblk[1] = 0 (literal)",
+            "TIED_TOTAL 486192 tied bits on 2288 leaf pins"]
+    tied = {("u_rsv_00.u.u_h4.sub", "iblk", "m"): [(1, "0", "")]}      # deeper than any owned cell: prefix walk
+    ref, un = bind.attribute_errors(errs, known, pt, {}, tied, ("kv__t1",), define_requesters=("svc__t1",),
+                                    lane_types={"up_s_0S_L1": ("lf__t1", "c__t1")})
+    assert un == []
+    assert set(ref) == {"lf__t1", "c__t1", "svc__t1", "kv__t1"}
+    assert len(ref["c__t1"]) == 2 and len(ref["kv__t1"]) == 1
+    _, un = bind.attribute_errors(errs[:2], known, pt, lane_types={})
+    assert len(un) == 2                                                 # unknown lane: both stay unattributed (block all)
+
+
+def test_attribution_inputs_reads_sidecars(tmp_path):
+    import bind
+    (tmp_path / "type_defines.json").write_text(json.dumps(dict(outside={"kv__t1": []}, added=["OT_X"],
+        rows=[dict(type="svc__t1", define="OT_X"), dict(type="z", define="OT_Y")])))
+    (tmp_path / "bind_lane_asbuilt.json").write_text(json.dumps(dict(lanes=[dict(lane="L", src_type="a", dst_type="b")])))
+    kw = bind.attribution_inputs(tmp_path, ["TYPE_DEFINE_CONFLICT x", "LANE_ASBUILT L: d"])
+    assert kw == dict(define_outside=("kv__t1",), define_requesters=("svc__t1",), lane_types={"L": ("a", "b")})

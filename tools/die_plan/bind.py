@@ -6360,11 +6360,53 @@ def probe_scope_split(errs, probe, known_types, module_types=None, path_types=No
     return keep, warn
 
 
-def attribute_errors(errs, known_types, path_types, module_types=None, tied_pins=None, define_outside=()):
+def _path_owner(path, path_types):
+    """longest owned prefix of an as-built path (bit index stripped) -> set of types (empty = none)"""
+    q = re.sub(r"\[[^\]]*\]$", "", str(path or ""))
+    while q and path_types:
+        if q in path_types:
+            return set(path_types[q])
+        if "." not in q:
+            break
+        q = q.rsplit(".", 1)[0]
+    return set()
+
+
+def attribution_inputs(out, errs=()):
+    """BIND-ATTR-CLASSES 11-24: the bind OUT sidecars the type attribution reads -> kwargs for attribute_errors.
+    type_defines.json: `outside` (types a conflicting define changes) + the requesting types of every added define;
+    bind_lane_asbuilt.json: lane -> its src/dst endpoint types (LANE_ASBUILT names a lane, never a type)."""
+    out = Path(out)
+    kw = dict(define_outside=(), define_requesters=(), lane_types={})
+    try:
+        if (out / "type_defines.json").is_file() and any(str(e).startswith("TYPE_DEFINE_CONFLICT ") for e in errs):
+            td = json.loads((out / "type_defines.json").read_text())
+            kw["define_outside"] = tuple(td.get("outside") or ())
+            added = set(td.get("added") or ())
+            kw["define_requesters"] = tuple(sorted({r["type"] for r in td.get("rows") or ()
+                                                    if r.get("define") in added and r.get("type")}))
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    try:
+        if (out / "bind_lane_asbuilt.json").is_file() and any(str(e).startswith("LANE_ASBUILT") for e in errs):
+            la = json.loads((out / "bind_lane_asbuilt.json").read_text())
+            kw["lane_types"] = {r["lane"]: tuple(t for t in (r.get("src_type"), r.get("dst_type")) if t)
+                                for r in la.get("lanes") or () if r.get("lane")}
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    return kw
+
+
+def attribute_errors(errs, known_types, path_types, module_types=None, tied_pins=None, define_outside=(), *,
+                     define_requesters=(), lane_types=None):
     """BIND-TYPE-RECEIPT 11-24 (COORD ruling, S81 iqf/seqhost refused BIND_STALE for svc_lo UNDRIVEN_OPEN/TIED): each bind error ->
     the bound types it belongs to (the same owner rules as probe_scope_split: token-1 type, `type T` phrase, as-built instance
     path at either end, LATCH_EXCEPT_MODULE module owners, TYPE_DEFINE_CONFLICT elab receipt; TIED_TOTAL = the owners of every tied
-    pin).  -> (refused {type: [errors]}, unattributed [errors]).  An error owned by no known type is unattributed and blocks all."""
+    pin).  -> (refused {type: [errors]}, unattributed [errors]).  An error owned by no known type is unattributed and blocks all.
+    BIND-ATTR-CLASSES 11-24 (COORD, S81 c8 1114 errors): LANE_ASBUILT <lane> -> the lane's src/dst endpoint types (lane_types from
+    bind_lane_asbuilt.json); LANE_ASBUILT_TOTAL -> the owners of every off-table lane (any unowned -> unattributed);
+    TYPE_DEFINE_CONFLICT -> the types it changes outside scope + the requesting types; TIED / TIED_TOTAL pins by longest owned
+    path prefix."""
     known = set(known_types or ())
     mt = module_types or {}
     refused, unattributed = defaultdict(list), []
@@ -6376,7 +6418,7 @@ def attribute_errors(errs, known_types, path_types, module_types=None, tied_pins
             if tie_owners is None:
                 tie_owners = set()
                 for (path, _port, _module) in (tied_pins or {}):
-                    o = set((path_types or {}).get(path, ()))
+                    o = _path_owner(path, path_types)
                     if not o:
                         tie_owners = None
                         break
@@ -6385,7 +6427,13 @@ def attribute_errors(errs, known_types, path_types, module_types=None, tied_pins
         elif code == "LATCH_EXCEPT_MODULE" and "/" not in tok:
             owners = set(mt.get(tok) or ())
         elif code == "TYPE_DEFINE_CONFLICT":
-            owners = set(define_outside)
+            owners = set(define_outside) | set(define_requesters)
+        elif code == "LANE_ASBUILT":
+            owners = set((lane_types or {}).get(tok, ()))
+        elif code == "LANE_ASBUILT_TOTAL":
+            lanes = [str(x).split()[1].rstrip(":") for x in errs if str(x).startswith("LANE_ASBUILT ")]
+            owned = [set((lane_types or {}).get(ln, ())) for ln in lanes]
+            owners = set().union(*owned) if lanes and all(owned) else set()
         else:
             owners = _error_owner_types(e, known, path_types)
         if owners and owners <= known:
@@ -6953,11 +7001,9 @@ def cmd_bind(a):
     _refused, _unatt = {}, []
     if B.errors:                             # BIND-TYPE-RECEIPT 11-24: attribute every error to its types (receipt per type below)
         try:
-            _define_outside = ()
-            if (out / "type_defines.json").is_file() and any(e.startswith("TYPE_DEFINE_CONFLICT ") for e in B.errors):
-                _define_outside = json.loads((out / "type_defines.json").read_text()).get("outside") or ()
+            _akw = attribution_inputs(out, B.errors)
             _refused, _unatt = attribute_errors(B.errors, set(B.by_type), _path_types(B), _module_types(B),
-                                                getattr(B, "tied_pins", {}), _define_outside)
+                                                getattr(B, "tied_pins", {}), _akw.pop("define_outside"), **_akw)
         except Exception as exc:             # cannot attribute -> every error blocks (the old rule)
             _refused, _unatt = {}, list(B.errors)
             print(f"bind: WARN TYPE_RECEIPT attribution failed ({type(exc).__name__}: {exc}); no receipt", flush=True)
