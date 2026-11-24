@@ -1,10 +1,13 @@
 """ROM via map -> GDS overlay -> die merge -> read back (tools/mem_compiler/rom_viamap_gds.py)."""
 from __future__ import annotations
 
+import gzip
 import json
 import random
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from threading import Event
 
 import pytest
 
@@ -181,6 +184,60 @@ def test_merge_map_stamps_each_position_image_and_reads_back(rom, tmp_path):
     assert vg.merge_map(die, "DIE", rm, m, d / "vm", out2, parts=["pB"])["instances_merged"] == 2
     assert vg.verify_map(out2, "DIE", rm, m, d / "vm", parts=["pB"])["verdict"] == "PASS"
     assert vg.verify_map(out2, "DIE", rm, m, d / "vm")["verdict"] == "FAIL"   # the other positions are not stamped
+
+
+def test_merge_map_reserves_and_publishes_compressed_stream(rom, tmp_path, monkeypatch):
+    d, sheet, _man, _spec = rom
+    m = vg.Macro(sheet)
+    rm = _rommap(tmp_path, m, [_pos("pA", m, [("u_rom0", 0.0)], "R0")])
+    out = tmp_path / "rank0.gds.gz"
+    before_publish = Event()
+    may_finish = Event()
+    merge = vg.merge_placed
+
+    def pause_writer(*args):
+        before_publish.set()
+        assert may_finish.wait(5)
+        return merge(*args)
+
+    with ThreadPoolExecutor(max_workers=1) as workers:
+        with monkeypatch.context() as ctx:
+            ctx.setattr(vg, "merge_placed", pause_writer)
+            writer = workers.submit(vg.merge_map, None, "DIE", rm, m, d / "vm", out)
+            try:
+                assert before_publish.wait(5)
+                assert not out.exists()
+                with pytest.raises(FileExistsError, match="writer reservation"):
+                    vg.merge_map(None, "DIE", rm, m, d / "vm", out)
+            finally:
+                may_finish.set()
+            assert writer.result(timeout=5)["instances_merged"] == 1
+
+    with pytest.raises(FileExistsError, match="refusing to overwrite"):
+        vg.merge_map(None, "DIE", rm, m, d / "vm", out)
+    plain = tmp_path / "rank0.gds"
+    vg.merge_map(None, "DIE", rm, m, d / "vm", plain)
+    assert gzip.decompress(out.read_bytes()) == plain.read_bytes()
+    assert vg.verify_map(out, "DIE", rm, m, d / "vm")["verdict"] == "PASS"
+    assert set(tmp_path.glob("rank0*")) == {out, plain}
+
+
+def test_failed_map_write_preserves_partial_without_publishing(rom, tmp_path):
+    d, sheet, _man, _spec = rom
+    m = vg.Macro(sheet)
+    rm = _rommap(tmp_path, m, [_pos("pA", m, [("u_rom0", 0.0)], "R0")])
+    die = tmp_path / "die.gds"
+    die_gds(die, top="DIE")
+    out = tmp_path / "rank0.gds"
+
+    with pytest.raises(ValueError, match="top structure ABSENT"):
+        vg.merge_map(die, "ABSENT", rm, m, d / "vm", out)
+    partial = out.with_name(out.name + ".part")
+    before = partial.read_bytes()
+    assert before and not out.exists()
+    with pytest.raises(FileExistsError, match="refusing to overwrite"):
+        vg.merge_map(die, "DIE", rm, m, d / "vm", out)
+    assert partial.read_bytes() == before and not out.exists()
 
 
 def test_verify_map_catches_a_swapped_image(rom, tmp_path):
