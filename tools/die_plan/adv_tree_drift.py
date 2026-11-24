@@ -11,7 +11,10 @@ Scope (only these files are hashed, so it runs in seconds):
   porous  tools/die_plan/porous_views_data/ (and any named path with 'porous')
   flow    physical/common_flow/ (all files)
   tool    tools/die_plan/*.py (not test_*) and every other tools/ path the plan names
-  rtl     rtl/ sources the plan names (reported last: event RTL is often a deliberate pin)
+  rtl     rtl/ sources the plan names, plus the BIND-TREE RTL CLOSURE (PRECHECK-R3 11-24): every tree/rtl file defining a
+          module a type names (module / contents[].module / hard_cores[].module) and, transitively, each module those files
+          instantiate; one line per lagging file with the types that reach it (QC C1g coll_core: ot_coll_tp8_static.sv
+          603 lines in the tree, 659 on main = RDPIPE/XEPRE missing; plans that name modules only never listed it)
 Per file: tree blob id (git hash-object, in process) vs main's (`git ls-tree` of the warm bare repo / $OT_ADV_MAIN_REPO), then
 one path-limited `git log --raw` over the differing paths:
   LAG      the tree copy equals an OLDER main version of the path: the fix(es) since are missing (main commits named)
@@ -149,6 +152,129 @@ def _ref_paths(raw, tree, plan_path, extra_docs=()):
     return out
 
 
+_MODDECL = re.compile(r"^\s*(?:macro)?module\s+(?:automatic\s+)?([A-Za-z_]\w*)", re.M)
+_INST = re.compile(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\(|[A-Za-z_\\][\w\[\]:.]*\s*\()", re.M)
+_CMT = re.compile(r"//[^\n]*|/\*.*?\*/", re.S)
+RTL_EXT = (".sv", ".v", ".svh", ".vh")
+RTL_LINES = 16
+MAX_CLOSURE = int(os.environ.get("OT_ADV_TREE_DRIFT_MAX_RTL", "6000"))
+
+
+def _is_tb(rel):
+    b = os.path.basename(rel)
+    return b.startswith(("tb_", "test_")) or "/test/" in rel or "/tb/" in rel or b.endswith(("_sim.sv", "_sim.v"))
+
+
+def plan_roots(raw):
+    """{module: [types]} the plan instantiates by name: each type's module, contents[].module and hard_cores[].module"""
+    out = {}
+    for tn, t in (raw.get("partition_types") or {}).items():
+        if not isinstance(t, dict):
+            continue
+        ms = [t.get("module")]
+        for k in ("contents", "hard_cores"):
+            for c in t.get(k) or []:
+                if isinstance(c, dict):
+                    ms.append(c.get("module"))
+        for m in ms:
+            if isinstance(m, str) and m:
+                out.setdefault(m, []).append(tn)
+    return out
+
+
+RTL_INDEX_S = float(os.environ.get("OT_ADV_TREE_DRIFT_RTL_S", "120"))
+_IDX_MEMO = {}
+
+
+def rtl_index(tree, deadline=None):
+    """({module: [rel files]}, {rel file: set(instantiated identifiers)}) over tree/rtl (tb / test files left out).
+    Memoised per tree in-process (ADV-UNSET-DEFINE reuses TREE-DRIFT's); inst gets key None = True when the walk was cut short."""
+    base = os.path.realpath(tree)
+    if base in _IDX_MEMO:
+        return _IDX_MEMO[base]
+    idx, inst = {}, {}
+    deadline = deadline or time.time() + RTL_INDEX_S
+    for root, _d, files in os.walk(os.path.join(base, "rtl")):
+        if time.time() > deadline:
+            inst[None] = True
+            break
+        for fn in files:
+            if not fn.endswith(RTL_EXT):
+                continue
+            fp = os.path.join(root, fn)
+            rel = os.path.relpath(fp, base)
+            if _is_tb(rel):
+                continue
+            try:
+                with open(fp, errors="replace") as f:
+                    s = _CMT.sub("", f.read())
+            except OSError:
+                continue
+            for m in set(_MODDECL.findall(s)):
+                idx.setdefault(m, []).append(rel)
+            inst[rel] = set(_INST.findall(s))
+    _IDX_MEMO[base] = (idx, inst)
+    return idx, inst
+
+
+def rtl_closure(raw, tree, deadline=None, index=None):
+    """the bind-tree RTL the plan's types reach: {rel file: parent rel file | None for a root} -- files defining a module
+    the plan names, then every file defining a module those files instantiate (whole-file over-approximation; a module
+    defined in more than 4 files counts none of them: a generated variant family, not one source)"""
+    idx, inst = index or rtl_index(tree, deadline)
+    roots = plan_roots(raw)
+    out = {}
+    todo = [(m, None) for m in sorted(roots)]
+    seen = set()
+    while todo and len(out) < MAX_CLOSURE:
+        m, parent = todo.pop()
+        if m in seen:
+            continue
+        seen.add(m)
+        fs = idx.get(m) or []
+        if len(fs) > 4:
+            continue
+        for f in fs:
+            if f in out:
+                continue
+            out[f] = parent
+            for c in sorted(inst.get(f, ())):
+                if c in idx and c not in seen:
+                    todo.append((c, f))
+    return out
+
+
+def closure_types(raw, index, files):
+    """{rel file: sorted types} for the given closure files: the types whose root modules reach the file (reverse walk)"""
+    idx, inst = index
+    defs = {}
+    for m, fs in idx.items():
+        if len(fs) <= 4:
+            for f in fs:
+                defs.setdefault(f, set()).add(m)
+    users = {}                                         # module -> files instantiating it
+    for f, cs in inst.items():
+        if f is None:
+            continue
+        for c in cs:
+            if c in idx:
+                users.setdefault(c, set()).add(f)
+    roots = plan_roots(raw)
+    out = {}
+    for f in files:
+        ts, seen, todo = set(), set(), [f]
+        while todo and len(seen) < 20000:
+            g = todo.pop()
+            if g in seen:
+                continue
+            seen.add(g)
+            for m in defs.get(g, ()):
+                ts.update(roots.get(m, ()))
+                todo.extend(users.get(m, ()))
+        out[f] = sorted(ts)
+    return out
+
+
 def _cat(path):
     if "porous" in path:
         return "porous"
@@ -257,11 +383,20 @@ def _history(repo, rev, paths, tree_oid, since_ct, deadline, final=True):
 
 
 def _run(raw, plan_path, tree, kw):
-    t0 = time.time()
-    deadline = t0 + BUDGET_S
     tree = tree or _find_tree(plan_path)
     if not tree or not os.path.isdir(tree):
         return []
+    # bind-tree RTL: the module closure of the plan's types in tree/rtl (the plan names RTL files only where a type lists
+    # `sources`; QC / KV types name modules only, so a lagging tree copy such as QC ot_coll_tp8_static.sv went unseen).
+    # Own budget (RTL_INDEX_S), before the BUDGET_S clock of the hash / history steps starts.
+    t_a = time.time()
+    rtlix, closure = None, {}
+    if kw.get("rtl_closure", True) and os.path.isdir(os.path.join(tree, "rtl")):
+        rtlix = rtl_index(tree)
+        closure = rtl_closure(raw, tree, index=rtlix)
+    t_rtl = time.time() - t_a
+    t0 = time.time()
+    deadline = t0 + BUDGET_S
     repo, main = _repo_main(kw)
     if not repo:
         return [_w("not checked: no main repo (warm bare repo / $OT_ADV_MAIN_REPO) resolves a main ref")]
@@ -280,6 +415,8 @@ def _run(raw, plan_path, tree, kw):
     for alts in refs.values():
         for a in alts:
             dirs.add(_view_dir(a) or os.path.dirname(a) or a)
+    for f in closure:
+        dirs.add(os.path.dirname(f))
     dirs = {d for d in dirs if d}
     t_a = time.time()
     try:
@@ -292,6 +429,9 @@ def _run(raw, plan_path, tree, kw):
         hit = next((a for a in alts if a in mainix), None) or next((a for a in alts if os.path.isfile(os.path.join(tree, a))), None)
         if hit:
             scope[hit] = _cat(hit)
+    for f in closure:
+        if f in mainix:
+            scope.setdefault(f, "rtl")
     vdirs = {_view_dir(p) for p in scope if _view_dir(p)}
     for p in mainix:
         if p.startswith(tuple(d + "/" for d in FLOW_DIRS + POROUS_DIRS)) or _view_dir(p) in vdirs:
@@ -353,7 +493,7 @@ def _run(raw, plan_path, tree, kw):
     groups = {}
     for p, (_, miss, base) in lag.items():
         cat = differ[p]
-        if PRIO.get(cat, 9) <= PRIO["flow"]:
+        if PRIO.get(cat, 9) <= PRIO["flow"] or cat == "rtl":
             key = (cat, _view_dir(p) or p, tuple(h for h, _, _ in miss))
         else:
             key = (cat, cat, ())
@@ -377,15 +517,30 @@ def _run(raw, plan_path, tree, kw):
     mis_list = sorted((p for p in missing if _keep(p)), key=lambda p: (PRIO[_cat(p)], p))
     mis_line = _w(f"MISSING {len(mis_list)} view/porous/flow file(s) on main absent in the tree: " + ", ".join(mis_list[:6]) +
                   (" ..." if len(mis_list) > 6 else "") + "; fix = carry from main or record why") if mis_list else None
+    rtl_lag = [p for p in lag if differ[p] == "rtl"]
+    rtypes = closure_types(raw, rtlix, [p for p in rtl_lag if p in closure]) if rtlix and rtl_lag else {}
+    nrtl = 0
     for (_, name, _), g in order:
         if mis_line and PRIO.get(g["cat"], 9) > PRIO["flow"]:
             lines.append(mis_line)
             mis_line = None
         for h, (c, n) in g["miss"].items():
             by_commit[h] = by_commit.get(h, 0) + n
+        miss = sorted(g["miss"].values(), key=lambda cn: (-cn[1], -cn[0][1]))
+        if g["cat"] == "rtl":            # own budget: a bind-tree RTL copy behind main changes the netlist the kit builds
+            nrtl += 1
+            if nrtl > RTL_LINES:
+                continue
+            ts = rtypes.get(name) or []
+            reach = (f"reached by {len(ts)} type(s) ({','.join(ts[:3])}{' ...' if len(ts) > 3 else ''})" if ts else
+                     "named by the plan" if name not in closure else "in the closure")
+            shown = "; ".join(f"{c[0]} {c[2][:80]}" for c, _ in miss[:3]) + (f"; +{len(miss) - 3} more" if len(miss) > 3 else "")
+            base = f" (tree = main version of {g['base'][0]} {time.strftime('%m-%d', time.gmtime(g['base'][1]))})" if g["base"] else ""
+            lines.append(_w(f"rtl {name}: LAG{base}, {reach}; missing {len(miss)} main commit(s): {shown}; "
+                            f"fix = carry from main before bind (event_adopt_diff.py carry) or record why the tree keeps it"))
+            continue
         if len(lines) >= MAX_LINES:
             continue
-        miss = sorted(g["miss"].values(), key=lambda cn: (-cn[1], -cn[0][1]))
         per = PRIO.get(g["cat"], 9) > PRIO["flow"]
         shown = "; ".join(f"{c[0]} {c[2][:80]}" + (f" (x{n})" if per else "") for c, n in miss[:4]) + \
             (f"; +{len(miss) - 4} more" if len(miss) > 4 else "")
@@ -408,8 +563,11 @@ def _run(raw, plan_path, tree, kw):
                     f"LOCAL {len(local)}{_bycat(local, differ)}, MISSING {len(missing)} ({len(mis_list)} listed scope), tree-only {tree_only}"
                     + (f", NOT HASHED {skipped} (time budget)" if skipped else "")
                     + (f", UNRESOLVED {len(unres)} (time budget)" if unres else "") + (f", unreadable {unread}" if unread else "")
-                    + f"; top missing commits: {top or 'none'}; pin {pin[:10] or '-'}; {time.time() - t0:.1f} s "
-                    f"(ls-tree {t_ls:.1f}, hash {t_hash:.1f}, log {t_log:.1f})"))
+                    + f"; bind RTL closure {len(closure)} file(s) from {len(plan_roots(raw))} plan module(s), LAG {len(rtl_lag)}"
+                    + (" (rtl index CUT at the time budget: partial)" if rtlix and rtlix[1].get(None) else "")
+                    + (f" ({nrtl - RTL_LINES} not listed)" if nrtl > RTL_LINES else "")
+                    + f"; top missing commits: {top or 'none'}; pin {pin[:10] or '-'}; {time.time() - t0 + t_rtl:.1f} s "
+                    f"(rtl index {t_rtl:.1f}, ls-tree {t_ls:.1f}, hash {t_hash:.1f}, log {t_log:.1f})"))
     return lines
 
 

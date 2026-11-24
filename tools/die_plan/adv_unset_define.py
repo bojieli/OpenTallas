@@ -4,6 +4,9 @@ A switch (`ifdef / `ifndef / `elsif / defined(OT_*)) ADDED on main in the last D
 partition_types.<t>.verilog_defines (name before '=') and no other top-level plan key names it.  Such a switch is dead code for this die until a row sets it
 (OT_TP8S_RDPIPE / OT_TP8S_XEPRE sat unapplied for a day).  Per switch: first commit that added a use, file, the modules the file defines, and the plan types
 whose module / contents name one of them = the types it targets.  kw days / main_repo / main_ref (as ADV-TREE-DRIFT).
+PRECHECK-R3 11-24: with a bind tree (kw tree / the tree above the plan) a switch counts only when its file is in the tree's RTL
+closure of the plan's types (IN-BIND-RTL, the types that reach it listed) or a type names its module; switches in RTL the plan
+never reaches (other dies) and mutation / test-bench controls are counted in the summary, not listed.
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.
 """
 import json
@@ -59,6 +62,12 @@ def _git(gd, args, timeout=240):
     return r.stdout.decode(errors="replace")
 
 
+def is_control(sw, f):
+    """mutation / negative-control switches and test-bench files: never meant for a plan row"""
+    b = f.rsplit("/", 1)[-1]
+    return bool(re.search(r"(^|_)MUT(ANT)?(_|$)", sw[3:])) or b.startswith(("tb_", "test_")) or "/test/" in f or "/tb/" in f
+
+
 def _findings(raw, plan_path, tree=None, **kw):
     import adv_tree_drift as T
     gd, ref = T._repo_main(kw)
@@ -76,30 +85,50 @@ def _findings(raw, plan_path, tree=None, **kw):
             small = {k: v for k, v in t.items() if k in ("module", "contents", "cells", "note")}
             for m in set(re.findall(r"[A-Za-z_]\w+", json.dumps(small))):
                 bymod.setdefault(m, []).append(tn)
-    rows = []
+    # the bind-tree RTL closure of the plan's types (ADV-TREE-DRIFT): a switch in a file the types reach is live code here
+    tree = tree or kw.get("tree") or T._find_tree(plan_path)
+    rtlix, closure = None, {}
+    if tree and (Path(tree) / "rtl").is_dir():
+        rtlix = T.rtl_index(tree)
+        closure = T.rtl_closure(raw, tree, index=rtlix)
+    rows, ctrl, else_names = [], 0, []
     for sw, (c, d, f) in sorted(added.items()):
         if sw in have:
+            continue
+        if is_control(sw, f):
+            ctrl += 1
             continue
         try:
             mods = MOD.findall(_git(gd, ["show", f"{ref}:{f}"], 60))
         except Exception:  # noqa: BLE001
             mods = []
-        tg = sorted({t for m in mods for t in bymod.get(m, [])})
+        tg = set(t for m in mods for t in bymod.get(m, []))
+        inclo = f in closure
+        if inclo:
+            tg |= set(T.closure_types(raw, rtlix, [f]).get(f, []))
         fam = "_".join(sw.split("_")[:2])
         sib = {t for h, ts in have.items() if h != sw and "_".join(h.split("_")[:2]) == fam for t in ts}
-        if sib:     # the plan sets a sibling switch of the same family: its types run this file's module family
-            tg = sorted(set(tg) | sib)
-        rows.append((sw, c, d, f, mods, tg, bool(sib)))
-    rows.sort(key=lambda r: (not r[6], not r[5], r[0]))
+        if sib and (inclo or not closure):     # a sibling switch of the same family is set here and the file is live code
+            tg |= sib
+        tg = sorted(tg)
+        if not tg and not inclo:
+            else_names.append(sw)
+            continue
+        rows.append((sw, c, d, f, mods, tg, bool(sib), inclo))
+    rows.sort(key=lambda r: (not r[7], not r[6], not r[5], r[0]))
     out = []
-    for sw, c, d, f, mods, tg, sib in rows[:MAX_LINES]:
+    for sw, c, d, f, mods, tg, sib, inclo in rows[:MAX_LINES]:
         out.append(_w(f"{sw}: not set by this plan; added {d} in {c} file {f} (modules {','.join(mods[:3]) or '?'}); "
-                      f"{'SIBLING-SET ' if sib else ''}targets {len(tg)} type(s) here: {','.join(tg[:4]) or 'none instantiate its modules'}{' ...' if len(tg) > 4 else ''}"))
-    hit = sum(1 for r in rows if r[5])
-    sibn = sum(1 for r in rows if r[6])
-    out.append(_w("summary", f"{len(added)} switch(es) added on main in {days} d; {len(added) - len(rows)} set by this plan; {len(rows)} UNSET "
-                  f"({sibn} with a sibling of the same family set here, {hit - sibn} more in a module this plan instantiates, {len(rows) - hit} elsewhere); "
-                  f"first {min(len(rows), MAX_LINES)} listed, strongest first; main {ref[:10]}"))
+                      f"{'IN-BIND-RTL ' if inclo else ''}{'SIBLING-SET ' if sib else ''}"
+                      f"targets {len(tg)} type(s) here: {','.join(tg[:4]) or '-'}{' ...' if len(tg) > 4 else ''}; "
+                      f"fix = a row sets it on the target types (verilog_defines) or record why this die keeps it off"))
+    ninc = sum(1 for r in rows if r[7])
+    out.append(_w("summary", f"{len(added)} switch(es) added on main in {days} d; {len(added) - len(rows) - ctrl - len(else_names)} set by this plan; "
+                  f"{len(rows)} UNSET here ({ninc} in the bind-tree RTL closure of {len(closure)} file(s), {sum(1 for r in rows if r[6])} with a sibling of the same family set here, "
+                  f"{len(rows) - ninc} by module name / sibling only); "
+                  f"{ctrl} mutation/test control(s) skipped; {len(else_names)} in RTL this plan does not reach "
+                  f"({','.join(else_names[:6])}{' ...' if len(else_names) > 6 else ''}); main {ref[:10]}"
+                  + ("" if closure else "; no bind tree: targets by name only")))
     return out
 
 
