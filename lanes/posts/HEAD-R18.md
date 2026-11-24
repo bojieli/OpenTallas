@@ -160,3 +160,4 @@
   ETA for W and E GRT reads: about 22:00-23:00.
 - 2026-11-23 18:03 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] W-b-wch4b (hd_lep0N_w_1123175934/gen/hd_lep0N_w): stage [src_manifest RUNNING]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
 - 2026-11-23 18:03 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] W-a-wband (hd_lep0N_w_1123175932/gen/hd_lep0N_w): stage [src_manifest RUNNING]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
+- 2026-11-23 18:03 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] E-epin4-esc (hd_lep0N_1123175731/gen/hd_lep0N): stage [src_manifest RUNNING]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
