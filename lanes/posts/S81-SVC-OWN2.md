@@ -1,0 +1,1 @@
+- 2026-11-24 01:54 PST TAKING S81-SVC-OWN2 from OPUS-FIX-S81-SVC-R9 + S81-ALLFIX-SVC-SERDESRING: svc_hi_dsdv_svc_pvso_entry t1-t2, svc_hi_dsdv_svc_rs t1-t6, svc_lo_dsdv_svc_rs t1-t7, svc_lo_dsdv_svc_rs_w t1, serdes__t2 (cc parents)
