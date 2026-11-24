@@ -203,3 +203,6 @@
 - 2026-11-24 12:52 PST WAIT S81-R003-R011-wave epyc2 oth-ubuntu-3056654-1795533383: DONE rc=0 unit=oth-ubuntu-3056654-1795533383 host=dear-crayfish end=12:52:51 log=/srv/opentallas-scratch3/claude/romw-1119-s81/logs/wave_r2_r0.otrun.log
 - 2026-11-24 12:54 PST WAIT S81-R003-R011-wave epyc2 oth-ubuntu-3055615-1795533383: DONE rc=0 unit=oth-ubuntu-3055615-1795533383 host=dear-crayfish end=12:54:21 log=/srv/opentallas-scratch3/claude/romw-1119-s81/logs/wave_r2_r2.otrun.log
 - 2026-11-24 15:56 PST WAIT HEAD-overlay epyc11 oth-ubuntu-414955-1795531258: DONE rc=0 unit=oth-ubuntu-414955-1795531258 host=viable-ram end=23:56:03 log=/srv/opentallas-scratch2/claude/romw-1119/codex_streamed_overlay_1124/head_r18gw_rank0.otrun.log
+- 2026-11-24 15:57 PST WAIT HEAD-overlay epyc11 oth-ubuntu-560513-1795531502: ot-wait: timeout after 28800.0 s, otrun-viable-ram-558426 still running
+- 2026-11-24 15:57 PST WAIT HEAD-overlay epyc11 oth-ubuntu-761591-1795531837: ot-wait: timeout after 28800.0 s, otrun-viable-ram-760025 still running
+- 2026-11-24 15:57 PST WAIT HEAD-overlay epyc11 oth-ubuntu-496724-1795531391: ot-wait: timeout after 28800.0 s, otrun-viable-ram-493581 still running
