@@ -116,3 +116,20 @@ def test_live_pad_with_unmatched_stage_fails_closed(tmp_path):
     assert r.returncode != 0 and "OT_HOOK_COVERAGE istations: 1 planned packed stations matched no register" in r.stderr, r.stdout + r.stderr
     r = _run(tmp_path, names, _calls("u_lpad_a", [(1, 1), (2, 2), (3, 3)]), env_cov="warn")
     assert r.returncode == 0 and "OT_HOOK_COVERAGE WARN istations" in r.stdout, r.stdout + r.stderr
+
+
+def test_unsited_register_is_fatal(tmp_path):
+    # ISTATIONS-MISSING-FATAL-1123: a miss that names an existing register (1-bit q$_DFF_P_ under old tools) fails the hook
+    if not TCLSH:
+        return
+    reg = "u_bound.u_ist_flt_0.q$_DFF_P_"
+    names = [(reg, "DFFHQNx1_ASAP7_75t_R")]
+    r = _run(tmp_path, names, [f"lappend is_miss {{{reg}}}"])
+    assert r.returncode != 0 and "OT_ISTATIONS_UNSITED 1 station registers" in r.stderr, r.stdout + r.stderr
+    r = _run(tmp_path, names, [f"lappend is_miss {{{reg}:nostart}}"])
+    assert r.returncode != 0 and "OT_ISTATIONS_UNSITED" in r.stderr, r.stdout + r.stderr
+    r = _run(tmp_path, names, [f"lappend is_miss {{{reg}}}"], env_cov="warn")
+    assert r.returncode == 0 and "unsited_registers=1" in r.stdout and "OT_HOOK_COVERAGE WARN istations: 1 station registers" in r.stdout
+    # a pattern miss (no such register: synthesis removed the pad) stays a plain miss
+    r = _run(tmp_path, names, ["lappend is_miss {*u_gone[./]q*}"])
+    assert r.returncode == 0 and "unsited_registers=0" in r.stdout, r.stdout + r.stderr

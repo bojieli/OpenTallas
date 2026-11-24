@@ -721,9 +721,32 @@ proc is_place_alt {pat alt any x y tag} {
     }
   }
 }
+proc is_unsited {} {
+  # ISTATIONS-MISSING-FATAL-1123 (COORD 17:25, FABLE flow review; QC RSN -97.79 ps): a miss that names a REGISTER of the
+  # netlist (the flop exists, but no station rule sited it: e.g. a 1-bit station q$_DFF_P_ under pre-c84f tools, no start,
+  # no pin, no free site) is unsited, and GPL pulls it to the lane core.  A miss that names only a pattern (synthesis removed
+  # the whole pad) is a plain miss and stays reported.
+  global is_miss
+  set regs [dict create]
+  foreach e [is_dffs ""] { dict set regs [lindex $e 1] 1; dict set regs [lindex $e 2] 1 }
+  set out {}
+  foreach m $is_miss {
+    set nm [regsub {:(nostart|nopin)$} $m ""]
+    if {[dict exists $regs $nm]} { lappend out $m }
+  }
+  return $out
+}
 proc is_coverage_gate {} {
   global is_n is_miss is_hard
-  puts "OT_HOOK_COVERAGE hook=istations touched=$is_n missing=[llength $is_miss] packed_stage_unmatched=[llength $is_hard]"
+  set uns [is_unsited]
+  puts "OT_HOOK_COVERAGE hook=istations touched=$is_n missing=[llength $is_miss] packed_stage_unmatched=[llength $is_hard] unsited_registers=[llength $uns]"
+  if {[llength $uns]} {
+    if {[info exists ::env(OT_HOOK_COVERAGE)] && $::env(OT_HOOK_COVERAGE) eq "warn"} {
+      puts "OT_HOOK_COVERAGE WARN istations: [llength $uns] station registers exist but were not sited: [lrange $uns 0 19]"
+    } else {
+      error "OT_ISTATIONS_UNSITED [llength $uns] station registers exist but were not sited (ISTATIONS-MISSING-FATAL-1123; regenerate the kit on current tools): [lrange $uns 0 19]"
+    }
+  }
   if {![llength $is_hard]} return
   if {[info exists ::env(OT_HOOK_COVERAGE)] && $::env(OT_HOOK_COVERAGE) eq "warn"} {
     puts "OT_HOOK_COVERAGE WARN istations: packed stations without a register: $is_hard"; return
