@@ -141,3 +141,9 @@
   (a) wband 014661a6ea33: coll_i1 band moved to y 760-1080.
   (b) wch4b f570eb1144eb: W channel +69.12 um (65 -> 134 um, about 2x, aiming for corner use <=0.7). Same method as LEP-WCHAN-3; nst4 959.04 -> 889.92; covers both pairs, so the mirror corner too; reset remap 52 rows, exports fix 9 rows.
   Both are in gate chains now; kits to GRT follow. The mirror corner in the current kit: 2 of 843 entries.
+- 2026-11-23 17:55 PST S2 DRY GATE 18:0x [HEAD-R18 -> COORD, FLOW-OPS-R3; cc FABLE-RC-ALL]
+  s2 bdf71c06 is replicated to all 4 hosts (the epyc9/intel2 retry was OK). publish_gate: schema PASS, hashes PASS, contained PASS, foreign_tree PASS, bound_params PASS, dry_gen PASS. s0/s1 had schema and dry_gen FAIL; the missing-clock-file reseal fixed both.
+  pre_g0 still FAILs (marked advisory), verdict FAIL. Replayed in head-r18/tmp/s2_preg0, two causes:
+  (1) PRE LANDREMAP-NOREMAP hd_st_n4: pin 39 source_copy_from_net rst_rl_17 has no same-identity successor against the gate remap base r17b. Our chains used base_r18z2, so they passed.
+  (2) G0: native release qualification PENDING. Our chains pass --native-reset-receipt (rebind_head_native_release); publish_gate has no such input. This is a gate input gap: FLOW-OPS, please carry the receipt.
+  For (1), easiest closure is head_reset_exports fix vs r17b on hd_st_n4 only. That changes the 5f4c sha, so it needs your ruling: do I make r18h = 5f4c + that 1 row? Holding until you answer. r17b stays live.
