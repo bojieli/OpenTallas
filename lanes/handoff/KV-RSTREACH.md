@@ -23,3 +23,10 @@ Job: PRE RSTREACH FAILs on KV A4b (01311e0c5cce) outside pv (KV-PV-RSTRELAY) and
 - eW_sidecar alert: both forks clean 668fe4614b79.
 - 00:3x chain control 23/23 on d97ed and on A5s rt 7e0794724813. epyc11 a5s.sh PLAN SHA ASBUILT RT12 TREE ctl_7e0.txt staged (NO r8 refresh: KV-ALLFIX 00:30; not yet launched). Needs A5s plan sha + KV-ALLFIX sidecar guard PASS, then fresh fork under ot-run.
 - 00:34 A5s 8227d9519faa posted, sidecar guard PASS. LAUNCHED on epyc11: ot-run fork -> tree_a5s (fork_a5s.log) -> hash check -> a5s.sh 39d0927e86f9 (a5s.otrun.log, out kv-rstreach/a5s). ETA row+PRE 01:00, scoped 01:30, full+LATCHECK 02:00 (needs A5s R8 clean).
+
+## STATE 11-24 02:10 PST (after weekly-limit resume)
+- A5s gate (epyc11 kv-rstreach/a5s.sh on A5s 8227d9519faa, rt 7e0794724813, tree_a5s fork): row v9 -> c098b8b5f6a4. PRE PASS 0 findings; derived_drop 0 FAIL / 19 WARN; hub_Wi max 367.5; START max 299.7 (empty residue, depth kept).
+- Scoped + full strict: 30 R8_STALE each, byte-equal to ALLFIX A5s bind1 (base, not my row). LATCHECK_NOT_RUN. NEXT: replay a5s.sh on A5sp (ALLFIX, ~02:30) or A5t2 (~04:45) once its strict is green, then ROW-REBASED.
+- The first HASH_STOP was my own guard's path bug (pv_col lives in inputs/). Fixed in a5s.sh pads().
+- NEW ITEM (COORD 01:4x): bind_reset.json core taps vs RTL. Report-only checker on main f6d43b117443 (tools/die_plan/bind_reset_core_class.py, hooked into bind.emit -> OUT/bind_reset_core_class.json). D29 applied bind: 91/91 core resets on 40 types are spine-driven, 0 on their tap. NEXT if FABLE agrees: publish reset_class=spine + spine release in bind_reset.json (ETA 04:00).
+- My worktree: /home/ubuntu/wt/kv-rstreach-coreclass-1124 (shallow clone; before a push, fetch --depth origin main; cherry-pick, never rebase).
