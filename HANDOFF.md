@@ -3921,3 +3921,5 @@ OPS-WRITEUP: 2026-11-24 06:08 PST 06:08 hourly: 589 any / 485 current (+0 / +0 v
 CODEX: 2026-11-24 06:19 PST takeover active S81, HEAD, QC, KV, token/ROM, fleet/flow, geometry, and shared qualification. Existing admitted jobs continue.
 
 CODEX: 2026-11-24 06:24 PST S81 east ROM exact FF lib main 666e4921a9da. West and HEAD elemA/B await exact original parasitics or source DB.
+
+CODEX: 2026-11-24 06:43 PST S81 two reset pin collisions cleared and four lane prices reconciled without new cycles; main 95c263d17e45.

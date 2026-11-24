@@ -14502,3 +14502,7 @@ No new owner-level decision arose. Exact Fable scope reviews remain with Claude 
 Live lanes resumed with existing worker paths and run IDs. Latest archive census 589 any / 485 current at 06:05. HBM parked. Exact review precedes new routes.
 
 CORE-TAP-BUDGET: E10 inherited split extraction completed. S81 east exact FF view main 666e4921a9da, 68/68 TT arcs matched, FF median -128.09 ps. West missed exact TT range, and hd_tile source paths reference older removed DBs. Triage continues.
+
+### OWNER?
+
+May we stop the two inherited epyc10 QC rank-0 overlay writers that are writing the same GDS and .empty inodes? Recommendation: stop both exact writers, retain logs and conflicting outputs, and use a new single-writer attempt on epyc11 after the real bound origin is available. The direct writer is PID 3900535 in session-1290343.scope (parent bash 3899574), and the admitted writer is PID 4182155 in oth-ubuntu-4181526-1795523934.scope. Neither writer was started during this takeover. epyc10 scratch2 was 112.5 GiB and falling at 06:42.
