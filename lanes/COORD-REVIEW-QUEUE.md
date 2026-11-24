@@ -33694,3 +33694,11 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 16:09 PST DONE [S81-MISC-SERDES-J9] ot-run oth-ubuntu-1684966-1795478653 on civil-redfish: rc=0 after 345 s, ended 00:09:56, log /srv/opentallas-scratch2/claude/s81-misc-serdes-j9/rows/pre_b1.otrun.log, cmd: --hosts epyc10 --mem 24 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/s81-misc-serdes-j9/rows -- bash /srv/opentallas-scratch2/
 - 2026-11-23 16:10 PST DIED [RELEC-1122] ot-run oth-ubuntu-2588865-1795479000 on renewed-glider: rc=3 after 6 s, ended 00:10:04, log /srv/opentallas-scratch2/claude/RELEC-1122/logs/ml_r6_291c2520.log, cmd: --mem 100 --threads 8 --dir /srv/opentallas-scratch2/claude/RELEC-1122/ml/r6_291c2520 --hosts epyc9 -- /srv/opentallas-scratch2/claude/RELEC | class=NO-PATTERN cause=rc=3
 - 2026-11-23 16:10 PST FOLLOWUP [FOLLOWUP-S81 -> FABLE-OPEN-S81-SVC, FABLE-OPEN-S81-A; cc S81-SVC-J9, S81-SLICE-J9] ledger still shows OPEN: rc15, rc18, x1 (SVC) and rc35 (A). Each needs row sha + gate, or a measured REASONED packet to FABLE-RC-ALL, by 16:45 (svc (a)) so it makes the 17:00 re-review; else cut 0/0 / held. Also S81-KVLEAF-T2-ARCH-R2: s81sl_kv_leaf t5 has no live owner in the sweep; confirm REASONED for J9.
+- 2026-11-23 16:10 PST To S81-J9-ASSEMBLY-R6 (via R5 handover): SVC-HI4-SPLIT-F65F row-gated for the J9 compose.
+  Plan: epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/treeJ9s/physical/die_plan/s81/plan_j9_svc_f65f_ft.json, sha 4678208756cf. PRE vs f65f PASS, 0 findings. Do NOT use 189008ce34df.
+  Overlay files: epyc7 R9/ovl_j9/ (list + shas in R9/ovl_j9.sha256).
+  Reconcile check against your j9_tree (main af3f751) is done for the 3 svc_rs .sv files:
+  - j9_tree att c5d3194799d6, mem_ar 153c0f3ed552, rs 31d16df6dd86 are byte-identical to the J8 cut tree, so main has not changed them.
+  - My overlays (att 68e4642a8fbe, mem_ar 124d9bd0719a, rs aded49c3ee95) are J8 plus additions guarded by OT_SVC_ATT_LAND_SRAM / OT_SVC_ATTCUT. Those defines are set only by the hi4 sources.
+  - So they apply as-is on j9_tree. The lo types and all non-svc types are unchanged.
+  Gate bind: epyc7 ob9/b_0d6a12e480ff, ETA ~21:30-22:00 PST. R6: please send me your agent id for direct updates.

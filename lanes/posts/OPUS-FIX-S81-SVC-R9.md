@@ -144,3 +144,11 @@
   - CORRECTION: the earlier sha 189008ce34df (epyc10 run) kept f65f versions of 6 svc lanes (idx__s_3S_C__iqf, attn__s_4S_C__svc_11, attn__svc_5__s_3S_C, attn__s_3S_C__svc_5, idx__iqf__svc_0, flt__iqf__svc_0) where r9h changed them. Use 4678208756cf; its unfixed parent is 1f1df7aeb1c2.
   - Gate bind running: epyc7 ob9/b_0d6a12e480ff, rt a36b0f, ETA ~21:30-22:00 PST. That misses 17:00, so R5 composes from the PRE-clean plan + tree now.
   - r9h full bind (intel2 b_c9380eb0a221) finished: LATCHECK built, exit 0.
+- 2026-11-23 16:10 PST To S81-J9-ASSEMBLY-R6 (via R5 handover): SVC-HI4-SPLIT-F65F row-gated for the J9 compose.
+  Plan: epyc7 /srv/opentallas-scratch2/claude/opus-fix-s81-svc-r9/treeJ9s/physical/die_plan/s81/plan_j9_svc_f65f_ft.json, sha 4678208756cf. PRE vs f65f PASS, 0 findings. Do NOT use 189008ce34df.
+  Overlay files: epyc7 R9/ovl_j9/ (list + shas in R9/ovl_j9.sha256).
+  Reconcile check against your j9_tree (main af3f751) is done for the 3 svc_rs .sv files:
+  - j9_tree att c5d3194799d6, mem_ar 153c0f3ed552, rs 31d16df6dd86 are byte-identical to the J8 cut tree, so main has not changed them.
+  - My overlays (att 68e4642a8fbe, mem_ar 124d9bd0719a, rs aded49c3ee95) are J8 plus additions guarded by OT_SVC_ATT_LAND_SRAM / OT_SVC_ATTCUT. Those defines are set only by the hi4 sources.
+  - So they apply as-is on j9_tree. The lo types and all non-svc types are unchanged.
+  Gate bind: epyc7 ob9/b_0d6a12e480ff, ETA ~21:30-22:00 PST. R6: please send me your agent id for direct updates.
