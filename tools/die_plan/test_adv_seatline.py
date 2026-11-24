@@ -47,3 +47,12 @@ def test_per_bit_seats_override_station_window():
     assert len(n_pt) == 1 and not n_bit                       # point seat flags; real per-bit spread (234 x 234 um) meets the need
     assert S.seats(t)[0][4] > 200
     assert S.seats({"internal_stations": t["internal_stations"], "relay_sites": {}})[0][4] == 0.0   # fallback when per-bit seats are missing
+
+
+def test_hot_bin_spreads_over_per_bit_seats():
+    import adv_seatline as S
+    rs = {f"u_ist_b_x_0.q[{i}]": [10.0 + (i % 40) * 20.0, 10.0 + (i // 40) * 20.0] for i in range(1600)}
+    ist = [{"conn": "bus:b_x", "regs_um": [[10.0, 10.0]], "bits": 1600}] + [{"conn": f"bus:c{k}", "regs_um": [[1000.0 + 200 * k, 10.0]], "bits": 10} for k in range(6)]
+    hot_pt = S.judge(S.seats({"internal_stations": ist}))[1]
+    hot_bit = S.judge(S.seats({"internal_stations": ist, "relay_sites": rs}))[1]
+    assert hot_pt and not hot_bit      # point seat piles the area in one bin; 800 um of per-bit seats do not

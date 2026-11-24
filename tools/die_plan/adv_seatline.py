@@ -41,7 +41,7 @@ def need_side(bits, logic_x=LOGIC_X, cell=CELL_UM2, util=UTIL):
 
 
 def window_side(stage):
-    if not stage:
+    if not stage or not isinstance(stage[0], (list, tuple)):
         return 0.0
     xs = [p[0] for p in stage]
     ys = [p[1] for p in stage]
@@ -73,7 +73,7 @@ def seats(t):
         off = 1 if bs and len(bs) == len(regs) - 1 else 0
         for j, p in enumerate(regs):
             st = bs[j - off] if bs and 0 <= j - off < len(bs) else None
-            out.append((f"ft {s.get('name')}", j, (p[0], p[1]), w, window_side(st) if st else 0.0))
+            out.append((f"ft {s.get('name')}", j, (p[0], p[1]), w, window_side(st) if st else 0.0, [(q[0], q[1]) for q in st] if st else None))
     for e in t.get("internal_stations") or []:
         if not isinstance(e, dict):
             continue
@@ -82,18 +82,25 @@ def seats(t):
         for j, p in enumerate(regs):
             st = bs[j - (1 - off if off == 1 else 0) if False else (j if off == 0 else j - 1)] if bs and 0 <= (j if off == 0 else j - 1) < len(bs) else None
             pb = bseat.get((str(e.get("conn")).split(":")[-1], j))
-            out.append((str(e.get("conn")), j, (p[0], p[1]), b, window_side(pb) if pb and len(pb) > 1 else (window_side(st) if st else 0.0)))
+            pts = pb if pb and len(pb) > 1 else ([(q[0], q[1]) for q in st] if st else None)
+            out.append((str(e.get("conn")), j, (p[0], p[1]), b, window_side(pts) if pts and len(pts) > 1 else 0.0, pts))
     return out
 
 
 def judge(ss, logic_x=LOGIC_X, cell=CELL_UM2):
     """-> (narrow [(name, j, bits, window, need)], hot [(bin, density, x_median)], median_density)"""
     narrow, bins = [], defaultdict(float)
-    for name, j, xy, bits, win in ss:
+    for name, j, xy, bits, win, *rest in ss:
         ns = need_side(bits, logic_x, cell)
         if ns > MIN_SIDE_UM and win < ns:
             narrow.append((name, j, bits, win, ns))
-        bins[(int(xy[0] // BIN_UM), int(xy[1] // BIN_UM))] += bits * (1.0 + logic_x) * cell
+        pts = rest[0] if rest and rest[0] and len(rest[0]) > 1 else None
+        area = bits * (1.0 + logic_x) * cell
+        if pts:   # per-bit seats: spread the stage's cell area over its seats (the single regs_um point only when there are none)
+            for q in pts:
+                bins[(int(q[0] // BIN_UM), int(q[1] // BIN_UM))] += area / len(pts)
+        else:
+            bins[(int(xy[0] // BIN_UM), int(xy[1] // BIN_UM))] += area
     if not bins:
         return narrow, [], 0.0
     med = statistics.median(bins.values())
