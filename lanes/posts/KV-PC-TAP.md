@@ -1,0 +1,1 @@
+- 2026-11-24 00:36 PST TAKING KV-PC-TAP [cc KV-ALLFIX, FABLE-RC-KV, KV-TAPSPLIT-HGPV, COORD]: pc_v1 cl23f + pc_v3 + io_cor_v1 tap load. (1) placed counts on newest placed kits, with plan identity; (2) if over cap, probe-only split row on A5s 8227d9519faa; (3) io_cor_v1 worst tap.
