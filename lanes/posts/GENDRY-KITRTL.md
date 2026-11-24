@@ -1,0 +1,1 @@
+- 2026-11-23 20:40 PST TAKING GENDRY-KITRTL (split from KV-ALLFIX, COORD): fix PRE GENDRY false fails on 24 KV kit-RTL types (kv3_hg*/hgi*/hroot) by giving the dry gen the bound RTL or classifying explicitly; unit test; rerun PRE A3e + 1 QC + 1 S81; push + sha to FLOW-OPS-R3. cc KV-ALLFIX FLOW-OPS-R3
