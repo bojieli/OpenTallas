@@ -1638,22 +1638,25 @@ def test_yosys_version_gate(tmp_path, monkeypatch, banner, ok):
     assert info["ok"] is ok and info["min"] == "0.68" and info["version"] == banner
 
 
-def test_check_records_and_refuses_old_yosys(tmp_path, monkeypatch):
-    """lec.json carries the yosys version; yosys 0.67 (DFFASRHQN set-stuck import) is refused before any work."""
+def test_run_yosys_refuses_old_and_runs_new(tmp_path, monkeypatch):
+    """yosys 0.67 (DFFASRHQN set-stuck import) is refused before any yosys script runs; 0.68+post runs."""
+    old = tmp_path / "old"
+    old.mkdir()
+    monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(old, "Yosys 0.67 (git sha1 abc)"))
+    with pytest.raises(lec.LecError, match="LEC-YOSYS-MIN"):
+        lec.run_yosys("", tmp_path / "a.ys", [])
+    assert not (tmp_path / "a.ys").exists()
+    new = tmp_path / "new"
+    new.mkdir()
+    monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(new, "Yosys 0.68+post (git sha1 UNKNOWN)"))
+    assert lec.run_yosys("", tmp_path / "b.ys", []).returncode == 0
+
+
+def test_check_records_yosys_version(tmp_path, monkeypatch):
     monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(tmp_path, "Yosys 0.67 (git sha1 abc)"))
     kit = tmp_path / "kit"
     kit.mkdir()
     rec = lec.check(str(kit), out=str(tmp_path / "out"))
-    assert rec["verdict"] == "ERROR" and "LEC-YOSYS-MIN" in rec["reason"]
-    assert rec["yosys"]["version"].startswith("Yosys 0.67") and rec["yosys"]["ok"] is False
+    assert rec["verdict"] == "ERROR"
     on_disk = json.loads((tmp_path / "out" / "lec.json").read_text())
-    assert on_disk["yosys"]["version"].startswith("Yosys 0.67")
-
-
-def test_check_records_new_yosys_and_continues(tmp_path, monkeypatch):
-    monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(tmp_path, "Yosys 0.68+post (git sha1 UNKNOWN)"))
-    kit = tmp_path / "kit"
-    kit.mkdir()
-    rec = lec.check(str(kit), out=str(tmp_path / "out"))
-    assert rec["yosys"]["ok"] is True
-    assert "LEC-YOSYS-MIN" not in (rec.get("reason") or "")   # it went on to parse the (empty) kit
+    assert on_disk["yosys"]["version"].startswith("Yosys 0.67") and on_disk["yosys"]["ok"] is False

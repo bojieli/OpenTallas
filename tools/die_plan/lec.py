@@ -8087,7 +8087,28 @@ def yosys_version_info():
                 ok=bool(v is not None and v >= YOSYS_MIN))
 
 
+_YOSYS_GATE = {}
+
+
+def yosys_gate_info():
+    """yosys_version_info() once per yosys binary (cached)."""
+    y = yosys_bin()
+    if y not in _YOSYS_GATE:
+        _YOSYS_GATE[y] = yosys_version_info()
+    return _YOSYS_GATE[y]
+
+
+def require_yosys_min():
+    """LecError (verdict ERROR) before the first yosys run when that yosys is older than YOSYS_MIN or unreadable."""
+    info = yosys_gate_info()
+    if not info["ok"]:
+        raise LecError(f"yosys {info['version']!r} ({info['bin']}) is older than {info['min']} or its version is "
+                       f"unreadable: refused (LEC-YOSYS-MIN, 0.67 read_liberty DFFASRHQN import)")
+    return info
+
+
 def run_yosys(script, path, log):
+    require_yosys_min()
     Path(path).write_text(script)
     y = yosys_bin()
     r = subprocess.run([y, "-q", "-l", str(path) + ".log", "-s", str(path)], capture_output=True, text=True)
@@ -8356,10 +8377,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     rec = dict(schema=SCHEMA, kit=kit, generated=time.strftime("%Y-%m-%dT%H:%M:%S%z"), verdict="UNPROVEN")
     log = []
     try:
-        rec["yosys"] = yosys_version_info()
-        if not rec["yosys"]["ok"]:
-            raise LecError(f"yosys {rec['yosys']['version']!r} ({rec['yosys']['bin']}) is older than "
-                           f"{rec['yosys']['min']} or unreadable: refused (LEC-YOSYS-MIN, 0.67 DFFASRHQN import)")
+        rec["yosys"] = yosys_gate_info()     # recorded on every lec.json; enforced by run_yosys (require_yosys_min)
         env = parse_config(kit)
         top = env["DESIGN_NAME"]
         rec["reset_contract"] = reset_contract_gate(kit, top)
