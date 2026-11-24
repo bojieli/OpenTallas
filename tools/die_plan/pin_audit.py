@@ -89,7 +89,7 @@ def declared_clock_ports(pins_path):
     return {name for name, role in roles.items() if role == "clk"}
 
 
-def accepted_count_strap_bits(evidence):
+def accepted_count_strap_bits(evidence, unverified=False):
     """{bit names} of parent-tied count straps, from the kit's count_strap_evidence.json (count_strap_evidence.py).
 
     A strap counts only if the plan declares it in count_straps, it is a bound-only input of that width, and every
@@ -97,6 +97,8 @@ def accepted_count_strap_bits(evidence):
     """
     if not isinstance(evidence, dict) or not evidence.get("instances"):
         return set()
+    if evidence.get("verification") == "UNVERIFIED" and not unverified:
+        return set()            # plan literals only (no PASS bind tie audit): warned, never accepted as proof
     bound = {r.get("port"): (r.get("dir"), r.get("width")) for r in evidence.get("bound_only_pins") or []}
     bits = set()
     for strap in evidence.get("plan_count_straps") or []:
@@ -130,8 +132,10 @@ def main():
     W, H = die.xMax() / dbu, die.yMax() / dbu
     want = {pin_key(p): p for p in json.load(open(os.environ["PINS"]))}
     clock_ports = declared_clock_ports(os.environ["PINS"])
-    tied_straps = accepted_count_strap_bits(load_count_strap_evidence(os.environ["PINS"]))
-    res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[], count_straps_accepted=[])
+    cs_evidence = load_count_strap_evidence(os.environ["PINS"])
+    tied_straps = accepted_count_strap_bits(cs_evidence)
+    warn_straps = accepted_count_strap_bits(cs_evidence, unverified=True) - tied_straps   # UNVERIFIED: report-only
+    res = dict(pins=len(want), ok=0, missing=[], wrong_layer=[], wrong_place=[], extra=[], count_straps_accepted=[], count_straps_unverified=[])
     seen = set()
     aliases = scalar_aliases(want, [bt.getName() for bt in block.getBTerms()])
     res["scalar_aliases"] = aliases
@@ -142,7 +146,7 @@ def main():
             # so are the 12.2a1 pushdown island feed-through ports (ft_ck_i/o, ft_rst_i/o, mp_isl*: die-owned, checked by
             # the ft_ports / pushdown gates, not by the face-pin table)
             if n not in clock_ports and not INTERIOR.match(n) and not bt.getSigType() in ("POWER", "GROUND"):
-                res["count_straps_accepted" if n in tied_straps else "extra"].append(n)
+                res["count_straps_accepted" if n in tied_straps else "count_straps_unverified" if n in warn_straps else "extra"].append(n)
             continue
         seen.add(n)
         p = want[n]
@@ -167,6 +171,9 @@ def main():
         res[k + "_n"] = len(res[k])
         res[k] = res[k][:20]
     res["count_straps_accepted_n"] = len(res["count_straps_accepted"])
+    res["count_straps_unverified_n"] = len(res["count_straps_unverified"])
+    if res["count_straps_unverified_n"]:
+        print(f"PIN_AUDIT_WARN {res['count_straps_unverified_n']} count-strap pin(s) tied only by plan literals (UNVERIFIED, no PASS bind tie audit): {res['count_straps_unverified'][:4]}")
     res["verdict"] = "PASS" if res["ok"] == res["pins"] and not res["extra_n"] else "FAIL"
     json.dump(res, open(os.environ["OUT"], "w"), indent=1)
     print(f"PIN_AUDIT {res['verdict']} {res['ok']}/{res['pins']} missing {res['missing_n']} wrong_layer "

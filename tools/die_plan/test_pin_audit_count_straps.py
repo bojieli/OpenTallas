@@ -153,45 +153,58 @@ def test_missing_tie_audit_writes_no_ties(tmp_path):
     assert PA.accepted_count_strap_bits(json.loads((tmp_path / CSE.FILE).read_text())) == set()
 
 
-# KIT-STRAP-EVIDENCE 11-23: a kit_rtl.json without instances/bound_only_pins (HEAD wave) must not give an empty evidence
+# KIT-STRAP-EVIDENCE 11-23: HEAD wave kit_rtl.json has no instances/bound_only_pins; ties come from the bound plan's PASS tie audit
 HEAD_TYPE = dict(count_straps=[dict(name="strap_ca_k_coll_i0", width=6)])
-HEAD_PARTS = [("lep0N_w", dict(type="t", id_straps={"strap_ca_k_coll_i0": 12, "strap_rst_ph": 1}))]
+HEAD_PARTS = [("lep0N_w", dict(type="t", id_straps={"strap_rst_ph": 1}))]
+HEAD_AUDIT = dict(verdict="PASS", rows=2029, accepted=[["lep0N_w.strap_ca_k_coll_i0", "6'b001100"], ["lk.strap_rst_ph", "1'd1"]])
+BITS6 = {f"strap_ca_k_coll_i0[{b}]" for b in range(6)}
 
 
-def head_kit(tmp_path):
-    (tmp_path / "kit_rtl.json").write_text(json.dumps(dict(schema="opentallas.head_wave_kit_rtl.v1", plan_type="t")))
+def head_kit(tmp_path, audit=HEAD_AUDIT):
+    (tmp_path / "kit_rtl.json").write_text(json.dumps(dict(schema="opentallas.head_wave_kit_rtl.v1", plan_type="t",
+                                                          **({"tie_audit": str(tmp_path / "ta.json")} if audit else {}))))
+    if audit:
+        (tmp_path / "ta.json").write_text(json.dumps(audit))
     return tmp_path / "kit_rtl.json"
 
 
-def test_head_wave_kit_rtl_evidence_from_plan(tmp_path):
+def test_head_wave_evidence_from_bind_tie_audit_with_sha(tmp_path):
     ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=HEAD_PARTS, strict=True)
-    assert ev["instances"] == ["lep0N_w"] and ev["parent_ties"] == {"strap_ca_k_coll_i0": {"lep0N_w": "6'd12"}}
-    assert PA.accepted_count_strap_bits(json.loads((tmp_path / CSE.FILE).read_text())) == {f"strap_ca_k_coll_i0[{b}]" for b in range(6)}
+    assert ev["verification"] == "VERIFIED" and len(ev["tie_audit"]["sha256"]) == 64
+    assert ev["parent_ties"] == {"strap_ca_k_coll_i0": {"lep0N_w": "6'b001100"}}
+    assert PA.accepted_count_strap_bits(json.loads((tmp_path / CSE.FILE).read_text())) == BITS6
 
 
-def test_mutant_missing_plan_tie_fails_at_gen(tmp_path):
-    parts = [("lep0N_w", dict(type="t", id_straps={"strap_rst_ph": 1}))]
-    with pytest.raises(ValueError, match="empty/short"):
-        CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=parts, strict=True)
+def test_missing_audit_plan_literals_are_unverified_report_only(tmp_path, capsys):
+    parts = [("lep0N_w", dict(type="t", id_straps={"strap_ca_k_coll_i0": 12}))]
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path, None), parts=parts)       # no raise, report-only
+    assert ev["verification"] == "UNVERIFIED" and PA.accepted_count_strap_bits(ev) == set()
+    assert PA.accepted_count_strap_bits(ev, unverified=True) == BITS6
+    assert "COUNT_STRAP_EVIDENCE_WARN" in capsys.readouterr().out
 
 
-def test_mutant_no_instances_fails_at_gen(tmp_path):
-    with pytest.raises(ValueError, match="empty/short"):
-        CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=[("x", dict(type="t"))], strict=True)
+def test_strict_raises_on_unverified(tmp_path):
+    with pytest.raises(ValueError, match="UNVERIFIED"):
+        CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path, None), parts=HEAD_PARTS, strict=True)
+
+
+def test_fail_audit_is_not_evidence(tmp_path):
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path, dict(HEAD_AUDIT, verdict="FAIL")), parts=HEAD_PARTS)
+    assert PA.accepted_count_strap_bits(ev) == set()
+
+
+def test_cross_check_counts_mismatch(tmp_path, capsys):
+    parts = [("lep0N_w", dict(type="t", id_straps={"strap_ca_k_coll_i0": 13}))]
+    CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path), parts=parts)
+    assert "compared=1 mismatch=1" in capsys.readouterr().out
 
 
 def test_sited_strap_needs_no_evidence(tmp_path):
     typ = dict(count_straps=[dict(name="strap_ca_k_coll_i0", width=6, sites_um=[[0, 0]] * 6)])
-    CSE.write_for_kit(tmp_path, typ, head_kit(tmp_path), parts=[("x", dict(type="t"))], strict=True)
+    CSE.write_for_kit(tmp_path, typ, head_kit(tmp_path), parts=HEAD_PARTS, strict=True)
 
 
-def test_kit_rtl_with_bind_audit_still_wins_and_strict_checks_it(tmp_path):
-    kit_rtl = tmp_path / "kit_rtl.json"
-    kit_rtl.write_text(json.dumps(KIT_RTL))
-    (tmp_path / "bind_sidecars").mkdir()
-    (tmp_path / "bind_sidecars" / "bind_tie_audit.json").write_text(json.dumps(TIES))
-    ev = CSE.write_for_kit(tmp_path, TYPE, kit_rtl, parts=[("a_b", dict(type="t"))], strict=True)
-    assert PA.accepted_count_strap_bits(ev) == BITS
-    (tmp_path / "bind_sidecars" / "bind_tie_audit.json").write_text(json.dumps(dict(TIES, verdict="FAIL")))
-    with pytest.raises(ValueError, match="empty/short"):
-        CSE.write_for_kit(tmp_path, TYPE, kit_rtl, parts=[("a_b", dict(type="t"))], strict=True)
+def test_pin_audit_unverified_bits_warn_not_fail(tmp_path, monkeypatch):
+    ev = CSE.write_for_kit(tmp_path, HEAD_TYPE, head_kit(tmp_path, None), parts=[("lep0N_w", dict(type="t", id_straps={"strap_ca_k_coll_i0": 12}))])
+    rc, res = run_audit(tmp_path, monkeypatch, [f"strap_ca_k_coll_i0[{b}]" for b in range(6)], ev)
+    assert (rc, res["extra_n"], res["count_straps_unverified_n"]) == (0, 0, 6)

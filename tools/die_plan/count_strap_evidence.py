@@ -8,7 +8,9 @@ bound-only input of the same width, and the bind tie audit (PASS) has a literal 
 
     count_strap_evidence.py <plan.json> <type> <kit_rtl.json> <kit dir>
 """
+import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -36,22 +38,55 @@ def build(type_plan, kit_rtl, tie_audit):
                 parent_ties=ties)
 
 
-def plan_facts(type_plan, parts):
-    """KIT-STRAP-EVIDENCE 11-23: the kit_rtl facts from the die plan, for a kit_rtl.json that carries none (HEAD wave
-    head_wave_kit_rtl.v1: no instances / bound_only_pins / bound_type).  gen.py rtl ties every count strap on the die top from
-    partitions[].id_straps (gen_rtl.die_top), so the plan holds the same literals the bind tie audit records.
-    parts = [(instance name, partition dict)] of this type -> (kit_rtl-like dict, tie_audit-like dict)"""
-    straps = type_plan.get("count_straps") or []
-    names = {r["name"] for r in straps}
-    rows = []
-    for inst, part in parts:
-        for name, value in sorted((part.get("id_straps") or {}).items()):
-            if name in names:
-                width = next(int(r["width"]) for r in straps if r["name"] == name)
-                rows.append([sv_id(inst), name, f"{width}'d{int(value)}"])
-    kit_rtl = dict(instances=sorted(sv_id(i) for i, _ in parts),
-                   bound_only_pins=[dict(port=r["name"], dir="input", width=int(r["width"])) for r in straps])
-    return kit_rtl, dict(verdict="PASS", rows=rows)
+def audit_literals(doc):
+    """{(instance, port): literal} of a PASS tie audit; both schemas: straps.audit_top_ties rows [[inst, port, lit]] and the
+    HEAD die portbind file (rows = a count, accepted = [["inst.port", lit]]).  {} for a missing or FAIL audit."""
+    if not isinstance(doc, dict) or doc.get("verdict") != "PASS":
+        return {}
+    out = {}
+    rows = doc.get("rows")
+    if isinstance(rows, list):
+        for inst, port, lit in rows:
+            out[(inst, port)] = lit
+    for key, lit in doc.get("accepted") or []:
+        inst, _, port = key.rpartition(".")
+        out.setdefault((inst, port), lit)
+    return out
+
+
+def find_audit(kit_rtl_json, kit_rtl):
+    """-> first existing tie-audit file of the BOUND plan: kit copy / bind_out bind_tie_audit.json, bind_out tie_audit.json (HEAD die
+    portbind), kit_rtl.tie_audit, env OT_BIND_TIE_AUDIT; None when none exists"""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import bound_r8_straps as _BRS
+    found = _BRS.bind_file(kit_rtl_json, kit_rtl, "bind_tie_audit.json") if kit_rtl_json else None
+    if found:
+        return found
+    cands = []
+    if kit_rtl.get("bind_out"):
+        cands.append(Path(kit_rtl["bind_out"]) / "tie_audit.json")
+    for c in (kit_rtl.get("tie_audit"), os.environ.get("OT_BIND_TIE_AUDIT")):
+        if c:
+            cands.append(Path(c))
+    return next((c for c in cands if c.is_file()), None)
+
+
+def plan_literals(type_plan, parts):
+    """{(instance, port): literal} the plan carries (partitions[].id_straps) for the type's count straps; UNVERIFIED (same source
+    as the die-top RTL gen, so it cannot catch a bind that computes another value)"""
+    straps = {r["name"]: int(r["width"]) for r in type_plan.get("count_straps") or []}
+    return {(sv_id(i), n): f"{straps[n]}'d{int(v)}" for i, part in parts for n, v in (part.get("id_straps") or {}).items() if n in straps}
+
+
+def lit_value(lit):
+    w, v = lit.replace(" ", "").split("'")
+    return int(w), int(v[1:].replace("_", ""), {"b": 2, "d": 10, "h": 16}[v[0].lower()])
+
+
+def cross_check(plan_lits, audit_lits):
+    """-> (compared, mismatched): plan literals against audit literals of the same (instance, port)"""
+    both = [k for k in plan_lits if k in audit_lits]
+    return len(both), sum(1 for k in both if lit_value(plan_lits[k]) != lit_value(audit_lits[k]))
 
 
 def missing_bits(type_plan, evidence):
@@ -68,38 +103,53 @@ def missing_bits(type_plan, evidence):
     return out
 
 
-def write_for_kit(kit, type_plan, kit_rtl_json, parts=None, strict=False):
+def write_for_kit(kit, type_plan, kit_rtl_json, parts=None, strict=None):
     """write kit/FILE when the type declares count straps; -> the evidence, or None (no file: pin_audit stays strict).
-    kit_rtl without instances/bound_only_pins (HEAD wave) takes them from the plan (parts).  strict: an evidence that leaves
-    a declared strap unaccepted raises here (GENDRY), not at PIN_AUDIT after the route."""
+    Ties come from the bound plan's PASS tie audit (sha recorded).  kit_rtl without instances/bound_only_pins (HEAD wave) takes
+    the instances and pins from the plan (parts); a type the audit does not cover falls back to the plan literals, labelled
+    verification UNVERIFIED (pin_audit warns, does not fail).  Report-only (COUNT_STRAP_EVIDENCE_WARN) unless strict or
+    OT_STRAP_EVIDENCE_STRICT=1, then a declared strap with no VERIFIED tie raises."""
+    if strict is None:
+        strict = os.environ.get("OT_STRAP_EVIDENCE_STRICT") == "1"
     if not type_plan.get("count_straps"):
         return None
-    if not Path(kit_rtl_json).is_file():
-        if not (strict and parts):
-            return None
-        kit_rtl = {}
+    have = Path(kit_rtl_json).is_file()
+    if not have and not parts:
+        return None
+    kit_rtl = json.loads(Path(kit_rtl_json).read_text()) if have else {}
+    audit_file = find_audit(kit_rtl_json, kit_rtl)
+    audit = json.loads(audit_file.read_text()) if audit_file else {}
+    lits = audit_literals(audit)
+    if kit_rtl.get("instances") and kit_rtl.get("bound_only_pins"):
+        evidence = build(type_plan, kit_rtl, dict(verdict="PASS" if lits else "FAIL", rows=[[i, p, l] for (i, p), l in lits.items()]))
     else:
-        kit_rtl = json.loads(Path(kit_rtl_json).read_text())
-    if parts and not (kit_rtl.get("instances") and kit_rtl.get("bound_only_pins")):
-        plan_kr, plan_ties = plan_facts(type_plan, parts)
-        evidence = build(type_plan, dict(plan_kr, bound_type=kit_rtl.get("bound_type") or kit_rtl.get("plan_type")), plan_ties)
-        evidence["source"] = "plan partitions[].id_straps (kit_rtl.json has no instances/bound_only_pins)"
-        bad = missing_bits(type_plan, evidence) if strict else []
-        if bad:
-            raise ValueError(f"count_strap_evidence empty/short: {len(bad)} declared count-strap bit(s) not tied on every instance "
-                             f"(plan partitions id_straps): {bad[:6]}")
-        (Path(kit) / FILE).parent.mkdir(parents=True, exist_ok=True)
-        (Path(kit) / FILE).write_text(json.dumps(evidence, indent=1) + "\n")
-        return evidence
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    import bound_r8_straps as _BRS              # FLOW-PROC-A 11-21: kit copy first, then bind_out
-    tie_file = _BRS.bind_file(kit_rtl_json, kit_rtl, "bind_tie_audit.json")
-    tie_audit = json.loads(tie_file.read_text()) if tie_file else {}
-    evidence = build(type_plan, kit_rtl, tie_audit)
-    bad = missing_bits(type_plan, evidence) if strict else []
-    if bad:
-        raise ValueError(f"count_strap_evidence empty/short: {len(bad)} declared count-strap bit(s) not accepted "
-                         f"(kit_rtl instances {len(evidence['instances'])}, ties {len(evidence['parent_ties'])}): {bad[:6]}")
+        parts = parts or []
+        straps = type_plan["count_straps"]
+        shell = dict(instances=sorted(sv_id(i) for i, _ in parts), bound_type=kit_rtl.get("bound_type") or kit_rtl.get("plan_type"),
+                     bound_only_pins=[dict(port=r["name"], dir="input", width=int(r["width"])) for r in straps])
+        evidence = build(type_plan, shell, dict(verdict="PASS" if lits else "FAIL", rows=[[i, p, l] for (i, p), l in lits.items()]))
+    evidence["verification"] = "VERIFIED"
+    evidence["tie_audit"] = dict(path=str(audit_file) if audit_file else None, verdict=audit.get("verdict"),
+                                 sha256=hashlib.sha256(audit_file.read_bytes()).hexdigest() if audit_file else None)
+    plan_lits = plan_literals(type_plan, parts or [])
+    if parts and missing_bits(type_plan, evidence):
+        evidence["verification"] = "UNVERIFIED"
+        evidence["unverified_parent_ties"] = {}
+        for (inst, port), lit in plan_lits.items():
+            evidence["unverified_parent_ties"].setdefault(port, {})[inst] = lit
+        evidence["parent_ties"] = evidence["unverified_parent_ties"]
+        evidence["parent_ties_source"] = "plan partitions[].id_straps (no PASS bind tie audit literal)"
+    compared, mism = cross_check(plan_lits, lits)
+    bad = missing_bits(type_plan, evidence) if evidence["verification"] == "VERIFIED" else sorted(
+        f"{r['name']}[{b}]" for r in type_plan["count_straps"] if not r.get("sites_um") for b in range(int(r["width"])))
+    print(f"COUNT_STRAP_EVIDENCE_CHECK {evidence['verification']} audit={evidence['tie_audit']['verdict']} "
+          f"audit_rows={len(lits)} plan_literals={len(plan_lits)} compared={compared} mismatch={mism} unverified_bits={len(bad) if evidence['verification'] != 'VERIFIED' else 0}")
+    if mism or bad:
+        msg = (f"count_strap_evidence {evidence['verification']}: {len(bad)} declared count-strap bit(s) without a PASS bind tie-audit "
+               f"literal, plan/audit literal mismatches {mism}: {bad[:6]}")
+        if strict and evidence["verification"] != "VERIFIED":
+            raise ValueError(msg)
+        print("COUNT_STRAP_EVIDENCE_WARN " + msg)
     (Path(kit) / FILE).parent.mkdir(parents=True, exist_ok=True)
     (Path(kit) / FILE).write_text(json.dumps(evidence, indent=1) + "\n")
     return evidence
