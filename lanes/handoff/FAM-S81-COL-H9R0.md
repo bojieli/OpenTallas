@@ -18,3 +18,4 @@ Job: close S81 col_h9. (1) i2 structural cause + fix; (2) t12 count check; (3) c
 - Then rep kit p2 col_h9_r0_p2__t1__cl9f71e63d__pva4376595 via kit_wave private-spec (template intel2 fam-s81-col-h9r0-r4/tmp/sealed_launch.sh; --tree c8_tree --bind-out .../native_bind/srcstage_out --goal route --src-manifest seal).
 - Then post ROW-REBASED to INT (flag p3/p6 names from placed_scan).
 - 08:5x: E11-IO-STALL: first fork (jobs 8) stopped at 7.2 GB, partial ot-deleted; re-fork --jobs 2 OT_TREE_FORK_STREAMS=2 intel2 pid 3271368 log ~/fam-s81-col-h9r0/fork_c8_j2.log. Never fork at high parallelism (one fork per source disk).
+- 09:0x: fork RETARGETED to epyc7 (COORD: E11 saturated). E11 fork stopped (exact PIDs), partial ot-deleted. Fork now runs ON epyc7 (pid 1282367, OT_TREE_FORK_STREAMS=2 set locally: with --host the env is not passed, so 12 streams ran), log epyc7 fam-s81-col-h9r0/fork_c8_e7.log. Gate + rep kit on epyc7. gate_src.sh + rows copied to epyc7 lane dir.
