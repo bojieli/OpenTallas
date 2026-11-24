@@ -5860,6 +5860,42 @@ def probe_only_filter(errs, probe):
     return [e for e in errs if (str(e).split() + ["", ""])[1].rstrip(":") in keep]
 
 
+def _module_types(B):
+    """bound module -> set of the types owning a cell of that module (partition members of every type, emitted or not)"""
+    mt = defaultdict(set)
+    for tn, ps in B.by_type.items():
+        for p in ps:
+            for ci in B.members[p]:
+                mt[B.F.cells[ci].module].add(tn)
+    return mt
+
+
+def probe_scope_split(errs, probe, known_types, module_types=None):
+    """SCOPED-BIND-NONEMIT 11-23: on a probe-only OUT (OT_BIND_ONLY_TYPES / --types) an error that names a bound type the probe did NOT
+    emit is out of scope: it becomes a WARN-OUT-OF-SCOPE warning and never blocks the in-scope outputs (native_topology.json, receipt).
+    An untyped LATCH_EXCEPT_MODULE key is mapped through module_types (bound module -> owning types, from the bind's partition members):
+    out of scope only when it maps to types and none of them is emitted; it stays an error when any owner is emitted or the module
+    cannot be mapped (COORD).  Errors that name an emitted type, or no type at all, stay errors.  A full bind (probe None) keeps
+    every error.  -> (errors, warnings)"""
+    if not probe:
+        return list(errs), []
+    keep_t = set(probe.get("emitted") or [])
+    known = set(known_types or ())
+    mt = module_types or {}
+    keep, warn = [], []
+    for e in errs:
+        toks = str(e).split()
+        code, tok = (toks + ["", ""])[0], (toks + ["", ""])[1].rstrip(":")
+        tn = tok.split("/", 1)[0]
+        if code == "LATCH_EXCEPT_MODULE" and "/" not in tok:
+            owners = set(mt.get(tok) or ())
+            out = bool(owners) and not (owners & keep_t)
+        else:
+            out = tn in known and tn not in keep_t
+        (warn if out else keep).append(f"WARN-OUT-OF-SCOPE {e}" if out else e)
+    return keep, warn
+
+
 def cmd_elab(a):
     raw = load_plan(a.plan)
     import manifest_paths
@@ -6203,6 +6239,13 @@ def cmd_bind(a):
                 LPS.write_die_record(os.environ["OT_DIE_SIGNOFF_RECORD"], lps, detail=str(_lb / "landing_phase_sign.json"))
     except Exception as exc:                # advisory: a failure is recorded, never raised
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
+    if getattr(B, "probe_only", None):           # SCOPED-BIND-NONEMIT 11-23: non-emitted types' findings are warnings on a probe OUT
+        B.errors[:], _oos = probe_scope_split(B.errors, B.probe_only, B.by_type, _module_types(B))
+        B.warns.extend(_oos)
+        rep["warnings"] = B.warns[:500]
+        rep["probe_only"]["out_of_scope_warnings"] = len(_oos)
+        if _oos:
+            print(f"bind: {len(_oos)} WARN-OUT-OF-SCOPE finding(s) on types the probe did not emit (not errors)", flush=True)
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     _fresh_write_text(out / "bus_groups.json", json.dumps(bg, indent=0))
     # LOCAL-RESET-RAW-1: landing_local_resets raw names re-picked on this bind's relay set (clock_landings._local_resets); the plan
