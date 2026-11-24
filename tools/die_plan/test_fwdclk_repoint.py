@@ -101,3 +101,21 @@ def test_repick_report_two_sided_with_whatif():
         "1": dict(tap="k1", hop=60, xy=[60, 0], pin=[0, 0], min=40, max=180)}}}}
     rows = FR.repick_report(raw, None, whatif=W, grid_of=lambda tn: grid)
     assert rows[0]["new"] == "mid" and rows[0]["kit"] == "T" and "max 200->180" in FR.repick_lines(rows)[0]
+
+
+def test_apply_measured_only_keeps_unmeasured_tap():
+    grid = {"clk": (0, 0), "far": (400, 0), "near": (20, 0)}
+    t = _type("far")
+    rows = FR.repoint_type("T", t, grid, apply={"measured"})
+    assert rows[0]["basis"] == "UNMEASURED" and rows[0]["applied"] is False
+    assert t["clock"]["landing_contract"]["pins"][0]["source_clock_port"] == "far"
+
+
+def test_only_restricts_written_pins():
+    grid = {"clk": (0, 0), "far": (400, 0), "near": (20, 0)}
+    t = _type("far")
+    rows = FR.repoint_type("T", t, grid, only=set())
+    assert rows[0]["applied"] is False and rows[0]["held"]
+    assert t["clock"]["landing_contract"]["pins"][0]["source_clock_port"] == "far"
+    rows = FR.repoint_type("T", t, grid, only={"fclk_out_x"})
+    assert rows[0]["applied"] and t["clock"]["landing_contract"]["pins"][0]["source_clock_port"] == "near"
