@@ -18,3 +18,6 @@ Pending: compose-A probe CTS (epyc8 ot-job ...place-outgoing-giraffe-2746461...)
 Waiters: compose-A CTS (epyc8 job dir OT_CTS_POST_TIMING).
 20:41 FABLE-RC-QC: do BOTH (private probe epyc11 + QC-ALLFIX compose). Probe checks: (a) f-bank hops + landing leg + bank tap/hold; (b) other r[3]/r[4] consumers; (c) family = only sle_ctl type (done, posted).
 Private probe: plan 30c963888225 = cA + row. Trees: epyc8 + epyc11 /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/rp/tree. Bind: running on epyc8 rp/bind_rp.sh -> rp/bind (log rp/bind_rp.ot, rp/bind.log). Then copy rp/bind to epyc11 and run intel2 /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN-probe.sh /srv/opentallas-scratch2/claude/QC-SLECTL-RESYN/rp grt sle_ctl__cla4f6f12f
+21:27 bind rp: strict 0 errors, LATCHECK PASS 1921/1921; copied to epyc11 rp/bind. PROBE LAUNCHED spec hub autopilot/private_specs/QC-SLECTL-RESYN/qwen_compute_sle_ctl__cla4f6f12f_1123212710 (gen epyc11, goal grt).
+Baseline compose-A probe: place done 20:58 (detailed place WS -241.23), in geom; 16442 relay_sites unmatched there (warning mode) -> check my 24 keys are NOT in my probe's ot_relay_sites_unmatched.txt.
+At CTS of each: sta_sum_rcx.sh KIT run/results/asap7/dp_sle_ctl__cla4f6f12f/base/4_1_cts.odb .../4_cts.sdc OUT TAG ; census.py ; locs.sh (edit locs.tcl patterns for f-bank).
