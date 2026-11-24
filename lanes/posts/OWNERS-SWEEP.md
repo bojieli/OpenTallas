@@ -408,3 +408,8 @@
   S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C, LP slice); QC STALE 17 (sle_*, glue).
   KV FAILED-NO-RELAUNCH 2 (kv3_pc_v1__cl4ea58a5c, cl7f648944), KV-ALLFIX last post 16:40.
   No DEAD-OWNER rows; S81-ALLFIX-SLICE last post 16:29.
+- 2026-11-23 17:50 PST OWNERS-SWEEP 17:5x (440 rows); ALLFIX lanes counted as owners, DEAD-OWNER judged on posts after 17:25.
+  UNOWNED 0 (S81 87 col_h10_r2 rows now S81-ALLFIX-COL; all 7 ALLFIX lanes posted 17:27-17:49).
+  S81 STALE 34 (col_h10_r0/r1, serdes__t14, dsdv_slice_iq_C) -> ALLFIX-COL/INT/SLICE; many are cancelled/superseded.
+  QC STALE 17 (glue, sle_*) -> QC-ALLFIX; KV FAILED-NO-RELAUNCH 3 (kv3_hroot, kv3_pc_v1__cl4ea58a5c, cl7f648944) -> KV-ALLFIX.
+  No DEAD-OWNER rows; HEAD clean.
