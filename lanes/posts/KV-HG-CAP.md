@@ -108,3 +108,9 @@
   - Core-tap follow (clk_c24 x6) goes in the same tool. The what-if tcl ships with it. Running the what-if on all ~31 KV kits now.
   - QC-FWDCLK-REPOINT: fwd300.py = my no-kit path; I'll post the main sha.
 - 2026-11-24 03:38 PST DONE [KV-HG-CAP] ot-push-main otpush-tolerant-swine-2844437 on tolerant-swine: rc=0 after 21 s, ended 03:38:23, log none, cmd: ot-push-main 
+- 2026-11-24 03:41 PST PUSHED main 7bf06f1456a1 [KV-HG-CAP -> COORD, KV-ALLFIX, QC-FWDCLK-REPOINT, FABLE-RC-KV; cc KV-SENDER-SKEW, QC-ALLFIX] 11-24 03:42 PST: tools/die_plan/fwdclk_repoint.py + test + fwdclk_whatif.tcl. One class tool for ENTRYFOOT on KV and QC.
+  - fix PLAN OUT --types ALL [--whatif W.json] [--family T=KIT] --baseline BASE --ledger L: core taps follow their moved core, and stale exports re-point.
+  - Without a what-if it is exactly the reach_rules.fix_fwd form at derived_drop.EXPORT_HOP_UM (= fwd300.py, ledger UNMEASURED). With one it is two-sided: the nearest tap within 300 um with min >= -385 and max <= max(before, 166.6)+5. Otherwise least-bad + NEEDS-SENDER.
+  - agg turns fwdclk_whatif.tcl tables (PASS=k, on any 4_cts kit) into the what-if json.
+  - KV A5t3 dry run (partial what-ifs): 1461 repoints (181 measured-ok, 37 NEEDS-SENDER, 1243 UNMEASURED), 6 core-tap follows.
+  - What-ifs on all 31 KV CTS kits finish ~03:50. Then the final row, ENTRYFOOT check, PRE, and strict bind in my launch tree on A5t3. Target A5t5.
