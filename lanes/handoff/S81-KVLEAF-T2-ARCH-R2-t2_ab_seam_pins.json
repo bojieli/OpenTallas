@@ -1,0 +1,4365 @@
+{
+ "schema": "opentallas.s81.kvleaf_t2_ab_seam_pins.v1",
+ "lane": "S81-KVLEAF-T2-ARCH-R2",
+ "instance": "u_lf.g_kv.u_kv",
+ "module": "ot_s81sl_kv_leaf",
+ "rtl_sha": "c149c0966d7c (ports unchanged by ca915a50222a and by the kvx chains)",
+ "total_bits": 709,
+ "inputs_to_B": 420,
+ "outputs_from_B": 289,
+ "ports": [
+  {
+   "port": "clk",
+   "dir_at_B": "in",
+   "width": 1,
+   "role": "clock"
+  },
+  {
+   "port": "rst_n",
+   "dir_at_B": "in",
+   "width": 1,
+   "role": "reset"
+  },
+  {
+   "port": "c_v",
+   "dir_at_B": "in",
+   "width": 1,
+   "role": "command valid"
+  },
+  {
+   "port": "c_d",
+   "dir_at_B": "in",
+   "width": 160,
+   "role": "command data"
+  },
+  {
+   "port": "busy",
+   "dir_at_B": "out",
+   "width": 1,
+   "role": "status (reg)"
+  },
+  {
+   "port": "done",
+   "dir_at_B": "out",
+   "width": 1,
+   "role": "status (reg)"
+  },
+  {
+   "port": "fault",
+   "dir_at_B": "out",
+   "width": 1,
+   "role": "status (reg)"
+  },
+  {
+   "port": "x_rv",
+   "dir_at_B": "out",
+   "width": 1,
+   "role": "VM read valid (reg)"
+  },
+  {
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "width": 10,
+   "role": "VM read address (reg)"
+  },
+  {
+   "port": "x_qv",
+   "dir_at_B": "in",
+   "width": 1,
+   "role": "VM read data valid"
+  },
+  {
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "width": 256,
+   "role": "VM read data"
+  },
+  {
+   "port": "x_wv",
+   "dir_at_B": "out",
+   "width": 1,
+   "role": "VM write valid (reg)"
+  },
+  {
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "width": 10,
+   "role": "VM write address (reg)"
+  },
+  {
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "width": 8,
+   "role": "VM write mask (reg)"
+  },
+  {
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "width": 256,
+   "role": "VM write data (reg)"
+  }
+ ],
+ "bits": [
+  {
+   "pin": "clk",
+   "port": "clk",
+   "dir_at_B": "in",
+   "role": "clock"
+  },
+  {
+   "pin": "rst_n",
+   "port": "rst_n",
+   "dir_at_B": "in",
+   "role": "reset"
+  },
+  {
+   "pin": "c_v",
+   "port": "c_v",
+   "dir_at_B": "in",
+   "role": "command valid"
+  },
+  {
+   "pin": "c_d[0]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[1]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[2]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[3]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[4]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[5]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[6]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[7]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[8]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[9]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[10]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[11]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[12]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[13]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[14]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[15]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[16]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[17]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[18]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[19]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[20]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[21]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[22]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[23]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[24]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[25]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[26]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[27]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[28]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[29]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[30]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[31]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[32]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[33]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[34]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[35]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[36]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[37]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[38]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[39]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[40]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[41]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[42]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[43]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[44]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[45]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[46]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[47]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[48]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[49]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[50]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[51]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[52]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[53]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[54]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[55]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[56]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[57]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[58]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[59]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[60]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[61]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[62]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[63]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[64]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[65]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[66]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[67]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[68]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[69]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[70]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[71]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[72]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[73]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[74]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[75]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[76]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[77]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[78]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[79]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[80]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[81]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[82]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[83]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[84]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[85]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[86]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[87]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[88]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[89]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[90]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[91]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[92]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[93]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[94]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[95]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[96]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[97]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[98]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[99]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[100]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[101]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[102]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[103]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[104]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[105]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[106]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[107]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[108]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[109]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[110]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[111]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[112]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[113]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[114]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[115]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[116]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[117]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[118]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[119]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[120]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[121]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[122]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[123]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[124]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[125]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[126]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[127]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[128]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[129]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[130]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[131]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[132]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[133]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[134]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[135]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[136]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[137]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[138]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[139]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[140]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[141]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[142]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[143]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[144]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[145]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[146]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[147]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[148]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[149]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[150]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[151]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[152]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[153]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[154]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[155]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[156]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[157]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[158]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "c_d[159]",
+   "port": "c_d",
+   "dir_at_B": "in",
+   "role": "command data"
+  },
+  {
+   "pin": "busy",
+   "port": "busy",
+   "dir_at_B": "out",
+   "role": "status (reg)"
+  },
+  {
+   "pin": "done",
+   "port": "done",
+   "dir_at_B": "out",
+   "role": "status (reg)"
+  },
+  {
+   "pin": "fault",
+   "port": "fault",
+   "dir_at_B": "out",
+   "role": "status (reg)"
+  },
+  {
+   "pin": "x_rv",
+   "port": "x_rv",
+   "dir_at_B": "out",
+   "role": "VM read valid (reg)"
+  },
+  {
+   "pin": "x_ra[0]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[1]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[2]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[3]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[4]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[5]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[6]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[7]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[8]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_ra[9]",
+   "port": "x_ra",
+   "dir_at_B": "out",
+   "role": "VM read address (reg)"
+  },
+  {
+   "pin": "x_qv",
+   "port": "x_qv",
+   "dir_at_B": "in",
+   "role": "VM read data valid"
+  },
+  {
+   "pin": "x_qd[0]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[1]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[2]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[3]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[4]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[5]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[6]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[7]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[8]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[9]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[10]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[11]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[12]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[13]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[14]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[15]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[16]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[17]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[18]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[19]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[20]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[21]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[22]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[23]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[24]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[25]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[26]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[27]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[28]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[29]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[30]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[31]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[32]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[33]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[34]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[35]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[36]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[37]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[38]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[39]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[40]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[41]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[42]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[43]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[44]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[45]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[46]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[47]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[48]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[49]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[50]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[51]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[52]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[53]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[54]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[55]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[56]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[57]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[58]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[59]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[60]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[61]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[62]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[63]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[64]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[65]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[66]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[67]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[68]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[69]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[70]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[71]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[72]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[73]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[74]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[75]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[76]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[77]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[78]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[79]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[80]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[81]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[82]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[83]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[84]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[85]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[86]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[87]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[88]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[89]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[90]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[91]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[92]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[93]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[94]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[95]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[96]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[97]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[98]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[99]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[100]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[101]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[102]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[103]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[104]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[105]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[106]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[107]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[108]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[109]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[110]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[111]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[112]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[113]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[114]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[115]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[116]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[117]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[118]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[119]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[120]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[121]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[122]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[123]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[124]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[125]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[126]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[127]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[128]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[129]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[130]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[131]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[132]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[133]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[134]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[135]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[136]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[137]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[138]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[139]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[140]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[141]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[142]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[143]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[144]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[145]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[146]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[147]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[148]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[149]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[150]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[151]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[152]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[153]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[154]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[155]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[156]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[157]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[158]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[159]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[160]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[161]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[162]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[163]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[164]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[165]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[166]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[167]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[168]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[169]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[170]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[171]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[172]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[173]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[174]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[175]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[176]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[177]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[178]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[179]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[180]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[181]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[182]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[183]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[184]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[185]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[186]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[187]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[188]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[189]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[190]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[191]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[192]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[193]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[194]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[195]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[196]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[197]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[198]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[199]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[200]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[201]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[202]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[203]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[204]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[205]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[206]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[207]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[208]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[209]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[210]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[211]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[212]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[213]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[214]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[215]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[216]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[217]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[218]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[219]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[220]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[221]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[222]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[223]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[224]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[225]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[226]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[227]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[228]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[229]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[230]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[231]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[232]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[233]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[234]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[235]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[236]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[237]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[238]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[239]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[240]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[241]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[242]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[243]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[244]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[245]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[246]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[247]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[248]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[249]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[250]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[251]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[252]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[253]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[254]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_qd[255]",
+   "port": "x_qd",
+   "dir_at_B": "in",
+   "role": "VM read data"
+  },
+  {
+   "pin": "x_wv",
+   "port": "x_wv",
+   "dir_at_B": "out",
+   "role": "VM write valid (reg)"
+  },
+  {
+   "pin": "x_wa[0]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[1]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[2]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[3]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[4]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[5]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[6]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[7]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[8]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wa[9]",
+   "port": "x_wa",
+   "dir_at_B": "out",
+   "role": "VM write address (reg)"
+  },
+  {
+   "pin": "x_wm[0]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[1]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[2]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[3]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[4]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[5]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[6]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wm[7]",
+   "port": "x_wm",
+   "dir_at_B": "out",
+   "role": "VM write mask (reg)"
+  },
+  {
+   "pin": "x_wd[0]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[1]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[2]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[3]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[4]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[5]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[6]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[7]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[8]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[9]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[10]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[11]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[12]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[13]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[14]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[15]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[16]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[17]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[18]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[19]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[20]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[21]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[22]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[23]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[24]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[25]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[26]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[27]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[28]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[29]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[30]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[31]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[32]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[33]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[34]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[35]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[36]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[37]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[38]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[39]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[40]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[41]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[42]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[43]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[44]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[45]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[46]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[47]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[48]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[49]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[50]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[51]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[52]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[53]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[54]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[55]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[56]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[57]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[58]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[59]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[60]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[61]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[62]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[63]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[64]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[65]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[66]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[67]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[68]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[69]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[70]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[71]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[72]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[73]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[74]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[75]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[76]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[77]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[78]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[79]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[80]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[81]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[82]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[83]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[84]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[85]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[86]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[87]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[88]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[89]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[90]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[91]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[92]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[93]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[94]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[95]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[96]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[97]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[98]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[99]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[100]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[101]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[102]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[103]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[104]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[105]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[106]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[107]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[108]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[109]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[110]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[111]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[112]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[113]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[114]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[115]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[116]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[117]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[118]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[119]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[120]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[121]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[122]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[123]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[124]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[125]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[126]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[127]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[128]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[129]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[130]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[131]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[132]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[133]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[134]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[135]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[136]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[137]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[138]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[139]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[140]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[141]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[142]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[143]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[144]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[145]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[146]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[147]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[148]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[149]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[150]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[151]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[152]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[153]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[154]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[155]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[156]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[157]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[158]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[159]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[160]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[161]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[162]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[163]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[164]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[165]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[166]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[167]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[168]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[169]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[170]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[171]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[172]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[173]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[174]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[175]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[176]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[177]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[178]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[179]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[180]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[181]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[182]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[183]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[184]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[185]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[186]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[187]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[188]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[189]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[190]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[191]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[192]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[193]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[194]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[195]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[196]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[197]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[198]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[199]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[200]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[201]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[202]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[203]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[204]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[205]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[206]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[207]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[208]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[209]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[210]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[211]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[212]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[213]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[214]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[215]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[216]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[217]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[218]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[219]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[220]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[221]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[222]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[223]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[224]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[225]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[226]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[227]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[228]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[229]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[230]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[231]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[232]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[233]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[234]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[235]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[236]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[237]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[238]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[239]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[240]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[241]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[242]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[243]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[244]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[245]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[246]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[247]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[248]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[249]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[250]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[251]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[252]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[253]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[254]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  },
+  {
+   "pin": "x_wd[255]",
+   "port": "x_wd",
+   "dir_at_B": "out",
+   "role": "VM write data (reg)"
+  }
+ ],
+ "notes": [
+  "B = the whole instance u_lf.g_kv.u_kv (kv_bank + cmp_pool + store SRAMs + glue); the cut is on its module boundary, no logic moves.",
+  "All 289 outputs are registers in ot_s81sl_kv_leaf (output reg): launch-registered at the seam.",
+  "The 418 data inputs are not all captured at the boundary inside B: the seam needs a landing stage on the B side (or the seam stations of the plan) - INT/J9 own the station form.",
+  "clk and rst_n arrive by the type clock / reset distribution of B, not as seam data pins: 707 data bits + clk + rst_n.",
+  "Coordinates are not in this file: they follow the B frame of the T2-REFLOOR slot answer."
+ ]
+}
