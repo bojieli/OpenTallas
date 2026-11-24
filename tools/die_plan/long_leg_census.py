@@ -47,7 +47,7 @@ STATION_RE = re.compile(r"(^|[./\\])u_(bin|bout|lpad|cland)_|(^|[._])(pinreg|fts
 STRAP_RE = re.compile(r"(^|[._/:])(strap|tie|TIEHI|TIELO|count_strap)", re.I)      # as cbc_rules.STRAP_TIE
 RESET_RE = re.compile(r"(^|[._/:\\])(rst|reset|raw_reset|arst|rstn|rst_n)(?![a-z])|u_cland_rst|u_rstr|rst_ft|reset_ring|rstring", re.I)     # reset-ring / reset-tree legs: their own class r
 VARIANT_RE = re.compile(r"__(cl|pv)[0-9a-f]{8}")
-GEN_HOSTS = ["epyc2", "intel1", "epyc7", "epyc8", "epyc9", "epyc10"]
+GEN_HOSTS = ["epyc2", "intel1", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11"]
 CLEAN_IDX = re.compile(r"\\?\[\d+\\?\]|(?<=[a-zA-Z_])\d+$|_\d+(?=[./]|$)")
 
 

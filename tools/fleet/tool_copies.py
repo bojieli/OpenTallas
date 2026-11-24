@@ -20,7 +20,7 @@ import subprocess
 import sys
 import time
 
-HOSTS = ["intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
+HOSTS = ["intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11"]
 ALERT_H = 24.0
 PATH_RE = re.compile(r"(/[\w.@+-]+(?:/[\w.@+-]+)+\.(?:py|sh)|/[\w.@+-]+(?:/[\w.@+-]+)*/(?:ot-[\w-]+|[\w-]+\.py))")
 KINDS = (("COPY", re.compile(r"^/home/[^/]+/\.local/lib/")),

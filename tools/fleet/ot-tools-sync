@@ -35,7 +35,7 @@ REPO = Path(os.environ.get("MQ_REPO", "/srv/opentallas-scratch2/claude/mq1/repo"
 MQ = Path(os.environ.get("MQ_HOME", HOME / "merge-queue"))
 PY = os.environ.get("MQ_PYTHON", str(MQ / "venv/bin/python"))
 REMOTE = os.environ.get("MQ_REMOTE", "origin")
-HOSTS = os.environ.get("OT_RT_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()
+HOSTS = os.environ.get("OT_RT_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11").split()
 # FABLE-FLOW-0600 class D (17 of 32 kit failures: rt incomplete on gen hosts): every host gets what a kit launch tree needs (rt_launch_tree.sh
 # hardlinks tools/ and physical/common_flow), not only tools/fleet, and the flip waits for a smoke of that copy on one gen host.
 HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools physical/common_flow").split()

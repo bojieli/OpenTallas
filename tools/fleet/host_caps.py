@@ -17,7 +17,7 @@ Exit 0 always (a report, not a gate); --strict exits 1 when anything is flagged.
 import argparse, datetime as dt, re, socket, subprocess, sys
 
 CAP_KEYS = {"THREAD_CAP_FACTOR": "0", "LOAD_CAP_FACTOR": "0", "LOAD_GATE_FACTOR": "0"}
-HOSTS = ["intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
+HOSTS = ["intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11"]
 TAG = re.compile(r"^#@cap\s+(\w+)\s*(.*)$")
 
 

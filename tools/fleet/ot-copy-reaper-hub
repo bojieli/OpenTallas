@@ -2,7 +2,7 @@
 # ot-copy-reaper-hub (COPY-REAPER-1119): from the hub, on every build host that has more than REAP_OVER rsync processes, run tools/fleet/rsync_reaper.sh there.
 # Per-host backoff when ssh fails (state ~/.local/state/copy-reaper/<host>: 5, 10, 20, 30 min).  No LLM: a systemd timer drives it.
 RT=/srv/opentallas-scratch2/claude/rt/current; ST=$HOME/.local/state/copy-reaper; mkdir -p $ST
-REAP_OVER=${REAP_OVER:-60}; HOSTS=${REAP_HOSTS:-"intel1 epyc2 epyc7 epyc8 epyc9 epyc10"}
+REAP_OVER=${REAP_OVER:-60}; HOSTS=${REAP_HOSTS:-"intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11"}
 now=$(date +%s)
 for h in $HOSTS; do
   ( f=$ST/$h; nxt=0; fl=0; [ -f $f ] && read nxt fl < $f

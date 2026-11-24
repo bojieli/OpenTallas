@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_HOSTS = ("epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "intel1", "intel2")
+DEFAULT_HOSTS = ("epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "intel1", "intel2")
 PROBE = ('read l1 l5 l15 _ < /proc/loadavg; echo "L $l1 $l5"; echo "N $(nproc)"; '
          "awk '/MemAvailable/{print \"M\", int($2/1048576)}' /proc/meminfo; "
          'if [ -n "$1" ]; then test -d "$1" && echo "T 1" || echo "T 0"; fi; df -BG --output=avail /srv/opentallas-scratch2 2>/dev/null | tail -1 | sed "s/^ */D /;s/G//"')

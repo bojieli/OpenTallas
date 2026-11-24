@@ -5,7 +5,7 @@ dir, from the hub's kit_wave.json) + copies the hub's protect.d/kit_wave.txt and
 each host by copy+mv.  Hub timer: every 15 min."""
 import json, os, re, subprocess, sys
 HOME = os.path.expanduser("~")
-HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
+HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "epyc11"]
 cfg = json.load(open(HOME + "/coord/autopilot/kit_wave.json"))["dies"]
 paths = set()
 def add(p):

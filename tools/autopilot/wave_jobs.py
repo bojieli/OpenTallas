@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 # WAVE-LONGRUN-1 11-15: the default named intel2,epyc2,intel1,epyc4: epyc7/8/9/10 were never probed or stopped (the scopes of
 # CANCELLED rows kept running there) and the terminated epyc4 timed out every call ("epyc4 not checked"), so every REAP-DEAD probe
 # was "unreadable (reported only)".  kit_wave._step now sets the list from kit_wave.json (set_fleet / fleet_from_cfg).
-FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,intel1,epyc2,epyc7,epyc8,epyc9,epyc10').split(',') if h]
+FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,intel1,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11').split(',') if h]
 
 
 def fleet_from_cfg(cfg, hub):

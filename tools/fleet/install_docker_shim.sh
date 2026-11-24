@@ -4,7 +4,7 @@
 set -eu
 # COORD 11-17: the six BUILD hosts only.  The hub intel2 and localhost (rtx-pro) run the owner's non-OpenTallas docker work: never installed there.
 case "$(hostname -s)" in
-  tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "install_docker_shim: REFUSED on $(hostname -s): build hosts only (intel1 epyc2 epyc7 epyc8 epyc9 epyc10)" >&2; exit 64;;
+  tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "install_docker_shim: REFUSED on $(hostname -s): build hosts only (intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11)" >&2; exit 64;;
 esac
 T=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-docker
 [ -x "$T" ] || { echo "ot-docker missing in rt/current: sync first" >&2; exit 3; }

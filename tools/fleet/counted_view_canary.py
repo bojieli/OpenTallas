@@ -13,7 +13,7 @@ import subprocess
 import sys
 import time
 
-HOSTS = ["epyc7", "epyc8", "epyc9", "epyc10", "intel1", "epyc2", "intel2"]
+HOSTS = ["epyc7", "epyc8", "epyc9", "epyc10", "epyc11", "intel1", "epyc2", "intel2"]
 HUB = "intel2"
 KW = "/home/ubuntu/coord/autopilot/kit_wave.json"
 SUFFIXES = ("_tt.lib", "_ff.lib", ".lef")

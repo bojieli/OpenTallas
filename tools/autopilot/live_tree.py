@@ -46,7 +46,7 @@ KW45 = "/srv/opentallas-scratch2/claude/kw45"
 MANIFEST, HASHFILE, LINKBASE, SNAPGROUP = ".src-manifest.json", ".src-manifest.sha256", ".link-base", ".snap-group"
 SNAPDELTA = ".snap-delta"
 SSH = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
-FLEET = os.environ.get("OT_LIVE_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()   # --hosts fleet
+FLEET = os.environ.get("OT_LIVE_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11").split()   # --hosts fleet
 FLOOR_GB = float(os.environ.get("OT_LIVE_FLOOR_GB", "100"))     # r709 disk floor: a host keeps this much free after the copy
 
 

@@ -60,7 +60,7 @@ TREE_INDEX = os.path.expanduser(os.environ.get("OT_TREE_INDEX", "~/.local/state/
 # same-manifest tree is asked first (HOLDER_HOSTS, their trees.jsonl index), and (2) the fetch runs STREAMS parallel tar streams over a fast cipher, files balanced by size.
 SSH = os.environ.get("OT_TREE_FORK_SSH", "ssh -o BatchMode=yes -o ControlPath=none -o Compression=no -c aes128-gcm@openssh.com").split()
 STREAMS = int(os.environ.get("OT_TREE_FORK_STREAMS", "4"))
-HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10").split(",") if h]
+HOLDER_HOSTS = [h for h in os.environ.get("OT_TREE_FORK_HOLDERS", "intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10,epyc11").split(",") if h]
 VERSION = 1
 
 

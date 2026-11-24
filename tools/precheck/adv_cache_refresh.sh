@@ -6,7 +6,7 @@ set -u
 RT=${1:-/srv/opentallas-scratch2/claude/rt/current}
 P=$RT/tools/precheck
 C=/srv/opentallas-scratch2/claude/precheck-cache
-HOSTS=${OT_ADV_CACHE_HOSTS:-"intel1 epyc2 epyc7 epyc8 epyc9 epyc10"}
+HOSTS=${OT_ADV_CACHE_HOSTS:-"intel1 epyc2 epyc7 epyc8 epyc9 epyc10 epyc11"}
 T=$C/tmp; mkdir -p "$T"
 # never replace a cache by a smaller one (a harvest that found fewer records is a source problem, not news)
 keep() {  # keep NEW OLD SECTION

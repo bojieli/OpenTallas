@@ -47,7 +47,7 @@ AGI = ['ssh', '-i', os.path.join(HOME, '.ssh/agidock_ot'), '-o', 'IdentitiesOnly
        '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20', 'ubuntu@155.103.253.53']
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
 # FLOW-FLEET-R1 11-22 (FABLE-FLOW-0000 F9): intel2 is a build host too (capped); its own spool was never read (45 files, oldest 10:40)
-HOSTS = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10')
+HOSTS = ('intel1', 'intel2', 'epyc2', 'epyc7', 'epyc8', 'epyc9', 'epyc10', 'epyc11')
 SPOOL_RETRY_AGE_S = float(os.environ.get('OT_AUTO_EXPORT_SPOOL_RETRY_H', 2)) * 3600   # F9: older -> retried once, then set aside
 SPOOL_ASIDE_AFTER_S = 600                                                               # the retry gets at least one more drain
 NOT_RECORD = re.compile(r"/(flow-canary|test_[^/]*|[^/]*pyt-[^/]*|[^/]*pytest[^/]*|fixtures?)/")   # canary / test runs: never a sign-off of record
