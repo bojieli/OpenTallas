@@ -69,3 +69,9 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - Row plan_c1g_sta10 3c17478ed804 (r10 st_a on C1g 96cce77c1e2f). PRE rt 7514: row-only findings 0 (DEPTH x1 is base/QC-ALLFIX). G0 PASS 0/858.
 - bindG.sh on epyc7 (log epyc8 QC-OPEN-STA/bindG.ot, out epyc7 QC-OPEN-STA/bindG/): strict bind + LATCHECK on rt c660 is running.
 - Next: on BINDG_DONE clean, run probes of the 8 DEAD-OWNER rows + cled3c1d7b/cl9f076a5c/clf4365a62 on epyc7 at goal grt via intel2 QC-OPEN-STA-probe.sh (--bind-out bindG/bind, --rt c66090747375, OT_TAP_ESCAPE_CLEAR_UM=0.30).
+
+## 11-24 03:3x sle_st_b_v2__clfde1249e (owned since 03:15)
+- C4 kit epyc9 R6V4: GEOM BAD (GEOM-REVIEW c0614cc9); route stays held.
+- C1g plan gate (rt 7514): SITEGRID 0, overlap 0, relays per point 1, reach findings 0. The plan gate does not catch the defect.
+- Cause: internal_stations x_fe_o(257 bits, 3 regs), x_st_a_i(653, 4), x_hc1_i(517, 8) have NO bit_sites_um (exact sites). The placer collapses them (relay_collapse 11, r2r 492). x_st_a_i targets the r4/r5 cluster (326,444), but the worst capture is u_r7 (y~840).
+- Row plan: give the 3 stations exact bank sites (kit_istations.py, as for st_a), split x_st_a_i toward r6/r7, re-check the 2 empty taps (t110, t127), legal.py + r9gate, into C1i. ETA row ~06:30.
