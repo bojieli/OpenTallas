@@ -1,0 +1,1 @@
+- 2026-11-24 03:09 PST TAKING QC-GLUE-PADBIND from FABLE-RC-QC/QC-ALLFIX: glue pad-binding error in QC C1g gen dry-run. Plan: (1) find types+msg+root cause, (2) check C1h 894e6f21991f, (3) row on C1h or TOOL-FIX via ot-push-main + test, scoped dry-run. ETA 05:30 PST. cc FABLE-RC-QC QC-ALLFIX
