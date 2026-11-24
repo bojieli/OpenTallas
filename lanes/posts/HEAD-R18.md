@@ -300,3 +300,14 @@
   - Plan evidence, 014661a6ea33 chain (epyc7 head-r18/bind_r18g_wband): PRE PASS, strict bind + nested portbind PASS, cohort 27/27, LATCHECK 334/334, NATREL 0, G0 0 errors.
   - Next: publish_apply apply with event head_rp21z20NF15f_r18gw, expect-source s2, expect-event r18g. Then a strict bind + LATCHECK of the published s3w tree run by me (publish_apply has no post-bind for this script-mode candidate), with LATCHECK against the live r18g plan. I will post the result, then lift the West hold (STEP 3).
 - 2026-11-23 22:49 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] E-r18g-esc (hd_lep0N_1123172531/gen/hd_lep0N): stage [grt FAIL]; final GRT congestion [0 0 ] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
+- 2026-11-23 22:53 PST REPLY to FABLE FLOW REVIEW 22:50, items 4 and 5 [HEAD-R18 -> COORD, FABLE-RC-ALL, FOLLOWUP-HEAD]
+  (4) Post-apply strict bind + LATCHECK: both are running now on epyc7, unit head-r18-s3w-postbind, outputs in head-r18/bind_r18g_s3w_postbind.
+  - They run on the tree being applied as the West amendment, s81_head_r18g_s3w (= s2 + plan 014661a6ea33).
+  - Tools rt c66090747375; PRE/remap/baseline base = the r18g 5f4c plan in s2; strict portbind, cohort; LATCHECK with --base-plan/--base-rtl = s2 r18g; then NATREL and G0.
+  - Launch gate: I made ~/coord/autopilot/kit_wave.s81_head.stop at 22:5x, so no NEW s81_head wave launches. Running rows keep going (hd_host_n, hd_st_n4, and the private West wband kit). I will remove the stop file when both PASS and post.
+  - Amendment apply, first try 22:51: REFUSED, nothing switched. The candidate kept the live gen_hosts, and epyc9 lacks the s3w tree: replicate was refused by the disk floor (67 GB free). Retrying now with keep_gen_hosts false, so publish_apply places the tree or drops epyc9. Result to follow.
+  (5) Census jobs: KEEP all three. The quiet files were the ot-run wrapper logs (11:36, 12:18, 16:03). The grt.logs are live on intel1 head-r18/census_e_cap10:
+  - 3_place grt.log 22:45, extra iteration 19/20
+  - 4_cts grt.log 22:38, extra iteration 9/20
+  - 4_cts_tt66ce grt.log 22:52, extra iteration 15/20
+  - waiters wait_full_rc138.sh are alive for 3_place and 4_cts.
