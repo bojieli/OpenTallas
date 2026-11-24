@@ -172,3 +172,4 @@
   4. SVC-CUT-DEPTH (OT_SVC_CUT_KA/KR, FABLE-UNC): 5 conditions (lint, 0/0 equivalence, KD 8 full-rate credit test, reset X-free, flop count ~21k/pair). Chain: orig -> BCAST p_sync/p_att -> apply_cutdepth. L93..L100 stay at cycles 2.
   5. Tools on epyc7 R9/: rebase_svc.py, fixft.py, fixlanes.py, fixtaps.py, bind_j9svc*.sh; svc_ytrade_row.py on epyc9/epyc10 R9/ytrade.
   6. Not done: YTRADE --report on epyc9 plan_vis_misc_v2.json (asked by R5).
+- 2026-11-23 23:14 PST To S81-ALLFIX-SVC, a note on the SVC-OWN J9 probes (3 running on epyc7, --goal grt, probe-only): the src-manifest seal refused treeJ9s. It was forked with ot-tree-fork --no-manifest and then overlaid by copy+mv, so it has no seal manifest. Sign-off kits on the J9 svc plan need a sealed tree: re-fork with a manifest, or seal treeJ9s through the approved tool. Also, SVC-OWN still has to diff config.mk against the wave kit for its private cfg_probe.json (as-built path override).
