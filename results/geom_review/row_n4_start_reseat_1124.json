@@ -1,0 +1,74 @@
+{
+  "status": "geometry draft, projected on retained exact netlist; requires fresh placement",
+  "plan_sha256": "5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02",
+  "source_placement": "epyc10 r18g wave hd_st_n4 attempt_1 placement geometry",
+  "cycles": {
+    "mission": 0,
+    "boot_added_by_row": 0,
+    "reader_START_depth": 2
+  },
+  "changed_sequential_placements": {
+    "u_cland_origin": 5,
+    "u_cland_reader_start_u2_i_0": 1,
+    "u_cland_reader_start_u2_i_1": 19
+  },
+  "baseline_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 483.41,
+    "r2r_captures_gt405": 95,
+    "r2r_captures": 20802,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_cland_reader_start_u2_i_1/g_x\\[1\\].u_r/q$_SDFF_PN0_ -> u_cland_u2_i/u_ring.dch\\[0\\].u_dsel/g_srep.sr\\[0\\].u_sel/di\\[0\\]$_DFFE_PP_"
+  },
+  "projected_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 388.37,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 20802,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_cland_reader_start_u2_i_1/g_x\\[1\\].u_r/q$_SDFF_PN0_ -> u_cland_u2_i/u_ring.dch\\[0\\].u_dsel/g_srep.sr\\[0\\].u_sel/di\\[0\\]$_DFFE_PP_"
+  },
+  "operations": [
+    {
+      "path": "partition_types.hd_st_n4.clock.landing_reader_start.origin_rect_um",
+      "old": [
+        491.1668,
+        741.92,
+        508.4468,
+        759.1999999999999
+      ],
+      "new": [
+        491.1668,
+        672.8,
+        508.4468,
+        690.08
+      ]
+    },
+    {
+      "path": "partition_types.hd_st_n4.clock.landing_reader_start.branches.u2_i.stages.0.xy_um",
+      "old": [
+        344.3348,
+        543.04
+      ],
+      "new": [
+        370.2548,
+        435.04
+      ],
+      "fixed_raw_reset": "rst_rl_76"
+    },
+    {
+      "path": "partition_types.hd_st_n4.clock.landing_reader_start.branches.u2_i.stages.1.xy_um",
+      "old": [
+        189.8597,
+        335.52
+      ],
+      "new": [
+        181.2197,
+        249.12
+      ],
+      "fixed_raw_reset": "rst_rl_91"
+    }
+  ]
+}

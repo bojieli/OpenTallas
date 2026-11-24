@@ -1,0 +1,7 @@
+# HEAD hd_st_n4 r18g START reach, November 24
+
+The exact epyc10 `head_rp21z20NF15f_r18g/items/hd_st_n4` placement review remains BAD for a new route. The macro-free interior offers room to move the reader START seats and keep the external landing banks in order. The exact `geom.tsv` net graph traces all 95 captures past the 405 µm reach to the final u2 reader START bank and its left-side ring. The worst pair is (190.404, 336.015) to (15.876, 27.135), rating 483.41 µm. The station-only scan missed this internal launch cone. [Exact original placement](hd_st_n4_place_r18g_1124.png)
+
+The drafted three-seat revision shifts the common origin south and distributes the two u2 seats along that direction. Shifting only the last stage cannot meet the adjacent launch and capture bounds, which are about 844 µm apart. The drafted rectangles avoid existing emitted landing groups. Recomputing all 20,802 capture distances on the retained graph gives 0 over 405 µm at a 388.37 µm worst reach. The local raw reset sources, two-cycle reader depth and external pin geometry are identical. This change adds zero boot or mission cycles. [Viewed draft](hd_st_n4_reseat_r18g_1124.png) · [Guarded coordinate operations](row_n4_start_reseat_1124.json)
+
+Carry the three coordinates together on a compatible subsequent HEAD form. Fresh placement must confirm the packed FF seats and new clock-tap assignments before routing. The older independently SIGNED archive view stays available for its existing binding.
