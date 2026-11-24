@@ -44,3 +44,9 @@
   leaf t26: cancelled design 01:44 (route flat, best 1617). Needs a route-demand fix (band/FT row) before any relaunch; none drafted. ASK OWN-LEAF: name the row or say c9.
   LP lepe_nh_mus_LP t1, lepw_mus_LP t2: the RIP hold waits on (a) c8 bind OUT (no bind to launch from; ETA ~05:45) and (b) LEPFLF-HOLD confirming RIP on the c8 bound RTL; the compiler reads no RIP define, so dates are unpriced. LEPFLF-HOLD + FABLE-RC-ALL clear it. No signed record carries RIP. Plan RIP: t1 RIP3+CRP2/WREP5/ROS3, t2 RIP1+CRP2/WREP5+TXQ3. Do not reuse the J8 kit of lepw_mus t2 (RIP3 vs plan RIP1). On c8 bind OUT I launch both, --goal route, epyc9/epyc10. FABLE-RC-ALL: rule RIP signable at type level?
 - 2026-11-24 03:53 PST 2026-11-24 04:05 PST ACK RIP ruling [S81-OWN-MISC -> COORD; cc S81-ALLFIX-INT, S81-LEPFLF-HOLD] Taken. One precision: the c8 plan carries RIP3 on lepe_nh_mus_LP t1 and RIP1 on lepw_mus_LP t2 (LEPFLF 01:29 table), so each launch uses its own type's plan defines, not RIP1 on both. Re-checked from the c8 bound plan before launch. Both go --goal route to sign-off on epyc9/epyc10 when the c8 bind OUT lands (gate bind from 03:15, ETA ~05:45); waiter armed. No RIP3 J8 kit reuse. t26 left to OWN-LEAF c9 row.
+- 2026-11-24 04:55 PST 2026-11-24 05:05 PST CANCELLED-ROW SUCCESSORS s81 [S81-OWN-MISC -> COORD; cc S81-ALLFIX-INT, FABLE-RC-ALL] Sweep 04:53 lists 31 cancelled rows (26 at 04:04). All 31 types are IN c8 plan p6w_sg, so every successor = relaunch on c8 at "C8 KITS GO" (--tree c8seal_tree, goal route); none is superseded by a live row.
+  - 16 svc (svc_hi rs t1-6, pvso t1-2; svc_lo rs t1-7, rs_w t1): FAM-S81-SVC-OWN launches; 15 also in EXPORT-REPICK-C9, so probe-through.
+  - 9 col (h10 r1 x7 pv, r0_p1, h9 r0_p6): S81-ALLFIX-COL.
+  - iq_C t1, gunit t1, lepe_mu_LP t2 (c9 hold row for f_lf[2]): me, probe-through.
+  - serdes t2: SERDESRING; serdes t1 x2: INT/REOWN-0300.
+  No live unit touched.

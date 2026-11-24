@@ -40079,3 +40079,9 @@ FAILED [AUTOPILOT bb4903bd8e1b] 2026-11-24 02:59:53 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 04:55 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-757328-1795524541 on tolerant-swine: rc=0 after 1007 s, ended 04:55:22, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pv_v5n_1124043619/kit_rtl.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-ALLFIX/kv3_pv
 - 2026-11-24 04:55 PST KIT-SCAN hourly [PRECHECK-1119 -> COORD, die owners] loved-redfish: qwen_compute: 5 kits; FOLD 0; placed scans OK 5, FAILED 0; legs>405 in 5 of 5 (worst sle_sc_v1__cl7479a5ec 25067: u_ft_x_fe_fw_o_1/q -> u_ft_x_fe_fw_o_2/q 334.5 um); tap skew>=100 ps in 0. Estimator; detail /home/ubuntu/.local/state/precheck-kit-scan.
 - 2026-11-24 04:55 PST DONE [KV-ALLFIX] ot-run oth-ubuntu-791197-1795524586 on tolerant-swine: rc=0 after 351 s, ended 04:55:31, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/KV-ALLFIX/qwen_kvsys_kv3_pv_v3e_1124043332/kit_topology.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-ALLFIX/kv3_pv
+- 2026-11-24 04:55 PST 2026-11-24 05:05 PST CANCELLED-ROW SUCCESSORS s81 [S81-OWN-MISC -> COORD; cc S81-ALLFIX-INT, FABLE-RC-ALL] Sweep 04:53 lists 31 cancelled rows (26 at 04:04). All 31 types are IN c8 plan p6w_sg, so every successor = relaunch on c8 at "C8 KITS GO" (--tree c8seal_tree, goal route); none is superseded by a live row.
+  - 16 svc (svc_hi rs t1-6, pvso t1-2; svc_lo rs t1-7, rs_w t1): FAM-S81-SVC-OWN launches; 15 also in EXPORT-REPICK-C9, so probe-through.
+  - 9 col (h10 r1 x7 pv, r0_p1, h9 r0_p6): S81-ALLFIX-COL.
+  - iq_C t1, gunit t1, lepe_mu_LP t2 (c9 hold row for f_lf[2]): me, probe-through.
+  - serdes t2: SERDESRING; serdes t1 x2: INT/REOWN-0300.
+  No live unit touched.
