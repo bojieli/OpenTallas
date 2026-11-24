@@ -107,6 +107,15 @@ ANCHORDRY-1123 (RESET-ANCHOR-TAPGUARD-1123, COORD; S81 J9 slice C c1x_C t1/t10/t
   own collector_tree is compared, WARN ANCHORDRY-ADVISORY only.  $OT_ANCHORDRY_SOLVE=1 also dry-runs the bind's resolve() on the
   solved reset trees (anchor_dry.py; slow on wavefront dies): refusals / re-picks are WARN ANCHORDRY-ADVISORY.  Seconds by default.
 
+GENDRY-1123 (COORD 17:25, FABLE flow review; HEAD E pin-move row cab67: every gate green, then kit GEN crashed at
+  clock_landings.py:1808 "writer START raw reset rst_rl_334 has no registered wavefront driver"): every partition type whose
+  plan entry differs from the --baseline-plan runs the kit generator dry (gen.py phys --types T --trial, tools of this PRE,
+  --rtl-root TREE, --clock-landing SIDECAR or <plan dir>/source_sidecar.json) into a temp dir; rc != 0 is FAIL GENDRY with the
+  generator's error line.  $OT_PRE_GENDRY_TYPES=T1,T2 names the types (also without a baseline); at most $OT_PRE_GENDRY_MAX
+  (24) types, $OT_PRE_GENDRY_J (8) in parallel, $OT_PRE_GENDRY_TIMEOUT_S (1800) each; the rest are WARN GENDRY-UNCHECKED.
+  No baseline and no list: not run.  The plan_gate_pre CLI runs it by default ($OT_PRE_GENDRY=0 or --skip GENDRY: off);
+  library callers pass gendry=True.  Minutes.
+
 SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,200 kv3_hg* o_ectl_Q_N_tN exact bank seats off
   the native lattice, found only at global_place): every exact bank site the kit places verbatim (internal_stations
   bit_sites_um / face_bit_sites_um, clock.soft_reg_banks bit_sites_um) must satisfy the kit's own predicate in integer DBU
@@ -136,7 +145,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1568,9 +1577,79 @@ def check_anchordry(tree, plan, base=None, solve=False, tree_fn=None, ported_fn=
     return out
 
 
+def gendry_types(plan_raw, base_raw, env=None):
+    """types whose partition_types entry differs from the baseline (or $OT_PRE_GENDRY_TYPES), sorted"""
+    env = os.environ if env is None else env
+    named = [t for t in (env.get("OT_PRE_GENDRY_TYPES") or "").split(",") if t]
+    if named:
+        return sorted(t for t in named if t in plan_raw.get("partition_types", {}))
+    if base_raw is None:
+        return []
+    pt, bt = plan_raw.get("partition_types", {}), base_raw.get("partition_types", {})
+    return sorted(t for t, v in pt.items() if json.dumps(v, sort_keys=True) != json.dumps(bt.get(t), sort_keys=True))
+
+
+def gendry_cmd(tree, plan, tn, out, sidecar=None):
+    gen = Path(__file__).resolve().parent / "gen.py"
+    cmd = [sys.executable, "-I", "-B", str(gen), "phys", str(Path(plan).absolute()), "--types", tn, "--out", str(out),
+           "--rtl-root", str(Path(tree).absolute()), "--trial"]
+    sc = sidecar or (Path(plan).absolute().parent / "source_sidecar.json")
+    if sc and Path(sc).is_file():
+        cmd += ["--clock-landing", str(Path(sc).absolute())]
+    return cmd
+
+
+def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None):
+    """GENDRY-1123 lines (see the doc).  runner(cmd, cwd, timeout) -> (rc, text): injectable for tests."""
+    import tempfile
+    from concurrent.futures import ThreadPoolExecutor
+    env = os.environ if env is None else env
+    try:
+        raw = json.loads(Path(plan).read_text())
+        base = json.loads(Path(baseline).read_text()) if baseline else None
+    except (OSError, ValueError) as e:
+        return [f"WARN GENDRY plan/baseline not readable ({type(e).__name__}); not checked"]
+    types = gendry_types(raw, base, env)
+    if not types:
+        return []
+    cap = int(env.get("OT_PRE_GENDRY_MAX") or 24)
+    jobs = max(1, int(env.get("OT_PRE_GENDRY_J") or 8))
+    tmo = int(env.get("OT_PRE_GENDRY_TIMEOUT_S") or 1800)
+    run, rest = types[:cap], types[cap:]
+
+    def _run(cmd, cwd, timeout):
+        try:
+            r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+            return r.returncode, r.stdout + r.stderr
+        except subprocess.TimeoutExpired:
+            return None, f"timeout after {timeout} s"
+    runner = runner or _run
+    out = []
+    with tempfile.TemporaryDirectory(prefix="pre_gendry_") as td:
+        def one(tn):
+            o = Path(td) / tn
+            o.mkdir()
+            return tn, runner(gendry_cmd(tree, plan, tn, o, sidecar), str(Path(tree).absolute()), tmo)
+        with ThreadPoolExecutor(max_workers=jobs) as ex:
+            res = list(ex.map(one, run))
+    for tn, (rc, text) in res:
+        if rc == 0:
+            continue
+        lines = [x for x in (text or "").splitlines() if x.strip()]
+        err = next((x for x in reversed(lines) if "ERROR" in x or "Error" in x), lines[-1] if lines else "")
+        if rc is None:
+            out.append(f"WARN GENDRY-UNCHECKED {tn}: kit generator {err}")
+        else:
+            out.append(f"FAIL GENDRY {tn}: kit generator rc={rc}: {err.strip()[:400]}")
+    if rest:
+        out.append(f"WARN GENDRY-UNCHECKED {len(rest)} changed type(s) over the cap {cap} ($OT_PRE_GENDRY_MAX): {', '.join(rest[:12])}")
+    out.append(f"WARN GENDRY-SUMMARY {len(run)} changed type(s) generated dry, {sum(1 for x in out if x.startswith('FAIL'))} failed")
+    return out
+
+
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
           skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0, elab_dir=None, ref_tools=None,
-          toolstale_level="FAIL", abspath_level=None, remap=None):
+          toolstale_level="FAIL", abspath_level=None, remap=None, gendry=False):
     findings = []
     rb, rb_how = remap_base(plan, remap, baseline) if not {"LANDREMAP", "ISTCYC"} <= {s.upper() for s in skip} else (None, "")
     skip = {s.upper() for s in skip}
@@ -1613,6 +1692,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "ANCHORDRY" not in skip:                          # ANCHORDRY-1123: anchored reset depths vs the remap base, seconds
         _abase = _base if _base else (rb if rb else remap_base(plan, remap, baseline)[0])
         findings += check_anchordry(tree, plan, base=_abase, solve=os.environ.get("OT_ANCHORDRY_SOLVE") == "1")
+    if gendry and "GENDRY" not in skip:                  # GENDRY-1123: changed types run the kit generator dry (CLI default)
+        findings += check_gendry(tree, plan, baseline, sidecar)
     if "SITEGRID" not in skip:                           # SITEGRID-1123: exact bank sites on the kit site/row lattice, seconds
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import site_grid as SG
@@ -1702,7 +1783,8 @@ def main(argv=None):
         return 0
     try:
         f = check(a.tree, a.plan, a.sidecar, a.asbuilt, a.compose_tree, a.baseline_plan, a.rows_proof, a.rows, a.skip,
-                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools, remap=a.remap_base)
+                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um, a.elab_dir, a.ref_tools, remap=a.remap_base,
+                  gendry=os.environ.get("OT_PRE_GENDRY", "1") != "0")
     except (OSError, ValueError) as e:
         print(f"plan_gate_pre: cannot read input: {e}", file=sys.stderr)
         return 2

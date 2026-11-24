@@ -44,10 +44,10 @@ class Gates(unittest.TestCase):
         p = Path(tempfile.mkdtemp()) / "plan.json"
         p.write_text(json.dumps({"partition_types": {"t": t}}))
         tree = Path(tempfile.mkdtemp())
-        f = G.check(str(tree), str(p), skip=("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM"))
-        self.assertEqual(len(f), 1, f)
+        f = [x for x in G.check(str(tree), str(p), skip=("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM")) if x.startswith("FAIL ")]
+        self.assertEqual(len(f), 1, f)       # advisory WARN lines (ADV-*, SITEGRID-SUMMARY) are not findings of this class
         self.assertTrue(f[0].startswith("FAIL KITFIT-OVERLAP type t"))
-        self.assertEqual(G.check(str(tree), str(p), skip=("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT")), [])
+        self.assertEqual([x for x in G.check(str(tree), str(p), skip=("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT")) if x.startswith("FAIL ")], [])
 
 
 class Outline(unittest.TestCase):
