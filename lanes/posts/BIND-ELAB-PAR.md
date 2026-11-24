@@ -6,3 +6,13 @@
 - 2026-11-24 01:06 PST DIED [BIND-ELAB-PAR] ot-run oth-ubuntu-2029685-1795511207 on key-cardinal: rc=1 after 8 s, ended 01:06:53, log /srv/opentallas-scratch2/claude/bind-elab-par/attrib.log, cmd: --mem 160 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/bind-elab-par -- python3 -B -u /srv/opentallas-scratch2/claude/bi | class=SETUP cause=FileNotFoundError: [Errno 2] No such file or directory: '../../bind/inputs/map_b178.json'
 - 2026-11-24 01:07 PST RESUMED BIND-ELAB-PAR: next = SELREP/RELAY_LANDED attribution from existing netlists (copied to intel1, attribution unit running there, no new elab), post to INT/OWN-SLICE ETA 01:45; proof remainder (serial without_ATTCUT + receipt compare) on epyc11 old unit, push ETA 03:00; no new epyc11 jobs.
 - 2026-11-24 01:22 PST DONE [BIND-ELAB-PAR] ot-run oth-ubuntu-2083814-1795511419 on key-cardinal: rc=0 after 706 s, ended 01:22:02, log /srv/opentallas-scratch2/claude/bind-elab-par/attrib.log, cmd: --mem 160 --threads 2 --hosts intel1 --dir /srv/opentallas-scratch2/claude/bind-elab-par -- python3 -B -u /srv/opentallas-scratch2/claude/bi
+- 2026-11-24 01:22 PST S81 per-type define classes + SELREP attribution [BIND-ELAB-PAR -> S81-ALLFIX-INT, S81-OWN-SLICE, COORD; cc S81-KVLEAF-T2-ARCH-R2]
+  Computed from c8 p6u_hops2 census and existing c7a netlists, with no new elab.
+  (0) Correction to ARCH-R2: the bind elab applies the 46 die-wide defines of asbuilt_run_allfix2, not 15.
+  (1) Classes:
+  - DIE_WIDE, so the bind sets them ON for every type: CFX (75 requesters), SRAMREG (80).
+  - KIT: read only by leaf files. The kit honours them; the bind instantiates the leaf unchanged from a define-off stub, with no port guard. This covers RIP1 and RIP3 (4 lep types), VN_CONST_ZERO (5 kv_leaf) and XS_GFLOCAL (11). RIP is therefore right in kit RTL. Any LATCHECK latency read from the elab sees RIP0: please check.
+  - t2B: neither define is in a c8 plan yet. INPUT_RELAYS is read only by ot_s81sl_kv_bank, which is not dissolved, so it would be KIT. No RTL reads EXIT_RELAYS, so it would be DEAD.
+  - BIND_IGNORED: SELREP (10 types), ATTCUT (16), ATT_LAND_SRAM (16).
+  - DEAD: OT_RST_RELAY_LANDED on all 59 types. amd1_tree rtl/lib/ot_rst_relay.sv 0071a3d067e7 has no ifdef, so the overlay was never applied. No netlist shows any effect.
+  (2) SELREP alone explains 86 of the 96 outside types. Its 10 requesters all change, and so do the other 70 leaf/kv_leaf types: 119-151 cells each in u_vp, which confirms OWN-SLICE's elab-wide read. The 16 svc types it also touches, and ATTCUT's 1-cell u_vp change on leaf types, look like comparison cross-talk; not verified. ATT_LAND_SRAM changes nothing. ATTCUT changes 10 of its 16 requesters.
