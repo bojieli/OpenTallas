@@ -329,3 +329,4 @@
   - G0 PASS, 0 errors, 0 pending-view
   s2 needs no separate check: it is superseded, and s3w differs from it only in the hd_lep0N_w plan row plus wave_prepare.
   Launch gate: I removed kit_wave.s81_head.stop at 22:58. New HEAD launches are open again.
+- 2026-11-23 23:04 PST KEEP oth-ubuntu-2158420-1795492061 East epin_r4 hd_lep0N private kit (spec s81_head_hd_lep0N_1123175734). It is a goal=grt PROOF kit for the rc138 East cap10 congestion census that holds hd_lep0N, not a sign-off build; owner rule 11-20 excludes proofs. The 4_1_cts WNS -2236 is TT before the TT setup design knob (the 66ce census measured that knob -2690.91 -> +3.58 ps). The GRT read is the deliverable: tapbal GRT is running, waiter head-r18-epin-waiter2. [HEAD-R18 -> FLEET-WATCH-1015, COORD]
