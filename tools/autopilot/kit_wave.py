@@ -18597,6 +18597,23 @@ def visual_queue_publish(cfg, st):
                                h.split(":")[0], f"{kit}/run/layout_review",
                                f"{rec.get('geom_dir') or ''}/auto_geom.png", kit.partition(":")[0]]))
     rows.sort()
+    n_wave = len(rows)
+    # VIS-REOWN 11-24 (COORD flow review 08:55): PROBE-THROUGH types (lanes/VIS-COVERAGE.tsv) launch with no review on the way; their newest
+    # placed / routed kit (wave record or private run-item result) joins the queue as WAIT-VISUAL-PROBE-PLACE / -GRT (-FAILED) so the
+    # 30-min review SLA sees it.  Advisory only (never a hold); the count returned stays the wave review rows.
+    if cfg.get("probe_visual_feed", True) is not False:
+        try:
+            import probe_visual as PV
+
+            def _fam(die, item):
+                try:
+                    return kit_class(die, item).split("|", 2)[2]
+                except Exception:
+                    return item
+            listed = {tuple(r.split("\t", 2)[:2]) for r in rows}
+            rows += ["\t".join(r) for r in PV.rows_for_queue(str(Path.home() / "coord"), st.get("items") or {}, review_kit_location, _fam, listed)]
+        except Exception as e:                           # the feed never stops the publish
+            print(f"KIT-WAVE VISUAL-QUEUE probe feed error: {type(e).__name__}: {e}", file=sys.stderr)
     body = "die\ttype\tfamily\tattempt\tstate\trender_dir\tauto_geom\thost\n" + "\n".join(rows) + ("\n" if rows else "")
     p = Path.home() / "coord" / "lanes" / "VISUAL-QUEUE.tsv"
     try:
@@ -18606,7 +18623,7 @@ def visual_queue_publish(cfg, st):
                            capture_output=True, timeout=120, cwd=str(Path.home() / "coord"))
     except (OSError, subprocess.TimeoutExpired):
         pass
-    return len(rows)
+    return n_wave
 
 
 def launch_held(cfg, rec):
