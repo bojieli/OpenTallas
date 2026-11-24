@@ -1,0 +1,7 @@
+# KV A5t3 PV v3ne and SYS C exact placed geometry (11-24)
+
+Both exact E11 images were opened from `KV-D29/private/KV-ALLFIX`. Keep both geometry holds.
+
+**PV v3ne BAD.** Exact work `kv3_pv_v3ne_1124043338`, spec `1124043350`. The west edge and central aisle contain dense vertical lanes, with tight approaches between overlapping macro-bank rows. Peak estimated lateral demand H3.283/V4.034 and ten macro-top clock entries. The placed scan has 70 NEED-STATION groups and 7,008 >405 µm bits, with longest R2R 2,499.61 µm. The 1,955 µm clock-entry-to-output leg and two 268-bit cross-port captures are independent failures. The inherited exploratory GRT probe did not finish. [Exact placement](kv_a5t3_pv_v3ne_actual_1124.png)
+
+**SYS C BAD.** Exact work `kv3_sys_c_1124044010`, spec `1124044024`. The wide central macro separates west and east logic while the narrow north cap carries the concentration of crossing data and clocks. Locally dense cells also sit along its eastern boundary. Peak estimated demand H1.532/V1.315, with V1.326 in an outer column. The placed scan reports 40 NEED-STATION groups and 1,225 >405 µm bits. Longest R2R 1,258.34 µm from the attention TX valid input register into D2D transmit. A separate 32-bit boot link configuration path reaches 1,076 µm and D2D reset fanout reaches 976 µm. Exploratory GRT converged with zero overflow, while mandatory local reach misses remain. [Exact placement](kv_a5t3_sys_c_actual_1124.png)
