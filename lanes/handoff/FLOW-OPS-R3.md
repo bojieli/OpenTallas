@@ -135,3 +135,11 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - Drop-in audit: removed 5 dead autopilot drop-ins, kept 9; effective unit unchanged (e7480ce1).
 - Held-no-owner list of 51 rows posted (0b983f77).
 - Open: hub-git-sync FAILED since 00:00 (bin/owners_sweep.py local edit, not mine); autoclean CURRENT_EVENTS stale (asked COORD); canary-FAIL push rule waits on FLOW-CANARY-R2.
+
+## CODEX notes 2026-11-24 06:31 PST
+
+- Reinstated intel2 ~/.config/systemd/user/autopilot.service.d/zzzzzz-codex-takeover-viewed-route.conf, with AP_REQUIRE_VIEWED_WAVE_ROUTE=1 and the CODEX-ROLE.md handback reminder. The 06:17 tick finished with no routes submitted. Verified the 06:23 live process inherited the exact-view setting. Admitted jobs kept running. Remove this specific drop-in at the handback.
+- E11 installed Ubuntu python3-matplotlib 3.10.7+dfsg1-2build1. Isolated python3 -I uses agg successfully. VIS has the result for exact renders of retained KV places.
+- E11 onboarding left an empty Ubuntu crontab. Restored the standard two-minute flock-serialized ot-heavy reconciler line. First pass cut 5,797 declared threads / 1,295 reservation pairs to 316 / 41, retiring only terminal thread charges and preserving their receipts. The previous and new crontab copies are in epyc11 FLOW-OPS-R3. THREAD_CAP_FACTOR=0 remained unchanged.
+- ITEM-SYNC historical bound-tree probe copied partial immutable inputs and retried tar rc2. The S81 d8j6r1 and QC v3p7c5rt records now have a scoped source fix in epyc10 FLOW-OPS-R3/repo on claude/flowops-item-sync-atomic-bound-1124. 104 focused checks PASS. Normal push unit flowops-item-sync-push-1124 and ../tmp/item_sync_push_1124.log. Existing partial trees preserved for owners. Any replication goes through the full snapshot publisher.
+- Wave hold audit has no leaks. The current 06:27 QC FW sign-off failed DRC0, TT -135.66 and FF -130.24. Two ECO rounds ended TT -131.06 and FF -130.24. Forwarded to QC for structural follow-up. S81 J8 lack of launches tracks exact holds and C8 awaits changed G0. E8 66 GB drained; scratch2 and scratch3 share its filesystem. Auto-clean remains scheduled.
