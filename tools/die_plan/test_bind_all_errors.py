@@ -1,0 +1,143 @@
+"""BIND-ALL-ERRORS 11-23: a strict / --all-gaps bind lists EVERY landing START stage / bus plan error of a type (and every type)
+in one run instead of stopping at the first (QC C1d: SU2R-FIX3 fixed sle_su_c, then the same class surfaced on
+slw_su_c__cl19bb38ef one 75-min round trip later).  Same checks, same messages; any error still FAILs."""
+import json
+from types import SimpleNamespace
+import pytest
+import bind
+from clock_landings import Landings, LandingError, LandingErrors
+from test_clock_landings import A_BODY, B_BODY
+from test_count_straps import strap_vehicle
+
+
+def writer(p, raws, xys=None):
+    p['partition_types']['A'].setdefault('clock', {})['landing_writer_start'] = dict(
+        depth=len(raws), branches={'x': {'stages': [dict(xy_um=(xys[i] if xys else [2. + i, 1.]), raw_reset=r)
+                                                    for i, r in enumerate(raws)]}})
+
+
+def reader(p, raws):
+    p['partition_types']['B'].setdefault('clock', {})['landing_reader_start'] = dict(
+        depth=len(raws), branches={'y': {'stages': [dict(xy_um=[3. + 3 * i, 3.], raw_reset=r) for i, r in enumerate(raws)]}})
+
+
+def landings(p, t, collect):
+    c = Landings(p, t)
+    c.collect = collect
+    return c
+
+
+def test_default_still_raises_the_first_stage_only():
+    p, t = strap_vehicle(); writer(p, ['bad0', 'rst_n_t0', 'bad2'])
+    with pytest.raises(LandingError, match='stage|bad0') as ei:
+        landings(p, t, False).type_rtl('A', A_BODY)
+    assert not isinstance(ei.value, LandingErrors) and 'bad0' in str(ei.value) and 'bad2' not in str(ei.value)
+
+
+def test_collect_lists_every_bad_writer_stage():
+    p, t = strap_vehicle(); writer(p, ['bad0', 'rst_n_t0', 'bad2'], xys=[[2., 1.], [3., 1.], [4., 1.]])
+    p['partition_types']['A']['clock']['landing_writer_start']['branches']['x']['stages'][1]['xy_um'] = [float('nan'), 1.]
+    with pytest.raises(LandingErrors) as ei:
+        landings(p, t, True).type_rtl('A', A_BODY)
+    errs = ei.value.errors
+    assert [(e['type'], e['bus'], e['side'], e['stage']) for e in errs] == [('A', 'x', 'writer', i) for i in range(3)]
+    assert 'bad0 has no registered wavefront driver' in errs[0]['error']
+    assert 'stage 1 needs finite xy_um' in errs[1]['error']
+    assert 'bad2 has no registered wavefront driver' in errs[2]['error']
+    assert '3 landing error(s)' in str(ei.value)
+
+
+def test_collect_bus_level_error_and_next_bus_continue():
+    p, t = strap_vehicle(); writer(p, ['rst_n_t0', 'rst_n_t0'])
+    p['partition_types']['A']['clock']['landing_writer_start']['branches']['x']['stages'].pop()   # depth 2, 1 stage
+    with pytest.raises(LandingErrors) as ei:
+        landings(p, t, True).type_rtl('A', A_BODY)
+    assert len(ei.value.errors) == 1 and ei.value.errors[0]['stage'] is None and 'exactly 2 physical stages' in str(ei.value)
+
+
+def test_collect_reader_stages():
+    p, t = strap_vehicle(); reader(p, ['nope_a', 'nope_b'])
+    with pytest.raises(LandingErrors) as ei:
+        landings(p, t, True).type_rtl('B', B_BODY)
+    assert [(e['side'], e['stage']) for e in ei.value.errors] == [('reader', 0), ('reader', 1)]
+
+
+def test_collect_clean_type_is_byte_identical():
+    for setup, tn, body in ((lambda p: writer(p, ['rst_n_t0', 'rst_n_t0']), 'A', A_BODY),
+                            (lambda p: reader(p, ['cland_reset_y', 'cland_reset_y']), 'B', B_BODY)):
+        p, t = strap_vehicle(); setup(p)
+        a, b = landings(p, t, False), landings(p, t, True)
+        assert a.type_rtl(tn, body) == b.type_rtl(tn, body)
+        assert a.reset_placements == b.reset_placements and b._type_errs is None
+
+
+def test_emit_one_records_one_gap_per_error():
+    errs = [dict(type='A', bus='x', side='writer', stage=i, error=f'A.x: writer START raw reset r{i} has no registered '
+                 'wavefront driver') for i in range(3)]
+    def boom(*a, **k):
+        raise LandingErrors(errs)
+    fake = SimpleNamespace(types={'A': {}}, collect_gaps=True, emit_type=lambda tn, p: ('text', []),
+                           clock_landings=SimpleNamespace(type_rtl=boom))
+    fake._gap = lambda msg: bind.Binder._gap(fake, msg)
+    fake._emit_type_files = lambda *a: bind.Binder._emit_type_files(fake, *a)
+    bind.Binder._emit_one(fake, 'A', ['pa'], None, [])
+    assert fake.emit_gaps == [f'A: {e["error"]}' for e in errs]
+
+
+def test_error_records_and_report(tmp_path, capsys):
+    errors = ['EMIT slw_su_c__cl19bb38ef: slw_su_c__cl19bb38ef.x_ctl_o: writer START raw reset rr_t138 has no registered '
+              'wavefront driver',
+              'EMIT sle_su_c: sle_su_c.x_su_l0_stm_o: writer START stage 6 needs finite xy_um',
+              'R8_STALE something', 'EMIT u_missing_a.rst_n: expected one bound leaf, found 0']
+    recs = bind.write_all_errors(tmp_path, errors, ['slw_su_c__cl19bb38ef', 'sle_su_c'])
+    assert recs[0] | {} == dict(cls='EMIT', type='slw_su_c__cl19bb38ef', bus='x_ctl_o', side='writer', stage=None, raw='rr_t138',
+                                error=errors[0])
+    assert (recs[1]['type'], recs[1]['bus'], recs[1]['stage']) == ('sle_su_c', 'x_su_l0_stm_o', 6)
+    assert recs[2]['cls'] == 'R8_STALE' and recs[2]['type'] is None
+    assert recs[3]['type'] is None
+    j = json.loads((tmp_path / 'bind_errors_all.json').read_text())
+    assert j['verdict'] == 'FAIL' and j['n_errors'] == 4 and j['by_class'] == {'EMIT': 3, 'R8_STALE': 1}
+    assert j['by_type'] == {'slw_su_c__cl19bb38ef': 1, 'sle_su_c': 1}
+    assert 'BIND_ALL_ERRORS 4 error(s) on 2 type(s)' in capsys.readouterr().out
+    assert json.loads((tmp_path / 'x').mkdir() or bind.write_all_errors(tmp_path / 'x', []) or
+                      (tmp_path / 'x/bind_errors_all.json').read_text())['verdict'] == 'PASS'
+
+
+def test_strict_bind_collects_by_default():
+    src = (bind.Path(bind.__file__)).read_text()
+    assert 'B.collect_gaps = bool(getattr(a, "all_gaps", False) or getattr(a, "strict", False))' in src
+    assert 'B.clock_landings.collect = B.collect_gaps' in src
+
+
+def test_stage_number_survives_to_the_record():
+    p, t = strap_vehicle(); writer(p, ['rst_n_t0', 'bad1'])
+    with pytest.raises(LandingErrors) as ei:
+        landings(p, t, True).type_rtl('A', A_BODY)
+    rec = bind.error_records([f"EMIT A: {ei.value.errors[0]['error']}"], ['A'])[0]
+    assert (rec['type'], rec['bus'], rec['side'], rec['stage'], rec['raw']) == ('A', 'x', 'writer', 1, 'bad1')
+
+
+def test_collected_errors_survive_a_later_plain_value_error(monkeypatch):
+    p, t = strap_vehicle(); writer(p, ['bad0'])
+    c = landings(p, t, True)
+    def late(*a, **k):
+        raise ValueError('later plan error')
+    monkeypatch.setattr(c, '_ring_lite', late)
+    with pytest.raises(LandingErrors) as ei:
+        c.type_rtl('A', A_BODY)
+    assert 'bad0' in ei.value.errors[0]['error'] and ei.value.errors[-1]['error'] == 'later plan error'
+
+
+@pytest.mark.parametrize('collect', [False, True])
+def test_post_landing_refusal_is_one_gap_per_type(collect):
+    def boom(tn, *a):
+        raise bind.BindError(f'control reset localization {tn}: nope')
+    f = SimpleNamespace(collect_gaps=collect, _emit_type_files=boom)
+    f._gap = lambda m: bind.Binder._gap(f, m)
+    if not collect:
+        with pytest.raises(bind.BindError):
+            bind.Binder._emit_one(f, 'T1', ['p'], None, [])
+        return
+    for tn in ('T1', 'T2'):
+        bind.Binder._emit_one(f, tn, ['p'], None, [])
+    assert f.emit_gaps == [f'control reset localization {tn}: nope' for tn in ('T1', 'T2')]

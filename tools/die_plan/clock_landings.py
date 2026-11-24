@@ -947,6 +947,15 @@ class LandingError(ValueError):
     pass
 
 
+class LandingErrors(LandingError):
+    """BIND-ALL-ERRORS 11-23: every START stage / bus plan error of ONE type, collected by Landings.type_rtl when
+    Landings.collect is on (strict / --all-gaps binds).  .errors = [dict(type, bus, side, stage, error)]."""
+
+    def __init__(self, errors):
+        self.errors = list(errors)
+        super().__init__(f"{len(self.errors)} landing error(s): " + " | ".join(e["error"] for e in self.errors))
+
+
 # count-aligned intra-region start relay: tx flop (origin partition) + rx flop (relay partition); must equal
 # count_align_bind.RELAY_STAGES, which shifts the K of the relay partition's crossings by the same counts
 RELAY_STAGES = 2
@@ -1707,6 +1716,28 @@ class Landings:
                                   ports=dict(ready=spec["ready_port"],fault=spec["fault_port"]),gating="ready AND, fault OR",
                                   added_data_cycles=0,added_external_ports=0,check="native leaf header (gen_rtl)")
 
+    collect = False      # BIND-ALL-ERRORS: set by bind for strict / --all-gaps binds (type_rtl collects per type)
+
+    @staticmethod
+    def _stage_checks(tn, bus, side, i, xy, raw):
+        if (not isinstance(xy, list) or len(xy) != 2 or
+                any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
+            raise LandingError(f"{tn}.{bus}: {side} START stage {i} needs finite xy_um")
+        if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
+            raise LandingError(f"{tn}.{bus}: {side} START stage {i} needs a local registered raw reset")
+
+    def _collect_err(self, tn, bus, side, stage, exc):
+        """BIND-ALL-ERRORS 11-23: inside type_rtl with collect on, record one stage / bus plan error and go on (the
+        type is then refused with every error listed); otherwise raise it unchanged (first-error behaviour)."""
+        errs = getattr(self, "_type_errs", None)
+        if errs is None:
+            raise exc
+        if isinstance(exc, LandingErrors):
+            errs.extend(exc.errors)
+        else:
+            msg = str(exc) if stage is None or f"stage {stage} " in str(exc) else f"{exc} [stage {stage}]"
+            errs.append(dict(type=tn, bus=bus, side=side, stage=stage, error=msg))
+
     def _branch_raw(self, tn, role, default):
         graph = getattr(self, "_raw_graphs", {}).get(tn)
         return graph.raw_for(role, default) if graph is not None else default
@@ -1747,13 +1778,13 @@ class Landings:
             xy, raw = stage.get("xy_um"), stage.get("raw_reset")
             ob = owners[i] if owners else bus
             raw = self._branch_raw(tn, f"reader:{ob}:{i}", raw)
-            if (not isinstance(xy, list) or len(xy) != 2 or
-                    any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
-                raise LandingError(f"{tn}.{bus}: reader START stage {i} needs finite xy_um")
-            if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
-                raise LandingError(f"{tn}.{bus}: reader START stage {i} needs a local registered raw reset")
-            # Existing wavefront relays, not an invented/resetless control net.
-            done, body = _private_raw_copy(tn, bus, "reader", raw, outputs, body, logic)
+            try:                     # BIND-ALL-ERRORS: collect mode records a bad stage and checks the next one
+                self._stage_checks(tn, bus, "reader", i, xy, raw)
+                # Existing wavefront relays, not an invented/resetless control net.
+                done, body = _private_raw_copy(tn, bus, "reader", raw, outputs, body, logic)
+            except LandingError as exc:
+                self._collect_err(tn, bus, "reader", i, exc)
+                continue
             if done is not None:
                 private[raw] = done
                 raw = done["net"]
@@ -1812,15 +1843,15 @@ class Landings:
             xy, raw = stage.get("xy_um"), stage.get("raw_reset")
             ob = owners[i] if owners else bus
             raw = self._branch_raw(tn, f"writer:{ob}:{i}", raw)
-            if (not isinstance(xy, list) or len(xy) != 2 or
-                    any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
-                raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
-            if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
-                raise LandingError(f"{tn}.{bus}: writer START stage {i} needs a local registered raw reset")
-            # LANDING-WRAP-TOOL 11-23 (QC C1b sle_su_c rr_t85, EMIT refusal after 3628 s): a port flop must feed only
-            # its port (face_guard 'shared'), so a raw relay that drives an output port becomes the same FLOW-6 private
-            # raw-export pair the reader side uses (same clk/D, export_q <= D: same release edge, +1 flop, 0 cycles)
-            done, body = _private_raw_copy(tn, bus, "writer", raw, outputs, body, logic)
+            try:                     # BIND-ALL-ERRORS: collect mode records a bad stage and checks the next one
+                self._stage_checks(tn, bus, "writer", i, xy, raw)
+                # LANDING-WRAP-TOOL 11-23 (QC C1b sle_su_c rr_t85, EMIT refusal after 3628 s): a port flop must feed only
+                # its port (face_guard 'shared'), so a raw relay that drives an output port becomes the same FLOW-6 private
+                # raw-export pair the reader side uses (same clk/D, export_q <= D: same release edge, +1 flop, 0 cycles)
+                done, body = _private_raw_copy(tn, bus, "writer", raw, outputs, body, logic)
+            except LandingError as exc:
+                self._collect_err(tn, bus, "writer", i, exc)
+                continue
             if done is not None:
                 private[raw] = done
                 raw = done["net"]
@@ -1878,6 +1909,27 @@ class Landings:
         return out
 
     def type_rtl(self, tn, text, base=None, inst=None, depth=None):
+        """BIND-ALL-ERRORS 11-23: _type_rtl; with self.collect every START stage / bus plan error of the type is
+        recorded and the type raises ONE LandingErrors listing all of them (plus the error that stopped it, if any),
+        instead of the first one only.  collect off (default): exactly _type_rtl."""
+        if not self.collect:
+            return self._type_rtl(tn, text, base=base, inst=inst, depth=depth)
+        self._type_errs = errs = []
+        try:
+            out = self._type_rtl(tn, text, base=base, inst=inst, depth=depth)
+        except ValueError as exc:      # also a non-landing plan error: never lose what was collected before it
+            if isinstance(exc, LandingErrors):
+                errs.extend(exc.errors)
+            else:
+                errs.append(dict(type=tn, bus=None, side=None, stage=None, error=str(exc)))
+            out = None
+        finally:
+            self._type_errs = None
+        if errs:
+            raise LandingErrors(errs)
+        return out
+
+    def _type_rtl(self, tn, text, base=None, inst=None, depth=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
         Existing data/epoch buses and their station chains stay intact. The
@@ -2013,7 +2065,11 @@ class Landings:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
-                    fstart_d, body = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
+                    try:
+                        fstart_d, body = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
+                    except LandingError as exc:      # BIND-ALL-ERRORS: collect mode records it, checks the next bus
+                        self._collect_err(tn, b, "writer", None, exc)
+                        fstart_d = "cland_start_d"
                     fstart_raw = self._branch_raw(tn, f"fstart:{b}", "cland_start_raw")
                     logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n({fstart_raw}), "
                                  f".d({fstart_d}), .q(cland_fstart_out_{b}));")
@@ -2099,8 +2155,12 @@ class Landings:
             if cat and b in cmask["inputs"]:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
-                reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head,
-                    default_raw=reset, default_xy=self.reset_placements.get(tn, {}).get(b, {}).get("xy_um"))
+                try:
+                    reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head,
+                        default_raw=reset, default_xy=self.reset_placements.get(tn, {}).get(b, {}).get("xy_um"))
+                except LandingError as exc:          # BIND-ALL-ERRORS: collect mode records it, checks the next bus
+                    self._collect_err(tn, b, "reader", None, exc)
+                    reader_start = "cland_start"
                 # QC-PARAMWRAP 11-12: a ring realised by a signed hard child keeps the child's exact parameters; the
                 # die-wide STATUS_REG / GUARD_REG / RSTREP / PLACEREP knobs only re-parameterise soft rings
                 hard = hard_ring_params(self.plan, tn, b, key)
@@ -2902,7 +2962,9 @@ class Landings:
             xy = r.get("xy_um")
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
-                raise LandingError(f"{tn}: landing_local_resets.{name} needs finite xy_um")
+                self._collect_err(tn, f"local_reset:{name}", "local", None,      # BIND-ALL-ERRORS: collect, next entry
+                                  LandingError(f"{tn}: landing_local_resets.{name} needs finite xy_um"))
+                continue
             # LOCAL-RESET-RAW-1 (S81-SERDES-GEN 11-17, FABLE-PD-S81-2100 finding 2): the saved raw name is never trusted.  A plan event
             # that adds taps renumbers rst_rl_<k>; the name then points at nothing or at a far relay (serdes t1 rst_rl_170 gone,
             # t15 rst_rl_244 690 um from its leaf).  The regenerated relay set decides: a name that still exists at the needed
@@ -2916,7 +2978,9 @@ class Landings:
                     self.__dict__.setdefault("local_reset_rederived", {}).setdefault(key, []).append(dict(name=name, was=was, raw=raw))
             if not isinstance(raw, str) or not re.search(r"\bot_dp_(?:rrelay(?:_nl)?|head_raw_export_pair)\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
-                raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")
+                self._collect_err(tn, f"local_reset:{name}", "local", None,      # BIND-ALL-ERRORS: collect, next entry
+                                  LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver"))
+                continue
             net, inst = f"cland_lrst_{name}", f"u_cland_lrst_{name}"
             cons = r.get("consumers")
             if not isinstance(cons, list) or not cons:

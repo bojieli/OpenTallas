@@ -3645,6 +3645,17 @@ class Binder:
         raise BindError(msg)
 
     def _emit_one(self, tn, ps, out, files):
+        """_emit_type_files; BIND-ALL-ERRORS: with collect_gaps a refusal in ANY per-type pass (reset localization, port /
+        bank / inst taps, groups, ...) is this type's gap and the other types go on; default: raised unchanged."""
+        if not getattr(self, "collect_gaps", False):
+            return self._emit_type_files(tn, ps, out, files)
+        try:
+            return self._emit_type_files(tn, ps, out, files)
+        except BindError as exc:
+            msg = str(exc)
+            self._gap(msg if tn in msg else f"{tn}: {msg}")
+
+    def _emit_type_files(self, tn, ps, out, files):
         """one bound type of emit(): emit_type + the per-type RTL passes; appends the files it wrote to `files`.  The serial loop and
         the forked workers of bind_emit_par.py both call exactly this (FABLE-PIPELINE-R1)."""
         t = self.types[tn]
@@ -3664,7 +3675,8 @@ class Binder:
                 err = BindError(f"{tn}: {exc}")
                 if not getattr(self, "collect_gaps", False):
                     raise err from exc
-                self._gap(err)
+                for e in (getattr(exc, "errors", None) or [dict(error=str(exc))]):   # BIND-ALL-ERRORS: one gap per error
+                    self._gap(BindError(f"{tn}: {e['error']}"))
                 return
         reset_localization = t.get("reset", {}).get("consumer_localization")
         if reset_localization:
@@ -5951,7 +5963,9 @@ def _bind_through_landings(a):
     import taps as _taps_pd
     _taps_pd.PLAN_DIR = str(B.source_plan.parent)   # KW-FIX-45 11-12 (COORD): sink_bins/ resolve under the PLAN folder first
     B.strict_types = bool(getattr(a, "strict", False))
-    B.collect_gaps = bool(getattr(a, "all_gaps", False))
+    # BIND-ALL-ERRORS 11-23: a STRICT bind collects every EMIT gap (all types; every landing START stage / bus of a
+    # type) instead of stopping at the first; same checks, any error still FAILs.  --all-gaps does it for non-strict.
+    B.collect_gaps = bool(getattr(a, "all_gaps", False) or getattr(a, "strict", False))
     # RELAY-ANCHOR (DIE-QC-97 11-10): plan START/local reset names anchored by site are re-picked onto the tree this
     # bind builds before the landings read them (reset_anchor.py); no anchor in the plan = no change, no receipt.
     if any("reset_tree_anchor" in (t.get("clock") or {}) for t in raw.get("partition_types", {}).values()):
@@ -5973,6 +5987,7 @@ def _bind_through_landings(a):
             B._clock_landing_table = json.loads(landing_path.read_text())
             CL.expand_station_types(B, B._clock_landing_table)
             B.clock_landings = CL.Landings(raw, B._clock_landing_table, plan_path=B.source_plan)
+            B.clock_landings.collect = B.collect_gaps      # BIND-ALL-ERRORS: every START stage error of a type
             landing_libs = ["rtl/common/ot_meso_fifo.sv", "rtl/common/ot_dp_clk_landing.sv"]
             if B._clock_landing_table.get("count_aligned"):
                 landing_libs.append("rtl/common/ot_dp_clk_landing_ca.sv")
@@ -5995,6 +6010,48 @@ def _bind_through_landings(a):
 
 
 R8_FAIL_FAST_PREFIXES = ("R8_STALE", "R8_UNCOVERED", "R8_TABLE")
+
+_ERR_STAGE = re.compile(r"\b(writer|reader) START (?:raw reset (\w+)|stage (\d+))")
+_ERR_TAG = re.compile(r"\[stage (\d+)\]$")
+
+
+def error_records(errors, types=()):
+    """BIND-ALL-ERRORS 11-23: one record per bind error: class (first word), type, bus, START side, stage and raw reset
+    when the message names them (EMIT <type>: <type>.<bus>: writer START stage <i> ...), plus the full message."""
+    types = set(types)
+    recs = []
+    for e in errors:
+        e = str(e)
+        r = dict(cls=e.split(" ", 1)[0].rstrip(":"), type=None, bus=None, side=None, stage=None, raw=None, error=e)
+        m = re.match(r"(?:EMIT\s+)?([A-Za-z_]\w*):\s+(?:([A-Za-z_]\w*)\.(\w+):\s)?", e)
+        if m and (m.group(1) in types or (m.group(2) and m.group(2) == m.group(1))):
+            r["type"] = m.group(1)
+            r["bus"] = m.group(3)
+        st = _ERR_STAGE.search(e)
+        if st:
+            r["side"] = st.group(1)
+            r["raw"] = st.group(2)
+            tag = _ERR_TAG.search(e)
+            r["stage"] = int(st.group(3)) if st.group(3) else int(tag.group(1)) if tag else None
+        recs.append(r)
+    return recs
+
+
+def write_all_errors(out, errors, types=()):
+    """OUT/bind_errors_all.json (every error, structured) + a one-line summary per class / type on stdout"""
+    recs = error_records(errors, types)
+    by_cls, by_type = {}, {}
+    for r in recs:
+        by_cls[r["cls"]] = by_cls.get(r["cls"], 0) + 1
+        if r["type"]:
+            by_type[r["type"]] = by_type.get(r["type"], 0) + 1
+    _fresh_write_text(Path(out) / "bind_errors_all.json", json.dumps(dict(
+        schema="opentallas.bind_errors_all.v1", verdict="FAIL" if recs else "PASS", n_errors=len(recs),
+        by_class=by_cls, by_type=by_type, errors=recs), indent=1) + "\n")
+    if recs:
+        print(f"BIND_ALL_ERRORS {len(recs)} error(s) on {len(by_type)} type(s); classes "
+              + ", ".join(f"{k}={v}" for k, v in sorted(by_cls.items())) + f"; full list {Path(out) / 'bind_errors_all.json'}")
+    return recs
 
 
 def r8_fail_fast(a, raw, out, B):
@@ -6057,6 +6114,8 @@ def cmd_bind(a):
         B.errors.append(f"EMIT {e}")
     else:
         B.errors.extend(f"EMIT {g}" for g in getattr(B, "emit_gaps", []))   # --all-gaps: every recorded gap
+        if getattr(B, "emit_gaps", None) and not getattr(a, "all_gaps", False):
+            files = []                       # strict default: downstream sees exactly what a first-error stop left it
     n_tied = sum(len(v) for v in B.tied_pins.values())
     if n_tied > 200:
         # the per-bit TIED list is capped at 200 lines; state the true count so a strict report is honest
@@ -6265,6 +6324,7 @@ def cmd_bind(a):
             for _r in _rows:
                 print(f"   LOCAL_RESET_RAW {_k}: {_r['name']} {_r['was']} -> {_r['raw']}")
     _fresh_write_text(out / "bind_report.json", json.dumps(rep, indent=1))
+    write_all_errors(out, B.errors, B.types)     # BIND-ALL-ERRORS: the full list (bind_report keeps the first 2000)
     try:                                     # BIND-GEN-TOOLSKEW (FLOW-FIX-0400): the tool sha + reset/relay generator hashes this bind ran with; kit prep compares them with the gen rt
         import bind_tool_stamp
         bind_tool_stamp.stamp(out)
