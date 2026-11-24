@@ -259,16 +259,28 @@ pg_np_apply
 # HOLD-MARGIN-FAMILY 11-17: extra REG-TO-REG pass to OT_PREGRT_HOLD_R2R_MARGIN (die family value, 0 = off); ports excepted, so the port seam
 # margin above is unchanged.  Same fail-safe as the rest of the build (TT setup is judged after the whole build, pg_verdict).
 set pg_rm [expr {[info exists ::env(OT_PREGRT_HOLD_R2R_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_R2R_MARGIN)] ? $::env(OT_PREGRT_HOLD_R2R_MARGIN) : 0.0}]
-# A kit may bound each optional RR margin pass with the same native buffer cap used in GRT.
+# KV-PREGRT-STALL 11-23: the RR margin pass is ALWAYS bounded.  It runs after the base pass closed hold, and at the family margin (40 ps) every
+# zero-logic reg pair is a violator: kv3_pv_v3 87,859 ends on 703k insts, kv3_hg_v3 34,721 on 528k; one uncapped single-thread repair_timing
+# ran 6-10 h with no output and was cancelled.  Default chunk = max(500, 0.5 % of insts) buffers (OT_PREGRT_HOLD_R2R_CHUNK_BUFS still
+# overrides), at most pg_rr_chunks chunks, and the GRT setup guard (OT_HOLD_SETUP_GUARD_PS, -42) between chunks; the GRT FF repair at
+# OT_HOLD_FF_MARGIN (same family value, routed parasitics, chunked + setup-guarded) takes whatever the bounded pass leaves.
+set pg_rr_chunks 3
+proc pg_rr_budget {insts} {
+  if {[info exists ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS)] && $::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS) ne ""} {
+    set budget $::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS)
+    if {![string is integer -strict $budget] || $budget <= 0} {
+      error "OT_PREGRT_HOLD_R2R_CHUNK_BUFS must be a positive integer"
+    }
+    return $budget
+  }
+  return [expr {max(500, int(ceil(0.005 * $insts)))}]
+}
 proc pg_repair_hold {tag margin insts} {
-  if {$tag ne "rr" || ![info exists ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS)] || $::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS) eq ""} {
+  if {$tag ne "rr"} {
     repair_timing -hold -hold_margin $margin -max_buffer_percent 100
     return 0
   }
-  set budget $::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS)
-  if {![string is integer -strict $budget] || $budget <= 0} {
-    error "OT_PREGRT_HOLD_R2R_CHUNK_BUFS must be a positive integer"
-  }
+  set budget [pg_rr_budget $insts]
   set pct [format %.6f [expr {min(100.0, 100.0 * $budget / max(1, $insts))}]]
   if {[catch {repair_timing -hold -hold_margin $margin -max_buffer_percent $pct} err opts]} {
     if {![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
@@ -276,6 +288,7 @@ proc pg_repair_hold {tag margin insts} {
   }
   return 0
 }
+set pg_rr_guard [expr {[info exists ::env(OT_HOLD_SETUP_GUARD_PS)] && [string is double -strict $::env(OT_HOLD_SETUP_GUARD_PS)] ? $::env(OT_HOLD_SETUP_GUARD_PS) : -42.0}]
 if {[catch {
   # (A) every hold path, ports included, to the base margin (OT_PREGRT_HOLD_PORT_MARGIN, 5): the seam contract
   #     (in_min / out_min) and same-tap pairs are padded as the GRT repair would pad them, with no route guard: port
@@ -303,7 +316,7 @@ if {[catch {
       if {[llength $pg_out]} { set_false_path -hold -to $pg_out }
       dict for {pg_p pg_v} $pg_taps { lassign $pg_v pg_ck pg_e; set_clock_latency -source -early -clock $pg_ck [expr {$pg_e - $pg_dg}] [get_ports $pg_p] }
     }
-    for {set pg_ps 1} {$pg_ps <= 6} {incr pg_ps} {
+    for {set pg_ps 1} {$pg_ps <= ($pg_tag eq "rr" ? $pg_rr_chunks : 6)} {incr pg_ps} {
       set pg_wp [pg_hold]; set pg_np [sta::endpoint_violation_count min]
       if {$pg_wp >= $pg_mrg} break
       set pg_inst_before [llength [$pg_blk getInsts]]
@@ -311,8 +324,12 @@ if {[catch {
       set pg_wq [pg_hold]
       if {$pg_capped} {
         set pg_added [expr {[llength [$pg_blk getInsts]] - $pg_inst_before}]
-        puts "OT_PREGRT_FF_HOLD rr buffer chunk $pg_ps cap $::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS) added $pg_added"
+        puts "OT_PREGRT_FF_HOLD rr buffer chunk $pg_ps cap [pg_rr_budget $pg_inst_before] added $pg_added"
         if {$pg_added <= 0} { break }
+      }
+      if {$pg_tag eq "rr" && [pg_setup] < min($pg_s0, $pg_rr_guard)} {
+        puts "OT_PREGRT_FF_HOLD rr setup guard: setup [pg_setup] < min(before $pg_s0, guard $pg_rr_guard) after chunk $pg_ps; the GRT FF repair takes the rest"
+        break
       }
       puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_mrg[expr {$pg_tag eq {xt} ? " + cross-tap $pg_dg" : {}}] wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
       # lever 3: a pass that still removes >= 5 % of the violating endpoints is progress, whatever the worst endpoint does

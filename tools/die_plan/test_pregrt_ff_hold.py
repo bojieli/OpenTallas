@@ -175,13 +175,13 @@ def test_tcl_parses(tmp_path):
     assert r.stdout.strip() == "OK", r.stdout + r.stderr
 
 
-def test_rr_buffer_chunks_are_opt_in_and_only_catch_native_cap(tmp_path):
+def test_rr_pass_is_always_bounded_and_only_catches_native_cap(tmp_path):
     tclsh = shutil.which("tclsh")
     if not tclsh:
         pytest.skip("no tclsh")
     _kit(tmp_path, {"pregrt_ff_hold": True})
     text = (tmp_path / "pregrt_ff_hold.tcl").read_text()
-    proc = text[text.index("proc pg_repair_hold"):text.index("\nif {[catch {", text.index("proc pg_repair_hold"))]
+    proc = text[text.index("proc pg_rr_budget"):text.index("\nset pg_rr_guard", text.index("proc pg_repair_hold"))]
     proof = tmp_path / "chunk.tcl"
     proof.write_text(proc + """
 unset -nocomplain ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS)
@@ -191,6 +191,7 @@ proc repair_timing {args} {
   if {$::result ne ""} { error $::result }
 }
 puts "default [pg_repair_hold rr 40 400000]"
+puts "floor [pg_rr_budget 20000]"
 set ::env(OT_PREGRT_HOLD_R2R_CHUNK_BUFS) 200
 puts "base [pg_repair_hold all 5 400000]"
 puts "cross-tap [pg_repair_hold xt 5 400000]"
@@ -203,8 +204,9 @@ puts "invalid [catch {pg_repair_hold rr 40 400000} msg] $msg"
 """)
     result = subprocess.run([tclsh, str(proof)], capture_output=True, text=True, check=True)
     assert result.stdout.splitlines() == [
-        "-hold -hold_margin 40 -max_buffer_percent 100",
+        "-hold -hold_margin 40 -max_buffer_percent 0.500000",
         "default 0",
+        "floor 500",
         "-hold -hold_margin 5 -max_buffer_percent 100",
         "base 0",
         "-hold -hold_margin 5 -max_buffer_percent 100",
@@ -343,3 +345,13 @@ def test_cross_tap_guard_keeps_grid_taps_named_in_the_ff_overlay(tmp_path):
     assert r.returncode == 0, r.stderr
     # grid taps kept (overlay FF early where it has one, the SDC value otherwise); core tap and absent port dropped
     assert r.stdout.split("\n")[:-1] == ["clk_t47 clk 9.9000", "clk_t6 clk -9.2000", "clk_t7 clk -40.0000", "clk_t90 clk -9.6000"]
+
+
+def test_rr_pass_chunk_limit_and_setup_guard(tmp_path):
+    """KV-PREGRT-STALL 11-23: the rr margin pass runs at most pg_rr_chunks bounded chunks and stops on the GRT setup guard"""
+    _kit(tmp_path, {"pregrt_ff_hold": True})
+    t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
+    assert "set pg_rr_chunks 3" in t
+    assert '$pg_ps <= ($pg_tag eq "rr" ? $pg_rr_chunks : 6)' in t
+    assert "[pg_setup] < min($pg_s0, $pg_rr_guard)" in t
+    assert "-max_buffer_percent 100" in t.split("proc pg_repair_hold")[1].split("set budget")[0]
