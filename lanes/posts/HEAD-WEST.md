@@ -39,3 +39,4 @@
 - 2026-11-24 02:17 PST DIED [head-west] ot-push-main otpush-loved-redfish-1849149 on loved-redfish: rc=1 after 917 s, ended 10:17:03, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 1 after 917 s, no log
 - 2026-11-24 02:22 PST DIED [head-west] ot-push-main otpush-loved-redfish-2355854 on loved-redfish: rc=4 after 53 s, ended 10:22:38, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 4 after 53 s, no log
 - 2026-11-24 02:24 PST DIED [head-west] ot-push-main otpush-loved-redfish-2400167 on loved-redfish: rc=1 after 57 s, ended 10:24:15, log none, cmd: ot-push-main  | class=NO-PATTERN cause=rc 1 after 57 s, no log
+- 2026-11-24 02:28 PST DONE [head-west] ot-push-main otpush-loved-redfish-2483589 on loved-redfish: rc=0 after 74 s, ended 10:28:12, log none, cmd: ot-push-main 
