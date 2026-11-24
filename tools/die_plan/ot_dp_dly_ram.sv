@@ -20,6 +20,12 @@
 //   shift line: d sampled at edge s is q after edge s + D - 1   =>   G = D - 3,  1 <= G <= DEPTH - 1   =>   4 <= D <= DEPTH + 2
 // The slot read at s+1+G is rewritten at s+1+DEPTH > s+1+G, and the slot written in that cycle is a+G != a.
 // wp / rp are reset-less like the flops they replace: rp - wp is a constant of the update rule, so any power-up value works.
+// DLYRAM-RESET 11-24: PROVEN, not only argued: from ANY state (wp, rp, every SRAM word, d_r, rd_out, q_r free) q equals the
+// D-stage flop line from the D-th edge on, D = 4..130 (yosys SAT; an off-by-one lag, an independent rp counter and a D-1
+// window all FAIL).  Power-up behaviour is therefore exactly that of ot_dp_dly: D cycles of garbage, which the die reset
+// hold must flush (neither line has a reset).  4-STATE SIMULATION ONLY: an X wp never resolves (X + 1 = X), so a 4-state
+// sim shows X forever; define OT_DLY_RAM_PTR_INIT to start wp at 0 in simulation (synthesis never sees it: SYNTHESIS
+// guard).  Bench rtl/test/dp_dly_ram/run_reset.sh.
 //
 // Macro: ot_sram_1r1w_128x256_m1_r2c2 (ASAP7 1R1W 128 x 256, read registered, read-before-write; already a KV kit macro,
 // kv3_pc_v3).  NB = ceil(W / 256) macros, instance g_b[k].u_m; repair inputs tied off (no redundancy in a delay line).
@@ -49,6 +55,11 @@ module ot_dp_dly_ram #(
     reg [AW-1:0] wp;
     reg [AW-1:0] rp;
     reg [W-1:0] q_r;
+`ifndef SYNTHESIS
+`ifdef OT_DLY_RAM_PTR_INIT
+    initial wp = {AW{1'b0}};
+`endif
+`endif
     always @(posedge clk) begin
         d_r <= d;
         wp <= wp + 1'b1;
