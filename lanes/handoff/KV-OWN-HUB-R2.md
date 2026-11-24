@@ -7,3 +7,7 @@ Job: A5t6 row for kv3_hub_Eo east macro channel (VIS-REOWN 09:31 E-side smear). 
 - epyc9 /srv/opentallas-scratch2/claude/kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-ECH.py sha 236ff2e333c4: hub_Eo.pad_ram {min_d 8, wide_min_d 16, keepout_um [[1000,245,1278.72,1430]]}. kit_dly_ram dry on A5t3 bound RTL: lead 8 + 3 SRAM D66 + resid 1, sites (882.6,100.7) (904.2,48.9) (774.6,135.3). Cycle-exact.
 ## Gate job
 - epyc11 ot-run PID 475022 (E9 waiter cancelled on load cap, never started) job_ech.sh -> out epyc11 kv-own-hub-r2/ech: row plan 3f53aba1376d (diff = hub_Eo pad_ram+note only), PRE base+row, elab, strict bind --types kv3_hub_Eo, PRE --elab-dir GENDRY. log job_ech.otrun.log. Plan copy in epyc11 grow/tree plan_of_record/plan_kvownhub_A5t3ech.json.
+## Row 2 (COORD 09:5x: stations on xs->fan, own lane, LATCHECK+R8, plans only in OWN folder -- never write grow/tree again)
+- epyc11 kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-SEQLP.py 11d9dfe72d5c: clock.core_link_pipe qkd_seq_fan_s {q:1,aqm:1}, types += kv3_hub_Eo. Plan on A5t3 = 526110b93a98.
+- Gate job_lp.sh: ot-tree-fork grow/tree -> kv-own-hub-r2/tree (own), plan there, launch_lp_70d2e, out kv-own-hub-r2/lp. ot-run PID 617482 unit oth-ubuntu-618360-1795543023.
+- Told KV-ALLFIX (0e1e840b) about grow/tree plan_kvownhub_A5t3ech.json: keep or ot-delete after my row1 job ends.
