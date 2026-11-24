@@ -126,10 +126,9 @@ def gen(stage, rank, out, path=None, ck=None):
               n_exp=m.n_exp, moe_ff=2304, hc=m.hc, ratio=m.ratio)
     LC.R_KV_SRC, LC.R_IDX_SRC = (lambda: m.kv_src), (lambda: m.idx_src)
     D = spec.get("dense_layer")
+    engram = "eng.wkv" in xs
     if D is not None:
-        if D in (1, 14) and spec.get("dense_split2") != "A":
-            raise SystemExit(f"{stage}: Engram dense layer {D} (eng.wkv x) is not in the weights-only mode yet")
-        for name, tensor, rows, cols in LC.die_slices(D, rank, sl, [], False):
+        for name, tensor, rows, cols in LC.die_slices(D, rank, sl, [], engram):
             if dense_keep(spec, name):
                 a, dt = LC._raw(ck, tensor, rows, cols)
                 o.put(f"weights/{name}.bin", a, tensor=tensor, rows=rows, cols=cols, format=dt)
@@ -139,8 +138,13 @@ def gen(stage, rank, out, path=None, ck=None):
             if name.startswith("exp"):
                 a, dt = LC._raw(ck, tensor, rows, cols)
                 o.put(f"weights/{name}.bin", a, tensor=tensor, rows=rows, cols=cols, format=dt)
+    shapes = x_shapes(m, experts, spec)
+    if engram:
+        # The weights-only planner still needs a vector at the released K.
+        # The actual runtime Engram all-gather is outside this image fixture.
+        shapes["eng.rows_allgather"] = (o.files["weights/engram.wkv.bin"]["shape"][1],)
     ops = OrderedDict()
-    for op, shp in x_shapes(m, experts, spec).items():
+    for op, shp in shapes.items():
         ops[op] = o.put(f"ops/{op}.bin", synth_x(op, shp), note="synthetic x (meta.x_policy)")
     shared = D is not None and spec.get("dense_split2") != "A"
     meta = OrderedDict(schema=SCHEMA, stage=stage, spec=spec, layer=f"L{D if D is not None else lx[0][0]}",
