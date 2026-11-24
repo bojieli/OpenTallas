@@ -20,7 +20,7 @@ def _plan(core_xy, fall=1, lef="v/m.lef", bus_window=None):
          "buses": [{"name": "x_i", "dir": "in", "width": 10, "face": "N", "window_um": [450.0, 460.0]}] if bus_window else [],
          "ft_slots": [{"name": "x", "in_face": "N", "regs_um": [[455.0, 1300.0]]}], "clock": {"landing_contract": {
              "bands": {"x_i": {"hard_core": "cl_x"}}, "pins": [{"name": "fclk_in_x_i", "xy_um": [455.0, 1300.0]}]}}}
-    return {"die": {"period_ps": 833}, "clock": {}, "partition_types": {"t": t}}
+    return {"die": {"name": "qwen_compute", "period_ps": 833}, "clock": {}, "partition_types": {"t": t}}
 
 
 def test_far_core_fails_half_cycle(tmp_path):
@@ -89,3 +89,20 @@ def test_ft_reg0_beside_fclk_pin_is_judged(tmp_path):
     raw["partition_types"]["t"]["ft_slots"] = [{"name": "x", "in_face": "N", "regs_um": [[454.0, 1298.0]]}]
     r = A.rows(raw, str(tmp_path))[0]
     assert r["basis"] == "ft-reg0" and r["verdict"] == "FAIL"
+
+
+def test_uncalibrated_die_prints_one_summary_line(tmp_path, monkeypatch):
+    _lef(tmp_path / "v/m.lef", 90.0, 50.0, 10, 49.9)
+    raw = _plan((300.0, 1000.0))
+    raw["die"]["name"] = "qwen_kvsys"
+    monkeypatch.delenv("OT_ADV_LANDREACH_ALL", raising=False)
+    ln = A.findings(raw, "p.json", str(tmp_path))
+    assert len(ln) == 1 and "not calibrated for this die (qwen_kvsys): 1 landings, 1 would be flagged" in ln[0]
+    monkeypatch.setenv("OT_ADV_LANDREACH_ALL", "1")
+    assert any("hard landing x_i" in x for x in A.findings(raw, "p.json", str(tmp_path)))
+
+
+def test_qc_die_flags_and_prints_calibration(tmp_path):
+    _lef(tmp_path / "v/m.lef", 90.0, 50.0, 10, 49.9)
+    ln = A.findings(_plan((300.0, 1000.0)), "p.json", str(tmp_path))
+    assert any("hard landing x_i" in x for x in ln) and any("calibration static-vs-measured" in x for x in ln)

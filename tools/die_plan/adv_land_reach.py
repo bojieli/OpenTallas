@@ -34,6 +34,7 @@ CORE_SMALL_UM = 150.0     # fclk pin stands in for the data port only for a core
 # Calibration (FABLE-RC-QC 11-23 21:01, hub 207fb235): static worst-bit margin vs measured slack on the three measured landings.
 # The static number is 30-115 ps pessimistic (the 45 ps allowance is not the whole eye), so the advisory flag sits at -100 ps.
 MARGIN_FLAG_PS = float(os.environ.get("OT_ADV_LANDREACH_MARGIN_PS", "-100"))
+CALIBRATED_DIES = ("qwen_compute",)   # measured slack exists only for QC; other dies print one summary line (PRECHECK ruling 11-23)
 CALIBRATION = (("sle_ctl x_hc1_st_b_i", -160, -55.8), ("sle_ctl cws2_i", -154, -40.4), ("st_a b_hw_ctl_hc0_i", -44, -11.97))
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
@@ -177,6 +178,10 @@ def findings(raw, plan_path=None, tree=None, margin_ps=None, **kw):
         unj = [r for r in rs if r["verdict"] == "INFO"]
         rs = [r for r in rs if r["verdict"] != "INFO"]
         bad = [r for r in rs if r["verdict"] == "FAIL"]
+        die = str((raw.get("die") or {}).get("name") or "")
+        if die not in CALIBRATED_DIES and os.environ.get("OT_ADV_LANDREACH_ALL", "0") != "1":
+            return [f"WARN ADV-{CHECK} not calibrated for this die ({die or '?'}): {len(rs)} landings, {len(bad)} would be flagged "
+                    f"(static only, no measured slack); set OT_ADV_LANDREACH_ALL=1 to list them"]
         edge = [r for r in rs if r["verdict"] == "WATCH"]
         lines = [f"WARN ADV-{CHECK} {r['type']}: hard landing {r['landing']} (core {r['core']}, {r['edge']}-cycle) parked "
                  f"{r['d50']:.0f} um median / {r['dmax']:.0f} um worst from its {r['face']} port = {r['delay50']:.0f} / "
