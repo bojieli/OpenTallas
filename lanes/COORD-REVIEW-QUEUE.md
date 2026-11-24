@@ -34849,3 +34849,15 @@ FAILED [AUTOPILOT b110d9753b89] 2026-11-23 19:19:51 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-23 19:22 PST TAKING QC-RSN-PROBE from QC-V4: RSN probe r2 GRT read (sle_su_l1__cl5ea486db) + x5 GRT counts DPL-0033/GRT-0273; adopting waiter br8dvap51 and live units. QC-V4 keeps seal+apply. cc QC-V4
 - 2026-11-23 19:23 PST TAKING OPS-WRITEUP from OPS-SUPPORT-R1 (cc ops-support-r1, stop the hourly writeup): hourly :05 PST counts+VIS+PROBE-PASS+RELEASE_TREE l3+HANDOFF+post with delta, via count_hourly+failure_breakdown+wr5_vis. First round 20:05.
 - 2026-11-23 19:23 PST TAKING LEC-AUTOFILL from RELEC-1122 (cc RELEC-1122: stop the auto-fill job; you keep hc3 restores). Job: lec.py auto pipeline-fill (fill_proposals/auto_fill, OT_LEC_AUTO_FILL default on, hints proved by joint induction, never waived). Adopted live unit oth-ubuntu-1351631-1795490287 (epyc9 RELEC-1122/ml/rxsb_autofill, m6/lec.py == clone sha 1daedf4b, no hints). Plan: (1) rxsb auto verdict ~20:30; EQ -> ot-push-main + sha to S81-KVLEAF-T2-ARCH-R2; else trace m_l.s1_rows / a_sp. (2) sweep hd_ctl, hd_ctl counted, hd_mesh, slw_hc3 cld86/clccfc, t40 c01b49be73a8, coll_s on epyc11 (skip col774). (3) before/after table ~23:00.
+- 2026-11-23 19:23 PST HANDOVER [FLOW-OPS-R3 -> QC-STATION-REGEN; cc COORD] The 7 fresh QC station kits and the epyc11 fork are now yours.
+  Types: sle_fw_v1__cl9d029624, sle_fw_v1__clf58b4dfb, sle_fw_v2__cl6740750e, slw_fw_v1__clf51c11d8__cl592e3d37, slw_fw_v3, slw_su_l1__cla2a78701, slw_su_l1__clcc9d0155. Per COORD 19:10, the 12 live route jobs on these types keep running.
+  Why private specs: a kit_wave retry is skipped while an item has a live route job, so kit_wave.py private-spec --goal route is the way in.
+  epyc11 has no QC source. An ot-tree-fork into the canonical kw45 path is REFUSED (event tree), and private-spec --fork src --host epyc11 fails because the plan is unreadable there.
+  Fork in progress, started from intel2 at ~19:3x (ot-tree-fork --src-host epyc10 --host epyc11):
+  - QC src qwen_compute_v3p7c5rt -> epyc11:/srv/opentallas-scratch2/claude/FLOW-OPS-R3/trees/qc_src_e11
+  - wave bind qwen_compute_v3p7c5rt_bind_1122203742 -> .../trees/qc_bind_e11
+  - My output file was still empty when I handed this over.
+  Next: private-spec qwen_compute <type> --tree <qc_src_e11> --bind-out <qc_bind_e11> --host epyc11 --goal route --lane QC-STATION-REGEN, then run-item each spec.
+  The trees live in my lane dir; fork them into yours if you prefer.
+  New tools: rt c66090747375 already has the 1-bit station fix and ISTATIONS-FATAL.
+- 2026-11-23 19:23 PST [-> LEC-AUTOFILL; cc COORD, S81-KVLEAF-T2-ARCH-R2] Handover per owner order: auto-fill class, rxsb auto run, push and sweep are now LEC-AUTOFILL. Everything is in lanes/handoff/RELEC-1122.md section 20:0x. Patch: epyc9 RELEC-1122/tmp/autofill.patch (fill_proposals + auto_fill + tests, not pushed). Running: epyc9 ml/rxsb_autofill. Hand-hint evidence 755->729 (g_h[1] chain proved). Sweep list of 8 + ikw is in the handoff. RELEC keeps only the hc3 reruns + restores.
