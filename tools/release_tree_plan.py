@@ -555,6 +555,57 @@ def dnc_hit(r, rows):
     return None
 
 
+# STRAP-EVIDENCE-COUNT 11-24 (COORD after FABLE-FLOW 137fc4da1186 / FABLE-RC-ALL 00:39): for hd_lep0N and hd_lep0N_w the bind tie audit is the
+# ONLY proof of their count straps (PIN_AUDIT no longer fails on unverified bits), so a record of these types counts only when its kit's
+# count_strap_evidence.json reads COUNT_STRAP_EVIDENCE_CHECK VERIFIED with kit_plan_sha256 == bind_plan_sha256.  The counter reads no host:
+# signed_store_ingest strap_sweep copies the verdicts to lanes/COUNT-STRAP-EVIDENCE.tsv
+# '<scan_host>:<kit dir>\t<VERIFIED|UNVERIFIED|...>\t<kit plan sha256>\t<bind plan sha256>\t<date>'.  No row = not counted (fail closed).
+STRAP_EVIDENCE_TYPES = ('hd_lep0N', 'hd_lep0N_w')
+COUNT_STRAP = pathlib.Path(__file__).resolve().parent.parent / 'lanes' / 'COUNT-STRAP-EVIDENCE.tsv'
+
+
+def strap_rows(path=None):
+    try: lines = pathlib.Path(path or COUNT_STRAP).read_text().splitlines()
+    except Exception: return {}
+    out = {}
+    for ln in lines:
+        f = [x.strip() for x in ln.split('\t')]
+        if len(f) >= 2 and ':' in f[0] and not ln.startswith('#'):
+            h, _, d = f[0].partition(':')
+            out[(h, d.rstrip('/'))] = dict(verification=f[1], kit_sha=f[2] if len(f) > 2 else '', bind_sha=f[3] if len(f) > 3 else '')
+    return out
+
+
+def strap_kit(r):
+    p = str(r.get('pins_path') or '')
+    return os.path.dirname(p).rstrip('/') if p.startswith('/') else ''
+
+
+def strap_verdict(r, rows):
+    """'' when the record's count-strap evidence is VERIFIED on matching plan shas, else the reason it does not count"""
+    row = rows.get((r.get('scan_host'), strap_kit(r)))
+    if not row:
+        return 'no count_strap_evidence.json read for kit %s:%s' % (r.get('scan_host'), strap_kit(r) or '?')
+    if row['verification'] != 'VERIFIED':
+        return 'COUNT_STRAP_EVIDENCE_CHECK %s' % row['verification']
+    if not row['kit_sha'] or row['kit_sha'] != row['bind_sha']:
+        return 'kit plan sha %s != bind plan sha %s' % (row['kit_sha'][:12] or '-', row['bind_sha'][:12] or '-')
+    return ''
+
+
+def strap_filter(st, vrefs):
+    """drop refs of the strap types that did not come from a VERIFIED record (DEDUP / INHERIT credit carries no evidence) -> dropped refs"""
+    out = {}
+    for k in STRAP_EVIDENCE_TYPES:
+        if k in st:
+            bad = [x for x in st[k] if x not in vrefs]
+            if bad:
+                out[k] = bad
+                st[k] = [x for x in st[k] if x in vrefs]
+                if not st[k]: st.pop(k)
+    return out
+
+
 def split_dnc(recs, rows):
     """-> (kept, held).  The record is one identity across its aliases: a marker beside any copy holds all of them."""
     if not any(row['state'] == 'HOLD' for row in rows): return recs, []
@@ -2019,6 +2070,7 @@ def refresh(log=lambda *a: None, old=None):
         names = retired_names()
         res['signed_records'] = recs; res['scanned'] = scanned
         ledger = load_ledger()
+        srows, vrefs = strap_rows(), set()
         live = set()
         # match SIGNED records to plan types / hard cores
         for d, ent in res['plans'].items():
@@ -2050,7 +2102,11 @@ def refresh(log=lambda *a: None, old=None):
                     if k in ks or m in ks:
                         why = name_retired(r_, ent['die'], names, (k, m))
                         if why: res['retired_records'].append(dict(r_, retired=why, retired_type=k))
-                        else: T.setdefault(k, []).append(ref)
+                        elif k in STRAP_EVIDENCE_TYPES and strap_verdict(r_, srows):
+                            res['retired_records'].append(dict(r_, retired='STRAP-EVIDENCE ' + strap_verdict(r_, srows), retired_type=k))
+                        else:
+                            T.setdefault(k, []).append(ref)
+                            if k in STRAP_EVIDENCE_TYPES: vrefs.add(ref)
                 for m in ent['hard_cores']:
                     if m in ks:
                         why = name_retired(r_, ent['die'], names, (m,))
@@ -2066,6 +2122,8 @@ def refresh(log=lambda *a: None, old=None):
                 ent['inherit_credited'] = inherit_credit(ent['die'], st, tm, inherit_rows())
             except Exception as e:
                 errs.append('INHERIT credit %s: %s' % (d, e))
+            _sd = strap_filter(st, vrefs)
+            if _sd: ent['strap_evidence_dropped'] = _sd
             ent['signed_types'] = st; ent['signed_cores'] = sc
             if ent.get('type_blocks'):
                 try:

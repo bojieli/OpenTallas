@@ -104,6 +104,53 @@ def ancestors(p):
     return out
 
 
+STRAP_PY = r'''
+import json, os, sys
+o = {}
+for d in sys.stdin.read().split('\n'):
+    if not d: continue
+    try:
+        e = json.load(open(os.path.join(d, 'count_strap_evidence.json')))
+        t = e.get('tie_audit') or {}
+        o[d] = [str(e.get('verification') or 'NO-VERDICT'), str(t.get('kit_plan_sha256') or ''), str(t.get('bind_plan_sha256') or '')]
+    except FileNotFoundError: pass
+    except Exception as x: o[d] = ['UNREADABLE', '', '']
+print(json.dumps(o))
+'''
+
+
+def strap_sweep(fails, cache=None, runner=None):
+    """STRAP-EVIDENCE-COUNT 11-24: the count-strap verdict of every signed record's kit (dir of its pins.json) -> lanes/COUNT-STRAP-EVIDENCE.tsv
+    (rewritten whole; committed when it changed).  Read only on the hosts.  -> rows written"""
+    runner = runner or run
+    recs = json.load(open(cache or rtp.CACHE)).get('signed_records') or []
+    need = collections.defaultdict(set)
+    for r in recs:
+        k = rtp.strap_kit(r)
+        if k and r.get('scan_host') in (globals().get('LIVE') or ORDER): need[r['scan_host']].add(k)
+    rows, skipped = [], set()
+    for h, ds in sorted(need.items()):
+        try:
+            r = runner(host_cmd(h, 'python3 -I -c ' + shlex.quote(STRAP_PY)), '\n'.join(sorted(ds)) + '\n', 600)
+            if r.returncode != 0 or not r.stdout.strip():
+                skipped.add(h); continue
+            for d, (v, ks, bs) in sorted(json.loads(r.stdout).items()):
+                rows.append('%s:%s\t%s\t%s\t%s\t%s' % (h, d, v, ks, bs, time.strftime('%Y-%m-%d')))
+        except Exception as e:
+            skipped.add(h); fails.append([h, '*', 'strap sweep', str(e)[:200]])
+    old = rtp.strap_rows()
+    for (h, d), v in sorted(old.items()):          # an unreachable host keeps its last rows (never upgraded, never dropped)
+        if h in skipped: rows.append('%s:%s\t%s\t%s\t%s\tcarried' % (h, d, v['verification'], v['kit_sha'], v['bind_sha']))
+    body = '# STRAP-EVIDENCE-COUNT: <scan_host>:<kit dir> verification kit_plan_sha256 bind_plan_sha256 date (signed_store_ingest strap_sweep)\n' + ''.join(x + '\n' for x in sorted(rows))
+    try: same = rtp.COUNT_STRAP.read_text().split('\n')[1:] and {tuple(x.split('\t')[:4]) for x in rtp.COUNT_STRAP.read_text().splitlines()[1:]} == {tuple(x.split('\t')[:4]) for x in rows}
+    except OSError: same = False
+    if not same:
+        rtp.COUNT_STRAP.write_text(body)
+        c = runner([str(COORD / 'bin/coord-commit.sh'), 'COUNT-STRAP-EVIDENCE: %d kit verdicts' % len(rows), 'lanes/COUNT-STRAP-EVIDENCE.tsv'], None, 280)
+        if c.returncode: fails.append(['coord', '*', 'strap commit rc %d' % c.returncode])
+    return rows
+
+
 def marker_sweep(fails, cache=None):
     """-> new HOLD rows written.  Own dirs only: a marker on another copy of the view says nothing about this record."""
     cache = json.load(open(cache or rtp.CACHE))
@@ -557,6 +604,9 @@ def main():
         try: backfill_cli()
         except Exception as x: fails.append(['*', '*', 'pins backfill: %s: %s' % (type(x).__name__, str(x)[:160])])
     holds = [] if dry else marker_sweep(fails)
+    if not dry:
+        try: strap_sweep(fails)
+        except Exception as x: fails.append(['*', '*', 'strap sweep: %s: %s' % (type(x).__name__, str(x)[:160])])
     res = dict(holds=holds, late=lated, late_candidates=[e['id'] for e, r in late], time=time.ctime(), secs=int(time.time() - t0), scanned=len(recs), selected=len(sel), new=new, fails=fails,
                unreachable=unreachable, commit_rc=commit, dry=dry)
     LAST.write_text(json.dumps(res, indent=1))
