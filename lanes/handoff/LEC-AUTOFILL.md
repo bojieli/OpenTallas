@@ -6,3 +6,8 @@ Job: lec.py LEC-FILL-AUTO (fill_proposals/auto_fill, OT_LEC_AUTO_FILL default on
   EQ -> ot-push-main, post sha to S81-KVLEAF-T2-ARCH-R2 (ikw rerun). Else trace m_l.s1_rows, a_sp.
 - Sweep on epyc11: kits copied to LEC-AUTOFILL/k/<tag> (netlist sha checked), runner LEC-AUTOFILL/afrun.sh, outputs r/<tag>, results LEC-AUTOFILL/runs.log.
   Before: hd_ctl 727 NOT-EQ; hd_ctl_counted 101 UNPROVEN (m2 lec + fsm hints; rerun with same hints); hd_mesh 9377+2128 undecided; hc3_cld86 KEEP FAIL 68; hc3_clccfc KEEP FAIL 85; t40 c01b49be73a8 UNPROVEN 4943; coll_s 20+1. col774 skipped (REAL).
+
+## 22:5x 11-23
+- v2 (iterative fixed point, OT_LEC_AUTO_FILL_ITERS=4) PUSHED main 92fbd05d. rxsb 755 -> 356 points (epyc11 r/rxsb, m2/lec.py sha1 7858f6a0 = pushed).
+- COORD 20:2x: ikw passes without this; finish sweep, no new hypotheses.
+- Sweep (v1 code, one pass): t40 4943=, 0 proposals; hd_ctl 727->101 (0 proposals; main FSM-SUPERSET gain); hd_ctl counted 101=, 0 proposals. Running: hd_mesh, hc3_cld86 (114 proposed), hc3_clccfc (113), coll_s. Results: epyc11 LEC-AUTOFILL/runs.log.
