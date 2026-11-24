@@ -534,18 +534,31 @@ def _bands_follow_windows(t, old_t):
     return sorted(set(moved))
 
 
+RESET_CLEAR_UM = 4.32       # reset_tree.CLEAR_UM
+
+
 def legalize_taps(t, grid=8.64):
     """remapped types with an explicit clock tap table: every tap inside the outline minus the tap clearance and at
     least one clearance from the earlier taps (taps.explicit_tap_sites rule), nudged in grid steps; returns the moved
     tap names."""
+    moved = []
+    rs = t.get("reset") or {}
+    if rs.get("local_taps_um"):     # reset_tree.consumer_taps: inside the outline minus CLEAR_UM (4.32)
+        w, h = t["outline_um"]
+        c = RESET_CLEAR_UM + 0.01       # margin: w - 4.32 in floats can fall a hair inside the bound
+        for j, xy in enumerate(rs["local_taps_um"]):
+            nx, ny = min(max(float(xy[0]), c), w - c), min(max(float(xy[1]), c), h - c)
+            if [round(nx, 6), round(ny, 6)] != [round(float(xy[0]), 6), round(float(xy[1]), 6)]:
+                rs["local_taps_um"][j] = [round(nx, 6), round(ny, 6)]
+                moved.append(f"reset_local_{j}")
     ck = t.get("clock") or {}
     table = [p for p in ck.get("taps", []) if p.get("kind") != "core" and isinstance(p.get("xy"), list)]
     if not table:
-        return []
+        return moved
     clear = float(S.type_tap_clear(t))
     w, h = t["outline_um"]
     lo_x, hi_x, lo_y, hi_y = clear, w - clear, clear, h - clear
-    taken, moved = [], []
+    taken = []
     for p in table:
         x0 = min(max(float(p["xy"][0]), lo_x), hi_x)
         y0 = min(max(float(p["xy"][1]), lo_y), hi_y)
@@ -726,7 +739,7 @@ def apply(raw, spec, pin_gap=1.2):
     rep["windows_clamped"] = clamped
     rep["taps_legalized"] = {parts[n]["type"]: legalize_taps(types[parts[n]["type"]],
                                                              float(raw["die"].get("grid_um", 8.64) or 8.64))
-                             for n in sorted(reshaped) if n in remap}
+                             for n in sorted(reshaped)}
     rep["bands_moved"] = {parts[n]["type"]: _bands_follow_windows(types[parts[n]["type"]], old_types[parts[n]["type"]])
                           for n in sorted(reshaped) if n in remap}
     # 4. ft slots with a changed window: rebuild regs, drop exact bit sites

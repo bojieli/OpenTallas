@@ -75,6 +75,7 @@ def test_reshape_slides_on_grid_packs_and_rebuilds_slots():
     raw = _plan()
     raw["partition_types"]["ts"]["clock"] = dict(tap_mode="explicit", taps=[dict(name="clk", xy=[432.0, 800.0])],
                                                  band_fixed_um=dict(ft0_o=dict(rect_um=[820.0, 500.0, 860.0, 560.0])))
+    raw["partition_types"]["ts"]["reset"] = dict(local_taps_um=[[432.0, 860.0]])
     y0 = 1728.0 + 8.64 * 75             # both stations lose their bottom 648 um: chain at 500-660 must re-site
     new, rep = RR.apply(raw, _spec({"S1": {"rect_um": [0.0, y0, 864.0, 2592.0]},
                                     "S2": {"rect_um": [864.0, y0, 1728.0, 2592.0]}},
@@ -96,6 +97,7 @@ def test_reshape_slides_on_grid_packs_and_rebuilds_slots():
     assert s["clock"]["band_fixed_um"]["ft0_o"]["rect_um"] == [820.0, ft0["out_window_um"][0], 860.0,
                                                              ft0["out_window_um"][1]]
     assert s["clock"]["taps"][0] == dict(name="clk", xy=[432.0, 200.0])          # explicit taps: scaled, not renamed
+    assert s["reset"]["local_taps_um"] == [[432.0, round(216.0 - 4.33, 6)]]      # scaled, then held off the edge
     # both stations hold the same frame window for the shared seam
     assert new["partition_types"]["tt"]["ft_slots"][0]["in_window_um"] == ft0["out_window_um"]
 
