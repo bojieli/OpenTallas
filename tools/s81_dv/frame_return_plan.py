@@ -360,9 +360,25 @@ def score(topo, assign, emit_edge, rows_vals, kslot=1):
     return nfaults(rep), len(ret), rep, ret
 
 
-def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters, ret_score=None):
+def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters, ret_score=None, *, layout_cache=None):
     """pairs: the frame's q pairs; nsr super rows x nseg segments = len(pairs) slots.  Local search over the slot
     permutation (super row, seg) -> pair; objective (faults, root words)."""
+    cache_key = None
+    if layout_cache is not None and ret_score is None:
+        # F1/F2/F3 and root-word count depend only on the packet tags,
+        # populated rows, and timing tree. The final compose still evaluates
+        # the actual FP values and carries its real data and error bits.
+        nodes = tuple((name, nd['a'], nd['b'], nd['link_a'], nd['link_b'])
+                      for name, nd in sorted(topo['nodes'].items()))
+        emits = tuple((p, tuple(emit_edge(p, s) for s in range(nseg))) for p in pairs)
+        cache_key = (topo['root'], topo['root_link'], topo['cf'], nodes, emits,
+                     nsr, nseg, tuple(sorted(rows_vals)), seed, iters, WIN, RST)
+        if cache_key in layout_cache:
+            assign, faults, words = layout_cache[cache_key]
+            actual_faults, actual_words, _, _ = score(topo, assign, emit_edge, rows_vals)
+            if (actual_faults, actual_words) == (faults, words):
+                return assign, faults, words
+
     slots = [(R, s, nseg) for R in range(nsr) for s in range(nseg)]
     assert len(slots) == len(pairs), (len(slots), len(pairs))
     rng = random.Random(seed)
@@ -390,7 +406,10 @@ def legalise(topo, pairs, nsr, nseg, emit_edge, rows_vals, seed, iters, ret_scor
             cur, cf_, cw = cand, f, w
             if (f, w) < (bf, bw):
                 best, bf, bw = cand[:], f, w
-    return mk(best), bf, bw
+    result = (mk(best), bf, bw)
+    if cache_key is not None:
+        layout_cache[cache_key] = result
+    return result
 
 
 KSLOT_LAYOUTS = ROOT / 'tools/s81_dv/layer_prog/kslot_layouts.json'
@@ -529,7 +548,7 @@ def golden_vals(mat, x, nseg):
 
 
 def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None, frame_schedule=None, ret_score=None,
-               kslot=1, nsr=None, slot_extra=None, stretch=None, frame_cohort=None):
+               kslot=1, nsr=None, slot_extra=None, stretch=None, frame_cohort=None, layout_cache=None):
     """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
     land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
     seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
@@ -632,7 +651,8 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
                 break
         assign, f, w = best_
     elif assign is None:
-        assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters, ret_score=ret_score)
+        assign, f, w = legalise(topo, pairs, nsr, nseg, emit_edge, vals, seed, iters,
+                                ret_score=ret_score, layout_cache=layout_cache)
     else:
         assert set(assign) <= set(pairs), ('fixed placement names a pair outside the frame', set(assign) - set(pairs))
         items = [tuple(it) for its in assign.values() for it in its]
