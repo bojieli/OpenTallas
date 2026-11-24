@@ -9,3 +9,7 @@ Work dir E9 /srv/opentallas-scratch2/claude/s81-open-demand (wt = main lane clon
 - LD-LAND5 ops ld/ops_ld_land5.json efc89aac2d22: mu_LP t2 relay_depth[0] u_land rst_n D 4->5. B1+row plan ld/out/01_ld_land5.json 396fa520d75a; PRE (amd1_tree tools 70b6, asbuilt_allfix) ld/pre_ld.log.
 - DEPTH PRE (main e8e1621 logic_depth via plan_gate_pre.check_depth): S81 B1/c6 with asbuilt_allfix reach 0 generated netlists (469 modules; 69/71 hard-core modules indexed, ot_v41_bf16_half/bf_col3_c not). Plan-only mode (no --asbuilt) FAILs on 10 qwen_* generated netlists S81 never uses = false FAIL class.
 - rc67: worker fork running (adv_hop_gap on B1 vs c6 with B1 bind OUT); posts as S81-OPEN-DEMAND "rc67 ...".
+## 20:5x
+- LD-LAND5 ROW-REBASED posted (PRE FAIL set identical to B1: 12 p5 ANCHORDRY + DEADIN). Scoped strict blocked: ELAB fails dsdv_svc_land_mem unknown (hi4:668), with and without OT_BIND_TYPE_DEFINES; ALERT + CORRECTION posted to INT.
+- rc67 ROW-REBASED by worker: RC67-HOPSITE-1 ops cf14e170d0df (E9 rc67/), PRE 0, scoped strict rc0 (epyc10). Leaf c6 regression handed to SLICE. Temp file intel2 ~/coord/tmp/s81-open-demand-rc67-post.txt -> ot-delete.
+- REPORT to COORD posted. Next: re-run LD scoped strict once INT fixes ELAB; c8 probe read on mu_LP t2 / cl774 pvea45273b.
