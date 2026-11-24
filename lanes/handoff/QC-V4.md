@@ -144,3 +144,16 @@ Gate V4 13:00 PST. Not GATED -> FABLE-RC-QC REASONED with census. epyc8 = UTC.
 - TTCTLM exact private open-neck a7db172c4d59 verified .788H/.510V with no blocked cuts; exact CTS -200.67/-122.62 ps still fails target. Same-mapped-netlist combined calendar+late-cone placement 1549 remains live. Active V3 a3 stays WAIT-FORM; its private CTS outputs received no release credit. Intel1 native59 a2 route is authorized by exact ledger 2c363c3626bc; open formatter is isolated at DPL, needs whole exact image review before advance.
 - RC97 narrow 181.44x345.6 actual CTS e93c3e454238 layout and density reviewed. Exact SRAM-to-1024 captures with all 6 TT libraries is +292.93 ps worst. Intel1 private route 1607 is active from reviewed bytes ready for access/DRC/LEC. Parent feasibility leaves 28.08 um clear of hard+halo union and needs eight FLT same-age relay reseats and exact variant/price bind. Do not substitute old wide signed child or generic BT2 region as parent proof.
 - E8 QC-V4/sta_btw_c4_1508 maintains the three exact rc96 st_a and two HC1 placement scopes. x3 slw_fw_v3 on checked fd1115 is at placement in x3_fd_refresh_1532. Fresh place-only scopes still require actual images. Original V3 old FE flat-five DRT ended SIGTERM, and original glue/HC1/CTL/NDR diagnoses stay as recorded. No unchanged reruns, no stopped admitted private units, and no shared wave edits.
+
+### QC-V4 resume 16:2x PST (after the 11:40-15:40 limit)
+- CUT posted (bb3345e4): V4 = C4 81fd3e6370c0 (strict 0, LAT 1921, G0 0). Post-cut packet to FABLE-RC-ALL (6a7a02cf), verdict due 16:30. Held: sle_su_l1__cl5ea486db RSN, rc96 st_a, rc104 slw_su_l1 x2, x3 fe/fw.
+- Named wave holds for 16 sweep types: kit_wave_edit c3f05273a1a (owner QC-V4, ETA 20:00).
+- cb carry_0924 recheck (oth-ubuntu-3299626): ANCHOR OK x5, LANDREMAP 0. EXPLICIT_TAP_SITES FAIL is n/a: all 5 types are density mode, and base C4 gives the same result. cb types now belong to helper a0667f53915fbc5a6.
+- Escalation answered (447f5674): rc99/101/105/107/109 row shas. hg-REACH/REPAIR-CAP/CLOCK-NDR-DROP/x7 are HELD (no C4 GRT probe for the GRT-0273 statement).
+- x5 kit: private-spec slw_st_a_v2__clf4365a62 goal grt, rt c84f, epyc8. Spec at hub autopilot/private_specs/QC-V4/qwen_compute_slw_st_a_v2__clf4365a62_1123161142 (run_item.out).
+- APPLY prep, in intel2 ~/qc-v4-release-1123:
+  - pack_v4c4 (517 files; script epyc8 QC-V4/pack_v4.py).
+  - live_tree apply gave snap qwen_compute_v4c4 manifest 88451f71a4fc on epyc7/8/9.
+  - epyc10/epyc2/intel1 had no live tree, so seed3.sh seeds them from the v3 snap and then applies the pack.
+  - Next: build the candidate with 6 hosts and tools_sha c84f72ee2c9ee2a79086972ab9239650faf0696d; seal via publish_apply.bind_first on epyc8 (~2 h); then publish_apply apply --expect-source qwen_compute_v3p7c5rt --expect-event s29q103S4Q9N46R6V3 after the FABLE-RC verdict.
+  - My relocate attempt (qwen_compute_v4c4_bind_release) was ot-deleted. The C4 bind references the 0819 bound tree and bind, so it cannot be cleanly relocated; use a fresh bind instead.
