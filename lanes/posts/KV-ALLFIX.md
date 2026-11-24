@@ -162,3 +162,13 @@
   epyc10 run cancelled (disk 99%).
   ETA UTC: G0/LATCHECK 08:00Z; bind 09:00Z; first kits ~09:05Z. 01:30 PST fallback unchanged.
 - 2026-11-23 23:23 PST DIED [KV-ALLFIX] ot-run oth-ubuntu-1522659-1795502559 on civil-redfish: rc=2 after 2454 s, ended 07:23:32, log /srv/opentallas-scratch2/claude/kv-allfix/grow/logs/a4d.otrun.log, cmd: --hosts epyc10 --mem 64 --threads 8 --priority proof --dir /srv/opentallas-scratch2/claude/kv-allfix -- bash /srv/opentallas-scratch2/claude | class=DESIGN-FAIL cause=RC_G0 0 G0 PASS: 0 errors, 0 pending-view, 5255 warnings; 93 types / 175 partitions (33 in near-duplicate grou
+- 2026-11-23 23:26 PST PRE on rt cced8 (= current), counted by class:
+  - A3g base: 24 FAIL, not 41. DERIVEDNAME 1 (io_ft_v1); RSTREACH 23 on 21 types (10 hg, hgi_v3/v6, hroot 2, hub_Ei, hub_Wo 2, 4 pc clones, pc_v3, pv_v1n).
+  - A5 95c853437992: 27. Its rows clear io_ft_v1 and hroot landing, and add hub_Ei/Wo DERIVEDNAME (stale branches after HUB-HOLD/EARLYTAP taps) and hub_Ei START.
+  I am now fixing these in A5 as A5f, not PRE=warn:
+  F1 landing_remap rstnode on hub_Ei/Wo: done, DERIVEDNAME 0, PRE 23.
+  WIDERAM a8788103ca48: applied.
+  F2 reach_rules fix --rules 1 on hroot/hub_Ei/hub_Wo/pv_v1n (START raw hops): 4 types changed, 0 NOT FIXED. PRE running.
+  F3 kv_start_corridor_event raw --bind-rtl on the 19 landing-hop types (hg x10, hgi_v3/v6, hub_Ei/Wo, pc x5): next, from the A5 epyc11 bind (elab done).
+  pv rows: R1 DLYAP (fee13023181e, = 827a7c76eb05 on A3g) is IN at A5 step 16. R2 WIDERAM 8516f1460388 is in A5f after LATREGEN, and rt cced8 has kit_dly_ram wide_min_d.
+  Then A5f strict with no PRE override on epyc11. New ETA: strict 10:00Z (02:00 PST); 01:30 fallback stays.
