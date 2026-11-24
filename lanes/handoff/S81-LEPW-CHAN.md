@@ -27,3 +27,5 @@ Job: dsdv_slice_lepw_mu_C__t1 CBC route-demand pinch; row on c9 048fa468f0a2; PR
 - If kit #2 overlay refused: build from composed plan tree (ot-tree-fork c8seal_tree + scoped bind out scope_stem_c8 as --bind-out).
 ## 14:0x COORD waiter+fallback
 - epyc11 fork c8fork (fork.otrun.log). intel2 s81lepwchan-overlaywatch (overlay_watch.sh/.log): verdict post, PASS->ot-delete fork, REFUSED->fallback kit #2 (kit_stem_fb), then stemrebased check. s81lepwchan-grtwatchfb watches kit_stem_fb.
+## 14:0x c8s-rt fallback bind
+- epyc9 scope_stem_c8s.sh -> scope_stem_c8s/ (rt 52c1a6417353, per-type receipt). Waiters now: overlaywatch2 (replaces overlaywatch), grtwatchfb2 (replaces grtwatchfb); others unchanged (kitwait, grtwatch, kitstemwait, grtwatchstem, stemwatch, stemrebased).
