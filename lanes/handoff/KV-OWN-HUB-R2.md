@@ -6,4 +6,4 @@ Job: A5t6 row for kv3_hub_Eo east macro channel (VIS-REOWN 09:31 E-side smear). 
 ## Row
 - epyc9 /srv/opentallas-scratch2/claude/kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-ECH.py sha 236ff2e333c4: hub_Eo.pad_ram {min_d 8, wide_min_d 16, keepout_um [[1000,245,1278.72,1430]]}. kit_dly_ram dry on A5t3 bound RTL: lead 8 + 3 SRAM D66 + resid 1, sites (882.6,100.7) (904.2,48.9) (774.6,135.3). Cycle-exact.
 ## Gate job
-- epyc9 ot-run PID 2755015 (job_ech.sh -> out kv-own-hub-r2/ech: row, PRE base+row, elab, strict bind --types kv3_hub_Eo, PRE --elab-dir GENDRY). log job_ech.otrun.log. Plan copy in grow/tree plan_of_record/plan_kvownhub_A5t3ech.json.
+- epyc11 ot-run PID 475022 (E9 waiter cancelled on load cap, never started) job_ech.sh -> out epyc11 kv-own-hub-r2/ech: row plan 3f53aba1376d (diff = hub_Eo pad_ram+note only), PRE base+row, elab, strict bind --types kv3_hub_Eo, PRE --elab-dir GENDRY. log job_ech.otrun.log. Plan copy in epyc11 grow/tree plan_of_record/plan_kvownhub_A5t3ech.json.
