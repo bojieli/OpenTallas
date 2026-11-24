@@ -1,0 +1,1 @@
+- 2026-11-24 08:09 PST TAKING KITROW-GAPS (fresh, post-limit): (1) 11 unsigned types with no current-plan kit-wave row, (2) CBC-RULES-1119 job (119 S81 CBC-FALLBACK rows). CBC-RULES-1119 is DEAD: last real post 11-19 06:20, its only output since is the hourly cron bin/cbc_fallback_post.sh (no lane, no handoff file); cron stays. [cc COORD, S81-ALLFIX-INT, QC-ALLFIX, KV-ALLFIX]
