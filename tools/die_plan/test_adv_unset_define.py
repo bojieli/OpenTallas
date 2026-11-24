@@ -37,3 +37,15 @@ def test_unset_and_tree_switch(tmp_path):
     assert "2 SWITCH-NOOP" in ts[-1]
     un = U.findings({"partition_types": {"t1": {"module": "mm", "verilog_defines": ["OT_ON"]}}}, "p", None, main_repo=gd, main_ref="main")
     assert any("OT_OFF: not set" in x and "targets 1 type(s)" in x for x in un) and "1 UNSET" in un[-1]
+
+
+def test_sibling_set_ranks_first(tmp_path):
+    repo = tmp_path / "r"
+    (repo / "rtl").mkdir(parents=True)
+    _git(repo, "init", "-q", "-b", "main")
+    (repo / "rtl" / "m.sv").write_text("module mm;\n`ifdef OT_FAM_NEW\n`endif\n`ifdef OT_OTHER_X\n`endif\nendmodule\n")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-qm", "x")
+    raw = {"partition_types": {"tq": {"module": "unrelated", "verilog_defines": ["OT_FAM_OLD"]}}}
+    out = U.findings(raw, "p", None, main_repo=str(repo / ".git"), main_ref="main")
+    assert "OT_FAM_NEW" in out[0] and "SIBLING-SET" in out[0] and "tq" in out[0] and "OT_OTHER_X" in out[1] and "1 with a sibling" in out[-1]

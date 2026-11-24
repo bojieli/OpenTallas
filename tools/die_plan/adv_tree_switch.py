@@ -67,7 +67,7 @@ def _findings(raw, plan_path, tree=None, **kw):
     have = U.plan_switches(raw)
     tsw, tnl = tree_index(tree)
     msw = main_index(gd, ref)
-    out, noop, drift, undef, differs = [], 0, 0, 0, 0
+    out, noop, drift, undef, differs, dfiles = [], 0, 0, 0, 0, {}
     for sw, tps in sorted(have.items()):
         if sw in tsw:
             for f in msw.get(sw, ()):
@@ -76,7 +76,8 @@ def _findings(raw, plan_path, tree=None, **kw):
                         mn = U._git(gd, ["show", f"{ref}:{f}"], 60).count("\n")
                     except Exception:  # noqa: BLE001
                         continue
-                    differs += mn != tnl[f]
+                    if mn != tnl[f]:
+                        dfiles[f] = (tnl[f], mn)
             continue
         noop += 1
         files = sorted(msw.get(sw, ()))
@@ -94,6 +95,9 @@ def _findings(raw, plan_path, tree=None, **kw):
             undef += 1
             out.append(_w(f"{sw}: SWITCH-NOOP+UNDEFINED set by {len(tps)} type(s) ({','.join(tps[:3]) or 'plan key'}); neither the tree nor main rtl mentions it"))
     out = out[:MAX_LINES]
+    differs = len(dfiles)
+    for f, (a, b) in sorted(dfiles.items(), key=lambda kv: -abs(kv[1][1] - kv[1][0]))[:8]:
+        out.append(_w(f"{f}: DIFFERS {a} lines in the tree vs {b} on main (carries a switch this plan sets)"))
     out.append(_w("summary", f"{len(have)} switch(es) set by the plan; {noop} SWITCH-NOOP in the tree ({drift} DRIFT main has it, {undef} UNDEFINED); "
                   f"{differs} switch-carrying file(s) differ in line count tree vs main; tree {tree} main {ref[:10]}"))
     return out

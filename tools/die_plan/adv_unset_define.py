@@ -85,14 +85,21 @@ def _findings(raw, plan_path, tree=None, **kw):
         except Exception:  # noqa: BLE001
             mods = []
         tg = sorted({t for m in mods for t in bymod.get(m, [])})
-        rows.append((sw, c, d, f, mods, tg))
+        fam = "_".join(sw.split("_")[:2])
+        sib = {t for h, ts in have.items() if h != sw and "_".join(h.split("_")[:2]) == fam for t in ts}
+        if sib:     # the plan sets a sibling switch of the same family: its types run this file's module family
+            tg = sorted(set(tg) | sib)
+        rows.append((sw, c, d, f, mods, tg, bool(sib)))
+    rows.sort(key=lambda r: (not r[6], not r[5], r[0]))
     out = []
-    for sw, c, d, f, mods, tg in rows[:MAX_LINES]:
+    for sw, c, d, f, mods, tg, sib in rows[:MAX_LINES]:
         out.append(_w(f"{sw}: not set by this plan; added {d} in {c} file {f} (modules {','.join(mods[:3]) or '?'}); "
-                      f"targets {len(tg)} type(s) here: {','.join(tg[:4]) or 'none instantiate its modules'}{' ...' if len(tg) > 4 else ''}"))
+                      f"{'SIBLING-SET ' if sib else ''}targets {len(tg)} type(s) here: {','.join(tg[:4]) or 'none instantiate its modules'}{' ...' if len(tg) > 4 else ''}"))
     hit = sum(1 for r in rows if r[5])
+    sibn = sum(1 for r in rows if r[6])
     out.append(_w("summary", f"{len(added)} switch(es) added on main in {days} d; {len(added) - len(rows)} set by this plan; {len(rows)} UNSET "
-                  f"({hit} of them in a module this plan instantiates, {len(rows) - hit} elsewhere); main {ref[:10]}"))
+                  f"({sibn} with a sibling of the same family set here, {hit - sibn} more in a module this plan instantiates, {len(rows) - hit} elsewhere); "
+                  f"first {min(len(rows), MAX_LINES)} listed, strongest first; main {ref[:10]}"))
     return out
 
 
