@@ -390,7 +390,7 @@ module ot_s81_su_kvq #(
         end else if (d2v && !cb_q[0]) begin
             o_a <= ob_q + cb_q[3:1]; o_m <= 16'hFFFF; o_d <= {nq_q, d2q};
         end else begin
-            o_a <= ob_q + N / 64; o_m <= 16'h000F << (4 * cb_q[3]); o_d <= {4{ex_d}};
+            o_a <= ob_q + N / 64; o_m <= 16'h000F << (4 * cb_q[3]); o_d <= {4{ex_d & {8{16'h03FF}}}};  // pad bits defined (were X until the first gather)
         end
     end
     reg fs;
