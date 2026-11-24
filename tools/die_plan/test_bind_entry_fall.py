@@ -44,3 +44,11 @@ def test_leaf_source_report_names_missing_cell_and_never_raises():
     assert rep["gate"] == "REPORT" and rep["missing"] == ["ot_dp_rrelay_fn"] and rep["n_missing"] == 1 and rep["checked"] == 4
     fixed = bind.optional_gen_cells(_plan(pin_entry_fall=True), BASE)
     assert bind.leaf_source_report(top, fixed, known={"ot_s81_serdes__t2", "hard_pma"})["missing"] == []
+
+
+def test_leaf_source_report_scans_partition_wrappers():
+    """the fsd proof (epyc2, 11-24): ot_dp_rrelay_fn is instantiated in s81p_serdes__t2.sv (the wrapper), not in the bound top"""
+    files = ("module s81_bound_top (input wire clk);\n    s81p_serdes__t2 u_p0 (.clk(clk));\nendmodule\n"
+             "module s81p_serdes__t2 (input wire clk);\n    ot_dp_rrelay_fn u_rst_in (.clk(clk), .d(1'b1), .q());\nendmodule\n")
+    assert bind.leaf_source_report(files, BASE, known=set())["missing"] == ["ot_dp_rrelay_fn"]
+    assert bind.leaf_source_report(files, bind.optional_gen_cells(_plan(pin_entry_fall=True), BASE), known=set())["missing"] == []

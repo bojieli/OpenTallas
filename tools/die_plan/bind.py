@@ -1125,8 +1125,9 @@ _SV_KEYWORDS = {"module", "endmodule", "input", "output", "inout", "wire", "reg"
 
 
 def leaf_source_report(top_txt, cells_txt, known):
-    """ENTRY-FALL-BIND 11-24, REPORT ONLY: the modules the bound top instantiates that have no source the kit will carry (not defined in the
-    top, not in bind_cells.sv, not kit-provided, not in KNOWN = leaf source index + macro views).  -> dict(gate, checked, missing)."""
+    """ENTRY-FALL-BIND 11-24, REPORT ONLY: the modules the bound RTL (TOP_TXT: the top and the partition wrappers) instantiates that have no
+    source the kit will carry (not defined in the bound files, not in bind_cells.sv, not kit-provided, not in KNOWN = leaf source index + macro
+    views).  -> dict(gate, checked, missing)."""
     inst = set(re.findall(r"^\s+(\w+)\s+(?:#\s*\(.*?\)\s+)?u_\w+\s*\(", top_txt, re.M | re.S)) - _SV_KEYWORDS
     defined = set(re.findall(r"^\s*module\s+(\w+)", top_txt, re.M)) | set(re.findall(r"^\s*module\s+(\w+)", cells_txt, re.M))
     missing = sorted(m for m in inst - defined - KIT_PROVIDED_CELLS if m not in known)
@@ -6748,8 +6749,9 @@ def cmd_bind(a):
                 print(f"   LOCAL_RESET_RAW {_k}: {_r['name']} {_r['was']} -> {_r['raw']}")
     if files and any((out / "rtl").glob("*_bound_top.sv")):     # ENTRY-FALL-BIND 11-24: report-only leaf source check (never an error)
         try:
-            _top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
-            _cells = "\n".join(f.read_text(errors="replace") for f in sorted((out / "rtl").glob("*.sv")))   # bind_cells.sv + every bound module file
+            # every bound file instantiates leaves (ot_dp_rrelay_fn sits in the partition wrappers s81p_<type>.sv, not in the top)
+            _cells = "\n".join(f.read_text(errors="replace") for f in sorted((out / "rtl").glob("*.sv")))   # bind_cells.sv + top + wrappers
+            _top = _cells
             _known = set(E.module_index(B.ab.get("rtl_roots", ["rtl"]), B.ab.get("files", []), B.base)) | set(macro_views(B.base))
             _known |= set(plan_row_views([h for t_ in (raw.get("partition_types") or {}).values() for h in (t_.get("hard_cores") or [])], B.base))
             rep["leaf_sources"] = leaf_source_report(_top, _cells, _known)
