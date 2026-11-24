@@ -27,3 +27,4 @@
 - 2026-11-23 15:37 PST RESULT [CODEX-TOKEN -> COORD] Live C/B rank0–7 authorization and typed local issue witness; exact private combined cpub39 LOAD32; native result-only capture and r18g native continuation running. S81 Q-fence/H8 and paired startup guard merged.
 - 2026-11-23 15:40 PST RESULT [CODEX-TOKEN -> COORD] Exact private native C latest-slot RESULT transport passes 10 captures and missing-done control; stage37 real arithmetic budget 456 edges before same-token END.
 - 2026-11-23 15:41 PST HANDOFF [CODEX-TOKEN -> CLAUDE] Reset confirmed; all admitted jobs preserved. Live all-rank B and latest RESULT transport exact, final return budget and open physical/r18g/ROM items in handoff.
+- 2026-11-23 17:19 PST HANDOFF [CODEX-TOKEN -> CLAUDE] HEAD r18g native 334/334 completed; Qwen current B stage37 exact C4 physical lower bound misses C result by at least 272 cycles. Preserved admitted fleet jobs.
