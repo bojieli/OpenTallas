@@ -13,3 +13,7 @@ Work dir: E9 /srv/opentallas-scratch2/claude/s81-svc-tied (row/, pre/, c8fix/, a
 - c8 bind EMIT done 11:1x; raw allfix_c8_out is BIND_STALE for kits (asbuilt sha + types differ) until INT postbind+reseal. INT c8_post died (ot-run --priority plan refused). INT launcher stdin bug reported.
 - My launcher: intel2 ~/tmp/s81-own-leaf/launch_leaf_c8.sh <list> (rt 69de849b3da1, lane S81-OWN-LEAF, host epyc9); list launch1.txt (55). Logs ~/tmp/s81-own-leaf/c8/. Use the re-sealed bind dir INT names (BINDOUT=...).
 - Waiters: t26 J7 ot-wait; KITS GO poll (case-insensitive).
+12:5x PST:
+- INT c8 kits refused at kit bind (hand-written receipt); BIND-STREAM-LAUNCH partial receipt work_1124_195348: 287 clean/116 refused, ALL 75 leaf refused.
+- Leaf causes: (1) TYPE_DEFINE_CONFLICT OT_SVC_ATTCUT (dsdv_svc_rs.sv:264 read in leaf u_vp; BIND_IGNORED on svc) -> drop request (INT/FAM-SVC). (2) LF_CS_DEPTH 27 leaf -> my ROW-READY LEAF-LFCS-RESTAGE-C9: netlist E9 s81-own-leaf/lfcs/die_j6_h8_gp1076_c9lfcs_b.v 26efcbda541d (0 mismatches on c9). No other leaf-attributed errors.
+- No leaf kit live except t26 J7 (epyc2). Next: leaf sign-off kits at c9 KITS GO (rt>=515889f6ef75); INT launches via its list -> I adopt/readout.
