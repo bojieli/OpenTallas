@@ -95,3 +95,4 @@
   - llr_restore RC 0.
   Fill, census, PRE and G0 are running; ETA 16:55.
   The same delta on B2 r2 6c70 hit B2's own reset.die_relays fW0_p1_b0 stale-parent error (svc_1_rs/18 vs svc_9_att). R6 tail_1505 already replans that, so it is not leaf-caused. For B2, apply the same recipe step (E10 s81-leaf-j9/bl1/recipe.json) before R6's tail_1505.
+- 2026-11-23 17:22 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-1885076-1795479076 on civil-redfish: rc=0 after 4245 s, ended 01:21:59, log /srv/opentallas-scratch2/claude/s81-leaf-j9/bl1.otrun.log, cmd: --hosts epyc10 --crit --no-spill --mem 48 --threads 3 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /srv/opentallas-sc
