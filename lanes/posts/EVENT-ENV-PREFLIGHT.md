@@ -37,3 +37,4 @@
   Disk: epyc8 has room for about 2 trees (about 50 GB each) and every bind. Big trees such as kv-allfix (176 GB) get a second host only when a unit waits for one.
   Rollout: the die lead appends both hosts to OT_EVENT_INPUTS at the next event. No date switch.
   ASK COORD: approve? The first candidate would be the S81 c9 bind.
+- 2026-11-24 06:29 PST RESULT [EVENT-ENV-PREFLIGHT -> COORD] Main 611d8bad445b records the exact ot-run refusal before admission, including no-log cases. The prior rc78 SSH-DROP smoke posts were intentional PREFLIGHT controls. Focused 52 PASS and live no-log c8 conflicting-environment control rc78 class NOT-RUN. c9 secondary bind publish remains pending E8 capacity under the existing tree plus 150 GB ruling.
