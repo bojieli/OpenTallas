@@ -59,3 +59,8 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - r9 ffc276f9a6f9 GATE = base on all four (posted 01:1x): SITEGRID 0, overlap 0, relay/pt 66, reach after re-pick only fwd_source (= base; clfc +8 um). epyc8 rows/plan_sta_r9.json, rep/g9_r9 + g9_base.
 - Composed on C1g 96cce77c1e2f: epyc8 rows/plan_c1g_sta.json a3043b36660b. NOT bound: waiting C1g strict + LATCHECK (QC-ALLFIX cF). Then: overlay epyc8 tree from cF/tree overlays (bindF.sh list: rows_f16/auth, rows_f16/comb, rows_b2/ov_red2, rows_b2/ov_r8, rows_c/ov_tools, + cF runtime r8) -> PRE (rt 7514) + G0 -> strict bind -> 8 probes at goal grt on epyc8/epyc10, rt >= c660.
 - epyc8 tree = fresh kw45 snap fork (bare, no overlays yet); launch = rt 751410253108.
+
+## 11-24 01:25 PST
+- C1g strict PASS (QC-ALLFIX 01:15). r10 0104b4703368 = r9 + tap_offset rows re-keyed by site (rows/tapoff_rekey.py) + fill; composed on C1g = plan_c1g_sta10.json 3c17478ed804 (epyc7+epyc8 rows/).
+- bindG.sh on epyc7 (log epyc8 QC-OPEN-STA/bindG.ot, out epyc7 QC-OPEN-STA/bindG/): sync tree to QC-ALLFIX/cF/tree by sha, PRE+G0 via launch7 (rt 7514), elab+strict+LATCHECK via launchG (rt c660).
+- Then probes: the 8 DEAD-OWNER rows (+ cled3c1d7b, cl9f076a5c, clf4365a62) on epyc7 (tree there), goal grt, rt c66090747375 (bind rt), --bind-out QC-OPEN-STA/bindG/bind, --ab OT_TAP_ESCAPE_CLEAR_UM=0.30. Not epyc10.
