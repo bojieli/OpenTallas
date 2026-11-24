@@ -3590,19 +3590,7 @@ def tap_offset_table(P, tn):
     tab = ((P.clock.get("tap_offset") or {}).get("per_port_ps") or {}).get(tn) or {}
     per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
     out = {}
-    # R-CLOCK-7 (FABLE-REVIEW-CLK 12:46): a CORE tap's raw offset carries its declared early delivery (insertion - common latency), so a core with
-    # insertion above ~666 ps is beyond T/2 by design.  The T/2 bound applies to the RESIDUAL (offset + insertion - common) of a core tap and to the
-    # raw offset of a glue port.
-    core = {}
-    if tab:
-        for cn, _cx, _cy, ctp in S.core_taps(P, tn):
-            core[cn] = ctp
-    for n, v in tab.items():
-        row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
-        res = {}
-        for c in ("TT", "FF"):
-            ty = getattr(P, "types", {}).get(tn)
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, ty) + S.core_tap_lead_ps(ty, c)) if n in core else 0.0)
+    for n, (row, res) in _tap_offset_rows(P, tn, tab).items():
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
@@ -3611,14 +3599,44 @@ def tap_offset_table(P, tn):
     return out
 
 
+def _tap_offset_rows(P, tn, tab):
+    """{port: (raw row, residual {TT, FF})} of the plan rows `tab` of type tn.
+    R-CLOCK-7 (FABLE-REVIEW-CLK 12:46): a CORE tap's raw offset carries its declared early delivery (insertion - common latency), so a core with
+    insertion above ~666 ps is beyond T/2 by design.  The T/2 bound applies to the RESIDUAL (offset + insertion - common) of a core tap and to the
+    raw offset of a glue port (residual = raw)."""
+    core = {}
+    if tab:
+        for cn, _cx, _cy, ctp in S.core_taps(P, tn):
+            core[cn] = ctp
+    ty = getattr(P, "types", {}).get(tn)
+    out = {}
+    for n, v in tab.items():
+        row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
+        res = {}
+        for c in ("TT", "FF"):
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, ty) + S.core_tap_lead_ps(ty, c)) if n in core else 0.0)
+        out[n] = (row, res)
+    return out
+
+
 def tap_offset_span_ps(P, tn):
-    """W of an offsets type: max(o + u) - min(o - u) over its ports and corners (ceil 0.1 ps); 0.0 without a row."""
+    """W of an offsets type: max(r + u) - min(r - u) over its ports and corners (ceil 0.1 ps); 0.0 without a row.
+    r = the RESIDUAL offset (QC-CBX-CLOCK 11-24): a glue port's raw o, a core tap's o + its declared early delivery.  The raw o of a
+    core tap carries that early delivery (cbx_q10__cl89936551 clk_c1 o -449.95, early 524.38 -> r +74.4), so a span over raw rows
+    charged every port without a row the core's earliness (W 510.2 instead of 122.3: setup -520 / hold -534 on every cross-tap pair).
+    Never wider than the raw-row span (COORD easiest-for-closure): where residuals spread MORE than raw rows (core taps the spine
+    does not deliver early, e.g. KV hg, cbn_q00) the kit keeps today's W byte-identical; that arrival spread is a die STA item."""
     tab = tap_offset_table(P, tn)
     if not tab:
         return 0.0
-    span = 0.0
-    for c in ("TT", "FF"):
-        span = max(span, max(r[c] + r["tol"] for r in tab.values()) - min(r[c] - r["tol"] for r in tab.values()))
+
+    def _span(rows):
+        span = 0.0
+        for c in ("TT", "FF"):
+            span = max(span, max(r[c] + u for r, u in rows) - min(r[c] - u for r, u in rows))
+        return span
+    pairs = _tap_offset_rows(P, tn, tab).values()
+    span = min(_span([(row, row["tol"]) for row, _res in pairs]), _span([(res, row["tol"]) for row, res in pairs]))
     return math.ceil(span * 10 - 1e-9) / 10.0
 
 
