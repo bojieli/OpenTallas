@@ -73,3 +73,39 @@ def test_unknown_common_root_old_failure_stays_failure():
     txt=TEXT.replace('ot_dp_rsync_s2 u_rst_root', 'arbitrary_reset u_rst_root')
     with pytest.raises(ResetConsumerError, match='common reset root'):
         localize(txt, [ROW], TREE)
+
+
+HOLD_TEXT = TEXT.replace(
+    '.sync_rst_n(rst_root_n));',
+    ".sync_rst_n(rst_por_n));\n"
+    "ot_dp_lockq #(.STABLE(256)) u_rst_lockq "
+    "(.clk(clk), .d(rst_por_n), .locked(1'b1), .q(rst_root_n));",
+)
+HOLD_TREE = dict(TREE, lock=dict(tied=True, stable=256, stages=259))
+
+
+def test_tied_hold_counter_keeps_localized_relays_at_same_depth():
+    txt, receipts = localize(HOLD_TEXT, [ROW], HOLD_TREE)
+    assert txt == HOLD_TEXT.replace('u_bin_i (.clk(clk), .rst_n(rst_n)',
+                                    'u_bin_i (.clk(clk), .rst_n(rst_n_t14)')
+    assert receipts[0]['depth'] == 2 and receipts[0]['cycles_added'] == 0
+
+
+@pytest.mark.parametrize('old,new', [
+    ("u_rst_lockq (.clk(clk)", "u_rst_lockq (.clk(otherclk)"),
+    ("ot_dp_lockq #", "unverified_counter #"),
+    (".d(rst_por_n)", ".d(arst_n)"),
+    (".locked(1'b1)", ".locked(start_i)"),
+    (".STABLE(256)", ".STABLE(255)"),
+    ("endmodule", "ot_dp_rrelay extra (.clk(clk), .d(a0), .q(rst_root_n));\nendmodule"),
+    ("endmodule", "ot_dp_rrelay extra (.clk(clk), .d(a0), .q(rst_por_n));\nendmodule"),
+])
+def test_tied_hold_counter_refuses_mismatched_emitted_root(old, new):
+    with pytest.raises(ResetConsumerError, match='common reset root'):
+        localize(HOLD_TEXT.replace(old, new), [ROW], HOLD_TREE)
+
+
+def test_tied_hold_counter_requires_published_matching_configuration():
+    for tree in (TREE, dict(TREE, lock=dict(tied=True, stable=256, stages=258))):
+        with pytest.raises(ResetConsumerError, match='common reset root'):
+            localize(HOLD_TEXT, [ROW], tree)
