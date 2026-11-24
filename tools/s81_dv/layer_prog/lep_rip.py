@@ -22,35 +22,57 @@ if os.path.isdir(os.environ.get('OT_REPO_ROOT') or ''):   # REPO-ROOT-1123 conve
 RTL = ROOT / 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv'
 
 
-def selectors(rtl=RTL):
-    """{bare selector: RIP} from the `ifdef OT_S81SL_LEP_RIP<n> ... `define OT_S81SL_LEP_RIP <n> blocks."""
+def selectors(rtl=RTL, knob='RIP'):
+    """{bare selector: n} from the `ifdef OT_S81SL_LEP_<knob><n> ... `define OT_S81SL_LEP_<knob> <n> blocks
+    (knob RIP = ring-out relay stages, ROS = input face stages)."""
     text = Path(rtl).read_text()
+    k = 'OT_S81SL_LEP_' + knob
     out = {}
-    for m in re.finditer(r'`ifdef\s+(OT_S81SL_LEP_RIP\w+)\s*\n\s*`ifndef\s+OT_S81SL_LEP_RIP\s*\n\s*`define\s+OT_S81SL_LEP_RIP\s+(\d+)', text):
+    for m in re.finditer(rf'`ifdef\s+({k}\w+)\s*\n\s*`ifndef\s+{k}\s*\n\s*`define\s+{k}\s+(\d+)', text):
         out[m.group(1)] = int(m.group(2))
     if not out:
-        raise ValueError('no OT_S81SL_LEP_RIP selectors found in ' + str(rtl))
+        raise ValueError(f'no {k} selectors found in ' + str(rtl))
     # the default is the LAST guarded define (each selector block nests the same `ifndef / `define / `endif)
-    m = re.findall(r'`ifndef\s+OT_S81SL_LEP_RIP\s*\n\s*`define\s+OT_S81SL_LEP_RIP\s+(\d+)\s*\n\s*`endif', text)
+    m = re.findall(rf'`ifndef\s+{k}\s*\n\s*`define\s+{k}\s+(\d+)\s*\n\s*`endif', text)
     if len(m) != len(out) + 1:
-        raise ValueError('cannot tell the RIP default from the selector blocks in ' + str(rtl))
+        raise ValueError(f'cannot tell the {knob} default from the selector blocks in ' + str(rtl))
     return out, int(m[-1])
 
 
-def lep_ri_rip(defines, rtl=RTL):
-    """RIP for one define list (bare names or NAME=value).  The first `ifdef in the RTL wins, as in the preprocessor."""
-    sel, default = selectors(rtl)
+def lep_knob(defines, knob, rtl=RTL):
+    """<knob> value for one define list (bare names or NAME=value).  The first `ifdef in the RTL wins, as in the preprocessor."""
+    sel, default = selectors(rtl, knob)
     names = {}
     for d in defines:
         k, _, v = (d[2:] if d.startswith('-D') else d).partition('=')
         names[k] = v
-    if 'OT_S81SL_LEP_RIP' in names:
-        return int(names['OT_S81SL_LEP_RIP'])
+    if 'OT_S81SL_LEP_' + knob in names:
+        return int(names['OT_S81SL_LEP_' + knob])
     text = Path(rtl).read_text()
     for name in sorted(sel, key=lambda s: text.index('`ifdef ' + s)):
         if name in names:
             return sel[name]
     return default
+
+
+def lep_ri_rip(defines, rtl=RTL):
+    """RIP (relay stages on the ring output ri only) for one define list"""
+    return lep_knob(defines, 'RIP', rtl)
+
+
+# ROS (FAM-S81-LEPE 11-21, ot_s81sl_slice_lep g_inpipe): ROS extra face stages on ALL FOUR lep input ports ro / t_host / t_kd /
+# mu_c and their valid copies.  In the bound LP piece (bind wrapper s81p_dsdv_slice_lep*_LP) they are fed from the type IN buses
+#   ro     = {lepf_i0[0], lepk_i0[1103:1]}        mu_c = unit_i0[44:11]
+#   t_host = unit_i0[116,121:117,115:45]          t_kd = unit_i0[175:122]          (lepe_mu_LP t2; nh / lepw types: mu_c only)
+# so the lanes that END on lepk_i* / lepf_i* / unit_i* of a ROS type land ROS edges later at the lep.  Bits of those buses that
+# do not enter u_lep (lepk_i0[0] = land reset relay, unit_i0[10:0] = rc of the landing) bypass the stages.
+ROS_IN_BUSES = ('lepk_i', 'lepf_i', 'unit_i')
+ROS_BYPASS = {'lepk_i': 'bit 0 (land reset relay)', 'unit_i': 'bits 10:0 (rc to the landing)'}
+
+
+def lep_ro_ros(defines, rtl=RTL):
+    """ROS (input face stages on ro / t_host / t_kd / mu_c) for one define list"""
+    return lep_knob(defines, 'ROS', rtl)
 
 
 def table(plan, rtl=RTL):

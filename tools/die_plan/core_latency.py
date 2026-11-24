@@ -27,6 +27,13 @@ def soft_out_cycles(typ, bus):
     return int((sl.get("out") or {}).get(bus, 0) or 0)
 
 
+def soft_in_cycles(typ, bus):
+    """declared SOFT-logic cycles on IN bus <bus> of plan type <typ>: soft_latency.in (0 = none).  LEP-ROS-LATCHECK (COORD 11-24,
+    LATDEF-C8): receiver-side soft registers (S81 lep ROS input face stages) every path from that IN bus crosses."""
+    sl = (typ or {}).get("soft_latency") or {}
+    return int((sl.get("in") or {}).get(bus, 0) or 0)
+
+
 def out_cycles(typ, bus):
     """declared cycles on OUT bus <bus> of plan type <typ> (0 = none): hard-core rows (CORE-LAT-1) + the type's soft-logic
     row (CORE-LAT-2, soft_out_cycles)"""

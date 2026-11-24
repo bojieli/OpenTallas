@@ -7324,12 +7324,20 @@
      "soft_latency": {
       "type": "object",
       "required": [
-       "out",
        "inst"
       ],
+      "minProperties": 2,
       "additionalProperties": false,
       "properties": {
        "out": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 1
+        }
+       },
+       "in": {
         "type": "object",
         "minProperties": 1,
         "additionalProperties": {

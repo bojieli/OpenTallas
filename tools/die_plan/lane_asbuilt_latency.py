@@ -213,6 +213,22 @@ def lep_ri_cycles(typ, bus):
     return lep_rip.lep_ri_rip(defs)
 
 
+def lep_ro_cycles(typ, bus):
+    """LEP-ROS-LATCHECK (COORD 11-24, LATDEF-C8): ROS input face stages of ot_s81sl_slice_lep on the lep inputs ro / t_host /
+    t_kd / mu_c, fed from the type IN buses lepk_i* / lepf_i* / unit_i* (lep_rip.ROS_IN_BUSES), selected by verilog_defines
+    (OT_S81SL_LEP_ROS2 / ROS3 / OT_S81SL_LEP_ROS=<n>).  Soft registers the bound RTL does not show, as RIP.  -> ROS, or None."""
+    defs = (typ or {}).get("verilog_defines") or []
+    if not any(str(d).startswith("OT_S81SL_LEP_ROS") for d in defs):
+        return None
+    sys.path.insert(0, str(HERE.parent / "s81_dv"))
+    from layer_prog import lep_rip  # noqa: E402
+    if not bus.startswith(lep_rip.ROS_IN_BUSES):
+        return None
+    if not lep_rip.RTL.is_file():
+        raise FileNotFoundError(f"LEP ROS: {lep_rip.RTL} missing (set OT_REPO_ROOT to the bound tree)")
+    return lep_rip.lep_ro_ros(defs)
+
+
 def plan_hops(plan):
     """lane id -> [(ft partition, out bus)] from the plan's port chain"""
     ports = {x["id"]: x for x in plan.get("ports", [])}
@@ -325,6 +341,13 @@ def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), prici
         if pricing:
             rec["pricing_cut"] = cut
         dn, ddet, p2 = side_stages(md, types.get(dt), r["bus_in"], "in", "dst" in reg, override)
+        ros = lep_ro_cycles(types.get(dt), r["bus_in"])
+        if ros is not None:
+            declared_in = CL.soft_in_cycles(types.get(dt), r["bus_in"])
+            ddet.update(lep_ros=ros, lep_ros_declared=declared_in)
+            dn += ros                                # the RTL's ROS stages (side_stages counts no receiver soft cycles)
+            if ros != declared_in:
+                p2.append(f"lep ROS {ros} on {r['bus_in']} but soft_latency.in declares {declared_in}")
         probs += [f"src {x}" for x in p1] + [f"dst {x}" for x in p2]
         tot = sn + ft + land + dn
         rec.update(source=sdet, receiver=ddet, ft=ft, landing=land, delivered=tot, delta=tot - rec["table"],
@@ -343,6 +366,8 @@ def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), prici
                 cls.append("STALE_TABLE")
             if sdet.get("lep_rip") is not None and sdet["lep_rip"] != sdet["lep_rip_declared"]:
                 cls.append("LEP_RIP_UNDECLARED")         # kit/plan RIP stages the table and soft_latency never priced
+            if ddet.get("lep_ros") is not None and ddet["lep_ros"] != ddet["lep_ros_declared"]:
+                cls.append("LEP_ROS_UNDECLARED")         # ROS input stages the table and soft_latency.in never priced
             if not cls and 0 < rec["delta"] <= sdet["kit_ist"] + ddet["kit_ist"]:
                 cls.append("UNPRICED_KIT_STATIONS")      # kit stations the table (lane fixed_cycles) never priced
             rec["class"] = cls or ["OTHER"]

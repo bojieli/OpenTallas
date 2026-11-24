@@ -2279,9 +2279,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["core_latency"] = {"type": "object"}
 # CORE-LAT-2 (COORD 11-19): declared cycles in the type's own soft logic {out:{bus:n}, inst, note}; core_latency.soft_out_cycles
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["soft_latency"] = {
-    "type": "object", "required": ["out", "inst"], "additionalProperties": False,
+    "type": "object", "required": ["inst"], "minProperties": 2, "additionalProperties": False,
     "properties": {"out": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1}},
+                   "in": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1}},
                    "inst": {"type": "string", "minLength": 1}, "note": {"type": "string"}}}
+# LEP-ROS-LATCHECK (COORD 11-24): soft_latency.in {bus: n} = receiver-side soft cycles (core_latency.soft_in_cycles)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 # SUL0-PINFACE-1 (DIE-QC-97 11-10): per-hard-core pin-face chain (kit_istations.core_pin_stations)

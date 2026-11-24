@@ -281,3 +281,47 @@ def test_lep_rip_declared_but_wrong_value_fails():
 def test_no_rip_selector_is_unchanged():
     recs, errs = rip_run(rip_plan(["OT_S81SL_LEP_CRP2", "OT_S81SL_LEP_WREP5"]))
     assert recs[0]["verdict"] == "PASS" and "lep_rip" not in recs[0]["source"]
+
+
+# ---- LEP-ROS-LATCHECK (COORD 11-24, LATDEF-C8): the lep ROS input stages are priced on the lanes into lepk_i / lepf_i / unit_i
+def ros_plan(defines, bus="lepk_i0", declared=None, table=2, fixed=0):
+    P = plan(table=table, fixed=fixed, src_regs=0)
+    R = P["partition_types"]["R"]
+    R["buses"] = [dict(name=bus, dir="in", width=1104)]
+    R["verilog_defines"] = list(defines)
+    if declared is not None:
+        R["soft_latency"] = {"in": {bus: declared}, "inst": "u_lep", "note": "ROS"}
+    return P
+
+
+def ros_run(P, bus="lepk_i0"):
+    mods = {"p": LAL.ModuleIndex(st("u_bout_o")), "q": LAL.ModuleIndex(st(f"u_bin_{bus}"))}
+    rows = [dict(lane="L0", src="p", dst="q", bus_out="o", bus_in=bus, plan_cycles=P["latency"]["lanes"]["L0"]["cycles"])]
+    pt = {p["name"]: p["type"] for p in P["partitions"]}
+    return LAL.check(P, rows, mods.get, pt.get, P["partition_types"], {"L0": 0}.get)
+
+
+def test_lep_ros_unpriced_fails_on_every_lep_input_lane():
+    for bus in ("lepk_i0", "lepf_i0", "unit_i0"):
+        for sel, ros in (("OT_S81SL_LEP_ROS2", 2), ("OT_S81SL_LEP_ROS3", 3)):
+            recs, errs = ros_run(ros_plan(["OT_S81SL_LEP_RIP3", sel], bus), bus)
+            r = recs[0]
+            assert r["verdict"] == "FAIL" and r["delta"] == ros and "LEP_ROS_UNDECLARED" in r["class"], r
+            assert r["receiver"]["lep_ros"] == ros and errs
+
+
+def test_lep_ros_declared_and_priced_passes():
+    recs, errs = ros_run(ros_plan(["OT_S81SL_LEP_ROS3"], declared=3, table=5, fixed=3))
+    assert recs[0]["verdict"] == "PASS" and not errs, recs[0]
+
+
+def test_lep_ros_declared_wrong_value_fails():
+    recs, _ = ros_run(ros_plan(["OT_S81SL_LEP_ROS2"], declared=3, table=5, fixed=3))
+    assert recs[0]["verdict"] == "FAIL" and "LEP_ROS_UNDECLARED" in recs[0]["class"]
+
+
+def test_lep_ros_not_on_other_buses_or_without_selector():
+    recs, _ = ros_run(ros_plan(["OT_S81SL_LEP_ROS3"], "coll_i0"), "coll_i0")
+    assert recs[0]["verdict"] == "PASS" and "lep_ros" not in recs[0]["receiver"]
+    recs, _ = ros_run(ros_plan(["OT_S81SL_LEP_RIP3"]))
+    assert recs[0]["verdict"] == "PASS" and "lep_ros" not in recs[0]["receiver"]

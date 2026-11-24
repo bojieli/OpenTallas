@@ -72,3 +72,11 @@ def test_repo_root_env_selects_the_bound_tree(tmp_path):
                           'from layer_prog import lep_rip; print(lep_rip.RTL)', str(Path(L.__file__).parents[1])],
                          env=dict(os.environ, OT_REPO_ROOT=str(tmp_path)), capture_output=True, text=True, check=True)
     assert out.stdout.strip() == str(r / 'ot_s81sl_slice_lep.sv')
+
+
+def test_ros_selectors_from_the_rtl():
+    sel, default = L.selectors(knob='ROS')
+    assert sel == {'OT_S81SL_LEP_ROS2': 2, 'OT_S81SL_LEP_ROS3': 3} and default == 0
+    assert L.lep_ro_ros(['OT_S81SL_LEP_CRP2', 'OT_S81SL_LEP_RIP3', 'OT_S81SL_LEP_ROS3']) == 3
+    assert L.lep_ro_ros(['-DOT_S81SL_LEP_ROS2']) == 2 and L.lep_ro_ros(['OT_S81SL_LEP_RIP1']) == 0
+    assert L.lep_ri_rip(['OT_S81SL_LEP_ROS3']) == 0                  # the knobs do not leak into each other
