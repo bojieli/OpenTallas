@@ -13,3 +13,11 @@ Job: core taps without budget owner -> legacy kit path (ETM max pin target). (1)
 - COORD ruled the GEN fix stays default-on. c8 p6u_hops2 94eb2af6a4f5: lanes/CORE-TAP-CENSUS-S81-c8.tsv. 301 of 302 legacy types move (col 216, leaf 75, kv_leaf 4, LP 4, gunit 1, bk_sel 1). Census column etm_TT/etm_err_TT on main 5ba73cdc86.
 - bk_sel: bksel_eco3_1117 lib ETM 512.40 stale vs signed mean 750.69. LP: ln0..3 unowned, plan 405/340 vs signed 424.6/336.26 (row for the S81 lanes).
 - Note: for declared_lead rows (core_pin_lead_ps), etm_TT is pre-lead, so pin_target - etm_TT includes the lead.
+
+## 11-24 03:35 bk_sel ETM + class scan (FABLE-RC-ALL 4d132ca0) DONE
+- Regen dsdv_bksel_q ETM from signed eco3 odb/spef + golden SDC: epyc2 /srv/opentallas-scratch2/claude/CORE-TAP-BUDGET/etm/dsdv_bksel_q_{tt,ff}.lib (scripts run.sh/etm_*.tcl, lat probe lat_tt.log).
+- TT max_clock_tree_path 512.40 reproduced exactly: not stale. 512.40 = network latency of the u_pk/clk hq_pk2 macro pin (the max network+internal endpoint). Registers 635-747 TT; the signed pin mean 750.69 is the right target.
+- Old FF (BC) lib: clk->out arcs TT-like (~851 vs regen 669, -181 ps), so FF hold on bksel_q outputs was optimistic. FF setup arcs -10, hold +10; TT clk->out +4.8.
+- t2 re-read was not done: there is no routed bk_sel__t2 DB (R7 kits are on epyc10, which is full).
+- Class scan: tmp/etm_class_scan.py; out/etm_scan_a.{log,json} (intel2: head, kvsys, s81) and out/etm_scan_b.* (epyc9: QC, c8).
+  - 24 unique views flagged; 8 are material (posted).
