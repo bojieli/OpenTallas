@@ -4,3 +4,5 @@
   - hgi cl141/cl42b: NO A5 row. u_rrl native-reset verifier fix never reached main; KV-RRL-EXPORT silent since 20:00. UNOWNED: I take it.
   - pc cl254 x2 r8: ASTK-EARLYTAP, ISTPRICE rows; reach A6. Live: ALLFIX.
   After A5s binds: probes at goal grt on epyc11, verified-sha tree, reach/non-reach types per ALLFIX's list.
+- 2026-11-24 00:45 PST DONE [KV-OWN-HG] ot-run oth-ubuntu-3717095-1795509675 on ubuntu: rc=0 after 281 s, ended 00:45:52, log none, cmd: --hosts epyc8 --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/KV-OWN-HG -- bash -c 
+  D=/srv/opentallas-scratch2/claude/kv-plan-r6/
