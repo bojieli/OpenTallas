@@ -1,30 +1,30 @@
-# FOLLOWUP-S81 ALLFIX tracker 11-23 17:52 PST (age = min since row fields last changed since my first snapshot; lane_post_age = min since owner lane file mtime)
+# FOLLOWUP-S81 ALLFIX tracker 11-23 18:21 PST (age = min since row fields last changed since my first snapshot; lane_post_age = min since owner lane file mtime)
 item	family_lane	row_sha	next_stage	stage_deadline	status	age_since_change_min	lane_post_age_min	flag
-rc4	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc5	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc7	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc8	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc9	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc12	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc14	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-rc16	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-rc18	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-rc20	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-rc25	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-rc28	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-rc29	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-rc30	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-rc31	S81-ALLFIX-SLICE	B+	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-rc32	S81-ALLFIX-SLICE	Wave A retap	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-rc33	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc34	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc36	S81-ALLFIX-SLICE	SP-W2+XGARRAY-1 LP	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-rc37	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc39	S81-ALLFIX-MULTI	CORETAP-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
+rc4	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc5	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc7	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 + TGR5 in base	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc8	S81-ALLFIX-SLICE	slice.sv 36236edd9c48 + CRR_PRE2 asbuilt	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc9	S81-ALLFIX-SLICE	vp.sv 2a7dbb06ab12 + LEAF-ALLFIX-1 defines	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc12	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 + VNB	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc14	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+rc16	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+rc18	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+rc20	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+rc25	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+rc28	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+rc29	S81-ALLFIX-SLICE	XGARRAY-2 1b	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+rc30	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+rc31	S81-ALLFIX-SLICE	B+	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+rc32	S81-ALLFIX-SLICE	Wave A retap	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+rc33	S81-ALLFIX-SLICE	PT1 b9a2fab893de + lepw eb3efa2c89c3	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc34	S81-ALLFIX-SLICE	lepw eb3efa2c89c3 (+C in base)	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc36	S81-ALLFIX-SLICE	SP-W2+XGARRAY-1 LP	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+rc37	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	100	3	AT-RISK
+rc39	S81-ALLFIX-MULTI	in base + SERDES-RING-ONEGROUP 877bf1f92e06	full_PRE	20:30	IN-COMPOSE c4	0	25	
 rc41	S81-ALLFIX-MULTI	TXFACE-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 rc42	S81-ALLFIX-MULTI	RCKROOT-1 11/11	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 rc43	S81-ALLFIX-MULTI	DECSITE-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
-rc44	S81-ALLFIX-MULTI	LOCKUP-1 12/12	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
+rc44	S81-ALLFIX-MULTI	in base + SERDES-RING-ONEGROUP	full_PRE	20:30	IN-COMPOSE c4	0	25	
 rc48	S81-ALLFIX-MULTI	CORETAP-1 v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 rc50	S81-ALLFIX-MULTI	ENG gate10c 0e32aea4d155	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 rc51	S81-ALLFIX-MULTI	ENG gate10c 0e32aea4d155	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
@@ -32,51 +32,57 @@ rc53	S81-ALLFIX-MULTI	ENG-XT1-STN-1	full_PRE	20:30	IN-BASE (gates on combined st
 rc55	S81-ALLFIX-MULTI	SEQHOST-VLG-STN-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 rc59	S81-ALLFIX-MULTI	GUNIT-L1-REACH-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 rc62	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT v2	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
-rc66	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-rc67	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-rc72	S81-ALLFIX-COL	a820825accbe	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc78	S81-ALLFIX-COL	02b182e95344	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc79	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc80	S81-ALLFIX-COL	5dbaeeb50fbd	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc82	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc84	S81-ALLFIX-COL	0c8530ca4c1c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc85	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc87	S81-ALLFIX-COL	porous 11e80a73410f	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc88	S81-ALLFIX-COL	8b09943f6df5	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-rc89	S81-ALLFIX-COL	TGR5 s3 (count)	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-x1	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-hg-S81-CLOCK-SKEW	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-CLOCK-TAP	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-GLOBAL-DEMAND	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	8c512474bcf6 RHI	full_PRE	20:30	ROW-REBASED	0	25	
-hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	8c512474bcf6 RHI	full_PRE	20:30	ROW-REBASED	0	25	
-hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	8c512474bcf6 RHI	full_PRE	20:30	ROW-REBASED	0	25	
-hg-S81-LOGIC-DEPTH	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-MACRO-CHANNEL	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-OVER-MACRO	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-REACH	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-REPAIR-CAP	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	8c512474bcf6 RHI	full_PRE	20:30	ROW-REBASED	0	25	
-hg-S81-STATION-CLUSTER	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-hop-S81-svc	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-hop-S81-leaf	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-hop-S81-col_h9_r12	S81-ALLFIX-COL	wave env+REASON	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
-hop-S81-col_h10	S81-ALLFIX-COL	5f8b2104a625+wave env	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	1	
+rc66	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+rc67	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+rc72	S81-ALLFIX-COL	a820825accbe	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc78	S81-ALLFIX-COL	02b182e95344	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc79	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc80	S81-ALLFIX-COL	5dbaeeb50fbd	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc82	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc84	S81-ALLFIX-COL	0c8530ca4c1c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc85	S81-ALLFIX-COL	ef09171c92b8+5f8b2104a625	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc87	S81-ALLFIX-COL	porous 11e80a73410f	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc88	S81-ALLFIX-COL	8b09943f6df5	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+rc89	S81-ALLFIX-COL	TGR5 s3 (count)	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+x1	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+hg-S81-CLOCK-SKEW	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-CLOCK-TAP	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-GLOBAL-DEMAND	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c4	0	25	
+hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c4	0	25	
+hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	8c512474bcf6	full_PRE	20:30	IN-COMPOSE c4	0	25	
+hg-S81-LOGIC-DEPTH	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-MACRO-CHANNEL	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-OVER-MACRO	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-REACH	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-REPAIR-CAP	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	8c512474bcf6+12cd5a01764b	full_PRE	20:30	IN-COMPOSE c4	0	25	
+hg-S81-STATION-CLUSTER	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	100	25	AT-RISK
+hop-S81-svc	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+hop-S81-leaf	S81-ALLFIX-SLICE	LEAF-ALLFIX-1 8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c4	0	3	
+hop-S81-col_h9_r12	S81-ALLFIX-COL	wave env+REASON	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
+hop-S81-col_h10	S81-ALLFIX-COL	5f8b2104a625+wave env	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	20	
 hop-S81-gunit	S81-ALLFIX-MULTI	GUNIT-L1-REACH-1	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
 hop-S81-eng	S81-ALLFIX-MULTI	gate10c	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	25	
-hop-S81-sliceC	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	0	
-x13	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-x14	S81-ALLFIX-MULTI	-	rebased	19:00	OPEN	71	25	
-col774-RTL-52aebeb23d	S81-ALLFIX-COL	rtl 52aebeb23d (overlay 70b6)	full_PRE	20:30	ROW-REBASED	0	1	
-COL-FRAME-HOPFIX-1	S81-ALLFIX-COL	c71de97d3e91	full_PRE	20:30	ROW-REBASED	0	1	
-GFLOCAL-v2	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-B2-R3	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-rc37-LP-PROFILE-1b	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-rc35-tpcap	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-KVLEAF-VNB-HARD-1	S81-ALLFIX-SLICE	-	rebased	19:00	OPEN	71	0	
-B1-G0-SVCFRAME-46	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-B1-G0-J8HOPS-6	S81-ALLFIX-SVC	c71de97d3e91 (HOPFIX: 6 hops removed)	full_PRE	20:30	ROW-REBASED	0	3	
-SVC-CUT-FACE	S81-ALLFIX-SVC	-	rebased	19:00	OPEN	71	3	
-ENG-HXFACE-1	S81-ALLFIX-SVC	503cbe8a158d	full_PRE	20:30	ROW-REBASED	0	3	
-SERDES-t2-RTL3	S81-ALLFIX-SVC	6e0fb23a41fd	full_PRE	20:30	ROW-REBASED (KLOCK define inert until lp.py hook)	0	3	
-ABI-RESTORE	S81-ALLFIX-INT	abi_restore.json	first_PRE	19:30	INT-RULING	0	13	
+hop-S81-sliceC	S81-ALLFIX-SLICE	Wave A slice chain	full_PRE	20:30	IN-BASE (gates on combined strict+probe)	0	3	
+x13	S81-ALLFIX-MULTI	env OT_BIND_TYPE_DEFINES=on	full_PRE	20:30	IN-COMPOSE c4	0	25	
+x14	S81-ALLFIX-MULTI	cfe7c49d2194	full_PRE	20:30	IN-COMPOSE c4	0	25	
+col774-RTL-52aebeb23d	S81-ALLFIX-COL	rtl 52aebeb23d	full_PRE	20:30	IN-COMPOSE c4	0	20	
+COL-FRAME-HOPFIX-1	S81-ALLFIX-COL	c71de97d3e91	full_PRE	20:30	IN-COMPOSE c4	0	20	
+GFLOCAL-v2	S81-ALLFIX-SLICE	b7a570942fc1	full_PRE	20:30	IN-COMPOSE c4	0	3	
+B2-R3	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+rc37-LP-PROFILE-1b	S81-ALLFIX-SLICE	301aa03b2751 / LK1 b13345f8a10e	full_PRE	20:30	IN-COMPOSE c4	0	3	
+rc35-tpcap	S81-ALLFIX-SLICE	af658d95d0f9 -> 2d5e21b9501f	full_PRE	20:30	IN-COMPOSE c4	0	3	
+KVLEAF-VNB-HARD-1	S81-ALLFIX-SLICE	d8156e224c7e	full_PRE	20:30	IN-COMPOSE c4	0	3	
+B1-G0-SVCFRAME-46	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+B1-G0-J8HOPS-6	S81-ALLFIX-SVC	c71de97d3e91	full_PRE	20:30	IN-COMPOSE c4	0	7	
+SVC-CUT-FACE	S81-ALLFIX-SVC	-	rebased	19:00	OPEN (ALLFIX-SVC rows due 19:00)	0	7	AT-RISK
+ENG-HXFACE-1	S81-ALLFIX-SVC	503cbe8a158d	full_PRE	20:30	IN-COMPOSE c4	0	7	
+SERDES-t2-RTL3	S81-ALLFIX-SVC	ENC/MIDVLD/KLOCK B1 ops	full_PRE	20:30	IN-COMPOSE c4	0	7	
+ABI-RESTORE	S81-ALLFIX-INT	abi_restore.json	first_PRE	19:30	INT-RULING	28	4	
+SVC-ENGINE-ROW	family	asbuilt 1230a5252b30 + ovl	full_PRE	20:30	IN-COMPOSE c4	0	-1	
+SVC3-BOOT-PRICE	family	sidecar 0a330b0244c6	full_PRE	20:30	IN-COMPOSE c4	0	-1	
+SERDES-RING-ONEGROUP	family	877bf1f92e06	full_PRE	20:30	IN-COMPOSE c4	0	-1	
+RHI-RST-REACH	family	12cd5a01764b	full_PRE	20:30	IN-COMPOSE c4	0	-1	
+LEAF-ALLFIX-1	family	8ce96cfc7c52	full_PRE	20:30	IN-COMPOSE c4	0	-1	
+KVLEAF-T2-HARD-1	S81-ALLFIX-SLICE	-	rebased	19:00	REASONED-pending (FABLE-RC-ALL 17:33 ACCEPT)	0	3	AT-RISK
