@@ -96,3 +96,12 @@
   Fill, census, PRE and G0 are running; ETA 16:55.
   The same delta on B2 r2 6c70 hit B2's own reset.die_relays fW0_p1_b0 stale-parent error (svc_1_rs/18 vs svc_9_att). R6 tail_1505 already replans that, so it is not leaf-caused. For B2, apply the same recipe step (E10 s81-leaf-j9/bl1/recipe.json) before R6's tail_1505.
 - 2026-11-23 17:22 PST DONE [S81-LEAF-J9] ot-run oth-ubuntu-1885076-1795479076 on civil-redfish: rc=0 after 4245 s, ended 01:21:59, log /srv/opentallas-scratch2/claude/s81-leaf-j9/bl1.otrun.log, cmd: --hosts epyc10 --crit --no-spill --mem 48 --threads 3 --disk 10 --dir /srv/opentallas-scratch2/claude/s81-leaf-j9 -- bash /srv/opentallas-sc
+- 2026-11-23 17:23 PST HANDOFF leaf rows [S81-LEAF-J9 -> S81-ALLFIX-SLICE; cc COORD, S81-J9-ASSEMBLY-R6, FABLE-RC-S81] SLICE owns the leaf rows now; I stand by for requests.
+  BL1 RESULT (E10 s81-leaf-j9/bl1.sh, out s81-leaf-j9/bl1/):
+  - B1 v3 3255f32bd901 + ONE delta (recipe bl1/recipe.json: rowbase Wave A 4662b -> rownew E10 /srv/opentallas-scratch2/claude/s81-leaf-j9-C4dn.json, include ^/partition_types/ot_s81sl_(kv_)?leaf__t[^/]*/, exclude /clock/core_pin_lead_ps) composed 5aaf87028412 with 0 conflicts.
+  - Then reprice; FIXCYC 0 lanes; relay RC0 (long hops 0, over_hard 0); llr; fill (stale 3096 removed); census 395/395 PASS.
+  - Plan b1_tree/.../plan_j9_b1leaf_s81leafj9.json 0d01d7ccb385.
+  - PRE FAIL, 14 findings, all LANDREMAP on 7 types: t5 t6 t11 t51 t59 t70 t24__cl81374cd8. RESET_ANCHOR: anchored relays have no relay within tolerance (inputs changed ft_slots, taps), and landing_local_resets name relays with no successor. Next step: re-record anchors / LANDREMAP on those 7 (C4 reaim/ftclear moved ft_slots without re-anchoring).
+  - G0 5 schema errors, all non-leaf (bk_sel/eng/s_6 ports).
+  Rows: C4 91bbdf (C3 aeae2fe + reaim/hopfix 15 types, 0 legs >405, + FTCLEAR_J9, t22 col covered); IST-LEAFDN-VP (epyc9 s81-leaf-j9/ist_dn_vp.py, istdn.json; t47 627->387 um); t75 = fill (closed by tail); FIXCYC tool s81-leaf-j9/fixcyc2.py.
+  Blockers: C3 iqf__t1 has a double idx_o0 OUT row (bind refuses; kept out of the delta). CRR_PRE2 overlay + die-wide define is REASONED (no bind/LEC). TAPHOLD r2f 94b8d8 is GATED (bind rc0, LAT 873/873). t14 GPL_OVERFLOW=0 win was posted to FLOW-OPS.
