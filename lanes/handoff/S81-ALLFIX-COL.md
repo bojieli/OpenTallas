@@ -13,3 +13,9 @@ Base B1 ae3101241d6b = E10 s81-j9-r6/b1_tree/physical/die_plan/s81/plan_j9_b1_ex
 - HOPFIX PRE main tools vs base B1: PASS 0 adv 197 (hf/pre_main_vsB1.log). Posted ROW-REBASED ae218970. 12 p5 ANCHORDRY = J8-baseline artifact of B1 depth-8 reseat; B1 strict bind re-picks rst_rl_22->24 depth 7.
 - pre_main_B1_vsJ8 (confirm inherited) still running E10 unit oth-ubuntu-3225270 -> hf/pre_main_B1_vsJ8.log.
 - NEXT: read ew1_place_1438 p5 GRT (~20:00): final 5_1_grt overflow at x1133-1413 y607-675 + census; post to S81-ALLFIX-INT/PRECHECK-LEDGER-R3 (rc72 GATED if 0 stuck shorts/overflow there).
+## 19:3x
+- ew1_place_1438 DIED in bind (24 EMIT; 12 = col_h9_r0_p5 fstart_1 depth 9 != copy 8). No p5 GRT from it (was goal place anyway).
+- ROW COL-P5-FSTART1: fs1/rows_COL-P5-FSTART1.json a2a6760fa5e1, plan fs1/plan_fs1.json 77d6f4f47270 (B1+HOPFIX+FSTART1); fstart_1 rst_rl_22 d7 -> rst_rl_25 d8 (1425.6,955.032). PRE main vs B1: 12 ANCHORDRY by design; posted 486275bd (asked FABLE-RC-ALL REASONED).
+- PROBE-ONLY bind running E10 (tmp/probe_bind.sh, out fs1/probe_out, log fs1/probe_bind.log; types p5 pvbca8d846, pveda1ecc9, p3 pv1489a898; elab copied from gate_b1_exact OUT; tree tools). Waiter task b2ex8h89o.
+- NEXT: if p5 EMIT 0 -> kits p5+p3 --goal route from probe_out (kit_wave private-spec --bind-out) -> read 5_1_grt corridor x1133-1413 y607-675 -> release/hold 60 h9_r0. If corridor overflows -> structural row (u_cf vs n5/n6 gap 60um; widen/re-band).
+- Col STALE rows triaged in post dc7fdeae (superseded; relaunch at INT all-types launch).
