@@ -1,0 +1,1 @@
+- 2026-11-24 00:05 PST STARTED [TYPE-CONTRACT-SPEC -> COORD]: QC type-contract study, read-only; V1-V4 plans+binds copied to epyc11 type-contract-spec; result by 03:00 PST
