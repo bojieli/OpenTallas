@@ -172,7 +172,7 @@ S81-B1-RTHOPS	stood-down	none	2026-11-24	01:12 PST | job done: ROW-REBASED S81-R
 HEAD-W-DRC	stood-down	HEAD-WEST	2026-11-24	01:14 PST | M7 face-cut fix main f079f8109a; plan key pg_face_cut [M7] handed to HEAD-WEST
 HEAD-W-SETUP	stood-down	HEAD-WEST	2026-11-24	01:30 PST | all 5 West setup groups delivered as rows (72c3fd0c + 2c478998); WEN-LOCAL-1 on main 9570aaed95
 KV-HR-DEEPCLK	stood-down	KV-ALLFIX	2026-11-24	01:36 PST | row 03439f30e22c ROW-REBASED DIAGNOSTIC; handoff lanes/handoff/KV-HR-DEEPCLK.md
-TYPE-CONTRACT-SPEC	stood-down	COORD	2026-11-24	03:09 PST | identity fix landed (09ef4b7d15, 8cf0ffcd0d, 209b070b5a on rt ffd0f832a5af); kept-row SDC audit posted 12c5074d; per-row TSV ~/coord/tmp/dar/TYPE-CONTRACT-SPEC-SDC-AUDIT-1124.tsv; contract_v1 waits on FABLE-RC-ALL
+TYPE-CONTRACT-SPEC	stood-down	COORD	2026-11-24	03:33 PST | SDC-audit ruling applied: code 14a4522edd (resign_items), config 5f4c6c2649 (32 items), post 9c97c4de; counter current-plan credit of the 27 counted rows needs a counter scope or COORD call; contract_v1 waits on FABLE-RC-ALL
 WATCHDOG-SWEEP	stood-down	none	2026-11-24	01:48 PST | job done; cancels posted to owners; COORD reads WATCHDOG-SWEEP posts
 S81-ROM-TEMPLATE	stood-down	none	2026-11-24	02:19 PST | jobs done: template count 0 creditable (branch claude/s81-rom-template 2aaa31a4f3); ROM DRC rerun posted 4210d57e (1018 GATE.S.1 seam markers, LUP/AUX clean); outputs epyc9 s81-rom-template/romdrc
 QC-SC-FARRST	stood-down	QC-ALLFIX	2026-11-24	03:08 PST | done: ROW-REBASED 1dfd9d3d7464 (re-key + sle_ctl + sc far-raw rows; strict 0, LATCHECK PASS); no live units
