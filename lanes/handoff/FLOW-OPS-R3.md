@@ -106,3 +106,7 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - Hub counter = main b438f6cd5b1 (hub commit de0270a1); backups tools/*.bak-drift-1124. Hub tests in place: 131 pass, 1 skip (live opt-in). count-hub 02:05 rc 0.
 - epyc11 load 36 at 01:46 after S81 add; s81 gen_hosts unchanged.
 - Open: QC C1c depth_netlists TTC F5 check.
+
+## 2026-11-24 02:25 PST DEPTH-NETLIST done
+- main fa8b2360de3: PRE DEPTH follows the as-built die netlist (C1g TTC F5 was missing); depth_cover counts netlist modules. C1g dry run 0 FAIL, F5 HELD.
+- Old local commit 1386e61111b (truncated msg) left unpushed on branch flowops-depth-ttc-1124; pushed f15b91ad832 tree-equal.
