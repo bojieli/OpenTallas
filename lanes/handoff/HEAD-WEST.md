@@ -40,3 +40,9 @@ Job: pick HEAD West form at GRT; nst4 kit if (b) wins; else next structural form
 - W4b `f7801937e979` generated and passed preflight. The inherited route-goal driver selected a detached sealed PLACE waiter on intel2, which never admitted CAD below its 150 GB disk floor. Stopped only that exact pending lane controller and waiter. Preserved their reports as `place_service.pre_review_pin_wait.json` and `place.pre_review_pin_wait.log` in the same private spec directory.
 - The exact same W4b kit, `hd_lep0N_w_1124051022`, is now placement-only via `head-west-w4b-place-reviewed.service` and the lane-scoped sealed wrapper. E7 `oth-ubuntu-2381351-1795533662` admitted under the w4b event, permanent kit E7, active sealed materialization `ot-jobs/hd_lep0N_w-place-loved-redfish-2448631-1795533743/work`. The new genuine `place_service.json` supports exact resume after the human view. RTL has both physical-intent station chains, actual placed bank census pending.
 - W5 `hd_serdes_1124070219` has the exact corrected dchn FF Liberty SHA 8bc587a4f5b9. Real retry-3 kit_rtl, gen, and E9 gen_lint are PASS; preflight ongoing. W3 diagnostic DRT still running, never count it as W4/W5.
+
+## 11-24 07:5x PST fresh HEAD-WEST lane (post-limit), job = HEAD west forms
+- W4b: intel2 service head-west-w4b-place-reviewed (place_w4b_only.sh, PLACE only), E7 unit oth-ubuntu-2381351-1795533662, kit .../private/HEAD-WEST/hd_lep0N_w_1124051022, spec dir ~/coord/autopilot/private_specs/HEAD-WEST/s81_head_hd_lep0N_w_1124051025.
+- W5 hd_serdes re-sign (corrected dchn FF 8bc587a4f5b9): intel2 service head-west-w5-place-r3 (west-w3/run_w5_place_r3.sh, run-item --goal place), kit hd_serdes_1124070219 on E9, spec 1124070221; place stage started 07:50.
+- Next: after each PLACE, visual review, then run-item <spec> --goal route (sign-off+LEC). W6 b3507e628de6 adopted only after HEAD-W6-ACCEPT verdict.
+- Local waiter: scratchpad hw_wait.sh (polls both services).
