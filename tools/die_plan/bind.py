@@ -240,6 +240,14 @@ class BindError(Exception):
     pass
 
 
+class BindErrors(BindError):
+    """BIND-ALL-ERRORS: several collected refusals of one pass (emit_type); .errors lists each."""
+
+    def __init__(self, errors):
+        self.errors = [str(e) for e in errors]
+        super().__init__("; ".join(self.errors))
+
+
 
 def _fresh_write_text(path, text):
     """FLOW-OPS-1300 (FABLE-FLOW-1240 c, OPUS-FIX-KV-HGI-R5 bindgate26c): a bind output is written to a new file and renamed over the old one, never written in place.
@@ -3939,8 +3947,8 @@ class Binder:
         try:
             return self._emit_type_files(tn, ps, out, files)
         except BindError as exc:
-            msg = str(exc)
-            self._gap(msg if tn in msg else f"{tn}: {msg}")
+            for msg in getattr(exc, "errors", None) or [str(exc)]:
+                self._gap(msg if tn in msg else f"{tn}: {msg}")
 
     def _emit_type_files(self, tn, ps, out, files):
         """one bound type of emit(): emit_type + the per-type RTL passes; appends the files it wrote to `files`.  The serial loop and
@@ -3949,8 +3957,9 @@ class Binder:
         if getattr(self, "collect_gaps", False):
             try:
                 txt, pnames = self.emit_type(tn, ps[0])
-            except BindError as exc:          # --all-gaps: this type stops at its gap; the other types go on
-                self._gap(exc)
+            except BindError as exc:          # --all-gaps: this type stops at its gap(s); the other types go on
+                for m in getattr(exc, "errors", None) or [str(exc)]:
+                    self._gap(m if tn in m else f"{tn}: {m}")
                 return
         else:
             txt, pnames = self.emit_type(tn, ps[0])
@@ -4187,7 +4196,7 @@ class Binder:
                 if not (getattr(self, "collect_gaps", False) and getattr(exc, "errors", None)):
                     raise BindError(str(exc)) from exc
                 for e in exc.errors:          # BIND-ALL-ERRORS: every bound-top landing error; no top from them
-                    self._gap(f"TOP {e[error]}")
+                    self._gap(f"TOP {e['error']}")
                 return files
             (out.parent / "bind_clock_landings.json").write_text(
                 json.dumps(self.clock_landings.manifest(), indent=1) + "\n")
@@ -4366,7 +4375,34 @@ class Binder:
                 raise BindError(str(exc)) from exc
         return self._lis_cfg
 
+    def _et_err(self, msg):
+        """BIND-ALL-ERRORS: an emit_type refusal.  Default (no collect): raised unchanged.  Collecting (collect_gaps): recorded
+        for this type; the caller skips that one item (bit / station / bus) and goes on, so one bind lists every refusal."""
+        errs = getattr(self, "_et_errs", None)
+        if errs is None:
+            raise BindError(msg)
+        errs.append(str(msg))
+
     def emit_type(self, tn, p):
+        """_emit_type; BIND-ALL-ERRORS: with collect_gaps every in-loop refusal of this type is collected and raised together
+        as BindErrors (one gap each); an exception after collected errors is added as the last entry.  Default: unchanged."""
+        if not getattr(self, "collect_gaps", False):
+            return self._emit_type(tn, p)
+        errs = self._et_errs = []
+        try:
+            out = self._emit_type(tn, p)
+        except Exception as exc:
+            if not errs:
+                raise
+            why = str(exc) if isinstance(exc, BindError) else f"{type(exc).__name__}: {exc}"
+            raise BindErrors(errs + [f"{tn}: after {len(errs)} collected error(s): {why}"]) from exc
+        finally:
+            del self._et_errs
+        if errs:
+            raise BindErrors(errs)
+        return out
+
+    def _emit_type(self, tn, p):
         t = self.types[tn]
         F, G = self.F, self.G
         mod = t["module"]
@@ -4764,7 +4800,7 @@ class Binder:
                 continue
             if reg:
                 if getattr(self, "ptree", None) is not None and any(self.ptree[(id(L), k)] for k in range(W)):
-                    raise BindError(f"registered_pins {p}: PAD_TREE taps on out bus {n} need flops a bare macro lacks")
+                    self._et_err(f"registered_pins {p}: PAD_TREE taps on out bus {n} need flops a bare macro lacks")
                 d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" for it in L["items"]])
                 body.append(f"    assign {n} = {{rst_n, {d}}};  // registered hard pin: the macro's output register is "
                             f"the boundary register; epoch [{W}] = the delivered reset level (no flop here)")
@@ -4772,7 +4808,7 @@ class Binder:
             if n in lob_bus:
                 # LAND-INTRA-STATIONS out-bus nets: u_bout_<n> is emitted with its station chains (below)
                 if getattr(self, "ptree", None) is not None:
-                    raise BindError(f"{IS.KEY} {tn}: out bus {n}: stations on a PAD_TREE bus are not supported")
+                    self._et_err(f"{IS.KEY} {tn}: out bus {n}: stations on a PAD_TREE bus are not supported")
                 obus_lob[n] = L
                 continue
             if getattr(self, "ptree", None) is not None:
@@ -4925,7 +4961,8 @@ class Binder:
         def tap(src, stem, x):
             """position x (>= 0) of the tapped reset-less delay line on 1-bit `src` (PAD_TREE)"""
             if x < 0:
-                raise BindError(f"PAD_TREE negative tap {x} on {src}")
+                self._et_err(f"PAD_TREE negative tap {x} on {src}")
+                return src
             if x == 0:
                 return src
             ln = taps.setdefault(src, {"stem": stem, "pos": {}})
@@ -4997,7 +5034,7 @@ class Binder:
                 if sp is not None:              # R8 strap-pad site (OWNER 10-28): fixed base + strap-count bank
                     site, base, span, _cnt = sp
                     if reg:
-                        raise BindError(f"registered_pins {p}: R8 strap pad on {F.cells[ci].path}.{pn}[{i}] needs "
+                        self._et_err(f"registered_pins {p}: R8 strap pad on {F.cells[ci].path}.{pn}[{i}] needs "
                                         "flops a bare macro lacks")
                     if site not in r8banks:
                         sb = sorted(b for (c2, p2, b), v in self.r8sp.items() if c2 == ci and p2 == pn and v[0] == site)
@@ -5024,7 +5061,7 @@ class Binder:
                     nb, sb = r8banks[site]
                     return f"{nb}[{sb.index(i)}]"
                 if reg and len(d) > 7 and (d[7] if PT is None else d[7] - PT[(id(L), j)]):
-                    raise BindError(f"registered_pins {p}: landing pad on {F.cells[ci].path}.{pn}[{i}] needs flops a "
+                    self._et_err(f"registered_pins {p}: landing pad on {F.cells[ci].path}.{pn}[{i}] needs flops a "
                                     "bare macro lacks")
                 if len(d) > 7 and PT is not None:      # PAD_TREE: tap of the in-lane bit's line
                     return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
@@ -5097,21 +5134,23 @@ class Binder:
                 # arst_n IS the pad (its other load is the root synchroniser u_rst_root)
                 if rtree is None or rtree.get("entry") != "sync" or self.wavefront_plan() is None or \
                         p != RT.wf_plan(self.wavefront_plan())["root"]:
-                    raise BindError(f"die reset pad analog load {F.cells[ci].path}.{pn}[{i}] in partition {p}: the raw "
+                    self._et_err(f"die reset pad analog load {F.cells[ci].path}.{pn}[{i}] in partition {p}: the raw "
                                     "pad exists only in the reset root partition")
                 return "arst_n"
             if k == "start":
                 if rtree is None or rtree.get("start_tap") is None:
-                    raise BindError(f"START consumer {F.cells[ci].path}.{pn}[{i}] in partition {p} (type {tn}): only "
+                    self._et_err(f"START consumer {F.cells[ci].path}.{pn}[{i}] in partition {p} (type {tn}): only "
                                     "a reset.start_role 'bootstrap' type publishes a local START tap; a mission type's "
                                     "control state is already START-gated")
+                    return "1'b0"
                 return f"start_t{rtree['start_tap']}"
             if k == "strap":
                 nm, _w = pnames[("strap", self.rel_of(ci), pn)]
                 return f"{nm}[{i}]"
             if k == "plan":
                 if render is None:
-                    raise BindError(f"plan-driven sink {self.F.cells[ci].path}.{pn}[{i}] in a partition without plan cells")
+                    self._et_err(f"plan-driven sink {self.F.cells[ci].path}.{pn}[{i}] in a partition without plan cells")
+                    return "1'b0"
                 return render(d[1])
             if k == "top" and d[1] in F.top_ports:
                 role = self.io_role(p, d[1]) if self.ab.get("io_roles") else d[1]
@@ -5134,7 +5173,8 @@ class Binder:
                     body.append(f"    ot_dp_{k} #(.N({len(ins)})) u_{nm} (.a({_concat(ins)}), .y({nm}));  // re-emitted "
                                 + ("fault OR" if k == "or" else "AND join"))
                 return orn[key]
-            raise BindError(f"no expression for {d}")
+            self._et_err(f"no expression for {d}")
+            return "1'b0"
         # DIE-KV-67 PC reset safe form (opt-in core_splits[].reset_gate): pin <= lane & nearest wavefront tap, one flop per
         # (leaf, driver); ot_dp_rgate traces through d, so the bind proof still sees the as-built driver.
         core_gate_ports, core_gates = {}, {}
@@ -5305,7 +5345,7 @@ class Binder:
             self.__dict__.setdefault("_pad_tail_split", {})[tn] = ts_row
             ts_short = {b: e["short"] for b, e in sorted(ts_reach.items()) if e["short"]}
             if ts_cfg["require_reach"] and ts_short:
-                raise BindError(f"land_pad_tail_split {tn}: landing pad shorter than the reach needs at hop "
+                self._et_err(f"land_pad_tail_split {tn}: landing pad shorter than the reach needs at hop "
                                 f"{ts_cfg['hop_um']:g} um (bus: stages short) {ts_short}: raise the pad where its law "
                                 "lives (R8 owner table, KV PV kv_pv_col_pads.py --min-pad / kv_pv_v_pads.py "
                                 "--e-min-pad) or add lane cycles")
@@ -5350,7 +5390,7 @@ class Binder:
                     for tag in sorted(by):
                         nm = short_id(f"pd1_{key[0]}_{key[1]}_{sv_id(tag)}_0", 100)
                         if nm in pads.values() or nm in names.values():
-                            raise BindError(f"land_pad_tail_split {tn}: bin copy name {nm} collides")
+                            self._et_err(f"land_pad_tail_split {tn}: bin copy name {nm} collides")
                         names[tag] = nm
                         decl.append(f"    wire [0:0] {nm};")
                         body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D(1)) u_{nm} (.clk(clk), .d({key[0]}[{key[1]}]), "
@@ -5379,13 +5419,14 @@ class Binder:
             except ValueError as exc:
                 raise BindError(str(exc)) from exc
             if reg:
-                raise BindError(f"{IS.KEY} {tn}: registered_pins partition {p}: stations need flops a bare macro lacks")
+                self._et_err(f"{IS.KEY} {tn}: registered_pins partition {p}: stations need flops a bare macro lacks")
 
             def lis_leaf(name, what):
                 hit = [ci for ci in self.members[p]
                        if IS.leaf_match(name, self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90))]
                 if len(hit) != 1:
-                    raise BindError(f"{IS.KEY} {tn}: {what} leaf {name}: {len(hit)} bound leaves in partition {p}")
+                    self._et_err(f"{IS.KEY} {tn}: {what} leaf {name}: {len(hit)} bound leaves in partition {p}")
+                    return None
                 return hit[0]
 
             lis_row = dict(nets=[], stages={}, cells=0, flops=0, sites={})
@@ -5398,27 +5439,33 @@ class Binder:
                     # OUT-BUS net: `D` chained D=1 stations per bus bit fed by the named leaf output, before u_bout_<bus>
                     L = obus_lob.get(n["bus"])
                     if L is None:
-                        raise BindError(f"{IS.KEY} {tn}: {n['label']}: partition {p} has no plain out bus {n['bus']} "
+                        self._et_err(f"{IS.KEY} {tn}: {n['label']}: partition {p} has no plain out bus {n['bus']} "
                                         "(spine / plan-cell / registered-pin buses carry no stations)")
+                        continue
                     for (si, sp_), _bus in n["members"]:
                         cs = lis_leaf(si, "src")
+                        if cs is None:      # BIND-ALL-ERRORS: recorded
+                            continue
                         lbl = f"{si}.{sp_}->{IS.BUS}{n['bus']}"
                         if G.dirs[cs].get(sp_) != "output":
-                            raise BindError(f"{IS.KEY} {tn}: {lbl}: not a leaf output")
+                            self._et_err(f"{IS.KEY} {tn}: {lbl}: not a leaf output")
+                            continue
                         cells = []
                         for k, it in enumerate(L["items"]):
                             if it[0] != "leaf" or it[1] != cs or it[2] != sp_:
                                 continue
                             if (n["bus"], k) in lob:
-                                raise BindError(f"{IS.KEY} {tn}: {lbl}: bus bit {k} is stationed twice")
+                                self._et_err(f"{IS.KEY} {tn}: {lbl}: bus bit {k} is stationed twice")
+                                continue
                             if core_link_src_depth(self.plan, tn, F.cells[cs].module, sp_, it[3]):
-                                raise BindError(f"{IS.KEY} {tn}: {lbl}[{it[3]}]: the driver bit already carries a core_link_pipe")
+                                self._et_err(f"{IS.KEY} {tn}: {lbl}[{it[3]}]: the driver bit already carries a core_link_pipe")
+                                continue
                             prev = f"{drv_w[(cs, sp_)]}[{it[3]}]"
                             for kk in range(D):
                                 # LATCHECK reads the chain by this name (u_lob_<bus>__<tag>_<k>): no short_id (it folds __)
                                 nm = f"lob_{sv_id(n['bus'])}__{sv_id(self.rel_of(cs))}__{sv_id(sp_)}_{it[3]}_{kk}"
                                 if nm in lis_names or len(nm) > 100:
-                                    raise BindError(f"{IS.KEY} {tn}: station name {nm} collides / is not a chain name")
+                                    self._et_err(f"{IS.KEY} {tn}: station name {nm} collides / is not a chain name")
                                 lis_names.add(nm)
                                 decl.append(f"    wire [0:0] {nm};")
                                 body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D(1)) u_{nm} (.clk(clk), .d({prev}), .q({nm}));  "
@@ -5428,7 +5475,7 @@ class Binder:
                                 prev = f"{nm}[0]"
                             lob[(n["bus"], k)] = prev
                         if not cells:
-                            raise BindError(f"{IS.KEY} {tn}: {lbl}: the leaf output feeds no bit of out bus {n['bus']}")
+                            self._et_err(f"{IS.KEY} {tn}: {lbl}: the leaf output feeds no bit of out bus {n['bus']}")
                         lis_row["nets"].append(dict(src=f"{si}.{sp_}", dst=IS.BUS + n["bus"], group=n["label"],
                                                     width=len(cells) // D, stages=D, cells=cells))
                         lis_row["cells"] += len(cells)
@@ -5436,25 +5483,31 @@ class Binder:
                     continue
                 for (si, sp_), (di, dp) in n["members"]:
                     cs, cd = lis_leaf(si, "src"), lis_leaf(di, "dst")
+                    if cs is None or cd is None:      # BIND-ALL-ERRORS: recorded
+                        continue
                     lbl = f"{si}.{sp_}->{di}.{dp}"
                     if G.dirs[cs].get(sp_) != "output" or G.dirs[cd].get(dp) != "input":
-                        raise BindError(f"{IS.KEY} {tn}: {lbl}: not a leaf output -> leaf input pin pair")
+                        self._et_err(f"{IS.KEY} {tn}: {lbl}: not a leaf output -> leaf input pin pair")
+                        continue
                     md = F.cells[cd].module
                     if dp in core_input_lockup(self.plan, tn, md) or core_link_pipe(self.plan, tn, md, dp):
-                        raise BindError(f"{IS.KEY} {tn}: {lbl}: the load port already carries core_input_lockup / "
+                        self._et_err(f"{IS.KEY} {tn}: {lbl}: the load port already carries core_input_lockup / "
                                         "core_link_pipe")
+                        continue
                     width = len(F.cells[cd].ports[dp])
                     cells = []
                     for i in range(width):
                         d = self.sinks[(cd, dp, i)]
                         if d[0] != "int" or d[1] != cs or d[2] != sp_ or d[4] or (cd, dp, i) in getattr(self, "isp", {}):
-                            raise BindError(f"{IS.KEY} {tn}: {lbl}[{i}] is not a direct driver -> load net "
+                            self._et_err(f"{IS.KEY} {tn}: {lbl}[{i}] is not a direct driver -> load net "
                                             f"(load reads {d[0]}{'' if d[0] != 'int' else ' ' + self.rel_of(d[1]) + '.' + d[2]})")
+                            continue
                         if core_link_src_depth(self.plan, tn, F.cells[cs].module, sp_, d[3]):
-                            raise BindError(f"{IS.KEY} {tn}: {lbl}[{i}]: the driver bit already carries a core_link_pipe")
+                            self._et_err(f"{IS.KEY} {tn}: {lbl}[{i}]: the driver bit already carries a core_link_pipe")
+                            continue
                         nm = short_id(f"lis{D}_{self.rel_of(cd)}__{dp}_{i}", 100)
                         if nm in lis_names:
-                            raise BindError(f"{IS.KEY} {tn}: station name {nm} collides")
+                            self._et_err(f"{IS.KEY} {tn}: station name {nm} collides")
                         lis_names.add(nm)
                         decl.append(f"    wire [0:0] {nm};")
                         body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D({D})) u_{nm} (.clk(clk), .d({drv_w[(cs, sp_)]}[{d[3]}]), "
@@ -5471,14 +5524,15 @@ class Binder:
                 W = L["width"]
                 miss = [k for k in range(len(L["items"])) if (bn, k) not in lob]
                 if miss:
-                    raise BindError(f"{IS.KEY} {tn}: out bus {bn}: {len(miss)} d bit(s) carry no station, e.g. item "
+                    self._et_err(f"{IS.KEY} {tn}: out bus {bn}: {len(miss)} d bit(s) carry no station, e.g. item "
                                     f"{miss[0]} (one bus = one latency: every bit must be covered)")
+                    continue
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{bn} (.clk(clk), .rst_n(rst_n), "
                             f".d({_concat([lob[(bn, k)] for k in range(len(L['items']))])}), .ea(rst_n), "
                             f".q({bn}[{W - 1}:0]), .eq({bn}[{W}]));  // d through {lob_bus[bn]} out-bus station stage(s)")
                 lis_row.setdefault("out_bus", {})[bn] = lob_bus[bn]
             if any(bc in lis for bc in bcopy):
-                raise BindError(f"{IS.KEY} {tn}: a stationed load pin is also a land_pad_tail_split bin-copy sink")
+                self._et_err(f"{IS.KEY} {tn}: a stationed load pin is also a land_pad_tail_split bin-copy sink")
             self.__dict__.setdefault("_intra_stations", {})[tn] = lis_row
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
@@ -5508,10 +5562,10 @@ class Binder:
                                 if dd_[0] == "int" else 0
                             y_ = rdm.get((sv_id(self.rel_of(dd_[1])), dd_[2]), 0) if dd_[0] == "int" else 0
                             if x_ and y_:
-                                raise BindError(f"relay_depth {tn}: {self.rel_of(dd_[1])}.{dd_[2]} also has a core_link_pipe source depth")
+                                self._et_err(f"relay_depth {tn}: {self.rel_of(dd_[1])}.{dd_[2]} also has a core_link_pipe source depth")
                             z_ = next((d_ for d_, l_, h_ in rds if i_ >= l_ and (h_ is None or i_ <= h_)), 0)
                             if z_ and (x_ or y_):
-                                raise BindError(f"relay_depth {tn}: sink {r}.{pn}[{i_}] also has a source-level pipe")
+                                self._et_err(f"relay_depth {tn}: sink {r}.{pn}[{i_}] also has a source-level pipe")
                             self.__dict__.setdefault("_rd_used", set()).add((tn, sv_id(r), pn)) if z_ else None
                             sd.append(x_ or y_ or z_)
                             rdo[i_] = 1 if (y_ or z_) else 0
@@ -5521,7 +5575,7 @@ class Binder:
                             lpd = lpd or [0] * len(bits)
                             for i_, x_ in enumerate(sd):
                                 if x_ and lpd[i_]:
-                                    raise BindError(f"core_link_pipe {tn}/{c.module}.{pn}[{i_}]: port-level and source-level "
+                                    self._et_err(f"core_link_pipe {tn}/{c.module}.{pn}[{i_}]: port-level and source-level "
                                                     "pipe on the same sink")
                                 lpd[i_] = lpd[i_] or x_
                     # QC-PLAN-R8 11-20: on a core_input_lockup port the relay_depth stages (u_y_xd_*) go on the per-bit wires BEFORE the
@@ -5673,9 +5727,9 @@ class Binder:
             if r8k:
                 self.__dict__.setdefault("_pad_tail_split", {}).setdefault(tn, {})["r8_keep"] = r8k
         if tsplit and len(set(pads.values())) != len(pads):
-            raise BindError(f"land_pad_tail_split {tn}: landing pad wire names collide")
+            self._et_err(f"land_pad_tail_split {tn}: landing pad wire names collide")
         if pcopies and (len(set(pcopies.values())) != len(pcopies) or set(pcopies.values()) & set(pads.values())):
-            raise BindError(f"land_pad_tail_split {tn}: pipe tail copy wire names collide")
+            self._et_err(f"land_pad_tail_split {tn}: pipe tail copy wire names collide")
         if core_reset_rows:
             self.__dict__.setdefault("_bound_core_resets", {})[tn] = [
                 dict(inst=i, leaf=short_id("u_" + self.rel_of(k[0]), 90), pin=k[1], reset=core_reset[k])
@@ -5711,7 +5765,7 @@ class Binder:
             miss = [f"{row['inst']}.{row.get('port', 'i' if row.get('side') == 'sink' else 'o')}" for row in t["relay_depth"]
                     if (tn, sv_id(row["inst"]), row.get("port", "i" if row.get("side") == "sink" else "o")) not in used]
             if miss:      # a row that names no leaf / drives no internal sink would silently leave a hop over the reach
-                raise BindError(f"relay_depth {tn}: {len(miss)} row(s) matched no internal sink: {miss[:6]}")
+                self._et_err(f"relay_depth {tn}: {len(miss)} row(s) matched no internal sink: {miss[:6]}")
         text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
             "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n"
         rb_rep = []
@@ -5736,7 +5790,7 @@ class Binder:
             import relay_branch
             same = relay_branch.copies_distinct(text, rb_rep)
             if same:      # flattened synthesis (opt_merge) would fold the copy back into the relay
-                raise BindError(f"relay_branch {tn}: copy inputs identical to the relay (no per-instance reset region): {same[:4]}")
+                self._et_err(f"relay_branch {tn}: copy inputs identical to the relay (no per-instance reset region): {same[:4]}")
         return text, pnames
 
     def default_domain(self, p):

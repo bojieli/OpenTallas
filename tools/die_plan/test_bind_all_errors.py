@@ -281,3 +281,76 @@ def test_constructor_collect_clean_table_is_identical():
     p, t = strap_vehicle()
     a, b = Landings(p, t), Landings(p, t, collect=True)
     assert a.type_rtl('A', A_BODY) == b.type_rtl('A', A_BODY) and b._type_errs is None
+
+
+# ---- BIND-ALL-ERRORS part 7: emit_type collects its in-loop refusals -------------------------------------------------
+def _start_vehicle():
+    from test_bind_sub_core_leaf import vehicle
+    b, part = vehicle({"u_a": "u_a"})
+    b.F.cells[0].ports["start_i"] = [10, 11]
+    b.G.dirs[0]["start_i"] = "input"
+    b.sinks[(0, "start_i", 0)] = ("start",)
+    b.sinks[(0, "start_i", 1)] = ("start",)
+    return b, part
+
+
+def test_emit_type_default_raises_first_refusal_unchanged():
+    import bind
+    b, part = _start_vehicle()
+    with pytest.raises(bind.BindError) as ei:
+        b.emit_type("src", part)
+    assert not isinstance(ei.value, bind.BindErrors)
+    assert "START consumer x.u_a.start_i[0]" in str(ei.value)
+
+
+def test_emit_type_collect_lists_every_refusal():
+    import bind
+    b, part = _start_vehicle()
+    b.collect_gaps = True
+    with pytest.raises(bind.BindErrors) as ei:
+        b.emit_type("src", part)
+    errs = ei.value.errors
+    assert sum("START consumer x.u_a.start_i[0]" in e for e in errs) == 1
+    assert sum("START consumer x.u_a.start_i[1]" in e for e in errs) == 1
+    assert not hasattr(b, "_et_errs")
+
+
+def test_emit_type_collect_clean_type_is_identical():
+    from test_bind_sub_core_leaf import vehicle
+    b, part = vehicle({"u_a": "u_a"})
+    ref, _ = b.emit_type("src", part)
+    b2, part2 = vehicle({"u_a": "u_a"})
+    b2.collect_gaps = True
+    got, _ = b2.emit_type("src", part2)
+    assert got == ref
+
+
+def test_emit_type_files_gaps_each_collected_refusal():
+    b, part = _start_vehicle()
+    b.collect_gaps = True
+    b.emit_gaps = []
+    b._emit_type_files("src", [part], None, [])
+    starts = [g for g in b.emit_gaps if "START consumer" in g]
+    assert len(starts) == 2 and all(g.startswith("src: ") or "src" in g for g in starts)
+
+
+def test_bound_top_retains_all_landing_errors(tmp_path):
+    def fail_top(text, modules):
+        raise LandingErrors([dict(error="missing reset A"), dict(error="missing reset B")])
+
+    b = bind.Binder.__new__(bind.Binder)
+    b.ab = {}
+    b.plan = {"die": {"name": "test"}}
+    b.by_type = {}
+    b.types = {}
+    b.wavefront_plan = lambda: None
+    b._lis_config = lambda: None
+    b.emit_top = lambda: "module test; endmodule"
+    b.collect_gaps = True
+    b.clock_landings = SimpleNamespace(top_rtl=fail_top)
+
+    files = b.emit(tmp_path)
+
+    assert b.emit_gaps == ["TOP missing reset A", "TOP missing reset B"]
+    assert [f.name for f in files] == ["bind_cells.sv"]
+    assert not (tmp_path / "rtl" / "test_bound_top.sv").exists()
