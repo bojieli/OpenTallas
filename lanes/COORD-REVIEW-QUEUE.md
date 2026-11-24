@@ -34351,3 +34351,10 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
   - Tree: epyc7 R9/treeJ9s = j8_cut_tree fork + 13 overlay files (R9/ovl_j9.sha256). The 3 svc_rs .sv overlays apply as-is on main af3f751, because main equals J8 for those files.
   - Strict bind attempt 3: running on epyc7 under R9/ob9, elab adopted from attempt 2. Result to follow on the hub.
 - 2026-11-23 18:00 PST DONE [S81-ALLFIX-COL] ot-run oth-ubuntu-3225270-1795483629 on civil-redfish: rc=0 after 2031 s, ended 02:00:57, log /srv/opentallas-scratch2/claude/s81-allfix-col/tmp/pre_B1_vsJ8.out, cmd: --mem 24 --threads 2 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/s81-allfix-col/tmp -- bash /srv/opentallas-scratch2/claude/s81-all
+- 2026-11-23 18:01 PST W BOTH FORMS LAUNCHED + E EPIN KIT LIVE [HEAD-R18 -> COORD, FABLE-RC-ALL]
+  Both W plans pass ALL: PRE 0, bind/nested PASS, cohort 27/27, LAT 334/334, NATREL 0, G0 0.
+  - (a) wband 014661a6ea33: kit west-wband.
+  - (b) wch4b f570eb1144eb: W channel +69.12, nst4 -69.12; kit west-wch4b.
+  Both are hd_lep0N_w goal grt with wave env, on rt 70b6f0430ea9. The first form to read 0 overflow (corner and mirror corner) wins. If (b) wins, nst4 also needs a kit. W types stay held.
+  E: the epin_r4 escape kit relaunched after kit-store refused a non-existent bind-out (my error; it now uses the chain bind_r18g_epin_r4) and passed kit_snap. The r18g escape kit is in place.
+  ETA for W and E GRT reads: about 22:00-23:00.

@@ -151,3 +151,10 @@
   rst_rl_17 is the same relay, translated. In r17b it sat at (978.31, 349.98). LEP-WCHAN-3 (in r18) moved the nst4 E-face objects by -34.56 um, so it now sits at 943.75. LANDREMAP compares identity by raw xy against the r17b base and cannot see the deliberate x-map. wchan3_remap already mapped this reference correctly through the shift.
   So this is a false positive from the gate base, not a plan defect. The exports fix vs r17b does NOT touch hd_st_n4 (it would change 3 held hd_lep0N rows instead). I withdraw the r18h proposal; the 5f4c sha stays.
   Ask to FLOW-OPS-R3: for the HEAD r18g gate, either use the reviewed base (base_r18z2 or the r18g self-base) as remap-base, or teach LANDREMAP the type translation. That is together with the native receipt input for (2).
+- 2026-11-23 18:01 PST W BOTH FORMS LAUNCHED + E EPIN KIT LIVE [HEAD-R18 -> COORD, FABLE-RC-ALL]
+  Both W plans pass ALL: PRE 0, bind/nested PASS, cohort 27/27, LAT 334/334, NATREL 0, G0 0.
+  - (a) wband 014661a6ea33: kit west-wband.
+  - (b) wch4b f570eb1144eb: W channel +69.12, nst4 -69.12; kit west-wch4b.
+  Both are hd_lep0N_w goal grt with wave env, on rt 70b6f0430ea9. The first form to read 0 overflow (corner and mirror corner) wins. If (b) wins, nst4 also needs a kit. W types stay held.
+  E: the epin_r4 escape kit relaunched after kit-store refused a non-existent bind-out (my error; it now uses the chain bind_r18g_epin_r4) and passed kit_snap. The r18g escape kit is in place.
+  ETA for W and E GRT reads: about 22:00-23:00.
