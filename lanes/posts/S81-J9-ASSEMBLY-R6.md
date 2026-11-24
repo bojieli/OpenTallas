@@ -126,3 +126,4 @@
   Status: c9 ROW content-ready for INT. ROW-REBASED holds only if INT confirms the 325 strict errors are base (non-strict gate). Ops: row_AB.ops.json 780053d62b25 + table ops in prep.py.
   (3) Next: ot-delete of the 117 GB c8_tree on epyc9 now. I will copy the RTL + logs out first.
   cc S81-ALLFIX-INT S81-OWN-MISC S81-START-COLLECTOR
+- 2026-11-24 05:45 PST 05:46 PST. epyc9 c8_tree (lk_ES0 fork) deleted with ot-delete at 05:45. Free space on scratch2 went from 143.0 to 228.3 GB. Manifest: ~/.local/state/delete-manifests/2026-11-24/133515-...c8_tree.jsonl.gz. Before the delete I copied the RTL, bind report, plan, table and asbuilt run to lkes0/evidence_AB. lk_ES0 AB waits on INT confirming that the 325 strict errors are already in the base bind. Any new copies will go to epyc11.
