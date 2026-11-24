@@ -19,3 +19,9 @@ Work dir: epyc11 /srv/opentallas-scratch2/claude/QC-FW-CAP (census/*.json, *.py)
 - Strict bind of plan v1 0c14 on epyc11 cG (tree fork from cache), rt 5127, log cG/bind.ot, unit oth-ubuntu-2646269-1795501019. epyc7 cF tree: ot-delete it after its lease expires at 00:05 PST (epyc7 disk is at 97%).
 - Measurement runs (kit copies, ORFS make, probe/*): ab_base100 / ab_base200 (+ft 220) / ab_cpl200 (cpl-first) / slw..._cpl to CTS (cpl-first) / ab_pf (plain-first) / ab_pfqn (plain-first + qn_alternate: 88 stations, 33.2k bits converted). Logs probe/run_*.log; census at gen/<t>/cell_census.jsonl.
 - Remaining-INV breakdown: census/rem_cpl.json. Non-fw hash proof: nh.log (su_l1 identical fe277a9e).
+
+## 2026-11-24 03:07 PST
+- pfqn result (phase 1 plain-first + phase 2 QN pairs, slw_fw_v1, intel1 probe/ab_pfqn): place non-tap 379,832, floorplan 274,749. Census: intel1 census/place_ab_pfqn.json.
+- Place adds 105.1k buffers (87k are wire buffers, mostly BUFx12f/x12). Nets with HPWL 200-300 um carry 48.7k of them; 70k roots have fanout 1. Top groups: u_ft_cws/rsf/rsn ~23k, u_ist_* ~25k, u_lpad ~13k, ports 17.7k.
+- Not at 360k, so no ROW-REBASED yet. Next structural lever: add a station on fw ft/ist hops >=200 um (each 200-300 um hop costs ~1.5 BUF/bit), or a type cut. Plan-level choice is with QC-ALLFIX/FABLE-RC-QC.
+- Still open: ot-delete epyc7 QC-FW-CAP/cF/tree (lease expired); strict bind of C1g v2 9c527bc425f1 on rt >=5041641 needs OT_PLAN_GATE_PRE=warn (inherited findings are base-identical).
