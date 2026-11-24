@@ -1261,13 +1261,13 @@ module ot_s81sl_lep_core #(
       end
     end
 // S81-LEPFLF-HOLD 11-23 (REPAIR-CAP-LEPFLF, lepe_mu_LP__t2 kit FAM-S81-LEPE-4 _1122050440): f_lf[2] D = l1_st[1] is a
-// ZERO-logic leg from the hard landing u_u_lnl1 k_st[1] (ot_s81_mu72_lnland, ck_k on the early-core port clk_c4: launch
-// -16 + 354 ps = 338) to a flop on the clk_t34 leaf (capture 315.6 + 25 unc + 10 hold = 350.5): hold -11.86 ps, wire
-// 0.30 ps (abutted hard pin), 2 x 201 hold buffers gained 0.00 (OT_HOLD_STALL NEEDS_RTL).  Bare selector
-// OT_S81SL_LEP_LFNEG takes the status bits through a falling-edge pre-stage: lf_n samples at the falling edge (half-cycle
-// setup ~ +350 ps; hold is checked against the previous falling edge, ~ +440 ps), lf takes lf_n at the rising edge.
-// lf at rising edge t holds exactly the value it held before (the macro bits launched at t-1 rise): cycle-exact, latency
-// 0, bind K 0.  Absent = the single rising-edge register (netlist unchanged for every other type).
+// ZERO-logic leg from the hard landing u_u_lnl1 k_st[1] (ck_k on early-core port clk_c4) to a flop on clk_t34, about
+// 6 um away: flow FF hold -11.86 ps (arrival 338.7, required 350.5).  Skew of the two clocks, not wire.  The net is not
+// dont_touch; all three GRT hold chunks stopped at the 200-buffer cap (RSZ-0060); why this endpoint was skipped is not
+// established.  Bare selector OT_S81SL_LEP_LFNEG adds a falling-edge pre-stage: the macro leg gets about a half cycle of
+// hold and gives up a half cycle of setup (estimate from uncalibrated STA: > +350 hold, > +300 setup; 50% duty assumed).
+// The launch is a rising-edge flop (ot_pl_land_local_r), so lf at a rising edge is the same value as before: latency 0.
+// Absent = the single rising-edge register (token stream unchanged for every other type).
 `ifdef OT_S81SL_LEP_LFNEG
     reg [3:0] lf_n;
     always @(negedge clk) lf_n <= {l1_st[0] | (|l1_f), l1_st[1], l0_st[0] | (|l0_f), l0_st[1]};
