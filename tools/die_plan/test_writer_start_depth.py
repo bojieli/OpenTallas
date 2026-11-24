@@ -92,13 +92,51 @@ PORT_BODY = A_BODY.replace(" output wire [4:0] x\n", " output wire [4:0] x,\n ou
     (lambda c: c['branches']['x']['stages'][0].update(xy_um=[float('nan'), 1]), A_BODY, 'finite xy_um'),
     (lambda c: c['branches'].update(nope=c['branches']['x']), A_BODY, 'output rings'),
     (lambda c: c.update(depth=True), A_BODY, 'integer'),
-    (lambda c: None, PORT_BODY, 'drives an output port'),
+    (lambda c: None, PORT_BODY.replace('ot_dp_rrelay u_rrl_0', 'ot_dp_rrelay_nl u_rrl_0'), 'private copy impossible'),
 ])
 def test_unsafe_contract_fails_closed(edit, body, reason):
     p, t = strap_vehicle(); enable(p)
     edit(p['partition_types']['A']['clock']['landing_writer_start'])
     with pytest.raises((LandingError, CAB.BindError), match=reason):
         Landings(p, t).type_rtl('A', body)
+
+
+@pytest.mark.parametrize('w', [1, 2])
+def test_port_driving_writer_raw_gets_the_reader_side_private_copy(w):
+    # LANDING-WRAP-TOOL 11-23 (QC C1b sle_su_c.x_ctl_o rr_t85: EMIT refused after 3628 s): the writer START side wraps a
+    # port-driving raw relay exactly as the reader side (FLOW-6): one raw-export pair, same instance/clk/D/Q, the port
+    # keeps its own flop, every stage takes export_q; 0 added cycles, so K, depth and boot cycles equal the plain form.
+    p, t = strap_vehicle(k_b=-2, k_c=-1)
+    enable(p, w)
+    plain = Landings(p, t)
+    a0 = plain.type_rtl('A', A_BODY)
+    c = Landings(p, t)
+    a = c.type_rtl('A', PORT_BODY)
+    assert ('ot_dp_head_raw_export_pair u_rrl_0 (.clk(clk), .d(rr_parent), .q(rst_n_t0), .export_q(rst_n_t0_reader_raw));'
+            in a)
+    assert 'ot_dp_rrelay u_rrl_0' not in a and 'assign rst_o_0 = rst_n_t0;' in a and a.count('wire rst_n_t0_reader_raw;') == 1
+    for i in range(w):
+        assert f'u_cland_writer_start_x_{i} (.clk(clk), .rst_raw_n(rst_n_t0_reader_raw), ' in a
+    assert '.rst_raw_n(rst_n_t0)' in a   # the origin (not a START stage) keeps the relay's own Q
+    ws, ws0 = c.reset_placements['A']['x']['writer_start'], plain.reset_placements['A']['x']['writer_start']
+    assert ws.pop('private_raw_copies') == {'rst_n_t0': dict(net='rst_n_t0_reader_raw', instance='u_rrl_0', port_net='rst_n_t0',
+                                                             added_flops=1, added_cycles=0)}
+    for r in ws['stages']:
+        r['raw_reset'] = 'rst_n_t0'
+    assert ws == ws0 and sorted(r['ring_k'] for r in c.rows) == sorted(r['ring_k'] for r in plain.rows)
+    # without the port the emitted type is the plain form, byte for byte
+    assert 'export_pair' not in a0 and 'private_raw_copies' not in ws0
+
+
+def test_writer_and_reader_share_one_raw_export_pair():
+    # a relay that drives a port and carries both a writer and a reader START stage gets ONE pair (one export_q)
+    import clock_landings as CL
+    body = (" ot_dp_rrelay u_rrl_9 (.clk(clk), .d(rr_parent), .q(rr_t9));\n assign rst_o_0 = rr_t9;\n")
+    logic, outs = [], {'rst_o_0'}
+    d1, body1 = CL._private_raw_copy('T', 'x', 'writer', 'rr_t9', outs, body, logic)
+    d2, body2 = CL._private_raw_copy('T', 'y', 'reader', 'rr_t9', outs, body1, logic)
+    assert d1 == d2 and body2 == body1 and body1.count('ot_dp_head_raw_export_pair u_rrl_9') == 1 and len(logic) == 1
+    assert CL._private_raw_copy('T', 'x', 'writer', 'rr_t9', set(), body, []) == (None, body)
 
 
 def test_parameter_form_fails_closed():

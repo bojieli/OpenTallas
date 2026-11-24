@@ -260,9 +260,17 @@ def _reader_vehicle(mutant=None,reach=False):
                 byname[path]=c;return c
             ring,bo,bt,br=byname['b.u_cland_y'],byname['b.u_cland_origin'],byname['b.u_rrl_0'],byname['b.u_rst_in']
             bclk=ring.ports['clk']
+            sraw=bt.ports['q'] if mutant!='reader_raw' else br.ports['q']
+            if mutant in ('export_pair','export_pair_bad'):
+                # FLOW-6 / LANDING-WRAP-TOOL: the planned relay u_rrl_0 drives a port, so it is the raw-export pair and
+                # the START stage takes its export_q (<= the same D); _bad: a pair one level up (D = the root entry)
+                if mutant=='export_pair':
+                    bt.module='ot_dp_head_raw_export_pair';sraw=[out(bt,'export_q')]
+                else:
+                    sraw=cell('b.u_rrl_x','ot_dp_head_raw_export_pair',{'clk':bclk,'d':br.ports['q']},['q','export_q']).ports['export_q']
             st=cell('b.u_cland_reader_start_y_0','ot_dp_landing_relay',
                     {'clk':bclk,'d':bo.ports['start'] if mutant!='reader_d' else bt.ports['q'],
-                     'rst_raw_n':bt.ports['q'] if mutant!='reader_raw' else br.ports['q']},['q'])
+                     'rst_raw_n':sraw},['q'])
             ring.ports['rst_n']=st.ports['q'] if mutant!='reader_skip' else bo.ports['start']
             lr=cell('b.u_cland_lrst_s0','ot_dp_rrelay',{'clk':bclk,'d':br.ports['q'] if mutant!='lrst_d' else bt.ports['q']},['q'])
             bo.ports['rst_raw_n']=lr.ports['q']
@@ -280,6 +288,14 @@ def _reader_vehicle(mutant=None,reach=False):
 
 def test_reader_start_chain_and_local_reset_copy_verified():
     assert _reader_vehicle()['errors']==[]
+
+
+def test_start_stage_on_raw_export_pair_verified():
+    # LANDING-WRAP-TOOL 11-23: a START stage on the export_q of the planned relay turned raw-export pair (the relay's own
+    # q keeps feeding the ring collector / origin copy) is the exact planned parent/depth; release() counts both outputs
+    assert _reader_vehicle('export_pair')['errors']==[]
+    errs=_reader_vehicle('export_pair_bad')['errors']
+    assert any('u_cland_reader_start_y_0: raw reset' in e for e in errs),errs
 
 
 def test_reach_default_reader_start_verified_on_ring_reset_and_mutants_fail():

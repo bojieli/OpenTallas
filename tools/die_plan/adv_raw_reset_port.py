@@ -8,8 +8,9 @@ the stage onto rr_t85, which the C4 bound body ties to an output port (assign o 
 
 For every type with START branches this lists each stage raw_reset that, in the type's bound module (BIND_OUT/rtl/<module>.sv: bind_out=
 kw / OT_ADV_BIND_OUT / plan-of-record sibling, as ADV-GHOST-MACRO), is an `output` itself or is the source of `assign <output> = raw;`.
-Reader stages are listed too (the bind privatises those with a raw-export pair, so they are INFO-level: 'reader (bind copies)').
-Fix: re-pick the stage's raw_reset to a non-port relay of the same tap neighbourhood (one the bound body does not export).
+Since LANDING-WRAP-TOOL 11-23 the bind privatises writer and reader stages alike with a raw-export pair (clock_landings.
+_private_raw_copy: +1 flop, 0 cycles), so every line is INFO (advisory, no bind refusal).  Optional cleanup: re-pick the stage's
+raw_reset to a non-port relay of the same tap neighbourhood to save the extra flop.
 findings(raw, plan_path, tree=None, **kw) -> WARN lines, never raises.
 """
 import re
@@ -78,17 +79,15 @@ def _findings(raw, plan_path, tree=None, **kw):
         if bad:
             w = [b for b in bad if b[0] == "writer"]
             rd = [b for b in bad if b[0] == "reader"]
-            if w:
-                hits.append((0, _w(f"{tn}: writer START stage raw reset " + ", ".join(sorted({f'{b[3]} ({b[1]}[{b[2]}])' for b in w})[:6]) +
-                                   " drives an output port in the bound RTL: the bind EMIT refuses 'writer START raw reset <raw> drives an output port; "
-                                   "plan a non-port registered relay'; fix: re-pick those stages' raw_reset to a non-port relay")))
-            elif rd:
-                hits.append((1, _w(f"{tn}: INFO reader START stage raw reset " + ", ".join(sorted({b[3] for b in rd})[:6]) +
-                                   " drives an output port (bind copies it with a raw-export pair, +1 flop, no refusal)")))
+            # LANDING-WRAP-TOOL 11-23: the bind wraps writer stages exactly like reader stages (clock_landings._private_raw_copy):
+            # a port-driving raw relay becomes ot_dp_head_raw_export_pair (+1 flop, 0 cycles), no EMIT refusal on either side
+            sides = "/".join(s for s, l in (("writer", w), ("reader", rd)) if l)
+            hits.append((0 if w else 1, _w(f"{tn}: INFO {sides} START stage raw reset " + ", ".join(sorted({f'{b[3]} ({b[0]} {b[1]}[{b[2]}])' for b in bad})[:6]) +
+                                           " drives an output port (bind copies it with a raw-export pair, +1 flop, 0 cycles, no refusal)")))
     hits.sort(key=lambda h: h[0])
     out = [m for _, m in hits[:MAX_LINES]]
     nw = sum(1 for h in hits if h[0] == 0)
-    out.append(_w("summary", f"{nw} type(s) with a WRITER START raw reset on a port-driving relay (bind refusal), {len(hits) - nw} reader-only (copied by the bind); "
+    out.append(_w("summary", f"{nw} type(s) with a writer START raw reset on a port-driving relay, {len(hits) - nw} reader-only (all copied by the bind, advisory); "
                              f"{n} types with START stages checked against bound RTL {bdir} ({nobound} without a bound body)"))
     return out
 

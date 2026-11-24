@@ -247,6 +247,37 @@ def reader_start_reach(plan, tn):
     return 1 if _soft_wide_bands(plan, tn) else 0
 
 
+def _private_raw_copy(tn, bus, side, raw, outputs, body, logic):
+    """FLOW-6 (reader, 10-30) / LANDING-WRAP-TOOL (writer, 11-23): the START stage raw reset `raw` of `side` must be a
+    registered wavefront relay Q.  When that Q also drives an output port (`output raw` or `assign <output> = raw;`), a
+    START stage on it would make the port flop feed internal logic (face_guard 'shared').  The relay's one native body
+    ot_dp_rrelay then becomes ot_dp_head_raw_export_pair (same instance, clk, D and Q; export_q <= D: the same release
+    edge as Q, +1 flop at the same site, 0 added cycles, so every reset latency and K stay as planned) and the stage
+    takes export_q (<raw>_reader_raw; one pair per relay, shared by every reader and writer stage on it).
+    -> (None, body) for a relay that drives no port (body unchanged), else (record, body)."""
+    prior = re.search(r"\bot_dp_head_raw_export_pair\s+(\w+)\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
+                      r"\s*\)[^;]*?\.export_q\(\s*(" + re.escape(raw) + r"_reader_raw)\s*\)\s*\);", body, re.S)
+    if prior is not None:
+        return dict(net=prior.group(2), instance=prior.group(1), port_net=raw, added_flops=1, added_cycles=0), body
+    if not re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) + r"\s*\)[^;]*?\);",
+                     body + "\n" + "\n".join(logic), re.S):
+        raise LandingError(f"{tn}.{bus}: {side} START raw reset {raw} has no registered wavefront driver")
+    if not (raw in outputs or any(o in outputs for o in
+                                  re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body))):
+        return None, body
+    rel = list(re.finditer(r"\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?\.q\(\s*" + re.escape(raw) + r"\s*\)[^;]*?)\);",
+                           body, re.S))
+    if len(rel) != 1:
+        raise LandingError(f"{tn}.{bus}: {side} START raw reset {raw} drives an output port and its relay "
+                           f"is not one native body ot_dp_rrelay (private copy impossible)")
+    m = rel[0]
+    done = dict(net=f"{raw}_reader_raw", instance=m.group(1), port_net=raw, added_flops=1, added_cycles=0)
+    body = (body[:m.start()] + f"ot_dp_head_raw_export_pair {m.group(1)} ({m.group(2).rstrip()}, "
+            f".export_q({done['net']}));" + body[m.end():])
+    logic += [f"    wire {done['net']};  // FLOW-6 private {side} START raw copy ({raw} drives an output port)"]
+    return done, body
+
+
 def reader_start_owners(cfg):
     """R-REACH-1 trunk sharing (RULES-REACH-1 11-13, RULEBOOK R-REACH): {bus: [owner bus of stage i]} of a
     clock.landing_reader_start config.  With cfg.share_trunk (opt-in, written by reach_rules.fix_start) stage i of a
@@ -1488,7 +1519,8 @@ class Landings:
         taps = ring_taps(self.plan, key)
         tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-xy[0]) + abs(taps[i][1]-xy[1])) if taps else 0
         reset = f"rst_n_t{tap}"
-        relay = re.search(r"ot_dp_r(gate|relay)(?:_nl)?\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
+        relay = re.search(r"ot_dp_(?:r(gate|relay)(?:_nl)?|head_raw_export_pair)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset +
+                          r"\)(?:,\s*\.export_q\(\w+\))?\);", body)
         if relay is None:
             raise LandingError(f"{tn}: timed local wavefront reset relay {reset} not found (region monitor)")
         if relay.group(1) == "gate":
@@ -1721,26 +1753,7 @@ class Landings:
             if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
                 raise LandingError(f"{tn}.{bus}: reader START stage {i} needs a local registered raw reset")
             # Existing wavefront relays, not an invented/resetless control net.
-            prior = re.search(r"\bot_dp_head_raw_export_pair\s+(\w+)\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
-                              r"\s*\)[^;]*?\.export_q\(\s*(" + re.escape(raw) + r"_reader_raw)\s*\)\s*\);", body, re.S)
-            done = None if prior is None else dict(net=prior.group(2), instance=prior.group(1), port_net=raw,
-                                                    added_flops=1, added_cycles=0)
-            registered = done is not None or re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" +
-                                   re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
-            if not registered:
-                raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} has no registered wavefront driver")
-            if done is None and (raw in outputs or any(
-                    o in outputs for o in re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body))):
-                rel = list(re.finditer(r"\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?\.q\(\s*" + re.escape(raw) +
-                                       r"\s*\)[^;]*?)\);", body, re.S))
-                if len(rel) != 1:
-                    raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} drives an output port and its relay "
-                                       f"is not one native body ot_dp_rrelay (private copy impossible)")
-                m = rel[0]
-                done = dict(net=f"{raw}_reader_raw", instance=m.group(1), port_net=raw, added_flops=1, added_cycles=0)
-                body = (body[:m.start()] + f"ot_dp_head_raw_export_pair {m.group(1)} ({m.group(2).rstrip()}, "
-                        f".export_q({done['net']}));" + body[m.end():])
-                logic += [f"    wire {done['net']};  // FLOW-6 private reader START raw copy ({raw} drives an output port)"]
+            done, body = _private_raw_copy(tn, bus, "reader", raw, outputs, body, logic)
             if done is not None:
                 private[raw] = done
                 raw = done["net"]
@@ -1765,11 +1778,12 @@ class Landings:
 
     def _writer_start_rtl(self, tn, bus, head, body, logic, type_key=None):
         """W1 (DIE-HEAD-38): transport the sender's SAFE start_d (second sampler, never the first synchroniser
-        stage) through W kept relays to the FSTART face flop of one output bus. Returns the face flop's D net."""
+        stage) through W kept relays to the FSTART face flop of one output bus. Returns (the face flop's D net, body):
+        body changes only when a stage raw relay drives an output port (FLOW-6 private raw-export pair)."""
         key = type_key or tn
         cfg = self.types[key].get("clock", {}).get("landing_writer_start")
         if cfg is None or bus not in cfg.get("branches", {}):
-            return "cland_start_d"
+            return "cland_start_d", body
         import count_align_bind as CAB
         depth = CAB.writer_start_depth(self.plan, key)
         branch = cfg["branches"][bus]
@@ -1787,6 +1801,7 @@ class Landings:
             raise LandingError(f"{tn}.{bus}: writer START needs exactly {physical_depth} physical stages (new stages for phase {depth})")
         outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
         records = []
+        private = {}
         prev = "cland_start" if reuse else "cland_start_d"
         # R-REACH-1 share_trunk (writer side): equal stage prefixes are one kept relay (reader_start_owners)
         owners = reader_start_owners(cfg).get(bus) if cfg.get("share_trunk") else None
@@ -1802,15 +1817,13 @@ class Landings:
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
             if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs a local registered raw reset")
-            registered = re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" +
-                                   re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
-            if not registered:
-                raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} has no registered wavefront driver")
-            # a port flop must feed only its port (face_guard 'shared'): the plan picks a non-port relay
-            if raw in outputs or any(o in outputs for o in
-                                     re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body)):
-                raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} drives an output port; "
-                                   f"plan a non-port registered relay")
+            # LANDING-WRAP-TOOL 11-23 (QC C1b sle_su_c rr_t85, EMIT refusal after 3628 s): a port flop must feed only
+            # its port (face_guard 'shared'), so a raw relay that drives an output port becomes the same FLOW-6 private
+            # raw-export pair the reader side uses (same clk/D, export_q <= D: same release edge, +1 flop, 0 cycles)
+            done, body = _private_raw_copy(tn, bus, "writer", raw, outputs, body, logic)
+            if done is not None:
+                private[raw] = done
+                raw = done["net"]
             name = f"u_cland_writer_start_{ident(ob)}_{i}"
             net = f"cland_writer_start_{ident(ob)}_{i}"
             if not (owners and name in emitted):
@@ -1827,8 +1840,9 @@ class Landings:
             depth=depth, stages=records, fstart_d=prev, K_adjustment_at_receiver=depth,
             **(dict(reused_origin_stage=1, added_flops=len(records)) if reuse else {}),
             boot_extra_cycles=depth, steady_data_cycles_added=0,
-            qualification="local raw-reset release and actual placed hops require plan timing")
-        return prev
+            qualification="local raw-reset release and actual placed hops require plan timing",
+            **({"private_raw_copies": private} if private else {}))
+        return prev, body
 
     def _ring_lite(self, tn, key, head, cat, cmask, status_copy):
         """RING-LITE-1: {bus: dict(lite, monitors, group)} for the grouped narrow rings of type `key` (see ring_lite_cfg).
@@ -1999,7 +2013,7 @@ class Landings:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
-                    fstart_d = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
+                    fstart_d, body = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
                     fstart_raw = self._branch_raw(tn, f"fstart:{b}", "cland_start_raw")
                     logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n({fstart_raw}), "
                                  f".d({fstart_d}), .q(cland_fstart_out_{b}));")
@@ -2064,7 +2078,9 @@ class Landings:
                 relay = None
             else:
                 reset = f"rst_n_t{tap}"
-            relay = None if hard_tree else re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\(" + reset + r"\)\);", body)
+            # a relay already turned raw-export pair (_private_raw_copy) is still the same plain relay (group 1 None)
+            relay = None if hard_tree else re.search(r"ot_dp_(?:r(gate|relay)|head_raw_export_pair)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)"
+                                                     r"[^;]*?\.q\(" + reset + r"\)(?:,\s*\.export_q\(\w+\))?\);", body)
             if relay is None and not hard_tree:
                 raise LandingError(f"{tn}.{b}: timed local wavefront reset relay {reset} not found")
             if hard_tree:
@@ -2555,7 +2571,8 @@ class Landings:
             raw = next(iter(ca_raw.values()), None)
             if raw is None:
                 if raw_fallback is not None:return raw_fallback
-                m = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)\);", body)
+                m = re.search(r"ot_dp_(?:r(gate|relay)|head_raw_export_pair)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)"
+                              r"(?:,\s*\.export_q\(\w+\))?\);", body)
                 raw = m.group(3) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
                 if raw == "rst_n":
                     # AUTOBUILD-PIPE-5 10-31: hard wrapper -- the origin's raw reset through one clk pin register
@@ -2897,7 +2914,7 @@ class Landings:
                 raw, was = pick_local_reset_raw(raw, xy, depth(first_old) - 1, relays, ported, LOCAL_RESET_REACH_UM)
                 if was is not None:
                     self.__dict__.setdefault("local_reset_rederived", {}).setdefault(key, []).append(dict(name=name, was=was, raw=raw))
-            if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay(?:_nl)?\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
+            if not isinstance(raw, str) or not re.search(r"\bot_dp_(?:rrelay(?:_nl)?|head_raw_export_pair)\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
                                                           r"\s*\)[^;]*?\);", allrtl, re.S):
                 raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")
             net, inst = f"cland_lrst_{name}", f"u_cland_lrst_{name}"

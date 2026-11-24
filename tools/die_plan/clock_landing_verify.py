@@ -32,6 +32,11 @@ def planned_ring_depths(raw,table):
     return depths
 
 
+# relay cells whose listed outputs are one registered raw-reset hop (q <= d on the region clock).  FLOW-6 /
+# LANDING-WRAP-TOOL: a planned relay whose Q drives an output port becomes ot_dp_head_raw_export_pair (same instance,
+# export_q <= the same D), so both of its outputs release on the same edge as the plain relay.
+RAW_HOP_PORTS = {'ot_dp_rrelay': ('q',), 'ot_dp_rrelay_nl': ('q',), 'ot_dp_head_raw_export_pair': ('q', 'export_q')}
+
 class Verification:
     def __init__(self,F,G,raw,table,names,live_widths=None,plan_path=None,reset_tree=None):
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
@@ -237,7 +242,8 @@ class Verification:
         return {q:depth(q) for q in rows}|{'rst_root_n':0}
 
     def release(self,net):
-        """(root term, plain relay hops) of a raw reset net: ot_dp_rrelay/_nl q +1, ot_dp_lk q and $buf 0; any other
+        """(root term, plain relay hops) of a raw reset net: ot_dp_rrelay/_nl q (and ot_dp_head_raw_export_pair q/export_q,
+        both <= the same D) +1, ot_dp_lk q and $buf 0; any other
         driver is the root.  Two resets of one partition with equal release() deassert on the same edge."""
         d=0;seen=set()
         while True:
@@ -246,7 +252,7 @@ class Verification:
             if net in self.G.top_in or len(ds)!=1:return (self.term(net),d)
             ci,port,_=ds[0];c=self.F.cells[ci]
             if c.kind=='glue' and port=='Y' and c.ytype in ('$buf','$pos') and len(c.ports.get('A',[]))==1:net=c.ports['A'][0];continue
-            if c.module in ('ot_dp_rrelay','ot_dp_rrelay_nl') and port=='q':d+=1
+            if port in RAW_HOP_PORTS.get(c.module,()):d+=1
             elif c.module!='ot_dp_lk' or port!='q':return (self.term(net),d)
             ib=c.ports.get('d',[])
             if len(ib)!=1:return (('bad',c.path),d)
@@ -303,7 +309,9 @@ class Verification:
             if extra and extra.startswith('u_cland_rst_') and re.fullmatch(re.escape(prefix+'u_cland_rfan_'+ident(extra[12:]))+r'_\d+',up.path):
                 allowed.add(up.path)
             if n in outq:allowed.add(prefix+row['name']+'_t')
-            if up.path not in allowed or up.module not in('ot_dp_rrelay','ot_dp_rrelay_nl') or port!='q':return False
+            # FLOW-6 / LANDING-WRAP-TOOL (clock_landings._private_raw_copy): a planned relay whose Q drives an output port
+            # is the same instance as ot_dp_head_raw_export_pair; its export_q (<= the same D) is a same-depth hop too
+            if up.path not in allowed or port not in RAW_HOP_PORTS.get(up.module,()):return False
             ib=up.ports.get('d',[])
             if len(ib)==1 and tree.get('relay_lockup')=='latch':
                 # RLK-1108 latch form: one hop lockup latch (0 cycles) between this relay and its planned parent
