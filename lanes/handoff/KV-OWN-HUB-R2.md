@@ -1,21 +1,8 @@
-# KV-OWN-HUB-R2 handoff (Opus 5.5, from 11-24 09:35 PST; predecessor KV-OWN-HUB died on the limit ~04:55, it left no handoff)
-Job: A5t6 row for kv3_hub_Eo east macro channel (VIS-REOWN 09:31 E-side smear). Base A5t3 cbee82715bca (epyc9 kv-allfix/grow/A5t3/plan.json). Post ROW-REBASED to KV-ALLFIX.
-## Cause (A5t3 probe kit epyc11 KV-D29/private/KV-ALLFIX/kv3_hub_Eo_1124042156 geom/geom.tsv, box x950-1250 y450-1400)
-- 36,002/40,500 flops u_d75_seq_g_fan_2_u_fan_aq (ot_dp_dly W540 D75 age pad fan_2 -> astk_ES ctl aq) + 6,487/8,100 u_d15 (fan_3 -> astk_EN). Unseated pad line = diagonal smear.
-- Separate (NOT in row): xs->fan q 4x128b NEED-STATION 840-998 um est 1040-1237 ps (placed_scan.tsv); needs priced +1 station (LAT); fan kq->kc REACH 526 um.
-## Row
-- epyc9 /srv/opentallas-scratch2/claude/kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-ECH.py sha 236ff2e333c4: hub_Eo.pad_ram {min_d 8, wide_min_d 16, keepout_um [[1000,245,1278.72,1430]]}. kit_dly_ram dry on A5t3 bound RTL: lead 8 + 3 SRAM D66 + resid 1, sites (882.6,100.7) (904.2,48.9) (774.6,135.3). Cycle-exact.
-## Gate job
-- epyc11 ot-run PID 475022 (E9 waiter cancelled on load cap, never started) job_ech.sh -> out epyc11 kv-own-hub-r2/ech: row plan 3f53aba1376d (diff = hub_Eo pad_ram+note only), PRE base+row, elab, strict bind --types kv3_hub_Eo, PRE --elab-dir GENDRY. log job_ech.otrun.log. Plan copy in epyc11 grow/tree plan_of_record/plan_kvownhub_A5t3ech.json.
-## Row 2 (COORD 09:5x: stations on xs->fan, own lane, LATCHECK+R8, plans only in OWN folder -- never write grow/tree again)
-- epyc11 kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-SEQLP.py 11d9dfe72d5c: clock.core_link_pipe qkd_seq_fan_s {q:1,aqm:1}, types += kv3_hub_Eo. Plan on A5t3 = 526110b93a98.
-- Gate job_lp.sh: ot-tree-fork grow/tree -> kv-own-hub-r2/tree (own), plan there, launch_lp_70d2e, out kv-own-hub-r2/lp. ot-run PID 617482 unit oth-ubuntu-618360-1795543023.
-- Told KV-ALLFIX (0e1e840b) about grow/tree plan_kvownhub_A5t3ech.json: keep or ot-delete after my row1 job ends.
-## hub_Wo added (COORD 10:1x) -- both rows extended, same files
-- ECH 68742d07d8de (Eo + Wo pad_ram; Wo keepout x<=280 y245-1430) -> plan dce4e1eb9163. SEQLP 00b81f50ff87 (types Eo + Wo) -> plan 7ae541e97dd2.
-- Wo evidence: D28 kit epyc8 KV-D28/private/FAM-KV-HUBWO-S1/kv3_hub_Wo_1122231146/geom (d20 smear y264-1436, xs->fan 781-828 um); A5t3 Wo bound RTL epyc9 kv3_hub_Wo_1124080816/rtl (d81, d20).
-- Gates: epyc11 job_bind.sh ech (job_bind2_ech, PID 1881671) + lp (job_bind3_lp, PID 1926120; SEQLP e36fe1abae50 = +kc_i D1 per COORD ruling, plan 510e93cd3d4a). out b_ech/b_lp in own fork.
-- Post ROW-REBASED for both rows together when both pass.
-## A5t5 rebase (COORD 11:0x: A5t5 669cbe6e39bd passed; re-apply both rows + PRE before ROW-REBASED; no reply needed until then)
-- epyc9 kv-own-hub-r2/job_a5t5.sh (PID 1856467): rows on A5t5 alone + both + order check, PRE each vs A5t5 base PRE (asbuilt A5t3, GENDRY off). Out epyc9 kv-own-hub-r2/a5t5.
-- epyc11 job_ech_full (PID 2833780): full strict bind of ECH for GENDRY. epyc11 job_bind3_lp (PID 1926120): SEQLP gate with kc_i.
+# KV-OWN-HUB-R2 handoff (11-24 12:55 PST)
+DONE: ROW-REBASED posted (hub c9504539). Both A5t6 rows ready for KV-ALLFIX composition on A5t5 669cbe6e39bd.
+- ECH row 68742d07d8de, SEQLP row e36fe1abae50: epyc11/epyc9 /srv/opentallas-scratch2/claude/kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-{ECH,SEQLP}.py
+- A5t5 plans (epyc9 kv-own-hub-r2/a5t5): ech d5566c394f23, seq 9a12a9c34c79, both 7926cbd1af90; PRE 0 new
+- A5t3 gates: bind 0 err, LATCHECK delta {}, R8 0 diff, BPC=ref
+- Open: GENDRY StopIteration landing_place.py:931 on hub types also on base (pre-existing, flag FLOW)
+- Own fork tree epyc11 kv-own-hub-r2/tree (49.9 GB) can be ot-deleted once KV-ALLFIX composes.
+Next: answer KV-ALLFIX questions only.
