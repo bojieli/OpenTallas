@@ -6,3 +6,9 @@ Job: hub cland ring -> bin internal hold seam (hub_Eo -323 post-hook CTS) as a f
 - A3g plan: hubs keep core_taps "internal"; A3 adds tap_pair_affinity {macro_follow} (pair_um 60, depth 2) on all 4 hubs.
 ## Probe (running 21:4x): epyc8 /srv/opentallas-scratch2/claude/kv-hub-hold/probe (run_probe.sh D28|A3 [GROUP_RE]); D28 placement + rt c149c0966d7c clock_taps; reports per-landing ring_rd/bin tap + HARD pins per tap. Waiters intel2 ~/tmp/kvhubhold/probe_*.otrun.log.
 ## Row draft: clock.tap_group re = landing key (u_cland_<k>/u_ring.dch*u_dsel + u_bin_<k>/q), follow_re "" ; group target must avoid taps carrying hard clock pins (tool change needed in clock_taps.tcl group target).
+## 21:5x state
+- Probe A3: macro_follow moved astk_ES ck clk_t3 -> clk_t40 (er_chain landing there); all 23 landings split. Probe A3S (new tool): 1970 sinks moved, all landings on hard-free taps.
+- Tool pushed main cadf980705dc (tap_landing_seam.tcl + gen_phys + schema + test); first rt with it: 29d2fff35ccd.
+- Row: epyc11 /srv/opentallas-scratch2/claude/kv-hub-hold/rows/ROWS_KV-HUB-HOLD.py da657da969c2; A3g b258e3e34f22 -> plan_H1.json 75317d2894e7 (only 4 clock keys added).
+- Gate H1 (epyc11, tree fork of ALLFIX grow/tree, rt 29d2fff35ccd, scoped strict bind 4 hubs): log intel2 ~/tmp/kvhubhold/gate_H1.otrun.log, out epyc11 kv-hub-hold/gate_H1.
+- KV-ALLFIX (ad9ba7d): base A3g OK; A3h = A3g + STRIPRAW on hroot/io_ft_v1 only, row transposes 1:1; folds into iteration 2 after rt + gate pass. Send row path+sha12.
