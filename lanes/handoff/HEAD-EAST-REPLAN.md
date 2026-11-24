@@ -29,3 +29,9 @@ Lane dir: epyc11 /srv/opentallas-scratch2/claude/head-east-replan (clone/, tmp/,
 - E11 r7 `c9ead4cccd9a` mapped `1_2_yosys.v` carries two I3 and three O0/O3 station instances with literal chained input/output wires. Live `ot_face_flops.txt` records 514 cells in each I3 bank and 513 in each O bank, 2,567 total FIRM, zero misses. The following native stage population is still active, before final view.
 - r6 diagnostic post-CTS worst −158.99 ps is the two-bank rne_addr control leg g_rx[2].g_nonempty_regions.addr_nz to g_rx[3] local SRAM read/bypass capture prev_q, after a ~300 ps wiring leg and adverse clock skew. It is a separate pre-repair class from WOPENREG and reset. r6 GRT still running and stays diagnostic.
 - Prospective native leaf lookup cache pushed lane branch `claude/head-r18-latpkg@03d8ffcdcf0e`. Keeps ordered exact membership and fail-closed empty selectors; reuses guard membership through placement and capacity counts. Twenty focused tests passed. E9 `head-r18/native_lookup_1124` subset of 14,741 actual r7 trace names and eight exact selectors gives same 1,569 ordered matches, one uncached pass 1036→593 ms. The current sealed r7 keeps its pinned helper.
+
+## 11-24 08:0x PST fresh lane (post-limit)
+- r7 place unit oth-ubuntu-251763-1795530958 DONE rc0 08:03; renders scratch place/{layout,density}.png read, PASS-to-continue (same floorplan as r6).
+- rne_addr->prev_q: RTL identical r6->r7 (ot_s81hd_lep_nr.sv rne_addr[2]->u_ptr advance->hit5->prev_q); check r7 post-CTS/GRT timing.
+- goal route refused by LBL (VIS-COVERAGE hd_lep0N DRAFT). Now intel2 service head-east-r7-grt (launch_east_r7_route.sh GOAL=grt, log ~/head-east-replan/r7-grt.log).
+- Next: read r7 post-hook CTS + final 5_1_grt.odb (overflow, TT worst, rne_addr path) -> VIS row PROBE-PASS -> systemd-run head-east-r7-route (GOAL default route).
