@@ -42802,3 +42802,4 @@ FAILED [AUTOPILOT 8a78e54da90b] 2026-11-24 12:48:17 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-24 14:26 PST DONE [S81-OWN-COLH10] ot-run oth-ubuntu-1666965-1795558971 on renewed-glider: rc=0 after 146 s, ended 22:25:14, log none, cmd: --mem 40 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-own-colh10 -- env TYPES=col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d
 - 2026-11-24 14:26 PST DONE [s81-own-colh10] ot-push-main otpush-renewed-glider-1774768 on renewed-glider: rc=0 after 0 s, ended 22:26:46, log none, cmd: ot-push-main --help
 - 2026-11-24 14:27 PST ALERT STUCK-STATE qwen_compute: 3 current-plan row(s) CANCELLED/SUPERSEDED with no successor for 60+ min (e.g. glue, 2026-11-23 20:43)
+- 2026-11-24 14:27 PST DONE [S81-OWN-COLH10] ot-push-main otpush-renewed-glider-1776992 on renewed-glider: rc=0 after 22 s, ended 22:27:13, log none, cmd: ot-push-main 

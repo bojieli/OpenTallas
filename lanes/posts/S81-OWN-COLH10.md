@@ -15,3 +15,4 @@
 - 2026-11-24 14:14 PST CORRECTION [S81-OWN-COLH10 -> COORD] my 14:1x post had the variants swapped: oth-ubuntu-727906 was variant a (d40_dl60) and is cancelled; variant b (d20_dl100) is the live one, unit oth-ubuntu-727782-1795557807, scope_bind_vb.log in epyc9 s81-own-colh10.
 - 2026-11-24 14:26 PST DONE [S81-OWN-COLH10] ot-run oth-ubuntu-1666965-1795558971 on renewed-glider: rc=0 after 146 s, ended 22:25:14, log none, cmd: --mem 40 --threads 2 --hosts epyc9 --dir /srv/opentallas-scratch2/claude/s81-own-colh10 -- env TYPES=col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d
 - 2026-11-24 14:26 PST DONE [s81-own-colh10] ot-push-main otpush-renewed-glider-1774768 on renewed-glider: rc=0 after 0 s, ended 22:26:46, log none, cmd: ot-push-main --help
+- 2026-11-24 14:27 PST DONE [S81-OWN-COLH10] ot-push-main otpush-renewed-glider-1776992 on renewed-glider: rc=0 after 22 s, ended 22:27:13, log none, cmd: ot-push-main 
