@@ -9,7 +9,7 @@ rc14	S81-ALLFIX-SVC	SVC-ATT-ENG-ORDER (plan 4e824d8ec6b1)	asbuilt 1230a5252b30 +
 rc16	S81-ALLFIX-SVC	SVC-BCAST-STAGE	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	yes	c6 8381109c93bf (asbuilt_run_allfix 11ecb220faee)	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)
 rc18	S81-ALLFIX-SVC	SVC-TAP-INV plan 3ad242df625f	912e846dd5c8	yes	c7a (composing 19:0x)	PASS 0/178	-	-	-	-	-	STAGED c7a
 rc20	S81-ALLFIX-SVC	SVC-ATT-ENG-ORDER (plan 4e824d8ec6b1)	asbuilt 1230a5252b30 + ENGINE ovl (SVC-ENGINE-ROW)	yes	c6 8381109c93bf (asbuilt_run_allfix 11ecb220faee)	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 via SVC-ENGINE-ROW (OT_SVC_ENG_XS/OT_SVC_BCAST)
-rc25	S81-ALLFIX-SVC	SVC-LO-START-INTERIOR tool epyc10 fix-s81-svc-lostart/tool/s	-	no	-	-	-	-	-	-	-	OPEN (SVC; no row posted)
+rc25	S81-OPEN-SVCLO	SVC-LO-START-INTERIOR tool epyc10 fix-s81-svc-lostart/tool/s	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-SVCLO by 22:00 -> c8
 rc28	S81-ALLFIX-SLICE	J9 1b SLICEC-XGARRAY-2 + lp_xf_driver 8d45ed26eb63	XGARRAY-2 1b	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc29	S81-ALLFIX-SLICE	J9 1b SLICEC-XGARRAY-2 8d45ed26eb63	XGARRAY-2 1b	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc30	S81-ALLFIX-SLICE	XG-RING-REACH-J9 + XG-FLT-RELAY-J9 (FIX-S81-XG-STN) + XFIN X	Wave A slice chain	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
@@ -18,7 +18,7 @@ rc32	S81-ALLFIX-SLICE	TGR5-J9-TAPS-v4 (--global-rounds main 37dc7af0ed)	Wave A r
 rc33	S81-ALLFIX-SLICE	SLICE-R6 C pin-face tap (J9) + LEPE-4 PT1 (LP, by 08:00)	PT1 b9a2fab893de + lepw eb3efa2c89c3	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 rc34	S81-ALLFIX-SLICE	tap_reset_split C (SLICE-R6) + LEPE R1 LP	lepw eb3efa2c89c3 (+C in base)	yes	c6 8381109c93bf	PASS 0/177	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 rc36	S81-ALLFIX-SLICE	LEPE-SP (lepe_mu_LP t2 field spread A/W2) + XGARRAY-1 LP	SP-W2+XGARRAY-1 LP	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
-rc37	S81-ALLFIX-SLICE	LEPE F2/N1/N2/S1	-	no	-	-	-	-	-	-	-	OPEN
+rc37	S81-OPEN-DEMAND	LEPE F2/N1/N2/S1	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 rc39	S81-ALLFIX-MULTI	SERDES-CORETAP-1 v2 + CLKENTRY-1 (J9)	in base + SERDES-RING-ONEGROUP 877bf1f92e06	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 rc41	S81-ALLFIX-MULTI	SERDES-TXFACE-1 (J9)	TXFACE-1 v2	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc42	S81-ALLFIX-MULTI	SERDES-RCKROOT-1 (J9)	RCKROOT-1 11/11	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
@@ -31,8 +31,8 @@ rc53	S81-ALLFIX-MULTI	ENG-XT1-STN (J9 v3)	ENG-XT1-STN-1	yes	c4 f347fb918fab	B1 0
 rc55	S81-ALLFIX-MULTI	SEQHOST-VLG-REP (J9 v3)	SEQHOST-VLG-STN-1	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc59	S81-ALLFIX-MULTI	GUNIT-L1-REACH (J9 v3)	GUNIT-L1-REACH-1	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc62	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT v2 (l20s_j9.sv 9617ad7537cc) + u_sel.u_g ->	BKSEL-IDS-RSPLIT v2	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
-rc66	S81-ALLFIX-MULTI	TGR5-J9-SERDES-DENS-1 (SPARSE-TAP-1 for serdes)	-	no	-	-	-	-	-	-	-	OPEN
-rc67	S81-ALLFIX-MULTI	S81-J9-HOPCLASS-1 + hop re-run on composed J9 plan (~10:30, 	-	no	-	-	-	-	-	-	-	OPEN
+rc66	S81-OPEN-CLOCK	TGR5-J9-SERDES-DENS-1 (SPARSE-TAP-1 for serdes)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+rc67	S81-OPEN-DEMAND	S81-J9-HOPCLASS-1 + hop re-run on composed J9 plan (~10:30, 	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 rc72	S81-ALLFIX-COL	COL-H9R0-UCF-MX	a820825accbe	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc78	S81-ALLFIX-COL	COL-H10-GROW 56d5a17e72bc (base of plan_final 30dd3d6e03cc) 	02b182e95344	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc79	S81-ALLFIX-COL	COL-H10-TAPGRT_J9 ef09171c92b8 + COL-H10-REACH_J9 5f8b2104a6	ef09171c92b8+5f8b2104a625	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
@@ -44,19 +44,19 @@ rc87	S81-ALLFIX-COL	J9 tree porous_views_data >=152df1bc05 (ASSEMBLY)	porous 11e
 rc88	S81-ALLFIX-COL	COL-H9R12-SSTRIP 3c285d644712 (supersedes LPAD-SPREAD)	8b09943f6df5	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc89	S81-ALLFIX-COL	TGR5-J9-TAPS-v4 s3 (proxy register sinks on all 120 types)	TGR5 s3 (count)	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 x1	S81-ALLFIX-SVC	SVC-HI4-SPLIT-F65F	-	no	-	-	-	-	-	-	-	INT-RULING 18:2x: B1 hi4 split kept, six-lane check = keep B1 values, strict decides
-hg-S81-CLOCK-SKEW	S81-ALLFIX-MULTI	NONE	-	no	-	-	-	-	-	-	-	OPEN
-hg-S81-CLOCK-TAP	S81-ALLFIX-MULTI	TAP-GRID-R5 J9 regen + LANECH channels + XGARRAY-2 strip mov	-	no	-	-	-	-	-	-	-	OPEN
-hg-S81-GLOBAL-DEMAND	S81-ALLFIX-MULTI	SLICEC-XGARRAY-2 8d45ed26eb63 (kv512_C/lepe_nh_mus_C) + COL-	-	no	-	-	-	-	-	-	-	OPEN
+hg-S81-CLOCK-SKEW	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+hg-S81-CLOCK-TAP	S81-OPEN-CLOCK	TAP-GRID-R5 J9 regen + LANECH channels + XGARRAY-2 strip mov	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+hg-S81-GLOBAL-DEMAND	S81-OPEN-DEMAND	SLICEC-XGARRAY-2 8d45ed26eb63 (kv512_C/lepe_nh_mus_C) + COL-	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 hg-S81-HOLD-SHORT-PATH	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-HOLD-SKEW	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hg-S81-IO-BOUNDARY	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
-hg-S81-LOGIC-DEPTH	S81-ALLFIX-MULTI	BKSEL-IDS-RSPLIT (bk_sel, wire not depth) + LEPE-4 SP (u_lan	-	no	-	-	-	-	-	-	-	OPEN
-hg-S81-MACRO-CHANNEL	S81-ALLFIX-MULTI	ENG-UEH0-CHAN-1	-	no	-	-	-	-	-	-	-	OPEN
-hg-S81-OVER-MACRO	S81-ALLFIX-MULTI	ENG-UEH0-CHAN-1	-	no	-	-	-	-	-	-	-	OPEN
-hg-S81-REACH	S81-ALLFIX-MULTI	NONE	-	no	-	-	-	-	-	-	-	OPEN
-hg-S81-REPAIR-CAP	S81-ALLFIX-MULTI	PT1 eecfc535 (port class) + violator row TBD	-	no	-	-	-	-	-	-	-	OPEN
+hg-S81-LOGIC-DEPTH	S81-OPEN-DEMAND	BKSEL-IDS-RSPLIT (bk_sel, wire not depth) + LEPE-4 SP (u_lan	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
+hg-S81-MACRO-CHANNEL	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-ENGCHAN by 22:00 -> c8
+hg-S81-OVER-MACRO	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-ENGCHAN by 22:00 -> c8
+hg-S81-REACH	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-CLOCK by 22:00 -> c8
+hg-S81-REPAIR-CAP	S81-OPEN-DEMAND	PT1 eecfc535 (port class) + violator row TBD	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-DEMAND by 22:00 -> c8
 hg-S81-RESET-ASYNC	S81-ALLFIX-MULTI	ROWS_CLASS-FIX-RHI.py 72b268847ec4 (RHI-RST/HSK/IO die rows,	8c512474bcf6+2e5928836573	yes	c6 8381109c93bf	PASS 0/178	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
-hg-S81-STATION-CLUSTER	S81-ALLFIX-MULTI	ENG-UEH0-CHAN-1 (ft1 bank W to x<=795.36)	-	no	-	-	-	-	-	-	-	OPEN
+hg-S81-STATION-CLUSTER	S81-OPEN-ENGCHAN	ENG-UEH0-CHAN-1 (ft1 bank W to x<=795.36)	-	no	-	-	-	-	-	-	-	OPEN: S81-OPEN-ENGCHAN by 22:00 -> c8
 hop-S81-svc	S81-ALLFIX-SVC	SVC-ATT-ENG-ORDER + SVC-CUT-STATION + SVC-BCAST-STAGE + SVC-	-	no	-	-	-	-	-	-	-	OPEN: SVC-FRAME-G0 v3 + ENGINE row in c6
 hop-S81-leaf	S81-ALLFIX-SLICE	J9-LEAF-ISTN-REAIM (pass inside LCBC row 3d)	LEAF-ALLFIX-1 8ce96cfc7c52	yes	c6 8381109c93bf	PASS 0/285	-	-	-	-	-	IN-COMPOSE c6 (tail 19:0x; c7a composing)
 hop-S81-col_h9_r12	S81-ALLFIX-COL	KEEPDLY wave env ot_dp_dly:r (480 DUPSTN) + REASON (120 core	wave env+REASON	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
@@ -87,4 +87,4 @@ LEAF-ALLFIX-1	family	8ce96cfc7c52	8ce96cfc7c52	yes	c6 8381109c93bf	PASS 0/285	-	
 KVLEAF-T2-HARD-1	S81-ALLFIX-SLICE	08bbfd521522 / slot +527x691	-	-	-	-	-	-	-	-	-	REASONED-pending (FABLE-RC-ALL 17:33 ACCEPT)
 COL-P5-FSTART1	S81-ALLFIX-COL	plan 77d6f4f47270	a2a6760fa5e1	yes	c7a (composing 19:0x)	12 ANCHORDRY REASONED (intended), else 0	-	-	-	-	-	STAGED c7a; REASONED on proof (COORD 19:18/FABLE d016ece5): scoped strict EMIT 0 on 12 p5+serdes__t13 + START release>=reset + die max release before/after. NOTE: B1 ae3101241d6b binds these 12 at depth 7 BY DESIGN; ALLFIX differs (depth 8) by design
 SERDES-t13-FSTART0	S81-ALLFIX-SVC	t13 fstart_0 depth 10!=9 (inherited B1)	-	no	-	-	-	-	-	-	-	OPEN: SVC row due 20:00 -> c7b
-FSTART-DEPTH-CLASS	S81-ALLFIX-MULTI	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: MULTI due 20:15 -> c7b
+FSTART-DEPTH-CLASS	S81-OPEN-FSTART (requested 19:3x)	fstart_depth_fix.py class tool (last tail step)	-	no	-	-	-	-	-	-	-	OPEN: lane requested; c7b/c8 last tail step
