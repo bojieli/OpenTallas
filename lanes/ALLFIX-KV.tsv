@@ -23,7 +23,10 @@ x10 tap offsets (TAPOFF last)	tap_offset_cover rt 70b6f	recomputed per compose	0
 x15 hroot GEOM block 3	4ca2bc6de1a3	in-base K3g	324af451f9be	PASS	0	PASS	PASS	-	-	IN-BASE (K3g gates only; NOT GATED until a probe read)
 TAPGRID pv_v3e split (+146 taps)	53fa112e543f (plan 42c02451ea4f)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
 TAPGRID pv_v1n split (+168 taps, resel, PARTIAL 2 over)	1a910f00e69b (plan dccab51441bf)	yes (TAP-GRID-R6, K3g)	0c9c828a2857 (A1)	PASS 0 (rt 70b6f)	running gate_A1	-	-	-	-	IN-COMPOSE A1
-hub_C HUBC-E2 relay seats	c95f773d3e97	REBASING (helper KV-ALLFIX-HUBC)	-	-	-	-	-	-	-	ROW-REBASING
-hub_C H2 reset leaf_clusters / H3 seq->bout E station / H4 d38 N/S split / ahub-kvs_ctl congestion split	-	BUILDING (helper KV-ALLFIX-HUBC)	-	-	-	-	-	-	-	ROW-BUILDING
+hub_C HUBC-E2 relay seats	c95f773d3e97	yes (on A1 + K3g)	A2 pending (hA1 69d116afe578)	PASS 0	-	-	-	-	-	ROW-REBASED
+hub_C H2 RSTCL / H3 SEQE (+3 cyc L2035/L2037) / PVNFENCE / KVCTLWRAP (ahub+kvs_ctl overflow 57 of ~101 nets)	c759208d0dc5 / fc0c1ec110af / 9aab91eb34cd / 96c827900c35	yes	A2 pending (hA1 69d116afe578)	PASS 0	-	-	-	-	-	ROW-REBASED
 R8 type split: 7 conflicting types (hg_v1, hg_v1p3, pc cl254f/cl5a95, pc_v1 cl4ea/cl7f, pc_v3) -> 32 clones by per-instance landing-pad vector (replaces strap_r8pad banks with no planned pin)	97b616f9451f (plan_t 4d16efb7c25d on A1r2, asbuilt 72f6b1feebc3)	yes (A1r2)	A2 pending	running	-	-	-	-	-	ROW-BUILT, PRE running
 PCGROW + die port shift (rc118 G2 seam), FABLE-OPEN-KV building on A1r2	-	FABLE-OPEN-KV	-	-	-	-	-	-	-	ACCEPTED into A2/A3 compose (COORD 17:3x)
+hub_C H4 d38 kvs_attn_pvst N/S fork (31b, 38 stages)	-	no	-	-	-	-	-	-	-	ROW-DROP tonight: needs per-sink chain split in bind or RTL copy -> REASONED-pending (FABLE-RC-ALL)
+PCFTGRID (pc FT stages half a row off grid; blocks pc_v3/pc_v1 kit gen)	1394aa5f6594	yes	A1b cf1eadc2cb91 (positions only; A1 bind valid)	PASS 0	-	-	-	-	-	IN-COMPOSE A1b
+PCGROWDIE (rc118 G2 seam, whole-die re-floor +224.64 um)	84141a5187ca	FABLE-OPEN-KV draft	iteration 2 (A3): KV-ALLFIX owns die clock mesh re-solve, 28 window remap, R8 refresh	-	-	-	-	-	-	ROW-DRAFT -> A3
