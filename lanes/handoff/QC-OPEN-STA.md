@@ -12,3 +12,11 @@ Pipeline (scripts in epyc8 rows/):
 2. relay_chain.sh: type_relay_sites (rt 70b6) per type from its A-probe geom.tsv (10 of 11; cl67389ecd geom came later) -> rows/plan_sta_r1.json 8c5f546a95e1: 0 chains > 380 um, 0 pin cycles.
 3. sta_ft.py: ft_sites.place per-bit sites for b_hw_ctl_hc* (550 bits > 405 in every probe), stations unchanged or rejected.
 Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 btab child), b_tw_data -> btab (REACH).
+
+## 21:30 PST
+- Final pipeline: epyc8 rows/pipe.sh (sta_floor macros on 8.64 lattice, SRAM y0 587.52 -> sta_ftbits b_hw_ctl per-bit sites -> relay_chain.sh (+firm) -> sta_clock span 290/chain 140, tap_radius kept) = plan_sta_r6 77d4fcb91680;
+  then epyc7 rows/tapfix.sh (addtap --fix rename + retap OLD=C1b + tap_offset_cover fill) = plan_sta_r7; gate epyc7 gate_r7 (PRE + G0), log epyc8 QC-OPEN-STA/r7.ot.
+- PRE history: r3 TAPNAME/TAPOFF (tap radius 140 + macro moves re-solve density base); r4 radius kept still TAPNAME -> tapfix. G0 r3 = base (3 su_c errors only), new WARN = G0C lattice (fixed in r6).
+- Private tree: epyc7 /srv/opentallas-scratch2/claude/QC-OPEN-STA/tree + launch; A bind copy epyc7 and epyc11 QC-OPEN-STA/bindA/bind. Probe launcher intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probe.sh HOST ITEM.
+- Leftovers to ot-delete: epyc8 QC-OPEN-STA/tree.forking-813798; epyc11 QC-OPEN-STA (bindA only, forks killed).
+- rc97 parent draft: scratch rc97_parent.py (needs BT_LAT=2 views from FAM-QC-HCST-R3); only the 5 st_a_v2 types (20 u_r cores) carry BT_LAT.
