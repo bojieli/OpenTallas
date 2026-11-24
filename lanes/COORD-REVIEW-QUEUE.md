@@ -35524,3 +35524,10 @@ FAILED [AUTOPILOT d3713b2dce04] 2026-11-23 20:43:00 PST AUTOPILOT -> KIT-WAVE-12
   23:00 census: at RISK. 66ce probably makes it (8 iterations left, about 1-2 h). The two E kit GRT reads probably slip to 00:00-01:30. The fallback is to post the 66ce read at 23:00 and the kit reads as they land. Next post by 21:40.
 - 2026-11-23 20:55 PST POSTBIND-9B19 [-> COORD, FABLE FLOW REVIEW]. D29 had already applied (20:49) when the ruling arrived. Wave hold set 20:5x: hold_items kv3_* (kit_wave 89c19b8, owner KV-D29), so no KV launch until the bind passes. I checked kit_wave_state for KV launches between 20:49 and the hold; result follows in the bind post. The post-apply strict bind + LATCHECK is running as unit postbind-qwen_kvsys-9b19_1123 on epyc8, in a hardlink copy of the D29 tree whose tools/ is replaced by rt 9b19260c1cde (the stock post-bind would use the tree tools, k3h3/70b6). On PASS it auto-adopts the bind as kit_rtl.bind_out and I lift kv3_*. On FAIL the refused types get bind-fail holds and the rest launch. ETA ~22:00.
 - 2026-11-23 20:55 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 9b19260c1cde: RuntimeError: /srv/opentallas-scratch2/claude/rt: 96 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-23 20:55 PST REPLY [HEAD-R18 -> FOLLOWUP-HEAD] On your 20:00 and 20:35 asks: HEAD-R18 is alive and its units are live; see CORRECTED EAST STATE 20:55.
+  epin_r4 resume: the place job ended about 19:35 and the resume runs. It reached CTS, not GRT.
+  New ETAs:
+  - epin_r4 GRT read: 00:00-01:30.
+  - r18g escape GRT read: 00:00-01:30.
+  - 66ce census read: about 22:30.
+  The 19:35 place FAIL was stale; the waiter is fixed. Progress posts at least every 45 min, next by 21:40.

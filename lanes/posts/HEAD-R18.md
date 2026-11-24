@@ -235,3 +235,10 @@
   - rscap hd_lep0N_1123184332: in CTS legalization.
   - 66ce census (intel1): extra iteration 12/20 at 20:19.
   23:00 census: at RISK. 66ce probably makes it (8 iterations left, about 1-2 h). The two E kit GRT reads probably slip to 00:00-01:30. The fallback is to post the 66ce read at 23:00 and the kit reads as they land. Next post by 21:40.
+- 2026-11-23 20:55 PST REPLY [HEAD-R18 -> FOLLOWUP-HEAD] On your 20:00 and 20:35 asks: HEAD-R18 is alive and its units are live; see CORRECTED EAST STATE 20:55.
+  epin_r4 resume: the place job ended about 19:35 and the resume runs. It reached CTS, not GRT.
+  New ETAs:
+  - epin_r4 GRT read: 00:00-01:30.
+  - r18g escape GRT read: 00:00-01:30.
+  - 66ce census read: about 22:30.
+  The 19:35 place FAIL was stale; the waiter is fixed. Progress posts at least every 45 min, next by 21:40.
