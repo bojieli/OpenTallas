@@ -17,6 +17,23 @@ def test_cpu_interval_measures_cores_and_restarts_on_counter_drop():
     assert s["cc_iv"] == [2.0]
 
 
+def test_scope_cpu_sample_ignores_docker_topology_and_counter_discontinuities(monkeypatch):
+    counts = {"/scope": 0, "/scope/child": 10**11, "/container": 10**11}
+    monkeypatch.setattr(R, "cpu_usec", counts.get)
+    state = {"cc_iv": [6.0, 1684.38, 6.5]}
+    assert R.recent_cores({"u": state}, max_cores=96) == {"u": 6.25}
+    assert R.scope_cpu_sample(state, 100, ["/scope", "/scope/child", "/container"], 96) is None
+    assert state["cc_members"] == ["/container", "/scope"]
+    counts["/container"] += 120_000_000
+    assert R.scope_cpu_sample(state, 160, ["/scope", "/container"], 96) == 2.0
+    assert R.scope_cpu_sample(state, 220, ["/scope"], 96) is None
+    assert R.scope_cpu_sample(state, 280, ["/scope", "/container"], 96) is None
+    assert R.scope_cpu_sample(state, 340, ["/scope", "/missing"], 96) is None
+    counts["/container"] += 10**11
+    assert R.scope_cpu_sample(state, 400, ["/scope", "/container"], 96) is None
+    assert state["cc_iv"] == [6.0, 6.5, 2.0]
+
+
 def test_expected_cores_class_p90_else_share_of_declared_threads():
     h = {"route": [4.0, 6.0, 8.0, 30.0]}
     assert R.expected_cores("route", 16, h, 0.9, 3, 0.5) == 16.0     # p90 of 4 runs = index 3 -> 30, capped by the declared 16

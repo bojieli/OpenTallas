@@ -673,6 +673,7 @@ def main():
     la = launches()
     table = sizes()
     freed, seen = 0, set()
+    online_cores = os.cpu_count() or 1
     for f in sorted(glob.glob(f"{D}/res.*")):
         try:
             unit, m = rd(f).split()
@@ -704,7 +705,7 @@ def main():
         hwm = sum(p["hwm"] for p in allp)
         cuse = sum(num(d + "/memory.current") for d in cdirs)
         if not DRY:
-            cpu_interval(s, NOW, cpu_usec(cg) + sum(cpu_usec(d) for d in dict.fromkeys(cdirs)))     # FLOW-FLEET-R2 F1: measured cores of this unit
+            scope_cpu_sample(s, NOW, [cg, *cdirs], online_cores)
             s["meta_cls"] = meta_class(rd(f"{D}/meta.{unit}")) or s.get("meta_cls")      # the class the unit was ADMITTED under (meta.<unit>): the key admission looks its charge up by
         cgpeak = num(cg + "/memory.peak") + sum(num(d + "/memory.peak") for d in cdirs)
         if s.get("cls") in ("cd", "?"):
@@ -1556,17 +1557,34 @@ def meta_class(text):
 
 
 def cpu_usec(path):
-    """usage_usec of a cgroup dir (cpu.stat), 0 when unreadable"""
+    """usage_usec of a cgroup dir (cpu.stat), None when unreadable"""
     for ln in rd(path + "/cpu.stat").splitlines():
         if ln.startswith("usage_usec"):
             try:
                 return int(ln.split()[1])
             except (IndexError, ValueError):
-                return 0
-    return 0
+                return None
+    return None
 
 
-def cpu_interval(s, now, usec, min_dt=30.0):
+def scope_cpu_sample(s, now, cgroups, online_cores):
+    """Only difference cumulative measurements covering the same cgroups."""
+    members = []
+    for path in sorted(set(cgroups)):
+        if not any(path.startswith(parent + "/") for parent in members):
+            members.append(path)                      # an ancestor's cpu.stat already includes the subtree
+    counters = [cpu_usec(path) for path in members]
+    if any(value is None for value in counters):
+        return None                                    # an unreadable file is missing data, never a reset to 0
+    if s.get("cc_members") != members:
+        s.pop("cc_prev", None)
+        s["cc_members"] = members
+        if "cc_iv" in s:
+            s["cc_iv"] = [cores for cores in s["cc_iv"] if 0 <= cores <= online_cores]
+    return cpu_interval(s, now, sum(counters), max_cores=online_cores)
+
+
+def cpu_interval(s, now, usec, min_dt=30.0, max_cores=None):
     """FLOW-FLEET-R2 F1: cores a unit used since its last sample (scope + its containers, usage_usec delta over wall time); the intervals of a unit's life are kept in
     s['cc_iv'] (capped).  A counter that went down (a container ended) restarts the interval.  -> cores or None"""
     prev = s.get("cc_prev")
@@ -1576,6 +1594,8 @@ def cpu_interval(s, now, usec, min_dt=30.0):
             s["cc_prev"] = prev
         return None
     cores = (usec - prev[1]) / 1e6 / (now - prev[0])
+    if max_cores is not None and cores > max_cores:
+        return None
     iv = s.setdefault("cc_iv", [])
     iv.append(round(cores, 2))
     del iv[:-240]
@@ -1615,13 +1635,13 @@ def expected_cores(cls, threads, hist, pct=0.9, min_n=3, fallback=0.5):
     return max(1.0, min(float(threads), v[min(len(v) - 1, int(pct * len(v)))]))
 
 
-def recent_cores(state, last=3):
+def recent_cores(state, last=3, max_cores=float("inf")):
     """{unit: mean cores of its last LAST sampled intervals} from the reconcile state (units with no interval yet are absent)"""
     out = {}
     for u, s in (state or {}).items():
-        iv = (s or {}).get("cc_iv") or []
+        iv = [cores for cores in ((s or {}).get("cc_iv") or [])[-last:] if 0 <= cores <= max_cores]
         if iv:
-            out[u] = sum(iv[-last:]) / len(iv[-last:])
+            out[u] = sum(iv) / len(iv)
     return out
 
 
@@ -1804,9 +1824,10 @@ def gate_locked(mem, argv):
                             if _u2 not in _live:
                                 _mm2 = rd(f"{D}/meta.{_u2}").split()
                                 _young_c.append((_mm2[1] if len(_mm2) > 1 else "?", int(num(f"{D}/cthr.{_u2}") or 8)))
-                    _cok, _cwhy = cpu_charge_check(cls, job_threads(), _units, cpu_history(), lambda u: int(num(f"{D}/cthr.{u}") or 8), os.cpu_count() or 1,
+                    online_cores = os.cpu_count() or 1
+                    _cok, _cwhy = cpu_charge_check(cls, job_threads(), _units, cpu_history(), lambda u: int(num(f"{D}/cthr.{u}") or 8), online_cores,
                                                    float(rd("/proc/loadavg").split()[0]), _young_c, conf("CPU_FACTOR"), conf("CPU_PCT"), conf("CPU_MIN_N"), conf("CPU_FALLBACK_SHARE"), conf("CPU_MIN_LOAD"),
-                                                   recent_cores(json.loads(rd(STATE) or "{}")))
+                                                   recent_cores(json.loads(rd(STATE) or "{}"), max_cores=online_cores))
                     _cpu_note = " | " + _cwhy
                     if not _cok:
                         print(f"NO {_need} {cls}{_cpu_note}")
