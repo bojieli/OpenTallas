@@ -193,3 +193,16 @@ def test_archived_credit_respects_revoked_hold_and_bare_names():
     assert cr == []                                      # no ledger entry: netlist unknown, a revoked type stays out
     _, cr = CH.credit_archived(c, [_u("sle_x__clfde1249e", "o1")], led, [("sle_x__clfde1249e", "sha256:other")], [], alias={})
     assert len(cr) == 1                                  # another netlist of that type was revoked, this one counts
+
+
+def test_archived_credit_honours_no_netlist_rows():
+    # RELEC-R2 11-24: slw_fe_v1 cl08d14f0d PENDING-LEC NO-NETLIST keyed epyc7:<closed base dir>, ODB sha only
+    c = _priv_cache()
+    t = "slw_fe_v1__clfe325744__cl08d14f0d"
+    hand = _u(t, "bbef", "INGEST-FIX 11-17 exported from epyc7:/c/closed/k/base/6_final.odb by hand")
+    assert CH.credit_archived(c, [hand], {}, [(t, "epyc7:/c/closed/k/base")], [], alias={})[1] == []
+    led = {"bbef": ("epyc7", "/c/closed/k/signoff/signoff.json", "v1")}
+    src = _u(t, "bbef", "AUTO-EXPORT-1118 epyc7:/c/closed/k/base/signoff.json")
+    assert CH.credit_archived(c, [src], led, [(t, "epyc7:/c/closed/k/base")], [], alias={})[1] == []   # src path under the dir
+    assert CH.credit_archived(c, [src], led, [(t, "odb:bbef")], [], alias={})[1] == []                 # ODB sha key
+    assert len(CH.credit_archived(c, [src], led, [(t, "odb:other")], [], alias={})[1]) == 1

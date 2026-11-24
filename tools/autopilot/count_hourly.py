@@ -150,18 +150,24 @@ def credit_archived(cache, units, ledger, rev, hold, alias=None):
         if not hit or not DIGEST_NAME.search(base) or base in hit[1]:
             continue
         host, signoff, vsha = ledger.get(u.get("odb_sha") or "", ("", "", ""))
+        # the INDEX src names the record as <host>:<path> (AUTO-EXPORT) even when the ledger has no entry (hand export)
+        m = re.search(r"(?:^|\s)([\w.-]+):(/\S+)", u.get("src") or "")
+        places = {(host, signoff)} | ({(m.group(1), m.group(2))} if m else set())
         names = {el, base, u["element"]}
         stop = False
         for name, key in rev:
             if name not in names:
                 continue
-            if not vsha:
-                stop = True
+            if key.startswith(("odb:", "odb_sha256:")):
+                # RELEC-R2 11-24: a NO-NETLIST row may name the routed ODB sha
+                stop = stop or key.partition(":")[2] == (u.get("odb_sha") or "")
+            elif not vsha:
+                stop = True                      # netlist unknown: any revoked row of the type keeps it out
             elif key.startswith("sha256:"):
                 stop = stop or key[7:] == vsha
             else:
                 h, _, d = key.partition(":")
-                stop = stop or (h == host and signoff.startswith(d.rstrip("/") + "/"))
+                stop = stop or any(h == hh and pp.startswith(d.rstrip("/") + "/") for hh, pp in places if pp)
         for k in hold:
             h, _, d = k.partition(":")
             stop = stop or (bool(signoff) and h == host and signoff.startswith(d.rstrip("/") + "/"))
