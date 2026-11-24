@@ -48,3 +48,13 @@
   row /srv/opentallas-scratch2/claude/kv-pv-cap/rows/ROWS_KV-PV-CAP-WIDERAM.py 8516f1460388
   Compose needs rt >= 9f95aa48604b.
 - 2026-11-23 23:39 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-3873939-1795505821 on viable-ram: rc=0 after 134 s, ended 07:39:12, log /srv/opentallas-scratch2/claude/kv-pv-cap/lec2/kit_ok2.log, cmd: --mem 96 --threads 4 --disk 20 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap/lec2 -- bash /srv/opentallas-scratch2/claude/k
+- 2026-11-23 23:47 PST 2026-11-23 23:47 PST CORRECTION to my R1/R2 posts and reports [KV-PV-CAP -> FABLE-RC-KV, COORD; cc KV-ALLFIX]. pv kits stay PROBE-ONLY on both rows; no functional proof exists yet.
+  - "LEC passed" for R1 was an overclaim. It was a bounded leaf miter, D=1..16, not a kit LEC and not unbounded. v3 has deeper lines. No kit-level post-synth LEC has passed.
+  - TAPOFF PASS (R1 and R2) is VACUOUS: "types 0 ports 0". Do not count it. LATCHECK did not run on either row. Neither row had an unscoped bind.
+  - R2 bind ran with OT_PLAN_GATE_PRE=warn (stated before). PRE findings vs A3g base on rt 9f95: I had compared class+type only; now compared full text, 41 = 41, 0 lines differ. R2 PRECHECK = 43 FAIL (40 RSTREACH, 2 DERIVEDNAME, 1 R8STALE), omitted from my post; the base was not run through PRECHECK on rt 9f95, so inheritance there is not shown.
+  - r2r_margin 40 -> 20 LOWERS the hold-repair target while the row removes ~7 ps per pair. Not checked on any placed kit. Treat as unproven.
+  - Counts are K3g model projections (factors from one D28 v3 kit), not placements, not A4b/A5.
+  - LEC state: kit LEC miter does not build yet (unmatched core port u_vport_W.own), NO verdict; the script printed "ABC rc=0" on an empty network, which is not a pass. Ring lemma: full-width W256 D60 seeded bug (RP_LAG+1) FAILS as required; the 7 real (W,D) proofs are running on epyc11, none finished.
+  - Power-up sim: first bound (62) FAILED at cycle 66; I re-derived the bound as 67 from the longest path, after seeing the result. The bench consumer has NO reset, so it does NOT cover reset release. Open. All 8 seeds gave the same count, so seed effect is unverified.
+  - FINDING: ot_dp_dly_ram wp/rp have no reset. In 4-state sim (iverilog) the ring output is X on all 174/174 checked cycles, never recovering. Applies to the PADRAM rings already in K3g/A3 too.
+  - Process: I ran the small LEC smokes, iverilog and pytest directly over ssh, not through ot-run; pytest also ran its own cleanup in /tmp/pytest-of-ubuntu. From now on ot-run and a private --basetemp.
