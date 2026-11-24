@@ -11,3 +11,12 @@ Dirs: E9 /srv/opentallas-scratch2/claude/s81-open-clock (dumps d_{j8,b1,c6}, rev
 - regen_c7a_b DONE: E10 regen_c7a_b/plan_s2.json 093fb7633726 (copy E9 plan_tgr5_leaf_c7a.json), 62 types +2712 taps, FIXCHK PASS. ROW BUILT posted.
 - rc66 ops E9 ops_t16_dens1.json 4c61a4e8438a.
 - E9 unit oth-ubuntu-1681604-1795491483: my_tail.sh recipe_oc1.json oc1 scope_types.txt -> tail_oc1/ (compose ff7ee10ae698 OK, then relay/LLR/fill/deadin/anchor/census/PRE allfix2/scoped strict 70 types). On finish: post ROW-REBASED to INT with PRE + scope bind result; if ANCHOR/PRE flags leaf types, compare vs INT j9tail_c7a.
+
+## 21:32 PST
+- ROW-REBASED TGR5-LEAF-REGEN-1 posted to INT for c8. PRE gives 0 NEW findings vs the j9tail_c7a base. ANCHORDRY is the same 20 (the same 7 leaf types), GEOM is 128 = 128, and the base DEADIN is cleared.
+- LEAFBAND ops 8f2a6b3cedb4 confirmed disjoint (landing_contract vs my added_taps, landing_local_resets and reset_tree_anchor).
+- Scoped strict is still running on epyc11 (E9 tail_oc1/scope_out); it is for diagnosis only, and c8s full strict is the bind test.
+- After c8: t32 taps plus a common-depth reset re-pick, in one step for c9.
+## 22:3x PST
+- Scoped strict runs: run 1 (wavea, PRE refuse) was refused by PRE on base findings and by the deadin manifest mismatch. Run 3 (allfix2, PRE warn) died at native_istations dn_s_3N_L3 fixed_cycles 8+1, a die-level lane in the same class as SVC-J9 10:52 and not touched by my row. Posted to INT.
+- c8 full strict is the bind test. Next for c9: t32 taps plus a depth re-pick (FSTART tool in INT tail handles landing depth).
