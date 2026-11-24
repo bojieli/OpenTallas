@@ -6071,7 +6071,8 @@ def cmd_elab(a):
     pre = (TDE.Prestart(raw, raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, E.elab)
            if TDE.mode() == "on" and TDE.has_defines(raw) else None)
     try:
-        rec = E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, on_sources=pre.on_sources if pre else None)
+        rec = (E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem, on_sources=pre.on_sources) if pre is not None
+               else E.elab(raw["asbuilt"], plan_base(a.plan, raw), a.out, a.mem))
     except BaseException:
         if pre is not None:
             pre.close()
