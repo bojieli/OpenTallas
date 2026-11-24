@@ -75,3 +75,31 @@ endmodule
         subprocess.run(["iverilog", "-g2012", *define, "-o", str(exe), str(tb)], check=True)
         out = subprocess.run(["vvp", str(exe)], check=True, capture_output=True, text=True).stdout
         assert "BAD 0" in out, (define, out)
+
+
+def test_dly_has_no_reset():
+    """FABLE-RC-QC reset/init condition: ot_dp_dly stages are reset-less (no async/sync reset, no initial value), so the
+    complement stages need no complemented reset value; the reset-state compare below covers every start state."""
+    t = _dly()
+    assert "rst" not in t and "negedge" not in t and "initial" not in t
+
+
+def _run_from(depth, init, seq, cpl):
+    r = list(init)
+    out = []
+    for x in seq:
+        last = r[depth - 1]
+        out.append((1 - last) if (cpl and depth % 2 == 1) else last)   # q before this clock edge
+        r = [(1 - x) if cpl else x] + [((1 - r[i - 1]) if cpl else r[i - 1]) for i in range(1, depth)]
+    return out
+
+
+@pytest.mark.parametrize("depth", [1, 2, 3, 4, 5])
+def test_reset_state_compare(depth):
+    """From EVERY start state of the plain chain, the complement chain started in the corresponding state (stage k
+    inverted when k is even) gives the same q on every cycle from cycle 0, not only after the pipe has flushed."""
+    seq = [(i * 5 + i // 2) % 2 for i in range(3 * depth + 4)]
+    for s in range(1 << depth):
+        init = [(s >> k) & 1 for k in range(depth)]
+        mapped = [(1 - b) if k % 2 == 0 else b for k, b in enumerate(init)]
+        assert _run_from(depth, mapped, seq, True) == _run_from(depth, init, seq, False), (depth, init)
