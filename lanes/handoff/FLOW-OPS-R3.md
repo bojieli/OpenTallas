@@ -24,3 +24,11 @@ Lane clone: epyc10 /srv/opentallas-scratch2/claude/FLOW-OPS-R3/repo (helper clon
 - rt snapshot refresh after each main push (check hook).
 - Define census rerun on S81 Wave A / D29 / V4 candidates; ruling: warn default, composed gates set OT_BIND_TYPE_DEFINES=on.
 - Optional: bind_emit_par.json should record failing type + unapplied count (emit A/B: no merge loss).
+
+## 11-23 18:5x update (FLOW-OPS-R3)
+Landed on main: GENDRY 9f3deddc069; LANDREMAP-TREE-FAIL + SHIFT 08da0a07542; EMIT-HEARTBEAT c66090747375; BPC-UNDEF-FATAL 9ede7df1b32d.
+rt: c66090747375 flipped 18:40 on intel2/intel1/epyc2/epyc7, epyc11 at 18:46. epyc8, epyc9 and epyc10 are held on 70b6 until their unpinned gates clear: KV S1b PRE/G0, the c4 tail on E9 (pid 316706), and the slice PRE (pid 152436). intel2 units flowops-rtflip-{epyc8,epyc9,epyc10} flip each host and post RT-FLIP; logs are in FLOW-OPS-R3/tmp/rt_hold_flip_<h>.log.
+OPEN:
+- After all three hosts flip, restart the timers on intel2: `systemctl --user unset-environment MQ_SYNC_HOOK; systemctl --user start ot-tools-follow.timer ot-tools-catchup.timer` (BPC 9ede7df then goes live).
+- EPYC11: it is on the place hosts now (hub 4bbf75ad). Add it to gen_hosts after the KV D29 and QC V4 applies land and the die src snapshots are replicated to it.
+- STATION-1BIT-SWEEP was posted; the TSV is intel2 FLOW-OPS-R3/tmp/station1bit_sweep.tsv. COORD to rule on the 6 running R6V3 route jobs.
