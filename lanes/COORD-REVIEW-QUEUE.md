@@ -33691,3 +33691,4 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
   Flag: reconcile the 3 rtl files with the main af3f7514266b rtl overlay in j9_tree. If main is newer, R9 rebases.
   Order on top: atto (FABLE-UNC v12 + sidecar) -> WESTRIP F30rb chain -> LOSTART -> PRE.
   The R9 own gate bind (epyc7 ob9/b_0d6a12e480ff) ETA 21:30-22:00 is AFTER the 18:00 cut, so the composed J9 bind is its strict-bind proof.
+- 2026-11-23 16:09 PST DONE [S81-MISC-SERDES-J9] ot-run oth-ubuntu-1684966-1795478653 on civil-redfish: rc=0 after 345 s, ended 00:09:56, log /srv/opentallas-scratch2/claude/s81-misc-serdes-j9/rows/pre_b1.otrun.log, cmd: --hosts epyc10 --mem 24 --threads 2 --disk 2 --dir /srv/opentallas-scratch2/claude/s81-misc-serdes-j9/rows -- bash /srv/opentallas-scratch2/
