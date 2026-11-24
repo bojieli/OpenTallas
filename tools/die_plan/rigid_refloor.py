@@ -687,11 +687,23 @@ def tap_renames(old_types, new_types, raw, tn, offset):
     except Exception:   # a tap mode that needs inputs not in the plan: leave the names alone (reported by PRE)
         return {}
     dx, dy = offset
+    ck = new_types[tn].get("clock", {})
     m = {}
     for name, x, y in og:
         best = min(ng, key=lambda t: abs(t[1] - (x + dx)) + abs(t[2] - (y + dy)))
         m[name] = best[0]
-    ck = new_types[tn].get("clock", {})
+    if ck.get("tap_mode") == "grid+explicit" and len(set(m.values())) != len(m) and len(ng) >= len(og):
+        # Preserve the root. Reassign colliding grid taps by increasing displacement so the
+        # explicit taps can still be renumbered after the grid without aliasing a live port.
+        m = {"clk": "clk"}
+        used = {"clk"}
+        candidates = sorted((abs(nx - (x + dx)) + abs(ny - (y + dy)), old, new)
+                            for old, x, y in og if old != "clk"
+                            for new, nx, ny in ng if new != "clk")
+        for _, old, new in candidates:
+            if old not in m and new not in used:
+                m[old] = new
+                used.add(new)
     if ck.get("tap_mode") == "grid+explicit":
         for i, a in enumerate(ck.get("added_taps") or []):
             m[a["name"]] = f"clk_t{len(ng) + i}"

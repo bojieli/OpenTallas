@@ -151,6 +151,18 @@ def test_grid_explicit_added_taps_renumbered_after_regrid():
     assert new["clock"]["tap_window"]["per_port_ps"]["tc"]["clk_t6"] == 30
 
 
+def test_grid_explicit_expansion_resolves_colliding_nearest_grid_taps():
+    old = {"t": dict(outline_um=[864.0, 864.0], clock=dict(
+        tap_mode="grid+explicit", added_taps=[dict(name="clk_t4", xy=[10.0, 10.0])]))}
+    new = copy.deepcopy(old)
+    new["t"]["outline_um"] = [1296.0, 864.0]
+    ren = RR.tap_renames(old, new, dict(partition_types=new, budgets=dict(tap_pitch_um=432.0)),
+                        "t", (864.0, 0.0))
+    assert ren["clk_t4"] == "clk_t6"
+    before = ["clk", "clk_t1", "clk_t2", "clk_t3"]
+    assert len({ren.get(name, name) for name in before}) == len(before)
+
+
 def _lane_plan():
     """SRC | S1 | channel 172.8 | S2 | DST in one row; one lane SRC.o0 -> S1.ft0 -> S2.ft0 -> DST.i0 at y 400-420."""
     ft = lambda: [dict(name="ft0", in_face="W", out_face="E", in_window_um=[400.0, 420.0],  # noqa: E731
