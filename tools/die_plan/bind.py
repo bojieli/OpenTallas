@@ -8490,6 +8490,29 @@ def _landremap_prev(a, G):
         return [f"WARN LANDREMAP previous-bind baseline {prev} unreadable: {e}"]
 
 
+def _tree_precheck(a):
+    """PRE-SCHEMA-KEYS 11-24 (S81-ALLFIX-INT 09:34, COORD 10:5x: three S81 forks died at elab on a stale schema.py / missing source
+    folders, found hours in).  tree_precheck.py runs FIRST, before the elab, in seconds: plan keys vs the gate tree AND this launch rt
+    schema.py, every as-built / bind.f path and *_sources/ folder in the tree, the fork vs its source's current seal.  Report only:
+    lines print as `bind: TREE-PRECHECK ...` and go to OUT/tree_precheck.json; the bind never stops on them.  OT_TREE_PRECHECK=off skips."""
+    if os.environ.get("OT_TREE_PRECHECK", "on") == "off" or ("PYTEST_CURRENT_TEST" in os.environ and os.environ.get("OT_TREE_PRECHECK") != "on"):
+        return
+    try:
+        import tree_precheck as _TP
+        lines = _TP.findings(str(E.REPO), a.plan, asbuilt=a.asbuilt, out=a.out, rt=str(Path(__file__).resolve().parents[2]))
+    except Exception as e:  # noqa: BLE001 - report only
+        print(f"bind: TREE-PRECHECK not run: {type(e).__name__}: {str(e)[:200]}")
+        return
+    for x in lines:
+        print(f"bind: TREE-PRECHECK {x}", flush=True)
+    os.environ["OT_TREE_PRECHECK_RAN"] = "1"      # plan_gate_pre (beside the bind) then skips its TREEPRE class
+    try:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        (Path(a.out) / "tree_precheck.json").write_text(json.dumps({"tree": str(E.REPO), "plan": a.plan, "findings": lines}, indent=1) + "\n")
+    except OSError:
+        pass
+
+
 def _plan_gate_pre(a):
     """PLAN-GATE-PRE-1115 (COORD r213): before a die elab/bind, run tools/die_plan/plan_gate_pre.py on THIS tree (schema keys,
     as-built inputs, tool vintage; rows and station-in-core overlaps only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
@@ -8720,6 +8743,8 @@ def _main(argv=None):
             print(f"bind: PLAN-PACKAGE {'WARNING' if _ok else 'ERROR'} {_msg}")
         if not _ok:
             return 2
+    if a.cmd in ("elab", "bind", "all") and getattr(a, "plan", None):
+        _tree_precheck(a)          # PRE-SCHEMA-KEYS 11-24: SCHEMA-KEYS / TREE-SOURCES / TREE-FRESH before the elab, report only (r703)
     if getattr(a, "types", None):
         os.environ["OT_BIND_ONLY_TYPES"] = a.types
     _AB_OVERRIDE["path"] = a.asbuilt

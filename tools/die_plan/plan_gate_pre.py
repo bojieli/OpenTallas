@@ -175,6 +175,9 @@ ISTPRICE (FABLE FLOW REVIEW 11-23 22:50, PRECHECK-LEDGER-R3): FAIL for every lan
   fixed_cycles 10 != 8 + 1; KV A3c / A2f).  Passes only at 0 flagged lanes.  NOT skippable (--skip ISTPRICE is ignored and said so).
   As-built: --asbuilt, else the plan's own `asbuilt` section, else <plan dir>/{plan_of_record/native_bind,plan_inputs/run}/asbuilt_run*.json, else the same under <tree>/physical/die_plan/*/
   (the newest); none found = FAIL ISTPRICE (the native rules cannot be judged), never a silent pass.  tools/die_plan/adv_ist_price.py.
+TREEPRE (PRE-SCHEMA-KEYS 11-24, S81-ALLFIX-INT / COORD): tree_precheck.py runs first: SCHEMA-KEYS (plan keys vs the bind tree AND the
+  launch rt schema.py), TREE-SOURCES (as-built / bind.f paths and *_sources/ folders in the tree), TREE-FRESH (.fork.json vs the source's
+  current seal).  WARN / LIST lines only (r703); bind.py runs it before its elab and sets OT_TREE_PRECHECK_RAN=1, which skips it here.
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
   GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
@@ -196,7 +199,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "RSTPIN", "RSTNAMES", "STNXREF", "LATPKG", "TREEPRE", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -2060,6 +2063,15 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     findings = []
     rb, rb_how = remap_base(plan, remap, baseline) if not {"LANDREMAP", "ISTCYC"} <= {s.upper() for s in skip} else (None, "")
     skip = {s.upper() for s in skip}
+    if "TREEPRE" not in skip and os.environ.get("OT_TREE_PRECHECK_RAN") != "1" and (os.environ.get("OT_TREE_PRECHECK") == "on" or "PYTEST_CURRENT_TEST" not in os.environ
+                                  and os.environ.get("OT_TREE_PRECHECK") != "off"):   # PRE-SCHEMA-KEYS 11-24: SCHEMA-KEYS / TREE-SOURCES / TREE-FRESH first, report only (r703)
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            import tree_precheck as _TP
+            findings += [x if x.startswith(("WARN ", "LIST ")) else "WARN " + x
+                         for x in _TP.findings(tree, plan, asbuilt=asbuilt, out=elab_dir)]
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself
+            findings.append(f"WARN TREEPRE not checked: {type(e).__name__}: {str(e)[:200]}")
     if "SCHEMA" not in skip:
         findings += check_schema(tree, plan, compose_tree)
     if "INPUT" not in skip:
