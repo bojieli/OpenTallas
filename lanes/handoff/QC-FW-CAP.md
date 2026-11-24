@@ -13,3 +13,9 @@ Work dir: epyc11 /srv/opentallas-scratch2/claude/QC-FW-CAP (census/*.json, *.py)
 - Tree fork epyc7 QC-FW-CAP/cF/tree (fork.log) for the scoped strict. Use a COPY of QC-ALLFIX bindB3.sh with R = the rt that carries 45e1fd.
 - Synth-only probe: epyc11 QC-FW-CAP/probe/slw_fw_v1..._cpl (a kit copy; run_kit refuses it with ENV-PROVENANCE, so it runs make synth directly). Log probe/syn_cpl.log.
   The real place/CTS hold probe needs kit_wave private-spec from the cF bind.
+## 22:30 PST state (FABLE d57d810a: phase 2 + 200 um A/B + reset compare in parallel; release target <=360k at place on slw_fw_v1, fw x5 held)
+- main 5127d7a29ef = phase 1 (cpl-first). Commit 5d9be36d30 changes it to plain-first and adds phase 2: gen_phys qn_alternate_stations under define OT_ST_QNALT (reuses the HBM qn_alternate.py). Push: epyc7 tmp/push2.log.
+- Row v2: row/fw_dly_cpl_row.py 03bd83206081 adds both defines. plan_c1_fwcpl2.json 7224440fdc4e (epyc7 + copy on epyc11).
+- Strict bind of plan v1 0c14 on epyc11 cG (tree fork from cache), rt 5127, log cG/bind.ot, unit oth-ubuntu-2646269-1795501019. epyc7 cF tree: ot-delete it after its lease expires at 00:05 PST (epyc7 disk is at 97%).
+- Measurement runs (kit copies, ORFS make, probe/*): ab_base100 / ab_base200 (+ft 220) / ab_cpl200 (cpl-first) / slw..._cpl to CTS (cpl-first) / ab_pf (plain-first) / ab_pfqn (plain-first + qn_alternate: 88 stations, 33.2k bits converted). Logs probe/run_*.log; census at gen/<t>/cell_census.jsonl.
+- Remaining-INV breakdown: census/rem_cpl.json. Non-fw hash proof: nh.log (su_l1 identical fe277a9e).
