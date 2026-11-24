@@ -22,7 +22,12 @@ import shutil
 import subprocess
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[2]
+# REPO-ROOT-1123 (COORD 17:25, FABLE flow review; S81 J9 B1 main-tools gate died after 2191 s reading a
+# repository-relative dead-input proof under rt/<sha>/ instead of the gate tree): $OT_REPO_ROOT names the repository
+# tree whose repository-relative DATA (dead-input proofs, sink bins, plan inputs, fallback RTL) a run reads, so a gate can
+# run rt tools against its own tree.  Unset (or not a directory) -> the tool checkout, as before.
+REPO = (Path(os.environ["OT_REPO_ROOT"]).resolve() if os.path.isdir(os.environ.get("OT_REPO_ROOT") or "")
+        else Path(__file__).resolve().parents[2])
 SKIP_DIR = re.compile(r"/(test|tests|tb|bench)/|/tb_[^/]*$|_tb\.s?v$")
 # Automatic recursive production discovery must not consume tool output pools.
 # Explicit file arguments or a root naming such a pool remain intentional inputs.

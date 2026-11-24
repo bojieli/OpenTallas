@@ -7497,7 +7497,7 @@ def cmd_kit_rtl(a):
         files.append(Path(spb_geometry['rtl']).resolve())
     pkgs = kit_packages(files + [bfile], ab0.get("rtl_roots", ["rtl"]), base)
     # The runtime may contain only tools. The explicit kit tree owns fallback RTL.
-    reset_root = Path(base) if src_tree else Path(__file__).resolve().parents[2]
+    reset_root = Path(base) if src_tree else E.REPO        # REPO-ROOT-1123: $OT_REPO_ROOT, else the tool checkout
     rs = reset_root / "rtl" / "lib" / "ot_reset_sync.sv"
     kit_srcs = [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve()] + \
         [f for f in files if f.name != "bind_cells.sv"]

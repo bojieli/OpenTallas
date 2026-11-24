@@ -435,7 +435,8 @@ def main(argv):
     ap.add_argument("new")
     ap.add_argument("out")
     ap.add_argument("--types", default="")
-    ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
+    ap.add_argument("--root", default=None, help="repository tree of the plans (default $OT_REPO_ROOT, else the tool checkout); "
+                                              "repository-relative plan inputs (sink bins ...) resolve there (REPO-ROOT-1123)")
     ap.add_argument("--receipt")
     ap.add_argument("--keep-anchor", action="store_true")
     ap.add_argument("--move-pins", action="store_true", help="let reset_resel move export rows / landing pins onto the relay (default: rename only, pin sites kept)")
@@ -446,6 +447,10 @@ def main(argv):
                                         "(then from OLD_PLAN's reset_tree_anchor; the rebuilt OLD tree is the last resort)")
     ap.add_argument("--rebuilt-old", action="store_true", help="anchor mode: ignore the bound tree, rebuild the OLD tree (pre 11-22 behaviour)")
     a = ap.parse_args(argv[1:])
+    import os
+    if a.root:                       # REPO-ROOT-1123: rt tools on a plan tree -- every repo-relative input resolves under --root
+        os.environ["OT_REPO_ROOT"] = str(Path(a.root).resolve())
+    a.root = a.root or os.environ.get("OT_REPO_ROOT") or str(Path(__file__).resolve().parents[2])
     old = json.loads(Path(a.old).read_text())
     new = json.loads(Path(a.new).read_text())
     rec = remap_plan(old, new, a.root, Path(a.new).parent, set(filter(None, a.types.split(","))), a.keep_anchor,

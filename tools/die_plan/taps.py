@@ -349,8 +349,11 @@ def _kmedians(pts, k, iters=25):
 
 
 def _root():
+    # REPO-ROOT-1123: $OT_REPO_ROOT (the gate's tree) wins over the tool checkout for repository-relative plan inputs
+    import os
     from pathlib import Path
-    return Path(__file__).resolve().parents[2]
+    r = os.environ.get("OT_REPO_ROOT") or ""
+    return Path(r).resolve() if os.path.isdir(r) else Path(__file__).resolve().parents[2]
 
 
 PLAN_DIR = None  # set by bind.py to the folder of the plan being bound (KW-FIX-45 11-12, COORD: plan-relative inputs)
