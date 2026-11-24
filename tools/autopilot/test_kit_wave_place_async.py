@@ -67,6 +67,20 @@ def spec(d, gen_host="intel1"):
     return p
 
 
+def test_event_wave_stages_declare_exact_composed_inputs():
+    src = "/srv/opentallas-scratch2/claude/head-west/trees/w5"
+    rt = "/srv/opentallas-scratch2/claude/rt/c0b6e2d03408"
+    bind = "/srv/opentallas-scratch2/kit-store/snaps/0123/root/bind"
+    plan = f"{src}/plan_of_record/plan.json"
+    sp = {"src": src, "plan": plan, "tools_rt": rt, "kit_rtl": {"bind_out": bind}, "root": "/w0"}
+    work = "/w0/one-kit"
+    launch = KW.rt_launch_path(src, rt)
+    mirror = KW.rt_mirror_path(src, rt)
+    command = KW.rt_tree_cmd(sp) + f"cd {launch} && OT_KIT_BIND_OUT={bind} PLAN={plan} bash {src}/kit_rtl.sh"
+    stages = KW.event_wave_stages(sp, work, command)
+    assert stages == [x for p in (src, rt, mirror, launch, bind) for x in ("--stage", p)]
+
+
 class PlaceAsync(unittest.TestCase):
     def go(self, d, fake, gen_host="intel1"):
         real, poll = KW.subprocess.run, KW.PLACE_POLL_S

@@ -10495,6 +10495,22 @@ def placed_geom_check(sp, odb, outline):
             "rules_args": rules}
 
 
+
+def event_wave_stages(sp, directory, command, extra_inputs=()):
+    """Declare the driver inputs named by an opted-in wave stage."""
+    src = sp["src"]
+    runtime = sp.get("tools_rt")
+    runtime_inputs = [runtime, rt_mirror_path(src, runtime), rt_launch_path(src, runtime)] if runtime else []
+    kit_rtl = {key: value for key, value in (sp.get("kit_rtl") or {}).items() if not key.startswith("note")}
+    paths = abs_paths([src, os.path.dirname(sp.get("plan") or ""), sp.get("root"), runtime_inputs,
+                       kit_rtl, sp.get("gen_args"), sp.get("gen_env"), sp.get("preflight_args"), extra_inputs])
+    declared = []
+    for path in dict.fromkeys(path.rstrip("/") for path in paths):
+        if path and path in command and not any(path == root or path.startswith(root + "/") for root in [directory, *declared]):
+            declared.append(path)
+    return [arg for path in declared for arg in ("--stage", path)]
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
@@ -10631,7 +10647,7 @@ def run_item(spec_path):
             _drc["t"] = time.time()
         return _drc["v"]
 
-    def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True):  # ot-run names the hub itself 'localhost'
+    def otrun(mem, thr, d, cmd, hosts, allow_hub=True, roam=True, extra_inputs=()):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         _all = list(hosts)
         _dr = stage_drain()
@@ -10648,8 +10664,14 @@ def run_item(spec_path):
                                f"{DRAIN_WAIT_S // 60} min apart, and none holds this kit")
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
-        argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
-            + heavy_args(sp) + ["--", "bash", "-c", rt_tree_cmd(sp) + cmd]      # TOOLS-DECOUPLE-1118: the launch tree on whichever host runs it
+        command = rt_tree_cmd(sp) + cmd
+        argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)]
+        if os.environ.get("OT_RUN_EVENT_ENV"):
+            stages = event_wave_stages(sp, d, command, extra_inputs)
+            if stages:
+                # Stage declarations identify existing holders. Roaming still uses verified snapshots.
+                argv += stages + ["--no-spill"]
+        argv += heavy_args(sp) + ["--", "bash", "-c", command]
         if roam and d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
             return ROAM.RoamArgv(argv)
         return argv
@@ -10767,7 +10789,7 @@ def run_item(spec_path):
             geom_tools = stage_geom_tools(out, gd, kh, hub, run, control=control_root())
         except OSError as e:
             return fail("geom_tools", f"KW_GEOM_TOOLS {kh}: {e}", f"{kh}:{gd}")
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False))
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False, extra_inputs=(geom_tools,)))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         ps_line = placed_scan_line(txt)      # PLACED-SCAN-1115: advisory early-fail diagnostic, names the matched group
