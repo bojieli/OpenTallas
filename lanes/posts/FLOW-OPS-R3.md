@@ -96,3 +96,4 @@
   KV A2h 9e26fb87c5c7: DEPTH 0 FAIL, 0 generated netlists reached. BPC: no bound RTL (A2h precheck FAIL 3, no bind).
   S81 c7a aebbf78417d7: DEPTH 0 FAIL, 0 reached. BPC on native_bind/out (last S81 bind; c7a has no bind yet): PASS 1218/1218, 0 undefined.
   Nothing newly fails. Pushing now; the next rt cut carries it plus KV-RRL-EXPORT once pushed.
+- 2026-11-23 20:30 PST DONE [FLOW-OPS-R3] ot-push-main otpush-civil-redfish-2461325 on civil-redfish: rc=0 after 57 s, ended 04:30:54, log /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp/push_dh.log, cmd: ot-push-main 
