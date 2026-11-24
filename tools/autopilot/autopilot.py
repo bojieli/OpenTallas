@@ -62,6 +62,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
+import fail_cause as FC  # noqa: E402
 import kit_wave as KW  # noqa: E402
 import kit_resume as KR  # noqa: E402
 sys.path.insert(1, str(Path(__file__).resolve().parents[1] / "die_plan"))
@@ -826,10 +827,12 @@ for _lp in [p for p in logs[-1:] if os.path.getmtime(p) >= since] + [os.path.joi
         if _dpl:
             out["grt_caught_dpl"] = _dpl[:260]
             out["first_error"] = "5_1_grt.log: " + out["grt_caught_dpl"]
+            out["first_error_log"] = _lp
             break
     _m = _fere.search(_stage_log)
     if _m:
         out["first_error"] = (os.path.basename(_lp) + ": " + _m.group(0).strip())[:300]
+        out["first_error_log"] = _lp
         break
 txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog_path = os.path.join(K, "run_%s.log" % goal)
@@ -3915,6 +3918,9 @@ def finish(st, j, c, client):
         reasons = f"{eco['summary'][:240]} | {reasons}"
     j.update(cls=cls, kind=kind, reasons=reasons[:600], probe=c.get("probe_host"),
              signoff=c.get("signoff"), finished=time.time())
+    # ROUTEFAIL-CAUSE: what the FAILED post quotes (fail_cause.py); never read by a verdict
+    j.update(first_error=c.get("first_error"), run_unit=client.get("unit"),
+             first_error_log=f"{c.get('probe_host') or j.get('host')}:{c['first_error_log']}" if c.get("first_error_log") else None)
     if c.get("chain"):
         j["chain"] = {k: c["chain"].get(k) for k in ("verdict", "reason", "gates", "lec", "lec_verdict",
                                                    "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
@@ -4274,7 +4280,7 @@ def failed_notice(j, cls, host):
     data_status = ("run data deleted (logs kept)" if j.get("data_deleted") else
                    "run data kept: " + (j.get("checkpoint_preserved") or "cleanup deferred"))
     msg = (f"{now_s()} AUTOPILOT -> {lane}: FAILED {j['id']} {j['die']}/{j['type']} ({cls}/{j.get('kind', '')}): "
-           f"{(j.get('reasons') or '')[:300]} | kit {host}:{j['path']} src {j['src']} | review {rev} | "
+           f"{FC.one_line(j.get('reasons'))}{FC.suffix(j, COORD)} | kit {host}:{j['path']} src {j['src']} | review {rev} | "
            f"{data_status}; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit")
     if (COORD / "lanes" / f"{lane}.md").exists() or COORD_FILES:
         coord_append(f"lanes/{lane}.md", msg)
