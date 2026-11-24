@@ -35,3 +35,9 @@ KV-ALLFIX: A3f failed G0; A3g (A3d b258e3e34f22 minus HUBA1 + IUSPLIT) gating on
 - epyc8 clone: test_kit_dly_ram.py power-up test UNCOMMITTED (bound 67 set after a fail at 62; no reset consumer).
 - (4) K3g only: r2new/place4.out epyc8; redo on A5.
 - Unproven: r2r_margin 20; R2 PRECHECK inheritance; TAPOFF vacuous; D29 pv_v3 hold still held (do NOT release before proofs).
+## 01:29 11-24 state
+- DONE: three checks posted (5154b07f): clocks PASS per flop (epyc10 clk/why3.log); fch_pv/resets present in the unmodified netlist; ring u_pdramw_6 was a dead slice -> R2 bug.
+- FIX main df6e71515ae (dead slice: no macro). Fixed-form pv_v3 kit LEC PROVED + n1/n2/n3 CEX (epyc10 lec2/k3_wapfix_*). Ring full-width argument posted (2566f344): cone checks epyc10 lec2/cone3.log + 1-bit lemma all depths.
+- Reset release = DLYRAM-RESET (harness handed over 00:2x). My power-up test WIP copy: epyc8 r2new/test_kit_dly_ram.pu_wip.py (not committed; theirs to use).
+- OPEN for me: LEC on the A5s form (when a full A5s bind exists) and on the ORFS netlist (needs std-cell models + QN init); full-width ring SAT on epyc11 (unit oth-ubuntu-3730999, optional); D29 pv_v3 hold still held.
+- Hosts: epyc11/epyc10 load-gated (<80); light jobs intel2/epyc2/epyc9/intel1.
