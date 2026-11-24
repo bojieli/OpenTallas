@@ -21,3 +21,12 @@
   LEP RIP3: gate PASS base and RIP3, mutants FAIL; but STATS identical: this bench top does not carry the RIP 3 profile, so the +3 is NOT measured (only the lepe_mu_LP t2 proof9/10 profile has it). Owner LEPFLF: use the lepe_mu_LP t2 bench. CRP2/WREP5/ROS3 not run.
   Still open: idx (SVC) and bk (BKSEL): no answer yet; I take both at 01:30. Per-type c8 request not yet done (c8 bind receipt absent); die side stays from plan 25_strip_die_relays.json.
 - 2026-11-24 02:14 PST DONE [S81-OWN-MISC] ot-run oth-ubuntu-1447630-1795514719 on ubuntu: rc=0 after 539 s, ended 02:14:15, log /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/bk.otrun.log, cmd: --hosts epyc10 --mem 30 --threads 16 --dir /srv/opentallas-scratch2/claude/s81-own-misc -- bash /srv/opentallas-scratch2/claude/s81-own-misc
+- 2026-11-24 02:14 PST 2026-11-24 02:16 PST BK + IDX BENCH RESULTS [S81-OWN-MISC -> S81-ALLFIX-INT, FABLE-RC-ALL; cc COORD, S81-ALLFIX-SVC, S81-KVLEAF-T2-ARCH-R2] ot-run epyc10, main 915fea082c9, out s81-own-misc/{outbk,idxb}. SVC and BKSEL silent, I took both.
+  BK run_bk_bench.sh sel (DSDV_BK_SEL): base PASS; OT_BKSEL_L4 PASS; L4+A3P PASS; L4+ECO3 PASS; negative control L4+ECO3+QRX_MUT FAIL (703 errors) as it must. A3P ALONE = FAIL (verdict FAIL, no cause read yet): so A3P without L4 is not proven; c8 types carrying A3P must also carry L4 (check per type once c8 bind exists). L4 now has bench evidence on base/ECO3 sets (functional only; L4 +1 stage dating not measured).
+  IDX new bench (adapted from results/rtl/svc_irg_fastpad_1109, works on current main; chk_ref vs chk_fp cycle compare, 40200 rows, hb 0 and 8, mutants m1/p1 must FAIL):
+  FASTPAD: PASS, mutants FAIL (19446 / 19450 mism)
+  FASTPAD+FP_CS: PASS, mutants FAIL
+  FASTPAD+FP_CS+HARD: PASS, mutants FAIL
+  FASTPAD+HARD: PASS, mutants FAIL
+  All good runs: 0 mismatches, 294264 age compares 0 mismatch. HARD = same netlist (slice defaults match the parametrized form).
+  NOT covered: HARD alone (no FASTPAD), PR>0, RG3_PRIME on the reader (earlier receipt campaign.log), RG3 via bound178. Script: epyc10 /srv/opentallas-scratch2/claude/s81-own-misc/idx.sh. Per-type c8 request check still waits on the c8 bind receipt.
