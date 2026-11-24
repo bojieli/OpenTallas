@@ -1,9 +1,9 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
-E pin-move kit-gen fix (clock_landings.py:1808 raw_reset rst_rl_334)	hd_lep0N E	COORD/Codex 17:19	HEAD-R18	11-23 16:14	still no owner post since 16:14; HEAD-R18 silent through limit	68	19:00	BLOCKED	AT-RISK
-East new raw START parent row (HEAD-owned)	hd_lep0N E	Codex 17:19	HEAD-R18	-	needed, no row	-	19:00 w/ kit-gen fix	OPEN	NEEDS-ROW
-West phase 2 GRT-0116 overflow 1034 on signal nets (West E7, phase 1 0 clock drops)	hd_lep0N_w	Codex 17:19	HEAD-R18	-	target next, no row	-	next	OPEN	NEEDS-ROW
-175-load relay_split row	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 16:14	building	68	19:30 (slipped?)	IN-PROGRESS	AT-RISK
-OT_TAP_ESCAPE_CLEAR_UM=0.30 on E kits	hd_lep0N E	COORD	HEAD-R18	-	no status	-	with E kits	OPEN	NEEDS-STATUS
-cap10 census read	hd_lep0N E	COORD	HEAD-R18	-	pending	-	23:00	RUNNING	
-HEAD publish	HEAD die	FLOW-OPS-R3 17:22	FLOW-OPS-R3	11-23 17:22	usable once rt >= 4a4ce3b; rt freeze lifts 18:30	0	18:30	WAIT-RT	BLOCKED on rt freeze
-hd_ctl route+LEC E7 1290560, rc138/WOPENREG REASONED	hd_ctl/hd_lep0N	earlier	HEAD-R18	-	pending	-	23:00	RUNNING/REASONED	
+E pin-move kit-gen fix (START-RAW-REDERIVE) + plan epin_r4 af6a9cfa4216	hd_lep0N E	HEAD-R18 17:50	HEAD-R18	11-23 17:50	FIXED: PRE0, bind, cohort 27/27, LAT334, NATREL0, G0 0; census kit hd_lep0N_1123174843 (epin_r4 + ESCAPE_CLEAR 0.30 + TT_SETUP) running to GRT	4	19:00 (met)	GATED-pending-census	
+OT_TAP_ESCAPE_CLEAR_UM=0.30 on E kits	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 17:50	on kits 1123172531 and 1123174843	4	-	DONE	
+E cap10 / escape census (66ce stand-in iter 6/20 + both GRT kits)	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 17:50	running	4	23:00	RUNNING	
+West GRT-0116 overflow 1034 (97% one hotspot u_rg1 corner)	hd_lep0N_w	HEAD-R18 17:42/17:50	HEAD-R18	11-23 17:50	cause read; two forms (a) wband 014661a6ea33 (b) wch4b f570eb1144eb in gate chains, kits to GRT follow	4	20:00 row	IN-PROGRESS	
+s2 reseal dry gate (r18g publish)	HEAD die	HEAD-R18 17:26	HEAD-R18	11-23 17:26	replicas epyc10 ok, epyc9/intel2 retrying	28	18:30	IN-PROGRESS	WATCH: due 18:30
+rscap row PRE	HEAD die	HEAD-R18	HEAD-R18/FLOW-OPS-R3	11-23 17:26	needs rt/current 7f184148, freeze lifts 18:30	-	19:00	WAIT-RT	
+175-load relay_split row	hd_lep0N E	HEAD-R18	HEAD-R18	11-23 16:14	no new ETA posted (19:30 prior)	100	19:30	IN-PROGRESS	AT-RISK (no ETA)
+hd_ctl route+LEC E7 1290560; rc138/WOPENREG REASONED	hd_ctl/hd_lep0N	earlier	HEAD-R18	-	pending	-	23:00	RUNNING/REASONED	
