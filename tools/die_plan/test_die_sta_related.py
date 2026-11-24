@@ -862,7 +862,8 @@ def test_kit_windows_per_region_with_tap_offset_rows():
                                  "u": {}},
                 partitions=[dict(name="p0", type="t"), dict(name="p1", type="u")])
     w = R.kit_windows(pc, None, plan)["intra"]
-    assert w["per_region"]["p0"] == 140.0          # span of the offsets form: (20 + 10) - (-100 - 10)
+    # span of the offsets form over RESIDUALS (QC-CBX-CLOCK 11-24): clk_c0 -100 + (300 - 250) = -50 -> (20 + 10) - (-50 - 10)
+    assert w["per_region"]["p0"] == 90.0
     assert w["per_region"]["p1"] == 180.0
 
 
