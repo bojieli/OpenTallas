@@ -60,6 +60,12 @@ _DRAIN_ADVISORY = re.compile(
 )
 
 
+# EVENT-ENV-PREFLIGHT 11-24: ot-run's informational lines.  "ot-run: rt pinned for this unit: OT_TOOLSTALE_RT=... (current; TOOLSTALE reference ...)"
+# was the cause of 9 DIED posts 02:00-04:52 read as TOOLSTALE pin refusals (class NO-PATTERN).  It is printed for every started unit, and
+# those units wrote their real output to their own files.  The preflight WARN and EVENT lines are report-only too.
+_INFO_LINES = re.compile(r"^ot-run: (rt pinned for this unit: |PREFLIGHT WARN: |EVENT \S+ env )[^\n]*$", re.MULTILINE)
+
+
 def _last_line(tail, pat=None):
     for ln in reversed([x.strip() for x in tail.splitlines() if x.strip() and not BOILER.match(x.strip())]):
         if pat is None or re.search(pat, ln, re.I):
@@ -72,7 +78,7 @@ def _c(cls, cause):
 
 
 def classify(rc, cmd="", log_tail="", secs=0):
-    t = _DRAIN_ADVISORY.sub("", log_tail or "")
+    t = _INFO_LINES.sub("", _DRAIN_ADVISORY.sub("", log_tail or ""))
     cmd = cmd or ""
     if rc != 0 and re.search(r"AUTO-GEOM FAIL\b", t):
         return _c("GEOM-FAIL", _last_line(t, r"AUTO-GEOM FAIL"))
@@ -117,6 +123,8 @@ def classify(rc, cmd="", log_tail="", secs=0):
         return _c("CHECKER-RC", _last_line(t, r"_DONE|VERDICT|PASS") + " (finished, exit rc %s: findings or verdict)" % rc)
     if not t.strip() and rc in (1, 2) and secs <= 10:
         return _c("SETUP", "died after %s s with no log: the command failed at start (rc %s)" % (secs, rc))
+    if not _last_line(t) and t.strip():
+        return _c("NO-PATTERN", "rc %s after %s s; the log holds only ot-run lines (the command wrote its output to its own files)" % (rc, secs))
     return _c("NO-PATTERN", _last_line(t) or ("rc %s after %s s, no log" % (rc, secs)))
 
 

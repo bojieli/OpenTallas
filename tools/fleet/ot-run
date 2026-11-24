@@ -2369,6 +2369,8 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     _lane = os.environ.get("OT_LANE", "")
     if re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", _lane):
         env = f"OT_LANE={_lane} " + env              # first: the disk / ot-heavy tail of the line stays as it was
+    if EVENT:
+        env += EVM.env_prefix(EVENT[0])          # EVENT-ENV-PREFLIGHT 11-24: the event env, before ot-heavy (the unit inherits it)
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     # Recheck before output placement: never recreate an input directory that
@@ -2376,7 +2378,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     workdir_guard = (f"test -d {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "")
     remote = scratch_env(host) + workdir_guard + scratch_place_sh(d, cmd, tag=tag, host=host) \
         + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
-        + rt_pin_sh(tag) + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
+        + ((EVENT and EVM.rt_pin_sh(tag, EVENT[0])) or rt_pin_sh(tag)) + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
     state = dict(started=False, rc=None, nocd=False, unit="?", refused=None, connfail=False)
     LAST_RUN["connfail"] = False
@@ -2429,6 +2431,9 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
             continue
         if "OT_RUN_NOCD" in ln and tag in ln:
             state["nocd"] = True
+            continue
+        if "OT_RUN_RTPIN_EVENT_MISSING" in ln and tag in ln:
+            say(f"ot-run: PREFLIGHT WARN: event rt {ln.split()[-1]} not found on {host} at start; the unit pins the current rt instead")
             continue
         if (_pin := rt_pin_line(ln, tag)) is not None:
             state["rt_pinned"] = _pin[0]
@@ -2731,6 +2736,12 @@ def main():
             HOSTS[:] = [h for h in HOSTS if h not in _ex]
         elif o == "--pick": pick = True
         elif o == "--strict-host": os.environ["OT_RUN_STRICT_HOST"] = "1"     # DEATHCLASS-1122 RAIL-KILL: keep a hard pin (no PIN-FALLBACK)
+        elif o == "--event-env":
+            # EVENT-ENV-PREFLIGHT 11-24: --event-env FILE (~/coord/events/<event>.env; format in ot_event_env.py) gives the unit its plan
+            # event's env (gate mode, baseline, wave env) and rt pin (OT_EVENT_RT -> OT_TOOLSTALE_RT).  At queue time a unit whose host
+            # lacks OT_EVENT_INPUTS or the event rt, or whose command / script sets its own OT_PLAN_GATE_* values, is NOT RUN PREFLIGHT
+            # (OT_RUN_PREFLIGHT=warn|off in the file or env relaxes it).  OT_RUN_EVENT_ENV=FILE is the same.  (The help text is hash-pinned.)
+            load_event_env(a.pop(0) if a else "")
         elif o == "--needs": NEEDS.extend(x for x in a.pop(0).split(",") if x)      # NEEDS_1115: input paths the chosen host must have
         elif o == "--replicate": REPLICATE.extend(x for x in a.pop(0).split(",") if x)   # NEEDS_1115: small input dirs rsynced to a host that lacks them
         elif o == "--no-spill": spill = False
@@ -2760,6 +2771,8 @@ def main():
         elif o == "--rt-floor-exempt":      # FLOW-FLEET-R2 T1: keep an rt below min_rt for this plan bind (sealed / pinned tree); logged
             rt_exempt = a.pop(0) if a else ""
         else: sys.exit(__doc__)
+    if not EVENT and os.environ.get("OT_RUN_EVENT_ENV"):
+        load_event_env(os.environ["OT_RUN_EVENT_ENV"])
     if job and not os.environ.get("OT_RUN_PLAN_JOB") and spec_plan_job(job):     # the job spec names the plan kind: it implies --priority plan
         os.environ["OT_RUN_PLAN_JOB"] = spec_plan_job(job)
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=plan "
@@ -2868,7 +2881,12 @@ def main():
                 print(f"ot-run: REPLICATE {_s} -> {_dst} rc={_rc}", file=sys.stderr)
         # a --stage path (and anything under it) is COPIED to the chosen host by the spill: not demanded of the host here
         _der = [x for x in cmd_input_paths(cmd, d) if not any(x == t or x.startswith(t + "/") for t in STAGE)]
-        _kept, _miss = hosts_with_needs(hosts, [os.path.normpath(x) for x in NEEDS], _der)
+        _nowhere = []
+        _kept, _miss = hosts_with_needs(hosts, [os.path.normpath(x) for x in NEEDS], _der, nowhere=_nowhere)
+        if _nowhere and EVM and EVM.mode(EVENT[0] if EVENT else None) != "off":
+            # EVENT-ENV-PREFLIGHT 11-24 (report only, never refuses: an output path the job creates looks the same here)
+            print(f"ot-run: PREFLIGHT WARN: the command names {len(_nowhere)} path(s) present on no candidate host ({', '.join(hosts)}): "
+                  f"{', '.join(_nowhere[:3])}{' ...' if len(_nowhere) > 3 else ''} (an input deleted or on another host? fine if the job writes it)", file=sys.stderr)
         if _miss:
             for _h, _m in _miss.items():
                 print(f"ot-run: NEEDS: {_h} lacks {', '.join(_m[:3])}{' ...' if len(_m) > 3 else ''}", file=sys.stderr)
@@ -2877,6 +2895,8 @@ def main():
                   + "); stage them with --replicate DIR or --stage, or set OT_RUN_NO_NEEDS_CHECK=1", file=sys.stderr)
             not_run("no candidate host has the job's input paths")
         hosts = _kept
+    if EVENT:
+        hosts = event_preflight(EVENT[0], hosts, cmd, d)
     if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0 and soft_pin():   # HARD-PIN-1122
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
@@ -3282,6 +3302,7 @@ def load_spill_neg(root, why=None):
 
 
 NEEDS = []      # NEEDS_1115 --needs PATH[,PATH]
+EVENT = []      # EVENT-ENV-PREFLIGHT 11-24: [parsed --event-env dict] (empty: no event)
 REPLICATE = []  # NEEDS_1115 --replicate DIR[,DIR]
 RT_RE = re.compile(r"^(.*/claude/rt)/([0-9a-f]{12})/")
 ORIG_ARGV = list(sys.argv[1:])
@@ -3302,6 +3323,60 @@ def copy_class():
         return ot_copy_class
     except ImportError:
         return None
+
+
+def _event_module():
+    """the ot_event_env module beside this file (EVENT-ENV-PREFLIGHT 11-24)"""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+        import ot_event_env
+        return ot_event_env
+    except ImportError:
+        return None
+
+
+EVM = _event_module()
+
+
+def load_event_env(path):
+    """--event-env FILE / OT_RUN_EVENT_ENV: parse it now (a bad file refuses before any queue wait)"""
+    if EVM is None:
+        sys.exit("ot-run: REFUSED (EVENT ENV): ot_event_env.py is missing beside ot-run")
+    if EVENT:
+        sys.exit("ot-run: --event-env given twice")
+    try:
+        ev = EVM.load(os.path.expanduser(path))
+    except EVM.EventEnvError as e:
+        sys.exit(f"ot-run: REFUSED (EVENT ENV): {e}")
+    EVENT.append(ev)
+    print(f"ot-run: EVENT {ev['OT_EVENT']} env {path}: rt {EVM.rt_sha(ev.get('OT_EVENT_RT', '')) or 'current'}, "
+          f"{len(EVM.unit_env(ev))} keys, preflight {EVM.mode(ev)}", file=sys.stderr)
+    return ev
+
+
+def event_preflight(ev, hosts, cmd, d, probe=None, environ=None, say=None):
+    """EVENT-ENV-PREFLIGHT 11-24: queue-time check of an --event-env unit -> the hosts it may use.  mode fail: a global finding (the command
+    or caller sets its own gate env) or no host without findings is NOT RUN now; a host with findings is dropped.  warn: WARN lines only."""
+    say = say or (lambda m: print(m, file=sys.stderr, flush=True))
+    m = EVM.mode(ev)
+    if m == "off":
+        return hosts
+    kept, per, glob = EVM.preflight(ev, list(hosts), cmd, d, probe=probe, environ=environ)
+    for f in glob:
+        say(f"ot-run: PREFLIGHT {'FINDING' if m == 'fail' else 'WARN'}: {f}")
+    for h, fs in per.items():
+        say(f"ot-run: PREFLIGHT {'FINDING' if m == 'fail' else 'WARN'}: {h}: {'; '.join(fs[:3])}{' ...' if len(fs) > 3 else ''}")
+    if m != "fail":
+        return hosts
+    if glob:
+        not_run(f"PREFLIGHT (event {ev['OT_EVENT']}): {glob[0]}; take it out of the command, or set OT_RUN_PREFLIGHT=warn")
+    if not kept:
+        h0 = next(iter(per))
+        not_run(f"PREFLIGHT (event {ev['OT_EVENT']}): no candidate host passes ({h0}: {per[h0][0]}); copy the inputs there or pin a host that has them")
+    if per:
+        say(f"ot-run: PREFLIGHT: candidates {', '.join(hosts)} -> {', '.join(kept)}")
+        return kept
+    return hosts
 
 
 def lease_paths(d, cmd, stage=(), real=None, env=None):
@@ -4556,7 +4631,7 @@ def cmd_input_paths(cmd, d=None):
     return out
 
 
-def hosts_with_needs(hosts, explicit, derived, probe=None):
+def hosts_with_needs(hosts, explicit, derived, probe=None, nowhere=None):
     """NEEDS_1115 (COORD 11-15: HEAD G0 on epyc10, QC die STA exit 127, S81 bind on epyc2, KV p6 skew all admitted on a host without their input tree):
     -> (kept hosts, {host: [missing path]}).  explicit (--needs) must exist on the host.  derived (the command's own /srv paths) must exist too, but
     only those that exist on at least one candidate host: a path that exists nowhere is an output or a path made by the job and is not demanded."""
@@ -4565,8 +4640,10 @@ def hosts_with_needs(hosts, explicit, derived, probe=None):
     if not allp or len(hosts) < 1:
         return list(hosts), {}
     with cf.ThreadPoolExecutor(max(1, len(hosts))) as ex:
-        rows = dict(zip(hosts, ex.map(lambda h: probe(h, allp), hosts)))
+        rows = dict(zip(hosts, ex.map(lambda h: probe(h, allp + (["/"] if nowhere is not None else [])), hosts)))
     exists_somewhere = {x for x in allp if any(r.get(x) for r in rows.values())}
+    if nowhere is not None and any(r.get("/") for r in rows.values()):    # EVENT-ENV-PREFLIGHT: derived paths no answering host ("/" seen) holds
+        nowhere.extend(x for x in derived if x not in exists_somewhere and x not in explicit)
     need = [x for x in allp if x in explicit or x in exists_somewhere]
     missing = {h: [x for x in need if not rows[h].get(x)] for h in hosts}
     return [h for h in hosts if not missing[h]], {h: m for h, m in missing.items() if m}
