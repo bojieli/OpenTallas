@@ -2340,6 +2340,34 @@
          }
         }
        },
+       "stb_common": {
+        "oneOf": [
+         {
+          "type": "boolean"
+         },
+         {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+           "outlier_ps": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 400
+           },
+           "rehome_um": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 600
+           },
+           "max_ps": {
+            "type": "number",
+            "minimum": 50,
+            "maximum": 2000
+           }
+          }
+         }
+        ]
+       },
        "tap_pair_affinity": {
         "type": "object",
         "additionalProperties": false,

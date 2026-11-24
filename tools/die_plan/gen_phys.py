@@ -4561,6 +4561,29 @@ def tap_balance_to_exports(t):
     return out
 
 
+def stb_common_exports(t):
+    """STB-COMMON 11-24 (S81-SERDES-TAPSKEW, FABLE-RC-ALL 27044af5): opt-in plan clock.stb_common (true, or a dict with
+    outlier_ps / rehome_um / max_ps) -> subtree_balance.tcl OT_STB_COMMON=1: one balance target for every tap of the type and
+    late outlier sinks re-homed to the nearest leaf instead of setting their tap's target.  Absent or false: nothing."""
+    spec = (t.get("clock") or {}).get("stb_common")
+    if spec is None or spec is False:
+        return []
+    if spec is True:
+        spec = {}
+    if not isinstance(spec, dict) or set(spec) - {"outlier_ps", "rehome_um", "max_ps"}:
+        raise ValueError("clock.stb_common must be true or a dict of outlier_ps / rehome_um / max_ps")
+    out = ["# STB-COMMON: one subtree-balance target across the taps, outliers re-homed (subtree_balance.tcl)",
+           "export OT_STB_COMMON = 1"]
+    for k, env, lo, hi in (("outlier_ps", "OT_STB_OUTLIER_PS", 0, 400), ("rehome_um", "OT_STB_REHOME_UM", 0, 600),
+                           ("max_ps", "OT_STB_COMMON_MAX_PS", 50, 2000)):
+        if k in spec:
+            v = spec[k]
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or not lo <= float(v) <= hi:
+                raise ValueError(f"clock.stb_common.{k} must be a number in [{lo}, {hi}]")
+            out.append(f"export {env} = {float(v):g}")
+    return out
+
+
 def tap_pair_affinity_exports(t):
     """QC-TYPES-6 11-07: default-off pre-CTS short-pair tap affinity (clock_taps.tcl -> tap_pair_affinity.tcl).
     Clock pins only; radius and group bounded by the declared tap radius and capacity."""
@@ -8297,6 +8320,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_chain_affinity_exports(t)
     cfg += dly_lockup_exports(P.budgets, tn, t)
     cfg += tap_pair_affinity_exports(t)
+    cfg += stb_common_exports(t)          # STB-COMMON 11-24, opt-in (clock.stb_common)
     cfg += tap_span_exports(t)
     cfg += tap_grid_exports(t)          # TAP-GRID-2130, opt-in (clock.tap_grid)
     if (t.get("clock") or {}).get("tap_cap_cascade") and not tap_grid_cfg(t):

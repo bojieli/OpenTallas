@@ -197,6 +197,87 @@ proc stb::insert {sink x y} {
   $sink connect $n1
   $n0 setDoNotTouch $dt_n
 }
+# STB-COMMON 11-24 (S81-SERDES-TAPSKEW, FABLE-RC-ALL 27044af5; opt-in OT_STB_COMMON=1, plan clock.stb_common): ONE balance target
+# for every tap of the type, so arrival is equal ACROSS taps, and a late outlier sink no longer sets a tap's target.  S81 serdes__t2
+# (-226 P13 kit): clk_t7 raw 360..380 (p99 380) had outliers at 545, so all 1553 ring/bin/lpad sinks were padded to 545 while
+# clk_t33 sat at ~290: +313 ps ring skew, 473 hold fails; clk_t29 (p99 225, one sink 354) put 7 pads (+195 ps) in front of the
+# u_txl chain, 88 fails.  Form: per tap-family port (stb::capped_port) the in-family arrival = the sinks at most
+# OT_STB_OUTLIER_PS (40) above that tap's p99; a sink later than that is an OUTLIER and is RE-HOMED: its clock pin moves to the
+# nearest leaf net (a tree node driving sinks, same inversion parity, latest sink <= the common target) of any tap-family tree
+# within OT_STB_REHOME_UM (150 um); none in reach = left as built and named.  Common target Tc = the latest in-family arrival over
+# all tap-family ports (OT_STB_COMMON_MAX_PS bounds it; the STB-BOUND cap is not applied in this mode, it would leave the taps
+# unequal).  Other clock ports (io_pma_rck, fclk_in_*) keep their own latest-sink target.  Same clock, flops and logic: only
+# clock pins re-connected inside one clock's tap trees, plus the usual delay buffers.
+set ::stb::common [expr {[info exists ::env(OT_STB_COMMON)] && $::env(OT_STB_COMMON) eq "1"}]
+set ::stb::outlier [expr {[info exists ::env(OT_STB_OUTLIER_PS)] ? double($::env(OT_STB_OUTLIER_PS)) : 40.0}]
+set ::stb::rehome_um [expr {[info exists ::env(OT_STB_REHOME_UM)] ? double($::env(OT_STB_REHOME_UM)) : 150.0}]
+proc stb::sink_arrs {p} {
+  set r {}
+  foreach k [array names ::stb::sinks "$p,*"] { foreach s $::stb::sinks($k) { set a [stb::arr $s]; if {$a ne ""} { lappend r [list $s $a [lindex [split $k ,] 1]] } } }
+  return $r
+}
+# returns the common target; re-homes outliers (rebuilds the trees of the ports it touched)
+proc stb::common_target {ports} {
+  set blk [ord::get_db_block]
+  set dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
+  set fam {}; set lim {}; set tc ""
+  foreach p $ports {
+    if {![stb::capped_port $p] || ![info exists ::stb::kids($p,PORT)]} continue
+    set v [stb::sink_arrs $p]; if {[llength $v] < 2} continue
+    set a [lsort -real [lmap x $v {lindex $x 1}]]; set c [llength $a]
+    set l [expr {[lindex $a [expr {$c - 1 - $c / 100}]] + $::stb::outlier}]
+    dict set lim $p $l; lappend fam $p
+    foreach x $a { if {$x <= $l && ($tc eq "" || $x > $tc)} { set tc $x } }
+  }
+  if {$tc eq ""} { return "" }
+  if {[info exists ::env(OT_STB_COMMON_MAX_PS)] && $::env(OT_STB_COMMON_MAX_PS) ne "" && $tc > double($::env(OT_STB_COMMON_MAX_PS))} {
+    set tc [expr {double($::env(OT_STB_COMMON_MAX_PS))}]
+  }
+  # leaf candidates: node, port, parity, x, y (node latest sink <= Tc)
+  set cand {}
+  foreach p $fam {
+    foreach k [array names ::stb::sinks "$p,*"] {
+      set n [lindex [split $k ,] 1]
+      if {$n eq "PORT" || ![llength $::stb::sinks($k)] || $::stb::hi($p,$n) > $tc} continue
+      set i [$blk findInst $n]; if {$i eq "NULL" || [$i isDoNotTouch]} continue
+      set on [stb::out_net $i]; if {$on eq "" || [$on isDoNotTouch]} continue
+      set s0 [lindex $::stb::sinks($k) 0]
+      lassign [$i getLocation] x y
+      lappend cand [list $n $p [expr {[info exists ::stb::par($s0)] ? $::stb::par($s0) : 0}] $x $y $on]
+    }
+  }
+  set moved 0; set kept 0; set touched {}
+  foreach p $fam {
+    set l [dict get $lim $p]
+    foreach x [stb::sink_arrs $p] {
+      lassign $x s a n
+      if {$a <= $l} continue
+      set si [$blk findInst [string range $s 0 [expr {[string last / $s] - 1}]]]
+      set sit [expr {$si eq "NULL" ? "NULL" : [$si findITerm [string range $s [expr {[string last / $s] + 1}] end]]}]
+      if {$sit eq "NULL" || [$si isDoNotTouch] || [[$si getMaster] isBlock]} { incr kept; puts [format "OT_STB_REHOME keep %s %s arr %.1f > %.1f (not editable)" $p $s $a $l]; continue }
+      lassign [$si getLocation] sx sy
+      set par [expr {[info exists ::stb::par($s)] ? $::stb::par($s) : 0}]
+      set best ""; set bd 1e30
+      foreach c $cand {
+        lassign $c cn cp cpar cx cy con
+        if {$cpar != $par || $cn eq $n} continue
+        set d [expr {(abs($cx - $sx) + abs($cy - $sy)) / $dbu}]
+        if {$d < $bd} { set bd $d; set best $c }
+      }
+      if {$best eq "" || $bd > $::stb::rehome_um} { incr kept; puts [format "OT_STB_REHOME keep %s %s arr %.1f > %.1f (no leaf within %.0f um)" $p $s $a $l $::stb::rehome_um]; continue }
+      set on [lindex $best 5]
+      set n0 [$sit getNet]; set dt [$n0 isDoNotTouch]; $n0 setDoNotTouch 0
+      $sit disconnect; $sit connect $on
+      $n0 setDoNotTouch $dt
+      incr moved
+      puts [format "OT_STB_REHOME move %s %s arr %.1f > %.1f -> %s leaf %s (%.0f um)" $p $s $a $l [lindex $best 1] [lindex $best 0] $bd]
+      foreach q [list $p [lindex $best 1]] { if {$q ni $touched} { lappend touched $q } }
+    }
+  }
+  if {$moved} { sta::arrivals_invalid; stb::rc; foreach p $fam { stb::build $p; stb::measure $p } }
+  puts [format "OT_STB_COMMON target %.1f over %d tap ports; outliers re-homed %d, kept %d" $tc [llength $fam] $moved $kept]
+  return $tc
+}
 proc stb::rc {} { if {$::stb::est eq "grt"} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
 proc stb::balance {} {
   set blk [ord::get_db_block]
@@ -211,13 +292,21 @@ proc stb::balance {} {
     if {$ns < 2} continue
     set m [stb::measure $p]
     if {$m eq ""} continue
-    if {$cap ne "" && [stb::capped_port $p] && [lindex $m 4] > $cap} {
+    if {$::stb::common && [stb::capped_port $p]} {
+      dict set T $p COMMON
+      puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target common"
+    } elseif {$cap ne "" && [stb::capped_port $p] && [lindex $m 4] > $cap} {
       dict set T $p $cap
       puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target [format %.1f $cap] (latest sink [format %.1f [lindex $m 4]] over the bound: capped)"
     } else {
       dict set T $p [lindex $m 4]
       puts "OT_STB before $p ($::stb::est RC): $nn tree nodes, [stb::fmt $m]; target [format %.1f [lindex $m 4]] (latest sink, fixed)"
     }
+  }
+  if {$::stb::common && [llength [dict keys [dict filter $T value COMMON]]]} {
+    if {$::stb::mode eq "report"} { set ::stb::rehome_um -1 }
+    set tc [stb::common_target $ports]
+    dict for {p Tp} $T { if {$Tp eq "COMMON"} { if {$tc eq ""} { dict unset T $p } else { dict set T $p $tc } } }
   }
   if {$::stb::mode eq "report"} { return }
   set n0 $::stb::n

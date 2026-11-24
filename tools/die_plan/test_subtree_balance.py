@@ -320,3 +320,72 @@ def test_cap_applies_only_to_the_tap_port_family():
     assert "target 80.0 (latest sink, fixed)" in out2, out2
     out3, _ = _run(env + "set ::env(OT_STB_CAP_PORTS_RE) {^(clk|ck2)$}\n")
     assert out3.count("over the bound: capped") == 2, out3
+
+
+COMMON_TREE = r'''
+proc ord::get_db_tech {} { return tech }
+proc tech {op args} { if {$op eq "getDbUnitsPerMicron"} { return 1000 } }
+port clk n0
+cell b0 M_BUFx2_ASAP7_75t_R n0 n_b0 0
+cell b1 M_BUFx2_ASAP7_75t_R n_b0 n_b1 10
+cell b2 M_BUFx2_ASAP7_75t_R n_b0 n_b2 70
+for {set i 0} {$i < 120} {incr i} { cell h$i M_DFFHQNx1_ASAP7_75t_R n_b1 "" }
+cell fo M_DFFHQNx1_ASAP7_75t_R n_b2 ""
+port clk_t1 m0
+cell c0 M_BUFx2_ASAP7_75t_R m0 m_c0 10
+cell c1 M_BUFx2_ASAP7_75t_R m_c0 m_c1 30
+cell g1 M_DFFHQNx1_ASAP7_75t_R m_c1 ""
+cell g2 M_DFFHQNx1_ASAP7_75t_R m_c1 ""
+port ck2 k0
+cell d0 M_BUFx2_ASAP7_75t_R k0 k_d0 5
+cell d1 M_BUFx2_ASAP7_75t_R k_d0 k_d1 5
+cell d2 M_BUFx2_ASAP7_75t_R k_d0 k_d2 60
+cell e1 M_DFFHQNx1_ASAP7_75t_R k_d1 ""
+cell e2 M_DFFHQNx1_ASAP7_75t_R k_d2 ""
+set ::env(OT_STB_PORTS) {clk clk_t1 ck2}
+set ::env(OT_STB_EST) placement
+'''
+
+
+def _run_common(env=""):
+    if not shutil.which("tclsh"):
+        pytest.skip("no tclsh")
+    body = (MOCK + COMMON_TREE + env + f"\nproc wrap {{}} {{ source {{{HOOK}}} }}\nwrap\n"
+            + 'foreach p {h0 h119 fo g1 g2 e1 e2} { puts "ARR $p [get_property $p.CLK arrival_max_rise]" }\n'
+            + 'puts "FONET $A(fo.CLK,net)"\n')
+    r = subprocess.run(["tclsh"], input=body, text=True, capture_output=True)
+    assert r.returncode == 0 and not r.stderr, r.stdout + r.stderr
+    arr = {ln.split()[1]: float(ln.split()[2]) for ln in r.stdout.splitlines() if ln.startswith("ARR ")}
+    return r.stdout, arr
+
+
+def test_common_target_equal_across_taps_and_outlier_rehomed():
+    """STB-COMMON 11-24 (S81-SERDES-TAPSKEW): OT_STB_COMMON=1 balances every tap-family port to ONE target and re-homes a late
+    outlier instead of letting it set its tap's target.  Mock: clk 120 sinks at 10 + outlier fo at 70 (p99 10 + 40 = 50 < 70);
+    clk_t1 sinks at 40.  Common target 40: fo moves to leaf b1, all clk sinks and fo padded up to ~40, clk_t1 untouched;
+    ck2 (not a tap port) keeps its own latest-sink target 65."""
+    out, arr = _run_common("set ::env(OT_STB_COMMON) 1\n")
+    assert "OT_STB ERROR" not in out, out
+    assert "OT_STB_REHOME move clk fo/CLK" in out and "-> clk leaf b1" in out, out
+    assert "OT_STB_COMMON target 40.0 over 2 tap ports; outliers re-homed 1, kept 0" in out, out
+    assert out.split("FONET ")[1].split()[0] != "n_b2", out
+    for f in ("h0", "h119", "fo"):
+        assert 40 - 8 - 20 < arr[f] <= 40, (f, arr, out)
+    assert arr["g1"] == 40 and arr["g2"] == 40, (arr, out)
+    assert "target 65.0 (latest sink, fixed)" in out and 65 - 8 - 20 < arr["e1"] <= 65, (arr, out)
+
+
+def test_common_target_default_off_and_report_mode_moves_nothing():
+    out, arr = _run_common()
+    assert "OT_STB_COMMON" not in out and "OT_STB_REHOME" not in out, out
+    assert arr["h0"] > 40 and arr["fo"] == 70, (arr, out)        # old rule: clk padded to its outlier
+    out2, arr2 = _run_common("set ::env(OT_STB_COMMON) 1\nset ::env(OT_STB) report\n")
+    assert "OT_STB_REHOME keep clk fo/CLK" in out2 and "re-homed 0, kept 1" in out2, out2
+    assert out2.split("FONET ")[1].split()[0] == "n_b2" and arr2["h0"] == 10, (arr2, out2)
+
+
+def test_common_outlier_without_leaf_in_reach_is_kept():
+    out, arr = _run_common("set ::env(OT_STB_COMMON) 1\nset ::env(OT_STB_REHOME_UM) 0\nproc odbloc {} {}\n"
+                           "rename objcall _objcall\nproc objcall {o op args} { if {$op eq \"getLocation\"} { return [expr {$o eq \"fo\" ? {5000 0} : {0 0}}] }; _objcall $o $op {*}$args }\n")
+    assert "OT_STB_REHOME keep clk fo/CLK" in out and "no leaf within 0 um" in out, out
+    assert arr["fo"] == 70, (arr, out)

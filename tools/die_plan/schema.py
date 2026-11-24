@@ -749,6 +749,13 @@ SCHEMA = {
                                 "properties": {"like": {"type": "string", "minLength": 1},
                                                "re": {"type": "string", "minLength": 3},
                                                "note": {"type": "string"}}}},
+                        # Default-off (STB-COMMON 11-24, gen_phys.stb_common_exports -> OT_STB_COMMON): one subtree-balance
+                        # target across the type's taps; late outlier sinks re-homed to the nearest leaf.
+                        "stb_common": {"oneOf": [{"type": "boolean"},
+                            {"type": "object", "additionalProperties": False,
+                             "properties": {"outlier_ps": {"type": "number", "minimum": 0, "maximum": 400},
+                                            "rehome_um": {"type": "number", "minimum": 0, "maximum": 600},
+                                            "max_ps": {"type": "number", "minimum": 50, "maximum": 2000}}}]},
                         # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
                         "tap_pair_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
