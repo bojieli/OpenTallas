@@ -23,3 +23,9 @@ Next: class (b) fix (fanout split / dup of u_11072,u_2367 cones + cluster), LEC 
 - Hold: u_rrl_78->79 / u_srl_141->142 = same-site relays on two taps (cap pass). tap_relay_cohort.tcl (opt-in clock.tap_relay_cohort), lane clone epyc11 /srv/opentallas-scratch2/claude/QC-TTC-R2/wt commit 7431b0710c (NOT pushed; push after p_rep5 census confirms). Armed in p_rep5/kit (6 clock pins moved).
 - RUNNING: p_rep5 CTS on epyc11 -> tool/census.sh -> tool/grt.sh p_rep5 -> census2.sh.
 - f16_obs/init_u0 producer: QC-F16-PRODUCER (findings posted).
+
+## 11-24 01:12 PST update
+- FABLE 00:10 conditions: (1) X arm of u_76013 resolved to 0 = recorded choice; sign-off LEC must compare routed netlist vs the resynth form (22cab1f23f17 / chosen rep form), not F5 with free X. (2) synth log rep5: 0 multi-driver, 0 loops; no-driver only f16_auth 83 + init_u0 (old template).
+- p_rep5 CTS: -121.23/-12.4k, sibling u_11071 now worst (258 ep). Group forms rep7 1c26b8af0f76 (k6 L6), rep8 53f6f842dc78 (k8 L4), rep9 42183e9af233 (k4 L8): LEC UNSAT all three; probes epyc11 p_rep7/8/9 (template tmpl_r2 = tmplf5 + relay cohort). FABLE: read rep7 first, no more launches before.
+- p_rep5 GRT: tool/grt.sh needs OT_VCLK_CORNER=ff CORNER=BC (fixed), relaunched p_rep5_grt2.ot.
+- u_hr hold at CTS: 768 w_mask_in pins of one SRAM (48 mask flops) worst -52, pre-repair.
