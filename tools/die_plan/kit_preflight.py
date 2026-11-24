@@ -514,6 +514,39 @@ def retired_grt_stop(kit):
     return errors
 
 
+# HOOK-SIBLINGS-1124 (COORD: kv3_hub_Wo_1124080816 died at CTS, clock_taps.tcl could not read /work/tap_landing_seam.tcl after hours of synth
+# and place): every staged tcl hook's `source <sibling>.tcl` ([file dirname [info script]]) and literal `source /work/<name>.tcl` must name a
+# file staged in the kit.  A source guarded by file exists / catch is skipped; one under an env flag (::env(X)) that config.mk does not set
+# to 1 is reported as advisory (it never runs in this kit), every other missing one refuses the kit.
+_HOOK_SIB = re.compile(r'^\s*source\s+\[file join \[file dirname (?:\[file normalize )?\[info script\]\]?\]\s+([\w.\-]+\.tcl)\]\s*(?:;|$)')
+_HOOK_WORK = re.compile(r'^\s*source\s+/work/([\w.\-]+\.tcl)\s*(?:;|$)')
+
+
+def hook_sources(kit, advisory=None):
+    kit = Path(kit)
+    on = set()
+    if (kit/'config.mk').is_file():
+        on = set(re.findall(r'^\s*export\s+(\w+)\s*[:?]?=\s*1\s*$', (kit/'config.mk').read_text(errors='replace'), re.M))
+    errors = []
+    for f in sorted(kit.glob('*.tcl')):
+        lines = f.read_text(errors='replace').splitlines()
+        for i, ln in enumerate(lines):
+            m = _HOOK_SIB.match(ln) or _HOOK_WORK.match(ln)
+            if not m or (kit/m.group(1)).is_file():
+                continue
+            ctx = '\n'.join(lines[max(0, i-3):i+1])
+            if 'file exists' in ctx or 'file readable' in ctx or 'catch' in ln:
+                continue
+            msg = f'{f.name}:{i+1} sources {m.group(1)}, which is not staged in the kit; regenerate the kit with current tools'
+            flags = re.findall(r'::env\((\w+)\)', ctx)
+            if flags and not any(x in on for x in flags):
+                if advisory is not None:
+                    advisory.append(msg + f' (advisory: {"/".join(dict.fromkeys(flags))} not set in config.mk)')
+                continue
+            errors.append(msg)
+    return errors
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -549,6 +582,10 @@ def check(kit, plan_dir=None, contract=False):
     run('staged_inputs', staged_inputs)
     run('sdc_and_ff_binding', lambda: sdc_lint.lint_kit_files(kit))
     run('retired_grt_stop', lambda: retired_grt_stop(kit))
+    _hook_adv = []
+    run('hook_sources', lambda: hook_sources(kit, _hook_adv))
+    if _hook_adv:
+        checks['hook_sources']['advisory'] = _hook_adv
     def cast_forms():
         hits = rtl_lint.yosys_cast_scan(rtl_lint._kit_sources(kit))
         return [f'{path}:{line}: {rule}: {snippet}' for path, entries in hits.items()

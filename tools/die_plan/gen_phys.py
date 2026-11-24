@@ -7570,6 +7570,27 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
             "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
 
 
+# HOOK-SIBLINGS-1124 (COORD: KV kv3_hub_Wo_1124080816 died at CTS, clock_taps.tcl could not source /work/tap_landing_seam.tcl: the hook copy list
+# never named the KV-HUB-HOLD 11-23 file, so every kit with clock.tap_landing_seam true lost it).  A staged hook that sources a sibling
+# ([file dirname [info script]] NAME.tcl) gets that sibling copied too, recursively; kit_preflight hook_sources refuses a kit that still lacks one.
+_HOOK_SIBLING_RE = re.compile(r"source\s+\[file join \[file dirname (?:\[file normalize )?\[info script\]\]?\]\s+([\w.\-]+\.tcl)\]")
+
+
+def hook_closure(names):
+    """names + every tools/die_plan file their tcl sources as a sibling (recursive), in order, each once"""
+    here = Path(__file__).resolve().parent
+    out, todo = list(dict.fromkeys(names)), list(dict.fromkeys(names))
+    while todo:
+        f = here / todo.pop(0)
+        if f.suffix != ".tcl" or not f.is_file():
+            continue
+        for n in _HOOK_SIBLING_RE.findall(f.read_text(errors="replace")):
+            if n not in out and (here / n).is_file():
+                out.append(n)
+                todo.append(n)
+    return tuple(out)
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -8384,10 +8405,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         macro_ff_repair_stage(kd, macros, mlib)
     if os.environ.get("OT_GRT_NONPORT_HOLD", "1") == "1":      # DEFAULT ON for every die (lever 3, 11-18; OT_GRT_NONPORT_HOLD=0 opts out); chained after any macro-FF wrapper written above
         grt_nonport_hold_chain(kd, required=os.environ.get("OT_GRT_NONPORT_HOLD") == "1")
-    for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
-              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_reset_split.tcl", "tap_relay_cohort.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "clk_obs_halo.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+    for f in hook_closure(("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
+              "clock_taps.tcl", "tap_landing_seam.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_reset_split.tcl", "tap_relay_cohort.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "clk_obs_halo.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "cts_post_report.tcl", "tap_insertion.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "sstn_m5_block.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl", "pg_row_guides.tcl", "obs_gcell_cap.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl", "pg_row_guides.tcl", "obs_gcell_cap.tcl")):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
