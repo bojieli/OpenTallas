@@ -5,3 +5,4 @@
 - 2026-11-23 23:22 PST EPYC11 GEN_HOSTS s81_head [-> COORD, cc FLOW-OPS-R3] epyc11 added to s81_head gen_hosts (current src+bind replicated; kit_wave_edit HOST-ADD probe passed). Load check in 30 min.
 - 2026-11-23 23:31 PST EPYC11 GEN_HOSTS qwen_compute REFUSED [-> COORD] HOST-ADD still refused after copy; see /srv/opentallas-scratch2/claude/EPYC11-ONBOARD-FINISH/tmp/e11_cur_qwen_compute.log; following up.
 - 2026-11-23 23:33 PST EPYC11 GEN_HOSTS qwen_compute [-> COORD, cc FLOW-OPS-R3] epyc11 added to qwen_compute gen_hosts (current src+bind replicated; kit_wave_edit HOST-ADD probe passed). Load check in 30 min.
+- 2026-11-23 23:46 PST EPYC11 GEN_HOSTS s81 [-> COORD, cc FLOW-OPS-R3] epyc11 added to s81 gen_hosts (current src+bind replicated; kit_wave_edit HOST-ADD probe passed). Load check in 30 min.
