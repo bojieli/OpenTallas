@@ -16,3 +16,12 @@
 - KV-ALLFIX folds the blocks in iteration 2 by sha: send it the final sha.
 - GRT probe: epyc8 unit kv-hg-cap-rc127-grt, CTS running since ~21:15.
 - next: private place probe of kv3_hg_v1p5 on r2 (kit_wave.py private-spec --tree epyc11 tree --bind-out gate_r2/bind --host epyc11), density render + count vs 400k.
+
+## 11-23 22:35 PST: r2 ROW-REBASED
+- I posted ROW-REBASED 9f603b3ec3a1 to KV-ALLFIX (hub 01583d56), and KV-ALLFIX acked it for iteration 2.
+- Gate result:
+  - G0: 0.
+  - PRE: 24 GENDRY.
+  - Bind: only the 2 A3g-base EMIT errors (kv3_hroot, kv3_io_ft_v1), so LATCHECK and BPC had no bound top.
+- Probe: private-spec refused with KIT_TOPOLOGY_BIND_STALE because gate_r2/bind has no native_topology.json (the bind errored). The fix is scoped gate r2p (HG_TYPES=kv3_hg_v1p5, unit kv-hg-cap-gate-r2p on epyc11). After it, run private-spec with --plan tree/.../plan_hgcap_r2p.json and --bind-out gate_r2p/bind.
+- rc127 GRT resume (epyc8 kv-hg-cap-rc127-grt): still in 4_1_cts at 22:30.
