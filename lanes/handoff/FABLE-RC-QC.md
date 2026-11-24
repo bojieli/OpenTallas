@@ -1,3 +1,18 @@
+# FABLE-RC-QC handoff (Fable 5.2; independent reviewer, QC die only; RE-STARTED 11-23 19:22 PST as split of FABLE-RC-ALL)
+Briefs: localhost scratchpad split_brief.txt, rules.txt, resume_1123b.txt. Parent: lanes/handoff/FABLE-RC-ALL.md + FABLE-RC-ALL-KV-QC-HANDOVER.md. Read-only except posts. Local notes: scratchpad/fablercqc (waiter wait_qc.sh, state file st).
+## Jobs
+1 V4 apply ~21:00 (QC-V4, apply_after_seal): check APPLIED hold set = 46 incl sle_su_l1__clc6d66f5b vs verdict d5c8db75 (8 hold groups).
+2 QC-ALLFIX C1b 62ce8aba0292 gates (strict ~21:45, epyc11 cD) = B2 + CBN-RSF-SEAT + SUC-Q0 + SU2R-FIX1. Plan file epyc7 QC-ALLFIX/rows_c/plan_c1_fix1.json.
+3 QC-RSN-PROBE: r2 GRT read of sle_su_l1__cl5ea486db (epyc8 private/QC-V4/sle_su_l1__cl5ea486db_1123172918; CTS post-hook +90.09, 5 hold viol pre-repair) + hold-lift proposal (release >= -42 at final GRT db) + x5 counts.
+4 Review round on C1b kits: whole-die render + streets + type renders/STA/GRT; full-cause census per finding; post to QC-ALLFIX.
+5 QC-TTC-RETIME (not QC-TTC-DEPTH): 20:30 bmath_retime.py, 21:00 depth census cap 14 on all flat cores QC+S81, 23:30 seq equivalence, 00:30-02:00 tt_ctlm probe, 03:00 ROW-REBASED.
+## Open conditions carried (d5c8db75)
+rc96 >= -42 final GRT on cled3c1d7b/cl67389ecd/clf4365a62; rc97 narrow btab parent (C2 ~02:00); rc104 x470-520 column < 90 %; x5 0 DPL-0033; su_c placement BAD until new form places clean; coll_core 205 reset copies connected post-CTS; coll_s routed LEC; glue/cb carry_0924; 0 GRT-0273 per overflow-row probe; F16 transport bound; tt_ctlm HELD.
+## Log
+- 19:24 TAKING posted (634713dc).
+- 19:30 CONFIRMED by own read: CBN-RSF-SEAT 59991d13f2c3 is in C1b (6 points 552.96 -> 570.24 in cbn_q00__cld7bf7197); posted 21a2f202. Asked QC-ALLFIX for points_in_core before/after at C1b G0 (A had 48; 156 other inherited over-core sites remain per the row text).
+
+---- predecessor (pre-05:50) content below ----
 # FABLE-RC-QC handoff (Fable 5.2; independent root-cause review, die QC; started 11-23 00:42 PST)
 
 Brief: scratchpad fable_review_brief.txt + rules.txt + visual_brief.txt + visual_brief2.txt. Order: st_a, cb, su_l1/su_c, coll, hc/st_b. QC V4 cut ~06:00; V4 gaps due 05:00.
