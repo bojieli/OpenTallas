@@ -232,6 +232,8 @@ def _prune_snapshots_locked(root, keep, protect, text, rm):
                 run(["find", str(d), "-type", "d", "-exec", "chmod", "u+w", "{}", "+"])
                 run(["rm", "-rf", "--one-file-system", "--", str(d)])
                 (Path(root) / f"{tgt.name if tgt else d.name}.manifest.json").unlink(missing_ok=True)
+                if tgt:                                                     # RT-HOST-DATA-MAN-1124: its manifest lives on the data disk too
+                    (tgt.parent / f"{tgt.name}.manifest.json").unlink(missing_ok=True)
             gone.append(d.name)
         except Exception as e:
             log(f"prune {d.name} failed: {e}")
@@ -606,12 +608,29 @@ def host_sync(host, name, prev, do_flip=True, smoke_here=False, lock_dir=None, _
         lf.close()
 
 
+def host_links(D, name, rt=None):
+    """RT-HOST-DATA-MAN-1124: shell that points RT/<name> and RT/<name>.manifest.json at a version installed on D (two small symlinks, each made
+    beside the target name and renamed over it).  The manifest link goes last: it is what marks the version HAVE."""
+    rt = str(rt or RT)
+    return (f"ln -sfn {D}/{name} {rt}/.{name}.lnk && mv -T {rt}/.{name}.lnk {rt}/{name} && "
+            f"ln -sfn {D}/{name}.manifest.json {rt}/.{name}.ml && mv -T {rt}/.{name}.ml {rt}/{name}.manifest.json")
+
+
 def _host_sync_unlocked(host, name, prev, do_flip=True, smoke_here=False):
     """copy RT/<name> (HOST_PATHS) to host, check it there (manifest + parse; with smoke_here also gen_smoke), flip host RT/current -> (ok, note).
     A note starting 'RED ' means the content is wrong (not the host)."""
     D = HOST_DATA.get(host) or str(RT)                    # RT-HOST-DATA-1124: where this host's version dirs are written
-    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || {{ mkdir -p {D} && df -BG --output=avail {D}/.. | tail -n1; }}"], input="")
-    if r.returncode == 0 and "HAVE" not in r.stdout:
+    # RT-HOST-DATA-MAN-1124 (COORD: epyc10 07:54 'install: cat: -: No space left on device'): on a host-data host the 2 MB manifest is written
+    # to D too, and RT gets only two small symlinks (RT/<name> and RT/<name>.manifest.json).  A version whose data and manifest are on D but
+    # whose RT links are missing (a full RT disk at install) is DATA: the next sync only re-makes the links, it never copies again.
+    data = (f" || {{ test -f {D}/{name}.manifest.json && test -d {D}/{name} && echo DATA; }}" if D != str(RT) else "")
+    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE{data} || {{ mkdir -p {D} && df -BG --output=avail {D}/.. | tail -n1; }}"], input="")
+    if r.returncode == 0 and "DATA" in r.stdout and "HAVE" not in r.stdout:
+        r = run(SSH + [host, host_links(D, name)], input="")
+        if r.returncode:
+            return False, f"install links: {(r.stderr or r.stdout).strip()[:200]}"
+        r.stdout = "HAVE"
+    elif r.returncode == 0 and "HAVE" not in r.stdout:
         try:
             hf = float(r.stdout.strip().split()[-1].rstrip("G"))
         except (ValueError, IndexError):
@@ -662,9 +681,9 @@ print(json.dumps(bad[:20]))
             if v != "ok":
                 return False, ("RED gen smoke: " if v == "red" else "gen smoke not run: ") + note
         m = json.dumps({"sha": man["sha"], "made": man["made"], "files": sub})
-        lnk = (f" && ln -sfn {D}/{name} {RT}/.{name}.lnk && mv -T {RT}/.{name}.lnk {RT}/{name}" if D != str(RT) else "")
-        r = run(SSH + [host, f"chmod -R a-w {D}/.{name}.partial/* && mv -T {D}/.{name}.partial {D}/{name}{lnk} && "
-                             f"cat > {RT}/.{name}.m.tmp && mv {RT}/.{name}.m.tmp {RT}/{name}.manifest.json"], input=m)
+        r = run(SSH + [host, f"chmod -R a-w {D}/.{name}.partial/* && mv -T {D}/.{name}.partial {D}/{name} && "
+                             f"cat > {D}/.{name}.m.tmp && mv {D}/.{name}.m.tmp {D}/{name}.manifest.json"
+                             + (f" && {host_links(D, name)}" if D != str(RT) else "")], input=m)
         if r.returncode:
             return False, f"install: {(r.stderr or r.stdout).strip()[:200]}"
     elif smoke_here:                                       # copied by an earlier sync: smoke the installed copy
