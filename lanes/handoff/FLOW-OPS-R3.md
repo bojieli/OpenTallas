@@ -59,3 +59,8 @@ OPEN:
 ## 21:0x 11-23 update
 - KV wave rt: no die-level rt pin exists; KV kit tools = bind_rt_follow/KW_BIND_RT on bind of record stamp. Current bind_out (d29 portable_bind, 70b6 stamp) resolves to rt 7f184148 (reset_tree.py differs). Ruling posted: KV-D29 repoints kit_rtl.bind_out to its 9b19 postbind (unit postbind-qwen_kvsys-9b19_1123, epyc8, ETA ~22:00) BEFORE lifting kv3_* hold; then I re-verify with kit_wave.bind_rt_follow from rt/9b19 vs live kit_wave.json (expect 9b19). KV-D29 agent a39af6d5d832f96bd told.
 - Follow timer retries the cut each run; hub 96 GB < 100 floor (cleanup running per COORD). Next cut = main head (11ca515 OTRUN-ORPHAN, fa21a27 ADV-PAD-LAUNCH, 8e13dda BIND-EMIT-MEM). Requesters told.
+
+## 21:4x 11-23 update
+- Hub disk freed (OPS-SUPPORT); follow timer auto-cutting main to ALL 8 hosts (epyc8 incl). rt/current = c149c0966d7c (has ADV-PAD-LAUNCH, OTRUN-ORPHAN, BIND-EMIT-MEM, GENDRY-KITRTL, KV-PREGRT-STALL c40acd9).
+- KV bind_out -> selected_candidate_bind_1123212910 at 21:33; flowops-kv-rtcheck2 (from rt/current) resolved KV wave rt = c149 (R8 fix + pregrt cap). KV-D29 told kv3_* may lift. KV-PREGRT-STALL closed (earliest rt c40acd92e639 21:07).
+- Pending: KV-RRL-EXPORT verifier fix (auto via follow when pushed); epyc11 gen_hosts after QC V4 apply; QC wave tree needs kit_istations/reg_leaf_split (QC apply owner).
