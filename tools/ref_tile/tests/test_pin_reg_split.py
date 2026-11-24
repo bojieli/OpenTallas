@@ -47,6 +47,9 @@ link_design top
 initialize_floorplan -die_area {0 0 40 40} -core_area {2 2 38 38} -site asap7sc7p5t
 source $P/openRoad/make_tracks.tcl
 place_pins -hor_layers M4 -ver_layers M5
+add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
+add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
+global_connect
 set ::env(RESULTS_DIR) /tmp/res
 file mkdir /tmp/res
 set ::env(OT_INHOLD_MASTER) HB2xp67_ASAP7_75t_R
