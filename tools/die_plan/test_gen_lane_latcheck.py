@@ -70,6 +70,24 @@ def test_unpriced_plan_stations_class(tmp_path):
     assert recs[0]["class"] == ["PLAN_STATIONS_UNPRICED"] and len(errs) == 1
 
 
+def test_built_only_counts_observed_stations_without_trusting_flag(tmp_path):
+    p = plan(cycles=6)
+    p["partition_types"]["A"]["internal_stations"] = [
+        dict(conn="bus:o", regs_um=[[1, 1], [2, 2]], bits=4),
+    ]
+    p["partition_types"]["A"]["realize_internal_stations"] = True
+    recs, errs, _ = G.run(p, [rtl(tmp_path)])
+    assert errs == [] and recs[0]["verdict"] == "PASS"
+    assert recs[0]["delivered"] == 6 and recs[0]["unbuilt_stations"] == 2
+
+    realized = tmp_path / "realized"
+    realized.mkdir()
+    p["partition_types"]["A"]["realize_internal_stations"] = False
+    recs, errs, _ = G.run(p, [rtl(realized, src_ist=2)])
+    assert errs == [] and recs[0]["verdict"] == "PASS"
+    assert recs[0]["delivered"] == 6 and "unbuilt_stations" not in recs[0]
+
+
 def test_missing_wrapper_unobserved_and_first_dir_wins(tmp_path):
     d = rtl(tmp_path)
     (d / "m_b.sv").unlink()

@@ -37,6 +37,8 @@ output); a type with no wrapper is UNOBSERVED (listed, not a failure), as in lan
 
     gen_lane_latcheck.py PLAN.json --rtl DIR [--rtl DIR2 ...] [--landings gen_clock_landings.json]
                          [--tsv OUT.tsv] [--json OUT.json]
+LATCHECK-BUILT-ONLY reports plan bus stations that are counted by LATCHECK but absent from generated RTL.
+It leaves the gate unchanged. An observed RTL stage still counts even if the plan flag is unset.
 Exit 0 PASS, 4 FAIL, 5 no failure but some lane UNOBSERVED (lane_asbuilt_latency's codes)."""
 import argparse
 import json
@@ -241,6 +243,24 @@ def live_base(plan_path, plan, env=None):
     return str(b), [str(pub)], how
 
 
+def annotate_unbuilt_stations(plan, rows, module_of, type_of, landing_of, records):
+    """Mark predicted bus station cycles with no register in a plan-generated wrapper."""
+    observed_types = {}
+    for name, typ in plan["partition_types"].items():
+        stations = typ.get("internal_stations") or []
+        retained = [row for row in stations if not (row.get("conn") or "").startswith("bus:")]
+        observed_types[name] = dict(typ, internal_stations=retained) if retained != stations else typ
+    if observed_types == plan["partition_types"]:
+        return
+    observed, _ = LAL.check(plan, rows, module_of, type_of, observed_types, landing_of)
+    by_lane = {record["lane"]: record.get("delivered") for record in observed}
+    for record in records:
+        priced = record.get("delivered")
+        built = by_lane.get(record["lane"])
+        if priced is not None and built is not None and priced > built:
+            record["unbuilt_stations"] = priced - built
+
+
 def run(plan, rtl_dirs, landings=None, fixed_in_core=False, base_plan=None, base_rtl=None, base_landings=None):
     parts = parts_of(plan)
     rows, bad = lane_rows(plan)
@@ -248,8 +268,11 @@ def run(plan, rtl_dirs, landings=None, fixed_in_core=False, base_plan=None, base
     if landings:
         land = {k: int(v) for k, v in (landings.get("lane_added_cycles") or {}).items()}
     module_of, src = load_modules(plan, rtl_dirs)
-    recs, errs = LAL.check(plan, rows, module_of, lambda p: parts.get(p, {}).get("type"), plan["partition_types"],
-                           land.get)
+    def type_of(part):
+        return parts.get(part, {}).get("type")
+
+    recs, errs = LAL.check(plan, rows, module_of, type_of, plan["partition_types"], land.get)
+    annotate_unbuilt_stations(plan, rows, module_of, type_of, land.get, recs)
     recs, errs = reclassify(plan, recs, errs, fixed_in_core)
     errs = [f"LANE_ROWS {b}" for b in bad] + errs
     if base_plan is not None:
@@ -288,7 +311,9 @@ def main(argv=None):
                           json.loads(Path(a.base_landings).read_text()) if a.base_landings else None)
     sm_fixed = sum(1 for r in recs if r.get("fixed_in_core"))
     sm = LAL.summary(recs)
-    sm.update(plan=str(a.plan), rtl=a.rtl, landings=a.landings, modules=src, mode="gen", fixed_in_core=sm_fixed)
+    unbuilt = [r for r in recs if r.get("unbuilt_stations")]
+    sm.update(plan=str(a.plan), rtl=a.rtl, landings=a.landings, modules=src, mode="gen", fixed_in_core=sm_fixed,
+              built_only=dict(lanes=len(unbuilt), cycles=sum(r["unbuilt_stations"] for r in unbuilt)))
     if a.json:
         Path(a.json).write_text(json.dumps(dict(summary=sm, lanes=recs, errors=errs), indent=1) + "\n")
     if a.tsv:
@@ -301,6 +326,10 @@ def main(argv=None):
                                                    "+".join(r.get("class", [])))) + "\n")
     for e in errs:
         print(e)
+    for r in unbuilt[:40]:
+        print(f"LATCHECK_BUILT_ONLY {r['lane']} priced {r['delivered']} "
+              f"built {r['delivered'] - r['unbuilt_stations']} "
+              f"({r['src_type']}.{r['bus_out']} -> {r['dst_type']}.{r['bus_in']})")
     print("LANE_ASBUILT", json.dumps({k: v for k, v in sm.items() if k != "modules"}))
     return 4 if errs else 5 if sm["unobserved"] else 0
 
