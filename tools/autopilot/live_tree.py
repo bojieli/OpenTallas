@@ -140,7 +140,7 @@ def host_seed(src, live):
     subprocess.run(["cp", "-a", "--reflink=never", src, part], check=True)       # a real copy: the live tree never shares a published tree's inodes
     dirs_writable(part)
     files_readonly(part)                                                          # fresh inodes: the a-w mode is the live tree's own
-    for n in (LINKBASE, SNAPGROUP):
+    for n in (LINKBASE, SNAPGROUP, SNAPDELTA):                                   # QC-V4 11-23: a snapshot's own markers never enter the live tree
         if os.path.lexists(os.path.join(part, n)):
             os.unlink(os.path.join(part, n))
     os.rename(part, live)
@@ -242,8 +242,8 @@ def host_apply(live, pack, snaps, name):
         shutil.rmtree(part)
     files_readonly(live)                                         # SNAP-RO-1119 (b): the live tree's files are a-w before they are shared (a writable one would reach every snapshot)
     subprocess.run(["cp", "-al", live, part], check=True)       # a snapshot of the unpublished live tree (directories are new, files shared)
-    for n in (LINKBASE,):
-        if os.path.lexists(os.path.join(part, n)):
+    for n in (LINKBASE, SNAPGROUP, SNAPDELTA):                    # QC-V4 11-23: a live tree seeded from a snapshot carried its mode-444 .snap-delta; cp -al
+        if os.path.lexists(os.path.join(part, n)):              # linked it here and the write below failed (PermissionError on E10/E2/intel1, V4 stage)
             os.unlink(os.path.join(part, n))
     with open(os.path.join(part, SNAPGROUP), "w") as f:         # a new file of the snapshot only
         f.write(os.path.realpath(live) + "\n")

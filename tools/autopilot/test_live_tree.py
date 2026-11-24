@@ -91,6 +91,32 @@ class LiveTree(unittest.TestCase):
         with self.assertRaises(PermissionError):                                       # an in-place write through a shared inode fails
             open(os.path.join(self.live, "tools/a.py"), "wb")
 
+    def test_live_tree_with_stale_snapshot_markers_still_snapshots(self):
+        # QC-V4 11-23: a live tree seeded (or rsynced) from a snapshot carried its mode-444 .snap-delta / .snap-group; the next apply died on PermissionError
+        LT.host_seed(self.pub, self.live)
+        LT.host_apply(self.live, "", self.snaps, "s0")
+        s0 = os.path.join(self.snaps, "s0")
+        for n in (LT.SNAPDELTA, LT.SNAPGROUP):
+            self.assertTrue(os.path.exists(os.path.join(s0, n)))
+        live2 = LT.live_path("d2", self.t)
+        LT.host_seed(s0, live2)                                                        # seed from a snapshot: its markers stay out
+        for n in (LT.SNAPDELTA, LT.SNAPGROUP, LT.LINKBASE):
+            self.assertFalse(os.path.lexists(os.path.join(live2, n)))
+        os.chmod(self.live, 0o755)
+        p = os.path.join(self.live, LT.SNAPDELTA)                                     # an older live tree that already carries one
+        open(p, "w").write("{}")
+        os.chmod(p, 0o444)
+        pk = os.path.join(self.t, "pk")
+        make_pack(pk, self.h0, {"physical/plan.json": b"P2"})
+        LT.host_apply(self.live, pk, self.snaps, "s1")
+        s1 = os.path.join(self.snaps, "s1")
+        dl = json.load(open(os.path.join(s1, LT.SNAPDELTA)))
+        self.assertEqual(dl["parent_manifest_hash"], self.h0)
+        self.assertNotEqual(os.stat(os.path.join(s1, LT.SNAPDELTA)).st_ino, os.stat(p).st_ino)
+        m1 = json.load(open(os.path.join(s1, SM.MANIFEST)))
+        e1, _ = SM.verify(s1, expect=m1["manifest_hash"], ro=True, full=True)
+        self.assertEqual(e1, [])
+
     def test_pack_for_other_tree_refused(self):
         LT.host_seed(self.pub, self.live)
         pk = os.path.join(self.t, "pk")
