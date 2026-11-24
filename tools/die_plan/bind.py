@@ -4579,7 +4579,8 @@ class Binder:
                     nm = short_id(f"w_{self.rel_of(ci)}__{pn}", 90)
                     drv_w[(ci, pn)] = nm
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
-        if rtree is not None and rtree.get("lock"):
+        if rtree is not None and rtree.get("lock") and not rtree["lock"].get("tied"):
+            # (a tied root stable counter, reset.source.hold, has no lock net: reset_tree emits .locked(1'b1))
             # PLL lock qualifier input of the root entry (reset_tree LOCK_SRC): the declared lock leaf output, as data
             lk = rtree["lock"]
             cand = [ci for ci in self.members[p] if (ci, lk["pin"]) in drv_w and self._por_inst_match(ci, lk["inst"])]

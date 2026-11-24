@@ -10102,7 +10102,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     lock = tree.get("lock")
     if lock and tree.get("entry") != "sync":
         raise gen_rtl.GenError(f"type {tn}: bound native root lock qualification requires a sync entry")
-    if lock and (not isinstance(lock, dict) or not lock.get("inst") or not lock.get("pin")
+    if lock and (not isinstance(lock, dict) or (not lock.get("tied") and (not lock.get("inst") or not lock.get("pin")))
                  or type(lock.get("stable")) is not int or lock["stable"] < 1
                  or lock.get("stages") != lock["stable"] + RT.LOCKQ_EXTRA):
         raise gen_rtl.GenError(f"type {tn}: bound native root lock qualifier declaration is incomplete "
@@ -10223,7 +10223,8 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
                 raise gen_rtl.GenError(f"type {tn}: pin reset copy {c['name']} has undeclared loads or drivers")
     lock_path = None
     if lock:
-        check("u_rst_lockq", "ot_dp_lockq", {"clk": "clk", "d": "rst_por_n", "locked": RT.LOCK_SRC, "q": "rst_root_n"})
+        check("u_rst_lockq", "ot_dp_lockq", {"clk": "clk", "d": "rst_por_n",
+                                             "locked": RT.HOLD_TIED if lock.get("tied") else RT.LOCK_SRC, "q": "rst_root_n"})
         # kept out of native_paths: the qualifier is no relay node (reset_tree.tcl places none for it), and captured
         # receipts of lock-free trees stay comparable
         lock_path = paths.pop("u_rst_lockq")
@@ -10231,11 +10232,16 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         if stable != [str(lock["stable"])]:
             raise gen_rtl.GenError(f"type {tn}: native reset lock qualifier STABLE differs from the tree ({lock['stable']})")
         drv = re.findall(rf"\bassign\s+{RT.LOCK_SRC}\s*=\s*([^;]+);", body)
+        if lock.get("tied"):
+            if drv:
+                raise gen_rtl.GenError(f"type {tn}: tied root stable counter (reset.source.hold) carries a lock source "
+                                       f"{RT.LOCK_SRC}")
         net = re.fullmatch(r"\s*(\w+)\s*(?:\[\s*0\s*\])?\s*", drv[0]) if len(drv) == 1 else None
-        if net is None:
+        if net is None and not lock.get("tied"):
             raise gen_rtl.GenError(f"type {tn}: native reset lock source {RT.LOCK_SRC} needs exactly one plain driver")
-        users = re.findall(rf"\.(\w+)\s*\(\s*{re.escape(net.group(1))}\s*(?:\[[^\]]*\])?\s*\)", body)
-        if users.count(lock["pin"]) != 1:
+        users = [] if lock.get("tied") else \
+            re.findall(rf"\.(\w+)\s*\(\s*{re.escape(net.group(1))}\s*(?:\[[^\]]*\])?\s*\)", body)
+        if not lock.get("tied") and users.count(lock["pin"]) != 1:
             raise gen_rtl.GenError(f"type {tn}: native reset lock source is not exactly one {lock['inst']}.{lock['pin']} "
                                    "leaf output")
         if len(re.findall(r"\brst_por_n\b", re.sub(r"\bwire\s+rst_por_n\s*;", "", body))) != 2:
@@ -10316,7 +10322,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
                     source_authority=source_contract, core_reset_policy="preserve bound connections; no native core-port rewiring",
                     verified_cell_classes=sorted(verified_cell_classes), opt_in=True)
     if lock:
-        contract["lock_qualifier"] = dict(lock, path=lock_path, source=RT.LOCK_SRC)
+        contract["lock_qualifier"] = dict(lock, path=lock_path, source=RT.HOLD_TIED if lock.get("tied") else RT.LOCK_SRC)
     if not hasattr(P, "_bound_native_reset_contracts"):
         P._bound_native_reset_contracts = {}
     P._bound_native_reset_contracts[tn] = contract

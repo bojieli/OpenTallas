@@ -9407,6 +9407,22 @@
         }
        }
       },
+      "hold": {
+       "type": "object",
+       "required": [
+        "stable_cycles"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "stable_cycles": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      },
       "note": {
        "type": "string"
       }

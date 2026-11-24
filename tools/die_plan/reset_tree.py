@@ -177,12 +177,57 @@ def die_reset_port(P):
     return ps["port"] if ps else "rst_n"
 
 
-def lock_stages(P):
-    """root-entry stages added by the PLL lock qualifier (ot_dp_lockq): 0 without a declared lock."""
+# QC-RSTCNT 11-24 (COORD; RESET-HOLD-SWEEP needed holds QC 78 / S81 292 / HEAD 113 clk): a die WITHOUT a PLL lock (clocks
+# are pins, root = ot_dp_rsync_s2 on rst_n) gets the same root counter in a host-independent form: reset.source.hold
+# {stable_cycles} = the SAME ot_dp_lockq u_rst_lockq after u_rst_root with its qualifier TIED high (HOLD_TIED).  It
+# counts stable_cycles RUNNING clocks after the synchronised rst_n release (no clock, no count: the release always
+# follows clocks running), then releases rst_root_n synchronously, so every partition release shifts by the same
+# stable_cycles + LOCKQ_EXTRA and the die holds every core reset that long whatever the host does.  Same cell, same tool
+# path (lock_stages -> wavefront entry, release offsets, bind, gen_phys checks) as the KV PLL lock form.
+HOLD_TIED = "1'b1"
+
+
+def hold_spec(P):
+    """None, or the declared host-independent root stable counter reset.source.hold {stable_cycles[, note]}."""
+    h = (P.reset.get("source") or {}).get("hold")
+    return dict(h) if h else None
+
+
+def root_qualifier(P):
+    """the root release qualifier ot_dp_lockq u_rst_lockq: {inst, pin, stable} of the declared PLL lock (pad plans), or
+    {inst None, pin None, tied True, stable} of reset.source.hold, else None."""
     ps = pad_spec(P)
-    if not ps or not ps.get("lock"):
-        return 0
-    return int(ps["lock"].get("stable_cycles", 16)) + LOCKQ_EXTRA
+    if ps and ps.get("lock"):
+        lk = ps["lock"]
+        return dict(inst=lk.get("inst"), pin=lk.get("pin"), stable=int(lk.get("stable_cycles", 16)))
+    h = hold_spec(P)
+    if h:
+        return dict(inst=None, pin=None, tied=True, stable=int(h.get("stable_cycles", 0)))
+    return None
+
+
+def lock_stages(P):
+    """root-entry stages added by the root qualifier ot_dp_lockq (PLL lock or tied hold counter): 0 without one."""
+    q = root_qualifier(P)
+    return q["stable"] + LOCKQ_EXTRA if q else 0
+
+
+def check_hold(P):
+    """G0 errors of a declared root stable counter reset.source.hold (empty when none is declared)."""
+    h = hold_spec(P)
+    if h is None:
+        return []
+    errs = []
+    sc = h.get("stable_cycles")
+    if type(sc) is not int or sc < 1:
+        errs.append(f"reset.source.hold.stable_cycles {sc!r}: an integer >= 1 (running clocks counted after rst_n release)")
+    ps = pad_spec(P)
+    if ps and ps.get("lock"):
+        errs.append("reset.source.hold with reset.source.lock: ONE root qualifier per die (raise lock.stable_cycles "
+                    "instead)")
+    if not wavefront(P):
+        errs.append("reset.source.hold needs reset.release wavefront (one die root entry)")
+    return errs
 
 
 def pad_false_path_pins(P, tn):
@@ -1291,9 +1336,10 @@ def for_type(P, tn, reach=None):
         if relay_lockup(P, tn):
             T["relay_lockup"] = relay_lockup_form(P)
         if T["entry"] == "sync" and lock_stages(P):
-            lk = pad_spec(P)["lock"]
-            T["lock"] = dict(inst=lk["inst"], pin=lk["pin"], stable=int(lk.get("stable_cycles", 16)),
-                             stages=lock_stages(P))
+            q = root_qualifier(P)
+            T["lock"] = dict(inst=q["inst"], pin=q["pin"], stable=q["stable"], stages=lock_stages(P))
+            if q.get("tied"):
+                T["lock"]["tied"] = True
         if T["relay_driver"]:
             T["relay_pair_boxes"] = blockages(P.types[tn])
         role, core_roles = start_roles(P, tn)
@@ -2422,7 +2468,8 @@ def wf_plan(P):
                         qualification='PREP raw-pin geometry only; native period/phase/reset relation unqualified')
         if pr is None:
             row.update(source=f"die {die_reset_port(P)} (asynchronous: the ONE root synchroniser" +
-                       (f" + PLL lock qualifier, +{lock_stages(P)} stages)" if lock_stages(P) else ")"))
+                       ((f" + root stable counter, +{lock_stages(P)} stages)" if hold_spec(P) else
+                         f" + PLL lock qualifier, +{lock_stages(P)} stages)") if lock_stages(P) else ")"))
         else:
             q = pr[0]
             k = sol["outs"][P.parts[q]["type"]].index(pr[1])
@@ -2971,7 +3018,15 @@ def _root_entry_lines(T, ind, src, lock_src, note):
             "(async input = the die reset pad ONLY)",
             f"{ind}ot_dp_lockq #(.STABLE({lk['stable']})) u_rst_lockq (.clk(clk), .d(rst_por_n), .locked({lock_src}), "
             f".q(rst_root_n));  // PLL lock qualifier ({lk['inst']}.{lk['pin']}): 2-flop sync + {lk['stable']}-cycle "
-            "stable count, sticky synchronous release (loss of lock after boot = HOST status, not a die reset)"]
+            "stable count, sticky synchronous release (loss of lock after boot = HOST status, not a die reset)"] \
+        if not lk.get("tied") else [
+            f"{ind}wire rst_por_n;",
+            f"{ind}ot_dp_rsync_s{ns} u_rst_root (.clk(clk), .async_rst_n({src}), .sync_rst_n(rst_por_n));  // {note} "
+            "(async input = the die reset pin ONLY)",
+            f"{ind}ot_dp_lockq #(.STABLE({lk['stable']})) u_rst_lockq (.clk(clk), .d(rst_por_n), .locked({HOLD_TIED}), "
+            f".q(rst_root_n));  // root stable counter (reset.source.hold, no PLL): {lk['stable']} running clocks "
+            f"after the synchronised rst_n release, then a sticky synchronous release (+{lk['stages']} clocks, "
+            "host-independent)"]
 
 
 def relay_cell(T, r, gated=False):
@@ -3511,6 +3566,7 @@ def check(P):
     if wavefront(P):
         try:
             errs += check_pad(P)
+            errs += check_hold(P)
             for tn, t in sorted(P.types.items()):
                 if t.get("hard") or not any(p["type"] == tn for p in P.parts.values()):
                     continue

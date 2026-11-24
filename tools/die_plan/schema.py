@@ -122,6 +122,11 @@ _reset_source = {"type": "object", "required": ["part", "bus"], "additionalPrope
                                 "lock": {"type": "object", "required": ["inst", "pin"], "additionalProperties": False,
                                          "properties": {"inst": _name, "pin": _name,
                                                         "stable_cycles": {"type": "integer", "minimum": 1}}},
+                                # QC-RSTCNT 11-24: host-independent root stable counter (no PLL): the same
+                                # ot_dp_lockq after u_rst_root with its qualifier tied high (reset_tree.hold_spec)
+                                "hold": {"type": "object", "required": ["stable_cycles"], "additionalProperties": False,
+                                         "properties": {"stable_cycles": {"type": "integer", "minimum": 1},
+                                                        "note": {"type": "string"}}},
                                 "note": {"type": "string"}}}
 
 # B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
