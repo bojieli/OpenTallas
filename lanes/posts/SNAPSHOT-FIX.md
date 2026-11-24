@@ -1,0 +1,1 @@
+- 2026-11-23 23:31 PST DONE: COORD-SNAPSHOT.md regenerates again (23:30 PST, 48 KB). Cause: coord_snapshot.py crashed IndexError on a queue post with empty [] head, every run since 11-16 17:45. Fixed (.bak-1123 kept), added live lanes, plan shas, failure_breakdown counts, host load/disk; handoff list limited to 24 h. Cron unchanged.
