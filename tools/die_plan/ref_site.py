@@ -14,6 +14,13 @@ bit_sites_um) are explicit xy, checked by ADV-BITSITE-SEAT in the same PRE run. 
 collector_reach checks its own edges).
 
     python3 tools/die_plan/ref_site.py PLAN [--baseline BASE] [--types a,b] [--root R] [--base-root R]
+
+COMPOSE re-key (COORD 11-24 ruling: a row that adds taps re-keys every index-keyed reference by site; report-only first, r703):
+    python3 tools/die_plan/ref_site.py reindex NEW --baseline PREV [--out OUT] [--types a,b]
+for every type whose tap set differs between PREV (the plan before the row) and NEW, retap.repoint_type re-points the tap names
+and the rst_n_t<i> / rr_t<i> indices by SITE (tap i -> the new tap nearest tap i's old site; seam output n_old + j -> n_new + j),
+whatever the published tree, and lists what changes.  Without --out nothing is written (report only); with --out the re-keyed
+plan is written for the compose to adopt.  Exit 0 either way.
 """
 import argparse
 import json
@@ -196,7 +203,77 @@ def run(raw, plan_path, braw=None, base_path=None, types=None, log=print):
     return dict(tot=tot, reach=fam_reach, moved=fam_moved, kind=fam_kind)
 
 
+def reindex_type(t, old, new):
+    """re-key type dict t (in place) from tap set old to new [(n, x, y)] by site -> [[where, key, was, now, um]] (retap rule)."""
+    import retap
+    return retap.repoint_type(t, old, new, reset=True)
+
+
+def reindex(raw, plan_path, braw, base_path, types=None, log=print):
+    """raw re-keyed in place against braw -> {type: changes}; types whose tap set is unchanged are not touched."""
+    import schema as S
+    P, PB = TS._plan(raw, plan_path), TS._plan(braw, base_path)
+    key = lambda ts: [(n, round(x, 6), round(y, 6)) for n, x, y in ts]  # noqa: E731
+    rep, fam, unev = {}, Counter(), 0
+    for tn in sorted(raw.get("partition_types") or {}):
+        if (types and tn not in types) or tn not in (braw.get("partition_types") or {}):
+            continue
+        t = raw["partition_types"][tn]
+        if not index_refs(t) and not (t.get("clock") or {}).get("landing_contract"):
+            continue
+        try:
+            TS._plandir(base_path)
+            old = [(n, float(x), float(y)) for n, x, y in S.tap_grid(PB, tn)]
+            TS._plandir(plan_path)
+            new = [(n, float(x), float(y)) for n, x, y in S.tap_grid(P, tn)]
+        except Exception as e:  # noqa: BLE001
+            unev += 1
+            log(f"NOT-EVALUABLE\t{tn}\t{type(e).__name__}: {str(e)[:120]}")
+            continue
+        if key(old) == key(new):
+            continue
+        try:
+            ch = reindex_type(t, old, new)
+        except Exception as e:  # noqa: BLE001
+            log(f"REINDEX-FAIL\t{tn}\t{type(e).__name__}: {str(e)[:160]}")
+            fam["FAIL"] += 1
+            continue
+        if ch:
+            rep[tn] = ch
+            for w, *_ in ch:
+                fam[family("." + w)] += 1
+            log(f"REINDEX\t{tn}\ttaps {len(old)} -> {len(new)}: {len(ch)} references re-keyed: "
+                + " ".join(f"{w}.{k}:{a}->{b}" for w, k, a, b, _u in ch[:6]))
+    log(f"SUMMARY\treindex: {len(rep)} types, {sum(len(v) for v in rep.values())} references re-keyed by site {dict(fam)}; {unev} not evaluable")
+    return rep
+
+
 def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if argv and argv[0] == "reindex":
+        ap = argparse.ArgumentParser(description="REF-SITE compose re-key by site (report only without --out)")
+        ap.add_argument("mode")
+        ap.add_argument("plan")
+        ap.add_argument("--baseline", required=True)
+        ap.add_argument("--out")
+        ap.add_argument("--types", default="")
+        ap.add_argument("--root")
+        ap.add_argument("--base-root")
+        a = ap.parse_args(argv)
+        raw, braw = json.loads(Path(a.plan).read_text()), json.loads(Path(a.baseline).read_text())
+        if a.root:
+            TS.ROOTS[str(a.plan)] = a.root
+        if a.base_root:
+            TS.ROOTS[str(a.baseline)] = a.base_root
+        reindex(raw, a.plan, braw, a.baseline, [t for t in a.types.split(",") if t] or None)
+        if a.out:
+            Path(a.out).write_text(json.dumps(raw, indent=1) + "\n")
+        return 0
+    return _main(argv)
+
+
+def _main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan")
     ap.add_argument("--baseline")
