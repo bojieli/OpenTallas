@@ -37207,3 +37207,4 @@ FAILED [AUTOPILOT f02823d0dc96] 2026-11-23 23:31:56 PST AUTOPILOT -> KIT-WAVE-3:
   STALE: S81 36 (31 cancelled-superseded, 5 held for plan event: dsdv_slice_c1x_C t1/t5, c3x_C t1, serdes__t14), QC 2 (glue superseded, tt_ctlm held for plan event).
   No flagged row is without a plan or lane; superseded rows need no action.
   Multi-job lanes: COORD-SNAPSHOT 7, FABLE-RC-ALL 6, PRECHECK-1119 4, QC-CB-PROBE 3, PRECHECK-CELLCAP 3, S81-ALLFIX-SLICE 3.
+- 2026-11-23 23:52 PST DIED [KV-PV-CAP] ot-run oth-ubuntu-4039083-1795506594 on viable-ram: rc=5 after 180 s, ended 07:52:51, log /srv/opentallas-scratch2/claude/kv-pv-cap/lec2/k3_ok.log, cmd: --mem 64 --threads 2 --disk 10 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap/lec2 -- bash /srv/opentallas-scratch2/claude/k | class=NO-PATTERN cause=KIT3 ok MITER_FAIL ERROR: Unsupported cell type: $shiftx ($flatten\gold.\u_vport_W.$shiftx$/srv/opentallas-scr
