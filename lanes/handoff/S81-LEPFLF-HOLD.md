@@ -5,7 +5,7 @@
   repair chunks hit the 200-buffer cap (RSZ-0060). Why this endpoint was skipped: NOT established.
 - My STA (E7 s81-lepflf-hold/dt, no SPEF/derate) does NOT reproduce: FF +5.3, TT -64.1, setup +720/+780. Uncalibrated.
 ## Candidate LEPFLF-LFNEG-1 (NOT ROW-REBASED)
-- RTL OT_SL81SL_LEP_LFNEG neg pre-stage: main f9681588a5 + comment fix 6eed04f985. Tree copy v2 E9 row/ot_s81sl_slice_lep_v2.sv
+- RTL OT_S81SL_LEP_LFNEG neg pre-stage: main f9681588a5 + comment fix 6eed04f985. Tree copy v2 E9 row/ot_s81sl_slice_lep_v2.sv
   (a2282728); ops E9 row/ops_lepflf_lfneg_v2.json.
 - LEC: extracted 4-bit block only, rising-launch assumed: k-induction SUCCESS, mutant FAIL. Bench hab P_PROD 0/1 PASS, f_lf
   trace identical (3 values only = weak). INERT pass.
