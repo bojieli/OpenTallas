@@ -113,3 +113,6 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 
 ## 2026-11-24 03:01 PST KIT-STAGE-IMPORT done
 - main 66331205584: ot-push-main exit 6 on new kit-staged import of an unstaged die_plan sibling (tools/fleet/kit_stage_imports.py, delta vs main). Canary-FAIL rule pending a canary record from FLOW-CANARY-R2.
+
+## 2026-11-24 03:45 PST GENDRY-WAVEMODE done
+- main dd479a7079b: PRE GENDRY follows the die kit_rtl mode (bind/script -> every non-hard type kit-rtl).
