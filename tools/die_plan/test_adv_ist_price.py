@@ -65,3 +65,12 @@ def test_native_out_lanes_flags_missing_lane():
     ab = {"internal_stations_types": ["ta"]}
     # o has lane L1 (src a.o); o2 has none -> flagged with 0 lanes
     assert A.native_out_lanes(P2, _Sch, ty, ab) == [("a", "o2", 0)]
+
+
+def test_not_run_headline_without_asbuilt():
+    """COORD 11-23 22:xx: c8 IST-PRICE without an as-built silently skipped FIXED-SPLIT/OUT-LANES (missed dn_s_3N_L3):
+    the summary line must say NOT-RUN up front."""
+    import types as _t
+    src = open(A.__file__).read()
+    assert "NOT-RUN: FIXED-SPLIT and OUT-LANES" in src
+    assert 'nr = "" if isinstance(ab, dict)' in src

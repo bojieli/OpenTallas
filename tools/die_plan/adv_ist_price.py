@@ -152,7 +152,8 @@ def _findings(raw, plan_path, tree=None, **_kw):
             hits.append((-1, _w(f"FIXED-SPLIT not checked: {e}")))
     hits.sort(key=lambda h: h[0])
     out = [m for _, m in hits[:MAX_LINES]]
-    out.append(_w("summary", f"{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE, {fixed_bad} FIXED-SPLIT/OUT-LANES{'' if isinstance(ab, dict) else ' (no as-built: FIXED-SPLIT not run)'}); {notab} lanes without a latency row"))
+    nr = "" if isinstance(ab, dict) else "NOT-RUN: FIXED-SPLIT and OUT-LANES (no as-built given: pass the integrator's current as-built, plan_advisory --asbuilt) -- "
+    out.append(_w("summary", f"{nr}{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE, {fixed_bad} FIXED-SPLIT/OUT-LANES); {notab} lanes without a latency row"))
     return out
 
 
