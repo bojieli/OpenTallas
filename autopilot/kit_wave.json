@@ -52591,7 +52591,18 @@
      "since": 1795519396.0,
      "why": "TYPE-CONTRACT-SPEC SDC audit 11-24 (COORD ruling): kept row carried onto the current plan; its kit SDC differs from a fresh current-plan generation (or kit+plan gone while counted): SDC-DIFF@2 LIVE"
     }
-   }
+   },
+   "pregrt_refresh": [
+    "sle_st_b_v2__cl14c98df5__pv41c959f3",
+    "slw_hc3__clccfc3e6b__pvcca9ff41",
+    "slw_st_b_v1__cl6357f1cc__pvffd43fdc",
+    "slw_st_b_v1__cle6023ec2",
+    "slw_st_b_v2__pva66d0f22__pvb80e2003",
+    "slw_st_b_v2__pvc2ec5bfb",
+    "slw_hc2__cla3497502__cl16607c7a",
+    "sle_st_b_v2__clfde1249e"
+   ],
+   "pregrt_refresh_pad": "all"
   },
   "hbm": {
    "enabled": true,
