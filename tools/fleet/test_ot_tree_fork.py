@@ -179,6 +179,8 @@ def test_host_runs_remote_with_script_on_stdin(tmp_path, monkeypatch):
         seen.update(argv=argv, input=input)
         return types.SimpleNamespace(returncode=0)
     monkeypatch.setattr(TF.subprocess, "run", run)
+    for k in TF.REMOTE_ENV:                     # E11-IO-STALL-1124: these travel to the remote side; this test checks the bare command
+        monkeypatch.delenv(k, raising=False)
     monkeypatch.setenv("OT_LANE", "LANE-X")
     assert TF.main(["/a/src", "/a/dst", "--host", "epyc8", "--jobs", "8"]) == 0
     assert "epyc8" in seen["argv"] and "ot-tree-fork" in seen["input"]
