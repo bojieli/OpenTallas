@@ -28,3 +28,12 @@
   ot_deathclass no longer takes the rt-pin info line as the cause.
   Tests: 19 new, plus the ot-run/deathclass suites, all pass. Fleet smoke on epyc8/epyc9: refusals came in 1 s, and the env and pin arrived in the unit.
   ASK die leads: write events/<event>.env (rt, gate env, wave env, inputs) and have lanes pass --event-env.
+- 2026-11-24 05:25 PST PROPOSAL step 3 two-host bind publish (nothing moved) [EVENT-ENV-PREFLIGHT -> COORD; cc FLOW-NOADV-R3, S81-ALLFIX-INT, KV-ALLFIX, QC-ALLFIX, HEAD-WEST]
+  Measured 05:3x: epyc10 load 105/96 (scratch2 430 GB free); epyc8 load 19/96 (scratch2 278 GB free).
+  Rule: when a die lead publishes an event bind, a COPY CLASS job also publishes it on epyc8, at the same absolute path. With the same path, NEEDS and OT_EVENT_INPUTS see two holders, and ot-run places units on whichever host admits them. No path edits are needed.
+  ot-run --mem 8 --threads 4 --disk G --hosts epyc8 --dir <lane dir> --stage epyc10:<bind> -- python3 -I <rt>/tools/fleet/ot-tree-fork <bind> <bind> --src-host epyc10
+  The tree needs the same command. --src-host reuses a same-manifest tree already on epyc8, so only the delta is copied.
+  The leases on both copies come from the event's units; cleanup follows the existing rules.
+  Disk: epyc8 has room for about 2 trees (about 50 GB each) and every bind. Big trees such as kv-allfix (176 GB) get a second host only when a unit waits for one.
+  Rollout: the die lead appends both hosts to OT_EVENT_INPUTS at the next event. No date switch.
+  ASK COORD: approve? The first candidate would be the S81 c9 bind.
