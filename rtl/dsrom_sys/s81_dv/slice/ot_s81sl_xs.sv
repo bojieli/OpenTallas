@@ -53,7 +53,9 @@
 // ---- physical structure -----------------------------------------------------------------------------------------------
 //   Kept (ot_v41_kreg) copies of every wide select: the BF write rotation per macro and half, the q / BF read-mux selects
 //   per 32 / 64-b slice; 8 reset-relay regions.  OT_S81SL_XS_WCOPY (opt-in): also the write data / mask family and
-//   beat-half selects, per macro and half (no cycle change).  Floorplan: tools/ref_tile/specs_s81slice/s81sl_xs.json.
+//   beat-half selects, per macro and half (no cycle change).  OT_S81SL_XS_GFLOCAL (opt-in, S81-SLICE-J9 + FAM-S81-DSDV-R1,
+//   wins over WCOPY): per-macro family select, 4 kept data copies and 4 kept mask copies per macro (64-b groups).
+//   Floorplan: tools/ref_tile/specs_s81slice/s81sl_xs.json.
 // ---------------------------------------------------------------------------------------------------------------------
 // ROM image names (INSTANCE, read from +OT_ROM_DIR) exist only in simulation; the hard macro has no parameters.
 `ifdef SYNTHESIS
@@ -190,7 +192,7 @@ module ot_s81sl_xs #(parameter INSTANCE = "") (
     wire [6:0]   mw_a [0:2][0:7];
     wire         mw_e [0:2][0:7];
     generate for (gs = 0; gs < 3; gs = gs + 1) begin : g_w
-        wire       v = gv_q[gs], f = gf_q[gs];
+        wire       v = gv_q[gs];
         wire [6:0] g = gi[gs];
         wire [1023:0] d = gd_q[1024*gs +: 1024];
         // BF16 columns: col[b] lane j = element 8 j + b of the beat
@@ -213,9 +215,35 @@ module ot_s81sl_xs #(parameter INSTANCE = "") (
             wire [2:0] bsel0 = M - ur0, bsel1 = M - ur1;
             wire [127:0] cb = {col[bsel1][127:64], col[bsel0][63:0]};
             wire qh = M[1];
+`ifdef OT_S81SL_XS_GFLOCAL
+            // Replicate the family select on the existing capture edge. Each
+            // kept data copy serves just a local 64-bit SRAM write-pin group.
+            wire f;
+            ot_v41_kreg u_gf_ctl (.clk(clk), .arst_n(1'b1), .d(g_fam[gs]), .q(f));
+            wire [255:0] b_data = {cb, cb};
+            wire [255:0] q_data = qh ? d[521:266] : d[255:0];
+            genvar wd;
+            for (wd = 0; wd < 4; wd = wd + 1) begin : g_wd
+                wire f_data;
+                ot_v41_kreg u_gf_data (.clk(clk), .arst_n(1'b1), .d(g_fam[gs]), .q(f_data));
+                assign mw_d[gs][gm][64*wd +: 64] = f_data ? b_data[64*wd +: 64] : q_data[64*wd +: 64];
+            end
+`else
+            wire f = gf_q[gs];
+`endif
             assign mw_e[gs][gm] = v && (f || (g[2] == M[2] && g[0] == M[0]));
             assign mw_a[gs][gm] = f ? {wpar_b, u} : {wpar_q, qrow};
-`ifdef OT_S81SL_XS_WCOPY
+`ifdef OT_S81SL_XS_GFLOCAL
+            // MASKLOCAL (IQC same-edge, FAM-S81-DSDV-R1): each SRAM mask quadrant from its own kept copy on the XG input edge.
+            genvar wm;
+            for (wm = 0; wm < 4; wm = wm + 1) begin : g_wmask
+                localparam MASK_HI = (wm >= 2);
+                wire mask_d = !g_fam[gs] || (g_idx[7*gs] == MASK_HI);
+                wire mask_q;
+                (* keep *) ot_v41_kreg u_mask (.clk(clk), .arst_n(1'b1), .d(mask_d), .q(mask_q));
+                assign mw_m[gs][gm][64*wm +: 64] = {64{mask_q}};
+            end
+`elsif OT_S81SL_XS_WCOPY
             // S81-J6 (FABLE-CLOSURE-1930 lever 4, iq_C): the family / beat-half selects of the write data mux and mask are
             // kept per-macro, per-half copies of {g_fam, g_idx[0]}, captured from the pins on the same edge as gf_q / gi_q
             // (as u_ur0 / u_ur1).  Without it the one gf_q[gs] flop drives 8 x 512 mux / mask loads (iq_C t1 J5 place:
