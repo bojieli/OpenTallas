@@ -4,3 +4,4 @@
   Grid-tap pin leg measured on 3 hubs: 59-114 ps. Residual TT/FF (leg FF scaled): ingest +146..+201 / +116..+160; order +114..+169 / +91..+135.
   Early form: offset ingest 90.40/70.59, order 57.93/45.69; unpadded clk_c leg on KV kits median 10, p90 33 (max 87) -> residual TT +7 median, +30 p90. Deliverable only if die DME gives 90 early; not proven.
   Next: row = early taps on signed means, hub_Wi PRE + scoped strict. ETA 01:30 PST.
+- 2026-11-24 00:28 PST DONE [KV-HR-DEEPCLK] ot-run oth-ubuntu-2988385-1795508503 on tolerant-swine: rc=0 after 401 s, ended 00:28:22, log /home/ubuntu/tmp/kvhrdc/ck.otrun.log, cmd: --hosts epyc8 --mem 32 --threads 2 --priority proof --dir /srv/opentallas-scratch2/claude/kv-hr-deepclk/ff -- bash /srv/opentallas-scratch2/
