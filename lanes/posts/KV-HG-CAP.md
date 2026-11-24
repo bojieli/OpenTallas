@@ -166,3 +166,4 @@
   - PRE shows ENTRYFOOT 77 lines. These are the pins left in place, plus pv_v7e and sys_SD/SD_v1 as routed. RSTREACH is unchanged and owned by KV-RSTREACH.
   - Ready for A5t5 compose. Plan: epyc11 KV-HG-CAP/ef/plan_A5t3_ef4.json; ledger: ledger_A5t3_ef4.json.
   - Next: re-run the what-if on A5t3 kits as they reach CTS, for the A5t6 row.
+- 2026-11-24 10:48 PST DIED [KV-HG-CAP] ot-run oth-ubuntu-2605722-1795532048 on viable-ram: rc=255 after 19298 s, ended 18:47:40 env=wave+0, log /home/ubuntu/coord/autopilot/private_specs/KV-HG-CAP/qwen_kvsys_kv3_hg_v1p5_1124114922/chain_a1.live.log, cmd: --mem 48 --threads 8 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D29/private/KV-HG-CAP/kv3_h | class=SSH-DROP cause=ot-run: NOT COMPLETED: the command started on epyc2 (unit oth-ubuntu-2605722-1795532048) but the connection en
