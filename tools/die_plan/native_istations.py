@@ -177,6 +177,31 @@ def annotate_kit_dest(b):
             L['internal_kit_dest_core_cycles']=n
 
 
+def annotate_soft_dest(b):
+    """Charge explicitly declared receiver soft cycles once, in place of a lane pad."""
+    fixed = {row["id"]: int(row.get("fixed_cycles", 0)) for row in b.plan.get("lanes", [])}
+    for part, links in b.in_bus.items():
+        typ = b.types.get(b.parts[part].get("type"), {})
+        for link in links:
+            lid = link.get("lane")
+            if not lid or link.get("spine"):
+                continue
+            cycles = CL.soft_in_cycles(typ, link["iname"])
+            if not cycles:
+                continue
+            promised = (int(link.get("internal_source_cycles", 0))
+                        + int(link.get("internal_kit_source_cycles", 0))
+                        + int(link.get("internal_kit_dest_core_cycles", 0)) + cycles)
+            base = 2 + sum(hop["stations"] for hop in link.get("ft", []))
+            base += int(link.get("clock_landing_cycles", 0))
+            if fixed.get(lid, 0) < promised or int(link.get("cycles", 0)) < base + promised:
+                b.errors.append(f"SOFT_DEST_LATENCY {lid}: {part}.{link['iname']} declares {cycles} receiver cycles "
+                                f"but fixed_cycles={fixed.get(lid, 0)} and table={link.get('cycles', 0)} "
+                                f"need at least {promised} fixed and {base + promised} total")
+                continue
+            link["internal_dest_soft_cycles"] = cycles
+
+
 def native_view(typ,only=None):
     """The copy of a plan type that bind-time native materialization hands to kit_istations: OUT-bus rows only.
     IN-bus station forms (station_trees / pad_landing, kit_istation_forms) are realised by the kit-rtl kit_istations stage on the

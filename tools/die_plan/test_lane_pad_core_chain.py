@@ -105,5 +105,36 @@ class ReceiverCoreChain(unittest.TestCase):
             self.assertNotIn("internal_kit_dest_core_cycles", L)
 
 
+class ReceiverSoftChain(unittest.TestCase):
+    def test_priced_pure_receiver_has_no_extra_pad(self):
+        b, link = fixture(cycles=5, regs=0, fixed=3, landing=0)
+        b.types["rx"]["soft_latency"] = {"in": {"lepf_i0": 3}, "inst": "u_lep"}
+        link["iname"] = "lepf_i0"
+        self.assertEqual(bind.lane_pad(link), 3)
+        native_istations.annotate_soft_dest(b)
+        self.assertEqual(b.errors, [])
+        self.assertEqual(link["internal_dest_soft_cycles"], 3)
+        self.assertEqual(bind.lane_pad(link), 0)
+
+    def test_scopes_each_receiver_bus(self):
+        b, link = fixture(cycles=5, regs=0, fixed=3, landing=0)
+        b.types["rx"]["soft_latency"] = {"in": {"lepf_i0": 3}, "inst": "u_lep"}
+        link["iname"] = "lepk_i0"
+        native_istations.annotate_soft_dest(b)
+        self.assertNotIn("internal_dest_soft_cycles", link)
+        self.assertEqual(bind.lane_pad(link), 3)
+        self.assertEqual(b.errors, [])
+
+    def test_rejects_unpriced_receiver_cycles(self):
+        for fixed, total in ((2, 5), (3, 4)):
+            b, link = fixture(cycles=total, regs=0, fixed=fixed, landing=0)
+            b.types["rx"]["soft_latency"] = {"in": {"lepf_i0": 3}, "inst": "u_lep"}
+            link["iname"] = "lepf_i0"
+            native_istations.annotate_soft_dest(b)
+            self.assertNotIn("internal_dest_soft_cycles", link)
+            self.assertEqual(len(b.errors), 1)
+            self.assertIn("SOFT_DEST_LATENCY", b.errors[0])
+
+
 if __name__ == "__main__":
     unittest.main()
