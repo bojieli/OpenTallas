@@ -43,7 +43,7 @@ rc85	S81-ALLFIX-COL	TAPGRT ef09171c92b8 (r2) + COL-H10-REACH_J9 v2 (u_s15 x -15.
 rc87	S81-ALLFIX-COL	J9 tree porous_views_data >=152df1bc05 (ASSEMBLY)	porous 11e80a73410f	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc88	S81-ALLFIX-COL	COL-H9R12-SSTRIP 3c285d644712 (supersedes LPAD-SPREAD)	8b09943f6df5	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
 rc89	S81-ALLFIX-COL	TGR5-J9-TAPS-v4 s3 (proxy register sinks on all 120 types)	TGR5 s3 (count)	yes	c4 f347fb918fab	B1 0	-	-	-	-	-	IN-BASE (gates on combined strict+probe)
-x1	S81-ALLFIX-SVC	SVC-HI4-SPLIT-F65F	-	no	-	-	-	-	-	-	-	INT-RULING 18:2x: B1 hi4 split kept, six-lane check = keep B1 values, strict decides
+x1	S81-ALLFIX-SVC	SVC-HI4-SPLIT-F65F	plan ccac0e15f21a (R9 treeJ9s)	no	-	PASS rc0	PASS (rt a36b0f07e4d0, epyc7 ob9/b_1d1e2bed3f57)	PASS	-	SVC-OWN probe_j9.sh: lo rs t3, hi pvso_entry t1/t2, lo rs_w t1	-	strict PASS 23:03 on own plan (B1 hi4 split = in ALLFIX base); probes via S81-ALLFIX-SVC
 hg-S81-CLOCK-SKEW	S81-OPEN-CLOCK	NONE	-	no	-	-	-	-	-	changed-type probes, read >= -42 ps	-	14 items: 9 IN-BASE/IN-COMPOSE (OPEN-CLOCK 19:27); leaf t23/t67 vp->vp ride TGR5-LEAF-REGEN-1 -> c8
 hg-S81-CLOCK-TAP	S81-OPEN-CLOCK	TAP-GRID-R5 J9 regen + LANECH channels + XGARRAY-2 strip mov	-	no	-	-	-	-	-	-	-	OPEN-CLOCK FINDING: r2_near reverts 2863 TGR5 leaf taps to J8; row TGR5 regen v4 leaf-only append, LAST step before tail, ETA 21:00 -> c8
 hg-S81-GLOBAL-DEMAND	S81-OPEN-DEMAND	SLICEC-XGARRAY-2 8d45ed26eb63 (kv512_C/lepe_nh_mus_C) + COL-	-	no	-	-	-	-	-	col_h9_r2 cl774acf45 pvea45273b probe (c8)	-	IN-BASE (OPEN-DEMAND 19:28: COL-H9R12-SSTRIP + XGARRAY-2 in B1; c6 unchanged)
