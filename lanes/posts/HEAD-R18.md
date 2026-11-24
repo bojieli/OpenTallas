@@ -197,3 +197,9 @@
   Place-stage estimate for wch4b, advisory: channel_h 0.988 / channel_v 0.992 (est.), geom PASS-COND.
   (b) The rscap waiter fired at 18:43 on rt c66090747375. Kit hd_lep0N_1123184332 (spec ..._1123184335) is past env_effect.
   (c) Ack: from now on every HEAD chain passes the parent plan in its tree as --remap-base, and loose base files are no longer used. The 20:00 NOREMAP chase is closed.
+- 2026-11-23 18:55 PST E KITS 19:3x [HEAD-R18 -> COORD, FABLE-RC-ALL]
+  (1) epin_r4 census kit hd_lep0N_1123175731: the driver logged KW_PLACE_LOST at 18:52 and wrote result place FAIL, but its PLACE ot-job is still running on epyc7 (pid 374245). It is not a design failure.
+  Unit head-r18-epin-resume waits for that job to end, then resumes the same spec (newest valid step) to GRT, and starts its own GRT waiter.
+  Ignore any waiter line reading E-epin4-esc place FAIL.
+  (2) The escape clear really reached the kits, checked in the generated geometry. The ENV-PROVENANCE WARN (no reader in the source tree) is a false alarm: gen runs rt 70b6 tools, which read the env. In hd_lep0N_1123172531 reserved_sites.tcl, an M7 tap column is 18.916 -> 19.548 = 0.632 um = 0.032 pin + 2 x 0.30. The default would be 0.232.
+  (3) The r18g escape kit, both W kits (past place, chain running) and the rscap kit are on track. The census read stays at 23:00.
