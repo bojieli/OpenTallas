@@ -62,6 +62,10 @@ set blk [ord::get_db_block]
 foreach b [$blk getBTerms] {
   if {[$b getIoType] ne "OUTPUT"} continue
   set cn [$b getNet]; set path {}
+  set shadow [$blk findNet [$b getName]]
+  if {$shadow ne "NULL" && $shadow ne $cn} {
+    error "output port [$b getName] shadows a distinct internal net"
+  }
   for {set i 0} {$i < 8} {incr i} {
     set dv ""; foreach it [$cn getITerms] { if {[$it isOutputSignal]} { set dv $it } }
     if {$dv eq ""} break

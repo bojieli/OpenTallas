@@ -72,8 +72,21 @@ foreach bt [$ot_oh_blk getBTerms] {
   set y [expr {max([$ot_oh_ca yMin], min($y, [$ot_oh_ca yMax] - [$ot_oh_hb getHeight]))}]
   set hb $ot_oh_hb; set hbs [list $ot_oh_hb]
   if {$ot_oh_shb ne "NULL" && [regexp -- $ot_oh_sre [$bt getName]]} { set hb $ot_oh_shb; set hbs [lrepeat $ot_oh_sst $ot_oh_shb]; incr ot_oh_ns }
+  # Once the port moves to the end of the pad, its old net is an internal signal.
+  # Keep the port name free so write_verilog cannot drive it from both nets.
+  set ot_oh_src ""
+  if {[$net getName] eq [$bt getName]} {
+    set ot_oh_src [format "ot_outhold_src%05d" $ot_oh_n]
+    while {[$ot_oh_blk findNet $ot_oh_src] ne "NULL" || [$ot_oh_blk findBTerm $ot_oh_src] ne "NULL"} {
+      append ot_oh_src _
+    }
+  }
   set pn [odb::dbNet_create $ot_oh_blk [format "ot_outhold_p%05d" $ot_oh_n]]
   $bt disconnect
+  if {$ot_oh_src ne ""} {
+    $net rename $ot_oh_src
+    if {[$ot_oh_blk findNet $ot_oh_src] ne $net} { error "OUTHOLD: cannot rename internal source to $ot_oh_src" }
+  }
   $bt connect $pn
   set cur $net; set k 0
   set nst [expr {[llength $hbs] + 2}]
