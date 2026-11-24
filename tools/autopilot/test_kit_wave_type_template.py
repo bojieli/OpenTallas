@@ -141,3 +141,25 @@ def test_credit_probe_runs_records(tmp_path):
     p = json.loads(out.split("AP_JSON ", 1)[1])
     assert not p.get("error"), p
     assert [(r["sibling"], r["credit"]) for r in p["records"]] == [(b, True)]
+
+
+def test_strict_rule_is_passed_only_when_the_die_sets_it_and_open_members_retry(tmp_path):
+    c, st, _rpy, _calls, rep, mem = _credit_world(tmp_path)
+    seen = []
+
+    def rpy(host, code, args, timeout=0):
+        seen.append(args)
+        return {"records": [{"schema": "opentallas.col_inherit.v1", "sibling": mem, "representative": rep, "credit": len(seen) > 2,
+                             "credit_blockers": ["no via map for x"]}]}
+    d = c["dies"]["qwen_kvsys"]
+    d.update(type_template_rule="strict", type_template_kits={mem: "/k"}, type_template_weights=["/w"], type_template_rom_dir="/r")
+    ap = FakeAP(tmp_path)
+    assert KW.template_credit_step(ap, c, st, {}, str(tmp_path), rpy=rpy) == 0
+    assert (seen[0]["rule"], seen[0]["kits"], seen[0]["weights"], seen[0]["rom_dir"]) == ("strict", {mem: "/k"}, ["/w"], "/r")
+    assert not st.get("template_credit") and not (tmp_path / KW.INHERIT_MEMBERS).exists()
+    nlog = len(ap.lines)
+    assert KW.template_credit_step(ap, c, st, {}, str(tmp_path), rpy=rpy) == 0 and len(ap.lines) == nlog          # same refusal: quiet retry
+    assert KW.template_credit_step(ap, c, st, {}, str(tmp_path), rpy=rpy) == 1 and st["template_credit"]          # now credited, closed
+    c2, st2, rpy2, calls2, _r, _m = _credit_world(tmp_path / "b" if (tmp_path / "b").mkdir() is None else tmp_path)
+    assert KW.template_credit_step(FakeAP(tmp_path / "b"), c2, st2, {}, str(tmp_path / "b"), rpy=rpy2) == 1
+    assert "rule" not in calls2[0][1]

@@ -13,6 +13,17 @@ Two marked types are one group only when BOTH keys are equal (nothing is assumed
               col layout keys but 51 kits, because a position that exports a reset to its neighbour has another reset tree and pin.
 A marked type with no bound RTL file is its own group (it builds on its own; never a member).
 
+STRICT CREDIT (S81-ROM-TEMPLATE 11-23; credit(..., rule="strict"), die option type_template_rule "strict"): a member is credited only
+when ALL of these hold as well (each refusal is named in credit_blockers):
+  logic    the ROM image strings are masked only on instances of the type's own plan hard cores (black boxes in synthesis and LEC); an
+           image string on any other module stays in the rtl key, so equal keys mean the same netlist by construction
+  images   every image instance of the member's BOUND RTL sits on the same bound instance / module as in the representative and names the
+           same ROM path below the frame (no permutation), all in one frame, and no image is named by any other position of the die
+  kit      the generated kit of the member equals the representative's (kit_files: every file, own name / image strings / part names /
+           comments / provenance hashes normalised) - the automated geometry, constraint and hook equality check
+  content  every image has its via map(s), listed with the same sha256 in a PASS weight record (rom_gen.py weights + verify-weights,
+           schema opentallas.rom-weights-*), and the member's image set differs from the representative's and from every other member's
+
   groups  PLAN --bind-rtl DIR [--all GLOB ...]          template groups (representative, members); --all = treat the globbed types as marked
   check   PLAN --bind-rtl DIR --repo SRC [--all GLOB ...] [--rom-dir DIR] [--out JSON]
                                                         per position: layout key, rtl key, outline, hard-core LEF/lib sha (files of SRC), differing
@@ -26,6 +37,8 @@ A marked type with no bound RTL file is its own group (it builds on its own; nev
                                                         bound RTL, via map file + sha) with the core rectangle in the die frame; checks that every
                                                         ROM core has the same module, LEF file sha, origin and orient as in the representative; exit 1
                                                         on any mismatch
+  kitcmp  PLAN --rep TYPE --rep-kit DIR --member TYPE --member-kit DIR [--out JSON]
+                                                        generated-kit equality of one pair (files that differ after normalisation); exit 1
   view    --rep TYPE --member TYPE --lef F --lib F --out DIR
                                                         the member's hard view = the representative's LEF / Liberty under the member's name
                                                         (die assembly places it with the position's orientation; the ROM via map is per instance)
@@ -46,6 +59,7 @@ FLAG = "type_template"
 SCHEMA = "opentallas.type_template.v1"
 _CMT = re.compile(r"//[^\n]*|/\*.*?\*/", re.S)
 _IMG = re.compile(r'\.(INSTANCE|VIAMAP)\s*\(\s*"[^"]*"\s*\)')
+_INST = re.compile(r"^(\s*)(\w+)(\s*#\s*\()(.*?)(\)\s*\w+\s*\()", re.M | re.S)
 
 
 def family(name):
@@ -64,9 +78,19 @@ def layout_key(name, t):
     return CI.jsha([family(name), w, fixed])
 
 
-def rtl_key(text, name):
+def hard_modules(t):
+    """modules placed as hard cores of a plan type: black boxes of the kit, the only modules whose image string is not logic"""
+    return frozenset(str(h.get("module")) for h in t.get("hard_cores") or [] if h.get("module") and h.get("lef") and h.get("lib"))
+
+
+def rtl_key(text, name, hard=None):
+    """hard = the modules whose INSTANCE / VIAMAP strings are masked (hard_modules); None = every module (the 11-19 key)"""
     s = _CMT.sub("", text).replace(name, "@T")
-    s = _IMG.sub(r".\1(@I)", s)
+    if hard is None:
+        s = _IMG.sub(r".\1(@I)", s)
+    else:
+        s = _INST.sub(lambda m: m.group(0) if m.group(2) not in hard else
+                      m.group(1) + m.group(2) + m.group(3) + _IMG.sub(r".\1(@I)", m.group(4)) + m.group(5), s)
     return CI.sha256_bytes(re.sub(r"\s+", " ", s).strip().encode())
 
 
@@ -78,7 +102,7 @@ def _rtl(bind_rtl, name):
         return None
 
 
-def groups(plan, bind_rtl, globs=()):
+def groups(plan, bind_rtl, globs=(), strict=False):
     """-> [dict(family, key, layout_key, rtl_key, representative, members)] over the marked types, sorted; the representative is the
     first name of the group, so every host and every tick picks the same one."""
     pt = CI.plan_types(plan)
@@ -86,7 +110,7 @@ def groups(plan, bind_rtl, globs=()):
     for n in marked(pt, globs):
         text = _rtl(bind_rtl, n)
         lk = layout_key(n, pt[n])
-        rk = rtl_key(text, n) if text is not None else "no-bound-rtl:" + n
+        rk = rtl_key(text, n, hard_modules(pt[n]) if strict else None) if text is not None else "no-bound-rtl:" + n
         by.setdefault((family(n), lk, rk), []).append(n)
     out = []
     for (fam, lk, rk), names in sorted(by.items(), key=lambda kv: min(kv[1])):
@@ -172,13 +196,169 @@ def flag(plan, globs):
     return sorted(done)
 
 
-def records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs=(), lec_policy="advisory", via_policy="advisory", judge=CI.judge_signoff):
+# ---------------------------------------------------------------- strict rule: images, kit equality, ROM content
+def image_owners(plan, bind_rtl):
+    """{image string: [type]} over every type of the plan that has a bound RTL file (a die-wide census: an image named twice is refused)"""
+    out = {}
+    for n in CI.plan_types(plan):
+        text = _rtl(bind_rtl, n)
+        for _m, image in (bound_images(text) if text else {}).values():
+            out.setdefault(image, []).append(n)
+    return out
+
+
+def image_blockers(plan, bind_rtl, rep, member, owners):
+    """why the member's ROM images are not the representative's with another frame: instance / module set, permutation, frame, sharing.
+    The bound RTL is the source (a type without param_set takes its images from parameter defaults: param_set alone is blind there)."""
+    pt = CI.plan_types(plan)
+    a, b = bound_images(_rtl(bind_rtl, member) or ""), bound_images(_rtl(bind_rtl, rep) or "")
+    why = []
+    if not a:
+        why.append("no ROM image instance in the bound RTL")
+    if {k: v[0] for k, v in a.items()} != {k: v[0] for k, v in b.items()}:
+        why.append("image instances / modules differ from the representative")
+    hard = hard_modules(pt[member])
+    soft = sorted({v[0] for v in a.values() if v[0] not in hard})
+    if soft:
+        why.append("image string on module(s) that are not plan hard cores: " + ",".join(soft[:3]))
+    tail = lambda x: x.split(".", 1)[1] if "." in x else x
+    perm = sorted(k for k in set(a) & set(b) if tail(a[k][1]) != tail(b[k][1]))
+    if perm:
+        why.append("image permuted at %d instance(s), e.g. %s = %s" % (len(perm), perm[0], a[perm[0]][1]))
+    if len({v[1].split(".", 1)[0] for v in a.values()}) > 1:
+        why.append("images of more than one frame")
+    if len({v[1] for v in a.values()}) != len(a):
+        why.append("one image on two instances")
+    shared = sorted(v[1] for v in a.values() if [t for t in owners.get(v[1], []) if t != member])
+    if shared:
+        why.append("image also named by another position: %s (%s)" % (shared[0], owners[shared[0]][0]))
+    return why
+
+
+def load_weights(paths):
+    """PASS weight records -> ({viamap file name: sha256}, [errors]).  A record = <dir>/weights.manifest.json (rom_gen weights)
+    with a verify-weights result next to it (weights.verify.json, verdict PASS, same manifest sha)."""
+    out, err = {}, []
+    for p in paths or []:
+        raw = open(p, "rb").read()
+        man = json.loads(raw)
+        vp = os.path.join(os.path.dirname(p), "weights.verify.json")
+        try:
+            v = json.load(open(vp))
+        except (OSError, ValueError):
+            err.append("%s: no weights.verify.json" % p)
+            continue
+        if v.get("verdict") != "PASS" or v.get("manifest_sha256") != CI.sha256_bytes(raw):
+            err.append("%s: verify-weights is not PASS on this manifest" % p)
+            continue
+        if not (man.get("checkpoint") or {}).get("index_sha256_seen"):
+            err.append("%s: the images name no checkpoint" % p)
+            continue
+        for r in man.get("instances") or []:
+            out[os.path.basename(str(r.get("viamap")))] = r.get("viamap_sha256")
+    return out, err
+
+
+def member_images(bind_rtl, name, rom_dir):
+    """[(image string, [(file, sha256)])] of every image of the bound RTL"""
+    names = sorted(os.listdir(rom_dir)) if rom_dir and os.path.isdir(rom_dir) else []
+    out = []
+    for image in sorted({v[1] for v in bound_images(_rtl(bind_rtl, name) or "").values()}):
+        rx = re.compile(r"^%s%s\.viamap\.hex$" % (re.escape(image), CI.IMAGE_SUFFIX))
+        out.append((image, [(f, CI.sha256_file(os.path.join(rom_dir, f))) for f in names if rx.match(f)]))
+    return out
+
+
+def content_blockers(images, weights, other_sets):
+    """images = member_images; weights = load_weights map; other_sets = content sets (frozenset of sha) of the representative and of the
+    members already checked.  A content equal to another position's is refused: the variant would not be a different ROM."""
+    why = []
+    miss = [i for i, f in images if not f]
+    if not images or miss:
+        why.append("no via map for %s" % (miss[0] if miss else "any image"))
+    bad = [f for _i, files in images for f, sha in files if sha is None or weights.get(f) != sha]
+    if bad:
+        why.append("%d via map(s) not in a PASS weight record, e.g. %s" % (len(bad), bad[0]))
+    cs = frozenset(s for _i, files in images for _f, s in files)
+    if cs and cs in other_sets:
+        why.append("ROM contents equal another position's (not a different image)")
+    return why, cs
+
+
+def part_names(plan, name):
+    parts = plan.get("partitions") or []
+    return sorted((str(p.get("name")) for p in (parts if isinstance(parts, list) else parts.values()) if isinstance(p, dict) and p.get("type") == name),
+                  key=lambda x: -len(x))
+
+
+KIT_SKIP_DIRS = {"__pycache__", "run", "bind_sidecars", "geom", "logs", "future_lec"}
+# records of WHAT the kit was made from (name / sha / path of other files); the files themselves are compared
+KIT_PROV_KEYS = re.compile(r'"(?:[A-Za-z_0-9]*sha256|[A-Za-z_0-9]*_sha|created|generated|mtime|contract|source|src|path|seal|digest)"\s*:\s*"[^"]*"')
+
+
+def kit_norm(text, name, parts, images, code):
+    """a kit file's text with what may differ between two ROM variants removed: RTL comments (code files), own name, the parts placed as
+    this type, the type's own image strings, scratch paths, provenance hashes.  Nothing numeric is touched."""
+    if code:
+        text = _CMT.sub("", text)
+    for i in sorted(images, key=lambda x: -len(x)):
+        text = text.replace('"%s"' % i, '"@I"')
+    text = text.replace(name, "@T")
+    for p in parts:
+        text = re.sub(r"(?<![A-Za-z0-9_])%s(?![A-Za-z0-9_])" % re.escape(p), "@P", text)
+    text = KIT_PROV_KEYS.sub(lambda m: m.group(0).split(":", 1)[0] + ': "@H"', text)
+    return re.sub(r"/(?:srv|tmp|home)/[^\s\"':,;)\]}]*", "@D", text)
+
+
+def kit_files(kit, plan, name, images=None):
+    """{relative file: sha256 of the normalised bytes} of a generated (not built) kit directory"""
+    if images is None:
+        images = {CI.unquote(v) for k, v in CI.param_set(CI.plan_types(plan)[name]).items() if CI.IMAGE_PARAM_RE.match(k)}
+    parts, out = part_names(plan, name), {}
+    for root, ds, fs in os.walk(kit, followlinks=True):
+        ds[:] = sorted(x for x in ds if x not in KIT_SKIP_DIRS)
+        for f in fs:
+            p = os.path.join(root, f)
+            rel = os.path.relpath(p, kit).replace(name, "@T")
+            raw = open(p, "rb").read()
+            try:
+                raw = kit_norm(raw.decode(), name, parts, images, f.endswith((".sv", ".v", ".svh", ".vh"))).encode()
+            except UnicodeDecodeError:
+                pass
+            out[rel] = CI.sha256_bytes(raw)
+    return out
+
+
+def kit_blockers(kit_rep, kit_mem, plan, rep, member, bind_rtl=None):
+    """-> (blockers, kit key, files compared)"""
+    for d in (kit_rep, kit_mem):
+        if not d or not os.path.isdir(d):
+            return ["no generated kit to compare (%s)" % d], None, 0
+    im = lambda n: {v[1] for v in bound_images(_rtl(bind_rtl, n) or "").values()} or None
+    a, b = kit_files(kit_rep, plan, rep, im(rep)), kit_files(kit_mem, plan, member, im(member))
+    if not a or "config.mk" not in b:
+        return ["kit directory holds no generated kit (config.mk)"], None, len(b)
+    diff = sorted(f for f in set(a) | set(b) if a.get(f) != b.get(f))
+    why = ["%d generated kit file(s) differ: %s" % (len(diff), ",".join(diff[:6]))] if diff else []
+    return why, CI.jsha(sorted(b.items()))[:16], len(b)
+
+
+def records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs=(), lec_policy="advisory", via_policy="advisory", judge=CI.judge_signoff,
+            rule="", kits=None, weights=None):
     """col_inherit records (dicts, nothing written) for every member of rep's template group.  The bound RTL text identity (rtl key)
-    is the logic proof, so a record carries lec EQUIVALENT by construction with the rtl key."""
-    g = next((x for x in groups(plan, bind_rtl, globs) if x["representative"] == rep), None)
+    is the logic proof, so a record carries lec EQUIVALENT by construction with the rtl key.
+    rule "strict" (module docstring): kits = {type: generated kit dir}, weights = paths of weights.manifest.json."""
+    if rule not in ("", "strict"):
+        raise ValueError("type_template rule %r" % rule)
+    strict = rule == "strict"
+    g = next((x for x in groups(plan, bind_rtl, globs, strict=strict) if x["representative"] == rep), None)
     if g is None:
         raise KeyError("%s is not the representative of a template group" % rep)
     out = []
+    if strict:
+        owners, (wmap, werr) = image_owners(plan, bind_rtl), load_weights(weights)
+        sets = {frozenset(s for _i, f in member_images(bind_rtl, rep, rom_dir) for _n, s in f)} - {frozenset()}
+        own_rep = image_blockers(plan, bind_rtl, rep, rep, owners)
     for m in g["members"]:
         lec = dict(verdict="EQUIVALENT", method="bound RTL text identity outside the ROM image strings (type_template rtl key)",
                    rtl_key=g["rtl_key"], template_group=g["key"])
@@ -190,16 +370,25 @@ def records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs=(), lec_policy="a
             # the kit the sign-off covers, so their absence here is recorded and does not refuse the credit
             rec["credit_blockers"] = [b for b in rec["credit_blockers"] if not b.startswith("no viamap image for ")]
             rec["credit"] = not rec["credit_blockers"]
+        if strict:
+            why = ["representative: " + w for w in own_rep] + image_blockers(plan, bind_rtl, rep, m, owners)
+            kw, key, nf = kit_blockers((kits or {}).get(rep), (kits or {}).get(m), plan, rep, m, bind_rtl)
+            cw, cs = content_blockers(member_images(bind_rtl, m, rom_dir), wmap, sets)
+            sets.add(cs)
+            rec["credit_blockers"] = rec["credit_blockers"] + why + kw + werr + cw
+            rec["credit"] = not rec["credit_blockers"]
+            rec.update(rule="strict", kit_key=key, kit_files_compared=nf, image_check=not why, content_check=not (werr + cw),
+                       images=len(bound_images(_rtl(bind_rtl, m) or "")), plan_sha256=CI.jsha(plan))
         out.append(rec)
     return out
 
 
 def credit(plan, bind_rtl, repo, rom_dir, rep, signoff, out_dir, members_tsv=None, globs=(), lec_policy="advisory", via_policy="advisory",
-           judge=CI.judge_signoff):
+           judge=CI.judge_signoff, rule="", kits=None, weights=None):
     """records() written as <out>/<member>/inherited.json (+ inherit_members.tsv rows for the credited ones).
     -> [(member, record path, credit)]"""
     res = []
-    for rec in records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs, lec_policy, via_policy, judge):
+    for rec in records(plan, bind_rtl, repo, rom_dir, rep, signoff, globs, lec_policy, via_policy, judge, rule, kits, weights):
         m = rec["sibling"]
         path = CI.write_record(rec, out_dir)
         if members_tsv and rec["credit"]:
@@ -347,6 +536,11 @@ def main(argv=None):
             s.add_argument("--rep", required=True); s.add_argument("--signoff", required=True); s.add_argument("--out", required=True)
             s.add_argument("--members-tsv"); s.add_argument("--lec-policy", default="advisory", choices=("require", "advisory"))
             s.add_argument("--via-policy", default="advisory", choices=("require", "advisory"))
+            s.add_argument("--rule", default="", choices=("", "strict")); s.add_argument("--kits", help="JSON {type: generated kit dir}")
+            s.add_argument("--weights", nargs="*", default=[])
+    k = sub.add_parser("kitcmp"); k.add_argument("plan"); k.add_argument("--bind-rtl"); k.add_argument("--out")
+    for x in ("rep", "rep-kit", "member", "member-kit"):
+        k.add_argument("--" + x, required=True)
     f = sub.add_parser("flag"); f.add_argument("plan"); f.add_argument("out"); f.add_argument("globs", nargs="+")
     v = sub.add_parser("view")
     for k in ("rep", "member", "lef", "lib", "out"):
@@ -356,6 +550,13 @@ def main(argv=None):
         print("\n".join(clone_view(a.rep, a.member, a.lef, a.lib, a.out)))
         return 0
     plan = json.load(open(a.plan))
+    if a.cmd == "kitcmp":
+        why, key, nf = kit_blockers(a.rep_kit, a.member_kit, plan, a.rep, a.member, a.bind_rtl)
+        print("TYPE_TEMPLATE kitcmp %s vs %s: %d file(s), %s" % (a.member, a.rep, nf, "; ".join(why) or "EQUAL key %s" % key))
+        if a.out:
+            with open(a.out, "w") as fo:
+                json.dump(dict(rep=a.rep, member=a.member, equal=not why, reasons=why, kit_key=key, files=nf), fo, indent=1)
+        return 1 if why else 0
     if a.cmd == "flag":
         done = flag(plan, a.globs)
         with open(a.out + ".tmp", "w") as fo:
@@ -395,7 +596,8 @@ def main(argv=None):
             if not row["equivalent"]:
                 print("  FAIL %s vs %s: %s" % (row["type"], row["representative"], "; ".join(row["reasons"])))
         return 1 if r["failed"] else 0
-    res = credit(plan, a.bind_rtl, a.repo, a.rom_dir, a.rep, a.signoff, a.out, a.members_tsv, a.all, a.lec_policy, a.via_policy)
+    res = credit(plan, a.bind_rtl, a.repo, a.rom_dir, a.rep, a.signoff, a.out, a.members_tsv, a.all, a.lec_policy, a.via_policy,
+                 rule=a.rule, kits=json.load(open(a.kits)) if a.kits else None, weights=a.weights)
     for m, p, c in res:
         print("%s\t%s\t%s" % ("CREDIT" if c else "NO-CREDIT", m, p))
     return 0 if all(c for _m, _p, c in res) else 1
