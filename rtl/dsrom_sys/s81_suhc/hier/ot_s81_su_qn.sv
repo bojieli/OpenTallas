@@ -499,29 +499,33 @@ module ot_s81_su_qnh #(
     always @(posedge clk or negedge rst_n) if (!rst_n) begin go <= 1'b0; pv <= 0; end else begin go <= i_go; pv <= p_v; end
     // two entries an engine (by vector parity)
     reg [NE*32-1:0] e0, e1;
-    reg [NE-1:0] h0, h1;
+    reg [NE-1:0] h0, h1r;
+    // P0 1: p_p is tied 0 by the caller, so parity 1 never occurs: entry 1 and its hold flags are absent (defined
+    // constants, as synthesis builds them), not registers that only a power-up X could set.
+    wire [NE-1:0] h1 = (P0 == 1) ? {NE{1'b0}} : h1r;
+    wire [NE-1:0] ppu = (P0 == 1) ? {NE{1'b0}} : pp;
     reg ptr; reg [7:0] vi;
     wire fire = (ptr ? (&h1) : (&h0)) && !go;
     always @(posedge clk) begin : ent
         integer e;
         for (e = 0; e < NE; e = e + 1) if (pv[e]) begin
-            if (pp[e]) e1[32 * e +: 32] <= pd[32 * e +: 32]; else e0[32 * e +: 32] <= pd[32 * e +: 32];
+            if (ppu[e]) e1[32 * e +: 32] <= pd[32 * e +: 32]; else e0[32 * e +: 32] <= pd[32 * e +: 32];
         end
     end
     always @(posedge clk or negedge rst_n) begin : hb
         integer e;
-        if (!rst_n) begin h0 <= 0; h1 <= 0; ptr <= 1'b0; vi <= 8'd0; end
-        else if (go) begin h0 <= 0; h1 <= 0; ptr <= 1'b0; vi <= 8'd0; end
+        if (!rst_n) begin h0 <= 0; h1r <= 0; ptr <= 1'b0; vi <= 8'd0; end
+        else if (go) begin h0 <= 0; h1r <= 0; ptr <= 1'b0; vi <= 8'd0; end
         else begin
-            if (fire) begin if (ptr) h1 <= 0; else h0 <= 0; ptr <= !ptr; vi <= vi + 8'd1; end
-            for (e = 0; e < NE; e = e + 1) if (pv[e]) begin if (pp[e]) h1[e] <= 1'b1; else h0[e] <= 1'b1; end
+            if (fire) begin if (ptr) h1r <= 0; else h0 <= 0; ptr <= !ptr; vi <= vi + 8'd1; end
+            for (e = 0; e < NE; e = e + 1) if (pv[e]) begin if (ppu[e]) h1r[e] <= 1'b1; else h0[e] <= 1'b1; end
         end
     end
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_n && !go) begin : ovc
         integer e;
         for (e = 0; e < NE; e = e + 1)
-            if (pv[e] && (pp[e] ? h1[e] : h0[e]) && !(fire && pp[e] == ptr))
+            if (pv[e] && (ppu[e] ? h1[e] : h0[e]) && !(fire && ppu[e] == ptr))
                 $fatal(1, "ot_s81_su_qnh: engine %0d partial overruns its entry", e);
     end
 `endif
