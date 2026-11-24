@@ -61,6 +61,13 @@ ABSPATH-1122 (FLOW-OPS-R2, COORD): an absolute path in the plan json (or its --s
   Keys provenance / source* / note* / comment* / receipt* / evidence* / proof* / report* / history / *_log are records.  Fix: `plan_gate_pre.py localize --plan P --out P2` copies each present outside
   file into <plan dir>/inputs/ and rewrites the reference tree-relative (composers run it before G0).
 
+DERIVED-DROP-1123 (PRECHECK-DERIVED-DROP, COORD 21:36 / FABLE-RC-KV): a re-floor, grow or tap rewrite that leaves a DERIVED section
+  pointing at the old tree.  RSTREACH: START / local reset raw hops over the edge reach (S81 c7a svc_tap_inv: 2233 um), FSTART
+  face flops beyond 405 um of their raw reset (stripped landing_raw_branches, KV pv_v3 -721 ps; branch base relays moved by the KV
+  +112 um grow).  DERIVEDNAME: relay / tap names not emitted, landing_raw_branches no longer a D-chain of the re-solved tree (KV
+  A3g io_ft_v1 EMIT), dangling consumers / START keys, station ends on removed hard cores.  derived_drop.py (doc there);
+  --elab-dir or <plan dir>/bind_of_record decides FSTART face flops; OT_DERIVED_BUDGET_S bounds the tree solves.
+
 ISTCYC-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every lane whose end-bus internal_stations depth (source OUT bus +
   destination IN bus, the deepest bus:<name> row as the kit merges them) changed against BASE, and whose BASE fixed_cycles
   followed the rule fixed_cycles = source + destination, must carry the new source + destination; else FAIL ISTCYC with the
@@ -152,7 +159,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1829,6 +1836,14 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
+    if {"RSTREACH", "DERIVEDNAME"} - skip:              # DERIVED-DROP-1123: derived sections a re-floor / tap rewrite left stale
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import derived_drop as DD
+        try:
+            findings += DD.findings(_load(plan) or {}, plan, tree, [c for c in DD.CLASSES if c not in skip],
+                                    bind_rtl=DD.default_bind_rtl(plan, elab_dir), base=rb or baseline)
+        except Exception as e:  # noqa: BLE001 - a checker crash names itself, it never passes silently
+            findings.append(f"WARN RSTREACH not checked: {type(e).__name__}: {str(e)[:200]}")
     if "ADVISORY" not in skip:                           # PRECHECK-R2: static estimator lines (WARN ADV-*), never a FAIL
         findings += advisory_lines(tree, plan, asbuilt, baseline=rb or baseline)
     if rb:
