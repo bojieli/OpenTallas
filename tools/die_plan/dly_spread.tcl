@@ -231,9 +231,87 @@ proc ds_route {A B} {
     foreach x1 $ds_xs { foreach y $ds_ys { foreach x2 $ds_xs { set p [list $A [list $x1 $hy] [list $x1 $y] [list $x2 $y] [list $x2 $ty] $B]; if {![ds_pok $p]} continue; set l [ds_plen $p]; if {$best eq {} || $l < $bl} { set best $p; set bl $l } } } }
     foreach y1 $ds_ys { foreach x $ds_xs { foreach y2 $ds_ys { set p [list $A [list $hx $y1] [list $x $y1] [list $x $y2] [list $tx $y2] $B]; if {![ds_pok $p]} continue; set l [ds_plen $p]; if {$best eq {} || $l < $bl} { set best $p; set bl $l } } } }
   }
+  # MAZE fallback (KV-PV-FANOUT 11-24): no street-line route of <= 4 bends clears the macros (an end in a pocket between abutted
+  # cores: kv3_pv_v4e A5t3 probe, 59 chains, ends outside every macro) -> shortest 4-neighbour path on a grid round the macros
+  if {$best eq {}} { set best [ds_maze $A $B] }
   # DLY-REPAIR-1 (2): no clear route -> {} (the caller keeps the GPL sites); never a straight line through a core
   dict set ds_rcache $key $best
   return $best
+}
+# MAZE (KV-PV-FANOUT 11-24): breadth-first shortest path on a OT_DLY_SPREAD_MAZE_UM (10) grid of the core area; a cell is blocked
+# when its centre lies inside a hard macro (+ the 2-um ds_hit margin); the two end cells are always free.  The cell path becomes a
+# rectilinear polyline (corners only) from A to B; it is returned only when ds_pok clears it, else {} (as before).
+# OT_DLY_SPREAD_MAZE_UM=0: no fallback.
+set ds_mz_um [expr {[info exists ::env(OT_DLY_SPREAD_MAZE_UM)] && [string is double -strict $::env(OT_DLY_SPREAD_MAZE_UM)] ? $::env(OT_DLY_SPREAD_MAZE_UM) : 10.0}]
+set ds_mz_built 0
+proc ds_mz_build {} {
+  global ds_mac ds_halo ds_core ds_dbu ds_mz_um ds_mz_g ds_mz_nx ds_mz_ny ds_mz_x0 ds_mz_y0 ds_mz_built ds_mzb
+  set ds_mz_g [expr {round($ds_mz_um * $ds_dbu)}]
+  set ds_mz_x0 [$ds_core xMin]; set ds_mz_y0 [$ds_core yMin]
+  set ds_mz_nx [expr {max(1, int(([$ds_core xMax] - $ds_mz_x0) / $ds_mz_g))}]
+  set ds_mz_ny [expr {max(1, int(([$ds_core yMax] - $ds_mz_y0) / $ds_mz_g))}]
+  array unset ds_mzb
+  set e 2000
+  foreach m $ds_mac {
+    lassign $m a b c d
+    set a [expr {$a + $ds_halo - $e}]; set b [expr {$b + $ds_halo - $e}]; set c [expr {$c - $ds_halo + $e}]; set d [expr {$d - $ds_halo + $e}]
+    set i0 [expr {max(0, int(ceil(($a - $ds_mz_x0) / double($ds_mz_g) - 0.5)))}]
+    set i1 [expr {min($ds_mz_nx - 1, int(floor(($c - $ds_mz_x0) / double($ds_mz_g) - 0.5)))}]
+    set j0 [expr {max(0, int(ceil(($b - $ds_mz_y0) / double($ds_mz_g) - 0.5)))}]
+    set j1 [expr {min($ds_mz_ny - 1, int(floor(($d - $ds_mz_y0) / double($ds_mz_g) - 0.5)))}]
+    for {set j $j0} {$j <= $j1} {incr j} { for {set i $i0} {$i <= $i1} {incr i} { set ds_mzb([expr {$j * $ds_mz_nx + $i}]) 1 } }
+  }
+  set ds_mz_built 1
+}
+proc ds_mz_cell {p} {
+  global ds_mz_g ds_mz_nx ds_mz_ny ds_mz_x0 ds_mz_y0
+  set i [expr {min($ds_mz_nx - 1, max(0, int(([lindex $p 0] - $ds_mz_x0) / $ds_mz_g)))}]
+  set j [expr {min($ds_mz_ny - 1, max(0, int(([lindex $p 1] - $ds_mz_y0) / $ds_mz_g)))}]
+  return [expr {$j * $ds_mz_nx + $i}]
+}
+proc ds_maze {A B} {
+  global ds_mz_um ds_mz_built ds_mz_g ds_mz_nx ds_mz_ny ds_mz_x0 ds_mz_y0 ds_mzb
+  if {!($ds_mz_um > 0)} { return {} }
+  if {!$ds_mz_built} { ds_mz_build }
+  set s [ds_mz_cell $A]; set t [ds_mz_cell $B]
+  array set prev [list $s -1]
+  set q [list $s]; set h 0; set found [expr {$s == $t}]
+  while {!$found && $h < [llength $q]} {
+    set c [lindex $q $h]; incr h
+    set ci [expr {$c % $ds_mz_nx}]; set cj [expr {$c / $ds_mz_nx}]
+    foreach {di dj} {1 0 -1 0 0 1 0 -1} {
+      set ni [expr {$ci + $di}]; set nj [expr {$cj + $dj}]
+      if {$ni < 0 || $nj < 0 || $ni >= $ds_mz_nx || $nj >= $ds_mz_ny} continue
+      set n [expr {$nj * $ds_mz_nx + $ni}]
+      if {[info exists prev($n)] || ([info exists ds_mzb($n)] && $n != $t)} continue
+      set prev($n) $c; lappend q $n
+      if {$n == $t} { set found 1; break }
+    }
+  }
+  if {!$found} { return {} }
+  set cells {}; for {set c $t} {$c != -1} {set c $prev($c)} { set cells [linsert $cells 0 $c] }
+  set pts [list $A]
+  foreach c $cells { lappend pts [list [expr {$ds_mz_x0 + ($c % $ds_mz_nx + 0.5) * $ds_mz_g}] [expr {$ds_mz_y0 + ($c / $ds_mz_nx + 0.5) * $ds_mz_g}]] }
+  lappend pts $B
+  # rectilinear: a corner between two points off one axis; then drop repeated and collinear points
+  set r [list [lindex $pts 0]]
+  for {set k 1} {$k < [llength $pts]} {incr k} {
+    lassign [lindex $r end] px py; lassign [lindex $pts $k] x y
+    if {$px != $x && $py != $y} { lappend r [list $x $py] }
+    lappend r [list $x $y]
+  }
+  set o [list [lindex $r 0]]
+  foreach p [lrange $r 1 end] {
+    if {$p eq [lindex $o end]} continue
+    if {[llength $o] >= 2} {
+      lassign [lindex $o end-1] ax ay; lassign [lindex $o end] bx by; lassign $p cx cy
+      if {($ax == $bx && $bx == $cx) || ($ay == $by && $by == $cy)} { lset o end $p; continue }
+    }
+    lappend o $p
+  }
+  if {[llength $o] < 2} { set o [list $A $B] }
+  if {![ds_pok $o]} { return {} }
+  return $o
 }
 # point at fraction f of the polyline's Manhattan length
 proc ds_atpl {pts f} {

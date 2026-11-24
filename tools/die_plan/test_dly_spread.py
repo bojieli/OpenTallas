@@ -547,3 +547,42 @@ eval [string map [list "\nds_main\n" "\nsource /w/chk.tcl\n"] $script]
     m = re.search(r"ROUTE_N (\d+) END (\S+ \S+) OK (\d)", out)
     assert m and int(m.group(1)) >= 2 and m.group(2) == f"{1000000 - halo} 300000" and m.group(3) == "1", out[-2000:]
     assert "ROUTE_OFF 0" in out, out[-2000:]
+
+
+def test_dly_spread_maze_fallback_routes_round_a_macro():
+    """MAZE (KV-PV-FANOUT 11-24): with no street-line route (here: no street lines at all, a macro across the straight path)
+    ds_route falls back to a grid path round the macro that ds_pok clears; OT_DLY_SPREAD_MAZE_UM=0 keeps {}."""
+    if not shutil.which("docker"):
+        pytest.skip("no docker")
+    checks = r"""
+set ds_mac [list [list [expr {1000000 - $ds_halo}] [expr {100000 - $ds_halo}] [expr {1400000 + $ds_halo}] [expr {500000 + $ds_halo}]]]
+set ds_xs {}; set ds_ys {}; set ds_rcache {}; set ds_mz_built 0
+set r [ds_route {200000 300000} {1600000 300000}]
+puts "MAZE_N [llength $r] OK [ds_pok $r] LEN [ds_plen $r] FIRST [lindex $r 0] LAST [lindex $r end]"
+set rect 1; for {set k 1} {$k < [llength $r]} {incr k} { lassign [lindex $r [expr {$k-1}]] a b; lassign [lindex $r $k] c d; if {$a != $c && $b != $d} { set rect 0 } }
+puts "MAZE_RECT $rect"
+set ds_mz_um 0; set ds_rcache {}
+puts "MAZE_OFF [llength [ds_route {200000 300000} {1600000 300000}]]"
+"""
+    with tempfile.TemporaryDirectory() as d:
+        (Path(d) / "t.v").write_text(_netlist())
+        tcl = TCL.split("source /w/dly_spread.tcl")[0] + r"""
+set hook [open /w/dly_spread.tcl r]
+set script [read $hook]
+close $hook
+eval [string map [list "\nds_main\n" "\nsource /w/chk.tcl\n"] $script]
+"""
+        (Path(d) / "t.tcl").write_text(tcl)
+        (Path(d) / "chk.tcl").write_text(checks)
+        shutil.copy(HERE / "dly_spread.tcl", d)
+        cmd = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit /w/t.tcl; chmod -R a+rwX /w"
+        r = subprocess.run(["docker", "run", "--rm", "--memory=4g", "--memory-swap=4g", "-v", f"{d}:/w",
+                            "openroad/orfs:asap7lock", "bash", "-lc", cmd], capture_output=True, text=True, timeout=600)
+        if r.returncode and "Unable to find image" in r.stderr:
+            pytest.skip("image missing")
+        out = r.stdout
+    m = re.search(r"MAZE_N (\d+) OK (\d) LEN (\S+) FIRST (\S+ \S+) LAST (\S+ \S+)", out)
+    assert m and int(m.group(1)) >= 4 and m.group(2) == "1", out[-2000:]
+    assert m.group(4) == "200000 300000" and m.group(5) == "1600000 300000", m.group(0)
+    assert 1400000 <= float(m.group(3)) <= 1400000 + 2 * 230000, m.group(0)    # straight 1400 um + a detour of <= ~2 x 220 um
+    assert "MAZE_RECT 1" in out and "MAZE_OFF 0" in out, out[-2000:]
