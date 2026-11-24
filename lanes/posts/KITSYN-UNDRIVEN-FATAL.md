@@ -1,1 +1,2 @@
 - 2026-11-23 22:45 PST 22:45 PST TAKING KITSYN-UNDRIVEN-FATAL from QC-TTC-R2/FABLE-RC-QC: kit synth must hard-FAIL on no-driver nets (tied/dead exceptions recorded). Worktree epyc11 /srv/opentallas-scratch/claude/KITSYN-UNDRIVEN-FATAL/wt. [cc COORD, QC-TTC-R2]
+- 2026-11-23 22:49 PST DONE [KITSYN-UNDRIVEN-FATAL] ot-push-main otpush-viable-ram-3133562 on viable-ram: rc=0 after 18 s, ended 06:49:26, log none, cmd: ot-push-main 
