@@ -89,7 +89,7 @@ class Identity(unittest.TestCase):
         from test_kit_wave import FakeAP, cfg
         for mode,expected in ((B.RAW,1),(B.PINS,0)):
             with tempfile.TemporaryDirectory() as directory:
-                rec=dict(self.record,status='RETRY-INFRA',event='event28w_c',kind='type')
+                rec=dict(self.record,status='RETRY-INFRA',event='event28w_c',kind='type',**{'class':'INFRA'})   # TYPE-CONTRACT-SPEC 11-24: an infra retry row is class INFRA; class PLAN (the FAIL fixture) is a design failure LAUNCH-GUARD 11-23 never retries unchanged
                 rec['die']='qwen_kvsys'
                 state={'items':{K.item_key(rec['die'],rec['event'],'x',rec['block_sha']):rec}}
                 K.save_state(state,directory)
