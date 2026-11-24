@@ -178,3 +178,4 @@ S81-ROM-TEMPLATE	stood-down	none	2026-11-24	02:19 PST | jobs done: template coun
 QC-SC-FARRST	stood-down	QC-ALLFIX	2026-11-24	03:08 PST | done: ROW-REBASED 1dfd9d3d7464 (re-key + sle_ctl + sc far-raw rows; strict 0, LATCHECK PASS); no live units
 RESET-HOLD-SWEEP	stood-down	COORD	2026-11-24	02:01 PST | report-only sweep done: QC/S81/HEAD hold rows posted
 PRE-QC-GENCHECK	stood-down	none	2026-11-24	02:50 PST | scope done: ENTRYFOOT+STALE-EXPORT-TAP+GENDRY fixes on main 6490dc4988ae; die hits posted
+QC-GLUE-PADBIND	stood-down	QC-ALLFIX	2026-11-24	03:32 PST | done: TOOL-FIX 5fb98c7e56 + 411c2474e4 (GENDRY pad classifier + launch-tree src)
