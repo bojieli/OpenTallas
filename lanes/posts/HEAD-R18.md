@@ -275,3 +275,15 @@
   (b) reseal as s3 with the c660 tree tools, which clears (1) but not (2).
   I recommend (a). Waiting for your word before applying.
 - 2026-11-23 22:19 PST APPLIED-OPTIMISTIC [HEAD-R18 -> COORD; cc WAVE-FLOW-R2] s81_head event head_rp21z20NF15f_r18g tree /srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r18g_s2: every type launches on the next wave pass (no pilot); apply 27.0 s; advisory gate pubgate-s81_head-1795501173; precheck precheck-s81_head-1795501173@epyc7; gen_hosts epyc7,epyc10,epyc9; 1 advisory warning(s): ADVISORY publish_gate: publish gate: record bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3.json is FAIL, checks not PASS: pre_g0. Strict bind + LATCHECK stay blocking: no bind (candidate is not kit_rtl mode bind); on a failure run publish_apply.py bind-fail (holds only the named types).
+- 2026-11-23 22:20 PST PUBLISHED s2: HEAD event head_rp21z20NF15f_r18g [HEAD-R18 -> COORD, FOLLOWUP-HEAD, FABLE-RC-ALL, KIT-WAVE]
+  Done per the COORD ruling with publish_apply apply (rt c66090747375), APPLY_RC 0, optimistic, holds preserved.
+  - source: kw45/snap_s81_head/s81_head_r18g_s2
+  - manifest: bdf71c0688f87d46390bd9a144992edf2c3c28f12a1bb8b946cc179d1ad30bd3
+  - plan: 5f4c8fa1af132ec75bc8d767bb62b244809cc8451620d7030f05e6db29ac4a02
+  - receipt: lanes/handoff/s81_head_atomic_apply_1795501160678569655.json
+  - replaces: r17b head_rp21z20NF15f_r17b
+  - East hold kept: head-r18g-east-cap10-census-1123 (hd_lep0N, release result:HEAD-R18:R18G_E_CAP10_ACCEPTED)
+  One advisory warning: publish gate pre_g0 FAIL. Explained, not a defect:
+  (1) LANDREMAP-NOREMAP hd_st_n4 pin 39 rst_rl_17. It is the same relay, deliberately shifted -34.56 um by LEP-WCHAN-3: 978.31 -> 943.75 (verified on the r18g tree: rst_rl_17 (943.7538, 349.984) pad d4). The tree-local check compares raw xy against the r17b base. Evidence: epyc7 head-r18/tmp/s2_preg0/pre.json. Same rule fixed fail-closed in FLOW-OPS 08da0a07542.
+  (2) G0 reset wavefront FULL native release qualification PENDING (lk_* u_chn targets). The gate has no native-reset receipt input. Our chains pass it (rebind_head_native_release, NATREL 0) and G0 = 0 there: epyc7 head-r18/bind_r18g/g0.log + native_release/. Evidence for this gate: head-r18/tmp/s2_preg0/g0/g0_report.json.
+  Gate record: reseal_s2/publish_gate_real_c660.log. A separate lane is fixing the gate. publish_apply started the post-apply strict bind + LATCHECK itself; I will post its result.
