@@ -40,7 +40,7 @@ module ot_s81sl_leaf #(
     parameter integer KV_ENABLE = 0, // one production D512 bank in designated die slice/leaf only
     parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     // kv_leaf t2 hard-master form (ot_s81sl_kv_bank XD / KST / XMRG / YBASE); all 0 = unchanged
-    parameter [47:0] KV_XD = 48'd0, parameter [63:0] KV_KST = 64'd0, parameter integer KV_XMRG = 0, parameter integer KV_YBASE = 0,
+    parameter [47:0] KV_XD = 48'd0, parameter [63:0] KV_KST = 64'd0, parameter integer KV_XMRG = 0, parameter integer KV_YBASE = 0, parameter [63:0] KV_XST = 64'd0, parameter integer KV_CPQ = 3,
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: KV_ENABLE leaf also runs CN 12 / IK 13 on its bank (opt-in)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: KV_ENABLE leaf also has the compressor pool CP 14 (opt-in)
     parameter integer VS_MUT = 0,      // bench negative controls only (ot_s81sl_vs MUT); 0 in every build
@@ -170,7 +170,7 @@ module ot_s81sl_leaf #(
     always @(posedge clk or negedge rst_n)if(!rst_n)kv_conflict<=0;
       else if(kvbusy && (vs_xrv || vs_xwv || (s_v && !kv_cmd)))kv_conflict<=1;
     generate if(KV_ENABLE)begin:g_kv
-      ot_s81sl_kv_leaf #(.CNIK(KV_CNIK),.CP(KV_CP),.HARD_RQ(KV_HARD_RQ),.KV_XD(KV_XD),.KV_KST(KV_KST),.KV_XMRG(KV_XMRG),.KV_YBASE(KV_YBASE)) u_kv(.clk(clk),.rst_n(rst_n),.c_v(s_v),.c_d(s_d),
+      ot_s81sl_kv_leaf #(.CNIK(KV_CNIK),.CP(KV_CP),.HARD_RQ(KV_HARD_RQ),.KV_XD(KV_XD),.KV_KST(KV_KST),.KV_XMRG(KV_XMRG),.KV_YBASE(KV_YBASE), .KV_XST(KV_XST), .KV_CPQ(KV_CPQ)) u_kv(.clk(clk),.rst_n(rst_n),.c_v(s_v),.c_d(s_d),
        .busy(kvbusy),.done(kvdone),.fault(kvfault),.x_rv(kv_xrv),.x_ra(kv_xra),
        .x_qv(x_qv && kvbusy),.x_qd(x_qd),.x_wv(kv_xwv),.x_wa(kv_xwa),.x_wm(kv_xwm),.x_wd(kv_xwd));
     end else begin:g_no_kv
@@ -241,7 +241,7 @@ module ot_s81sl_slice #(
     parameter integer KV_ENABLE = 0, // opt-in production KV bank on leaf0; no view alias
     parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     // kv_leaf t2 hard-master form (ot_s81sl_kv_bank XD / KST / XMRG / YBASE); all 0 = unchanged
-    parameter [47:0] KV_XD = 48'd0, parameter [63:0] KV_KST = 64'd0, parameter integer KV_XMRG = 0, parameter integer KV_YBASE = 0,
+    parameter [47:0] KV_XD = 48'd0, parameter [63:0] KV_KST = 64'd0, parameter integer KV_XMRG = 0, parameter integer KV_YBASE = 0, parameter [63:0] KV_XST = 64'd0, parameter integer KV_CPQ = 3,
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: leaf0 bank also runs CN / IK (needs KV_ENABLE)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: leaf0 also hosts the compressor pool (needs KV_ENABLE)
     parameter integer VS_MUT = 0,    // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
@@ -303,7 +303,7 @@ module ot_s81sl_slice #(
     wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ), .KV_XD(KV_XD), .KV_KST(KV_KST), .KV_XMRG(KV_XMRG), .KV_YBASE(KV_YBASE),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ), .KV_XD(KV_XD), .KV_KST(KV_KST), .KV_XMRG(KV_XMRG), .KV_YBASE(KV_YBASE), .KV_XST(KV_XST), .KV_CPQ(KV_CPQ),
             // PATH-S81 X2: this leaf's R3 station depths
             .CS_HI_D(LF_CS_HI_D[4 * k +: 4]), .CS_HI_GS(LF_CS_HI_GS[4 * k +: 4]), .CS_HO_D(LF_CS_HO_D[4 * k +: 4]), .CS_HO_GS(LF_CS_HO_GS[4 * k +: 4]), .CS_H_G(LF_CS_H_G[4 * k +: 4]),
             .VN_XRD(LF_VN_XRD[4 * k +: 4]), .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]),

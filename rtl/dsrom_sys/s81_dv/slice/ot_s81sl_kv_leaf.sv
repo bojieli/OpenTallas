@@ -22,6 +22,8 @@
 module ot_s81sl_kv_leaf #(
  parameter integer CNIK=0, CP=0, HARD_RQ=0, CP_MUT=0, CNIK_MUT=0,
  parameter integer KV_XMRG=0, KV_YBASE=0, // ot_s81sl_kv_bank XMRG / YBASE
+ parameter integer KV_CPQ=3, // ot_s81sl_cmp_pool TQB: pool tag queue depth 2^KV_CPQ
+ parameter [63:0] KV_XST=64'd0, // ot_s81sl_kv_bank XST: exit relay stages by quant block
  parameter [63:0] KV_KST=64'd0, // ot_s81sl_kv_bank KST: relay stages tap -> engine by quant block
  parameter [47:0] KV_XD=48'd0   // ot_s81sl_kv_bank XD: extra relay stages by link family (0 = unchanged)
 )(
@@ -45,7 +47,7 @@ module ot_s81sl_kv_leaf #(
  reg [15:0] dn_v;reg [8191:0] dn_d;reg [255:0] halfrow;
  wire [15:0] ov;wire [223:0] oa;wire [255:0] om;wire [8191:0] od;
  wire bf,bon,bid;
- ot_s81sl_kv_bank #(.CNIK(CNIK),.HARD_RQ(HARD_RQ),.XD(KV_XD),.KST(KV_KST),.XMRG(KV_XMRG),.YBASE(KV_YBASE),.CNIK_MUT(CNIK_MUT)) u_bank(.sk(clk),.rst_n(rst_n),.dn_st(dn_st),.dn_kind(kind),.dn_gsel(gsel),.dn_jid(jid),
+ ot_s81sl_kv_bank #(.CNIK(CNIK),.HARD_RQ(HARD_RQ),.XD(KV_XD),.KST(KV_KST),.XMRG(KV_XMRG),.YBASE(KV_YBASE),.XST(KV_XST),.CNIK_MUT(CNIK_MUT)) u_bank(.sk(clk),.rst_n(rst_n),.dn_st(dn_st),.dn_kind(kind),.dn_gsel(gsel),.dn_jid(jid),
  .dn_v(dn_v),.dn_d(dn_d),.wq_v(ov),.wq_row(oa),.wq_mask(om),.wq_d(od),.fault(bf),.online(bon),.input_done(bid));
  reg [1:0] count[0:15];
  reg [3:0] bank;reg [1:0] entry;reg [1:0] phase;reg draining;reg finishing;
@@ -142,7 +144,7 @@ module ot_s81sl_kv_leaf #(
   wire pstart=start && is_cp && !kbusy && !pbusy;
   wire pbad=start && is_cp && (c_d[31:24]!=32 || imm[127:14]!=0 || imm[3:0]!=K_CP);
   wire [255:0] y32;wire [15:0] pa;
-  ot_s81sl_cmp_pool #(.MUT(CP_MUT),.HARD((HARD_RQ>=2 && CP_MUT==0)?1:0)) u_pool(.clk(clk),.rst_n(rst_n),.start(pstart && !pbad),.b0(c_d[13:4]),.b1(c_d[23:14]),
+  ot_s81sl_cmp_pool #(.TQB(KV_CPQ),.MUT(CP_MUT),.HARD((HARD_RQ>=2 && CP_MUT==0)?1:0)) u_pool(.clk(clk),.rst_n(rst_n),.start(pstart && !pbad),.b0(c_d[13:4]),.b1(c_d[23:14]),
    .ob(imm[13:4]),.busy(pbusy),.done(pdone),.fault(pfault),.x_rv(px_rv),.x_ra(px_ra),.x_qv(x_qv && pbusy),.x_qd(x_qd),
    .x_wv(px_wv),.x_wa(px_wa),.x_wm(px_wm),.x_wd(px_wd),.dbg_y32(y32),.dbg_age(pa));
   reg pcf;

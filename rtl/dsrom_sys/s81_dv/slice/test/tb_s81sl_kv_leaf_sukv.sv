@@ -7,22 +7,28 @@
 //   16 raw, 16 norm rows), img_ik.mem: IK job (params 672, operands 692 with 24 zero rows, obase 168) vs exp_ik.mem.
 //   [+KV] KV regression on the same build: img_kvg.mem GK gsel 0, img_kv.mem KV job vs exp_kv.mem (25 rows).
 // Every job: no output event before its last input read (KV-class), fixed finish ages printed (calendar pricing).
-module tb_s81sl_kv_leaf_sukv #(parameter integer VLAT = 4, CNIK_MUT = 0, CP_MUT = 0, HARD_RQ = 0, parameter [47:0] KV_XD = 48'd0, parameter [63:0] KV_KST = 64'd0, parameter integer KV_XMRG = 0, KV_YBASE = 0);
+module tb_s81sl_kv_leaf_sukv #(parameter integer VLAT = 4, CNIK_MUT = 0, CP_MUT = 0, HARD_RQ = 0, parameter [47:0] KV_XD = 48'd0, parameter [63:0] KV_KST = 64'd0, parameter integer KV_XMRG = 0, KV_YBASE = 0, SEAM_IN = 0, SEAM_OUT = 0, parameter [63:0] KV_XST = 64'd0, parameter integer KV_CPQ = 3);
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,c_v=0;reg[159:0]c_d=0;
  wire busy,done,fault,xrv,xwv;wire[9:0]xra,xwa;wire[7:0]xwm;wire[255:0]xwd;
  reg xqv;reg[255:0]xqd;
+ wire dc_v,dxqv,d_busy,d_done,d_fault,d_xrv,d_xwv;wire[159:0]dc_d;wire[255:0]dxqd,d_xwd;wire[9:0]d_xra,d_xwa;wire[7:0]d_xwm;
  reg[127:0]mem[0:1023];reg[127:0]img[0:1023];
  reg[511:0]ecp[0:31];reg[31:0]ecp32[0:511];reg[511:0]ecn[0:47];reg[511:0]eik[0:7];reg[511:0]ekv[0:24];
- ot_s81sl_kv_leaf #(.CNIK(1),.CP(1),.HARD_RQ(HARD_RQ),.KV_XD(KV_XD),.KV_KST(KV_KST),.KV_XMRG(KV_XMRG),.KV_YBASE(KV_YBASE),.CP_MUT(CP_MUT),.CNIK_MUT(CNIK_MUT)) dut(.clk(clk),.rst_n(rst_n),.c_v(c_v),.c_d(c_d),
-  .busy(busy),.done(done),.fault(fault),.x_rv(xrv),.x_ra(xra),.x_qv(xqv),.x_qd(xqd),.x_wv(xwv),.x_wa(xwa),.x_wm(xwm),.x_wd(xwd));
+ ot_s81sl_kv_leaf #(.CNIK(1),.CP(1),.HARD_RQ(HARD_RQ),.KV_XD(KV_XD),.KV_KST(KV_KST),.KV_XMRG(KV_XMRG),.KV_YBASE(KV_YBASE),.KV_XST(KV_XST),.KV_CPQ(KV_CPQ),.CP_MUT(CP_MUT),.CNIK_MUT(CNIK_MUT)) dut(.clk(clk),.rst_n(rst_n),.c_v(dc_v),.c_d(dc_d),
+  .busy(d_busy),.done(d_done),.fault(d_fault),.x_rv(d_xrv),.x_ra(d_xra),.x_qv(dxqv),.x_qd(dxqd),.x_wv(d_xwv),.x_wa(d_xwa),.x_wm(d_xwm),.x_wd(d_xwd));
+ // A|B seam (kv_leaf t2 cut): SEAM_IN boundary stages on the inputs, SEAM_OUT on the outputs; the bench is the A side
+ ot_hdc_delay #(.W(1+160+1+256),.D(SEAM_IN),.RESET(1)) u_seam_in(.clk(clk),.rst_n(rst_n),.d({c_v,c_d,xqv,xqd}),.q({dc_v,dc_d,dxqv,dxqd}));
+ ot_hdc_delay #(.W(5+20+8+256),.D(SEAM_OUT),.RESET(1)) u_seam_out(.clk(clk),.rst_n(rst_n),
+  .d({d_busy,d_done,d_fault,d_xrv,d_xwv,d_xra,d_xwa,d_xwm,d_xwd}),.q({busy,done,fault,xrv,xwv,xra,xwa,xwm,xwd}));
  // VM: VLAT-edge pair reads, masked pair writes
  reg [VLAT:1] qv_l; reg [255:0] qd_l [1:VLAT];
  integer cycle=0,writes=0,bad=0,reads=0,lastread=-1,firstev=-1,k,fage=-1,lage=-1,nev=0;
  always @(posedge clk)begin
   qv_l[1]<=xrv;qd_l[1]<={mem[xra+1],mem[xra]};
   for(k=2;k<=VLAT;k=k+1)begin qv_l[k]<=qv_l[k-1];qd_l[k]<=qd_l[k-1];end
-  if(xrv)begin reads=reads+1;lastread=cycle;end
+  if(xrv)reads=reads+1;
+  if(d_xrv)lastread=cycle;
   if(xwv)begin
    writes=writes+1;
    for(integer m=0;m<8;m=m+1)if(xwm[m])mem[xwa+m/4][32*(m%4)+:32]<=xwd[32*m+:32];
@@ -59,6 +65,7 @@ module tb_s81sl_kv_leaf_sukv #(parameter integer VLAT = 4, CNIK_MUT = 0, CP_MUT 
    firstev=-1;fage=-1;lage=-1;nev=0;r0=reads;w0=writes;
    @(negedge clk);c_d={im,8'd32,a1,a0,4'd15};c_v=1;t0=cycle;
    @(negedge clk);c_v=0;
+   repeat(SEAM_IN+SEAM_OUT)@(negedge clk);   // done is a level: the A side may read it only after the seam round trip
    wait(done);@(negedge clk);
    $display("SUKV_JOB %s kind=%0d finish_edges=%0d reads=%0d pair_writes=%0d events=%0d first_event_age=%0d last_event_age=%0d first_event=%0d last_read=%0d fault=%0d",
             tag,kind,cycle-t0,reads-r0,writes-w0,nev,fage,lage,firstev,lastread,fault);

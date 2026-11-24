@@ -44,6 +44,9 @@ module ot_s81sl_kv_bank #(
     // engine -> quant / CN / IK writer relay: base stages when nonzero (the hard form seats them in one cluster and
     // needs 1); 0 = ERL
     parameter integer YBASE=0,
+    // exit relay stages block -> KV stop by quant block kb, a nibble each; 0 = ERL + XO.  Each block writes its own
+    // stop slot (S_WR == NKQ), so blocks may differ: a near block need not carry the far block's stages.
+    parameter [63:0]  XST=64'd0,
     parameter integer CNIK_MUT=0      // bench negative controls only (0 in every build): 1 IK applies the D512 QNR rstd
                                       // (wrong tree / divisor); 2 CN norm rows carry the neighbour block's norm
 )(
@@ -60,6 +63,7 @@ module ot_s81sl_kv_bank #(
                        XH=XD[31:28],XG=XD[35:32],XGO=XD[39:36],XO=XD[43:40],XINS=XD[47:44];
     wire [0:0] rst={rst_n};
 `ifndef SYNTHESIS
+    initial if (XST != 0 && S_WR != NKQ) $fatal(1, "ot_s81sl_kv_bank: XST needs S_WR == NKQ (one stop slot a block)");
     initial if (XMRG != 0 && S_WR != NKQ) $fatal(1, "ot_s81sl_kv_bank: XMRG needs S_WR == NKQ (equal exit depth)");
     initial if (HARD_RQ >= 2 && MUT != 0) $fatal(1, "ot_s81sl_kv_bank: HARD_RQ >= 2 needs MUT == 0 (the hard tap master has no mutant)");
 `endif
@@ -238,6 +242,7 @@ module ot_s81sl_kv_bank #(
         end else begin : g_g0
             assign gv = 8'd0; assign ge = 80'd0;
         end
+        localparam integer PHB = (XST[4 * kb +: 4] != 0) ? XST[4 * kb +: 4] : ERL + XO;     // exit relay stages of this block
         wire [3:0] CB = kb;
         wire kv_on;
         wire x_nv, x_cv; wire [13:0] x_na, x_ca; wire [15:0] x_cm; wire [511:0] x_nd, x_cd;   // CN exits of this block (XMRG)
@@ -279,24 +284,24 @@ module ot_s81sl_kv_bank #(
             // equal-depth relays to the stop (as the KVQ exits): CN norm + CN write keep slot kb, IK goes to slot kb - 12
             assign x_nv = nv; assign x_na = na; assign x_nd = nd; assign x_cv = cv; assign x_ca = ca; assign x_cm = cm; assign x_cd = cd;
             // XMRG: the CN exits leave through the block's merged relay below; their own relays become empty wires
-            ot_hdc_delay #(.W(4), .D(ERL + XO), .RESET(1)) u_xv (.clk(sk), .rst_n(rst[0]), .d({(XMRG != 0) ? 1'b0 : nv, (XMRG != 0) ? 1'b0 : cv, iv, cf | ifl}),
+            ot_hdc_delay #(.W(4), .D(PHB), .RESET(1)) u_xv (.clk(sk), .rst_n(rst[0]), .d({(XMRG != 0) ? 1'b0 : nv, (XMRG != 0) ? 1'b0 : cv, iv, cf | ifl}),
                 .q({cnr_v[kb], cwr_v[kb], ikr_vv[kb], cx_f[kb]}));
-            ot_hdc_delay #(.W(14 + 512), .D((XMRG != 0) ? 0 : ERL + XO)) u_xn (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? 526'd0 : {na, nd}),
+            ot_hdc_delay #(.W(14 + 512), .D((XMRG != 0) ? 0 : PHB)) u_xn (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? 526'd0 : {na, nd}),
                 .q({cnr_a[14 * kb +: 14], cnr_d[512 * kb +: 512]}));
-            ot_hdc_delay #(.W(14 + 16 + 512), .D((XMRG != 0) ? 0 : ERL + XO)) u_xc (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? 542'd0 : {ca, cm, cd}),
+            ot_hdc_delay #(.W(14 + 16 + 512), .D((XMRG != 0) ? 0 : PHB)) u_xc (.clk(sk), .rst_n(rst[0]), .d((XMRG != 0) ? 542'd0 : {ca, cm, cd}),
                 .q({cwr_a[14 * kb +: 14], cwr_m[16 * kb +: 16], cwr_d[512 * kb +: 512]}));
             if (kb >= NKQ - 4) begin : g_ikr
 `ifdef OT_S81_KVLEAF_EXIT_RELAYS
-                // the IK exit data rides ERL + XO hard relay stages (dsfd_su_t_kvx); its valid stays in u_xv
-                wire [541:0] xi_d [0:ERL + XO];
+                // the IK exit data rides PHB hard relay stages (dsfd_su_t_kvx); its valid stays in u_xv
+                wire [541:0] xi_d [0:PHB];
                 assign xi_d[0] = {ia, im, id};
-                for (genvar xs = 0; xs < ERL + XO; xs++) begin : g_ik_relay
+                for (genvar xs = 0; xs < PHB; xs++) begin : g_ik_relay
                     dsfd_su_t_kvx u_relay (
                         .ck(sk), .rst(rst[0]), .i_v(1'b0), .i_d(xi_d[xs]), .o_v(), .o_d(xi_d[xs+1]));
                 end
-                assign {ikr_a[14 * (kb - 12) +: 14], ikr_m[16 * (kb - 12) +: 16], ikr_d[512 * (kb - 12) +: 512]} = xi_d[ERL + XO];
+                assign {ikr_a[14 * (kb - 12) +: 14], ikr_m[16 * (kb - 12) +: 16], ikr_d[512 * (kb - 12) +: 512]} = xi_d[PHB];
 `else
-                ot_hdc_delay #(.W(14 + 16 + 512), .D(ERL + XO)) u_xi (.clk(sk), .rst_n(rst[0]), .d({ia, im, id}),
+                ot_hdc_delay #(.W(14 + 16 + 512), .D(PHB)) u_xi (.clk(sk), .rst_n(rst[0]), .d({ia, im, id}),
                     .q({ikr_a[14 * (kb - 12) +: 14], ikr_m[16 * (kb - 12) +: 16], ikr_d[512 * (kb - 12) +: 512]}));
 `endif
             end
@@ -320,7 +325,7 @@ module ot_s81sl_kv_bank #(
         end
         // to the KV stop: equal-depth relays + (S_WR < NKQ, reduced shapes only) a phase of 8 cycles a slot group so
         // the engines sharing slot kb % S_WR never write in the same cycle (full shape: 0)
-        localparam integer PH = ERL + XO + 8 * (kb / S_WR);
+        localparam integer PH = PHB + 8 * (kb / S_WR);
         wire         mg_v = ov | x_nv | x_cv;
         wire         mg_c = ({1'b0, ov} + {1'b0, x_nv} + {1'b0, x_cv}) > 2'd1;          // two sources in one cycle
         wire [13:0]  mg_a = ({14{ov}} & oa) | ({14{x_nv}} & x_na) | ({14{x_cv}} & x_ca);

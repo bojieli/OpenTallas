@@ -37,6 +37,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_cmp_pool #(
     parameter integer LM = 5, LA = 4, MUT = 0,
+    parameter integer TQB = 3,        // tag queue of 2^TQB outstanding reads: 3 covers the VM latency of 4 edges; the
+                                      // kv_leaf t2 A|B seam adds boundary stages to the read loop and takes 4
     parameter integer HARD = 0        // S81-KVLEAF-T2-ARCH 11-23: 1 = each lane is the hard master dsfd_sl_t_cpl (x8; same body,
                                       // LM 5 / LA 4 / MUT 0 only); 0 = the lanes stay soft (instance names unchanged)
 ) (
@@ -98,8 +100,8 @@ module ot_s81sl_cmp_pool #(
     wire [9:0] rbase = ij[0] ? sb1 : sb0;
     wire [9:0] raddr = rbase + (sc_slot ? 10'd128 : 10'd0) + rofs;
     // ---------------------------------------------------------------- tag queue (in-order responses)
-    reg [1:0] tq [0:7];
-    reg [2:0] tw, tr; reg [3:0] tn;
+    reg [1:0] tq [0:(1 << TQB) - 1];
+    reg [TQB-1:0] tw, tr; reg [TQB:0] tn;
     wire      push = issuing && (sc_slot || kv_slot);
     wire      pop  = x_qv;
     // ---------------------------------------------------------------- command check
@@ -139,7 +141,7 @@ module ot_s81sl_cmp_pool #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             busy <= 1'b0; done <= 1'b0; fault <= 1'b0; x_rv <= 1'b0; x_wv <= 1'b0; issuing <= 1'b0; ie <= 10'd0;
-            age <= 16'd0; nout <= 7'd0; tw <= 3'd0; tr <= 3'd0; tn <= 4'd0; l_v <= 1'b0; sb0 <= 10'd0; sb1 <= 10'd0;
+            age <= 16'd0; nout <= 7'd0; tw <= {TQB{1'b0}}; tr <= {TQB{1'b0}}; tn <= {(TQB + 1){1'b0}}; l_v <= 1'b0; sb0 <= 10'd0; sb1 <= 10'd0;
             sob <= 10'd0; fin <= 1'b0;
         end else begin
             done <= 1'b0; x_rv <= 1'b0; x_wv <= 1'b0; l_v <= pop && busy;
@@ -147,7 +149,7 @@ module ot_s81sl_cmp_pool #(
                 if (busy || bad_cmd) fault <= 1'b1;
                 else begin
                     busy <= 1'b1; issuing <= 1'b1; ie <= 10'd0; age <= 16'd0; nout <= 7'd0;
-                    sb0 <= b0; sb1 <= b1; sob <= ob; tw <= 3'd0; tr <= 3'd0; tn <= 4'd0;
+                    sb0 <= b0; sb1 <= b1; sob <= ob; tw <= {TQB{1'b0}}; tr <= {TQB{1'b0}}; tn <= {(TQB + 1){1'b0}};
                 end
             end
             if (busy) begin
@@ -157,10 +159,10 @@ module ot_s81sl_cmp_pool #(
                     ie <= ie + 10'd1;
                     if (ie == NE - 1) issuing <= 1'b0;
                 end
-                if (push) tw <= tw + 3'd1;
-                if (pop) tr <= tr + 3'd1;
-                tn <= tn + {3'd0, push} - {3'd0, pop};
-                if ((pop && tn == 0 && !push) || (tn == 4'd8 && push && !pop)) fault <= 1'b1;
+                if (push) tw <= tw + 1'b1;
+                if (pop) tr <= tr + 1'b1;
+                tn <= tn + {{TQB{1'b0}}, push} - {{TQB{1'b0}}, pop};
+                if ((pop && tn == 0 && !push) || (tn == (1 << TQB) && push && !pop)) fault <= 1'b1;
                 if (|lf) fault <= 1'b1;
                 if (lo_v[0]) begin
                     if (lo_v != 8'hFF) fault <= 1'b1;                   // lanes are in lockstep
