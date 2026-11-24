@@ -95,3 +95,7 @@ Order: HEAD(6) > S81(18) > KV(52) > QC(92). Report to COORD (<250 words) after H
 - 827de5708c20: NOT gone (earlier line wrong). Autopilot id, not store id; store record 58a694414806. Kit restored from AGIdock signed-1106/epyc9 (347/347 sha OK) to epyc9 ak/qwen_compute_type_slw_hc3_pvcca9ff41_827de5708c20/kit; run ml/r6_22ee41ca, lec 096df89d.
 - 822d3873e2eb: store record c7902930b0a3, netlist + config but no RTL in the record; archive kit dir has no rtl/. Blocked.
 - hd_mesh "all FIFO" wrong (500 of 9377 listed: 320 g_fifo_safe, 180 g_rb_safe); MERGEPAIR census partial; rxsb wrong-RTL not ruled out; auto_fill restore guard in my patch was wrong (LEC-AUTOFILL owns the fix).
+
+## CODEX notes, 11-24 takeover
+- Historical hc3 c7902930b0a3 exact netlist sha 291c2520bfc1. Recovered archived kit_rtl_paths.json with source digests (sha 66bc2db5f6aa) in epyc11 LEC-AUTOFILL/tmp/hc3_c790_restore. Seven of nine HDL files match the available pvfd488b8f kit. Exact generated wrappers b1104b98332c and dfaab911f73f differ. Archived kit holds no RTL and all surviving v1r6 bind replicas only have bind_report.json, so row stays revoked. No substitute source used.
+- Full targeted hc3 rerun on exact available successor netlist pending in LEC-AUTOFILL. All four historical records maintain their status.
