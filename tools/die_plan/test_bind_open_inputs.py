@@ -168,6 +168,7 @@ endmodule
 module top_leaf (input wire clk, output wire q, output wire r);
  mid u_m (.clk(clk), .q(q));
  child u_p (clk, 8'd0, 1'b1, r);
+ child u_s (clk, g_x.uid, 1'b1, r);   // positional with a hierarchical '.'
 endmodule
 """
 
@@ -181,11 +182,24 @@ def scanner(tmp_path, defines=()):
 def test_nested_open_inputs_found_through_hierarchy(tmp_path):
     sc = scanner(tmp_path)
     assert sorted(sc.hits("top_leaf")) == [("u_m.u_c", "child", "en"), ("u_m.u_c", "child", "uid")]
-    assert sc.unjudged == ["top_leaf.u_p (child)"]          # positional: not judged
+    assert sc.unjudged == ["top_leaf.u_p (child)", "top_leaf.u_s (child)"]          # positional: not judged
 
 
 def test_nested_follows_the_manifest_defines(tmp_path):
     assert scanner(tmp_path, ["WITH_UID"]).hits("top_leaf") == []
+
+
+def test_nested_connections_read_after_a_generate_label(tmp_path):
+    """_unlabel shortens `begin : g_x`; the connection text must come from the same (masked) offsets"""
+    f = tmp_path / "g.sv"
+    f.write_text(PARENT.split("module mid")[0] + """module gl (input wire clk, input wire go, output wire q);
+ generate if (1) begin : g_long_label_name
+  child u_c (.clk(clk), .uid(8'd1), .en(go), .q(q));
+ end endgenerate
+endmodule
+""")
+    sc = LB.Scanner(lambda m: str(f) if m in ("child", "gl") else None)
+    assert sc.hits("gl") == [] and sc.unjudged == []
 
 
 def tiny_graph(tmp_path, drop):

@@ -40,7 +40,7 @@ def _instances(body):
         except ValueError:
             out.append((name, im.group(1), None))
             continue
-        out.append((name, im.group(1), body[k + 1:e]))
+        out.append((name, im.group(1), masked[k + 1:e]))   # masked offsets: _unlabel shortens labels
     return out
 
 
@@ -85,7 +85,7 @@ class Scanner:
             cm = self.module(child)
             if cm is None:
                 continue        # no RTL body of record (hard macro, primitive): its pins are the macro's view
-            if conns is None or '.*' in conns or (conns.strip() and '.' not in conns):
+            if conns is None or '.*' in conns or (conns.strip() and not conns.lstrip().startswith('.')):
                 self.unjudged.append(f"{name}.{inst} ({child})")
                 continue
             named = dict(D._named_conns(conns))
