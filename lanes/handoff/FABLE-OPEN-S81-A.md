@@ -26,3 +26,4 @@ Workers (subagents) resumed 10:50 with Codex's 07:30-08:59 results (posts under 
 - x14: REASONED (COORD accepted). S81-LPR-FOREST on main 538684029b; ops epyc10 fable-open-s81-a/x14row/S81-LPR-FOREST-ops.json f7fb40b63c1c (11 serdes types, define OT_S81_LPR_FOREST, 0 cycles). Benches PASS, PRE 0 findings, scoped strict bind serdes__t14 0 errors (gate_1517). Not in B1. Next: after the first full bind that carries it, build serdes__t14 kit --goal cts and read the lpr_syn path (was -311.83) + LATCHECK.
 - x6: closes on B1 strict/LAT + seqhost probe (SEQHOST row byte-identical in B1; no 10c dependency).
 - Workers: rc37 a97bce3 (done), x14 af62b67, lockup aa2277e, x6 aa5427d.
+- rc37 one-op PRE on B1 tail ae3101241d6b: PASS findings 0 (epyc10 fable-open-s81-a/rc37/b1pre/pre_b1_1b.log, plan 301aa03b2751), posted 16:05.
