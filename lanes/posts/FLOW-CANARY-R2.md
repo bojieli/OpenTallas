@@ -386,3 +386,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 15:00 PST CANARY s81 @ dce92f0c92: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 5 source commits (1e5253421a13, 52c1a6417353, 67a9d659af22, b335c93437b7); baseline canary-ru)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 15:45 PST CANARY qwen_kvsys @ b835224104: PASS (STALE-BASELINE STALE-BASELINE: identical 3 regressed metric(s) at 5 source commits (1e5253421a13, 3cba4dba0571, 67a9d659af22, 7d77f33f6541); baseline canary-ru)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
