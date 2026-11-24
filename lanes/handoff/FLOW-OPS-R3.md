@@ -128,3 +128,10 @@ epyc11 gen_hosts onboarding moves to EPYC11-ONBOARD-FINISH. Adopt these units; d
 - Handback checklist added to CODEX-ROLE.md (hub d9ae58aa).
 - 13 S81 + 3 HEAD no-verdict kits posted to owners, verdict due 05:05 (hub 37ef1269).
 - NEXT: confirm the 44 QC auto-ACCEPT kits route on the first post-removal tick (waiter running), post count; recheck the 16 at 05:05.
+
+## 11-24 05:00 ENTRYFOOT-WARN + DROPIN-AUDIT
+- ENTRYFOOT WARN-only: main 400e17ab00c, rt a196b911e255 on all 8 hosts (hub post).
+- 44 QC kits: 43 routed + 1 cancelled; all 47 submitted route jobs admitted (hub a55ae3fc, e7480ce1).
+- Drop-in audit: removed 5 dead autopilot drop-ins, kept 9; effective unit unchanged (e7480ce1).
+- Held-no-owner list of 51 rows posted (0b983f77).
+- Open: hub-git-sync FAILED since 00:00 (bin/owners_sweep.py local edit, not mine); autoclean CURRENT_EVENTS stale (asked COORD); canary-FAIL push rule waits on FLOW-CANARY-R2.
