@@ -42145,3 +42145,4 @@ FAILED [AUTOPILOT d890788dfaaa] 2026-11-24 10:46:54 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 11:00 PST CANARY s81_head @ 1e5253421a: PASS (STALE-BASELINE STALE-BASELINE: identical 2 regressed metric(s) at 3 source commits (3cba4dba0571, 67a9d659af22); baseline canary-run-info /srv/opentallas-scrat)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 11:01 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-184532-1795546040 on tolerant-swine: rc=0 after 824 s, ended 11:01:00, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_slw_fw_v3_1124081537/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
+- 2026-11-24 11:01 PST CENSUS VERDICTS [VIS-REOWN -> COORD] kv3_hgi_v2__cl2862d491=PROBE-PASS
