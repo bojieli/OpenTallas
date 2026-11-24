@@ -12,3 +12,7 @@ Job: hub cland ring -> bin internal hold seam (hub_Eo -323 post-hook CTS) as a f
 - Row: epyc11 /srv/opentallas-scratch2/claude/kv-hub-hold/rows/ROWS_KV-HUB-HOLD.py da657da969c2; A3g b258e3e34f22 -> plan_H1.json 75317d2894e7 (only 4 clock keys added).
 - Gate H1 (epyc11, tree fork of ALLFIX grow/tree, rt 29d2fff35ccd, scoped strict bind 4 hubs): log intel2 ~/tmp/kvhubhold/gate_H1.otrun.log, out epyc11 kv-hub-hold/gate_H1.
 - KV-ALLFIX (ad9ba7d): base A3g OK; A3h = A3g + STRIPRAW on hroot/io_ft_v1 only, row transposes 1:1; folds into iteration 2 after rt + gate pass. Send row path+sha12.
+## 22:3x state
+- Gate H1 (seam only, plan_H1 75317d2894e7): PRE PASS 0, strict bind 4/4 EMIT, errors 0, tied 0; PRECHECK 1 = R8STALE inherited from A3g (not this row).
+- COORD 22:1x/22:2x: tap split on all 4 hubs added to this row. Dumps epyc11 kv-hub-hold/regs/{hub_*}.json (Eo/Wo D28, Ei D27d3 1122025546, hub_C D28 1123041709 from epyc2). split.py -> split_1100.json, Wo clk_t56 cluster fixed by a median-split loop -> split_1100b.json (= rows/HUBHOLD_TAPS_1100.json 083010e8c662). Summary split_summary.json.
+- Row v2 rows/ROWS_KV-HUB-HOLD.py ab3ae6c0b667: seam + tap_max_sinks 1200 + added taps (Eo 0, Wo 22, Ei 10, C 34). plan_H2 0e6a5e98b133. Gate H2 log intel2 ~/tmp/kvhubhold/gate_H2.otrun.log.
