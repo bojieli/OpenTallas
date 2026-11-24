@@ -11,6 +11,9 @@ cycles but recounts ft stations / landing live from the slots, so a table not re
   PRICE-SHORT   stored cycles < 2 + live ft stations + live landing + source station depth of the lane's OUT bus
                 (kit_istations depth + hard-core cycles, LANE_ASBUILT UNPRICED_KIT_STATIONS; native: 'native stations exceed
                 priced lane depth')
+  FIXED-SPLIT   (needs the as-built: kw asbuilt= / plan_advisory --asbuilt) native-source lane whose fixed_cycles != source
+                station regs + max destination regs (bind: 'native stations L415: fixed_cycles must equal source 6 + destination 5');
+                the A2f strict refusal that PRICE-SHORT cannot see, since it is about the table's fixed split, not the ft count
 Fix: refresh the latency table (the compose's latency step / reprice) or fixed_cycles += delta (pre-approved).
 findings(raw, plan_path, tree=None, **kw) -> WARN lines (advisory in plan_advisory, never raises).
 """
@@ -54,6 +57,33 @@ def judge(row, st, land, depth):
     return why
 
 
+def native_fixed(P, schema, types, ab, tree_dir):
+    """-> {lane: (fixed, source regs, destination regs)} for native-source lanes violating fixed == source + destination"""
+    import adv_stn_conflict as S
+    bad = {}
+    for lid, ln in sorted(P.lanes.items()):
+        ports = [P.ports[q] for q in ln.get("ports", []) if q in P.ports]
+        if not ports:
+            continue
+        a, b = ports[0]["src"], ports[-1]["dst"]
+        if a["part"] == schema.DIE_PART or a["part"] not in P.parts or b["part"] == schema.DIE_PART or b["part"] not in P.parts:
+            continue
+        stn, dtn = P.parts[a["part"]]["type"], P.parts[b["part"]]["type"]
+        scope = S.native_scope(ab, stn)
+        if scope is None or (scope and a["bus"] not in scope):
+            continue
+        rows = [e for e in (types.get(stn) or {}).get("internal_stations") or [] if isinstance(e, dict) and e.get("conn") == "bus:" + a["bus"]]
+        if not rows:
+            continue
+        src = len(rows[0].get("regs_um") or [])
+        dst = max((len(e.get("regs_um") or []) for e in (types.get(dtn) or {}).get("internal_stations") or []
+                   if isinstance(e, dict) and e.get("conn") == "bus:" + b["bus"]), default=0)
+        fixed = int(ln.get("fixed_cycles", 0))
+        if fixed != src + dst:
+            bad[lid] = (fixed, src, dst)
+    return bad
+
+
 def _findings(raw, plan_path, tree=None, **_kw):
     sys.path.insert(0, str(Path(tree) / "tools" / "die_plan") if tree and (Path(tree) / "tools" / "die_plan" / "schema.py").is_file()
                     else str(Path(__file__).resolve().parent))
@@ -73,9 +103,24 @@ def _findings(raw, plan_path, tree=None, **_kw):
             short += any(x.startswith("PRICE") for x in why)
             hits.append((-max(2 + st + land + depth - int(row.get("cycles", 0)), 0), _w(f"lane {lid}:", "; ".join(why),
                          "(bind: native stations exceed priced lane depth / LANE_LATENCY); fix: refresh the latency table or fixed_cycles +delta")))
+    ab = _kw.get("asbuilt")
+    if isinstance(ab, str):
+        import json
+        with open(ab) as f:
+            ab = json.load(f)
+    fixed_bad = 0
+    if isinstance(ab, dict):
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        try:
+            for lid, (fx, src, dst) in native_fixed(P, schema, types, ab, tree).items():
+                fixed_bad += 1
+                hits.append((-1000, _w(f"lane {lid}: FIXED-SPLIT fixed_cycles {fx} != native source stations {src} + destination {dst} "
+                                       f"(bind: native stations {lid}: fixed_cycles must equal source {src} + destination {dst}); fix: fixed_cycles = {src + dst}")))
+        except ImportError as e:
+            hits.append((-1, _w(f"FIXED-SPLIT not checked: {e}")))
     hits.sort(key=lambda h: h[0])
     out = [m for _, m in hits[:MAX_LINES]]
-    out.append(_w("summary", f"{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE); {notab} lanes without a latency row"))
+    out.append(_w("summary", f"{len(hits)} of {n} lanes flagged ({short} PRICE-SHORT, {stale} STALE-TABLE, {fixed_bad} FIXED-SPLIT{'' if isinstance(ab, dict) else ' (no as-built: FIXED-SPLIT not run)'}); {notab} lanes without a latency row"))
     return out
 
 
@@ -88,5 +133,6 @@ def findings(raw, plan_path, tree=None, **kw):
 
 if __name__ == "__main__":
     import json
-    for ln in findings(json.load(open(sys.argv[1])), sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None):
+    for ln in findings(json.load(open(sys.argv[1])), sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None,
+                       asbuilt=sys.argv[3] if len(sys.argv) > 3 else None):
         print(ln)

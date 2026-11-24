@@ -27,3 +27,30 @@ def test_regenerated_lane_passes():
 
 def test_never_raises():
     assert A.findings(None, "p")[0].startswith("WARN ADV-IST-PRICE not checked")
+
+
+class _Sch:
+    DIE_PART = "__die__"
+
+
+class _P:
+    lanes = {"L415": {"ports": ["p0"], "fixed_cycles": 10}, "L9": {"ports": ["p1"], "fixed_cycles": 3}}
+    ports = {"p0": {"src": {"part": "a", "bus": "o"}, "dst": {"part": "b", "bus": "i"}},
+             "p1": {"src": {"part": "a", "bus": "o2"}, "dst": {"part": "b", "bus": "i2"}}}
+    parts = {"a": {"type": "ta"}, "b": {"type": "tb"}}
+
+
+def _types():
+    rows = lambda bus, n: {"conn": "bus:" + bus, "regs_um": list(range(n))}  # noqa: E731
+    return {"ta": {"internal_stations": [rows("o", 6), rows("o2", 3)]}, "tb": {"internal_stations": [rows("i", 5), rows("i2", 0)]}}
+
+
+def test_native_fixed_split_a2f_l415():
+    """A2f strict refusal: 'native stations L415: fixed_cycles must equal source 6 + destination 5' (fixed was 10)."""
+    ab = {"internal_stations_types": ["ta"]}
+    bad = A.native_fixed(_P, _Sch, _types(), ab, None)
+    assert bad == {"L415": (10, 6, 5)}              # L9: 3 == 3 + 0 passes
+
+
+def test_native_fixed_split_skips_non_native():
+    assert A.native_fixed(_P, _Sch, _types(), {"internal_stations_types": ["other"]}, None) == {}
