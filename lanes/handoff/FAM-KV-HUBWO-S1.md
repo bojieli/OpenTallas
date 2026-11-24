@@ -9,3 +9,4 @@
 - 20:5x: Wo GRT triage stop (est -251.6 < -150), worst = astk_WN->ist_o_astk_WS 1500 um single hop (-170 post-CTS). Eo past GRT, in route (waiter needed). NEXT: station row for astk_WN->WS lanes, relaunch sealed Wo; Eo route/LEC/provenance.
 - 20:5x: FINDING posted: astk station chains sited at one core while bound packed buses mix WN/WS sources (plan-vs-bind mismatch); no standalone station row; waiting KV-ASTK-TIED to confirm mapping, then I build per-source chain geometry on A3e. Eo route waiter b8iky02e2 armed.
 - 21:2x: Eo DIED route entry PLAN-TRIAGE (worst -323 cland_i_astk_ES ep_zo ring, -133 astk_EN station). No live sealed kit. Waiting KV-ASTK-TIED mapping, then rows on A3e.
+- 22:3x: ROW-REBASED posted (ROWS-READY 4ebe911966d7, plan 0517b84c2255). G0 PASS, scoped strict bind 0 (after r8_refresh), BPC PASS. LATCHECK + hub GENDRY left to KV-ALLFIX combined gate. Next: when combined plan binds strict-clean, relaunch sealed hub_Wo/Eo --goal route. No live kit.
