@@ -1100,6 +1100,39 @@ def ft_hop_lockup_cell():
     return m.group(1)
 
 
+def optional_gen_cells(raw, cells):
+    """ENTRY-FALL-BIND 11-24 (FABLE flow review c7edf6f5, SERDES-RING: all 11 S81 serdes types set reset.pin_entry_fall, the bound RTL
+    instantiates ot_dp_rrelay_fn, kit_rtl reads only bind_cells.sv: 'leaf modules without a source [ot_dp_rrelay_fn]').  gen_rtl writes these
+    opt-in cells into ot_dp_cells.sv only when the plan uses them; bind_cells.sv gets the same ones (each once; a plan that uses none keeps a
+    byte-identical cell file)."""
+    import gen_rtl
+    import pin_entry_delay as PED
+    import pin_entry_phase as PEP
+    for used, mod, text in ((gen_rtl.uses_entry_fall(raw), "ot_dp_rrelay_fn", gen_rtl.ENTRY_FALL_CELLS),
+                            (PED.uses(raw), "ot_dp_rrelay_delay", PED.CELL_RTL),
+                            (PEP.uses(raw), "ot_dp_rrelay_ph", PEP.CELL_RTL),
+                            (gen_rtl.uses_relay_lockup(raw, "negedge"), "ot_dp_rrelay_nl", gen_rtl.LOCKUP_CELLS)):
+        if used and not re.search(r"^\s*module\s+" + re.escape(mod) + r"\b", cells, re.M):
+            cells += "\n" + text
+    return cells
+
+
+# generated cells the kit's own flow supplies (kit_rtl excludes the same names from its leaf list)
+KIT_PROVIDED_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay",
+                      "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq", "ot_dp_rtail"}
+_SV_KEYWORDS = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "logic", "assign", "always", "begin", "end", "if", "else",
+                "generate", "endgenerate", "genvar", "for", "localparam", "parameter", "initial", "case", "endcase", "function", "task"}
+
+
+def leaf_source_report(top_txt, cells_txt, known):
+    """ENTRY-FALL-BIND 11-24, REPORT ONLY: the modules the bound top instantiates that have no source the kit will carry (not defined in the
+    top, not in bind_cells.sv, not kit-provided, not in KNOWN = leaf source index + macro views).  -> dict(gate, checked, missing)."""
+    inst = set(re.findall(r"^\s+(\w+)\s+(?:#\s*\(.*?\)\s+)?u_\w+\s*\(", top_txt, re.M | re.S)) - _SV_KEYWORDS
+    defined = set(re.findall(r"^\s*module\s+(\w+)", top_txt, re.M)) | set(re.findall(r"^\s*module\s+(\w+)", cells_txt, re.M))
+    missing = sorted(m for m in inst - defined - KIT_PROVIDED_CELLS if m not in known)
+    return dict(gate="REPORT", checked=len(inst), missing=missing[:200], n_missing=len(missing))
+
+
 def wavefront_cells_text_only(names):
     """canonical cell modules `names` copied verbatim (attributes included) from gen_rtl.CELLS."""
     import gen_rtl
@@ -4044,6 +4077,7 @@ class Binder:
             cells += "\n" + RRP.TAIL_CELL                # KV-D23-REACH: reset spine relay copies (rsync form rows only)
         if (gen_rtl.uses_hold_hb4(self.plan) or core_input_uses_pad(self.plan)) and "module ot_dp_hd " not in cells:
             cells += "\n" + gen_rtl.HOLD_CELLS     # HOLDFORM-1 hold pads / latch_except_hb4 (absent = byte-identical cell file)
+        cells = optional_gen_cells(self.plan, cells)  # ENTRY-FALL-BIND 11-24: the opt-in cells gen_rtl writes into ot_dp_cells.sv
         _fresh_write_text(out / "bind_cells.sv", cells)
         files = [out / "bind_cells.sv"]
         self._native_glue = None
@@ -6657,6 +6691,18 @@ def cmd_bind(a):
         for _k, _rows in sorted(_lr.items()):
             for _r in _rows:
                 print(f"   LOCAL_RESET_RAW {_k}: {_r['name']} {_r['was']} -> {_r['raw']}")
+    if files and any((out / "rtl").glob("*_bound_top.sv")):     # ENTRY-FALL-BIND 11-24: report-only leaf source check (never an error)
+        try:
+            _top = next((out / "rtl").glob("*_bound_top.sv")).read_text()
+            _cells = "\n".join(f.read_text(errors="replace") for f in sorted((out / "rtl").glob("*.sv")))   # bind_cells.sv + every bound module file
+            _known = set(E.module_index(B.ab.get("rtl_roots", ["rtl"]), B.ab.get("files", []), B.base)) | set(macro_views(B.base))
+            _known |= set(plan_row_views([h for t_ in (raw.get("partition_types") or {}).values() for h in (t_.get("hard_cores") or [])], B.base))
+            rep["leaf_sources"] = leaf_source_report(_top, _cells, _known)
+        except Exception as exc:                                   # report only: a failure is recorded, never raised
+            rep["leaf_sources"] = dict(gate="REPORT", verdict="ERROR", error=str(exc)[:300])
+        if rep["leaf_sources"].get("missing"):
+            print(f"bind: WARN leaf modules without a source (report only, kit_rtl will refuse them): {rep['leaf_sources']['missing'][:10]}",
+                  flush=True)
     _fresh_write_text(out / "bind_report.json", json.dumps(rep, indent=1))
     write_all_errors(out, B.errors, B.types)     # BIND-ALL-ERRORS: the full list (bind_report keeps the first 2000)
     try:                                     # BIND-GEN-TOOLSKEW (FLOW-FIX-0400): the tool sha + reset/relay generator hashes this bind ran with; kit prep compares them with the gen rt
