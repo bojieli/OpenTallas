@@ -1,1 +1,12 @@
 - 2026-11-24 01:54 PST TAKING S81-SLICE-C-OWN: dsdv_slice_c3x_C t1, iq_C t1, lepe_mu_C t1, lepe_nh_mus_C t1, lepw_mus_C t1, c1x_C t7, lepw_mu_C t1, s81sl_kv_leaf t3/t4/t5, IQC-T1. LP types lepe_nh_mus_LP t1 / lepw_mus_LP t2 HELD (FABLE + S81-KV-CALENDAR RIP), listed only.
+- 2026-11-24 02:02 PST CLASS S81-SLICE-C-OWN (basis: c8 p6u_hops2 94eb2af6a4f5 vs B1 per-type diff on epyc9 s81-slice-c-own/sco_diff.out + recipe steps; measured on plan, not on timing) [-> COORD, S81-ALLFIX-INT; cc S81-C8-TYPES, S81-OWN-SLICE]
+  dsdv_slice_iq_C__t1: RIDES-C8 (rc35 + GFLOCAL define; cause map 11-23 20:27: reach rows IN-BASE c4->c7a, taps c8). Probe after c8 bind.
+  dsdv_slice_lepe_nh_mus_C__t1: RIDES-C8 (rc35; ROUTE-HELD kit b55cf2d3ded95 is old event 891100ef774).
+  dsdv_slice_lepw_mus_C__t1: RIDES-C8 (rc35; ROUTE-HELD kit b766651e3cd80 old event).
+  dsdv_slice_lepw_mu_C__t1: RIDES-C8 (rc67 + relay_sites; kit bc51f84eb379d ROUTE-HELD old event).
+  ot_s81sl_kv_leaf t3 t4 t5: RIDES-C8 (step 12 KVLEAF-VNB-HARD-1 v2 hard cores/ft/stations + step 13 unbury: 103 chains 0 unmoved; t4 SELREP dropped from c8, per-type param is c9 = OWN-SLICE). RSTREACH t4 t5 fixed by c8_rederive.
+  dsdv_slice_c1x_C__t7: RIDES-C8 for rc67 + GFLOCAL; OPEN residual leafup_o0 (OWN-SLICE 01:13) NOT yet measured on c8 -> HELD on c8 probe, no row drafted unless the probe shows it. Kit bc4739f09402c ROUTE-HELD old event.
+  dsdv_slice_c3x_C__t1 and dsdv_slice_lepe_mu_C__t1: OPEN. Cause: c8 changes only clock.tap_pair_affinity (pair_cap 1950, rc35); taps/added_taps identical to B1 (0 added, tap_max_sinks 1500); tap split BLOCKED (dense region > 0.9 cap x 9 taps, TAP-GRID-R5), TAP-GRID-R5 DRY-RUN-3 shows lepe_mu_C max 2000/tap. Fix row for c9: tap-pair move/added taps on the dense region; drafting on p6u_hops2 now.
+  HELD: lepe_nh_mus_LP t1, lepw_mus_LP t2 (FABLE + S81-KV-CALENDAR RIP; not touched).
+  IQC-T1: row closed as RIDES-C8; iq_C t1 probe waits on c8 bind OUT.
+  ROUTE-HELD kits on superseded plan (event 891100ef774), left, not proofs: lepe_nh_mus_C t1 b55cf2d3ded95 (epyc10), lepw_mus_C t1 b766651e3cd80 (epyc10), lepw_mu_C t1 bc51f84eb379d (intel1), c1x_C t7 bc4739f09402c (intel1).
