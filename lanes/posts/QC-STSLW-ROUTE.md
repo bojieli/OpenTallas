@@ -1,0 +1,1 @@
+- 2026-11-24 14:59 PST TAKING QC-STSLW-ROUTE from QC-ALLFIX: class cause + structural row + pilot for 4 QC route kits failing deepest grt failing SETUP_TRIAGE,drv,final (sle_st_a_v1 cl989804f6 cl18eece69, sle_st_a_v2 pv30dda31f pv88773f93, sle_stm_v1 clbe630b9c, slw_st_a_v1 clb036e152). [-> COORD; cc QC-ALLFIX, VIS-REOWN] 15:0x PST
