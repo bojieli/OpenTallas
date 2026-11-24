@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""CELLCAP-HOLD (COORD FABLE FLOW REVIEW 11-23 22:50 item 1): a type whose CELL-BUDGET projection is over the 400k OpenROAD cap is
-refused at launch even under stops_off, unless a type_split / recorded exception covers it; running kits are not touched."""
+"""CELLCAP-HOLD / CELLCAP-RETRACT (COORD 11-23): a type whose CELL-BUDGET projection is over the 400k cap is refused at launch unless a
+type_split / recorded exception covers it; every die carries cell_cap_exceptions {"*": "r703"} (owner r703), so in practice it is a WARN +
+one owner post (report only).  Running kits are never touched."""
 import json
 import os
 import subprocess
@@ -64,6 +65,29 @@ class Block(unittest.TestCase):
         self.assertIsNone(KW.plan_entry_block(dict(self.D, cell_cap_exceptions={"a": "r999"}), "a"))
         self.assertIsNone(KW.plan_entry_block(dict(self.D, cell_cap_exceptions={"a*": "COORD 11-23"}), "a"))
         self.assertIn("CELLCAP-HOLD", KW.plan_entry_block(dict(self.D, cell_cap_exceptions={"z*": "x"}), "a"))
+
+    def test_r703_exception_launches_and_posts_once(self):
+        posts, logs = [], []
+
+        class AP:
+            DRY = False
+
+            @staticmethod
+            def log(m):
+                logs.append(m)
+
+            @staticmethod
+            def coord_append(f, line):
+                posts.append(line)
+        d = dict(self.D, cell_cap_exceptions={"*": "r703"}, _plan_sha="abc", die_owner="QC-STB-CAP")
+        self.assertIsNone(KW.plan_entry_block(d, "a"))
+        cfg, st = {"dies": {"qwen_compute": d}}, {}
+        KW.cell_budget_note(AP, cfg, st)
+        KW.cell_budget_note(AP, cfg, st)
+        self.assertEqual(len(posts), 1)
+        self.assertIn("WARN [KIT-WAVE -> QC-STB-CAP]", posts[0])
+        self.assertIn("410,000", posts[0])
+        self.assertIn("r703", posts[0])
 
     def test_cached_probe_without_cell_budget_is_rerun(self):
         self.assertIn('"cell_budget" in c', KW.Path(KW.__file__).read_text())

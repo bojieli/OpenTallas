@@ -1823,6 +1823,36 @@ def cell_big_note(AP, cfg, st):
             AP.log(f"KIT-WAVE CELL-BIG {die}: {len(big)} type(s) estimated over the {SPLIT_CELLS} cell limit launch anyway (stops_off): {', '.join(big)[:400]}")
         elif not big:
             seen.pop(die, None)
+    cell_budget_note(AP, cfg, st)
+
+
+def cell_budget_note(AP, cfg, st):
+    """CELLCAP-RETRACT (COORD 11-23 23:0x; owner r703 + fewer rules): a type the plan probe flags 'cellcap' (CELL-BUDGET projection over
+    the 400k cap) that a cell_cap_exceptions entry (dies.*: {"*": "r703"}) lets launch gets a WARN log line and ONE post to the type's
+    owner per die|type|plan sha: report only, never a stop.  The split rows are the structural fix."""
+    seen = st.setdefault("cell_budget_posted", {})
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        cb = d.get("_cell_budget") or {}
+        for t, f in sorted((d.get("_plan_flags") or {}).items()):
+            ex = cell_cap_exception(d, t) if f == "cellcap" else ""
+            if not ex:
+                continue
+            key = f"{die}|{t}|{str(d.get('_plan_sha') or '')[:12]}"
+            if key in seen:
+                continue
+            r = cb.get(t) if isinstance(cb.get(t), dict) else {}
+            est = f"{int(r['est']):,}" if r.get("est") else "?"
+            owner = die_owner(cfg, die, item=t)[0]
+            seen[key] = {"ts": time.time(), "est": r.get("est"), "owner": owner}
+            msg = (f"CELL-BUDGET {die}/{t}: projected {est} synth cells > {SPLIT_CELLS:,} (place ~x1.28) from {str(r.get('basis') or '')[:200]}; "
+                   f"launches under exception {ex} (report only); split row = the fix")
+            AP.log(f"KIT-WAVE WARN {msg}")
+            if not AP.DRY:
+                AP.coord_append("lanes/posts/KIT-WAVE.md", f"- {now_s()} WARN [KIT-WAVE -> {owner}] {msg}")
+    for k in [k for k, v in seen.items() if time.time() - float((v or {}).get("ts") or 0) > 7 * 86400]:
+        seen.pop(k, None)
 
 
 # FLOW-OPS-0900 11-21 (COORD ruling: CELL-CAP is a report, r703): the floorplan CELL-CAP report of a kit (native_cell_cap.tcl "OT_CELL_CAP REPORT" in the stage live
