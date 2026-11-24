@@ -1,6 +1,6 @@
 item	family	source	owner_lane	last_owner_post_time	last_progress	age_since_progress_min	deadline	status	flag
 r18g event plan 5f4c8fa1af13 (single event, East held)	HEAD die	HEAD-R18 15:25/15:40	HEAD-R18	11-23 15:40	Fable accepted at gate with East held; PRE/G0 0, cohort 27/27, LAT334; S1 reseal (4 tooling files) + dry gate retry staged; live r17b unchanged	3	no new ETA posted (old 13:00 passed)	PACKAGING	NEEDS-ETA
-East types (hd_lep0N E cap10) release on census read	hd_lep0N E	Codex 14:44	HEAD-R18	11-23 15:40	cap10 TT structural -2690.91 -> +3.58 (placement RC); actual census pending; NDR drops 70->3->2	3	ASAP, FABLE-RC read	HELD	NEEDS-ETA
+East types (hd_lep0N E cap10) release on census read	hd_lep0N E	Codex 14:44	HEAD-R18	11-23 15:40	cap10 TT structural -2690.91 -> +3.58 (placement RC); actual census pending; NDR drops 70->3->2	3	ASAP, FABLE-RC read	HELD	LATE: relay_split row 19:30
 hd_ctl routed LEC (LEC-SETUP)	hd_ctl	HEAD-R18 14:49	HEAD-R18	11-23 14:49	fresh binary kit: mapped LEC 69457/69457 EQ, GRT TT +2.44; route+routed LEC E7 oth-1290560 live	54	next read	RUNNING	
 W fresh route E7 1288889 / clk_t27 NDR advisory	hd_lep0N_w	HEAD-R18 15:25	HEAD-R18	11-23 15:40	checking canonical 5_1 and t27 trace before live adoption	3	-	RUNNING	
 rc138 LEP-CLKWALL-1 probe part, LEP-WOPENREG-1	hd_lep0N	REASONED	FABLE-OPEN-HEAD-QC / HEAD-R18	11-23 10:54	REASONED; closes on E cap10 GRT census	~290	with E census	REASONED-pending	
