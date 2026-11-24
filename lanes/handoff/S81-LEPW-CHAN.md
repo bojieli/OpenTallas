@@ -25,3 +25,5 @@ Job: dsdv_slice_lepw_mu_C__t1 CBC route-demand pinch; row on c9 048fa468f0a2; PR
 - epyc9 stem_c8_chain.sh (out_stem_c8, scope_stem_c8, row/LEPW-MUC-STEM.overlay.json); row_stem.sh (out_stem, c9).
 - intel2 units: stemrebased (auto ROW-REBASED), kitstemwait -> kit_stem_body.sh (kit #2, ~/tmp/s81-lepw-chan/kit_stem), grtwatchstem; control kit units kitwait/grtwatch; stemwatch (draft result post).
 - If kit #2 overlay refused: build from composed plan tree (ot-tree-fork c8seal_tree + scoped bind out scope_stem_c8 as --bind-out).
+## 14:0x COORD waiter+fallback
+- epyc11 fork c8fork (fork.otrun.log). intel2 s81lepwchan-overlaywatch (overlay_watch.sh/.log): verdict post, PASS->ot-delete fork, REFUSED->fallback kit #2 (kit_stem_fb), then stemrebased check. s81lepwchan-grtwatchfb watches kit_stem_fb.
