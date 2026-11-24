@@ -16,3 +16,8 @@ STATUS: cause measured, fix NOT ready. Nothing for A6 yet. No bind result exists
 1. Ruling on the setup bound (default: 166.6, the receiver kit max). Then pv_v12: near tap + a port launch station for rings over it (+1 cycle, LATCHECK).
 2. Bind needs a base that passes PRE (ALLFIX A5r/A5s). FABLE order: sender row first, then seam values re-derived on the same compose.
 3. PRECHECK STALE-EXPORT-TAP (source > 300 um with a nearer tap = FAIL) would push all 1461 pins to near taps: same setup hazard, die-wide.
+## 00:3x PST update (pv_v12 row draft; everything here is on A5 95c853437992 geometry, not A5s)
+- Per ring (3 launch points, all 53): 22 o_* bus rings + ft53 launch at the port; 30 ft rings launch from the last station 345-389 um out (data 514-732 ps), so near tap alone gives d +200..+480. Placed S0 is ~31 um inside the face, so hop 0 is 3-160 um (slack is real).
+- Row epyc10 /srv/opentallas-scratch2/claude/kv-sender-skew/ROWS_KV-SENDER-SKEW-PV12.py 26b81eb53c03 (cwd = private fork; env SS_EXPORTS=ss_exports.txt). Dry run: 53 repoints; 19 slots respaced at the same count; 11 slots +1 or +2 station (ft0 ft5 ft6 ft7 ft9 ft11 ft13 ft14 ft16 ft28 +1, ft10 +2); hops <= 385 um; tails <= 43 um, except ft57 (522 bits) 107 um. +1 lanes: L596 L1961 L1963 L1975 L1979 L1981 L1993 L1995 L2009 L2015, L1977 +2.
+- Not done: post-fix m is a proxy (fstart launch at port), LATCHECK / join alignment not run, PRE and bind not run, ft57 likely needs its own siting.
+- Waiter: epyc10 kv-sender-skew/wait_a5s.sh for A5s plan.json; then ot-tree-fork + row + PRE + LATCHECK + scoped bind (no PRE override).
