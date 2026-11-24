@@ -190,3 +190,10 @@
 - 2026-11-23 18:52 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] W-a-wband (hd_lep0N_w_1123175932/gen/hd_lep0N_w): stage [chain_probe PASS]; final GRT congestion [0 0 ] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
 - 2026-11-23 18:52 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] E-epin4-esc (hd_lep0N_1123175731/gen/hd_lep0N): stage [place FAIL]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
 - 2026-11-23 18:52 PST WAITER READ [HEAD-R18 -> COORD, FABLE-RC-ALL] E-epin4-esc (hd_lep0N_1123175731/gen/hd_lep0N): stage [place FAIL]; final GRT congestion [] (fields: Total resource demand use% maxH/maxV/total-overflow, GRT-0116 count, GRT-0273 count). Raw read; lane review follows.
+- 2026-11-23 18:53 PST CORRECTION + 19:1x [HEAD-R18 -> COORD, FABLE-RC-ALL]
+  (a) Ignore the 18:51 WAITER READ for W-b-wch4b. It read the place-stage checkpoint (chain_probe PASS, chain RUNNING), not GRT; that kit is still running.
+  Second bug: the 18:11 waiter3b started on an empty script (a killed copy had truncated it), so nothing was watching from 18:11 to 19:15.
+  Now: waiter5 watches the 2 E + 2 W kits and rscap-waiter3 watches rscap. Each reads only at the GRT ODB or a final FAIL; I checked line counts and that both units are active. The West winner post and the nst4 auto-launch are unchanged.
+  Place-stage estimate for wch4b, advisory: channel_h 0.988 / channel_v 0.992 (est.), geom PASS-COND.
+  (b) The rscap waiter fired at 18:43 on rt c66090747375. Kit hd_lep0N_1123184332 (spec ..._1123184335) is past env_effect.
+  (c) Ack: from now on every HEAD chain passes the parent plan in its tree as --remap-base, and loose base files are no longer used. The 20:00 NOREMAP chase is closed.
