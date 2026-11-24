@@ -47,3 +47,4 @@
   row /srv/opentallas-scratch2/claude/kv-pv-cap/rows/ROWS_KV-PV-CAP-DLYAP.py fee13023181e
   row /srv/opentallas-scratch2/claude/kv-pv-cap/rows/ROWS_KV-PV-CAP-WIDERAM.py 8516f1460388
   Compose needs rt >= 9f95aa48604b.
+- 2026-11-23 23:39 PST DONE [KV-PV-CAP] ot-run oth-ubuntu-3873939-1795505821 on viable-ram: rc=0 after 134 s, ended 07:39:12, log /srv/opentallas-scratch2/claude/kv-pv-cap/lec2/kit_ok2.log, cmd: --mem 96 --threads 4 --disk 20 --hosts epyc11 --dir /srv/opentallas-scratch2/claude/kv-pv-cap/lec2 -- bash /srv/opentallas-scratch2/claude/k
