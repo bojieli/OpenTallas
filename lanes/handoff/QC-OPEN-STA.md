@@ -33,3 +33,9 @@ Residual (not placement): u_r0 -> g_btb writes 28 b (NEED-STATION, RTL: rc97 bta
 - bindR7/bindR8 both BAD (tree lacked cC overlays). Tree now = cC overlays (bindS.sh installed 9 files from QC-ALLFIX/cC/tree); plan in tree = plan_probe_nosu 7e25fd64b4e4 (C1-noSU + st_a row, rows/compose_probe.py).
 - bindS.sh -> bindS/bind (fresh elab + strict R8 loop + LATCHECK), log epyc8 QC-OPEN-STA/bindS.ot.
 - Probe launcher intel2 /srv/opentallas-scratch2/claude/QC-OPEN-STA-probe.sh: set --bind-out $D/bindS/bind before running (rt 70b6).
+
+## 23:55 PST (resumed)
+- r8 on HOLD (posted): r_reach 34->42 is 8 new st_a findings (raw reset hops up to 1150 um, clfc START fan 569); cause unproven. G0 reads pre-re-pick names. Checking with rows/rreach.py (log epyc8 QC-OPEN-STA/rreach.ot).
+- PRE/G0 r3..r8 ran on the bare kw45 tree: RERUN on the overlaid tree (now sha256-equal to cC in rtl/tools/runtime/bind). gate.sh installs its PLAN into tree: never run it while bindS is live.
+- r6->r7 tapfix: dropped 6 added taps (cl67389ecd 1, cl18eece69 1, cled 1, clb036 1, clfc x2 1 each), tap_offset st_a rows 207 removed, 0 filled.
+- Live: bindS unit oth-ubuntu-2693179-1795505578 (epyc7). tapfix.sh rm -f'd own zz_opensta_* temp plans in launch plan_of_record and tmp_r8.json in lane root (own files, but outside the tmp dir: use ot-delete there next time).
