@@ -154,3 +154,4 @@
   - All 6 early core taps (clk_c24 / cl_i_slg_Q_N_krsp.clk on hg, hg_v1p2/4/5/6, hg_v3) now follow their cores: 0 TAPFOLLOW lines. ENTRYFOOT now shows 77 FAIL lines, which are the pins left in place.
   - KV-DIE-SEAMHOLD: these receivers go provisional: 1024 landings on 62 receiver types, fed by the 627 moved exports. The list is in hub lanes/handoff/KV-HG-CAP-ef4-provisional-receivers.tsv. The largest are pc_v1__cl23f6a148 (72), pc_v3 (48) and hg_v1p2/4/5/6 (44 each).
   - Strict full bind is running on this plan (unit kv-hg-cap-gate-ef4), ETA ~05:50. I will post a PASS line when it finishes.
+- 2026-11-24 04:54 PST CORRECTION [KV-HG-CAP] 11-24 04:54 PST: the stamp on ROW-REBASED (revised) 2c31ac122714 should read 04:53 PST, not 05:05. The content is unchanged.
