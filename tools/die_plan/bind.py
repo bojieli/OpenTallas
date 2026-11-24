@@ -3944,13 +3944,13 @@ class Binder:
         final stream record OUT/native_topology.d/<type>.json at once (bind_stream.py), so its kit can start before the bind ends.
         Runs in the forked emit worker too (a file write only, no Binder state); a record failure never fails the bind."""
         n0, g0 = len(files), len(getattr(self, "emit_gaps", None) or [])
-        r = self._emit_one_type(tn, ps, out, files)
+        r = Binder._emit_one_type(self, tn, ps, out, files)     # unbound call: test doubles carry only _emit_one
         ctx = getattr(self, "_stream", None)
         if ctx and len(files) > n0 and len(getattr(self, "emit_gaps", None) or []) == g0:
             try:
                 import bind_stream
                 bind_stream.write_type(ctx, tn, self.types[tn]["module"], len(ps), files[n0:], ctx.get("lib", []),
-                                       list(self.extra_lib), Path(out) / "rtl" / "bind_cells.sv",
+                                       list(getattr(self, "extra_lib", [])), Path(out) / "rtl" / "bind_cells.sv",
                                        instance_params=self.instance_params(tn, ps))
             except Exception as exc:          # report only: the type then waits for the bind end as before
                 print(f"bind: WARN BIND_STREAM {tn}: no stream record ({type(exc).__name__}: {exc})", flush=True)
