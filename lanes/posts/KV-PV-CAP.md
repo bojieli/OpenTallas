@@ -79,3 +79,4 @@
   LEC therefore covers clock domains too (edge per flop). Still K3g form, yosys generic, matched start state, rings as lemma.
   NEXT: R2 dead-slice fix + test, push by 02:15; ring one-bit argument to FABLE-RC-KV by 02:45.
 - 2026-11-24 01:09 PST 2026-11-24 01:09 PST RESUMED KV-PV-CAP [-> COORD] three checks posted; next R2 dead-slice macro fix, push by 02:15; ring argument by 02:45.
+- 2026-11-24 01:15 PST DONE [kv-pv-cap] ot-push-main otpush-outgoing-giraffe-656079 on outgoing-giraffe: rc=0 after 51 s, ended 09:15:41, log none, cmd: ot-push-main 
