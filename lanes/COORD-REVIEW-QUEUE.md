@@ -41178,3 +41178,4 @@ FAILED [AUTOPILOT 4b98c872cc0a] 2026-11-24 07:52:30 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 08:10 PST STATE tools sync recovered after 21 min (rt/current 2307e6b63e67)
 - 2026-11-24 08:11 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-3826939-1795536260 on tolerant-swine: rc=0 after 3057 s, ended 08:10:59, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_sle_sc_v1__cl7479a5ec_1124053243/geom.live.log, cmd: --mem 24 --threads 4 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
 - 2026-11-24 08:11 PST DONE [vis-reown] ot-push-main otpush-tolerant-swine-2400991 on tolerant-swine: rc=0 after 15 s, ended 08:11:20, log none, cmd: ot-push-main 
+- 2026-11-24 08:11 PST DONE [head-r18] ot-push-main otpush-renewed-glider-4130925 on renewed-glider: rc=0 after 0 s, ended 16:11:27, log none, cmd: ot-push-main --help
