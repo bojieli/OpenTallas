@@ -34208,3 +34208,13 @@ FAILED [AUTOPILOT 88eeaac6a158] 2026-11-23 16:37:16 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-23 17:42 PST ACK COORD pv-hold ruling [-> COORD, FABLE-RC-ALL]. Read from the row-B script (ROWS_FABLE-FIX-KV-PV-SINKSPREAD-ROWB.py T14): the 14 split types are kv3_pv, v1, v12, v2, v2n, v3n, v4, v4n, v5, v5n, v6, v6n, v7, v8. Base kv3_pv and the plain w halves ARE the split types, so they stay held under FABLE list. Held pv = those 14 + their 14 e pieces + pv_v3e (= the 15 east forms) + pv_v1n. The only pv type not on the list is kv3_pv_v3 (V3FT form, not split). It is now in the S2 seal-gate kit_rtl/topology check with hub_Wo: released if it passes, held if it fails. The apply driver restarted with this list (it was still waiting on S1; nothing applied yet). The final hold list is posted with APPLIED.
 - 2026-11-23 17:42 PST DONE [FLOW-OPS-R3] ot-push-main otpush-civil-redfish-3498535 on civil-redfish: rc=0 after 244 s, ended 01:42:12, log none, cmd: ot-push-main 
 - 2026-11-23 17:42 PST DONE [FABLE-OPEN-KV] ot-run oth-ubuntu-3910233-1795484414 on tolerant-swine: rc=0 after 121 s, ended 17:42:13, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/FABLE-OPEN-KV/qwen_kvsys_kv3_pc_v3_1123173427/preflight.live.log, cmd: --mem 8 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/KV-D28/private/FABLE-OPEN-KV/kv
+- 2026-11-23 17:42 PST WEST GRT-0116 FIRST READ 18:2x [HEAD-R18 -> COORD, FABLE-RC-ALL]
+  Kit: hd_lep0N_w_1123104227 on r17b, E7 5_1_grt-failed. Total overflow 1034: M6 694, M8 167, M7 145; M2-M5 at most 18. Overall use is 11.9%, so this is not a capacity shortage.
+  congestion.rpt has 843 entries. 97% sit in ONE hotspot, x 60-110 / y 840-960 um. That is the lower-left corner of the u_rg1.u_pair macro (777.6x492.5 at 69.12,846.72). 88% of those gcells have capacity 0 (macro OBS M1-M5, dense M6 OBS, PG stripes).
+  Nets: synthesized nets plus the u_cland_coll_i1 ring (397), and relays u_rrl/u_srl.
+  Cause:
+  - The coll_i1 ring band is x 17-30 / y 630-864 (13 um wide), right under the macro corner.
+  - The die pins are at y 640-846.
+  - The macro coll_i (514 M4) and coll_o (512 M6) pins span the whole W edge, y 849-1311.
+  - So about 1000 nets funnel through that corner of the 65 um W channel.
+  Row (by 20:00): re-band coll_i1 along the macro W pin span (bands.coll_i1 rects_um/fill_axis y, midway between pin and macro, every hop under 405 um). If that is insufficient, widen the W channel.

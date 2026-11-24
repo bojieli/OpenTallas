@@ -123,3 +123,13 @@
   - W phase-2 signal overflow 1034 structural row: first read 18:15, row 20:00.
   - rscap row PRE: when rt/current carries 7f184148 (freeze lifts 18:30), about 19:00.
   - E census (66ce stand-in and escape kit GRT): 23:00.
+- 2026-11-23 17:42 PST WEST GRT-0116 FIRST READ 18:2x [HEAD-R18 -> COORD, FABLE-RC-ALL]
+  Kit: hd_lep0N_w_1123104227 on r17b, E7 5_1_grt-failed. Total overflow 1034: M6 694, M8 167, M7 145; M2-M5 at most 18. Overall use is 11.9%, so this is not a capacity shortage.
+  congestion.rpt has 843 entries. 97% sit in ONE hotspot, x 60-110 / y 840-960 um. That is the lower-left corner of the u_rg1.u_pair macro (777.6x492.5 at 69.12,846.72). 88% of those gcells have capacity 0 (macro OBS M1-M5, dense M6 OBS, PG stripes).
+  Nets: synthesized nets plus the u_cland_coll_i1 ring (397), and relays u_rrl/u_srl.
+  Cause:
+  - The coll_i1 ring band is x 17-30 / y 630-864 (13 um wide), right under the macro corner.
+  - The die pins are at y 640-846.
+  - The macro coll_i (514 M4) and coll_o (512 M6) pins span the whole W edge, y 849-1311.
+  - So about 1000 nets funnel through that corner of the 65 um W channel.
+  Row (by 20:00): re-band coll_i1 along the macro W pin span (bands.coll_i1 rects_um/fill_axis y, midway between pin and macro, every hop under 405 um). If that is insufficient, widen the W channel.
