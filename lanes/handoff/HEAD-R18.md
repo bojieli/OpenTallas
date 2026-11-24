@@ -161,3 +161,8 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
   - Next: a kit to GRT for each. W stays held until a kit reads 0 overflow.
 - rscap waiter unit head-r18-rscap-wait2 on epyc7 waits for rt/current to carry 7f184148.
 - s2 dry gate: intel2 r18g_event_candidate/reseal_s2/driver2.log (replicate retry, then guard_then_gate).
+## 2026-11-23 18:0x PST
+- W kits (goal grt, intel2 r18g_exact_continue/west-*): wband hd_lep0N_w_1123175932, wch4b hd_lep0N_w_1123175934. First to 0 overflow wins; if wch4b wins, nst4 needs a kit too.
+- E kits: east-escape hd_lep0N_1123172531, east-epin-escape hd_lep0N_1123175731 (bind_r18g_epin_r4).
+- s2 dry gate: only pre_g0 fails. (1) LANDREMAP nst4 rst_rl_17 is a false positive: the same relay, shifted -34.56 by WCHAN-3, vs the r17b remap base. (2) G0 native receipt is not an input of publish_gate. Both asked of FLOW-OPS-R3. No publish; r17b live.
+- prep_r18h (exports fix vs r17b) is UNUSED and withdrawn; delete it via ot-delete when convenient.
