@@ -15,3 +15,7 @@ Job: find every LEC/equivalence pass claimed since 11-22 that used a vacuous met
 ## Files
 - mutator: epyc9+intel1 /srv/opentallas-scratch2/claude/LEC-VACUITY-SWEEP/mutate_po.py
 - neg scripts: .../LEC-VACUITY-SWEEP/neg/{lec_r4_neg.sh,ikw_rc_neg.sh,kvq_neg.sh}
+
+## CODEX notes, 11-24 takeover
+- ikw exact OpenDB probe confirmed 527 real, distinct source and terminal nets whose Verilog names collided after the hold hook moved the port. Existing ODB preserves unique pin drivers. Private corrected serialization renamed only source-net labels without saving ODB, then wrote logic_final_namespace.v.
+- Scope proof E9 LEC-VACUITY-SWEEP/ikw_writer_codex terminal_cones.log, unit oth-ubuntu-2118653-1795531628: all 527 chains recovered from actual emitted netlist and proved identity with cell Liberty; final bit o_d[137] inversion alone detected. Full core positive/negative units oth-ubuntu-2030929-1795531460 and oth-ubuntu-2031082-1795531461 active. No count change.
