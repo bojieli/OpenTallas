@@ -1,2 +1,3 @@
 - 2026-11-24 07:50 PST TAKING PRECHECK-R3 (fresh, post-limit): finish report-only PRE checks ADV-UNSET-DEFINE (RTL ifdef switches on main that sit unset in bound plans/kits, e.g. OT_TP8S_RDPIPE/XEPRE) and ADV-TREE-DRIFT (bind-tree RTL lagging main); land on main, run on c9/C1j/A5t5/W6, post to die integrators. cc COORD, PRECHECK-LEDGER-R3
 - 2026-11-24 08:30 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-1052818 on dear-crayfish: rc=0 after 0 s, ended 08:30:02, log none, cmd: ot-push-main --help
+- 2026-11-24 08:31 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-1069840 on dear-crayfish: rc=0 after 64 s, ended 08:31:30, log none, cmd: ot-push-main 
