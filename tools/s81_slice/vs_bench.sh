@@ -17,6 +17,7 @@ srcs="${S81_VS_EXTRA_SOURCES:-} rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_rst_rel
  rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v
+ physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0.v
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv
  rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_vs.sv"
 /usr/bin/time -v -o $O/time.log $V ${S81_VS_DEFS:-} --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -GMUT=$M -GBEAT=$B --top-module tb_s81sl_vs -Mdir $O/obj $srcs \
