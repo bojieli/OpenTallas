@@ -195,3 +195,25 @@ def test_bound_native_tied_hold_mutants_fail_closed(tmp_path, mutation, match):
     p, f = _hold_fixture(tmp_path, mutation)
     with pytest.raises(gen_rtl.GenError, match=match):
         gen_phys.install_bound_native_reset(p, 't', [f])
+
+
+# reset_hold_row: the plan row writer the composers call (QC C1i, S81 c9, HEAD)
+def test_row_writer_uniform_and_refusals(tmp_path):
+    import reset_hold_row as RHR
+    import json as _j
+    p = tmp_path / 'plan.json'
+    p.write_text(_j.dumps(unique_root_plan()))
+    new, rep = RHR.apply(_j.loads(p.read_text()), str(p), 256)
+    assert new['reset']['source']['hold']['stable_cycles'] == 256
+    assert rep['uniform'] and rep['release_shift'] == [256 + RT.LOCKQ_EXTRA] and rep['root'] == 'pm2'
+    q = tmp_path / 'shared.json'
+    q.write_text(_j.dumps(base_plan()))            # root type shared by two parts: non-uniform -> refused
+    with pytest.raises(SystemExit, match='non-uniform'):
+        RHR.apply(_j.loads(q.read_text()), str(q), 256)
+    lk = unique_root_plan()
+    lk['reset'].setdefault('source', {'part': '@die', 'bus': 'rst_n'})['lock'] = {'inst': 'u', 'pin': 'l'}
+    with pytest.raises(SystemExit, match='PLL lock'):
+        RHR.apply(lk, str(p), 256)
+    assert RHR.cycles_from_need(78) == 128 and RHR.cycles_from_need(292) == 352 and RHR.cycles_from_need(113) == 160
+    assert RHR.main([str(p), str(tmp_path / 'o.json'), '--cycles', '64']) == 0
+    assert _j.loads((tmp_path / 'o.json').read_text())['reset']['source']['hold']['stable_cycles'] == 64
