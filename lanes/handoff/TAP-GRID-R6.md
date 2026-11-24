@@ -23,3 +23,9 @@ census.sh = TAPOFF-ALL census, caloc.sh + cal_oc.py = SINK-EST calibration + ove
 - svc re-cut CANCELLED (4.5 h without converging; stale 11-18/20 flop basis predates the svc ENGINE row) -> REASONED. Trigger: the S81-SVC-J9 c9 kit CTS tap loads; re-cut on its placed sinks if any tap > 800.
 - rc98 confirmed in C4 (11:02). rc119 in K3. KV pv_v3e/pv_v1n split offered, waiting GO from KV-D29.
 - Nothing running.
+
+## 16:30 PST
+- S81 B1 v3 over-cap census posted (ae3101241d6b post-tail): 95 types / 1352 taps (75/494 without stale-basis svc); epyc10 census/oc_s81_b1v3.tsv. Advisory, no rows.
+- KV pv split (COORD GO) delivered to FABLE-OPEN-KV for 20:00 amendment: epyc8 tap-grid-r6/d29/pv2 (v3e, PRE 0) + pv2b (v1n resel, PARTIAL 2 over; PRE SCHEMA-UNKNOWN-KEY x3 unexplained vs pv2 PASS -> asked their chain PRE).
+- svc: REASONED (COORD 15:5x); trigger = first c9 kit placed sinks, any tap > 800.
+- Nothing running.
