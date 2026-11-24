@@ -14,3 +14,9 @@
 - script epyc7/epyc10 /srv/opentallas-scratch2/claude/QC-F16-PRODUCER/rows/f16p_row.py TREE OUT RT; bind f16p_bind.sh C
 - built on cS base (18d22fbde479): proof bef4ffc628a5, die_r56 94afcbf4a73f, asbuilt 4d9fac2cad9f, plan 469c19a9143a (epyc10 mini/row)
 - rebasing on C1g 96cce77c1e2f: fork epyc7 QC-F16-PRODUCER/c1g/tree, then f16p_bind.sh (PRE + elab + strict --types tt_ctlm)
+
+## 11-24 03:2x TT-TOKBENCH (job 2)
+- Tool on main e0ce58397587: tools/qwen_tokfunc/tt_ctlm_token_bench.py (+ tests/test_tt_ctlm_token_bench.py). Runner epyc7 QC-F16-PRODUCER/tok/ttb_runs.sh R1|R2|R3 (TREE=, OUTN=).
+- C1h verdict FAIL: XPF records margin 23 (program T=20) vs core XPF_TRANSPORT_EDGES=21 (needs 24) -> u_go xpf_schedule_fault at seal, cf 1078. RTL@T=20 PASS (tok/r3); repriced program -> witness digest fault (tok/r2). Needs core rebuild (T match or new program + digest); ruling asked of QC-ALLFIX.
+- Recovered old harness code: epyc7 QC-F16-PRODUCER/harness_src (from epyc10 delete-manifests/2026-11-24/071108 inputs tarball); data was not kept.
+- Lane clone epyc7 QC-F16-PRODUCER/clone (branch claude/qc-f16-tt-tokbench-1124, pushed).
