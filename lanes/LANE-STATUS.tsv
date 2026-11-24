@@ -182,3 +182,4 @@ QC-GLUE-PADBIND	stood-down	QC-ALLFIX	2026-11-24	03:32 PST | done: TOOL-FIX 5fb98
 QC-HC1-CLKENTRY	stood-down	SEAT-MATCH-AUDIT	2026-11-24	03:54 PST | census posted 03:51; row not adopted per COORD; bank residual = SEAT-MATCH-AUDIT re-key
 QC-RSN-PROBE	stood-down	QC-ALLFIX	2026-11-24	05:06 PST | RSN probe done: lift per COORD (a); r5 GRT dead, no live units; QC-ALLFIX launches RSN from C1h
 HEAD-W6-ACCEPT	stood-down	COORD	2026-11-24	07:57 PST | W6 b3507e628de6 ACCEPT posted 07:56 PST; one-shot review done
+BINDPROBE-FIX	stood-down	KITWAVE-BINDOUT	2026-11-24	09:25 PST | bind probe re-probe loop fixed on main 434f13368bb; probes off epyc10 via bind_probe_avoid_hosts
