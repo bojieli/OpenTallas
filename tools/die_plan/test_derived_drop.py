@@ -190,3 +190,128 @@ def test_rr_t_and_collector_nodes_are_warn():
              hops={"su": [("reader_start:x_i:0", "rr_t137", "missing", None, 0.0)]})
     out = D.findings({"partition_types": {"su": t}}, "/x/p.json", solver=S)
     assert out and all(x.startswith("WARN") for x in out)
+
+
+# ENTRYFOOT (PRE-QC-GENCHECK 11-23): QC C1-noSU 12b66c0e4829 cbn_q00__cl622f65d2 -- u_t00/u_t01 + footprints moved 43.2 um,
+# early taps clk_c0/clk_c2 not; kit GEN died in validate_access.
+def _ef_type(tap_x=332.704, core_x=60.48):
+    return {"clock": {"core_taps": "early", "taps": [{"kind": "core", "name": "u_t00.ck", "xy": [tap_x, 648.012]}]},
+            "hard_cores": [{"inst": "u_t00", "origin_um": [core_x, 69.12], "outline_um": [457.92, 1157.76], "orient": "R0",
+                            "clock_entry_access": {"pin": "ck", "footprints_um": {"M7": [[289.488, 647.628, 289.52, 648.396]]}}}]}
+
+
+class EF(Fake):
+    def __init__(self, rows):
+        super().__init__()
+        self.rows = rows
+
+    def entry_rows(self, tn):
+        return self.rows[tn]
+
+
+def _row(x, foot=(289.488, 647.628, 289.52, 648.396), on_track=True):
+    return {"port": "clk_c0", "inst": "u_t00", "pin": "ck", "xy": (x, 648.012), "top": 7, "on_track": on_track,
+            "box": [x - 0.016, 647.628, x + 0.016, 648.396], "foot": [list(foot)] if foot else []}
+
+
+def test_entryfoot_tap_left_behind_fails():
+    raw = {"partition_types": {"cbn": _ef_type()}}
+    out = D.findings(raw, "/x/p.json", solver=EF({"cbn": [_row(332.704)]}), classes=["ENTRYFOOT"])
+    assert len(out) == 1 and out[0].startswith("FAIL ENTRYFOOT cbn: clk_c0 (u_t00.ck)") and "d +43.2,+0" in out[0]
+    assert "[289.504,648.012]" in out[0]
+
+
+def test_entryfoot_matching_tap_passes_and_off_track_fails():
+    raw = {"partition_types": {"cbn": _ef_type(289.504)}}
+    assert D.findings(raw, "/x/p.json", solver=EF({"cbn": [_row(289.504)]}), classes=["ENTRYFOOT"]) == []
+    out = D.findings(raw, "/x/p.json", solver=EF({"cbn": [_row(289.504, on_track=False)]}), classes=["ENTRYFOOT"])
+    assert len(out) == 1 and "off the preferred M7 routing track" in out[0]
+    out = D.findings(raw, "/x/p.json", solver=EF({"cbn": [_row(289.504, foot=None)]}), classes=["ENTRYFOOT"])
+    assert len(out) == 1 and "0 M7 footprint boxes" in out[0]
+
+
+def test_entryfoot_types_without_access_not_solved():
+    t = _ef_type()
+    del t["hard_cores"][0]["clock_entry_access"]
+    assert D.entry_types({"partition_types": {"cbn": t, "x": {"hard_cores": []}}}) == []
+    assert D.entry_types({"partition_types": {"cbn": _ef_type()}}) == ["cbn"]
+
+
+def test_entryfoot_tap_follows_moved_core():
+    base = {"partition_types": {"cbn": _ef_type(332.704, 103.68)}}
+    left = {"partition_types": {"cbn": _ef_type(332.704, 60.48)}}
+    out = D.tapfollow_findings(left, base)
+    assert len(out) == 1 and out[0].startswith("FAIL ENTRYFOOT cbn: 1 early core tap(s)") and "core moved (-43.2,+0)" in out[0]
+    assert D.tapfollow_findings({"partition_types": {"cbn": _ef_type(289.504, 60.48)}}, base) == []
+    assert D.tapfollow_findings({"partition_types": {"cbn": _ef_type(289.504, 103.68)}}, base) == []   # tap-only fix row
+    assert D.tapfollow_findings(left, None) == []
+
+
+def test_gen_rtl_landings_get_plan_path(monkeypatch, tmp_path):
+    """GENDRY on QC (cwd = tree root): write_rtl built clock_landings.Landings without plan_path, so the plan-relative count
+    frame (plan_of_record/feed_*.json) resolved against the cwd: 'count frame files not found' on all 14 cb types"""
+    import clock_landings as CL
+    import gen_rtl as GR
+    seen = {}
+
+    def fake(raw, landing, **kw):
+        seen.update(kw)
+        raise CL.LandingError("stop")
+    monkeypatch.setattr(GR.S, "validate", lambda raw: [])
+    monkeypatch.setattr(GR.S, "scope_errors", lambda errs, scope: [])
+    monkeypatch.setattr(GR.S, "Plan", lambda raw, pp=None: object())
+    monkeypatch.setattr(GR, "bus_epochs", lambda P: {})
+    monkeypatch.setattr(CL, "Landings", fake)
+    plan = tmp_path / "plan_of_record" / "p.json"
+    try:
+        GR.write_rtl({"clock": {"landing_network": {"root_observer": "o"}}}, tmp_path / "o", plan_path=plan,
+                     landing={"collector": {"observer": "o"}})
+    except GR.GenError as e:
+        assert "stop" in str(e)
+    assert seen.get("plan_path") == plan
+
+
+# STALE-EXPORT-TAP (ENTRYFOOT c., KV A5: export buffer left at the landing-compose tap 320-1942 um from the port)
+def _fx(src, xy=(10.0, 10.0)):
+    return {"clock": {"landing_contract": {"pins": [
+        {"name": "fclk_out_a", "kind": "clock", "dir": "out", "xy_um": list(xy), "source_clock_port": src},
+        {"name": "d_a", "kind": "data", "dir": "out", "xy_um": [0, 0]}]}}}
+
+
+class GF(Fake):
+    def __init__(self, grid):
+        super().__init__()
+        self.g = grid
+
+    def grid(self, tn):
+        return self.g
+
+
+def test_stale_export_tap_fails_and_nearest_passes():
+    g = {"clk": (500.0, 500.0), "clk_t1": (20.0, 20.0), "clk_t9": (900.0, 10.0)}
+    raw = {"partition_types": {"pv": _fx("clk_t9")}, "partitions": [{"name": "a", "type": "pv"}, {"name": "b", "type": "pv"}]}
+    out = D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])
+    assert out[0].startswith("FAIL ENTRYFOOT pv: STALE-EXPORT-TAP 1 of 1") and "clk_t9 890 um (nearest clk_t1 20 um)" in out[0]
+    assert out[-1].startswith("LIST ENTRYFOOT STALE-EXPORT-TAP die: 1 of 1") and "2 of 2 placed" in out[-1]
+    raw["partition_types"]["pv"] = _fx("clk")         # far root: stale too
+    assert D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])[0].startswith("FAIL")
+    raw["partition_types"]["pv"] = _fx("clk_t1")
+    out = D.findings(raw, "/x/p.json", solver=GF(g), classes=["ENTRYFOOT"])
+    assert [x for x in out if not x.startswith("LIST")] == []
+
+
+def test_stale_export_tap_gone_and_no_nearer_tap_fail():
+    g = {"clk_t1": (20.0, 20.0)}
+    out, n, m = D.exporttap_type("pv", _fx("clk_t7"), g)
+    assert n == 1 and out[0].startswith("FAIL") and "1 a tap that no longer exists" in out[0]
+    out, n, m = D.exporttap_type("pv", _fx("clk_t1", (400.0, 20.0)), g)
+    assert n == 1 and len(out) == 1 and out[0].startswith("FAIL ENTRYFOOT pv: STALE-EXPORT-TAP 1 forwarded")
+    g = {"clk_t1": (20.0, 20.0), "clk_t2": (60.0, 20.0)}      # nearer tap exists but is itself over 300 um: stale, not "no nearer"
+    out, n, m = D.exporttap_type("pv", _fx("clk_t1", (400.0, 20.0)), g)
+    assert n == 1 and "take a source tap more than 300" in out[0] and "nearest clk_t2 340 um" in out[0]
+
+
+def test_stale_export_tap_budget_never_silent():
+    raw = {"partition_types": {"pv": _fx("clk_t9")}}
+    out = D.exporttap_findings(raw, GF({"clk_t9": (900.0, 10.0)}), budget=-1)
+    assert len(out) == 1 and out[0].startswith("WARN ENTRYFOOT STALE-EXPORT-TAP: 1 type(s) not checked") and "pv" in out[0]

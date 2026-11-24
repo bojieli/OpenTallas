@@ -32,10 +32,15 @@ DERIVEDNAME (FAIL; generic): every derived name resolves in the current floorpla
      an existing FSTART pin / START stage / band;
   d. internal_stations launch / capture 'core:<inst>' and 'leaf <inst>' name an instance of the type's hard_cores / contents.
 
+ENTRYFOOT (FAIL; generic, PRE-QC-GENCHECK 11-23): an early core tap naming a hard core's clock_entry_access pin emits exactly the
+  access footprint (top partition layer, 1e-6 um, on track) -- QC CB-R3 moved u_t00/u_t01 + footprints, not taps clk_c0/clk_c2:
+  kit GEN died; with a baseline, every early core tap follows its moved hard core by the same delta; STALE-EXPORT-TAP: every
+  forwarded-clock output's source_clock_port tap lies within 300 um of its pin (KV A5: 1457 of 2769 over).  See above CLASSES.
+
 Cost: one reset-tree solve per type that needs one (cached, shared by both classes); OT_DERIVED_BUDGET_S (default 900) bounds
 the total, types past it are WARN ... not checked.  OT_DERIVED_TYPES=a,b limits the types.  --skip RSTREACH / DERIVEDNAME.
 
-    python3 -I tools/die_plan/derived_drop.py --plan PLAN [--tree TREE] [--elab-dir BIND_OUT] [--classes RSTREACH,DERIVEDNAME]
+    python3 -I tools/die_plan/derived_drop.py --plan PLAN [--tree TREE] [--elab-dir BIND_OUT] [--classes RSTREACH,DERIVEDNAME,ENTRYFOOT]
     exit 0 = no FAIL, 1 = FAIL lines, 2 = bad input
 """
 import argparse
@@ -162,6 +167,40 @@ class Solver:
         import reset_tree as RT
         sol = self._run(lambda: RT.wf_solve(self._plan()))
         return {p: (None if pr is None else (pr[0], pr[1])) for p, pr in sol["parent"].items()}
+
+    def entry_rows(self, tn):
+        """ENTRYFOOT a.: [{port, inst, pin, xy, box, foot, top, on_track}] of every early core tap naming a hard core's
+        clock_entry_access pin, with the utility pin box the kit generator emits for it (gen_phys._pin_box, core_tap_rows)"""
+        import gen_phys as GP
+        import schema
+
+        def go():
+            P = self._plan()
+            lb = P.layer_budget["partition_signal_max"]
+            top, L = int(lb[1:]), P.layers[lb]
+            taps = {n: (x, y) for n, x, y, _ in schema.core_taps(P, tn)}
+            rows = GP.core_tap_rows(P, tn)
+            out = []
+            for c in P.types[tn].get("hard_cores") or []:
+                acc = c.get("clock_entry_access")
+                if not acc:
+                    continue
+                for n, i, pin, _, _ in rows:
+                    if n in taps and GP._core_is(c, i) and pin == acc.get("pin"):
+                        x, y = taps[n]
+                        k = ((x if L["dir"] == "V" else y) - L["offset_um"]) / L["pitch_um"]
+                        out.append(dict(port=n, inst=c["inst"], pin=pin, xy=(x, y), box=[float(v) for v in GP._pin_box(P, tn, n, x, y)],
+                                        foot=(acc.get("footprints_um") or {}).get(f"M{top}") or [], top=top,
+                                        on_track=abs(k - round(k)) <= 1e-6))
+            return out
+        return self._run(go)
+
+    def grid(self, tn):
+        """{tap: (x, y)} of the type's current tap grid (schema.tap_grid, reach_rules R-REACH-4's grid)"""
+        if ("g", tn) not in self._c:
+            import schema
+            self._c[("g", tn)] = self._run(lambda: {n: (float(x), float(y)) for n, x, y in schema.tap_grid(self._plan(), tn)})
+        return self._c[("g", tn)]
 
     def raw_hops(self, tn):
         """reach_rules.raw_hops: [(where, raw, 'same'|'half'|'missing', hop um|None, limit um)]"""
@@ -434,7 +473,201 @@ def derivedname_type(tn, t, S, base_raw=None, BS=None):
     return out
 
 
-CLASSES = ("RSTREACH", "DERIVEDNAME")
+# ---------------------------------------------------------------------------------------------------------------------------
+# ENTRYFOOT (PRE-QC-GENCHECK 11-23, QC-CB-PROBE 23:18): QC CB-R3 street row moved u_t00/u_t01 (x 103.68 -> 60.48) and their
+# clock_entry_access footprints, but not the early core taps clk_c0/clk_c2 (x 332.704 / 332.576 stayed).  Strict bind and
+# LATCHECK passed; kit GEN died in lef_clock_entry.validate_access ("entry footprint differs from actual emitted utility pin").
+#   a. every early core tap that names a hard core's clock_entry_access pin: the utility pin box the generator emits for it
+#      (gen_phys._pin_box at the tap xy) equals the access footprint on the top partition layer (1e-6 um), and the tap sits on
+#      a preferred routing track (gen_phys.core_tap_pins "explicit entry off preferred routing track");
+#   b. with a baseline plan: a hard core whose origin moved (same orient) moves every early core tap that names it by the same
+#      delta (any die; the derived tap follows its core).
+ENTRY_EPS = 1e-6
+FOLLOW_EPS = 0.05          # um: a snapped tap may land up to a track off the exact delta
+
+
+def _core_tap_names(t):
+    ck = (t or {}).get("clock") or {}
+    if ck.get("core_taps") != "early":
+        return []
+    out, k = [], 0
+    for tp in ck.get("taps") or []:
+        if isinstance(tp, dict) and tp.get("kind") == "core":
+            out.append((f"clk_c{k}", tp))
+            k += 1
+    return out
+
+
+def _tap_inst(name, insts):
+    for i in sorted(insts, key=len, reverse=True):
+        if name == i or str(name).startswith(i + "."):
+            return i
+    return None
+
+
+def entry_types(raw):
+    """types with early core taps on a hard core that declares clock_entry_access"""
+    out = []
+    for tn, t in sorted(((raw or {}).get("partition_types") or {}).items()):
+        if isinstance(t, dict) and _core_tap_names(t) and any(
+                isinstance(c, dict) and c.get("clock_entry_access") for c in t.get("hard_cores") or []):
+            out.append(tn)
+    return out
+
+
+def entryfoot_type(tn, S):
+    """ENTRYFOOT a. lines of one type (S.entry_rows(tn): [{port, inst, pin, xy, box, foot, top, on_track}])"""
+    out = []
+    for r in S.entry_rows(tn):
+        foot = r.get("foot") or []
+        box = r["box"]
+        x, y = r["xy"]
+        if len(foot) != 1:
+            out.append(f"FAIL ENTRYFOOT {tn}: {r['port']} ({r['inst']}.{r['pin']}) clock_entry_access has {len(foot)} M{r['top']} "
+                       f"footprint boxes (needs exactly 1 = the emitted utility pin); kit GEN refuses it")
+            continue
+        d = [round(a - b, 6) + 0.0 for a, b in zip(box, foot[0])]
+        if any(abs(v) > ENTRY_EPS for v in d):
+            fx, fy = (foot[0][0] + foot[0][2]) / 2, (foot[0][1] + foot[0][3]) / 2
+            out.append(f"FAIL ENTRYFOOT {tn}: {r['port']} ({r['inst']}.{r['pin']}) tap xy [{x:g},{y:g}] emits M{r['top']} pin box "
+                       f"[{', '.join(f'{v:g}' for v in box)}] but the clock_entry_access footprint is "
+                       f"[{', '.join(f'{v:g}' for v in foot[0])}] (d {d[0]:+g},{d[1]:+g} um); kit GEN dies 'entry footprint "
+                       f"differs from actual emitted utility pin' -- move the tap to the footprint centre "
+                       f"[{fx:g},{fy:g}] (or re-derive the footprint), the core and its tap move together")
+        elif not r.get("on_track", True):
+            out.append(f"FAIL ENTRYFOOT {tn}: {r['port']} ({r['inst']}.{r['pin']}) tap xy [{x:g},{y:g}] is off the preferred "
+                       f"M{r['top']} routing track; kit GEN refuses an explicit entry off track")
+    return out
+
+
+def tapfollow_findings(raw, base_raw, only=None):
+    """ENTRYFOOT b. (pure): core moved since the baseline, its early core tap did not move with it"""
+    if not base_raw:
+        return []
+    out = []
+    bt = base_raw.get("partition_types") or {}
+    for tn, t in sorted(((raw or {}).get("partition_types") or {}).items()):
+        b = bt.get(tn)
+        if not isinstance(t, dict) or not isinstance(b, dict) or (only and tn not in only):
+            continue
+        cores = {c["inst"]: c for c in t.get("hard_cores") or [] if isinstance(c, dict) and c.get("inst")}
+        bcores = {c["inst"]: c for c in b.get("hard_cores") or [] if isinstance(c, dict) and c.get("inst")}
+        btaps = {tp.get("name"): tp for _, tp in _core_tap_names(b)}
+        bad = []
+        for port, tp in _core_tap_names(t):
+            i = _tap_inst(tp.get("name"), cores)
+            c, bc, btp = cores.get(i), bcores.get(i), btaps.get(tp.get("name"))
+            if not (c and bc and btp and c.get("origin_um") and bc.get("origin_um") and tp.get("xy") and btp.get("xy")):
+                continue
+            if (c.get("orient") or "R0") != (bc.get("orient") or "R0") or c.get("outline_um") != bc.get("outline_um"):
+                continue
+            dc = [float(a) - float(z) for a, z in zip(c["origin_um"], bc["origin_um"])]
+            if max(abs(v) for v in dc) <= FOLLOW_EPS:
+                continue
+            dt = [float(a) - float(z) for a, z in zip(tp["xy"], btp["xy"])]
+            if any(abs(u - v) > FOLLOW_EPS for u, v in zip(dc, dt)):
+                bad.append(f"{port} {tp.get('name')}: core moved ({dc[0]:+g},{dc[1]:+g}) tap moved ({dt[0]:+g},{dt[1]:+g})")
+        if bad:
+            out.append(f"FAIL ENTRYFOOT {tn}: {len(bad)} early core tap(s) did not follow their moved hard core since the "
+                       f"baseline ({'; '.join(bad[:MAX_LIST])}); shift each tap xy by its core's delta")
+    return out
+
+
+def entryfoot_findings(raw, S, base_raw=None, only=None):
+    out = []
+    for tn in entry_types(raw):
+        if only and tn not in only:
+            continue
+        try:
+            out += entryfoot_type(tn, S)
+        except Exception as e:  # noqa: BLE001 - the kit generator names its own error; never a silent pass
+            out.append(f"WARN ENTRYFOOT {tn}: not checked ({type(e).__name__}: {str(e)[:160]})")
+    return out + tapfollow_findings(raw, base_raw, only)
+
+
+# STALE EXPORT TAP (ENTRYFOOT c., COORD 11-23 23:4x; KV-SENDER-SKEW / FABLE-RC-KV 23:28-23:31): KV A5 -- 66 of 67 late forwarded
+# clock exports keep the export buffer at the source_clock_port chosen at first landing compose, 320-1942 um from the port after
+# the taps were regrown / renumbered (2-12 repeaters, fclk 294-964 ps vs data 132-411).  Every landing_contract clock output's
+# source tap lies within EXPORT_HOP_UM of its pin (FAIL above; reach_rules R-REACH-4 measure, fix: reach_rules.py fix --rules 4
+# or FWDCLK-1 repoint at 150 um).  A source tap that no longer exists is FAIL; so is a pin whose source is already the
+# nearest tap but over the limit (own line: add a tap or move the pin).
+EXPORT_HOP_UM = 300.0
+
+
+def export_pins(t):
+    lc = ((t or {}).get("clock") or {}).get("landing_contract") or {}
+    return [q for q in lc.get("pins") or [] if isinstance(q, dict) and q.get("kind") == "clock" and q.get("dir") == "out"
+            and q.get("source_clock_port") is not None and q.get("xy_um")]
+
+
+def exporttap_type(tn, t, grid, limit=EXPORT_HOP_UM):
+    """(lines, n_over, n_pins) of one type; grid = {tap: (x, y)} (schema.tap_grid)"""
+    pins = export_pins(t)
+    if not pins:
+        return [], 0, 0
+    taps = [n for n in grid if n != "clk"] or list(grid)
+    stale, dang, nofix = [], [], []
+    for q in pins:
+        s, xy = q["source_clock_port"], q["xy_um"]
+        near = min(taps, key=lambda n: (man(grid[n], xy), n)) if taps else None
+        h1 = man(grid[near], xy) if near else float("inf")
+        if s not in grid:
+            dang.append(f"{q.get('name')} <- {s} (gone; nearest {near} {h1:.0f} um)")
+            continue
+        h0 = man(grid[s], xy)
+        if h0 <= limit + EPS:
+            continue
+        if h1 < h0 - EPS:      # a nearer tap exists (maybe itself over the limit): the source is stale
+            stale.append((h0, f"{q.get('name')} <- {s} {h0:.0f} um (nearest {near} {h1:.0f} um)"))
+        else:
+            nofix.append(f"{q.get('name')} <- {s} {h0:.0f} um (nearest {near} {h1:.0f} um)")
+    out = []
+    if stale or dang:
+        stale.sort(reverse=True)
+        ex = [x for _, x in stale] + dang
+        out.append(f"FAIL ENTRYFOOT {tn}: STALE-EXPORT-TAP {len(stale)} of {len(pins)} forwarded-clock output(s) take a source "
+                   f"tap more than {limit:g} um from their pin" + (f", {len(dang)} a tap that no longer exists" if dang else "")
+                   + f" ({'; '.join(ex[:MAX_LIST])}); re-point source_clock_port to the nearest tap (reach_rules.py fix "
+                     f"--rules 4 / FWDCLK-1 repoint)")
+    if nofix:
+        out.append(f"FAIL ENTRYFOOT {tn}: STALE-EXPORT-TAP {len(nofix)} forwarded-clock output(s) over {limit:g} um with no nearer "
+                   f"tap ({'; '.join(nofix[:2])}); add a tap or move the pin")
+    return out, len(stale) + len(dang) + len(nofix), len(pins)
+
+
+def exporttap_findings(raw, S, only=None, limit=EXPORT_HOP_UM, budget=None):
+    """budget = seconds (tap grids of a big die cost minutes: S81 561 s); types past it are WARN ... not checked"""
+    t0, left = time.time(), []
+    types = (raw or {}).get("partition_types") or {}
+    uses = {}
+    for p in ((raw or {}).get("partitions") or []):
+        if isinstance(p, dict) and p.get("type"):
+            uses[p["type"]] = uses.get(p["type"], 0) + 1
+    out, over, pins, iover, ipins = [], 0, 0, 0, 0
+    for tn, t in sorted(types.items()):
+        if not isinstance(t, dict) or (only and tn not in only) or not export_pins(t):
+            continue
+        if budget is not None and time.time() - t0 > budget:
+            left.append(tn)
+            continue
+        try:
+            lines, n, m = exporttap_type(tn, t, S.grid(tn), limit)
+        except Exception as e:  # noqa: BLE001
+            out.append(f"WARN ENTRYFOOT {tn}: STALE-EXPORT-TAP not checked ({type(e).__name__}: {str(e)[:160]})")
+            continue
+        out += lines
+        k = uses.get(tn, 1)
+        over, pins, iover, ipins = over + n, pins + m, iover + n * k, ipins + m * k
+    if left:
+        out.append(f"WARN ENTRYFOOT STALE-EXPORT-TAP: {len(left)} type(s) not checked (budget {budget:.0f} s, OT_DERIVED_BUDGET_S): "
+                   f"{', '.join(left[:6])}")
+    if pins:
+        out.append(f"LIST ENTRYFOOT STALE-EXPORT-TAP die: {over} of {pins} forwarded-clock output pins (type level; {iover} of "
+                   f"{ipins} placed) have a source hop over {limit:g} um")
+    return out
+
+
+CLASSES = ("RSTREACH", "DERIVEDNAME", "ENTRYFOOT")
 
 
 def die_relay_findings(raw, S):
@@ -471,7 +704,7 @@ def default_bind_rtl(plan_path, elab_dir=None):
 
 def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=None, budget_s=None, base=None,
              base_solver=None):
-    """FAIL / WARN lines of the two classes (a type the solver cannot build is WARN ... not checked: the bind names it)"""
+    """FAIL / WARN lines of the three classes (a type the solver cannot build is WARN ... not checked: the bind names it)"""
     want = {c.upper() for c in classes}
     if not want & set(CLASSES):
         return []
@@ -497,6 +730,10 @@ def findings(raw, plan_path, tree=None, classes=CLASSES, bind_rtl=None, solver=N
     t0, out, done, errs = time.time(), [], 0, 0
     if "DERIVEDNAME" in want and not only:
         out += die_relay_findings(raw, S)
+    if "ENTRYFOOT" in want:
+        out += entryfoot_findings(raw, S, base_raw, only)
+        if hasattr(S, "grid"):
+            out += exporttap_findings(raw, S, only, budget=budget)
     for tn, t in todo:
         if time.time() - t0 > budget:
             break

@@ -136,3 +136,46 @@ def test_failed_bind_out_is_not_used(tmp_path):
     out = P.check_gendry(tmp_path, pn, pb, env={}, runner=lambda c, w, t: (0, "") if "kit-rtl" not in c else (_ for _ in ()).throw(AssertionError),
                          elab_dir=bo)
     assert any(x.startswith("WARN GENDRY-KITRTL k:") for x in out) and not any(x.startswith("FAIL") for x in out)
+
+
+def test_observer_not_a_plan_leaf_goes_through_kit_rtl(tmp_path):
+    """QC cC: leaf-bound types, but the sidecar observer (glue qfd_sys_face_lctx3_wrapped) exists only in the bound RTL; the native
+    landed emitter refuses every type, kit_wave uses bind.py kit-rtl"""
+    raw = {"partitions": [{"name": "glue", "type": "g"}], "partition_types": {"g": {"contents": []}, "q": {"buses": [{"leaf": "u.o"}]}}}
+    pn, sc, el = tmp_path / "plan.json", tmp_path / "source_sidecar.json", tmp_path / "bind"
+    pn.write_text(json.dumps(raw))
+    sc.write_text(json.dumps({"collector": {"observer": {"part": "glue", "module": "face"}}}))
+    el.mkdir()
+    (el / "bind_report.json").write_text(json.dumps({"errors": [], "n_errors": 0}))
+    cmds, env = [], {"OT_PRE_GENDRY_TYPES": "q"}
+    run = lambda c, w, t: (cmds.append(c), (0, ""))[1]  # noqa: E731
+    P.check_gendry(tmp_path, pn, None, env=env, runner=run, elab_dir=el)
+    assert len(cmds) == 2 and "kit-rtl" in cmds[0] and "--kit-rtl" in cmds[1]
+    cmds.clear()                                                  # no finished bind: classified, not generated, never FAIL
+    out = P.check_gendry(tmp_path, pn, None, env=env, runner=run)
+    assert not cmds and any(x.startswith("WARN GENDRY-KITRTL q") for x in out) and not any(x.startswith("FAIL") for x in out)
+    raw["partition_types"]["g"]["contents"] = [{"inst": "u", "module": "face"}]     # plan leaf: native path as before
+    pn.write_text(json.dumps(raw))
+    P.check_gendry(tmp_path, pn, None, env=env, runner=run, elab_dir=el)
+    assert len(cmds) == 1 and "--kit-rtl" not in cmds[0]
+
+
+def test_generator_reads_the_tree_not_the_tool_checkout(tmp_path, monkeypatch):
+    raw = {"partition_types": {"a": {"x": 1}}}
+    pn = tmp_path / "plan.json"
+    pn.write_text(json.dumps(raw))
+    seen = {}
+
+    class R:
+        returncode, stdout, stderr = 0, "", ""
+    monkeypatch.setattr(P.subprocess, "run", lambda cmd, **k: (seen.update(k), R)[1])
+    P.check_gendry(tmp_path, pn, None, env={"OT_PRE_GENDRY_TYPES": "a"})
+    assert seen["env"]["OT_REPO_ROOT"] == str(tmp_path.resolve()) and seen["cwd"] == str(tmp_path.absolute())
+
+
+def test_gen_phys_view_root_is_the_tree(tmp_path, monkeypatch):
+    import gen_phys as GP
+    monkeypatch.delenv("OT_REPO_ROOT", raising=False)
+    assert GP.view_root() == Path(GP.__file__).resolve().parents[2]
+    monkeypatch.setenv("OT_REPO_ROOT", str(tmp_path))
+    assert GP.view_root() == tmp_path.resolve()

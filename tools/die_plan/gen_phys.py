@@ -1759,6 +1759,13 @@ def tap_points(P, tn):
             _snap_tap(P, *rs, pg_legal=not t.get("hard"))]
 
 
+def view_root():
+    """repository root of plan-relative view files when the caller gives none: $OT_REPO_ROOT (the plan's tree, REPO-ROOT-1123),
+    else this tool checkout (unchanged).  GENDRY runs the tools from rt/<sha>: entry_block_boxes looked for QC NK LEFs there"""
+    import taps
+    return taps._root()
+
+
 def core_tap_pins(P, tn):
     """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)].
     S81-49/kits 11-02: a tap the plan puts on a hard core's edge pin can snap a few tracks INTO a macro whose LEF
@@ -1881,7 +1888,7 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
     t = P.types[tn]
     top = int(P.layer_budget["partition_signal_max"][1:])
     ents = _placed_entries(t)
-    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    base = Path(root) if root else view_root()
     out = []
     for inst, mod, lef, lib, x, y, o in type_macros(P, tn, base):
         c = ents.get(inst) or {}
@@ -4904,7 +4911,7 @@ def pinband_macros(P, tn, macros, root=None, check_only=False):
         return macros, None
     import pinband_site as PBS
     t = P.types[tn]
-    base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
+    base = Path(root) if root else view_root()
     fixed = {i for d in phy_pg_domains(P, tn) for i in d[4]}
     lefs, kids, keep = {}, [], []
     for inst, mod, lef, lib, x, y, o in macros:
@@ -4987,7 +4994,7 @@ def type_macros(P, tn, root=None):
     design root the kit uses to stage them, including when the generator runs from a separate tools bundle."""
     t = P.types[tn]
     out = []
-    base = Path(root).absolute() if root else Path(__file__).resolve().parents[2]
+    base = Path(root).absolute() if root else view_root()
 
     def resolve(path):
         return _CR.resolve(path, base)
@@ -6089,7 +6096,7 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     die M8/M9 VDDPHY mesh of die.pg.domains lands on it), a macro grid landing M6 on the macro's top-layer PG pins, and
     a hard placement blockage (no std cell in the region: it has no core followpins).  Content macros outside regions
     get a CORE macro grid (their M4 PG pins -> core M5 straps)."""
-    root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
+    root = Path(root) if root is not None else view_root()
     phy_insts = sorted({i for d in doms for i in d[4]})
     phy_layers = {m[0]: _macro_pg_layers(_CR.resolve(m[2], root)) for m in macros if m[0] in phy_insts}
     for name, pw, gd, r, mac in doms:

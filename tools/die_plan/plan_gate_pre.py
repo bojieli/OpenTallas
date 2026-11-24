@@ -67,6 +67,10 @@ DERIVED-DROP-1123 (PRECHECK-DERIVED-DROP, COORD 21:36 / FABLE-RC-KV): a re-floor
   +112 um grow).  DERIVEDNAME: relay / tap names not emitted, landing_raw_branches no longer a D-chain of the re-solved tree (KV
   A3g io_ft_v1 EMIT), dangling consumers / START keys, station ends on removed hard cores.  derived_drop.py (doc there);
   --elab-dir or <plan dir>/bind_of_record decides FSTART face flops; OT_DERIVED_BUDGET_S bounds the tree solves.
+  ENTRYFOOT (PRE-QC-GENCHECK 11-23, QC C1-noSU cbn_q00__cl622f65d2: cores + clock_entry_access footprints moved, early taps
+  not; strict bind + LATCHECK passed, kit GEN died): each early core tap on a clock_entry_access pin emits exactly the access
+  footprint; with a baseline every early core tap follows its moved hard core; every forwarded-clock
+  output's source_clock_port tap lies within 300 um of its pin (STALE-EXPORT-TAP, KV A5).  Seconds (S81: 9 min of tap grids).
 
 ISTCYC-1122 (FLOW-OPS-R2, COORD): with --baseline-plan, every lane whose end-bus internal_stations depth (source OUT bus +
   destination IN bus, the deepest bus:<name> row as the kit merges them) changed against BASE, and whose BASE fixed_cycles
@@ -174,7 +178,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ISTPRICE", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "SEATMATCH", "ANCHORDRY", "TOOLROOT", "SITEGRID", "GENDRY", "DEPTH", "RSTREACH", "DERIVEDNAME", "ENTRYFOOT", "ISTPRICE", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1768,6 +1772,25 @@ def gendry_kitrtl_types(plan_raw, types):
     return out
 
 
+def gendry_native_observer(plan_raw, sidecar):
+    """GENDRY-OBSERVER-1123 (PRE-QC-GENCHECK): False when the landing sidecar's observer module is not a plan contents leaf of the
+    observer partition's type (QC glue: qfd_sys_face_lctx3_wrapped exists only in the bound RTL).  gen_rtl's plan-native landed
+    emitter then refuses EVERY type (Landings.validate_observer_native); kit_wave builds such a die only through bind.py kit-rtl +
+    gen.py --kit-rtl.  True when there is no sidecar / observer, or it cannot be read (the generator names that error)."""
+    try:
+        obs = ((json.loads(Path(sidecar).read_text()).get("collector") or {}).get("observer") or {}) if sidecar else {}
+    except (OSError, ValueError, AttributeError):
+        return True
+    pn, mod = obs.get("part"), obs.get("module")
+    parts = plan_raw.get("partitions") or {}
+    tn = (parts.get(pn) or {}).get("type") if isinstance(parts, dict) else next(
+        (p.get("type") for p in parts if isinstance(p, dict) and pn in (p.get("name"), p.get("inst"))), None)
+    t = plan_raw.get("partition_types", {}).get(tn)
+    if not mod or not isinstance(t, dict):
+        return True
+    return sum(1 for c in t.get("contents") or [] if c.get("module") == mod) == 1
+
+
 def gendry_bind_out(elab_dir):
     """the finished, error-free bind OUT dir (bind_report.json with no errors) the kit-rtl step reads, else None"""
     f = Path(elab_dir) / "bind_report.json" if elab_dir else None
@@ -1819,20 +1842,27 @@ def check_gendry(tree, plan, baseline=None, sidecar=None, env=None, runner=None,
     tmo = int(env.get("OT_PRE_GENDRY_TIMEOUT_S") or 1800)
     run, rest = types[:cap], types[cap:]
     kitrtl = set(gendry_kitrtl_types(raw, run))      # GENDRY-KITRTL-1123
+    sc = sidecar or (Path(plan).absolute().parent / "source_sidecar.json")       # the sidecar gendry_cmd passes
+    if Path(sc).is_file() and not gendry_native_observer(raw, sc):               # GENDRY-OBSERVER-1123: kit-rtl like the wave
+        kitrtl = {tn for tn in run if not (raw["partition_types"].get(tn) or {}).get("hard")}
     bind_out = gendry_bind_out(elab_dir) if kitrtl else None
     out = []
     if kitrtl and not bind_out:
         for tn in sorted(kitrtl):
-            out.append(f"WARN GENDRY-KITRTL {tn}: kit-RTL type (no bus.leaf / contents[].bind: the kit builds it from the bound "
-                       f"RTL via bind.py kit-rtl); not generated dry without a finished error-free bind OUT (--elab-dir with bind_report.json)")
+            out.append(f"WARN GENDRY-KITRTL {tn}: kit-RTL type (no bus.leaf / contents[].bind, or the landing observer is not a "
+                       f"plan leaf: the kit builds it from the bound RTL via bind.py kit-rtl); not generated dry without a finished error-free bind OUT (--elab-dir with bind_report.json)")
         run = [tn for tn in run if tn not in kitrtl]
 
     def _run(cmd, cwd, timeout):
         try:
-            r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+            r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, env=genv)
             return r.returncode, r.stdout + r.stderr
         except subprocess.TimeoutExpired:
             return None, f"timeout after {timeout} s"
+    # GENDRY-REPOROOT-1123 (QC cC): these tools may run from rt/<sha> or a lane checkout; repository-relative plan inputs (sink
+    # bins, view LEFs) resolve in --tree like the wave's own tree-local tools (REPO-ROOT-1123), not beside the tools
+    genv = dict(os.environ, **env)
+    genv["OT_REPO_ROOT"] = str(Path(tree).resolve())
     runner = runner or _run
     with tempfile.TemporaryDirectory(prefix="pre_gendry_") as td:
         def one(tn):
@@ -1940,7 +1970,7 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import bind_rowcheck as RC
         findings += RC.check_all(tree, plan, _load(plan), asbuilt, elab_dir, ref_tools, skip, toolstale_level)
-    if {"RSTREACH", "DERIVEDNAME"} - skip:              # DERIVED-DROP-1123: derived sections a re-floor / tap rewrite left stale
+    if {"RSTREACH", "DERIVEDNAME", "ENTRYFOOT"} - skip:              # DERIVED-DROP-1123: derived sections a re-floor / tap rewrite left stale
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import derived_drop as DD
         try:

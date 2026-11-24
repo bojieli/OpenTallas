@@ -930,7 +930,9 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
         if types is not None:
             raise GenError("clock landing: --types is not allowed; every type must carry its landing hardware")
         try:
-            L = CL.Landings(raw, landing)
+            # PRE-QC-GENCHECK 11-23: plan_path resolves the count frame (clock.spine.feed / region_map, plan-relative)
+            # from the plan file, not the cwd: QC GENDRY (cwd = tree root) failed all 14 cb types "count frame files not found"
+            L = CL.Landings(raw, landing, plan_path=plan_path)
             if landing.get("collector", {}).get("observer") != raw["clock"]["landing_network"].get("root_observer"):
                 raise CL.LandingError("sidecar observer differs from the plan's landing_network.root_observer")
             if rtl_root is not None:
