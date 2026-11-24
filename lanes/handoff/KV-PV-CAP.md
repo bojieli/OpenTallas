@@ -22,3 +22,8 @@ KV-ALLFIX: A3f failed G0; A3g (A3d b258e3e34f22 minus HUBA1 + IUSPLIT) gating on
 - v1n lever: kit_dly_ram wide mode PUSHED main 80de880655b (pad_ram.wide_min_d; W>1 ot_dp_dly D>=thr -> lead + RAM per 256b slice + residual under original name; verilator cycle-exact test). Probe on K3g: v1n 326k model (~365k nontap, UNDER), v3 276k (~309k).
 - Row R2 = R1 + ROWS_KV-PV-CAP-WIDERAM.py (8516f1460388, wide_min_d 32 on v1n/v3/v3n/v12) -> row/plan_pvcap_R2.json a8788103ca48. Gate R2: row/gate_pvcap2.sh (GATE_RT=rt 9f95aa48604b), log gate_R2.otrun.log. A3g kit_rtl+PADRAM probe: a3g/ (a3g.otrun.log).
 - D29 kv3_pv_v3 hold (kit_wave eb9e50a) still mine: release after R2 rows land with KV-ALLFIX.
+## 23:1x state
+- R1 ROW-REBASED 827a7c76eb05 PASS posted (PRE 0, G0, scoped strict bind 0 err, BPC). R2 ROW-REBASED a8788103ca48 PASS posted (G0, scoped bind 0 err gate_R2w/; PRE 41 FAIL = identical to A3g base on rt 9f95, pre_base9f.log, bind ran PRE=warn).
+- Both rows dry-apply clean on KV-ALLFIX A4b 01311e0c5cce -> eff53250f8ad (epyc10 /srv/opentallas-scratch2/claude/kv-pv-cap/rows/). Asked KV-ALLFIX to add both row lines after LATREGEN (needs rt >= 9f95aa48604b).
+- All 31 pv projected < 400k nontap (v1n ~365k, v3 ~309-348k). Real proof = first GEN/place of v1n + v3 on the composed plan.
+- Open: release D29 kv3_pv_v3 hold (kit_wave eb9e50a) once KV-ALLFIX composes the rows; recheck hold on first placed v3 (r2r_margin 20).
