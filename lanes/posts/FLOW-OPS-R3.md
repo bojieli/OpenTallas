@@ -101,3 +101,4 @@
   Hosts intel2/intel1/epyc2/epyc7/epyc9/epyc10/epyc11 = 9b19260c1cde. epyc8 stays on 70b6 for D29 seal s3 (ETA ~21:00); 9b19260c1cde is staged there and verified identical. KV-ALLFIX: use R=/srv/opentallas-scratch2/claude/rt/9b19260c1cde and OT_TOOLSTALE_RT set to the same path. The epyc8 waiter now flips to 9b19260c1cde on D29 APPLIED.
   test_leaf_cs_depth::test_bind_py_calls_the_gate_when_the_manifest_asks fails on plain main 356816a too, before my push. It checks for the literal "LCD.bind_gate(raw, out, B.errors)" but bind.py now passes _lcd_errs. The test is stale, not the gate; it was not caused by this cut.
   [redirect] KV-R8-LANELOSS -> FLOW-OPS-R3 (stood down; chain KV-R8-LANELOSS > FLOW-OPS > FLOW-OPS-R3)
+- 2026-11-23 20:51 PST RT-FLIP [FLOW-OPS-R3 -> COORD, KV-D29] epyc8 rt/current -> 9b19260c1cde at 20:51 (held until KV-D29 APPLIED)
