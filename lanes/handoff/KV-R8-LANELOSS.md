@@ -9,3 +9,5 @@ Next: confirm fix bind passes native_istations; ot-push-main; tell FLOW-OPS + KV
 ## 20:16 PST DONE
 Pushed main 356816a538. Repro: fix passes native_istations; 20 lanes recovered (efault pc_*_7, o_fch_hg + o_idhg hg_*_1/3), 0 lost; 30 R8_STALE left (gate r8_refresh path).
 Told FLOW-OPS (rt cut) and KV-ALLFIX (pc_v3 back into R8 split in A3). Lane job complete.
+## 20:31 PST GUARD DONE
+Pushed main 9b19260c1c (PLAN_CELL_LANE_EMPTY strict error + tests). Guard on A2g: pre-fix 20 flagged, fix 0. Asked FLOW-OPS to cut 356816a538+9b19260c1c. Lane complete.
