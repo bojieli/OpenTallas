@@ -14500,3 +14500,5 @@ No new owner-level decision arose. Exact Fable scope reviews remain with Claude 
 ## Takeover 2026-11-24 06:19 PST
 
 Live lanes resumed with existing worker paths and run IDs. Latest archive census 589 any / 485 current at 06:05. HBM parked. Exact review precedes new routes.
+
+CORE-TAP-BUDGET: E10 inherited split extraction completed. S81 east exact FF view main 666e4921a9da, 68/68 TT arcs matched, FF median -128.09 ps. West missed exact TT range, and hd_tile source paths reference older removed DBs. Triage continues.

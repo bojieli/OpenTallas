@@ -3919,3 +3919,5 @@ OPS-WRITEUP: 2026-11-24 05:08 PST 05:08 hourly: 589 any / 485 current (+0 / +0 v
 OPS-WRITEUP: 2026-11-24 06:08 PST 06:08 hourly: 589 any / 485 current (+0 / +0 vs 05:05). VIS-COVERAGE: 435/451 types with a verdict (96%); PROBE-PASS 1
 
 CODEX: 2026-11-24 06:19 PST takeover active S81, HEAD, QC, KV, token/ROM, fleet/flow, geometry, and shared qualification. Existing admitted jobs continue.
+
+CODEX: 2026-11-24 06:24 PST S81 east ROM exact FF lib main 666e4921a9da. West and HEAD elemA/B await exact original parasitics or source DB.

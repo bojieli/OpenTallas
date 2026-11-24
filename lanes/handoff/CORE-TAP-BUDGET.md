@@ -34,3 +34,9 @@ Job: core taps without budget owner -> legacy kit path (ETM max pin target). (1)
   - hd_serdes
   - qc slw_sc_v3
 - Proven only on dsdv_bksel_q (regen). A second regen sample would confirm the class.
+
+## CODEX notes 11-24 06:2x PST
+
+- Inherited E10 job 1202585-1795526932 completed both split ROM view extractions. East TT clk-to-out 68/68 exact, FF delta median -128.09 ps. Pins and arc keys unchanged. Published normalized-name FF view on main 666e4921a9da, new sha256 925bfb49c6d700481c72cc580cc5c7b419012ec38b23349a7de6060dfc8ee59c.
+- West regenerated all 68 arcs, but TT delta range -1.70..+1.24 ps exceeded the matched-view check. It still needs the original SPEF or an exact alternate extraction. No west publish.
+- Archives for elemA/B_cv contained the later Nov 15 kit DBs, whereas counted hd_tile uses the original October 27 clock-freeze views. Original run provenance points to removed intel1 and epyc2 scratch paths. The exact FF pair remains open.
