@@ -11,3 +11,8 @@ Job: A5t6 row for kv3_hub_Eo east macro channel (VIS-REOWN 09:31 E-side smear). 
 - epyc11 kv-own-hub-r2/ROWS_KV-OWN-HUB-R2-SEQLP.py 11d9dfe72d5c: clock.core_link_pipe qkd_seq_fan_s {q:1,aqm:1}, types += kv3_hub_Eo. Plan on A5t3 = 526110b93a98.
 - Gate job_lp.sh: ot-tree-fork grow/tree -> kv-own-hub-r2/tree (own), plan there, launch_lp_70d2e, out kv-own-hub-r2/lp. ot-run PID 617482 unit oth-ubuntu-618360-1795543023.
 - Told KV-ALLFIX (0e1e840b) about grow/tree plan_kvownhub_A5t3ech.json: keep or ot-delete after my row1 job ends.
+## hub_Wo added (COORD 10:1x) -- both rows extended, same files
+- ECH 68742d07d8de (Eo + Wo pad_ram; Wo keepout x<=280 y245-1430) -> plan dce4e1eb9163. SEQLP 00b81f50ff87 (types Eo + Wo) -> plan 7ae541e97dd2.
+- Wo evidence: D28 kit epyc8 KV-D28/private/FAM-KV-HUBWO-S1/kv3_hub_Wo_1122231146/geom (d20 smear y264-1436, xs->fan 781-828 um); A5t3 Wo bound RTL epyc9 kv3_hub_Wo_1124080816/rtl (d81, d20).
+- Gates: epyc11 job_bind.sh ech|lp in own fork kv-own-hub-r2/tree, logs job_bind2_{ech,lp}.otrun.log, out b_ech/b_lp; ot-run PIDs 1881671 / 1881675. Eo-only bind attempts were stopped.
+- Post ROW-REBASED for both rows together when both pass.
