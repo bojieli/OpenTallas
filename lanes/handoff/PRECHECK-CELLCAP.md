@@ -6,3 +6,6 @@
 - Known gaps: lane pads (latency.lanes pad) and RTL pad chains not modeled; kit plan overhead not retained (kit = floor, no delta). Add measured contents to cell_budget_modules.json to sharpen.
 ## Runs (epyc11 /srv/opentallas-scratch2/claude/precheck-cellcap/{plans,tmp}; clone epyc10 .../precheck-cellcap/repo has pytest)
 - S81 c8 ba9b277a852b 7 flags (t2 653k; c8 t2 has 0 hard_cores!), QC C1d c2856018af83 35 (sle_ctl 377k structural; st_b/hc kits), KV A4b 01311e0c5cce 14 (all pv; v1n 653k structural), HEAD r18g 0. Posted to owners 22:5x.
+## 23:1x CELLCAP-HOLD then RETRACT (COORD)
+- main bbb0393d8ed: plan probe flags cellcap (CELL-BUDGET > 400k) and plan_entry_block refuses the launch unless type_split, cell_cap_exception, or die cell_cap_exceptions covers it.
+- Retracted (owner r703): kit_wave.json hub 501db3e4 sets {"*":"r703"} on all dies. main d536d0990de adds cell_budget_note (WARN log + one KIT-WAVE post to the owner per die|type|plan sha). Report only. Posted RETRACT and told FLOW-OPS-R3 the rt sha.
