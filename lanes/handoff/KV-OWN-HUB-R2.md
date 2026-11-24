@@ -16,3 +16,6 @@ Job: A5t6 row for kv3_hub_Eo east macro channel (VIS-REOWN 09:31 E-side smear). 
 - Wo evidence: D28 kit epyc8 KV-D28/private/FAM-KV-HUBWO-S1/kv3_hub_Wo_1122231146/geom (d20 smear y264-1436, xs->fan 781-828 um); A5t3 Wo bound RTL epyc9 kv3_hub_Wo_1124080816/rtl (d81, d20).
 - Gates: epyc11 job_bind.sh ech (job_bind2_ech, PID 1881671) + lp (job_bind3_lp, PID 1926120; SEQLP e36fe1abae50 = +kc_i D1 per COORD ruling, plan 510e93cd3d4a). out b_ech/b_lp in own fork.
 - Post ROW-REBASED for both rows together when both pass.
+## A5t5 rebase (COORD 11:0x: A5t5 669cbe6e39bd passed; re-apply both rows + PRE before ROW-REBASED; no reply needed until then)
+- epyc9 kv-own-hub-r2/job_a5t5.sh (PID 1856467): rows on A5t5 alone + both + order check, PRE each vs A5t5 base PRE (asbuilt A5t3, GENDRY off). Out epyc9 kv-own-hub-r2/a5t5.
+- epyc11 job_ech_full (PID 2833780): full strict bind of ECH for GENDRY. epyc11 job_bind3_lp (PID 1926120): SEQLP gate with kc_i.
