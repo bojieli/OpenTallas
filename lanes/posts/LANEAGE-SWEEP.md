@@ -15,3 +15,4 @@
 - 2026-11-24 06:47 PST DONE [LANEAGE-SWEEP] ot-push-main otpush-civil-redfish-2815634 on civil-redfish: rc=0 after 212 s, ended 14:47:50, log none, cmd: ot-push-main 
 - 2026-11-24 06:47 PST DONE [LANEAGE-SWEEP] ot-run oth-ubuntu-2815005-1795531455 on civil-redfish: rc=0 after 217 s, ended 14:47:50, log /srv/opentallas-scratch2/claude/LANEAGE-SWEEP/tmp/codex-tests/head-built-push2.otrun.log, cmd: --mem 12 --threads 4 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/LANEAGE-SWEEP/wt -- python3 -I /srv/opentallas-scratch2/claude/rt/
 - 2026-11-24 06:53 PST DONE [LANEAGE-SWEEP] ot-push-main otpush-civil-redfish-2957987 on civil-redfish: rc=0 after 108 s, ended 14:53:52, log none, cmd: ot-push-main 
+- 2026-11-24 06:56 PST DONE [LANEAGE-SWEEP] ot-push-main otpush-civil-redfish-3046166 on civil-redfish: rc=0 after 47 s, ended 14:56:58, log none, cmd: ot-push-main 
