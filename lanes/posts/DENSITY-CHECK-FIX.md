@@ -1,0 +1,1 @@
+- 2026-11-23 21:15 PST DIED [DENSITY-CHECK-FIX] ot-run oth-ubuntu-407410-1795497322 on outgoing-giraffe: rc=1 after 4 s, ended 05:15:24, log none, cmd: --mem 16 --threads 2 --hosts epyc8 --dir /srv/opentallas-scratch2/claude/DENSITY-CHECK-FIX -- bash tmp/dumpjob2.sh | class=SETUP cause=died after 4 s with no log: the command failed at start (rc 1)
