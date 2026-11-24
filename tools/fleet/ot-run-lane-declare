@@ -104,6 +104,28 @@ def under(p, roots):
     return any(p == r.rstrip("/") or p.startswith(r.rstrip("/") + "/") for r in roots)
 
 
+def copy_class_ok(argv):
+    """COPY CLASS 11-24: True only for a request whose --stage HOST:PATH form ot_copy_class accepts (the one tool, source, hosts and destination
+    are all declared); any error, a missing module or any other job = False = the checks below, unchanged.  ot-run repeats it and asks the hosts."""
+    from importlib.machinery import SourceFileLoader
+    for d in (os.path.dirname(os.path.realpath(__file__)), "/srv/opentallas-scratch2/claude/rt/current/tools/fleet"):
+        f = os.path.join(d, "ot_copy_class.py")
+        if os.path.isfile(f):
+            sys.dont_write_bytecode = True
+            try:
+                cc = SourceFileLoader("ot_copy_class", f).load_module()
+            except Exception:
+                return False
+            try:
+                return cc.wanted(argv) and bool(cc.parse(argv))
+            except cc.Refused as e:
+                print(f"ot-run: COPY CLASS not met: {e}", file=sys.stderr)
+                return False
+            except Exception:
+                return False
+    return False
+
+
 def check(argv):
     """-> [(path, where)] undeclared, or None when this call is not a lane job"""
     s = split(argv)
@@ -112,6 +134,8 @@ def check(argv):
     opts, cmd = s
     if "--job" in opts:
         return []                                  # a sealed ot-job: its spec declares every input
+    if copy_class_ok(argv):
+        return []
     roots = [r for r in opts.get("--dir", []) + opts.get("--stage", []) if isinstance(r, str)]
     return [(p, w) for p, w in sorted(named(cmd).items()) if not under(p, roots) and not p.startswith(SYSTEM_OK)]
 

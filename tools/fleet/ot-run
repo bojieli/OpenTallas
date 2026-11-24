@@ -2688,6 +2688,20 @@ def main():
     if a[:1] == ["--cancel-dir"] and len(a) >= 2:
         sys.exit(cancel_dir(a[1], a[a.index("--reason") + 1] if "--reason" in a[2:] and a.index("--reason") + 1 < len(a) else ""))
     _pin_only = False
+    copy_job = None
+    if (CC := copy_class()) is None:
+        if any(re.match(r"[A-Za-z0-9][A-Za-z0-9.-]*:/", x) for x in (a[:a.index("--")] if "--" in a else a)):
+            sys.exit("ot-run: REFUSED (COPY CLASS): ot_copy_class.py is missing beside ot-run; --stage HOST:PATH needs it")
+    elif CC.wanted(a):                     # COPY CLASS 11-24: --stage HOST:PATH = one rt ot-tree-fork / src_manifest replicate, hard-pinned, or refused
+        try:
+            copy_job = CC.parse(a)
+            CC.check_hosts(copy_job)
+        except CC.Refused as e:
+            sys.exit(f"ot-run: REFUSED (COPY CLASS): {e}")
+        os.environ["OT_RUN_STRICT_HOST"] = os.environ["OT_RUN_HARD_PIN"] = os.environ["OT_RUN_NO_SPILL"] = "1"
+        os.environ["OT_RUN_PRIO_ENV"] = ""     # a tree path that looks die-like gets no priority
+        global ETA_STAGE_AFTER_S
+        ETA_STAGE_AFTER_S = -1
     _a0 = a
     a = pin_spill_args(a, time.time() - T_START, drop_no_heavy(canon_hosts(HOSTS)))       # FLOW-FLEET-R2: pinned-host spill
     if a is not _a0:
@@ -2721,6 +2735,8 @@ def main():
         elif o == "--replicate": REPLICATE.extend(x for x in a.pop(0).split(",") if x)   # NEEDS_1115: small input dirs rsynced to a host that lacks them
         elif o == "--no-spill": spill = False
         elif o == "--job": job = a.pop(0)
+        elif o == "--stage" and copy_job:
+            a.pop(0)                       # checked by ot_copy_class; never a spill / staging input (STAGE stays empty)
         elif o == "--stage":
             for x in a.pop(0).split(","):
                 if not x.startswith("/"):
@@ -2808,7 +2824,14 @@ def main():
         if d and not os.environ.get("OT_RUN_NO_TICKET"):
             RUN_T0 = ticket_open(d)               # FLOW-FLEET-R2 P1: a re-submit of a still-waiting dir keeps its first-seen age
         ledger_write(d, hosts if hosts is not HOSTS else None, cmd)          # FLOW-FLEET-R2 C2: submit ledger
-        start_leases(lease_paths(d, cmd, STAGE), f"{os.environ.get('OT_LANE') or 'ot-run'}/ot-run-{socket.gethostname().split('.')[0]}-{os.getpid()}")
+        _owner = f"{os.environ.get('OT_LANE') or 'ot-run'}/ot-run-{socket.gethostname().split('.')[0]}-{os.getpid()}"
+        start_leases((CC.lease_list(copy_job) if copy_job else []) + [x for x in lease_paths(d, cmd, STAGE) if not copy_job or x not in CC.lease_list(copy_job)], _owner)
+        if copy_job:
+            try:
+                import ot_lease
+                CC.check_leases(copy_job, _owner, ot_lease.leases())
+            except (ImportError, CC.Refused) as e:
+                not_run(f"COPY CLASS REFUSED: {e}")
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         print("ot-run: die-level command (DIE_RE): --priority die", file=sys.stderr)
@@ -3269,6 +3292,16 @@ ORIG_ARGV = list(sys.argv[1:])
 # client's leases expire after LEASE_TTL_H.  OT_RUN_NO_LEASE=1 turns it off.
 LEASE_TTL_H = 2.0
 LEASE_MAX = 16
+
+
+def copy_class():
+    """the ot_copy_class module beside this file, None when missing"""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+        import ot_copy_class
+        return ot_copy_class
+    except ImportError:
+        return None
 
 
 def lease_paths(d, cmd, stage=(), real=None, env=None):
