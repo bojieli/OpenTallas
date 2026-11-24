@@ -5,6 +5,9 @@
 module tb_ot_qkh_lane8_p #(parameter integer TMUT = 0, parameter integer V0 = 0, parameter integer MV0 = 0);
     localparam integer ADD_LAT = 7;
     localparam integer LTW = 12;
+    localparam integer LT_COPY = 0;
+    localparam integer S3_COPY = 0;
+    localparam integer STRAP_DIRECT = 0;
     reg clk = 0;
     always #5 clk = ~clk;
     reg rstv = 0;
@@ -21,8 +24,8 @@ module tb_ot_qkh_lane8_p #(parameter integer TMUT = 0, parameter integer V0 = 0,
     wire  r_kpv, d_kpv;
     wire [63:0] r_nb, d_nb;
     wire  r_gf, d_gf;
-    ot_qkh_lane8 #(.ADD_LAT(ADD_LAT), .LTW(LTW)) u_ref (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .hid(i_hid), .bsel(TMUT ? MV0 : V0), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .kp(r_kp), .kpv(r_kpv), .nb(r_nb), .gf(r_gf));
-    ot_qkh_lane8_p #(.ADD_LAT(ADD_LAT), .LTW(LTW), .BSEL(V0)) u_dut (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .hid(i_hid), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .kp(d_kp), .kpv(d_kpv), .nb(d_nb), .gf(d_gf));
+    ot_qkh_lane8 #(.ADD_LAT(ADD_LAT), .LTW(LTW), .LT_COPY(LT_COPY), .S3_COPY(S3_COPY), .STRAP_DIRECT(STRAP_DIRECT)) u_ref (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .hid(i_hid), .bsel(TMUT ? MV0 : V0), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .kp(r_kp), .kpv(r_kpv), .nb(r_nb), .gf(r_gf));
+    ot_qkh_lane8_p #(.ADD_LAT(ADD_LAT), .LTW(LTW), .LT_COPY(LT_COPY), .S3_COPY(S3_COPY), .STRAP_DIRECT(STRAP_DIRECT), .BSEL(V0)) u_dut (.clk(clk), .rst_n(rstv), .c_in(i_c_in), .row_in(i_row_in), .e_in(i_e_in), .lt_in(i_lt_in), .hid(i_hid), .q_valid_in(i_q_valid_in), .q_beat_in(i_q_beat_in), .q_data_in(i_q_data_in), .kp(d_kp), .kpv(d_kpv), .nb(d_nb), .gf(d_gf));
     integer cyc, errs, w;
     task automatic drive;
         begin

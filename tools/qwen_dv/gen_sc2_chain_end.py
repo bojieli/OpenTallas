@@ -75,9 +75,11 @@ def leaf(face):
     L = ['// chain-end kit top: scalar-port wrapper of the bounded netlist %s = qfd_dv_s5_sc2_%s0 #(LA 7, LM 9)' % (n, face),
          '// (k79 recipe, see tools/qwen_dv/gen_sc2_chain_end.py).  Ports = qfd_dv_s5_sc2_leaf without %s_i.' % face,
          '// OT_S5_SC2CE_MUT_NETLIST (bench only): the constructed CE_MUT=1 mutant netlist instead.',
-         'module qfd_dv_s5_sc2_leaf_%s0 (' % face]
+         # HARD_PINREG (QC SC HARD1 9ab4c31eda, tools/qwen_dv/sc2_hard_pinreg.py): passed to the k79 netlist only
+         'module qfd_dv_s5_sc2_leaf_%s0 #(parameter integer HARD_PINREG = 0) (' % face]
     L += ['    %-6s wire %-10s %s%s' % (d, w, p, ',' if i < len(P) - 1 else '') for i, (d, w, p) in enumerate(P)]
-    L += [');', '`ifdef OT_S5_SC2CE_MUT_NETLIST', '    %s_mut u (' % n, '`else', '    %s u (' % n, '`endif',
+    L += [');', '`ifdef OT_S5_SC2CE_MUT_NETLIST', '    %s_mut u (' % n, '`else',
+          '    %s #(.HARD_PINREG(HARD_PINREG)) u (' % n, '`endif',
           '        ' + ', '.join('.%s(%s)' % (p, p) for _, _, p in P) + ');', 'endmodule', '']
     return '\n'.join(L)
 

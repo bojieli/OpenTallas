@@ -97,6 +97,8 @@ def transform(lines):
 def main(argv):
     check = '--check' in argv
     a = [x for x in argv if x != '--check']
+    if len(a) < 2:      # GEN-FRESH-FIX 11-24: usage error, not IndexError
+        sys.exit('usage: tkm_root_ctlrst.py [--check] SRC DST: the following arguments are required: SRC DST')
     src, dst = a[0], a[1]
     lines = open(src).read().splitlines(True)
     new, done = transform(lines)

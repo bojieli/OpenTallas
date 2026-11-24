@@ -39,6 +39,7 @@ module ot_qwen_tp_seq_w12_vrl #(
     parameter integer NW   = 16,
     parameter integer PAW  = 12,
     parameter integer VWA  = 8,
+    parameter integer VM_ADDR_EXT = 0, // [31:20] high row bits; [9:2] low bits
     parameter integer DAW  = 6,
     parameter integer FW   = 512,
     parameter integer TAGW = 32,
@@ -98,6 +99,9 @@ module ot_qwen_tp_seq_w12_vrl #(
     reg [DAW-1:0] seg;
     reg [1:0]     kind;
     reg [VWA-1:0] vw;
+    wire [19:0] descriptor_vw = VM_ADDR_EXT ? {desc_q[31:20], desc_q[9:2]} : {12'd0, desc_q[9:2]};
+    wire [8:0] descriptor_nw = (ENABLE_AR256 && desc_q[1:0] == K_AR && desc_q[17:10] == 0) ? 9'd256 : {1'b0, desc_q[17:10]};
+    wire [20:0] descriptor_end = {1'b0, descriptor_vw} + descriptor_nw;
     reg [8:0]     nw;
     reg [NW-1:0]  row0;
 
@@ -161,12 +165,16 @@ module ot_qwen_tp_seq_w12_vrl #(
                 end
                 S_DESC: begin desc_re <= 1'b1; desc_addr <= seg; st <= S_DLAT; end
                 S_DLAT: if (!desc_re) begin
-                    kind <= desc_q[1:0]; vw <= desc_q[2 +: 8];
+                    kind <= desc_q[1:0]; vw <= descriptor_vw;
                     nw <= (ENABLE_AR256 != 0 && desc_q[1:0] == K_AR && desc_q[10 +: 8] == 8'd0) ? 9'd256 : {1'b0, desc_q[10 +: 8]};
                     prog_base <= desc_q[32 +: PAW];
                     row0 <= (QWEN_FULLSHAPE != 0) ?
                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];
-                    st <= S_RUN;
+                    // Reject an invalid range before launching the core or touching memory.
+                    if (VM_ADDR_EXT && desc_q[1:0] == K_AR &&
+                        (descriptor_nw == 0 || descriptor_end > (21'd1 << VWA))) begin
+                        fault <= 1'b1; done <= 1'b1; st <= S_IDLE;
+                    end else st <= S_RUN;
                 end
                 S_RUN: st <= S_CWAIT;              // the core samples core_start on this edge
                 S_CWAIT: if (core_done) begin

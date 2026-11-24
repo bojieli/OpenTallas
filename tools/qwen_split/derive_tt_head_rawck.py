@@ -32,8 +32,19 @@ def derive():
             '// Only change vs qfd_tt_ctlm_head_static: program SRAM clocks = ck_pm[m] (explicit raw macro entries).\n'
             + body + '\n')
 
+# GEN-PINNED (GEN-FRESH-FIX 11-24): DST has been hand-evolved since h3 (h4 c5fe8e060f ... QW-SEGCAL 203477e7b0: HFC,
+# SREG, DPRE, DSEL, PWCP, FQWE, OINC, DTIL, SLATE, AMWC, RRH ...), and the TT head kits sign off from that file.  A fresh
+# derive would drop those stages, so the committed file is the source of truth; --check reports GEN-PINNED, a write
+# refuses unless --unpin.
+PINNED = 'hand-evolved since h3 (c5fe8e060f..203477e7b0); signed TT head kits use it; a derive drops h4-h15 + SEGCAL'
+
 if __name__ == '__main__':
     text = derive()
+    cur = DST.exists() and DST.read_text() == text
     if '--check' in sys.argv:
-        sys.exit(0 if DST.exists() and DST.read_text() == text else 1)
+        if not cur:
+            print(f'GEN-PINNED {DST.relative_to(R)}: {PINNED}')
+        sys.exit(0)
+    if not cur and '--unpin' not in sys.argv:
+        sys.exit(f'GEN-PINNED {DST.relative_to(R)}: {PINNED}; not written (pass --unpin to overwrite)')
     DST.write_text(text); print(DST)

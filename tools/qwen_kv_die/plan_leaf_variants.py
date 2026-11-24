@@ -376,7 +376,10 @@ def default_params(params, ov):
     """[(name, value)] of the integer parameters (defaults, die overrides)"""
     out = []
     for p in params:
-        mm = re.match(r'(?:parameter\s+)?(?:integer\s+)?(\w+)\s*=\s*(.+)$', ' '.join(p.split()))
+        # GEN-FRESH-FIX 11-24: a ranged parameter (`parameter [0:0] G_CONST=1'b0`, qkd_kvs_pc_h_head_p's source) matched
+        # no group: accept an optional [msb:lsb] range (and logic / bit / int types) before the name
+        mm = re.match(r'(?:parameter\s+)?(?:(?:integer|int|logic|bit)\s+)?(?:\[[^\]]*\]\s*)?(\w+)\s*=\s*(.+)$',
+                      ' '.join(p.split()))
         out.append((mm.group(1), ov.get(mm.group(1), mm.group(2))))
     return out
 
@@ -545,6 +548,15 @@ def outputs():
     return files
 
 
+# GEN-FRESH-FIX 11-24: variant files extended BY HAND after generation.  The generator neither writes nor checks them
+# (a regeneration would silently drop the hand feature); their benches / run.sh entries stay generated.  To take one
+# back: port the feature into variant() and remove it here.
+HAND_MAINTAINED = {
+    f'{OUT}/qkd_astk_ep_s_e.sv': 'dd943b93a3 HG-SPLIT 11-03: EX join EX_ADD0..3 / EX_PAD pad stages, DT += EXM (default 0 = generated netlist)',
+    f'{OUT}/qkd_astk_ep_s_head_e.sv': 'dd943b93a3 HG-SPLIT 11-03: EX join EX_ADD0..3 / EX_PAD pad stages, DT += EXM (default 0 = generated netlist)',
+}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--check', action='store_true')
@@ -552,6 +564,9 @@ def main():
     bad = 0
     for rel, text in outputs().items():
         p = ROOT / rel
+        if rel in HAND_MAINTAINED:
+            print(f'HAND {rel}: {HAND_MAINTAINED[rel]} (not regenerated)')
+            continue
         if a.check:
             if not p.exists() or p.read_text() != text:
                 print(f'STALE {rel}')

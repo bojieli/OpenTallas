@@ -50,6 +50,29 @@ HEADER = """`timescale 1ns/1ps
 // too (shared helper modules) and, for FPL > 3, rtl/hdc/ot_hdc_fp32_add_lat.sv and rtl/hdc/ot_hdc_prefix.sv.
 // ---------------------------------------------------------------------------
 """
+# Edits applied on top of the SRC_REV module text (exact, each must match once).  9a3ffdc192 (10-09, "default-off
+# indexer query ready loop break and exact gate") added ARRAY_PHASE_GATE / SAFE_QUERY_GATE (default 0 = the as-built
+# unit) to the committed idx_lat file; ot_hdc_v41x_idx_score_slice_reg.sv and hfd_idx_score.sv use them.  Kept here
+# so the generation reproduces the committed file (GEN-FRESH-FIX 11-24).
+POST = {
+    V + "ot_hdc_v41x_idx_lat.sv": [
+        ("    parameter integer FPL=3, FML=3, QL=3   // engine arithmetic latencies (ot_hdc_v41x_idx_engine_l)\n) (",
+         "    parameter integer FPL=3, FML=3, QL=3,  // engine arithmetic latencies (ot_hdc_v41x_idx_engine_l)\n"
+         "    parameter integer ARRAY_PHASE_GATE=0 // private: array excludes queries from external key-valid\n) ("),
+        ("    assign ql_ready=(count==0) && !ev && !i_valid;\n",
+         "    assign ql_ready=(count==0) && !ev && (ARRAY_PHASE_GATE || !i_valid);\n"),
+        ("    parameter integer QL = 3           // block-dot latency\n",
+         "    parameter integer QL = 3,          // block-dot latency\n"
+         "    parameter integer SAFE_QUERY_GATE = 0 // phase-exclusion gate independent of accepted-key ready\n"),
+        ("    assign ql_ready = &qr;\n",
+         "    assign ql_ready = (&qr) && (!SAFE_QUERY_GATE || !i_valid);\n"
+         "    wire slice_ql_v = ql_v && (!SAFE_QUERY_GATE || !i_valid);\n"),
+        (".FPL(FPL), .FML(FML), .QL(QL)) u (\n            .clk(clk), .rst_n(rst_n),\n"
+         "            .ql_v(ql_v), .ql_ready(qr[s]), .ql_head(ql_head),",
+         ".FPL(FPL), .FML(FML), .QL(QL), .ARRAY_PHASE_GATE(SAFE_QUERY_GATE)) u (\n            .clk(clk), .rst_n(rst_n),\n"
+         "            .ql_v(slice_ql_v), .ql_ready(qr[s]), .ql_head(ql_head),"),
+    ],
+}
 WHAT = {"ot_hdc_v41x_idx_arith_lat.sv": "indexer arithmetic (block dot, head-weight product, FP32 add wrapper)",
         "ot_hdc_v41x_idx_lat.sv": "indexer element, tail, engine, score slice and scoring array",
         "ot_hdc_v41x_attn_tile_lat.sv": "attention tile (product, chunk chain, head datapath, tile, FP32 add wrapper)",
@@ -92,8 +115,13 @@ def generate():
             srcs.append(src)
             revs.append(rev)
         name = Path(out).name
-        files[out] = HEADER.format(what=WHAT[name], src=", ".join(srcs), rev=", ".join(sorted(set(revs)))) + \
+        text = HEADER.format(what=WHAT[name], src=", ".join(srcs), rev=", ".join(sorted(set(revs)))) + \
             "\n\n".join(body) + "\n"
+        for old, new in POST.get(out, []):
+            if text.count(old) != 1:
+                sys.exit(f"w11_stream_latgen: POST edit for {out} no longer applies exactly once: {old.strip()[:80]!r}")
+            text = text.replace(old, new)
+        files[out] = text
     return files
 
 

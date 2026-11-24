@@ -424,10 +424,11 @@ def main():
     ap.add_argument("--out-dir", type=Path)
     ap.add_argument("--committed", action="store_true", help="(re)write rtl/qwen_sys/missing_masters_20261007/gen")
     ap.add_argument("--check", action="store_true", help="fail if the committed generated masters are stale")
+    ap.add_argument("--unpin", action="store_true", help="--committed also overwrites the GEN-PINNED file")
     a = ap.parse_args()
     gen = ROOT / "rtl/qwen_sys/missing_masters_20261007/gen"
     if a.committed:
-        write_committed(gen)
+        write_committed(gen, a.unpin)
         print(gen)
         return
     if a.check:
@@ -646,10 +647,21 @@ def inline_include(text: str) -> str:
     return text.replace('`include "ot_hdc_isa.svh"', "// ---- inlined rtl/hdc/ot_hdc_isa.svh ----\n" + svh, 1)
 
 
-def write_committed(out: Path):
+# GEN-PINNED (GEN-FRESH-FIX 11-24): gen/ot_qwen_rom_core_ctrl.sv carries the ICUT re-cut (55b8e3b530, icut_t CLOSED
+# TT +12.32 / FF +4.69) added by hand after this emitter; a fresh emit drops ICUT.  The committed file is the source of
+# truth: --check reports it GEN-PINNED, --committed leaves it alone unless --unpin.
+PINNED = {"ot_qwen_rom_core_ctrl.sv": "hand-evolved ICUT re-cut 55b8e3b530 (signed icut_t); a fresh emit drops ICUT"}
+
+
+def write_committed(out: Path, unpin=False):
     core = EMIT.emit(EMIT.CORE.read_text())
     out.mkdir(parents=True, exist_ok=True)
-    (out / "ot_qwen_rom_core_ctrl.sv").write_text(inline_include(emit_ctrl(core)))
+    f = out / "ot_qwen_rom_core_ctrl.sv"
+    t = inline_include(emit_ctrl(core))
+    if unpin or not f.exists() or f.read_text() == t:
+        f.write_text(t)
+    else:
+        print(f"GEN-PINNED {f.relative_to(ROOT)}: {PINNED[f.name]}; not written (pass --unpin to overwrite)")
     (out / "ot_qfd_sp_constants_sequencer.sv").write_text(emit_seq_master())
     (ROOT / "rtl/test/tb_qfd_constants_sequencer.sv").write_text(emit_seq_tb())
 
@@ -659,7 +671,10 @@ def check_committed(out: Path):
     want = {out / "ot_qwen_rom_core_ctrl.sv": inline_include(emit_ctrl(core)),
             out / "ot_qfd_sp_constants_sequencer.sv": emit_seq_master(),
             ROOT / "rtl/test/tb_qfd_constants_sequencer.sv": emit_seq_tb()}
-    stale = [str(n) for n, t in want.items() if n.read_text() != t]
+    stale = [str(n) for n, t in want.items() if n.read_text() != t and n.name not in PINNED]
+    for n, t in want.items():
+        if n.read_text() != t and n.name in PINNED:
+            print(f"GEN-PINNED {n.relative_to(ROOT)}: {PINNED[n.name]}")
     if stale:
         raise SystemExit(f"STALE generated masters (re-run emit_partition.py --committed): {stale}")
     print("generated masters current")

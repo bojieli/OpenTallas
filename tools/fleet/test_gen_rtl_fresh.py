@@ -48,3 +48,14 @@ def test_fresh_stale_fail(tmp_path, capsys):
     assert "g_ok" not in out.split("summary")[0]
     assert "FRESH 1" in out and "DATED-OK 1" in out
     assert len(tsv.read_text().splitlines()) == 5
+
+
+def test_pinned_and_silent_stale(tmp_path):
+    """GEN-FRESH-FIX 11-24: GEN-PINNED on exit 0 -> PINNED; a silent non-zero exit -> STALE (not GEN-FAIL)"""
+    (tmp_path / "tools").mkdir()
+    (tmp_path / "tools/pin.py").write_text("import sys\nassert '--check' in sys.argv\nprint('GEN-PINNED rtl/x.sv: hand-evolved')\n")
+    (tmp_path / "tools/silent.py").write_text("import sys\nassert '--check' in sys.argv\nsys.exit(1)\n")
+    (tmp_path / "tools/doconly.py").write_text("# usage: doconly.py [--check]\n")
+    assert G.run_check(str(tmp_path), "tools/pin.py", 30)[0] == "PINNED"
+    assert G.run_check(str(tmp_path), "tools/silent.py", 30)[0] == "STALE"
+    assert G.run_check(str(tmp_path), "tools/doconly.py", 30)[0] == "NO-CHECK"

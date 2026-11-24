@@ -3096,6 +3096,14 @@ def main():
         print(f'wrote {DOMSPLIT_TABLE}: ' + ', '.join(f'{k} {sum(v == "hck" for v in f.values())} hck / '
                                                       f'{sum(v == "ck" for v in f.values())} ck' for k, f in tab['fields'].items()))
         return 0
+    if (a.rtl or a.check) and not ON:
+        # GEN-FRESH-FIX 11-24: every committed qkd_kvs_tiles*.sv is a STATIC-DIE design point (header: OT_KV_STATIC_DIE=1);
+        # the flag-off text is no committed file, so a bare --check compared the wrong design point and a bare --rtl
+        # overwrote the legacy base point with it.  The design point is the OT_KV_* flags of the run (kvsys_prep.sh).
+        print('kv_static_die: the following arguments are required: OT_KV_STATIC_DIE=1 and the design point OT_KV_* '
+              f'flags in the environment (bare --check / --rtl selects no committed design point; {RTL_FILE})',
+              file=sys.stderr)
+        return 2
     txt = rtl_text()
     p = ROOT / RTL_FILE
     if a.rtl:

@@ -5,13 +5,15 @@
 module tb_qkd_astk_ctl_s_p #(parameter integer TMUT = 0, parameter integer V0 = 0, parameter integer MV0 = 0);
     localparam integer Z_STRIDE = 4;
     localparam integer PORT_REGS = 0;
+    localparam integer AM_G_PIN = 1;
+    localparam integer G_CONST = 1'b0;
     reg clk = 0;
     always #5 clk = ~clk;
     reg rstv = 0;
     reg [31:0] i_cal;
     reg [1:0] i_st;
     reg [539:0] i_aq;
-    reg [35:0] i_am;
+    reg [34+AM_G_PIN:0] i_am;
     reg [266:0] i_xi;
     reg [137:0] i_zi;
     reg  i_fz;
@@ -21,8 +23,8 @@ module tb_qkd_astk_ctl_s_p #(parameter integer TMUT = 0, parameter integer V0 = 
     wire [571:0] r_qo, d_qo;
     wire [59:0] r_tc_faces, d_tc_faces;
     wire [571:0] r_qo_face, d_qo_face;
-    qkd_astk_ctl_s #(.Z_STRIDE(Z_STRIDE), .PORT_REGS(PORT_REGS)) u_ref (.cal(i_cal), .ck(clk), .rst_n(rstv), .st(TMUT ? MV0 : V0), .aq(i_aq), .lt(r_lt), .am(i_am), .ap(r_ap), .af(r_af), .qo(r_qo), .tc_faces(r_tc_faces), .qo_face(r_qo_face), .xi(i_xi), .zi(i_zi), .fz(i_fz));
-    qkd_astk_ctl_s_p #(.Z_STRIDE(Z_STRIDE), .PORT_REGS(PORT_REGS), .ST(V0)) u_dut (.cal(i_cal), .ck(clk), .rst_n(rstv), .aq(i_aq), .lt(d_lt), .am(i_am), .ap(d_ap), .af(d_af), .qo(d_qo), .tc_faces(d_tc_faces), .qo_face(d_qo_face), .xi(i_xi), .zi(i_zi), .fz(i_fz));
+    qkd_astk_ctl_s #(.Z_STRIDE(Z_STRIDE), .PORT_REGS(PORT_REGS), .AM_G_PIN(AM_G_PIN), .G_CONST(G_CONST)) u_ref (.cal(i_cal), .ck(clk), .rst_n(rstv), .st(TMUT ? MV0 : V0), .aq(i_aq), .lt(r_lt), .am(i_am), .ap(r_ap), .af(r_af), .qo(r_qo), .tc_faces(r_tc_faces), .qo_face(r_qo_face), .xi(i_xi), .zi(i_zi), .fz(i_fz));
+    qkd_astk_ctl_s_p #(.Z_STRIDE(Z_STRIDE), .PORT_REGS(PORT_REGS), .AM_G_PIN(AM_G_PIN), .G_CONST(G_CONST), .ST(V0)) u_dut (.cal(i_cal), .ck(clk), .rst_n(rstv), .aq(i_aq), .lt(d_lt), .am(i_am), .ap(d_ap), .af(d_af), .qo(d_qo), .tc_faces(d_tc_faces), .qo_face(d_qo_face), .xi(i_xi), .zi(i_zi), .fz(i_fz));
     integer cyc, errs, w;
     task automatic drive;
         begin

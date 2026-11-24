@@ -263,18 +263,40 @@ def build():
              '// the chain-end inputs that the as-built die tied to literals are REMOVED (ports and end stages), not tied.\n'
              '`timescale 1ns/1ps\n',
              fdn_variant(s['fdn'], False), fdn_variant(s['fdn'], True), fdn_variant(s['fdn'], False, w5=True),
-             fup_e5(s['leaves6']), stm_se0(s['leaves6']), stream_se0(s['stream']), station_nb0(s['stn']),
+             fup_e5(s['leaves6']), stm_se0(s['leaves6']), stream_se0(s['stream']), nb0_ce(s['stn']),
              slice_variant(s['flat'], False), slice_variant(s['flat'], True), slice_variant(s['flat'], False, w5=True)]
     return '\n'.join(parts)
 
 
+def nb0_ce(src):
+    """station_nb0 for qfd_dv_s8_ce.sv, with the 95dd92ef23 (11-13) comment on its OT_QC_SWREG form (comment only)"""
+    return sub1(station_nb0(src),
+                '    // OT_QC_SWREG (HARD-QC-FORMS-1 11-13, opt-in per plan type): registered u_scale_wait output, 0 cycles.  QC st_a post-CTS:\n'
+                '    // SRAM clk->Q 250 ps + 18 cells of u_mul in one stage, TT setup -465 ps on 260 endpoints (R-RTL-3).\n',
+                '    // OT_QC_SWREG (HARD-QC-FORMS-1 11-13): as qfd_dv_s8_station_tail1, registered u_scale_wait output, 0 cycles.  The _orq /\n'
+                '    // _orq_mrep / _orq3 copies already use qfd_dv_s8s_sram_delay_orq (the same registered-read form) and need no define.\n')
+
+
+# The _orq / _orq_mrep / _orq3 files (DIE-QC-97 11-10) are pinned, byte-identical for the kits that carry them: they
+# derive from qfd_dv_s8_station_tail1.sv at STN_ORQ_REV, the source they were generated from.  Later source edits
+# (aab1fcfe0c OT_QC_SWREG, 95dd92ef23 OT_QC_PINKEEP, both opt-in defines, default off) go to qfd_dv_s8_ce.sv only;
+# the orq copies already carry the registered-read scale wait (GEN-FRESH-FIX 11-24).
+STN_ORQ_REV = 'f7ac6cf3c4'
+
+
+def stn_orq():
+    import subprocess
+    return subprocess.run(['git', 'show', '%s:%s' % (STN_ORQ_REV, SRC['stn'])], cwd=R, capture_output=True, text=True,
+                          check=True).stdout
+
+
 
 def build_orq():
-    t = station_nb0((R / SRC['stn']).read_text())
+    t = station_nb0(stn_orq())
     t = sub1(t, 'module qfd_dv_s8_station_tail1_nb0 #(\n', 'module qfd_dv_s8_station_tail1_nb0_orq #(\n')
     t = sub1(t, 'qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (',
              'qfd_dv_s8s_sram_delay_orq #(.W(DW), .D(3+BT_LAT)) u_scale_wait (')
-    v1 = module((R / SRC['stn']).read_text(), 'qfd_dv_s8_station_tail1')
+    v1 = module(stn_orq(), 'qfd_dv_s8_station_tail1')
     v1 = sub1(v1, 'module qfd_dv_s8_station_tail1 #(\n', 'module qfd_dv_s8_station_tail1_orq #(\n')
     v1 = sub1(v1, 'qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (',
               'qfd_dv_s8s_sram_delay_orq #(.W(DW), .D(3+BT_LAT)) u_scale_wait (')
@@ -298,7 +320,7 @@ def build_orq_mrep():
             placer (plan chain_even group: mode_mid -> u_p3 -> u_m3/u_m4 -> g_nb[z].u_o) split the 830 um into hops
             < 400 um.  keep_hierarchy + distinct IDs keep synthesis from merging them back (the rule that keeps u_m2).
     MREP_MUT (bench negative control): 1 = the byte-0 gate reads its replica's mode == 1 bit instead of mode == 3."""
-    t = station_nb0((R / SRC['stn']).read_text())
+    t = station_nb0(stn_orq())
     t = sub1(t, 'module qfd_dv_s8_station_tail1_nb0 #(\n    parameter integer CE_MUT    = 0,\n',
              'module qfd_dv_s8_station_tail1_nb0_orq_mrep #(\n    parameter integer CE_MUT    = 0,\n'
              '    parameter integer MREP_MUT  = 0,\n')
@@ -335,7 +357,7 @@ def build_orq3():
     qfd_dv_s8_station_tail1 with ALL THREE SRAM delays = qfd_dv_s8s_sram_delay_orq (same W, D, ports, latency and warm
     mask; PIN CYCLES 0): u_sks (r4 -35.1), u_skn (r5 -6.2) and u_scale_wait (r6 -8.1) of the routed 3071ae56cd53 TT
     STA (class B).  u_sks keeps .MUT(MUT == 16): orq MUT=1 reads one edge early exactly as the base MUT!=0."""
-    v1 = module((R / SRC['stn']).read_text(), 'qfd_dv_s8_station_tail1')
+    v1 = module(stn_orq(), 'qfd_dv_s8_station_tail1')
     v1 = sub1(v1, 'module qfd_dv_s8_station_tail1 #(\n', 'module qfd_dv_s8_station_tail1_orq3 #(\n')
     v1 = sub1(v1, 'qfd_dv_s8s_sram_delay #(.W(DW), .D(SKEW_S), .MUT(MUT == 16)) u_sks (',
               'qfd_dv_s8s_sram_delay_orq #(.W(DW), .D(SKEW_S), .MUT(MUT == 16)) u_sks (')

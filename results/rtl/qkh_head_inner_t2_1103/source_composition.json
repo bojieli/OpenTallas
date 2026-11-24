@@ -93,15 +93,15 @@
     "u_t2": "ck_t2"
   },
   "source_sha256": {
-    "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv": "d78b8d9905aa93bbf364880dd53d35d4d2538f01640fa3ede096aa1ea3aa4421",
+    "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv": "07226bf62f2869edceb835f0335a3032b94b185635021a6a302de1bae36be4d9",
     "rtl/qwen_sys/split_20261014/qkh_head_stages.sv": "fc99193d8427b0e5abf4c4af7fa89b4851474bb24957f24a03d5f235f551143b",
-    "rtl/test/qwen_split/tb_qkh_head_native.sv": "7b7c7b2edaf7066b4b0f8a815193925d90399aaf1593c912c0e5de40f59dd8e5",
+    "rtl/test/qwen_split/tb_qkh_head_native.sv": "e38ff288e87d54ccfe25d1494f1061ad5e939359aee8218dd10973cbb64e0a79",
     "tools/qwen_kv_die/head_inner_t2.py": "e05e4164e8bdd9a9cbe5040409366dcbb1f73704e70d6082a3a57bf00d7bae36"
   },
   "inherited_body_sha256": "ac02c250fd48dd77de3d9ecdd776027644f648b8bfeaf939689696786ca727d5",
   "inverse_alias_body_sha256": "ac02c250fd48dd77de3d9ecdd776027644f648b8bfeaf939689696786ca727d5",
   "generated_source_sha256": "89dc90b81afd9cefd600c85b0ebfbca83ddc4489601fbf139f9686a854c43177",
-  "composition_bench_sha256": "2212c9dca9a28f02f3e99f9777c390b89c2eb0cf2960ceaaae233d9ad4cc27c5",
+  "composition_bench_sha256": "196b1488d4c8ed4fb376d1311c66fe343e26b41b903d5fae06a43960da4caeb6",
   "aliases": {
     "c_in": "c_t2",
     "row_in": "row_t2",

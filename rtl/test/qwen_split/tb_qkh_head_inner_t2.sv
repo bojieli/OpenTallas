@@ -31,6 +31,12 @@ module tb_qkh_head_inner_t2;
   reg [31:0] last_score=0;
   integer score_changes=0,node_changes=0;
   reg [1023:0] last_node=0;
+`ifdef QKH_G3S2
+  integer ferrors=0;
+  always @(posedge clk) begin #0.06; if(check_on && {gs_f,gnb_f} !== {rs_d[4],rnb_d[2]}) begin
+    if(ferrors<8) $display("HEAD_G3S2_FAR_MISMATCH cycle=%0d s=%h/%h nb_equal=%b",cycles,rs_d[4],gs_f,rnb_d[2]===gnb_f);
+    ferrors=ferrors+1; errors=errors+1; end end
+`endif
   always @(posedge clk) begin
     #0.05;
     cycles=cycles+1;

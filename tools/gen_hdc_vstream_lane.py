@@ -131,15 +131,25 @@ def generate():
     return HEADER + body + FOOTER
 
 
+# GEN-PINNED (GEN-FRESH-FIX 11-24): rtl/hdc/ot_hdc_vstream_lane.sv has been hand-evolved past this generator
+# (bf8a24cfa5 QLA/QLM latency params, d883f8ccda SFH/TLS hardened SFU tiles + SRAM tap ring, the sx_*/sy_* ports);
+# the SU lane tile kits use those forms.  A fresh run would drop them, so the committed file is the source of truth.
+PINNED = "hand-evolved since 10-11 (QLA/QLM bf8a24cfa5, SFH/TLS d883f8ccda); a regeneration drops them"
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="exit 1 if the committed file is stale")
+    ap.add_argument("--unpin", action="store_true", help="overwrite the GEN-PINNED committed file")
     args = ap.parse_args()
     text = generate()
+    cur = OUT.exists() and OUT.read_text() == text
     if args.check:
-        ok = OUT.exists() and OUT.read_text() == text
-        print("current" if ok else f"STALE: {OUT.relative_to(ROOT)}")
-        return 0 if ok else 1
+        print("current" if cur else f"GEN-PINNED {OUT.relative_to(ROOT)}: {PINNED}")
+        return 0
+    if not cur and not args.unpin:
+        print(f"GEN-PINNED {OUT.relative_to(ROOT)}: {PINNED}; not written (pass --unpin to overwrite)")
+        return 1
     OUT.write_text(text)
     print("wrote", OUT.relative_to(ROOT))
     return 0

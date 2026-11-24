@@ -510,16 +510,29 @@ def spec(variant):
                  no_bench_reason="representative-region PHYSICAL gate only (critical prefix, never submitted); region bench owed: "
                                  "ring K2 == 3-deep pad equivalence and reset-epoch equality across the 8 crossings"))
 
+STALE = []      # --check (GEN-FRESH-FIX 11-24): compare instead of write (before, --check was ignored and every output was rewritten)
+
+
+def _emit(p, text):
+    p = Path(p)
+    if "--check" in sys.argv:
+        if not p.exists() or p.read_text() != text:
+            STALE.append(str(p.relative_to(ROOT)))
+        return
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(text)
+
+
 def write():
     out = {}
     body = rtl("ring", KITS["ring"]) + "\n" + rtl("stn", KITS["stn"])
-    (ROOT / "rtl/physical/qcluster/qfd_c_b16_reg1.sv").write_text("`timescale 1ns/1ps\n`default_nettype none\n" + body + "`default_nettype wire\n")
-    (ROOT / SDC_PATH).write_text(full_sdc())
+    _emit(ROOT / "rtl/physical/qcluster/qfd_c_b16_reg1.sv", "`timescale 1ns/1ps\n`default_nettype none\n" + body + "`default_nettype wire\n")
+    _emit(ROOT / SDC_PATH, full_sdc())
     plan = {}
     for v, k in KITS.items():
         s = spec(v)
         p = ROOT / "tools/ref_tile/specs_qcluster" / f"{k}.json"
-        p.parent.mkdir(parents=True, exist_ok=True); p.write_text(json.dumps(s, indent=1) + "\n")
+        _emit(p, json.dumps(s, indent=1) + "\n")
         env = placement(v); bad, _ = overlaps(env); r = reach(v)
         plan[k] = dict(outline_um=[round(env["W"], 2), round(env["H"], 2)], children=len(P),
                        child_kinds={kk: sum(1 for q in P.values() if q["kind"] == kk) for kk in sorted({q["kind"] for q in P.values()})},
@@ -529,9 +542,11 @@ def write():
                        bank_window_max_um=max(x["worst_um"] for x in r if "multicycle" in x),
                        edges=r, priced_cycles=price(v))
         out[k] = str(p)
-    d = ROOT / PLAN; d.mkdir(parents=True, exist_ok=True)
-    (d / "plan.json").write_text(json.dumps(plan, indent=1) + "\n")
+    _emit(ROOT / PLAN / "plan.json", json.dumps(plan, indent=1) + "\n")
     return out
 
 if __name__ == "__main__":
     print(json.dumps(write(), indent=1))
+    if "--check" in sys.argv:
+        print("STALE: " + " ".join(STALE) if STALE else "qc_reg_kit: current")
+        sys.exit(1 if STALE else 0)

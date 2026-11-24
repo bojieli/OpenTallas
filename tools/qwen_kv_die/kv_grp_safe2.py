@@ -67,9 +67,28 @@ MUTANTS = {
 }
 
 
+# GEN-FRESH-FIX 11-24: the derivation stays on its PINNED source text when a shared source moves on main.  git blob ids of
+# the SHA texts above; read() takes the blob (sha256-verified) when the working file differs, so the committed outputs
+# (bound by the signed s2 / G6C views) keep their bytes.  Drift seen on main 11-24, both outside the derived s2 behaviour:
+#   BASE  deac9e5110 (10-21): kvs_emb u_join gains .rope_sweep(1'b0) (embedding tile only; no group tile text changes)
+#   LCAL  f14f42039b (10-25): opt-in SAME_CLOCK = 0 (WIP common833 controller; default = the pinned text)
+# A deliberate re-derivation (new behaviour wanted in s2) re-pins SHA + PIN_BLOB together and re-runs the s2 bench.
+PIN_BLOB = {
+    BASE: '44ee4c4e70b48020307bb050e2695001b16cd5d6',
+    LCAL: '8b1967cf8be7b464f96fcc9a63eb08d74d07822f',
+}
+
+
 def read(rel):
     t = (ROOT / rel).read_text()
     h = hashlib.sha256(t.encode()).hexdigest()
+    if h != SHA[rel] and rel in PIN_BLOB:
+        import subprocess
+        r = subprocess.run(['git', '-C', str(ROOT), 'cat-file', 'blob', PIN_BLOB[rel]], capture_output=True, timeout=300)
+        if r.returncode == 0 and hashlib.sha256(r.stdout).hexdigest() == SHA[rel]:
+            print(f'kv_grp_safe2: {rel} moved on main ({h[:12]}); derived from the pinned blob {PIN_BLOB[rel][:12]}',
+                  file=sys.stderr)
+            return r.stdout.decode()
     if h != SHA[rel]:
         raise SystemExit(f'kv_grp_safe2: source identity changed: {rel} {h}')
     return t

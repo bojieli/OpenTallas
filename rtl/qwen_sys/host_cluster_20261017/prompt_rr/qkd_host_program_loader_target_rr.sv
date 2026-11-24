@@ -6,7 +6,11 @@
 // RELEASE 3 ck edges after the pin, as every other host_rst_n consumer of the child.  rtl/qwen_sys/host_20261013/qkd_host_program_loader_target.sv is unchanged.
 // QKD_HR_PR_RR_MUTANT (bench only): relay bypassed.
 module qkd_host_program_loader_target_rr #(
-  parameter integer MUT=0
+  parameter integer MUT=0,
+  parameter integer MU=0,
+  parameter integer AGES=0,
+  parameter integer NRST=43,
+  parameter integer DIECAP=1
 )(
  input wire ck,
  input wire rst_n,
@@ -40,7 +44,7 @@ module qkd_host_program_loader_target_rr #(
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_q));
 `endif
- qkd_host_program_loader_target #(.MUT(MUT)) u_m(
+ qkd_host_program_loader_target #(.MUT(MUT),.MU(MU),.AGES(AGES),.NRST(NRST),.DIECAP(DIECAP)) u_m(
   .ck(ck),
   .rst_n(rst_q),
   .begin_image(begin_image),

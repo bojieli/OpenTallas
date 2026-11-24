@@ -6,15 +6,16 @@
 // RELEASE 3 ck edges after the pin, as every other host_rst_n consumer of the child.  rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv is unchanged.
 // QKD_HR_PR_RR_MUTANT (bench only): relay bypassed.
 module qkd_host_hc_station_rr #(
-  parameter integer MUT=0
+  parameter integer MUT=0,
+  parameter integer HCW=182
 )(
  input wire ck,
  input wire rst_n,
  input wire [2:0] die_id,
- input wire [181:0] raw_hc,
+ input wire [HCW-1:0] raw_hc,
  input wire cmd_cr,
  output wire cmd_v,
- output wire [181:0] cmd_hc,
+ output wire [HCW-1:0] cmd_hc,
  output wire source_cr,
  output wire available,
  output wire fault
@@ -25,7 +26,7 @@ module qkd_host_hc_station_rr #(
 `else
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst_relay(.clk(ck),.rst_n_in(rst_n),.rst_n(rst_q));
 `endif
- qkd_host_hc_station #(.MUT(MUT)) u_m(
+ qkd_host_hc_station #(.MUT(MUT),.HCW(HCW)) u_m(
   .ck(ck),
   .rst_n(rst_q),
   .die_id(die_id),

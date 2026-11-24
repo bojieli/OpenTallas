@@ -32,8 +32,11 @@ def generate():
     pblock = head[head.index("#(") + 2:head.index(") (")]
     plist = []
     for m in re.finditer(r"parameter\s+integer\s+(\w+)\s*=\s*([^,\n/]+)", pblock):
-        if m.group(1) not in PARAMS:
-            plist.append((m.group(1), m.group(2).strip()))
+        if m.group(1) not in PARAMS:      # a default naming a fixed configuration parameter gets its value (KV_FP8 = (SU_VEC != 0))
+            v = m.group(2).strip()
+            for k, kv in PARAMS.items():
+                v = re.sub(rf"\b{k}\b", str(kv), v)
+            plist.append((m.group(1), v))
     pdecl = ",\n".join(f"    parameter integer {n} = {v}" for n, v in plist)
     ppass = ", ".join(f".{n}({n})" for n, _ in plist)
     # the port widths use SW: substitute the configuration
@@ -45,15 +48,25 @@ def generate():
             f"    ot_hdc_core #({ppass}, {ptxt}) u_core (\n{conn}\n    );\nendmodule\n")
 
 
+# GEN-PINNED (GEN-FRESH-FIX 11-24): ot_hdc_core_vsu.sv is a P&R top that hdc kits bind; it keeps its 09-27 port list.
+# ot_hdc_core later gained KV_FP8 / KV_VEC_WRITE_BRIDGE and the kv_write_drained / kv_write_flush ports (47da0bb568);
+# at the defaults (KV_FP8 = 1 as before, bridge 0: kv_write_drained unused) only the new flush output would appear.
+PINNED = "P&R top keeps its 09-27 ports; a regeneration adds kv_write_drained/kv_write_flush (bridge 0: unused/new only)"
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--unpin", action="store_true", help="overwrite the GEN-PINNED committed top")
     a = ap.parse_args()
     t = generate()
+    cur = OUT.exists() and OUT.read_text() == t
     if a.check:
-        ok = OUT.exists() and OUT.read_text() == t
-        print("current" if ok else "STALE")
-        return 0 if ok else 1
+        print("current" if cur else f"GEN-PINNED {OUT.relative_to(ROOT)}: {PINNED}")
+        return 0
+    if not cur and not a.unpin:
+        print(f"GEN-PINNED {OUT.relative_to(ROOT)}: {PINNED}; not written (pass --unpin to overwrite)")
+        return 1
     OUT.write_text(t)
     print("wrote", OUT.relative_to(ROOT))
     return 0
