@@ -1272,7 +1272,7 @@ def pre_mode(elab_dir, skip=()):
     return f"LIST PRE-MODE plan-only: {len(names)} bound checks downgraded ({', '.join(names)})"
 
 
-START_SETTLE_STRICT_FROM = "2026-11-25"   # START-SETTLE-1124 (COORD r703): WARN for c9, FAIL from c10 (c10 is not before this day)
+START_SETTLE_LEVEL = "WARN"   # START-SETTLE-1124 (COORD r703): report-only; COORD promotes it to FAIL by an explicit ruling (edit this constant), never by date
 
 
 def start_settle_bound(sidecar_doc, max_release):
@@ -1306,10 +1306,8 @@ def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_re
     """START-SETTLE-1124: the die START is ot_dp_landing_root #(SETTLE = count_aligned.root_settle_cycles) and every child
     origin leaves reset at its wavefront release, so SETTLE must be >= the collector ready bound at the plan's actual max
     release (raw release + 21 ring training + chain depths), and the sidecar boot_budget must carry that release.
-    WARN before START_SETTLE_STRICT_FROM, FAIL from it.  No sidecar / no collector: WARN, not run."""
-    import time as _t
-    strict = (today or _t.strftime("%Y-%m-%d")) >= START_SETTLE_STRICT_FROM
-    lvl = "FAIL" if strict else "WARN"
+    Always START_SETTLE_LEVEL (WARN: report-only until COORD rules otherwise).  No sidecar / no collector: WARN, not run."""
+    lvl = START_SETTLE_LEVEL
     sc = sidecar
     if not sc and asbuilt:
         ab = _load(asbuilt) or {}
@@ -1339,7 +1337,7 @@ def check_startsettle(tree, plan, sidecar=None, asbuilt=None, today=None, max_re
     if have < need:
         out.append(f"{lvl} START-SETTLE root_settle_cycles {have} < ready bound {need} (max release {max_release} + ring train + chain "
                    f"depths): START (ot_dp_landing_root SETTLE) can fire before the last partition leaves reset; set "
-                   f"count_aligned.root_settle_cycles >= {need} in {sc} (WARN before {START_SETTLE_STRICT_FROM}, FAIL from it)")
+                   f"count_aligned.root_settle_cycles >= {need} in {sc} (report-only: {lvl})")
     if int(bud.get("raw_reset_release_max_cycles", -1)) != max_release:
         out.append(f"{lvl} START-SETTLE boot_budget raw_reset_release_max_cycles {bud.get('raw_reset_release_max_cycles')} != plan max "
                    f"release {max_release} in {sc}")

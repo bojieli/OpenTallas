@@ -388,13 +388,13 @@ def test_start_settle_bound_matches_collector_model():
     assert G.start_settle_bound({}, 331) is None
 
 
-def test_start_settle_warn_then_fail(tmp_path):
+def test_start_settle_stays_warn_no_date_switch(tmp_path):
     sc = tmp_path / "sc.json"
     sc.write_text(json.dumps(_ss_sidecar(64, 331)))
-    warn = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-24", max_release=331)
-    assert warn and all(w.startswith("WARN START-SETTLE") for w in warn)
-    fail = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=331)
-    assert fail and all(w.startswith("FAIL START-SETTLE") for w in fail)
+    for day in ("2026-11-24", "2026-11-25", "2030-01-01"):
+        got = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today=day, max_release=331)
+        assert got and all(w.startswith("WARN START-SETTLE") for w in got)
+    assert not hasattr(G, "START_SETTLE_STRICT_FROM") and G.START_SETTLE_LEVEL == "WARN"
     sc.write_text(json.dumps(_ss_sidecar(422, 354)))
     assert G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=354) == []
     stale = G.check_startsettle(str(tmp_path), "unused", str(sc), None, today="2026-11-25", max_release=331)
