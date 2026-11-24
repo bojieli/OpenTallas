@@ -14,3 +14,8 @@ Updated 2026-11-24 13:58 PST.
 - E10 fork cancelled (slot queue). Tree on E11: QC-HC3-LEC/trees/c1j_hc3/tree (+ tree_bind via BIND-FORK). RTL overlaid (7b15b78e -> b0d30123).
 - Kit: spec E11 /home/ubuntu/coord/autopilot/private_specs/QC-HC3-LEC/qwen_compute_slw_hc3__clccfc3e6b__pvcca9ff41_1124225256 (run_item.launch.out, result.json next to spec), run-item pid 1517870, work E11 kw43-wave-1109n/.../s29q103S4Q9N46R6V4/private/QC-HC3-LEC/slw_hc3__clccfc3e6b__pvcca9ff41_1124225225. Launcher E11 QC-HC3-LEC/launch_hc3.sh [ITEM].
 - Next: wait for sign-off + routed LEC; if EQUIVALENT, post RESULT; siblings (cld86 pvfd488b8f etc.) can launch with launch_hc3.sh ITEM.
+## Update 15:2x PST
+- COORD lead (relay_q[9]) checked: R8 kept missing 0; not the cause. Posted STATE 15:02.
+- LEC-tool test: QC-COLLS-LEC LEC-TRACE-NEAREST lec.py (cb2152fd55e, copy E10 QC-HC3-LEC/m/lec.py sha 62f61ffca2f3) unhinted, PYTHONHASHSEED=0 on R8 netlist 00112d4e: E10 unit oth-ubuntu-1290235-1795561323, log E10 QC-HC3-LEC/r/R8_nearest/lec.log, json r/R8_nearest/lec/lec.json. ETA ~17:30.
+- Kit: kit_rtl 0 (kit leaf sha b0d30123 verified), env_provenance 0, place stage started 15:08 (service kwp). Watch run_item.launch.out KW_STAGE_RC lines; result.json next to spec.
+- On results: post RESULT (LEC verdict of both) to COORD cc QC-ALLFIX, FAM-QC-HCST-R3, RELEC-R2, QC-COLLS-LEC.
