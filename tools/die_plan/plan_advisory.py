@@ -41,6 +41,7 @@ change its verdict or exit code.  Each check found, on 11-22, a problem one buil
 
   HOP-GAP          internal one-cycle reg-to-reg / reg-to-core-pin hop > 405 um with no station (FABLE-RC-S81: gunit -2168 ps)
   TAPOFF-SITE      tap_offset / tap_window rows whose tap moved > 9 um vs a baseline plan (rows are keyed by tap NAME; QC st_a r9 had 5-22 of 225-408 on their own tap); needs --baseline
+  SEATLINE         station seats whose cells (bits x 2) cannot fit the seat window (sqrt(cells x 0.25 / 0.6)) or whose 100 um bin is 2x the median / 30% seat area (QC sle_ctl hc1_o 1,574 bits at one point)
   COLSYNC          plan landing_contract collector nodes vs the landed sidecar's (strict reads the sidecar, landing_place / kit gen the plan): differ / not in tree / > 405 um from the row (QC su_c)
   CTLM-AGES        compiled tt_ctlm program lane ages (ctlm_metadata_source relay.R_*) and core XPF_TRANSPORT_EDGES vs the bound lane cycles and xpf = 1 + R_HR (QC C1g 19/19 vs 14/10, XPF 21 vs 20)
   BITSITE-SEAT     exact bit sites (ft bit_sites_um, in-core rows) farther than 40 um from their station / wrong stage count (KV A5t2 RREACH 659 um; --baseline: only stages seated before)
@@ -82,7 +83,7 @@ CHECKS = (("CORE-PARAM", "adv_core_param"), ("GHOST-MACRO", "adv_ghost_macro"), 
           ("STATION-DENSITY", "adv_station_density"), ("SITE-ON-ROW", "adv_site_on_row"), ("PLACE-REGION", "adv_place_region"),
           ("BAND-BLOCKAGE", "adv_band_blockage"), ("BAND-GAP", "adv_band_gap"), ("LANE-STATIONS", "adv_lane_stations"),
           ("ROUTE-DEMAND", "adv_route_demand"), ("EDGE-STRIP", "adv_edge_strip"), ("RESET-NAME", "adv_reset_names"),
-          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("PAD-LAUNCH", "adv_pad_launch"))
+          ("REF-SITE", "adv_ref_site"), ("HOP-GAP", "adv_hop_gap"), ("OFF-GRID", "adv_off_grid"), ("TREE-DRIFT", "adv_tree_drift"), ("LAND-CAP", "adv_land_cap"), ("LAND-REACH", "adv_land_reach"), ("STN-CONFLICT", "adv_stn_conflict"), ("IST-PRICE", "adv_ist_price"), ("RAW-RESET-TO-PORT", "adv_raw_reset_port"), ("STALE-KEEPOUT", "adv_stale_keepout"), ("G0-HOPS", "adv_g0_hops"), ("TAPOFF-SITE", "adv_tapoff_site"), ("LAT-DEFINE", "adv_latdefine"), ("BITSITE-SEAT", "adv_bitsite_seat"), ("CTLM-AGES", "adv_ctlm_ages"), ("COLSYNC", "adv_colsync"), ("SEATLINE", "adv_seatline"), ("PAD-LAUNCH", "adv_pad_launch"))
 CHECK_TIMEOUT_S = int(os.environ.get("OT_PLAN_ADVISORY_TIMEOUT_S", "120"))
 MAX_LINES = 25          # per check, plus its own summary line
 
