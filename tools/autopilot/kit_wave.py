@@ -9667,6 +9667,15 @@ def bind_asbuilt(bind_out, src):
     return str(f) if f.is_file() else None
 
 
+def bind_manifest_named(bind_out):
+    """BINDOUT-LOUD-1124: the as-built manifest name provenance_bind.json records (str), else None (no / unreadable provenance)"""
+    try:
+        m = json.loads((Path(bind_out) / "provenance_bind.json").read_text()).get("provenance", {}).get("manifest")
+    except (OSError, ValueError, AttributeError):
+        return None
+    return m if isinstance(m, str) and m else None
+
+
 def asbuilt_clock_landing(asbuilt, src):
     """FLOW-STRIPBODY-R2 11-22: the clock-landing sidecar an as-built manifest names (clock_landing_table, relative to the src tree
     or absolute) when it exists here, else None.  A split plan's asbuilt_vN.json names its re-composed eW_sidecar.json; the wave
@@ -9687,9 +9696,10 @@ BIND_LANDING_REMOTE = None     # tests: loader(host, hub, bind_out, src) -> {"as
 def _bind_landing_probe_py():
     """the remote probe = the exact bind_asbuilt / asbuilt_clock_landing code, run on the gen host"""
     import inspect
-    return ("import json, os, sys\nfrom pathlib import Path\n" + inspect.getsource(bind_asbuilt) + "\n" + inspect.getsource(asbuilt_clock_landing)
+    return ("import json, os, sys\nfrom pathlib import Path\n" + inspect.getsource(bind_asbuilt) + "\n" + inspect.getsource(asbuilt_clock_landing) + "\n" + inspect.getsource(bind_manifest_named)
             + "\na = json.loads(sys.argv[1])\nab_ = bind_asbuilt(a['bind_out'], a.get('src') or None)\n"
-            "print('KW_BIND_LANDING ' + json.dumps({'asbuilt': ab_, 'clock_landing': asbuilt_clock_landing(ab_, a.get('src') or None) if ab_ else None}))\n")
+            "print('KW_BIND_LANDING ' + json.dumps({'asbuilt': ab_, 'clock_landing': asbuilt_clock_landing(ab_, a.get('src') or None) if ab_ else None, "
+            "'named': bind_manifest_named(a['bind_out'])}))\n")
 
 
 def bind_landing_remote(host, hub, bind_out, src, run=subprocess.run):
@@ -9709,15 +9719,21 @@ def bind_landing_remote(host, hub, bind_out, src, run=subprocess.run):
         return {}
 
 
+BIND_NAMED = {}   # BINDOUT-LOUD-1124: bind_out -> the manifest its provenance names (filled by bind_landing_inputs)
+
+
 def bind_landing_inputs(bind_out, src, host=None, hub=PRIVATE_HUB):
     """KITWAVE-BINDOUT 11-24: (asbuilt, clock_landing, read_on) of a bind: on the gen host first (the kit reads the bind there), else here."""
+    named = None
     if host and host not in ("localhost", hub) and not host_retired_kw(host):
         got = (BIND_LANDING_REMOTE or bind_landing_remote)(host, hub, str(bind_out), str(src or ""))
         if isinstance(got, dict) and got.get("asbuilt"):
             return got["asbuilt"], got.get("clock_landing"), host
+        named = got.get("named") if isinstance(got, dict) else None
     bab = bind_asbuilt(bind_out, src)
     if bab:
         return bab, asbuilt_clock_landing(bab, src), "local"
+    BIND_NAMED[str(bind_out)] = named or bind_manifest_named(bind_out)
     return None, None, ""
 
 
@@ -9730,14 +9746,30 @@ def host_retired_kw(host):
         return False
 
 
+class BindLandingMissing(ValueError):
+    """BINDOUT-LOUD-1124: the bind's own as-built / clock-landing cannot be read; a kit with the wave's would mismatch the bind"""
+
+
 def apply_bind_landing(sp, bind_out, host=None, hub=PRIVATE_HUB):
     """set sp kit_rtl.asbuilt and the gen --clock-landing to what bind_out read (provenance_bind.json -> manifest -> clock_landing_table);
-    gen_phys refuses a sidecar of another plan (SIDECAR_STALE), kit_topology.bind_matches an as-built of another bind (BIND_STALE).  -> record"""
+    gen_phys refuses a sidecar of another plan (SIDECAR_STALE), kit_topology.bind_matches an as-built of another bind (BIND_STALE).  -> record
+    BINDOUT-LOUD-1124 (COORD; KV-ALLFIX 04:38 and S81-ALLFIX-INT 11:3x, 403 c8 specs hand-fixed with specfix.py): an unreadable bind
+    as-built, or a gen --clock-landing whose bind as-built names no readable sidecar, raises BindLandingMissing (never the wave's kept)."""
     bab, clt, where = bind_landing_inputs(bind_out, sp.get("src"), host=host, hub=hub)
     kr = sp.get("kit_rtl") or {}
     rec = {"bind_out": str(bind_out), "read_on": where or f"unreadable (here and on {host or '-'}): wave asbuilt kept"}
     if not bab:
+        named = BIND_NAMED.get(str(bind_out))
+        if named:                                        # the bind says which as-built it read, and that file is not there: never the wave's
+            raise BindLandingMissing(f"KITWAVE-BINDOUT: bind {bind_out} read as-built {named}, which is missing under src {sp.get('src') or '-'} "
+                                     f"on {host or '-'} and here; the spec would keep the wave as-built and mismatch the bind")
+        print(f"KW_BIND_LANDING_UNREADABLE {bind_out}: no provenance_bind.json manifest on {host or '-'} or here; wave as-built kept "
+              f"(a bind of another as-built will die KIT_TOPOLOGY_BIND_STALE)", file=sys.stderr, flush=True)
         return rec
+    _ga = list(sp.get("gen_args") or [])
+    if not clt and "--clock-landing" in _ga and bab != (kr.get("asbuilt") or ""):
+        raise BindLandingMissing(f"KITWAVE-BINDOUT: the bind as-built {bab} names no readable clock_landing_table, but the gen args carry "
+                                 f"--clock-landing {_ga[_ga.index('--clock-landing') + 1] if _ga.index('--clock-landing') + 1 < len(_ga) else ''} of the wave")
     rec["asbuilt"] = {"wave": kr.get("asbuilt") or "", "bind": bab}
     sp["kit_rtl"] = dict(kr, asbuilt=bab)
     ga = list(sp.get("gen_args") or [])
@@ -9794,7 +9826,38 @@ def headroom_host(cands, stt, hub="intel2", drain=(), mem_gb=48, floors=None):
     return best, f"load {r['load']:.0f}/{r['cores']}, admits {r['admit']} GB, {r.get('wait_n', 0)} queued ({r.get('wait_gb', 0)} GB)"
 
 
+def detach_stdin(keep=False):
+    """BINDOUT-LOUD-1124 (S81-ALLFIX-INT: `while read t; do kit_wave.py private-spec ...; done < TYPES` made one spec: a child ssh read the
+    rest of the list): private-spec reads no stdin unless --stdin; fd 0 becomes /dev/null for it and every child."""
+    if keep:
+        return
+    try:
+        fd = os.open(os.devnull, os.O_RDONLY)
+        os.dup2(fd, 0)
+        os.close(fd)
+        sys.stdin = open(0, closefd=False)
+    except OSError:
+        pass
+
+
+def runitem_bind_landing(sp):
+    """BINDOUT-LOUD-1124: a private bind spec written by private-spec of an rt older than KITWAVE-BINDOUT (S81-ALLFIX-INT ran private-spec from
+    the bind rt 69de849b3da1) still names the wave as-built / --clock-landing.  run-item (driven from rt/current) puts the bind's own in.
+    -> None (nothing to change / not a private bind spec) or the repair record; raises BindLandingMissing when the bind cannot be read."""
+    kr = sp.get("kit_rtl") or {}
+    if not sp.get("private") or not kr.get("bind_out"):
+        return None
+    new = json.loads(json.dumps(sp))
+    rec = apply_bind_landing(new, kr["bind_out"], host=sp.get("gen_host"), hub=sp.get("hub") or PRIVATE_HUB)
+    if (new.get("kit_rtl") or {}).get("asbuilt") == kr.get("asbuilt") and list(new.get("gen_args") or []) == list(sp.get("gen_args") or []):
+        return None
+    sp["kit_rtl"], sp["gen_args"] = new["kit_rtl"], new["gen_args"]
+    sp["private"]["bind_landing_repair"] = rec
+    return rec
+
+
 def private_spec_cmd(a):
+    detach_stdin(getattr(a, "stdin", False))
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
     import env_provenance as EP
@@ -10578,8 +10641,21 @@ def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises).  FLOW-PRIVSPEC-R1: a private spec (or --goal)
     continues after AUTO-GEOM PASS through the wave stage chain (private_chain) to its goal; a wave spec stops at AUTO-GEOM (the tick enqueues it)."""
     spec_bytes = Path(spec_path).read_bytes()
-    spec_sha256 = hashlib.sha256(spec_bytes).hexdigest()
     sp = json.loads(spec_bytes)
+    try:
+        _blr = runitem_bind_landing(sp)
+    except BindLandingMissing as e:
+        print(f"KW_STAGE bind_landing {now_s()} :: REFUSED {e}", flush=True)
+        (Path(spec_path).parent / "result.json").write_text(json.dumps({"stage": "bind_landing", "verdict": "FAIL", "cls": "FLOW", "die": sp.get("die"),
+                                                                    "item": sp.get("item"), "tail": f"BIND-LANDING (not built): {e}"}, indent=1))
+        return 1
+    if _blr:                                             # BINDOUT-LOUD-1124: the spec on disk carries the bind's own inputs from here on
+        print(f"KW_BIND_LANDING_REPAIRED {json.dumps(_blr)}", flush=True)
+        spec_bytes = (json.dumps(sp, indent=1) + "\n").encode()
+        _t = Path(str(spec_path) + ".bl.tmp")
+        _t.write_bytes(spec_bytes)
+        os.replace(_t, spec_path)
+    spec_sha256 = hashlib.sha256(spec_bytes).hexdigest()
     goal = RUN_ITEM_GOAL
     if goal and not sp.get("private"):
         print(f"run-item: --goal applies to private specs only (a wave spec stops at AUTO-GEOM and the tick enqueues it); ignored", flush=True)
@@ -21662,6 +21738,7 @@ def main(argv=None):
     ps_.add_argument("--host", help="gen / place host of the private kit (default: the die gen host with the most headroom now; with --tree the wave pick)")
     ps_.add_argument("--wave-host", action="store_true", help="FLOW-FLEET-R2: keep the wave pick as the home host (no headroom default)")
     ps_.add_argument("--bind-out", help="private strict bind dir (kit_rtl bind_out; default: the wave bind, moved with --tree)")
+    ps_.add_argument("--stdin", action="store_true", help="BINDOUT-LOUD-1124: keep stdin (default: /dev/null, so a `while read` loop over types is not eaten)")
     ps_.add_argument("--allow-bind-stale", action="store_true", help="KIT-TOPO-STALE-1122: write the spec although the bind probe finds the bind made from another plan")
     ps_.add_argument("--src-manifest", choices=("seal", "on", "off"), help="seal (default with --tree/--fork, FLOW-FLEET-R1): the tree's manifest at gen = parent main sha + "
                                                                        "changed files (sha256), kept in <work>/logs; the sign-off then counts (PROVENANCE kind private). "

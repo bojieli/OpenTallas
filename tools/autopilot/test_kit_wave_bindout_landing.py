@@ -80,12 +80,47 @@ def test_private_bind_out_on_another_plan_reaches_kit_topology_without_bind_stal
     assert v[0] == "STALE" and "KIT_TOPOLOGY_BIND_STALE" in v[1]
 
 
-def test_unreadable_bind_keeps_the_wave_inputs_and_says_so(private_plan, monkeypatch):
+def test_unreadable_bind_keeps_the_wave_inputs_and_says_so(private_plan, monkeypatch, capsys):
     monkeypatch.setattr(KW, "BIND_LANDING_REMOTE", lambda *a: {})
     c = cfg_with_landing()
     sp = KW.private_spec(c, D, I, "intel2", plan=private_plan["plan"], bind_out="/nowhere/bind", host="epyc11")
     assert sp["kit_rtl"]["asbuilt"] == c["dies"][D]["kit_rtl"]["asbuilt"]
     assert sp["private"]["bind_landing"]["read_on"].startswith("unreadable")
+    assert "KW_BIND_LANDING_UNREADABLE /nowhere/bind" in capsys.readouterr().err
+
+
+def test_bind_naming_a_missing_asbuilt_fails_loudly(private_plan, monkeypatch):
+    """BINDOUT-LOUD-1124: the bind names the as-built it read, and that file is gone: never the wave's"""
+    monkeypatch.setattr(KW, "BIND_LANDING_REMOTE", lambda *a: {})
+    Path(private_plan["ab"]).unlink()
+    with pytest.raises(KW.BindLandingMissing, match="which is missing"):
+        KW.private_spec(cfg_with_landing(), D, I, "intel2", plan=private_plan["plan"], bind_out=private_plan["bind"], host="epyc11")
+
+
+def test_bind_asbuilt_without_sidecar_fails_loudly(private_plan, monkeypatch):
+    Path(private_plan["ab"]).write_text(json.dumps({}))
+    with pytest.raises(KW.BindLandingMissing, match="clock_landing_table"):
+        KW.private_spec(cfg_with_landing(), D, I, "intel2", plan=private_plan["plan"], bind_out=private_plan["bind"], host="epyc11")
+
+
+def test_run_item_repairs_a_spec_written_by_an_old_rt(private_plan):
+    """S81-ALLFIX-INT 11:3x: private-spec from the bind rt (pre KITWAVE-BINDOUT) kept the wave as-built / --clock-landing"""
+    c = cfg_with_landing()
+    sp = KW.private_spec(c, D, I, "intel2", plan=private_plan["plan"], bind_out=private_plan["bind"], host="epyc11")
+    old = dict(sp, kit_rtl=dict(sp["kit_rtl"], asbuilt=c["dies"][D]["kit_rtl"]["asbuilt"]), gen_args=list(c["dies"][D]["gen_args"]))
+    rec = KW.runitem_bind_landing(old)
+    assert rec and old["kit_rtl"]["asbuilt"] == private_plan["ab"]
+    assert old["gen_args"][old["gen_args"].index("--clock-landing") + 1] == private_plan["side"]
+    assert old["private"]["bind_landing_repair"]["asbuilt"]["bind"] == private_plan["ab"]
+    assert KW.runitem_bind_landing(old) is None                      # already right: unchanged
+    assert KW.runitem_bind_landing(dict(old, private=None)) is None  # a wave spec is never touched
+
+
+def test_private_spec_does_not_read_stdin():
+    code = ("import sys, subprocess; sys.path.insert(0, %r); import kit_wave as KW; KW.detach_stdin(False); "
+            "print(repr(subprocess.run(['cat'], capture_output=True, text=True).stdout))") % str(Path(KW.__file__).parent)
+    r = subprocess.run([sys.executable, "-I", "-c", code], input="t2 route\nt3 route\n", capture_output=True, text=True, timeout=120)
+    assert r.stdout.strip().splitlines()[-1] == "''", r.stderr[-400:]
 
 
 def test_spec_host_copy_is_the_fallback(private_plan, monkeypatch):
