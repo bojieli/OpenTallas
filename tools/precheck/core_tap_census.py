@@ -36,7 +36,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 FIELDS = ["die", "plan_sha12", "type", "placed", "core_taps", "path", "owner_class", "port", "tap", "inst", "module", "pin",
-          "tap_ins_TT", "tap_ins_FF", "pin_target_TT", "pin_basis", "err_TT", "contract_TT", "contract_FF",
+          "tap_ins_TT", "tap_ins_FF", "pin_target_TT", "pin_basis", "err_TT", "etm_TT", "etm_err_TT", "contract_TT", "contract_FF",
           "plan_minus_contract_TT", "plan_minus_contract_FF", "contract_source", "offset_core_rows", "W_raw", "W_tool", "W_res",
           "W_extra", "signed_whatif", "note"]
 
@@ -183,6 +183,9 @@ def type_rows(die, sha, P, tn, root, GP, S, CC, placed):
                        pin_target_TT=r.get("rise_ps"), pin_basis=r.get("basis", ""), note=note)
             if r.get("rise_ps") is not None:
                 row["err_TT"] = round(float(r["rise_ps"]) - ins, 2)
+            etm = r.get("etm_max_bound_ps", r.get("rise_ps") if r.get("basis") == "legacy_etm_max_bound" else None)
+            if etm is not None:     # the pre-9bfb2254dc legacy pin target (ETM max): etm_err_TT = what a new kit moves by
+                row["etm_TT"], row["etm_err_TT"] = etm, round(float(etm) - ins, 2)
             if core:
                 key = core.get("lib")
                 if key not in con_cache:
