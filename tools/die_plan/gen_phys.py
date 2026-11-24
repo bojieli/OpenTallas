@@ -10003,6 +10003,14 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
     reset_cells = gen_rtl.CELLS + getattr(gen_rtl, "LOCKUP_CELLS", "")
     if tree.get("pin_entry_fall"):
         reset_cells += gen_rtl.ENTRY_FALL_CELLS
+    # KV-OWN-HG: FLOW-6 private reader-START copy.  The raw relay of a wavefront OUT tap may be the exact canonical
+    # ot_dp_head_raw_export_pair (same clk/D/Q, export_q <= D); its canonical body is the repo cell, never the bound text.
+    PAIR = "ot_dp_head_raw_export_pair"
+    _pair_src = Path(__file__).resolve().parent.parent.parent / "rtl" / "common" / "ot_dp_clk_landing_ca.sv"
+    if _pair_src.is_file():
+        reset_cells += "\n" + _pair_src.read_text()
+    _nck = RT.consumer_count(tree)
+    out_raw = {f"rr_t{_nck + k}" for k in range(len(tree.get("outs") or []))} if tree.get("start") else set()
 
     def canonical_cell(src, module):
         src = re.sub(r"//[^\n]*|/\*.*?\*/", "", src, flags=re.S)
@@ -10113,13 +10121,23 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None, cap_scope
         output = output_relays.get(r["q"])
         if output is not None:
             ports["q"] = f"rst_o_{output}"
-        check(r["name"], RT.relay_cell(tree, r, gated=gated), ports)
+        cell = RT.relay_cell(tree, r, gated=gated)
+        if (cell == "ot_dp_rrelay" and r.get("role") == "raw" and r["q"] in out_raw
+                and re.search(rf"\b{PAIR}\s*(?:#\([^;]*?\))?\s*{re.escape(r['name'])}\s*\(", clean)):
+            cell = PAIR
+            ports["export_q"] = f"{r['q']}_reader_raw"
+        check(r["name"], cell, ports)
         physical_nodes.append(dict(r, q=ports["q"], d=r.get("dlab", r["d"]), optional=False))
         if output is not None:
             copy_name = r["name"] + "_t"
             check(copy_name, RT.relay_cell(tree, r, gated=gated), dict(ports, q=r["q"]))
             physical_nodes.append(dict(r, name=copy_name, optional=True))
-    actual_nodes = set(re.findall(r"\bot_dp_r(?:relay|gate)(?:_drive|_nl)?\s+(u_[rs]rl_\w+)\s*\(", body))
+    actual_nodes = set(re.findall(r"\bot_dp_(?:r(?:relay|gate)(?:_drive|_nl)?|head_raw_export_pair)\s+(u_[rs]rl_\w+)\s*\(", body))
+    for k in range(len(out_raw)):
+        net = f"rr_t{_nck + k}"
+        if not (re.search(rf"\bassign\s+rst_o_{k}\s*=\s*{net}\s*;", body)
+                and re.search(rf"\bassign\s+start_o_{k}\s*=\s*rn_{net}\s*;", body)):
+            raise gen_rtl.GenError(f"type {tn}: native reset out rst_o_{k} is not the registered raw tap {net} of its own relay")
     if actual_nodes != {r["name"] for r in physical_nodes}:
         raise gen_rtl.GenError(f"type {tn}: native reset has undeclared or missing relay nodes")
     entries = set(re.findall(r"\bot_dp_r\w+\s+(u_(?:rst|run)_(?:in|root)(?:_\w+)?)\s*\(", body))

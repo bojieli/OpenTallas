@@ -346,3 +346,60 @@ def test_root_lock_declaration_and_relayed_lock_fail_closed(tmp_path):
     p,f=fixture(tmp_path);p.types['t']['clock']['landing_contract']['collector_tree']['lock']=dict(LOCK)
     with pytest.raises(gen_rtl.GenError,match='requires a sync entry'):
         G.install_bound_native_reset(p,'t',[f])
+
+
+# KV-OWN-HG: START tree with a wavefront OUT whose raw relay is the FLOW-6 private reader-START pair.
+def out_fixture(tmp_path, pair=True, mutate=lambda s: s):
+    import re as _re
+    t = tree('relayed')
+    t.update(start=True, start_in=[8.64, 10.8], start_role='mission', tap_roles={'0': 'mission', '1': 'mission'},
+             start_tap=None, taps=['clk', 'clk'], n_reset_consumers=1, outs=[[17.28, 25.92]],
+             relays=[dict(name='u_rrl_0', d='rst_root_n', q='rst_n_t0', xy=[17.28, 17.28], depth=1, tap=0, kind='tap'),
+                     dict(name='u_rrl_1', d='rst_root_n', q='rst_n_t1', xy=[17.28, 25.92], depth=1, tap=1, kind='tap')])
+    body = '\n'.join(R.rtl_lines(t))
+    assert 'ot_dp_rrelay u_rrl_1 (.clk(clk), .d(rst_root_n), .q(rr_t1));' in body
+    if pair:
+        body = body.replace('ot_dp_rrelay u_rrl_1 (.clk(clk), .d(rst_root_n), .q(rr_t1));',
+                            'wire rr_t1_reader_raw;\n    ot_dp_head_raw_export_pair u_rrl_1 (.clk(clk), .d(rst_root_n), '
+                            '.q(rr_t1), .export_q(rr_t1_reader_raw));')
+    src = (Path(G.__file__).resolve().parent.parent.parent / 'rtl' / 'common' / 'ot_dp_clk_landing_ca.sv').read_text()
+    cell = _re.search(r'module ot_dp_head_raw_export_pair\b.*?endmodule', src, _re.S).group(0)
+    text = ('module top(input clk, arst_n, start_i, output rst_o_0, start_o_0);\n'
+            ' bound u_bound(.clk(clk), .arst_n(arst_n), .start_i(start_i), .rst_o_0(rst_o_0), .start_o_0(start_o_0));\nendmodule\n'
+            'module bound(input clk, arst_n, start_i, output wire rst_o_0, output wire start_o_0);\n' + body +
+            '\nendmodule\n' + gen_rtl.CELLS + '\n' + cell + '\n')
+    f = tmp_path / 'native.sv'; f.write_text(mutate(text))
+    p = SimpleNamespace(types={'t': dict(module='top', outline_um=[100, 100],
+                                       clock=dict(landing_contract=dict(collector_tree=t)))})
+    return p, f
+
+
+def test_out_raw_relay_may_be_canonical_private_export_pair(tmp_path):
+    p, f = out_fixture(tmp_path)
+    c = G.install_bound_native_reset(p, 't', [f])
+    assert 'u_rrl_1' in c['native_paths'] and 'ot_dp_head_raw_export_pair' in c['verified_cell_classes']
+
+
+def test_out_plain_relay_still_passes(tmp_path):
+    p, f = out_fixture(tmp_path, pair=False)
+    G.install_bound_native_reset(p, 't', [f])
+
+
+@pytest.mark.parametrize('mutation', [
+    lambda s: s.replace('export_q <= d;', 'export_q <= q;'),                       # late copy: not the canonical cell
+    lambda s: s.replace('.export_q(rr_t1_reader_raw)', '.export_q(other_raw)'),    # wrong export net
+    lambda s: s.replace('assign rst_o_0 = rr_t1;', 'assign rst_o_0 = rst_n_t1;'),   # out is not the raw tap
+    lambda s: s.replace('assign start_o_0 = rn_rr_t1;', 'assign start_o_0 = run_root;'),
+    lambda s: s.replace('.d(rst_root_n), .q(rr_t1), .export_q', '.d(wrong), .q(rr_t1), .export_q'),
+])
+def test_out_pair_negatives_fail_closed(tmp_path, mutation):
+    p, f = out_fixture(tmp_path, mutate=mutation)
+    with pytest.raises(gen_rtl.GenError):
+        G.install_bound_native_reset(p, 't', [f])
+
+
+def test_pair_on_consumer_tap_relay_is_rejected(tmp_path):
+    p, f = out_fixture(tmp_path, pair=False, mutate=lambda s: s.replace(
+        'ot_dp_rgate u_rrl_0 (', 'ot_dp_head_raw_export_pair u_rrl_0 (').replace('.run(rn_rst_root_n), ', '', 1))
+    with pytest.raises(gen_rtl.GenError):
+        G.install_bound_native_reset(p, 't', [f])
