@@ -1727,6 +1727,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_split"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["flop", "clones"],
         "properties": {"flop": {"type": "string", "minLength": 1}, "note": {"type": "string"},
+                       # S81-CLASSCOPY 11-24: dissolve the synthesis fan-out BUF tree of the flop before the split (see RELAY_SPLIT_TCL)
+                       "unbuffer": {"type": "boolean"},
                        "clones": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False,
                            "required": ["name", "sinks"], "properties": {
                                "name": {"type": "string", "pattern": "__rs[0-9]+$"},

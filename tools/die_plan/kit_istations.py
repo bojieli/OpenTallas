@@ -1501,6 +1501,27 @@ proc rs_key {nm} {
   regsub {\$_[A-Za-z0-9_]*$} $k {} k
   return $k
 }
+# S81-CLASSCOPY 11-24 (relay_split[].unbuffer, opt-in per row): the fan-out BUF tree synthesis put on the flop hides the sinks,
+# so every non-inverting BUF load (not fixed / dont_touch, no port on its net) is dissolved first (its loads re-hung on the
+# flop's net), and a listed sink behind an INV load gets a copy of that INV on the clone (same polarity; 0 cycles).
+proc rs_unbuf {net} {
+  set n 0; set again 1
+  while {$again} {
+    set again 0
+    foreach it [$net getITerms] {
+      if {[$it isOutputSignal]} continue
+      set ci [$it getInst]
+      if {![regexp {^BUF} [[$ci getMaster] getName]] || [$ci isFixed] || [$ci isDoNotTouch]} continue
+      set on ""
+      foreach o [$ci getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL" && [$o getNet] ne ""} { set on [$o getNet] } }
+      if {$on eq "" || $on eq $net || [llength [$on getBTerms]] || [$on isDoNotTouch]} continue
+      foreach l [$on getITerms] { if {![$l isOutputSignal]} { $l disconnect; $l connect $net } }
+      odb::dbInst_destroy $ci; odb::dbNet_destroy $on
+      incr n; set again 1; break
+    }
+  }
+  return $n
+}
 proc rs_split_all {rows} {
   global ff_blk is_miss
   set by [dict create]; set dup [dict create]; set byf [dict create]; set dupf [dict create]
@@ -1513,9 +1534,9 @@ proc rs_split_all {rows} {
       if {$isff} { if {[dict exists $byf $a]} { dict set dupf $a 1 } else { dict set byf $a $i } }
     }
   }
-  set nc 0; set nm 0; set miss {}
+  set nc 0; set nm 0; set miss {}; set nub 0; set nic 0; set ub ""
   foreach row $rows {
-    lassign $row fk clones
+    set ub ""; lassign $row fk clones ub
     set fa [string map {/ .} $fk]
     if {![dict exists $byf $fa] || [dict exists $dupf $fa]} { lappend miss "flop:$fk"; continue }
     set f [dict get $byf $fa]
@@ -1537,6 +1558,18 @@ proc rs_split_all {rows} {
       if {$on eq ""} break
       lappend chain [list $ci [[lindex $ld 0] getMTerm]]
       set qn $on
+    }
+    # unbuffer row: dissolve the BUF tree, then one INV level is transparent: net name -> {INV inst, its input MTerm, its output MTerm}
+    set invn [dict create]
+    if {$ub ne ""} {
+      incr nub [rs_unbuf $qn]
+      foreach it [$qn getITerms] {
+        if {[$it isOutputSignal]} continue
+        set ci [$it getInst]
+        if {![regexp {^INV} [[$ci getMaster] getName]] || [$ci isDoNotTouch]} continue
+        foreach o [$ci getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL" && [$o getNet] ne "" && ![llength [[$o getNet] getBTerms]]} {
+          incr nub [rs_unbuf [$o getNet]]; dict set invn [[$o getNet] getName] [list $ci [$it getMTerm] [$o getMTerm]] } }
+      }
     }
     set raw [$f getName]
     foreach cl $clones {
@@ -1570,18 +1603,34 @@ proc rs_split_all {rows} {
       foreach c [lsort -unique [list [string map {/ .} $ck] [string map {/ .} [regsub {^[^./]*[./]} [rs_key $cn] {}]]]] {
         dict set by $c $cf; dict set byf $c $cf
       }
-      incr nc
+      incr nc; set icp [dict create]
       foreach sk $sinks {
         set sa [string map {/ .} $sk]
         if {[dict exists $byf $sa] && ![dict exists $dupf $sa]} { set s [dict get $byf $sa] } elseif {[dict exists $by $sa] && ![dict exists $dup $sa]} { set s [dict get $by $sa] } else { lappend miss "sink:$sk"; continue }
         set hit 0
         foreach it [$s getITerms] {
-          if {![$it isOutputSignal] && [$it getNet] eq $qn} { $it disconnect; $it connect $cur; set hit 1 }
+          if {[$it isOutputSignal]} continue
+          set sn [$it getNet]
+          if {$sn eq "NULL" || $sn eq ""} continue
+          if {$sn eq $qn} { $it disconnect; $it connect $cur; set hit 1; continue }
+          if {$ub eq "" || ![dict exists $invn [$sn getName]]} continue
+          set nk [$sn getName]
+          if {![dict exists $icp $nk]} {
+            lassign [dict get $invn $nk] iv im om
+            set ic [odb::dbInst_create $ff_blk [$iv getMaster] [format "ot_rss_%05d_i%d" $nc [dict size $icp]]]
+            [$ic findITerm [$im getName]] connect $cur
+            set inn [odb::dbNet_create $ff_blk [format "ot_rss_%05d_in%d" $nc [dict size $icp]]]
+            [$ic findITerm [$om getName]] connect $inn
+            $ic setLocation [lindex $loc 0] [lindex $loc 1]; $ic setPlacementStatus PLACED
+            dict set icp $nk $inn; incr nic
+          }
+          $it disconnect; $it connect [dict get $icp $nk]; set hit 1
         }
         if {$hit} { incr nm } else { lappend miss "pin:$sk" }
       }
     }
   }
+  if {$nub} { puts "OT_RELAY_SPLIT_UNBUF $nub fan-out BUF cells dissolved, $nic INV copies" }
   puts "OT_RELAY_SPLIT [llength $rows] flops, $nc copies, $nm sink pins moved (missing: [llength $miss] [lrange $miss 0 7])"
   if {[llength $miss]} { lappend is_miss "relay_split:[llength $miss]" }
 }
@@ -1592,7 +1641,7 @@ def _split_call(rows):
     def b(x):
         return "{" + x + "}"
     return "rs_split_all [list " + " ".join(
-        b(b(r["flop"]) + " " + b(" ".join(b(b(c["name"]) + " " + b(" ".join(b(s) for s in c["sinks"]))) for c in r["clones"])))
+        b(b(r["flop"]) + " " + b(" ".join(b(b(c["name"]) + " " + b(" ".join(b(s) for s in c["sinks"]))) for c in r["clones"])) + (" 1" if r.get("unbuffer") else ""))
         for r in rows) + "]"
 
 

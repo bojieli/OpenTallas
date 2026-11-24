@@ -6749,6 +6749,9 @@
         "note": {
          "type": "string"
         },
+        "unbuffer": {
+         "type": "boolean"
+        },
         "clones": {
          "type": "array",
          "minItems": 1,

@@ -601,3 +601,12 @@ def test_merged_core_reset_port_stages_every_native_pin(tmp_path):
     assert [r["port"] for r in rows] == ["rst_n", "u_a__rst_n", "u_b__rst_n"]
     assert len({r["D"] for r in rows}) == 1
     assert all(k.startswith("u_y_xd_hc_rst_n_0_") for k in t["relay_sites"] if k.startswith("u_y_xd_hc_"))
+
+
+def test_relay_split_unbuffer_call():
+    """S81-CLASSCOPY 11-24: the opt-in flag reaches the tcl row; a row without it is byte-identical to before"""
+    import kit_istations as K
+    r = {"flop": "u_a.r", "clones": [{"name": "u_a.r__rs0", "sinks": ["_1_", "u_b.x"]}]}
+    assert K._split_call([r]) == "rs_split_all [list {{u_a.r} {{{u_a.r__rs0} {{_1_} {u_b.x}}}}}]"
+    assert K._split_call([dict(r, unbuffer=True)]) == "rs_split_all [list {{u_a.r} {{{u_a.r__rs0} {{_1_} {u_b.x}}}} 1}]"
+    K._check_split("t", [dict(r, unbuffer=True)])
