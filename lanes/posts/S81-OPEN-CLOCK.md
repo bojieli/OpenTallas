@@ -19,3 +19,4 @@
   - IN-COMPOSE kv512_C xg.u_s (-1287 = gf_q[2] -> SRAM wd_in): OT_S81SL_XS_GFLOCAL on the type in c6 (FABLE accepted the hold on GFLOCAL; the v9 XGA/bank/tap rows stay with S81-ALLFIX-SLICE).
   - IN-COMPOSE eng u_hN -> hx_res (-224): ENG-HXFACE-1 503cbe8a158d (c6 step 4, hx leg 77 um, 0 cycles).
   Probe read for all of these = INT changed-type probes (every item type changed in c6/c7). Read rule: each named path >= -42 at final GRT; vp/crr also hold >= 0.
+- 2026-11-23 19:28 PST DONE [S81-OPEN-CLOCK] ot-run oth-ubuntu-1371224-1795490569 on civil-redfish: rc=0 after 369 s, ended 03:28:56, log /srv/opentallas-scratch2/claude/s81-open-clock/regen_c7a.otrun.log, cmd: --mem 64 --threads 8 --hosts epyc10 --dir /srv/opentallas-scratch2/claude/s81-open-clock -- bash leaf_regen.sh /srv/opentallas-scratch2/clau
