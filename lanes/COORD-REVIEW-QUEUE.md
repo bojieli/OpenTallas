@@ -41510,3 +41510,4 @@ FAILED [AUTOPILOT 4b98c872cc0a] 2026-11-24 07:52:30 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 09:00 PST CANARY s81_head @ 67a9d659af: PASS (REGRESSION signoff ins_tt 248.89 -> 238.39 |ins-bound| 1.11 -> 11.61 (tol 5); signoff ins_ff 194.23 -> 186.6 |ins-bound| 8.27 -> 15.90 (tol 5))
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 09:00 PST DONE [QC-ALLFIX] ot-run oth-ubuntu-1191116-1795539333 on tolerant-swine: rc=0 after 292 s, ended 09:00:20, log /srv/opentallas-scratch2/claude/hub-coord/autopilot/private_specs/QC-ALLFIX/qwen_compute_slw_fe_v2__cle312294d_1124082744/gen.live.log, cmd: --mem 16 --threads 2 --dir /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N46R6V4/privat
+- 2026-11-24 09:00 PST DONE [PRECHECK-R3] ot-push-main otpush-dear-crayfish-1725343 on dear-crayfish: rc=0 after 22 s, ended 09:00:41, log none, cmd: ot-push-main 
