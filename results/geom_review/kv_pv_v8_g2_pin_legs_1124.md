@@ -7,3 +7,5 @@ The separate high 512 `s1__ts` bits already pass through an explicit one-cycle b
 - [Pin pairs and macro perimeter](pv_v8_g2_pins_1124.png)
 - [All 512 pin pairs](pv_v8_g2_exact_lef_witness_1124.json)
 - [Whole exact placed review](kv_a5t3_pv_v8_1124.md)
+
+The draft west bank fits eight columns spaced 1.35 µm from x631.80 and 64 rows spaced 0.27 µm from y914.76. The existing FIRM and macro footprints clear the examined x626.00–643.296, y893.00–940.00 window. Projected maximum P1→bank and bank→join legs are 369.990 and 316.602 µm, including source pin escape. The fresh clock, PG and row measurements are still required.
