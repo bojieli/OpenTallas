@@ -1,0 +1,20 @@
+item	row_sha	rebased	in_compose_sha	PRE	strict	LAT	G0	probe_unit	probe_result	status
+b25 successor (Q00 + CB/glue carry_0924 + FE+4 + CTL 332 + x_hc0 band + RSN/RSF reseat)	b25b1cf7c404	yes(base)	cA f418c1b290f3	pending	b25: err0	-	b25: PASS	-	-	COMPOSING
+x12 tapoff (cbn_q00 10 ports filled, census 130/130 PASS)	f418c1b290f3	yes	cA f418c1b290f3	census PASS	-	-	-	-	-	COMPOSING
+rc99 cb NK lockup (row A + HB4 rev5, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING
+rc101 cb landing piles (CB-1 + STREET, in C4)	C4	in base	cA	-	-	-	-	-	-	PROBE-PENDING
+rc107/rc109 coll g_pf + shr_p_rx_i (pkg15, in C4)	C4	in base	cA	-	-	-	-	-	-	QC-ALLFIX-COLL
+coll_core 80 clock-open reset copies	-	-	-	-	-	-	-	-	-	QC-ALLFIX-COLL
+SLE CTL B_TW bank spread	-	-	-	-	-	-	-	-	-	QC-ALLFIX-COLL
+SLE CTL clock entry reconciliation	-	-	-	-	-	-	-	-	-	QC-ALLFIX-COLL
+rc105 su_c street + su_c re-floor	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
+SU-2 (6c198f9a7419)	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
+RED +2	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
+rc103 su_l1 tap affinity	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU
+hg-QC-HOLD-SKEW / hg-QC-RESET-ASYNC (RHI rows)	-	-	-	-	-	-	-	-	-	QC-ALLFIX-SU (+CLASS-FIX-RHI)
+RSN FLT u_lpad_flt_su_c_i.q[0] -97.79	-	-	-	-	-	-	-	-	-	QC-V4 keeps: kit tools bug (1-bit istations unsited, rt<c84f); fixed by kit regen on rt>=c84f, no dup needed
+F16 auth transport + TTCTLM f5 constructor	-	-	-	-	-	-	-	-	-	QC-ALLFIX building
+TTCTLM placement (BAD, CTS -200.7)	-	-	-	-	-	-	-	-	-	QC-ALLFIX
+rc97 btab narrow parent + BT_LAT=2 / hg-QC-REACH	-	-	-	-	-	-	-	-	-	QC-ALLFIX (+FAM-QC-HCST-R3)
+rc94 STA-1 seat / rc98 SEAT-1c pinreg / hg-QC-IO-BOUNDARY	-	-	-	-	-	-	-	-	-	QC-ALLFIX
+x5 DPL-0033 on C4 st_a kit (slw_st_a_v2__clf4365a62 epyc8)	-	-	-	-	-	-	-	-	-	QC-V4 kit running
