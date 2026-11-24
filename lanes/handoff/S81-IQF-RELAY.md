@@ -15,3 +15,7 @@ Brief: localhost scratchpad resume_1124b.txt + s81_open_brief.txt (+ rules/split
 - Gate unit oth-ubuntu-771484-1795538396 done. PRE c9 base vs c9+row: both FAIL findings=52 (ANCHORDRY/GENDRY/SCHEMA), identical sets; none name iqf/seqhost. Scoped strict EMIT 2/2, 0 errors on both types (1049 die-wide crossing errors = c8 svc class). Logs E9 s81-iqf-relay/gate/.
 - ROW-REBASED posted to S81-ALLFIX-INT (11:1x).
 - OPEN: (a) c8 GO kits for iqf__t1/seqhost__t1 (INT, after c8 bind ends) = adopted current-form probes; read their place/GRT/route. (b) private seqhost rep: run intel2 ~/tmp/s81-iqf-relay/launch_seqhost_row.sh once c8seal_tree has the sealed c8 bind (INT post "c8 SEALED"/GO); if BIND_STALE, fall back to type_overlay regs_um only (relay_sites not overlay-able) or wait for the c9 suffix bind with the row.
+## 11:3x PST kits blocked
+- c8 GO held (c8_post failed: ot-run --priority plan w/o --plan-job; launch_c8 --rt 6d967ec98ec6 mismatches bind rt 69de849b3da1). iqf/seqhost not launched.
+- My reps REFUSED KIT_TOPOLOGY_BIND_STALE: bind OUTs (allfix_c8_out, my bind_out) lack native_topology.json; bind writes it only when no in-scope errors; untyped svc crossing errors (UNDRIVEN_OPEN 848, TIED 200, TIED_TOTAL 1) block it even for a 2-type probe. Posted to INT/COORD/BIND-ALL-ERRORS.
+- Launch when a receipt exists: intel2 ~/tmp/s81-iqf-relay/launch_rep.sh iqf__t1 <c8|c9 plan> <bind_out> TAG ; seqhost__t1 with plan incl. row (re-run my scoped bind: E9 s81-iqf-relay/gate_row.sh, needs a fresh bind_out dir).
