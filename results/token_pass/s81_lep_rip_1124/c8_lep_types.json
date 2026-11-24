@@ -1,0 +1,48 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/s81-allfix-int/amd1_tree/physical/die_plan/s81/j9tail_c8/p6_fstart.json",
+ "partition_types": {
+  "dsdv_slice_lepe_mu_C__t1": {
+   "verilog_defines": []
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "verilog_defines": [
+    "OT_S81SL_LEP_CRP2",
+    "OT_S81SL_LEP_WREP5",
+    "OT_S81SL_LEP_RIP3",
+    "OT_S81SL_LEP_ROS3"
+   ]
+  },
+  "dsdv_slice_lepe_nh_mus_C__t1": {
+   "verilog_defines": []
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "verilog_defines": [
+    "OT_S81SL_LEP_CRP2",
+    "OT_S81SL_LEP_WREP5",
+    "OT_S81SL_LEP_RIP3",
+    "OT_S81SL_LEP_ROS3"
+   ]
+  },
+  "dsdv_slice_lepw_mu_C__t1": {
+   "verilog_defines": []
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "verilog_defines": [
+    "OT_S81SL_LEP_CRP2",
+    "OT_S81SL_LEP_WREP5",
+    "OT_S81SL_LEP_RIP1"
+   ]
+  },
+  "dsdv_slice_lepw_mus_C__t1": {
+   "verilog_defines": []
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "verilog_defines": [
+    "OT_S81SL_LEP_CRP2",
+    "OT_S81SL_LEP_WREP5",
+    "OT_S81SL_LEP_RIP1",
+    "OT_S81SL_LEP_TXQ3"
+   ]
+  }
+ }
+}
