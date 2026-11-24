@@ -35671,3 +35671,4 @@ FAILED [AUTOPILOT 47e0750418d4] 2026-11-23 21:02:15 PST AUTOPILOT -> KIT-WAVE-1:
   - rscap: CTS.
   - 66ce census: iteration 13/20.
   All 4 HEAD-R18 units are active. ETAs unchanged: 66ce about 22:30-23:00; E kit GRT reads 00:00-01:30. Next post by 21:55.
+- 2026-11-23 21:14 PST DONE [QC-ALLFIX-SU] ot-run oth-ubuntu-3765078-1795497048 on loved-redfish: rc=0 after 242 s, ended 05:14:46, log /srv/opentallas-scratch2/claude/QC-ALLFIX-SU/fix3_build.ot, cmd: --mem 24 --threads 2 --hosts epyc7 -- bash /srv/opentallas-scratch2/claude/QC-ALLFIX-SU/fix3_build.sh
