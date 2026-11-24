@@ -41024,3 +41024,4 @@ FAILED [AUTOPILOT bc9b1a8bd98b] 2026-11-24 07:39:39 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-24 07:45 PST AUTO-EXPORT s81/dsfd_su_t_ikw (spool epyc2:/srv/opentallas-scratch2/claude/ot-jobs/ikw_review_1124/archive_input/signoff_r3/signoff.json) RTX-FULL-AGI-META s81/dsfd_su_t_ikw__ax_c3717f5211 (full record rtx-pro, metadata+display AGIdock), ODB sha c3717f52118c, record dd6728e07acd, TT 166.46 FF -9.95, INDEX rows on both
 - 2026-11-24 07:45 PST CANARY qwen_compute @ b335c93437: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d032c7204_1121_101641_352907)
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 07:45 PST TAKING S81-INTAKE-NORM-RXSB (fresh, post-limit): independent ACCEPT/HOLD review of Codex FOR-CLAUDE intakes Norm Finish RF1 f026a96f9c37 and DS85 RXSB 2f207633a396 (E9 c9). Read-only; cc S81-ALLFIX-INT.
