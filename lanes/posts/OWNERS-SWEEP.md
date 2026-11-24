@@ -465,3 +465,8 @@
   DEAD-OWNER (no post since 01:50): FAM-S81-COL-H9R0-R4 60 (last 01:19), OPUS-FIX-S81-SVC-R9 16 (23:14), S81-OPEN-FSTART 2, KIT-FWDCLK-SDC 1, WATCHDOG-SWEEP 1.
   STALE S81 35 (mostly superseded), QC 2 (tt_ctlm, glue).
   col_h10_r2 12 rows: S81-ALLFIX-INT 10 + SEAT-MATCH-AUDIT 2, both posted 03:13-03:49; not RSTSOLVE.
+- 2026-11-24 04:54 PST OWNERS-SWEEP 04:5x (446 rows); reassignments applied, all new lanes posted 03:53-04:50. S81 UNOWNED 0, DEAD-OWNER 0, FAILED 0, HEAD clean.
+  21 rows WAITING-GATE (C8: col_h10_r2, svc, LP, serdes), not STALE. S81 STALE 14 remain (col_h10_r0/r1 under ALLFIX-INT/B1-RTHOPS).
+  KV DEAD-OWNER 22: KV-OWN-PV 21 (kv3_pv_*, last post 02:34), KV-HUB-HOLD 1 (kv3_hub_Eo, 22:55).
+  QC STALE 2: glue (QC-ALLFIX, superseded), tt_ctlm (FLOW-OPS-R3).
+  Nothing else flagged.
