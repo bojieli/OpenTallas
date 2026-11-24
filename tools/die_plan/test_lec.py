@@ -1660,3 +1660,41 @@ def test_check_records_yosys_version(tmp_path, monkeypatch):
     assert rec["verdict"] == "ERROR"
     on_disk = json.loads((tmp_path / "out" / "lec.json").read_text())
     assert on_disk["yosys"]["version"].startswith("Yosys 0.67") and on_disk["yosys"]["ok"] is False
+
+
+@pytest.mark.parametrize("drop", ["none", "fill", "hypothesis", "constraint", "new_fill"])
+def test_auto_fill_preserves_proved_relations(monkeypatch, tmp_path, drop):
+    # A hint refinement can converge with a smaller proof set even when it retains some fills.
+    from types import SimpleNamespace
+
+    anchor = ("gate", "ff:u_dut.a")
+    previous_fill = ("gold", "ff:u_dut.s1")
+    new_fill = ("gold", "ff:u_dut.s2")
+    hypotheses = {anchor: ("const", 0)}
+    if drop != "new_fill":
+        hypotheses[previous_fill] = ("fill", 0, None)
+    constraints = [("gold", ["ff:u_dut.st"], [[0]])]
+    L = SimpleNamespace(hyp=dict(hypotheses), cons=list(constraints))
+    monkeypatch.setattr(lec, "fill_proposals", lambda *_: [["gold", new_fill[1], ["fill", 0, None]]])
+
+    def apply(design, *_):
+        if drop != "new_fill":
+            design.hyp[new_fill] = ("fill", 0, None)
+        if drop == "fill":
+            del design.hyp[previous_fill]
+        if drop == "hypothesis":
+            del design.hyp[anchor]
+        if drop == "constraint":
+            design.cons.clear()
+        return {"kept": len(design.hyp)}
+
+    monkeypatch.setattr(lec, "apply_hints", apply)
+    rec = {}
+    lec.auto_fill(L, rec, tmp_path, 1, [])
+    assert L.cons == constraints
+    if drop == "none":
+        assert L.hyp == {**hypotheses, new_fill: ("fill", 0, None)}
+        assert rec["auto_fill"]["kept"] == 2
+    else:
+        assert L.hyp == hypotheses
+        assert rec["auto_fill"]["lost_undone"] == (0 if drop == "new_fill" else 1)

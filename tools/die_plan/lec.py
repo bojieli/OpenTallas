@@ -7370,7 +7370,7 @@ def auto_fill(L, rec, work, conflicts, log):
     OT_LEC_AUTO_FILL_ITERS, default 4).  Each refinement round re-runs noreset_filter, which can drop further constant
     hypotheses (rxsb 11-23: 29 more, d_u.line[319] / rad_st[10][*], after the first proposal); the chains they fed then
     fail as false roots.  The next pass proposes those newly dropped constants too, with the fills kept so far as
-    predecessors.  The hypothesis set of the last converged pass is restored when a pass does not converge.
+    predecessors. A pass is kept only if it proves a fill without losing a previously proved hypothesis or constraint.
     -> rec['auto_fill'] = dict(proposed, kept, dropped, refused, passes, first)."""
     iters = max(1, int(os.environ.get("OT_LEC_AUTO_FILL_ITERS", "4") or 4))
     out = dict(proposed=0, kept=0, dropped=0, refused=0, passes=0, first=[])
@@ -7388,12 +7388,20 @@ def auto_fill(L, rec, work, conflicts, log):
         out["proposed"] = max(out["proposed"], len(auto))
         out["dropped"] += len(r.get("dropped") or [])
         out["refused"] += len(r.get("fill_refused") or [])
-        if not r.get("kept"):
+        kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "fill")
+        # never a net loss: an unfilled fill register reads as X, so a hypothesis that held with it free can fail
+        # its not-X obligation (hc3 cld86 11-23: 0 fills kept, 369 other hypotheses dropped).  Such a pass, one that
+        # keeps no fill, or one that does not converge is undone.
+        lost = keep_hyp.keys() - L.hyp.keys()
+        lost_constraints = sum(c not in L.cons for c in keep_cons)
+        if not r.get("kept") or not kept or lost or lost_constraints:
             L.hyp.clear(); L.hyp.update(keep_hyp)
             L.cons[:] = keep_cons
-            log.append(f"auto pipeline-fill pass {it + 1}: refinement did not converge; hypotheses restored")
+            out["lost_undone"] = out.get("lost_undone", 0) + len(lost) + lost_constraints
+            log.append(f"auto pipeline-fill pass {it + 1}: undone (converged={bool(r.get('kept'))}, "
+                       f"fills kept={len(kept)}, hypotheses lost={len(lost)}, "
+                       f"constraints lost={lost_constraints}); hypotheses restored")
             break
-        kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "fill")
         log.append(f"auto pipeline-fill pass {it + 1}: {len(kept)} of {len(auto)} fills kept")
     kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "fill")
     out["kept"], out["first"] = len(kept), kept[:20]
