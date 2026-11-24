@@ -34,3 +34,4 @@ Baseline 4_1_cts.odb not in kit results yet (only rpt); full census later.
 Copies variants (epyc11 QC-SLECTL-RESYN/cp/{cp8,cp89}, mk_copies.py, lecsel.sh proven + mutant caught; run.ot; goal cts). Full LEC of wrapper still owed. RP-BANK probe = spec hub private_specs/QC-SLECTL-RESYN/qwen_compute_sle_ctl__cla4f6f12f_1123235320 (epyc11). RP-SEL probe spec _1123214009 (epyc8). FABLE 23:15 checks on RP-BANK: region density, u_rp/stations not displaced, landing->f->bank hops, taps, buffer count.
 No remote sleep loops in the foreground: use background waiters.
 00:00 PST 11-24: RP-BANK spec _1123235320 has wrong --why text (says RP-SEL), tree is RP-BANK e6ddac1f0432. Data-path trace: epyc8 sta_base/trace2.log. Waiters live: RP-SEL 4_cts (epyc8), cp8/cp89 (epyc11 cp/*/run.ot), RP-BANK launch.out (intel2).
+01:40 RESULT RP-SEL posted: TNS -30337 -> -4390, select class 0, data 94 ends -283; hold TNS -84694. sta_rp on epyc8.
