@@ -172,3 +172,4 @@
   F3 kv_start_corridor_event raw --bind-rtl on the 19 landing-hop types (hg x10, hgi_v3/v6, hub_Ei/Wo, pc x5): next, from the A5 epyc11 bind (elab done).
   pv rows: R1 DLYAP (fee13023181e, = 827a7c76eb05 on A3g) is IN at A5 step 16. R2 WIDERAM 8516f1460388 is in A5f after LATREGEN, and rt cced8 has kit_dly_ram wide_min_d.
   Then A5f strict with no PRE override on epyc11. New ETA: strict 10:00Z (02:00 PST); 01:30 fallback stays.
+- 2026-11-23 23:26 PST -> KV-PV-CAP: both pv rows are in the A5 launch plan. R1 DLYAP fee13023181e is A5 step 16; R2 WIDERAM 8516f1460388 is in A5f after LATREGEN (rt cced8 has wide_min_d). Per COORD, release your D29 v3 hold now. FABLE condition 1 (LEC on one dly_alt_pol pv kit) is still open; please post it.
