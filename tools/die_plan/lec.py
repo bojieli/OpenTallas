@@ -8056,10 +8056,40 @@ def rename_collision_reason(script, out, side, log, rec, err):
             f"function `automatic` in the RTL")
 
 
+# LEC-YOSYS-MIN (FABLE 11-24, class LEC-DFFASRHQN-MODEL): yosys 0.67 read_liberty imports ASAP7 DFFASRHQNx1 with the
+# async set active whenever SETN = 1 (every async-reset flop held in reset), which this check's async2sync model would
+# inherit.  The fleet image (yosys 0.68+post) imports it correctly (clear !SETN, preset !RESETN & SETN).  Every lec.json
+# records the yosys that ran; a yosys older than YOSYS_MIN, or one whose version cannot be read, is refused (ERROR).
+YOSYS_MIN = (0, 68)
+
+
+def yosys_bin():
+    y = ORFS + "/tools/install/yosys/bin/yosys"
+    return y if os.access(y, os.X_OK) else (shutil.which("yosys") or "yosys")
+
+
+def parse_yosys_version(text):
+    """'Yosys 0.68+post (git sha1 ...)' -> (0, 68); None when no version is found."""
+    m = re.search(r"\bYosys\s+(\d+)\.(\d+)", text or "")
+    return (int(m.group(1)), int(m.group(2))) if m else None
+
+
+def yosys_version_info():
+    """-> dict(version, bin, min, ok) for the yosys run_yosys will call."""
+    y = yosys_bin()
+    try:
+        r = subprocess.run([y, "-V"], capture_output=True, text=True, timeout=120)
+        txt = ((r.stdout or "") + (r.stderr or "")).strip()
+    except (OSError, subprocess.SubprocessError) as e:
+        txt = f"{type(e).__name__}: {e}"
+    v = parse_yosys_version(txt)
+    return dict(version=(txt.splitlines() or [""])[0][:200], bin=y, min="%d.%d" % YOSYS_MIN,
+                ok=bool(v is not None and v >= YOSYS_MIN))
+
+
 def run_yosys(script, path, log):
     Path(path).write_text(script)
-    y = ORFS + "/tools/install/yosys/bin/yosys"
-    y = y if os.access(y, os.X_OK) else (shutil.which("yosys") or "yosys")
+    y = yosys_bin()
     r = subprocess.run([y, "-q", "-l", str(path) + ".log", "-s", str(path)], capture_output=True, text=True)
     if r.returncode:
         err = [l for l in (Path(str(path) + ".log").read_text(errors="replace").splitlines()
@@ -8326,6 +8356,10 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
     rec = dict(schema=SCHEMA, kit=kit, generated=time.strftime("%Y-%m-%dT%H:%M:%S%z"), verdict="UNPROVEN")
     log = []
     try:
+        rec["yosys"] = yosys_version_info()
+        if not rec["yosys"]["ok"]:
+            raise LecError(f"yosys {rec['yosys']['version']!r} ({rec['yosys']['bin']}) is older than "
+                           f"{rec['yosys']['min']} or unreadable: refused (LEC-YOSYS-MIN, 0.67 DFFASRHQN import)")
         env = parse_config(kit)
         top = env["DESIGN_NAME"]
         rec["reset_contract"] = reset_contract_gate(kit, top)

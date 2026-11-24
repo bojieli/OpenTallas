@@ -1613,3 +1613,47 @@ def test_fill_proposals_kept_fill_is_predecessor_of_newly_dropped(tmp_path):
     L.noreset_dropped = {("gold", "ff:u_dut.s2"): 0}
     h = lec.fill_proposals(L, [])
     assert h == [["gold", "ff:u_dut.s1", ["fill", 0, None]], ["gold", "ff:u_dut.s2", ["fill", 0, "ff:u_dut.s1"]]]
+
+
+def _fake_yosys(tmp_path, banner):
+    y = tmp_path / "yosys"
+    y.write_text(f"#!/bin/sh\necho '{banner}'\n")
+    y.chmod(0o755)
+    return str(y)
+
+
+def test_parse_yosys_version():
+    assert lec.parse_yosys_version("Yosys 0.68+post (git sha1 UNKNOWN, Release)") == (0, 68)
+    assert lec.parse_yosys_version("Yosys 0.9 (git sha1 1979e0b)") == (0, 9)
+    assert lec.parse_yosys_version("Yosys 1.2") == (1, 2)
+    assert lec.parse_yosys_version("command not found") is None
+    assert lec.parse_yosys_version("") is None
+
+
+@pytest.mark.parametrize("banner,ok", [("Yosys 0.67 (git sha1 abc)", False), ("Yosys 0.68+post (git sha1 x)", True),
+                                        ("Yosys 0.70", True), ("Yosys 0.9", False), ("no version here", False)])
+def test_yosys_version_gate(tmp_path, monkeypatch, banner, ok):
+    monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(tmp_path, banner))
+    info = lec.yosys_version_info()
+    assert info["ok"] is ok and info["min"] == "0.68" and info["version"] == banner
+
+
+def test_check_records_and_refuses_old_yosys(tmp_path, monkeypatch):
+    """lec.json carries the yosys version; yosys 0.67 (DFFASRHQN set-stuck import) is refused before any work."""
+    monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(tmp_path, "Yosys 0.67 (git sha1 abc)"))
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    rec = lec.check(str(kit), out=str(tmp_path / "out"))
+    assert rec["verdict"] == "ERROR" and "LEC-YOSYS-MIN" in rec["reason"]
+    assert rec["yosys"]["version"].startswith("Yosys 0.67") and rec["yosys"]["ok"] is False
+    on_disk = json.loads((tmp_path / "out" / "lec.json").read_text())
+    assert on_disk["yosys"]["version"].startswith("Yosys 0.67")
+
+
+def test_check_records_new_yosys_and_continues(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "yosys_bin", lambda: _fake_yosys(tmp_path, "Yosys 0.68+post (git sha1 UNKNOWN)"))
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    rec = lec.check(str(kit), out=str(tmp_path / "out"))
+    assert rec["yosys"]["ok"] is True
+    assert "LEC-YOSYS-MIN" not in (rec.get("reason") or "")   # it went on to parse the (empty) kit
