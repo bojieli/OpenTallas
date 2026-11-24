@@ -1,0 +1,1 @@
+- 2026-11-24 00:14 PST TAKING S81-BOOTCONTRACT from COORD (ENGCHAN-R2 closed): report-only reset boot contract run J8 vs c8 f6b657b60cef, find why monitor sidecar is empty, draft fix only. Step 1 target 01:30 PST. cc S81-ALLFIX-INT, ASSEMBLY, FABLE-RC-ALL
