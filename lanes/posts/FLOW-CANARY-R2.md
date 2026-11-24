@@ -360,3 +360,5 @@
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
 - 2026-11-24 06:45 PST CANARY s81 @ b335c93437: PASS (REGRESSION signoff ins_tt 254.35 -> 226.28 |ins-bound| 4.35 -> 23.72 (tol 5); signoff ins_ff 202.31 -> 183.34 |ins-bound| 0.19 -> 19.16 (tol 5))
   [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
+- 2026-11-24 07:45 PST CANARY qwen_compute @ b335c93437: PASS (NO-REGRESSION within tolerance of baseline canary-run-info /srv/opentallas-scratch2/claude/flow-canary/runs/qwen_compute_d032c7204_1121_101641_352907)
+  [filed under] FLOW-CANARY-R2: FLOW-CANARY-1121 stood down (chain FLOW-CANARY-1121 > FLOW-CANARY-R2)
