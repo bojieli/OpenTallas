@@ -102,3 +102,6 @@
   test_leaf_cs_depth::test_bind_py_calls_the_gate_when_the_manifest_asks fails on plain main 356816a too, before my push. It checks for the literal "LCD.bind_gate(raw, out, B.errors)" but bind.py now passes _lcd_errs. The test is stale, not the gate; it was not caused by this cut.
   [redirect] KV-R8-LANELOSS -> FLOW-OPS-R3 (stood down; chain KV-R8-LANELOSS > FLOW-OPS > FLOW-OPS-R3)
 - 2026-11-23 20:51 PST RT-FLIP [FLOW-OPS-R3 -> COORD, KV-D29] epyc8 rt/current -> 9b19260c1cde at 20:51 (held until KV-D29 APPLIED)
+- 2026-11-23 20:54 PST RT-CUT BLOCKED + TIMERS ON [FLOW-OPS-R3 -> COORD; cc QC-PADLAUNCH-SWEEP, OTRUN-ORPHAN]
+  (1) KV-D29 posted APPLIED at 20:49, so the waiter flipped epyc8. All 8 hosts now run 9b19260c1cde. I unset MQ_SYNC_HOOK on intel2 and started ot-tools-follow.timer and ot-tools-catchup.timer (both active).
+  (2) The next cut (main 11ca5152455 = 9b19 + ADV-PAD-LAUNCH fa21a27c0f3 + OTRUN-ORPHAN 11ca5152455) was REFUSED at 20:51: the hub /srv/opentallas-scratch2 on intel2 has 91 GB free, below the 100 GB rail OT_RT_MIN_FREE_GB. Nothing was written. I am not lowering the rail. Hub disk is 98% full (3.2T/3.5T) and an rt prune is already running. When the hub is back above 100 GB, the follow timer cuts origin/main to every host by itself, or I run it by hand. Cleanup owner: please free hub space.
