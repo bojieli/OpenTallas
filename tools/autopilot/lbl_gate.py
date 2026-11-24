@@ -4,7 +4,8 @@ Rule: a NEW launch of an unsigned type -- a relaunch of a failed attempt, or the
 row in ~/coord/lanes/VIS-COVERAGE.tsv (column 9, row_status) says the family was looked at and fixed:
 
   allowed   PROBE-PASS, NONE-NEEDED, and the later states IN-EVENT, SIGNED (the header orders DRAFT|PRE-PASS|PROBE-PASS|IN-EVENT|SIGNED|NONE-NEEDED;
-            LAUNCH-GUARD ruling: a state past PROBE-PASS is not held, the less restrictive reading)
+            LAUNCH-GUARD ruling: a state past PROBE-PASS is not held, the less restrictive reading), and PROBE-THROUGH (COORD 11-24 08:04 ruling (2),
+            VIS-REOWN: a DRAFT row past the 30-min visual-review SLA launches as a probe now; OWNER: probes never wait, review never blocks)
   refused   DRAFT, PRE-PASS (and any other status) -> reason LBL-<status>
   no row    not held (the tracker lists every unsigned type from OWNERS-SWEEP; a type it does not list has no verdict to wait for) -> LBL-NOROW, logged
 
@@ -22,7 +23,7 @@ import subprocess
 import time
 
 REFRESH_S = 300
-ALLOWED = ("PROBE-PASS", "NONE-NEEDED", "IN-EVENT", "SIGNED")
+ALLOWED = ("PROBE-PASS", "NONE-NEEDED", "IN-EVENT", "SIGNED", "PROBE-THROUGH")
 PROBE_GOALS = ("place", "geom", "cts", "grt")
 REL = "lanes/VIS-COVERAGE.tsv"
 CACHE = os.path.expanduser(os.environ.get("OT_LBL_CACHE", "~/.local/state/lbl/VIS-COVERAGE.tsv"))

@@ -58,6 +58,12 @@ def test_refused_statuses_and_allowed_statuses():
         assert LBL.check(item, die, rows=rows)[0] is False, item
 
 
+def test_probe_through_row_past_the_review_sla_launches():
+    rows = LBL.parse(vis(("S81", "s81sl_leaf__t31", "leaf", "PROBE-THROUGH"), ("KV", "kv3_hgi_v3", "kv3_hgi", "DRAFT")))
+    assert LBL.check("ot_s81sl_leaf__t31", "s81", rows=rows)[:2] == (False, "LBL-PROBE-THROUGH-OK")
+    assert LBL.check("kv3_hgi_v3", "qwen_kvsys", rows=rows)[:2] == (True, "LBL-DRAFT")
+
+
 def test_a_new_variant_takes_its_siblings_and_any_allowed_sibling_allows():
     rows = LBL.parse(TABLE)
     got = LBL.check("col_h10_r1__t1__cl95b37463__pvdeadbeef", "s81", rows=rows)
