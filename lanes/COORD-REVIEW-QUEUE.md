@@ -33776,3 +33776,4 @@ FAILED [AUTOPILOT a3029c31fe27] 2026-11-23 16:07:55 PST AUTOPILOT -> KIT-WAVE-3:
   - hg-QC-CLOCK-NDR-DROP on cbf_q00__cl1b5a6458 + sle_st_a_v1__cl989804f6__cl18eece69: held.
   - x7 on slw_fe_v2__clf110fab2: held.
   Release condition for each: the first C4-bound GRT probe of that type shows 0 GRT-0273. The x5 C4 st_a GRT kit (slw_st_a_v2__clf4365a62, live on epyc8) reports GRT-0273 together with DPL-0033.
+- 2026-11-23 16:16 PST DONE [FLOW-OPS-R3] ot-push-main otpush-civil-redfish-1994097 on civil-redfish: rc=0 after 1 s, ended 00:16:31, log /srv/opentallas-scratch2/claude/FLOW-OPS-R3/tmp/brs_push.log, cmd: ot-push-main 
