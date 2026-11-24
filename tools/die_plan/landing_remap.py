@@ -31,7 +31,17 @@ referenced name, else the OLD plan's own clock.reset_tree_anchor (recorded on th
 S81 J8 tap rows: the rebuilt J7 tree reused 53 types' landing names at other depths (leaf__t1 rst_rl_674 bound depth 17, rebuilt
 12), so the names were "kept" and the strict bind failed 53 EMIT "release edge would move" + 37 LF_CS_DEPTH.
 
+RESET NODES (LANDREMAP-RSTNODE 11-23, FABLE-RC-KV; was the hand row ROWS_KV-RSTNAME-REMAP a84045c95c5c after the KV A3 +112.32 um
+grow: kv3_hroot 27 finals rst_n_t11 -> rst_n_t12, kv3_io_ft_v1 5 chains): the passes above rewrite rst_rl_<k> and clk_t<i> but a
+landing_raw_branches FINAL names a tap reset node rst_n_t<i>, which the grow renumbers too.  Every mode now ends with the
+reset-node pass: (1) a final naming at the same branch the same rst_n_t<i> as OLD whose NEW site is not its OLD site (+ the
+type's outline growth) -> the unique NEW node of that class + kind at the OLD site (reset_resel walks up from it); (2) every
+all-tree branch is rebuilt from its final over the NEW D links (literal-predecessor rule).  No unique node / a chain that
+reaches the root -> receipt rstnode_unresolved (listed, not fatal).  --resets rstnode runs this pass alone (a plan whose
+other names an earlier landing_remap already took).
+
   python3 landing_remap.py OLD_PLAN NEW_PLAN OUT [--types T1,T2] [--root DIR] [--receipt FILE] [--keep-anchor] [--bound-rtl DIR]
+                           [--resets resel|anchor|identity|rstnode]
 """
 import json
 import re
@@ -287,6 +297,185 @@ def bound_old_tree(tn, t_old, bound_rtl=None):
     return None
 
 
+RSTNODE = re.compile(r"^(rst_n_t\d+|rst_rl_\d+)$")
+
+
+def _rn_cls(n):
+    return "rst_n_t" if n.startswith("rst_n_t") else "rst_rl"
+
+
+def _rn_finals(t):
+    """{branch index: final stage original} of the type's landing_raw_branches whose final is a tap reset node rst_n_t<i>"""
+    out = {}
+    for i, b in enumerate(((t.get("clock") or {}).get("landing_raw_branches")) or []):
+        st = b.get("stages") or []
+        if st and isinstance(st[-1].get("original"), str) and st[-1]["original"].startswith("rst_n_t"):
+            out[i] = st[-1]["original"]
+    return out
+
+
+def rstnode_old_key(old_raw, new_raw, tn):
+    """the OLD plan type a NEW type's reset nodes are compared with: the same name, else its base_type, else the name with
+    R8 / clone suffixes stripped (R8SPLIT clones); None when OLD has none"""
+    ot, nt = old_raw["partition_types"], new_raw["partition_types"]
+    if tn in ot:
+        return tn
+    for b in ((nt[tn] or {}).get("base_type"), re.sub(r"(__r8[0-9a-f]{8}|__cl[0-9a-f]{8})+$", "", tn)):
+        if b and b in ot:
+            return b
+    return None
+
+
+def rstnode_map(t_old, t_new, old_tree, new_tree, tol_um=1.0):
+    """LANDREMAP-RSTNODE (11-23, FABLE-RC-KV; rule of ROWS_KV-RSTNAME-REMAP a84045c95c5c): a die grow / re-floor renumbers
+    the tap reset nodes rst_n_t<i> of the re-solved reset tree, while a landing_raw_branches FINAL names one literally (the
+    consumer's reset equation; bind-fatal 'origin reset phase/equation differs').  Identity = site + kind: a final that names
+    at the same branch index the same rst_n_t<i> as OLD and whose NEW site is not its OLD site (OLD xy, or OLD xy + the
+    type's outline growth dx / dy) is renamed to the unique NEW node of the same class and kind at the OLD site (tol_um).
+    Names already renamed since OLD are kept.  old_tree / new_tree: reset trees {relays: [{q, d, xy, kind}]}.
+    -> ({branch index: (old name, new name)}, [unresolved rows])"""
+    of, nf = _rn_finals(t_old), _rn_finals(t_new)
+    old = {r["q"]: r for r in old_tree.get("relays") or []}
+    new = {r["q"]: r for r in new_tree.get("relays") or []}
+    ow, nw = t_old.get("outline_um") or [0, 0], t_new.get("outline_um") or [0, 0]
+    dx, dy = float(nw[0]) - float(ow[0]), float(nw[1]) - float(ow[1])
+    shifts = sorted({(0.0, 0.0), (dx, 0.0), (0.0, dy), (dx, dy)})
+
+    def at(r, xy):
+        return abs(float(r["xy"][0]) - xy[0]) + abs(float(r["xy"][1]) - xy[1]) <= tol_um
+    mp, bad, memo = {}, [], {}
+    for i, n in sorted(nf.items()):
+        if of.get(i) != n or n not in old:
+            continue
+        if n in memo:
+            if memo[n]:
+                mp[i] = (n, memo[n])
+            continue
+        memo[n] = None
+        o = old[n]
+        sites = [(float(o["xy"][0]) + a, float(o["xy"][1]) + b) for a, b in shifts]
+        if n in new and new[n].get("kind") == o.get("kind") and any(at(new[n], s) for s in sites):
+            continue
+        cand = sorted({m for m, r in new.items() if _rn_cls(m) == _rn_cls(n) and r.get("kind") == o.get("kind")
+                       and any(at(r, s) for s in sites)})
+        if len(cand) != 1:
+            bad.append(dict(branch=i, name=n, old_xy=list(o["xy"]), candidates=cand[:4]))
+            continue
+        memo[n] = cand[0]
+        mp[i] = (n, cand[0])
+    return mp, bad
+
+
+def rstnode_apply(t_new, mp, new_tree):
+    """rename the landing_raw_branches finals through mp {branch index: (old, new)}, then rebuild each branch whose final is a node of new_tree from
+    that final by walking the NEW D links back over the same number of stages (base = the next D): every stage then meets
+    the bind's literal-predecessor rule on the solved tree.  Stage sites are kept; a branch on a landing-side relay
+    (cland_reset_<bus>) or another non-tree name is never touched.  -> (changes, unresolved)"""
+    new = {r["q"]: r for r in new_tree.get("relays") or []}
+    ch, bad = [], []
+    for i, b in enumerate(((t_new.get("clock") or {}).get("landing_raw_branches")) or []):
+        stg = b.get("stages") or []
+        if not stg:
+            continue
+        fin = stg[-1].get("original")
+        if i in mp and fin == mp[i][0]:
+            stg[-1]["original"] = fin = mp[i][1]
+        if not isinstance(fin, str) or not RSTNODE.match(fin) or any(
+                not (isinstance(s.get("original"), str) and RSTNODE.match(s["original"])) for s in stg):
+            continue
+        if fin not in new:
+            bad.append(dict(branch=i, name=b.get("name"), final=fin, why="final not in the NEW tree"))
+            continue
+        chain, q = [fin], fin
+        for _ in range(len(stg)):
+            q = new[q].get("d") if q in new else None
+            if q is None:
+                break
+            chain.append(q)
+        if len(chain) != len(stg) + 1:
+            bad.append(dict(branch=i, name=b.get("name"), final=fin, why="chain reaches the root"))
+            continue
+        chain.reverse()
+        was = [b.get("base")] + [s.get("original") for s in stg]
+        if was != chain:
+            b["base"] = chain[0]
+            for s, q in zip(stg, chain[1:]):
+                s["original"] = q
+            ch.append(dict(branch=i, name=b.get("name"), was=was, now=chain))
+    return ch, bad
+
+
+def rstnode_old_tree(t_old, tn_old, old_raw, tree_fn, need):
+    """the OLD reset tree: the OLD type's stored landing_contract.collector_tree (the tree it was published / bound with)
+    when it carries every needed name, else tree_fn(old_raw, tn_old)"""
+    st = ((t_old.get("clock") or {}).get("landing_contract") or {}).get("collector_tree") or {}
+    if need <= {r.get("q") for r in st.get("relays") or [] if r.get("xy") is not None}:
+        return st
+    return tree_fn(old_raw, tn_old)
+
+
+def rstnode_plan(old_raw, new_raw, names, tree_fn, tol_um=1.0):
+    """rule 1 maps of every type (see rstnode_map).  -> ({type: {branch: (old, new)}}, {type: new tree}, unresolved, skipped)"""
+    maps, trees, bad, skipped = {}, {}, [], []
+    for tn in names:
+        t_new = new_raw["partition_types"][tn]
+        if not isinstance(t_new, dict) or t_new.get("hard") or not ((t_new.get("clock") or {}).get("landing_raw_branches")):
+            continue
+        ok = rstnode_old_key(old_raw, new_raw, tn)
+        try:
+            trees[tn] = tree_fn(new_raw, tn)
+        except Exception as e:  # noqa: BLE001
+            skipped.append(f"{tn}: reset-node pass skipped (NEW reset tree not built: {type(e).__name__})")
+            continue
+        if ok is None:
+            continue
+        t_old = old_raw["partition_types"][ok]
+        nf, of = _rn_finals(t_new), _rn_finals(t_old)
+        need = {n for i, n in nf.items() if of.get(i) == n}
+        if not need:
+            continue
+        try:
+            otree = rstnode_old_tree(t_old, ok, old_raw, tree_fn, need)
+        except Exception as e:  # noqa: BLE001
+            skipped.append(f"{tn}: reset-node rule 1 skipped (OLD reset tree not built: {type(e).__name__})")
+            continue
+        mp, b = rstnode_map(t_old, t_new, otree, trees[tn], tol_um)
+        if mp:
+            maps[tn] = mp
+        bad += [dict(type=tn, **x) for x in b]
+    return maps, trees, bad, skipped
+
+
+def rstnode_old_view(old_raw, maps):
+    """OLD plan view whose landing_raw_branches finals carry the rule-1 names (reset_resel walks UP from the OLD final):
+    only the touched types are copied"""
+    if not maps:
+        return old_raw
+    import copy as _copy
+    v = dict(old_raw)
+    v["partition_types"] = dict(old_raw["partition_types"])
+    for tn, mp in maps.items():
+        if tn not in v["partition_types"]:
+            continue
+        t = v["partition_types"][tn] = _copy.deepcopy(old_raw["partition_types"][tn])
+        for i, b in enumerate(((t.get("clock") or {}).get("landing_raw_branches")) or []):
+            st = b.get("stages") or []
+            if st and i in mp and st[-1].get("original") == mp[i][0]:
+                st[-1]["original"] = mp[i][1]
+    return v
+
+
+def rstnode_finish(new_raw, maps, trees, rec):
+    """apply rule 1 + rule 2 on every type of trees; fill rec['rstnodes'] / rec['rstnode_unresolved']"""
+    for tn in sorted(trees):
+        ch, bad = rstnode_apply(new_raw["partition_types"][tn], maps.get(tn, {}), trees[tn])
+        mp = maps.get(tn, {})
+        if ch or mp:
+            rec["rstnodes"].append(dict(type=tn, renames=dict(sorted({a: b for a, b in mp.values()}.items())),
+                                        finals_renamed=len(mp), chains=ch))
+        rec["rstnode_unresolved"] += [dict(type=tn, **x) for x in bad]
+
+
 def resel_resets(old_raw, new_raw, names, plan_dir):
     """default reset step: street_rule.reset_resel (exports, pin sources, START stages, local resets by role + depth +
     nearest old site).  -> {type: record}; mutates new_raw."""
@@ -333,7 +522,8 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         return plans[id(raw)]
     if groups_fn is None:
         groups_fn = lambda raw, tn: tap_groups(plan(raw), tn)  # noqa: E731
-    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[], identity=[], resel_fallback={}, old_tree={})
+    rec = dict(resets=[], taps=[], skipped=[], adopted={}, anchors=[], identity=[], resel_fallback={}, old_tree={},
+               rstnodes=[], rstnode_unresolved=[])
 
     def _tree_fn():
         if tree_fn is not None:
@@ -345,6 +535,20 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         import reset_tree as RT
         return RT.relay_um(plan(new_raw))
     names = [tn for tn in new_raw["partition_types"] if (not types or tn in types) and tn in old_raw["partition_types"]]
+    # LANDREMAP-RSTNODE: the reset-node pass also covers NEW-only types (R8 / clone splits) through their OLD base type
+    rn_names = names + [tn for tn in new_raw["partition_types"] if (not types or tn in types) and tn not in old_raw["partition_types"]
+                        and rstnode_old_key(old_raw, new_raw, tn) is not None]
+
+    def _rstnode_plan():
+        maps, trees, bad, sk = rstnode_plan(old_raw, new_raw, rn_names, _tree_fn())
+        rec["rstnode_unresolved"] += bad
+        rec["skipped"] += sk
+        return maps, trees
+    if resets == "rstnode":                             # LANDREMAP-RSTNODE: the reset-node pass alone
+        maps, trees = _rstnode_plan()
+        rstnode_finish(new_raw, maps, trees, rec)
+        rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, _tree_fn(), _relay_um)
+        return rec
     if adopt:
         for tn in names:
             ad = adopt_by_key(old_raw["partition_types"][tn], new_raw["partition_types"][tn])
@@ -367,8 +571,10 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             rec["taps"].append(dict(type=tn, remaps=rows))
     if ident_fn is None:
         ident_fn = lambda raw, tn: relay_identity_map(_tree_fn()(raw, tn))  # noqa: E731
+    rn_maps, rn_trees = _rstnode_plan()
     if resets == "identity":                            # PORTPAD-1122: identity pass only
         rec["identity"] = identity_remap(old_raw, new_raw, names, ident_fn)
+        rstnode_finish(new_raw, rn_maps, rn_trees, rec)
         rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, _tree_fn(), _relay_um)
         return rec
     if resets == "resel":
@@ -376,7 +582,8 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         fn = resel_fn or resel_resets
         keep = {tn: _xy_snapshot(new_raw["partition_types"][tn]) for tn in names} if keep_xy else {}
         pre = {tn: _copy.deepcopy(new_raw["partition_types"][tn]) for tn in names}
-        out = fn(old_raw, new_raw, [tn for tn in names], plan_dir)
+        # LANDREMAP-RSTNODE: reset_resel walks UP from the OLD final; hand it the rule-1 names
+        out = fn(rstnode_old_view(old_raw, rn_maps), new_raw, [tn for tn in names], plan_dir)
         for tn, r in list(out.items()):                 # PORTPAD-1122: a type reset_resel refuses goes to the identity pass alone
             if r.get("error") and tn in pre and "non-tree stage" in str(r["error"]):
                 new_raw["partition_types"][tn] = pre[tn]
@@ -401,6 +608,7 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         except RemapError as e:
             fb = "; ".join(f"{k}: reset_resel {v}" for k, v in rec["resel_fallback"].items())
             raise RemapError(str(e) + (f" (after {fb})" if fb else "")) from e
+        rstnode_finish(new_raw, rn_maps, rn_trees, rec)
         rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, _tree_fn(), _relay_um)
         return rec
     tree_fn = _tree_fn()
@@ -424,6 +632,7 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             del t_new["clock"][RA.KEY]
             if (t_old.get("clock") or {}).get(RA.KEY):
                 t_new["clock"][RA.KEY] = t_old["clock"][RA.KEY]
+    rstnode_finish(new_raw, rn_maps, rn_trees, rec)
     rec["anchors"] = rerecord_anchors(old_raw, new_raw, names, root, tree_fn, _relay_um)
     return rec
 
@@ -441,8 +650,9 @@ def main(argv):
     ap.add_argument("--keep-anchor", action="store_true")
     ap.add_argument("--move-pins", action="store_true", help="let reset_resel move export rows / landing pins onto the relay (default: rename only, pin sites kept)")
     ap.add_argument("--no-adopt", action="store_true", help="do not take stale compose names from OLD by key first")
-    ap.add_argument("--resets", choices=["resel", "anchor", "identity"], default="resel",
-                    help="resel (default; then the identity pass), anchor, or identity = the PORTPAD-1122 identity pass alone")
+    ap.add_argument("--resets", choices=["resel", "anchor", "identity", "rstnode"], default="resel",
+                    help="resel (default; then the identity pass), anchor, identity = the PORTPAD-1122 identity pass alone, or "
+                         "rstnode = the LANDREMAP-RSTNODE tap reset node pass alone (every mode runs it last)")
     ap.add_argument("--bound-rtl", help="rtl/ of the bind of record of OLD_PLAN: anchor mode reads the OLD relay depth + site there "
                                         "(then from OLD_PLAN's reset_tree_anchor; the rebuilt OLD tree is the last resort)")
     ap.add_argument("--rebuilt-old", action="store_true", help="anchor mode: ignore the bound tree, rebuild the OLD tree (pre 11-22 behaviour)")
@@ -464,7 +674,10 @@ def main(argv):
         print(f"  adopted by key {tn}: {len(ad)} name(s)")
     nr += len(rec.get("identity") or [])
     print(f"landing_remap: {nr} relay name(s), {nt} tap name(s) rewritten; skipped {len(rec['skipped'])}; "
-          f"reset anchors re-recorded {len(rec.get('anchors') or [])}")
+          f"reset anchors re-recorded {len(rec.get('anchors') or [])}; tap reset nodes: "
+          f"{sum(r['finals_renamed'] for r in rec.get('rstnodes') or [])} final(s) renamed, "
+          f"{sum(len(r['chains']) for r in rec.get('rstnodes') or [])} raw-branch chain(s) rebuilt, "
+          f"{len(rec.get('rstnode_unresolved') or [])} unresolved")
     for r in rec["resets"]:
         print(f"  reset {r['type']}: " + json.dumps({k: (len(v) if isinstance(v, list) else v) for k, v in r.items() if k != 'type'}))
         for where, name in (r["kept"] if isinstance(r.get("kept"), list) else []):   # anchor-mode receipts carry kept = a count
@@ -476,6 +689,10 @@ def main(argv):
         print(f"  reset {tn}: reset_resel refused ({e[:160]}); identity pass only")
     for r in rec.get("identity") or []:
         print(f"  identity {r['type']}: {r['path']} {r['old']} -> {r['new']} {tuple(r['identity'])}")
+    for r in rec.get("rstnodes") or []:
+        print(f"  rstnode {r['type']}: finals renamed {r['finals_renamed']} {json.dumps(r['renames'])}, raw-branch chains rebuilt {len(r['chains'])}")
+    for r in rec.get("rstnode_unresolved") or []:
+        print(f"  rstnode UNRESOLVED {r['type']}: " + json.dumps({k: v for k, v in r.items() if k != 'type'}))
     for r in rec["taps"]:
         for m in r["remaps"]:
             print(f"  tap {r['type']}: {m['name']} -> {m['to']} ({m['moved_um']} um, {m['shared_sinks']} shared sinks)")
