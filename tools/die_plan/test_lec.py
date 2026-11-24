@@ -1576,3 +1576,30 @@ def test_merged_copy_with_private_x_input_is_proposed(tmp_path):
     L2 = _x_twin_design(tmp_path, "b", "f")
     lec.merged_proposals(L2, [])
     assert ("gold", "ff:u_dut.k") not in L2.hyp
+
+
+def _fill_chain_design(tmp_path, tag, root_next):
+    """LEC-FILL-AUTO (s81 rxsb 11-23): a no-reset pipeline s1 <- constant, s2 <- s1, o <- s2 ^ d; synthesis folds s1/s2
+    to 0 (gate o <- d).  root_next(m, lits): s1's next state (0 = the real constant; d = a mutant, not a constant)."""
+    g, gm = _seq(tmp_path, "gold" + tag, ["d"], ["s1", "s2", "o"],
+                 lambda m, l: {"s1": root_next(m, l), "s2": l["s1"], "o": m.XOR(l["s2"], l["d"])})
+    t, tm = _seq(tmp_path, "gate" + tag, ["d"], ["o"], lambda m, l: {"o": m.XOR(l["d"], 0)})
+    return lec.Lec(g, gm, t, tm)
+
+
+def test_fill_proposals_chain_root_and_pred(tmp_path):
+    L = _fill_chain_design(tmp_path, "a", lambda m, l: 0)
+    assert L.gonly == ["ff:u_dut.s1", "ff:u_dut.s2"]
+    log = []
+    h = lec.fill_proposals(L, log, cands={"ff:u_dut.s1": 0, "ff:u_dut.s2": 0})
+    assert h == [["gold", "ff:u_dut.s1", ["fill", 0, None]], ["gold", "ff:u_dut.s2", ["fill", 0, "ff:u_dut.s1"]]], log
+    assert "auto pipeline-fill proposals: 2 of 2" in log[-1]
+
+
+def test_fill_proposals_skip_self_holding_register(tmp_path):
+    hold = lambda m, e, d, q: m.AND(m.AND(e, d) ^ 1, m.AND(e ^ 1, q) ^ 1) ^ 1
+    g, gm = _seq(tmp_path, "goldh", ["d", "e"], ["k", "o"],
+                 lambda m, l: {"k": hold(m, l["e"], 0, l["k"]), "o": m.XOR(l["k"], l["d"])})
+    t, tm = _seq(tmp_path, "gateh", ["d", "e"], ["o"], lambda m, l: {"o": m.XOR(l["d"], 0)})
+    L = lec.Lec(g, gm, t, tm)
+    assert lec.fill_proposals(L, [], cands={"ff:u_dut.k": 0}) == []      # loaded class, not a pipeline stage

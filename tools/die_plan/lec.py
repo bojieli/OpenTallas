@@ -7294,6 +7294,93 @@ def auto_loaded(L, rec, work, conflicts, log):
                               refused=len(r.get("loaded_refused") or []), first=kept[:20])
 
 
+def fill_proposals(L, log, cands=None, cap=20000):
+    """LEC-FILL-AUTO (RELEC-1122 11-23: s81 dsfd_su_t_rxsb 968 differ; S81 kv_leaf ikw 887 points from 107 registers in
+    ot_hgi_fp4qdq).  A gold-only register with NO reset on an every-cycle pipeline whose source is a constant (rxsb: the
+    i_u sign bits are tied 0, so hstep s1_sign -> d_cut line -> s2_sign -> s3_neg / s3_pf[27:26] all carry 0) is X until
+    the constant has ridden down to it; synthesis folds the chain to the constant, noreset_filter drops the constant
+    hypotheses and every compare point downstream 'differs'.  The approved pipeline-fill form (LEC-FPREG-6, apply_hints)
+    states exactly that RTL fact: k == (filled ? c : X), filled' = filled(pred).  This only PROPOSES such hints:
+    candidates are the gold-only constants noreset_filter dropped whose next state does not read their own state (a
+    self-holding register is the loaded class, loaded_proposals); pred = the candidate register in D(k)'s register
+    support with the deepest chain (all of a stage's sources are filled once its deepest one is), None = a chain root
+    (D(k) reads no candidate).  apply_hints proves every hint by the joint induction (filled' -> D(k) == c and not X),
+    refuses one whose reset-state value is the other constant and drops a wrong one; nothing is assumed or waived.
+    -> hint list."""
+    d, gp, gc = L.gold, L.gp, L.gc
+    if cands is None:
+        gonly = set(L.gonly)
+        cands = {k: c for (sd, k), c in getattr(L, "noreset_dropped", {}).items()
+                 if sd == "gold" and k in gonly}
+    cands = {k: c for k, c in cands.items() if k.startswith("ff:") and "__" not in k and k in gp and k in gc
+             and c in (0, 1) and gc[k] != gp[k] and k not in getattr(L, "unwritten", ())
+             and ("gold", k) not in L.hyp}
+    if not cands:
+        return []
+    I, Lc = d["I"], d["L"]
+    base = I + Lc + 1
+    ands = d["ands"]
+    sym = {lit >> 1: k for k, lit in gp.items()}
+    def regs(lit):
+        out, seen, st = set(), set(), [lit >> 1]
+        while st:
+            v = st.pop()
+            if v in seen or v == 0:
+                continue
+            seen.add(v)
+            if v in sym:
+                out.add(sym[v])
+            elif v >= base:
+                i = v - base
+                st.append(ands[2 * i] >> 1)
+                st.append(ands[2 * i + 1] >> 1)
+        return out
+    src = {}
+    for k in cands:
+        r = regs(gc[k])
+        if k in r:                                   # self-holding: loaded class, not a pipeline stage
+            continue
+        src[k] = sorted(x for x in r if x in cands)
+    depth, pred, todo = {}, {}, set(src)
+    while todo:
+        ready = [k for k in todo if all(x in depth for x in src[k] if x in src)]
+        if not ready:
+            break                                    # a cycle among candidates: left out (never assumed)
+        for k in ready:
+            ps = [x for x in src[k] if x in depth]
+            if len(ps) != len([x for x in src[k]]):
+                todo.discard(k)                      # reads a candidate that is not a pipeline stage
+                continue
+            pred[k] = max(ps, key=lambda x: (depth[x], x)) if ps else None
+            depth[k] = 1 + (depth[pred[k]] if pred[k] else 0)
+            todo.discard(k)
+    hints = [["gold", k, ["fill", cands[k], pred[k]]] for k in sorted(depth, key=lambda k: (depth[k], k))][:cap]
+    keep = {h[1] for h in hints}
+    hints = [h for h in hints if h[2][2] is None or h[2][2] in keep]
+    log.append(f"auto pipeline-fill proposals: {len(hints)} of {len(cands)} dropped no-reset constants "
+               f"({sum(1 for h in hints if h[2][2] is None)} chain roots)")
+    return hints
+
+
+def auto_fill(L, rec, work, conflicts, log):
+    """Default-on (OT_LEC_AUTO_FILL=0 disables): fill_proposals -> apply_hints.  The hypothesis set before is restored
+    when the refinement does not converge.  -> rec['auto_fill'] = dict(proposed, kept, dropped, refused, first)."""
+    auto = fill_proposals(L, log)
+    if not auto:
+        rec["auto_fill"] = dict(proposed=0)
+        return
+    keep_hyp, keep_cons = dict(L.hyp), list(L.cons)
+    r = apply_hints(L, auto, work, conflicts, log) or {}
+    kept = sorted(k for (sd, k), h in L.hyp.items() if h[0] == "fill")
+    if not r.get("kept"):
+        L.hyp.clear(); L.hyp.update(keep_hyp)
+        L.cons[:] = keep_cons
+        kept = []
+        log.append("auto pipeline-fill: refinement did not converge; hypotheses restored")
+    rec["auto_fill"] = dict(proposed=len(auto), kept=len(kept), dropped=len(r.get("dropped") or []),
+                            refused=len(r.get("fill_refused") or []), first=kept[:20])
+
+
 def scope_twin_proposals(L, log, cands_per_reg=4, words=16, seed=20261108, exclude=()):
     """LEC-SCOPE-TWIN (HBM-HARD-6-KSH 11-08, kshare v8e478a NOT EQUIVALENT 2/35744: lane[0].u_fill.rd_gray[2..3]).
     A gray-pointer FIFO keeps rd_bin and rd_gray, both loaded on rd_fire with rd_next / its gray code and both reset
@@ -8387,6 +8474,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             auto_twins(L, rec, out, conflicts, log)
         if os.environ.get("OT_LEC_AUTO_LOADED", "1") != "0":
             auto_loaded(L, rec, out, conflicts, log)
+        if os.environ.get("OT_LEC_AUTO_FILL", "1") != "0":
+            auto_fill(L, rec, out, conflicts, log)
         noreset_filter(L, log, collections.Counter(), out, conflicts)
         rec["noreset_constants"] = noreset_report(L)
         rec["noreset_constants"]["listing"] = noreset_listing(L, out / "noreset_constants.tsv")
