@@ -46,7 +46,9 @@ def emit(rows):
     for row in rows:
         if any(c in row['cell_glob']+row['id'] for c in '{}\\\n'):
             raise ValueError('unsafe soft CS bank identifier')
-        sites=' '.join('{%g %g}'%tuple(p) for p in row['bit_sites_um'])
+        # SITEGRID-1123: %.9g, not %g -- 6 significant digits moved the on-grid S81 leaf t31 site 1000.296 to 1000.3, off
+        # the 0.054 site grid (is_soft_cs_banks 'off row/site'); values of <= 6 digits print the same bytes as before
+        sites=' '.join('{%.9g %.9g}'%tuple(p) for p in row['bit_sites_um'])
         scalars = row.get('native_scalars', [])
         if any(any(c in scalar for c in '{}\n') for scalar in scalars):
             raise ValueError('unsafe native scalar identifier')

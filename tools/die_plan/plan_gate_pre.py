@@ -107,6 +107,14 @@ ANCHORDRY-1123 (RESET-ANCHOR-TAPGUARD-1123, COORD; S81 J9 slice C c1x_C t1/t10/t
   own collector_tree is compared, WARN ANCHORDRY-ADVISORY only.  $OT_ANCHORDRY_SOLVE=1 also dry-runs the bind's resolve() on the
   solved reset trees (anchor_dry.py; slow on wavefront dies): refusals / re-picks are WARN ANCHORDRY-ADVISORY.  Seconds by default.
 
+SITEGRID-1123 (ADV-SITEGRID-1123, FLOW-OPS-R3, COORD 16:1x; KV D29 HGFORM: 70,200 kv3_hg* o_ectl_Q_N_tN exact bank seats off
+  the native lattice, found only at global_place): every exact bank site the kit places verbatim (internal_stations
+  bit_sites_um / face_bit_sites_um, clock.soft_reg_banks bit_sites_um) must satisfy the kit's own predicate in integer DBU
+  (site_grid.py: round(x * dbu) - core_x0 a multiple of the 0.054 site, round(y * dbu) - core_y0 a row origin, CORE_AREA =
+  kit_fit.kit_core_area): else FAIL SITEGRID per type with the count, bank rows, examples and the nearest legal origin.  Macro
+  origins (origin + track_offset) off the manufacturing grid are WARN SITEGRID-MACRO; off the site column / row and plan cell
+  hints the kit legalises are counted in WARN SITEGRID-SUMMARY only (adopted kits place with them).  Seconds.
+
 ADVISORY (PRECHECK-R2, COORD 11-22; owner 11-19: an estimator, never a gate): plan_advisory.py's static checks (CORE-PARAM,
   GHOST-MACRO, SITE-COLLIDE, PORT-WINDOW-PAIR, DEPTH-VS-RTL, DENSITY, TAP-BUDGET, TAP-LOAD, ... BANK-OFFAREA) run on every check and add WARN ADV-<CHECK>
   lines only: they never change the verdict or the exit code.  They print with --quiet too and go to --json "advisories".
@@ -128,7 +136,7 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "ADVISORY")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM", "KITFIT", "FIXEDCYC", "ROWSINK", "MODULES", "TOOLSTALE", "LANDREMAP", "ABSPATH", "ISTCYC", "DEADIN", "TAPNAME", "R8STALE", "RELAYSINK", "EMITNAME", "RESETPUB", "MACROGHOST", "ANCHORDRY", "TOOLROOT", "SITEGRID", "ADVISORY")
 # GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
 # QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
 # every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
@@ -1605,6 +1613,10 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
     if "ANCHORDRY" not in skip:                          # ANCHORDRY-1123: anchored reset depths vs the remap base, seconds
         _abase = _base if _base else (rb if rb else remap_base(plan, remap, baseline)[0])
         findings += check_anchordry(tree, plan, base=_abase, solve=os.environ.get("OT_ANCHORDRY_SOLVE") == "1")
+    if "SITEGRID" not in skip:                           # SITEGRID-1123: exact bank sites on the kit site/row lattice, seconds
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import site_grid as SG
+        findings += SG.findings(_load(plan) or {})
     if "ABSPATH" not in skip:                            # ABSPATH-1122: inputs that die with a snapshot tree
         findings += abspath_findings(plan, tree, sidecar, abspath_level, already="\n".join(findings))
     if "KITFIT" not in skip:                             # KITFIT-1116: every hard core at its kit offset (origin + track_offset), every type
