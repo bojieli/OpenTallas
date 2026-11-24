@@ -197,3 +197,10 @@ S1 sealed at 7a0b97df40178816a6b450cc007914afc1dcc677001facf49f35361848f7dae9 wi
 - Waiter guard bug fixed (ls A B exited 2). East waiters restarted: head-r18-east-waiter2 (waiter_east/), head-r18-epin-waiter2 (waiter_epin2/), head-r18-rscap-waiter4 (waiter_rscap2/). A FAIL result older than the waiter is ignored as stale.
 - State: epin_r4 in CTS; r18g escape in 4_2 tapbal GRT, iteration 4/30; rscap in CTS; 66ce census at iteration 12/20.
 - 23:00 census at risk: post the 66ce read at 23:00, kit GRT reads 00:00-01:30. Hub progress every <=45 min.
+
+## 22:21 PST 11-23 s2 PUBLISHED
+- publish_apply apply (rt c66090747375) APPLY_RC 0. Event head_rp21z20NF15f_r18g, source kw45/snap_s81_head/s81_head_r18g_s2, manifest bdf71c06..., plan 5f4c.
+- Receipt: lanes/handoff/s81_head_atomic_apply_1795501160678569655.json. Holds preserved, including the East cap10 census hold.
+- Advisory pre_g0 FAIL explained in the hub post (LEP-WCHAN-3 rst_rl_17 shift; native release receipt not an input to the gate). Evidence in epyc7 head-r18/tmp/s2_preg0/.
+- No post-apply bind: the candidate is not bind-mode, so post_bind is null.
+- Still open: East kits in 4_2 tapbal GRT (escape, epin_r4, rscap) with waiters on intel2; 66ce census on intel1 with a session waiter.
