@@ -297,3 +297,15 @@ namespace eval ::ot_tap_rsplit {
  }
 }
 ::ot_tap_rsplit::run
+# LEP-RSPLIT-REPAIR-1 (HEAD-EAST-REPLAN 11-24, opt-in OT_TAP_RESET_SPLIT_REPAIR=1 from clock.tap_reset_split_repair): the copies
+# above sit at their sinks' centroid with the launcher's D / RESETN net shared, unbuffered (the placement repair_design ran
+# before them).  hd_lep0N rscap post-hook CTS: u_srl_302 -> u_rrl_303 copy 655 um slew 2906 ps (-468.7), u_rstr root ->
+# group copies slew 2800 ps (-785.8); one repair_design on the saved DB took both classes to >= -42 (1891 buffers).  Buffers
+# only: no register, no cycle, LEC unchanged.  Reports one line OT_TAP_RESET_SPLIT_REPAIR.
+if {[info exists ::env(OT_TAP_RESET_SPLIT_REPAIR)] && $::env(OT_TAP_RESET_SPLIT_REPAIR) eq "1"} {
+ set ot_rsr_wire [expr {[info exists ::env(OT_TAP_RESET_SPLIT_REPAIR_WIRE_UM)] ? $::env(OT_TAP_RESET_SPLIT_REPAIR_WIRE_UM) : 300}]
+ set ot_rsr_n0 [llength [[ord::get_db_block] getInsts]]
+ estimate_parasitics -placement
+ repair_design -max_wire_length $ot_rsr_wire
+ puts "OT_TAP_RESET_SPLIT_REPAIR buffers [expr {[llength [[ord::get_db_block] getInsts]] - $ot_rsr_n0}] max_wire_um $ot_rsr_wire"
+}

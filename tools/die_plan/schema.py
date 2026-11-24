@@ -1883,6 +1883,14 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # OT_TAP_RESET_SPLIT_MAX_TAPS).  Absent = no cap (unchanged).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_max_taps"] = {
     "type": "integer", "minimum": 2}
+# LEP-RSPLIT-REPAIR-1 (HEAD-EAST-REPLAN 11-24, opt-in, with tap_reset_split): the per-tap copies are placed at their sinks'
+# centroid AFTER the placement repair_design, so the shared D / RESETN net from the launcher to every copy stays unbuffered
+# (hd_lep0N rscap 4_cts post-hook: u_srl_302 -> u_rrl_303 copy 655 um, slew 2906 ps, -468.7; u_rstr root -> group copies,
+# slew 2800 ps, -785.8).  true = one repair_design (max wire tap_reset_split_repair_wire_um, default 300) right after the
+# split (tap_reset_split.tcl OT_TAP_RESET_SPLIT_REPAIR); buffers only, 0 cycles, LEC unchanged.  Absent = unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_repair"] = {"type": "boolean"}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_split_repair_wire_um"] = {
+    "type": "number", "exclusiveMinimum": 0}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {

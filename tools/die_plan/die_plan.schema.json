@@ -3577,6 +3577,13 @@
         "type": "integer",
         "minimum": 2
        },
+       "tap_reset_split_repair": {
+        "type": "boolean"
+       },
+       "tap_reset_split_repair_wire_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
        "pregrt_hold_guard_ps": {
         "type": "number",
         "minimum": 0,

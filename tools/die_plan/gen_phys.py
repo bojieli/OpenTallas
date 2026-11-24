@@ -8278,6 +8278,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     reset_split_max_taps = t.get("clock", {}).get("tap_reset_split_max_taps")
     if t.get("clock", {}).get("tap_reset_split") is True and reset_split_max_taps is not None:   # LEP-RSPLIT-CAP-1 11-23, opt-in
         cfg.append(f"export OT_TAP_RESET_SPLIT_MAX_TAPS = {reset_split_max_taps}")
+    if t.get("clock", {}).get("tap_reset_split") is True and t["clock"].get("tap_reset_split_repair") is True:   # LEP-RSPLIT-REPAIR-1 11-24, opt-in
+        cfg.append("export OT_TAP_RESET_SPLIT_REPAIR = 1")
+        if t["clock"].get("tap_reset_split_repair_wire_um") is not None:
+            cfg.append(f"export OT_TAP_RESET_SPLIT_REPAIR_WIRE_UM = {t['clock']['tap_reset_split_repair_wire_um']}")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     if (t.get("clock") or {}).get("tap_landing_seam") is True:   # KV-HUB-HOLD 11-23, opt-in: landing ring + u_bin on one hard-free tap

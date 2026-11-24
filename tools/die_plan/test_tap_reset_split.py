@@ -136,3 +136,21 @@ def test_copies_get_unique_seats_before_cts():
     assert t.count(call) == 1 and t.index('puts "OT_TAP_RESET_SPLIT sources') < t.index(call)
     assert t.index(call) < t.index("::ot_tap_rsplit::run") and 'OT_TAP_RESET_SPLIT_UNIQ) eq "0"' in t
     assert "while {[dict exists $taken" in t
+
+
+def test_reset_split_repair_is_opt_in_typed_exported_and_buffers_only():
+    # LEP-RSPLIT-REPAIR-1 (HEAD-EAST-REPLAN 11-24): unbuffered launcher -> copy nets after the split (hd_lep0N -468.7 / -785.8)
+    for plan_schema in (schema.SCHEMA, json.loads((HERE / "die_plan.schema.json").read_text())):
+        clock = plan_schema["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]
+        assert clock["properties"]["tap_reset_split_repair"] == {"type": "boolean"}
+        assert clock["properties"]["tap_reset_split_repair_wire_um"] == {"type": "number", "exclusiveMinimum": 0}
+    g = (HERE / "gen_phys.py").read_text()
+    i = g.index('cfg.append("export OT_TAP_RESET_SPLIT_REPAIR = 1")')
+    assert 'get("tap_reset_split") is True and t["clock"].get("tap_reset_split_repair") is True' in g[i - 300:i]
+    t = (HERE / "tap_reset_split.tcl").read_text()
+    j = t.index("::ot_tap_rsplit::run\n")
+    k = t.index('$::env(OT_TAP_RESET_SPLIT_REPAIR) eq "1"')
+    assert k > j   # after the split and the unique seats
+    body = t[k:]
+    assert "repair_design -max_wire_length $ot_rsr_wire" in body and "repair_timing" not in body
+    assert ": 300}]" in body and "puts \"OT_TAP_RESET_SPLIT_REPAIR buffers" in body
