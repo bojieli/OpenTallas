@@ -15,3 +15,5 @@ Work dir epyc10 /srv/opentallas-scratch2/claude/kv-tapsplit-hgpv (cen.sh census,
 - My extra file in KV-ALLFIX grow/tree: plan_of_record/plan_tshgpv_sbA5ts.json (removal = ot-delete if KV-ALLFIX asks).
 - Edge strips (pv_v12e v7e v2ne v6n v5ne v1n) owner = KV-PV-EDGESTRIP; cause in my posts is inferred, not read from obstacle boxes.
 - hg_v3 1368 / hgi_v8 1351: FABLE accepted as PARTIAL (23:21); the brief's "0 taps over 1200" is NOT met.
+- 11-24 00:0x: comp.sh OVERWROTE epyc10 grow/tree eW_sidecar_A5.json (668fe4614b79 -> 591061370a95); asbuilt identical. epyc11 has the original; KV-ALLFIX restores. NEVER rerun comp.sh (RINS-WRAP / FWDCLK / EARLYTAP write to their tree). regen.sh not needed, never run.
+- FABLE reads after rebind: errors by class, emitted = 15, LATCHECK per lane for +6 ready_at_glue, START depth >= reset depth on 14 resel types.
