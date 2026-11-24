@@ -636,3 +636,8 @@
   NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 6.8 h job 6.8 h: no new meaningful log line for 6.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
   NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 6.8 h job 10.6 h: no new meaningful log line for 6.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
   NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 6.8 h job 11.3 h: no new meaningful log line for 6.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+- 2026-11-23 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 23:52 PST: 105 running jobs, PROGRESSING 96, SLOW 5, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 56.9 h job 56.9 h: no new meaningful log line for 6.1 h; last: "not_interacting" in: asap7_tiled_diagnostic.lydrc:186
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 7.8 h job 7.8 h: no new meaningful log line for 7.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 7.8 h job 11.6 h: no new meaningful log line for 7.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 7.8 h job 12.3 h: no new meaningful log line for 7.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s

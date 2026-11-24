@@ -37195,3 +37195,8 @@ FAILED [AUTOPILOT f02823d0dc96] 2026-11-23 23:31:56 PST AUTOPILOT -> KIT-WAVE-3:
   - r2 PRE (rt 9b19) has no RSTREACH check. KV-ALLFIX A5 PRE fails it on kv3_hg (5 hops, max 681 um) and v1p5 (1 hop, 628 um), so "PRE same as base" does not cover reset reach. KV-ALLFIX sent the list to KV-RSTREACH; whether my row added any is not checked.
   - In A5 the hg blocks differ from r2 in clock, internal_stations and one ring core (kv3_hg_v3 also ft_slots). The hard g_ex_0 row is unchanged (checked on kv3_hg, v1p5, v3).
   - My handoff entries stamped 22:35 and 22:52 were written 22:29 and 22:50.
+- 2026-11-23 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-23 23:52 PST: 105 running jobs, PROGRESSING 96, SLOW 5, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc7 array_direct_cli_1121 tiled_diagnostic stage 56.9 h job 56.9 h: no new meaningful log line for 6.1 h; last: "not_interacting" in: asap7_tiled_diagnostic.lydrc:186
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 7.8 h job 7.8 h: no new meaningful log line for 7.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 7.8 h job 11.6 h: no new meaningful log line for 7.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
+  NO-PROGRESS intel1 census_e_cap10 census_4_cts_tt66ce.otrun stage 7.8 h job 12.3 h: no new meaningful log line for 7.8 h; last: ot-heavy: admitted on key-cardinal as oth-ubuntu-1459759-1795478606 after 1 s
